@@ -4,91 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CA58C27C53
-	for <kexec@archiver.kernel.org>; Wed, 12 Jun 2024 09:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B04B0C27C77
+	for <kexec@archiver.kernel.org>; Wed, 12 Jun 2024 09:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CwGUNsADaaQSW/KwaMrWU1fETj4vTPJA7oSJZKQJYNg=; b=vf3PDGCOXeZP98
-	K9qthxScVRFrVotDIsYmTl/RyTZpR2PaWV0AqUpddoIkMj99aCU5NYaEBaVvxkvIgY9cN0Ga9zvoA
-	mwqbl/MYcoiNv0GzJITjNFtE432UjW1mXHfAXHbgVRO0In60Ea+a7iBwhFoqdrCHrY0E/ytto3FAj
-	mFTr3YOelzHt/zNM134QM4cvvdhPjEoSaivfsuD5xNpKFchzRxh5i80BEImtEkOjmRc/9jZfE5QOz
-	bJF+WbXpLnopPpQwgnSm8tbcnuvSyODIMu7NsarZZOVKDHmEQwapT95SV45G5SdMcyLzgijh1eSG9
-	2VPW6ZGNUOPpLwYIglGg==;
+	List-Owner; bh=AUBvd6qPdn2MJVmI8NG79ScXaW9fyTNWyC4zpwZAB7w=; b=uJpWiEZ/NESKQa
+	0VgQilyhY+WMZCXaGCxjigVl4QFV6X72sFrSoM8+GMe5gqkfNJraJMsUA3t8pkoQ3OlBOtVWWTUZ+
+	i6sSC6Vx/uymF0RZ5HZOP0WXWujJP007BwpRtOA8SRe6ItddOI0E1eavMCWUSN0272bSx2K2uxyfl
+	Mu6MezJp7/DDxHyjoAsXGInwL2mhsjQ2hY5mXpciOIH3IbFdZygeoe3mKgWsUluXuBTqV8TMm0cPG
+	hiGiAsmrcxHwPuXFAiXSrPWiMlxeiQgVlO3wbhjGKWDIibvLRG5SO2DFHGQpldDnOywRPXp/d3H8D
+	sWdUJILbaKnraVAWJeJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHKBj-0000000BwrO-022U;
-	Wed, 12 Jun 2024 09:22:39 +0000
-Received: from mgamail.intel.com ([192.198.163.17])
+	id 1sHKDk-0000000Bxse-0DkL;
+	Wed, 12 Jun 2024 09:24:44 +0000
+Received: from mgamail.intel.com ([192.198.163.14])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHKBf-0000000Bwpd-25qU
+	id 1sHKDf-0000000Bxmj-0ppY
 	for kexec@lists.infradead.org;
-	Wed, 12 Jun 2024 09:22:37 +0000
+	Wed, 12 Jun 2024 09:24:41 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718184155; x=1749720155;
+  t=1718184279; x=1749720279;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=7QifDfrNsx1fq4Zn54nkhEExNwXSNVLR0i6Op1TRZJI=;
-  b=kvC5e96lZeYTPVgV3qvBaeV7Mt9Wh+eOaQp1H+xFUUuvx8nBg+C3/fAD
-   F+9TA8Xa+hZo4QKzr1OpeXseiE+kIHAPtU5WXxqMQzpkyuPZA97C/gyN4
-   7Cb88KddkOzZp9TJwL9V/eDzO3TuU3lRLZTMZG4RwuBRG4z1FqNilfmAT
-   S+zrVUPwV50zW4SsILwMuKKHBCe2xhK+k7VJmOIdGj2xIFtsLpAgsfJO9
-   uUak//4s4e+2M4xjOWC7VdJZiW1ScvV0QhnvgKmDNf5H1ydtDsORhDvN7
-   CYQDtDNA48Y+mG71viP1UsJi/69dBf/qgSds/uDp5v9RAbKaPSnISWFAW
-   Q==;
-X-CSE-ConnectionGUID: XZUGZLFgSZWNAoGjWT5O2w==
-X-CSE-MsgGUID: N56YPv8JSbKVySxNoD0e0Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14810228"
+  bh=Qea/Jn12txiTuu1sQzZhiztNW21tvwMqG/CoQdaTdLE=;
+  b=Ji0uTgrtXzmB9eNKa9GjDTeC4+2EBQfjyduHVY9emfybV/mj76BUDE0o
+   iOiBJ2EaVjI9KjNMuG2TlZ9L0Y5ReTN4x+/3jww8GXYALrkYZKYRIZIcI
+   GbIFq4PPmABUzaf1FtvXIjvbAooRIvJxZ7IYuv9pX8WujYuLgevxyZZPO
+   IB9KIuftEGEkYIk3FQ8bfbhyV/RazxwtnI4jLgAs977ecxCJBF1SY0eeQ
+   fYZU+hwwLxqVLwaoI1WlVvgmN0wZYFv9vYuWw/kZq4PxOqB2t4HUiVaE2
+   95Y4mg9/8xEH0IJhPGAtnWEN/E+G9Ja+KcDdblZUPscPnsyCTHdU2GjKI
+   A==;
+X-CSE-ConnectionGUID: sNB5MHj9Tu2mFSHaeEv76Q==
+X-CSE-MsgGUID: NOOk9iRySGC4xsdzOM8icA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15166822"
 X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="14810228"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 02:22:34 -0700
-X-CSE-ConnectionGUID: l+tjhQPjQImOMdvNQ7mk4A==
-X-CSE-MsgGUID: Isa6/PTmSJC0RRJHVa41FQ==
+   d="scan'208";a="15166822"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 02:24:38 -0700
+X-CSE-ConnectionGUID: i2TjnqRFRByO99lPQ1rpLg==
+X-CSE-MsgGUID: 3Cah0xaYTqG0k8+PVw92kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="70530128"
+   d="scan'208";a="40201459"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 12 Jun 2024 02:22:28 -0700
+  by orviesa006.jf.intel.com with ESMTP; 12 Jun 2024 02:24:32 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 07C52193; Wed, 12 Jun 2024 12:22:26 +0300 (EEST)
-Date: Wed, 12 Jun 2024 12:22:26 +0300
+	id 195CE193; Wed, 12 Jun 2024 12:24:30 +0300 (EEST)
+Date: Wed, 12 Jun 2024 12:24:30 +0300
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "H. Peter Anvin" <hpa@zytor.com>, 
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Borislav Petkov <bp@alien8.de>, Nikolay Borisov <nik.borisov@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
 	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
 	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
 	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
 	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
 	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
- confusion
-Message-ID: <nxllu5wfhvfvorxbbt6ll3lc2mr47lw7sduszfawhtryqgtyrd@3qgtci7ocah6>
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+Message-ID: <2kc27uzrsvpevtvos2harqj3bgfkizi5dhhxkigswlylpnogr5@lk6fi2okv53i>
 References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
- <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
- <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
- <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
- <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
- <5c8b3ee9-64c2-4ff3-9cca-ba2672b9635e@zytor.com>
+ <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
+ <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
+ <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
+ <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
+ <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
+ <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
+ <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5c8b3ee9-64c2-4ff3-9cca-ba2672b9635e@zytor.com>
+In-Reply-To: <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240612_022235_575226_25EDC87E 
-X-CRM114-Status: GOOD (  25.42  )
+X-CRM114-CacheID: sfid-20240612_022439_431159_1B4CDF3E 
+X-CRM114-Status: GOOD (  18.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,78 +103,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 11, 2024 at 11:26:17AM -0700, H. Peter Anvin wrote:
-> On 6/4/24 08:21, Kirill A. Shutemov wrote:
-> > 
-> >  From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
-> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > Date: Fri, 10 Feb 2023 12:53:11 +0300
-> > Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-> > 
-> > TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
-> > that bit is cleared during CR4 register reprogramming during boot or
-> > kexec flows, a #VE exception will be raised which the guest kernel
-> > cannot handle it.
-> > 
-> > Therefore, make sure the CR4.MCE setting is preserved over kexec too and
-> > avoid raising any #VEs.
-> > 
-> > The change doesn't affect non-TDX-guest environments.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >   arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
-> >   1 file changed, 10 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> > index 085eef5c3904..9c2cf70c5f54 100644
-> > --- a/arch/x86/kernel/relocate_kernel_64.S
-> > +++ b/arch/x86/kernel/relocate_kernel_64.S
-> > @@ -5,6 +5,8 @@
-> >    */
-> >   #include <linux/linkage.h>
-> > +#include <linux/stringify.h>
-> > +#include <asm/alternative.h>
-> >   #include <asm/page_types.h>
-> >   #include <asm/kexec.h>
-> >   #include <asm/processor-flags.h>
-> > @@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-> >   	 * Set cr4 to a known state:
-> >   	 *  - physical address extension enabled
-> >   	 *  - 5-level paging, if it was enabled before
-> > +	 *  - Machine check exception on TDX guest, if it was enabled before.
-> > +	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
-> > +	 *
-> > +	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
-> > +	 * PAE is always set in the original CR4.
-> >   	 */
-> > -	movl	$X86_CR4_PAE, %eax
-> > -	testq	$X86_CR4_LA57, %r13
-> > -	jz	.Lno_la57
-> > -	orl	$X86_CR4_LA57, %eax
-> > -.Lno_la57:
-> > -
-> > -	movq	%rax, %cr4
-> > +	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
-> > +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
-> > +	movq	%r13, %cr4
+On Tue, Jun 11, 2024 at 09:46:53PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 11, 2024 at 06:47:05PM +0300, Kirill A. Shutemov wrote:
+> > Borislav, given this code deduplication effort is not trivial, maybe we
+> > can do it as a separate patchset on top of this one?
 > 
-> If this is the case, I don't really see a reason to clear MCE per se as I'm
-> guessing a machine check here will be fatal anyway? It just changes the
-> method of death.
+> Sure, as long as it gets done and doesn't get delayed indefinitely by
+> new and more important features enablement.
 
-Andrew had a strong opinion on method of death here.
+I will try to deliver it in timely manner.
 
-https://lore.kernel.org/all/1144340e-dd95-ee3b-dabb-579f9a65b3c7@citrix.com
+> Usually, we do unifications and cleanups first - then new features but
+> this kexec pile has been long in the making already...
+> 
+> > I also wounder if it makes sense to combine ident_map.c and
+> > set_memory.c.  There's some overlap between the two.
+> 
+> Yeah, we have a bunch of different pagetable manipulating things, all
+> with their peculiarities and unifying them and having a good set of APIs
+> which everything else uses, is always a good thing.
 
-> Also, is there a reason to save %cr4, run code, and *then* clear the
-> relevant bits? Wouldn't it be better to sanitize %cr4 as soon as possible?
+Will give it a try.
 
-You mean set new CR4 directly in relocate_kernel() before switching CR3?
-I guess it is possible.
+> And since we're talking cleanups, there's another thing I've been
+> looking at critically: CONFIG_X86_5LEVEL. Maybe it is time to get rid of
+> it and make the 5level stuff unconditional. And get rid of a bunch of
+> code since both vendors support 5level now...
 
-But I can say I see huge benefit of changing it. Such change would have
-own risks.
+Can do.
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
