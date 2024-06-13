@@ -4,164 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF57CC27C4F
-	for <kexec@archiver.kernel.org>; Thu, 13 Jun 2024 05:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E6E8C27C4F
+	for <kexec@archiver.kernel.org>; Thu, 13 Jun 2024 13:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sKw7DqkMOPyxzfwmqZjIHdeO0lsWJsQyuc1JPO5DOPY=; b=mZsqZHTfBTF1Rf
-	7el3te9ZWtM/lHWiu6ds0ugpSg0iNvvXtCOSYal0PxUN2WRLWd/7LkbKBqwt3w7d7q3IUDzY9BEgf
-	0UizWYDnRGxwLzVLZJ3JXo6LTgLyS6mrZ9lkmDClSMRTxtQwSJmCm2caZvRMVYgDC4dEIrXGcthTa
-	FxougAMHbA/8Fn7t6Udmii1lHx2vK4SFlAa24eK0hHYPWN592ooCn9Y21LKNi44ZKxai7JOGUZpBf
-	9A3Z/Wk1tTWRSbJSRBX0fzUq/aD+I8rC5PTtEsPNGkIx0a7oPitqCrevXvt3SnZyBYJLYmDm4gE58
-	PRN4i7scAw0BTyAnzMpA==;
+	List-Owner; bh=gLeiKDKzCwXGJERCEitzJtzUkG7wdSp3NDhrNoR3oqw=; b=eyMsBUEy36MRvC
+	G084gwV4Shv8u/97h2nvp1MIOoGhqG06JPjGdkxBMEWmXA97TiL0YXDhcoMlOKdb+J7iua5nfi+t1
+	WG4Wdfz/wPVqqjPmYtXB4eCIuysfXJkesvOvT7FKTwJEXfvb4xfPyz1eUsuGET0dvo0F3bcHyCYeg
+	YqdeKUPpAQIO4Wyk/76rmZP02cy8pSCZgeX0MZFj4GOQAtXT4iOGCvyIahPu9SMd6KWABXQlY6pa5
+	dQ6Y4w12z/OqSQDMMj6ClteNVl8nqCrXCY2Oif79zL9oAgYLgEK6I1j1NjPw+4p3HT5CucT5Ulxam
+	3vNqc7KG50hU/hOchxxw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHdFh-0000000FCcO-3DHS;
-	Thu, 13 Jun 2024 05:44:01 +0000
-Received: from mail-os0jpn01on2062a.outbound.protection.outlook.com ([2a01:111:f403:201a::62a] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
+	id 1sHkha-0000000GmbX-3bKw;
+	Thu, 13 Jun 2024 13:41:18 +0000
+Received: from mgamail.intel.com ([198.175.65.12])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHdFd-0000000FCaH-3CCp
+	id 1sHkhX-0000000GmZq-3Njf
 	for kexec@lists.infradead.org;
-	Thu, 13 Jun 2024 05:44:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b8vbwupGX8kWTY+og/Q86/MuYJJh2GTFLNszlYhl8tKdDY0exnBc1BbLLynXkNI0umMm6OIhRZ9Z8XUBK7WhAggLYxHnjUfsKr4SdKHc6U08e28I49mOofGrmlAKZFLWpnOHtnHmg7kc3YEENn+GLW9Ql633qSpWia69vboeaH8U14MS3eiH5g+x4KjFi77OlnkfTzGlee+bLW0GPDb9fiUofKifSGg1BdKL6YZprZn4wMo9Y6HfErs/r5WpfwLBHJN0lu+RJOewrddqUu5+9jFm4wf6fHuv8O+YBiZPE8FJyigyV+8AymSySP7s37tuxf7HVwOZEqHzUyJKu0Yfew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ecH5NsAkWKWFmxfjzscOL9Qpm5liqef3BRwn3KEwO8=;
- b=btQTvk89iZm3M5C/KkIqzfpD3GkSdti+z/ZI9Bxm2W+7EaEMZ3GcMByEo03bVjw5nDuezIEv2nKgXZw8DHJ7FuYQ+/7okA58RaYw9lJa4TLge5sIK42n1jK5hv1rMf23o+Dw9Y/lZpKc1Rodyx9tdi1/VxiuTqu39QM4veGnXR9oRIBhIXEJTTyRlGz7jmysKpmZ1uS7eUXrwjL3x2AHG7lKrkpZZgIxJEUYPvtzTQ2s5eT1oaqYPEFbq4DQlExL9VrtEX0s8YcztyeHcWXHXzmxv8rC8gUPExmCTl2yNwitPxeuZaex9g10Fk1PUEa9rfb1wXhMZcJQAVc/yjO0nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ecH5NsAkWKWFmxfjzscOL9Qpm5liqef3BRwn3KEwO8=;
- b=m1lueRwgEmQMYqWMJ5InD4CxefTIvVNu1d2dcEdyG9qvKmRv+lDOL7UL9gSbLit5YooqWZMFOkCFKeSWiV4GW0LaiF4QfgK2fD0oMWor15NsI5Og63NE8+gTTnFw6LhdJWgEK6q/uocm5NJBQ7/JC5K5EVNhlWJE28AXcz07opr/rN2kRRo+0yRcnx8D5QkSRPv2ROU+w7aCgaeUKPf54bU2yBWoPxPH4lhWTjV4fSy5/2flXFZoM2sbSfParsD5I4kIpAhQ4cRU67841Ihjfy2RfX6ZNi+OvtYT2CT8SFi/ddqh8O5+AC6yzf/5dJ42U98ZElb2KgBfODYTMK9VKQ==
-Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
- (2603:1096:400:3a5::14) by OSZPR01MB6924.jpnprd01.prod.outlook.com
- (2603:1096:604:138::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21; Thu, 13 Jun
- 2024 05:43:34 +0000
-Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
- ([fe80::f07d:6a76:a936:693c]) by TYCPR01MB10963.jpnprd01.prod.outlook.com
- ([fe80::f07d:6a76:a936:693c%6]) with mapi id 15.20.7677.024; Thu, 13 Jun 2024
- 05:43:33 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>
-Subject: Re: [PATCH 2/2 makedumpfile] Fix wrong exclusion of Slab pages on
- Linux 6.10-rc1 and later
-Thread-Topic: [PATCH 2/2 makedumpfile] Fix wrong exclusion of Slab pages on
- Linux 6.10-rc1 and later
-Thread-Index: AQHauKSxpq/YPA+zKUeEOuU9OWvP+7HFN/eA
-Date: Thu, 13 Jun 2024 05:43:33 +0000
-Message-ID: <bb9512b8-f511-4d74-90c0-139fa18addae@nec.com>
-References: <1717055930-23334-1-git-send-email-k-hagio-ab@nec.com>
- <1717742044-27933-1-git-send-email-k-hagio-ab@nec.com>
-In-Reply-To: <1717742044-27933-1-git-send-email-k-hagio-ab@nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB10963:EE_|OSZPR01MB6924:EE_
-x-ms-office365-filtering-correlation-id: db5c07f2-a2e6-4737-5239-08dc8b6bc3a0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230034|376008|1800799018|366010|38070700012;
-x-microsoft-antispam-message-info: =?utf-8?B?aVhHS0g2Y1ZMalNNYzI0Y3hzbjVGSUR2RXFGeGdqNzUrVFVKSEFSMENueXFl?=
- =?utf-8?B?M0JhcUZnbmFqbzB1dHhYSVdxV1lLRHVDUmFBd05XcUNLVmo2eU1CMVg1NDg4?=
- =?utf-8?B?WGhLV0VLWGhtbnRPWnR6eFFHanRiM01sN0pTczVCNXdlZkFkSmlTNFdRYm5C?=
- =?utf-8?B?dzlxeWRJQWxuYzJhbkxNS1hBdGR2TGUxcitIdTJnRW1HNXRwNTZWL29RUWdl?=
- =?utf-8?B?TTc2ayt0cXY5MVZiZ1h2c2ZDdGxPMnoyREdWQk5TNW9wVDZEVmdSSU8yMHpK?=
- =?utf-8?B?WDVEbG5lUkJIU3lvZEdYZGYveXA1Ry95RVpWWGVDWWlRWS9TY2FrZW5RT0dP?=
- =?utf-8?B?dDlmQTJjd25KMElmSEU4UE9sSGVhU3Myejh4aGdLYUlJK2lBbExmVHo5dEox?=
- =?utf-8?B?cnFWdTNqUTBEdFNUY1h2RU1RREFrRmhMK3VxSm53RnRVdmZMWHc3clNFdm5h?=
- =?utf-8?B?OGF1c0NVdnBDV1ErQ1JEWTFMWU9TMG5YUmRTMFRURnVicFI2Nml4UDJrbjlF?=
- =?utf-8?B?YWRFanZLNGJ5VHpwSlFKQjNwUEQzUHozRE9aRVV0bXlLNFdoQXE0amp6SlZ4?=
- =?utf-8?B?cGkxbFdRbUpRczIyeWVyanVESkVHeGpRUndJUlRmRGVRdVlVNUN2TkdJMlVh?=
- =?utf-8?B?MCs5VGxad0NUTmxOVE9JQlFvRThSb2U3NTJ3dTQ1L0xZTGFoTDl6b3ZQeXdV?=
- =?utf-8?B?eUZKMWdiWG9pRGpLWGh0SFlzVklRYkZxK25oWkMybE0wcEE0Vnd5ZmdET3Bh?=
- =?utf-8?B?VnRybHRlLzVySzliMDJmcGxEbFBiemxoT2RjMEhneHZETHRUR1B0QUNlQVNP?=
- =?utf-8?B?bVJrc0FaOEJTN1d2eWZjdDltdy9iakk3SGcvVmNqS0tGYmNlbk5CZi95YVV6?=
- =?utf-8?B?ckN0MklBK0Z1dkxQM204ZjAxUlltNVo4VzYzcTBxTUI0OWxMVHRmODJscUpu?=
- =?utf-8?B?dlA5OXA2MkcyTk1IK3VRVGJpNDNJa1ZSanA3RlpITkRXUEVha3dxZzNkTkF1?=
- =?utf-8?B?Y2VpQ0lLY3pyZHovRW5Nc2ozV0dLY01mMGlIZjVIK1pNZDRvYjR5eTBlQjhK?=
- =?utf-8?B?U3ZiZ1NBSlV3a0VlcTBFMWpXblNqU1JsUXcwbTF5VmlYS3dLUjR1eUNhdC9j?=
- =?utf-8?B?NUErTFVvc1JuTiszOEdnbTFDWlhJT3ZBa0RESlcyUXNFQmJ1U3k3REI2YTJJ?=
- =?utf-8?B?NWhNTEYzS2FGNnkzUy9aZ29QWEcyVkg5OElUNGtZMFlvSWh6YWxnQlFINy9l?=
- =?utf-8?B?RzVBa0p6dmJpUGZFaUxiVHFid0M4N1F3NHJwREptckxMbExBZGhKTUxzTkNn?=
- =?utf-8?B?aDJGV3BvOURSNko4UFJKcWNEdlF3NmxLN2JFWkQ5d3pKNEhaS3Bmd1VEdDFo?=
- =?utf-8?B?clROK1Yrb1BLZ2xjcURsTm1ZQW5oWEFtbkY2WW91WmkySzVhVEE2NHRMd2NB?=
- =?utf-8?B?Ui83N1A5K2FiZE1aRGtFcGVhTG9vckovTlMwSGhzd1BxcUNZZU5JSy84TlhQ?=
- =?utf-8?B?MDYwcEtLd0hiMm9NeG4zK1VCMTNwTmdSWXFtYWpMVGdqOVpOdlFFd0F1Nkly?=
- =?utf-8?B?aGVwaHhZV2o4OXExUGpBT2R4VE5TZ0tScXROS0NTL3pLSFFFa21Zbi9PSnV3?=
- =?utf-8?B?VHVjM0pweTZVZWpLaHJCL2h1R0V1TDRqOEVCSzV5VEFEeFNPdTV0N2FVS1Zo?=
- =?utf-8?B?WmhmNmhHMXhPZEM3dVVVZGg3dHFCYzlTdW9tdFlzQThheVhSK2p6OGJyZHJ1?=
- =?utf-8?Q?rY8N/kOQtJuKfZ7K6k3fdAfOW1kofMo6ca03++C?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10963.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230034)(376008)(1800799018)(366010)(38070700012);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VFBXdTFrT1d0eENQSUxIM01wUHdzc0hCd09rWS9GbExjOFgydVZQU25DdWRm?=
- =?utf-8?B?TFBhZ0VtUEhZMEFnc1lta0RDblh0SGhRZjR3SDEwYVRSNEZhWEVZOVFrZE5R?=
- =?utf-8?B?VXd1aDFyNHpBL004cDFBOXJWNHJmMXFjTnkxcW12d1ZZRkg2WHNVUmJld1Jo?=
- =?utf-8?B?dnRLZW5kTVhFREg0c0QwUkEwTVYra2k4ZVJ5WUJkbVcrNG92a1ZiVWdMVG9y?=
- =?utf-8?B?R3RENjM2MVpoc2hSTWxYRXRlQXpHdmZEWkNNUDFuQlZqMmxXQXhoc3Y0RG5Y?=
- =?utf-8?B?SHdHTmRNajhsVWZ3MC9WbCsrcGVNaWMyR1RyNlFDQ3RrNS9VU1Rjc0tDNUxR?=
- =?utf-8?B?OE9oQW84R3JYWTNUN0t6bWl1aVZjNkJRdXZSbWo0YzUxWktWb1hFdmg0eGtF?=
- =?utf-8?B?Y3gzMWo5N3Y5NnBwY2tqUmw5NDdCT0dnTlJULzQweGZOakdCeXVncm1sMmJh?=
- =?utf-8?B?LzNudk8rb2lDL3BXQ2Q0ZGZtTlA4NnlvbmN5VFdWZzJRQ2xrV1dvdVhvVFRE?=
- =?utf-8?B?a1pmL0RlelJWM2ZlanM3UnlxZWdjdi9oNUhrVjV2VnFzdjdDdmM4clIrK2Rm?=
- =?utf-8?B?akc4OVVXaCswMEZNQUVvblkxKzl4ckF1T01oSVEvMWdUSTJCOWkyY2RkZzNr?=
- =?utf-8?B?SzZPOWg5S0VjZEFRUzlXTHVYM3BkbjlyaWpROHN5SHhGYkxLWTIyTlBCbHZh?=
- =?utf-8?B?bll3MjBRNC91LytYZDk2aTB3cWRQVVpQeDZNeE1QR1JOeEgwVnU1MXZobW55?=
- =?utf-8?B?UlFqWTJOVmdFeU1haFhnTHJJayszRFo4RkNBc2JPVjJYMUxYaEdlUUdWM2ZP?=
- =?utf-8?B?S2ppZFZTTUpveldHUVlQS2lMdWxOZnpKMkxjSWcxQnBCSkZ0V3A0TDBQbHAv?=
- =?utf-8?B?MDlkNmVXWHpMZEJYL09RZVI0K0xzeTAwVHkwdGdZdjk4dHM1WjN2K1FkaWht?=
- =?utf-8?B?UTJYVXN6NCsyVzVwbHJxbkhUZkEzVHJKSUE0YlFLWUFSMWF0czRLZTdJSjUw?=
- =?utf-8?B?b1BiV0JSYlhBQURKUEhadWZzNlltWDI5T3pya2FxdEZZRGtKc1d5RUZZTWJp?=
- =?utf-8?B?L2IwcldVeUtYMWZBR1llMWVCbVg3UEJLei8ycDZUcEQrSitCd2lQem1oNldY?=
- =?utf-8?B?RVBndk9WOUJOVm9sODAyN2NrQ2ptMmFWNmUzc1lMQ21KOC9uT2o5YWtNZFlr?=
- =?utf-8?B?YUFKM3J6TGh4QkNDaVNmNHo1SEwrSGIrRys1RG8xYjg4QzJkeDNxeG1rMUtl?=
- =?utf-8?B?dU9nWGUyVDA0bnhGTnpGZVBVS3N1ZU5iNnMxV0lGd0tuRW5pekdpRm9PVVhM?=
- =?utf-8?B?S29tSWJYQlVWb2FRNjN3OEYxRlZ5ZEJsbDJJWHM0LzJWZVdwVk14MTlqT0JV?=
- =?utf-8?B?Sm9nYkdlRzh3VC9PdXBaV2Fjdjl2WkNhOWpMcWhpVmFJdXFERUZNa3NITUlZ?=
- =?utf-8?B?Ym9qNnVQZkpabmFWOXhickRZMjc0M1ZvMXQ5M3F2ZXRLWEVqaTdGMC8yTklF?=
- =?utf-8?B?eS9qVjZ2bW1xczNvR28wVG9kMnpmVjJZRmR0akZBRVlIODJDMng0OXVDVVJV?=
- =?utf-8?B?Z2Yza1V2YWNobGd0eTdsMXZWYXh3T09RTElZSEYzOFRpbURPc01RRnl4WU1S?=
- =?utf-8?B?MTR3RzZtOThIdjBHSm5XZGxLY00rdjk1UWZ6U1JvYms4VlNaRzZ0dTdKR2xR?=
- =?utf-8?B?aFZ2UDFnQm9FendHeWdIWVBGR3JQRDhweXdwZWh3bXdwdDg4MFB0dnJJSkRG?=
- =?utf-8?B?NDN6eUI3MlFIYS9Ja1NKbjlkOU5HQ3AwcG9xUGJwVlRZUFN2TGhWTUdSdWlq?=
- =?utf-8?B?a3lzWGNIR2hrZFBkSzMrR0JaTDVVQmovTTE0bnVqYytyZ2FodjZ2U2FHRVRI?=
- =?utf-8?B?ZFdOc0lvOVp6dVJQVVRiZzJDTkdNY3p2TkN2WHZMcjN5dGhXVS8zL2g2WGhE?=
- =?utf-8?B?UWQ4aDY0dEd6VjNhZytWUTlTazIzRVIzTklwcFc5cmVpMmlTWURuYTVxTDNI?=
- =?utf-8?B?MHhJNkNjeUl5Q2o0OTlka056bkYzUUdCOVJqMDd0WlVvUHpUQThPNjRpRW1h?=
- =?utf-8?B?OXdsdnMwNHdva0U5aUFob2VaQldET3hMYVYwUmtMaVdaUnc4MjN2THJXQWc5?=
- =?utf-8?Q?Q7Xnq3enTO5u7t2tDzitOpoI7?=
-Content-ID: <517EFF4CF24BE74E9D760E771F7BFDDB@jpnprd01.prod.outlook.com>
+	Thu, 13 Jun 2024 13:41:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718286075; x=1749822075;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L2ElOQTFv2JkJ/cmO5hpTEN8p3dz3MA6+ue1MO99SVI=;
+  b=jS+isNqFycUroH3WCz3maZ+5rVdTml6TfLh0YngaZenxN5gft5HQTkbZ
+   pFDp13aFclEOauGe76LX58w/BsO64BaUqsW9ohBav497x59bE8/POHfDq
+   ONCkHyOod4dLJjHtVBBdu5SaNRmwchX2d4vHLJNbbL4QP2FohUasb2Ix8
+   VBeJIWpJvXSC853wpiBdeVtL5g82CueMP3miKxdmAaU4cHk94AN+Mu349
+   YHQWIgxzBF6996PEsw22TE2sPZwbcR3uejsX4bSrY7nOZ72XSoGpIS4Yg
+   Kg4E/lmf2NSOiAcKAWbWhuwZdo24kTvC35XZRJxN6wL7IhzV/7Llrkitm
+   A==;
+X-CSE-ConnectionGUID: nm7qFBDpQtypr+KmvtEA2g==
+X-CSE-MsgGUID: 2BbKtQ3AQyqk8Kao+KwvRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26527064"
+X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
+   d="scan'208";a="26527064"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 06:41:07 -0700
+X-CSE-ConnectionGUID: GFZ3DVmUTWC0a6Lkf/WuZQ==
+X-CSE-MsgGUID: XkabKZq+QZ6C4U0l7Gv4mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
+   d="scan'208";a="40268688"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 13 Jun 2024 06:41:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 21C87FB; Thu, 13 Jun 2024 16:41:00 +0300 (EEST)
+Date: Thu, 13 Jun 2024 16:41:00 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+Message-ID: <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
+ <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
+ <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
+ <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
+ <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
+ <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
+ <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
+ <2kc27uzrsvpevtvos2harqj3bgfkizi5dhhxkigswlylpnogr5@lk6fi2okv53i>
+ <20240612092943.GCZmlqh7O662JB-yGu@fat_crate.local>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10963.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db5c07f2-a2e6-4737-5239-08dc8b6bc3a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2024 05:43:33.9341
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7GZSpv+GCET39M30YmUE9TLvScBubUkBf3k1T4k46aR3shSX3/igXsf4mnMFaZJZs340Fdi2maTEfynJ8vSNEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB6924
+Content-Disposition: inline
+In-Reply-To: <20240612092943.GCZmlqh7O662JB-yGu@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240612_224358_037820_AAC67515 
-X-CRM114-Status: UNSURE (   9.10  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240613_064116_003625_52C3FDEF 
+X-CRM114-Status: GOOD (  37.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -173,28 +100,443 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-DQpPbiAyMDI0LzA2LzA3IDE1OjM0LCBIQUdJTyBLQVpVSElUTyjokKnlsL4g5LiA5LuBKSB3cm90
-ZToNCj4gKiBSZXF1aXJlZCBmb3Iga2VybmVsIDYuMTANCj4gDQo+IEtlcm5lbCBjb21taXQgNDZk
-ZjhlNzNhNGEzICgibW06IGZyZWUgdXAgUEdfc2xhYiIpIG1vdmVkIHRoZSBQR19zbGFiDQo+IGZs
-YWcgZnJvbSBwYWdlLmZsYWdzIGludG8gcGFnZS5fbWFwY291bnQgKHNsYWIuX19wYWdlX3R5cGUp
-LCBhbmQNCj4gaW50cm9kdWNlZCBOVU1CRVIoUEFHRV9TTEFCX01BUENPVU5UX1ZBTFVFKSBlbnRy
-eSBpbnRvIHZtY29yZWluZm8uDQo+IA0KPiBXaXRob3V0IHRoZSBwYXRjaCwgIm1ha2VkdW1wZmls
-ZSAtZCA4IiBvcHRpb24gd3JvbmdseSBleGNsdWRlcyBTbGFiDQo+IHBhZ2VzIGFuZCBjcmFzaCBj
-YW5ub3Qgb3BlbiB0aGUgZHVtcGZpbGUgd2l0aCBhbiBlcnJvciBsaWtlIHRoaXM6DQo+IA0KPiAg
-ICAkIGNyYXNoIC0ta2FzbHIgYXV0byB2bWxpbnV4IGR1bXBmaWxlDQo+ICAgIC4uLg0KPiAgICBw
-bGVhc2Ugd2FpdC4uLiAoZ2F0aGVyaW5nIHRhc2sgdGFibGUgZGF0YSkNCj4gICAgY3Jhc2g6IHBh
-Z2UgZXhjbHVkZWQ6IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IGZmZmY5MDk5ODA0NDAyNzAgdHlw
-ZTogInhhX25vZGUuc2xvdHNbb2ZmXSINCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEthenVoaXRvIEhh
-Z2lvIDxrLWhhZ2lvLWFiQG5lYy5jb20+DQoNCkFwcGxpZWQgdGhlIHR3byBwYXRjaGVzIGZvciA2
-LjkgYW5kIDYuMTAuDQpodHRwczovL2dpdGh1Yi5jb20vbWFrZWR1bXBmaWxlL21ha2VkdW1wZmls
-ZS9jb21taXQvOTg1ZTU3NTI1M2YxYzJkZThkNjg3NmNmZTY4NWM2OGEyNGVlMDZlMQ0KaHR0cHM6
-Ly9naXRodWIuY29tL21ha2VkdW1wZmlsZS9tYWtlZHVtcGZpbGUvY29tbWl0L2JhZDJhN2M0ZmE3
-NWQzN2E0MTU3ODQ0MTQ2ODU4NDk2MzAyOGJkZGENCg0KVGhhbmtzLA0KS2F6dQpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, Jun 12, 2024 at 11:29:43AM +0200, Borislav Petkov wrote:
+> > > And since we're talking cleanups, there's another thing I've been
+> > > looking at critically: CONFIG_X86_5LEVEL. Maybe it is time to get rid of
+> > > it and make the 5level stuff unconditional. And get rid of a bunch of
+> > > code since both vendors support 5level now...
+> > 
+> > Can do.
+> 
+> Much appreciated, thanks!
+
+It is easy enough to do. See the patch below.
+
+But I am not sure if I can justify it properly. If someone doesn't really
+need 5-level paging, disabling it at compile-time would save ~34K of
+kernel code with the configuration.
+
+Is it worth saving ~100 lines of code?
+
+ Documentation/arch/x86/cpuinfo.rst              |  8 +++-----
+ Documentation/arch/x86/x86_64/5level-paging.rst |  9 ---------
+ arch/x86/Kconfig                                | 24 +-----------------------
+ arch/x86/boot/compressed/pgtable_64.c           | 10 +++-------
+ arch/x86/boot/header.S                          |  4 ----
+ arch/x86/include/asm/disabled-features.h        |  9 +--------
+ arch/x86/include/asm/page_64.h                  |  2 --
+ arch/x86/include/asm/page_64_types.h            |  7 -------
+ arch/x86/include/asm/pgtable_64_types.h         | 18 ------------------
+ arch/x86/kernel/alternative.c                   |  2 +-
+ arch/x86/kernel/head64.c                        |  5 -----
+ arch/x86/kernel/head_64.S                       |  2 --
+ arch/x86/mm/init.c                              |  4 ----
+ arch/x86/mm/pgtable.c                           |  2 --
+ drivers/firmware/efi/libstub/x86-5lvl.c         |  2 +-
+ tools/arch/x86/include/asm/disabled-features.h  |  9 +--------
+ 16 files changed, 11 insertions(+), 106 deletions(-)
+
+diff --git a/Documentation/arch/x86/cpuinfo.rst b/Documentation/arch/x86/cpuinfo.rst
+index 8895784d4784..0ea70924c89e 100644
+--- a/Documentation/arch/x86/cpuinfo.rst
++++ b/Documentation/arch/x86/cpuinfo.rst
+@@ -171,10 +171,10 @@ For example, when an old kernel is running on new hardware.
+ 
+ c: The kernel disabled support for it at compile-time.
+ ------------------------------------------------------
+-For example, if 5-level-paging is not enabled when building (i.e.,
+-CONFIG_X86_5LEVEL is not selected) the flag "la57" will not show up [#f1]_.
++For example, if Linear Address Masking (LAM) is not enabled when building (i.e.,
++CONFIG_ADDRESS_MASKING is not selected) the flag "lam" will not show up.
+ Even though the feature will still be detected via CPUID, the kernel disables
+-it by clearing via setup_clear_cpu_cap(X86_FEATURE_LA57).
++it by clearing via setup_clear_cpu_cap(X86_FEATURE_LAM).
+ 
+ d: The feature is disabled at boot-time.
+ ----------------------------------------
+@@ -197,5 +197,3 @@ missing at runtime. For example, AVX flags will not show up if XSAVE feature
+ is disabled since they depend on XSAVE feature. Another example would be broken
+ CPUs and them missing microcode patches. Due to that, the kernel decides not to
+ enable a feature.
+-
+-.. [#f1] 5-level paging uses linear address of 57 bits.
+diff --git a/Documentation/arch/x86/x86_64/5level-paging.rst b/Documentation/arch/x86/x86_64/5level-paging.rst
+index 71f882f4a173..ad7ddc13f79d 100644
+--- a/Documentation/arch/x86/x86_64/5level-paging.rst
++++ b/Documentation/arch/x86/x86_64/5level-paging.rst
+@@ -22,15 +22,6 @@ QEMU 2.9 and later support 5-level paging.
+ Virtual memory layout for 5-level paging is described in
+ Documentation/arch/x86/x86_64/mm.rst
+ 
+-
+-Enabling 5-level paging
+-=======================
+-CONFIG_X86_5LEVEL=y enables the feature.
+-
+-Kernel with CONFIG_X86_5LEVEL=y still able to boot on 4-level hardware.
+-In this case additional page table level -- p4d -- will be folded at
+-runtime.
+-
+ User-space and large virtual address space
+ ==========================================
+ On x86, 5-level paging enables 56-bit userspace virtual address space.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e8837116704c..c62827c2ecea 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -408,8 +408,7 @@ config DYNAMIC_PHYSICAL_MASK
+ 
+ config PGTABLE_LEVELS
+ 	int
+-	default 5 if X86_5LEVEL
+-	default 4 if X86_64
++	default 5 if X86_64
+ 	default 3 if X86_PAE
+ 	default 2
+ 
+@@ -1491,27 +1490,6 @@ config X86_PAE
+ 	  has the cost of more pagetable lookup overhead, and also
+ 	  consumes more pagetable space per process.
+ 
+-config X86_5LEVEL
+-	bool "Enable 5-level page tables support"
+-	default y
+-	select DYNAMIC_MEMORY_LAYOUT
+-	select SPARSEMEM_VMEMMAP
+-	depends on X86_64
+-	help
+-	  5-level paging enables access to larger address space:
+-	  up to 128 PiB of virtual address space and 4 PiB of
+-	  physical address space.
+-
+-	  It will be supported by future Intel CPUs.
+-
+-	  A kernel with the option enabled can be booted on machines that
+-	  support 4- or 5-level paging.
+-
+-	  See Documentation/arch/x86/x86_64/5level-paging.rst for more
+-	  information.
+-
+-	  Say N if unsure.
+-
+ config X86_DIRECT_GBPAGES
+ 	def_bool y
+ 	depends on X86_64
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index c882e1f67af0..f9b77b66c792 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -10,12 +10,10 @@
+ #define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
+ #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+ 
+-#ifdef CONFIG_X86_5LEVEL
+ /* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
+ unsigned int __section(".data") __pgtable_l5_enabled;
+ unsigned int __section(".data") pgdir_shift = 39;
+ unsigned int __section(".data") ptrs_per_p4d = 1;
+-#endif
+ 
+ /* Buffer to preserve trampoline memory */
+ static char trampoline_save[TRAMPOLINE_32BIT_SIZE];
+@@ -113,7 +111,6 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
+ 	 * Check if LA57 is desired and supported.
+ 	 *
+ 	 * There are several parts to the check:
+-	 *   - if the kernel supports 5-level paging: CONFIG_X86_5LEVEL=y
+ 	 *   - if user asked to disable 5-level paging: no5lvl in cmdline
+ 	 *   - if the machine supports 5-level paging:
+ 	 *     + CPUID leaf 7 is supported
+@@ -121,10 +118,9 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
+ 	 *
+ 	 * That's substitute for boot_cpu_has() in early boot code.
+ 	 */
+-	if (IS_ENABLED(CONFIG_X86_5LEVEL) &&
+-			!cmdline_find_option_bool("no5lvl") &&
+-			native_cpuid_eax(0) >= 7 &&
+-			(native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
++	if (!cmdline_find_option_bool("no5lvl") &&
++	    native_cpuid_eax(0) >= 7 &&
++	    (native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
+ 		l5_required = true;
+ 
+ 		/* Initialize variables for 5-level paging */
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index b5c79f43359b..32361cef909e 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -361,12 +361,8 @@ xloadflags:
+ #endif
+ 
+ #ifdef CONFIG_X86_64
+-#ifdef CONFIG_X86_5LEVEL
+ #define XLF56 (XLF_5LEVEL|XLF_5LEVEL_ENABLED)
+ #else
+-#define XLF56 XLF_5LEVEL
+-#endif
+-#else
+ #define XLF56 0
+ #endif
+ 
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..19cf1678fcaa 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -38,12 +38,6 @@
+ # define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
+ #endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
+ 
+-#ifdef CONFIG_X86_5LEVEL
+-# define DISABLE_LA57	0
+-#else
+-# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
+-#endif
+-
+ #ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+ # define DISABLE_PTI		0
+ #else
+@@ -149,8 +143,7 @@
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+-#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
+-			 DISABLE_ENQCMD)
++#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_UMIP|DISABLE_ENQCMD)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	(DISABLE_IBT)
+ #define DISABLED_MASK19	(DISABLE_SEV_SNP)
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index cc6b8e087192..3b8cb6a8b122 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -60,7 +60,6 @@ static inline void clear_page(void *page)
+ 
+ void copy_page(void *to, void *from);
+ 
+-#ifdef CONFIG_X86_5LEVEL
+ /*
+  * User space process size.  This is the first address outside the user range.
+  * There are a few constraints that determine this:
+@@ -91,7 +90,6 @@ static __always_inline unsigned long task_size_max(void)
+ 
+ 	return ret;
+ }
+-#endif	/* CONFIG_X86_5LEVEL */
+ 
+ #endif	/* !__ASSEMBLY__ */
+ 
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 06ef25411d62..714e88a72c9f 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -52,14 +52,7 @@
+ /* See Documentation/arch/x86/x86_64/mm.rst for a description of the memory map. */
+ 
+ #define __PHYSICAL_MASK_SHIFT	52
+-
+-#ifdef CONFIG_X86_5LEVEL
+ #define __VIRTUAL_MASK_SHIFT	(pgtable_l5_enabled() ? 56 : 47)
+-/* See task_size_max() in <asm/page_64.h> */
+-#else
+-#define __VIRTUAL_MASK_SHIFT	47
+-#define task_size_max()		((_AC(1,UL) << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
+-#endif
+ 
+ #define TASK_SIZE_MAX		task_size_max()
+ #define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 9053dfe9fa03..576aea58b0c0 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -23,7 +23,6 @@ typedef struct { pmdval_t pmd; } pmd_t;
+ 
+ extern unsigned int __pgtable_l5_enabled;
+ 
+-#ifdef CONFIG_X86_5LEVEL
+ #ifdef USE_EARLY_PGTABLE_L5
+ /*
+  * cpu_feature_enabled() is not available in early boot code.
+@@ -37,10 +36,6 @@ static inline bool pgtable_l5_enabled(void)
+ #define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_LA57)
+ #endif /* USE_EARLY_PGTABLE_L5 */
+ 
+-#else
+-#define pgtable_l5_enabled() 0
+-#endif /* CONFIG_X86_5LEVEL */
+-
+ extern unsigned int pgdir_shift;
+ extern unsigned int ptrs_per_p4d;
+ 
+@@ -48,8 +43,6 @@ extern unsigned int ptrs_per_p4d;
+ 
+ #define SHARED_KERNEL_PMD	0
+ 
+-#ifdef CONFIG_X86_5LEVEL
+-
+ /*
+  * PGDIR_SHIFT determines what a top-level page table entry can map
+  */
+@@ -67,17 +60,6 @@ extern unsigned int ptrs_per_p4d;
+ 
+ #define MAX_POSSIBLE_PHYSMEM_BITS	52
+ 
+-#else /* CONFIG_X86_5LEVEL */
+-
+-/*
+- * PGDIR_SHIFT determines what a top-level page table entry can map
+- */
+-#define PGDIR_SHIFT		39
+-#define PTRS_PER_PGD		512
+-#define MAX_PTRS_PER_P4D	1
+-
+-#endif /* CONFIG_X86_5LEVEL */
+-
+ /*
+  * 3rd level page
+  */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 37596a417094..f1c519abb925 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -457,7 +457,7 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
+ 
+ 	/*
+-	 * In the case CONFIG_X86_5LEVEL=y, KASAN_SHADOW_START is defined using
++	 * KASAN_SHADOW_START is defined using
+ 	 * cpu_feature_enabled(X86_FEATURE_LA57) and is therefore patched here.
+ 	 * During the process, KASAN becomes confused seeing partial LA57
+ 	 * conversion and triggers a false-positive out-of-bound report.
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index a817ed0724d1..df19bdea1c86 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -52,13 +52,11 @@ extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
+ static unsigned int __initdata next_early_pgt;
+ pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
+ 
+-#ifdef CONFIG_X86_5LEVEL
+ unsigned int __pgtable_l5_enabled __ro_after_init;
+ unsigned int pgdir_shift __ro_after_init = 39;
+ EXPORT_SYMBOL(pgdir_shift);
+ unsigned int ptrs_per_p4d __ro_after_init = 1;
+ EXPORT_SYMBOL(ptrs_per_p4d);
+-#endif
+ 
+ #ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
+ unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
+@@ -71,9 +69,6 @@ EXPORT_SYMBOL(vmemmap_base);
+ 
+ static inline bool check_la57_support(void)
+ {
+-	if (!IS_ENABLED(CONFIG_X86_5LEVEL))
+-		return false;
+-
+ 	/*
+ 	 * 5-level paging is detected and enabled at kernel decompression
+ 	 * stage. Only check if it has been enabled there.
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 330922b328bf..4b2b2138c163 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -659,12 +659,10 @@ SYM_DATA_START_PTI_ALIGNED(init_top_pgt)
+ SYM_DATA_END(init_top_pgt)
+ #endif
+ 
+-#ifdef CONFIG_X86_5LEVEL
+ SYM_DATA_START_PAGE_ALIGNED(level4_kernel_pgt)
+ 	.fill	511,8,0
+ 	.quad	level3_kernel_pgt - __START_KERNEL_map + _PAGE_TABLE_NOENC
+ SYM_DATA_END(level4_kernel_pgt)
+-#endif
+ 
+ SYM_DATA_START_PAGE_ALIGNED(level3_kernel_pgt)
+ 	.fill	L3_START_KERNEL,8,0
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index eb503f53c319..5a980a452f4c 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -173,11 +173,7 @@ __ref void *alloc_low_pages(unsigned int num)
+  * randomization is enabled.
+  */
+ 
+-#ifndef CONFIG_X86_5LEVEL
+-#define INIT_PGD_PAGE_TABLES    3
+-#else
+ #define INIT_PGD_PAGE_TABLES    4
+-#endif
+ 
+ #ifndef CONFIG_RANDOMIZE_MEMORY
+ #define INIT_PGD_PAGE_COUNT      (2 * INIT_PGD_PAGE_TABLES)
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 93e54ba91fbf..982775ef8b34 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -691,7 +691,6 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ }
+ 
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+-#ifdef CONFIG_X86_5LEVEL
+ /**
+  * p4d_set_huge - setup kernel P4D mapping
+  *
+@@ -710,7 +709,6 @@ int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
+ void p4d_clear_huge(p4d_t *p4d)
+ {
+ }
+-#endif
+ 
+ /**
+  * pud_set_huge - setup kernel PUD mapping
+diff --git a/drivers/firmware/efi/libstub/x86-5lvl.c b/drivers/firmware/efi/libstub/x86-5lvl.c
+index 77359e802181..f1c5fb45d5f7 100644
+--- a/drivers/firmware/efi/libstub/x86-5lvl.c
++++ b/drivers/firmware/efi/libstub/x86-5lvl.c
+@@ -62,7 +62,7 @@ efi_status_t efi_setup_5level_paging(void)
+ 
+ void efi_5level_switch(void)
+ {
+-	bool want_la57 = IS_ENABLED(CONFIG_X86_5LEVEL) && !efi_no5lvl;
++	bool want_la57 = !efi_no5lvl;
+ 	bool have_la57 = native_read_cr4() & X86_CR4_LA57;
+ 	bool need_toggle = want_la57 ^ have_la57;
+ 	u64 *pgt = (void *)la57_toggle + PAGE_SIZE;
+diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..19cf1678fcaa 100644
+--- a/tools/arch/x86/include/asm/disabled-features.h
++++ b/tools/arch/x86/include/asm/disabled-features.h
+@@ -38,12 +38,6 @@
+ # define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
+ #endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
+ 
+-#ifdef CONFIG_X86_5LEVEL
+-# define DISABLE_LA57	0
+-#else
+-# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
+-#endif
+-
+ #ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+ # define DISABLE_PTI		0
+ #else
+@@ -149,8 +143,7 @@
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+-#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
+-			 DISABLE_ENQCMD)
++#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_UMIP|DISABLE_ENQCMD)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	(DISABLE_IBT)
+ #define DISABLED_MASK19	(DISABLE_SEV_SNP)
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
