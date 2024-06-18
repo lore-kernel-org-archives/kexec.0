@@ -4,49 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C4DCC27C4F
-	for <kexec@archiver.kernel.org>; Tue, 18 Jun 2024 11:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF28AC27C4F
+	for <kexec@archiver.kernel.org>; Tue, 18 Jun 2024 12:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fL4oJEUpkcK+d2UhKFyp217PNYuDblrvcCyasHHEGmM=; b=anATKeakDw6fSC
-	3cR6LSHholQ4R0tnM+UPMUiQrT5hS7BokBN9N8JwwBYOwmlnNZ9ZAVfCjb34c//N++Rkegfe4+2LB
-	nRixbkA3S+fuIVpSr9pumT+lKMPiGy2vQTk/mJDboBTi6ZGrT98DNspKMPG/mAq+pp0wM362ERob9
-	BH+a1fkDuNpVEixWDKMtyuUuvCvDKiIEAWznknwARu8Oo0Q0nZMHKHJqAwjrRbWuSTEtDB8XJrB2F
-	blO3RGVDXDrNsTbF7QRk4NU67ibI6QfB4lKZKU509LJmMEf1mDbXRJ9PqVFPlaLpLYk7M26DCYTo6
-	q7qLHU2FX0ssHjYjXZGw==;
+	List-Owner; bh=5o2AaYErj1dbYucurqE+SvmD325FTWpziZsuJQdcv0M=; b=vri7MCEk/WQPT/
+	jnJwAjMZTomfRR3CGh+Yv4ZlDUc3Yt2mEEQrJ23V+fmDdx1o/Ns8R6BosaDxezY/K9AfB5Rq4CEdM
+	XZ6ac6ZbhWe+grkG7rqDl12txp0PXyzFFVdjbPx4bUYLDE15xJlldGl5ct6UfD/JwwKVCGtjhimkz
+	HDEauvFgHDZ5LPGErOjOwCg0cAIj+SPxxGD6GtpTieK3MSq6kKsyNeofhk880gJpTWp4KYXIQkHbz
+	U3H2NJgQqGeZM6xMYC7sUgKtafNTkxsUszeWeiBCDWEsSC7x9RNikxHRyS8/IL6gXiYUPhJhyiRX5
+	xDuxeXIHMydb70w9Q5Eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJX8J-0000000EekF-3Mgu;
-	Tue, 18 Jun 2024 11:36:15 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJX8F-0000000Eehh-091G;
-	Tue, 18 Jun 2024 11:36:13 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35018DA7;
-	Tue, 18 Jun 2024 04:36:32 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46A5C3F6A8;
-	Tue, 18 Jun 2024 04:36:06 -0700 (PDT)
-Date: Tue, 18 Jun 2024 12:36:03 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Breno Leitao <leitao@debian.org>, Rob Herring <robh@kernel.org>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, will@kernel.org, catalin.marinas@arm.com,
-	rmikey@meta.com
-Subject: Re: arm64: Kexec: Warning: virt_to_phys used for non-linear address
-Message-ID: <ZnFxI-jCoJcO8WPw@J2N7QTR9R3>
-References: <ZnFKEtqfqJkYflwL@gmail.com>
+	id 1sJXpD-0000000EqtJ-0R2H;
+	Tue, 18 Jun 2024 12:20:35 +0000
+Received: from mgamail.intel.com ([198.175.65.11])
+	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sJXp7-0000000Eqpm-0hWq
+	for kexec@lists.infradead.org;
+	Tue, 18 Jun 2024 12:20:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718713230; x=1750249230;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4POtStJCjE5RRoSLSG+N/j3IB3Xj43A0ipVnukEbGJg=;
+  b=m+0upUEg+kJ2IW0qzJFt2H5o3Zrht00/fhyjnU8N+oCn7/Wv2lZuaI5g
+   XQlyNpCQTHvhTeuNbuIMLCt7QvWgQLXfR4NLxZIBfyqdhetcN3Om8YfpX
+   VkRzFLomlC9FoCTHeD2NlgJBUCdVHBe+g6DZc3vnDJHQ+kJArnHBHABsq
+   RHOkcNFNbLf3Hy8qbz1V1xkAoLIa37dLM1uTnjVSRb2PgrHNDrnZShM2j
+   wQOV8uvgPluy+9MpjA6Lbz7NDAJnDY3eJ0wkHJ1FmFUFoyWuJiandnWre
+   guTH1ahW7qTzu6YWQEExe8J5I4EQrC9phIrdLgYcVAwwOSsgen81fhB1o
+   g==;
+X-CSE-ConnectionGUID: 8pf0YzjwRquejJkVEyrIDQ==
+X-CSE-MsgGUID: YQExngnnRG++axmokdYdww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="26169870"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="26169870"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 05:20:28 -0700
+X-CSE-ConnectionGUID: DwcjCin0ROGMSatLBuCePA==
+X-CSE-MsgGUID: I5+5RDgfRiK1kXbdoeW9pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="46659137"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 18 Jun 2024 05:20:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 381D71CB; Tue, 18 Jun 2024 15:20:20 +0300 (EEST)
+Date: Tue, 18 Jun 2024 15:20:20 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+Message-ID: <noxbrmequ4inpxgnwna6drnzuymcn3k6ik2kvlbzacxvr2udgf@pximrevgcgmu>
+References: <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
+ <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
+ <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
+ <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
+ <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
+ <2kc27uzrsvpevtvos2harqj3bgfkizi5dhhxkigswlylpnogr5@lk6fi2okv53i>
+ <20240612092943.GCZmlqh7O662JB-yGu@fat_crate.local>
+ <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+ <20240613145636.GGZmsIpHn16R04QlaN@fat_crate.local>
+ <8efff872-7843-2025-dce2-a5dcdbf31143@amd.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZnFKEtqfqJkYflwL@gmail.com>
+In-Reply-To: <8efff872-7843-2025-dce2-a5dcdbf31143@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240618_043611_234751_19AC1257 
-X-CRM114-Status: GOOD (  21.61  )
+X-CRM114-CacheID: sfid-20240618_052029_437293_FA062128 
+X-CRM114-Status: GOOD (  24.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,106 +106,41 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 18, 2024 at 01:49:22AM -0700, Breno Leitao wrote:
-> Hello,
+On Fri, Jun 14, 2024 at 09:06:30AM -0500, Tom Lendacky wrote:
+> On 6/13/24 09:56, Borislav Petkov wrote:
+> > On Thu, Jun 13, 2024 at 04:41:00PM +0300, Kirill A. Shutemov wrote:
+> > > It is easy enough to do. See the patch below.
+> > 
+> > Thanks, will have a look.
+> > 
+> > > But I am not sure if I can justify it properly. If someone doesn't really
+> > > need 5-level paging, disabling it at compile-time would save ~34K of
+> > > kernel code with the configuration.
+> > > 
+> > > Is it worth saving ~100 lines of code?
+> > 
+> > Well, it goes both ways: is it worth saving ~34K kernel text and for that make
+> > the code a lot less conditional, more readable, contain less ugly ifdeffery,
 > 
-> I am setting the following warning when loading a kdump kernel in
-> ACPI-based aarch64 box, running upstream and linux-next (stack below
-> against 5f703ce5c981).
-> 
->   virt_to_phys used for non-linear address: 00000000cf9a4e41 (0xffffffffff5e0000)
->   WARNING: CPU: 35 PID: 2279 at arch/arm64/mm/physaddr.c:15 __virt_to_phys (arch/arm64/mm/physaddr.c:17)
->   Modules linked in: sunrpc(E) ipmi_ssif(E) nvidia_cspmu(E) arm_cspmu_module(E) arm_smmuv3_pmu(E) coresight_trbe(E) mlx5_ib(E) ib_uverbs(E) ipmi_devintf(E) ipmi_msghandler(E) coresight_stm(E) coresight_tmc(E) coresight_funnel(E) stm_core(E) coresight_etm4x(E) coresight(E) cppc_cpufreq(E) sch_fq_codel(E) drm(E) backlight(E) drm_panel_orientation_quirks(E) crct10dif_ce(E) sm3_ce(E) sm3(E) sha3_ce(E) sha512_ce(E) sha512_arm64(E) xhci_pci(E) xhci_hcd(E) spi_tegra210_quad(E) nbd(E) acpi_power_meter(E) loop(E) efivarfs(E) autofs4(E)
->   Hardware name: Quanta Java Island EVT 29F0EMAZ046/Java Island, BIOS F0EJ3A01 06/03/2024
->   pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
->   pc : __virt_to_phys (arch/arm64/mm/physaddr.c:17)
->   lr : __virt_to_phys (arch/arm64/mm/physaddr.c:17)
->   sp : ffff8000be1cf9f0
->   x29: ffff8000be1cf9f0 x28: dfff800000000000 x27: ffff800083ca9630
->   x26: ffff800083ca9000 x25: 1ffff000107952c6 x24: ffff0000ff1b6800
->   x23: 0000000000000000 x22: 0000000000001687 x21: ffff0001ecd46800
->   x20: ffff000103524000 x19: ffffffffff5e0000 x18: ffffffffffffffff
->   x17: ffff8000802d07d4 x16: 2930303030653566 x15: 0000000000000001
->   x14: 1ffff00017c39ed8 x13: 0000000000000000 x12: 0000000000000000
->   x11: ffff700017c39ed9 x10: 0000000000000002 x9 : e7a4565c7b34a200
->   x8 : ffff800083c50000 x7 : 0000000000000001 x6 : 0000000000000001
->   x5 : ffff8000be1cf6a0 x4 : ffff800084a5ff40 x3 : ffff800081580960
->   x2 : 0000000000000001 x1 : ffff800083253340 x0 : 000000000000004f
->   Call trace:
->   __virt_to_phys (arch/arm64/mm/physaddr.c:17)
->   of_kexec_alloc_and_setup_fdt (drivers/of/kexec.c:305)
->   load_other_segments (arch/arm64/kernel/machine_kexec_file.c:162)
->   image_load (arch/arm64/kernel/kexec_image.c:103)
->   __arm64_sys_kexec_file_load (kernel/kexec_file.c:73 kernel/kexec_file.c:257 kernel/kexec_file.c:296 kernel/kexec_file.c:374 kernel/kexec_file.c:332 kernel/kexec_file.c:332)
->   invoke_syscall (arch/arm64/kernel/syscall.c:? arch/arm64/kernel/syscall.c:48)
->   el0_svc_common (./include/linux/thread_info.h:127 arch/arm64/kernel/syscall.c:141)
->   do_el0_svc (arch/arm64/kernel/syscall.c:153)
->   el0_svc (arch/arm64/kernel/entry-common.c:165 arch/arm64/kernel/entry-common.c:178 arch/arm64/kernel/entry-common.c:713)
->   el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:781)
->   el0t_64_sync (arch/arm64/kernel/entry.S:598)
->   irq event stamp: 49964
->   hardirqs last enabled at (49963): console_unlock (kernel/printk/printk.c:? kernel/printk/printk.c:2746 kernel/printk/printk.c:3065)
->   hardirqs last disabled at (49964): el1_dbg (arch/arm64/kernel/entry-common.c:371 arch/arm64/kernel/entry-common.c:471)
->   softirqs last enabled at (49942): handle_softirqs (./arch/arm64/include/asm/preempt.h:13 kernel/softirq.c:401 kernel/softirq.c:582)
->   softirqs last disabled at (49937): __do_softirq (kernel/softirq.c:589)
->   ---[ end trace 0000000000000000 ]---
-> 
-> 
-> This is happening on the following code:
-> 
->         /* Remove memory reservation for the current device tree. */
->         ret = fdt_find_and_del_mem_rsv(fdt, __pa(initial_boot_params),
->                                        fdt_totalsize(initial_boot_params));
-> 
-> 
-> Where `initial_boot_params` contains a copy of the fdt allocated at init
-> time, and as I've analyzed, it is a virtual address and can be
-> translated by the MMU.
+> Won't getting rid of the config option cause 5-level to be used by default
+> on all platforms that support it? The no5lvl command line option would have
+> to be used to get 4-level paging at that point.
 
-AFAICT, on arm64 'initial_boot_params' will be a pointer to the FDT in
-the fixmap that we mapped in setup_machine_fdt(). So that's not a linear
-address, and the warning is legitimate -- the use of __pa() here will
-give a bogus result and we could remove a memory reservation for an
-unrelated address.
+Yes, there won't be compile-time option to disable 5-level paging.
 
-It looks like this is a regression due to commit:
+Is it a problem?
 
-  ac10be5cdbfa8521 ("arm64: Use common of_kexec_alloc_and_setup_fdt()")
+We benchmarked it back when 5-level paging got introduced and were not able
+to see a measurable difference between 4- and 5-level paging on the same
+machine. There's some memory overhead on more page table, but it shouldn't
+be a show stopper.
 
-... as at that point arm64 had a fixmap'd fdt, and prior to that commit
-we didn't try to use __pa() on the fixmap pointer.
+I would prefer to get 5-level paging enabled if the machine supports it.
+"no5lvl" cmdline option can be useful for debug or if your workload is
+somehow special.
 
-It looks like no-one's tested kexec_file_load() with
-CONFIG_DEBUG_VIRTUAL since then.
-
-> Since __pa() is a macro to __virt_to_phys():
-> 
-> 	#define __pa(x)                 __virt_to_phys((unsigned long)(x))
-> 
-> I am curious why this address is special that makes __virt_to_phys()
-> unhappy.
-
-It's a fixmap address rather than a linear-map address. Confusingly
-'virt' generally means the linear map rather than any virtual address,
-and usually virt_to_*() only work on linear map addresses.
-
-I'm not sure how to fix this; the major reason we fixmap the FDT is so
-that it can be anywhere in memory (and e.g. may not be in the linear map
-at all), so we can't always generate a linear map VA.
-
-We could stash the PA at boot time, and pass this as an argument to
-of_kexec_alloc_and_setup_fdt().
-
-Rob, any thoughts? I couldn't see a neat way of doing this, but maybe we
-could initialise an initial_boot_params_phys at setup time, with a bit
-of churn to early_init_dt_verify() and friends?
-
-Mark.
-
-> 
-> Have you seen this before? Any tip on how to debug this further?
-> 
-> Thanks
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
