@@ -4,135 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2B60C27C79
-	for <kexec@archiver.kernel.org>; Thu, 20 Jun 2024 22:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D170C27C4F
+	for <kexec@archiver.kernel.org>; Mon, 24 Jun 2024 01:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Vnu5gX+QmTkLCh+8kq+i7aTa+nFrQqGlnwFMPjE2FzE=; b=jRz8S9Py0yxAbz
-	FYLBjhIiEm1OuhdLItMBxf2iykzl65Fnlm5sM3BUQ0IGKppArAM9WXUXAbbNtICusimQinnt2xtoe
-	KjNNskvEf3/egphwg6oDpnHL8CCoCZOhrn0YgtjlxeBZFy+4GWPIhu1POBkxClZeczXCM+7DD5wKq
-	YwcP/UIbg4X7lOUq2bRvorzeCqSmqYUlsHG6LbdWp6UQoDYb3E6ng8Bo4ziGrrTFTVyjXoINihu5a
-	lr6AWkKF7St6OkJQ7wh4aZozwRqTm9AK70O068uR81+5Xbc6c0n0CsvCUPVgtzw7H5Y8Yy8T/3wQo
-	4ziyLUEFSiNrRxt5LDuQ==;
+	List-Owner; bh=Lw1EVSXCRncZVJ0Mt8gKBvi3QVy9ljccF1+9sS8nErw=; b=hVMVVamjmHhLer
+	TvKH76GxTN0gMqBnzW9h7LEVgftPvQi9DcmBbTA2tcDPcv57lDc3SGudRVb1IXKJ3uV3JUBvAdMLo
+	BIpOHZBdVJdx53CseetbOCzH8T1K8frriWHMFwqyKuoS1JUx/TDt9+bwmVAsCyOtAbbMjC1qVTe7G
+	AWSrNtW28egxghb8No0M/2Wr4vU93itPq43UgcxvWcfB+fOln32QnMdNi559s44YpAt6o+H4bBSxs
+	roAQkSEW+PvH9x8CQF2P5lMvyqhJZY0JpbVMLtxm2fli9OwdHzkHWxupNuD/RpKVAw3gOqDoYkVwq
+	3/LKQORbPEIZ3vvHkYUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sKQRK-00000006yMj-1wZD;
-	Thu, 20 Jun 2024 22:39:34 +0000
-Received: from mail-mw2nam12on20605.outbound.protection.outlook.com ([2a01:111:f403:200a::605] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	id 1sLYsM-0000000FE34-23dB;
+	Mon, 24 Jun 2024 01:52:10 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sKQRH-00000006yLw-2i4z
+	id 1sLYsH-0000000FE1S-2qsP
 	for kexec@lists.infradead.org;
-	Thu, 20 Jun 2024 22:39:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BumU5Hp37pijfKyFOJCvW0deAYcD91K/eS1rNdfzM6MlBXDYbpWfI+00ZfZC65GUKU78ROYLGLWjoTrVjxGRDMC5ibSfmPusnmsXOOftpUxYr9g/id8lwK2ypl6eToDC5DHj1UIrdN26Doyi7K4lF7zlamScHCg5GU4U0QzFJD9xgveRbC4zBIN1uxGjhLkd6AUyCjUZNB0/r+wZIym1mpxeK9MJocgSbZfkE0HMNg+pXZZrUKw507WLu24yotWe8t3+FdCwKMeU8cYl5mlqQgbg0/13kugeFlNADd4apMksvQE1mifORjJkiQ+pRQaPuF9d215arbfh/R2/b3BgeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j+OqCByTIXSGPjSRs+PSmPW6wyr2CG2fnV0DiwQ0tww=;
- b=h0gtricxVT4rEmqEe4+63CFCDvb+O0GNF5NSds5lUVIQnzyMMcLAwdx9zalFX2bR/qrpkTslM15gRw489t86FM8p1zzTTf4fOmtsB7oWvAGsMg0AOhfy4OgoI+ew4dGbhVwk6wGaA9q6yS83WgUDl31p4NPhkmN0pMXYzkJQWAzN76nl5l/9pnR7X3JtwqNeOUT6S+954EKW+kHx5phDUAedW9nF4VzSWw6qg+3rTVWHcJGRy6bJZIXfUHvaeZvxxyE6VOOzC8X3Lsn8l0V4v/hPufzMTz+lx/AtDe9BeFI/66xF13qsDqd9nk1CludF0Ff3IdzKkwVJAmy35/4mpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+OqCByTIXSGPjSRs+PSmPW6wyr2CG2fnV0DiwQ0tww=;
- b=z3tI+EqHkHUkBF9r5RUw6zhZgXcYQGbh29B9nF8WbaC1alIcH91n9MGnyEGN3plCSADOOp5YGbYLLekf9XU7EqmRvxZ+Qc6vTS+m9IUxUkIxKaYNL1717Aoax5s/hQNtl8LoDZTEs0l2a6HaoHAiVMNyjcDkXeLlVqLhcRBaG6Y=
-Received: from CH2PR14CA0043.namprd14.prod.outlook.com (2603:10b6:610:56::23)
- by LV8PR12MB9358.namprd12.prod.outlook.com (2603:10b6:408:201::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 20 Jun
- 2024 22:23:54 +0000
-Received: from CH1PEPF0000AD74.namprd04.prod.outlook.com
- (2603:10b6:610:56:cafe::8d) by CH2PR14CA0043.outlook.office365.com
- (2603:10b6:610:56::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
- Transport; Thu, 20 Jun 2024 22:23:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD74.mail.protection.outlook.com (10.167.244.52) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 20 Jun 2024 22:23:54 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Jun
- 2024 17:23:53 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>
-CC: <rafael@kernel.org>, <hpa@zytor.com>, <peterz@infradead.org>,
-	<adrian.hunter@intel.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<jun.nakajima@intel.com>, <rick.p.edgecombe@intel.com>,
-	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <bhe@redhat.com>, <kirill.shutemov@linux.intel.com>,
-	<bdas@redhat.com>, <vkuznets@redhat.com>, <dionnaglaze@google.com>,
-	<anisinha@redhat.com>, <jroedel@suse.de>, <ardb@kernel.org>,
-	<dyoung@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 2/3] x86/boot: Skip video memory access in the decompressor for SEV-ES/SNP
-Date: Thu, 20 Jun 2024 22:23:44 +0000
-Message-ID: <42f56d2405522cc207b59235506c0b5bec67123f.1718920799.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1718920799.git.ashish.kalra@amd.com>
-References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com> <cover.1718920799.git.ashish.kalra@amd.com>
+	Mon, 24 Jun 2024 01:52:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719193923;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7aOPK0i+6jvB6VDDdYW6TLVTzmplrtlrPXL8VqZpj7E=;
+	b=LcuVALhwgQIZrHlFgSHGQHmIm06zYMuMxDuomcXUB1HOxdbq5vSi/69JDIHn1Qtj9QCZhh
+	0+XGXn5wjSheMlaRubbxr+akdqHAmb893x7gdQ9AsaVuyJefu1Z1PhkD/jeWFFuJmZML7O
+	oD31xBcsci5zk1gcpIB9sqlWok/nFCI=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-609-cH2iJ0iHMXCgdrT3XVrlbA-1; Sun, 23 Jun 2024 21:52:01 -0400
+X-MC-Unique: cH2iJ0iHMXCgdrT3XVrlbA-1
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3761d89298fso3089955ab.1
+        for <kexec@lists.infradead.org>; Sun, 23 Jun 2024 18:52:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719193921; x=1719798721;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7aOPK0i+6jvB6VDDdYW6TLVTzmplrtlrPXL8VqZpj7E=;
+        b=CMInqXRpcOhPIvRUs0ZcBi4DUhnV38TNpnEttv8zLCfmM8dNC75tuCE4oxzQ0VAE68
+         GcSesOZdMWHLHvTTDkVru7iYkuh+xc8nZNIrxubHZhAbXKOlXd9G+5VF9Gy9DnQw26+w
+         9eV4iemL/NZWe1CDKled+bJRN5LfKKIaCdBcC+Jf6ZhYTOHzbn+JmCh7OzFMeeLYNEhW
+         P9b2/WcfDz6ueODx0YDDj/gXZHIkTkA6FEK/mt27ZRKT0p1Ywc6pRpOyjX1sAOVp/ijt
+         +Hv/jPys4yEcYd5iLdS8SugWWLH+Eblq1j/9VR18nZoqmV/lMgBtBrJJScQh8JRWo61J
+         eJgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVk3xxYNyG63h08zL1alFQGEY3bVM5neSLz5eGGT3ciwik/gQ+Lz2NeIU3XbWFckAPaFM3o6QNYGgUmdV/3RzsLGomuoZxmJlT9
+X-Gm-Message-State: AOJu0YzfRgwIXzYfHgEMkguz9bPeAiCQRDzCtfkxEDBPxpUWuvENSWio
+	voupE8PYtvTMPsOvUgXdsUIgd0ChB0LeyB9E5l4OaPdLpuAibpZNJwQbM15QGX6kStJRiaBdW2r
+	q9GK5myikpYUxhO5xhFd4EoEXqkX7yAzladpxbvrGDyOz6em1Xj4OBzHeBArhd4zFfeBd0jHrwe
+	3qZKC3A2peXpGLFegbioCDHHYa+5nBNcbW
+X-Received: by 2002:a05:6e02:1583:b0:376:408f:585b with SMTP id e9e14a558f8ab-376408f5927mr27006535ab.1.1719193920968;
+        Sun, 23 Jun 2024 18:52:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyMeoB/u6xnkbi17lmDObkp94AykwrFoPiSJZcOVji66fsLtxN8RnHaCqmKD4jPsYX9ByWEX7xlASA7kKA5pc=
+X-Received: by 2002:a05:6e02:1583:b0:376:408f:585b with SMTP id
+ e9e14a558f8ab-376408f5927mr27006475ab.1.1719193920631; Sun, 23 Jun 2024
+ 18:52:00 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD74:EE_|LV8PR12MB9358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c788689-da41-4d70-a1b7-08dc9177ab7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|7416011|36860700010|82310400023|1800799021;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ew9tk9SerMi38D/uXUA7C2fbXV2TH5TaGjtp3TPNn2RjkrFvgToPtuX9NT3L?=
- =?us-ascii?Q?HB3HTrXD64PXZVlOQmR+R2415PMbpaDiFqh/YNhRAHOhgIhnaydj3CZCB4G7?=
- =?us-ascii?Q?OGCGiRRq5Vl0gOgwChABOKwh3FZD+G1JvaznOwJtP9JDUei7GbIjf2H5/ZTQ?=
- =?us-ascii?Q?FYZBWuEfGLnSTiv4Qxt9eZHTi4HhU/WKHhx0czk0QH0DRSzfcR/OeK+8S/Ue?=
- =?us-ascii?Q?lQP+Ay/eQ8ySaP/mWcUVEcvHbUjy8t1gDjJF2Ha3oaF3KqBKVbERC/4MC1jB?=
- =?us-ascii?Q?cktRo1M/0cI48hXs1vDNjGiXeNbHHIU+Oxw9qQmkL+SwEr7FC2XnqcAMiRev?=
- =?us-ascii?Q?i23mYz2bCd3m+ixScRkwkaM2SGTF9RzMO5yQn6vwFJzuRQcZp3+2jSbJo5uH?=
- =?us-ascii?Q?0VZ8woMl3rkE6vrBKSn6wH568aFbFHLDchotQMvtCYQUKSWIvEpHYXWH5Wpb?=
- =?us-ascii?Q?6ABDwbPm98e8ud5B6RXtl5NGUA2FkckAVrvHKC5Mox8a8aRykncdBB2SNP68?=
- =?us-ascii?Q?5tA7eG/ClBRczhgJA4Ibyei9WtKIPnW5Jk1w1fhFLV61Og/tj7JpHyz15Srv?=
- =?us-ascii?Q?fmOux2Wig1D7BGxfxSzrFu5aXSA9d27ZcFtSUa5MON4n/uxwBhOZPnLcIPJz?=
- =?us-ascii?Q?6t6ffXT362kUHQ15SVC62yXr9NPRAokKOPV2xzTAU+1t8vYRNRaLpcSEsFC/?=
- =?us-ascii?Q?N/c0gRZbzqKb7fh7IL186YWW4Uf2fHOW55QxaVhSrmP4A9g973+h64QUWSVk?=
- =?us-ascii?Q?YdF+y3srLei8Dkh6mifq4hnf7va8PkFFg07MmdP2AfJvzYuIOk+G4m8GBsO8?=
- =?us-ascii?Q?b32Y8Msv7JSCuJ7GfHG2BavhypvqPNpZN8glCZ0uq79KnHp06Em0GbkzlTWX?=
- =?us-ascii?Q?u/+25pkTd3RzwnK/L+oKK6zwULB+bPdY3RheIkGgtXTnFwOk4YazNBqKX4Qk?=
- =?us-ascii?Q?p/xfUOgmL9rEE0Foy6W1nLmzhEgJ4dApBviATU/TKRzGNBtlFct+n2tjW96k?=
- =?us-ascii?Q?MdoQncgYZA79ZyN606J2WTQ4bsg3lu+4tAmTyLSY2PX4mlnYzOU2jyFBBBHB?=
- =?us-ascii?Q?bh0gS5Na4VhPLJ/4hqviWRaIiR0EZO1UdI+bU7JxzILUGD5BT8egXQTVymGp?=
- =?us-ascii?Q?IY3kg2Aj6WcvgYmCbrMg4YGzgfC6AcJQhESH+dZxDry7BSUmhLCVn8WwjRPM?=
- =?us-ascii?Q?zC1+59EyfnzvxgxPcWyKnaUsoumyzT2oKPl/R4mKKuoaZRPRV8zOlZAxmm6k?=
- =?us-ascii?Q?IZ1az0Z+ostY60IAT0VpoOEr8gYfQ/oPVZWTxniMrdBVL7EGdWiAhPn3aHQf?=
- =?us-ascii?Q?IOcOIulV36Dedymklnagn9sxNfz+SvBYHemgONN8qx1vd3nNOJu54R852woS?=
- =?us-ascii?Q?Wr/m9ixqdr7jXqeymdtOqAxLgfIwRfUneOXY7xo8zICtpLRr/Q=3D=3D?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(7416011)(36860700010)(82310400023)(1800799021);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 22:23:54.2765
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c788689-da41-4d70-a1b7-08dc9177ab7f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000AD74.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9358
+References: <CAKh1g55PTX=tXoiQB8sKiZ1T+bBnCE4W67fFi5G8zEfh-nKq2g@mail.gmail.com>
+ <56a5a42d-a2cd-4988-853f-49df60813ecb@nec.com>
+In-Reply-To: <56a5a42d-a2cd-4988-853f-49df60813ecb@nec.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Mon, 24 Jun 2024 09:52:16 +0800
+Message-ID: <CALu+AoSt=hZjm-ENnaQw5XDg-J6k7KTe_cUpLsSbtQW_t7sowA@mail.gmail.com>
+Subject: Re: enhance makedumpfile to dump process list from vmcore
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: Prasad Koya <prasad@arista.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, Lianbo Jiang <lijiang@redhat.com>, 
+	Tao Liu <ltao@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240620_153931_695126_86630AE1 
-X-CRM114-Status: GOOD (  12.92  )
+X-CRM114-CacheID: sfid-20240623_185205_814744_968C53EE 
+X-CRM114-Status: GOOD (  26.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -144,77 +95,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
-
-Accessing guest video memory/RAM in the decompressor causes guest
-termination as the boot stage2 #VC handler for SEV-ES/SNP systems does
-not support MMIO handling.
-
-This issue is observed during a SEV-ES/SNP guest kexec as kexec -c adds
-screen_info to the boot parameters passed to the second kernel, which
-causes console output to be dumped to both video and serial.
-
-As the decompressor output gets cleared really fast, it is preferable to
-get the console output only on serial, hence, skip accessing the video
-RAM during decompressor stage to prevent guest termination.
-
-Serial console output during decompressor stage works as boot stage2 #VC
-handler already supports handling port I/O.
-
-  [ bp: Massage. ]
-
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Suggested-by: Thomas Lendacy <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- arch/x86/boot/compressed/misc.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 944454306ef4..826b4d5cb1f0 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -385,6 +385,19 @@ static void parse_mem_encrypt(struct setup_header *hdr)
- 		hdr->xloadflags |= XLF_MEM_ENCRYPTION;
- }
- 
-+static void early_sev_detect(void)
-+{
-+	/*
-+	 * Accessing video memory causes guest termination because
-+	 * the boot stage2 #VC handler of SEV-ES/SNP guests does not
-+	 * support MMIO handling and kexec -c adds screen_info to the
-+	 * boot parameters passed to the kexec kernel, which causes
-+	 * console output to be dumped to both video and serial.
-+	 */
-+	if (sev_status & MSR_AMD64_SEV_ES_ENABLED)
-+		lines = cols = 0;
-+}
-+
- /*
-  * The compressed kernel image (ZO), has been moved so that its position
-  * is against the end of the buffer used to hold the uncompressed kernel
-@@ -440,6 +453,8 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
- 	 */
- 	early_tdx_detect();
- 
-+	early_sev_detect();
-+
- 	console_init();
- 
- 	/*
--- 
-2.34.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgS2F6dSwKCk9uIFdlZCwgMTkgSnVuIDIwMjQgYXQgMTM6NDUsIEhBR0lPIEtBWlVISVRPKOiQ
+qeWwvuOAgOS4gOS7gSkgPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6Cj4KPiBPbiAyMDI0LzA2
+LzA2IDM6MTAsIFByYXNhZCBLb3lhIHdyb3RlOgo+ID4gSGkKPiA+Cj4gPiBXZSB1c2UgbWFrZWR1
+bXBmaWxlIHRvIHJlYWQgdGhlIGRtZXNnIGJ1ZmZlciBmcm9tIHRoZSB2bWNvcmUuIFdlIGFyZQo+
+ID4gd29ya2luZyBvbiBhZGRpbmcgYSBmZWF0dXJlIHRvIG1ha2VkdW1wZmlsZSB0byBleHRyYWN0
+IHRoZSAicHJvY2Vzcwo+ID4gbGlzdCIgZnJvbSAvcHJvYy92bWNvcmUuIE91ciBtYWluIHVzZSBj
+YXNlIGlzIHRvIHNhdmUgdGhlIHByb2Nlc3Nlcwo+ID4gdGhhdCB3ZXJlIHJ1bm5pbmcgYXQgdGhl
+IHRpbWUgb2Yga2VybmVsIGNyYXNoIHRvIGEgZmlsZSBvbiB0aGUKPiA+IHBlcm1hbmVudCBzdG9y
+YWdlIGZyb20gdGhlIGtkdW1wIGtlcm5lbC4gV2UgaW50ZW5kIHRvIHJlYWQgYSBoYW5kZnVsCj4g
+PiBvZiB1c2VmdWwgZGF0YSBmb3IgZWFjaCBydW5uaW5nIHRhc2s6IHBpZCwgcGFyZW50IHBpZCwg
+cmVhbCBwYXJlbnQKPiA+IHBpZCwgcHJpb3JpdHksIG5pY2UgdmFsdWUsIFJTUywgVk0gc2l6ZSwg
+Y29tbWFuZCwgdXRpbWUsIHN0aW1lLCBPT00KPiA+IHNjb3JlLgo+ID4KPiA+IFByb2Nlc3MgbGlz
+dCBmcm9tIHZtY29yZSBjYW4gcHJvYmFibHkgYmUgcmVhZCB1c2luZyBjcmFzaCB1dGlsaXR5LCBi
+dXQKPiA+IGluIG91ciBlbWJlZGRlZCBzeXN0ZW0gdXNpbmcgbWFrZWR1bXBmaWxlIHRvIGRvIHRo
+YXQgam9iIG1ha2VzIHNlbnNlCj4gPiBmb3IgdXMuCj4gPgo+ID4gSWYgc3VjaCBhbiBvcHRpb24g
+aXMgdXNlZnVsIGZvciB0aGUgZ2VuZXJhbCB1c2VycyBvZiBtYWtlZHVtcGZpbGUsCj4gPiB3ZSdk
+IGxpa2UgdG8gZ2V0IG1vcmUgaW5wdXRzIGFuZCBjb250cmlidXRlIHRvIHRoaXMgZmVhdHVyZS4K
+Pgo+IEhpIFByYXNhZCwKPgo+IHRoYW5rIHlvdSBmb3Igc2hhcmluZyB0aGUgaWRlYS4gIEJ1dCBz
+b3JyeSwgY3VycmVudGx5IHdlIGFyZSBub3QKPiBpbnRlcmVzdGVkIGluIGltcGxlbWVudGluZyBz
+dWNoIGEgYmlnIGZ1bmN0aW9uIGluIG1ha2VkdW1wZmlsZS4KPgo+IFRoZSBkbWVzZyBidWZmZXIg
+aXMgdGhlIG1vc3QgaW1wb3J0YW50IGluZm9ybWF0aW9uIHRvIGJlIGFibGUgdG8KPiBkZXRlcm1p
+bmUgdGhlIGNhdXNlIG9mIGEgY3Jhc2ggb25seSB3aXRoIGl0LCBzbyB0aGUgLS1kdW1wLWRtZXNn
+IG9wdGlvbgo+IHdhcyBpbXBsZW1lbnRlZCBpbiBtYWtlZHVtcGZpbGUgZmlyc3Qgb25jZSB1cG9u
+IGEgdGltZS4gIEJ1dCBub3cgd2UgaGF2ZQo+IGhhbmRpZXIgdm1jb3JlLWRtZXNnIGNvbW1hbmQg
+aW4ga2V4ZWMtdG9vbHMsIHNvIHdlIGRvbid0IGludGVuZCB0byBhZGQKPiBvdGhlciBmdW5jdGlv
+bnMgdG8gbWFrZWR1bXBmaWxlIHRoYW4gbWFraW5nIGEgZHVtcGZpbGUuCj4KPiBJJ20gbm90IHN1
+cmUgd2hldGhlciB0aGVzZSBhcmUgZG9hYmxlLCBidXQgSSB3b3VsZCBzdWdnZXN0IGEgZmV3IGlk
+ZWFzCj4gaW5zdGVhZDoKPiAtIG1ha2UgZS5nLiB2bWNvcmUtcHJvY2Vzcy1saXN0IGNvbW1hbmQg
+bGlrZSB2bWNvcmUtZG1lc2cuCgpOb3Qgc3VyZSBpZiB0aGlzIGlzIHdvcnRoIGVpdGhlci4gICAg
+SSBndWVzcyBpdCBjYW4gYmUgZG9uZSB3aXRoIHNvbWUKY3Jhc2ggdG9vbCBzY3JpcHRzIG9yIGEg
+Y3Jhc2ggcGx1Z2luPwoKPiAtIHVzZSBwYW5pYyBub3RpZmllciB0byBkdW1wIHByb2Nlc3MgbGlz
+dCB0byB0aGUgZG1lc2cgYnVmZmVyIGJlZm9yZQo+IGtkdW1wLCBhbmQgdXNlIHZtY29yZS1kbWVz
+ZyB0byBnZXQgaXQuCgpJdCBpcyBub3QgcmVjb21tZW5kZWQgdG8gYWRkIHRoZXNlIGJlZm9yZSBr
+ZHVtcCBpZiBwZW9wbGUgc3RpbGwgd2FudCBhCnJlbGlhYmxlIGtkdW1wLgoKPgo+IFRoYW5rcywK
+PiBLYXp1Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+PiBrZXhlYyBtYWlsaW5nIGxpc3QKCgpUaGFua3MKRGF2ZQo+IGtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
