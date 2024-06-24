@@ -4,135 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE964C2BD09
-	for <kexec@archiver.kernel.org>; Mon, 24 Jun 2024 18:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BBBFBC2BD09
+	for <kexec@archiver.kernel.org>; Mon, 24 Jun 2024 18:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fvAEoRh3E2C8k4ygcGdYgKSg8CiF2TbsVsnoWtJTokE=; b=YxRi8bQD3OnOKH
-	oboL5DxyKHE1p4fPnr/Z6c0JXW7OdKBAHFn6rRf2uCQ9/vDIYNbZcjq9UoRLWClUPWnF09L3UQzHl
-	kj8MQPQXckDc0cBtqNMbwCLWbJEk4XzSSX5f05wz7eTEBqOIxEaxoE1NOt+qUCRZ/ViNsT51a+BBM
-	ni3LIyEusd/mN5Yq23P9LVi2L5F5v+YnCkwpJ4xTtpZlveF80B95EHTur61XR9vP4UbD8k6xpDZw7
-	8UfP2LP4iYZf5FKT+8CXEXUQuuuAzoHMKjTH5H+i5JjMBN/rO3yc+nOpWLyAx4MysJs12kquHHlfK
-	L8xbar6gtsjsB3Eeylqg==;
+	List-Owner; bh=P24peKave1mtny2rN9Irhu00OYEfqfbh+lVkBqZdvuI=; b=MEDli2haZhiO5w
+	m5ZjGpmcgcsGcixUCSRpkMnkaCzMvF02dBmPE9HZilQjoaf4jUt1coGwc3emQQe6Oo+PsFffaTpvd
+	SV0jHPCQHH+F6RjagPMXLLcdPEwhIwmdqV8PdmPrJsxL/C9V9QdjO14V02iCowTBHVjfdPLJHUFGi
+	DtNGQPDS2d4U7kXaYsuaM3ln4GjPuzLovaBbPUU9oZMXVOzBnJt0c8llEQPmKO9izf4htAAyVFf0/
+	ESZjdsetWh1kYGZWJ7wDsPZ91vEyl1Jo0XVYoghFpNaAbPwiQ2b32nRqUxF+EcCCcjST1chzpecaR
+	umCEdo7y5JK6W/+MpuGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sLoKZ-00000000GvB-0nqC;
-	Mon, 24 Jun 2024 18:22:19 +0000
-Received: from mail-dm6nam12on20600.outbound.protection.outlook.com ([2a01:111:f403:2417::600] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1sLoPG-00000000Hjp-0O7W;
+	Mon, 24 Jun 2024 18:27:10 +0000
+Received: from mail.alien8.de ([65.109.113.108])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sLoKW-00000000Gso-05bO
+	id 1sLoPB-00000000Heh-0R7S
 	for kexec@lists.infradead.org;
-	Mon, 24 Jun 2024 18:22:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cg/MI1oaA2+Zco5CPbrXUmkResIax/9WORwAuDkjnBuXSIhyOwrHsHaqMhKqLzid2/MnQd2twTrfhAW1YozSgR5y1L/YfBl/z6vrUsSxyv1ChGfOhrpw9JrAlikfD7HsSQzsobdKerBgSQsLpEqm8C5I5du59F1Qc32jtZ5BvRNao2HBiOpEpYxig5tfhtfOfum7W27a2a0wy4chy3h74ozUcBpklr/kzBgOua6xYEP7ukkadwC1K/9QvNZ6fuucmT345kC2Qb+BNewnEc9CTPZqyHvvf9dfBP6LSwUnKU9DMcqfpPhmvGzFliTq/5Z6jLqx8ZMCgOBjOAGS6h2hEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G+ybRi0afqpQoZ2IU3HxHf1AlVwjluzelxF7du9a8bI=;
- b=USMEZydwU/vytOC0rDlgM1Qt1VjnYa+CFyHP5Z4vtOpYLzz+0r7E8XjlSYZ8xO6PU/8nMo2/x9cGOJbilFnVVTfjjgzW6Azivo4r43odF/BJlIFgCOKbSUeJ1sgFZQmVl55/nb2296Bty8pNv1gRkgOLPXz3ihjl1nY5mm4kOfieeYGLksT5Rd9dULla9uZFvw+2WKprATUKDcu0m3W/VbUJ8ndM/4etMLEyzTZuYU+MEs1YGuXtqN9NUCrN3kjxsRZ2M7zj3wQ7NHxTTvlMlm/unldFR0BFf2Wkj9JEJsu6XhtQh6QdjD1f1+weAK3e7pWbLQzJHN0LyAbtrEpijw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G+ybRi0afqpQoZ2IU3HxHf1AlVwjluzelxF7du9a8bI=;
- b=s/Dq984TXdCZTZbV21KlzGciXKMUPAtQhWI14Qqnd97sJ/v5/EJ1emKqL67gJhSsAAgWhbFIP+hKi2XQ4Ra4LqN1IGi4UxqTAPzR0O3i1afhQ6E/IWFRrwzUrLmOSWq1ocYhJPPfjkkNyPZu8Gl2ddktmVEAaw83SDSiAiZBhnA=
-Received: from SN7PR04CA0222.namprd04.prod.outlook.com (2603:10b6:806:127::17)
- by BY5PR12MB4308.namprd12.prod.outlook.com (2603:10b6:a03:20a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
- 2024 18:22:11 +0000
-Received: from SN1PEPF000397B4.namprd05.prod.outlook.com
- (2603:10b6:806:127:cafe::b3) by SN7PR04CA0222.outlook.office365.com
- (2603:10b6:806:127::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
- Transport; Mon, 24 Jun 2024 18:22:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000397B4.mail.protection.outlook.com (10.167.248.58) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 18:22:10 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Jun
- 2024 13:22:09 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>
-CC: <rafael@kernel.org>, <hpa@zytor.com>, <peterz@infradead.org>,
-	<adrian.hunter@intel.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<jun.nakajima@intel.com>, <rick.p.edgecombe@intel.com>,
-	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <bhe@redhat.com>, <kirill.shutemov@linux.intel.com>,
-	<bdas@redhat.com>, <vkuznets@redhat.com>, <dionnaglaze@google.com>,
-	<anisinha@redhat.com>, <jroedel@suse.de>, <ardb@kernel.org>,
-	<dyoung@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 2/2] Subject: [PATCH v9 3/3] x86/snp: Convert shared memory back to private on  kexec
-Date: Mon, 24 Jun 2024 18:22:00 +0000
-Message-ID: <e7edcf74748e05c51aad6320eae3150e3c024c3c.1719251730.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719251730.git.ashish.kalra@amd.com>
-References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com> <cover.1719251730.git.ashish.kalra@amd.com>
+	Mon, 24 Jun 2024 18:27:07 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AEEB040E01D6;
+	Mon, 24 Jun 2024 18:26:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YhcAhENbR_WH; Mon, 24 Jun 2024 18:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719253609; bh=fXBniNOuUrC5AGYiVs4PLfsvA4GQHtYMsgsNMOxALm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h2+L2ArAjnVtpNtjTXIsYwgHNdbGwaWF8PXEmAs1qB0SlNZF0QUk1HYOaHbSlJIui
+	 viSCdg7TaroT2VnwNwVZ4C+9YD0rg/L2sCP5Y9s81qU0Y78fm8MG2fjMOr4ODt3QFW
+	 kOFiXZphJZA+3pzx3jeNs5UltFEsGSNwV5r9NMQlFo1E/AVoeTuMpvHjtypHXWMhr2
+	 OCJazXAsbqYzbCoHu/78daIwWXHa0qEHxF6Whsq6YabVaPLJicAlfjiexwQfdmA6wI
+	 5SyvrtFobGhxIrUDEPz8qxgM7EsRCOgeNJw62ZPNe8YIP6keb0KaZWVRezMn2XamEn
+	 SKDaurjw/Gdb80OxsUQaEnMfMOwM1ozJGUIXDW8g8WgUEUYf97KoTGU0s0+PcUgNYY
+	 a1Flsfh+/bvdCvQf7Q8uqxm1A8Nb5LBvRkavxSKHIahIZk5ZS67wMSsmniIGYp0k5E
+	 apvDcRfV6UfLT/VxDOGTZu1Wy0KBBm5gCgAuw0MRyCROcQHxdbxcVU0btWvm2t+Pf0
+	 fzBsyzKqtdzAJfO1HaKeJTJmJfVlaOVhhoEow2OdPcIrTG+DA9c7v5GRWXL1fR7XfM
+	 kKw786IMPpxU1KokfzZJsgd+sY9lzwol9eEh7OrAsMPYIQM+QDQexaF5bTARc0a4A1
+	 R3Uz8o0Ezn7Ahaw68OiYxY5A=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3D62A40E0177;
+	Mon, 24 Jun 2024 18:26:21 +0000 (UTC)
+Date: Mon, 24 Jun 2024 20:26:15 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, dyoung@redhat.com,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 3/3] x86/snp: Convert shared memory back to private on
+ kexec
+Message-ID: <20240624182615.GLZnm6R4hLvnlF16aP@fat_crate.local>
+References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
+ <cover.1718920799.git.ashish.kalra@amd.com>
+ <f6c0ddfd15579674bc234d6e1b84e92768531050.1718920799.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B4:EE_|BY5PR12MB4308:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9cdbb549-561b-4a73-6d2a-08dc947a9005
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|7416011|1800799021|82310400023|36860700010;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?YOn6zHRSH/Nn8R0NuH8uWhRQheuiqjdsADjX1ivsiAqFimCfp9i+K58OgS08?=
- =?us-ascii?Q?uzDxqmEK2FM9NtjlIcvgj3uyea8vXirWgirKo83r7bxxbS1Pp44Mc6dMMAmn?=
- =?us-ascii?Q?oik6CGcurPCVZMhN12lnDPiJdm0DPVLzKkG7srjF+QXqvQa3yaRVeuFK7Brc?=
- =?us-ascii?Q?k7XnE7fI1yHwRc11mmcAFhGQhGapn8FAke4R3TQQ0q9MfPyvkWakWexxeKSx?=
- =?us-ascii?Q?m0/SrNPiUGaOfr2TH1KgOVuC5fCpo35Al5PYQawpkL0q9aKIilQAh1XeeI6c?=
- =?us-ascii?Q?z3Tb3YpgFpUEEE7dhTz6hdwLVHan87UgyUcTtdWxj9VvhIPlphTuZp1Zv6Z0?=
- =?us-ascii?Q?03Xt2lvnDmpitjzrrO/CH5fnyj2rZq010GuVjZzgtqSB3eXIkw0Cy1YcxDzy?=
- =?us-ascii?Q?DAdNXELsdFq90qXvDXJYpb/FpU0oVnVYWtZvMQNWnzj3M311a1DW91rhIBOH?=
- =?us-ascii?Q?UlKJYyyW248NkvR0AZLpgQ2QJWCt/pa2LklKeU24z3jZFIKIy/kFKZP3CHwq?=
- =?us-ascii?Q?ti0n8eZbjCJUjdjUT/9ZCV5uNzKP2tm4q1i2+bm64n/SxN9V+kDUUFxZFqCD?=
- =?us-ascii?Q?EKFDk7ISzglKyhqT1WIKw6MjcPMDHrnjRjRvwmRuN2sxYrxzO43VhhlJaxEW?=
- =?us-ascii?Q?UWY3At1NmpGABD9QJorTglCfdpAjeYvys5fUMUSJF5ilwdlDR6srkJQ8Fk+/?=
- =?us-ascii?Q?h69tDabJLGkH/drCZcqQfNBzjiyeoS7l7jmH8kiEOWKvVhJ0AerixqHfRDMe?=
- =?us-ascii?Q?oRYTEPEIrj62JLLzI3/BlsvOPdInTVtNGt+2PLOhiqiVT4DOChAfODCaAl2s?=
- =?us-ascii?Q?Nyu5aKMzpeQ4ijL0evGc49oCzlXxW6K+B83bgF4y6Oqs9dqmn6zB8Kps0Ss3?=
- =?us-ascii?Q?toMw4OjBBZ4aXV1WGgviKjsrrgOw3BvI83JZl6IwIY3l/LBU4tQrvCUNn+Ly?=
- =?us-ascii?Q?o23KSi2bOcnHwNupz5cXESTw7NXbI8VEwkWFh4XYDnE9AAoJ7/P3jyCh1hKs?=
- =?us-ascii?Q?qfbwWFe7FSW5ojIVbglbCC+H6vmybJ3x5ygFKf1fcA54hsv2qczfTk3Jucni?=
- =?us-ascii?Q?QVVVkxBjVdgMjR94j1rsMavyjVUFjxTeWYarg0Z/mc9aGXeYpgyMf/6zqsHs?=
- =?us-ascii?Q?TducJoeE06Kj7QtLtpZ99xb86nxEXBnpJHVq9H/AzwbVlhRZ0Y4Z/2/9iPft?=
- =?us-ascii?Q?0Nlo7GgWHo29bl/YBGga8mEoDFFrLkJP71qXVPTFkxov6k1Dhg99FCAbHxK/?=
- =?us-ascii?Q?mUhCT+oW189YhGams5lSOrX1BrO/uiGdbTrMA5Ds8m/0PL36EE+jeG+Jashb?=
- =?us-ascii?Q?aZxqJrO33FrqBiNGW46THFJxtfS7EfELEzwiU+3npkRKIg6YfbVELnyDFoPe?=
- =?us-ascii?Q?BBj3/b3CSpazst73tXk9jv4/Rq9vR6Rw2cTRi98xMY1u5Z7lLw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(7416011)(1800799021)(82310400023)(36860700010);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 18:22:10.2338
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9cdbb549-561b-4a73-6d2a-08dc947a9005
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF000397B4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4308
+Content-Disposition: inline
+In-Reply-To: <f6c0ddfd15579674bc234d6e1b84e92768531050.1718920799.git.ashish.kalra@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240624_112216_148039_AD91AD61 
-X-CRM114-Status: GOOD (  25.19  )
+X-CRM114-CacheID: sfid-20240624_112705_384178_49B27EB4 
+X-CRM114-Status: GOOD (  26.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -149,268 +98,186 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Thu, Jun 20, 2024 at 10:23:59PM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> SNP guests allocate shared buffers to perform I/O. It is done by
+> allocating pages normally from the buddy allocator and converting them
+> to shared with set_memory_decrypted().
+> 
+> The second kernel has no idea what memory is converted this way. It only
 
-SNP guests allocate shared buffers to perform I/O. It is done by
-allocating pages normally from the buddy allocator and converting them
-to shared with set_memory_decrypted().
+The secon, kexec-ed, kernel...
 
-The second kernel has no idea what memory is converted this way. It only
-sees E820_TYPE_RAM.
+> sees E820_TYPE_RAM.
 
-Accessing shared memory via private mapping will cause unrecoverable RMP
-page-faults.
+...
 
-On kexec walk direct mapping and convert all shared memory back to
-private. It makes all RAM private again and second kernel may use it
-normally. Additionally for SNP guests convert all bss decrypted section
-pages back to private.
+> @@ -92,6 +94,9 @@ static struct ghcb *boot_ghcb __section(".data");
+>  /* Bitmap of SEV features supported by the hypervisor */
+>  static u64 sev_hv_features __ro_after_init;
+>  
+> +/* Last address to be switched to private during kexec */
+> +static unsigned long kexec_last_addr_to_make_private;
 
-The conversion occurs in two steps: stopping new conversions and
-unsharing all memory. In the case of normal kexec, the stopping of
-conversions takes place while scheduling is still functioning. This
-allows for waiting until any ongoing conversions are finished. The
-second step is carried out when all CPUs except one are inactive and
-interrupts are disabled. This prevents any conflicts with code that may
-access shared memory.
+This is particularly yucky.
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c      | 166 ++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/sev.h    |   4 +
- arch/x86/mm/mem_encrypt_amd.c |   2 +
- 3 files changed, 172 insertions(+)
+AFAIU, you want to:
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 082d61d85dfc..9b405237f2c5 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -42,6 +42,8 @@
- #include <asm/apic.h>
- #include <asm/cpuid.h>
- #include <asm/cmdline.h>
-+#include <asm/pgtable.h>
-+#include <asm/set_memory.h>
- 
- #define DR7_RESET_VALUE        0x400
- 
-@@ -92,6 +94,9 @@ static struct ghcb *boot_ghcb __section(".data");
- /* Bitmap of SEV features supported by the hypervisor */
- static u64 sev_hv_features __ro_after_init;
- 
-+/* Last address to be switched to private during kexec */
-+static unsigned long kexec_last_addr_to_make_private;
-+
- /* #VC handler runtime per-CPU data */
- struct sev_es_runtime_data {
- 	struct ghcb ghcb_page;
-@@ -1010,6 +1015,167 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
- }
- 
-+static bool set_pte_enc(pte_t *kpte, int level, void *va)
-+{
-+	pte_t new_pte;
-+
-+	if (pte_none(*kpte))
-+		return false;
-+
-+	/*
-+	 * Change the physical page attribute from C=0 to C=1. Flush the
-+	 * caches to ensure that data gets accessed with the correct C-bit.
-+	 */
-+	if (pte_present(*kpte))
-+		clflush_cache_range(va, page_level_size(level));
-+
-+	new_pte = __pte(cc_mkenc(pte_val(*kpte)));
-+	set_pte_atomic(kpte, new_pte);
-+
-+	return true;
-+}
-+
-+static bool make_pte_private(pte_t *pte, unsigned long addr, int pages, int level)
-+{
-+	struct sev_es_runtime_data *data;
-+	struct ghcb *ghcb;
-+
-+	data = this_cpu_read(runtime_data);
-+	ghcb = &data->ghcb_page;
-+
-+	/* Check for GHCB for being part of a PMD range. */
-+	if ((unsigned long)ghcb >= addr &&
-+	    (unsigned long)ghcb <= (addr + (pages * PAGE_SIZE))) {
-+		/*
-+		 * Ensure that the current cpu's GHCB is made private
-+		 * at the end of unshared loop so that we continue to use the
-+		 * optimized GHCB protocol and not force the switch to
-+		 * MSR protocol till the very end.
-+		 */
-+		kexec_last_addr_to_make_private = addr;
-+		return true;
-+	}
-+
-+	if (!set_pte_enc(pte, level, (void *)addr))
-+		return false;
-+
-+	snp_set_memory_private(addr, pages);
-+
-+	return true;
-+}
-+
-+static void unshare_all_memory(void)
-+{
-+	unsigned long addr, end;
-+
-+	/*
-+	 * Walk direct mapping and convert all shared memory back to private,
-+	 */
-+
-+	addr = PAGE_OFFSET;
-+	end  = PAGE_OFFSET + get_max_mapped();
-+
-+	while (addr < end) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		pte = lookup_address(addr, &level);
-+		size = page_level_size(level);
-+
-+		/*
-+		 * pte_none() check is required to skip physical memory holes in direct mapped.
-+		 */
-+		if (pte && pte_decrypted(*pte) && !pte_none(*pte)) {
-+			int pages = size / PAGE_SIZE;
-+
-+			if (!make_pte_private(pte, addr, pages, level)) {
-+				pr_err("Failed to unshare range %#lx-%#lx\n",
-+				       addr, addr + size);
-+			}
-+
-+		}
-+
-+		addr += size;
-+	}
-+	__flush_tlb_all();
-+
-+}
-+
-+static void unshare_all_bss_decrypted_memory(void)
-+{
-+	unsigned long vaddr, vaddr_end;
-+	unsigned int level;
-+	unsigned int npages;
-+	pte_t *pte;
-+
-+	vaddr = (unsigned long)__start_bss_decrypted;
-+	vaddr_end = (unsigned long)__start_bss_decrypted_unused;
-+	npages = (vaddr_end - vaddr) >> PAGE_SHIFT;
-+	for (; vaddr < vaddr_end; vaddr += PAGE_SIZE) {
-+		pte = lookup_address(vaddr, &level);
-+		if (!pte || !pte_decrypted(*pte) || pte_none(*pte))
-+			continue;
-+
-+		set_pte_enc(pte, level, (void *)vaddr);
-+	}
-+	vaddr = (unsigned long)__start_bss_decrypted;
-+	snp_set_memory_private(vaddr, npages);
-+}
-+
-+/* Stop new private<->shared conversions */
-+void snp_kexec_begin(void)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		return;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+	/*
-+	 * Crash kernel reaches here with interrupts disabled: can't wait for
-+	 * conversions to finish.
-+	 *
-+	 * If race happened, just report and proceed.
-+	 */
-+	if (!set_memory_enc_stop_conversion())
-+		pr_warn("Failed to stop shared<->private conversions\n");
-+}
-+
-+/* Walk direct mapping and convert all shared memory back to private */
-+void snp_kexec_finish(void)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		return;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+
-+	unshare_all_memory();
-+
-+	unshare_all_bss_decrypted_memory();
-+
-+	if (kexec_last_addr_to_make_private) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		/*
-+		 * Switch to using the MSR protocol to change this cpu's
-+		 * GHCB to private.
-+		 * All the per-cpu GHCBs have been switched back to private,
-+		 * so can't do any more GHCB calls to the hypervisor beyond
-+		 * this point till the kexec kernel starts running.
-+		 */
-+		boot_ghcb = NULL;
-+		sev_cfg.ghcbs_initialized = false;
-+
-+		pte = lookup_address(kexec_last_addr_to_make_private, &level);
-+		size = page_level_size(level);
-+		set_pte_enc(pte, level, (void *)kexec_last_addr_to_make_private);
-+		snp_set_memory_private(kexec_last_addr_to_make_private, (size / PAGE_SIZE));
-+	}
-+}
-+
- static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
- {
- 	int ret;
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index ac5886ce252e..56e723bc63e2 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -348,6 +348,8 @@ u64 snp_get_unsupported_features(u64 status);
- u64 sev_get_status(void);
- void sev_show_status(void);
- void snp_update_svsm_ca(void);
-+void snp_kexec_finish(void);
-+void snp_kexec_begin(void);
- 
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
- 
-@@ -384,6 +386,8 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
- static inline u64 sev_get_status(void) { return 0; }
- static inline void sev_show_status(void) { }
- static inline void snp_update_svsm_ca(void) { }
-+static inline void snp_kexec_finish(void) { }
-+static inline void snp_kexec_begin(void) { }
- 
- #endif	/* CONFIG_AMD_MEM_ENCRYPT */
- 
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index 86a476a426c2..9a2cb740772e 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -467,6 +467,8 @@ void __init sme_early_init(void)
- 	x86_platform.guest.enc_status_change_finish  = amd_enc_status_change_finish;
- 	x86_platform.guest.enc_tlb_flush_required    = amd_enc_tlb_flush_required;
- 	x86_platform.guest.enc_cache_flush_required  = amd_enc_cache_flush_required;
-+	x86_platform.guest.enc_kexec_begin	     = snp_kexec_begin;
-+	x86_platform.guest.enc_kexec_finish	     = snp_kexec_finish;
- 
- 	/*
- 	 * AMD-SEV-ES intercepts the RDMSR to read the X2APIC ID in the
+1. Skip GHCB addresses when making all pages private
+
+2. Once you're done converting, in snp_kexec_finish() go over the GHCB
+   addresses and convert them explicitly, one-by-one, without this silly
+   variable
+
+>  /* #VC handler runtime per-CPU data */
+>  struct sev_es_runtime_data {
+>  	struct ghcb ghcb_page;
+> @@ -1010,6 +1015,169 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+>  	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
+>  }
+>  
+> +static bool set_pte_enc(pte_t *kpte, int level, void *va)
+
+Code duplication: __set_clr_pte_enc().
+
+You need to refactor the code instead of adding just another, generically
+looking helper just because it is easier this way.
+
+> +{
+> +	pte_t new_pte;
+> +
+> +	if (pte_none(*kpte))
+> +		return false;
+> +
+> +	/*
+> +	 * Change the physical page attribute from C=0 to C=1. Flush the
+> +	 * caches to ensure that data gets accessed with the correct C-bit.
+> +	 */
+> +	if (pte_present(*kpte))
+> +		clflush_cache_range(va, page_level_size(level));
+> +
+> +	new_pte = __pte(cc_mkenc(pte_val(*kpte)));
+> +	set_pte_atomic(kpte, new_pte);
+> +
+> +	return true;
+> +}
+> +
+> +static bool make_pte_private(pte_t *pte, unsigned long addr, int pages, int level)
+> +{
+> +	struct sev_es_runtime_data *data;
+> +	struct ghcb *ghcb;
+> +
+> +	data = this_cpu_read(runtime_data);
+> +	ghcb = &data->ghcb_page;
+> +
+> +	/* Check for GHCB for being part of a PMD range. */
+> +	if ((unsigned long)ghcb >= addr &&
+> +	    (unsigned long)ghcb <= (addr + (pages * PAGE_SIZE))) {
+> +		/*
+> +		 * Ensure that the current cpu's GHCB is made private
+
+s/cpu/CPU/g
+
+There are multiple places.
+
+> +		 * at the end of unshared loop so that we continue to use the
+> +		 * optimized GHCB protocol and not force the switch to
+> +		 * MSR protocol till the very end.
+> +		 */
+> +		pr_debug("setting boot_ghcb to NULL for this cpu ghcb\n");
+> +		kexec_last_addr_to_make_private = addr;
+> +		return true;
+> +	}
+> +
+> +	if (!set_pte_enc(pte, level, (void *)addr))
+> +		return false;
+> +
+> +	snp_set_memory_private(addr, pages);
+> +
+> +	return true;
+> +}
+> +
+> +static void unshare_all_memory(void)
+> +{
+> +	unsigned long addr, end;
+> +
+> +	/*
+> +	 * Walk direct mapping and convert all shared memory back to private,
+
+This ends with a ','. Is anything more coming?
+
+> +	 */
+> +
+> +	addr = PAGE_OFFSET;
+> +	end  = PAGE_OFFSET + get_max_mapped();
+> +
+> +	while (addr < end) {
+> +		unsigned long size;
+> +		unsigned int level;
+> +		pte_t *pte;
+> +
+> +		pte = lookup_address(addr, &level);
+> +		size = page_level_size(level);
+> +
+> +		/*
+> +		 * pte_none() check is required to skip physical memory holes in direct mapped.
+
+This sentence needs to be written for humans. And come to think of it, you can
+simply drop it. lookup_address() can return NULL so you simply need to check
+its retval.
+
+> +		 */
+> +		if (pte && pte_decrypted(*pte) && !pte_none(*pte)) {
+> +			int pages = size / PAGE_SIZE;
+> +
+> +			if (!make_pte_private(pte, addr, pages, level)) {
+> +				pr_err("Failed to unshare range %#lx-%#lx\n",
+> +				       addr, addr + size);
+
+Might as well terminate the guest here.
+
+> +			}
+> +
+> +		}
+> +
+> +		addr += size;
+> +	}
+> +	__flush_tlb_all();
+> +
+> +}
+> +
+> +static void unshare_all_bss_decrypted_memory(void)
+
+Why is this a separate function and not part of unshare_all_memory()?
+
+> +{
+> +	unsigned long vaddr, vaddr_end;
+> +	unsigned int level;
+> +	unsigned int npages;
+> +	pte_t *pte;
+> +
+> +	vaddr = (unsigned long)__start_bss_decrypted;
+> +	vaddr_end = (unsigned long)__start_bss_decrypted_unused;
+> +	npages = (vaddr_end - vaddr) >> PAGE_SHIFT;
+> +	for (; vaddr < vaddr_end; vaddr += PAGE_SIZE) {
+> +		pte = lookup_address(vaddr, &level);
+> +		if (!pte || !pte_decrypted(*pte) || pte_none(*pte))
+> +			continue;
+> +
+> +		set_pte_enc(pte, level, (void *)vaddr);
+> +	}
+> +	vaddr = (unsigned long)__start_bss_decrypted;
+> +	snp_set_memory_private(vaddr, npages);
+> +}
+
+...
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
