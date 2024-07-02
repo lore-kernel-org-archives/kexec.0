@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6D22C3065C
-	for <kexec@archiver.kernel.org>; Tue,  2 Jul 2024 19:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC0B5C30658
+	for <kexec@archiver.kernel.org>; Tue,  2 Jul 2024 19:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=275F8Nb+nol16oe/nI44ezkaggO9A/M+NEhjTsBy6xg=; b=CQBJ24vmKsWOiG
-	Cm2zi7Lbanaj7+tPn0PvoHEyBpjnRGEXXGfgrV08KAGy9/crquVIq2yeuLaUMeyqRCOUZ2fzRLJqc
-	9dQcTxuoe1SWU2uOe/e4YCZGEhAy1CiWyKKAWO0rZbH2TBk8ceMhzWIz4fHkBFmqwvSfIp7hj1jWq
-	GGq0wRZXSQ6zAunnb70+ZfvIHN6PAdD3DO1rJpwdaCBgn8BEHDUcSw9x97YhsBc8jSceac3s1TRNj
-	LoVItX5ZffysLCAb7M8C7gE+5/ACOA3LNaNdZgg8HOzHw2L55lDpMCKKb5e9iIaEEMEuTBSvrICQn
-	BUCGn0zI9/HXxo2T36mA==;
+	List-Owner; bh=Dcddl215M2L9Pco0+RDXfOWmf46VAg/8PclZTUkTOTU=; b=yuRSKin48WF9u/
+	iXitY19ePyidILPiKQlAZPuAtM8eTXN0IlnbdN2d6Q5+uh9V7ROJlAeGAbA6CL+xrfpBMHD61kP0z
+	xMSPAgtv5tJ4S2sq7PCggt0eTTciwztqoVXv8vwBq04k7tXidTJy+zdFL8XQmMrN2fvgvsirpryDf
+	Ha4fxqicNlGJ+Jh9Eb8w6N7/+GFFjuPeFUUbZ/5Chwf44zyLYIpV5r/VNlvNKXMr143TX4F6Eb/R2
+	uGkxGmah109x0PhKaF25fMnIrKfluTNi8ylNsmnNTaMqz6Ba3j3fFOb/P+sgo2EqgOcFrelAfBdbX
+	si2f7B6GWvsYd7kWnltA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOjcb-00000007pu6-01Qq;
-	Tue, 02 Jul 2024 19:57:01 +0000
-Received: from mail-dm6nam10on2061b.outbound.protection.outlook.com ([2a01:111:f400:7e88::61b] helo=NAM10-DM6-obe.outbound.protection.outlook.com)
+	id 1sOjdt-00000007q4k-2WyK;
+	Tue, 02 Jul 2024 19:58:21 +0000
+Received: from mail-co1nam11on20600.outbound.protection.outlook.com ([2a01:111:f403:2416::600] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOjcX-00000007ptX-1E2Z
+	id 1sOjdq-00000007q3j-1vnp
 	for kexec@lists.infradead.org;
-	Tue, 02 Jul 2024 19:56:58 +0000
+	Tue, 02 Jul 2024 19:58:19 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c0FiuKV77xy+d7FNuFz/D0C7Aiugxgy3kPhyG4UHuiiYPp9gMLbywe33wP0v0AeQ8Yaf4vCdPCc432qH8+rhDqQo6z9fW9rX4UdjN9f3BdKcEuJaWyuQg9spLCqAiaOlgDcfr2BO5ehgnTaM7cWrq5CYiVm4KeZxM5YxBM9mPBCpJaelAkSMJ/ZQiRX3Rx2Fpy39lRKNcHmFoKjWQOjS6jubi8gatiynH9gCbr076tk83q507e/H/TXzrGm9oj9+IoNxwLU1pjGWB7Yp5cf56L/W4PFLJaCt474gD4ebs/aRgZkpDlDAn+lgqTf/pavBaOoWZA3G3cG8JZ/62/iZGw==
+ b=AjjnM1uTAZJdNCm6kbfMbW83DTWl8UKIamjo+fThWXQjUHFSHLaWwbB6cLFKY5zWm+epilpg2Z2DSihF/V8Fx9IVVsKsusG/GLBMUcFbMqoI3HjfVKnnB3+fS2R6KwLeJVWL8QGjLHk2Wco/QWYZLHB6iAL2SlqKjhCIqX0wQmCwmkH7+Hek0WJENr7KEZ6OoqieZ3BrBeP5r3ScnHcUkqTbMzOS3V5eSUS8XYqzhrBE3mWy6Mx0kQyAIFkjNZ4y01rcNBWMOK7IguNRBw0ZJ+dFl2xR4Fr8pncJdR7RaRhsNC5joE5vTVr4ZAnpyan5vr0wPMa8R6DPJ+i3yNzT1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YmCeDU2fX7yAQjpLbzJlPnbjO+dvR6kRRZmZ1Hwi7C8=;
- b=mx59FoHCHgjJAIb+/QgR26lu2jhz6JW8uOR64j2uvuU51or67v/o6YLGGV7x9PCMfWsB9Rmct9PiTDVS+H5vxcObK8BMwAeCSingv/m1LXKsPEjSTEcEFnx8K2QSwgVr/d4HRZvZUakUw+uoxOgnnYlZao5x8Aormiit21DJtpUKbu7vPwDCjpv1/pxY2UAJwzPCfaswebPubG7WIL/hkpMJgKj2znYi6OjF2qb+uS1G6qZ9x0HlBV/LUeaw6y8bTPjNoqIlkgj/sjL2NhB+8m61mCW+airRMkCi1B4/s9d5AiFRDYTEl0LugP4Qxb7H+hbOalLiEnVNuW54WLqrWA==
+ bh=E96lfO2ane/Bn+hd5G+CEZvQoyEFIsDM+LjtymPitAA=;
+ b=VBTO7FUBtX/I+xQq/wtmxLAVr4VdK7ZItPXyhVmeZAIxfIChXHH+3IatSiYZC4ch73QFAKnHmMiNV9FG96svJ6n+sKCFLvTtUksAKLP+YgxN3qHiRwldGTisfXgaPVAARYeanDQbjkQ3zVn8TcOx7Cc/Kl5Yqmp1WyF2KtSfslMyMEHZxqVB0PzpqS/LeWujJP0sTrfzr6V0AuSUCpQsLHm86hMKjpho0osF4VSngfQcHyg6Hdxh6HyiSoCfk4olLXaWAgeGNgi0A1Hu1PehCq3jz3F1msMq7QPio7qsQbuAHLV8y5x84sYagEYGFkQhL6cbFfOca9y+OAofISweZw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YmCeDU2fX7yAQjpLbzJlPnbjO+dvR6kRRZmZ1Hwi7C8=;
- b=M9g1BH481uMpcjTh6urBda8U2/KrQ+Y5T0W00CgP9YCZMHuOcWOeJ1+zE2tsEx0+YlAKbgjWpbhAFJ2uuv/DAguK3Qru2rd0MQnfnxcTe945JoAOnoY2bbewf9cbcoUfX7Rh/AKqgJKAQ+oPnQYcU7goRQOzh5TBWYylGQ4jLuU=
-Received: from CH0P221CA0035.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::22)
- by PH7PR12MB5878.namprd12.prod.outlook.com (2603:10b6:510:1d6::10) with
+ bh=E96lfO2ane/Bn+hd5G+CEZvQoyEFIsDM+LjtymPitAA=;
+ b=gd/02UQREsm3Up7W1IrlFdrnEkUeQJ2QD2tcM9xESbialQSLH+S4lnZbUGj1MzRfLdBBTaQtyxXljm3QeACQ0Jv2siqTNkEFQCbj+qgGIz/7TTSHsCHGdeReizUsVWomF2G16Qoc0WPNydDf5nq3DinqQ/v/J7pHe4RWx9mtTdI=
+Received: from CH2PR20CA0018.namprd20.prod.outlook.com (2603:10b6:610:58::28)
+ by IA1PR12MB6042.namprd12.prod.outlook.com (2603:10b6:208:3d6::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Tue, 2 Jul
- 2024 19:56:46 +0000
-Received: from CH1PEPF0000AD78.namprd04.prod.outlook.com
- (2603:10b6:610:11d:cafe::66) by CH0P221CA0035.outlook.office365.com
- (2603:10b6:610:11d::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23 via Frontend
- Transport; Tue, 2 Jul 2024 19:56:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Tue, 2 Jul
+ 2024 19:58:07 +0000
+Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
+ (2603:10b6:610:58:cafe::ae) by CH2PR20CA0018.outlook.office365.com
+ (2603:10b6:610:58::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.34 via Frontend
+ Transport; Tue, 2 Jul 2024 19:58:05 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -59,13 +59,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD78.mail.protection.outlook.com (10.167.244.56) with Microsoft
+ CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 19:56:45 +0000
+ 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 19:58:05 +0000
 Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
- 2024 14:56:43 -0500
+ 2024 14:58:04 -0500
 From: Ashish Kalra <Ashish.Kalra@amd.com>
 To: <dave.hansen@linux.intel.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
 	<bp@alien8.de>, <x86@kernel.org>
@@ -78,61 +78,62 @@ CC: <hpa@zytor.com>, <rafael@kernel.org>, <peterz@infradead.org>,
 	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <anisinha@redhat.com>,
 	<ardb@kernel.org>, <dyoung@redhat.com>, <kexec@lists.infradead.org>,
 	<linux-coco@lists.linux.dev>, <jroedel@suse.de>
-Subject: [PATCH v11 0/3] x86/snp: Add kexec support
-Date: Tue, 2 Jul 2024 19:56:33 +0000
-Message-ID: <cover.1719948376.git.ashish.kalra@amd.com>
+Subject: [PATCH v11 2/3] x86/mm: refactor __set_clr_pte_enc()
+Date: Tue, 2 Jul 2024 19:57:54 +0000
+Message-ID: <f2152ca66e98cc399681e4964d748306b1845710.1719948376.git.ashish.kalra@amd.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
-References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <cover.1719948376.git.ashish.kalra@amd.com>
+References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com> <cover.1719948376.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.180.168.240]
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD78:EE_|PH7PR12MB5878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 284f8e66-5cea-4564-71c1-08dc9ad11a05
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|IA1PR12MB6042:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a2b51be-60a3-402a-350a-08dc9ad14997
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?NLzKCucgRmLH6r+1jp5EvkzNROdRe/+NgSennIsdJYCVacILxp7bhsHqJJXi?=
- =?us-ascii?Q?ZnI9xuNvcUC3YIf9jWt43pkxqJACt81Y/jA8Xc1+mXzu6bzRPQqH+BO9GHg4?=
- =?us-ascii?Q?d9sj5hlBH6sUlor6r975uqSxForBhR1xZZdbG8qCftH22vtaKcz6eAPGgsty?=
- =?us-ascii?Q?PreSdhIIK4ExO39YVx3KKs0ACsSwTe+3/eUaKPj6q5tYL6k9F2Oe9PIIDwbV?=
- =?us-ascii?Q?D6XCF+ac9zF5p8fOZd3sQpYEJW32/hgtvMvQXCQYD5/BRzFolNsBneDQjR/o?=
- =?us-ascii?Q?IMkzlUCPoMJGw3cla8CoxFlUjTGolEJOLIS3P1KdFQreW4em58E5C8L91JQW?=
- =?us-ascii?Q?iNRKLYQxxmTTyxloDTRyrr8dolBNc12VeoVIc+g/tZlgZChlb1R2Z0cHwzr9?=
- =?us-ascii?Q?RMOH4HQeNk7TeAT+S09RIHDdBw+InH3g+vDVVgNvwxHj0jPegmGHsrBhVaJh?=
- =?us-ascii?Q?h0HTA6/dkRqwkvX7eXcZWdL8ceMN0W6vxN2vpq+5twRDkDlLDAaMY6BSIcOh?=
- =?us-ascii?Q?adqB0rzR550RstnydkwMjQ3cHOaw7SuDBF/mMmuZwHbHBkPX3qAJDO7Gf+TI?=
- =?us-ascii?Q?8R0pcyfBv3Pr9FK5WPJgPi7LMaJnzn06dVj1s079xGrIIa7FhOggI8/EvVhr?=
- =?us-ascii?Q?equNdR8XWxty4PHfQxXu60bfdoUgVM61hILpW2YKHQQbCGG1wQGiF8zzRfDp?=
- =?us-ascii?Q?FEX5+Kgnaxx6Y0487urT/6OjuAmGB+mlFE3fYccnDlQNXWWtiSwaFP2Rw8xS?=
- =?us-ascii?Q?wiHSIG2EwaKlpYu9iO3UwVs3Ct5bMI+RlcupOMrCXRMFMnKqR1yQj4st3lY4?=
- =?us-ascii?Q?lr8M8uLun73r8t7RjmeK9yz652jf6v4sqAA8ChZl9Tb84b8gSm+ihq2qlcYO?=
- =?us-ascii?Q?2Qf0Zo2ljpFBKIdO0qNuMUUg08ZB6K8qBJzf6p+FLNV3LPLTXWTGTd4+gNe0?=
- =?us-ascii?Q?JSfc9P5b1RMW0iuvzpcJUBS2Uky2GpH8y5Vl3lmIuOOXuFbzyZO9EBTmxubA?=
- =?us-ascii?Q?UdIUZbqE6Ihz+cmPk2B0LmJmlXc/VC3Q+XT7ACxLOBPsuqrvbzwcYF32Qbpb?=
- =?us-ascii?Q?bOKc/n5GWkE9lZiJeyyAWHTHaqv9aT70A6wl3QPqHsYoJMw3sIcVKDT2KbNd?=
- =?us-ascii?Q?NbNCWlphKwQ09mIw5n/xcDUDCngz/8g32dPTV+73cr+kvgpBp1ocYH8ePM16?=
- =?us-ascii?Q?3mIttQeQybMrNkfEOVdDQ5K4ZFhg2HCyHP4ciZwQxoK5czlkQNvADxP7mjBw?=
- =?us-ascii?Q?u5tK4KhLPN5JWN68vu1PumyW+LdPYw2seF/bf3GI9HbpqdYLF5ECYNqTz9P9?=
- =?us-ascii?Q?az5Dw5VvCplpz6J7fB0rANCPp55rgaJzKWWP9myiQgg1Wvets6Za7P7fSjgf?=
- =?us-ascii?Q?49IpnICej4a6Hg8DYFP930EaDxLyiizTiYYROj/+YR3qtj5Urg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?PzGjDe/CQtmO1dOBOOzANd6PYFD/m4pZSnTpZtD3sytWg7LzKt2yiNwWozBU?=
+ =?us-ascii?Q?i3jUTmsMHgJhcL7QngfEASegGKvQbOKV4cLerrqIqjkUPVBbKNGPr7yqm2Pa?=
+ =?us-ascii?Q?GvWlDdE3rBkO+DwpMIYXg0Q2/udMNx0Wr8pQI1+a7QsOavHUi7G9EI+l6ntu?=
+ =?us-ascii?Q?b2NgYn4oL3dsh9R4YmCImpkaPzg7uSFazApmEdTg14gsjQV7UvlXtfLbRmUs?=
+ =?us-ascii?Q?By+nvI6Uvnt66JlpXGn9ANEMlSKK6Jm1xbE++1OGItinxLXjy9vn/1i6oBYn?=
+ =?us-ascii?Q?/TlFPlTVVwhPWm3nys+P1RBpZ5a+RVUN9ptfzyoawPwEIFb2CLSNl1b0DSIU?=
+ =?us-ascii?Q?MC3OMTEMSnG5pRALecOIn5SdbxT9kwu1/xR4DeWhKfGM5S7pyGl65cWi8u74?=
+ =?us-ascii?Q?5T3ENznxigXSTqcZJJ61VCjWQHshqfkpPvFmzeYH9qqT5wQBaOFSeAjeULN8?=
+ =?us-ascii?Q?j0NLrX/St7GfkST98pR2kBfb08pnU/75aF2rFXFpcGE+XfkifaJ7olG7oq+v?=
+ =?us-ascii?Q?Cvz/nYKI0vuXjVhgqHWoYL5DHE6Hkfb0GFgYr8SvZ3iHbCW1kMrHwJBkVt6I?=
+ =?us-ascii?Q?l/r2qt0RO4dqBzLSMHNFdB51gL5LKtFwXQJNPQtL3Tt49jykiBiiZyhxXr3N?=
+ =?us-ascii?Q?0TXU+ghWQZY5ZZR8sjv1uoPSFvbfpfBIivXMQqA4uOMvxaNI88d2WvKG9ldv?=
+ =?us-ascii?Q?G81V+kV/9XhWi+Dywd4RZNOcbdse+ArW6Eo/1Ob13nQbtdTM+qimNZ2bUmy8?=
+ =?us-ascii?Q?enTGj5wrZNe4FMMdB26up2VBLM3/CxxkFTqzAeWE8+gsVLLcXpxt3bVR1sfo?=
+ =?us-ascii?Q?+CJbbfOMTHA5cfcy9Y4ci4zcKCO3UwF1vu/MU/+hwu6o9lmmwDl/gAtYAb7k?=
+ =?us-ascii?Q?GsprtOCkVMzjh5HKKYVEN9cODRLFqs9G0W9w6vfqzlXpJ3DSh0MXUXNOcUAI?=
+ =?us-ascii?Q?8QMu0XJ4ogor2SppAf0xagT3vUSUmYEyifyrPPyDmkFW9I3b7lsCrQ5aTbki?=
+ =?us-ascii?Q?SD2/ZNsvFA2qQUGFmUMqd83WciB9M4hcOZ4yhOmeIf6qYF918tY2c+QkaYnZ?=
+ =?us-ascii?Q?SoG/jwv+mWRIFP3GS/0hLyZEPqka5kQHluqKwrwTr4wWzQQUlqYPmwu1pedj?=
+ =?us-ascii?Q?peysz4+9vUu6UK33RArV2I+FJwGCF+OoXTrMEsD/tCjaazKGrreo5qJgbVy8?=
+ =?us-ascii?Q?b9wGIWNKJXxQR1Nz5WU5zmuT65w4vIQooeAUMWsMgxCCNXR9UkDJOnkWAOsj?=
+ =?us-ascii?Q?mlKJrRhYL+gpAIa0RFWtjKWUvYwVjVWuSd7EGUjH4ZIORoKFoCF3gjX0tO6B?=
+ =?us-ascii?Q?HhHMHHLYh/ik31L/r+8Px/vOBq9xPiVOjlmL21dSqvkDyPWhZMZWfTYkEaR/?=
+ =?us-ascii?Q?sQf/Kf/n6Vp58SHpkjPLngW8hmgYb/XsQ88wAOmQXmnAZOgFeqfaL/Q2krpY?=
+ =?us-ascii?Q?gWJDjmvrvWLEDcQN4WfRowDfL8fxLepY?=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 19:56:45.4548
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 19:58:05.2631
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 284f8e66-5cea-4564-71c1-08dc9ad11a05
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a2b51be-60a3-402a-350a-08dc9ad14997
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000AD78.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000AD76.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5878
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6042
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240702_125657_401855_23E1DC05 
-X-CRM114-Status: GOOD (  21.41  )
+X-CRM114-CacheID: sfid-20240702_125818_532557_DDEC59B3 
+X-CRM114-Status: GOOD (  17.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -151,115 +152,128 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Ashish Kalra <ashish.kalra@amd.com>
 
-The patchset adds bits and pieces to get kexec (and crashkernel) work on
-SNP guest.
+Refactor __set_clr_pte_enc() and add two new helper functions to
+set/clear PTE C-bit from early SEV/SNP initialization code and
+later during normal system operations and shutdown/kexec.
 
-This patchset requires the following fix for preventing EFI memory map
-corruption while doing SNP guest kexec:
-  https://lore.kernel.org/all/16131a10-b473-41cc-a96e-d71a4d930353@amd.com/T/#m77f2f33f5521d1369b0e8d461802b99005b4ffd6
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/include/asm/sev.h    |  9 +++++++
+ arch/x86/mm/mem_encrypt_amd.c | 47 +++++++++++++++++++++++++++++------
+ 2 files changed, 48 insertions(+), 8 deletions(-)
 
-The series is based off and tested against tree:
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-
-----
-
-v11:
-- Refactored __set_clr_pte_enc() and added two new helper functions to
-  set/clear PTE C-bit from early SEV/SNP initialization code and
-  later during normal system operations and shutdown/kexec.
-- Removed kexec_last_addr_to_make_private and now skip per-cpu
-  GHCB addresses when making all pages private and then after 
-  converting all pages to private in snp_kexec_finish(), go over
-  the per-cpu GHCB addresses and convert them to private explicitly.
-- Fixed comments and commit logs as per upstream review.
-
-v10:
-- Removed pr_debug() calls as per upstream review feedback.
-- Add review tags.
-
-v9:
-- Rebased onto current tip/master;
-- Rebased on top of [PATCH] x86/sev: Move SEV compilation units 
-  and uses the coco directory hierarchy for SEV guest kexec patches.
-- Includes the above mentioned patch as part of this patch-set to
-  fix any kernel test robot/build issues.
-- Includes the massaged version of patch 2/3 as per upstream
-  review/feedback.
-
-v8:
-- removed fix EFI memory map corruption with kexec patch as this
-  is a use-after-free bug that is not specific to SNP/TDX or kexec
-  and a generic fix for the same has been posted. 
-- Add new early_sev_detect() and move detection of SEV-ES/SNP guest
-  and skip accessing video RAM during decompressor stage into
-  this function as per feedback from upstream review.
-
-v7:
-- Rebased onto current tip/master;
-- Moved back to checking the md attribute instead of checking the
-  efi_setup for detecting if running under kexec kernel as 
-  suggested in upstream review feedback.
-
-v6:
-- Updated and restructured the commit message for patch 1/3 to
-  explain the issue in detail.
-- Updated inline comments in patch 1/3 to explain the issue in 
-  detail.
-- Moved back to checking efi_setup for detecting if running
-  under kexec kernel.
-
-v5:
-- Removed sev_es_enabled() function and using sev_status directly to
-  check for SEV-ES/SEV-SNP guest.
-- used --base option to generate patches to specify Kirill's TDX guest
-  kexec patches as prerequisite patches to fix kernel test robot
-  build errors.
-
-v4:
-- Rebased to current tip/master.
-- Reviewed-bys from Sathya.
-- Remove snp_kexec_unprep_rom_memory() as it is not needed any more as 
-  SEV-SNP code is not validating the ROM range in probe_roms() anymore.
-- Fix kernel test robot build error/warnings.
-
-v3:
-- Rebased;
-- moved Keep page tables that maps E820_TYPE_ACPI patch to Kirill's tdx
-  guest kexec patch series.
-- checking the md attribute instead of checking the efi_setup for
-  detecting if running under kexec kernel.
-- added new sev_es_enabled() function.
-- skip video memory access in decompressor for SEV-ES/SNP systems to 
-  prevent guest termination as boot stage2 #VC handler does not handle
-  MMIO.
-
-v2:
-- address zeroing of unaccepted memory table mappings at all page table levels
-  adding phys_pte_init(), phys_pud_init() and phys_p4d_init().
-- include skip efi_arch_mem_reserve() in case of kexec as part of this 
-  patch set.
-- rename last_address_shd_kexec to a more appropriate 
-  kexec_last_address_to_make_private.
-- remove duplicate code shared with TDX and use common interfaces
-  defined for SNP and TDX for kexec/kdump.
-- remove set_pte_enc() dependency on pg_level_to_pfn() and make the 
-  function simpler.
-- rename unshare_pte() to make_pte_private().
-- clarify and make the comment for using kexec_last_address_to_make_private  
-  more understandable.
-- general cleanup. 
-
-Ashish Kalra (3):
-  x86/boot: Skip video memory access in the decompressor for SEV-ES/SNP
-  x86/mm: refactor __set_clr_pte_enc()
-  x86/snp: Convert shared memory back to private on kexec
-
- arch/x86/boot/compressed/misc.c |  15 ++++
- arch/x86/coco/sev/core.c        | 148 ++++++++++++++++++++++++++++++++
- arch/x86/include/asm/sev.h      |  13 +++
- arch/x86/mm/mem_encrypt_amd.c   |  49 +++++++++--
- 4 files changed, 217 insertions(+), 8 deletions(-)
-
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index ac5886ce252e..4f3fd913aadb 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -348,6 +348,10 @@ u64 snp_get_unsupported_features(u64 status);
+ u64 sev_get_status(void);
+ void sev_show_status(void);
+ void snp_update_svsm_ca(void);
++int prep_set_clr_pte_enc(pte_t *kpte, int level, int enc, void *va,
++			 unsigned long *ret_pfn, unsigned long *ret_pa,
++			 unsigned long *ret_size, pgprot_t *ret_new_prot);
++void set_pte_enc_mask(pte_t *kpte, unsigned long pfn, pgprot_t new_prot);
+ 
+ #else	/* !CONFIG_AMD_MEM_ENCRYPT */
+ 
+@@ -384,6 +388,11 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
+ static inline u64 sev_get_status(void) { return 0; }
+ static inline void sev_show_status(void) { }
+ static inline void snp_update_svsm_ca(void) { }
++static inline int
++prep_set_clr_pte_enc(pte_t *kpte, int level, int enc, void *va,
++		     unsigned long *ret_pfn, unsigned long *ret_pa,
++		     unsigned long *ret_size, pgprot_t *ret_new_prot) { }
++static inline void set_pte_enc_mask(pte_t *kpte, unsigned long pfn, pgprot_t new_prot) { }
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+ 
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index 86a476a426c2..42a35040aaf9 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -311,15 +311,16 @@ static int amd_enc_status_change_finish(unsigned long vaddr, int npages, bool en
+ 	return 0;
+ }
+ 
+-static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
++int prep_set_clr_pte_enc(pte_t *kpte, int level, int enc, void *va,
++			 unsigned long *ret_pfn, unsigned long *ret_pa,
++			 unsigned long *ret_size, pgprot_t *ret_new_prot)
+ {
+ 	pgprot_t old_prot, new_prot;
+ 	unsigned long pfn, pa, size;
+-	pte_t new_pte;
+ 
+ 	pfn = pg_level_to_pfn(level, kpte, &old_prot);
+ 	if (!pfn)
+-		return;
++		return 1;
+ 
+ 	new_prot = old_prot;
+ 	if (enc)
+@@ -329,7 +330,7 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+ 
+ 	/* If prot is same then do nothing. */
+ 	if (pgprot_val(old_prot) == pgprot_val(new_prot))
+-		return;
++		return 1;
+ 
+ 	pa = pfn << PAGE_SHIFT;
+ 	size = page_level_size(level);
+@@ -339,7 +340,39 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+ 	 * physical page attribute from C=1 to C=0 or vice versa. Flush the
+ 	 * caches to ensure that data gets accessed with the correct C-bit.
+ 	 */
+-	clflush_cache_range(__va(pa), size);
++	if (va)
++		clflush_cache_range(va, size);
++	else
++		clflush_cache_range(__va(pa), size);
++
++	if (ret_new_prot)
++		*ret_new_prot = new_prot;
++	if (ret_size)
++		*ret_size = size;
++	if (ret_pfn)
++		*ret_pfn = pfn;
++	if (ret_pa)
++		*ret_pa = pa;
++
++	return 0;
++}
++
++void set_pte_enc_mask(pte_t *kpte, unsigned long pfn, pgprot_t new_prot)
++{
++	pte_t new_pte;
++
++	/* Change the page encryption mask. */
++	new_pte = pfn_pte(pfn, new_prot);
++	set_pte_atomic(kpte, new_pte);
++}
++
++static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
++{
++	unsigned long pfn, pa, size;
++	pgprot_t new_prot;
++
++	if (prep_set_clr_pte_enc(kpte, level, enc, NULL, &pfn, &pa, &size, &new_prot))
++		return;
+ 
+ 	/* Encrypt/decrypt the contents in-place */
+ 	if (enc) {
+@@ -354,9 +387,7 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+ 		early_snp_set_memory_shared((unsigned long)__va(pa), pa, 1);
+ 	}
+ 
+-	/* Change the page encryption mask. */
+-	new_pte = pfn_pte(pfn, new_prot);
+-	set_pte_atomic(kpte, new_pte);
++	set_pte_enc_mask(kpte, pfn, new_prot);
+ 
+ 	/*
+ 	 * If page is set encrypted in the page table, then update the RMP table to
 -- 
 2.34.1
 
