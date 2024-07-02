@@ -4,97 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8462C3065C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B78BFC3064D
 	for <kexec@archiver.kernel.org>; Tue,  2 Jul 2024 04:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=htr2LrTisVtqoyyNOkRtP0pBKGRMO9zmFzxdBoRwbwo=; b=LqNc+yqDg47wEo
-	JADALjn0F+B4o3wqOee1ndLHb7RRU/pmNnyBRKLg/qMvz1JG4pqI8VS6Rn9ou/OLGcbi6IGCA5/te
-	QYWoH7hXynxnrr5H0U7tFNJfzM+kNMc69dxKXkGaDXwjOz0pZeiFzOLBKVI/3/sDK0hM4wT2Ycs5c
-	VBSsU9urxFUu0XrFVhrujvmcEcDJwei41/xWOyRaVpsGiGmTb5LZBk/N00H/6njQ+oV6uFBmAIRFY
-	oBxuxUjJCTxqltuciozqAyws0cCJbmgLuSKpswvHpJNLo11hDjlfRfRmdkpRw2HOTJeYp7Jca5yjb
-	WHixEe0NM2NjIhS8c9og==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ZeTr1R+QXbShXKsnOzp94J9+6NkmTL0mCUWCqqBnv/k=; b=ZRNzLRfLUa2IOF
+	dEqvpkpJrg5W7Auew6CKKfy4POFienyPvPUyjAwIH7bK+vgl/31Iy0c2RX2xJkCLQTyleoCJAx20f
+	/9USB5PpYTNYBCIPNi1zv1DLWblauaEUgXrHi7UY9d6P/vxJBpB3y/4g/ahHsMGarByliJ+hae1sc
+	xlRwYk8VkUQwH6ou+hPA4z78h00eI9v96EpTC7z8zuTrDfZD7BXSxWwvQsQiNjiy5A+eqWujmLh3x
+	j7j7TyAAHHG/jp1yz8v8C7R45mQ5WGcQZ8fvykhCxV+vbQKi+hOA2gJwrI8z/vtW+epakJdIxcZKs
+	b4YCwxS406Tb9NeZywkA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOVAl-00000005Vru-0WBq;
-	Tue, 02 Jul 2024 04:31:19 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1sOVAk-00000005Vrf-2v8N;
+	Tue, 02 Jul 2024 04:31:18 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOVAh-00000005VqF-1PDw
+	id 1sOVAh-00000005VqU-2yJA
 	for kexec@lists.infradead.org;
 	Tue, 02 Jul 2024 04:31:17 +0000
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4623qw8U020510;
-	Tue, 2 Jul 2024 04:31:09 GMT
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4624TCPq003898;
+	Tue, 2 Jul 2024 04:31:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pp1; bh=mwtHJwoKW/2C4F0vN3kXgMiBW5
-	kMZk414sphRNVI2Zk=; b=TSxY+KzD4yNDj+AknuPCSPbvdvyuwpDmxb7e3Knrze
-	LqQdaj9DlS365RJRitCY7goWkaeyxwuJmQnL63hmmHBjCbHlMhGKsjIgHRQarkju
-	ECYV17ehXeIpPGkWoM4RLkhfgMh3lCilAvCqqfVt7xjaJkAyq3bvymG46IHz453N
-	vi0PAYSFkOmENZX4HBSTCN8L4bc5+Wm6qGbo5Sk4f8P6q2S5raWUeS4JH7hTHUrq
-	1qZTJsj49IGUkRi6hUvQ8d2ZVNCD6Brs8Q/NIpcdnnh+I00OLk0Yq0aKz7ksDTPO
-	iFAahrR/5YHxmlLjkPpnep5zLbVQ3ULpulgNFo9CNz6g==
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=ZvqPQScap+JnZ
+	ncTNajNS+pW4c6jUve7RmDZ3C2DY2E=; b=BvysVH2uzeCiGXyiIgYpY8g5RSWq2
+	xfPQPKIcw4mwkuHLA7FQaLyzjqvCdV87Pqy05yStyNAQdDsN+96aFsu5qAWpu/Ql
+	y1C6RdD/1UXHnXUS6rI6VBkbkAfW4gFCpmmo1vJquLaKjCP9KcPHcSbALrLSnfAO
+	wDTrle/gACK8bk3uixkc4Es9qm29KNmtZGd+ls3C9ucA4wwhMoDWOyUhHzjuA2TB
+	cmsSS91pSyYJZeGw9oNMgJ4U1966mpMoQq66IjaWMDQl3Siaymjv69KHWCgvb3Qj
+	JFWwfBKtumqjL2As4xlZWe2HAjbamFD9ljFnuq3GnGHUng2zgH5N/pvwA==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4049p1r4p9-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 404aj9004w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 04:31:08 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4624V8JG016736;
-	Tue, 2 Jul 2024 04:31:08 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4049p1r4p7-1
+	Tue, 02 Jul 2024 04:31:11 +0000 (GMT)
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4624VBYu007798;
+	Tue, 2 Jul 2024 04:31:11 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 404aj9004t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 04:31:08 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46221Ydg009086;
-	Tue, 2 Jul 2024 04:31:07 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402w00k1xk-1
+	Tue, 02 Jul 2024 04:31:11 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4624LdLk009529;
+	Tue, 2 Jul 2024 04:31:10 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 402xtmjmv6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 04:31:07 +0000
+	Tue, 02 Jul 2024 04:31:10 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4624V2ae52625856
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4624V4u035324384
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jul 2024 04:31:04 GMT
+	Tue, 2 Jul 2024 04:31:07 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05AA620043;
-	Tue,  2 Jul 2024 04:31:02 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id D919720040;
+	Tue,  2 Jul 2024 04:31:04 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4478920040;
-	Tue,  2 Jul 2024 04:31:00 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0ADC22004D;
+	Tue,  2 Jul 2024 04:31:03 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.94])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  2 Jul 2024 04:31:00 +0000 (GMT)
+	Tue,  2 Jul 2024 04:31:02 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: kexec@lists.infradead.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
         Aditya Gupta <adityag@linux.ibm.com>, Baoquan He <bhe@redhat.com>,
         Coiby Xu <coxu@redhat.com>, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
         Simon Horman <horms@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>
-Subject: [PATCH v3 1/3] kexec_load: Use new kexec flag for hotplug support
-Date: Tue,  2 Jul 2024 10:00:55 +0530
-Message-ID: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
+Subject: [PATCH v3 2/3] powerpc/kexec_load: add hotplug support
+Date: Tue,  2 Jul 2024 10:00:56 +0530
+Message-ID: <20240702043057.200211-2-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
+References: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5gNYihlq0_pK6pcbRK74AeLTQK4yJN2k
-X-Proofpoint-GUID: p0lGcIekFHBlzvSjF6S5vTqk-pkmrJo2
+X-Proofpoint-GUID: rnPJEReAjcoMYkfimIW36z75OeJI7sF4
+X-Proofpoint-ORIG-GUID: 2kjfs6N31zpiHZASkGj2ARA6GUMP_Mrt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-02_01,2024-07-01_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=838
- impostorscore=0 adultscore=0 clxscore=1011 phishscore=0 mlxscore=0
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 clxscore=1015 suspectscore=0 malwarescore=0 phishscore=0
+ bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2407020029
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240701_213115_744055_B478E322 
-X-CRM114-Status: GOOD (  25.69  )
+X-CRM114-CacheID: sfid-20240701_213115_777450_C6F92E5E 
+X-CRM114-Status: GOOD (  33.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,22 +113,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Kernel commit 79365026f869 (crash: add a new kexec flag for hotplug
-support) has introduced a new kexec flag to generalize hotplug support.
-The newly introduced kexec flags for hotplug allow architectures to
-exclude all the required kexec segments from SHA calculation so that
-the kernel can update them on hotplug events. This was not possible
-earlier with the KEXEC_UPDATE_ELFCOREHDR kexec flags since it was added
-only for the elfcorehdr segment.
+Kernel commits b741092d5976 ("powerpc/crash: add crash CPU hotplug
+support") and 849599b702ef ("powerpc/crash: add crash memory hotplug
+support") added crash CPU/Memory hotplug support on PowerPC. This patch
+extends that support for the kexec_load syscall.
 
-To enable architectures to control the list of kexec segments to exclude
-when hotplug support is enabled, add a new architecture-specific
-function named arch_do_exclude_segment. During the SHA calculation, this
-function gets called to let the architecture decide whether a specific
-kexec segment should be considered for SHA calculation or not.
+During CPU/Memory hotplug events on PowerPC, two kexec segments,
+elfcorehdr, and FDT, get updated by the kernel. To ensure the kernel
+can safely update these two kexec segments for the kdump image loaded
+using the kexec_load system call, the following changes are made:
 
-Given that the KEXEC_UPDATE_ELFCOREHDR is no longer required and was
-colliding with the KEXEC_LIVE_UPDATE update flag, it is removed.
+1. Extra size is allocated for both elfcorehdr and FDT to accommodate
+   additional resources in the future. For the elfcorehdr, the size hint
+   is taken from /sys/kernel/crash_elfcorehdr_size sysfs, while for FDT,
+   extra size is allocated to hold possible CPU nodes.
+
+2. Both elfcorehdr and FDT are skipped from SHA calculation.
 
 Cc: Aditya Gupta <adityag@linux.ibm.com>
 Cc: Baoquan He <bhe@redhat.com>
@@ -137,274 +139,377 @@ Acked-by: Hari Bathini <hbathini@linux.ibm.com>
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
 
-* No changes in v2.
+Changelog:
+
+From v2 -> v3:
+  - Added a Acked-by, no functional changes.
+
+From v1 -> v2:
+  - Find CPUs in the system using the /sys/devices/system/cpu/present sysfs
+    instead of traversing all nodes under /proc/device-tree/cpus.
+
+  - Added a new function to find present CPUs in the system.
+
+  - Removed unnecessary NULL check on seg_ptr from arch_do_exclude_segment().
 
 ---
- kexec/arch/arm/kexec-arm.c             |  5 +++++
- kexec/arch/arm64/kexec-arm64.c         |  4 ++++
- kexec/arch/cris/kexec-cris.c           |  4 ++++
- kexec/arch/hppa/kexec-hppa.c           |  5 +++++
- kexec/arch/i386/kexec-x86.c            |  8 ++++++++
- kexec/arch/ia64/kexec-ia64.c           |  4 ++++
- kexec/arch/loongarch/kexec-loongarch.c |  5 +++++
- kexec/arch/m68k/kexec-m68k.c           |  5 +++++
- kexec/arch/mips/kexec-mips.c           |  4 ++++
- kexec/arch/ppc/kexec-ppc.c             |  4 ++++
- kexec/arch/ppc64/kexec-ppc64.c         |  5 +++++
- kexec/arch/s390/kexec-s390.c           |  5 +++++
- kexec/arch/sh/kexec-sh.c               |  5 +++++
- kexec/arch/x86_64/kexec-x86_64.c       |  5 +++++
- kexec/kexec-syscall.h                  |  2 +-
- kexec/kexec.c                          | 14 ++++++++------
- kexec/kexec.h                          |  2 ++
- 17 files changed, 79 insertions(+), 7 deletions(-)
+ kexec/arch/ppc64/crashdump-ppc64.c  |  16 +-
+ kexec/arch/ppc64/fdt.c              | 236 +++++++++++++++++++++++++++-
+ kexec/arch/ppc64/include/arch/fdt.h |   2 +-
+ kexec/arch/ppc64/kexec-elf-ppc64.c  |   2 +-
+ kexec/arch/ppc64/kexec-ppc64.c      |   9 +-
+ 5 files changed, 258 insertions(+), 7 deletions(-)
 
-diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
-index 49f35b1..34531f9 100644
---- a/kexec/arch/arm/kexec-arm.c
-+++ b/kexec/arch/arm/kexec-arm.c
-@@ -148,3 +148,8 @@ int have_sysfs_fdt(void)
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index 6d47898..98d439a 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -476,7 +476,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 				uint64_t max_addr, unsigned long min_base)
  {
- 	return !access(SYSFS_FDT, F_OK);
- }
+ 	void *tmp;
+-	unsigned long sz;
++	unsigned long sz, memsz;
+ 	uint64_t elfcorehdr;
+ 	int nr_ranges, align = 1024, i;
+ 	unsigned long long end;
+@@ -531,8 +531,18 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		}
+ 	}
+ 
+-	elfcorehdr = add_buffer(info, tmp, sz, sz, align, min_base,
+-				max_addr, 1);
++	memsz = sz;
++	/* To support --hotplug, replace the calculated memsz with the value
++	 * from /sys/kernel/crash_elfcorehdr_size and align it correctly.
++	 */
++	if (do_hotplug) {
++		if (elfcorehdrsz > sz)
++			memsz = _ALIGN(elfcorehdrsz, align);
++	}
 +
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 4a67b0d..9d052b0 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -1363,3 +1363,7 @@ void arch_reuse_initrd(void)
- void arch_update_purgatory(struct kexec_info *UNUSED(info))
- {
- }
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
-index 3b69709..7f09121 100644
---- a/kexec/arch/cris/kexec-cris.c
-+++ b/kexec/arch/cris/kexec-cris.c
-@@ -109,3 +109,7 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
-                                     buf_min, buf_max, buf_end, 1);
++	/* Record the location of the elfcorehdr for hotplug handling */
++	info->elfcorehdr = elfcorehdr = add_buffer(info, tmp, sz, memsz, align,
++						   min_base, max_addr, 1);
+ 	reserve(elfcorehdr, sz);
+ 	/* modify and store the cmdline in a global array. This is later
+ 	 * read by flatten_device_tree and modified if required
+diff --git a/kexec/arch/ppc64/fdt.c b/kexec/arch/ppc64/fdt.c
+index 8bc6d2d..879240f 100644
+--- a/kexec/arch/ppc64/fdt.c
++++ b/kexec/arch/ppc64/fdt.c
+@@ -17,6 +17,13 @@
+ #include <libfdt.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <limits.h>
++#include <stdbool.h>
++#include <dirent.h>
++#include <sys/stat.h>
++
++#include "../../kexec.h"
++#include "../../kexec-syscall.h"
+ 
+ /*
+  * Let the kernel know it booted from kexec, as some things (e.g.
+@@ -46,17 +53,244 @@ static int fixup_kexec_prop(void *fdt)
+ 	return 0;
  }
  
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
++static inline bool is_dot_dir(char * d_path)
 +{
++	return d_path[0] == '.';
++}
++
++/*
++ * get_cpu_node_size - Returns size of files including file name size under
++ *                     the given @cpu_node_path.
++ */
++static int get_cpu_node_size(char *cpu_node_path)
++{
++	DIR *d;
++	struct dirent *de;
++	struct stat statbuf;
++	int cpu_node_size = 0;
++	char cpu_prop_path[2 * PATH_MAX];
++
++	d = opendir(cpu_node_path);
++	if (!d)
++		return 0;
++
++	while ((de = readdir(d)) != NULL) {
++		if (de->d_type != DT_REG)
++			continue;
++
++		memset(cpu_prop_path, '\0', PATH_MAX);
++		snprintf(cpu_prop_path, 2 * PATH_MAX, "%s/%s", cpu_node_path,
++			 de->d_name);
++
++		if (stat(cpu_prop_path, &statbuf))
++			continue;
++
++		cpu_node_size += statbuf.st_size;
++		cpu_node_size += strlen(de->d_name);
++	}
++
++	return cpu_node_size;
++}
++
++/*
++ * is_cpu_node - Checks if the node specified by the given @path
++ *               represents a CPU node.
++ *
++ * Returns true if the @path has a "device_type" file containing "cpu";
++ * otherwise, returns false.
++ */
++static bool is_cpu_node(char *path)
++{
++	FILE *file;
++	bool ret = false;
++	char device_type[4];
++
++	file = fopen(path, "r");
++	if (!file)
++		return false;
++
++	memset(device_type, '\0', 4);
++	if (fread(device_type, 1, 3, file) < 3)
++		goto out;
++
++	if (strcmp(device_type, "cpu"))
++		goto out;
++
++	ret = true;
++out:
++	fclose(file);
++	return ret;
++}
++
++static int get_threads_per_cpu(char *path)
++{
++	struct stat statbuf;
++	if (stat(path, &statbuf))
++		return 0;
++
++	return statbuf.st_size / 4;
++}
++
++/**
++ * get_present_cpus - finds the present CPUs in the system
++ *
++ * This function opens the file `/sys/devices/system/cpu/present` to read
++ * the range of present CPUs. It parses the range and calculates the
++ * total number of present CPUs in the system.
++ *
++ * Returns total number of present CPUs on success, -1 on failure.
++ */
++static int get_present_cpus()
++{
++	char *range;
++	char buf[1024];
++	int start, end;
++	int cpu_count = 0;
++	FILE *file = fopen("/sys/devices/system/cpu/present", "r");
++
++	if (!file)
++		return -1;
++
++	if (!fgets(buf, sizeof(buf), file))
++		return -1;
++
++	fclose(file);
++
++	range = strtok(buf, ",");
++	while (range != NULL) {
++		if (sscanf(range, "%d-%d", &start, &end) == 2) {
++			for (int i = start; i <= end; i++)
++				cpu_count++;
++		} else if (sscanf(range, "%d", &start) == 1) {
++			cpu_count++;
++		} else {
++			return -1;
++		}
++		range = strtok(NULL, ",");
++	}
++
++	return cpu_count;
++}
++
++/*
++ * get_cpu_info - Finds the following CPU attributes:
++ *
++ * threads_per_cpu: Number of threads per CPU, based on the device tree entry
++ *                  /proc/device-tree/cpus/<cpu_node>/ibm,ppc-interrupt-server#s.
++ * cpu_node_size: Size of files including file name size under a CPU node.
++ *
++ * Returns 0 on success, else -1.
++ */
++static int get_cpu_info(int *_present_cpus, int *_threads_per_cpu, int *_cpu_node_size)
++{
++	DIR *d;
++	struct dirent *de;
++	char path[PATH_MAX];
++	int present_cpus = 0, threads_per_cpu = 0, cpu_node_size = 0;
++	char *cpus_node_path = "/proc/device-tree/cpus";
++
++	present_cpus = get_present_cpus();
++	if (present_cpus < 0)
++		return -1;
++
++	d = opendir(cpus_node_path);
++	if (!d)
++		return -1;
++
++	while ((de = readdir(d)) != NULL) {
++		if ((de->d_type != DT_DIR) || is_dot_dir(de->d_name))
++			continue;
++
++		memset(path, '\0', PATH_MAX);
++		snprintf(path, PATH_MAX, "%s/%s/%s", cpus_node_path,
++			 de->d_name, "device_type");
++
++		/* Skip nodes with device_type != "cpu" */
++		if (!is_cpu_node(path))
++			continue;
++
++		/*
++		 * Found the first node under /proc/device-tree/cpus with
++		 * device_type == "cpu"
++		 */
++		memset(path, '\0', PATH_MAX);
++		snprintf(path, PATH_MAX, "%s/%s", cpus_node_path, de->d_name);
++		cpu_node_size = get_cpu_node_size(path);
++
++		memset(path, '\0', PATH_MAX);
++		snprintf(path, PATH_MAX, "%s/%s/%s", cpus_node_path,
++		de->d_name, "ibm,ppc-interrupt-server#s");
++		threads_per_cpu = get_threads_per_cpu(path);
++		break;
++	}
++
++	closedir(d);
++
++	if (!(threads_per_cpu && cpu_node_size))
++		return -1;
++
++	*_present_cpus = present_cpus;
++	*_cpu_node_size = cpu_node_size;
++	*_threads_per_cpu = threads_per_cpu;
++
++	dbgprintf("present_cpus: %d, threads_per_cpu: %d, cpu_node_size: %d\n",
++		  present_cpus, threads_per_cpu, cpu_node_size);
++
 +	return 0;
 +}
-diff --git a/kexec/arch/hppa/kexec-hppa.c b/kexec/arch/hppa/kexec-hppa.c
-index 77c9739..a64dc3d 100644
---- a/kexec/arch/hppa/kexec-hppa.c
-+++ b/kexec/arch/hppa/kexec-hppa.c
-@@ -146,3 +146,8 @@ unsigned long virt_to_phys(unsigned long addr)
++
++/*
++ * kdump_fdt_extra_size - Calculates the extra size needed for the Flattened
++ *                        Device Tree (FDT) based on the possible and present
++ *                        CPUs in the system.
++ */
++static unsigned int kdump_fdt_extra_size(void)
++{
++	int cpus_in_system;
++	unsigned int extra_size = 0;
++	int present_cpus = 0, threads_per_cpu = 0, cpu_node_size = 0;
++	int possible_cpus;
++
++	/* ALL possible CPUs are present in FDT so no extra size required */
++	if (sysconf(_SC_NPROCESSORS_ONLN) == sysconf(_SC_NPROCESSORS_CONF))
++		return 0;
++
++	if (get_cpu_info(&present_cpus, &threads_per_cpu, &cpu_node_size)) {
++		die("Failed to get cpu info\n");
++	}
++
++	cpus_in_system = present_cpus / threads_per_cpu;
++	possible_cpus = sysconf(_SC_NPROCESSORS_CONF) / threads_per_cpu;
++	dbgprintf("cpus_in_system: %d, possible_cpus: %d\n", cpus_in_system,
++		  possible_cpus);
++
++	if (cpus_in_system > possible_cpus)
++		die("Possible CPU nodes can't be less than active CPU nodes\n");
++
++	extra_size = (possible_cpus - cpus_in_system) * cpu_node_size;
++	dbgprintf("kdump fdt extra size: %u\n", extra_size);
++
++	return extra_size;
++}
+ 
+ /*
+  * For now, assume that the added content fits in the file.
+  * This should be the case when flattening from /proc/device-tree,
+  * and when passing in a dtb, dtc can be told to add padding.
+  */
+-int fixup_dt(char **fdt, off_t *size)
++int fixup_dt(char **fdt, off_t *size, unsigned long kexec_flags)
  {
- 	return addr - phys_offset;
- }
+ 	int ret;
+ 
+ 	*size += 4096;
 +
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
-index 444cb69..b4947a0 100644
---- a/kexec/arch/i386/kexec-x86.c
-+++ b/kexec/arch/i386/kexec-x86.c
-@@ -208,3 +208,11 @@ void arch_update_purgatory(struct kexec_info *info)
- 	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
- 		&panic_kernel, sizeof(panic_kernel));
- }
++	/* To support --hotplug option for the kexec_load syscall, consider
++	 * adding extra buffer to FDT so that the kernel can add CPU nodes
++	 * of hot-added CPUs.
++	 */
++	if (do_hotplug && (kexec_flags & KEXEC_ON_CRASH))
++		*size += kdump_fdt_extra_size();
 +
+ 	*fdt = realloc(*fdt, *size);
+ 	if (!*fdt) {
+ 		fprintf(stderr, "%s: out of memory\n", __func__);
+diff --git a/kexec/arch/ppc64/include/arch/fdt.h b/kexec/arch/ppc64/include/arch/fdt.h
+index b19f185..5f340b0 100644
+--- a/kexec/arch/ppc64/include/arch/fdt.h
++++ b/kexec/arch/ppc64/include/arch/fdt.h
+@@ -3,6 +3,6 @@
+ 
+ #include <sys/types.h>
+ 
+-int fixup_dt(char **fdt, off_t *size);
++int fixup_dt(char **fdt, off_t *size, unsigned long kexec_flags);
+ 
+ #endif
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index bdcfd20..858c994 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -345,7 +345,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 		create_flatten_tree(&seg_buf, &seg_size, cmdline);
+ 	}
+ 
+-	result = fixup_dt(&seg_buf, &seg_size);
++	result = fixup_dt(&seg_buf, &seg_size, info->kexec_flags);
+ 	if (result < 0)
+ 		return result;
+ 
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index fb27b6b..13c3ce3 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -24,6 +24,7 @@
+ #include <errno.h>
+ #include <stdint.h>
+ #include <string.h>
++#include <libfdt.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <dirent.h>
+@@ -968,7 +969,13 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
+ {
+ }
+ 
+-int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
 +int arch_do_exclude_segment(struct kexec_segment *seg_ptr, struct kexec_info *info)
-+{
+ {
 +	if (info->elfcorehdr == (unsigned long) seg_ptr->mem)
 +		return 1;
 +
-+	return 0;
-+}
-diff --git a/kexec/arch/ia64/kexec-ia64.c b/kexec/arch/ia64/kexec-ia64.c
-index 418d997..8d9c1f3 100644
---- a/kexec/arch/ia64/kexec-ia64.c
-+++ b/kexec/arch/ia64/kexec-ia64.c
-@@ -245,3 +245,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
- {
- }
- 
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-index ac75030..ee7b9f1 100644
---- a/kexec/arch/loongarch/kexec-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-loongarch.c
-@@ -381,3 +381,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
- 	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
- 				    buf_min, buf_max, buf_end, 1);
- }
++	if (seg_ptr->buf && fdt_magic(seg_ptr->buf) == FDT_MAGIC)
++		return 1;
 +
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/m68k/kexec-m68k.c b/kexec/arch/m68k/kexec-m68k.c
-index cb54927..0c7dbaf 100644
---- a/kexec/arch/m68k/kexec-m68k.c
-+++ b/kexec/arch/m68k/kexec-m68k.c
-@@ -108,3 +108,8 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
- {
- 	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+ 	return 0;
  }
-+
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
-index d8cbea8..94224ee 100644
---- a/kexec/arch/mips/kexec-mips.c
-+++ b/kexec/arch/mips/kexec-mips.c
-@@ -189,3 +189,7 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
- 				    buf_min, buf_max, buf_end, 1);
- }
- 
-+int arch_do_exclude_segment(const void *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index 03bec36..c8af870 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -966,3 +966,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
- {
- }
- 
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
-index bd5274c..fb27b6b 100644
---- a/kexec/arch/ppc64/kexec-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-ppc64.c
-@@ -967,3 +967,8 @@ int arch_compat_trampoline(struct kexec_info *UNUSED(info))
- void arch_update_purgatory(struct kexec_info *UNUSED(info))
- {
- }
-+
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index 33ba6b9..0561ee7 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -267,3 +267,8 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
- {
- 	return parse_iomem_single("Crash kernel\n", start, end);
- }
-+
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
-index ce341c8..f84c40c 100644
---- a/kexec/arch/sh/kexec-sh.c
-+++ b/kexec/arch/sh/kexec-sh.c
-@@ -257,3 +257,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
- 	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
- 				    buf_min, buf_max, buf_end, 1);
- }
-+
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index ffd84f0..42af90a 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -188,3 +188,8 @@ void arch_update_purgatory(struct kexec_info *info)
- 	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
- 				&panic_kernel, sizeof(panic_kernel));
- }
-+
-+int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
-+{
-+	return 0;
-+}
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index 73e5254..4675c46 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -112,7 +112,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
- 
- #define KEXEC_ON_CRASH		0x00000001
- #define KEXEC_PRESERVE_CONTEXT	0x00000002
--#define KEXEC_UPDATE_ELFCOREHDR	0x00000004
-+#define KEXEC_CRASH_HOTPLUG_SUPPORT	0x00000008
- #define KEXEC_ARCH_MASK		0xffff0000
- 
- /* Flags for kexec file based system call */
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 222f79e..034cea6 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -701,10 +701,13 @@ static void update_purgatory(struct kexec_info *info)
- 			continue;
- 		}
- 
--		/* Don't include elfcorehdr in the checksum, if hotplug
--		 * support enabled.
-+		/*
-+		 * Let architecture decide which segments to exclude from checksum
-+		 * if hotplug support is enabled.
- 		 */
--		if (do_hotplug && (info->segment[i].mem == (void *)info->elfcorehdr)) {
-+		if (do_hotplug && arch_do_exclude_segment(&info->segment[i], info)) {
-+			dbgprintf("Skipping segment mem: 0x%lx from SHA calculation\n",
-+				  (unsigned long)info->segment[i].mem);
- 			continue;
- 		}
- 
-@@ -1651,7 +1654,6 @@ int main(int argc, char *argv[])
- 		die("--load-live-update can only be used with xen\n");
- 	}
- 
--	/* NOTE: Xen KEXEC_LIVE_UPDATE and KEXEC_UPDATE_ELFCOREHDR collide */
- 	if (do_hotplug) {
- 		const char *ces = "/sys/kernel/crash_elfcorehdr_size";
- 		char *buf, *endptr = NULL;
-@@ -1665,8 +1667,8 @@ int main(int argc, char *argv[])
- 		if (!elfcorehdrsz || (endptr && *endptr != '\0'))
- 			die("Path %s does not exist, the kernel needs CONFIG_CRASH_HOTPLUG\n", ces);
- 		dbgprintf("ELFCOREHDR_SIZE %lu\n", elfcorehdrsz);
--		/* Indicate to the kernel it is ok to modify the elfcorehdr */
--		kexec_flags |= KEXEC_UPDATE_ELFCOREHDR;
-+		/* Indicate to the kernel it is ok to modify the relevant kexec segments */
-+		kexec_flags |= KEXEC_CRASH_HOTPLUG_SUPPORT;
- 	}
- 
- 	fileind = optind;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 1004aff..2d758c9 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -307,6 +307,8 @@ extern int do_hotplug;
- #define BOOTLOADER_VERSION PACKAGE_VERSION
- 
- void arch_usage(void);
-+/* Return non-zero if segment needs to be excluded from SHA calculation, else 0. */
-+int arch_do_exclude_segment(struct kexec_segment *seg_ptr, struct kexec_info *info);
- int arch_process_options(int argc, char **argv);
- int arch_compat_trampoline(struct kexec_info *info);
- void arch_update_purgatory(struct kexec_info *info);
 -- 
 2.45.1
 
