@@ -4,136 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE782C3065C
-	for <kexec@archiver.kernel.org>; Tue,  2 Jul 2024 20:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66F1BC2BD09
+	for <kexec@archiver.kernel.org>; Wed,  3 Jul 2024 04:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=07iTsFwufDw3BFZNZ7Xi1OpsyK9CQC9ePG1N0EgQCt8=; b=GBx9wqmHahIWoh
-	yTuvhq3B25NZHvwEBUbUwBwMz6ZdiMEKY47cpkwKZ0G9b1dWQwgF9886SrCgIzY7ocLwL3HpK0uFc
-	pt90ndohzfguvOfkahP1RO1xajVgC3vB7NJ2wqzZwLXQ+xKC6oFqbfTrScXCRi1mWbX6kruiLWBXI
-	3Eu0goErNhP0prxnOOARYA2JiRAEuQBfet2ElrLB065aK2vtYmHqYSePnskfz3wFdAhdQZ3wKSUOS
-	S9eFNk+ftMVnyubh+9rvE3awfo3hUL52r6buXBghosYgBzZUaXt6OAJA0eiO8jBkEJ7QAGT6gX2II
-	WScEeUHN1SiuEUwjoEXQ==;
+	List-Owner; bh=3bBKXDLupx4oTukrzxvlYsHIz0KT5cUguoSg4rLaS8Y=; b=3JFy0nP1/niWL6
+	Rkrqz3NuC6oV7qTIE5jjHKxbqDak1WRPpUlXWw75o8mK0EUJWtkf7FsE9UVWoEV/yGoKKkUqU71UL
+	e5W+KTLn+f+ylp6IcauSVKMl9foLlUNofgA/Qu5z/b3P34XKxf3oUTUoBSwHRFIsB/6lvxM//1tBy
+	RCUo+SlhGC42qWOBGGUAF2Is2pESu5pqm0by095AhbJmLMP+Wqu6atvJJuhav2oVkyFUyyKE+mFE6
+	GuYGurUvDur9pHZ6Kg/TooKmwCXJq2csDFiMqZLpp8PEsyh7ZRaaoICMRc7T06MTROcjQOTj0r7PU
+	tFb3DlX55X7KoRks6+vA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOjso-00000007rg0-0jCi;
-	Tue, 02 Jul 2024 20:13:46 +0000
-Received: from mail-dm6nam10on2061f.outbound.protection.outlook.com ([2a01:111:f400:7e88::61f] helo=NAM10-DM6-obe.outbound.protection.outlook.com)
+	id 1sOreX-00000008xBS-0n2N;
+	Wed, 03 Jul 2024 04:31:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOjsl-00000007rfY-0SSz
+	id 1sOreT-00000008xAM-2f27
 	for kexec@lists.infradead.org;
-	Tue, 02 Jul 2024 20:13:44 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c9VK9vdNN2U+9XY/TPU4sMVPSbtW/JB48xPJLa98vd/gjCznfUMx6dkkGl8MiLC/ac6oH4gq9K2LtSYbQXs5TGbi24H8NMK3/8DNuxBFMJdkWI57HAPRlAV221jI+qYJ4qwOmNNRB4qD9wS4QiM72dcWyj7qBUdTYMCcap4ptKYARJQ+zYKAR1tcKXTIpsyG23Xmu+laW+eWb24DjELlTnqGl8M4fmNUFgFQ3O4+7WEFWgoqF7CCy07LxuaEhQg67o/++Felydagq0PWMFitZHcdIPYjdwoX0RESnOLg1h6s0gqz+Mpg8pjWCIFgt55xK8JQVyouGcSaJMn03CVcaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xAW6P1BTBJSfNIUvVl8FqTOvvJPB1XAot5xkWOzWcuA=;
- b=fiwiHkm3A51CVnr6cZ2zYoKNO03m3SJai9V+4AXF5/giq1f13JCqV7QElzTcmcK/Yl2U4zVi53hE+Pm/dn9I8NwYYJu53N5btdEIhluIpTGI45iwtB+MAFAoW1OfsyqKlk/vLIO6fxZpANo6pa42V81MerKjREo7YjqUIn7BZAoPemgtrtm7Xj5f48ze+LBft1UZ3nhfHKbhXjlPSjw7h7MpmvvQ2PmhJI/bhrRtgWlsffB9chJ1xNgeG1yZUopo8JExrMYgQGStxT6k/+U3pZNJ8wUClVmJLw/W1AY6SpKmQ/Bu4xmcfZ3fBY05Hw9dbT85YcoJmjVZ9vQ4v1fKmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xAW6P1BTBJSfNIUvVl8FqTOvvJPB1XAot5xkWOzWcuA=;
- b=ZvSl+vUURV5P/xSetCZ24Jl/qt/wK0y/f422JHSZLR2q5wxcfa7vFz9lzDIjXw3eiaa1KX4rcNMq96aApsfcjS2j67jqCpAS4EGPU/cBYhXSDjrwXnbzN1u9SFBuO9eyraYtc7X0rP4t/JkUOfz73Sj9NDBFNNIqoc3Jesb4Bic=
-Received: from CH2PR20CA0004.namprd20.prod.outlook.com (2603:10b6:610:58::14)
- by PH7PR12MB6787.namprd12.prod.outlook.com (2603:10b6:510:1ad::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Tue, 2 Jul
- 2024 19:57:49 +0000
-Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
- (2603:10b6:610:58:cafe::8e) by CH2PR20CA0004.outlook.office365.com
- (2603:10b6:610:58::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33 via Frontend
- Transport; Tue, 2 Jul 2024 19:57:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 19:57:48 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
- 2024 14:57:47 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <dave.hansen@linux.intel.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <x86@kernel.org>
-CC: <hpa@zytor.com>, <rafael@kernel.org>, <peterz@infradead.org>,
-	<adrian.hunter@intel.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<jun.nakajima@intel.com>, <kirill.shutemov@linux.intel.com>,
-	<rick.p.edgecombe@intel.com>, <linux-kernel@vger.kernel.org>,
-	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <bhe@redhat.com>, <bdas@redhat.com>,
-	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <anisinha@redhat.com>,
-	<ardb@kernel.org>, <dyoung@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <jroedel@suse.de>
-Subject: [PATCH v11 1/3] x86/boot: Skip video memory access in the decompressor for SEV-ES/SNP
-Date: Tue, 2 Jul 2024 19:57:30 +0000
-Message-ID: <cc4636ee5a94c8b975ece43b9288a33ad62990cd.1719948376.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719948376.git.ashish.kalra@amd.com>
-References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com> <cover.1719948376.git.ashish.kalra@amd.com>
+	Wed, 03 Jul 2024 04:31:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719981086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JgHakkQuOZDwtNizCt1o4VIeKwc904nfJFS72Gueq74=;
+	b=emAKx5xVH7J7CC4Cjzn1EwjiKuGkS1Y0C2p5eQYNsJddx+YFT1kBwe0S9eaChsaDynE4Zt
+	YtMIFTqewKouAGpq8QaVmFvacGsB1kCEPh2We4EHcKgLGIPv/+d5OIQ6zqxNs44JuN9g7o
+	iXlfNrfo/u4IQMJZs5X6Ilhx63r+UD0=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-192-Mh6rdM2APS-4PpyzjeLsFw-1; Wed,
+ 03 Jul 2024 00:31:22 -0400
+X-MC-Unique: Mh6rdM2APS-4PpyzjeLsFw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2A2B619560AB;
+	Wed,  3 Jul 2024 04:31:21 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.117])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 746841955F21;
+	Wed,  3 Jul 2024 04:31:18 +0000 (UTC)
+Date: Wed, 3 Jul 2024 12:31:14 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
+	Coiby Xu <coxu@redhat.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Simon Horman <horms@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [PATCH v3 1/3] kexec_load: Use new kexec flag for hotplug support
+Message-ID: <ZoTUEtU6o6wuHvtf@MiWiFi-R3L-srv>
+References: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|PH7PR12MB6787:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6158c41-60a4-4869-f942-08dc9ad13fb7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?tbye1GI/sRxulyI8N+5yRNaQ+8sNuzlsr2vwTXihIQri5wdhSKTHi8T8QBKB?=
- =?us-ascii?Q?aL4UX3+LlTGKg300rovCtDj8hg7BCq7YmQLZtMaPYlTomn92LldtXfQ68COk?=
- =?us-ascii?Q?rtqY0rCRjfG1CZPcD0cuqwHP/jlWCxvcqaLWsq87WQToPP92xvM0i9x6b4w+?=
- =?us-ascii?Q?PwCkGgAGQsZ8/Faj1bdewUFNbIaEkHiQ4cXUjswI/tW7e/+okf3RqLbwzH+b?=
- =?us-ascii?Q?LIJxMIkRpRdmC0GmQHdHVTytqxCkNRek8i4+peEindyvSJ4PqT5iz03oWj3P?=
- =?us-ascii?Q?cIgrGOidj98xSHsHju+rzFNgC7zqyZmt9w4VH86P3b6mCKKWoTw/OM9GlxUG?=
- =?us-ascii?Q?W4TL5Mega2x04AFLhABubsKGg4OPRYsJcw17hvBQjV/trnZHvxqjuHmBQSp4?=
- =?us-ascii?Q?CvsUn7IpcProF6Tkln5yFt1I0pd10Vt0IM+LlSjq7JSdUU06JSSpsJ84US+5?=
- =?us-ascii?Q?SsvlMi7PYEYxZ/O3ORL+CROtu2FfxaPVm9B/3tzN+xG48mIPCJ4y9p3ApI+x?=
- =?us-ascii?Q?mdJfWHeRqP3Ll28/y2V8ZP6mxqObwq6RCsDwVaogIgWG9PCUPB79DM5rrz53?=
- =?us-ascii?Q?0y4g7KzPRe0irYSjbJASY2yFRNboKubRzXFxjr46SzYb5rOvFnEKNi+Uuksx?=
- =?us-ascii?Q?oYdoejOo7wPjcociz4bjlGPYJ2yjA6SWiaCzkfN7ttfY/6wy8qcUSnfGgYs0?=
- =?us-ascii?Q?cOgz1B4z+TLUBhS9WmzLW3RbH4qXYqgS1n2wmqd3+SxdtDRNhZB80jMz98uO?=
- =?us-ascii?Q?ni1JQ17xFHZVohiz4ZzL5f53YkOr0n4nspwEdarWmqcFv+ShZAycl8jKrDom?=
- =?us-ascii?Q?pB8ZOpuD+GgUIoQxjPvbz3J1xQ+8MFGg7Yfkr4F2v0mnJtQqfNNpUE+aXUKQ?=
- =?us-ascii?Q?jSEPSjMunaO/XwkGCdGQdZtWBz8B/KKb2ggp7RN0zLDV2UYo8lQFmmQga0mj?=
- =?us-ascii?Q?Jmh7KyWurBpDHwBAYfIRvwH0h7w57EY8GMKdyU2L9XgkAP+D58AJQLudx8Hy?=
- =?us-ascii?Q?lW6+omgPo/Ul/Xe0BRw8TXGGxb3Glxhiw2uVB2nJlxJ9evOHoGJjVcAmeBbV?=
- =?us-ascii?Q?/7P24NmDc3yyg0+WLrovyZ5ECQY5FgRBeXUrCsVHixxYg6S+kkc3aufWYkAu?=
- =?us-ascii?Q?g0oChA8vOyMKj9qF2bqTg+vydmLqqK6Dj4kgq+WWO/2dciNMUkMcUsy79nQf?=
- =?us-ascii?Q?u8gd16ivOoqgckmS+ubTszFvQMyP2nDzyjLsDcwpEgDkNAg3gG1e8OhqFfoN?=
- =?us-ascii?Q?odJRWgcniMrJBHqmEpG250bwRFoLG2jCB5s/5izSA/rRnS28VDwzTw8UD7pw?=
- =?us-ascii?Q?IOl6qS3c4I+OMo8wsCG9/Nw5KoCxY+NMFuLXogfzrVDiWYjaTRQuHqqQeRjK?=
- =?us-ascii?Q?4ux9LFXbm9BeLPmvIfwguJVjM+O3YcWXkqcK0WS6/4vRwAaVy/B0NdxLuW6i?=
- =?us-ascii?Q?bF7UZf6aU6F3NOcEDpXgxcev9rlBxTu0?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 19:57:48.7006
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6158c41-60a4-4869-f942-08dc9ad13fb7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000AD76.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6787
+In-Reply-To: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240702_131343_159234_BD48826D 
-X-CRM114-Status: GOOD (  13.67  )
+X-CRM114-CacheID: sfid-20240702_213129_780897_16DCA45E 
+X-CRM114-Status: GOOD (  23.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,70 +87,233 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 07/02/24 at 10:00am, Sourabh Jain wrote:
+......
+> diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+> index 444cb69..b4947a0 100644
+> --- a/kexec/arch/i386/kexec-x86.c
+> +++ b/kexec/arch/i386/kexec-x86.c
+> @@ -208,3 +208,11 @@ void arch_update_purgatory(struct kexec_info *info)
+>  	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
+>  		&panic_kernel, sizeof(panic_kernel));
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *seg_ptr, struct kexec_info *info)
+> +{
+> +	if (info->elfcorehdr == (unsigned long) seg_ptr->mem)
+> +		return 1;
+> +
+> +	return 0;
+> +}
 
-Accessing guest video memory/RAM in the decompressor causes guest
-termination as the boot stage2 #VC handler for SEV-ES/SNP systems does
-not support MMIO handling.
+I know the similar question has been asked in earlier version, I may not
+get it. still raise concern here to ask why x86_64 returns 0 directly,
+while i386 will have the different cases.
 
-This issue is observed during a SEV-ES/SNP guest kexec as kexec -c adds
-screen_info to the boot parameters passed to the second kernel, which
-causes console output to be dumped to both video and serial.
+> diff --git a/kexec/arch/ia64/kexec-ia64.c b/kexec/arch/ia64/kexec-ia64.c
+> index 418d997..8d9c1f3 100644
+> --- a/kexec/arch/ia64/kexec-ia64.c
+> +++ b/kexec/arch/ia64/kexec-ia64.c
+> @@ -245,3 +245,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>  {
+>  }
+>  
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+                                                            ~~~~~~~
+A tiny nit about the parameter naming, since the existing is taking
+'struct kexec_segment *segment', can we also take the same way? Not
+strong opinion.
 
-As the decompressor output gets cleared really fast, it is preferable to
-get the console output only on serial, hence, skip accessing the video
-RAM during decompressor stage to prevent guest termination.
+=====
+kexec-tools/kexec/kexec.c:
+static int valid_memory_segment(struct kexec_info *info,
+                                struct kexec_segment *segment)
+{
+        unsigned long sstart, send;
+        sstart = (unsigned long)segment->mem;
+        send   = sstart + segment->memsz - 1;
 
-Serial console output during decompressor stage works as boot stage2 #VC
-handler already supports handling port I/O.
+        return valid_memory_range(info, sstart, send);
+}
 
-  [ bp: Massage. ]
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
+> index ac75030..ee7b9f1 100644
+> --- a/kexec/arch/loongarch/kexec-loongarch.c
+> +++ b/kexec/arch/loongarch/kexec-loongarch.c
+> @@ -381,3 +381,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>  	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
+>  				    buf_min, buf_max, buf_end, 1);
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/m68k/kexec-m68k.c b/kexec/arch/m68k/kexec-m68k.c
+> index cb54927..0c7dbaf 100644
+> --- a/kexec/arch/m68k/kexec-m68k.c
+> +++ b/kexec/arch/m68k/kexec-m68k.c
+> @@ -108,3 +108,8 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+>  {
+>  	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+> index d8cbea8..94224ee 100644
+> --- a/kexec/arch/mips/kexec-mips.c
+> +++ b/kexec/arch/mips/kexec-mips.c
+> @@ -189,3 +189,7 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>  				    buf_min, buf_max, buf_end, 1);
+>  }
+>  
+> +int arch_do_exclude_segment(const void *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+> index 03bec36..c8af870 100644
+> --- a/kexec/arch/ppc/kexec-ppc.c
+> +++ b/kexec/arch/ppc/kexec-ppc.c
+> @@ -966,3 +966,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>  {
+>  }
+>  
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+> index bd5274c..fb27b6b 100644
+> --- a/kexec/arch/ppc64/kexec-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-ppc64.c
+> @@ -967,3 +967,8 @@ int arch_compat_trampoline(struct kexec_info *UNUSED(info))
+>  void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>  {
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
+> index 33ba6b9..0561ee7 100644
+> --- a/kexec/arch/s390/kexec-s390.c
+> +++ b/kexec/arch/s390/kexec-s390.c
+> @@ -267,3 +267,8 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+>  {
+>  	return parse_iomem_single("Crash kernel\n", start, end);
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+> index ce341c8..f84c40c 100644
+> --- a/kexec/arch/sh/kexec-sh.c
+> +++ b/kexec/arch/sh/kexec-sh.c
+> @@ -257,3 +257,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>  	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
+>  				    buf_min, buf_max, buf_end, 1);
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+> index ffd84f0..42af90a 100644
+> --- a/kexec/arch/x86_64/kexec-x86_64.c
+> +++ b/kexec/arch/x86_64/kexec-x86_64.c
+> @@ -188,3 +188,8 @@ void arch_update_purgatory(struct kexec_info *info)
+>  	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
+>  				&panic_kernel, sizeof(panic_kernel));
+>  }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+> index 73e5254..4675c46 100644
+> --- a/kexec/kexec-syscall.h
+> +++ b/kexec/kexec-syscall.h
+> @@ -112,7 +112,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+>  
+>  #define KEXEC_ON_CRASH		0x00000001
+>  #define KEXEC_PRESERVE_CONTEXT	0x00000002
+> -#define KEXEC_UPDATE_ELFCOREHDR	0x00000004
+> +#define KEXEC_CRASH_HOTPLUG_SUPPORT	0x00000008
+>  #define KEXEC_ARCH_MASK		0xffff0000
 
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Suggested-by: Thomas Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/boot/compressed/misc.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Yeah, removing KEXEC_UPDATE_ELFCOREHDR sounds good to avoid collision
+with xen code. 
 
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 944454306ef4..826b4d5cb1f0 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -385,6 +385,19 @@ static void parse_mem_encrypt(struct setup_header *hdr)
- 		hdr->xloadflags |= XLF_MEM_ENCRYPTION;
- }
- 
-+static void early_sev_detect(void)
-+{
-+	/*
-+	 * Accessing video memory causes guest termination because
-+	 * the boot stage2 #VC handler of SEV-ES/SNP guests does not
-+	 * support MMIO handling and kexec -c adds screen_info to the
-+	 * boot parameters passed to the kexec kernel, which causes
-+	 * console output to be dumped to both video and serial.
-+	 */
-+	if (sev_status & MSR_AMD64_SEV_ES_ENABLED)
-+		lines = cols = 0;
-+}
-+
- /*
-  * The compressed kernel image (ZO), has been moved so that its position
-  * is against the end of the buffer used to hold the uncompressed kernel
-@@ -440,6 +453,8 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
- 	 */
- 	early_tdx_detect();
- 
-+	early_sev_detect();
-+
- 	console_init();
- 
- 	/*
--- 
-2.34.1
+>  
+>  /* Flags for kexec file based system call */
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 222f79e..034cea6 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -701,10 +701,13 @@ static void update_purgatory(struct kexec_info *info)
+>  			continue;
+>  		}
+>  
+> -		/* Don't include elfcorehdr in the checksum, if hotplug
+> -		 * support enabled.
+> +		/*
+> +		 * Let architecture decide which segments to exclude from checksum
+> +		 * if hotplug support is enabled.
+>  		 */
+> -		if (do_hotplug && (info->segment[i].mem == (void *)info->elfcorehdr)) {
+> +		if (do_hotplug && arch_do_exclude_segment(&info->segment[i], info)) {
+> +			dbgprintf("Skipping segment mem: 0x%lx from SHA calculation\n",
+> +				  (unsigned long)info->segment[i].mem);
+>  			continue;
+>  		}
+>  
+> @@ -1651,7 +1654,6 @@ int main(int argc, char *argv[])
+>  		die("--load-live-update can only be used with xen\n");
+>  	}
+>  
+> -	/* NOTE: Xen KEXEC_LIVE_UPDATE and KEXEC_UPDATE_ELFCOREHDR collide */
+>  	if (do_hotplug) {
+>  		const char *ces = "/sys/kernel/crash_elfcorehdr_size";
+>  		char *buf, *endptr = NULL;
+> @@ -1665,8 +1667,8 @@ int main(int argc, char *argv[])
+>  		if (!elfcorehdrsz || (endptr && *endptr != '\0'))
+>  			die("Path %s does not exist, the kernel needs CONFIG_CRASH_HOTPLUG\n", ces);
+>  		dbgprintf("ELFCOREHDR_SIZE %lu\n", elfcorehdrsz);
+> -		/* Indicate to the kernel it is ok to modify the elfcorehdr */
+> -		kexec_flags |= KEXEC_UPDATE_ELFCOREHDR;
+> +		/* Indicate to the kernel it is ok to modify the relevant kexec segments */
+> +		kexec_flags |= KEXEC_CRASH_HOTPLUG_SUPPORT;
+>  	}
+>  
+>  	fileind = optind;
+> diff --git a/kexec/kexec.h b/kexec/kexec.h
+> index 1004aff..2d758c9 100644
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -307,6 +307,8 @@ extern int do_hotplug;
+>  #define BOOTLOADER_VERSION PACKAGE_VERSION
+>  
+>  void arch_usage(void);
+> +/* Return non-zero if segment needs to be excluded from SHA calculation, else 0. */
+> +int arch_do_exclude_segment(struct kexec_segment *seg_ptr, struct kexec_info *info);
+>  int arch_process_options(int argc, char **argv);
+>  int arch_compat_trampoline(struct kexec_info *info);
+>  void arch_update_purgatory(struct kexec_info *info);
+> -- 
+> 2.45.1
+> 
 
 
 _______________________________________________
