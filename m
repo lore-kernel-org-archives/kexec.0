@@ -4,102 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCE6CC2BD09
-	for <kexec@archiver.kernel.org>; Wed,  3 Jul 2024 18:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D791C30653
+	for <kexec@archiver.kernel.org>; Thu,  4 Jul 2024 12:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yB4StvYBySHxd9RBGldQOvwN0+do+VFgb5Wa3TnphZY=; b=P9p0U6UXChL4kN
-	yc3CTnjOh1d93P3tycHuOsF2nnaamSjUjy4P1P8XvTxXIMNl4z3D5eqIhl9MoAz8AqxPqz2QN5CJ7
-	z0U6yE/2d7/JDvoZ4RL5DSXa3Mszj3pVn1WgoZrC+cnCL/jntNT03cYLyXl+I5ATIBzKqj0/UQ++2
-	1NZWg6npCDiiqWaiFeURwLs86feAuCiWjfIxDwqdYg/e5+mG7YtKylZJnQGYPUZ6ShEWVK4fRdXWV
-	EkjxccE2JkTYIZGDpohAkOGEcoplUi+yc+Hgy1GOZYYxEm9fMevcKw3epAt9kqJLbEoKQrPpNM461
-	Bbl6/Zs3Y8i57XfaoGNw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
+	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=qni+B3/OB3BApQJYu4qhxKDDOH3j6/aeg8vir8rbuQU=; b=X5Ffm+IZOD276h
+	bQrn4F/z5XkVISA0+uv+Xvi4zEDrExk22ll5fD1ExEj1dhGhLCLDRpJEQ+/+ep7Qlba8LKngbFPDl
+	eV3kK93hxMYg0EI+crRNbF3i/5EtlZsWPrfqwBLbXX9GowIVcIgnIv0JN2y3Dfd2v09szsKQMSWYC
+	5scyvq7UBteRdTAINp1hFQdCTM/xxPGz4tkFWv6yUs0+sCxSJ5x/giBaTj3InryqyjWqMyZoMM8Eg
+	VRT/Vd/F6l5Wqob7WoVJCUZF8naYojazozc1aqrbNDZB+ySoGl08OzJnwe8ILLWadbmEdkoajWGKV
+	pKgfhzPdxwfYLSkbldXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sP4TT-0000000B871-3gXW;
-	Wed, 03 Jul 2024 18:12:59 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1sPLN0-0000000D6t8-3q2j;
+	Thu, 04 Jul 2024 12:15:26 +0000
+Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sP4TQ-0000000B86I-3Oe9
+	id 1sPLMx-0000000D6sk-1uQo
 	for kexec@lists.infradead.org;
-	Wed, 03 Jul 2024 18:12:58 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463IChUN018337;
-	Wed, 3 Jul 2024 18:12:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=F
-	weMSns6bm7twrZ+B8i7d3Lg5RQRPQjszQSwv1he6W8=; b=O44Z4ZRVRIE/EBH7j
-	gUJy8yRaxVx+zYHHVVafFLnJPsqcK+VW0whKjt59B0PKohenHGtIwzpWEsfaqLY+
-	opjDEsu7+9kV5yHrnvgRXQNGc3xVUQ8TFMlDUeRdHN28Bca2kRahmvyFdp5Ti3eI
-	bhaUftGxSXjF/N10PyUhK7ImJvPQinMA4WjMluX1NDTOO1fS1PeDVdMSi+dmaAGW
-	H3hyBZbAqaDdaoPu70KTW/P5nokzM+P/6ZWKfJCa8FgG49wnJh0hqgC6rAoQvW1N
-	18KxeBsfdTRNmUd4wrBVJ25ZljtBFSj1Sczw0RaCD9zEoSfdab+M65H216bIcHwY
-	YhEDg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 405bgur11h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 18:12:52 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 463ICq0k018449;
-	Wed, 3 Jul 2024 18:12:52 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 405bgur11d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 18:12:52 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 463GmKOG009455;
-	Wed, 3 Jul 2024 18:12:51 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 402xtmupte-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 18:12:51 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 463ICkkV56557852
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jul 2024 18:12:48 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05E3C20040;
-	Wed,  3 Jul 2024 18:12:46 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A2B5B2004D;
-	Wed,  3 Jul 2024 18:12:43 +0000 (GMT)
-Received: from [9.43.78.85] (unknown [9.43.78.85])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Jul 2024 18:12:43 +0000 (GMT)
-Message-ID: <17f42d4e-5b26-4ec4-a570-a58a699d3863@linux.ibm.com>
-Date: Wed, 3 Jul 2024 23:42:42 +0530
+	Thu, 04 Jul 2024 12:15:24 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 0212CCE3438
+	for <kexec@lists.infradead.org>; Thu,  4 Jul 2024 12:15:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C123BC3277B
+	for <kexec@lists.infradead.org>; Thu,  4 Jul 2024 12:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720095320;
+	bh=r1vk0YAizuAj5auz3uSWc6OhJhn1k9N3zbH0SY28U9Y=;
+	h=Date:From:To:Subject:From;
+	b=OahfblbZmotVhOs9O6lODw0/ddrOViwQCoJpssmVBYVvHhx6bxCxcnaadjNUrf1Qu
+	 8bImmKO0+j4tnvqTvE26xY7YpefA+SSUVpm9Gmzqbk4VQDZdcucDRX6b+TJqTC1Cp1
+	 YIBQM0j4EHXmzG/KJFu3rC8b2do6g82sToMq5VwvVmv6aJA4JLKMZz87nxqK+uFMgw
+	 XuM8agsz6swo64Jy9kyaMM545k/e2xMC9Zw4+8XSeS8ZfVSlykPf5dfQyHMCfQ9M3I
+	 4jtz5woH5P77P0MQLRuGwmXixTOrsZXU5CssuCl1BUKyUFemhqYj56e6duZSqMcojA
+	 vAA2fNqpUjOTw==
+Date: Thu, 4 Jul 2024 13:15:17 +0100
+From: Simon Horman <horms@kernel.org>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools v2.0.29 preparation
+Message-ID: <20240704121517.GA1088210@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] doc/hotplug: update man and --help
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
-        Coiby Xu <coxu@redhat.com>, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Simon Horman <horms@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>
-References: <20240702043057.200211-1-sourabhjain@linux.ibm.com>
- <20240702043057.200211-3-sourabhjain@linux.ibm.com>
- <ZoTh9E8BJt+E3ctg@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <ZoTh9E8BJt+E3ctg@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XJsGln_G7O1oi87slHbun1i8H6oCgk9U
-X-Proofpoint-ORIG-GUID: zZ5xIcaQhBrPKw8LB662xjZ9-0UF5UhM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_12,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 spamscore=0 suspectscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 clxscore=1015 mlxlogscore=838 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030133
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240703_111257_014892_C9424770 
-X-CRM114-Status: GOOD (  12.51  )
+X-CRM114-CacheID: sfid-20240704_051523_694656_91DE546D 
+X-CRM114-Status: UNSURE (   7.72  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,38 +64,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi all,
 
-On 03/07/24 11:00, Baoquan He wrote:
-> On 07/02/24 at 10:00am, Sourabh Jain wrote:
->> Update the man page and --help option to make the description of the
->> --hotplug option easier to understand.
->>
->> Cc: Aditya Gupta <adityag@linux.ibm.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Coiby Xu <coxu@redhat.com>
->> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
->> Cc: Simon Horman <horms@kernel.org>
->> Acked-by: Hari Bathini <hbathini@linux.ibm.com>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> ---
->> Changelog:
->>
->>  From v2 -> v3
->>    - Updated --hotplug option description
->>
->> ---
->>   kexec/kexec.8 | 8 ++++----
->>   kexec/kexec.c | 4 +++-
->>   2 files changed, 7 insertions(+), 5 deletions(-)
-> Acked-by: Baoquan He <bhe@redhat.com>
-Thanks for Ack!
+I am planning to release kexec-tools v2.0.29 in the next two weeks
+to roughly coincide with the release of the v6.10 kernel.
 
-- Sourabh Jain
+I would like to ask interested parties to send any patches they would like
+included in v2.0.29 within one week so they can be considered for inclusion
+in an rc release.
+
+For reference the patches queued up since v2.0.28 are as follows.
+
+Thanks to everyone who has contributed to kexec-tools!
+
+4fd0553cdfe3 x86-linux-setup.c: Use POSIX basename API
+2e8a93af1e85 kexec: loongarch: fix load command line segment error
+69ccfa12d5e3 kexec: loongarch: add multi crash kernel segment support
+3194d1eba9c1 LoongArch: fix kernel image size error
+2a3e54e9f734 ARM: Fix add_buffer_phys_virt() align issue
+f53bcef5063c Fix incorrect Free Software Foundation address in the license
+623ceb333c18 util_lib/elf_info.c: fix a warning
+9d9cf8de8b2a kexec_file: add kexec_file flag to support debug printing
+6ee2ac1bf739 workflow: update to use checkout@v4
+328de8e00e29 Fix building on x86_64 with binutils 2.41
+94fbe64fb22d kexec: don't use kexec_file_load on XEN
+21ea4569856a kexec-tools 2.0.28.git
 
 _______________________________________________
 kexec mailing list
