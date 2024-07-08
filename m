@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 334B0C3271E
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B96C9C3DA42
 	for <kexec@archiver.kernel.org>; Mon,  8 Jul 2024 13:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nmtOKCJjIfP6qPqFGsUoSYbH3BN0RH9Zx9SGUNnrOEA=; b=5Gvyov57lM/tUh
-	E4Db/5chvbzo9oERUNaSRCALBQaY52Nv45kdBfkJKLIX2lVQ1rlNiT45dxDwgcZYX7X4z16fnze5J
-	ZG/YQZmndj9+3qiQnmHbMDK/BCnJ7INBLCm9Os0MCiGkZKHgUtz/Z3mubSu4ztsjsXK2Ir7LXd+0m
-	sGT5ruuoScxDc8wAI/62mUZpwmLO8ujD69Vd7zu6r0nEuj3Zm7BwfjeYn42oyZeMpPaf7sShpRjvn
-	zUfanBWTZvKrzzgh+9mf4dCX6UVpxDHsEXu+sIRymFKKtjXLL1SEzAZR5xxxHI/SjA9tB/pQLUBLa
-	wsd+g5Z1vH6W7aZsipMA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=phW/PoIU9Y/D4I+Yp/oDCyIi07L2wepIW+U0/TxYfAA=; b=YwfHsLetW3l2jV
+	Gn5ZZnU2CXL3wP8dBlHuCpZEnTQ2+aHNZkGl2pjnlog/xpqW9M8ByqOATFf7uJGrPFSglav+WPqr+
+	EhLZbY+7QA+W+O/1dfiDmrTdQ/iQ1COO8nDu3WNRYTHCQ0k/ykVMeLmaYCMmGXmsL7Rzy3y2ioCPM
+	fwhm+yssJzYNRQnJ1GPffj70kGxsO7VGWNyCf6G/VpZI7lhQin3atcnzErSP60R3c+hdvz1aLi3uF
+	5inH8LdYD77R0q7L3ScDuIgSr5IJ6heAmnqfYuSeYGc70O3preDa9VEIJ3wrj7Bg3xfC8jh86kBlV
+	pklaUOUFOlyEUQLh3ogw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQoRJ-00000003ui9-320p;
-	Mon, 08 Jul 2024 13:29:57 +0000
-Received: from szxga03-in.huawei.com ([45.249.212.189])
+	id 1sQoRK-00000003uiV-1bij;
+	Mon, 08 Jul 2024 13:29:58 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQoRG-00000003uge-0p12;
+	id 1sQoRG-00000003ugf-1OCb;
 	Mon, 08 Jul 2024 13:29:56 +0000
 Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WHlHl00R7zQksh;
-	Mon,  8 Jul 2024 21:25:54 +0800 (CST)
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WHlMl1wM9znZMj;
+	Mon,  8 Jul 2024 21:29:23 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id B5267140415;
-	Mon,  8 Jul 2024 21:29:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DDA4F140415;
+	Mon,  8 Jul 2024 21:29:47 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 8 Jul
- 2024 21:29:47 +0800
+ 2024 21:29:46 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <linux@armlinux.org.uk>, <bhe@redhat.com>, <vgoyal@redhat.com>,
 	<dyoung@redhat.com>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
@@ -47,19 +47,18 @@ To: <linux@armlinux.org.uk>, <bhe@redhat.com>, <vgoyal@redhat.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 1/3] crash: Fix memory reserve dead loop bug in reserve_crashkernel_generic()
-Date: Mon, 8 Jul 2024 21:33:46 +0800
-Message-ID: <20240708133348.3592667-2-ruanjinjie@huawei.com>
+Subject: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel reservation
+Date: Mon, 8 Jul 2024 21:33:45 +0800
+Message-ID: <20240708133348.3592667-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240708133348.3592667-1-ruanjinjie@huawei.com>
-References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240708_062954_455656_89F426C4 
-X-CRM114-Status: GOOD (  11.52  )
+X-CRM114-CacheID: sfid-20240708_062954_602688_39DCC383 
+X-CRM114-Status: UNSURE (   7.01  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,53 +75,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the platform do not support memory above 4G, such as 32 bit arch,
-and CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX, the high
-crash kernel memory reservation is meaningless and it will cause
-dead loop and system stall:
+Currently, x86, arm64, riscv and loongarch has been switched to generic
+crashkernel reservation. Also use generic interface to simplify crashkernel
+reservation for arm32, and fix two bugs by the way.
 
--> reserve_crashkernel_generic() and high is true
- -> memblock_phys_alloc_range() fail and return 0
-    -> search_end = CRASH_ADDR_LOW_MAX(same as CRASH_ADDR_HIGH_MAX)
-       -> call memblock_phys_alloc_range() again and fail agin.
-          -> search_end == CRASH_ADDR_HIGH_MAX satisfy again
-	......
+Jinjie Ruan (3):
+  crash: Fix memory reserve dead loop bug in
+    reserve_crashkernel_generic()
+  ARM: Fix crash kenrel data type bug
+  ARM: Use generic interface to simplify crashkernel reservation
 
-However, the current check only considers the case where
-CRASH_ADDR_HIGH_MAX is greater than CRASH_ADDR_LOW_MAX. Fix it.
+ arch/arm/Kconfig                     |  3 ++
+ arch/arm/include/asm/crash_reserve.h | 24 +++++++++++
+ arch/arm/kernel/setup.c              | 63 +++++-----------------------
+ kernel/crash_reserve.c               |  8 +++-
+ 4 files changed, 44 insertions(+), 54 deletions(-)
+ create mode 100644 arch/arm/include/asm/crash_reserve.h
 
-Fixes: 0ab97169aa05 ("crash_core: add generic function to do reservation")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/crash_reserve.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index 5b2722a93a48..e18fb1bb5d28 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -390,6 +390,11 @@ void __init reserve_crashkernel_generic(char *cmdline,
- 	} else if (high) {
- 		search_base = CRASH_ADDR_LOW_MAX;
- 		search_end = CRASH_ADDR_HIGH_MAX;
-+
-+		if (search_base >= search_end) {
-+			pr_warn("crashkernel high memory reservation failed.\n");
-+			return;
-+		}
- 	}
- 
- retry:
-@@ -410,7 +415,8 @@ void __init reserve_crashkernel_generic(char *cmdline,
- 		 * low memory, fall back to high memory, the minimum required
- 		 * low memory will be reserved later.
- 		 */
--		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
-+		if (!high && search_end == CRASH_ADDR_LOW_MAX &&
-+		    CRASH_ADDR_HIGH_MAX > CRASH_ADDR_LOW_MAX) {
- 			search_end = CRASH_ADDR_HIGH_MAX;
- 			search_base = CRASH_ADDR_LOW_MAX;
- 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
 -- 
 2.34.1
 
