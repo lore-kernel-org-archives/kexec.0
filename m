@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6021BC3DA41
-	for <kexec@archiver.kernel.org>; Tue,  9 Jul 2024 07:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD52EC2BD09
+	for <kexec@archiver.kernel.org>; Tue,  9 Jul 2024 07:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7yZcMHVftyOPiO7YiKUyGbmjTIkYWaAe+hIVu5j0CoI=; b=qeANABZxvnpKot
-	Kz8UBGapE/li6/cOfuqUQKXw6jwvKIGThVKnu4Tum0HCKUnY26jrn328eeFZpZFJBWhUy9PvysEIT
-	ixM1r33RahHCcJM6YLQ4XoMxAs+rX9Wo0KYxKSnDlAFDlBV69QL0Gi1cYBq8vaEVJlBQqZ78+yJH+
-	5HIkEXdmqZl0b1RdV7w1BvRo9pQ8qTXZy4RjWUhO9swFjmYFY2jjZyUPuWD8tHvDRQw8A7LQj4X4+
-	cPcxWQRGUOQLoeNq1h/cK0XJI0dYKqTZFY3NgMCVoBxK15PwfVl7tEyrHsOfCVb707A3Tcu+DI0AD
-	6zD/K5OqTJQMs3+vS+uA==;
+	List-Owner; bh=cg5D8tYrHkhHgqqtIAE6Z6ak/dUdgafueCq3Hq868bY=; b=jxh2nfXpv8TsS6
+	EA/F66Jlm8kNvOvP7MsZubLY2l2bBvVxSllMJ7Q/MpoXwYoUZIY/SBNcuTdFjf+snAyD5bW8CNhdG
+	bhgES2K/HGy39arU0IlEHYKCgyP5TiwrY6Xp61q34dO5nOYTd/h0qWnhYVZo52eBcnkINKMj5PeWR
+	rtb7aGvy50SPqtYWUWvzgW5gSEw0v6X9rQC+K3VczVFRKjU7bett3eI5c90uiVX4dDotADbnUxr9Y
+	BRgDsfb69STjESJX6UKacJWME4B4J8y8zAEhVirVvdt3MBwb2jJjIlaqp506eKYh0RrwPji+tmrjQ
+	HOpDfP1QdTrpxngvhQjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR5Bx-00000006DlG-25cE;
-	Tue, 09 Jul 2024 07:23:13 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1sR5Ia-00000006ENO-10UE;
+	Tue, 09 Jul 2024 07:30:04 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR5Bt-00000006Dki-0nkQ
+	id 1sR5IW-00000006EM7-29O5
 	for kexec@lists.infradead.org;
-	Tue, 09 Jul 2024 07:23:10 +0000
+	Tue, 09 Jul 2024 07:30:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 3F70A60F3E;
-	Tue,  9 Jul 2024 07:23:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE38C3277B;
-	Tue,  9 Jul 2024 07:23:06 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 5745060F38;
+	Tue,  9 Jul 2024 07:29:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E21C3277B;
+	Tue,  9 Jul 2024 07:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720509787;
-	bh=NxNRYtDnVXEWtZR/Hk5E/9vVJXMuEtLaY/D1HoPqNJY=;
+	s=k20201202; t=1720510199;
+	bh=r0nJLph3vOq6vcsrqYIVHY/7gvpCGCD/nRIzDvt3Qww=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsDylTz3Fm7AF/PShtN/tRTfrZNZcleNGucR4idntNkgYIf9/G1biDIqWLXi+hQca
-	 HbXTHcNAyVErZKKlvaj50VWTpSH2wlgldY9VuLxS6Ar94fvgjgiCr5wSnnHu9zMCXj
-	 A89cXyelI+l2qrz8NkkVjnSoP6oQJLOvS+vP235PX6p2b91z2gDcts/XYBRW3i4X/v
-	 d3PBMssJ8PmM7FFo9nYBLvQ0QBAH7fz0ZUXzc6xsFwKNdP8tLthfABAuJ2HBNEwHXN
-	 XUnYm8V5ATmWbpA3KCPj4zpj7TFzCXMtTZbfOCsAW9G8zytoLGLdey50+jXkmhuNtV
-	 b1JLP3hj56nSA==
-Date: Tue, 9 Jul 2024 08:23:04 +0100
+	b=pAat4fR7g25/Av/rahPoVvWLuwODZjEkE0yGY89ONa+PupLsKeK8zoNle8dCGRxRB
+	 aRBiNyElBsO4uf2t9MMuL3kplm42GKPR+tFTmSo7VXCWZczhyP+FbOBsQojg6q625l
+	 PGsed+kW11R2tpsro30R3vVcRExG+s+qlpGGVrxFLFKHqLqu7uahGQnd+BUUp245wc
+	 rLRREUPBlDwbiwJxTsz/WqqtUZDA50cubIVev8tK/durG5SnOwxmYGVKu3eeEpcihf
+	 HvYZ+NCFtEo5nlbv8sote1CPEanwI5kRmPoJYIP3PtifOXT/6kGEcm1EIZKdQ7QKFd
+	 AqwZaKLZ8Cwng==
+Date: Tue, 9 Jul 2024 08:29:55 +0100
 From: Simon Horman <horms@kernel.org>
 To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>,
-	Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [ANNOUNCE] kexec-tools v2.0.29 preparation
-Message-ID: <20240709072304.GA346094@kernel.org>
-References: <20240704121517.GA1088210@kernel.org>
- <f0f36b28-c229-40ca-a10c-cbf0ebade4a3@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Aditya Gupta <adityag@linux.ibm.com>,
+	Baoquan He <bhe@redhat.com>, Coiby Xu <coxu@redhat.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Subject: Re: [PATCH v3 0/3] Enable crash hotplug support on powerpc
+Message-ID: <20240709072955.GB346094@kernel.org>
+References: <20240707152456.87899-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <f0f36b28-c229-40ca-a10c-cbf0ebade4a3@linux.ibm.com>
+In-Reply-To: <20240707152456.87899-1-sourabhjain@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240709_002309_312862_657E856D 
-X-CRM114-Status: GOOD (  13.26  )
+X-CRM114-CacheID: sfid-20240709_003000_611541_A6279C26 
+X-CRM114-Status: GOOD (  17.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,24 +74,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jul 07, 2024 at 09:00:18PM +0530, Sourabh Jain wrote:
-> Hello Simon,
+On Sun, Jul 07, 2024 at 08:54:53PM +0530, Sourabh Jain wrote:
+> The primary goal of this patch series is to enable crash hotplug on
+> powerpc architecture for the `kexec_load` system call.
 > 
-> On 04/07/24 17:45, Simon Horman wrote:
-> > Hi all,
-> > 
-> > I am planning to release kexec-tools v2.0.29 in the next two weeks
-> > to roughly coincide with the release of the v6.10 kernel.
-> > 
-> > I would like to ask interested parties to send any patches they would like
-> > included in v2.0.29 within one week so they can be considered for inclusion
-> > in an rc release.
+> The first patch in the series introduces a new kexec flag added in the
+> kernel to generalize crash hotplug support. The second patch enables
+> crash hotplug support on PowerPC for `kexec_load` system call. The third
+> patch updates the documentation about crash hotplug support.
 > 
-> It would be helpful if we could consider the below patch series for the
-> v2.0.29 release.
-> https://lore.kernel.org/all/20240707152456.87899-1-sourabhjain@linux.ibm.com/
+> Changes log:
+> 
+> v4:
+>   - Do not remove the KEXEC_UPDATE_ELFCOREHDR kexec flag. It is needed to
+>     maintain backward compatibility on x86. 1/3
+>   - Send the KEXEC_UPDATE_ELFCOREHDR kexec flag for x86, and for the rest
+>     of the architectures, send KEXEC_CRASH_HOTPLUG_SUPPORT to enable
+>     crash hotplug support kexec_load system call. 1/3
+>   - Since there is a significant change in 1/3, hence Hari's Acked-by
+>     is removed form only first patch. 1/3
+>   - Rename and reorder the function arch_do_exclude_segment() parameters
+>     as suggested. 1/3
+>   - Keep the implementation of arch_do_exclude_segment() function same
+>     for x86_64 and i386. 1/3
+> 
+> v3:
+>   https://lists.infradead.org/pipermail/kexec/2024-July/030361.html
+>   - Updated --hotplug option description 3/3
+> 
+> v2:
+>   https://lists.infradead.org/pipermail/kexec/2024-June/030309.html
+>   - Find CPUs in the system using the /sys/devices/system/cpu/present sysfs
+>     instead of traversing all nodes under /proc/device-tree/cpus. 2/3
+>   - Added a new function to find present CPUs in the system. 2/3
+>   - Removed unnecessary NULL check on seg_ptr from arch_do_exclude_segment(). 2/3
+>   - Updated --hotplug option description 3/3
+> 
+> v1:
+>   https://lists.infradead.org/pipermail/kexec/2024-May/030051.html
 
-Sure, will do.
+Thanks Sourabh,
+
+Series applied.
 
 _______________________________________________
 kexec mailing list
