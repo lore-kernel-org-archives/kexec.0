@@ -4,76 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22FD3C2BD09
-	for <kexec@archiver.kernel.org>; Tue,  9 Jul 2024 09:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 472D4C3DA41
+	for <kexec@archiver.kernel.org>; Tue,  9 Jul 2024 09:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Nyj+had62oM9L+vWCAJJizHtRmPvgf2BQdyBTS0ktJU=; b=fGp8vnHNJQLCic
-	3J+D0kkEJjlJfMt7BV1OkT/deTP1SYa6uNL259xGcdSnemhfCYD3Gs2r+4+L06525bcJ5C5gux2eS
-	scNaPnZ3p/9FPnmwCZ4K59mM3ybgMQGG2MAHg3bd/ueqr2dbPPL/IY9yunsl/iBKm9vuwVdHIt15y
-	h/KODf3vP/9wHIvPzTpSdXSFtMgw7IkjsXdHVGuCo5sb6NgB7FQldmrNc2U8zjrWy67L+l+eRokHf
-	C38frMMmrq/IoNnHT2MWSGOLtFGJGl1YyT+EhRwuk4SsVReq1pzflIJA8exE2udIWdF8Q8Omfc1UF
-	Ma2uHGelzTC5hpI7lX2g==;
+	List-Owner; bh=dAmOaoEYL6at7qR1VDvKPsHjTZ6XJ5diONmY5KufP1c=; b=f5gcFkb9D8MfWw
+	5uDOC/JOZaGmAIVPgXZKONZn6ako275tRcDB2kyDTcTM5WgKB0NSOhqYw+Fnov9AjF0SARTKV7IRU
+	kHIqvKewwhzxTnxRFfUfmovBhv3b9r6SKFnFztdmkYY0mDAUFgjJQ854MWcxZSaNYojGqiBdb8FC4
+	woxSyFAHewoaoCG0cvpq0fceRgA4SAqYAAEqXZ21IkP3x2yXMAVZVuSiJHu6TaE1ND8bEQDt5+dVn
+	oXz0yUN56+LJpigtTRI3E0l+pE6bAEt43xflyOQsB+ExRFKX5DHh08fqjj8fLmO5Bi7h7sAxJIlrS
+	42sod36V4vVb4kRWLqMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR7Aj-00000006cER-2VIJ;
-	Tue, 09 Jul 2024 09:30:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sR7Ud-00000006gCt-3DQy;
+	Tue, 09 Jul 2024 09:50:39 +0000
+Received: from szxga01-in.huawei.com ([45.249.212.187])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR7Ag-00000006cDM-2pxf
-	for kexec@lists.infradead.org;
-	Tue, 09 Jul 2024 09:30:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720517399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3UrNehCdEOz3kmpljIH4fi/GT8Naw2VAyq67V1zlRwE=;
-	b=iqMaUdcuS49pW/PY2h86iwWP4Z+i47J27FvpKcETtmd4VcdpfMtmNc4T/iHSSUVp+ptpf2
-	CfsxzIt5a/sRhoP0dVJFvbPVWrGGupHaf1FmOE7mL+lIc7YSghgCgcH/tJ9PSl9O2S4+wv
-	DlBnuLfYmgKApmGyQLtgqHAW27geOiQ=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-454-M8UPmP1PMDilwb-uNonikA-1; Tue,
- 09 Jul 2024 05:29:57 -0400
-X-MC-Unique: M8UPmP1PMDilwb-uNonikA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3CC6B1936187;
-	Tue,  9 Jul 2024 09:29:53 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0D441955F40;
-	Tue,  9 Jul 2024 09:29:49 +0000 (UTC)
-Date: Tue, 9 Jul 2024 17:29:45 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, vgoyal@redhat.com, dyoung@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	arnd@arndb.de, afd@ti.com, akpm@linux-foundation.org,
-	rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-	eric.devolder@oracle.com, gregkh@linuxfoundation.org, deller@gmx.de,
-	javierm@redhat.com, robh@kernel.org, thunder.leizhen@huawei.com,
-	austindh.kim@gmail.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+	id 1sR7UZ-00000006gAT-3och;
+	Tue, 09 Jul 2024 09:50:37 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WJGMJ3T7RzxVgV;
+	Tue,  9 Jul 2024 17:45:48 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8427D18007E;
+	Tue,  9 Jul 2024 17:50:22 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 9 Jul 2024 17:50:21 +0800
+Message-ID: <3157befe-431f-69ac-b9d3-7a8685ba3a4d@huawei.com>
+Date: Tue, 9 Jul 2024 17:50:20 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
 Subject: Re: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel
  reservation
-Message-ID: <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>
+CC: <linux@armlinux.org.uk>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<arnd@arndb.de>, <afd@ti.com>, <akpm@linux-foundation.org>,
+	<rmk+kernel@armlinux.org.uk>, <linus.walleij@linaro.org>,
+	<eric.devolder@oracle.com>, <gregkh@linuxfoundation.org>, <deller@gmx.de>,
+	<javierm@redhat.com>, <robh@kernel.org>, <thunder.leizhen@huawei.com>,
+	<austindh.kim@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
 References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240708133348.3592667-1-ruanjinjie@huawei.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+ <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240709_023002_836049_A0EECAC3 
-X-CRM114-Status: UNSURE (   9.12  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240709_025036_148717_4BC0D598 
+X-CRM114-Status: GOOD (  10.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,21 +79,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
-> Currently, x86, arm64, riscv and loongarch has been switched to generic
-> crashkernel reservation. Also use generic interface to simplify crashkernel
-> reservation for arm32, and fix two bugs by the way.
 
-I am not sure if this is a good idea. I added the generic reservation
-itnerfaces for ARCH which support crashkernel=,high|low and normal
-crashkernel reservation, with this, the code can be simplified a lot.
-However, arm32 doesn't support crashkernel=,high, I am not sure if it's
-worth taking the change, most importantly, if it will cause
-misunderstanding or misoperation.
 
-Thanks
-Baoquan
+On 2024/7/9 17:29, Baoquan He wrote:
+> On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
+>> Currently, x86, arm64, riscv and loongarch has been switched to generic
+>> crashkernel reservation. Also use generic interface to simplify crashkernel
+>> reservation for arm32, and fix two bugs by the way.
+> 
+> I am not sure if this is a good idea. I added the generic reservation
+> itnerfaces for ARCH which support crashkernel=,high|low and normal
+> crashkernel reservation, with this, the code can be simplified a lot.
+> However, arm32 doesn't support crashkernel=,high, I am not sure if it's
+> worth taking the change, most importantly, if it will cause
+> misunderstanding or misoperation.
 
+Yes, arm32 doesn't support crashkernel=,high.
+
+However, a little enhancement to the generic code (please see the first
+patch), the generic reservation interfaces can also be applicable to
+architectures that do not support "high" such as arm32, and it can also
+simplify the code (please see the third patch).
+
+> 
+> Thanks
+> Baoquan
+> 
+> 
 
 _______________________________________________
 kexec mailing list
