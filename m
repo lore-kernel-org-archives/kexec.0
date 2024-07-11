@@ -4,70 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28967C3DA41
-	for <kexec@archiver.kernel.org>; Thu, 11 Jul 2024 08:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C778BC3DA47
+	for <kexec@archiver.kernel.org>; Thu, 11 Jul 2024 10:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=REhbF8paw/wwNU+gW//hjmelyWNXM0GhPoeqFgxKfqI=; b=cz7P+51k/CZzjU
-	GK9qIVj4qVVELpfwS2OxtHSMk6BR6JCvxkihVuPjmGmIrcA1gwfzVK4Y/DjFRMmWGUT35r13AIRux
-	PH59F7LnDflocfxf2oeKtEnpqBSEyoJwzF7FuU/+WY2R8CQBre6VIHsnMcDYwfiUMElptEprsKb87
-	PRIZEHJA6MDD+Rnjb7roJFkwGnQqlZDa74hxtgOQ5xWwyOPWkQlYQAf8Af+ylVZTjuLnuskYvnPGw
-	fi2xiqBHXx6Ux1WpGxxgs+AA2DqZt+8r4RHHUQR9rYxgKeJQvyurGsgMUMJpcDQ/4+IfJG6qkr+tf
-	orcdvT6eowwNahMPnKBQ==;
+	List-Owner; bh=g1NxGDKthJxQuzr4fA4dfnWMXAyzvko/i9QwW5C+ZAk=; b=FpX6t4gkPlRtCS
+	h57WHtQCvHsqIXFcvzChhGHOyhxrFgKXCY14mHIGXrkdlNbOG0zxIiYucbwdyvGkCOcFB4X4+xB8v
+	1Tb1FyZAdGMUP0SRiBPaCKTXhxKRzpg4terSpbnUEXXJDm6mcf2Py+DyjVz7CsDTbzzz8FXCJwk+1
+	t6i8xoHOvm8VHNMe4Dy2s+DOENjlZGR3mu6PsIpHAsCYYykoWJCPTPwaXigeQNFKbgdXcXhzMOdBt
+	9c4ZkoIho3TasJthAHT1qO7pczaTK3eq7I2s6UJgr20/ma2tco/utJVcPFeGJKQIppL93ZRb+RnFo
+	vFvj0pVdOgBxRNCVNHzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRpF8-0000000DCgG-1AhV;
-	Thu, 11 Jul 2024 08:33:34 +0000
-Received: from smtp81.cstnet.cn ([159.226.251.81] helo=cstnet.cn)
+	id 1sRr8Y-0000000DZba-1FEX;
+	Thu, 11 Jul 2024 10:34:54 +0000
+Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRpF2-0000000DCeR-3paw;
-	Thu, 11 Jul 2024 08:33:31 +0000
-Received: from sunying2022-ubuntu-01.cloud.onecloud.io (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAXHZnImI9mBB0vFQ--.56149S2;
-	Thu, 11 Jul 2024 16:33:13 +0800 (CST)
-From: sunying@isrc.iscas.ac.cn
-To: ebiederm@xmission.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: kexec@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	zhuhengbo@iscas.ac.cn,
-	Ying Sun <sunying@isrc.iscas.ac.cn>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH v1] riscv/kexec_file: Fix relocation type R_RISCV_ADD16 and R_RISCV_SUB16 unknown
-Date: Thu, 11 Jul 2024 08:32:36 +0000
-Message-Id: <20240711083236.2859632-1-sunying@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	id 1sRr7t-0000000DZIk-2ZXK
+	for kexec@lists.infradead.org;
+	Thu, 11 Jul 2024 10:34:15 +0000
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so778308a12.1
+        for <kexec@lists.infradead.org>; Thu, 11 Jul 2024 03:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720694051; x=1721298851; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jR1Web6fOpG4PfW7GgX8Z5K27/fHkBluZOacmcz2i6E=;
+        b=Hi2+9YTGKbyh4U4ETXg9iR8ZSAGAsYXonlIon+JFu056u91jREAlSwdRdLGF4U4oew
+         hyuL5jn/u7A+SrK2k0rdiBfzxC/yZd6jsN4dYS/YMcHAkuA3Cmk9DjWpAUHTGAR2xaiv
+         qqap8Zm+40HqkldnzHe3fjltmrCe5j6KxBmtq0qSSEY8/iH85Iaqu4nAAA6njxhYt+tM
+         UG96c6oZuMPleB1DNsfrGoPwgUdtMuDFsJzvw+1TYFFyu30jPOpKtoLQ+St1siTYzfUC
+         NPJIBJRx/ydlMspsy69RzfpF7i6XZHvCzn0iXCqGqX3yZJEk2wJy+ThN6qVI7/NKO5Zb
+         s0ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720694051; x=1721298851;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jR1Web6fOpG4PfW7GgX8Z5K27/fHkBluZOacmcz2i6E=;
+        b=J05bjK/9GFAfMFBQLbjjHlZfs1vEXT055EtobCaAFKQwTkUPpLXeOAWkjX0d5sfV+J
+         MNuz4RF7BCFLpwdvhUBtiOrE0CvPMEJBQ9/NI1H6Y6I78e9xehH2IhquYCUx7VrLyzF3
+         N44lMh8oz7jXVKo3cdJUZlaw95eie4Us7e2/4BhlEFbGXK+dWU4+27O3kWR5VE8OzuKf
+         hBYJhXfpXC4JOw8H9X0FZVIVFKNRWZ7T7L3wGlP4SpvNb+WpZfV34xpV+6DjA6Ha7uxi
+         YZd+Xgwey6wuxxLVYolyAPAY2BRo5cSc3T2CrItbKpSiTMqS+iun400XcTii9coG9DqD
+         vq1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWYJmF1GZCcgj6cJnkcqkhqhoUKNxLXXF7vfHoPZCIrVhMV82FSSwijYLFnXjiAlpWdf554q7Mkz7POHUld+F5vE9KBPCRhIqhu
+X-Gm-Message-State: AOJu0Yz5pS8Th8Py27eGCeCwGwgtFIf3j26EKJD1qXxQrVSIUV4A7nk0
+	n+tbYXGEEGAnoU14QYTVr9xAzWvhuDeju4OcXFJtrRP3nIbO1f9cf8vHb/qAzkU=
+X-Google-Smtp-Source: AGHT+IESzBPL1aKKBD56be1MULJXc15BES/x9i+LATELu4LzxdGOdNbDaV9C405YEadlCd/JoNnfNw==
+X-Received: by 2002:a05:6402:4316:b0:57c:a77d:a61e with SMTP id 4fb4d7f45d1cf-594bab80111mr6037655a12.7.1720694050942;
+        Thu, 11 Jul 2024 03:34:10 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bbe2cf60sm3296192a12.26.2024.07.11.03.34.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 03:34:10 -0700 (PDT)
+From: Petr Tesarik <petr.tesarik@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Petr Tesarik <petr@tesarici.cz>,
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] sysfs/cpu: Make crash_hotplug attribute world-readable
+Date: Thu, 11 Jul 2024 12:34:09 +0200
+Message-ID: <20240711103409.319673-1-petr.tesarik@suse.com>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-X-CM-TRANSID: rQCowAAXHZnImI9mBB0vFQ--.56149S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw4UWrWfAw13ZFWDAFW7XFb_yoW8Gryxp3
-	43Cr15KFs8GryxKw4xArykua4rW3Z8urW3Ja90kFyrJrnrJry8t3yqqw1UJa1jvr1FgrWS
-	vFy2gF95GF1jyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUSiihUUUUU=
-X-Originating-IP: [124.16.138.129]
-X-CM-SenderInfo: 5vxq5x1qj6x21ufox2xfdvhtffof0/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240711_013329_373441_895B814F 
-X-CRM114-Status: UNSURE (   5.59  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240711_033413_682354_A5B63307 
+X-CRM114-Status: GOOD (  11.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,50 +94,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ying Sun <sunying@isrc.iscas.ac.cn>
+From: Petr Tesarik <ptesarik@suse.com>
 
-Runs on the kernel with CONFIG_RISCV_ALTERNATIVE enabled:
-  kexec -sl vmlinux
+There is no reason to restrict access to this attribute, as it merely
+reports whether crash elfcorehdr is automatically updated on CPU hot
+plug/unplug and/or online/offline events.
 
-Error:
-  kexec_image: Unknown rela relocation: 34
-  kexec_image: Error loading purgatory ret=-8
-and
-  kexec_image: Unknown rela relocation: 38
-  kexec_image: Error loading purgatory ret=-8
+Note that since commit 79365026f8694 ("crash: add a new kexec flag for
+hotplug support"), this maps to the same flag which is world-accessible
+through /sys/devices/system/memory/crash_hotplug.
 
-The purgatory code uses the 16-bit addition and subtraction relocation
-type, but not handled, resulting in kexec_file_load failure.
-So add handle to arch_kexec_apply_relocations_add().
-
-Tested on RISC-V64 Qemu-virt, issue fixed.
-
-Co-developed-by: Petr Tesarik <petr@tesarici.cz>
-Signed-off-by: Petr Tesarik <petr@tesarici.cz>
-Signed-off-by: Ying Sun <sunying@isrc.iscas.ac.cn>
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
 ---
- arch/riscv/kernel/elf_kexec.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/base/cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index 11c0d2e0becf..3c37661801f9 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -451,6 +451,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 			*(u32 *)loc = CLEAN_IMM(CJTYPE, *(u32 *)loc) |
- 				 ENCODE_CJTYPE_IMM(val - addr);
- 			break;
-+		case R_RISCV_ADD16:
-+			*(u16 *)loc += val;
-+			break;
-+		case R_RISCV_SUB16:
-+			*(u16 *)loc -= val;
-+			break;
- 		case R_RISCV_ADD32:
- 			*(u32 *)loc += val;
- 			break;
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index c61ecb0c2ae2..73d69791d0d3 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -308,7 +308,7 @@ static ssize_t crash_hotplug_show(struct device *dev,
+ {
+ 	return sysfs_emit(buf, "%d\n", crash_check_hotplug_support());
+ }
+-static DEVICE_ATTR_ADMIN_RO(crash_hotplug);
++static DEVICE_ATTR_RO(crash_hotplug);
+ #endif
+ 
+ static void cpu_device_release(struct device *dev)
 -- 
-2.34.1
+2.45.2
 
 
 _______________________________________________
