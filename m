@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 393C7C3DA41
-	for <kexec@archiver.kernel.org>; Thu, 11 Jul 2024 07:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E44A4C3271E
+	for <kexec@archiver.kernel.org>; Thu, 11 Jul 2024 07:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:To
-	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=e/l3nEJQ3Dqd3bptvdVF5mTtSuqUwzPHYlWD0KYm2h8=; b=pBhZRGsWULZnnI
-	3PC353HLzUUlb2L7LxZpGWdeUTCxakV2xqImtzEsi/JLlEZ5EmSo6g1cjrhCs7lI5R2WJGZnAne0P
-	vus87cJs159QsdBOblY7YKnN/lWH5MMMZ+ys1lc97v9OLDr0z4mXmUR3cztcqUU27Sm+hShnDdtBb
-	MbyqqVUUXnjpspLLFw3IMC/the1jjfvyXpI1Fw8NGPr7qlAK+acDWxkupySoEuseuywcMondlK8lh
-	wbouZVNa9BaSkbqq26NXPCj4gSkPS4+ZnM59FZ4Cn99ZFk92nGmvqyFKQ6r9WM9/+FOCh5ZtF2p0F
-	gyvWJkVEShdpAvyvFwvQ==;
+	List-Owner; bh=e/l3nEJQ3Dqd3bptvdVF5mTtSuqUwzPHYlWD0KYm2h8=; b=PsW9lOlFPuZOYY
+	OQkX+D9Hzk+cMutPbnJb7rSg9GlwnTONXGjPaStzm6KM6IduHf/VXrptbMrJgFP2jrG1Y1fWJhNx4
+	dBfLXbc9IaRtzs+NJXcLCzxsaPANGewGr68ovKj4hEtP2ZyH45gZkwnPfLgXK/+KhyLvAFPP63zui
+	jOYE9pUTWbmNU6o5k+CGQcfdRsagyFw/N1Wy7y22f5UoYEm1M/fHqNUzE2jOpW6DRsn2Hw0Z7OXqF
+	+zz257fjvHSSnOvnHzYgpjYt89Jg7VvgsHh65eJFPOPOUmmt+ejYzXHgwWzun+TQnHDZMO+eC5dig
+	usXuYhuwymsMIHlMuORg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRoCp-0000000D0gB-1WOW;
-	Thu, 11 Jul 2024 07:27:07 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1sRoE6-0000000D0qr-2eb2;
+	Thu, 11 Jul 2024 07:28:26 +0000
+Received: from szxga04-in.huawei.com ([45.249.212.190])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRoCl-0000000D0fe-1JRK
+	id 1sRoE2-0000000D0qJ-45A1
 	for kexec@lists.infradead.org;
-	Thu, 11 Jul 2024 07:27:05 +0000
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WKR4v3nspzxW4p;
-	Thu, 11 Jul 2024 15:22:23 +0800 (CST)
+	Thu, 11 Jul 2024 07:28:24 +0000
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WKR6n1FQrz2Cl8D;
+	Thu, 11 Jul 2024 15:24:01 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id A2067180087;
-	Thu, 11 Jul 2024 15:26:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C297180018;
+	Thu, 11 Jul 2024 15:28:14 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
- 2024 15:26:59 +0800
+ 2024 15:28:13 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
 	<akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] crash: Fix x86_32 memory reserve dead loop retry bug
-Date: Thu, 11 Jul 2024 15:31:18 +0800
-Message-ID: <20240711073118.1289866-1-ruanjinjie@huawei.com>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2 RESEND] crash: Fix x86_32 memory reserve dead loop retry bug
+Date: Thu, 11 Jul 2024 15:32:31 +0800
+Message-ID: <20240711073231.1289883-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240711_002703_545257_6839A507 
-X-CRM114-Status: GOOD (  13.23  )
+X-CRM114-CacheID: sfid-20240711_002823_178866_E53F34D3 
+X-CRM114-Status: GOOD (  12.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
