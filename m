@@ -4,69 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C19CBC3DA4B
-	for <kexec@archiver.kernel.org>; Mon, 15 Jul 2024 14:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2576BC41513
+	for <kexec@archiver.kernel.org>; Mon, 15 Jul 2024 18:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=13xaSjbplUj+HWuBWAiV0ALQEDMG+qU9SvPQpIHzktY=; b=pCHHvT0D0A5rNi
-	b0wiJlIXlG6iV583MBAW1R16cgwWSmwdyBQQAyGdBGS9511ksl+eWk2CvPQgvkbr5s6jOEVTEG7k+
-	YTm/NWhj8u8GT7UXiN5RLKLGUGdnzRUojQwttuL0tP3ZJ6JLnGqLVCrOfUSarLQh7kbfz/vNDxY58
-	2NddHXl2DLfbJ9aPWi1A8JRB0SuNboRxqeByEV6UqzbSjK22SpKFvgtwiobZq27emu2f4HsQMxu6M
-	x5cVYUBAU+ZB1C5FVddw1+CvnCKuD8krz763RzgPRlSbdmuwrmgAWN0zJ9XZ+xgEHGB2CK/oo7j0P
-	p/dLEeWWaTNmJMIreR1g==;
+	List-Owner; bh=bkgyMM4lLzfb2AGNqaAfCiUbGuk+KwmGLTKY0sTq4EY=; b=N3Kg/6Xrf/ofVy
+	50kHodgUTTmxyZ/W58yHWUjSWkAzf/41Ur3zjAG4pMJ5NIPUe3iQrZcmMQPFV7zeBZijsur7l+JZ2
+	Cin6aiR6J+qh+G8ZD5quX2RoiyJAiUxa/2cNuL+vZQvku/keMAqkZqvyIv3REhivoJm7fz1c9j5Wv
+	1lx+Hno0pvZLh91sjYmkdBvFqW8GZaVkGIfdqec3noxb+SChnP+zg9wD9TuJYim9kEBrim8WLPfl1
+	gP469yIah53Ihb4ZKbzDqH1XXjagnIMvHpe3XJQg8soJR/2xF5+Pj5SvkSN0L7RFD7dGAley+Mp9f
+	oO8cCurImJ0FOH3t789w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTN0G-00000007RPS-3YYg;
-	Mon, 15 Jul 2024 14:48:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sTQpq-000000083vY-0JiF;
+	Mon, 15 Jul 2024 18:54:06 +0000
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTN0D-00000007RNu-1RN9
+	id 1sTQpm-000000083uS-3Nva
 	for kexec@lists.infradead.org;
-	Mon, 15 Jul 2024 14:48:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721054911;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BkASY8k41Yge7TlrZ3/2PBxoq4fiGL0DmL3P/8JkIRs=;
-	b=Lhuf45DPOXo+xGME5qe3stgp+ELqHojXw7WhKclmHBZWuTaBJd306BGqkDn1lha1wdL9Xl
-	ecFGruofPmSlEo6OyBrUJ77UR1Qrm8tZhKGGC6ZD6YGWgrBn1J95o8fg8Y2bDhla4XuoLk
-	fdmhEL0kjhbuGfcPygigsE5CTB3KrmE=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-332-ZGslQ6mQM6mpsMimRaGtXw-1; Mon,
- 15 Jul 2024 10:48:28 -0400
-X-MC-Unique: ZGslQ6mQM6mpsMimRaGtXw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	Mon, 15 Jul 2024 18:54:04 +0000
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FIQa1N020560;
+	Mon, 15 Jul 2024 18:53:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pps0720; bh=b9w0XB6La
+	ytVB7Wdf1B/UO3yLAMzxQddtR5FFc0xAXI=; b=O+SvTFNRZkkemnyioMs1vrQ4l
+	jVXcMUACB5nrzwiDNaNGLK0k+O9ajXlVnjrVQN60+fXs7RAQT3Ja6X2OCm1iFRFJ
+	0a88OzVEqSSOY7RLA9a+Ke9c/z/mpPgnSN/MoKJUPsavMDsLxQm3m+laJ2gGnX6L
+	p6mnfnA6vTQfg+ROKKS5/TFEO0zZVn3c9fRlOi6tGjFSP6UK+1rJpL069I2gxA0W
+	C/WW1mmIj7JTJhIqC31/fVWHBgLsyLgZVejeXd7EMGvs2F2CS7Toq5JRcD6gM3Oi
+	7+QwaU5Eh0zo+ER6/kZamfEPvhgE7JRz60jPO3JGbdxMPfVj6CsSnqjOLMtqg==
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 40d920g5dc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 18:53:14 +0000 (GMT)
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 92F9A1944B2A;
-	Mon, 15 Jul 2024 14:48:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.64])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 911801955F3B;
-	Mon, 15 Jul 2024 14:48:16 +0000 (UTC)
-Date: Mon, 15 Jul 2024 22:48:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>, akpm@linux-foundation.org
-Cc: vgoyal@redhat.com, dyoung@redhat.com, austindh.kim@gmail.com,
-	rmk+kernel@armlinux.org.uk, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] crash: Fix x86_32 and arm32 memory reserve bug
-Message-ID: <ZpU2rJ1aKyqlu8IN@MiWiFi-R3L-srv>
-References: <20240713014808.1689915-1-ruanjinjie@huawei.com>
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 62DFF147B7;
+	Mon, 15 Jul 2024 18:53:13 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 4597380A808;
+	Mon, 15 Jul 2024 18:53:11 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+	id D919B3003D738; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
+        Hou Wenlong <houwenlong.hwl@antgroup.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>,
+        Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH v2 1/2] x86/kexec: Add EFI config table identity mapping for kexec kernel
+Date: Mon, 15 Jul 2024 13:53:08 -0500
+Message-Id: <20240715185309.1637839-2-steve.wahl@hpe.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20240715185309.1637839-1-steve.wahl@hpe.com>
+References: <20240715185309.1637839-1-steve.wahl@hpe.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240713014808.1689915-1-ruanjinjie@huawei.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Proofpoint-GUID: erjPfCL_YkXRsiLsrvsUrX7KQgUKW0HO
+X-Proofpoint-ORIG-GUID: erjPfCL_YkXRsiLsrvsUrX7KQgUKW0HO
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ clxscore=1011 malwarescore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 bulkscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407150147
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240715_074833_474250_C118BE31 
-X-CRM114-Status: GOOD (  15.89  )
+X-CRM114-CacheID: sfid-20240715_115402_860548_6703B0BD 
+X-CRM114-Status: GOOD (  25.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,83 +109,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/13/24 at 09:48am, Jinjie Ruan wrote:
-> On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
-> as below:
-> 	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
-> 
-> And on Qemu vexpress-a9 with 1GB memory, the crash kernel "crashkernel=4G"
-> is also ok as below:
-> 	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
-> 
-> The cause is that the crash_size is parsed and printed with "unsigned long
-> long" data type which is 8 bytes but allocated used with "phys_addr_t"
-> which is 4 bytes in memblock_phys_alloc_range().
-> 
-> Fix it by limiting the "crash_size" to phys_addr_t and bypass the invalid
-> input size.
+From: Tao Liu <ltao@redhat.com>
 
-I am not sure if this is a good idea. Shouldn't we handle this in
-arch_reserve_crashkernel() to check the system RAM size?
+A kexec kernel boot failure is sometimes observed on AMD CPUs due to
+an unmapped EFI config table array.  This can be seen when "nogbpages"
+is on the kernel command line, and has been observed as a full BIOS
+reboot rather than a successful kexec.
 
-With this patch, if you specify crashkernel=4352M (namely 4G+256M) in
-kernel cmdline, then you will reserve 256M crashkernel in system, don't
-you think that is confusing?
+This was also the cause of reported regressions attributed to Commit
+7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page
+should be mapped.") which was subsequently reverted.
 
-By the way, I am considering changing code to apply generic crashkernel
-reservation to 32bit system. Maybe below draft code can prevent
-crashkernel=,high from being parsed successfully on 32bit system.
+To avoid this page fault, explicitly include the EFI config table
+array in the kexec identity map.
 
-What do you think?
+Further explanation:
 
-diff --git a/arch/arm64/include/asm/crash_reserve.h b/arch/arm64/include/asm/crash_reserve.h
-index 4afe027a4e7b..bf362c1a612f 100644
---- a/arch/arm64/include/asm/crash_reserve.h
-+++ b/arch/arm64/include/asm/crash_reserve.h
-@@ -7,4 +7,6 @@
+The following 2 commits caused the EFI config table array to be
+accessed when enabling sev at kernel startup.
+
+    commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
+                          earlier during boot")
+    commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
+                          detection/setup")
+
+This is in the code that examines whether SEV should be enabled or
+not, so it can even affect systems that are not SEV capable.
+
+This may result in a page fault if the EFI config table array's
+address is unmapped. Since the page fault occurs before the new kernel
+establishes its own identity map and page fault routines, it is
+unrecoverable and kexec fails.
+
+Most often, this problem is not seen because the EFI config table
+array gets included in the map by the luck of being placed at a memory
+address close enough to other memory areas that *are* included in the
+map created by kexec.
+
+Both the "nogbpages" command line option and the "use gpbages only
+where full GB page should be mapped" patch greatly reduce the chance
+of being included in the map by luck, which is why the problem
+appears.
+
+Signed-off-by: Tao Liu <ltao@redhat.com>
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+Tested-by: Pavin Joseph <me@pavinjoseph.com>
+Tested-by: Sarah Brofeldt <srhb@dbc.dk>
+Tested-by: Eric Hagberg <ehagberg@gmail.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index cc0f7f70b17b..563d119f9f29 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -28,6 +28,7 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
+ #include <asm/cpu.h>
++#include <asm/efi.h>
  
- #define CRASH_ADDR_LOW_MAX              arm64_dma_phys_limit
- #define CRASH_ADDR_HIGH_MAX             (PHYS_MASK + 1)
+ #ifdef CONFIG_ACPI
+ /*
+@@ -83,10 +84,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ #endif
+ 
+ static int
+-map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
++map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
+ {
+ #ifdef CONFIG_EFI
+ 	unsigned long mstart, mend;
++	void *kaddr;
++	int ret;
+ 
+ 	if (!efi_enabled(EFI_BOOT))
+ 		return 0;
+@@ -102,6 +105,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
+ 	if (!mstart)
+ 		return 0;
+ 
++	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
++	if (ret)
++		return ret;
 +
-+#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
- #endif
-diff --git a/arch/riscv/include/asm/crash_reserve.h b/arch/riscv/include/asm/crash_reserve.h
-index 013962e63587..8d7a8fc1d459 100644
---- a/arch/riscv/include/asm/crash_reserve.h
-+++ b/arch/riscv/include/asm/crash_reserve.h
-@@ -7,5 +7,7 @@
- #define CRASH_ADDR_LOW_MAX		dma32_phys_limit
- #define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
- 
-+#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
++	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
++	if (!kaddr) {
++		pr_err("Could not map UEFI system table\n");
++		return -ENOMEM;
++	}
 +
- extern phys_addr_t memblock_end_of_DRAM(void);
++	mstart = efi_config_table;
++
++	if (efi_enabled(EFI_64BIT)) {
++		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
++
++		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
++	} else {
++		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
++
++		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
++	}
++
++	memunmap(kaddr);
++
+ 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
  #endif
-diff --git a/arch/x86/include/asm/crash_reserve.h b/arch/x86/include/asm/crash_reserve.h
-index 7835b2cdff04..24c2327f9a16 100644
---- a/arch/x86/include/asm/crash_reserve.h
-+++ b/arch/x86/include/asm/crash_reserve.h
-@@ -26,6 +26,7 @@ extern unsigned long swiotlb_size_or_default(void);
- #else
- # define CRASH_ADDR_LOW_MAX     SZ_4G
- # define CRASH_ADDR_HIGH_MAX    SZ_64T
-+#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
- #endif
+ 	return 0;
+@@ -241,10 +268,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	}
  
- # define DEFAULT_CRASH_KERNEL_LOW_SIZE crash_low_size_default()
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index 5b2722a93a48..c5213f123e19 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -306,7 +306,7 @@ int __init parse_crashkernel(char *cmdline,
- 	/* crashkernel=X[@offset] */
- 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
- 				crash_base, NULL);
--#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+#ifdef HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
  	/*
- 	 * If non-NULL 'high' passed in and no normal crashkernel
- 	 * setting detected, try parsing crashkernel=,high|low.
+-	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
+-	 * not covered by pfn_mapped.
++	 * Prepare EFI systab, config table and ACPI tables for kexec kernel
++	 * since they are not covered by pfn_mapped.
+ 	 */
+-	result = map_efi_systab(&info, level4p);
++	result = map_efi_tables(&info, level4p);
+ 	if (result)
+ 		return result;
+ 
+-- 
+2.26.2
 
 
 _______________________________________________
