@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2281DC3DA4B
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEBAAC3DA5E
 	for <kexec@archiver.kernel.org>; Mon, 15 Jul 2024 18:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=WPVw2TsDqP+qrNgRL06wc7zqQ1PbsOgs4MFGOpuzq4M=; b=YPLCmk/cGgL7/2
-	zSTtV7pPhCBTU3C+EKCEO931T83hKCQbTRV19PbWMg2O2cELbD90wCJea/+ebD+EBJaIJpnR8N6E/
-	HVQEmG1NSA77Q6Sq+jpR6coJzGxMDvjfJffEkXwhI10BPkHCtESdm+fxJLpoHLnOr4+W6hqCoAArL
-	rG7yZ89MQFpsW320RK+JpyDElr9qzBVnh4YBjJ68FoqhL1/et+UKFjDUNk3Oo5BAdhax+u1shBGnw
-	8UMhKLiVUnoQaUXF4ffpwRF57uhn70LvsIqh17ewOe3RXimJ9B93TVCzW7g7ylx4+rtclAh5rAGhE
-	6Teq6E4GJZ0Y6AyMPVNg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=igqC7y0yvtJ08mry12hsaBVmQcggGtmNgH2D9Zgxe3I=; b=3CbSDgLjQ1YfRm
+	VjNMmok1/42Ms1VNbN5Ek9+qylrdy7+6uDSjxS54Yn6aqFq4PhAS0ttPeK34JBgnegVyWk8KmZIj5
+	QSkOkpPwnlp8JQdqPSh4IdaKdRQKSm2CD53cnkNpk/wvDxhL/AXYvmH/3e8u32kTM40X2g4Vu/rn7
+	eeFjmqIc1P7NJKMHkHcHw+ZKsSEDd8gN732EiblS4/EzvpwbKsSvT19PrduBxeCbmjAix+NWLM9pg
+	VdkYPUvQITRci950p0FLpwAH1vaCg/RwF7QmgbGewBhw5UDEkGsbiewIamc4uYaYfvnIX+C04gS4D
+	ggchmPD9dMZ8NUgH9GiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTQpp-000000083vO-09wq;
-	Mon, 15 Jul 2024 18:54:05 +0000
+	id 1sTQpr-000000083w1-2FCJ;
+	Mon, 15 Jul 2024 18:54:07 +0000
 Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTQpm-000000083uT-3Nmz
+	id 1sTQpm-000000083uU-3UvF
 	for kexec@lists.infradead.org;
-	Mon, 15 Jul 2024 18:54:04 +0000
+	Mon, 15 Jul 2024 18:54:05 +0000
 Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FIqx7B023075;
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FHX5r3012894;
 	Mon, 15 Jul 2024 18:53:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pps0720; bh=ma6MWGfDS
-	iybBQfLQjd48GruvjHUoPF2GnYDc9S5+xA=; b=gzDusuFIUVWKJ+vp4epftAvGm
-	dDGsl5+y0x2ixnPzTlBPijvt7hK7UAQ2FGpLa+sb3ffp6owUXmrFWolA2m2r6Wtv
-	O/c7wqOsE2rxU7GAcD1zmCcdvLY/IiNkaBRweTUWxL4JeBaZjc1fF8g2wTD2msh3
-	JP/aAlJ677/WO4dHGXoA2AwXYPpFSimptHcorkp9KxrzJHInPV1KuugRPP8s+Y5A
-	EzYO/xe5kOPXIACOsLG0v6FSBxfHFPr9nYWy4BePalFqXqZNrbQp4zeqHnkuJWhb
-	aQ3sTxOVt0rCQNdsj6v7wLKCAi+Zjg03MRzgPZyCSTh4Ow5LFbIbQ4ie4K8Yg==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 40bfsd1334-1
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pps0720; bh=CEmvAFnikYXYXe4xHWa9PD
+	0T95AUEAKIxnZFw5nCu8w=; b=dKnidXV1YGCz3u2JscWM8pDNzg1VjPB0sR8Mns
+	X0G4zg6YWUyZtRUZ1ZSk6zudj809F9l2o8U21LBbAWA1fOhQrcq5rKKtATSGBIz0
+	P0j+mksKA9qQaXnOP2yg6PHSZ7Ozx76rJ5KcRPikVlGyOHhWg4q84u3hAJC/b7nB
+	2oVkOvYWO8Zds4zO6dSYkXU9eOXELoX5itBuiVMEtT1A7mMqCTuHxOkIVVOdvFXN
+	9h5mmYIZJR/RlNFkC8xTGRR35/CFVuoHerOxrt31HfC0b7eDwsmegMu/jWN7D5ly
+	kqL/TQf5TinzYCfz+pDj4wo3H19kYLxAy/mSZN9DT+yYwqKw==
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 40bfsd1333-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 15 Jul 2024 18:53:14 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 6C688800267;
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 63148147B9;
 	Mon, 15 Jul 2024 18:53:13 +0000 (UTC)
 Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 4EAA5806B23;
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 57EFF8032AE;
 	Mon, 15 Jul 2024 18:53:11 +0000 (UTC)
 Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id DA9933003D73E; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
+	id D2EB530000731; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
 From: Steve Wahl <steve.wahl@hpe.com>
 To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -72,27 +72,25 @@ Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
         Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
         "Kalra, Ashish" <ashish.kalra@amd.com>,
         Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH v2 2/2] x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
-Date: Mon, 15 Jul 2024 13:53:09 -0500
-Message-Id: <20240715185309.1637839-3-steve.wahl@hpe.com>
+Subject: [PATCH v2 0/2] Resolve problems with kexec identity mapping
+Date: Mon, 15 Jul 2024 13:53:07 -0500
+Message-Id: <20240715185309.1637839-1-steve.wahl@hpe.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240715185309.1637839-1-steve.wahl@hpe.com>
-References: <20240715185309.1637839-1-steve.wahl@hpe.com>
 MIME-Version: 1.0
-X-Proofpoint-GUID: O0Bo_58AH_KYzszwFF4URZ3YOJr2hd9-
-X-Proofpoint-ORIG-GUID: O0Bo_58AH_KYzszwFF4URZ3YOJr2hd9-
+X-Proofpoint-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
+X-Proofpoint-ORIG-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=826 impostorscore=0 spamscore=0 bulkscore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2407150147
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240715_115402_859619_D4A1E615 
-X-CRM114-Status: GOOD (  20.59  )
+X-CRM114-CacheID: sfid-20240715_115402_887376_69983AD5 
+X-CRM114-Status: GOOD (  23.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,73 +107,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When ident_pud_init() uses only gbpages to create identity maps, large
-ranges of addresses not actually requested can be included in the
-resulting table; a 4K request will map a full GB.  This can include a
-lot of extra address space past that requested, including areas marked
-reserved by the BIOS.  That allows processor speculation into reserved
-regions, that on UV systems can cause system halts.
+Creating kexec identity maps using only GB pages can include a lot of
+extra address space past that requested, including areas marked
+reserved by the BIOS, which on UV systems can cause system halts.
 
-Only use gbpages when map creation requests include the full GB page
-of space.  Fall back to using smaller 2M pages when only portions of a
-GB page are included in the request.
+The previous attempt to fix this problem,
 
-No attempt is made to coalesce mapping requests. If a request requires
-a map entry at the 2M (pmd) level, subsequent mapping requests within
-the same 1G region will also be at the pmd level, even if adjacent or
-overlapping such requests could have been combined to map a full
-gbpage.  Existing usage starts with larger regions and then adds
-smaller regions, so this should not have any great consequence.
+       7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Tested-by: Pavin Joseph <me@pavinjoseph.com>
-Tested-by: Sarah Brofeldt <srhb@dbc.dk>
-Tested-by: Eric Hagberg <ehagberg@gmail.com>
----
- arch/x86/mm/ident_map.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+caused a regression on a small number of AMD systems, and was later reverted.
 
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 968d7005f4a7..a204a332c71f 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -26,18 +26,31 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 	for (; addr < end; addr = next) {
- 		pud_t *pud = pud_page + pud_index(addr);
- 		pmd_t *pmd;
-+		bool use_gbpage;
- 
- 		next = (addr & PUD_MASK) + PUD_SIZE;
- 		if (next > end)
- 			next = end;
- 
--		if (info->direct_gbpages) {
--			pud_t pudval;
-+		/* if this is already a gbpage, this portion is already mapped */
-+		if (pud_leaf(*pud))
-+			continue;
-+
-+		/* Is using a gbpage allowed? */
-+		use_gbpage = info->direct_gbpages;
- 
--			if (pud_present(*pud))
--				continue;
-+		/* Don't use gbpage if it maps more than the requested region. */
-+		/* at the begining: */
-+		use_gbpage &= ((addr & ~PUD_MASK) == 0);
-+		/* ... or at the end: */
-+		use_gbpage &= ((next & ~PUD_MASK) == 0);
-+
-+		/* Never overwrite existing mappings */
-+		use_gbpage &= !pud_present(*pud);
-+
-+		if (use_gbpage) {
-+			pud_t pudval;
- 
--			addr &= PUD_MASK;
- 			pudval = __pud((addr - info->offset) | info->page_flag);
- 			set_pud(pud, pudval);
- 			continue;
+The cause of this regression was that the EFI Config Table Array was
+not explicitly included in the kexec identity map. While this array was
+often included in the identity map by luck, when it was not, code that
+checks whether the AMD SEV feature should be enabled takes a page
+fault due to the array's address not being mapped.  This happens before
+the new kernel is able to set up a page fault handler, so it is fatal.
+
+The patch that was reverted greatly reduced the chance that the EFI
+Config Table Array got mapped by luck, which is why this problem
+appeared.  The kernel command line option "nogbpages" also causes the
+problem to show, and was used for debugging and illustrative purposes.
+
+The first patch in this series explicitly adds the EFI Config Table
+array to the kexec identity map so this problem will not occur.
+
+The second patch in the series re-instates the previously reverted
+patch that reduces usage of gbpages in creating the identity map.
+
+All three of the people who reported regression with my earlier patch
+have retested with this patch series and found it to work where my
+single patch previously did not.  With current kernels, all fail to
+kexec when "nogbpages" is on the command line, but all succeed with
+"nogbpages" after the series is applied.
+
+Series version 2:
+
+  * Removed a patch (formerly #2) that also added the CC blob to the
+    identity map, as this was proactive, but not proved necessary.
+
+  * Rewrote this cover letter and patch commit messages to include
+    discussion on previous version.
+
+V1: https://lore.kernel.org/all/20240520183633.1457687-1-steve.wahl@hpe.com/
+
+Steve Wahl (1):
+  x86/mm/ident_map: Use gbpages only where full GB page should be
+    mapped.
+
+Tao Liu (1):
+  x86/kexec: Add EFI config table identity mapping for kexec kernel
+
+ arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
+ arch/x86/mm/ident_map.c            | 23 +++++++++++++++-----
+ 2 files changed, 49 insertions(+), 9 deletions(-)
+
 -- 
 2.26.2
 
