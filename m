@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE78EC3DA59
-	for <kexec@archiver.kernel.org>; Tue, 16 Jul 2024 03:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CF99C3DA49
+	for <kexec@archiver.kernel.org>; Tue, 16 Jul 2024 03:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/fVZZU4TYFAACzxZji+hsrP5DtbwqIfz3Mdbu5X65CU=; b=L79X+wjt57uRLs
-	ScvBgreCG1x2iwyG+13q1FgyCbkOGnQbr3PjK8RNBQocVpAg/V0fj2+QrVD4LI+P9Ty7t8pHQ+8rG
-	x6i+BlU412I3XCj3JbvTfdenpZgJN7FKCTOP7+xDhYfErXyKm4oLpDlli8tqJqXyf53Bcgl9Nf1eD
-	T2OaAOXPyZ7SZKtC1lRM1CTSZkpk1pgIltOpiT1Bqb5/z3q33tA9tSevn4B7r7XNq63Ox27hUIgzY
-	VmnrCz/NqVo6dIGKbT0W95njk0tG/3P00rItyoX2x6DPf3B1aLF/9E41c4kLQVBWNTgtl3kt6SiLV
-	6G4llGDUxUAAM/rLYhWg==;
+	List-Owner; bh=V9OjRhgUBcqrOAqSZ6PWY/NW1dDc7Mrm+C8HjiPhKzw=; b=bZAPtdbBtQvdak
+	eWg15PBrGitD5phzhblgMVYAEY3jhyGo97gKAVkNO2hJnhNZNq0LK+uNDog7cravGEaAPaA9AXw4O
+	G9jAw4pxi0E9lLpJI4QlZorpmFQRi7E7XZXsDl5mVTjIxH9LNeMxGNtu2hY/gw4w/CBevk9FTc/jU
+	iFluKWL+lKHZSpXMUQ01ThujCIx4nYlrTXgHveMfuYONI5D4VByBdzNPC4kyUTuEDzMRO5icLeR2/
+	lh/kdJpjmspR76pzr0tVtzdwXxeiVrWwwgqQUsp1K6qFAHdWMfgU7RVmNJNpBfPjn6axcY/KAyInd
+	8ViVB/ob1Vn70iM9903w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTZ7d-00000009DEZ-0DFe;
-	Tue, 16 Jul 2024 03:45:01 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1sTZEZ-00000009EK2-1q11;
+	Tue, 16 Jul 2024 03:52:11 +0000
+Received: from szxga08-in.huawei.com ([45.249.212.255])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTZ7Z-00000009DCG-1iCP
+	id 1sTZEV-00000009EJ2-2HzQ
 	for kexec@lists.infradead.org;
-	Tue, 16 Jul 2024 03:44:59 +0000
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNPzW4g3bzdhwf;
-	Tue, 16 Jul 2024 11:43:03 +0800 (CST)
+	Tue, 16 Jul 2024 03:52:10 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WNQ4J0Sm7z1JCjc;
+	Tue, 16 Jul 2024 11:47:12 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id BD6AF1403D1;
-	Tue, 16 Jul 2024 11:44:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1F49C14041A;
+	Tue, 16 Jul 2024 11:52:02 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 16 Jul 2024 11:44:46 +0800
-Message-ID: <ff8d5b8c-088c-9e05-53b2-f86335a18b8f@huawei.com>
-Date: Tue, 16 Jul 2024 11:44:45 +0800
+ 15.1.2507.39; Tue, 16 Jul 2024 11:52:01 +0800
+Message-ID: <2cee61df-70fa-9adb-14d9-41d6d17e4ea5@huawei.com>
+Date: Tue, 16 Jul 2024 11:52:00 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
@@ -53,11 +53,11 @@ References: <20240713014808.1689915-1-ruanjinjie@huawei.com>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 In-Reply-To: <ZpU2rJ1aKyqlu8IN@MiWiFi-R3L-srv>
 X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240715_204457_842125_19C36AB4 
-X-CRM114-Status: GOOD (  22.55  )
+X-CRM114-CacheID: sfid-20240715_205208_302148_8EBB42C8 
+X-CRM114-Status: GOOD (  18.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,16 +99,6 @@ On 2024/7/15 22:48, Baoquan He wrote:
 > With this patch, if you specify crashkernel=4352M (namely 4G+256M) in
 > kernel cmdline, then you will reserve 256M crashkernel in system, don't
 > you think that is confusing?
-
-You are right!
-
-In the case you mentioned, it can still allocate 256M successfully, but
-the log shows 4352M successfully allocated, which is not taken into
-account by this patch.
-
-And handle this in arch_reserve_crashkernel() is a good idea, which will
- bypass all these corner case, I'll do it next version.
-
 > 
 > By the way, I am considering changing code to apply generic crashkernel
 > reservation to 32bit system. Maybe below draft code can prevent
@@ -116,17 +106,7 @@ And handle this in arch_reserve_crashkernel() is a good idea, which will
 > 
 > What do you think?
 
-I agree with you, I've thought about passing in a parameter in the
-generic interface whether high is supported or not to implement it,
-which is so incompatible. An architecture-defined macro to filter out
-parsing of "high" fundamentally avoid using the generic interface to
-allocate memory in "high" for the architecture that does not support
-"high". The below code do prevent "crashkernel=,high" from being parsed
-successfully on 32bit system.
-
-But if it is to support 32 bit system to use generic crash memory
-reserve interface, reserve_crashkernel_generic() needs more modification
-, as it may try to allocate memory at high.
+I'll test the below patch on ARM32 an x86_32 sooner.
 
 > 
 > diff --git a/arch/arm64/include/asm/crash_reserve.h b/arch/arm64/include/asm/crash_reserve.h
