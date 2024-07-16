@@ -4,93 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEBAAC3DA5E
-	for <kexec@archiver.kernel.org>; Mon, 15 Jul 2024 18:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE78EC3DA59
+	for <kexec@archiver.kernel.org>; Tue, 16 Jul 2024 03:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=igqC7y0yvtJ08mry12hsaBVmQcggGtmNgH2D9Zgxe3I=; b=3CbSDgLjQ1YfRm
-	VjNMmok1/42Ms1VNbN5Ek9+qylrdy7+6uDSjxS54Yn6aqFq4PhAS0ttPeK34JBgnegVyWk8KmZIj5
-	QSkOkpPwnlp8JQdqPSh4IdaKdRQKSm2CD53cnkNpk/wvDxhL/AXYvmH/3e8u32kTM40X2g4Vu/rn7
-	eeFjmqIc1P7NJKMHkHcHw+ZKsSEDd8gN732EiblS4/EzvpwbKsSvT19PrduBxeCbmjAix+NWLM9pg
-	VdkYPUvQITRci950p0FLpwAH1vaCg/RwF7QmgbGewBhw5UDEkGsbiewIamc4uYaYfvnIX+C04gS4D
-	ggchmPD9dMZ8NUgH9GiQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=/fVZZU4TYFAACzxZji+hsrP5DtbwqIfz3Mdbu5X65CU=; b=L79X+wjt57uRLs
+	ScvBgreCG1x2iwyG+13q1FgyCbkOGnQbr3PjK8RNBQocVpAg/V0fj2+QrVD4LI+P9Ty7t8pHQ+8rG
+	x6i+BlU412I3XCj3JbvTfdenpZgJN7FKCTOP7+xDhYfErXyKm4oLpDlli8tqJqXyf53Bcgl9Nf1eD
+	T2OaAOXPyZ7SZKtC1lRM1CTSZkpk1pgIltOpiT1Bqb5/z3q33tA9tSevn4B7r7XNq63Ox27hUIgzY
+	VmnrCz/NqVo6dIGKbT0W95njk0tG/3P00rItyoX2x6DPf3B1aLF/9E41c4kLQVBWNTgtl3kt6SiLV
+	6G4llGDUxUAAM/rLYhWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTQpr-000000083w1-2FCJ;
-	Mon, 15 Jul 2024 18:54:07 +0000
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
+	id 1sTZ7d-00000009DEZ-0DFe;
+	Tue, 16 Jul 2024 03:45:01 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTQpm-000000083uU-3UvF
+	id 1sTZ7Z-00000009DCG-1iCP
 	for kexec@lists.infradead.org;
-	Mon, 15 Jul 2024 18:54:05 +0000
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FHX5r3012894;
-	Mon, 15 Jul 2024 18:53:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pps0720; bh=CEmvAFnikYXYXe4xHWa9PD
-	0T95AUEAKIxnZFw5nCu8w=; b=dKnidXV1YGCz3u2JscWM8pDNzg1VjPB0sR8Mns
-	X0G4zg6YWUyZtRUZ1ZSk6zudj809F9l2o8U21LBbAWA1fOhQrcq5rKKtATSGBIz0
-	P0j+mksKA9qQaXnOP2yg6PHSZ7Ozx76rJ5KcRPikVlGyOHhWg4q84u3hAJC/b7nB
-	2oVkOvYWO8Zds4zO6dSYkXU9eOXELoX5itBuiVMEtT1A7mMqCTuHxOkIVVOdvFXN
-	9h5mmYIZJR/RlNFkC8xTGRR35/CFVuoHerOxrt31HfC0b7eDwsmegMu/jWN7D5ly
-	kqL/TQf5TinzYCfz+pDj4wo3H19kYLxAy/mSZN9DT+yYwqKw==
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 40bfsd1333-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 18:53:14 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 63148147B9;
-	Mon, 15 Jul 2024 18:53:13 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 57EFF8032AE;
-	Mon, 15 Jul 2024 18:53:11 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id D2EB530000731; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>,
-        Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH v2 0/2] Resolve problems with kexec identity mapping
-Date: Mon, 15 Jul 2024 13:53:07 -0500
-Message-Id: <20240715185309.1637839-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
+	Tue, 16 Jul 2024 03:44:59 +0000
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNPzW4g3bzdhwf;
+	Tue, 16 Jul 2024 11:43:03 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id BD6AF1403D1;
+	Tue, 16 Jul 2024 11:44:46 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 16 Jul 2024 11:44:46 +0800
+Message-ID: <ff8d5b8c-088c-9e05-53b2-f86335a18b8f@huawei.com>
+Date: Tue, 16 Jul 2024 11:44:45 +0800
 MIME-Version: 1.0
-X-Proofpoint-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
-X-Proofpoint-ORIG-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 mlxlogscore=826 impostorscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407150147
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v2] crash: Fix x86_32 and arm32 memory reserve bug
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>, <akpm@linux-foundation.org>
+CC: <vgoyal@redhat.com>, <dyoung@redhat.com>, <austindh.kim@gmail.com>,
+	<rmk+kernel@armlinux.org.uk>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240713014808.1689915-1-ruanjinjie@huawei.com>
+ <ZpU2rJ1aKyqlu8IN@MiWiFi-R3L-srv>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <ZpU2rJ1aKyqlu8IN@MiWiFi-R3L-srv>
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240715_115402_887376_69983AD5 
-X-CRM114-Status: GOOD (  23.54  )
+X-CRM114-CacheID: sfid-20240715_204457_842125_19C36AB4 
+X-CRM114-Status: GOOD (  22.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,64 +74,111 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Creating kexec identity maps using only GB pages can include a lot of
-extra address space past that requested, including areas marked
-reserved by the BIOS, which on UV systems can cause system halts.
 
-The previous attempt to fix this problem,
 
-       7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+On 2024/7/15 22:48, Baoquan He wrote:
+> On 07/13/24 at 09:48am, Jinjie Ruan wrote:
+>> On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
+>> as below:
+>> 	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
+>>
+>> And on Qemu vexpress-a9 with 1GB memory, the crash kernel "crashkernel=4G"
+>> is also ok as below:
+>> 	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
+>>
+>> The cause is that the crash_size is parsed and printed with "unsigned long
+>> long" data type which is 8 bytes but allocated used with "phys_addr_t"
+>> which is 4 bytes in memblock_phys_alloc_range().
+>>
+>> Fix it by limiting the "crash_size" to phys_addr_t and bypass the invalid
+>> input size.
+> 
+> I am not sure if this is a good idea. Shouldn't we handle this in
+> arch_reserve_crashkernel() to check the system RAM size?
+> 
+> With this patch, if you specify crashkernel=4352M (namely 4G+256M) in
+> kernel cmdline, then you will reserve 256M crashkernel in system, don't
+> you think that is confusing?
 
-caused a regression on a small number of AMD systems, and was later reverted.
+You are right!
 
-The cause of this regression was that the EFI Config Table Array was
-not explicitly included in the kexec identity map. While this array was
-often included in the identity map by luck, when it was not, code that
-checks whether the AMD SEV feature should be enabled takes a page
-fault due to the array's address not being mapped.  This happens before
-the new kernel is able to set up a page fault handler, so it is fatal.
+In the case you mentioned, it can still allocate 256M successfully, but
+the log shows 4352M successfully allocated, which is not taken into
+account by this patch.
 
-The patch that was reverted greatly reduced the chance that the EFI
-Config Table Array got mapped by luck, which is why this problem
-appeared.  The kernel command line option "nogbpages" also causes the
-problem to show, and was used for debugging and illustrative purposes.
+And handle this in arch_reserve_crashkernel() is a good idea, which will
+ bypass all these corner case, I'll do it next version.
 
-The first patch in this series explicitly adds the EFI Config Table
-array to the kexec identity map so this problem will not occur.
+> 
+> By the way, I am considering changing code to apply generic crashkernel
+> reservation to 32bit system. Maybe below draft code can prevent
+> crashkernel=,high from being parsed successfully on 32bit system.
+> 
+> What do you think?
 
-The second patch in the series re-instates the previously reverted
-patch that reduces usage of gbpages in creating the identity map.
+I agree with you, I've thought about passing in a parameter in the
+generic interface whether high is supported or not to implement it,
+which is so incompatible. An architecture-defined macro to filter out
+parsing of "high" fundamentally avoid using the generic interface to
+allocate memory in "high" for the architecture that does not support
+"high". The below code do prevent "crashkernel=,high" from being parsed
+successfully on 32bit system.
 
-All three of the people who reported regression with my earlier patch
-have retested with this patch series and found it to work where my
-single patch previously did not.  With current kernels, all fail to
-kexec when "nogbpages" is on the command line, but all succeed with
-"nogbpages" after the series is applied.
+But if it is to support 32 bit system to use generic crash memory
+reserve interface, reserve_crashkernel_generic() needs more modification
+, as it may try to allocate memory at high.
 
-Series version 2:
-
-  * Removed a patch (formerly #2) that also added the CC blob to the
-    identity map, as this was proactive, but not proved necessary.
-
-  * Rewrote this cover letter and patch commit messages to include
-    discussion on previous version.
-
-V1: https://lore.kernel.org/all/20240520183633.1457687-1-steve.wahl@hpe.com/
-
-Steve Wahl (1):
-  x86/mm/ident_map: Use gbpages only where full GB page should be
-    mapped.
-
-Tao Liu (1):
-  x86/kexec: Add EFI config table identity mapping for kexec kernel
-
- arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
- arch/x86/mm/ident_map.c            | 23 +++++++++++++++-----
- 2 files changed, 49 insertions(+), 9 deletions(-)
-
--- 
-2.26.2
-
+> 
+> diff --git a/arch/arm64/include/asm/crash_reserve.h b/arch/arm64/include/asm/crash_reserve.h
+> index 4afe027a4e7b..bf362c1a612f 100644
+> --- a/arch/arm64/include/asm/crash_reserve.h
+> +++ b/arch/arm64/include/asm/crash_reserve.h
+> @@ -7,4 +7,6 @@
+>  
+>  #define CRASH_ADDR_LOW_MAX              arm64_dma_phys_limit
+>  #define CRASH_ADDR_HIGH_MAX             (PHYS_MASK + 1)
+> +
+> +#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+>  #endif
+> diff --git a/arch/riscv/include/asm/crash_reserve.h b/arch/riscv/include/asm/crash_reserve.h
+> index 013962e63587..8d7a8fc1d459 100644
+> --- a/arch/riscv/include/asm/crash_reserve.h
+> +++ b/arch/riscv/include/asm/crash_reserve.h
+> @@ -7,5 +7,7 @@
+>  #define CRASH_ADDR_LOW_MAX		dma32_phys_limit
+>  #define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
+>  
+> +#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+> +
+>  extern phys_addr_t memblock_end_of_DRAM(void);
+>  #endif
+> diff --git a/arch/x86/include/asm/crash_reserve.h b/arch/x86/include/asm/crash_reserve.h
+> index 7835b2cdff04..24c2327f9a16 100644
+> --- a/arch/x86/include/asm/crash_reserve.h
+> +++ b/arch/x86/include/asm/crash_reserve.h
+> @@ -26,6 +26,7 @@ extern unsigned long swiotlb_size_or_default(void);
+>  #else
+>  # define CRASH_ADDR_LOW_MAX     SZ_4G
+>  # define CRASH_ADDR_HIGH_MAX    SZ_64T
+> +#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+>  #endif
+>  
+>  # define DEFAULT_CRASH_KERNEL_LOW_SIZE crash_low_size_default()
+> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> index 5b2722a93a48..c5213f123e19 100644
+> --- a/kernel/crash_reserve.c
+> +++ b/kernel/crash_reserve.c
+> @@ -306,7 +306,7 @@ int __init parse_crashkernel(char *cmdline,
+>  	/* crashkernel=X[@offset] */
+>  	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
+>  				crash_base, NULL);
+> -#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> +#ifdef HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+>  	/*
+>  	 * If non-NULL 'high' passed in and no normal crashkernel
+>  	 * setting detected, try parsing crashkernel=,high|low.
+> 
+> 
 
 _______________________________________________
 kexec mailing list
