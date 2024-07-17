@@ -4,81 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01E56C3DA4B
-	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 13:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F97FC3DA4B
+	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 13:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=m/kGOaEFPxu35CB+S6L3gVGWD5oMUYAOtiZNjanKDmQ=; b=X79H2JSrhf/YLk
-	/m3DvEOnqJvXy9bDCx8M5RpD7SFTT3l2Kv/6A9Y7m8hGc1EmA2i+cV0Irt1kooFowl38AXe0YXRbE
-	qhgdV2DIDXG/u3teSt+pd4NWSoJQQGHiuLkHp79oHM17RIa8cdndpgMGtmo5akq5mDnrh8HxFKEhn
-	l4FZ/3OXnNdluzEBIELIDQH3YMbfWYql2tt1s7WhHnAvbUI3j1YPmpqjvfqiW903dcLTWT7sCyRxU
-	I0cLR0pPYidiwTvE5c0dExt5v2bYqOsXaWiBkPmCfBK5ivV1gvpolNbdD8SMivK5kaqeVWowuyQSA
-	y8X50S1r6k8sHtZulLkw==;
+	List-Owner; bh=8Dsmv3GCx5GIzZpAg/KAZRgk+4eHpO+br9J2aR9Gj9c=; b=dIsCnEPdgOlFQn
+	/wiKEaZpLrj3T2fm7RfCB3xpmOXCvUmG5+h8Dp1I8ylGmob7IJjFM3KOWm75DTSr1RkmXfDmyEnIS
+	R4O15vEZrHXmBKd7LvlguZWxAgDYFpe+QPHzZpLYKYd71c4VrlXX5hWyldREeId4JCTXFJzSy/yLf
+	Nq8ocVq00hdi2h8V9rB3yJXvp+i2lRj0TyvjbQTrTCdfFd8HQsL1CFYGXgy6Vswl6SkzMZQNpe2E2
+	T1EKWCwK31ff8ruw28OUywfhlGk36LNe2IUUlKvbhniYbg89BnREI17PNJN7FHF+6lAP4emc5eshS
+	zR/FmRmcNy/CI9+jKJgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sU4Tx-0000000DrAf-0h6B;
-	Wed, 17 Jul 2024 13:14:09 +0000
-Received: from mail-il1-x12b.google.com ([2607:f8b0:4864:20::12b])
+	id 1sU4rx-0000000DvFc-2JW4;
+	Wed, 17 Jul 2024 13:38:57 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sU4Tu-0000000Dr9T-0i0b
+	id 1sU4rv-0000000DvF7-0HMZ
 	for kexec@lists.infradead.org;
-	Wed, 17 Jul 2024 13:14:07 +0000
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-38373958e94so2469745ab.0
-        for <kexec@lists.infradead.org>; Wed, 17 Jul 2024 06:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1721222044; x=1721826844; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5uVCb0H5+qw23qlc6XhoPIVvBE69YNuKQHQJOvzKA2E=;
-        b=F18JXOmrNmI0lFB4LJUI2ltYyyQcHlrlUtw+h7x6rxzMdkG0zKlV6IfHZxMuFWHg28
-         E3HJBrpaYVcL5OvmsdsTIo26yoqiVbiJB3KpcpVO8W6Ksx4bA0FM0j/zG3IfQhnwldPf
-         e/JstgnrQTHo4HS7jl2F704pUZqdf9rH2d26zEZV7hOPXLJLU9tlq/dj6/9oG6ERFE4Z
-         0qEqPBe/zvK3mX3ZcJkRazQsibYAzQuoHPD4ewBxaAh7naNVnHuUvMDoXY4TiwW+1gzi
-         2XUPbx/TzghhlCqd1pZxfJY5zgYKvUGuXPlGcsuX0AY8NG/70HIT1qktV5vry7I58KGY
-         FJnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721222044; x=1721826844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5uVCb0H5+qw23qlc6XhoPIVvBE69YNuKQHQJOvzKA2E=;
-        b=gESJBXYRnx07C2MDUDbkUBxFt9gcqdMRYsu76knaFw0sT4A8guHQUGhCqr62oBDHl6
-         tKXqgtg0myWWH9H5YvGzhna36FfcU71/QIwCaRwabRmap1U2zhTn7MxKIUPJzmvYajR+
-         91WPAt9Fq7I6rotBG/tR5mlsqBpCVTDYoQwzaKnf0+Z95phpZB022oCWVJj/0ug5vaS3
-         LofeAwp7/Xs11CyPmuClzVFDg7TM5aBe6hCS6ijLTdDPIZ/UGllufph0M/qF4AwWbxCJ
-         XSwl4P7npQYb4nmRG4N+kBhwVQsRfzsKPqq6f72MVT45Mgo+5In0354gr3v8fuuXBzN+
-         MXJA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6vMAA3xrdVj/ntB9ViuuAYi0Fz3IAxCMBragn3nN27ECMSRRQ+jrYzjZfVPt2H+jUaiVetzNAzTxvc/lrmmLwpc4RxIrKD3Be
-X-Gm-Message-State: AOJu0YxLh7+zSJR+cW8zd8a+292agR51A8KeDruuMX2LHw+zFdHc84XD
-	5/GEmWml7+GZWr8Yvlf0k54Yf6LnZm6K1RSQNAwZccMha5GFPoCbOcWU2BMW3omAHblV/0xIj+m
-	wYUE=
-X-Google-Smtp-Source: AGHT+IFhw3MWoZSEt2rfShEC06vRpqsGgviNG/vejjaH60Y+5HYzE8TtnavkRKo4N4oXKY9d7Dnl1A==
-X-Received: by 2002:a05:6e02:1c0d:b0:376:3c3b:e235 with SMTP id e9e14a558f8ab-3950f2855e2mr16902955ab.13.1721222043808;
-        Wed, 17 Jul 2024 06:14:03 -0700 (PDT)
-Received: from localhost ([140.82.166.162])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c210f7c4c8sm651830173.130.2024.07.17.06.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 06:14:03 -0700 (PDT)
-Date: Wed, 17 Jul 2024 08:14:02 -0500
-From: Andrew Jones <ajones@ventanamicro.com>
-To: sunying@isrc.iscas.ac.cn
-Cc: ebiederm@xmission.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, kexec@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, zhuhengbo@iscas.ac.cn, Petr Tesarik <petr@tesarici.cz>
-Subject: Re: [PATCH v1] riscv/kexec_file: Fix relocation type R_RISCV_ADD16
- and R_RISCV_SUB16 unknown
-Message-ID: <20240717-c761f5af7369cdeba5b9c759@orel>
-References: <20240711083236.2859632-1-sunying@isrc.iscas.ac.cn>
+	Wed, 17 Jul 2024 13:38:56 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721223534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vhY47IaT+xpjtEKrUmqTs+3xE4CAdxaNkPoUu1I3NaY=;
+	b=Lu3BMKxyqKemF0soOcF+0aXT2rtgRtU0w4dQQI2WaKhCYVE1sdWIOWd/Z73EtY0Oi1Rjea
+	0GMN0H/XFBYZ5OTkeJ0HklwJQOlqdwLrokakbkRc8fXaMhvgeFhMOU9NsIyJHMGjp1zNEu
+	KZqwWWV4aEwj6DI8IUsb0Ge52EQGjGE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-MIIcWOCHNZ6I6qR8600WxQ-1; Wed,
+ 17 Jul 2024 09:38:51 -0400
+X-MC-Unique: MIIcWOCHNZ6I6qR8600WxQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02D2B1955EA7;
+	Wed, 17 Jul 2024 13:38:50 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.209])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1210C1955F3B;
+	Wed, 17 Jul 2024 13:38:47 +0000 (UTC)
+Date: Wed, 17 Jul 2024 21:38:41 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: vgoyal@redhat.com, dyoung@redhat.com, akpm@linux-foundation.org,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] crash: fix x86_32 memory reserve dead loop retry
+ bug at "high"
+Message-ID: <ZpfJYcjZ0QmFUpPf@MiWiFi-R3L-srv>
+References: <20240717070904.2671147-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240711083236.2859632-1-sunying@isrc.iscas.ac.cn>
+In-Reply-To: <20240717070904.2671147-1-ruanjinjie@huawei.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240717_061406_233595_0C952FD8 
-X-CRM114-Status: GOOD (  14.77  )
+X-CRM114-CacheID: sfid-20240717_063855_208887_EA435DAA 
+X-CRM114-Status: GOOD (  26.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,54 +83,89 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 11, 2024 at 08:32:36AM GMT, sunying@isrc.iscas.ac.cn wrote:
-> From: Ying Sun <sunying@isrc.iscas.ac.cn>
+On 07/17/24 at 03:09pm, Jinjie Ruan wrote:
+> Similar to commit 8f9dade5906a ("crash: fix x86_32 memory reserve dead loop
+> retry bug") and in the symmetry case, on x86_32 Qemu machine with
+> 1GB memory, the cmdline "crashkernel=512M" will also cause system stall
+> as below:
 > 
-> Runs on the kernel with CONFIG_RISCV_ALTERNATIVE enabled:
->   kexec -sl vmlinux
+> 	ACPI: Reserving FACP table memory at [mem 0x3ffe18b8-0x3ffe192b]
+> 	ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe18b7]
+> 	ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+> 	ACPI: Reserving APIC table memory at [mem 0x3ffe192c-0x3ffe19bb]
+> 	ACPI: Reserving HPET table memory at [mem 0x3ffe19bc-0x3ffe19f3]
+> 	ACPI: Reserving WAET table memory at [mem 0x3ffe19f4-0x3ffe1a1b]
+> 	143MB HIGHMEM available.
+> 	879MB LOWMEM available.
+> 	  mapped low ram: 0 - 36ffe000
+> 	  low ram: 0 - 36ffe000
+> 	  (stall here)
 > 
-> Error:
->   kexec_image: Unknown rela relocation: 34
->   kexec_image: Error loading purgatory ret=-8
-> and
->   kexec_image: Unknown rela relocation: 38
->   kexec_image: Error loading purgatory ret=-8
+> The reason is that the CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX
+> on x86_32, the first "low" crash kernel memory reservation for 512M fails,
+> then it go into the "retry" loop and never came out as below (consider
+> CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX = 512M):
 > 
-> The purgatory code uses the 16-bit addition and subtraction relocation
-> type, but not handled, resulting in kexec_file_load failure.
-> So add handle to arch_kexec_apply_relocations_add().
+> -> reserve_crashkernel_generic() and high is false
+>    -> alloc at [0, 0x20000000] fail
+>       -> alloc at [0x20000000, 0x20000000] fail and repeatedly
+>       (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
 > 
-> Tested on RISC-V64 Qemu-virt, issue fixed.
+> Fix it by also changing the another out check condition, the fixed base
+> situation has no problem because it warn out if it fail to alloc.
 > 
-> Co-developed-by: Petr Tesarik <petr@tesarici.cz>
-> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
-> Signed-off-by: Ying Sun <sunying@isrc.iscas.ac.cn>
+> After this patch, it prints:
+> 	cannot allocate crashkernel (size:0x20000000)
+> 
+> Fixes: 9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->  arch/riscv/kernel/elf_kexec.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  kernel/crash_reserve.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-> index 11c0d2e0becf..3c37661801f9 100644
-> --- a/arch/riscv/kernel/elf_kexec.c
-> +++ b/arch/riscv/kernel/elf_kexec.c
-> @@ -451,6 +451,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
->  			*(u32 *)loc = CLEAN_IMM(CJTYPE, *(u32 *)loc) |
->  				 ENCODE_CJTYPE_IMM(val - addr);
->  			break;
-> +		case R_RISCV_ADD16:
-> +			*(u16 *)loc += val;
-> +			break;
-> +		case R_RISCV_SUB16:
-> +			*(u16 *)loc -= val;
-> +			break;
->  		case R_RISCV_ADD32:
->  			*(u32 *)loc += val;
->  			break;
-> -- 
-> 2.34.1
->
+> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> index 03e455738e75..36c13cf942f4 100644
+> --- a/kernel/crash_reserve.c
+> +++ b/kernel/crash_reserve.c
+> @@ -409,7 +409,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
+>  		 * low memory, fall back to high memory, the minimum required
+>  		 * low memory will be reserved later.
+>  		 */
+> -		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
+> +		if (!high && !search_base) {
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Hmm, this may not be good. We can't guarantee that CRASH_ADDR_LOW_MAX must
+not be 0. I still suggest you testing below draft patch to see if it works
+well. And we should revert the patch in Andrew's tree since it's not good.
+Posting like these mess will confuse people and add difficulty when
+backporting.
+
+You haven't responded to my earlier request to test those two draft
+patches. When you tested below code and it's good, you can post this as
+a formal patch. So my suggestion to the whole work is:
+
+1) revert commit 8f9dade5906a in Andrew's tree;
+
+2) post two patches I suggested to prevert crashkernel=,high for 32bit
+system, and fix the issue you found;
+
+3) post patchset to make arm32 use generic crashkernel reservation.
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 5b2722a93a48..ac087ba442cd 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -414,7 +414,8 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 			search_end = CRASH_ADDR_HIGH_MAX;
+ 			search_base = CRASH_ADDR_LOW_MAX;
+ 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+-			goto retry;
++			if (search_base != search_end)
++				goto retry;
+ 		}
+ 
+ 		/*
+
 
 _______________________________________________
 kexec mailing list
