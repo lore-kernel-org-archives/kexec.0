@@ -4,73 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57266C3DA42
-	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 04:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C12A0C3DA4B
+	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 07:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BqAkBaQs2WITCjOQYa8P46H9Zh/Dq5fJGG1rAlVAhZ0=; b=LzNlEjCoAGwjct
-	yPAbyNyjJ7xzhJQmroIhY1iCVXrSptyUCKEW9imrn+vap4DjA7zLMXp6UE5QC77HGKDie4XnzN1EU
-	u+7+yvtKNWDYuF2HZpJxzYRs/ZzNc1XR++71NvEVdPBIXK5gO8cjo8ztRnudX7hh1J6k2Q8Ri8Qiv
-	8vgW7Y0E4f5IzXpf+FAhiipPDqjIA+0vJLb27GHsIdVccrzm2L0qsC1LiPbhaEbI+1kOCO1SlgB5e
-	X0Ty/f/IsK70QZVX8vNh0Sac2qb5c0S6XpB1ZtyW99TyZXsqvHwrQcmplUsMSKj8ElSw7B+9eue1A
-	uA2jAXddRg2D7qw0L17A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=fn5l6kuN3rmozuO/EN93IAR/o68EEuRKadbQBi6c7K4=; b=1UQ7AfLXoFi7bM
+	2kWJsbg1Xhta6MgGqHz++JFAaT886NdHXI9ahA2HbTjZGudZU3tQBBHaFAv5GiSFWoAp6wqfJncWY
+	jzMRyEVPy1iWvLa0ZAUDOdXg7b8dy/TvJoyKU6tTh1cjAos7HZtQ+/krnIVZWar600dNf8uqNVHMp
+	DRcGrIsaZ/IDTWvrOJsLPWP4FceUEqi3+F6tUNCUFuYLaqqYoCj7ZQi1Vyy8nzswhTTJI1Kb9wB4w
+	UfiT9R7so+lDKTtY1TEmH2TQCZHCQgqOrMlQobMNN/8UalsLp7tJ9HLssurXUlWqAgaGhiVisql0g
+	ztutYeeMjoMjyZlSjFzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTwdV-0000000Cdtj-3hHi;
-	Wed, 17 Jul 2024 04:51:29 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sTyiH-0000000CvrL-3Pd8;
+	Wed, 17 Jul 2024 07:04:33 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTwdT-0000000CdrY-0rTm
+	id 1sTyiE-0000000Cvq8-0r3k
 	for kexec@lists.infradead.org;
-	Wed, 17 Jul 2024 04:51:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721191884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cwKS0cVz4qhsxcRMtjrAbgEN0j5pL4SYiKq8yDq5p7Q=;
-	b=KIlTiUNg3zhqHGUHprUyiwPkCtDu0cZsEUzU+cdSfCAq5akOeg+hxRppUx4egIt7DH0ZmI
-	nHLvUfU/JelIsF7qoqsx/htpxAkTw0DOef2bLQxCmJoimRe9E1xA9AGvLDQqpoxgyfrxwN
-	ci47Ef4xTQPWwrK9/xW4kYDksvnhQaA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-oDocYaQYNPmjksFnSeV-lQ-1; Wed,
- 17 Jul 2024 00:51:17 -0400
-X-MC-Unique: oDocYaQYNPmjksFnSeV-lQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE86B19560AA;
-	Wed, 17 Jul 2024 04:51:14 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.57])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3DA23195605A;
-	Wed, 17 Jul 2024 04:51:06 +0000 (UTC)
-Date: Wed, 17 Jul 2024 12:51:01 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: akpm@linux-foundation.org, vgoyal@redhat.com, dyoung@redhat.com,
-	austindh.kim@gmail.com, rmk+kernel@armlinux.org.uk,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] crash: Fix x86_32 and arm32 memory reserve bug
-Message-ID: <ZpdNtfWCfOwmUWZl@MiWiFi-R3L-srv>
-References: <20240713014808.1689915-1-ruanjinjie@huawei.com>
- <ZpU2rJ1aKyqlu8IN@MiWiFi-R3L-srv>
- <ff8d5b8c-088c-9e05-53b2-f86335a18b8f@huawei.com>
- <ZpYRrsSLd2ZpUyff@MiWiFi-R3L-srv>
- <5dba2994-5f38-1410-0f3f-ef04993cc169@huawei.com>
+	Wed, 17 Jul 2024 07:04:32 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WP6MF4lL3zdhck;
+	Wed, 17 Jul 2024 15:02:33 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5486718009B;
+	Wed, 17 Jul 2024 15:04:17 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Jul
+ 2024 15:04:16 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next] crash: fix x86_32 memory reserve dead loop retry bug at "high"
+Date: Wed, 17 Jul 2024 15:09:04 +0800
+Message-ID: <20240717070904.2671147-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5dba2994-5f38-1410-0f3f-ef04993cc169@huawei.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240716_215127_347286_15984C3F 
-X-CRM114-Status: GOOD (  44.09  )
+X-CRM114-CacheID: sfid-20240717_000430_428813_E759FCF4 
+X-CRM114-Status: GOOD (  11.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,115 +69,60 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/16/24 at 08:46pm, Jinjie Ruan wrote:
-> 
-> 
-> On 2024/7/16 14:22, Baoquan He wrote:
-> > On 07/16/24 at 11:44am, Jinjie Ruan wrote:
-> >>
-> >>
-> >> On 2024/7/15 22:48, Baoquan He wrote:
-> >>> On 07/13/24 at 09:48am, Jinjie Ruan wrote:
-> >>>> On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
-> >>>> as below:
-> >>>> 	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
-> >>>>
-> >>>> And on Qemu vexpress-a9 with 1GB memory, the crash kernel "crashkernel=4G"
-> >>>> is also ok as below:
-> >>>> 	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
-> >>>>
-> >>>> The cause is that the crash_size is parsed and printed with "unsigned long
-> >>>> long" data type which is 8 bytes but allocated used with "phys_addr_t"
-> >>>> which is 4 bytes in memblock_phys_alloc_range().
-> >>>>
-> >>>> Fix it by limiting the "crash_size" to phys_addr_t and bypass the invalid
-> >>>> input size.
-> >>>
-> >>> I am not sure if this is a good idea. Shouldn't we handle this in
-> >>> arch_reserve_crashkernel() to check the system RAM size?
-> >>>
-> >>> With this patch, if you specify crashkernel=4352M (namely 4G+256M) in
-> >>> kernel cmdline, then you will reserve 256M crashkernel in system, don't
-> >>> you think that is confusing?
-> >>
-> >> You are right!
-> >>
-> >> In the case you mentioned, it can still allocate 256M successfully, but
-> >> the log shows 4352M successfully allocated, which is not taken into
-> >> account by this patch.
-> >>
-> >> And handle this in arch_reserve_crashkernel() is a good idea, which will
-> >>  bypass all these corner case, I'll do it next version.
-> >>
-> >>>
-> >>> By the way, I am considering changing code to apply generic crashkernel
-> >>> reservation to 32bit system. Maybe below draft code can prevent
-> >>> crashkernel=,high from being parsed successfully on 32bit system.
-> >>>
-> >>> What do you think?
-> >>
-> >> I agree with you, I've thought about passing in a parameter in the
-> >> generic interface whether high is supported or not to implement it,
-> >> which is so incompatible. An architecture-defined macro to filter out
-> >> parsing of "high" fundamentally avoid using the generic interface to
-> >> allocate memory in "high" for the architecture that does not support
-> >> "high". The below code do prevent "crashkernel=,high" from being parsed
-> >> successfully on 32bit system.
-> >>
-> >> But if it is to support 32 bit system to use generic crash memory
-> >> reserve interface, reserve_crashkernel_generic() needs more modification
-> >> , as it may try to allocate memory at high.
-> > 
-> > You are right. Below change may be able to fix that. 
-> > 
-> > And I have been thinking if one case need be taken off in which the
-> > first attempt was for high memory, then fall back to low memory. Surely,
-> > this is not related to the 32bit crashkernel reservation.
-> 
-> It seems that ARM64 has the possibility before the refactoring. However,
-> x86 supports only the "low" -> "high" retry but not the "high" -> "low"
-> retry before the refactoring. In my opinion, "low" -> "high" retry is
-> more usefull, but I'm not sure if we should get rid of the other way.
+Similar to commit 8f9dade5906a ("crash: fix x86_32 memory reserve dead loop
+retry bug") and in the symmetry case, on x86_32 Qemu machine with
+1GB memory, the cmdline "crashkernel=512M" will also cause system stall
+as below:
 
-Thanks for the valuable input, I will think more about this.
+	ACPI: Reserving FACP table memory at [mem 0x3ffe18b8-0x3ffe192b]
+	ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe18b7]
+	ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+	ACPI: Reserving APIC table memory at [mem 0x3ffe192c-0x3ffe19bb]
+	ACPI: Reserving HPET table memory at [mem 0x3ffe19bc-0x3ffe19f3]
+	ACPI: Reserving WAET table memory at [mem 0x3ffe19f4-0x3ffe1a1b]
+	143MB HIGHMEM available.
+	879MB LOWMEM available.
+	  mapped low ram: 0 - 36ffe000
+	  low ram: 0 - 36ffe000
+	  (stall here)
 
-> 
-> > 
-> > By the way, do you figure out these issues from code reading and qemu
-> > testing, or there's need for deploying kdump on 32bit system, e.g i386
-> > or arm32? Just curious.
-> 
-> I found these problems during testing on QEMU when trying to support
-> this generic crash memory retention on ARM32, and I further found that
-> x86_32 also has the same problem by code reading and uncommon
-> configuration test.
+The reason is that the CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX
+on x86_32, the first "low" crash kernel memory reservation for 512M fails,
+then it go into the "retry" loop and never came out as below (consider
+CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX = 512M):
 
-I see, thanks for the explanation.
+-> reserve_crashkernel_generic() and high is false
+   -> alloc at [0, 0x20000000] fail
+      -> alloc at [0x20000000, 0x20000000] fail and repeatedly
+      (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
 
-Could you help test the earlier patch and below draft patch, to see if
-it fixes the issues you saw up to now? If they works, the generic
-crashkernel reservation can be taken on 32bit system like arm32 based 
-on them.
+Fix it by also changing the another out check condition, the fixed base
+situation has no problem because it warn out if it fail to alloc.
 
-> 
-> > 
-> > diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-> > index 5b2722a93a48..ac087ba442cd 100644
-> > --- a/kernel/crash_reserve.c
-> > +++ b/kernel/crash_reserve.c
-> > @@ -414,7 +414,8 @@ void __init reserve_crashkernel_generic(char *cmdline,
-> >  			search_end = CRASH_ADDR_HIGH_MAX;
-> >  			search_base = CRASH_ADDR_LOW_MAX;
-> >  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> > -			goto retry;
-> > +			if (search_base != search_end)
-> > +				goto retry;
-> >  		}
-> >  
-> >  		/*
-> > 
-> > 
-> 
+After this patch, it prints:
+	cannot allocate crashkernel (size:0x20000000)
+
+Fixes: 9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ kernel/crash_reserve.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 03e455738e75..36c13cf942f4 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -409,7 +409,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 		 * low memory, fall back to high memory, the minimum required
+ 		 * low memory will be reserved later.
+ 		 */
+-		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
++		if (!high && !search_base) {
+ 			search_end = CRASH_ADDR_HIGH_MAX;
+ 			search_base = CRASH_ADDR_LOW_MAX;
+ 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+-- 
+2.34.1
 
 
 _______________________________________________
