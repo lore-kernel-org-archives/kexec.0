@@ -4,93 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A255C3DA5D
-	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 21:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8388C3DA60
+	for <kexec@archiver.kernel.org>; Wed, 17 Jul 2024 23:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=UurF9mLo9bfCaAHaCvUuvFmjdpbXwopyjb6FB+RtynI=; b=GIgQPKR2UVvmmF
-	+Glf+zJFLHgcNAQ3qTA0Z0qcC/ArsGBtrUipqxxlPuJq3bx44PiD14mf8IpXxFrrgW6ivqPANl6WW
-	RhF+fG0wNgVbqviDJGMQpU0n+N5Nlu7RzATZKfIgGObLef2DJGdi4b+jd1Df3vUtxZ/vWiUEc6h94
-	w8nrScbqnxNkL9H9ahBGqqVUSZvXKYc5agfU9EsTxkncsJP2c2jwnfepsGbYSRU4y3ga1d9QGxdCT
-	6bJSgsmXDsmxx2OcZoGhDtoqRHDvF6vYa1o1rYS/fB2iP3kSsTbxncW+4HRcPruj9yKdTCaN7RrDl
-	un7S5gYSV6t/Tvyraz1g==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ds8yiiovVYVbFehrYaLi42XNWAMdaDnf4aNbxQiTC9I=; b=M0yX4zpWGu6C5D
+	KsQZygjw6EnRvaXBlN4zwthdYcosu1jtZDhp+Tfolh/VsSLy+NMgjuwSlfab0n0Q+b0lP2mp9fZJN
+	NSE9Lm72mcXXAIRtfq5R0bQK4QoBY7rCpkcT/cxGfLY6GhPpUW52u19bKZOXwqNUkELJmHhEIOwth
+	AQgHLI7DaWs0D/0OXHwuTxFhq24TcTuSSW5/ikoInX2/SESW190lCJuQCPBO7KR0/oiAnTPRwSMdv
+	j6Nh+XhoTSIfoLeb4CqzC3NpAHpkl4Gp+iFibrm184KsaJ1kVn3lnL3OO2G1kU4sScxzBHpRghrTV
+	7FzivctXuJbXBBn7Mfqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUCGL-0000000EyvG-094x;
-	Wed, 17 Jul 2024 21:32:37 +0000
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
+	id 1sUDdZ-0000000FAWf-00Xz;
+	Wed, 17 Jul 2024 23:00:41 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUCGI-0000000EyuO-0fES
+	id 1sUCab-0000000F1wB-02ue
+	for kexec@bombadil.infradead.org;
+	Wed, 17 Jul 2024 21:53:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:Subject:Message-ID:
+	Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Gwv4GLwX8rCMngg6ThUxnvDL4Iu5N+x3Ck3c3FmCpi4=; b=Ywj4e9cvp+86NZFfnkEUzBjyzY
+	RhX4LsTm5P9XMCmwyKSqybGjlJ4n7IwuEpGrlFlU5VqHRPoLADr+CB+mjkY5LXGtGiJ0/HbytW/u3
+	MbDEth4NUYJI/cfex3TAAy19pbWyF8/rilQV32vNrdDTD1kkRzjJUVu6hXcjbDTHnwCWAfIWTaDz7
+	+TNofrRzMxOqTbLGUAdZXwGbuspb327eaWbrscyer+o8vEb6PPz4bV3/gmcEfgnLubjntfa/Mz3Wj
+	PorlDbXac/Lv0nWVZ94IFrycRWVwYF4kTGXSjAuBImSz91sk2heeK8/9bZGrOIrkWkTL4XQwIeJxa
+	PgMTtwTA==;
+Received: from dfw.source.kernel.org ([139.178.84.217])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sUCaX-00000002PlF-1zIK
 	for kexec@lists.infradead.org;
-	Wed, 17 Jul 2024 21:32:35 +0000
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HEofNS002946;
-	Wed, 17 Jul 2024 21:31:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pps0720; bh=808SU6qyaK/Um857JBYO8r
-	S2Bl8LCNVBrZBok6IKwwE=; b=mDHLBAc0rPzJ0DNjqfFEzkKXPo4oM8PhTOFKQ1
-	HuJUpQPfnyug8cPcDiqB3fj0HwIx+r3ujhrK2eLvGBgL8/FwVPkrlvbtSEzdmqut
-	/IRFW+T8imeLqrJyeYRDer2YKF75NpOuspGovuiqtAIPnO7Ff+3mZ2K5SA3XtjAs
-	XWwmX5GDnPW/zAyR5EBRQEj/fT3K761hZyDuPw0wVg2f6dIb6oJnFR2+VNUpBt7E
-	R8fAko62JGJApVURJAeq9UQzajzdqT3eGWfjUWUOpA8NJjV68QmbLlOxIv0jWmln
-	cOESQm/SrX8LMrNjgd66POhuHiphUlW4pqPwvuYZ1IF/tPXA==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 40dwf02w6p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 21:31:26 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id B9C1E80026E;
-	Wed, 17 Jul 2024 21:31:24 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 71C0480FDCA;
-	Wed, 17 Jul 2024 21:31:22 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id 36CDD300BB4C9; Wed, 17 Jul 2024 16:31:21 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>,
-        Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH v3 0/2] Resolve problems with kexec identity mapping
-Date: Wed, 17 Jul 2024 16:31:19 -0500
-Message-Id: <20240717213121.3064030-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
+	Wed, 17 Jul 2024 21:53:31 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7477361975
+	for <kexec@lists.infradead.org>; Wed, 17 Jul 2024 21:53:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D5EC4AF1A
+	for <kexec@lists.infradead.org>; Wed, 17 Jul 2024 21:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721253204;
+	bh=2hNKo4PRlRL5HpgATzZ4TV0W6nttMnM5e0eF+5Mjub0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AnPX+U9c48j4O8UxGmxwQ0NrNzpMU+YP8PL8yLystZQLYQOOX0lcLezJB2hX300zT
+	 fcx1FaWwSaZc6pBsAs1p4/GJDztsgmWvSqohxbnkINB/bWV12WeUINHgRaqQxWaq7P
+	 l4y7SIxldsYUU9YCM4hoiVEBAUzp3Jm0Mk0IjNzzPBbtQ5UeQUwudCmrvdKLO0oYcO
+	 HHTUWVaPXh18rdymSaWnXJEwnG7J1Vm60MldsOriyf/TRLhZdAYLjOkZ07d5iZtZPa
+	 jtJVRv87NA05+y/2uGjhB7Kxji4l2ujQ+vrlTBv4xJR4e4WqO+1V4Q8X7t5M9zq7v0
+	 0vudlyMAI45ag==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eecd2c6432so2931501fa.3
+        for <kexec@lists.infradead.org>; Wed, 17 Jul 2024 14:53:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMGnmOnxLpn+q3xMp87bu5P3TMTStpZO9G9Ds+GKUxCj9KvMfkQNBmtfbbU2EO1rBvBqAVrq+bZIsAp4QsbRoFsYQQMiBMD43f
+X-Gm-Message-State: AOJu0YxEd1GnBj3cya/s6cMiY1fnrSkKcy8CYZklLG013DZlV07WtKEr
+	ADm1JI4Y3Td82sPGZa+viiaPcMf5ERS9VFD4L77g8zlD5KMTyC2gp2Wn91y1s9S4AG1RQ+BF52P
+	YBTH7g7ohfhz16u7lsyPDhN1ccII=
+X-Google-Smtp-Source: AGHT+IHQA5REQfR6PJuDJ5WJHovXh5yxPkwShu/QgAgI8DmO7TG1mfxo+DDoQQvj4nWpnCxV2bSVNwiXncM9U1sfLSs=
+X-Received: by 2002:a2e:b60c:0:b0:2ee:52f4:266 with SMTP id
+ 38308e7fff4ca-2ef05c53bd9mr5245661fa.3.1721253202794; Wed, 17 Jul 2024
+ 14:53:22 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-GUID: ho06VTQBQgjQyTsV5tShzxTP38dasqcr
-X-Proofpoint-ORIG-GUID: ho06VTQBQgjQyTsV5tShzxTP38dasqcr
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_16,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 spamscore=0 mlxlogscore=893
- priorityscore=1501 mlxscore=0 adultscore=0 impostorscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407170162
+References: <20240717213121.3064030-1-steve.wahl@hpe.com> <20240717213121.3064030-2-steve.wahl@hpe.com>
+In-Reply-To: <20240717213121.3064030-2-steve.wahl@hpe.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 17 Jul 2024 14:53:11 -0700
+X-Gmail-Original-Message-ID: <CAMj1kXEgvORTj3FT54Dq39d-tQLXDdmEPEVc=x6H8Schmdu6fg@mail.gmail.com>
+Message-ID: <CAMj1kXEgvORTj3FT54Dq39d-tQLXDdmEPEVc=x6H8Schmdu6fg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] x86/kexec: Add EFI config table identity mapping
+ for kexec kernel
+To: Steve Wahl <steve.wahl@hpe.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
+	Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>, 
+	Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>, 
+	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>, 
+	Dimitri Sivanich <sivanich@hpe.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <jroedel@suse.de>, 
+	Michael Roth <michael.roth@amd.com>, Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org, 
+	"Kalra, Ashish" <ashish.kalra@amd.com>, linux-efi@vger.kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240717_143234_211034_9E83B6D6 
-X-CRM114-Status: GOOD (  23.88  )
+X-CRM114-CacheID: sfid-20240717_225329_874953_D365CEA8 
+X-CRM114-Status: GOOD (  26.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,67 +108,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Creating kexec identity maps using only GB pages can include a lot of
-extra address space past that requested, including areas marked
-reserved by the BIOS, which on UV systems can cause system halts.
+On Wed, 17 Jul 2024 at 14:32, Steve Wahl <steve.wahl@hpe.com> wrote:
+>
+> From: Tao Liu <ltao@redhat.com>
+>
+> A kexec kernel boot failure is sometimes observed on AMD CPUs due to
+> an unmapped EFI config table array.  This can be seen when "nogbpages"
+> is on the kernel command line, and has been observed as a full BIOS
+> reboot rather than a successful kexec.
+>
+> This was also the cause of reported regressions attributed to Commit
+> 7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page
+> should be mapped.") which was subsequently reverted.
+>
+> To avoid this page fault, explicitly include the EFI config table
+> array in the kexec identity map.
+>
+> Further explanation:
+>
+> The following 2 commits caused the EFI config table array to be
+> accessed when enabling sev at kernel startup.
+>
+>     commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
+>                           earlier during boot")
+>     commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
+>                           detection/setup")
+>
+> This is in the code that examines whether SEV should be enabled or
+> not, so it can even affect systems that are not SEV capable.
+>
+> This may result in a page fault if the EFI config table array's
+> address is unmapped. Since the page fault occurs before the new kernel
+> establishes its own identity map and page fault routines, it is
+> unrecoverable and kexec fails.
+>
+> Most often, this problem is not seen because the EFI config table
+> array gets included in the map by the luck of being placed at a memory
+> address close enough to other memory areas that *are* included in the
+> map created by kexec.
+>
+> Both the "nogbpages" command line option and the "use gpbages only
+> where full GB page should be mapped" patch greatly reduce the chance
+> of being included in the map by luck, which is why the problem
+> appears.
+>
+> Signed-off-by: Tao Liu <ltao@redhat.com>
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> Tested-by: Pavin Joseph <me@pavinjoseph.com>
+> Tested-by: Sarah Brofeldt <srhb@dbc.dk>
+> Tested-by: Eric Hagberg <ehagberg@gmail.com>
+> ---
+>
+> Version 3: Do not rename map_efi_systab to map_efi_tables, and don't add
+> 'config table' to the comments, per Ard Biesheuvel request.
+>
+>  arch/x86/kernel/machine_kexec_64.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
 
-The previous attempt to fix this problem,
-
-       7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
-
-caused a regression on a small number of AMD systems, and was later reverted.
-
-The cause of this regression was that the EFI Config Table Array was
-not explicitly included in the kexec identity map. While this array was
-often included in the identity map by luck, when it was not, code that
-checks whether the AMD SEV feature should be enabled takes a page
-fault due to the array's address not being mapped.  This happens before
-the new kernel is able to set up a page fault handler, so it is fatal.
-
-The patch that was reverted greatly reduced the chance that the EFI
-Config Table Array got mapped by luck, which is why this problem
-appeared.  The kernel command line option "nogbpages" also causes the
-problem to show, and was used for debugging and illustrative purposes.
-
-The first patch in this series explicitly adds the EFI Config Table
-array to the kexec identity map so this problem will not occur.
-
-The second patch in the series re-instates the previously reverted
-patch that reduces usage of gbpages in creating the identity map.
-
-All three of the people who reported regression with my earlier patch
-have retested with this patch series and found it to work where my
-single patch previously did not.  With current kernels, all fail to
-kexec when "nogbpages" is on the command line, but all succeed with
-"nogbpages" after the series is applied.
-
-Series version 3:
-  * In patch 1, do not change name of map_efi_systab, and fix comment.
-
-Series version 2:
-
-  * Removed a patch (formerly #2) that also added the CC blob to the
-    identity map, as this was proactive, but not proved necessary.
-
-  * Rewrote this cover letter and patch commit messages to include
-    discussion on previous version.
-
-V1: https://lore.kernel.org/all/20240520183633.1457687-1-steve.wahl@hpe.com/
-
-Steve Wahl (1):
-  x86/mm/ident_map: Use gbpages only where full GB page should be
-    mapped.
-
-Tao Liu (1):
-  x86/kexec: Add EFI config table identity mapping for kexec kernel
-
- arch/x86/kernel/machine_kexec_64.c | 27 +++++++++++++++++++++++++++
- arch/x86/mm/ident_map.c            | 23 ++++++++++++++++++-----
- 2 files changed, 45 insertions(+), 5 deletions(-)
-
--- 
-2.26.2
-
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
 _______________________________________________
 kexec mailing list
