@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 074D6C3DA60
-	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 03:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93CBFC3DA60
+	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 03:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=sVnYuE1K5o26JN44ORH83r1qB/LzikVnHEhT1YoTRMg=; b=0JFdcxpR3dswUe
-	s57R7rYUZwOJsCXxifzTWE38mOnjLLItop7PzJX0/IpkkaNBGbrZlbl8l479TyeqNzE5cnCcYOGZ1
-	gf4vFX+UDbEpduM8b+3AafZi87JG+r8kv54WToKkbn9VcU8KMv7qgVIbElrOrHde8/LEFdeCSJcDw
-	7ClNssUvpC0onk6ZWFOLhe76LbjsJHS3XW4mDqOcMMLUk0Mhk/ILb7UyO2pzT8WonEYuLXIn6Lvqe
-	GJvyOw9wP/+H6QlX1FjNAwyIB/Htb/dwcX6UcIsFXuKU63J0C+Em7phkoAuO6dUbv0LG5Cx4TmRKn
-	/2occrywLS0p5f7hlYRg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=EGMp91grVj+iK1p0ovzlJ5nJy5Q7TUImzOnlupsh3w8=; b=SJ1iN3NIYSoyC1
+	zAR0lSpRHBSqM1qKVYYRukjVKFANakkHfjtX/4jEy8sTxN3t+WZD6VVu3DLYuR0KCXrK19DC668XK
+	LLFrFSPq6KYWl+V9tLbcRU+zLucf4KqDH7hIim8WFgndUUpxrCHLDYPnZHKmsU2o2XTFZoSVTeeZs
+	dyev0+y2hkSiXy0kxZcCOPmSy5qh9RPDBh0SWhAZEGJtiQJTkklGzZ3uGiX8Cmo+u6NG0AHRGp2wy
+	TXAVS4xfoJXxZC5k6wurvWMPpR9aqxa0uhx4EjsCEc7+FeLLVw4KdXDacy+gmpk1MCgQgidXDtxUA
+	84/Zbqnppv+oRwXETiag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUI9o-0000000FfKI-2q3H;
-	Thu, 18 Jul 2024 03:50:16 +0000
-Received: from szxga08-in.huawei.com ([45.249.212.255])
+	id 1sUIA8-0000000FfQ3-1Fv5;
+	Thu, 18 Jul 2024 03:50:36 +0000
+Received: from szxga03-in.huawei.com ([45.249.212.189])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUI9i-0000000FfJD-1d3V;
-	Thu, 18 Jul 2024 03:50:15 +0000
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WPdx33lvqz1JCft;
-	Thu, 18 Jul 2024 11:45:11 +0800 (CST)
+	id 1sUI9v-0000000FfLk-0E0J;
+	Thu, 18 Jul 2024 03:50:24 +0000
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WPdyH67rKzQm5K;
+	Thu, 18 Jul 2024 11:46:15 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 31B2C140109;
-	Thu, 18 Jul 2024 11:50:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 24A2E180106;
+	Thu, 18 Jul 2024 11:50:05 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
- 2024 11:50:03 +0800
+ 2024 11:50:04 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <linux@armlinux.org.uk>, <catalin.marinas@arm.com>, <will@kernel.org>,
 	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
@@ -50,18 +50,19 @@ To: <linux@armlinux.org.uk>, <catalin.marinas@arm.com>, <will@kernel.org>,
 	<kexec@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-riscv@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 0/3] crash: Fix x86_32 memory reserve dead loop bug
-Date: Thu, 18 Jul 2024 11:54:41 +0800
-Message-ID: <20240718035444.2977105-1-ruanjinjie@huawei.com>
+Subject: [PATCH v3 1/3] crash: Fix x86_32 crash memory reserve dead loop bug
+Date: Thu, 18 Jul 2024 11:54:42 +0800
+Message-ID: <20240718035444.2977105-2-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240718035444.2977105-1-ruanjinjie@huawei.com>
+References: <20240718035444.2977105-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240717_205013_898409_E2EEC07D 
-X-CRM114-Status: UNSURE (   8.68  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240717_205023_484708_4E5D1937 
+X-CRM114-Status: GOOD (  13.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,33 +79,103 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Fix two bugs for x86_32 crash memory reserve, and prepare to apply generic
-crashkernel reservation to 32bit system. Then use generic interface to
-simplify crashkernel reservation for ARM32.
+On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=1G,high"
+will cause system stall as below:
 
-changes in v3:
+	ACPI: Reserving FACP table memory at [mem 0x3ffe18b8-0x3ffe192b]
+	ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe18b7]
+	ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+	ACPI: Reserving APIC table memory at [mem 0x3ffe192c-0x3ffe19bb]
+	ACPI: Reserving HPET table memory at [mem 0x3ffe19bc-0x3ffe19f3]
+	ACPI: Reserving WAET table memory at [mem 0x3ffe19f4-0x3ffe1a1b]
+	143MB HIGHMEM available.
+	879MB LOWMEM available.
+	  mapped low ram: 0 - 36ffe000
+	  low ram: 0 - 36ffe000
+	 (stall here)
+
+The reason is that the CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX
+on x86_32, the first high crash kernel memory reservation will fail, then
+go into the "retry" loop and never came out as below.
+
+-> reserve_crashkernel_generic() and high is true
+ -> alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] fail
+    -> alloc at [0, CRASH_ADDR_LOW_MAX] fail and repeatedly
+       (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
+
+Fix it by prevent crashkernel=,high from being parsed successfully on 32bit
+system with a architecture-defined macro.
+
+After this patch, the 'crashkernel=,high' for 32bit system can't succeed,
+and it has no chance to call reserve_crashkernel_generic(), therefore this
+issue on x86_32 is solved.
+
+Fixes: 9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Tested-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+v3:
 - Fix it as Baoquan suggested.
 - Update the commit message.
-
-changes in v2:
+v2:
 - Peel off the other two patches.
 - Update the commit message and fix tag.
+---
+ arch/arm64/include/asm/crash_reserve.h | 2 ++
+ arch/riscv/include/asm/crash_reserve.h | 2 ++
+ arch/x86/include/asm/crash_reserve.h   | 1 +
+ kernel/crash_reserve.c                 | 2 +-
+ 4 files changed, 6 insertions(+), 1 deletion(-)
 
-Jinjie Ruan (3):
-  crash: Fix x86_32 crash memory reserve dead loop bug
-  crash: Fix x86_32 crash memory reserve dead loop bug at high
-  ARM: Use generic interface to simplify crashkernel reservation
-
- arch/arm/Kconfig                       |  3 ++
- arch/arm/include/asm/crash_reserve.h   | 24 ++++++++++
- arch/arm/kernel/setup.c                | 63 ++++----------------------
- arch/arm64/include/asm/crash_reserve.h |  2 +
- arch/riscv/include/asm/crash_reserve.h |  2 +
- arch/x86/include/asm/crash_reserve.h   |  1 +
- kernel/crash_reserve.c                 |  5 +-
- 7 files changed, 44 insertions(+), 56 deletions(-)
- create mode 100644 arch/arm/include/asm/crash_reserve.h
-
+diff --git a/arch/arm64/include/asm/crash_reserve.h b/arch/arm64/include/asm/crash_reserve.h
+index 4afe027a4e7b..bf362c1a612f 100644
+--- a/arch/arm64/include/asm/crash_reserve.h
++++ b/arch/arm64/include/asm/crash_reserve.h
+@@ -7,4 +7,6 @@
+ 
+ #define CRASH_ADDR_LOW_MAX              arm64_dma_phys_limit
+ #define CRASH_ADDR_HIGH_MAX             (PHYS_MASK + 1)
++
++#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+ #endif
+diff --git a/arch/riscv/include/asm/crash_reserve.h b/arch/riscv/include/asm/crash_reserve.h
+index 013962e63587..8d7a8fc1d459 100644
+--- a/arch/riscv/include/asm/crash_reserve.h
++++ b/arch/riscv/include/asm/crash_reserve.h
+@@ -7,5 +7,7 @@
+ #define CRASH_ADDR_LOW_MAX		dma32_phys_limit
+ #define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
+ 
++#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
++
+ extern phys_addr_t memblock_end_of_DRAM(void);
+ #endif
+diff --git a/arch/x86/include/asm/crash_reserve.h b/arch/x86/include/asm/crash_reserve.h
+index 7835b2cdff04..24c2327f9a16 100644
+--- a/arch/x86/include/asm/crash_reserve.h
++++ b/arch/x86/include/asm/crash_reserve.h
+@@ -26,6 +26,7 @@ extern unsigned long swiotlb_size_or_default(void);
+ #else
+ # define CRASH_ADDR_LOW_MAX     SZ_4G
+ # define CRASH_ADDR_HIGH_MAX    SZ_64T
++#define HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+ #endif
+ 
+ # define DEFAULT_CRASH_KERNEL_LOW_SIZE crash_low_size_default()
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 5b2722a93a48..c5213f123e19 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -306,7 +306,7 @@ int __init parse_crashkernel(char *cmdline,
+ 	/* crashkernel=X[@offset] */
+ 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
+ 				crash_base, NULL);
+-#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
++#ifdef HAVE_ARCH_CRASHKERNEL_RESERVATION_HIGH
+ 	/*
+ 	 * If non-NULL 'high' passed in and no normal crashkernel
+ 	 * setting detected, try parsing crashkernel=,high|low.
 -- 
 2.34.1
 
