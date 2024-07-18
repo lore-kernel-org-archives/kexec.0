@@ -4,83 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4121C3DA63
-	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 14:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F007DC3DA63
+	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 17:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PGb3WaTNAF4itvHMh3l6jZ1VWrfQGCPItIWeQYSpQsI=; b=qbo0dfD1WHRvKs
-	ByF45XlWLYEhUZxt9tAkHAvgwiKQiXqCZXIfzPTJ6CzAf93Q/ySFvag60wasjZHeqASOMxaizNxh6
-	r0g6K6nnl3M8r29CVl03VHkThn60BoY+KX5dU7gXvcMELRR+HR3PbI5HY2dt34Et0ftivIMp0SdsW
-	T0JsAAxg53mvjsl0kjfAKwr49qbOb9IUvDu82R3CHb9LzfnNyuKowrhUhV9Gov2opqrpYqW6m50/0
-	00x6WhOwHdWL6Z7S0qPRp0WzzarDaUMxyT5Zaa9GSYbcvq5/ttRe4m0DFkJdFcI8fX+bQiFVB/vsx
-	VS6ew/dUyBYede0VI/KA==;
+	List-Owner; bh=ePhIFSgHfGi5w68FSP0O9NHjjybobKV9Qjio2KmldnU=; b=1grzLGYkz6Kyix
+	1vFyMYVH/d/Li4SDEAb4dnao8SNWCrZK38wnBNEN1buRFWaOLB188PvrOC4HA4BdowSFyGpcGIvfz
+	9gHxDGvfTz5X2v3CfWkzw14g1jLOpD/9G7uULVyi6NLSlDWKdKiJyKMdr5JNVpdJaH3aVZXWx0g2o
+	d7cx0JKYe9O0l9bH6tCY2+Y+YmjGvB+ACJQwrVapUX8lBYWIVdLR/c5LLkPAFLaPMiWfLWrOxC72M
+	lVqLNLRSbSFYAmEJLW2SQ+QxuyGYVh5h0ZiqBf5FdpjKa86sbVCulORzT21uMVeqNanUweJtP0pHq
+	5Z6fgIf61alYzRR5QzTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUSM7-0000000HJ5C-2gIX;
-	Thu, 18 Jul 2024 14:43:39 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sUUnQ-000000005F2-306v;
+	Thu, 18 Jul 2024 17:20:00 +0000
+Received: from sin.source.kernel.org ([145.40.73.55])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUSLj-0000000HIwi-0D3B
-	for kexec@lists.infradead.org;
-	Thu, 18 Jul 2024 14:43:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721313794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gJrnZFWbEYDfYCgkGw1MmmGbtaUVBD+dZ8bSRNzGKmo=;
-	b=FvIkrOT+Z+iR7qiuHkocyrApsdyc1LpYsAsmw5lQy0o469Er7x6kGqWQ05b9XmWu3Wt4dR
-	PzWWjGp2Fd785kByRvTCsnfTjDVhgYcNcTNbTFvppiRBObK/Svwn3ohwQsgsnu4O6HnUM9
-	dfLAESeGmuw3zvP35zk9JoQsO37jyAI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-41-wwEfdrw0NfmVBBmg15EUHg-1; Thu,
- 18 Jul 2024 10:43:07 -0400
-X-MC-Unique: wwEfdrw0NfmVBBmg15EUHg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 553071954223;
-	Thu, 18 Jul 2024 14:42:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.39])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B42773000185;
-	Thu, 18 Jul 2024 14:42:53 +0000 (UTC)
-Date: Thu, 18 Jul 2024 22:42:42 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, vgoyal@redhat.com,
-	dyoung@redhat.com, arnd@arndb.de, afd@ti.com,
-	linus.walleij@linaro.org, akpm@linux-foundation.org,
-	eric.devolder@oracle.com, gregkh@linuxfoundation.org,
-	javierm@redhat.com, deller@gmx.de, robh@kernel.org,
-	hbathini@linux.ibm.com, thunder.leizhen@huawei.com,
-	chenjiahao16@huawei.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] crash: Fix x86_32 crash memory reserve dead loop
- bug at high
-Message-ID: <Zpkp4iF7quCOq7k0@MiWiFi-R3L-srv>
-References: <20240718035444.2977105-1-ruanjinjie@huawei.com>
- <20240718035444.2977105-3-ruanjinjie@huawei.com>
- <Zpj4+G5OwTYBQGIA@MiWiFi-R3L-srv>
- <aca0795c-f1a8-20c1-3daf-7f39d2ebf1bc@huawei.com>
+	id 1sUUnN-000000005EA-0Vp9;
+	Thu, 18 Jul 2024 17:19:58 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 7BD2ACE19D4;
+	Thu, 18 Jul 2024 17:19:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31218C4AF0A;
+	Thu, 18 Jul 2024 17:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721323193;
+	bh=keIX2+eAoAsKL+d0fzFb7BJ3sbvEkE/QR7C10Odk9Qo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sglcyTWg6b2IrV2cQTwxnMPN+5e3yJX6eIthBvycT/RpGBou/LTM0chIL9VjkL3Yy
+	 NWd9VQPjwoodC3WCHs+KkT9HQlBhWtq2tpVblk+OgGobvY09EhD5CpImOFljkNPHRD
+	 lKCIUw3Q7gxA9/WshpjJxttGrnBNokewQET6O/l4hdDqlVsWxNOYdkNYU+DVONzPdh
+	 qqv6YRs2vFFNwwTa/rI8dbgE/gKg3IzjxCbYfEdrUo7MSla8VpvoU8cr4uH+2rRobL
+	 f8ReqWXXGLGd6qgNuBpkXjKdUpYG83sKPoOrunLzJHCEfvgxRwA+0tjJCfs0pFlIYb
+	 q1MLvA/z2Y70A==
+Message-ID: <8c82c558556750751780a9d2b3a50ca548f565e8.camel@kernel.org>
+Subject: Re: [RFC 1/7] efi/libstub: Ask efi_random_alloc() to skip unusable
+ memory
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Pingfan Liu <piliu@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Jan Hendrik Farr <kernel@jfarr.cc>, 
+ Philipp Rudo <prudo@redhat.com>, Lennart Poettering <mzxreary@0pointer.de>,
+ Baoquan He <bhe@redhat.com>,  Dave Young <dyoung@redhat.com>, Mark Rutland
+ <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>
+Date: Thu, 18 Jul 2024 20:19:49 +0300
+In-Reply-To: <20240718085759.13247-2-piliu@redhat.com>
+References: <20240718085759.13247-1-piliu@redhat.com>
+	 <20240718085759.13247-2-piliu@redhat.com>
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <aca0795c-f1a8-20c1-3daf-7f39d2ebf1bc@huawei.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240718_074315_165726_DF5190B0 
-X-CRM114-Status: UNSURE (   9.61  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240718_101957_518569_379496CF 
+X-CRM114-Status: GOOD (  11.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,24 +77,49 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/18/24 at 08:10pm, Jinjie Ruan wrote:
+On Thu, 2024-07-18 at 16:57 +0800, Pingfan Liu wrote:
+> efi_random_alloc() demands EFI_ALLOCATE_ADDRESS when allocate_pages(),
+> but the current implement can not ensure the selected target locates
+> inside free area, that is to exclude EFI_BOOT_SERVICES_*,
+> EFI_RUNTIME_SERVICES_* etc.
 > 
+> Fix the issue by checking md->type.
 > 
-> On 2024/7/18 19:14, Baoquan He wrote:
-> > On 07/18/24 at 11:54am, Jinjie Ruan wrote:
-> > 
-> > I don't fully catch the subject, what does the 'dead loop bug at high'
-> > mean?
-> 
-> It means alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] repeatedly
-> which corresponds to the crashkernel parameter of the "high".
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Jan Hendrik Farr <kernel@jfarr.cc>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> Cc: Lennart Poettering <mzxreary@0pointer.de>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> To: linux-arm-kernel@lists.infradead.org
+> To: kexec@lists.infradead.org
+> To: linux-efi@vger.kernel.org
 
-That may mislead people to think it's a crashkernel=,high setting and
-the corresponding issue.
+I'm on holiday up until end of next week so not going to go this trough
+right now but I have minor complain ;-)
 
-Maybe "crash: Fix x86_32 crashkernel reservation dead loop" is good
-enough.
+Please use:
 
+       --[no-]cc-cover
+           If this is set, emails found in Cc: headers in the first patch of the series (typically
+           the cover letter) are added to the cc list for each email set. Default is the value of
+           sendemail.ccCover configuration value; if that is unspecified, default to --no-cc-cover.
+       [from "man git-send-email"]
+
+This will make the commits less bloated and makes sure that everyone you
+might want to CC will get always the same set of patches.
+
+I'd also recommend to pick only one list for to-field because there can
+be only one maintainer that in the end would take these patches. Change
+rest to cc's. Now the process of managing these patches is ambiguous by
+definition.
+
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
