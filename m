@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82FF9C3DA61
-	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 09:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A8A0C3DA49
+	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 09:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9Ew5ZvXx8G4txCj5buUcpQS5lmvuUeWyaf6mGu+VAr4=; b=4Wnl4k+QsBzij4
-	0fvbNF0Wm4REvLCmqM3vuAcGE/Nui2fJyXER4NUuIRCBW1IZg5ijYjTMXwtSiIJB11Flo8F3Xmp4L
-	F59/9jmaSEkVfa5heLSwKyBvoJJovXsoe1c9OfWwxusnRHjc+M9DzJCCFBxb47e+9I9b7gx5BQV0P
-	1HHGRlu9F8XNa/EQUQQk4UTj3qoX/on42bt31EnIZcIAPXMhsbd0Ybb6kNMvivkB9Bmeb8dmuT5RD
-	JuBpvOJAimlMCRanIw0+Fd7DP+a4KLdpvtyjFg6N6HCMU2kg3ng71OwGNHQFmCoXeLu7k/sji/e/c
-	HjjcDisLLqguZqZXB1Ig==;
+	List-Owner; bh=1bIFZT5BD7fEz3sfb22Idreh/2VFZMFuToRynVIUuu4=; b=4wHrJECgxiuAQb
+	YKC6f8IGzF1xN4Fq8JbvyYTYbV6A8LpdlIcidkb0YKas0E84KjJMizpkzcDtu6qE8B7T+Guc82e/f
+	xndb8sco+wubbqgrcPl8VvZ+y9dxFiiPNceSkaJFfx7ccqfFw1iq2h+sit/WEWwgV0M4oyLhAJxW8
+	lYOhY/zyOBxI3bJSZWc1WQQgka2ZfjY14q9z6L7V55azvQUMvTM90uEZ9LwJWKppUbih6Nuq8RDme
+	ymJWEiUc1C7obmROLj9BtxRpX1Rhbsqqf4HAYB/Y3O8CXH7y/WnDOGiH9tzuSyCpdk93iRi5ZhUs2
+	g/9rqX+LXQvrKRWvLy4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUN02-0000000GVLz-0im5;
-	Thu, 18 Jul 2024 09:00:30 +0000
+	id 1sUN0e-0000000GVaN-040b;
+	Thu, 18 Jul 2024 09:01:08 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUMzx-0000000GVKL-1S4o
+	id 1sUN0Y-0000000GVYQ-3SQJ
 	for kexec@lists.infradead.org;
-	Thu, 18 Jul 2024 09:00:27 +0000
+	Thu, 18 Jul 2024 09:01:06 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721293224;
+	s=mimecast20190719; t=1721293262;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ON75peU/bs1K8lvZg4F3KV8/U1IV42h+4HalwWFCbTc=;
-	b=JFYR1oAh6sgbzatmWQAyKNfG1SMluht9iolCf8pXzLUIOsGmi7UEGPY0/Uvema/hwCEpk+
-	X/3lXCj91qMLZVPSA2A2315ejftbPdAonxZNHu2ld4CxjRQEwJKi2DedtzPDEGzakX7Lsg
-	10lMwqDaZ+lfkGhsoY0Kh9I6gL9QNXY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=3hNfYZDiuxS1NyyJIIF1E+E75SCF0d1XgAjWnjU5K1g=;
+	b=HFe+NrOZZJlD0ZSryZv4RDeHp/qBXuultfeqUhrv+u66mSjXLCgnLjzzUgpDNdmjhH4Xjm
+	PRI5nk2otnLU+oHr7u2a7unpVHR3M6HMPrJFKSIenhSffwT4XHMfLZmU1BfRj+q2T1mGRg
+	xkdgY8tMc1ZLH/1uYF3szaCZ//AZYf0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-13-AC18grf3O964ewF1iYDe3Q-1; Thu,
- 18 Jul 2024 04:58:55 -0400
-X-MC-Unique: AC18grf3O964ewF1iYDe3Q-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-D31q2u5bOAauFQDGlbOiXQ-1; Thu,
+ 18 Jul 2024 04:59:14 -0400
+X-MC-Unique: D31q2u5bOAauFQDGlbOiXQ-1
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E4BB1955D56;
-	Thu, 18 Jul 2024 08:58:53 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1EF131955D5C;
+	Thu, 18 Jul 2024 08:59:11 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.125])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 825A03000185;
-	Thu, 18 Jul 2024 08:58:46 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 13330300018A;
+	Thu, 18 Jul 2024 08:59:02 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: linux-arm-kernel@lists.infradead.org,
 	kexec@lists.infradead.org,
@@ -67,17 +67,17 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Will Deacon <will@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>
-Subject: [RFC 4/7] efi/emulator: Turn on mmu for arm64
-Date: Thu, 18 Jul 2024 16:57:54 +0800
-Message-ID: <20240718085759.13247-5-piliu@redhat.com>
+Subject: [RFC 6/7] arm64: kexec: Prepare page table for emulator
+Date: Thu, 18 Jul 2024 16:57:56 +0800
+Message-ID: <20240718085759.13247-7-piliu@redhat.com>
 In-Reply-To: <20240718085759.13247-1-piliu@redhat.com>
 References: <20240718085759.13247-1-piliu@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240718_020025_539669_FEE0E63F 
-X-CRM114-Status: GOOD (  21.57  )
+X-CRM114-CacheID: sfid-20240718_020104_789980_B512B0CA 
+X-CRM114-Status: GOOD (  24.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,18 +94,13 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On arm64, when kexec switches to the new kernel, the mmu is off. So the
-efi emulator should turn on the mmu to enable the identity mapping at
-the first stage.
+The emulator will run in identity mapping, and the first kernel prepares
+for it. The special allocator resorts to kimage_alloc_control_pages(),
+which can avoid the allocation on the spot of the destination and
+overwritten during copying the kernel.
 
-In fact, the kexec switching can run with mmu-on if it enters emulator,
-but that requires the re-arrangement of the relocate_kernel.S [1].
-After that, this patch can be drop.
-
-But let us focus on emulator itself and keep things simple for the time
-being.
-
-[1]: https://lore.kernel.org/linux-arm-kernel/20240328115656.24090-1-piliu@redhat.com/
+The identity mapping covers only all of the kexec segments, and this
+reduces the memory consumption of page table.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -122,221 +117,191 @@ To: linux-arm-kernel@lists.infradead.org
 To: kexec@lists.infradead.org
 To: linux-efi@vger.kernel.org
 ---
- drivers/firmware/efi/efi_emulator/Makefile    |   2 +-
- .../firmware/efi/efi_emulator/arm64_proc.S    | 172 ++++++++++++++++++
- drivers/firmware/efi/efi_emulator/entry.c     |   7 +
- 3 files changed, 180 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/efi/efi_emulator/arm64_proc.S
+ arch/arm64/kernel/machine_kexec.c | 90 +++++++++++++++++++++++++++++--
+ include/linux/kexec.h             |  5 +-
+ 2 files changed, 89 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi_emulator/Makefile b/drivers/firmware/efi/efi_emulator/Makefile
-index e37472004a2b5..b78a6241182fc 100644
---- a/drivers/firmware/efi/efi_emulator/Makefile
-+++ b/drivers/firmware/efi/efi_emulator/Makefile
-@@ -64,7 +64,7 @@ OBJECT_FILES_NON_STANDARD	:= y
- emulator-y			:= head.o entry.o \
- 				   core.o pe_loader.o misc.o memory.o memory_api.o runtime_service.o config_table.o \
- 				   lib.o printf.o \
--				   amba-pl011.o
-+				   amba-pl011.o arm64_proc.o
- obj-y				:= efi_emulator.o
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 82e2203d86a31..ae76874879188 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -14,6 +14,7 @@
+ #include <linux/reboot.h>
+ #include <linux/set_memory.h>
+ #include <linux/smp.h>
++#include <linux/efi_emulator.h>
  
- 
-diff --git a/drivers/firmware/efi/efi_emulator/arm64_proc.S b/drivers/firmware/efi/efi_emulator/arm64_proc.S
-new file mode 100644
-index 0000000000000..93618637e4935
---- /dev/null
-+++ b/drivers/firmware/efi/efi_emulator/arm64_proc.S
-@@ -0,0 +1,172 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Based on arch/arm/mm/proc.S
-+ *
-+ * Copyright (C) 2001 Deep Blue Solutions Ltd.
-+ * Copyright (C) 2012 ARM Ltd.
-+ * Author: Catalin Marinas <catalin.marinas@arm.com>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/linkage.h>
-+#include <linux/pgtable.h>
-+#include <linux/cfi_types.h>
-+#include <asm/assembler.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/asm_pointer_auth.h>
-+#include <asm/hwcap.h>
-+#include <asm/kernel-pgtable.h>
-+#include <asm/pgtable-hwdef.h>
-+#include <asm/cpufeature.h>
-+#include <asm/alternative.h>
-+#include <asm/smp.h>
-+#include <asm/sysreg.h>
-+
-+#ifdef CONFIG_ARM64_64K_PAGES
-+#define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
-+#elif defined(CONFIG_ARM64_16K_PAGES)
-+#define TCR_TG_FLAGS	TCR_TG0_16K | TCR_TG1_16K
-+#else /* CONFIG_ARM64_4K_PAGES */
-+#define TCR_TG_FLAGS	TCR_TG0_4K | TCR_TG1_4K
-+#endif
-+
-+#ifdef CONFIG_RANDOMIZE_BASE
-+#define TCR_KASLR_FLAGS	TCR_NFD1
-+#else
-+#define TCR_KASLR_FLAGS	0
-+#endif
-+
-+#define TCR_SMP_FLAGS	TCR_SHARED
-+
-+/* PTWs cacheable, inner/outer WBWA */
-+#define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
-+
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define TCR_KASAN_SW_FLAGS TCR_TBI1 | TCR_TBID1
-+#else
-+#define TCR_KASAN_SW_FLAGS 0
-+#endif
-+
-+#ifdef CONFIG_KASAN_HW_TAGS
-+#define TCR_MTE_FLAGS TCR_TCMA1 | TCR_TBI1 | TCR_TBID1
-+#elif defined(CONFIG_ARM64_MTE)
-+/*
-+ * The mte_zero_clear_page_tags() implementation uses DC GZVA, which relies on
-+ * TBI being enabled at EL1.
-+ */
-+#define TCR_MTE_FLAGS TCR_TBI1 | TCR_TBID1
-+#else
-+#define TCR_MTE_FLAGS 0
-+#endif
-+
-+/*
-+ * Default MAIR_EL1. MT_NORMAL_TAGGED is initially mapped as Normal memory and
-+ * changed during mte_cpu_setup to Normal Tagged if the system supports MTE.
-+ */
-+#define MAIR_EL1_SET							\
-+	(MAIR_ATTRIDX(MAIR_ATTR_DEVICE_nGnRnE, MT_DEVICE_nGnRnE) |	\
-+	 MAIR_ATTRIDX(MAIR_ATTR_DEVICE_nGnRE, MT_DEVICE_nGnRE) |	\
-+	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL_NC, MT_NORMAL_NC) |		\
-+	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL) |			\
-+	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL_TAGGED))
-+
-+
-+SYM_FUNC_START(__cpu_setup)
-+	tlbi	vmalle1				// Invalidate local TLB
-+	dsb	nsh
-+
-+	msr	cpacr_el1, xzr			// Reset cpacr_el1
-+	mov	x1, #1 << 12			// Reset mdscr_el1 and disable
-+	msr	mdscr_el1, x1			// access to the DCC from EL0
-+	reset_pmuserenr_el0 x1			// Disable PMU access from EL0
-+	reset_amuserenr_el0 x1			// Disable AMU access from EL0
-+
-+	/*
-+	 * Default values for VMSA control registers. These will be adjusted
-+	 * below depending on detected CPU features.
-+	 */
-+	mair	.req	x17
-+	tcr	.req	x16
-+	mov_q	mair, MAIR_EL1_SET
-+	mov_q	tcr, TCR_T0SZ(IDMAP_VA_BITS) | TCR_T1SZ(VA_BITS_MIN) | TCR_CACHE_FLAGS | \
-+		     TCR_SMP_FLAGS | TCR_TG_FLAGS | TCR_KASLR_FLAGS | TCR_ASID16 | \
-+		     TCR_TBI0 | TCR_A1 | TCR_KASAN_SW_FLAGS | TCR_MTE_FLAGS
-+
-+	tcr_clear_errata_bits tcr, x9, x5
-+
-+#ifdef CONFIG_ARM64_VA_BITS_52
-+	mov		x9, #64 - VA_BITS
-+alternative_if ARM64_HAS_VA52
-+	tcr_set_t1sz	tcr, x9
-+#ifdef CONFIG_ARM64_LPA2
-+	orr		tcr, tcr, #TCR_DS
-+#endif
-+alternative_else_nop_endif
-+#endif
-+
-+	/*
-+	 * Set the IPS bits in TCR_EL1.
-+	 */
-+	tcr_compute_pa_size tcr, #TCR_IPS_SHIFT, x5, x6
-+#ifdef CONFIG_ARM64_HW_AFDBM
-+	/*
-+	 * Enable hardware update of the Access Flags bit.
-+	 * Hardware dirty bit management is enabled later,
-+	 * via capabilities.
-+	 */
-+	mrs	x9, ID_AA64MMFR1_EL1
-+	and	x9, x9, ID_AA64MMFR1_EL1_HAFDBS_MASK
-+	cbz	x9, 1f
-+	orr	tcr, tcr, #TCR_HA		// hardware Access flag update
-+1:
-+#endif	/* CONFIG_ARM64_HW_AFDBM */
-+	msr	mair_el1, mair
-+	msr	tcr_el1, tcr
-+
-+	mrs_s	x1, SYS_ID_AA64MMFR3_EL1
-+	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
-+	cbz	x1, .Lskip_indirection
-+
-+	/*
-+	 * The PROT_* macros describing the various memory types may resolve to
-+	 * C expressions if they include the PTE_MAYBE_* macros, and so they
-+	 * can only be used from C code. The PIE_E* constants below are also
-+	 * defined in terms of those macros, but will mask out those
-+	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
-+	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
-+	 */
-+
-+#define PTE_MAYBE_NG		0
-+#define PTE_MAYBE_SHARED	0
-+
-+	mov_q	x0, PIE_E0
-+	msr	REG_PIRE0_EL1, x0
-+	mov_q	x0, PIE_E1
-+	msr	REG_PIR_EL1, x0
-+
-+#undef PTE_MAYBE_NG
-+#undef PTE_MAYBE_SHARED
-+
-+	mov	x0, TCR2_EL1x_PIE
-+	msr	REG_TCR2_EL1, x0
-+
-+.Lskip_indirection:
-+
-+	/*
-+	 * Prepare SCTLR
-+	 */
-+	mov_q	x0, INIT_SCTLR_EL1_MMU_ON
-+	ret					// return to head.S
-+
-+	.unreq	mair
-+	.unreq	tcr
-+SYM_FUNC_END(__cpu_setup)
-+
-+SYM_FUNC_START(enable_sctlr_el1)
-+	stp     x29, x30, [sp, #-16]!
-+	bl      __cpu_setup
-+	set_sctlr_el1 x0
-+	ldp     x29, x30, [sp], #16
-+	ret
-+SYM_FUNC_END(enable_sctlr_el1)
-+
-diff --git a/drivers/firmware/efi/efi_emulator/entry.c b/drivers/firmware/efi/efi_emulator/entry.c
-index c851a9acafa77..a72a746805666 100644
---- a/drivers/firmware/efi/efi_emulator/entry.c
-+++ b/drivers/firmware/efi/efi_emulator/entry.c
-@@ -13,6 +13,13 @@ extern void enable_sctlr_el1(unsigned long scratch_reg);
- static void arch_handle_mmu(struct efi_emulator_param *param)
- {
- 	if (!param->mmu_on && param->pgd_root) {
-+		unsigned long scratch_reg = 0;
-+		// in fact, we need SYM_FUNC_START(__cpu_setup), later, set SCTLR_EL1
-+		//  At present, the mmu is not ON
-+		write_sysreg(param->pgd_root, ttbr0_el1);
-+		isb();
-+		/* scratch_reg asks the C compiler to save x0 */
-+		enable_sctlr_el1(scratch_reg);
+ #include <asm/cacheflush.h>
+ #include <asm/cpu_ops.h>
+@@ -86,8 +87,22 @@ static void kexec_segment_flush(const struct kimage *kimage)
  	}
  }
  
++/* todo: alloc page for the pgtable used by efi emulator in crashkernel range */
++static phys_addr_t crash_page_alloc(int unused, void *arg)
++{
++	struct kimage *kimage = (struct kimage *)arg;
++	int i;
++
++	//skip kimage->segment[].mem
++	for (i = 0; i < kimage->nr_segments; i ++) {
++		//seg = &kimage->segment[i];
++	}
++	//skip any range allocated
++	return -1;
++}
++
+ /* Allocates pages for kexec page table */
+-static void *kexec_page_alloc(void *arg)
++static void *__kexec_page_alloc(void *arg)
+ {
+ 	struct kimage *kimage = arg;
+ 	struct page *page = kimage_alloc_control_pages(kimage, 0);
+@@ -102,6 +117,69 @@ static void *kexec_page_alloc(void *arg)
+ 	return vaddr;
+ }
+ 
++static phys_addr_t kexec_page_alloc(int unused, void *arg)
++{
++	void *vaddr;
++
++	vaddr = __kexec_page_alloc(arg);
++	if (!vaddr)
++		return (phys_addr_t)-1;
++	return virt_to_phys(vaddr);
++}
++
++/*
++ * This function should be called after all kimage segments have been profiled 
++ * Return physical address of page table's root
++ */
++phys_addr_t arch_emulator_prepare_pgtable(struct kimage *kimage,
++		struct efi_emulator_param *param)
++{
++	struct kexec_segment *seg;
++	unsigned long paddr, sz;
++	pgd_t *pgd;
++	typedef phys_addr_t (* alloc_fn)(int, void *);
++	alloc_fn alloc;
++	phys_addr_t pgd_paddr;
++	int i;
++
++	/*
++	 * Set up pgtable of emulator, either for crash or for reboot.
++	 * All of the segments have been profiled, and kimage_alloc_normal_control_pages()
++	 * will allocate page in safe zone.
++	 * On the other hand, these pages are not in any segment, which means they are
++	 * left, not copied. Hence the radix tree laying out on them is not broken.
++	 */
++	if (kimage->head & IND_DONE)
++		alloc = crash_page_alloc;
++	else
++		alloc = kexec_page_alloc;
++	pgd_paddr = alloc(0, kimage);
++	pgd = (pgd_t *)phys_to_virt(pgd_paddr);
++	for (i = 0; i < kimage->nr_segments; i ++) {
++		seg = &kimage->segment[i];
++		paddr = ALIGN_DOWN(seg->mem, PAGE_SIZE);
++		sz = ALIGN(seg->mem - paddr + seg->memsz, PAGE_SIZE);
++		kexec_dprintk("Set up mapping for phyaddr: 0x%lx, size:0x%lx", paddr, sz);
++		//todo: distinguish executable segment
++		__create_pgd_mapping_locked(pgd, paddr, paddr, sz,
++				PAGE_KERNEL_EXEC, alloc, kimage, 0);
++	}
++
++	/*
++	 * Per UEFI specification, SetVirtualAddressMap() is oneshot, which means
++	 * efi stub should not call EFI runtime service without setting up mapping.
++	 * As a result, emulator does not need to set up the mapping for
++	 * EFI_RUNTIME_SERVICES_CODE etc.
++	 */
++
++	if (param->print_enabled)
++		__create_pgd_mapping_locked(pgd, param->earlycon_reg_base,
++				param->earlycon_reg_base, param->earlycon_reg_sz,
++				pgprot_device(PAGE_KERNEL), alloc, kimage, 0);
++
++	return pgd_paddr;
++}
++
+ int machine_kexec_post_load(struct kimage *kimage)
+ {
+ 	int rc;
+@@ -109,7 +187,7 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	void *reloc_code = page_to_virt(kimage->control_code_page);
+ 	long reloc_size;
+ 	struct trans_pgd_info info = {
+-		.trans_alloc_page	= kexec_page_alloc,
++		.trans_alloc_page	= __kexec_page_alloc,
+ 		.trans_alloc_arg	= kimage,
+ 	};
+ 
+@@ -129,7 +207,7 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	}
+ 
+ 	/* Create a copy of the linear map */
+-	trans_pgd = kexec_page_alloc(kimage);
++	trans_pgd = __kexec_page_alloc(kimage);
+ 	if (!trans_pgd)
+ 		return -ENOMEM;
+ 	rc = trans_pgd_create_copy(&info, &trans_pgd, PAGE_OFFSET, PAGE_END);
+@@ -145,6 +223,7 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 				  &kimage->arch.t0sz, reloc_code);
+ 	if (rc)
+ 		return rc;
++
+ 	kimage->arch.phys_offset = virt_to_phys(kimage) - (long)kimage;
+ 
+ 	/* Flush the reloc_code in preparation for its execution. */
+@@ -175,7 +254,6 @@ void machine_kexec(struct kimage *kimage)
+ 		"Some CPUs may be stale, kdump will be unreliable.\n");
+ 
+ 	pr_info("Bye!\n");
+-
+ 	local_daif_mask();
+ 
+ 	/*
+@@ -192,7 +270,8 @@ void machine_kexec(struct kimage *kimage)
+ 
+ 		cpu_install_idmap();
+ 		restart = (void *)__pa_symbol(cpu_soft_restart);
+-		restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
++		/* kimage->start can be either the entry of kernel or efi emulator */
++		restart(is_hyp_nvhe(), kimage->start, kimage->arch.param_mem,
+ 			0, 0);
+ 	} else {
+ 		void (*kernel_reloc)(struct kimage *kimage);
+@@ -201,6 +280,7 @@ void machine_kexec(struct kimage *kimage)
+ 			__hyp_set_vectors(kimage->arch.el2_vectors);
+ 		cpu_install_ttbr0(kimage->arch.ttbr0, kimage->arch.t0sz);
+ 		kernel_reloc = (void *)kimage->arch.kern_reloc;
++		//tell between the emulator and normal kernel inside the relocate code 
+ 		kernel_reloc(kimage);
+ 	}
+ 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index cff6b6869498b..c68427f796d31 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -22,6 +22,7 @@
+ 
+ #include <uapi/linux/kexec.h>
+ #include <linux/verification.h>
++#include <linux/efi_emulator.h>
+ 
+ extern note_buf_t __percpu *crash_notes;
+ 
+@@ -463,7 +464,9 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
+ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
+ #endif
+ 
+-extern phys_addr_t arch_emulator_prepare_pgtable(struct kimage *kimage);
++extern phys_addr_t arch_emulator_prepare_pgtable(struct kimage *kimage,
++		struct efi_emulator_param *param);
++
+ extern bool kexec_file_dbg_print;
+ 
+ #define kexec_dprintk(fmt, arg...) \
 -- 
 2.41.0
 
