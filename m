@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8A4BC3DA49
-	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 12:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45CDBC3DA49
+	for <kexec@archiver.kernel.org>; Thu, 18 Jul 2024 13:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bhi64ka5vOA12JTT1wiXYZL83F5cSYcckaIguaDIoOw=; b=swOLhvNsdjErhv
-	or34TdikGc2tvD17ZnAR1shig2jY+1OO7i62HmnQJ2ydaDOjvtWLguB+KgppVHfvAnjbIlSvoaR7t
-	Hc6FSnuu09DjZEX5+1ZcCPWidy3soQCcQKzEtcMArE4EV3oOFxqDV0yrrpM+DdTbXrzGojXDV/AjO
-	4EXTx+r1zHKJHU3FK0QJb3XtSVe8eeoMao9PYImVnmK8CDUYPVNwTnP5XhYvJTGMD+CCCbAyAXG3z
-	3/2y5TyWr3eQFQKT1N8bGfDGFbnCw131OzqlIzP20knSBuVjrUpAJhJv99ahAkmYT9Br7fpHySW/C
-	0TWh3eBDCSMsme+MsWfA==;
+	List-Owner; bh=9cv/y/FT80e6TRKoLf3ROki33Nsyb3jkVespgCgEelY=; b=EJOblZ4ZLeAQhx
+	42Leah5cZ/TWdHwT0QVygqMIEbzq7MbLVci955CKq3d59RlbhaJhyFCGoIEuz/VnsS/i1MSHdedSv
+	jDzVkvXw/nPACJSvXNf+vzvF4HSruKw0e31G+3dbEfy6cCNSxJ40pgvbjx0Kp2gCWtXu0+SfPrTKr
+	1iIty2ugruBwoM6U3FPJ89rbApLOZNlBh3JQs+UsUHQqeD/Kcwsy3M6uH+AQ6O0+nfFt/LvLFQPv7
+	991wroXUwALD+oNAB1euHVP232uqI0AyXqP6eW2dX7jZ7EdiwOCS8BWCNMUR1IOL/tyF6YArDKf4K
+	nICjakOvcjaBJ+4nGffA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUPz8-0000000Gvyz-3tgG;
-	Thu, 18 Jul 2024 12:11:46 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1sUR2A-0000000H5iX-0Dte;
+	Thu, 18 Jul 2024 13:18:58 +0000
+Received: from szxga03-in.huawei.com ([45.249.212.189])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUPz5-0000000Gvxa-2eaa;
-	Thu, 18 Jul 2024 12:11:45 +0000
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WPs7T1x7fzdjDQ;
-	Thu, 18 Jul 2024 20:09:57 +0800 (CST)
+	id 1sUR25-0000000H5hL-29fD;
+	Thu, 18 Jul 2024 13:18:56 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WPtZ93CzrzQm3r;
+	Thu, 18 Jul 2024 21:14:41 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7FA0B180087;
-	Thu, 18 Jul 2024 20:11:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2D25518009D;
+	Thu, 18 Jul 2024 21:18:46 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 18 Jul 2024 20:11:40 +0800
-Message-ID: <42e69f31-44da-0525-0a79-8d4b5f3e4c57@huawei.com>
-Date: Thu, 18 Jul 2024 20:11:39 +0800
+ 15.1.2507.39; Thu, 18 Jul 2024 21:18:44 +0800
+Message-ID: <5284b96b-06a8-6d84-ec87-44f3c112c89b@huawei.com>
+Date: Thu, 18 Jul 2024 21:18:43 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
@@ -63,11 +63,11 @@ References: <20240718035444.2977105-1-ruanjinjie@huawei.com>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 In-Reply-To: <Zpj4OUsTPshBK4JZ@MiWiFi-R3L-srv>
 X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240718_051144_061072_346B2CA0 
-X-CRM114-Status: GOOD (  20.43  )
+X-CRM114-CacheID: sfid-20240718_061853_978523_2AAA1AFE 
+X-CRM114-Status: GOOD (  21.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,7 +127,7 @@ On 2024/7/18 19:10, Baoquan He wrote:
 > patch, the Co-developed-by tag is needed. As a maintainer, I prefer to
 > have the Suggested-by tag in this case.
 
-OK, thank you very much!
+Hi, Baoquan, I wonder if riscv32 have a similar problem, but I'm not sure.
 
 > 
 >> Tested-by: Jinjie Ruan <ruanjinjie@huawei.com>
@@ -137,11 +137,9 @@ OK, thank you very much!
 > 
 > Other than these tag adding concerns, this patch looks good to me. You
 > can post v4 to update and add my:
-
-Thank you, I'll fix it next version.
-
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> 
 >> ---
 >> v3:
 >> - Fix it as Baoquan suggested.
