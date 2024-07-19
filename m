@@ -4,77 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BEF2C3DA59
-	for <kexec@archiver.kernel.org>; Fri, 19 Jul 2024 10:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AF3EC3DA5D
+	for <kexec@archiver.kernel.org>; Fri, 19 Jul 2024 12:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=edZ4Y7nyTgXiopy2cLk95rGO21dJql6C4Wvn8r8Zo2M=; b=zDXLYmGtajEdkp
-	cK+t6xPFvP8wzJVNvWzz7qJccU91MokJ7XI1pWKLr753ARr9Tyjsk6sLpOupvfm8OWwimLA2v4oDU
-	fuV3DYechxVBVMgg/MfTRj8tHgNDIhwAXvEB0iR9TILh0lnZMur9Ss5odjWbMmSa3qcVv1NJ0ppGp
-	vJsKpOZpQetQBlBXCHkUZG2eklMOJcIpd9bFgk31rRKDfi6wqU607uzFD9S59Teo7gY7WV31w6N+Q
-	j1NX5boW4ClrYBdcmgPxt42UQYTrQA91eqMGEbwEmJZQonNnem5p/oIxkvtF4+sU2nNEnzVbds2f4
-	41Myh8854vwAHB4YhqPg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=jsn/VwdnenIUKQTOTbxbEZfaw5MySTmagT2e85GdNns=; b=EPBd93q+SMktgc
+	v4hewtFS+Yg59Gnl3JDpjwtnG2gnbbue/G1PM5VIJcsCriPaoL49M3m4n5XOfiWL91zsghhMP9EwP
+	J1rsWLrXDPvpTEnrFo98bmLvRCbmmnbP9I6kOy3QM6F2FoRVLZK8QK+5mEIOJqCdmJYoukA0BGNrN
+	4UJON1ZALndguC3v48TMqHAjMarLIV4/o/teu+M8XUdcJ8u/vCeWnEuBoXlRXF1fN2sUu3hSGUfJF
+	yz4XnV2FIVv5MOtPBsMf9z9VIeewPJ2yXD02ayxQipgC6EfjF+MaS2XXzcN3muSB5D2wmh0VciWm3
+	VBsfMHcm6IcVtVMlzs8Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUl1o-00000002PxE-0uiw;
-	Fri, 19 Jul 2024 10:39:56 +0000
-Received: from mail-lj1-x22d.google.com ([2a00:1450:4864:20::22d])
+	id 1sUmlo-00000002dvJ-1tNA;
+	Fri, 19 Jul 2024 12:31:32 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUl1k-00000002PwJ-3UwC
+	id 1sUmll-00000002dte-1cII
 	for kexec@lists.infradead.org;
-	Fri, 19 Jul 2024 10:39:54 +0000
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2eee083c044so20904411fa.3
-        for <kexec@lists.infradead.org>; Fri, 19 Jul 2024 03:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721385590; x=1721990390; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=igSaV7XZ3Cr6vZxP+aTe+2LlltaNI5nN7ttSrnUQLKQ=;
-        b=U7iyb7qJtoMsX82G3Q3KNokOGCkPoDiN1q6fn9ysjCeIDImG/Gh+FnTV3EXDVLHN7q
-         wYJebeRNck2RI9y7PcVXENYyN35TfLLrG1kaDhHwZxVkJcGYHp5g6AVyAnk2HT/Aext3
-         1i3AtwLTlZI1F/4kY8W72oYs+rBMG9EpjX3YkQEwz26D05Xli8aHEVAT26DTjrfEGfdg
-         EnOp97GdCVi0Xy8xSnTXQb9vGpD/hjdGhiTd6TK4D0YH3j7nWZKq+FtoNyDDWSmzr1z9
-         wC5jZ4G8WwMPuodLWK40MSmmZw/BLYhRK1GScQDoUI7OfMCE6wWpWAFlASeZQurRX7Q9
-         BFSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721385590; x=1721990390;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=igSaV7XZ3Cr6vZxP+aTe+2LlltaNI5nN7ttSrnUQLKQ=;
-        b=GbXEmEEWZY2RFZzczFEwWhpJwbJ1pFJHTO0CLayDYPEqkNzyGz8c+HnGKqNQJ3elXf
-         SRrlrQvgXZObwmhFpxuOmWV7cwv5JmyXNpSn5DCRXxPobWZQ6Ri9a52GIUlugQNNV8EU
-         XrDZoFMN4R2gp5d7lLqun4nNeGqGzkptJAyo74K6Q/Q5JSiGr1IM0qKNGb0fYtRXFO7I
-         CQh4T2duq0wgLeK/jMM0yrrn0sQeAnC5tqnyZ+jrW9naHnyFDOLP1IUaDdL5mtgxTiZb
-         W5aqFckMEXAYuqut6arWf78y0tNK2GlvOaNKQOsAsi9A8tC5RDzd7fRRKIpbAofEmNJF
-         xCIw==
-X-Gm-Message-State: AOJu0YzrAYvFW5WXsRXrU1yunXYrnJ2q2/4kiZrlEc+CGozOWbBuEEtc
-	oesfoJruPKpHXZuuiZuxupyYdZewv34lX4FYhj0xayRh/5IlPWjcEMuZ9bsf
-X-Google-Smtp-Source: AGHT+IGDMZz5Ed0SYJ86pWbecobgjSLO1BwlQZsL9m550SurHJlk/eyq8D+wFwn/pahNaIpsuWzXZg==
-X-Received: by 2002:a2e:6a18:0:b0:2eb:f31e:9e7b with SMTP id 38308e7fff4ca-2ef05c78c4amr33331211fa.14.1721385589731;
-        Fri, 19 Jul 2024 03:39:49 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a30aaa247dsm969213a12.22.2024.07.19.03.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jul 2024 03:39:49 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH] kexec: Use atomic_try_cmpxchg_acquire() in kexec_trylock()
-Date: Fri, 19 Jul 2024 12:38:52 +0200
-Message-ID: <20240719103937.53742-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	Fri, 19 Jul 2024 12:31:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721392287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qbbjKuhbbvUYpkBSuhBVInsptupV4f2A5Xnr2kbjA0o=;
+	b=Cxj+slXsA2ekLKAkM8TVdrkm7bOqRppVpaJVs9IgfdxknW1+ldNC5utSN7jeQiUL5GWrrT
+	w8ymX0mgnHDsw0civgoayLfxwDzDLRSUz6d1h4cf96q5f5Bn8kTqX9fwJUa7602qSa0H6G
+	SPFAt+AQGiVVrtB3aINLaRTaKDmfJTo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-EXZgBTCeMM-_M4_CybQBlA-1; Fri,
+ 19 Jul 2024 08:31:24 -0400
+X-MC-Unique: EXZgBTCeMM-_M4_CybQBlA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C09D1955F41;
+	Fri, 19 Jul 2024 12:31:14 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.23])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7787119560B2;
+	Fri, 19 Jul 2024 12:30:55 +0000 (UTC)
+Date: Fri, 19 Jul 2024 20:29:18 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, vgoyal@redhat.com, dyoung@redhat.com, arnd@arndb.de,
+	afd@ti.com, akpm@linux-foundation.org, linus.walleij@linaro.org,
+	eric.devolder@oracle.com, gregkh@linuxfoundation.org,
+	javierm@redhat.com, deller@gmx.de, robh@kernel.org,
+	thunder.leizhen@huawei.com, hbathini@linux.ibm.com,
+	tangyouling@kylinos.cn, chenjiahao16@huawei.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] crash: Fix x86_32 crash memory reserve dead loop
+Message-ID: <ZppcHqO2iMZeox1L@MiWiFi-R3L-srv>
+References: <20240719095735.1912878-1-ruanjinjie@huawei.com>
+ <20240719095735.1912878-3-ruanjinjie@huawei.com>
 MIME-Version: 1.0
+In-Reply-To: <20240719095735.1912878-3-ruanjinjie@huawei.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240719_033952_890237_AE7996F0 
-X-CRM114-Status: UNSURE (   9.94  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240719_053129_523423_C7855A92 
+X-CRM114-Status: GOOD (  20.51  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,33 +95,78 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use atomic_try_cmpxchg_acquire(*ptr, &old, new) instead of
-atomic_cmpxchg_acquire(*ptr, old, new) == old in kexec_trylock().
-x86 CMPXCHG instruction returns success in ZF flag, so
-this change saves a compare after cmpxchg.
+On 07/19/24 at 05:57pm, Jinjie Ruan wrote:
+> On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=512M" will
+> also cause system stall as below:
+> 
+> 	ACPI: Reserving FACP table memory at [mem 0x3ffe18b8-0x3ffe192b]
+> 	ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe18b7]
+> 	ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+> 	ACPI: Reserving APIC table memory at [mem 0x3ffe192c-0x3ffe19bb]
+> 	ACPI: Reserving HPET table memory at [mem 0x3ffe19bc-0x3ffe19f3]
+> 	ACPI: Reserving WAET table memory at [mem 0x3ffe19f4-0x3ffe1a1b]
+> 	143MB HIGHMEM available.
+> 	879MB LOWMEM available.
+> 	  mapped low ram: 0 - 36ffe000
+> 	  low ram: 0 - 36ffe000
+> 	  (stall here)
+> 
+> The reason is that the CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX
+> on x86_32, the first "low" crash kernel memory reservation for 512M fails,
+> then it go into the "retry" loop and never came out as below (consider
+> CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX = 512M):
+> 
+> -> reserve_crashkernel_generic() and high is false
+>    -> alloc at [0, 0x20000000] fail
+>       -> alloc at [0x20000000, 0x20000000] fail and repeatedly
+>       (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
+> 
+> Fix it by skipping meaningless calls of memblock_phys_alloc_range() with
+> `start = end`
+> 
+> After this patch, the retry dead loop is avoided and print below info:
+> 	cannot allocate crashkernel (size:0x20000000)
+> 
+> And apply generic crashkernel reservation to 32bit system will be ready.
+      ~~~ applying
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
----
- kernel/kexec_internal.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Other than this nit, it looks good to me.
 
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index 2595defe8c0d..d35d9792402d 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -23,7 +23,8 @@ int kimage_is_destination_range(struct kimage *image,
- extern atomic_t __kexec_lock;
- static inline bool kexec_trylock(void)
- {
--	return atomic_cmpxchg_acquire(&__kexec_lock, 0, 1) == 0;
-+	int old = 0;
-+	return atomic_try_cmpxchg_acquire(&__kexec_lock, &old, 1);
- }
- static inline void kexec_unlock(void)
- {
--- 
-2.42.0
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> 
+> Fixes: 9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Suggested-by: Baoquan He <bhe@redhat.com>
+> ---
+> v4:
+> - Signed-off-by -> Suggested-by as suggested.
+> - Remove the Tested-by as suggested.
+> - Update the commit subject
+> v3:
+> - Fix it as Baoquan suggested.
+> - Update the commit message.
+> ---
+>  kernel/crash_reserve.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> index c5213f123e19..dacc268429e2 100644
+> --- a/kernel/crash_reserve.c
+> +++ b/kernel/crash_reserve.c
+> @@ -414,7 +414,8 @@ void __init reserve_crashkernel_generic(char *cmdline,
+>  			search_end = CRASH_ADDR_HIGH_MAX;
+>  			search_base = CRASH_ADDR_LOW_MAX;
+>  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> -			goto retry;
+> +			if (search_base != search_end)
+> +				goto retry;
+>  		}
+>  
+>  		/*
+> -- 
+> 2.34.1
+> 
 
 
 _______________________________________________
