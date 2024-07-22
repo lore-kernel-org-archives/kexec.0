@@ -4,82 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 405A8C3DA59
-	for <kexec@archiver.kernel.org>; Sat, 20 Jul 2024 07:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DE77C3DA5D
+	for <kexec@archiver.kernel.org>; Mon, 22 Jul 2024 01:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=KIesEgT4EpZ3SP8JtzzgFVq6CarD9LkiI5bqV11SS5M=; b=IlJUC9hY5hnWig
-	Gw4DxwYGFa6HxC7dMqgUgnq+9bTwofLHKhSo+tjs8eiGjqpaC5Ph3aFK3teIpARFFtfKWw6iuBhmV
-	bcbW2dUjnVcg78H7P9eAvFEayl7lCGqiSW9tj8G2i7EhL3XpaL92riB237j3AbuGeX6EkhY9aFLap
-	31yRE0x+q3B85vXDTZRbALbzprmQkP3JpcTDCA9TdtiHMoIBd0J4kXLzcKKtEKv8YQrisg9y4yxl9
-	u4JKlEfDK4Cob8bo/Tm1HCNrcDvK5fT/Of+pHVjlA5I0tt14e4ZoMSh+xUiNUSyhECbkTjomsm5fD
-	nXIaca0Ehae3glQdHo/w==;
+	List-Owner; bh=BDsoXeqgXZ5tONEOhXcdMSUHFcBOicjLR1gWsEYoRs8=; b=ZtWq4+qrO1oBx3
+	wj++WzgDSMqdfy3Anupk/i6swcyMnsLY1eTJaObMFzWEkXMMBudLOXuLBT6G/pGU66xnPpyRgyurI
+	AWEjlvwbQGPPyukM4RulEv2xdVKZCQPC3PO9mOnWZK4PuGO50TCot7+97kVtTR5NkRN2FMRjW44gS
+	A4kCgQQjCqKan6/y5AEucCBa6DnMK+C9W+hzm5OUeJKI0pFXW3D4Xh5Iqn5dqMYZnrMFpRmSVLEiO
+	E2mqZZe3ly6nLKhy5opAOOsC7Gs0ViFiylY6Pdl62PyA3qvdmccm6ufDriZVmLYRRmY27sL8YJSWQ
+	jC+FdkLajkAMquDEBqpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sV4gC-00000004hB7-1aWC;
-	Sat, 20 Jul 2024 07:38:56 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sVi1A-000000080mo-279R;
+	Mon, 22 Jul 2024 01:39:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sV4g9-00000004hAT-2Qry
+	id 1sVi0m-000000080hs-2hoK
 	for kexec@lists.infradead.org;
-	Sat, 20 Jul 2024 07:38:55 +0000
+	Mon, 22 Jul 2024 01:38:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721461130;
+	s=mimecast20190719; t=1721612325;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gtJlNSO/VlVav+0eSeE5Nn2CqkE4RoB1EsIegq+Yd+Y=;
-	b=acJHVayH437EG5oytPgcKHQyalDgXptHhUs6trs61g8IfldgEi/QolhXn5pQWrFBNzT9fu
-	p6HJwnudnara6MvDaGBtlZZt4jWO0gYnKzipdVmgz/5K/UAePAiXmRuCZ/e/ktLPqKiBGV
-	fJgpkqQI8uiboSzh+jHhG9d6ugYEnl8=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-20-spJnEiRcN_auDpS7XyeWXw-1; Sat, 20 Jul 2024 03:38:48 -0400
-X-MC-Unique: spJnEiRcN_auDpS7XyeWXw-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2cb4c2276b6so2208684a91.1
-        for <kexec@lists.infradead.org>; Sat, 20 Jul 2024 00:38:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721461127; x=1722065927;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gtJlNSO/VlVav+0eSeE5Nn2CqkE4RoB1EsIegq+Yd+Y=;
-        b=qYJqs2qtL8MleOUlDV5otFeuxcLVFPB07h9MENHzGbJXh//nK3T0AW9Y6sHhozT0Jh
-         X5sdbGPHYcdFjG1GjLzC6kQyUylJmQI/ru+Sox5pPiXwBHuTEcOb15C2sPzLhgja+STM
-         XV1Dgl8uiOR8+l4yIWvo1Ky2pWWkj2MA8+EdKzAgA1pKbkugpVIgeOfd5T4A/qMQPvT+
-         wIw03Bzapgz6mfXSKkfnK4gUmfZ7DuCqes/dETBrDlfZBPEGRJrF8RfDQ2TFOAa+08YD
-         Mt30N2c15KkO+SD58s+0GU3FBw1YaXBlzL1T0eSOSaWePa6p95jgygAN4W9cdWiJcpWt
-         fV2w==
-X-Gm-Message-State: AOJu0YzdWsgGfx3nkqlrlXqQ3K9e1bxbcXPKyZXHBvNG2YItdFFLdaeS
-	Aj7zH3r2LgUNgYbFQG7UmkvN8K739WYSSkdSAaGpL73RZwXknXghsUS/n2CqnM2vTP61ZoLfDUr
-	p7WT4TwfB9v2nZW6Ucizr3UUpQ9xxa1yq8nQL076zuGKy5dUYLzpRJ1OKjAUZIIraRp7xarIz/q
-	KLoZVEEjwYGQMlo9jFV9NwsGzQ8lWKfrTDKO6fXZGMYko=
-X-Received: by 2002:a05:6a21:338b:b0:1c0:f216:7f20 with SMTP id adf61e73a8af0-1c42867920emr671247637.49.1721461126920;
-        Sat, 20 Jul 2024 00:38:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDFJThysIbMR30X2f++5bDifKfG/V6G9LGs6R8GpVOWMOuf6qzfMWbQI9P9rSvYUc+hIbM37pFEJ76fRs0FRs=
-X-Received: by 2002:a05:6a21:338b:b0:1c0:f216:7f20 with SMTP id
- adf61e73a8af0-1c42867920emr671241637.49.1721461126586; Sat, 20 Jul 2024
- 00:38:46 -0700 (PDT)
+	bh=9+xayDydG/sjylytxGn8tGsAMMzGvzWoMbFBXwqY3+w=;
+	b=fYNVPZwFF4aQIOjNRLF0qvbBa/4LT0vewytNXyJuiK0f+NkHhqgpW2DafXY9DTq1K8JwBZ
+	uqTBhQ9QcweTwm03h9OkeshgV1gISXiIE9FwIqYW/VClqAyuLRU8ZkTnWaty/jnP1uuHu8
+	/xQTj8A/2l0uPooP1ZJfcBgG6cAJ7JQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-2yqhrWR1OBiPlcNGBp9d1w-1; Sun,
+ 21 Jul 2024 21:38:41 -0400
+X-MC-Unique: 2yqhrWR1OBiPlcNGBp9d1w-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 12B721955D45;
+	Mon, 22 Jul 2024 01:38:31 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.6])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2CC5B19560AE;
+	Mon, 22 Jul 2024 01:38:23 +0000 (UTC)
+Date: Mon, 22 Jul 2024 09:38:19 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, vgoyal@redhat.com, dyoung@redhat.com, arnd@arndb.de,
+	afd@ti.com, akpm@linux-foundation.org, linus.walleij@linaro.org,
+	eric.devolder@oracle.com, gregkh@linuxfoundation.org,
+	javierm@redhat.com, deller@gmx.de, robh@kernel.org,
+	thunder.leizhen@huawei.com, hbathini@linux.ibm.com,
+	tangyouling@kylinos.cn, chenjiahao16@huawei.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 3/3] ARM: Use generic interface to simplify
+ crashkernel reservation
+Message-ID: <Zp24C4ZkWI4g21FK@MiWiFi-R3L-srv>
+References: <20240719095735.1912878-1-ruanjinjie@huawei.com>
+ <20240719095735.1912878-4-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-References: <20240625015712.3266086-1-lichliu@redhat.com> <bcdaf3b8-599d-4af1-af92-188e4072d143@nec.com>
-In-Reply-To: <bcdaf3b8-599d-4af1-af92-188e4072d143@nec.com>
-From: Lichen Liu <lichliu@redhat.com>
-Date: Sat, 20 Jul 2024 15:38:35 +0800
-Message-ID: <CAPmSd0Pd3afnTZGog3pXEY_mh093WDW27HJLUGN2QYDwk8RHyQ@mail.gmail.com>
-Subject: Re: [PATCH] makedumpfile: call initial before use cache
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+In-Reply-To: <20240719095735.1912878-4-ruanjinjie@huawei.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240720_003853_719302_E9A6C669 
-X-CRM114-Status: GOOD (  29.42  )
+X-CRM114-CacheID: sfid-20240721_183848_763404_08F4A9D3 
+X-CRM114-Status: GOOD (  16.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,67 +91,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-VGhhbmtzIGZvciB5b3VyIGV4cGxhbmF0aW9uIQoKCk9uIFdlZCwgSnVsIDE3LCAyMDI0IGF0IDM6
-NDTigK9QTSBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4EpCjxrLWhhZ2lvLWFiQG5lYy5j
-b20+IHdyb3RlOgo+Cj4gSGkgTGljaGVuLAo+Cj4gc29ycnkgZm9yIHRoZSBsb25nIGRlbGF5Lgo+
-Cj4gT24gMjAyNC8wNi8yNSAxMDo1NywgTGljaGVuIExpdSB3cm90ZToKPiA+IFJ1biAnbWFrZWR1
-bXBmaWxlIC0tbWVtLXVzYWdlIC9wcm9jL2tjb3JlJyB3aWxsIGNvcmVkdW1wIG9uIHBwYzY0LCBp
-dCBpcwo+ID4gYmVjYXVzZSBzaG93X21lbV91c2FnZSgpLT5nZXRfcGFnZV9vZmZzZXQoKS0+Z2V0
-X3ZlcnNpb25kZXBfaW5mb19wcGM2NCgpCj4gPiAtPnJlYWRtZW0oKSB1c2UgY2FjaGUgYmVmb3Jl
-IGl0IGlzIGluaXRlZCBieSBpbml0aWFsKCkuCj4gPgo+ID4gQ3VycmVudGx5IG9ubHkgcHBjNjQg
-aGFzIHRoaXMgaXNzdWUgYmVjYXVzZSBvbmx5Cj4gPiBnZXRfdmVyc2lvbmRlcF9pbmZvX3BwYzY0
-KCkgY2FsbCByZWFkbWVtKCkuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogTGljaGVuIExpdSA8bGlj
-aGxpdUByZWRoYXQuY29tPgo+ID4gLS0tCj4gPiAgIG1ha2VkdW1wZmlsZS5jIHwgNiArKystLS0K
-PiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiA+
-Cj4gPiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZpbGUuYwo+ID4gaW5k
-ZXggNWIzNDcxMi4uNmE0MjI2NCAxMDA2NDQKPiA+IC0tLSBhL21ha2VkdW1wZmlsZS5jCj4gPiAr
-KysgYi9tYWtlZHVtcGZpbGUuYwo+ID4gQEAgLTEyMDE5LDYgKzEyMDE5LDkgQEAgaW50IHNob3df
-bWVtX3VzYWdlKHZvaWQpCj4gPiAgICAgICAgICAgICAgIERFQlVHX01TRygiUmVhZCB2bWNvcmVp
-bmZvIGZyb20gTk9URSBzZWdtZW50OiAlZFxuIiwgdm1jb3JlaW5mbyk7Cj4gPiAgICAgICB9Cj4g
-Pgo+ID4gKyAgICAgaWYgKCFpbml0aWFsKCkpCj4gPiArICAgICAgICAgICAgIHJldHVybiBGQUxT
-RTsKPiA+ICsKPiA+ICAgICAgIGlmICghZ2V0X3BhZ2Vfb2Zmc2V0KCkpCj4gPiAgICAgICAgICAg
-ICAgIHJldHVybiBGQUxTRTsKPiA+Cj4gPiBAQCAtMTIwMzQsOSArMTIwMzcsNiBAQCBpbnQgc2hv
-d19tZW1fdXNhZ2Uodm9pZCkKPiA+ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gRkFMU0U7
-Cj4gPiAgICAgICB9Cj4gPgo+ID4gLSAgICAgaWYgKCFpbml0aWFsKCkpCj4gPiAtICAgICAgICAg
-ICAgIHJldHVybiBGQUxTRTsKPiA+IC0KPiA+ICAgICAgIGlmICghb3Blbl9kdW1wX2JpdG1hcCgp
-KQo+ID4gICAgICAgICAgICAgICByZXR1cm4gRkFMU0U7Cj4gPgo+Cj4gaW5pdGlhbCgpIG5lZWRz
-IHRvIGJlIGNhbGxlZCBhZnRlciBzZXRfa2NvcmVfdm1jb3JlaW5mbygpLCB3aGVuIHRoZXJlIGlz
-Cj4gbm8gdm1jb3JlaW5mbyBpbiAvcHJvYy9rY29yZSBFTEYgbm90ZS4KPgo+IFNvIHdpdGggdGhl
-IHBhdGNoLCAibWFrZWR1bXBmaWxlIC0tbWVtLXVzYWdlIiBmYWlscyBvbiBrZXJuZWxzIHRoYXQg
-ZG8KPiBub3QgaGF2ZSBhIHZtY29yZWluZm8gaW4gRUxGIG5vdGUsIGUuZy4gUkhFTDcga2VybmVs
-Ogo+Cj4gICAgIyBtYWtlZHVtcGZpbGUtZGV2IC1mIC0tbWVtLXVzYWdlIC9wcm9jL2tjb3JlCj4g
-ICAgZXhjbHVkZV9mcmVlX3BhZ2U6IENhbid0IGdldCBuZWNlc3Nhcnkgc3ltYm9scyBmb3IgZXhj
-bHVkaW5nIGZyZWUgcGFnZXMuCj4KPiAgICBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+Cj4KPiBQcm9i
-YWJseSByZWFkbWVtKCkgc2hvdWxkIG5vdCBiZSBjYWxsZWQgYmVmb3JlIGluaXRpYWwoKSBpbiB0
-aGUgZmlyc3QKPiBwbGFjZS4gIEkgdGhpbmsgaXQncyB0aGUgcm9vdCBjYXVzZSwgYnV0IEknbSBu
-b3Qgc3VyZSBob3cgd2UgY2FuIGZpeCBpdC4KPgo+IEEgd29ya2Fyb3VuZCBJIHRob3VnaHQgb2Yg
-aXMgdGhhdCBtb3ZpbmcgZ2V0X3BhZ2Vfb2Zmc2V0KCkgYW5kCj4gZ2V0X3BoeXNfYmFzZSgpIGlu
-dG8gdGhlICF2bWNvcmVpbmZvIGJsb2NrLiAgVGhlc2UgYXJlIG5lZWRlZCBieQo+IHNldF9rY29y
-ZV92bWNvcmVpbmZvKCksIHNvIHdlIGNhbiBhdm9pZCBjYWxsaW5nIHRoZW0gaWYgdGhlcmUgaXMg
-YQo+IHZtY29yZWluZm8gaW4gRUxGIG5vdGU6Cj4KPiAtLS0gYS9tYWtlZHVtcGZpbGUuYwo+ICsr
-KyBiL21ha2VkdW1wZmlsZS5jCj4gQEAgLTEyMDE5LDE0ICsxMjAxOSwxNCBAQCBpbnQgc2hvd19t
-ZW1fdXNhZ2Uodm9pZCkKPiAgICAgICAgICAgICAgICAgIERFQlVHX01TRygiUmVhZCB2bWNvcmVp
-bmZvIGZyb20gTk9URSBzZWdtZW50OiAlZFxuIiwKPiB2bWNvcmVpbmZvKTsKPiAgICAgICAgICB9
-Cj4KPiAtICAgICAgIGlmICghZ2V0X3BhZ2Vfb2Zmc2V0KCkpCj4gLSAgICAgICAgICAgICAgIHJl
-dHVybiBGQUxTRTsKPiArICAgICAgIGlmICghdm1jb3JlaW5mbykgewo+ICsgICAgICAgICAgICAg
-ICBpZiAoIWdldF9wYWdlX29mZnNldCgpKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVy
-biBGQUxTRTsKPgo+IC0gICAgICAgLyogcGFkZHJfdG9fdmFkZHIoKSBvbiBhcm02NCBuZWVkcyBw
-aHlzX2Jhc2UuICovCj4gLSAgICAgICBpZiAoIWdldF9waHlzX2Jhc2UoKSkKPiAtICAgICAgICAg
-ICAgICAgcmV0dXJuIEZBTFNFOwo+ICsgICAgICAgICAgICAgICAvKiBwYWRkcl90b192YWRkcigp
-IG9uIGFybTY0IG5lZWRzIHBoeXNfYmFzZS4gKi8KPiArICAgICAgICAgICAgICAgaWYgKCFnZXRf
-cGh5c19iYXNlKCkpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIEZBTFNFOwo+Cj4g
-LSAgICAgICBpZiAoIXZtY29yZWluZm8pIHsKPiAgICAgICAgICAgICAgICAgIGlmICghZ2V0X3N5
-c19rZXJuZWxfdm1jb3JlaW5mbygmdm1jb3JlaW5mb19hZGRyLAo+ICZ2bWNvcmVpbmZvX2xlbikp
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsKPgo+Cj4gVGhpcyB3aWxs
-IHdvcmsgb25seSBmb3IgNC4xOSBhbmQgbGF0ZXIga2VybmVscywgYnV0IG1pZ2h0IHJlZHVjZSB1
-c2Vycwo+IHRoYXQgaGl0IHRoZSBpc3N1ZS4gIERvZXMgdGhpcyB3b3JrIGZvciB5b3U/ClRoYXQg
-d29ya3MgZm9yIG1lIGJlY2F1c2UgSSdtIHRlc3RpbmcgZm9yIHRoZSA2Lngga2VybmVsLgoKVGhh
-bmtzLApMaWNoZW4KPgo+IFRoYW5rcywKPiBLYXp1CgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On 07/19/24 at 05:57pm, Jinjie Ruan wrote:
+> Currently, x86, arm64, riscv and loongarch has been switched to generic
+> crashkernel reservation, which is also ready for 32bit system.
+> So with the help of function parse_crashkernel() and generic
+> reserve_crashkernel_generic(), arm32 crashkernel reservation can also
+> be simplified by steps:
+> 
+> 1) Add a new header file <asm/crash_reserve.h>, and define CRASH_ALIGN,
+>    CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX in it;
+> 
+> 2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
+>    reserve_crashkernel_generic();
+> 
+> 3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
+>    arch/arm/Kconfig.
+> 
+> The old reserve_crashkernel() can be removed.
+> 
+> Following test cases have been performed as expected on QEMU vexpress-a9
+> (1GB system memory):
+> 
+> 1) crashkernel=4G,high				// invalid
+> 2) crashkernel=1G,high				// invalid
+> 3) crashkernel=1G,high crashkernel=0M,low	// invalid
+> 4) crashkernel=256M,high			// invalid
+> 5) crashkernel=256M,low				// invalid
+> 6) crashkernel=256M crashkernel=256M,high	// high is ignored, ok
+> 7) crashkernel=256M crashkernel=256M,low	// low is ignored, ok
+> 8) crashkernel=256M,high crashkernel=256M,low	// invalid
+> 9) crashkernel=256M,high crashkernel=4G,low	// invalid
+> 10) crashkernel=256M				// ok
+> 11) crashkernel=512M				// ok
+> 12) crashkernel=256M@0x88000000			// ok
+> 13) crashkernel=256M@0x78000000			// ok
+> 14) crashkernel=512M@0x78000000			// ok
+> 
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+> v4:
+> - Remove the Tested-by as suggested.
+> v3:
+> - Update the commit message.
+> ---
+>  arch/arm/Kconfig                     |  3 ++
+>  arch/arm/include/asm/crash_reserve.h | 24 +++++++++++
+>  arch/arm/kernel/setup.c              | 63 ++++------------------------
+>  3 files changed, 36 insertions(+), 54 deletions(-)
+>  create mode 100644 arch/arm/include/asm/crash_reserve.h
+
+LGTM,
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+By the way, you may need respost the parsed crashkernel value limitation
+checking patch for arm32 and i386.
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
