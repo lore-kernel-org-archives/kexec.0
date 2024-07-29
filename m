@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDEE2C3DA61
-	for <kexec@archiver.kernel.org>; Mon, 29 Jul 2024 11:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6143C3DA61
+	for <kexec@archiver.kernel.org>; Mon, 29 Jul 2024 11:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=dwZmyQu8OABeG/dhi9gywhaPGoAnaIpwdKpxeTIAIGg=; b=lcZgHQVomeYl54
-	kevsAAZj6TgjkyKK+OLrbnqhTvVB9dDBTFM3dr5M+06ZWE8EApMIQe3RFWvV/I3bp1Qf68biHfF/x
-	sEgF3U7kDCKh7Wf9Hwp8Tv2aivxDKqRfj5IYZkWf4o61V+4q+N5EsBjuOwhPFTbP+9B1wSa7dkpLs
-	DKvEDG9N/Zifq2laNKxh5JRW2+HLvrYyj1n0jJ107mpMsmJs+1OuVKJYGxGRuuv7ZUJQfhgMmCAWM
-	ofH0I1ExndS+gk05SkcJySAP0S+6hQJ2W+K8mDteI245klCaPMsPawTlsK6zh4kIkjL+F8aEkkOQj
-	zv38xrWCpCxIEOZfjkzQ==;
+	List-Owner; bh=dwZmyQu8OABeG/dhi9gywhaPGoAnaIpwdKpxeTIAIGg=; b=vY1qK0AAJsXr3C
+	5pmrdWma229aa3A4mR/nid9bpkF4KO31b94UM0jsouXPd01x0d31r7iaSDQdgRBxuPAaPu0bp2n5C
+	S8xzQW7ZcQVF61IUDg1E21sJkgzbT7slGmf9TfZEQQiqr9hP8mZd+XqaZsQSVRYhQ8u3Ouo0745KB
+	46Z6VKpDtuIdofCmFBTgWCQHc9nVwuVC6mYVdXMfJD4ilcnIwiq8RfP4rf63vZD1aLypjSRRfe9/Z
+	6US1owoXi/3prw/O7YuBGvtVT+ZevsYtyOx9rtIdxd2w624YvQ1V291R7o/19xiquVPQ+pMCmY2s/
+	rbVV9ErYK/AKs1wXG4LQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sYOo1-0000000B7L9-0Zjz;
-	Mon, 29 Jul 2024 11:44:45 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1sYOqS-0000000B81z-0eu8;
+	Mon, 29 Jul 2024 11:47:16 +0000
+Received: from szxga01-in.huawei.com ([45.249.212.187])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sYOnx-0000000B7IU-0tRq;
-	Mon, 29 Jul 2024 11:44:43 +0000
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WXc1z68Tzznd22;
-	Mon, 29 Jul 2024 19:43:35 +0800 (CST)
+	id 1sYOqQ-0000000B81C-0ZDv;
+	Mon, 29 Jul 2024 11:47:15 +0000
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WXc0Q6h5ZzyP1c;
+	Mon, 29 Jul 2024 19:42:14 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52FA1140E5D;
-	Mon, 29 Jul 2024 19:44:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A9691800D0;
+	Mon, 29 Jul 2024 19:47:11 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 29 Jul
- 2024 19:44:31 +0800
+ 2024 19:47:10 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
-	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<rppt@kernel.org>, <kexec@lists.infradead.org>,
+To: <akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+	<dyoung@redhat.com>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <rppt@kernel.org>, <kexec@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v6] crash: Fix crash memory reserve exceed system memory bug
-Date: Mon, 29 Jul 2024 19:50:12 +0800
-Message-ID: <20240729115012.1656042-1-ruanjinjie@huawei.com>
+Subject: [PATCH v6 RESEND] crash: Fix crash memory reserve exceed system memory bug
+Date: Mon, 29 Jul 2024 19:52:52 +0800
+Message-ID: <20240729115252.1659112-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240729_044441_445768_4690B1F2 
-X-CRM114-Status: GOOD (  12.11  )
+X-CRM114-CacheID: sfid-20240729_044714_339823_594831D5 
+X-CRM114-Status: GOOD (  12.51  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
