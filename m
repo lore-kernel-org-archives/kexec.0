@@ -4,56 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6143C3DA61
-	for <kexec@archiver.kernel.org>; Mon, 29 Jul 2024 11:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A6E3C3DA7E
+	for <kexec@archiver.kernel.org>; Mon, 29 Jul 2024 16:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=dwZmyQu8OABeG/dhi9gywhaPGoAnaIpwdKpxeTIAIGg=; b=vY1qK0AAJsXr3C
-	5pmrdWma229aa3A4mR/nid9bpkF4KO31b94UM0jsouXPd01x0d31r7iaSDQdgRBxuPAaPu0bp2n5C
-	S8xzQW7ZcQVF61IUDg1E21sJkgzbT7slGmf9TfZEQQiqr9hP8mZd+XqaZsQSVRYhQ8u3Ouo0745KB
-	46Z6VKpDtuIdofCmFBTgWCQHc9nVwuVC6mYVdXMfJD4ilcnIwiq8RfP4rf63vZD1aLypjSRRfe9/Z
-	6US1owoXi/3prw/O7YuBGvtVT+ZevsYtyOx9rtIdxd2w624YvQ1V291R7o/19xiquVPQ+pMCmY2s/
-	rbVV9ErYK/AKs1wXG4LQ==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
+	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=mKasWaV8U7SxO2CdVzxZX7821LDV9/gPEvZB9CskrzY=; b=uvJ3ZyTfhLfoXq
+	TYwTTDGxEAMZKG4BP90mrWEjXUHj9smFgXDQu/uJ2VE2B1Fdfj60+1FIXZL098qcRXxadxddtFjJZ
+	s0XPs6SCXZBSRxftcl1yn5QdR/l9KXAs5hNzueEWbZ6OEXX+QSXfHNJazZ5NZSXRFEfQUmH+JIvdl
+	2UVM5Ydah9NAbG+iH3r4SPilP+xy/NvrULsTpvf7BXnQt+9wRNEtKj7o6HIxyJkXVL7rAmFyl9b18
+	RXXMREEAurNPHQxPyaT/dJngvJpbYuWfVT3RGtAyNObGurOW0BcUk5hQYWwQJRfJQ9R0yVqTui554
+	y4f4JIjeYf2yiPAMEYNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sYOqS-0000000B81z-0eu8;
-	Mon, 29 Jul 2024 11:47:16 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1sYTPV-0000000C4kf-1Mol;
+	Mon, 29 Jul 2024 16:39:45 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sYOqQ-0000000B81C-0ZDv;
-	Mon, 29 Jul 2024 11:47:15 +0000
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WXc0Q6h5ZzyP1c;
-	Mon, 29 Jul 2024 19:42:14 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A9691800D0;
-	Mon, 29 Jul 2024 19:47:11 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 29 Jul
- 2024 19:47:10 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <rppt@kernel.org>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v6 RESEND] crash: Fix crash memory reserve exceed system memory bug
-Date: Mon, 29 Jul 2024 19:52:52 +0800
-Message-ID: <20240729115252.1659112-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	id 1sYTPR-0000000C4ho-0bL6;
+	Mon, 29 Jul 2024 16:39:43 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 3915361B45;
+	Mon, 29 Jul 2024 16:39:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D5937C4AF0C;
+	Mon, 29 Jul 2024 16:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722271179;
+	bh=ACOFD4CnvNQvgxH3c3fJIkYLBWpRIGrdoWdi94w0LGY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MxGffYremrlYV7IoL+PFdzTVghbhUmYE24NoiOXwot130hJR092fMDPljyjOFHVdc
+	 BwOk8pSOjwwKbEdqNqxYUxpql4UoUKiFJ2lsCDqaei8fiv2nLmq0phzDybvS4Ruc8d
+	 z/XfJg+CKgAclYeW7CbbQLEE7gLL/hM0xFPcU/zrpTnoN8mAo4/WHGmlPe/dDySyr4
+	 +P5sQueNRxv+PdBs1m2FMKXNsYAKLBJPpcrqn+AXFKcM9NOrWmX7bCZDnXiuc8wZZk
+	 cgjYyQYbzjQhie1m/6w7FgPL23bO3WKyoer9qNey5Cb3pqkqUfzFfvK9OYAA6SDF3G
+	 K/Q0xuxSAzaPQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BBA0BC43613;
+	Mon, 29 Jul 2024 16:39:39 +0000 (UTC)
 MIME-Version: 1.0
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Subject: Re: [GIT PULL] sysctl constification changes for v6.11-rc1
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: <172227117976.3603.14526183264046270376.git-patchwork-notify@kernel.org>
+Date: Mon, 29 Jul 2024 16:39:39 +0000
+References: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
+In-Reply-To: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
+To: Joel Granados <j.granados@samsung.com>
+Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
+ linux@weissschuh.net, mcgrof@kernel.org, kees@kernel.org, kuba@kernel.org,
+ david@fromorbit.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-security-module@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bpf@vger.kernel.org, kexec@lists.infradead.org,
+ linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
+ mptcp@lists.linux.dev, lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240729_044714_339823_594831D5 
-X-CRM114-Status: GOOD (  12.51  )
+X-CRM114-CacheID: sfid-20240729_093941_261720_CAD3514F 
+X-CRM114-Status: UNSURE (   9.33  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,70 +85,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
-as below:
-	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
+Hello:
 
-It's similar on other architectures, such as ARM32 and RISCV32.
+This pull request was applied to riscv/linux.git (fixes)
+by Linus Torvalds <torvalds@linux-foundation.org>:
 
-The cause is that the crash_size is parsed and printed with "unsigned long
-long" data type which is 8 bytes but allocated used with "phys_addr_t"
-which is 4 bytes in memblock_phys_alloc_range().
+On Wed, 24 Jul 2024 23:00:14 +0200 you wrote:
+> Linus
+> 
+> Constifying ctl_table structs will prevent the modification of
+> proc_handler function pointers as they would reside in .rodata. To get
+> there, the proc_handler arguments must first be const qualified which
+> requires this (fairly large) treewide PR. Sending it in the tail end of
+> of the merge window after a suggestion from Kees to avoid unneeded merge
+> conflicts. It has been rebased on top of 7a3fad30fd8b4b5e370906b3c554f64026f56c2f.
+> I can send it later if it makes more sense on your side; please tell me
+> what you prefer.
+> 
+> [...]
 
-Fix it by checking if crash_size is greater than system RAM size and
-return error if so.
+Here is the summary with links:
+  - [GIT,PULL] sysctl constification changes for v6.11-rc1
+    https://git.kernel.org/riscv/c/f8a8b94d0698
 
-After this patch, there is no above confusing reserve success info.
-
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Acked-by: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
-v6:
-- Take off Baoquan's Suggested-by.
-v5:
-- Fix it in common parse_crashkernel() instead of per-arch.
-- Add suggested-by.
-
-v4:
-- Update the warn info to align with parse_crashkernel_mem().
-- Rebased on the "ARM: Use generic interface to simplify crashkernel
-  reservation" patch.
-- Also fix for riscv32.
-- Update the commit message.
-
-v3:
-- Handle the check in reserve_crashkernel() Baoquan suggested.
-- Split x86_32 and arm32.
-- Add Suggested-by.
-- Drop the wrong fix tag.
-
-v2:
-- Also fix for x86_32.
-- Update the fix method.
-- Peel off the other two patches.
-- Update the commit message.
----
- kernel/crash_reserve.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index ad5b3f2c5487..5387269114f6 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -335,6 +335,9 @@ int __init parse_crashkernel(char *cmdline,
- 	if (!*crash_size)
- 		ret = -EINVAL;
- 
-+	if (*crash_size >= system_ram)
-+		ret = -EINVAL;
-+
- 	return ret;
- }
- 
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
 _______________________________________________
