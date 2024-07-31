@@ -4,84 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD9A1C3DA64
-	for <kexec@archiver.kernel.org>; Wed, 31 Jul 2024 13:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 625EFC3DA64
+	for <kexec@archiver.kernel.org>; Wed, 31 Jul 2024 15:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:Cc:To:References:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Io+FbRQrgpw9oCPIk8WzCiKwXvtPatL/mwzfwx4corM=; b=OAZbn2UkVcRIk1
-	4cjlnbOlNtNboefHhMYirIKHRSaFz2Qn4d7D/eF/vkmFbEqXfHZUXS0mdz9YY6S2cAvGteSQf+v7p
-	41dThivDjT8IKY0hAV/YFsqdHIuwm2fkZX9hxn5/WTFkg8bJb2mOGI6QR8cAO8KYOU6jTPHhnnzan
-	zPdzXzneVq+0FK8XS15591FsSIZgchsPnh4pBesx46+0dlQP0xIycMcSxTzpfjaKvw63IoSgL0D3z
-	NcvjUdI0cLOVGwS5Jm+1r5zjPvT1dNwAX+RQwcR9oF9ltiRi8EIyns7g5KGqlLmkpNojjRjGZzHP3
-	LxwMwP/Oo+MbXmK10mmQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=r8xo4SsMndkq+3JeR8T2ft+IRc+McCX/h9FjbvFCnec=; b=RkW6nvV6IJ/ImD
+	6WqqNl93x0UC/fZLK+JU9MC0fPtMlulsYqRr7mfkIUbpfEjDnj6HexTuhqYKPTh67q5ygI6bqkHDj
+	Vsr3m4egBIHmMl8ZTTLdgvoUPuH8hRDHPRDK2+oPRQczFZnKDgg6R3//9tipBiMMMmk+2CpKy7htg
+	4ATz1GUxL/yW8PTSTgJskDV2kgR5EGtBDwBhWRy9YTMk1rzVWNe8fO9LJzhdEFizOj+tKaNTXG/DE
+	AQSCwPKVGPuqoCozuI7RnVX3t6OjPo0KzV891+xxHguVSW+QKz+xyo90LaRlwAV760jDmL9klJsSa
+	8VTgTOhvIj4V2qdC7S8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZ9AI-00000001GMn-2QaB;
-	Wed, 31 Jul 2024 13:14:50 +0000
-Received: from sonic304-20.consmr.mail.sg3.yahoo.com ([106.10.242.210])
+	id 1sZBUp-00000001lUC-0NcA;
+	Wed, 31 Jul 2024 15:44:11 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZ9AF-00000001GKO-3Yv1
+	id 1sZBUl-00000001lSk-1Lhg
 	for kexec@lists.infradead.org;
-	Wed, 31 Jul 2024 13:14:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1722431683; bh=U/HbpM1FC5Bg3pobmjY/Fz2MFMFcYL48D3PoU8/ByRM=; h=Date:Subject:References:To:Cc:From:In-Reply-To:From:Subject:Reply-To; b=mKm1VYXrSa2tCry33oSu+o9uWZOGu5rGstGzvmtMcz/Wd8MPxjcu3HbZ0C7W4fumcLFTk5X8STmhrLiv0l+DNNPfep+FKU9+DA8QhhnkIc/J07wKNjJrfDSuiusjlJv0SIJosedCnCUHj6Pf0+S3YGvmxVqXNivB17VYn1Btsg+6cvSXin/NXRLKPj5rZa038p4q6EvOSSxdJEzDI8cVwQCDZ7uKVe6e1pvA1dtL3H2ucVcWFj6s6UPUTaIdxvyx+39CMymLd/sHtvCBzVcp68iaTd2kfhmhRkZ2O/gbFDVf/f8Ql359mJdGgIj6ezP1/Z7VGozTfLH/TBAJqgWIgQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1722431683; bh=PRCp7gX3sDbZYsLhhPmnGigEnfeWEyVobe+wnSfCAy+=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=OfI98yjlOrCS795UjOmc82/I1s0DyzBARAHBWHNo4c/mKDZJysd1GF8gnsT6pVFS4Jhyccx8j2B4v+qH6Qw5GQTxqpCu8oaLxp0urwhL1BBxnsB8O7busVGZeJu5efwDGFH/C0lc8g7LYxG/Gy6PxtC9CZ1RB0G6QwNNhUAXRO97TnmT6P2dcq8qC9Ns6k4G92lH+jWJwPUI2M0ecQl5WLDPOLhQRM0afdeZ+mqP8f6UzShHSdBULCMDQbANinMTWWniRwq794jrklOTqQxtdoMdS7p52kyF3GdAOkOP7z9PYmXrU4NFp/7FaZ7ve7xYXu+GwgsrO8chXhiVQdfA2A==
-X-YMail-OSG: rJhMDR0VM1lQMCliYKhhSS5s9Y1DbVZ2npzBRsmegRWNTf6U5QJ4Fu2bVXF2RO5
- Her5q.m.7YXwhdQR_by7QQ8kwQTsqRocep6fxKomiR2BFeX.IB.lxjc7fo2cvXguHwHjVc5HUfcH
- g9FAoeJ1o0GMS6GBQYFEFmp4.jFJ.e.ZtRGiIBnPIbdxOLV1GW.WJqfFK_bzDDmGhJSGDqNkHM2p
- l_BxazYL6KjeBwnFGNah9Q9rehri.KyJbQk3QvhGB6ppGudN9dbZ1N61TWar0rJjZj_FN8U2s1Gp
- 5NTbTJb3oQeunbZdLsqRxVpQ4FFESMSPkSJGqF60NZwZ21WrWveu9GVuIEafa5F4BpfkMDd3_Qzq
- CYDF101XRReDgRyJByTD1iGiv2wl3cCKf7qX7a6Fm7K.7T.x7u__71ziLrrw8xwwC19.JMHjjH.j
- V.3bFjpGz8KUAH4jgrRu7_pu_unLJc5MAPLwfnBjIQ4cImtYE.LhC2dipWBx_mPEdLSZXU16sAZd
- sziIALpcb0xJbupIz.qRmjYo1nJchKvWl0xBCwG2R27.K.3USpR0F8LTIQawUlfUVD5_QrwTVpW_
- SWdnnzDZWzzGJfG.OqRihxv0mccmFs5AQ8RFvleMUVt.wYle.wUXJU0igd0ao9PfHfIPfasTybsv
- OWcYv2DWxw5VAfel.IMNNpSjIKie5.hh3NfNvH2yqq1lqACCURXUcWZ629ZrOfMniNVSQVI9F09a
- ._2tkO_HOGr4yjaKnmssa9LqmXkIT96ufJYD.JeCVlESEmpw.f3ER8lL70c2Q2KXk7h8Hgij8WGG
- sbv6i6EMH5qRrFRGDVOWjdfemNpcLbMx3bTCAcU_LiP5QIbNK4cFT8vvWFBk.7VnO.00yBLyymVJ
- BFQABH5KBKWW_ScimmHA6n8lmuHJoNKE0eHtEn5a2dabWz1bpvjRypa7HrOP0EVQuksD_YY2PvlS
- AvEWWu2FpDkV_CSIbXUgGyioTMB4tnqHnUKgAeLf8o0QcdnAgmGdNUI_E47TlAW6pQdsk.TKypqz
- AEtCUjQVhEbXS465xh_kt1LNtMEYsmi4vxxUG4GQXq6t1K6axbMRwdTKr.q6FmHE4IVU71udS7ww
- YuQ_vBGf8UTEDg_SgwFgf7UevEV2x3iEgfwbNjyeffeH5s38Y4PI7V18bFPQmKSuIUrKzpAgARzI
- Pqs5LSeKnBC.LE0zu.BVUIc73w05W800RiqhvenoAyJ4W2eaHaGQlifzC4ztGZkMHHo6TO79GbDo
- .Bq92PJzeNCFjSQHrO6wAfVJL58kO.mkfmbe59Q87wEQCRC1I9Y7_Dp6AXKZr_JzWdtcHiEe70X6
- ZOV4nHvBqS36XdX8gahWahwjumpOfDx5qzdfdZGUGcYki50LX.kjY12FwapCPKGEDTMOErQP8S6x
- h3xI5vC7Eidmhnm.h0LnD5lZTMf9n5YSwcom8kdxvtBuROZBmZktC.Y8EeD2slkvgH2IeZQT2UkO
- 67gQtbgA_dB_cnQJRz2hUVjw8.Kv5C7JWOgvt4CAuHCXTCT0hubTSl9YMyKkos70ONjrxqh5DFe6
- ZkijeJKe41iG0wfn1_pfZZWOH7deWwoMs5C9BKEB4NddPoz4urMg4Vi06n.wRDtV1QPj5yYO8rkY
- f5h.e9f9jiI6vNYS1FD8C1rBOmXMUl8UEdxHN6fjGs1Gq41liJYqnUba0ZHB7DAhAWCtIKLqVeAZ
- E556joisOj5IfZCOB0uzC5.DAt18tZbUJuikEmcDhIdzPk0sz_bub5yINPfrZj47eRNgNhlJWu9i
- yRY2bW0Di3g5_8i41YYZJxzWT41KzDQdMZ0iEaxU8iFJal.R_urJvc_gm8l_htJjxH1i8Msq9Zbh
- 8OsfEyVbuUV35v1Sb7GQkNqn8l5ureCctqXHk_49D_4YDbm0Doy13GGhhI1MeppDpjDsz.aPdOLp
- mvUgVckOd4aDJ9A1J6tOztXCIIz_rSapTmkYTcgp.9tr5Z5mbVXXKYE0kY2SO8Vl0UuIrYjkw0PG
- 9PwA1QhKx6ohoYIwvxLcbK.nTivmOgw1iU6PseGW1UcIHcc4hs317Eg2cxkBjBzc8QdQdWCBWRZj
- 3y.XDjTT12fy8GQGhevauPPUcT6OTV35JTcstClNKix3JsSJCiw0X90lIWcD3ky4BZaMUQA9MjcV
- pWDw8f4wf7GmxfiFUcd3Oo8VsLrfcs10GS6xC4TWdSYEHAC0XdpMsEDsFBpBsN8xNu7ifOU4-
-X-Sonic-MF: <avikalpa@yahoo.com>
-X-Sonic-ID: 6faafff8-1baf-4c05-8641-a652c2c8e72d
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.sg3.yahoo.com with HTTP; Wed, 31 Jul 2024 13:14:43 +0000
-Received: by hermes--production-sg3-fc85cddf6-kdpzj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 41958dc54f5ab0c10e41b1e18fb7b525;
-          Wed, 31 Jul 2024 13:04:36 +0000 (UTC)
-Message-ID: <cebc7800-df78-4f90-9f8e-82e3f9120b6e@yahoo.com>
-Date: Wed, 31 Jul 2024 18:34:31 +0530
+	Wed, 31 Jul 2024 15:44:08 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46VEx8xZ010793;
+	Wed, 31 Jul 2024 15:43:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=hhHWeaNkZfHMfRDUO64zSGqk09
+	QgJEh1NWQLmw+aNQc=; b=fu04ENa4h8O9wnWe9M1ajRTMcXYS95QeBUBWH9myRQ
+	pUIEimclg1mxFi5Xbc2G00YDFi9FAwQu3g50RIsGC6Jy/XVCtPlAI7e4onBY2TDX
+	A0vsAhsiHwVBZjy7kvmTfNvq2rPN1/Vlm9p3LNyQiD+iXlJ2Zdp0q9vbto3sKn9a
+	1Hl/yFnXmX4ELNkN1y8/N8gzjLJJeXMggGUmL/CEesdFliUdTRY6L/1wXDHs/ZQS
+	hLgZgJIDBm8+z0VOsZyKsrIrAe654pf1pqe5juOvzEoYidI8nxrdkfh/oWW4g6C2
+	A8V+rwnp5RPbzcOQ+LEert2g/fpM1PgtiLV0Y28lRqQQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40qqgfg50g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jul 2024 15:43:58 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46VFhvJX030535;
+	Wed, 31 Jul 2024 15:43:57 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40qqgfg50f-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jul 2024 15:43:57 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46VFPDbD018863;
+	Wed, 31 Jul 2024 15:28:20 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40nc7pvcar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jul 2024 15:28:20 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46VFSEtp25297594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 31 Jul 2024 15:28:16 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 768A520043;
+	Wed, 31 Jul 2024 15:28:14 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E86E520040;
+	Wed, 31 Jul 2024 15:28:11 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.121.172])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 31 Jul 2024 15:28:11 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: bhe@redhat.com
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
+Subject: [PATCH] kexec/crash: no crash update when kexec in progress
+Date: Wed, 31 Jul 2024 20:57:38 +0530
+Message-ID: <20240731152738.194893-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: kexec failure with Xen 4.19-rc4 and 4.20-dev on linux host
-Content-Language: en-US
-References: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
-From: A Kundu <avikalpa@yahoo.com>
-In-Reply-To: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
-X-Forwarded-Message-Id: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
-X-Mailer: WebService/1.1.22544 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NI5JIIGj-pUPCmKc0HLVKOq8Q-d3lv5Y
+X-Proofpoint-ORIG-GUID: DSRbYjB_BDAWk9Bm9dww5IvoeeZeHPoz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-31_10,2024-07-31_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 mlxscore=0
+ adultscore=0 phishscore=0 priorityscore=1501 suspectscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407310108
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240731_061448_103844_FF27AB0A 
-X-CRM114-Status: UNSURE (   4.13  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240731_084407_535985_8B91F858 
+X-CRM114-Status: GOOD (  17.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,64 +107,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I am experiencing issues using kexec to load Xen 4.17(debian's apt version),
-Xen 4.19-rc4 (compiled from source) and 4.20-dev (compiled from source) 
-on a debian host.
+The following errors are observed when kexec is done with SMT=off on
+powerpc.
 
-System information:
-$ uname -a
-Linux host 6.9.10-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.9.10-1 
-(2024-07-19) x86_64 GNU/Linux
+[  358.458385] Removing IBM Power 842 compression device
+[  374.795734] kexec_core: Starting new kernel
+[  374.795748] kexec: Waking offline cpu 1.
+[  374.875695] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+[  374.935833] kexec: Waking offline cpu 2.
+[  375.015664] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+snip..
+[  375.515823] kexec: Waking offline cpu 6.
+[  375.635667] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+[  375.695836] kexec: Waking offline cpu 7.
 
-$ kexec --version # compiled from source tarball with ./configure --with-xen
-kexec-tools 2.0.29
+During kexec, the offline CPUs are brought online, which triggers the
+crash hotplug handler `crash_handle_hotplug_event()` to update the kdump
+image. Given that the system is on the kexec path and the kexec lock is
+taken, the `crash_handle_hotplug_event()` function fails to take the
+same lock to update the kdump image, resulting in the above error
+messages.
 
-Steps to reproduce:
+To fix this, let's return from `crash_handle_hotplug_event()` if kexec
+is in progress.
 
-1. Set variables:
+The same applies to the `crash_check_hotplug_support()` function.
+Return 0 if kexec is in progress.
 
-XEN_HYPERVISOR="/boot/xen.gz"
-XEN_CMD="dom0_mem=6G dom0_max_vcpus=6 dom0_vcpus_pin cpufreq=xen"
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: kexec@lists.infradead.org
+Cc: linuxppc-dev@ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org
+Reported-by: Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ kernel/crash_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-2. Attempt to load Xen 4.19-rc4:
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 63cf89393c6e..d37a16d5c3a1 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -502,6 +502,9 @@ int crash_check_hotplug_support(void)
+ {
+ 	int rc = 0;
+ 
++	if (kexec_in_progress)
++		return 0;
++
+ 	crash_hotplug_lock();
+ 	/* Obtain lock while reading crash information */
+ 	if (!kexec_trylock()) {
+@@ -537,6 +540,9 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+ {
+ 	struct kimage *image;
+ 
++	if (kexec_in_progress)
++		return;
++
+ 	crash_hotplug_lock();
+ 	/* Obtain lock while changing crash information */
+ 	if (!kexec_trylock()) {
+-- 
+2.45.2
 
-# kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
-Could not find a free area of memory of 0x3b6001 bytes...
-elf_exec_build_load_relocatable: ELF exec load failed
-
-3. Attempt to load Xen 4.20-dev:
-
-# kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
-Could not find a free area of memory of 0x3f8001 bytes...
-elf_exec_build_load_relocatable: ELF exec load failed
-
-4. Attempt to load Xen 4.17 (from debian rrepositories):
-# kexec -l /boot/xen-4.17-amd64.gz --command-line="$XEN_CMD"
-Could not find a free area of memory of 0x3b4001 bytes...
-elf_exec_build_load_relocatable: ELF exec load failed
-
-If you need any further information to investigate this problem,
-please let me know.
-
-PS: If I used apt's pacakged version (which might be compiled 
---without-xen),
-it shows,
-
-# kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
-Cannot determine the file type of /boot/xen-4.17-amd64.gz
-
-# kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD" --type=bzImage
-Cannot determine the file type of /boot/xen-4.17-amd64.gz
-
-
-Thank you for your attention to this matter.
-
-A Kundu
 
 _______________________________________________
 kexec mailing list
