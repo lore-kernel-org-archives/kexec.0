@@ -4,108 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5894BC3DA4A
-	for <kexec@archiver.kernel.org>; Fri,  2 Aug 2024 07:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DE38C3DA4A
+	for <kexec@archiver.kernel.org>; Fri,  2 Aug 2024 08:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=g/UW6HtEjTA2QqrIQIio/Y+64wTtoe3BhsTzdw6T7AE=; b=NqzThQESUNbw1e
-	ocl/IgUd/XyR1KNENSOs4L7UI4E96JwwBASI1aphqmHbXC6T8M09YXC1DduekMhzjE5RJ+BPssNWQ
-	5V9o/Z4VgxWZ7Hq+mRNY8AdhOodfP81bNbbNlTVux/KoeIOg+52f5WBOH91S2DNIPPTEXKvVFUe4b
-	NneQP+sxngypItB2SaWtMpZpZrFq4r5AWnpyJ4p1TPy2r69yumrCKEKigmrPASOPkAqR7gZLnXROR
-	meE5ZOI9YiWRUuBqgBIMNcl33nF8osuAs0Hop/sLKKdPdC1XVh6aCM9Qa+YAtJ50GzAAthEflDXQU
-	Sup6umb7ObxG6N8hkrhQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=CEP658pALyhpRoSL/QTz5Oy2qz2pTQzgNqk0oTZJMo4=; b=lLvaHCIZAYFWBb
+	A9LJpfcyx6b/u/p2rBzzBa9TqDvjxe4v7tBRdLOeKkXQvAK0GycmnvlNtbohOKChGRScq04PeH9b0
+	NZYIfXs3B9YNLPdZATi6IEN9Yp2PLA7QXQ+u9ik69rIAgqoFlJpAmmenX9ejCz203qsNWGDOZBNnW
+	liQp4TKzTdalxsaEhCXuOTYvMeDcrvWteRLCLbtJF0HfywKiwJIbcHOAxFari3Fa1L/k6acYfvwLC
+	5ABgHf4rnrfP1uoEV42cCcbJylZE6334Z1NJHoavZ2Pf5hb52+VXRJngkscL46x6IdWexmQzPr/bp
+	Ifo9Boop0OH4oIyKfKWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZn8O-000000081VQ-3Sqk;
-	Fri, 02 Aug 2024 07:55:32 +0000
-Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
+	id 1sZo4H-00000008AVb-2Kls;
+	Fri, 02 Aug 2024 08:55:21 +0000
+Received: from szxga05-in.huawei.com ([45.249.212.191])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZn8L-000000081UJ-0lD4
-	for kexec@lists.infradead.org;
-	Fri, 02 Aug 2024 07:55:30 +0000
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5ab2baf13d9so10903314a12.2
-        for <kexec@lists.infradead.org>; Fri, 02 Aug 2024 00:55:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1722585327; x=1723190127; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=iiLa95PkjLGr8EZW8pWxLPDawc+bvhxIuWW8rxxnntM=;
-        b=MLyv7oCYaXbnK0bedk5hfbsH4NFXe2bVpfsOCOG/aTV3/v0Wso093dxUHiHNAwP23c
-         BzuWIsHgDs4pJW58rLLXdd3elhK9TFixq4L9Tzuf68hZTmC7bisDRH2gZ67VUPfcHR3W
-         2SNmk97CwRVfzUb9hg2zjgxrtTo2A0TZdkj1BKvs476zgj4WIwgD3JMeLEX8uWyEL1xg
-         8n5lWQEepyoZfuRfm+XfGAcTHFkiO7BAXHIPLtZl27RULpciAU71/hikZ9yz6G6pz/05
-         Hv5HBiSkqcVfvOlbK6+30t1vvRgnVcqLvtUguxwZxfVwfExNZ75eilVvUoNbmviCnYM2
-         TWfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722585327; x=1723190127;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iiLa95PkjLGr8EZW8pWxLPDawc+bvhxIuWW8rxxnntM=;
-        b=j+ErRTd8KwdRDN270qU1Ik0fBjTsVqLLquXMFyalWjJQ3dtxU6qwU7rTw2Xu1BAdLU
-         enmCEPbAMbUFu6iXhEh+dfmZDgj86TwnGPNi/orncLCW3KIn8FcPziiHOo0jYa+dHZZX
-         A9+Wg1t2P1+YU1CK6TDIgWc0xRdSGvYAt4zFztoTdkt18694LNde86LAMcUaobtl8O9b
-         nzpxtgEkPQe3wGwEc0hukKsb1CIH095gS4b+Cnq6AZ6whlDUYInTvZV8sEJ8jHKyalJG
-         xx7u2ddDRaIx+BLAqajGAA/xngAX4WuABF6BveNyG4oZMzUkI708a1Tacu5ycfsL/zh3
-         /WDw==
-X-Gm-Message-State: AOJu0Yxynxr86icjsobjEbG7kt8aOVB+7j3DUm1356BBViN/M1dHms61
-	LdE0FCOZpkUn67bq9+yA+jRW0j2zcfKUCH6OE85nAWwOefyFazFxIfpb1Fit3p+7H0tNIjTq55M
-	=
-X-Google-Smtp-Source: AGHT+IErj1BTA7Zf5HTsmj2a2xYL6sNOpfrm5LD7weo/NvZUOwCyxwCGdR9FFwJ/S72/wyxivZAkXQ==
-X-Received: by 2002:a05:6402:40c:b0:5a0:c709:aa0b with SMTP id 4fb4d7f45d1cf-5b7f56fd439mr2051010a12.24.1722585326916;
-        Fri, 02 Aug 2024 00:55:26 -0700 (PDT)
-Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b83960f308sm769528a12.4.2024.08.02.00.55.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Aug 2024 00:55:26 -0700 (PDT)
-Message-ID: <ac57dec1-68a3-471d-8f4c-c87fd9dca619@suse.com>
-Date: Fri, 2 Aug 2024 09:55:25 +0200
+	id 1sZo4D-00000008AUy-3gyB;
+	Fri, 02 Aug 2024 08:55:20 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wb00X2n0wz1j6NP;
+	Fri,  2 Aug 2024 16:50:36 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F8A31400DC;
+	Fri,  2 Aug 2024 16:55:12 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
+ 2024 16:55:12 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<chenjiahao16@huawei.com>, <akpm@linux-foundation.org>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next] crash: Fix riscv64 crash memory reserve dead loop
+Date: Fri, 2 Aug 2024 17:01:05 +0800
+Message-ID: <20240802090105.3871929-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: kexec failure with Xen 4.19-rc4 and 4.20-dev on linux host
-To: A Kundu <avikalpa@yahoo.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au,
- xen-devel@lists.xenproject.org, Baoquan He <bhe@redhat.com>
-References: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
- <cebc7800-df78-4f90-9f8e-82e3f9120b6e@yahoo.com>
- <ZqxUMgcEHakeFPaU@MiWiFi-R3L-srv>
- <abaceb99-4b80-49d7-ab7f-b190f73e858d@yahoo.com>
-Content-Language: en-US
-From: Jan Beulich <jbeulich@suse.com>
-Autocrypt: addr=jbeulich@suse.com; keydata=
- xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
- hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
- 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
- /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
- O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
- MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
- nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
- 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
- Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
- AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
- e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
- hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
- IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
- FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
- t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
- AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
- HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
- mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
- m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
- EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
- wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
- nAuWpQkjM1ASeQwSHEeAWPgskBQL
-In-Reply-To: <abaceb99-4b80-49d7-ab7f-b190f73e858d@yahoo.com>
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240802_005529_257588_7471A506 
-X-CRM114-Status: UNSURE (   7.88  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240802_015518_130328_271451AE 
+X-CRM114-Status: GOOD (  11.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,59 +70,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02.08.2024 09:28, A Kundu wrote:
-> On 8/2/24 09:06, Baoquan He wrote:
->> On 07/31/24 at 06:34pm, A Kundu wrote:
->>> I am experiencing issues using kexec to load Xen 4.17(debian's apt version),
->>> Xen 4.19-rc4 (compiled from source) and 4.20-dev (compiled from source) on a
->>> debian host.
->> You should CC this to XEN dev list so that XEN dev knows this and may
->> provide help. Not everyone is interested in and knows XEN.
->>
->>> System information:
->>> $ uname -a
->>> Linux host 6.9.10-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.9.10-1 (2024-07-19)
->>> x86_64 GNU/Linux
->>>
->>> $ kexec --version # compiled from source tarball with ./configure --with-xen
->>> kexec-tools 2.0.29
->>>
->>> Steps to reproduce:
->>>
->>> 1. Set variables:
->>>
->>> XEN_HYPERVISOR="/boot/xen.gz"
->>> XEN_CMD="dom0_mem=6G dom0_max_vcpus=6 dom0_vcpus_pin cpufreq=xen"
->>>
->>> 2. Attempt to load Xen 4.19-rc4:
->>>
->>> # kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
->>> Could not find a free area of memory of 0x3b6001 bytes...
->>> elf_exec_build_load_relocatable: ELF exec load failed
->>>
->>> 3. Attempt to load Xen 4.20-dev:
->>>
->>> # kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
->>> Could not find a free area of memory of 0x3f8001 bytes...
->>> elf_exec_build_load_relocatable: ELF exec load failed
->>>
->>> 4. Attempt to load Xen 4.17 (from debian rrepositories):
->>> # kexec -l /boot/xen-4.17-amd64.gz --command-line="$XEN_CMD"
->>> Could not find a free area of memory of 0x3b4001 bytes...
->>> elf_exec_build_load_relocatable: ELF exec load failed
+On RISCV64 Qemu machine with 512MB memory, cmdline "crashkernel=500M,high"
+will cause system stall as below:
 
-And with all of them saying effectively the same, did you verify you
-actually have a sufficiently large area reserved? The obvious
-place for you to look at is Xen's boot log (obtained via serial
-console or "xl dmesg" immediately after booting the system). If you
-find everything as expected there, ...
+	 Zone ranges:
+	   DMA32    [mem 0x0000000080000000-0x000000009fffffff]
+	   Normal   empty
+	 Movable zone start for each node
+	 Early memory node ranges
+	   node   0: [mem 0x0000000080000000-0x000000008005ffff]
+	   node   0: [mem 0x0000000080060000-0x000000009fffffff]
+	 Initmem setup node 0 [mem 0x0000000080000000-0x000000009fffffff]
+	(stall here)
 
->>> If you need any further information to investigate this problem,
->>> please let me know.
+commit 5d99cadf1568 ("crash: fix x86_32 crash memory reserve dead loop
+bug") fix this on 32-bit architecture. However, the problem is not
+completely solved. If `CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX` on 64-bit
+architecture, for example, when system memory is equal to
+CRASH_ADDR_LOW_MAX on RISCV64, the following infinite loop will also occur:
 
-... please provide that boot log.
+	-> reserve_crashkernel_generic() and high is true
+	   -> alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] fail
+	      -> alloc at [0, CRASH_ADDR_LOW_MAX] fail and repeatedly
+	         (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
 
-Jan
+Before refactor in commit 9c08a2a139fe ("x86: kdump: use generic interface
+to simplify crashkernel reservation code"), x86 do not try to reserve crash
+memory at low if it fails to alloc above high 4G. However before refator in
+commit fdc268232dbba ("arm64: kdump: use generic interface to simplify
+crashkernel reservation"), arm64 try to reserve crash memory at low if it
+fails above high 4G. For 64-bit systems, this attempt is less beneficial
+than the opposite, remove it to fix this bug and align with native x86
+implementation.
+
+After this patch, it print:
+	cannot allocate crashkernel (size:0x1f400000)
+
+Fixes: 39365395046f ("riscv: kdump: use generic interface to simplify crashkernel reservation")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ kernel/crash_reserve.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 5387269114f6..69e4b8b7b969 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -420,15 +420,6 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 				goto retry;
+ 		}
+ 
+-		/*
+-		 * For crashkernel=size[KMG],high, if the first attempt was
+-		 * for high memory, fall back to low memory.
+-		 */
+-		if (high && search_end == CRASH_ADDR_HIGH_MAX) {
+-			search_end = CRASH_ADDR_LOW_MAX;
+-			search_base = 0;
+-			goto retry;
+-		}
+ 		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 			crash_size);
+ 		return;
+-- 
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
