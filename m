@@ -4,82 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05102C3DA4A
-	for <kexec@archiver.kernel.org>; Mon,  5 Aug 2024 07:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68821C3DA7F
+	for <kexec@archiver.kernel.org>; Mon,  5 Aug 2024 07:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NE0cqccMEC+3a0eHCxHW5xtH+txDOvus+kcbdmCtJNo=; b=1UW8NWen3c826t
-	bfYCvF8eMgyu26dks6M60IRIFepTI1xlnIBGycMW+jkO0CUuOk9++XNe4fds8NqC9WGtHFpAfwA8W
-	7Ohk9X3xsivTcIrURTrmEjVgwlgc9HjAH6HzKzlef5D3Rn+dq952jKJlNz5jqOBTl0NAE0cZtvsZy
-	41cSuS6Orb6h9bWRST6R86QfEqVH7NG8JlSArT51CM5bG3r/FfZJeZzW6Y96hcY927rkMG5pdUFn8
-	fLdq8RH/gzyV1WJqDCYBgi4POJvsi4ZlBXq0rY9D7rMhMDeMaYpEhKj2O5YuwEqkv+fmKZRt978k1
-	CsEgkWfHgb4w0HbMMgQA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=n0O7J700p2rEEOmYcebOJxTinXSUF7Si3/jo92aGGZg=; b=CwPKZ/Uweq0l1p
+	wQrCON8cQ4kYVGlRA3+2fuKgyBiSJUO6eVMVJswLQ2zlhoJWkmmNzgYbHHr8biOHpjEpILC2SjaAZ
+	uMEV6usRmcfKfdTg2oSysfNeKFnZu0pO946O7E42eZB+B0enyao4fJuprZZPlfRwytI3JhRSpzKy8
+	pA9vt1+JDInKfD00cailI7Jr8lXlwF4SizcK4WJ/BIVZ6fPB8hcat6CQFN8CfB5RE+sV1f2/7BQEZ
+	Wa7hkc4D+ZNOC5KAp4GtvRflqwesZFaATPeHek+i1B83fRm0nPG3K6oYP99M8kA7z2fN8FkKlLyUk
+	Ji+PD1m9xrvWTxFVqTTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sarxR-0000000EtoB-2Qvn;
-	Mon, 05 Aug 2024 07:16:41 +0000
-Received: from mail-lj1-x236.google.com ([2a00:1450:4864:20::236])
+	id 1sasLC-0000000EyuW-3uq3;
+	Mon, 05 Aug 2024 07:41:14 +0000
+Received: from mail.vectorspeedbiz.com ([89.40.118.23])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sarwv-0000000Eti4-3DiK
+	id 1sasL9-0000000Eytv-2tII
 	for kexec@lists.infradead.org;
-	Mon, 05 Aug 2024 07:16:11 +0000
-Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2f025b94e07so127835561fa.0
-        for <kexec@lists.infradead.org>; Mon, 05 Aug 2024 00:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722842167; x=1723446967; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1HgahZErKvyf0fnLV2ZxSZ9HrSzv9jqWuvKKwc1ntU=;
-        b=eJhUNGm56m6v9XEzLKV7fI6R9jHC479RsYi7NB4OVFQpp0PS6CRzUJni+VNXj34blE
-         +G0L7nomW6hKSOjYHItW7Ob60rYt4ax0mprxIPFO7xOk/B+87ESg9/UtrROPsxqKCjJN
-         fcoUyfMMGly4ZDkAu+kYj72hZp+yqIwK/zCeD+RIcwkwEZnJJMVvxs0D2D9iFVesKzAM
-         J6TBSNRtPmk86Wyp46MgIiqFsrtK54pzgbGyzhsve7ER0wM20O9vD6l0Y2Pax1xCRx40
-         35/Y6Gu6ZbXT6l+bxU/rfeXD5SPEC/U7PfihtoVCjrkusNeys+9+0DkMd/rfccSl9SaN
-         gr0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722842167; x=1723446967;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S1HgahZErKvyf0fnLV2ZxSZ9HrSzv9jqWuvKKwc1ntU=;
-        b=SFczcIcldIhpREyxDw84EVol/la6/LdV6DUHfDTWJM3eMIW8krY0dDQxJ7bZy3aJwA
-         HHHdkZMeEp70e38tLY8Sd5pxIy2DaRpqoZmO+GsiHIAcNIRpjP7JXJ0hrO3dA/1rmLyc
-         jyPmFtK8MoQ0rD6SULmvzFqTOX/w3asNlrEQNT13SJ1NtWvBJ8hlBDeuElIZijaKUiX3
-         8Y8j9ATiZi1vESbI6WdO1htmd1bh8K+UU+Byo/nYWdMgd0mZAPM01q+NiXhgHT+g5LHN
-         RC9vXjoE0hWF4BkUDuexwQwDJEbv7WJ9Icc1RhZpYyXfSyr31zYRThiCzvj4HKbpeVDh
-         7jqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTW5Q/S0RZDQzkpgR23Fopv4HqCd/uXtv9BZGtdmEX7+N8djeMXYhGqCFkASebbIaV/La2vOExg4em0mv42BVZJXHJKCHBqzhE
-X-Gm-Message-State: AOJu0YwrzrJxrltUHPEuSSbmXI5x2Gb7eBued0Da7szoq4nDHw+QjJT6
-	8ksPa+BsQKjXh/MgpyFhbtvrZj7iFj6Ladl2rEDr/QRfdnnmCW7tpA2v/eCzhtrdFZIIGSR7/9X
-	zt0MbWTfaVwUV6z2lLnruNfOhA9M97ggYSFqmIQ==
-X-Google-Smtp-Source: AGHT+IGqDa7Mip4T5Ze4gJNuIM7yryOJ7VNW9gtRF+kE/YxZtKeRspxCkSMK2y9gAbawEf0T16gIsNMCKgatq/4Jndw=
-X-Received: by 2002:a05:6512:1253:b0:52c:dd3d:85af with SMTP id
- 2adb3069b0e04-530bb379522mr7294063e87.25.1722842167351; Mon, 05 Aug 2024
- 00:16:07 -0700 (PDT)
+	Mon, 05 Aug 2024 07:41:13 +0000
+Received: by mail.vectorspeedbiz.com (Postfix, from userid 1002)
+	id C42DF840C7; Mon,  5 Aug 2024 09:41:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vectorspeedbiz.com;
+	s=mail; t=1722843666;
+	bh=xrNEpnWQZ8snhxPgU3EBuIKpICs42jmB6iTHM0+PLvw=;
+	h=Date:From:To:Subject:From;
+	b=EcwinrrRmEkVBgs4g0vA/61EZBGvWWSSXsiB50gh2/pWDyJCULA7CNlPuSDH5Z7wT
+	 oBCUKJPlB6uECh2cEWoBH4v2IGgF+VHHvm97K9inYLSz5oc3LtlXOTH323e+KNR+tj
+	 aRqu8QY2sXr0v1gZbHncOSlRgcKE32l4dFBOY8CWMQ0zHwNakaGMzIQGsdWpTQBjr7
+	 /hd61zwwltpi2jkFMQkaqeyCGa7T+nlefXoZDpqXF2b80vQX+jlUTfYBYJi0vNPj+H
+	 cJOKKvl+f8rQxgFPpEzAOU+IpJXgToTIpevYqkFxJC0mXCxhHvUIebaTAl4kqfeGpw
+	 PKyhJfHiChc6w==
+Received: by mail.vectorspeedbiz.com for <kexec@lists.infradead.org>; Mon,  5 Aug 2024 07:41:00 GMT
+Message-ID: <20240805084500-0.1.4p.3d2p.0.nxfgerf3ft@vectorspeedbiz.com>
+Date: Mon,  5 Aug 2024 07:41:00 GMT
+From: "Julien Keller" <julien.keller@vectorspeedbiz.com>
+To: <kexec@lists.infradead.org>
+Subject: Mobile Phone Wholesale
+X-Mailer: mail.vectorspeedbiz.com
 MIME-Version: 1.0
-References: <20240708133348.3592667-1-ruanjinjie@huawei.com> <20240708133348.3592667-2-ruanjinjie@huawei.com>
-In-Reply-To: <20240708133348.3592667-2-ruanjinjie@huawei.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 5 Aug 2024 09:15:56 +0200
-Message-ID: <CACRpkdbY-Lp7_AyqvLnQCFYkaazsmMGSHY5K85oJRNmPgM_yVA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] crash: Fix memory reserve dead loop bug in reserve_crashkernel_generic()
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, bhe@redhat.com, vgoyal@redhat.com, 
-	dyoung@redhat.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, arnd@arndb.de, afd@ti.com, akpm@linux-foundation.org, 
-	rmk+kernel@armlinux.org.uk, eric.devolder@oracle.com, 
-	gregkh@linuxfoundation.org, deller@gmx.de, javierm@redhat.com, 
-	robh@kernel.org, thunder.leizhen@huawei.com, austindh.kim@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240805_001609_843482_3CFD05A5 
-X-CRM114-Status: GOOD (  10.82  )
+X-CRM114-CacheID: sfid-20240805_004112_427752_C7A4026A 
+X-CRM114-Status: UNSURE (   1.07  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,28 +62,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gTW9uLCBKdWwgOCwgMjAyNCBhdCAzOjMw4oCvUE0gSmluamllIFJ1YW4gPHJ1YW5qaW5qaWVA
-aHVhd2VpLmNvbT4gd3JvdGU6Cgo+IElmIHRoZSBwbGF0Zm9ybSBkbyBub3Qgc3VwcG9ydCBtZW1v
-cnkgYWJvdmUgNEcsIHN1Y2ggYXMgMzIgYml0IGFyY2gsCj4gYW5kIENSQVNIX0FERFJfTE9XX01B
-WCBpcyBlcXVhbCB0byBDUkFTSF9BRERSX0hJR0hfTUFYLCB0aGUgaGlnaAo+IGNyYXNoIGtlcm5l
-bCBtZW1vcnkgcmVzZXJ2YXRpb24gaXMgbWVhbmluZ2xlc3MgYW5kIGl0IHdpbGwgY2F1c2UKPiBk
-ZWFkIGxvb3AgYW5kIHN5c3RlbSBzdGFsbDoKPgo+IC0+IHJlc2VydmVfY3Jhc2hrZXJuZWxfZ2Vu
-ZXJpYygpIGFuZCBoaWdoIGlzIHRydWUKPiAgLT4gbWVtYmxvY2tfcGh5c19hbGxvY19yYW5nZSgp
-IGZhaWwgYW5kIHJldHVybiAwCj4gICAgIC0+IHNlYXJjaF9lbmQgPSBDUkFTSF9BRERSX0xPV19N
-QVgoc2FtZSBhcyBDUkFTSF9BRERSX0hJR0hfTUFYKQo+ICAgICAgICAtPiBjYWxsIG1lbWJsb2Nr
-X3BoeXNfYWxsb2NfcmFuZ2UoKSBhZ2FpbiBhbmQgZmFpbCBhZ2luLgo+ICAgICAgICAgICAtPiBz
-ZWFyY2hfZW5kID09IENSQVNIX0FERFJfSElHSF9NQVggc2F0aXNmeSBhZ2Fpbgo+ICAgICAgICAg
-Li4uLi4uCj4KPiBIb3dldmVyLCB0aGUgY3VycmVudCBjaGVjayBvbmx5IGNvbnNpZGVycyB0aGUg
-Y2FzZSB3aGVyZQo+IENSQVNIX0FERFJfSElHSF9NQVggaXMgZ3JlYXRlciB0aGFuIENSQVNIX0FE
-RFJfTE9XX01BWC4gRml4IGl0Lgo+Cj4gRml4ZXM6IDBhYjk3MTY5YWEwNSAoImNyYXNoX2NvcmU6
-IGFkZCBnZW5lcmljIGZ1bmN0aW9uIHRvIGRvIHJlc2VydmF0aW9uIikKPiBTaWduZWQtb2ZmLWJ5
-OiBKaW5qaWUgUnVhbiA8cnVhbmppbmppZUBodWF3ZWkuY29tPgoKTG9va3MgZ29vZCB0byBtZToK
-UmV2aWV3ZWQtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KCllv
-dXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Good morning, 
+
+As a wholesaler of GSM mobile phones and accessories, we offer smartphones such as Motorola, Google, Honor, OnePlus, Oppo, POCO, Samsung and Xiaomi. 
+
+By eliminating intermediaries, we provide truly competitive prices.
+
+All phones are in stock and ready for immediate shipment. We guarantee delivery within 48 hours.
+
+If you are interested in cooperation or have questions, please reply to this e-mail address.
+
+
+Best regards
+Julien Keller
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
