@@ -4,112 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D98A7C3DA4A
-	for <kexec@archiver.kernel.org>; Mon,  5 Aug 2024 08:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5AB14C3DA7F
+	for <kexec@archiver.kernel.org>; Mon,  5 Aug 2024 15:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=UIyrS+w2G9O3VpCxMzo1NmC89+d21q4tP4uYpD3ns2c=; b=E+651o4BlTeQkD
-	8pMKelJ9vhI2rRFEakLlotj9ZfSvtc3yHDeYnjW7sSUS4iadGYqX0T9aUNsQzn39VO0z+Pe0v+bgg
-	PLAs45JakC8WrFL/yWp5NAmh1ynLjTUgLtRHATrhYa0bOiA3ZfcK10OGY6LJMe0D2vQrpfVlg6J3p
-	f6AGZX8D6j0g7VnLrw14dD6g413xziEb3j04hQSeYl6X2OsqUQd0ao3/ZXVUjuTFGSpCyCT8AYqMb
-	m2zHHJi6dV5LLeJcigUZOpu4FhLxDtLWasiO4nyfdug1COHwtLvfIzY5bYmy3TkpWp7e1ZDqG5S94
-	HoF0G63IE2aY02d4ndBg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=OsqI/no19mImnHuDk7FzhDFra2idqAjg1c0QXdsmgRk=; b=gVpxCgSIksDgPz
+	+1HSa1j/keJGomm2Z+d3cyqlA57Gpebr55clKrF9FG2js13NW86H4gcxWPingHIXEDK/OsbsPXiV8
+	INQmb+otcHxZvA1MGa19/P0xGxT5dc2jSzfsTE5uC1ropipBwzSlscnuSxHT1imM2UTBgHWxj/J19
+	GXrNJoO5KC3bwtNNHT7rS/Dt+e/mOH4mjcx8jkUGfcCT2URiudgay6zQi21SNF7QRyQ7xA5PXKHje
+	P99cIWhDsv4BBE1ywpiPyY20JUNPt1M3EcI3fb6wEOKZffjIr0Rvcjac5QDgiAtIyluMtTC+jam4i
+	CMLyMxL7FsyFGF38zKiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sasqN-0000000F55J-0fHA;
-	Mon, 05 Aug 2024 08:13:27 +0000
-Received: from mail-ej1-x632.google.com ([2a00:1450:4864:20::632])
+	id 1sazJn-0000000GFqi-1umP;
+	Mon, 05 Aug 2024 15:08:15 +0000
+Received: from mail-ej1-x630.google.com ([2a00:1450:4864:20::630])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sasqK-0000000F545-1hI7
+	id 1sazJk-0000000GFq5-0bVR
 	for kexec@lists.infradead.org;
-	Mon, 05 Aug 2024 08:13:25 +0000
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-a7d89bb07e7so842699066b.3
-        for <kexec@lists.infradead.org>; Mon, 05 Aug 2024 01:13:23 -0700 (PDT)
+	Mon, 05 Aug 2024 15:08:13 +0000
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-a7b2dbd81e3so1285671366b.1
+        for <kexec@lists.infradead.org>; Mon, 05 Aug 2024 08:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1722845603; x=1723450403; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=RSVAtk8ASxSlNuTkSOv8+pp8eaYCgFgeM8xdbggOScc=;
-        b=aVAwgX23GnEpgqLjkxYlsNhvapwap28w4ypgFu2Gg8yjDdkUTL6AVzh0gT/aT3YQJi
-         LYPb/clCZE/hcOc23xDUq+tDThwKK1mZby+7LOMFwZm1o+6nvF1zBfSJeLjAyaSCC7Ou
-         PHehXqzu7KjaP0ImjaLtk/93Cxq0O3BibNXoV4kXF548jAD7Se/5jBcxmahfMA7BIZIN
-         jsajZKQJYnkHJ2GwUhvyAgm7FW9rLleCp4rRTe42gbM3hWthI80fs0FKzwCqsRp8zmjf
-         WwWrc3fhyyzDIAV5AiDC+vpJ3oQpd8GPSlF0FLIiV9Ved2HLDbaPsFNG4iHSMLQAjszs
-         REmg==
+        d=suse.com; s=google; t=1722870489; x=1723475289; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z12bTz3uc/6bWoxaYbSLkO/A8SqLo9rW3xC9vooatVQ=;
+        b=Fyzq6fCtdAovbzWJYHyhySeyo09WCkT2rD6N+5wVISXwdBs0anIHMz/BP6L9AC6cgA
+         fptU5EC5ILhN4+hEK3r7XF3/uyPjb7uTAsPF66TK9aQ4FchUsyyvcet+ppc4dXn1hwD3
+         jkrvIGrIBOOpe2wp2WwmYwQ13+hwQnkyM7KUC8hidy2TDleETZjMDMi7j7170EiPNh10
+         YoCh0HvCPRXogzSzNV6cKAKMHlhEA1FhvjsnKRqXuCw823f2oix7l4rfgtW5cRj0Ukud
+         hMik9yVStYVaSHT8+X7Y4sGHUU4g3nZXrteWYmNtfE1cvi+XshlY1sd1TDfjkCDooMWU
+         UWhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722845603; x=1723450403;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RSVAtk8ASxSlNuTkSOv8+pp8eaYCgFgeM8xdbggOScc=;
-        b=THYOfugwsQinNUzAiTsYHq9ZbJrHKOhNwYwLU0QIkYo4PuHCe/7AEBkUL+q4Hs1LQ4
-         IW5h9fHEV+hmjF04Ag4Q1zB3u4+IxvfFNrZCH+CzWbNi4DAasV1w+rAY6GxnP09VlJBY
-         ZrHaWAGFNtM8N3sfQTJeYjP6hLY6N9bFQ5wI+49YV6tPNjmtrJPc9CEIAFVLHBcTMzCW
-         aUEZyFIvbyWCeX2L7ZwNHsKl5koxk2OsssZal3mwZHluUapu24m5Gm+2p4h4SpKxD7+9
-         iK3kOlWFF4k6kwM/KFN/HBDhXBRQOvPkv9W836xlMQCrTLNDjgj6IyyRrx8laDyV2EHK
-         XYSA==
-X-Gm-Message-State: AOJu0YzXJKGtE9X9x/4qWpclsznbzFxY2WC3TzPBuMezKWWm0ruSPTkh
-	msq1tM9NQrZXr/KW6uNXiuK7tgBR4vt0lkdbHkwXycKZX/YTJe6hRIP4ba4XIZ/EA+Irnu0tbBw
-	=
-X-Google-Smtp-Source: AGHT+IE5ZRJCjb3GqsOmwC+xbgcZTTM2VpGf8UcOIyb+KQACkjiBdiAfi7ZL7+GH5plWx6S7KjODbA==
-X-Received: by 2002:a17:907:c009:b0:a7d:cf4f:1817 with SMTP id a640c23a62f3a-a7dcf4f1a38mr702447866b.0.1722845602460;
-        Mon, 05 Aug 2024 01:13:22 -0700 (PDT)
-Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9ecb085sm420682166b.212.2024.08.05.01.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Aug 2024 01:13:22 -0700 (PDT)
-Message-ID: <ee4d05f4-f533-4f03-99ba-65ddefa54d82@suse.com>
-Date: Mon, 5 Aug 2024 10:13:22 +0200
+        d=1e100.net; s=20230601; t=1722870489; x=1723475289;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z12bTz3uc/6bWoxaYbSLkO/A8SqLo9rW3xC9vooatVQ=;
+        b=cEvlQ+3E2sw8YMGm7blHxa/Wspd4BhEWGu+oG28fmymfkfOEGhDHOpKGNwsOhJN1C0
+         Azt7MC/PUhp9RaLLH9WvEImVzHpyTUhJj+WRpBVS2ofsniS7vr9Q6cROgkYwfPLpxY/t
+         bo2BIlzBWOxn9o8RXQ4GqkM+HL8/1LLaNf1UjwIU6wVBu2CvG5EIWh7KzzGX+A9FxJE4
+         FLzRC02yqh+XGmtpGuRZ78hq7C3i78oXK5DIJIiNBdpafB7WhdW6EUNEn2/4IhA7pdR3
+         1+4gNwzb/6qSctJo1kMXC4MqTpggz9WNro34/jOIbGdGkNzZQ9DXpHr1gvmZpyvzQ+ny
+         5ksQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAaAK5uhD9DZ7a6CrtNMSAl0wUDbEwkclfMbk9jLMoq/3dRH+GEZfJQ43/4bCp8HJAEfwAlpYZX5H4sCBO7BS8XuIqi9+1YUEq
+X-Gm-Message-State: AOJu0YyUZnychNRDfAdmqFJEHRl0o9lqQ/bzTjgCjHyUYfA2lYWNaJRU
+	ZhgbfRsbVDgB2hSPAR/R9r6AaZ1HjzsERYuC4lqSXs3gERLdE2W3XQHLQCRczVM=
+X-Google-Smtp-Source: AGHT+IEag2rNRk0j4QehJ+DMvtcP+G/n9mTpBKv6zvPEM0uKOUnzQ0IF6Ol2eIkgYDDb+d00iGANlw==
+X-Received: by 2002:a17:906:d554:b0:a72:6849:cb0f with SMTP id a640c23a62f3a-a7dc5100463mr806932766b.62.1722870489211;
+        Mon, 05 Aug 2024 08:08:09 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9ec7173sm459121666b.204.2024.08.05.08.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Aug 2024 08:08:08 -0700 (PDT)
+From: Petr Tesarik <petr.tesarik@suse.com>
+To: Eric Biederman <ebiederm@xmission.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	kexec@lists.infradead.org (open list:KEXEC),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Petr Tesarik <ptesarik@suse.com>,
+	stable@kernel.org
+Subject: [PATCH 1/1] kexec_file: fix elfcorehdr digest exclusion when CONFIG_CRASH_HOTPLUG=y
+Date: Mon,  5 Aug 2024 17:07:50 +0200
+Message-ID: <20240805150750.170739-1-petr.tesarik@suse.com>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: kexec failure with Xen 4.19-rc4 and 4.20-dev on linux host
-To: Juergen Gross <jgross@suse.com>, A Kundu <avikalpa@yahoo.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au,
- xen-devel@lists.xenproject.org, Baoquan He <bhe@redhat.com>,
- andrew.cooper3@citrix.com
-References: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
- <cebc7800-df78-4f90-9f8e-82e3f9120b6e@yahoo.com>
- <ZqxUMgcEHakeFPaU@MiWiFi-R3L-srv>
- <abaceb99-4b80-49d7-ab7f-b190f73e858d@yahoo.com>
- <ac57dec1-68a3-471d-8f4c-c87fd9dca619@suse.com>
- <dc5c9dff-6bee-493a-8315-b2eee48bd802@yahoo.com>
- <18032298-e535-4405-890e-6ab9d54cf7e3@suse.com>
- <74bac0d8-de7a-41df-87ed-b7e2d4140ade@suse.com>
-Content-Language: en-US
-From: Jan Beulich <jbeulich@suse.com>
-Autocrypt: addr=jbeulich@suse.com; keydata=
- xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
- hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
- 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
- /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
- O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
- MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
- nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
- 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
- Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
- AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
- e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
- hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
- IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
- FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
- t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
- AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
- HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
- mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
- m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
- EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
- wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
- nAuWpQkjM1ASeQwSHEeAWPgskBQL
-In-Reply-To: <74bac0d8-de7a-41df-87ed-b7e2d4140ade@suse.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240805_011324_489330_7ED1C41C 
-X-CRM114-Status: GOOD (  17.67  )
+X-CRM114-CacheID: sfid-20240805_080812_210631_C647A5D9 
+X-CRM114-Status: GOOD (  11.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,91 +97,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05.08.2024 09:52, Juergen Gross wrote:
-> On 05.08.24 08:01, Jan Beulich wrote:
->> On 04.08.2024 15:17, A Kundu wrote:
->>> On 8/2/24 13:25, Jan Beulich wrote:
->>>   > On 02.08.2024 09:28, A Kundu wrote:
->>>   >> On 8/2/24 09:06, Baoquan He wrote:
->>>   >>> On 07/31/24 at 06:34pm, A Kundu wrote:
->>>   >>>> I am experiencing issues using kexec to load Xen 4.17(debian's apt
->>> version),
->>>   >>>> Xen 4.19-rc4 (compiled from source) and 4.20-dev (compiled from
->>> source) on a
->>>   >>>> debian host.
->>>   >>> You should CC this to XEN dev list so that XEN dev knows this and may
->>>   >>> provide help. Not everyone is interested in and knows XEN.
->>>   >>>
->>>   >>>> System information:
->>>   >>>> $ uname -a
->>>   >>>> Linux host 6.9.10-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.9.10-1
->>> (2024-07-19)
->>>   >>>> x86_64 GNU/Linux
->>>   >>>>
->>>   >>>> $ kexec --version # compiled from source tarball with ./configure
->>> --with-xen
->>>   >>>> kexec-tools 2.0.29
->>>   >>>>
->>>   >>>> Steps to reproduce:
->>>   >>>>
->>>   >>>> 1. Set variables:
->>>   >>>>
->>>   >>>> XEN_HYPERVISOR="/boot/xen.gz"
->>>   >>>> XEN_CMD="dom0_mem=6G dom0_max_vcpus=6 dom0_vcpus_pin cpufreq=xen"
->>>   >>>>
->>>   >>>> 2. Attempt to load Xen 4.19-rc4:
->>>   >>>>
->>>   >>>> # kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
->>>   >>>> Could not find a free area of memory of 0x3b6001 bytes...
->>>   >>>> elf_exec_build_load_relocatable: ELF exec load failed
->>>   >>>>
->>>   >>>> 3. Attempt to load Xen 4.20-dev:
->>>   >>>>
->>>   >>>> # kexec -l "$XEN_HYPERVISOR" --command-line="$XEN_CMD"
->>>   >>>> Could not find a free area of memory of 0x3f8001 bytes...
->>>   >>>> elf_exec_build_load_relocatable: ELF exec load failed
->>>   >>>>
->>>   >>>> 4. Attempt to load Xen 4.17 (from debian rrepositories):
->>>   >>>> # kexec -l /boot/xen-4.17-amd64.gz --command-line="$XEN_CMD"
->>>   >>>> Could not find a free area of memory of 0x3b4001 bytes...
->>>   >>>> elf_exec_build_load_relocatable: ELF exec load failed
->>>   >
->>>   > And with all of them saying effectively the same, did you verify you
->>>   > actually have a sufficiently large area reserved? The obvious
->>>   > place for you to look at is Xen's boot log (obtained via serial
->>>   > console or "xl dmesg" immediately after booting the system). If you
->>>   > find everything as expected there, ...
->>>   >
->>>   >>>> If you need any further information to investigate this problem,
->>>   >>>> please let me know.
->>>   >
->>>   > ... please provide that boot log.
->>>
->>> I have also followed up on your suggestion to check the Xen boot log
->>> using "xl dmesg", but unfortunately, I received the following error:
->>>
->>> xencall: error: Could not obtain handle on privileged command interface:
->>> No such file or directory
->>> libxl: error: libxl.c:102:libxl_ctx_alloc: cannot open libxc handle: No
->>> such file or directory
->>> cannot init xl context
->>>
->>> This indicates that Xen did not boot successfully, so there are no logs
->>> available.
->>
->> The fact that you have Dom0 up makes clear that Xen booted okay(ish). The
->> fact that you get "No such file or directory" from xencall suggests you
->> either didn't load the xen-privcmd driver (normally arrangements are made
->> by distros for this to happen automatically), or you didn't even build it.
-> 
-> The messages seen don't indicate that Xen booted okay(ish). I get the same
-> messages when having booted the Linux kernel on bare metal without Xen.
+From: Petr Tesarik <ptesarik@suse.com>
 
-Hmm, I didn't even think of this as a possible case, considering the question
-was forwarded to xen-devel (from a kexec list). I'm afraid Xen simply plays
-no role when setting up kexec (to whatever target) from a bare metal env.
+Fix the condition to exclude the elfcorehdr segment from the SHA digest
+calculation.
 
-Jan
+The j iterator is an index into the output sha_regions[] array, not into
+the input image->segment[] array. Once it reaches image->elfcorehdr_index,
+all subsequent segments are excluded. Besides, if the purgatory segment
+precedes the elfcorehdr segment, the elfcorehdr may be wrongly included in
+the calculation.
+
+Fixes: f7cc804a9fd4 ("kexec: exclude elfcorehdr from the segment digest")
+Cc: stable@kernel.org
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ kernel/kexec_file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3d64290d24c9..3eedb8c226ad 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -752,7 +752,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 
+ #ifdef CONFIG_CRASH_HOTPLUG
+ 		/* Exclude elfcorehdr segment to allow future changes via hotplug */
+-		if (j == image->elfcorehdr_index)
++		if (i == image->elfcorehdr_index)
+ 			continue;
+ #endif
+ 
+-- 
+2.45.2
+
 
 _______________________________________________
 kexec mailing list
