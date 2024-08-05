@@ -4,88 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 925E5C3DA64
-	for <kexec@archiver.kernel.org>; Sun,  4 Aug 2024 13:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5163C3DA64
+	for <kexec@archiver.kernel.org>; Mon,  5 Aug 2024 02:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Ns8JOMWTaJWdJn1w0AFtxoytk99ht3JoV5/NvdhboEA=; b=RVRj9LSE3objvf
-	pqCZRvr57kYnj8jM+2gLfYkg8r9Ka6PG6gcZr186aZNcJnJEJCZV6yRUKCoIq+zgFS/LVKAa0deVG
-	rqoEQbjzr+5lDo1yZF3nPidFPAUSDKuK3vdFgYH643aTsd2ZCjntq3jiZFX1LEYkd+EmegAxYlC/1
-	q9s12JcEPZKwrJwdqW45zdgHn59eUk+MoaXxp3iJjM008+y1zEjCouttegf/L+vIxnlmUXoVCiC+1
-	anlLSjL1w1dlveUYyb9j7AZ7t1Sm7s1v15J18sgfIkeTifrMJFzsM3NL/Xny9TDvp5y8Td7pw9B1z
-	/D92S8P+/WINz9q5GXkA==;
+	List-Owner; bh=Sfh8KA4YCtF3AOVXfuhGJTSeMnusaWC+S7JzeLtEc+M=; b=NqbASw+I2Fxi01
+	1ASP5UNB1pEH7PjLtv6TMqmYg2y+RY4Nk1LTVcuemRqQ8ZThknJYyHCLtIEALdA3Nl1kDhc1/94Vu
+	vkQby6cCUVe/9Qok8jUG1zhygpvpCcfh28zzm1wmPunP7l/tC8Smvg0j0pMEKRsOGkCIpDxDwxsC1
+	Gr/54H7TWCJ9vEsgHpiW22/xEfLRbBILnI2vNDZSlI5vTKPXR0AnNDl2xSZGAJx7zAO7QE28Dry4/
+	+1u+oVhtvS75DDrEua79KQliyKqqLruWjNMk5rq98s4LY0Qvvxt5JqsYOLkTLGkIxX3JjYfJEj5ex
+	Afd0E4YJDXjFJpLfAzfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sab7S-0000000DJ23-0JFh;
-	Sun, 04 Aug 2024 13:17:54 +0000
-Received: from sonic306-20.consmr.mail.sg3.yahoo.com ([106.10.241.140])
+	id 1sanT6-0000000EO5m-2U4a;
+	Mon, 05 Aug 2024 02:29:04 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sab7N-0000000DJ1e-2Riv
+	id 1sanT2-0000000EO58-013D
 	for kexec@lists.infradead.org;
-	Sun, 04 Aug 2024 13:17:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1722777463; bh=KTuMdd1zh6HTDH2YhL7095Abn07VWBYYH9xAFPngVZ4=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=sQYokT/er7U+fm/NXGGLqGuFrzGTuvsedt9Xuo/YTbGknZ1YJxz9KbWv+INoqKYv4bIe3dtRvGiFrmr95fV9RRKGet98RrQMbQuG1y22B4DCBLIBmzF1IJ+IGdhfFjl7xBsj/jtmv/lNISNqqtOVtxj5Eok1pYbknCZA2CjhCptgUCfQF1O1OgcXBVvXpnonFRYcoMldNpOi8FzJpU7CRkRggXb/4KtFBMOiquZZlCMoRPhwwKgocFZ39UJvxh2KduKo6AONpq1HiRmnVaxIieMJj/2fTDk2ztLdjD/BJip6iTndui9noeXqcK7dZM1oxEz8cbFUQoCu3HExnK1ibA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1722777463; bh=bI6cyOFgBn+wEt/H6ZDs8QZTm0BWA3SV+KxzWmck2Oy=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jgtfumF2s+jg3wneMdXT5zyg1fKBUZGZoNNKbeZAIAlH/fXIEM2hBz6hCN6BiR9emG0MyxJUW33B+W5rfeZRx4LwHhidU76zs/mReowJf3COMV48R9kVNFGYMCndgPVx3+0+be0xQx99DCcDduNrjdIil2kVPM8NstHZW2SdaAQMLldXruWogqpWLPXTNM+wOVwXeHBX868gXPX48zz7GYZfYmTsN/aeBfiay9GQKzPw2dEQfrfNVr4UgC6hDNu69D+5Wi+zzk2XMTPq96egtu8jcNRcNJ3EYHIlyG3Ue3XnUifGnss2vA+8utcMmb4S0BlGs+7BIPOhR2lcIXTF/w==
-X-YMail-OSG: 8H3zK2oVM1mu_UzawiwNFOMntvun56b2MS1sHxEeFXGjAhcPPi6VSb.KzWVFhJ0
- oM22j1FXUJ3o0Ow1fRxcGKvLyPq1oJsq.0FTvuvWcsymPgHbNptJO7HHUt2CHTAPQpnozVRovt4g
- JSZwu4hFMv7HtfwMjICzaH27b_dgjEcrFEG5yEBy1b7U8.63LKNc_yJp5rMyIP0Nbb16PdwpA0Hj
- ZZmti62AiZuZcxDUkgn8NzA5rYaory68_FPVMlm.N_rZqpVexLk2WmZ5VTuMa4VpKUEcAmT.3ZnX
- OPUqeQkKO8Du2K7gZecRlCTFlyNFgmMh09EBzxA_JHDGIWUs4Cyu3T7oypWPVffJ34HBKbfj8SH3
- BG0NymIE4bgiSgExSFRsc.H8xRNgoo3Wo3OOoFGyiPHOjPBOLXFKRvXp5ggnNecyDKe.CPgCUEoF
- mhAjamf.n2JrZI7MoC4yO48hIevQbIFGq9FanK3rks.kcfuNvZ5dF_zCIUPW1EXWH1hZEu.dvTHf
- Th6vLE6mI_Ifr6d9XTfUfhRXmULxYLdofTSv2TeCNycON4QXREij7aU1YlNlLVISKssUmAORHQUY
- ce18DW0I9T7ySxmpVWCYFRyJdntiThK_TQDu59ekrdIYEkfNnQrtH7htAzBUm3vDX68htfmNEIFd
- V6YzTvO7ASB9kZQJwAp8_brFYkXRgaMnaJVPLTbx64_o79K2N18vSUQ0B7b1R5n8mZfu1cbxHFyP
- QW3Gc7hg3WUp361hcEXsSOFPhdVb9oAHdwbw17wSvF_m27wvVz50vqizz9MQ1qUbnAZvYTp.0ZQp
- OTdz4FRAiPTOo5fO7ZwszKRQvwrU3z88YCxQlr4ucVo31Lzz9C2RhKqeWcRG1AKnTYaQ5GUnUdJ3
- V2iEkYKtZwxgL7Pni7MUl9VrjqRosDwxiGBYpmyfjV05ls.whXh95dNQ4sUEzsRoRvNgbgtLkX6Y
- c.KDMTXqyuMLK9xacUlMfHSDZhBaVF1Rr4s0ptLTA9TKYgcn0JfEAgOyW3DiDwm2BU5r8QTo52Ke
- s.6eOXGZuOIPluvQQAe_4ABXz1KmI3f8r0HAIYKPHj8lEuA0KIV90NsTE3l4Bb1mI_PNQy4O_vTT
- 4aHYNtYJiRbY7vTyGoAgRysgmjRabCup4er9vh1rNv4WnPtT2r6wqBsZ_2O.nywtWzP6uMbUi3SX
- StxO2AdlerSzocObWJE7Xs1WrlZV338u9cVRNXfwyfNyvj.Cu0lYx.5iQLB2X9graverN2z0wNrK
- bjtywPRdGn.bQRap3JrKt1K1oI5pcPBg7PvY0TnYfIYZh8zqEjFeiUQdhZnqqkTg1swVWZj4TTHf
- hB5ZYyTH5YMPC7gXnL3LN_F3z4y830VNCc6qE5f.owVTGZZl4M_1Mewr.yAgaZ11Et3yoQPNwiOj
- jwq9qfs2yYaVK5VJuM.3lqnV6lwXqf7FRuNEy7mFys7arcSTxb9otAiptgBFmAofVq7Az1ISh17m
- RNjsehFKK9AjXL0brRsz4D55ilFPr2PQANTrYq58Ubfh5E6_II_25x6ou7vDOEBwp.S0cDwVSGSR
- XGE47HPAcX8dG8dQ2L0XgE8q1BMsYRAUiBUJzsSxyxX1Hxrqn411.GNd7VLpTOvMMNZBck_9e5B.
- GXvFKYLCQZflt6qUAzBS8XIVSxn8Bcs5RxYBejlorXp229rHMW.hkO7jNsdNM5y3Fg.mNl_KAa2C
- BkAZ.WnD0SgWMNm.0FDbunUaGPEKltkSUhMl38NORGP3zs8QNJZJ8q6Gn7jAyjLXMf__q_l.rNIC
- 0ZzO_Tvr3GgADDpdkwcjEAr3an__PyZTxhAz.T3Q9DKI89erzYfT5dUj2haQ3oKfFI8YGkb3sEMJ
- HIM9kyMsf3_rTwx2KKCeVgx73SFIQQMK7OsaOyyTiEyDQ.7MivheTg9052BygNQ4jIB1xMflK5j0
- 6GjBiyfDhiqhBKsSf0Zo472DuwYKe7YVea9A3aSGhY.k_ivGHj80JrpJhLhCwIrgbLru1yC7UHk7
- _X8KEr8z1atWBrogwIaWpuEKNo5oUBogZbtbqmTbyt3cf4ZjyHS4p_8JPfaJSIywYzGLJB0.VkjY
- zaErbMPlGEz5hAA.TFcwXGmW7sv.PUCq8s1wnRwxl0FxHfc3EpIpDH78MquISftexO8Xmwosi3QM
- USmEcA7P_tlvk_pK3NmYY.rAK9hsYGJu8rgXRJ42qJG6v6AZkWUWi3IC5KN5DekJtfC6q3kYiR52
- oFA--
-X-Sonic-MF: <avikalpa@yahoo.com>
-X-Sonic-ID: b9a632db-0c31-4574-a195-875efe122acf
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.sg3.yahoo.com with HTTP; Sun, 4 Aug 2024 13:17:43 +0000
-Received: by hermes--production-sg3-fc85cddf6-6jgr8 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 37747466b1a90a07168896b733ea2d20;
-          Sun, 04 Aug 2024 13:17:43 +0000 (UTC)
-Message-ID: <dc5c9dff-6bee-493a-8315-b2eee48bd802@yahoo.com>
-Date: Sun, 4 Aug 2024 18:47:23 +0530
+	Mon, 05 Aug 2024 02:29:02 +0000
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WcgMQ02pHzndJK;
+	Mon,  5 Aug 2024 10:27:46 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 857C818009B;
+	Mon,  5 Aug 2024 10:28:52 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 5 Aug 2024 10:28:51 +0800
+Message-ID: <50498549-f6c1-ce2c-b190-e9eedd1eb9ee@huawei.com>
+Date: Mon, 5 Aug 2024 10:28:50 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: kexec failure with Xen 4.19-rc4 and 4.20-dev on linux host
-To: Jan Beulich <jbeulich@suse.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au,
- xen-devel@lists.xenproject.org, Baoquan He <bhe@redhat.com>,
- andrew.cooper3@citrix.com
-References: <05395ed2-3bf3-4926-8e24-c2e7ff37ed26@yahoo.com>
- <cebc7800-df78-4f90-9f8e-82e3f9120b6e@yahoo.com>
- <ZqxUMgcEHakeFPaU@MiWiFi-R3L-srv>
- <abaceb99-4b80-49d7-ab7f-b190f73e858d@yahoo.com>
- <ac57dec1-68a3-471d-8f4c-c87fd9dca619@suse.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v18 0/6] powerpc/crash: Kernel handling of CPU and memory
+ hotplug
 Content-Language: en-US
-From: A Kundu <avikalpa@yahoo.com>
-In-Reply-To: <ac57dec1-68a3-471d-8f4c-c87fd9dca619@suse.com>
-X-Mailer: WebService/1.1.22544 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, <linuxppc-dev@ozlabs.org>
+CC: Akhil Raj <lf32.dev@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David
+ Hildenbrand <david@redhat.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Hari Bathini <hbathini@linux.ibm.com>, Laurent
+ Dufour <laurent.dufour@fr.ibm.com>, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Mimi Zohar <zohar@linux.ibm.com>,
+	Naveen N Rao <naveen@kernel.org>, Oscar Salvador <osalvador@suse.de>, Thomas
+ Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, <kexec@lists.infradead.org>,
+	<x86@kernel.org>
+References: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240804_061749_853962_1DE25ED0 
-X-CRM114-Status: GOOD (  27.55  )
+X-CRM114-CacheID: sfid-20240804_192900_393847_514B7574 
+X-CRM114-Status: GOOD (  46.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,130 +79,258 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gOC8yLzI0IDEzOjI1LCBKYW4gQmV1bGljaCB3cm90ZToKID4gT24gMDIuMDguMjAyNCAwOToy
-OCwgQSBLdW5kdSB3cm90ZToKID4+IE9uIDgvMi8yNCAwOTowNiwgQmFvcXVhbiBIZSB3cm90ZToK
-ID4+PiBPbiAwNy8zMS8yNCBhdCAwNjozNHBtLCBBIEt1bmR1IHdyb3RlOgogPj4+PiBJIGFtIGV4
-cGVyaWVuY2luZyBpc3N1ZXMgdXNpbmcga2V4ZWMgdG8gbG9hZCBYZW4gNC4xNyhkZWJpYW4ncyBh
-cHQgCnZlcnNpb24pLAogPj4+PiBYZW4gNC4xOS1yYzQgKGNvbXBpbGVkIGZyb20gc291cmNlKSBh
-bmQgNC4yMC1kZXYgKGNvbXBpbGVkIGZyb20gCnNvdXJjZSkgb24gYQogPj4+PiBkZWJpYW4gaG9z
-dC4KID4+PiBZb3Ugc2hvdWxkIENDIHRoaXMgdG8gWEVOIGRldiBsaXN0IHNvIHRoYXQgWEVOIGRl
-diBrbm93cyB0aGlzIGFuZCBtYXkKID4+PiBwcm92aWRlIGhlbHAuIE5vdCBldmVyeW9uZSBpcyBp
-bnRlcmVzdGVkIGluIGFuZCBrbm93cyBYRU4uCiA+Pj4KID4+Pj4gU3lzdGVtIGluZm9ybWF0aW9u
-OgogPj4+PiAkIHVuYW1lIC1hCiA+Pj4+IExpbnV4IGhvc3QgNi45LjEwLWFtZDY0ICMxIFNNUCBQ
-UkVFTVBUX0RZTkFNSUMgRGViaWFuIDYuOS4xMC0xIAooMjAyNC0wNy0xOSkKID4+Pj4geDg2XzY0
-IEdOVS9MaW51eAogPj4+PgogPj4+PiAkIGtleGVjIC0tdmVyc2lvbiAjIGNvbXBpbGVkIGZyb20g
-c291cmNlIHRhcmJhbGwgd2l0aCAuL2NvbmZpZ3VyZSAKLS13aXRoLXhlbgogPj4+PiBrZXhlYy10
-b29scyAyLjAuMjkKID4+Pj4KID4+Pj4gU3RlcHMgdG8gcmVwcm9kdWNlOgogPj4+PgogPj4+PiAx
-LiBTZXQgdmFyaWFibGVzOgogPj4+PgogPj4+PiBYRU5fSFlQRVJWSVNPUj0iL2Jvb3QveGVuLmd6
-IgogPj4+PiBYRU5fQ01EPSJkb20wX21lbT02RyBkb20wX21heF92Y3B1cz02IGRvbTBfdmNwdXNf
-cGluIGNwdWZyZXE9eGVuIgogPj4+PgogPj4+PiAyLiBBdHRlbXB0IHRvIGxvYWQgWGVuIDQuMTkt
-cmM0OgogPj4+PgogPj4+PiAjIGtleGVjIC1sICIkWEVOX0hZUEVSVklTT1IiIC0tY29tbWFuZC1s
-aW5lPSIkWEVOX0NNRCIKID4+Pj4gQ291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVtb3J5
-IG9mIDB4M2I2MDAxIGJ5dGVzLi4uCiA+Pj4+IGVsZl9leGVjX2J1aWxkX2xvYWRfcmVsb2NhdGFi
-bGU6IEVMRiBleGVjIGxvYWQgZmFpbGVkCiA+Pj4+CiA+Pj4+IDMuIEF0dGVtcHQgdG8gbG9hZCBY
-ZW4gNC4yMC1kZXY6CiA+Pj4+CiA+Pj4+ICMga2V4ZWMgLWwgIiRYRU5fSFlQRVJWSVNPUiIgLS1j
-b21tYW5kLWxpbmU9IiRYRU5fQ01EIgogPj4+PiBDb3VsZCBub3QgZmluZCBhIGZyZWUgYXJlYSBv
-ZiBtZW1vcnkgb2YgMHgzZjgwMDEgYnl0ZXMuLi4KID4+Pj4gZWxmX2V4ZWNfYnVpbGRfbG9hZF9y
-ZWxvY2F0YWJsZTogRUxGIGV4ZWMgbG9hZCBmYWlsZWQKID4+Pj4KID4+Pj4gNC4gQXR0ZW1wdCB0
-byBsb2FkIFhlbiA0LjE3IChmcm9tIGRlYmlhbiBycmVwb3NpdG9yaWVzKToKID4+Pj4gIyBrZXhl
-YyAtbCAvYm9vdC94ZW4tNC4xNy1hbWQ2NC5neiAtLWNvbW1hbmQtbGluZT0iJFhFTl9DTUQiCiA+
-Pj4+IENvdWxkIG5vdCBmaW5kIGEgZnJlZSBhcmVhIG9mIG1lbW9yeSBvZiAweDNiNDAwMSBieXRl
-cy4uLgogPj4+PiBlbGZfZXhlY19idWlsZF9sb2FkX3JlbG9jYXRhYmxlOiBFTEYgZXhlYyBsb2Fk
-IGZhaWxlZAogPgogPiBBbmQgd2l0aCBhbGwgb2YgdGhlbSBzYXlpbmcgZWZmZWN0aXZlbHkgdGhl
-IHNhbWUsIGRpZCB5b3UgdmVyaWZ5IHlvdQogPiBhY3R1YWxseSBoYXZlIGEgc3VmZmljaWVudGx5
-IGxhcmdlIGFyZWEgcmVzZXJ2ZWQ/IFRoZSBvYnZpb3VzCiA+IHBsYWNlIGZvciB5b3UgdG8gbG9v
-ayBhdCBpcyBYZW4ncyBib290IGxvZyAob2J0YWluZWQgdmlhIHNlcmlhbAogPiBjb25zb2xlIG9y
-ICJ4bCBkbWVzZyIgaW1tZWRpYXRlbHkgYWZ0ZXIgYm9vdGluZyB0aGUgc3lzdGVtKS4gSWYgeW91
-CiA+IGZpbmQgZXZlcnl0aGluZyBhcyBleHBlY3RlZCB0aGVyZSwgLi4uCiA+CiA+Pj4+IElmIHlv
-dSBuZWVkIGFueSBmdXJ0aGVyIGluZm9ybWF0aW9uIHRvIGludmVzdGlnYXRlIHRoaXMgcHJvYmxl
-bSwKID4+Pj4gcGxlYXNlIGxldCBtZSBrbm93LgogPgogPiAuLi4gcGxlYXNlIHByb3ZpZGUgdGhh
-dCBib290IGxvZy4KCkRlYXIgSmFuLAoKVGhhbmsgeW91IGZvciB5b3VyIHJlc3BvbnNlIGFuZCBz
-dWdnZXN0aW9ucy4KCkFzIG1lbnRpb25lZCBpbiBteSBvcmlnaW5hbCBtZXNzYWdlLCBJIGhhdmUg
-YWxyZWFkeSBhdHRlbXB0ZWQgdG8gbG9hZApYZW4gdXNpbmcga2V4ZWMgd2l0aCB2YXJpb3VzIHZl
-cnNpb25zICg0LjE3LCA0LjE5LXJjNCwgYW5kIDQuMjAtZGV2KSwKYWxsIG9mIHdoaWNoIHJlc3Vs
-dGVkIGluIHRoZSBzYW1lIGVycm9yOgoKQ291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVt
-b3J5IG9mIDB4M2I2MDAxIGJ5dGVzLi4uCmVsZl9leGVjX2J1aWxkX2xvYWRfcmVsb2NhdGFibGU6
-IEVMRiBleGVjIGxvYWQgZmFpbGVkCgpJIGhhdmUgYWxzbyBmb2xsb3dlZCB1cCBvbiB5b3VyIHN1
-Z2dlc3Rpb24gdG8gY2hlY2sgdGhlIFhlbiBib290IGxvZwp1c2luZyAieGwgZG1lc2ciLCBidXQg
-dW5mb3J0dW5hdGVseSwgSSByZWNlaXZlZCB0aGUgZm9sbG93aW5nIGVycm9yOgoKeGVuY2FsbDog
-ZXJyb3I6IENvdWxkIG5vdCBvYnRhaW4gaGFuZGxlIG9uIHByaXZpbGVnZWQgY29tbWFuZCBpbnRl
-cmZhY2U6IApObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5CmxpYnhsOiBlcnJvcjogbGlieGwuYzox
-MDI6bGlieGxfY3R4X2FsbG9jOiBjYW5ub3Qgb3BlbiBsaWJ4YyBoYW5kbGU6IE5vIApzdWNoIGZp
-bGUgb3IgZGlyZWN0b3J5CmNhbm5vdCBpbml0IHhsIGNvbnRleHQKClRoaXMgaW5kaWNhdGVzIHRo
-YXQgWGVuIGRpZCBub3QgYm9vdCBzdWNjZXNzZnVsbHksIHNvIHRoZXJlIGFyZSBubyBsb2dzCmF2
-YWlsYWJsZS4KCiA+CiA+IEFuZCB3aXRoIGFsbCBvZiB0aGVtIHNheWluZyBlZmZlY3RpdmVseSB0
-aGUgc2FtZSwgZGlkIHlvdSB2ZXJpZnkgeW91CiA+IGFjdHVhbGx5IGhhdmUgYSBzdWZmaWNpZW50
-bHkgbGFyZ2UgYXJlYSByZXNlcnZlZD8gVGhlIG9idmlvdXMKID4gcGxhY2UgZm9yIHlvdSB0byBs
-b29rIGF0IGlzIFhlbidzIGJvb3QgbG9nIChvYnRhaW5lZCB2aWEgc2VyaWFsCiA+IGNvbnNvbGUg
-b3IgInhsIGRtZXNnIiBpbW1lZGlhdGVseSBhZnRlciBib290aW5nIHRoZSBzeXN0ZW0pLiBJZiB5
-b3UKID4gZmluZCBldmVyeXRoaW5nIGFzIGV4cGVjdGVkIHRoZXJlLCAuLi4KID4KCkluIGFuIGF0
-dGVtcHQgdG8gcmVzb2x2ZSB0aGUgbWVtb3J5IGFsbG9jYXRpb24gaXNzdWUsIEkgaGF2ZSB0cmll
-ZCB0aGUKZm9sbG93aW5nOgoKQWRkZWQgYSBjcmFzaGtlcm5lbD08c2l6ZT5APG9mZnNldD4gcGFy
-YW1ldGVyIHRvIHRoZSBob3N0IGtlcm5lbCBjb21tYW5kCmxpbmUgdG8gcmVzZXJ2ZSBhIGRlZGlj
-YXRlZCBtZW1vcnkgcmVnaW9uIGZvciBrZXhlYywgYW5kIGF0dGVtcHRlZCB0bwpsb2FkIFhlbiBp
-bnRvIHRoYXQgYXJlYS4KCkV4cGVyaW1lbnRlZCB3aXRoIHRoZSBtZW09PHNpemU+IHBhcmFtZXRl
-ciB0byBsaW1pdCB0aGUgYW1vdW50IG9mIG1lbW9yeQp1c2VkIGJ5IHRoZSBob3N0IGtlcm5lbCwg
-aG9waW5nIHRvIGxlYXZlIG1vcmUgY29udGlndW91cyBzcGFjZSBhdmFpbGFibGUKZm9yIGxvYWRp
-bmcgWGVuLgoKVW5mb3J0dW5hdGVseSwgbmVpdGhlciBvZiB0aGVzZSBhcHByb2FjaGVzIHJlc29s
-dmVkIHRoZSBpc3N1ZSwgYW5kIEkKc3RpbGwgZW5jb3VudGVyIHRoZSBzYW1lIG1lbW9yeSBhbGxv
-Y2F0aW9uIGVycm9yIHdoZW4gYXR0ZW1wdGluZyB0byBsb2FkClhlbiB3aXRoIGtleGVjLgoKSSBo
-YXZlIGFsc28gcmV2aWV3ZWQgdGhlIGF2YWlsYWJsZSBkb2N1bWVudGF0aW9uIGZvciBrZXhlYyBh
-bmQgWGVuLCBidXQKbXVjaCBvZiBpdCBhcHBlYXJzIHRvIGJlIG91dGRhdGVkLCByZWZlcmVuY2lu
-ZyBhcmNoYWljIG9wdGlvbnMgbGlrZQotLXZtbSB3aGljaCBubyBsb25nZXIgZXhpc3QgaW4gdGhl
-IGN1cnJlbnQgdmVyc2lvbiBvZiBrZXhlYy10b29scy4KCiA+IEphbgoKQXQgdGhpcyBwb2ludCwg
-SSdtIHVuc3VyZSBvZiBob3cgdG8gcHJvY2VlZC4gSSBzdXNwZWN0IHRoZSBpc3N1ZSBtYXkgYmUK
-cmVsYXRlZCB0byBjaGFuZ2VzIGluIHRoZSBrZXhlYyBjb2RlYmFzZSBhbmQgaXRzIGludGVyYWN0
-aW9uIHdpdGggWGVuLAphcyBrZXhlYyBkb2NzIGZvciBYZW4gaGFzIG5vdCBiZWVuIGFjdGl2ZWx5
-IG1haW50YWluZWQgc2luY2UgMjAxNy4KCmdpdCBsb2cgLTEgLS1mb3JtYXQ9IiVhZCIgLS0gZG9j
-cy9taXNjL2tleGVjX2FuZF9rZHVtcC50eHQKRnJpIEp1biA5IDE0OjExOjM3IDIwMTcgKzAyMDAK
-CklmIGl0J3Mgbm90IHRvbyBtdWNoIHRvIGFzaywgY291bGQgeW91IHBsZWFzZSBjaGVjayBpZiB5
-b3UgY2FuCnN1Y2Nlc3NmdWxseSBsYXVuY2ggdGhlIFhlbiBrZXJuZWwgdXNpbmcga2V4ZWMgd2l0
-aCBrZXhlYy10b29scwp2ZXJzaW9uID4gMi54LnggYW5kIGEgTGludXgga2VybmVsIHZlcnNpb24g
-Pj0gNi42PwoKSSBoYXZlIG5ldmVyIGJlZW4gYWJsZSB0byBib290IHRoZSBYZW4ga2VybmVsIHdp
-dGggYW55dGhpbmcgKHN5c2xpbnV4LAp6ZnNib290bWVudSlvdGhlciB0aGFuIEdSVUIgYW5kIG1i
-b290LmMzMiwgYXMgdXNlZCBieSBDaXRyaXggb3IgWENQLW5nLgoKSW4gZmFjdCwgSSBoYXZlIG5l
-dmVyIGNvbWUgYWNyb3NzIGEgWGVuIGRpc3RyaWJ1dGlvbiB0aGF0IGRvZXNuJ3QgcmVseQpvbiBH
-UlVCIGZvciB4ZW4sIHdoaWNoIG1ha2VzIG1lIHF1ZXN0aW9uIHdoZXRoZXIga2V4ZWMnaW5nIHRo
-ZSBYZW4Ka2VybmVsIGlzIGV2ZW4gcG9zc2libGUgYXQgdGhpcyBwb2ludC4KCgpGb3IgcmVmZXJl
-bmNlLCBJJ20gcHJvdmlkaW5nIGEgbG9nIG9mIG15IGF0dGVtcHRzIHRvIGJvb3QgWGVuIHVzaW5n
-ClpGU0Jvb3RNZW51IChhIGJhcmVib25lcyBsaW51eCBrZXJuZWwgdHJ5aW5nIHRvIGJvb3Qgdmlh
-IGtleGVjOyBvdGhlciAKZGV0YWlscyBpcnJlbGV2YW50KToKCnRlZTogL3pmc2Jvb3RtZW51L2Vu
-dmlyb25tZW50cy96cm9vdC9ST09UL2RlYmlhbi9tbnQvdmFyL3pibS5sb2c6IApSZWFkLW9ubHkg
-ZmlsZSBzeXN0ZW0KPT09IEF0dGVtcHRpbmcgdG8gTGF1bmNoIFhlbiA9PT0KU2VsZWN0ZWQgS2Vy
-bmVswqDCoMKgwqAgOiAvYm9vdC92bWxpbnV6LTYuOS4xMi1hbWQ2NApTZWxlY3RlZCBpbml0cmFt
-ZnPCoCA6IC9ib290L2luaXRyZC5pbWctNi45LjEyLWFtZDY0ClNlbGVjdGVkIEJFwqDCoMKgwqDC
-oMKgwqDCoCA6IHpyb290L1JPT1QvZGViaWFuClNlbGVjdGVkIE1vdW50cG9pbnQgOiAvemZzYm9v
-dG1lbnUvZW52aXJvbm1lbnRzL3pyb290L1JPT1QvZGViaWFuL21udApaRlNCb290TWVudSBrZXJu
-ZWwgY29tbWFuZGxpbmU6IHF1aWV0IGxvZ2xldmVsPTAKCnpmcyBnZXQgb3JnLnpmc2Jvb3RtZW51
-OmNvbW1hbmRsaW5lIHpyb290L1JPT1QvZGViaWFuCk5BTUXCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIFBST1BFUlRZIFZBTFVFwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIApTT1VSQ0UKenJvb3Qv
-Uk9PVC9kZWJpYW7CoCBvcmcuemZzYm9vdG1lbnU6Y29tbWFuZGxpbmXCoCBxdWlldCBjcmFzaGtl
-cm5lbD0wTSAKbWVtbWFwPTY0TSQweDEwMDAwMDAwMMKgIGxvY2FsCiheXl4gVGhpcyBpcyB0aGUg
-bGludXgvZG9tMCBjb21tYW5kbGluZSwgZXhlY3V0ZWQgYnkga2V4ZWMpCgo9PT0gTWVtb3J5IHJl
-cG9ydGVkIGJ5IGhlYWQgL3Byb2MvbWVtaW5mbyA9PT0KTWVtVG90YWw6wqDCoMKgwqDCoMKgwqAg
-ODA0NDA4NCBrQgpNZW1GcmVlOsKgwqDCoMKgwqDCoMKgwqAgNzgyMjMzMiBrQgpNZW1BdmFpbGFi
-bGU6wqDCoMKgIDc2ODczMjAga0IKQnVmZmVyczrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAw
-IGtCCkNhY2hlZDrCoMKgwqDCoMKgwqDCoMKgwqDCoCA0OTEzNiBrQgpTd2FwQ2FjaGVkOsKgwqDC
-oMKgwqDCoMKgwqDCoMKgIDAga0IKQWN0aXZlOsKgwqDCoMKgwqDCoMKgwqDCoMKgIDQ1ODY4IGtC
-CkluYWN0aXZlOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAwIGtCCkFjdGl2ZShhbm9uKTrCoMKg
-wqDCoCA0NTg2OCBrQgpJbmFjdGl2ZShhbm9uKTrCoMKgwqDCoMKgwqAgMCBrQgo9PT0gRW5kIG9m
-IE1lbW9yeSBSZXBvcnQgPT09CgpYZW4ga2VybmVsIGZvdW5kLiBBdHRlbXB0aW5nIGtleGVjLi4u
-ClhlbiBLZXJuZWwgUGF0aMKgwqDCoMKgIDogCi96ZnNib290bWVudS9lbnZpcm9ubWVudHMvenJv
-b3QvUk9PVC9kZWJpYW4vbW50L2Jvb3QveGVuLmd6ClRyeSBnemlwIGRlY29tcHJlc3Npb24uCkNv
-dWxkIG5vdCBmaW5kIGEgZnJlZSBhcmVhIG9mIG1lbW9yeSBvZiAweDNiYTAwMSBieXRlcy4uLgpl
-bGZfZXhlY19idWlsZF9sb2FkX3JlbG9jYXRhYmxlOiBFTEYgZXhlYyBsb2FkIGZhaWxlZApFeGVj
-dXRpbmcga2V4ZWMuLi4KTm90aGluZyBoYXMgYmVlbiBsb2FkZWQhCgpBZnRlciBib290aW5nIGlu
-dG8gbGludXggd2hhdCBoYXBwZW5zLCBJIGhhdmUgYWxyZWFkeSBzaGFyZWQuCgpJZiB5b3UgaGF2
-ZSBhbnkgZnVydGhlciBpbnNpZ2h0cyBvciBzdWdnZXN0aW9ucyBvbiBob3cgdG8gb3ZlcmNvbWUg
-dGhpcwptZW1vcnkgYWxsb2NhdGlvbiBpc3N1ZSBvciBzdWNjZXNzZnVsbHkgYm9vdCBYZW4gdXNp
-bmcga2V4ZWMgb24gYSBtb2Rlcm4Kc3lzdGVtLCBJIHdvdWxkIGdyZWF0bHkgYXBwcmVjaWF0ZSB5
-b3VyIGd1aWRhbmNlLgoKVGhhbmsgeW91IGZvciB5b3VyIHRpbWUgYW5kIGFzc2lzdGFuY2UuCgpC
-ZXN0IHJlZ2FyZHMsCkEgS3VuZHUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+
+On 2024/3/26 13:54, Sourabh Jain wrote:
+> Commit 247262756121 ("crash: add generic infrastructure for crash
+> hotplug support") added a generic infrastructure that allows
+> architectures to selectively update the kdump image component during CPU
+> or memory add/remove events within the kernel itself.
+> 
+> This patch series adds crash hotplug handler for PowerPC and enable
+> support to update the kdump image on CPU/Memory add/remove events.
+> 
+> Among the 6 patches in this series, the first two patches make changes
+> to the generic crash hotplug handler to assist PowerPC in adding support
+> for this feature. The last four patches add support for this feature.
+> 
+> The following section outlines the problem addressed by this patch
+> series, along with the current solution, its shortcomings, and the
+> proposed resolution.
+> 
+> Problem:
+> ========
+> Due to CPU/Memory hotplug or online/offline events the elfcorehdr
+> (which describes the CPUs and memory of the crashed kernel) and FDT
+> (Flattened Device Tree) of kdump image becomes outdated. Consequently,
+> attempting dump collection with an outdated elfcorehdr or FDT can lead
+> to failed or inaccurate dump collection.
+
+Hi, Sourabh, are there any specific methods to reproduce the scenarios
+for this feature? I would like to port this feature to ARM64, but I
+don't know how to reproduce the issue.
+
+> 
+> Going forward CPU hotplug or online/offline events are referred as
+> CPU/Memory add/remove events.
+> 
+> Existing solution and its shortcoming:
+> ======================================
+> The current solution to address the above issue involves monitoring the
+> CPU/memory add/remove events in userspace using udev rules and whenever
+> there are changes in CPU and memory resources, the entire kdump image
+> is loaded again. The kdump image includes kernel, initrd, elfcorehdr,
+> FDT, purgatory. Given that only elfcorehdr and FDT get outdated due to
+> CPU/Memory add/remove events, reloading the entire kdump image is
+> inefficient. More importantly, kdump remains inactive for a substantial
+> amount of time until the kdump reload completes.
+> 
+> Proposed solution:
+> ==================
+> Instead of initiating a full kdump image reload from userspace on
+> CPU/Memory hotplug and online/offline events, the proposed solution aims
+> to update only the necessary kdump image component within the kernel
+> itself.
+> 
+> Git tree for testing:
+> =====================
+> https://github.com/sourabhjains/linux/tree/kdump-in-kernel-crash-update-v18
+> 
+> Above tree is rebased on top of powerpc/next branch.
+> 
+> To realize this feature, the kdump udev rule must be updated. On RHEL,
+> add the following two lines at the top of the
+> "/usr/lib/udev/rules.d/98-kexec.rules" file.
+> 
+> SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+> SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+> 
+> With the above change to the kdump udev rule, kdump reload is avoided
+> during CPU/Memory add/remove events if this feature is enabled in the
+> kernel.
+> 
+> Note: only kexec_file_load syscall will work. For kexec_load minor changes
+> are required in kexec tool.
+> 
+> Changelog:
+> ----------
+> v18: [No functional changes]
+>   - Update a comment in 2/6.
+>   - Describe the clean-up done on x86 in patch description 2/6.
+>   - Fix a minor typo in the patch description of 3/6.
+> 
+> v17: [https://lore.kernel.org/all/20240226084118.16310-1-sourabhjain@linux.ibm.com/]
+>   - Rebase the patch series on top linux-next tree and below patch series
+>     https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
+>   - Split 0003 patch from v16 into two patches
+>        1. Move get_crash_memory_ranges() along with other *_memory_ranges()
+>           functions to ranges.c and make them public.
+>        2. Make update_cpus_node function public and take this function
+>           out of file_load_64.c
+>   - Keep arch_crash_hotplug_support in crash.c instead of core_64.c [05/06]
+>   - Use CONFIG_CRASH_MAX_MEMORY_RANGES to find extra elfcorehdr size [06/06]
+> 
+> v16: [https://lore.kernel.org/all/20240217081452.164571-1-sourabhjain@linux.ibm.com/]
+>   - Remove the unused #define `crash_hotplug_cpu_support`
+>     and `crash_hotplug_memory_support` in `arch/x86/include/asm/kexec.h`.
+>   - Document why two kexec flag bits are used in
+>     `arch_crash_hotplug_memory_support` (x86).
+>   - Use a switch case to handle different hotplug operations
+>     in `arch_crash_handle_hotplug_event` for PowerPC.
+>   - Fix a typo in 4/5.
+> 
+> v15:
+>   - Remove the patch that adds a new kexec flag for FDT update.
+>   - Introduce a generic kexec flag bit to share hotplug support
+>     intent between the kexec tool and the kernel for the kexec_load
+>     syscall. (2/5)
+>   - Introduce an architecture-specific handler to process the kexec
+>     flag for crash hotplug support. (2/5)
+>   - Rename the @update_elfcorehdr member of the struct kimage to
+>     @hotplug_support. (2/5)
+>   - Use a common function to advertise hotplug support for both CPU
+>     and Memory. (2/5)
+> 
+> v14:
+>   - Fix build warnings by including necessary header files
+>   - Rebase to v6.7-rc5
+> 
+> v13:
+>   - Fix a build warning, take ranges.c out of CONFIG_KEXEC_FILE
+>   - Rebase to v6.7-rc4
+> 
+> v12:
+>   - A patch to add new kexec flags to support this feature on kexec_load
+>     system call
+>   - Change in the way this feature is advertise to userspace for both
+>     kexec_load syscall
+>   - Rebase to v6.6-rc7
+> 
+> v11:
+>   - Rebase to v6.4-rc6
+>   - The patch that introduced CONFIG_CRASH_HOTPLUG for PowerPC has been
+>     removed. The config is now part of common configuration:
+>     https://lore.kernel.org/all/87ilbpflsk.fsf@mail.lhotse/
+> 
+> v10:
+>   - Drop the patch that adds fdt_index attribute to struct kimage_arch
+>     Find the fdt segment index when needed.
+>   - Added more details into commits messages.
+>   - Rebased onto 6.3.0-rc5
+> 
+> v9:
+>   - Removed patch to prepare elfcorehdr crash notes for possible CPUs.
+>     The patch is moved to generic patch series that introduces generic
+>     infrastructure for in kernel crash update.
+>   - Removed patch to pass the hotplug action type to the arch crash
+>     hotplug handler function. The generic patch series has introduced
+>     the hotplug action type in kimage struct.
+>   - Add detail commit message for better understanding.
+> 
+> v8:
+>   - Restrict fdt_index initialization to machine_kexec_post_load
+>     it work for both kexec_load and kexec_file_load.[3/8] Laurent Dufour
+> 
+>   - Updated the logic to find the number of offline core. [6/8]
+> 
+>   - Changed the logic to find the elfcore program header to accommodate
+>     future memory ranges due memory hotplug events. [8/8]
+> 
+> v7
+>   - added a new config to configure this feature
+>   - pass hotplug action type to arch specific handler
+> 
+> v6
+>   - Added crash memory hotplug support
+> 
+> v5:
+>   - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
+>   - Move fdt segment identification for kexec_load case to load path
+>     instead of crash hotplug handler
+>   - Keep new attribute defined under kimage_arch to track FDT segment
+>     under CONFIG_HOTPLUG_CPU config.
+> 
+> v4:
+>   - Update the logic to find the additional space needed for hotadd CPUs
+>     post kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash
+>     hotplug support for kexec_file_load" patch to know more about the
+>     change.
+>   - Fix a couple of typo.
+>   - Replace pr_err to pr_info_once to warn user about memory hotplug
+>     support.
+>   - In crash hotplug handle exit the for loop if FDT segment is found.
+> 
+> v3
+>   - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
+>   - Rebase patche on top of
+>     https://lore.kernel.org/lkml/20220303162725.49640-1-eric.devolder@oracle.com/
+>   - Fixed warning reported by checpatch script
+> 
+> v2:
+>   - Use generic hotplug handler introduced by
+>     https://lore.kernel.org/lkml/20220209195706.51522-1-eric.devolder@oracle.com/
+>     a significant change from v1.
+> 
+> Cc: Akhil Raj <lf32.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Cc: x86@kernel.org
+> 
+> Sourabh Jain (6):
+>   crash: forward memory_notify arg to arch crash hotplug handler
+>   crash: add a new kexec flag for hotplug support
+>   powerpc/kexec: move *_memory_ranges functions to ranges.c
+>   PowerPC/kexec: make the update_cpus_node() function public
+>   powerpc/crash: add crash CPU hotplug support
+>   powerpc/crash: add crash memory hotplug support
+> 
+>  arch/powerpc/Kconfig                    |   4 +
+>  arch/powerpc/include/asm/kexec.h        |  15 ++
+>  arch/powerpc/include/asm/kexec_ranges.h |  20 +-
+>  arch/powerpc/kexec/Makefile             |   4 +-
+>  arch/powerpc/kexec/core_64.c            |  91 +++++++
+>  arch/powerpc/kexec/crash.c              | 196 +++++++++++++++
+>  arch/powerpc/kexec/elf_64.c             |   3 +-
+>  arch/powerpc/kexec/file_load_64.c       | 314 +++---------------------
+>  arch/powerpc/kexec/ranges.c             | 312 ++++++++++++++++++++++-
+>  arch/x86/include/asm/kexec.h            |  13 +-
+>  arch/x86/kernel/crash.c                 |  32 ++-
+>  drivers/base/cpu.c                      |   2 +-
+>  drivers/base/memory.c                   |   2 +-
+>  include/linux/crash_core.h              |  15 +-
+>  include/linux/kexec.h                   |  11 +-
+>  include/uapi/linux/kexec.h              |   1 +
+>  kernel/crash_core.c                     |  29 +--
+>  kernel/kexec.c                          |   4 +-
+>  kernel/kexec_file.c                     |   5 +
+>  19 files changed, 714 insertions(+), 359 deletions(-)
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
