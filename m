@@ -4,69 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3847C3DA4A
-	for <kexec@archiver.kernel.org>; Fri,  9 Aug 2024 01:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20A50C52D7B
+	for <kexec@archiver.kernel.org>; Fri,  9 Aug 2024 01:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=P/Wez1Pf0cweH1hOpi3MXS76ERaxhhAwR2zJFLYKPQY=; b=XyOUI1BCiMU4MU
-	BeunqGjBFFnpihbkwUTSQZqn5maRgPE6QLtnxbJ6L7RrrI0cMARYOfJhPytY9Mlvf8T2M8TZ7Pm/u
-	xjdeoCMFcNwwNdSlURNdLoKL0IUZsf24QbJWyKASL+GEaUpam/7quC23t1G6cGfntzpIUAMFE46dW
-	GZAXK0zt+txAld6o+rUhF2DtkTs7qgwNbEzRzxlod7YD6v2VUBPCMYYHpQ07anjrXgGc/z7xqdIA/
-	C6GU5KO4hc0cbYPeOCnrBj0+HHaAlFvGoQxlYRIDj6aC4Pu2Nl35RCcaLmR4uqAfvBaCNsd+epADF
-	e2bbQjKla3iz6oI23neg==;
+	List-Owner; bh=KT9svkN5C+Yolunl5VZVaNO/9qPjTbDQgsz6A7bMnY4=; b=HAFR/YxEFNMAKN
+	M0Qe2JRk7xjn1YQfhXDKpezzn8lo+fPkF6TBtsBd+F01fmkNq+x4COKAJx/BhgTHFc3XLdZMsydvq
+	33LrqVBbNtepThtWs0/0c1VwPWbapZZr248O48EYScHlpF+s2GQKY1jp9T8RKMM1xC4Zmw1c1+mF/
+	KNlm20Q7XXaWlX5aZDxBqtrhOg8ExjysfSKuwp7jdgOvJC1bLU9tIPS9BiSSqlae7qZOMliHBcgUg
+	yOt961+M0cWjpmSaRKnm8wap5/dAHj5wcrZL+nFeLQNR0pzGYoDmW5DspXUkjcUnS71ce9cfsLZwb
+	mhY5bbDhqphioh/xOTZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1scEjw-00000009yGP-1MMh;
-	Fri, 09 Aug 2024 01:48:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1scEsW-00000009zer-320s;
+	Fri, 09 Aug 2024 01:57:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1scEjt-00000009yFw-0RXs
+	id 1scErz-00000009zX3-1sbe
 	for kexec@lists.infradead.org;
-	Fri, 09 Aug 2024 01:48:22 +0000
+	Fri, 09 Aug 2024 01:56:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723168099;
+	s=mimecast20190719; t=1723168602;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hJ/62GROS7IbAy6zzGYGjfT+wmu/PxDh0548wPz6kXc=;
-	b=SChRvP12VwRoQVJhNUiw6ood19TmUOMCIBvDDZeCexyYYnLUgow2BK6E6FR+pZC2aygplH
-	eV7gDscdklElnvgTmmV3dOMUXWPljQFbIvOowoUrMBAA4wqWo80s31JBq1cpdZgsQ1zCDT
-	aUL04/GzrlGjJor7heEuTl+9XtFHUQM=
+	bh=eyrDIWJ+gklz3sPzX8cNbptE71/BtV5PAo33v+52O2s=;
+	b=fqxBGBX2mghoqOeC0pf9QujTU8GGkanx0upKqT0qUY5GUM4ka3njSJusDsNIs07wHLGnsZ
+	yCTldVSDyNdfz02SgoeHxFo1fczL2kHkLPUV0zZ+CknEG/43tCFdE3Flv8n60FF0NchOnV
+	cnLErRRx/tTdHpxqzJtnozHD/Z8AYxM=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-njZg67iROPSgfEfh6geabA-1; Thu,
- 08 Aug 2024 21:48:16 -0400
-X-MC-Unique: njZg67iROPSgfEfh6geabA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-184-lLrDmAUfPZKPUWNQa4x6NQ-1; Thu,
+ 08 Aug 2024 21:56:36 -0400
+X-MC-Unique: lLrDmAUfPZKPUWNQa4x6NQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E26F91944D30;
-	Fri,  9 Aug 2024 01:48:13 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A01801944CCC;
+	Fri,  9 Aug 2024 01:56:33 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.129])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8AB7A19560AA;
-	Fri,  9 Aug 2024 01:48:10 +0000 (UTC)
-Date: Fri, 9 Aug 2024 09:48:07 +0800
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E10BC300018D;
+	Fri,  9 Aug 2024 01:56:30 +0000 (UTC)
+Date: Fri, 9 Aug 2024 09:56:25 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Petr Tesarik <petr@tesarici.cz>, Hari Bathini <hbathini@linux.ibm.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH] Document/kexec: Generalize crash hotplug description
-Message-ID: <ZrV1V4QzDShYJSsI@MiWiFi-R3L-srv>
-References: <20240805050829.297171-1-sourabhjain@linux.ibm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Cc: vgoyal@redhat.com, dyoung@redhat.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, chenjiahao16@huawei.com,
+	akpm@linux-foundation.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH -next] crash: Fix riscv64 crash memory reserve dead loop
+Message-ID: <ZrV3SQZ43mgymxcr@MiWiFi-R3L-srv>
+References: <20240802090105.3871929-1-ruanjinjie@huawei.com>
+ <ZqywtegyIS/YXOVv@MiWiFi-R3L-srv>
+ <ZrJ1JkyDVpRRB_9e@arm.com>
+ <ZrJ60vopeGDXFZyK@arm.com>
+ <e01df216-0225-ef49-8eb3-2ccdcb424785@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240805050829.297171-1-sourabhjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <e01df216-0225-ef49-8eb3-2ccdcb424785@huawei.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240808_184821_251350_C5A7293A 
-X-CRM114-Status: GOOD (  34.85  )
+X-CRM114-CacheID: sfid-20240808_185643_565763_1CD43E14 
+X-CRM114-Status: GOOD (  29.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,156 +90,85 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/05/24 at 10:38am, Sourabh Jain wrote:
-> Commit 79365026f869 ("crash: add a new kexec flag for hotplug support")
-> generalizes the crash hotplug support to allow architectures to update
-> multiple kexec segments on CPU/Memory hotplug and not just elfcorehdr.
-> Therefore, update the relevant kernel documentation to reflect the same.
+On 08/08/24 at 03:56pm, Jinjie Ruan wrote:
 > 
-> No functional change.
 > 
-> Cc: Petr Tesarik <petr@tesarici.cz>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: x86@kernel.org
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
+> On 2024/8/7 3:34, Catalin Marinas wrote:
+> > On Tue, Aug 06, 2024 at 08:10:30PM +0100, Catalin Marinas wrote:
+> >> On Fri, Aug 02, 2024 at 06:11:01PM +0800, Baoquan He wrote:
+> >>> On 08/02/24 at 05:01pm, Jinjie Ruan wrote:
+> >>>> On RISCV64 Qemu machine with 512MB memory, cmdline "crashkernel=500M,high"
+> >>>> will cause system stall as below:
+> >>>>
+> >>>> 	 Zone ranges:
+> >>>> 	   DMA32    [mem 0x0000000080000000-0x000000009fffffff]
+> >>>> 	   Normal   empty
+> >>>> 	 Movable zone start for each node
+> >>>> 	 Early memory node ranges
+> >>>> 	   node   0: [mem 0x0000000080000000-0x000000008005ffff]
+> >>>> 	   node   0: [mem 0x0000000080060000-0x000000009fffffff]
+> >>>> 	 Initmem setup node 0 [mem 0x0000000080000000-0x000000009fffffff]
+> >>>> 	(stall here)
+> >>>>
+> >>>> commit 5d99cadf1568 ("crash: fix x86_32 crash memory reserve dead loop
+> >>>> bug") fix this on 32-bit architecture. However, the problem is not
+> >>>> completely solved. If `CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX` on 64-bit
+> >>>> architecture, for example, when system memory is equal to
+> >>>> CRASH_ADDR_LOW_MAX on RISCV64, the following infinite loop will also occur:
+> >>>
+> >>> Interesting, I didn't expect risc-v defining them like these.
+> >>>
+> >>> #define CRASH_ADDR_LOW_MAX              dma32_phys_limit
+> >>> #define CRASH_ADDR_HIGH_MAX             memblock_end_of_DRAM()
+> >>
+> >> arm64 defines the high limit as PHYS_MASK+1, it doesn't need to be
+> >> dynamic and x86 does something similar (SZ_64T). Not sure why the
+> >> generic code and riscv define it like this.
+> >>
+> >>>> 	-> reserve_crashkernel_generic() and high is true
+> >>>> 	   -> alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] fail
+> >>>> 	      -> alloc at [0, CRASH_ADDR_LOW_MAX] fail and repeatedly
+> >>>> 	         (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
+> >>>>
+> >>>> Before refactor in commit 9c08a2a139fe ("x86: kdump: use generic interface
+> >>>> to simplify crashkernel reservation code"), x86 do not try to reserve crash
+> >>>> memory at low if it fails to alloc above high 4G. However before refator in
+> >>>> commit fdc268232dbba ("arm64: kdump: use generic interface to simplify
+> >>>> crashkernel reservation"), arm64 try to reserve crash memory at low if it
+> >>>> fails above high 4G. For 64-bit systems, this attempt is less beneficial
+> >>>> than the opposite, remove it to fix this bug and align with native x86
+> >>>> implementation.
+> >>>
+> >>> And I don't like the idea crashkernel=,high failure will fallback to
+> >>> attempt in low area, so this looks good to me.
+> >>
+> >> Well, I kind of liked this behaviour. One can specify ,high as a
+> >> preference rather than forcing a range. The arm64 land has different
+> >> platforms with some constrained memory layouts. Such fallback works well
+> >> as a default command line option shipped with distros without having to
+> >> guess the SoC memory layout.
+> > 
+> > I haven't tried but it's possible that this patch also breaks those
+> > arm64 platforms with all RAM above 4GB when CRASH_ADDR_LOW_MAX is
+> > memblock_end_of_DRAM(). Here all memory would be low and in the absence
+> > of no fallback, it fails to allocate.
+> > 
+> > So, my strong preference would be to re-instate the current behaviour
+> > and work around the infinite loop in a different way.
 > 
-> Discussion about the documentation update:
-> https://lore.kernel.org/all/68d0328d-531a-4a2b-ab26-c97fd8a12e8b@linux.ibm.com/
+> Hi, baoquan, What's your opinion?
 > 
-> ---
->  .../ABI/testing/sysfs-devices-memory          |  6 ++--
->  .../ABI/testing/sysfs-devices-system-cpu      |  6 ++--
->  .../admin-guide/mm/memory-hotplug.rst         |  5 ++--
->  Documentation/core-api/cpu_hotplug.rst        | 10 ++++---
->  kernel/crash_core.c                           | 29 ++++++++++++-------
->  5 files changed, 33 insertions(+), 23 deletions(-)
+> Only this patch should be re-instate or all the 3 dead loop fix patch?
 
-The overall looks good to me, except of concern from Petr. Thanks.
+I am not sure which way Catalin suggested to take. 
 
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-memory b/Documentation/ABI/testing/sysfs-devices-memory
-> index a95e0f17c35a..421acc8e2c6b 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-memory
-> +++ b/Documentation/ABI/testing/sysfs-devices-memory
-> @@ -115,6 +115,6 @@ What:		/sys/devices/system/memory/crash_hotplug
->  Date:		Aug 2023
->  Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
->  Description:
-> -		(RO) indicates whether or not the kernel directly supports
-> -		modifying the crash elfcorehdr for memory hot un/plug and/or
-> -		on/offline changes.
-> +		(RO) indicates whether or not the kernel update of kexec
-> +		segments on memory hot un/plug and/or on/offline events,
-> +		avoiding the need to reload kdump kernel.
-> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> index 325873385b71..f4ada1cd2f96 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> @@ -703,9 +703,9 @@ What:		/sys/devices/system/cpu/crash_hotplug
->  Date:		Aug 2023
->  Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
->  Description:
-> -		(RO) indicates whether or not the kernel directly supports
-> -		modifying the crash elfcorehdr for CPU hot un/plug and/or
-> -		on/offline changes.
-> +		(RO) indicates whether or not the kernel update of kexec
-> +		segments on CPU hot un/plug and/or on/offline events,
-> +		avoiding the need to reload kdump kernel.
->  
->  What:		/sys/devices/system/cpu/enabled
->  Date:		Nov 2022
-> diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-> index 098f14d83e99..cb2c080f400c 100644
-> --- a/Documentation/admin-guide/mm/memory-hotplug.rst
-> +++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-> @@ -294,8 +294,9 @@ The following files are currently defined:
->  ``crash_hotplug``      read-only: when changes to the system memory map
->  		       occur due to hot un/plug of memory, this file contains
->  		       '1' if the kernel updates the kdump capture kernel memory
-> -		       map itself (via elfcorehdr), or '0' if userspace must update
-> -		       the kdump capture kernel memory map.
-> +		       map itself (via elfcorehdr and other relevant kexec
-> +		       segments), or '0' if userspace must update the kdump
-> +		       capture kernel memory map.
->  
->  		       Availability depends on the CONFIG_MEMORY_HOTPLUG kernel
->  		       configuration option.
-> diff --git a/Documentation/core-api/cpu_hotplug.rst b/Documentation/core-api/cpu_hotplug.rst
-> index dcb0e379e5e8..a21dbf261be7 100644
-> --- a/Documentation/core-api/cpu_hotplug.rst
-> +++ b/Documentation/core-api/cpu_hotplug.rst
-> @@ -737,8 +737,9 @@ can process the event further.
->  
->  When changes to the CPUs in the system occur, the sysfs file
->  /sys/devices/system/cpu/crash_hotplug contains '1' if the kernel
-> -updates the kdump capture kernel list of CPUs itself (via elfcorehdr),
-> -or '0' if userspace must update the kdump capture kernel list of CPUs.
-> +updates the kdump capture kernel list of CPUs itself (via elfcorehdr and
-> +other relevant kexec segment), or '0' if userspace must update the kdump
-> +capture kernel list of CPUs.
->  
->  The availability depends on the CONFIG_HOTPLUG_CPU kernel configuration
->  option.
-> @@ -750,8 +751,9 @@ file can be used in a udev rule as follows:
->   SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->  
->  For a CPU hot un/plug event, if the architecture supports kernel updates
-> -of the elfcorehdr (which contains the list of CPUs), then the rule skips
-> -the unload-then-reload of the kdump capture kernel.
-> +of the elfcorehdr (which contains the list of CPUs) and other relevant
-> +kexec segments, then the rule skips the unload-then-reload of the kdump
-> +capture kernel.
->  
->  Kernel Inline Documentations Reference
->  ======================================
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 63cf89393c6e..64dad01e260b 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -520,18 +520,25 @@ int crash_check_hotplug_support(void)
->  }
->  
->  /*
-> - * To accurately reflect hot un/plug changes of cpu and memory resources
-> - * (including onling and offlining of those resources), the elfcorehdr
-> - * (which is passed to the crash kernel via the elfcorehdr= parameter)
-> - * must be updated with the new list of CPUs and memories.
-> + * To accurately reflect hot un/plug changes of CPU and Memory resources
-> + * (including onling and offlining of those resources), the relevant
-> + * kexec segments must be updated with latest CPU and Memory resources.
->   *
-> - * In order to make changes to elfcorehdr, two conditions are needed:
-> - * First, the segment containing the elfcorehdr must be large enough
-> - * to permit a growing number of resources; the elfcorehdr memory size
-> - * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
-> - * Second, purgatory must explicitly exclude the elfcorehdr from the
-> - * list of segments it checks (since the elfcorehdr changes and thus
-> - * would require an update to purgatory itself to update the digest).
-> + * Architectures must ensure two things for all segments that need
-> + * updating during hotplug events:
-> + *
-> + * 1. Segments must be large enough to accommodate a growing number of
-> + *    resources.
-> + * 2. Exclude the segments from SHA verification.
-> + *
-> + * For example, on most architectures, the elfcorehdr (which is passed
-> + * to the crash kernel via the elfcorehdr= parameter) must include the
-> + * new list of CPUs and memory. To make changes to the elfcorehdr, it
-> + * should be large enough to permit a growing number of CPU and Memory
-> + * resources. One can estimate the elfcorehdr memory size based on
-> + * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
-> + * excluded from SHA verification by default if the architecture
-> + * supports crash hotplug.
->   */
->  static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
->  {
-> -- 
-> 2.45.2
-> 
+Hi Catalin,
+
+Could you say more words about your preference so that Jinjie can
+proceed accordingly?
+
+Thanks
+Baoquan
 
 
 _______________________________________________
