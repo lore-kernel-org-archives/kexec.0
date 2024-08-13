@@ -4,102 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DB9AC52D7C
-	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 05:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 616FDC52D7B
+	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 08:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=96ubgP8fsnEWF0t8TD5FMT5sKYtYHrgOnBggKtajdwM=; b=ULyaXDOJ2GZ9wfP8V2KwbcLYke
-	UkNhGYkabDTemtRfb4a3gA6XBokb8sg8IYLt2FpT/qa+TZ5xAhYy6/48Yv+cby59K4D2Gj3C6HciJ
-	LyBRVXCc/WAIm7JvL/qgGKHekM/1jZ2sXO4bvxowyRnUK7noz5aqbDFxbzeN3+LemtVZvE3Cq9b4D
-	yuZyiNip0wsbjcn1RGZEjZASZBPf4QefqKWqO3IRit0RwEvSulzY+mqxBsuYO2CwZqnY7SlWhxLZH
-	dCpiir0KCt1zoLVdLDfH7TgT6KENTICNmE52Rwf8wa6471b5U9rCpOOEaRHezniZETgLTEHQv1fEA
-	9OT10ngQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=fd0SRvFHCgV0MahkmLPY1cFA0yQirlJ00dhP0UMYO6U=; b=du00xDGcHzoAAX
+	4q/zSKLlPWi17lhBrLCIogXSgnjPtKUI+BILNxrHPlUoZASu0njI1/jJ34BR7G4tDtm27uCBcqM1F
+	1OYYLa/raGyMpLCRUyB3zrXCMM6J8OESjiqPugLAcLD1/XoDHF42gaySL8Y+nUJAl8wLdCGbBVt/2
+	NSblkNvdnGKzDkQZootx/GNWhInaYYpS/fMhPcHksm3E4+WwIiRN2Kw2Mbx+oH1TCQpfisCMBuUi2
+	/IUUfvMpfzDqth5KV4LBQSZMY2Rx7ZSG0A9s3qE2Ee5fdD/+I955EZWwts9LTbUspMjfvjIkdSWMt
+	zIJZqHdU6/DYI7E9CobQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdk58-00000002S9U-1jgB;
-	Tue, 13 Aug 2024 05:28:30 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1sdn5t-00000002xgW-44Vo;
+	Tue, 13 Aug 2024 08:41:29 +0000
+Received: from bee.tesarici.cz ([2a03:3b40:fe:2d4::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdk54-00000002S8m-1SYG
-	for kexec@lists.infradead.org;
-	Tue, 13 Aug 2024 05:28:28 +0000
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47CNlZcL009210;
-	Tue, 13 Aug 2024 05:28:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	/lNn5nU6xFoZkgBpvGqy1oEMvMo3TWepI8F/OAlN3uQ=; b=ITmNG1XJQUhMGpOI
-	iCKpSLHyMYfLEarrxX9AUkiRSKaA6xU/3UmDMvLWvu5nBJBPbjwBjhFhHdZSvcYO
-	XknWB+ib+sT/iMuFnZA+FqmXNYiWMpFwTnX4doaksAh7M8eLvlyJyOi8QEjrlgzG
-	AXqGjZP8gumnKQygyxJesHEVAm8A4q0j3MfXGPCiRHg5I1Hu5lVozASXCNAxnAUt
-	dlpvlD3lRo40ClkAs4BYZ0Z4vF76GTKVfrwIKzH6Tr1Z2hCZyjGV6l6DfIWpcFPz
-	sHKqgVZB0KQPl4XNE1gpH3cGBsoBypIDTkNneQclTj9S5xhH4v4Af19R0zU+I56I
-	Z2C34A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wy0rpn1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 05:28:21 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47D5SL68008157;
-	Tue, 13 Aug 2024 05:28:21 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wy0rpn1a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 05:28:21 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47D3oiH3016309;
-	Tue, 13 Aug 2024 05:28:20 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40xkhphyxr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 05:28:20 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47D5SGaO48955810
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Aug 2024 05:28:18 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4437820049;
-	Tue, 13 Aug 2024 05:28:16 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D478C2004D;
-	Tue, 13 Aug 2024 05:28:13 +0000 (GMT)
-Received: from [9.43.76.60] (unknown [9.43.76.60])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 13 Aug 2024 05:28:13 +0000 (GMT)
-Message-ID: <4cbbf314-5134-4a1a-8a4d-f6f8c09104d3@linux.ibm.com>
-Date: Tue, 13 Aug 2024 10:58:12 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Document/kexec: Generalize crash hotplug description
-To: Baoquan He <bhe@redhat.com>
-Cc: Petr Tesarik <petr@tesarici.cz>, Hari Bathini <hbathini@linux.ibm.com>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20240812041651.703156-1-sourabhjain@linux.ibm.com>
- <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _t_Jy8gzm8GRubRgPR8-NNNKZC7NI_iL
-X-Proofpoint-GUID: y3oYdxfQXZBJ9XHE2X8Vd_g5qQcQ6-aA
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1sdn4s-00000002wsV-3Qm4;
+	Tue, 13 Aug 2024 08:40:30 +0000
+Received: from mordecai.tesarici.cz (unknown [193.86.92.181])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id AA57D1DD8F4;
+	Tue, 13 Aug 2024 10:40:17 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1723538417; bh=+CB3AGdZxpN1qDzpfCmR2fXPuhWenCYU98WPyCmPcbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gSKoHX1ynpXgGo54H/X1Op9pUo2k4TFLAcNL2THOGJ88fcL0FRZ6VY12qmRaM6BXW
+	 10omo4GDISaZakiQcFXihpyemDW3E3Ht3YCHwCyIK+D8q+hqhUMyE1wwLZOVKxwYDd
+	 0QyROvxzJLWewl6aob6mx9bMqOuqZcNG7M4BU09s8mzIqfu0vDEN9Gr9GqnTSeFp2d
+	 AKgQk7frb92oqwICB00izD/6IMNT55WkatoppaiNT6LFjhOr3DprcAKd6+qL/+KFxe
+	 NnHKIPj1hfwchX4wKh27babIEzyJ66CmNzTCrQ8DNR2I8jSHXNxwLmK1jTyw4jqwcj
+	 nnLBdotkEtigA==
+Date: Tue, 13 Aug 2024 10:40:06 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Baoquan He <bhe@redhat.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ vgoyal@redhat.com, dyoung@redhat.com, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, chenjiahao16@huawei.com,
+ akpm@linux-foundation.org, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH -next] crash: Fix riscv64 crash memory reserve dead loop
+Message-ID: <20240813104006.520bf42d@mordecai.tesarici.cz>
+In-Reply-To: <ZrJ60vopeGDXFZyK@arm.com>
+References: <20240802090105.3871929-1-ruanjinjie@huawei.com>
+	<ZqywtegyIS/YXOVv@MiWiFi-R3L-srv>
+	<ZrJ1JkyDVpRRB_9e@arm.com>
+	<ZrJ60vopeGDXFZyK@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-12_12,2024-08-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=897 adultscore=0 malwarescore=0 spamscore=0
- suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408130034
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240812_222826_758659_8E31EBDD 
-X-CRM114-Status: GOOD (  11.94  )
+X-CRM114-CacheID: sfid-20240813_014027_550294_3ED746BE 
+X-CRM114-Status: GOOD (  32.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,48 +74,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Baoquan,
+Hi Catalin,
 
-On 13/08/24 10:34, Baoquan He wrote:
-> On 08/12/24 at 09:46am, Sourabh Jain wrote:
-> ......
->> ---
->>
->> Changelog:
->>
->> Since v1: https://lore.kernel.org/all/20240805050829.297171-1-sourabhjain@linux.ibm.com/
->>    - Update crash_hotplug sysfs document as suggested by Petr T
->>    - Update an error message in crash_handle_hotplug_event and
->>      crash_check_hotplug_support function.
->>
->> ---
-> ......
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 63cf89393c6e..c1048893f4b6 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -505,7 +505,7 @@ int crash_check_hotplug_support(void)
->>   	crash_hotplug_lock();
->>   	/* Obtain lock while reading crash information */
->>   	if (!kexec_trylock()) {
->> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
->> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
-> Wondering why this need be updated.
+On Tue, 6 Aug 2024 20:34:42 +0100
+Catalin Marinas <catalin.marinas@arm.com> wrote:
 
-In some architectures, additional kexec segments become obsolete during 
-a hotplug event,
-so simply calling out the `elfcorehdr may be inaccurate` may not be 
-sufficient.
-Therefore, it has been generalized with the kdump image.
+> On Tue, Aug 06, 2024 at 08:10:30PM +0100, Catalin Marinas wrote:
+> > On Fri, Aug 02, 2024 at 06:11:01PM +0800, Baoquan He wrote:  
+> > > On 08/02/24 at 05:01pm, Jinjie Ruan wrote:  
+> > > > On RISCV64 Qemu machine with 512MB memory, cmdline "crashkernel=500M,high"
+> > > > will cause system stall as below:
+> > > > 
+> > > > 	 Zone ranges:
+> > > > 	   DMA32    [mem 0x0000000080000000-0x000000009fffffff]
+> > > > 	   Normal   empty
+> > > > 	 Movable zone start for each node
+> > > > 	 Early memory node ranges
+> > > > 	   node   0: [mem 0x0000000080000000-0x000000008005ffff]
+> > > > 	   node   0: [mem 0x0000000080060000-0x000000009fffffff]
+> > > > 	 Initmem setup node 0 [mem 0x0000000080000000-0x000000009fffffff]
+> > > > 	(stall here)
+> > > > 
+> > > > commit 5d99cadf1568 ("crash: fix x86_32 crash memory reserve dead loop
+> > > > bug") fix this on 32-bit architecture. However, the problem is not
+> > > > completely solved. If `CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX` on 64-bit
+> > > > architecture, for example, when system memory is equal to
+> > > > CRASH_ADDR_LOW_MAX on RISCV64, the following infinite loop will also occur:  
+> > > 
+> > > Interesting, I didn't expect risc-v defining them like these.
+> > > 
+> > > #define CRASH_ADDR_LOW_MAX              dma32_phys_limit
+> > > #define CRASH_ADDR_HIGH_MAX             memblock_end_of_DRAM()  
+> > 
+> > arm64 defines the high limit as PHYS_MASK+1, it doesn't need to be
+> > dynamic and x86 does something similar (SZ_64T). Not sure why the
+> > generic code and riscv define it like this.
+> >   
+> > > > 	-> reserve_crashkernel_generic() and high is true
+> > > > 	   -> alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] fail
+> > > > 	      -> alloc at [0, CRASH_ADDR_LOW_MAX] fail and repeatedly  
+> > > > 	         (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
+> > > > 
+> > > > Before refactor in commit 9c08a2a139fe ("x86: kdump: use generic interface
+> > > > to simplify crashkernel reservation code"), x86 do not try to reserve crash
+> > > > memory at low if it fails to alloc above high 4G. However before refator in
+> > > > commit fdc268232dbba ("arm64: kdump: use generic interface to simplify
+> > > > crashkernel reservation"), arm64 try to reserve crash memory at low if it
+> > > > fails above high 4G. For 64-bit systems, this attempt is less beneficial
+> > > > than the opposite, remove it to fix this bug and align with native x86
+> > > > implementation.  
+> > > 
+> > > And I don't like the idea crashkernel=,high failure will fallback to
+> > > attempt in low area, so this looks good to me.  
+> > 
+> > Well, I kind of liked this behaviour. One can specify ,high as a
+> > preference rather than forcing a range. The arm64 land has different
+> > platforms with some constrained memory layouts. Such fallback works well
+> > as a default command line option shipped with distros without having to
+> > guess the SoC memory layout.  
+> 
+> I haven't tried but it's possible that this patch also breaks those
+> arm64 platforms with all RAM above 4GB when CRASH_ADDR_LOW_MAX is
+> memblock_end_of_DRAM(). Here all memory would be low and in the absence
+> of no fallback, it fails to allocate.
 
+I'm afraid you've just opened a Pandora box... ;-)
 
-Thanks,
-Sourabh Jain
+Another (unrelated) patch series made us aware of a platforms where RAM
+starts at 32G, but IIUC the host bridge maps 32G-33G to bus addresses
+0-1G, and there is a device on that bus which can produce only 30-bit
+addresses.
+
+Now, what was the idea behind allocating some crash memory "low"?
+Right, it should allow the crash kernel to access devices with
+addressing constraints. So, on the above-mentioned platform, allocating
+"low" would in fact mean allocating between 32G and 33G (in host address
+domain).
+
+Should we rethink the whole concept of high/low?
+
+Petr T
 
 _______________________________________________
 kexec mailing list
