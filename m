@@ -4,72 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F24BC52D7C
-	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 03:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6550EC52D7C
+	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 05:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=o/+qZ8cZVxiTa/4LpCi2tzmpVrFSKkHFtLxm6IT4mzA=; b=hpsMIpUYxX9gpD
-	ZlhkBRcPWPhp1JPzOx2oZrQNZfFQcKDqFmya7wV0TYr3NN5kYOqqS6CEsEvaS9wYKLApliqbVzyb9
-	qdy3VVc0S8TxBgi6+HIANFTuwQ3fE7EZIbqUBcER0WQj4EQDz7F7pCMiVId5/RbfDjtZaNiJjVElL
-	yNT3xjrqkb/RmxEu6+FEeNrnDweP6wJd4fXqO/vBltwtway8FVVcOcJDa2CzhCyMP+Zp3bB6s5o5P
-	n+wGMiCl4pLF+ZNLqmlOV6/GcsVQ7b3O4SD7Kkhd/b7RJLCiOgK1hEVLoeyu7WHmlIDQnQqD0Up3Z
-	JWSjlyWSkp+cmCdjCCEg==;
+	List-Owner; bh=Gxk5cI4hyl9K278CegThaqRsifomMDqL8IQvwMDjVIw=; b=vdL3DW6MZOl00J
+	KvJggOaO+BpQW+3XF9+IQne6ezqVT2RSHPaGJdOV9/LmzZDkJUfE6URewCg9xLnf7Day3xp9jkQu0
+	fDyAjlJg4nznidX6O+67iJe40S2nYYIycy9AjnCiQnyFVg2XySpo1ezNXT5TW5WncAeDwbG/1Xkob
+	WEVjPIufSo4dM6jIUlsZJneMaRjN/KxjhxR6l8bIe7EuLaSZdXYJYQdTarpeISwiRzsQzeO+c9INJ
+	1e1AW61WoiTNfYt1Un5LCSPAo/rs2x+IBpyRegjXqCK4/9SwHnPaxjc/cRi7ikuAaYptJ1q3FdNB1
+	8TlhlezZpe2eS4i2xzCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdiGU-00000002D2W-24ps;
-	Tue, 13 Aug 2024 03:32:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sdjiW-00000002Pq4-0Bku;
+	Tue, 13 Aug 2024 05:05:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdiGS-00000002D1j-1UP2
+	id 1sdjiS-00000002PpH-1GKd
 	for kexec@lists.infradead.org;
-	Tue, 13 Aug 2024 03:32:05 +0000
+	Tue, 13 Aug 2024 05:05:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723519923;
+	s=mimecast20190719; t=1723525503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ImjO3P8y5HQjjz6vvHUXt04IUaXtaxVKMc6ROVHnaII=;
-	b=he+PoMHI2sgiEx79kBARPV/TtoTIPPoJ64MLSjIpEOexMktPxRvFUqhZR5UMbFCXG+RN9E
-	qm2g4/yvx7XoaOfTiTHEsUSzHyofKJOAF4UpE4jaaUEZ0t0WNuB8xFF2bh+22pJd8Cd4Zm
-	PabKKrxjZGCDfBwKdv8IAZYZIM6F6gM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=mQ6Iuf9HQSPpywwg6TUGGWKJbgP49L0YclpTyCUxyXs=;
+	b=awQJnOwYK4NzqYM3QrN330Mvvyo14F42+reXIPfepS06lsHyhyRA0g/+qQkus1PMCTJWrl
+	yXUKBcTsicbLkntd4ELAzECL6CvMGxpQVhV8zIHQRtygq7hPmCsXFQGmULoZkE2ZWzjk+t
+	gmAsZK0b0g/gt1DyuIMKjAdkRfQgoFQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-587-9qR12zzKML6SmeAHm7fOZg-1; Mon,
- 12 Aug 2024 23:32:00 -0400
-X-MC-Unique: 9qR12zzKML6SmeAHm7fOZg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-126-p12-A8AMMAaezDID4m6mJA-1; Tue,
+ 13 Aug 2024 01:04:59 -0400
+X-MC-Unique: p12-A8AMMAaezDID4m6mJA-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3657195420C;
-	Tue, 13 Aug 2024 03:31:57 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2263318EB22C;
+	Tue, 13 Aug 2024 05:04:57 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.25])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 49669196BE80;
-	Tue, 13 Aug 2024 03:31:54 +0000 (UTC)
-Date: Tue, 13 Aug 2024 11:31:50 +0800
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09279196BE80;
+	Tue, 13 Aug 2024 05:04:54 +0000 (UTC)
+Date: Tue, 13 Aug 2024 13:04:50 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, vgoyal@redhat.com, dyoung@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH -next v2] crash: Fix riscv64 crash memory reserve dead
- loop
-Message-ID: <ZrrTpgvC/buAY/OV@MiWiFi-R3L-srv>
-References: <20240812062017.2674441-1-ruanjinjie@huawei.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Petr Tesarik <petr@tesarici.cz>, Hari Bathini <hbathini@linux.ibm.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v2] Document/kexec: Generalize crash hotplug description
+Message-ID: <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
+References: <20240812041651.703156-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240812062017.2674441-1-ruanjinjie@huawei.com>
+In-Reply-To: <20240812041651.703156-1-sourabhjain@linux.ibm.com>
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240812_203204_487946_82DBEAD5 
-X-CRM114-Status: GOOD (  22.25  )
+X-CRM114-CacheID: sfid-20240812_220504_444918_DDF2F1E5 
+X-CRM114-Status: GOOD (  24.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,68 +83,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/12/24 at 02:20pm, Jinjie Ruan wrote:
-> On RISCV64 Qemu machine with 512MB memory, cmdline "crashkernel=500M,high"
-> will cause system stall as below:
-> 
-> 	 Zone ranges:
-> 	   DMA32    [mem 0x0000000080000000-0x000000009fffffff]
-> 	   Normal   empty
-> 	 Movable zone start for each node
-> 	 Early memory node ranges
-> 	   node   0: [mem 0x0000000080000000-0x000000008005ffff]
-> 	   node   0: [mem 0x0000000080060000-0x000000009fffffff]
-> 	 Initmem setup node 0 [mem 0x0000000080000000-0x000000009fffffff]
-> 	(stall here)
-> 
-> commit 5d99cadf1568 ("crash: fix x86_32 crash memory reserve dead loop
-> bug") fix this on 32-bit architecture. However, the problem is not
-> completely solved. If `CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX` on 64-bit
-> architecture, for example, when system memory is equal to
-> CRASH_ADDR_LOW_MAX on RISCV64, the following infinite loop will also occur:
-> 
-> 	-> reserve_crashkernel_generic() and high is true
-> 	   -> alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] fail
-> 	      -> alloc at [0, CRASH_ADDR_LOW_MAX] fail and repeatedly
-> 	         (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
-> 
-> As Catalin suggested, do not remove the ",high" reservation fallback to
-> ",low" logic which will change arm64's kdump behavior, but fix it by
-> skipping the above situation similar to commit d2f32f23190b ("crash: fix
-> x86_32 crash memory reserve dead loop").
-> 
-> After this patch, it print:
-> 	cannot allocate crashkernel (size:0x1f400000)
-> 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+On 08/12/24 at 09:46am, Sourabh Jain wrote:
+......
 > ---
-> v2:
-> - Fix it in another way suggested by Catalin.
-> - Add Suggested-by.
-> ---
->  kernel/crash_reserve.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
 > 
-> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-> index 5387269114f6..aae4a9e998d1 100644
-> --- a/kernel/crash_reserve.c
-> +++ b/kernel/crash_reserve.c
-> @@ -427,7 +427,8 @@ void __init reserve_crashkernel_generic(char *cmdline,
->  		if (high && search_end == CRASH_ADDR_HIGH_MAX) {
->  			search_end = CRASH_ADDR_LOW_MAX;
->  			search_base = 0;
-> -			goto retry;
-> +			if (search_end != CRASH_ADDR_HIGH_MAX)
-> +				goto retry;
->  		}
->  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->  			crash_size);
+> Changelog:
+> 
+> Since v1: https://lore.kernel.org/all/20240805050829.297171-1-sourabhjain@linux.ibm.com/
+>   - Update crash_hotplug sysfs document as suggested by Petr T
+>   - Update an error message in crash_handle_hotplug_event and
+>     crash_check_hotplug_support function.
+> 
+> ---
+......
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 63cf89393c6e..c1048893f4b6 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -505,7 +505,7 @@ int crash_check_hotplug_support(void)
+>  	crash_hotplug_lock();
+>  	/* Obtain lock while reading crash information */
+>  	if (!kexec_trylock()) {
+> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
+> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+
+Wondering why this need be updated.
+
+>  		crash_hotplug_unlock();
+>  		return 0;
+>  	}
+> @@ -520,18 +520,25 @@ int crash_check_hotplug_support(void)
+>  }
+>  
+>  /*
+> - * To accurately reflect hot un/plug changes of cpu and memory resources
+> - * (including onling and offlining of those resources), the elfcorehdr
+> - * (which is passed to the crash kernel via the elfcorehdr= parameter)
+> - * must be updated with the new list of CPUs and memories.
+> + * To accurately reflect hot un/plug changes of CPU and Memory resources
+> + * (including onling and offlining of those resources), the relevant
+> + * kexec segments must be updated with latest CPU and Memory resources.
+>   *
+> - * In order to make changes to elfcorehdr, two conditions are needed:
+> - * First, the segment containing the elfcorehdr must be large enough
+> - * to permit a growing number of resources; the elfcorehdr memory size
+> - * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
+> - * Second, purgatory must explicitly exclude the elfcorehdr from the
+> - * list of segments it checks (since the elfcorehdr changes and thus
+> - * would require an update to purgatory itself to update the digest).
+> + * Architectures must ensure two things for all segments that need
+> + * updating during hotplug events:
+> + *
+> + * 1. Segments must be large enough to accommodate a growing number of
+> + *    resources.
+> + * 2. Exclude the segments from SHA verification.
+> + *
+> + * For example, on most architectures, the elfcorehdr (which is passed
+> + * to the crash kernel via the elfcorehdr= parameter) must include the
+> + * new list of CPUs and memory. To make changes to the elfcorehdr, it
+> + * should be large enough to permit a growing number of CPU and Memory
+> + * resources. One can estimate the elfcorehdr memory size based on
+> + * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
+> + * excluded from SHA verification by default if the architecture
+> + * supports crash hotplug.
+>   */
+>  static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
+>  {
+> @@ -540,7 +547,7 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+>  	crash_hotplug_lock();
+>  	/* Obtain lock while changing crash information */
+>  	if (!kexec_trylock()) {
+> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
+> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+>  		crash_hotplug_unlock();
+>  		return;
+>  	}
 > -- 
-> 2.34.1
+> 2.45.2
 > 
 
 
