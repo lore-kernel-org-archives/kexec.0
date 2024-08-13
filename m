@@ -4,69 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6550EC52D7C
-	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 05:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DB9AC52D7C
+	for <kexec@archiver.kernel.org>; Tue, 13 Aug 2024 05:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Gxk5cI4hyl9K278CegThaqRsifomMDqL8IQvwMDjVIw=; b=vdL3DW6MZOl00J
-	KvJggOaO+BpQW+3XF9+IQne6ezqVT2RSHPaGJdOV9/LmzZDkJUfE6URewCg9xLnf7Day3xp9jkQu0
-	fDyAjlJg4nznidX6O+67iJe40S2nYYIycy9AjnCiQnyFVg2XySpo1ezNXT5TW5WncAeDwbG/1Xkob
-	WEVjPIufSo4dM6jIUlsZJneMaRjN/KxjhxR6l8bIe7EuLaSZdXYJYQdTarpeISwiRzsQzeO+c9INJ
-	1e1AW61WoiTNfYt1Un5LCSPAo/rs2x+IBpyRegjXqCK4/9SwHnPaxjc/cRi7ikuAaYptJ1q3FdNB1
-	8TlhlezZpe2eS4i2xzCA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=96ubgP8fsnEWF0t8TD5FMT5sKYtYHrgOnBggKtajdwM=; b=ULyaXDOJ2GZ9wfP8V2KwbcLYke
+	UkNhGYkabDTemtRfb4a3gA6XBokb8sg8IYLt2FpT/qa+TZ5xAhYy6/48Yv+cby59K4D2Gj3C6HciJ
+	LyBRVXCc/WAIm7JvL/qgGKHekM/1jZ2sXO4bvxowyRnUK7noz5aqbDFxbzeN3+LemtVZvE3Cq9b4D
+	yuZyiNip0wsbjcn1RGZEjZASZBPf4QefqKWqO3IRit0RwEvSulzY+mqxBsuYO2CwZqnY7SlWhxLZH
+	dCpiir0KCt1zoLVdLDfH7TgT6KENTICNmE52Rwf8wa6471b5U9rCpOOEaRHezniZETgLTEHQv1fEA
+	9OT10ngQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdjiW-00000002Pq4-0Bku;
-	Tue, 13 Aug 2024 05:05:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sdk58-00000002S9U-1jgB;
+	Tue, 13 Aug 2024 05:28:30 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdjiS-00000002PpH-1GKd
+	id 1sdk54-00000002S8m-1SYG
 	for kexec@lists.infradead.org;
-	Tue, 13 Aug 2024 05:05:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723525503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mQ6Iuf9HQSPpywwg6TUGGWKJbgP49L0YclpTyCUxyXs=;
-	b=awQJnOwYK4NzqYM3QrN330Mvvyo14F42+reXIPfepS06lsHyhyRA0g/+qQkus1PMCTJWrl
-	yXUKBcTsicbLkntd4ELAzECL6CvMGxpQVhV8zIHQRtygq7hPmCsXFQGmULoZkE2ZWzjk+t
-	gmAsZK0b0g/gt1DyuIMKjAdkRfQgoFQ=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-126-p12-A8AMMAaezDID4m6mJA-1; Tue,
- 13 Aug 2024 01:04:59 -0400
-X-MC-Unique: p12-A8AMMAaezDID4m6mJA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2263318EB22C;
-	Tue, 13 Aug 2024 05:04:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.25])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09279196BE80;
-	Tue, 13 Aug 2024 05:04:54 +0000 (UTC)
-Date: Tue, 13 Aug 2024 13:04:50 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Petr Tesarik <petr@tesarici.cz>, Hari Bathini <hbathini@linux.ibm.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+	Tue, 13 Aug 2024 05:28:28 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47CNlZcL009210;
+	Tue, 13 Aug 2024 05:28:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	/lNn5nU6xFoZkgBpvGqy1oEMvMo3TWepI8F/OAlN3uQ=; b=ITmNG1XJQUhMGpOI
+	iCKpSLHyMYfLEarrxX9AUkiRSKaA6xU/3UmDMvLWvu5nBJBPbjwBjhFhHdZSvcYO
+	XknWB+ib+sT/iMuFnZA+FqmXNYiWMpFwTnX4doaksAh7M8eLvlyJyOi8QEjrlgzG
+	AXqGjZP8gumnKQygyxJesHEVAm8A4q0j3MfXGPCiRHg5I1Hu5lVozASXCNAxnAUt
+	dlpvlD3lRo40ClkAs4BYZ0Z4vF76GTKVfrwIKzH6Tr1Z2hCZyjGV6l6DfIWpcFPz
+	sHKqgVZB0KQPl4XNE1gpH3cGBsoBypIDTkNneQclTj9S5xhH4v4Af19R0zU+I56I
+	Z2C34A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wy0rpn1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 05:28:21 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47D5SL68008157;
+	Tue, 13 Aug 2024 05:28:21 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wy0rpn1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 05:28:21 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47D3oiH3016309;
+	Tue, 13 Aug 2024 05:28:20 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40xkhphyxr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 05:28:20 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47D5SGaO48955810
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Aug 2024 05:28:18 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4437820049;
+	Tue, 13 Aug 2024 05:28:16 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D478C2004D;
+	Tue, 13 Aug 2024 05:28:13 +0000 (GMT)
+Received: from [9.43.76.60] (unknown [9.43.76.60])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 Aug 2024 05:28:13 +0000 (GMT)
+Message-ID: <4cbbf314-5134-4a1a-8a4d-f6f8c09104d3@linux.ibm.com>
+Date: Tue, 13 Aug 2024 10:58:12 +0530
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] Document/kexec: Generalize crash hotplug description
-Message-ID: <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
+To: Baoquan He <bhe@redhat.com>
+Cc: Petr Tesarik <petr@tesarici.cz>, Hari Bathini <hbathini@linux.ibm.com>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
 References: <20240812041651.703156-1-sourabhjain@linux.ibm.com>
+ <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <Zrrpcn7cnCigNfWd@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _t_Jy8gzm8GRubRgPR8-NNNKZC7NI_iL
+X-Proofpoint-GUID: y3oYdxfQXZBJ9XHE2X8Vd_g5qQcQ6-aA
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240812041651.703156-1-sourabhjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-12_12,2024-08-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=897 adultscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408130034
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240812_220504_444918_DDF2F1E5 
-X-CRM114-Status: GOOD (  24.02  )
+X-CRM114-CacheID: sfid-20240812_222826_758659_8E31EBDD 
+X-CRM114-Status: GOOD (  11.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,90 +111,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/12/24 at 09:46am, Sourabh Jain wrote:
-......
-> ---
-> 
-> Changelog:
-> 
-> Since v1: https://lore.kernel.org/all/20240805050829.297171-1-sourabhjain@linux.ibm.com/
->   - Update crash_hotplug sysfs document as suggested by Petr T
->   - Update an error message in crash_handle_hotplug_event and
->     crash_check_hotplug_support function.
-> 
-> ---
-......
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 63cf89393c6e..c1048893f4b6 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -505,7 +505,7 @@ int crash_check_hotplug_support(void)
->  	crash_hotplug_lock();
->  	/* Obtain lock while reading crash information */
->  	if (!kexec_trylock()) {
-> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
-> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+Hello Baoquan,
 
-Wondering why this need be updated.
+On 13/08/24 10:34, Baoquan He wrote:
+> On 08/12/24 at 09:46am, Sourabh Jain wrote:
+> ......
+>> ---
+>>
+>> Changelog:
+>>
+>> Since v1: https://lore.kernel.org/all/20240805050829.297171-1-sourabhjain@linux.ibm.com/
+>>    - Update crash_hotplug sysfs document as suggested by Petr T
+>>    - Update an error message in crash_handle_hotplug_event and
+>>      crash_check_hotplug_support function.
+>>
+>> ---
+> ......
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index 63cf89393c6e..c1048893f4b6 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -505,7 +505,7 @@ int crash_check_hotplug_support(void)
+>>   	crash_hotplug_lock();
+>>   	/* Obtain lock while reading crash information */
+>>   	if (!kexec_trylock()) {
+>> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
+>> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+> Wondering why this need be updated.
 
->  		crash_hotplug_unlock();
->  		return 0;
->  	}
-> @@ -520,18 +520,25 @@ int crash_check_hotplug_support(void)
->  }
->  
->  /*
-> - * To accurately reflect hot un/plug changes of cpu and memory resources
-> - * (including onling and offlining of those resources), the elfcorehdr
-> - * (which is passed to the crash kernel via the elfcorehdr= parameter)
-> - * must be updated with the new list of CPUs and memories.
-> + * To accurately reflect hot un/plug changes of CPU and Memory resources
-> + * (including onling and offlining of those resources), the relevant
-> + * kexec segments must be updated with latest CPU and Memory resources.
->   *
-> - * In order to make changes to elfcorehdr, two conditions are needed:
-> - * First, the segment containing the elfcorehdr must be large enough
-> - * to permit a growing number of resources; the elfcorehdr memory size
-> - * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
-> - * Second, purgatory must explicitly exclude the elfcorehdr from the
-> - * list of segments it checks (since the elfcorehdr changes and thus
-> - * would require an update to purgatory itself to update the digest).
-> + * Architectures must ensure two things for all segments that need
-> + * updating during hotplug events:
-> + *
-> + * 1. Segments must be large enough to accommodate a growing number of
-> + *    resources.
-> + * 2. Exclude the segments from SHA verification.
-> + *
-> + * For example, on most architectures, the elfcorehdr (which is passed
-> + * to the crash kernel via the elfcorehdr= parameter) must include the
-> + * new list of CPUs and memory. To make changes to the elfcorehdr, it
-> + * should be large enough to permit a growing number of CPU and Memory
-> + * resources. One can estimate the elfcorehdr memory size based on
-> + * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
-> + * excluded from SHA verification by default if the architecture
-> + * supports crash hotplug.
->   */
->  static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
->  {
-> @@ -540,7 +547,7 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
->  	crash_hotplug_lock();
->  	/* Obtain lock while changing crash information */
->  	if (!kexec_trylock()) {
-> -		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
-> +		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
->  		crash_hotplug_unlock();
->  		return;
->  	}
-> -- 
-> 2.45.2
-> 
+In some architectures, additional kexec segments become obsolete during 
+a hotplug event,
+so simply calling out the `elfcorehdr may be inaccurate` may not be 
+sufficient.
+Therefore, it has been generalized with the kdump image.
 
+
+Thanks,
+Sourabh Jain
 
 _______________________________________________
 kexec mailing list
