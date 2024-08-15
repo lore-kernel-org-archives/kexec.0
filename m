@@ -4,70 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AFBAC3DA7F
-	for <kexec@archiver.kernel.org>; Thu, 15 Aug 2024 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3F86C3DA7F
+	for <kexec@archiver.kernel.org>; Thu, 15 Aug 2024 19:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=wNKvFHwJ/V08P+5DMbi8g7VxcNUuttSuM2MOb7rHk6Y=; b=SE4dR8abZ+Zxst
-	zUBI3aOOD2QuqFu1WLas6RssEAlbQuBo7T/wx1Fz7d844s6thlo5FMqY3Jseg4DuNVxDeqONoEk2w
-	7bZu412Kpiy/Jue+tm76DDII0cAolsdW9nHKYQXLJYrKStKgaxGrB2eCCu5dFWy45gm/5uFcM375c
-	M+V7yEpNnk4kMVRlrIdp2lYwXgx7VpJoki8wDswzWikpZ6W/THEkynCjYW3SsTd30FiVt4T8CC8CT
-	i7moaDtd8NmGWb5Id4Y6b/8oN+3pAH+GD2n7jqYRv0WceqXmo6Q1D0YEINt2prTRSGX4M7dzbICl0
-	JM1Is4at0i+3VwwGbZlA==;
+	List-Owner; bh=rVgauMiEBnn6eerKko7/FyAuEhYRev5oEQgCHQIhQ24=; b=1pNg6AxIfWPjfu
+	WkGLmGULV16M4gJYS7h5n1k/JDTnB+lZoejlBah/6InBJ250I+x3UzQxP0Vr1+DlViITxPWh4GOf0
+	U7g0udhTOTDBAMBv5JeSr2p363OTghYsGDuY/4RHxQ+FOk0plOOareBaQ2wES23FZNmSoXDr2yIZt
+	oroO1lObIuyaSmnswz75hnRisX6ekjXsioBWOb1dsOks4wDmSG6MQ+WRJoGm0myYaMvQoxa6PcRkA
+	u/dhYxUxHXBFn/esW/nd1TiFoz/Rpt+9Xno5egQ2Z569NmqwEpLJXXw53Y25cD0u82DZs9rvW1l3Q
+	unvbvXnZeEhqkTiAk9SQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1seg5J-0000000Asra-296H;
-	Thu, 15 Aug 2024 19:24:33 +0000
-Received: from sender3-of-o59.zoho.com ([136.143.184.59])
+	id 1segQC-0000000AvTL-0XGq;
+	Thu, 15 Aug 2024 19:46:08 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1seg5H-0000000AsrC-0GSC
+	id 1seeRn-0000000Aesh-1YV3
+	for kexec@bombadil.infradead.org;
+	Thu, 15 Aug 2024 17:39:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=k1yW3lqDSNMNJ8KRaQwnFW+bmQLXz7OCYYupyBO4txs=; b=Np8Fc66gVZVWO1XrEqHT0/EV0a
+	5irKS5x+PbxNhk1OiN6pD+XEGiYfzmAilWpUtK1dTYtB913KsI2KS/0W8Z9G8hkfFZ2BdY/nDPChh
+	jE+kv1CNiIA7oVpkPXFUvpM5Wpk53IBR5IZW/kFUnTMKERW8L6a4qdIKncXiywIFSsoAZj+zFXt71
+	vkRId5DL53i86p/6tj7O1hgpHxUDvJ3MG5rMMZKNk4ZZqRC4U3QD1uBIASApKuJzUfw+ksRMsh0Xn
+	Bs+WZiL2h1OxCK6eVjQMch9oynJ6Fx4wok8hfoNH1VJTg68WUHK1FkMOkdviHodJk4Y5T2ottKDi7
+	CawwBIvw==;
+Received: from sender4-of-o51.zoho.com ([136.143.188.51])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1seeRi-00000008T9y-2aYI
 	for kexec@lists.infradead.org;
-	Thu, 15 Aug 2024 19:24:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1723749845; cv=none; 
+	Thu, 15 Aug 2024 17:39:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1723743539; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=eCR+ownc2K5nhjbnzLCk8mQRLiIfIIVGVqZyVkyxbKj5zEH/F8WuodIG4DDdZud29ubCfObYUsNlR6VzWJMRkcKydjw01hkGG2IoE0UwZEtmF6U08fziJxQq4LfARXwyaleGw2ErE3JIZSR+WviZYRjMFngQPbPyj9AIxlvsAEg=
+	b=XtGseNy4C77Qkun9eK1PM0fPYtZco/I19ax9wStj3XsehsM63o2G8LEkEnVXVrp11m6R0JzsGNLFv33xWClEax53yJ/cVO5KoeKMGdfqDyYSsuJZMgNCH94Tr46n/8p6UQaijSKzeohjTtKgE/qh7sQM6c6O1rmYfE1aXNJ2wyM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1723749845; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+UN78hyEChy5/BcN7wOK0jAZMASV1l7rKkiHw5UEFag=; 
-	b=f+b27MPFTDDwYUwBHSuMsS2XeHjmizmG6hnhRc6iQBLYirhzmyyUzmUV6qf5s5QnsBrSEPxlUe7J2m9QuDXnwHfaR91FA6ogQe/VO/OYc2lEGkEIiUdYlU8XQYvNaEJLRgugvYAgEDZ6W94gjsGKI5OOVDLLN5PVsME8OPDlVTc=
+	t=1723743539; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=k1yW3lqDSNMNJ8KRaQwnFW+bmQLXz7OCYYupyBO4txs=; 
+	b=JTM7T4rXFqt5jnG/WJsGrc4UGMnI2yC1Yba96T+vZ6JHobJC4A687NAk3Ebt9sImzaYdjdtB0oYtKZH65jzhxKhIHQjJk6ZuTV0CpWVsBiHxYapeE0MZToUFYYqe+3WHtqEeDWDrVZeYcIDB5xNLIv+ylL8h6uM0q7L6VKb75mw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=apertussolutions.com;
 	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
 	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723749845;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723743539;
 	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=+UN78hyEChy5/BcN7wOK0jAZMASV1l7rKkiHw5UEFag=;
-	b=XB5405LSOwCca8ZSFn1+Doi1AedyI6ptJvjtYUb4GcBr5IlE1r5URdz29JBsaalx
-	oFeTAOtoDjD/OVOhotQnKPNWQmhBlGMJ2yCvbc5u8s/0qlTseKPuvtLeqGK3bvLzgLJ
-	e9g7SqJ6O3MGzJuFKEOmmHe6/+E8pJWjAQO2TFU0=
-Received: by mx.zohomail.com with SMTPS id 1723749843823897.2191746657345;
-	Thu, 15 Aug 2024 12:24:03 -0700 (PDT)
-Message-ID: <32f0bc58-c0a1-4c11-bd02-c6e61b0e2eb6@apertussolutions.com>
-Date: Thu, 15 Aug 2024 15:24:00 -0400
+	bh=k1yW3lqDSNMNJ8KRaQwnFW+bmQLXz7OCYYupyBO4txs=;
+	b=vCX9b9gUcbLUptKgKJtbd6AX+UcIO83NY+v4mISA1evOj5c51XaFZNoTkefHPKhA
+	2RYcT3/+w0fGliPZCs0P2PIulpS4d5LeTrykCZHALZ0/0XuXUck16UUbBQ1PT/5oJUj
+	kwT22TRFbbFY+aqfopGNGHOoueq8bTnqaNBwV+o4=
+Received: by mx.zohomail.com with SMTPS id 1723743536581442.62993572542007;
+	Thu, 15 Aug 2024 10:38:56 -0700 (PDT)
+Message-ID: <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+Date: Thu, 15 Aug 2024 13:38:52 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 14/19] tpm: Ensure tpm is in known state at startup
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
 Content-Language: en-US
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+To: "Eric W. Biederman" <ebiederm@xmission.com>,
+ Eric Biggers <ebiggers@kernel.org>
+Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
  x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
  dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
- James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jgg@ziepe.ca,
- luto@amacapital.net, nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
- davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+ James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
+ jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+ herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
  dwmw2@infradead.org, baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
 References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-15-ross.philipson@oracle.com>
- <D1RIB8BHWRC5.3RRW0ZKV3KDVM@kernel.org>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
 From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
  xsJuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
@@ -100,11 +118,11 @@ Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
  ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
  p15jV4PCYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
  NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
-In-Reply-To: <D1RIB8BHWRC5.3RRW0ZKV3KDVM@kernel.org>
+In-Reply-To: <874jaegk8i.fsf@email.froward.int.ebiederm.org>
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240815_122431_184737_2A1617CD 
-X-CRM114-Status: GOOD (  20.62  )
+X-CRM114-CacheID: sfid-20240815_183935_153109_656BB7C5 
+X-CRM114-Status: GOOD (  19.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,91 +139,53 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/4/24 16:14, Jarkko Sakkinen wrote:
-> On Fri May 31, 2024 at 4:03 AM EEST, Ross Philipson wrote:
->> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+On 5/31/24 09:54, Eric W. Biederman wrote:
+> Eric Biggers <ebiggers@kernel.org> writes:
+> 
+>> On Thu, May 30, 2024 at 06:03:18PM -0700, Ross Philipson wrote:
+>>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>>>
+>>> For better or worse, Secure Launch needs SHA-1 and SHA-256. The
+>>> choice of hashes used lie with the platform firmware, not with
+>>> software, and is often outside of the users control.
+>>>
+>>> Even if we'd prefer to use SHA-256-only, if firmware elected to start us
+>>> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
+>>> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in order
+>>> to safely use SHA-256 for everything else.
+>>>
+>>> The SHA-1 code here has its origins in the code from the main kernel:
+>>>
+>>> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+>>>
+>>> A modified version of this code was introduced to the lib/crypto/sha1.c
+>>> to bring it in line with the SHA-256 code and allow it to be pulled into the
+>>> setup kernel in the same manner as SHA-256 is.
+>>>
+>>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 >>
->> When tis core initializes, it assumes all localities are closed. There
-> 
-> s/tis_core/tpm_tis_core/
-
-Ack.
-
->> are cases when this may not be the case. This commit addresses this by
->> ensuring all localities are closed before initializing begins.
+>> Thanks.  This explanation doesn't seem to have made it into the actual code or
+>> documentation.  Can you please get it into a more permanent location?
 >>
->> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->>   drivers/char/tpm/tpm_tis_core.c | 11 ++++++++++-
->>   include/linux/tpm.h             |  6 ++++++
->>   2 files changed, 16 insertions(+), 1 deletion(-)
+>> Also, can you point to where the "deliberately cap the SHA-1 PCRs" thing happens
+>> in the code?
 >>
->> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
->> index 7c1761bd6000..9fb53bb3e73f 100644
->> --- a/drivers/char/tpm/tpm_tis_core.c
->> +++ b/drivers/char/tpm/tpm_tis_core.c
->> @@ -1104,7 +1104,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->>   	u32 intmask;
->>   	u32 clkrun_val;
->>   	u8 rid;
->> -	int rc, probe;
->> +	int rc, probe, i;
->>   	struct tpm_chip *chip;
->>   
->>   	chip = tpmm_chip_alloc(dev, &tpm_tis);
->> @@ -1166,6 +1166,15 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->>   		goto out_err;
->>   	}
->>   
->> +	/*
->> +	 * There are environments, like Intel TXT, that may leave a TPM
+>> That paragraph is also phrased as a hypothetical, "Even if we'd prefer to use
+>> SHA-256-only".  That implies that you do not, in fact, prefer SHA-256 only.  Is
+>> that the case?  Sure, maybe there are situations where you *have* to use SHA-1,
+>> but why would you not at least *prefer* SHA-256?
 > 
-> What else at this point than Intel TXT reflecting the state of the
-> mainline?
+> Yes.  Please prefer to use SHA-256.
+> 
+> Have you considered implementing I think it is SHA1-DC (as git has) that
+> is compatible with SHA1 but blocks the known class of attacks where
+> sha1 is actively broken at this point?
 
-Leaving the TPM in Locality 2 is a requirement of the TCG D-RTM 
-specification. This will be the situation for AMD and Arm as well. The 
-comment can be updated to ref the TCG spec instead of a specific 
-implementation.
-
->> +	 * locality open. Close all localities to start from a known state.
->> +	 */
->> +	for (i = 0; i <= TPM_MAX_LOCALITY; i++) {
->> +		if (check_locality(chip, i))
->> +			tpm_tis_relinquish_locality(chip, i);
->> +	}
-> 
-> To be strict this should be enabled only for x86 platforms.
-> 
-> I.e. should be flagged.
-
-As mentioned above, this will also affect Arm.
-
->> +
->>   	/* Take control of the TPM's interrupt hardware and shut it off */
->>   	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
->>   	if (rc < 0)
->> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
->> index c17e4efbb2e5..363f7078c3a9 100644
->> --- a/include/linux/tpm.h
->> +++ b/include/linux/tpm.h
->> @@ -147,6 +147,12 @@ struct tpm_chip_seqops {
->>    */
->>   #define TPM2_MAX_CONTEXT_SIZE 4096
->>   
->> +/*
->> + * The maximum locality (0 - 4) for a TPM, as defined in section 3.2 of the
->> + * Client Platform Profile Specification.
->> + */
->> +#define TPM_MAX_LOCALITY		4
->> +
->>   struct tpm_chip {
->>   	struct device dev;
->>   	struct device devs;
-> 
-> 
-> BR, Jarkko
+We are using the kernel's implementation, addressing what the kernel 
+provides is beyond our efforts. Perhaps someone who is interested in 
+improving the kernel's SHA1 could submit a patch implementing/replacing 
+it with SHA1-DC, as I am sure the maintainers would welcome the help.
 
 v/r,
 dps
