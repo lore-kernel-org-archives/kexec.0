@@ -4,75 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26B48C531DC
-	for <kexec@archiver.kernel.org>; Fri, 16 Aug 2024 07:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A443C3DA4A
+	for <kexec@archiver.kernel.org>; Fri, 16 Aug 2024 10:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=UOuT1PmUJEyxQIqYy4uNu+ZosLYyHvHf6N3CaXPqioc=; b=AByV9IMjbvaI2v
-	UfCJPe/CRCX3r3Xdpx90QekKDYXANF0MxYYtkr+JnCya4wKHz/XN4dUsXAmVGFJ3JJhb6jR99RwL2
-	lfjH57UXIMuTVthWPof7v0sZiJxZmi34jYMWtDf7VCKmHuBMAYaiO2ro/yxxfTWZN2hzixUT6Ee0p
-	mg6NkuC6XCcPq77+om+XB0PGwpXW5bFBX0fBgUK0t/SeeJ7X+peWB0BLkYHduWxB1IIeX2WIu5aRm
-	gqyGOZEauzRicC/poixnw7zviC5UwVOHdA3/pDyOWXUfPyVGQjA9FQb1Pg3UkyjEd7R/yOh6XRPEi
-	I0B+T1j3FoLpHKWLXFLw==;
+	List-Owner; bh=iWBjHJ1BON0X0Gvf4pben5xhyMXV+VqswkkzGq4TOqg=; b=AU0molIJ7e7Gu+
+	NFPT/OqfpvNG7YMmRyxHgu+vP/2Bv/H2rrxYUmPXCtZL8DL6WcfGo+nJmmAa8mCOiP/GseYiaHrTT
+	RugoGr2b9Xja5J0vBjwVe/bVceAtUu2EZUGJzIBN7HKTcbDQo513UHN0tpXYWQOQHm+Mk8TR0ZCaW
+	OUo8IEQJMzw1aHXse4l6OSFOXh4LMHALvI91o05qzG820/GQU/Q+4paIALyfsQLlfd1XIbkUqqwf5
+	M7r7fpfMSGQQAKL/I86cRvZ/QbFz5tNjSZglxyn7n5d/6p+4CkREoGalbfBmfs4YuauiBfVQs6Dbh
+	xwJbLEO6h5lesbYRXy4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ser8v-0000000C3Dc-3aLq;
-	Fri, 16 Aug 2024 07:13:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1seuPW-0000000CcFg-2KLm;
+	Fri, 16 Aug 2024 10:42:22 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ser8s-0000000C3Au-2x3t
+	id 1seuPR-0000000CcEZ-384E
 	for kexec@lists.infradead.org;
-	Fri, 16 Aug 2024 07:13:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723792376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBq7aYZZS57mYSej0WqgMxXgRDCvCAbACBmMzM3dZj8=;
-	b=WldcU6uTZbdxOVVLAWZ87KIEpNoSUG2PA7uHFEzC3SHZoB4yiK6HfD/k3Ti1mDsAAxu9iU
-	ndZdYL6DMGsgH2wX0s2viTNW6GFw1+7/G7kJcj8haDDWr6uHf65U4KIcBRnP1Mq5rMzoE6
-	p0G+TIfJhKjBy/rYOqVSix4dZ6b2nOs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-621-tdPrMVXhPxSuZDkm0UB6fg-1; Fri,
- 16 Aug 2024 03:12:47 -0400
-X-MC-Unique: tdPrMVXhPxSuZDkm0UB6fg-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E7AF1954B11;
-	Fri, 16 Aug 2024 07:12:45 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 63C9C19560A3;
-	Fri, 16 Aug 2024 07:12:42 +0000 (UTC)
-Date: Fri, 16 Aug 2024 15:12:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Tesarik <petr.tesarik@suse.com>
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	"open list:KEXEC" <kexec@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Petr Tesarik <ptesarik@suse.com>, stable@kernel.org
-Subject: Re: [PATCH 1/1] kexec_file: fix elfcorehdr digest exclusion when
- CONFIG_CRASH_HOTPLUG=y
-Message-ID: <Zr775rzbuVP6AwMu@MiWiFi-R3L-srv>
-References: <20240805150750.170739-1-petr.tesarik@suse.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240805150750.170739-1-petr.tesarik@suse.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+	Fri, 16 Aug 2024 10:42:19 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id ECAD461DCF;
+	Fri, 16 Aug 2024 10:42:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C679C32782;
+	Fri, 16 Aug 2024 10:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723804936;
+	bh=zg3dRit0opyHfuuTVglW5AtRP4DAPWyWCTz/Rq9Op8U=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=NB193JTXK3JRQ7RSKkOV16g8BU8FoDpFZ9LrZZP3Mr/3BsNpE4kWT2iUeatduZZUe
+	 42iqfmX+LeVxQUsdm8vSGspHkZbszI5FZ3EPXdHy9uQPwn8HkZlPSmKdcwx8DF+wtm
+	 nFt0M7aq8L1mzCPQPuZUhVBGGOjDBOkbMum9ikJr/AVq3DkDb/koO8d8n6IgkN9f59
+	 BexA35uQhGZv4ph6LKZoSbT0wspZgo7Ff6avGvl0r8QC8Apl3M1iwrQYf4L1yhr7W4
+	 bYYTtbhcN8kgzIAFe1rQAe/rM0UYJS0HEr2bRTvySuQwtTKcLGMqksaTknDYo3S8qi
+	 6uwqFaJIb34bw==
+Mime-Version: 1.0
+Date: Fri, 16 Aug 2024 13:42:13 +0300
+Message-Id: <D3H9ULV1NH4M.1A8EKXWZFTEF2@kernel.org>
+Cc: "Ross Philipson" <ross.philipson@oracle.com>,
+ <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
+ <linux-efi@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
+ <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
+ <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Thomas Gleixner" <tglx@linutronix.de>, "Daniel P. Smith"
+ <dpsmith@apertussolutions.com>, "Eric W. Biederman"
+ <ebiederm@xmission.com>, "Eric Biggers" <ebiggers@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx>
+In-Reply-To: <87ttflli09.ffs@tglx>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240816_001258_832374_D3C90FA4 
-X-CRM114-Status: GOOD (  17.20  )
+X-CRM114-CacheID: sfid-20240816_034217_896304_A09D6E97 
+X-CRM114-Status: GOOD (  20.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,52 +91,53 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Andrew,
+On Thu Aug 15, 2024 at 10:10 PM EEST, Thomas Gleixner wrote:
+> On Thu, Aug 15 2024 at 13:38, Daniel P. Smith wrote:
+> > On 5/31/24 09:54, Eric W. Biederman wrote:
+> >> Eric Biggers <ebiggers@kernel.org> writes:
+> >>> That paragraph is also phrased as a hypothetical, "Even if we'd prefer to use
+> >>> SHA-256-only".  That implies that you do not, in fact, prefer SHA-256 only.  Is
+> >>> that the case?  Sure, maybe there are situations where you *have* to use SHA-1,
+> >>> but why would you not at least *prefer* SHA-256?
+> >> 
+> >> Yes.  Please prefer to use SHA-256.
+> >> 
+> >> Have you considered implementing I think it is SHA1-DC (as git has) that
+> >> is compatible with SHA1 but blocks the known class of attacks where
+> >> sha1 is actively broken at this point?
+> >
+> > We are using the kernel's implementation, addressing what the kernel 
+> > provides is beyond our efforts. Perhaps someone who is interested in 
+> > improving the kernel's SHA1 could submit a patch implementing/replacing 
+> > it with SHA1-DC, as I am sure the maintainers would welcome the help.
 
-On 08/05/24 at 05:07pm, Petr Tesarik wrote:
-> From: Petr Tesarik <ptesarik@suse.com>
-> 
-> Fix the condition to exclude the elfcorehdr segment from the SHA digest
-> calculation.
-> 
-> The j iterator is an index into the output sha_regions[] array, not into
-> the input image->segment[] array. Once it reaches image->elfcorehdr_index,
-> all subsequent segments are excluded. Besides, if the purgatory segment
-> precedes the elfcorehdr segment, the elfcorehdr may be wrongly included in
-> the calculation.
+Git also has a bit more wide than secure launch, and the timeline is
+also completely different. Git maintains legacy, while has also
+introduced SHA-256 support in 2018. This as a new feature in the kernel
+stack.
 
-Ping.
+The purpose of SHA1-DC has obviously been to extend the lifespan, not
+fix SHA-1.
 
-This is a good fix, could you pick this one into your tree?
+Linux will be better of not adding anything new related to SHA-1 or
+TPM 1.2. They still have a maintenance cost and I think that time
+would be better spent of for almost anything else (starting from
+taking your trashes out or boiling coffee) ;-)
 
-Thanks
-Baoquan
+>
+> Well, someone who is interested to get his "secure" code merged should
+> have a vested interested to have a non-broken SHA1 implementation if
+> there is a sensible requirement to use SHA1 in that new "secure" code,
+> no?
+>
+> Just for the record. The related maintainers can rightfully decide to
+> reject known broken "secure" code on a purely technical argument.
+>
+> Thanks,
+>
+>         tglx
 
-> 
-> Fixes: f7cc804a9fd4 ("kexec: exclude elfcorehdr from the segment digest")
-> Cc: stable@kernel.org
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  kernel/kexec_file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3d64290d24c9..3eedb8c226ad 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -752,7 +752,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  
->  #ifdef CONFIG_CRASH_HOTPLUG
->  		/* Exclude elfcorehdr segment to allow future changes via hotplug */
-> -		if (j == image->elfcorehdr_index)
-> +		if (i == image->elfcorehdr_index)
->  			continue;
->  #endif
->  
-> -- 
-> 2.45.2
-> 
-
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
