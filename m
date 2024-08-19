@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92B12C52D6F
-	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 14:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72D3EC5320E
+	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 14:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=s38Yt3gMos4hLW0olBfeDq9V0ebXsPfx8+Vbs7sWrSs=; b=RY0yHm9HPjcoTr
-	V6fI97ArsLpaSeQoigzssb2LV7UkIuTJ6YsVPBaiTif+cdzF0UvwewoP6jEbxbkyGObju4lm7AdzA
-	Ark/eODitbMQ4hyjxN4OohZPB1XP/hzSUzKPngWX82mkgJ0aatmn1kG+iZ1fRFwf/2okxdujmUoG0
-	etfgzkc75f4OSi/BMAmjW8Xkk1nQC527Wn6fNRDkyBx+0tX81SwkR6Vvv33jrw9+u5+IkwNKY2iMc
-	b5imzUOQw7mfnyn4hj+BPt4iEXLVY1l4jaYAxAby6WzriUzJumNmBry00vnoAuFNvfraCPrTIihFl
-	C6HJVLK2Yd+utcLK8VbA==;
+	List-Owner; bh=RK7hjG1c5rq3ruvPyMLCw8cl3JDksnQwxJ586FVMqm8=; b=dSMzIhYxhYOuzz
+	tg4bOFUGZNCdvdAlW9TK/UZyfu9yENkuVSzZ0jBzqkvU9oW09bYFyuAnV9xhHoLvpNq/Ek0J0t9Ck
+	Ns0BcV7P3VJeDujK8JfckiSFfAmQHiiNTxWNI5CKMYeMmWUGIF7Nv2OQot8N/pHX7CNUTMtZhNIvP
+	1CEDqmc4GbgZ0wm1As5I8PcDUdUKlvvPE5+hqp2AyZTpJYi6c84Gdj92V9joKM5U7dKt8NuDoKDAO
+	pyb2jmgQbGhEvnoPTndRcvW7MGIQgzeQDGnDi9GEv+AIY6O5v4dXuTpQybhjtFUqEfCTEw1MV064U
+	EOIzeZm+zwiDtD5nr83Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3mw-00000001pwa-1pfz;
-	Mon, 19 Aug 2024 14:55:18 +0000
+	id 1sg3nI-00000001q7V-0T4w;
+	Mon, 19 Aug 2024 14:55:40 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3mj-00000001psm-2HMl
+	id 1sg3nD-00000001q4f-3tkd
 	for kexec@lists.infradead.org;
-	Mon, 19 Aug 2024 14:55:07 +0000
+	Mon, 19 Aug 2024 14:55:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724079304;
+	s=mimecast20190719; t=1724079335;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wiBxTOGq9aVdhn1+CpbHzQqObWNoKSOYg9dxENZx8/E=;
-	b=Wb4QFBCD0lp1/IRyr7/AmBrZkK+swEyBvi8HHeMlNJ1WjIQrvtvzB/ZezsvfNCluHdtrSM
-	WMcTWVv42Ewhvuchr30Qu/QpKAUNVuyTVNdcWR4LuRno74FMkb5ZrJmMCh5i/FpqOSil8s
-	V1oy7JvRrmH80gFxC/xj58q2rGbamJU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=LcKEDsrUy4VHo6FTRlO8InFKgG7AEDUaPffRYgLjGFs=;
+	b=BMfd9NzAiC4LfJ8uarLXvzT9cdZucToukeOn5xuJAXHzsGtc7n0VoeU2vEaudH9yRQgw5Z
+	VLiCosJycEmkW6wSt4OWYgdAFy5zHk+F7VCl7OLXyEn+UaBCZ6+l7nbn1j61fLJo3c0t+c
+	6rI7tWt6RZDFGqomn3LIMJ1xwDnvxvE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-Ue7ktWKDOO-5JaPjXde9nA-1; Mon,
- 19 Aug 2024 10:55:00 -0400
-X-MC-Unique: Ue7ktWKDOO-5JaPjXde9nA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-U2exi1kMPfW4KE9F8i_Osg-1; Mon,
+ 19 Aug 2024 10:55:31 -0400
+X-MC-Unique: U2exi1kMPfW4KE9F8i_Osg-1
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 897141944D01;
-	Mon, 19 Aug 2024 14:54:58 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8631E1955D57;
+	Mon, 19 Aug 2024 14:55:29 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E114C19560A3;
-	Mon, 19 Aug 2024 14:54:49 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9D3B71956053;
+	Mon, 19 Aug 2024 14:55:20 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: linux-efi@vger.kernel.org
 Cc: Pingfan Liu <piliu@redhat.com>,
@@ -67,18 +67,19 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFCv2 1/9] efi/libstub: Ask efi_random_alloc() to skip unusable memory
-Date: Mon, 19 Aug 2024 22:53:34 +0800
-Message-ID: <20240819145417.23367-2-piliu@redhat.com>
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [RFCv2 4/9] efi/emulator: Turn on mmu for arm64
+Date: Mon, 19 Aug 2024 22:53:37 +0800
+Message-ID: <20240819145417.23367-5-piliu@redhat.com>
 In-Reply-To: <20240819145417.23367-1-piliu@redhat.com>
 References: <20240819145417.23367-1-piliu@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240819_075505_677387_437118E9 
-X-CRM114-Status: GOOD (  10.68  )
+X-CRM114-CacheID: sfid-20240819_075536_056289_A30E80F9 
+X-CRM114-Status: GOOD (  21.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,43 +96,243 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-efi_random_alloc() demands EFI_ALLOCATE_ADDRESS when allocate_pages(),
-but the current implement can not ensure the selected target locates
-inside free area, that is to exclude EFI_BOOT_SERVICES_*,
-EFI_RUNTIME_SERVICES_* etc.
+On arm64, when kexec switches to the new kernel, the mmu is off. So the
+efi emulator should turn on the mmu to enable the identity mapping at
+the first stage.
 
-Fix the issue by checking md->type.
+In fact, the kexec switching can run with mmu-on if it enters emulator,
+but that requires the re-arrangement of the relocate_kernel.S [1].
+After that, this patch can be drop.
+
+But let us focus on emulator itself and keep things simple for the time
+being.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20240328115656.24090-1-piliu@redhat.com/
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 To: linux-efi@vger.kernel.org
 ---
- drivers/firmware/efi/libstub/randomalloc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/firmware/efi/efi_emulator/Makefile    |   2 +-
+ .../firmware/efi/efi_emulator/arm64_proc.S    | 175 ++++++++++++++++++
+ drivers/firmware/efi/efi_emulator/entry.c     |   7 +
+ 3 files changed, 183 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/efi/efi_emulator/arm64_proc.S
 
-diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
-index c41e7b2091cdd..7304e767688f2 100644
---- a/drivers/firmware/efi/libstub/randomalloc.c
-+++ b/drivers/firmware/efi/libstub/randomalloc.c
-@@ -79,6 +79,8 @@ efi_status_t efi_random_alloc(unsigned long size,
- 		efi_memory_desc_t *md = (void *)map->map + map_offset;
- 		unsigned long slots;
+diff --git a/drivers/firmware/efi/efi_emulator/Makefile b/drivers/firmware/efi/efi_emulator/Makefile
+index d696381d168ba..9d295b77a2be3 100644
+--- a/drivers/firmware/efi/efi_emulator/Makefile
++++ b/drivers/firmware/efi/efi_emulator/Makefile
+@@ -65,7 +65,7 @@ emulator-y			:= head.o entry.o \
+ 				   core.o pe_loader.o memory.o memory_api.o config_table.o misc.o \
+ 				   device_handle.o protocol_simple_text_output.o protocol_device_path.o \
+ 				   lib.o printf.o \
+-				   amba-pl011.o
++				   amba-pl011.o arm64_proc.o
+ obj-y				:= efi_emulator.o
  
-+		if (!(md->type & (EFI_CONVENTIONAL_MEMORY || EFI_PERSISTENT_MEMORY)))
-+			continue;
- 		slots = get_entry_num_slots(md, size, ilog2(align), alloc_min,
- 					    alloc_max);
- 		MD_NUM_SLOTS(md) = slots;
-@@ -111,6 +113,9 @@ efi_status_t efi_random_alloc(unsigned long size,
- 		efi_physical_addr_t target;
- 		unsigned long pages;
  
-+		if (!(md->type & (EFI_CONVENTIONAL_MEMORY || EFI_PERSISTENT_MEMORY)))
-+			continue;
+diff --git a/drivers/firmware/efi/efi_emulator/arm64_proc.S b/drivers/firmware/efi/efi_emulator/arm64_proc.S
+new file mode 100644
+index 0000000000000..8364c459b8348
+--- /dev/null
++++ b/drivers/firmware/efi/efi_emulator/arm64_proc.S
+@@ -0,0 +1,175 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Based on arch/arm/mm/proc.S
++ *
++ * Copyright (C) 2001 Deep Blue Solutions Ltd.
++ * Copyright (C) 2012 ARM Ltd.
++ * Author: Catalin Marinas <catalin.marinas@arm.com>
++ */
 +
- 		if (total_mirrored_slots > 0 &&
- 		    !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
- 			continue;
++#include <linux/init.h>
++#include <linux/linkage.h>
++#include <linux/pgtable.h>
++#include <linux/cfi_types.h>
++#include <asm/assembler.h>
++#include <asm/asm-offsets.h>
++#include <asm/asm_pointer_auth.h>
++#include <asm/hwcap.h>
++#include <asm/kernel-pgtable.h>
++#include <asm/pgtable-hwdef.h>
++#include <asm/cpufeature.h>
++#include <asm/alternative.h>
++#include <asm/smp.h>
++#include <asm/sysreg.h>
++
++#ifdef CONFIG_ARM64_64K_PAGES
++#define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
++#elif defined(CONFIG_ARM64_16K_PAGES)
++#define TCR_TG_FLAGS	TCR_TG0_16K | TCR_TG1_16K
++#else /* CONFIG_ARM64_4K_PAGES */
++#define TCR_TG_FLAGS	TCR_TG0_4K | TCR_TG1_4K
++#endif
++
++#ifdef CONFIG_RANDOMIZE_BASE
++#define TCR_KASLR_FLAGS	TCR_NFD1
++#else
++#define TCR_KASLR_FLAGS	0
++#endif
++
++#define TCR_SMP_FLAGS	TCR_SHARED
++
++/* PTWs cacheable, inner/outer WBWA */
++#define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
++
++#ifdef CONFIG_KASAN_SW_TAGS
++#define TCR_KASAN_SW_FLAGS TCR_TBI1 | TCR_TBID1
++#else
++#define TCR_KASAN_SW_FLAGS 0
++#endif
++
++#ifdef CONFIG_KASAN_HW_TAGS
++#define TCR_MTE_FLAGS TCR_TCMA1 | TCR_TBI1 | TCR_TBID1
++#elif defined(CONFIG_ARM64_MTE)
++/*
++ * The mte_zero_clear_page_tags() implementation uses DC GZVA, which relies on
++ * TBI being enabled at EL1.
++ */
++#define TCR_MTE_FLAGS TCR_TBI1 | TCR_TBID1
++#else
++#define TCR_MTE_FLAGS 0
++#endif
++
++/*
++ * Default MAIR_EL1. MT_NORMAL_TAGGED is initially mapped as Normal memory and
++ * changed during mte_cpu_setup to Normal Tagged if the system supports MTE.
++ */
++#define MAIR_EL1_SET							\
++	(MAIR_ATTRIDX(MAIR_ATTR_DEVICE_nGnRnE, MT_DEVICE_nGnRnE) |	\
++	 MAIR_ATTRIDX(MAIR_ATTR_DEVICE_nGnRE, MT_DEVICE_nGnRE) |	\
++	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL_NC, MT_NORMAL_NC) |		\
++	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL) |			\
++	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL_TAGGED))
++
++
++SYM_FUNC_START(__cpu_setup)
++	tlbi	vmalle1				// Invalidate local TLB
++	dsb	nsh
++
++	msr	cpacr_el1, xzr			// Reset cpacr_el1
++	mov_q	x1, CPACR_EL1_FPEN_EL1EN | CPACR_EL1_FPEN_EL0EN | CPACR_EL1_ZEN_EL1EN
++	msr	cpacr_el1, x1			// avoid the trap of FPSIMD in uefi code
++	isb
++	mov	x1, #1 << 12			// Reset mdscr_el1 and disable
++	msr	mdscr_el1, x1			// access to the DCC from EL0
++	reset_pmuserenr_el0 x1			// Disable PMU access from EL0
++	reset_amuserenr_el0 x1			// Disable AMU access from EL0
++
++	/*
++	 * Default values for VMSA control registers. These will be adjusted
++	 * below depending on detected CPU features.
++	 */
++	mair	.req	x17
++	tcr	.req	x16
++	mov_q	mair, MAIR_EL1_SET
++	mov_q	tcr, TCR_T0SZ(IDMAP_VA_BITS) | TCR_T1SZ(VA_BITS_MIN) | TCR_CACHE_FLAGS | \
++		     TCR_SMP_FLAGS | TCR_TG_FLAGS | TCR_KASLR_FLAGS | TCR_ASID16 | \
++		     TCR_TBI0 | TCR_A1 | TCR_KASAN_SW_FLAGS | TCR_MTE_FLAGS
++
++	tcr_clear_errata_bits tcr, x9, x5
++
++#ifdef CONFIG_ARM64_VA_BITS_52
++	mov		x9, #64 - VA_BITS
++alternative_if ARM64_HAS_VA52
++	tcr_set_t1sz	tcr, x9
++#ifdef CONFIG_ARM64_LPA2
++	orr		tcr, tcr, #TCR_DS
++#endif
++alternative_else_nop_endif
++#endif
++
++	/*
++	 * Set the IPS bits in TCR_EL1.
++	 */
++	tcr_compute_pa_size tcr, #TCR_IPS_SHIFT, x5, x6
++#ifdef CONFIG_ARM64_HW_AFDBM
++	/*
++	 * Enable hardware update of the Access Flags bit.
++	 * Hardware dirty bit management is enabled later,
++	 * via capabilities.
++	 */
++	mrs	x9, ID_AA64MMFR1_EL1
++	and	x9, x9, ID_AA64MMFR1_EL1_HAFDBS_MASK
++	cbz	x9, 1f
++	orr	tcr, tcr, #TCR_HA		// hardware Access flag update
++1:
++#endif	/* CONFIG_ARM64_HW_AFDBM */
++	msr	mair_el1, mair
++	msr	tcr_el1, tcr
++
++	mrs_s	x1, SYS_ID_AA64MMFR3_EL1
++	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
++	cbz	x1, .Lskip_indirection
++
++	/*
++	 * The PROT_* macros describing the various memory types may resolve to
++	 * C expressions if they include the PTE_MAYBE_* macros, and so they
++	 * can only be used from C code. The PIE_E* constants below are also
++	 * defined in terms of those macros, but will mask out those
++	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
++	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
++	 */
++
++#define PTE_MAYBE_NG		0
++#define PTE_MAYBE_SHARED	0
++
++	mov_q	x0, PIE_E0
++	msr	REG_PIRE0_EL1, x0
++	mov_q	x0, PIE_E1
++	msr	REG_PIR_EL1, x0
++
++#undef PTE_MAYBE_NG
++#undef PTE_MAYBE_SHARED
++
++	mov	x0, TCR2_EL1x_PIE
++	msr	REG_TCR2_EL1, x0
++
++.Lskip_indirection:
++
++	/*
++	 * Prepare SCTLR
++	 */
++	mov_q	x0, INIT_SCTLR_EL1_MMU_ON
++	ret					// return to head.S
++
++	.unreq	mair
++	.unreq	tcr
++SYM_FUNC_END(__cpu_setup)
++
++SYM_FUNC_START(enable_sctlr_el1)
++	stp     x29, x30, [sp, #-16]!
++	bl      __cpu_setup
++	set_sctlr_el1 x0
++	ldp     x29, x30, [sp], #16
++	ret
++SYM_FUNC_END(enable_sctlr_el1)
++
+diff --git a/drivers/firmware/efi/efi_emulator/entry.c b/drivers/firmware/efi/efi_emulator/entry.c
+index e5a31bd303858..835021ab0f629 100644
+--- a/drivers/firmware/efi/efi_emulator/entry.c
++++ b/drivers/firmware/efi/efi_emulator/entry.c
+@@ -13,6 +13,13 @@ extern void enable_sctlr_el1(unsigned long scratch_reg);
+ static void arch_handle_mmu(struct efi_emulator_param *param)
+ {
+ 	if (!param->mmu_on && param->pgd_root) {
++		unsigned long scratch_reg = 0;
++		// in fact, we need SYM_FUNC_START(__cpu_setup), later, set SCTLR_EL1
++		//  At present, the mmu is not ON
++		write_sysreg(param->pgd_root, ttbr0_el1);
++		isb();
++		/* scratch_reg asks the C compiler to save x0 */
++		enable_sctlr_el1(scratch_reg);
+ 	}
+ }
+ 
 -- 
 2.41.0
 
