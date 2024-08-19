@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A23B3C52D6F
-	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 14:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D669EC3DA4A
+	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 14:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=mmK3v2bRtlZUfLBLH6OyA642JGOh25Ep9d2YxwaToFU=; b=o4A1pw6tOaL0Be
-	X2pQi8FlqXM+W+BPmG+e9yYX5UY7SY266uXWEJsz1c4WH0fhHLBSLr25EzzOouolB6EOQPBLqTkDT
-	rZtCCC+1WSkjCSimkquqAgZs36IwnholOS+Bb20TFD/SNbf5pPUxaqpshTPiomr6HuviuQk1n/diV
-	Bc5NMSviMpRAUWingcSk1iF/up5SaWPrF8eNDqwM1IHdxhw96xWiInJf8n7LbApfVX8yVCvH1s2J/
-	k64Q+Pj4KwDRV2vlU5PAix6oWmNbuyRIUaTcH5SOqfrzPzuoSz5PBjvPAE6572dRASVYTthKW+vaP
-	KCPXsuW8x2nPTPravB8Q==;
+	List-Owner; bh=sR3kxo+KF55mSYtDwXkszVk/ZmPmRUw5UxsDCobUEB0=; b=rACgdHNiPyihBV
+	3ExXLiWoWw59tngheSRrPSQVxEXudDjEWOfc8hEidExDQHssZfTqrwB063LCEXjbYTHy2NG1YNKj9
+	lBE5HffdM/YVqqw+DufnerSQ7Ub9sJ7juF9MghnMCVbcRAGNDEjDmUHVv+RvYHMtt8tI33Amr/Kyg
+	M24GEJCX4XF8NpDw+Ftc+7Pfur/5ge9BrQqgd45PBlUflca6BiLQeUJRc8x+QBSf6NYMV7EeTMDg/
+	HgCq0j3pqaevHSVaF9G902ADQZxSWHlKEeg2Jb1UhFBfJwDIustEPO5kOdXdSaVqw+tvSG3teaCLD
+	gHQq3ziHbxENyEyp8g5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3nc-00000001qHS-0bdf;
-	Mon, 19 Aug 2024 14:56:00 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sg3nn-00000001qNK-2Fa0;
+	Mon, 19 Aug 2024 14:56:11 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3nX-00000001qFT-2HL5
+	id 1sg3nk-00000001qM4-3OXE
 	for kexec@lists.infradead.org;
-	Mon, 19 Aug 2024 14:55:58 +0000
+	Mon, 19 Aug 2024 14:56:10 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724079354;
+	s=mimecast20190719; t=1724079368;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nORFBheCnmBdqnoFe9uPUvA5oaRV47y8v5ImE/FbbjU=;
-	b=bJn/kuwvUNvh9oBnGbS8unFSTygnXkxqc/dyXEuYGClTipf10RwppDiIOuYOkihkjkI8wA
-	PMNt8hfL048utWvNpcU2aYPVMwiAl+v6C5HnSiVSXGi4R+qMIfRNf0BZTIgQY/2o831M6A
-	UGu4x8PC5vTKAH+WPlip+6O/OYWApfk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=uVVz1zO8BEoWzJpfVYvNY32S88JW7SsI5g78gkxTnig=;
+	b=TNs52FaUtuAp/2Q6ExFmwywxQ8wkT6rpnp2ifvFStwYfAwqhxmFHhhDTNTXrbfm2fg152d
+	B5hDnyHg/Uwpr9DdYDjqtTlyoiMY0MKTCLYWwB/bLqn+XKCYPxoBGtQSza4JREUTr7ChBl
+	GgDbVMMpigETP2xcHMdrOq12Ynvw3Ik=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-KAsVic3cOMOfMu4DfSmE5w-1; Mon,
- 19 Aug 2024 10:55:51 -0400
-X-MC-Unique: KAsVic3cOMOfMu4DfSmE5w-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-L0cX0TIwN3KmO02ATSssbA-1; Mon,
+ 19 Aug 2024 10:56:00 -0400
+X-MC-Unique: L0cX0TIwN3KmO02ATSssbA-1
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D79A1955D52;
-	Mon, 19 Aug 2024 14:55:49 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D9C761955BF7;
+	Mon, 19 Aug 2024 14:55:58 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6199619560A3;
-	Mon, 19 Aug 2024 14:55:38 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 281A419560A3;
+	Mon, 19 Aug 2024 14:55:49 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
@@ -69,17 +69,17 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	kexec@lists.infradead.org,
 	linux-efi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFCv2 6/9] arm64: kexec: Introduce a new member param_mem to kimage_arch
-Date: Mon, 19 Aug 2024 22:53:39 +0800
-Message-ID: <20240819145417.23367-7-piliu@redhat.com>
+Subject: [RFCv2 7/9] arm64: mm: Change to prototype of
+Date: Mon, 19 Aug 2024 22:53:40 +0800
+Message-ID: <20240819145417.23367-8-piliu@redhat.com>
 In-Reply-To: <20240819145417.23367-1-piliu@redhat.com>
 References: <20240819145417.23367-1-piliu@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240819_075555_809173_FE6CBC28 
-X-CRM114-Status: GOOD (  12.14  )
+X-CRM114-CacheID: sfid-20240819_075609_033375_39F7EB2C 
+X-CRM114-Status: GOOD (  16.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,92 +96,297 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-relocate_kernel will be used either to boot vmlinux directly or PE
-image. In the latter case, the efi emulator needs efi_emulator_param
-instead of dtb as input parameter.  On the other hand, dtb is still
-required to pass down through efi_emulator_param to the second kernel,
-so keep kimage_arch->dtb_mem as scratch and introduce another member
-'param_mem'
+The current allocator of __create_pgd_mapping_locked() takes only one
+parameter, which reflects the current level of page table.
 
-When booting vmlinux, param_mem equals dtb_mem.
+But kexec_page_alloc() should extra control information from the
+parameter kimage. In order to make kexec_page_alloc() as an allocator,
+re-shape the prototype of the allocator and hence of the
+__create_pgd_mapping_locked().
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 To: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm64/include/asm/kexec.h         | 1 +
- arch/arm64/kernel/asm-offsets.c        | 2 +-
- arch/arm64/kernel/machine_kexec.c      | 2 +-
- arch/arm64/kernel/machine_kexec_file.c | 1 +
- arch/arm64/kernel/relocate_kernel.S    | 2 +-
- 5 files changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/mmu.h |  6 ++++
+ arch/arm64/mm/mmu.c          | 67 ++++++++++++++++++++----------------
+ 2 files changed, 44 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 4d9cc7a76d9ca..f4c63a1a9531f 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -109,6 +109,7 @@ int machine_kexec_post_load(struct kimage *image);
- struct kimage_arch {
- 	void *dtb;
- 	phys_addr_t dtb_mem;
-+	phys_addr_t param_mem;
- 	phys_addr_t kern_reloc;
- 	phys_addr_t el2_vectors;
- 	phys_addr_t ttbr0;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 81496083c0413..8633a94fcb9f1 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -187,7 +187,7 @@ int main(void)
-   BLANK();
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 65977c7783c58..4b908e0650105 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -64,6 +64,12 @@ extern void arm64_memblock_init(void);
+ extern void paging_init(void);
+ extern void bootmem_init(void);
+ extern void __iomem *early_io_map(phys_addr_t phys, unsigned long virt);
++extern void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
++					unsigned long virt, phys_addr_t size,
++					pgprot_t prot,
++					phys_addr_t (*pgtable_alloc)(int, void *),
++					void *arg,
++					int flags);
+ extern void create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 				   phys_addr_t size, pgprot_t prot);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index c927e9312f102..875e2bc0cfb39 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -106,7 +106,7 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ }
+ EXPORT_SYMBOL(phys_mem_access_prot);
+ 
+-static phys_addr_t __init early_pgtable_alloc(int shift)
++static phys_addr_t __init early_pgtable_alloc(int shift, void *unused)
+ {
+ 	phys_addr_t phys;
+ 
+@@ -190,7 +190,8 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 				unsigned long end, phys_addr_t phys,
+ 				pgprot_t prot,
+-				phys_addr_t (*pgtable_alloc)(int),
++				phys_addr_t (*pgtable_alloc)(int, void *arg),
++				void *arg,
+ 				int flags)
+ {
+ 	unsigned long next;
+@@ -205,7 +206,7 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pmdval |= PMD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pte_phys = pgtable_alloc(PAGE_SHIFT);
++		pte_phys = pgtable_alloc(PAGE_SHIFT, arg);
+ 		ptep = pte_set_fixmap(pte_phys);
+ 		init_clear_pgtable(ptep);
+ 		ptep += pte_index(addr);
+@@ -241,7 +242,9 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 
+ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 		     phys_addr_t phys, pgprot_t prot,
+-		     phys_addr_t (*pgtable_alloc)(int), int flags)
++		     phys_addr_t (*pgtable_alloc)(int, void *),
++		     void *arg,
++		     int flags)
+ {
+ 	unsigned long next;
+ 
+@@ -263,7 +266,7 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 						      READ_ONCE(pmd_val(*pmdp))));
+ 		} else {
+ 			alloc_init_cont_pte(pmdp, addr, next, phys, prot,
+-					    pgtable_alloc, flags);
++					    pgtable_alloc, arg, flags);
+ 
+ 			BUG_ON(pmd_val(old_pmd) != 0 &&
+ 			       pmd_val(old_pmd) != READ_ONCE(pmd_val(*pmdp)));
+@@ -275,7 +278,9 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 				unsigned long end, phys_addr_t phys,
+ 				pgprot_t prot,
+-				phys_addr_t (*pgtable_alloc)(int), int flags)
++				phys_addr_t (*pgtable_alloc)(int, void *),
++				void * arg,
++				int flags)
+ {
+ 	unsigned long next;
+ 	pud_t pud = READ_ONCE(*pudp);
+@@ -292,7 +297,7 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pudval |= PUD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pmd_phys = pgtable_alloc(PMD_SHIFT);
++		pmd_phys = pgtable_alloc(PMD_SHIFT, arg);
+ 		pmdp = pmd_set_fixmap(pmd_phys);
+ 		init_clear_pgtable(pmdp);
+ 		pmdp += pmd_index(addr);
+@@ -312,7 +317,7 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 		    (flags & NO_CONT_MAPPINGS) == 0)
+ 			__prot = __pgprot(pgprot_val(prot) | PTE_CONT);
+ 
+-		init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
++		init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, arg, flags);
+ 
+ 		pmdp += pmd_index(next) - pmd_index(addr);
+ 		phys += next - addr;
+@@ -323,7 +328,8 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 
+ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 			   phys_addr_t phys, pgprot_t prot,
+-			   phys_addr_t (*pgtable_alloc)(int),
++			   phys_addr_t (*pgtable_alloc)(int, void *),
++			   void *arg,
+ 			   int flags)
+ {
+ 	unsigned long next;
+@@ -337,7 +343,7 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			p4dval |= P4D_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pud_phys = pgtable_alloc(PUD_SHIFT);
++		pud_phys = pgtable_alloc(PUD_SHIFT, arg);
+ 		pudp = pud_set_fixmap(pud_phys);
+ 		init_clear_pgtable(pudp);
+ 		pudp += pud_index(addr);
+@@ -368,7 +374,7 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 						      READ_ONCE(pud_val(*pudp))));
+ 		} else {
+ 			alloc_init_cont_pmd(pudp, addr, next, phys, prot,
+-					    pgtable_alloc, flags);
++					    pgtable_alloc, arg, flags);
+ 
+ 			BUG_ON(pud_val(old_pud) != 0 &&
+ 			       pud_val(old_pud) != READ_ONCE(pud_val(*pudp)));
+@@ -381,7 +387,8 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 
+ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 			   phys_addr_t phys, pgprot_t prot,
+-			   phys_addr_t (*pgtable_alloc)(int),
++			   phys_addr_t (*pgtable_alloc)(int, void *),
++			   void *arg,
+ 			   int flags)
+ {
+ 	unsigned long next;
+@@ -395,7 +402,7 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pgdval |= PGD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		p4d_phys = pgtable_alloc(P4D_SHIFT);
++		p4d_phys = pgtable_alloc(P4D_SHIFT, arg);
+ 		p4dp = p4d_set_fixmap(p4d_phys);
+ 		init_clear_pgtable(p4dp);
+ 		p4dp += p4d_index(addr);
+@@ -411,7 +418,7 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 		next = p4d_addr_end(addr, end);
+ 
+ 		alloc_init_pud(p4dp, addr, next, phys, prot,
+-			       pgtable_alloc, flags);
++			       pgtable_alloc, arg, flags);
+ 
+ 		BUG_ON(p4d_val(old_p4d) != 0 &&
+ 		       p4d_val(old_p4d) != READ_ONCE(p4d_val(*p4dp)));
+@@ -422,10 +429,11 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 	p4d_clear_fixmap();
+ }
+ 
+-static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
++void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ 					unsigned long virt, phys_addr_t size,
+ 					pgprot_t prot,
+-					phys_addr_t (*pgtable_alloc)(int),
++					phys_addr_t (*pgtable_alloc)(int, void *),
++					void *arg,
+ 					int flags)
+ {
+ 	unsigned long addr, end, next;
+@@ -445,7 +453,7 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+ 		alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
+-			       flags);
++			       arg, flags);
+ 		phys += next - addr;
+ 	} while (pgdp++, addr = next, addr != end);
+ }
+@@ -453,12 +461,13 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+ 				 unsigned long virt, phys_addr_t size,
+ 				 pgprot_t prot,
+-				 phys_addr_t (*pgtable_alloc)(int),
++				 phys_addr_t (*pgtable_alloc)(int, void *),
++				 void *arg,
+ 				 int flags)
+ {
+ 	mutex_lock(&fixmap_lock);
+ 	__create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
+-				    pgtable_alloc, flags);
++				    pgtable_alloc, arg, flags);
+ 	mutex_unlock(&fixmap_lock);
+ }
+ 
+@@ -466,10 +475,10 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+ extern __alias(__create_pgd_mapping_locked)
+ void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+ 			     phys_addr_t size, pgprot_t prot,
+-			     phys_addr_t (*pgtable_alloc)(int), int flags);
++			     phys_addr_t (*pgtable_alloc)(int, void *), void *arg, int flags);
  #endif
- #ifdef CONFIG_KEXEC_CORE
--  DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
-+  DEFINE(KIMAGE_ARCH_PARAM_MEM,		offsetof(struct kimage, arch.param_mem));
-   DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
-   DEFINE(KIMAGE_ARCH_ZERO_PAGE,		offsetof(struct kimage, arch.zero_page));
-   DEFINE(KIMAGE_ARCH_PHYS_OFFSET,	offsetof(struct kimage, arch.phys_offset));
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 82e2203d86a31..6958c1fc84a5a 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -192,7 +192,7 @@ void machine_kexec(struct kimage *kimage)
  
- 		cpu_install_idmap();
- 		restart = (void *)__pa_symbol(cpu_soft_restart);
--		restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
-+		restart(is_hyp_nvhe(), kimage->start, kimage->arch.param_mem,
- 			0, 0);
- 	} else {
- 		void (*kernel_reloc)(struct kimage *kimage);
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index af1ca875c52ce..9fca3a35f04d5 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -184,6 +184,7 @@ int load_other_segments(struct kimage *image,
- 		goto out_err;
- 	image->arch.dtb = dtb;
- 	image->arch.dtb_mem = kbuf.mem;
-+	image->arch.param_mem = image->arch.dtb_mem;
+-static phys_addr_t __pgd_pgtable_alloc(int shift)
++static phys_addr_t __pgd_pgtable_alloc(int shift, void *unused)
+ {
+ 	/* Page is zeroed by init_clear_pgtable() so don't duplicate effort. */
+ 	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
+@@ -478,9 +487,9 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
+ 	return __pa(ptr);
+ }
  
- 	kexec_dprintk("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 		      kbuf.mem, kbuf.bufsz, kbuf.memsz);
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index 413f899e4ac63..84e1bbb7def21 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -44,7 +44,7 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- 	 */
- 	ldr	x28, [x0, #KIMAGE_START]
- 	ldr	x27, [x0, #KIMAGE_ARCH_EL2_VECTORS]
--	ldr	x26, [x0, #KIMAGE_ARCH_DTB_MEM]
-+	ldr	x26, [x0, #KIMAGE_ARCH_PARAM_MEM]
+-static phys_addr_t pgd_pgtable_alloc(int shift)
++static phys_addr_t pgd_pgtable_alloc(int shift, void *unused)
+ {
+-	phys_addr_t pa = __pgd_pgtable_alloc(shift);
++	phys_addr_t pa = __pgd_pgtable_alloc(shift, unused);
+ 	struct ptdesc *ptdesc = page_ptdesc(phys_to_page(pa));
  
- 	/* Setup the list loop variables. */
- 	ldr	x18, [x0, #KIMAGE_ARCH_ZERO_PAGE] /* x18 = zero page for BBM */
+ 	/*
+@@ -512,7 +521,7 @@ void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 			&phys, virt);
+ 		return;
+ 	}
+-	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL,
++	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, NULL,
+ 			     NO_CONT_MAPPINGS);
+ }
+ 
+@@ -528,7 +537,7 @@ void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+ 
+ 	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+-			     pgd_pgtable_alloc, flags);
++			     pgd_pgtable_alloc, NULL, flags);
+ }
+ 
+ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
+@@ -540,7 +549,7 @@ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
+ 		return;
+ 	}
+ 
+-	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL,
++	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, NULL,
+ 			     NO_CONT_MAPPINGS);
+ 
+ 	/* flush the TLBs after updating live kernel mappings */
+@@ -551,7 +560,7 @@ static void __init __map_memblock(pgd_t *pgdp, phys_addr_t start,
+ 				  phys_addr_t end, pgprot_t prot, int flags)
+ {
+ 	__create_pgd_mapping(pgdp, start, __phys_to_virt(start), end - start,
+-			     prot, early_pgtable_alloc, flags);
++			     prot, early_pgtable_alloc, NULL, flags);
+ }
+ 
+ void __init mark_linear_text_alias_ro(void)
+@@ -742,7 +751,7 @@ static int __init map_entry_trampoline(void)
+ 	memset(tramp_pg_dir, 0, PGD_SIZE);
+ 	__create_pgd_mapping(tramp_pg_dir, pa_start, TRAMP_VALIAS,
+ 			     entry_tramp_text_size(), prot,
+-			     __pgd_pgtable_alloc, NO_BLOCK_MAPPINGS);
++			     __pgd_pgtable_alloc, NULL, NO_BLOCK_MAPPINGS);
+ 
+ 	/* Map both the text and data into the kernel page table */
+ 	for (i = 0; i < DIV_ROUND_UP(entry_tramp_text_size(), PAGE_SIZE); i++)
+@@ -1344,7 +1353,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+ 
+ 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+-			     size, params->pgprot, __pgd_pgtable_alloc,
++			     size, params->pgprot, __pgd_pgtable_alloc, NULL,
+ 			     flags);
+ 
+ 	memblock_clear_nomap(start, size);
 -- 
 2.41.0
 
