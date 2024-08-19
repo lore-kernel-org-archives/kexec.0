@@ -4,83 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35FDCC3DA4A
-	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76FF2C52D7C
+	for <kexec@archiver.kernel.org>; Mon, 19 Aug 2024 18:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Subject:Cc:To:
+	From:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+ZH8BC2Eti+B5K6EaOjYwX2cGwK6sLW6X5UQOHCVwVE=; b=X/zbGzuZc09FLj
-	lYSP1yH6tGn8rPfPjuGp6Z+VPR9sWpywYALwTZNh6obgOgSc7W/RfwKQLu+IJ8W9dxKoT3qSn9fU4
-	nDrY1s2wceZewq5F4Sw/182pC4mxYzB/9I4nMzh0OtSFGt2M/yevYaYsEtsyBTylg4JZonRfP+Ps6
-	4o1WzdAqgq7qCqfq9L45r50M6goFJFnX0BsSNmzP9yXjxdykODwQuPIPQ2akKhAIfJBsqjUuHuMon
-	qLzM7i10kCFeoMgzeJ1+03FSAmiXFQIrchgajDOEDdp+YFCUHMuRQNQrip5h0m0EXbfMTAorC0D4x
-	/XLthgfP+5z80nwYmPbg==;
+	List-Owner; bh=POF7aIyachH5KEqC/XwHe3uAl/o2li8DEUzvH5mxgJc=; b=NmNQFD2shfmWBE
+	JGgk96hCyIKS4hFGryS3HhAdX5INkowDdZftQcgz0rxWUmRTlm8wS6Fk/2UAUa5PKAxCH459E03EB
+	BLJaFsNLBi4875qcy3nFogu+SJpeodFZsq6RjclODHeGono6DJthT0ttr+VHwYsT8okNgCQO4goKu
+	cbesKQDZx3A+g5sACsRJWotH67wc5UBFH1xcUSrSlpgN5+dJosWrqCrLp37DY0mYV9jVDjO3Np0f/
+	cyrjxMQc/GMEr5sqFvKC3ODBWV1FQZyAHB+ySlAW29rn6RQwiPKM2aaTj5a6XuKEy1GBrpuCEJgJ5
+	OYMYxujmzQvDZo6Xh3LA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3o4-00000001qVg-33AR;
-	Mon, 19 Aug 2024 14:56:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sg6lP-00000002VIH-2Sz5;
+	Mon, 19 Aug 2024 18:05:55 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sg3o1-00000001qTS-0eEm
+	id 1sg6lM-00000002VGZ-235D
 	for kexec@lists.infradead.org;
-	Mon, 19 Aug 2024 14:56:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724079384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tuBomQYrL4neI9/UIiUoEKpHGEUfWQV2ECUiNi8myCc=;
-	b=YnTErmrrQifwCFhzkdCK79vcXb/0qb3sbQOgHvRkqJahhd8FKFWwpPha4t//y8won6bnEj
-	xc6MVAUijBCvPS/toDeH1aQqcoTaqGLbnpjE0+U6ow5d+WSyd+J9/8alkG4we1kIfS9t03
-	BPUELJ2Y/1/DBUguAKMHpzYhRpcPS8U=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-193-CWQEnUUsNYCtspDcNI2Rqg-1; Mon,
- 19 Aug 2024 10:56:20 -0400
-X-MC-Unique: CWQEnUUsNYCtspDcNI2Rqg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4DEEC1955D57;
-	Mon, 19 Aug 2024 14:56:18 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9A8CE1955F45;
-	Mon, 19 Aug 2024 14:56:09 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Philipp Rudo <prudo@redhat.com>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFCv2 9/9] arm64: kexec: Enable kexec_pe_image
-Date: Mon, 19 Aug 2024 22:53:42 +0800
-Message-ID: <20240819145417.23367-10-piliu@redhat.com>
-In-Reply-To: <20240819145417.23367-1-piliu@redhat.com>
-References: <20240819145417.23367-1-piliu@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+	Mon, 19 Aug 2024 18:05:53 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id EAA7660C81;
+	Mon, 19 Aug 2024 18:05:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECEA4C4AF0E;
+	Mon, 19 Aug 2024 18:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724090751;
+	bh=uLSpmh/E5SFR+0qV7rTBO7Co/W3e9kkntMp3LEBgW5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=adPXV4dvUSE0pwCC6K1YfPntPyebWDDj0fD+pJW3wr5fWWivDUihmzH65OZg46th3
+	 XY10Ijh0JETmHQ73y7+fG4I7PgmkHr7U80iDyJGFtweWoz0YsD2HhM0IN6gAouT3+4
+	 6/b3YMhfpj3SjpIxmEsO8HaHTh/HP48Vhopc1sof3H6TSo2NuxemqhNg0cvH00Yqjd
+	 FoE10+toTGsLcJhCGFlHGlNrtMPcWL+mwRQvrS4NYp3KGBtiTY7wERz0v8glMM02y5
+	 B4p9QyU2xjbp0fZfBDFDQLq1UwKFMdeTscNEQhbErYHeZ8xohsUeIfaNIwX+yr65Nd
+	 gZnFXr8lOKE8A==
+Mime-Version: 1.0
+Date: Mon, 19 Aug 2024 21:05:47 +0300
+Message-Id: <D3K35VBCWZSW.2WCXJMW1HGGD5@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Matthew Garrett" <mjg59@srcf.ucam.org>
+Cc: "Andrew Cooper" <andrew.cooper3@citrix.com>, "Thomas Gleixner"
+ <tglx@linutronix.de>, "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+ "Eric W. Biederman" <ebiederm@xmission.com>, "Eric Biggers"
+ <ebiggers@kernel.org>, "Ross Philipson" <ross.philipson@oracle.com>,
+ <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
+ <linux-efi@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <dave.hansen@linux.intel.com>, <ardb@kernel.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
+ <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+X-Mailer: aerc 0.18.2
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx> <550d15cd-5c48-4c20-92c2-f09a7e30adc9@citrix.com>
+ <D3HAP4O4OVS3.2LOSH5HMQ34OZ@kernel.org> <Zr+dTMYZNY1b9cRV@srcf.ucam.org>
+In-Reply-To: <Zr+dTMYZNY1b9cRV@srcf.ucam.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240819_075625_343776_156D5FE6 
-X-CRM114-Status: UNSURE (   9.87  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240819_110552_593845_F878CE1B 
+X-CRM114-Status: GOOD (  12.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,51 +92,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Now, anything is ready, enable PE image loading on arm64
+On Fri Aug 16, 2024 at 9:41 PM EEST, Matthew Garrett wrote:
+> On Fri, Aug 16, 2024 at 02:22:04PM +0300, Jarkko Sakkinen wrote:
+>
+> > For (any) non-legacy features we can choose, which choices we choose to
+> > support, and which we do not. This is not an oppositive view just saying
+> > how it is, and platforms set of choices is not a selling argument.
+>
+> NIST still permits the use of SHA-1 until 2030, and the most significant 
+> demonstrated weaknesses in it don't seem applicable to the use case 
+> here. We certainly shouldn't encourage any new uses of it, and anyone 
+> who's able to use SHA-2 should be doing that instead, but it feels like 
+> people are arguing about not supporting hardware that exists in the real 
+> world for vibes reasons rather than it being a realistically attackable 
+> weakness (and if we really *are* that concerned about SHA-1, why are we 
+> still supporting TPM 1.2 at all?)
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-To: linux-arm-kernel@lists.infradead.org
----
- arch/arm64/Kconfig                     | 4 ++++
- arch/arm64/kernel/machine_kexec_file.c | 3 +++
- 2 files changed, 7 insertions(+)
+We are life-supporting TPM 1.2 as long as necessary but neither the
+support is extended nor new features will gain TPM 1.2 support. So
+that is at least my policy for that feature.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5d91259ee7b53..fb6de7b4cd008 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1550,6 +1550,10 @@ config ARCH_SELECTS_KEXEC_FILE
- 	depends on KEXEC_FILE
- 	select HAVE_IMA_KEXEC if IMA
- 
-+config ARCH_SELECTS_KEXEC_PEIMAGE
-+	def_bool y
-+	depends on KEXEC_FILE
-+
- config ARCH_SUPPORTS_KEXEC_SIG
- 	def_bool y
- 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 9fca3a35f04d5..c259d871b8e33 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -24,6 +24,9 @@
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-+#ifdef CONFIG_ARCH_SELECTS_KEXEC_PEIMAGE
-+	&pe_image_ops,
-+#endif
- 	NULL
- };
- 
--- 
-2.41.0
-
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
