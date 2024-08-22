@@ -4,80 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DBF9C5320E
-	for <kexec@archiver.kernel.org>; Thu, 22 Aug 2024 09:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5927AC5320E
+	for <kexec@archiver.kernel.org>; Thu, 22 Aug 2024 10:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=agqZ95ngWXYTTMH6A651O5SI3MvJIygl6FXh42wfrU4=; b=1afaJ3xcjRr5KF
-	d3eabqP1w24ywB45v0BgGwhbSTianAh5CggjULiO1vj51R9Tmec7H5U3oUbTPpzPkXJsaw5uKH+uh
-	HfcPNYhHlIq4QFdWbpJmZG+fx/IZ+W+0223Fe1DHO6xwFpNgB4BlZ7onJ6cZRI7jVT3jmLK6jogUl
-	pS+Z/Xdb9JexvcR/8TeIV8HYGWd4kNUskKV5nCmYNOWOsiBJ3slcT8A15EajfxSwVANvvZGAc6P9c
-	BjPI6mh/L7ZIY0zxp1PnBf5ebvCGzyv9hbnTomGzKGgfDNu+v/9JOGt8qaOYEWbuy1eW2DQr2XdZ/
-	CmzziyTG+RTOwOqLrumg==;
+	List-Owner; bh=M3ugSs7eCmmh33d4yRZXg7S88Rm++m9s06brRW+qhgw=; b=ofeCNC5N9f7zw7
+	OdV4OML/h6xLUb4nlgA3NTqjtmQf7J1NOCuoJ14Vac45f+jPZ6HEfCc/SWvQvNbkTCACHqPqmCBIO
+	+8EymOHKTRU7mo6IIHHvqqxWO/0ejouQAe/qANJDrW5Y47BzNzsfgnDMefEKhcVXNRZp5fsUAxdt0
+	fzaI3FHDb5dw5Dgt3A+QZCa9NjumNzmHb9vB8epEs2hRewZRgxguAkwr2XwFz76N62erwKeTsDi1t
+	MvGVywkshRtVDPyaonEYmFa0Jkz5IskWDMGN3SAJR3fKetHfsiILF4l7FY5vpQweg+afQVENXr2ec
+	FRwAZiKpOmsEoqvXyIAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sh4G4-0000000CGgz-3Xra;
-	Thu, 22 Aug 2024 09:37:32 +0000
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66])
+	id 1sh5KI-0000000CTK6-4At4;
+	Thu, 22 Aug 2024 10:45:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sh4Fr-0000000CGcz-34tg;
-	Thu, 22 Aug 2024 09:37:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ew4XJV0bOTsY5qn2+zYb5/OFku83Mlpg9puNUd46LUI=; t=1724319439; x=1724924239; 
-	b=SMewXOvNU+uSq1xs8savaRRvsM0g4SpeIvbtCBLfOW0gG1pAyl9aTve+cWGtqpw95QsC5l5PAj5
-	c2Jz0GT9ry49P9eLvv6tBt/P3HFaVIqXrk1BUMLf2PeoiVeEq5XP78g7HZ+NocVAoT7ksLf7KwP/S
-	7Fp1sjV06ZlRHg48NHFCagJ1UyDDr6QH9gUcURAxpdaHwhprlZafrKZIdw0MPeiGa6CrGNm3FoQef
-	DYTxzfzCyyeDxkI23HIjLx3fJjMEFHHPbbiX61pOlc6fgBDuLqGETZZAlLuiU5dizM0J3YTJ6mtyO
-	gLcwynepmrEkH+/+73bAYa+1B5omyDNZ25FA==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sh4Fi-000000011Jg-3QjS; Thu, 22 Aug 2024 11:37:10 +0200
-Received: from p5b13a2bf.dip0.t-ipconnect.de ([91.19.162.191] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sh4Fi-00000003DQ3-2PLa; Thu, 22 Aug 2024 11:37:10 +0200
-Message-ID: <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related
- config items
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>, 
- Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
- debian-powerpc@lists.debian.org, x86@kernel.org, 
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-mips@vger.kernel.org,  linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev,  akpm@linux-foundation.org,
- ebiederm@xmission.com, hbathini@linux.ibm.com,  piliu@redhat.com,
- viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
-Date: Thu, 22 Aug 2024 11:37:09 +0200
-In-Reply-To: <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
-	 <20240124051254.67105-6-bhe@redhat.com>
-	 <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
-	 <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
-User-Agent: Evolution 3.52.4 
+	id 1sh5KG-0000000CTJS-0q79
+	for kexec@lists.infradead.org;
+	Thu, 22 Aug 2024 10:45:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724323554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mpnb3SemwFliUZ4/dS7d4EoXv878E5NLpOTu5i7vK3A=;
+	b=KqLX8G3Xb/JKhBK0N09IzfDvATSuV2WQ/7y6RuUYsp9bQjZYIjqCYmBbCD0iWMSpL8Y/CU
+	w9RhVx5oNiGJ4jtvAhcoSsTmCluenw2LSokokAQE2AT3/JXa0j4GBUG8DvfPQj5EzPdEck
+	7+m8g+Tsi/j/vMr+mAHKKowpjpUNPgk=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-461-GdJA3f8nPLquBmq2r6JEJA-1; Thu, 22 Aug 2024 06:45:50 -0400
+X-MC-Unique: GdJA3f8nPLquBmq2r6JEJA-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6bf7ad66ab7so34391106d6.1
+        for <kexec@lists.infradead.org>; Thu, 22 Aug 2024 03:45:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724323550; x=1724928350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mpnb3SemwFliUZ4/dS7d4EoXv878E5NLpOTu5i7vK3A=;
+        b=Gn+3UXeSE5KEBM7cEI22oduG1TOe/Cb6PN+TCwEy3sUwKw1uvs1mEJ0uyfdMgH4350
+         JexOXjOchNcOCJ45S8wwHzUdA4kMti4qMlsfioCoouV+zL3kLoPx9ZJ3TmB0IDJCkavx
+         X60S5oFUEWmDsyw0P0AlhRFIgrj6jDhJT25yHt8p3S3e5nBjP41GCtiY4cqI21bbxqEa
+         yo60RsifWqF+xfUHBmfZzQakTlpgvUxtjT2uy8EyKRrZl3UTAciqf3pm9y/ApeOHhUEh
+         jj7zceTpi6Z5F4yWEtZC0NQTELh8wPE3zBk2lh1gtwmw2XINgIt1IqoEKy257XiB50Rb
+         BErA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDZ7YodVixVmz9O+2tG+8wORIeXuNKWvrQfiRRslEI9xNUx14KdDhgqwdLEyhAK/1wpXelug==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwNMSiBo0HwzkcfM4Oryl7IrbK1cBEjBSY2lIe2D6YQbnVns7wq
+	L4kPz+TMR2f+rUy0g084hi01MxGqUDZLzy35afUQOvukKJSPoH4ODWlQDq/PxpYRC4CjdY3UFLQ
+	FTxnUV0fVY8+KG5HT9KI99mRqzeRleDIDQXEF9dEOdWMIf04VHoNtuMIchVe/kPl1bbqz5vEOgF
+	s4pVq5l3FgaJCk9aZ7zoQMvJSnXmJ2800a
+X-Received: by 2002:a05:6214:2b93:b0:6bf:60b8:d4d7 with SMTP id 6a1803df08f44-6c160c71354mr52485536d6.15.1724323549904;
+        Thu, 22 Aug 2024 03:45:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHDpqdsRgZKmZj2LlYLuSKDF48ze2sPIDVJNwTHfTXpNGLbI9DbeX+bnNBTGnZjFpbQMzRQrZC/Ggb2z0yJ5U=
+X-Received: by 2002:a05:6214:2b93:b0:6bf:60b8:d4d7 with SMTP id
+ 6a1803df08f44-6c160c71354mr52485196d6.15.1724323549541; Thu, 22 Aug 2024
+ 03:45:49 -0700 (PDT)
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 91.19.162.191
-X-ZEDAT-Hint: PO
+References: <20240819145417.23367-1-piliu@redhat.com> <ZsX5QNie3pzocSfT@gardel-login>
+ <CAF+s44S2Ph1_nFcZYy3j0Jr4yuHayb5zdNu1YXg8ce_Lf3TOgQ@mail.gmail.com> <Zsb1isJ2cYRp2jpj@gardel-login>
+In-Reply-To: <Zsb1isJ2cYRp2jpj@gardel-login>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Thu, 22 Aug 2024 18:45:38 +0800
+Message-ID: <CAF+s44TauSXk-gDgRHn=6CsQrAv8Q-QyGXkDJO+_sTh_yKde5w@mail.gmail.com>
+Subject: Re: [RFCv2 0/9] UEFI emulator for kexec
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Jan Hendrik Farr <kernel@jfarr.cc>, Philipp Rudo <prudo@redhat.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
+	Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240822_023719_948590_C494EB6D 
-X-CRM114-Status: GOOD (  13.65  )
+X-CRM114-CacheID: sfid-20240822_034556_365299_956D6DE3 
+X-CRM114-Status: GOOD (  39.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,58 +97,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
-
-On Thu, 2024-08-22 at 17:17 +0800, Baoquan He wrote:
-> > The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
-> > on 32-bit Power Macintosh systems which fail after GRUB with:
-> > 
-> > 	"Error: You can't boot a kdump kernel from OF!"
-> > 
-> > We may have to turn this off for 32-bit Power Macintosh systems.
-> > 
-> > See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
-> 
-> If so, fix need be made.
-> 
-> We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
-> post a patch? I don't know how to identify 32-bit Power Macintosh.
-> 
-> arch/powerpc/Kconfig:
-> ===
-> config ARCH_SUPPORTS_CRASH_DUMP
->         def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
->         
-> config ARCH_SELECTS_CRASH_DUMP
->         def_bool y
->         depends on CRASH_DUMP
->         select RELOCATABLE if PPC64 || 44x || PPC_85xx
-> ......
-> config PHYSICAL_START
->         hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
->         default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
->         default "0x00000000"
-
-I think the architecture does support crash dumps, but I think the kernel has to
-be booted from kexec in this case. Booting a kernel with CRASH_DUMP enabled won't
-work from Open Firmware. So, I think CRASH_DUMP should just be disabled for
-PPC_BOOK3S_32 by default and users who want to use it on these systems, will have to
-enable it explicitly.
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBBdWcgMjIsIDIwMjQgYXQgNDoyM+KAr1BNIExlbm5hcnQgUG9ldHRlcmluZyA8bXp4
+cmVhcnlAMHBvaW50ZXIuZGU+IHdyb3RlOgo+Cj4gT24gRG8sIDIyLjA4LjI0IDEzOjQyLCBQaW5n
+ZmFuIExpdSAocGlsaXVAcmVkaGF0LmNvbSkgd3JvdGU6Cj4KPiAgPiBPbiBXZWQsIEF1ZyAyMSwg
+MjAyNCBhdCAxMDoyN+KAr1BNIExlbm5hcnQgUG9ldHRlcmluZwo+ID4gPG16eHJlYXJ5QDBwb2lu
+dGVyLmRlPiB3cm90ZToKPiA+ID4KPiA+ID4gT24gTW8sIDE5LjA4LjI0IDIyOjUzLCBQaW5nZmFu
+IExpdSAocGlsaXVAcmVkaGF0LmNvbSkgd3JvdGU6Cj4gPiA+Cj4gPiA+ID4gKioqIEJhY2tncm91
+bmQgKioqCj4gPiA+ID4KPiA+ID4gPiBBcyBtb3JlIFBFIGZvcm1hdCBrZXJuZWwgaW1hZ2VzIGFy
+ZSBpbnRyb2R1Y2VkLCBpdCBwb3N0IGNoYWxsZW5nZSB0byBrZXhlYyB0bwo+ID4gPiA+IGNvcGUg
+d2l0aCB0aGUgbmV3IGZvcm1hdC4KPiA+ID4gPgo+ID4gPiA+IEluIG15IGF0dGVtcHQgdG8gYWRk
+IHN1cHBvcnQgZm9yIGFybTY0IHpib290IGltYWdlIGluIHRoZSBrZXJuZWwgWzFdLAo+ID4gPiA+
+IEFyZCBzdWdnZXN0ZWQgdXNpbmcgYW4gZW11bGF0b3IgdG8gdGFja2xlIHRoaXMgaXNzdWUuICBM
+YXN0IHllYXIsIHdoZW4KPiA+ID4gPiBKYW4gdHJpZWQgdG8gaW50cm9kdWNlIFVLSSBzdXBwb3J0
+IGluIHRoZSBrZXJuZWwgWzJdLCBBcmQgbWVudGlvbmVkIHRoZQo+ID4gPiA+IGVtdWxhdG9yIGFw
+cHJvYWNoIGFnYWluIFszXQo+ID4gPgo+ID4gPiBIbW0sIHN5c3RlbWQncyBzeXN0ZW1kLXN0dWIg
+Y29kZSB0cmllcyB0byBsb2FkIGNlcnRhaW4gInNpZGUtY2FyIgo+ID4gPiBmaWxlcyBwbGFjZWQg
+bmV4dCB0byB0aGUgVUtJLCB2aWEgdGhlIFVFRkkgZmlsZSBzeXN0ZW0gQVBJcy4gV2hhdCdzCj4g
+PiA+IHlvdXIgaW50ZW50aW9uIHdpdGggdGhlIFVFRkkgZW11bGF0b3IgcmVnYXJkaW5nIHRoYXQ/
+IFRoZSBzaWRlY2FycyBhcmUKPiA+ID4gc29tZXdoYXQgaW1wb3J0YW50LCBiZWNhdXNlIHRoYXQn
+cyBob3cgd2UgcGFyYW1ldGVyaXplIG90aGVyd2lzZQo+ID4gPiBzdHJpY3RseSBzZWFsZWQsIGlt
+bXV0YWJsZSBVS0lzLgo+ID4gPgo+ID4gSUlVQywgeW91IGFyZSByZWZlcnJpbmcgdG8gVUtJIGFk
+ZG9ucy4KPgo+IFllYWgsIFVLSSBhZGRvbnMsIGFzIHdlbGwgYXMgY3JlZGVudGlhbCBmaWxlcywg
+YW5kIHN5c2V4dC9jb25mZXh0Cj4gRERJcy4KPgo+IFRoZSBhZGRvbnMgYXJlIHRoZSBtb3N0IGlu
+dGVyZXN0aW5nIGJ0dywgYmVjYXVzZSB3ZSBsb2FkIHRoZW0gaW50bwo+IG1lbW9yeSBhcyBQRSBm
+aWxlcywgYW5kIGFzayB0aGUgVUVGSSB0byBhdXRoZW50aWNhdGUgdGhlbS4KPgo+ID4gPiBIZW5j
+ZSwgd2hhdCdzIHRoZSBzdG9yeSB0aGVyZT8gaW1wbGVtZW50IHNvbWUgZm9ybSBvZiBmcyBkcml2
+ZXIgKGZvcgo+ID4gPiB3aGF0IGZzIHByZWNpc2VseT8pIGluIHRoZSBlbXVsYXRvciB0b28/Cj4g
+PiA+Cj4gPiBBcyBmb3IgYWRkb24sIHRoYXQgaXMgYSBtaXNzaW5nIHBhcnQgaW4gdGhpcyBzZXJp
+ZXMuIEkgaGF2ZSBvdmVybG9va2VkCj4gPiB0aGlzIGlzc3VlLiBPcmlnaW5hbGx5LCBJIHRob3Vn
+aHQgdGhhdCB0aGVyZSB3YXMgbm8gbmVlZCB0byBpbXBsZW1lbnQKPiA+IGEgZGlzayBkcml2ZXIg
+YW5kIHZmYXQgZmlsZSBzeXN0ZW0sIGp1c3QgcHJlbG9hZCB0aGVtIGludG8gbWVtb3J5LCBhbmQK
+PiA+IGZpbmFsbHkgcHJlc2VudCB0aGVtIHRocm91Z2ggdGhlIHVlZmkgQVBJLiBJIHdpbGwgdGFr
+ZSBhIGNsb3NlciBsb29rCj4gPiBhdCBpdCBhbmQgY2hldyBvbiBpdC4KPgo+IEl0IGRvZXNuJ3Qg
+aGF2ZSB0byBiZSBWRkFUIGJ0dy4gSXQganVzdCBoYXMgdG8gYmUgc29tZXRoaW5nLiBGb3IKPiBl
+eGFtcGxlLCBpdCBtaWdodCBzdWZmaWNlIHRvIHRha2UgdGhlc2UgZmlsZXMsIHBhY2sgdGhlbSB1
+cCBhcyBjcGlvIG9yCj4gc28gYW5kIHBhc3MgdGhlbSBhbG9uZyB3aXRoIHRoZSBVRUZJIGV4ZWN1
+dGlvbi4gVGhlIFVFRkkgZW11bGF0b3IKPiB3b3VsZCB0aGVuIGhhdmUgdG8gZXhwb3NlIHRoZW0g
+YXMgYSBmaWxlIHN5c3RlbSB0aGVuLgo+Cj4gV2UgYXJlIG5vdCB0YWxraW5nIG9mIGEgYmF6aWxs
+aW9uIG9mIGZpbGVzIGhlcmUsIGl0J3MgbW9zdGx5IGEKPiBzbWFsbGlzaCBudW1iZXIgb2Ygc2lk
+ZWNhciBmaWxlcyBJJ2QgZXhwZWN0Lgo+ClllcywgSSB0aGluayBhYm91dCB1c2luZyA8a2V5LCB2
+YWx1ZT4sIHdoZXJlIGtleSBpcyB0aGUgZmlsZSBwYXRoLAp2YWx1ZSBpcyB0aGUgZmlsZSBjb250
+ZW50LgoKPiA+ID4gQW5kIHJlZ2FyZGluZyB0cG0/IHRwbXMgcmVxdWlyZSBkcml2ZXJzIGFuZCBp
+IGd1ZXNzIGF0IHRoZSBtb21lbnQgdWVmaQo+ID4gPiBlbXVsYXRvciB3b3VsZCBydW4gdGhvc2Ug
+YXJlbid0IGF2YWlsYWJsZSBhbnltb3JlPyBidXQgd2UgcmVhbGx5Cj4gPiA+IHNob3VsZCBkbyBh
+IHNlcGFyYXRvciBtZWFzdXJlbWVudCB0aGVuLiAoYWxzbyB0aGVyZSBuZWVkcyB0byBiZSBzb21l
+Cj4gPiA+IHdheSB0byBwYXNzIG92ZXIgbWVhc3VyZW1lbnQgbG9nIG9mIHRoYXQgbWVhc3VyZW1l
+bnQ/KQo+ID4KPiA+IEl0IGlzIGEgcGl0eSB0aGF0IGl0IGlzIGEgY29tbW9uIGlzc3VlIHBlcnNp
+c3RlbnQgd2l0aCBrZXhlYy1yZWJvb3QKPiA+IGtlcm5lbCBub3dhZGF5cy4KPiA+IEkgYW0gbm90
+IGZhbWlsaWFyIHdpdGggVFBNIGFuZCBoYXZlIG5vIGNsZWFyIGlkZWEgZm9yIHRoZSB0aW1lIGJl
+aW5nLgo+ID4gKGVtdWxhdGluZyBQbGF0Zm9ybSBDb25maWd1cmF0aW9uIFJlZ2lzdGVycyA/KS4g
+IEJ1dCBzaW5jZSB0aGlzCj4gPiBlbXVsYXRvciBpcyBoZWxkIGluc2lkZSBhIGxpbnV4IGtlcm5l
+bCBpbWFnZSwgYW5kIHRoZSBVS0kncyBzaWduYXR1cmUKPiA+IGlzIGNoZWNrZWQgZHVyaW5nIGtl
+eGVjX2ZpbGVfbG9hZC4gQWxsIG9mIHRoZW0gYXJlIHNhZmUgZnJvbQo+ID4gbW9kaWZpY2F0aW9u
+LCB0aGlzIHNlY3VyaXR5IGlzIG5vdCBhbiB1cmdlbnQgaXNzdWUuCj4KPiBIbW0sIEknZCByZWFs
+bHkgdGhpbmsgYWJvdXQgdGhpcyB3aXRoIHNvbWUgcHJpb3JpdHkuIFRoZSBtZWFzdXJlbWVudAo+
+IHN0dWZmIHNob3VsZCBub3QgYmUgYW4gYWZ0ZXJ0aG91Z2h0LCBpdCB0eXBpY2FsbHkgaGFzIG1h
+am9yCj4gaW1wbGljYXRpb25zIG9uIGhvdyB5b3UgZGVzaWduIHlvdXIgdHJhbnNpdGlvbnMsIGJl
+Y2F1c2UgbWVhc3VyZW1lbnRzCj4gb2Ygc29tZSBjb21wb25lbnQgYWx3YXlzIG5lZWQgdG8gaGFw
+cGVuICpiZWZvcmUqIHlvdSBwYXNzIGNvbnRyb2wgdG8KPiBpdCwgb3RoZXJ3aXNlIHRoZXkgYXJl
+IHBvaW50bGVzcy4KPgoKT0ssIEkgd2lsbCBsb29rIGludG8gdGhlIGRldGFpbHMgb2YgVFBNIHRv
+IHNlZSBob3cgdG8gYmFpbCBvdXQuCgpUaGFua3MsCgpQaW5nZmFuCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
