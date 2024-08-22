@@ -4,78 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18D1DC3DA4A
-	for <kexec@archiver.kernel.org>; Thu, 22 Aug 2024 09:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C913C5320E
+	for <kexec@archiver.kernel.org>; Thu, 22 Aug 2024 09:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kQops3lKSw3af9O3Bt1MsrlNZUye5qrhX/Ot7y4c+EQ=; b=cuREzmA+TPoZk4
-	oGhNcjLl0PXiA6g963om3rcWwajZvcXuWOd1srntWB942rZHuS0PRVz6ewCXlKIqo86wTIsFEYosc
-	M60XgAhTG/TbIWWMeM/B/L9K2mvagfjUE8A+vigGSzq1Mak4js8xvYEQ/O/56gHBlY4lIjLn1/vJM
-	9hlCA31er5bJdAny4rXU5ZaCexXe2EBFwHQWLv8ILg8vcRNBD3X0nWKlcpCnoZcrYMFLjMMxLcg9k
-	FORVcIPTKoAP38fcJuQiZ5UnBQA4TfL0E8V3tpZRcuypYriSvTHfMx6iPtVNYnmspQySj93MbBW0g
-	d74dnn8Hj/HDqDtW6eKA==;
+	List-Owner; bh=+502VcFhhdjLzrk4yWsF5+qIfwbLToWMoCQeGwAEw1o=; b=crQQeV6Gpx/XsJ
+	L8aS8eud77Nj5NkTRIRg/8HZUSR/t0NbrHCPr/Q5PWRu+YQ+XQlOzak/9ZWn6HJQDjzKGv9tMBb4N
+	g/gKtUaD4+Ks7rWDoG4CE7Qu2RXagML3BDwArn57X++Q7/MIzzD+zELW/hLozSYwJI9ox5ZcC/9Ml
+	g6DkAb4Wc5A6GYkUsMbuWi5FM1NVcX3y3J0RJDsk9lfmnFFpI8k83cYaz//M5aOV1PXB0qdsa8arr
+	jG1emF6RHx7ie68t9u5myJDnvpwx35bEVDsVn+OzG05UgK+y6mjXxYNiiH28eU8FKnj0s6wbqVc4s
+	VHaRzuaF7yusf+bACLGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sh3yQ-0000000CBpa-0DwC;
-	Thu, 22 Aug 2024 09:19:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sh49C-0000000CF0k-0w4f;
+	Thu, 22 Aug 2024 09:30:26 +0000
+Received: from mail-ed1-f41.google.com ([209.85.208.41])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sh3x5-0000000CBay-3Q7q
-	for kexec@lists.infradead.org;
-	Thu, 22 Aug 2024 09:17:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724318273;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TQYE68vcEgjS0sSHwEvda+5305YgNqXrXPbN5IkBuaU=;
-	b=UY1Q5HwYWh3v/HAQG051COykZLBdUrl4gl4G2eetp+cjvuJnU8R6h2ijP5kqj9fVCTnipL
-	VVd7ZLyrNn5+Gm8eMkJU3qbFReUaF8K48gI6YONQaTooqWYKChRa4gDUmg5eFoPcFza6bI
-	WC3/oECWLfTeYNt/PLz8Iz7kqRKAfBo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-L0turdIFM4OQX6QvsCLAsw-1; Thu,
- 22 Aug 2024 05:17:49 -0400
-X-MC-Unique: L0turdIFM4OQX6QvsCLAsw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3C3B1955EB3;
-	Thu, 22 Aug 2024 09:17:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A174E1956053;
-	Thu, 22 Aug 2024 09:17:41 +0000 (UTC)
-Date: Thu, 22 Aug 2024 17:17:36 +0800
-From: Baoquan He <bhe@redhat.com>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>,
-	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-	debian-powerpc@lists.debian.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
-	viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
- items
-Message-ID: <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-6-bhe@redhat.com>
- <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+	id 1sh46z-0000000CENs-0jTT;
+	Thu, 22 Aug 2024 09:28:10 +0000
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5bed83489c3so910394a12.3;
+        Thu, 22 Aug 2024 02:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724318886; x=1724923686;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VN9jzH0UPOapT4tC7UETUW4m0uJSfV3eGL/eBKYPOfY=;
+        b=qZFxkE69wtzC5E1A0fb6FcCc/CGYq3+RCTzlAlU6UeaXvMqRSLmgPZAw/OoHzCuP2X
+         txCJowirqRHJOLigvK1Hpo0phXI7GJEldW4Ft8PKG7y5eNxDYMDBqa20yI3eWoSvOqdY
+         A8cYNo/tZfmXs64+cybbZULti0yQ/BOubniMTh3xOq05BjwtHijwhQexu8aDbsa231Yt
+         eD+Cx+SefEqYFaEC3XemEg3Get5x/Mc7HMViuX1Z/QDNVq2gVl3m8Awrxd/2UuAg3n+Y
+         FjjPe5JqLqxzQPjpepdCTuQ/SEFvQA2QFKT3ncJ40p3TRZrDHG2NJX+dX5idBBbDc5N1
+         C7ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM9GcPgZ23VXV99Nm55nlESeRAsjxB605K03IAZ1Oq3y8GaUtPnoSbmzjYxHQJHdZa+Dm1Ig==@lists.infradead.org, AJvYcCWgHui2XVfQ3t8mkgQx45VfshO8GZp/ygPT0XYzmmJ2GEjY9GuVeJRgf9TRX6FI59qRA2Xh1LEgixqv2aR0l6pV1A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyS7abN5fmR2cbxQdIXdfNl+4YxuuN9Yihtjkp7vlFBOHJVq9kX
+	Ot8Oi0HG5ryg9RRJmGKrlANWovgMQghbb3UPYPQV8ujqjU7GVWQW
+X-Google-Smtp-Source: AGHT+IFEITUubqeCKs3SGRzcXStT+gGxDCeUKCXqb+5lEZiNZgwZx4Kc4+rknA3R/wvV1KzdEn9Mww==
+X-Received: by 2002:a05:6402:354c:b0:5be:ccde:c433 with SMTP id 4fb4d7f45d1cf-5bf1f25e4bdmr3098395a12.34.1724318885778;
+        Thu, 22 Aug 2024 02:28:05 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-008.fbsv.net. [2a03:2880:30ff:8::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c044ddbef7sm675537a12.16.2024.08.22.02.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2024 02:28:05 -0700 (PDT)
+Date: Thu, 22 Aug 2024 02:28:03 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org, catalin.marinas@arm.com, rmikey@meta.com
+Subject: Re: arm64: Kexec: Warning: virt_to_phys used for non-linear address
+Message-ID: <ZscEo8KJfn4xfm6X@gmail.com>
+References: <ZnFKEtqfqJkYflwL@gmail.com>
+ <ZnFxI-jCoJcO8WPw@J2N7QTR9R3>
+ <20240624113614.GA8361@willie-the-truck>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20240624113614.GA8361@willie-the-truck>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240822_021755_963420_AFF05393 
-X-CRM114-Status: GOOD (  24.32  )
+X-CRM114-CacheID: sfid-20240822_022809_235044_FF534B63 
+X-CRM114-Status: GOOD (  24.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,103 +83,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/22/24 at 09:33am, John Paul Adrian Glaubitz wrote:
-> Hi Baoquan,
-> 
-> On Wed, 2024-01-24 at 13:12 +0800, Baoquan He wrote:
-> > By splitting CRASH_RESERVE and VMCORE_INFO out from CRASH_CORE, cleaning
-> > up the dependency of FA_DMUMP on CRASH_DUMP, and moving crash codes from
-> > kexec_core.c to crash_core.c, now we can rearrange CRASH_DUMP to
-> > depend on KEXEC_CORE, and make CRASH_DUMP select CRASH_RESERVE and
-> > VMCORE_INFO.
-> > 
-> > KEXEC_CORE won't select CRASH_RESERVE and VMCORE_INFO any more because
-> > KEXEC_CORE enables codes which allocate control pages, copy
-> > kexec/kdump segments, and prepare for switching. These codes are shared
-> > by both kexec reboot and crash dumping.
-> > 
-> > Doing this makes codes and the corresponding config items more
-> > logical (the right item depends on or is selected by the left item).
-> > 
-> > PROC_KCORE -----------> VMCORE_INFO
-> > 
-> >            |----------> VMCORE_INFO
-> > FA_DUMP----|
-> >            |----------> CRASH_RESERVE
-> > 
-> >                                                 ---->VMCORE_INFO
-> >                                                /
-> >                                                |---->CRASH_RESERVE
-> > KEXEC      --|                                /|
-> >              |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
-> > KEXEC_FILE --|                               \ |
-> >                                                \---->CRASH_HOTPLUG
-> > 
-> > KEXEC      --|
-> >              |--> KEXEC_CORE--> kexec reboot
-> > KEXEC_FILE --|
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  kernel/Kconfig.kexec | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> > index 8faf27043432..6c34e63c88ff 100644
-> > --- a/kernel/Kconfig.kexec
-> > +++ b/kernel/Kconfig.kexec
-> > @@ -9,8 +9,6 @@ config VMCORE_INFO
-> >  	bool
-> >  
-> >  config KEXEC_CORE
-> > -	select VMCORE_INFO
-> > -	select CRASH_RESERVE
-> >  	bool
-> >  
-> >  config KEXEC_ELF
-> > @@ -99,8 +97,11 @@ config KEXEC_JUMP
-> >  
-> >  config CRASH_DUMP
-> >  	bool "kernel crash dumps"
-> > +	default y
-> >  	depends on ARCH_SUPPORTS_CRASH_DUMP
-> > -	select KEXEC_CORE
-> > +	depends on KEXEC_CORE
-> > +	select VMCORE_INFO
-> > +	select CRASH_RESERVE
-> >  	help
-> >  	  Generate crash dump after being started by kexec.
-> >  	  This should be normally only set in special crash dump kernels
-> 
-> The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
-> on 32-bit Power Macintosh systems which fail after GRUB with:
-> 
-> 	"Error: You can't boot a kdump kernel from OF!"
-> 
-> We may have to turn this off for 32-bit Power Macintosh systems.
-> 
-> See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+On Mon, Jun 24, 2024 at 12:36:14PM +0100, Will Deacon wrote:
+> On Tue, Jun 18, 2024 at 12:36:03PM +0100, Mark Rutland wrote:
+> > On Tue, Jun 18, 2024 at 01:49:22AM -0700, Breno Leitao wrote:
 
-If so, fix need be made.
+> > > Since __pa() is a macro to __virt_to_phys():
+> > > 
+> > > 	#define __pa(x)                 __virt_to_phys((unsigned long)(x))
+> > > 
+> > > I am curious why this address is special that makes __virt_to_phys()
+> > > unhappy.
+> > 
+> > It's a fixmap address rather than a linear-map address. Confusingly
+> > 'virt' generally means the linear map rather than any virtual address,
+> > and usually virt_to_*() only work on linear map addresses.
+> > 
+> > I'm not sure how to fix this; the major reason we fixmap the FDT is so
+> > that it can be anywhere in memory (and e.g. may not be in the linear map
+> > at all), so we can't always generate a linear map VA.
+> > 
+> > We could stash the PA at boot time, and pass this as an argument to
+> > of_kexec_alloc_and_setup_fdt().
+> 
+> Yeah, if it was passed as an additional argument to early_init_dt_scan(),
+> then the core could could track it. Alternatively, we'd need a helper
+> macro to get the PA and have an arm64-variant for the fixmap (everybody
+> else could use __pa()).
+> 
+> > Rob, any thoughts? I couldn't see a neat way of doing this, but maybe we
+> > could initialise an initial_boot_params_phys at setup time, with a bit
+> > of churn to early_init_dt_verify() and friends?
+> 
+> Rob?
 
-We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
-post a patch? I don't know how to identify 32-bit Power Macintosh.
+Hello, is there anything I can do or test to have this moving?
 
-arch/powerpc/Kconfig:
-===
-config ARCH_SUPPORTS_CRASH_DUMP
-        def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
-        
-config ARCH_SELECTS_CRASH_DUMP
-        def_bool y
-        depends on CRASH_DUMP
-        select RELOCATABLE if PPC64 || 44x || PPC_85xx
-......
-config PHYSICAL_START
-        hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
-        default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
-        default "0x00000000"
-
+Thanks
 
 _______________________________________________
 kexec mailing list
