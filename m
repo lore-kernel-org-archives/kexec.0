@@ -4,82 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04932C5321D
-	for <kexec@archiver.kernel.org>; Thu, 22 Aug 2024 18:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56D7AC5320E
+	for <kexec@archiver.kernel.org>; Fri, 23 Aug 2024 00:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=KqWsvffwL10dtMgAZXb/QCxTCE8MuoqAGZvEkRRdlG8=; b=mcZxJo5gyXUc+b
-	snXA8k6jWm0PnLtVZuUo0A9Y8Dda0oBsgrCnefiW6Vz4PVZjxfXnub+3Dtir6ZrkbatsGpp8BYx1Q
-	AKUlNf5ZGkjbXJKeYwRDZYgRUac6O/s9CysCG56b4wd8X4dKxJV9ICLk/91vtLQxprWWXfWR046rs
-	whouMoSOQfVNV9+opXEcZ8kPf/q0yCAxZOp02aGOiXovvL1U13JP7MgKMGLSK/lBZUI4ASrb5ws0f
-	nP9cHWfYzOai/0tvi4CyC8GelokphZdCg+lOfQRVNn17US9LIcrlISUBrN0m6U+qAo+1yu9JkLm1z
-	4dJi8suXEFi6mto/6ElA==;
+	List-Owner; bh=YPy7XJvq22IAo03rRpEr/sLcJmogcq5mbdUL6VRzVzU=; b=zXxVQywneI0aiO
+	aCPMVVjhbBBCwYFva2JQnGBJLFGLws4Du/IKziFa+Ak7fTJiZi8qfR4o0S9GwfP2JjhtAzYrlXboR
+	BNpa8k2a/KoXw3ElQRxgB1D2zt9cCzSVqDwPv/xvPIQAbAlE0qvlxQ/Sm3G1vCK5NXqQytkCTFiRq
+	I89LbqumA+R8GcRsTU2YS9r3aecUGfPH1i6L3E8sJ3rncRfSaJIQwRfH5azIj/JvE0rsXlH/cC8Bd
+	QAW0+WC64CIlWjuI0osOIyU3Z0XasBqEUZxmFHyyVKZt+LLBQiWi+qqCGEAtUw8UFz7eSf/4oiufw
+	AFwvU23HWE3gXF8j+G+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1shCa2-0000000Dwwh-0OTx;
-	Thu, 22 Aug 2024 18:30:42 +0000
-Received: from sender4-of-o51.zoho.com ([136.143.188.51])
+	id 1shHmz-0000000Eeas-0qKB;
+	Fri, 23 Aug 2024 00:04:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1shCZz-0000000DwwB-1Nik
+	id 1shHmv-0000000EeYF-14FM
 	for kexec@lists.infradead.org;
-	Thu, 22 Aug 2024 18:30:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1724351396; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ensxJanajnfNH4lrohozTfRp/kJ8ndAR/I5SeOCvPtvZpwA/RS3UKS9IzW5MnGlu3KwD9JZgR/559mn/GKEg7+II30GBHjPG+RHQQXv6qYJ8VO6d6q5godbIQcqq8y5Wsi0Giv6acyQMSSuozV5LPKeS57s5x4o9g8w+sokW13c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1724351396; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=MyQlkXBuBh5D5+ORO/Ajt6ntHefewg/FMRXibyLJvKQ=; 
-	b=fPGGbQa6PDJETfzD86dOnyy2nf1dhiCXht9Z7kAfpQDeTDuKfPlCsPgzwzvQy4C7qDUHI6mVeTa8+DiKlK4twHkkFW7Rmr4iNCsDZl/Ko9tv8Bi0jkphPJpIC2WLsxxLAEHGJm+ZQJ0UDZdtX2DQt0UJL9HnfiEXQoDXnto9fHQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724351396;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=MyQlkXBuBh5D5+ORO/Ajt6ntHefewg/FMRXibyLJvKQ=;
-	b=LWndbxnZqsXgRW0zxX0skSHrs/RICB+4zvHapAfsJIHhBjt1SzpRUZ8bMV2l5ynf
-	xRPob/zjMHRjYX8ykLglY1hM59kdZCqo6e2s59dYvXpsTBX6lSomKRhRHWTKfRE2XAz
-	FMGosfle+46Swp76HbPabYQUH+ZMH+FO0Ir/i62I=
-Received: by mx.zohomail.com with SMTPS id 1724351393878947.9797156192928;
-	Thu, 22 Aug 2024 11:29:53 -0700 (PDT)
-Message-ID: <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
-Date: Thu, 22 Aug 2024 14:29:48 -0400
+	Fri, 23 Aug 2024 00:04:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724371459;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HHqbq1AQSOY5EcS479bGVBSadv/yHMIWF28e/YV8WdA=;
+	b=TkML4e/uurJjQBOYeTuxhTmcHPx4B1ATzR3NnAeTn9VCZhiUE9RF4dn90l8q/EL0jaGe+1
+	0I9Zb8tTSrkeNOUN40g3rWe42CiwTd5ImTaGN65zQGBXlW8x3QXIntiFP2Kof6P74eHimF
+	CQU9Rd05CTLMiGmqGbupMaUaxx+8I60=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-Q2zfLi0YMr2QKG2BabfBhQ-1; Thu,
+ 22 Aug 2024 20:04:18 -0400
+X-MC-Unique: Q2zfLi0YMr2QKG2BabfBhQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0352B1955BF4;
+	Fri, 23 Aug 2024 00:04:14 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.51])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACCC819560A3;
+	Fri, 23 Aug 2024 00:04:10 +0000 (UTC)
+Date: Fri, 23 Aug 2024 08:04:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>,
+	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+	debian-powerpc@lists.debian.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
+Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
+ items
+Message-ID: <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-6-bhe@redhat.com>
+ <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+ <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
+ <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
- early measurements
-To: Thomas Gleixner <tglx@linutronix.de>,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
- trenchboot-devel@googlegroups.com
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-7-ross.philipson@oracle.com>
- <20240531021656.GA1502@sol.localdomain>
- <874jaegk8i.fsf@email.froward.int.ebiederm.org>
- <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
- <87ttflli09.ffs@tglx>
-Content-Language: en-US
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-In-Reply-To: <87ttflli09.ffs@tglx>
-X-ZohoMailClient: External
+Content-Disposition: inline
+In-Reply-To: <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240822_113039_521852_B7360237 
-X-CRM114-Status: GOOD (  22.44  )
+X-CRM114-CacheID: sfid-20240822_170421_406357_69DD4C3E 
+X-CRM114-Status: GOOD (  28.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,101 +89,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/15/24 15:10, Thomas Gleixner wrote:
-> On Thu, Aug 15 2024 at 13:38, Daniel P. Smith wrote:
->> On 5/31/24 09:54, Eric W. Biederman wrote:
->>> Eric Biggers <ebiggers@kernel.org> writes:
->>>> That paragraph is also phrased as a hypothetical, "Even if we'd prefer to use
->>>> SHA-256-only".  That implies that you do not, in fact, prefer SHA-256 only.  Is
->>>> that the case?  Sure, maybe there are situations where you *have* to use SHA-1,
->>>> but why would you not at least *prefer* SHA-256?
->>>
->>> Yes.  Please prefer to use SHA-256.
->>>
->>> Have you considered implementing I think it is SHA1-DC (as git has) that
->>> is compatible with SHA1 but blocks the known class of attacks where
->>> sha1 is actively broken at this point?
->>
->> We are using the kernel's implementation, addressing what the kernel
->> provides is beyond our efforts. Perhaps someone who is interested in
->> improving the kernel's SHA1 could submit a patch implementing/replacing
->> it with SHA1-DC, as I am sure the maintainers would welcome the help.
+On 08/22/24 at 11:37am, John Paul Adrian Glaubitz wrote:
+> Hi Baoquan,
 > 
-> Well, someone who is interested to get his "secure" code merged should
-> have a vested interested to have a non-broken SHA1 implementation if
-> there is a sensible requirement to use SHA1 in that new "secure" code,
-> no?
+> On Thu, 2024-08-22 at 17:17 +0800, Baoquan He wrote:
+> > > The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
+> > > on 32-bit Power Macintosh systems which fail after GRUB with:
+> > > 
+> > > 	"Error: You can't boot a kdump kernel from OF!"
+> > > 
+> > > We may have to turn this off for 32-bit Power Macintosh systems.
+> > > 
+> > > See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+> > 
+> > If so, fix need be made.
+> > 
+> > We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
+> > post a patch? I don't know how to identify 32-bit Power Macintosh.
+> > 
+> > arch/powerpc/Kconfig:
+> > ===
+> > config ARCH_SUPPORTS_CRASH_DUMP
+> >         def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+> >         
+> > config ARCH_SELECTS_CRASH_DUMP
+> >         def_bool y
+> >         depends on CRASH_DUMP
+> >         select RELOCATABLE if PPC64 || 44x || PPC_85xx
+> > ......
+> > config PHYSICAL_START
+> >         hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
+> >         default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
+> >         default "0x00000000"
 > 
-> Just for the record. The related maintainers can rightfully decide to
-> reject known broken "secure" code on a purely technical argument.
-> 
-> Thanks,
-> 
->          tglx
-> 
+> I think the architecture does support crash dumps, but I think the kernel has to
+> be booted from kexec in this case. Booting a kernel with CRASH_DUMP enabled won't
+> work from Open Firmware. So, I think CRASH_DUMP should just be disabled for
+> PPC_BOOK3S_32 by default and users who want to use it on these systems, will have to
+> enable it explicitly.
 
-There is one simple question, does allowing the Secure Launch code to 
-record SHA1 measurements make the system insecure, and the answer is 
-absolutely not.
+If so, below patch possiblly can fix it. Can you help check if it's OK?
 
-The role of the Secure Launch code base in the context of the larger 
-launch process is to function as observer. Within this role, its only 
-responsibility is continuing the trust chain(s) that were started by the 
-CPU/Hardware. It does so by measuring the components and configuration 
-it is responsible for loading and applying, i.e. in TCG parlance, it is 
-continuing the construction of the transitive trust for the system. In 
-this aspect, the only degradation of security that can affect the 
-kernel's role is whether all the necessary entities are safely measured 
-and not what algorithms are used.
+From dd5318dc5dcd66521b31214f0e5921f258532ef8 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 23 Aug 2024 07:37:38 +0800
+Subject: [PATCH] powerpc/crash: do not default to enable CRASH_DUMP for
+ PPC_BOOK3S_32 system
+Content-type: text/plain
 
-If the system integrator, whether that be the OEM, your employer, the 
-distro maintainer, the system administrator, or the end user, configures 
-the DL preamble to only use SHA1 or used older hardware that has a 
-TPM1.2, then they are accepting the risk it creates in their solution. 
-In fact, a greater threat to the security of the launch is the 
-misconfiguration of the IOMMU, which risks the kernel's ability to 
-safely make measurements, as compared to the use of SHA1. Yet it was 
-insisted in past reviews that we allow the user to specify an incorrect 
-IOMMU policy.
+Recently it's reported that PowerPC macMini system failed to boot up.
+It's because CONFIG_CRASH_DUMP=y is set by default on the system since
+kernel 6.9, and that makes CONFIG_PHYSICAL_START not equaling 0 any
+more and causes failure of normal kernel bootup.
 
-In the end, the "security" of an RTM solution is how and what 
-measurements are used to assess the health of a system. Thus bringing it 
-back to the opening question, if SHA1 measurements are made but not 
-used, i.e. the attestation enforcement only uses SHA2, then it has zero 
-impact on the security of the system.
+The link of error report can be found here:
 
-Another fact to consider is that the current Intel's TXT MLE 
-specification dictates SHA1 as a valid configuration. Secure Launch's 
-use of SHA1 is therefore to comply with Intel's specification for TXT. 
-And like the IOMMU situation, having the option available allows the 
-user to determine how they ultimately want to integrate Secure Launch 
-into their integrity management. And because Secure Launch will only 
-attempt SHA1 if it was in the TXT configuration, when either Intel 
-removes SHA1 from the MLE specification or firmware manufactures begin 
-disabling the SHA1 banks, this will obviously mean that Secure Launch 
-will not produce SHA1 measurements.
+https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
 
-On a side note, with my remote attestation hat on, the SHA1 measurements 
-can in fact be extremely useful. If an attestation was made containing 
-both SHA1 and SHA2 chains, and the SHA1 of an event was correct but the 
-SHA2 was not, either a natural collision happened or someone maliciously 
-caused a collision. The former has an extremely low probability, while 
-the latter is highly probable.
+And copy the code snippet here for reference:
+arch/powerpc/Kconfig:
+==================
+config KERNEL_START
+        hex "Virtual address of kernel base" if KERNEL_START_BOOL
+        default PAGE_OFFSET if PAGE_OFFSET_BOOL
+        default "0xc2000000" if CRASH_DUMP && !NONSTATIC_KERNEL
+        default "0xc0000000"
 
-Thus, with this information alone, it is possible to make the reasonable 
-determination the device is compromised. Whereas if both hashes are 
-mismatched, without any additional information it is equally probable of 
-either misconfiguration or compromise. And to state the obvious, with 
-only SHA2, further information is needed to distinguish between 
-misconfiguration and compromise.
+So let's stop enabling CRASH_DUMP by default on PPC_BOOK3S_32.
 
-V/r,
-Daniel P. Smith
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d7b09b064a8a..dc5ca58be1d6 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -680,7 +680,7 @@ config RELOCATABLE_TEST
+ 	  relocation code.
+ 
+ config ARCH_SUPPORTS_CRASH_DUMP
+-	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
++	def_bool PPC64 || PPC_85xx || (44x && !SMP)
+ 
+ config ARCH_SELECTS_CRASH_DUMP
+ 	def_bool y
+-- 
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
