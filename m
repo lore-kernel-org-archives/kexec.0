@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9753BC5321D
-	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 22:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B5C5C5472C
+	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 22:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=QG4ExutFbQY3pu+LAFXzzQlLcOW5V2fZwWkQwpG6Tcs=; b=4L7h3NMSIfXL1L
-	i2FKs6FQNgJA2trnWku8l1bBl1qIt4FFVOgy0ZeHH70jbrZ35NtCxPCnlhJSf9b8JuX/gMYGJoSuB
-	yMzab592z6wFHDv5UVjUslcm9vGzQ8pB4WlOYjMH96wV+1JVj5Jf1tuxlxNOH9Frgg1wZDFXPpw4F
-	CdnU/zLVUheNTZfXJ5sIkUn4Y8PBP4wgkJxbqp9NEo6EfeLieU28+8as/sVusNS7eGwJErlh0KQMP
-	OlrjGDSLrzVIco8Kpya7Iw99TzfdRaWutnm3lC7ykcuhGdy1IaB+9tUKAV9hvGHyWL1QwXpFETNiC
-	V1aQZof46/wg59ZllfkQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=HTV51NzFgF+d9Je9ZBceu3PPDem8ff/yRzq9Obgag3o=; b=JU9S7rC5t+ZuXa
+	mbdQVm3EypPvUbIEYbAi2P0chrau5F0iyOkCo2AkkKHFiBTz/T8WVgflqh44i24AkTKeoclyavpum
+	cdNNEoxBt+CJ2dEl2obMLI40t8zGWSAHrZObQC4LqpVK/jWnAReL2B5qF4GpdSSTyKwvLmEjUJ6o2
+	iaUqImYphf1XZn4G8KgfO94A/FcjTz/6Rfb/8a90xQkHheJaG2uzajf+hRsDVNM28bBw6Bno1PMId
+	y5rrm0KQVyTI1VospNzn4ISE74RJxqXWI1lrKiONl4D5EYLG65I6+ukZneS5wqWyE+rLTK9P+BOBD
+	LvRLu0UUAyC/v5YKRTyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siiU0-000000093mb-0JJI;
-	Mon, 26 Aug 2024 22:46:44 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1siiUM-000000093vW-3mU5;
+	Mon, 26 Aug 2024 22:47:07 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siiTv-000000093js-3sHr
+	id 1siiUJ-000000093tr-2qyF
 	for kexec@lists.infradead.org;
-	Mon, 26 Aug 2024 22:46:41 +0000
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtSJk002122;
-	Mon, 26 Aug 2024 22:41:06 GMT
+	Mon, 26 Aug 2024 22:47:05 +0000
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtUKj029254;
+	Mon, 26 Aug 2024 22:41:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=corp-2023-11-20; bh=Gv4HW1G5cdOvir
-	O2jWjsTyVsSRMo8mo3IuMx7QOgH1o=; b=OFWT01HBd6tfiuJ9pkQdtCRpyUs4w9
-	5kwUfh8tM7FzYNNJap04yjeZ9ceOXgTJi2VPv2hYXol04KY1y2BUZ34vUBx8PXR0
-	ydEvUg7t0wKLwfUuvXaJQixuYH9282BbT0tKG3zdHVw2swdEnIYMpE7NhOak97Xn
-	4Uo8wsTa1h2zz8qeZXdWJFuNZmsgaK/sP2HlRCYcaEBgfpbsgLhOcDUF3ePdq0UJ
-	G9wdov70IH3/vmqtilqD2PbGqy7dULBj5Vhc48J5YNS0oX2MrzgfWLxXEUQ+jy53
-	QbcNrqjlxGkGWU02XKw8OvscHggLrCmABUjqqygRoNsZda09LVMEvFBg==
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	corp-2023-11-20; bh=+GlPFNEbINVnwMIFGKDr6SpAd36aIYo7CErTuUU3G94=; b=
+	dDsDJfH9unZ9HCiMeBkkSamGB28TeieJsSOVUYqsnPiSeXOFG3ARC+bmFd4AUVyK
+	fj8qzLLuSk4JSmE9JvrttarwqS0/fJ/it7nXJuT5S9rNGnxY2t3jUirjx/b9PfaR
+	6xiAmcj6BKBTWv9653/BI2fZK9I7iHp83PCxsdAOdYG9CjLK1u1Am/U4Y7+Embmw
+	/FN7DIBHAwgdCXSIqcmug7ubpJYoR21/yGX6kVMiac5Yo9UlN2uycJHNxBiA+gMY
+	4baQ13w+8iw/l/sDrc+mxz4MvEATHehlkdg4IjvVVw9ySPiVlz5R2spfhX94XCi2
+	37QreVTXnE3U940HBL1wgg==
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177n448y4-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177ksv7p4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Aug 2024 22:41:06 +0000 (GMT)
+	Mon, 26 Aug 2024 22:41:40 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QLgln4017489;
-	Mon, 26 Aug 2024 22:41:05 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QM2ELI016704;
+	Mon, 26 Aug 2024 22:41:39 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmnp3-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmp7p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:41:05 +0000
+	Mon, 26 Aug 2024 22:41:39 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMf4WO024081;
-	Mon, 26 Aug 2024 22:41:04 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMfcDh025807;
+	Mon, 26 Aug 2024 22:41:38 GMT
 Received: from localhost.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmnkt-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmp5n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:41:03 +0000
+	Mon, 26 Aug 2024 22:41:38 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -72,10 +73,12 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v10 00/20] x86: Trenchboot secure dynamic launch Linux kernel support
-Date: Mon, 26 Aug 2024 15:38:15 -0700
-Message-Id: <20240826223835.3928819-1-ross.philipson@oracle.com>
+Subject: [PATCH v10 04/20] x86: Secure Launch main header file
+Date: Mon, 26 Aug 2024 15:38:19 -0700
+Message-Id: <20240826223835.3928819-5-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240826223835.3928819-1-ross.philipson@oracle.com>
+References: <20240826223835.3928819-1-ross.philipson@oracle.com>
 MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
@@ -84,11 +87,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxs
  phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
  definitions=main-2408260174
-X-Proofpoint-GUID: 5D2qrFJw56jWXHTLdUh7id2dWYRhaKcx
-X-Proofpoint-ORIG-GUID: 5D2qrFJw56jWXHTLdUh7id2dWYRhaKcx
+X-Proofpoint-ORIG-GUID: PmQ7cYwOK5tf8WrkJfHjmY4aXYbqNFEw
+X-Proofpoint-GUID: PmQ7cYwOK5tf8WrkJfHjmY4aXYbqNFEw
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240826_154640_099311_1A724ED9 
-X-CRM114-Status: GOOD (  44.26  )
+X-CRM114-CacheID: sfid-20240826_154703_752764_B63C56BE 
+X-CRM114-Status: GOOD (  18.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,292 +103,271 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
-enhance the boot security and integrity in a unified manner. The first area of
-focus has been on the Trusted Computing Group's Dynamic Launch for establishing
-a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
-Trust for Measurement). The project has been and continues to work on providing
-a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
-cross-architecture (x86 and Arm), with our recent involvment in the upcoming
-Arm DRTM specification. The order of introducing DRTM to the Linux kernel
-follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
-Technology (TXT) is present today and only requires a preamble loader, e.g. a
-boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
-been present since the introduction of AMD-V but requires an additional
-component that is AMD specific and referred to in the specification as the
-Secure Loader, which the TrenchBoot project has an active prototype in
-development. Finally Arm's implementation is in specification development stage
-and the project is looking to support it when it becomes available.
-
-This patchset provides detailed documentation of DRTM, the approach used for
-adding the capbility, and relevant API/ABI documentation. In addition to the
-documentation the patch set introduces Intel TXT support as the first platform
-for Linux Secure Launch.
-
-A quick note on terminology. The larger open source project itself is called
-TrenchBoot, which is hosted on Github (links below). The kernel feature enabling
-the use of Dynamic Launch technology is referred to as "Secure Launch" within
-the kernel code. As such the prefixes sl_/SL_ or slaunch/SLAUNCH will be seen
-in the code. The stub code discussed above is referred to as the SL stub.
-
-Links:
-
-The TrenchBoot project including documentation:
-
-https://trenchboot.org
-
-The TrenchBoot project on Github:
-
-https://github.com/trenchboot
-
-Intel TXT is documented in its own specification and in the SDM Instruction Set volume:
-
-https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
-https://software.intel.com/en-us/articles/intel-sdm
-
-AMD SKINIT is documented in the System Programming manual:
-
-https://www.amd.com/system/files/TechDocs/24593.pdf
-
-The TrenchBoot project provides a quick start guide to help get a system
-up and running with Secure Launch for Linux:
-
-https://github.com/TrenchBoot/documentation/blob/master/QUICKSTART.md
-
-Patch set based on commit:
-
-torvalds/master/b311c1b497e51a628aa89e7cb954481e5f9dced2
-
-Thanks
-Ross Philipson and Daniel P. Smith
-
-Changes in v2:
-
- - Modified 32b entry code to prevent causing relocations in the compressed
-   kernel.
- - Dropped patches for compressed kernel TPM PCR extender.
- - Modified event log code to insert log delimiter events and not rely
-   on TPM access.
- - Stop extending PCRs in the early Secure Launch stub code.
- - Removed Kconfig options for hash algorithms and use the algorithms the
-   ACM used.
- - Match Secure Launch measurement algorithm use to those reported in the
-   TPM 2.0 event log.
- - Read the TPM events out of the TPM and extend them into the PCRs using
-   the mainline TPM driver. This is done in the late initcall module.
- - Allow use of alternate PCR 19 and 20 for post ACM measurements.
- - Add Kconfig constraints needed by Secure Launch (disable KASLR
-   and add x2apic dependency).
- - Fix testing of SL_FLAGS when determining if Secure Launch is active
-   and the architecture is TXT.
- - Use SYM_DATA_START_LOCAL macros in early entry point code.
- - Security audit changes:
-   - Validate buffers passed to MLE do not overlap the MLE and are
-     properly laid out.
-   - Validate buffers and memory regions used by the MLE are
-     protected by IOMMU PMRs.
- - Force IOMMU to not use passthrough mode during a Secure Launch.
- - Prevent KASLR use during a Secure Launch.
-
-Changes in v3:
-
- - Introduce x86 documentation patch to provide background, overview
-   and configuration/ABI information for the Secure Launch kernel
-   feature.
- - Remove the IOMMU patch with special cases for disabling IOMMU
-   passthrough. Configuring the IOMMU is now a documentation matter
-   in the previously mentioned new patch.
- - Remove special case KASLR disabling code. Configuring KASLR is now
-   a documentation matter in the previously mentioned new patch.
- - Fix incorrect panic on TXT public register read.
- - Properly handle and measure setup_indirect bootparams in the early
-   launch code.
- - Use correct compressed kernel image base address when testing buffers
-   in the early launch stub code. This bug was introduced by the changes
-   to avoid relocation in the compressed kernel.
- - Use CPUID feature bits instead of CPUID vendor strings to determine
-   if SMX mode is supported and the system is Intel.
- - Remove early NMI re-enable on the BSP. This can be safely done later
-   on the BSP after an IDT is setup.
-
-Changes in v4:
- - Expand the cover letter to provide more context to the order that DRTM
-   support will be added.
- - Removed debug tracing in TPM request locality funciton and fixed
-   local variable declarations.
- - Fixed missing break in default case in slmodule.c.
- - Reworded commit messages in patches 1 and 2 per suggestions.
-
-Changes in v5:
- - Comprehensive documentation rewrite.
- - Use boot param loadflags to communicate Secure Launch status to
-   kernel proper.
- - Fix incorrect check of X86_FEATURE_BIT_SMX bit.
- - Rename the alternate details and authorities PCR support.
- - Refactor the securityfs directory and file setup in slmodule.c.
- - Misc. cleanup from internal code reviews.
- - Use reverse fir tree format for variables.
-
-Changes in v6:
- - Support for the new Secure Launch Resourse Table that standardizes
-   the information passed and forms the ABI between the pre and post
-   launch code.
- - Support for booting Linux through the EFI stub entry point and
-   then being able to do a Secure Launch once EFI stub is done and EBS
-   is called.
- - Updates to the documentation to reflect the previous two items listed.
-
-Changes in v7:
- - Switch to using MONITOR/MWAIT instead of NMIs to park the APs for
-   later bringup by the SMP code.
- - Use static inline dummy functions instead of macros when the Secure
-   Launch feature is disabled.
- - Move early SHA1 code to lib/crypto and pull it in from there.
- - Numerous formatting fixes from comments on LKML.
- - Remove efi-stub/DL stub patch temporarily for redesign/rework.
-
-Changes in v8:
- - Reintroduce efi-stub Linux kernel booting through the dynamic launch
-   stub (DL stub).
- - Add new approach to setting localities > 0 through kernel and sysfs
-   interfaces in the TPM mainline driver.
- - General code cleanup from v7 post comments.
-
-Changes in v9:
- - Updated DL stub support for recent changes to EFI stub in the kernel.
- - Added patches to fix locality changing support in the TPM driver
-   (these patches originally were posted as a separate set).
- - Enhanced Secure Launch TPM locality 2 setting in the TPM driver.
- - Added locality setting support through sysfs for user land to access.
- - Split up SHA1 and SHA256 changes into separate patches and updated
-   the commit messages to be more clear (per request from upstream
-   review).
- - Fix Clang compile issues detected by kernel test robot.
- - Modifications to the Secure Launch Resource Table ABI:
-   . Use flex arrays in table structures.
-   . Update and move fields in tables to make everything 8b aligned.
-   . Add 2 new DLME fields and a txt_heap address field.
-   . Remove platform specific tables that are not defined yet (AMD/ARM).
- - Update Kconfig dependencies for Secure Launch with SHA1/SHA256/TPM.
- - Remove push/pop of rsi since boot params is now stored in r15.
- - Update outdated kernel documentation.
- - Misc. comment fixes for type-os and mispellings.
-
-Changes in v10:
- - Removed patch #1 from previous set that forced the kernel_info
-   section at a fixed offset.
- - Add changes from Ard Biesheuvel to use the link step to generate the
-   proper relative offsets for the MLE header in the kernel_info
-   section.
- - Fix sizes and alignment slightly in the SLR table. Add comments to
-   the SLR header to indicate it is defined by the TrenchBoot project.
- - Remove incorrect extra pop instruction noted in the head_64.S
-   changes.
- - Use the prefix tpm/tpm2 to distinguish between TPM versions as is
-   done in the rest of the TPM related code.
- - Rework the TPM locality setting/reporting changes to use "default"
-   locality as opposed to "preferred". Remove uneeded extra locality
-   function in the TPM interface (call the chip function directly).
- - Adopt comment/documentation changes to code and commit message per
-   requests from the community.
- - Use u64 for the boot params physical address to avoid truncating
-   pointers during casts.
- - Split adding of new MSR registers into its own patch.
- - Attempt to further address justification for using SHA-1 algorithm.
-   Pick up some code suggestions for the SHA-1 patch.
- - Introduct slaunch_is_txt_launch() function per Jarkko Sakkinen's
-   suggestion.
- - Implement minor changes to the EFI stub code per suggestions.
-
-Daniel P. Smith (7):
-  Documentation/x86: Secure Launch kernel documentation
-  x86: Add early SHA-1 support for Secure Launch early measurements
-  x86: Add early SHA-256 support for Secure Launch early measurements
-  tpm: Protect against locality counter underflow
-  tpm: Ensure tpm is in known state at startup
-  tpm: Make locality requests return consistent values
-  x86: Secure Launch late initcall platform module
-
-Ross Philipson (13):
-  x86: Secure Launch Kconfig
-  x86: Secure Launch Resource Table header file
-  x86: Secure Launch main header file
-  x86/msr: Add variable MTRR base/mask and x2apic ID registers
-  x86/boot: Place TXT MLE header in the kernel_info section
-  x86: Secure Launch kernel early boot stub
-  x86: Secure Launch kernel late boot stub
-  x86: Secure Launch SMP bringup support
-  kexec: Secure Launch kexec SEXIT support
-  x86/reboot: Secure Launch SEXIT support on reboot paths
-  tpm: Add ability to set the default locality the TPM chip uses
-  tpm: Add sysfs interface to allow setting and querying the default
-    locality
-  x86/efi: EFI stub DRTM launch support for Secure Launch
-
- Documentation/arch/x86/boot.rst               |  21 +
- Documentation/security/index.rst              |   1 +
- .../security/launch-integrity/index.rst       |  11 +
- .../security/launch-integrity/principles.rst  | 320 ++++++++
- .../secure_launch_details.rst                 | 587 ++++++++++++++
- .../secure_launch_overview.rst                | 227 ++++++
- arch/x86/Kconfig                              |  11 +
- arch/x86/boot/compressed/Makefile             |   3 +
- arch/x86/boot/compressed/head_64.S            |  29 +
- arch/x86/boot/compressed/kernel_info.S        |  50 +-
- arch/x86/boot/compressed/sha1.c               |   6 +
- arch/x86/boot/compressed/sha256.c             |   6 +
- arch/x86/boot/compressed/sl_main.c            | 588 ++++++++++++++
- arch/x86/boot/compressed/sl_stub.S            | 726 ++++++++++++++++++
- arch/x86/boot/compressed/vmlinux.lds.S        |   7 +
- arch/x86/include/asm/msr-index.h              |   5 +
- arch/x86/include/asm/realmode.h               |   3 +
- arch/x86/include/uapi/asm/bootparam.h         |   1 +
- arch/x86/kernel/Makefile                      |   2 +
- arch/x86/kernel/asm-offsets.c                 |  20 +
- arch/x86/kernel/reboot.c                      |  10 +
- arch/x86/kernel/setup.c                       |   3 +
- arch/x86/kernel/slaunch.c                     | 596 ++++++++++++++
- arch/x86/kernel/slmodule.c                    | 509 ++++++++++++
- arch/x86/kernel/smpboot.c                     |  43 +-
- arch/x86/realmode/init.c                      |   3 +
- arch/x86/realmode/rm/header.S                 |   3 +
- arch/x86/realmode/rm/trampoline_64.S          |  32 +
- drivers/char/tpm/tpm-chip.c                   |  24 +-
- drivers/char/tpm/tpm-sysfs.c                  |  30 +
- drivers/char/tpm/tpm_tis_core.c               |  27 +-
- drivers/firmware/efi/libstub/efistub.h        |   8 +
- drivers/firmware/efi/libstub/x86-stub.c       |  98 +++
- drivers/iommu/intel/dmar.c                    |   4 +
- include/crypto/sha1.h                         |   1 +
- include/linux/slaunch.h                       | 548 +++++++++++++
- include/linux/slr_table.h                     | 276 +++++++
- include/linux/tpm.h                           |  10 +
- kernel/kexec_core.c                           |   4 +
- lib/crypto/sha1.c                             |  82 ++
- 40 files changed, 4922 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/security/launch-integrity/index.rst
- create mode 100644 Documentation/security/launch-integrity/principles.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_details.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_overview.rst
- create mode 100644 arch/x86/boot/compressed/sha1.c
- create mode 100644 arch/x86/boot/compressed/sha256.c
- create mode 100644 arch/x86/boot/compressed/sl_main.c
- create mode 100644 arch/x86/boot/compressed/sl_stub.S
- create mode 100644 arch/x86/kernel/slaunch.c
- create mode 100644 arch/x86/kernel/slmodule.c
- create mode 100644 include/linux/slaunch.h
- create mode 100644 include/linux/slr_table.h
-
--- 
-2.39.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SW50cm9kdWNlIHRoZSBtYWluIFNlY3VyZSBMYXVuY2ggaGVhZGVyIGZpbGUgdXNlZCBpbiB0aGUg
+ZWFybHkgU0wgc3R1YgphbmQgdGhlIGVhcmx5IHNldHVwIGNvZGUuCgpTaWduZWQtb2ZmLWJ5OiBS
+b3NzIFBoaWxpcHNvbiA8cm9zcy5waGlsaXBzb25Ab3JhY2xlLmNvbT4KLS0tCiBpbmNsdWRlL2xp
+bnV4L3NsYXVuY2guaCB8IDU0OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrCiAxIGZpbGUgY2hhbmdlZCwgNTQ4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBpbmNsdWRlL2xpbnV4L3NsYXVuY2guaAoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc2xh
+dW5jaC5oIGIvaW5jbHVkZS9saW51eC9zbGF1bmNoLmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMDAwMDAwLi5lZmIxMjM1YjNlMWIKLS0tIC9kZXYvbnVsbAorKysgYi9pbmNsdWRl
+L2xpbnV4L3NsYXVuY2guaApAQCAtMCwwICsxLDU0OCBAQAorLyogU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IEdQTC0yLjAgKi8KKy8qCisgKiBNYWluIFNlY3VyZSBMYXVuY2ggaGVhZGVyIGZpbGUu
+CisgKgorICogQ29weXJpZ2h0IChjKSAyMDI0IEFwZXJ0dXMgU29sdXRpb25zLCBMTEMKKyAqIENv
+cHlyaWdodCAoYykgMjAyNCwgT3JhY2xlIGFuZC9vciBpdHMgYWZmaWxpYXRlcy4KKyAqLworCisj
+aWZuZGVmIF9MSU5VWF9TTEFVTkNIX0gKKyNkZWZpbmUgX0xJTlVYX1NMQVVOQ0hfSAorCisvKgor
+ICogU2VjdXJlIExhdW5jaCBEZWZpbmVkIFN0YXRlIEZsYWdzCisgKi8KKyNkZWZpbmUgU0xfRkxB
+R19BQ1RJVkUJCTB4MDAwMDAwMDEKKyNkZWZpbmUgU0xfRkxBR19BUkNIX1RYVAkweDAwMDAwMDAy
+CisKKy8qCisgKiBTZWN1cmUgTGF1bmNoIENQVSBUeXBlCisgKi8KKyNkZWZpbmUgU0xfQ1BVX0lO
+VEVMCTEKKworI2RlZmluZSBfX1NMMzJfQ1MJMHgwMDA4CisjZGVmaW5lIF9fU0wzMl9EUwkweDAw
+MTAKKworLyoKKyAqIEludGVsIFNhZmVyIE1vZGUgRXh0ZW5zaW9ucyAoU01YKQorICoKKyAqIElu
+dGVsIFNNWCBwcm92aWRlcyBhIHByb2dyYW1taW5nIGludGVyZmFjZSB0byBlc3RhYmxpc2ggYSBN
+ZWFzdXJlZCBMYXVuY2hlZAorICogRW52aXJvbm1lbnQgKE1MRSkuIFRoZSBtZWFzdXJlbWVudCBh
+bmQgcHJvdGVjdGlvbiBtZWNoYW5pc21zIHN1cHBvcnRlZCBieSB0aGUKKyAqIGNhcGFiaWxpdGll
+cyBvZiBhbiBJbnRlbCBUcnVzdGVkIEV4ZWN1dGlvbiBUZWNobm9sb2d5IChUWFQpIHBsYXRmb3Jt
+LiBTTVggaXMKKyAqIHRoZSBwcm9jZXNzb3LigJlzIHByb2dyYW1taW5nIGludGVyZmFjZSBpbiBh
+biBJbnRlbCBUWFQgcGxhdGZvcm0uCisgKgorICogU2VlOgorICogICBJbnRlbCBTRE0gVm9sdW1l
+IDIgLSA2LjEgIlNhZmVyIE1vZGUgRXh0ZW5zaW9ucyBSZWZlcmVuY2UiCisgKiAgIEludGVsIFRy
+dXN0ZWQgRXhlY3V0aW9uIFRlY2hub2xvZ3kgLSBNZWFzdXJlZCBMYXVuY2ggRW52aXJvbm1lbnQg
+RGV2ZWxvcGVy4oCZcyBHdWlkZQorICovCisKKy8qCisgKiBTTVggR0VUU0VDIExlYWYgRnVuY3Rp
+b25zCisgKi8KKyNkZWZpbmUgU01YX1g4Nl9HRVRTRUNfU0VYSVQJNQorI2RlZmluZSBTTVhfWDg2
+X0dFVFNFQ19TTUNUUkwJNworI2RlZmluZSBTTVhfWDg2X0dFVFNFQ19XQUtFVVAJOAorCisvKgor
+ICogSW50ZWwgVHJ1c3RlZCBFeGVjdXRpb24gVGVjaG5vbG9neSBNTUlPIFJlZ2lzdGVycyBCYW5r
+cworICovCisjZGVmaW5lIFRYVF9QVUJfQ09ORklHX1JFR1NfQkFTRQkweGZlZDMwMDAwCisjZGVm
+aW5lIFRYVF9QUklWX0NPTkZJR19SRUdTX0JBU0UJMHhmZWQyMDAwMAorI2RlZmluZSBUWFRfTlJf
+Q09ORklHX1BBR0VTICAgICAoKFRYVF9QVUJfQ09ORklHX1JFR1NfQkFTRSAtIFwKKwkJCQkgIFRY
+VF9QUklWX0NPTkZJR19SRUdTX0JBU0UpID4+IFBBR0VfU0hJRlQpCisKKy8qCisgKiBJbnRlbCBU
+cnVzdGVkIEV4ZWN1dGlvbiBUZWNobm9sb2d5IChUWFQpIFJlZ2lzdGVycworICovCisjZGVmaW5l
+IFRYVF9DUl9TVFMJCQkweDAwMDAKKyNkZWZpbmUgVFhUX0NSX0VTVFMJCQkweDAwMDgKKyNkZWZp
+bmUgVFhUX0NSX0VSUk9SQ09ERQkJMHgwMDMwCisjZGVmaW5lIFRYVF9DUl9DTURfUkVTRVQJCTB4
+MDAzOAorI2RlZmluZSBUWFRfQ1JfQ01EX0NMT1NFX1BSSVZBVEUJMHgwMDQ4CisjZGVmaW5lIFRY
+VF9DUl9ESURWSUQJCQkweDAxMTAKKyNkZWZpbmUgVFhUX0NSX1ZFUl9FTUlGCQkJMHgwMjAwCisj
+ZGVmaW5lIFRYVF9DUl9DTURfVU5MT0NLX01FTV9DT05GSUcJMHgwMjE4CisjZGVmaW5lIFRYVF9D
+Ul9TSU5JVF9CQVNFCQkweDAyNzAKKyNkZWZpbmUgVFhUX0NSX1NJTklUX1NJWkUJCTB4MDI3OAor
+I2RlZmluZSBUWFRfQ1JfTUxFX0pPSU4JCQkweDAyOTAKKyNkZWZpbmUgVFhUX0NSX0hFQVBfQkFT
+RQkJMHgwMzAwCisjZGVmaW5lIFRYVF9DUl9IRUFQX1NJWkUJCTB4MDMwOAorI2RlZmluZSBUWFRf
+Q1JfU0NSQVRDSFBBRAkJMHgwMzc4CisjZGVmaW5lIFRYVF9DUl9DTURfT1BFTl9MT0NBTElUWTEJ
+MHgwMzgwCisjZGVmaW5lIFRYVF9DUl9DTURfQ0xPU0VfTE9DQUxJVFkxCTB4MDM4OAorI2RlZmlu
+ZSBUWFRfQ1JfQ01EX09QRU5fTE9DQUxJVFkyCTB4MDM5MAorI2RlZmluZSBUWFRfQ1JfQ01EX0NM
+T1NFX0xPQ0FMSVRZMgkweDAzOTgKKyNkZWZpbmUgVFhUX0NSX0NNRF9TRUNSRVRTCQkweDA4ZTAK
+KyNkZWZpbmUgVFhUX0NSX0NNRF9OT19TRUNSRVRTCQkweDA4ZTgKKyNkZWZpbmUgVFhUX0NSX0Uy
+U1RTCQkJMHgwOGYwCisKKy8qIFRYVCBkZWZhdWx0IHJlZ2lzdGVyIHZhbHVlICovCisjZGVmaW5l
+IFRYVF9SRUdWQUxVRV9PTkUJCTB4MVVMTAorCisvKiBUWFRDUl9TVFMgc3RhdHVzIGJpdHMgKi8K
+KyNkZWZpbmUgVFhUX1NFTlRFUl9ET05FX1NUUwkJQklUKDApCisjZGVmaW5lIFRYVF9TRVhJVF9E
+T05FX1NUUwkJQklUKDEpCisKKy8qCisgKiBTSU5JVC9NTEUgQ2FwYWJpbGl0aWVzIEZpZWxkIEJp
+dCBEZWZpbml0aW9ucworICovCisjZGVmaW5lIFRYVF9TSU5JVF9NTEVfQ0FQX1dBS0VfR0VUU0VD
+CTAKKyNkZWZpbmUgVFhUX1NJTklUX01MRV9DQVBfV0FLRV9NT05JVE9SCTEKKworLyoKKyAqIE9T
+L01MRSBTZWN1cmUgTGF1bmNoIFNwZWNpZmljIERlZmluaXRpb25zCisgKi8KKyNkZWZpbmUgVFhU
+X09TX01MRV9TVFJVQ1RfVkVSU0lPTgkxCisjZGVmaW5lIFRYVF9PU19NTEVfTUFYX1ZBUklBQkxF
+X01UUlJTCTMyCisKKy8qCisgKiBUWFQgSGVhcCBUYWJsZSBFbnVtZXJhdGlvbgorICovCisjZGVm
+aW5lIFRYVF9CSU9TX0RBVEFfVEFCTEUJCTEKKyNkZWZpbmUgVFhUX09TX01MRV9EQVRBX1RBQkxF
+CQkyCisjZGVmaW5lIFRYVF9PU19TSU5JVF9EQVRBX1RBQkxFCQkzCisjZGVmaW5lIFRYVF9TSU5J
+VF9NTEVfREFUQV9UQUJMRQk0CisjZGVmaW5lIFRYVF9TSU5JVF9UQUJMRV9NQVgJCVRYVF9TSU5J
+VF9NTEVfREFUQV9UQUJMRQorCisvKgorICogU2VjdXJlIExhdW5jaCBEZWZpbmVkIEVycm9yIENv
+ZGVzIHVzZWQgaW4gTUxFLWluaXRpYXRlZCBUWFQgcmVzZXRzLgorICoKKyAqIFRYVCBTcGVjaWZp
+Y2F0aW9uCisgKiBBcHBlbmRpeCBJIEFDTSBFcnJvciBDb2RlcworICovCisjZGVmaW5lIFNMX0VS
+Uk9SX0dFTkVSSUMJCTB4YzAwMDgwMDEKKyNkZWZpbmUgU0xfRVJST1JfVFBNX0lOSVQJCTB4YzAw
+MDgwMDIKKyNkZWZpbmUgU0xfRVJST1JfVFBNX0lOVkFMSURfTE9HMjAJMHhjMDAwODAwMworI2Rl
+ZmluZSBTTF9FUlJPUl9UUE1fTE9HR0lOR19GQUlMRUQJMHhjMDAwODAwNAorI2RlZmluZSBTTF9F
+UlJPUl9SRUdJT05fU1RSQURETEVfNEdCCTB4YzAwMDgwMDUKKyNkZWZpbmUgU0xfRVJST1JfVFBN
+X0VYVEVORAkJMHhjMDAwODAwNgorI2RlZmluZSBTTF9FUlJPUl9NVFJSX0lOVl9WQ05UCQkweGMw
+MDA4MDA3CisjZGVmaW5lIFNMX0VSUk9SX01UUlJfSU5WX0RFRl9UWVBFCTB4YzAwMDgwMDgKKyNk
+ZWZpbmUgU0xfRVJST1JfTVRSUl9JTlZfQkFTRQkJMHhjMDAwODAwOQorI2RlZmluZSBTTF9FUlJP
+Ul9NVFJSX0lOVl9NQVNLCQkweGMwMDA4MDBhCisjZGVmaW5lIFNMX0VSUk9SX01TUl9JTlZfTUlT
+Q19FTgkweGMwMDA4MDBiCisjZGVmaW5lIFNMX0VSUk9SX0lOVl9BUF9JTlRFUlJVUFQJMHhjMDAw
+ODAwYworI2RlZmluZSBTTF9FUlJPUl9JTlRFR0VSX09WRVJGTE9XCTB4YzAwMDgwMGQKKyNkZWZp
+bmUgU0xfRVJST1JfSEVBUF9XQUxLCQkweGMwMDA4MDBlCisjZGVmaW5lIFNMX0VSUk9SX0hFQVBf
+TUFQCQkweGMwMDA4MDBmCisjZGVmaW5lIFNMX0VSUk9SX1JFR0lPTl9BQk9WRV80R0IJMHhjMDAw
+ODAxMAorI2RlZmluZSBTTF9FUlJPUl9IRUFQX0lOVkFMSURfRE1BUgkweGMwMDA4MDExCisjZGVm
+aW5lIFNMX0VSUk9SX0hFQVBfRE1BUl9TSVpFCQkweGMwMDA4MDEyCisjZGVmaW5lIFNMX0VSUk9S
+X0hFQVBfRE1BUl9NQVAJCTB4YzAwMDgwMTMKKyNkZWZpbmUgU0xfRVJST1JfSElfUE1SX0JBU0UJ
+CTB4YzAwMDgwMTQKKyNkZWZpbmUgU0xfRVJST1JfSElfUE1SX1NJWkUJCTB4YzAwMDgwMTUKKyNk
+ZWZpbmUgU0xfRVJST1JfTE9fUE1SX0JBU0UJCTB4YzAwMDgwMTYKKyNkZWZpbmUgU0xfRVJST1Jf
+TE9fUE1SX01MRQkJMHhjMDAwODAxNworI2RlZmluZSBTTF9FUlJPUl9JTklUUkRfVE9PX0JJRwkJ
+MHhjMDAwODAxOAorI2RlZmluZSBTTF9FUlJPUl9IRUFQX1pFUk9fT0ZGU0VUCTB4YzAwMDgwMTkK
+KyNkZWZpbmUgU0xfRVJST1JfV0FLRV9CTE9DS19UT09fU01BTEwJMHhjMDAwODAxYQorI2RlZmlu
+ZSBTTF9FUlJPUl9NTEVfQlVGRkVSX09WRVJMQVAJMHhjMDAwODAxYgorI2RlZmluZSBTTF9FUlJP
+Ul9CVUZGRVJfQkVZT05EX1BNUgkweGMwMDA4MDFjCisjZGVmaW5lIFNMX0VSUk9SX09TX1NJTklU
+X0JBRF9WRVJTSU9OCTB4YzAwMDgwMWQKKyNkZWZpbmUgU0xfRVJST1JfRVZFTlRMT0dfTUFQCQkw
+eGMwMDA4MDFlCisjZGVmaW5lIFNMX0VSUk9SX1RQTV9OVU1CRVJfQUxHUwkweGMwMDA4MDFmCisj
+ZGVmaW5lIFNMX0VSUk9SX1RQTV9VTktOT1dOX0RJR0VTVAkweGMwMDA4MDIwCisjZGVmaW5lIFNM
+X0VSUk9SX1RQTV9JTlZBTElEX0VWRU5UCTB4YzAwMDgwMjEKKyNkZWZpbmUgU0xfRVJST1JfSU5W
+QUxJRF9TTFJUCQkweGMwMDA4MDIyCisjZGVmaW5lIFNMX0VSUk9SX1NMUlRfTUlTU0lOR19FTlRS
+WQkweGMwMDA4MDIzCisjZGVmaW5lIFNMX0VSUk9SX1NMUlRfTUFQCQkweGMwMDA4MDI0CisKKy8q
+CisgKiBTZWN1cmUgTGF1bmNoIERlZmluZWQgTGltaXRzCisgKi8KKyNkZWZpbmUgVFhUX01BWF9D
+UFVTCQk1MTIKKyNkZWZpbmUgVFhUX0JPT1RfU1RBQ0tfU0laRQkxMjgKKworLyoKKyAqIFNlY3Vy
+ZSBMYXVuY2ggZXZlbnQgbG9nIGVudHJ5IHR5cGUuIFRoZSBUWFQgc3BlY2lmaWNhdGlvbiBkZWZp
+bmVzIHRoZQorICogYmFzZSBldmVudCB2YWx1ZSBhcyAweDQwMCBmb3IgRFJUTSB2YWx1ZXMuCisg
+Ki8KKyNkZWZpbmUgVFhUX0VWVFlQRV9CQVNFCQkJMHg0MDAKKyNkZWZpbmUgVFhUX0VWVFlQRV9T
+TEFVTkNICQkoVFhUX0VWVFlQRV9CQVNFICsgMHgxMDIpCisjZGVmaW5lIFRYVF9FVlRZUEVfU0xB
+VU5DSF9TVEFSVAkoVFhUX0VWVFlQRV9CQVNFICsgMHgxMDMpCisjZGVmaW5lIFRYVF9FVlRZUEVf
+U0xBVU5DSF9FTkQJCShUWFRfRVZUWVBFX0JBU0UgKyAweDEwNCkKKworLyoKKyAqIE1MRSBzY3Jh
+dGNoIGFyZWEgb2Zmc2V0cworICovCisjZGVmaW5lIFNMX1NDUkFUQ0hfQVBfRUJYCQkwCisjZGVm
+aW5lIFNMX1NDUkFUQ0hfQVBfSk1QX09GRlNFVAk0CisjZGVmaW5lIFNMX1NDUkFUQ0hfQVBfU1RB
+Q0tTX09GRlNFVAk4CisKKyNpZm5kZWYgX19BU1NFTUJMWV9fCisKKyNpbmNsdWRlIDxsaW51eC9p
+by5oPgorI2luY2x1ZGUgPGxpbnV4L3RwbS5oPgorI2luY2x1ZGUgPGxpbnV4L3RwbV9ldmVudGxv
+Zy5oPgorCisvKgorICogU2VjdXJlIExhdW5jaCBBUCBzdGFjayBhbmQgbW9uaXRvciBibG9jawor
+ICovCitzdHJ1Y3Qgc2xfYXBfc3RhY2tfYW5kX21vbml0b3IgeworCXUzMiBtb25pdG9yOworCXUz
+MiBjYWNoZV9wYWRbMTVdOworCXUzMiBzdGFja19wYWRbMTVdOworCXUzMiBhcGljaWQ7Cit9IF9f
+cGFja2VkOworCisvKgorICogU2VjdXJlIExhdW5jaCBBUCB3YWtldXAgaW5mb3JtYXRpb24gZmV0
+Y2hlZCBpbiBTTVAgYm9vdCBjb2RlLgorICovCitzdHJ1Y3Qgc2xfYXBfd2FrZV9pbmZvIHsKKwl1
+MzIgYXBfd2FrZV9ibG9jazsKKwl1MzIgYXBfd2FrZV9ibG9ja19zaXplOworCXUzMiBhcF9qbXBf
+b2Zmc2V0OworCXUzMiBhcF9zdGFja3Nfb2Zmc2V0OworfTsKKworLyoKKyAqIFRYVCBoZWFwIGV4
+dGVuZGVkIGRhdGEgZWxlbWVudHMuCisgKi8KK3N0cnVjdCB0eHRfaGVhcF9leHRfZGF0YV9lbGVt
+ZW50IHsKKwl1MzIgdHlwZTsKKwl1MzIgc2l6ZTsKKwkvKiBEYXRhICovCit9IF9fcGFja2VkOwor
+CisjZGVmaW5lIFRYVF9IRUFQX0VYVERBVEFfVFlQRV9FTkQJCQkwCisKK3N0cnVjdCB0eHRfaGVh
+cF9lbmRfZWxlbWVudCB7CisJdTMyIHR5cGU7CisJdTMyIHNpemU7Cit9IF9fcGFja2VkOworCisj
+ZGVmaW5lIFRYVF9IRUFQX0VYVERBVEFfVFlQRV9UUE1fRVZFTlRfTE9HX1BUUgkJNQorCitzdHJ1
+Y3QgdHh0X2hlYXBfZXZlbnRfbG9nX2VsZW1lbnQgeworCXU2NCBldmVudF9sb2dfcGh5c19hZGRy
+OworfSBfX3BhY2tlZDsKKworI2RlZmluZSBUWFRfSEVBUF9FWFREQVRBX1RZUEVfRVZFTlRfTE9H
+X1BPSU5URVIyXzEJOAorCitzdHJ1Y3QgdHh0X2hlYXBfZXZlbnRfbG9nX3BvaW50ZXIyXzFfZWxl
+bWVudCB7CisJdTY0IHBoeXNfYWRkcjsKKwl1MzIgYWxsb2NhdGVkX2V2ZW50X2NvbnRhaW5lcl9z
+aXplOworCXUzMiBmaXJzdF9yZWNvcmRfb2Zmc2V0OworCXUzMiBuZXh0X3JlY29yZF9vZmZzZXQ7
+Cit9IF9fcGFja2VkOworCisvKgorICogU2VjdXJlIExhdW5jaCBkZWZpbmVkIE9TL01MRSBUWFQg
+SGVhcCB0YWJsZQorICovCitzdHJ1Y3QgdHh0X29zX21sZV9kYXRhIHsKKwl1MzIgdmVyc2lvbjsK
+Kwl1MzIgcmVzZXJ2ZWQ7CisJdTY0IGJvb3RfcGFyYW1zX2FkZHI7CisJdTY0IHNscnQ7CisJdTY0
+IHR4dF9pbmZvOworCXUzMiBhcF93YWtlX2Jsb2NrOworCXUzMiBhcF93YWtlX2Jsb2NrX3NpemU7
+CisJdTggbWxlX3NjcmF0Y2hbNjRdOworfSBfX3BhY2tlZDsKKworLyoKKyAqIFRYVCBzcGVjaWZp
+Y2F0aW9uIGRlZmluZWQgQklPUyBkYXRhIFRYVCBIZWFwIHRhYmxlCisgKi8KK3N0cnVjdCB0eHRf
+Ymlvc19kYXRhIHsKKwl1MzIgdmVyc2lvbjsgLyogQ3VycmVudGx5IDUgZm9yIFRQTSAxLjIgYW5k
+IDYgZm9yIFRQTSAyLjAgKi8KKwl1MzIgYmlvc19zaW5pdF9zaXplOworCXU2NCByZXNlcnZlZDE7
+CisJdTY0IHJlc2VydmVkMjsKKwl1MzIgbnVtX2xvZ2ljYWxfcHJvY3M7CisJLyogVmVyc2lvbnMg
+Pj0gNSB3aXRoIHVwZGF0ZXMgaW4gdmVyc2lvbiA2ICovCisJdTMyIHNpbml0X2ZsYWdzOworCXUz
+MiBtbGVfZmxhZ3M7CisJLyogVmVyc2lvbnMgPj0gNCAqLworCS8qIEV4dCBEYXRhIEVsZW1lbnRz
+ICovCit9IF9fcGFja2VkOworCisvKgorICogVFhUIHNwZWNpZmljYXRpb24gZGVmaW5lZCBPUy9T
+SU5JVCBUWFQgSGVhcCB0YWJsZQorICovCitzdHJ1Y3QgdHh0X29zX3Npbml0X2RhdGEgeworCXUz
+MiB2ZXJzaW9uOyAvKiBDdXJyZW50bHkgNiBmb3IgVFBNIDEuMiBhbmQgNyBmb3IgVFBNIDIuMCAq
+LworCXUzMiBmbGFnczsKKwl1NjQgbWxlX3B0YWI7CisJdTY0IG1sZV9zaXplOworCXU2NCBtbGVf
+aGRyX2Jhc2U7CisJdTY0IHZ0ZF9wbXJfbG9fYmFzZTsKKwl1NjQgdnRkX3Btcl9sb19zaXplOwor
+CXU2NCB2dGRfcG1yX2hpX2Jhc2U7CisJdTY0IHZ0ZF9wbXJfaGlfc2l6ZTsKKwl1NjQgbGNwX3Bv
+X2Jhc2U7CisJdTY0IGxjcF9wb19zaXplOworCXUzMiBjYXBhYmlsaXRpZXM7CisJLyogVmVyc2lv
+biA9IDUgKi8KKwl1NjQgZWZpX3JzZHRfcHRyOworCS8qIFZlcnNpb25zID49IDYgKi8KKwkvKiBF
+eHQgRGF0YSBFbGVtZW50cyAqLworfSBfX3BhY2tlZDsKKworLyoKKyAqIFRYVCBzcGVjaWZpY2F0
+aW9uIGRlZmluZWQgU0lOSVQvTUxFIFRYVCBIZWFwIHRhYmxlCisgKi8KK3N0cnVjdCB0eHRfc2lu
+aXRfbWxlX2RhdGEgeworCXUzMiB2ZXJzaW9uOyAgICAgICAgICAgICAvKiBDdXJyZW50IHZhbHVl
+cyBhcmUgNiB0aHJvdWdoIDkgKi8KKwkvKiBWZXJzaW9ucyA8PSA4ICovCisJdTggYmlvc19hY21f
+aWRbMjBdOworCXUzMiBlZHhfc2VudGVyX2ZsYWdzOworCXU2NCBtc2VnX3ZhbGlkOworCXU4IHNp
+bml0X2hhc2hbMjBdOworCXU4IG1sZV9oYXNoWzIwXTsKKwl1OCBzdG1faGFzaFsyMF07CisJdTgg
+bGNwX3BvbGljeV9oYXNoWzIwXTsKKwl1MzIgbGNwX3BvbGljeV9jb250cm9sOworCS8qIFZlcnNp
+b25zID49IDcgKi8KKwl1MzIgcmxwX3dha2V1cF9hZGRyOworCXUzMiByZXNlcnZlZDsKKwl1MzIg
+bnVtX29mX3Npbml0X21kcnM7CisJdTMyIHNpbml0X21kcnNfdGFibGVfb2Zmc2V0OworCXUzMiBz
+aW5pdF92dGRfZG1hcl90YWJsZV9zaXplOworCXUzMiBzaW5pdF92dGRfZG1hcl90YWJsZV9vZmZz
+ZXQ7CisJLyogVmVyc2lvbnMgPj0gOCAqLworCXUzMiBwcm9jZXNzb3Jfc2NydG1fc3RhdHVzOwor
+CS8qIFZlcnNpb25zID49IDkgKi8KKwkvKiBFeHQgRGF0YSBFbGVtZW50cyAqLworfSBfX3BhY2tl
+ZDsKKworLyoKKyAqIFRYVCBkYXRhIHJlcG9ydGluZyBzdHJ1Y3R1cmUgZm9yIG1lbW9yeSB0eXBl
+cworICovCitzdHJ1Y3QgdHh0X3Npbml0X21lbW9yeV9kZXNjcmlwdG9yX3JlY29yZCB7CisJdTY0
+IGFkZHJlc3M7CisJdTY0IGxlbmd0aDsKKwl1OCB0eXBlOworCXU4IHJlc2VydmVkWzddOworfSBf
+X3BhY2tlZDsKKworLyoKKyAqIFRYVCBkYXRhIHN0cnVjdHVyZSB1c2VkIGJ5IGEgcmVzcG9uc2l2
+ZSBsb2NhbCBwcm9jZXNzb3IgKFJMUCkgdG8gc3RhcnQKKyAqIGV4ZWN1dGlvbiBpbiByZXNwb25z
+ZSB0byBhIEdFVFNFQ1tXQUtFVVBdLgorICovCitzdHJ1Y3Qgc214X3JscF9tbGVfam9pbiB7CisJ
+dTMyIHJscF9nZHRfbGltaXQ7CisJdTMyIHJscF9nZHRfYmFzZTsKKwl1MzIgcmxwX3NlZ19zZWw7
+ICAgICAvKiBjcyAoZHMsIGVzLCBzcyBhcmUgc2VnX3NlbCs4KSAqLworCXUzMiBybHBfZW50cnlf
+cG9pbnQ7IC8qIHBoeXMgYWRkciAqLworfSBfX3BhY2tlZDsKKworLyoKKyAqIFRQTSBldmVudCBs
+b2cgc3RydWN0dXJlcyBkZWZpbmVkIGluIGJvdGggdGhlIFRYVCBzcGVjaWZpY2F0aW9uIGFuZAor
+ICogdGhlIFRDRyBkb2N1bWVudGF0aW9uLgorICovCisjZGVmaW5lIFRQTV9FVlRMT0dfU0lHTkFU
+VVJFICJUWFQgRXZlbnQgQ29udGFpbmVyIgorCitzdHJ1Y3QgdHBtX2V2ZW50X2xvZ19oZWFkZXIg
+eworCWNoYXIgc2lnbmF0dXJlWzIwXTsKKwljaGFyIHJlc2VydmVkWzEyXTsKKwl1OCBjb250YWlu
+ZXJfdmVyX21ham9yOworCXU4IGNvbnRhaW5lcl92ZXJfbWlub3I7CisJdTggcGNyX2V2ZW50X3Zl
+cl9tYWpvcjsKKwl1OCBwY3JfZXZlbnRfdmVyX21pbm9yOworCXUzMiBjb250YWluZXJfc2l6ZTsK
+Kwl1MzIgcGNyX2V2ZW50c19vZmZzZXQ7CisJdTMyIG5leHRfZXZlbnRfb2Zmc2V0OworCS8qIFBD
+UkV2ZW50c1tdICovCit9IF9fcGFja2VkOworCisvKgorICogRnVuY3Rpb25zIHRvIGV4dHJhY3Qg
+ZGF0YSBmcm9tIHRoZSBJbnRlbCBUWFQgSGVhcCBNZW1vcnkuIFRoZSBsYXlvdXQKKyAqIG9mIHRo
+ZSBoZWFwIGlzIGFzIGZvbGxvd3M6CisgKiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0r
+CisgKiAgfCBTaXplIEJpb3MgRGF0YSB0YWJsZSAodTY0KSB8CisgKiAgKy0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0rCisgKiAgfCBCaW9zIERhdGEgdGFibGUgICAgICAgICAgICB8CisgKiAg
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCisgKiAgfCBTaXplIE9TIE1MRSB0YWJsZSAo
+dTY0KSAgICB8CisgKiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCisgKiAgfCBPUyBN
+TEUgdGFibGUgICAgICAgICAgICAgICB8CisgKiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LSArCisgKiAgfCBTaXplIE9TIFNJTklUIHRhYmxlICh1NjQpICB8CisgKiAgKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0rCisgKiAgfCBPUyBTSU5JVCB0YWJsZSAgICAgICAgICAgICB8Cisg
+KiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCisgKiAgfCBTaXplIFNJTklUIE1MRSB0
+YWJsZSAodTY0KSB8CisgKiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCisgKiAgfCBT
+SU5JVCBNTEUgdGFibGUgICAgICAgICAgICB8CisgKiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0rCisgKgorICogIE5PVEU6IHRoZSB0YWJsZSBzaXplIGZpZWxkcyBpbmNsdWRlIHRoZSA4
+IGJ5dGUgc2l6ZSBmaWVsZCBpdHNlbGYuCisgKi8KK3N0YXRpYyBpbmxpbmUgdTY0IHR4dF9iaW9z
+X2RhdGFfc2l6ZSh2b2lkICpoZWFwKQoreworCXJldHVybiAqKCh1NjQgKiloZWFwKTsKK30KKwor
+c3RhdGljIGlubGluZSB2b2lkICp0eHRfYmlvc19kYXRhX3N0YXJ0KHZvaWQgKmhlYXApCit7CisJ
+cmV0dXJuIGhlYXAgKyBzaXplb2YodTY0KTsKK30KKworc3RhdGljIGlubGluZSB1NjQgdHh0X29z
+X21sZV9kYXRhX3NpemUodm9pZCAqaGVhcCkKK3sKKwlyZXR1cm4gKigodTY0ICopKGhlYXAgKyB0
+eHRfYmlvc19kYXRhX3NpemUoaGVhcCkpKTsKK30KKworc3RhdGljIGlubGluZSB2b2lkICp0eHRf
+b3NfbWxlX2RhdGFfc3RhcnQodm9pZCAqaGVhcCkKK3sKKwlyZXR1cm4gaGVhcCArIHR4dF9iaW9z
+X2RhdGFfc2l6ZShoZWFwKSArIHNpemVvZih1NjQpOworfQorCitzdGF0aWMgaW5saW5lIHU2NCB0
+eHRfb3Nfc2luaXRfZGF0YV9zaXplKHZvaWQgKmhlYXApCit7CisJcmV0dXJuICooKHU2NCAqKSho
+ZWFwICsgdHh0X2Jpb3NfZGF0YV9zaXplKGhlYXApICsKKwkJCXR4dF9vc19tbGVfZGF0YV9zaXpl
+KGhlYXApKSk7Cit9CisKK3N0YXRpYyBpbmxpbmUgdm9pZCAqdHh0X29zX3Npbml0X2RhdGFfc3Rh
+cnQodm9pZCAqaGVhcCkKK3sKKwlyZXR1cm4gaGVhcCArIHR4dF9iaW9zX2RhdGFfc2l6ZShoZWFw
+KSArCisJCXR4dF9vc19tbGVfZGF0YV9zaXplKGhlYXApICsgc2l6ZW9mKHU2NCk7Cit9CisKK3N0
+YXRpYyBpbmxpbmUgdTY0IHR4dF9zaW5pdF9tbGVfZGF0YV9zaXplKHZvaWQgKmhlYXApCit7CisJ
+cmV0dXJuICooKHU2NCAqKShoZWFwICsgdHh0X2Jpb3NfZGF0YV9zaXplKGhlYXApICsKKwkJCXR4
+dF9vc19tbGVfZGF0YV9zaXplKGhlYXApICsKKwkJCXR4dF9vc19zaW5pdF9kYXRhX3NpemUoaGVh
+cCkpKTsKK30KKworc3RhdGljIGlubGluZSB2b2lkICp0eHRfc2luaXRfbWxlX2RhdGFfc3RhcnQo
+dm9pZCAqaGVhcCkKK3sKKwlyZXR1cm4gaGVhcCArIHR4dF9iaW9zX2RhdGFfc2l6ZShoZWFwKSAr
+CisJCXR4dF9vc19tbGVfZGF0YV9zaXplKGhlYXApICsKKwkJdHh0X29zX3Npbml0X2RhdGFfc2l6
+ZShoZWFwKSArIHNpemVvZih1NjQpOworfQorCisjaWYgSVNfRU5BQkxFRChDT05GSUdfU0VDVVJF
+X0xBVU5DSCkKKworLyoKKyAqIFRQTSBldmVudCBsb2dnaW5nIGZ1bmN0aW9ucy4KKyAqLworc3Rh
+dGljIGlubGluZSBzdHJ1Y3QgdHh0X2hlYXBfZXZlbnRfbG9nX3BvaW50ZXIyXzFfZWxlbWVudCoK
+K3RwbTJfZmluZF9sb2cyXzFfZWxlbWVudChzdHJ1Y3QgdHh0X29zX3Npbml0X2RhdGEgKm9zX3Np
+bml0X2RhdGEpCit7CisJc3RydWN0IHR4dF9oZWFwX2V4dF9kYXRhX2VsZW1lbnQgKmV4dF9lbGVt
+OworCisJLyogVGhlIGV4dGVuZGVkIGVsZW1lbnQgYXJyYXkgYXMgYXQgdGhlIGVuZCBvZiB0aGlz
+IHRhYmxlICovCisJZXh0X2VsZW0gPSAoc3RydWN0IHR4dF9oZWFwX2V4dF9kYXRhX2VsZW1lbnQg
+KikKKwkJKCh1OCAqKW9zX3Npbml0X2RhdGEgKyBzaXplb2Yoc3RydWN0IHR4dF9vc19zaW5pdF9k
+YXRhKSk7CisKKwl3aGlsZSAoZXh0X2VsZW0tPnR5cGUgIT0gVFhUX0hFQVBfRVhUREFUQV9UWVBF
+X0VORCkgeworCQlpZiAoZXh0X2VsZW0tPnR5cGUgPT0KKwkJICAgIFRYVF9IRUFQX0VYVERBVEFf
+VFlQRV9FVkVOVF9MT0dfUE9JTlRFUjJfMSkgeworCQkJcmV0dXJuIChzdHJ1Y3QgdHh0X2hlYXBf
+ZXZlbnRfbG9nX3BvaW50ZXIyXzFfZWxlbWVudCAqKQorCQkJCSgodTggKilleHRfZWxlbSArCisJ
+CQkJCXNpemVvZihzdHJ1Y3QgdHh0X2hlYXBfZXh0X2RhdGFfZWxlbWVudCkpOworCQl9CisJCWV4
+dF9lbGVtID0KKwkJCShzdHJ1Y3QgdHh0X2hlYXBfZXh0X2RhdGFfZWxlbWVudCAqKQorCQkJKCh1
+OCAqKWV4dF9lbGVtICsgZXh0X2VsZW0tPnNpemUpOworCX0KKworCXJldHVybiBOVUxMOworfQor
+CitzdGF0aWMgaW5saW5lIGludCB0cG1fbG9nX2V2ZW50KHZvaWQgKmV2dGxvZ19iYXNlLCB1MzIg
+ZXZ0bG9nX3NpemUsCisJCQkJdTMyIGV2ZW50X3NpemUsIHZvaWQgKmV2ZW50KQoreworCXN0cnVj
+dCB0cG1fZXZlbnRfbG9nX2hlYWRlciAqZXZ0bG9nID0KKwkJKHN0cnVjdCB0cG1fZXZlbnRfbG9n
+X2hlYWRlciAqKWV2dGxvZ19iYXNlOworCisJaWYgKG1lbWNtcChldnRsb2ctPnNpZ25hdHVyZSwg
+VFBNX0VWVExPR19TSUdOQVRVUkUsCisJCSAgIHNpemVvZihUUE1fRVZUTE9HX1NJR05BVFVSRSkp
+KQorCQlyZXR1cm4gLUVJTlZBTDsKKworCWlmIChldnRsb2ctPmNvbnRhaW5lcl9zaXplID4gZXZ0
+bG9nX3NpemUpCisJCXJldHVybiAtRUlOVkFMOworCisJaWYgKGV2dGxvZy0+bmV4dF9ldmVudF9v
+ZmZzZXQgKyBldmVudF9zaXplID4gZXZ0bG9nLT5jb250YWluZXJfc2l6ZSkKKwkJcmV0dXJuIC1F
+MkJJRzsKKworCW1lbWNweShldnRsb2dfYmFzZSArIGV2dGxvZy0+bmV4dF9ldmVudF9vZmZzZXQs
+IGV2ZW50LCBldmVudF9zaXplKTsKKwlldnRsb2ctPm5leHRfZXZlbnRfb2Zmc2V0ICs9IGV2ZW50
+X3NpemU7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGlubGluZSBpbnQgdHBtMl9sb2dfZXZl
+bnQoc3RydWN0IHR4dF9oZWFwX2V2ZW50X2xvZ19wb2ludGVyMl8xX2VsZW1lbnQgKmVsZW0sCisJ
+CQkJIHZvaWQgKmV2dGxvZ19iYXNlLCB1MzIgZXZ0bG9nX3NpemUsCisJCQkJIHUzMiBldmVudF9z
+aXplLCB2b2lkICpldmVudCkKK3sKKwlzdHJ1Y3QgdGNnX3Bjcl9ldmVudCAqaGVhZGVyID0KKwkJ
+KHN0cnVjdCB0Y2dfcGNyX2V2ZW50ICopZXZ0bG9nX2Jhc2U7CisKKwkvKiBIYXMgdG8gYmUgYXQg
+bGVhc3QgYmlnIGVub3VnaCBmb3IgdGhlIHNpZ25hdHVyZSAqLworCWlmIChoZWFkZXItPmV2ZW50
+X3NpemUgPCBzaXplb2YoVENHX1NQRUNJRF9TSUcpKQorCQlyZXR1cm4gLUVJTlZBTDsKKworCWlm
+IChtZW1jbXAoKHU4ICopaGVhZGVyICsgc2l6ZW9mKHN0cnVjdCB0Y2dfcGNyX2V2ZW50KSwKKwkJ
+ICAgVENHX1NQRUNJRF9TSUcsIHNpemVvZihUQ0dfU1BFQ0lEX1NJRykpKQorCQlyZXR1cm4gLUVJ
+TlZBTDsKKworCWlmIChlbGVtLT5hbGxvY2F0ZWRfZXZlbnRfY29udGFpbmVyX3NpemUgPiBldnRs
+b2dfc2l6ZSkKKwkJcmV0dXJuIC1FSU5WQUw7CisKKwlpZiAoZWxlbS0+bmV4dF9yZWNvcmRfb2Zm
+c2V0ICsgZXZlbnRfc2l6ZSA+CisJICAgIGVsZW0tPmFsbG9jYXRlZF9ldmVudF9jb250YWluZXJf
+c2l6ZSkKKwkJcmV0dXJuIC1FMkJJRzsKKworCW1lbWNweShldnRsb2dfYmFzZSArIGVsZW0tPm5l
+eHRfcmVjb3JkX29mZnNldCwgZXZlbnQsIGV2ZW50X3NpemUpOworCWVsZW0tPm5leHRfcmVjb3Jk
+X29mZnNldCArPSBldmVudF9zaXplOworCisJcmV0dXJuIDA7Cit9CisKKy8qCisgKiBFeHRlcm5h
+bCBmdW5jdGlvbnMgYXZhbGFpbGFibGUgaW4gbWFpbmxpbmUga2VybmVsLgorICovCit2b2lkIHNs
+YXVuY2hfc2V0dXBfdHh0KHZvaWQpOwordm9pZCBzbGF1bmNoX2ZpeHVwX2p1bXBfdmVjdG9yKHZv
+aWQpOwordTMyIHNsYXVuY2hfZ2V0X2ZsYWdzKHZvaWQpOworc3RydWN0IHNsX2FwX3dha2VfaW5m
+byAqc2xhdW5jaF9nZXRfYXBfd2FrZV9pbmZvKHZvaWQpOworc3RydWN0IGFjcGlfdGFibGVfaGVh
+ZGVyICpzbGF1bmNoX2dldF9kbWFyX3RhYmxlKHN0cnVjdCBhY3BpX3RhYmxlX2hlYWRlciAqZG1h
+cik7Cit2b2lkIF9fbm9yZXR1cm4gc2xhdW5jaF90eHRfcmVzZXQodm9pZCBfX2lvbWVtICp0eHQs
+CisJCQkJCSBjb25zdCBjaGFyICptc2csIHU2NCBlcnJvcik7Cit2b2lkIHNsYXVuY2hfZmluYWxp
+emUoaW50IGRvX3NleGl0KTsKKworc3RhdGljIGlubGluZSBib29sIHNsYXVuY2hfaXNfdHh0X2xh
+dW5jaCh2b2lkKQoreworCXUzMiBtYXNrID0gIFNMX0ZMQUdfQUNUSVZFIHwgU0xfRkxBR19BUkNI
+X1RYVDsKKworCXJldHVybiAoc2xhdW5jaF9nZXRfZmxhZ3MoKSAmIG1hc2spID09IG1hc2s7Cit9
+CisKKyNlbHNlCisKK3N0YXRpYyBpbmxpbmUgdm9pZCBzbGF1bmNoX3NldHVwX3R4dCh2b2lkKQor
+eworfQorCitzdGF0aWMgaW5saW5lIHZvaWQgc2xhdW5jaF9maXh1cF9qdW1wX3ZlY3Rvcih2b2lk
+KQoreworfQorCitzdGF0aWMgaW5saW5lIHUzMiBzbGF1bmNoX2dldF9mbGFncyh2b2lkKQorewor
+CXJldHVybiAwOworfQorCitzdGF0aWMgaW5saW5lIHN0cnVjdCBhY3BpX3RhYmxlX2hlYWRlciAq
+c2xhdW5jaF9nZXRfZG1hcl90YWJsZShzdHJ1Y3QgYWNwaV90YWJsZV9oZWFkZXIgKmRtYXIpCit7
+CisJcmV0dXJuIGRtYXI7Cit9CisKK3N0YXRpYyBpbmxpbmUgdm9pZCBzbGF1bmNoX2ZpbmFsaXpl
+KGludCBkb19zZXhpdCkKK3sKK30KKworc3RhdGljIGlubGluZSBib29sIHNsYXVuY2hfaXNfdHh0
+X2xhdW5jaCh2b2lkKQoreworCXJldHVybiBmYWxzZTsKK30KKworI2VuZGlmIC8qICFJU19FTkFC
+TEVEKENPTkZJR19TRUNVUkVfTEFVTkNIKSAqLworCisjZW5kaWYgLyogIV9fQVNTRU1CTFkgKi8K
+KworI2VuZGlmIC8qIF9MSU5VWF9TTEFVTkNIX0ggKi8KLS0gCjIuMzkuMwoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
