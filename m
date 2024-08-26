@@ -4,64 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7474C5320E
-	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 02:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5FDEC5321E
+	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 02:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=mj4WmgQf4ArOggBhYioGndwe/NX4rZLhOOuAkk/raRE=; b=VcEz9elzHwNrJX
-	M3so/liOpnkT9nawk0iGhAOBnN17KC0iY1cTkgtfQQOGETu3HRGtsCFWXmlUvER9FHRgz6qfByndO
-	mNGc42nExrqbDaD+NPxzfIJMMRyPBslTzzxgFVrGEFqqHUTqyXjwRpfxHwL7F2BwCP7CBM6gwnQ5D
-	JMFhSbr+/mYQy19beDdC61lRdEnMyAaxm/z9G1SUvisaYBMjFeMx8hZg5816dI00MZPmilLG8w2x2
-	Xdd2fV7SGAjgQ/xFrZmeLyP51vf89sE+gWefmZXJjwiyY9FJUSahaQyraMHg629IV92ACmzmBZltJ
-	EBxIqFGevl5FaeudXk8Q==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=+HQI0gwJHBSw4P6JErR4DUWgFD6XZ1pOHq9g2pc1qPQ=; b=ndMcSLZk0Y8pQb
+	Ql37CHg8Qlgc8BxBrZss6pMt/Km9lXBdj5S1umCNzSOyQQa3sv7+DjnxQd59CPavAz2t7fUnWjbry
+	m5gRO0iEvKEank3iCTVPahe0/Xuy9ss5D2/MnwwX25LU9+1+QLUjpKcEbO4vXnNV6ovC9lifPPkXi
+	cf02RtpxP5iatO2qFPrsIS35kfRXDLSIc4POQgWjplGvtGe6t6KAxG7aL4OvUdX+l9m/jZCOlnXQU
+	dZ0QPCIgswGvCm5Qqpt8SQa4cN5ozeCa8aPrIPfCl9xBmFHsEWvb7j5nmilinnp9BHwsyVaQ1WmHl
+	XBbd8ga1BvyyOTzGoe/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siP4W-00000005UyJ-2tVW;
-	Mon, 26 Aug 2024 02:03:08 +0000
-Received: from gandalf.ozlabs.org ([150.107.74.76] helo=mail.ozlabs.org)
+	id 1siPoo-00000005aAJ-0LZO;
+	Mon, 26 Aug 2024 02:50:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siP4S-00000005Uxf-0b7I
+	id 1siPjD-00000005Z46-09G4
 	for kexec@lists.infradead.org;
-	Mon, 26 Aug 2024 02:03:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1724637782;
-	bh=dZljPhuAr0mbkeN13uZvN48XWKzlLsshYIWJUncVcO0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=VHGPtgj3ZZH12Ev7NLX3TF4pSlkYdY9+3Nos8qj7Ugrk3Qd7UBTWOtWCw67MgXYWv
-	 Qf2bSQC2kE+6RnAmHrsiymxESd/vrerKgDKnxQbFnzMGj9QoZhKM4BG813fBkW7/oy
-	 z6/RR90YfTlKCPEcpUglj1BtK76nlsKyI9rwR+9dNJFdSKB9WERcPawXYYaYWesu3G
-	 qO2lMQfKPcsW0jJphnqBQ0sQ9kXdFOOxx2o6xJ+jdhIoe3PL2bPg8u7lSQ8ia2DLv4
-	 1IKHQh9Xc0kwVaDtqJFt7AUOf/uVLWHWmUo277slyXLTsvcl221QRZpYtO03eTe8IU
-	 rQ67+TcLWw9cw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	Mon, 26 Aug 2024 02:45:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724640309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=syCKz/lVp/XAhbuhyjS5gKGmCqe5UA+PMP3rS7ORfQA=;
+	b=RoPoXkpnbiFIfzU21tbAHIpww7lWyIERVwdhEUH7c5DMT4VBDIvAClEjh4IX008QVdH4/F
+	7Ungk5K4JG5SxAmoXdT8naIegiu9biI5r/2+u5ikN/PDhDYT/SO+eBpR9kDBoAU4REjVJv
+	+YCWj+YHbvuZ7LMnEmUOOOpSJVtaHZM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-35-86CU_4IDPkWQ3b8m3kBq5g-1; Sun,
+ 25 Aug 2024 22:45:07 -0400
+X-MC-Unique: 86CU_4IDPkWQ3b8m3kBq5g-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WsYq848z1z4wbR;
-	Mon, 26 Aug 2024 12:02:59 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Dave Vasilevsky
- <dave@vasilevsky.ca>
-Cc: glaubitz@physik.fu-berlin.de, bhe@redhat.com,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Reimar
- =?utf-8?Q?D=C3=B6ffinger?=
- <Reimar.Doeffinger@gmx.de>
-Subject: Re: [PATCH] crash: Default to CRASH_DUMP=n when support for it is
- unlikely
-In-Reply-To: <CAMuHMdVYNhFJ+qBDP3_fi9oeHsgOL0vqPe1YqE18+M8n1onssw@mail.gmail.com>
-References: <20240823125156.104775-1-dave@vasilevsky.ca>
- <CAMuHMdVYNhFJ+qBDP3_fi9oeHsgOL0vqPe1YqE18+M8n1onssw@mail.gmail.com>
-Date: Mon, 26 Aug 2024 12:02:59 +1000
-Message-ID: <87frqsghws.fsf@mail.lhotse>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E61B1956080;
+	Mon, 26 Aug 2024 02:45:06 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.42])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 661AF19560A3;
+	Mon, 26 Aug 2024 02:45:00 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com,
+	noodles@fb.com,
+	x86@kernel.org,
+	lijiang@redhat.com,
+	dyoung@redhat.com,
+	kexec@lists.infradead.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH] x86/mm/sme: fix the kdump kernel breakage on SME system when CONFIG_IMA_KEXEC=y
+Date: Mon, 26 Aug 2024 10:44:57 +0800
+Message-ID: <20240826024457.22423-1-bhe@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240825_190304_527928_70C776A5 
-X-CRM114-Status: GOOD (  23.05  )
+X-CRM114-CacheID: sfid-20240825_194511_197479_5BCBF9B7 
+X-CRM114-Status: GOOD (  16.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,58 +79,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4gd3JpdGVzOgo+IEhpIERh
-dmUsCj4KPiBPbiBGcmksIEF1ZyAyMywgMjAyNCBhdCAyOjU04oCvUE0gRGF2ZSBWYXNpbGV2c2t5
-IDxkYXZlQHZhc2lsZXZza3kuY2E+IHdyb3RlOgo+PiBGaXhlcyBib290IGZhaWx1cmVzIG9uIDYu
-OSBvbiBQUENfQk9PSzNTXzMyIG1hY2hpbmVzIHVzaW5nCj4+IE9wZW4gRmlybXdhcmUuIE9uIHRo
-ZXNlIG1hY2hpbmVzLCB0aGUga2VybmVsIHJlZnVzZXMgdG8gYm9vdAo+PiBmcm9tIG5vbi16ZXJv
-IFBIWVNJQ0FMX1NUQVJULCB3aGljaCBvY2N1cnMgd2hlbiBDUkFTSF9EVU1QIGlzIG9uLgo+Pgo+
-PiBTaW5jZSBtb3N0IFBQQ19CT09LM1NfMzIgbWFjaGluZXMgYm9vdCB2aWEgT3BlbiBGaXJtd2Fy
-ZSwgaXQgc2hvdWxkCj4+IGRlZmF1bHQgdG8gb2ZmIGZvciB0aGVtLiBVc2VycyBib290aW5nIHZp
-YSBzb21lIG90aGVyIG1lY2hhbmlzbQo+PiBjYW4gc3RpbGwgdHVybiBpdCBvbiBleHBsaWNpdGx5
-Lgo+Pgo+PiBBbHNvIGRlZmF1bHRzIHRvIENSQVNIX0RVTVA9biBvbiBzaC4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogRGF2ZSBWYXNpbGV2c2t5IDxkYXZlQHZhc2lsZXZza3kuY2E+Cj4+IFJlcG9ydGVk
-LWJ5OiBSZWltYXIgRMO2ZmZpbmdlciA8UmVpbWFyLkRvZWZmaW5nZXJAZ214LmRlPgo+PiBDbG9z
-ZXM6IGh0dHBzOi8vbGlzdHMuZGViaWFuLm9yZy9kZWJpYW4tcG93ZXJwYy8yMDI0LzA3L21zZzAw
-MDAxLmh0bWwKPj4gRml4ZXM6IDc1YmMyNTVhNzQ0NCAoImNyYXNoOiBjbGVhbiB1cCBrZHVtcCBy
-ZWxhdGVkIGNvbmZpZyBpdGVtcyIpCj4KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghCj4KPj4gLS0t
-IGEva2VybmVsL0tjb25maWcua2V4ZWMKPj4gKysrIGIva2VybmVsL0tjb25maWcua2V4ZWMKPj4g
-QEAgLTk3LDcgKzk3LDcgQEAgY29uZmlnIEtFWEVDX0pVTVAKPj4KPj4gIGNvbmZpZyBDUkFTSF9E
-VU1QCj4+ICAgICAgICAgYm9vbCAia2VybmVsIGNyYXNoIGR1bXBzIgo+PiAtICAgICAgIGRlZmF1
-bHQgeQo+PiArICAgICAgIGRlZmF1bHQgQVJDSF9ERUZBVUxUX0NSQVNIX0RVTVAKPj4gICAgICAg
-ICBkZXBlbmRzIG9uIEFSQ0hfU1VQUE9SVFNfQ1JBU0hfRFVNUAo+PiAgICAgICAgIGRlcGVuZHMg
-b24gS0VYRUNfQ09SRQo+PiAgICAgICAgIHNlbGVjdCBWTUNPUkVfSU5GTwo+Cj4gSU1ITyBDUkFT
-SF9EVU1QIHNob3VsZCBqdXN0IGRlZmF1bHQgdG8gbiwgbGlrZSBtb3N0IGtlcm5lbCBvcHRpb25z
-LCBhcwo+IGl0IGVuYWJsZXMgbm9uLXRyaXZpYWwgZXh0cmEgZnVuY3Rpb25hbGl0eTogdGhlIGtl
-cm5lbCBzb3VyY2UgdHJlZSBoYXMKPiBtb3JlIHRoYW4gMTAwIGxvY2F0aW9ucyB0aGF0IGNoZWNr
-IGlmIENPTkZJR19DUkFTSF9EVU1QIGlzIGVuYWJsZWQuCj4KPiBMZXR0aW5nIGl0IGRlZmF1bHQg
-dG8gZW5hYmxlZCBhbHNvIGNvbmZsaWN0cyB3aXRoIHRoZSBzcGlyaXQgb2YgdGhlCj4gaGVscCB0
-ZXh0IGZvciB0aGUgc3ltYm9sOgo+Cj4gICAgICAgICAgIEdlbmVyYXRlIGNyYXNoIGR1bXAgYWZ0
-ZXIgYmVpbmcgc3RhcnRlZCBieSBrZXhlYy4KPiAgICAgICAgICAgVGhpcyBzaG91bGQgYmUgbm9y
-bWFsbHkgb25seSBzZXQgaW4gc3BlY2lhbCBjcmFzaCBkdW1wIGtlcm5lbHMKPiAgICAgICAgICAg
-Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5e
-Xl5eXl4KPiAgICAgICAgICAgd2hpY2ggYXJlIGxvYWRlZCBpbiB0aGUgbWFpbiBrZXJuZWwgd2l0
-aCBrZXhlYy10b29scyBpbnRvCj4gICAgICAgICAgIGEgc3BlY2lhbGx5IHJlc2VydmVkIHJlZ2lv
-biBhbmQgdGhlbiBsYXRlciBleGVjdXRlZCBhZnRlcgo+ICAgICAgICAgICBhIGNyYXNoIGJ5IGtk
-dW1wL2tleGVjLiBUaGUgY3Jhc2ggZHVtcCBrZXJuZWwgbXVzdCBiZSBjb21waWxlZAo+ICAgICAg
-ICAgICB0byBhIG1lbW9yeSBhZGRyZXNzIG5vdCB1c2VkIGJ5IHRoZSBtYWluIGtlcm5lbCBvciBC
-SU9TIHVzaW5nCj4gICAgICAgICAgIFBIWVNJQ0FMX1NUQVJULCBvciBpdCBtdXN0IGJlIGJ1aWx0
-IGFzIGEgcmVsb2NhdGFibGUgaW1hZ2UKPiAgICAgICAgICAgKENPTkZJR19SRUxPQ0FUQUJMRT15
-KS4KPiAgICAgICAgICAgRm9yIG1vcmUgZGV0YWlscyBzZWUgRG9jdW1lbnRhdGlvbi9hZG1pbi1n
-dWlkZS9rZHVtcC9rZHVtcC5yc3QKPgo+ICAgICAgICAgICBGb3IgczM5MCwgdGhpcyBvcHRpb24g
-YWxzbyBlbmFibGVzIHpmY3BkdW1wLgo+ICAgICAgICAgICBTZWUgYWxzbyA8ZmlsZTpEb2N1bWVu
-dGF0aW9uL2FyY2gvczM5MC96ZmNwZHVtcC5yc3Q+Cj4KPiBXaGF0IGlzIHNvIHNwZWNpYWwgYWJv
-dXQgQ1JBU0hfRFVNUCwgdGhhdCBpdCBzaG91bGQgYmUgZW5hYmxlZCBieQo+IGRlZmF1bHQ/CiAK
-VGhlIHJlYWxpdHkgaXMgdGhhdCBlc3NlbnRpYWxseSBhbGwgZGlzdHJvcyBlbmFibGUgaXQuIEJl
-Y2F1c2UgdGhleQpkb24ndCB3YW50IHRvIG1hbmFnZSBzZXBhcmF0ZSBrZXJuZWwgLyBjcmFzaC1r
-ZXJuZWwgcGFja2FnZXMuCgpTbyBJTUhPIGhhdmluZyBpdCBlbmFibGVkIGJ5IGRlZmF1bHQgaW4g
-dXBzdHJlYW0gZG9lcyBtYWtlIHNlbnNlLApiZWNhdXNlIGl0IG1vcmUgY2xvc2VseSBtYXRjaGVz
-IHdoYXQgZGlzdHJvcy91c2VycyBhY3R1YWxseSBydW4uCgpjaGVlcnMKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+Recently, it's reported that kdump kernel is broken during bootup on
+SME system when CONFIG_IMA_KEXEC=y. When debugging, I noticed this
+can be traced back to commit ("b69a2afd5afc x86/kexec: Carry forward
+IMA measurement log on kexec"). Just nobody ever tested it on SME
+system when enabling CONFIG_IMA_KEXEC.
+
+--------------------------------------------------
+ ima: No TPM chip found, activating TPM-bypass!
+ Loading compiled-in module X.509 certificates
+ Loaded X.509 cert 'Build time autogenerated kernel key: 18ae0bc7e79b64700122bb1d6a904b070fef2656'
+ ima: Allocated hash algorithm: sha256
+ Oops: general protection fault, probably for non-canonical address 0xcfacfdfe6660003e: 0000 [#1] PREEMPT SMP NOPTI
+ CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.11.0-rc2+ #14
+ Hardware name: Dell Inc. PowerEdge R7425/02MJ3T, BIOS 1.20.0 05/03/2023
+ RIP: 0010:ima_restore_measurement_list+0xdc/0x420
+ Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
+ RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
+ RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
+ RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
+ R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
+ R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
+ Call Trace:
+  <TASK>
+  ? show_trace_log_lvl+0x1b0/0x2f0
+  ? show_trace_log_lvl+0x1b0/0x2f0
+  ? ima_load_kexec_buffer+0x6e/0xf0
+  ? __die_body.cold+0x8/0x12
+  ? die_addr+0x3c/0x60
+  ? exc_general_protection+0x178/0x410
+  ? asm_exc_general_protection+0x26/0x30
+  ? ima_restore_measurement_list+0xdc/0x420
+  ? vprintk_emit+0x1f0/0x270
+  ? ima_load_kexec_buffer+0x6e/0xf0
+  ima_load_kexec_buffer+0x6e/0xf0
+  ima_init+0x52/0xb0
+  ? __pfx_init_ima+0x10/0x10
+  init_ima+0x26/0xc0
+  ? __pfx_init_ima+0x10/0x10
+  do_one_initcall+0x5b/0x300
+  do_initcalls+0xdf/0x100
+  ? __pfx_kernel_init+0x10/0x10
+  kernel_init_freeable+0x147/0x1a0
+  kernel_init+0x1a/0x140
+  ret_from_fork+0x34/0x50
+  ? __pfx_kernel_init+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ Modules linked in:
+ ---[ end trace 0000000000000000 ]---
+ RIP: 0010:ima_restore_measurement_list+0xdc/0x420
+ Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
+ RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
+ RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
+ RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
+ R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
+ R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
+ Kernel panic - not syncing: Fatal exception
+ Kernel Offset: disabled
+ Rebooting in 10 seconds..
+
+From debugging printing, the stored addr and size of ima_kexec buffer
+are not decrypted correctly like:
+ ------
+ ima: ima_load_kexec_buffer, buffer:0xcfacfdfe6660003e, size:0xe48066052d5df359
+ ------
+
+There are three pieces of setup_data info passed to kexec/kdump kernel:
+SETUP_EFI, SETUP_IMA and SETUP_RNG_SEED. However, among them, only
+ima_kexec buffer suffered from the incorrect decryption. After
+debugging, it's because of the code bug in early_memremap_is_setup_data()
+where checking the embedded content inside setup_data takes wrong range
+calculation.
+
+The length of efi data, rng_seed and ima_kexec are 0x70, 0x20, 0x10,
+and the length of setup_data is 0x10. When checking if data is inside
+the embedded conent of setup_data, the starting address of efi data and
+rng_seed happened to land in the wrong calculated range. While the
+ima_kexec's starting address unluckily doesn't pass the checking, then
+error occurred.
+
+Here fix the code bug to make kexec/kdump kernel boot up successfully.
+
+Fixes: 8f716c9b5feb ("x86/mm: Add support to access boot related data in the clear")
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/x86/mm/ioremap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index aa7d279321ea..7953c4a1d28d 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -717,7 +717,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+ 		paddr_next = data->next;
+ 		len = data->len;
+ 
+-		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
++		if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
+ 			early_memunmap(data, sizeof(*data));
+ 			return true;
+ 		}
+-- 
+2.41.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
