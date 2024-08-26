@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F451C5472C
-	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 22:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F463C54731
+	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 22:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CLdz5NL07XXnM8GWX1NsHTNBMvxX3r9h2yGSEd+EdX0=; b=OkzFp7K/FdEoyS
-	hbsYZF42vIRRhF5z1//wan/lxOEZ04IXEHjT41/n5RUSQIJQi34cQMzxSPQUoEJpBLTmtHQD5QMKo
-	L2vRyWo/9ZRB8YQq+QBJj//i93/zkw9GG0vPSRGU853neC27ZO/stYpuu/m9hgSaltKvdJrTRrNSl
-	0SxJU3cr/7ABAS/fE8UrNcJi1fcHEDtPD1o1LwNbwOHITwqDnU/uF19zKHAx46BKmqWoql7xtu68D
-	CWse6xD2/uY8vBdzCWsQ384l4h4chl75T0P+sxuTPtBDEJI81RZldwaUVfJOG0kd/cZzrHqNE29Ch
-	knwi85LKk3IdWufCs8iw==;
+	List-Owner; bh=h3hNGaOv3UDMBIJvIU4EC7Pul+do+ElZr1ddqwRw7SM=; b=KL2BhQ3uS9hbCK
+	JAihcC5gnsIofELw6jnbnSxzPWQgsj3AOZtQY8y5umDTexUb1NOG6/Ik6MlcEQrZruWnyyf1AawkD
+	71gW2IJpdejubhIPdtwV8xgIevqAWcJYXlY/RhXZXZPfJb9ou7rM//kSNhIZvCT/lQnbYso2u7H+g
+	ZhCA0HHzV9HBCZcOIsyGrW2CwFSroLpaxM63Z68XN/V+6DPbUrUP7R/u7eJv82Rjrh5KsjfprAvHO
+	9AKxAqzjqIYOueu1izVbrL73yWU21kMp7NJhYUr68RTzzslv4ZBsFQJ5KzyBJrI40vVIv4BGACbj6
+	zr1sco3E5OhhAyj8XgJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siiS8-0000000937B-28Qa;
-	Mon, 26 Aug 2024 22:44:48 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1siiS9-00000009384-3eOX;
+	Mon, 26 Aug 2024 22:44:49 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siiRQ-000000092s9-0gHl
+	id 1siiRl-0000000930i-16Kk
 	for kexec@lists.infradead.org;
-	Mon, 26 Aug 2024 22:44:08 +0000
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtSbR002141;
-	Mon, 26 Aug 2024 22:43:45 GMT
+	Mon, 26 Aug 2024 22:44:26 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtToh014888;
+	Mon, 26 Aug 2024 22:44:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=C
-	BwVi+IOsZakjKwBef0tUPxe+z4b+8YEf5WOjhPKBpE=; b=BL9NaMAxZ9+EQDu7W
-	jC8UBAbrv+cKb0hz5lOQlTXq+4B2e8lCkZeA7ntotVoL+VJKldPZ1z7GH97TIQrd
-	u3Q5RBUh7bVpP+5ZudhXpqJ73qWHrYPjpbCNuqwvn1czus1WQOWLtFCim3Z+skGN
-	mZgwVUO+sndR6s4BYackGK+urG4kqO3obigjV20yW9UrqucyoTq8JLRoP+Nu1+RN
-	CfyTQo95vnnKPkGjlIlg33wmpZ3guSK6+w119XyoZrC56g0n+IWfhvDKmYnthVbi
-	A9MvxAIyz91UmA9eEvhf1jtlkT3Ophn/Oxzsw9XMntKtJ0XNf1OXwbmhrQ4nTrCX
-	GvnXg==
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=F
+	ZVeLxDSNo7d2mdIrU5gJs+5+aIX6K0McCQCkOYq2DA=; b=TLsj5pg8JwIWPCTGR
+	a44vpgcYPW5SHAF72319CDvpv3tAIPvsXNDcSkwR5Ip2wreuFuyJHVy/5rkikqbA
+	GjiS5d96uQMQx+jE1UJymIHctosiOgAnD/Xjg9PaF+ji6w3FsG6swCBEaKEXntZL
+	ICM/dOf/gbbXgNzCpGa9NyjN/w4odJUmH9Ey+o3gPJpq0kXgfUk+zoalnPUsPebn
+	1nyKy+sxs0xUzIc9RVfs3dqDFJxZIO+yETw4raKykeH1E9GKcTYnyQt5PtEwbn03
+	bojW58XGrPLsJQWSfq+uOAWMp65SSbCxRPhKt+fJGOwE47yRuaVNqyK/nOHzIl9P
+	NonCQ==
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177n4491k-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41782sv8s0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Aug 2024 22:43:44 +0000 (GMT)
+	Mon, 26 Aug 2024 22:44:05 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QMQHJc016714;
-	Mon, 26 Aug 2024 22:43:43 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QLlvXI017435;
+	Mon, 26 Aug 2024 22:44:04 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmqx3-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmr8x-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:43:43 +0000
+	Mon, 26 Aug 2024 22:44:04 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMhgf7030531;
-	Mon, 26 Aug 2024 22:43:42 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMhlw8030730;
+	Mon, 26 Aug 2024 22:44:03 GMT
 Received: from localhost.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmqu1-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmr6b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:43:42 +0000
+	Mon, 26 Aug 2024 22:44:03 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v10 18/20] tpm: Add sysfs interface to allow setting and querying the default locality
-Date: Mon, 26 Aug 2024 15:38:33 -0700
-Message-Id: <20240826223835.3928819-19-ross.philipson@oracle.com>
+Subject: [PATCH v10 20/20] x86/efi: EFI stub DRTM launch support for Secure Launch
+Date: Mon, 26 Aug 2024 15:38:35 -0700
+Message-Id: <20240826223835.3928819-21-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240826223835.3928819-1-ross.philipson@oracle.com>
 References: <20240826223835.3928819-1-ross.philipson@oracle.com>
@@ -87,11 +87,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxs
  phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
  definitions=main-2408260174
-X-Proofpoint-GUID: 95a73I-2QyKUy8AihDryftqMY6G9QY72
-X-Proofpoint-ORIG-GUID: 95a73I-2QyKUy8AihDryftqMY6G9QY72
+X-Proofpoint-GUID: _txUEO6_ZPApYbvwaVaVoP0oF_4uE0Bl
+X-Proofpoint-ORIG-GUID: _txUEO6_ZPApYbvwaVaVoP0oF_4uE0Bl
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240826_154404_414428_827E227E 
-X-CRM114-Status: GOOD (  12.81  )
+X-CRM114-CacheID: sfid-20240826_154425_315783_4EDDBED6 
+X-CRM114-Status: GOOD (  20.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,69 +108,159 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Expose a sysfs interface to allow user mode to set and query the default
-locality set for the TPM chip.
+This support allows the DRTM launch to be initiated after an EFI stub
+launch of the Linux kernel is done. This is accomplished by providing
+a handler to jump to when a Secure Launch is in progress. This has to be
+called after the EFI stub does Exit Boot Services.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- drivers/char/tpm/tpm-sysfs.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/firmware/efi/libstub/efistub.h  |  8 ++
+ drivers/firmware/efi/libstub/x86-stub.c | 98 +++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index 94231f052ea7..185a2f57d4cb 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -324,6 +324,34 @@ static ssize_t null_name_show(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_RO(null_name);
- #endif
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index d33ccbc4a2c6..baf42d6d0796 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -135,6 +135,14 @@ void efi_set_u64_split(u64 data, u32 *lo, u32 *hi)
+ 	*hi = upper_32_bits(data);
+ }
  
-+static ssize_t default_locality_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
++static inline
++void efi_set_u64_form(u32 lo, u32 hi, u64 *data)
 +{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
++	u64 upper = hi;
 +
-+	return sprintf(buf, "%d\n", chip->default_locality);
++	*data = lo | upper << 32;
 +}
 +
-+static ssize_t default_locality_store(struct device *dev, struct device_attribute *attr,
-+				      const char *buf, size_t count)
+ /*
+  * Allocation types for calls to boottime->allocate_pages.
+  */
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index f8e465da344d..04786c1b3b5d 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -9,6 +9,8 @@
+ #include <linux/efi.h>
+ #include <linux/pci.h>
+ #include <linux/stddef.h>
++#include <linux/slr_table.h>
++#include <linux/slaunch.h>
+ 
+ #include <asm/efi.h>
+ #include <asm/e820/types.h>
+@@ -923,6 +925,99 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
+ 	return efi_adjust_memory_range_protection(addr, kernel_text_size);
+ }
+ 
++static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
++						 struct boot_params *boot_params)
 +{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	unsigned int locality;
++	struct slr_entry_intel_info *txt_info;
++	struct slr_entry_policy *policy;
++	struct txt_os_mle_data *os_mle;
++	bool updated = false;
++	int i;
 +
-+	if (kstrtouint(buf, 0, &locality))
-+		return -ERANGE;
++	txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
++	if (!txt_info)
++		return false;
 +
-+	if (locality >= TPM_MAX_LOCALITY)
-+		return -ERANGE;
++	os_mle = txt_os_mle_data_start((void *)txt_info->txt_heap);
++	if (!os_mle)
++		return false;
 +
-+	if (tpm_chip_set_default_locality(chip, (int)locality))
-+		return count;
-+	else
-+		return 0;
++	os_mle->boot_params_addr = (u64)boot_params;
++
++	policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
++	if (!policy)
++		return false;
++
++	for (i = 0; i < policy->nr_entries; i++) {
++		if (policy->policy_entries[i].entity_type == SLR_ET_BOOT_PARAMS) {
++			policy->policy_entries[i].entity = (u64)boot_params;
++			updated = true;
++			break;
++		}
++	}
++
++	/*
++	 * If this is a PE entry into EFI stub the mocked up boot params will
++	 * be missing some of the setup header data needed for the second stage
++	 * of the Secure Launch boot.
++	 */
++	if (image) {
++		struct setup_header *hdr = (struct setup_header *)((u8 *)image->image_base +
++					    offsetof(struct boot_params, hdr));
++		u64 cmdline_ptr;
++
++		boot_params->hdr.setup_sects = hdr->setup_sects;
++		boot_params->hdr.syssize = hdr->syssize;
++		boot_params->hdr.version = hdr->version;
++		boot_params->hdr.loadflags = hdr->loadflags;
++		boot_params->hdr.kernel_alignment = hdr->kernel_alignment;
++		boot_params->hdr.min_alignment = hdr->min_alignment;
++		boot_params->hdr.xloadflags = hdr->xloadflags;
++		boot_params->hdr.init_size = hdr->init_size;
++		boot_params->hdr.kernel_info_offset = hdr->kernel_info_offset;
++		efi_set_u64_form(boot_params->hdr.cmd_line_ptr, boot_params->ext_cmd_line_ptr,
++				 &cmdline_ptr);
++		boot_params->hdr.cmdline_size = strlen((const char *)cmdline_ptr);
++	}
++
++	return updated;
 +}
 +
-+static DEVICE_ATTR_RW(default_locality);
++static void efi_secure_launch(struct boot_params *boot_params)
++{
++	struct slr_entry_dl_info *dlinfo;
++	efi_guid_t guid = SLR_TABLE_GUID;
++	dl_handler_func handler_callback;
++	struct slr_table *slrt;
 +
- static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_pubek.attr,
- 	&dev_attr_pcrs.attr,
-@@ -336,6 +364,7 @@ static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_durations.attr,
- 	&dev_attr_timeouts.attr,
- 	&dev_attr_tpm_version_major.attr,
-+	&dev_attr_default_locality.attr,
- 	NULL,
- };
++	if (!IS_ENABLED(CONFIG_SECURE_LAUNCH))
++		return;
++
++	/*
++	 * The presence of this table indicated a Secure Launch
++	 * is being requested.
++	 */
++	slrt = (struct slr_table *)get_efi_config_table(guid);
++	if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
++		return;
++
++	/*
++	 * Since the EFI stub library creates its own boot_params on entry, the
++	 * SLRT and TXT heap have to be updated with this version.
++	 */
++	if (!efi_secure_launch_update_boot_params(slrt, boot_params))
++		return;
++
++	/* Jump through DL stub to initiate Secure Launch */
++	dlinfo = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
++
++	handler_callback = (dl_handler_func)dlinfo->dl_handler;
++
++	handler_callback(&dlinfo->bl_context);
++
++	unreachable();
++}
++
+ static void __noreturn enter_kernel(unsigned long kernel_addr,
+ 				    struct boot_params *boot_params)
+ {
+@@ -1050,6 +1145,9 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+ 		goto fail;
+ 	}
  
-@@ -344,6 +373,7 @@ static struct attribute *tpm2_dev_attrs[] = {
- #ifdef CONFIG_TCG_TPM2_HMAC
- 	&dev_attr_null_name.attr,
- #endif
-+	&dev_attr_default_locality.attr,
- 	NULL
- };
- 
++	/* If a Secure Launch is in progress, this never returns */
++	efi_secure_launch(boot_params);
++
+ 	/*
+ 	 * Call the SEV init code while still running with the firmware's
+ 	 * GDT/IDT, so #VC exceptions will be handled by EFI.
 -- 
 2.39.3
 
