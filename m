@@ -4,160 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5DADEC5321E
-	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 14:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D708C5321D
+	for <kexec@archiver.kernel.org>; Mon, 26 Aug 2024 22:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:Subject:From:
-	References:Cc:To:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OvPzVxeBf5631HJmDwPGx/DTdV6pLoX3bqkQ2b+c6xM=; b=mhLJOOKzYU1bQN
-	KSUafZBr0mbk4cgqxYNKwsunz4cSBicl9XWNi7FOMLY9jsd2pSiIUYdBet2ICbEnQMJZXCEAEpbwS
-	Fl+50+2mjROXANB4k0SFcCClauYwh8Eu9pTVViaXA9M5Yxdi0c2vyGOW7VKXyxzD9GVSOa4vSRn9G
-	Az0AS8Uobgca1IwvWtab+IKnJvP88SfIU+CDq+LHYbw+JqFnp3XF5YljgKEwXNjsOPRNc8gjZapGj
-	RJ3WeQM4EgJ8PdqYDlPabRBp0v0DwrmEx5V9iDBR8aHE4T5VwIPnUowtnh0gPE8rMUXf4tPjGXCU+
-	1w0M7eFH++SDa8bhvnrw==;
+	List-Owner; bh=ETq9x8cDOInSx9RZeyEHkSuxM2qzp9NBbgP/PXoUR8w=; b=5G6aXwVGlteH40
+	iIR6qqcS4sGxBshdefW6YAXXc6NkwhCe9KaLxPNRvacCzFGZJi1jxRCYdFTI2uiiT0X3zOK7GITYR
+	W15RVuP0+iHd/jQZ8Y3PXL4PZTvVzJhemE+4xBAzK/S/klHHMXeqlOBlHDhNnPndVc9tlwleFFJFG
+	oV118fOHKhMCkJ92/qFT2Fmp5hyw3yB+hHWx+WHhnEFlnwXoaPUtjXrOYPKEEkqQ11Bf5l8pEB3Er
+	LAn8lfv13pAOqHw7LM970MZEgSz5WPuQMwpPBdtxVClyJ/r4y6Wzo9oNMUhLwBnt7p7Sa44RBraZi
+	aU5fZWq1ncfszqvLU38A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siadz-00000007dmo-3APN;
-	Mon, 26 Aug 2024 14:24:31 +0000
-Received: from mail-dm6nam11on2062f.outbound.protection.outlook.com ([2a01:111:f403:2415::62f] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
+	id 1siiPN-000000091kM-1tZD;
+	Mon, 26 Aug 2024 22:41:57 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siadq-00000007dit-2wok
+	id 1siiPK-000000091jt-36Lj
 	for kexec@lists.infradead.org;
-	Mon, 26 Aug 2024 14:24:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w8UyKFI9rHVjAJlVTC4n/B5vJeUniBuLY1eJkNzKKamvE9frluLhs9HzSXPZBkPkgK2LuZwqwAVlaEbEacbsDaO+DG8C5ENsB5+a9/ZUzI0ZVGA/9sDN8SdOTMzgmM5Nrgr2gIPxb4BvCr8fVarJQcB6fO17D5uOcUzELPvdTwxK8bzyP+F6uMZ1kLFww+6exnzZCLauT8d7f1Jx7JRxpq78DObsq/fwKH7Nk3gXAlzLvH/1jdLcjOv+F/ak6sa30MFAw9sWBqbcRPm0yI66xuh6WUle35vBA7SW1p88p39NOepliYKqNDMYYC1CqeTCt3AnzTGNoGSwCdp/S4xYeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FWLetO0P33D0Gxys2gBwlG2SbDKf5Z+THrB96kpo/Yg=;
- b=EkUG3ED0cmPLiaLtlQIHe+KuDeN/ghH+41SgNBNxSQfVWgs21v2LBS96MdU5OBHqksns8jVq0IrQPy7B9Ff9PznIitGdjZH9XajxnZjaB/G8ieBwDA4LyP2EXLI2uJyTGJnjbvzKeYc+7PFj35SZLLnStvIf6K0ONcsWFjvg78EaNkOUeyUg3vI2Ral1ef58eCdpuryaPfa4OHZwy0zllM0LE1IwlyB64x6CquvG2s8xRZ1lzE2xERYugSVW3GkJo13SyAyBzWZVTUggAyAmOVLHtBW2JKDIsDjIWJYTsqOWbxGlOtU2na+DvMs5aET6qqe803LmxDySk29lf0i+4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FWLetO0P33D0Gxys2gBwlG2SbDKf5Z+THrB96kpo/Yg=;
- b=fRvEvAS0fn3LB64b4L8Ba4Za6YBlg1PxuPJIWsxdK0svF0TrTqrkHGWmkJqUO6qGKShhyeC3qBrBt25csWIyV7/ugmeAu2a2J0sXIjclaeVhgvUOeBwwCkJYvV3zjvUszpT7gFVATny7aqxlTJtf1fWp3lg5BHzhzsWiJnXa25o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by CYYPR12MB8923.namprd12.prod.outlook.com (2603:10b6:930:bc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.24; Mon, 26 Aug
- 2024 14:24:15 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.7897.021; Mon, 26 Aug 2024
- 14:24:13 +0000
-Message-ID: <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
-Date: Mon, 26 Aug 2024 09:24:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: noodles@fb.com, x86@kernel.org, lijiang@redhat.com, dyoung@redhat.com,
- kexec@lists.infradead.org
-References: <20240826024457.22423-1-bhe@redhat.com>
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH] x86/mm/sme: fix the kdump kernel breakage on SME system
- when CONFIG_IMA_KEXEC=y
-In-Reply-To: <20240826024457.22423-1-bhe@redhat.com>
-X-ClientProxiedBy: SA1P222CA0139.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::25) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	Mon, 26 Aug 2024 22:41:55 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtSN8007318;
+	Mon, 26 Aug 2024 22:41:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=E
+	cqTseYjTndPo7qnnktrBgiljIE8peMHL6Zd2VChAJc=; b=EcEcybTKQawn84wlR
+	tAA+aQye7h1zOClxQzDJ9ImqEf9WNMVPvuPVnMxTZLXUJlvo5OOlPL0hp7x+v9YU
+	pCR6AXX8bbNkTjNEOfoti9qiWUfjXtH2xJrKXifE3f+uDHiVMmfVVyvbVD8tfCFH
+	9MMZFpjfUmJjA4RS9hwD58V6TO6JV4dQ/9uqk5hcypNegI8pAr9c4XCGZD7M9whO
+	k7EEeFVbFZIGoDfGzN0kQtugLHnKLedbzH4D+8uEygUX4ZPHiUUxnZCcqWKaLKQx
+	BWihLnK7Ez0TvkzDUAdiaC8Ng0I8YJVD/TnOWSXw2I2+5W9zpNYPl6xya54eYGsG
+	KuPPw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177u6mbcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Aug 2024 22:41:23 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QMJXdO017382;
+	Mon, 26 Aug 2024 22:41:22 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmnye-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 26 Aug 2024 22:41:22 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMfLg2024733;
+	Mon, 26 Aug 2024 22:41:21 GMT
+Received: from localhost.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5rmnvd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 26 Aug 2024 22:41:21 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v10 02/20] x86: Secure Launch Kconfig
+Date: Mon, 26 Aug 2024 15:38:17 -0700
+Message-Id: <20240826223835.3928819-3-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240826223835.3928819-1-ross.philipson@oracle.com>
+References: <20240826223835.3928819-1-ross.philipson@oracle.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CYYPR12MB8923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ad0224a-270a-43c1-fedc-08dcc5dac213
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SWE1T2hGTUhsQ0xzRmlRU1J0dytQVWdmaFh2dzhFblMwWnhLYTUvVlZjY0oz?=
- =?utf-8?B?ZEFPeE50Y0JvM1l1dyt3UEVaTHlteXJoU1ozeXgrTjROdW9yeUFPSVcwVDdW?=
- =?utf-8?B?NVJ3NEZZT1lCcVdZaHpmaDNmWk9tU0YrSHVGQzBFblB2TDdmeWM4bzFBbFRY?=
- =?utf-8?B?V1dSYkdIQXY3K2xQSHNJZ09DTkREc2o5TmNZTWZobzJJZXVpOWR4cHRhd0dZ?=
- =?utf-8?B?TFJMbU9zVzIrbEorcTZqS0NOUjZvdUNleDFLdVR3TGxNRzgzbTNxcmIwdlN4?=
- =?utf-8?B?RUxtcjJ3RUNFSHh2Nk9DaDUrSVZpbHRRNEZuWVJlV1ZhNjdaSm5uWm56MXBm?=
- =?utf-8?B?dTg2OTd4NEpJYVhIR1JQTmNrWFVuS2dWTjlYSm55SXRubVAxZHlxRDVRN2lR?=
- =?utf-8?B?ejhiWkdrVWdNY1JQMHZpZ0padmNzUXpIUWpjSDZBT2Fxb01aN3ZEOFBtM1B5?=
- =?utf-8?B?TDBIUHlaa1Z6YVlxMzk2N2U0dng0UWVXM2YrWkpFakk2RFBnY1RydkVSVitz?=
- =?utf-8?B?aWE4cnV6WFNrQ3p2bWV0N2NWd1dmM1BtbGE1Snp2MjEzS0ZKdk9uZTk2N0Z1?=
- =?utf-8?B?anJsT0l1ZFYvNU9nU3dqYnpWZGhVVUlMenRuZmUzUmlTSnB5elE5ZlBoVkw0?=
- =?utf-8?B?bzJwcW1rU0llbmt2cGd1YVA1RThYcVdFaUpBTnFScXNCaHFpR2VnWGVFelBP?=
- =?utf-8?B?Kzk5dVFJRUxpajdaUW1tbnpNRHB4Q2FveDg4YS8xcHV3aUQzdTVSb3VtelNQ?=
- =?utf-8?B?RDN4Z0JsMEhPU05INFpGeDA1d0docW53R1hEWFhXODdpMHJNUGk0KzdsVmhU?=
- =?utf-8?B?ako3eWdKUzJiMzRxL25xYnE4RFkza25WUkF1U1YyUXMvM0pqaUxnWHV1b2Za?=
- =?utf-8?B?WXhDNmc3VndHdlJ4dnRmRFU2bmNadWNGS2hIL25TUm45Qk9Jc2ZpZUdvaTNH?=
- =?utf-8?B?RjJvWUdNNEdQK3A4bU1iQ2RPc25VbUpxcDlmSTBSNmQzNzhjSEtuaVVtekM4?=
- =?utf-8?B?V25IcE1GellOUW1ncWZ0cTdNci9kRm5lT24raGE0WXg5ZlZjSE55YytPdkJw?=
- =?utf-8?B?akJuL1VwNkQxNnZTYUY3MVFCOXhldkE3SnI5ZnpvTWVhdUtYUHJzUWhRejRs?=
- =?utf-8?B?TlJVdVF3QXpqTWduRVlldjRwZEtyY2N1VmkzMFEzYXRnOWl4V0NmWkVJdFp0?=
- =?utf-8?B?cmhoNmFlbWVFWllhUXdZK2VpbmloTytleHo2SjJUK0RNU3QwOGR5YVN5RXJS?=
- =?utf-8?B?bzlUNExZOFBSRkY1b091U2M2ci9hYVNHSElabGFtOTRVZVl4QjRrbXRIWFlZ?=
- =?utf-8?B?QVFaaHBIcE1tbVBIYW1DRG9Eczg4bnpwRHdKL0Q1cWtBMmhURVJUNURva3p2?=
- =?utf-8?B?TXMyRjdJNjh1bHA2V0ZUN1FES1JhbmNNTjh3djR2ck85dWZwQWh3cXRiS1M0?=
- =?utf-8?B?dkU4RW1WdjFlMlMrN0x3dThOeXlXSGUzVTFxaVplL0xPZVN1a1BDT1Y4dVFy?=
- =?utf-8?B?VGRTT2JpblRWV29qd3lWY0FBVGpBVHA0OHhMdW95TmkvUXk5eTFodXAyZldi?=
- =?utf-8?B?VU1abTlKbUdLRG9hcXZoM3MzUXJkTUlBanUwN0lDUVhaekFoVnpBcEtYektO?=
- =?utf-8?B?bDBtenRxLzRpenh0ZDdKZ0U4aEgvWEs1bTNsRUZ2d1NLb2pOYUNCNXMxWTZj?=
- =?utf-8?B?UDc3R0FRcmNXeFBxUm1ES1dqeW5lS0NpQTRQRWdZVVRzWjU4VmQ3YkR3VG15?=
- =?utf-8?B?WDhmM0U4WWRUV1FmYkhZRy80anNKTTdLdUdCdWZTU2x2RU0zVXQwVTlQRGs5?=
- =?utf-8?B?YUdabnlZamNZdldqcmp2Zz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ckkvY3RpTk5VY2V3cGJQZlVSdzB4TXVkbjhDMlFucis5RHFhWjBPdWVyZjJX?=
- =?utf-8?B?RW5YYjRsYktUT0RkUWNSMUVXelhtekVGMm8wQitIelc1NndEOTRrQTRBWExq?=
- =?utf-8?B?SDFpaStZZVJoWkJ5a2F1NTZzYk5mU09zeFFrWFJWbjgrOStkWTJUZTUvSUE3?=
- =?utf-8?B?TDVETWgxQnpYcEt3Y2tMNGZKdnIvTUxTT1pWYmZKK3NzRlpnd3NHSHoraTBw?=
- =?utf-8?B?OXcxdWZmeEc1NkltWjQ4WUU4ZG1nMTR0TzVVMmVjb1pBMFphc0dlcmFxRkJi?=
- =?utf-8?B?b09NVHFuc2k0dURITUkya0hQektPRkVEcWhmZHlvTmEvTVRZVXRMd2RkR2lR?=
- =?utf-8?B?S3o5bE1nTkprSURXbGFWMkt0bXA1QVlVbXF5MWY1OWhBSGRWQVo3T1FuT0Ny?=
- =?utf-8?B?ZVpmVENqZm1oY3gwTnJpU2tqcjNLRHZMTmtVL0tvSjZXNy80WG9TcUVCaXVm?=
- =?utf-8?B?Tlo3djZNZzdNSUFWS1BzeHRJRUhWbU9rUlJxMWxnaUxKdVJOZkVicTlMZ0x1?=
- =?utf-8?B?QTl0QUI5TkNCNzV6QzduRmJxcE82Tk1OeUpMcmxMa1FsMmhZWDEvSFplWVNt?=
- =?utf-8?B?SW1jOXhzQjBsQmFuQWdUaDlQN2FpTnVrL2ZSVVd3L0F4NUU2cFlFa2ovSFZH?=
- =?utf-8?B?Q1RIa0RyWDFjVUJLMWhiVDZtSFdiZDEvcE80M1kyaVBKOEhIZVdBRkNqcWJn?=
- =?utf-8?B?SUhPWlM3VVgwbG1Bd0MrZU42OVNCT09mY3puUmJTM3RyUm5DZVV5MVVvSzZY?=
- =?utf-8?B?d0VlOU5iSTU4Y0l5azNpbGFJSW1LaGs2VXJIbWJ0QTZEajlRS1Q3Rk5uUnlT?=
- =?utf-8?B?cDRadGNxOC9BRVF1NUJxakpQM3FVbkZTSGNsck9LYUxDREJ6LzNQY3JiMXlp?=
- =?utf-8?B?dzdCVWkwU3NIVm1Rb3B3dDliMjdDL3NVSm1IUVVoYzNmUTdITVVydzRZREdz?=
- =?utf-8?B?elJvZjU0NmxWRFM4SHBUV3dtZjhjYnlRNkVnemMybjN6b1ZLN1NNM3FLNWF4?=
- =?utf-8?B?aDZTQ0diblYxRGkydTRyNHFKY2RIUDFzVEoyeUtZUmxCc0FRWUhxTk1Zdzg1?=
- =?utf-8?B?Sko4TGE3OTUweEZ5Y2c1U0MrblZodHBIYURRTTUrSEpNb3RmOWh5eHA4RFA5?=
- =?utf-8?B?c0Z1Q3ZOWk8yNUlrdkEvMFFwUk85eVlOZDJMMTNKOURPM1p0SUtoamFyT3hJ?=
- =?utf-8?B?U0VnRjdGNVE2ODkyWUFxM1p6c2oxd0kvQmhtdy9SWjE3UjErMGFEY1luRGVF?=
- =?utf-8?B?czdpNnhIYVU4Ti9OSEdaaExPaXV0UFU1WDZ2aEVwZVFUVFdMaE5rQXJlQnZa?=
- =?utf-8?B?dUFGVFcvdGpFckgwSzYzNStxUVd4anZySGRlZjRBWDhaVThTKzhaQ3JHUnBh?=
- =?utf-8?B?NEZPbDhGaGFjUkpsTFY0ZHUzNXZ3cENGSVh6c1AzdXN5WVFTWmpDMk9GTXhv?=
- =?utf-8?B?YVVuT1hyVmxBZm1Hc0QxQ2RIN250N09QSHpvS3JNWGs5Sys0Z0IrVTRLN1A1?=
- =?utf-8?B?SjF3eHdTK2tkZUxWV0FRVkZ4bnFDUFRiSlJPTzVEUGhPcCtjZlFBT3RsNlB5?=
- =?utf-8?B?WFptZkQzZ1hYV2NIaUt0QThRNmwxbGJPUVdnY1ltSkxYVDhaQlJmRm5hMVZU?=
- =?utf-8?B?YlhmRVFib1ZiU2N1MWR2YVVUbjJwQ3BuMVRsUXZDTW5LS3g4b1ZicllPc2Vk?=
- =?utf-8?B?bEt5dS81cE1wSGxKL3pQZjRQdE5KQUpBYmw4dFNVZUFiM3BGTWw5VHZzQVFm?=
- =?utf-8?B?c1FZdGhDTnVuRndIQzI3MVp2alBKcFp6cmJBRTVmaC92Sy9uWDBVVkYwL0RH?=
- =?utf-8?B?LzlBaFJYOEFROXp3Z09LbjJRVEgvNUd1YnQrZ3cvUFBCNllVRXZFbDlXNDNL?=
- =?utf-8?B?NzRsMW9oKzdNb3l4VjR6NkVwOG5Cc3NHaWxLWk9KdGI0R01nN3ZnR001V2Nv?=
- =?utf-8?B?bUVwUXZocjMxU3NjdVdCSDZNK0pSaER1SExVY0Mza3Q2N2VpSGVRSnBkMWJ1?=
- =?utf-8?B?eDFubklLejdwa0FzekZBano1UVNIYW5HM1BMKzlNZklyWnpKWGowR3hoZTJz?=
- =?utf-8?B?WnkzV0I1dzlTRXlYd3pLYkh5OTdDWllRbDVTV21KYWVLUlBwYWpRdUVQWS9H?=
- =?utf-8?Q?iybwygIe+9o5HU+hqC6kodK3Z?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ad0224a-270a-43c1-fedc-08dcc5dac213
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2024 14:24:13.0947
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EpWdHoOa1Rm6NjqsCOYlFlv0rROvKmNYubEjUq3Es8QUX3DvQwQjkZ3Ib7FxMdXGZiQfi1YQz8x/79bYyRtu5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8923
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-26_16,2024-08-26_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408260174
+X-Proofpoint-ORIG-GUID: YIaGp_4ebV8l0VAxwRvHDVc2ng7lhzN_
+X-Proofpoint-GUID: YIaGp_4ebV8l0VAxwRvHDVc2ng7lhzN_
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240826_072422_912043_A6CCB95F 
-X-CRM114-Status: GOOD (  32.74  )
+X-CRM114-CacheID: sfid-20240826_154154_907824_5E3F9856 
+X-CRM114-Status: UNSURE (   9.67  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,136 +109,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/25/24 21:44, Baoquan He wrote:
-> Recently, it's reported that kdump kernel is broken during bootup on
-> SME system when CONFIG_IMA_KEXEC=y. When debugging, I noticed this
-> can be traced back to commit ("b69a2afd5afc x86/kexec: Carry forward
-> IMA measurement log on kexec"). Just nobody ever tested it on SME
-> system when enabling CONFIG_IMA_KEXEC.
-> 
-> --------------------------------------------------
->  ima: No TPM chip found, activating TPM-bypass!
->  Loading compiled-in module X.509 certificates
->  Loaded X.509 cert 'Build time autogenerated kernel key: 18ae0bc7e79b64700122bb1d6a904b070fef2656'
->  ima: Allocated hash algorithm: sha256
->  Oops: general protection fault, probably for non-canonical address 0xcfacfdfe6660003e: 0000 [#1] PREEMPT SMP NOPTI
->  CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.11.0-rc2+ #14
->  Hardware name: Dell Inc. PowerEdge R7425/02MJ3T, BIOS 1.20.0 05/03/2023
->  RIP: 0010:ima_restore_measurement_list+0xdc/0x420
->  Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
->  RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
->  RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
->  RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
->  RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
->  R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
->  R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
->  FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
->  Call Trace:
->   <TASK>
->   ? show_trace_log_lvl+0x1b0/0x2f0
->   ? show_trace_log_lvl+0x1b0/0x2f0
->   ? ima_load_kexec_buffer+0x6e/0xf0
->   ? __die_body.cold+0x8/0x12
->   ? die_addr+0x3c/0x60
->   ? exc_general_protection+0x178/0x410
->   ? asm_exc_general_protection+0x26/0x30
->   ? ima_restore_measurement_list+0xdc/0x420
->   ? vprintk_emit+0x1f0/0x270
->   ? ima_load_kexec_buffer+0x6e/0xf0
->   ima_load_kexec_buffer+0x6e/0xf0
->   ima_init+0x52/0xb0
->   ? __pfx_init_ima+0x10/0x10
->   init_ima+0x26/0xc0
->   ? __pfx_init_ima+0x10/0x10
->   do_one_initcall+0x5b/0x300
->   do_initcalls+0xdf/0x100
->   ? __pfx_kernel_init+0x10/0x10
->   kernel_init_freeable+0x147/0x1a0
->   kernel_init+0x1a/0x140
->   ret_from_fork+0x34/0x50
->   ? __pfx_kernel_init+0x10/0x10
->   ret_from_fork_asm+0x1a/0x30
->   </TASK>
->  Modules linked in:
->  ---[ end trace 0000000000000000 ]---
->  RIP: 0010:ima_restore_measurement_list+0xdc/0x420
->  Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
->  RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
->  RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
->  RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
->  RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
->  R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
->  R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
->  FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
->  Kernel panic - not syncing: Fatal exception
->  Kernel Offset: disabled
->  Rebooting in 10 seconds..
-> 
-> From debugging printing, the stored addr and size of ima_kexec buffer
-> are not decrypted correctly like:
->  ------
->  ima: ima_load_kexec_buffer, buffer:0xcfacfdfe6660003e, size:0xe48066052d5df359
->  ------
-> 
-> There are three pieces of setup_data info passed to kexec/kdump kernel:
-> SETUP_EFI, SETUP_IMA and SETUP_RNG_SEED. However, among them, only
-> ima_kexec buffer suffered from the incorrect decryption. After
-> debugging, it's because of the code bug in early_memremap_is_setup_data()
-> where checking the embedded content inside setup_data takes wrong range
-> calculation.
-> 
-> The length of efi data, rng_seed and ima_kexec are 0x70, 0x20, 0x10,
-> and the length of setup_data is 0x10. When checking if data is inside
-> the embedded conent of setup_data, the starting address of efi data and
-> rng_seed happened to land in the wrong calculated range. While the
-> ima_kexec's starting address unluckily doesn't pass the checking, then
-> error occurred.
-> 
-> Here fix the code bug to make kexec/kdump kernel boot up successfully.
-> 
-> Fixes: 8f716c9b5feb ("x86/mm: Add support to access boot related data in the clear")
+Initial bits to bring in Secure Launch functionality. Add Kconfig
+options for compiling in/out the Secure Launch code.
 
-The check that was modified was added by:
-	b3c72fc9a78e ("x86/boot: Introduce setup_indirect")
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The SETUP_INDIRECT patches seem to be the issue here.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 007bab9f2a0e..24df5f468fdc 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2056,6 +2056,17 @@ config EFI_RUNTIME_MAP
+ 
+ 	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
+ 
++config SECURE_LAUNCH
++	bool "Secure Launch support"
++	depends on X86_64 && X86_X2APIC && TCG_TPM && CRYPTO_LIB_SHA1 && CRYPTO_LIB_SHA256
++	help
++	   The Secure Launch feature allows a kernel to be loaded
++	   directly through an Intel TXT measured launch. Intel TXT
++	   establishes a Dynamic Root of Trust for Measurement (DRTM)
++	   where the CPU measures the kernel image. This feature then
++	   continues the measurement chain over kernel configuration
++	   information and init images.
++
+ source "kernel/Kconfig.hz"
+ 
+ config ARCH_SUPPORTS_KEXEC
+-- 
+2.39.3
 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/mm/ioremap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index aa7d279321ea..7953c4a1d28d 100644
-> --- a/arch/x86/mm/ioremap.c
-> +++ b/arch/x86/mm/ioremap.c
-> @@ -717,7 +717,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
->  		paddr_next = data->next;
->  		len = data->len;
->  
-> -		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
-> +		if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
-
-I don't think this is correct. You are adding the requested size to the
-length of the setup data element. The length is the true length of the
-setup data and should not be increased.
-
-It looks like there were some major changes to this function to support
-SETUP_INDIRECT. Is the IMA log setup data marked SETUP_INDIRECT?
-
-It might be helpful to instrument the code to see exactly what is
-happening during the execution of that function for the IMA log address.
-
-Thanks,
-Tom
-
->  			early_memunmap(data, sizeof(*data));
->  			return true;
->  		}
 
 _______________________________________________
 kexec mailing list
