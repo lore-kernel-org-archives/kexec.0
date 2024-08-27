@@ -4,108 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A314C5321D
-	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 02:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 257F4C52D6F
+	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 03:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uzBeJ/Zby2esiCvrqCNXr9XdJDVeMbRUuXcCsQh7v0I=; b=mmZLjj+uoJvyEg
-	DIPO3EZKvy+cDTDwIre+DN/SUJV5mxjWK50mjJr1RwqpeUEGJTBQWjts05UWsQ5RadyqYE2cntdsu
-	vzFXrJpdf+spsatk29jm2VarrEll0g2Dwa/TZ1Z1mSjNJVc5K08loYfXkPG3+UvI+y/hdtXfPpuSJ
-	P7NYCIqTv7wR8XMJ3YHdwiHl1D7GwNV2OTPro9uFVcId0dS25HJKA/lp54+Zi1nptLQmd6rxN4SAS
-	9KFadW2awYceD57CF7/DyOrH39+PonE8Ng0orjvE7W3wBNRFJ7MbRZNRBlZHNfakqQKx0cfeiEqGD
-	UaL42BpjXDUUOdISYqaw==;
+	List-Owner; bh=Y7DBNROUcP/38j2IJRFEPgwW4vQvtjlvpKgd7+Fb6Lw=; b=HuMnz7Cews/1xa
+	0d3TBtgBGxcfUW2+y2s2Aq/LDpcrX2iEaxEg+BmvwXPxhROvSJhnawLL15yWxX6qnW7itrPwAvSgL
+	AJSk0EMLq/Q0CrEcApMfTI0sNHu6OCZs7qTxqHxVmtNquih3L31OZu6b+5SEPt9WDYrGDiIQTibl+
+	sVNubBeFAMU6TYtTAlgnHAYF9RFdBCc9N1NOXUj3tFkp6LJM8c2afVDQkzi1a5q5H3kWBRwlOKJZc
+	4Ek8fzCK8opWI2m5sD4zvL7CAHnjOrS9CK84RuDxRHt9NF0RvR1hF/frtIXgK6sqR5q9d+NoiPa8C
+	VuVguyrwKM3662Ah8+dA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1simD1-00000009Uef-1zfs;
-	Tue, 27 Aug 2024 02:45:27 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1silBH-00000009Lbe-066j
-	for kexec@bombadil.infradead.org;
-	Tue, 27 Aug 2024 01:39:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:Subject:Message-ID:
-	Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RcUZuAiIymGX7H+XVS6SW6mmiBe4rQIxa+4Z1d8lF2E=; b=rX8istKSx2+uUBhmHWN9mDj0B0
-	osV0g5g/SSte0g5dquo+ugUO85eEBRp3lfbgJNqBG7gPoO7VHComHr1GbOPQeTVLKqCnLm8UbZG8C
-	TK+PeWHhgJOsF7GsFJDgdYWcn1hNhJXewYLcULc9ACcUWZBf+Uez6XbvjafwiIfYlMAB195hjkZEv
-	zxu9pJ09W3vrhs8yXWHkqZVi3nXQQX9G8mxZ7uTlXf0A51O5/daOYeeVLW6ZPXTSB/V/2lnG1nJHU
-	r1n9IzIRSI2ayxqlXB0NULQSpAsQW15zQgdAGJhOK2C+a341AUXde5myKZ6vyIlvDhtdLqm3O+pP3
-	ntRmZcMQ==;
+	id 1simjt-00000009Zk9-2COB;
+	Tue, 27 Aug 2024 03:19:25 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1silAv-0000000AlXM-2I1F
+	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1simjq-00000009ZjW-3USC
 	for kexec@lists.infradead.org;
-	Tue, 27 Aug 2024 01:39:31 +0000
+	Tue, 27 Aug 2024 03:19:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724722744;
+	s=mimecast20190719; t=1724728759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RcUZuAiIymGX7H+XVS6SW6mmiBe4rQIxa+4Z1d8lF2E=;
-	b=jQX89dSw1l2s8GF4jrR4Kz+RSMp+UXwUwgY0JnA1Hs7Rk62JWrsEjSYiD41t1RzauL00yb
-	BzpuZwk/eFsmzurVFNeYTVgZFfJmKDbSr+lUvK+dgZVteFIUQRhIziDXxykybap3ZK1/Is
-	BlLSU8pFcNk9T6Ou9D4TmLOfdppZlkE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724722745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RcUZuAiIymGX7H+XVS6SW6mmiBe4rQIxa+4Z1d8lF2E=;
-	b=Z8ruXSNGu46H4QxFDzfo3bFKC6sKKr33H3LmuGjb2ASL19sypJ4h4LnhRat3KJ6tOOtfXk
-	oamJjhnh7UWFB6voCApoH9hfN1gm1kDWtS+/zH340lIZb+H7tOQdyvBlYZsO89eL5LMQF+
-	9BX5zuU0osPNn0HoiMypyi8aDAA6QiA=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-529-4eXOYGwcN9Ga7xvG38hmVg-1; Mon, 26 Aug 2024 21:39:01 -0400
-X-MC-Unique: 4eXOYGwcN9Ga7xvG38hmVg-1
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-39d2044b532so49529915ab.0
-        for <kexec@lists.infradead.org>; Mon, 26 Aug 2024 18:39:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724722740; x=1725327540;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RcUZuAiIymGX7H+XVS6SW6mmiBe4rQIxa+4Z1d8lF2E=;
-        b=aSS/06gib3OcNK7tj/vqBJbAkILNyJgGyB+64EzuZL6h6/MISLBjsXQt05XkKjxSGI
-         tclciR9HJpmY30QI8PE6VUI/SMS0Le14bz9UoaRAfVQoniuiiL8KKhrZjtPOWDt4Sb1c
-         A+VFRgu796/zHhj4CQcRMEvckl8W0oGEflElFVuMCO48tM/f+k/59IAVRt0gtxhamNjY
-         5HFITCx+AIJv1hXvAwB3+ZIUPWot88MjcEPoJPX37eCVgVZ5l2W9WN/v8mf9eJwi82rx
-         rSAI4SEHyyKDvY7PAtISommsAAL16Sjet2kNWWVBpfUYM76leTAfWKrWJ5sy4/v7oMsw
-         9DjA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4D/2MQZgY+eKw5EF0rh4JtA3Ba/Qr28ToV0LIceieII6EJTC5GQ5vCYBxs5zmXKRZENFy/Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwAX6Efe+A2FdWWiqeDASJN2J4oUkGHLP/TxPAnhVTu/lKiVIP3
-	sUt2UJZZ98NmoZPrUsTPhw9hF+6ztZqfarob3NC4gYLP073P4k9yCdqu2qUgO1LHslNl92JLGHX
-	WykAiKkfyDJ39nq4ESF/yzSgLbxMNQH1Z3vHlka7yEHEyz07QDF9PEPd1C2i5A5Zt3jpJJR11jW
-	jLJ7sD8Pkwtyj0NGUbXlcQjZZ/yvTRm3HwonsTtvTC4MI=
-X-Received: by 2002:a05:6e02:1c24:b0:397:95c7:6f5d with SMTP id e9e14a558f8ab-39e63e266c5mr16394425ab.11.1724722740338;
-        Mon, 26 Aug 2024 18:39:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXnHINDAungBbMalgCdsrX65mN/3DGRJJIi1PLVY1a/+F4xCyzaWEeJjC17e4sX3tEcIimWOw3E2196cTeQ8M=
-X-Received: by 2002:a05:6e02:1c24:b0:397:95c7:6f5d with SMTP id
- e9e14a558f8ab-39e63e266c5mr16394255ab.11.1724722739911; Mon, 26 Aug 2024
- 18:38:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20240826024457.22423-1-bhe@redhat.com> <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
-In-Reply-To: <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 27 Aug 2024 09:39:10 +0800
-Message-ID: <CALu+AoQdKyeJBRzucdai5+KihMMOdWJeg0nAmw4K_Pd4DRt3_Q@mail.gmail.com>
+	bh=mao8BPC02rLbQsWcMKds61xFi54GETX6UtFo69nGjYE=;
+	b=Hi5w9Y18EBHb9qWvmgURgmuLE5CXUkVx+P/Jqi125NPjKXqLHyTjVMgd3lN3uqXh8TO/7V
+	ogPBw4FabN/iLaVJaHwaA3aQ4ytrPHvNW2Ttu/lZ1JVsxld8i4/0KFeSUNvJErnxFF8AGx
+	sU0n/nykqBOGx4h0tLXJVJ8zC/Mubbo=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-131-EmKBVpomP0WWh_c5xHSxcw-1; Mon,
+ 26 Aug 2024 23:19:16 -0400
+X-MC-Unique: EmKBVpomP0WWh_c5xHSxcw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 115591955F3D;
+	Tue, 27 Aug 2024 03:19:15 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.42])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B50DE1956052;
+	Tue, 27 Aug 2024 03:19:13 +0000 (UTC)
+Date: Tue, 27 Aug 2024 11:19:09 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, noodles@fb.com, x86@kernel.org,
+	lijiang@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org
 Subject: Re: [PATCH] x86/mm/sme: fix the kdump kernel breakage on SME system
  when CONFIG_IMA_KEXEC=y
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, noodles@fb.com, 
-	x86@kernel.org, lijiang@redhat.com, kexec@lists.infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Message-ID: <Zs1FrZVuZK14Je7z@MiWiFi-R3L-srv>
+References: <20240826024457.22423-1-bhe@redhat.com>
+ <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240827_023921_993037_F15134B4 
-X-CRM114-Status: GOOD (  38.19  )
+X-CRM114-CacheID: sfid-20240826_201922_979977_8ECA3EED 
+X-CRM114-Status: GOOD (  42.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,15 +84,14 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 26 Aug 2024 at 22:24, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
+On 08/26/24 at 09:24am, Tom Lendacky wrote:
 > On 8/25/24 21:44, Baoquan He wrote:
 > > Recently, it's reported that kdump kernel is broken during bootup on
 > > SME system when CONFIG_IMA_KEXEC=y. When debugging, I noticed this
 > > can be traced back to commit ("b69a2afd5afc x86/kexec: Carry forward
 > > IMA measurement log on kexec"). Just nobody ever tested it on SME
 > > system when enabling CONFIG_IMA_KEXEC.
-> >
+> > 
 > > --------------------------------------------------
 > >  ima: No TPM chip found, activating TPM-bypass!
 > >  Loading compiled-in module X.509 certificates
@@ -192,75 +153,152 @@ On Mon, 26 Aug 2024 at 22:24, Tom Lendacky <thomas.lendacky@amd.com> wrote:
 > >  Kernel panic - not syncing: Fatal exception
 > >  Kernel Offset: disabled
 > >  Rebooting in 10 seconds..
-> >
+> > 
 > > From debugging printing, the stored addr and size of ima_kexec buffer
 > > are not decrypted correctly like:
 > >  ------
 > >  ima: ima_load_kexec_buffer, buffer:0xcfacfdfe6660003e, size:0xe48066052d5df359
 > >  ------
-> >
+> > 
 > > There are three pieces of setup_data info passed to kexec/kdump kernel:
 > > SETUP_EFI, SETUP_IMA and SETUP_RNG_SEED. However, among them, only
 > > ima_kexec buffer suffered from the incorrect decryption. After
 > > debugging, it's because of the code bug in early_memremap_is_setup_data()
 > > where checking the embedded content inside setup_data takes wrong range
 > > calculation.
-> >
+> > 
 > > The length of efi data, rng_seed and ima_kexec are 0x70, 0x20, 0x10,
 > > and the length of setup_data is 0x10. When checking if data is inside
 > > the embedded conent of setup_data, the starting address of efi data and
 > > rng_seed happened to land in the wrong calculated range. While the
 > > ima_kexec's starting address unluckily doesn't pass the checking, then
 > > error occurred.
-> >
+> > 
 > > Here fix the code bug to make kexec/kdump kernel boot up successfully.
-> >
+> > 
 > > Fixes: 8f716c9b5feb ("x86/mm: Add support to access boot related data in the clear")
->
+> 
 > The check that was modified was added by:
->         b3c72fc9a78e ("x86/boot: Introduce setup_indirect")
->
+> 	b3c72fc9a78e ("x86/boot: Introduce setup_indirect")
+> 
 > The SETUP_INDIRECT patches seem to be the issue here.
->
+
+Hmm, I didn't check it carefully, thanks for addding this info. While
+after checking commit b3c72fc9a78e, I feel the adding code was trying to
+fix your original early_memremap_is_setup_data(). Even though
+SETUP_INDIRECT type of setup_data has been added, the original
+early_memremap_is_setup_data() only check the starting address and
+the content of struct setup_data, that's obviously wrong.
+
+arch/x86/include/uapi/asm/setup_data.h:
+/* extensible setup data list node */
+struct setup_data {
+        __u64 next;
+        __u32 type;
+        __u32 len;
+        __u8 data[];
+};
+
+As you can see, the zero-length will embed the carried data which is
+actually expected and adjacent to its carrier, the struct setup_data.
+
+> 
 > > Signed-off-by: Baoquan He <bhe@redhat.com>
 > > ---
 > >  arch/x86/mm/ioremap.c | 2 +-
 > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
+> > 
 > > diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
 > > index aa7d279321ea..7953c4a1d28d 100644
 > > --- a/arch/x86/mm/ioremap.c
 > > +++ b/arch/x86/mm/ioremap.c
 > > @@ -717,7 +717,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
-> >               paddr_next = data->next;
-> >               len = data->len;
-> >
-> > -             if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
-> > +             if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
->
+> >  		paddr_next = data->next;
+> >  		len = data->len;
+> >  
+> > -		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
+> > +		if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
+> 
 > I don't think this is correct. You are adding the requested size to the
 > length of the setup data element. The length is the true length of the
 > setup data and should not be increased.
 
-I think here size should be sizeof(struct setup_data) instead like below:
-        if ((phys_addr > paddr) && (phys_addr < (paddr + sizeof(struct
-setup_data) + len)))
+Please see the inline comment among code lines.
 
-Baoquan, does the above work?
->
+static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+                                                unsigned long size)
+{
+        struct setup_indirect *indirect;
+        struct setup_data *data;
+        u64 paddr, paddr_next;
+
+        paddr = boot_params.hdr.setup_data; //paddr point at struct steup_data;
+        while (paddr) {
+                unsigned int len, size;
+
+                if (phys_addr == paddr) // check the starting addr of setup_data
+                        return true;
+
+		data = early_memremap_decrypted(paddr, sizeof(*data));
+                if (!data) {
+                        pr_warn("failed to early memremap setup_data entry\n");
+                        return false;
+                }
+
+                size = sizeof(*data); //size is the length of struct setup_data
+
+                paddr_next = data->next;
+                len = data->len; // len is the length of carried data,
+                                 //e.g sizeof(ima_setup_data) if ima_kexec buffer
+                                 // or sizeof(struct setup_indirect) if
+                                 // it's SETUP_INDIRECT type. Note that SETUP_INDIRECT
+				 //data is also setup_data info even
+				 //though it's intermideate info.
+
+
+		//Here I check if phys_addr is inside (paddr, paddr + sizeof(struct setup_data) + len)	
+                //means it check if phys_addr is inside struct
+                //setup_data or struct ima_setup_data if ima_kexec case.
+                if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
+                        early_memunmap(data, sizeof(*data));
+                        return true;
+                }
+
+		if (data->type == SETUP_INDIRECT) {
+			......
+			if (indirect->type != SETUP_INDIRECT) {
+                                paddr = indirect->addr;
+                                len = indirect->len;
+                        }
+			// it's checking the indirect dat, and the paddr
+			// is adjusted here. Wondering if indirect data
+			//can be nested, e.g 
+ 			//setup_data->indirect->indirect->acutal data
+		}
+	...
+	}
+	...
+}
+
+
+> 
 > It looks like there were some major changes to this function to support
 > SETUP_INDIRECT. Is the IMA log setup data marked SETUP_INDIRECT?
->
+
+No, ima_kexec buffer is marked as SETUP_IMA, it's not indirect data.
+
+arch/x86/kernel/kexec-bzimage64.c:
+bzImage64_load()
+    ->setup_boot_parameters()
+        ->setup_ima_state()
+
+> 
 > It might be helpful to instrument the code to see exactly what is
 > happening during the execution of that function for the IMA log address.
->
-> Thanks,
-> Tom
->
-> >                       early_memunmap(data, sizeof(*data));
-> >                       return true;
-> >               }
->
+
+I almost have printed all needed information because kexec/kdump passed
+three types of setup_data, but only ima_kexec buffer is not got right.
+The behaviour is very bizarre at the beginning.
 
 
 _______________________________________________
