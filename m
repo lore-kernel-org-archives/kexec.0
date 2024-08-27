@@ -4,128 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B143BC54731
-	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 20:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2EB6C54742
+	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 22:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=mZMxXaWilzRPFB5g0THlzC5UWWwM18COaw5jxyTVkjY=; b=SqLrgEni1XT0EE
-	aMlCCxzCdxlTjFELuNhnZASnwmrNbPGxGrXDo3ZTMYC7iTZaTW26QBeUYnO4Z4K5Edw44Gk2Znrda
-	r2RmFVxGB+a3WEvBzTa5DTihHmI55qG7od9rRQWHeUFIvKoW/gfvG0/Pe8+MsE+IqDd/dtKZEsccH
-	0no82pKRAfQPWxdMAKAcPSVo6hNlFzuiEvSIh9LrrRRrt51a7NUw/KbJcv0vgRUq7mJCQtpnqF33T
-	xmRsn4RqBnpqu3oYLbmm4thaCzbN00AZCuH+SkeKSsXnOx66PhiWxjt+lDuGszew0lUMIu3ZYuQlu
-	XmAzjg3siiuV4QTqVd2w==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=N8uCbmnfLHmpyBQ6SMs5vs2dCAuohLde08I0OjzkU7A=; b=HIDTY5PwjTMQL5
+	g/113JQ9yhkURPDv4YHntWJ2A/6rsdY1pnTDiNAoltwb42BYsZE++uR7oKx9EbzH8pX98L0FTBHys
+	sJfSDVMn1hA3JlClAX7160Y+YAEZe+HOjiO5PqiP8d/tqARtOR/c9CO3br1oVsgtaUUqyKZZKEDXs
+	uZYTO0n2BTVN6Mq404nMgOEHZwleUKBB2nJqsGMwQhHqNaJ8XVRwxZ3Sbj06a7z0UhnQjolIzO3yk
+	v2gJKoiCaZmh4jrC5n+z5xOg5Eg/j0fUV0Ofy1Co77QFFcKesuPK9FcfwWxNNaSLBIG9O7TQcaTQA
+	LJzSIWJGjgK9ZqAIFMBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sj2xP-0000000ClUf-1Qic;
-	Tue, 27 Aug 2024 20:38:27 +0000
-Received: from mail-dm6nam12on20605.outbound.protection.outlook.com ([2a01:111:f403:2417::605] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1sj4rK-0000000D2m1-1WQ6;
+	Tue, 27 Aug 2024 22:40:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sj2xM-0000000ClTt-0qdL
+	id 1sj4rH-0000000D2kq-446q
 	for kexec@lists.infradead.org;
-	Tue, 27 Aug 2024 20:38:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NE3mlBVad/jjg0xBP88DXSpGsdq7wyqxga0ro3mvFrhT9n+mpczoaY2aX/kpRPat/vQQZjsDMxizYvqbW3GY9aPUvZ1jwG6InJ2zGYiX5wZhO6jQsXn2Ty/LmwmpM5XNTuqfZvw8lz3BoMdm+KUhyoMUW9+PYjJRLJRHsZur1DXLJ+5jbIQGISgxf3m5HgsHWt8zndqAjAwQFgjGs4Um7k5VgtpvfVGiq0jrY4gLfOJrk4OCOZAFjws5diOfPwrHNhs5IhJIAlXRsrQ5WzXQv4z2Z1HEtSc9xgafFQuel2hoChULOnxQ1fFxQvhugm+whpRwCMmPd/a1Tc/1tAitXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fl096LLw+ONomYqKEJnIBksMtwlNK1ZuvoEdAlXorsM=;
- b=TI6YE6CI+2J4ZKAvclWGLJ1ZfnBKxeq5I6bmpacW3Zk9xNpVgNu1ifqrvMjNbwv64pa8FGj5yDFKNfd4uwWOQnekBwQZLlVpYJ3aCfe0QSgOwPO2xmH7Irymp4DiGplmvXYqH/NZnPT5b4TxHeWw1797sVy5IfAdAnipCLpSE5pyROWHquHB8McT1j1AlbUshcleimBuYlTEoECf7DS2jMnpLTf5N/Njhwa6nj7n8bWD/5PPook3ILYHfgMZEm7VAMnhYBQtJt8HJqP+msSCCXi1KIibWNE+zQvNpWwx26Gc0Uic0EE0HzMRnBepZfySLkIlaBfdbigNvfgZs5RVhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fl096LLw+ONomYqKEJnIBksMtwlNK1ZuvoEdAlXorsM=;
- b=mxVRi+sov7sw3cdnIT/ph9i5gY4jCEDxoPp/wPHboG1hrF7Ca4+rCuIIY4q9dYbMzzob0Y//ApH/EvMrMO20gDhkeg8qkUP0uQeikpSwXfuVeJRTWsfDKcbMa+qp6qaKKrgdMKd68HsscXtDHvZXpr6DqsDr06DpfwUkKeZrjQc=
-Received: from SA0PR13CA0002.namprd13.prod.outlook.com (2603:10b6:806:130::7)
- by IA1PR12MB6164.namprd12.prod.outlook.com (2603:10b6:208:3e8::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.26; Tue, 27 Aug
- 2024 20:38:15 +0000
-Received: from SA2PEPF00003F68.namprd04.prod.outlook.com
- (2603:10b6:806:130:cafe::80) by SA0PR13CA0002.outlook.office365.com
- (2603:10b6:806:130::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.16 via Frontend
- Transport; Tue, 27 Aug 2024 20:38:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F68.mail.protection.outlook.com (10.167.248.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7918.13 via Frontend Transport; Tue, 27 Aug 2024 20:38:15 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 27 Aug
- 2024 15:38:14 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <dave.hansen@linux.intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>
-CC: <hpa@zytor.com>, <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <thomas.lendacky@amd.com>, <michael.roth@amd.com>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH] x86/sev: Fix host kdump support for SNP
-Date: Tue, 27 Aug 2024 20:38:04 +0000
-Message-ID: <20240827203804.4989-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	Tue, 27 Aug 2024 22:40:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724798414;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NmdBAM2JtkvTbDIIpL2at1ANoYfOw4zWq0b3hsBM2zc=;
+	b=VDBeAjvPBTRQ6wP5H+wi3I0nHnyJQo7iQeiMD4SwCEvncUjkJ1iGuI7Fjbi0iZHj5JCnOG
+	RqP5JxS5LCGTTrGUCrTtJjYfxnY2Ya3wHv0NEf9asDxiepWUsmHWHYTJmVq7JgxgtJM9jB
+	wRhRnxsN2fbiRRAGnGfG1vUPAUY8MvU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-9FifvTB6P1S61EsS22p3Ag-1; Tue,
+ 27 Aug 2024 18:40:09 -0400
+X-MC-Unique: 9FifvTB6P1S61EsS22p3Ag-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 813EC19560A2;
+	Tue, 27 Aug 2024 22:40:08 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.42])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A5F6C1956054;
+	Tue, 27 Aug 2024 22:40:06 +0000 (UTC)
+Date: Wed, 28 Aug 2024 06:40:02 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, noodles@fb.com, x86@kernel.org,
+	lijiang@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/mm/sme: fix the kdump kernel breakage on SME system
+ when CONFIG_IMA_KEXEC=y
+Message-ID: <Zs5VwrKVetWFkYmR@MiWiFi-R3L-srv>
+References: <20240826024457.22423-1-bhe@redhat.com>
+ <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
+ <Zs1FrZVuZK14Je7z@MiWiFi-R3L-srv>
+ <be6e5ab6-8b43-1a3f-39a6-b4aa5e0523ac@amd.com>
+ <ac929075-27a3-8cbd-5ffd-966ea3e82697@amd.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F68:EE_|IA1PR12MB6164:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8d706bd-c981-484d-2f45-08dcc6d82d4e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?AHjkn0ihVg1ePGjVqao76zDKwuN4FJK4LXaViPRPaf5qaNqIAwaYVkk/fSyY?=
- =?us-ascii?Q?jkpDlpTnPdh5EHZ7OxbRgCNj/31xPYXxOL0Dz6gL14VKtOh4fC12k/ZTtMMf?=
- =?us-ascii?Q?EwtRisqfLIfsyudYDpizYlZm5V+qTMY3OoB39f0+rlN5yIjnH4IdnfE+21Uq?=
- =?us-ascii?Q?VuhoPy0SY/0epMN/doVnLca5mcLQIseDzcv2x+TQpKZIpho4fkuyr8Ez5WJG?=
- =?us-ascii?Q?4dg2BxYO0P4/dZ8NljTjPsKThgTbWbWWmEjL2WdJ1ytE+aW9oxH9RSgDQnKC?=
- =?us-ascii?Q?KhQTAKpRYfdkpHRxoVyjCHh7YMbacARqVGPxZmQY69iMURXAduRiMPUePSQg?=
- =?us-ascii?Q?cPntY8Um+VcEWoYec08ODzXMWjD2D4gPOMRZ52d+sh4upN141YqJSqNvMTeG?=
- =?us-ascii?Q?F4RfyH9mr/WDD/x88cpe7QrGcW2wqZsHOSPhs0foCjp/evAiQ42DQzygjV14?=
- =?us-ascii?Q?NENGFElBg62vfIQiMzAENyBnx+00/VJvrvbfMIaHVRjqe9focIXM014GubW4?=
- =?us-ascii?Q?UDVffOMv7NIHXbHGeoSHWGGpiIzz+/5WaZU28aPc3j/TIz6af+Ihei2GfTHO?=
- =?us-ascii?Q?5EthcDDaPA+sX8Wmol6f1c0fxlEFYFl/KNI0OzB9/cmROFgyx6L6w8oOz+kt?=
- =?us-ascii?Q?C0GCrhynOYYR3jTiRVgtOMNcbW56xkdjfx4XKQzhRjwYzfzEfyB6UZK4hYE1?=
- =?us-ascii?Q?NbgKnH+ZLxe3celHtw9+10BBM+tbkATfzCTqcxQpnk82AkN+Lq8I1DTtt5dY?=
- =?us-ascii?Q?1A8hD/H7FP9lGPLToW6C2DlmugCQPDnvTosQFjG8v4SxALdJA0t/5uAn/7P8?=
- =?us-ascii?Q?HDLlpISEEqPlf1ZMY9WpgACjZcPCbm4IA9UNmMeTZ9aupBMMJ+btwUuBmSzP?=
- =?us-ascii?Q?4dEHCYXAgjTZ44bKmju16cSUXB8b5H50ih6Yy0m2XY1++XmUcyt+cf2CT4pl?=
- =?us-ascii?Q?EIKaW15egYucIfnSDkFD6arIUiOPO013eS9iuRmXYlePe3xcYf6hFI39lt+W?=
- =?us-ascii?Q?19g7bX0Vbh4iYQzORe5p/PIbO27wuTc8wZ/kQ/FGKjfNfW2bAlo10dzIOz3w?=
- =?us-ascii?Q?WW68r9+NxzxeqwS+fu/QiwlcctLMtf280iZFLcKU2Y+S5LQYRlUBgmrr9Oau?=
- =?us-ascii?Q?wtA5iH8ILW+zptDHzX4TWmQo3zxmJ4eGTeLod6y9rup43aPMby+RKylzp16Y?=
- =?us-ascii?Q?1wqyAOgnSax0gfwQeT85GgdIDwuzCHIXJ9T/QcmQSz9k8ikFpausbGtJFEhS?=
- =?us-ascii?Q?S1EkRqWABZKc4e3LnbOswaPRaXPDdAKpzb87UD1pvY9weeF8VwHXC94Lpqt6?=
- =?us-ascii?Q?fwr5TFMSEPJIyT8A/Ka8TKZMM+E0ueOPxOpchBzjyE7X3nDtddz34VBMbDQS?=
- =?us-ascii?Q?rrzgimQJnFj90MfJDdEvJCsfE2uHWSCNJfF0CNsB4yAHLom8p4aimeN5AtlB?=
- =?us-ascii?Q?EbLzeuBIIZy9Gr9OEiOnltZa/nYUqCeI?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2024 20:38:15.4164
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8d706bd-c981-484d-2f45-08dcc6d82d4e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF00003F68.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6164
+Content-Disposition: inline
+In-Reply-To: <ac929075-27a3-8cbd-5ffd-966ea3e82697@amd.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240827_133824_718923_1BAC64FB 
-X-CRM114-Status: GOOD (  20.36  )
+X-CRM114-CacheID: sfid-20240827_154016_121614_EFDBF845 
+X-CRM114-Status: GOOD (  23.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,352 +87,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 08/27/24 at 09:00am, Tom Lendacky wrote:
+> On 8/27/24 08:52, Tom Lendacky wrote:
+> > On 8/26/24 22:19, Baoquan He wrote:
+> >> On 08/26/24 at 09:24am, Tom Lendacky wrote:
+> >>> On 8/25/24 21:44, Baoquan He wrote:
+> >>>> Recently, it's reported that kdump kernel is broken during bootup on
+> >>>> SME system when CONFIG_IMA_KEXEC=y. When debugging, I noticed this
+> >>>> can be traced back to commit ("b69a2afd5afc x86/kexec: Carry forward
+> >>>> IMA measurement log on kexec"). Just nobody ever tested it on SME
+> >>>> system when enabling CONFIG_IMA_KEXEC.
+> >>>>
+> >>>>
+> >>>> Here fix the code bug to make kexec/kdump kernel boot up successfully.
+> >>>>
+> >>>> Fixes: 8f716c9b5feb ("x86/mm: Add support to access boot related data in the clear")
+> >>>
+> >>> The check that was modified was added by:
+> >>> 	b3c72fc9a78e ("x86/boot: Introduce setup_indirect")
+> >>>
+> >>> The SETUP_INDIRECT patches seem to be the issue here.
+> >>
+> >> Hmm, I didn't check it carefully, thanks for addding this info. While
+> >> after checking commit b3c72fc9a78e, I feel the adding code was trying to
+> >> fix your original early_memremap_is_setup_data(). Even though
+> >> SETUP_INDIRECT type of setup_data has been added, the original
+> >> early_memremap_is_setup_data() only check the starting address and
+> >> the content of struct setup_data, that's obviously wrong.
+> > 
+> > IIRC, when this function was created, the value of "len" in setup_data
+> > included the length of "data", so the calculation was correct. Everything
+> > was contiguous in a setup_data element.
+> > 
+> >>
+> >> arch/x86/include/uapi/asm/setup_data.h:
+> >> /* extensible setup data list node */
+> >> struct setup_data {
+> >>         __u64 next;
+> >>         __u32 type;
+> >>         __u32 len;
+> >>         __u8 data[];
+> >> };
+> >>
+> >> As you can see, the zero-length will embed the carried data which is
+> >> actually expected and adjacent to its carrier, the struct setup_data.
+> > 
+> > Right, and "len" is the length of that data. So paddr + len goes to the
+> > end of the overall setup_data.
+> 
+> Ah, I see what you're saying. "len" doesn't include the size of the
+> setup_data structure, only the data. If so, then, yes, adding a sizeof()
+> to the calculation in the if statement is correct.
 
-With active SNP VMs, SNP_SHUTDOWN_EX invoked during panic notifiers causes
-crashkernel boot failure with the following signature:
-
-[  563.497112] sysrq: Trigger a crash
-[  563.508415] Kernel panic - not syncing: sysrq triggered crash
-[  563.522002] CPU: 10 UID: 0 PID: 4661 Comm: bash Kdump: loaded Not tainted 6.11.0-rc3-next-20240813-snp-host-f2a41ff576cc-dirty #61
-[  563.549762] Hardware name: AMD Corporation ETHANOL_X/ETHANOL_X, BIOS RXM100AB 10/17/2022
-[  563.566266] Call Trace:
-[  563.576430]  <TASK>
-[  563.585932]  dump_stack_lvl+0x2b/0x90
-[  563.597244]  dump_stack+0x14/0x20
-[  563.608141]  panic+0x3b9/0x400
-[  563.618801]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  563.631271]  sysrq_handle_crash+0x19/0x20
-[  563.642696]  __handle_sysrq+0xf9/0x290
-[  563.653691]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  563.666126]  write_sysrq_trigger+0x60/0x80
-...
-...
-[  564.186804] in panic
-[  564.194287] in panic_other_cpus_shutdown
-[  564.203674] kexec: in crash_smp_send_stop
-[  564.213205] kexec: in kdump_nmi_shootdown_cpus
-[  564.224338] Kernel Offset: 0x35a00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  564.282209] in snp_shutdown_on_panic after decommision, wbinvd + df_flush required
-[  564.462217] ccp 0000:23:00.1: SEV-SNP DF_FLUSH failed with error 14
-[  564.676920] kexec: in native_machine_crash_shutdown
-early console in extract_kernel
-input_data: 0x000000007410d2cc
-input_len: 0x0000000000ce98b2
-output: 0x0000000071600000
-output_len: 0x000000000379eb8c
-kernel_total_size: 0x0000000002c30000
-needed_size: 0x0000000003800000
-trampoline_32bit: 0x0000000000000000
-
-Invalid physical address chosen!
-
-Physical KASLR disabled: no suitable memory region!
-
-Virtual KASLR using RDRAND RDTSC...
-
-Decompressing Linux... Parsing ELF... Performing relocations... done.
-Booting the kernel (entry_offset: 0x0000000000000bda).
-[    0.000000] Linux version 6.11.0-rc3-next-20240813-snp-host-f2a41ff576cc-dirty (amd@ethanolx7e2ehost) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils) 2.40) #61 SMP Mon Aug 19 19:59:02 UTC 2024
-[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.11.0-rc3-next-20240813-snp-host-f2a41ff576cc-dirty root=UUID=4b87a03b-0e78-42ca-a8ad-997e63bba4e0 ro console=tty0 console=ttyS0,115200n8 earlyprintk=ttyS0,115200n8 amd_iommu_dump=1 reset_devices systemd.unit=kdump-tools-dump.service nr_cpus=1 irqpoll nousb elfcorehdr=1916276K
-[    0.000000] KERNEL supported cpus:
-...
-...
-[    1.671804] AMD-Vi: Using global IVHD EFR:0x841f77e022094ace, EFR2:0x0
-[    1.679835] AMD-Vi: Translation is already enabled - trying to copy translation structures
-[    1.689363] AMD-Vi: Copied DEV table from previous kernel.
-[    1.864369] AMD-Vi: Completion-Wait loop timed out
-[    2.038289] AMD-Vi: Completion-Wait loop timed out
-[    2.212215] AMD-Vi: Completion-Wait loop timed out
-[    2.386141] AMD-Vi: Completion-Wait loop timed out
-[    2.560068] AMD-Vi: Completion-Wait loop timed out
-[    2.733997] AMD-Vi: Completion-Wait loop timed out
-[    2.907927] AMD-Vi: Completion-Wait loop timed out
-[    3.081855] AMD-Vi: Completion-Wait loop timed out
-[    3.225500] AMD-Vi: Completion-Wait loop timed out
-[    3.231083] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
-d out
-[    3.579592] AMD-Vi: Completion-Wait loop timed out
-[    3.753164] AMD-Vi: Completion-Wait loop timed out
-[    3.815762] Kernel panic - not syncing: timer doesn't work through Interrupt-remapped IO-APIC
-[    3.825347] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.11.0-rc3-next-20240813-snp-host-f2a41ff576cc-dirty #61
-[    3.837188] Hardware name: AMD Corporation ETHANOL_X/ETHANOL_X, BIOS RXM100AB 10/17/2022
-[    3.846215] Call Trace:
-[    3.848939]  <TASK>
-[    3.851277]  dump_stack_lvl+0x2b/0x90
-[    3.855354]  dump_stack+0x14/0x20
-[    3.859050]  panic+0x3b9/0x400
-[    3.862454]  panic_if_irq_remap+0x21/0x30
-[    3.866925]  setup_IO_APIC+0x8aa/0xa50
-[    3.871106]  ? __pfx_amd_iommu_enable_faulting+0x10/0x10
-[    3.877032]  ? __cpuhp_setup_state+0x5e/0xd0
-[    3.881793]  apic_intr_mode_init+0x6a/0xf0
-[    3.886360]  x86_late_time_init+0x28/0x40
-[    3.890832]  start_kernel+0x6a8/0xb50
-[    3.894914]  x86_64_start_reservations+0x1c/0x30
-[    3.900064]  x86_64_start_kernel+0xbf/0x110
-[    3.904729]  ? setup_ghcb+0x12/0x130
-[    3.908716]  common_startup_64+0x13e/0x141
-[    3.913283]  </TASK>
-[    3.915715] in panic
-[    3.918149] in panic_other_cpus_shutdown
-[    3.922523] ---[ end Kernel panic - not syncing: timer doesn't work through Interrupt-remapped IO-APIC ]---
-
-This happens as SNP_SHUTDOWN_EX fails when SNP VMs are active as the
-firmware checks every encryption-capable ASID to verify that it is
-not in use by a guest and a DF_FLUSH is not required. If a DF_FLUSH
-is required, the firmware returns DFFLUSH_REQUIRED.
-
-To fix this, added support to do SNP_DECOMMISION of all active SNP VMs
-in the panic notifier before doing SNP_SHUTDOWN_EX, but then
-SNP_DECOMMISION tags all CPUs on which guest has been activated to do
-a WBINVD. This causes SNP_DF_FLUSH command failure with the following
-flow: SNP_DECOMMISION -> SNP_SHUTDOWN_EX -> SNP_DF_FLUSH ->
-failure with WBINVD_REQUIRED.
-
-When panic notifier is invoked all other CPUs have already been
-shutdown, so it is not possible to do a wbinvd_on_all_cpus() after
-SNP_DECOMMISION has been executed. This eventually causes SNP_SHUTDOWN_EX
-to fail after SNP_DECOMMISION.
-
-Adding fix to do SNP_DECOMMISION and subsequent WBINVD on all CPUs
-during NMI shutdown of CPUs as part of disabling virtualization on
-all CPUs via cpu_emergency_disable_virtualization ->
-svm_emergency_disable().
-
-This fixes and enables crashkernel/kdump on SNP host.
-
-Fixes: c3b86e61b756 ("x86/cpufeatures: Enable/unmask SEV-SNP CPU feature")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kvm/svm/sev.c | 39 ++++++++++++++++++
- arch/x86/kvm/svm/svm.c | 91 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.h |  3 +-
- 3 files changed, 132 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 0b851ef937f2..34ddea43c4e6 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -89,6 +89,7 @@ static unsigned int nr_asids;
- static unsigned long *sev_asid_bitmap;
- static unsigned long *sev_reclaim_asid_bitmap;
- 
-+static void **snp_asid_to_gctx_pages_map;
- static int snp_decommission_context(struct kvm *kvm);
- 
- struct enc_region {
-@@ -2248,6 +2249,9 @@ static int snp_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 		goto e_free_context;
- 	}
- 
-+	if (snp_asid_to_gctx_pages_map)
-+		snp_asid_to_gctx_pages_map[sev_get_asid(kvm)] = sev->snp_context;
-+
- 	return 0;
- 
- e_free_context:
-@@ -2884,9 +2888,35 @@ static int snp_decommission_context(struct kvm *kvm)
- 	snp_free_firmware_page(sev->snp_context);
- 	sev->snp_context = NULL;
- 
-+	if (snp_asid_to_gctx_pages_map)
-+		snp_asid_to_gctx_pages_map[sev_get_asid(kvm)] = NULL;
-+
- 	return 0;
- }
- 
-+/*
-+ * NOTE: called in NMI context from sev_emergency_disable().
-+ */
-+void snp_decommision_all(void)
-+{
-+	struct sev_data_snp_addr data = {};
-+	int ret, asid;
-+
-+	if (!snp_asid_to_gctx_pages_map)
-+		return;
-+
-+	for (asid = 1; asid < min_sev_asid; asid++) {
-+		if (snp_asid_to_gctx_pages_map[asid]) {
-+			data.address = __sme_pa(snp_asid_to_gctx_pages_map[asid]);
-+			ret = sev_do_cmd(SEV_CMD_SNP_DECOMMISSION, &data, NULL);
-+			if (!ret) {
-+				snp_free_firmware_page(snp_asid_to_gctx_pages_map[asid]);
-+				snp_asid_to_gctx_pages_map[asid] = NULL;
-+			}
-+		}
-+	}
-+}
-+
- void sev_vm_destroy(struct kvm *kvm)
- {
- 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-@@ -3052,6 +3082,13 @@ void __init sev_hardware_setup(void)
- 	sev_es_supported = true;
- 	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
- 
-+	if (sev_snp_supported) {
-+		snp_asid_to_gctx_pages_map = kmalloc_array(min_sev_asid,
-+							   sizeof(void *),
-+							   GFP_KERNEL | __GFP_ZERO);
-+		if (!snp_asid_to_gctx_pages_map)
-+			pr_warn("Could not allocate SNP asid to guest context map\n");
-+	}
- out:
- 	if (boot_cpu_has(X86_FEATURE_SEV))
- 		pr_info("SEV %s (ASIDs %u - %u)\n",
-@@ -3094,6 +3131,8 @@ void sev_hardware_unsetup(void)
- 
- 	misc_cg_set_capacity(MISC_CG_RES_SEV, 0);
- 	misc_cg_set_capacity(MISC_CG_RES_SEV_ES, 0);
-+
-+	kfree(snp_asid_to_gctx_pages_map);
- }
- 
- int sev_cpu_init(struct svm_cpu_data *sd)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index e13c54d93964..a8f64a1710c2 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -17,6 +17,7 @@
- #include <linux/highmem.h>
- #include <linux/amd-iommu.h>
- #include <linux/sched.h>
-+#include <linux/delay.h>
- #include <linux/trace_events.h>
- #include <linux/slab.h>
- #include <linux/hashtable.h>
-@@ -248,6 +249,8 @@ static unsigned long iopm_base;
- 
- DEFINE_PER_CPU(struct svm_cpu_data, svm_data);
- 
-+static DEFINE_SPINLOCK(snp_decommision_lock);
-+
- /*
-  * Only MSR_TSC_AUX is switched via the user return hook.  EFER is switched via
-  * the VMCB, and the SYSCALL/SYSENTER MSRs are handled by VMLOAD/VMSAVE.
-@@ -594,9 +597,97 @@ static inline void kvm_cpu_svm_disable(void)
- 
- static void svm_emergency_disable(void)
- {
-+	static atomic_t waiting_for_cpus_synchronized;
-+	static bool synchronize_cpus_initiated;
-+	static bool snp_decommision_handled;
-+	static atomic_t cpus_synchronized;
-+
- 	kvm_rebooting = true;
- 
- 	kvm_cpu_svm_disable();
-+
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-+		return;
-+
-+	/*
-+	 * SNP_SHUTDOWN_EX fails when SNP VMs are active as the firmware checks
-+	 * every encryption-capable ASID to verify that it is not in use by a
-+	 * guest and a DF_FLUSH is not required. If a DF_FLUSH is required,
-+	 * the firmware returns DFFLUSH_REQUIRED. To address this, SNP_DECOMMISION
-+	 * is required to shutdown all active SNP VMs, but SNP_DECOMMISION tags all
-+	 * CPUs that guest was activated on to do a WBINVD. When panic notifier
-+	 * is invoked all other CPUs have already been shutdown, so it is not
-+	 * possible to do a wbinvd_on_all_cpus() after SNP_DECOMMISION has been
-+	 * executed. This eventually causes SNP_SHUTDOWN_EX to fail after
-+	 * SNP_DECOMMISION. To fix this, do SNP_DECOMMISION and subsequent WBINVD
-+	 * on all CPUs during NMI shutdown of CPUs as part of disabling
-+	 * virtualization on all CPUs via cpu_emergency_disable_virtualization().
-+	 */
-+
-+	spin_lock(&snp_decommision_lock);
-+
-+	/*
-+	 * exit early for call from native_machine_crash_shutdown()
-+	 * as SNP_DECOMMISSION has already been done as part of
-+	 * NMI shutdown of the CPUs.
-+	 */
-+	if (snp_decommision_handled) {
-+		spin_unlock(&snp_decommision_lock);
-+		return;
-+	}
-+
-+	/*
-+	 * Synchronize all CPUs handling NMI before issuing
-+	 * SNP_DECOMMISSION.
-+	 */
-+	if (!synchronize_cpus_initiated) {
-+		/*
-+		 * one CPU handling panic, the other CPU is initiator for
-+		 * CPU synchronization.
-+		 */
-+		atomic_set(&waiting_for_cpus_synchronized, num_online_cpus() - 2);
-+		synchronize_cpus_initiated = true;
-+		/*
-+		 * Ensure CPU synchronization parameters are setup before dropping
-+		 * the lock to let other CPUs continue to reach synchronization.
-+		 */
-+		wmb();
-+
-+		spin_unlock(&snp_decommision_lock);
-+
-+		/*
-+		 * This will not cause system to hang forever as the CPU
-+		 * handling panic waits for maximum one second for
-+		 * other CPUs to stop in nmi_shootdown_cpus().
-+		 */
-+		while (atomic_read(&waiting_for_cpus_synchronized) > 0)
-+		       mdelay(1);
-+
-+		/* Reacquire the lock once CPUs are synchronized */
-+		spin_lock(&snp_decommision_lock);
-+
-+		atomic_set(&cpus_synchronized, 1);
-+	} else {
-+		atomic_dec(&waiting_for_cpus_synchronized);
-+		/*
-+		 * drop the lock to let other CPUs contiune to reach
-+		 * synchronization.
-+		 */
-+		spin_unlock(&snp_decommision_lock);
-+
-+		while (atomic_read(&cpus_synchronized) == 0)
-+		       mdelay(1);
-+
-+		/* Try to re-acquire lock after CPUs are synchronized */
-+		spin_lock(&snp_decommision_lock);
-+	}
-+
-+	if (!snp_decommision_handled) {
-+		snp_decommision_all();
-+		snp_decommision_handled = true;
-+	}
-+	spin_unlock(&snp_decommision_lock);
-+	wbinvd();
- }
- 
- static void svm_hardware_disable(void)
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 76107c7d0595..2f933b941b8d 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -749,6 +749,7 @@ void sev_snp_init_protected_guest_state(struct kvm_vcpu *vcpu);
- int sev_gmem_prepare(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
- void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
- int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn);
-+void snp_decommision_all(void);
- #else
- static inline struct page *snp_safe_alloc_page_node(int node, gfp_t gfp)
- {
-@@ -779,7 +780,7 @@ static inline int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn)
- {
- 	return 0;
- }
--
-+static void snp_decommision_all(void);
- #endif
- 
- /* vmenter.S */
--- 
-2.34.1
+Exactly. That could confuse people sometime.
 
 
 _______________________________________________
