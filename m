@@ -4,73 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3FBCC5320E
-	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 09:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AB33C54734
+	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 10:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sKvftfLFRaZwk+YQU4sDQORdfT1X2ZR9FNbreSVJ8T0=; b=Tr+I8y3FYwyn8x
-	2JEGGY2v6zYg5tqytsXPN8IOUsUXEJwhWwzWvA5LI/M10k/yfuH209qtfBcUZJf8oyAH0m0JQusYF
-	3aaGFhcPShJOhZZjleAbguA0flUq67AJrjK7vP0fqo8dZsvnyttgVDeSFDFe69t+fSxE6eW2hLWDG
-	rD0ZY5aiKNoCcxa13e58TqZOYGLuF02gKYseqJjssKqpVbCtwkgTQOsTYGGvOUouOwYihXmIboL6n
-	RoT5OyUdyeMcYtIHMSqMTYDki2tJMzWvLOWQbC0Ne5yLJGsZyy6k7mUl31NBiiSXv0XdrzWDdRLiy
-	u+5kghlPlEaLpPOYJ7eQ==;
+	List-Owner; bh=unRWAcOeb/nBoB3F1yAye0PvoMhpEcQiUmmaJdU0pbs=; b=x+yqGZm7jAVrSX
+	zXZvB483PjyuRU/zKjlzoiCQcnxFb3pwzcIeBsdNr2c+HXDNTBKJpLDqdG6pcJrLEMuL8VRWad/Zp
+	gdVAqpqqHrSgMdZ1y7M8PY4AF71wmAIdq37p00/jw5MLA2uetPZoQvfsdOJTX1LdqHQSmk1UeE9iJ
+	8eZU1AFh6kI6lMW7TAfJuJ/2TApuJERJy1GImreaW25bnphRc6mxy+qEuflgBTuHkdrDvgf31jH7A
+	ZPS/EjnKf8lckUZcfoTsKLd1VkLjugo9OLab2wzqv4KbPbk/byswA8VpMY03qsK+qnl9vI4SFU3SG
+	TqnUHqlMM71b/jvaLjwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sisao-0000000AbA8-1y8w;
-	Tue, 27 Aug 2024 09:34:26 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sitR6-0000000AoAz-2oxc;
+	Tue, 27 Aug 2024 10:28:28 +0000
+Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sisa5-0000000Ab1N-0fkh
+	id 1sitR3-0000000Ao9o-2hEe
 	for kexec@lists.infradead.org;
-	Tue, 27 Aug 2024 09:33:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724751220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xioG04ypc2y3mzfncp7R682Hre9B7EvlJbcD2gyIjIg=;
-	b=XGPZdbQr+jVQyOGT0rgusbFWYD0jJibEBLKxieJO7lUnk7oXvwBSUPgcGrv+5Nn/OJhd9a
-	vxGZM4vrrmZniWHe6Z6kypWSafaq2UJzDR6Q5KI/4QivbWS6gy2AK5DpC+61O/9Ddj0uYU
-	Y1iyXmE9FAPqntvqzoVvNvfe/lnxT90=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-EbzGIH8aMEaTI4cZ3J3YLg-1; Tue,
- 27 Aug 2024 05:33:36 -0400
-X-MC-Unique: EbzGIH8aMEaTI4cZ3J3YLg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B906D1954B05;
-	Tue, 27 Aug 2024 09:33:34 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.42])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 700031956056;
-	Tue, 27 Aug 2024 09:33:32 +0000 (UTC)
-Date: Tue, 27 Aug 2024 17:33:28 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Dave Young <dyoung@redhat.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
-	noodles@fb.com, x86@kernel.org, lijiang@redhat.com,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH] x86/mm/sme: fix the kdump kernel breakage on SME system
- when CONFIG_IMA_KEXEC=y
-Message-ID: <Zs2daJ9FHA8vPkPP@MiWiFi-R3L-srv>
-References: <20240826024457.22423-1-bhe@redhat.com>
- <35e40987-1541-cbbe-6b16-1ddadc2c4c35@amd.com>
- <Zs1j31JGB/5EJatz@MiWiFi-R3L-srv>
- <CALu+AoTNtzVGFyG=GLAtT=VEWJG7FNbx6jD_Ye+4ORYXOiMekw@mail.gmail.com>
+	Tue, 27 Aug 2024 10:28:27 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 08BEACE118C
+	for <kexec@lists.infradead.org>; Tue, 27 Aug 2024 10:28:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8F8C8B7A4
+	for <kexec@lists.infradead.org>; Tue, 27 Aug 2024 10:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724754503;
+	bh=ITTElo/b0xmcXLky20o3aXYvQkQonQvee1/DzBHfgOY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Z0l/v28V7aAoV2n2ULTbT7WVve/56FzSdMbMfKLB6jCtUmD+Qi6t7T99lgqy28Tcg
+	 YRtiAN+ZzGjiK6d8YSxe3LK7Hiiqy818OulFcG4lbshKrb4Qfd9pcEfgx9pZTmjxNd
+	 fs51GyrtZoGTBnMHzu+XlKAvKYfiUVzaA/Rwnfxl2fDgxpoBrO2b8c5gIAlKhxkj2/
+	 LdAICrf7XmrDQigKroyEDDLSLgEJfOwTUGRnr1vcxFg8/SMoMQmT3iiZTFBzdGbN0o
+	 0XZgJ26nndoo3ksMg/X8SVymSv2o8INcbc9yyVrOaBw7+kfHLeF5o14bkILaMfAKy/
+	 Q7yYhvMEOFCoA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53346132348so6285206e87.2
+        for <kexec@lists.infradead.org>; Tue, 27 Aug 2024 03:28:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXr4lN4n07EcK/N7J0FbwaGLhCfsWuC+hcDA4JW2zFi7uEnED+jaUO7Qj1DaC6Fpe3liKnAMg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyOpBcRseuASFJUG0fbRs/mDgJActDQWs13RZlLW7Lp9Ghy5B5e
+	7Hkif6QdRltwi40IJgiwFSbmTRtfshxr4viYxUObq3omw8OOOiJo+0OL9hH15JdZ7QAKeG/QEX7
+	mKET6/QmFRLlO6azq3UVqv1txWvg=
+X-Google-Smtp-Source: AGHT+IEc4W3oYLEUVyAgQgD5lGc43eMGwkrzL5cq7+l4rmkv9sJdVmYWlyj3bwH/rt9Kls4pEV8Wy5JcfmVf76SJtlk=
+X-Received: by 2002:a05:6512:1103:b0:52f:c5c0:2879 with SMTP id
+ 2adb3069b0e04-534387be5cemr9633786e87.41.1724754501384; Tue, 27 Aug 2024
+ 03:28:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CALu+AoTNtzVGFyG=GLAtT=VEWJG7FNbx6jD_Ye+4ORYXOiMekw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20240826223835.3928819-1-ross.philipson@oracle.com> <20240826223835.3928819-21-ross.philipson@oracle.com>
+In-Reply-To: <20240826223835.3928819-21-ross.philipson@oracle.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 27 Aug 2024 12:28:10 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEyStoqmvvQirxt_GXTnO2qQjOxtQGzHzQeCdRCYzT7uA@mail.gmail.com>
+Message-ID: <CAMj1kXEyStoqmvvQirxt_GXTnO2qQjOxtQGzHzQeCdRCYzT7uA@mail.gmail.com>
+Subject: Re: [PATCH v10 20/20] x86/efi: EFI stub DRTM launch support for
+ Secure Launch
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
+	trenchboot-devel@googlegroups.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240827_023341_299503_B69F1F92 
-X-CRM114-Status: GOOD (  27.47  )
+X-CRM114-CacheID: sfid-20240827_032826_051738_5C2BF44A 
+X-CRM114-Status: GOOD (  27.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,48 +93,167 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/27/24 at 01:41pm, Dave Young wrote:
-> On Tue, 27 Aug 2024 at 13:28, Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 08/26/24 at 09:24am, Tom Lendacky wrote:
-> > > On 8/25/24 21:44, Baoquan He wrote:
-......
-> > > > ---
-> > > >  arch/x86/mm/ioremap.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> > > > index aa7d279321ea..7953c4a1d28d 100644
-> > > > --- a/arch/x86/mm/ioremap.c
-> > > > +++ b/arch/x86/mm/ioremap.c
-> > > > @@ -717,7 +717,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
-> > > >             paddr_next = data->next;
-> > > >             len = data->len;
-> > > >
-> > > > -           if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
-> > > > +           if ((phys_addr > paddr) && (phys_addr < (paddr + size + len))) {
-> > >
-> > > I don't think this is correct. You are adding the requested size to the
-> > > length of the setup data element. The length is the true length of the
-> > > setup data and should not be increased.
-> >
-> > I talked to Dave, he reminded me that people could mix the passed in
-> > parameter 'size' and the local variable 'size' defined inside the while
-> > loop, not sure which 'size' you are referring to.
-> >
-> Baoquan, you are right, but I think I mistakenly read the code in
-> memremap_is_setup_data instead of early_memremap_is_setup_data.  You
-> can check the memremap_is_setup_data, no "size = sizeof (*data)",  so
-> these two functions could both need fixes.
+On Tue, 27 Aug 2024 at 00:44, Ross Philipson <ross.philipson@oracle.com> wrote:
+>
+> This support allows the DRTM launch to be initiated after an EFI stub
+> launch of the Linux kernel is done. This is accomplished by providing
+> a handler to jump to when a Secure Launch is in progress. This has to be
+> called after the EFI stub does Exit Boot Services.
+>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 
-Agree, memremap_is_setup_data() has the same drawback in code.
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-> 
-> Otherwise it would be better to change the function internal variable
-> name, it could cause confusion even if the actual result is correct.
-
-Ok, will consider to change when spinning v2.
-
+> ---
+>  drivers/firmware/efi/libstub/efistub.h  |  8 ++
+>  drivers/firmware/efi/libstub/x86-stub.c | 98 +++++++++++++++++++++++++
+>  2 files changed, 106 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index d33ccbc4a2c6..baf42d6d0796 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -135,6 +135,14 @@ void efi_set_u64_split(u64 data, u32 *lo, u32 *hi)
+>         *hi = upper_32_bits(data);
+>  }
+>
+> +static inline
+> +void efi_set_u64_form(u32 lo, u32 hi, u64 *data)
+> +{
+> +       u64 upper = hi;
+> +
+> +       *data = lo | upper << 32;
+> +}
+> +
+>  /*
+>   * Allocation types for calls to boottime->allocate_pages.
+>   */
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index f8e465da344d..04786c1b3b5d 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -9,6 +9,8 @@
+>  #include <linux/efi.h>
+>  #include <linux/pci.h>
+>  #include <linux/stddef.h>
+> +#include <linux/slr_table.h>
+> +#include <linux/slaunch.h>
+>
+>  #include <asm/efi.h>
+>  #include <asm/e820/types.h>
+> @@ -923,6 +925,99 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
+>         return efi_adjust_memory_range_protection(addr, kernel_text_size);
+>  }
+>
+> +static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
+> +                                                struct boot_params *boot_params)
+> +{
+> +       struct slr_entry_intel_info *txt_info;
+> +       struct slr_entry_policy *policy;
+> +       struct txt_os_mle_data *os_mle;
+> +       bool updated = false;
+> +       int i;
+> +
+> +       txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
+> +       if (!txt_info)
+> +               return false;
+> +
+> +       os_mle = txt_os_mle_data_start((void *)txt_info->txt_heap);
+> +       if (!os_mle)
+> +               return false;
+> +
+> +       os_mle->boot_params_addr = (u64)boot_params;
+> +
+> +       policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
+> +       if (!policy)
+> +               return false;
+> +
+> +       for (i = 0; i < policy->nr_entries; i++) {
+> +               if (policy->policy_entries[i].entity_type == SLR_ET_BOOT_PARAMS) {
+> +                       policy->policy_entries[i].entity = (u64)boot_params;
+> +                       updated = true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       /*
+> +        * If this is a PE entry into EFI stub the mocked up boot params will
+> +        * be missing some of the setup header data needed for the second stage
+> +        * of the Secure Launch boot.
+> +        */
+> +       if (image) {
+> +               struct setup_header *hdr = (struct setup_header *)((u8 *)image->image_base +
+> +                                           offsetof(struct boot_params, hdr));
+> +               u64 cmdline_ptr;
+> +
+> +               boot_params->hdr.setup_sects = hdr->setup_sects;
+> +               boot_params->hdr.syssize = hdr->syssize;
+> +               boot_params->hdr.version = hdr->version;
+> +               boot_params->hdr.loadflags = hdr->loadflags;
+> +               boot_params->hdr.kernel_alignment = hdr->kernel_alignment;
+> +               boot_params->hdr.min_alignment = hdr->min_alignment;
+> +               boot_params->hdr.xloadflags = hdr->xloadflags;
+> +               boot_params->hdr.init_size = hdr->init_size;
+> +               boot_params->hdr.kernel_info_offset = hdr->kernel_info_offset;
+> +               efi_set_u64_form(boot_params->hdr.cmd_line_ptr, boot_params->ext_cmd_line_ptr,
+> +                                &cmdline_ptr);
+> +               boot_params->hdr.cmdline_size = strlen((const char *)cmdline_ptr);
+> +       }
+> +
+> +       return updated;
+> +}
+> +
+> +static void efi_secure_launch(struct boot_params *boot_params)
+> +{
+> +       struct slr_entry_dl_info *dlinfo;
+> +       efi_guid_t guid = SLR_TABLE_GUID;
+> +       dl_handler_func handler_callback;
+> +       struct slr_table *slrt;
+> +
+> +       if (!IS_ENABLED(CONFIG_SECURE_LAUNCH))
+> +               return;
+> +
+> +       /*
+> +        * The presence of this table indicated a Secure Launch
+> +        * is being requested.
+> +        */
+> +       slrt = (struct slr_table *)get_efi_config_table(guid);
+> +       if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
+> +               return;
+> +
+> +       /*
+> +        * Since the EFI stub library creates its own boot_params on entry, the
+> +        * SLRT and TXT heap have to be updated with this version.
+> +        */
+> +       if (!efi_secure_launch_update_boot_params(slrt, boot_params))
+> +               return;
+> +
+> +       /* Jump through DL stub to initiate Secure Launch */
+> +       dlinfo = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
+> +
+> +       handler_callback = (dl_handler_func)dlinfo->dl_handler;
+> +
+> +       handler_callback(&dlinfo->bl_context);
+> +
+> +       unreachable();
+> +}
+> +
+>  static void __noreturn enter_kernel(unsigned long kernel_addr,
+>                                     struct boot_params *boot_params)
+>  {
+> @@ -1050,6 +1145,9 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+>                 goto fail;
+>         }
+>
+> +       /* If a Secure Launch is in progress, this never returns */
+> +       efi_secure_launch(boot_params);
+> +
+>         /*
+>          * Call the SEV init code while still running with the firmware's
+>          * GDT/IDT, so #VC exceptions will be handled by EFI.
+> --
+> 2.39.3
+>
 
 _______________________________________________
 kexec mailing list
