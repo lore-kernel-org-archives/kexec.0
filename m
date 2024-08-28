@@ -4,76 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC658C54742
-	for <kexec@archiver.kernel.org>; Tue, 27 Aug 2024 22:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40221C61DB8
+	for <kexec@archiver.kernel.org>; Wed, 28 Aug 2024 15:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LB3ohFSqEeGbpEMQm6vK3C/bMwOoXN71bZfboUxL5p8=; b=Qhz4emHMmXihWK
-	k2Tx6iYDdv3BrrEWIRy+uAMBhcUZo2dSdJAextqENM46/DiLLphRHzjcXwXOzLN0jcx1G8wyOx8xl
-	ZiJgD/ciDCWO9iFDK7pWOXeqyScCKtI+uGDgglwnpyPRTpY5gPqAexqO31om5k3LPRH/FymXOzT4l
-	fSOBER+t7rZuTuo4b8yS9YLEdXa2YtqpRPuNypoH0W9PpzLNkRL+Qw0RPr4oCSmQDm9e4Pv1571co
-	fE0mrBVCi5jJG/lVjo76aFrvEO7haGqy1PNNloimEVdv9IAhYbDsoV9Ql6NfjvM1SArj55tIvwAdc
-	L2i1wE4muQtVge9XwNJw==;
+	List-Owner; bh=ZRTbmP/Myf3gqxTKQ1T/+IHbpx2l42ncaNzemQ/QLo4=; b=CjkaTOlrmg/k5Y
+	I+uNa4Ync42UvsQoO3uLIUfya4xomLFKJVpXAYqMqXyn9w+VVn8jYU3vXHenpLrlhSB5JYfapokYi
+	t77CASemIoa7H8x4pfgVuh/3Fk6rhC+mGjx35VE+irKMHN0LEd3zRJTZ+iUGwbIMZ03wZjGCAlTBL
+	ENjjBpWB2WkxQe3cPP/z8UZpS5IDYv+U6BzcUuK1wDInsLGfIGqhFWgq/aURhgArcijc6ID0IR2th
+	IHs3em2hWTr/t+cTBJrjOJvzS/SJfpf8IikngEZM/XvkRF+MeEkIrGXyZZ12mfYZT89D2V/ahFTrr
+	LLZjR00tyws2xKPotPpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sj4z6-0000000D3g2-0pSY;
-	Tue, 27 Aug 2024 22:48:20 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sjL3J-0000000G6Zv-1a5e;
+	Wed, 28 Aug 2024 15:57:45 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sj4z3-0000000D3f0-1RAm
+	id 1sjL2y-0000000G6T0-0lPs
 	for kexec@lists.infradead.org;
-	Tue, 27 Aug 2024 22:48:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724798896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SVWzv4d3wS++awPAHCsT183EQ2Vo8jOynbbMBJW0NUY=;
-	b=VdKCj9jLtt6t+0mArfENWFGYZG4J1JJ9AO7X7VHUsKhAQatunReflzpQ822m23e3KGliVL
-	KejDAouzlko4MNIenDjQb+NQxYUAQ8m0Q026DVWL+fSWNgDuej3TvgERwZZrYCSC5unGUT
-	iDcElz4CP7tViyV+I/GvqV7jNdgZaDo=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-673-M6HYJC8xM8-rvrkCJ4lelQ-1; Tue,
- 27 Aug 2024 18:48:13 -0400
-X-MC-Unique: M6HYJC8xM8-rvrkCJ4lelQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A89DC19560B0;
-	Tue, 27 Aug 2024 22:48:10 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.42])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F1161955D8C;
-	Tue, 27 Aug 2024 22:48:07 +0000 (UTC)
-Date: Wed, 28 Aug 2024 06:48:03 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Will Deacon <will@kernel.org>
-Cc: k-hagio-ab@nec.com, lijiang@redhat.com,
-	Kuan-Ying Lee <kuan-ying.lee@canonical.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ardb@kernel.org
-Subject: Re: [PATCH] arm64/vmcore: Add pgtable_l5_enabled information in
- vmcoreinfo
-Message-ID: <Zs5Xo5eVUvGMbtSv@MiWiFi-R3L-srv>
-References: <20240826065219.305963-1-kuan-ying.lee@canonical.com>
- <20240827122459.GA4679@willie-the-truck>
+	Wed, 28 Aug 2024 15:57:25 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id F3152A41AD6
+	for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 15:57:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DCC1C4FEAD
+	for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 13:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724851694;
+	bh=KW5R7PwTkwJ7eH25MlLERl4o7RhFtKAZw+Vph435i7k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DuDgMfT0kvoDLyx95ArYFHwsNqDzm6c4x7/q1V3hvhbqF/TzT9iKEZmBTYQmJP3RM
+	 HPuxl935jLmeaVpD3uiIJOk/F8xg+tsHUClxjXJXn5DHGKz6essCDjGPBHQZc+GpUY
+	 mIkNt3AKSXkJhltbBvo1fMG67b2lHr/w2H2n3iRLLH6IW1TzWvm9nEEisO6wXskNAn
+	 R7RxpO1/C9HmRd4/LRTUovmmqAyWIj3sh78gT+FLw0n9vTAHvN14l5Ks1oPvNu77QS
+	 Y/0HqKcmC+hf0rpS7iU+3oEH98sl5rVrjvSRivMAOw/ROX+P2B3CM7b1BHV6kNI1lL
+	 uHbuvLz2oDC4w==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f025b94e07so61905941fa.0
+        for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 06:28:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVm9OUwlSAyiEaHizMlwMXJD7HdVE5+9uYsAQMCri5PswjJHY1ppsRHmVPi7nCg5u6UKAqWCw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzvMFKW3Gay2/tUJ6ftNILluiyTMeRPEC+t8xE5CJMVfHUqxAa2
+	1WbybyceP97XCUY+Wmd0lz9apfK8zbk/bE1jv3ybyfxZZv38QrpDJPeJiPy0KaLnWq5luN2hgMh
+	6QwGgkuePWPbFb+7hqemnZCHRYuE=
+X-Google-Smtp-Source: AGHT+IFPpXqgB2ZHxGcUOd4HwSoKV4p7KRCTOVZffH5Q1PrkpitY1msj3d+3/H33hv0TesEGqrq38ufbKq5w17FoLjM=
+X-Received: by 2002:a2e:a54e:0:b0:2f3:e2f0:af15 with SMTP id
+ 38308e7fff4ca-2f5617dca81mr13124511fa.30.1724851692671; Wed, 28 Aug 2024
+ 06:28:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240827122459.GA4679@willie-the-truck>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20240819145417.23367-1-piliu@redhat.com> <20240819145417.23367-2-piliu@redhat.com>
+In-Reply-To: <20240819145417.23367-2-piliu@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 28 Aug 2024 15:28:01 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG_TynaQni6mzXYg6sCybSMba7cuwnyb4qi5LNZ=53pKQ@mail.gmail.com>
+Message-ID: <CAMj1kXG_TynaQni6mzXYg6sCybSMba7cuwnyb4qi5LNZ=53pKQ@mail.gmail.com>
+Subject: Re: [RFCv2 1/9] efi/libstub: Ask efi_random_alloc() to skip unusable memory
+To: Pingfan Liu <piliu@redhat.com>
+Cc: linux-efi@vger.kernel.org, Jan Hendrik Farr <kernel@jfarr.cc>, 
+	Philipp Rudo <prudo@redhat.com>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
+	Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240827_154817_482331_8DD49F95 
-X-CRM114-Status: GOOD (  15.05  )
+X-CRM114-CacheID: sfid-20240828_085724_374568_1662AB07 
+X-CRM114-Status: GOOD (  18.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,30 +86,58 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/27/24 at 01:24pm, Will Deacon wrote:
-> On Mon, Aug 26, 2024 at 02:52:02PM +0800, Kuan-Ying Lee wrote:
-> > Since arm64 supports 5-level page tables, we need to add this
-> > information to vmcoreinfo to make debug tools know if 5-level
-> > page table is enabled or not.
-> > 
-> > Missing this information will break the debug tool like crash [1].
-> > 
-> > [1] https://github.com/crash-utility/crash
-> > 
-> > Signed-off-by: Kuan-Ying Lee <kuan-ying.lee@canonical.com>
-> > ---
-> >  Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
-> >  arch/arm64/kernel/vmcore_info.c                | 3 +++
-> >  2 files changed, 9 insertions(+)
-> 
-> In which case, wouldn't you also want to know about pgtable_l4_enabled()?
+On Mon, 19 Aug 2024 at 16:55, Pingfan Liu <piliu@redhat.com> wrote:
+>
+> efi_random_alloc() demands EFI_ALLOCATE_ADDRESS when allocate_pages(),
+> but the current implement can not ensure the selected target locates
+> inside free area, that is to exclude EFI_BOOT_SERVICES_*,
+> EFI_RUNTIME_SERVICES_* etc.
+>
+> Fix the issue by checking md->type.
+>
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> To: linux-efi@vger.kernel.org
+> ---
+>  drivers/firmware/efi/libstub/randomalloc.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
+> index c41e7b2091cdd..7304e767688f2 100644
+> --- a/drivers/firmware/efi/libstub/randomalloc.c
+> +++ b/drivers/firmware/efi/libstub/randomalloc.c
+> @@ -79,6 +79,8 @@ efi_status_t efi_random_alloc(unsigned long size,
+>                 efi_memory_desc_t *md = (void *)map->map + map_offset;
+>                 unsigned long slots;
+>
+> +               if (!(md->type & (EFI_CONVENTIONAL_MEMORY || EFI_PERSISTENT_MEMORY)))
+> +                       continue;
 
-That is a good question. I guess it's deduced in code, mostly needed for
-different PAGE_OFFSET, how to transfer virtual addr to physical addr,
-etc.
+This is wrong in 3 different ways:
+- md->type is not a bitmask
+- || is not bitwise but boolean
+- get_entry_num_slots() ignores all memory types except
+EFI_CONVENTIONAL_MEMORY anyway.
 
-Add Crash utility experts here.
+So what exactly are you trying to fix here?
 
+
+>                 slots = get_entry_num_slots(md, size, ilog2(align), alloc_min,
+>                                             alloc_max);
+>                 MD_NUM_SLOTS(md) = slots;
+> @@ -111,6 +113,9 @@ efi_status_t efi_random_alloc(unsigned long size,
+>                 efi_physical_addr_t target;
+>                 unsigned long pages;
+>
+> +               if (!(md->type & (EFI_CONVENTIONAL_MEMORY || EFI_PERSISTENT_MEMORY)))
+> +                       continue;
+> +
+>                 if (total_mirrored_slots > 0 &&
+>                     !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
+>                         continue;
+> --
+> 2.41.0
+>
 
 _______________________________________________
 kexec mailing list
