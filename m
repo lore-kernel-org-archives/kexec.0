@@ -4,77 +4,209 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79A41C636EE
-	for <kexec@archiver.kernel.org>; Wed, 28 Aug 2024 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B756C7112B
+	for <kexec@archiver.kernel.org>; Wed, 28 Aug 2024 20:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sTqJOTlgYAEw2IiZtUDrROZ9q4pq1E8SJ2M39g61i1I=; b=IDkMujLl3uuc21
-	BL6ooz+2UKCoy4zetx+Q7kHkHLj3FjxnPAlucSzuqZxzCkwnZ5QDPFTeVOEwQ3nb5nv9+tukXQmS4
-	tOkVDdm8HTKz1kPQsRcZRuDpwS/KpJdNscSfQ2ckOnU+VOC2Ixp20UonrPWK4ZCau44j1Cqac5XBa
-	ckldEThUAfOpYa3t2/lefQURy0JZefmxBJiT8hL5OkiESYI/JibMnBGvxAs0e9FRmNn5qOhJQ3YsC
-	9gkvg3Y73OnojwsTgWrNJiA2PIyTIJus6YX9mvKb7P66ppccMBFUuo5dFTt2t5CirL74QGN/Suru1
-	MoJmDDVgYneKNsYya8mw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6LhX9FM1P5fOe5XqucmRJK6pmG5zYwoEkf9+/maQPuA=; b=bhvp70losk//TCjGCnezVCWJ+Z
+	WZ7R5SMwYcGBO5CgAfRJ9g2jDFC7strjGUD3yZ8IViG53cw6wzohs6ATqME6kfuvtgrKgZqf5hHUA
+	bbNgIQ/qWa732a3MSG4dIcwnxmxv874zt8PxepzZt41K8do+HYZph4taawBoXYclp/zdxab5LVgm+
+	8/rERbwSTEsWaMD011aJMoxa2ndx/EHTUO59qEL3YmK0j4CWHY1Fsr0BudiHYc4Pcputmj7ZXy5Lb
+	h7FbE92mTM6f06sr5T+WH43vRX7HN2cCPUYE7NCMZujPUQOtnCVd2XaSQ1YqVAScOSzpj1QDSScm6
+	SG6YQHgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjMjW-0000000GQ8H-3KcS;
-	Wed, 28 Aug 2024 17:45:26 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1sjP57-0000000GqXi-1iBs;
+	Wed, 28 Aug 2024 20:15:53 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjMjT-0000000GQ6v-3kGS
+	id 1sjP53-0000000GqUb-1I7W
 	for kexec@lists.infradead.org;
-	Wed, 28 Aug 2024 17:45:25 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 0A915A428DC
-	for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 17:45:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF811C4CED2
-	for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 17:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724867122;
-	bh=G9QT0vPfao0O0lwDuOgePtuOTxFGY2xhec23X8b5r3c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SHmG7I1AqNhnQBidq2BCot4ejAL+TzMllfS2rv3qkf+lElNlaaHqHWHiOCKivyXyC
-	 TzFTphymTh9XH159FympnbYfJx62unid9Qv9eAbiS/n+DjC9fCEcTF3or7HiGqneOd
-	 6YWcbHm6IsHp16uteCBB2Em71ZKYMH37JfojTKFFli0XQwq7jXhO3keSssf7lt2p2a
-	 nexLta3iWnFo1/tclYsogHocm8wp7TDayc3ekXmACvwi3BbPRA0wuOaOgYHSRV4zhd
-	 jL+KVompujrPQ/3PvhWFYoabKrE8t8s9GjPBUrQzB1AfsrlUJ3xaZG92KXGXBJHj87
-	 kGVLVVpOJTGLQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-533463f6b16so8268355e87.1
-        for <kexec@lists.infradead.org>; Wed, 28 Aug 2024 10:45:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXM9lLQtW5e5jZWIc6NG8LegoHeAlPCNZUeKXUB2YUL/dCMeUScqhcF4icEznHqRPgCfbaKFA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwbrLc/i09z9xhams4cV4PS0ME15ltBREhmFEwMPMyUw+EHrpCb
-	Wp7WEzLoJEPoudlxaHPJOfWXl/vXDZojVmEL/90Bzq9cTgd3GZZaBDZHwXLMgGJPxu6PMOfkKCB
-	FUn4eJS45xmItOCQw+1B4CNltWCc=
-X-Google-Smtp-Source: AGHT+IGaVTdJ/LHztg5boQQvEQD2uV+Xdg8ZsjilzNuNZwL1c7aotEe1qcRRan6SrgWsXGUOuRs+QonsXS8FUfmscYw=
-X-Received: by 2002:a05:6512:b98:b0:530:bbe7:4db3 with SMTP id
- 2adb3069b0e04-5353e5b81e8mr28078e87.39.1724867120119; Wed, 28 Aug 2024
- 10:45:20 -0700 (PDT)
+	Wed, 28 Aug 2024 20:15:51 +0000
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47SJXYNW026674;
+	Wed, 28 Aug 2024 20:14:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=thdaJMgMyuYGqq8n3FY/SB2ISAWSvg0IaIhowwZxmCM=; b=
+	IH9AD3GTEmv5v7zqBKyxy9+1T9sPzZ45SoJgq0l7HJGXMF4AEQxbhqkeivXtpGdi
+	emUhlNnZde+h/5ZyAgKNRt57fQIaEsAKRSc1z7jeAvvn/XDfB114S0gFMnEg5u2R
+	dW6YfbBJkC+mxrUqyI06WLMh2D1VuLFPKAazurXd3CemnGkeir/YyPcFWeLW0knT
+	zlk59egP4KgdvCvmaoWupElYD2shzlJ/7y54Ton/Tg/lVofwMBOiBD2XB44Znzvt
+	cvmIwTvb72qGmA4iSiJP8Z7+q1EZBN+/mhP4r4Smvs718HrGisixW3jOPniMw0Pw
+	igP1wj6N+Qx0CH4U24N78w==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 419pura7tf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Aug 2024 20:14:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47SK5p8J035057;
+	Wed, 28 Aug 2024 20:14:55 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2049.outbound.protection.outlook.com [104.47.51.49])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4189sv125h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Aug 2024 20:14:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ybUX6VkItmZLjCZNYUoRtU94kCxxl3AaSkds7zb+LBEEJvvkbbTg+BQ6aPTUfrIjE/3hHD2REtnknEGvTCcwog23750L4rmX2I/aus+Zh8KWTjEfovo55ek7yQyk9vj4qj8z8JumFdZ5kUF73XCQCiE2HFBGrrPK7ss0snJAVax/giql1+WPq+Qo4ZdJceOZx59q+4diUJi5Nufl3BPdLI2B55SmUI1P3Hdj1GeKbdLBdD0eZv98R1/XOBNwCo1rZbIkh4lTDV4Jw75VSGfa4YbQr/rTIPgMevLEQfg1cHljH2xQQM2drsFIEaU8xauzju/WxEFYkGQqry+NP07S6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=thdaJMgMyuYGqq8n3FY/SB2ISAWSvg0IaIhowwZxmCM=;
+ b=wyW4/DjzIbBUqyHhMPnGLG+4ZBzeg+UtjvZEarIZvRg/xvGlVlhuaG96mXF90B3uBfU1hrfDOEb83lHpGGjNjAzKLO8ss2ADyDfm65mOsqJ4KrZ/ai5EeS68GMv5rBECw+ddFSPnBNfsFAjeRvOfPUQlZzhDyYeeTJ4rveDFujsYsj7ALA833s21sSGtZXFysiQjUFejDO9wMXn1xYXKp0/c6shU+CCSOmX1FgfSZ2PYMWIb7O9EaKKHAcEPqpoI1TMHZ0o3hiBXnhDWCYGxO1bYK190hTQ+0dVVXtnnP0WWn79NF4DtYfYMTY02eMMryNYOiKd/DLsmPmCvInBB+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=thdaJMgMyuYGqq8n3FY/SB2ISAWSvg0IaIhowwZxmCM=;
+ b=twHGrWq/0pDhNDNZ4443V/m1/WE40Qyy30mdojeectMLQaAApbQ3rcoFADpZChkKX5FOkITug+tuoexexurooXaT1q5DfVJI47ItjURRssS6U3oiOYGICXaVMXGidAwN7fFxLfEsC8cMAJrgnBzb6gNU4LAuGTaWcHMVzt2rhMs=
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
+ CH3PR10MB7645.namprd10.prod.outlook.com (2603:10b6:610:17a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.17; Wed, 28 Aug
+ 2024 20:14:52 +0000
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8%7]) with mapi id 15.20.7897.010; Wed, 28 Aug 2024
+ 20:14:52 +0000
+Message-ID: <601646a2-46ac-47a0-a8b7-1d45a09172ab@oracle.com>
+Date: Wed, 28 Aug 2024 13:14:45 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <20240827181426.GC2049@sol.localdomain>
+Content-Language: en-US
+From: ross.philipson@oracle.com
+In-Reply-To: <20240827181426.GC2049@sol.localdomain>
+X-ClientProxiedBy: BN9PR03CA0658.namprd03.prod.outlook.com
+ (2603:10b6:408:13b::33) To DS0PR10MB7224.namprd10.prod.outlook.com
+ (2603:10b6:8:f5::14)
 MIME-Version: 1.0
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-2-ross.philipson@oracle.com> <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com>
- <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
-In-Reply-To: <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 28 Aug 2024 19:45:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHn6xeAskWiDLvvA4oG3j9_tqx+iMYJXMqmgvyX4pMzgg@mail.gmail.com>
-Message-ID: <CAMj1kXHn6xeAskWiDLvvA4oG3j9_tqx+iMYJXMqmgvyX4pMzgg@mail.gmail.com>
-Subject: Re: [PATCH v8 01/15] x86/boot: Place kernel_info at a fixed offset
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>, Stuart Yoder <stuart.yoder@arm.com>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	hpa@zytor.com, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, kanth.ghatraju@oracle.com, 
-	trenchboot-devel@googlegroups.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|CH3PR10MB7645:EE_
+X-MS-Office365-Filtering-Correlation-Id: 382cb9d9-5af2-4e38-f4a3-08dcc79e1372
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RVdLUlJsQ0NrcDhKY2NDUkFyNERzYU1meHppdUtFZFowK3hRUXhBM3BXVXZQ?=
+ =?utf-8?B?VnV2T0QzOFVWeDAxNnJHREt5VDZEdkhweXNSN284dlhsUXRJb2RBVzNGejBV?=
+ =?utf-8?B?VXhDU0FWeUJndnFuV0tKYzJZaVpJOUgwaGc1VytpNFQ2TUxjYUM2RFgvM3pG?=
+ =?utf-8?B?ODd2eFRRSndENm5rWUlGUlRVUHlJMkFQZUo2ZnY2dWt4T1h4YnhHM3N3Tzk2?=
+ =?utf-8?B?YXhpbmpEMXZmTHQrUEhtSmJvNm5zMHNSTDlaU0pkU0FhTm5jaXAvQ0dJNFR3?=
+ =?utf-8?B?WFFJRXNYVUh5THJaYmwrWlNKU2RHN1cxUnVuS2RrOW50aStxL3dFaWJ1dTgx?=
+ =?utf-8?B?RlFJalpMRnFLWjVRMk9DMjNZTlUzbnFyemI1RWg3ekZxTkNjb2txZktIcXhK?=
+ =?utf-8?B?T0RERGovU3FKMmpPMjJCUE5Vb0V4eFVBTGEyRWwwRGxUTWl0Z0xucENuRk5B?=
+ =?utf-8?B?a0l5ZFBueHQraEhpb1UrWUNnR05rSEQxNS8yaDZITWI1Ui9NQTZoUU1mK2hQ?=
+ =?utf-8?B?cm8wV1hWM2RlUnlGd01DSG43aHphNlE2ZTNSWkt4OENIN2ZYZGc1ZzRvdERv?=
+ =?utf-8?B?Q2xFcTI1aGVjdExQc1pRdHJ5R2l5SVhkMGZsTmJqSW9YMnNIZG5jMFZUdnhK?=
+ =?utf-8?B?RC90enNKSC9ieW1ObjZSWTNlTVlsVCtpU29KeHpFeks5MHdJL280K0JlVkVh?=
+ =?utf-8?B?YXUxc0xjdEtaNllFdUw1MUV1RkUxS0FaNVc1YktVN1JVWnRYWWJMbGdySDQ3?=
+ =?utf-8?B?b3RpWmk1cFJqRGh4bXBkYm45a0p3ZEFpaVl2cTc1ckNZTVByYk1GbnpvbEVH?=
+ =?utf-8?B?SDBhTmhMaXZGaklKTGZwMkRtRFBONjdUVFRNVjZjQ2FlZDBacDEvYnhvK1Ew?=
+ =?utf-8?B?Ym9JR09oUWZ4MXFxL2l4b2drY0tScERqU09nYVJuVVY2bW9TZGpBM2VmNUNo?=
+ =?utf-8?B?MDN5VHhpb0NxbURXUENBMWdWZTN5VWU4aDZSUmZCT1R3NXZtVVFjMnRpSTRV?=
+ =?utf-8?B?dTYzTWMzNGxuL2FFcEtZc3BQUWNZaXExR295Q0ZZdVFxTWRSeDd1NG9xd3l1?=
+ =?utf-8?B?cWg1eUdSK1RUV21QQkxzb1RiYkY5RWpVbE5JZ1ZFNFZ0MjBWeGMvN3ZNb0Jk?=
+ =?utf-8?B?d1hMS0hhcDBIM1dycTJLM1JINVZDOEhOUWV1UEU1Zm83dk1qOUtLTFhRcHhN?=
+ =?utf-8?B?aVFZeSt4RTF6dG05UmQwdDF0Y3F0M1FTbnVUdXNLMUhiTkxNNDVISnA4dERX?=
+ =?utf-8?B?RFkrd3JGcFlOb0Q3aXl5K3BsS1lNTU5Ed1pEUC9tWFNYL3BxQ0R3cnhaRGMw?=
+ =?utf-8?B?MHBQZFZqUWljcCtQWUFNZTE5d1I5N3lGUHFpYm1RaHdYZVViWHNUUUl3SmIr?=
+ =?utf-8?B?cVo5TytybGtsalBKdk1CTE1Kai9PZ3dvWG1lcDQ4ZkFnREdnZUpSMzNkbXJm?=
+ =?utf-8?B?emlpL3JJcCtqNzBVUG9SNUhTdlZ3aU1YM2hFSGw4d3E1V3FkNFdjNVRHb2hY?=
+ =?utf-8?B?aktDbHhDVm5BQjNyck13dTFhSDRlK2dWV2txQlRKNW80ZTJjcDdIUDNHaW1L?=
+ =?utf-8?B?OW9ING9ONEdURW1ETGxMYlV6dldxRnN0VWtOcEJrSEhQeVN1K08yWE9ObHZW?=
+ =?utf-8?B?N0pOclNsQVhnaFlmNjFmeUJlemhFK3lJRHdmZmNPR21NZWRoemZuRThaUjY3?=
+ =?utf-8?B?M3BhdFY0Y2V1SGsvcFFyZFJQMExwWTQvMU92R2NLVTA2ZW5DOGcvczYrYzV2?=
+ =?utf-8?B?eXZIYmxUNHhySENEang5U0c0RnF5b0lxME9iWFJ4WHM3MmlyM2U3dXR3UGI0?=
+ =?utf-8?B?SWdWZVFNb1hpc2tRa252dz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eGc1TmpXc0NyTWVRRUZabHRvZlRvajRXRUNBNWgrN2VGUFJaSFZwZXJiU29M?=
+ =?utf-8?B?LzdjdVhib3o4TTdBRmdia3hicExTcUJiTjdMWlZXTUhVNXhrenhya09VcVJj?=
+ =?utf-8?B?QTFMdHdwWDRMN3dpMmNqcHdVc1JhV3g0d0ZHRnZiSVV1aGg0dE4wTlBVTzgw?=
+ =?utf-8?B?K2tTNjF1eTlvbWJLQ2RJNnVyNS9IU1dpR2d0Y2lIelhNS2l5Q2NHZFYvRkZ0?=
+ =?utf-8?B?cEpHV1l2S1ZKY095Q3dpYVRoTjdqTVNGQ3lWQ09UeU5MaVBJL3VEYk9rYXBW?=
+ =?utf-8?B?SXloRjJpQzA4NzA3M3E2UDQ4eWcvaTg5MStLOUsyT2o3U3hNNG9nZmRvVGpu?=
+ =?utf-8?B?MkVvN2JkMHljNWJmS1ZnMFhEbERpdCtGMFE2aldUN1g5b1FEKzNYb0xFVXNq?=
+ =?utf-8?B?YTROc0lFQVhRd2F1Nkp4T0ZjOGVPRTFMUTVUMVI5U2wwL3ViZW4rdHFsUlJI?=
+ =?utf-8?B?K0NvVWM2Z3NmWVo5TElIWUlnemwyallFbGd2eTNTdGw0TVdrQjRXOFQyTzhM?=
+ =?utf-8?B?N2U5aS9rbDluWU1lTk9EZTV5bnR3Q2lXcVpwTUNFdmJZOVRVR2d0eXdWS2Y2?=
+ =?utf-8?B?bWUwaE5BRkxaSGY1WmNaelNSeHlnM0ltR3FGb3lZZXBNcTgxQjROSnBKdGoz?=
+ =?utf-8?B?aWo5YUgrSHJsRnNFMGEwK2c4LzZmRzFzMERrbWorUUd1OUIxNCtYa3QyMzVC?=
+ =?utf-8?B?aVRJYitjRnZZQ3hOc1BrYzZzVm90SGl2SkF4UmZEZ0JxaENHRzFIODJRS1Iw?=
+ =?utf-8?B?eUU0K0NiR1ZyZDJIampPZmNNNUJOKy9WUzZ3clhJUkFadDRKblk2OUNncVd4?=
+ =?utf-8?B?L0xiWkZCZ25wcEhjZ2pJc3lhUnFQU1JMcGJpRXNFOVZyQjZuZ1Q1VGtKNlQ2?=
+ =?utf-8?B?Q0w2bmtadExmOWdIQWV1bE5TL2UzbjNHbnpIQUhoajdRVlllaU5XTWVkSERZ?=
+ =?utf-8?B?akJycm1JSC9RcXQzdFlmbW0yNXZKdGhvVDAvK0dyRVcyU2wxUk1IV2twRjBq?=
+ =?utf-8?B?TzU2UzYvb0JUZlpXUW9ncEZoSENac20xZTFRQ2xTZENwdHE5OTV2L2F0QkdN?=
+ =?utf-8?B?ZzA0VW5sYzdjMTBIQ2VacDBYWENscXVRWEdIQW1Ic0ozQ2xUSFpPRUhiTnpH?=
+ =?utf-8?B?dmwvT2NUaEs0MnArZHc3RG9weGtPNXpNeG9LNWUydmZQRGI5UHZwTk0wcEJE?=
+ =?utf-8?B?aDR3akpBV1l2c3JsVi9GTkxDSVQvQUVqSnIxV3ZYSEJ0eWVlanVXU0pWZGxu?=
+ =?utf-8?B?bjhYam9TZ2xGbDNaVFFUOHEzdktWQ3BRZm1qV1hRbEVtY09XTC9jUGlmYnY0?=
+ =?utf-8?B?U0xOQW5uOCtiWlVjRXY3SUpjMzRyVVZqc3J5bzZYNWs1U2xNQlBSczZ2YTU2?=
+ =?utf-8?B?bUljNUxYY2xlOERnakpYR1BUZEd2TDFCUm42N1pxRE5GeG5qVThMZUlqZndw?=
+ =?utf-8?B?QStrNDFxREx2V3hteHRJUGh1Sjk3MUx5VEhCbXJ1aFBCdEU4a0VFTGNBZkpD?=
+ =?utf-8?B?U0d5RE9vUmtFemlOQnpMaVJvYi9rUEFjVTgxanRFZUhjTWZCZDJKRjVxWkt6?=
+ =?utf-8?B?WUp0Q2czeXE3MlRMc09leG9FdlV5RWtoRHlibE0rMVZGbmRkRUxBVUpPeGds?=
+ =?utf-8?B?NjA4WFlwaGJXVkxjTEUzZDhnVTRrcEliWldNMDkwNm1Hd0lRYm5xbnRTbGpm?=
+ =?utf-8?B?aDEyUGVtRC80UWZpQmNraDJ0MThlZlZ6Vy91T1ExRVlXSktMWHRBQ3k1Vyti?=
+ =?utf-8?B?YUQxeWY3TmNTeG5uL1hMRXZzSWpOazM5c0JHRmtoYTRMeTFDOTBjV1F0bnRK?=
+ =?utf-8?B?cjc1U1l6TG8zTzEyTWhialVRSWg5WW9Ya2s2RWFXUU55VjZCWkVpOHB3Sk5n?=
+ =?utf-8?B?RS9ETnVWbWRvZm5JVWI3T2lLOFFWaEppRTA4eGJrTU9mcGVNL1MwNVZPSjFm?=
+ =?utf-8?B?NUUyZGpkeHB2cndrbllPWjhTancyRTlLVk1UUEU5ODdBaENmRzZtY0ZpNHlC?=
+ =?utf-8?B?a2tocjBnSlgwNDRaS1hLZ2FHQlNFWFRTeUltZnRZdWlyb0c1ZGdsT1pJKzlj?=
+ =?utf-8?B?SjBocGtBaEpGeWJNNXlxMGUxWlJGbCs3UFRCZFBBSWJUYVk2TFFNSVhrWHFy?=
+ =?utf-8?B?RlRibkVQNlNFOVpVY1lsb1NmQ2Z5dnN6cDBoWHNnOU5BdHRDSlhaVVRXRGV1?=
+ =?utf-8?B?QlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: izCdzmR5GWQ621jOms/TEJDbmSLXaK21S4wzPYZObFNlh1G2DuwJOBmpr4w6NDHASBQOYsBzwFgDmuUMRn99pfop36ob1IIxjzL2u1AGWxZpU2SFdkiocLCO8+x/Ou22+Xx13OHF8V1mM7aLT/zJSk6TgZzoQmo0wxTWCevnNK868DswgsEaD4MTnCccQhEhqlLwmiC88eQ7lNlqK2sjpRD/M9oTAAxzWUuihfQSwPlKgIgmRSD8/dvDjT5qqH4C5cE/XssetFD0+G0uwPgqZJ3i3SiP3TEnCX1ET2nBOP/EGFcxSNxro++VHonYIXpfIo7/GJdfMuvoKSxB0W1Ms8GRi779ld/msauzKpN2aM6RzyWYAxhn/NunXsRhFq8F3HOzHxsnJ1C+i87H/7gUks4JlpuRvLdFRUyHUdslI84ngEo88/+KzKZz4fyk8kGDNlgmH1mkyBLLd+BG0k6m+XXHs7HWqw8rgnHhdZuqmzG1mafo8XmppyFjlVmIPco9Fqwt+PzvSai441Qz861u97B/qwHIIocYlutg9MmxdCaRUYXEW3WtwL2gULyBYIJRtV6+ajlSr+S2L4WbXtJrqvk/QMqpcrixwfGhiDlYn1E=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 382cb9d9-5af2-4e38-f4a3-08dcc79e1372
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2024 20:14:52.7356
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fvIE3zmAQIFaurCCGyAkl56RUBSd1xXJ6vgY+OWAqNrpUGRz1pKV8OhJSneSpEmwkVufj4rRPYRgVwuuZcd8FAZPYK+yGxLV/iK3eN1A4oo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7645
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-28_08,2024-08-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408280146
+X-Proofpoint-ORIG-GUID: T2Y0OfwG0i4dmRrj9dgEUWi9uBvESos8
+X-Proofpoint-GUID: T2Y0OfwG0i4dmRrj9dgEUWi9uBvESos8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240828_104524_078980_BF7A62A2 
-X-CRM114-Status: GOOD (  17.62  )
+X-CRM114-CacheID: sfid-20240828_131549_366835_3510FF01 
+X-CRM114-Status: GOOD (  19.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,47 +218,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-(cc Stuart)
+On 8/27/24 11:14 AM, 'Eric Biggers' via trenchboot-devel wrote:
+> On Thu, May 30, 2024 at 07:16:56PM -0700, Eric Biggers wrote:
+>> On Thu, May 30, 2024 at 06:03:18PM -0700, Ross Philipson wrote:
+>>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>>>
+>>> For better or worse, Secure Launch needs SHA-1 and SHA-256. The
+>>> choice of hashes used lie with the platform firmware, not with
+>>> software, and is often outside of the users control.
+>>>
+>>> Even if we'd prefer to use SHA-256-only, if firmware elected to start us
+>>> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
+>>> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in order
+>>> to safely use SHA-256 for everything else.
+>>>
+>>> The SHA-1 code here has its origins in the code from the main kernel:
+>>>
+>>> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+>>>
+>>> A modified version of this code was introduced to the lib/crypto/sha1.c
+>>> to bring it in line with the SHA-256 code and allow it to be pulled into the
+>>> setup kernel in the same manner as SHA-256 is.
+>>>
+>>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+>>
+>> Thanks.  This explanation doesn't seem to have made it into the actual code or
+>> documentation.  Can you please get it into a more permanent location?
+> 
+> I see that a new version of the patchset was sent out but this suggestion was
+> not taken.  Are you planning to address it?
 
-On Thu, 21 Mar 2024 at 15:46, Daniel P. Smith
-<dpsmith@apertussolutions.com> wrote:
->
-> Hi Ard!
->
-> On 2/15/24 02:56, Ard Biesheuvel wrote:
-> > On Wed, 14 Feb 2024 at 23:31, Ross Philipson <ross.philipson@oracle.com> wrote:
-> >>
-> >> From: Arvind Sankar <nivedita@alum.mit.edu>
-> >>
-> >> There are use cases for storing the offset of a symbol in kernel_info.
-> >> For example, the trenchboot series [0] needs to store the offset of the
-> >> Measured Launch Environment header in kernel_info.
-> >>
-> >
-> > Why? Is this information consumed by the bootloader?
->
-> Yes, the bootloader needs a standardized means to find the offset of the
-> MLE header, which communicates a set of meta-data needed by the DCE in
-> order to set up for and start the loaded kernel. Arm will also need to
-> provide a similar metadata structure and alternative entry point (or a
-> complete rewrite of the existing entry point), as the current Arm entry
-> point is in direct conflict with Arm DRTM specification.
->
+Sorry we sort of overlooked that part of the request. We will take the 
+latest commit message, clean it up a little and put it in 
+boot/compressed/sha1.c file as a comment. I believe that is what you 
+would like us to do.
 
-Digging up an old thread here: could you elaborate on this? What do
-you mean by 'Arm entry point' and how does it conflict directly with
-the Arm DRTM specification? The Linux/arm64 port predates that spec by
-about 10 years, so I would expect the latter to take the former into
-account. If that failed to happen, we should fix the spec while we
-still can.
+Thanks
+Ross
 
-Thanks,
-Ard.
+> 
+> - Eric
+> 
+
 
 _______________________________________________
 kexec mailing list
