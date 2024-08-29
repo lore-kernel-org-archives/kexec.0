@@ -4,67 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 815D5C7115D
-	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 03:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 171B9C83010
+	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 08:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:References:
+	In-Reply-To:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=usK5pXH0xeqsp5wPJEUxxfNX5HVKX+RSmu5juPWLImA=; b=FFCkeG5J8kyxRZ
-	tD3/y5X40Nk8xJvYPkpiuE4ky3icmHxPKBKo4qT1W2Wzzrxuf3qpwApo4je2ZMPM+cTgZHkceeoLN
-	TAj7fYRqKkfxUKCdgB+NB9XMF6V1lToe20VwZdit1tQG0ZySKNJFe13ZHNSmL9uIpQmLz5JFbJcvn
-	fn898/xz8/4YA2WxZYBlDRQIUt0J2Tddo9SMy8RO9wnM2AsNfV4a8V9l8aCzHqTX0P1+bdBHdobqH
-	2yZHHSWF+4+e0+366CnXoN+GMxpIUzFjd9ZCR0kUU4ss/QPS5KP3d3NpO0T+aTajn5+ahwQMJ3dnl
-	hrefPSFr3SfaADgDqsHA==;
+	List-Owner; bh=qFzyH/yew3dV61XbvgZ1M6aYGgeGeRVPJ7xsU06mN5k=; b=h4kC6LdgwbuZz+
+	/IIoU1Ntesp+LLJb46+uWuulxbF83AVBFdvFI5mceEfldR1I8/Jt3JtX5BEOw7bEP/v+CSk/BeFpt
+	9G7p9IC3GydVskO+PW8k/vC+usBps/d904vkds6ioIpPPlQuzGfLaqwXmDW2LiPo7k9QUvs9l4ULp
+	K+7nseF6fO5UVXaobYSF48WPHvQRBSv1fBopxJ6X9vn7EJbs7wgOaipmKEOHtHNCFQXnMQr+KcFTL
+	FooKzQOhHGaTnZJHmWgojumu7Yg4jFTtefR+HWbpr5UagUuN4Mgbl40EYgdCYrlpaCVoQpFXAfavL
+	StBd6h+7MecPTTJdXX4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjVmy-00000000LPx-3yxh;
-	Thu, 29 Aug 2024 03:25:36 +0000
-Received: from cavan.codon.org.uk ([176.126.240.207])
+	id 1sjafL-00000001BDE-0ApQ;
+	Thu, 29 Aug 2024 08:38:03 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjVmt-00000000LNe-26f0
+	id 1sjacq-00000001AVj-33sV
 	for kexec@lists.infradead.org;
-	Thu, 29 Aug 2024 03:25:35 +0000
-Received: by cavan.codon.org.uk (Postfix, from userid 1000)
-	id 1FEBF407E6; Thu, 29 Aug 2024 04:25:26 +0100 (BST)
-Date: Thu, 29 Aug 2024 04:25:26 +0100
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	"Daniel P. Smith" <dpsmith@apertussolutions.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ross Philipson <ross.philipson@oracle.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	dave.hansen@linux.intel.com, ardb@kernel.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com,
-	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
- early measurements
-Message-ID: <Zs/qJsKu3StL3Wzt@srcf.ucam.org>
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-7-ross.philipson@oracle.com>
- <20240531021656.GA1502@sol.localdomain>
- <874jaegk8i.fsf@email.froward.int.ebiederm.org>
- <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
- <87ttflli09.ffs@tglx>
- <CALCETrXQ7rChWLDqTG0+KY7rsfajSPguMnHO1G4VJi_mgwN9Zw@mail.gmail.com>
+	Thu, 29 Aug 2024 08:35:30 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 07C2540E01C5;
+	Thu, 29 Aug 2024 08:35:14 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id g_I6YJdYLlmn; Thu, 29 Aug 2024 08:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1724920509; bh=CPJhcm4WSc5DpBeeH7qgshS/p1SRpirWBGGJlu0SQk4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=cah3Mpc5nSYpGQMyejkNsp95hkl/X+s6B5xBrgHTfPCNNQHp02ZSXOUI3HjjX9DhW
+	 vEjexwCY727LS3YMNoK0hQUMyonR7aCZ6D039tIZEc0OGBucSwndlYqbguDZ5gi4V1
+	 qhZLMvXyyeZMQu6daP0guN8Y1oKm6wakJjFYxPGOxJLNxtRkK+Z+Ex/igPHquHI7Wj
+	 Ddds+DrEZRos0kyn+w1xjqjEOWO/CswZhHip6siwbkvvkLWV5HCiPMzsqyHYzuUJoT
+	 L5qAqTd7VSvRgD2Z1lZm5t9usfqnAZaWvE1uVf4Va1N3vBI82FN068qKydf+GuJidM
+	 XA1OKDiXNXqX6CU65lFshs7FVcU81qS2symUlsmgah/jJijv/Tf0+WDNXM80jUmtfG
+	 Nlfq/D7c6dvsjCzZq6aRE4X0n+UsndkhJQiIm0XIRUG9GGVUW/RgrPl5RQ3h7s4yoL
+	 3HIXB4MRZm3S3Yac4tzt6ibF8iW4XM+Ll3t856HohJIhipSd1Bm0aYJr6hm2CmI2vW
+	 WVddYO2iPSadIGgueMUoLwBneHPNBouJQPv+xtq6+hv0CCXnB9obYO8ytEQsrQei75
+	 OGA2vtzuB2ZuJwSvSswy6ChUfr7Bf8mfj7ZWYX5nRoa/YrU7DDUXMabC788QCRKSqU
+	 s0hrlESh+O3tj6sHBKJoGii4=
+Received: from [127.0.0.1] (business-24-134-159-81.pool2.vodafone-ip.de [24.134.159.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 51BEC40E016A;
+	Thu, 29 Aug 2024 08:34:53 +0000 (UTC)
+Date: Thu, 29 Aug 2024 10:34:49 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com, pbonzini@redhat.com,
+ dave.hansen@linux.intel.com, tglx@linutronix.de, mingo@redhat.com,
+ x86@kernel.org
+CC: hpa@zytor.com, peterz@infradead.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, thomas.lendacky@amd.com, michael.roth@amd.com,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev
+Subject: Re: [PATCH] x86/sev: Fix host kdump support for SNP
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20240827203804.4989-1-Ashish.Kalra@amd.com>
+References: <20240827203804.4989-1-Ashish.Kalra@amd.com>
+Message-ID: <87475131-856C-44DC-A27A-84648294F094@alien8.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CALCETrXQ7rChWLDqTG0+KY7rsfajSPguMnHO1G4VJi_mgwN9Zw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240828_202531_695345_A1E05E2D 
-X-CRM114-Status: UNSURE (   9.89  )
+X-CRM114-CacheID: sfid-20240829_013528_941764_F571EC28 
+X-CRM114-Status: UNSURE (   7.47  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -82,16 +90,18 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 28, 2024 at 08:17:05PM -0700, Andy Lutomirski wrote:
+On August 27, 2024 10:38:04 PM GMT+02:00, Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>From: Ashish Kalra <ashish.kalra@amd.com>
+>
+>With active SNP VMs, SNP_SHUTDOWN_EX invoked during panic notifiers causes
+>crashkernel boot failure with the following signature:
 
-> Ross et al, can you confirm that your code actually, at least by
-> default and with a monstrous warning to anyone who tries to change the
-> default, caps SHA1 PCRs if SHA256 is available?  And then can we maybe
-> all stop hassling the people trying to develop this series about the
-> fact that they're doing their best with the obnoxious system that the
-> TPM designers gave them?
+Why would SNP_SHUTDOWN be allowed *at all* if there are active SNP guests and there's potential to lose guest data in the process?!
 
-Presumably this would be dependent upon non-SHA1 banks being enabled?
+I don't think you want to be on the receiving end of those customer support calls at your cloud provider...
+
+-- 
+Sent from a small device: formatting sucks and brevity is inevitable. 
 
 _______________________________________________
 kexec mailing list
