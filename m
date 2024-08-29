@@ -4,81 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AEBFC83F15
-	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 13:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D523EC83F26
+	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 14:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gt82NL5b5gLGIcFCdvu5qbl51ngTsuL5uw5l4KNPoTc=; b=HoAfPGVbZqHR9v
-	E+VXRbR9F3NU7t9Pbcd2ORGx8GjDeKV98wea/3eqcGOG/KsGMla/sXpuzjHgzkoagp7FfTgXz1AbP
-	M1n/WIR5t3BCl788U2ahPtwnQV6DWeEpsFO7kwXZQ+Lv2P3hXRrrcHPOIW7L+szvP85InthWO3cH0
-	BX/fLLsa/qzHLZ2Wly433/wWL6zBFKZ67oLaMQmjyXTNh0CVC64EtzKqSXbDmkNOV6/z+xC8dNEPL
-	JLpMRyLUpT3U73EXdGaFeO7EjXpH78CSJEG3WNRscgwBH8aY4d3vIch/rTvsojzZDhQgCaBD6d1jt
-	Dxlz7Njox0nqrkrkMaBQ==;
+	List-Owner; bh=AcSpDz0SJaAH47J4wknP6NZAixD5O8lkZ2r+12RZXBM=; b=mMaGnTNP+6i4sJ
+	Gv3c23QBR0unaGVkzaHWyRhWje0EeplWrTVn4hkQovffSnmNn+H4Ne7R2c3qD/udZq4CrCjbHQ1UE
+	lb3dxWRAldshl3CYN++2vWQeLUnpSwMAKiKzqLJGyfHMc3gBYKWRi7OdH491urSaDrKmwsqsEYJRc
+	X/tuWs6vivGnie9vnoPPvnzxKonwwFkKgNnepQmvAyGYLZCnTYdm02KtwsAHzlLkdynuxqrO0JqaZ
+	NLJWhxjZiYwQoXlSlHg864+yn2ZLFO7xhmSrAkFpkJhCB/KupnqVY7mJniJRq3CVkef1BUznheWlN
+	Z3EX/6Lnm8bJpklZZl1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjfDo-00000002BNi-2WPs;
-	Thu, 29 Aug 2024 13:29:56 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1sjfst-00000002LDC-0Dm7;
+	Thu, 29 Aug 2024 14:12:23 +0000
+Received: from sender4-of-o51.zoho.com ([136.143.188.51])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjfCw-00000002B7b-4C8a
+	id 1sjfsV-00000002L8A-1BiY
 	for kexec@lists.infradead.org;
-	Thu, 29 Aug 2024 13:29:04 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id A0EA4A4403A
-	for <kexec@lists.infradead.org>; Thu, 29 Aug 2024 13:28:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B616C4CEC9
-	for <kexec@lists.infradead.org>; Thu, 29 Aug 2024 13:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724938141;
-	bh=/JM47t330311w1URWNgJKWeR3KsLsi57yIqe7LWcBDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GWUmH+VDn7PGqf7OCkWt61y26BuOc3jvCOyW80wPk0Ea2oPNCiKqWh1ZzJXv2Ycpm
-	 d1z9q70phGGVVwWFmlVTPx43K+W1FXEuXO08ofStOQh8+8e5gwvR+o8WHBPEHD1Nmq
-	 9b1Krr82ZBHWHYH115jZ3ZYVifjgZmjZvstLzZIzQigeybQLkBs3s+WuWK6DN2MRfV
-	 TqvT7Cxc9LzX4rpzAGWe8DIH6JIyG4v26B4oEirVDm1dDj6NU4A67skJ8Pa8yX45X1
-	 NFfhPhhzPr7eY/1oHrx3CjjtLwSz2EZfRhsxrrbO37iHQ5ARxzE79CGDoAv/4dboNm
-	 e8coKFIvcg1+Q==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5353cd2fa28so819143e87.3
-        for <kexec@lists.infradead.org>; Thu, 29 Aug 2024 06:29:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUue2M741bGbxhOSBi2JHAGdmdjgoXniJkbZGYmrJPD8o7hRwz2t5iT1MMWfG5n6kPswCWHUA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxrhYFjPznxvYyJttUQ2yP6uts64Qz6aFhH94AdyRPPnin4RyVW
-	SspmX/TOS5cO1NHRahaYhdEtB6K6YMxBA3UQRrrnlCqb60mX2T422E4X6wAErvLljio1uSn0pKU
-	NIwA4+f5p0dpfCqliIBT0pzP/eo0=
-X-Google-Smtp-Source: AGHT+IG7brDpiVxJl+LLeO4JEGrNvWC9+/qw29ZvVDhohPvAunRSDVjoDP7LpczQ2+SS7Lyf3hGLblkJdiXuBsb3zXM=
-X-Received: by 2002:a05:6512:340c:b0:52e:9382:a36 with SMTP id
- 2adb3069b0e04-5353e57cb27mr1967760e87.30.1724938139518; Thu, 29 Aug 2024
- 06:28:59 -0700 (PDT)
+	Thu, 29 Aug 2024 14:12:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1724940676; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=E7EusWO6er6F2xI1Zxfssj17795cFIrBU9nS7H5PyLGs+6UWBCNXAkfV+JQpsvkn4X6QnDjZg59GcAbdwpZwp541+ugqTaxP6T/nv6M351s7VISQpTXJZegJ/QpLmHKW8PhIgd5ObyYNwREe1/OqSZxAHGA/WYAAlVOJLcXTMDk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724940676; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HgDBKtReaNoT627XPwozc8cV/1MN4aAoTtHPOciy3pM=; 
+	b=F8+Ieta99m9Sb6grjg5r5Hse1Vt8cQANARXzRz4E2JRoFdXjGYznYWVRmMvi/k0t3GJxjfgkNXCi7mbnz93mta8ovG1WRwOCa2szi73evgpHYzIgytv1sd3soamVZ71SpJYmuyZoaySGKcb25OExw2BJMSP43syvz3OmqKbf23o=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724940676;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=HgDBKtReaNoT627XPwozc8cV/1MN4aAoTtHPOciy3pM=;
+	b=fRJYXpXL9J45pXy0RROxungza/op8PLpbcAgBCB2imI/b3vHv4nw02sEX8neAivz
+	PPiCX2FneFCwIi7K74vsx1xZ2NcmUIkgDl+v3rZoRF1EkHBouBvTymaYqasGUoGZL83
+	itV4OEfBmfm1uvXSAhidcGZMH/LIAtY/V/1UW3+4=
+Received: by mx.zohomail.com with SMTPS id 1724940674239491.862092879441;
+	Thu, 29 Aug 2024 07:11:14 -0700 (PDT)
+Message-ID: <e3194ad1-e976-40a6-a8f3-98081b0b07ea@apertussolutions.com>
+Date: Thu, 29 Aug 2024 10:11:11 -0400
 MIME-Version: 1.0
-References: <20240826223835.3928819-21-ross.philipson@oracle.com>
- <202408290030.FEbUhHbr-lkp@intel.com> <CAMj1kXGVn85ht_srwhYXDnKffPFX=B2+Cnv-8EAocwoHi__OoQ@mail.gmail.com>
- <6b214ad2-d448-4f5f-85e9-93cd38e0e035@oracle.com> <ZtB2bP1Mx3zTr9e5@earth.li>
-In-Reply-To: <ZtB2bP1Mx3zTr9e5@earth.li>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 29 Aug 2024 15:28:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHvTjC1ALgHnu-_Tad4Ur9RqJR_d9h8bQDvXcx2p5H2AA@mail.gmail.com>
-Message-ID: <CAMj1kXHvTjC1ALgHnu-_Tad4Ur9RqJR_d9h8bQDvXcx2p5H2AA@mail.gmail.com>
-Subject: Re: [PATCH v10 20/20] x86/efi: EFI stub DRTM launch support for
- Secure Launch
-To: Jonathan McDowell <noodles@earth.li>
-Cc: ross.philipson@oracle.com, kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org, 
-	oe-kbuild-all@lists.linux.dev, dpsmith@apertussolutions.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, 
-	dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
-	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	kanth.ghatraju@oracle.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/15] x86/boot: Place kernel_info at a fixed offset
+To: Ard Biesheuvel <ardb@kernel.org>, Stuart Yoder <stuart.yoder@arm.com>
+Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+References: <20240214221847.2066632-1-ross.philipson@oracle.com>
+ <20240214221847.2066632-2-ross.philipson@oracle.com>
+ <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com>
+ <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
+ <CAMj1kXHn6xeAskWiDLvvA4oG3j9_tqx+iMYJXMqmgvyX4pMzgg@mail.gmail.com>
+Content-Language: en-US
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+In-Reply-To: <CAMj1kXHn6xeAskWiDLvvA4oG3j9_tqx+iMYJXMqmgvyX4pMzgg@mail.gmail.com>
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240829_062903_190671_E60702A1 
-X-CRM114-Status: GOOD (  21.73  )
+X-CRM114-CacheID: sfid-20240829_071159_476689_59D64347 
+X-CRM114-Status: GOOD (  18.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,54 +85,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 29 Aug 2024 at 15:24, Jonathan McDowell <noodles@earth.li> wrote:
->
-> On Wed, Aug 28, 2024 at 01:19:16PM -0700, ross.philipson@oracle.com wrote:
-> > On 8/28/24 10:14 AM, Ard Biesheuvel wrote:
-> > > On Wed, 28 Aug 2024 at 19:09, kernel test robot <lkp@intel.com> wrote:
-> > > >
-> > > > Hi Ross,
-> > > >
-> > > > kernel test robot noticed the following build warnings:
-> > > >
-> > > > [auto build test WARNING on tip/x86/core]
-> > > > [also build test WARNING on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus herbert-cryptodev-2.6/master efi/next linus/master v6.11-rc5]
-> > > > [cannot apply to herbert-crypto-2.6/master next-20240828]
-> > > > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > > > And when submitting patch, we suggest to use '--base' as documented in
-> > > > https://urldefense.com/v3/__https://git-scm.com/docs/git-format-patch*_base_tree_information__;Iw!!ACWV5N9M2RV99hQ!KhkZK77BXRIR4F24tKkUeIlIrdqXtUW2vcnDV74c_5BmrQBQaQ4FqcDKKv9LB3HQUocTGkrmIxuz-LAC$ ]
-> > > >
-> > > > url:    https://urldefense.com/v3/__https://github.com/intel-lab-lkp/linux/commits/Ross-Philipson/Documentation-x86-Secure-Launch-kernel-documentation/20240827-065225__;!!ACWV5N9M2RV99hQ!KhkZK77BXRIR4F24tKkUeIlIrdqXtUW2vcnDV74c_5BmrQBQaQ4FqcDKKv9LB3HQUocTGkrmI7Z6SQKy$
-> > > > base:   tip/x86/core
-> > > > patch link:    https://urldefense.com/v3/__https://lore.kernel.org/r/20240826223835.3928819-21-ross.philipson*40oracle.com__;JQ!!ACWV5N9M2RV99hQ!KhkZK77BXRIR4F24tKkUeIlIrdqXtUW2vcnDV74c_5BmrQBQaQ4FqcDKKv9LB3HQUocTGkrmIzWfs1XZ$
-> > > > patch subject: [PATCH v10 20/20] x86/efi: EFI stub DRTM launch support for Secure Launch
-> > > > config: i386-randconfig-062-20240828 (https://urldefense.com/v3/__https://download.01.org/0day-ci/archive/20240829/202408290030.FEbUhHbr-lkp@intel.com/config__;!!ACWV5N9M2RV99hQ!KhkZK77BXRIR4F24tKkUeIlIrdqXtUW2vcnDV74c_5BmrQBQaQ4FqcDKKv9LB3HQUocTGkrmIwkYG0TY$ )
-> > >
-> > >
-> > > This is a i386 32-bit build, which makes no sense: this stuff should
-> > > just declare 'depends on 64BIT'
-> >
-> > Our config entry already has 'depends on X86_64' which in turn depends on
-> > 64BIT. I would think that would be enough. Do you think it needs an explicit
-> > 'depends on 64BIT' in our entry as well?
->
-> The error is in x86-stub.c, which is pre-existing and compiled for 32
-> bit as well, so you need more than a "depends" here.
->
+On 8/28/24 13:45, Ard Biesheuvel wrote:
+> (cc Stuart)
+> 
+> On Thu, 21 Mar 2024 at 15:46, Daniel P. Smith
+> <dpsmith@apertussolutions.com> wrote:
+>>
+>> Hi Ard!
+>>
+>> On 2/15/24 02:56, Ard Biesheuvel wrote:
+>>> On Wed, 14 Feb 2024 at 23:31, Ross Philipson <ross.philipson@oracle.com> wrote:
+>>>>
+>>>> From: Arvind Sankar <nivedita@alum.mit.edu>
+>>>>
+>>>> There are use cases for storing the offset of a symbol in kernel_info.
+>>>> For example, the trenchboot series [0] needs to store the offset of the
+>>>> Measured Launch Environment header in kernel_info.
+>>>>
+>>>
+>>> Why? Is this information consumed by the bootloader?
+>>
+>> Yes, the bootloader needs a standardized means to find the offset of the
+>> MLE header, which communicates a set of meta-data needed by the DCE in
+>> order to set up for and start the loaded kernel. Arm will also need to
+>> provide a similar metadata structure and alternative entry point (or a
+>> complete rewrite of the existing entry point), as the current Arm entry
+>> point is in direct conflict with Arm DRTM specification.
+>>
+> 
+> Digging up an old thread here: could you elaborate on this? What do
+> you mean by 'Arm entry point' and how does it conflict directly with
+> the Arm DRTM specification? The Linux/arm64 port predates that spec by
+> about 10 years, so I would expect the latter to take the former into
+> account. If that failed to happen, we should fix the spec while we
+> still can.
 
-Ugh, that means this is my fault - apologies. Replacing the #ifdef
-with IS_ENABLED() makes the code visible to the 32-bit compiler, even
-though the code is disregarded.
+Yes, we have been working with Stuart regarding the specification and 
+crafting a compliant implementation approach. It is still very early 
+days, we are attempting to draft a plan around the specification with no 
+physical implementation to validate against. After some discussion, the 
+concern that a separate entry point may be needed has faded and in fact 
+it likely will not be needed. As always, the devil is in the details, 
+and until we have a hardware that has implemented the specification, and 
+we attempt to light it up, we won't know what will be needed for the 
+implementation.
 
-I'd still prefer IS_ENABLED(), but this would require the code in
-question to live in a separate compilation unit (which depends on
-CONFIG_SECURE_LAUNCH). If that is too fiddly, feel free to bring back
-the #ifdef CONFIG_SECURE_LAUNCH here (and retain my R-b)
+In short, at this point it was determined no update to the DRTM spec is 
+needed. As hardware becomes available, and we do battle with it, Stuart 
+will be kept up to date. We will work with him to ensure any changes are 
+captured that will help reduce chances that vendors and developers do 
+not misinterpret the spec.
+
+V/r,
+Daniel P. Smith
 
 _______________________________________________
 kexec mailing list
