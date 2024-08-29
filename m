@@ -4,78 +4,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4557C83F2E
-	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 15:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E414C83F2E
+	for <kexec@archiver.kernel.org>; Thu, 29 Aug 2024 15:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BFAJN4yHgQ86Lo6lS08+fvn7T4tcRU0cyxQZeUqMIeY=; b=H4x5Zyl+kKYDo/
-	OZzKjqigdhtFkwtxQ/WyeKEhwwz/T3cGNqip+95+subKMNeSKvggYul8HX1rzh/bKKpSR92mihOzD
-	JAhkuWdUzV3EwXHuHzDajHRgToa8IloFlsI6qJ/eISMJ1QyaHCPsmCuVqvzC7KnSByon7UZcaPm1N
-	+P+KNLtyiOHF/F0MkJryp6EqqBVqpp/r+EEpCVicxOrAE0HhjRnIQIyJ9gSRI0Jn8Lm7TN2WNbRP8
-	6KlNSDC22mzF+IIhka33tL5eO4xiB2LOqV3s5JDxD/rVLL7YCGdYOThrY3PB7DT8DZ3d/KrCDMO/j
-	HWfhJpHxSbqTJ+5CpybA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
+	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=VIWCgkmirygWjpwwadKIG0uaDzUZ++lyr9yPKYZDpCE=; b=qhUMh1TABapUI42qg+gxICpunZ
+	RPW8P1d2JC4D61eZqrgXD6szyQoQoJfFDH4FvgAMjtQQE27mfbNjDj/gPbKILfG4L/pLYwvI+/LcQ
+	Q1kh3kXte/Q0wM7AVl3/P45FEOnUka8cg8PB2n/VWyCDSr+iLgn/54I78JCSqAur3f3grSzsw9azP
+	jZD67r3RXPssENEpAi6/7afyZW9z5i1Hb8fxajC+CBbXYX/LMpk8MMxqetuEJRb1EWHM+WWH1iLVK
+	KMleN/X5OzOyFQLXFVJrpgOPsB6b5Xx+79s9L+XgxSF5h73BLJA+yAeR3Fa9k3A/10GW7r5XwDtZ4
+	+JmvfvIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjghL-00000002XBe-08h3;
-	Thu, 29 Aug 2024 15:04:31 +0000
-Received: from mail.alien8.de ([65.109.113.108])
+	id 1sjgtI-00000002ZiE-1epi;
+	Thu, 29 Aug 2024 15:16:52 +0000
+Received: from mail-sn1nam02on2060e.outbound.protection.outlook.com ([2a01:111:f400:7ea9::60e] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjghH-00000002XAB-3LRD
+	id 1sjgtF-00000002Zgz-0Cfm
 	for kexec@lists.infradead.org;
-	Thu, 29 Aug 2024 15:04:29 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D879040E0277;
-	Thu, 29 Aug 2024 15:04:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id eGyWPI7l-Okp; Thu, 29 Aug 2024 15:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1724943862; bh=YfvEj90/YGTqFstXw+WygwIyDmoZvVGd7EjPYBPVmmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZXO7HL9vBgsg3vVGUgx+5tUa1K02Cy5YiW87naLs7rQWruNBSeAPNX84S5dPpx16Q
-	 Phc0unvnj/pAXRoTrl8gKXNmjc28NiQa7Gx7IuKoEwyxMsXo7PCayGQ11aa5YiS41q
-	 LH4lBzFE8o/V46xa8cGFGKVfepmKo6lAW1qiI7QW08SFGBPDqWtsmgmC7/qcS8vVB2
-	 9jnAbgFEnu/gu2+aAsJgU/noo9i0vUolxyTqDWbJ63DBSJ8wxGpD9r/lSDe/+o7dmk
-	 fWipX/QOAaR6LFBXcrGJhzluk01T2RK+pFO8Mle3AgYYbD3g/b9FcW34EUgt8pzwIw
-	 VZQgQtSceacb0xUyCqqsrbOEABhkSLE42a6pr40MSN9PhUSQEc0OjzIFAgyX62if/9
-	 BdnlIykYUe3hxsiWLWDvRYG157aTgZfWpom0KXvuJk5W2T5Fp595xq7hbkwkcuVyeh
-	 QYEOmfNQXpjszVN5KE+N9v2D08w6K8xi7+YfX+hu6vbxjroa1gG90yD6FeS0K0v9uQ
-	 4ey8hLyMvDTt2KComHRs7C3FoW1XOH1gCNLx5LB3wUnGKfP7BPJTsnWNiWXYHG01bG
-	 WHnpNP+RGVdn/9KHkVmplmyFVp5E1H8+8B5SkDKpVvIah6dWJjHrs02ssUIu+EHhgo
-	 bo49QgY29hvKGw7zGc5MgNO0=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CD3DC40E0275;
-	Thu, 29 Aug 2024 15:04:06 +0000 (UTC)
-Date: Thu, 29 Aug 2024 17:04:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com,
-	dave.hansen@linux.intel.com, tglx@linutronix.de, mingo@redhat.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	thomas.lendacky@amd.com, michael.roth@amd.com,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev
+	Thu, 29 Aug 2024 15:16:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tu41ul7WNVsxT2tQv7Q7f28Qchn/UAQYnShYspVoHsGlKsJR5qhV9j5eCe6y6XTvWiZFGUSbLfkO8CqR4Qa5Gm6055VzZIn3LqEWfLDN8LnjVkl8ynFt/DyHXHEVlq5cwKX2PHlk9jXvtwwAIiXPu7T+pEp/Z0G+g+w5L0klwhliw/i/MIAwfKcbjsQh4527Ok7+Rn07IuL3KQEbV+9twgfiCHW/aEk0rOccoYVUvGhMeGOQQ4rUnm/VQaOrNqq6lbiXZ4cu9EGtQOEKVcKhAU/lCpJ85rASOWGyieur72llOzTo+hwywCDYBXYXUaMXuCbSn0o8tWjtgyC73vhKjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+ZvNG/BZ+zeiD5haLF9S8XOv+CL8bj8GavR1fkolK9Q=;
+ b=VHZOjZecnJcPhWmMIT+6B26oIOV360GHb8wo7FXh+n6GK461bECqRq8ZQyf85m9mM8n/dj0kz79mkqYgNjbvZ0pjF4zBNxs8YSttIY9KyaSQo4sRFNnPLV8PNYoq5uZRvrjwOFypQraYNor5QtZu/i3LiAtSkivxQaGGWkGlTZpQGrGV9BCqjjlCw03dUTJg17vJ/VDJrebkbnKfZmMEv9s5zIeF/JhGSM77HNfL1aQ3Me6p1g1STkCTPjfrLyyN1CMyplSNSB0VjxCHnNzXZWpXGskSWUMVKIfCpCeboMv4gNw3le99gAwUk+MmJD0OAZAHFyHWbXA/j9HemA1RAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+ZvNG/BZ+zeiD5haLF9S8XOv+CL8bj8GavR1fkolK9Q=;
+ b=xPA9/t56tg48EnVidqj7u0aVKNabSJ+4FeRnxvu4qRvflqMce1NL/1FtY6cvZX0FOXfcu72Ah1dlt/aJE+yvbsqtks9dq4Bo2wpsCuKwjPRr8p06lXIZXSyGUmIwWHSqxJOU7ezPggZIDP/HZCHDVR0nJnu6osx2VmoJCGhPtZY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
+ by LV8PR12MB9408.namprd12.prod.outlook.com (2603:10b6:408:208::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.28; Thu, 29 Aug
+ 2024 15:16:43 +0000
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef%6]) with mapi id 15.20.7897.021; Thu, 29 Aug 2024
+ 15:16:43 +0000
+Message-ID: <155cb321-a169-4a56-b0ac-940676c1e9ee@amd.com>
+Date: Thu, 29 Aug 2024 10:16:39 -0500
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] x86/sev: Fix host kdump support for SNP
-Message-ID: <20240829150401.GGZtCN4ZtVyqjYHbpD@fat_crate.local>
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>, Borislav Petkov <bp@alien8.de>
+Cc: pbonzini@redhat.com, dave.hansen@linux.intel.com, tglx@linutronix.de,
+ mingo@redhat.com, x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, thomas.lendacky@amd.com,
+ michael.roth@amd.com, kexec@lists.infradead.org, linux-coco@lists.linux.dev
 References: <20240827203804.4989-1-Ashish.Kalra@amd.com>
  <87475131-856C-44DC-A27A-84648294F094@alien8.de>
  <ZtCKqD_gc6wnqu-P@google.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
 In-Reply-To: <ZtCKqD_gc6wnqu-P@google.com>
+X-ClientProxiedBy: SN7PR04CA0155.namprd04.prod.outlook.com
+ (2603:10b6:806:125::10) To BL3PR12MB9049.namprd12.prod.outlook.com
+ (2603:10b6:208:3b8::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|LV8PR12MB9408:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8dd2d8ee-cc02-473d-68b3-08dcc83d96cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aXJSNFdGWDczMThDd25vbjRjT3FYMlRyclVLeUc3N0xPc3prcU9TbkU1SHk1?=
+ =?utf-8?B?VUFSdmNPY0hmRWk4ZmpUSElkNEt1REdQbG5OVkQ3aTB6Y1lReG5jRlM0UVZU?=
+ =?utf-8?B?dmduSnUvanJPditVWXNSQ1V4aTdRR3Z4R2xWV2UzNnowMmtTQTFUWTZuTHND?=
+ =?utf-8?B?UWkrdXdQaXZIVnA3N281M1ZwdzRsUXdCZGhOQm9tMi9sSW41eHhhb2c1Z3l0?=
+ =?utf-8?B?a3hhNXJrWHk2bWlGVCtaYTR4V3hnVlFsbVFEQmNPSGc2aXlDT09Ka1IxczQ0?=
+ =?utf-8?B?RHRKQm1oOC9jUWhjamc5a3B4U0ZzRWc1TFZkSDg0VjhMREkwa2MvOFdMb3hQ?=
+ =?utf-8?B?UERENTR5MmxqUjRtYTdmdE5kMk5hU3ZLc1VWdmxhS01qT3dOalJOaE53ZytK?=
+ =?utf-8?B?WCtkRFBsN3ZMckV0UmFpMlo0SldxY0hYZjR5NnhqUVMxeFdxOEhiOVBmeVBy?=
+ =?utf-8?B?bFdOOWQ5T3hBQUZmc0JNUG9lUWJWL3lQWEMwK3M5WlBaODAxVzJ1ZkVhQVF6?=
+ =?utf-8?B?aE9JMW5BS2d4NE1JaTFnV3RPWVpXSmdGeTVnQlVaZHAvcDR1bXNnbW82NzAx?=
+ =?utf-8?B?a3JaQzl6RFl6dFg2dGdGL3NEdHd4cmt1WVFMQmJ1cXhENS85V3d1V3NicUF0?=
+ =?utf-8?B?eGlCOWNQeEV2SGdnbFAxV01iT0hBYzhqWDAyRUlLZHE2WkN1OGpUOU14dzFs?=
+ =?utf-8?B?V1R2ajVmZGk5OTU3Wld0YzBsNEZNOU9DeTJ3TUZYSlFXbWN5QUttTklyNWVR?=
+ =?utf-8?B?bDZmd2hSS1BjMjRQMDhySlJnQzM0ZC9xNEFSbEV3S3UrSVU2M2k0SXA3UEZ0?=
+ =?utf-8?B?V1grbmNJWFpxaWliNUszLzlXemp4NGdRNnN3VlZTdGhRTCs5TmxEank5N1Yw?=
+ =?utf-8?B?bkx0MDZ0SEwwbzdkOEJ5bWVVQUg3Zk1GRGdXS2srZXdGVVc0dTVlTWtjQ2gv?=
+ =?utf-8?B?WXorUThZVG5mUXZveUVacUhYb09hWDlQQVZ5cWkrcVIwZFZuazc5UzdJZDl4?=
+ =?utf-8?B?VGVMRTlRVUsvR1hwRUd1K2liM1VoN2Y3ZEpWeE1pSk5IR2U5L0hZbkZyZjVj?=
+ =?utf-8?B?bXFwYTBnblg1TDhKNmR2ZnVzdlNzRXovb3VJQ3AxUXJQTDg2VWQ4UHN6TGNQ?=
+ =?utf-8?B?a1JieDRoRitkRlB2NENtWVhGUjJ4a3pKMFVOdTZrUVo3V2VmeFVjcW1SbWhR?=
+ =?utf-8?B?clZEZk9ZZWVWQjcybXIzcXdvS1RSZVJCa3lkYjcydHcyZ1cyTGtKd3diNjlD?=
+ =?utf-8?B?N3B2TmpZY1k5d2tuRWxNWG1FVXlYQkZFSExDS1Z6KzdJRFJ2anlQSkFTZ2kx?=
+ =?utf-8?B?aFdmNG9UK2tXc2tWSytTMmRNY2dlQXZJZ0NWKzJhcUpHR1JPdkszeURMbTV5?=
+ =?utf-8?B?L2NEY3MxOGtXakVyNU9BczJFUHRPRlZDdlJKaW9RNmF1YTRjSXJ6K1U1THlO?=
+ =?utf-8?B?OG9jTkhYRmVNK0tHaDhIdGd4QXVOeUFwN0FlcWRDN1A3SmxRamMxdkFwRlVX?=
+ =?utf-8?B?Z0FmVjlTZnk1aVVheWJvWjM4N2VKQkRTR0t6emdCMWxjSDhEOS93VVdJbUlk?=
+ =?utf-8?B?V002MnF1Ym9ZSDkzWW9COWpYSVdoYVQ4VU54Rlgra2FSSEN1Z2tlOU5pa2to?=
+ =?utf-8?B?V1ZIY0Y0RStNdWNINXJTajByNzduNU9aZ3ZIdHFWV25vbEpuVEFDRlh6TkRa?=
+ =?utf-8?B?U0wyS2JHTEVBYkx1OXpLdk9Sek9maWhCZmM4ZS9xd2xFc0lTRmFwRzM2WGxL?=
+ =?utf-8?B?dHVQQllWZjV0MzBpbUpVTVl5SU1FWFNkaExtTmhma0FYdTJzeDNPMEpLeVF4?=
+ =?utf-8?B?anRjR1Y4aVVhTFhuU2dydz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YzJOdXNiMUNCb0JxeW1CR0VJZjJLNFVid25USE5HOS9zUlgzSnN2cHZWZldx?=
+ =?utf-8?B?MlRISHV6dWVTL2lOQ0pacDNUSENkS1BqeHNybys0N2dPT1hhcmdPbEpNYUI5?=
+ =?utf-8?B?c0psbjFiUUlaTWJPT056Y1dGRFZJTEtxblR3R2pjaEdmSEdlYW50SmJGeWkw?=
+ =?utf-8?B?MXhOakx0dUVzODlmdjJ1NzF2K3NHRThhbEMrYUU3Ni9iZUNWbm1Xdy8wcy9G?=
+ =?utf-8?B?cGFzY1cwTUQvb28xZy8vV1FDSVV1SHdUb2VNaldQSEtjaml2WFl4NithWjZI?=
+ =?utf-8?B?UEIzQXJId1UzL1dOa2k5ZkM3Q2pzZ2xrMDFhTzEyNlJQWDJxK0lhemszMlRZ?=
+ =?utf-8?B?dEJieGhETzNJVWdLbnFjanVsUGgrRVI1alh1b1J2RlN6YmlMa1NqNHZMWHdz?=
+ =?utf-8?B?aUw3c1lyRlNkMGpKaUhjSGFFdU81WUdwL25mTWdQTVZqYkVBSzJVMEwwU2hh?=
+ =?utf-8?B?SGIzV0JNR0tSK3JxcXlHelVnZ01iTWNPRmZGNlIvMW43KzM4eFdCZ3BQcTdl?=
+ =?utf-8?B?OTE3c0FKNU54dWwwNVdKaTZ3M1ZHcldyZWlzR0dOaHFIUXAwNDZBUlMxV01q?=
+ =?utf-8?B?ejZWa1kvYS80N08rc0VqMkVLMy9uUEZxbzJwR05zWEJTWUtuUzhnZStRdmpl?=
+ =?utf-8?B?TzlYNVJ2MnZqdGh5R2J4MitYampFUWFBTDRwR1ZKSkc5b0tJSDJzSmJ0alpB?=
+ =?utf-8?B?MVRYR2g4RVpobTJ5SWxZRElvWXI4Zi9vOUVZL0dVL0MrbG1lS2hnV2dpdTlV?=
+ =?utf-8?B?RnV5WFZWekNEODNUZFRlNTlpMWRFQUVGSXhNUks1czNxcTY1bkREQXBlK1Jj?=
+ =?utf-8?B?ZzJCTE4xK09aR01SRzZ5TGYrQkZTdFBwS0JKVDNNWUQrSy8vcE50T1pldjF1?=
+ =?utf-8?B?djh4TUVJeFI1cXYzOVQrcjFPbjJrbVVRbVZWeG1BSTlXRHdxV2dsYVZSbytG?=
+ =?utf-8?B?OGNYb1VsMmVhZEIyNEhPR1EvRjBaYkJKWDlKZTFaK3hMV0tUeWsxYUtSSWcy?=
+ =?utf-8?B?cFIyR2ovUmNJeWJwWmZwL3QvR1NhMjR6YWdlNU1OaDdUakpoZWJEd2ZPVzZ5?=
+ =?utf-8?B?dDhvUVFsUFNUVmFGVXNOeURmSzVsTkdvckdId0JWVGpVSERlL2tpbG00YXNh?=
+ =?utf-8?B?VkRLZkZNQnBRUHRmejgvem5sYWI4OW8zTTA2YXUya0JGelJNSS9uTmxncHJN?=
+ =?utf-8?B?VTVaSEcxZlB3TXA2LzZZelYzYVQwczE0b3ZtTURsbmc2ZUNYaXlNcUlIMHd6?=
+ =?utf-8?B?RlVxUzlnd3dOemJ2NWxqOURUOFNlbFNzSXhLNzZVWER2YmYzZ0dWM3ViSWFl?=
+ =?utf-8?B?MXFCMEJhWmN4ei9hR0pWQ3NMSnRSOU9ZVVVWY1p6RXZkdlk0TEdRcFVxeDYz?=
+ =?utf-8?B?aTk2ZDhRM1RNQlNabWF5QXpBRjcwa2hlVWIrZVRZOEszbW1hOEFldEpsaDBB?=
+ =?utf-8?B?UWc1WHBXT0FFaUd0V0JERjh4c1UxVmlIQXF1VjRqeTI3d3hGYVJlS0NVRXRB?=
+ =?utf-8?B?Y1BtV0FXcy94eDd3NWdkaGRnL1RQdFZWT01VUUEwOVRFMStZNE11TXpwNytT?=
+ =?utf-8?B?a3d0SFlObko5dTY0ekRjQXZzbVZMQXJrRGxJaURwZ042QlVlTHRwVkE2L1RR?=
+ =?utf-8?B?S0I2cnpnVWNMVlk0ZFRJYlFHaTd1Z1BQcHIrU1NQZ0YveC9wTmlDa0tUNUZx?=
+ =?utf-8?B?WVAwRDdWYlV4cnFIQjBPL2pzWVR1UUVZUit6SFJlc0dpbWVHbnZkNVFyTkMx?=
+ =?utf-8?B?ckl2Rk5UTllpbzFpak5EQUx3Qjh0aWxhOVIyUDBNeHBjaUVreDBncHRUcVpN?=
+ =?utf-8?B?UDhVOCs1ekdObzh5d2dnNVdkV2xhVEtPb05ENzhBSmV6bFdjSTBaQXB4UVc1?=
+ =?utf-8?B?dWl5S0l5WWxjaEowekdRYXc5SDAwUnJrWTAvOEc0ZmRxbjVSaEIxdnVpcE9G?=
+ =?utf-8?B?UURZOEZZb1hZbXp0M1V4a2UwN2x3VEdTQUxKVjZUeStYdU5zZjhkOFp1YVFJ?=
+ =?utf-8?B?QVRXOFk3YlhxMmNhWE1yM09UU2hPVnNEYW9zdFpUL01WS1AvdmlaRytQcmhq?=
+ =?utf-8?B?K1ZJVFQyMUUwazFlK3B3ck1mbDVxcGJaK0RHNXN1VXhSdEt1bk9yQ2hYeUVS?=
+ =?utf-8?Q?iKfRGh1/739PFVC6CW3j5vZwt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dd2d8ee-cc02-473d-68b3-08dcc83d96cb
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 15:16:42.9915
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zWcNsd1s68bFRkm1ot6AyfLf56OozfyRspM57K/EFwIe5bQqGJF50NW8fMe70hZPAylMkLWIidSRGc9+UqwZCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9408
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240829_080428_014864_39D2BE96 
-X-CRM114-Status: UNSURE (   7.55  )
+X-CRM114-CacheID: sfid-20240829_081649_612708_73E6C437 
+X-CRM114-Status: UNSURE (   9.39  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -93,21 +178,24 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Aug 29, 2024 at 07:50:16AM -0700, Sean Christopherson wrote:
-> Because if the host is panicking, guests are hosed regardless.
+On 8/29/2024 9:50 AM, Sean Christopherson wrote:
 
-Are they?
+> On Thu, Aug 29, 2024, Borislav Petkov wrote:
+>> On August 27, 2024 10:38:04 PM GMT+02:00, Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>>
+>>> With active SNP VMs, SNP_SHUTDOWN_EX invoked during panic notifiers causes
+>>> crashkernel boot failure with the following signature:
+>> Why would SNP_SHUTDOWN be allowed *at all* if there are active SNP guests and
+>> there's potential to lose guest data in the process?!
+> Because if the host is panicking, guests are hosed regardless.  Unless I'm
+> misreading things, the goal here is to ensure the crashkernel can actually capture
+> a kdump.
 
-I read "active SNP VMs"...
+Yes, that is the main goal here to ensure that crashkernel can boot and capture a kdump on a SNP enabled host regardless of SNP VMs running.
 
-I guess if it reaches svm_emergency_disable() we're hosed anyway and that's
-what you mean but I'm not sure...
+Thanks, Ashish
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
