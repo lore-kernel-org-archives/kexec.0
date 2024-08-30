@@ -4,71 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3806DCA1008
-	for <kexec@archiver.kernel.org>; Fri, 30 Aug 2024 16:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26147CA0EFD
+	for <kexec@archiver.kernel.org>; Fri, 30 Aug 2024 17:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=teJlDQJiET67m1R3BMFocULYbm4uxaEl7um7lW6c+Z4=; b=geCv7Ea8yttB9r
-	7vBFTVNYyUJn03Obclj0F+C15ZSeYU7KYfaVenijIiVWX8/ghD5zmaYtmpqbUtNEXnahB16qSUElb
-	RRy3OqCJzyJZYjJ6+eseskoVQ5z5JNeNoA1THYIpbbAEhGm1VF9edET98lZ8dJs4AwLDixnEG1KLy
-	tiR4LUEChJbZ5Z3zcpgdbSpDDefP1x1lYmp+KFSb0AiIRCHE4DiAyXWpJ1VsX2vf+ajdxBGzGvgvk
-	d/JpQwlU/1pLBN0j26oXxfl67Gr32RefNfZckGl5Em2MsRAXMoVfjkKwm/EHvXOnKTm9lrAdTqv6o
-	Wacd7gM8uAtPfvN3WlZw==;
+	List-Owner; bh=GkE71ahpuyIFmgRrt9PTXMljUPhJt87uZTwws+KtAkk=; b=pWMK+4TlX54BkT
+	D5wh+Uzlj0ZROanZ4B0AbCUkU7lvt64RJ+mZIMfGAQJfe7G4p9PLiX+pztOIboPc089LDgIWQnLbr
+	qI5+h8qVftBOlmYQRR6F16DrkU9wWPDH0caYSh38pW5z99+X8XQBq9fAhVOdTepv+ZztTaFUktoAQ
+	XlZU8E30z4ljeNkHpzZwXaTHOUkMde2flS89Wom/f2B+7ktsMl9esV8N3VJ1d4DKzZX9Fvg22GoAl
+	hiKdul0AsJp99kX/YYuqD8LuOsYlxcdCL2R7f9M9uVZWOeUU5gvur3wrwOXmv73fz4R72ORUkK7J9
+	MUZeqsz0JEc8z5Xr7crA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sk43k-00000006vwm-2t7C;
-	Fri, 30 Aug 2024 16:01:12 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sk5FA-00000007A02-1dkk;
+	Fri, 30 Aug 2024 17:17:04 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sk2sv-00000006ej7-0OLC
+	id 1sk5EK-000000079sl-3LNg
 	for kexec@lists.infradead.org;
-	Fri, 30 Aug 2024 14:45:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725029155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=poMuVC2rWak5xNQz8AshgocATbY4uKgllYK+isxtXuw=;
-	b=bP9kyiAGr6AjVclXXBN4OfkiA0E0d0VrSGjnl9g92i8bAmvz1xZv1AjgvBPqKrfoNLkuNW
-	Umfkxf3n7EoLTLGaRdeXZ9m4ASO1+2PdPcGf7lVcYXZv3EhlHlbLi6CUOZLwq+vTirD0Bl
-	NhXFmNlT7CkV+uzhfqxXivswLKsy15c=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-673-SJ0C32O-MsC2AVBv5PeHPA-1; Fri,
- 30 Aug 2024 10:45:52 -0400
-X-MC-Unique: SJ0C32O-MsC2AVBv5PeHPA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 843A21955F28;
-	Fri, 30 Aug 2024 14:45:50 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.42])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD1D51955DD8;
-	Fri, 30 Aug 2024 14:45:48 +0000 (UTC)
-Date: Fri, 30 Aug 2024 22:45:44 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jacek Tomaka <jacekt@dugeo.com>
-Cc: kexec@lists.infradead.org, horms@kernel.org, dan.j.williams@intel.com,
-	Jacek Tomaka <jacek.tomaka@poczta.fm>
-Subject: Re: [PATCH] Add support for soft reserved memory range
-Message-ID: <ZtHbGIuXOAT59IBJ@MiWiFi-R3L-srv>
-References: <20240814052024.25731-1-jacekt@dugeo.com>
- <20240814053313.35251-1-jacekt@dugeo.com>
+	Fri, 30 Aug 2024 17:16:14 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47UF8SFk011978;
+	Fri, 30 Aug 2024 17:15:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:in-reply-to:references:date:message-id
+	:content-type:mime-version; s=corp-2023-11-20; bh=trXIFKYJo53Pb1
+	DCv0l38QAl/1jl88LaYXR62v4idqs=; b=fK/5XyePLJNgjsK7UOaoVzv1o44DWe
+	1uKGgbLXJnEoEo+Id5111paGkYihIzYC0dRaftpOt3ZZrfRfaDg4GyzdZCxHznfP
+	D5TdgVRTidNtuZhrrc1JGyTPyvNyuVf2umVKPRBYrggOuYjx0zMLCEfQmCl957p/
+	cM3ROHFuE7sLkRwdgImHCFqArZz6FK1DgU+JMR89VJXPMh5cvrwZUVNkaakUVWfR
+	BdAPA0eHoNaF+EVD9OULa+7o0UlHZROlxEOkLaSzodsWpTGfuIQFtaWcjZlAPotj
+	dylvFfnIS4bhNKnVkUqU2op2M28+B3hERbh9aJO1p/+oo/zzKJHUV8sg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 419pugy9d0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 Aug 2024 17:15:55 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47UFGq6Q036511;
+	Fri, 30 Aug 2024 17:15:55 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4189jpua4p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 Aug 2024 17:15:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JOuO9JbWn365eYrGw1cMMYaDy1lOXVOuscgibTyZeLnYUJO/3RVOrhjOyKSIZ/4svCbjSQ+NdDMZhT0trKPslhycU7aVILcSQx8Evaso0GxOuYKWYElCQQN6obsknGcKTgczFC9guoMcqgnH4wM3ZUzXRTaJYiDbuWHtx7WbeoM6hO26sUdzqc+hnTBaV600ypMyc7yX9q7PVU2oZIpPQJckyiY6kk4YxUmDH34y5VotwDK5xiawqWvlKANrr+ZEwr11KT6bzmVW4A4W6cFf0gJwIamHTVijl4KJgL807l5ktntoPj7wDURpxbBWQJa2/J4Afw9m42grfjpAdvKfEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=trXIFKYJo53Pb1DCv0l38QAl/1jl88LaYXR62v4idqs=;
+ b=L9GRzh8sjd0P3hcvINvXRp/XFb9O9kAZfxOHCd8O8kMGQp1Xt7dWLSQeWzdCBjPvDnYx3bm9REKPdaQrBdXYGQZWu7YdCK0AD+47KtL0+tVihpYWB3e2xHF9CzfhAbVA4EO5nXS3wz74iHh/tqaZDFNef6d+HVu+fgEFGqzWIxwqQ3WsHDljMF5fW7OxmcbWd9PuTgQK7nRYM4OFsS+AP7bh0iCF8JyBu6iOVSvKPbxwyA+KLhd664SP/qnb6bc1j+eG8Kqcdvo6q+1NKRvQypuiF40IUQQUwixE5T5gUhmIVrp6TcI/tfSvL19wcZA/kjHgOov8a5fvap7WJxnqiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=trXIFKYJo53Pb1DCv0l38QAl/1jl88LaYXR62v4idqs=;
+ b=AK/UT+tfjVpmcIJdwblwR7Op79zw7d4WqPtv3P/iGl1TJL3omfn+4OYdDpmZK9y2HA+geJhG/R7ykTvsvkbTGJZrG2ed9db87mhWFo/rzyOKYk68/8hzldRMSTW2jYkD+7FwTVN04BHzj4DQPLfNHkLTkvODPUIk/y13aWaF0Hk=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by BL3PR10MB6138.namprd10.prod.outlook.com (2603:10b6:208:3b9::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.12; Fri, 30 Aug
+ 2024 17:15:53 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%3]) with mapi id 15.20.7918.018; Fri, 30 Aug 2024
+ 17:15:53 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, kexec@lists.infradead.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation: Improve crash_kexec_post_notifiers
+ description
+In-Reply-To: <20240830140401.458542-1-gpiccoli@igalia.com>
+References: <20240830140401.458542-1-gpiccoli@igalia.com>
+Date: Fri, 30 Aug 2024 10:15:50 -0700
+Message-ID: <87ed66q6d5.fsf@oracle.com>
+X-ClientProxiedBy: BL0PR02CA0071.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::48) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 MIME-Version: 1.0
-In-Reply-To: <20240814053313.35251-1-jacekt@dugeo.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|BL3PR10MB6138:EE_
+X-MS-Office365-Filtering-Correlation-Id: 20fed499-c93a-4654-83a1-08dcc91766fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?zeJcLOtcQCKpdm0CFHnwX99f/Ov8b8Pm4MQZ/EbMHRYwYDK6gVwnzPUCkf3Y?=
+ =?us-ascii?Q?mXP0TYXm5VsbkoPZ5YVZWN5bS9B48UvZjahvSImmyV2XWybZyYJM7K3j7vtk?=
+ =?us-ascii?Q?ecmXxQ3QlzwxdWY0SsfMR868id3JZERGY8UNrrs8AK0pOePffJ1ZR2xR5/Nf?=
+ =?us-ascii?Q?EwMKb4iY4zbGduPAKXK9CuDVpjfR4s0dcLOb9vWvQfsAfsTmEYXRyu74ud9d?=
+ =?us-ascii?Q?uBX+35aQHy01BoeCrFIyVfOyKFGGTDK1Q411GWKeDFM/cxesRCFrhrxXIOBn?=
+ =?us-ascii?Q?25d9wT/wODjS74WjlyP4mIlNci60T5UcKevc7bqfqjPLMguld7nE95UcVDpp?=
+ =?us-ascii?Q?IWl0BwQyGIfVDgBcNDCz+q+qCGbu0O4kSTPohGtxTwyqYnpa29r3Emn9W2Fy?=
+ =?us-ascii?Q?KqFv0XjIZh8JS6e+1ePK1Yz3Z5HnF34wDTgOrAX1Nl054eDldfj/KQOzzS63?=
+ =?us-ascii?Q?z99Fz84Ub/jng9XudRvGzAmkzqDrSHTRFWyZRYbLGFskhuo+HAc0D5JPJ6SF?=
+ =?us-ascii?Q?RtQy8Q/3AV9jcbhFQK5lacD4SlWTI1bMQNAfNkxhZ9Vh6aMfNcgVUuahv/Ab?=
+ =?us-ascii?Q?1VM6rsgOat4kx25b4JYQbKM7hbG5VXizuLBXWDCtnGGwWDufopMpoa3oSQpw?=
+ =?us-ascii?Q?Cw9yk5TaaoE90Oj90OJtsg/adwpNIf3IBwIDQQCP4fztGOEpIBCbumLo7k7L?=
+ =?us-ascii?Q?xfpRofOyAey6sHbMjrJewRK67kSnW2Jt4QtEfGRm63hD4t8dMgvIeDQv+P03?=
+ =?us-ascii?Q?Ck4lvg1XQtZJORv6W5/MbhhjLLp1FNwuN/HE2S9YldrY5f6oMSED8jkgRd1d?=
+ =?us-ascii?Q?mJVkGYmuAoAg95z9qD2wvndVhSUaLu49+9kHVgx/grR4OVgK6hbPgr2ujrze?=
+ =?us-ascii?Q?avikhLTgd5Pr99UKKC0iOoEOowafoWR6l7YE1sTURav89Bt9u7f/dK7E3/5G?=
+ =?us-ascii?Q?I0JbxxhsQ+LmUxW6X/kL81TcNydtYfJtXCA/UKEHaatWSko3bFydEyRWg+MI?=
+ =?us-ascii?Q?/YJJUPtu5COMI3PqSRx+xsrnoEIO1FyGhJ5O47ZHhNdwsBUmnN5uynzJLMDg?=
+ =?us-ascii?Q?OrrL/UPsZEm4KoCB5XPmd+Uthc6dLfZycJ5OdFkj4tlSIqGJ8ipyq0rS+c3k?=
+ =?us-ascii?Q?eOPCUF3FZzR98vyyOb4VEyUF8LaVp0Q+N8j6KRUL7mgyzOsL+sdhf74h3waL?=
+ =?us-ascii?Q?iwWAUEdxn2TcoBcWq282gbzI/jyOlfgrsvgzroJky1GWFZeTNDKlo6mQ+sUR?=
+ =?us-ascii?Q?3roiZiQhBVSnEviP9EtOvd0WJxEaNZY1TgpOahy9eYKhupMsmKiGDvMxWqpw?=
+ =?us-ascii?Q?0LI5/ba27VLag1kwTJotBRR0amJdlX8/gbTHoZCMut5EQw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bnVnTt/KyfL1IL52tmSl6rKxppH0Gsf9VB7ZRUlMEb/IYt9ueqsEoXpWwMi6?=
+ =?us-ascii?Q?4ssIChgwjWnIpqMUEu7vsbScpa3LqoZUDwAhrfmKiuIInTO3gjbSkXCryhBg?=
+ =?us-ascii?Q?zxpKydjQn1zhxc4vP9i/dmcE/j2hCyBNG0BcvLm9BDAQ/tB8WFLmXC1JtvGH?=
+ =?us-ascii?Q?gM5uoZPKPlgj75UNhmkXQehWzFtGWyQQXrvdTu3h7vbmkEJaRBR9dVE6yj4G?=
+ =?us-ascii?Q?ErJ4RXxrCC25rTzx68G4TGtrBNI+0Kd4GmnYcGCvoh/eBp44CUfgQzJkIBVr?=
+ =?us-ascii?Q?/UBs0CzwLNsahId7lv85hHcVWidf8gFlqJPk1htdMO7xCQGE6aD3cjfayEjp?=
+ =?us-ascii?Q?HlEYAR9SC64jo16zTdjYV6NSj52yJjrSb502FJ08TPTe2htPnWal+nbdeyAy?=
+ =?us-ascii?Q?sNtTE2Z5up4PjqLR3T0kE8rdgNjG2k4vBX3heOTRcSMD3FEu5L0XFOehbgJ9?=
+ =?us-ascii?Q?KxaNwntHkpvCMbOBuLwF5QzwDcD2U6FKX33sG6ej7YT5ci4qprsM4SHiZjlc?=
+ =?us-ascii?Q?xBNIbuZs8ONMbRRoEEXNEJt2HNo2FDvxV1VXtf1v00pDkIuX9xpt4wg3TUz0?=
+ =?us-ascii?Q?pg+s5nV0Gh4hfx7V3lZ+Zqvu+Te2UafhAqPBOEVunvO2wvSvy8F4GXjZAq7n?=
+ =?us-ascii?Q?2laMVjob2QyIbZoZJoy0ne12BQTs/oBE1V3ztBCBxQ7ws6doAKdF8r3PNFg5?=
+ =?us-ascii?Q?xvowtMUeuaP99X1D91ub7UVZ33gHKNmt+DbWaSs5DjM3JpGAvD7SU4UDCn7y?=
+ =?us-ascii?Q?7KMqshederSythq14mUcdUJddcKeAT3d9y4C1plbKzl1TjQ1+BtCQp+bmNRf?=
+ =?us-ascii?Q?dqSS7hGxakHJbLAdctUgBkaLnsg2NG/1mg6A/9jA6RJasrvlDamPBakrSPBm?=
+ =?us-ascii?Q?3Y5Jsom3+7CyB9rjXXZ3vSQxGqfvRHwYLTjlv6CG0YXCaJvuKdhFQhU5Obv3?=
+ =?us-ascii?Q?+io/9eaSRzrPAOxpnlb+6RRtjwlmYNbcOnAjPDd0FE+m3uKpSRqnX+ux8kAu?=
+ =?us-ascii?Q?A4roK+YwaSa1v+fMV1duBIsHswY75IZD3qD0hg9i7BUWY5iPVkokIguPgYtz?=
+ =?us-ascii?Q?a+yHZTdX7wkjVxlp0E3hQ3s+eZZb8DELekF9D9XYgiN+eMKw+v5HSmF2wZJz?=
+ =?us-ascii?Q?+K6ultYpU1DyGjtp30XfKr1I7x5isBdbmGO0KO9DjetIzn+eMI1MNhqSUOAY?=
+ =?us-ascii?Q?zeGmW4onb94hSHYER1ZmXhupDa/GjoIEDC2nVt6eN/1AM8EAb4fOCrm1WOU4?=
+ =?us-ascii?Q?hpnTMcgOiw+bcpoyc229bzMNV3ysd2n9iLGBsrW51an77Q5jjapYOe1ORg68?=
+ =?us-ascii?Q?kxKqjIg4ZjTT5v31ZisKGt2njS/OupDnV0c3OITa7KN1f1FLeIBvfApf3M0m?=
+ =?us-ascii?Q?7M2hCtwNhsMX1PQmD23FF8yrh6o3QYr+HmBo8JG2B60Kq6cWhV99nUPvsUMN?=
+ =?us-ascii?Q?HytIlpZ76bR9Kb1worNcShMfnBHItmYmti7RMUc4ST51YXbdOOwmeqg+gew9?=
+ =?us-ascii?Q?MtBOJ2lUKxdDd9807ilTTPaGi/+lqQt7frQUMgxKYXdwBXtBFl6ZEdVtY94v?=
+ =?us-ascii?Q?+dfRMBL2T/DygTkvz1/cnf/pYZLzeiXn90j9H7G8tOGfwzOIofGOB1rpU4es?=
+ =?us-ascii?Q?JjwxrWbsXN0W5E5ZjyWlm53EoS4hGyRdiMzqQOejXzcT?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: i/7umgNT6bae6T7r16w71tvFGA/poD3VfwGjC8IQsO+PO2a4chtoHbo46gMYSHrNABT/O7Axm+ObDvR47XI08DzIIF6toOKa2A48IZMdOyZ1qUv1tLZMZjDlgWCP93HoFwfUe8KwwcF/pWjKZ8FiY1lXlDZgQhEhFheNkGU3bniImPCD3NPmrCkwpIbUobz9kfIP9B5o4hefjaZNSKzzpgh8m6TS1NLq8A3egFvGcdkcP5r9ib8sM+nmoCrziknvAGpiCZK05a9IPkaNFGJbejMp6RlyGn4qk9gm+lPRU+RCA25bAwWkXq4xHy+3DkbHhhj8FwPUgeIy/YYkFR11JlocBk5vNTV9H7FnkpXsxu18+ep2uJDxekhKrwa+gs+HNSZUbmHKGj7O1jGTxpTwZ+bZ5LZUy/sn9yV0BYcJDY3obiqKNKhNaqkOYrz/HLR4e9FfTIcXsXiXWEOAoRkUfOz+Yd5VMsTG5Ts7HYcgGiYTG0YDYVw/iKDeQQXYA9VCtVcD9KW/hadJYLyT0GfXhCa0II+v0usxb2IkXQeIhKVdCkP2WEg0q6BgPnQtaU0tdj8BoEAXal0pIP/oZR6zJwY6fxBSFC2ssjFEvOJJP2g=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20fed499-c93a-4654-83a1-08dcc91766fc
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2024 17:15:53.0906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vzyG1NCk5YXbOfkc65jNrD0QtIj0qm/ImAzxdC0FJgtRmh4IndSH24LvDxecLn9hG7g0Th9BUNPVPv6wgL0HMXTJaVEPDcn+TC5VQps0GGI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6138
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-30_10,2024-08-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408300132
+X-Proofpoint-GUID: iiHRrH_6Qaa5PbKmlj_2dQltF26bYwtP
+X-Proofpoint-ORIG-GUID: iiHRrH_6Qaa5PbKmlj_2dQltF26bYwtP
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240830_074557_281742_833F6D3F 
-X-CRM114-Status: GOOD (  22.92  )
+X-CRM114-CacheID: sfid-20240830_101613_000991_C2C72FD6 
+X-CRM114-Status: GOOD (  21.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,164 +182,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: bhe@redhat.com, corbet@lwn.net, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, kernel-dev@igalia.com, dyoung@redhat.com, vgoyal@redhat.com, linux-debuggers@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-On 08/14/24 at 01:33pm, Jacek Tomaka wrote:
-> Essentially catch up with e820 related changes in the kernel.
-> Intel Sapphire Rappids MAX has high bandwidth memory which is
-> precious resource that is better not allocated by the kernel.
-
-Wondering what use cases you have encountered and want to use this patch
-to resolve. Could you say more about it?
-
-> 
-> Userspace later can enable soft reserved range using daxctl.
-> 
-> Signed-off-by: Jacek Tomaka <jacek.tomaka@poczta.fm>
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
+> Be more clear about the downsides, the upsides (yes, there are some!)
+> and about code that unconditionally sets that.
+>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 > ---
->  include/x86/x86-linux.h               | 2 ++
->  kexec/arch/i386/crashdump-x86.c       | 7 +++++++
->  kexec/arch/i386/kexec-multiboot-x86.c | 1 +
->  kexec/arch/i386/kexec-x86-common.c    | 5 +++++
->  kexec/arch/i386/x86-linux-setup.c     | 3 +++
->  kexec/firmware_memmap.c               | 2 ++
->  kexec/kexec.h                         | 1 +
->  7 files changed, 21 insertions(+)
-> 
-> diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-> index 9646102835..fbde93df94 100644
-> --- a/include/x86/x86-linux.h
-> +++ b/include/x86/x86-linux.h
-> @@ -23,6 +23,8 @@ struct e820entry {
->  #define E820_NVS	4
->  #define E820_PMEM       7
->  #define E820_PRAM       12
-> +#define E820_SOFT_RESERVED 0xefffffff
-> +
->  } __attribute__((packed));
->  #endif
+>  Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index efc52ddc6864..cb25dc5cbe9a 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -913,12 +913,16 @@
+>  			the parameter has no effect.
 >  
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index a01031e570..49108b2032 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -288,6 +288,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
->  			type = RANGE_RESERVED;
->  		} else if (memcmp(str, "Reserved\n", 9) == 0) {
->  			type = RANGE_RESERVED;
-> +		} else if (memcmp(str, "soft reserved\n", 14) == 0 ) {
-> +			type = RANGE_SOFT_RESERVED;
-> +		} else if (memcmp(str, "Soft Reserved\n", 14) == 0 ) {
-> +			type = RANGE_SOFT_RESERVED;
->  		} else if (memcmp(str, "GART\n", 5) == 0) {
->  			gart_start = start;
->  			gart_end = end;
-> @@ -615,6 +619,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
->  		strcat (str_mmap, "K@");
->  	else if (type == RANGE_RESERVED)
->  		strcat (str_mmap, "K$");
-> +	else if (type == RANGE_SOFT_RESERVED)
-> +		strcat (str_mmap, "K*");
->  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
->  		strcat (str_mmap, "K#");
->  	else if (type == RANGE_PRAM)
-> @@ -985,6 +991,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->  		if ( !( mem_range[i].type == RANGE_ACPI
->  			|| mem_range[i].type == RANGE_ACPI_NVS
->  			|| mem_range[i].type == RANGE_RESERVED
-> +			|| mem_range[i].type == RANGE_SOFT_RESERVED
->  			|| mem_range[i].type == RANGE_PMEM
->  			|| mem_range[i].type == RANGE_PRAM))
->  			continue;
-> diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
-> index 33c885a2fa..49d57cb5ae 100644
-> --- a/kexec/arch/i386/kexec-multiboot-x86.c
-> +++ b/kexec/arch/i386/kexec-multiboot-x86.c
-> @@ -379,6 +379,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
->  			mmap[i].Type = 4;
->  			break;
->  		case RANGE_RESERVED:
-> +		case RANGE_SOFT_RESERVED:
->  		default:
->  			mmap[i].Type = 2;  /* Not RAM (reserved) */
->  		}
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index ffc95a9e43..116c4f4fd3 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -99,6 +99,9 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
->  		else if (strncasecmp(str, "reserved\n", 9) == 0) {
->  			type = RANGE_RESERVED;
->  		}
-> +		else if (strncasecmp(str, "soft reserved\n", 9) == 0) {
-> +			type = RANGE_SOFT_RESERVED;
-> +		}
->  		else if (memcmp(str, "ACPI Tables\n", 12) == 0) {
->  			type = RANGE_ACPI;
->  		}
-> @@ -170,6 +173,8 @@ unsigned xen_e820_to_kexec_type(uint32_t type)
->  			return RANGE_PMEM;
->  		case E820_PRAM:
->  			return RANGE_PRAM;
-> +		case E820_SOFT_RESERVED;
-> +			return RANGE_SOFT_RESERVED;
->  		case E820_RESERVED:
->  		default:
->  			return RANGE_RESERVED;
-> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> index 73251b9339..afc83fe729 100644
-> --- a/kexec/arch/i386/x86-linux-setup.c
-> +++ b/kexec/arch/i386/x86-linux-setup.c
-> @@ -755,6 +755,9 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
->  			case RANGE_PRAM:
->  				e820[i].type = E820_PRAM;
->  				break;
-> +			case RANGE_SOFT_RESERVED:
-> +				e820[i].type = E820_SOFT_RESERVED;
-> +				break;
->  			default:
->  			case RANGE_RESERVED:
->  				e820[i].type = E820_RESERVED;
-> diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
-> index 457c3dc9a6..fa0c22140a 100644
-> --- a/kexec/firmware_memmap.c
-> +++ b/kexec/firmware_memmap.c
-> @@ -182,6 +182,8 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
->  		range->type = RANGE_RESERVED;
->  	else if (strcmp(type, "Reserved") == 0)
->  		range->type = RANGE_RESERVED;
-> +        else if (strcmp(type, "Soft Reserved") == 0)
-> +                range->type = RANGE_SOFT_RESERVED;
->  	else if (strcmp(type, "Unknown E820 type") == 0)
->  		range->type = RANGE_RESERVED;
->  	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 31c323f674..dbb27a7607 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -139,6 +139,7 @@ struct memory_range {
->  #define RANGE_UNCACHED	4
->  #define RANGE_PMEM		6
->  #define RANGE_PRAM		11
-> +#define RANGE_SOFT_RESERVED 0xefffffff
->  };
->  
->  struct memory_ranges {
-> -- 
-> 2.17.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+>  	crash_kexec_post_notifiers
+> -			Run kdump after running panic-notifiers and dumping
+> -			kmsg. This only for the users who doubt kdump always
+> -			succeeds in any situation.
+> -			Note that this also increases risks of kdump failure,
+> -			because some panic notifiers can make the crashed
+> -			kernel more unstable.
+> +			Only jump to kdump kernel after running the panic
+> +			notifiers and dumping kmsg. This option increases the
+> +			risks of a kdump failure, since some panic notifiers
+> +			can make the crashed kernel more unstable. As a bright
+> +			side, it might allow to collect more data on dmesg like
+> +			stack traces from other CPUs or extra data dumped by
+> +			panic_print. This is usually only for users who doubt
+> +			kdump will succeed every time.
 
+This is definitely clearer and an improvement! But I didn't (and still
+don't) love the phrase "users who doubt kdump will succeed" because I
+think that implies user error or silly beliefs.
+
+What if these two sentences read something like:
+
+In configurations where kdump may not be reliable, running the panic
+notifiers can allow collecting more data on dmesg, like stack traces
+from other CPUS or extra data dumped by panic_print.
+
+> Notice that some code
+> +			enables this option unconditionally, like Hyper-V,
+> +			PowerPC (fadump) and AMD SEV.
+
+Yes, great addition.
+
+With or without my suggestions it's an improvement, so:
+
+Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 
 _______________________________________________
 kexec mailing list
