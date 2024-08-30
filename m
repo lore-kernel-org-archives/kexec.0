@@ -4,71 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E69F0CA0ED2
-	for <kexec@archiver.kernel.org>; Fri, 30 Aug 2024 03:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 356C6CA0ED4
+	for <kexec@archiver.kernel.org>; Fri, 30 Aug 2024 03:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=anlyKdScANYAaS+6iezKfw7kiuIQQH92wE60qiTdXSw=; b=nK+bjFur5N7LOL
-	M687pBU9A97Gp6GQbVGum9GDOtD9jLqK1Dtfjjp/r5b0XUhD2c/9qQF7/WcbM+n2dTvVLf/ojzq6J
-	z+mSwYHQHbJaHGaoJVnSwtxNnUWt7gibv7sJK0Min8/VhFb65xj9J89zLgB4wk/oIeaLODo4XzFBB
-	8z7jBm9YG29pWMy81rWw5lecSsz8KWjX/VEVEkkMK3pgsEt665u0aJHluRdtCZ2Bpn9W6bSU2D2gv
-	XzPqd9LnKSIxDu4H4+tnfrxsg9fNKfuDWgLVicRgQthMMGRCg7WxmS7YfvqOUpgaluXxfOOj+ecd4
-	T5HNERSQkF7zsG0wkkhQ==;
+	List-Owner; bh=2gpU92QclCgCC2PdhBvq4f7n7AQv8akMownVrcuy7wM=; b=46i6aPONunkPCV
+	41PJyb9UlQIMOnKWr5OBc6eU9/sbeEfVfTkiV2svKGDCq4s/KSgO6slZKKPknrlCkcKT4CAMAPHWX
+	dTDnpKkQc4A/NWlKmUfTmejnkTYCDha9orxD9sX4RYG9m4+1moLqh25K9vjFNVYFESmv7KdGKa8Ok
+	EqNXqZ7MLxvMDHQPFvaWNrEdD6k9l4MXZjt4zp3G811AKFQ0fRnezTlxf/ptB9r85m/GNNGdKUOIn
+	BhllN3GcNkAXR9e3X2HhnLMVClhvijDgklxaVzRhPiPx++67qR2sMysD7p3NKMyo0VqYyhIIsVpSe
+	Q+piPyhVYZl1qkmnRYuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjs7d-00000004UHg-2Gvn;
-	Fri, 30 Aug 2024 03:16:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sjsSH-00000004X6L-3TVz;
+	Fri, 30 Aug 2024 03:37:45 +0000
+Received: from mail-qv1-f53.google.com ([209.85.219.53])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sjs7K-00000004UDI-2kD2
+	id 1sjsSF-00000004X5m-1h4e
 	for kexec@lists.infradead.org;
-	Fri, 30 Aug 2024 03:16:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724987765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Y16gZ5ll9x+ZZRQurc1f4Q2jGpW469PmPcdJZo7k8I=;
-	b=Bkm+kCp1nF/aynI+HfPIbF2tL5QkvM4rpWGtm+MfdPiSarZKfvR/9HBufxLPrCf5tjGqhm
-	rcH2xzHbh0gJhA4/PmCMh7V9vHkWtgqmHoGLgqF+z2ARk3MNvdE+MPZxq3yTVn3+Akn/bL
-	iXywMoh8yuWcd1udvxo9zBHRY7mNn+c=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-146-E_cgXM_TMY2lLDSNHnmYZA-1; Thu,
- 29 Aug 2024 23:16:01 -0400
-X-MC-Unique: E_cgXM_TMY2lLDSNHnmYZA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E21241955D55;
-	Fri, 30 Aug 2024 03:15:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.42])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3149E1955F1B;
-	Fri, 30 Aug 2024 03:15:55 +0000 (UTC)
-Date: Fri, 30 Aug 2024 11:15:51 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Dave Vasilevsky <dave@vasilevsky.ca>
-Cc: glaubitz@physik.fu-berlin.de, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org, mpe@ellerman.id.au,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Reimar =?iso-8859-1?Q?D=F6ffinger?= <Reimar.Doeffinger@gmx.de>
+	Fri, 30 Aug 2024 03:37:44 +0000
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6bf6606363fso7666146d6.3
+        for <kexec@lists.infradead.org>; Thu, 29 Aug 2024 20:37:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724989062; x=1725593862;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fo9L05Z0QSBRe+YpGa+Uw+0Mfbc5M8wNwQrY2Gw1TrU=;
+        b=NigWUY8O+hH2/HphgQGcag83MTteFr0ty1Og8SNevhjHP6LGp+nfNLZvoLE6vKyDvT
+         8LCHLPfKSC/Dq43157mleMJMDYcgFddDpLTJGFGvPrZec/4LA6Zq+u2VMTy9Pso+I2si
+         Fa62hwAPXK61WpSbb770TIrpbk0fN6O4RYqHsK7jH9YH/ozCTLLwqm6snD5qAeZrUoKt
+         /l+i85OhALDkFXTtD4Owvz3GssSlvFjszi898lH5NMhPp+3EPFVreCXkf0J0aLtwa1Ru
+         OFUn/iGamIkJZ9/1oTwOpF5dO5WWtNKsRGefBIOt8klLqM/x2VBh0PLEOEhXIDskx75K
+         Qbgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVsx6xyFpAHYCdoebbZAN6Yv9jpXb439rG1L5Noq063c9QmRul/eLJlkc9ekycWpd0vppbsQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxscOp3urmdY2xJXxJt+L7sR4D42iSc3F8b6s6IoXQwlEbddDY0
+	F9GYG/CSFe0P9ZuQxU7w9XVC7nUjbcGQ5i9bhGHVTKMWDRAyixcn
+X-Google-Smtp-Source: AGHT+IF5lvFeC41ykAP/5lmiaGuGSVJ62dpKhpYmw92FoqNUdVPe/V37Z2IbmmFTugcCgHwIe+E9QA==
+X-Received: by 2002:a05:6214:3d9b:b0:6b5:d73d:918f with SMTP id 6a1803df08f44-6c33e4f053cmr61325206d6.0.1724989061710;
+        Thu, 29 Aug 2024 20:37:41 -0700 (PDT)
+Received: from [192.168.2.204] ([65.93.184.127])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c340bfafaesm11005716d6.22.2024.08.29.20.37.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2024 20:37:40 -0700 (PDT)
+Message-ID: <1568b378-5592-4d23-a572-4e09f3996331@vasilevsky.ca>
+Date: Thu, 29 Aug 2024 23:37:29 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] crash: Default to CRASH_DUMP=n when support for it is
  unlikely
-Message-ID: <ZtE5Z/gDR1WixG9S@MiWiFi-R3L-srv>
+To: Baoquan He <bhe@redhat.com>
+Cc: glaubitz@physik.fu-berlin.de, linuxppc-dev@lists.ozlabs.org,
+ linux-sh@vger.kernel.org, mpe@ellerman.id.au, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Reimar_D=C3=B6ffinger?=
+ <Reimar.Doeffinger@gmx.de>
 References: <20240823125156.104775-1-dave@vasilevsky.ca>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240823125156.104775-1-dave@vasilevsky.ca>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+ <ZtE5Z/gDR1WixG9S@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Dave Vasilevsky <dave@vasilevsky.ca>
+In-Reply-To: <ZtE5Z/gDR1WixG9S@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240829_201606_783398_8826510B 
-X-CRM114-Status: GOOD (  10.51  )
+X-CRM114-CacheID: sfid-20240829_203743_478343_7BE613DA 
+X-CRM114-Status: UNSURE (   9.56  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,50 +87,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Dave,
-
-On 08/23/24 at 08:51am, Dave Vasilevsky wrote:
-......snip..
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 1aa3c4a0c5b2..b04cfa23378c 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -549,6 +549,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool BROKEN_ON_SMP
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool n
-
-If we don't add ARCH_DEFAULT_CRASH_DUMP at all in sh arch, the
-CRASH_DUMP will be off by default according to the below new definition
-of CRASH_DUMP?
-
-Thanks
-Baoquan
-
-> +
->  config ARCH_SUPPORTS_KEXEC_JUMP
->  	def_bool y
->  
-......  
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 6c34e63c88ff..4d111f871951 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -97,7 +97,7 @@ config KEXEC_JUMP
->  
->  config CRASH_DUMP
->  	bool "kernel crash dumps"
-> -	default y
-> +	default ARCH_DEFAULT_CRASH_DUMP
->  	depends on ARCH_SUPPORTS_CRASH_DUMP
->  	depends on KEXEC_CORE
->  	select VMCORE_INFO
-> -- 
-> 2.34.1
+On 2024-08-29 23:15, Baoquan He wrote:
+>> +config ARCH_DEFAULT_CRASH_DUMP
+>> +	def_bool n
 > 
+> If we don't add ARCH_DEFAULT_CRASH_DUMP at all in sh arch, the
+> CRASH_DUMP will be off by default according to the below new definition
+> of CRASH_DUMP?
 
+Yes, that's true. But if we don't add it at all in sh arch, it looks confusing
+in the search feature of menuconfig:
+
+> Symbol: ARCH_DEFAULT_CRASH_DUMP [=ARCH_DEFAULT_CRASH_DUMP]
+> Type  : unknown
+
+So I thought it was better to explicitly set it to 'n'. What do you think?
+
+-Dave
 
 _______________________________________________
 kexec mailing list
