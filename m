@@ -4,163 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9662CD37B5
-	for <kexec@archiver.kernel.org>; Tue,  3 Sep 2024 22:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE862CD37AE
+	for <kexec@archiver.kernel.org>; Wed,  4 Sep 2024 04:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
-	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=dmd48vcuBgi4dChRjSXhmLmAROOPSxznl5yIJQx+sH8=; b=S+7pdnvzDfTbUbDm2tARKigWYR
-	xkkovQxBkiP71Ny97lPCcdoT+Bs10sGkZPNbYR/91vGHx4msYG7/14CsI+DiemPGXh4tRfq8Nh3u2
-	nFHsPOgcuRadp1Mn7lLkJCpdRvBZOly/GCeQGjA1PIev8tUEtlZguZt0Du6MtZQYbQONEX1ecZlCg
-	ttvRm7b1jMcn7qFv9uoT8Jsm6nXSBKSzd+ZtmZTJqm6AwNipPOkmuCJKgk9PAAJL8Ara8XucE5Uyy
-	OAnlEl8toljfU7cEXsK6cmy7xATIQ+AdoUaXCrplB7nMzBMvo119p9k/0AaHQzO1M8GjJP4DdXnkg
-	xEucWoVg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=n8YVnEkYbPTQ03PVVn8nDwSG82DWcHPlWfqbsguqO44=; b=tjajK8AiCEv7v+
+	C+YId+ezBSQKYqO3J+FTKkP+OvhqxEtqZDb4WfDf2Ex2cIzYXBuhUX+ZelXwZJkE/fETpJMtbcbCw
+	dEl4O5qoI26x5Icu2fUKo8aUFX13DcFVsGoC7DjvfDj/wYG4D6bcTA/y9VnEY6gx9a9eXfvwqy4tC
+	yY5qUBsR9FYjwJ8+LoU9PW2G01wJ27eEaSa0FzAgSWpSVEPNOU7b0QfUyquBcr7KQsmK9Xyl//sNG
+	jouSaFmGLsI9exyh4cAcWzIfWJzVpA+xhMnsb8+H7x7tfmtTmd3dAIUWQzwZcvMXtGjFylWJv1PXY
+	72bRpzJ8YnGwsZFyUnDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1slcUH-00000002FTN-2fqQ;
-	Tue, 03 Sep 2024 22:59:01 +0000
-Received: from mail-bn8nam12on2060c.outbound.protection.outlook.com ([2a01:111:f403:2418::60c] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
+	id 1slhQb-00000002lXd-0w0E;
+	Wed, 04 Sep 2024 04:15:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1slcUE-00000002FRw-3bvr
+	id 1slhQY-00000002lWU-0Mmg
 	for kexec@lists.infradead.org;
-	Tue, 03 Sep 2024 22:59:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YnndKO18zx+gbR89KVyb9P0Y+T7n+ghEa5C/uLD1P4vwpr3BBL/YM3xO2rcYqAXQxUvhanNUvKpKtD9joU1QZ7GTdxIS9GAvOfmkFI4QFarYx+pQ+kc0DeykPYG0yz5AhAU3Xz8r1p6hTSe7QEUXLZ/Z83PPWigwOGwEx7LdTTDKU4BZNuRyQ8JzqUUcn2ovmqzCPHHmceQFy5bPOG6mYqQ5fdNrcPxjr82Bzb2ugsmAOjCdT7KYGIDA+EPoxgVIExYCsRAXL+1FDVmmlT/mvIDhtxVJxXVDnP9q6Hvw4g2tQesmr91tJ3D85kBy6P3iBqxE+rQ2NIh6MfD9sTS/rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oiA516XHq8NEIpYKYb2pw92MONMjL1AihOluMb5ho+E=;
- b=lQHI9POcV2uZ7DxQr2+PsPB+gcjasZXNkxjoAkb4mjpsQvJr/oK8fZaq2cThQfFj5MYatDTVb2ugiq5Q77FJJm5YbIBT3hcUKQql5bBL0XcpV8rx+Oanf+yfsCiptYxiHSbp33smoFAUwEWu5LYWx69m1+3h6B/i8yR52yvsE2TcDB48rKYHuGoQ0f+1coUT8Hi04/CH+TmuIiPVQW8ldUTrDxVYWWFZjJMlUsWr4ncDDavCNhxwYGrerMwcVaka+4u/J8HaHZxjjWgUVxiZUULC916Q+pQcQ+TqzDzFvxmC4qNSuAE0QXKsarCuugOQ+x56redmyZgcn/7NfVkrfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oiA516XHq8NEIpYKYb2pw92MONMjL1AihOluMb5ho+E=;
- b=1GtyrlttgZcMjSfI5y66L4MAeZ0azt2w1oI0h3xw0KlkWn8GfEZBjIIZApLyGX9PIkJ4EO2acNSK44AoTCoD2Z+KszZzr7pSSRUt92dxnwHHDWzrTbB3aHE1HWWGje21CKfGLzLYqV+zQ8ELCRW0zEekdND/a4LezoXtwRAQK0c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB9066.namprd12.prod.outlook.com (2603:10b6:510:1f6::5)
- by CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.23; Tue, 3 Sep
- 2024 22:58:47 +0000
-Received: from PH7PR12MB9066.namprd12.prod.outlook.com
- ([fe80::954d:ca3a:4eac:213f]) by PH7PR12MB9066.namprd12.prod.outlook.com
- ([fe80::954d:ca3a:4eac:213f%3]) with mapi id 15.20.7918.024; Tue, 3 Sep 2024
- 22:58:46 +0000
-Message-ID: <fbde9567-d235-459b-a80b-b2dbaf9d1acb@amd.com>
-Date: Tue, 3 Sep 2024 17:58:44 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/sev: Fix host kdump support for SNP
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, dave.hansen@linux.intel.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
- peterz@infradead.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- thomas.lendacky@amd.com, michael.roth@amd.com, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev
-References: <20240903191033.28365-1-Ashish.Kalra@amd.com>
- <ZtdpDwT8S_llR9Zn@google.com>
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <ZtdpDwT8S_llR9Zn@google.com>
-X-ClientProxiedBy: SN7PR04CA0211.namprd04.prod.outlook.com
- (2603:10b6:806:127::6) To PH7PR12MB9066.namprd12.prod.outlook.com
- (2603:10b6:510:1f6::5)
+	Wed, 04 Sep 2024 04:15:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725423327;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCm93KcVpasKSMGOmpqNFRYTJOZXEhAnzoVwEsV3DXc=;
+	b=FNXRADcyjhXzSkujDfWU+ZwC0z1CalJR48jQL+UtVcuJVIU956r606w3vbogwDYcrmsZAS
+	mZ1p9b1TXYvMjQ41Cc0uMWpdaQbD4i8WZnH6eRoXiJxQHPkIPbYp36Cunjak2caa9U9BFd
+	L7+m20bLWm6yz4NmsRhIWrSPXWRHxdQ=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-vTTSo0XuMvWYqQ8EIj0TOA-1; Wed,
+ 04 Sep 2024 00:15:22 -0400
+X-MC-Unique: vTTSo0XuMvWYqQ8EIj0TOA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 94FEB19560BE;
+	Wed,  4 Sep 2024 04:15:20 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.58])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCCC319560AA;
+	Wed,  4 Sep 2024 04:15:18 +0000 (UTC)
+Date: Wed, 4 Sep 2024 12:15:14 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jacek Tomaka <jacekt@dug.com>
+Cc: kexec@lists.infradead.org, horms@kernel.org, dan.j.williams@intel.com,
+	Jacek Tomaka <jacek.tomaka@poczta.fm>
+Subject: Re: [PATCH] Add support for soft reserved memory range
+Message-ID: <Ztfe0oKCEDaeHLfb@MiWiFi-R3L-srv>
+References: <20240814052024.25731-1-jacekt@dugeo.com>
+ <20240814053313.35251-1-jacekt@dugeo.com>
+ <ZtHbGIuXOAT59IBJ@MiWiFi-R3L-srv>
+ <CAKVxXCUSCn5QLMTPF2vLdk7wHbMTeQNxBVwnTtYsprNnEnaq=g@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB9066:EE_|CH2PR12MB4133:EE_
-X-MS-Office365-Filtering-Correlation-Id: 135a9c13-cb1f-4766-6fe5-08dccc6bf76d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?cy8vSHpPck13eGdtRWlxNi9NN3FjSUl6OThqM3lZMFAwRG1VRG9pY0dxNUFM?=
- =?utf-8?B?TEM2ajBiN0lpSElhSWZVc2psNzdhaVp3KytOS1VTQytadENkcElhUEVUTE9Z?=
- =?utf-8?B?dXlLN05LTTZrTjF5QjFlQWVtR3phWW5SZmlvaHh3UlFVUTdBclo1ZlpEOGI1?=
- =?utf-8?B?dnpVVG9ickpTRUF4RXJmNkRJSUMwcEYwRHBib3ZMSkZ1NXNuTzgrclpQYzhx?=
- =?utf-8?B?ajE3ZWxWYmI2NFZ6THpoWWtQZWczSUhVaW1Mb21wdVpOakhWVEZKVEhuUXU0?=
- =?utf-8?B?akhQeTVINytjVVJaemJYWExxWWQrOTJJdnUvVlNOQlpaNGVGZm1CeHF6OHpG?=
- =?utf-8?B?ZjNxZWh4N1E3YnRDeDZGcUpTVHNDSHhsNzNIVWpqZUszaW9iL09mYklUQmly?=
- =?utf-8?B?Tlk1VmY3MXdTNE1TWko4MXlCcE94UmpBcU41UHBPZkVGa0lOZmpKU09kSUFC?=
- =?utf-8?B?Um5HRW1ES3BVb1JLRUJKUWxUZWc1NnRNK3JucUV3bG1zL2NRSVRlcDVsRUR2?=
- =?utf-8?B?bG1Oc1NHWmlFdDNhVm9PWHIzRExlNkNkRjIxcEJEK0h5QTliNXVGSElaYWpG?=
- =?utf-8?B?Q0JFV0RJcUpuK2Z6S29NcEdabU1LT081Zy84bXp4SFFwaFoyVHQrL0thcmhw?=
- =?utf-8?B?SGxLVXVzQUNOc1JaVHdkRFZsbjcremQ0NnExcHR3QUJ3WFUzdVhOalRzNGpl?=
- =?utf-8?B?RGRDdkhZRWxzNDV3a28wcnFzV1ZQeGlTMkhtQ2R2LzBoaWtQS3UwVDNSTkdD?=
- =?utf-8?B?STJnVnlJRVdWU29LYk11eVZTdUVWb2VkcFY5TUI1ekFGNmtLMFFrZFZ3VXBK?=
- =?utf-8?B?Mks4a3YrcFlUSzFxSjZXTG1vSVlINkNncVp3dTE2ellOTUZMNmp6Y2xodkZp?=
- =?utf-8?B?OGkwVENmZWNMdzJEV3g3RzlscmF5M1JIdEZDQk5LNHh0c1NtNlNiL2JFbWY4?=
- =?utf-8?B?WGUydVJZellFTGI1c2dnbnRQZmhaN09RWDZSTTkrbnF2NTBOT2Q1b2o5VFA2?=
- =?utf-8?B?UitKdHoyOW04eGcwU0tiUXJCd3FBdUl1OFFVRmhwc0tyY1dRSHV0Z2trdllP?=
- =?utf-8?B?NUR4TUJMMVA3Tjh6RDkxbnFoMm9oYkVrZmdSbWw0d0lQNURGSVcxVUowRjlE?=
- =?utf-8?B?RDl1azIzbWU2Q2JicmhZVEl5akovSG5ERnlpTlZrZGNqQ3YxcXZvckRMUldt?=
- =?utf-8?B?Wm1mVmpxaEhTQ2VPL0g0N0ovNVRKMFJGOE5kUmdwd2dHQWFpd0JLZGhNSm1r?=
- =?utf-8?B?SjlDWUZZMlR5MksyaUphdGpxcGExV2Q1cjlkR3Y1WEk0SHM5MVVKam5HdEk2?=
- =?utf-8?B?MmRlRytIR1YvOGxYY2Z6VlJFdWVZODY1MjFHalVqaFBDbjNvN1hqTDRieVRM?=
- =?utf-8?B?S0FWYmtVcDFmK2o1cmZlZ1luS0JyT0NMUEpQMkZlR2tvUlg4c2NBU0YweHlX?=
- =?utf-8?B?eHVienUxMU5pRkFTVWdERGNjNFJKY1JGWnJ4UUJSdWpybGdWNGJtYlhkM2s2?=
- =?utf-8?B?M1N6K0hwUElWNmNaUEw2VVVrdEJ2VjNFSUZsUVBuK3VoQzNUeTByakdJdGcz?=
- =?utf-8?B?dDZGOHErR0tsV2JTZHM1SjRJKzhjQk5FQVJneU4venJMZWZJbUQwU3RHMUZT?=
- =?utf-8?B?N1piOFp5aXJyQVliQU1iKzFnNDJlU0M5ZWdmRk5lY1ZEb1lBL2U3dVhwRVVx?=
- =?utf-8?B?WEtlUWhlZjlneUszejR3ODhuTXNMOHlMYlFETFJaaTZMdnlQZkdSNVJOQ1My?=
- =?utf-8?B?eGhpZndGT2FTdDgwanJ1TVR6Ylc2L3pGaExIcmJsS0Q0Z3BIQW9rR25VVzlh?=
- =?utf-8?B?U09SZGpVVVM1cEJqRWtFUT09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB9066.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bS8vbGpteWRTUGZBeHBLakZTdmx2STV5UHJYY1JFZUZMK00wc2g2OCsrQ2JQ?=
- =?utf-8?B?ZFY4STZZellpaGlOdHdqYmxLeUhNdkU1b0Vlb0N0MlArM3NlZ1UvNUhwZ1NQ?=
- =?utf-8?B?STNCVk5SY0RISFJRbkxXcEVvNnRaYlpvNllrVzNwaE5TVStZb01DSVRHd3dQ?=
- =?utf-8?B?VWhaNHlVUW1jWnVzUXVzODIwZ3gwTnRiM21Ic0pJMGZad2NhMEdRWkhiTllY?=
- =?utf-8?B?SmdOUHZzS21yOFpwTFp3RlVyc3Q4WjBRTkF0eXpVZ2FxRVlPQU5TaExBTEFI?=
- =?utf-8?B?VTdvQ3FyTGJiazNSbkh2bzBaWTZMbzVZSXJUOUdNS3hMNi9jWElEUGlPL2Vs?=
- =?utf-8?B?bFJoVVUyMldUU3A0RTJjM1F5K3A0cS9qcXNCT1d0Um9XYm43NVNNdkRoNXVm?=
- =?utf-8?B?VWdwR2lSSnZFaENNbmVyUThrWnRyVSt6aE5WR29BOTJoaTVRNlRhRlZrQXJs?=
- =?utf-8?B?b3hTRm9SdlYza2dYbkt2RHkxRjR2QTV6SUlNaUFsY0tFV252eSsrMVNDL2Nw?=
- =?utf-8?B?SVBkSHAwWkZtejgyVEtqaXBDYzA4Z3I5R2Y2U1RrWG5mNUp6amlDc21sMlFs?=
- =?utf-8?B?YjVqNEdqWlRzV1o3VnVKZnkzM2ttMTdZOHVDSlJsdE5FYklPWmlCN3FUYnND?=
- =?utf-8?B?THBPeDZ4amtnWnQ1YWlxNnNWMStXUDlIVTg3SlY3SU82SlpFMGVNWlFObWF6?=
- =?utf-8?B?T0ZSZ3RRRDN1ZU53UkgrREZFS0NxUDMyOFRrQnhVems4ZE1NQkp5TWY3cXRy?=
- =?utf-8?B?bjQ0UzdVSDNnNVdvRnRzekFLbS9neHM2NW53NHpPVXh6Q3E1TWRPajEra0Rz?=
- =?utf-8?B?N0Exdk1qc2FiU0lIMFBmZXkrS2xvMEVzMWF3S1MwbCszdFAydnVKeUF2TFVO?=
- =?utf-8?B?TExwbGMwK0pjMkROdGVFVUVJNE9lS216VU5GdEJobVFwcCtoeWRTQmx5RTgx?=
- =?utf-8?B?MHhLVEtJY3ZVd2QydnZnbTJvOU5MTml1eVF5azFaZUt1MTVJaURyYTlEanUv?=
- =?utf-8?B?Q25icFY3TkxLdVJ3M0tJdVVEYXVtMU96ci9IaHJQdk5nVHB2UDVReGdEYzQ1?=
- =?utf-8?B?NXpOemFNMlNTdGJ2elhqcGRjTW9zdU8vZy85TVEvSFJ1ZmNDalluZ2ZjN0I2?=
- =?utf-8?B?Qnoxd2pDM1lPTEhQUzV4MHdsNmJvbXJUQmhBaC9HQkg0SHRIWFFMV2lkM1Nu?=
- =?utf-8?B?VWt2V3djcXJ5a0tWQTFnSlc0cUdianpMb2JRYzlZMmVPWGxmK3Z2amVycXBG?=
- =?utf-8?B?VE51Z29ZUWFRSEdMbWxIZmVONVVTQ0YrYjM3dFFUQWI4aWIyZEZHUS9Ic2p0?=
- =?utf-8?B?WUF2YTYvY0l4ek4rTStRMk9KRVJ2Nm1UdFNGKzJhTUVoVEEzcUlrSGFYQWNa?=
- =?utf-8?B?UzVWM1VBb1dtWnQ4aFZ6SEQ1ZVhHbFM2Qi9Kbnh6d0JpR0EwUmZNc25QWUpI?=
- =?utf-8?B?Si9UOTRObExnNzJacldSOE1WMU94bFFjU1ZSSkVFeHZYY3RCTHgwaFFOc0VO?=
- =?utf-8?B?UFZEeVBxeVpQQ09McXA4ckl5L2U1dERsNkcvalYzbFdSRzNhbG9yK3VNNzY1?=
- =?utf-8?B?T0RWMUpIcU54VnFQblFUWGxoTGg5cExiRzJaV2hDVitoTWZvRnEra1J6ODNr?=
- =?utf-8?B?WE8rdzBBYlB4UHNMeFYzWFMyOEVveU9IaFVTb3Q4V1ZmNE12bW5iMm90bk9I?=
- =?utf-8?B?NVRoT2t3ZG5GcUtDaXJLdlJXUFFESWE2ZkptK0ZqWUh1eXpyUGw0TWtISTFB?=
- =?utf-8?B?WHk2UTB5Q3NWMWVqNDYxZmJOZlJHK3FtQld5NWJDNXM4bkJCcHNpZ1A3M1FL?=
- =?utf-8?B?ZkNQVzdmMlRVUFk5ek1tblY1VTRiY0lSOWZuR2tDbXRiWXBmbFhzU2RLb3Ny?=
- =?utf-8?B?eHFKZElZNEhiZjZxSUdVZHZ2Q21lQlJaMmxTQkRKL0h3UlZXWTBtMGFPMXRk?=
- =?utf-8?B?dVVXTFpETUtvakxxam5EOVJCdWNzM1F4SjlLVy9XeU82NGl1U2RHM3ZHTXNp?=
- =?utf-8?B?ZjN4c0RLUURXSFhOdHg2TTJHY24xZmNEcGYyVjQxaTRDdjZObU0xWU56QzdG?=
- =?utf-8?B?b1E5b2xMVkFDNFpKUmhpYzlqMko3Qks1OGpGUDU3SkhCbkE4NEdnSlY1d2Zl?=
- =?utf-8?Q?VLUU6nchc8zYHJbI36Q76q0x7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 135a9c13-cb1f-4766-6fe5-08dccc6bf76d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB9066.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 22:58:46.6934
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ApayoxXxr7JyaB6YPladAr5TDcHxsT4yRzbQwsh79wLz7J3p2JVymFDHc1eVO3+XO5ZYCFsAMATn8AQGg1DmWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4133
+In-Reply-To: <CAKVxXCUSCn5QLMTPF2vLdk7wHbMTeQNxBVwnTtYsprNnEnaq=g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 127.0.0.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240903_155859_007552_B0FAB411 
-X-CRM114-Status: GOOD (  24.89  )
+X-CRM114-CacheID: sfid-20240903_211530_242805_74D7D788 
+X-CRM114-Status: GOOD (  33.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -172,281 +83,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Sean,
-
-On 9/3/2024 2:52 PM, Sean Christopherson wrote:
-> On Tue, Sep 03, 2024, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
->> [    1.671804] AMD-Vi: Using global IVHD EFR:0x841f77e022094ace, EFR2:0x0
->> [    1.679835] AMD-Vi: Translation is already enabled - trying to copy translation structures
->> [    1.689363] AMD-Vi: Copied DEV table from previous kernel.
->> [    1.864369] AMD-Vi: Completion-Wait loop timed out
->> [    2.038289] AMD-Vi: Completion-Wait loop timed out
->> [    2.212215] AMD-Vi: Completion-Wait loop timed out
->> [    2.386141] AMD-Vi: Completion-Wait loop timed out
->> [    2.560068] AMD-Vi: Completion-Wait loop timed out
->> [    2.733997] AMD-Vi: Completion-Wait loop timed out
->> [    2.907927] AMD-Vi: Completion-Wait loop timed out
->> [    3.081855] AMD-Vi: Completion-Wait loop timed out
->> [    3.225500] AMD-Vi: Completion-Wait loop timed out
->> [    3.231083] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
->> d out
->> [    3.579592] AMD-Vi: Completion-Wait loop timed out
->> [    3.753164] AMD-Vi: Completion-Wait loop timed out
->> [    3.815762] Kernel panic - not syncing: timer doesn't work through Interrupt-remapped IO-APIC
->> [    3.825347] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.11.0-rc3-next-20240813-snp-host-f2a41ff576cc-dirty #61
->> [    3.837188] Hardware name: AMD Corporation ETHANOL_X/ETHANOL_X, BIOS RXM100AB 10/17/2022
->> [    3.846215] Call Trace:
->> [    3.848939]  <TASK>
->> [    3.851277]  dump_stack_lvl+0x2b/0x90
->> [    3.855354]  dump_stack+0x14/0x20
->> [    3.859050]  panic+0x3b9/0x400
->> [    3.862454]  panic_if_irq_remap+0x21/0x30
->> [    3.866925]  setup_IO_APIC+0x8aa/0xa50
->> [    3.871106]  ? __pfx_amd_iommu_enable_faulting+0x10/0x10
->> [    3.877032]  ? __cpuhp_setup_state+0x5e/0xd0
->> [    3.881793]  apic_intr_mode_init+0x6a/0xf0
->> [    3.886360]  x86_late_time_init+0x28/0x40
->> [    3.890832]  start_kernel+0x6a8/0xb50
->> [    3.894914]  x86_64_start_reservations+0x1c/0x30
->> [    3.900064]  x86_64_start_kernel+0xbf/0x110
->> [    3.904729]  ? setup_ghcb+0x12/0x130
->> [    3.908716]  common_startup_64+0x13e/0x141
->> [    3.913283]  </TASK>
->> [    3.915715] in panic
->> [    3.918149] in panic_other_cpus_shutdown
->> [    3.922523] ---[ end Kernel panic - not syncing: timer doesn't work through Interrupt-remapped IO-APIC ]---
->>
->> This happens as SNP_SHUTDOWN_EX fails
-> Exactly what happens?  I.e. why does the PSP (sorry, ASP) need to be full shutdown
-> in order to get a kdump?  The changelogs for the original SNP panic/kdump support
-> are frustratingly unhelpful.  They all describe what the patch does, but say
-> nothing about _why_.
-
-If SNP_SHUTDOWN_EX is not issued, or more accurately if SNP_SHUTDOWN_EX is not issued with IOMMU_SNP_SHUTDOWN set to 1, i.e, to disable SNP enforcement by IOMMU, then IOMMUs are initialized in an IRQ remapping configuration by early_enable_iommus() during crashkernel boot, which causes the above crash in check_timer().
-
-Also, SNP_SHUTDOWN_EX is required to tear down the RMP CPU/IOMMU TMRs.
-
-Additionally, if IOMMU SNP_SHUTDOWN is not done and all pages associated with the IOMMU are not transitioned to Reclaim state (and then subsequently by HV to hypervisor state) there is a really high probability of a fatal RMP page fault due to collision with a new page allocation during kexec boot due to collision with one of these IOMMU pages.
-
-So we really need SNP_SHUTDOWN_EX with IOMMU_SNP_SHUTDOWN=1 for kexec/crashkernel boot.
-
->
->> when SNP VMs are active as the firmware checks every encryption-capable ASID
->> to verify that it is not in use by a guest and a DF_FLUSH is not required. If
->> a DF_FLUSH is required, the firmware returns DFFLUSH_REQUIRED.
->>
->> To fix this, added support to do SNP_DECOMMISSION of all active SNP VMs
->> in the panic notifier before doing SNP_SHUTDOWN_EX, but then
->> SNP_DECOMMISSION tags all CPUs on which guest has been activated to do
->> a WBINVD. This causes SNP_DF_FLUSH command failure with the following
->> flow: SNP_DECOMMISSION -> SNP_SHUTDOWN_EX -> SNP_DF_FLUSH ->
->> failure with WBINVD_REQUIRED.
->>
->> When panic notifier is invoked all other CPUs have already been
->> shutdown, so it is not possible to do a wbinvd_on_all_cpus() after
->> SNP_DECOMMISSION has been executed. This eventually causes SNP_SHUTDOWN_EX
->> to fail after SNP_DECOMMISSION.
->>
->> Adding fix to do SNP_DECOMMISSION and subsequent WBINVD on all CPUs
->> during NMI shutdown of CPUs as part of disabling virtualization on
->> all CPUs via cpu_emergency_disable_virtualization ->
->> svm_emergency_disable().
->>
->> SNP_DECOMMISSION unbinds the ASID from SNP context and marks the ASID
->> as unusable and then transitions the SNP guest context page to a
->> firmware page and SNP_SHUTDOWN_EX transitions all pages associated
->> with the IOMMU to reclaim state which the hypervisor then transitions
->> to hypervisor state, all these page state changes are in the RMP
->> table, so there is no loss of guest data as such and the complete
->> host memory is captured with the crashkernel boot. There are no
->> processes which are being killed and host/guest memory is not
->> being altered or modified in any way.
->>
->> This fixes and enables crashkernel/kdump on SNP host.
-> ...
->
->> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
->> index 714c517dd4b7..30f286a3afb0 100644
->> --- a/arch/x86/kvm/svm/sev.c
->> +++ b/arch/x86/kvm/svm/sev.c
->> @@ -16,6 +16,7 @@
->>  #include <linux/psp-sev.h>
->>  #include <linux/pagemap.h>
->>  #include <linux/swap.h>
->> +#include <linux/delay.h>
->>  #include <linux/misc_cgroup.h>
->>  #include <linux/processor.h>
->>  #include <linux/trace_events.h>
->> @@ -89,6 +90,8 @@ static unsigned int nr_asids;
->>  static unsigned long *sev_asid_bitmap;
->>  static unsigned long *sev_reclaim_asid_bitmap;
->>  
->> +static DEFINE_SPINLOCK(snp_decommission_lock);
->> +static void **snp_asid_to_gctx_pages_map;
->>  static int snp_decommission_context(struct kvm *kvm);
->>  
->>  struct enc_region {
->> @@ -2248,6 +2251,9 @@ static int snp_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->>  		goto e_free_context;
->>  	}
->>  
->> +	if (snp_asid_to_gctx_pages_map)
->> +		snp_asid_to_gctx_pages_map[sev_get_asid(kvm)] = sev->snp_context;
->> +
->>  	return 0;
->>  
->>  e_free_context:
->> @@ -2884,9 +2890,126 @@ static int snp_decommission_context(struct kvm *kvm)
->>  	snp_free_firmware_page(sev->snp_context);
->>  	sev->snp_context = NULL;
->>  
->> +	if (snp_asid_to_gctx_pages_map)
->> +		snp_asid_to_gctx_pages_map[sev_get_asid(kvm)] = NULL;
->> +
->>  	return 0;
->>  }
->>  
->> +static void __snp_decommission_all(void)
->> +{
->> +	struct sev_data_snp_addr data = {};
->> +	int ret, asid;
->> +
->> +	if (!snp_asid_to_gctx_pages_map)
->> +		return;
->> +
->> +	for (asid = 1; asid < min_sev_asid; asid++) {
->> +		if (snp_asid_to_gctx_pages_map[asid]) {
->> +			data.address = __sme_pa(snp_asid_to_gctx_pages_map[asid]);
-> NULL pointer deref if this races with snp_decommission_context() from task
-> context.
-
-Yes this race needs to be handled.
-
-I am looking at if i can do SNP_DECOMMISSION on all (SNP) ASIDs, and continue with the loop if SNP_DECOMMISSION fails with INVALID_GUEST error as the guest has already been decommissioned via snp_decommission_context().
-
->> +			ret = sev_do_cmd(SEV_CMD_SNP_DECOMMISSION, &data, NULL);
->> +			if (!ret) {
-> And what happens if SEV_CMD_SNP_DECOMMISSION fails?
-
-As mentioned above, will add additional handling for cases where INVALID_GUEST kind of errors are returned.
-
-But, if errors like UPDATE_FAILED are returned, this will eventually cause SNP_SHUTDOWN failure and then lead to crashkernel boot failure as discussed above.
-
->
->> +				snp_free_firmware_page(snp_asid_to_gctx_pages_map[asid]);
->> +				snp_asid_to_gctx_pages_map[asid] = NULL;
->> +			}
->> +		}
->> +	}
->> +}
->> +
->> +/*
->> + * NOTE: called in NMI context from svm_emergency_disable().
->> + */
->> +void sev_emergency_disable(void)
->> +{
->> +	static atomic_t waiting_for_cpus_synchronized;
->> +	static bool synchronize_cpus_initiated;
->> +	static bool snp_decommission_handled;
->> +	static atomic_t cpus_synchronized;
->> +
->> +	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
->> +		return;
->> +
->> +	/*
->> +	 * SNP_SHUTDOWN_EX fails when SNP VMs are active as the firmware checks
-> Define "active".
->
->> +	 * every encryption-capable ASID to verify that it is not in use by a
->> +	 * guest and a DF_FLUSH is not required. If a DF_FLUSH is required,
->> +	 * the firmware returns DFFLUSH_REQUIRED. To address this, SNP_DECOMMISSION
->> +	 * is required to shutdown all active SNP VMs, but SNP_DECOMMISSION tags all
->> +	 * CPUs that guest was activated on to do a WBINVD. When panic notifier
->> +	 * is invoked all other CPUs have already been shutdown, so it is not
->> +	 * possible to do a wbinvd_on_all_cpus() after SNP_DECOMMISSION has been
->> +	 * executed. This eventually causes SNP_SHUTDOWN_EX to fail after
->> +	 * SNP_DECOMMISSION. To fix this, do SNP_DECOMMISSION and subsequent WBINVD
->> +	 * on all CPUs during NMI shutdown of CPUs as part of disabling
->> +	 * virtualization on all CPUs via cpu_emergency_disable_virtualization().
->> +	 */
->> +
->> +	spin_lock(&snp_decommission_lock);
->> +
->> +	/*
->> +	 * exit early for call from native_machine_crash_shutdown()
->> +	 * as SNP_DECOMMISSION has already been done as part of
->> +	 * NMI shutdown of the CPUs.
->> +	 */
->> +	if (snp_decommission_handled) {
->> +		spin_unlock(&snp_decommission_lock);
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * Synchronize all CPUs handling NMI before issuing
->> +	 * SNP_DECOMMISSION.
->> +	 */
->> +	if (!synchronize_cpus_initiated) {
->> +		/*
->> +		 * one CPU handling panic, the other CPU is initiator for
->> +		 * CPU synchronization.
->> +		 */
->> +		atomic_set(&waiting_for_cpus_synchronized, num_online_cpus() - 2);
-> And what happens when num_online_cpus() == 1?
-Yes, will add fix for that.
->> +		synchronize_cpus_initiated = true;
->> +		/*
->> +		 * Ensure CPU synchronization parameters are setup before dropping
->> +		 * the lock to let other CPUs continue to reach synchronization.
->> +		 */
->> +		wmb();
->> +
->> +		spin_unlock(&snp_decommission_lock);
->> +
->> +		/*
->> +		 * This will not cause system to hang forever as the CPU
->> +		 * handling panic waits for maximum one second for
->> +		 * other CPUs to stop in nmi_shootdown_cpus().
->> +		 */
->> +		while (atomic_read(&waiting_for_cpus_synchronized) > 0)
->> +		       mdelay(1);
->> +
->> +		/* Reacquire the lock once CPUs are synchronized */
->> +		spin_lock(&snp_decommission_lock);
->> +
->> +		atomic_set(&cpus_synchronized, 1);
->> +	} else {
->> +		atomic_dec(&waiting_for_cpus_synchronized);
->> +		/*
->> +		 * drop the lock to let other CPUs contiune to reach
->> +		 * synchronization.
->> +		 */
->> +		spin_unlock(&snp_decommission_lock);
->> +
->> +		while (atomic_read(&cpus_synchronized) == 0)
->> +		       mdelay(1);
->> +
->> +		/* Try to re-acquire lock after CPUs are synchronized */
->> +		spin_lock(&snp_decommission_lock);
->> +	}
-> Yeah, no.  This is horrific.  If the panic path doesn't provide the necessary
-> infrastructure to ensure the necessary ordering between the initiating CPU and
-> responding CPUs, then rework the panic path.
-
-The issue here is that panic path will ensure that all (other) CPUs have been shutdown via NMI by checking that they have executed the NMI shutdown callback.
-
-But the above synchronization is specifically required for SNP case, as we don't want to execute the SNP_DECOMMISSION command (to destroy SNP guest context) while one or more CPUs are still in the NMI VMEXIT path and still in the process of saving the vCPU state (and still modifying SNP guest context?) during this VMEXIT path. Therefore, we ensure that all the CPUs have saved the vCPU state and entered NMI context before issuing SNP_DECOMMISSION. The point is that this is a specific SNP requirement (and that's why this specific handling in sev_emergency_disable()) and i don't know how we will be able to enforce it in the generic panic path ?
-
-Thanks, Ashish
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDkvMDMvMjQgYXQgMDk6NDdhbSwgSmFjZWsgVG9tYWthIHdyb3RlOgo+IEhpIEJvYXF1YW4s
+Cj4gCj4gPiBXb25kZXJpbmcgd2hhdCB1c2UgY2FzZXMgeW91IGhhdmUgZW5jb3VudGVyZWQgYW5k
+IHdhbnQgdG8gdXNlIHRoaXMgcGF0Y2gKPiA+IHRvIHJlc29sdmUuIENvdWxkIHlvdSBzYXkgbW9y
+ZSBhYm91dCBpdD8KPiAKPiBTdXJlLCB3ZSBhcmUgdXNpbmcgZ2VuZGVycyB0byBzdG9yZSBrZXJu
+ZWwgYXJndW1lbnRzIGZvciBlYWNoIG1hY2hpbmUKPiBzbyB0aGF0IHRoZXkgYXJlIHZlcnNpb24g
+Y29udHJvbGxlZC4KPiBJbiBvcmRlciB0byBhcHBseSB0aGVtIHdlIGJvb3QgYnVpbGRyb290IGtl
+cm5lbCwgZG93bmxvYWQgZGVzdGluYXRpb24KPiBrZXJuZWwsIHJlYWQgYXJndW1lbnRzIHRvIGJl
+IHBhc3NlZCwKPiB0aGVuIGtleGVjLgo+IAo+IEluIGdlbmVyYWwgaXQgd29ya3MgZmluZSwgYnV0
+IHNvbWUgb2Ygb3VyIG1hY2hpbmVzIGFyZSBTYXBwaGlyZSBSYXBpZHMKPiBNYXggYW5kIHdpdGhv
+dXQga2V4ZWMgdW5kZXJzdGFuZGluZyBzb2Z0Cj4gcmVzZXJ2YXRpb25zIHdlIGVuZCB1cCB3aXRo
+IDJHQiBsZXNzIHRvdGFsIG1lbW9yeSwgd2hpY2ggaW4gZ2VuZXJhbAo+IHdvdWxkIG5vdCBiZSBh
+IGJpZyBkZWFsIGJ1dCBJIHRoaW5rIGl0IGlzIHRoZQo+IEhCTSBtZW1vcnkgdGhhdCBpcyB3YXN0
+ZWQuCgpPaywgdGhhbmtzIGZvciB0aGVzZSBkZXRhaWxzLgoKU28geW91IGFyZSB1c2luZyBrZXhl
+Y19sb2FkIGludGVyZmFjZSwgZG9lcyBrZXhlY19maWxlX2xvYWQgaW50ZXJmYWNlCndvcmsgd2Vs
+bCBpbiB0aGlzIGNhc2U/Cgo+IAo+IAo+IE9uIEZyaSwgQXVnIDMwLCAyMDI0IGF0IDEwOjQ14oCv
+UE0gQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgo+ID4KPiA+IEhpLAo+ID4KPiA+
+IE9uIDA4LzE0LzI0IGF0IDAxOjMzcG0sIEphY2VrIFRvbWFrYSB3cm90ZToKPiA+ID4gRXNzZW50
+aWFsbHkgY2F0Y2ggdXAgd2l0aCBlODIwIHJlbGF0ZWQgY2hhbmdlcyBpbiB0aGUga2VybmVsLgo+
+ID4gPiBJbnRlbCBTYXBwaGlyZSBSYXBwaWRzIE1BWCBoYXMgaGlnaCBiYW5kd2lkdGggbWVtb3J5
+IHdoaWNoIGlzCj4gPiA+IHByZWNpb3VzIHJlc291cmNlIHRoYXQgaXMgYmV0dGVyIG5vdCBhbGxv
+Y2F0ZWQgYnkgdGhlIGtlcm5lbC4KPiA+Cj4gPiBXb25kZXJpbmcgd2hhdCB1c2UgY2FzZXMgeW91
+IGhhdmUgZW5jb3VudGVyZWQgYW5kIHdhbnQgdG8gdXNlIHRoaXMgcGF0Y2gKPiA+IHRvIHJlc29s
+dmUuIENvdWxkIHlvdSBzYXkgbW9yZSBhYm91dCBpdD8KPiA+Cj4gPiA+Cj4gPiA+IFVzZXJzcGFj
+ZSBsYXRlciBjYW4gZW5hYmxlIHNvZnQgcmVzZXJ2ZWQgcmFuZ2UgdXNpbmcgZGF4Y3RsLgo+ID4g
+Pgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKYWNlayBUb21ha2EgPGphY2VrLnRvbWFrYUBwb2N6dGEu
+Zm0+Cj4gPiA+IC0tLQo+ID4gPiAgaW5jbHVkZS94ODYveDg2LWxpbnV4LmggICAgICAgICAgICAg
+ICB8IDIgKysKPiA+ID4gIGtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgICAgICAgfCA3
+ICsrKysrKysKPiA+ID4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1tdWx0aWJvb3QteDg2LmMgfCAx
+ICsKPiA+ID4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmMgICAgfCA1ICsrKysr
+Cj4gPiA+ICBrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMgICAgIHwgMyArKysKPiA+
+ID4gIGtleGVjL2Zpcm13YXJlX21lbW1hcC5jICAgICAgICAgICAgICAgfCAyICsrCj4gPiA+ICBr
+ZXhlYy9rZXhlYy5oICAgICAgICAgICAgICAgICAgICAgICAgIHwgMSArCj4gPiA+ICA3IGZpbGVz
+IGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKPiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1
+ZGUveDg2L3g4Ni1saW51eC5oIGIvaW5jbHVkZS94ODYveDg2LWxpbnV4LmgKPiA+ID4gaW5kZXgg
+OTY0NjEwMjgzNS4uZmJkZTkzZGY5NCAxMDA2NDQKPiA+ID4gLS0tIGEvaW5jbHVkZS94ODYveDg2
+LWxpbnV4LmgKPiA+ID4gKysrIGIvaW5jbHVkZS94ODYveDg2LWxpbnV4LmgKPiA+ID4gQEAgLTIz
+LDYgKzIzLDggQEAgc3RydWN0IGU4MjBlbnRyeSB7Cj4gPiA+ICAjZGVmaW5lIEU4MjBfTlZTICAg
+ICA0Cj4gPiA+ICAjZGVmaW5lIEU4MjBfUE1FTSAgICAgICA3Cj4gPiA+ICAjZGVmaW5lIEU4MjBf
+UFJBTSAgICAgICAxMgo+ID4gPiArI2RlZmluZSBFODIwX1NPRlRfUkVTRVJWRUQgMHhlZmZmZmZm
+Zgo+ID4gPiArCj4gPiA+ICB9IF9fYXR0cmlidXRlX18oKHBhY2tlZCkpOwo+ID4gPiAgI2VuZGlm
+Cj4gPiA+Cj4gPiA+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5j
+IGIva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+ID4gPiBpbmRleCBhMDEwMzFlNTcw
+Li40OTEwOGIyMDMyIDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1w
+LXg4Ni5jCj4gPiA+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPiA+ID4g
+QEAgLTI4OCw2ICsyODgsMTAgQEAgc3RhdGljIGludCBnZXRfY3Jhc2hfbWVtb3J5X3Jhbmdlcyhz
+dHJ1Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2UsIGludCAqcmFuZ2VzLAo+ID4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgdHlwZSA9IFJBTkdFX1JFU0VSVkVEOwo+ID4gPiAgICAgICAgICAgICAgIH0g
+ZWxzZSBpZiAobWVtY21wKHN0ciwgIlJlc2VydmVkXG4iLCA5KSA9PSAwKSB7Cj4gPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICB0eXBlID0gUkFOR0VfUkVTRVJWRUQ7Cj4gPiA+ICsgICAgICAgICAg
+ICAgfSBlbHNlIGlmIChtZW1jbXAoc3RyLCAic29mdCByZXNlcnZlZFxuIiwgMTQpID09IDAgKSB7
+Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICB0eXBlID0gUkFOR0VfU09GVF9SRVNFUlZFRDsK
+PiA+ID4gKyAgICAgICAgICAgICB9IGVsc2UgaWYgKG1lbWNtcChzdHIsICJTb2Z0IFJlc2VydmVk
+XG4iLCAxNCkgPT0gMCApIHsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIHR5cGUgPSBSQU5H
+RV9TT0ZUX1JFU0VSVkVEOwo+ID4gPiAgICAgICAgICAgICAgIH0gZWxzZSBpZiAobWVtY21wKHN0
+ciwgIkdBUlRcbiIsIDUpID09IDApIHsKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIGdhcnRf
+c3RhcnQgPSBzdGFydDsKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIGdhcnRfZW5kID0gZW5k
+Owo+ID4gPiBAQCAtNjE1LDYgKzYxOSw4IEBAIHN0YXRpYyB2b2lkIGNtZGxpbmVfYWRkX21lbW1h
+cF9pbnRlcm5hbChjaGFyICpjbWRsaW5lLCB1bnNpZ25lZCBsb25nIHN0YXJ0aywKPiA+ID4gICAg
+ICAgICAgICAgICBzdHJjYXQgKHN0cl9tbWFwLCAiS0AiKTsKPiA+ID4gICAgICAgZWxzZSBpZiAo
+dHlwZSA9PSBSQU5HRV9SRVNFUlZFRCkKPiA+ID4gICAgICAgICAgICAgICBzdHJjYXQgKHN0cl9t
+bWFwLCAiSyQiKTsKPiA+ID4gKyAgICAgZWxzZSBpZiAodHlwZSA9PSBSQU5HRV9TT0ZUX1JFU0VS
+VkVEKQo+ID4gPiArICAgICAgICAgICAgIHN0cmNhdCAoc3RyX21tYXAsICJLKiIpOwo+ID4gPiAg
+ICAgICBlbHNlIGlmICh0eXBlID09IFJBTkdFX0FDUEkgfHwgdHlwZSA9PSBSQU5HRV9BQ1BJX05W
+UykKPiA+ID4gICAgICAgICAgICAgICBzdHJjYXQgKHN0cl9tbWFwLCAiSyMiKTsKPiA+ID4gICAg
+ICAgZWxzZSBpZiAodHlwZSA9PSBSQU5HRV9QUkFNKQo+ID4gPiBAQCAtOTg1LDYgKzk5MSw3IEBA
+IGludCBsb2FkX2NyYXNoZHVtcF9zZWdtZW50cyhzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywgY2hh
+ciogbW9kX2NtZGxpbmUsCj4gPiA+ICAgICAgICAgICAgICAgaWYgKCAhKCBtZW1fcmFuZ2VbaV0u
+dHlwZSA9PSBSQU5HRV9BQ1BJCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICB8fCBtZW1fcmFu
+Z2VbaV0udHlwZSA9PSBSQU5HRV9BQ1BJX05WUwo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
+fHwgbWVtX3JhbmdlW2ldLnR5cGUgPT0gUkFOR0VfUkVTRVJWRUQKPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgIHx8IG1lbV9yYW5nZVtpXS50eXBlID09IFJBTkdFX1NPRlRfUkVTRVJWRUQKPiA+
+ID4gICAgICAgICAgICAgICAgICAgICAgIHx8IG1lbV9yYW5nZVtpXS50eXBlID09IFJBTkdFX1BN
+RU0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIHx8IG1lbV9yYW5nZVtpXS50eXBlID09IFJB
+TkdFX1BSQU0pKQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4gPiA+IGRp
+ZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtbXVsdGlib290LXg4Ni5jIGIva2V4ZWMv
+YXJjaC9pMzg2L2tleGVjLW11bHRpYm9vdC14ODYuYwo+ID4gPiBpbmRleCAzM2M4ODVhMmZhLi40
+OWQ1N2NiNWFlIDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtbXVsdGli
+b290LXg4Ni5jCj4gPiA+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1tdWx0aWJvb3QteDg2
+LmMKPiA+ID4gQEAgLTM3OSw2ICszNzksNyBAQCBpbnQgbXVsdGlib290X3g4Nl9sb2FkKGludCBh
+cmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4sCj4gPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICBtbWFwW2ldLlR5cGUgPSA0Owo+ID4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgYnJlYWs7Cj4gPiA+ICAgICAgICAgICAgICAgY2FzZSBSQU5HRV9SRVNFUlZFRDoKPiA+
+ID4gKyAgICAgICAgICAgICBjYXNlIFJBTkdFX1NPRlRfUkVTRVJWRUQ6Cj4gPiA+ICAgICAgICAg
+ICAgICAgZGVmYXVsdDoKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIG1tYXBbaV0uVHlwZSA9
+IDI7ICAvKiBOb3QgUkFNIChyZXNlcnZlZCkgKi8KPiA+ID4gICAgICAgICAgICAgICB9Cj4gPiA+
+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jIGIva2V4ZWMv
+YXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYwo+ID4gPiBpbmRleCBmZmM5NWE5ZTQzLi4xMTZj
+NGY0ZmQzIDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1v
+bi5jCj4gPiA+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmMKPiA+ID4g
+QEAgLTk5LDYgKzk5LDkgQEAgc3RhdGljIGludCBnZXRfbWVtb3J5X3Jhbmdlc19wcm9jX2lvbWVt
+KHN0cnVjdCBtZW1vcnlfcmFuZ2UgKipyYW5nZSwgaW50ICpyYW5nZXMKPiA+ID4gICAgICAgICAg
+ICAgICBlbHNlIGlmIChzdHJuY2FzZWNtcChzdHIsICJyZXNlcnZlZFxuIiwgOSkgPT0gMCkgewo+
+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9IFJBTkdFX1JFU0VSVkVEOwo+ID4gPiAg
+ICAgICAgICAgICAgIH0KPiA+ID4gKyAgICAgICAgICAgICBlbHNlIGlmIChzdHJuY2FzZWNtcChz
+dHIsICJzb2Z0IHJlc2VydmVkXG4iLCA5KSA9PSAwKSB7Cj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICB0eXBlID0gUkFOR0VfU09GVF9SRVNFUlZFRDsKPiA+ID4gKyAgICAgICAgICAgICB9Cj4g
+PiA+ICAgICAgICAgICAgICAgZWxzZSBpZiAobWVtY21wKHN0ciwgIkFDUEkgVGFibGVzXG4iLCAx
+MikgPT0gMCkgewo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9IFJBTkdFX0FDUEk7
+Cj4gPiA+ICAgICAgICAgICAgICAgfQo+ID4gPiBAQCAtMTcwLDYgKzE3Myw4IEBAIHVuc2lnbmVk
+IHhlbl9lODIwX3RvX2tleGVjX3R5cGUodWludDMyX3QgdHlwZSkKPiA+ID4gICAgICAgICAgICAg
+ICAgICAgICAgIHJldHVybiBSQU5HRV9QTUVNOwo+ID4gPiAgICAgICAgICAgICAgIGNhc2UgRTgy
+MF9QUkFNOgo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIFJBTkdFX1BSQU07Cj4g
+PiA+ICsgICAgICAgICAgICAgY2FzZSBFODIwX1NPRlRfUkVTRVJWRUQ7Cj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICByZXR1cm4gUkFOR0VfU09GVF9SRVNFUlZFRDsKPiA+ID4gICAgICAgICAg
+ICAgICBjYXNlIEU4MjBfUkVTRVJWRUQ6Cj4gPiA+ICAgICAgICAgICAgICAgZGVmYXVsdDoKPiA+
+ID4gICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBSQU5HRV9SRVNFUlZFRDsKPiA+ID4gZGlm
+ZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYyBiL2tleGVjL2FyY2gv
+aTM4Ni94ODYtbGludXgtc2V0dXAuYwo+ID4gPiBpbmRleCA3MzI1MWI5MzM5Li5hZmM4M2ZlNzI5
+IDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMKPiA+
+ID4gKysrIGIva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCj4gPiA+IEBAIC03NTUs
+NiArNzU1LDkgQEAgc3RhdGljIHZvaWQgYWRkX2U4MjBfbWFwX2Zyb21fbXIoc3RydWN0IHg4Nl9s
+aW51eF9wYXJhbV9oZWFkZXIgKnJlYWxfbW9kZSwKPiA+ID4gICAgICAgICAgICAgICAgICAgICAg
+IGNhc2UgUkFOR0VfUFJBTToKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZTgy
+MFtpXS50eXBlID0gRTgyMF9QUkFNOwo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBicmVhazsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNhc2UgUkFOR0VfU09GVF9SRVNF
+UlZFRDoKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZTgyMFtpXS50eXBlID0g
+RTgyMF9TT0ZUX1JFU0VSVkVEOwo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBi
+cmVhazsKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIGRlZmF1bHQ6Cj4gPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICBjYXNlIFJBTkdFX1JFU0VSVkVEOgo+ID4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBlODIwW2ldLnR5cGUgPSBFODIwX1JFU0VSVkVEOwo+ID4gPiBkaWZmIC0t
+Z2l0IGEva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMgYi9rZXhlYy9maXJtd2FyZV9tZW1tYXAuYwo+
+ID4gPiBpbmRleCA0NTdjM2RjOWE2Li5mYTBjMjIxNDBhIDEwMDY0NAo+ID4gPiAtLS0gYS9rZXhl
+Yy9maXJtd2FyZV9tZW1tYXAuYwo+ID4gPiArKysgYi9rZXhlYy9maXJtd2FyZV9tZW1tYXAuYwo+
+ID4gPiBAQCAtMTgyLDYgKzE4Miw4IEBAIHN0YXRpYyBpbnQgcGFyc2VfbWVtbWFwX2VudHJ5KGNv
+bnN0IGNoYXIgKmVudHJ5LCBzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyYW5nZSkKPiA+ID4gICAgICAg
+ICAgICAgICByYW5nZS0+dHlwZSA9IFJBTkdFX1JFU0VSVkVEOwo+ID4gPiAgICAgICBlbHNlIGlm
+IChzdHJjbXAodHlwZSwgIlJlc2VydmVkIikgPT0gMCkKPiA+ID4gICAgICAgICAgICAgICByYW5n
+ZS0+dHlwZSA9IFJBTkdFX1JFU0VSVkVEOwo+ID4gPiArICAgICAgICBlbHNlIGlmIChzdHJjbXAo
+dHlwZSwgIlNvZnQgUmVzZXJ2ZWQiKSA9PSAwKQo+ID4gPiArICAgICAgICAgICAgICAgIHJhbmdl
+LT50eXBlID0gUkFOR0VfU09GVF9SRVNFUlZFRDsKPiA+ID4gICAgICAgZWxzZSBpZiAoc3RyY21w
+KHR5cGUsICJVbmtub3duIEU4MjAgdHlwZSIpID09IDApCj4gPiA+ICAgICAgICAgICAgICAgcmFu
+Z2UtPnR5cGUgPSBSQU5HRV9SRVNFUlZFRDsKPiA+ID4gICAgICAgZWxzZSBpZiAoc3RyY21wKHR5
+cGUsICJBQ1BJIE5vbi12b2xhdGlsZSBTdG9yYWdlIikgPT0gMCkKPiA+ID4gZGlmZiAtLWdpdCBh
+L2tleGVjL2tleGVjLmggYi9rZXhlYy9rZXhlYy5oCj4gPiA+IGluZGV4IDMxYzMyM2Y2NzQuLmRi
+YjI3YTc2MDcgMTAwNjQ0Cj4gPiA+IC0tLSBhL2tleGVjL2tleGVjLmgKPiA+ID4gKysrIGIva2V4
+ZWMva2V4ZWMuaAo+ID4gPiBAQCAtMTM5LDYgKzEzOSw3IEBAIHN0cnVjdCBtZW1vcnlfcmFuZ2Ug
+ewo+ID4gPiAgI2RlZmluZSBSQU5HRV9VTkNBQ0hFRCAgICAgICA0Cj4gPiA+ICAjZGVmaW5lIFJB
+TkdFX1BNRU0gICAgICAgICAgIDYKPiA+ID4gICNkZWZpbmUgUkFOR0VfUFJBTSAgICAgICAgICAg
+MTEKPiA+ID4gKyNkZWZpbmUgUkFOR0VfU09GVF9SRVNFUlZFRCAweGVmZmZmZmZmCj4gPiA+ICB9
+Owo+ID4gPgo+ID4gPiAgc3RydWN0IG1lbW9yeV9yYW5nZXMgewo+ID4gPiAtLQo+ID4gPiAyLjE3
+LjAKPiA+ID4KPiA+ID4KPiA+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KPiA+ID4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4gPiA+IGtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKPiA+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo+ID4gPgo+ID4KPiAKPiAKPiAtLSAKPiBKYWNlayBUb21ha2EKPiBQcmluY2lw
+YWwgU29mdHdhcmUgRW5naW5lZXIKPiAKPiA3NiBLaW5ncyBQYXJrIFJvYWQKPiBXZXN0IFBlcnRo
+IDYwMDUgV0EsIEF1c3RyYWxpYQo+IHRlbCArNjEgOCA5Mjg3IDQxNDMKPiBqYWNla3RAZHVnLmNv
+bQo+IHd3dy5kdWcuY29tCj4gd3d3LmR1Zy5jb213d3cuZHVnLmNvbQo+IAoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
