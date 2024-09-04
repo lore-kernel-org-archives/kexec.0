@@ -4,78 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2D39CD4847
-	for <kexec@archiver.kernel.org>; Wed,  4 Sep 2024 10:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5E2BCA0ED3
+	for <kexec@archiver.kernel.org>; Wed,  4 Sep 2024 10:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=R9rdeOG+n/dVOIN85hnBfU00Q4n3sXUvpEXGxAZsdO0=; b=OhOLXWWi4Wrr2a
-	Nk4C8v/erKdkkIH1aoaSPb20WXUWzHHYODazgTJG98xS9yYMX/mklKRg3hVLrkfNow9OechhGAhIV
-	BEeFbdifXbuupXoHUXVbhXsfqdfD7+artcGV0nh+pGFjik7ZST/vvJ5hEz/KdwppQnUPRKnYzEk6z
-	321Jwkan3jqx0Lz5WHTiLeays9ieXQjYxxuhsa7hhxs+P+EIewv+VG33mTU0MY7UJ1rtHEER/HMfL
-	6grwKI03INP8GKbTL8123dgk0pwiAYnyGPHtkkRiXlaCN6gEk0aGILdESBJG4Wq55Kb/EvrWp3HPf
-	clHLOOIPFa1d80eCa+FA==;
+	List-Owner; bh=YTmB+1+Jy9oFTo6/GBMPLZ3Qt7/5iA3NM/cW12HTdXA=; b=R6EH6SRdT6sP8V
+	J5Zrj3q7o/FBDiZzBusdcG3GZf8IeBnhkFLzEv/wN+H84tYxolZe6sNV0L8+M8yb0zUHCiE36Th7t
+	sovd0nOZMupBf5iKTjTJgcjtYDTjQDNwxy/pSXBj6aMPTnW3ol1YTpVbk4aN8g5roqFLknKWGfFet
+	9NTT5X4MQuHYiCZQLkbOjYlKbgeNo08ttyqgezxBLEXoc4GpfT25/rnpzbyH2wyF6d+eByWWE60+p
+	rYaZNJ5ox/7aJt84XNkUPrUg0eYimDjn3/1bxj0kqE2+F12cwf9WEdNKQozR4BIjBZj99ezb6O1I4
+	6MxcX6xvdKD37465ncNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1slmyl-00000003qhL-1Lai;
-	Wed, 04 Sep 2024 10:11:11 +0000
-Received: from mgamail.intel.com ([192.198.163.14])
+	id 1slnUH-00000003yJi-1hp1;
+	Wed, 04 Sep 2024 10:43:45 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1slmRt-00000003iKW-3ZdJ
+	id 1slnGw-00000003via-1F5z
 	for kexec@lists.infradead.org;
-	Wed, 04 Sep 2024 09:37:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725442634; x=1756978634;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MRI42CKgJTs+ilD0WptG4fiGcysSWtMrf69iJuwhEW8=;
-  b=GmEMeaVA7qB90ScuXmaxRkiuZAC431r14Q2cWRG9YRiAV2uSDi5HeNYd
-   jaqxCnVy4ldnfUNM9Kprr3wiLOEVFF7EpKEsU56eSx7DE5JLM1PK3y+ak
-   QgP9ZNLJSnKG2oTcvaA0WUnwwPaLqj2aetZcu/iJNEWPOfv+O/kFmZGir
-   6gZayZ2X4FajATFVtkpYcFYkxRToCAeDQUmtWLFEq3T4YFG6sMmgBfwI6
-   pyZIU/zQw0RpzKQD7wDYRN88Ol/7mSLoIal0isX2rTFjjHN5vQnxuIs1e
-   bKpc5oS81fA/e+sW7jDQjgbNQD2DjAuxSejFF0de8AHE8EEQsEg8vVd3U
-   g==;
-X-CSE-ConnectionGUID: brvRnIxjTPKVm69X5+PODA==
-X-CSE-MsgGUID: z8RmiHHRR1K4rEdWA4PQPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="24282247"
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="24282247"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 02:37:10 -0700
-X-CSE-ConnectionGUID: d0r+BYN8SpGJOZjq18N87w==
-X-CSE-MsgGUID: vdCyl8MJT2OrIqkJ7EljEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="70076393"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 04 Sep 2024 02:37:07 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1slmRk-0007oi-1D;
-	Wed, 04 Sep 2024 09:37:04 +0000
-Date: Wed, 4 Sep 2024 17:36:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
-	pbonzini@redhat.com, dave.hansen@linux.intel.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, hpa@zytor.com,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	thomas.lendacky@amd.com, michael.roth@amd.com,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev
-Subject: Re: [PATCH v2] x86/sev: Fix host kdump support for SNP
-Message-ID: <202409041737.FSl6a7vH-lkp@intel.com>
-References: <20240903191033.28365-1-Ashish.Kalra@amd.com>
+	Wed, 04 Sep 2024 10:30:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725445796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GjvrxlJE8EJ7TRDwR1pXnt1cZcb/OYfz99rwQ0Yh7zs=;
+	b=S38fUNnlaJ1mk2ofsB66yFuffHB7tyERArbN5GfQ2dB06AFN5JZFcIdZ2mhUpsNYfrwHP9
+	l9OKn6W1Dbk7UQeyJA6WuYGqcqURiAY6sA1Y+wYgNbPNeWL4uzkLNoVd9hsecuegSD5JuH
+	saouQSAihf+4cQ9bI0Fer+PJjMpGuMg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-KjNqAiOFNe-LS3FPurhPAQ-1; Wed, 04 Sep 2024 06:29:55 -0400
+X-MC-Unique: KjNqAiOFNe-LS3FPurhPAQ-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a16fae2ba7so420646a12.1
+        for <kexec@lists.infradead.org>; Wed, 04 Sep 2024 03:29:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725445794; x=1726050594;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GjvrxlJE8EJ7TRDwR1pXnt1cZcb/OYfz99rwQ0Yh7zs=;
+        b=BZvQ6o53nPqmNYuNnVPDnz/BjMrGIUjDJJKGeDTNHYaBcRRWwahWFa7IGZ6EtmivL4
+         Lty0Kx9cL+MxcVSfoUxl+mMwPyfZTqTaJfuJLjUhrCyNFe52nfKKeY33d6+bcivZUaFw
+         Rd8zcYta+oKg0ULAlhdyePZG+2bQIZnbIfnvFn61DcVjRws4hY1mnC6Rrs4SQrOKgRs9
+         dPQP102aaPVmrcOs8f3Y8QOJhP+7KgwMpXAIrEo42vjkemFmSDK1W4uVDkxg6LZ8UMbG
+         /mQy1Vztm4QkUEXAvZhgw5tRO0LIE5o3giTJIIU1RB2t9GFC41YMbhZdo+0cIsln1ODL
+         S+Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWXSMrjcQqra5cEK5eKn5M8PaMppIaOgTpQDHns0hCRf6VJk1QWIP2qyWf191+wJ/lA8GxZfw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzK2iLZ83pQjV+Oc9LR4+cC/CZ0jkPzFjH8moRHgnoBMemqswoo
+	GLM86CuVx+35TddjJfXBsmUCEWq1PNlKyEL+zugzK9zZRLTZE6pc1t+UwMIDteVHdN5lg6KpyJh
+	8hzAZ/Qjz3Y28DtEkBJRbOjLPLjRROkGP5qfFQ17JsVj6hKWH/jayi5rytA==
+X-Received: by 2002:a05:6402:1ec5:b0:5a1:24fc:9a47 with SMTP id 4fb4d7f45d1cf-5c2caf22be6mr1560653a12.27.1725445793836;
+        Wed, 04 Sep 2024 03:29:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlfGqHgiFwjp/Ap4TY3x8/1uxKWyFR9NEI0cj9enurEW6F7gDBRXOrJY/rHX0K4XiDL+Ug+g==
+X-Received: by 2002:a05:6402:1ec5:b0:5a1:24fc:9a47 with SMTP id 4fb4d7f45d1cf-5c2caf22be6mr1560599a12.27.1725445792849;
+        Wed, 04 Sep 2024 03:29:52 -0700 (PDT)
+Received: from [192.168.10.3] ([151.95.101.29])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5c250edd2e3sm4341769a12.27.2024.09.04.03.29.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Sep 2024 03:29:51 -0700 (PDT)
+Message-ID: <25ca73c9-e4ba-4a95-82c8-0d6cf8d0ff78@redhat.com>
+Date: Wed, 4 Sep 2024 12:29:47 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240903191033.28365-1-Ashish.Kalra@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/sev: Fix host kdump support for SNP
+To: "Kalra, Ashish" <ashish.kalra@amd.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: dave.hansen@linux.intel.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, thomas.lendacky@amd.com,
+ michael.roth@amd.com, kexec@lists.infradead.org, linux-coco@lists.linux.dev
+References: <20240903191033.28365-1-Ashish.Kalra@amd.com>
+ <ZtdpDwT8S_llR9Zn@google.com> <fbde9567-d235-459b-a80b-b2dbaf9d1acb@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <fbde9567-d235-459b-a80b-b2dbaf9d1acb@amd.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240904_023713_937843_E294219C 
-X-CRM114-Status: GOOD (  12.26  )
+X-CRM114-CacheID: sfid-20240904_032958_457911_2B529B04 
+X-CRM114-Status: GOOD (  18.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,72 +137,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ashish,
+On 9/4/24 00:58, Kalra, Ashish wrote:
+> The issue here is that panic path will ensure that all (other) CPUs
+> have been shutdown via NMI by checking that they have executed the
+> NMI shutdown callback.
+> 
+> But the above synchronization is specifically required for SNP case,
+> as we don't want to execute the SNP_DECOMMISSION command (to destroy
+> SNP guest context) while one or more CPUs are still in the NMI VMEXIT
+> path and still in the process of saving the vCPU state (and still
+> modifying SNP guest context?) during this VMEXIT path. Therefore, we
+> ensure that all the CPUs have saved the vCPU state and entered NMI
+> context before issuing SNP_DECOMMISSION. The point is that this is a
+> specific SNP requirement (and that's why this specific handling in
+> sev_emergency_disable()) and i don't know how we will be able to
+> enforce it in the generic panic path ?
 
-kernel test robot noticed the following build warnings:
+I think a simple way to do this is to _first_ kick out other
+CPUs through NMI, and then the one that is executing
+emergency_reboot_disable_virtualization().  This also makes
+emergency_reboot_disable_virtualization() and
+native_machine_crash_shutdown() more similar, in that
+the latter already stops other CPUs before disabling
+virtualization on the one that orchestrates the shutdown.
 
-[auto build test WARNING on kvm/queue]
-[also build test WARNING on linus/master v6.11-rc6 next-20240904]
-[cannot apply to kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Something like (incomplete, it has to also add the bool argument
+to cpu_emergency_virt_callback and the actual callbacks):
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ashish-Kalra/x86-sev-Fix-host-kdump-support-for-SNP/20240904-031215
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
-patch link:    https://lore.kernel.org/r/20240903191033.28365-1-Ashish.Kalra%40amd.com
-patch subject: [PATCH v2] x86/sev: Fix host kdump support for SNP
-config: x86_64-randconfig-r073-20240904 (https://download.01.org/0day-ci/archive/20240904/202409041737.FSl6a7vH-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240904/202409041737.FSl6a7vH-lkp@intel.com/reproduce)
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 340af8155658..3df25fbe969d 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -111,7 +111,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+  
+  	crash_smp_send_stop();
+  
+-	cpu_emergency_disable_virtualization();
++	cpu_emergency_disable_virtualization(true);
+  
+  	/*
+  	 * Disable Intel PT to stop its logging
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 0e0a4cf6b5eb..7a86ec786987 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(cpu_emergency_unregister_virt_callback);
+   * reboot.  VMX blocks INIT if the CPU is post-VMXON, and SVM blocks INIT if
+   * GIF=0, i.e. if the crash occurred between CLGI and STGI.
+   */
+-void cpu_emergency_disable_virtualization(void)
++void cpu_emergency_disable_virtualization(bool last)
+  {
+  	cpu_emergency_virt_cb *callback;
+  
+@@ -572,7 +572,7 @@ void cpu_emergency_disable_virtualization(void)
+  	rcu_read_lock();
+  	callback = rcu_dereference(cpu_emergency_virt_callback);
+  	if (callback)
+-		callback();
++		callback(last);
+  	rcu_read_unlock();
+  }
+  
+@@ -591,11 +591,11 @@ static void emergency_reboot_disable_virtualization(void)
+  	 * other CPUs may have virtualization enabled.
+  	 */
+  	if (rcu_access_pointer(cpu_emergency_virt_callback)) {
+-		/* Safely force _this_ CPU out of VMX/SVM operation. */
+-		cpu_emergency_disable_virtualization();
+-
+  		/* Disable VMX/SVM and halt on other CPUs. */
+  		nmi_shootdown_cpus_on_restart();
++
++		/* Safely force _this_ CPU out of VMX/SVM operation. */
++		cpu_emergency_disable_virtualization(true);
+  	}
+  }
+  #else
+@@ -877,7 +877,7 @@ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+  	 * Prepare the CPU for reboot _after_ invoking the callback so that the
+  	 * callback can safely use virtualization instructions, e.g. VMCLEAR.
+  	 */
+-	cpu_emergency_disable_virtualization();
++	cpu_emergency_disable_virtualization(false);
+  
+  	atomic_dec(&waiting_for_crash_ipi);
+  
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 18266cc3d98c..9a863348d1a7 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -124,7 +124,7 @@ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
+  	if (raw_smp_processor_id() == atomic_read(&stopping_cpu))
+  		return NMI_HANDLED;
+  
+-	cpu_emergency_disable_virtualization();
++	cpu_emergency_disable_virtualization(false);
+  	stop_this_cpu(NULL);
+  
+  	return NMI_HANDLED;
+@@ -136,7 +136,7 @@ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
+  DEFINE_IDTENTRY_SYSVEC(sysvec_reboot)
+  {
+  	apic_eoi();
+-	cpu_emergency_disable_virtualization();
++	cpu_emergency_disable_virtualization(false);
+  	stop_this_cpu(NULL);
+  }
+  
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409041737.FSl6a7vH-lkp@intel.com/
+And then a second patch adds sev_emergency_disable() and only
+executes it if last == true.
 
-All warnings (new ones prefixed by >>):
+Paolo
 
-   In file included from arch/x86/kvm/kvm-asm-offsets.c:11:
->> arch/x86/kvm/svm/svm.h:783:13: warning: 'sev_emergency_disable' defined but not used [-Wunused-function]
-     783 | static void sev_emergency_disable(void) {}
-         |             ^~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/sev_emergency_disable +783 arch/x86/kvm/svm/svm.h
-
-   763	
-   764	static inline void sev_free_vcpu(struct kvm_vcpu *vcpu) {}
-   765	static inline void sev_vm_destroy(struct kvm *kvm) {}
-   766	static inline void __init sev_set_cpu_caps(void) {}
-   767	static inline void __init sev_hardware_setup(void) {}
-   768	static inline void sev_hardware_unsetup(void) {}
-   769	static inline int sev_cpu_init(struct svm_cpu_data *sd) { return 0; }
-   770	static inline int sev_dev_get_attr(u32 group, u64 attr, u64 *val) { return -ENXIO; }
-   771	#define max_sev_asid 0
-   772	static inline void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code) {}
-   773	static inline void sev_snp_init_protected_guest_state(struct kvm_vcpu *vcpu) {}
-   774	static inline int sev_gmem_prepare(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order)
-   775	{
-   776		return 0;
-   777	}
-   778	static inline void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end) {}
-   779	static inline int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn)
-   780	{
-   781		return 0;
-   782	}
- > 783	static void sev_emergency_disable(void) {}
-   784	#endif
-   785	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
