@@ -4,71 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FAEEEB64DE
-	for <kexec@archiver.kernel.org>; Sun,  8 Sep 2024 19:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4955EEB64DE
+	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 02:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yym1dr/VmcHr0pbPN+YTJ26uMMCl/1iOzAK0rNlsRnc=; b=VUttByB87HAGuq
-	kfa1SnzIJ+ZV5pgS1oDYJv+gur6TRoZVr5yKFAX/pGWQh3dHdx0iJt5FR+T7Ni17YVRpwTnRozbVB
-	Ei4wQB5Lvp05YIgqQrNQYMhVT+uzXk4V6jdJzK7AF6ZaLZ24C2GMO0WLwyqDWKlGWFWrHgsDSECzY
-	O3QTGzZeSg2JY/JV+WA7BiGKn6LP/2bWas3Dn0poNePw1FJVYnxo8jDpwHCwFQvTnYRYxXW77FNHQ
-	MmEcGwlq61tqq0kN8Ub4hZdMP+x+tt7nGwy+8u2vZmDHm6DU3WIuLwtSwffMmei11axR/LxLk2fV7
-	76YLfXzBtPWsvLZLj/Zw==;
+	List-Owner; bh=bprryOAZlW7mLKCESXW7NRXALvlTBtyFL1A+QeVHyPE=; b=rlRWmS3r4ZBqNC
+	lKWodllBdWrfrmiIqW2bmKjOeZj0Jm72CNyLjAFLfX0jBdbRU6eZ1/JbJ6adnsluYHjMyM4KnuEV0
+	z6tayV8wY8hmqMy5QFxklk9zLvwKMz1SppIAGNeuVslV9V9iXnLfeNiC+hL0kXpN0RMO+B5yIi5/t
+	7tXTWZ7pgA8Ug0QcmQQ2+Rr2lDrXyfazV+xSQdGLEVIB7FuBmXtn3P1C6GmwZqjHaTL/9Edq7Qomt
+	OA7nBo5Gi1MVDck8BHUuVQoaCiNTFFpKoEKdFAeK6uR7J5SVECcFhzAiSKc1Rae0CbQSadaRV2AXz
+	9Q7tVwRfIrhFjs6rR7+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snO2r-0000000HNEj-1qlY;
-	Sun, 08 Sep 2024 19:58:01 +0000
-Received: from mail-yb1-f182.google.com ([209.85.219.182])
+	id 1snUFl-00000000IDG-1pz9;
+	Mon, 09 Sep 2024 02:35:45 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snO2m-0000000HNEA-3xIw
+	id 1snUFi-00000000ICn-0tZC
 	for kexec@lists.infradead.org;
-	Sun, 08 Sep 2024 19:57:58 +0000
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e1a7d43a226so3975892276.3
-        for <kexec@lists.infradead.org>; Sun, 08 Sep 2024 12:57:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725825475; x=1726430275;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6iRQ4ycMPuueLuQbrmkO5BYrgQaV5z5SVussbCyOKoM=;
-        b=XDl2HH4UQ/bvZOnKgExn4NEH8o4qJiBIMqFBQPhyQSTUhRALUrXmyQi8ZJdNiFebAy
-         9LCTRNJhLFomsEC8TY5d9Yk33JseDUOa27pgywDfXegqymDfS+2dkE8XTaR9y8XdTA4/
-         jdkyDzf3+bR4Q7udFS/OHRzo72NohOPnyEoKdTYPLAOyX7aSL4R5ACnVNnOge+QAvqWh
-         xknxmCTIN6jtUWoTMst3+xiYpGod6g342zyrDioap/xo2B1n9aytdHMtqH+eo/smcRe5
-         Ol5qw/wBoafpjA6MYnVQ4yH5p3lGUgt1X8q2+1knzaiOsuQZ+OCWFCnIq+5op+s42hIf
-         906w==
-X-Forwarded-Encrypted: i=1; AJvYcCUIgARAREDZUWbpJqKUIYRvYcmlC1oYvBXfwDrQXujssNuiXeyF/I7arWgTIB9ChaUwX8fZ0Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxyMWpyhrCBg2wdyrkARlvYYlEBLz2sSbxVcq5KWVCIjLoV5lge
-	ViBs8NxaOxxFrbxiar8lf/+CkPrwxjb889RB/JJzptXEoC63bIEG
-X-Google-Smtp-Source: AGHT+IHbDiMdtH2pqnAbxLEMjAlHcuY4ygwDQW8Q8ews50/boV7RDQlibc4OTUwRVZ+TyW4cporrAg==
-X-Received: by 2002:a25:cece:0:b0:e1d:436c:3b4f with SMTP id 3f1490d57ef6-e1d436c3bd7mr5094797276.50.1725825474790;
-        Sun, 08 Sep 2024 12:57:54 -0700 (PDT)
-Received: from [192.168.2.254] ([70.24.204.168])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45822e7723asm14597531cf.22.2024.09.08.12.57.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Sep 2024 12:57:54 -0700 (PDT)
-Message-ID: <c04fe24a-26e6-44b5-a2dd-00eac589e36b@vasilevsky.ca>
-Date: Sun, 8 Sep 2024 15:57:42 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Mon, 09 Sep 2024 02:35:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725849341;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZjtEHt8bSvmRde39BXklX+Lti/JhyV/GdXZeYzGRgUo=;
+	b=JE3Xob7DSfq1jc7QanatXchA6OSj5jmja1XIJICXceB90/42vGdNk0FaYa1J8gQy4QijNI
+	j+uFUHYh7suhARVni34YLqpFsQaYoo9yJYTi4ao0cbted5MMHbFMqRneKP7vm7ol+B2vL7
+	nhBLEGt+w8Q+DQTY/C+ETCaFmXkhqKc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-stwFWWh1NuS5XhhFDaflqA-1; Sun,
+ 08 Sep 2024 22:35:37 -0400
+X-MC-Unique: stwFWWh1NuS5XhhFDaflqA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24C7119560A5;
+	Mon,  9 Sep 2024 02:35:35 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.58])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DB3C1956086;
+	Mon,  9 Sep 2024 02:35:32 +0000 (UTC)
+Date: Mon, 9 Sep 2024 10:35:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Dave Vasilevsky <dave@vasilevsky.ca>
+Cc: glaubitz@physik.fu-berlin.de, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, mpe@ellerman.id.au,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Reimar =?iso-8859-1?Q?D=F6ffinger?= <Reimar.Doeffinger@gmx.de>
 Subject: Re: [PATCH] crash: Default to CRASH_DUMP=n when support for it is
  unlikely
-To: glaubitz@physik.fu-berlin.de, bhe@redhat.com,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, mpe@ellerman.id.au,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Reimar_D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
+Message-ID: <Zt5e72DEl0K8cQe9@MiWiFi-R3L-srv>
 References: <20240823125156.104775-1-dave@vasilevsky.ca>
-Content-Language: en-US
-From: Dave Vasilevsky <dave@vasilevsky.ca>
-In-Reply-To: <20240823125156.104775-1-dave@vasilevsky.ca>
+ <c04fe24a-26e6-44b5-a2dd-00eac589e36b@vasilevsky.ca>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <c04fe24a-26e6-44b5-a2dd-00eac589e36b@vasilevsky.ca>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240908_125757_014223_BE66B333 
-X-CRM114-Status: UNSURE (   6.36  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240908_193542_342447_5D2BB63A 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,15 +86,14 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I received a notification from Patchwork that my patch is now in the state "Handled Elsewhere".[0] Does that mean someone merged it somewhere? Or that I should be using a different mailing list? Or something else?
+On 09/08/24 at 03:57pm, Dave Vasilevsky wrote:
+> I received a notification from Patchwork that my patch is now in the state "Handled Elsewhere".[0] Does that mean someone merged it somewhere? Or that I should be using a different mailing list? Or something else?
 
-I'd appreciate some guidance.
+I guess it's powerpc dev's patchwork which automatically grabs this
+patch to do some testing? Becuase ppc list is added in the CC. I don't
+think this patch has been picked by people because this is an old v1 and
+there's concern about it.
 
-Thanks,
-Dave
-
-
-[0] http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240823125156.104775-1-dave@vasilevsky.ca/
 
 _______________________________________________
 kexec mailing list
