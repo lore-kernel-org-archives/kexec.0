@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0DD0ECE57A
-	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 14:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE31DECE57A
+	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 14:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,153 +13,153 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=LfhoTGH8DZw8FGpeTpvQ00l5GJQQHaxKt3ihXyYtVqg=; b=LglYQuHKKeLGNGZ+jZVNtFR1WO
-	2uJ07MM3mMH+mDde9Vk25z0Qhh5xW1K4N3oVpPiz1OgpKj50yrOs4qNAyTqEP5QGNeOLg1SOK/8hH
-	NQb3BRQZIp2np3QMyDxm6eXRA1Q6LO1hU8+dh1S4cHyFJR+P3J0Y+NQ/X29rpLi+1Gd8XprCmdMMb
-	AHMFHhxJJqWVD2NO7b81wzSnUEE3yueV2A3ux83+2whwYnj9NycnHVetC51K+EBi1K3zi4cs5Ex/F
-	DI/Vlk3wOYuP86SbWIKHpXYvdy6eJsyAzv+oQv+3LHRzDKObqah6iEYi6rz0yZHX4JegpzthmZ5pe
-	wPsMsXIQ==;
+	bh=yoIJXTXUJbe9+4dNnAK/F2USrwjliZV1fMbD0zxLpW8=; b=IvVQTbjNZ0nM6G72glgNfaLrzn
+	fo8JM7EXGDZu7GC1fwCCiGykbt7Ri3pKGXfStoYIPeZdxwHsthF3L69gIKadQO+Bz30wi/kvd1wzB
+	CKJU6cPiVe3V/zo0eO3ml1FQZoTuhkvz9mZOZLBjFdOygPE0x6Lezle9Upmekr4bKH0qEH2X7t+PV
+	BNd1vBgdMb0dJ2idDg0Z11x9UUH4+vREZTNDpPf1GSYCzZpUeT8/D4vL8WxVo/B1Azo6eMhbv6m74
+	0vkIn3P2Lw43D+Wqp8Na/nUW6Uh06c0FV8YMYcWyz9X05ZaURk929nYNW5Ia5ui+3rVsa/K0FfGUh
+	T/rQ7Xbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snfcK-00000002Kux-0W6u;
-	Mon, 09 Sep 2024 14:43:48 +0000
-Received: from mail-dm6nam11on2061d.outbound.protection.outlook.com ([2a01:111:f403:2415::61d] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
+	id 1snfmC-00000002Mg8-1wTG;
+	Mon, 09 Sep 2024 14:54:00 +0000
+Received: from mail-mw2nam12on2062c.outbound.protection.outlook.com ([2a01:111:f403:200a::62c] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snfcG-00000002Ku7-3oF8
+	id 1snfmA-00000002MfX-0vsB
 	for kexec@lists.infradead.org;
-	Mon, 09 Sep 2024 14:43:46 +0000
+	Mon, 09 Sep 2024 14:53:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Da03KKXZsRmjnc6+19MqpbfzQ7MQWTL/HPJWMkzDbjI2G871aKyMRmYB+4ytgb0EvWIrz1Leuqb69T/ufgYDJyu8F5YqAUkho1u4hgMKubNKUaFvEkCw1PebzHGrqAQ5c7zKnsgA2LsnbmvQOSZ+lzSl2Lvj7b5sjuebdePFOunnOgZtPqekzYA/GFoMx3pmFJJhU828bQPsNqCtk+0CzrjkXvU4YQBJ30UlYm47VcXrmhhBHpcZLDTkXC8I9tLtsJPhBKcTO1/4asxlHbs4AFFHgycBLDd35IjOf4JytP913bZJnYAYv5ilhPCbxIPvtAu1QFrJ3LQX5keeLSarnA==
+ b=KxylXcUMyS0bPYIVZS1TXFhMk3KLiNjV8oOriuZoXOFkvg/gE2jaOcG+gvGRMu1s3QEeIciInZ3u17iAkFZAbDfDKgFg4Etp2k/r6hOzqk+gz2sHu3l2jgHuTxfMFXqKNvaVuMJY0KyHR1t58L7QsPeTQd2slCEBOfTCkc4FJ78Fk+MWTrc/LAET27jZAInVdPxnvMYfG+yW86P+m5Wsh2I6aPLSb2SdiCb7jDAFbiyGowKOrj2x5AYAG1h2KZtaUya/twj3cznL2cyh94Ey78jVqQqCk7RudRaxJTPJxijD8wfUqVuYn+jf15lWOl0dQ+mYNyqHpwJVc5UfZ0xWhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vH4h7QZwuJG3UUcMB1ubgI7V5x+arTZjHBkKISVpIek=;
- b=M4tf0Lv3OQTxL/PmY54pJ80ep1Wyth9A7dWwsCjUqoNZo1ItRRLi+VvN0PObxv0StlN2ue5OfE9GS78l/YqXtq8ke5CKs96FMkgZnAHuTcWxrfxUKcxZCOdp/eGXr3FiOX6Dg2xA4okcV1V35/ehX8p1hJI5XohNr07PCcns/JvxE+AX9biU9lMYJ0uyAVfwBEIMidp0WV6BMElcMqqfzc95vDvILlSWxF07f0PZ8JCiU8SDU8ZOgjEbTIKL1Ql+f36lgbtmVdsxQYlmW0NCWl8ScFduGVI49qgbHnotDqqLcsVuF0QbUalY/R+fWNa2EYTEsq9S8FFcu4QvgCxNqQ==
+ bh=dGlKvwXe+pTpGiIy1pPj7CjKoPxmpZplosZf+C3tZGU=;
+ b=mrHP1qqK2Qq8zUNA/ArTgyEm4BncJZ4/nU+1EHGNsws8MhGey2XAzT4npnka4F0CO9yhGK9BTrXSZRHrsPzZqD7rre06Lxvu5kDeyUYmAbgnojIGW8TLUKC3g0a8fBpsbVGSYndRadfBmr8oY07VStncUjkM5OTw3BW6xX0WBhPbpQZBzpGf+9nGB1Axso2Hih4iBqyKhB+CeGph9zxVvJEHSsFnlXl47wxvf+x72NLYYzpSk39N4FKxmeXkaOui58/pUXYA2m3tcxBVWGN41pWxYST7bjKw7qKQ28J027w0N3S33MWlu4SB+nXAlzvwH+2emNjlvfG4A9rcQk/H/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vH4h7QZwuJG3UUcMB1ubgI7V5x+arTZjHBkKISVpIek=;
- b=C220X7JOou8GN641VPwpjT+dHPgaamyY22wlARWPgbgd4RKIqNAd3upkWhsI2vjrang2/L0NHGfjCagK04w7nNNiAdf7MZEAk9wd3OHMaBvSNMGkcyQAm7fnJTTfgAIie8AYV2KWgk9ZtCs42V1kp+j/lYtX6SfGIJhSNUYjvQY=
+ bh=dGlKvwXe+pTpGiIy1pPj7CjKoPxmpZplosZf+C3tZGU=;
+ b=uqLVEem6F6Ca8vACyi5yJrtPDk2VFMYXVRyjtiUoG0TvOX/wAeRaUqXdoiUIAk4d2MIsAS52P+rgzmB4KWTlFcFz0HHpe3Me2QUdJeC4oKKPOETH0cN+mFILARdcbVfg1xFEl4q4O1VWM08c4e8+cBoZju2aDSefp3+YmhiYgBc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by CH2PR12MB4264.namprd12.prod.outlook.com (2603:10b6:610:a4::15) with
+ by SJ2PR12MB7824.namprd12.prod.outlook.com (2603:10b6:a03:4c4::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Mon, 9 Sep
- 2024 14:43:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.20; Mon, 9 Sep
+ 2024 14:53:50 +0000
 Received: from DM4PR12MB5070.namprd12.prod.outlook.com
  ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
  ([fe80::20a9:919e:fd6b:5a6e%4]) with mapi id 15.20.7939.017; Mon, 9 Sep 2024
- 14:43:34 +0000
-Message-ID: <3abbad0d-2c01-bb57-bffe-ae75e1138a03@amd.com>
-Date: Mon, 9 Sep 2024 09:43:37 -0500
+ 14:53:50 +0000
+Message-ID: <43291018-098f-291a-629b-6e02ef00f8e5@amd.com>
+Date: Mon, 9 Sep 2024 09:53:53 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v2 1/2] x86/mm: rename the confusing local variable in
- early_memremap_is_setup_data()
+Subject: Re: [PATCH v2 2/2] x86/mm/sme: fix the kdump kernel breakage on SME
+ system when CONFIG_IMA_KEXEC=y
+Content-Language: en-US
 To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
 Cc: dyoung@redhat.com, daniel.kiper@oracle.com, noodles@fb.com,
  lijiang@redhat.com, kexec@lists.infradead.org
 References: <20240829104016.84139-1-bhe@redhat.com>
- <20240829104016.84139-2-bhe@redhat.com>
-Content-Language: en-US
+ <20240829104016.84139-3-bhe@redhat.com>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20240829104016.84139-2-bhe@redhat.com>
-X-ClientProxiedBy: SA0PR11CA0035.namprd11.prod.outlook.com
- (2603:10b6:806:d0::10) To DM4PR12MB5070.namprd12.prod.outlook.com
+In-Reply-To: <20240829104016.84139-3-bhe@redhat.com>
+X-ClientProxiedBy: SN7PR18CA0029.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::28) To DM4PR12MB5070.namprd12.prod.outlook.com
  (2603:10b6:5:389::22)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CH2PR12MB4264:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b4a720e-a0c5-44a4-0c99-08dcd0ddc7f4
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|SJ2PR12MB7824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b22abd0-0efd-4ea2-1c8b-08dcd0df370f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Q3FCejJkaDRFdXRrZ0c2OEVVeVBKamJhditsc3FNRWRITFgxbUlZOGFIRWll?=
- =?utf-8?B?ZUJmNGg5bjVNc0kzTUhPcUozL3pudzV2c0g1UEROVTJjSWtmT3Y0QmZkbUh3?=
- =?utf-8?B?YWtQUVY3eFAzQnk3dEtKMUNGN0xmOTJ3TFAzTmtuRDZYUHBoNFNrRzd6UE9F?=
- =?utf-8?B?bUdSOTdqYWlEMG1vdFM3cmx0U2VWallLcmRQSklJeUhVd1dXUWtpUDgwb0Y0?=
- =?utf-8?B?VlBJNWxKTVZrWFlFbWRaUjRXelhtRjBkWG9yMHN4SHhsYU54N3ZGZGdGZi9B?=
- =?utf-8?B?SnBBcVpmTUJNMDRnaFJKa01CamRJN1ZXOGszaEZhSG11TFBWeDlFRXJrV2ps?=
- =?utf-8?B?SmJyL21QL2FBYUJWMHFUR2VScy9KSzFpNkRUK3VBZVF6WGlvQnVlQitpQ0hv?=
- =?utf-8?B?c0lUV1JzdklmbDFOcFk5YjZJbDQ0Nm5lTzBlV2hhalFIRHZXbnZ0ZDRUWjlp?=
- =?utf-8?B?NWFRYmM1SzMwcVU2b3U3UXpuTDJCSjI5YlZTamYzWGh6NVlGd0NOZkI0OUR6?=
- =?utf-8?B?bE92Ry9haE9tVXBUa2ExNGxMRXNieHNuU0h6eUdnS0RDbnBPZWJETjJ4ZGJZ?=
- =?utf-8?B?bVE4bTF0MEpkUEhZTkgraUNOenJ2WW9XZnhPYkRtWDI1aCsrejJwN2pnbUhp?=
- =?utf-8?B?T3RJSC9xb1p3elh5YU5VZHZreDRQQk1UQnB2UUdYSTllS091aTFSelovd1dk?=
- =?utf-8?B?UXllYW43a0ZTWFpOM1BSVGNvRTFheFNpM2M2Y21ZUUZqTFlEVzZYNkJrcVJ4?=
- =?utf-8?B?YnVRR2orMTVpR0NaYWlmSENUSnYrQW1BcXpqWE5iSG9mWEwrdmhBZXdiMS9N?=
- =?utf-8?B?bHFqQ3lBdUxPYTE0dWFkMnloUFBzWnI4SWppUFVIeGpVd2FUMFZ4WFY2QXI3?=
- =?utf-8?B?bjUxcnZ6VEp2OWNSZTdMUGNuV0w3Q3BjdlQyaGxTSWNuaStjZDUyd3RFT1pD?=
- =?utf-8?B?U3Ria2NYcU1PWm1HVmlMNnYraTZjZ0djSkUzZmJzYVB3SjlaQXlVejBQOW55?=
- =?utf-8?B?T2MyRFRBc2s3UGNoYXRVVEpnRWJDMHlnQXRueTQwYks1M3hJbE9QeWVVbC9U?=
- =?utf-8?B?RTNZZ0FmNjB0VGVhbk5rdDAzZXNxcVRRbGJKd2ppN0g0STRVaVZKRE9UZSs1?=
- =?utf-8?B?bXpiU1VNZXhVMURXczRNcERqTE1ZUzFmMlVWeGhlbWR2dVc0ZFArd1M1Qk1m?=
- =?utf-8?B?dExnVWdRTnAva1dMMWZpYmw2Wkt2aWRwc3hTZ2xmWGxOK3VMbVpLTllFKzhH?=
- =?utf-8?B?OWxiY2IyYnFvU25pNHRsTVNkRVZMWFdPRlFJTGR0SzVoOUx2eE5Eb25iNisr?=
- =?utf-8?B?dHZjM3hTeUEvWXU5Q0ZUQi9rU0NWQzd5alRRSE9GeXFXbGdJbEVtakwzV3Nl?=
- =?utf-8?B?T2dRblcweDV5NStHNEhhYWRZRmkvMjRnV3RiNVVkN1hSbytJNlBvamJyUHRN?=
- =?utf-8?B?Q0VjZW5lSkREREF1RHRYeVV3VzZoZFVLaXFtWCtBRXF3VUdlNnpLZGNEUGtn?=
- =?utf-8?B?NlVMa3FZTWJRRlROVk1XbXhIYmt5ekdieUE1enExSkx0bUJncVowK2tlMENL?=
- =?utf-8?B?c09SQWdYRjFORm5XMTQveXJ1SHVpMGhlTGZKUjlCSXdNenhvclhJOTZNSWhp?=
- =?utf-8?B?QW45RzZabHdBR1VUQ3ZkWm0zNEIwUE45SitBQ2I4OW5ha2o1VkpUcUdjaHFt?=
- =?utf-8?B?cUhnNVZYVlM3cjM2Kys5dDRMQ1dGTjVZK25MeWhkbldTREl3RUQ2cHZ5QUJE?=
- =?utf-8?B?TVFVZ0NQc1BKSWZKSEV4YWpUWVVyZ3NXRHgxaTVRODljdnRGT0pXaG5ZU2cy?=
- =?utf-8?B?NFphZ3h2d1k3eTcrVWtGdz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MC9yckFjTjhQU0Q4eGZjMzVZN1hEek5XckI4dE5IclB3LzRwRE1rYnZtMXdh?=
+ =?utf-8?B?UXorVjc0VjFPMkJGRm5sOCtrbE1nLzBzSEt1T3RIMk5kbWgwQmVjbjM1cEkw?=
+ =?utf-8?B?NkQ5MVlXWmtSVjhnalA0a2MzM1poMHo3WmpkSm9ZT1d0UzkrTjk0Q2doOG5K?=
+ =?utf-8?B?ZkpKT0RKYjJ0V0l2NlZRUHJCb3ZvdmJzekhCRVd6OWQ0Z2Q2QzhWWjBueEY3?=
+ =?utf-8?B?bStPbXc0eDRkSXk3QW9hR1U1aXNZaUczQk04WEhha1Axb2hMOThCcUpDYWJp?=
+ =?utf-8?B?aWZqOVBZRkVGOTVHdGFEOXJGa3Bob3pEUGh6bzJFNlUvZStvaUNOQlhJSyty?=
+ =?utf-8?B?YllkY1ZvZGJSVG5jSmVPa3ljd1paeTRwNGQ5eGRCT2xlcjV0VjB1SGNIMmUy?=
+ =?utf-8?B?TW80Z3dMdElOVW5MZkJvL2x1QkdjZVlxWGRmS0x6SnNZS05HcVRqOExuTVhx?=
+ =?utf-8?B?azRQa3BPWXkwTlBVaURGTGdWRVY1ZC9jSlltRVNLMTM2eHhnNWNnRE13MkJn?=
+ =?utf-8?B?WmJPZllKMUIvQ2JmVmp3dloyWHk1VzZHbU8zT2dLV0xhbWJJcUpKTDN5T1RU?=
+ =?utf-8?B?SDk3T2diakFFV1dXSDkrL21ac0daWWdFZnpTQmZCNTdKUUpBS05FOXkrMnRZ?=
+ =?utf-8?B?SkdyYkJjZHBUYTdkRURUemF3cE1nU1NxcGpzN0tLQm1IZHorbkY1cCsxYi9O?=
+ =?utf-8?B?WWlSYUNhTEJSVnBadWVaT3cyRWx2c3Uvc0VTYXpKVVhreUJ4WUNFKzhPcHQ3?=
+ =?utf-8?B?UlZTSUc4VEJ5SXBERkl6RUJWU21BWFZENExIaTdhdGoxOGc4VkNHK29WMDFU?=
+ =?utf-8?B?aUZZWHNjVStDK2g5N20yYnBGZnY0eURpSDFQSzJzU0NBSFEvdTZQQ3UyUzBz?=
+ =?utf-8?B?Rk1lUGN1THdrdnNEeVNYOFJNZ1ZTeERyU1lMTXVuSEJ6YVRhY1lKYU5aZVVT?=
+ =?utf-8?B?TndZclNHWmZFRlA1bVlZbU95ZlZpL1RVWStnYllVekxObTVmSjFrVGdCKzBh?=
+ =?utf-8?B?OHNvb05aRzZacGpjelowb1VqTjZSRURIbE9uL3ZvckZDWUNyR3MvdS9rYVVv?=
+ =?utf-8?B?T2lFbFZURGhidC9YVlJFSmFxc3V6b3Jvdm1RemlGa1Fua0N1Tlhpemd6eHdB?=
+ =?utf-8?B?Qkd3R0ZHcTE0MXZJblJSRk9mdTBTaStwT3Q3RWNKMllma3ZLOGhISFo3YzZZ?=
+ =?utf-8?B?SkZhMDF2aVUrMDAxdTRERk12Wm9hM1RzSzFockt6c0VoUmM2MDloZU9CRkNX?=
+ =?utf-8?B?dkJDdUVnUlRSVEk2UzFJbHVoVGJXUkF5WVVBZWN5ZFdicUxTUHpvZ3BPdTVG?=
+ =?utf-8?B?NXRnczRLeFMxY2lVaDhNQnQ4VG84akMzTGJhOGFqUFRtQzFDVHVkdG03bjUz?=
+ =?utf-8?B?WEdUL2FNL200TUhzMWZNS2pHUkt5eXVFTkN5N2h3ZTBwaE4xZlNuUDU4N1d2?=
+ =?utf-8?B?VTBPY1BnZ1VLZlphekdoZWc4RGlsaktUSTJHNzg4akpkaHJwYXAwd25WUzQv?=
+ =?utf-8?B?S28wbEhpQStaejRWcjJZRTdvMy9TOEVOTEUyZWwxdUtlcVhCWVhmNVVNSW5m?=
+ =?utf-8?B?N2ZnSkQrMzEvN3RLRDNLS2FoMm1yUTFPZ2g4MmFDcU1PRkJyUEdjQkRlRE92?=
+ =?utf-8?B?bUdMNnhGMUV0dDZUTXBzRDFyMTBTSzEwTXIyaWpMUDZJeHdiOFN1QUhMc045?=
+ =?utf-8?B?WVlkb2t4SjlvekpGc3NpUmRwUjY1ZnlYUFFFYWU5QTFEa2lLbzJ1cWtCRlZX?=
+ =?utf-8?B?bEJxaDZLY2U3VHdES1pjWDQ5KytGRUZIeVlOUmJiR2dlUjEwY1V5dVEvSWlU?=
+ =?utf-8?B?NysrNWN3OUZTM3B0YUNNUT09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N3QwWTlSbDhDRitLc085T3RIdjFqdEZ3WENBV2xBT01KQ2VHQ1ZsVldPZmU1?=
- =?utf-8?B?cE03WStkTVNhNW9ZbTdJamRUVG1WU0VRcElDOVdhR0xEU2hXNzUrdW1sL2Jo?=
- =?utf-8?B?UnFXYWV6UStyY1diOVIyZ05BVnVwWFZhckJTaC96ZStlcXM2SU8xZDUyYjRy?=
- =?utf-8?B?VUJiaTliclZHbElrR3hpWGJWTmFGSE52eXZWVEg1RzJqaG5zYm5NTWtOVmdt?=
- =?utf-8?B?RnNCTm54MDFMVXRsdWhFUkZGdkFxK1FrN21vNHpHcnk1bm41VnFMRWRla09i?=
- =?utf-8?B?dUJ5dnltYUorSml1SUk1NHhBU3hleTZ0VkNkQnljSEZ5VWthd1dEYjh6eFZv?=
- =?utf-8?B?TndBbytWOEZ5dU9pazAxcTQ3TlFRNk9NQ1l0d05xVThBUy9hVWtONjQ5ZTBx?=
- =?utf-8?B?SEcvSDRURmRwbEpmQU02UG1QVkpabG5xR2QydldEdVlnUlZkV0hqL3NiNDl6?=
- =?utf-8?B?cHptNlVCVytuR1RyQjk4N1NkbTNJWHN6aVBBR3lOU25kQnl3bGJ1NGszbnZF?=
- =?utf-8?B?bDZGQk5iSUo0NGx6ZEtjdDlHRjF5Zk9GNlRjZ1F3NnRXQXEyajlUYUtTd1Ev?=
- =?utf-8?B?NWxMRy9hZm5pZ01lWUMxWWJ0TktLU2NLeTk0dHhqdHFjM1o0ZUs1UEZzMzdn?=
- =?utf-8?B?SFJNZTVkZllURTJJMUk5YU1tTG1Na3ozZnM1eHlhRWU3NnAzTW9CZXErQkJh?=
- =?utf-8?B?R2k4WWdZdlIwU0VMZUJTVUtSQVpPZTN6a3JMRUxianAvVG5rUUVrcjdPVDhJ?=
- =?utf-8?B?ejRVeXpHL1Avcmd3SUFzbHFOL3c1WjFreGtvZElOUE1QWG4yZHB3cklhN09O?=
- =?utf-8?B?MTAwRXBsS3lpUHhESTZiV3M5VWxuL2tWdjR2UW90SnhBR2JCZGUyR1g1SGdw?=
- =?utf-8?B?OFJMZlNnK2xrNGFsRVBTcitZQ3lXcitSelBEVnF4TUxhNXY2Snkvc0FjSWhy?=
- =?utf-8?B?Y0JQaXk4TmFhVzE5Q0dIQlVOTm9KYmpmdHZ1YzVGdGg1WVo3YWpqdEhRT1Nn?=
- =?utf-8?B?b3ViLzc3cVhYWkhWOS9zeE1UQmlLakhaRE1aNEpIcTlob2FySCt2Vlkzbk1T?=
- =?utf-8?B?Ky9MdWNzd0xqbGhGSEVZOW1VWmtOOGdBWFhvNzJ1a3l3SlNXVU1ZL3lOTlRn?=
- =?utf-8?B?eU15RWdyYUo0UitIVUwyNHNDTWJoQXRzVyt6aXBJMFVESHlvdnliMTBWN3BE?=
- =?utf-8?B?U21KL2FmZjhIY0c0UjExUiszV1JvVmRHMmF3TlJLRDNDUUl2dklhdFdsOTRr?=
- =?utf-8?B?R3RFWUExcDFkRUIwK3RtTXN1TzlaRVNwTGdPaTRJOXUwcFo5aEVtVWloTTFY?=
- =?utf-8?B?cEkxSy9wS05qdzVIVWNZTFI3NG9Hdkd0SUdXUlRwUURHMnNWYVVnR2RmT2FQ?=
- =?utf-8?B?V2cxempMVUgxRzd4UjI1NGpiK0tvTFdJZlpIQ01ic1ZYdlU4SVZTbGFWamtE?=
- =?utf-8?B?K1g0ZVp4Y0hiOUdtVVJNbzlCa3I5M3lzc2dJbkxYUEg5RlRKYVdjQkl4UjRC?=
- =?utf-8?B?UzhvTk80NW92M3FQMFVDQzNpTzlpODZVMkFyMm1aaWNWVnNwbmNTdFllWEpi?=
- =?utf-8?B?RWlDeDJnNVJscE50OVpEVWFieVBMek04YXZ5YWg3Q1czcFYyTE9VczZLZ3Ux?=
- =?utf-8?B?Y3ZtZFROSXo1aFYvZEpwcG5VTlRwOTJnRWsxeGV5N1hnRlpOaTF5TDcwamRN?=
- =?utf-8?B?bDk3YThQVDk5aHV2d09BR1c3cS93RTNlWkw0N0NvaDcyTDBuUHVKNkJoQi9T?=
- =?utf-8?B?YXlkRlY2c3ZXWXBTZnN6Qm5Lb2pReVRiVmtPL1dVZUFuTU9pUkNsWmFXbllX?=
- =?utf-8?B?Y3NiTlNDdlp4NlFhRnpJMzNpY1NSUkU4VnhKbGlIRFdFdHA5NVFRRnJjNWNh?=
- =?utf-8?B?Syt2QWdxRDFLYUQ1UktJTUdIZGFab05zZCtmNnlPeS9PZGNCanRCUXQ2c3BQ?=
- =?utf-8?B?OHJNMFdXZmVPVzF6ZDF0Q1R3MU5lQndYVEhqR2tGUjhpODI5SndnbjB6c3d5?=
- =?utf-8?B?MnpJb2dpSHo2ZnVIRHJ4Y05kTm9SU0NZTitBcWZRSjhUNXNYMjFOd2JqK2FZ?=
- =?utf-8?B?djRMR0E4Ukp3QnQyMUxsd0FaOW5XcFdJL0M2dFhMdGhSY1lTMk5kWFFDYkpH?=
- =?utf-8?Q?+OLl4df5jgj/cazbyb2J6uO0i?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aWJNZmtHZlFvZTRYb3hOdHpzOThKZ0JBUHJVeWJXbWxTVmliVkloVXpCbjhX?=
+ =?utf-8?B?eTdhMnZDWXdLbzdpVnI5Q1U4QTVYSEVXMTgvb2FIcGhsZUtoWEZvb3p3VUdl?=
+ =?utf-8?B?L0ZvbWsxR0svcTN6ZWdoTFV5VEtYaHIyVEorSENZYnhJUU11Y3B1R1VSUHNJ?=
+ =?utf-8?B?TG02aHJIYlUram8zQy9GME54bWdwL1g4K2lwL21xeUJKZGtrNmVhS0hJdXhj?=
+ =?utf-8?B?amdOT0xLbEpWN3FsNWg1NFAzTkZST2xRQmkvUkRzWDdvZ3V2U0YyNHdrbTFC?=
+ =?utf-8?B?cmU1dnNMamEwYVlyUDhLazFKNTUrSFI0YXlnUVhMWk0yQXRIaG1wNmFPRG9l?=
+ =?utf-8?B?alN6Y2pSeGFPN3lsV2ZKZVhTdDcvc04vMVhaT0xYRkMzbUhoYW5ESDdvNUlz?=
+ =?utf-8?B?eld6cWN4a0lSeWljeldSUkVGWTNNMElKM3BIQXdKTTRUMzk0SDlWNjlKMmdz?=
+ =?utf-8?B?YzZIZ0hBcjlwak1JVkVUTHZSeG9qeFVlYjMwUlZFV1htaHkzQnNxNVNHb1Mx?=
+ =?utf-8?B?d1RsZTJkM0EzbTQxZ2drODZrM04vRktXaml1VnBkQ1g3dEJTMWlaMFVBOURt?=
+ =?utf-8?B?Zms4ZU9xNVBWMmpiTDVTc21LWEhXMzNEZFhWcmljUTZrVzVYZ1ZrVUVEbita?=
+ =?utf-8?B?eWNxanBLalJoTVlFTHRidHRHdVZiNXNtYVVHTWJhUDZ6eWVLMS9jVnhoMG1N?=
+ =?utf-8?B?cHZueFk5eUMrbDNwTDJHbUdVSUtEOTRpdGl3VmJnY1pIZnROZy80WFNvamJM?=
+ =?utf-8?B?SmJVbEs1UTlXbUFUMEtLUUNzeEJiOWpzY2x2WThDZnVzLzFnSFRDcHdxaS9v?=
+ =?utf-8?B?dmFOZEJJOU92bmhtM1FLZUJrREU4SStkNjNWcGpjTzRsVGhaL1FFVWJhQUNr?=
+ =?utf-8?B?dllhRFkwOWhFbXRIR1VBZzQ3SDFkQW1uaWh5bHJSR1NETHN4djIyVCs1eFRN?=
+ =?utf-8?B?S3EzYU5Nd3hIdTA4bUFNYW50VDJ1aWJiLzBpNU51SW1PUkJhbzl3V1Zxa2NB?=
+ =?utf-8?B?U3dFOW5kekNaSjlESzZPTDJZNjdHdmNuV1FvTWk2WkkyMU5idGRIbDhsUjBP?=
+ =?utf-8?B?c21leWE1UUJ3Smx2VjlUL1o1MjRGR2JaWkFaVVhQVDZteTBiTUdoUmw1L1Js?=
+ =?utf-8?B?UzlrellvL1BzMzZtTFVDU2lINUozQlN5WkI2Y09JbGtoVVBJQ1ZLY0dJbzQ3?=
+ =?utf-8?B?VjlYTUtTQWozY2NLOTNWREk1ZWJWZktSQ3VGNFpLZUhNczl4dUY5eVJWeFZV?=
+ =?utf-8?B?amV6Z1h5dDlmS0ROV2JSdUdQckJHQnJQYlViV3FFRDhQYXVYd09RbHFBdE55?=
+ =?utf-8?B?SlRZUDFDSW5tY0crQkJiRSsxeFlYbFNJa0IySi8zTzY2T3E0dDROaUM5Mkla?=
+ =?utf-8?B?c0t2SVBoeUQrVXI4djg5bG15cndRdVNlTXZBbEdOZTJkSDZnOUZoQ3JpTU03?=
+ =?utf-8?B?SGdzTTMvUGwzdlFNYm5lWU4ycUpRcHZzZ3pCTForMGtwWEtWTGoxSXdwWnlI?=
+ =?utf-8?B?amZMV20zdUlvWk16U2UrWGhocDN1SFRDb3djMXZmSjQxNTRtcHFPbVJadjYr?=
+ =?utf-8?B?cGdGb0tRRjRiQkkxMVFBclpQZXBiTW1iME03aDJOOGVHQU1TQ0tGR2tLM3JJ?=
+ =?utf-8?B?YVNlM3Byc29ETURxMzBzSnVDNVZPQnduTW9NQVpXTHpjVmZxbjlGMUE3VjBZ?=
+ =?utf-8?B?NEVWd3BCRGVoYUd3SzY1aDN2SlIzVFVnN0ZxZm83S0drRm5MU3dBdHlqMDhF?=
+ =?utf-8?B?Y0FvNHZUVVdYWDhyL0tkRmVRZW50NDB4Q0dhSUpFT1Z4dUQyeTZPTkVpTE0v?=
+ =?utf-8?B?VTBrWFVnTEtrWjdWbCtHa0NXTkgwMWV0S3lXNHBqOEpoRklmY2JaaXhuUUs3?=
+ =?utf-8?B?bWxGNGVQc3BrTXU1V2dyWk8zMWRZNVJiTmVsRk9rVUlUVFZFZTZxYStPMDdU?=
+ =?utf-8?B?T3hxSnlQaXh4eU54eEt6QkwzdTBnNG44Vi94ZUhaNG9qdVF6ZzVnVFhuV05t?=
+ =?utf-8?B?NFJicEZ3QkRGbU1HdzJET2h2SlFYczdLY25GM0trcWZSOHR0d0x0Qjl6cDBD?=
+ =?utf-8?B?Vzg5M1NFZTRzMWd6SEFrOFNvSjg4L0FseVlUWDhVcTVnNTdGUFN1Y2U3U2ha?=
+ =?utf-8?Q?/1/dIFPn4UBd5M4olM0lqPA51?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b4a720e-a0c5-44a4-0c99-08dcd0ddc7f4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b22abd0-0efd-4ea2-1c8b-08dcd0df370f
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 14:43:34.2090
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 14:53:50.1764
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dR4onVyAYOeSkGhC3GZSzoQyNOmtkzV4udqJuvdVg/LISI/8f4fsQwVjEClX3r7Ex74aU9GAXK0SVFMluI3/NQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4264
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4P5VwF3sDDp1VkaJd0G3UY5aiL6W+WR900oE2bTKwgsHZIgbLoLkYbBhzMk9TWvsQVMHURCW5Jfmwf45TxpHJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7824
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240909_074344_992633_39E2013C 
-X-CRM114-Status: GOOD (  18.73  )
+X-CRM114-CacheID: sfid-20240909_075358_514545_69FDE9ED 
+X-CRM114-Status: GOOD (  30.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -177,96 +177,136 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 8/29/24 05:40, Baoquan He wrote:
-> In function early_memremap_is_setup_data(), parameter 'size' passed has
-> the same name as the local variable inside the while loop. That
-> confuses people who sometime mix up them when reading code.
+> Recently, it's reported that kdump kernel is broken during bootup on
+> SME system when CONFIG_IMA_KEXEC=y. When debugging, I noticed this
+> can be traced back to commit ("b69a2afd5afc x86/kexec: Carry forward
+> IMA measurement log on kexec"). Just nobody ever tested it on SME
+> system when enabling CONFIG_IMA_KEXEC.
 > 
-> Here rename the local variable 'size' inside while loop to 'sd_size'.
+> --------------------------------------------------
+>  ima: No TPM chip found, activating TPM-bypass!
+>  Loading compiled-in module X.509 certificates
+>  Loaded X.509 cert 'Build time autogenerated kernel key: 18ae0bc7e79b64700122bb1d6a904b070fef2656'
+>  ima: Allocated hash algorithm: sha256
+>  Oops: general protection fault, probably for non-canonical address 0xcfacfdfe6660003e: 0000 [#1] PREEMPT SMP NOPTI
+>  CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.11.0-rc2+ #14
+>  Hardware name: Dell Inc. PowerEdge R7425/02MJ3T, BIOS 1.20.0 05/03/2023
+>  RIP: 0010:ima_restore_measurement_list+0xdc/0x420
+>  Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
+>  RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
+>  RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
+>  RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
+>  RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
+>  R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
+>  R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
+>  FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
+>  Call Trace:
+>   <TASK>
+>   ? show_trace_log_lvl+0x1b0/0x2f0
+>   ? show_trace_log_lvl+0x1b0/0x2f0
+>   ? ima_load_kexec_buffer+0x6e/0xf0
+>   ? __die_body.cold+0x8/0x12
+>   ? die_addr+0x3c/0x60
+>   ? exc_general_protection+0x178/0x410
+>   ? asm_exc_general_protection+0x26/0x30
+>   ? ima_restore_measurement_list+0xdc/0x420
+>   ? vprintk_emit+0x1f0/0x270
+>   ? ima_load_kexec_buffer+0x6e/0xf0
+>   ima_load_kexec_buffer+0x6e/0xf0
+>   ima_init+0x52/0xb0
+>   ? __pfx_init_ima+0x10/0x10
+>   init_ima+0x26/0xc0
+>   ? __pfx_init_ima+0x10/0x10
+>   do_one_initcall+0x5b/0x300
+>   do_initcalls+0xdf/0x100
+>   ? __pfx_kernel_init+0x10/0x10
+>   kernel_init_freeable+0x147/0x1a0
+>   kernel_init+0x1a/0x140
+>   ret_from_fork+0x34/0x50
+>   ? __pfx_kernel_init+0x10/0x10
+>   ret_from_fork_asm+0x1a/0x30
+>   </TASK>
+>  Modules linked in:
+>  ---[ end trace 0000000000000000 ]---
+>  RIP: 0010:ima_restore_measurement_list+0xdc/0x420
+>  Code: ff 48 c7 85 10 ff ff ff 00 00 00 00 48 c7 85 18 ff ff ff 00 00 00 00 48 85 f6 0f 84 09 03 00 00 48 83 fa 17 0f 86 ff 02 00 00 <66> 83 3e 01 49 89 f4 0f 85 90 94 7d 00 48 83 7e 10 ff 0f 84 74 94
+>  RSP: 0018:ffffc90000053c80 EFLAGS: 00010286
+>  RAX: 0000000000000000 RBX: ffffc90000053d03 RCX: 0000000000000000
+>  RDX: e48066052d5df359 RSI: cfacfdfe6660003e RDI: cfacfdfe66600056
+>  RBP: ffffc90000053d80 R08: 0000000000000000 R09: ffffffff82de1a88
+>  R10: ffffc90000053da0 R11: 0000000000000003 R12: 00000000000001a4
+>  R13: ffffc90000053df0 R14: 0000000000000000 R15: 0000000000000000
+>  FS:  0000000000000000(0000) GS:ffff888040200000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 00007f2c744050e8 CR3: 000080004110e000 CR4: 00000000003506b0
+>  Kernel panic - not syncing: Fatal exception
+>  Kernel Offset: disabled
+>  Rebooting in 10 seconds..
 > 
-> And also add one local variable 'sd_size' likewise in function
-> memremap_is_setup_data() to simplify code. In later patch, this can also
-> be used.
+> From debugging printing, the stored addr and size of ima_kexec buffer
+> are not decrypted correctly like:
+>  ------
+>  ima: ima_load_kexec_buffer, buffer:0xcfacfdfe6660003e, size:0xe48066052d5df359
+>  ------
 > 
+> There are three pieces of setup_data info passed to kexec/kdump kernel:
+> SETUP_EFI, SETUP_IMA and SETUP_RNG_SEED. However, among them, only
+> ima_kexec buffer suffered from the incorrect decryption. After
+> debugging, it's because of the code bug in early_memremap_is_setup_data()
+> where checking the embedded content inside setup_data takes wrong range
+> calculation.
+> 
+> The length of efi data, rng_seed and ima_kexec are 0x70, 0x20, 0x10,
+> and the length of setup_data is 0x10. When checking if data is inside
+> the embedded conent of setup_data, the starting address of efi data and
+> rng_seed happened to land in the wrong calculated range. While the
+> ima_kexec's starting address unluckily doesn't pass the checking, then
+> error occurred.
+> 
+> Here fix the code bug to make kexec/kdump kernel boot up successfully.
+> 
+> And also fix the similar buggy code in memremap_is_setup_data() which
+> are found out during code reviewing.
+
+I think you should add something along the lines that the "len" variable
+in struct setup_data is the length of the "data" field and does not
+include the size of the struct, which is the reason for the miscalculation.
+
+Otherwise:
+
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+
+> 
+> Fixes: b3c72fc9a78e ("x86/boot: Introduce setup_indirect")
 > Signed-off-by: Baoquan He <bhe@redhat.com>
-
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-
 > ---
->  arch/x86/mm/ioremap.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+>  arch/x86/mm/ioremap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index aa7d279321ea..f1ee8822ddf1 100644
+> index f1ee8822ddf1..4cadc7ef1cb4 100644
 > --- a/arch/x86/mm/ioremap.c
 > +++ b/arch/x86/mm/ioremap.c
-> @@ -640,7 +640,7 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
->  
->  	paddr = boot_params.hdr.setup_data;
->  	while (paddr) {
-> -		unsigned int len;
-> +		unsigned int len, sd_size;
->  
->  		if (phys_addr == paddr)
->  			return true;
-> @@ -652,6 +652,8 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
->  			return false;
->  		}
->  
-> +		sd_size = sizeof(*data);
-> +
+> @@ -657,7 +657,7 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
 >  		paddr_next = data->next;
 >  		len = data->len;
 >  
-> @@ -662,7 +664,9 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
->  
->  		if (data->type == SETUP_INDIRECT) {
+> -		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
+> +		if ((phys_addr > paddr) && (phys_addr < (paddr + sd_size + len))) {
 >  			memunmap(data);
-> -			data = memremap(paddr, sizeof(*data) + len,
-> +
-> +			sd_size += len;
-> +			data = memremap(paddr, sd_size,
->  					MEMREMAP_WB | MEMREMAP_DEC);
->  			if (!data) {
->  				pr_warn("failed to memremap indirect setup_data\n");
-> @@ -701,7 +705,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
->  
->  	paddr = boot_params.hdr.setup_data;
->  	while (paddr) {
-> -		unsigned int len, size;
-> +		unsigned int len, sd_size;
->  
->  		if (phys_addr == paddr)
 >  			return true;
-> @@ -712,7 +716,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
->  			return false;
 >  		}
->  
-> -		size = sizeof(*data);
-> +		sd_size = sizeof(*data);
->  
+> @@ -721,7 +721,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
 >  		paddr_next = data->next;
 >  		len = data->len;
-> @@ -723,9 +727,9 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
->  		}
 >  
->  		if (data->type == SETUP_INDIRECT) {
-> -			size += len;
-> +			sd_size += len;
+> -		if ((phys_addr > paddr) && (phys_addr < (paddr + len))) {
+> +		if ((phys_addr > paddr) && (phys_addr < (paddr + sd_size + len))) {
 >  			early_memunmap(data, sizeof(*data));
-> -			data = early_memremap_decrypted(paddr, size);
-> +			data = early_memremap_decrypted(paddr, sd_size);
->  			if (!data) {
->  				pr_warn("failed to early memremap indirect setup_data\n");
->  				return false;
-> @@ -739,7 +743,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
->  			}
->  		}
->  
-> -		early_memunmap(data, size);
-> +		early_memunmap(data, sd_size);
->  
->  		if ((phys_addr > paddr) && (phys_addr < (paddr + len)))
 >  			return true;
+>  		}
 
 _______________________________________________
 kexec mailing list
