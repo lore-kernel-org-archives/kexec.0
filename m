@@ -4,111 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB16DECE57E
-	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 14:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0DD0ECE57A
+	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 14:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MXeDBktVheJ8VftbpJVUYOSSRkdXcc6Gyp7JoP/EIRI=; b=bpvCAJ990PmvV4
-	hXKWnXZ7Vq+qJj9JToEyEFyxuXjRntzctUIg4C9yggYADtqL8RlBIoPcmTqg1XhbqLbbT4Q1/uB/I
-	trk4a2jP6cN5jiwFt9lhUB9O6pLa72og/9C+myO/Xw1ASSArJY1URFu9uRa1YRvfPZAcKNyE41sCu
-	4M7B6uBHReI384KSDxsvc0kahtrMoYf2u8cCC+QFAZIlMSBaQqj6MsvaxaqrDsczo7UxhO6hocMkm
-	nYIiyL0wYRCslZgk+cnpFnOYPFK84sWz12MX+C9dkH1SFlHR9iln+F3XaqwBrosG74rxcu2M8N8RE
-	Si4+OL/OCLoCj8CLpG3w==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
+	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=LfhoTGH8DZw8FGpeTpvQ00l5GJQQHaxKt3ihXyYtVqg=; b=LglYQuHKKeLGNGZ+jZVNtFR1WO
+	2uJ07MM3mMH+mDde9Vk25z0Qhh5xW1K4N3oVpPiz1OgpKj50yrOs4qNAyTqEP5QGNeOLg1SOK/8hH
+	NQb3BRQZIp2np3QMyDxm6eXRA1Q6LO1hU8+dh1S4cHyFJR+P3J0Y+NQ/X29rpLi+1Gd8XprCmdMMb
+	AHMFHhxJJqWVD2NO7b81wzSnUEE3yueV2A3ux83+2whwYnj9NycnHVetC51K+EBi1K3zi4cs5Ex/F
+	DI/Vlk3wOYuP86SbWIKHpXYvdy6eJsyAzv+oQv+3LHRzDKObqah6iEYi6rz0yZHX4JegpzthmZ5pe
+	wPsMsXIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snfVu-00000002JU6-0Io8;
-	Mon, 09 Sep 2024 14:37:10 +0000
-Received: from fout8-smtp.messagingengine.com ([103.168.172.151])
+	id 1snfcK-00000002Kux-0W6u;
+	Mon, 09 Sep 2024 14:43:48 +0000
+Received: from mail-dm6nam11on2061d.outbound.protection.outlook.com ([2a01:111:f403:2415::61d] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snfVq-00000002JS4-3LSS
+	id 1snfcG-00000002Ku7-3oF8
 	for kexec@lists.infradead.org;
-	Mon, 09 Sep 2024 14:37:08 +0000
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id E7B021380225;
-	Mon,  9 Sep 2024 10:37:04 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 09 Sep 2024 10:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1725892624; x=1725979024; bh=PGrDzIuNXk
-	woLQBLlTew5GzRcdRT4GoGBHO02S2JrMQ=; b=T9Hx3nvMWNPCQfObLPaWaI38HZ
-	+aP3Q4zf4fbDUxTz6uTG6Qe/57tEB2PTVRDdG1nKgmpCsEqqZwHOBNifN4t77ILU
-	Q2ILBmbeQC3NFF/SzHj9ysDFoHvAGfJP6haI4tYfdGE2M9rf9k+7oUJpywgbXZ6c
-	QxA8qZ3RuMMGtpasZtsrQn87Wrfhb67CvDPfy0VTel1/7SbHa16byIxcDz89M5nV
-	ElayrfOXBupJdqPumfmk1BjOunJAKLgouNTzCwY0bNuhO/kw3Ew7QQB+jH0G1oo9
-	GRzx1dVl/oI4lPar5TMsWoH1Sbjqnqah4Ppl864J6VdZF5ETa9hYlPmYUTYg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1725892624; x=1725979024; bh=PGrDzIuNXkwoLQBLlTew5GzRcdRT
-	4GoGBHO02S2JrMQ=; b=RW8vWb3ZaHIA3fiGtT7ZQlN9G7OiV088/vl2GUrX6iQ/
-	+Yt9FrgjqxVnzpL1Bqjq1MpLl6PoZVkggAVeSGEH+ls8WEo9xqEUE7C97KH51cpm
-	txsiD1OZWq9mgo8SN40QDeTgJyweJTlIVr4G89GzUGxaRfGjoSYhDNhDv7NKx63/
-	fDI/++cD1vVPL2a+WbEYL97lMTSRtOFBn7KkgvMCvYBuWOVofd5SgSV+zqtiLWc/
-	bb8jXgxiSTLg4b7UKnYSsMRXvO8pKLn89dbIztyVfSTtRzxEznXcN7cKEzbfg+Mx
-	6y63U9QZUj4t/xn+8FCuUjyVkv4l2ATo8rURgio++w==
-X-ME-Sender: <xms:EAjfZrCCl4_WhXRdrgldCI1wLMnSX4tjrhdmuNJG8q0YpYwopK2rBw>
-    <xme:EAjfZhjhIqX3l7xY4XXMlnUYO2CdKLlYEnJfKtXdhOvjIXzona-LMGzpBnOBvdzut
-    v-gydIuOuZXuZapZVU>
-X-ME-Received: <xmr:EAjfZmm_le99CTZgubDZnLb78-aocXsV8Y1hzMtGOqo37RVjGA-AEnhBjvtUpnmdxn6077V-2LK0RIyjd04520ynE0D3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeijedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeehgeefffej
-    veeuleekueeguefftdefhefgtedtieeghefhtefgiefhiefhtdetheenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttgdpnhgspghrtghpthhtohepud
-    egpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepphhruhguohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmh
-    iigihrvggrrhihsedtphhoihhnthgvrhdruggvpdhrtghpthhtohepphhilhhiuhesrhgv
-    ughhrghtrdgtohhmpdhrtghpthhtohepjhgrrhhkkhhosehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegvsghivgguvghrmhesgihmihhsshhiohhnrdgtohhmpdhrtghpthhtohep
-    sghhvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepugihohhunhhgsehrvgguhhgrth
-    drtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomh
-X-ME-Proxy: <xmx:EAjfZtxBalTnTYZ2K8z8QH2obb7nzUdaxyh7XrIFgFqL2Vxub8_NMg>
-    <xmx:EAjfZgR3fSN9YiZSvXsdumgu2vrENc2sy48uBo7apyxAfkRalXUVVA>
-    <xmx:EAjfZgbh74UmtvdNxqEpORIHgOBChrPowf3QAhWs0bwrkhIIdFFG_g>
-    <xmx:EAjfZhTFc6PRJ2L_2MHK-7W5UK_lbS5MpwgjAop9CpHZUYXhCzvLQQ>
-    <xmx:EAjfZsoIVMkwy5q97bklK5eN1eQMHyFpPLJmFhsLcVLGALNhex6XCndc>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 9 Sep 2024 10:37:02 -0400 (EDT)
-Date: Mon, 9 Sep 2024 16:37:01 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Philipp Rudo <prudo@redhat.com>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Pingfan Liu <piliu@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFCv2 0/9] UEFI emulator for kexec
-Message-ID: <Zt8IDVMhUw7aAejR@archlinux>
-References: <20240819145417.23367-1-piliu@redhat.com>
- <CAMj1kXGB3VF=NAQBADkdmodSVaZyf8h2n0FXwi5fXLUE2WgXag@mail.gmail.com>
- <20240906125438.1e54c5f6@rotkaeppchen>
- <Zt7EbvWjF9WPCYfn@gardel-login>
- <Zt7RJepoCiCMRZSu@archlinux>
- <20240909154940.7ab93782@rotkaeppchen>
- <CAMj1kXHN5NgUJ+wwaZxsKeT4bDHqO6C2CHaALAi7JV5hWVmR2A@mail.gmail.com>
+	Mon, 09 Sep 2024 14:43:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Da03KKXZsRmjnc6+19MqpbfzQ7MQWTL/HPJWMkzDbjI2G871aKyMRmYB+4ytgb0EvWIrz1Leuqb69T/ufgYDJyu8F5YqAUkho1u4hgMKubNKUaFvEkCw1PebzHGrqAQ5c7zKnsgA2LsnbmvQOSZ+lzSl2Lvj7b5sjuebdePFOunnOgZtPqekzYA/GFoMx3pmFJJhU828bQPsNqCtk+0CzrjkXvU4YQBJ30UlYm47VcXrmhhBHpcZLDTkXC8I9tLtsJPhBKcTO1/4asxlHbs4AFFHgycBLDd35IjOf4JytP913bZJnYAYv5ilhPCbxIPvtAu1QFrJ3LQX5keeLSarnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vH4h7QZwuJG3UUcMB1ubgI7V5x+arTZjHBkKISVpIek=;
+ b=M4tf0Lv3OQTxL/PmY54pJ80ep1Wyth9A7dWwsCjUqoNZo1ItRRLi+VvN0PObxv0StlN2ue5OfE9GS78l/YqXtq8ke5CKs96FMkgZnAHuTcWxrfxUKcxZCOdp/eGXr3FiOX6Dg2xA4okcV1V35/ehX8p1hJI5XohNr07PCcns/JvxE+AX9biU9lMYJ0uyAVfwBEIMidp0WV6BMElcMqqfzc95vDvILlSWxF07f0PZ8JCiU8SDU8ZOgjEbTIKL1Ql+f36lgbtmVdsxQYlmW0NCWl8ScFduGVI49qgbHnotDqqLcsVuF0QbUalY/R+fWNa2EYTEsq9S8FFcu4QvgCxNqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vH4h7QZwuJG3UUcMB1ubgI7V5x+arTZjHBkKISVpIek=;
+ b=C220X7JOou8GN641VPwpjT+dHPgaamyY22wlARWPgbgd4RKIqNAd3upkWhsI2vjrang2/L0NHGfjCagK04w7nNNiAdf7MZEAk9wd3OHMaBvSNMGkcyQAm7fnJTTfgAIie8AYV2KWgk9ZtCs42V1kp+j/lYtX6SfGIJhSNUYjvQY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CH2PR12MB4264.namprd12.prod.outlook.com (2603:10b6:610:a4::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Mon, 9 Sep
+ 2024 14:43:34 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%4]) with mapi id 15.20.7939.017; Mon, 9 Sep 2024
+ 14:43:34 +0000
+Message-ID: <3abbad0d-2c01-bb57-bffe-ae75e1138a03@amd.com>
+Date: Mon, 9 Sep 2024 09:43:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 1/2] x86/mm: rename the confusing local variable in
+ early_memremap_is_setup_data()
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, daniel.kiper@oracle.com, noodles@fb.com,
+ lijiang@redhat.com, kexec@lists.infradead.org
+References: <20240829104016.84139-1-bhe@redhat.com>
+ <20240829104016.84139-2-bhe@redhat.com>
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <20240829104016.84139-2-bhe@redhat.com>
+X-ClientProxiedBy: SA0PR11CA0035.namprd11.prod.outlook.com
+ (2603:10b6:806:d0::10) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHN5NgUJ+wwaZxsKeT4bDHqO6C2CHaALAi7JV5hWVmR2A@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CH2PR12MB4264:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b4a720e-a0c5-44a4-0c99-08dcd0ddc7f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Q3FCejJkaDRFdXRrZ0c2OEVVeVBKamJhditsc3FNRWRITFgxbUlZOGFIRWll?=
+ =?utf-8?B?ZUJmNGg5bjVNc0kzTUhPcUozL3pudzV2c0g1UEROVTJjSWtmT3Y0QmZkbUh3?=
+ =?utf-8?B?YWtQUVY3eFAzQnk3dEtKMUNGN0xmOTJ3TFAzTmtuRDZYUHBoNFNrRzd6UE9F?=
+ =?utf-8?B?bUdSOTdqYWlEMG1vdFM3cmx0U2VWallLcmRQSklJeUhVd1dXUWtpUDgwb0Y0?=
+ =?utf-8?B?VlBJNWxKTVZrWFlFbWRaUjRXelhtRjBkWG9yMHN4SHhsYU54N3ZGZGdGZi9B?=
+ =?utf-8?B?SnBBcVpmTUJNMDRnaFJKa01CamRJN1ZXOGszaEZhSG11TFBWeDlFRXJrV2ps?=
+ =?utf-8?B?SmJyL21QL2FBYUJWMHFUR2VScy9KSzFpNkRUK3VBZVF6WGlvQnVlQitpQ0hv?=
+ =?utf-8?B?c0lUV1JzdklmbDFOcFk5YjZJbDQ0Nm5lTzBlV2hhalFIRHZXbnZ0ZDRUWjlp?=
+ =?utf-8?B?NWFRYmM1SzMwcVU2b3U3UXpuTDJCSjI5YlZTamYzWGh6NVlGd0NOZkI0OUR6?=
+ =?utf-8?B?bE92Ry9haE9tVXBUa2ExNGxMRXNieHNuU0h6eUdnS0RDbnBPZWJETjJ4ZGJZ?=
+ =?utf-8?B?bVE4bTF0MEpkUEhZTkgraUNOenJ2WW9XZnhPYkRtWDI1aCsrejJwN2pnbUhp?=
+ =?utf-8?B?T3RJSC9xb1p3elh5YU5VZHZreDRQQk1UQnB2UUdYSTllS091aTFSelovd1dk?=
+ =?utf-8?B?UXllYW43a0ZTWFpOM1BSVGNvRTFheFNpM2M2Y21ZUUZqTFlEVzZYNkJrcVJ4?=
+ =?utf-8?B?YnVRR2orMTVpR0NaYWlmSENUSnYrQW1BcXpqWE5iSG9mWEwrdmhBZXdiMS9N?=
+ =?utf-8?B?bHFqQ3lBdUxPYTE0dWFkMnloUFBzWnI4SWppUFVIeGpVd2FUMFZ4WFY2QXI3?=
+ =?utf-8?B?bjUxcnZ6VEp2OWNSZTdMUGNuV0w3Q3BjdlQyaGxTSWNuaStjZDUyd3RFT1pD?=
+ =?utf-8?B?U3Ria2NYcU1PWm1HVmlMNnYraTZjZ0djSkUzZmJzYVB3SjlaQXlVejBQOW55?=
+ =?utf-8?B?T2MyRFRBc2s3UGNoYXRVVEpnRWJDMHlnQXRueTQwYks1M3hJbE9QeWVVbC9U?=
+ =?utf-8?B?RTNZZ0FmNjB0VGVhbk5rdDAzZXNxcVRRbGJKd2ppN0g0STRVaVZKRE9UZSs1?=
+ =?utf-8?B?bXpiU1VNZXhVMURXczRNcERqTE1ZUzFmMlVWeGhlbWR2dVc0ZFArd1M1Qk1m?=
+ =?utf-8?B?dExnVWdRTnAva1dMMWZpYmw2Wkt2aWRwc3hTZ2xmWGxOK3VMbVpLTllFKzhH?=
+ =?utf-8?B?OWxiY2IyYnFvU25pNHRsTVNkRVZMWFdPRlFJTGR0SzVoOUx2eE5Eb25iNisr?=
+ =?utf-8?B?dHZjM3hTeUEvWXU5Q0ZUQi9rU0NWQzd5alRRSE9GeXFXbGdJbEVtakwzV3Nl?=
+ =?utf-8?B?T2dRblcweDV5NStHNEhhYWRZRmkvMjRnV3RiNVVkN1hSbytJNlBvamJyUHRN?=
+ =?utf-8?B?Q0VjZW5lSkREREF1RHRYeVV3VzZoZFVLaXFtWCtBRXF3VUdlNnpLZGNEUGtn?=
+ =?utf-8?B?NlVMa3FZTWJRRlROVk1XbXhIYmt5ekdieUE1enExSkx0bUJncVowK2tlMENL?=
+ =?utf-8?B?c09SQWdYRjFORm5XMTQveXJ1SHVpMGhlTGZKUjlCSXdNenhvclhJOTZNSWhp?=
+ =?utf-8?B?QW45RzZabHdBR1VUQ3ZkWm0zNEIwUE45SitBQ2I4OW5ha2o1VkpUcUdjaHFt?=
+ =?utf-8?B?cUhnNVZYVlM3cjM2Kys5dDRMQ1dGTjVZK25MeWhkbldTREl3RUQ2cHZ5QUJE?=
+ =?utf-8?B?TVFVZ0NQc1BKSWZKSEV4YWpUWVVyZ3NXRHgxaTVRODljdnRGT0pXaG5ZU2cy?=
+ =?utf-8?B?NFphZ3h2d1k3eTcrVWtGdz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N3QwWTlSbDhDRitLc085T3RIdjFqdEZ3WENBV2xBT01KQ2VHQ1ZsVldPZmU1?=
+ =?utf-8?B?cE03WStkTVNhNW9ZbTdJamRUVG1WU0VRcElDOVdhR0xEU2hXNzUrdW1sL2Jo?=
+ =?utf-8?B?UnFXYWV6UStyY1diOVIyZ05BVnVwWFZhckJTaC96ZStlcXM2SU8xZDUyYjRy?=
+ =?utf-8?B?VUJiaTliclZHbElrR3hpWGJWTmFGSE52eXZWVEg1RzJqaG5zYm5NTWtOVmdt?=
+ =?utf-8?B?RnNCTm54MDFMVXRsdWhFUkZGdkFxK1FrN21vNHpHcnk1bm41VnFMRWRla09i?=
+ =?utf-8?B?dUJ5dnltYUorSml1SUk1NHhBU3hleTZ0VkNkQnljSEZ5VWthd1dEYjh6eFZv?=
+ =?utf-8?B?TndBbytWOEZ5dU9pazAxcTQ3TlFRNk9NQ1l0d05xVThBUy9hVWtONjQ5ZTBx?=
+ =?utf-8?B?SEcvSDRURmRwbEpmQU02UG1QVkpabG5xR2QydldEdVlnUlZkV0hqL3NiNDl6?=
+ =?utf-8?B?cHptNlVCVytuR1RyQjk4N1NkbTNJWHN6aVBBR3lOU25kQnl3bGJ1NGszbnZF?=
+ =?utf-8?B?bDZGQk5iSUo0NGx6ZEtjdDlHRjF5Zk9GNlRjZ1F3NnRXQXEyajlUYUtTd1Ev?=
+ =?utf-8?B?NWxMRy9hZm5pZ01lWUMxWWJ0TktLU2NLeTk0dHhqdHFjM1o0ZUs1UEZzMzdn?=
+ =?utf-8?B?SFJNZTVkZllURTJJMUk5YU1tTG1Na3ozZnM1eHlhRWU3NnAzTW9CZXErQkJh?=
+ =?utf-8?B?R2k4WWdZdlIwU0VMZUJTVUtSQVpPZTN6a3JMRUxianAvVG5rUUVrcjdPVDhJ?=
+ =?utf-8?B?ejRVeXpHL1Avcmd3SUFzbHFOL3c1WjFreGtvZElOUE1QWG4yZHB3cklhN09O?=
+ =?utf-8?B?MTAwRXBsS3lpUHhESTZiV3M5VWxuL2tWdjR2UW90SnhBR2JCZGUyR1g1SGdw?=
+ =?utf-8?B?OFJMZlNnK2xrNGFsRVBTcitZQ3lXcitSelBEVnF4TUxhNXY2Snkvc0FjSWhy?=
+ =?utf-8?B?Y0JQaXk4TmFhVzE5Q0dIQlVOTm9KYmpmdHZ1YzVGdGg1WVo3YWpqdEhRT1Nn?=
+ =?utf-8?B?b3ViLzc3cVhYWkhWOS9zeE1UQmlLakhaRE1aNEpIcTlob2FySCt2Vlkzbk1T?=
+ =?utf-8?B?Ky9MdWNzd0xqbGhGSEVZOW1VWmtOOGdBWFhvNzJ1a3l3SlNXVU1ZL3lOTlRn?=
+ =?utf-8?B?eU15RWdyYUo0UitIVUwyNHNDTWJoQXRzVyt6aXBJMFVESHlvdnliMTBWN3BE?=
+ =?utf-8?B?U21KL2FmZjhIY0c0UjExUiszV1JvVmRHMmF3TlJLRDNDUUl2dklhdFdsOTRr?=
+ =?utf-8?B?R3RFWUExcDFkRUIwK3RtTXN1TzlaRVNwTGdPaTRJOXUwcFo5aEVtVWloTTFY?=
+ =?utf-8?B?cEkxSy9wS05qdzVIVWNZTFI3NG9Hdkd0SUdXUlRwUURHMnNWYVVnR2RmT2FQ?=
+ =?utf-8?B?V2cxempMVUgxRzd4UjI1NGpiK0tvTFdJZlpIQ01ic1ZYdlU4SVZTbGFWamtE?=
+ =?utf-8?B?K1g0ZVp4Y0hiOUdtVVJNbzlCa3I5M3lzc2dJbkxYUEg5RlRKYVdjQkl4UjRC?=
+ =?utf-8?B?UzhvTk80NW92M3FQMFVDQzNpTzlpODZVMkFyMm1aaWNWVnNwbmNTdFllWEpi?=
+ =?utf-8?B?RWlDeDJnNVJscE50OVpEVWFieVBMek04YXZ5YWg3Q1czcFYyTE9VczZLZ3Ux?=
+ =?utf-8?B?Y3ZtZFROSXo1aFYvZEpwcG5VTlRwOTJnRWsxeGV5N1hnRlpOaTF5TDcwamRN?=
+ =?utf-8?B?bDk3YThQVDk5aHV2d09BR1c3cS93RTNlWkw0N0NvaDcyTDBuUHVKNkJoQi9T?=
+ =?utf-8?B?YXlkRlY2c3ZXWXBTZnN6Qm5Lb2pReVRiVmtPL1dVZUFuTU9pUkNsWmFXbllX?=
+ =?utf-8?B?Y3NiTlNDdlp4NlFhRnpJMzNpY1NSUkU4VnhKbGlIRFdFdHA5NVFRRnJjNWNh?=
+ =?utf-8?B?Syt2QWdxRDFLYUQ1UktJTUdIZGFab05zZCtmNnlPeS9PZGNCanRCUXQ2c3BQ?=
+ =?utf-8?B?OHJNMFdXZmVPVzF6ZDF0Q1R3MU5lQndYVEhqR2tGUjhpODI5SndnbjB6c3d5?=
+ =?utf-8?B?MnpJb2dpSHo2ZnVIRHJ4Y05kTm9SU0NZTitBcWZRSjhUNXNYMjFOd2JqK2FZ?=
+ =?utf-8?B?djRMR0E4Ukp3QnQyMUxsd0FaOW5XcFdJL0M2dFhMdGhSY1lTMk5kWFFDYkpH?=
+ =?utf-8?Q?+OLl4df5jgj/cazbyb2J6uO0i?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b4a720e-a0c5-44a4-0c99-08dcd0ddc7f4
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 14:43:34.2090
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dR4onVyAYOeSkGhC3GZSzoQyNOmtkzV4udqJuvdVg/LISI/8f4fsQwVjEClX3r7Ex74aU9GAXK0SVFMluI3/NQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4264
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240909_073707_079588_192FB0F3 
-X-CRM114-Status: GOOD (  29.61  )
+X-CRM114-CacheID: sfid-20240909_074344_992633_39E2013C 
+X-CRM114-Status: GOOD (  18.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -125,81 +176,97 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09 16:04:50, Ard Biesheuvel wrote:
+On 8/29/24 05:40, Baoquan He wrote:
+> In function early_memremap_is_setup_data(), parameter 'size' passed has
+> the same name as the local variable inside the while loop. That
+> confuses people who sometime mix up them when reading code.
 > 
-> [...]
->
-> kdump has a kexec kernel 'standby' to launch when the kernel panics.
-> So for the UKI/EFI payload case, this would imply that the load
-> involves running the payload until EBS() and freezing the state.
+> Here rename the local variable 'size' inside while loop to 'sd_size'.
 > 
-> Whether execution occurs in true user space or in a deprivileged
-> kernel context is an implementation detail, imho. We don't want to run
-> external code in privileged mode inside the kernel in any case, as
-> this would violate lockdown already. But it should be feasible to have
-> a EFI compatible layer in the kernel that invokes the EFI entrypoint
-> of an image in a way that protects the host kernel. This could be user
-> mode on the CPU or perhaps a minimal KVM virtual machine.
-
-This solution is what I'm currently in favor of (besides my original
-approach), see: https://lore.kernel.org/kexec/Zt7EbvWjF9WPCYfn@gardel-login/T/#md4f02b7cb6c694cb28aa8d36fe47a02bd4dc17a4
-
-From the perspective of supporting UKIs the EFI compatibility layer
-definetly has to be run in the kernel not in regular userspace so that
-the chain of trust is maintained.
-
-Why do you say that it would have to be a deprivileged kernel context
-though? In lockdown mode we would enforce a signature check on the PE
-file, so it shouldn't be any different from loading a signed kernel
-module from a kernel lockdown perspective, right?
-
-Using KVM is actually something I didn't consider yet, however it would
-not work in VMs without nested virtualization.
-
-> The advantage of this approach is that the whole concept of purgatory
-> can be avoided - the EFI boot phase runs in parallel with the previous
-> kernel, which has full control over authentication and [emulated] PCR
-> externsion, and has ultimate control over whether the kexec reboot is
-> permitted.
-
-I'm under the impression that we still need some code to run between the
-kernels to do two things:
-
-1. Clean up the address space, so that it's what the EFI binary expects
-2. Verify a checksum on the saved state in case a kernel panic is the
-result of memory corruption
-
-Sure, the majority of the work (running the EFI binary until EBS()) is
-done while the old kernel is still running.
-
->
-> [...]
+> And also add one local variable 'sd_size' likewise in function
+> memremap_is_setup_data() to simplify code. In later patch, this can also
+> be used.
 > 
-> I don't think intermediate kernels are the solution here. We need to
-> run as much as possible under the control of the preceding kernel, and
-> minimize the bare metal handover that occurs after EBS(). Adding more
-> code to the purgatory (as this series does) is not acceptable to me,
-> as it is extremely difficult to debug, and duplicates drivers and
-> other logic (making it an 'intermediate kernel' of sorts already)
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-I agree
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
 
+> ---
+>  arch/x86/mm/ioremap.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
 > 
-> Today, UKI functionality is implemented in terms of EFI API calls. Any
-> solution that needs either a parallel implementation (eBPF vs EFI) or
-> needs to unpack the UKI in order to perform the steps that the UKI
-> would perform itself if it were executed in an EFI environment is a
-> no-go in my opinion.
-> 
-> So either we provide some EFI compatible runtime sufficient to run a
-> UKI, or we re-engineer UKI to be built on top of an abstraction that
-> can be implemented straight-forwardly both on system firmware and in
-> the EFI context.
-
-A solution that can boot UKIs as they exist today is definetly the right
-choice. Rewriting them for eBPF and maintaining two implementations is
-way less than ideal.
-
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index aa7d279321ea..f1ee8822ddf1 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -640,7 +640,7 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
+>  
+>  	paddr = boot_params.hdr.setup_data;
+>  	while (paddr) {
+> -		unsigned int len;
+> +		unsigned int len, sd_size;
+>  
+>  		if (phys_addr == paddr)
+>  			return true;
+> @@ -652,6 +652,8 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
+>  			return false;
+>  		}
+>  
+> +		sd_size = sizeof(*data);
+> +
+>  		paddr_next = data->next;
+>  		len = data->len;
+>  
+> @@ -662,7 +664,9 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
+>  
+>  		if (data->type == SETUP_INDIRECT) {
+>  			memunmap(data);
+> -			data = memremap(paddr, sizeof(*data) + len,
+> +
+> +			sd_size += len;
+> +			data = memremap(paddr, sd_size,
+>  					MEMREMAP_WB | MEMREMAP_DEC);
+>  			if (!data) {
+>  				pr_warn("failed to memremap indirect setup_data\n");
+> @@ -701,7 +705,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+>  
+>  	paddr = boot_params.hdr.setup_data;
+>  	while (paddr) {
+> -		unsigned int len, size;
+> +		unsigned int len, sd_size;
+>  
+>  		if (phys_addr == paddr)
+>  			return true;
+> @@ -712,7 +716,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+>  			return false;
+>  		}
+>  
+> -		size = sizeof(*data);
+> +		sd_size = sizeof(*data);
+>  
+>  		paddr_next = data->next;
+>  		len = data->len;
+> @@ -723,9 +727,9 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+>  		}
+>  
+>  		if (data->type == SETUP_INDIRECT) {
+> -			size += len;
+> +			sd_size += len;
+>  			early_memunmap(data, sizeof(*data));
+> -			data = early_memremap_decrypted(paddr, size);
+> +			data = early_memremap_decrypted(paddr, sd_size);
+>  			if (!data) {
+>  				pr_warn("failed to early memremap indirect setup_data\n");
+>  				return false;
+> @@ -739,7 +743,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+>  			}
+>  		}
+>  
+> -		early_memunmap(data, size);
+> +		early_memunmap(data, sd_size);
+>  
+>  		if ((phys_addr > paddr) && (phys_addr < (paddr + len)))
+>  			return true;
 
 _______________________________________________
 kexec mailing list
