@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EC4CE6FE49
-	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 08:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15115ECE579
+	for <kexec@archiver.kernel.org>; Mon,  9 Sep 2024 09:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=hNM8EXp1sNtMrZyp9JQxPiZ9rseckud58iEvlEehqJg=; b=yK4qwUqR7avkSP
-	kZ5dHuut0sF1KqLu+SPBHUFCemgqoSif50AxDG7EnFaT2+XorcKaapvCW0V9AyA6McUShlWonJYCT
-	egujikxZs8KqlB5+4TeUPOH5kiLnxAyGhbuJfUMbSs052NXvBtlmiTQxddfdAx9Wy8VQSACsKQ0Y/
-	CcXWZUuUrwfTpAvAy5Nu4ZW1Zm3k5cuLHf+fMpPpkGba2+O5p6bQ8HAOakSjdX0dnYAsg/K0VLd+T
-	CBL6jdusdS/M1BtRU0khuBjcg97G9lmTxXkWvESotPF5LOuVrV4C8X7bucY5R/v8PvcLZkwz6OKGD
-	fh1pI+OLlzzsO+eQLEqQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=QzpT7ZxFCVqMFuf0H1JlQDkhKCZYa5pAR5o9+F8/xEo=; b=ldQsJF/x1b9viG
+	Bi309vrZWxSKB5DRQQeJzGo2qeyCB9l2u1ahlXwp4sI3lYY69wRA63VpWBnPxTHXblP2Mu+NFPQO1
+	nKGDIsUJz+pEz//3YZso5pLHb3JIA6R7dg+4lJWa//rR6f3g2j/VD7kyM3oq5u1yJdQBVch3k3fEE
+	ZKtkP3H4Q3L7NA3Aowqu43cbGb/ImuB064KNcHaAFUdFwVui6Ge3Ds1n1gkZUn+6GuWWOFqBycaDa
+	PIJMjbNqbLEt/bq7l+sLC67RE722VPuEdvjp9LOd+84KPJKlqQFF0Nf1kopnzgDWYKJ518P1ohMB9
+	LOuMiSKPWIWWgT6evw1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snZLo-00000000yMn-07el;
-	Mon, 09 Sep 2024 08:02:20 +0000
-Received: from mail.originateinc.pl ([217.61.97.94])
+	id 1snb1x-00000001OKI-0yoP;
+	Mon, 09 Sep 2024 09:49:57 +0000
+Received: from gardel.0pointer.net ([85.214.157.71])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1snZLl-00000000yLf-00NA
+	id 1snb0e-00000001O2T-03M9
 	for kexec@lists.infradead.org;
-	Mon, 09 Sep 2024 08:02:18 +0000
-Received: by mail.OriginateInc.pl (Postfix, from userid 1001)
-	id 234148473C; Mon,  9 Sep 2024 09:01:57 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=OriginateInc.pl;
-	s=mail; t=1725868934;
-	bh=EywM+E+OIUr7RnYatSz3YfoNTVB6dOfImeA7tdj3yJA=;
-	h=Date:From:To:Subject:From;
-	b=uEVZh+SPuJSm7PzSQs8lt+b+wjpfk1aK79PJxC+LewrkTY/Vx7YdDBupF/VJdlBCn
-	 Pr4Gb2ylq2gp0lc1g2jVvJMYuymuAS4+lpXh9Mb28uyug/K0ch2YkRjEKz7tjX/q8y
-	 9aTpEMDm+VmKeOf6MyMpIvzFm1e5Q7FbdCAASxGffWKv9oTLN2rP34ch6jSezX7x0q
-	 tt8B5yDHP3IXXoHypsQU4nsyGJMhriUvrSJzeTy6femLkQrrNS+KJzzT0RaY6wheYC
-	 KgjCCfoKB7PD1q+qufApCvPO7aH1TlkRjURSC9IbPcPXOd3hvy5I60mis/sdaU8xOQ
-	 QhO3khhXTuHDg==
-Received: by mail.OriginateInc.pl for <kexec@lists.infradead.org>; Mon,  9 Sep 2024 08:01:15 GMT
-Message-ID: <20240909074501-0.1.f1.1ojhj.0.0eooednj0e@OriginateInc.pl>
-Date: Mon,  9 Sep 2024 08:01:15 GMT
-From: "Kamil Tralewski" <kamil.tralewski@originateinc.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.OriginateInc.pl
+	Mon, 09 Sep 2024 09:49:55 +0000
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id EDB21E80261;
+	Mon,  9 Sep 2024 11:48:30 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 68469160143; Mon,  9 Sep 2024 11:48:30 +0200 (CEST)
+Date: Mon, 9 Sep 2024 11:48:30 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Pingfan Liu <piliu@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFCv2 0/9] UEFI emulator for kexec
+Message-ID: <Zt7EbvWjF9WPCYfn@gardel-login>
+References: <20240819145417.23367-1-piliu@redhat.com>
+ <CAMj1kXGB3VF=NAQBADkdmodSVaZyf8h2n0FXwi5fXLUE2WgXag@mail.gmail.com>
+ <20240906125438.1e54c5f6@rotkaeppchen>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20240906125438.1e54c5f6@rotkaeppchen>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240909_010217_186254_B953727A 
-X-CRM114-Status: UNSURE (   2.13  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240909_024836_228927_8D54D210 
+X-CRM114-Status: GOOD (  20.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -62,18 +66,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-RHppZcWEIGRvYnJ5LAoKemFwb3puYcWCZW0gc2nEmSB6IFBhxYRzdHdhIG9mZXJ0xIUgaSB6IHBy
-enlqZW1ub8WbY2nEhSBwcnp5em5hasSZLCDFvGUgcHJ6eWNpxIVnYSB1d2FnxJkgaSB6YWNoxJlj
-YSBkbyBkYWxzenljaCByb3ptw7N3LiAKClBvbXnFm2xhxYJlbSwgxbxlIG1vxbxlIG3Ds2fFgmJ5
-bSBtaWXEhyBzd8OzaiB3a8WCYWQgdyBQYcWEc3R3YSByb3p3w7NqIGkgcG9tw7NjIGRvdHJ6ZcSH
-IHogdMSFIG9mZXJ0xIUgZG8gd2nEmWtzemVnbyBncm9uYSBvZGJpb3Jjw7N3LiBQb3p5Y2pvbnVq
-xJkgc3Ryb255IHd3dywgZHppxJlraSBjemVtdSBnZW5lcnVqxIUgxZt3aWV0bnkgcnVjaCB3IHNp
-ZWNpLgoKTW/FvGVteSBwb3Jvem1hd2lhxIcgdyBuYWpibGnFvHN6eW0gY3phc2llPwoKClBvemRy
-YXdpYW0KS2FtaWwgVHJhbGV3c2tpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Fr, 06.09.24 12:54, Philipp Rudo (prudo@redhat.com) wrote:
+
+> I mostly agree on what you have wrote. But I see a big problem in
+> running the EFI emulator in user space when it comes to secure boot.
+> The chain of trust ends in the kernel. So it's the kernel that needs to
+> verify that the image to be loaded can be trusted. But when the EFI
+> runtime is in user space the kernel simply cannot do that. Which means,
+> if we want to go this way, we would need to extend the chain of trust
+> to user space. Which will be a whole bucket of worms, not just a
+> can.
+
+May it would be nice to have a way to "zap" userspace away, i.e. allow
+the kernel to get rid of all processes in some way, reliable. And then
+simply start a new userspace, from a trusted definition. Or in other
+words: if you don't want to trust the usual userspace, then let's
+maybe just terminate it, and create it anew, with a clean, pristine
+definition the old userspace cannot get access to.
+
+> Let me throw an other wild idea in the ring. Instead of implementing
+> a EFI runtime we could also include a eBPF version of the stub into the
+> images. kexec could then extract the eBPF program and let it run just
+> like any other eBPF program with all the pros (and cons) that come with
+> it. That won't be as generic as the EFI runtime, e.g. you couldn't
+> simply kexec any OS installer. On the other hand it would make it
+> easier to port UKIs et al. to non-EFI systems. What do you think?
+
+ebpf is not turing complete, I am not sure how far you will make it
+with this, in the various implementations of EFI payloads there are
+plenty of loops, sometimes IO loops, sometimes hash loops of huge data
+(for measurements). As I understand ebpf is not really compatible such
+code.
+
+Lennart
+
+--
+Lennart Poettering, Berlin
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
