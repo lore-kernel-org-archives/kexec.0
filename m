@@ -4,63 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41FA3ECE564
-	for <kexec@archiver.kernel.org>; Tue, 10 Sep 2024 14:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A25BEDE99A
+	for <kexec@archiver.kernel.org>; Tue, 10 Sep 2024 15:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
-	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=F1sFyYIb4jIt+jxw+wAA2yYrog1MyrzgNXmxhjpJOEY=; b=VlsEvW2Lq0br5UMmVsjo2CTBt5
-	hHeM+8tfAdQB/i8xpnQB/RutfIcXU2vqjO1GNyChQYN/WnguB/7HCv0dQLkoldlAp7JWUR8otZvXu
-	E00jspUfi2Krlu+X0RIKZYF6famuMdwrf56iQWzQKZz0X6x9zveiDj7AMdnsDexp0xJr766xdSFvd
-	8cvUWHAhGZiKA/7I9+UBJtUdxua1uCCcqVSY2Os16xahdIqVL6Fh8Lb3Lm9vfhbyMVsxbraPvWEeq
-	2apnph93Qu4s88/kYSHdNkMbjIKo9ex/uTyBUgZuh/Dvn5fsp2uBOFkyyB/lJcdV7ITi15fu//ODn
-	4pQBLIRQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=t8ST6UKRVn70jKXdIHKZapWJvxpbZhmNqldK8PN9VuA=; b=x+1Us8M7eni+gl
+	AVEdmnvTPzvslVjHvx2m7xU65b1619HVJd2Gmx2jNcVvXiDSc5ylXFzFY8i8IbLA3FYb+i1dCcj4S
+	X621z7qEooKHzMoCYkisbzWes5SFaN7Ma4Cxkj+t//ahEUj02ShUzeHk1cIK2esqECQI3cBsp62ZC
+	uX1o87JyngcLzkmLlNiMkLOynANBD5AmPYVq+Wx++uAGLOsW2fwKolUmdnvupT0Cv30nxxzQS1+Ls
+	HvB7vf3kZLgoClOVOUCIEQuAMWRa20fYOUJsx1ENGGdOH55jTbvUiUSrrLc0D12roXQ9ypRlBsojr
+	kOcSTDEVzAzj4+o1QVCg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1so1pO-00000005rkt-1lQk;
-	Tue, 10 Sep 2024 14:26:46 +0000
-Received: from out02.mta.xmission.com ([166.70.13.232])
+	id 1so2Z0-000000061tU-2YZV;
+	Tue, 10 Sep 2024 15:13:54 +0000
+Received: from mail-ej1-f50.google.com ([209.85.218.50])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1so1pK-00000005rhg-3y7O
+	id 1so2Yx-000000061sZ-1k4E
 	for kexec@lists.infradead.org;
-	Tue, 10 Sep 2024 14:26:44 +0000
-Received: from in02.mta.xmission.com ([166.70.13.52]:35602)
-	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1so1p3-00FrpQ-8z; Tue, 10 Sep 2024 08:26:25 -0600
-Received: from ip68-227-165-127.om.om.cox.net ([68.227.165.127]:55678 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1so1p2-009HMx-7D; Tue, 10 Sep 2024 08:26:24 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: ardb@kernel.org,  linux-efi@vger.kernel.org,  kexec@lists.infradead.org,
-  bhe@redhat.com,  vgoyal@redhat.com,  devel@edk2.groups.io,
-  rppt@kernel.org,  usamaarif642@gmail.com,  gourry@gourry.net,
-  rmikey@meta.com
-References: <20240910-juicy-festive-sambar-9ad23a@devvm32600>
-Date: Tue, 10 Sep 2024 09:26:00 -0500
-In-Reply-To: <20240910-juicy-festive-sambar-9ad23a@devvm32600> (Breno Leitao's
-	message of "Tue, 10 Sep 2024 06:58:44 -0700")
-Message-ID: <87ed5rd1qf.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
-MIME-Version: 1.0
-X-XM-SPF: eid=1so1p2-009HMx-7D;;;mid=<87ed5rd1qf.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.165.127;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19dkBTjOgMEh0RF9HPfgeclbCjl4TDYDm8=
+	Tue, 10 Sep 2024 15:13:53 +0000
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a8ce5db8668so652790366b.1
+        for <kexec@lists.infradead.org>; Tue, 10 Sep 2024 08:13:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725981228; x=1726586028;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qT/8R/5BLp+GREKZ2zNCykpf17IboodqIA5H60ak+44=;
+        b=BxlsPtKQsimnPd+TBoNUKRrVqJXTlNVH7xhJKY/l/ltwcI5c0jSwBBr3Hg+2S4b8iV
+         jeg/e0R/ltkWp0EqDNCWeZphMIsTC5y5BDA/79Vos5xxsjkuPFqW5auxesAWTr/1eJLa
+         8WCbE9ixsw3H20LxBaPk4UWQbSobuLyKZNi53fw4cO6q+Bvp+69RK/YKKpQbgdI417Xm
+         QzckvB1tdYHx2tHyJot49eiDHuUT8lOGWoT2eRxSWDVQbTh463BFuBzilzpfntZVkteU
+         WwAjMiMKfRbdaUP7P+y56KIrKstnJ2W1aJ1wmFbopcJVvWsPCwjaGxRUOMJ8xP9l3UHU
+         iT5A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5MZ+olyGSSKuIm2CC8A/6XmFNUUz8G3wlQrwZhtp24uZ97msbMMqGcP9/9QDTY0zf3uW8/g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwWXJ8KEtMgYh9DuMJ6lm0ICE1f2L/Mi0ezCdGVnL9VVvDPYx4B
+	NHQxNnUXXBqk9hGDUA03nC9XKEpJ7l5qHZCvOgslRQU7UeiWkwTx
+X-Google-Smtp-Source: AGHT+IGa324Mp4PeWqG8pH6t0Eo2JNJfFvVRTDFBDbp+jS0qdKR+yK3pu1oX1FOFMuTRkhs3lJJw7g==
+X-Received: by 2002:a17:907:6088:b0:a8d:1142:1d68 with SMTP id a640c23a62f3a-a8ffaaa54c5mr136500066b.2.1725981227436;
+        Tue, 10 Sep 2024 08:13:47 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-112.fbsv.net. [2a03:2880:30ff:70::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25ceb1ffsm500604766b.146.2024.09.10.08.13.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 08:13:46 -0700 (PDT)
+Date: Tue, 10 Sep 2024 08:13:44 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: ardb@kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org,
+	bhe@redhat.com, vgoyal@redhat.com, devel@edk2.groups.io,
+	rppt@kernel.org, usamaarif642@gmail.com, gourry@gourry.net,
+	rmikey@meta.com
 Subject: Re: EFI table being corrupted during Kexec
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: rmikey@meta.com, gourry@gourry.net, usamaarif642@gmail.com, rppt@kernel.org, devel@edk2.groups.io, vgoyal@redhat.com, bhe@redhat.com, kexec@lists.infradead.org, linux-efi@vger.kernel.org, ardb@kernel.org, leitao@debian.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out02.mta.xmission.com); SAEximRunCond expanded to false
+Message-ID: <20240910-uppish-gopher-of-spirit-f14f0e@devvm32600>
+References: <20240910-juicy-festive-sambar-9ad23a@devvm32600>
+ <87ed5rd1qf.fsf@email.froward.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87ed5rd1qf.fsf@email.froward.int.ebiederm.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240910_072643_007784_A692D365 
-X-CRM114-Status: GOOD (  29.00  )
+X-CRM114-CacheID: sfid-20240910_081351_476943_CC783CA7 
+X-CRM114-Status: GOOD (  23.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,61 +79,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-QnJlbm8gTGVpdGFvIDxsZWl0YW9AZGViaWFuLm9yZz4gd3JpdGVzOgoKPiBXZSd2ZSBzZWVuIGEg
-cHJvYmxlbSBpbiB1cHN0cmVhbSBrZXJuZWwga2V4ZWMsIHdoZXJlIGEgRUZJIFRQTSBsb2cgZXZl
-bnQgdGFibGUKPiBpcyBiZWluZyBvdmVyd3JpdHRlbi4gIFRoaXMgcHJvYmxlbSBoYXBwZW4gb24g
-cmVhbCBtYWNoaW5lLCBhcyB3ZWxsIGFzIGluIGEKPiByZWNlbnQgRURLMiBxZW11IFZNLgo+Cj4g
-RGlnZ2luZyBkZWVwLCB0aGUgdGFibGUgaXMgYmVpbmcgb3ZlcndyaXR0ZW4gZHVyaW5nIGtleGVj
-LCBtb3JlIHByZWNpc2VseSB3aGVuCj4gcmVsb2NhdGluZyBrZXJuZWwgKHJlbG9jYXRlX2tlcm5l
-bCgpIGZ1bmN0aW9uKS4KPgo+IEkndmUgYWxzbyBmb3VuZCB0aGF0IHRoZSB0YWJsZSBpcyBiZWlu
-ZyBwcm9wZXJseSByZXNlcnZlZCB1c2luZwo+IG1lbWJsb2NrX3Jlc2VydmUoKSBlYXJseSBpbiB0
-aGUgYm9vdCwgYW5kIHRoYXQgcmFuZ2UgZ2V0cyBvdmVyd3JpdHRlbiBsYXRlciBpbgo+IGJ5IHJl
-bG9jYXRlX2tlcm5lbCgpLiBJbiBvdGhlciB3b3Jkcywga2V4ZWMgaXMgb3ZlcndyaXRpbmcgYSBt
-ZW1vcnkgdGhhdCB3YXMKPiBwcmV2aW91c2x5IHJlc2VydmVkIChhcyBtZW1ibG9ja19yZXNlcnZl
-KCkpLgo+Cj4gVXNhbWEgZm91bmQgdGhhdCBrZXhlYyBvbmx5IGhvbm91cnMgbWVtb3J5IHJlc2Vy
-dmF0aW9ucyBmcm9tIC9zeXMvZmlybXdhcmUvbWVtbWFwCj4gd2hpY2ggY29tZXMgZnJvbSBlODIw
-X3RhYmxlX2Zpcm13YXJlIHRhYmxlLgo+Cj4gTG9va2luZyBhdCB0aGUgVFBNIHNwZWMsIEkgZm91
-bmQgdGhlIGZvbGxvd2luZyBwYXJ0Ogo+Cj4gCUlmIHRoZSBBQ1BJIFRQTTIgdGFibGUgY29udGFp
-bnMgdGhlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIFBsYXRmb3JtIEZpcm13YXJlIFRDRyBsb2cs
-Cj4gCWZpcm13YXJlIOKAnHBpbnPigJ0gdGhlIG1lbW9yeSBhc3NvY2lhdGVkIHdpdGggdGhlIFBs
-YXRmb3JtIEZpcm13YXJlIFRDRyBsb2csIGFuZCByZXBvcnRzCj4gCXRoaXMgbWVtb3J5IGFzIOKA
-nFJlc2VydmVk4oCdIG1lbW9yeSB2aWEgdGhlIElOVCAxNWgvRTgyMCBpbnRlcmZhY2UuCj4KPgo+
-IEZyb206IGh0dHBzOi8vdHJ1c3RlZGNvbXB1dGluZ2dyb3VwLm9yZy93cC1jb250ZW50L3VwbG9h
-ZHMvUEMtQ2xpZW50UGxhdGZvcm1fUHJvZmlsZV9mb3JfVFBNXzJwMF9TeXN0ZW1zX3Y0OV8xNjEx
-MTRfcHVibGljLXJldmlldy5wZGYKPgo+IEkgYW0gd29uZGVyaW5nIGlmIHRoYXQgbWVtb3J5IHJl
-Z2lvbi9yYW5nZSBzaG91bGQgYmUgcGFydCBvZiBlODIwIHRhYmxlIHRoYXQgaXMKPiBwYXNzZWQg
-YnkgRUZJIGZpcm13YXJlIHRvIGtlcm5lbCwgYW5kIGlmIGl0IGlzIG5vdCBwYXNzZWQgKGFzIGl0
-IGlzIG5vdCBiZWluZwo+IHBhc3NlZCB0b2RheSksIHRoZW4gdGhlIGtlcm5lbCBkb2Vzbid0IG5l
-ZWQgdG8gcmVzcGVjdCBpdCwgYW5kIGl0IGlzIGZyZWUgdG8KPiBvdmVyd3JpdGUgKGFzIGl0IGRv
-ZXMgdG9kYXkpLiBJbiBvdGhlciB3b3JkcywgdGhpcyBpcyBhIGZpcm13YXJlIGJ1ZyBhbmQgbm90
-IGEKPiBrZXJuZWwgYnVnLgo+Cj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZz8KCkkgYWdyZWUgdGhh
-dCB0aGlzIGFwcGVhcnMgdG8gYmUgYSBmaXJtd2FyZSBidWcuICBUaGlzIG1lbW9yeSBpcyByZXNl
-cnZlZAppbiBvbmUgbG9jYXRpb24gYW5kIG5vdCBpbiBhbm90aGVyIGxvY2F0aW9uLgoKVGhhdCBz
-YWlkIHRoYXQgZG9lc24ndCBtZWFuIHdlIGNhbid0IGRlYWwgd2l0aCBpdCBpbiB0aGUga2VybmVs
-LgphY3BpX3RhYmxlX3VwZ3JhZGUgc2VlbXMgdG8gaGF2ZSBoaXQgYSBzaW1pbGFyIGlzc3VlIGlz
-c3VlIGFuZCBjYWxscwphcmNoX3Jlc2VydmVfbWVtX2FyZWEgdG8gcmVzZXJ2ZSB0aGUgYXJlYSBp
-biB0aGUgZTgyMHRhYmxlcy4KCgpUaGUgbGFzdCB0aW1lIEkgbG9va2VkIHRoZSBlODIwIHRhYmxl
-cyAoaW4gdGhlIGtlcm5lbCkgYXJlIHVzZWQgdG8gc3RvcmUKdGhlIGVmaSBtZW1vcnkgbWFwIHdo
-ZW4gYXZhaWxhYmxlIGFuZCBvbmx5IHVzZSB0aGUgdHJ1ZSBlODIwIGRhdGEgb24Kb2xkZXIgc3lz
-dGVtcy4KCldoaWNoIGlzIGEgbG9uZyB3YXkgb2Ygc2F5IHRoYXQgdGhlIGU4MjAgdGFibGUgaW4g
-dGhlIGtlcm5lbCBsYXN0IEkKbG9va2VkIHdhcyB0aGUgbWFzdGVyIHRhYmxlLCBvZiBob3cgdGhl
-IGZpcm13YXJlIHZpZXdzIHRoZSBtZW1vcnkuCgoKQXMgSSByZWNhbGwgdGhlIG1lbWJsb2NrIGFs
-bG9jYXRvciBpcyB0aGUgYm9vdHN0cmFwIG1lbW9yeSBhbGxvY2F0b3IKdXNlZCB3aGVuIGJyaW5n
-aW5nIHVwIHRoZSBrZXJuZWwuICBTbyBJIGRvbid0IHNlZSByZXNlcnZpbmcgc29tZXRoaW5nCmlu
-IHRoZSBtZW1ibG9jayBhbGxvY2F0b3IgYXMgYmVpbmcgYXV0aG9yaXRhdGl2ZSBhcyB0byBob3cg
-dGhlIGZpcm13YXJlCmhhcyBzZXR1cCBtZW1vcnkuCgoKCkkgd291bGQgc3VnZ2VzdCB3cml0aW5n
-IGEgcGF0Y2ggdG8gdXBkYXRlIHdoYXRldmVyIGlzIGNhbGxpbmcKbWVtYmxvY2tfcmVzZXJ2ZSB0
-byBhbHNvLCBvciBwZXJoYXBzIGluIHByZWZlcmVuY2UgdG8gdXBkYXRlIHRoZSBlODIwCm1hcC4g
-IElmIHRoZSBjb2RlIGlzIG5vdCB4ODYgc3BlY2lmaWMgSSB3b3VsZCBzdWdnZXN0IHVzaW5nIEFD
-UEkncwphcmNoX3Jlc2VydmVfbWVtX2FyZWEgY2FsbC4KCgpJZiB5b3UgaGF2ZSBhIGdvb2QgcGF0
-aCB0byB5b3VyIHRoZSBmb2xrcyB3aG8gd3JpdGUgZm9yIHRoZSBjb21wdXRlcnMKd2hlcmUgdGhp
-cyBoYXBwZW5zIGl0IHNlZW1zIGVudGlyZWx5IHJlYXNvbmFibGUgdG8gcmVwb3J0IHRoaXMgYXMg
-YSBidWcKdG8gdGhlbSBhcyB3ZWxsLgoKRXJpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+Hello Eric,
+
+On Tue, Sep 10, 2024 at 09:26:00AM -0500, Eric W. Biederman wrote:
+> > I am wondering if that memory region/range should be part of e820 table that is
+> > passed by EFI firmware to kernel, and if it is not passed (as it is not being
+> > passed today), then the kernel doesn't need to respect it, and it is free to
+> > overwrite (as it does today). In other words, this is a firmware bug and not a
+> > kernel bug.
+> >
+> > Am I missing something?
+> 
+> I agree that this appears to be a firmware bug.  This memory is reserved
+> in one location and not in another location.
+
+That was is our current understanding also, but, having the same issue
+in EDK2 and on a real machine firmware was surprising.
+
+Anyway, I've CCed the EDK2 mailing list in this thread as well, let's
+see if someone has any comment.
+
+> As I recall the memblock allocator is the bootstrap memory allocator
+> used when bringing up the kernel.  So I don't see reserving something
+> in the memblock allocator as being authoritative as to how the firmware
+> has setup memory.
+> 
+> I would suggest writing a patch to update whatever is calling
+> memblock_reserve to also, or perhaps in preference to update the e820
+> map.  If the code is not x86 specific I would suggest using ACPI's
+> arch_reserve_mem_area call.
+
+Should all memblock_reserve() memory ranges be mapped to e820 table, or,
+just specific cases where we see problems?
+
+Thanks
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
