@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 033CCEE49BC
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78850EE57C2
 	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 15:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,57 +12,57 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=T5L55J52FYhx3rjcL+Km43SiMbu4+R8Qf9+CT0ww+ps=; b=LtO0UP7Tnk2eqU
-	roHce7kQXz7WgthLzOPNZTJsNT76zUGh++SUPE92IgSbJbdZznrU519XP00Yrd4GFHZqOtzymt2ta
-	c3mpWEeix0r/v6Ov/dZQZ4jZ4RlYRmsitQ2VjuDw7FMCChvWpMGyGoeE/ertZ7XwFt7GaFcQJ2XnL
-	2n3elZ0xFuQoaVw7RtL3YHPU/kul772GxBjrNuADN/VMxhFU/OwuWc7SqrGVIaK/y5ZLndihy2vmT
-	rHX1tBnu1x4K+6ot1HrApExLiv336NP7jbkclUViJe0+j630NEmwZEpwdL7OVOu2ogTZoUgN/z5fs
-	p8Gm7sNDpRYUb8MWDY7Q==;
+	List-Owner; bh=ySPETofK7tLBGCEIf7l5Iery60uwni9rSdOHab4+UQA=; b=nd5+vpDcteB6Ye
+	Nvf5yyYDWyVj2CX3SXcLsbfK2Ab78bZ03AGYsMc45jjYYIFRS5t5GSqeM/NI0Boev7ohlcUrkR5KW
+	Z5J00jOkVHvtjZQGWxSZ2eG/0PxDI9+arulF3kfR6PmT9Ig4JXhTqCLS0obbgBZ6qURMxouMXZanT
+	1nU/4gTV1TgJ3/2X97RBZXZUO697S71fLVhlmkG1QIg+8hrC0MdSjJJAMy2K7Xck5Q6k7/7UzAh1x
+	sZkzr62uatyN/PoHb3PGvFWT1gDXxz1+3vB133/O/rc9DjyCrrfDk8uHxkP3YXhE91fLAlvTheamy
+	xDVGxv03Xmk2yri5xq8A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soPAd-0000000A7sK-1aeE;
-	Wed, 11 Sep 2024 15:22:15 +0000
+	id 1soPAe-0000000A7sm-08Qv;
+	Wed, 11 Sep 2024 15:22:16 +0000
 Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soOyJ-0000000A5CV-0nKH
+	id 1soOzF-0000000A5Mc-3ewi
 	for kexec@lists.infradead.org;
-	Wed, 11 Sep 2024 15:09:32 +0000
+	Wed, 11 Sep 2024 15:10:31 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
 	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=StjhS8B78DcDy6BGi67+Cz5YOv6C9jIwH3H6WigF/WM=; b=r+UhIyBWzMNTcNYxUJSUllsIDu
-	bu2ZKt5cxVuYjqUkhKZKxQ3tFhHQQ8UFlpvwKu31tci73Zl6s8gQYkX+Bt9kqCGfsG8Bou9iJKm3J
-	iT8mrpkRdPgL0hXNAI11wDl+Q2Y+WDt9wfTTB+70Wf3WfhOTX5TZjxMc3NFqqFSQCkWRzWlEgo4WL
-	NKo6QFhEvNJJzk/KAmqtNJE94OqnR9N5dN4ui+dZ8O0rMEf6lmNxMbhJsZrIzpGcYHtaJQWYW6wOK
-	zNUdsbzl6vJ/n+Qx48V0sQMPsyLlg0brzgAiSi1+RKrLlOBjd/s7VELVgnsKekMzJni/4Sn1Zq4Zo
-	9tS8nxvg==;
+	bh=iSUmAoKbkFC1zgzAwsv+m6BjssQM8FyL0ByRqeFy6+I=; b=CZKvIOj7HFsJS0sdHhYovrfpue
+	oo92pRbxJYzGUfB2zrQwfScKO4eESbCllOLYBd6xMu4DIFZ5hQjmPaN6p+FSw/zaAPn99YsB8o483
+	FFW+GGCJHG8uedG1UApHD93E3r55OaLsWXNKe+gfZnhhaKFK7BPxJeuKdJmWKC3xRiaB7BaVjnNLU
+	GkHusTCXSwzDr2eLMIwMJTIQmx9E3QoWTiNpXcEMm+w56j7+N7zT8aDU5fwuqOo9TbExjAygmHnIe
+	HKcNAymcqlf64ASd/BMN686Z49TG/j8/r2/TlOXW5J4M/3jh1AY1p7NNvos8B8QW6E+0VzKQ4biCk
+	0Xo7ZPcA==;
 Received: from [195.69.0.8] (helo=[172.21.208.109])
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1soOy6-00CUTT-Gv; Wed, 11 Sep 2024 17:09:18 +0200
-Message-ID: <d954da78-87cf-d7d9-a620-0c2fae5dd242@igalia.com>
-Date: Wed, 11 Sep 2024 17:09:11 +0200
+	id 1soOzD-00CUVu-4l; Wed, 11 Sep 2024 17:10:27 +0200
+Message-ID: <121b62a7-bd2d-0ded-97a7-ac890831ca63@igalia.com>
+Date: Wed, 11 Sep 2024 17:10:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
 Subject: Re: [PATCH V2] Documentation: Improve crash_kexec_post_notifiers
  description
 Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, vgoyal@redhat.com,
- dyoung@redhat.com, corbet@lwn.net, linux-kernel@vger.kernel.org,
- linux-debuggers@vger.kernel.org, stephen.s.brennan@oracle.com,
- kernel@gpiccoli.net, kernel-dev@igalia.com
+To: Simon Horman <horms@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, bhe@redhat.com,
+ corbet@lwn.net, kernel@gpiccoli.net, linux-kernel@vger.kernel.org,
+ stephen.s.brennan@oracle.com, kernel-dev@igalia.com, dyoung@redhat.com,
+ vgoyal@redhat.com, linux-debuggers@vger.kernel.org
 References: <20240830182219.485065-1-gpiccoli@igalia.com>
- <ZtUrX4n+HPYhyQ9z@MiWiFi-R3L-srv>
+ <20240902082342.GC23170@kernel.org>
 From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <ZtUrX4n+HPYhyQ9z@MiWiFi-R3L-srv>
+In-Reply-To: <20240902082342.GC23170@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240911_080931_266346_AFE4B02E 
-X-CRM114-Status: GOOD (  17.06  )
+X-CRM114-CacheID: sfid-20240911_081030_015877_AAC7DB7E 
+X-CRM114-Status: GOOD (  14.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,25 +79,12 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02/09/2024 05:05, Baoquan He wrote:
-> On 08/30/24 at 03:21pm, Guilherme G. Piccoli wrote:
->> Be more clear about the downsides, the upsides (yes, there are some!)
->> and about code that unconditionally sets that.
->>
->> Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
->> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
->>
->> ---
->>
->> V2: Some wording improvements from Stephen, thanks!
->> Also added his review tag.
->>
->> V1 link: https://lore.kernel.org/r/20240830140401.458542-1-gpiccoli@igalia.com/
->>
->>
->>  Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++++------
->>  1 file changed, 10 insertions(+), 6 deletions(-)
->>
+On 02/09/2024 10:23, Simon Horman wrote:
+> 
+> Hi Guilherme,
+> 
+> Some subjective grammar nits.
+> 
 >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
 >> index efc52ddc6864..351730108c58 100644
 >> --- a/Documentation/admin-guide/kernel-parameters.txt
@@ -116,27 +103,26 @@ On 02/09/2024 05:05, Baoquan He wrote:
 >> +			notifiers and dumping kmsg. This option increases the
 >> +			risks of a kdump failure, since some panic notifiers
 >> +			can make the crashed kernel more unstable. In the
+> 
+> nit: In the configurations -> In configurations
+> 
 >> +			configurations where kdump may not be reliable,
 >> +			running the panic notifiers can allow collecting more
 >> +			data on dmesg, like stack traces from other CPUS or
 >> +			extra data dumped by panic_print. Notice that some
->> +			code enables this option unconditionally, like
->> +			Hyper-V, PowerPC (fadump) and AMD SEV.
->                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> I know Hyper-V enable panic-notifiers by default, but don't remember how
-> PowerPC and AMD SEC behave in this aspect. While at it, can you add a
-> little more words to state them in log so that people can learn it?
-> Thanks.
 > 
-Hi Baoquan, tnx for the suggestion! You mean mention that in the commit
-message? If so, I can certainly do - will sent a new version soon(tm)
-and include it =)
+> nit: Notice that -> Note that
+> 
+>> +			code enables this option unconditionally, like
+> 
+> Maybe: some code enables -> some configurations enable
+> 
 
+Hey Simon, tnx for the suggestions, will change in the next version.
 Cheers,
 
 
 Guilherme
-
 
 _______________________________________________
 kexec mailing list
