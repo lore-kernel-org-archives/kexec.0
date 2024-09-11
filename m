@@ -4,98 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17EF3EE4997
-	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 11:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 964A8EE4997
+	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 11:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=j0uDzgsFMXA4LMEkNOwNQ3cQ3IinvuAQban8Qo3Lhls=; b=t89KD9QRiRZGDQ
-	A7quH9ChWsEdb+AV8aZfo8IRPIV+yrlX+CdrYbdGkwH5IgnW+brByAimG+zjnzUlrKpHHmE1IgWen
-	0slE42w33o21OeCDEVsJTUR/owPd8zeWSth7fQ7i0lYqY3yTQuWPpBOiFpuqGyf2zlxgO4Kjav8dp
-	WkssFCM70RbeJycOR21VGN/uhttGByV/qrC/CTHPhrQxg8fCf0kiItKm9k4gRcGrFHYOQoDv6Xm5+
-	KnVXWIDTlFtoi5kyiOuxrtLlP4M5GpXgzuyVVUB5sjHZN0rNw9ISb+i6wHZrenh4gwiXxIo+PltAJ
-	kqLOE0jTt08H0pvYG0+g==;
+	List-Owner; bh=twyJyJK0IO8JtnnVmHM50GbdCDEX8T/8Fs0drzjsG0I=; b=DC3I7HAtyDUx7i
+	SeLNDsiuIicA4u2ZXqpBDxqpdFmojXUt4kraZkoX9h7BK9Lnq9dt6T+25T3R5ojjmmBUgnG0RvQE0
+	ra4ekLgUcRW6SjW9HmGQpbzApRzJXABmXsCUGpFWmlOKQOtG9121fl71qO9Dt4LYXrwiLz08rGhIW
+	oxQOO6yylpmIbuN4wleMlfSKHXU4fIHhZYpTbFmisHNcXBASYmDAKQnop/ZHZJyFVJbZ9i18MBh/u
+	CGgLsy7+jpLs0SeVr16ozYKvSzi/LRXeZE8K2/lR/ZnK31tGEoxErc3CAQjMcoaBKIBYjtDbwnFnw
+	1pzFEVsKeqAsrezgSBUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soLMy-00000009Gar-3KIy;
-	Wed, 11 Sep 2024 11:18:44 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1soLQO-00000009H8D-0mTA;
+	Wed, 11 Sep 2024 11:22:16 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soLK6-00000009Fxs-1dg1
+	id 1soLPZ-00000009H1o-3NWL
 	for kexec@lists.infradead.org;
-	Wed, 11 Sep 2024 11:15:48 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48B7JqCW028394;
-	Wed, 11 Sep 2024 11:15:38 GMT
+	Wed, 11 Sep 2024 11:21:27 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48B4tC8W017485;
+	Wed, 11 Sep 2024 11:21:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=Wp2GsN0eV/Isimo+fx+sy80p+eNfCNRoPfy1GC0
-	Wgj8=; b=g+9mKXIFOQ0UCLDq6HB3/Bzz7mILPqulbYX/HTPPt0Up6XiXH6yL4js
-	HlOLkq9ISsn6gF19d09SaLtO5v8BA0q28HZM44D2UKWaFwtuh61pdgcosS3srBpG
-	6aWiBjkp5UYEnxhiW563ufP+3npsV+rBSCm3OwJaOjvM+SOb7Zsp5TDJqbxTpZvO
-	1IxvFjIGV2i97mFd8JRAM3pHQCphIAiz9B6BSNSdPJ66h+oBEJArOJWdX77tKtCr
-	cD2Ap/96khxg7zr66o3dw4H5yugnCjiCWg4I9PtzykpXUn8lvMv2rXJZKg40xDgS
-	Hh8bagItolcIS1/3FLzRbfUygsNJEpQ==
+	:mime-version; s=pp1; bh=nBF5sI29Rox57tDf+dFBWrQ9inWyIhlzi9IfNsS
+	nFRU=; b=oFtZMlkXigY4rAgSoR6KVg3y7WuNKQnQsHm6B2uLhUIsuKt9lYQahMS
+	KcmnGMDojPmi/JAsestRyHwr6nXy23uTV/Z2ZgwKuXV8+0Ufyf8q8qUYJiQ7qpFs
+	kvzUmyabBahTp6RDxj6zBSknSIfLwkEjrk8Hc4lIwKu6wgdG3nJrbcOL8C2/khKq
+	wVbTx8Wx/WU/hmWUaIFeh//hJ7f6POxYx10qSWsG7ehX+cqfaHPUmvqXkzjYLSj4
+	Q7YDiq6Y0W4aU220jL6orHXqgBphZbU8/1rxIEmFrytbMy4oF2V716+DAqm8udXD
+	q6RsZcvS8VqtoQOi8lnlvuzQDLKA2BQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gefyn1n2-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gejanbch-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Sep 2024 11:15:37 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48BBFbqG025638;
-	Wed, 11 Sep 2024 11:15:37 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gefyn1mu-1
+	Wed, 11 Sep 2024 11:21:20 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48BBIUAY002556;
+	Wed, 11 Sep 2024 11:21:19 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gejanbc7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Sep 2024 11:15:37 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48BAaIGw032103;
-	Wed, 11 Sep 2024 11:15:36 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41h2nms01c-1
+	Wed, 11 Sep 2024 11:21:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48B9qfRh032415;
+	Wed, 11 Sep 2024 11:21:18 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41h1j0s8qe-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Sep 2024 11:15:36 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48BBFYVB51511696
+	Wed, 11 Sep 2024 11:21:18 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48BBLGWW50463098
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Sep 2024 11:15:34 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 58EC02004E;
-	Wed, 11 Sep 2024 11:15:34 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 418C320040;
-	Wed, 11 Sep 2024 11:15:31 +0000 (GMT)
+	Wed, 11 Sep 2024 11:21:16 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29C8E20049;
+	Wed, 11 Sep 2024 11:21:16 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B57620040;
+	Wed, 11 Sep 2024 11:21:13 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.116.75])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 11 Sep 2024 11:15:30 +0000 (GMT)
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Sep 2024 11:21:12 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: bhe@redhat.com
 Cc: Hari Bathini <hbathini@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
-Subject: [PATCH v2] kexec/crash: no crash update when kexec in progress
-Date: Wed, 11 Sep 2024 16:45:28 +0530
-Message-ID: <20240911111528.104303-1-sourabhjain@linux.ibm.com>
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
+Subject: [PATCH RESEND v2] kexec/crash: no crash update when kexec in progress
+Date: Wed, 11 Sep 2024 16:51:11 +0530
+Message-ID: <20240911112111.108056-1-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.46.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LXb6hJqXbhDVpIsaY4eYybKBdraT82cB
-X-Proofpoint-ORIG-GUID: jLbe-4MlMbIJfO3TCUFPXY5Xfgyq3fnl
+X-Proofpoint-ORIG-GUID: 5LbiWJagaFGoMF1stH_GnUIYrKVP5C8F
+X-Proofpoint-GUID: oec8U_PFtdv40NkCfJS3AG_OrhMxS7PD
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-10_12,2024-09-09_02,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- adultscore=0 clxscore=1011 spamscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409110082
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2409110082
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240911_041546_793698_DD8343A5 
-X-CRM114-Status: GOOD (  18.67  )
+X-CRM114-CacheID: sfid-20240911_042125_873086_AE2DC7A6 
+X-CRM114-Status: GOOD (  19.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -145,13 +145,12 @@ the kdump image.
 Cc: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: kexec@lists.infradead.org
-Cc: linuxppc-dev@ozlabs.org
+Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org
 Reported-by: Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
-
 Changelog:
 
 Since v1:
@@ -161,6 +160,8 @@ Since v1:
  - Rebased on top of #next-20240910 to avoid conflict with the patch below
    https://lore.kernel.org/all/20240812041651.703156-1-sourabhjain@linux.ibm.com/T/#u
 
+V2 RESEND:
+ - Update linuxppc-dev mailing list address
 ---
  kernel/crash_core.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
