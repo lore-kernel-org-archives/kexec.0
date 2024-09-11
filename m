@@ -4,65 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37B08ECE582
-	for <kexec@archiver.kernel.org>; Tue, 10 Sep 2024 17:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5E72EE021A
+	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 08:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
-	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=nRp57vkqso5IXYZevGCMU4lMVrmKarXpuqhyr5+8DZ4=; b=3Ae0HALb0LgBPce4iQx5YTMi75
-	jn/Pin2jGOmjqERROlx+7v8nXZlXDYBpiO3zfmOS3aez/XEdHx49AaQoH3l3RyVreEkq4epYgY34M
-	mFe/AFxsG7739et87H8UCkEC42bqiJYug4+EAv4DRmJrTy+qCv1cFesfcXbxysKyBZ2PvvLbrWni/
-	xFcTvRBMixDJh7lTKSHLZ4pK93HyGINNqx4OW1krPRkgeV1jmAh8e6opQLvbd5wt7PPhxsXR47+8d
-	kGfOQ62guaVcox9+zIWSVRdWUhNCCiT5M5lnF0xMdlDk8oDrDwpNep4avgFexGCvmN8xfX/mZrfTf
-	L4U9k7cg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=Bj55qBuQ0NeQgKWCOZ63FrVpHuutav8reLiTrRlg7qg=; b=lWDtDd1fAe1+Iw
+	zjSYSkFr5HENGb7lrXxdLXIb9qJxvQEjYU7XgyyBQp3CbXBf54RZIN5dBdT9a5B5PPRhASitZg89F
+	O2P6m7AJn3m5AzLcLXYEhO8PMjhdmd3DIgyVMP6qacS683KYbd3wkBuiNBFlDXgcqQcxzv6S6U9pO
+	eKKtSfIFB+uI7FAI+hKnys2ogYOIax/VSEvQH2b+8WP20uJolKgJEx54LKpcsL4jzl9df64tGjEAU
+	QzXduu+RdYcGEDl5TWtYHt6fh9NqG3HuHhOSSA+DM4egHg/92v2G5hlNccrLkwvIxwHD4xwT5BRnt
+	ZYLulv7LpPuUSEdJ5tTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1so4KS-00000006T3g-3OVv;
-	Tue, 10 Sep 2024 17:07:00 +0000
-Received: from out01.mta.xmission.com ([166.70.13.231])
+	id 1soIcu-00000008cbL-2BfV;
+	Wed, 11 Sep 2024 08:23:00 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1so4Iy-00000006Sho-3ZM6
+	id 1soIWb-00000008auE-2bnU
 	for kexec@lists.infradead.org;
-	Tue, 10 Sep 2024 17:05:30 +0000
-Received: from in01.mta.xmission.com ([166.70.13.51]:55468)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1so4Iw-0092sG-Ob; Tue, 10 Sep 2024 11:05:26 -0600
-Received: from ip68-227-165-127.om.om.cox.net ([68.227.165.127]:46314 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1so4Iv-005kJH-SY; Tue, 10 Sep 2024 11:05:26 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: ardb@kernel.org,  linux-efi@vger.kernel.org,  kexec@lists.infradead.org,
-  bhe@redhat.com,  vgoyal@redhat.com,  devel@edk2.groups.io,
-  rppt@kernel.org,  usamaarif642@gmail.com,  gourry@gourry.net,
-  rmikey@meta.com
-References: <20240910-juicy-festive-sambar-9ad23a@devvm32600>
-	<87ed5rd1qf.fsf@email.froward.int.ebiederm.org>
-	<20240910-uppish-gopher-of-spirit-f14f0e@devvm32600>
-Date: Tue, 10 Sep 2024 12:05:19 -0500
-In-Reply-To: <20240910-uppish-gopher-of-spirit-f14f0e@devvm32600> (Breno
-	Leitao's message of "Tue, 10 Sep 2024 08:13:44 -0700")
-Message-ID: <87seu7a180.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	Wed, 11 Sep 2024 08:16:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726042588;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=S9gOHV2P6n1r9v/KacsRsytS/lNb4zOlPi+8XQnUG00=;
+	b=Lzrx1mfLX/yHSBGvXVrJK6HrmHqfy+glN2kttj+KeW/3VBdJJ0iLEtPvl1ih8468weybO3
+	Nz69MmMw70rfPJ/gh8obKP/OtPXmHeiGdcd/upD/JWsFbSnW5CD9n+ZgpJ+6dVyQyvBrz/
+	yBp8f+xCU956scKXnzDGUVMd4lXVoUc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-149-1M_BptrPMby1ljoBlh4kPQ-1; Wed,
+ 11 Sep 2024 04:16:27 -0400
+X-MC-Unique: 1M_BptrPMby1ljoBlh4kPQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 502DB19560AF;
+	Wed, 11 Sep 2024 08:16:25 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.58])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F0C3630001A1;
+	Wed, 11 Sep 2024 08:16:19 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: thomas.lendacky@amd.com,
+	dyoung@redhat.com,
+	daniel.kiper@oracle.com,
+	noodles@fb.com,
+	lijiang@redhat.com,
+	kexec@lists.infradead.org,
+	x86@kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 0/2] x86/mm/sme: fix the kdump kernel breakage on SME system when CONFIG_IMA_KEXEC=y
+Date: Wed, 11 Sep 2024 16:16:13 +0800
+Message-ID: <20240911081615.262202-1-bhe@redhat.com>
 MIME-Version: 1.0
-X-XM-SPF: eid=1so4Iv-005kJH-SY;;;mid=<87seu7a180.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.165.127;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19JOxRHwKLUZUCY1QPm1gfN+KbZ5kGU+nk=
-Subject: Re: EFI table being corrupted during Kexec
-X-SA-Exim-Connect-IP: 166.70.13.51
-X-SA-Exim-Rcpt-To: rmikey@meta.com, gourry@gourry.net, usamaarif642@gmail.com, rppt@kernel.org, devel@edk2.groups.io, vgoyal@redhat.com, bhe@redhat.com, kexec@lists.infradead.org, linux-efi@vger.kernel.org, ardb@kernel.org, leitao@debian.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240910_100528_910982_B898B2FC 
-X-CRM114-Status: GOOD (  24.12  )
+X-CRM114-CacheID: sfid-20240911_011629_761322_0E00E03A 
+X-CRM114-Status: UNSURE (   8.61  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,46 +86,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Breno Leitao <leitao@debian.org> writes:
+Currently, distros like Fedora/RHEL have enabled CONFIG_IMA_KEXEC by
+default. This makes kexec/kdump kernel always fail to boot up on SME
+platform because of a code bug. By debugging, the root cause is found
+out and bug is fixed with this patchset.
 
-> Hello Eric,
->
-> On Tue, Sep 10, 2024 at 09:26:00AM -0500, Eric W. Biederman wrote:
->> > I am wondering if that memory region/range should be part of e820 table that is
->> > passed by EFI firmware to kernel, and if it is not passed (as it is not being
->> > passed today), then the kernel doesn't need to respect it, and it is free to
->> > overwrite (as it does today). In other words, this is a firmware bug and not a
->> > kernel bug.
->> >
->> > Am I missing something?
->> 
->> I agree that this appears to be a firmware bug.  This memory is reserved
->> in one location and not in another location.
->
-> That was is our current understanding also, but, having the same issue
-> in EDK2 and on a real machine firmware was surprising.
->
-> Anyway, I've CCed the EDK2 mailing list in this thread as well, let's
-> see if someone has any comment.
->
->> As I recall the memblock allocator is the bootstrap memory allocator
->> used when bringing up the kernel.  So I don't see reserving something
->> in the memblock allocator as being authoritative as to how the firmware
->> has setup memory.
->> 
->> I would suggest writing a patch to update whatever is calling
->> memblock_reserve to also, or perhaps in preference to update the e820
->> map.  If the code is not x86 specific I would suggest using ACPI's
->> arch_reserve_mem_area call.
->
-> Should all memblock_reserve() memory ranges be mapped to e820 table, or,
-> just specific cases where we see problems?
+Changelog:
+v2->v3:
+=======
+- Add how the miscaculation is caused into patch 2 log according to
+  Tom's suggestion.
+- Add Tom's tag.
 
-Just specific cases.  There could be other linux specific reasons to
-tell the memblock allocator not to allocation from a specific range
-of memory.
+v1->v2:
+=======
+- Add patch 1 to clean up the confusing local varibale naming because
+  people may mix up the local variable 'size' with the passed in parameter
+  in function early_memremap_is_setup_data(). Suggested by Dave and Tom
+  during v1 patch reviewing.
 
-Eric
+Baoquan He (2):
+  x86/mm: rename the confusing local variable in
+    early_memremap_is_setup_data()
+  x86/mm/sme: fix the kdump kernel breakage on SME system when
+    CONFIG_IMA_KEXEC=y
+
+ arch/x86/mm/ioremap.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+-- 
+2.41.0
 
 
 _______________________________________________
