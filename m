@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9241EEE499B
-	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 11:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2B72EE49B3
+	for <kexec@archiver.kernel.org>; Wed, 11 Sep 2024 14:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1kxfi/bA2GhFj0qtMf4h3HX163/nXyCdNImuYeMKpgs=; b=sLh517MJL59JTO
-	roaeCydTQ76DPQv2jKQeiiQsN3rRq5oICo0TSAr1Q2jNuzB8AS+KffqtJetwh/SDPH0rc2VCVvIB0
-	D3kopvkcOAo6WQn2Hxo9vtBZLoDr//BnVoO69Ttt+b+5aeD735u7HFecE3JX+kzjOSgWNLecCU0Lq
-	hK74akwXopHts5YyKhy1YfwcyRP4YK8hIILsdg7tZmzPalD4FQyAXp7EGBHjGajujaDCiq3wVDnp+
-	ohX7yBcOFAs5wm9FZLAui5Hiaokm3ag7/4iiCrxWu/7t0tsEW2skjB4TN55ombfbi3s0pLcEOiTSZ
-	BWDG4QOSA6m5Lw12zLog==;
+	List-Owner; bh=dvmxp+YmUBR2sE+qXGKfmyG2BcH1crQ+gwqCp/ipVNE=; b=JICrVKhd5ibUnP
+	gbxpfXSoUTTbRn21AG81TNRazJ+T+J2zOI05eYplOGA5GlwwOMTcpiTiItEoVbIWFEt02x938K/oC
+	Li+EFBQjD7+pugSsVr6ib86YjiXTcvrYfbL2b4z64OVvDQwZntiNzzlj8mfM6eWBO38HBOlHhmfYz
+	+nbYU8tx+/iGKw9KsKiAmYwnn6FxSsmr1IPiTyFwAYgM0zYYBVACZiEbAR6YSekiFXIZT8YXlKFVe
+	jVgeidzukbtOeyFv1XdrJFYD48OJVwzeIFkBcv/41ikvMm24pJRW4ne/N6kM4sGWlU4RCVaAxqJFj
+	HQQDnItgz4fnRtN+whCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soLsW-00000009MEC-39nM;
-	Wed, 11 Sep 2024 11:51:20 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1soOKX-00000009u3r-3iyy;
+	Wed, 11 Sep 2024 14:28:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1soLsU-00000009MDO-0ibF
+	id 1soOCv-00000009sOA-3FjP
 	for kexec@lists.infradead.org;
-	Wed, 11 Sep 2024 11:51:19 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 53AD6A44CD4
-	for <kexec@lists.infradead.org>; Wed, 11 Sep 2024 11:51:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244AAC4CED7
-	for <kexec@lists.infradead.org>; Wed, 11 Sep 2024 11:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726055476;
-	bh=VcRhp8593HorVnJcoMR5P9X1KIpUuGKL1andDHcc1Hk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MIHVCcaKsa/zc981NiZjWwhlyj8GlC14BFiTWuoRMESHKnbYNJGqutrVX0nPqlxB1
-	 5Afwg7242KCcXd5anOcaTlzPcKxNhLdxUXphlJNtV9YD0gIZLuI6nO09cLiQjzaxiP
-	 5ZWfby9vuP1+upPnES1+8k1tiveYjVw+u8Yp/C8YL20V0v90TjbXY3ZgR5QgXa0Wv+
-	 JER5a2WNkNkX47RcufzOW4swU2XjR8bdhCVsamHeniAbyobpjeR323iE7XFsP84pAY
-	 8HdI4wBbHCxNmko+zowE18fZpuwrnivCSQuIBpdw5wYdabTNH26KFzpjbqTEvBa+t9
-	 94Et/eMvgK9rA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f754d4a6e4so58993241fa.3
-        for <kexec@lists.infradead.org>; Wed, 11 Sep 2024 04:51:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXtsqfdS3h1VoM66VQX9Sp8WDfHLk9xhvI/EXcLKznn7MNGD54rNChmDxE6I0dYAjUz/mGGrA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwNSnoJXJ8cBn+avJ67Lf+dACNfAE576JHk7Q07B6W0UJwLME+1
-	rsq7ci2Sue1yoy4Vsbh3lHZq0ocTCp5QUeGO1mZ1iXjKYq3vzTIz9aYSajZEH7uoCrXTHiTKlH3
-	3rqV3CtBrHx59n1pIPSLVUgwDfE4=
-X-Google-Smtp-Source: AGHT+IGwbhZjGqOj6sOlVvxEtdzPPBl7wj7LtWnVpMe6yBubbv7XFzPAcVcy/8ieGc+uRemrmEZv58Pc2Xmv81kF6a0=
-X-Received: by 2002:a05:651c:2212:b0:2f6:9787:5fc0 with SMTP id
- 38308e7fff4ca-2f751faa255mr103181591fa.40.1726055474181; Wed, 11 Sep 2024
- 04:51:14 -0700 (PDT)
+	Wed, 11 Sep 2024 14:20:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726064432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9UKjQHKbbUWDKvrveJtrSaJsbUem/1dqSveBkM7kg2E=;
+	b=OTmlSU92Jdo8s/WNvOA+o0PwlkYA6eayr5RtdiDwI6aQpOk9J+BVyzpothTGgHyHKAHtra
+	EO55NJtHqXisugzNgz5LuERt0Eiz/Jiknmm3yo/7wavtrHbWZO2i9XtSdT6us3Q4gSICxt
+	V95+7QsVi6TRXN9+EkSdYpPkYMCIdcQ=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-394-lXe3ob0CMI-wwPAWC2bJCA-1; Wed,
+ 11 Sep 2024 10:20:26 -0400
+X-MC-Unique: lXe3ob0CMI-wwPAWC2bJCA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 53DF01955E8C;
+	Wed, 11 Sep 2024 14:20:23 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.58])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA5FA30001A1;
+	Wed, 11 Sep 2024 14:20:20 +0000 (UTC)
+Date: Wed, 11 Sep 2024 22:20:15 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: akpm@linux-foundation.org, Hari Bathini <hbathini@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
+Subject: Re: [PATCH RESEND v2] kexec/crash: no crash update when kexec in
+ progress
+Message-ID: <ZuGnH5R+FOC481V3@MiWiFi-R3L-srv>
+References: <20240911112111.108056-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <20240911104109.1831501-1-usamaarif642@gmail.com>
-In-Reply-To: <20240911104109.1831501-1-usamaarif642@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 11 Sep 2024 13:51:02 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
-Message-ID: <CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
-Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in 820_table_firmware
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io, kexec@lists.infradead.org, 
-	ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, tglx@linutronix.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	leitao@debian.org, rmikey@meta.com, gourry@gourry.net
+Content-Disposition: inline
+In-Reply-To: <20240911112111.108056-1-sourabhjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240911_045118_366396_DFD34D52 
-X-CRM114-Status: GOOD (  30.83  )
+X-CRM114-CacheID: sfid-20240911_072033_911114_3087B69E 
+X-CRM114-Status: GOOD (  24.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,106 +80,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gV2VkLCAxMSBTZXB0IDIwMjQgYXQgMTI6NDEsIFVzYW1hIEFyaWYgPHVzYW1hYXJpZjY0MkBn
-bWFpbC5jb20+IHdyb3RlOgo+Cj4gTG9va2luZyBhdCB0aGUgVFBNIHNwZWMgWzFdCj4KPiBJZiB0
-aGUgQUNQSSBUUE0yIHRhYmxlIGNvbnRhaW5zIHRoZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBQ
-bGF0Zm9ybQo+IEZpcm13YXJlIFRDRyBsb2csIGZpcm13YXJlIOKAnHBpbnPigJ0gdGhlIG1lbW9y
-eSBhc3NvY2lhdGVkIHdpdGggdGhlCj4gUGxhdGZvcm0gRmlybXdhcmVUQ0cgbG9nLCBhbmQgcmVw
-b3J0cyB0aGlzIG1lbW9yeSBhcyDigJxSZXNlcnZlZOKAnSBtZW1vcnkKPiB2aWEgdGhlIElOVCAx
-NWgvRTgyMCBpbnRlcmZhY2UuCj4KPiBJdCBsb29rcyBsaWtlIHRoZSBmaXJtd2FyZSBzaG91bGQg
-cGFzcyB0aGlzIGFzIHJlc2VydmVkIGluIGU4MjAgbWVtb3J5Cj4gbWFwLiBIb3dldmVyLCBpdCBk
-b2Vzbid0IHNlZW0gdG8uIFRoZSBmaXJtd2FyZSBiZWluZyB0ZXN0ZWQgb24gaXM6Cj4gZG1pZGVj
-b2RlIC1zIGJpb3MtdmVyc2lvbgo+IGVkazItMjAyNDAyMTQtMi5lbDkKPgo+IFdoZW4gdGhpcyBh
-cmVhIGlzIG5vdCByZXNlcnZlZCwgaXQgY29tZXMgdXAgYXMgdXNhYmxlIGluCj4gL3N5cy9maXJt
-d2FyZS9tZW1tYXAuIFRoaXMgbWVhbnMgdGhhdCBrZXhlYywgd2hpY2ggdXNlcyB0aGF0IG1lbW1h
-cAo+IHRvIGZpbmQgdXNhYmxlIG1lbW9yeSByZWdpb25zLCBjYW4gc2VsZWN0IHRoZSByZWdpb24g
-d2hlcmUgZWZpLnRwbV9sb2cKPiBpcyBhbmQgb3ZlcndyaXRlIGl0IGFuZCByZWxvY2F0ZV9rZXJu
-ZWwuCj4KPiBIYXZpbmcgYSBmaXggaW4gZmlybXdhcmUgY2FuIGJlIGRpZmZpY3VsdCB0byBnZXQg
-dGhyb3VnaC4gQXMgYSBzZWNvbmRhcnkKPiBmaXgsIHRoaXMgcGF0Y2ggbWFya3MgdGhhdCByZWdp
-b24gYXMgcmVzZXJ2ZWQgaW4gZTgyMF90YWJsZV9maXJtd2FyZSBpZiBpdAo+IGlzIGN1cnJlbnRs
-eSBFODIwX1RZUEVfUkFNIHNvIHRoYXQga2V4ZWMgZG9lc24ndCB1c2UgaXQgZm9yIGtlcm5lbCBz
-ZWdtZW50cy4KPgo+IFsxXSBodHRwczovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29u
-dGVudC91cGxvYWRzL1BDLUNsaWVudFBsYXRmb3JtX1Byb2ZpbGVfZm9yX1RQTV8ycDBfU3lzdGVt
-c192NDlfMTYxMTE0X3B1YmxpYy1yZXZpZXcucGRmCj4KPiBTaWduZWQtb2ZmLWJ5OiBVc2FtYSBB
-cmlmIDx1c2FtYWFyaWY2NDJAZ21haWwuY29tPgoKSSB3b3VsZCBleHBlY3QgdGhlIEVGSSBtZW1v
-cnkgbWFwIHRvIEU4MjAgY29udmVyc2lvbiBpbXBsZW1lbnRlZCBpbgp0aGUgRUZJIHN0dWIgdG8g
-dGFrZSBjYXJlIG9mIHRoaXMuCgpJZiB5b3UgYXJlIG5vdCBib290aW5nIHZpYSB0aGUgRUZJIHN0
-dWIsIHRoZSBib290bG9hZGVyIGlzIHBlcmZvcm1pbmcKdGhpcyBjb252ZXJzaW9uLCBhbmQgc28g
-aXQgc2hvdWxkIGJlIGRvbmUgdGhlcmUgaW5zdGVhZC4KCgo+IC0tLQo+ICBhcmNoL3g4Ni9pbmNs
-dWRlL2FzbS9lODIwL2FwaS5oIHwgMiArKwo+ICBhcmNoL3g4Ni9rZXJuZWwvZTgyMC5jICAgICAg
-ICAgIHwgNiArKysrKysKPiAgYXJjaC94ODYvcGxhdGZvcm0vZWZpL2VmaS5jICAgICB8IDkgKysr
-KysrKysrCj4gIGRyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jICAgICAgfCAyICstCj4gIGluY2x1
-ZGUvbGludXgvZWZpLmggICAgICAgICAgICAgfCA3ICsrKysrKysKPiAgNSBmaWxlcyBjaGFuZ2Vk
-LCAyNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYvaW5jbHVkZS9hc20vZTgyMC9hcGkuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2U4MjAvYXBp
-LmgKPiBpbmRleCAyZTc0YTdmMGU5MzUuLjRlOWFhMjRmMDNiZCAxMDA2NDQKPiAtLS0gYS9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9lODIwL2FwaS5oCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20v
-ZTgyMC9hcGkuaAo+IEBAIC0xNiw2ICsxNiw4IEBAIGV4dGVybiBib29sIGU4MjBfX21hcHBlZF9h
-bGwodTY0IHN0YXJ0LCB1NjQgZW5kLCBlbnVtIGU4MjBfdHlwZSB0eXBlKTsKPgo+ICBleHRlcm4g
-dm9pZCBlODIwX19yYW5nZV9hZGQgICAodTY0IHN0YXJ0LCB1NjQgc2l6ZSwgZW51bSBlODIwX3R5
-cGUgdHlwZSk7Cj4gIGV4dGVybiB1NjQgIGU4MjBfX3JhbmdlX3VwZGF0ZSh1NjQgc3RhcnQsIHU2
-NCBzaXplLCBlbnVtIGU4MjBfdHlwZSBvbGRfdHlwZSwgZW51bSBlODIwX3R5cGUgbmV3X3R5cGUp
-Owo+ICtleHRlcm4gdTY0ICBlODIwX19yYW5nZV91cGRhdGVfZmlybXdhcmUodTY0IHN0YXJ0LCB1
-NjQgc2l6ZSwgZW51bSBlODIwX3R5cGUgb2xkX3R5cGUsCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGVudW0gZTgyMF90eXBlIG5ld190eXBlKTsKPiAgZXh0ZXJuIHU2
-NCAgZTgyMF9fcmFuZ2VfcmVtb3ZlKHU2NCBzdGFydCwgdTY0IHNpemUsIGVudW0gZTgyMF90eXBl
-IG9sZF90eXBlLCBib29sIGNoZWNrX3R5cGUpOwo+ICBleHRlcm4gdTY0ICBlODIwX19yYW5nZV91
-cGRhdGVfdGFibGUoc3RydWN0IGU4MjBfdGFibGUgKnQsIHU2NCBzdGFydCwgdTY0IHNpemUsIGVu
-dW0gZTgyMF90eXBlIG9sZF90eXBlLCBlbnVtIGU4MjBfdHlwZSBuZXdfdHlwZSk7Cj4KPiBkaWZm
-IC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2U4MjAuYyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMK
-PiBpbmRleCA0ODkzZDMwY2U0MzguLjkxMjQwMDE2MTYyMyAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4
-Ni9rZXJuZWwvZTgyMC5jCj4gKysrIGIvYXJjaC94ODYva2VybmVsL2U4MjAuYwo+IEBAIC01Mzgs
-NiArNTM4LDEyIEBAIHU2NCBfX2luaXQgZTgyMF9fcmFuZ2VfdXBkYXRlX3RhYmxlKHN0cnVjdCBl
-ODIwX3RhYmxlICp0LCB1NjQgc3RhcnQsIHU2NCBzaXplLAo+ICAgICAgICAgcmV0dXJuIF9fZTgy
-MF9fcmFuZ2VfdXBkYXRlKHQsIHN0YXJ0LCBzaXplLCBvbGRfdHlwZSwgbmV3X3R5cGUpOwo+ICB9
-Cj4KPiArdTY0IF9faW5pdCBlODIwX19yYW5nZV91cGRhdGVfZmlybXdhcmUodTY0IHN0YXJ0LCB1
-NjQgc2l6ZSwgZW51bSBlODIwX3R5cGUgb2xkX3R5cGUsCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgZW51bSBlODIwX3R5cGUgbmV3X3R5cGUpCj4gK3sKPiArICAgICAg
-IHJldHVybiBfX2U4MjBfX3JhbmdlX3VwZGF0ZShlODIwX3RhYmxlX2Zpcm13YXJlLCBzdGFydCwg
-c2l6ZSwgb2xkX3R5cGUsIG5ld190eXBlKTsKPiArfQo+ICsKPiAgLyogUmVtb3ZlIGEgcmFuZ2Ug
-b2YgbWVtb3J5IGZyb20gdGhlIEU4MjAgdGFibGU6ICovCj4gIHU2NCBfX2luaXQgZTgyMF9fcmFu
-Z2VfcmVtb3ZlKHU2NCBzdGFydCwgdTY0IHNpemUsIGVudW0gZTgyMF90eXBlIG9sZF90eXBlLCBi
-b29sIGNoZWNrX3R5cGUpCj4gIHsKPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvcGxhdGZvcm0vZWZp
-L2VmaS5jIGIvYXJjaC94ODYvcGxhdGZvcm0vZWZpL2VmaS5jCj4gaW5kZXggODhhOTY4MTZkZTlh
-Li5hYTk1Zjc3ZDdhMzAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYvcGxhdGZvcm0vZWZpL2VmaS5j
-Cj4gKysrIGIvYXJjaC94ODYvcGxhdGZvcm0vZWZpL2VmaS5jCj4gQEAgLTE3MSw2ICsxNzEsMTUg
-QEAgc3RhdGljIHZvaWQgX19pbml0IGRvX2FkZF9lZmlfbWVtbWFwKHZvaWQpCj4gICAgICAgICBl
-ODIwX191cGRhdGVfdGFibGUoZTgyMF90YWJsZSk7Cj4gIH0KPgo+ICsvKiBSZXNlcnZlIGZpcm13
-YXJlIGFyZWEgaWYgaXQgd2FzIG1hcmtlZCBhcyBSQU0gKi8KPiArdm9pZCBhcmNoX3VwZGF0ZV9m
-aXJtd2FyZV9hcmVhKHU2NCBhZGRyLCB1NjQgc2l6ZSkKPiArewo+ICsgICAgICAgaWYgKGU4MjBf
-X2dldF9lbnRyeV90eXBlKGFkZHIsIGFkZHIgKyBzaXplKSA9PSBFODIwX1RZUEVfUkFNKSB7Cj4g
-KyAgICAgICAgICAgICAgIGU4MjBfX3JhbmdlX3VwZGF0ZV9maXJtd2FyZShhZGRyLCBzaXplLCBF
-ODIwX1RZUEVfUkFNLCBFODIwX1RZUEVfUkVTRVJWRUQpOwo+ICsgICAgICAgICAgICAgICBlODIw
-X191cGRhdGVfdGFibGUoZTgyMF90YWJsZV9maXJtd2FyZSk7Cj4gKyAgICAgICB9Cj4gK30KPiAr
-Cj4gIC8qCj4gICAqIEdpdmVuIGFkZF9lZmlfbWVtbWFwIGRlZmF1bHRzIHRvIDAgYW5kIHRoZXJl
-IGlzIG5vIGFsdGVybmF0aXZlCj4gICAqIGU4MjAgbWVjaGFuaXNtIGZvciBzb2Z0LXJlc2VydmVk
-IG1lbW9yeSwgaW1wb3J0IHRoZSBmdWxsIEVGSSBtZW1vcnkKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9maXJtd2FyZS9lZmkvdHBtLmMgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS90cG0uYwo+IGluZGV4
-IGU4ZDY5YmQ1NDhmMy4uOGU2ZTcxMzFkNzE4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZmlybXdh
-cmUvZWZpL3RwbS5jCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9lZmkvdHBtLmMKPiBAQCAtNjAs
-NiArNjAsNyBAQCBpbnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQo+ICAgICAg
-ICAgfQo+Cj4gICAgICAgICB0Ymxfc2l6ZSA9IHNpemVvZigqbG9nX3RibCkgKyBsb2dfdGJsLT5z
-aXplOwo+ICsgICAgICAgYXJjaF91cGRhdGVfZmlybXdhcmVfYXJlYShlZmkudHBtX2xvZywgdGJs
-X3NpemUpOwo+ICAgICAgICAgbWVtYmxvY2tfcmVzZXJ2ZShlZmkudHBtX2xvZywgdGJsX3NpemUp
-Owo+Cj4gICAgICAgICBpZiAoZWZpLnRwbV9maW5hbF9sb2cgPT0gRUZJX0lOVkFMSURfVEFCTEVf
-QUREUikgewo+IEBAIC0xMDcsNCArMTA4LDMgQEAgaW50IF9faW5pdCBlZmlfdHBtX2V2ZW50bG9n
-X2luaXQodm9pZCkKPiAgICAgICAgIGVhcmx5X21lbXVubWFwKGxvZ190YmwsIHNpemVvZigqbG9n
-X3RibCkpOwo+ICAgICAgICAgcmV0dXJuIHJldDsKPiAgfQo+IC0KPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9saW51eC9lZmkuaCBiL2luY2x1ZGUvbGludXgvZWZpLmgKPiBpbmRleCA2YmYzYzRmZTg1
-MTEuLjljMjM5Y2RmZjc3MSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2VmaS5oCj4gKysr
-IGIvaW5jbHVkZS9saW51eC9lZmkuaAo+IEBAIC0xMzcxLDQgKzEzNzEsMTEgQEAgZXh0ZXJuIHN0
-cnVjdCBibG9ja2luZ19ub3RpZmllcl9oZWFkIGVmaXZhcl9vcHNfbmg7Cj4gIHZvaWQgZWZpdmFy
-c19nZW5lcmljX29wc19yZWdpc3Rlcih2b2lkKTsKPiAgdm9pZCBlZml2YXJzX2dlbmVyaWNfb3Bz
-X3VucmVnaXN0ZXIodm9pZCk7Cj4KPiArI2lmZGVmIENPTkZJR19YODZfNjQKPiArdm9pZCBfX2lu
-aXQgYXJjaF91cGRhdGVfZmlybXdhcmVfYXJlYSh1NjQgYWRkciwgdTY0IHNpemUpOwo+ICsjZWxz
-ZQo+ICtzdGF0aWMgaW5saW5lIHZvaWQgX19pbml0IGFyY2hfdXBkYXRlX2Zpcm13YXJlX2FyZWEo
-dTY0IGFkZHIsIHU2NCBzaXplKQo+ICt7Cj4gK30KPiArI2VuZGlmCj4gICNlbmRpZiAvKiBfTElO
-VVhfRUZJX0ggKi8KPiAtLQo+IDIuNDMuNQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+On 09/11/24 at 04:51pm, Sourabh Jain wrote:
+> The following errors are observed when kexec is done with SMT=off on
+> powerpc.
+> 
+> [  358.458385] Removing IBM Power 842 compression device
+> [  374.795734] kexec_core: Starting new kernel
+> [  374.795748] kexec: Waking offline cpu 1.
+> [  374.875695] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+> [  374.935833] kexec: Waking offline cpu 2.
+> [  375.015664] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+> snip..
+> [  375.515823] kexec: Waking offline cpu 6.
+> [  375.635667] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
+> [  375.695836] kexec: Waking offline cpu 7.
+> 
+> To avoid kexec kernel boot failure on PowerPC, all the present CPUs that
+> are offline are brought online during kexec. For more information, refer
+> to commit e8e5c2155b00 ("powerpc/kexec: Fix orphaned offline CPUs across
+> kexec"). Bringing the CPUs online triggers the crash hotplug handler,
+> crash_handle_hotplug_event(), to update the kdump image. Since the
+> system is on the kexec kernel boot path and the kexec lock is held, the
+> crash_handle_hotplug_event() function fails to acquire the same lock to
+> update the kdump image, resulting in the error messages mentioned above.
+> 
+> To fix this, return from crash_handle_hotplug_event() without printing
+> the error message if kexec is in progress.
+> 
+> The same applies to the crash_check_hotplug_support() function. Return
+> 0 if kexec is in progress because kernel is not in a position to update
+> the kdump image.
+
+LGTM, thanks.
+
+Acked-by: Baoquan he <bhe@redhat.com>
+
+> 
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: kexec@lists.infradead.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: x86@kernel.org
+> Reported-by: Sachin P Bappalige <sachinpb@linux.vnet.ibm.com>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+> Changelog:
+> 
+> Since v1:
+>  - Keep the kexec_in_progress check within kexec_trylock() - Baoquan He
+>  - Include the reason why PowerPC brings offline CPUs online
+>    during the kexec kernel boot path - Baoquan He
+>  - Rebased on top of #next-20240910 to avoid conflict with the patch below
+>    https://lore.kernel.org/all/20240812041651.703156-1-sourabhjain@linux.ibm.com/T/#u
+> 
+> V2 RESEND:
+>  - Update linuxppc-dev mailing list address
+> ---
+>  kernel/crash_core.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index c1048893f4b6..078fe5bc5a74 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -505,7 +505,8 @@ int crash_check_hotplug_support(void)
+>  	crash_hotplug_lock();
+>  	/* Obtain lock while reading crash information */
+>  	if (!kexec_trylock()) {
+> -		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+> +		if (!kexec_in_progress)
+> +			pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+>  		crash_hotplug_unlock();
+>  		return 0;
+>  	}
+> @@ -547,7 +548,8 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+>  	crash_hotplug_lock();
+>  	/* Obtain lock while changing crash information */
+>  	if (!kexec_trylock()) {
+> -		pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+> +		if (!kexec_in_progress)
+> +			pr_info("kexec_trylock() failed, kdump image may be inaccurate\n");
+>  		crash_hotplug_unlock();
+>  		return;
+>  	}
+> -- 
+> 2.46.0
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
