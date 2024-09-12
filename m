@@ -4,88 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 09195EED606
-	for <kexec@archiver.kernel.org>; Thu, 12 Sep 2024 13:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B4D5EED60A
+	for <kexec@archiver.kernel.org>; Thu, 12 Sep 2024 14:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MrUOtp7Gbcmyyjx4j73d9qA9hO0Y+QJE/nhErGLcKmQ=; b=UX/aJKe/JmpYKU
-	NMqsy7lTfYUf/YNRljxSPZPPPX191CABpCf86SYvHsS6BZO75bSYVMsW/AHoLJIE4UhWidQ/7kaUO
-	4Iai9R5ie0CreqAv7PZl/NgFAkASnn4MSGQ2NXGLpfbQjbZsODbFJmrHA/d2Y1pyH4AXKE7RXCgpL
-	CWvM0QRNT69HQhrp2Fe4Mcd67H8pK07PvubjxuVJGGHAAZ+7/bg5duysEoliMNny3C3MWFji74h5M
-	sP4ZEhManvqszq3OEvNUgksgr0Y6+UslMlOC0ZzFJpF1614o+MbbDIAf+2Z+2CtzBvXOctoqZGoU0
-	6aR7nW72NjKdEJriMwbA==;
+	List-Owner; bh=tbm786VsIGo7Q5yNnEaGYdZyqEONz34GNr2eTqaj6Ss=; b=owGZwWqQ//Un8y
+	BAPBUMYvK6ZnspZiMu9oPb8b10xyaLUOKX9m8IizzHnsYM9NiJZKcdZtGRXN/AAs0LoP+RLe/EhzW
+	N5+p6cOj1fwpt35m/5xv0M82Q44rRmqFucw5cdM2Qe7FQWNNocDtTy1+RKsdsu6nyeCR4p6xYUMzl
+	jETIwdeDTYG7Adl9c3t0V6sGZp2GLDhb8IbiWNwUafbVJB9OnpWad631pPA3VXXx0a51pBP9XGxi5
+	L9JUUH3rwep/IVjhVg6TiOaIPXLx1UA9kORevw1EYsy8L46yoCsLKhze7JRwG3eVT0MBAPiK6dzFu
+	TXuAbSBaJqFj24qfJzOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sokHn-0000000DGvO-018u;
-	Thu, 12 Sep 2024 13:55:03 +0000
-Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
+	id 1sokb8-0000000DJka-1AL8;
+	Thu, 12 Sep 2024 14:15:02 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sokHj-0000000DGtr-43fk
+	id 1sokb5-0000000DJj7-1OAj
 	for kexec@lists.infradead.org;
-	Thu, 12 Sep 2024 13:55:01 +0000
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-a8d6d0fe021so155744266b.1
-        for <kexec@lists.infradead.org>; Thu, 12 Sep 2024 06:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726149298; x=1726754098; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t1G5qVhSpJn+iV45COy44bHVmW0jeUlHnhOjcc2IqBg=;
-        b=PGInxH9bSMa3QDBiMpO9vloeE7zekpdHNbME9vfQfEC6LG6Iy9xfhcz1pEwFEf6tUd
-         WFvG6hySLqIK2FSc0Jue3w7yP4IspMhpKLBcjNMxNKGwVxLaEM/teHYBgwYcrubyTYhS
-         Sh1vgbsjFpBVdirInvMAy1Wg9Ot9+HOSruKpfk2RksKSgSRUK8nPufJwcEzAuaSHx3QY
-         7mV+pKLwAnkpkpdPzdPokxsa0JlCDf+U618Z+Uzjfrb7AXvrpYtP6vePu8GWMinmn92o
-         Sm3f5xVcwwpRN6RH7xl1jR1kPU1o/O6At9adiZtEEaQfR6UiAlUpglYPNIW5E9kfOF9G
-         rpBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726149298; x=1726754098;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1G5qVhSpJn+iV45COy44bHVmW0jeUlHnhOjcc2IqBg=;
-        b=Fw1naAKtHVNhL7KgkRcEl67gAsMUc8Dr+zYNDY1kxI1wVX2y/IpAkz8U8TSOvH5YDS
-         u5jA2Q70fmylw5e/FAGJJ51KUzNzAkF59BGvTuhR6ucV8XPlIZ4LfSOUGJ3udpOAbe+q
-         8vILxRWxbjGbispEUSEmd49ycYHG03FW61T2NTVoF0TXlTiED4joVS35RpEB5eKBlKy9
-         aUf/pxyCpAgolGOOM+woZzpyLnZ6c6wKg1tMpmgyFaH7PjPz+SLA4JoMo46zAJZeN/fp
-         PNnRRT4rdFgg5+yuZVHeENo57AaBc1gUWYLyVkbDdOJbs2aYX9MaUV+Dyqdr2EeH6EDo
-         62sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ01+Xr6uOMv22wbZti1bnOzT8k9p1Bm6lt3HlNUoCjOvHkM+GT2vd4HQUX+8CJfu8uHj8lQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YypJFn/hG+YcfX0/EbnC+pbeOBPbu1hVVqmPPRCSudnR9bfWxq4
-	b5SyqwZ3l+ArnmHkk3XZiJNwkSMcLq2TEZKURUt/ZCw1u7NaaL37NgoeBw==
-X-Google-Smtp-Source: AGHT+IGHyggpXdC19jbQjmV+z/3GczJJNtHI7cEPIGNXAzJMFOl3VDvtIn7uWtgy0U0A/cj483cK+Q==
-X-Received: by 2002:a17:906:c151:b0:a8d:5d28:8e0d with SMTP id a640c23a62f3a-a90296175a4mr320642766b.45.1726149297648;
-        Thu, 12 Sep 2024 06:54:57 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::6:5725])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25d5dda8sm744523866b.211.2024.09.12.06.54.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Sep 2024 06:54:57 -0700 (PDT)
-Message-ID: <6b2cc4c4-4354-4b29-bc73-c1384b90dfc6@gmail.com>
-Date: Thu, 12 Sep 2024 14:54:56 +0100
+	Thu, 12 Sep 2024 14:15:00 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 60E40A455D0
+	for <kexec@lists.infradead.org>; Thu, 12 Sep 2024 14:14:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21834C4CED2
+	for <kexec@lists.infradead.org>; Thu, 12 Sep 2024 14:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726150497;
+	bh=VGZRJzmCN+Wam8xXW+P57As3xaf2eURuf7X7kqSVP/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UCu4fUizGzE/dzDYc6CuCz/qavF3YbiQyMrJzGo/5YZsGrD+qM5sopYjrApGcg/VV
+	 es6Dwq7BMu6suX1JkIfpGnAXCt0FU7SW2zkAFHYhhQIDbj5hoGd+TrZ9IsBrHhjKr7
+	 +OQ9CieoiZUesGyHUZZwAJucay1togj7ylsiSJMtU4dxEIALi9gPfWxfZWoKGCvHDk
+	 ULLDsGQBNtHuNgqct0Gbe8QZTXN6gKWUKrFjP38ezSDlMAQ5I0MGRKdL2+Slt5GI5R
+	 UERtzmrTLRPsZK6yvgm3F72GGvERC9s66IR+5AA0p6IYViJuOTa/PRin5wZCk6tCdW
+	 Uj2nOqtepDcQw==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f75c6ed428so11361241fa.0
+        for <kexec@lists.infradead.org>; Thu, 12 Sep 2024 07:14:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWe7kAvdkFahJX8kL/hhbZC4yLn1LgtDvai3iZL+71Za1n6nRGykbrwGHrSP5oHzo6CkUaKtg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YytumY7JaA7IMPTX5Ji3GiAft+PXbuOy4CzLtdATUyl3SdXO2WS
+	Wr0ukkkIOd7K1yqbGuDypZ7i/D1zmKlvBO1F9eFLYl/mTHWbBPG94Q9IH5mBujmi11mjbmP3AtB
+	j/XrtmLRLRlOX1duVDpDZzGsAZ+o=
+X-Google-Smtp-Source: AGHT+IGyYLLbdVpehbHj2Oyt04OkcFENJP/n0YHbA9nWypu5M9+GnU0Kn53CEAQm2eO+JUyPpMVSPBaYRfKVMrIyfhM=
+X-Received: by 2002:a2e:a7c1:0:b0:2f7:543a:3b1a with SMTP id
+ 38308e7fff4ca-2f787d9e337mr19645771fa.7.1726150495442; Thu, 12 Sep 2024
+ 07:14:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in
- 820_table_firmware
-To: Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>
-Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org,
- ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com,
- tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
- linux-kernel@vger.kernel.org, rmikey@meta.com, gourry@gourry.net
 References: <20240911104109.1831501-1-usamaarif642@gmail.com>
  <CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
- <2542182d-aa79-4705-91b6-fa593bacffa6@gmail.com>
- <CAMj1kXGi+N6AukJt6EGQTao=-1Ud_=bzwPvdjEzhmzEraFU98w@mail.gmail.com>
- <20240912-wealthy-gabby-tamarin-aaba3c@leitao>
- <CAMj1kXHh-Kov8c1pto0LJL6debugz1og6GFMYCwvfu+RiQGreA@mail.gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CAMj1kXHh-Kov8c1pto0LJL6debugz1og6GFMYCwvfu+RiQGreA@mail.gmail.com>
+ <2542182d-aa79-4705-91b6-fa593bacffa6@gmail.com> <CAMj1kXGi+N6AukJt6EGQTao=-1Ud_=bzwPvdjEzhmzEraFU98w@mail.gmail.com>
+ <20240912-wealthy-gabby-tamarin-aaba3c@leitao> <CAMj1kXHh-Kov8c1pto0LJL6debugz1og6GFMYCwvfu+RiQGreA@mail.gmail.com>
+ <6b2cc4c4-4354-4b29-bc73-c1384b90dfc6@gmail.com> <CAMj1kXG1hbiafKRyC5qM1Vj5X7x-dmLndqqo2AYnHMRxDz-80w@mail.gmail.com>
+In-Reply-To: <CAMj1kXG1hbiafKRyC5qM1Vj5X7x-dmLndqqo2AYnHMRxDz-80w@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 12 Sep 2024 16:14:43 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFr+N9LMj0=wULchYosUpV0ygZSKUj1vdUP0KWEANKasw@mail.gmail.com>
+Message-ID: <CAMj1kXFr+N9LMj0=wULchYosUpV0ygZSKUj1vdUP0KWEANKasw@mail.gmail.com>
+Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in 820_table_firmware
+To: Usama Arif <usamaarif642@gmail.com>, Dave Young <dyoung@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, 
+	ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, tglx@linutronix.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	rmikey@meta.com, gourry@gourry.net
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240912_065500_040699_F652566F 
-X-CRM114-Status: GOOD (  10.05  )
+X-CRM114-CacheID: sfid-20240912_071459_505764_17FDEDBE 
+X-CRM114-Status: GOOD (  17.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,38 +88,57 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+(cc Dave)
 
+Full thread here:
+https://lore.kernel.org/all/CAMj1kXG1hbiafKRyC5qM1Vj5X7x-dmLndqqo2AYnHMRxDz-80w@mail.gmail.com/T/#u
 
-On 12/09/2024 14:10, Ard Biesheuvel wrote:
-> Does the below help at all?
-> 
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -60,7 +60,7 @@ int __init efi_tpm_eventlog_init(void)
->         }
-> 
->         tbl_size = sizeof(*log_tbl) + log_tbl->size;
-> -       memblock_reserve(efi.tpm_log, tbl_size);
-> +       efi_mem_reserve(efi.tpm_log, tbl_size);
-> 
->         if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR) {
->                 pr_info("TPM Final Events table not present\n");
-
-Unfortunately not. efi_mem_reserve updates e820_table, while kexec looks at /sys/firmware/memmap
-which is e820_table_firmware.
-
-arch_update_firmware_area introduced in the RFC patch does the same thing as efi_mem_reserve does at
-its end, just with e820_table_firmware instead of e820_table.
-i.e. efi_mem_reserve does:
-	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-	e820__update_table(e820_table);
-
-while arch_update_firmware_area does:
-	e820__range_update_firmware(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-	e820__update_table(e820_table_firmware);
-
-Thanks,
-Usama
+On Thu, 12 Sept 2024 at 16:05, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 12 Sept 2024 at 15:55, Usama Arif <usamaarif642@gmail.com> wrote:
+> >
+> >
+> >
+> > On 12/09/2024 14:10, Ard Biesheuvel wrote:
+> > > Does the below help at all?
+> > >
+> > > --- a/drivers/firmware/efi/tpm.c
+> > > +++ b/drivers/firmware/efi/tpm.c
+> > > @@ -60,7 +60,7 @@ int __init efi_tpm_eventlog_init(void)
+> > >         }
+> > >
+> > >         tbl_size = sizeof(*log_tbl) + log_tbl->size;
+> > > -       memblock_reserve(efi.tpm_log, tbl_size);
+> > > +       efi_mem_reserve(efi.tpm_log, tbl_size);
+> > >
+> > >         if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR) {
+> > >                 pr_info("TPM Final Events table not present\n");
+> >
+> > Unfortunately not. efi_mem_reserve updates e820_table, while kexec looks at /sys/firmware/memmap
+> > which is e820_table_firmware.
+> >
+> > arch_update_firmware_area introduced in the RFC patch does the same thing as efi_mem_reserve does at
+> > its end, just with e820_table_firmware instead of e820_table.
+> > i.e. efi_mem_reserve does:
+> >         e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> >         e820__update_table(e820_table);
+> >
+> > while arch_update_firmware_area does:
+> >         e820__range_update_firmware(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> >         e820__update_table(e820_table_firmware);
+> >
+>
+> Shame.
+>
+> Using efi_mem_reserve() is appropriate here in any case, but I guess
+> kexec on x86 needs to be fixed to juggle the EFI memory map, memblock
+> table, and 3 (!) versions of the E820 table in the correct way
+> (e820_table, e820_table_kexec and e820_table_firmware)
+>
+> Perhaps we can put this additional logic in x86's implementation of
+> efi_arch_mem_reserve()? AFAICT, all callers of efi_mem_reserve() deal
+> with configuration tables produced by the firmware that may not be
+> reserved correctly if kexec looks at e820_table_firmware[] only.
 
 _______________________________________________
 kexec mailing list
