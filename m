@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 391EDC3ABA2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01BC7C3ABD2
 	for <kexec@archiver.kernel.org>; Mon, 16 Sep 2024 13:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,52 +12,52 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1diz/x6XH/FPpqaQCULxQLoZHsquhYDv6ZB5AlT1AuM=; b=WFjFjf8U87OBys
-	+wRTk38Cbde+VmqUW1DNZVn0JdhELI7SyVLLtsgry2hnzoSfbiJzndfkp0Y/mzMQOt0MhcvBpBdZR
-	GdwLo+DKd7FUB79vBMY2YHLlRKeMwWdcGgagqlM0Hf7+dH6mWUotIlI6U8wdVrzL498msQZwdHjbw
-	7VDe3AgdYyVF0uwGM3y6mT7JRwVR8EdTJj8FvtCyCHfrH9jFnhcal8Agr1roZZUYeqn6yclusNnoM
-	eiC/cyldLcxHgNE/znSHwf7cxwq3ox/0JIpPUG7+Bcde5rbtCVqn+oWcyBFBfpgb7DvaKmOhe/crz
-	0Gk2x/c2HQ06JDQ3UA1w==;
+	List-Owner; bh=GICY41+epiZApLdMu45z/UU3gH2aCyv8NwucLAzszF4=; b=N+ZoG3dr4uKe1O
+	g82rJEjA/ING3Bn/xTaO6Ci08aQJTUc3UyYxrkqebRoyw3qRaiibSdoJqL27nJHkBihzgmAYyTfqh
+	VyWyvmCA1L7t8nwn6uHavURqmbmPO361vfHn+/aubna83mprOBzLYLqL5A7EgZ8e7owM90SYfzKuJ
+	7mqdSawU9uJ67Li9rgVTY6Rbv0DDMS32VGC+LU7AYRV/nEjDRruPU44YbN5GhwI5lSsZcIa4AgAuu
+	H4bdUCfnrSSST697T6473Up+Ec7WIEtBVykMMwb3FbxyC57F8DDzn/tJ9gtYvyL2HHivQJHt309c+
+	fdhMtlKptlbO1tRL3Vbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqCDT-000000046oj-1WwN;
-	Mon, 16 Sep 2024 13:56:35 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
-	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1siiQG-000000092DD-16mq
+	id 1sqCDU-000000046pK-2KsO;
+	Mon, 16 Sep 2024 13:56:36 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1spCeI-0000000H0or-0sCZ
 	for kexec@lists.infradead.org;
-	Mon, 26 Aug 2024 22:42:57 +0000
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47QKtVQV025665;
-	Mon, 26 Aug 2024 22:42:23 GMT
+	Fri, 13 Sep 2024 20:12:16 +0000
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DJ0XtI004038;
+	Fri, 13 Sep 2024 20:11:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=O
-	dVGPy3Cd3lfAZrkJsp7isHmTLzu6pF5jzq4KxGSe+0=; b=MJWt8CLEUM4zmSOci
-	w478K1+3ftzxzQAU9yArJ+UFmniHlVpuBm4b8URi4O7CGxzSIR6d6HLwncITjiD5
-	6N3iPGkpArrYYUL/dgjxM/zYGiHGhuw9EDIBbVZqVaySozBGj9D9CF/WgbOgiPGk
-	+qSoeepRfFJP2iHBwiofDfIT+aSK9U777I/kR2a2E3p/80LW2q4sf1eYWhxrVstb
-	ldam2NBAiNweBzx3t393v0TKWKeVANHZMIBPqCDiqgs0ora/IpGaF7f+fxExj8Gi
-	vhX5dcWtQfmEaOPvIwOTbaviNRF6NCqGAOhQYdVJS0zZFi3E+MEhJm0AZ3MP+km0
-	rJ+6g==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177npc8px-1
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=m
+	6byQmml7q4oHzxGrrukniVFExzNvNQVflYIdO02N3o=; b=b/QW2P/5xtifzWSgI
+	dTLEPqdwRnCJ/AETuz8HHrGIudG5QIzKWexNX4WT872+Ab1y/Vl3n3Ps4l2ZfsSr
+	aRPT9nKzcWXizhw9pGXreV0dJH2K8soQ7i/4xrYLElxrYuZOS0sN5MI9KWgnOMla
+	dQJZEdviazwV4nkjcptm/Gwfu5m4B54/JD8GWshHbRZmRF64aKOISjIit2fs0Uwd
+	/7owMSvFf5ti1jTHn5S18sKR9CJeiHVEGtEKRB0Y0HKQ3Fe7zvqakfwjjHvgNtGy
+	XIuZVr9d7VjMjnVjRu7iR9LBX/FXIlz2AM1NCwHuAWHmLyGXmXwF1Y5nXBVmNzhs
+	dGjsA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41gd8d6afx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Aug 2024 22:42:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QLI6Md020513;
-	Mon, 26 Aug 2024 22:42:18 GMT
+	Fri, 13 Sep 2024 20:11:41 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48DIA90V040758;
+	Fri, 13 Sep 2024 20:11:40 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 418j8kw9ur-1
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9eten0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:42:18 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47QMgHBT013066;
-	Mon, 26 Aug 2024 22:42:17 GMT
+	Fri, 13 Sep 2024 20:11:40 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48DKAgQA022137;
+	Fri, 13 Sep 2024 20:11:39 GMT
 Received: from localhost.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 418j8kw9tt-1
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9etejv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 26 Aug 2024 22:42:17 +0000
+	Fri, 13 Sep 2024 20:11:39 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,25 +73,25 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v10 09/20] x86: Secure Launch kernel early boot stub
-Date: Mon, 26 Aug 2024 15:38:24 -0700
-Message-Id: <20240826223835.3928819-10-ross.philipson@oracle.com>
+Subject: [PATCH v11 09/20] x86: Secure Launch kernel early boot stub
+Date: Fri, 13 Sep 2024 13:05:06 -0700
+Message-Id: <20240913200517.3085794-10-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240826223835.3928819-1-ross.philipson@oracle.com>
-References: <20240826223835.3928819-1-ross.philipson@oracle.com>
+In-Reply-To: <20240913200517.3085794-1-ross.philipson@oracle.com>
+References: <20240913200517.3085794-1-ross.philipson@oracle.com>
 MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-26_16,2024-08-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 spamscore=0 malwarescore=0 phishscore=0
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 phishscore=0 adultscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2407110000 definitions=main-2408260174
-X-Proofpoint-GUID: xhDWpqUcsUy2Z8wvSSZ6TZ291CRSGpZ8
-X-Proofpoint-ORIG-GUID: xhDWpqUcsUy2Z8wvSSZ6TZ291CRSGpZ8
+ engine=8.12.0-2408220000 definitions=main-2409130143
+X-Proofpoint-ORIG-GUID: Jnfb5QTZ0nV5XuOBLq5STSfa7o4v3deL
+X-Proofpoint-GUID: Jnfb5QTZ0nV5XuOBLq5STSfa7o4v3deL
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240826_154252_394335_6DA6EF48 
-X-CRM114-Status: GOOD (  37.84  )
+X-CRM114-CacheID: sfid-20240913_131210_549386_534804CA 
+X-CRM114-Status: GOOD (  38.24  )
 X-Mailman-Approved-At: Mon, 16 Sep 2024 06:56:30 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -128,11 +128,11 @@ Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
  Documentation/arch/x86/boot.rst       |  21 +
  arch/x86/boot/compressed/Makefile     |   3 +-
  arch/x86/boot/compressed/head_64.S    |  29 +
- arch/x86/boot/compressed/sl_main.c    | 588 +++++++++++++++++++++
+ arch/x86/boot/compressed/sl_main.c    | 584 +++++++++++++++++++++
  arch/x86/boot/compressed/sl_stub.S    | 726 ++++++++++++++++++++++++++
  arch/x86/include/uapi/asm/bootparam.h |   1 +
  arch/x86/kernel/asm-offsets.c         |  20 +
- 7 files changed, 1387 insertions(+), 1 deletion(-)
+ 7 files changed, 1383 insertions(+), 1 deletion(-)
  create mode 100644 arch/x86/boot/compressed/sl_main.c
  create mode 100644 arch/x86/boot/compressed/sl_stub.S
 
@@ -238,10 +238,10 @@ index 1dcb794c5479..545329c97377 100644
  	/* Pass boot_params to initialize_identity_maps() */
 diff --git a/arch/x86/boot/compressed/sl_main.c b/arch/x86/boot/compressed/sl_main.c
 new file mode 100644
-index 000000000000..0fc8c2d9fc94
+index 000000000000..d2aae90eada6
 --- /dev/null
 +++ b/arch/x86/boot/compressed/sl_main.c
-@@ -0,0 +1,588 @@
+@@ -0,0 +1,584 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Secure Launch early measurement and validation routines.
@@ -513,7 +513,7 @@ index 000000000000..0fc8c2d9fc94
 +					log21_elem->first_record_offset +
 +					sizeof(struct tcg_pcr_event));
 +
-+	if (efi_head->num_algs == 0 || efi_head->num_algs > 2)
++	if (efi_head->num_algs == 0 || efi_head->num_algs > SL_TPM2_MAX_ALGS)
 +		sl_txt_reset(SL_ERROR_TPM_NUMBER_ALGS);
 +
 +	memcpy(&tpm_algs[0], &efi_head->digest_sizes[0],
@@ -538,10 +538,10 @@ index 000000000000..0fc8c2d9fc94
 +	}
 +	pcr_event->event_size = event_size;
 +	if (event_size > 0)
-+		memcpy((u8 *)pcr_event + sizeof(struct tcg_pcr_event),
++		memcpy((u8 *)pcr_event + sizeof(*pcr_event),
 +		       event_data, event_size);
 +
-+	total_size = sizeof(struct tcg_pcr_event) + event_size;
++	total_size = sizeof(*pcr_event) + event_size;
 +
 +	if (tpm_log_event(evtlog_base, evtlog_size, total_size, pcr_event))
 +		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
@@ -557,51 +557,47 @@ index 000000000000..0fc8c2d9fc94
 +	struct sha256_state sctx256 = {0};
 +	struct tcg_pcr_event2_head *head;
 +	struct tcg_event_field *event;
-+	u32 total_size;
++	u32 total_size, alg_idx;
 +	u16 *alg_ptr;
 +	u8 *dgst_ptr;
 +
 +	head = (struct tcg_pcr_event2_head *)log_buf;
 +	head->pcr_idx = pcr;
 +	head->event_type = event_type;
-+	total_size = sizeof(struct tcg_pcr_event2_head);
-+	alg_ptr = (u16 *)(log_buf + sizeof(struct tcg_pcr_event2_head));
++	total_size = sizeof(*head);
++	alg_ptr = (u16 *)(log_buf + sizeof(*head));
 +
-+	for ( ; head->count < 2; head->count++) {
-+		if (!tpm_algs[head->count].alg_id)
++	for (alg_idx = 0; alg_idx < SL_TPM2_MAX_ALGS; alg_idx++) {
++		if (!tpm_algs[alg_idx].alg_id)
 +			break;
 +
-+		*alg_ptr = tpm_algs[head->count].alg_id;
++		*alg_ptr = tpm_algs[alg_idx].alg_id;
 +		dgst_ptr = (u8 *)alg_ptr + sizeof(u16);
 +
-+		if (tpm_algs[head->count].alg_id == TPM_ALG_SHA256 &&
-+		    length) {
++		if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA256) {
 +			sha256_init(&sctx256);
 +			sha256_update(&sctx256, data, length);
 +			sha256_final(&sctx256, &sha256_hash[0]);
-+		} else if (tpm_algs[head->count].alg_id == TPM_ALG_SHA1 &&
-+			   length) {
-+			sha1(data, length, &sha1_hash[0]);
-+		}
-+
-+		if (tpm_algs[head->count].alg_id == TPM_ALG_SHA256) {
 +			memcpy(dgst_ptr, &sha256_hash[0], SHA256_DIGEST_SIZE);
 +			total_size += SHA256_DIGEST_SIZE + sizeof(u16);
 +			alg_ptr = (u16 *)((u8 *)alg_ptr + SHA256_DIGEST_SIZE + sizeof(u16));
-+		} else if (tpm_algs[head->count].alg_id == TPM_ALG_SHA1) {
++		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA1) {
++			sha1(data, length, &sha1_hash[0]);
 +			memcpy(dgst_ptr, &sha1_hash[0], SHA1_DIGEST_SIZE);
 +			total_size += SHA1_DIGEST_SIZE + sizeof(u16);
 +			alg_ptr = (u16 *)((u8 *)alg_ptr + SHA1_DIGEST_SIZE + sizeof(u16));
 +		} else {
 +			sl_txt_reset(SL_ERROR_TPM_UNKNOWN_DIGEST);
 +		}
++
++		head->count++;
 +	}
 +
 +	event = (struct tcg_event_field *)(log_buf + total_size);
 +	event->event_size = event_size;
 +	if (event_size > 0)
-+		memcpy((u8 *)event + sizeof(struct tcg_event_field), event_data, event_size);
-+	total_size += sizeof(struct tcg_event_field) + event_size;
++		memcpy((u8 *)event + sizeof(*event), event_data, event_size);
++	total_size += sizeof(*event) + event_size;
 +
 +	if (tpm2_log_event(log21_elem, evtlog_base, evtlog_size, total_size, &log_buf[0]))
 +		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
@@ -642,11 +638,11 @@ index 000000000000..0fc8c2d9fc94
 +		return next;
 +	}
 +
-+	sl_check_pmr_coverage(((u8 *)curr) + sizeof(struct setup_data),
++	sl_check_pmr_coverage(((u8 *)curr) + sizeof(*curr),
 +			      curr->len, true);
 +
 +	sl_tpm_extend_evtlog(entry->pcr, TXT_EVTYPE_SLAUNCH,
-+			     ((u8 *)curr) + sizeof(struct setup_data),
++			     ((u8 *)curr) + sizeof(*curr),
 +			     curr->len,
 +			     entry->evt_info);
 +
@@ -684,7 +680,7 @@ index 000000000000..0fc8c2d9fc94
 +			sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
 +
 +		sl_tpm_extend_evtlog(entry->pcr, TXT_EVTYPE_SLAUNCH,
-+				     (void *)entry->entity, sizeof(struct slr_entry_intel_info),
++				     (void *)entry->entity, sizeof(*intel_info),
 +				     entry->evt_info);
 +	}
 +}
