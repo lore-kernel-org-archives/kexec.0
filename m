@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F0ABFC6174
-	for <kexec@archiver.kernel.org>; Fri, 13 Sep 2024 20:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE7E2FC6177
+	for <kexec@archiver.kernel.org>; Fri, 13 Sep 2024 20:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/qOKUUOSSloOEMQuoW8CZ5kdee3hEODHQ2DXw8y4xQU=; b=gM7JIHdb0ovKwP
-	ZcjZwkq9xJBzC4Cyhcw/uD5+sgWu0vycwKJMw4AGw1G/Zz2BnLC/2Xt4vXr1uuESvE3APgeKheVTE
-	YafCLYHW8jGJ2v8IThcJjKrgKgOusT43XySRZ+my9QWy18u9vk4u6CSwtbmzjMWaZ6o8yAMxnu8GV
-	6xQ1CSDnxRQrhAvs66kXlMwg7z2IYIlpgSMhgeIyfO0CrxD3G+HC/8tWUUt2S6cioQEcViks9ILTT
-	PP82cTLTMP7Uad27glrEv2NA/uY8IzmQoKkTyFome2Q374U56XbKqoE0bxQ1VaeeYmyVjBreQTnft
-	0r22eytlWV09WXYsJ3Eg==;
+	List-Owner; bh=svL9ysajKWTvcvV6qfrEq0Ve2wIyp26EMxvRhUn/0f0=; b=xzfcFOyzKr3OfL
+	DZkvGXlJXCvgO2AfjphcslYhKTrrwamryaWtA8vu/5aIrQyQ5Qrx2LQBADkmxG7mjXc2t1LP0m4GR
+	jhvq2HE3qvbecVXXd8mqOw1f6dQi2GPtN0SuVdfyw7t0rxqfKbg/Ewy5fCcCanx/K4BigpneaOrTa
+	d7vSzSVb/igQlozsQXW6LUafNIKhj8A9DRDvhje+PZMCQCJ8MYis8ls772y1UgCZu77JDE8nM0Rpb
+	pAs91HM6PO8gdU9sPovEKRqVQea+1N9WeBJdjLpux5zPTq9xeCIE2eBXL6b+5yyKifsNDudNMyZI7
+	CMNfHkxQ+aP+4i+eeGxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1spCf0-0000000H16K-07vW;
-	Fri, 13 Sep 2024 20:12:54 +0000
+	id 1spCf2-0000000H185-18h3;
+	Fri, 13 Sep 2024 20:12:56 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1spCdX-0000000H0Xh-0h3S
+	id 1spCe1-0000000H0jk-3hdC
 	for kexec@lists.infradead.org;
-	Fri, 13 Sep 2024 20:11:24 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DJ0VdW012498;
-	Fri, 13 Sep 2024 20:11:03 GMT
+	Fri, 13 Sep 2024 20:11:55 +0000
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DJ0YL3015723;
+	Fri, 13 Sep 2024 20:11:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=Y
-	WfwAVZRvfFZhmN3gyLa8i+SUBecW95Y+kJG454zFNk=; b=QQAhPSmsdg8kOTS96
-	qGgYjcSrsJZH/RfyII9LAsn1XfeaNm6GvoAOGclYq8yx9qb1U1VWPRmViS0bKtrJ
-	+3/KntJxdzARrFRLB8Btad2ef8zkrTovmEa+RXkfN0KJtlpCh2Bvo0kJp7fYMX0j
-	j/XV6NAtZfYUZ4c82d803yEQkIImohHJE1EjPp5uq9tV1tP9NnMyf0FEZxzhrlOA
-	6MHIGRvtK4AAae40/KvTMH2VYJzqX6UI6Ip+KI7bjX0Jn6Y6JHv88MWqUqCEJpFe
-	rRkd/VRWL9I7wOA6ucfGZiCwZH+6uFHNKath2q2vV76p+5WOSdYHl8X7k7iF8GaB
-	zq5nQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41gfctpgtg-1
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=r
+	BJXy853cKM5QQhsfSyXvP7MPmesrChZVNIvQN1aP8M=; b=nsOYC056dYEhfXgyp
+	xVCOtumGA0nagt4PPWhWmG7dIUVaNNYoK0aCOtZGtkXuqO8Rq+pF1PS/ctxr6muS
+	ORFSTchk94JnEswf5olvpCGLiw4VC6RWXi7Iv5ZX/TGl5S855EOFEobRr7XlyVsm
+	VsOV1OAl7x+CeLbsGAqGSAYHIOuqe4T44AgGvqCDAA+/cm8iD43fMg1yXPmBtbQi
+	eDz0bmKLWXpP4qfIY5uXTSBAgXL1vokc7X9fnYg1yqrkz0BoNuvwV19cCA2xQbwT
+	34bAVBapnUxCm/zl5bZyD+7XuVTYxtTmXE8xoUf0rbwvtPcacxyKmMG4JloG/Fgj
+	c2Oxw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41gde0ejw6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Sep 2024 20:11:02 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48DJDjJ4019781;
-	Fri, 13 Sep 2024 20:11:01 GMT
+	Fri, 13 Sep 2024 20:11:30 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48DJC4lQ033542;
+	Fri, 13 Sep 2024 20:11:30 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9kn2jx-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9d3n8b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 13 Sep 2024 20:11:01 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48DKB0Ha032964;
-	Fri, 13 Sep 2024 20:11:00 GMT
+	Fri, 13 Sep 2024 20:11:30 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48DKBTmU024066;
+	Fri, 13 Sep 2024 20:11:29 GMT
 Received: from localhost.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9kn2hs-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9d3n6n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 13 Sep 2024 20:11:00 +0000
+	Fri, 13 Sep 2024 20:11:29 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v11 05/20] x86: Add early SHA-1 support for Secure Launch early measurements
-Date: Fri, 13 Sep 2024 13:05:02 -0700
-Message-Id: <20240913200517.3085794-6-ross.philipson@oracle.com>
+Subject: [PATCH v11 08/20] x86/boot: Place TXT MLE header in the kernel_info section
+Date: Fri, 13 Sep 2024 13:05:05 -0700
+Message-Id: <20240913200517.3085794-9-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240913200517.3085794-1-ross.philipson@oracle.com>
 References: <20240913200517.3085794-1-ross.philipson@oracle.com>
@@ -83,15 +83,15 @@ MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2408220000 definitions=main-2409130143
-X-Proofpoint-GUID: uT1XJGOnBe3RUjhDu7AMlUFhw33GwGmQ
-X-Proofpoint-ORIG-GUID: uT1XJGOnBe3RUjhDu7AMlUFhw33GwGmQ
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2408220000
+ definitions=main-2409130143
+X-Proofpoint-ORIG-GUID: 143MtiZrCd_lEZwh3OtgsrvR5udV3RW3
+X-Proofpoint-GUID: 143MtiZrCd_lEZwh3OtgsrvR5udV3RW3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240913_131123_222626_32D15A7F 
-X-CRM114-Status: GOOD (  25.56  )
+X-CRM114-CacheID: sfid-20240913_131154_121572_3F985A94 
+X-CRM114-Status: GOOD (  20.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,167 +108,106 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+The MLE (measured launch environment) header must be locatable by the
+boot loader and TXT must be setup to do a launch with this header's
+location. While the offset to the kernel_info structure does not need
+to be at a fixed offset, the offsets in the header must be relative
+offsets from the start of the setup kernel. The support in the linker
+file achieves this.
 
-Secure Launch is written to be compliant with the Intel TXT Measured Launch
-Developer's Guide. The MLE Guide dictates that the system can be configured to
-use both the SHA-1 and SHA-2 hashing algorithms.
-
-Regardless of the preference towards SHA-2, if the firmware elected to start
-with the SHA-1 and SHA-2 banks active and the dynamic launch was configured to
-include SHA-1, Secure Launch is obligated to record measurements for all
-algorithms requested in the launch configuration.
-
-The user environment or the integrity management does not desire to use SHA-1,
-it is free to just ignore the SHA-1 bank in any integrity operation with the
-TPM. If there is a larger concern about the SHA-1 bank being active, it is free
-to deliberately cap the SHA-1 PCRs, recording the event in the D-RTM log.
-
-The SHA-1 code here has its origins in the code from the main kernel:
-
-commit c4d5b9f ("crypto: sha1 - implement base layer for SHA-1")
-
-A modified version of this code was introduced to the lib/crypto/sha1.c to bring
-it in line with the SHA-256 code and allow it to be pulled into the setup kernel
-in the same manner as SHA-256 is.
-
-Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/Makefile |  2 +
- arch/x86/boot/compressed/sha1.c   |  6 +++
- include/crypto/sha1.h             |  1 +
- lib/crypto/sha1.c                 | 81 +++++++++++++++++++++++++++++++
- 4 files changed, 90 insertions(+)
- create mode 100644 arch/x86/boot/compressed/sha1.c
+ arch/x86/boot/compressed/kernel_info.S | 50 +++++++++++++++++++++++---
+ arch/x86/boot/compressed/vmlinux.lds.S |  7 ++++
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index f2051644de94..7eb03afb841b 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -107,6 +107,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
- vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
- vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+index f818ee8fba38..a0604a0d1756 100644
+--- a/arch/x86/boot/compressed/kernel_info.S
++++ b/arch/x86/boot/compressed/kernel_info.S
+@@ -1,12 +1,20 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
  
-+vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/sha1.o
-+
- $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
- 	$(call if_changed,ld)
++#include <linux/linkage.h>
+ #include <asm/bootparam.h>
  
-diff --git a/arch/x86/boot/compressed/sha1.c b/arch/x86/boot/compressed/sha1.c
-new file mode 100644
-index 000000000000..d754489941ac
---- /dev/null
-+++ b/arch/x86/boot/compressed/sha1.c
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
+-	.section ".rodata.kernel_info", "a"
 +/*
-+ * Copyright (c) 2024 Apertus Solutions, LLC.
++ * The kernel_info structure is not placed at a fixed offest in the
++ * kernel image. So this macro and the support in the linker file
++ * allow the relative offsets for the MLE header within the kernel
++ * image to be configured at build time.
 + */
-+
-+#include "../../../../lib/crypto/sha1.c"
-diff --git a/include/crypto/sha1.h b/include/crypto/sha1.h
-index 044ecea60ac8..d715dd5332e1 100644
---- a/include/crypto/sha1.h
-+++ b/include/crypto/sha1.h
-@@ -42,5 +42,6 @@ extern int crypto_sha1_finup(struct shash_desc *desc, const u8 *data,
- #define SHA1_WORKSPACE_WORDS	16
- void sha1_init(__u32 *buf);
- void sha1_transform(__u32 *digest, const char *data, __u32 *W);
-+void sha1(const u8 *data, unsigned int len, u8 *out);
++#define roffset(X) ((X) - kernel_info)
  
- #endif /* _CRYPTO_SHA1_H */
-diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
-index 6d2922747cab..de11d22ebded 100644
---- a/lib/crypto/sha1.c
-+++ b/lib/crypto/sha1.c
-@@ -137,5 +137,86 @@ void sha1_init(__u32 *buf)
+-	.global kernel_info
++	.section ".rodata.kernel_info", "a"
+ 
+-kernel_info:
++	.balign	16
++SYM_DATA_START(kernel_info)
+ 	/* Header, Linux top (structure). */
+ 	.ascii	"LToP"
+ 	/* Size. */
+@@ -17,6 +25,40 @@ kernel_info:
+ 	/* Maximal allowed type for setup_data and setup_indirect structs. */
+ 	.long	SETUP_TYPE_MAX
+ 
++	/* Offset to the MLE header structure */
++#if IS_ENABLED(CONFIG_SECURE_LAUNCH)
++	.long	roffset(mle_header_offset)
++#else
++	.long	0
++#endif
++
+ kernel_info_var_len_data:
+ 	/* Empty for time being... */
+-kernel_info_end:
++SYM_DATA_END_LABEL(kernel_info, SYM_L_LOCAL, kernel_info_end)
++
++#if IS_ENABLED(CONFIG_SECURE_LAUNCH)
++	/*
++	 * The MLE Header per the TXT Specification, section 2.1
++	 * MLE capabilities, see table 4. Capabilities set:
++	 * bit 0: Support for GETSEC[WAKEUP] for RLP wakeup
++	 * bit 1: Support for RLP wakeup using MONITOR address
++	 * bit 2: The ECX register will contain the pointer to the MLE page table
++	 * bit 5: TPM 1.2 family: Details/authorities PCR usage support
++	 * bit 9: Supported format of TPM 2.0 event log - TCG compliant
++	 */
++SYM_DATA_START(mle_header)
++	.long	0x9082ac5a  /* UUID0 */
++	.long	0x74a7476f  /* UUID1 */
++	.long	0xa2555c0f  /* UUID2 */
++	.long	0x42b651cb  /* UUID3 */
++	.long	0x00000034  /* MLE header size */
++	.long	0x00020002  /* MLE version 2.2 */
++	.long	roffset(sl_stub_entry_offset) /* Linear entry point of MLE (virt. address) */
++	.long	0x00000000  /* First valid page of MLE */
++	.long	0x00000000  /* Offset within binary of first byte of MLE */
++	.long	roffset(_edata_offset) /* Offset within binary of last byte + 1 of MLE */
++	.long	0x00000227  /* Bit vector of MLE-supported capabilities */
++	.long	0x00000000  /* Starting linear address of command line (unused) */
++	.long	0x00000000  /* Ending linear address of command line (unused) */
++SYM_DATA_END(mle_header)
++#endif
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 083ec6d7722a..f82184801462 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -118,3 +118,10 @@ SECTIONS
+ 	}
+ 	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
  }
- EXPORT_SYMBOL(sha1_init);
- 
-+static void __sha1_transform(u32 *digest, const char *data)
-+{
-+	u32 ws[SHA1_WORKSPACE_WORDS];
 +
-+	sha1_transform(digest, data, ws);
-+
-+	/* Ensure local data for generating digest is cleared in all cases */
-+	memzero_explicit(ws, sizeof(ws));
-+}
-+
-+static void sha1_update(struct sha1_state *sctx, const u8 *data, unsigned int len)
-+{
-+	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
-+	int blocks;
-+
-+	sctx->count += len;
-+
-+	if (unlikely((partial + len) < SHA1_BLOCK_SIZE))
-+		goto out;
-+
-+	if (partial) {
-+		int p = SHA1_BLOCK_SIZE - partial;
-+
-+		memcpy(sctx->buffer + partial, data, p);
-+		data += p;
-+		len -= p;
-+
-+		__sha1_transform(sctx->state, sctx->buffer);
-+	}
-+
-+	blocks = len / SHA1_BLOCK_SIZE;
-+	len %= SHA1_BLOCK_SIZE;
-+
-+	if (blocks) {
-+		while (blocks--) {
-+			__sha1_transform(sctx->state, data);
-+			data += SHA1_BLOCK_SIZE;
-+		}
-+	}
-+	partial = 0;
-+
-+out:
-+	memcpy(sctx->buffer + partial, data, len);
-+}
-+
-+static void sha1_final(struct sha1_state *sctx, u8 *out)
-+{
-+	const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
-+	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
-+	__be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
-+	__be32 *digest = (__be32 *)out;
-+	int i;
-+
-+	sctx->buffer[partial++] = 0x80;
-+	if (partial > bit_offset) {
-+		memset(sctx->buffer + partial, 0x0, SHA1_BLOCK_SIZE - partial);
-+		partial = 0;
-+
-+		__sha1_transform(sctx->state, sctx->buffer);
-+	}
-+
-+	memset(sctx->buffer + partial, 0x0, bit_offset - partial);
-+	*bits = cpu_to_be64(sctx->count << 3);
-+	__sha1_transform(sctx->state, sctx->buffer);
-+
-+	for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-+		put_unaligned_be32(sctx->state[i], digest++);
-+
-+	*sctx = (struct sha1_state){};
-+}
-+
-+void sha1(const u8 *data, unsigned int len, u8 *out)
-+{
-+	struct sha1_state sctx = {0};
-+
-+	sha1_init(sctx.state);
-+	sha1_update(&sctx, data, len);
-+	sha1_final(&sctx, out);
-+}
-+EXPORT_SYMBOL(sha1);
-+
- MODULE_DESCRIPTION("SHA-1 Algorithm");
- MODULE_LICENSE("GPL");
++#ifdef CONFIG_SECURE_LAUNCH
++PROVIDE(kernel_info_offset      = ABSOLUTE(kernel_info - startup_32));
++PROVIDE(mle_header_offset       = kernel_info_offset + ABSOLUTE(mle_header - startup_32));
++PROVIDE(sl_stub_entry_offset    = kernel_info_offset + ABSOLUTE(sl_stub_entry - startup_32));
++PROVIDE(_edata_offset           = kernel_info_offset + ABSOLUTE(_edata - startup_32));
++#endif
 -- 
 2.39.3
 
