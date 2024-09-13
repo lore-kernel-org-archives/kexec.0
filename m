@@ -4,94 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8CDBFA374A
-	for <kexec@archiver.kernel.org>; Fri, 13 Sep 2024 12:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FA35FA3755
+	for <kexec@archiver.kernel.org>; Fri, 13 Sep 2024 14:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ToaetrcqOcd8+jagDwxFMGM+Fny2BuX72hvtoWjlysA=; b=11womWbguNxtjx
-	BMiGEF8bzOCjOCeRkMpZ8uACymxCKRLjDW4mnEPkx6rZU7IIkgPqU4FKvjlAyylsJvxnAFieapPiw
-	sy88XamHEir7ifF1LjfZHo5XAjXIti5k7Oc2pFa4SMajSiHmGTOjWZi9B6v3NL73ha91INsxKhDCa
-	daPg7/k5PXT64Vd2z9JafBFAy/1Qp3+YEhQJb1pfSfkPgCQb0yvRC1uci+zg7sQ1zLRL1PNoaEo1f
-	YXKPOksH6KxhsVmsQcnEbmb4bCRhG+bCANFoQI/lmjyGHj0r7T7E4zBOZwr3czQLXTMkhC0rdXQ9W
-	8bpJT1Ao0WsKAxddG0gw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=XEusglvtdG0TtkvC3esEw7igq857BAq7KWtf/6242Ng=; b=yPfMCesiy+qJfG
+	sumAICY9fyVM1tw/Adk+7UHvi14vybzIUx6Cbb03ys55nv6opwaEF62cKj0oBpXsiDHEN/jWtoC8S
+	Qpo6SQNdCiNOvjKuqYrPXv9CQVfxTrffBimbVfqimbRUXBjEk6q4/LZxYDgNhlsoPERL4GCILMtFr
+	id/ugExe1dpv6sDI9V4MxykK+t5meJ6JHBpMWsGUAQtaFg8/FIsSw5pj4kyYu9u7isE5V4eCE8cZn
+	A6ma6jRShAI/RfhTm6YHdSxkrgbhvoYZrogvpUjC1AKrbR81/WfnH1+I1vlnBjERrRK3/liK3PO56
+	qce4MNFfnW7z1hVNWPrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sp5ns-0000000Fxsi-3wRC;
-	Fri, 13 Sep 2024 12:53:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sp7Ob-0000000GCde-1NYa;
+	Fri, 13 Sep 2024 14:35:37 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sp5n1-0000000FxiP-2iMp
+	id 1sp7O6-0000000GCUA-17pV
 	for kexec@lists.infradead.org;
-	Fri, 13 Sep 2024 12:52:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726231961;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wl05HquAsncJfGKJSFBrSFOKrrN2t2JKKgtLUktSM2A=;
-	b=iv8pPh5fm7vYBEJBF4t7P07/GwC9HSV588A8tx0AgQ7d7kwaUA77kTXepqUfyxGLVQ3URR
-	6OhVVWX9LXbY8HGuSotrnZ39Y2FzTBon9qi1sk+7DoyH9+NhwKpJniUrtFcGxVVFQWzika
-	CHQKJy6RTywCp4q7XQeBtEcAv6YQE2M=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-50-pdsA0JdCMfqZnrXpR9ckCA-1; Fri, 13 Sep 2024 08:52:40 -0400
-X-MC-Unique: pdsA0JdCMfqZnrXpR9ckCA-1
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-39f5328fd5eso19987275ab.2
-        for <kexec@lists.infradead.org>; Fri, 13 Sep 2024 05:52:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726231960; x=1726836760;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wl05HquAsncJfGKJSFBrSFOKrrN2t2JKKgtLUktSM2A=;
-        b=N7AKG0sbyaXVU+nmfFuEiVj+r187jQD6d+gQkcptiVzGxQU0wKu3UCJIioeC8o+Nhk
-         5bhJ6d9/zMxe2lawXAIkoTcBEI1TD/AypNcSUAjpQdQ2uElKuo2NcxS49lvvpQ9Fa9Pp
-         9xiHiRS8QKjuAAUZLDlvt8INgNzCuhyAGAGx21o0BWHEUTctYU4NB+4RFsUUbULhv4u5
-         eyxYR/mle2YvA057lHHkU4E5h9n6xKINsnj10dxaCiZaKwPsO9UTB9KoU7DYI3v0XW98
-         5eMM73ApZFPkclHkyF7YcUx5wP6nMiiGyOVao1sZOBaf11zgqubxg9fLgZAikKGZe43D
-         I2Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtUlzRcxELT87mvhBhEL2tBOGRzoNH9b0OLDE+sw/2zzP4B0i2sYIPCZJZME6SLEkPv1mtTw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxJwcOgEROQLuxEEMXXUzV6eGPz1nG48iaqoQDuotYJQqPXkTek
-	lq3rKQ9p8c6pudCKSHrJXakdE9CwxehyIUULLhHcJsCWyKlgvNKpPnL8h46rece9tWUJLDYChcL
-	y7wfRtpU+MH5pOYNVPPvfODYi4UDRzbmAhuoU/EMkmyZPtw27Ubtq+i7c7yKecqNylyLMBom8vh
-	yrcSvE+IfXo6PLDhunkHZ7b7/Bo20jwwUh
-X-Received: by 2002:a05:6e02:1383:b0:39f:5abe:ec25 with SMTP id e9e14a558f8ab-3a08495478amr60011715ab.19.1726231960117;
-        Fri, 13 Sep 2024 05:52:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFwLSNinCxdMGjUdbfB8K3Nj35P1O2ZHOuUti0jQxahFf7ERb5uddFQ5NioJygZfBUzuO8uwTkyZu28jvB7vZ0=
-X-Received: by 2002:a05:6e02:1383:b0:39f:5abe:ec25 with SMTP id
- e9e14a558f8ab-3a08495478amr60011405ab.19.1726231959796; Fri, 13 Sep 2024
- 05:52:39 -0700 (PDT)
+	Fri, 13 Sep 2024 14:35:07 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DDpv4c025206;
+	Fri, 13 Sep 2024 14:35:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=IAYkytz8XSsnohTIVmspGAmLd+
+	i/yw5Gg9iqMwB7CyM=; b=d6UmZjluXADBNVfoqdzzVfU24f9t6SyTs+FoGXXHB/
+	/z9M6MhY0xje72b97SNYVFL/2hgo26rTIrm08F0/tPbl5DwQfsgEusUrjRTXjUo3
+	mOCxwdojRG8OHikWc1nJF5xU7g1uuVY69tMpQmzhEhOFhjZMhSRphbKjgqAyMYL7
+	wZEyL7rHCspeZ9Ya/0YZ42FWkGbvFMHV0Yj70qqH9hjxVOwCNaukQKncckGr6/fJ
+	RmK4tcrnZu0wlqCwRh6R5fg5TtOiCODTxX4l+xaFBfHro2RogtXioLYo5TjujFIg
+	AEcfA7VLD2YgslopjPH2ntvw1/u7FnjPq1qKvcMnNWXA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41geg02caj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Sep 2024 14:35:04 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48DEZ3aM015907;
+	Fri, 13 Sep 2024 14:35:03 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41geg02cag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Sep 2024 14:35:03 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48DC5K21019843;
+	Fri, 13 Sep 2024 14:35:02 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41h25qeqyh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Sep 2024 14:35:02 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48DEZ04E52232654
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Sep 2024 14:35:01 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFFA420043;
+	Fri, 13 Sep 2024 14:35:00 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D256920040;
+	Fri, 13 Sep 2024 14:35:00 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 13 Sep 2024 14:35:00 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 83FCDE0260; Fri, 13 Sep 2024 16:35:00 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: kexec@lists.infradead.org
+Cc: Masamitsu Yamazaki <yamazaki-msmt@nec.com>,
+        Kazuhito Hagio <k-hagio-ab@nec.com>, Philipp Rudo <prudo@redhat.com>
+Subject: [PATCH] Submit physical address to is_phys_addr()
+Date: Fri, 13 Sep 2024 16:35:00 +0200
+Message-ID: <20240913143500.3615218-1-agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <20240911104109.1831501-1-usamaarif642@gmail.com>
- <CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
- <2542182d-aa79-4705-91b6-fa593bacffa6@gmail.com> <CAMj1kXGi+N6AukJt6EGQTao=-1Ud_=bzwPvdjEzhmzEraFU98w@mail.gmail.com>
- <20240912-wealthy-gabby-tamarin-aaba3c@leitao> <CAMj1kXHh-Kov8c1pto0LJL6debugz1og6GFMYCwvfu+RiQGreA@mail.gmail.com>
- <6b2cc4c4-4354-4b29-bc73-c1384b90dfc6@gmail.com> <CAMj1kXG1hbiafKRyC5qM1Vj5X7x-dmLndqqo2AYnHMRxDz-80w@mail.gmail.com>
- <CAMj1kXFr+N9LMj0=wULchYosUpV0ygZSKUj1vdUP0KWEANKasw@mail.gmail.com>
- <CALu+AoS9+OxPmVJB9fAJFkjsX9xUVw6K_uXiOi0-XsK6-b4THg@mail.gmail.com>
- <1c37546a-e15e-465f-bcbb-6f39c0fcf82d@gmail.com> <CALu+AoQ_Db=1naa1YffvdV7ziY8FPzugUutw6ggg8O5P0Z2ofA@mail.gmail.com>
- <CALu+AoSdN4Zh5gPbyTGS8gJ7wDFfOq81ANNH4wmv3z1vs-34Rw@mail.gmail.com> <c76e9653-d991-4319-8924-5883e6829d17@gmail.com>
-In-Reply-To: <c76e9653-d991-4319-8924-5883e6829d17@gmail.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Fri, 13 Sep 2024 20:52:48 +0800
-Message-ID: <CALu+AoStijsAxNvX0h2w7jBt-4sHr0O9AEtyyoxNbLBtgmZB7g@mail.gmail.com>
-Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in 820_table_firmware
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>, linux-efi@vger.kernel.org, 
-	kexec@lists.infradead.org, ebiederm@xmission.com, bhe@redhat.com, 
-	vgoyal@redhat.com, tglx@linutronix.de, dave.hansen@linux.intel.com, 
-	x86@kernel.org, linux-kernel@vger.kernel.org, rmikey@meta.com, 
-	gourry@gourry.net
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Y3L5m69Lbt7H2L1-FeZnrSTERn3a6p6t
+X-Proofpoint-ORIG-GUID: KpIQ6S1MTUjzfx2SP9Mnjv7kSYAu9Gq3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=967 priorityscore=1501
+ adultscore=0 clxscore=1015 spamscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409130102
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240913_055243_776893_4B7CFE59 
-X-CRM114-Status: GOOD (  10.65  )
+X-CRM114-CacheID: sfid-20240913_073506_456951_E51A86DD 
+X-CRM114-Status: GOOD (  14.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,22 +111,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Usama,
+ELF program table virtual address is submitted to is_phys_addr()
+function, most likely as a leftover of replaced is_vmalloc_addr()
+function, as result of commit 2e452d75fa78 ("[PATCH v3] Enable
+--mem-usage for s390x."). Submit the physical address instead.
 
-> > Anyway I was not aware very much about the firmware e820 tables and
-> > kexec tables when they were created.   I suspect that a cleanup and
-> > revisit is needed.  I will have a look at that.
->
-> Yes, I feel like there is one too many tables! From reading the code
-> I understand that /sys/firmware/memmap should contain the untouched map
-> at time of boot, i.e. e820_table_firmware. But I would be in favour of
-> getting rid of e820_table_firmware, and just having e820_table_kexec.
-> And /sys/firmware/memmap gets data from e820_table_kexec.
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ elf_info.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Agreed, I have the same feelings.
-
-Thanks
-Dave
+diff --git a/elf_info.c b/elf_info.c
+index bc24083..7f3d053 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -765,7 +765,7 @@ int get_kcore_dump_loads(void)
+ 	for (i = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+ 		if (p->phys_start == NOT_PADDR
+-				|| !is_phys_addr(p->virt_start))
++				|| !is_phys_addr(p->phys_start))
+ 			continue;
+ 		loads++;
+ 	}
+@@ -786,7 +786,7 @@ int get_kcore_dump_loads(void)
+ 	for (i = 0, j = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+ 		if (p->phys_start == NOT_PADDR
+-				|| !is_phys_addr(p->virt_start))
++				|| !is_phys_addr(p->phys_start))
+ 			continue;
+ 		if (j >= loads) {
+ 			free(pls);
+-- 
+2.43.0
 
 
 _______________________________________________
