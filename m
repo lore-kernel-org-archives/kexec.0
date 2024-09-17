@@ -4,77 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33004CAC587
-	for <kexec@archiver.kernel.org>; Tue, 17 Sep 2024 15:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDDD8CAC58E
+	for <kexec@archiver.kernel.org>; Tue, 17 Sep 2024 16:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RdtZfsgyNZ6Bd4AusRGy5yxTbBIKTtFwrpRiJ4fdUaw=; b=L8VMcxRaCVb17E
-	+VgFTm2rKo2Gjft9u0AQ0/mYFuKmKxGe7mHoxVzrqSDr5anhS9iyPpy0N06lPMri/4yrwtnF1Q6rE
-	muO69Qt9KTSTy9OVjVNVBa4a3+VUKnL5JO/3IY8BJ/9oWDCuyLkVvyg9skUQOP7PiML/fpT3fKHEV
-	6Jv5MHa2MHsCjqctvHWFbJ8K2U104UgDyhBk3WuiiD1An87eHWtTLsHwYVlLrW3up3stOZ32W0pq8
-	r47biYJXdFQdKBIB3sQD0idggWHZou/yjkm/ePLvousPCrQKMGkIawQ6cPVPqd/nuinnFkG8FYXIX
-	1SPv7QaKoKZ1iPgq5Muw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=VxxZKO38fD/oSxwSKoxbVMcrz2sa8Le89hQyuDB3WmY=; b=Z8DES2eFikB2hw
+	orMDRazxSa1f3vbHKz9C5aimTMgjull36kAkCMQjZm41AoVKpxkPWoh36LFaKrzndEE5i4etSRmbP
+	TajqJ+y4CPgw1wUpGTIBdYZ2D9Wn6+1Y0c2MTiH3ZoLZegrKQUNd3pUo9waqmos14HH7BrnszZtIX
+	Gr7X7FBHcS3KsvjEFv4y1UG5eWME/quyj1ZV09y5NCUNH1gvhe7ZBZm1Y6+scIjoYJJ4igJsMPN9K
+	HmMYGiH1mx5zT9CnK1FoRmZkgt14ipaA4kQ5f14ZnOyvdRsJiWGwyvr/oBN4XqJ9vjYM61+fg782O
+	lb0geba3NXcbSuMFqt9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqaEs-00000006Ob4-2CzM;
-	Tue, 17 Sep 2024 15:35:38 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1sqbD7-00000006WRD-2f4m;
+	Tue, 17 Sep 2024 16:37:53 +0000
+Received: from mail-qv1-f46.google.com ([209.85.219.46])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqaEp-00000006OZr-2SSX
+	id 1sqbD3-00000006WQn-3G2O
 	for kexec@lists.infradead.org;
-	Tue, 17 Sep 2024 15:35:36 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id C60835C40A4
-	for <kexec@lists.infradead.org>; Tue, 17 Sep 2024 15:35:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F725C4CEC7
-	for <kexec@lists.infradead.org>; Tue, 17 Sep 2024 15:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726587334;
-	bh=jJt7WnZBGuBV8L4paI1I1Es2EO1tM2i2LNNETVlvlLg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D8QpCMsl4hL6URbZ0y9GOTbkwLbGidkNzrLm1OkyRJYFPfL6xa1fjlldFR0Fzh33n
-	 vrYhxuly++Rq4Hge4f6PnD1FDN+6sraoPg/xbrhbAZrs2yFG4w/MO9n/sjudVgT9VI
-	 J78/7dtup430/h5ym92SJBJ5uh+F6K4gtFGHz3xi1xpJnADasSvmaNdw0BLTDSo4fZ
-	 MKHVluYW9UUXCF3XIWRmhMTH8EKtJcZNUz5Gd8EMn/GceO97jcBIYQCaViClbBGSJ4
-	 og7dPqrPLgIm751QTNcZm3Fr3RRkyTJlGUb5lHqGgdER87ld2wRzk05pKy0eL85QqP
-	 gafhFW9lu7stg==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f761461150so62869171fa.0
-        for <kexec@lists.infradead.org>; Tue, 17 Sep 2024 08:35:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWp0/mVtjglPXrhRwZVJK9SHc9JRyk9KxFUcC3KXDYC4jZQ9hqPqFmde5hLlK0URpmErznTEQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyZwAuA22xa2gg4CuAeA1AWrLkCwPYLp8qXd0zfYzcSEv0gaL/W
-	ezPi2KFnOKMGN1tuMGDWNLTAz//84u5pzvgojrIGI7dCtnv2fo98XjVjxoa9CqzsImsNoaM1+aq
-	wT6UuxlEyia1r6JWo7ueIU1ZG0jk=
-X-Google-Smtp-Source: AGHT+IFfQJc8EcaWULN3Z+i8J/MSKeJvx5yHNWVN+ecZpADLsbwRegnU6nAb8P+zRnNC86xZWl36vWg3eoJPTQEschw=
-X-Received: by 2002:a2e:b8d3:0:b0:2f7:7fe7:ca94 with SMTP id
- 38308e7fff4ca-2f7918e4df3mr114333291fa.1.1726587332402; Tue, 17 Sep 2024
- 08:35:32 -0700 (PDT)
+	Tue, 17 Sep 2024 16:37:51 +0000
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6c524b4f8b9so48641926d6.3
+        for <kexec@lists.infradead.org>; Tue, 17 Sep 2024 09:37:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726591067; x=1727195867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kXQda56YrJG4pLuPYq9YltdvrEvuSPsYRw5+Mc1L42w=;
+        b=PySL3oJE/hMhebBC+rdBujXJISg3bQvUrjToxUrtZ2U5XWd4vuS1ny/ngk7gaqFBIp
+         Xaeo47kCUlz8Dz05vd0aCeVhyLfC0r/MoHVZaQWZt/3K+QjTDreS5qxgKyruXZzNybw0
+         eRyvRMu3RoiPerc7fD2KwcX5ZM/jV9rcSqtpJ/6sxXymqaT2waXK2scTmPB3EO5Stsdp
+         LF9pSDZ/j1YQdQbGSZ0XpZLMXArR85MN9NnBXg8PuDoKNebEvmRtITOwFYnoP9Zw+AaI
+         /NFO0pLCwrqydjF3oGyti6l0u1GJ26YuBPgsJHEoi5gq0JVgcPsF8ljeO4jAiPULFfwz
+         sPDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkDYHmZx63SAvOX/M3UizWv/8MY4uNjrzbhwS2J+ieVlNzuxrQ+z0/UhrzDUBlDZnxjM3bGw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzfZQPF7wQsqT3Ww4pojd9TROm0dfGBR92+52lgXyLz0a+4cEa9
+	IIWjii765Qg1crGSSaZeQdRHgLJmpia4aSWkd5ex43RG/6Va8nX8
+X-Google-Smtp-Source: AGHT+IGGBf9/e6O1ntWmc2YX7CGXE6d5jsChz8P2QxTASGHH97EqpLpTUE3r9bE7rmFWJ1jTgtOJ2w==
+X-Received: by 2002:a0c:f411:0:b0:6c3:5c75:d2bc with SMTP id 6a1803df08f44-6c57e0d6734mr261842196d6.47.1726591067519;
+        Tue, 17 Sep 2024 09:37:47 -0700 (PDT)
+Received: from dogali.home ([70.24.204.168])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c58c625f50sm36131796d6.3.2024.09.17.09.37.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2024 09:37:46 -0700 (PDT)
+From: Dave Vasilevsky <dave@vasilevsky.ca>
+To: glaubitz@physik.fu-berlin.de,
+	bhe@redhat.com,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org,
+	mpe@ellerman.id.au,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ebiederm@xmission.com
+Cc: Dave Vasilevsky <dave@vasilevsky.ca>,
+	=?UTF-8?q?Reimar=20D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
+Subject: [PATCH v2] crash, powerpc: Default to CRASH_DUMP=n on PPC_BOOK3S_32
+Date: Tue, 17 Sep 2024 12:37:20 -0400
+Message-ID: <20240917163720.1644584-1-dave@vasilevsky.ca>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <20240911104109.1831501-1-usamaarif642@gmail.com>
- <CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
- <2542182d-aa79-4705-91b6-fa593bacffa6@gmail.com> <CAMj1kXGi+N6AukJt6EGQTao=-1Ud_=bzwPvdjEzhmzEraFU98w@mail.gmail.com>
- <20240912-wealthy-gabby-tamarin-aaba3c@leitao> <d9df5012cd3306afa2eddd5187e643a3bbdfd866.camel@HansenPartnership.com>
- <20240913-careful-maroon-crab-8a0541@leitao> <5c525fe8f33fffebc0d275086cc7484e309dfae0.camel@HansenPartnership.com>
- <87o74n5p05.fsf@email.froward.int.ebiederm.org> <CAMj1kXF7EohKai9nyxSnvu32KNdUcNZxxP69Sz-vUZ-6nmvekg@mail.gmail.com>
- <874j6e482p.fsf@email.froward.int.ebiederm.org>
-In-Reply-To: <874j6e482p.fsf@email.froward.int.ebiederm.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 17 Sep 2024 17:35:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEa4DSY8omHGhoTK0U5isvK2G-PJO9go-QK_Mzny=g6ow@mail.gmail.com>
-Message-ID: <CAMj1kXEa4DSY8omHGhoTK0U5isvK2G-PJO9go-QK_Mzny=g6ow@mail.gmail.com>
-Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in 820_table_firmware
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Breno Leitao <leitao@debian.org>, 
-	Usama Arif <usamaarif642@gmail.com>, linux-efi@vger.kernel.org, 
-	kexec@lists.infradead.org, bhe@redhat.com, vgoyal@redhat.com, 
-	tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, rmikey@meta.com, gourry@gourry.net
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240917_083535_783861_F2445017 
-X-CRM114-Status: GOOD (  57.26  )
+X-CRM114-CacheID: sfid-20240917_093749_840143_05EF5FF2 
+X-CRM114-Status: GOOD (  13.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,116 +81,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 17 Sept 2024 at 17:24, Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Ard Biesheuvel <ardb@kernel.org> writes:
->
-> > Hi Eric,
-> >
-> > Thanks for chiming in.
->
-> It just looked like after James gave some expert input the
-> conversation got stuck, so I am just trying to move it along.
->
-> I don't think anyone knows what this whole elephant looks like,
-> which makes solving the problem tricky.
->
-> > On Mon, 16 Sept 2024 at 22:21, Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >>
-...
-> >>
-> >> This leaves two practical questions if I have been following everything
-> >> correctly.
-> >>
-> >> 1) How to get kexec to avoid picking that memory for the new kernel to
-> >>    run in before it initializes itself. (AKA the getting stomped by
-> >>    relocate kernel problem).
-> >>
-> >> 2) How to point the new kernel to preserved tpm_log.
-> >>
-> >>
-> >> This recommendation is from memory so it may be a bit off but
-> >> the general structure should work.  The idea is as follows.
-> >>
-> >> - Pass the information between kernels.
-> >>
-> >>   It is probably simplest for the kernel to have a command line option
-> >>   that tells the kernel the address and size of the tpm_log.
-> >>
-> >>   We have a couple of mechanisms here.  Assuming you are loading a
-> >>   bzImage with kexec_file_load you should be able to have the in kernel
-> >>   loader to add those arguments to the kernel command line.
-> >>
-> >
-> > This shouldn't be necessary, and I think it is actively harmful to
-> > keep inventing special ways for the kexec kernel to learn about these
-> > things that deviate from the methods used by the first kernel. This is
-> > how we ended up with 5 sources of truth for the physical memory map
-> > (EFI memory map, memblock and 3 different versions of the e820 memory
-> > map).
-> >
-> > We should try very hard to make kexec idempotent, and reuse the
-> > existing methods where possible. In this case, the EFI configuration
-> > table is already being exposed to the kexec kernel, which describes
-> > the base of the allocation. The size of the allocation can be derived
-> > from the table header.
-> >
-> >> - Ensure that when the loader is finding an address to load the new
-> >>   kernel it treats the address of the tpm_log as unavailable.
-> >>
-> >
-> > The TPM log is a table created by the EFI stub loader, which is part
-> > of the kernel. So if we need to tweak this for kexec's benefit, I'd
-> > prefer changing it in a way that can accommodate the first kernel too.
-> > However, I think the current method already has that property so I
-> > don't think we need to do anything (modulo fixing the bug)
->
-> I am fine with not inventing a new mechanism, but I think we need
-> to reuse whatever mechanism the stub loader uses to pass it's
-> table to the kernel.  Not the EFI table that disappears at
-> ExitBootServices().
->
-
-Not sure what you mean here - the EFI table that gets clobbered by
-kexec *is* the table that is created by the stub loader to pass the
-TPM log to the kernel. Not sure what alternative you have in mind
-here.
-
-> > That said, I am doubtful that the kexec kernel can make meaningful use
-> > of the TPM log to begin with, given that the TPM will be out of sync
-> > at this point. But it is still better to keep it for symmetry, letting
-> > the higher level kexec/kdump logic running in user space reason about
-> > whether the TPM log has any value to it.
->
-> Someone seems to think so or there would not be a complaint that it is
-> getting corrupted.
->
-
-No. The problem is that the size of the table is *in* the table, and
-so if it gets corrupted, the code that attempts to memblock_reserve()
-it goes off into the weeds. But that does not imply there is a point
-to having access to this table from a kexec kernel in the first place.
-
-> This should not be the kexec-on-panic kernel as that runs in memory
-> that is reserved solely for it's own use.  So we are talking something
-> like using kexec as a bootloader.
->
-
-kexec as a bootloader under TPM based measured boot will need to do a
-lot more than pass the firmware's event log to the next kernel. I'd
-expect a properly engineered kexec to replace this table entirely, and
-include the hashes of the assets it has loaded and measured into the
-respective PCRs.
-
-But let's stick to solving the actual issue here, rather than
-philosophize on how kexec might work in this context.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4ZXMgYm9vdCBmYWlsdXJlcyBvbiA2Ljkgb24gUFBDX0JPT0szU18zMiBtYWNoaW5lcyB1c2lu
+ZwpPcGVuIEZpcm13YXJlLiBPbiB0aGVzZSBtYWNoaW5lcywgdGhlIGtlcm5lbCByZWZ1c2VzIHRv
+IGJvb3QKZnJvbSBub24temVybyBQSFlTSUNBTF9TVEFSVCwgd2hpY2ggb2NjdXJzIHdoZW4gQ1JB
+U0hfRFVNUCBpcyBvbi4KClNpbmNlIG1vc3QgUFBDX0JPT0szU18zMiBtYWNoaW5lcyBib290IHZp
+YSBPcGVuIEZpcm13YXJlLCBpdCBzaG91bGQKZGVmYXVsdCB0byBvZmYgZm9yIHRoZW0uIFVzZXJz
+IGJvb3RpbmcgdmlhIHNvbWUgb3RoZXIgbWVjaGFuaXNtCmNhbiBzdGlsbCB0dXJuIGl0IG9uIGV4
+cGxpY2l0bHkuCgpEb2VzIG5vdCBjaGFuZ2UgdGhlIGRlZmF1bHQgb24gYW55IG90aGVyIGFyY2hp
+dGVjdHVyZXMgZm9yIHRoZQp0aW1lIGJlaW5nLgoKU2lnbmVkLW9mZi1ieTogRGF2ZSBWYXNpbGV2
+c2t5IDxkYXZlQHZhc2lsZXZza3kuY2E+ClJlcG9ydGVkLWJ5OiBSZWltYXIgRMO2ZmZpbmdlciA8
+UmVpbWFyLkRvZWZmaW5nZXJAZ214LmRlPgpDbG9zZXM6IGh0dHBzOi8vbGlzdHMuZGViaWFuLm9y
+Zy9kZWJpYW4tcG93ZXJwYy8yMDI0LzA3L21zZzAwMDAxLmh0bWwKRml4ZXM6IDc1YmMyNTVhNzQ0
+NCAoImNyYXNoOiBjbGVhbiB1cCBrZHVtcCByZWxhdGVkIGNvbmZpZyBpdGVtcyIpCi0tLQogYXJj
+aC9hcm0vS2NvbmZpZyAgICAgICB8IDMgKysrCiBhcmNoL2FybTY0L0tjb25maWcgICAgIHwgMyAr
+KysKIGFyY2gvbG9vbmdhcmNoL0tjb25maWcgfCAzICsrKwogYXJjaC9taXBzL0tjb25maWcgICAg
+ICB8IDMgKysrCiBhcmNoL3Bvd2VycGMvS2NvbmZpZyAgIHwgNCArKysrCiBhcmNoL3Jpc2N2L0tj
+b25maWcgICAgIHwgMyArKysKIGFyY2gvczM5MC9LY29uZmlnICAgICAgfCAzICsrKwogYXJjaC9z
+aC9LY29uZmlnICAgICAgICB8IDMgKysrCiBhcmNoL3g4Ni9LY29uZmlnICAgICAgIHwgMyArKysK
+IGtlcm5lbC9LY29uZmlnLmtleGVjICAgfCAyICstCiAxMCBmaWxlcyBjaGFuZ2VkLCAyOSBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vS2NvbmZpZyBi
+L2FyY2gvYXJtL0tjb25maWcKaW5kZXggMGVjMDM0OTMzY2FlLi40Y2MzMTQ2NzI5OGIgMTAwNjQ0
+Ci0tLSBhL2FyY2gvYXJtL0tjb25maWcKKysrIGIvYXJjaC9hcm0vS2NvbmZpZwpAQCAtMTU5OCw2
+ICsxNTk4LDkgQEAgY29uZmlnIEFUQUdTX1BST0MKIGNvbmZpZyBBUkNIX1NVUFBPUlRTX0NSQVNI
+X0RVTVAKIAlkZWZfYm9vbCB5CiAKK2NvbmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAorCWRl
+Zl9ib29sIHkKKwogY29uZmlnIEFVVE9fWlJFTEFERFIKIAlib29sICJBdXRvIGNhbGN1bGF0aW9u
+IG9mIHRoZSBkZWNvbXByZXNzZWQga2VybmVsIGltYWdlIGFkZHJlc3MiIGlmICFBUkNIX01VTFRJ
+UExBVEZPUk0KIAlkZWZhdWx0ICEoQVJDSF9GT09UQlJJREdFIHx8IEFSQ0hfUlBDIHx8IEFSQ0hf
+U0ExMTAwKQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9LY29uZmlnIGIvYXJjaC9hcm02NC9LY29u
+ZmlnCmluZGV4IGVkMTViODc2ZmE3NC4uOGM2N2I3NjM0N2QzIDEwMDY0NAotLS0gYS9hcmNoL2Fy
+bTY0L0tjb25maWcKKysrIGIvYXJjaC9hcm02NC9LY29uZmlnCkBAIC0xNTU5LDYgKzE1NTksOSBA
+QCBjb25maWcgQVJDSF9ERUZBVUxUX0tFWEVDX0lNQUdFX1ZFUklGWV9TSUcKIGNvbmZpZyBBUkNI
+X1NVUFBPUlRTX0NSQVNIX0RVTVAKIAlkZWZfYm9vbCB5CiAKK2NvbmZpZyBBUkNIX0RFRkFVTFRf
+Q1JBU0hfRFVNUAorCWRlZl9ib29sIHkKKwogY29uZmlnIEFSQ0hfSEFTX0dFTkVSSUNfQ1JBU0hL
+RVJORUxfUkVTRVJWQVRJT04KIAlkZWZfYm9vbCBDUkFTSF9SRVNFUlZFCiAKZGlmZiAtLWdpdCBh
+L2FyY2gvbG9vbmdhcmNoL0tjb25maWcgYi9hcmNoL2xvb25nYXJjaC9LY29uZmlnCmluZGV4IDBl
+M2FiZjdiMGJkMy4uN2JhM2JhZWU4NTllIDEwMDY0NAotLS0gYS9hcmNoL2xvb25nYXJjaC9LY29u
+ZmlnCisrKyBiL2FyY2gvbG9vbmdhcmNoL0tjb25maWcKQEAgLTYwMCw2ICs2MDAsOSBAQCBjb25m
+aWcgQVJDSF9TVVBQT1JUU19LRVhFQwogY29uZmlnIEFSQ0hfU1VQUE9SVFNfQ1JBU0hfRFVNUAog
+CWRlZl9ib29sIHkKIAorY29uZmlnIEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCisJZGVmX2Jvb2wg
+eQorCiBjb25maWcgQVJDSF9TRUxFQ1RTX0NSQVNIX0RVTVAKIAlkZWZfYm9vbCB5CiAJZGVwZW5k
+cyBvbiBDUkFTSF9EVU1QCmRpZmYgLS1naXQgYS9hcmNoL21pcHMvS2NvbmZpZyBiL2FyY2gvbWlw
+cy9LY29uZmlnCmluZGV4IDYwMDc3ZTU3NjkzNS4uYjU0N2Y0MzA0ZDBjIDEwMDY0NAotLS0gYS9h
+cmNoL21pcHMvS2NvbmZpZworKysgYi9hcmNoL21pcHMvS2NvbmZpZwpAQCAtMjg4MSw2ICsyODgx
+LDkgQEAgY29uZmlnIEFSQ0hfU1VQUE9SVFNfS0VYRUMKIGNvbmZpZyBBUkNIX1NVUFBPUlRTX0NS
+QVNIX0RVTVAKIAlkZWZfYm9vbCB5CiAKK2NvbmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAor
+CWRlZl9ib29sIHkKKwogY29uZmlnIFBIWVNJQ0FMX1NUQVJUCiAJaGV4ICJQaHlzaWNhbCBhZGRy
+ZXNzIHdoZXJlIHRoZSBrZXJuZWwgaXMgbG9hZGVkIgogCWRlZmF1bHQgIjB4ZmZmZmZmZmY4NDAw
+MDAwMCIKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9LY29uZmlnIGIvYXJjaC9wb3dlcnBjL0tj
+b25maWcKaW5kZXggOGE0ZWU1N2NkNGVmLi5jMDRmN2JiNTQzY2MgMTAwNjQ0Ci0tLSBhL2FyY2gv
+cG93ZXJwYy9LY29uZmlnCisrKyBiL2FyY2gvcG93ZXJwYy9LY29uZmlnCkBAIC02ODIsNiArNjgy
+LDEwIEBAIGNvbmZpZyBSRUxPQ0FUQUJMRV9URVNUCiBjb25maWcgQVJDSF9TVVBQT1JUU19DUkFT
+SF9EVU1QCiAJZGVmX2Jvb2wgUFBDNjQgfHwgUFBDX0JPT0szU18zMiB8fCBQUENfODV4eCB8fCAo
+NDR4ICYmICFTTVApCiAKK2NvbmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAorCWJvb2wKKwlk
+ZWZhdWx0IHkgaWYgIVBQQ19CT09LM1NfMzIKKwogY29uZmlnIEFSQ0hfU0VMRUNUU19DUkFTSF9E
+VU1QCiAJZGVmX2Jvb2wgeQogCWRlcGVuZHMgb24gQ1JBU0hfRFVNUApkaWZmIC0tZ2l0IGEvYXJj
+aC9yaXNjdi9LY29uZmlnIGIvYXJjaC9yaXNjdi9LY29uZmlnCmluZGV4IDg2ZDFmMWNlYTU3MS4u
+MzQxZWY3NTk4NzBhIDEwMDY0NAotLS0gYS9hcmNoL3Jpc2N2L0tjb25maWcKKysrIGIvYXJjaC9y
+aXNjdi9LY29uZmlnCkBAIC04ODIsNiArODgyLDkgQEAgY29uZmlnIEFSQ0hfU1VQUE9SVFNfS0VY
+RUNfUFVSR0FUT1JZCiBjb25maWcgQVJDSF9TVVBQT1JUU19DUkFTSF9EVU1QCiAJZGVmX2Jvb2wg
+eQogCitjb25maWcgQVJDSF9ERUZBVUxUX0NSQVNIX0RVTVAKKwlkZWZfYm9vbCB5CisKIGNvbmZp
+ZyBBUkNIX0hBU19HRU5FUklDX0NSQVNIS0VSTkVMX1JFU0VSVkFUSU9OCiAJZGVmX2Jvb2wgQ1JB
+U0hfUkVTRVJWRQogCmRpZmYgLS1naXQgYS9hcmNoL3MzOTAvS2NvbmZpZyBiL2FyY2gvczM5MC9L
+Y29uZmlnCmluZGV4IGM2MGU2OTllOTlmNS4uZmZmMzcxYjg5ZTQxIDEwMDY0NAotLS0gYS9hcmNo
+L3MzOTAvS2NvbmZpZworKysgYi9hcmNoL3MzOTAvS2NvbmZpZwpAQCAtMjc1LDYgKzI3NSw5IEBA
+IGNvbmZpZyBBUkNIX1NVUFBPUlRTX0NSQVNIX0RVTVAKIAkgIFRoaXMgb3B0aW9uIGFsc28gZW5h
+YmxlcyBzMzkwIHpmY3BkdW1wLgogCSAgU2VlIGFsc28gPGZpbGU6RG9jdW1lbnRhdGlvbi9hcmNo
+L3MzOTAvemZjcGR1bXAucnN0PgogCitjb25maWcgQVJDSF9ERUZBVUxUX0NSQVNIX0RVTVAKKwlk
+ZWZfYm9vbCB5CisKIG1lbnUgIlByb2Nlc3NvciB0eXBlIGFuZCBmZWF0dXJlcyIKIAogY29uZmln
+IEhBVkVfTUFSQ0hfWjEwX0ZFQVRVUkVTCmRpZmYgLS1naXQgYS9hcmNoL3NoL0tjb25maWcgYi9h
+cmNoL3NoL0tjb25maWcKaW5kZXggZTkxMDM5OThjY2E5Li4wNGZmNWZiOTI0MmUgMTAwNjQ0Ci0t
+LSBhL2FyY2gvc2gvS2NvbmZpZworKysgYi9hcmNoL3NoL0tjb25maWcKQEAgLTU1MCw2ICs1NTAs
+OSBAQCBjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQwogY29uZmlnIEFSQ0hfU1VQUE9SVFNfQ1JB
+U0hfRFVNUAogCWRlZl9ib29sIEJST0tFTl9PTl9TTVAKIAorY29uZmlnIEFSQ0hfREVGQVVMVF9D
+UkFTSF9EVU1QCisJZGVmX2Jvb2wgeQorCiBjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQ19KVU1Q
+CiAJZGVmX2Jvb2wgeQogCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9LY29uZmlnIGIvYXJjaC94ODYv
+S2NvbmZpZwppbmRleCBkMWZlNzMyOTc5ZDQuLjdmMzlkYjc3OTU3NCAxMDA2NDQKLS0tIGEvYXJj
+aC94ODYvS2NvbmZpZworKysgYi9hcmNoL3g4Ni9LY29uZmlnCkBAIC0yMDkyLDYgKzIwOTIsOSBA
+QCBjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQ19KVU1QCiBjb25maWcgQVJDSF9TVVBQT1JUU19D
+UkFTSF9EVU1QCiAJZGVmX2Jvb2wgWDg2XzY0IHx8IChYODZfMzIgJiYgSElHSE1FTSkKIAorY29u
+ZmlnIEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCisJZGVmX2Jvb2wgeQorCiBjb25maWcgQVJDSF9T
+VVBQT1JUU19DUkFTSF9IT1RQTFVHCiAJZGVmX2Jvb2wgeQogCmRpZmYgLS1naXQgYS9rZXJuZWwv
+S2NvbmZpZy5rZXhlYyBiL2tlcm5lbC9LY29uZmlnLmtleGVjCmluZGV4IDZjMzRlNjNjODhmZi4u
+NGQxMTFmODcxOTUxIDEwMDY0NAotLS0gYS9rZXJuZWwvS2NvbmZpZy5rZXhlYworKysgYi9rZXJu
+ZWwvS2NvbmZpZy5rZXhlYwpAQCAtOTcsNyArOTcsNyBAQCBjb25maWcgS0VYRUNfSlVNUAogCiBj
+b25maWcgQ1JBU0hfRFVNUAogCWJvb2wgImtlcm5lbCBjcmFzaCBkdW1wcyIKLQlkZWZhdWx0IHkK
+KwlkZWZhdWx0IEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCiAJZGVwZW5kcyBvbiBBUkNIX1NVUFBP
+UlRTX0NSQVNIX0RVTVAKIAlkZXBlbmRzIG9uIEtFWEVDX0NPUkUKIAlzZWxlY3QgVk1DT1JFX0lO
+Rk8KLS0gCjIuNDMuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
