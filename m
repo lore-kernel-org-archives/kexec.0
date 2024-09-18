@@ -4,163 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C67C6CAC5B2
-	for <kexec@archiver.kernel.org>; Wed, 18 Sep 2024 01:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 552B2CAC5B2
+	for <kexec@archiver.kernel.org>; Wed, 18 Sep 2024 03:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=wGZMQb/euhCuqphqXpkgEVvwsipHfGVL8EO6b18SwL8=; b=iWm1wQIXocNUOT
-	YgcyaQvar5cgAEaExq7/g+/qj62LSDQY+iWpHSKM7mH1yfhVxzQXn4c0ItjDGVG2BDkf3vMlj6tiH
-	JIsaK91If60x4MB1m345xAciwp088CRjDRoOPd1r/hVFH+jKM8f05o42ulw+80iOrfMAPbRJvf0bK
-	DY575mZVckGj3BYDyCTZ4Lu6+/mYsTcOTb0jLyGORFUWRXYsrZ+9wPfNLoHaOo8Khx0dMsOt6MV0D
-	fRvRH9qwnukZozG3mjjzFcRzJyn6LrprlEDRMMO3Qgz56O7yYq1ofBNfoTcXf/XhFNBxNMT0Z+h3s
-	Iucx13+TsX7ew3bbq6hg==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=s+z9W7zkfvo0WqXbbYgJo9Qhy1XOU/Ewfsn9/H5bSDw=; b=Pdnq1t1ZuS9XgfrfhywD6yjYcm
+	2l2c8OWWujVT62MocgcYePdPd5mHWAeFoNE92eOrxo0P6o6nmO5lSQ55wp2kivSoi+LiR0KdLF8Na
+	NfWUlEjF4Vrz6Mm+aWzx3emUjtXU95joAtRPEiBC8bKMK53IoQGLlz4eTqn7/WCI3qE30BsqNb+9q
+	dfepcyRfcG5GB8FAsoYULAtmZhox9nYXFQgRUIl6goynSqJgz8WpqUWlnTztWLmibqIt8p47WjTjr
+	nT8xbWzZFhD9oprGc8mVsyBFDHE/hr2mhy/vDYdkLs6/z8ZL4huelALKv87EFqNXLyGuKUrdoGUkB
+	Awlc1neg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqjCB-00000007EoJ-0Duq;
-	Wed, 18 Sep 2024 01:09:27 +0000
-Received: from mail-japanwestazlp170110001.outbound.protection.outlook.com ([2a01:111:f403:c407::1] helo=OS0P286CU010.outbound.protection.outlook.com)
+	id 1sql8z-00000007MlH-3L77;
+	Wed, 18 Sep 2024 03:14:17 +0000
+Received: from out03.mta.xmission.com ([166.70.13.233])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqjC7-00000007Ens-3MIM
+	id 1sql8w-00000007Miy-2Xse
 	for kexec@lists.infradead.org;
-	Wed, 18 Sep 2024 01:09:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cqc8hbva1EIpUJAeBmg2oAbb/8mIi7q87vZ9l+l9Qwy54w6Nk6rjT3mB1nTz/1Alja84f9l7nNcmTn6AXSrgbBufSycrvE0RPvxCfMzNlRRcZ0BMgJsI04oeELNWaOGuIeWbTtQfO+VOJd8TM/zehjcGDmX1R8MandfcchGCUdVyqgxYuSjlkWCCcOigtbFgmz6E8uODYRUw+TJHm2AhZuy1rVA4H1ZeJVv72h1bVeAFWC/whdMjkDXXV0xK82f0ck9SoraMTQftpmOwoH74GYyn+zmNo7EBQ7+7dLZHzaXbm+niSIYO/9KAJx1h5haCDxX1BR9bK1JRAPzoOG5BNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CZKYS1A/SS/TeYy3MSSxXdgrJKBkicQ9g0RYFOHYXak=;
- b=Ya3lmujUkqxK3N6CcXXWeiXHkk1CEyRw+tUGvMlgKlTy938SUG1L6HYUs/S7BnIbV7mYng2A7sCQ0oReY+8pLhC8f1TegDcYSi/FOSjl3fTfyX3kkBtk1tjK2uzaYdkzrgSiQUJ7Hy7UIJYI2M+9zM1vBdWXykT5p5PKQq4nwf5mlIxTjIj1ew0MgaBj0AjbuqXJ8eYHixvx4RwjEoOieq5cvToTlnToY9ECls9STVprUWCKHKZLQqb8rQtADqvXk9SQlX5vlKzZBBExdHn4biijbLZCH4CspqTCbej8eWmYgaxWapNLVvbxi0z72CxOBGfMNN85Mu1hs2J6GcJ8vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CZKYS1A/SS/TeYy3MSSxXdgrJKBkicQ9g0RYFOHYXak=;
- b=P3EDngOHZ4DCK/OkuwYMFfvg+aKGrKsjAbX4Fm8m/8YzlcQrgXE1RZdgkkMUO48mY7bQY4gnMND2rxmGb9nbzYRYnRevQklxGnnCgHRwozjj155+KIqF80rLOuMhUYvwhqhy8xATGpaTaJgdJu1/NjWacf8C0ldU1U+5+2ua8ha8rAav9XJJAxD3N3CpI4OH6rh+vqaZ8hnxeryGfj9YqT6V2yN3aEROhkeZ/V1MGo9yLPu8IIayI5SpvcAbnFiZIW+y9KoTa9YjUUah6SuxWGbqnzm6FR2OjoRviQWk5Ey5jBhXNnhcFsO2YLB3wY6UUmYfbr/l/rvkuI6oJBQjSQ==
-Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com (2603:1096:604:1de::11)
- by TYWPR01MB10822.jpnprd01.prod.outlook.com (2603:1096:400:2a6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.24; Wed, 18 Sep
- 2024 01:09:07 +0000
-Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com
- ([fe80::d0f6:b978:1865:3d66]) by OS3PR01MB9993.jpnprd01.prod.outlook.com
- ([fe80::d0f6:b978:1865:3d66%5]) with mapi id 15.20.7962.022; Wed, 18 Sep 2024
- 01:09:06 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH] Submit physical address to is_phys_addr()
-Thread-Topic: [PATCH] Submit physical address to is_phys_addr()
-Thread-Index: AQHbBeonNdlKgoyVJ0OI1cxQ+DCTAbJcwuIA
-Date: Wed, 18 Sep 2024 01:09:06 +0000
-Message-ID: <1ce6bdc0-2f5b-4d39-8d55-d352b697fa35@nec.com>
-References: <20240913143500.3615218-1-agordeev@linux.ibm.com>
-In-Reply-To: <20240913143500.3615218-1-agordeev@linux.ibm.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS3PR01MB9993:EE_|TYWPR01MB10822:EE_
-x-ms-office365-filtering-correlation-id: d9e69478-1a32-4b9a-1530-08dcd77e7e97
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?b2RienJobkJVRklUZ0J0bXJ6WkNZQ3F2VmlFR3Z0OEt6eGJKWXZZZ1NUZlA0?=
- =?utf-8?B?RjRFcEVlNkNYVUVMdlZSVlBvVDFBS2lqc05XTVkyMUVDbG5PWXBZcE1mSW5M?=
- =?utf-8?B?UFA5dFB3b3NEUHhLdWxNUFJyWG5lQTRrL0JVZTc2MlBxeVNBUFhPcm9DcSsy?=
- =?utf-8?B?Q28xRzdQaXg5RTdBeXM5Rmx3R2J5SWo2dGtHS2ZyZFZnSW1HdnRhdUdnbnJO?=
- =?utf-8?B?UVVmbWhBWmtOTGpYMmZUTXdRZVo5V3V5TzJKZjlWOXE0c0k4dWhZZnptMlY4?=
- =?utf-8?B?cElPdzhYaGxBaDFuWmZBc1F5M0tuc0VkakNONjU4ZFFIQm11V0lwUXVsckxW?=
- =?utf-8?B?Z29EdForUFRtdnpvUjc5Q3lFVnJVVXZVUkUyblBPRVRoTWQ5L1BrMG1xQUpG?=
- =?utf-8?B?NWx6WnJEWk9UeHYwcmZ1OEl5MHV5eko5Z2FsTTYzelV1cUNWaHNaS1AzKzI5?=
- =?utf-8?B?TVEydXBFMGN3NWRaTXY4dFMwWUtyeGlhNmJ2emo3KzRjdGY3dkJJaXV0WldP?=
- =?utf-8?B?MGRjZUxCWURKYU9FMU1hdTl6N3ByS1RueU1vUTdubm4rWXdkM1lRQnJUNFZJ?=
- =?utf-8?B?VVVLZTJzcGdmbXRSKytGaXJIYWs2T3FXWkEvTEdxMjNRR28vdEhSdXFpNzJp?=
- =?utf-8?B?T3RpUmgwNmNYbjF2YUgzREpaZEdQL3E5M3BuVkRmdEYzVHpkcUFCVUE4Ymh5?=
- =?utf-8?B?eVpoYWxZbFpiWUo5aGRXN1ZYbEVGNGF3U0NrRVAwVGVtaENEcCt1dW9OQjhE?=
- =?utf-8?B?aS9Mbk42c3Q4M2s0YlIrWTNFMzRVWnhLU2NZUXFlb1pHTHp3c0owdVZiczNN?=
- =?utf-8?B?d3FqWSsyRktDTFpLNWRrdjMzQURiQzd3bVkyRWNxamZGbjkxL2dqTkE0M1h4?=
- =?utf-8?B?Uzg2S2FZa0tST000K094UkZhVC9aRXdiZDlQNlRlanpZK1pUcXNvVHJKMVRS?=
- =?utf-8?B?S1ltU3ViWWFXRGsyUXpna0tWNGtPaHN1N2pUZGhoMENkOXM5VGxGM1F3UE40?=
- =?utf-8?B?aVBDWlR5dmxScUlBSThMUkQrZ1Rza0JnNWE5YVdtcFlSdTVreE1zRmNxUzFO?=
- =?utf-8?B?anE1SkNoanZpTG5DY0NTRVpxM0tJVTVIZDgvdmVOeDd5UDRPZzdFRUdHRFlM?=
- =?utf-8?B?TVUrQnBHaGNKNVA1KzZUc1VTckZQUFBiaDFwbmNXdGZsMk11WC9PbDZnaXpq?=
- =?utf-8?B?VEw4N3JQN0V3UUpSZHRFcWdLMm5yeVQ3NmJmdHNjTmQ4Vm1yL1pLSC9Mdys2?=
- =?utf-8?B?TE8xUnRYUU4yMjRrRyttaVFtazVlMnRDU2tkejhkQWV6OUtDTHFlRnpQQkNU?=
- =?utf-8?B?aE9Jbk1JaUIzSU9paTg3RDdMNGhieGlEc1l4U3AvT0crbzlZWGNScWhueEM4?=
- =?utf-8?B?akJtTENCbUJMZmw2b21YdVBwb1NBYzNiclhFQU1rQmxjWks0UExOSEJmWXhl?=
- =?utf-8?B?N2JSWmlnbnIvY2hNYXowTCsxRlpZajVIdHhYWE8zeGV0NjE4bUZGNDB5VGoy?=
- =?utf-8?B?R09FYTJHNGhsWjhUOUpqamFpbUVEWTNrdUpLNGNoTDU3WExmaGRpcjE5UExq?=
- =?utf-8?B?b3h2NkdWV3IyMWFkRzQ5YjJlZ1llbjRoQzVxZmlZYXozYkVVYWJXRnFMSGE3?=
- =?utf-8?B?ei9VZzNhNGU4anZoQk9SaExxM3JnWDdzdm9kcCtyWXJJTGZ6NDErOFJDWDMz?=
- =?utf-8?B?UkYvcnZkWkdrQUtxRE9jYnVrUUdqRHFSNk9TSEpuazI4blI4VHhCeWRqRHoz?=
- =?utf-8?B?S1lGUHRIZWp6M3VRODJ1ZWZqdEk0ZmVtSVdHbEJlc1FabXNJUzBoUTFNbWhZ?=
- =?utf-8?B?b3VWWkdPeHVUUTlPcmNjaFc0WHIzS21YRG04WngrQndQcFdGa2REZnd5bGVv?=
- =?utf-8?B?bVpmWi84WVhhc1JPRFFSeGVGZDgyckZBajN4OUw5ekpHclE9PQ==?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB9993.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q2hYckVZZFZucDNZazREUnlYYmxndEU3U0VTZlhCa2JpRlVEMUxUK1J6ZW9W?=
- =?utf-8?B?UEU0SStnMklDS3JvdmhGUFJFQklSUmsyTWdQdFEvVkZoNFY0TGo0dG5haG9Z?=
- =?utf-8?B?ODI4UDVVcm1KWmgwR2dSVXdjZnpJRHptanNaMUhyRGZGdGYvSUhWV2NKY2pV?=
- =?utf-8?B?RzVGa3BGUUhKVEtrR3hRUThIczRrRnNmZzVGRDJ5ZjViMHJubmpCZFhTOHVh?=
- =?utf-8?B?SmVwU011bDR1amYyUnh5bG9sTWhBVzVqOWdzb0hzaUVoeXVSeThCc3hDQTRO?=
- =?utf-8?B?SGtzSzBsbDh3TFEyYjNKNHMrMmF3SGZybFIvd29vOU5nalpHTCtCMldteHV6?=
- =?utf-8?B?bFN2ZFpQUjl2UTd4WGFLdjMzc3ZiaTgyajZrQkZlUFhlNFN2cEY4Wk82eFZL?=
- =?utf-8?B?TTBoZ0d6T2hzY0dFSkpvQWxzMkNaSmlLbXVDVVliS3BQRTRUUERUYTNqOTJa?=
- =?utf-8?B?c2tQZWRVMzM2ajRwSWlvcDVNcUZhb0hwc0g2YlNDV0YzUko1SzNSZnRWb0dp?=
- =?utf-8?B?S1R1emJtL0sxQkh6cVdaV3NRc0t3eUt0MWVpWmhGTjFyajRIbGdsdlFUMXFq?=
- =?utf-8?B?dGZObHQyeUxiVU5WeVJiUkNKdUpVQ0dWWFFwaGkzOHQ2a2RVVDRRcUltVzlp?=
- =?utf-8?B?bXIyRFFWUmJqYTJFck1SaGJnWUNBVmx4c2RaNkp1bjdZdDZNT1NNeUtFd2wy?=
- =?utf-8?B?OWNYSWNNc3RmOFpTcGtuUWVjOXZSUUNmWHoxdjF0U1kyWnpIdG5YeXYrNllW?=
- =?utf-8?B?anhUVEdQYXNPYllkdFo1UEdmL2NsajFJZkhjc2NBcUtYVTZrV3NUblRyY1ZL?=
- =?utf-8?B?eVFLSGpyWm5wZDNSRXY1dDhnbmtKRDRqeU5pMkFITXhmKzlicDJxdkZqUEdw?=
- =?utf-8?B?aFV5bmZSU3lReFdmd2RENmMvQzhXQm5qbVV4ZDM2a0dXRWRlT1B6T3dtbVB1?=
- =?utf-8?B?bG9OL240cE5NVlVFWFhWcXRzUytUWXlpaG94V1VaZ0VIZVRYUG91L1BFcUMy?=
- =?utf-8?B?Uktha3hYUXJkbTI3V1U4NnNLN3VxenFPUFdaNWN6MTVMbUtCT29PZnJFWjFL?=
- =?utf-8?B?cmo5UDVCU2xTQWJ6NjZFWWdNRVVxczZZQTVkYXpqdXpreDRnWlJud25pYktn?=
- =?utf-8?B?bXlQLzFEdG1leldWNHpVRktGdmZVRmNNRDdGV3ExVG9xT2tTMitzdVk3Vm1U?=
- =?utf-8?B?dFdDbThhUWFsZUo3b1NhNFQzMk80WWl1NFE5TVh4bGh6MmtZVjhHLzVXa0tD?=
- =?utf-8?B?dVVDMHpCM3UzMWU1NzJsSmF6ZG1NN0hGV2VGMkhWMmFLSjFieWE0U0tTSFlY?=
- =?utf-8?B?THRsZmpyTVpPNlIzQW9NTjFDc3FmeUc3SUdwT2lUSjZSL0VFbkJLaEFpRWlM?=
- =?utf-8?B?N3BSeDI3NWIrbkZ2RW1kMVZHM1ZOMlJibEo5VE9zNGNpVTFoUE5nUjFBQ1hG?=
- =?utf-8?B?cFlTUU8xdjhOYUJKalJkZ1p4Y1piMms1QnJIOUxJaHlzVnlnRFNyanBUckNh?=
- =?utf-8?B?cFR2dFA5aFhJUTN1TWpyVEVtbXdteEtOYXcxbEVxdVRUZVc0U3BSQlllZlo1?=
- =?utf-8?B?M0sxNC9ieXlmZEd5QzAvYk0yUHhBdlZ5R0NMTVo0NG11VlAxQzBDejlrVGYx?=
- =?utf-8?B?RHFjUWp0SHUvbjd6SFROT05MQmI5TzRndzdMUUNmZnlYMjBkalFRZS91amFU?=
- =?utf-8?B?N0FwcHNZSVhyN2xueWNZbm5oa2ozdW5rNHFLMWQ2djhVeWJ0VE9uSFZjTVVr?=
- =?utf-8?B?L2VneG1QcDhtZlRPK2g4MVZhT3BHaWJvRWsvb0JRMEJSYnRMVjI4ZkxFeEty?=
- =?utf-8?B?Z21Uci9DeWZNdkhPelNIRVhHdDVMY2YvZVN6UnRDZmYyMjArL2ZhZVdKZ1Fp?=
- =?utf-8?B?Yytkang1b0lpM1lVZUg4b1ZOSzZjTXFrYTFWUzI0Ym93YThDcVNqS3hUTFZ1?=
- =?utf-8?B?UEEzTTd4Sm9HN25PRW1IRXhKZXo2bHpYQ3pOZk5qaEJUYjZwUU1SOVRkYUhM?=
- =?utf-8?B?YVo1UjZrNVNrZVRkMjU0STdBeGluM21NRzFKZXZzQmIzRXBaSUhrcWRUMUpC?=
- =?utf-8?B?b1F4eUdOZjlGNVNhRzV4d2NnN3Z4bGhjQllHR01PZDUxaHBzbWoxOUpGVGpu?=
- =?utf-8?Q?5MG22QVzZiGybkJCeDvR1wlXl?=
-Content-ID: <1926C5750FD78C46AF259777FECA2470@jpnprd01.prod.outlook.com>
+	Wed, 18 Sep 2024 03:14:15 +0000
+Received: from in01.mta.xmission.com ([166.70.13.51]:34848)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sql8d-004Anw-KA; Tue, 17 Sep 2024 21:13:55 -0600
+Received: from ip68-227-165-127.om.om.cox.net ([68.227.165.127]:41268 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sql8c-005NV4-DJ; Tue, 17 Sep 2024 21:13:55 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,  Breno Leitao
+ <leitao@debian.org>,  Usama Arif <usamaarif642@gmail.com>,
+  linux-efi@vger.kernel.org,  kexec@lists.infradead.org,  bhe@redhat.com,
+  vgoyal@redhat.com,  tglx@linutronix.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  linux-kernel@vger.kernel.org,  rmikey@meta.com,
+  gourry@gourry.net
+References: <20240911104109.1831501-1-usamaarif642@gmail.com>
+	<CAMj1kXFVyQEwBTf2bG8yBXUktM16dzrcPH-Phz_toAsCK-NfMA@mail.gmail.com>
+	<2542182d-aa79-4705-91b6-fa593bacffa6@gmail.com>
+	<CAMj1kXGi+N6AukJt6EGQTao=-1Ud_=bzwPvdjEzhmzEraFU98w@mail.gmail.com>
+	<20240912-wealthy-gabby-tamarin-aaba3c@leitao>
+	<d9df5012cd3306afa2eddd5187e643a3bbdfd866.camel@HansenPartnership.com>
+	<20240913-careful-maroon-crab-8a0541@leitao>
+	<5c525fe8f33fffebc0d275086cc7484e309dfae0.camel@HansenPartnership.com>
+	<87o74n5p05.fsf@email.froward.int.ebiederm.org>
+	<CAMj1kXF7EohKai9nyxSnvu32KNdUcNZxxP69Sz-vUZ-6nmvekg@mail.gmail.com>
+	<874j6e482p.fsf@email.froward.int.ebiederm.org>
+	<CAMj1kXEa4DSY8omHGhoTK0U5isvK2G-PJO9go-QK_Mzny=g6ow@mail.gmail.com>
+Date: Tue, 17 Sep 2024 22:13:30 -0500
+In-Reply-To: <CAMj1kXEa4DSY8omHGhoTK0U5isvK2G-PJO9go-QK_Mzny=g6ow@mail.gmail.com>
+	(Ard Biesheuvel's message of "Tue, 17 Sep 2024 17:35:20 +0200")
+Message-ID: <87setx3b8l.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB9993.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9e69478-1a32-4b9a-1530-08dcd77e7e97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2024 01:09:06.9274
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kijnpr/qaxHOKhW36yhQ0TNQie7WyF2J5BN+CrATsekNzC3ueKSrutZ5gPquFsbYcWqDARulE7g27ZOCIphYOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10822
+X-XM-SPF: eid=1sql8c-005NV4-DJ;;;mid=<87setx3b8l.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.165.127;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+kvMZT12Ifk9zEW+PAKwuz6Tn0dqFT3Ew=
+Subject: Re: [RFC] efi/tpm: add efi.tpm_log as a reserved region in
+ 820_table_firmware
+X-SA-Exim-Connect-IP: 166.70.13.51
+X-SA-Exim-Rcpt-To: gourry@gourry.net, rmikey@meta.com, linux-kernel@vger.kernel.org, x86@kernel.org, dave.hansen@linux.intel.com, tglx@linutronix.de, vgoyal@redhat.com, bhe@redhat.com, kexec@lists.infradead.org, linux-efi@vger.kernel.org, usamaarif642@gmail.com, leitao@debian.org, James.Bottomley@hansenpartnership.com, ardb@kernel.org
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out03.mta.xmission.com); SAEximRunCond expanded to false
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240917_180923_938637_BC0A253E 
-X-CRM114-Status: GOOD (  18.40  )
+X-CRM114-CacheID: sfid-20240917_201414_680796_56DA1F5D 
+X-CRM114-Status: GOOD (  55.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -177,53 +91,132 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Alex,
+Ard Biesheuvel <ardb@kernel.org> writes:
 
-Thanks for the patch.
+> On Tue, 17 Sept 2024 at 17:24, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> Ard Biesheuvel <ardb@kernel.org> writes:
+>>
+>> > Hi Eric,
+>> >
+>> > Thanks for chiming in.
+>>
+>> It just looked like after James gave some expert input the
+>> conversation got stuck, so I am just trying to move it along.
+>>
+>> I don't think anyone knows what this whole elephant looks like,
+>> which makes solving the problem tricky.
+>>
+>> > On Mon, 16 Sept 2024 at 22:21, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> >>
+> ...
+>> >>
+>> >> This leaves two practical questions if I have been following everything
+>> >> correctly.
+>> >>
+>> >> 1) How to get kexec to avoid picking that memory for the new kernel to
+>> >>    run in before it initializes itself. (AKA the getting stomped by
+>> >>    relocate kernel problem).
+>> >>
+>> >> 2) How to point the new kernel to preserved tpm_log.
+>> >>
+>> >>
+>> >> This recommendation is from memory so it may be a bit off but
+>> >> the general structure should work.  The idea is as follows.
+>> >>
+>> >> - Pass the information between kernels.
+>> >>
+>> >>   It is probably simplest for the kernel to have a command line option
+>> >>   that tells the kernel the address and size of the tpm_log.
+>> >>
+>> >>   We have a couple of mechanisms here.  Assuming you are loading a
+>> >>   bzImage with kexec_file_load you should be able to have the in kernel
+>> >>   loader to add those arguments to the kernel command line.
+>> >>
+>> >
+>> > This shouldn't be necessary, and I think it is actively harmful to
+>> > keep inventing special ways for the kexec kernel to learn about these
+>> > things that deviate from the methods used by the first kernel. This is
+>> > how we ended up with 5 sources of truth for the physical memory map
+>> > (EFI memory map, memblock and 3 different versions of the e820 memory
+>> > map).
+>> >
+>> > We should try very hard to make kexec idempotent, and reuse the
+>> > existing methods where possible. In this case, the EFI configuration
+>> > table is already being exposed to the kexec kernel, which describes
+>> > the base of the allocation. The size of the allocation can be derived
+>> > from the table header.
+>> >
+>> >> - Ensure that when the loader is finding an address to load the new
+>> >>   kernel it treats the address of the tpm_log as unavailable.
+>> >>
+>> >
+>> > The TPM log is a table created by the EFI stub loader, which is part
+>> > of the kernel. So if we need to tweak this for kexec's benefit, I'd
+>> > prefer changing it in a way that can accommodate the first kernel too.
+>> > However, I think the current method already has that property so I
+>> > don't think we need to do anything (modulo fixing the bug)
+>>
+>> I am fine with not inventing a new mechanism, but I think we need
+>> to reuse whatever mechanism the stub loader uses to pass it's
+>> table to the kernel.  Not the EFI table that disappears at
+>> ExitBootServices().
+>>
+>
+> Not sure what you mean here - the EFI table that gets clobbered by
+> kexec *is* the table that is created by the stub loader to pass the
+> TPM log to the kernel. Not sure what alternative you have in mind
+> here.
 
-On 2024/09/13 23:35, Alexander Gordeev wrote:
-> ELF program table virtual address is submitted to is_phys_addr()
-> function, most likely as a leftover of replaced is_vmalloc_addr()
-> function, as result of commit 2e452d75fa78 ("[PATCH v3] Enable
-> --mem-usage for s390x."). Submit the physical address instead.
+I was referring to whatever the EFI table that James Bottomley mentioned
+that I presume the stub loader reads from when the stub loader
+constructs the tpm_log that is passed to the kernel.
 
-If this leftover causes a failure, could you add the error and brief 
-description about it to the commit log?
+So I believe we are in agreement of everything except terminology.
 
-It looks like currently is_phys_addr() is used only by s390x, and the 
-patch looks good to me.
+>> > That said, I am doubtful that the kexec kernel can make meaningful use
+>> > of the TPM log to begin with, given that the TPM will be out of sync
+>> > at this point. But it is still better to keep it for symmetry, letting
+>> > the higher level kexec/kdump logic running in user space reason about
+>> > whether the TPM log has any value to it.
+>>
+>> Someone seems to think so or there would not be a complaint that it is
+>> getting corrupted.
+>>
+>
+> No. The problem is that the size of the table is *in* the table, and
+> so if it gets corrupted, the code that attempts to memblock_reserve()
+> it goes off into the weeds. But that does not imply there is a point
+> to having access to this table from a kexec kernel in the first place.
 
-Thanks,
-Kazu
+If there is no point to having access to it then we should just not
+pass anything to the loaded kernel, so the kernel does not think there
+is anything there.
 
-> 
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->   elf_info.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/elf_info.c b/elf_info.c
-> index bc24083..7f3d053 100644
-> --- a/elf_info.c
-> +++ b/elf_info.c
-> @@ -765,7 +765,7 @@ int get_kcore_dump_loads(void)
->   	for (i = 0; i < num_pt_loads; ++i) {
->   		struct pt_load_segment *p = &pt_loads[i];
->   		if (p->phys_start == NOT_PADDR
-> -				|| !is_phys_addr(p->virt_start))
-> +				|| !is_phys_addr(p->phys_start))
->   			continue;
->   		loads++;
->   	}
-> @@ -786,7 +786,7 @@ int get_kcore_dump_loads(void)
->   	for (i = 0, j = 0; i < num_pt_loads; ++i) {
->   		struct pt_load_segment *p = &pt_loads[i];
->   		if (p->phys_start == NOT_PADDR
-> -				|| !is_phys_addr(p->virt_start))
-> +				|| !is_phys_addr(p->phys_start))
->   			continue;
->   		if (j >= loads) {
->   			free(pls);
+>> This should not be the kexec-on-panic kernel as that runs in memory
+>> that is reserved solely for it's own use.  So we are talking something
+>> like using kexec as a bootloader.
+>>
+>
+> kexec as a bootloader under TPM based measured boot will need to do a
+> lot more than pass the firmware's event log to the next kernel. I'd
+> expect a properly engineered kexec to replace this table entirely, and
+> include the hashes of the assets it has loaded and measured into the
+> respective PCRs.
+>
+> But let's stick to solving the actual issue here, rather than
+> philosophize on how kexec might work in this context.
+
+
+I am fine with that.  The complaint I had seen was that the table was
+being corrupted and asking how to solve that.  It seems I haven't read
+the part of the conversation where it was made clear that no one wants
+the tpm_log after kexec.
+
+If someone wants the tpm_log then we need to solve this problem.
+
+Eric
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
