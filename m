@@ -4,54 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BE24CF58E4
-	for <kexec@archiver.kernel.org>; Fri, 20 Sep 2024 07:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48E46C78820
+	for <kexec@archiver.kernel.org>; Fri, 20 Sep 2024 10:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:Date:Message-Id:Subject:Mime-Version
-	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Date:Subject:To:
+	Message-ID:From:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=3ANJjc2wn0ubW7G5k+YC8LU9drk0xk0xTWj7kfFccNE=; b=BaKFfoJd16dDF0
-	7wr9F4NpRuhykPpBhXhXbKDWmtiiVEg5IaO7Yd+Re0Ib6fGPTm5uy2ZrFp0ZOdiXdxbhFeb6g/gkb
-	GIhSPH7skmtvfd8z3jea6W7Sme1qyCGi45ugl4ejj+pVWElAzjyV4PblV8/uObWtQmDeHCpLloRcy
-	T3TD4I0oELyzXue0asMIiBvCLh+m8m4VraTGwXo9dWjuqLuM4MLxszmDkwTrkv47jJoB8PPEijIv9
-	hRl1fTayISwesoJdgMpXHaogtY7bviLtOMgNYhKmZ2W8j7s9BnmKQoLRE8LQRev4i5bWE4wF95Euf
-	h5UOHXO74HpN7wbmAypQ==;
+	List-Owner; bh=vW6KhjhCt4jEiZJx61gwzs7apKWofHOw2mXyqbrLqQE=; b=ETdgCG8BRy2zkl
+	hwGugTyw5eq/AG0VFP0wypXCHUpiunHc4mbFYsQaMJPmjdaOO+x/Ec+qnYU2dMb4e65IRq50PMTkq
+	MlZ1coTpi5JsuCf0dV6Y7SSaTj7DSEKRP8l1LWAIThpZ4y3tBROwJULCeVJFRgYgncISyn4NTirU9
+	L/nH080ccSPc+neTneJ2f3EwWvRGEQOGOlhgsx1ptIvktY5mbZtkh8mZWgHzPm4P0GpdKlT9JRiom
+	MqJV5yvH+er2+25T4bk0rCz4njSae5+3mFXfTHYvF1v+e+broD13li8zuQvFhYKhB7eQJA27hn441
+	PX6hyWzBOoZQzeqMZtMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1srY98-0000000Bd8q-0cpN;
-	Fri, 20 Sep 2024 07:33:42 +0000
-Received: from dediextern.your-server.de ([85.10.215.232])
+	id 1srbFC-0000000C2Ja-1Buh;
+	Fri, 20 Sep 2024 10:52:10 +0000
+Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1srY7i-0000000Bcze-3xSl
+	id 1srbF9-0000000C2JD-3NFM
 	for kexec@lists.infradead.org;
-	Fri, 20 Sep 2024 07:32:16 +0000
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <martin.friedrich@hetzner-cloud.de>)
-	id 1srY7b-000Kui-IE
-	for kexec@lists.infradead.org; Fri, 20 Sep 2024 09:32:07 +0200
-Received: from [2a01:4f8:0:a0a7::1002] (helo=smtpclient.apple)
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin.friedrich@hetzner-cloud.de>)
-	id 1srY7b-000PtD-2f
-	for kexec@lists.infradead.org;
-	Fri, 20 Sep 2024 09:32:07 +0200
-From: Martin Friedrich <martin.friedrich@hetzner-cloud.de>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: makedumpfile fail to strip pages
-Message-Id: <164F5E03-EB17-451A-810F-58962BBC53B2@hetzner-cloud.de>
-Date: Fri, 20 Sep 2024 09:31:56 +0200
+	Fri, 20 Sep 2024 10:52:08 +0000
+Received: by mail-pg1-x544.google.com with SMTP id 41be03b00d2f7-7db53a20d1fso1244649a12.0
+        for <kexec@lists.infradead.org>; Fri, 20 Sep 2024 03:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726829526; x=1727434326; darn=lists.infradead.org;
+        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MxitZxgmvoGPY/D0MWsatY/SG1INnyxTi18mvHYSZYE=;
+        b=WB4pxVMVy1oPwr5zmLXgaw/7je8w5AYelBUrMrDmXnZTmhv9qwy6JNN2P2tK/zPkVc
+         MO/jEdK1w3OqhNnapLh+e+P0i+CuB94jtNspkqVarTlEyV1ai8EAPFJ9qaHdsk+gvbTA
+         AZxa82m/4U/H/6CRjr6MwD+HRUom/UbDZKUeq28aQKAEh1iPgKNy0CEafoMLxns3UO5d
+         2Ex91K5U/jjI0zYgP0yreq7KqGNuoD7+j7YKt7tkIc0jOPchlFd9lmaNuYXx/iRIh8yv
+         EAcmrsYYuLoCfyWcoT2rCH3YRvfRLATxIdq/wk0x8GOrB1PlJYH36vdmOB1xiFjwWfln
+         7HPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726829526; x=1727434326;
+        h=mime-version:date:subject:to:reply-to:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MxitZxgmvoGPY/D0MWsatY/SG1INnyxTi18mvHYSZYE=;
+        b=DYk3pkj9O+voWF8wuNo3ohjhw2h+H8nOeKePvSoJijUpGabGnmjTjo9FsMstHac6N7
+         ZptdTIL6PsZs0QS3l6grQYlHeMzOMlYoYtWOL97T8+AEVRYGiQEBqLbj2EHwCBlqTby3
+         su8nXJSMkdbDhuTISKyI8HJXNvSso1eD5XCiXBoc3q6NKzp/NIDZbDQf/N6qx5u5UHMf
+         LUK6auRH2cMWT+rQ2lpJu67VrXFZYTWKt2alUAU/H/+GacOdvEljukhDiSTo4zwOElKQ
+         UaIZb/8Te6kNRGgb4+tk9dswunvxPGueqORnLY0A4iRPnKJYCxOK/9YUNA4UIiWZs69+
+         oAyA==
+X-Gm-Message-State: AOJu0Yz9Y7pGD9TneFKJh3ZzD/RBKV9//R05IH9pak7bnqlo6UjmgaP/
+	W6xEViOvSJVP0VNurkgzbs7GNAAYptiIVLzX5RJPjC7a+l+LVsLK0FIAyQ+1
+X-Google-Smtp-Source: AGHT+IHWnWtpE2I6y0keWG5MzjBuDhF//Wt94HQ3cISfU4803Jdq+4QxFwCzTzUsSaUB5PxjhstS9g==
+X-Received: by 2002:a05:6a21:e96:b0:1cf:4d21:f4c1 with SMTP id adf61e73a8af0-1d30c9e9f89mr3157413637.19.1726829526341;
+        Fri, 20 Sep 2024 03:52:06 -0700 (PDT)
+Received: from [103.67.163.162] ([103.67.163.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71944ab5910sm9627527b3a.77.2024.09.20.03.52.05
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2024 03:52:06 -0700 (PDT)
+From: Michelle Fangman <dd5797840@gmail.com>
+X-Google-Original-From: Michelle Fangman <michfangman@outlook.com>
+Message-ID: <726b286039abee39164b3c442734a95348680399633cccf333d8b215ce70a532@mx.google.com>
 To: kexec@lists.infradead.org
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-Authenticated-Sender: martin.friedrich@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27403/Thu Sep 19 10:44:20 2024)
+Subject: Baby Grand Piano  09/20
+Date: Fri, 20 Sep 2024 06:52:05 -0400
+MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240920_003215_001568_F1909EB3 
-X-CRM114-Status: UNSURE (   6.57  )
+X-CRM114-CacheID: sfid-20240920_035207_847992_6EC4DF2B 
+X-CRM114-Status: UNSURE (   3.32  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -64,6 +83,7 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: michfangman@outlook.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
@@ -71,19 +91,11 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hello,
 
-I try to identify the root-cause of an issue with kdump & makedumpfile which results in dumps to have a size of the system memory.
-Kdump-tools/makedumpfile has been configured to strip most pages with the flags: " -c -d 31" and transfer the dump to an ssh target.
+I'm offering my late husband's Yamaha Piano to any music enthusiast who may appreciate it. If you or someone you know might be interested in receiving this instrument for free, please feel free to reach out to me.
 
-I'm unable to replicate the issue by crashing kernel using sysrq-triggers. As long the system crashed by sysrq-trigger, the dump has the correct size and completes successfully. 
-But as soon a system crashes for other reasons, dumps get huge and fail to transfer to the ssh target due to their size.
+Warm regards,
+Michelle 
 
-Our servers (x64/aarch64) are running Ubuntu 22.04 with a self built kernel 6.6.32 (config attached) and makedumpfile (backported 1.7.5-3 to Ubuntu 22.04).
-
-Am I missing something within the kernel config which could cause this behavior?
-
-
-Thanks
--- Martin
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
