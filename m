@@ -4,73 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93C77CE8D60
-	for <kexec@archiver.kernel.org>; Thu, 19 Sep 2024 08:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BE24CF58E4
+	for <kexec@archiver.kernel.org>; Fri, 20 Sep 2024 07:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9d1p0rudzTRkiwu9/siUlSxeKFWjkioomvZVGcgKNcg=; b=4ODftEkLEULRdT
-	oYdLW2nsqfDWBXlVTO7IM3yK1cJbTNvkxNbGITh+prev5mpHxXKMsjNauztMtWkxp0aE7vSsE1Brw
-	Ajn/vBoR6bo5CnpY51YIz/b8dPAGMATfsIWuXKIfwL5pFccDCRYXabFKR/o4mSaRH7++pRnPdSC36
-	4g8samTHgZsTcvFQ3J0bU3PIEhWmSfM0WY5bOYy5ssB74CvdnXq4OIYey4LYWFdHuhKtMrQm44WqE
-	Q2Zz5aBLtmf8DI++OqkHNlK5N+MvhcH0j4HKAZIlqtPZnNnory0CclT5rGu7KRArbmkytlZSFTBBM
-	OuetqQKgw56Dvl5dJdlw==;
+	List-Archive:List-Unsubscribe:List-Id:To:Date:Message-Id:Subject:Mime-Version
+	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=3ANJjc2wn0ubW7G5k+YC8LU9drk0xk0xTWj7kfFccNE=; b=BaKFfoJd16dDF0
+	7wr9F4NpRuhykPpBhXhXbKDWmtiiVEg5IaO7Yd+Re0Ib6fGPTm5uy2ZrFp0ZOdiXdxbhFeb6g/gkb
+	GIhSPH7skmtvfd8z3jea6W7Sme1qyCGi45ugl4ejj+pVWElAzjyV4PblV8/uObWtQmDeHCpLloRcy
+	T3TD4I0oELyzXue0asMIiBvCLh+m8m4VraTGwXo9dWjuqLuM4MLxszmDkwTrkv47jJoB8PPEijIv9
+	hRl1fTayISwesoJdgMpXHaogtY7bviLtOMgNYhKmZ2W8j7s9BnmKQoLRE8LQRev4i5bWE4wF95Euf
+	h5UOHXO74HpN7wbmAypQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1srCz7-00000009qZp-1W7L;
-	Thu, 19 Sep 2024 08:57:57 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1srY98-0000000Bd8q-0cpN;
+	Fri, 20 Sep 2024 07:33:42 +0000
+Received: from dediextern.your-server.de ([85.10.215.232])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1srCz4-00000009qY6-205H
+	id 1srY7i-0000000Bcze-3xSl
 	for kexec@lists.infradead.org;
-	Thu, 19 Sep 2024 08:57:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726736272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YDlb9HHKZ7ppggUTFJeczVT++JQqxU+9AUY020deop4=;
-	b=K4SxDi89fcfMvZTSygD2ngminr0rIyGJGrOBTOD9fjT/j0ZG4zG5kreQG/XOajcUqSbYwW
-	MwoJZXmWMpOCNLWf/Qdw0TBKoSfMbUcvJZK2GLXHVWJ6oPNA6V5Su0XoR61KaTs+Je9cGK
-	5pQBf77AM+h99vMz8HamjCSIxWAoC1s=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-PHncvciHNp20_laqddd98Q-1; Thu,
- 19 Sep 2024 04:57:48 -0400
-X-MC-Unique: PHncvciHNp20_laqddd98Q-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E13C1956083;
-	Thu, 19 Sep 2024 08:57:46 +0000 (UTC)
-Received: from localhost (unknown [10.45.226.3])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5F9C819560AA;
-	Thu, 19 Sep 2024 08:57:44 +0000 (UTC)
-Date: Thu, 19 Sep 2024 10:57:41 +0200
-From: Baoquan He <bhe@redhat.com>
-To: Dave Vasilevsky <dave@vasilevsky.ca>
-Cc: akpm@linux-foundation.org, glaubitz@physik.fu-berlin.de,
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-	mpe@ellerman.id.au, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, ebiederm@xmission.com,
-	Reimar =?iso-8859-1?Q?D=F6ffinger?= <Reimar.Doeffinger@gmx.de>
-Subject: Re: [PATCH v2] crash, powerpc: Default to CRASH_DUMP=n on
- PPC_BOOK3S_32
-Message-ID: <ZuvnhSvVMIGgAVNj@fedora>
-References: <20240917163720.1644584-1-dave@vasilevsky.ca>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240917163720.1644584-1-dave@vasilevsky.ca>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+	Fri, 20 Sep 2024 07:32:16 +0000
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <martin.friedrich@hetzner-cloud.de>)
+	id 1srY7b-000Kui-IE
+	for kexec@lists.infradead.org; Fri, 20 Sep 2024 09:32:07 +0200
+Received: from [2a01:4f8:0:a0a7::1002] (helo=smtpclient.apple)
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <martin.friedrich@hetzner-cloud.de>)
+	id 1srY7b-000PtD-2f
+	for kexec@lists.infradead.org;
+	Fri, 20 Sep 2024 09:32:07 +0200
+From: Martin Friedrich <martin.friedrich@hetzner-cloud.de>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: makedumpfile fail to strip pages
+Message-Id: <164F5E03-EB17-451A-810F-58962BBC53B2@hetzner-cloud.de>
+Date: Fri, 20 Sep 2024 09:31:56 +0200
+To: kexec@lists.infradead.org
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-Authenticated-Sender: martin.friedrich@hetzner-cloud.de
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27403/Thu Sep 19 10:44:20 2024)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240919_015754_613741_F8C0E6D7 
-X-CRM114-Status: GOOD (  20.69  )
+X-CRM114-CacheID: sfid-20240920_003215_001568_F1909EB3 
+X-CRM114-Status: UNSURE (   6.57  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,212 +64,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/17/24 at 12:37pm, Dave Vasilevsky wrote:
-> Fixes boot failures on 6.9 on PPC_BOOK3S_32 machines using
-> Open Firmware. On these machines, the kernel refuses to boot
-> from non-zero PHYSICAL_START, which occurs when CRASH_DUMP is on.
-> =
+Hello,
 
-> Since most PPC_BOOK3S_32 machines boot via Open Firmware, it should
-> default to off for them. Users booting via some other mechanism
-> can still turn it on explicitly.
-> =
+I try to identify the root-cause of an issue with kdump & makedumpfile which results in dumps to have a size of the system memory.
+Kdump-tools/makedumpfile has been configured to strip most pages with the flags: " -c -d 31" and transfer the dump to an ssh target.
 
-> Does not change the default on any other architectures for the
-> time being.
-> =
+I'm unable to replicate the issue by crashing kernel using sysrq-triggers. As long the system crashed by sysrq-trigger, the dump has the correct size and completes successfully. 
+But as soon a system crashes for other reasons, dumps get huge and fail to transfer to the ssh target due to their size.
 
-> Signed-off-by: Dave Vasilevsky <dave@vasilevsky.ca>
-> Reported-by: Reimar D=F6ffinger <Reimar.Doeffinger@gmx.de>
-> Closes: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
-> Fixes: 75bc255a7444 ("crash: clean up kdump related config items")
-> ---
->  arch/arm/Kconfig       | 3 +++
->  arch/arm64/Kconfig     | 3 +++
->  arch/loongarch/Kconfig | 3 +++
->  arch/mips/Kconfig      | 3 +++
->  arch/powerpc/Kconfig   | 4 ++++
->  arch/riscv/Kconfig     | 3 +++
->  arch/s390/Kconfig      | 3 +++
->  arch/sh/Kconfig        | 3 +++
->  arch/x86/Kconfig       | 3 +++
->  kernel/Kconfig.kexec   | 2 +-
->  10 files changed, 29 insertions(+), 1 deletion(-)
+Our servers (x64/aarch64) are running Ubuntu 22.04 with a self built kernel 6.6.32 (config attached) and makedumpfile (backported 1.7.5-3 to Ubuntu 22.04).
 
-Thanks for the effort.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> =
-
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 0ec034933cae..4cc31467298b 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1598,6 +1598,9 @@ config ATAGS_PROC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config AUTO_ZRELADDR
->  	bool "Auto calculation of the decompressed kernel image address" if !AR=
-CH_MULTIPLATFORM
->  	default !(ARCH_FOOTBRIDGE || ARCH_RPC || ARCH_SA1100)
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index ed15b876fa74..8c67b76347d3 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1559,6 +1559,9 @@ config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  	def_bool CRASH_RESERVE
->  =
-
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 0e3abf7b0bd3..7ba3baee859e 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -600,6 +600,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SELECTS_CRASH_DUMP
->  	def_bool y
->  	depends on CRASH_DUMP
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 60077e576935..b547f4304d0c 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -2881,6 +2881,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config PHYSICAL_START
->  	hex "Physical address where the kernel is loaded"
->  	default "0xffffffff84000000"
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 8a4ee57cd4ef..c04f7bb543cc 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -682,6 +682,10 @@ config RELOCATABLE_TEST
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	bool
-> +	default y if !PPC_BOOK3S_32
-> +
->  config ARCH_SELECTS_CRASH_DUMP
->  	def_bool y
->  	depends on CRASH_DUMP
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 86d1f1cea571..341ef759870a 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -882,6 +882,9 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  	def_bool CRASH_RESERVE
->  =
-
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index c60e699e99f5..fff371b89e41 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -275,6 +275,9 @@ config ARCH_SUPPORTS_CRASH_DUMP
->  	  This option also enables s390 zfcpdump.
->  	  See also <file:Documentation/arch/s390/zfcpdump.rst>
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  menu "Processor type and features"
->  =
-
->  config HAVE_MARCH_Z10_FEATURES
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index e9103998cca9..04ff5fb9242e 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -550,6 +550,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool BROKEN_ON_SMP
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SUPPORTS_KEXEC_JUMP
->  	def_bool y
->  =
-
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index d1fe732979d4..7f39db779574 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2092,6 +2092,9 @@ config ARCH_SUPPORTS_KEXEC_JUMP
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool X86_64 || (X86_32 && HIGHMEM)
->  =
-
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SUPPORTS_CRASH_HOTPLUG
->  	def_bool y
->  =
-
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 6c34e63c88ff..4d111f871951 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -97,7 +97,7 @@ config KEXEC_JUMP
->  =
-
->  config CRASH_DUMP
->  	bool "kernel crash dumps"
-> -	default y
-> +	default ARCH_DEFAULT_CRASH_DUMP
->  	depends on ARCH_SUPPORTS_CRASH_DUMP
->  	depends on KEXEC_CORE
->  	select VMCORE_INFO
-> -- =
-
-> 2.43.0
-> =
+Am I missing something within the kernel config which could cause this behavior?
 
 
-
+Thanks
+-- Martin
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
