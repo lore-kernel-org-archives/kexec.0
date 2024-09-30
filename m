@@ -4,98 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 860A2C369A0
-	for <kexec@archiver.kernel.org>; Wed, 25 Sep 2024 07:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C3DFCF6499
+	for <kexec@archiver.kernel.org>; Mon, 30 Sep 2024 03:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OLqPD1pTxbJwO1KZLntjuq/fCZ3BafXtJDBbPX53it8=; b=3e0h3R7hldIngn
-	HQHxLCdG22Z9ugE52h/Bg52vXULjGMzAgCDLwZYLHxWRRYwZCsbWEPqEsm47O3W8YS6p+xJvgSnwH
-	ArzoCI2s1aX3LxYZApy51ODVVbaB3wzjuD9lraCnubfPhvJQbxfyaXawL8hKOU6M5Zo3J6NH4H3I8
-	J+ysj0muU4K0125UAUcd1yaKNnoMP6E0IkJRuh986ppPfVI6JH+VDXD4KEkhIxdXm8SCxO31dGWvA
-	Xdr7vreJbEo09rlqfl95KMZXs+xGMuYMwWLeqqfb5WX35yb2EsJvPlvrCMNsTrwDe38OsymsKlhdF
-	tMwtjsNH+UkeS2ZmwSUQ==;
+	List-Owner; bh=j4mxUj8Ej4W0bhgs67inIE8cRlHonoclAMbFmVpESLU=; b=aqGR2K9VWR1nxM
+	X4VfxpPZnjI4o0/NiH8/Ki9/UfIvLZ7syQWtYCiSltKMizxmV/xBzbpRTll8GCJ9+ZbVbZNg3ACl+
+	EV70rwTrV5QjyWzIQex0ZXKgitEwNmx9w/xvmJKwJLRgydWlKNHmLb2PUXWvizlcrU9jlqFHpGBf/
+	uD7tMaavHS/mny4I+hcaMMo1gwWLDMSiOZ5hgKBrSMiUczFekCNY6kujjXThzoot9juFmlYsyEw9o
+	y3zLWR8GDiJ06/mZ9LyDD4AN/S9XuJpuZgfGKT1qRV2pdVl+nQMw9wj2S70F8XMIEOTAT9MsYBEAA
+	/bTem9mD6xbCzSmU4YLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1stM2N-00000004FjH-0Xff;
-	Wed, 25 Sep 2024 07:02:11 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1sv6di-0000000Fm6A-44BB;
+	Mon, 30 Sep 2024 02:59:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1stM0R-00000004FP8-2S1P
+	id 1sv6dd-0000000Fm5S-3hY4
 	for kexec@lists.infradead.org;
-	Wed, 25 Sep 2024 07:00:13 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48P1WkFm004173;
-	Wed, 25 Sep 2024 07:00:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=7esH8tVn3+1IljSug6nP9M2wC+U
-	WMaXIe9n7g2r8W/4=; b=LI6VpJa3cQobyRMWXsCkQc13/gTejsOiE6q9FOwZW4M
-	T2p4jtZeVEYaDMaz3VcMgfIt3rxwfBB2I6xGXySmnGVq0X0fpthix3IEskDzcJQA
-	DQRW2QB+EKVL1tYJM3qfYGcn87fgrF7siJ5iAzRPLccQ3FfbfT4KD0sD28YplPID
-	JqUOImpV3yqBoTnlekkwKvMHw8GFhcudTY21oEOfUD7ig5C9JdMAJzfFzbc/Yb73
-	OM4Ko1HmnA15bFhMC6HOjRpnbnztZ3dea32/nSX0Od7Jzc1ZR6Ybu3XO7jOkIrNz
-	76sLLOJOKR4a1+WEpqxC+mtOjAPWyp9XPmjDucJvPjQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snnaeds3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Sep 2024 07:00:08 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48P708A4023891;
-	Wed, 25 Sep 2024 07:00:08 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41snnaedrp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Sep 2024 07:00:08 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48P6SPXC013998;
-	Wed, 25 Sep 2024 07:00:07 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41t9yn013f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Sep 2024 07:00:06 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48P704Cf34865782
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Sep 2024 07:00:04 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C2AB920043;
-	Wed, 25 Sep 2024 07:00:04 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 686AB2004E;
-	Wed, 25 Sep 2024 07:00:04 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.2.154])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Sep 2024 07:00:04 +0000 (GMT)
-Date: Wed, 25 Sep 2024 09:00:02 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: kexec@lists.infradead.org, Masamitsu Yamazaki <yamazaki-msmt@nec.com>,
-        Kazuhito Hagio <k-hagio-ab@nec.com>
-Subject: Re: [PATCH] Submit physical address to is_phys_addr()
-Message-ID: <ZvO08s9J4rH25N7w@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240913143500.3615218-1-agordeev@linux.ibm.com>
- <20240923134716.2cbc107c@rotkaeppchen>
+	Mon, 30 Sep 2024 02:59:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727665191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=52ETwP6isu6QbD683EQIu95q3mYeXtz+F2oyo0mvDPI=;
+	b=B3ltAcBESSpHidyfG9puA3JmRcFk5Ar4XYlCfRJCSBRCM9ZqDN0FLUBRJnWkloEcXnm69E
+	+RLNXODsazLYPf1UcOr9XdE5adQT6APz51YX1hVUOP6bmRNUClQTWbSZqNK1Wu2Bd5BNhH
+	eCsw1kpNPFdiNUJc7j4Tx6NRy2vsBLc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-uu9o7dTyMtSU1GJ1JgjymA-1; Sun,
+ 29 Sep 2024 22:59:49 -0400
+X-MC-Unique: uu9o7dTyMtSU1GJ1JgjymA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 95FB7196C42F;
+	Mon, 30 Sep 2024 02:59:48 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.26])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 623FC3003E40;
+	Mon, 30 Sep 2024 02:59:45 +0000 (UTC)
+Date: Mon, 30 Sep 2024 10:59:41 +0800
+From: Baoquan He <bhe@redhat.com>
+To: x86@kernel.org, thomas.lendacky@amd.com
+Cc: dyoung@redhat.com, daniel.kiper@oracle.com, noodles@fb.com,
+	lijiang@redhat.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] x86/mm/sme: fix the kdump kernel breakage on SME
+ system when CONFIG_IMA_KEXEC=y
+Message-ID: <ZvoUHcDGsCyX9fg+@MiWiFi-R3L-srv>
+References: <20240911081615.262202-1-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240923134716.2cbc107c@rotkaeppchen>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4x2hZNj8pA-oGo7j1D_A2NdpXkTTtlXM
-X-Proofpoint-ORIG-GUID: OEPv3kzekw04HnrYOrwJhlk-02RpplI2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-24_02,2024-09-24_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 mlxlogscore=762 spamscore=0 impostorscore=0 priorityscore=1501
- phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409250045
+In-Reply-To: <20240911081615.262202-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240925_000011_874792_010128C1 
-X-CRM114-Status: GOOD (  16.69  )
+X-CRM114-CacheID: sfid-20240929_195954_012776_84D90D6F 
+X-CRM114-Status: UNSURE (   9.64  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,30 +85,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 23, 2024 at 01:47:16PM +0200, Philipp Rudo wrote:
-> Hi Alexander,
+Hi,
 
-Hi Philipp,
+On 09/11/24 at 04:16pm, Baoquan He wrote:
+> Currently, distros like Fedora/RHEL have enabled CONFIG_IMA_KEXEC by
+> default. This makes kexec/kdump kernel always fail to boot up on SME
+> platform because of a code bug. By debugging, the root cause is found
+> out and bug is fixed with this patchset.
 
-> On Fri, 13 Sep 2024 16:35:00 +0200
-> Alexander Gordeev <agordeev@linux.ibm.com> wrote:
-> 
-> > ELF program table virtual address is submitted to is_phys_addr()
-> > function, most likely as a leftover of replaced is_vmalloc_addr()
-> > function, as result of commit 2e452d75fa78 ("[PATCH v3] Enable
-> > --mem-usage for s390x."). Submit the physical address instead.
-> 
-> is the patch supposed to fix the bug with /proc/kcore I reported? I
-> gave it a try on a KVM VM and it's still failing...
+PING.
 
-No, it fixes another issue.
+Can this be added into 6.12 so that SME system is available? Please
+tell if there's any concern or comment.
 
-> Thanks
-> Philipp
+Thanks
+Baoquan
 
-Thank you for testing!
-
-Thanks!
 
 _______________________________________________
 kexec mailing list
