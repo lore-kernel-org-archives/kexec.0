@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 179EBCF6D3B
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF52BCF6D41
 	for <kexec@archiver.kernel.org>; Wed,  2 Oct 2024 16:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,35 +12,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NZtMgkkTMbpRfpD1WuFe2BsvNsl60DFCftmE6pKCaLI=; b=tmUzZ7+p6ajjwA
-	B1C2u2N3SbDakjSSnNA+3OILY98oVk5egP7H9P63OftsjAtpeILk/YzoRbMfqvvlGmzfwkR/Ys8vd
-	NpRaTuW8vqECLUQa1LdEKREGMS/efBTfjKSuVReHCqvsxFAgi83Kny7bWJqRlkj45UiXHbEpGPIcY
-	B+4NBsfbbCa6Zws4d/vVqQ6gME6wNp6lsEkLesm977rcY+DBQEGNylcKa3nbNNnS3m/bYn0wvFbMZ
-	tAgEvHv87isFVasyBljyKzY6NLrZBUZYlL0Q+5nXpwTXreM5F6EABI8Ench46AkR4So12Ec2J1TC1
-	t/qKgDMV2F/mHE49XFBg==;
+	List-Owner; bh=3FAKBUCcHRuzsrhhJ6xWVy2LxGc46m3WuVrLIvfVsCs=; b=N/YT/vGL9eLM+d
+	euCGDhKCn2eX0kCS/WcUD7AyEg5EiMMDAH0MniV6r70wIvz0kNvo0M37YXcDRtzfxHcd2TpLFdSIZ
+	KFglEM7SGwYaoTwUHbfK7/JxPEJ4ReD6xMoXzw6odeKVkhcnIihAY/rukJnPMcSKz3PVvVxmVyynn
+	H59N55N6Uw4n4HJAW6UWH9J81J+B3U5FxFwZkRAJT2zZQKK9oVqpHm0h1+gB5BvWsy7ZcyNbMk5Av
+	+8CNGzy5wrnEzqdIAiRYOX6SiaHnNR+sL0YW9JsOUqjwYmmRuRDNU1WGDleKfFpD/O4/lF6XAIbNF
+	5W7h2sXHnpaG0mzuCakw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1uS-00000006rVV-3U0F;
-	Wed, 02 Oct 2024 16:09:04 +0000
-Received: from forwardcorp1d.mail.yandex.net ([2a02:6b8:c41:1300:1:45:d181:df01])
+	id 1sw1uU-00000006rX1-1lEj;
+	Wed, 02 Oct 2024 16:09:06 +0000
+Received: from forwardcorp1d.mail.yandex.net ([178.154.239.200])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1uN-00000006rQ1-1u5n
+	id 1sw1uR-00000006rSQ-28Wg
 	for kexec@lists.infradead.org;
-	Wed, 02 Oct 2024 16:09:02 +0000
+	Wed, 02 Oct 2024 16:09:05 +0000
 Received: from mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:b1cb:0:640:2a1e:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id C8E5760A6D;
-	Wed,  2 Oct 2024 19:08:55 +0300 (MSK)
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id CC29E60A0A;
+	Wed,  2 Oct 2024 19:09:00 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-NNW0FOgv;
-	Wed, 02 Oct 2024 19:08:54 +0300
+	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-zn4PxY97;
+	Wed, 02 Oct 2024 19:08:59 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1727885334;
-	bh=FEwZkDU2VcUSP99EqMYuNuirJIt2aNspqQO+oi3JBZ0=;
+	s=default; t=1727885340;
+	bh=Buw6OtY4vaTEiLfE/rpef765HwG5RsoTmBzPC5wm+WI=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=rISzUCreiYPr5KO7sSHN36OWn/OE/1SW6J4qWdFjSKXFl/OmP3/AsvrO93oc/rfO3
-	 E5TEW/kK1jsj+bzA3aigLi1L2TRjEmagB2KlDbxL85Ej/R71PObcT7q7wfbME/qBX8
-	 269sah/PVLakog1l83ZOSHYhyBL6jgF+dNfxMlRE=
+	b=r7jyfNdcu/K1YYJQ5x6knMx5Nl49ROZZsg0QUwcs8pAkjxACaAuyrBlPZogqCEB6V
+	 9NxYNkSHpbUIL/TAjsx2WCSnmAbHSj6ctGbfnRoo8DUx7sJv137cKVrtUwnBzmFt0M
+	 LJnhETmwa6hxGje8tRERsspaQJi5H+2Gj2LROC2E=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -63,17 +63,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-trace-kernel@vger.kernel.org,
 	valesini@yandex-team.com,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [RFC PATCH 2/7] kexec: Hack and abuse crashkernel for the kstate's migration stream
-Date: Wed,  2 Oct 2024 18:07:17 +0200
-Message-ID: <20241002160722.20025-3-arbn@yandex-team.com>
+Subject: [RFC PATCH 4/7] mm/memblock: Add MEMBLOCK_PRSRV flag
+Date: Wed,  2 Oct 2024 18:07:19 +0200
+Message-ID: <20241002160722.20025-5-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241002160722.20025-1-arbn@yandex-team.com>
 References: <20241002160722.20025-1-arbn@yandex-team.com>
 MIME-Version: 1.0
 X-Yandex-Filter: 1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241002_090859_742316_AD622C55 
-X-CRM114-Status: GOOD (  23.70  )
+X-CRM114-CacheID: sfid-20241002_090903_843095_43F22046 
+X-CRM114-Status: GOOD (  17.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,270 +90,120 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is an early ugly hack just for now. Will be completely redone later.
-This abuses crashkernel segment of memory for the kstate purposes to
-save and restore object descriptions.
+Add MEMBLOCK_PRSRV flag indicating that we don't need to initialize
+'struct page' at all. The flag will be used in the following patches
+to mark memory intended to be kept intact across kexec.
+The 'struct page' for such region assumed to be initialized by the old
+kernel, so the new one shouldn't touch it.
 
-The proper solution probably would be using segments in ordinary kexec
-mechanism, however since kstate requires such segments very late
-(at reboot stage, not the load stage) some thought and work will be
-required to make that happen. The KEXEC_FILE_MIGRATE/KEXEC_TYPE_MIGRATE flags
-also likely won't be required.
+This is only initial RFC sketch, in which we assume that 'struct page'
+layout doens't change between old and new kernel. The proper solution
+would require some form of migration from old 'struct page' to the new
+one if layout did change.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
- arch/x86/kernel/kexec-bzimage64.c  | 36 ++++++++++++++++++++++++++++++
- arch/x86/kernel/machine_kexec_64.c |  5 ++++-
- include/linux/kexec.h              |  6 +++--
- include/uapi/linux/kexec.h         |  2 ++
- kernel/crash_core.c                |  3 ++-
- kernel/kexec_core.c                | 10 ++++++++-
- kernel/kexec_file.c                | 15 +++++++++++--
- 7 files changed, 70 insertions(+), 7 deletions(-)
+ include/linux/memblock.h |  7 +++++++
+ mm/memblock.c            |  9 ++++++++-
+ mm/mm_init.c             | 19 +++++++++++++++++++
+ 3 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 68530fad05f74..71c82841e6b12 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -18,6 +18,7 @@
- #include <linux/mm.h>
- #include <linux/efi.h>
- #include <linux/random.h>
-+#include <linux/vmalloc.h>
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 673d5cae7c813..b3c6029b03624 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -50,6 +50,7 @@ enum memblock_flags {
+ 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+ 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+ 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
++	MEMBLOCK_PRSRV		= 0x20, /* struct page presreved during kexec, don't initialize */
+ };
  
- #include <asm/bootparam.h>
- #include <asm/setup.h>
-@@ -77,6 +78,11 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
- 		len = sprintf(cmdline_ptr,
- 			"elfcorehdr=0x%lx ", image->elf_load_addr);
- 	}
-+	if (image->type == KEXEC_TYPE_MIGRATE) {
-+		len = sprintf(cmdline_ptr,
-+			"migrate_stream=0x0%llx ", crashk_res.start);
-+	}
-+
- 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
- 	cmdline_len += len;
+ /**
+@@ -132,6 +133,7 @@ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
+ int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
+ int memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t size);
++int memblock_reserved_mark_preserved(phys_addr_t base, phys_addr_t size);
  
-@@ -389,6 +395,29 @@ static int bzImage64_probe(const char *buf, unsigned long len)
- 	return ret;
+ void memblock_free_all(void);
+ void memblock_free(void *ptr, size_t size);
+@@ -271,6 +273,11 @@ static inline bool memblock_is_reserved_noinit(struct memblock_region *m)
+ 	return m->flags & MEMBLOCK_RSRV_NOINIT;
  }
  
-+static int load_migrate_segments(struct kimage *image)
++static inline bool memblock_is_preserved(struct memblock_region *m)
 +{
-+	int ret;
-+	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
-+				  .buf_max = ULONG_MAX, .top_down = false };
-+
-+	kbuf.bufsz = 4096;
-+	kbuf.buffer = vzalloc(kbuf.bufsz);
-+
-+	kbuf.memsz = 8*1024*1024;
-+
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret)
-+		return ret;
-+	image->mig_stream = kbuf.mem;
-+	kexec_dprintk("kstate: Loaded mig_stream at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		      image->mig_stream, kbuf.bufsz, kbuf.memsz);
-+
-+	return ret;
++	return m->flags & MEMBLOCK_PRSRV;
 +}
 +
- static void *bzImage64_load(struct kimage *image, char *kernel,
- 			    unsigned long kernel_len, char *initrd,
- 			    unsigned long initrd_len, char *cmdline,
-@@ -444,6 +473,13 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	}
- #endif
- 
-+	if (image->type == KEXEC_TYPE_MIGRATE) {
-+		ret = load_migrate_segments(image);
-+		if (ret)
-+			return ERR_PTR(ret);
-+
-+	}
-+
- 	/*
- 	 * Load purgatory. For 64bit entry point, purgatory  code can be
- 	 * anywhere.
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 9c9ac606893e9..edf6234b75baf 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -572,7 +572,10 @@ static void kexec_mark_crashkres(bool protect)
- 	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
- 
- 	/* Don't touch the control code page used in crash_kexec().*/
--	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
-+	if (kexec_image && kexec_image->type & KEXEC_TYPE_MIGRATE)
-+		control = PFN_PHYS(page_to_pfn(kexec_image->control_code_page));
-+	else if (kexec_crash_image)
-+		control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
- 	/* Control code page is located in the 2nd page. */
- 	kexec_mark_range(crashk_res.start, control + PAGE_SIZE - 1, protect);
- 	control += KEXEC_CONTROL_PAGE_SIZE;
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f0e9f8eda7a3c..182ef76f21860 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -299,6 +299,7 @@ struct kimage {
- 	unsigned long start;
- 	struct page *control_code_page;
- 	struct page *swap_page;
-+	unsigned long mig_stream;
- 	void *vmcoreinfo_data_copy; /* locates in the crash memory */
- 
- 	unsigned long nr_segments;
-@@ -312,9 +313,10 @@ struct kimage {
- 	unsigned long control_page;
- 
- 	/* Flags to indicate special processing */
--	unsigned int type : 1;
-+	unsigned int type : 2;
- #define KEXEC_TYPE_DEFAULT 0
- #define KEXEC_TYPE_CRASH   1
-+#define KEXEC_TYPE_MIGRATE 2
- 	unsigned int preserve_context : 1;
- 	/* If set, we are using file mode kexec syscall */
- 	unsigned int file_mode:1;
-@@ -401,7 +403,7 @@ bool kexec_load_permitted(int kexec_image_type);
- 
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
--				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
-+				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | KEXEC_FILE_MIGRATE)
- 
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 5ae1741ea8ea0..454dc7c8a7d86 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -27,6 +27,8 @@
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
- #define KEXEC_FILE_DEBUG	0x00000008
-+#define KEXEC_FILE_MIGRATE	0X00000010
-+
- 
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index c1048893f4b68..87b9a52d60352 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -42,7 +42,8 @@ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
- 
- 	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
- 		return 0;
--	if (image->type != KEXEC_TYPE_CRASH)
-+	if (image->type != KEXEC_TYPE_CRASH &&
-+	    image->type != KEXEC_TYPE_MIGRATE)
- 		return 0;
- 
- 	/*
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3b..ca6283d21235e 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/fs.h>
- #include <linux/kexec.h>
-+#include <linux/kstate.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/highmem.h>
-@@ -196,7 +197,8 @@ int sanity_check_segment_list(struct kimage *image)
- 	 * kernel could corrupt things.
- 	 */
- 
--	if (image->type == KEXEC_TYPE_CRASH) {
-+	if (image->type == KEXEC_TYPE_CRASH ||
-+	    image->type == KEXEC_TYPE_MIGRATE) {
- 		for (i = 0; i < nr_segments; i++) {
- 			unsigned long mstart, mend;
- 
-@@ -461,6 +463,7 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
- 		break;
- #ifdef CONFIG_CRASH_DUMP
- 	case KEXEC_TYPE_CRASH:
-+	case KEXEC_TYPE_MIGRATE:
- 		pages = kimage_alloc_crash_control_pages(image, order);
- 		break;
- #endif
-@@ -859,6 +862,7 @@ int kimage_load_segment(struct kimage *image,
- 		break;
- #ifdef CONFIG_CRASH_DUMP
- 	case KEXEC_TYPE_CRASH:
-+	case KEXEC_TYPE_MIGRATE:
- 		result = kimage_load_crash_segment(image, segment);
- 		break;
- #endif
-@@ -1044,9 +1048,13 @@ int kernel_kexec(void)
- 		 */
- 		cpu_hotplug_enable();
- 		pr_notice("Starting new kernel\n");
-+		arch_kexec_unprotect_crashkres();
- 		machine_shutdown();
- 	}
- 
-+	if (kexec_image->type & KEXEC_TYPE_MIGRATE)
-+		save_migrate_state(kexec_image->mig_stream);
-+
- 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
- 	machine_kexec(kexec_image);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad8..4a576db4141cd 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -293,6 +293,11 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
- 	}
- #endif
- 
-+	if (flags & KEXEC_FILE_MIGRATE) {
-+		image->control_page = crashk_res.start;
-+		image->type = KEXEC_TYPE_MIGRATE;
-+	}
-+
- 	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
- 					   cmdline_ptr, cmdline_len, flags);
- 	if (ret)
-@@ -360,6 +365,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- #endif
- 		dest_image = &kexec_image;
- 
-+	if (image_type == KEXEC_TYPE_MIGRATE)
-+		if (*dest_image)
-+			arch_kexec_unprotect_crashkres();
-+
- 	if (flags & KEXEC_FILE_UNLOAD)
- 		goto exchange;
- 
-@@ -428,7 +437,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	image = xchg(dest_image, image);
- out:
- #ifdef CONFIG_CRASH_DUMP
--	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
-+	if (((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image) ||
-+	    ((flags & KEXEC_FILE_MIGRATE) && kexec_image))
- 		arch_kexec_protect_crashkres();
- #endif
- 
-@@ -608,7 +618,8 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
- 				int (*func)(struct resource *, void *))
+ static inline bool memblock_is_driver_managed(struct memblock_region *m)
  {
- #ifdef CONFIG_CRASH_DUMP
--	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH ||
-+	    kbuf->image->type == KEXEC_TYPE_MIGRATE)
- 		return walk_iomem_res_desc(crashk_res.desc,
- 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
- 					   crashk_res.start, crashk_res.end,
+ 	return m->flags & MEMBLOCK_DRIVER_MANAGED;
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 0389ce5cd281e..20ab3272cc166 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1048,6 +1048,12 @@ int __init_memblock memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t
+ 				    MEMBLOCK_RSRV_NOINIT);
+ }
+ 
++int __init_memblock memblock_reserved_mark_preserved(phys_addr_t base, phys_addr_t size)
++{
++	return memblock_setclr_flag(&memblock.reserved, base, size, 1,
++				    MEMBLOCK_PRSRV);
++}
++
+ static bool should_skip_region(struct memblock_type *type,
+ 			       struct memblock_region *m,
+ 			       int nid, int flags)
+@@ -2181,7 +2187,8 @@ static void __init memmap_init_reserved_pages(void)
+ 	 * the MEMBLOCK_RSRV_NOINIT flag set
+ 	 */
+ 	for_each_reserved_mem_region(region) {
+-		if (!memblock_is_reserved_noinit(region)) {
++		if (!memblock_is_reserved_noinit(region) &&
++			!memblock_is_preserved(region)) {
+ 			nid = memblock_get_region_node(region);
+ 			start = region->base;
+ 			end = start + region->size;
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 4ba5607aaf194..b82c13077928f 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -837,6 +837,22 @@ static void __init init_unavailable_range(unsigned long spfn,
+ 			node, zone_names[zone], pgcnt);
+ }
+ 
++static bool pfn_preserved(unsigned long *pfn)
++{
++	struct memblock_region *r;
++
++	for_each_reserved_mem_region(r) {
++		if (memblock_is_preserved(r)) {
++			if (*pfn >= memblock_region_memory_base_pfn(r) &&
++				*pfn < memblock_region_memory_end_pfn(r)) {
++				*pfn = memblock_region_memory_end_pfn(r);
++				return true;
++			}
++		}
++	}
++	return false;
++}
++
+ /*
+  * Initially all pages are reserved - free ones are freed
+  * up by memblock_free_all() once the early boot process is
+@@ -889,6 +905,9 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+ 			}
+ 		}
+ 
++		if (pfn_preserved(&pfn))
++			continue;
++
+ 		page = pfn_to_page(pfn);
+ 		__init_single_page(page, pfn, zone, nid);
+ 		if (context == MEMINIT_HOTPLUG) {
 -- 
 2.45.2
 
