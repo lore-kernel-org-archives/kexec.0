@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C7E7CF6D3D
-	for <kexec@archiver.kernel.org>; Wed,  2 Oct 2024 16:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7318CEACF3
+	for <kexec@archiver.kernel.org>; Wed,  2 Oct 2024 17:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7C29n5QVdDrgi3zJqBGVUweZKyKrIRhKfE8A0dUuoOI=; b=dLbDms8UfqIuJe
-	lfsvY3YqtJCYwNg8vgfWc4LJxrLxT6/qP/NxlXH59YoyMDo2r4wgokVi+zQcyD0VTwdj3r4aAXEqT
-	BaX9cc7xQ/aDizoRi/BcbIiiz9iuzLu5CB2hfeQ9cyVlgN/NHkL/i2y6qrO5qbpg232SYH/As/sch
-	5zoxOSgMkUOWi2EREDeFFEJsT1XTwhHMg18IIeNh1CacZ/0TX0Rf0WObiRK5l/+PFFB54EGPrM15F
-	SPYusf1cnuIzAyW7qTLUQiPf925yyaEuyVdonBpQSjU0AeDgLyj8O8XU1oxT/pLDS4On4SpcND2Dd
-	4xnvJMObSvmxZgMoRqQQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=zRMbQV/ICBGHKVeNAC6x4pQW/ppmIKorMSEQpMDOxF0=; b=Bi3olrTmPAOydV
+	YyyvY9Ft2mePo51CNy+Ga8ZrURiRC6j/IHVoPJlUjkPgYvO26ZyoNib6+CfAv4Sd9EgYyp9mvXi+M
+	QJPD35a3bKNapLalpYqIBUclzrhM4vm84lLDTpK423YrSI7S2x0ZAlc2m0PhI/VGp7GkBUaiWxNmT
+	biy16YVtjRZnln4F+YqjJE36+u+WI6pOt5BJ0a8S9kJKhGlg+miFzhxqhh1QPo+TzDrbjGDTC/ui0
+	u75qLXZpJ0AQqH+9yZTsluaekC4PS/yyN6Mf+td0W7/pUEm0/YUOhdO91tpFn9mJdMF18u64y6dy6
+	6WQFSgesivR3viybFbgw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1ud-00000006rhK-3GLh;
-	Wed, 02 Oct 2024 16:09:15 +0000
-Received: from forwardcorp1d.mail.yandex.net ([178.154.239.200])
+	id 1sw2xz-000000072Tk-422y;
+	Wed, 02 Oct 2024 17:16:47 +0000
+Received: from forwardcorp1d.mail.yandex.net ([2a02:6b8:c41:1300:1:45:d181:df01])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1uY-00000006rZZ-0TuJ
+	id 1sw1uM-00000006rOP-05Fk
 	for kexec@lists.infradead.org;
-	Wed, 02 Oct 2024 16:09:13 +0000
+	Wed, 02 Oct 2024 16:09:00 +0000
 Received: from mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:b1cb:0:640:2a1e:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 9F16460949;
-	Wed,  2 Oct 2024 19:09:08 +0300 (MSK)
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 4084E60A53;
+	Wed,  2 Oct 2024 19:08:50 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-ueku0Pjg;
-	Wed, 02 Oct 2024 19:09:07 +0300
+	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-AzWbIPI5;
+	Wed, 02 Oct 2024 19:08:49 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1727885347;
-	bh=r6KOHiXGwu9wJr+jMWOsPrgnVfkjQk3UoBVxWjKVRQc=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=F5+i2ZBr2Uq7UPOSwZbgC7ZA0tYzgqL47KGhDszAsbQa6F6J/7vbR7Ko3bOmn6riv
-	 8JQEDe8b3xruR/nSABrpSw17jrHYUuNZVIz8HuRdoAPk5CYiB7gV3oWoy60iWQ6ke4
-	 u3C0/g9G/pAFLeQBOSS9YnP/FYBQuMXxxe4R9D2w=
+	s=default; t=1727885329;
+	bh=Qu8AzV4vrubALdhHGWYjkmRujMkHXpB9Tz28NNmsJNU=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=Qco0Cr8sVJxDco/+vtwTXI7KiXbCi2ZO0WM08Z3X3KzHc88CYxfKbsa3MZ/jjFFb/
+	 1PQigYr31xemiZ5awWpcOa2tnMclwk+CdFMbl+M3UpNVx724+Z+jc4UzW5Y7jhxvth
+	 3gRidhfUKoCKDvOe5CABTSfbPFVO75C2umbWyYBM=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -63,17 +63,15 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-trace-kernel@vger.kernel.org,
 	valesini@yandex-team.com,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [RFC PATCH 7/7] trace: migrate trace buffers across kexec
-Date: Wed,  2 Oct 2024 18:07:22 +0200
-Message-ID: <20241002160722.20025-8-arbn@yandex-team.com>
+Subject: [RFC PATCH 0/7] KSTATE: a mechanism to migrate some part of the kernel state across kexec
+Date: Wed,  2 Oct 2024 18:07:15 +0200
+Message-ID: <20241002160722.20025-1-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241002160722.20025-1-arbn@yandex-team.com>
-References: <20241002160722.20025-1-arbn@yandex-team.com>
 MIME-Version: 1.0
 X-Yandex-Filter: 1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241002_090910_591131_0E9C7F88 
-X-CRM114-Status: GOOD (  21.55  )
+X-CRM114-CacheID: sfid-20241002_090858_617868_57BD0B4D 
+X-CRM114-Status: GOOD (  21.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,361 +88,122 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is a demonstration of kstate capabilities to migrate across
-kexec something more complex rather than simple structure like
-in the lib/test_kstate.c module.
+kstate (kernel state) is a mechanism to describe internal some part of the
+kernel state, save it into the memory and restore the state after kexec
+in the new kernel.
 
-Here we migrate tracing_on/current_trace and content of the
-trace buffers to the new kernel
+This is a very early RFC with a lot of hacks and cut corners with
+the purpose to demonstrate the concept itself. Some parts
+of this feature isn't well thought trough yet (like dealing with
+struct changes between old and new kernel, fixed size of migrate stream
+memory and absence of boundary checks, and so on and on).
 
-The 'global_trace_state' describes 'tracing_on' and 'current_trace'
-states. The 'trace_buffer' kstate field in 'global_trace_state'
-points to 'kstate_trace_buffer' describing the state of ring buffers.
+The end goal here and the main use case for this is to be able to
+update host kernel under VMs with VFIO pass-through devices running
+on that host.
+We are pretty far from that end goal yet. This patchset only tries
+to establish some basic infrastructure to describe and migrate complex
+in-kernel states.
 
-The code in kstate_rb_[save/restore]() saves and restore list of buffer
-pages. It turned out to be somewhat hacky and ugly, partially because
-kstate currently can't migrate slab data. So because of that we have
-to save/restore positions of commit_page/reader_page/etc in the list
-of pages. We could probably teach kstate to migrate slab pages, preserving
-contents at the same address, which would make easier to migrate lists
-like the ring buffer list in the trace, as we would need to save/restore
-only pointer.
+The inspiration for this came from QEMU and its VMSTATE stuff which
+is used to solve similar problem - migrate complex internal state
+across different versions of QEMU. So there is a bit of similarity here.
 
-Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
----
- include/linux/kstate.h     |   4 +
- kernel/trace/ring_buffer.c | 189 +++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.c       |  81 ++++++++++++++++
- 3 files changed, 274 insertions(+)
+The alternative for the kstate is KHO (Kexec Hand Over) [1].
+Since in KHO migrates trace buffers, I decided to choose them
+as a victim for kstate too. So we can compare both approaches.
 
-diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-index 2ddbe41a1f171..ae807a75a02f8 100644
---- a/include/linux/kstate.h
-+++ b/include/linux/kstate.h
-@@ -32,6 +32,10 @@ enum kstate_ids {
- 	KSTATE_PAGE_ID,
- 	KSTATE_RSVD_MEM_ID,
- 	KSTATE_TEST_ID,
-+	KSTATE_TRACE_ID,
-+	KSTATE_TRACE_BUFFER_ID,
-+	KSTATE_TRACE_RING_BUFFER_ID,
-+	KSTATE_TRACE_BUFFER_PAGE_ID,
- 	KSTATE_LAST_ID = -1,
- };
- 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 77dc0b25140e6..9a8692d7d960c 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -16,6 +16,7 @@
- #include <linux/security.h>
- #include <linux/uaccess.h>
- #include <linux/hardirq.h>
-+#include <linux/kstate.h>
- #include <linux/kthread.h>	/* for self test */
- #include <linux/module.h>
- #include <linux/percpu.h>
-@@ -1467,6 +1468,194 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
- }
- 
-+#ifdef CONFIG_KSTATE
-+static int kstate_bpage_save(void *mig_stream, void *obj, const struct kstate_field *field)
-+{
-+	struct buffer_page *bpage = obj;
-+
-+	kstate_register_page(virt_to_page(bpage->page), bpage->order);
-+	return 0;
-+
-+}
-+struct kstate_description kstate_buffer_page = {
-+	.name = "buffer_page",
-+	.id = KSTATE_TRACE_BUFFER_PAGE_ID,
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_SIMPLE(write, struct buffer_page),
-+		KSTATE_SIMPLE(read, struct buffer_page),
-+		KSTATE_SIMPLE(entries, struct buffer_page),
-+		KSTATE_SIMPLE(real_end, struct buffer_page),
-+		KSTATE_SIMPLE(order, struct buffer_page),
-+		KSTATE_SIMPLE(page, struct buffer_page),
-+		{
-+			.name = "buffer_page",
-+			.flags = KS_CUSTOM,
-+			.save = kstate_bpage_save,
-+			.size = (sizeof(struct buffer_page)),
-+		},
-+		KSTATE_END_OF_LIST(),
-+	},
-+};
-+
-+static void restore_pages_positions(void **mig_stream,
-+				struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	struct list_head *tmp;
-+	struct list_head *head = rb_list_head(cpu_buffer->pages);
-+	unsigned long commit_page_nr, reader_page_nr,
-+		head_page_nr, tail_page_nr;
-+	int i = 0;
-+
-+	commit_page_nr = kstate_get_ulong(mig_stream);
-+	reader_page_nr = kstate_get_ulong(mig_stream);
-+	head_page_nr = kstate_get_ulong(mig_stream);
-+	tail_page_nr = kstate_get_ulong(mig_stream);
-+
-+	for (tmp = head;;) {
-+		struct buffer_page *page = (struct buffer_page *)tmp;
-+
-+		if (commit_page_nr == i)
-+			cpu_buffer->commit_page = page;
-+		if (reader_page_nr == i)
-+			cpu_buffer->reader_page = page;
-+		if (head_page_nr == i)
-+			cpu_buffer->head_page = page;
-+		if (tail_page_nr == i)
-+			cpu_buffer->tail_page = page;
-+		i++;
-+		tmp = rb_list_head(tmp->next);
-+		if (tmp == head)
-+			break;
-+	}
-+}
-+
-+static int kstate_rb_restore(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = obj;
-+	LIST_HEAD(pages);
-+	void *stream_start = mig_stream;
-+	struct buffer_page *page;
-+	struct list_head *tmp;
-+	struct list_head *head = rb_list_head(cpu_buffer->pages);
-+	int i = 0;
-+
-+	while (kstate_get_byte(&mig_stream)) {
-+		int j = 0;
-+		bool page_exists  = false;
-+
-+		for (tmp = rb_list_head(head->next); tmp != head;
-+		     tmp = rb_list_head(tmp->next)) {
-+			if (j == i) {
-+				page_exists = true;
-+				page = (struct buffer_page *)tmp;
-+				break;
-+			}
-+			j++;
-+		}
-+		if (!page_exists) {
-+			struct buffer_page *bpage;
-+
-+			bpage = kzalloc_node(ALIGN(sizeof(*bpage),
-+					cache_line_size()), GFP_KERNEL,
-+					cpu_to_node(cpu_buffer->cpu));
-+			list_add(&bpage->list, &pages);
-+			page = bpage;
-+		}
-+		mig_stream = restore_kstate((struct kstate_entry *)mig_stream,
-+					i++, field->ksd, page);
-+	}
-+
-+	restore_pages_positions(&mig_stream, cpu_buffer);
-+
-+	return mig_stream - stream_start;
-+}
-+
-+static int kstate_rb_save(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = obj;
-+	struct list_head *tmp;
-+	struct list_head *head = rb_list_head(cpu_buffer->pages);
-+	void *stream_start = mig_stream;
-+	unsigned long commit_page_nr, reader_page_nr,
-+		head_page_nr, tail_page_nr;
-+	int i = 0;
-+
-+
-+	for (tmp = head;;) {
-+		struct buffer_page *page = (struct buffer_page *)tmp;
-+
-+		mig_stream = kstate_save_byte(mig_stream, 1);
-+		mig_stream = save_kstate(mig_stream, i, field->ksd, page);
-+
-+		if (cpu_buffer->commit_page == page)
-+			commit_page_nr = i;
-+		if (cpu_buffer->reader_page == page)
-+			reader_page_nr = i;
-+		if (cpu_buffer->head_page == page)
-+			head_page_nr = i;
-+		if (cpu_buffer->tail_page == page)
-+			tail_page_nr = i;
-+		i++;
-+		tmp = rb_list_head(tmp->next);
-+		if (tmp == head)
-+			break;
-+	}
-+
-+	mig_stream = kstate_save_byte(mig_stream, 0);
-+
-+	/* save pages positions */
-+	mig_stream = kstate_save_ulong(mig_stream, commit_page_nr);
-+	mig_stream = kstate_save_ulong(mig_stream, reader_page_nr);
-+	mig_stream = kstate_save_ulong(mig_stream, head_page_nr);
-+	mig_stream = kstate_save_ulong(mig_stream, tail_page_nr);
-+
-+	return mig_stream - stream_start;
-+}
-+
-+struct kstate_description kstate_ring_buffer_per_cpu = {
-+	.name = "ring_buffer_per_cpu",
-+	.id = KSTATE_TRACE_RING_BUFFER_ID,
-+	.state_list = LIST_HEAD_INIT(kstate_ring_buffer_per_cpu.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_SIMPLE(entries, struct ring_buffer_per_cpu),
-+		KSTATE_SIMPLE(entries_bytes, struct ring_buffer_per_cpu),
-+		{
-+			.name = "buffer_pages",
-+			.flags = KS_CUSTOM,
-+			.size = (sizeof(struct ring_buffer_per_cpu)),
-+			.ksd = &kstate_buffer_page,
-+			.save = kstate_rb_save,
-+			.restore = kstate_rb_restore,
-+		},
-+		KSTATE_END_OF_LIST(),
-+	},
-+};
-+
-+static int nr_ring_buffers(void)
-+{
-+	return nr_cpu_ids;
-+}
-+
-+struct kstate_description kstate_trace_buffer = {
-+	.name = "trace_buffer",
-+	.id = KSTATE_TRACE_BUFFER_ID,
-+	.state_list = LIST_HEAD_INIT(kstate_trace_buffer.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		{
-+			.name = "ring_buffers",
-+			.flags = KS_STRUCT|KS_POINTER|KS_ARRAY_OF_POINTER,
-+			.size = (sizeof(struct ring_buffer_per_cpu *)),
-+			.offset = offsetof(struct trace_buffer, buffers),
-+			.count = nr_ring_buffers,
-+			.ksd = &kstate_ring_buffer_per_cpu,
-+		},
-+		KSTATE_END_OF_LIST(),
-+	}
-+};
-+#endif
-+
- static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
- 			  struct buffer_page *bpage)
- {
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c01375adc4714..bb07d716beab4 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -18,6 +18,7 @@
- #include <linux/writeback.h>
- #include <linux/kallsyms.h>
- #include <linux/security.h>
-+#include <linux/kstate.h>
- #include <linux/seq_file.h>
- #include <linux/irqflags.h>
- #include <linux/debugfs.h>
-@@ -10621,6 +10622,84 @@ __init static void enable_instances(void)
- 	}
- }
- 
-+#ifdef CONFIG_KSTATE
-+static int cur_trace_save(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct trace_array *tr = obj;
-+
-+	return strscpy(mig_stream, tr->current_trace->name, 100) + 1;
-+}
-+
-+static int cur_trace_restore(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct trace_array *tr = obj;
-+
-+	tracing_set_tracer(tr, mig_stream);
-+	return strlen(mig_stream) + 1;
-+}
-+
-+static int tracing_on_save(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct trace_array *tr = obj;
-+
-+	*(u8 *)mig_stream = (u8)tracer_tracing_is_on(tr);
-+	return sizeof(u8);
-+
-+}
-+
-+static int tracing_on_restore(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct trace_array *tr = obj;
-+	u8 on = *(u8 *)mig_stream;
-+
-+	if (on)
-+		tracer_tracing_on(tr);
-+	else
-+		tracer_tracing_off(tr);
-+
-+	return sizeof(on);
-+}
-+
-+extern struct kstate_description kstate_trace_buffer;
-+
-+struct kstate_description global_trace_state = {
-+	.name = "trace_state",
-+	.id = KSTATE_TRACE_ID,
-+	.version_id = 1,
-+	.state_list = LIST_HEAD_INIT(global_trace_state.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		{
-+			.name = "tracing_on",
-+			.flags = KS_CUSTOM,
-+			.version_id = 0,
-+			.size = sizeof(struct trace_array),
-+			.save = tracing_on_save,
-+			.restore = tracing_on_restore,
-+		},
-+		{
-+			.name = "current_trace",
-+			.flags = KS_CUSTOM,
-+			.version_id = 0,
-+			.size = sizeof(struct trace_array),
-+			.save = cur_trace_save,
-+			.restore = cur_trace_restore,
-+
-+		},
-+		{
-+			.name = "trace_buffer",
-+			.flags = KS_STRUCT|KS_POINTER,
-+			.offset = offsetof(struct trace_array, array_buffer.buffer),
-+			.ksd = &kstate_trace_buffer,
-+		},
-+		KSTATE_END_OF_LIST()
-+	},
-+};
-+#endif
-+
- __init static int tracer_alloc_buffers(void)
- {
- 	int ring_buf_size;
-@@ -10848,6 +10927,8 @@ __init static int late_trace_init(void)
- 
- 	tracing_set_default_clock();
- 	clear_boot_tracer();
-+	kstate_register(&global_trace_state, &global_trace);
-+
- 	return 0;
- }
- 
+In my very biased opinion with kstate it's much easier to describe
+some state to migrate it to new kernel. And seems requires
+almost none intervention into existing code paths of the subsystem.icated
+
+
+So now to the part how this works.
+
+States (usually this is some struct) are described by the
+'struct kstate_description' containing the array of individual
+fields descpriptions - 'struct kstate_field'.
+Fields have different types like:
+   KS_SIMPLE  - trivial type that just copied by value
+
+   KS_POINTER - field contains pointer, it will be dereferenced to copy
+     the value during save/restore phases.
+
+   KS_STRUCT - contains another struct,
+       field->ksd must point to another 'struct kstate_dscription'
+
+   KS_CUSTOM - something that requires fit trivial types as above,
+               for this fields the callbacks field->save()/->restore() must
+	       do all job
+   KS_ARRAY_OF_POINTER - array of pointers, the size of array determined by the
+                         field->count() callback
+   KS_END - special flag indicating the end of migration stream data.
+
+
+kstate_register() call accepts kstate_description along with an instance
+of an object and registers it in the global 'states' list.
+
+During kexec reboot phase this list iterated, and for each instance
+in the list 'struct kstate_entry' formed and saved in the migration stream.
+'kstate_entry' contains information like ID of kstate_description, version
+of it, size of migration data and the data itself.
+
+After the reboot, when the kstate_register() called it parses migration
+stream, finds the appropriate 'kstate_entry' and restores the contents of the
+object.
+
+The content of this patchset:
+
+The first patch contains the most of the basic KSTATE infrastructure.
+
+The 2,3 patches are temporary hacks needed to pass the memory used to store
+migration data across kexec. Will be completely redone later.
+
+The 4,5 patches are bits needed to preserve pages intact across kexec.
+
+6 is test&playground patch to develop and test kstate itself.
+
+7 is a demonstration of how to migrate trace buffer using kstate.
+
+
+[1] https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com/
+
+Andrey Ryabinin (7):
+  kstate: Add kstate - a mechanism to migrate some kernel state across
+    kexec
+  kexec: Hack and abuse crashkernel for the kstate's migration stream
+  [hack] purgatory: disable purgatory verification.
+  mm/memblock: Add MEMBLOCK_PRSRV flag
+  kstate: Add mechanism to preserved specified memory pages across
+    kexec.
+  kstate, test: add test module for testing kstate subsystem.
+  trace: migrate trace buffers across kexec
+
+ arch/x86/kernel/kexec-bzimage64.c  |  36 +++++
+ arch/x86/kernel/machine_kexec_64.c |   5 +-
+ arch/x86/kernel/setup.c            |  81 ++++++++++++
+ arch/x86/purgatory/purgatory.c     |   2 +
+ include/linux/kexec.h              |   6 +-
+ include/linux/kstate.h             | 129 ++++++++++++++++++
+ include/linux/memblock.h           |   7 +
+ include/uapi/linux/kexec.h         |   2 +
+ kernel/Kconfig.kexec               |  12 ++
+ kernel/Makefile                    |   1 +
+ kernel/crash_core.c                |   3 +-
+ kernel/kexec_core.c                |  10 +-
+ kernel/kexec_file.c                |  15 ++-
+ kernel/kstate.c                    | 205 +++++++++++++++++++++++++++++
+ kernel/trace/ring_buffer.c         | 189 ++++++++++++++++++++++++++
+ kernel/trace/trace.c               |  81 ++++++++++++
+ lib/Makefile                       |   2 +
+ lib/test_kstate.c                  |  89 +++++++++++++
+ mm/memblock.c                      |   9 +-
+ mm/mm_init.c                       |  19 +++
+ 20 files changed, 895 insertions(+), 8 deletions(-)
+ create mode 100644 include/linux/kstate.h
+ create mode 100644 kernel/kstate.c
+ create mode 100644 lib/test_kstate.c
+
 -- 
 2.45.2
 
