@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3831ACF6D3D
-	for <kexec@archiver.kernel.org>; Wed,  2 Oct 2024 16:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B21CCF6D3B
+	for <kexec@archiver.kernel.org>; Wed,  2 Oct 2024 16:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IFV+Wh9D8/aQ5GnA4E2+g0A/qhA6rQyyzFdwkbcEMGA=; b=fRCpD5uRqxNz8w
-	7+AO+WZElQ1zhTBWLkujnRVtQwq1t4t3wuVgHTqsJ2Mu/Qb1JXYUNb6Yn/8ZIwDwSoYikF1osJ+Hf
-	2JcSrNGs0+K3+hk7XmbrJ6u6O6lYfCmhvI7t6j8Yd/HptpkVo0khNZ3PZamNMxwxS9VjmbEP+oa+B
-	Eyjf5ybgv0Ft89ltGtwWKXBN7wnwxwdLYYQNpWhsy4EbHs9Kd3GD+VOLdeA1+QTdTvScB+BKsaIQ7
-	sdJLK/E/ptMYs/0fAV5uGW1P5QhGQGhWN2ZvFA9qp35DfofRQK4MfXg/S7woIY51VbK6sMkUQxm/W
-	NmTMK0WCuFfJ2S5pcaRQ==;
+	List-Owner; bh=+43Nqd2SPYTSQidbuvW9UHnAzxLJJpZ0xIlrmF1WtPY=; b=0K8Gcgc0L5NceN
+	dfLMEVW1cKnoXDQKlJ6TXFWAoSPpLw2DU0/3JxZ0YU34ZNHGqR+uu1fmUw81uxrBxsr4F8CLvn/vi
+	AIV3LSg91RYjTaaAl61MLNwBB8asRbctPDDu5/L6/8hYAnn7+TWezWX4sX7Kcg1xqIeAsaYS07sav
+	OL7AMgBxPBiAzBKnnvkvfoNKmLL2VXOzjGdmnRRtIDutm3fbD3eZozHzNQKBBBuNM+0NdUVa6O55C
+	6JXdWh7x5uRoN0MHnswFikeBmzgamOViePKvyiJZcNeme3dAvBadHUub7r5Q/W6yDtuddPmINy3+P
+	xMMSiOSw7tfnp0lzxopQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1uX-00000006rZq-2S0b;
-	Wed, 02 Oct 2024 16:09:09 +0000
-Received: from forwardcorp1d.mail.yandex.net ([2a02:6b8:c41:1300:1:45:d181:df01])
+	id 1sw1uZ-00000006rck-3zYb;
+	Wed, 02 Oct 2024 16:09:11 +0000
+Received: from forwardcorp1d.mail.yandex.net ([178.154.239.200])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sw1uS-00000006rUm-3snX
+	id 1sw1uV-00000006rWt-1NGj
 	for kexec@lists.infradead.org;
-	Wed, 02 Oct 2024 16:09:08 +0000
+	Wed, 02 Oct 2024 16:09:09 +0000
 Received: from mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:b1cb:0:640:2a1e:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 62E2A609C4;
-	Wed,  2 Oct 2024 19:09:03 +0300 (MSK)
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id E548260A23;
+	Wed,  2 Oct 2024 19:09:05 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-vYLh3gEa;
-	Wed, 02 Oct 2024 19:09:02 +0300
+	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-nRmmw9QO;
+	Wed, 02 Oct 2024 19:09:05 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1727885342;
-	bh=vDCJtHtK3uU2sdBk8J/tnuJVXLHuR9McbyPPpAX4VPs=;
+	s=default; t=1727885345;
+	bh=0gXnv/qrKYuE/cS8ZBx3ikqYeKs1eCUWKuL7cMB0Reg=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Q0TLXURt2M11h05HQcTCotDXqV17/pTO/eYHxyvF7CpIRwLEfbBfbhK5guCrZhW7i
-	 FTOE8WK8gOdDKUCtCqsclUk1GbjcM0KngfLxMtHpSJRo9cn3UXM9NGQ39FLI8zLwTl
-	 y0g4IX5ZfCyGA9n7LHUYQ9btKkyR6EMQ9Tfr2MTA=
+	b=QJ6MOGmC2WXQfZHzJZ1VaR1B8rKzNr7QnMVdzqdp+QQv3P0S3FHMiPewEj2rscP08
+	 wpInBKldjvUn90+GV+UmlmIIYMJDqh6JpsBqKYkROXaqaEMgJ2zuIgRq06YpaV+5qL
+	 OvdxqE3T7r9VwN+6lIu4k91/bcBG6keVqTB4vvQk=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -63,17 +63,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-trace-kernel@vger.kernel.org,
 	valesini@yandex-team.com,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [RFC PATCH 5/7] kstate: Add mechanism to preserved specified memory pages across kexec.
-Date: Wed,  2 Oct 2024 18:07:20 +0200
-Message-ID: <20241002160722.20025-6-arbn@yandex-team.com>
+Subject: [RFC PATCH 6/7] kstate, test: add test module for testing kstate subsystem.
+Date: Wed,  2 Oct 2024 18:07:21 +0200
+Message-ID: <20241002160722.20025-7-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241002160722.20025-1-arbn@yandex-team.com>
 References: <20241002160722.20025-1-arbn@yandex-team.com>
 MIME-Version: 1.0
 X-Yandex-Filter: 1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241002_090905_231251_1BCFCF91 
-X-CRM114-Status: GOOD (  21.21  )
+X-CRM114-CacheID: sfid-20241002_090907_570697_40673C25 
+X-CRM114-Status: GOOD (  19.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,183 +90,138 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This adds functionality to preserve memory pages across kexec.
-kstate_register_page() stores struct page in the special list of
-'struct page_state's. At kexec reboot stage this list iterated, pfns
-saved into kstate's migrate stream. The new kernel after kexec reads
-pfns from the stream and marks memory as reserved to keep it
-intact. Also it marked with MEMBLOCK_PRSRV flag indicating that
-'struct page' itself shouldn't be reinitialized.
+This is simple test and playground useful kstate subsystem development.
+It contains some structure with different kind of data which migrated
+across kexec to the new kernel using kstate.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
- arch/x86/kernel/kexec-bzimage64.c |  2 +-
- arch/x86/kernel/setup.c           | 81 +++++++++++++++++++++++++++++++
- include/linux/kstate.h            |  6 +++
- kernel/kstate.c                   |  7 +++
- 4 files changed, 95 insertions(+), 1 deletion(-)
+ include/linux/kstate.h |  1 +
+ lib/Makefile           |  2 +
+ lib/test_kstate.c      | 89 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 lib/test_kstate.c
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 71c82841e6b12..d769d08cf9a8a 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -406,7 +406,7 @@ static int load_migrate_segments(struct kimage *image)
- 
- 	kbuf.memsz = 8*1024*1024;
- 
--	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.buf_align = PAGE_SIZE;
- 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index f1fea506e20f4..cfddc902e266b 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -15,6 +15,7 @@
- #include <linux/init_ohci1394_dma.h>
- #include <linux/initrd.h>
- #include <linux/iscsi_ibft.h>
-+#include <linux/kstate.h>
- #include <linux/memblock.h>
- #include <linux/panic_notifier.h>
- #include <linux/pci.h>
-@@ -638,6 +639,85 @@ static void __init e820_add_kernel_range(void)
- 	e820__range_add(start, size, E820_TYPE_RAM);
- }
- 
-+#ifdef CONFIG_KSTATE
-+struct state_entry mem_kstate;
-+
-+struct mem_state {
-+	unsigned int nr_pages;
-+	struct list_head list;
-+};
-+struct page_state {
-+	struct list_head list;
-+	int order;
-+	struct page *page;
-+};
-+
-+struct mem_state m_state = { .list = LIST_HEAD_INIT(m_state.list) };
-+
-+int kstate_register_page(struct page *page, int order)
-+{
-+	struct page_state *state;
-+
-+	state = kmalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
-+
-+	state->page = page;
-+	state->order = order;
-+	list_add(&state->list, &m_state.list);
-+	m_state.nr_pages++;
-+	return 0;
-+}
-+
-+static int kstate_pages_save(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct page_state *p_state;
-+	void *start = mig_stream;
-+
-+	list_for_each_entry(p_state, &m_state.list, list) {
-+		mig_stream = kstate_save_byte(mig_stream, p_state->order);
-+		mig_stream = kstate_save_ulong(mig_stream, page_to_phys(p_state->page));
-+	}
-+	return mig_stream - start;
-+}
-+
-+static int __init kstate_pages_restore(void *mig_stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct mem_state *m_state = obj;
-+	int nr_pages, i;
-+
-+	nr_pages = m_state->nr_pages;
-+	for (i = 0; i < nr_pages; i++) {
-+		int order = kstate_get_byte(&mig_stream);
-+		unsigned long phys = kstate_get_ulong(&mig_stream);
-+
-+		memblock_reserve(phys, PAGE_SIZE << order);
-+		memblock_reserved_mark_preserved(phys, PAGE_SIZE << order);
-+	}
-+	return 0;
-+}
-+
-+struct kstate_description kstate_reserved = {
-+	.name = "reserved_mem",
-+	.id = KSTATE_RSVD_MEM_ID,
-+	.state_list = LIST_HEAD_INIT(kstate_reserved.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_SIMPLE(nr_pages, struct mem_state),
-+		{
-+			.name = "pages",
-+			.flags = KS_CUSTOM,
-+			.size = sizeof(struct mem_state),
-+			.save = kstate_pages_save,
-+			.restore = kstate_pages_restore,
-+		},
-+
-+		KSTATE_END_OF_LIST()
-+	},
-+};
-+#endif
-+
- static void __init early_reserve_memory(void)
- {
- 	/*
-@@ -989,6 +1069,7 @@ void __init setup_arch(char **cmdline_p)
- 
- 	memblock_set_current_limit(ISA_END_ADDRESS);
- 	e820__memblock_setup();
-+	__kstate_register(&kstate_reserved, &m_state, &mem_kstate);
- 
- 	/*
- 	 * Needs to run after memblock setup because it needs the physical
 diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-index c97804d0243ea..855acb339d5d7 100644
+index 855acb339d5d7..2ddbe41a1f171 100644
 --- a/include/linux/kstate.h
 +++ b/include/linux/kstate.h
-@@ -29,6 +29,8 @@ struct kstate_field {
- };
- 
+@@ -31,6 +31,7 @@ struct kstate_field {
  enum kstate_ids {
-+	KSTATE_PAGE_ID,
-+	KSTATE_RSVD_MEM_ID,
+ 	KSTATE_PAGE_ID,
+ 	KSTATE_RSVD_MEM_ID,
++	KSTATE_TEST_ID,
  	KSTATE_LAST_ID = -1,
  };
  
-@@ -87,6 +89,10 @@ void *save_kstate(void *stream, int id, const struct kstate_description *kstate,
- 		void *obj);
- void *restore_kstate(struct kstate_entry *ke, int id,
- 		const struct kstate_description *kstate, void *obj);
+diff --git a/lib/Makefile b/lib/Makefile
+index 773adf88af416..2432e47664c35 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -354,6 +354,8 @@ obj-$(CONFIG_PARMAN) += parman.o
+ 
+ obj-y += group_cpus.o
+ 
++obj-$(CONFIG_KSTATE) += test_kstate.o
 +
-+int kstate_page_save(void *mig_stream, void *obj,
-+		const struct kstate_field *field);
-+int kstate_register_page(struct page *page, int order);
- #else
- 
- #define __kstate_register(state, obj, se)
-diff --git a/kernel/kstate.c b/kernel/kstate.c
-index 0ef228baef94e..7f7e135bafd81 100644
---- a/kernel/kstate.c
-+++ b/kernel/kstate.c
-@@ -182,6 +182,13 @@ int kstate_register(struct kstate_description *state, void *obj)
- 	return 0;
- }
- 
-+int kstate_page_save(void *mig_stream, void *obj,
-+		const struct kstate_field *field)
+ # GCC library routines
+ obj-$(CONFIG_GENERIC_LIB_ASHLDI3) += ashldi3.o
+ obj-$(CONFIG_GENERIC_LIB_ASHRDI3) += ashrdi3.o
+diff --git a/lib/test_kstate.c b/lib/test_kstate.c
+new file mode 100644
+index 0000000000000..e95e3110f8949
+--- /dev/null
++++ b/lib/test_kstate.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/io.h>
++#include <linux/kstate.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++
++unsigned long ulong_val;
++struct kstate_test_data {
++	int i;
++	unsigned long *p_ulong;
++	char s[10];
++	struct page *page;
++};
++
++struct kstate_description test_state = {
++	.name = "test",
++	.version_id = 1,
++	.id = KSTATE_TEST_ID,
++	.state_list = LIST_HEAD_INIT(test_state.state_list),
++	.fields = (const struct kstate_field[]) {
++		KSTATE_SIMPLE(i, struct kstate_test_data),
++		KSTATE_SIMPLE(s, struct kstate_test_data),
++		KSTATE_POINTER(p_ulong, struct kstate_test_data),
++		{
++			.name = "page",
++			.flags = KS_CUSTOM,
++			.offset = offsetof(struct kstate_test_data, page),
++			.save = kstate_page_save,
++		},
++		KSTATE_SIMPLE(page, struct kstate_test_data),
++		KSTATE_END_OF_LIST()
++	},
++};
++
++static struct kstate_test_data test_data;
++
++static int init_test_data(void)
 +{
-+	kstate_register_page(*(struct page **)obj, 0);
++	struct page *page;
++	int i;
++
++	test_data.i = 10;
++	ulong_val = 20;
++	memcpy(test_data.s, "abcdefghk", sizeof(test_data.s));
++	page = alloc_page(GFP_KERNEL);
++	if (!page)
++		return -ENOMEM;
++
++	for (i = 0; i < PAGE_SIZE/4; i += 4)
++		*((u32 *)page_address(page) + i) = 0xdeadbeef;
++	test_data.page = page;
 +	return 0;
 +}
 +
- static int __init setup_migrate(char *arg)
- {
- 	char *end;
++static void validate_test_data(void)
++{
++	int i;
++
++	WARN_ON(test_data.i != 10);
++	WARN_ON(*test_data.p_ulong != 20);
++	WARN_ON(strcmp(test_data.s, "abcdefghk") != 0);
++
++	for (i = 0; i < PAGE_SIZE/4; i += 4) {
++		u32 val = *((u32 *)page_address(test_data.page) + i);
++
++		WARN_ON(val != 0xdeadbeef);
++	}
++}
++
++static int __init test_kstate_init(void)
++{
++	int ret = 0;
++
++	test_data.p_ulong = &ulong_val;
++
++	if (!is_migrate_kernel()) {
++		ret = init_test_data();
++		if (ret)
++			goto out;
++	}
++
++	kstate_register(&test_state, &test_data);
++
++	validate_test_data();
++
++out:
++	return ret;
++}
++__initcall(test_kstate_init);
 -- 
 2.45.2
 
