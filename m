@@ -4,83 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1B17CFB43F
-	for <kexec@archiver.kernel.org>; Mon,  7 Oct 2024 14:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72CC2CFB443
+	for <kexec@archiver.kernel.org>; Mon,  7 Oct 2024 14:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IVHt80NndmslJHdftUtpTcPIM6AcuY2js0SgdvREzB8=; b=JG/ZhrcIyHY4WI
-	mxuKleYRpsvj5V0goAUpAnhdYp0lDXd/dnFXokTnJJDuTYZejr0wo3k7aIxprZR0WsPVf6VEJZf1R
-	zxDP8/Jq/wWKv5PHTYTSdv8rFQ4rEsy/I6B371LNv0Oh4faB+8r1wk4qWDmbnp/4+rT6XdVMp92Xo
-	G67xgQDHm8+H3TCUKC3CMj5mAsTKnCZVJnktKo0eGjjfIZi/Isl3h0sIgUSMDlo26U5JmU4iPAvJ6
-	xxVL/bPtm5VV3KicDgQa/cUQMjS82tdvj41c2uvfWeeYYEf+rMyP/8DQGXyioX8WKPO77hSDmzoj1
-	FWlDuPSm/hDnAuEp1y8w==;
+	List-Owner; bh=M1jobWssNymYcW7AGzd2j7KA7AiuZUoU8zGYJ+valUw=; b=vZvdG0laSWzzES
+	urry0zKVm9pvWZ/myQkwtriC0GWFvdSkYnraHH37YZCQqiyLW4tsvpeEauWZDhmqTJsPR291wPrU6
+	iP9ytFD5j+MkM/ZmvJOy/YcWVUJGJMQq7369mqSYXDUQB183+cHho60En59EIj8yjmfT1ENNLI5jv
+	AUWJOnof0nURSJNgw0SZUz35LchnniHM92IY+WiCO3SV8mYWrsPMjMyB8WpngjgibRPpE2GAZC+QU
+	yn3c2KhfWPBufNlO2p/W9t/n/PiWAM7OusLbIqd3Cuanyi8vGylm7CtV3GWcv9FqrRNJjk3GCnQ03
+	cNiH8ORnyU0LWaqy+mHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sxoU4-00000002esm-1dBa;
-	Mon, 07 Oct 2024 14:13:12 +0000
-Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
+	id 1sxozD-00000002mgp-2fkZ;
+	Mon, 07 Oct 2024 14:45:23 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1sxoNr-00000002d3w-2pRi;
-	Mon, 07 Oct 2024 14:06:48 +0000
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-a994cd82a3bso202074766b.2;
-        Mon, 07 Oct 2024 07:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728310005; x=1728914805; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MdQ4yGHqhJQxjQ94zkFj9YscA03Tg1UyYYIoS94UNGE=;
-        b=iRziJ7kQbtHIks7pyvYAnfs6BUjCJdF8/OCZAPe3ci0f9JhfJUD/6PtEKEUUSPMShC
-         mUsADEoB014b5zl2K5ZMaEqJHY1YHyjfXoW0EDYHNEKU+Z29SOAo2HuMfOsAWhHDd5ps
-         kTOzmjPGcHz8S01HuD20Vuccg0JiCC3BEoOSKYf44dC1shvt7vhQ3tRjWT7dgaccwNkH
-         pSkaeWIL4qZ4AjcoVCR3MkgjiDJm3qw5xeR/OS1baz2zKF1psFI3DMVQsffs0knmzhCa
-         jV5iIi+J3GWwPV16Fl2vURf1vhrmW6tQdi3Gmm6KBtCmUC05idK0leWh8g23+gyF5hqh
-         ZeYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728310005; x=1728914805;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MdQ4yGHqhJQxjQ94zkFj9YscA03Tg1UyYYIoS94UNGE=;
-        b=IX/RGichbgqMtNx6w2vUef0Z6rWnUaJ3uI1cxEn5BJEpDTMoWqnUv98Z2aBqOGjv6I
-         Qq3Eik8yj5KH/wz2GwoTw1zFagYoV2dsl/RpS2p5wNnLKDBIXKBIq9Hmze3op0waPWr7
-         NScE6eIpROw0y0SV0a327NWVN2iCH4Kf7lw6gHu0cf8YTGk4A92f8vs0XwZxi5KVDkgu
-         QjDeUrCPhS32RbIJ8ZnMCJZzCr70oS/RkOQkpa0BxtSK/j1dhUMAEKfUL/yIH3+NbuKf
-         wKJWJ4bmgyi134ogUSsTqNVPGvAQCgYjSvuSizpvNEOs0m5BD2r0f65EFY6GFBKsXPTa
-         jGrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWT5N3j6BEGn2gSaExzCkzDx5HgI5VCO5Ve06XfyqZfd1mazBxX5poHerwBw2prr8mOU6HQXQ==@lists.infradead.org, AJvYcCXITekRuiekoVFYbvs6iqvHqSGxBpBl8wFs1fRxj0MPl6vcRWykWWS0UpMFntPT1JYFH+f3p2fxSFcfSeWScdctwg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyK2h7qJd/3FdxueZvCDAryLQj8CyeCTKMVI8m1ety3fN/0fymp
-	t4M/etOBKF/ehhYvo9oOFd5nE8eNI1SwYNSPhMZEAU4kwhYyr8DY
-X-Google-Smtp-Source: AGHT+IHzTf9/mOydaRIHtAD1WG+qTiC3dn2gaVfrhGsXeLY2d2YXJzxhT6uT0jaK87guDPp/jNDboQ==
-X-Received: by 2002:a17:907:972a:b0:a8d:555f:eeda with SMTP id a640c23a62f3a-a991bce5aecmr1377640066b.8.1728310005084;
-        Mon, 07 Oct 2024 07:06:45 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::4:3232])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a994f74e13csm187218766b.164.2024.10.07.07.06.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2024 07:06:44 -0700 (PDT)
-Message-ID: <d3d90f10-1ccd-4557-843c-5b546d3b913c@gmail.com>
-Date: Mon, 7 Oct 2024 15:06:44 +0100
+	id 1sxoty-00000002lbM-1xbD;
+	Mon, 07 Oct 2024 14:39:59 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id CC86BA41475;
+	Mon,  7 Oct 2024 14:39:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D2CC4CED2;
+	Mon,  7 Oct 2024 14:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728311997;
+	bh=xIKmFdsKl3VoJoRVa+lTTRtmFAYUymUeG0NPSdB4qkM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sfa4o+1olqcPgJpIaH+SDfJrdsUpJdOjPkMbApZLOfM4xIJ08b/N4llmtg1XjlbUu
+	 JQe6E0lhXk1HoH8ekYKUyTePuwYCexJxCDXkGP/StWz/VrYUs1qseXDOiL2z7v9GpG
+	 iJD9d/e9AgP2dG9KaDC2VQ22oYOeYuGwSyhvw1dq+VZShyEAAjjGCaAWwyfZnnqfEe
+	 Dg7Jf9QGs8lH9mfxVpSXLTotHNRX+qAh12ZrS8egHx4FUywBS4Q8QKhDeLtPPlVD1f
+	 Jplv06X8RYwFa6ZsujT0tjQ29PTU/s0dfHmQsiPcFZd6jVj1zzNyF6c4Ie+//U28lS
+	 l5dK+y1YBFPaA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53959a88668so5513954e87.2;
+        Mon, 07 Oct 2024 07:39:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQPUty5PQZEQrpOwoEvm1qYHAouXWdqN6VLIipOeiwUW41SicAC0UzDCrzmIk7WqVnSMe3C+9RYhgZcrCxHLgpBQ==@lists.infradead.org, AJvYcCXAUDMN0mvyIDXYMqMIsDVlm/5tzfuODtIjI3msJtvae+aKuZTCpjsUWH/aNjiEuW8whY2Y5g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzIN6smVtDEwY3pfdfBfIzcm4izlUgEbZHXcpioNVEZ1I3IRexL
+	7AhVpRTy2Fed8UJK3HBtpXkMctg9eF1B+8qnXSe/+Ii/0b3TiB3kxOxJ+oTkHBcDwD4DHk0nFG1
+	nFmGmp3wFQg05FSidyeiaAD6JOA==
+X-Google-Smtp-Source: AGHT+IEG5q6+j+CeqLxaVJZa0oofLHHRdz/JFR71IlJpiAgKIbDzqEkmM0wZIXncpHj7oLyHzkEwSpYcacaGxALVOpk=
+X-Received: by 2002:a05:6512:31ce:b0:52f:df:db40 with SMTP id
+ 2adb3069b0e04-539ab9ed4f8mr6140759e87.56.1728311995390; Mon, 07 Oct 2024
+ 07:39:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20241003113840.2972416-1-usamaarif642@gmail.com>
+ <20241004000316.GA1910499-robh@kernel.org> <d3d90f10-1ccd-4557-843c-5b546d3b913c@gmail.com>
+In-Reply-To: <d3d90f10-1ccd-4557-843c-5b546d3b913c@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 7 Oct 2024 09:39:42 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJVEjPt9tHNr0uAGHQwGnUbZDZoe7kURp3Qx0ce1jv+vw@mail.gmail.com>
+Message-ID: <CAL_JsqJVEjPt9tHNr0uAGHQwGnUbZDZoe7kURp3Qx0ce1jv+vw@mail.gmail.com>
 Subject: Re: [PATCH] of/kexec: save pa of initial_boot_params for arm64 and
  use it at kexec
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, will@kernel.org, leitao@debian.org,
- catalin.marinas@arm.com, saravanak@google.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org
-References: <20241003113840.2972416-1-usamaarif642@gmail.com>
- <20241004000316.GA1910499-robh@kernel.org>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20241004000316.GA1910499-robh@kernel.org>
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: mark.rutland@arm.com, will@kernel.org, leitao@debian.org, 
+	catalin.marinas@arm.com, saravanak@google.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241007_070647_752104_EBC49500 
-X-CRM114-Status: GOOD (  19.56  )
+X-CRM114-CacheID: sfid-20241007_073958_653863_3BB09356 
+X-CRM114-Status: GOOD (  27.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,69 +80,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 04/10/2024 01:03, Rob Herring wrote:
-> On Thu, Oct 03, 2024 at 12:38:40PM +0100, Usama Arif wrote:
->>  __pa() is only intended to be used for linear map addresses and using
->> it for initial_boot_params which is in fixmap for arm64 will give an
->> incorrect value. Hence stash the physical address when it is known at
->> boot time and use it at kexec time instead of converting the virtual
->> address using __pa().
->>
->> Reported-by: Breno Leitao <leitao@debian.org>
->> Suggested-by: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
->> Fixes: ac10be5cdbfa ("arm64: Use common of_kexec_alloc_and_setup_fdt()")
->> ---
->>  arch/arm64/kernel/setup.c | 8 ++++++++
->>  drivers/of/fdt.c          | 6 ++++++
->>  drivers/of/kexec.c        | 8 ++++++--
->>  include/linux/of_fdt.h    | 2 ++
->>  4 files changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->> index b22d28ec8028..a4d96f5e2e05 100644
->> --- a/arch/arm64/kernel/setup.c
->> +++ b/arch/arm64/kernel/setup.c
->> @@ -194,6 +194,14 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
->>  	/* Early fixups are done, map the FDT as read-only now */
->>  	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
->>  
->> +	/*
->> +	 * Save dt_phys address so that it can be used later for kexec. This
->> +	 * is done as __pa() is only intended to be used for linear map addresses
->> +	 * and using it for initial_boot_params which is in fixmap will give an
->> +	 * incorrect value.
->> +	 */
->> +	set_initial_boot_params_pa(dt_phys);
-> 
-> No new arch->dt functions please. If we need to save off the PA, then do 
-> that when we set initial_boot_params.
-> 
-> Rob
-
-
-initial_boot_params is set in early_init_dt_verify, called by early_init_dt_scan.
-This is done in setup_machine_fdt in arm64 where the PA is available,
-but in other functions in other architectures, where the PA is not available.
-So it makes it quite messy to set it in the same place as initial_boot_params.
-Its only needed for arm64 and making a change in all archs probably isnt a good idea?
-
-Any reason to not add a new function to make arch -> of/fdt call?
-
-Thanks,
-Usama
-
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBPY3QgNywgMjAyNCBhdCA5OjA24oCvQU0gVXNhbWEgQXJpZiA8dXNhbWFhcmlmNjQy
+QGdtYWlsLmNvbT4gd3JvdGU6Cj4KPgo+Cj4gT24gMDQvMTAvMjAyNCAwMTowMywgUm9iIEhlcnJp
+bmcgd3JvdGU6Cj4gPiBPbiBUaHUsIE9jdCAwMywgMjAyNCBhdCAxMjozODo0MFBNICswMTAwLCBV
+c2FtYSBBcmlmIHdyb3RlOgo+ID4+ICBfX3BhKCkgaXMgb25seSBpbnRlbmRlZCB0byBiZSB1c2Vk
+IGZvciBsaW5lYXIgbWFwIGFkZHJlc3NlcyBhbmQgdXNpbmcKPiA+PiBpdCBmb3IgaW5pdGlhbF9i
+b290X3BhcmFtcyB3aGljaCBpcyBpbiBmaXhtYXAgZm9yIGFybTY0IHdpbGwgZ2l2ZSBhbgo+ID4+
+IGluY29ycmVjdCB2YWx1ZS4gSGVuY2Ugc3Rhc2ggdGhlIHBoeXNpY2FsIGFkZHJlc3Mgd2hlbiBp
+dCBpcyBrbm93biBhdAo+ID4+IGJvb3QgdGltZSBhbmQgdXNlIGl0IGF0IGtleGVjIHRpbWUgaW5z
+dGVhZCBvZiBjb252ZXJ0aW5nIHRoZSB2aXJ0dWFsCj4gPj4gYWRkcmVzcyB1c2luZyBfX3BhKCku
+Cj4gPj4KPiA+PiBSZXBvcnRlZC1ieTogQnJlbm8gTGVpdGFvIDxsZWl0YW9AZGViaWFuLm9yZz4K
+PiA+PiBTdWdnZXN0ZWQtYnk6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+Cj4g
+Pj4gU2lnbmVkLW9mZi1ieTogVXNhbWEgQXJpZiA8dXNhbWFhcmlmNjQyQGdtYWlsLmNvbT4KPiA+
+PiBGaXhlczogYWMxMGJlNWNkYmZhICgiYXJtNjQ6IFVzZSBjb21tb24gb2Zfa2V4ZWNfYWxsb2Nf
+YW5kX3NldHVwX2ZkdCgpIikKPiA+PiAtLS0KPiA+PiAgYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAu
+YyB8IDggKysrKysrKysKPiA+PiAgZHJpdmVycy9vZi9mZHQuYyAgICAgICAgICB8IDYgKysrKysr
+Cj4gPj4gIGRyaXZlcnMvb2Yva2V4ZWMuYyAgICAgICAgfCA4ICsrKysrKy0tCj4gPj4gIGluY2x1
+ZGUvbGludXgvb2ZfZmR0LmggICAgfCAyICsrCj4gPj4gIDQgZmlsZXMgY2hhbmdlZCwgMjIgaW5z
+ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2tlcm5lbC9zZXR1cC5jIGIvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+ID4+IGluZGV4
+IGIyMmQyOGVjODAyOC4uYTRkOTZmNWUyZTA1IDEwMDY0NAo+ID4+IC0tLSBhL2FyY2gvYXJtNjQv
+a2VybmVsL3NldHVwLmMKPiA+PiArKysgYi9hcmNoL2FybTY0L2tlcm5lbC9zZXR1cC5jCj4gPj4g
+QEAgLTE5NCw2ICsxOTQsMTQgQEAgc3RhdGljIHZvaWQgX19pbml0IHNldHVwX21hY2hpbmVfZmR0
+KHBoeXNfYWRkcl90IGR0X3BoeXMpCj4gPj4gICAgICAvKiBFYXJseSBmaXh1cHMgYXJlIGRvbmUs
+IG1hcCB0aGUgRkRUIGFzIHJlYWQtb25seSBub3cgKi8KPiA+PiAgICAgIGZpeG1hcF9yZW1hcF9m
+ZHQoZHRfcGh5cywgJnNpemUsIFBBR0VfS0VSTkVMX1JPKTsKPiA+Pgo+ID4+ICsgICAgLyoKPiA+
+PiArICAgICAqIFNhdmUgZHRfcGh5cyBhZGRyZXNzIHNvIHRoYXQgaXQgY2FuIGJlIHVzZWQgbGF0
+ZXIgZm9yIGtleGVjLiBUaGlzCj4gPj4gKyAgICAgKiBpcyBkb25lIGFzIF9fcGEoKSBpcyBvbmx5
+IGludGVuZGVkIHRvIGJlIHVzZWQgZm9yIGxpbmVhciBtYXAgYWRkcmVzc2VzCj4gPj4gKyAgICAg
+KiBhbmQgdXNpbmcgaXQgZm9yIGluaXRpYWxfYm9vdF9wYXJhbXMgd2hpY2ggaXMgaW4gZml4bWFw
+IHdpbGwgZ2l2ZSBhbgo+ID4+ICsgICAgICogaW5jb3JyZWN0IHZhbHVlLgo+ID4+ICsgICAgICov
+Cj4gPj4gKyAgICBzZXRfaW5pdGlhbF9ib290X3BhcmFtc19wYShkdF9waHlzKTsKPiA+Cj4gPiBO
+byBuZXcgYXJjaC0+ZHQgZnVuY3Rpb25zIHBsZWFzZS4gSWYgd2UgbmVlZCB0byBzYXZlIG9mZiB0
+aGUgUEEsIHRoZW4gZG8KPiA+IHRoYXQgd2hlbiB3ZSBzZXQgaW5pdGlhbF9ib290X3BhcmFtcy4K
+PiA+Cj4gPiBSb2IKPgo+Cj4gaW5pdGlhbF9ib290X3BhcmFtcyBpcyBzZXQgaW4gZWFybHlfaW5p
+dF9kdF92ZXJpZnksIGNhbGxlZCBieSBlYXJseV9pbml0X2R0X3NjYW4uCj4gVGhpcyBpcyBkb25l
+IGluIHNldHVwX21hY2hpbmVfZmR0IGluIGFybTY0IHdoZXJlIHRoZSBQQSBpcyBhdmFpbGFibGUs
+Cj4gYnV0IGluIG90aGVyIGZ1bmN0aW9ucyBpbiBvdGhlciBhcmNoaXRlY3R1cmVzLCB3aGVyZSB0
+aGUgUEEgaXMgbm90IGF2YWlsYWJsZS4KCkRvZXNuJ3QgX19wYSgpIHdvcmsgZm9yIGFsbCB0aGUg
+b3RoZXIgYXJjaGl0ZWN0dXJlcz8gVGhhdCdzIHdoYXQgeW91cgpwYXRjaCBpbmRpY2F0ZXMuCgo+
+IFNvIGl0IG1ha2VzIGl0IHF1aXRlIG1lc3N5IHRvIHNldCBpdCBpbiB0aGUgc2FtZSBwbGFjZSBh
+cyBpbml0aWFsX2Jvb3RfcGFyYW1zLgo+IEl0cyBvbmx5IG5lZWRlZCBmb3IgYXJtNjQgYW5kIG1h
+a2luZyBhIGNoYW5nZSBpbiBhbGwgYXJjaHMgcHJvYmFibHkgaXNudCBhIGdvb2QgaWRlYT8KPgo+
+IEFueSByZWFzb24gdG8gbm90IGFkZCBhIG5ldyBmdW5jdGlvbiB0byBtYWtlIGFyY2ggLT4gb2Yv
+ZmR0IGNhbGw/CgpZZXMuIEl0IGlzIHRoZSBvcHBvc2l0ZSBkaXJlY3Rpb24gSSBoYXZlIHJld29y
+a2VkIHRoZSBpbnRlcmZhY2VzIHRvLgpXZSBkb24ndCB3YW50IGVhY2ggYXJjaCBjYWxsaW5nIHZh
+cmlvdXMgZWFybHkgRFQgZnVuY3Rpb25zIGF0IHJhbmRvbQp0aW1lcyBhbmQgb3JkZXIuIFRoYXQn
+cyBmcmFnaWxlIHdoZW4gdGhlIERUIGZ1bmN0aW9ucyBtYWtlIGFzc3VtcHRpb25zCmFib3V0IHdo
+ZW4gdGhleSBhcmUgY2FsbGVkIG9yIHdoYXQncyBiZWVuIGluaXRpYWxpemVkIGFscmVhZHkuCgpB
+bm90aGVyIG9wdGlvbiBpcyB0byBtYWtlIGFybTY0IGNvcHkgdGhlIERUIGFzIHNvbWUgYXJjaGVz
+IGRvLgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
