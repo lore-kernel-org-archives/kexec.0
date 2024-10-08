@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C424CED27F
-	for <kexec@archiver.kernel.org>; Tue,  8 Oct 2024 08:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E2C4CEF15C
+	for <kexec@archiver.kernel.org>; Tue,  8 Oct 2024 11:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0/6HSohhKnrwgiglB29nMLJByappYGauj56ZhAhHWx4=; b=Jnomzhk3Qv6OWl
-	p3MeTwuJrAJHLeyJ51ILXvi/san1L+sLjFW9X883t+LkvqFaiex9CJg4jI3CgJtMw0Y7A4oGCMjx9
-	cUNjQMGKb56ysnRnwD/zktItgDxcdrze65B5PHhK0qvcZpQpBsVA3KmZPIyCAsYhrGlDQyZ3xtYAK
-	ocDeBRS2tsVJ8yXqCOKowQ7Hi5d0Ng+lCdLtdGdBdFgy74opyENYZUASuDRxNWrUgG6J/JYjhCgjo
-	ne72CbHE5EQKNn8pL0NNjDwydG2IMrf4tJrXvaFsSi5MSv49Qe4FExBfkV3eJmAPh7E77g0zuApak
-	sc61zj09ymlnFVBIxNXw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=96VX6Glghsi5+6o9b9Otg+FQS5734X7ehbuwXxmNEWk=; b=TTPsVJJtLrggL0
+	VSU7Ksn03PFcbQ8aXV4K6T942WmQrkuZFp6YoMGkoeAIrQDSxCQOR9z44CP5JpxI5v0qS5HcrRX1Z
+	lXMzEjsatvmVB79E769IDils7yQqR8DHNA4757Kjctl4jz5F4jFfnjXjxTuutCUVb+wyvisEfc+o+
+	4mEoiRFWKp5+3t3GuMlFzmzDN3XIIMYKPJIFEPejg3qelzbT1eqONclDCYggdGKJlsYhjrCBrnouj
+	D52rwhYoHOhRFoXfLCM95NsMu8CQzKvNbssYoKgPiQnLgTruHJJ9wuqd3O1gPfd0mHfF7tuT/JMJO
+	jm+xIxw2vQOkHd6IrxbQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sy5ri-0000000580a-45BK;
-	Tue, 08 Oct 2024 08:46:46 +0000
-Received: from mail.loongson.cn ([114.242.206.163])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1sy5og-000000056wj-2olp
+	id 1sy8rG-00000005isa-1Egj;
+	Tue, 08 Oct 2024 11:58:30 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1sy8nM-00000005iHC-0zaP
 	for kexec@lists.infradead.org;
-	Tue, 08 Oct 2024 08:43:40 +0000
-Received: from loongson.cn (unknown [36.112.180.52])
-	by gateway (Coremail) with SMTP id _____8BxHLO08ARnY14PAA--.22930S3;
-	Tue, 08 Oct 2024 16:43:33 +0800 (CST)
-Received: from [192.168.109.221] (unknown [36.112.180.52])
-	by front2 (Coremail) with SMTP id qciowMBx+cWz8ARnt1IjAA--.46740S2;
-	Tue, 08 Oct 2024 16:43:32 +0800 (CST)
-Message-ID: <5a6d9b3c-78ed-4498-941b-00dc04f7fc7a@loongson.cn>
-Date: Tue, 8 Oct 2024 16:43:31 +0800
+	Tue, 08 Oct 2024 11:54:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728388465;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JTS6I00rUMvKL3lJtUFvwqS3wGRkVZD4AR+JuGlVOlo=;
+	b=dEYjXp/S+g1k3R1XWQCq1SDzqCgQHSghE4vEyuOSRPlAfb++w1vkOdymQOd25RoTtmNxQS
+	CodVMnmrFEFfqZiLo2QvkBJOIT4ztXkeMDCgkqNTP+2m2liop+Lk7zcBJOTsuIPR5IsUz/
+	rGwCcUdb0whX9btYQd/ztPdnbqPYQpA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-eC5wAq9QOgyJPeNfPMw1Aw-1; Tue,
+ 08 Oct 2024 07:54:22 -0400
+X-MC-Unique: eC5wAq9QOgyJPeNfPMw1Aw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF74019560B6;
+	Tue,  8 Oct 2024 11:54:20 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.116.54])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B7CAE300018D;
+	Tue,  8 Oct 2024 11:54:14 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: 
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Philipp Rudo <prudo@redhat.com>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	kexec@lists.infradead.org
+Subject: [PATCH 0/3] kexec: Add support for UKI format kernel
+Date: Tue,  8 Oct 2024 19:54:00 +0800
+Message-ID: <20241008115408.21944-1-piliu@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH makedumpfile] Fix incorrect PFN exclusion when LOAD
- segments overlap
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?=
- <k-hagio-ab@nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "lixuefeng@loongson.cn" <lixuefeng@loongson.cn>,
- "gaojuxin@loongson.cn" <gaojuxin@loongson.cn>,
- =?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?=
- <yamazaki-msmt@nec.com>
-References: <20240814024315.3166766-1-wangming01@loongson.cn>
- <80b58b89-d08e-45f2-af28-b285b9b17b69@nec.com>
-From: Ming Wang <wangming01@loongson.cn>
-Content-Language: en-US
-In-Reply-To: <80b58b89-d08e-45f2-af28-b285b9b17b69@nec.com>
-X-CM-TRANSID: qciowMBx+cWz8ARnt1IjAA--.46740S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEEEmcDzyER4gABst
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1kZrWrAr1rXrWfKFWUKFX_yoWrZr1Upr
-	yUJrWrCrs5Jr17Jr17JF1UGr1UJa1vkF4kJr4UJr18Aw1DWr1xtr1UJ3WrWryUGr4Iqr1U
-	tF1Dt345tr1UZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57
-	IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE
-	14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2
-	IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jU9NsU
-	UUUU=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241008_014339_090705_E271B49E 
-X-CRM114-Status: GOOD (  23.90  )
+X-CRM114-CacheID: sfid-20241008_045428_364951_AC987ECB 
+X-CRM114-Status: GOOD (  11.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,91 +84,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgS2F6dSwKClRoYW5rIHlvdSBmb3IgeW91ciBkZXRhaWxlZCBxdWVzdGlvbnMuCgpPbiA5LzMw
-LzI0IDE2OjE4LCBIQUdJTyBLQVpVSElUTyjokKnlsL4g5LiA5LuBKSB3cm90ZToKPiBIaSBNaW5n
-LAo+IAo+IHNvcnJ5IGZvciB0aGUgbGF0ZSByZXNwb25zZSB0byB0aGlzIHBhdGNoLgo+IAo+IE9u
-IDIwMjQvMDgvMTQgMTE6NDMsIE1pbmcgV2FuZyB3cm90ZToKPj4gV2hlbiBpdGVyYXRpbmcgdGhy
-b3VnaCBMT0FEIHNlZ21lbnRzIHRvIGV4Y2x1ZGUgcGFnZXMgaW4KPj4gYGV4Y2x1ZGVfbm9kYXRh
-X3BhZ2VzYCwgc2ltcGx5IHVzaW5nIGBwaHlzX2VuZGAgdG8gdHJhY2sgYWxsb2NhdGVkCj4+IFBG
-TnMgY2FuIGxlYWQgdG8gdGhlIGVycm9uZW91cyBleGNsdXNpb24gb2YgdmFsaWQgcGFnZXMgZnJv
-bSBhCj4+IHN1YnNlcXVlbnQgTE9BRCBzZWdtZW50IGlmIGl0cyBgcGh5c19zdGFydGAgb3Zlcmxh
-cHMgd2l0aCB0aGUKPj4gcHJldmlvdXMgc2VnbWVudCdzIGFkZHJlc3MgcmFuZ2UuCj4+Cj4+IFRo
-aXMgcGF0Y2ggYWRkcmVzc2VzIHRoZSBpc3N1ZSBieSBjaGVja2luZyBmb3Igc3VjaCBvdmVybGFw
-cyB3aXRoIHRoZQo+PiBuZXh0IExPQUQgc2VnbWVudCdzIHBoeXNpY2FsIGFkZHJlc3MgcmFuZ2Uu
-IElmIGFuIG92ZXJsYXAgaXMKPj4gZGV0ZWN0ZWQsIHdlIGNvbnRpbnVlIGluY2x1ZGluZyBQRk5z
-IGZyb20gdGhlIGN1cnJlbnQgc2VnbWVudCB1bnRpbAo+PiByZWFjaGluZyB0aGUgZW5kIG9mIHRo
-ZSBvdmVybGFwcGluZyByZWdpb24uCj4+Cj4+IFRoaXMgZml4IGVuc3VyZXMgdGhhdCBhbGwgdmFs
-aWQgcGFnZXMgd2l0aGluIG92ZXJsYXBwaW5nIExPQUQgc2VnbWVudHMKPj4gYXJlIGNvcnJlY3Rs
-eSBpbmNsdWRlZCBkdXJpbmcgUEZOIGV4Y2x1c2lvbi4KPiAKPiBJIGhhdmUgYSBmZXcgcXVlc3Rp
-b25zOgo+IAo+IC0gSSBoZWFyZCBmcm9tIE1hc2EgdGhhdCB0aGUgb3ZlcmxhcCBpcyBjYXVzZWQg
-YnkgYSBidWcsIGlzbid0IGl0IGZpeGVkIAo+IG9uIHRoZSBrZXJuZWwgc2lkZT8gIG9yIGl0IHdp
-bGwgYmUgZml4ZWQgYnV0IGlzIHRoaXMgcGF0Y2ggZm9yIGV4aXN0aW5nIAo+IGtlcm5lbHMgdGhh
-dCBoYXZlIHRoZSBidWc/ClRoZSBvdmVybGFwIHlvdSBtZW50aW9uZWQgaXMgbm90IGNhdXNlZCBi
-eSBhIGtlcm5lbCBidWcgYW5kIGlzIG5vdCBleHBlY3RlZCB0byBiZSBmaXhlZCBpbiB0aGUga2Vy
-bmVsLgo+IAo+IC0gZXhjbHVkZV9ub2RhdGFfcGFnZXMoKSBpcyBmb3IgZHVtcGZpbGVzIGNyZWF0
-ZWQgYnkgIm1ha2VkdW1wZmlsZSAtRSIsIAo+IHdoaWNoIHVzZXMgcF9maWxlc3ogaW4gcHJvZ3Jh
-bSBoZWFkZXJzIHRvIHJlY29yZCBleGlzdGluZyBwYWdlcyBhZnRlciAKPiBleGNsdXNpb24uICBU
-aGUgZnVuY3Rpb24gZXhjbHVkZXMgcGFnZXMgb25seSBiZXR3ZWVuIAo+IHBoeXNfc3RhcnQrZmls
-ZV9zaXplIGFuZCBwaHlzX2VuZCwgc28gaWYgcF9maWxlc3ogPT0gcF9tZW1zeiwgaXQgd2lsbCAK
-PiBub3QgZXhjbHVkZSBhbnkgcGFnZXMuCk15IHN5c3RlbSdzIHBhZ2Ugc2l6ZSBpcyAxNkssIENv
-bnNpZGVyIHRoZSBmb2xsb3dpbmcgTE9BRCBzZWdtZW50IGluZm9ybWF0aW9uCgpwaHlzX3N0YXJ0
-ICAgICAgICAgcGh5c19lbmQgICAgICAgdmlydF9zdGFydCAgICAgICAgIHZpcnRfZW5kCkxPQURb
-IDBdICAgICAgICAgICAyMDAwMDAgICAgICAgICAgMjE4NjIwMCA5MDAwMDAwMDAwMjAwMDAwIDkw
-MDAwMDAwMDIxODYyMDAKTE9BRFsgMV0gICAgICAgICAgIDIwMDAwMCAgICAgICAgICBlZTAwMDAw
-IDkwMDAwMDAwMDAyMDAwMDAgOTAwMDAwMDAwZWUwMDAwMAoKSSBhZGRlZCBzb21lIHByaW50IHN0
-YXRlbWVudHMgd2l0aGluIHRoZSBleGNsdWRlX25vZGF0YV9wYWdlcyBmdW5jdGlvbjoKCndoaWxl
-IChwZm4gPCBwZm5fZW5kKSB7CiAgICBFUlJNU0coIlxuZnVuYzolczogcGZuOiAlI2xseCBwaHlz
-X3N0YXJ0OiAlI2xseCBwaHlzX2VuZDogJSNsbHggZmlsZV9zaXplOiAlbHUgcGZuX2VuZDolI2xs
-eFxuIgogICAgICAgICwgX19mdW5jX18sIHBmbiwgcGh5c19zdGFydCwgcGh5c19lbmQsICh1bnNp
-Z25lZCBsb25nKWZpbGVfc2l6ZSwgcGZuX2VuZCk7CiAgICBjbGVhcl9iaXRfb25fMm5kX2JpdG1h
-cChwZm4sIGN5Y2xlKTsKICAgICsrcGZuOwp9CgpUaGUgZm9sbG93aW5nIG91dHB1dCB3YXMgb2Jz
-ZXJ2ZWQ6CgpmdW5jOmV4Y2x1ZGVfbm9kYXRhX3BhZ2VzOiBwZm46IDB4ODYxIHBoeXNfc3RhcnQ6
-IDB4MjAwMDAwIHBoeXNfZW5kOiAweDIxODYyMDAgZmlsZV9zaXplOiAzMzA1NTIzMiBwZm5fZW5k
-OjB4ODYyCgpBZnRlciB0aGlzIHByaW50IHN0YXRlbWVudCwgY2xlYXJfYml0X29uXzJuZF9iaXRt
-YXAgaXMgY2FsbGVkLCBlZmZlY3RpdmVseSBjbGVhcmluZyB0aGUgYml0bWFwIGJpdCBmb3IgcGZu
-OiAweDg2MS4KSG93ZXZlciwgcGZuOiAweDg2MSBpcyBhIHZhbGlkIFBGTiB0aGF0IGhhcHBlbnMg
-dG8gc3RvcmUgdGhlIGtlcm5lbCdzIGluaXRfdXRzX25zLiBUaGlzIGxlYWRzIHRvIGFuIGVycm9y
-IHdoZW4gdGhlCmNyYXNoIHRvb2wgYXR0ZW1wdHMgdG8gZGV0ZWN0IHRoZSBrZXJuZWwgdmVyc2lv
-bjoKCnJlYWRfZGlza2R1bXA6IFBBR0VfRVhDTFVERUQ6IHBhZGRyL3BmbjogMjE4NWQ5OC84NjEK
-Y3Jhc2g6IHBhZ2UgZXhjbHVkZWQ6IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IDkwMDAwMDAwMDIx
-ODVkOTggIHR5cGU6ICJpbml0X3V0c19ucyIgCj4gSSB3b3VsZCBsaWtlIHRvIGNoZWNrIGhvdyB0
-aGV5IGFyZSBvbiB5b3VyIG1hY2hpbmUsIHNvIGNvdWxkIEkgaGF2ZSBhIAo+ICJyZWFkZWxmIC1s
-IC9wcm9jL3ZtY29yZSIgb3V0cHV0PwpUaGUgb3V0cHV0IG9mIHRoZSBjb21tYW5kIHJlYWRlbGYg
-LWwgL3Byb2Mvdm1jb3JlIGV4ZWN1dGVkIG9uIG15IHN5c3RlbSBpcyBwcm92aWRlZCBiZWxvdy4g
-CgpJdCBpcyBpbXBvcnRhbnQgdG8gbm90ZSB0aGF0IHRoaXMgb3V0cHV0IGNvcnJlc3BvbmRzIHRv
-IGEgZGlmZmVyZW50IGtlcm5lbCB2ZXJzaW9uIGNvbXBhcmVkIHRvIHRoZSBvbmUgdXNlZCBpbiB0
-aGUgcHJlY2VkaW5nIGV4YW1wbGU6Cgpbcm9vdEBsb2NhbGhvc3Qgfl0jIHJlYWRlbGYgLWwgL3By
-b2Mvdm1jb3JlCgpFbGYgZmlsZSB0eXBlIGlzIENPUkUgKENvcmUgZmlsZSkKRW50cnkgcG9pbnQg
-MHgwClRoZXJlIGFyZSA4IHByb2dyYW0gaGVhZGVycywgc3RhcnRpbmcgYXQgb2Zmc2V0IDY0CgpQ
-cm9ncmFtIEhlYWRlcnM6ClR5cGUgICAgICAgICAgIE9mZnNldCAgICAgICAgICAgICBWaXJ0QWRk
-ciAgICAgICAgICAgUGh5c0FkZHIKRmlsZVNpeiAgICAgICAgICAgIE1lbVNpeiAgICAgICAgICAg
-ICAgRmxhZ3MgIEFsaWduCk5PVEUgICAgICAgICAgIDB4MDAwMDAwMDAwMDAwNDAwMCAweDAwMDAw
-MDAwMDAwMDAwMDAgMHgwMDAwMDAwMDAwMDAwMDAwCiAgICAgICAgICAgICAgIDB4MDAwMDAwMDAw
-MDAwNGE1NCAweDAwMDAwMDAwMDAwMDRhNTQgICAgICAgICAweDQKTE9BRCAgICAgICAgICAgMHgw
-MDAwMDAwMDAwMDBjMDAwIDB4OTAwMDAwMDAwMDIwMDAwMCAweDAwMDAwMDAwMDAyMDAwMDAKICAg
-ICAgICAgICAgICAgMHgwMDAwMDAwMDAyNTUwNDAwIDB4MDAwMDAwMDAwMjU1MDQwMCAgUldFICAg
-IDB4MApMT0FEICAgICAgICAgICAweDAwMDAwMDAwMDI1NjAwMDAgMHg5MDAwMDAwMDAwMjAwMDAw
-IDB4MDAwMDAwMDAwMDIwMDAwMAogICAgICAgICAgICAgICAweDAwMDAwMDAwMGVjMDAwMDAgMHgw
-MDAwMDAwMDBlYzAwMDAwICBSV0UgICAgMHgwCkxPQUQgICAgICAgICAgIDB4MDAwMDAwMDAxMTE2
-MDAwMCAweDkwMDAwMDAwOTA0MDAwMDAgMHgwMDAwMDAwMDkwNDAwMDAwCiAgICAgICAgICAgICAg
-IDB4MDAwMDAwMDAxMTIwMDAwMCAweDAwMDAwMDAwMTEyMDAwMDAgIFJXRSAgICAweDAKTE9BRCAg
-ICAgICAgICAgMHgwMDAwMDAwMDIyMzYwMDAwIDB4OTAwMDAwMDBmOGUwMDAwMCAweDAwMDAwMDAw
-ZjhlMDAwMDAKICAgICAgICAgICAgICAgMHgwMDAwMDAwMDAwMGMwMDAwIDB4MDAwMDAwMDAwMDBj
-MDAwMCAgUldFICAgIDB4MApMT0FEICAgICAgICAgICAweDAwMDAwMDAwMjI0MjAwMDAgMHg5MDAw
-MDAwMGY4ZWQwMDAwIDB4MDAwMDAwMDBmOGVkMDAwMAogICAgICAgICAgICAgICAweDAwMDAwMDAw
-MDRjNzAwMDAgMHgwMDAwMDAwMDA0YzcwMDAwICBSV0UgICAgMHgwCkxPQUQgICAgICAgICAgIDB4
-MDAwMDAwMDAyNzA5MDAwMCAweDkwMDAwMDAwZmUxMDAwMDAgMHgwMDAwMDAwMGZlMTAwMDAwCiAg
-ICAgICAgICAgICAgIDB4MDAwMDAwMGY4MWYwMDAwMCAweDAwMDAwMDBmODFmMDAwMDAgIFJXRSAg
-ICAweDAKTE9BRCAgICAgICAgICAgMHgwMDAwMDAwZmE4ZjkwMDAwIDB4OTAwMDEwMDA4MDAwMDAw
-MCAweDAwMDAxMDAwODAwMDAwMDAKICAgICAgICAgICAgICAgMHgwMDAwMDAxMDAwMDAwMDAwIDB4
-MDAwMDAwMTAwMDAwMDAwMCAgUldFICAgIDB4MAo+IAo+IC0gRG8geW91IG1lYW4gdGhhdCB0aGUg
-YnVnIGFsd2F5cyBwdXRzIHRoZSB0d28gTE9BRCBzZWdtZW50cyB0aGF0IGhhdmUgCj4gdGhlIHNh
-bWUgcGh5c19zdGFydCBpbiBhIHJvdz8KWWVzLCBhcyBkZW1vbnN0cmF0ZWQgaW4gdGhlIGV4YW1w
-bGUgYWJvdmUuCgpUaGFua3MsCk1pbmcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+As a UEFI PE format kernel image becomes more popular, there is a need
+for kexec to reboot those kinds of images.
+
+After the introduction of the UKI (another PE), at present, there are
+three competitive methods to support that goal, but all of them have
+pros and cons.[1] It seems that none of them can be accepted in the near
+future.  Therefore, we are resorting to the user space kexec-tools to
+parse the UKI format for the time being.
+
+By parsing the UKI, systemd-stub is stepped around and PCM will not affect
+the boot up of the second system.
+
+[1]: https://github.com/rhkdump/kexec_uefi/blob/main/overview.md#the-competitive-solutions
+
+Cc: Simon Horman <horms@kernel.org>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>
+Cc: Philipp Rudo <prudo@redhat.com>
+Cc: Lennart Poettering <mzxreary@0pointer.de>
+
+Cc: kexec@lists.infradead.org
+
+Pingfan Liu (3):
+  kexec: Introduce default_initrd_fd to pass internal initrd information
+  kexec: Introduce UKI image parser
+  arm64: Support UKI image format
+
+ include/pe.h                         | 104 +++++++++++++++++++++++
+ kexec/Makefile                       |   1 +
+ kexec/arch/arm64/kexec-arm64.c       |   1 +
+ kexec/arch/arm64/kexec-image-arm64.c |   3 +-
+ kexec/arch/x86_64/kexec-bzImage64.c  |   3 +-
+ kexec/kexec-uki.c                    | 122 +++++++++++++++++++++++++++
+ kexec/kexec.c                        |   2 +
+ kexec/kexec.h                        |   5 ++
+ 8 files changed, 239 insertions(+), 2 deletions(-)
+ create mode 100644 include/pe.h
+ create mode 100644 kexec/kexec-uki.c
+
+-- 
+2.41.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
