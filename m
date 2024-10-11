@@ -4,53 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5496CFC618
-	for <kexec@archiver.kernel.org>; Fri, 11 Oct 2024 08:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F6B0CFD2E0
+	for <kexec@archiver.kernel.org>; Fri, 11 Oct 2024 08:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=CTcmsQ685HgQByCm+ZHSthm+DLLKj16QHmIiq+c8T90=; b=pY8aFCBjTPaCi7
-	y7hKG6YYnDNoxoq233frjDv8Psrn7nWGTRq/3H6qJCYypOcjRNvk3tSyOst6TU04ZFsuj+SsezDgA
-	8rgeyjG84GhgWJ6cW//7Tir/OBkapJM4LK78qyW8yNoVuZaaq7czbF5Hak9XJseFiHxOzyWJWcLqW
-	NIRKDPtCfuwEpV8dCN5zJAazxdsoTWxdPQsRTJs8czPA0QB/cTGO5KfGUNipbfMehX5P+8FZq3X0T
-	jrHwJZd60SZwxm8q8bly85fJvBRaHMJw06dbqs2ywhCzMb8Tm5Kk+j3VnSlUPIwKimC3T3UVXCeL0
-	sse/eq4fjYzI53/eekiA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=Died9nHE3n23EzYwzlzCl4acU4hCg8gVjIJ5Y4CiMMs=; b=tlsid7mQfG49Lg
+	T0TndTid1CeTvaxHnmApdE0pGch2NwfozijJnt/HXH9QAg/rMMM/paY02LajwwXrM/ShxouPn4ujO
+	rhd4TdrAmCpE9CaQs7ZdpEkuWjjLrcN1ECMpxSm66LQDr0wCKw6SqkWzO2b3yg5pS137gl3uQgcNg
+	+CWbhtJIwhEYLlPJNa1iAaQCTgFKAY91oV+vG2illTS6D1frYOx5i0kHHI5yfabArhp1TftlVjcnj
+	pzFJvIaC3vnjAn1xjE2M1HBotAvrVlvfFhPdyHsDieqsV7BuwwEHl17KUAg8uBtp3hAiB6OcoWHUJ
+	av77q5GxtdHPj9ms4NBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1szAkK-0000000FeaG-0ZE8;
-	Fri, 11 Oct 2024 08:11:36 +0000
-Received: from mail.originatepro.pl ([162.19.155.125])
+	id 1szBGq-0000000Firi-1quN;
+	Fri, 11 Oct 2024 08:45:12 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1szAkF-0000000FeYG-3Ifv
+	id 1szBFr-0000000FiUr-33ax
 	for kexec@lists.infradead.org;
-	Fri, 11 Oct 2024 08:11:34 +0000
-Received: by mail.OriginatePro.pl (Postfix, from userid 1002)
-	id B42EC27A4A; Fri, 11 Oct 2024 10:01:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=OriginatePro.pl;
-	s=mail; t=1728633755;
-	bh=HDodNtmiQ0oQNph7sp+h4NRbkxw8d1NmRLmJ4HyiCoQ=;
-	h=Date:From:To:Subject:From;
-	b=MBVUn1Jz0LK/ZMGdVj5pyJASeBvpxCAER9FmLR3m9nctS2MeKz6Z0BOBpyo0d5rrQ
-	 7ezsUFI8UJiv6tSd4fFJRjQ8tdb0usbFWiyTDpEyNEHCwZiuWWpCarq0QW8hmcSVZp
-	 HcEiHXg1OkRFntVoZHpPp3+MTNQAoggYzoGTvVEbDxB3Iw1nyXXTWZhkCswsIl3czN
-	 LnHvMo+ZmGfkc9q30RPajhXUh3cPohGA0S+4p/wxqwFS7CGHUOx+RGB+NwrqvfB+Je
-	 6mQzZw3xtTVL6DFTDTkKazqk5lwMBukgjoL8NQd/IJT/zV0fLmWJ07rB40x9qgczV1
-	 +JDXW0NAN4Zjg==
-Received: by mail.OriginatePro.pl for <kexec@lists.infradead.org>; Fri, 11 Oct 2024 08:01:19 GMT
-Message-ID: <20241011084500-0.1.ek.2dzj2.0.ylagkgkrte@OriginatePro.pl>
-Date: Fri, 11 Oct 2024 08:01:19 GMT
-From: "Marcin Wojciechowski" <marcin.wojciechowski@originatepro.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?Zam=C3=B3wienie_?=
-X-Mailer: mail.OriginatePro.pl
+	Fri, 11 Oct 2024 08:44:13 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 17FD5A45227;
+	Fri, 11 Oct 2024 08:44:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4860C4CEC3;
+	Fri, 11 Oct 2024 08:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728636250;
+	bh=NX1Qexf6vfsbVvbEuZ2b9TVNhqODkwQOR3tP+f2t4sU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nIRbq6joBIPkus2l3VO7l9rO9J874Df8N2Vw+j3pdVvWRB9Dgq16lqjvH1//g/X6n
+	 kP/95doGRwcVYwJcyYV3gX6fpa2gXP7vqOuZ738Tkubc3NBK744NxoCozBTulcrHmm
+	 XGKRH5bFMMSbLKWxTGtXxXM19i42cJWYTDok/Qd+2FTWDox6JXG6DqW4dXPgNgeonq
+	 FIYKLsVFPhunnqjAxtoo2wVZVILZQbbvc/okqRpRpMeyYm0TL5ufVU3whlxkwQiLdQ
+	 g57/jpDz/w3rrMVToWbrO6Me4fUC5sHzYxNb2aUPNdy3vep44b/FzJ/a8awTP4R1Sy
+	 ioowdpFsZV11A==
+Date: Fri, 11 Oct 2024 09:44:06 +0100
+From: Simon Horman <horms@kernel.org>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Philipp Rudo <prudo@redhat.com>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH 2/3] kexec: Introduce UKI image parser
+Message-ID: <20241011084406.GB66815@kernel.org>
+References: <20241008115408.21944-1-piliu@redhat.com>
+ <20241008115408.21944-3-piliu@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20241008115408.21944-3-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241011_011132_524081_BA3F4F95 
-X-CRM114-Status: UNSURE (   0.12  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20241011_014411_859970_34593ABC 
+X-CRM114-Status: GOOD (  16.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -62,24 +71,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-V2l0YW0sCgpDenkgcG90cnplYnVqxIUgUGHFhHN0d28gYWt0dWFsbmllIG5vd3ljaCBrbGllbnTD
-s3cgQjJCPwoKT2QgMTAgbGF0IHBvbWFnYW15IHBvenlza2l3YcSHIG5vd3ljaCBwYXJ0bmVyw7N3
-IGJpem5lc293eWNoIHcgUG9sc2NlIG9yYXogemEgZ3JhbmljxIUuCgpQb25hZCAzMDAwIHpyZWFs
-aXpvd2FueWNoIHByb2pla3TDs3cgemFyw7N3bm8gZGxhIG5handpxJlrc3p5Y2ggZ2xvYmFsbnlj
-aCBrb3Jwb3JhY2ppLCBwb2xza2ljaCBzcMOzxYJlayBnaWXFgmRvd3ljaCBjenkgdGXFvCBuaWV3
-aWVsa2ljaCBkemlhxYJhbG5vxZtjaSBnb3Nwb2RhcmN6eWNoIHNwcmF3aWEsIMW8ZSBqZXN0ZcWb
-bXkgamVkbnltIHogbGlkZXLDs3cgYnJhbsW8eS4KClogd2llbG9tYSBmaXJtYW1pIHdzcMOzxYJw
-cmFjdWplbXkgbmllcHJ6ZXJ3YW5pZSBvZCB3aWVsdSBsYXQsIGdlbmVydWrEhWMgc3RvcHkgendy
-b3TDs3cgc2nEmWdhasSFY2UgdHlzacSZY3kgcHVua3TDs3cgcHJvY2VudG93eWNoLCBwb21hZ2Fq
-xIVjIGplZG5vY3plxZtuaWUgdyBzcG9zw7NiIHBvd3RhcnphbG55IG9yYXogcG9saWN6YWxueSBw
-b3N6ZXJ6YcSHIHBvcnRmZWxlIGtsaWVudMOzdyBiaXpuZXNvd3ljaC4KCkplxZtsaSBtYWrEhSBQ
-YcWEc3R3byBwcnplc3RyemXFhCBuYSBvYnPFgnVnxJkgbm93eWNoIGtsaWVudMOzdywgemFwcmFz
-emFtIGRvIGtvbnRha3R1IHp3cm90bmVnby4gIAoKClBvemRyYXdpYW0KTWFyY2luIFdvamNpZWNo
-b3dza2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Tue, Oct 08, 2024 at 07:54:02PM +0800, Pingfan Liu wrote:
+> A UKI image is a PE file that consists of several sections, typically
+> including: .text, .data, .linux, .initrd, .cmdline, and others.
+> 
+> The kernel image is stored in the .linux section, which is one of the
+> formats currently recognized by kexec-tools. Therefore, the UKI parser
+> can be used to strip away the UKI layer, allowing the other parser to
+> process the kernel image.
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: kexec@lists.infradead.org
+> ---
+>  include/pe.h      | 104 +++++++++++++++++++++++++++++++++++++++
+>  kexec/Makefile    |   1 +
+>  kexec/kexec-uki.c | 122 ++++++++++++++++++++++++++++++++++++++++++++++
+>  kexec/kexec.h     |   4 ++
+>  4 files changed, 231 insertions(+)
+>  create mode 100644 include/pe.h
+>  create mode 100644 kexec/kexec-uki.c
+
+Hi Pingfan Liu,
+
+I think you need to squash the following into this patch
+so that pe.h is included in distribution tarballs.
+
+You should be able to see the problem by running: make distcheck.
+
+diff --git a/include/Makefile b/include/Makefile
+index cd88a26b1476..6a3e8541c36d 100644
+--- a/include/Makefile
++++ b/include/Makefile
+@@ -8,6 +8,7 @@ dist += include/Makefile		\
+ 	include/x86/mb_header.h		\
+ 	include/x86/multiboot2.h	\
+ 	include/elf.h			\
++	include/pe.h			\
+ 	include/image.h			\
+ 	include/unused.h		\
+ 	include/boot/linuxbios_tables.h	\
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
