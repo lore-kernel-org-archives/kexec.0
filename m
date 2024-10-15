@@ -4,61 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11ADECFC28A
-	for <kexec@archiver.kernel.org>; Tue, 15 Oct 2024 11:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 784D4D216A3
+	for <kexec@archiver.kernel.org>; Tue, 15 Oct 2024 13:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=REytIl+RONTk+eiSOQccvGXxHOIgA4ffG0JfUyYnarA=; b=YXq5HN3uLTGwYE
-	ajU0Sf1TD89tpQUSxmHnRA0pZYbYbhdt0rr7tXDp3bP26RSMvKG+X2wnOwdK8Hr5TNLdALiSu0Ojp
-	qgq1hGo21ARAVutvvynD/gmWA6o2DSNYoZvRNMW/cm6QyqCi1eE28hbCggwVpDADLxW1o8O778KfG
-	zF0QbRm8CYMlZGMtoUwQ3/gfQxDLELEjfRDJVcYnUlgz5epYEzlcjRZuuH7YCorl+3t10+EZuP+TL
-	bOswqYwa2BhwEI4N8PN8d/76Rxa96zaXgV1m8gbcXG7/NlbBholt+qvaDME9mEPIGpAkfoy/JHSTY
-	0RcBl4z+tZP+NMxFvlVQ==;
+	List-Owner; bh=ydOyTWtfBFBeHZZZy2ljeqV3STE9YL9bLt3lqj3gMkQ=; b=jpw1fMxpNhEoCw
+	ddOY3XMqUjcSczAyitWbp/9xLqPYNtUUhKiHWYiAlEgWGRAHeRMt0IW6yPby3t0fNGSv9lWQ5kX0e
+	PgZkooTXu/FrlV2/wKS/ZRz2SS/IJNwmlzOwLCi3gHgq7VV8G5DzYXTFYshRFQC+Nssi2ntMqaP1T
+	oju6H9+2D8TGor7UxQVNumaqMVaYe2OSShljegSNGkAkI0ZrZ06i1y7ymSwrRSgSN/JbL4NYIRzhx
+	QphOGdUrhyF/cbu4kcnst9Yv2zx+6RprbHwWTZIp8Zx4/X/iSNGYfXGwSLa2X2IwNlCmpViX904g1
+	y+4xbn+8PR79JJ8s7P+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0fbe-00000007zlj-3dNu;
-	Tue, 15 Oct 2024 11:20:50 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0fV3-00000007ylf-076n;
-	Tue, 15 Oct 2024 11:14:02 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 011011007;
-	Tue, 15 Oct 2024 04:14:30 -0700 (PDT)
-Received: from [10.57.86.207] (unknown [10.57.86.207])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94A2A3F51B;
-	Tue, 15 Oct 2024 04:13:57 -0700 (PDT)
-Message-ID: <2e561511-ab20-4aa9-9b92-bd6ac6678087@arm.com>
-Date: Tue, 15 Oct 2024 12:13:55 +0100
+	id 1t0haW-00000008Lg2-2KPf;
+	Tue, 15 Oct 2024 13:27:48 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0hZ8-00000008LV0-0DeS
+	for kexec@bombadil.infradead.org;
+	Tue, 15 Oct 2024 13:26:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+rlyZbbmuXKpzki+hm0O/GKWF2xV1b5/9C3CwWaeRfg=; b=VGZnZQZFjv/mBPoNzSDEh9qHjK
+	H6rO2bB+dVrmShIsh4YKCwRa8ZqyBfP4uSLfZgxTnLX3MhhFyNF1hMpgIaYcmxvarKss9AqVUiOoT
+	DywHOYsp+wuRlfXrThamghoS+bZrwyoPJJGfaMweCLtwbgBpBbF+2Zx4Fy0PhtW807/7RH5vsgsoo
+	ToK3emKzVCC0As7L9ydihvbeSaqKqRaMkfaiXo1lqToTgPBRg3a9jaSG+El3JGY5oZVNO4MXCV14d
+	JVgare5EvEhpRe+Xjl/i8smOVJayZN2GLlxcHCwJzFL0l2Weu4IyvTzxT0lIPNOTnhBphe07z/zCN
+	0OqeKS7g==;
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0hZ4-00000006ZeF-2WhM
+	for kexec@lists.infradead.org;
+	Tue, 15 Oct 2024 13:26:20 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id D67FCA4191C;
+	Tue, 15 Oct 2024 13:26:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC786C4CEC6;
+	Tue, 15 Oct 2024 13:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728998774;
+	bh=1s6PuggFG+x9InYwshnxVpcwJbt9KQq7Ef+sMZ3tcME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TrhVlDFY1AMgCLzdY26FwT3rIVDTLAr1oxC3t5pJcmr3YjJR7sadYeukfLMiTyj5L
+	 w6VqgZ0NC5BzewXxJq0qiSzVGQprETEx5vO6hbh/YS0Mw2xV5+0amDSr34tnLbsArU
+	 4D5iFy6wExeZ0ESYMlh+ssng+6hjyoyni/t1P1doxlkkDBkp6c1Abxnd8oJLCSwKk4
+	 ojOjcO1z6DbEfV+haqkYr9Ib1h52NIsvo6qGHF2wPsEzT02uT32shpseVkt4hb4Vt5
+	 cJYp3FReaNqAHuN3rXjSpsHmxRCExNd3phNNmSLnuH4ig1d9Izman1p3KX35oBdD0g
+	 mWiXh8/Qd/Prw==
+Date: Tue, 15 Oct 2024 14:26:10 +0100
+From: Simon Horman <horms@kernel.org>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Philipp Rudo <prudo@redhat.com>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH 2/3] kexec: Introduce UKI image parser
+Message-ID: <20241015132610.GA2162@kernel.org>
+References: <20241008115408.21944-1-piliu@redhat.com>
+ <20241008115408.21944-3-piliu@redhat.com>
+ <20241011084406.GB66815@kernel.org>
+ <CAF+s44QMLaQLmm6cst+o2Ssgi2v-SBXcw3hE1kKTFnL7DmoLFg@mail.gmail.com>
+ <CAF+s44QRNpBrRuJsuVwvZduHTLhEFTtUz3fU5=4YNAn8sbBccw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 19/57] crash: Remove PAGE_SIZE compile-time
- constant assumption
-Content-Language: en-GB
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- David Hildenbrand <david@redhat.com>, Greg Marsden
- <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
- Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, Will Deacon <will@kernel.org>,
- kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20241014105514.3206191-1-ryan.roberts@arm.com>
- <20241014105912.3207374-1-ryan.roberts@arm.com>
- <20241014105912.3207374-19-ryan.roberts@arm.com>
- <Zw3luHGG3LqHge2m@MiWiFi-R3L-srv>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <Zw3luHGG3LqHge2m@MiWiFi-R3L-srv>
+Content-Disposition: inline
+In-Reply-To: <CAF+s44QRNpBrRuJsuVwvZduHTLhEFTtUz3fU5=4YNAn8sbBccw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241015_041401_176178_EDE970A0 
-X-CRM114-Status: GOOD (  20.04  )
+X-CRM114-CacheID: sfid-20241015_142618_823998_1564A628 
+X-CRM114-Status: UNSURE (   9.18  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,66 +95,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 15/10/2024 04:47, Baoquan He wrote:
-> On 10/14/24 at 11:58am, Ryan Roberts wrote:
->> To prepare for supporting boot-time page size selection, refactor code
->> to remove assumptions about PAGE_SIZE being compile-time constant. Code
->> intended to be equivalent when compile-time page size is active.
->>
->> Updated BUILD_BUG_ON() to test against limit.
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>
->> ***NOTE***
->> Any confused maintainers may want to read the cover note here for context:
->> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
->>
->>  kernel/crash_core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 63cf89393c6eb..978c600a47ac8 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -465,7 +465,7 @@ static int __init crash_notes_memory_init(void)
->>  	 * Break compile if size is bigger than PAGE_SIZE since crash_notes
->>  	 * definitely will be in 2 pages with that.
->>  	 */
->> -	BUILD_BUG_ON(size > PAGE_SIZE);
->> +	BUILD_BUG_ON(size > PAGE_SIZE_MIN);
+On Mon, Oct 14, 2024 at 10:43:34AM +0800, Pingfan Liu wrote:
+> Hello everyone,
 > 
-> This should be OK. While one thing which could happen is if selected size
-> is 64K, PAGE_SIZE_MIN is 4K, it will issue a false-positive warning when
-> compiling while actual it's not a problem during running. 
-
-PAGE_SIZE can only ever be bigger than PAGE_SIZE_MIN if compiling a "boot-time
-page size" build. And in this case, you need to know that size is small enough
-to work with any of the boot-time selectable page sizes. Since size
-(=sizeof(note_buf_t)) is invariant to PAGE_SIZE, we can do this by checking
-against PAGE_SIZE_MIN.
-
-So I don't think this could ever lead to a false-positive.
-
-
-Not sure if
-> that could happen on arm64. Anyway, we can check the crash_notes to get
-> why it's so big when it really happens. So,
+> I have created V2 and make a PR: https://github.com/horms/kexec-tools/pull/9
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>
+> Due to utilizing the workflow in github to have some basic checks
+> automatically , I migrated it to github instead of mailing-list.
+> 
+> Please share your opinions.
+
+I appreciate you making use of GitHub,
+but please post patch submissions using the email workflow.
 
 Thanks!
-
-> 
->>  
->>  	crash_notes = __alloc_percpu(size, align);
->>  	if (!crash_notes) {
->> -- 
->> 2.43.0
->>
->>
-> 
-
 
 _______________________________________________
 kexec mailing list
