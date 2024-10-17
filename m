@@ -4,87 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 216F0D1AD4A
-	for <kexec@archiver.kernel.org>; Wed, 16 Oct 2024 11:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B43ADD2F7ED
+	for <kexec@archiver.kernel.org>; Thu, 17 Oct 2024 04:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6VZ94m83/xugqbLvC31WPcSj5Px6FcT1qYYISM/sUJs=; b=ITgVlJIMVlJrbx
-	zCVAXsua0jF5Te/YpyZuI4rq6KbVVYerWxZoexUGl4lnO0NEmA+ezbI+ORHSYP5QBttZt8y72/rUY
-	INb9KMzPm/1egAlBsucIIZ59glfvt5a+jxi8qIxNe6wM1tRbGo4O4lo+gsJYw0Mkz3VDStcfQgpoF
-	0dychiieEQ4KkMATsHd7+8XYk8wztX9E1mV5sbQmPYuszArBiIYzhrrNUcaCmYYznVwP7u5uMMrZm
-	0QXU05EgnniGRibiYgV7EkUknvjffnf7ppaJazOlCXXY/wBqmzTRqr6ZpeyvivUBEow4QXosZk8A5
-	slVZVX9mnMwvpfhSYIuA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=g9C+gZvRCqmVdxohbquupL1jqQCJ43xEUQtRh6n1pGQ=; b=z60V3JX4pG7HXd
+	PCp+/CTwoocPpIyxs7iclMUBIoVLPE/MgIe2ZNGXd22ZpcXm7u+dM9WaOiblAc4aNb+hNeV4EMA3C
+	xFWiG+w72QgugpEOFhHMBXQ6R+C7A1sqF+pM8YshybIJKg2BE2nhBR9tcAbB62TZyFRGvfkAe+DM8
+	Otmjsd1BWoejnEADIHdcXfFsrSePYTxLa/9jEvgHLnpfqk/wZThbEmsmZ1X2snf45mDbKYLgoCLv6
+	oLCeopO3tRoNNkDdrH3xVMSdR37KbB8y1wN7lC3n2HF4uvrf4A/wgcogWEK3x1kDHj+52m6Ero5RX
+	+VIvSho1/xEnfeyavjhQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t12Ly-0000000Bbfl-2tNm;
-	Wed, 16 Oct 2024 11:38:10 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1t1IKx-0000000Djck-1AuZ;
+	Thu, 17 Oct 2024 04:42:11 +0000
+Received: from mail-pl1-x62c.google.com ([2607:f8b0:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t12Lv-0000000Bbek-32lS
+	id 1t1IKu-0000000Djc0-09tL
 	for kexec@lists.infradead.org;
-	Wed, 16 Oct 2024 11:38:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729078686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JF+eTlcyLvbiORgpfj4z63y0NrWPM0D2UwJwXqsYRK0=;
-	b=gBDolMi1l0Ypgrf2Qys8Z6DgywlW+baEkNqMf3989von0BDwwbijKmaQMvFy3gTbcRgQIB
-	LCS+ACa5P087QjXVAR37kKw4wnB1fiwbZLkNaN5nLna5GSzNv88VYru/A+d+k/HvZNXW+t
-	kUBTVYkcAe/iHEa1nH6pckyQ+GGx4a0=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-GaZR5troO3KSw4Xdcp0p-Q-1; Wed, 16 Oct 2024 07:38:05 -0400
-X-MC-Unique: GaZR5troO3KSw4Xdcp0p-Q-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6cbe4fc0aa7so159936736d6.0
-        for <kexec@lists.infradead.org>; Wed, 16 Oct 2024 04:38:05 -0700 (PDT)
+	Thu, 17 Oct 2024 04:42:09 +0000
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-20ca03687fdso105995ad.0
+        for <kexec@lists.infradead.org>; Wed, 16 Oct 2024 21:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729140127; x=1729744927; darn=lists.infradead.org;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SxwDXIKxjXP21FdsmXkLH79jYy6JTiroXLnGAM677n8=;
+        b=PDCG3hRfscHwj0tHB7xqHwF6sRIYmEOjAE1w2JC860whSJJwjH+gMoT3RAQ8/boTQk
+         kxC/vTZZxFbOyWZ2TAEmnaGOyTt5wpqSR5UUEi54vfi1LfTtS9TO4IOqZL7xoQ/rlXCH
+         r6/+5hOIJXFmD8JKdWF+16lgkwnOgfFsG+SntZyEpvT227dvak8wB86uxohtxPuchbTF
+         LPrBbCOmks8bQJRKMVb/fy/iqFMj2qhqbd0oymGM3eRdbOvqhcrLsqiq2SWNKoiwoF7v
+         CVaWXB7fcT82oAipvtZMSjqAZEEGScusCCx4+80g06eDRyE0e1SPMnl98LR4f6sIwacS
+         MEMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729078685; x=1729683485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JF+eTlcyLvbiORgpfj4z63y0NrWPM0D2UwJwXqsYRK0=;
-        b=YGrsxQDGKD0X7MTx6q2AeAL+plxGbRb5U4lvKDg7Iw+CtkpEcK8V731VvTF53ahS1g
-         gZvjidmYbP0A8p0swJs0G9QVgScBVy6vv6APvIwQAeqe9v1Rfz4LLkvW+ki16ZABJAS3
-         5gwTUocStSODH8uVGwHtc3xRbCeZIG8llAKXifzSB78rkRWL8OPgJHaxcAUSrJMH+vlu
-         qrjUt7+a01jVPsuKsxcPYhB3NeQGcpfT2zwWlTOuJ56gF89anDas+Q4ajF5RoXkVl3KK
-         SFANs8tQRB0KxlsgkM456qZxmks+ghOz/1les2ww7KIR58iehty2udpAJ38rE7U98Qth
-         KvJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTAn+0NUWI/O9q0NnPugSuu2dh1MYShpU+gQwRhKzVsedSc7bg8cfKmLARsi24JEDQoKBn5A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwvjEWnG0iO0tPbC5N9ZxivN6Ss4hj9zj205H51UY2f0W9XmcLM
-	iieIUSlw8GF/i6TpthjUVyavu4oex4NY7CNAOJ63We0Z8sm6ICiklnZqlX+P2CmbhLsVHuADuIu
-	UcUbNUgj72eItDbnh0xU7ypC8elYaWg0JzJq5T2C5c71A++hLl/aVIv/RHpt2IJW26oxSyGa7ff
-	4fvFe0ANSXEJGEz65EYSAZJB8zmMOUJJGH
-X-Received: by 2002:a05:6214:568b:b0:6cb:e770:f50b with SMTP id 6a1803df08f44-6cbf9e76302mr205594126d6.33.1729078684948;
-        Wed, 16 Oct 2024 04:38:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHoTl5BmyJt+oy/WMk/6HWSOvYllCORgVjiXW6saChSXDLQ2ZSU5piVCnAbv4H6IbcUBSR2TOM737092lru0lU=
-X-Received: by 2002:a05:6214:568b:b0:6cb:e770:f50b with SMTP id
- 6a1803df08f44-6cbf9e76302mr205593936d6.33.1729078684711; Wed, 16 Oct 2024
- 04:38:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729140127; x=1729744927;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SxwDXIKxjXP21FdsmXkLH79jYy6JTiroXLnGAM677n8=;
+        b=Wl7vLOQ5bRhtHvW1wefvRtBB29PW13gvJpMrtLwYGjzyOzTSpqlnFDdogS0R+DiZVf
+         KeRwxZncn2PmjNOdYIFiGNKR2Av8p+caELPhM7YXZ/9yz6+77yVh43TLUTO8tcNYxNJs
+         sRSyJOHVhptNKR2gkJcg48glzRBrS/aPP6FQgtBbOq/3hFpDSpZJprqRcHKSgNXJV3vD
+         wj8dF5AJGUQV8koHe+szdKYvX3ofRjj5jLH1H+/8x0K7/VfKjfxwP5TVRXLiF84T9lFs
+         t9W0Q6ipCITG9CQuPqHMFhTxtLE9yrY/1Mmxu2DTNLDM/sHEwt0ea+Q3BTHn4mQ7T/2f
+         +SNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUBsi6sCEKM9iHajNw8wUTWp7/QwAGEBsgWiF5w2gYQuYevV+CvEL8JO/MQ4oSjuD15TtNaw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxNsVqKglv1O1z7zJaJSCIZ/CaRCRM1PznWCTZ77xwzWi14ruX6
+	BNH5RCs70lk2VCAvbFaHlP4YHk/klsXy4FnXIJm1PKamW1CjgaV1LRJt9Axeog==
+X-Google-Smtp-Source: AGHT+IGRlbQ6kzPJ28NkEONzWnblgHBvnulYQfVkCGoqmNaYRFSvxEl8c3XOA+M6/Wu7YgwzqX7aVw==
+X-Received: by 2002:a17:902:f542:b0:20c:f87f:b7ef with SMTP id d9443c01a7336-20d49640d27mr1707435ad.22.1729140126312;
+        Wed, 16 Oct 2024 21:42:06 -0700 (PDT)
+Received: from [2620:0:1008:15:2231:4da8:e0e:5534] ([2620:0:1008:15:2231:4da8:e0e:5534])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e774a29f6sm4020888b3a.140.2024.10.16.21.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 21:42:05 -0700 (PDT)
+Date: Wed, 16 Oct 2024 21:42:04 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: James Gowans <jgowans@amazon.com>, Dave Hansen <dave.hansen@intel.com>, 
+    David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
+    Mike Rapoport <mike.rapoport@gmail.com>, 
+    Pasha Tatashin <tatashin@google.com>, Peter Xu <peterx@redhat.com>, 
+    Alexander Graf <graf@amazon.com>, Ashish Kalra <ashish.kalra@amd.com>, 
+    Tom Lendacky <thomas.lendacky@amd.com>, 
+    David Woodhouse <dwmw@amazon.co.uk>, 
+    Anthony Yznaga <anthony.yznaga@oracle.com>, 
+    Jason Gunthorpe <jgg@nvidia.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Frank van der Linden <fvdl@google.com>, Vipin Sharma <vipinsh@google.com>, 
+    David Matlack <dmatlack@google.com>, 
+    Steve Rutherford <srutherford@google.com>, 
+    Erdem Aktas <erdemaktas@google.com>, Alper Gun <alpergun@google.com>, 
+    Vishal Annapurve <vannapurve@google.com>, 
+    Ackerley Tng <ackerleytng@google.com>, Sagi Shahar <sagis@google.com>
+cc: linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: Pmemfs/guestmemfs discussion recap and open questions
+Message-ID: <f44f317a-2dcb-cfe2-013c-7508907ce3df@google.com>
 MIME-Version: 1.0
-References: <20241008115408.21944-1-piliu@redhat.com> <20241008115408.21944-3-piliu@redhat.com>
- <20241011084406.GB66815@kernel.org> <CAF+s44QMLaQLmm6cst+o2Ssgi2v-SBXcw3hE1kKTFnL7DmoLFg@mail.gmail.com>
- <CAF+s44QRNpBrRuJsuVwvZduHTLhEFTtUz3fU5=4YNAn8sbBccw@mail.gmail.com> <20241015132610.GA2162@kernel.org>
-In-Reply-To: <20241015132610.GA2162@kernel.org>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Wed, 16 Oct 2024 19:37:53 +0800
-Message-ID: <CAF+s44SihJFWqe94fe33dNUgc0PiH_JOUvuxEpLiMWimV6cK5A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kexec: Introduce UKI image parser
-To: Simon Horman <horms@kernel.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
-	Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>, Jan Hendrik Farr <kernel@jfarr.cc>, 
-	Philipp Rudo <prudo@redhat.com>, Lennart Poettering <mzxreary@0pointer.de>, kexec@lists.infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241016_043807_853200_1F1E24BB 
-X-CRM114-Status: GOOD (  12.63  )
+X-CRM114-CacheID: sfid-20241016_214208_103903_87E5C318 
+X-CRM114-Status: GOOD (  30.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,23 +97,150 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVHVlLCBPY3QgMTUsIDIwMjQgYXQgOToyNuKAr1BNIFNpbW9uIEhvcm1hbiA8aG9ybXNAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cj4KPiBPbiBNb24sIE9jdCAxNCwgMjAyNCBhdCAxMDo0MzozNEFNICsw
-ODAwLCBQaW5nZmFuIExpdSB3cm90ZToKPiA+IEhlbGxvIGV2ZXJ5b25lLAo+ID4KPiA+IEkgaGF2
-ZSBjcmVhdGVkIFYyIGFuZCBtYWtlIGEgUFI6IGh0dHBzOi8vZ2l0aHViLmNvbS9ob3Jtcy9rZXhl
-Yy10b29scy9wdWxsLzkKPiA+Cj4gPiBEdWUgdG8gdXRpbGl6aW5nIHRoZSB3b3JrZmxvdyBpbiBn
-aXRodWIgdG8gaGF2ZSBzb21lIGJhc2ljIGNoZWNrcwo+ID4gYXV0b21hdGljYWxseSAsIEkgbWln
-cmF0ZWQgaXQgdG8gZ2l0aHViIGluc3RlYWQgb2YgbWFpbGluZy1saXN0Lgo+ID4KPiA+IFBsZWFz
-ZSBzaGFyZSB5b3VyIG9waW5pb25zLgo+Cj4gSSBhcHByZWNpYXRlIHlvdSBtYWtpbmcgdXNlIG9m
-IEdpdEh1YiwKPiBidXQgcGxlYXNlIHBvc3QgcGF0Y2ggc3VibWlzc2lvbnMgdXNpbmcgdGhlIGVt
-YWlsIHdvcmtmbG93Lgo+CgpTZWUsIEkgd2lsbCB1c2UgLmdpdGh1Yi93b3JrZmxvd3MgdG8gY2hl
-Y2sgYW55IGJ1aWxkIGlzc3VlIGFuZCBnbwp0aHJvdWdoIHRoZSBlbWFpbCB3b3JrZmxvdy4KCkkg
-aGF2ZSBwb3N0ZWQgVjIgdXNpbmcgdGhlIG1haWxpbmcgbGlzdC4KClRoYW5rcywKClBpbmdmYW4K
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi all,
+
+We had a very interesting discussion today led by James Gowans in the
+Linux MM Alignment Session, thank you James!  And thanks to everybody who
+attended and provided great questions, suggestions, and feedback.
+
+Guestmemfs[*] is proposed to provide an in-memory persistent filesystem
+primarily aimed at Kexec Hand-Over (KHO) use cases: 1GB allocations, no
+struct pages, unmapped from the kernel direct map.  The memory for this
+filesystem is set aside by the memblock allocator as defined by the
+kernel command line (like guestmemfs=900G on a 1TB system).
+
+
+----->o-----
+Feedback from David Hildenbrand was that we may want to leverge HVO
+to get struct page savings and the alignment was to define this as
+part of the filesystem configuration: do you want all struct pages to
+be gone and memory unmapped from the kernel direct map, or in the
+kernel direct map with tail pages freed for I/O?  You get to choose!
+
+
+----->o-----
+It was noted that the premise for guestmemfs sounded very similar to
+guest_memfd, a filesystem that would index non-anonymous guest_memfds;
+indeed, this is not dissimilar to persistent guest_memfd.  The new
+kernel would need to present the fds to userspace so they can
+be used once again, so a filesystem abstraction may make sense.  We
+may also want to use uid and gid permissions.
+
+It's highly desirable for the kernel to share the same infrastructure and 
+source code, like struct page optimizations and unmapping from the kernel 
+direct map, and name the guest_memfd.  We'd want to avoid duplicating 
+this, but it's still questionable how this would be glued together.
+
+David Hildenbrand brought up the idea of a persistent filesystem that
+even databases could use that may not be guest_memfd.  Persistent
+filesystems do exist, but lack the 1GB memory allocation requirement; if
+we were to support databases or other workloads that want to persist
+memory across kexec, this instead would become a new optimized filesystem 
+for generic use cases that require persistence.  Mike Rapoport noted that 
+tying the ability to persist memory across kexec to only guests would 
+preclude this without major changes.
+
+Frank van der Linden noted the abstraction between guest_memfd and
+guestmemfs doesn't mesh very well and we may want to do this at the
+allocator level instead: basically a factory that gives you exactly what
+you want -- memory unmapped from the kernel direct map, with HVO instead,
+etc.
+
+Jason Gunthorpe noted there's a desire to add iommufd connections to
+guest_memfd and that would have to be duplicated for guestmemfs.  KVM has
+special connections to it, ioctls, etc.  So likely a whole new API
+surface is coming around guest_memfd that guestmemfs will want to re-use.
+
+To support this, it was also noted that guest_memfd is largely used for
+confidential computing and pKVM today, and confidential computing is a
+requirement for cloud providers: they need to expose guest_memfd style 
+interface for such VMs as well.
+
+Jason suggested that when you create a file on the filesystem, you tell
+it exactly what you want: unmapped memory, guest_memfd semantics, or just
+a plain file.  James expanded on this by brainstorming an API for such
+use cases and backed by this new kind of allocator to provide exactly
+what you need.
+
+
+----->o-----
+James also noted some users are interested in smaller regions of memory
+that aren't preallocated, like tmpfs, so there is interest in "persistent
+tmpfs," including dynamic sizing.  This may be tricky because tmpfs uses 
+page cache.  In this case, the preallocation would not be needed.  Mike 
+Rapoport noted the same is the case for memory mapped into the kernel 
+direct map which is not required for persistence (including if you want to 
+do I/O).
+
+The tricky part of this is to determine what should and should not be
+solved with the same solution.  Is it acceptable to have something like
+guestmemfs which is very specific to cloud providers running VMs in most
+of their host memory?
+
+Matthew Wilcox noted there perhaps are ways to support persistence in
+tmpfs, such as with swap, for this other use case, James noted this could
+be used for things like systemd information that people have brought up
+for containerization.  He indicated we should ensure KHO can mark tmpfs
+pages to be persistent.  We'd need to follow up with Alex.
+
+
+----->o-----
+Pasha Tatashin asked about NUMA support with the current guestmemfs
+proposal.  James noted this would be an essential requirement.  When
+specifying the kernel command line with guestmemfs=, we could specify
+the lengths required from each NUMA node.  This would result in per-node
+mount points.
+
+
+----->o-----
+Peter Xu asked if IOMMU page tables could be stored on the guestmemfs
+themselves to preserve across kexec.  James noted previous solutions for
+this existed, but were tricky because of filesystem ordering at boot.  
+This led to the conclusion that if we want persistent devices, then we 
+need persistent memory as well; only files from guestmemfs that are known 
+to be persistent can be mapped into a persistent VMA domain.  In the case 
+of IOMMU page tables, the IOMMU driver needs to tell KHO that they must be
+persisted.
+
+
+----->o-----
+My takeaway: based on the feedback that was provided in the discussion:
+
+ - we need an allocator abstraction for persistent memory that can return
+   memory with various characteristics: 1GB or not, kernel direct map or
+   not, HVO or not, etc.
+
+ - built on top of that, we need the ability to carve out very large
+   ranges of memory (cloud provider use case) with NUMA awareness on the
+   kernel command line
+
+ - we also need the ability to be able to dynamically resize this or
+   provide hints at allocation time that memory must be persisted across
+   kexec to support the non-cloud provider use case
+
+ - we need a filesystem abstraction that map memory of the type that is
+   requested, including guest_memfd and then deal with all the fun of
+   multitenancy since it would be drawing from a finite per-NUMA node
+   pool of persistent memory
+
+ - absolutely critical to this discussion is defining what is the core
+   infrastructure that is required for a generally acceptable solution
+   and then what builds off of that to be more special cased (like the
+   cloud provider use case or persistent tmpfs use case)
+
+We're looking to continue that discussion here and then come together 
+again in a few weeks.
+
+Thanks!
+
+[*] https://lore.kernel.org/kvm/20240805093245.889357-1-jgowans@amazon.com/
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
