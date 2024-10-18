@@ -4,97 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA47BD3C53F
-	for <kexec@archiver.kernel.org>; Fri, 18 Oct 2024 01:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08AF9D3C542
+	for <kexec@archiver.kernel.org>; Fri, 18 Oct 2024 02:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/+e0T8s9D+ACS8lBwf8DYuRcnFnID2Nnc6aiRn1Bfrs=; b=K49fLJmLNOkQ2lVc0WeN0ovzKK
-	fwWWhA0Vlq/jy1KkDQttL2h28Y9d8RkyD/MHL5d0T+jYGBrEyvmUYRf5L48Jj7+rNP4AXb5mZRsfY
-	LzjqeqgTuzNJGQx4CbYkeUceIwa+hw/vIX1WvKLaCP1y8JTZllXjKeoAUxvQfcPWZhnAUw1BNOIE0
-	fVtY4URBPvuS/AJ1Y0N4jKHwrN176qLRZ+oGwc2GmfyKuy7XXFSaQawNCOA+sA4/86Cj3+ksnennX
-	PaCIPVypR9H20cnBcrazdw+5z+oFRy5Pfy4cz3LTzdLNWRHWODVrVk6lCuvbAysQorS1OgpOlxshG
-	5TDqXI4w==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=DZN7OJ+hhe6dSanQVptke4JFwpR4+3WB7u/xANBxEKA=; b=GnDC6cz/+Zb3RC
+	7xPti1g4qN35giX3xAmzLGC6GuDcUMiMMAFGx7BXt4hyHa5h21bVwh0OC7uEhB9qi679rzO3XjWQN
+	8/BvzyPqFcsb0O8Ryt5UOfd5L7xosxPPiclvKoTjdO+/Ze+yCFj59XFlyeaXaxp99Ht2QfB51reys
+	j+SimmHyEYNAXU+Ljd7w8HM78Z251F/6Xb2Z6sF3AShAKOKQt4Pz9ftvBG01oI7YDzv6zlFRmjLkM
+	uTQh/X4qINBcqMNZ03w07HV/kqg1pjiWul3Ik+DDEAK/JVsQaC/JqfNwnCHQU+xXF+0FsocfLtlFG
+	UDZENTW2Dury3/q8XIjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1c3U-0000000GbMx-3fUq;
-	Fri, 18 Oct 2024 01:45:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1t1cZw-0000000Ge3W-1Rc1;
+	Fri, 18 Oct 2024 02:19:00 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1c3R-0000000GbMH-1KuJ
+	id 1t1cZt-0000000Ge2t-2QwC
 	for kexec@lists.infradead.org;
-	Fri, 18 Oct 2024 01:45:26 +0000
+	Fri, 18 Oct 2024 02:18:59 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729215924;
+	s=mimecast20190719; t=1729217935;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kF9L/0/jEWIqoyh3hjUFK/h0JiArykMrlHze3wNZf+8=;
-	b=aXicDse8Er+6wHLzNqOJExUdftCaq915PJM5BNb5GQ1QlLZtQUTyES9CLrIiVD4JGKunC6
-	/pMXQUZSi0cf6WA+K4bgnuv+uV730v1uNUYIeyJ82pJQU38UV9r9+PllC0bLKv2tHZ0+Jq
-	QB+LYmrDOfw5e2jxPNegrVS46Pzvnj0=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-141-ByELLT_7NsKtOpfw_FkTcQ-1; Thu, 17 Oct 2024 21:45:23 -0400
-X-MC-Unique: ByELLT_7NsKtOpfw_FkTcQ-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-7ea8baba4d5so1902536a12.2
-        for <kexec@lists.infradead.org>; Thu, 17 Oct 2024 18:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729215922; x=1729820722;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kF9L/0/jEWIqoyh3hjUFK/h0JiArykMrlHze3wNZf+8=;
-        b=devjroDhqbIz/py42ai7Mal+J4SSzrATI+4hfTXkSWVECMCUpwv9qUy3iOp7PcCgL7
-         +EUI8Iv6cbrmJsfRQglU8UDs2u8m1vxE0g30nraNroA6PgYtyvYNPN8AhIG302Tab+v5
-         hyCCdP/SFKzItTmi3RMuJBdVOfDuicfDRRhHSgNVJMdHc6ZdyPB8hIvWdsuDEtpMtvHA
-         pOhapI/781PBaJO15+6QjxJCmB7Tn3alxJhXCFtIHBEvnemLyj1aFtLtSs+NSHJFp+XB
-         kF6xdbZ/Edps2mVcwvIIDas95Q6hl57X7YbsipU23zYCJFXRpCJuu7rN7WeDXd5R07E4
-         WJCw==
-X-Gm-Message-State: AOJu0YzCS5q6sX57SULT1zhwWDtB5779p7YIyK+pLg5XljJOOD9PAwkW
-	UmGH56CtzthHm7pSEkyN7aPrlifV0rgOnpwHbDs9O+Nt2TpB2mUQoWKGl3DXxHY68GRNHsLXXl4
-	ER7EZwXwisFp4r/uoCfLFP0yRlF4IHb8BQPit+gigVwXIFIRVFyHiAfe5Tw==
-X-Received: by 2002:a05:6a21:1706:b0:1d8:b076:d9ad with SMTP id adf61e73a8af0-1d92c57bcfemr1283441637.40.1729215922018;
-        Thu, 17 Oct 2024 18:45:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELXI3rWpUnWGTn+OFPj0VKUMIIHmOrQ9N8JxvRbg/oBYI+G6/m6Fxjefu3RxKAlgaDRIhjcA==
-X-Received: by 2002:a05:6a21:1706:b0:1d8:b076:d9ad with SMTP id adf61e73a8af0-1d92c57bcfemr1283424637.40.1729215921594;
-        Thu, 17 Oct 2024 18:45:21 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea345b45fsm333944b3a.177.2024.10.17.18.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 18:45:21 -0700 (PDT)
-Date: Fri, 18 Oct 2024 09:44:37 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <enehvyzptsb2daxnsybmkv5byeqrebgcgwpz3tlmqwpwfaxtmm@ca57dtcsmyna>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
- <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
- <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
- <ZmZeJVa/kpyfZ47g@MiWiFi-R3L-srv>
+	bh=YfvFw0tOK2Fyk1UbczyrvNOBcIGyduZmN7lJxbAzLyg=;
+	b=DsAUwdjBrM3r+VeaZgxxWhxjBxPq8hRLoGjQzLPY8Zm81aP88/CwjRT8Ftj8fkUPfYeo/3
+	LQunZS1Gxmsu7jprhDPCyLJKhsy7Cy4hThGVUcd/R//nPQaNzs/rJ08m9w3J7cOMHNH8Ro
+	lXtKkjG73bTg+q89Tk09qLBz2ma76Os=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-614-5A-PiV4VMYyr7Pcz-3CGkw-1; Thu,
+ 17 Oct 2024 22:18:53 -0400
+X-MC-Unique: 5A-PiV4VMYyr7Pcz-3CGkw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5ECAE1955F41;
+	Fri, 18 Oct 2024 02:18:51 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.28])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6861619560A3;
+	Fri, 18 Oct 2024 02:18:48 +0000 (UTC)
+Date: Fri, 18 Oct 2024 10:18:42 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, bhelgaas@google.com,
+	andriy.shevchenko@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	mika.westerberg@linux.intel.com, ying.huang@intel.com,
+	tglx@linutronix.de, takahiro.akashi@linaro.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] resource,kexec: walk_system_ram_res_rev must retain
+ resource flags
+Message-ID: <ZxHFgmHPe3Cow2n8@MiWiFi-R3L-srv>
+References: <20241017190347.5578-1-gourry@gourry.net>
 MIME-Version: 1.0
-In-Reply-To: <ZmZeJVa/kpyfZ47g@MiWiFi-R3L-srv>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
+In-Reply-To: <20241017190347.5578-1-gourry@gourry.net>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241017_184525_456749_4CACE529 
-X-CRM114-Status: GOOD (  38.44  )
+X-CRM114-CacheID: sfid-20241017_191857_715873_D40C08B8 
+X-CRM114-Status: GOOD (  19.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,121 +82,121 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 10, 2024 at 10:00:05AM +0800, Baoquan He wrote:
->On 06/07/24 at 08:27pm, Coiby Xu wrote:
->> On Tue, Jun 04, 2024 at 04:51:03PM +0800, Baoquan He wrote:
->> > Hi Coiby,
->>
->> Hi Baoquan,
->>
->> >
->> > On 05/23/24 at 01:04pm, Coiby Xu wrote:
->> > > A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
->> > > the dm crypt keys persist for the kdump kernel. User space can send the
->> > > following commands,
->> > > - "init KEY_NUM"
->> > >   Initialize needed structures
->> > > - "record KEY_DESC"
->> > >   Record a key description. The key must be a logon key.
->> > >
->> > > User space can also read this API to learn about current state.
->> >
->> > From the subject, can I think the luks keys will persist forever? or
->> > only for a while?
->>
->> Yes, you are right. The keys need to stay in kdump reserved memory.
->
->Hmm, there are two different concepts we may need differentiate. From
->security keys's point of view, the keys need be stored for a while so
->that kdump loading take action to get it, that's done through sysfs;
->Froom kdump's point of view, the keys need be stored forever till kdump
->kernel use it. I can't see what you are referring to from the subject,
->esepcially you stress the newly added sysfs
->/sys/kernel/crash_dm_crypt_keys.
+HI Gregory,
 
-Thanks for the suggestion! The patch set's goal is make the kdump kernel
-to be able to unlock encrypted volumes so the keys have always to be
-there to be ready for the kdump kernel. In fact, the 1st kernel also
-keeps the keys in runtime memory because I/O data could be written back
-to disk anytime and thus needs to be encrypted with the keys anytime.
-But keys are sensitive data so we try to make it as safe as possible and
-one measure for example to make it stay in the keyring for relatively
-short time.  I'll add a note in next version's commit message. Together
-with the info of the life cycle of keys, hopefully it will bring some
-clarities
+On 10/17/24 at 03:03pm, Gregory Price wrote:
+> walk_system_ram_res_rev() erroneously discards resource flags when
+> passing the information to the callback.
+> 
+> This causes systems with IORESOURCE_SYSRAM_DRIVER_MANAGED memory to
+> have these resources selected during kexec to store kexec buffers
+> if that memory happens to be at placed above normal system ram.
 
->
->>
->> > If need and can only keep it for a while, can you
->> > mention it and tell why and how it will be used. Because you add a lot
->> > of codes, but only simply mention the sysfs, that doesn't make sense.
->>
->> Thanks for raising the concern! I've added
->> Documentation/ABI/testing/crash_dm_crypt_keys and copy some text in the
->> cover letter to this patch in v5.
->>
->> >
->> > >
->> > > Signed-off-by: Coiby Xu <coxu@redhat.com>
->> > > ---
->> > >  include/linux/crash_core.h   |   5 +-
->> > >  kernel/Kconfig.kexec         |   8 +++
->> > >  kernel/Makefile              |   1 +
->> > >  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->> > >  kernel/ksysfs.c              |  22 +++++++
->> > >  5 files changed, 148 insertions(+), 1 deletion(-)
->> > >  create mode 100644 kernel/crash_dump_dm_crypt.c
->> > >
->> > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
->> > > index 44305336314e..6bff1c24efa3 100644
->> > > --- a/include/linux/crash_core.h
->> > > +++ b/include/linux/crash_core.h
->> > > @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
->> > >  static inline void arch_kexec_unprotect_crashkres(void) { }
->> > >  #endif
->> [...]
->> > > +static int init(const char *buf)
->> >              ~~~~ A more interesting name with more description?
->>
->> Thanks for the suggestion! I've added some comments for this function
->> in v5. But I can't come up with a better name after looking at current
->> kernel code. You are welcome to suggest any better name:)
->
->Usually init() is for the whole driver module. Your init() here only
->receive the passed total keys number, and allocate the key_header, how
->can you simply name it init()? If you call it init_keys_header(), I
->would think it's much more meaningful.
+Sorry about that. I haven't checked IORESOURCE_SYSRAM_DRIVER_MANAGED
+memory carefully, wondering if res could be set as
+'IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY' plus
+IORESOURCE_SYSRAM_DRIVER_MANAGED in iomem_resource tree.
 
-Good suggestion! Yes, init_keys_header would be a much better choice!
-Unfortunately a new version will switch to configfs. So I will keep this
-lesson in mind and try to apply it to similar cases in the future.
+Anyway, the change in this patch is certainly better. Thanks.
 
->
->>
->> > > +static int process_cmd(const char *buf, size_t count)
->> >                                                  ~~~~
->> > If nobody use the count, why do you add it?
->>
->> Good catch! Yes, this is no need to use count in v4. But v5 now needs it to avoid
->> buffer overflow.
->
->OK, did you add code comment telling what 'count' stands for?
->
->And the name 'process_cmd()' is also ambiguous. We may need avoid this
->kind of name, e.g process_cmd, do_things, handle_stuff. Can you add a
->more specific name?
+Acked-by: Baoquan He <bhe@redhat.com>
 
-As new version will switch to configfs, process_cmd will no longer be
-needed. But I'll try coming up with better names in the future. Thanks!
-
--- 
-Best regards,
-Coiby
+> 
+> This leads to undefined behavior after reboot. If the kexec buffer
+> is never touched, nothing happens. If the kexec buffer is touched,
+> it could lead to a crash (like below) or undefined behavior.
+> 
+> Tested on a system with CXL memory expanders with driver managed
+> memory, TPM enabled, and CONFIG_IMA_KEXEC=y. Adding printk's
+> showed the flags were being discarded and as a result the check
+> for IORESOURCE_SYSRAM_DRIVER_MANAGED passes.
+> 
+> find_next_iomem_res: name(System RAM (kmem))
+> 		     start(10000000000)
+> 		     end(1034fffffff)
+> 		     flags(83000200)
+> 
+> locate_mem_hole_top_down: start(10000000000) end(1034fffffff) flags(0)
+> 
+> [.] BUG: unable to handle page fault for address: ffff89834ffff000
+> [.] #PF: supervisor read access in kernel mode
+> [.] #PF: error_code(0x0000) - not-present page
+> [.] PGD c04c8bf067 P4D c04c8bf067 PUD c04c8be067 PMD 0
+> [.] Oops: 0000 [#1] SMP
+> [.] RIP: 0010:ima_restore_measurement_list+0x95/0x4b0
+> [.] RSP: 0018:ffffc900000d3a80 EFLAGS: 00010286
+> [.] RAX: 0000000000001000 RBX: 0000000000000000 RCX: ffff89834ffff000
+> [.] RDX: 0000000000000018 RSI: ffff89834ffff000 RDI: ffff89834ffff018
+> [.] RBP: ffffc900000d3ba0 R08: 0000000000000020 R09: ffff888132b8a900
+> [.] R10: 4000000000000000 R11: 000000003a616d69 R12: 0000000000000000
+> [.] R13: ffffffff8404ac28 R14: 0000000000000000 R15: ffff89834ffff000
+> [.] FS:  0000000000000000(0000) GS:ffff893d44640000(0000) knlGS:0000000000000000
+> [.] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [.] ata5: SATA link down (SStatus 0 SControl 300)
+> [.] CR2: ffff89834ffff000 CR3: 000001034d00f001 CR4: 0000000000770ef0
+> [.] PKRU: 55555554
+> [.] Call Trace:
+> [.]  <TASK>
+> [.]  ? __die+0x78/0xc0
+> [.]  ? page_fault_oops+0x2a8/0x3a0
+> [.]  ? exc_page_fault+0x84/0x130
+> [.]  ? asm_exc_page_fault+0x22/0x30
+> [.]  ? ima_restore_measurement_list+0x95/0x4b0
+> [.]  ? template_desc_init_fields+0x317/0x410
+> [.]  ? crypto_alloc_tfm_node+0x9c/0xc0
+> [.]  ? init_ima_lsm+0x30/0x30
+> [.]  ima_load_kexec_buffer+0x72/0xa0
+> [.]  ima_init+0x44/0xa0
+> [.]  __initstub__kmod_ima__373_1201_init_ima7+0x1e/0xb0
+> [.]  ? init_ima_lsm+0x30/0x30
+> [.]  do_one_initcall+0xad/0x200
+> [.]  ? idr_alloc_cyclic+0xaa/0x110
+> [.]  ? new_slab+0x12c/0x420
+> [.]  ? new_slab+0x12c/0x420
+> [.]  ? number+0x12a/0x430
+> [.]  ? sysvec_apic_timer_interrupt+0xa/0x80
+> [.]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [.]  ? parse_args+0xd4/0x380
+> [.]  ? parse_args+0x14b/0x380
+> [.]  kernel_init_freeable+0x1c1/0x2b0
+> [.]  ? rest_init+0xb0/0xb0
+> [.]  kernel_init+0x16/0x1a0
+> [.]  ret_from_fork+0x2f/0x40
+> [.]  ? rest_init+0xb0/0xb0
+> [.]  ret_from_fork_asm+0x11/0x20
+> [.]  </TASK>
+> 
+> Link: https://lore.kernel.org/all/20231114091658.228030-1-bhe@redhat.com/
+> Fixes: 7acf164b259d ("resource: add walk_system_ram_res_rev()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  kernel/resource.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index b730bd28b422..4101016e8b20 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -459,9 +459,7 @@ int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+>  			rams_size += 16;
+>  		}
+>  
+> -		rams[i].start = res.start;
+> -		rams[i++].end = res.end;
+> -
+> +		rams[i++] = res;
+>  		start = res.end + 1;
+>  	}
+>  
+> -- 
+> 2.43.0
+> 
 
 
 _______________________________________________
