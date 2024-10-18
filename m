@@ -4,63 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 117B4D30016
-	for <kexec@archiver.kernel.org>; Fri, 18 Oct 2024 14:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 611E1D2FFFA
+	for <kexec@archiver.kernel.org>; Fri, 18 Oct 2024 15:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=zSvT/X5H2QqmLzN9FY5c1DGapIYUBM0jKJ0WV7kRQmk=; b=uTJdt+gK4av04/
-	251aE6Jo9hJ4wFum9Phj5pBQcf5TLoK1Mh+vx1maxmvqorFF6b+2fV42+P5jvF5d6YFmTCLX08X3M
-	wwRQuVzFNahvc4ufZnEGSNti5myC6q4ghukopUyial1Tk2gqo+jwzUPU2Vk0laEt0lXslpWQ8PXHm
-	WIBrpCP74uVSVP5cfcxy/ogdSZRnWpUI05EsMe7MAiAiCtwZZ0U3qzs7BAkX7otprosqVQynkfxjv
-	yjCJKdNm6Ex1D5uKM9HSWvgNFmNKR2G8YuRdF71LQkXiJoNi7jlbfxnnVZS/iaQpwEobYZ24x6/J+
-	TXrQb/szDht7a7Bm8hDw==;
+	List-Owner; bh=wOuQ39n8K4yQx1Ui77S0NAEWGxEMNkvWcKSd8DAA/bw=; b=4VYLMjM0rZs9TO
+	liZpjIC2twvVBmnfQbXEP97Abg4SOVAATeOdGbdIP+kp2e1jVevXjHbW6l0+4yW9qMlHhNxOegS52
+	mcF6hUTOlec/uhOdqFiy8CEFyeUfyUNfZSWeG7sC34DbGXP6U1w9LxTWUqkQiGfwXS0HzLCiPZzdd
+	Sgf4i3an7wLvZrRGrD34IEaP1D2kIsVbTcp8S0rVVikct9kmSDzMTBjF6o2PWHtOJEDPUQDF0b91J
+	LCajrH5Nhkutk0ktPssmkGScCyuhuV+MAArRXw3oWZdXlSA+pYKEK9BNNHLcNnjLGf1m/8TCYJ7mv
+	OQaG5+rBdApd2HeS82tw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1oMg-000000017MG-36Hd;
-	Fri, 18 Oct 2024 14:54:06 +0000
-Received: from mgamail.intel.com ([192.198.163.15])
+	id 1t1p5V-00000001E6V-3W91;
+	Fri, 18 Oct 2024 15:40:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1oLO-0000000173L-1NyR
+	id 1t1p5K-00000001E5D-1uPe
 	for kexec@lists.infradead.org;
-	Fri, 18 Oct 2024 14:52:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729263166; x=1760799166;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p6gcj2E2AWyHapsnii9ApBkSENMZ4qCfzEIAfYkDheU=;
-  b=RjikpbnhTNddCYTZWOpXvTXrFjZeZe3eMejFOKrQdqo8MkoZj53ExNQj
-   EA7PSTt3qsV2qr+dHGwl3uALSHOTyL6LAH1hx2PD6Zq7RUoQfCzA54Ihk
-   BhLIuj0d2+oYdaP8yuMputH25up/nA6NEorKVze4Nd/IYvOhmWEt8SYGQ
-   ftr+nt7ogjod5BX9OD86F/SpvO5lePruLeFnJ6c5Vu4mSGQS0m1J9n24d
-   XevT774sy1frH7r7fRqWvLwIwwhZw2+lOJlBLY0gLKux59CmrGpbHbxrb
-   r2HUThQZzuWRkRaWrZsAPOZsHopWHRO7JdLg8IkeNMeqNyUNiahHjFBeS
-   Q==;
-X-CSE-ConnectionGUID: j1YZLikhQhy3FzR3itzwrw==
-X-CSE-MsgGUID: BX3RatVXTuatTWg0lEijBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="28931382"
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="28931382"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 07:52:45 -0700
-X-CSE-ConnectionGUID: hTqHQxmDRla9eZdI7ktgNw==
-X-CSE-MsgGUID: R5JGxbFyTeCcgIegNnEoRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="83463777"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 07:52:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1t1oLH-00000004VIk-40Oj;
-	Fri, 18 Oct 2024 17:52:39 +0300
-Date: Fri, 18 Oct 2024 17:52:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Baoquan He <bhe@redhat.com>
+	Fri, 18 Oct 2024 15:40:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729266012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L7sF+ux8tQB6rtv2OQ9q9fbX718Icj+2tzphppaDZ3A=;
+	b=PxH8PXi0eVYhzTd5whrXowxwlkEu23oSukwRZEbExcu8N14AGDo3FwXR4dlKkA1QJ9XoTa
+	yzqbJdro9iDg/vc4wVK0HGC5i197whSLFFqvvbAzhC9a6ZyNL48qH+V2cyA6wxvcV8wbuf
+	kSO7NCi5YDaoWEZfclrJ2mVaWF0uUCA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-633-9VZDhXIJN6-ai3qN3pH6Fg-1; Fri,
+ 18 Oct 2024 11:40:10 -0400
+X-MC-Unique: 9VZDhXIJN6-ai3qN3pH6Fg-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E8B231964CF3;
+	Fri, 18 Oct 2024 15:40:06 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.28])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 39A1F1955D5A;
+	Fri, 18 Oct 2024 15:39:10 +0000 (UTC)
+Date: Fri, 18 Oct 2024 23:39:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Gregory Price <gourry@gourry.net>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
 	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
@@ -69,19 +62,20 @@ Cc: Gregory Price <gourry@gourry.net>, kexec@lists.infradead.org,
 	stable@vger.kernel.org
 Subject: Re: [PATCH] resource,kexec: walk_system_ram_res_rev must retain
  resource flags
-Message-ID: <ZxJ2NxXpqowd73om@smile.fi.intel.com>
+Message-ID: <ZxKBFMAecrL25Fwb@MiWiFi-R3L-srv>
 References: <20241017190347.5578-1-gourry@gourry.net>
  <ZxHFgmHPe3Cow2n8@MiWiFi-R3L-srv>
  <ZxJTDq-PxxxIgzfv@smile.fi.intel.com>
  <ZxJoLxyfAHxd18UM@MiWiFi-R3L-srv>
  <ZxJ13aKBqEotI593@smile.fi.intel.com>
+ <ZxJ2NxXpqowd73om@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZxJ13aKBqEotI593@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZxJ2NxXpqowd73om@smile.fi.intel.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241018_075246_413795_6F80860B 
-X-CRM114-Status: GOOD (  22.33  )
+X-CRM114-CacheID: sfid-20241018_084014_594593_7ED46E2A 
+X-CRM114-Status: GOOD (  25.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,47 +92,46 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Oct 18, 2024 at 05:51:09PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 18, 2024 at 09:52:47PM +0800, Baoquan He wrote:
-> > On 10/18/24 at 03:22pm, Andy Shevchenko wrote:
-> > > On Fri, Oct 18, 2024 at 10:18:42AM +0800, Baoquan He wrote:
-> > > > On 10/17/24 at 03:03pm, Gregory Price wrote:
-> > > > > walk_system_ram_res_rev() erroneously discards resource flags when
-> > > > > passing the information to the callback.
+On 10/18/24 at 05:52pm, Andy Shevchenko wrote:
+> On Fri, Oct 18, 2024 at 05:51:09PM +0300, Andy Shevchenko wrote:
+> > On Fri, Oct 18, 2024 at 09:52:47PM +0800, Baoquan He wrote:
+> > > On 10/18/24 at 03:22pm, Andy Shevchenko wrote:
+> > > > On Fri, Oct 18, 2024 at 10:18:42AM +0800, Baoquan He wrote:
+> > > > > On 10/17/24 at 03:03pm, Gregory Price wrote:
+> > > > > > walk_system_ram_res_rev() erroneously discards resource flags when
+> > > > > > passing the information to the callback.
+> > > > > > 
+> > > > > > This causes systems with IORESOURCE_SYSRAM_DRIVER_MANAGED memory to
+> > > > > > have these resources selected during kexec to store kexec buffers
+> > > > > > if that memory happens to be at placed above normal system ram.
 > > > > > 
-> > > > > This causes systems with IORESOURCE_SYSRAM_DRIVER_MANAGED memory to
-> > > > > have these resources selected during kexec to store kexec buffers
-> > > > > if that memory happens to be at placed above normal system ram.
+> > > > > Sorry about that. I haven't checked IORESOURCE_SYSRAM_DRIVER_MANAGED
+> > > > > memory carefully, wondering if res could be set as
+> > > > > 'IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY' plus
+> > > > > IORESOURCE_SYSRAM_DRIVER_MANAGED in iomem_resource tree.
+> > > > > 
+> > > > > Anyway, the change in this patch is certainly better. Thanks.
 > > > > 
-> > > > Sorry about that. I haven't checked IORESOURCE_SYSRAM_DRIVER_MANAGED
-> > > > memory carefully, wondering if res could be set as
-> > > > 'IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY' plus
-> > > > IORESOURCE_SYSRAM_DRIVER_MANAGED in iomem_resource tree.
-> > > > 
-> > > > Anyway, the change in this patch is certainly better. Thanks.
+> > > > Can we get more test cases in the respective module, please?
 > > > 
-> > > Can we get more test cases in the respective module, please?
+> > > Do you mean testing CXL memory in kexec/kdump? No, we can't. Kexec/kdump
+> > > test cases basically is system testing, not unit test or module test. It
+> > > needs run system and then jump to 2nd kernel, vm can be used but it
+> > > can't cover many cases existing only on baremetal. Currenly, Redhat's
+> > > CKI is heavily relied on to test them, however I am not sure if system
+> > > with CXL support is available in our LAB.
+> > > 
+> > > Not sure if I got you right.
 > > 
-> > Do you mean testing CXL memory in kexec/kdump? No, we can't. Kexec/kdump
-> > test cases basically is system testing, not unit test or module test. It
-> > needs run system and then jump to 2nd kernel, vm can be used but it
-> > can't cover many cases existing only on baremetal. Currenly, Redhat's
-> > CKI is heavily relied on to test them, however I am not sure if system
-> > with CXL support is available in our LAB.
-> > 
-> > Not sure if I got you right.
+> > I meant since we touch resource.c, we should really touch resource_kunit.c
+> > *in addition to*.
 > 
-> I meant since we touch resource.c, we should really touch resource_kunit.c
-> *in addition to*.
+> And to be more clear, there is no best time to add test cases than
+> as early as possible. So, can we add the test cases to the (new) APIs,
+> so we want have an issue like the one this patch fixes?
 
-And to be more clear, there is no best time to add test cases than
-as early as possible. So, can we add the test cases to the (new) APIs,
-so we want have an issue like the one this patch fixes?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+I will have a look at kernel/resource_kunit.c to see if I can add
+something for walk_system_ram_res_rev(). Thanks.
 
 
 _______________________________________________
