@@ -4,62 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE63AD15DA8
-	for <kexec@archiver.kernel.org>; Mon, 21 Oct 2024 14:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A496BD15DB8
+	for <kexec@archiver.kernel.org>; Mon, 21 Oct 2024 16:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
-	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=UWaP1AKlhe2GGgJ20fPpI2X2DAJOebMX22Gq77BSvsM=; b=LGsaNME5+ej4UwX0UdvugOHIVT
-	Gg7SNPt9ijvpuOV6bDvaBBre6SvPdf9+cbxZueNGhrL4b14KyDPIDPku68qvwZsBlNzB8Z+cFmkGw
-	p89SNUHWaspWYxq3YiMUmJl8o0uiaS6v9sOt3mnUwewOyu0N7JmckRMwe1ImmGnP6Qu/jRAj3EZs8
-	OF9THZlwlRbW7sbQg7E6BW165VUc+qrWHB0JRI1KUZQ/PPy7UA+Nn0O01axjqVqZrfnDwI7ZUZix1
-	dZPrUSMhKhYttegkTiOt4MKNNXPAcOnopB8qoT3ultlTc3C3DFX1kWl6ucBVuNaMRxwlx0JmUTXUb
-	MxPONUHw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ivWdrupDmH+q4xW4ZQIvzBcQ/8ymSrH4AWAjMcadg+4=; b=1pMhdHE/hbhMkc
+	pWA752A/YT4AW/XhB3YDB0xx77R1RLqJ6lKyOMyS1whIWCm/zvfeIdJdGdfYIQ5Gv8c+fVs86xoiU
+	+mzqFqa5tr7GkZNwnCn7uvA+EJq8zoldYca6hZ6Dse1VwEWcw9OtvkqCLdHasLnCa/2s+rROiuVm7
+	cjut01RsEzBZbNRenMIuSgr+EKE+X5pvGaLPtvATiftYeyTuEyLFggjWHP9GnZCQwkWvPJHGsl5tx
+	3IvJw1QNP9QgfTqprBk6TZs8AvYXdDv+1MFaC+bvQ0Wa30NHxvLMkuZkhxxOiNLKdSJyca7C0Z5b1
+	QB/79D6qgpEPJ6hKTzGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t2trx-00000007hYH-2IMe;
-	Mon, 21 Oct 2024 14:58:53 +0000
-Received: from out01.mta.xmission.com ([166.70.13.231])
+	id 1t2vDn-00000007wjU-1IK4;
+	Mon, 21 Oct 2024 16:25:31 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t2tU2-00000007dEf-0Ebn
+	id 1t2vDj-00000007wiw-3rBK
 	for kexec@lists.infradead.org;
-	Mon, 21 Oct 2024 14:34:11 +0000
-Received: from in01.mta.xmission.com ([166.70.13.51]:39828)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1t2tTi-00D8Vo-2W; Mon, 21 Oct 2024 08:33:51 -0600
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:56464 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1t2tTg-007PNk-VZ; Mon, 21 Oct 2024 08:33:49 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: kexec@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  linux-coco@lists.linux.dev,  x86@kernel.org,  rick.p.edgecombe@intel.com,
-  kirill.shutemov@linux.intel.com
-References: <20241021034553.18824-1-yan.y.zhao@intel.com>
-Date: Mon, 21 Oct 2024 09:33:17 -0500
-In-Reply-To: <20241021034553.18824-1-yan.y.zhao@intel.com> (Yan Zhao's message
-	of "Mon, 21 Oct 2024 11:45:53 +0800")
-Message-ID: <87frop8r0y.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	Mon, 21 Oct 2024 16:25:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729527925;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bWZY1d5rj67pjJtFTwRmzBPKLPBY5rJNOQ78xLhz5Nk=;
+	b=NxqzekYrqyFHzQAyaShX/8/KAP7ie0rldg2/3/COdIycEXRgs1BHddURcit4cKaLTGwdvB
+	EGJZPBaOAIlcy+y+saxqDg3E0xO4uRDvfqOX0waqw/nG4rDV1iBknhJjlWp5ViiLMkUsn+
+	SUTeDJahoEe7MHaLPIFH4Se7CNMgz5o=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-S2qCC0USMw-cBPmN6H2DxA-1; Mon,
+ 21 Oct 2024 12:25:22 -0400
+X-MC-Unique: S2qCC0USMw-cBPmN6H2DxA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B4A11945CBB;
+	Mon, 21 Oct 2024 16:25:17 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.45.226.92])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56ABB1955BC5;
+	Mon, 21 Oct 2024 16:25:09 +0000 (UTC)
+Date: Mon, 21 Oct 2024 18:25:06 +0200
+From: Philipp Rudo <prudo@redhat.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Jan Hendrik Farr <kernel@jfarr.cc>, Lennart Poettering
+ <mzxreary@0pointer.de>, kexec@lists.infradead.org
+Subject: Re: [PATCHv2 0/3] kexec: Add support for UKI format kernel
+Message-ID: <20241021182506.37b16102@rotkaeppchen>
+In-Reply-To: <20241016113418.22568-1-piliu@redhat.com>
+References: <20241016113418.22568-1-piliu@redhat.com>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-X-XM-SPF: eid=1t2tTg-007PNk-VZ;;;mid=<87frop8r0y.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19A3UgQ6OIzwbePtgXVLHKHHilNY2diWnM=
-Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
-X-SA-Exim-Connect-IP: 166.70.13.51
-X-SA-Exim-Rcpt-To: kirill.shutemov@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, yan.y.zhao@intel.com
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241021_073410_105408_361738CC 
-X-CRM114-Status: GOOD (  30.41  )
+X-CRM114-CacheID: sfid-20241021_092528_084874_34358E16 
+X-CRM114-Status: GOOD (  24.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,100 +87,76 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+Hi Pingfan,
+Hi Simon,
 
-> The kexec destination addresses (incluing those for purgatory, the new
-> kernel, boot params/cmdline, and initrd) are searched from the free area of
-> memblock or RAM resources. Since they are not allocated by the currently
-> running kernel, it is not guaranteed that they are accepted before
-> relocating the new kernel.
->
-> Accept the destination addresses for the new kernel, as the new kernel may
-> not be able to or may not accept them by itself.
->
-> Place the "accept" code immediately after the destination addresses pass
-> sanity checks, so the code can be shared by both users of the kexec_load
-> and kexec_file_load system calls.
+I know I'm a little bit too late, but I finally had time to take a
+look. All in all the series looks fine to me. But I have two questions.
 
-I am not at all certain this is sufficient, and I am a bit flummoxed
-about the need to ever ``accept'' memory lazily.
+1) Is there a reason why you don't enable the UKI for x86 as well? The
+way I see it patch 1 and 2 cover x86 as well. So you only should need a
+patch similar to patch 3. Or am I missing something?
 
-In a past life I wrote bootup firmware, and as part of that was the code
-to initialize the contents of memory.  When properly tuned and setup it
-would never take more than a second to just blast initial values into
-memory.  That is because the ratio of memory per memory controller to
-memory bandwidth stayed roughly constant while I was paying attention.
-I expect that ratio to continue staying roughly constant or systems
-will quickly start developing unacceptable boot times.
+2) Would it make sense to "reuse" the mechanism you introduced for the
+initrd for the command line as well. I.e. if it's a UKI with a .cmdline
+section and the user didn't provide any of the --command-line,
+--reuse-cmdline, etc. then use the command line from the UKI.
 
-As I recall Intel TDX is where the contents of memory are encrypted per
-virtual machine.  Which implies that you have the same challenge as
-bootup initializing memory, and that is what ``accepting'' memory is.
+Thanks
+Philipp
 
-I am concerned that an unfiltered accept_memory may result in memory
-that has already been ``accepted'' being accepted again.  This has
-the potential to be wasteful in the best case, and the potential to
-cause memory that is in use to be reinitialized losing the values
-that are currently stored there.
+On Wed, 16 Oct 2024 19:34:12 +0800
+Pingfan Liu <piliu@redhat.com> wrote:
 
-I am concerned that the target kernel won't know about about accepting
-memory, or might not perform the work early enough and try to use memory
-without accepting it first.
-
-I would much prefer if getting into kexec_load would force the memory
-acceptance out of lazy mode (or possibly not even work in lazy mode).
-That keeps things simple for now.
-
-Once enough people have machines requiring the use of accept_memory
-we can worry about optimizing things and pushing the accept_memory call
-down into kexec_load.
-
-
-
-Ugh.  I just noticed another issue.  Unless the memory we are talking
-about is the memory reserved for kexec on panic kernels the memory needs
-struct pages and everything setup so it can be allocated from anyway.
-
-Which is to say I think this is has the potential to conflict with
-the accounting in try_to_accept_memory.
-
-Please just make memory acceptance ``eager'' non-lazy when using kexec.
-Unless someone has messed their implementation badly it won't be a
-significant amount of time in human terms, and it makes the code
-so much easier to understand and think about.
-
-Eric
-
-
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> As a UEFI PE format kernel image becomes more popular, there is a need
+> for kexec to reboot those kinds of images.
+> 
+> After the introduction of the UKI (another PE), at present, there are
+> three competitive methods to support that goal, but all of them have
+> pros and cons.[1] It seems that none of them can be accepted in the near
+> future.  Therefore, we are resorting to the user space kexec-tools to
+> parse the UKI format for the time being.
+> 
+> By parsing the UKI, systemd-stub is stepped around and PCM will not affect
+> the boot up of the second system.
+> 
+> [1]: https://github.com/rhkdump/kexec_uefi/blob/main/overview.md#the-competitive-solutions
+> 
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Jan Hendrik Farr <kernel@jfarr.cc>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> Cc: Lennart Poettering <mzxreary@0pointer.de>
+> Cc: kexec@lists.infradead.org
 > ---
->  kernel/kexec_core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index c0caa14880c3..d97376eafc1a 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -210,6 +210,16 @@ int sanity_check_segment_list(struct kimage *image)
->  	}
->  #endif
->  
-> +	/*
-> +	 * The destination addresses are searched from free memory ranges rather
-> +	 * than being allocated from the current kernel, so they are not
-> +	 * guaranteed to be accepted by the current kernel.
-> +	 * Accept those initial pages for the new kernel since it may not be
-> +	 * able to accept them by itself.
-> +	 */
-> +	for (i = 0; i < nr_segments; i++)
-> +		accept_memory(image->segment[i].mem, image->segment[i].memsz);
-> +
->  	return 0;
->  }
->  
-> base-commit: 8cf0b93919e13d1e8d4466eb4080a4c4d9d66d7b
+> v1 -> v2:
+> Add include/pe.h in makefile to fix 'make dist'
+> Rename default_initrd_fd to implicit_initrd_fd
+> 
+> 
+> Pingfan Liu (3):
+>   kexec: Introduce implicit_initrd_fd to pass internal initrd
+>     information
+>   kexec: Introduce UKI image parser
+>   arm64: Support UKI image format
+> 
+>  include/Makefile                     |   1 +
+>  include/pe.h                         | 104 +++++++++++++++++++++++
+>  kexec/Makefile                       |   1 +
+>  kexec/arch/arm64/kexec-arm64.c       |   1 +
+>  kexec/arch/arm64/kexec-image-arm64.c |   3 +-
+>  kexec/arch/x86_64/kexec-bzImage64.c  |   3 +-
+>  kexec/kexec-uki.c                    | 122 +++++++++++++++++++++++++++
+>  kexec/kexec.c                        |   2 +
+>  kexec/kexec.h                        |   5 ++
+>  9 files changed, 240 insertions(+), 2 deletions(-)
+>  create mode 100644 include/pe.h
+>  create mode 100644 kexec/kexec-uki.c
+> 
+
 
 _______________________________________________
 kexec mailing list
