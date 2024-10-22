@@ -4,85 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44099D1CDA1
-	for <kexec@archiver.kernel.org>; Tue, 22 Oct 2024 06:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25BBCD1CDA1
+	for <kexec@archiver.kernel.org>; Tue, 22 Oct 2024 06:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NUukUk8iYnKxHKCpbmFDG6eO65EZxWnwpZmslTpTqZQ=; b=Uyo7HjTPpCAqP8
-	t1YTdFovA6SYB8dZfgGVu1RqAOu5umks5HE3rwaBjzM/4aVuJpixwCl/UZYbM4o1Juy1XXPtlXTD5
-	xiTblMWNnydWos+XQsvmFzyAlwOZAK/TTRsxr6MyMtNKcf1T8/7pbV4MLSZbmDqi9OVQVeQUX8NEs
-	cpmL9XNuzSOMogC/hvTlbwF9jsjB+l/pLvI+0JUscxegbbkHUEDeuT6cZYCyQYwlw1u3/BynOQbPe
-	2Wsc00bFYyXyV3CIMumtqAASS2lOdK+CbdP0Dqa8pPf9ve7xuQBtFHgtru4Ig55LtC5hM6l5dDXTZ
-	m7ksA3L+Sk94jUiYWo4A==;
+	List-Owner; bh=KT+xmSAYoSCopaICc91AVUv5rjxv8uOpReQjsjRcz6A=; b=Kzj+h3QIab8B2z
+	PFK7Uv6osgKppnJ9i6jRZpGrJXm6PZ1tDuiBcvFXApuz8YIyr172rGpevJZq7Jrw+by/PH9EkYsyw
+	5iP8B2Z4JNq9VX6Mq674VlGW3iWAJH0ZZB8ii0bY2i919lcmYRSFaGFsDKXYMFQPD8UBNQwNuUkJF
+	9t/6qsbRwBHbvTp52G92pmKf3BToIr2cwDJQysNQ5jROwdT1t8dwqgqajt8yJStBM48FMWotDpR0E
+	ZPCJNjKCf2Zs2fNwQ7m/Q8CFWR9fd7mTXVMFDVFvyjhe3d9v81USFfah0nhBhffpNVxkdlj7KQbHH
+	FppZ0m/lw2mclJrx6KRg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t38L0-00000009nw8-0AxT;
-	Tue, 22 Oct 2024 06:25:50 +0000
+	id 1t38N2-00000009o9Z-3Nuv;
+	Tue, 22 Oct 2024 06:27:56 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t38Kt-00000009nvU-2Ywj
+	id 1t38Mz-00000009o8d-0Onw
 	for kexec@lists.infradead.org;
-	Tue, 22 Oct 2024 06:25:46 +0000
+	Tue, 22 Oct 2024 06:27:54 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729578340;
+	s=mimecast20190719; t=1729578472;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HG1CnhguTFudhDNP7EG2wfjiJo8LWO9xpmww9MVdItw=;
-	b=gaipqLb3c6XatTbbD/N9dGDGiI30ifU6BLKGAHjvuNCnQJvskx3zz49PmTk3OUKAXhdBNX
-	DkgAPb0CNKex67ewn8tQFe7YPb0tVMvLvUEbwTsnSlBCKwgSUdwVdSF7oJ0W3/WN4XmhiT
-	soDn7jrHkXqUHGl4gfqpDbhLSUtZtj4=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-46-3h5aSuDSOiulqsB5Cqicaw-1; Tue, 22 Oct 2024 02:25:38 -0400
-X-MC-Unique: 3h5aSuDSOiulqsB5Cqicaw-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6ce242668ebso6619346d6.2
-        for <kexec@lists.infradead.org>; Mon, 21 Oct 2024 23:25:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729578338; x=1730183138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HG1CnhguTFudhDNP7EG2wfjiJo8LWO9xpmww9MVdItw=;
-        b=afVH18Gwut519DXwqWJQJLpgk2ZVYnNUpv+gsNx8R2XOxQkEEqT4JPFaMMh/LYjTbI
-         PzuHn3NCOP5vQVN+LFk9dWHsmOPptm7TqWFj9Tlmjv5Be7CXq75YEemHIdeEGct+KjHQ
-         hgAJH8IN9P8z24XF3YO7JQmLWY3zlkplHHYRL3iw+5NOoifK78WpakfUrQp2aKCGQiC9
-         XCMtHVXDiB2PX8c9l6QseBlQxlwCGmUwcq7Lv85tnfATZGE3Kv8VG5YPbOz7Q4FBGrkl
-         u0MAicv00/Y5RY7P0YcZF9BBubiQhyWNRZ+WmHfoyCmp+IOB66lBDy+PdkutBekj8nxU
-         k2Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0NYWMYHvXNCZgF+qUxiXJwLDnR1TlruCVvzdtQlKoVoOHDKLpBh/GjdrBE1wiOtFVOaOIZw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw7eiTTbtLSL5U+rF9k38c9gNF7TNQ+AnmtDMDaK6qg6kJuhMoy
-	rRqZlO9c/LAHz3Wy0NUGzZpv6VsDSF1AMNAzU5c6VlFJirkzWz4tD6al7e0xiT8ycHzKqSKH965
-	pUX88XNibsWqH8i1ei6JUcism8aFOMDECrunWtas9aJ8Yu4mlNuPV1OzA44jCQUpXghxOgvjl5W
-	jeB8YhU399Bm+W4fuj0EfwTNcFlDt8Tw42
-X-Received: by 2002:a05:6214:5c47:b0:6cb:fff6:8f31 with SMTP id 6a1803df08f44-6ce23f5d15dmr17766606d6.47.1729578338379;
-        Mon, 21 Oct 2024 23:25:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBOfheIGtzqhHWYeCprFnp6dUVrp0QgkhuTIyGLIi8taZWKHRge8OH2+yEKi2pv7pim28fS75L/8IGCQtOraM=
-X-Received: by 2002:a05:6214:5c47:b0:6cb:fff6:8f31 with SMTP id
- 6a1803df08f44-6ce23f5d15dmr17766496d6.47.1729578337999; Mon, 21 Oct 2024
- 23:25:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20241016113418.22568-1-piliu@redhat.com> <20241021182506.37b16102@rotkaeppchen>
-In-Reply-To: <20241021182506.37b16102@rotkaeppchen>
+	bh=4/7y0RIkrXyKe7zsAHBL6ZHpYoQ7gklzgFx59AtCFzE=;
+	b=PioevkMrhh1pmmonn5p41mwkQ8h7NN69ZgDO+RUTnZf6iDuSqjm/x31mVAbW2ergul+Qt6
+	Dqjd9OQq1BXv17ieF9ajbZv9+/HQjBlxezRWDwzDUDwQnN49Aiqc7mY9xK2aXyxhCkYvvc
+	uZ9kl3AgdzLrfyCl+KPjnBK304Sp63M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-52-v9lkcTKQOwubZ1FoZEHlZw-1; Tue,
+ 22 Oct 2024 02:27:48 -0400
+X-MC-Unique: v9lkcTKQOwubZ1FoZEHlZw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CB4919560AD;
+	Tue, 22 Oct 2024 06:27:47 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.98])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1529F1956088;
+	Tue, 22 Oct 2024 06:27:44 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
-Date: Tue, 22 Oct 2024 14:25:27 +0800
-Message-ID: <CAF+s44R3PmzQXxzoHavmL-PziGSmvwjn-DN8zHFYwSd9jejdnA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] kexec: Add support for UKI format kernel
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
-	Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>, Jan Hendrik Farr <kernel@jfarr.cc>, 
-	Lennart Poettering <mzxreary@0pointer.de>, kexec@lists.infradead.org
+To: 
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	kexec@lists.infradead.org
+Subject: [PATCHv3 2/3] kexec: Introduce UKI image parser
+Date: Tue, 22 Oct 2024 14:27:18 +0800
+Message-ID: <20241022062734.9857-1-piliu@redhat.com>
+In-Reply-To: <20241016113418.22568-3-piliu@redhat.com>
+References: <20241016113418.22568-3-piliu@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241021_232543_751316_5DC47391 
-X-CRM114-Status: GOOD (  34.76  )
+X-CRM114-CacheID: sfid-20241021_232753_238504_6CDA7BC3 
+X-CRM114-Status: GOOD (  26.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,69 +80,313 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgUGhpbGlwcCwKClRoYW5rcyBmb3Igc2hhcmluZyB5b3VyIHRob3VnaHRzLgoKT24gVHVlLCBP
-Y3QgMjIsIDIwMjQgYXQgMTI6MjXigK9BTSBQaGlsaXBwIFJ1ZG8gPHBydWRvQHJlZGhhdC5jb20+
-IHdyb3RlOgo+Cj4gSGkgUGluZ2ZhbiwKPiBIaSBTaW1vbiwKPgo+IEkga25vdyBJJ20gYSBsaXR0
-bGUgYml0IHRvbyBsYXRlLCBidXQgSSBmaW5hbGx5IGhhZCB0aW1lIHRvIHRha2UgYQo+IGxvb2su
-IEFsbCBpbiBhbGwgdGhlIHNlcmllcyBsb29rcyBmaW5lIHRvIG1lLiBCdXQgSSBoYXZlIHR3byBx
-dWVzdGlvbnMuCj4KPiAxKSBJcyB0aGVyZSBhIHJlYXNvbiB3aHkgeW91IGRvbid0IGVuYWJsZSB0
-aGUgVUtJIGZvciB4ODYgYXMgd2VsbD8gVGhlCj4gd2F5IEkgc2VlIGl0IHBhdGNoIDEgYW5kIDIg
-Y292ZXIgeDg2IGFzIHdlbGwuIFNvIHlvdSBvbmx5IHNob3VsZCBuZWVkIGEKPiBwYXRjaCBzaW1p
-bGFyIHRvIHBhdGNoIDMuIE9yIGFtIEkgbWlzc2luZyBzb21ldGhpbmc/Cj4KClllcywgdGhlcmUg
-c2hvdWxkIGJlIG9uZSBmb3IgeDg2LiBJIHdpbGwgZG8gaXQgYWZ0ZXIgdGhpcyBzZXJpZXMgaXMg
-bWVyZ2VkLgoKPiAyKSBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvICJyZXVzZSIgdGhlIG1lY2hhbmlz
-bSB5b3UgaW50cm9kdWNlZCBmb3IgdGhlCj4gaW5pdHJkIGZvciB0aGUgY29tbWFuZCBsaW5lIGFz
-IHdlbGwuIEkuZS4gaWYgaXQncyBhIFVLSSB3aXRoIGEgLmNtZGxpbmUKPiBzZWN0aW9uIGFuZCB0
-aGUgdXNlciBkaWRuJ3QgcHJvdmlkZSBhbnkgb2YgdGhlIC0tY29tbWFuZC1saW5lLAo+IC0tcmV1
-c2UtY21kbGluZSwgZXRjLiB0aGVuIHVzZSB0aGUgY29tbWFuZCBsaW5lIGZyb20gdGhlIFVLSS4K
-PgoKSSBoYWQgdGhvdWdodCBhYm91dCBpdCwgYW5kIHRoZSBzY2VuYXJpbyBzaG91bGQgbG9vayBs
-aWtlIHRoaXM6IGEKc3lzdGVtIHdpdGggYSBVS0kgaW1hZ2Ugc28gdGhlcmUgaXMgbm8gZGlyZWN0
-IGFjY2VzcyB0byBnZXQgaW5pdHJkLAp3aGljaCBvYnN0cnVjdHMgdGhlIHVzZSBvZiAtLWluaXRy
-ZCBvcHRpb24uIE9uIHRoZSBvdGhlciBoYW5kLAotLXJldXNlLWNtZGxpbmUgY2FuIGFsd2F5cyBn
-ZXQgdGhlIGNtZGxpbmUgZnJvbSAvcHJvYy9jbWRsaW5lIHdpdGhvdXQKdHJvdWJsZS4KClRoYW5r
-cywKClBpbmdmYW4KCj4gVGhhbmtzCj4gUGhpbGlwcAo+Cj4gT24gV2VkLCAxNiBPY3QgMjAyNCAx
-OTozNDoxMiArMDgwMAo+IFBpbmdmYW4gTGl1IDxwaWxpdUByZWRoYXQuY29tPiB3cm90ZToKPgo+
-ID4gQXMgYSBVRUZJIFBFIGZvcm1hdCBrZXJuZWwgaW1hZ2UgYmVjb21lcyBtb3JlIHBvcHVsYXIs
-IHRoZXJlIGlzIGEgbmVlZAo+ID4gZm9yIGtleGVjIHRvIHJlYm9vdCB0aG9zZSBraW5kcyBvZiBp
-bWFnZXMuCj4gPgo+ID4gQWZ0ZXIgdGhlIGludHJvZHVjdGlvbiBvZiB0aGUgVUtJIChhbm90aGVy
-IFBFKSwgYXQgcHJlc2VudCwgdGhlcmUgYXJlCj4gPiB0aHJlZSBjb21wZXRpdGl2ZSBtZXRob2Rz
-IHRvIHN1cHBvcnQgdGhhdCBnb2FsLCBidXQgYWxsIG9mIHRoZW0gaGF2ZQo+ID4gcHJvcyBhbmQg
-Y29ucy5bMV0gSXQgc2VlbXMgdGhhdCBub25lIG9mIHRoZW0gY2FuIGJlIGFjY2VwdGVkIGluIHRo
-ZSBuZWFyCj4gPiBmdXR1cmUuICBUaGVyZWZvcmUsIHdlIGFyZSByZXNvcnRpbmcgdG8gdGhlIHVz
-ZXIgc3BhY2Uga2V4ZWMtdG9vbHMgdG8KPiA+IHBhcnNlIHRoZSBVS0kgZm9ybWF0IGZvciB0aGUg
-dGltZSBiZWluZy4KPiA+Cj4gPiBCeSBwYXJzaW5nIHRoZSBVS0ksIHN5c3RlbWQtc3R1YiBpcyBz
-dGVwcGVkIGFyb3VuZCBhbmQgUENNIHdpbGwgbm90IGFmZmVjdAo+ID4gdGhlIGJvb3QgdXAgb2Yg
-dGhlIHNlY29uZCBzeXN0ZW0uCj4gPgo+ID4gWzFdOiBodHRwczovL2dpdGh1Yi5jb20vcmhrZHVt
-cC9rZXhlY191ZWZpL2Jsb2IvbWFpbi9vdmVydmlldy5tZCN0aGUtY29tcGV0aXRpdmUtc29sdXRp
-b25zCj4gPgo+ID4gQ2M6IFNpbW9uIEhvcm1hbiA8aG9ybXNAa2VybmVsLm9yZz4KPiA+IENjOiBF
-cmljIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+ID4gQ2M6IEJhb3F1YW4gSGUg
-PGJoZUByZWRoYXQuY29tPgo+ID4gQ2M6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPgo+
-ID4gQ2M6IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+Cj4gPiBDYzogSmFuIEhlbmRy
-aWsgRmFyciA8a2VybmVsQGpmYXJyLmNjPgo+ID4gQ2M6IFBoaWxpcHAgUnVkbyA8cHJ1ZG9AcmVk
-aGF0LmNvbT4KPiA+IENjOiBMZW5uYXJ0IFBvZXR0ZXJpbmcgPG16eHJlYXJ5QDBwb2ludGVyLmRl
-Pgo+ID4gQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IC0tLQo+ID4gdjEgLT4gdjI6
-Cj4gPiBBZGQgaW5jbHVkZS9wZS5oIGluIG1ha2VmaWxlIHRvIGZpeCAnbWFrZSBkaXN0Jwo+ID4g
-UmVuYW1lIGRlZmF1bHRfaW5pdHJkX2ZkIHRvIGltcGxpY2l0X2luaXRyZF9mZAo+ID4KPiA+Cj4g
-PiBQaW5nZmFuIExpdSAoMyk6Cj4gPiAgIGtleGVjOiBJbnRyb2R1Y2UgaW1wbGljaXRfaW5pdHJk
-X2ZkIHRvIHBhc3MgaW50ZXJuYWwgaW5pdHJkCj4gPiAgICAgaW5mb3JtYXRpb24KPiA+ICAga2V4
-ZWM6IEludHJvZHVjZSBVS0kgaW1hZ2UgcGFyc2VyCj4gPiAgIGFybTY0OiBTdXBwb3J0IFVLSSBp
-bWFnZSBmb3JtYXQKPiA+Cj4gPiAgaW5jbHVkZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKPiA+ICBpbmNsdWRlL3BlLmggICAgICAgICAgICAgICAgICAgICAgICAgfCAxMDQg
-KysrKysrKysrKysrKysrKysrKysrKysKPiA+ICBrZXhlYy9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDEgKwo+ID4gIGtleGVjL2FyY2gvYXJtNjQva2V4ZWMtYXJtNjQuYyAgICAg
-ICB8ICAgMSArCj4gPiAga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1pbWFnZS1hcm02NC5jIHwgICAz
-ICstCj4gPiAga2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtYnpJbWFnZTY0LmMgIHwgICAzICstCj4g
-PiAga2V4ZWMva2V4ZWMtdWtpLmMgICAgICAgICAgICAgICAgICAgIHwgMTIyICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKwo+ID4gIGtleGVjL2tleGVjLmMgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAgMiArCj4gPiAga2V4ZWMva2V4ZWMuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1
-ICsrCj4gPiAgOSBmaWxlcyBjaGFuZ2VkLCAyNDAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
-LSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9wZS5oCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGtleGVjL2tleGVjLXVraS5jCj4gPgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+A UKI image is a PE file that consists of several sections, typically
+including: .text, .data, .linux, .initrd, .cmdline, and others.
+
+The kernel image is stored in the .linux section, which is one of the
+formats currently recognized by kexec-tools. Therefore, the UKI parser
+can be used to strip away the UKI layer, allowing the other parser to
+continue the procession of the kernel image.
+
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Simon Horman <horms@kernel.org>
+Cc: kexec@lists.infradead.org
+---
+ include/Makefile  |   1 +
+ include/pe.h      | 104 +++++++++++++++++++++++++++++++++++++++
+ kexec/Makefile    |   1 +
+ kexec/kexec-uki.c | 123 ++++++++++++++++++++++++++++++++++++++++++++++
+ kexec/kexec.h     |   4 ++
+ 5 files changed, 233 insertions(+)
+ create mode 100644 include/pe.h
+ create mode 100644 kexec/kexec-uki.c
+
+diff --git a/include/Makefile b/include/Makefile
+index cd88a26..6a3e854 100644
+--- a/include/Makefile
++++ b/include/Makefile
+@@ -8,6 +8,7 @@ dist += include/Makefile		\
+ 	include/x86/mb_header.h		\
+ 	include/x86/multiboot2.h	\
+ 	include/elf.h			\
++	include/pe.h			\
+ 	include/image.h			\
+ 	include/unused.h		\
+ 	include/boot/linuxbios_tables.h	\
+diff --git a/include/pe.h b/include/pe.h
+new file mode 100644
+index 0000000..2617074
+--- /dev/null
++++ b/include/pe.h
+@@ -0,0 +1,104 @@
++/*
++ * Extract from linux kernel include/linux/pe.h
++ */
++
++#ifndef __PE_H__
++#define __PE_H__
++
++struct pe_hdr {
++	uint32_t magic;		/* PE magic */
++	uint16_t machine;	/* machine type */
++	uint16_t sections;	/* number of sections */
++	uint32_t timestamp;	/* time_t */
++	uint32_t symbol_table;	/* symbol table offset */
++	uint32_t symbols;	/* number of symbols */
++	uint16_t opt_hdr_size;	/* size of optional header */
++	uint16_t flags;		/* flags */
++};
++
++/* the fact that pe32 isn't padded where pe32+ is 64-bit means union won't
++ * work right.  vomit. */
++struct pe32_opt_hdr {
++	/* "standard" header */
++	uint16_t magic;		/* file type */
++	uint8_t  ld_major;	/* linker major version */
++	uint8_t  ld_minor;	/* linker minor version */
++	uint32_t text_size;	/* size of text section(s) */
++	uint32_t data_size;	/* size of data section(s) */
++	uint32_t bss_size;	/* size of bss section(s) */
++	uint32_t entry_point;	/* file offset of entry point */
++	uint32_t code_base;	/* relative code addr in ram */
++	uint32_t data_base;	/* relative data addr in ram */
++	/* "windows" header */
++	uint32_t image_base;	/* preferred load address */
++	uint32_t section_align;	/* alignment in bytes */
++	uint32_t file_align;	/* file alignment in bytes */
++	uint16_t os_major;	/* major OS version */
++	uint16_t os_minor;	/* minor OS version */
++	uint16_t image_major;	/* major image version */
++	uint16_t image_minor;	/* minor image version */
++	uint16_t subsys_major;	/* major subsystem version */
++	uint16_t subsys_minor;	/* minor subsystem version */
++	uint32_t win32_version;	/* reserved, must be 0 */
++	uint32_t image_size;	/* image size */
++	uint32_t header_size;	/* header size rounded up to
++				   file_align */
++	uint32_t csum;		/* checksum */
++	uint16_t subsys;	/* subsystem */
++	uint16_t dll_flags;	/* more flags! */
++	uint32_t stack_size_req;/* amt of stack requested */
++	uint32_t stack_size;	/* amt of stack required */
++	uint32_t heap_size_req;	/* amt of heap requested */
++	uint32_t heap_size;	/* amt of heap required */
++	uint32_t loader_flags;	/* reserved, must be 0 */
++	uint32_t data_dirs;	/* number of data dir entries */
++};
++
++struct pe32plus_opt_hdr {
++	uint16_t magic;		/* file type */
++	uint8_t  ld_major;	/* linker major version */
++	uint8_t  ld_minor;	/* linker minor version */
++	uint32_t text_size;	/* size of text section(s) */
++	uint32_t data_size;	/* size of data section(s) */
++	uint32_t bss_size;	/* size of bss section(s) */
++	uint32_t entry_point;	/* file offset of entry point */
++	uint32_t code_base;	/* relative code addr in ram */
++	/* "windows" header */
++	uint64_t image_base;	/* preferred load address */
++	uint32_t section_align;	/* alignment in bytes */
++	uint32_t file_align;	/* file alignment in bytes */
++	uint16_t os_major;	/* major OS version */
++	uint16_t os_minor;	/* minor OS version */
++	uint16_t image_major;	/* major image version */
++	uint16_t image_minor;	/* minor image version */
++	uint16_t subsys_major;	/* major subsystem version */
++	uint16_t subsys_minor;	/* minor subsystem version */
++	uint32_t win32_version;	/* reserved, must be 0 */
++	uint32_t image_size;	/* image size */
++	uint32_t header_size;	/* header size rounded up to
++				   file_align */
++	uint32_t csum;		/* checksum */
++	uint16_t subsys;	/* subsystem */
++	uint16_t dll_flags;	/* more flags! */
++	uint64_t stack_size_req;/* amt of stack requested */
++	uint64_t stack_size;	/* amt of stack required */
++	uint64_t heap_size_req;	/* amt of heap requested */
++	uint64_t heap_size;	/* amt of heap required */
++	uint32_t loader_flags;	/* reserved, must be 0 */
++	uint32_t data_dirs;	/* number of data dir entries */
++};
++
++struct section_header {
++	char name[8];			/* name or "/12\0" string tbl offset */
++	uint32_t virtual_size;		/* size of loaded section in ram */
++	uint32_t virtual_address;	/* relative virtual address */
++	uint32_t raw_data_size;		/* size of the section */
++	uint32_t data_addr;		/* file pointer to first page of sec */
++	uint32_t relocs;		/* file pointer to relocation entries */
++	uint32_t line_numbers;		/* line numbers! */
++	uint16_t num_relocs;		/* number of relocations */
++	uint16_t num_lin_numbers;	/* srsly. */
++	uint32_t flags;
++};
++
++#endif
+diff --git a/kexec/Makefile b/kexec/Makefile
+index 11682bf..d4f26d7 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -18,6 +18,7 @@ KEXEC_SRCS_base += kexec/kexec-elf-core.c
+ KEXEC_SRCS_base += kexec/kexec-elf-rel.c
+ KEXEC_SRCS_base += kexec/kexec-elf-boot.c
+ KEXEC_SRCS_base += kexec/kexec-pe-zboot.c
++KEXEC_SRCS_base += kexec/kexec-uki.c
+ KEXEC_SRCS_base += kexec/kexec-iomem.c
+ KEXEC_SRCS_base += kexec/firmware_memmap.c
+ KEXEC_SRCS_base += kexec/crashdump.c
+diff --git a/kexec/kexec-uki.c b/kexec/kexec-uki.c
+new file mode 100644
+index 0000000..210ebb6
+--- /dev/null
++++ b/kexec/kexec-uki.c
+@@ -0,0 +1,123 @@
++#include <limits.h>
++#include <stdint.h>
++#include <string.h>
++#include <stdio.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <pe.h>
++#include "kexec.h"
++
++#define UKI_LINUX_SECTION ".linux"
++#define UKI_INITRD_SECTION ".initrd"
++#define UKI_CMDLINE_SECTION ".cmdline"
++#define UKI_DTB_SECTION ".dtb"
++
++#define FILENAME_UKI_INITRD          "/tmp/InitrdXXXXXX"
++
++static int embeded_linux_format_index = -1;
++
++/*
++ * Return -1 if not PE, else offset of the PE header
++ */
++static int get_pehdr_offset(const char *buf)
++{
++	int pe_hdr_offset;
++
++	pe_hdr_offset = *((int *)(buf + 0x3c));
++	buf += pe_hdr_offset;
++	if (!!memcmp(buf, "PE\0\0", 4)) {
++		printf("Not a PE file\n");
++		return -1;
++	}
++
++	return pe_hdr_offset;
++}
++
++int uki_image_probe(const char *file_buf, off_t buf_sz)
++{
++	struct pe_hdr *pe_hdr;
++	struct pe32plus_opt_hdr *opt_hdr;
++	struct section_header *sect_hdr;
++	int pe_hdr_offset, section_nr, linux_sz = -1;
++	char *pe_part_buf, *linux_src;
++	char *initrd_fname = NULL;
++	int initrd_fd = -1;
++
++	pe_hdr_offset = get_pehdr_offset(file_buf);
++	pe_part_buf = (char *)file_buf + pe_hdr_offset;
++	pe_hdr = (struct pe_hdr *)pe_part_buf;
++	if (pe_hdr->opt_hdr_size == 0) {
++		printf("ERR: optional header is missing\n");
++		return -1;
++	}
++	section_nr = pe_hdr->sections;
++	opt_hdr = (struct pe32plus_opt_hdr *)(pe_part_buf + sizeof(struct pe_hdr));
++	sect_hdr = (struct section_header *)((char *)opt_hdr + pe_hdr->opt_hdr_size);
++
++	for (int i = 0; i < section_nr; i++) {
++		if (!strcmp(sect_hdr->name, UKI_LINUX_SECTION)) {
++			/* data_addr is relative to the whole file */
++			linux_src = (char *)file_buf + sect_hdr->data_addr;
++			linux_sz = sect_hdr->raw_data_size;
++
++		} else if (!strcmp(sect_hdr->name, UKI_INITRD_SECTION)) {
++			if (!(initrd_fname = strdup(FILENAME_UKI_INITRD))) {
++				dbgprintf("%s: Can't duplicate strings\n", __func__);
++				goto next;
++			}
++
++			if ((initrd_fd = mkstemp(initrd_fname)) < 0) {
++				dbgprintf("%s: Can't open file %s\n", __func__,	initrd_fname);
++				goto next;
++			}
++
++			if (write(initrd_fd, (char *)file_buf + sect_hdr->data_addr,
++					sect_hdr->raw_data_size) != sect_hdr->raw_data_size) {
++				dbgprintf("%s: Can't write the compressed file %s\n",
++						__func__, initrd_fname);
++				close(initrd_fd);
++				goto next;
++			} else {
++				implicit_initrd_fd = open(initrd_fname, O_RDONLY);
++				close(initrd_fd);
++			}
++		}
++next:
++		sect_hdr++;
++	}
++
++	if (linux_sz == -1) {
++		printf("ERR: can not find .linux section\n");
++		return -1;
++	}
++	/*
++	 * After stripping the UKI coat, the real kernel format can be handled now.
++	 */
++	for (int i = 0; i < file_types; i++) {
++		/* kernel_fd will be created by probe */
++		if (file_type[i].probe != uki_image_probe &&
++		    file_type[i].probe(linux_src, linux_sz) >= 0) {
++			embeded_linux_format_index = i;
++			break;
++		}
++	}
++	if (embeded_linux_format_index < 0) {
++		printf("Can not recognize the kernel format in .linux section\n");
++		return -1;
++	}
++	return 0;
++}
++
++int uki_image_load(int argc, char **argv, const char *buf, off_t len,
++			struct kexec_info *info)
++{
++	return file_type[embeded_linux_format_index].load(argc, argv, buf, len, info);
++}
++
++void uki_image_usage(void)
++{
++	printf(
++"     An UKI image.\n");
++}
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index e70c18d..a2e19c4 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -357,4 +357,8 @@ static inline void ultoa(unsigned long val, char *str)
+ 	str[pos] = 0;
+ }
+ 
++extern int uki_image_probe(const char *file_buf, off_t buf_sz);
++extern int uki_image_load(int argc, char **argv, const char *buf, off_t len,
++		struct kexec_info *info);
++extern void uki_image_usage(void);
+ #endif /* KEXEC_H */
+-- 
+2.41.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
