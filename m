@@ -4,102 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F73D3C939
-	for <kexec@archiver.kernel.org>; Tue, 22 Oct 2024 12:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C088CDD0C6
+	for <kexec@archiver.kernel.org>; Tue, 22 Oct 2024 18:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=hIg0QEomXwIilVPulKtSpb8dyzzYTZpA2dF0aC+zC9Q=; b=Y/R7rFpIpkvlJo
-	JO5wbYLAA6z5Y6nZzouRyNHeK2RpjzczbXo6283Qkmg0uYGwIqMlX2V6NpidU+gYijfwAsJNxw5Ib
-	o6XaMqJBFp5xnndhaQthLUX5gfNaMik8U4EFncPVtvGZXdFcbnmxn7JMUOcQb/LTHkpDK0IYKIHok
-	CnnQ3MIesTDuSXN4I9u/IlSACeNbybfArdhJn+WKy5nm67VziUcRcTiTx2PzfJr9Aqhk51Ohr7z2a
-	ZnUgL93JVN9qBEsv5fzg1NTEenDidbnszUBVKJXul1FlerjKTZAHCmetPtaNEPGz6YwyOvKcy8fHO
-	dumWj9dBb4ysxQsxom+g==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	MIME-Version:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4PrdOLTxkxuaIpSSQjPA2KyE90iwhT3dzh+9bJuaUFU=; b=e1RDQwM1wde+06IBq2CCi1l3ZM
+	TPAJhUvneVq67M4odVxt0X0JyDXPV6nP/H86bYY+te+TFzbrcYUOMpiHH9y89XT44/KS2Etcroa3j
+	dD/OvM4S2NKqLVWkIudsuddl204D5ks2fodqMntaYZby78cJrKzCLahExT0fhR2ynrueXYhtCa1OQ
+	7+Il/3aWd/icFNF03d2+pLKz0W7O0P9/bdb6Wxjjfl0+qIN3VPMPUd6HmjzUvj6Ml5H08Ocb21e0f
+	a7bbtlYCKKrTynNfKiVOfdd0ex9NvjDFkS1M7yM8f1Tgaca7OlJCfVYdFVS2/LOF5uI6CzIEJQ8Ag
+	35pAnhrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3Deg-0000000AmSc-0bvz;
-	Tue, 22 Oct 2024 12:06:30 +0000
-Received: from fout-a1-smtp.messagingengine.com ([103.168.172.144])
+	id 1t3Jys-0000000Bqkp-2XJM;
+	Tue, 22 Oct 2024 18:51:46 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3Deb-0000000AmQE-3Sjd
-	for kexec@lists.infradead.org;
-	Tue, 22 Oct 2024 12:06:28 +0000
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id E70C813801DE;
-	Tue, 22 Oct 2024 08:06:23 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Tue, 22 Oct 2024 08:06:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1729598783; x=
-	1729685183; bh=XALMLFIneOKfWdqu2K+AmUt1MMElDGjAw56Uce222Jw=; b=c
-	oAE1ZBnBERAYE0C1WWrJ1hDVvQM+qPDupItO4AT245jgKjlCdqE5pxM2o5PzlI72
-	OhVuvOSWgAzOPD87T4jh3H35GvcrrdClOZriLY+q3RyF/7SCMgIBahjwsfkvJcnB
-	4zopTvP2bTr44QPdEPSk930zXIVFtmZE2RZeiRSgm9qxZ/acY0mxbn8geAyg9TYl
-	k4PvYheTE0ei7j4mg06ttS82EcrHKBw/4CTDnqJ9rEb57IVnUXdh9vNYn2oLtaDh
-	JADmalq/4BTza21m91tFBUZET5RZQ08rCM90mCNINSPD6+b3WWhdFrTwi9ZAfMqZ
-	acQ2t0N4KMFQiJPZuixRw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1729598783; x=1729685183; bh=XALMLFIneOKfWdqu2K+AmUt1MMEl
-	DGjAw56Uce222Jw=; b=jBlctpeoo16nnW4b1y5T56neNLRYcLsqLcGTEpRKbEsV
-	tvj5+lMvYfX++t74VaC70c1J/J6sMvqZWS0J/kULeVjKt3WD1tdZ1VZa3b+W8jb5
-	2P7Sn2jCF3xHcEfbCUFH607FIZ/1U+rPElHXP7whUsXAKCVuK6KVzgMHW4tYu5zu
-	pWj94IMuyvlN6EKV0yzfO3dUCy3hGwWEJv7mNyA9dJZQwoMyOGUvghRTc6doSdDI
-	DsWZii0M0mRml9f5eSNVWjZSo7rov9WnauVaDeM6+NUznCJyNzm/lVDKVWdDYYqk
-	+DReeiaPNHZuV/AeO0XLgQPZBLh+rM8v4r2xmL5C2A==
-X-ME-Sender: <xms:P5UXZ4D0t5GeK9q4RmtLP0dcsNSHRW1zpn3Sb0W3IYe9GS9NEZIgtw>
-    <xme:P5UXZ6g29P6jIOcAapSusyWnl7b9BbV3ADSGkKa_HajeBRLHjCqNtQOYb8nhvdsho
-    CBI0Mt6dxRqSQdJvWE>
-X-ME-Received: <xmr:P5UXZ7mNVgEkGiEZyJ4U_jVqOG-ShkWhc_VVhohkcXIDTXjQkPkCbAs9KNZ9PjJFR5PDug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeihedggeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvden
-    ucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlse
-    hshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfhhfff
-    veelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhv
-    rdhnrghmvgdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htohepvggsihgvuggvrhhmseigmhhishhsihhonhdrtghomhdprhgtphhtthhopeihrghn
-    rdihrdiihhgrohesihhnthgvlhdrtghomhdprhgtphhtthhopehkvgigvggtsehlihhsth
-    hsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghl
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqtghotghose
-    hlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheprhhitghkrdhprdgvughgvggtohhmsggvsehinhhtvghlrdgtoh
-    hmpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnthgv
-    lhdrtghomh
-X-ME-Proxy: <xmx:P5UXZ-z5na7gTuq-gPsDbmzcOTMkur0Bx1Hf1OGV-rk8AALgjMAM5g>
-    <xmx:P5UXZ9Q1oZGpXp4iyrGZwmEBpAZokhVNba7iiX_OZBUM8d3apF7zUA>
-    <xmx:P5UXZ5b_VtBBedhkNv4aUvMo86gBv2vi0kjCuc1oKbhzKj6QWifYug>
-    <xmx:P5UXZ2QokQP7SMve-sP3koPmqYbShCNSL4V_dSxikGrTibzOckWXPA>
-    <xmx:P5UXZ4FWmNNbj-cL1O0S1qnmfkNQa6uTbWjmmqEuAphFACVdVzM2RQC6>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 22 Oct 2024 08:06:20 -0400 (EDT)
-Date: Tue, 22 Oct 2024 15:06:15 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, x86@kernel.org, 
-	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
-Message-ID: <tpbcun3d4wrnbtsvx3b3hjpdl47f2zuxvx6zqsjoelazdt3eyv@kgqnedtcejta>
-References: <20241021034553.18824-1-yan.y.zhao@intel.com>
- <87frop8r0y.fsf@email.froward.int.ebiederm.org>
+	id 1t3Jyq-0000000Bqkd-2Kak
+	for kexec@bombadil.infradead.org;
+	Tue, 22 Oct 2024 18:51:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vNr3Ud2/qsqEpXARv0gcBAhIMEpUzZSh5WHpDSFYWek=; b=kZ080zjcnQZYECzz+1sBkDlXDF
+	Fakr8Q0gIr9T17j0gOUbDY148kYuWMzdYMyeo55Yg15aiC6qoQtTnnVTQYugG2Gv1p/IkTF4l9EwR
+	R51hcjCgNF3TRXIJ4EjW62sDgVsufVRBADl6/gbK2pDT0aqdJlZWOyoN3cwAN0ppQt1EcVKOwCxZR
+	0QRdAQgrIvWIMKtLVo3KvpU0FPwR8Uy8Bjbm2z3JcNfmuYws54wxxr1TwocaBA56k+VmA2PI7tNer
+	GzTtOdKIHLzOHwB2Zq1l69V++qwMYATgkUp5UYFeDarN5tiNGOCEMtCg6u69gS5HkHcLGr1hwVD2X
+	ipL1JIZA==;
+Received: from [2001:8b0:10b:5:51f6:cefc:4e76:679f] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t3Jyk-00000001uqX-1JRS;
+	Tue, 22 Oct 2024 18:51:39 +0000
+Message-ID: <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+From: David Woodhouse <dwmw2@infradead.org>
+To: Dave Young <dyoung@redhat.com>, Steve Wahl <steve.wahl@hpe.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Pavin Joseph
+ <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>, 
+ kexec@lists.infradead.org, Eric Hagberg <ehagberg@gmail.com>, 
+ dave.hansen@linux.intel.com, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Date: Tue, 22 Oct 2024 19:51:38 +0100
+In-Reply-To: <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
+References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+	 <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+	 <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
+	 <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+	 <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+	 <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
+	 <87cyryxr6w.fsf@email.froward.int.ebiederm.org>
+	 <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
+	 <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87frop8r0y.fsf@email.froward.int.ebiederm.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241022_050626_542861_E64F01CA 
-X-CRM114-Status: GOOD (  31.62  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,98 +75,270 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3410538013418234515=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 21, 2024 at 09:33:17AM -0500, Eric W. Biederman wrote:
-> Yan Zhao <yan.y.zhao@intel.com> writes:
-> 
-> > The kexec destination addresses (incluing those for purgatory, the new
-> > kernel, boot params/cmdline, and initrd) are searched from the free area of
-> > memblock or RAM resources. Since they are not allocated by the currently
-> > running kernel, it is not guaranteed that they are accepted before
-> > relocating the new kernel.
-> >
-> > Accept the destination addresses for the new kernel, as the new kernel may
-> > not be able to or may not accept them by itself.
-> >
-> > Place the "accept" code immediately after the destination addresses pass
-> > sanity checks, so the code can be shared by both users of the kexec_load
-> > and kexec_file_load system calls.
-> 
-> I am not at all certain this is sufficient, and I am a bit flummoxed
-> about the need to ever ``accept'' memory lazily.
-> 
-> In a past life I wrote bootup firmware, and as part of that was the code
-> to initialize the contents of memory.  When properly tuned and setup it
-> would never take more than a second to just blast initial values into
-> memory.  That is because the ratio of memory per memory controller to
-> memory bandwidth stayed roughly constant while I was paying attention.
-> I expect that ratio to continue staying roughly constant or systems
-> will quickly start developing unacceptable boot times.
-> 
-> As I recall Intel TDX is where the contents of memory are encrypted per
-> virtual machine.  Which implies that you have the same challenge as
-> bootup initializing memory, and that is what ``accepting'' memory is.
-> 
-> I am concerned that an unfiltered accept_memory may result in memory
-> that has already been ``accepted'' being accepted again.
 
-It is not unfiltered. We check it against bitmap that maintains the
-accept status of the memory block.
+--===============3410538013418234515==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-MQP9TFkoyyafU0ovUhhL"
 
-> This has
-> the potential to be wasteful in the best case, and the potential to
-> cause memory that is in use to be reinitialized losing the values
-> that are currently stored there.
-> 
-> I am concerned that the target kernel won't know about about accepting
-> memory, or might not perform the work early enough and try to use memory
-> without accepting it first.
 
-The bitmap I mentioned above passed between two kernels via an EFI config
-table. This mechanism predates kexec enabling of the systems with
-unaccepted memory support, so there should not be a problem.
+--=-MQP9TFkoyyafU0ovUhhL
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I would much prefer if getting into kexec_load would force the memory
-> acceptance out of lazy mode (or possibly not even work in lazy mode).
-> That keeps things simple for now.
+On Thu, 2024-03-14 at 17:25 +0800, Dave Young wrote:
+> On Thu, 14 Mar 2024 at 00:18, Steve Wahl <steve.wahl@hpe.com> wrote:
+> >=20
+> > On Wed, Mar 13, 2024 at 07:16:23AM -0500, Eric W. Biederman wrote:
+> > >=20
+> > > Kexec happens on identity mapped page tables.
+> > >=20
+> > > The files of interest are machine_kexec_64.c and relocate_kernel_64.S
+> > >=20
+> > > I suspect either the building of the identity mappged page table in
+> > > machine_kexec_prepare, or the switching to the page table in
+> > > identity_mapped in relocate_kernel_64.S is where something goes wrong=
+.
+> > >=20
+> > > Probably in kernel_ident_mapping_init as that code is directly used
+> > > to build the identity mapped page tables.
+> > >=20
+> > > Hmm.
+> > >=20
+> > > Your change is commit d794734c9bbf ("x86/mm/ident_map: Use gbpages on=
+ly
+> > > where full GB page should be mapped.")
+> >=20
+> > Yeah, sorry, I accidentally used the stable cherry-pick commit id that
+> > Pavin Joseph found with his bisect results.
+> >=20
+> > > Given the simplicity of that change itself my guess is that somewhere=
+ in
+> > > the first 1Gb there are pages that needed to be mapped like the idt a=
+t 0
+> > > that are not getting mapped.
+> >=20
+> > ...
+> >=20
+> > > It might be worth setting up early printk on some of these systems
+> > > and seeing if the failure is in early boot up of the new kernel (that=
+ is
+> > > using kexec supplied identity mapped pages) rather than in kexec per-=
+se.
+> > >=20
+> > > But that is just my guess at the moment.
+> >=20
+> > Thanks for the input.=C2=A0 I was thinking in terms of running out of
+> > memory somewhere because we're using more page table entries than we
+> > used to.=C2=A0 But you've got me thinking that maybe some necessary reg=
+ion
+> > is not explicitly requested to be placed in the identity map, but is
+> > by luck included in the rounding errors when we use gbpages.
+>=20
+> Yes, it is possible. Here is an example case:
+> http://lists.infradead.org/pipermail/kexec/2023-June/027301.html
+> Final change was to avoid doing AMD things on Intel platform, but the
+> mapping code is still not fixed in a good way.
 
-You can always force this behaviour with accept_memory=eager, but it is
-waaay slower for larger VMs. It is especially bad idea if kexec used as
-initial bootloader and most of the memory is not yet accepted by the time
-kexec is triggered.
+I spent all of Monday setting up a full GDT, IDT and exception handler
+for the relocate_kernel() environment=C2=B9, and I think these reports may
+have been the same as what I've been debugging.
 
-> Once enough people have machines requiring the use of accept_memory
-> we can worry about optimizing things and pushing the accept_memory call
-> down into kexec_load.
+We end up taking a #PF, usually on one of the 'rep mov's, one time on
+the 'pushq %r8' right before using it to 'ret' to identity_mapped. In
+each case it happens on the first *write* to a page.
 
-It is already here and it works. Despite some bugs that need to be
-addressed.
+Now I can print %cr2 when it happens (instead of just going straight to
+triple-fault), I spot an interesting fact about the address. It's
+always *adjacent* to a region reserved by BIOS in the e820 data, and
+within the same 2MiB page.
 
-> Ugh.  I just noticed another issue.  Unless the memory we are talking
-> about is the memory reserved for kexec on panic kernels the memory needs
-> struct pages and everything setup so it can be allocated from anyway.
+[    0.000000] BIOS-e820: [mem 0x000000bfbe000000-0x000000c1420fffff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x000000c142100000-0x000000fc7fffffff] usabl=
+e
 
-I am not sure I follow. Could you please elaborate?
 
-> Which is to say I think this is has the potential to conflict with
-> the accounting in try_to_accept_memory.
-> 
-> Please just make memory acceptance ``eager'' non-lazy when using kexec.
-> Unless someone has messed their implementation badly it won't be a
-> significant amount of time in human terms, and it makes the code
-> so much easier to understand and think about.
+2024-10-22 17:09:14.291000 kern NOTICE [   58.996257] kexec: Control page a=
+t c149431000
+2024-10-22 17:09:14.291000 Y
+2024-10-22 17:09:14.291000 rip:000000c1494312f8
+2024-10-22 17:09:14.291000 rsp:000000c149431f90
+2024-10-22 17:09:14.291000 Exc:000000000000000e
+2024-10-22 17:09:14.291000 Err:0000000080000003
+2024-10-22 17:09:14.291000 rax:000000c142130000
+2024-10-22 17:09:14.291000 rbx:000000010d4b8020
+2024-10-22 17:09:14.291000 rcx:0000000000000200
+2024-10-22 17:09:14.291000 rdx:000000000009c000
+2024-10-22 17:09:14.291000 rsi:000000000009c000
+2024-10-22 17:09:14.291000 rdi:000000c142130000
+2024-10-22 17:09:14.291000 r8 :000000c149431000
+2024-10-22 17:09:14.291000 r9 :000000c149430000
+2024-10-22 17:09:14.291000 r10:000000010d4bc000
+2024-10-22 17:09:14.291000 r11:0000000000000000
+2024-10-22 17:09:14.291000 r12:0000000000000000
+2024-10-22 17:09:14.291000 r13:0000000000770ef0
+2024-10-22 17:09:14.291000 r14:ffff8c82c0000000
+2024-10-22 17:09:14.291000 r15:0000000000000000
+2024-10-22 17:09:14.291000 cr2:000000c142130000
+>=20
 
-Waiting minutes to get VM booted to shell is not feasible for most
-deployments. Lazy is sane default to me.
+And bit 31 in the error code is set, which means it's an RMP
+violation.=C2=A0
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Looks like we set up a 2MiB page covering the whole range from
+0xc142000000 to 0xc142200000, but we aren't allowed to touch the first
+half of that.
+
+For me it happens either with or without Steve's last patch, *but*
+clearing direct_gbpages did seem to make it go away (or at least
+reduced the incident rate far below the 1-crash-in-1000-kexecs which I
+was seeing before).
+
+I think Steve's original patch was just moving things around a little
+and because it allocate more pages for page tables, just happened to
+leave pages in the offending range to be allocated for writing to, for
+the unlucky victims.
+
+I think the patch was actually along the right lines though, although
+it needs to go all the way down to 4KiB PTEs in some cases. And it
+could probably map anything that the e820 calls 'usable RAM', rather
+than really restricting itself to precisely the ranges which it's
+requested to map.=20
+
+
+
+=C2=B9 I'll post that exception handler at some point once I've tidied it
+up.
+
+--=-MQP9TFkoyyafU0ovUhhL
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMDIyMTg1MTM4WjAvBgkqhkiG9w0BCQQxIgQgS4oUV+4t
+Yg3VsFy1+tz9nGx3ChGfHpqQIn7JkZOVzNwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBteJhktw+zEt20nehKTyhC3mp4iSMrylFp
+LN+H4Q6aQoiEBqcoRVj479kdvnCpOeMtokfgCU9kZTw/wyn9fF084rwQ9i59YEvxAHsUT4m33lj+
+ZOA8O6SRJTgOmg3Pe5AY/doUEMTajBs+0OVDZKCXFwvIEwIg0cnj/Qd83XRUwGIlnJAGZBAPGzND
+ipwpbj4mtU1B1DuUvQuiiqlC1yc5iMnVNE0N2D8+DMKWirULFoZRCtCoNivH3B4JM1t/s5xmNFNS
+H9V6r8RN+xEAIkz4knFux+vCM29pUOeN2CtAVHgALf3oqxj02qnwI3vYEcwx5JcJ46hnwtQzhjbo
+113meKX93HAoiiNhBeiLUpUkSCuNunCXVXHN5Zbztftch2iYKzHZJIXnTT8FUBkmh0U13HVxqx3K
+6Fv2B7NyxkyxYPQHmvFGxk7g3hQ3MTQ5/lh42I4KqifjAa2n6JL4cMYcvs7msP9wE1QolBT12CV1
++Y+kwQWNZ7l85nCYDhaU1keABkqRcM+N09NH8i8R70jVGxQuPQs4DafiyIcsYmFqRIsNAdSIBngD
+kwZjP7hfAICnMlW3c+Ft0sAjvzEmVvDWDKEyby5gsoGUldPbZK0St5M7swMJYIyR34TCnljT41Ib
+HiTLZ/k0D/htKxroVXWWLihBI1/4kMuueh97GN5XPgAAAAAAAA==
+
+
+--=-MQP9TFkoyyafU0ovUhhL--
+
+
+--===============3410538013418234515==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============3410538013418234515==--
+
