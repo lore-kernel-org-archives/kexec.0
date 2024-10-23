@@ -4,96 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68FC3CDD0FF
-	for <kexec@archiver.kernel.org>; Tue, 22 Oct 2024 22:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 362FCD2E014
+	for <kexec@archiver.kernel.org>; Wed, 23 Oct 2024 05:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yrdulZ9Xmmh/oI8vAAU4pFRzbSoOKRaXLBBRTKGTw+8=; b=LpmNfyMJCyeQxs
-	a//GZ5xEagpZsGw1OMNo3H3ISaPgkbz0IFH2azYR5WZDrEa6JkvUAya0HmA8PkuU7R3pcuXeNoHT6
-	kqNnjBze78c90opQ1D7RUlaIQhQOULgO1nHQUtHCVZqsY7+VsCkHUQxf9qkNBa96MPEglf40AOCRy
-	PIqGrV1yD2W6glRiOhqitUrbje1oGDJaQ2JiNeiNI7UC+4/7qkDkOBPdjvPlA3NVlskuq3oQWzMod
-	ecaJH+FU7+1O7HlyXx0JD/LVdLNic+7N6NPd6lxWLEYoaukuRpsvF8cb2wPAt2XWNHu5PEj4XUiwb
-	v/K6lEeajy+z21mequfw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:Message-ID:Date
+	:Subject:To:From:Reply-To:Cc:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=33Su717c/ikcYz2SokYY+RcKpsYBzVVMO9335EoTXWo=; b=PJ09bw5EjSJylu
+	LF4s0T0C+KMWnDYklHX48RfRtAQl2kt54Lspfoe31E3k4yaXtwH1yc0zXsP3sx991WDOpuLRQpl66
+	6Joc8Zj9R0EkApCDsDTGI5HpdvBvmRKYbrkkRdtWJouklx2+QcM7eNsVFdaO1XznKODxkTYibcU7B
+	XOTHKIvciGEoKec26g4FIM1GnEqVDm3CoGQ1C9AtsSVG6/lTy17LhjlF0QX1pSHfjrT3uiSRb0Q2N
+	cuujgAlWqEaIWeze8HAAOUg+7GJq91ynsnPZkdM/anHUbNXmwvPQWdhLKVULVJD0O2tUONUwfzNKq
+	nzKe753Y2J+nDl+Q3tLg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3N1w-0000000CJDS-2a57;
-	Tue, 22 Oct 2024 22:07:08 +0000
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
+	id 1t3Tk3-0000000D1KS-3iBY;
+	Wed, 23 Oct 2024 05:17:07 +0000
+Received: from mail-japanwestazlp170100001.outbound.protection.outlook.com ([2a01:111:f403:c406::1] helo=OS0P286CU011.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3N1t-0000000CJBI-0Cjg
+	id 1t3TP4-0000000CyV9-1Ct9
 	for kexec@lists.infradead.org;
-	Tue, 22 Oct 2024 22:07:06 +0000
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49MLYwGI028426;
-	Tue, 22 Oct 2024 22:06:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps0720; bh=Vy
-	wH1BfnN3mlhSINt8ZDDsQDI1v+YV8gCm/U1F3m7HU=; b=BYsfOf8EjwQt+7OoKq
-	v7PrdyhpUv+ebj0ZgKYH5lzCTuhebJIIEha0vKXG2+27I8ZiDaXfYYDYQd2eb5d5
-	ZMcIDXsV2mTdx7SXHGSgJKlfjC5RUM4562XiCwTPjwZBqlE7mmieqYtQ7Hn9YsRd
-	uxA80U/GETZiQsacQ+R0LMInc1sYvD4dsv8QWzNwRVE19ElyFlxshmOs3n2ZCyWR
-	VV29ZBYPUbzfrnwpCe2pwAmlD88ltySC/G/Vg7VhGRPqfMSLuDwk2lcrxhmEvGU9
-	jdCg1Zgz16GQujuduYZt17t0Ii95eEhI+y3HTqyTgXT0uhWlHvrjcIADnbTlQDie
-	7Iww==
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 42em36rax3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Oct 2024 22:06:56 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 2C2EFD2A4;
-	Tue, 22 Oct 2024 22:06:55 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id B799C8014F6;
-	Tue, 22 Oct 2024 22:06:52 +0000 (UTC)
-Date: Tue, 22 Oct 2024 17:06:50 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Dave Young <dyoung@redhat.com>, Steve Wahl <steve.wahl@hpe.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavin Joseph <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>,
-        kexec@lists.infradead.org, Eric Hagberg <ehagberg@gmail.com>,
-        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <Zxgh-hBK2FfhHJ9R@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
- <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
- <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
- <87cyryxr6w.fsf@email.froward.int.ebiederm.org>
- <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
- <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
- <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
+	Wed, 23 Oct 2024 04:55:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=udwk5BQIL8rGsRhQb5qTgddc+0+KYIzS7nQzsP+a+8YkrLJ4JmzUPNIZVNj4XyFY2SgFgVXCEG/54IPzA+Fr3TE8s5v4XyZcTSmBI5c18L2jGoyhVcWGsdl20PcCKMX24RdALs8479s8R2zEZf4lCnsYw0ZFodxs8hi33U/bclYBHtX+l7cNn/bTkqS5Ve6bdhwFSZC+2weEWw+oOQCchCoxRUyNS0R+PQkp7VeSeF2wORi4/OSr6mhj6i20yPRkEwMABRIR18Zj2I98+ut9XaaUSmCmVuwte1hXfgb+fl1JqM0eSUuDAIjUae/aC/C6GYt8LJgX5iNi15BJPJFXvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZSnJ5P6uJZFf4YqZQXka32TwY3tYUUOO//ybycpkgqc=;
+ b=PYZsgbc5/AG4AwXYoixYtCLR1Ofu2yEmdF57AAnJfkyOlT2RxR0lC9EEdzlEef45pRZCIFCglXubtyNQwq0RBkUaq7h3UqALYvw1t1nw/3NTq4CNfkHcMygoF8y79AhiOHo6hp3+jkEjScX2MuslQs5UvOjcjqCVBn+TJQM2T7JiaL9qlqWNByZK8Oy/GuXV2ac26wE+BGfmJdQ3krJqAUwEUkvL6zd6B48FyeyolXNVlqjiuNv26Zyx+Vq/D4DnOcBmy+vZkolAl3SCg9wRAYUsBbRRFueG1nDTFl46e8X5BYRU0Udy/ik937f7n8Qnj8NGolt/xa/hGBDXtpi7UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZSnJ5P6uJZFf4YqZQXka32TwY3tYUUOO//ybycpkgqc=;
+ b=UH+Nvx3vkyg7ER5JYgdY9bjkNh7bqLdEjZ4lYVdsWNBN/jhXo79n3BT7Vmi2yMG97FoAPGXz5E8VPtjHQ13MTdf1Hl1wKOG9FkjUeQYE9J+P8QM3fVmJoMiopaGokTshSEvQjMi+qv/HbHWkzNrjRuecppxwqRpmEyeybcUr1rY44IfMAlVDzKIP1RitQSLeGOLjO1gKKewJ5mbpFn1d8GZEbEip/0JDe/j2MIC+NpX/HH0BcHKOXexJeRKa5rg3eXEu+MdgwzF/R1/MbqD6yV0A8aDMFb9BS3qVN9L0qpjPvJKrkOc5lX1/ibeTuy6AtxafPi2VsrNRdwCboFXI4Q==
+Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com (2603:1096:604:1de::11)
+ by TYCPR01MB5965.jpnprd01.prod.outlook.com (2603:1096:400:4e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.17; Wed, 23 Oct
+ 2024 04:55:15 +0000
+Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com
+ ([fe80::d0f6:b978:1865:3d66]) by OS3PR01MB9993.jpnprd01.prod.outlook.com
+ ([fe80::d0f6:b978:1865:3d66%6]) with mapi id 15.20.8069.027; Wed, 23 Oct 2024
+ 04:55:15 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+	<k-hagio-ab@nec.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: [ANNOUNCE] makedumpfile 1.7.6
+Thread-Topic: [ANNOUNCE] makedumpfile 1.7.6
+Thread-Index: AQHbJQe/IDsc/EY9Tkayz5nDeVasug==
+Date: Wed, 23 Oct 2024 04:55:15 +0000
+Message-ID: <7f732c4d-4acf-4d0c-bf8d-6c7e7ddc1e8b@nec.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS3PR01MB9993:EE_|TYCPR01MB5965:EE_
+x-ms-office365-filtering-correlation-id: 46a85925-31e4-4fcd-b3eb-08dcf31ee283
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?RVZTSzhFRUNHaTRpdHR2WDRhREF1VHBxY3d2L3BOTlBLM2MzME9nd2hLRlJO?=
+ =?utf-8?B?V2dlb3VnUkMvT2dJUTc3YlQ1QWZESkFmY3VtZzFhbUljRnZCMVo4L29OZURH?=
+ =?utf-8?B?Wk8zY0NRTXFZR3ZWTEloalNqb29Wc3QzelBpVHcyU0IxVGNpQnpoa2hxU2VD?=
+ =?utf-8?B?WW1CSmhZa2hnU3hnSnRwejI1RzRISjlEWnk2eEpxQ2llNmQxbktKaTIvU2lJ?=
+ =?utf-8?B?Rko2TGNMT28wem11R0M4aVFtWkFiYzc0dHBjN0ZKTk85ZkJjSW1kdzN1ZElR?=
+ =?utf-8?B?SC9kS3pOT2xlVEE1bTF0UkJUR2NYL0F0RFNpLzRkYjVMbllSNkVpTmQ1SUQv?=
+ =?utf-8?B?cEF1U2NoM1JNWE1SWjRheC9udlFDclA2QzV0KzdtRVRFY3Erc2xkS3ZhWEc4?=
+ =?utf-8?B?RlRGOSswK1JqOTRVTTlDVkNOdGRnMENKWVU2bkJYQ1MwQ0lTNWczYlZrdDlx?=
+ =?utf-8?B?aHY4dWN5SEs5VGJ0OFJ2aWRqaDZjQW4vQmxpdm9xZ1dvQTFxZ0R6cFVDdmU2?=
+ =?utf-8?B?OFBmUEx2Vk15RHN2YnJ6VHNuek1sNWFIejB2b21CMGJuK09ac2FBaDlmR0F5?=
+ =?utf-8?B?TkxseGswcXdyM2h2NVFlYWJKYUVTYlRGU2E2NXBaSWM1ZERBMWs2K052SUkv?=
+ =?utf-8?B?VUlNeEVUeGQrcWs4OGJHRkYxdVNmTGh5RlQ0MGRReWdrUUxhMTk5cXJYS29v?=
+ =?utf-8?B?SnJGNU42Vk9aVlVLSEFZSFFONWZxK2ZDTlZEU0w0OVV0OE9BYktCejd3alNH?=
+ =?utf-8?B?MWlVNldhM1pIQUc1b2M0RjY1TGUvbTJnM0ZOaHMvbVJTNFMvV2ZGN1lTMkdq?=
+ =?utf-8?B?b1RWM1plamdtK1dOUi9wTWFmS2E5QXRCd2Ivd0pzRm1KOFNJSjJwS0pxaGJG?=
+ =?utf-8?B?Z1BlajhDdmFvTUg1ZksxbzhUbEZMZUVnbTZxUEJKcWxDeU84NHRUOHhycko5?=
+ =?utf-8?B?NkFjVnFsN00xK01lSFJRRDQza3Y3OU5mbG9kYjFhNjh2anpIbkpmRGV4cnk1?=
+ =?utf-8?B?YU1ndlZOTVZFbW1Mb0pKWnpZaEQ5bXp6VUh3d0NRcFZGbklaVTJVdVlVamZl?=
+ =?utf-8?B?dTdRVnhjWXc4blZiQy9WV0VGZmZYd2REZjBCS0oxQzcwYVNBM2k5YkczSXNG?=
+ =?utf-8?B?bC9VeU81d0I4cTQrL3AzSndud3RIZCtzbk85NnRiNUdNZldyc3JENGpxSmZ5?=
+ =?utf-8?B?UXBvNkFQV0FTOGJ4MFozQ0V3ci9leUFtM2RBUytkcktDTTFha2ZGdzRSdW9L?=
+ =?utf-8?B?RitFSGt5T3ZpZUxaN1ducDd5SUZRdlBmWUVNMllybVBxT29YejgrN09neVcv?=
+ =?utf-8?B?YUtBNkhQdlI4cHhFUkRJRVg3cFREbEgyK3VoenFQR1VlYmpXay9nWTRvYlc2?=
+ =?utf-8?B?dTdRa0dEWDl1bXZsRmxpdXlJU2VUL2NNaXJhVUtFQXRSeWpuRC9XNHd0UnIz?=
+ =?utf-8?B?RGo2V0h3R1F3bW9VZGZidHNjclg3Rjh2dHR2MURpRXBsTkZyaFFvWVpOZFVp?=
+ =?utf-8?B?ZFdsUFpQQWNZRmZSSHRMNWYvUktOMUtMc2xCU21SbGVJMm9KbHpkdG11Nlcy?=
+ =?utf-8?B?aXlDTUUzbVJJUkhJMWRzRG1ZMHVMVzBLOVg2MTRHVnIxQ1BaS21BUjlKa0JM?=
+ =?utf-8?B?WS9JOVNOcEVWUUZCMk8zWWpUaTU3MGY5eTE2WmNoUjdBZUk3eEJvaGRwQUtz?=
+ =?utf-8?B?RHZEazU1aWxKVXEwWU93bGxoTzNxaldRb2M5a3ZaZ1hGbmQ4eGdhWlBFNS9j?=
+ =?utf-8?B?aDQ0ZGFvMHpKRlNna3hva1I4ODJVWFBESVhDWVlDbk0zNnpHSnZQQVhjbytR?=
+ =?utf-8?B?bEZBM2NGNnlmSmZndUNDdStseVgrZTF5UDBpclJ5ZnlZUnFldy9ocFY4bnBF?=
+ =?utf-8?Q?M4/oA0MUVPyxo?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB9993.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VEY4SXBDZ0NzY1dPdHRJMW93SWJlbklBcDV6STBFU1kyRXhXMFEyejkxRVRD?=
+ =?utf-8?B?dzE1b1Q4RkZYbW9QYzR4RmNJZVFWcDJzbzFTUDNvNVduN0RUMXF0ai9FclpF?=
+ =?utf-8?B?NjhPaEJDQWN2b2VTS0thd29xR3RNZFMwdEhPRmdYbVBER1hvSFFOdkNVVDVs?=
+ =?utf-8?B?R0lCaUpuZU1weWFTVGxWMmlMRHJ3Q1VpYzRmNU5QbWdDYURWbVVBTzJITVVj?=
+ =?utf-8?B?ZHJXR2lSc2NaM1VtWEhlckxMT3RPcWg3eGs1bFJ1Z1FWWmJmOHJaVkhVbkRV?=
+ =?utf-8?B?RkFRMWxod0NPYldLMS9mYUNTeStvSGtkdFJyOUN4dDNhZy9pdXVQTW9Ed0o1?=
+ =?utf-8?B?dEtlbVpiaUtEandzdmNCeXJnRk1WYXlPWXQzY055RUltTTE5WHc3bHdpOTdp?=
+ =?utf-8?B?MnBOUW1MazNxeWlPR25nYjF0R2Z5MVN5Y01hQlQ0M1pUbzJLU1JhQjdzYTZV?=
+ =?utf-8?B?MUpkTXNKMzZmUmVRM2E5ekQ3czRhYXV1MWg3U1dqc3N5UDcrSTdRUUFjY2pN?=
+ =?utf-8?B?L1g2Q3R1K3BLUEw4M01taCtlRGtaV2F6Vzl0Z1BuREdVN01BdUVMSU94bmtu?=
+ =?utf-8?B?L28zOC9yRTI4L1VZZmx4WHVvSmpFQVVOcTVhYzhnWFZsWW40Z2JyT0QvL1Zl?=
+ =?utf-8?B?cUVIMTRnOWUwdDhCL0s2QmRLRVBaRVhVS2h1UFljbkMyVGdvbTJVSnowVFlF?=
+ =?utf-8?B?Wk1sdGwyN2tYeDhwTCszUnMweXBkZlFrbEFrVUltM0J3L2FJNW1CWkdVdUxH?=
+ =?utf-8?B?UUgyZmd2Q1JGaTBNc2cyUWRMZ01OY08ralovbHE3TWRIRWdiVmlVa0lFMnZX?=
+ =?utf-8?B?cUhaZCtHVkNhQ1htTUNwdElWaUkwY01lRDZGY2ZuVEFVWEpiWDZJUGpBVVNo?=
+ =?utf-8?B?aW45eVJQTUJ6ODlEd3pZakRXYUtNNGpwdmZPTlBiMHBMcDVYWDVkQyswbVMv?=
+ =?utf-8?B?RkdWVGVnUG5DMzdIdzlGVlJqaThQcXR5bmNVcktrbFJlZnFqeVRFZmNBbXdv?=
+ =?utf-8?B?eFM3OWt3alN1YmdqbTRHQ0hEN2drdVhXNGdPcGFkOXlDMUlCcmxzMDkwa0hj?=
+ =?utf-8?B?OFFKcGgxRWZLR0VHbGdzUlpORGxqWHJndGMwdjBrRkI3ZEphVTdBOW1HNXBo?=
+ =?utf-8?B?M2ljckRxZ2VuQzA4RVBaK1RvaUVmNURZdkNPWnJyc3AxeC9hMTlZc2M0ejBw?=
+ =?utf-8?B?VGRVM1lWRkI0QjQwRUVZVkg5c01GQ2tSUDdpTllOM0NKaUJTeDM4UzdySkMy?=
+ =?utf-8?B?UkxmU3YrYkhibkRVNVlXK1ByM3lqaFZzNFhOMUoxc1k4dnBZZ3IvZ0dOOC9x?=
+ =?utf-8?B?MXNuUUVERXhoSVdoaFBMN2U4Q0RiWDNRdnRFZmU1ZVp2S1I1YlVtR2FMY3NN?=
+ =?utf-8?B?YzY3OExMMHRwcGU5Y3gxbkhpYkVKUTc5UUlUK0ZicWVVa1UzM1oxRUFxWS9F?=
+ =?utf-8?B?c1pUVG9SUGlML3A5amNOZFU3SzVKWmhKZnZ1ZEY1OWJXYzFSTEVtSmNMTDNI?=
+ =?utf-8?B?TzUyaDdnYVk5cTZmRmRBV3R2UjhoZDdLOGF2cklURkZ4SlhCZHFZRUw1V3lU?=
+ =?utf-8?B?dEN0ZVc1WHRQV0dTc2lzc0NiSjltakdBVmlKTm9SMGpTYnh6cWt6WE5VUHJp?=
+ =?utf-8?B?azZKa3dGT1dJL3ltajZURnVUSXd2SzR4MFI4VDdxaUE3MmtJQmRsN3lOeFJz?=
+ =?utf-8?B?dkNNaGd6SkR1QVlDYXhSelJ6Z1FRMUN3TXh6MjdtRWxsQlMreUZkUjNQSTUr?=
+ =?utf-8?B?cFBOT2lLemJrNkhHdzQxRUxhZGJOaWhmK2xUYlpsWjdEZzNtQzRoemFhUEhV?=
+ =?utf-8?B?OGFKcVFickxpU3hFWWNvclc5Q04vMkRhVytwVlNzNllub2JoK3pNdC84M2tC?=
+ =?utf-8?B?L0gxTU9sSHRoUWtRR0Z1R3o1NnFWUFJXRUNwa0lWekdheGIzUVB0NkF0Znc2?=
+ =?utf-8?B?Vi9aVmJsN2lDU3BNcGRCVTBlTkkyeGZ5VWxabC9hSStIdEJnZGF4TlFsMWtj?=
+ =?utf-8?B?UDlad3R5cCtBcjJCRWRsVGt3UWJ5RjBSUWNCV1AyaktVQkZudURDaUYyem01?=
+ =?utf-8?B?U0t5Nk1pcDNGMFhBYTVVa1hSS0R5Sllyc05WaHExa0FJWStpT2gxaGpxZVZX?=
+ =?utf-8?Q?j73eUGd3CkQXOd+qoo2RIIEke?=
+Content-ID: <FDFEDECA8634D04EA53653029A38EED5@jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
-X-Proofpoint-GUID: aJQdN_SsE1yVeQ3REZJbsQ1HIEdaLQtb
-X-Proofpoint-ORIG-GUID: aJQdN_SsE1yVeQ3REZJbsQ1HIEdaLQtb
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410220143
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB9993.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46a85925-31e4-4fcd-b3eb-08dcf31ee283
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2024 04:55:15.4181
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bbdUWZQZWRAWGaoTfrrVZB4dRxytADu5F1ZRTthfPP4b0snwI3cwKb9rPxrKR9ho6oTbEHDy2gwwlAvRqM6avw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB5965
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241022_150705_118362_D5F0AEA8 
-X-CRM114-Status: GOOD (  63.72  )
+X-CRM114-CacheID: sfid-20241022_215526_663424_DE165C6C 
+X-CRM114-Status: UNSURE (   7.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,231 +168,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Oct 22, 2024 at 07:51:38PM +0100, David Woodhouse wrote:
-> On Thu, 2024-03-14 at 17:25 +0800, Dave Young wrote:
-> > On Thu, 14 Mar 2024 at 00:18, Steve Wahl <steve.wahl@hpe.com> wrote:
-> > > =
+Hi,
 
-> > > On Wed, Mar 13, 2024 at 07:16:23AM -0500, Eric W. Biederman wrote:
-> > > > =
+We're pleased to announce the release of makedumpfile 1.7.6.
+Thank you everyone for your help to maintain the tool.
 
-> > > > Kexec happens on identity mapped page tables.
-> > > > =
+Download:
+The latest makedumpfile can be downloaded from the following page.
+     https://github.com/makedumpfile/makedumpfile/releases
 
-> > > > The files of interest are machine_kexec_64.c and relocate_kernel_64=
-.S
-> > > > =
+New features:
+- Support for kernels up to v6.11 (x86_64)
 
-> > > > I suspect either the building of the identity mappged page table in
-> > > > machine_kexec_prepare, or the switching to the page table in
-> > > > identity_mapped in relocate_kernel_64.S is where something goes wro=
-ng.
-> > > > =
+Commits since 1.7.5:
+97a8948 [v1.7.6] Update version (Kazuhito Hagio)
+f2c5f76 [PATCH v2] Fix incorrect page exclusion in exclude_nodata_pages() (Ming Wang)
+90dc30d [PATCH 2/2] s390x: Assume zero value of OS_INFO pointer is valid (Alexander Gordeev)
+1958845 [PATCH 1/2] Submit physical address to is_phys_addr() (Alexander Gordeev)
+bd30437 [PATCH 2/2] sadump_info: Return empty string instead of NULL (Stefan Wiehler)
+3de7484 [PATCH 1/2] Add ftruncate error handling (Stefan Wiehler)
+306eddf [PATCH] Fix failure of free pages exclusion with -x option on Linux 6.10 (Kazuhito Hagio)
+a7196e9 [PATCH] fix comment: Mention current logic for vmalloc_start (Aditya Gupta)
+c763012 [PATCH] make reserve_diskspace do nothing for flattened format (Jiri Bohac)
+900190d [PATCH] Workaround for segfault by "makedumpfile --mem-usage" on PPC64 (Kazuhito Hagio)
+bad2a7c [PATCH] Fix wrong exclusion of Slab pages on Linux 6.10-rc1 and later (Kazuhito Hagio)
+985e575 [PATCH] Fix failure of hugetlb pages exclusion on Linux 6.9 and later (Kazuhito Hagio)
+354fbdd [PATCH] Makefile: Make sbin directory configurable (Coiby Xu)
+6798189 [PATCH] Update maintainers (Kazuhito Hagio)
 
-> > > > Probably in kernel_ident_mapping_init as that code is directly used
-> > > > to build the identity mapped page tables.
-> > > > =
+Description of makedumpfile:
+The makedumpfile is a tool for creating a dumpfile from /proc/vmcore
+with filtering out unnecessary pages for analysis and compressing the
+remaining pages, to shorten the size of the dumpfile and the time of
+creating it.
+https://github.com/makedumpfile/makedumpfile
 
-> > > > Hmm.
-> > > > =
-
-> > > > Your change is commit d794734c9bbf ("x86/mm/ident_map: Use gbpages =
-only
-> > > > where full GB page should be mapped.")
-> > > =
-
-> > > Yeah, sorry, I accidentally used the stable cherry-pick commit id that
-> > > Pavin Joseph found with his bisect results.
-> > > =
-
-> > > > Given the simplicity of that change itself my guess is that somewhe=
-re in
-> > > > the first 1Gb there are pages that needed to be mapped like the idt=
- at 0
-> > > > that are not getting mapped.
-> > > =
-
-> > > ...
-> > > =
-
-> > > > It might be worth setting up early printk on some of these systems
-> > > > and seeing if the failure is in early boot up of the new kernel (th=
-at is
-> > > > using kexec supplied identity mapped pages) rather than in kexec pe=
-r-se.
-> > > > =
-
-> > > > But that is just my guess at the moment.
-> > > =
-
-> > > Thanks for the input.=A0 I was thinking in terms of running out of
-> > > memory somewhere because we're using more page table entries than we
-> > > used to.=A0 But you've got me thinking that maybe some necessary regi=
-on
-> > > is not explicitly requested to be placed in the identity map, but is
-> > > by luck included in the rounding errors when we use gbpages.
-> > =
-
-> > Yes, it is possible. Here is an example case:
-> > http://lists.infradead.org/pipermail/kexec/2023-June/027301.html
-> > Final change was to avoid doing AMD things on Intel platform, but the
-> > mapping code is still not fixed in a good way.
-> =
-
-> I spent all of Monday setting up a full GDT, IDT and exception handler
-> for the relocate_kernel() environment=B9, and I think these reports may
-> have been the same as what I've been debugging.
-
-David,
-
-My original problem involved UV platform hardware catching a
-speculative access into the reserved areas, that caused a BIOS HALT.
-Reducing the use of gbpages in the page table kept the speculation
-from hitting those areas.  I would believe this sort of thing might be
-uniqe to the UV platform.
-
-The regression reports I got from Pavin and others were due to my
-original patch trimming down the page tables to the point where they
-didn't include some memory that was actually referenced, not processor
-speculation, because the regions were not explicitly included in the
-creation of the kexec page map.  This was fixed by explicitly
-including those regions when creating the map.
-
-Can you dump the page tables to see if the address you're referencing
-is included in those tables (or maybe you already did)?  Can you give
-symbols and code around the RIP when you hit the #PF?  It looks like
-this is in the region metioned as the "Control page", so it's probably
-trampoline code that has been copied from somewhere else.  I'm using
-my copy of perhaps different kernel source than you have, given your
-exception handler modification.
-
-Wait, I can't make sense of the dump. See more below.
-
-What platform are you running on?  And under what conditions (is this
-bare metal)? Is it really speculation that's causing your #PF?  If so,
-you could cause it deterministically by, say, doing a quick checksum
-on that area you're not supposed to touch (0xc142000000 -
-0xC1420fffff) and see if it faults every time.  (As I said, I was
-thinking faults from speculation might be unique to the UV platform.)
-
-> We end up taking a #PF, usually on one of the 'rep mov's, one time on
-> the 'pushq %r8' right before using it to 'ret' to identity_mapped. In
-> each case it happens on the first *write* to a page.
-> =
-
-> Now I can print %cr2 when it happens (instead of just going straight to
-> triple-fault), I spot an interesting fact about the address. It's
-> always *adjacent* to a region reserved by BIOS in the e820 data, and
-> within the same 2MiB page.
-
-I'm not at all certain, but this feels like a red herring.  Be cautious.
-
-> [    0.000000] BIOS-e820: [mem 0x000000bfbe000000-0x000000c1420fffff] res=
-erved
-> [    0.000000] BIOS-e820: [mem 0x000000c142100000-0x000000fc7fffffff] usa=
-ble
-> =
-
-> =
-
-> 2024-10-22 17:09:14.291000 kern NOTICE [   58.996257] kexec: Control page=
- at c149431000
-> 2024-10-22 17:09:14.291000 Y
-> 2024-10-22 17:09:14.291000 rip:000000c1494312f8
-> 2024-10-22 17:09:14.291000 rsp:000000c149431f90
-> 2024-10-22 17:09:14.291000 Exc:000000000000000e
-> 2024-10-22 17:09:14.291000 Err:0000000080000003
-> 2024-10-22 17:09:14.291000 rax:000000c142130000
-> 2024-10-22 17:09:14.291000 rbx:000000010d4b8020
-> 2024-10-22 17:09:14.291000 rcx:0000000000000200
-> 2024-10-22 17:09:14.291000 rdx:000000000009c000
-> 2024-10-22 17:09:14.291000 rsi:000000000009c000
-> 2024-10-22 17:09:14.291000 rdi:000000c142130000
-> 2024-10-22 17:09:14.291000 r8 :000000c149431000
-> 2024-10-22 17:09:14.291000 r9 :000000c149430000
-> 2024-10-22 17:09:14.291000 r10:000000010d4bc000
-> 2024-10-22 17:09:14.291000 r11:0000000000000000
-> 2024-10-22 17:09:14.291000 r12:0000000000000000
-> 2024-10-22 17:09:14.291000 r13:0000000000770ef0
-> 2024-10-22 17:09:14.291000 r14:ffff8c82c0000000
-> 2024-10-22 17:09:14.291000 r15:0000000000000000
-> 2024-10-22 17:09:14.291000 cr2:000000c142130000
-> > =
-
-> =
-
-> And bit 31 in the error code is set, which means it's an RMP
-> violation.=A0
-
-RMP is AMD SEV related, right?  I'm not familiar with SEV operation,
-but I have an itchy feeling it's involved in this problem.
-
-I am having a hard time with the RIP listed above.  Maybe your
-exception handler has affected it?  My disassembly seems to show this
-address should be in a sea of 0xCC / int3 bytes past the end of swap
-pages.
-
-> Looks like we set up a 2MiB page covering the whole range from
-> 0xc142000000 to 0xc142200000, but we aren't allowed to touch the first
-> half of that.
-
-Is it possible that, instead, some SEV tag is hanging around (TLB not
-completely cleared?) and a page that was otherwise free is causing the
-problem.  Are you using SEV/SME in your system, and if you stop using
-it does it go away?  (Although I have a feeling the answer is no and
-I'm barking up the wrong tree.)
-
-The target of the pages above is c1421300000.  Have you checked to
-make sure that's a valid address in the page map?
-
-> For me it happens either with or without Steve's last patch, *but*
-> clearing direct_gbpages did seem to make it go away (or at least
-> reduced the incident rate far below the 1-crash-in-1000-kexecs which I
-> was seeing before).
-
-I assume you're referring to the "nogbpages" kernel option?  My patch
-and the nogbpages option should have the exact same pages mapped in
-the page table.  The difference being my patch would still use gbpages
-in places where a whole gbpage region is included in the map,
-nogbpages would use 2M pages to fill out the region.  This *would*
-allocate more pages to the page table, which might be shifting things
-around on you.
-
-> I think Steve's original patch was just moving things around a little
-> and because it allocate more pages for page tables, just happened to
-> leave pages in the offending range to be allocated for writing to, for
-> the unlucky victims.
-> =
-
-> I think the patch was actually along the right lines though, although
-> it needs to go all the way down to 4KiB PTEs in some cases. And it
-> could probably map anything that the e820 calls 'usable RAM', rather
-> than really restricting itself to precisely the ranges which it's
-> requested to map. =
-
-> =
-
-> =
-
-> =
-
-> =B9 I'll post that exception handler at some point once I've tidied it
-> up.
-
-I hope this might be of some help.  Good luck, I'll pitch in any way I
-can.
-
---> Steve
-
--- =
-
-Steve Wahl, Hewlett Packard Enterprise
-
+Thanks,
+Kazu
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
