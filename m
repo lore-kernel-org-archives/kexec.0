@@ -4,91 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8560ED0BB56
-	for <kexec@archiver.kernel.org>; Fri, 25 Oct 2024 15:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA75FD149C5
+	for <kexec@archiver.kernel.org>; Fri, 25 Oct 2024 16:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=YLMmyj8qeGfru6Rc0vLhobjluGpfnaVZlaSqwBmDOr4=; b=cNU2rL3KJSGejx
-	AXVLe6ptHU0l9f6LAj39UtQ2J1UAplDlXASjrkBt6o4dLEwa57ffbpQ8r6ecbps7cpMeM7n2DWHcd
-	Ba1Z9c9dXWmys92d5LalCGhX3exJSYk3RI2o6o/icFs5UA0Sffr2KbzP8x8Aly+bRwkFlNe0AysWi
-	PKX07FY5OEKp9T23Z4zXoi8bEM8U4hiJy+667j/4eXQzu+h6f1ylaHqyKI6Le6T7pCormUR4o69kP
-	L8jNYC8pfDoKMpoHbUN48Z7YAAwbKSmjLpxNx/8ltE5zuI4BmsddfInvnim9xZ4tsByTHgv5sdLqd
-	STMSTb+ObECgPuM75GvA==;
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=VAs9fggr4BGdNJ68lpNK7nB+tuU5j36kCouUs8GVD4c=; b=j7EVzFm+3pxatH
+	CEfzgB1R8T7IOuaN/jOZ9JI83nqhNpm5CfotWddIfsWX1emxEpsZSjtw0XpGnBMZYIcqWlGkJDEG1
+	SBenGxghVItNYG2K2eppnHV2y3YOnbopuaG3kVLlh06rUv1VY8TT7jAw8p9ZOudaatqm7S/lX2upH
+	GET3FwphwQa2bFEJFXuEItHvZQH6wGR0gqHCDGmw9HoMYU0RvAF78PYBBOxXpSvaHZW7m6EllCeul
+	O7P++ElxTu2MN6Nh5vBXVqg7EzN8n3OLeufAX6bhinMbXlfyo4cMKV/nTGJscP8FdEWhQiG8+991G
+	kp6Mso7UIA7eEQ5kPRpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4MLe-00000004Gak-1VwY;
-	Fri, 25 Oct 2024 15:35:34 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1t4N7o-00000004QuG-3Kdk;
+	Fri, 25 Oct 2024 16:25:20 +0000
+Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4M0D-00000004BCl-0lWI
+	id 1t4N3f-00000004PCV-1K5d
 	for kexec@lists.infradead.org;
-	Fri, 25 Oct 2024 15:13:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729869204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=duV64aDOzPCg70Erai+k0MR4CZFFfLJs/Tny3PQhGqo=;
-	b=Py6SXWnRRaYj5YfdQ32q1Yz4tx1KceUdfrsMSo9rXb1hCRYtJuxPMeU8ELBtJ32Aby/wK/
-	mhlU3WLXKkd5ykcpAKH66baagvhntNHGedC+8wnLT5i+WVsKHJCChIoKylnhv0UHfOpJHn
-	o6afDZvZNqmL17RURTtHktZCkTVDDUw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-_q3EKHFQNEmGt7K_9EZzAQ-1; Fri,
- 25 Oct 2024 11:13:19 -0400
-X-MC-Unique: _q3EKHFQNEmGt7K_9EZzAQ-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 750F61956096;
-	Fri, 25 Oct 2024 15:13:17 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.22.65.27])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 27021300018D;
-	Fri, 25 Oct 2024 15:13:08 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-s390@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	David Hildenbrand <david@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1 11/11] s390/kdump: virtio-mem kdump support (CONFIG_PROC_VMCORE_DEVICE_RAM)
-Date: Fri, 25 Oct 2024 17:11:33 +0200
-Message-ID: <20241025151134.1275575-12-david@redhat.com>
-In-Reply-To: <20241025151134.1275575-1-david@redhat.com>
-References: <20241025151134.1275575-1-david@redhat.com>
+	Fri, 25 Oct 2024 16:21:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=EHLpWcwrtqUoy9yZdOs2vFLOu6EebO+piZZlDeFdZ2U=; b=YbG4Yt1fz5SrBiorVVGTzoxFeJ
+	BhofV7UIxCiw/O7cutk+kz6WvBmC3k7ykYF4pUi6Z41Y6UYNkseVt0/GgfigbyWDEAiyY4Seab18d
+	qoAmreG73WYGcrQoiJnm5C1E5e0fnuHLmy8r/TujFw69CXkl9j8jpFNsDKCRo5EjjK/B9F3WeMKof
+	feMj6hD08D7rHFaMNeGwde8yIbz3T+m0QRWT8e5R/yy3vJTbOjp/mDajPO7WEJJMKc9TPUtvtOBTp
+	6Ni5Z62vjOyA5HYEFgC4gDu79/x6kDOtLC2DwdWldwyENU8OkTUe+Td1/VEXNbvhdFgi1bqn+J4FG
+	K11pt7BQ==;
+Received: from [189.79.117.125] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1t4N3P-00F5mK-VM; Fri, 25 Oct 2024 18:20:48 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH V3] Documentation: Improve crash_kexec_post_notifiers description
+Date: Fri, 25 Oct 2024 13:18:20 -0300
+Message-ID: <20241025162042.905104-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.46.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241025_081325_305798_DBFE27F7 
-X-CRM114-Status: GOOD (  13.94  )
+X-CRM114-CacheID: sfid-20241025_092105_136518_14EFE421 
+X-CRM114-Status: UNSURE (   9.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,101 +66,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: kernel-dev@igalia.com, bhe@redhat.com, corbet@lwn.net, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, stephen.s.brennan@oracle.com, horms@kernel.org, dyoung@redhat.com, vgoyal@redhat.com, linux-debuggers@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Let's add support for including virtio-mem device RAM in the crash dump,
-setting NEED_PROC_VMCORE_DEVICE_RAM, and implementing
-elfcorehdr_fill_device_ram_ptload_elf64().
+The crash_kexec_post_notifiers description could be improved a bit,
+by clarifying its upsides (yes, there are some!) and be more descriptive
+about the downsides, specially mentioning code that enables the option
+unconditionally, like Hyper-V[0], PowerPC (fadump)[1] and more
+recently, AMD SEV[2].
 
-To avoid code duplication, factor out the code to fill a PT_LOAD entry.
+[0] Commit a11589563e96 ("x86/Hyper-V: Report crash register data or kmsg before running crash kernel").
+[1] Commit 06e629c25daa ("powerpc/fadump: Fix inaccurate CPU state info in vmcore generated with panic").
+[2] Commit 8ef979584ea8 ("crypto: ccp: Add panic notifier for SEV/SNP firmware shutdown on kdump").
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- arch/s390/Kconfig             |  1 +
- arch/s390/kernel/crash_dump.c | 39 ++++++++++++++++++++++++++++-------
- 2 files changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index d339fe4fdedf..d80450d957a9 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -230,6 +230,7 @@ config S390
- 	select MODULES_USE_ELF_RELA
- 	select NEED_DMA_MAP_STATE	if PCI
- 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
-+	select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
- 	select NEED_SG_DMA_LENGTH	if PCI
- 	select OLD_SIGACTION
- 	select OLD_SIGSUSPEND3
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index edae13416196..97b9e71b734d 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -497,6 +497,19 @@ static int get_mem_chunk_cnt(void)
- 	return cnt;
- }
+V3: Improved wording and commit description, detailing more about the addition
+of code that enables crash_kexec_post_notifiers unconditionally.
+
+Thanks Baoquan and Simon for the suggestions!
+
+
+ Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 3978fb704c53..2a7a523bb90b 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -918,12 +918,16 @@
+ 			the parameter has no effect.
  
-+static void fill_ptload(Elf64_Phdr *phdr, unsigned long paddr,
-+		unsigned long vaddr, unsigned long size)
-+{
-+	phdr->p_type = PT_LOAD;
-+	phdr->p_vaddr = vaddr;
-+	phdr->p_offset = paddr;
-+	phdr->p_paddr = paddr;
-+	phdr->p_filesz = size;
-+	phdr->p_memsz = size;
-+	phdr->p_flags = PF_R | PF_W | PF_X;
-+	phdr->p_align = PAGE_SIZE;
-+}
-+
- /*
-  * Initialize ELF loads (new kernel)
-  */
-@@ -509,14 +522,8 @@ static void loads_init(Elf64_Phdr *phdr, bool os_info_has_vm)
- 	if (os_info_has_vm)
- 		old_identity_base = os_info_old_value(OS_INFO_IDENTITY_BASE);
- 	for_each_physmem_range(idx, &oldmem_type, &start, &end) {
--		phdr->p_type = PT_LOAD;
--		phdr->p_vaddr = old_identity_base + start;
--		phdr->p_offset = start;
--		phdr->p_paddr = start;
--		phdr->p_filesz = end - start;
--		phdr->p_memsz = end - start;
--		phdr->p_flags = PF_R | PF_W | PF_X;
--		phdr->p_align = PAGE_SIZE;
-+		fill_ptload(phdr, start, old_identity_base + start,
-+			    end - start);
- 		phdr++;
- 	}
- }
-@@ -526,6 +533,22 @@ static bool os_info_has_vm(void)
- 	return os_info_old_value(OS_INFO_KASLR_OFFSET);
- }
+ 	crash_kexec_post_notifiers
+-			Run kdump after running panic-notifiers and dumping
+-			kmsg. This only for the users who doubt kdump always
+-			succeeds in any situation.
+-			Note that this also increases risks of kdump failure,
+-			because some panic notifiers can make the crashed
+-			kernel more unstable.
++			Only jump to kdump kernel after running the panic
++			notifiers and dumping kmsg. This option increases
++			the risks of a kdump failure, since some panic
++			notifiers can make the crashed kernel more unstable.
++			In configurations where kdump may not be reliable,
++			running the panic notifiers could allow collecting
++			more data on dmesg, like stack traces from other CPUS
++			or extra data dumped by panic_print. Note that some
++			configurations enable this option unconditionally,
++			like Hyper-V, PowerPC (fadump) and AMD SEV.
  
-+#ifdef CONFIG_PROC_VMCORE_DEVICE_RAM
-+/*
-+ * Fill PT_LOAD for a physical memory range owned by a device and detected by
-+ * its device driver.
-+ */
-+void elfcorehdr_fill_device_ram_ptload_elf64(Elf64_Phdr *phdr,
-+		unsigned long long paddr, unsigned long long size)
-+{
-+	unsigned long old_identity_base = 0;
-+
-+	if (os_info_has_vm())
-+		old_identity_base = os_info_old_value(OS_INFO_IDENTITY_BASE);
-+	fill_ptload(phdr, paddr, old_identity_base + paddr, size);
-+}
-+#endif
-+
- /*
-  * Prepare PT_LOAD type program header for kernel image region
-  */
+ 	crashkernel=size[KMG][@offset[KMG]]
+ 			[KNL,EARLY] Using kexec, Linux can switch to a 'crash kernel'
 -- 
-2.46.1
+2.46.2
 
 
 _______________________________________________
