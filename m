@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D3B1D1039D
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1733D116FB
 	for <kexec@archiver.kernel.org>; Fri, 25 Oct 2024 15:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,46 +12,46 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZQeeDT+jjnjvKoiHVfvnfYNgO1PLRoUgmuAb0KNSOnQ=; b=Kuoq4LkLhzneT/
-	Pzc6rSM160vTQPYBJVUIj3S86fFRlugFTt5ChjoWQbNbkZp5yqQ2g9cvrXSrMid1WtXTq8JrolygU
-	drPrtOHAqRL9bwdmNklhgWworw3PtAaxRs0CixImpLAkh977u2gVGP6+KHVGidB43MqsxJ6lINpcD
-	+dzXFgLvfpuy8jpjP8n1alX3uv2luplb+J9WZ2WWxKvnUtFMJpLGYiN2J5UV7QT3ju570zpphbn6u
-	nf3NFugTI5hlbcFBHmTp8r2tnlcqBWkLvAZMGbQbU4vy+tq1EXSAOCa558iqus5mxA6vVC15jbKd4
-	TosWVOpyBMrv4t4aqmdw==;
+	List-Owner; bh=Yure1T8e33YVHWaql0hBe2Bp+Qqd3wfjoNkwh2PhFBU=; b=jtSZ14v+s6YiXg
+	Ltba+zIyCDg8AnMYVWA7DkYqfOTPknE3FrG15P4AFHMGUSCkwSghjMoopgmm4XIWr1PThQmejeL0/
+	TTKTn6/XLCi2nLwsY/QMUu2LhBjETgRDgNNIhbFhLEvKcv/RWVcAPk8HO4Oaq1ihQl4au/iC/lvhl
+	lydBxvZj7F7pE8XtwZ/GXTRFmFVszNYu4VsYIrLSfeKNCcd9a/ny0XfYiqoBp3gXzuoKG0alZr15H
+	VzChZYT5d0Nq4zqcPhtvaJUBZQ4F7uwbW2v/Xki4DQ5Ki0wUhLdDRWhSrpUzXY7r0ykp4cmPrjho+
+	wMH6eXwOfezQXWt+Xlow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4MLS-00000004GRK-2ts1;
-	Fri, 25 Oct 2024 15:35:22 +0000
+	id 1t4MLT-00000004GRh-1B3G;
+	Fri, 25 Oct 2024 15:35:23 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4LzH-00000004Aok-1S6s
+	id 1t4LzP-00000004Asq-1sbn
 	for kexec@lists.infradead.org;
-	Fri, 25 Oct 2024 15:12:29 +0000
+	Fri, 25 Oct 2024 15:12:36 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729869146;
+	s=mimecast20190719; t=1729869154;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D6QGok1SHO7tWBONbTK+qNFzpgcjUP8FVLCibVkMqhw=;
-	b=F4f6VDPowolVgA+uXd3Bdfk804HllggMYQN1XDYRdzlPfMrlvctSDCbIOU5nYL8YeCL1ZW
-	Srd8KL/ZNC+UBeNXVgXXdEJQn1zU3Ly91pPlLBqTYoFGd+owCNO+OmcZ7l/W7EXMY4PG/y
-	4JsUglSrbN4B2vO3d6IPQVEgSCkKrjw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=UerumhmGRgSm1AsU/ieQ+gWT/mqI7oI1n5V7Kl7Bfao=;
+	b=HCYGFgfCMHNSarehRCaSP7uVM+vkNMk5LydC2a67LZ8gNqc6Tn6IhzixzzeReS9SITamTS
+	Pz2K9BWn/utDdQgZGRHekthwHuXu9GSfNFq4S1nHdYlpa0RJBQ1t1m1ZP5hkYkzoCXr/tZ
+	QG7PXvXAwI1rQGLpaAdvwdc7xQ8s1a4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-64-m7d72Gv7PTyqbx3Zkb-x3g-1; Fri,
- 25 Oct 2024 11:12:21 -0400
-X-MC-Unique: m7d72Gv7PTyqbx3Zkb-x3g-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-8XrGVJi3OyGjKDZHuJgcSw-1; Fri,
+ 25 Oct 2024 11:12:30 -0400
+X-MC-Unique: 8XrGVJi3OyGjKDZHuJgcSw-1
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65E1F1956077;
-	Fri, 25 Oct 2024 15:12:19 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 98ACF1955E70;
+	Fri, 25 Oct 2024 15:12:27 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.22.65.27])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E93DA300018D;
-	Fri, 25 Oct 2024 15:12:10 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 006CD30001A9;
+	Fri, 25 Oct 2024 15:12:19 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -79,16 +79,16 @@ Cc: linux-mm@kvack.org,
 	Claudio Imbrenda <imbrenda@linux.ibm.com>,
 	Eric Farman <farman@linux.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1 04/11] fs/proc/vmcore: move vmcore definitions from kcore.h to crash_dump.h
-Date: Fri, 25 Oct 2024 17:11:26 +0200
-Message-ID: <20241025151134.1275575-5-david@redhat.com>
+Subject: [PATCH v1 05/11] fs/proc/vmcore: factor out allocating a vmcore memory node
+Date: Fri, 25 Oct 2024 17:11:27 +0200
+Message-ID: <20241025151134.1275575-6-david@redhat.com>
 In-Reply-To: <20241025151134.1275575-1-david@redhat.com>
 References: <20241025151134.1275575-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241025_081227_610181_D066CDEE 
-X-CRM114-Status: GOOD (  17.90  )
+X-CRM114-CacheID: sfid-20241025_081235_585746_1B15DA85 
+X-CRM114-Status: GOOD (  15.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,163 +105,102 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-These defines are not related to /proc/kcore, move them to crash_dump.h
-instead. While at it, rename "struct vmcore" to "struct
-vmcore_mem_node", which is a more fitting name.
+Let's factor it out into include/linux/crash_dump.h, from where we can
+use it also outside of vmcore.c later.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- fs/proc/vmcore.c           | 20 ++++++++++----------
- include/linux/crash_dump.h | 13 +++++++++++++
- include/linux/kcore.h      | 13 -------------
- 3 files changed, 23 insertions(+), 23 deletions(-)
+ fs/proc/vmcore.c           | 21 ++-------------------
+ include/linux/crash_dump.h | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+), 19 deletions(-)
 
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 6371dbaa21be..47652df95202 100644
+index 47652df95202..76fdc3fb8c0e 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -304,10 +304,10 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
-  */
- static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
- {
-+	struct vmcore_mem_node *m = NULL;
- 	ssize_t acc = 0, tmp;
- 	size_t tsz;
- 	u64 start;
--	struct vmcore *m = NULL;
- 
- 	if (!iov_iter_count(iter) || *fpos >= vmcore_size)
- 		return 0;
-@@ -560,8 +560,8 @@ static int vmcore_remap_oldmem_pfn(struct vm_area_struct *vma,
- static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
- {
- 	size_t size = vma->vm_end - vma->vm_start;
-+	struct vmcore_mem_node *m;
- 	u64 start, end, len, tsz;
--	struct vmcore *m;
- 
- 	start = (u64)vma->vm_pgoff << PAGE_SHIFT;
- 	end = start + size;
-@@ -683,16 +683,16 @@ static const struct proc_ops vmcore_proc_ops = {
+@@ -683,11 +683,6 @@ static const struct proc_ops vmcore_proc_ops = {
  	.proc_mmap	= mmap_vmcore,
  };
  
--static struct vmcore* __init get_new_element(void)
-+static struct vmcore_mem_node * __init get_new_element(void)
- {
--	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
-+	return kzalloc(sizeof(struct vmcore_mem_node), GFP_KERNEL);
- }
- 
+-static struct vmcore_mem_node * __init get_new_element(void)
+-{
+-	return kzalloc(sizeof(struct vmcore_mem_node), GFP_KERNEL);
+-}
+-
  static u64 get_vmcore_size(size_t elfsz, size_t elfnotesegsz,
  			   struct list_head *vc_list)
  {
-+	struct vmcore_mem_node *m;
- 	u64 size;
--	struct vmcore *m;
- 
- 	size = elfsz + elfnotesegsz;
- 	list_for_each_entry(m, vc_list, list) {
-@@ -1090,11 +1090,11 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+@@ -1090,7 +1085,6 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
  						size_t elfnotes_sz,
  						struct list_head *vc_list)
  {
-+	struct vmcore_mem_node *new;
+-	struct vmcore_mem_node *new;
  	int i;
  	Elf64_Ehdr *ehdr_ptr;
  	Elf64_Phdr *phdr_ptr;
- 	loff_t vmcore_off;
--	struct vmcore *new;
+@@ -1113,13 +1107,8 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+ 		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
+ 		size = end - start;
  
- 	ehdr_ptr = (Elf64_Ehdr *)elfptr;
- 	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr)); /* PT_NOTE hdr */
-@@ -1133,11 +1133,11 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+-		/* Add this contiguous chunk of memory to vmcore list.*/
+-		new = get_new_element();
+-		if (!new)
++		if (vmcore_alloc_add_mem_node(vc_list, start, size))
+ 			return -ENOMEM;
+-		new->paddr = start;
+-		new->size = size;
+-		list_add_tail(&new->list, vc_list);
+ 
+ 		/* Update the program header offset. */
+ 		phdr_ptr->p_offset = vmcore_off + (paddr - start);
+@@ -1133,7 +1122,6 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
  						size_t elfnotes_sz,
  						struct list_head *vc_list)
  {
-+	struct vmcore_mem_node *new;
+-	struct vmcore_mem_node *new;
  	int i;
  	Elf32_Ehdr *ehdr_ptr;
  	Elf32_Phdr *phdr_ptr;
- 	loff_t vmcore_off;
--	struct vmcore *new;
+@@ -1156,13 +1144,8 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+ 		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
+ 		size = end - start;
  
- 	ehdr_ptr = (Elf32_Ehdr *)elfptr;
- 	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr)); /* PT_NOTE hdr */
-@@ -1175,8 +1175,8 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
- static void set_vmcore_list_offsets(size_t elfsz, size_t elfnotes_sz,
- 				    struct list_head *vc_list)
- {
-+	struct vmcore_mem_node *m;
- 	loff_t vmcore_off;
--	struct vmcore *m;
+-		/* Add this contiguous chunk of memory to vmcore list.*/
+-		new = get_new_element();
+-		if (!new)
++		if (vmcore_alloc_add_mem_node(vc_list, start, size))
+ 			return -ENOMEM;
+-		new->paddr = start;
+-		new->size = size;
+-		list_add_tail(&new->list, vc_list);
  
- 	/* Skip ELF header, program headers and ELF note segment. */
- 	vmcore_off = elfsz + elfnotes_sz;
-@@ -1587,9 +1587,9 @@ void vmcore_cleanup(void)
- 
- 	/* clear the vmcore list. */
- 	while (!list_empty(&vmcore_list)) {
--		struct vmcore *m;
-+		struct vmcore_mem_node *m;
- 
--		m = list_first_entry(&vmcore_list, struct vmcore, list);
-+		m = list_first_entry(&vmcore_list, struct vmcore_mem_node, list);
- 		list_del(&m->list);
- 		kfree(m);
- 	}
+ 		/* Update the program header offset */
+ 		phdr_ptr->p_offset = vmcore_off + (paddr - start);
 diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index acc55626afdc..5e48ab12c12b 100644
+index 5e48ab12c12b..ae77049fc023 100644
 --- a/include/linux/crash_dump.h
 +++ b/include/linux/crash_dump.h
-@@ -114,10 +114,23 @@ struct vmcore_cb {
- extern void register_vmcore_cb(struct vmcore_cb *cb);
- extern void unregister_vmcore_cb(struct vmcore_cb *cb);
+@@ -121,6 +121,20 @@ struct vmcore_mem_node {
+ 	loff_t offset;
+ };
  
-+struct vmcore_mem_node {
-+	struct list_head list;
-+	unsigned long long paddr;
-+	unsigned long long size;
-+	loff_t offset;
-+};
++/* Allocate a vmcore memory node and add it to the list. */
++static inline int vmcore_alloc_add_mem_node(struct list_head *list,
++		unsigned long long paddr, unsigned long long size)
++{
++	struct vmcore_mem_node *m = kzalloc(sizeof(*m), GFP_KERNEL);
++
++	if (!m)
++		return -ENOMEM;
++	m->paddr = paddr;
++	m->size = size;
++	list_add_tail(&m->list, list);
++	return 0;
++}
 +
  #else /* !CONFIG_CRASH_DUMP */
  static inline bool is_kdump_kernel(void) { return false; }
  #endif /* CONFIG_CRASH_DUMP */
- 
-+struct vmcoredd_node {
-+	struct list_head list;	/* List of dumps */
-+	void *buf;		/* Buffer containing device's dump */
-+	unsigned int size;	/* Size of the buffer */
-+};
-+
- /* Device Dump information to be filled by drivers */
- struct vmcoredd_data {
- 	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
-diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-index 86c0f1d18998..9a2fa013c91d 100644
---- a/include/linux/kcore.h
-+++ b/include/linux/kcore.h
-@@ -20,19 +20,6 @@ struct kcore_list {
- 	int type;
- };
- 
--struct vmcore {
--	struct list_head list;
--	unsigned long long paddr;
--	unsigned long long size;
--	loff_t offset;
--};
--
--struct vmcoredd_node {
--	struct list_head list;	/* List of dumps */
--	void *buf;		/* Buffer containing device's dump */
--	unsigned int size;	/* Size of the buffer */
--};
--
- #ifdef CONFIG_PROC_KCORE
- void __init kclist_add(struct kcore_list *, void *, size_t, int type);
- 
 -- 
 2.46.1
 
