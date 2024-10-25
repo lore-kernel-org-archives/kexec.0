@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AAC5D0BB56
-	for <kexec@archiver.kernel.org>; Fri, 25 Oct 2024 15:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8560ED0BB56
+	for <kexec@archiver.kernel.org>; Fri, 25 Oct 2024 15:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8W9FJinAhOzhMxDmMk4QlZHe2QdhhjCW/xbWoyWrqtU=; b=ULUnwW33eh1p1H
-	Eejn/zQlUmM8Vkv7Yjz/JU92ZO83zp/5vIdgxr282agTjfSyCLA4QBMIBxuLx1Lqsf9Tw74GoPQbu
-	/J81G5cB2sIyLTy6QXNpE3uAx5ZGgYM9WCl7zklQFuczNyPnF3l/bXmPHFHcEEyAgiQuAPHjLQqcC
-	71Or8JAQpxRyQ25u2EMK82au6yKi/kg+au7sfY872Bx+v+xbQe1LgQJ95+VWxJt1hO+MDr8h6tYYo
-	KEIe5EIQZzdMwudtMr48QjhvxwBiAPXcLP+c7R8jnQygGZkxOSjHbdB/D4t+HPtWBb2yCa5pnlU9q
-	MZqrKmNBkcX4KJes0zUw==;
+	List-Owner; bh=YLMmyj8qeGfru6Rc0vLhobjluGpfnaVZlaSqwBmDOr4=; b=cNU2rL3KJSGejx
+	AXVLe6ptHU0l9f6LAj39UtQ2J1UAplDlXASjrkBt6o4dLEwa57ffbpQ8r6ecbps7cpMeM7n2DWHcd
+	Ba1Z9c9dXWmys92d5LalCGhX3exJSYk3RI2o6o/icFs5UA0Sffr2KbzP8x8Aly+bRwkFlNe0AysWi
+	PKX07FY5OEKp9T23Z4zXoi8bEM8U4hiJy+667j/4eXQzu+h6f1ylaHqyKI6Le6T7pCormUR4o69kP
+	L8jNYC8pfDoKMpoHbUN48Z7YAAwbKSmjLpxNx/8ltE5zuI4BmsddfInvnim9xZ4tsByTHgv5sdLqd
+	STMSTb+ObECgPuM75GvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4MLb-00000004GXw-0Ley;
-	Fri, 25 Oct 2024 15:35:31 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1t4MLe-00000004Gak-1VwY;
+	Fri, 25 Oct 2024 15:35:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4M02-00000004B8n-139t
+	id 1t4M0D-00000004BCl-0lWI
 	for kexec@lists.infradead.org;
-	Fri, 25 Oct 2024 15:13:15 +0000
+	Fri, 25 Oct 2024 15:13:26 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729869193;
+	s=mimecast20190719; t=1729869204;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mE6UZtvB4UrwqxDxBvXj02Eqawd4qPQUjTyB3c978sA=;
-	b=C0GH3MEkilMRvBMAFnW1Bh45TU0I/NqYsUGs4uYd/jvsTqaa8CRF3DrXtmWtQqjuSl8z/Z
-	ezDLmv6iZ7I5FtHnmt33OlslhxlSNI7N8u1dApSgHxUB60OjHp+V7siWYLzZjXcUsyJQCg
-	exR5FeJI54alCP9Nxrtxre+xhs6oTXg=
+	bh=duV64aDOzPCg70Erai+k0MR4CZFFfLJs/Tny3PQhGqo=;
+	b=Py6SXWnRRaYj5YfdQ32q1Yz4tx1KceUdfrsMSo9rXb1hCRYtJuxPMeU8ELBtJ32Aby/wK/
+	mhlU3WLXKkd5ykcpAKH66baagvhntNHGedC+8wnLT5i+WVsKHJCChIoKylnhv0UHfOpJHn
+	o6afDZvZNqmL17RURTtHktZCkTVDDUw=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-373-3cSc-QklMMuKHb2DIsw0Pg-1; Fri,
- 25 Oct 2024 11:13:10 -0400
-X-MC-Unique: 3cSc-QklMMuKHb2DIsw0Pg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-_q3EKHFQNEmGt7K_9EZzAQ-1; Fri,
+ 25 Oct 2024 11:13:19 -0400
+X-MC-Unique: _q3EKHFQNEmGt7K_9EZzAQ-1
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A10BC1955D4A;
-	Fri, 25 Oct 2024 15:13:08 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 750F61956096;
+	Fri, 25 Oct 2024 15:13:17 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.22.65.27])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 86CEF300018D;
-	Fri, 25 Oct 2024 15:13:01 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 27021300018D;
+	Fri, 25 Oct 2024 15:13:08 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -79,16 +79,16 @@ Cc: linux-mm@kvack.org,
 	Claudio Imbrenda <imbrenda@linux.ibm.com>,
 	Eric Farman <farman@linux.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1 10/11] virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM
-Date: Fri, 25 Oct 2024 17:11:32 +0200
-Message-ID: <20241025151134.1275575-11-david@redhat.com>
+Subject: [PATCH v1 11/11] s390/kdump: virtio-mem kdump support (CONFIG_PROC_VMCORE_DEVICE_RAM)
+Date: Fri, 25 Oct 2024 17:11:33 +0200
+Message-ID: <20241025151134.1275575-12-david@redhat.com>
 In-Reply-To: <20241025151134.1275575-1-david@redhat.com>
 References: <20241025151134.1275575-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241025_081314_390379_9E38DCB7 
-X-CRM114-Status: GOOD (  19.20  )
+X-CRM114-CacheID: sfid-20241025_081325_305798_DBFE27F7 
+X-CRM114-Status: GOOD (  13.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,137 +105,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Let's implement the get_device_ram() vmcore callback, so
-architectures that select NEED_PROC_VMCORE_NEED_DEVICE_RAM, like s390
-soon, can include that memory in a crash dump.
+Let's add support for including virtio-mem device RAM in the crash dump,
+setting NEED_PROC_VMCORE_DEVICE_RAM, and implementing
+elfcorehdr_fill_device_ram_ptload_elf64().
 
-Merge ranges, and process ranges that might contain a mixture of plugged
-and unplugged, to reduce the total number of ranges.
+To avoid code duplication, factor out the code to fill a PT_LOAD entry.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/virtio/Kconfig      |  1 +
- drivers/virtio/virtio_mem.c | 88 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 89 insertions(+)
+ arch/s390/Kconfig             |  1 +
+ arch/s390/kernel/crash_dump.c | 39 ++++++++++++++++++++++++++++-------
+ 2 files changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 2eb747311bfd..60fdaf2c2c49 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -128,6 +128,7 @@ config VIRTIO_MEM
- 	depends on MEMORY_HOTREMOVE
- 	depends on CONTIG_ALLOC
- 	depends on EXCLUSIVE_SYSTEM_RAM
-+	select PROVIDE_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
- 	help
- 	 This driver provides access to virtio-mem paravirtualized memory
- 	 devices, allowing to hotplug and hotunplug memory.
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 73477d5b79cf..1ae1199a7617 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -2728,6 +2728,91 @@ static bool virtio_mem_vmcore_pfn_is_ram(struct vmcore_cb *cb,
- 	mutex_unlock(&vm->hotplug_mutex);
- 	return is_ram;
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index d339fe4fdedf..d80450d957a9 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -230,6 +230,7 @@ config S390
+ 	select MODULES_USE_ELF_RELA
+ 	select NEED_DMA_MAP_STATE	if PCI
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
++	select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
+ 	select NEED_SG_DMA_LENGTH	if PCI
+ 	select OLD_SIGACTION
+ 	select OLD_SIGSUSPEND3
+diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+index edae13416196..97b9e71b734d 100644
+--- a/arch/s390/kernel/crash_dump.c
++++ b/arch/s390/kernel/crash_dump.c
+@@ -497,6 +497,19 @@ static int get_mem_chunk_cnt(void)
+ 	return cnt;
  }
-+
-+#ifdef CONFIG_PROC_VMCORE_DEVICE_RAM
-+static int virtio_mem_vmcore_add_device_ram(struct virtio_mem *vm,
-+		struct list_head *list, uint64_t start, uint64_t end)
-+{
-+	int rc;
-+
-+	rc = vmcore_alloc_add_mem_node(list, start, end - start);
-+	if (rc)
-+		dev_err(&vm->vdev->dev,
-+			 "Error adding device RAM range: %d\n", rc);
-+	return rc;
-+}
-+
-+static int virtio_mem_vmcore_get_device_ram(struct vmcore_cb *cb,
-+		struct list_head *list)
-+{
-+	struct virtio_mem *vm = container_of(cb, struct virtio_mem,
-+					     vmcore_cb);
-+	const uint64_t device_start = vm->addr;
-+	const uint64_t device_end = vm->addr + vm->usable_region_size;
-+	uint64_t chunk_size, cur_start, cur_end, plugged_range_start = 0;
-+	LIST_HEAD(tmp_list);
-+	int rc;
-+
-+	if (!vm->plugged_size)
-+		return 0;
-+
-+	/* Process memory sections, unless the device block size is bigger. */
-+	chunk_size = max_t(uint64_t, PFN_PHYS(PAGES_PER_SECTION),
-+			   vm->device_block_size);
-+
-+	mutex_lock(&vm->hotplug_mutex);
-+
-+	/*
-+	 * We process larger chunks and indicate the complete chunk if any
-+	 * block in there is plugged. This reduces the number of pfn_is_ram()
-+	 * callbacks and mimic what is effectively being done when the old
-+	 * kernel would add complete memory sections/blocks to the elfcore hdr.
-+	 */
-+	cur_start = device_start;
-+	for (cur_start = device_start; cur_start < device_end; cur_start = cur_end) {
-+		cur_end = ALIGN_DOWN(cur_start + chunk_size, chunk_size);
-+		cur_end = min_t(uint64_t, cur_end, device_end);
-+
-+		rc = virtio_mem_send_state_request(vm, cur_start,
-+						   cur_end - cur_start);
-+
-+		if (rc < 0) {
-+			dev_err(&vm->vdev->dev,
-+				"Error querying block states: %d\n", rc);
-+			goto out;
-+		} else if (rc != VIRTIO_MEM_STATE_UNPLUGGED) {
-+			/* Merge ranges with plugged memory. */
-+			if (!plugged_range_start)
-+				plugged_range_start = cur_start;
-+			continue;
-+		}
-+
-+		/* Flush any plugged range. */
-+		if (plugged_range_start) {
-+			rc = virtio_mem_vmcore_add_device_ram(vm, &tmp_list,
-+							      plugged_range_start,
-+							      cur_start);
-+			if (rc)
-+				goto out;
-+			plugged_range_start = 0;
-+		}
-+	}
-+
-+	/* Flush any plugged range. */
-+	if (plugged_range_start)
-+		rc = virtio_mem_vmcore_add_device_ram(vm, &tmp_list,
-+						      plugged_range_start,
-+						      cur_start);
-+out:
-+	mutex_unlock(&vm->hotplug_mutex);
-+	if (rc < 0) {
-+		vmcore_free_mem_nodes(&tmp_list);
-+		return rc;
-+	}
-+	list_splice_tail(&tmp_list, list);
-+	return 0;
-+}
-+#endif /* CONFIG_PROC_VMCORE_DEVICE_RAM */
- #endif /* CONFIG_PROC_VMCORE */
  
- static int virtio_mem_init_kdump(struct virtio_mem *vm)
-@@ -2737,6 +2822,9 @@ static int virtio_mem_init_kdump(struct virtio_mem *vm)
- #ifdef CONFIG_PROC_VMCORE
- 	dev_info(&vm->vdev->dev, "memory hot(un)plug disabled in kdump kernel\n");
- 	vm->vmcore_cb.pfn_is_ram = virtio_mem_vmcore_pfn_is_ram;
++static void fill_ptload(Elf64_Phdr *phdr, unsigned long paddr,
++		unsigned long vaddr, unsigned long size)
++{
++	phdr->p_type = PT_LOAD;
++	phdr->p_vaddr = vaddr;
++	phdr->p_offset = paddr;
++	phdr->p_paddr = paddr;
++	phdr->p_filesz = size;
++	phdr->p_memsz = size;
++	phdr->p_flags = PF_R | PF_W | PF_X;
++	phdr->p_align = PAGE_SIZE;
++}
++
+ /*
+  * Initialize ELF loads (new kernel)
+  */
+@@ -509,14 +522,8 @@ static void loads_init(Elf64_Phdr *phdr, bool os_info_has_vm)
+ 	if (os_info_has_vm)
+ 		old_identity_base = os_info_old_value(OS_INFO_IDENTITY_BASE);
+ 	for_each_physmem_range(idx, &oldmem_type, &start, &end) {
+-		phdr->p_type = PT_LOAD;
+-		phdr->p_vaddr = old_identity_base + start;
+-		phdr->p_offset = start;
+-		phdr->p_paddr = start;
+-		phdr->p_filesz = end - start;
+-		phdr->p_memsz = end - start;
+-		phdr->p_flags = PF_R | PF_W | PF_X;
+-		phdr->p_align = PAGE_SIZE;
++		fill_ptload(phdr, start, old_identity_base + start,
++			    end - start);
+ 		phdr++;
+ 	}
+ }
+@@ -526,6 +533,22 @@ static bool os_info_has_vm(void)
+ 	return os_info_old_value(OS_INFO_KASLR_OFFSET);
+ }
+ 
 +#ifdef CONFIG_PROC_VMCORE_DEVICE_RAM
-+	vm->vmcore_cb.get_device_ram = virtio_mem_vmcore_get_device_ram;
-+#endif /* CONFIG_PROC_VMCORE_DEVICE_RAM */
- 	register_vmcore_cb(&vm->vmcore_cb);
- 	return 0;
- #else /* CONFIG_PROC_VMCORE */
++/*
++ * Fill PT_LOAD for a physical memory range owned by a device and detected by
++ * its device driver.
++ */
++void elfcorehdr_fill_device_ram_ptload_elf64(Elf64_Phdr *phdr,
++		unsigned long long paddr, unsigned long long size)
++{
++	unsigned long old_identity_base = 0;
++
++	if (os_info_has_vm())
++		old_identity_base = os_info_old_value(OS_INFO_IDENTITY_BASE);
++	fill_ptload(phdr, paddr, old_identity_base + paddr, size);
++}
++#endif
++
+ /*
+  * Prepare PT_LOAD type program header for kernel image region
+  */
 -- 
 2.46.1
 
