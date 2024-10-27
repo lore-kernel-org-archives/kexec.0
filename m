@@ -4,90 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B161CD10BE3
-	for <kexec@archiver.kernel.org>; Sat, 26 Oct 2024 06:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 443AED13578
+	for <kexec@archiver.kernel.org>; Sun, 27 Oct 2024 18:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:Message-ID:
-	In-Reply-To:Subject:cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MmtPLDU1AQ8+vYWuAAgNvcGpU+ezOz8I3tiVtvPORtk=; b=ANTP/Utzr54qp6
-	3tHv6GXMU5NdE62DH04WabtL0aRFE09ahFoeamtCG0ENev7dCI2BtnxuD0x22F8v+f0RabGlHcI7B
-	pLlfWe/c9kNPVeq7/Rr1+16z8ZCk+VTDjZNxtZLgpgHzLbUbhd9PSoRC1r4gnI5D2U3+jVRpnRDhl
-	BQYGn40ESfV2W1Mg0yKd6eWfWcSRi6rephYzUN2L23Qx/TV8FsZcQzl4y3sYZc3R7CmbCIqcCglLe
-	PN+uQiyg4WWXY5qWv3cJnDw+H8Z4BUWSPo8BbVK8imMA9rdtFpcJvTxu5xPjInKwsqq8HMGTvp0qg
-	CNxcjt1OHz82Uf265Amg==;
+	List-Owner; bh=vLVTcizm8KpbjqCZZvMwT0x4yCtluPVTc2VOqZpOFKo=; b=iqM8ysNlGFpRZ1
+	Aa0Rm2si/9ig3vy3T+E/+FYFI5CaqoKYgkUTcRPUg2F0NKdKHXsQE+Ld8vT7xqfpv/g6kaHxZRWiG
+	a1JUnWt6EOKqFltXdOEDq52OfwH/wRZqyiQmG0Q4TjC5/1Fn/aox/YH6YuNG4bhLZCEsqjYXFedE5
+	TKLR5GEaeWVGQtM5BZEmAxgJ3gBcelvXKf0XDhQXIPjKIecIWR/NliD37DybcwzczVqNkFUvhq+4b
+	PJ4VnN00tuF2NqlA4zWxpzVppsBXKAoKdW1YIyDFqYYADHj+h1H5296/vtfmJO6MSLqJXPwKL5SPH
+	YXakWaK5IYxNvQy2o/sg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4ZxU-000000061Bg-0c5J;
-	Sat, 26 Oct 2024 06:07:32 +0000
-Received: from mail-il1-x131.google.com ([2607:f8b0:4864:20::131])
+	id 1t57oW-00000008erK-0vne;
+	Sun, 27 Oct 2024 18:16:32 +0000
+Received: from mail-bn1nam02olkn20807.outbound.protection.outlook.com ([2a01:111:f403:2c07::807] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t4ZxR-000000061B1-3ZGJ
+	id 1t57oQ-00000008epU-3JuS
 	for kexec@lists.infradead.org;
-	Sat, 26 Oct 2024 06:07:31 +0000
-Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3a4e54d3cefso157425ab.0
-        for <kexec@lists.infradead.org>; Fri, 25 Oct 2024 23:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729922849; x=1730527649; darn=lists.infradead.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PQSPHe+PJtxEzujGUtNL873qp26GJXxZytaxypHA5kI=;
-        b=R+AtZWj8SABF+AMpziLcbkr5G4Dx+cO12nN4B0oZjWwnGtZXQPHCuR7pHxHXjR482U
-         d6poXH9H3DtNHqGNSet4VtnrDzKM1AVemyq/M+KZZ1VyjDarHQBoj6tbrU2gqTxFzfCf
-         YOmPKGWvg17+KWDGNXiogLEr4g/7xLSSfTNgW0IqBWK8Oy8XrvJXibKSkaxJdcag+Jns
-         nHz1WDM7BEGt6avgVXfn/s6XwwbR4YrHE3pl04l8rsGXhU2gCGQSkvpVlal0mitGBZFQ
-         AeOuTUEW+0/rNvS/zULLD/PWo91Xpb1AJvF0RJEU8s2sDnCB6+J2iYJmqUw4MN5II5ow
-         5r9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729922849; x=1730527649;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PQSPHe+PJtxEzujGUtNL873qp26GJXxZytaxypHA5kI=;
-        b=eJ54OsG8vr387Oe6oOPDNShwKb9AHaQJUDl4bzlavQG5Ie4AFNrzGc4I1OKIOmRCj1
-         0y5jJrcyR6fEi+65Pay4/lrlos6JmU7XYli7zejBxjTfQJmX7WqnxcsrxHuSmUr9IdAL
-         4t276MFK/MlF8O7eOHyKBEMProkOxQDs1LUFXKVpePBcx62iJdG4f6v1bhba1Iy/F5rN
-         XWM4uj7tQWaG0IMJPM4cjNBz43n14q+e+GJe9SFQkW6AogfLo5tfJDJ4B5a9TzThylNu
-         YBi1SB7F6yx7rLOM5S3xs0GMahfyNKaHq0qZlqeGGy22lgy6Q+u2EIc2TlvcDAzpTM9o
-         KPlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXwL7YSbrMyU80hnbKHuWQe6qrAHsAd8kgqQMZZjexzrR41EruRJ616fL4wI8o9bYJ5Apu0cw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yznmf7pFR8MvB29gj+5BUgf5nS2KVaSWa2Rh6cqhNLJBv6SKFfW
-	zxjq5gr5y1rQ9RW5xWo13ESnZMwUBhIRPB20p3H+W8avK5G4Ay58d7o6BANRTg==
-X-Google-Smtp-Source: AGHT+IHnGileZkvepxLdTSybvUnOAtRRrxty8+lkuWaRJ6nqZp9GWgJxqbOMP+zu3Uk5mBAi7NZuKg==
-X-Received: by 2002:a05:6e02:1a86:b0:3a0:aa6c:8a50 with SMTP id e9e14a558f8ab-3a4edfcc5cbmr1355895ab.29.1729922848679;
-        Fri, 25 Oct 2024 23:07:28 -0700 (PDT)
-Received: from [2620:0:1008:15:a73a:2b46:3ef7:2150] ([2620:0:1008:15:a73a:2b46:3ef7:2150])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a1fe5fsm2091901b3a.160.2024.10.25.23.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 23:07:28 -0700 (PDT)
-Date: Fri, 25 Oct 2024 23:07:27 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: James Gowans <jgowans@amazon.com>, Dave Hansen <dave.hansen@intel.com>, 
-    David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
-    Mike Rapoport <mike.rapoport@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Peter Xu <peterx@redhat.com>, 
-    Alexander Graf <graf@amazon.com>, Ashish Kalra <ashish.kalra@amd.com>, 
-    Tom Lendacky <thomas.lendacky@amd.com>, 
-    David Woodhouse <dwmw@amazon.co.uk>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Frank van der Linden <fvdl@google.com>, Vipin Sharma <vipinsh@google.com>, 
-    David Matlack <dmatlack@google.com>, 
-    Steve Rutherford <srutherford@google.com>, 
-    Erdem Aktas <erdemaktas@google.com>, Alper Gun <alpergun@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    Ackerley Tng <ackerleytng@google.com>, Sagi Shahar <sagis@google.com>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: Re: Pmemfs/guestmemfs discussion recap and open questions
-In-Reply-To: <f44f317a-2dcb-cfe2-013c-7508907ce3df@google.com>
-Message-ID: <5b6613bc-beef-79e6-62ed-23de4dfafe51@google.com>
-References: <f44f317a-2dcb-cfe2-013c-7508907ce3df@google.com>
+	Sun, 27 Oct 2024 18:16:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dYEuwebuBKKtdHG3G/zKr6Y0qv7xsBg5eg1pA8Bbf35SUBJ2/mB6fs6K4+WZW6QgTqytFJ4RRQp3DPfFGVZJEZtsgpdCAMRonwROyemECHNiADPS+JUA8RzEGTNElf+qVtAG98tDjvGZ81k56DR2V95Kzmp3SZR+thUc5qs3G1hWL2ILWmS/KUxBSHJKMI8Ee6cWGzPr6osO9TmMzhTO9vqCUPLLuIHsnxmSkAuMX2KLgQ5XsTjUCutlNjYuqgvaD3kz9RUKZXaIYDqlHEkyQL6o0cKxPp/dqytJyp902Aso5+Isi2BaIbcF+JmzuAZzSRmeiSvwKDcaQyxjKXo34Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UF1tZ3DDudgXDMkMtuZrdtfh9spaAuUXzeHLhpNY0rs=;
+ b=paC1Sq+N78vdhvme2uGsgDqd7Z4r0NtNotAS0puTVdyIUWNqZlxb35fAVTOkOfTxX+sts0jm504SNLk8G0reh/LgVSAnC0d0y4D0VHsh9TAM3sh6XYqFiivnvtjPqtRqr3yCzwf8qG94bcfjSCgV530IRgYEWjaiQTaTjKyY/jC5pkI40omK3FrZw5VkMn7vZGyKP4+C4P/ryTH0C9W2rOT5BwNkxMtYu6WCM6BJiIIKqJU9VaymVvEJUAXzlr6sOI/w9NqHVoqT+ixS0nWYF57vQhUVy79mtzrv1TSBfjGDOeJQY+7cqiuTUfe5PdN9ckDQKAt0zwsylya10x2eaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UF1tZ3DDudgXDMkMtuZrdtfh9spaAuUXzeHLhpNY0rs=;
+ b=soYkb2Hd3tXaQ+7RfGCCp66k4idBx4io3JUABiZ4/0wAEbIr1SujbMDw/M+wkKlpDllJ52Xfop8BexKz463TYJsvjfKWyKsEXDTRNC7678EPxo1NfLsiO9ab16m/KIe2elWvH6PO4+364V+apJhIZBC1xqQdVmGvoo3U2QFxTtSskOT2dInnvY4Q+Ug4LADFgqD8PjDJehZEWMXKkM05iA5jFPptxCDsCo0FJ31/vnkCUaOLITC3TvCCux+CRVmMBkkC+dghDj6Tn/H2+7fhev2Pf+58O85r6mYp/ME0Dp6wwTn33RY7exQHNh/Nv+INHWPWo0oWyJ5y2G3bGXSobQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB8715.namprd02.prod.outlook.com (2603:10b6:510:da::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Sun, 27 Oct
+ 2024 18:16:15 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8093.024; Sun, 27 Oct 2024
+ 18:16:15 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>
+CC: "bhe@redhat.com" <bhe@redhat.com>, "vgoyal@redhat.com"
+	<vgoyal@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-debuggers@vger.kernel.org"
+	<linux-debuggers@vger.kernel.org>, "stephen.s.brennan@oracle.com"
+	<stephen.s.brennan@oracle.com>, "horms@kernel.org" <horms@kernel.org>,
+	"kernel@gpiccoli.net" <kernel@gpiccoli.net>, "kernel-dev@igalia.com"
+	<kernel-dev@igalia.com>
+Subject: RE: [PATCH V3] Documentation: Improve crash_kexec_post_notifiers
+ description
+Thread-Topic: [PATCH V3] Documentation: Improve crash_kexec_post_notifiers
+ description
+Thread-Index: AQHbJvnmbOpHVMum9U6tJODk/l66f7Ka59EA
+Date: Sun, 27 Oct 2024 18:16:15 +0000
+Message-ID: <SN6PR02MB41577D176FD038A3D630296DD4492@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20241025162042.905104-1-gpiccoli@igalia.com>
+In-Reply-To: <20241025162042.905104-1-gpiccoli@igalia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8715:EE_
+x-ms-office365-filtering-correlation-id: b7a42753-cc69-48a7-d20a-08dcf6b3722f
+x-microsoft-antispam: BCL:0;ARA:14566002|8060799006|8062599003|19110799003|7072599006|461199028|8022599003|15080799006|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info: G1PYCkGfOb/m5n8vfqyfqbtNvTBEZ/+hyoceaEPuYdnxnY8kojpLO5agMoZbh/LIZjlebQBwbVdgh6vDk4v98+D4dqm6f4OkD7kNFK9D9ySRyocIGasrTDyiF9aCehJDAQiBjOZ6cEGuOGK19itj6XRijYCy3AtJJ3N+7rTwA6Qh1/cCvamLA6zAlRL4Y3S6E9FucywERywFbawDkWxehhtlU14ioo8da++Ttbp2/sBDZ3cZu1FGcOdVnFNRHF/SkQciCV1YUpbA8BWeGV7A149FYw6wGNVZ9Bty506SvA2VoDCEurXjUExHXOOWGHJv0TOtuCyO7zJVDVARhoOyEa+6PyegPBlB8QcbrWKbD7IMZWnA3StU4gbGn36RiisMAsHMC6pHEEopzKd/y2092uWEiNQtPbOU+aOS772shwEt101/nOcODlD6GXtnvyaecM0Jt1GWNh3QZL+7FW9Wh5gDjyZQRxVAIDChfs+A6peWSs1KWaYIYl38VZtLnYZy5oOBaCih5u0e4QS6Son2Tfum+W0RVQd2FXdl2uOpvkd667JIorl7BlECzTUzk4JS3w0P7TsHCtgwURAwfc18YEk+ArSSHtZUTop0RxuxU1rYWdi2rLSAXW4xQ98i8yQG6OBiA9TpfeiAZ+Rs0vpE/EE3VCg3isB97wE+yQP52xapwhTFs7x6EnVZnOujtiLf4LUIYMNv6LbyKRguH94gmDb02ESqfGzQ9ts3mEOTDFH02ZXHg5mimBkwnaRxQuBwpK8fqwnNFPpKH5BBHD9+Dg==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/tU0FWjmima2RbYYVkqwaKN8CBQrp0NOeC9HSQ3SrcAVqN5o+93wk0vrpY9n?=
+ =?us-ascii?Q?7H8qfUb1gkFO2Yqw0H9LrH12qmV2bBwSB6L6thzB3P4cqdH9qWoR+HQ/WRXv?=
+ =?us-ascii?Q?3Vr3CIoaj9v4uL0zWp4fMt58LKKWz2ZinPx80pXd/bObgMfJNJHW8y5lINnQ?=
+ =?us-ascii?Q?F5900APL2NDJxFrJIW2Mw25ZJE3x+xghdwbjkwjCW6Ow7U6Na22NdNdTsT13?=
+ =?us-ascii?Q?Eg+pl9ZF8Te9YcVcdyhSm5zmjrqhBh/hqwQL2uvP6W1iYcmEZA6VMFsg/DRJ?=
+ =?us-ascii?Q?HNN/TOetgg3xGaZloxSPVG/soVNbbfevOKar/AP3kNg/za0FwhFmVGHmKoDq?=
+ =?us-ascii?Q?5nucpzNsSuKd+QoG/YvuO6lDMWSXbtYT7dZBPTA5sCfNwwLxXUlOk0auq9f9?=
+ =?us-ascii?Q?qofLCNi4BneejcfIscqwo/kttGVNUQZA121luSHMufeDeJqtjxphc/X4rIUY?=
+ =?us-ascii?Q?7xcaP1gFA+YOnp0PcMElL1SFT+MLcLzxegi7md/NIqLD2nx3Rbl0YF8wy+8P?=
+ =?us-ascii?Q?+AZmXnwnqJ+zMRsE/OnLjjRQVyH8B6V3ekYgB/GeqL/86PKkMTMd4+udDOk7?=
+ =?us-ascii?Q?zzcMIPKHpeH7OMCOQ6ZF1R47wPrvzCzdxnUn9HyJ/B4nqaW+KylsoHdGCX8c?=
+ =?us-ascii?Q?n4V+OUSwCdkWWRxCRX2U0/5BzcxJAV0CzHRN/kP3lovfmwo08ZtPV5G5txUH?=
+ =?us-ascii?Q?3MIXmRlaXTRFrHz3l6k5ypnNGajN0knC0h05tMjA243RUyu2+Hl/38uVxc3f?=
+ =?us-ascii?Q?/OdQkaRrK5XN2FalgEwcKfe2dx+hTWMipuGgLveabgZLWAiSWx4bG+9Ll+jv?=
+ =?us-ascii?Q?HfEs0pPzJrHWhKd623voinJmSaa7z/A+tSzwX8rS8zEpu+mIU0CI7pGz4Nr1?=
+ =?us-ascii?Q?kldFTYY4jVPDW97QnDJjckkkajnRs7G52wrLApStjHpVk9842oAoqy46IsKf?=
+ =?us-ascii?Q?FFzZaMk/qEZha5W5T8d130cPmeRZ+ItdZm/wFqv4cNDKEUp3o0e1+npMWRbr?=
+ =?us-ascii?Q?J4VK+4dajQOCYcGqwnvw6OAkSYg9ENBudEpJx3TFjh+p+3XNtBCju+sV8ykj?=
+ =?us-ascii?Q?9k/lpu0mkPazu+Gd+nlEk/gLgRTGo8r6tk/Hu0Ek5IvHtoPY2pBLyky5TA58?=
+ =?us-ascii?Q?0mXC+hK+Riws6Pu/veM8woVURdJaTRbkvIzq8VtqL4y/LUOIhNNHEPdTi1KL?=
+ =?us-ascii?Q?9qNipNSAzu6hobf0/H0pJ2LcbULAtmPb8S5d0P2E92Xnrim79Pd5qACFr68?=
+ =?us-ascii?Q?=3D?=
 MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7a42753-cc69-48a7-d20a-08dcf6b3722f
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2024 18:16:15.4950
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8715
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241025_230729_921396_4CB58BBA 
-X-CRM114-Status: GOOD (  23.96  )
+X-CRM114-CacheID: sfid-20241027_111626_971106_D0D38D04 
+X-CRM114-Status: GOOD (  23.51  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,67 +134,88 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 16 Oct 2024, David Rientjes wrote:
-
-> ----->o-----
-> My takeaway: based on the feedback that was provided in the discussion:
+From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Friday, October 25, 2024 9:18 AM
 > 
->  - we need an allocator abstraction for persistent memory that can return
->    memory with various characteristics: 1GB or not, kernel direct map or
->    not, HVO or not, etc.
+> The crash_kexec_post_notifiers description could be improved a bit,
+> by clarifying its upsides (yes, there are some!) and be more descriptive
+> about the downsides, specially mentioning code that enables the option
+> unconditionally, like Hyper-V[0], PowerPC (fadump)[1] and more
+> recently, AMD SEV[2].
 > 
->  - built on top of that, we need the ability to carve out very large
->    ranges of memory (cloud provider use case) with NUMA awareness on the
->    kernel command line
+> [0] Commit a11589563e96 ("x86/Hyper-V: Report crash register data or kmsg before
+> running crash kernel").
+> [1] Commit 06e629c25daa ("powerpc/fadump: Fix inaccurate CPU state info in vmcore
+> generated with panic").
+> [2] Commit 8ef979584ea8 ("crypto: ccp: Add panic notifier for SEV/SNP firmware
+> shutdown on kdump").
+> 
+> Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+> 
+> V3: Improved wording and commit description, detailing more about the addition
+> of code that enables crash_kexec_post_notifiers unconditionally.
+> 
+> Thanks Baoquan and Simon for the suggestions!
+> 
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> b/Documentation/admin-guide/kernel-parameters.txt
+> index 3978fb704c53..2a7a523bb90b 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -918,12 +918,16 @@
+>  			the parameter has no effect.
+> 
+>  	crash_kexec_post_notifiers
+> -			Run kdump after running panic-notifiers and dumping
+> -			kmsg. This only for the users who doubt kdump always
+> -			succeeds in any situation.
+> -			Note that this also increases risks of kdump failure,
+> -			because some panic notifiers can make the crashed
+> -			kernel more unstable.
+> +			Only jump to kdump kernel after running the panic
+> +			notifiers and dumping kmsg. This option increases
+> +			the risks of a kdump failure, since some panic
+> +			notifiers can make the crashed kernel more unstable.
+> +			In configurations where kdump may not be reliable,
+> +			running the panic notifiers could allow collecting
+> +			more data on dmesg, like stack traces from other CPUS
+> +			or extra data dumped by panic_print. Note that some
+> +			configurations enable this option unconditionally,
+> +			like Hyper-V, PowerPC (fadump) and AMD SEV.
+
+This last line should be more specific and use "AMD SEV-SNP" instead of
+just "AMD SEV". Commit 8ef979584ea8 that you mentioned above is
+specific to SEV-SNP.
+
+There have been three versions of SEV functionality in AMD processors:
+* SEV:  the original guest VM encryption
+* SEV-ES:  SEV enhanced to cover register state as well
+* SEV-SNP:  SEV-ES plus Secure Nested Paging, which provides
+functionality to address the Confidential Computing VM threat model
+described in the Linux CoCo VM documentation. SEV-SNP processors are
+AMD's product that is widely deployed for CoCo VMs in large public clouds.
+
+Just using "SEV" is somewhat ambiguous because it's not clear whether
+it refers to the family of three SEV levels, or just the original guest VM
+encryption. Since this case is clearly SEV-SNP only, being specific removes
+the ambiguity.
+
+Michael
+
+
+
+> 
+>  	crashkernel=size[KMG][@offset[KMG]]
+>  			[KNL,EARLY] Using kexec, Linux can switch to a 'crash kernel'
+> --
+> 2.46.2
 > 
 
-Following up on this, I think this physical memory allocator would also be 
-possible to use as a backend for hugetlb.  Hopefully this would be an 
-allocator that would be generally useful for multiple purposes, something 
-like a mm/phys_alloc.c.
-
-Frank van der Linden may also have thoughts on the above?
-
->  - we also need the ability to be able to dynamically resize this or
->    provide hints at allocation time that memory must be persisted across
->    kexec to support the non-cloud provider use case
-> 
->  - we need a filesystem abstraction that map memory of the type that is
->    requested, including guest_memfd and then deal with all the fun of
->    multitenancy since it would be drawing from a finite per-NUMA node
->    pool of persistent memory
-> 
->  - absolutely critical to this discussion is defining what is the core
->    infrastructure that is required for a generally acceptable solution
->    and then what builds off of that to be more special cased (like the
->    cloud provider use case or persistent tmpfs use case)
-> 
-> We're looking to continue that discussion here and then come together 
-> again in a few weeks.
-> 
-
-We'll be looking to schedule some more time to talk about this topic in 
-the Wednesday, November 13 instance of the Linux MM Alignment Session.
-
-After that, I think it would be quite useful to break out the set of 
-people that are interested in persisting guest memory across kexec and KHO 
-into a separate series to accelerate discussion and next stpes.  Getting 
-the requirements and design locked down are critical, so happy to 
-facilitate that to any extent possible and welcome everybody interested in 
-discussing it.
-
-James, for the guestmemfs discussions, would this work for you?
-
-Alexander, same question for you regarding the KHO work?
-
-It's a global community, so the timing won't work for eveyrbody.  We'd 
-plan on sending out summaries of these discussions, such as in this email, 
-to solicit feedback and ideas from everybody.
-
-If you're not on the To: or Cc: list already, please email me separatel if 
-you're interested in participating and then we can find a regular time.
-
-This is exciting!
 
 _______________________________________________
 kexec mailing list
