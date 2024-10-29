@@ -4,76 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3BFBBD5B865
-	for <kexec@archiver.kernel.org>; Tue, 29 Oct 2024 03:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA19FD5B87A
+	for <kexec@archiver.kernel.org>; Tue, 29 Oct 2024 05:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kY0RDQDkyz6W9CeAv+af5LALtYf02PWs3dBGUBl3nsk=; b=PuJFdm7oBhFgRg
-	Zo0+vVa1N/erYwUnf41Be7tXTy2O7BhkpgOL8I5opjGn08UXix2QwBxpmV78feZC7Gk2C62ulcT8a
-	SdyttjG019SDcSxhG/q32Qovbn13lllvYg3Z+tFn1Adwz3C8jAStrgqEceIRZPdnvV1G/ZVL2VubX
-	MjNQz+KnkluPi5EWuoNkTX2Fbh70pwQkAXqDTP9r5qae0M0UwCMBnRx1s4qczSiSWbBifNk/jKep6
-	sGg73gIs9C0JBRRFj2lo3RrJhs9aH4fAIiWxN+0eML7ESjTTu3Uxun9X8E3eYMNGsivbgRs9oPkQ1
-	c3lHIKY4h5PX7PLWiR7A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=mVZrlvGN5Lqg9sMTq1TlFghftt/Jg1RRnbnGpyXUvfQ=; b=Hix5sbK9suieoY
+	08RgyoHsFi4BB3fUS2gVODp/k6xUHpKBMMjL5UnuvpDL6KgMiiLuE/vBqfY/RsArpPmn9wJcm3enU
+	Qga3ZwvLKDpxZqtlIC8p6sDR3l8qtRGXvVDf8Ji+fYvHtY38UGECSEPMGM4s6e5BHjpxmATref+/c
+	Kgo7cI6/fY9Hl74jteOO1r1Z4QoWPZytgLCCNqiEjjGPDNkfCkBfmLl8qqk+5mPQrXbUiCU9eD0cG
+	JLMHj0EN5YujtmHl7IjODSj3WSsvA9GW8XYgxdbKn/Nvy0v7Jjk0lIVSH2z78F4zTTgI13dZnAWFK
+	z1W+UC7SjXdmYzRPIHUw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5cbd-0000000D3Jh-0zmI;
-	Tue, 29 Oct 2024 03:09:17 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1t5f9g-0000000DHxF-3Ylq;
+	Tue, 29 Oct 2024 05:52:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5cbX-0000000D3Io-0umL
+	id 1t5f9d-0000000DHtq-0cKr
 	for kexec@lists.infradead.org;
-	Tue, 29 Oct 2024 03:09:13 +0000
+	Tue, 29 Oct 2024 05:52:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730171348;
+	s=mimecast20190719; t=1730181150;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Htj3zSbwg6CbqXsr8zuJkKK0VfLTQ/viyDjsj3CcKvc=;
-	b=iPN/n2dRbOEl07n3xwsRwp7r0DMeg2zZPpkju6azGcQGA04dajBJJ1pyMjftFc7NpSeBhI
-	59CELN4neXdnLWg5z5OOC5AL1aUhLwwdKi/IFHlszt+2G/JLcJjFvRwNua9KmspED3Dmjw
-	dBC+LJo1IuLnhhkZjJhadSLG3rtLBwg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-299-KxjwvzPENd2IdUhcKoxwGg-1; Mon,
- 28 Oct 2024 23:09:05 -0400
-X-MC-Unique: KxjwvzPENd2IdUhcKoxwGg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF9A31956088;
-	Tue, 29 Oct 2024 03:09:01 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.66])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0F07300018D;
-	Tue, 29 Oct 2024 03:08:58 +0000 (UTC)
-Date: Tue, 29 Oct 2024 11:08:54 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	kernel test robot <oliver.sang@intel.com>,
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KHFzZGQ/l/fVuX++kisaiN2+imX2gKbLVuuJBqEl0bs=;
+	b=KA7obbYprjxVw0CK85DcAyNtKosm39hBK0ZlFSDmR8uCOYMG0w7H+BA3M0C4dxRKnPzGVi
+	9xs8rMLpHTNoQ0Tx/hqustEffkHn08Xmur1howI34TeDXoVGkFWkYQC3ZYR9IHBPfilmPL
+	aV1ccYf4BxDQ5M2g6QqinOzaOo3yIJ4=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-V2Dd3KzpO6C5vAnZwfuyFw-1; Tue, 29 Oct 2024 01:52:29 -0400
+X-MC-Unique: V2Dd3KzpO6C5vAnZwfuyFw-1
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-7c6b192a39bso3805994a12.2
+        for <kexec@lists.infradead.org>; Mon, 28 Oct 2024 22:52:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730181147; x=1730785947;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KHFzZGQ/l/fVuX++kisaiN2+imX2gKbLVuuJBqEl0bs=;
+        b=bDgzCLqXz0iFGHaSBpWzGuTVSZI+TCERykaooQQSQ3buLFrsnUcItpgQWxmzgJcKAL
+         iBVVUo8027HTAyuP0EdpB/oRc5DfwSlwqvQGlFFeH2SQjynEdYL4NgejJ9CZcGujjRpN
+         3WjgliZxUQScIPNTceUTSPy7WugvpH/Abh7Sh1kENBtROiFiOEb5xmqroYvxFY0ET896
+         EwxK+P57BJ4aB0osGFxzBjGXHuzRAf8Te0xwVpBWJYw27mEWtvW5Fo23qhqncTTOG2XX
+         TwHWstWoSDWgrNpAzpY0szXENi/rT4bbl/CBIjXASxlau/cLFwwA2iIDPycMMmeaVbw+
+         d/IA==
+X-Gm-Message-State: AOJu0YxMAl5kT1mAOad7AN0lXrOsTaJWKfl5Sjrq0dwpq3dq5peh5LlX
+	dOGIvaDyeXY0wNXyA7A4GmJjwkM9OGxGqKMFB7j16wpxJJTBDnSH1wGzOAAlBAur2k7DeyhF2kX
+	iLByT3h0i6Afd+6XwAPhTFw3LVDlNljhLz8I0ad5ZW3aSad8zqht2eDte2gA7v0jkBXjT2BMFXs
+	Iz2pfqM2GAUMVFsCFxWT5tDaTmjBjws8N/xgM1OIi60/Za
+X-Received: by 2002:a05:6a20:e30b:b0:1d9:d5e:82a6 with SMTP id adf61e73a8af0-1d9a85169f1mr14915298637.45.1730181147320;
+        Mon, 28 Oct 2024 22:52:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IERMRnwg6+rCeT4sm+GdXmtiDFz6kCcFzoQbpi8rS797KAdLgYtmsTcK+8odUIfl52A+GuuQQ==
+X-Received: by 2002:a05:6a20:e30b:b0:1d9:d5e:82a6 with SMTP id adf61e73a8af0-1d9a85169f1mr14915268637.45.1730181146786;
+        Mon, 28 Oct 2024 22:52:26 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc066d6bsm58682855ad.278.2024.10.28.22.52.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 22:52:26 -0700 (PDT)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
-Subject: Re: [linus:master] [kexec]  816d334afa: Mem-Info
-Message-ID: <ZyBRxoV6SVT2kIXu@MiWiFi-R3L-srv>
-References: <202410231602.fecf96df-lkp@intel.com>
+	x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 0/7] Support kdump with LUKS encryption by reusing LUKS volume keys
+Date: Tue, 29 Oct 2024 13:52:13 +0800
+Message-ID: <20241029055223.210039-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.47.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <202410231602.fecf96df-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241028_200911_366265_34DFFB43 
-X-CRM114-Status: GOOD (  19.70  )
+X-CRM114-CacheID: sfid-20241028_225233_288189_3BFDF9BC 
+X-CRM114-Status: GOOD (  32.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,181 +110,188 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Yuntao,
+LUKS is the standard for Linux disk encryption, widely adopted by users,
+and in some cases, such as Confidential VMs, it is a requirement. With 
+kdump enabled, when the first kernel crashes, the system can boot into
+the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore) 
+to a specified target. However, there are two challenges when dumping
+vmcore to a LUKS-encrypted device:
 
-On 10/23/24 at 04:30pm, kernel test robot wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "Mem-Info" on:
-> 
-> commit: 816d334afa85c836080b41bb6238aea845615ad9 ("kexec: modify the meaning of the end parameter in kimage_is_destination_range()")
+ - Kdump kernel may not be able to decrypt the LUKS partition. For some
+   machines, a system administrator may not have a chance to enter the
+   password to decrypt the device in kdump initramfs after the 1st kernel
+   crashes; For cloud confidential VMs, depending on the policy the
+   kdump kernel may not be able to unseal the keys with TPM and the
+   console virtual keyboard is untrusted.
 
-Can you check what happened with your patch?
+ - LUKS2 by default use the memory-hard Argon2 key derivation function
+   which is quite memory-consuming compared to the limited memory reserved
+   for kdump. Take Fedora example, by default, only 256M is reserved for
+   systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
+   to be reserved for kdump. Note if the memory reserved for kdump can't
+   be used by 1st kernel i.e. an user sees ~1300M memory missing in the
+   1st kernel.
 
-Thanks
-Baoquan
+Besides users (at least for Fedora) usually expect kdump to work out of
+the box i.e. no manual password input or custom crashkernel value is
+needed. And it doesn't make sense to derivate the keys again in kdump
+kernel which seems to be redundant work.
 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> [test failed on linus/master      c2ee9f594da826bea183ed14f2cc029c719bf4da]
-> [test failed on linux-next/master 7436324ebd147598f940dde1335b7979dbccc339]
-> 
-> in testcase: trinity
-> version: 
-> with following parameters:
-> 
-> 	runtime: 600s
-> 
-> 
-> 
-> config: x86_64-randconfig-r032-20220801
-> compiler: gcc-12
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> we observed the issue happen randomly but keep clean on parent
-> 
-> 
-> 5c28913ed04b29ef 816d334afa85c836080b41bb623
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :100         41%          41:100   dmesg.Mem-Info
-> 
-> 
-> and from below Call Trace, seems be related to changes in 816d334afa. FYI
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202410231602.fecf96df-lkp@intel.com
-> 
-> 
-> 
-> [  183.284967][ T2438] trinity-c2: page allocation failure: order:1, mode:0x10cc0(GFP_KERNEL|__GFP_NORETRY), nodemask=(null),cpuset=/,mems_allowed=0
-> [  183.287021][ T2438] CPU: 0 PID: 2438 Comm: trinity-c2 Not tainted 6.7.0-rc4-00178-g816d334afa85 #1
-> [  183.288291][ T2438] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [  183.289719][ T2438] Call Trace:
-> [  183.290202][ T2438]  <TASK>
-> [ 183.290556][ T2438] dump_stack_lvl (lib/dump_stack.c:107) 
-> [ 183.291233][ T2438] dump_stack (lib/dump_stack.c:114) 
-> [ 183.291773][ T2438] warn_alloc (mm/page_alloc.c:3391) 
-> [ 183.292370][ T2438] ? zone_watermark_ok_safe (mm/page_alloc.c:3370) 
-> [ 183.293136][ T2438] ? get_page_from_freelist (mm/page_alloc.c:3513) 
-> [ 183.293882][ T2438] ? __this_cpu_preempt_check (lib/smp_processor_id.c:67) 
-> [ 183.294602][ T2438] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423) 
-> [ 183.295385][ T2438] __alloc_pages_slowpath+0x17d2/0x1b00 
-> [ 183.296285][ T2438] ? __zone_watermark_ok (mm/page_alloc.c:2968) 
-> [ 183.297011][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
-> [ 183.297719][ T2438] ? warn_alloc (mm/page_alloc.c:4041) 
-> [ 183.298306][ T2438] ? get_page_from_freelist (include/linux/mmzone.h:1651 mm/page_alloc.c:3187) 
-> [ 183.299017][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
-> [ 183.299639][ T2438] __alloc_pages (mm/page_alloc.c:4581) 
-> [ 183.300162][ T2438] ? asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:645) 
-> [ 183.300851][ T2438] ? __alloc_pages_slowpath+0x1b00/0x1b00 
-> [ 183.301627][ T2438] ? kimage_alloc_pages (arch/x86/include/asm/bitops.h:55 (discriminator 3) include/asm-generic/bitops/instrumented-atomic.h:29 (discriminator 3) include/linux/page-flags.h:492 (discriminator 3) kernel/kexec_core.c:303 (discriminator 3)) 
-> [ 183.302230][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
-> [ 183.302840][ T2438] kimage_alloc_pages (include/linux/gfp.h:238 include/linux/gfp.h:261 include/linux/gfp.h:274 kernel/kexec_core.c:295) 
-> [ 183.303436][ T2438] kimage_alloc_control_pages (kernel/kexec_core.c:369 kernel/kexec_core.c:480) 
-> [ 183.304126][ T2438] ? kimage_free_page_list (kernel/kexec_core.c:475) 
-> [ 183.304774][ T2438] kimage_alloc_init (kernel/kexec.c:63) 
-> [ 183.305362][ T2438] do_kexec_load (kernel/kexec.c:125) 
-> [ 183.305910][ T2438] ? kimage_alloc_init (kernel/kexec.c:89) 
-> [ 183.306496][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
-> [ 183.307107][ T2438] __x64_sys_kexec_load (kernel/kexec.c:255 kernel/kexec.c:235 kernel/kexec.c:235) 
-> [ 183.307750][ T2438] do_syscall_64 (arch/x86/entry/common.c:51 arch/x86/entry/common.c:82) 
-> [ 183.308284][ T2438] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
-> [  183.308968][ T2438] RIP: 0033:0x463519
-> [ 183.309465][ T2438] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 59 00 00 c3 66 2e 0f 1f 84 00 00 00 00
-> All code
-> ========
->    0:	00 f3                	add    %dh,%bl
->    2:	c3                   	ret
->    3:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
->    a:	00 00 00 
->    d:	0f 1f 40 00          	nopl   0x0(%rax)
->   11:	48 89 f8             	mov    %rdi,%rax
->   14:	48 89 f7             	mov    %rsi,%rdi
->   17:	48 89 d6             	mov    %rdx,%rsi
->   1a:	48 89 ca             	mov    %rcx,%rdx
->   1d:	4d 89 c2             	mov    %r8,%r10
->   20:	4d 89 c8             	mov    %r9,%r8
->   23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
->   28:	0f 05                	syscall
->   2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
->   30:	0f 83 db 59 00 00    	jae    0x5a11
->   36:	c3                   	ret
->   37:	66                   	data16
->   38:	2e                   	cs
->   39:	0f                   	.byte 0xf
->   3a:	1f                   	(bad)
->   3b:	84 00                	test   %al,(%rax)
->   3d:	00 00                	add    %al,(%rax)
-> 	...
-> 
-> Code starting with the faulting instruction
-> ===========================================
->    0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
->    6:	0f 83 db 59 00 00    	jae    0x59e7
->    c:	c3                   	ret
->    d:	66                   	data16
->    e:	2e                   	cs
->    f:	0f                   	.byte 0xf
->   10:	1f                   	(bad)
->   11:	84 00                	test   %al,(%rax)
->   13:	00 00                	add    %al,(%rax)
-> 	...
-> [  183.312022][ T2438] RSP: 002b:00007ffe4d586468 EFLAGS: 00000246 ORIG_RAX: 00000000000000f6
-> [  183.313222][ T2438] RAX: ffffffffffffffda RBX: 00000000000000f6 RCX: 0000000000463519
-> [  183.314330][ T2438] RDX: 00007f3d966eb000 RSI: 0000000000000001 RDI: 00007f3d966e9000
-> [  183.315440][ T2438] RBP: 00007f3d97011000 R08: 0000000000000051 R09: 0000000000001000
-> [  183.316561][ T2438] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-> [  183.317678][ T2438] R13: 00007f3d97011058 R14: 000000000109a850 R15: 00007f3d97011000
-> [  183.318855][ T2438]  </TASK>
-> [  183.324046][ T2438] Mem-Info:
-> [  183.324538][ T2438] active_anon:5181 inactive_anon:9601 isolated_anon:0
-> [  183.324538][ T2438]  active_file:0 inactive_file:0 isolated_file:0
-> [  183.324538][ T2438]  unevictable:85008 dirty:0 writeback:0
-> [  183.324538][ T2438]  slab_reclaimable:24508 slab_unreclaimable:111403
-> [  183.324538][ T2438]  mapped:11081 shmem:7595 pagetables:757
-> [  183.324538][ T2438]  sec_pagetables:0 bounce:0
-> [  183.324538][ T2438]  kernel_misc_reclaimable:0
-> [  183.324538][ T2438]  free:22807 free_pcp:846 free_cma:0
-> [  183.365634][ T2438] Node 0 active_anon:20724kB inactive_anon:38404kB active_file:0kB inactive_file:0kB unevictable:340032kB isolated(anon):0kB isolated(file):0kB mapped:44324kB dirty:0kB writeback:0kB shmem:30380kB writeback_tmp:0kB kernel_stack:3776kB pagetables:3028kB sec_pagetables:0kB all_unreclaimable? yes
-> [  183.369581][ T2438] DMA free:15296kB boost:0kB min:16kB low:28kB high:40kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:15992kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
-> [  183.373381][ T2438] lowmem_reserve[]: 0 2813 13774 13774
-> [  183.374261][ T2438] DMA32 free:46624kB boost:0kB min:3064kB low:5944kB high:8824kB reserved_highatomic:0KB active_anon:8kB inactive_anon:2888kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:3129216kB managed:2958668kB mlocked:0kB bounce:0kB free_pcp:2712kB local_pcp:996kB free_cma:0kB
-> [  183.378286][ T2438] lowmem_reserve[]: 0 0 10961 10961
-> [  183.379256][ T2438] Normal free:42560kB boost:4096kB min:16040kB low:27264kB high:38488kB reserved_highatomic:4096KB active_anon:20716kB inactive_anon:35516kB active_file:0kB inactive_file:0kB unevictable:340032kB writepending:0kB present:13631488kB managed:11224244kB mlocked:392kB bounce:0kB free_pcp:492kB local_pcp:464kB free_cma:0kB
-> [  183.383570][ T2438] lowmem_reserve[]: 0 0 0 0
-> [  183.384357][ T2438] DMA: 0*4kB 0*8kB 0*16kB 0*32kB 1*64kB (U) 1*128kB (U) 1*256kB (U) 1*512kB (U) 0*1024kB 1*2048kB (U) 3*4096kB (M) = 15296kB
-> [  183.386517][ T2438] DMA32: 80*4kB (UME) 4*8kB (M) 4*16kB (ME) 6*32kB (UME) 3*64kB (UME) 4*128kB (UM) 3*256kB (UME) 5*512kB (UM) 5*1024kB (M) 2*2048kB (ME) 8*4096kB (M) = 46624kB
-> [  183.389206][ T2438] Normal: 524*4kB (UMEH) 445*8kB (UME) 410*16kB (UME) 382*32kB (UMEH) 154*64kB (UME) 41*128kB (U) 8*256kB (U) 1*512kB (U) 0*1024kB 0*2048kB 0*4096kB = 42104kB
-> [  183.391793][ T2438] 92505 total pagecache pages
-> [  183.392602][ T2438] 0 pages in swap cache
-> [  183.393232][ T2438] Free swap  = 0kB
-> [  183.393819][ T2438] Total swap = 0kB
-> [  183.394352][ T2438] 4194174 pages RAM
-> [  183.394916][ T2438] 0 pages HighMem/MovableOnly
-> [  183.395645][ T2438] 644606 pages reserved
-> [  183.396135][ T2438] 0 pages cma reserved
-> 
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20241023/202410231602.fecf96df-lkp@intel.com
-> 
-> 
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+This patch set addresses the above issues by making the LUKS volume keys
+persistent for kdump kernel with the help of cryptsetup's new APIs
+(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+the kdump copies of LUKS volume keys,
+
+ 1. After the 1st kernel loads the initramfs during boot, systemd
+    use an user-input passphrase to de-crypt the LUKS volume keys
+    or TPM-sealed key and then save the volume keys to specified keyring
+    (using the --link-vk-to-keyring API) and the key will expire within
+    specified time.
+
+ 2. A user space tool (kdump initramfs loader like kdump-utils) create
+    key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
+    the 1st kernel which keys are needed.
+
+ 3. When the kdump initramfs is loaded by the kexec_file_load
+    syscall, the 1st kernel will iterate created key items, save the
+    keys to kdump reserved memory.
+
+ 4. When the 1st kernel crashes and the kdump initramfs is booted, the
+    kdump initramfs asks the kdump kernel to create a user key using the
+    key stored in kdump reserved memory by writing yes to
+    /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
+    device is unlocked with libcryptsetup's --volume-key-keyring API.
+
+ 5. The system gets rebooted to the 1st kernel after dumping vmcore to
+    the LUKS encrypted device is finished
+
+After libcryptsetup saving the LUKS volume keys to specified keyring,
+whoever takes this should be responsible for the safety of these copies
+of keys. The keys will be saved in the memory area exclusively reserved
+for kdump where even the 1st kernel has no direct access. And further
+more, two additional protections are added,
+ - save the copy randomly in kdump reserved memory as suggested by Jan
+ - clear the _PAGE_PRESENT flag of the page that stores the copy as
+   suggested by Pingfan
+
+This patch set only supports x86. There will be patches to support other
+architectures once this patch set gets merged.
+
+v6
+ - Baoquan
+   - support AMD SEV
+   - drop unnecessary keys_header_size
+   - improve commit message of [PATCH 4/7]
+ 
+ - Greg
+   - switch to configfs
+   - move ifdef from .c to .h files
+   - use tab instead of space for appended code comment
+ 
+ - Process key description in a more flexible way to address problems
+   found by Ondrej
+ - improve cover letter
+ - fix an compilation error as found by kernel test robot 
+
+v5
+ - Baoquan
+   - limit the feature of placing kexec_buf randomly to kdump (CONFIG_CRASH_DUMP)
+   - add documentation for added sysfs API 
+   - allow to re-send init command to support the case of user switching to
+     a different LUKS-encrypted target
+   - make CONFIG_CRASH_DM_CRYPT depends on CONFIG_DM_CRYPT
+   - check if the number of keys exceed KEY_NUM_MAX
+   - rename (struct keys_header).key_count as (struct keys_header).total_keys
+     to improve code readability
+   - improve commit message
+   - fix the failure of calling crash_exclude_mem_range (there is a split
+     of mem_range)
+   - use ret instead of r as return code
+ 
+ - Greg
+   - add documentation for added sysfs API 
+   - avoid spamming kernel logs 
+   - fix a buffer overflow issue
+   - keep the state enums synced up with the string values
+   - use sysfs_emit other than sprintf
+   - explain KEY_NUM_MAX and KEY_SIZE_MAX
+   - s/EXPORT_SYMBOL_GPL/EXPORT_SYMBOL/g
+   - improve code readability
+ 
+ - Rebase onto latest Linus tree
+
+
+v4
+- rebase onto latest Linus tree so Baoquan can apply the patches for
+  code review
+- fix kernel test robot warnings
+
+v3
+ - Support CPU/memory hot-plugging [Baoquan]
+ - Don't save the keys temporarily to simplify the implementation [Baoquan]
+ - Support multiple LUKS encrypted volumes
+ - Read logon key instead of user key to improve security [Ondrej]
+ - A kernel config option CRASH_DM_CRYPT for this feature (disabled by default)
+ - Fix warnings found by kernel test robot
+ - Rebase the code onto 6.9.0-rc5+
+
+v2
+ - work together with libscryptsetup's --link-vk-to-keyring/--volume-key-keyring APIs [Milan and Ondrej]
+ - add the case where console virtual keyboard is untrusted for confidential VM
+ - use dm_crypt_key instead of LUKS volume key [Milan and Eric]
+ - fix some code format issues
+ - don't move "struct kexec_segment" declaration
+ - Rebase the code onto latest Linus tree (6.7.0)
+
+v1
+ - "Put the luks key handling related to crash_dump out into a separate
+   file kernel/crash_dump_luks.c" [Baoquan]
+ - Put the generic luks handling code before the x86 specific code to
+   make it easier for other arches to follow suit [Baoquan]
+ - Use phys_to_virt instead of "pfn -> page -> vaddr" [Dave Hansen]
+ - Drop the RFC prefix [Dave Young]
+ - Rebase the code onto latest Linus tree (6.4.0-rc4)
+
+RFC v2
+ - libcryptsetup interacts with the kernel via sysfs instead of "hacking"
+   dm-crypt
+   - to save a kdump copy of the LUKS volume key in 1st kernel
+   - to add a logon key using the copy for libcryptsetup in kdump kernel [Milan]
+   - to avoid the incorrect usage of LUKS master key in dm-crypt [Milan]
+ - save the kdump copy of LUKS volume key randomly [Jan]
+ - mark the kdump copy inaccessible [Pingfan]
+ - Miscellaneous
+   - explain when operations related to the LUKS volume key happen [Jan]
+   - s/master key/volume key/g
+   - use crash_ instead of kexec_ as function prefix
+   - fix commit subject prefixes e.g. "x86, kdump" to x86/crash
+
+Coiby Xu (7):
+  kexec_file: allow to place kexec_buf randomly
+  crash_dump: make dm crypt keys persist for the kdump kernel
+  crash_dump: store dm crypt keys in kdump reserved memory
+  crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
+  crash_dump: retrieve dm crypt keys in kdump kernel
+  x86/crash: pass dm crypt keys to kdump kernel
+  x86/crash: make the page that stores the dm crypt keys inaccessible
+
+ arch/x86/kernel/crash.c            |  20 +-
+ arch/x86/kernel/kexec-bzimage64.c  |   7 +
+ arch/x86/kernel/machine_kexec_64.c |  22 ++
+ include/linux/crash_core.h         |   7 +-
+ include/linux/crash_dump.h         |   2 +
+ include/linux/kexec.h              |  32 ++
+ kernel/Kconfig.kexec               |   9 +
+ kernel/Makefile                    |   1 +
+ kernel/crash_dump_dm_crypt.c       | 459 +++++++++++++++++++++++++++++
+ kernel/kexec_file.c                |   3 +
+ 10 files changed, 559 insertions(+), 3 deletions(-)
+ create mode 100644 kernel/crash_dump_dm_crypt.c
+
+
+base-commit: e42b1a9a2557aa94fee47f078633677198386a52
+-- 
+2.47.0
 
 
 _______________________________________________
