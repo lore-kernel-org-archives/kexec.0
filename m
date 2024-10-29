@@ -4,73 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9290BD339A9
-	for <kexec@archiver.kernel.org>; Mon, 28 Oct 2024 17:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3BFBBD5B865
+	for <kexec@archiver.kernel.org>; Tue, 29 Oct 2024 03:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qPptdCGHgzShvglBnm/jDAmi6Xi29x3V4mAdsr8khZ0=; b=U7/KTmQO7D9Mna
-	Ij/ELbPNrKni1owvojismDx+/8kGm17xs1FXiBg4SFODiKLOBxuUbTj8M/YypZqFqgo4kToBCTYuk
-	ABS3hmrquNQ2qJz6VAY8nCIVElLP4TdA8sCM1B17zcmTriCZtm1ZDh0Q92doWBklspkbfXHeyfgic
-	ptZliHgVSqcHpHLNf5x/eVixelE93IydJZaUBlWS49mdWoDy6XvrBp4w8nW5c+O2ZMqzSMgOJAXdP
-	3666ynKrdRCPacJQCtB91vHejN6NFMWsmeVd5DS5khi18Fo+MTFQB5Ol5Xyw7xsWmdHzLhcjF6vnT
-	IABhFUD1MwxT/RVsuqQw==;
+	List-Owner; bh=kY0RDQDkyz6W9CeAv+af5LALtYf02PWs3dBGUBl3nsk=; b=PuJFdm7oBhFgRg
+	Zo0+vVa1N/erYwUnf41Be7tXTy2O7BhkpgOL8I5opjGn08UXix2QwBxpmV78feZC7Gk2C62ulcT8a
+	SdyttjG019SDcSxhG/q32Qovbn13lllvYg3Z+tFn1Adwz3C8jAStrgqEceIRZPdnvV1G/ZVL2VubX
+	MjNQz+KnkluPi5EWuoNkTX2Fbh70pwQkAXqDTP9r5qae0M0UwCMBnRx1s4qczSiSWbBifNk/jKep6
+	sGg73gIs9C0JBRRFj2lo3RrJhs9aH4fAIiWxN+0eML7ESjTTu3Uxun9X8E3eYMNGsivbgRs9oPkQ1
+	c3lHIKY4h5PX7PLWiR7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5Td5-0000000BfMA-4APG;
-	Mon, 28 Oct 2024 17:34:11 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1t5cbd-0000000D3Jh-0zmI;
+	Tue, 29 Oct 2024 03:09:17 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5Td2-0000000BfLX-3Dtd;
-	Mon, 28 Oct 2024 17:34:10 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id D62785C5C12;
-	Mon, 28 Oct 2024 17:33:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E76C4CEE7;
-	Mon, 28 Oct 2024 17:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730136847;
-	bh=pcLLhLxlquE4QPOlWW4Lr1bb5MuHYN7k6DZdbDCx9DQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N2N8PbhzCFAC8L9B/R+n6LS/2Vz3FY30Fm8hWgEopytD1knoRkeGPQKL3kqI2YZh4
-	 N66V/nX5SYYKx1XlmynUto9sGLWOvhBEmg5rJSntmjzIwGDKa6y6pQ5CqfVhu6ox3z
-	 XXy4qMSqLoaPINE/LE66ohBgCVuwypgcmHq7aI6zsMGsZnZ0NSH6AbSvbsTjET7iO5
-	 tM6H9w8I9wRriKG8/z+JwgusAW1OG4vSksb8DGG2Dt3CZPSWdvjdM4zjviLYwYBMsG
-	 60iDnfcMYPZgh5mphm7YYFd/flxuIVSEHd35xe9nF7CCH1OilerJX6R47wN1hlmM2E
-	 GJMGejqlT3Efw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53a007743e7so5250608e87.1;
-        Mon, 28 Oct 2024 10:34:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBAo6pbX/nMZ4DWSeW4pJ++IbfxTMicmcYyI21EiKf2/MlayznbJ+RJgDCdl8leEtHKWkv7+CkgJ2sLP+Ljsz/MQ==@lists.infradead.org, AJvYcCVXodPayS/2IcpDWoXjpJ4W/0B2YUn2oXUX+0Rrl8/Bvbvu2VPjUYXnKRAyLYB3sF14KYpSnw==@lists.infradead.org, AJvYcCXsvHC8GDd6pwllSXXhuUy2BDMHFlb6f2QmxZ8YQcDNBk7dra8syTjAPluYiZtixUoXot2mBF2fh8LbwnU=@lists.infradead.org
-X-Gm-Message-State: AOJu0YxTmaPXYkJnprt3rt+T8dchElQC89DCqaOJTa4jqNbzjVBAH6Qx
-	q8cu/rNgb8VHAaENFnJFhDdn5+FOijmC87u6MjcdBlR9PEiSS8SRAT5oH11r4dljSYnoQClB7G8
-	vXW7uX8kTNX3iq8V9TJaE1xOXLw==
-X-Google-Smtp-Source: AGHT+IF5IETAXGDmlx+LAKug+dwz64NqnsL1okXnnGJyl9RYKmQIgXl4x3+ziMcKV48JBCGh1PNtcevuXjcqmWy53WY=
-X-Received: by 2002:a05:6512:224e:b0:539:e85c:c888 with SMTP id
- 2adb3069b0e04-53b34a1900emr4148343e87.40.1730136845913; Mon, 28 Oct 2024
- 10:34:05 -0700 (PDT)
+	id 1t5cbX-0000000D3Io-0umL
+	for kexec@lists.infradead.org;
+	Tue, 29 Oct 2024 03:09:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730171348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Htj3zSbwg6CbqXsr8zuJkKK0VfLTQ/viyDjsj3CcKvc=;
+	b=iPN/n2dRbOEl07n3xwsRwp7r0DMeg2zZPpkju6azGcQGA04dajBJJ1pyMjftFc7NpSeBhI
+	59CELN4neXdnLWg5z5OOC5AL1aUhLwwdKi/IFHlszt+2G/JLcJjFvRwNua9KmspED3Dmjw
+	dBC+LJo1IuLnhhkZjJhadSLG3rtLBwg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-299-KxjwvzPENd2IdUhcKoxwGg-1; Mon,
+ 28 Oct 2024 23:09:05 -0400
+X-MC-Unique: KxjwvzPENd2IdUhcKoxwGg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF9A31956088;
+	Tue, 29 Oct 2024 03:09:01 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.66])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0F07300018D;
+	Tue, 29 Oct 2024 03:08:58 +0000 (UTC)
+Date: Tue, 29 Oct 2024 11:08:54 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
+Subject: Re: [linus:master] [kexec]  816d334afa: Mem-Info
+Message-ID: <ZyBRxoV6SVT2kIXu@MiWiFi-R3L-srv>
+References: <202410231602.fecf96df-lkp@intel.com>
 MIME-Version: 1.0
-References: <20241023171426.452688-1-usamaarif642@gmail.com> <20241028154054.GE2484@willie-the-truck>
-In-Reply-To: <20241028154054.GE2484@willie-the-truck>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 28 Oct 2024 12:33:51 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK=cbknmjKa-rtr9vPhaOoYf26KNzvQ0uGabOwy19jcCA@mail.gmail.com>
-Message-ID: <CAL_JsqK=cbknmjKa-rtr9vPhaOoYf26KNzvQ0uGabOwy19jcCA@mail.gmail.com>
-Subject: Re: [PATCH v2] of/fdt: add dt_phys arg to early_init_dt_scan and early_init_dt_verify
-To: Will Deacon <will@kernel.org>
-Cc: Usama Arif <usamaarif642@gmail.com>, mark.rutland@arm.com, leitao@debian.org, 
-	catalin.marinas@arm.com, tglx@linutronix.de, chris@zankel.net, 
-	saravanak@google.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-sh@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-openrisc@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-csky@vger.kernel.org
+Content-Disposition: inline
+In-Reply-To: <202410231602.fecf96df-lkp@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241028_103408_921998_4229AD27 
-X-CRM114-Status: GOOD (  23.15  )
+X-CRM114-CacheID: sfid-20241028_200911_366265_34DFFB43 
+X-CRM114-Status: GOOD (  19.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,81 +85,189 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gTW9uLCBPY3QgMjgsIDIwMjQgYXQgMTA6NDHigK9BTSBXaWxsIERlYWNvbiA8d2lsbEBrZXJu
-ZWwub3JnPiB3cm90ZToKPgo+IE9uIFdlZCwgT2N0IDIzLCAyMDI0IGF0IDA2OjE0OjI2UE0gKzAx
-MDAsIFVzYW1hIEFyaWYgd3JvdGU6Cj4gPiAgX19wYSgpIGlzIG9ubHkgaW50ZW5kZWQgdG8gYmUg
-dXNlZCBmb3IgbGluZWFyIG1hcCBhZGRyZXNzZXMgYW5kIHVzaW5nCj4gPiBpdCBmb3IgaW5pdGlh
-bF9ib290X3BhcmFtcyB3aGljaCBpcyBpbiBmaXhtYXAgZm9yIGFybTY0IHdpbGwgZ2l2ZSBhbgo+
-ID4gaW5jb3JyZWN0IHZhbHVlLiBIZW5jZSBzYXZlIHRoZSBwaHlzaWNhbCBhZGRyZXNzIHdoZW4g
-aXQgaXMga25vd24gYXQKPiA+IGJvb3QgdGltZSB3aGVuIGNhbGxpbmcgZWFybHlfaW5pdF9kdF9z
-Y2FuIGZvciBhcm02NCBhbmQgdXNlIGl0IGF0IGtleGVjCj4gPiB0aW1lIGluc3RlYWQgb2YgY29u
-dmVydGluZyB0aGUgdmlydHVhbCBhZGRyZXNzIHVzaW5nIF9fcGEoKS4KPiA+Cj4gPiBSZXBvcnRl
-ZC1ieTogQnJlbm8gTGVpdGFvIDxsZWl0YW9AZGViaWFuLm9yZz4KPiA+IFN1Z2dlc3RlZC1ieTog
-TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IFVz
-YW1hIEFyaWYgPHVzYW1hYXJpZjY0MkBnbWFpbC5jb20+Cj4gPiBGaXhlczogYWMxMGJlNWNkYmZh
-ICgiYXJtNjQ6IFVzZSBjb21tb24gb2Zfa2V4ZWNfYWxsb2NfYW5kX3NldHVwX2ZkdCgpIikKPiA+
-IC0tLQo+ID4gdjEgLT4gMjoKPiA+IC0gcGFzcyBkdF9waHlzIGluIGVhcmx5X2luaXRfZHRfc2Nh
-biBpbnN0ZWFkIG9mIGNyZWF0aW5nCj4gPiAgIGFub3J0aGVyIGFyY2gtPmR0IGZ1bmN0aW9uIChS
-b2IgSGVycmluZykKPiA+IC0tLQo+ID4gIGFyY2gvYXJjL2tlcm5lbC9kZXZ0cmVlLmMgICAgICAg
-ICAgICAgIHwgIDIgKy0KPiA+ICBhcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jICAgICAgICAgICAg
-ICB8ICAyICstCj4gPiAgYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYyAgICAgICAgICAgICAgfCAg
-NiArKysrKy0KPiA+ICBhcmNoL2Nza3kva2VybmVsL3NldHVwLmMgICAgICAgICAgICAgICB8ICA0
-ICsrLS0KPiA+ICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvc2V0dXAuYyAgICAgICAgICB8ICAyICst
-Cj4gPiAgYXJjaC9taWNyb2JsYXplL2tlcm5lbC9wcm9tLmMgICAgICAgICAgfCAgMiArLQo+ID4g
-IGFyY2gvbWlwcy9rZXJuZWwvcHJvbS5jICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+ICBhcmNo
-L21pcHMva2VybmVsL3JlbG9jYXRlLmMgICAgICAgICAgICB8ICAyICstCj4gPiAgYXJjaC9uaW9z
-Mi9rZXJuZWwvcHJvbS5jICAgICAgICAgICAgICAgfCAgNCArKy0tCj4gPiAgYXJjaC9vcGVucmlz
-Yy9rZXJuZWwvcHJvbS5jICAgICAgICAgICAgfCAgMiArLQo+ID4gIGFyY2gvcG93ZXJwYy9rZXJu
-ZWwvZHRfY3B1X2Z0cnMuYyAgICAgIHwgIDIgKy0KPiA+ICBhcmNoL3Bvd2VycGMva2VybmVsL3By
-b20uYyAgICAgICAgICAgICB8ICAyICstCj4gPiAgYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2Vy
-aWVzL3BscGtzLmMgfCAgMiArLQo+ID4gIGFyY2gvcmlzY3Yva2VybmVsL3NldHVwLmMgICAgICAg
-ICAgICAgIHwgIDIgKy0KPiA+ICBhcmNoL3NoL2tlcm5lbC9zZXR1cC5jICAgICAgICAgICAgICAg
-ICB8ICAyICstCj4gPiAgYXJjaC91bS9rZXJuZWwvZHRiLmMgICAgICAgICAgICAgICAgICAgfCAg
-MiArLQo+ID4gIGFyY2gveDg2L2tlcm5lbC9kZXZpY2V0cmVlLmMgICAgICAgICAgIHwgIDIgKy0K
-PiA+ICBhcmNoL3h0ZW5zYS9rZXJuZWwvc2V0dXAuYyAgICAgICAgICAgICB8ICAyICstCj4gPiAg
-ZHJpdmVycy9vZi9mZHQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAxNCArKysrKysrKy0tLS0t
-LQo+ID4gIGRyaXZlcnMvb2Yva2V4ZWMuYyAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+
-ICBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oICAgICAgICAgICAgICAgICB8ICA1ICsrKy0tCj4gPiAg
-MjEgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMjkgZGVsZXRpb25zKC0pCj4gPgo+
-ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2tlcm5lbC9kZXZ0cmVlLmMgYi9hcmNoL2FyYy9rZXJu
-ZWwvZGV2dHJlZS5jCj4gPiBpbmRleCA0YzllNjE0NTdiMmYuLmNjNmFjN2QxMjhhYSAxMDA2NDQK
-PiA+IC0tLSBhL2FyY2gvYXJjL2tlcm5lbC9kZXZ0cmVlLmMKPiA+ICsrKyBiL2FyY2gvYXJjL2tl
-cm5lbC9kZXZ0cmVlLmMKPiA+IEBAIC02Miw3ICs2Miw3IEBAIGNvbnN0IHN0cnVjdCBtYWNoaW5l
-X2Rlc2MgKiBfX2luaXQgc2V0dXBfbWFjaGluZV9mZHQodm9pZCAqZHQpCj4gPiAgICAgICBjb25z
-dCBzdHJ1Y3QgbWFjaGluZV9kZXNjICptZGVzYzsKPiA+ICAgICAgIHVuc2lnbmVkIGxvbmcgZHRf
-cm9vdDsKPiA+Cj4gPiAtICAgICBpZiAoIWVhcmx5X2luaXRfZHRfc2NhbihkdCkpCj4gPiArICAg
-ICBpZiAoIWVhcmx5X2luaXRfZHRfc2NhbihkdCwgX19wYShkdCkpKQo+ID4gICAgICAgICAgICAg
-ICByZXR1cm4gTlVMTDsKPiA+Cj4gPiAgICAgICBtZGVzYyA9IG9mX2ZsYXRfZHRfbWF0Y2hfbWFj
-aGluZShOVUxMLCBhcmNoX2dldF9uZXh0X21hY2gpOwo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2tlcm5lbC9kZXZ0cmVlLmMgYi9hcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jCj4gPiBpbmRleCBm
-ZGI3NGU2NDIwNmEuLjNiNzg5NjZlNzUwYSAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2tlcm5l
-bC9kZXZ0cmVlLmMKPiA+ICsrKyBiL2FyY2gvYXJtL2tlcm5lbC9kZXZ0cmVlLmMKPiA+IEBAIC0y
-MDAsNyArMjAwLDcgQEAgY29uc3Qgc3RydWN0IG1hY2hpbmVfZGVzYyAqIF9faW5pdCBzZXR1cF9t
-YWNoaW5lX2ZkdCh2b2lkICpkdF92aXJ0KQo+ID4KPiA+ICAgICAgIG1kZXNjX2Jlc3QgPSAmX19t
-YWNoX2Rlc2NfR0VORVJJQ19EVDsKPiA+Cj4gPiAtICAgICBpZiAoIWR0X3ZpcnQgfHwgIWVhcmx5
-X2luaXRfZHRfdmVyaWZ5KGR0X3ZpcnQpKQo+ID4gKyAgICAgaWYgKCFkdF92aXJ0IHx8ICFlYXJs
-eV9pbml0X2R0X3ZlcmlmeShkdF92aXJ0LCBfX3BhKGR0X3ZpcnQpKSkKPiA+ICAgICAgICAgICAg
-ICAgcmV0dXJuIE5VTEw7Cj4gPgo+ID4gICAgICAgbWRlc2MgPSBvZl9mbGF0X2R0X21hdGNoX21h
-Y2hpbmUobWRlc2NfYmVzdCwgYXJjaF9nZXRfbmV4dF9tYWNoKTsKPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2tlcm5lbC9zZXR1cC5jIGIvYXJjaC9hcm02NC9rZXJuZWwvc2V0dXAuYwo+ID4g
-aW5kZXggYjIyZDI4ZWM4MDI4Li4xNzcyNjI3MzljNDkgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2Fy
-bTY0L2tlcm5lbC9zZXR1cC5jCj4gPiArKysgYi9hcmNoL2FybTY0L2tlcm5lbC9zZXR1cC5jCj4g
-PiBAQCAtMTc1LDcgKzE3NSwxMSBAQCBzdGF0aWMgdm9pZCBfX2luaXQgc2V0dXBfbWFjaGluZV9m
-ZHQocGh5c19hZGRyX3QgZHRfcGh5cykKPiA+ICAgICAgIGlmIChkdF92aXJ0KQo+ID4gICAgICAg
-ICAgICAgICBtZW1ibG9ja19yZXNlcnZlKGR0X3BoeXMsIHNpemUpOwo+ID4KPiA+IC0gICAgIGlm
-ICghZHRfdmlydCB8fCAhZWFybHlfaW5pdF9kdF9zY2FuKGR0X3ZpcnQpKSB7Cj4gPiArICAgICAv
-Kgo+ID4gKyAgICAgICogZHRfdmlydCBpcyBhIGZpeG1hcCBhZGRyZXNzLCBoZW5jZSBfX3BhKGR0
-X3ZpcnQpIGNhbid0IGJlIHVzZWQuCj4gPiArICAgICAgKiBQYXNzIGR0X3BoeXMgZGlyZWN0bHku
-Cj4gPiArICAgICAgKi8KPiA+ICsgICAgIGlmICghZHRfdmlydCB8fCAhZWFybHlfaW5pdF9kdF9z
-Y2FuKGR0X3ZpcnQsIGR0X3BoeXMpKSB7Cj4KPiBuaXQ6IEl0IGxvb2tzIGxpa2UgZWFybHlfaW5p
-dF9kdF92ZXJpZnkoKSB3aWxsIG5vdyByZXR1cm4gZmFsc2UgaWYKPiAhZHRfdmlydCwgc28gd2Ug
-Y2FuIGRyb3AgdGhlIGFkZGl0aW9uYWwgY2hlY2sgaGVyZS4KClRoYXQgd2FzIHRydWUgYmVmb3Jl
-LCBidXQgSSdsbCBmaXggdGhpcyB1cCB3aGVuIGFwcGx5aW5nLgoKUm9iCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+Hi Yuntao,
+
+On 10/23/24 at 04:30pm, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed "Mem-Info" on:
+> 
+> commit: 816d334afa85c836080b41bb6238aea845615ad9 ("kexec: modify the meaning of the end parameter in kimage_is_destination_range()")
+
+Can you check what happened with your patch?
+
+Thanks
+Baoquan
+
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linus/master      c2ee9f594da826bea183ed14f2cc029c719bf4da]
+> [test failed on linux-next/master 7436324ebd147598f940dde1335b7979dbccc339]
+> 
+> in testcase: trinity
+> version: 
+> with following parameters:
+> 
+> 	runtime: 600s
+> 
+> 
+> 
+> config: x86_64-randconfig-r032-20220801
+> compiler: gcc-12
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> we observed the issue happen randomly but keep clean on parent
+> 
+> 
+> 5c28913ed04b29ef 816d334afa85c836080b41bb623
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :100         41%          41:100   dmesg.Mem-Info
+> 
+> 
+> and from below Call Trace, seems be related to changes in 816d334afa. FYI
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202410231602.fecf96df-lkp@intel.com
+> 
+> 
+> 
+> [  183.284967][ T2438] trinity-c2: page allocation failure: order:1, mode:0x10cc0(GFP_KERNEL|__GFP_NORETRY), nodemask=(null),cpuset=/,mems_allowed=0
+> [  183.287021][ T2438] CPU: 0 PID: 2438 Comm: trinity-c2 Not tainted 6.7.0-rc4-00178-g816d334afa85 #1
+> [  183.288291][ T2438] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> [  183.289719][ T2438] Call Trace:
+> [  183.290202][ T2438]  <TASK>
+> [ 183.290556][ T2438] dump_stack_lvl (lib/dump_stack.c:107) 
+> [ 183.291233][ T2438] dump_stack (lib/dump_stack.c:114) 
+> [ 183.291773][ T2438] warn_alloc (mm/page_alloc.c:3391) 
+> [ 183.292370][ T2438] ? zone_watermark_ok_safe (mm/page_alloc.c:3370) 
+> [ 183.293136][ T2438] ? get_page_from_freelist (mm/page_alloc.c:3513) 
+> [ 183.293882][ T2438] ? __this_cpu_preempt_check (lib/smp_processor_id.c:67) 
+> [ 183.294602][ T2438] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423) 
+> [ 183.295385][ T2438] __alloc_pages_slowpath+0x17d2/0x1b00 
+> [ 183.296285][ T2438] ? __zone_watermark_ok (mm/page_alloc.c:2968) 
+> [ 183.297011][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> [ 183.297719][ T2438] ? warn_alloc (mm/page_alloc.c:4041) 
+> [ 183.298306][ T2438] ? get_page_from_freelist (include/linux/mmzone.h:1651 mm/page_alloc.c:3187) 
+> [ 183.299017][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> [ 183.299639][ T2438] __alloc_pages (mm/page_alloc.c:4581) 
+> [ 183.300162][ T2438] ? asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:645) 
+> [ 183.300851][ T2438] ? __alloc_pages_slowpath+0x1b00/0x1b00 
+> [ 183.301627][ T2438] ? kimage_alloc_pages (arch/x86/include/asm/bitops.h:55 (discriminator 3) include/asm-generic/bitops/instrumented-atomic.h:29 (discriminator 3) include/linux/page-flags.h:492 (discriminator 3) kernel/kexec_core.c:303 (discriminator 3)) 
+> [ 183.302230][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> [ 183.302840][ T2438] kimage_alloc_pages (include/linux/gfp.h:238 include/linux/gfp.h:261 include/linux/gfp.h:274 kernel/kexec_core.c:295) 
+> [ 183.303436][ T2438] kimage_alloc_control_pages (kernel/kexec_core.c:369 kernel/kexec_core.c:480) 
+> [ 183.304126][ T2438] ? kimage_free_page_list (kernel/kexec_core.c:475) 
+> [ 183.304774][ T2438] kimage_alloc_init (kernel/kexec.c:63) 
+> [ 183.305362][ T2438] do_kexec_load (kernel/kexec.c:125) 
+> [ 183.305910][ T2438] ? kimage_alloc_init (kernel/kexec.c:89) 
+> [ 183.306496][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> [ 183.307107][ T2438] __x64_sys_kexec_load (kernel/kexec.c:255 kernel/kexec.c:235 kernel/kexec.c:235) 
+> [ 183.307750][ T2438] do_syscall_64 (arch/x86/entry/common.c:51 arch/x86/entry/common.c:82) 
+> [ 183.308284][ T2438] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
+> [  183.308968][ T2438] RIP: 0033:0x463519
+> [ 183.309465][ T2438] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 59 00 00 c3 66 2e 0f 1f 84 00 00 00 00
+> All code
+> ========
+>    0:	00 f3                	add    %dh,%bl
+>    2:	c3                   	ret
+>    3:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+>    a:	00 00 00 
+>    d:	0f 1f 40 00          	nopl   0x0(%rax)
+>   11:	48 89 f8             	mov    %rdi,%rax
+>   14:	48 89 f7             	mov    %rsi,%rdi
+>   17:	48 89 d6             	mov    %rdx,%rsi
+>   1a:	48 89 ca             	mov    %rcx,%rdx
+>   1d:	4d 89 c2             	mov    %r8,%r10
+>   20:	4d 89 c8             	mov    %r9,%r8
+>   23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
+>   28:	0f 05                	syscall
+>   2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
+>   30:	0f 83 db 59 00 00    	jae    0x5a11
+>   36:	c3                   	ret
+>   37:	66                   	data16
+>   38:	2e                   	cs
+>   39:	0f                   	.byte 0xf
+>   3a:	1f                   	(bad)
+>   3b:	84 00                	test   %al,(%rax)
+>   3d:	00 00                	add    %al,(%rax)
+> 	...
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
+>    6:	0f 83 db 59 00 00    	jae    0x59e7
+>    c:	c3                   	ret
+>    d:	66                   	data16
+>    e:	2e                   	cs
+>    f:	0f                   	.byte 0xf
+>   10:	1f                   	(bad)
+>   11:	84 00                	test   %al,(%rax)
+>   13:	00 00                	add    %al,(%rax)
+> 	...
+> [  183.312022][ T2438] RSP: 002b:00007ffe4d586468 EFLAGS: 00000246 ORIG_RAX: 00000000000000f6
+> [  183.313222][ T2438] RAX: ffffffffffffffda RBX: 00000000000000f6 RCX: 0000000000463519
+> [  183.314330][ T2438] RDX: 00007f3d966eb000 RSI: 0000000000000001 RDI: 00007f3d966e9000
+> [  183.315440][ T2438] RBP: 00007f3d97011000 R08: 0000000000000051 R09: 0000000000001000
+> [  183.316561][ T2438] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+> [  183.317678][ T2438] R13: 00007f3d97011058 R14: 000000000109a850 R15: 00007f3d97011000
+> [  183.318855][ T2438]  </TASK>
+> [  183.324046][ T2438] Mem-Info:
+> [  183.324538][ T2438] active_anon:5181 inactive_anon:9601 isolated_anon:0
+> [  183.324538][ T2438]  active_file:0 inactive_file:0 isolated_file:0
+> [  183.324538][ T2438]  unevictable:85008 dirty:0 writeback:0
+> [  183.324538][ T2438]  slab_reclaimable:24508 slab_unreclaimable:111403
+> [  183.324538][ T2438]  mapped:11081 shmem:7595 pagetables:757
+> [  183.324538][ T2438]  sec_pagetables:0 bounce:0
+> [  183.324538][ T2438]  kernel_misc_reclaimable:0
+> [  183.324538][ T2438]  free:22807 free_pcp:846 free_cma:0
+> [  183.365634][ T2438] Node 0 active_anon:20724kB inactive_anon:38404kB active_file:0kB inactive_file:0kB unevictable:340032kB isolated(anon):0kB isolated(file):0kB mapped:44324kB dirty:0kB writeback:0kB shmem:30380kB writeback_tmp:0kB kernel_stack:3776kB pagetables:3028kB sec_pagetables:0kB all_unreclaimable? yes
+> [  183.369581][ T2438] DMA free:15296kB boost:0kB min:16kB low:28kB high:40kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:15992kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> [  183.373381][ T2438] lowmem_reserve[]: 0 2813 13774 13774
+> [  183.374261][ T2438] DMA32 free:46624kB boost:0kB min:3064kB low:5944kB high:8824kB reserved_highatomic:0KB active_anon:8kB inactive_anon:2888kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:3129216kB managed:2958668kB mlocked:0kB bounce:0kB free_pcp:2712kB local_pcp:996kB free_cma:0kB
+> [  183.378286][ T2438] lowmem_reserve[]: 0 0 10961 10961
+> [  183.379256][ T2438] Normal free:42560kB boost:4096kB min:16040kB low:27264kB high:38488kB reserved_highatomic:4096KB active_anon:20716kB inactive_anon:35516kB active_file:0kB inactive_file:0kB unevictable:340032kB writepending:0kB present:13631488kB managed:11224244kB mlocked:392kB bounce:0kB free_pcp:492kB local_pcp:464kB free_cma:0kB
+> [  183.383570][ T2438] lowmem_reserve[]: 0 0 0 0
+> [  183.384357][ T2438] DMA: 0*4kB 0*8kB 0*16kB 0*32kB 1*64kB (U) 1*128kB (U) 1*256kB (U) 1*512kB (U) 0*1024kB 1*2048kB (U) 3*4096kB (M) = 15296kB
+> [  183.386517][ T2438] DMA32: 80*4kB (UME) 4*8kB (M) 4*16kB (ME) 6*32kB (UME) 3*64kB (UME) 4*128kB (UM) 3*256kB (UME) 5*512kB (UM) 5*1024kB (M) 2*2048kB (ME) 8*4096kB (M) = 46624kB
+> [  183.389206][ T2438] Normal: 524*4kB (UMEH) 445*8kB (UME) 410*16kB (UME) 382*32kB (UMEH) 154*64kB (UME) 41*128kB (U) 8*256kB (U) 1*512kB (U) 0*1024kB 0*2048kB 0*4096kB = 42104kB
+> [  183.391793][ T2438] 92505 total pagecache pages
+> [  183.392602][ T2438] 0 pages in swap cache
+> [  183.393232][ T2438] Free swap  = 0kB
+> [  183.393819][ T2438] Total swap = 0kB
+> [  183.394352][ T2438] 4194174 pages RAM
+> [  183.394916][ T2438] 0 pages HighMem/MovableOnly
+> [  183.395645][ T2438] 644606 pages reserved
+> [  183.396135][ T2438] 0 pages cma reserved
+> 
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20241023/202410231602.fecf96df-lkp@intel.com
+> 
+> 
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
