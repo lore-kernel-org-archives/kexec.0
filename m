@@ -4,71 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ACCC6D74954
-	for <kexec@archiver.kernel.org>; Wed, 30 Oct 2024 02:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7D0C1D5CC9C
+	for <kexec@archiver.kernel.org>; Wed, 30 Oct 2024 11:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=quEj3WP+kAUrG/xyZGNZE3at5jVZYH9GGkaC6yg/jNo=; b=P3MSybjd6cBYZC
-	LhRH0B/rrBGT44rQsC8l51GojJSur0BshyeIxEQslCOOetHbH0ZUVMzZMYqyqjxpZaFeRMb8M7DT5
-	l4x4sNihiwo1OT/9Q7jjsfrXn+Sk8aML+TQ1NuT0645INa3tfXb822tcoMp7PiaR9Ic9OPl5Ptiby
-	bQJnFayOv5UiIcMOGEUPCj/yEnvZsN9KJuAXfNnucROxn2kh11KSBg2+wCWF3W+w01sZhhdpJmfZR
-	fF4ok9E/YvBY+3lzj3Gsk1dAI9li4f6HQfIxJHOB+jA7Qr5hqOdj598lztqg9RifVFMj6dSHu9iaM
-	9odr0U0+bdnmvF0ujNcA==;
+	List-Owner; bh=Bh/02yahiHZhg7mUdAmKXBPaCCYawOhz3WYeVQuUBic=; b=zrEaHaNiKii8ap
+	9AMCAoN+Ow6uTGhUKEgGewA0fKnguyXsh8ID/Gs/9+wZRKmyCAhoxyiuxA52p8cLWTHDb5wVutZxG
+	WECrG1UNK2aHD4zHhLLmjDrRnLVktkH2sK5a25KIV1JBV0eM9zZSsxsvEwI3S82v2pFnC3HjxNCZy
+	Gzm+meIVlhhPQwIEfivd6UESWXA3gaKwjQNz/y0AHG3uoI6hmVZ+G3i/bclUTKFsBLiLYpk5YfurV
+	B23XV24558Bh9M6YZb006pzPMh+2eu0TSvcjTMDibvrNgAQLB7drJ6hftOfEf6LdM5Xn9xy+eltJQ
+	YcDASiEnN1s0q69KDdQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5yqu-0000000GYm1-3xlA;
-	Wed, 30 Oct 2024 02:54:32 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1t67AD-00000000CYQ-04j3;
+	Wed, 30 Oct 2024 11:47:01 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t5yqr-0000000GYlI-30yH
+	id 1t66vH-0000000093M-3PCL
 	for kexec@lists.infradead.org;
-	Wed, 30 Oct 2024 02:54:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730256868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9MajDa86shltyihCJs2RWiiHVZZLIphX6dVVnM3/Ivw=;
-	b=UT0dvYBck6wvcbKSExCyNIDVc9OBagriLvhDuLSsAQeMMushFXnWjh89PdQL7nuYuVVrfI
-	a2Zwn4r9Zub0cKaywgYMoFLOICnkVO3N5T1Ljt08Zj4l7/pntrgmx9Wn7QFkyDWk3Ph0eO
-	Tv0PJ4H7DGEXXI/RvjHJMMLM3NpXIco=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-oqLcKpGVNSKeFJnwoe99ow-1; Tue,
- 29 Oct 2024 22:54:24 -0400
-X-MC-Unique: oqLcKpGVNSKeFJnwoe99ow-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	Wed, 30 Oct 2024 11:31:37 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 65F5C40E0219;
+	Wed, 30 Oct 2024 11:31:20 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id q5LWoPUdiOpA; Wed, 30 Oct 2024 11:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730287876; bh=/rPgRmjYbXWEjZCU0NovrlZpZ3/iWCSfnrohOhQm1lI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OvK3Dip+OAWthc7F2h9PuJkdZbkPUoxNC7D5E2k/a87lM7CmqTtH/qSoYruMR0zX1
+	 B3FaINjoqTYzIzxLQ9FF2Hy0G07pk5jwq4V7GrVjXnJUDqd87S8n3jVtRTQv1gssXb
+	 gcxxyMJXc3E7pVLxIpS58J8nESdEqPYOOGy5RR0SzdJ/cwlYDfhmLjF8h9/QZkwvR0
+	 5IvTosJ1s3clX9thvoVeynodC+t+0wbQm6GPk8tPC9g8zTPOj4zFze2MiX5PVApi7j
+	 ZnXdjs/SmnWooIkeApWjgz42KnnL5qK6+I0cwerP7aoGX+Lp2CTz9PabXzwfEf/bac
+	 4kzT2y3VZPcGs6ooKINQQlO1GqNlvzwjRBgbCzlkrgyxCJwtvwkDLyu8bVGuL4VHL3
+	 78SFRDicRzmvJsldIIY4ivs+3V/ct+lU7y6sf7SBfJEuyqhQQx9xFSVASIMAA7OYBN
+	 zutThgt8vv1J562z1zo5GBvIUZ9k4e77hp5gYNqtsdxsU0SXrK69ZSZjx/3jduqp4n
+	 V0D6qxAa0EPoaXFvorgZ99QLTH9Og4aq/xV+h7iIagmuMpUKRHyfep1rMgiZufxSTG
+	 en8szzEjGwxQRWxKqD6lh6O2qfEkn+PoB20708wEywfSdPGJ7fZoLQ4VgT4H7dcxtg
+	 WcbcgQu/HW7ITZVy37M7Loz0=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 367F6195608A;
-	Wed, 30 Oct 2024 02:54:23 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.14])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 58B4A19560A2;
-	Wed, 30 Oct 2024 02:54:20 +0000 (UTC)
-Date: Wed, 30 Oct 2024 10:54:16 +0800
-From: Baoquan He <bhe@redhat.com>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D1E240E0191;
+	Wed, 30 Oct 2024 11:31:06 +0000 (UTC)
+Date: Wed, 30 Oct 2024 12:31:00 +0100
+From: Borislav Petkov <bp@alien8.de>
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com,
-	dyoung@redhat.com, daniel.kiper@oracle.com, noodles@fb.com,
-	lijiang@redhat.com, kexec@lists.infradead.org, x86@kernel.org
+Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+	thomas.lendacky@amd.com, dyoung@redhat.com, daniel.kiper@oracle.com,
+	noodles@fb.com, lijiang@redhat.com, kexec@lists.infradead.org,
+	x86@kernel.org
 Subject: Re: [PATCH v3 0/2] x86/mm/sme: fix the kdump kernel breakage on SME
  system when CONFIG_IMA_KEXEC=y
-Message-ID: <ZyGf2PZtf4H+dE9u@MiWiFi-R3L-srv>
+Message-ID: <20241030113100.GCZyIY9KgKX2pHK7GV@fat_crate.local>
 References: <20240911081615.262202-1-bhe@redhat.com>
  <20241029182306.04c3451808c8b76e5e96fdb4@linux-foundation.org>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20241029182306.04c3451808c8b76e5e96fdb4@linux-foundation.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241029_195429_855680_47CAB9BD 
-X-CRM114-Status: GOOD (  19.38  )
+X-CRM114-CacheID: sfid-20241030_043136_010683_F938759E 
+X-CRM114-Status: UNSURE (   8.23  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,31 +91,18 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/29/24 at 06:23pm, Andrew Morton wrote:
-> On Wed, 11 Sep 2024 16:16:13 +0800 Baoquan He <bhe@redhat.com> wrote:
-> 
-> > Currently, distros like Fedora/RHEL have enabled CONFIG_IMA_KEXEC by
-> > default. This makes kexec/kdump kernel always fail to boot up on SME
-> > platform because of a code bug. By debugging, the root cause is found
-> > out and bug is fixed with this patchset.
-> 
-> [1/1] is a cleanup.  [2/2] fixes a bug which appears to go all the way
-> back to 5.10.  The bugfix patch has a dependency on the cleanup, which
-> is unfortunate.
-> 
-> We could add the Fixes: to [1/1] and add cc:stable to both patches so
-> they get backported into -stable kernels together.  But I think it's
-> nicer to just concentrate on the single bugfix patch (with Fixes: and
-> cc:stable) and do the cleanup later, in the usual fashion.
-
-Totally agree, thanks a lot.
-
-> 
+On Tue, Oct 29, 2024 at 06:23:06PM -0700, Andrew Morton wrote:
 > So can I suggest a resend please?
 
-Will send a standalone patch to fix the bug, and send clean up patch
-after the fix patch is settled.
+Andrew, you can ignore. It is on my radar now.
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
