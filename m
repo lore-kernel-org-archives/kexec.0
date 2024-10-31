@@ -4,71 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9093E6B240
-	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 10:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55BF0E6B27C
+	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 14:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To:From:
-	Subject:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kkGcCPA+hwGod7iK8wyfmYjhT9+q6707l2gY/LRslf4=; b=Qc6q/cOLAHOeKM
-	EaSIi7JHh7gnqmA++WtI5bpdnMK1THXl/iRL7B2bAkevmnWwipDLowns0dFH4S+hcSfznWrlkB7cX
-	h0zTLLgNXI2NyejxJvkD3xT9kg03d/4UMwpH78tswaXyJhp4bRy056RyyD0vYijb/F92/vko/FJGQ
-	gZqiRBvu+D8io6Bl8arVzcP52nzwfijHlwTV3muR47/JjQgGhTWuY+Vht1Qq2Rjku06kO6usAXXW1
-	fAVJBPTv23AjE2L8TXgthiIi14ba9TGb+yeNHXeR//m8jn1b+4SKDMm7TKgAoE0UuNVxSzyMga4Vz
-	ZbzNFBqOVZpfo81VZTKA==;
+	List-Owner; bh=76+1EbUx2bUOPjOJQeMZv1Qf4b2HD41PO5qrfY/AeCc=; b=mJSsXtLxTehY8J
+	YQx6rs4mTvp03B+RK0iXGah2TMZ6qasVQ6noJNr0XuKFVLxrPuEIbMBq11QpINtLXH0tzL5dvIe+D
+	Ik6jPP+ExQnuwWw6vegaas73WDkbJtBCu89SdEKVkLzpULqIJBQOX01q2VeCTsDFWI8beBp3uX+1h
+	GLvserTpdXMnBSQ9QL4slu86/GITt80EmAX9Ke1ZH5ex6NWqgV2IpbjVlM32ke0CzCDt6IhOk/i1Z
+	1PUf+qi1o6bvtGA+L4EtUtm/5LYgUv6+byPe02KhQIyk3jA3i3DNRqlIQFZTKfMqPRXxAvz1WZqgs
+	vNtEeh4J5eeJ5mRAbdQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6ohv-00000006XJ9-4BHa;
-	Fri, 01 Nov 2024 10:16:44 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1t6sG6-00000007Gj4-118L;
+	Fri, 01 Nov 2024 14:04:14 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6oWN-00000006Uy1-13w0
+	id 1t6s5z-00000007F6I-0PAx
+	for kexec@bombadil.infradead.org;
+	Fri, 01 Nov 2024 13:53:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:References:To:From:Subject
+	:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=X9xZeLK5UwcmYaEmE29YjHzyiIdH+Qq0jPUQJmq0BVU=; b=lsP+WTcwS5LDXLSctSkYOxyTdR
+	flFmtdc2KkQd89XbtbIr04eOsxikFk4BQD8e0i4DwGLdV/PhitOSSmcUykDN+mVdP/Y/r9YkMo+r+
+	VgQjkNqh5QsPK5ZIGQYvKlAoxRgHnkZKGfUs+jUlcw3BPq4UiG+BXMy2+xGnjGLTnW8o3z6Zp8TZd
+	g3oyjHLOw4RlgEEouErg1UoHykk2bNcXhNJY05vgeVGIoau3CuTxMcFpojZwzR28FbZ9oA+8e5YKC
+	sbGq21YrH10bNAe5Pm7Y3G2PhhYBeeJI2BQko1MdDcwlT5nsMC2oO0bVb9n+MI/P4N9C6Grs+CkH7
+	TdGUcazg==;
+Received: from dfw.source.kernel.org ([139.178.84.217])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1t6s5u-0000000Ahjq-2pby
 	for kexec@lists.infradead.org;
-	Fri, 01 Nov 2024 10:04:49 +0000
+	Fri, 01 Nov 2024 13:53:45 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 2D890A42A86;
-	Fri,  1 Nov 2024 10:02:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6CDC4CED1;
-	Fri,  1 Nov 2024 10:04:44 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4FF895CA49D;
+	Thu, 31 Oct 2024 22:36:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37DBCC4CEC3;
+	Thu, 31 Oct 2024 22:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730455485;
-	bh=ItQI00nS8tC10ZV8l2jyRO6gDNvw+VRojMmh7RUgXnI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=fOMg2SZJB9VVqSZQ39KHQMlL2y8sJbkrgDhxf7Z8ZlTa/VEnVFFfhaaRPrtwP8/yh
-	 POWHBMEO8mFRPnTFzrzEAvAEa7YdtvJVaxBM49PI/q8ZQvP3Ym8s220U+NYbs9OsdS
-	 +vuoKWKCLZUorjlnKqZZaysZwEpw/R1tDdJNbIBLC8DK5NT7+pO7AolUM2yicAOYd9
-	 mhheEhTsmnGjUz9/4jZki/KtKYunba+0jUH54/79vbCL8pbHJ+pCAz4ugGM27D+IUj
-	 rJ4UiSjiCb3r6TDI0JUpPfI/DvTRhUCObpYTAuV8sPwA4fh1Mkuv/pfrUbjsKVyDRn
-	 VRPZSZJ8prfFA==
+	s=k20201202; t=1730414251;
+	bh=HfxuReQImXwvhpLuPipg5vqXGCC5//yJ2cqMYklD4uE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=HkpDpmu7UAbaJtrXnkkFcec2474fvBoqy1ujDdyxLJNxpkcAbhiAXS1i+Za5t54bZ
+	 GVwE5D/p4jdo5We7G5n3MMQRMeZt1O4PwIEk3Q8dSYOvRJp80k8RjogGFcur/qZ9A4
+	 65A4DQPqRNeJPryDCd7dZX/z2M2Qj8ilUSZb90Qw15sK2bj1m9OGio2DHx9qbloBzI
+	 03SnuZRNrUzggGH9xeKrEfxS8fiBmLPxUjVP6p1J98HwOansT2wUsTL+V9wzx6AmkH
+	 IK4e9kIEtrcKNkxVSuQU1G4u+Vdbl9KNU2pocO2pR1bDSBN1vVB/WbCKXWURZsDZGW
+	 fsY12541kUjOQ==
 Mime-Version: 1.0
-Date: Fri, 01 Nov 2024 12:04:41 +0200
-Message-Id: <D5AR9TGFZL14.AZMGA2G8GTDA@kernel.org>
-Subject: Re: [PATCH v11 16/20] tpm: Make locality requests return consistent
- values
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ross Philipson" <ross.philipson@oracle.com>,
- <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
- <linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
- <linux-efi@vger.kernel.org>, <iommu@lists.linux-foundation.org>
-Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
- <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
- <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
- <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
- <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
- <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
- <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+Date: Fri, 01 Nov 2024 00:37:27 +0200
+Message-Id: <D5ACNMVX5LXB.1L0S9P2J3UDJH@kernel.org>
+Cc: <dpsmith@apertussolutions.com>, <mingo@redhat.com>, <bp@alien8.de>,
+ <hpa@zytor.com>, <dave.hansen@linux.intel.com>, <ardb@kernel.org>,
+ <mjg59@srcf.ucam.org>, <James.Bottomley@hansenpartnership.com>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <luto@amacapital.net>,
+ <nivedita@alum.mit.edu>, <herbert@gondor.apana.org.au>,
+ <davem@davemloft.net>, <corbet@lwn.net>, <ebiederm@xmission.com>,
+ <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
  <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
  <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v11 00/20] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Thomas Gleixner" <tglx@linutronix.de>, "Ross Philipson"
+ <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
+ <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
+ <iommu@lists.linux-foundation.org>
 X-Mailer: aerc 0.18.2
 References: <20240913200517.3085794-1-ross.philipson@oracle.com>
- <20240913200517.3085794-17-ross.philipson@oracle.com>
-In-Reply-To: <20240913200517.3085794-17-ross.philipson@oracle.com>
+ <87wmhoulb9.ffs@tglx>
+In-Reply-To: <87wmhoulb9.ffs@tglx>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241101_030447_462799_582EC5F2 
-X-CRM114-Status: GOOD (  22.75  )
+X-CRM114-CacheID: sfid-20241101_135343_137631_F0D061AA 
+X-CRM114-Status: GOOD (  25.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,81 +101,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri Sep 13, 2024 at 11:05 PM EEST, Ross Philipson wrote:
-> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+On Thu Oct 31, 2024 at 9:25 PM EET, Thomas Gleixner wrote:
+> On Fri, Sep 13 2024 at 13:04, Ross Philipson wrote:
+> > The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
+> > enhance the boot security and integrity in a unified manner. The first area of
+> > focus has been on the Trusted Computing Group's Dynamic Launch for establishing
+> > a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
+> > Trust for Measurement). The project has been and continues to work on providing
+> > a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
+> > cross-architecture (x86 and Arm), with our recent involvment in the upcoming
+> > Arm DRTM specification. The order of introducing DRTM to the Linux kernel
+> > follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
+> > Technology (TXT) is present today and only requires a preamble loader, e.g. a
+> > boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
+> > been present since the introduction of AMD-V but requires an additional
+> > component that is AMD specific and referred to in the specification as the
+> > Secure Loader, which the TrenchBoot project has an active prototype in
+> > development. Finally Arm's implementation is in specification development stage
+> > and the project is looking to support it when it becomes available.
+> >
+> > This patchset provides detailed documentation of DRTM, the approach used for
+> > adding the capbility, and relevant API/ABI documentation. In addition to the
+> > documentation the patch set introduces Intel TXT support as the first platform
+> > for Linux Secure Launch.
 >
-> The function tpm_tis_request_locality() is expected to return the locality
-> value that was requested, or a negative error code upon failure. If it is called
-> while locality_count of struct tis_data is non-zero, no actual locality request
-> will be sent. Because the ret variable is initially set to 0, the
-> locality_count will still get increased, and the function will return 0. For a
-> caller, this would indicate that locality 0 was successfully requested and not
-> the state changes just mentioned.
+> So this looks pretty reasonable to me by now and I'm inclined to take it
+> through the tip x86 tree, but that needs reviewed/acked-by's from the
+> crypto and TPM folks. EFI has been reviewed already.
 >
-> Additionally, the function __tpm_tis_request_locality() provides inconsistent
-> error codes. It will provide either a failed IO write or a -1 should it have
-> timed out waiting for locality request to succeed.
->
-> This commit changes __tpm_tis_request_locality() to return valid negative error
-> codes to reflect the reason it fails. It then adjusts the return value check in
-> tpm_tis_request_locality() to check for a non-negative return value before
-> incrementing locality_cout. In addition, the initial value of the ret value is
-> set to a negative error to ensure the check does not pass if
-> __tpm_tis_request_locality() is not called.
->
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
->  drivers/char/tpm/tpm_tis_core.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index 22ebf679ea69..20a8b341be0d 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -210,7 +210,7 @@ static int __tpm_tis_request_locality(struct tpm_chip *chip, int l)
->  again:
->  		timeout = stop - jiffies;
->  		if ((long)timeout <= 0)
-> -			return -1;
-> +			return -EBUSY;
->  		rc = wait_event_interruptible_timeout(priv->int_queue,
->  						      (check_locality
->  						       (chip, l)),
-> @@ -229,18 +229,21 @@ static int __tpm_tis_request_locality(struct tpm_chip *chip, int l)
->  			tpm_msleep(TPM_TIMEOUT);
->  		} while (time_before(jiffies, stop));
->  	}
-> -	return -1;
-> +	return -EBUSY;
->  }
->  
->  static int tpm_tis_request_locality(struct tpm_chip *chip, int l)
->  {
->  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-> -	int ret = 0;
-> +	int ret = -EBUSY;
-> +
-> +	if (l < 0 || l > TPM_MAX_LOCALITY)
-> +		return -EINVAL;
->  
->  	mutex_lock(&priv->locality_count_mutex);
->  	if (priv->locality_count == 0)
->  		ret = __tpm_tis_request_locality(chip, l);
-> -	if (!ret)
-> +	if (ret >= 0)
->  		priv->locality_count++;
->  	mutex_unlock(&priv->locality_count_mutex);
->  	return ret;
+> Can we make progress on this please?
 
-First of all, -1 is as consistent value as a value can be.
+So TPM patches do have bunch of glitches:
 
-Secondly:
+- 15/20: I don't get this. There is nothing to report unless tree
+  is falling. The reported-by tag literally meaningless. Maybe this
+  is something that makes sense with this feature. Explain from that
+  angle.
+- 16/20: Is this actually a bug fix? If it is should be before 15/20.
+- 17/20: the commit message could do a better job explaining how the
+  locality can vary. I'm not sure how this will be used by rest of
+  the patch set.
+- 18/20: I'm not confident we want to give privilege to set locality
+  to the user space. The commit message neither makes a case of this.
+  Has this been tested to together with bus encryption (just checking)?
 
-	if (tpm_tis_request_locality(chip, 0) != 0)
-		return -EBUSY;
-
-What am I missing here?
+>
+> Thanks,
+>
+>         tglx
 
 BR, Jarkko
 
