@@ -4,89 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F152DD6B6DA
-	for <kexec@archiver.kernel.org>; Wed, 30 Oct 2024 22:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D5F5E68949
+	for <kexec@archiver.kernel.org>; Thu, 31 Oct 2024 03:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yevTgnf5h+ETHvWmrsfZbmwrXyDZ6jpF1UPIl2J1WsQ=; b=XkSpsZnIbV8Hmq
-	Vs18gRgB6Tzxce9If1z9FMENDOZDVn3nKwJauK6shGr8j35tsHXa2EYbCFPZXmgGHZo4CjakUwqEX
-	uwxYOWTbsS+rjK26rgl1O9ScEaIIJrT0nPFd7u0IX3zThUxtt2YFjmhBKJoWk2Cu4973FUY81clNw
-	czqL0MgfJ9/l4tGj4BINpcETE/r+uFi9pdTO7uIiJ5TKLkLuczhLgJZwS5E/w54NElRdgNw20grP/
-	PIYTb7c2ropSVa5jSgTD1tJwijukE2TDgcoDr2WvSo7boOiipjsHpIt8egalDveFUcyP+s7ghgZYv
-	1AWmEWjUvYtHHsAw/9Cg==;
+	List-Owner; bh=vrn4rQBsik8te7cFYwBgFRn8Y0Y3NZHTFr8sxj2J4Vs=; b=jk3F+S/9IMmJvu
+	NNW5wwRoCcnEHR+pUwIzq+R/I2Kjw1BPyetYqsuZcE02vU/o+uBw+IgCAvS5+CTtL4qUh9xzCe/L5
+	2HVY6nfFI5Gh+byUQ1aE7vUYU103O10ayLenvS+RBrwkkiBo7mw9iMhKLFHTzbQCi46fwV8+PK+da
+	pwirGAADdgv5W0li7csL+BT38uOkN49c/4+HIZic+a8H+XcaLlv9Efyajl6u2tnDhuS+sRHYUjFn6
+	oyvQKBBd7mmzZz5K9BUsBfxPV2ugv5+Z7qAy3tGARGwuINUf4eTKGJaeCJoIvzS0TBjVgJOGKXVqG
+	CLBBFjS2jvvmsl2bdGAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6HQE-00000001zfA-2W8H;
-	Wed, 30 Oct 2024 22:44:14 +0000
-Received: from mail-wm1-x329.google.com ([2a00:1450:4864:20::329])
+	id 1t6M3u-00000002RjS-3275;
+	Thu, 31 Oct 2024 03:41:30 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6HQB-00000001zeK-22Sk
+	id 1t6M3r-00000002Rin-09Nk
 	for kexec@lists.infradead.org;
-	Wed, 30 Oct 2024 22:44:12 +0000
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-4315a8cff85so52545e9.0
-        for <kexec@lists.infradead.org>; Wed, 30 Oct 2024 15:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730328249; x=1730933049; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aPnPpvMxjfs6ca/yrsKQ/ymzLSP4VWx+Z93efIfuEgg=;
-        b=RBm9HDDwpNHEispnYbWq0Hi60n8Y0ckbJWnwdW+rbd7jZm/ZKYIfM5O905+VNrACuf
-         N3O+G7OU4cJ3jh9vCK9o/SOyEdDKsY66z0RkEdVIJUnRo6DOM7An2MEtralVVWU9Dk7Z
-         /FVly3mJoTVB0Gu1dU9e8RoW+uKEyl5cej32GqqaIsUxEIG4TZoVfgndeiujj+pHH80t
-         vUzKpsbv/bUQPe+6AUZrVCFVf4HSZC2kKjdetgDJFonW2AomzQ4XP7OYlmXM9zsZb6GL
-         JxdFFwjbgQgbMzRELiNeDrtyDsruF7hxA1QJL1UbJtmAOcavdLXN5VlWViMyjWiAQJTt
-         jc1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730328249; x=1730933049;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aPnPpvMxjfs6ca/yrsKQ/ymzLSP4VWx+Z93efIfuEgg=;
-        b=Jck+nrlYOSY8Ntu+OnELmFG8bMWji1ZktMQhyqDSOClPgOUB+/CXPqO9WoBuOf56O4
-         c/Nau6awn5e8eiJy4k/lWzNcNPPRkhMBClXACcCAhRNJNuJRw0yNH4RpSQWkXq9fT7/p
-         GAdMWVihVLzZxe8FfHSgsLwxQEx/ntDvkKHWa/y6QvUD4dS310ztmHHGSo6FDuoVrWCC
-         wzszk53f7SiYsQR6zh8C9Szipub6iF9NiqHN/cJkUgRuCWWs7Dzbrt8dCzLfhQFliAM6
-         m1f8Fkm9rGjx/BxpLt6BmiOYEfBJsqibL1N2GWbnoQ0LZtyhG9uiMVVVfNZV9C+Uu9JR
-         vssg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/wVDgqRVxLAj7pmu3tv7Ha52xnrwJ127KRZBkIY9kkTp+m/h/g7bXFw12cpXsgs3zLe3VxQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyQH1IfQ+/tOh2UI08szgzLKcNj78UtpB6AEmXJMIcI86WthBV0
-	Y+Gn0qpbJituZZ1YlsKGWtavilHLYW6XkgVYBOXPkeIZ7KE8hMnvFiWJagWXw8YAYK8JRPrH36c
-	S4udpaMiDygWcpUdfOqzpLDJXXiiUWmBBy2oN
-X-Gm-Gg: ASbGncvupZ/fHEuoZeI4thBftIJBDZ7v7OhqiTeavGoq1Jo4uudAqWVlYqvLWBx2/Gz
-	cVXuU7NTCF+gJCBWyPFqugr4fm/oP
-X-Google-Smtp-Source: AGHT+IGiDK/Yh78ucrdpGaMeQexkQNAiQJjBQAsjPXA1SS/EAbGjme0Q880vLm7UFXTyXv9x83UBq70x1u0XbwYFdhg=
-X-Received: by 2002:a05:600c:4e45:b0:431:3baa:2508 with SMTP id
- 5b1f17b1804b1-4327d9039cemr759015e9.3.1730328248598; Wed, 30 Oct 2024
- 15:44:08 -0700 (PDT)
+	Thu, 31 Oct 2024 03:41:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730346084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mzos0guM5CCjsx4ktHYZDA2/aTNVPouGHC3JHAxwbeI=;
+	b=PQoHyQfHSvO7eixAYtjDzledyCxiNP3NaorzeWMGgX9s0dy8jJ9ZrdwDTmy30bbrtLNH/9
+	XOGb1DDI+/jPgttJ5mqDkLBHhTwcmTYTF/beYxDYSWOw1HcWz4RannfEXX92bN1oGq85Tp
+	PPtzgPxjFVrvsLgrMnik2VRsun17LW8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-73-bWcVKkV5MF678Gqq89Il1g-1; Wed,
+ 30 Oct 2024 23:41:21 -0400
+X-MC-Unique: bWcVKkV5MF678Gqq89Il1g-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99ECE19560B1;
+	Thu, 31 Oct 2024 03:41:19 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.132])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AA2A1956054;
+	Thu, 31 Oct 2024 03:41:16 +0000 (UTC)
+Date: Thu, 31 Oct 2024 11:41:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, dyoung@redhat.com,
+	daniel.kiper@oracle.com, noodles@fb.com, lijiang@redhat.com,
+	kexec@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v3 1/2] x86/mm: rename the confusing local variable in
+ early_memremap_is_setup_data()
+Message-ID: <ZyL8WDTw9F3laupG@MiWiFi-R3L-srv>
+References: <20240911081615.262202-1-bhe@redhat.com>
+ <20240911081615.262202-2-bhe@redhat.com>
+ <20241029181101.GXZyElNXVuF6596TKG@fat_crate.local>
+ <ZyGDlYsg6YWNXSVo@MiWiFi-R3L-srv>
+ <8c81835b-97fe-a0b3-a860-0bbd5c0341f6@amd.com>
 MIME-Version: 1.0
-References: <f44f317a-2dcb-cfe2-013c-7508907ce3df@google.com>
- <5b6613bc-beef-79e6-62ed-23de4dfafe51@google.com> <ZyEO0rFGTGAs-d_N@kernel.org>
-In-Reply-To: <ZyEO0rFGTGAs-d_N@kernel.org>
-From: Frank van der Linden <fvdl@google.com>
-Date: Wed, 30 Oct 2024 15:43:57 -0700
-Message-ID: <CAPTztWZ26YQmtDbXowUzrRUSb2mmbQksztHfbRYYTgDm9Gc_og@mail.gmail.com>
-Subject: Re: Pmemfs/guestmemfs discussion recap and open questions
-To: Mike Rapoport <rppt@kernel.org>
-Cc: David Rientjes <rientjes@google.com>, James Gowans <jgowans@amazon.com>, 
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Mike Rapoport <mike.rapoport@gmail.com>, 
-	Pasha Tatashin <tatashin@google.com>, Peter Xu <peterx@redhat.com>, 
-	Alexander Graf <graf@amazon.com>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, David Woodhouse <dwmw@amazon.co.uk>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vipin Sharma <vipinsh@google.com>, 
-	David Matlack <dmatlack@google.com>, Steve Rutherford <srutherford@google.com>, 
-	Erdem Aktas <erdemaktas@google.com>, Alper Gun <alpergun@google.com>, 
-	Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, 
-	Sagi Shahar <sagis@google.com>, linux-mm@kvack.org, kexec@lists.infradead.org
+Content-Disposition: inline
+In-Reply-To: <8c81835b-97fe-a0b3-a860-0bbd5c0341f6@amd.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241030_154411_551782_7BAFAAC8 
-X-CRM114-Status: GOOD (  28.86  )
+X-CRM114-CacheID: sfid-20241030_204127_171505_A9BB3136 
+X-CRM114-Status: GOOD (  23.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,66 +83,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVHVlLCBPY3QgMjksIDIwMjQgYXQgOTozOeKAr0FNIE1pa2UgUmFwb3BvcnQgPHJwcHRAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cj4KPiBIaSBEYXZpZCwKPgo+IE9uIEZyaSwgT2N0IDI1LCAyMDI0IGF0
-IDExOjA3OjI3UE0gLTA3MDAsIERhdmlkIFJpZW50amVzIHdyb3RlOgo+ID4gT24gV2VkLCAxNiBP
-Y3QgMjAyNCwgRGF2aWQgUmllbnRqZXMgd3JvdGU6Cj4gPgo+ID4gPiAtLS0tLT5vLS0tLS0KPiA+
-ID4gTXkgdGFrZWF3YXk6IGJhc2VkIG9uIHRoZSBmZWVkYmFjayB0aGF0IHdhcyBwcm92aWRlZCBp
-biB0aGUgZGlzY3Vzc2lvbjoKPiA+ID4KPiA+ID4gIC0gd2UgbmVlZCBhbiBhbGxvY2F0b3IgYWJz
-dHJhY3Rpb24gZm9yIHBlcnNpc3RlbnQgbWVtb3J5IHRoYXQgY2FuIHJldHVybgo+ID4gPiAgICBt
-ZW1vcnkgd2l0aCB2YXJpb3VzIGNoYXJhY3RlcmlzdGljczogMUdCIG9yIG5vdCwga2VybmVsIGRp
-cmVjdCBtYXAgb3IKPiA+ID4gICAgbm90LCBIVk8gb3Igbm90LCBldGMuCj4gPiA+Cj4gPiA+ICAt
-IGJ1aWx0IG9uIHRvcCBvZiB0aGF0LCB3ZSBuZWVkIHRoZSBhYmlsaXR5IHRvIGNhcnZlIG91dCB2
-ZXJ5IGxhcmdlCj4gPiA+ICAgIHJhbmdlcyBvZiBtZW1vcnkgKGNsb3VkIHByb3ZpZGVyIHVzZSBj
-YXNlKSB3aXRoIE5VTUEgYXdhcmVuZXNzIG9uIHRoZQo+ID4gPiAgICBrZXJuZWwgY29tbWFuZCBs
-aW5lCj4gPiA+Cj4gPgo+ID4gRm9sbG93aW5nIHVwIG9uIHRoaXMsIEkgdGhpbmsgdGhpcyBwaHlz
-aWNhbCBtZW1vcnkgYWxsb2NhdG9yIHdvdWxkIGFsc28gYmUKPiA+IHBvc3NpYmxlIHRvIHVzZSBh
-cyBhIGJhY2tlbmQgZm9yIGh1Z2V0bGIuICBIb3BlZnVsbHkgdGhpcyB3b3VsZCBiZSBhbgo+ID4g
-YWxsb2NhdG9yIHRoYXQgd291bGQgYmUgZ2VuZXJhbGx5IHVzZWZ1bCBmb3IgbXVsdGlwbGUgcHVy
-cG9zZXMsIHNvbWV0aGluZwo+ID4gbGlrZSBhIG1tL3BoeXNfYWxsb2MuYy4KPgo+IENhbiB5b3Ug
-ZWxhYm9yYXRlIG9uIHRoaXM/IG1tL3BhZ2VfYWxsb2MuYyBhbHJlYWR5IGFsbG9jYXRlcyBwaHlz
-aWNhbAo+IG1lbW9yeSA6KQo+Cj4gT3IgeW91IG1lYW4gYW4gYWxsb2NhdG9yIHRoYXQgd2lsbCBk
-ZWFsIHdpdGggbWVtb3J5IGNhcnZlZCBvdXQgZnJvbSB3aGF0IHBhZ2UKPiBhbGxvY2F0b3IgbWFu
-YWdlcz8KPgo+ID4gRnJhbmsgdmFuIGRlciBMaW5kZW4gbWF5IGFsc28gaGF2ZSB0aG91Z2h0cyBv
-biB0aGUgYWJvdmU/CgpZZWFoICdwaHlzaWNhbCBhbGxvY2F0b3InIGlzIGEgYml0IG9mIGEgbWlz
-bm9tZXIuIFlvdSdyZSByaWdodCwgYW4KYWxsb2NhdG9yIHRoYXQgZGVhbHMgd2l0aCBtZW1vcnkg
-bm90IHVuZGVyIHBhZ2UgYWxsb2NhdG9yIGNvbnRyb2wgaXMgYQpiZXR0ZXIgZGVzY3JpcHRpb24u
-CgpUbyBlbGFib3JhdGUgYSBiaXQ6IHRoZXJlIGFyZSB2YXJpb3VzIHNjZW5hcmlvcyB3aGVyZSBh
-bGxvY2F0aW5nCmNvbnRpZ3VvdXMgc3RyZXRjaGVzIG9mIHBoeXNpY2FsIG1lbW9yeSBpcyB1c2Vm
-dWwuIEh1Z2VUTEIsIFZNIGd1ZXN0Cm1lbW9yeS4gT3Igd2hlcmUgeW91IGFyZSBwcmVzZW50ZWQg
-d2l0aCBhbiBleHRlcm5hbCByYW5nZSBvZiBWTV9QRk5NQVAKbWVtb3J5IGFuZCBuZWVkIHRvIG1h
-bmFnZSBpdCBpbiBhIHNpbXBsZSB3YXkgYW5kIGhhbmQgaXQgb3V0IGZvciBndWVzdAptZW1vcnkg
-c3VwcG9ydCAoc2VlIE5WaWRpYSdzIGdpdGh1YiBmb3IgbnZncmFjZS1lZ20pLiBIb3dldmVyLCBh
-bGwgb2YKdGhlc2UgY2FzZXMgbWF5IGNvbWUgd2l0aCBzbGlnaHRseSBkaWZmZXJlbnQgcmVxdWly
-ZW1lbnRzOiBpcyB0aGUKbWVtb3J5IHB1cmVseSBleHRlcm5hbD8gRG9lcyBpdCBoYXZlIHN0cnVj
-dCBwYWdlcz8gSWYgc28sIGlzIGl0IGluIHRoZQpkaXJlY3QgbWFwPyBJcyB0aGUgbWVtbWFwIGZv
-ciB0aGUgbWVtb3J5IG9wdGltaXplZCAoSFZPLXN0eWxlKT8gRG9lcwppdCBuZWVkIHRvIGJlIHBl
-cnNpc3RlbnQ/IFdoZW4gZG9lcyBpdCBuZWVkIHRvIGJlIHplcm9lZCBvdXQ/CgpTbyB0aGF0J3Mg
-d2h5IGl0IHNlZW1zIGxpa2UgYSBnb29kIGlkZWEgdG8gY29tZSB1cCB3aXRoIGEgc2xpZ2h0bHkK
-bW9yZSBnZW5lcmFsaXplZCB2ZXJzaW9uIG9mIHBvb2wgYWxsb2NhdG9yIC0gc29tZXRoaW5nIHRo
-YXQgbWFuYWdlcywKdXN1YWxseSBsYXJnZXIsIGNodW5rcyBvZiBwaHlzaWNhbGx5IGNvbnRpZ3Vv
-dXMgbWVtb3J5LiBBIGlzCmluaXRpYWxpemVkIHdpdGggY2VydGFpbiBwcm9wZXJ0aWVzIChwZXJz
-aXN0ZW5jZSwgZXRjKS4gSXQgaGFzIG1ldGhvZHMKdG8gZ3JvdyBhbmQgc2hyaW5rIHRoZSBwb29s
-IGlmIG5lZWRlZC4gSXQncyBpbiBubyB3YXkgbWVhbnQgdG8gYmUKYW55d2hlcmUgbmVhciBhcyBz
-b3BoaXN0aWNhdGVkIGFzIHRoZSBwYWdlIGFsbG9jYXRvciwgdGhhdCB3b3VsZCBub3QKYmUgdXNl
-ZnVsIChhbmQgcG9pbnRsZXNzIGNvZGUgZHVwbGljYXRpb24pLiBBIHNpbXBsZSBmaXhlZC1zaXpl
-IGNodW5rCnBvb2wgd2lsbCBzYXRpc2Z5IGEgbG90IG9mIHRoZXNlIGNhc2VzLgoKQSBudW1iZXIg
-b2YgdGhlIGJ1aWxkaW5nIGJsb2NrcyBhcmUgYWxyZWFkeSB0aGVyZTogdGhlcmUncyBDTUEsCnRo
-ZXJlJ3MgWk9ORV9ERVZJQ0Ugd2hpY2ggaGFzIHRvb2xzIHRvIG1hbmlwdWxhdGUgc29tZSBvZiB0
-aGVzZQpwcm9wZXJ0aWVzIChieSBnb2luZyB0aHJvdWdoIGEgaG90cmVtb3ZlIC8gaG90cGx1ZyBj
-eWNsZSkuIEkgY3JlYXRlZCBhCnNpbXBsZSBwcm90b3R5cGUgdGhhdCBlc3NlbnRpYWxseSB1c2Vz
-IENNQSBhcyBhIHBvb2wgcHJvdmlkZXIsIGFuZAp1c2VzIHNvbWUgWk9ORV9ERVZJQ0UgdG9vbHMg
-dG8gaW5pdGlhbGl6ZSBtZW1vcnkgaG93ZXZlciB5b3Ugd2FudCBpdAp3aGVuIGl0J3MgYWRkZWQg
-dG8gdGhlIHBvb2wuIEkgYWxzbyBhZGRlZCBzb21lIG5ldyBpbml0IGNvZGUgdG8gdG8KYXZvaWQg
-dGhpbmdzIGxpa2UgdW5uZWVkZWQgbWVtbWFwIGFsbG9jYXRpb24gYXQgYm9vdCBmb3IgaHVnZXRs
-YmZzCnBhZ2VzLiBJIHB1dCBodWdldGxiZnMgb24gdG9wIG9mIGl0IC0gYnV0IGluIGEgcmVzdHJp
-Y3RlZCB3YXkgZm9yCnByb3RvdHlwaW5nIHB1cnBvc2VzIChubyByZXNlcnZhdGlvbnMsIG5vIGRl
-bW90aW9uKS4KCkFueXdheSwgdGhpcyBpcyB0aGUgYmFzaWMgaWRlYS4KCi0gRnJhbmsKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 10/30/24 at 07:49am, Tom Lendacky wrote:
+> On 10/29/24 19:53, Baoquan He wrote:
+> > On 10/29/24 at 07:11pm, Borislav Petkov wrote:
+> >> On Wed, Sep 11, 2024 at 04:16:14PM +0800, Baoquan He wrote:
+> >>> In function early_memremap_is_setup_data(), parameter 'size' passed has
+> >>> the same name as the local variable inside the while loop. That
+> >>> confuses people who sometime mix up them when reading code.
+> >>>
+> >>> Here rename the local variable 'size' inside while loop to 'sd_size'.
+> >>>
+> >>> And also add one local variable 'sd_size' likewise in function
+> >>> memremap_is_setup_data() to simplify code. In later patch, this can also
+> >>> be used.
+> >>>
+> >>> Signed-off-by: Baoquan He <bhe@redhat.com>
+> >>> Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+> >>> ---
+> >>>  arch/x86/mm/ioremap.c | 18 +++++++++++-------
+> >>>  1 file changed, 11 insertions(+), 7 deletions(-)
+> >>>
+> >>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> >>> index aa7d279321ea..f1ee8822ddf1 100644
+> >>> --- a/arch/x86/mm/ioremap.c
+> >>> +++ b/arch/x86/mm/ioremap.c
+> >>> @@ -640,7 +640,7 @@ static bool memremap_is_setup_data(resource_size_t phys_addr,
+> >>
+> >> Huh?
+> > 
+> > Thanks for looking into this.
+> > 
+> > I ever doubted this, guess it could use the unused 'size' to avoid
+> > warning? Noticed Tom introduced it at the beginning. It's better idea to
+> > remove it if it's useless.
+> > 
+> > commit 8f716c9b5febf6ed0f5fedb7c9407cd0c25b2796
+> > Author: Tom Lendacky <thomas.lendacky@amd.com>
+> > Date:   Mon Jul 17 16:10:16 2017 -0500
+> > 
+> >     x86/mm: Add support to access boot related data in the clear
+> > 
+> > Hi Tom,
+> > 
+> > Can you help check and tell your intention why the argument 'size' is
+> > added into early_memremap_is_setup_data() and memremap_is_setup_data().
+> 
+> That was a long time ago... I probably used it while I was developing the
+> support and then never removed it in the final version where it wasn't used.
+
+Thanks for confirming. Then we can remove it to avoid confusion.
+
+Hi Boris,
+
+Should I send the fixing patch alone and clean up the useless argument
+'size' later, or squash them into one patch?
+
+Thanks
+Baoquan
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
