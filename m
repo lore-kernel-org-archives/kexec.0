@@ -4,76 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D24BFE6F08E
-	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 22:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05117E6F08E
+	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 22:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Subject:Cc:To:
+	From:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CntBsUc61TMb92S8Z1E7nZ/4W1liTxOaayMMXBLn8Co=; b=37nrAsz3kWxH+e
-	FUbSifq2GzxE+X51I3DzgJfaqQ99Vnkd+6K+tiaAg5g/LtKHTnXMZGkEWh2OLLzo/L9mTp7SQy6lR
-	jQ599P2g30vjgZtY1tfsHHa8mfXCe6nPd39TxVZQeB8jyS8cHjbY7ZcXVWm7PNoMJFlnPIqSuNcDg
-	BydJnVspTOMFC+x5QVFkBb+kofBfArR7ouyfwrn50jLbLN+0Xx1TMGv7ucyG8PKLeajykNgqOPzEQ
-	bEHPQcRbFbW9zcWVKrRqRqTLTsIZUWrNTDuDri+Rm0GWPgpdbRQ9tbaPdQ9bHbt113Xe9ho+A0A3H
-	/IuAplX+mcU3nf61/Fmw==;
+	List-Owner; bh=C0gzEgoJe4bYHHFw0o1GTdGMcMEApWHSGCHxcdyl57Y=; b=2goHR+PFRX4+XB
+	uQjgG+2ueGZsqrOy1cUptWQVfdPxBmxqc8ZHxN6qbyxUiFXNnliMf3rYc7f0HyDHkyldYiGRGCpyg
+	oQPviW+2obLELBwAKXIBOFESY/8s8HnXaIZLG8D/NJVWohpky/98CixHaNot1/Xj8fKJw8iapSeAs
+	jIC9mcM8wFdy+1VsulR78SBRnJeZGeLTJkk/TrwQJ7w2CDafIaRKF4wA8vulo+UPzK0smBozKzNdF
+	KZE6d+d0cAlJ6zpSLKNrCyOo5HDomO+wUeb2m9RWPubU8jB3zG4zATfRJGQQSn4bj8XR7rhTD9aGJ
+	h+7pEpNLQT1u26NKd9og==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6zlN-00000008QfV-36qz;
-	Fri, 01 Nov 2024 22:05:02 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1t6zyi-00000008RyC-1kas;
+	Fri, 01 Nov 2024 22:18:48 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6zlG-00000008Qdu-2tNc
+	id 1t6zyf-00000008Rx8-0qTT
 	for kexec@lists.infradead.org;
-	Fri, 01 Nov 2024 22:04:59 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1730498692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lCede5LVGfjUHXIUEvO/z1zpCc7zqLUZ75s6lun7nCY=;
-	b=Rs3kktdWk1lN32PUJ7bpKRqaI11W6TOARxQ7M8IZg85h0hLj8BpU2d8RkiS45aZMUyj1SP
-	g7D8XYE7FQdz0rBPLhapHRw7jAYH329IqfssC+tl5X+UAwMpLdcZ8mtwDBdWImq7YWeCHV
-	E69hG/E7sMUbLpd0OwnHa/lKJMzyj29gylBqqr8mFQwSUd83ijMkNhIFqIsxXzXtHeIEeY
-	WxzwNQP3iECYYKDGS9YRD5NqFBn0PXekZn98GCVyQpl/aLmgtc30iQWryd5Zr9med2khgR
-	/QSNouVebLs8VzjX1uu0X7pddyTzpIsuugIxW2Ac4HVRRutyjeVneaZnhAT3cg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1730498692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lCede5LVGfjUHXIUEvO/z1zpCc7zqLUZ75s6lun7nCY=;
-	b=oF1urBdtwwN3U5Xd6xbkDqyj0L2KGcSI0vNXOshMgQsBWuRvFH9dDh2NfemcPFvzI2hSoY
-	KbIRqufKcA+Se/CA==
-To: Jarkko Sakkinen <jarkko@kernel.org>, Jarkko Sakkinen
- <jarkko@kernel.org>, Ross Philipson <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: dpsmith@apertussolutions.com, mingo@redhat.com, bp@alien8.de,
- hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+	Fri, 01 Nov 2024 22:18:46 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 507545C58DC;
+	Fri,  1 Nov 2024 22:17:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E707C4CECD;
+	Fri,  1 Nov 2024 22:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730499523;
+	bh=SfvWv72ZbUeIjpMhK1H+Di14U2NJnni6MvQ7OWwTfDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G8B5FbihtNvVjmiGncdZkw/5g49VXEDLWU6dCd6f7AgBZV7b3MDz4Mio9teMOIupZ
+	 ARqPuoMHB79uUnWfl+rqF4KTcZ/gObfhf3oVmSS9eCRk0qutPaqPxfYhbHSu3Vq/je
+	 HAnbzuzI/c9euOqXkGM4iUaORjvXEUct9BNxVVJk/Pbc72JYcDPtDceTthEVk9fecj
+	 /Eb+mS/2aEEzZIyWFJQYVe4M7FITlC7FUxUCj5mBCz6yf4dfV6rgbJW7pxdd+uGM6c
+	 HQnGDrwoQ/wXmcgGWjGK7qycALq7sacle8cuCNP5D38T9ddXyPOhWhHpmJw1iV1I20
+	 ayJ6MSw0pdYXA==
+Mime-Version: 1.0
+Date: Sat, 02 Nov 2024 00:18:39 +0200
+Message-Id: <D5B6VSE24UFU.3IMXJC23PCNFW@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Thomas Gleixner" <tglx@linutronix.de>, "Ross Philipson"
+ <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
+ <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
+ <iommu@lists.linux-foundation.org>
+Cc: <dpsmith@apertussolutions.com>, <mingo@redhat.com>, <bp@alien8.de>,
+ <hpa@zytor.com>, <dave.hansen@linux.intel.com>, <ardb@kernel.org>,
+ <mjg59@srcf.ucam.org>, <James.Bottomley@hansenpartnership.com>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <luto@amacapital.net>,
+ <nivedita@alum.mit.edu>, <herbert@gondor.apana.org.au>,
+ <davem@davemloft.net>, <corbet@lwn.net>, <ebiederm@xmission.com>,
+ <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
+ <trenchboot-devel@googlegroups.com>
 Subject: Re: [PATCH v11 00/20] x86: Trenchboot secure dynamic launch Linux
  kernel support
-In-Reply-To: <D5B5MLX1C8TS.2U6YPCYBWBTYT@kernel.org>
+X-Mailer: aerc 0.18.2
 References: <20240913200517.3085794-1-ross.philipson@oracle.com>
  <D5ARS5Y7EATS.2GVNSARKXKIDI@kernel.org> <87a5eivgku.ffs@tglx>
  <D5B5I0WUU8F0.30JMZ6QHPOFRK@kernel.org>
- <D5B5MLX1C8TS.2U6YPCYBWBTYT@kernel.org>
-Date: Fri, 01 Nov 2024 23:04:51 +0100
-Message-ID: <87msiitxto.ffs@tglx>
-MIME-Version: 1.0
+ <D5B5MLX1C8TS.2U6YPCYBWBTYT@kernel.org> <87msiitxto.ffs@tglx>
+In-Reply-To: <87msiitxto.ffs@tglx>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241101_150454_890385_96316D59 
-X-CRM114-Status: GOOD (  10.02  )
+X-CRM114-CacheID: sfid-20241101_151845_300488_F4915188 
+X-CRM114-Status: GOOD (  14.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,26 +88,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 01 2024 at 23:19, Jarkko Sakkinen wrote:
-> On Fri Nov 1, 2024 at 11:13 PM EET, Jarkko Sakkinen wrote:
->> I think we can sort them out independently as long as we find a
->> conclusion how to address locality change.
+On Sat Nov 2, 2024 at 12:04 AM EET, Thomas Gleixner wrote:
+> On Fri, Nov 01 2024 at 23:19, Jarkko Sakkinen wrote:
+> > On Fri Nov 1, 2024 at 11:13 PM EET, Jarkko Sakkinen wrote:
+> >> I think we can sort them out independently as long as we find a
+> >> conclusion how to address locality change.
+> >
+> > And to be fair: there was no reaction from anyone. It is mostly x86
+> > patch set, meaning that I was waiting for some reaction first from that
+> > side.  And I did respond to that when it came.
 >
-> And to be fair: there was no reaction from anyone. It is mostly x86
-> patch set, meaning that I was waiting for some reaction first from that
-> side.  And I did respond to that when it came.
+> The x86 side is mostly self contained, so the damage there is minimal,
+> but the TPM parts are changing the generic operations and the x86 parts
+> depend on them.
+>
+> So let's not create a chicken and egg problem and solve the TPM parts,
+> which at my cursory glance are partially legitimate fixes, independent
+> of the actual trenchboot x86 functionality.
 
-The x86 side is mostly self contained, so the damage there is minimal,
-but the TPM parts are changing the generic operations and the x86 parts
-depend on them.
+Yeah, I'm already writing a (draft/RFC) patch to demonstrate my
+proposal that I sent so all good.
 
-So let's not create a chicken and egg problem and solve the TPM parts,
-which at my cursory glance are partially legitimate fixes, independent
-of the actual trenchboot x86 functionality.
+>
+> Thanks,
+>
+>         tglx
 
-Thanks,
-
-        tglx
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
