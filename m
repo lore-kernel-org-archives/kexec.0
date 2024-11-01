@@ -4,58 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6E95E6749E
-	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 03:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE39DE6749A
+	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 03:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vNGXQ+yeMziZ/UIM3VDG4ZSQBGfF99rywTl0linCXY4=; b=epsPtaRCxaDfF/
-	bBjOt8T0JfuOpYurTTgI0ZnG3bTowPC34ByJUtKSV2ZMY/eAP9K88Q2nOeLsRyP1g5vE9X5WrLjtV
-	CCcCyPII5sVc3fdaFm0V7SzNFS6c6dslFUB7RA4sUu+GjobY1wlVfmNNaGURH2K2UahMZ6Wv+bu/D
-	fp3/ZZzQKSjxyPRxFxF0NWfziluBEwQ1KxzbcHg1uGrNpzOx0rvlBiIGzuMXOKgdWfJCHWBDqr2+n
-	mMu7/mmVtBnGpQzzTdoWr8GqkvhAZ+gtZ6KblEPAU+CH10jJni7uLo2dJ7VAIMtDiPfb1qSJiwAHG
-	z28J/0dhMHH93q4/g2xQ==;
+	List-Owner; bh=vNGXQ+yeMziZ/UIM3VDG4ZSQBGfF99rywTl0linCXY4=; b=095j5UdMm3GJH6
+	aWrg5LJOuPofCi/PJrgyRuDzmxq4AjwUntM+LAtW6UgrwK2z+cInXl6wn23Y9xb+5v96Nudh2ba1N
+	J3x7EblaDwjv1DYDrZtIIOTfQKqKyqTzZIrOZFOrtR7OLGZSWISEVRWX0sVPr+626Jl8ock/DxViZ
+	+PL4+ssLYu9LtrPbFikYekGdYA8VmSkfMtAhmRHdu3u0YRSnaomZDDvCA7Zh5ZtEli3d3E/LRE3vL
+	Sgo2R1OBEBYRBhlz9OW5SghiTDCSH95d43WY2rqCWFSDOyE/J81EmipS0FlELtQVqQjPSpvGmumL9
+	McFoBeyXdA4UUGbfhZpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6ie4-00000005h9h-0vnk;
-	Fri, 01 Nov 2024 03:48:20 +0000
+	id 1t6ii6-00000005hih-1yet;
+	Fri, 01 Nov 2024 03:52:30 +0000
 Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6ie1-00000005h8O-0m8u
+	id 1t6ii2-00000005hfs-3SR1
 	for kexec@lists.infradead.org;
-	Fri, 01 Nov 2024 03:48:19 +0000
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XfmxH6FFczpXjJ;
-	Fri,  1 Nov 2024 11:46:11 +0800 (CST)
+	Fri, 01 Nov 2024 03:52:28 +0000
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Xfn1Q3wMCzdkb7;
+	Fri,  1 Nov 2024 11:49:46 +0800 (CST)
 Received: from kwepemm600002.china.huawei.com (unknown [7.193.23.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1940C18006C;
-	Fri,  1 Nov 2024 11:48:07 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E284C140361;
+	Fri,  1 Nov 2024 11:52:20 +0800 (CST)
 Received: from huawei.com (10.44.142.84) by kwepemm600002.china.huawei.com
  (7.193.23.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 1 Nov
- 2024 11:48:06 +0800
+ 2024 11:52:20 +0800
 From: Qi Xi <xiqi2@huawei.com>
-To: <bobo.shaobowang@huawei.com>, <xiqi2@huawei.com>, <bhe@redhat.com>,
-	<vgoyal@redhat.com>, <dyoung@redhat.com>, <holzheu@linux.vnet.ibm.com>,
-	<akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>
+To: <ruanjinjie@huawei.com>
+CC: <akpm@linux-foundation.org>, <bhe@redhat.com>,
+	<bobo.shaobowang@huawei.com>, <dyoung@redhat.com>,
+	<holzheu@linux.vnet.ibm.com>, <kexec@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<vgoyal@redhat.com>, <xiqi2@huawei.com>
 Subject: [PATCH v3] fs/proc: Fix compile warning about variable 'vmcore_mmap_ops'
-Date: Fri, 1 Nov 2024 11:43:49 +0800
-Message-ID: <20241101034349.8915-1-xiqi2@huawei.com>
+Date: Fri, 1 Nov 2024 11:48:03 +0800
+Message-ID: <20241101034803.9298-1-xiqi2@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <f79d2587-2588-598f-f9b2-2e3548067d92@huawei.com>
 References: <f79d2587-2588-598f-f9b2-2e3548067d92@huawei.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.44.142.84]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemm600002.china.huawei.com (7.193.23.29)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241031_204817_398622_4B71343A 
-X-CRM114-Status: UNSURE (   9.79  )
+X-CRM114-CacheID: sfid-20241031_205227_033830_158F421D 
+X-CRM114-Status: UNSURE (   9.87  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
