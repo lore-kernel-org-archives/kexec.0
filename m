@@ -4,73 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 213FFE6F062
-	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 14:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1648E6F06C
+	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 16:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
-	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iBtRXAjaagJEJMZURVAxRAXd7SfQ0Nko6YstrI78DFE=; b=xER+tDhLa3X3H9
-	+elmkVhtBEcQVKgx+uSn/C73I+tjtUNhgmNY3y/B7JigWqoVSG7CNV3sUL1WQzFvHrKFrguZCFkUE
-	qRBtyeJ/sIFvOO+ef+aGHC94Sb4DfVAsuPzvtguVlq1HHP1RPE/BZsA70ptwcNt8lHoCiNh4DGs7P
-	OfdfuJEdN+j6Y47Nx0maATbOHQX8ro2tuIxHXhbdl08Yi7jEgXUS+3tyxPFqSb8cIwBPbuL3NQQAg
-	f0imQJwEwtyaEYeJJZEsMuLFHQZx0CTDRhkptyErx+cFzvNo/1XTr+lT7GAx4sz4Be8iFBfFHbCSn
-	FXUe0iuahUKn59xzR7hw==;
+	List-Owner; bh=RW2ZN3Pa+l5dpLFCa+4MgY3htJWGBkoyZ/ezUY4BTwU=; b=TooI1YqAwslFaG
+	JzEqbc6D6aso4Of5W+VRVmtmqCAw+YgOkrGRK/BkkAaurSdMOkQ9Zhee0YxK4pffhRSj/dHuf4img
+	7ZspYI36PMQRSM1xwfPcktbMu2MMiyaHzRbqNIrLshYdDVgyDJ7B6OFMjT/XAJeaYD2pPtqxTr/gG
+	v2yI3yO0KpjYWxrj3pbDbpWpJeqzdVva6JP54E/Umpl+ncsQhBbfl2CkmlAiXQFqRehZQUb4Wp+iT
+	lnMnNHnm1WFHtweum4YzfqzUaEvJoT5YcFRJS5GmFl2mC3cxlnrgDf+aQQQTpxCx1VaOfPCf3zs4Q
+	ONuxY01GbXLyhqXv+3dQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6t0L-00000007PZg-2qjL;
-	Fri, 01 Nov 2024 14:52:01 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1t6uQ4-00000007eXJ-3dtg;
+	Fri, 01 Nov 2024 16:22:40 +0000
+Received: from mail.alien8.de ([65.109.113.108])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6t0G-00000007PW2-1ToI
+	id 1t6uMh-00000007drr-1rPC
 	for kexec@lists.infradead.org;
-	Fri, 01 Nov 2024 14:51:59 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 982E55C3D84;
-	Fri,  1 Nov 2024 14:51:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7E1C4CECD;
-	Fri,  1 Nov 2024 14:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730472715;
-	bh=fBmciF+8K11L8eGrwOJGRPAF0tISY2XVqBxqg8Opu4U=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=pLhfBdhQcDWy1mnIlIpI0fOGxQXBqk3WkdTqtzWxYa3Xu2vgoWazyk+oRO4J8V1pe
-	 J12+zyrD3bpt/2XYSTT9A+rLfKfpZnQooZfbr3hXIKGNmAf/0/fZ5VzYidOSm8s1CB
-	 qXRqoncGrKqJsKcpb8FbDwj9ybgRiGjtyguDdA5nxy7drXN+PGO2YFvp5itn7JLMXV
-	 fbJNJrTcnGTDVhmMNfF4tuazJXCfSvg/G5WTcKQmKUR7fse/fqr9sdbG+0bKpjMcgv
-	 ZOhOnn3yPdMWS3GtiT3Ts0h2JZJl95ikhDcsovwWxxpvK21esgAM8w8igj4MQDpyZm
-	 AiQeBW27/ymrA==
-Mime-Version: 1.0
-Date: Fri, 01 Nov 2024 16:51:50 +0200
-Message-Id: <D5AXDOQWNMIY.3RD4A8I5H6OOJ@kernel.org>
-Cc: <dpsmith@apertussolutions.com>, <mingo@redhat.com>, <bp@alien8.de>,
- <hpa@zytor.com>, <dave.hansen@linux.intel.com>, <ardb@kernel.org>,
- <mjg59@srcf.ucam.org>, <James.Bottomley@hansenpartnership.com>,
- <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <luto@amacapital.net>,
- <nivedita@alum.mit.edu>, <herbert@gondor.apana.org.au>,
- <davem@davemloft.net>, <corbet@lwn.net>, <ebiederm@xmission.com>,
- <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
- <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
- <trenchboot-devel@googlegroups.com>
-Subject: Re: [PATCH v11 00/20] x86: Trenchboot secure dynamic launch Linux
- kernel support
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Thomas Gleixner" <tglx@linutronix.de>, "Ross Philipson"
- <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
- <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
- <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
- <iommu@lists.linux-foundation.org>
-X-Mailer: aerc 0.18.2
-References: <20240913200517.3085794-1-ross.philipson@oracle.com>
- <87wmhoulb9.ffs@tglx> <D5ACNMVX5LXB.1L0S9P2J3UDJH@kernel.org>
- <87ldy3vpjh.ffs@tglx>
-In-Reply-To: <87ldy3vpjh.ffs@tglx>
+	Fri, 01 Nov 2024 16:19:13 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E752240E015F;
+	Fri,  1 Nov 2024 16:19:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0KrUJmqolMCh; Fri,  1 Nov 2024 16:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730477944; bh=ga3EU5e3LwksEz0FqQ+0xvAlawIA21BzAgKw22O3GpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hLVTrvFv1Kcd1oeV1zWXiHkv35eRo3qpkpEAgpWhWXB8HfSOnhhB+Au63RxpHFNGI
+	 fodSE7M0iUFnzbiA6F7BJJLHhJU12JhwvEHwcBSPXRubvgVwsENtkDwtvlPIwJsaW8
+	 Y1t5hpxM+6kJ/psHBQd7zMxewNUyJZbIKqIwTKArATUEYn0FFRxaWV8msbMneQprNj
+	 /snidavlN2diEcfcNE5MA54WNsPQdjYV81/SPfMsO0Xgg+vW3CI1qwkZVVSC//GyqE
+	 Y35O0ECSUYtR1yRQJGrApjh8N8TbkTEYfaVu9ELLr59qqxohbiPdo2XHayRwVzyCJ8
+	 Xdgwb7YfrXJAhCuNPhM7PQ4wNO3+T3BY+kPxxq4AhuB0hdmGh+lJY8MseZMpBQxNcF
+	 l9NMntdCANZlcXFlDVApdlgFMNIUXoa5XbCZWxL5qSzLJQmMjjMFex6Fklw4J7DrR3
+	 Xudte7uQRmvJjdlRYl8DN2PhLaHobJA4wh29xuTWYytIb14ENlgU+IuHuGfb40NO3X
+	 HdODACICW9EsLy4IeUS4K00CfXtKtHoTPrK79Gll5a3IIH0eBXXOBHS3CuL6T2FfbY
+	 Vba7yBIeRsTkMmV95o//WBGygAS6tdffNtSlGVZGhdShh2iOJSLyGgCa5tMJQ4RDor
+	 G9sTpr4zgz5NGWRLFy69DEQ8=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 907DD40E019C;
+	Fri,  1 Nov 2024 16:18:55 +0000 (UTC)
+Date: Fri, 1 Nov 2024 17:18:49 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+	dyoung@redhat.com, daniel.kiper@oracle.com, noodles@fb.com,
+	lijiang@redhat.com, kexec@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v3 1/2] x86/mm: rename the confusing local variable in
+ early_memremap_is_setup_data()
+Message-ID: <20241101161849.GCZyT_aSMcGIXnGr1-@fat_crate.local>
+References: <20240911081615.262202-1-bhe@redhat.com>
+ <20240911081615.262202-2-bhe@redhat.com>
+ <20241029181101.GXZyElNXVuF6596TKG@fat_crate.local>
+ <ZyGDlYsg6YWNXSVo@MiWiFi-R3L-srv>
+ <8c81835b-97fe-a0b3-a860-0bbd5c0341f6@amd.com>
+ <ZyL8WDTw9F3laupG@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ZyL8WDTw9F3laupG@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241101_075156_446963_13333EE9 
-X-CRM114-Status: GOOD (  23.17  )
+X-CRM114-CacheID: sfid-20241101_091911_660642_9B77020A 
+X-CRM114-Status: UNSURE (   7.68  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,40 +94,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri Nov 1, 2024 at 1:08 AM EET, Thomas Gleixner wrote:
-> On Fri, Nov 01 2024 at 00:37, Jarkko Sakkinen wrote:
-> > On Thu Oct 31, 2024 at 9:25 PM EET, Thomas Gleixner wrote:
-> >> So this looks pretty reasonable to me by now and I'm inclined to take it
-> >> through the tip x86 tree, but that needs reviewed/acked-by's from the
-> >> crypto and TPM folks. EFI has been reviewed already.
-> >>
-> >> Can we make progress on this please?
-> >
-> > So TPM patches do have bunch of glitches:
-> >
-> > - 15/20: I don't get this. There is nothing to report unless tree
-> >   is falling. The reported-by tag literally meaningless. Maybe this
-> >   is something that makes sense with this feature. Explain from that
-> >   angle.
-> > - 16/20: Is this actually a bug fix? If it is should be before 15/20.
-> > - 17/20: the commit message could do a better job explaining how the
-> >   locality can vary. I'm not sure how this will be used by rest of
-> >   the patch set.
-> > - 18/20: I'm not confident we want to give privilege to set locality
-> >   to the user space. The commit message neither makes a case of this.
-> >   Has this been tested to together with bus encryption (just checking)?
->
-> Can you please explicitely voice your detailed technical concerns in
-> replies to the actual patches?
+On Thu, Oct 31, 2024 at 11:41:12AM +0800, Baoquan He wrote:
+> Should I send the fixing patch alone and clean up the useless argument
+> 'size' later, or squash them into one patch?
 
-Yes, I did that.
+First the fix, then the cleanup.
 
->
-> Thanks,
->
->         tglx
+Btw, that fix wants to go to stable no? Seeing how it breaks certain machines
+with IMA and kdump and SMe...
 
-BR, Jarkko
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
