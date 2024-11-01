@@ -4,60 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE39DE6749A
-	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 03:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C694E674AC
+	for <kexec@archiver.kernel.org>; Fri,  1 Nov 2024 07:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vNGXQ+yeMziZ/UIM3VDG4ZSQBGfF99rywTl0linCXY4=; b=095j5UdMm3GJH6
-	aWrg5LJOuPofCi/PJrgyRuDzmxq4AjwUntM+LAtW6UgrwK2z+cInXl6wn23Y9xb+5v96Nudh2ba1N
-	J3x7EblaDwjv1DYDrZtIIOTfQKqKyqTzZIrOZFOrtR7OLGZSWISEVRWX0sVPr+626Jl8ock/DxViZ
-	+PL4+ssLYu9LtrPbFikYekGdYA8VmSkfMtAhmRHdu3u0YRSnaomZDDvCA7Zh5ZtEli3d3E/LRE3vL
-	Sgo2R1OBEBYRBhlz9OW5SghiTDCSH95d43WY2rqCWFSDOyE/J81EmipS0FlELtQVqQjPSpvGmumL9
-	McFoBeyXdA4UUGbfhZpQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=TVf9JJEaJC1BzZad8wKQxrD1f//R/LLV0SGk1IsA72I=; b=JCrHrbmU/kf62dH3tUORAVO5qT
+	qVjMg0SM/zMKhcZnkVCDC0xU+zvaSLAemswND9gEeudIUSWRNMltQx9TbtHIAQnUNt78ORRPP3qUB
+	i5m9JsBS2plk1c+d6xBsXCY33hThZx9SbYUrW2ymHliQ1zmcERwn22WrfVzF0a7iyG6A33NknGCjm
+	Pe4n6k7YFWeQFyezomp1f6tBXPHCWU8LnkQumEyBo8HGvjmrDNS7RaKIAGzUShO3SFvYwWl1uvLUm
+	XoOR5/5q+eqiqL1dE4yiLbzwwObdF6qLPb+WR5mYB1nWKGjLop8TBEeWJaNQP/tDmbg1L2Fu6mx/B
+	GSJjvIJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6ii6-00000005hih-1yet;
-	Fri, 01 Nov 2024 03:52:30 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1t6m7M-000000067wf-2wuf;
+	Fri, 01 Nov 2024 07:30:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t6ii2-00000005hfs-3SR1
+	id 1t6lxG-000000065rH-167J
 	for kexec@lists.infradead.org;
-	Fri, 01 Nov 2024 03:52:28 +0000
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Xfn1Q3wMCzdkb7;
-	Fri,  1 Nov 2024 11:49:46 +0800 (CST)
-Received: from kwepemm600002.china.huawei.com (unknown [7.193.23.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id E284C140361;
-	Fri,  1 Nov 2024 11:52:20 +0800 (CST)
-Received: from huawei.com (10.44.142.84) by kwepemm600002.china.huawei.com
- (7.193.23.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 1 Nov
- 2024 11:52:20 +0800
-From: Qi Xi <xiqi2@huawei.com>
-To: <ruanjinjie@huawei.com>
-CC: <akpm@linux-foundation.org>, <bhe@redhat.com>,
-	<bobo.shaobowang@huawei.com>, <dyoung@redhat.com>,
-	<holzheu@linux.vnet.ibm.com>, <kexec@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<vgoyal@redhat.com>, <xiqi2@huawei.com>
-Subject: [PATCH v3] fs/proc: Fix compile warning about variable 'vmcore_mmap_ops'
-Date: Fri, 1 Nov 2024 11:48:03 +0800
-Message-ID: <20241101034803.9298-1-xiqi2@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <f79d2587-2588-598f-f9b2-2e3548067d92@huawei.com>
-References: <f79d2587-2588-598f-f9b2-2e3548067d92@huawei.com>
+	Fri, 01 Nov 2024 07:20:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730445619;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x5hXjcqWXRn59a0xbdSnVFt2VZK6FjShJd6whf11uMo=;
+	b=h0HXucU+KFi4rmjYc7KbUaLjmvB4QZooOwRB4Bh5XDhBzd+5fW1C96ltNceRrlb4ezc7cB
+	ClVJJkZMIhQ6NpDC+anvS1kOAUy0b50QsmRsDwozdXyBbABMPvjyN+LKPVKeiyVBKikH0C
+	056s6ZacS9CiPsfHFSMu582OXwonYvQ=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-62-FcxqgS5yNj6dJ-wVN7HlJQ-1; Fri, 01 Nov 2024 03:20:18 -0400
+X-MC-Unique: FcxqgS5yNj6dJ-wVN7HlJQ-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-20e5df3e834so18165235ad.0
+        for <kexec@lists.infradead.org>; Fri, 01 Nov 2024 00:20:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730445617; x=1731050417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x5hXjcqWXRn59a0xbdSnVFt2VZK6FjShJd6whf11uMo=;
+        b=t5ugbSr/sGt8VMR3qGfrSWlcyTqrkk7CVJA2rntjt5IumzuSu0eKRR2oxdbANPJshR
+         I/rMzH88ue2a/655H+FiHjdhWd/7qnq+RzaVbsgl1eI2vFSJ/6aEkj+gGW7S3M5ejgSp
+         cwy9xG1A6i/tOcm00d8AOK3kazqmWs5wDFdwvFZRYSJG1xb5Q84JUc2DKIhWDRf3Llk4
+         jCX4IL+Wauq5rdhNsg5d1TQNLhq/GYbhYUphun293PKO5QEkeMRQbPpzyGaHnVIPyYvs
+         j6dDZZJNwQoYQjjJr5xxJnOqH/kT2Hbj+qSBlbGMl8Z2onzlnT6P5huR+9IzrpvbjXjE
+         hV3w==
+X-Gm-Message-State: AOJu0YwgDHa1zInLLF/rEgL6cpAy8Z0d1GedF8mOcAo39VA8jHTnfqfM
+	bWe4OA47QVHoPyO3uh2uc/w+fsEkyZdESz/bs1RFFrEu2V4FFwRbUn9fpk6V+CwbYMiYAuhsWcD
+	6LH2AC0CeGDNhL8dYV4yn25IcS0PfqqYnKSoc6NM2Rl5RsCp0yu1DB31qDeStv9pk8j3O22LJyA
+	==
+X-Received: by 2002:a17:903:22c6:b0:20c:6ac0:f1f3 with SMTP id d9443c01a7336-2111af799c8mr30759205ad.34.1730445617246;
+        Fri, 01 Nov 2024 00:20:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGG2Y5WF1CYx2a1shsD35rPwqjdlx6MHWPlasgIsp973u0b68S35AogeDETQd5q6GacNCn+OA==
+X-Received: by 2002:a17:903:22c6:b0:20c:6ac0:f1f3 with SMTP id d9443c01a7336-2111af799c8mr30759025ad.34.1730445616668;
+        Fri, 01 Nov 2024 00:20:16 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056edb4csm17362645ad.58.2024.11.01.00.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2024 00:20:16 -0700 (PDT)
+Date: Fri, 1 Nov 2024 15:16:03 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: kernel test robot <lkp@intel.com>
+Cc: kexec@lists.infradead.org, oe-kbuild-all@lists.linux.dev, 
+	Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Greg KH <greg@kroah.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"(open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb)" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v6 3/7] crash_dump: store dm crypt keys in kdump reserved
+ memory
+Message-ID: <7iimyaxqzvjn7f6xorz7ng2kvgapvay5dwhyuisd7ls6rhs6zz@q6gtyynjxpzt>
+References: <20241029055223.210039-4-coxu@redhat.com>
+ <202410292237.HA9vMqbC-lkp@intel.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.44.142.84]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600002.china.huawei.com (7.193.23.29)
+In-Reply-To: <202410292237.HA9vMqbC-lkp@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241031_205227_033830_158F421D 
-X-CRM114-Status: UNSURE (   9.87  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20241101_002022_410262_61460FDA 
+X-CRM114-Status: GOOD (  23.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,59 +105,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When build with !CONFIG_MMU, the variable 'vmcore_mmap_ops'
-is defined but not used:
+On Tue, Oct 29, 2024 at 10:41:50PM +0800, kernel test robot wrote:
+>Hi Coiby,
+>
+>kernel test robot noticed the following build errors:
+>
+>[auto build test ERROR on e42b1a9a2557aa94fee47f078633677198386a52]
+>
+>url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20241029-135449
+>base:   e42b1a9a2557aa94fee47f078633677198386a52
+>patch link:    https://lore.kernel.org/r/20241029055223.210039-4-coxu%40redhat.com
+>patch subject: [PATCH v6 3/7] crash_dump: store dm crypt keys in kdump reserved memory
+>config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20241029/202410292237.HA9vMqbC-lkp@intel.com/config)
+>compiler: loongarch64-linux-gcc (GCC) 14.1.0
+>reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241029/202410292237.HA9vMqbC-lkp@intel.com/reproduce)
+>
+>If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>the same patch/commit), kindly add following tags
+>| Reported-by: kernel test robot <lkp@intel.com>
+>| Closes: https://lore.kernel.org/oe-kbuild-all/202410292237.HA9vMqbC-lkp@intel.com/
+>
+>All error/warnings (new ones prefixed by >>):
+>
+>   kernel/crash_dump_dm_crypt.c: In function 'crash_load_dm_crypt_keys':
+>>> kernel/crash_dump_dm_crypt.c:221:16: error: variable 'kbuf' has initializer but incomplete type
+>     221 |         struct kexec_buf kbuf = {
+>         |                ^~~~~~~~~
+>>> kernel/crash_dump_dm_crypt.c:222:18: error: 'struct kexec_buf' has no member named 'image'
+>     222 |                 .image = image,
+>         |                  ^~~~~
+>>> kernel/crash_dump_dm_crypt.c:222:26: warning: excess elements in struct initializer
+>     222 |                 .image = image,
+>         |                          ^~~~~
+>   kernel/crash_dump_dm_crypt.c:222:26: note: (near initialization for 'kbuf')
+>>> kernel/crash_dump_dm_crypt.c:223:18: error: 'struct kexec_buf' has no member named 'buf_min'
+>     223 |                 .buf_min = 0,
+>         |                  ^~~~~~~
+>   kernel/crash_dump_dm_crypt.c:223:28: warning: excess elements in struct initializer
+>     223 |                 .buf_min = 0,
+>         |                            ^
+>   kernel/crash_dump_dm_crypt.c:223:28: note: (near initialization for 'kbuf')
+>>> kernel/crash_dump_dm_crypt.c:224:18: error: 'struct kexec_buf' has no member named 'buf_max'
+>     224 |                 .buf_max = ULONG_MAX,
+>         |                  ^~~~~~~
+>   In file included from include/linux/limits.h:7,
+>                    from include/linux/thread_info.h:12,
+>                    from include/asm-generic/preempt.h:5,
+>                    from ./arch/loongarch/include/generated/asm/preempt.h:1,
+>                    from include/linux/preempt.h:79,
+>                    from include/linux/rcupdate.h:27,
+>                    from include/linux/rbtree.h:24,
+>                    from include/linux/key.h:15,
+>                    from kernel/crash_dump_dm_crypt.c:2:
+>>> include/vdso/limits.h:13:25: warning: excess elements in struct initializer
+>      13 | #define ULONG_MAX       (~0UL)
+>         |                         ^
+>   kernel/crash_dump_dm_crypt.c:224:28: note: in expansion of macro 'ULONG_MAX'
+>     224 |                 .buf_max = ULONG_MAX,
+>         |                            ^~~~~~~~~
+>   include/vdso/limits.h:13:25: note: (near initialization for 'kbuf')
+>      13 | #define ULONG_MAX       (~0UL)
+>         |                         ^
+>   kernel/crash_dump_dm_crypt.c:224:28: note: in expansion of macro 'ULONG_MAX'
+>     224 |                 .buf_max = ULONG_MAX,
+>         |                            ^~~~~~~~~
+>>> kernel/crash_dump_dm_crypt.c:225:18: error: 'struct kexec_buf' has no member named 'top_down'
+>     225 |                 .top_down = false,
+>         |                  ^~~~~~~~
+>   kernel/crash_dump_dm_crypt.c:225:29: warning: excess elements in struct initializer
+>     225 |                 .top_down = false,
+>         |                             ^~~~~
+>   kernel/crash_dump_dm_crypt.c:225:29: note: (near initialization for 'kbuf')
+>>> kernel/crash_dump_dm_crypt.c:226:18: error: 'struct kexec_buf' has no member named 'random'
+>     226 |                 .random = true,
+>         |                  ^~~~~~
+>   kernel/crash_dump_dm_crypt.c:226:27: warning: excess elements in struct initializer
+>     226 |                 .random = true,
+>         |                           ^~~~
+>   kernel/crash_dump_dm_crypt.c:226:27: note: (near initialization for 'kbuf')
+>>> kernel/crash_dump_dm_crypt.c:221:26: error: storage size of 'kbuf' isn't known
+>     221 |         struct kexec_buf kbuf = {
+>         |                          ^~~~
+>>> kernel/crash_dump_dm_crypt.c:246:20: error: 'KEXEC_BUF_MEM_UNKNOWN' undeclared (first use in this function)
+>     246 |         kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>         |                    ^~~~~~~~~~~~~~~~~~~~~
+>   kernel/crash_dump_dm_crypt.c:246:20: note: each undeclared identifier is reported only once for each function it appears in
+>>> kernel/crash_dump_dm_crypt.c:247:13: error: implicit declaration of function 'kexec_add_buffer' [-Wimplicit-function-declaration]
+>     247 |         r = kexec_add_buffer(&kbuf);
+>         |             ^~~~~~~~~~~~~~~~
+>>> kernel/crash_dump_dm_crypt.c:221:26: warning: unused variable 'kbuf' [-Wunused-variable]
+>     221 |         struct kexec_buf kbuf = {
+>         |                          ^~~~
+>
+>
+>vim +/kbuf +221 kernel/crash_dump_dm_crypt.c
+>
+>   218	
+>   219	int crash_load_dm_crypt_keys(struct kimage *image)
+>   220	{
+> > 221		struct kexec_buf kbuf = {
+> > 222			.image = image,
+> > 223			.buf_min = 0,
+> > 224			.buf_max = ULONG_MAX,
+> > 225			.top_down = false,
+> > 226			.random = true,
+>   227		};
+>   228		int r;
+>   229	
+>   230	
+>   231		if (key_count <= 0) {
+>   232			kexec_dprintk("No dm-crypt keys\n");
+>   233			return -EINVAL;
+>   234		}
+>   235	
+>   236		image->dm_crypt_keys_addr = 0;
+>   237		r = build_keys_header();
+>   238		if (r)
+>   239			return r;
+>   240	
+>   241		kbuf.buffer = keys_header;
+>   242		kbuf.bufsz = get_keys_header_size(key_count);
+>   243	
+>   244		kbuf.memsz = kbuf.bufsz;
+>   245		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+> > 246		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> > 247		r = kexec_add_buffer(&kbuf);
+>   248		if (r) {
+>   249			kvfree((void *)kbuf.buffer);
+>   250			return r;
+>   251		}
+>   252		image->dm_crypt_keys_addr = kbuf.mem;
+>   253		image->dm_crypt_keys_sz = kbuf.bufsz;
+>   254		kexec_dprintk(
+>   255			"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
+>   256			kbuf.bufsz, kbuf.bufsz);
+>   257	
+>   258		return r;
+>   259	}
+>   260	
+>
+>-- 
+>0-DAY CI Kernel Test Service
+>https://github.com/intel/lkp-tests/wiki
 
->> fs/proc/vmcore.c:458:42: warning: unused variable 'vmcore_mmap_ops'
-     458 | static const struct vm_operations_struct vmcore_mmap_ops = {
+Thanks for reporting this issue. I'll make CRASH_DM_CRYPT depend on
+KEXEC_FILE to fix it in new version of patch set!
 
-Fix this by only defining it when CONFIG_MMU is enabled.
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-Fixes: 9cb218131de1 ("vmcore: introduce remap_oldmem_pfn_range()")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/lkml/202410301936.GcE8yUos-lkp@intel.com/
-Signed-off-by: Qi Xi <xiqi2@huawei.com>
----
-v3: move changelogs after the '---' line
-v2: use ifdef instead of __maybe_unused
-
- fs/proc/vmcore.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 1fb213f379a5..9ed1f6902c8f 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -455,10 +455,6 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
- #endif
- }
- 
--static const struct vm_operations_struct vmcore_mmap_ops = {
--	.fault = mmap_vmcore_fault,
--};
--
- /**
-  * vmcore_alloc_buf - allocate buffer in vmalloc memory
-  * @size: size of buffer
-@@ -486,6 +482,11 @@ static inline char *vmcore_alloc_buf(size_t size)
-  * virtually contiguous user-space in ELF layout.
-  */
- #ifdef CONFIG_MMU
-+
-+static const struct vm_operations_struct vmcore_mmap_ops = {
-+	.fault = mmap_vmcore_fault,
-+};
-+
- /*
-  * remap_oldmem_pfn_checked - do remap_oldmem_pfn_range replacing all pages
-  * reported as not being ram with the zero page.
 -- 
-2.33.0
+Best regards,
+Coiby
 
 
 _______________________________________________
