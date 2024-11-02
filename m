@@ -4,74 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCC58E677F5
-	for <kexec@archiver.kernel.org>; Sat,  2 Nov 2024 13:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADBECE677EF
+	for <kexec@archiver.kernel.org>; Sat,  2 Nov 2024 14:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
-	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:From:Subject:Cc:
+	To:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eCCFIyloZl8Rfnq5PoNowjnnPxFRnSwBzTaIe7qwpUI=; b=DEcTBsYDkLRsPv
-	pa5KNSupzoVw6j+XB4zbHVx1hNgNNQfS3vacWLt64hvn3Aff13JZbIln9K4GgK2YKKlStYf9027T7
-	zK7AGe9T7t/+kP+Ux0+K78uqiUQ2MipA/91Dx+mhodLO7eBjAhJo25zA1RWKsgkQf01+HHwvfHmL5
-	Nd1j/ht4ShIP5oEJ4hdQi5jg4TYGtXFxl7PKkr4A7RM3mskb3+nWIdv6YixBU3D8c+7NiDE/8/qwh
-	91tBjb7YppDDU4Tiu4g44/ksAOdI7wfktfo28F4QuTwBJGRfEkq02uxdHd9za62BHED8ap+FZEjGS
-	3IfFBY5sl6lU2b5lmk3w==;
+	List-Owner; bh=JyZxbGrVayBQ81IkgbPV8eWVLzlKAKl1krICjHSl0yI=; b=Gu7AFE8ccC9Ew4
+	Kn35HCBskydY1EYiNOWsrR+qoaIFX5/wy0w94NX7DrB/I7C5xrgYDUkiC4m4S31By3nLBDqebzXyC
+	dmmuDG+FqlQw2q/fGazc3uq0nfdvYtEYIh1mTb+oJHk7xs4q5hSz8GnMdwexdViWnccDst7Z3EWID
+	WGbj9It71zXibVj77G5oQLIHQcv8w7IlGH14OmYFtjRMDIlblEw4BRGXdUUdgkwnyJbRgrVqyjNzX
+	NSb/M2wLbbflVymOz3+/LJwHGITRxCm+K7TOF8sA/2ocodJd32TaB1C6HQHO1ZUGbOBuK4YxD8K15
+	Hghoz+bvnmXn+H7OdO+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7EM0-00000009nOU-1Rd6;
-	Sat, 02 Nov 2024 13:39:48 +0000
+	id 1t7EiW-00000009p9J-0jws;
+	Sat, 02 Nov 2024 14:03:04 +0000
 Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7ELx-00000009nNl-37i1
+	id 1t7EiT-00000009p8G-0wsf
 	for kexec@lists.infradead.org;
-	Sat, 02 Nov 2024 13:39:46 +0000
+	Sat, 02 Nov 2024 14:03:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 67D18A40078;
-	Sat,  2 Nov 2024 13:37:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74441C4CEC3;
-	Sat,  2 Nov 2024 13:39:42 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 87CFAA40183;
+	Sat,  2 Nov 2024 14:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F357BC4CEC3;
+	Sat,  2 Nov 2024 14:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730554783;
-	bh=sxBligjgKTVDk7jjHZnmdCYx6SXn35Wcjb9+LxenKDs=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=um5mVVfufD7+UoTS8jMDsamcAhTuEjg6A0ORTzlgu/Q9HKzwpAFL8iOUXfTlXE6SC
-	 /p0QR+RtUL9Lu/NsyzijhcdmJ7LLTFvDK0Il25LCvW5ro0aSLqy/cuIPeFJ32CNN2d
-	 EN4I7xt4Fqi1xj5fDmEMseVMu5/OUto2eSx8ZhLDvnZMjfVKzFYlhNY8zClW0aRoFG
-	 GmnpSIGDIQLBPeArr7ea6SBJDNPyFj71iMd+Eof2IlOmyJdsGPcPMohuEw0fPsUw9F
-	 tW483OucMVL5HcSVaPNMb/aegWoBkcTzRpZ2wAr6Pd1DE/c0yJRZl0s9Ce3WF6t1SA
-	 LbSvkCk/SYRMQ==
+	s=k20201202; t=1730556179;
+	bh=ZLS8k2hCcSrDj/7M9xiZ525QVQIkvt4SYg63pY+uces=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=OL76AlXppOEgaPLRvOdzPtX1KYy7U2H6tK9emSQRGpBH4CwmwnLeWOf6ww3LIxQVJ
+	 9uvAptu3mlOSnkkJaDa4S8mFBUjj526MSluXQHiHpoAVtT35/1w90Z+jpfbGQtWW6i
+	 ug9Rmz/4odjf7FZjByk8xIr/59oKhBkhK45heHo9vpneXu5IE3H1QzPkwTQEuFXogk
+	 ZI54GIf88ujwbVT7tF7vome8H5biZjIJsZvkS8Vj6VoyngXiRPeS1BYrhFwotXFr9q
+	 Vf1d9YyaQx8qhS97yUHqqP1RyS9ZuWiDCQs2O4/GrSKhx+5nURvSiLMeulEWXvYu4g
+	 AbH2S0NN5vpGA==
 Mime-Version: 1.0
-Date: Sat, 02 Nov 2024 15:39:38 +0200
-Message-Id: <D5BQGY5425TQ.3U6N698H2KYWO@kernel.org>
-Cc: "Jonathan Corbet" <corbet@lwn.net>, "Peter Huewe" <peterhuewe@gmx.de>,
- "Jason Gunthorpe" <jgg@ziepe.ca>, <James.Bottomley@hansenpartnership.com>,
- <andrew.cooper3@citrix.com>, <baolu.lu@linux.intel.com>, <bp@alien8.de>,
- <dave.hansen@linux.intel.com>, <davem@davemloft.net>,
- <dpsmith@apertussolutions.com>, <dwmw2@infradead.org>,
- <ebiederm@xmission.com>, <herbert@gondor.apana.org.au>, <hpa@zytor.com>,
- <iommu@lists.linux-foundation.org>, <kanth.ghatraju@oracle.com>,
- <kexec@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-efi@vger.kernel.org>,
- <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <luto@amacapital.net>, <mingo@redhat.com>, <mjg59@srcf.ucam.org>,
- <nivedita@alum.mit.edu>, <ross.philipson@oracle.com>, <tglx@linutronix.de>,
- <trenchboot-devel@googlegroups.com>, <x86@kernel.org>
-Subject: Re: [RFC PATCH v2 1/2] tpm, tpm_tis: Introduce TPM_IOC_SET_LOCALITY
+Date: Sat, 02 Nov 2024 16:02:55 +0200
+Message-Id: <D5BQYRP5BCGN.27P7RQRRUIYSS@kernel.org>
+To: "Ross Philipson" <ross.philipson@oracle.com>,
+ <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
+ <linux-efi@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
+ <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
+ <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v11 15/20] tpm: Ensure tpm is in known state at startup
 From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ard Biesheuvel" <ardb@kernel.org>
 X-Mailer: aerc 0.18.2
-References: <D5BB5GX4KEUO.VJ2G9G9QKYRR@kernel.org>
- <20241102062259.2521361-1-jarkko@kernel.org>
- <D5BHBW3NUS5C.293GUI03HMTCF@kernel.org>
- <CAMj1kXGk8y=rZiNiDcD-8mDKJB5HkTowM7g+kjO6616MGdTQaQ@mail.gmail.com>
- <D5BMMJYMVWKJ.3MIGB8KW34PR2@kernel.org>
- <CAMj1kXExMWBAx7geuU8Uwp9CQLpJyTgYmWUw2CtKd3xT8mMFsg@mail.gmail.com>
-In-Reply-To: <CAMj1kXExMWBAx7geuU8Uwp9CQLpJyTgYmWUw2CtKd3xT8mMFsg@mail.gmail.com>
+References: <20240913200517.3085794-1-ross.philipson@oracle.com>
+ <20240913200517.3085794-16-ross.philipson@oracle.com>
+In-Reply-To: <20240913200517.3085794-16-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241102_063945_918034_B0F20272 
-X-CRM114-Status: GOOD (  17.72  )
+X-CRM114-CacheID: sfid-20241102_070301_350345_4E94A590 
+X-CRM114-Status: UNSURE (   7.32  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,57 +85,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat Nov 2, 2024 at 12:52 PM EET, Ard Biesheuvel wrote:
-> > Short answer: I have no idea. I would not mind that but neither
-> > the commit message for TPM give a clue on this. Actually, I *do
-> > not care* if it is RO and RW but I'm neither good at guessing
-> > random shit.
-> >
+On Fri Sep 13, 2024 at 11:05 PM EEST, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 >
-> You were cc'ed on the rest of the series, no?
+> When tis_tis_core initializes, it assumes all localities are closed. There
+> are cases when this may not be the case. This commit addresses this by
+> ensuring all localities are closed before initializing begins.
 
-Yeah, but that does not make sysfs attribute having store operation less
-confusing. At minimum 2/2 should replace the current sysfs patch, if
-store operation is not required.
+Replace with:
 
-> Shall we clarify this first, before proposing patches that introduce
-> new ioctls() and kernel command line parameters to a security
-> sensitive subsystem?
->
-> My reading of 19/20 is that the secure launch module sets the default
-> locality, and given that it can be built as a module, setting the
-> default locality needs to be exported to modules (but as I indicated,
-> this should probably be in a TPM internal module namespace)
->
-> If setting the default locality from user space is a requirement down
-> the road, we can discuss it then. For now, let's not go off into the
-> weeds and derail this series even more.
+"tpm_tis: Close all localities to ensure D-RTM compatibility
 
-If sysfs store is not required after all, and only thing that touches
-the locality is slmodule, tweaking 17/20's set operation to this would
-be good enough for me:
+There are environments, for example, those that comply with the TCG D-RTM
+specification that requires the TPM to be left in locality 2. Prepare
+kernel for such environments by closing all the localities."
 
-int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality)
-{
-	int ret;
-
-	if (locality >= TPM_MAX_LOCALITY)
-		return false;
-
-	ret = tpm_try_get_ops(chip);
-	if (ret)
-		return ret;
-
-	chip->default_locality = locality;
-
-	tpm_put_ops(chip);
-	return 0;
-}
-EXPORT_SYMBOL_GPL(tpm_chip_set_locality);
-
-Now that I've worked on this issue I think also 15/20 and 16/20 are
-pretty clear I can suggest some tweaks to the commit messages later to
-make then more self-explatonery.
+Please don't do anything to the code change (despite my one random
+earlier comment).
 
 BR, Jarkko
 
