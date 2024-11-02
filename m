@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB528E677F5
-	for <kexec@archiver.kernel.org>; Sat,  2 Nov 2024 10:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55280E677F8
+	for <kexec@archiver.kernel.org>; Sat,  2 Nov 2024 10:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
 	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LJMXQlE0Ir0CJLrLYjB92xWNGGvXtoFhKuMfcL4BMjM=; b=BA1Q/e6jWrCYjL
-	1KJW7yLQdDmeqyRgALG7OGFSiNVKbYUUxUGymyst4M04VIqlKRtlIFwAwHPF02Dd1d6tztpxYoRSk
-	7HHWKGZ6vGJAjlG3bD/oF306chyPrz2jxQvftmz55s2nKGUJ7o9umFSm2d272cv8v+DT4C597WYxL
-	3WNN5KzyWdNBhAs5XtCjCCTMbN7w9QkxslhcBwuRe3kM/hoZwIoEbFbyjXl3v+sMvqs+XyVIgFm08
-	a9tTnvKLuXjLxkG7jyh6LntANDUMdhhdErKLx6b95hRRyEqpSqv+VtnYOuK3AHpMjGAUNUa3zgS4b
-	GoztxPInWtSBfTkBcUWQ==;
+	List-Owner; bh=DHv7DrHTOQYui7bVTJcAfVc1bKDxmTDja9VrqGA37I8=; b=AP1rOlCkdTDfpf
+	Oq7Nk//uPqShLc65i5tj9HqVZpuSv2Kt0oqICexxB7OxLKJlv+Ai+Oc/fdpYLNQOI37xWQuG1JMPQ
+	MofeSgh8oRad9H++MUXTjGTuF+a+/1kKePBw2YRh+D/6w5WRYouQ4fHS4UdBh+M1kQw6eb7UOjqi3
+	yR9/7w8uTX8m/hESOzhajQu9sVmzExORDjprKk6QAJWrvGlbkDWQ9WSRWd4t/6U97BEkBFWWfs3nI
+	xATmtU2Z1OFR0adwSdDFB/T0ED8v3XVqJRAqDW4peM79i6tsaEyLQeorznHbLgMes7oXrqA7jNBxB
+	RyMwgYOQ21dB2Y8VqFLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7BX6-00000009VVG-1mQq;
-	Sat, 02 Nov 2024 10:39:04 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1t7BYf-00000009Vjm-01SA;
+	Sat, 02 Nov 2024 10:40:41 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7BX2-00000009VSg-0NGq
+	id 1t7BYc-00000009ViR-21G6
 	for kexec@lists.infradead.org;
-	Sat, 02 Nov 2024 10:39:02 +0000
+	Sat, 02 Nov 2024 10:40:40 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 66B2AA402DC;
-	Sat,  2 Nov 2024 10:37:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACC7DC4CEC3;
-	Sat,  2 Nov 2024 10:38:57 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id CC4275C3300;
+	Sat,  2 Nov 2024 10:39:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A74C4CEC3;
+	Sat,  2 Nov 2024 10:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730543938;
-	bh=VBKEa56BIF6QsRkD7RAecoTuv66Z7zv8Det8m4u7ftI=;
+	s=k20201202; t=1730544037;
+	bh=tV3w/NhiYLlSxyTG9f/8MYrM2eWyQSkpoUd6CUZpQ/s=;
 	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=gOtMufXPnc1DFubhW7urf50dPP0bw7KIiI3fvULoHrreHHmwFH9QwAfpNb54uDN18
-	 kaAGkZTYHObw5uIJMbV9bUddVCc1ac0Saz5R1wPok7rFAng3z5LsAVZOXlyl/LCoCt
-	 G1hsDOSZJJDG9/uEQhCnicp3jmsm2plmYOIQmF7hHiJ/+a4a9RXHKtxhsRYhofwHAA
-	 lLkViIuMowQlJi/iR0N36yOu8ktoVAz+045SjYt1aw8Ju46YHIUBQqLfWk7NqGhDuM
-	 AEFABWsbKJAh+lmxj5cmSoWXmdQVVQTiAKI8qVrgMtzWekCyE9Ldt7bWWVUyLtMp5U
-	 CZ0rOmGMK8dyQ==
+	b=YqfIep9RAimhK5lG8GqaDVHqPzgB0uQJtTNYapUpHHL3VKHD63sfcJEgzueni7hxh
+	 cilOlKzjwtdBMAy/OQZ+l0IpY0UmNFTwXCvsHHnr7kkoK/43Rug3DEoVA+M1xExXzq
+	 BOTjSEjqGkivPG88YnB5MWaZUg8+CWRWayIW79lY9vYeYXYzUrSgq8nDMHSDKx2rCF
+	 8Q7UW0GpW0FwAXMD9WoKaep1r8yt4QQxPeQLyx1CeRryvMAk5IZgYpA87cz4tAe5PC
+	 cmA3WWCIh6wxIYGhm7nB1aprTmMUmQq43pnRUZGmIZNenwodP9jmmhiXWEG730hFGH
+	 Ln33GT8WM1epw==
 Mime-Version: 1.0
-Date: Sat, 02 Nov 2024 12:38:53 +0200
-Message-Id: <D5BMMJYMVWKJ.3MIGB8KW34PR2@kernel.org>
+Date: Sat, 02 Nov 2024 12:40:31 +0200
+Message-Id: <D5BMNT065TE5.1SV8CSW8KEG6L@kernel.org>
 Cc: "Jonathan Corbet" <corbet@lwn.net>, "Peter Huewe" <peterhuewe@gmx.de>,
  "Jason Gunthorpe" <jgg@ziepe.ca>, <James.Bottomley@hansenpartnership.com>,
  <andrew.cooper3@citrix.com>, <baolu.lu@linux.intel.com>, <bp@alien8.de>,
@@ -60,17 +60,18 @@ Cc: "Jonathan Corbet" <corbet@lwn.net>, "Peter Huewe" <peterhuewe@gmx.de>,
  <trenchboot-devel@googlegroups.com>, <x86@kernel.org>
 Subject: Re: [RFC PATCH v2 1/2] tpm, tpm_tis: Introduce TPM_IOC_SET_LOCALITY
 From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Ard Biesheuvel"
+ <ardb@kernel.org>
 X-Mailer: aerc 0.18.2
 References: <D5BB5GX4KEUO.VJ2G9G9QKYRR@kernel.org>
  <20241102062259.2521361-1-jarkko@kernel.org>
  <D5BHBW3NUS5C.293GUI03HMTCF@kernel.org>
  <CAMj1kXGk8y=rZiNiDcD-8mDKJB5HkTowM7g+kjO6616MGdTQaQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXGk8y=rZiNiDcD-8mDKJB5HkTowM7g+kjO6616MGdTQaQ@mail.gmail.com>
+ <D5BMMJYMVWKJ.3MIGB8KW34PR2@kernel.org>
+In-Reply-To: <D5BMMJYMVWKJ.3MIGB8KW34PR2@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241102_033900_216964_919EDAFD 
-X-CRM114-Status: UNSURE (   8.94  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20241102_034038_571206_0644508F 
+X-CRM114-Status: GOOD (  13.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,20 +88,25 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat Nov 2, 2024 at 11:02 AM EET, Ard Biesheuvel wrote:
-> Same for the ioctl() [as well as the read-write sysfs node]: looking
-> at the code (patch 19/20) it doesn't seem like user space needs to be
-> able to modify this at all, at least not for the patch set as
-> presented. So for now, can we just stick with making the sysfs node
-> read-only?
+On Sat Nov 2, 2024 at 12:38 PM EET, Jarkko Sakkinen wrote:
+> On Sat Nov 2, 2024 at 11:02 AM EET, Ard Biesheuvel wrote:
+> > Same for the ioctl() [as well as the read-write sysfs node]: looking
+> > at the code (patch 19/20) it doesn't seem like user space needs to be
+> > able to modify this at all, at least not for the patch set as
+> > presented. So for now, can we just stick with making the sysfs node
+> > read-only?
+>
+> Short answer: I have no idea. I would not mind that but neither
+> the commit message for TPM give a clue on this. Actually, I *do
+> not care* if it is RO and RW but I'm neither good at guessing
+> random shit.
+>
+> I haad to assume it was *needed* for reason that I do not know
+> given that sysfs attribute was RW.
 
-Short answer: I have no idea. I would not mind that but neither
-the commit message for TPM give a clue on this. Actually, I *do
-not care* if it is RO and RW but I'm neither good at guessing
-random shit.
-
-I haad to assume it was *needed* for reason that I do not know
-given that sysfs attribute was RW.
+Let's put it this way: *if* write is needed this the way to do
+it now and also in the future (or along the lines). Or least
+harmful at least (single additional locality change per boot).
 
 BR, Jarkko
 
