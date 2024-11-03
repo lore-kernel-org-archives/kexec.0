@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E820EE6749D
-	for <kexec@archiver.kernel.org>; Sun,  3 Nov 2024 05:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BEA0E6B252
+	for <kexec@archiver.kernel.org>; Sun,  3 Nov 2024 05:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=bbxK2bNyaBR5rGn/m+7uzQXh2yd4c4Fr6ESPsa9w07g=; b=QCbLvHwWkZY29O
-	SbzkXcNdnE12Ay3o9SaZaIk0/jbxP1e/nRAANodEzbB7LyuSkZg2F8MUJiMfFe7AZDpGHkqPbYeMV
-	kAcTuT9owj/1qZBFIsy/BQP8kmvyAlvRR+v5CHDVQ21Q0PaFrfhLp/NPoqAVdmI6DTclZ/ao7XdZM
-	jZ+AF6ivAttYfafWE8zJZ9posWmAtSQco7frN0et9godM1SG+x1t6jHPm/FqC0A7eCX4fHCs33XsB
-	uUlSocdc9mgZfAeAcF1xVpacmyihw7lv496ppCalZJpOdswtXLPGakf68zvMCi/nLyhBc5OXcQW7i
-	d3v3O9kJr+hvpAymVTJg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=GAQ8MR26q2qcasx89rhw0++iCgP4MBfHBdy5U8HD5nY=; b=22UMXKnzyRr/ef
+	45QNJLZ+FMVp6jTSTE3EijWq/zc7IAD9fPLyKHX554wJ/j3bA0gQPDVJOrMIviwSTsnEQ9xnUJ4iT
+	LVDHKVQc7x1DeIvLSoYqTVoFKuyAesvO4Zf65giwFruxn6tRXAt6BdIEWRsMHgUN1bQz0lYZONf3w
+	zrl4h9NIeTGtz8PupQDiwNV+/jvelZAvnAUNcKfDf+odHuBU+vIULUZ+iqFLI/cSEk3umbkxeUeKY
+	FVQ7aSFp7sTu/O8qwSQL4YUowTIZq1sMGY0g1YDmOxRhDxKdPG6kE2BjFXfUEx/osrnm6eVrFZFkW
+	/04H644vG1uYSpRx+1Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLm-0000000AzXj-2atA;
-	Sun, 03 Nov 2024 05:40:34 +0000
+	id 1t7TLn-0000000AzXy-0HJb;
+	Sun, 03 Nov 2024 05:40:35 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLl-0000000AzWt-0jEm
+	id 1t7TLl-0000000AzWu-0jFt
 	for kexec@bombadil.infradead.org;
 	Sun, 03 Nov 2024 05:40:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=00LBfdePtVjoMz5Goiqj3TfM6d1ERcfKYUF+vI7ZIfk=; b=ZhOnLPscHbI4A3YfoBJDDqT7L5
-	LiKex09k9Y8n51FyefJ4Wh87pP9OJJVORyZW3FPqmqttlNCZc44eKYAgpC0lf6ZTwyOUfWlEGc27c
-	1x0vrOfb2MOOAuqh7/9x8cgOd5GpYbjMVP0QNuTc9oqQM4Tvagkpwj+hzr61o84NLVtvsTR+YykFT
-	CCioXSDzqcEdqhLp6G1DUHnTRxaNFF61Lp8DKrYTclRGFlQ1hKyuk+50C8lAqvmotZVSZMsCvKh6D
-	LcPGX4VuTZviCLqEQw4mzBn4HbD6uToP8v7/onJ9Fqh65abb7vlZRLSj/GYw9w9GmmW8bGaiKDNhA
-	/h8dAFsQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=KE2zAg0FNUcZu2wRX0Sf0y9yX7Pxf0UAIJCxTS4zamA=; b=AtBu14MeLBRdSkyzOtDpgPhJNB
+	3hRjG+jBwG+OKjW8af0r6qd4L4MDNIOc9HpqqPZ6yqOwYyY/c+4tNlHrdAdxCEpQtByhqUtTRbUFS
+	3ADKuLdlOc9fIaltzvdx22MV5t9wu9BRlTxF8Sziq63nS8xaLvhz9f2ZIdSdtxeBOCqj9ePDB/tfc
+	oUwmFYQQ8Jir37/ai4G1WvXIXH4q2VoRyTU0JAkUu/vlotzyEBNfCoRI0QLDmibi9fbrVVa86tqjJ
+	RbcloQZ6NiU8XMnJcYS6Sd1br20KFH4wTmITi5uORr80C90Fr39NU7StdRRpNpGREsP7fqQdfORZ9
+	+LFYmD2A==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLb-0000000B4NT-41Fo;
-	Sun, 03 Nov 2024 05:40:28 +0000
+	id 1t7TLb-0000000B4NV-45eL;
+	Sun, 03 Nov 2024 05:40:29 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1t7TLa-0000000FvL6-2v0A;
+	id 1t7TLa-0000000FvLD-3WY6;
 	Sun, 03 Nov 2024 05:40:22 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -58,10 +58,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Nikolay Borisov <nik.borisov@suse.com>,
 	linux-kernel@vger.kernel.org,
 	Simon Horman <horms@kernel.org>
-Subject: [RFC PATCH 0/7] x86/kexec: Add exception handling for relocate_kernel
-Date: Sun,  3 Nov 2024 05:35:25 +0000
-Message-ID: <20241103054019.3795299-1-dwmw2@infradead.org>
+Subject: [RFC PATCH 2/7] x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
+Date: Sun,  3 Nov 2024 05:35:27 +0000
+Message-ID: <20241103054019.3795299-3-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20241103054019.3795299-1-dwmw2@infradead.org>
+References: <20241103054019.3795299-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -80,26 +82,77 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Page faults in relocate_kernel() are extremely painful to debug. Provide a
-basic exception handler which will just dump the exception information and
-registers to a serial port.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-It's disabled by default and has to be enabled with #define DEBUG.
+Make the code a little more readable.
 
-While I was at it, I also stopped swap_pages from actually swapping pages
-in the case of a plain kexec without preserve_context. Unless I'm missing
-something, that's just a pointless waste of time.
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/kernel/relocate_kernel_64.S | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-David Woodhouse (7):
-      x86/kexec: Clean up and document register use in relocate_kernel_64.S
-      x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
-      x86/kexec: Only swap pages for preserve_context mode
-      x86/kexec: Debugging support: load a GDT
-      x86/kexec: Debugging support: Load an IDT and basic exception entry points
-      x86/kexec: Debugging support: Dump registers on exception
-
- arch/x86/kernel/relocate_kernel_64.S | 265 ++++++++++++++++++++++++++++++++---
- 1 file changed, 246 insertions(+), 19 deletions(-)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index c065806884f8..e607c0b7d70b 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -271,31 +271,31 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
+-	jmp	1f
++	jmp	.Lstart		/* Should start with an indirection record */
+ 
+-0:	/* top, read another word for the indirection page */
++.Lloop:	/* top, read another word for the indirection page */
+ 
+ 	movq	(%rbx), %rcx
+ 	addq	$8,	%rbx
+-1:
++.Lstart:
+ 	testb	$0x1,	%cl   /* is it a destination page? */
+-	jz	2f
++	jz	.Lnotdest
+ 	movq	%rcx,	%rdi
+ 	andq	$0xfffffffffffff000, %rdi
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotdest:
+ 	testb	$0x2,	%cl   /* is it an indirection page? */
+-	jz	2f
++	jz	.Lnotind
+ 	movq	%rcx,   %rbx
+ 	andq	$0xfffffffffffff000, %rbx
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotind:
+ 	testb	$0x4,	%cl   /* is it the done indicator? */
+-	jz	2f
+-	jmp	3f
+-2:
++	jz	.Lnotdone
++	jmp	.Ldone
++.Lnotdone:
+ 	testb	$0x8,	%cl   /* is it the source indicator? */
+-	jz	0b	      /* Ignore it otherwise */
++	jz	.Lloop	      /* Ignore it otherwise */
+ 	movq	%rcx,   %rsi  /* For ever source page do a copy */
+ 	andq	$0xfffffffffffff000, %rsi
+ 
+@@ -320,8 +320,8 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	rep ; movsq
+ 
+ 	lea	PAGE_SIZE(%rax), %rsi
+-	jmp	0b
+-3:
++	jmp	.Lloop
++.Ldone:
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
+ 	int3
+-- 
+2.44.0
 
 
 _______________________________________________
