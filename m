@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 67BCFE67806
-	for <kexec@archiver.kernel.org>; Sun,  3 Nov 2024 05:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E820EE6749D
+	for <kexec@archiver.kernel.org>; Sun,  3 Nov 2024 05:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=R4qFYjBHTEjACNMEBBO+XtpG2/oyTJsy/izj9A3Qyk8=; b=cKjaqGnncooiT3
-	46XPbQIhOk9P1FtQOhx+kblroKCy6qifABx5uwjqg2ilWFlwV+BxFAmC7jpZVmanNvDoqtpl39T5T
-	kPAu6qJNXeScdwMhbXLLXoA94YuuUgTyWmRm/8bQzrr71wk+sf4aYHs3yO3mP3RhjVex6OaN1qsXL
-	vz/MwMEba4lfUR5PESay/7UNx1F4uQo7EVyLNksfu2MPor+T5g31PWwneLv8sZpm1XnKLTNxoOqL0
-	Te1CxJoCUV35j9CS0zCMFv6vxkgrgW0LZdfgecpui5H33jHgpgDWHon2XGkujUifQ6xltRxk7cJY0
-	o7gnPraY/p103nM/1qsQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=bbxK2bNyaBR5rGn/m+7uzQXh2yd4c4Fr6ESPsa9w07g=; b=QCbLvHwWkZY29O
+	SbzkXcNdnE12Ay3o9SaZaIk0/jbxP1e/nRAANodEzbB7LyuSkZg2F8MUJiMfFe7AZDpGHkqPbYeMV
+	kAcTuT9owj/1qZBFIsy/BQP8kmvyAlvRR+v5CHDVQ21Q0PaFrfhLp/NPoqAVdmI6DTclZ/ao7XdZM
+	jZ+AF6ivAttYfafWE8zJZ9posWmAtSQco7frN0et9godM1SG+x1t6jHPm/FqC0A7eCX4fHCs33XsB
+	uUlSocdc9mgZfAeAcF1xVpacmyihw7lv496ppCalZJpOdswtXLPGakf68zvMCi/nLyhBc5OXcQW7i
+	d3v3O9kJr+hvpAymVTJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLi-0000000AzWC-3uTR;
-	Sun, 03 Nov 2024 05:40:30 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1t7TLm-0000000AzXj-2atA;
+	Sun, 03 Nov 2024 05:40:34 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLe-0000000AzVj-2l62
+	id 1t7TLl-0000000AzWt-0jEm
 	for kexec@bombadil.infradead.org;
-	Sun, 03 Nov 2024 05:40:26 +0000
+	Sun, 03 Nov 2024 05:40:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=b9tRHLeN7pxr2xLddlnhC83jvrEl3kzVd1otLRBzbTE=; b=jO9C1c79487FhflAUbwCJXVvep
-	IS2n0bhmHSa0v4UNoWe/2n9mZpNuTvAoBh+a6iE+2qJIoJ5RCVK1Yb3Y/F28Of9qEVlH2Nkme22eD
-	MmdptXVsZXviyiN7cPhxIwAiatf1M4w7DH1STwE4AFwZkl4VVybStgt0rfPaoUgDJ5V74WFtlJuJ1
-	tUCLZ5Q2obhJgUyNNiqNF0FvgbxzVzHTTUWlsd3ryjyaDToXWuMBJk7x3p60VkG/11V3L4TXdMO+V
-	TbpFwFHmNMQaDRgrB4xHChR6ZWdx3UGuxnpTIdzsp30qH/fFv/8KMiXdFbnvEBamgKGI45dUK9SSr
-	Pxld+mCQ==;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=00LBfdePtVjoMz5Goiqj3TfM6d1ERcfKYUF+vI7ZIfk=; b=ZhOnLPscHbI4A3YfoBJDDqT7L5
+	LiKex09k9Y8n51FyefJ4Wh87pP9OJJVORyZW3FPqmqttlNCZc44eKYAgpC0lf6ZTwyOUfWlEGc27c
+	1x0vrOfb2MOOAuqh7/9x8cgOd5GpYbjMVP0QNuTc9oqQM4Tvagkpwj+hzr61o84NLVtvsTR+YykFT
+	CCioXSDzqcEdqhLp6G1DUHnTRxaNFF61Lp8DKrYTclRGFlQ1hKyuk+50C8lAqvmotZVSZMsCvKh6D
+	LcPGX4VuTZviCLqEQw4mzBn4HbD6uToP8v7/onJ9Fqh65abb7vlZRLSj/GYw9w9GmmW8bGaiKDNhA
+	/h8dAFsQ==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLa-0000000HSiN-2SWN;
-	Sun, 03 Nov 2024 05:40:23 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t7TLb-0000000B4NT-41Fo;
+	Sun, 03 Nov 2024 05:40:28 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1t7TLa-0000000FvLL-3x2L;
+	id 1t7TLa-0000000FvL6-2v0A;
 	Sun, 03 Nov 2024 05:40:22 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -58,14 +58,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Nikolay Borisov <nik.borisov@suse.com>,
 	linux-kernel@vger.kernel.org,
 	Simon Horman <horms@kernel.org>
-Subject: [RFC PATCH 4/7] x86/kexec: Debugging support: load a GDT
-Date: Sun,  3 Nov 2024 05:35:29 +0000
-Message-ID: <20241103054019.3795299-5-dwmw2@infradead.org>
+Subject: [RFC PATCH 0/7] x86/kexec: Add exception handling for relocate_kernel
+Date: Sun,  3 Nov 2024 05:35:25 +0000
+Message-ID: <20241103054019.3795299-1-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241103054019.3795299-1-dwmw2@infradead.org>
-References: <20241103054019.3795299-1-dwmw2@infradead.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,65 +80,26 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Page faults in relocate_kernel() are extremely painful to debug. Provide a
+basic exception handler which will just dump the exception information and
+registers to a serial port.
 
-There are some failure modes which lead to triple-faults in the
-relocate_kernel function, which is fairly much undebuggable for normal
-mortals.
+It's disabled by default and has to be enabled with #define DEBUG.
 
-Adding a GDT in the relocate_kernel environment is step 1 towards being
-able to catch faults and do something more useful.
+While I was at it, I also stopped swap_pages from actually swapping pages
+in the case of a plain kexec without preserve_context. Unless I'm missing
+something, that's just a pointless waste of time.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/relocate_kernel_64.S | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+David Woodhouse (7):
+      x86/kexec: Clean up and document register use in relocate_kernel_64.S
+      x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
+      x86/kexec: Only swap pages for preserve_context mode
+      x86/kexec: Debugging support: load a GDT
+      x86/kexec: Debugging support: Load an IDT and basic exception entry points
+      x86/kexec: Debugging support: Dump registers on exception
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 9b6ed08e00ea..2af4ce593645 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -131,6 +131,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	/* store the start address on the stack */
- 	pushq   %rdx
- 
-+#ifdef DEBUG
-+	/* Create a GDTR (16 bits limit, 64 bits addr) on stack */
-+	leaq	.Lreloc_kernel_gdt(%rip), %r8
-+	pushq	%r8
-+	pushw	(%r8)
-+
-+	/* Load the GDT, put the stack back */
-+	lgdt	(%rsp)
-+	addq	$10, %rsp
-+
-+	/* Test that we can load segments */
-+	movq	%ds, %rax
-+	movq	%rax, %ds
-+#endif /* DEBUG */
-+
- 	/*
- 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
- 	 * below.
-@@ -331,5 +346,16 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 	int3
- SYM_CODE_END(swap_pages)
- 
-+#ifdef DEBUG
-+.Lreloc_kernel_gdt:
-+	.word   1f - .Lreloc_kernel_gdt - 1
-+	.long   0
-+	.word   0
-+	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
-+	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
-+	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
-+1:
-+#endif /* DEBUG */
-+
- 	.skip KEXEC_CONTROL_CODE_MAX_SIZE - (. - relocate_kernel), 0xcc
- SYM_CODE_END(relocate_range);
--- 
-2.44.0
+ arch/x86/kernel/relocate_kernel_64.S | 265 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 246 insertions(+), 19 deletions(-)
 
 
 _______________________________________________
