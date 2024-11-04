@@ -4,85 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC796D11185
-	for <kexec@archiver.kernel.org>; Mon,  4 Nov 2024 06:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E9F5D111BF
+	for <kexec@archiver.kernel.org>; Mon,  4 Nov 2024 08:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qRjTOCEwVL6GYNnP7Sc9R/ebfIqpZTNNkBQkUszDHpw=; b=C2m1wqHB54gguc
-	xBup9MPb5+Cyxa0YxoOW6VnXu3Fu421KXZsS+RHqrYb2b+Blb1lNxiB5tJmmoAKnR9CtrmW00q49j
-	1t+Q3ySJpHTaYE/cazKeMzW+bjQ6hYnLn8dZd7sgWkvoRzF2NsFdJBI3/7hMyYrIg1zeT7Nu/hQYM
-	HtJpKwJIoRvFDmcvfSTXQVI30UGrAPwwMzIVI1Blk3BVPXdWk63rek198cJFoETUUWRVtwswIBovw
-	B1Pewjgcq93DxUnIO/CY9Y3veStOoZUOdZcf62mz9rI4YOPASsLi675g75icBvQ8h44etcnmGwt50
-	GDGegRuuMHIBmcwL2IxQ==;
+	List-Owner; bh=agUd8WSGPsH9VUW4rqWrmg5gGIVCm9lU/zjFiHwtMF4=; b=crYPfWmoJ9oX/L
+	MGJVq5/+AVlTSjJdcBmm4etqIjHkflqfTGzuWrk52/2jiH9d+cigH0dai017F0unVKH5stDsy4naZ
+	MeEMijtct+4UTLuLkvsiDcMN5PJ9dJxTkElu8ZfCJCsEGkgQdqUUqfDukFiXXmXvMAnxNa1AXuhja
+	uyKDas9fd5vuZBjR39juwlXeoF60YDBFHsnL8e8LNz5UdQRSboFQvXLkhc6/4CaQdcVPXaRJFadGj
+	ueAeYwEJ4x9LtPFE3Wr3GgZgEyxihVuYkEX3pSS8Jxfqt5JIVEvIsGavQehrGn0duClWzk7b49QGw
+	8mpKDuxmtgr/HVmgxndA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7qSq-0000000CkZB-2LLf;
-	Mon, 04 Nov 2024 06:21:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1t7sas-0000000CzhS-2teL;
+	Mon, 04 Nov 2024 08:37:50 +0000
+Received: from mgamail.intel.com ([198.175.65.13])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7qSn-0000000CkYk-282p
+	id 1t7sZ3-0000000CzLo-2Fyi
 	for kexec@lists.infradead.org;
-	Mon, 04 Nov 2024 06:21:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730701280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Yt6e01JiHs6xDUFc4KUXQd8i1elq2u0nXKuucFyQGQ=;
-	b=C5nfLtGxsFHw+kCR4Io+aPSPNXA28rScFPcj4q+oa91Snmr4y5FMvfG5XImTGPkgV284JT
-	R2hJCqOCUjttUjZ1atgBQDsfMDmc/EIuH6Mxc2tznvZ7+0EjoPn4yht0UtiY2Z95kcWiA6
-	2f6EQdmcR1PKOeUcYq613TEbo3rqZMQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-49-b2Wj_TLPNE6Ox6N8IQMnvg-1; Mon,
- 04 Nov 2024 01:21:16 -0500
-X-MC-Unique: b2Wj_TLPNE6Ox6N8IQMnvg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A026619560B4;
-	Mon,  4 Nov 2024 06:21:13 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.78])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA7C11956052;
-	Mon,  4 Nov 2024 06:21:10 +0000 (UTC)
-Date: Mon, 4 Nov 2024 14:21:06 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 00/11] fs/proc/vmcore: kdump support for virtio-mem on
- s390
-Message-ID: <Zyhn0oz+ze0xY2AR@MiWiFi-R3L-srv>
-References: <20241025151134.1275575-1-david@redhat.com>
+	Mon, 04 Nov 2024 08:35:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730709358; x=1762245358;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kyIazxcsnD1piSdyaQzAEKNQGTi5kMoAlbZhxGC4Hsc=;
+  b=fJkONhyOkKm1cDy3Okj9t/Ns4KabcGWZXakmftba8dG9Y2PoB3RHzFyG
+   7KVg3hW04gAYqXQT8SXw2H1BgUrxO2sfoiawiVPK4YYUyfgfoDWDKQaTt
+   03CL9smQ9IetE064A6k+53q/tPvvYLgdKwqOBvZe9dZIWzrc9XjnisIR4
+   BVIFzm8IqXXCLME65Bv2a0lSI/gzprwMJKCbPhy5Wm1NZEVRZmBUt275n
+   cj+N38kw+S1drcienqS437ZS17AdYt3aOEjzeSROUos5ycEXPakUB5qsl
+   aDUoooDh867mbMy58FvwFxda8RBnULVQbnqNN1KCq+JSZyf+uj61s3nPr
+   A==;
+X-CSE-ConnectionGUID: BV8Q/FviQBa6YyTnATTQ3w==
+X-CSE-MsgGUID: gVgoBvnQSRm6QBhFoty7Gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41501595"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="41501595"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 00:35:57 -0800
+X-CSE-ConnectionGUID: /GZTW6eHQ72wu5JQUTGKsA==
+X-CSE-MsgGUID: NQ0MhvZzR7mR/WXC6VUHpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
+   d="scan'208";a="84031503"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 04 Nov 2024 00:35:55 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id DD1824A3; Mon, 04 Nov 2024 10:35:53 +0200 (EET)
+Date: Mon, 4 Nov 2024 10:35:53 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, 
+	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com
+Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
+Message-ID: <ktwgnbsni5pt2cznxj2g6qyb3xwkhjrciym6lpk3uvsxgi4324@tllciap26vb5>
+References: <20241021034553.18824-1-yan.y.zhao@intel.com>
+ <87frop8r0y.fsf@email.froward.int.ebiederm.org>
+ <tpbcun3d4wrnbtsvx3b3hjpdl47f2zuxvx6zqsjoelazdt3eyv@kgqnedtcejta>
+ <87cyjq7rjo.fsf@email.froward.int.ebiederm.org>
+ <ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20241025151134.1275575-1-david@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241103_222121_649077_10B838C4 
-X-CRM114-Status: GOOD (  28.06  )
+X-CRM114-CacheID: sfid-20241104_003557_650469_4C302988 
+X-CRM114-Status: GOOD (  25.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,58 +91,53 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/25/24 at 05:11pm, David Hildenbrand wrote:
-> This is based on "[PATCH v3 0/7] virtio-mem: s390 support" [1], which adds
-> virtio-mem support on s390.
+On Fri, Oct 25, 2024 at 04:56:41PM +0300, Kirill A. Shutemov wrote:
+> On Wed, Oct 23, 2024 at 10:44:11AM -0500, Eric W. Biederman wrote:
+> > "Kirill A. Shutemov" <kirill@shutemov.name> writes:
+> > 
+> > > Waiting minutes to get VM booted to shell is not feasible for most
+> > > deployments. Lazy is sane default to me.
+> > 
+> > Huh?
+> > 
+> > Unless my guesses about what is happening are wrong lazy is hiding
+> > a serious implementation deficiency.  From all hardware I have seen
+> > taking minutes is absolutely ridiculous.
+> > 
+> > Does writing to all of memory at full speed take minutes?  How can such
+> > a system be functional?
 > 
-> The only "different than everything else" thing about virtio-mem on s390
-> is kdump: The crash (2nd) kernel allocates+prepares the elfcore hdr
-> during fs_init()->vmcore_init()->elfcorehdr_alloc(). Consequently, the
-> crash kernel must detect memory ranges of the crashed/panicked kernel to
-> include via PT_LOAD in the vmcore.
+> It is not only memory write (to encrypt the memory), but also TDCALL which
+> is TD-exit on every page. That is costly in TDX case.
 > 
-> On other architectures, all RAM regions (boot + hotplugged) can easily be
-> observed on the old (to crash) kernel (e.g., using /proc/iomem) to create
-> the elfcore hdr.
+> On single vCPU it takes about a minute to accept 90GiB of memory.
 > 
-> On s390, information about "ordinary" memory (heh, "storage") can be
-> obtained by querying the hypervisor/ultravisor via SCLP/diag260, and
-> that information is stored early during boot in the "physmem" memblock
-> data structure.
+> It improves a bit with number of vCPUs. It is 40 seconds with 4 vCPU, but
+> it doesn't scale past that in my setup.
 > 
-> But virtio-mem memory is always detected by as device driver, which is
-> usually build as a module. So in the crash kernel, this memory can only be
-> properly detected once the virtio-mem driver started up.
+> But it is all rather pathological: VMM doesn't support huge pages yet and
+> all memory is accepted in 4K chunks. Bringing 2M support would cut number
+> of TDCALLs by 512.
 > 
-> The virtio-mem driver already supports the "kdump mode", where it won't
-> hotplug any memory but instead queries the device to implement the
-> pfn_is_ram() callback, to avoid reading unplugged memory holes when reading
-> the vmcore.
+> Once memory accepted, memory access cost is comparable to bare metal minus
+> usual virtualisation tax on page walk.
 > 
-> With this series, if the virtio-mem driver is included in the kdump
-> initrd -- which dracut already takes care of under Fedora/RHEL -- it will
-> now detect the device RAM ranges on s390 once it probes the devices, to add
-> them to the vmcore using the same callback mechanism we already have for
-> pfn_is_ram().
+> I don't know what the picture looks like in AMD case.
+> j
+> > If you don't actually have to write to the pages and it is just some
+> > accounting function it is even more ridiculous.
+> > 
+> > 
+> > I had previously thought that accept_memory was the firmware call.
+> > Now that I see that it is just a wrapper for some hardware specific
+> > calls I am even more perplexed.
 > 
-> To add these device RAM ranges to the vmcore ("patch the vmcore"), we will
-> add new PT_LOAD entries that describe these memory ranges, and update
-> all offsets vmcore size so it is all consistent.
-> 
-> Note that makedumfile is shaky with v6.12-rcX, I made the "obvious" things
-> (e.g., free page detection) work again while testing as documented in [2].
-> 
-> Creating the dumps using makedumpfile seems to work fine, and the
-> dump regions (PT_LOAD) are as expected. I yet have to check in more detail
-> if the created dumps are good (IOW, the right memory was dumped, but it
-> looks like makedumpfile reads the right memory when interpreting the
-> kernel data structures, which is promising).
-> 
-> Patch #1 -- #6 are vmcore preparations and cleanups
+> It is hypercall basically. The feature is only used in guests so far.
 
-Thanks for CC-ing me, I will review the patch 1-6, vmcore part next
-week.
+Eric, can we get the patch applied? It fixes a crash.
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
