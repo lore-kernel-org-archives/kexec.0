@@ -4,68 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51EEBE67806
-	for <kexec@archiver.kernel.org>; Sun,  3 Nov 2024 05:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A656D11183
+	for <kexec@archiver.kernel.org>; Mon,  4 Nov 2024 06:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aUkJi39GwyVNF9StiVnMJaWqDvPGCIzWSM9GsxVyM2o=; b=p0yz14twhBS3zY
-	FuxsWdlczTF+j05cmFBnHxWZt5nwMODk5BBANVhRsHrVHMLTDqJ6dhKWEGoUOloGovyH59UlKVCUS
-	qTZQ3b7pDJ+tQyHMpqO7CpTRf/JDpkJvAlaIClsj89DKjfqBjH+LvxmePCTIdOzD9bwn30Gxy4TqR
-	/o4kl08mCscs7gwIQyGi9MfxYJrhwQn6TAdP+6koZ4tmpp/adw5KfsHttFSBfJuMb2T+j7s+aEttZ
-	b443MLcRci22nK7nw9uZZMo0zG5HQ82N6Dhs+GNlQZ5rG+/Gjs/5iKm6RiSNaT4jEGbq4KmBwOymw
-	RS9zWqdgBwomV2sEYgwg==;
+	List-Owner; bh=/r0D1fzxP08DPM1Mhtsw52CPy50i/CtyJxN1In01ifc=; b=3F5KtrbRWNOHNo
+	T+3clmL9d5MEC0jJOA2Z8MTZkgc6PMtRmGkxxdzYx6ajSGC18csGzBpmD7B1cKLsfLwCed8PlNzLM
+	wy6zafTITMBvEUvIwLhqg16ou4sNFZMjuPi1DOvxtqEjR78GaZ4MFYcZ81vAW+pudq8BjGPfosISD
+	rZ3mhHS3kF47ZGWXSkhyiU5c8V/jTW/in9c+GpCbIQkAwOBnFLc3ilfSYhhhN+WXk2ZZcJP4d7lvU
+	ve3p2R3d755p7XFdTsgjWLL73RnlgFjlJ4CVBft8BS26DrS53cFxe8BLVqBT7dRwVloVKJ9cw669k
+	7n28ZVp5gMzd470sXgOg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLt-0000000Azc8-3efk;
-	Sun, 03 Nov 2024 05:40:41 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1t7qPg-0000000CkKi-17QZ;
+	Mon, 04 Nov 2024 06:18:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLs-0000000Azb8-3W0Z
-	for kexec@bombadil.infradead.org;
-	Sun, 03 Nov 2024 05:40:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=ZdZ+nlAayZckzp2Spz6rpIxa9MO+4/e+5j0I1vjYVzw=; b=C7uD+miHpdzhuY8kUB3Jx01O1r
-	yAObd9yToflETXCD8JZVihND7D94qZx3ypGkLw4xgVPaICWvF5pfN3Wlf7ASg+NPiQDmO6N0QDplJ
-	+WYz2QC1k+JQLhsKeCx1L78DSaHCbcBfvE9LjFDESocunEi68Lm3u6dPit8ZRsm6q+8K3tvefWxQC
-	RzCTbUSDTB9TErCocvuHGJ3Oo7vc43UbVExPx++YTG25Lc/7nICWtIRIoRlgugRRszoBSSEJ7f9bJ
-	e8/3pSQNIX2ULMdzcc8F0sydMW/q/c/j3HS51E8hp1pAtzOrbK+yd1SV7hpvQW9DTPRk+/pUcmXVA
-	qHmfjxCA==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7TLb-0000000B4NU-46Mw;
-	Sun, 03 Nov 2024 05:40:38 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1t7TLa-0000000FvL9-3Dh7;
-	Sun, 03 Nov 2024 05:40:22 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org,
-	Simon Horman <horms@kernel.org>
-Subject: [RFC PATCH 1/7] x86/kexec: Clean up and document register use in relocate_kernel_64.S
-Date: Sun,  3 Nov 2024 05:35:26 +0000
-Message-ID: <20241103054019.3795299-2-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241103054019.3795299-1-dwmw2@infradead.org>
-References: <20241103054019.3795299-1-dwmw2@infradead.org>
+	id 1t7qPb-0000000CkKE-1bWb
+	for kexec@lists.infradead.org;
+	Mon, 04 Nov 2024 06:18:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730701080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Do/2TiELOGIeqU3m4GK74cp6r6SIjB0QSr9SYGDc+Tc=;
+	b=F8qd860iqM807yJMtKDFVnQeAOyiAkva9vlyQRrdu1U2h3rxvRrW91nwDKsiSt4u2RSV9J
+	x+DD4Tu/ajTRngXLIysi7oklHoi4MXN1/K29OTOLybdMNGlgy7jB/CED0D3DrZVPHevAHe
+	ouJcGr1Fbv+pBuQpQwZdzBNprLpdVh8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-533-2cIPdUKtPMy9hOiHaNGHWw-1; Mon,
+ 04 Nov 2024 01:17:57 -0500
+X-MC-Unique: 2cIPdUKtPMy9hOiHaNGHWw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F5A11955EE9;
+	Mon,  4 Nov 2024 06:17:55 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.78])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF30719560AD;
+	Mon,  4 Nov 2024 06:17:52 +0000 (UTC)
+Date: Mon, 4 Nov 2024 14:17:48 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	akpm@linux-foundation.org, Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <ZyhnDBmhvsG2TZ5V@MiWiFi-R3L-srv>
+References: <20241029055223.210039-1-coxu@redhat.com>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Disposition: inline
+In-Reply-To: <20241029055223.210039-1-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241103_221803_522312_FB950BB6 
+X-CRM114-Status: GOOD (  11.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,73 +92,21 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Hi Coiby,
 
-Add more comments explaining what each register contains, and save the
-preserve_context flag to a non-clobbered register sooner, to keep things
-simpler.
+On 10/29/24 at 01:52pm, Coiby Xu wrote:
+> LUKS is the standard for Linux disk encryption, widely adopted by users,
+> and in some cases, such as Confidential VMs, it is a requirement. With 
+> kdump enabled, when the first kernel crashes, the system can boot into
+> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore) 
+> to a specified target. However, there are two challenges when dumping
+> vmcore to a LUKS-encrypted device:
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/relocate_kernel_64.S | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+I am doing RHEL code rebasing to upstream kernel, will review this next
+week.
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index e9e88c342f75..c065806884f8 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -100,6 +100,9 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	%r10, CP_PA_SWAP_PAGE(%r11)
- 	movq	%rdi, CP_PA_BACKUP_PAGES_MAP(%r11)
- 
-+	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
-+	movq	%rcx, %r11
-+
- 	/* Switch to the identity mapped page tables */
- 	movq	%r9, %cr3
- 
-@@ -116,6 +119,13 @@ SYM_CODE_END(relocate_kernel)
- 
- SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	UNWIND_HINT_END_OF_STACK
-+	/*
-+	 * %rdi	indirection page
-+	 * %rdx start address
-+	 * %r11 preserve_context
-+	 * %r12 host_mem_enc_active
-+	 */
-+
- 	/* set return address to 0 if not preserving context */
- 	pushq	$0
- 	/* store the start address on the stack */
-@@ -170,8 +180,6 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	wbinvd
- .Lsme_off:
- 
--	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
--	movq	%rcx, %r11
- 	call	swap_pages
- 
- 	/*
-@@ -183,13 +191,14 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	movq	%cr3, %rax
- 	movq	%rax, %cr3
- 
-+	testq	%r11, %r11	/* preserve_context */
-+	jnz .Lrelocate
-+
- 	/*
- 	 * set all of the registers to known values
- 	 * leave %rsp alone
- 	 */
- 
--	testq	%r11, %r11
--	jnz .Lrelocate
- 	xorl	%eax, %eax
- 	xorl	%ebx, %ebx
- 	xorl    %ecx, %ecx
--- 
-2.44.0
+Thanks
+Baoquan
 
 
 _______________________________________________
