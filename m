@@ -4,77 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E9F5D111BF
-	for <kexec@archiver.kernel.org>; Mon,  4 Nov 2024 08:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04703D132A3
+	for <kexec@archiver.kernel.org>; Mon,  4 Nov 2024 09:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=agUd8WSGPsH9VUW4rqWrmg5gGIVCm9lU/zjFiHwtMF4=; b=crYPfWmoJ9oX/L
-	MGJVq5/+AVlTSjJdcBmm4etqIjHkflqfTGzuWrk52/2jiH9d+cigH0dai017F0unVKH5stDsy4naZ
-	MeEMijtct+4UTLuLkvsiDcMN5PJ9dJxTkElu8ZfCJCsEGkgQdqUUqfDukFiXXmXvMAnxNa1AXuhja
-	uyKDas9fd5vuZBjR39juwlXeoF60YDBFHsnL8e8LNz5UdQRSboFQvXLkhc6/4CaQdcVPXaRJFadGj
-	ueAeYwEJ4x9LtPFE3Wr3GgZgEyxihVuYkEX3pSS8Jxfqt5JIVEvIsGavQehrGn0duClWzk7b49QGw
-	8mpKDuxmtgr/HVmgxndA==;
+	List-Owner; bh=5Ak/ZgfNEzQzZSi+tiL1pV0XuRci5KcqQhKOi7WrpAg=; b=rhCNlCw2OZVDqO
+	GtbOWioIs4yyj4/pzjcCAbRe59N7GCFcfLJrmssW7DsG98w5TrjP6sU2DggOI4nfcCLGWyzDil8ZM
+	LbRv6g+ELSn6HFpE544E1u8RWGG9vEQyhfb2iCUfpIzmq1GHuLcsWJLeOee8b1LfdV6V4Hp+gY6JR
+	9kSUI0PhV/NEbuTtnBrsqvPYcI3Qd979IfmOs7XRpMf3W+/Jeb6Fe/pDXSKoMRQ1a1ZaegBXglWCB
+	/OfgTpriFZJ0RulktYb64pvnShHMENaW1aIXlm6enYSI5Zg+DxT2mPeysKgEXQKycuk7S6BgC7OQM
+	iPTiQXVqbeKybxHwowuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7sas-0000000CzhS-2teL;
-	Mon, 04 Nov 2024 08:37:50 +0000
-Received: from mgamail.intel.com ([198.175.65.13])
+	id 1t7tOx-0000000D9wT-2eFh;
+	Mon, 04 Nov 2024 09:29:35 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t7sZ3-0000000CzLo-2Fyi
+	id 1t7tOv-0000000D9vZ-2xxQ
 	for kexec@lists.infradead.org;
-	Mon, 04 Nov 2024 08:35:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730709358; x=1762245358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kyIazxcsnD1piSdyaQzAEKNQGTi5kMoAlbZhxGC4Hsc=;
-  b=fJkONhyOkKm1cDy3Okj9t/Ns4KabcGWZXakmftba8dG9Y2PoB3RHzFyG
-   7KVg3hW04gAYqXQT8SXw2H1BgUrxO2sfoiawiVPK4YYUyfgfoDWDKQaTt
-   03CL9smQ9IetE064A6k+53q/tPvvYLgdKwqOBvZe9dZIWzrc9XjnisIR4
-   BVIFzm8IqXXCLME65Bv2a0lSI/gzprwMJKCbPhy5Wm1NZEVRZmBUt275n
-   cj+N38kw+S1drcienqS437ZS17AdYt3aOEjzeSROUos5ycEXPakUB5qsl
-   aDUoooDh867mbMy58FvwFxda8RBnULVQbnqNN1KCq+JSZyf+uj61s3nPr
-   A==;
-X-CSE-ConnectionGUID: BV8Q/FviQBa6YyTnATTQ3w==
-X-CSE-MsgGUID: gVgoBvnQSRm6QBhFoty7Gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41501595"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="41501595"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 00:35:57 -0800
-X-CSE-ConnectionGUID: /GZTW6eHQ72wu5JQUTGKsA==
-X-CSE-MsgGUID: NQ0MhvZzR7mR/WXC6VUHpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
-   d="scan'208";a="84031503"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 04 Nov 2024 00:35:55 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id DD1824A3; Mon, 04 Nov 2024 10:35:53 +0200 (EET)
-Date: Mon, 4 Nov 2024 10:35:53 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, 
-	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
-Message-ID: <ktwgnbsni5pt2cznxj2g6qyb3xwkhjrciym6lpk3uvsxgi4324@tllciap26vb5>
-References: <20241021034553.18824-1-yan.y.zhao@intel.com>
- <87frop8r0y.fsf@email.froward.int.ebiederm.org>
- <tpbcun3d4wrnbtsvx3b3hjpdl47f2zuxvx6zqsjoelazdt3eyv@kgqnedtcejta>
- <87cyjq7rjo.fsf@email.froward.int.ebiederm.org>
- <ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm>
+	Mon, 04 Nov 2024 09:29:34 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id BC4DF5C51B2;
+	Mon,  4 Nov 2024 09:28:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2528EC4AF09;
+	Mon,  4 Nov 2024 09:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730712572;
+	bh=2JURijHNV+KemUfDU5wkI0i6KLCZZ11iq9Wf/qgx0vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=seOuwwpmc4+XPpKRPh1tpDeO8LnLjHrpangCLPXlZRRzeNqYFmL0pmiDQcWr0G66x
+	 8KCMIEARpPbteRdARmIfNPih2K469/FERZOGGyXqxy4t4VAKT768coptEcNdLqbPWr
+	 6qdveBFDHXJPEzmtW4CQR9VoTwnejzMkItLUhGUqGRrOcZPGPf6I2yFQHkhgK3Ix09
+	 Zl5Nct1zDc7clTchxyYD17KcP20a8t20BIX8zwsOmPr2V5arxR7tHEwmADGU2E4fwc
+	 vqgHQ6QsWQFurnrJasenjMOhuZZ9EYuYhoz/bdJ2yk4rq7mwL+cgZTRWHpsYHaOyex
+	 t2dmRbG97098w==
+Date: Mon, 4 Nov 2024 09:29:28 +0000
+From: Simon Horman <horms@kernel.org>
+To: Chen Haixiang <chenhaixiang3@huawei.com>
+Cc: kexec@lists.infradead.org, louhongxiang@huawei.com,
+	wangbin224@huawei.com, yangyanchao6@huawei.com
+Subject: Re: [PATCH v2] Before adding to usablemem_rgns, check if the memory
+ range is already included.
+Message-ID: <20241104092928.GR1838431@kernel.org>
+References: <20241021120025.1430-1-chenhaixiang3@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm>
+In-Reply-To: <20241021120025.1430-1-chenhaixiang3@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241104_003557_650469_4C302988 
-X-CRM114-Status: GOOD (  25.15  )
+X-CRM114-CacheID: sfid-20241104_012933_808406_BB220279 
+X-CRM114-Status: UNSURE (   8.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,53 +74,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Oct 25, 2024 at 04:56:41PM +0300, Kirill A. Shutemov wrote:
-> On Wed, Oct 23, 2024 at 10:44:11AM -0500, Eric W. Biederman wrote:
-> > "Kirill A. Shutemov" <kirill@shutemov.name> writes:
-> > 
-> > > Waiting minutes to get VM booted to shell is not feasible for most
-> > > deployments. Lazy is sane default to me.
-> > 
-> > Huh?
-> > 
-> > Unless my guesses about what is happening are wrong lazy is hiding
-> > a serious implementation deficiency.  From all hardware I have seen
-> > taking minutes is absolutely ridiculous.
-> > 
-> > Does writing to all of memory at full speed take minutes?  How can such
-> > a system be functional?
+On Mon, Oct 21, 2024 at 08:00:25PM +0800, Chen Haixiang wrote:
+> When kexec_iomem_for_each_line() reads from /proc/iomem,
+> concurrent modifications to /proc/iomem may lead to
+> usablemem_rgns recording duplicate Crash kernel segments.
+> This can result in the number of retrieved Crash kernel
+> segments exceeding CRASH_MAX_RESERVED_RANGES, triggering
+> a realloc of the crash_reserved_mem in usablemem_rgns,
+> which could crash the process. We should ensure that each
+> range added to usablemem_rgns is unique to prevent these issues.
 > 
-> It is not only memory write (to encrypt the memory), but also TDCALL which
-> is TD-exit on every page. That is costly in TDX case.
-> 
-> On single vCPU it takes about a minute to accept 90GiB of memory.
-> 
-> It improves a bit with number of vCPUs. It is 40 seconds with 4 vCPU, but
-> it doesn't scale past that in my setup.
-> 
-> But it is all rather pathological: VMM doesn't support huge pages yet and
-> all memory is accepted in 4K chunks. Bringing 2M support would cut number
-> of TDCALLs by 512.
-> 
-> Once memory accepted, memory access cost is comparable to bare metal minus
-> usual virtualisation tax on page walk.
-> 
-> I don't know what the picture looks like in AMD case.
-> j
-> > If you don't actually have to write to the pages and it is just some
-> > accounting function it is even more ridiculous.
-> > 
-> > 
-> > I had previously thought that accept_memory was the firmware call.
-> > Now that I see that it is just a wrapper for some hardware specific
-> > calls I am even more perplexed.
-> 
-> It is hypercall basically. The feature is only used in guests so far.
+> Reviewed-by: Louhongxiang <louhongxiang@huawei.com>
+> Reviewed-by: wangbin <wangbin224@huawei.com>
+> Reviewed-by: yangyanchao <yangyanchao6@huawei.com>
+> Signed-off-by: chenhaixiang <chenhaixiang3@huawei.com>
 
-Eric, can we get the patch applied? It fixes a crash.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
