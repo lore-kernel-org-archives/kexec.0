@@ -4,206 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED56DD12676
-	for <kexec@archiver.kernel.org>; Tue,  5 Nov 2024 10:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD033D2B950
+	for <kexec@archiver.kernel.org>; Tue,  5 Nov 2024 15:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=L8xZj73mVzJEQureMtpee/NwVYIVSEb3ZaDEzVhWvz8=; b=C2hPB5jt/bZaIP
-	SujSbNURo334WCqnklSQr+qUhlFhY5WRFoCtTdriYkhFlEwKWXDgBolXU7/5lS2HGwMnz6MZKynfr
-	H1uQzlimnJyxuAWfVBk+Eztknu81E72oP+VF4RlcnP2BOGO3ZL//Sbx3xDxEwjvrLJTwGrskg7vac
-	MgGb40Nu/U7kmqCw77npUuMo2Q6A+tsu8wpd9xNci/vAxuIK54pEjTTbImevXPuryZ6Wm3cxJAPkM
-	55H+KasyxBIDvD2PVppTD9xpOQPv7hYgp//LC+bbZNSxzjyGWe5vX2RnzIzg28QyURPE6RlX3KdaH
-	WaKAFVy1anm/sRkOQ8kw==;
+	List-Owner; bh=rG+IiUtJP4f6sMNqKH73pvLZ0l422+yUo7jJwZvnqCQ=; b=TSQQb39HFtH2J5
+	PaiYqyqp+NR9e63aFlGkmHjdzNXVvIwFIBcPkoaZqzLVRAltMK9x4r+KlCu81QpytnFN0o2VX9Zv9
+	IUndNuISfDnXjqWVZNiF9KaIrP882+Vd974XNQSSsKM1zlLLaAkvUabXNw8uTQo2wMx9x5AM/sNzh
+	1Hq03nor5A2rJvbC6gkisUpLWTPwcr0A5Gpmx3nzFb+whZGY9AsdZJa4gve0sfe0T6J1ZU/6loWPP
+	SbcJSySIvo51eXbE0ilLlP6qF813rYV2xO0SCPU3JFUjPOrNneMLaUdmDlRYHPdoMyOZUEq3gMpB/
+	tbvfM8EsrnrXfjIN7aEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1t8GRX-0000000GcbC-01sA;
-	Tue, 05 Nov 2024 10:05:47 +0000
-Received: from mgamail.intel.com ([198.175.65.9])
+	id 1t8LwV-0000000HWc7-21pk;
+	Tue, 05 Nov 2024 15:58:07 +0000
+Received: from out-174.mta1.migadu.com ([2001:41d0:203:375::ae])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1t8GMu-0000000Gbqf-0Dq7
+	id 1t8LuH-0000000HWEB-0W3w
 	for kexec@lists.infradead.org;
-	Tue, 05 Nov 2024 10:01:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730800860; x=1762336860;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=aWatiM/UaQBp2iCQT2Oc+grpQxw7bOZjhmNbubKpEGk=;
-  b=nhNWHddDfTpx/qaZI8rJ/FXV1RELHOuZcLCNlcNgf6TUF4SQ6et+6vvP
-   f32y0U5nUwhcwCJ13fDjSY+NQ/RQqkXsJ8mQC0UxOtFWjPpe4ULtgzMVl
-   fDgIiyG/DHZgpdAWAgUiCoF0uQMH4/DsVGPIih4ZdXmyi8f4QpPFbO4vO
-   ZkG2EDBAODdnGOUSzzc79MKKCBCX5eONLguxfWPttudj+MRSZmBCa3lCl
-   07xDTXrjKcrE77IW5FBUZhnra3Y44B2kEepMx2x6Qx1lxWnOce0DwPG/R
-   uLrS2gvG05zYGA1o3P03GCk01cXDoRKMnFFG6e6p+AUpU6SHXeJnYMZ5h
-   A==;
-X-CSE-ConnectionGUID: apfQfX5VRoSytyUWtHV57g==
-X-CSE-MsgGUID: LHI/qp33SL+BvTlTI9yJDg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="53104609"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="53104609"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 02:00:59 -0800
-X-CSE-ConnectionGUID: jtA1Pqf8R/2nHE6SrNk2Aw==
-X-CSE-MsgGUID: 7yDRWZBORrqS6+ao66JH7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,259,1725346800"; 
-   d="scan'208";a="84059938"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Nov 2024 02:00:58 -0800
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 5 Nov 2024 02:00:57 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 5 Nov 2024 02:00:57 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 5 Nov 2024 02:00:57 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oYrWYXU89K4mzzeHIwdYNDQw89Xq3B/L6BZl/UFXmvxy4mEmUxpBrytD7YFqOtfxXoO2Po9doWwwwau6nqeQkOYycRwRl5jyw3CoweDMrYvwk5s8ulwODQQolMYDLctterRs+APHgI5hi+sw/8o5h/Kx4xNnOC7ZtkG4qKRke/L2ceBnJsCSQ9shdzONhbMR8WPGlwBzhlvAtRY3sm4t4K+jp6c0aBSpAxSz5mQqRhNowA3cauLQEeryNpA4Heizy3ETTOCHudHPL2E2ho4eaq2gLxBsXV/7QGgKf/heJP9nouXh3TdCPqNT+JFAuKxAYtZjqyScKSWZw5ZRjGlQTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aWatiM/UaQBp2iCQT2Oc+grpQxw7bOZjhmNbubKpEGk=;
- b=lv8PPN78VCBqmVnss4TklpWzH73GV+I8nre1Iv5c94GTEhidGm5iRPDH/aQIEu4a6Pgz2AjiFxGxZNOGnekdvPKBQqZuRDfPOixgoGXwuPdP2ws1K/GUjtdc2k1jBFnRucjgy7LAX8c5rM68JLobrvT1aG8oTisbtvmtecI1Azn7OcLSBKzdkl0YRu0h37KjbH5r41UYoFaJZsgFy15hOqMDv4x3FdfBprGPh1WfCZ/vdOa1StI0wt+TnnS7M6DBAla+scbSsQaPhk2qrp3gt02g6a7jdCxvIos4e/lW57R4pK5S+MMS8ANNu9ZDt7V+0CA7wyKk5sSC5rRoCt1OmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by IA1PR11MB6121.namprd11.prod.outlook.com (2603:10b6:208:3ef::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.29; Tue, 5 Nov
- 2024 10:00:55 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b%4]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
- 10:00:55 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"dwmw2@infradead.org" <dwmw2@infradead.org>
-CC: "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "horms@kernel.org" <horms@kernel.org>,
-	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "nik.borisov@suse.com" <nik.borisov@suse.com>
-Subject: Re: [RFC PATCH 1/7] x86/kexec: Clean up and document register use in
- relocate_kernel_64.S
-Thread-Topic: [RFC PATCH 1/7] x86/kexec: Clean up and document register use in
- relocate_kernel_64.S
-Thread-Index: AQHbLbL4YouOxajXUEGNhWd+ldKSc7Kod8yA
-Date: Tue, 5 Nov 2024 10:00:55 +0000
-Message-ID: <b7282cfd3cf15462cfbc89bab9c09bcb8791b33c.camel@intel.com>
-References: <20241103054019.3795299-1-dwmw2@infradead.org>
-	 <20241103054019.3795299-2-dwmw2@infradead.org>
-In-Reply-To: <20241103054019.3795299-2-dwmw2@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.52.4 (3.52.4-1.fc40) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|IA1PR11MB6121:EE_
-x-ms-office365-filtering-correlation-id: 66e75bdc-32ec-4e96-c4a4-08dcfd80bd52
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?VzZDcm9JYWNJdXVQSjdHVXozV1ZQL0lUckNOcFVJc0dqREhRS3B2bUlDdXps?=
- =?utf-8?B?enk3VlJha2FocERxU0dUWSsxc0s5NzVtOGlpbWxhbmVrNDBTSHhTdi9NRUdX?=
- =?utf-8?B?R092bkN1ODdqOEZGeUxON2s2Q2pPWnp2Ny9VNnQ1QkxreGdGMUlQSGFBL1J4?=
- =?utf-8?B?NXl3TVpwVUFYS3Z2VGo1NFF6bU50OW9SQ0F4eDdVQ0I5dmZmRkZpZUJta3JR?=
- =?utf-8?B?dUxlMVFrNW9zbFBEbkxONjN4ZWNiMHFRSDJXUUFWb1pQemQxMVNnS2ZXTUJU?=
- =?utf-8?B?d3hSaXBNWU5iOEFxZHVmN2dRYnJXRHJWNzllZFlQM0gvV3A5TzlWaVVMUHRP?=
- =?utf-8?B?TGlZOWlZMVRyZG1ocmp4RjZGaFlIb0xsZnlMcHpQQnprR2pQcVpYdUdxQzlW?=
- =?utf-8?B?ZXc3ZjAwR1c1eXZDUEUza1JBaXF6dklobG9qTXhmQXNzR0xrNE8yMzVZQThm?=
- =?utf-8?B?SUEwWURLaHk2MDdxdlZOVEg0UUlaMFg0dWUxRmdWWXhxL2UwQjQ1SzRCZFhq?=
- =?utf-8?B?V28wMGcwYjFLbENmcFI1RTlXUlo3NkNWelJsN2luMnJZdFBNeDNERmdQUk1L?=
- =?utf-8?B?NENKV0l1R0hlTWpUNHlGL0owTUgwUmZVbHVyckIrbzRQWi9DcW5qQlF3Vy9W?=
- =?utf-8?B?V3ZxWGhNSTgxWDJla3VUcGJ2MzE2YnVBV2J3Z2dqVWg2VCtaUWY5aWNVZnhF?=
- =?utf-8?B?NU9iMytzc3dQRzNYNklHUkt3Z09vc0IwM2RoUnJIYVpiakFpZGVHMTBzNUhG?=
- =?utf-8?B?OWp0UlRFejVrdUZHRlViM1FwYkUvWU5lM3gyOUNGTXlTNk1tWUhvMGt6YWdE?=
- =?utf-8?B?KzZ0ZU9yVUFDUGVUQjdlWEFZeVUrakNMUGxqVEZMTzhUV0IwRG5HQ1U5dlBY?=
- =?utf-8?B?M05xbnpUQkFBR2hKZDdwelJ2cDl2S1NjalR6TnpYVUl5N1JTR29uaTNhdi92?=
- =?utf-8?B?ODNYZkFqemxpY3FPaGxHMHF1QjNpWllZa053RlRWTGFuVVQ2SlVSTUJndUpB?=
- =?utf-8?B?RmZRQ2Q4cnFac0NwWlFxOTV6dWNxbFVLblNXYWEzNW1KZGs0d1ljWkFBUXdF?=
- =?utf-8?B?RkM2VnpIbDl2akt0ZzJubTNLOEFWanRIenJYOExuNFJyY255MWhwRHl1NFlh?=
- =?utf-8?B?Z1JnUUt0VEJYaDZkb1Bld25iNG9tWm5vekFxeDZ3dysvbnQ0VVhHWTNTTTI2?=
- =?utf-8?B?a29SWHpMS3RrK1VkZFJ3ZWZ6dVNmM25ETVpjeVUwYlc3aTdDM2JBbC9jcW1L?=
- =?utf-8?B?Y3R5OWRaYlJmdjF2NGtOLzI2aFdvdTFRVXUrelNSbVNuQzlUVnZUUVRRbVhq?=
- =?utf-8?B?MHZ2N3hveUhBK1BNOSsvU1Q2cnFScm1VWG5LTW9TNDcyY1VSOHlBZGhZSkF3?=
- =?utf-8?B?bk9MOXVTSHRpYkZUOG5VWXJvYnd0QXJ3bW1lKzBMNzhib0ExZXdKR2dSL0Fl?=
- =?utf-8?B?U2R6eWJSbG52cTMwT1V3K0JOTkl0ZmQ3MzNITUFxdi8vcHdCV0ZQTXV3Zzcr?=
- =?utf-8?B?KzlxamVWTW9odGJ3VnNGTWpIOHd0Nlc1UjhlWGtLRU9XLzBYdUhRaE96MG5v?=
- =?utf-8?B?SzIydVQ2dFRwZzN6Ynl2RjZjcjVzeWVSQnpkdGgxVG5QT0tsR1JpVVBFK211?=
- =?utf-8?B?eSt4ODkzdTVJSkU5OU9CNXZ3N1Qwd092d2h0RGZabmRIbDRZRlNkbmEraUlE?=
- =?utf-8?B?OTdBNGhuck1LVXhDTnlnNFNzaW1QOWRZYUhmditvSFVyNTdCbWVLM2lKSEdr?=
- =?utf-8?B?NFlHUmlxejY1NkMvWmd3bG4vM2NacWtZanF6d3lkaXhqL2x4Sm1tTWxaUHVV?=
- =?utf-8?Q?FlR0UFh5a2eZz4dK+TMtOENSjAW9LV54lEl8U=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WnJJTk1OYzN1Qm9OK0pZUk5pR1p2bzJjaE9OS01xYjh2QnQwYTlxZSs3WWhS?=
- =?utf-8?B?Q3Exdkh6djlyTHk0R0tlUzBBMngzNnNEa3pSc3graVVuaEhYRFBvTndxM21H?=
- =?utf-8?B?c1NtR01JK25IZURmWFBMZUlBSG80dzR0akJGdWphdDRLbzRvTGxDNktndmt3?=
- =?utf-8?B?NlU1dkJoQ25QMjRFeDZteUw0NWJHUWRGeWhOSlhoMEpMbXp1bjkvS1psV3B1?=
- =?utf-8?B?VFZ6NTFYTTB5dTBrUHNtcXFUdFUxOHRQRHRXazJ0S3RBdjErTGFFZG9FL250?=
- =?utf-8?B?ZUpySXJrdFRlRzcxQlZCQ2lNYUg4WFQ4RWpLcEs4dDZsUjRvbzZOMlU5TDFH?=
- =?utf-8?B?NzJWQVRtWUtJbEZleS92SG9hSkp2VjB0M2lnYnh0ZXR0NmVaRmxhbjlYS1RM?=
- =?utf-8?B?UG5DM0lqTHBlbmlyY2dZc1l5dGhLMktycCt3Z0VGdVdjbDdRR21FN2tFcktZ?=
- =?utf-8?B?NXE3TGM4OGFwVm1ZU0tZaldTUXJtcjhaUEhwMW85TCs2enJLNXlvT2J2UEpy?=
- =?utf-8?B?d2hWcWpOTlJzKzhGVmdZN3E4YUF0OUt3NXJFWlJRNFZ5T016TnJPV2l4TVEy?=
- =?utf-8?B?bjU1V04xWFhrM0N6T1VXR1hqRld2ajN3VmsybzlyamNDVEdISEJtUFp2R3ds?=
- =?utf-8?B?T1FzZ2prdXkvUHRZblVTdXdpeWFManVqa1JTVGMzU0Q1QlQ2ZUNZV2xKdWNB?=
- =?utf-8?B?TFpkak5HTjBWdzFvOVR3WEVpNXhBZ1Znb05lZ2EwM0tlYWZIRzFtWDByTndw?=
- =?utf-8?B?YnMvcmtMUTBNbXJBcC9NL2dhL2FuRW5LVFhFTnhlVUpITmV1N3JPYjVJaWJy?=
- =?utf-8?B?MnlkS3hZVFJDTlFaSjBCZUtPazJZVmlWUCtBUTB4aDF5VURFd3plaElNTlo4?=
- =?utf-8?B?QmxvdUJ3eFJZNHFZWVVVUjMwTDZ4UjBLQVA4NldZWWdUc2dDcFB0enR3dStZ?=
- =?utf-8?B?cWNROVM1aVVDQUk1MlhJNUFoMFBPUHJERGFxSTE1VVlYc0UxNnkyWU1VWkRG?=
- =?utf-8?B?NUE3UDErRlhXaUd6SU5LVXJPa1JIZzJpRE54ZnlMLzlIeDdZaXN6YlFwcFRm?=
- =?utf-8?B?eDBIeSt0a01SYVNLaHFZZUFFZTd6WHNvQVlzM1JSLzVLYWl3SmlMelpCQ3pE?=
- =?utf-8?B?WndPaVpsOC9wWk9rOFlIZWRLVHplZXprRHVIdVVmcUhwaXVsU1FlVE1GZDZr?=
- =?utf-8?B?RnJxRjZJWnJiSEJoRzQrM2JEc0NTRXVnakZtU2RQUngyYkQ1VWJUTG5xYlN2?=
- =?utf-8?B?VmUwdGxXVlhFQlJiUTE3cVR0STZTekgzN1BsemFKZUkweHhoczZ2clNuVE84?=
- =?utf-8?B?b0NIcWd4RFJweDVpQ2xoSUhxekNENDlVK1NXbHM3V1NyczJUTEk1UUlCazY0?=
- =?utf-8?B?dkRvcmhVZnBaTEU5VmkvUmtYOUthRkxaWnhtWFY5bnJMRU5WWEJTRUdRaVZ0?=
- =?utf-8?B?Y3I1ZUhvSDRYQnJ6WElYb0RpQnNmeVI3Y2QvMkNVa3lQaXJFSTFrRVlQbEwr?=
- =?utf-8?B?VXQwZUUzZ1VoTkRXdm9xalZkbG5QRXZWOWliRVgwVzhHc0VQKzBCcUNjSWxo?=
- =?utf-8?B?NmErNlhWSDdMMHhxWmVGZ2I1S0w4YU05SDVEVU5sN3g0TTYxd2VlTStabUh4?=
- =?utf-8?B?LzlVMldQYjlVbDJLeEQvUXIycE8rWnFTWmNNcWsyc2FzZnVXb3ZaaS9zZ3RT?=
- =?utf-8?B?dlVHRG9FcUUrOVFMV2llbFZqbWEya2J2c0d4dUNZSGVKY1FJaStmR2xQVVlX?=
- =?utf-8?B?c3VkRjk5RFJBd2ZsVEFaU2pCc24wajJmTkM4cXA0UHdUeUVJQjY1STFyckJy?=
- =?utf-8?B?N3JvWUNPb09rOHVnaDJZUm82c05oWjA5OUNiRXdyQUdwbitTZHNnSHJHTVJi?=
- =?utf-8?B?SUt6YXRuYXJOb2pZOStUeld2Rjl1ZlNOVE9nQmVuSFEwQ3lkTjVBUkpILy90?=
- =?utf-8?B?U0lTS3lNMjdZU2pGUzB1OEwvT1dobkx6cnU5QmUyTDQyWnVScWE0dXV0RlNJ?=
- =?utf-8?B?TmkydXlkWHpwMkUrUDlGbFZ6Mmtjdjdxd2hnZEtQMmpMeVhsK0QrRzJFRTRp?=
- =?utf-8?B?ZitsY0Z4WkIwQWlGdEVHUmZlMXhVM1RFUGtNandTY1BURkUyUUZaRXY3KzBE?=
- =?utf-8?Q?QfwPaK8omh6qccmKDWLGk4sMr?=
-Content-ID: <28C933F35D6C1C469A9D5AFD7B88334A@namprd11.prod.outlook.com>
+	Tue, 05 Nov 2024 15:55:51 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1730822139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0EuUsdK8fEGUB6ZfmWdVcefFHr5cHk997POUTni/11k=;
+	b=gT1tRnBMkjAbEq6crVfW4D3AojwyteAQ0nAj+U4HzVZwKuE8LJucqhoCHgRgDZX9IufDjr
+	BxkPeIbO8K/nPaFjx4kkh4R+qIhR02SDqfkEMA26kvSX04zVHJv20LNEK44y7UIk06HWHE
+	q89kw0pAwRJ3Gzxlo3UqYtcMv+03Gls=
+From: Yuntao Wang <yuntao.wang@linux.dev>
+To: bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	bp@alien8.de,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	ebiederm@xmission.com,
+	hpa@zytor.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lkp@intel.com,
+	mingo@redhat.com,
+	oe-lkp@lists.linux.dev,
+	oliver.sang@intel.com,
+	tglx@linutronix.de,
+	ytcoode@gmail.com,
+	yuntao.wang@linux.dev
+Subject: Re: [linus:master] [kexec]  816d334afa: Mem-Info
+Date: Tue,  5 Nov 2024 23:55:19 +0800
+Message-ID: <20241105155519.57530-1-yuntao.wang@linux.dev>
+In-Reply-To: <ZyBRxoV6SVT2kIXu@MiWiFi-R3L-srv>
+References: <ZyBRxoV6SVT2kIXu@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66e75bdc-32ec-4e96-c4a4-08dcfd80bd52
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2024 10:00:55.3305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IsGX3ZuANWQRVzq/6xEmsA9/ib6EqNqC46iMLW7t2dbKk/l102fGnGG/yqzJQheJCZwBzBy45aruZAK44wgDMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6121
-X-OriginatorOrg: intel.com
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241105_020100_193531_B8C96BB5 
-X-CRM114-Status: GOOD (  19.40  )
+X-CRM114-CacheID: sfid-20241105_075549_770275_C8499331 
+X-CRM114-Status: GOOD (  21.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -220,62 +81,198 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, 2024-11-03 at 05:35 +0000, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On Tue, 29 Oct 2024 11:08:54 +0800, Baoquan He <bhe@redhat.com> wrote:
+
+> Hi Yuntao,
 > 
-> Add more comments explaining what each register contains, and save the
-> preserve_context flag to a non-clobbered register sooner, to keep things
-> simpler.
+> On 10/23/24 at 04:30pm, kernel test robot wrote:
+> > 
+> > 
+> > Hello,
+> > 
+> > kernel test robot noticed "Mem-Info" on:
+> > 
+> > commit: 816d334afa85c836080b41bb6238aea845615ad9 ("kexec: modify the meaning of the end parameter in kimage_is_destination_range()")
 > 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  arch/x86/kernel/relocate_kernel_64.S | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
+> Can you check what happened with your patch?
+
+Hi Baoquan,
+
+Sorry for the late response, I missed this email.
+
+This issue seems quite similar to the previous one:
+
+https://lore.kernel.org/lkml/ZkcD9H0P8O7Me5Do@xpf.sh.intel.com/t/#u
+
+Once again, I still could not figure out why this commit is causing this issue.
+
+Could someone else please take a look?
+
+Thanks in advance!
+Yuntao
+ 
+> Thanks
+> Baoquan
 > 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index e9e88c342f75..c065806884f8 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -100,6 +100,9 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
->  	movq	%r10, CP_PA_SWAP_PAGE(%r11)
->  	movq	%rdi, CP_PA_BACKUP_PAGES_MAP(%r11)
->  
-> +	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
-> +	movq	%rcx, %r11
-> +
-
-Seems moving this here won't break anything.  From functionality's perspective
-there's no need move this here, but fine to me since the move is needed for the
-sake of adding the comment (below) to identity_mapped.
-
->  	/* Switch to the identity mapped page tables */
->  	movq	%r9, %cr3
->  
-> @@ -116,6 +119,13 @@ SYM_CODE_END(relocate_kernel)
->  
->  SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
->  	UNWIND_HINT_END_OF_STACK
-> +	/*
-> +	 * %rdi	indirection page
-> +	 * %rdx start address
-> +	 * %r11 preserve_context
-> +	 * %r12 host_mem_enc_active
-> +	 */
-> +
-
-I think adding this comment is the main purpose of this patch.  Since we have
-listed 4 regs in the comment, how about also add an entry for %r13?
-
-Something like:
-
-	%r13 original CR4 when relocate_kernel() is invoked
-
-Yeah this is kinda mentioned in later code but it seems it's more complete if we
-also mention %r13 here.
-
-Anyway, I suppose adding this comment is kinda helpful, so:
-
-Acked-by: Kai Huang <kai.huang@intel.com>
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> > [test failed on linus/master      c2ee9f594da826bea183ed14f2cc029c719bf4da]
+> > [test failed on linux-next/master 7436324ebd147598f940dde1335b7979dbccc339]
+> > 
+> > in testcase: trinity
+> > version: 
+> > with following parameters:
+> > 
+> > 	runtime: 600s
+> > 
+> > 
+> > 
+> > config: x86_64-randconfig-r032-20220801
+> > compiler: gcc-12
+> > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> > 
+> > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> > 
+> > 
+> > we observed the issue happen randomly but keep clean on parent
+> > 
+> > 
+> > 5c28913ed04b29ef 816d334afa85c836080b41bb623
+> > ---------------- ---------------------------
+> >        fail:runs  %reproduction    fail:runs
+> >            |             |             |
+> >            :100         41%          41:100   dmesg.Mem-Info
+> > 
+> > 
+> > and from below Call Trace, seems be related to changes in 816d334afa. FYI
+> > 
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > | Closes: https://lore.kernel.org/oe-lkp/202410231602.fecf96df-lkp@intel.com
+> > 
+> > 
+> > 
+> > [  183.284967][ T2438] trinity-c2: page allocation failure: order:1, mode:0x10cc0(GFP_KERNEL|__GFP_NORETRY), nodemask=(null),cpuset=/,mems_allowed=0
+> > [  183.287021][ T2438] CPU: 0 PID: 2438 Comm: trinity-c2 Not tainted 6.7.0-rc4-00178-g816d334afa85 #1
+> > [  183.288291][ T2438] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> > [  183.289719][ T2438] Call Trace:
+> > [  183.290202][ T2438]  <TASK>
+> > [ 183.290556][ T2438] dump_stack_lvl (lib/dump_stack.c:107) 
+> > [ 183.291233][ T2438] dump_stack (lib/dump_stack.c:114) 
+> > [ 183.291773][ T2438] warn_alloc (mm/page_alloc.c:3391) 
+> > [ 183.292370][ T2438] ? zone_watermark_ok_safe (mm/page_alloc.c:3370) 
+> > [ 183.293136][ T2438] ? get_page_from_freelist (mm/page_alloc.c:3513) 
+> > [ 183.293882][ T2438] ? __this_cpu_preempt_check (lib/smp_processor_id.c:67) 
+> > [ 183.294602][ T2438] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423) 
+> > [ 183.295385][ T2438] __alloc_pages_slowpath+0x17d2/0x1b00 
+> > [ 183.296285][ T2438] ? __zone_watermark_ok (mm/page_alloc.c:2968) 
+> > [ 183.297011][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> > [ 183.297719][ T2438] ? warn_alloc (mm/page_alloc.c:4041) 
+> > [ 183.298306][ T2438] ? get_page_from_freelist (include/linux/mmzone.h:1651 mm/page_alloc.c:3187) 
+> > [ 183.299017][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> > [ 183.299639][ T2438] __alloc_pages (mm/page_alloc.c:4581) 
+> > [ 183.300162][ T2438] ? asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:645) 
+> > [ 183.300851][ T2438] ? __alloc_pages_slowpath+0x1b00/0x1b00 
+> > [ 183.301627][ T2438] ? kimage_alloc_pages (arch/x86/include/asm/bitops.h:55 (discriminator 3) include/asm-generic/bitops/instrumented-atomic.h:29 (discriminator 3) include/linux/page-flags.h:492 (discriminator 3) kernel/kexec_core.c:303 (discriminator 3)) 
+> > [ 183.302230][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> > [ 183.302840][ T2438] kimage_alloc_pages (include/linux/gfp.h:238 include/linux/gfp.h:261 include/linux/gfp.h:274 kernel/kexec_core.c:295) 
+> > [ 183.303436][ T2438] kimage_alloc_control_pages (kernel/kexec_core.c:369 kernel/kexec_core.c:480) 
+> > [ 183.304126][ T2438] ? kimage_free_page_list (kernel/kexec_core.c:475) 
+> > [ 183.304774][ T2438] kimage_alloc_init (kernel/kexec.c:63) 
+> > [ 183.305362][ T2438] do_kexec_load (kernel/kexec.c:125) 
+> > [ 183.305910][ T2438] ? kimage_alloc_init (kernel/kexec.c:89) 
+> > [ 183.306496][ T2438] ? ftrace_likely_update (arch/x86/include/asm/smap.h:56 kernel/trace/trace_branch.c:229) 
+> > [ 183.307107][ T2438] __x64_sys_kexec_load (kernel/kexec.c:255 kernel/kexec.c:235 kernel/kexec.c:235) 
+> > [ 183.307750][ T2438] do_syscall_64 (arch/x86/entry/common.c:51 arch/x86/entry/common.c:82) 
+> > [ 183.308284][ T2438] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
+> > [  183.308968][ T2438] RIP: 0033:0x463519
+> > [ 183.309465][ T2438] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 59 00 00 c3 66 2e 0f 1f 84 00 00 00 00
+> > All code
+> > ========
+> >    0:	00 f3                	add    %dh,%bl
+> >    2:	c3                   	ret
+> >    3:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+> >    a:	00 00 00 
+> >    d:	0f 1f 40 00          	nopl   0x0(%rax)
+> >   11:	48 89 f8             	mov    %rdi,%rax
+> >   14:	48 89 f7             	mov    %rsi,%rdi
+> >   17:	48 89 d6             	mov    %rdx,%rsi
+> >   1a:	48 89 ca             	mov    %rcx,%rdx
+> >   1d:	4d 89 c2             	mov    %r8,%r10
+> >   20:	4d 89 c8             	mov    %r9,%r8
+> >   23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
+> >   28:	0f 05                	syscall
+> >   2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
+> >   30:	0f 83 db 59 00 00    	jae    0x5a11
+> >   36:	c3                   	ret
+> >   37:	66                   	data16
+> >   38:	2e                   	cs
+> >   39:	0f                   	.byte 0xf
+> >   3a:	1f                   	(bad)
+> >   3b:	84 00                	test   %al,(%rax)
+> >   3d:	00 00                	add    %al,(%rax)
+> > 	...
+> > 
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
+> >    6:	0f 83 db 59 00 00    	jae    0x59e7
+> >    c:	c3                   	ret
+> >    d:	66                   	data16
+> >    e:	2e                   	cs
+> >    f:	0f                   	.byte 0xf
+> >   10:	1f                   	(bad)
+> >   11:	84 00                	test   %al,(%rax)
+> >   13:	00 00                	add    %al,(%rax)
+> > 	...
+> > [  183.312022][ T2438] RSP: 002b:00007ffe4d586468 EFLAGS: 00000246 ORIG_RAX: 00000000000000f6
+> > [  183.313222][ T2438] RAX: ffffffffffffffda RBX: 00000000000000f6 RCX: 0000000000463519
+> > [  183.314330][ T2438] RDX: 00007f3d966eb000 RSI: 0000000000000001 RDI: 00007f3d966e9000
+> > [  183.315440][ T2438] RBP: 00007f3d97011000 R08: 0000000000000051 R09: 0000000000001000
+> > [  183.316561][ T2438] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+> > [  183.317678][ T2438] R13: 00007f3d97011058 R14: 000000000109a850 R15: 00007f3d97011000
+> > [  183.318855][ T2438]  </TASK>
+> > [  183.324046][ T2438] Mem-Info:
+> > [  183.324538][ T2438] active_anon:5181 inactive_anon:9601 isolated_anon:0
+> > [  183.324538][ T2438]  active_file:0 inactive_file:0 isolated_file:0
+> > [  183.324538][ T2438]  unevictable:85008 dirty:0 writeback:0
+> > [  183.324538][ T2438]  slab_reclaimable:24508 slab_unreclaimable:111403
+> > [  183.324538][ T2438]  mapped:11081 shmem:7595 pagetables:757
+> > [  183.324538][ T2438]  sec_pagetables:0 bounce:0
+> > [  183.324538][ T2438]  kernel_misc_reclaimable:0
+> > [  183.324538][ T2438]  free:22807 free_pcp:846 free_cma:0
+> > [  183.365634][ T2438] Node 0 active_anon:20724kB inactive_anon:38404kB active_file:0kB inactive_file:0kB unevictable:340032kB isolated(anon):0kB isolated(file):0kB mapped:44324kB dirty:0kB writeback:0kB shmem:30380kB writeback_tmp:0kB kernel_stack:3776kB pagetables:3028kB sec_pagetables:0kB all_unreclaimable? yes
+> > [  183.369581][ T2438] DMA free:15296kB boost:0kB min:16kB low:28kB high:40kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:15992kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> > [  183.373381][ T2438] lowmem_reserve[]: 0 2813 13774 13774
+> > [  183.374261][ T2438] DMA32 free:46624kB boost:0kB min:3064kB low:5944kB high:8824kB reserved_highatomic:0KB active_anon:8kB inactive_anon:2888kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:3129216kB managed:2958668kB mlocked:0kB bounce:0kB free_pcp:2712kB local_pcp:996kB free_cma:0kB
+> > [  183.378286][ T2438] lowmem_reserve[]: 0 0 10961 10961
+> > [  183.379256][ T2438] Normal free:42560kB boost:4096kB min:16040kB low:27264kB high:38488kB reserved_highatomic:4096KB active_anon:20716kB inactive_anon:35516kB active_file:0kB inactive_file:0kB unevictable:340032kB writepending:0kB present:13631488kB managed:11224244kB mlocked:392kB bounce:0kB free_pcp:492kB local_pcp:464kB free_cma:0kB
+> > [  183.383570][ T2438] lowmem_reserve[]: 0 0 0 0
+> > [  183.384357][ T2438] DMA: 0*4kB 0*8kB 0*16kB 0*32kB 1*64kB (U) 1*128kB (U) 1*256kB (U) 1*512kB (U) 0*1024kB 1*2048kB (U) 3*4096kB (M) = 15296kB
+> > [  183.386517][ T2438] DMA32: 80*4kB (UME) 4*8kB (M) 4*16kB (ME) 6*32kB (UME) 3*64kB (UME) 4*128kB (UM) 3*256kB (UME) 5*512kB (UM) 5*1024kB (M) 2*2048kB (ME) 8*4096kB (M) = 46624kB
+> > [  183.389206][ T2438] Normal: 524*4kB (UMEH) 445*8kB (UME) 410*16kB (UME) 382*32kB (UMEH) 154*64kB (UME) 41*128kB (U) 8*256kB (U) 1*512kB (U) 0*1024kB 0*2048kB 0*4096kB = 42104kB
+> > [  183.391793][ T2438] 92505 total pagecache pages
+> > [  183.392602][ T2438] 0 pages in swap cache
+> > [  183.393232][ T2438] Free swap  = 0kB
+> > [  183.393819][ T2438] Total swap = 0kB
+> > [  183.394352][ T2438] 4194174 pages RAM
+> > [  183.394916][ T2438] 0 pages HighMem/MovableOnly
+> > [  183.395645][ T2438] 644606 pages reserved
+> > [  183.396135][ T2438] 0 pages cma reserved
+> > 
+> > 
+> > 
+> > The kernel config and materials to reproduce are available at:
+> > https://download.01.org/0day-ci/archive/20241023/202410231602.fecf96df-lkp@intel.com
+> > 
+> > 
+> > 
+> > -- 
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> > 
 
 _______________________________________________
 kexec mailing list
