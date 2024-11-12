@@ -4,67 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F90D32D8C
-	for <kexec@archiver.kernel.org>; Tue, 12 Nov 2024 10:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F06B1D32D9A
+	for <kexec@archiver.kernel.org>; Tue, 12 Nov 2024 11:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SbsbpXU21CLT7MHfY0zzb1hyYq5uEs/Qv3w5rzPC1mw=; b=ExSaI1wioEAUYi
-	8qbBGkG5t3C5RrfRXsqJ56o+bI5qlcINqrDfzHfILgz+IUD02IpH90VN7eL012OSSiKGUs4aVBBIr
-	wLsVhQ0U6ygg65W/QveBY666tc7u+XHk8Z9T26aUrTsN0POp1LIqYJ65Yn2eeslEcwDoupJ8/yMD/
-	aJlmA9k2veyK7mbkGOeGKmaPrkguFEamnMbSx+Fj/kWRcXjyI7GEbe6epeTCca+q/vqGntin3IQU0
-	zBtSChWMnS95xou+nN4E94a+9gXBwxYUbm891GqmMKJuY6OTpEqoFDO1dwpAMzLyTmqRjqPgg6pbq
-	KvJ1ZbP/boRuGLdHyfeA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	MIME-Version:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=HSawA+pOvIGvG+oGEDC+YlfFwZ7RWYv5z0ltCU+dJ4w=; b=t5tvopBN7qdlk2veHrjvsoGCgg
+	k81VvrNbEdAysv9WP5bGudjIWX8tgB4HuQNT1Jh1tHEgjZjW0k2EUZmD200VgK3lfRhfbznzDh936
+	J+mDPhfm7FqOw+zwLHdMLzT4IEKOHfZdQGzmCIeRSV2YGDSwOSFd9kKsRlBdyS130kF/ix7iUuJfz
+	/o5aZzO++3pUgOBsY+YDolTa96Y5Hc4w+NpXnr+Z3WeiQAbYxWqgHO7tEWnFlExGvEqLRmTSOkqLq
+	a+2g1qPY5vubcQsjmNH4SqwvM48fnGipyt4iX2NrmpAQpZsKREM2iaVnr26HwRJsQT0xnVlDq9pRG
+	ervIfpDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tAo4G-0000000320Y-1rcb;
-	Tue, 12 Nov 2024 10:24:16 +0000
+	id 1tApKF-00000003GoC-1l6d;
+	Tue, 12 Nov 2024 11:44:51 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tAnul-00000002zih-3FaG
+	id 1tAoOS-000000036F0-3GH2
 	for kexec@bombadil.infradead.org;
-	Tue, 12 Nov 2024 10:14:27 +0000
+	Tue, 12 Nov 2024 10:45:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=NI2FSn6wR9NllQpa1yQiYOWhZtDJAgUAJVvJXNP2daY=; b=Lz8wX3hh3vIxhltmyWPz1aRlQn
-	kWu59NA/aM1/3WjpsFfFE3ZgkPK8u9TMSbPtwr3mEzLidEio5ah/99Y7tmc/L7Ptfp/RwQ90hxljZ
-	81C3LnCjpVBNCclD1/BWuQOqwMchTzPgMG10fSvD9OPaU6Mfg9JXHpqW2Zst8tqOPfrPu4OIpnrvl
-	SEOButaG95BZKrqdY7Ui/yna2q4m+WpHri4Z/ma18p3GpODoZ1lpRpHqsQOmoPFg7t7lHk+Sox0fB
-	XFQ3iqjB2LKTE8MGIO/lNohTEnJ/uG3nPEcACbfKTZ01p/nENMqyFn+L1zIAhgntrvLuaWE5zy+yH
-	RpZAfrRw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=bkQNtHL2RjS8tELyHxR0NePRVc2o+1jvc7I1wLmaH4I=; b=RId/sJksERv0XxPZozFPaDJDZb
+	Mz5cy8IEOv2glbYJM5uR/nfA+CvzSAzEs8RV7XglstMwo7OFC9AmlfsKVyhHGM5da+9jwfLIRobxu
+	M1ngOcHLEkh/6XhL031tc4BGDDRhnL1BwRla1j5R2B8CU7+E7zGjHEtqwSCt94gUPqd2Qj4LOiISi
+	rBQmzO01rb4mer03fYwCZN/Ge1OB5MSdJKHYwAlq2Iva4qIT0ejBux0yjHvDPa0QrTMk43M3TSpX3
+	yfd81k5E/pwcfESifG5GQiiXaeaKWisT86d3j0ZsAXPCbJWTsZKprBdEWQ+bgDVQFlHvPXuSxREPO
+	RszvDImw==;
+Received: from [2001:8b0:10b:5:509c:9e12:99bd:a31] (helo=u3832b3a9db3152.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tAnui-0000000EDfU-1WT0;
-	Tue, 12 Nov 2024 10:14:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F4081300478; Tue, 12 Nov 2024 11:14:23 +0100 (CET)
-Date: Tue, 12 Nov 2024 11:14:23 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org,
-	jpoimboe <jpoimboe@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>
+	id 1tAoOQ-0000000EFpJ-1KFe;
+	Tue, 12 Nov 2024 10:45:06 +0000
+Message-ID: <785f90158524228a32bc4c22bfb4425ceadb0197.camel@infradead.org>
 Subject: Re: [RFC PATCH 2/2] x86/kexec: Add data section to relocate_kernel
-Message-ID: <20241112101423.GO22801@noisy.programming.kicks-ass.net>
+From: David Woodhouse <dwmw2@infradead.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, jpoimboe
+ <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
+ Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman
+ <horms@kernel.org>
+Date: Tue, 12 Nov 2024 10:45:05 +0000
+In-Reply-To: <20241112101423.GO22801@noisy.programming.kicks-ass.net>
 References: <1983c62c02b863f6d70198730dbb55a1ef7ceb9f.camel@infradead.org>
- <20241108052241.3972433-1-dwmw2@infradead.org>
- <20241108052241.3972433-2-dwmw2@infradead.org>
- <B26FDB75-D8F3-4D9C-9078-C536C461A7CF@zytor.com>
- <1e8f11982ad0754d8123c143a514969fa2a07c05.camel@infradead.org>
+	 <20241108052241.3972433-1-dwmw2@infradead.org>
+	 <20241108052241.3972433-2-dwmw2@infradead.org>
+	 <B26FDB75-D8F3-4D9C-9078-C536C461A7CF@zytor.com>
+	 <1e8f11982ad0754d8123c143a514969fa2a07c05.camel@infradead.org>
+	 <20241112101423.GO22801@noisy.programming.kicks-ass.net>
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1e8f11982ad0754d8123c143a514969fa2a07c05.camel@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,50 +74,180 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============8385113180121585471=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 12, 2024 at 08:44:33AM +0000, David Woodhouse wrote:
-> On Fri, 2024-11-08 at 12:26 +0100, H. Peter Anvin wrote:
-> > =
 
-> > > --- a/arch/x86/kernel/vmlinux.lds.S
-> > > +++ b/arch/x86/kernel/vmlinux.lds.S
-> > > @@ -100,7 +100,7 @@ const_pcpu_hot =3D pcpu_hot;
-> > > =A0=A0=A0=A0=A0=A0=A0=A0. =3D ALIGN(PAGE_SIZE);=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0\
-> > > =A0=A0=A0=A0=A0=A0=A0=A0__relocate_kernel_start =3D .;=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0\
-> > > =A0=A0=A0=A0=A0=A0=A0=A0*(.text.relocate_kernel);=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0\
-> > > -=A0=A0=A0=A0=A0=A0=A0*(.rodata.relocate_kernel);=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0\
-> > > +=A0=A0=A0=A0=A0=A0=A0*(.data.relocate_kernel);=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0\
+--===============8385113180121585471==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-jEzho5rV0wf4nur9EKWy"
 
-Why are we having data in the middle of the text section?
 
-> > > =A0=A0=A0=A0=A0=A0=A0=A0__relocate_kernel_end =3D .;
-> > > #else
-> > > #define KEXEC_RELOCATE_KERNEL_TEXT
-> > =
+--=-jEzho5rV0wf4nur9EKWy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-> > Looks good at first glance. I'm currently traveling so I haven't
-> > fully reviewed it though.
-> =
+T24gVHVlLCAyMDI0LTExLTEyIGF0IDExOjE0ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToK
+PiBPbiBUdWUsIE5vdiAxMiwgMjAyNCBhdCAwODo0NDozM0FNICswMDAwLCBEYXZpZCBXb29kaG91
+c2Ugd3JvdGU6Cj4gPiBPbiBGcmksIDIwMjQtMTEtMDggYXQgMTI6MjYgKzAxMDAsIEguIFBldGVy
+IEFudmluIHdyb3RlOgo+ID4gPiAKPiA+ID4gPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvdm1saW51
+eC5sZHMuUwo+ID4gPiA+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC92bWxpbnV4Lmxkcy5TCj4gPiA+
+ID4gQEAgLTEwMCw3ICsxMDAsNyBAQCBjb25zdF9wY3B1X2hvdCA9IHBjcHVfaG90Owo+ID4gPiA+
+IMKgwqDCoMKgwqDCoMKgwqAuID0gQUxJR04oUEFHRV9TSVpFKTvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+ID4g
+PiA+IMKgwqDCoMKgwqDCoMKgwqBfX3JlbG9jYXRlX2tlcm5lbF9zdGFydCA9IC47wqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcCj4gPiA+ID4g
+wqDCoMKgwqDCoMKgwqDCoCooLnRleHQucmVsb2NhdGVfa2VybmVsKTvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFwKPiA+ID4gPiAt
+wqDCoMKgwqDCoMKgwqAqKC5yb2RhdGEucmVsb2NhdGVfa2VybmVsKTvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+ID4gPiA+ICvCoMKg
+wqDCoMKgwqDCoCooLmRhdGEucmVsb2NhdGVfa2VybmVsKTvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFwKPiAKPiBXaHkgYXJlIHdl
+IGhhdmluZyBkYXRhIGluIHRoZSBtaWRkbGUgb2YgdGhlIHRleHQgc2VjdGlvbj8KClRoaXMgaXMg
+dGhlIHJlbG9jYXRlX2tlcm5lbCgpIHBhZ2UuIEl0J3MgdGhlIGxhc3QgdGhpbmcgdGhlIGtlcm5l
+bApjYWxscyBvbiBrZXhlYy4KClRoZSBrZXJuZWwgZmlyc3QgdGFrZXMgYSAqY29weSogb2YgaXQg
+YW5kIHBsYWNlcyBpdCBpbnRvIHRoZSBpZGVudGl0eQptYXBwaW5nIHBhZ2UgdGFibGVzIHdoaWNo
+IGFyZSBzZXQgdXAgZm9yIGtleGVjLgoKVGhlIHJlbG9jYXRlX2tlcm5lbCgpIGZ1bmN0aW9uIGlz
+IHRoZW4gY2FsbGVkIGF0IGl0cyAqb3JpZ2luYWwqCmxvY2F0aW9uIGluIHRoZSBrZXJuZWwgdGV4
+dC4gQmVmb3JlIHJlbG9hZGluZyAlY3IzLCBpdCBzdG9yZXMgc29tZQppbmZvcm1hdGlvbiB3aGlj
+aCBpcyBnb2luZyB0byBiZWNvbWUgdW5hdmFpbGFibGUgaW50byBpdHMgb3duIHBhZ2UKKGN1cnJl
+bnRseSB1c2luZyBhIGJpdCBvZiBhIG5hc3R5IGhhY2sgYmFzZWQgb24gYSBoYXJkLWNvZGVkCktF
+WEVDX0NPTlRST0xfQ09ERV9NQVhfU0laRSBiZWNhdXNlIHdlIGNhbid0IGp1c3QgdXNlIGRhdGEg
+c3ltYm9sCnJlZmVyZW5jZXMpLgoKVGhlbiBpdCByZWxvYWRzICVjcjMgYW5kIGp1bXBzIHRvIHRo
+ZSBpZGVudGl0eS1tYXBwZWQgY29weSBvZiBpdHNlbGYuCgpDb3VsZCB3ZSBwdXQgLnRleHQucmVs
+b2NhdGVfa2VybmVsIGFuZCAuZGF0YS5yZWxvY2F0ZV9rZXJuZWwgc29tZXdoZXJlCipvdGhlciog
+dGhhbiB0aGUgbWFpbiBrZXJuZWwgdGV4dCBzZWdtZW50PyBQcm9iYWJseS4uLiBpdCB1c2UgdXNl
+CmFsdGVybmF0aXZlIGluc3RydWN0aW9ucywgYnV0IHdlIGNvdWxkIGRlYWwgd2l0aCB0aGF0LiBB
+bmQgaWYgd2UgY2FsbApmcm9tIG1hY2hpbmVfa2V4ZWMoKSBkaXJlY3RseSBpbnRvIHRoZSAqY29w
+eSogKGhhdmluZyBtYXJrZWQgaXQKZXhlY3V0YWJsZSksIG1heWJlLi4uPwoKCg==
 
-> Turns out it doesn't help much. It's neater, obviously, but objtool
-> still wants to disassemble the .data.relocate_kernel section after it
-> gets included in the overall kernel text section.
 
-Objtool only decodes stuff that has SHF_EXECINSTR set. Why would your
-data sections have that on?
+--=-jEzho5rV0wf4nur9EKWy
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMTEyMTA0NTA1WjAvBgkqhkiG9w0BCQQxIgQgwmCc1sjJ
+QhJvrWz5DwN2szNYkAemYcxNyKpJOWRaL9owgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCDjuCEiJZeMc2Ivy3mKy5EtX3HRj0iNBsm
++Kp1iClmens/wFgrA529iGDL1vI+nwKYuRdgJ2yetHN0UVYMCT4a2tqb5GIB/fPfW2dlgcLek8V7
+Ewms/G9pNVrwSoLVDW+ukt76FBCpcYEu8iZ4w6U+1ETf0I/DclDqo8UNLdlYY63iAy31U50oDVAI
+YrUWvGuSGFJj/XgcIdDWOYE912P6evI+LwWFgVL+nABa8eXMCtmNjKEUkrZ4O/8U3lhzfkidXKly
+FliGW8zxSOJ8cyNl8L/gElwwKBe+u6eqEMpikwviv/95JJjUG5YRE+0qKXmFBipqC7OXXDhSEzC6
+DGb+aHhG6wtUQbPUGIy1UJh7csUlMqxHDBBJ5JjTCIgeSi1OLkMg2rpj8KYaTZNAODXuM4nMuqr0
+99AcwjzzuscTpgxY3pq4FtkYJdR5R+zZfTsEt8BqrBiC+PRZJYn2PI1fDLm0gRnrzIXqq4ErrKWW
+IN07B2EzMARqifHv6mVLNbQnyOPvnI/l/RJWLYOV9ej7CYfBDV8w6/CxcA0Ew2WRFllcm9u8BOAq
+513qmjURTzGaf4iLz705LLlZLvNIBibOH93DJ1j2C6zA6Dn2rqNn9ug8ITWuxTbn/NPgmgjMkDv9
+vm6zRqdV1ltngsltKF7bQIT0r3QyNr4A672I9Q0eFQAAAAAAAA==
+
+
+--=-jEzho5rV0wf4nur9EKWy--
+
+
+--===============8385113180121585471==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============8385113180121585471==--
+
