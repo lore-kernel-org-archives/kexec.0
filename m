@@ -4,71 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6886BD32D97
-	for <kexec@archiver.kernel.org>; Tue, 12 Nov 2024 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6ABBD597C3
+	for <kexec@archiver.kernel.org>; Wed, 13 Nov 2024 01:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GfMPCfKWH9WI/60rxxESRNpElbpmIkXecOGWDLD/XjA=; b=D2xXsvHx5jcuKC
-	Jl7NZZOzQgPrt4PDHbpI65zFlYykjiIiDY1+II3ahZTwtHUUM2eS08pt6TBK/bQ8rClSueLCg+yS7
-	NinncGh8/UAAws/kNBWpVib70YUQfKJimTpVqtQ6OCDt/7ECxVhixFb+oQU5oIHeGR/awfcJfyW9G
-	eW4FEexoY3iVewQN0BVO8ZmM9FOiv87jJMVX2fGrNwFDLnaPv5Y09G+g1M3IjXWBAjxdnwcjao3ps
-	F1c11u/1kMa7Pu47LLy1WjOynmd7Ydr03e0yxxuqTJ001XLkEXs1LLydmI09YgbfLPUBI+72PelhE
-	V8YJPhdd8yAa5NyTbpjg==;
+	List-Owner; bh=VrivR523vm+ChvLCz2zoKm7qZge4OihtMXV2MR0/ows=; b=3jMV8z/Z/O/KmL
+	bGiVVMlS9aJuAoFCHj9vvc29Q5UTCrvgHT16ca+Z1i+IJi7wL6Xb7AK0tyFqhq3ifSAwhaj3YPHbC
+	oAiP6g47Yrk0yYdwEwLs5h/WYJHX6DQB+SVZb1g1eOol1wdQAIC5aOOxPPhERjG4ER6WqHdQf8a2h
+	saHeqb6PAKuLLZv174HQFJuXmoCLSWcdkikZyhaYqHwzwBuxag3PuQF2f0a6HaVVKhQg9bVATRne7
+	DUVZj/drBZ6CS1HnCA0X2pvADsqoXK75O+I4Df2Nv2bOTq+/aEO9kDJA4xxN4i0svqJWUsFq3ntd7
+	avfaqMgTaM0VjMwZwsvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tAwUR-00000004hXJ-36YM;
-	Tue, 12 Nov 2024 19:23:51 +0000
-Received: from mail-qt1-f172.google.com ([209.85.160.172])
+	id 1tB1ny-00000005Tc3-0TN8;
+	Wed, 13 Nov 2024 01:04:22 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tAwUO-00000004hW8-09eS
+	id 1tB1nu-00000005TbJ-13yD
 	for kexec@lists.infradead.org;
-	Tue, 12 Nov 2024 19:23:49 +0000
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-46089a6849bso42059381cf.3
-        for <kexec@lists.infradead.org>; Tue, 12 Nov 2024 11:23:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731439426; x=1732044226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=514Cwwg37cjDwGlks2Htu/DlMLs4Z4YtnMfe6cEDDuc=;
-        b=dXQrDzZTDkr/xFCSxKVLoS3i75Wg4u29D+GOODQAZiapOouVG7wbQozH26uOGNpasb
-         If+G7kNqzFtwFZaeAw9K9AGMcLQYqe2k2fMRuT6Ba5PikQ2rzrC9HHaBunQjTVMaJ/CF
-         r9kpbwWJYVu95Yp+JxB0jIC5PX+vqlGHc2CQug1TVAitmgnlgK+8qiPX4V5MVqjdpM0+
-         hAN8lreiw46cmm9FmWeAlayCl8Gpntg3VdcXDOGzEy3cEoHu+pX7Gc24MnUL8Nfs904K
-         es+aqvHA4AnnLrNssHJvJlFVrjhnwCu40ew4nDRT+Ej4IpSd1omPl+4adDRH08Yyvr2v
-         A5uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpVva5drunhU4d33rZLZKt4+VLwgGO38KjpResjFQf5TRZlAYnVmO35/jjiIJ3HIoFzpwz1w==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxrRFFKmfuFyNo42mBwCdl3GbFo0bpvnX2fPthYWxxp/V+cDM0w
-	qsjxQRlJRclhMzGqKpUnsX/pguqgDUZyWuoXPhvwetFpP5jZ07fm
-X-Google-Smtp-Source: AGHT+IFAV25RZuV+YLWpg6EdKcKzgySKuq8aCBmFO8uEZ8zwSx4/O/r1QU70TbuTgKB1JLBzWjC4HQ==
-X-Received: by 2002:a05:622a:2c2:b0:462:bb96:6d5d with SMTP id d75a77b69052e-4634b498491mr4540641cf.10.1731439426030;
-        Tue, 12 Nov 2024 11:23:46 -0800 (PST)
-Received: from [192.168.2.12] ([70.24.125.223])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-462ff3df26csm78311031cf.12.2024.11.12.11.23.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 11:23:45 -0800 (PST)
-Message-ID: <71165bc1-8886-4846-bf11-d1dafae040f2@vasilevsky.ca>
-Date: Tue, 12 Nov 2024 14:23:32 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Wed, 13 Nov 2024 01:04:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731459856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=71kRV9QsWZSXh3DeItT/ZQQntIgYvFwGt1Icivu2FQU=;
+	b=W/3QJif3EzC+DqiNuiM1JinKwu0JDI1aqlA7EFdt9r2cZdW2hzrTc80fprK2Abefdv4Ojn
+	YCjGXef8m28K2Ij3/xln1C7t4R6/eK7f1jG0zsaZYFNnUz8UtrVUyvZ04wHQJUvfVYmTos
+	4I73a7Czz4KZR1wAAYLQHEav1a7uozw=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-11EtgfivOCK3-BmbgwnKPQ-1; Tue,
+ 12 Nov 2024 20:04:12 -0500
+X-MC-Unique: 11EtgfivOCK3-BmbgwnKPQ-1
+X-Mimecast-MFC-AGG-ID: 11EtgfivOCK3-BmbgwnKPQ
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2220919541A1;
+	Wed, 13 Nov 2024 01:04:10 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.83])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61B4830000DF;
+	Wed, 13 Nov 2024 01:04:07 +0000 (UTC)
+Date: Wed, 13 Nov 2024 09:04:03 +0800
+From: Baoquan He <bhe@redhat.com>
+To: akpm@linux-foundation.org, Dave Vasilevsky <dave@vasilevsky.ca>
+Cc: glaubitz@physik.fu-berlin.de, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, mpe@ellerman.id.au,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	ebiederm@xmission.com,
+	Reimar =?iso-8859-1?Q?D=F6ffinger?= <Reimar.Doeffinger@gmx.de>
 Subject: Re: [PATCH v2] crash, powerpc: Default to CRASH_DUMP=n on
  PPC_BOOK3S_32
-To: glaubitz@physik.fu-berlin.de, bhe@redhat.com,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, mpe@ellerman.id.au,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- ebiederm@xmission.com, horms@verge.net.au
-Cc: =?UTF-8?Q?Reimar_D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
+Message-ID: <ZzP7AzziB8a2jJGP@MiWiFi-R3L-srv>
 References: <20240917163720.1644584-1-dave@vasilevsky.ca>
-Content-Language: en-US
-From: Dave Vasilevsky <dave@vasilevsky.ca>
-In-Reply-To: <20240917163720.1644584-1-dave@vasilevsky.ca>
+ <ZuvnhSvVMIGgAVNj@fedora>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ZuvnhSvVMIGgAVNj@fedora>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241112_112348_104663_D2FF42C3 
-X-CRM114-Status: GOOD (  20.55  )
+X-CRM114-CacheID: sfid-20241112_170418_385906_CB55FBA0 
+X-CRM114-Status: GOOD (  17.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,107 +84,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjAyNC0wOS0xNyAxMjozNywgRGF2ZSBWYXNpbGV2c2t5IHdyb3RlOgo+IEZpeGVzIGJvb3Qg
-ZmFpbHVyZXMgb24gNi45IG9uIFBQQ19CT09LM1NfMzIgbWFjaGluZXMgdXNpbmcKPiBPcGVuIEZp
-cm13YXJlLiBPbiB0aGVzZSBtYWNoaW5lcywgdGhlIGtlcm5lbCByZWZ1c2VzIHRvIGJvb3QKPiBm
-cm9tIG5vbi16ZXJvIFBIWVNJQ0FMX1NUQVJULCB3aGljaCBvY2N1cnMgd2hlbiBDUkFTSF9EVU1Q
-IGlzIG9uLgoKSGkgRXJpYywgYW5kIG90aGVyIGtleGVjIHBlb3BsZSwKCklzIHRoZXJlIGFueXdo
-ZXJlIGVsc2UgSSBzaG91bGQgYmUgc2VuZGluZyB0aGlzIHBhdGNoIHRvIHJlcXVlc3QgYSBtZXJn
-ZT8gSSBkb24ndCBzZWUgYSBrZXhlYyB0cmVlIGFueXdoZXJlLgoKVGhhbmtzLApEYXZlCiAKPiBT
-aW5jZSBtb3N0IFBQQ19CT09LM1NfMzIgbWFjaGluZXMgYm9vdCB2aWEgT3BlbiBGaXJtd2FyZSwg
-aXQgc2hvdWxkCj4gZGVmYXVsdCB0byBvZmYgZm9yIHRoZW0uIFVzZXJzIGJvb3RpbmcgdmlhIHNv
-bWUgb3RoZXIgbWVjaGFuaXNtCj4gY2FuIHN0aWxsIHR1cm4gaXQgb24gZXhwbGljaXRseS4KPiAK
-PiBEb2VzIG5vdCBjaGFuZ2UgdGhlIGRlZmF1bHQgb24gYW55IG90aGVyIGFyY2hpdGVjdHVyZXMg
-Zm9yIHRoZQo+IHRpbWUgYmVpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTogRGF2ZSBWYXNpbGV2c2t5
-IDxkYXZlQHZhc2lsZXZza3kuY2E+Cj4gUmVwb3J0ZWQtYnk6IFJlaW1hciBEw7ZmZmluZ2VyIDxS
-ZWltYXIuRG9lZmZpbmdlckBnbXguZGU+Cj4gQ2xvc2VzOiBodHRwczovL2xpc3RzLmRlYmlhbi5v
-cmcvZGViaWFuLXBvd2VycGMvMjAyNC8wNy9tc2cwMDAwMS5odG1sCj4gRml4ZXM6IDc1YmMyNTVh
-NzQ0NCAoImNyYXNoOiBjbGVhbiB1cCBrZHVtcCByZWxhdGVkIGNvbmZpZyBpdGVtcyIpCj4gLS0t
-Cj4gIGFyY2gvYXJtL0tjb25maWcgICAgICAgfCAzICsrKwo+ICBhcmNoL2FybTY0L0tjb25maWcg
-ICAgIHwgMyArKysKPiAgYXJjaC9sb29uZ2FyY2gvS2NvbmZpZyB8IDMgKysrCj4gIGFyY2gvbWlw
-cy9LY29uZmlnICAgICAgfCAzICsrKwo+ICBhcmNoL3Bvd2VycGMvS2NvbmZpZyAgIHwgNCArKysr
-Cj4gIGFyY2gvcmlzY3YvS2NvbmZpZyAgICAgfCAzICsrKwo+ICBhcmNoL3MzOTAvS2NvbmZpZyAg
-ICAgIHwgMyArKysKPiAgYXJjaC9zaC9LY29uZmlnICAgICAgICB8IDMgKysrCj4gIGFyY2gveDg2
-L0tjb25maWcgICAgICAgfCAzICsrKwo+ICBrZXJuZWwvS2NvbmZpZy5rZXhlYyAgIHwgMiArLQo+
-ICAxMCBmaWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL0tjb25maWcgYi9hcmNoL2FybS9LY29uZmlnCj4gaW5kZXgg
-MGVjMDM0OTMzY2FlLi40Y2MzMTQ2NzI5OGIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vS2NvbmZp
-Zwo+ICsrKyBiL2FyY2gvYXJtL0tjb25maWcKPiBAQCAtMTU5OCw2ICsxNTk4LDkgQEAgY29uZmln
-IEFUQUdTX1BST0MKPiAgY29uZmlnIEFSQ0hfU1VQUE9SVFNfQ1JBU0hfRFVNUAo+ICAJZGVmX2Jv
-b2wgeQo+ICAKPiArY29uZmlnIEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCj4gKwlkZWZfYm9vbCB5
-Cj4gKwo+ICBjb25maWcgQVVUT19aUkVMQUREUgo+ICAJYm9vbCAiQXV0byBjYWxjdWxhdGlvbiBv
-ZiB0aGUgZGVjb21wcmVzc2VkIGtlcm5lbCBpbWFnZSBhZGRyZXNzIiBpZiAhQVJDSF9NVUxUSVBM
-QVRGT1JNCj4gIAlkZWZhdWx0ICEoQVJDSF9GT09UQlJJREdFIHx8IEFSQ0hfUlBDIHx8IEFSQ0hf
-U0ExMTAwKQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L0tjb25maWcgYi9hcmNoL2FybTY0L0tj
-b25maWcKPiBpbmRleCBlZDE1Yjg3NmZhNzQuLjhjNjdiNzYzNDdkMyAxMDA2NDQKPiAtLS0gYS9h
-cmNoL2FybTY0L0tjb25maWcKPiArKysgYi9hcmNoL2FybTY0L0tjb25maWcKPiBAQCAtMTU1OSw2
-ICsxNTU5LDkgQEAgY29uZmlnIEFSQ0hfREVGQVVMVF9LRVhFQ19JTUFHRV9WRVJJRllfU0lHCj4g
-IGNvbmZpZyBBUkNIX1NVUFBPUlRTX0NSQVNIX0RVTVAKPiAgCWRlZl9ib29sIHkKPiAgCj4gK2Nv
-bmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAo+ICsJZGVmX2Jvb2wgeQo+ICsKPiAgY29uZmln
-IEFSQ0hfSEFTX0dFTkVSSUNfQ1JBU0hLRVJORUxfUkVTRVJWQVRJT04KPiAgCWRlZl9ib29sIENS
-QVNIX1JFU0VSVkUKPiAgCj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL0tjb25maWcgYi9h
-cmNoL2xvb25nYXJjaC9LY29uZmlnCj4gaW5kZXggMGUzYWJmN2IwYmQzLi43YmEzYmFlZTg1OWUg
-MTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZwo+ICsrKyBiL2FyY2gvbG9vbmdh
-cmNoL0tjb25maWcKPiBAQCAtNjAwLDYgKzYwMCw5IEBAIGNvbmZpZyBBUkNIX1NVUFBPUlRTX0tF
-WEVDCj4gIGNvbmZpZyBBUkNIX1NVUFBPUlRTX0NSQVNIX0RVTVAKPiAgCWRlZl9ib29sIHkKPiAg
-Cj4gK2NvbmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAo+ICsJZGVmX2Jvb2wgeQo+ICsKPiAg
-Y29uZmlnIEFSQ0hfU0VMRUNUU19DUkFTSF9EVU1QCj4gIAlkZWZfYm9vbCB5Cj4gIAlkZXBlbmRz
-IG9uIENSQVNIX0RVTVAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL0tjb25maWcgYi9hcmNoL21p
-cHMvS2NvbmZpZwo+IGluZGV4IDYwMDc3ZTU3NjkzNS4uYjU0N2Y0MzA0ZDBjIDEwMDY0NAo+IC0t
-LSBhL2FyY2gvbWlwcy9LY29uZmlnCj4gKysrIGIvYXJjaC9taXBzL0tjb25maWcKPiBAQCAtMjg4
-MSw2ICsyODgxLDkgQEAgY29uZmlnIEFSQ0hfU1VQUE9SVFNfS0VYRUMKPiAgY29uZmlnIEFSQ0hf
-U1VQUE9SVFNfQ1JBU0hfRFVNUAo+ICAJZGVmX2Jvb2wgeQo+ICAKPiArY29uZmlnIEFSQ0hfREVG
-QVVMVF9DUkFTSF9EVU1QCj4gKwlkZWZfYm9vbCB5Cj4gKwo+ICBjb25maWcgUEhZU0lDQUxfU1RB
-UlQKPiAgCWhleCAiUGh5c2ljYWwgYWRkcmVzcyB3aGVyZSB0aGUga2VybmVsIGlzIGxvYWRlZCIK
-PiAgCWRlZmF1bHQgIjB4ZmZmZmZmZmY4NDAwMDAwMCIKPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dl
-cnBjL0tjb25maWcgYi9hcmNoL3Bvd2VycGMvS2NvbmZpZwo+IGluZGV4IDhhNGVlNTdjZDRlZi4u
-YzA0ZjdiYjU0M2NjIDEwMDY0NAo+IC0tLSBhL2FyY2gvcG93ZXJwYy9LY29uZmlnCj4gKysrIGIv
-YXJjaC9wb3dlcnBjL0tjb25maWcKPiBAQCAtNjgyLDYgKzY4MiwxMCBAQCBjb25maWcgUkVMT0NB
-VEFCTEVfVEVTVAo+ICBjb25maWcgQVJDSF9TVVBQT1JUU19DUkFTSF9EVU1QCj4gIAlkZWZfYm9v
-bCBQUEM2NCB8fCBQUENfQk9PSzNTXzMyIHx8IFBQQ184NXh4IHx8ICg0NHggJiYgIVNNUCkKPiAg
-Cj4gK2NvbmZpZyBBUkNIX0RFRkFVTFRfQ1JBU0hfRFVNUAo+ICsJYm9vbAo+ICsJZGVmYXVsdCB5
-IGlmICFQUENfQk9PSzNTXzMyCj4gKwo+ICBjb25maWcgQVJDSF9TRUxFQ1RTX0NSQVNIX0RVTVAK
-PiAgCWRlZl9ib29sIHkKPiAgCWRlcGVuZHMgb24gQ1JBU0hfRFVNUAo+IGRpZmYgLS1naXQgYS9h
-cmNoL3Jpc2N2L0tjb25maWcgYi9hcmNoL3Jpc2N2L0tjb25maWcKPiBpbmRleCA4NmQxZjFjZWE1
-NzEuLjM0MWVmNzU5ODcwYSAxMDA2NDQKPiAtLS0gYS9hcmNoL3Jpc2N2L0tjb25maWcKPiArKysg
-Yi9hcmNoL3Jpc2N2L0tjb25maWcKPiBAQCAtODgyLDYgKzg4Miw5IEBAIGNvbmZpZyBBUkNIX1NV
-UFBPUlRTX0tFWEVDX1BVUkdBVE9SWQo+ICBjb25maWcgQVJDSF9TVVBQT1JUU19DUkFTSF9EVU1Q
-Cj4gIAlkZWZfYm9vbCB5Cj4gIAo+ICtjb25maWcgQVJDSF9ERUZBVUxUX0NSQVNIX0RVTVAKPiAr
-CWRlZl9ib29sIHkKPiArCj4gIGNvbmZpZyBBUkNIX0hBU19HRU5FUklDX0NSQVNIS0VSTkVMX1JF
-U0VSVkFUSU9OCj4gIAlkZWZfYm9vbCBDUkFTSF9SRVNFUlZFCj4gIAo+IGRpZmYgLS1naXQgYS9h
-cmNoL3MzOTAvS2NvbmZpZyBiL2FyY2gvczM5MC9LY29uZmlnCj4gaW5kZXggYzYwZTY5OWU5OWY1
-Li5mZmYzNzFiODllNDEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9zMzkwL0tjb25maWcKPiArKysgYi9h
-cmNoL3MzOTAvS2NvbmZpZwo+IEBAIC0yNzUsNiArMjc1LDkgQEAgY29uZmlnIEFSQ0hfU1VQUE9S
-VFNfQ1JBU0hfRFVNUAo+ICAJICBUaGlzIG9wdGlvbiBhbHNvIGVuYWJsZXMgczM5MCB6ZmNwZHVt
-cC4KPiAgCSAgU2VlIGFsc28gPGZpbGU6RG9jdW1lbnRhdGlvbi9hcmNoL3MzOTAvemZjcGR1bXAu
-cnN0Pgo+ICAKPiArY29uZmlnIEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCj4gKwlkZWZfYm9vbCB5
-Cj4gKwo+ICBtZW51ICJQcm9jZXNzb3IgdHlwZSBhbmQgZmVhdHVyZXMiCj4gIAo+ICBjb25maWcg
-SEFWRV9NQVJDSF9aMTBfRkVBVFVSRVMKPiBkaWZmIC0tZ2l0IGEvYXJjaC9zaC9LY29uZmlnIGIv
-YXJjaC9zaC9LY29uZmlnCj4gaW5kZXggZTkxMDM5OThjY2E5Li4wNGZmNWZiOTI0MmUgMTAwNjQ0
-Cj4gLS0tIGEvYXJjaC9zaC9LY29uZmlnCj4gKysrIGIvYXJjaC9zaC9LY29uZmlnCj4gQEAgLTU1
-MCw2ICs1NTAsOSBAQCBjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQwo+ICBjb25maWcgQVJDSF9T
-VVBQT1JUU19DUkFTSF9EVU1QCj4gIAlkZWZfYm9vbCBCUk9LRU5fT05fU01QCj4gIAo+ICtjb25m
-aWcgQVJDSF9ERUZBVUxUX0NSQVNIX0RVTVAKPiArCWRlZl9ib29sIHkKPiArCj4gIGNvbmZpZyBB
-UkNIX1NVUFBPUlRTX0tFWEVDX0pVTVAKPiAgCWRlZl9ib29sIHkKPiAgCj4gZGlmZiAtLWdpdCBh
-L2FyY2gveDg2L0tjb25maWcgYi9hcmNoL3g4Ni9LY29uZmlnCj4gaW5kZXggZDFmZTczMjk3OWQ0
-Li43ZjM5ZGI3Nzk1NzQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYvS2NvbmZpZwo+ICsrKyBiL2Fy
-Y2gveDg2L0tjb25maWcKPiBAQCAtMjA5Miw2ICsyMDkyLDkgQEAgY29uZmlnIEFSQ0hfU1VQUE9S
-VFNfS0VYRUNfSlVNUAo+ICBjb25maWcgQVJDSF9TVVBQT1JUU19DUkFTSF9EVU1QCj4gIAlkZWZf
-Ym9vbCBYODZfNjQgfHwgKFg4Nl8zMiAmJiBISUdITUVNKQo+ICAKPiArY29uZmlnIEFSQ0hfREVG
-QVVMVF9DUkFTSF9EVU1QCj4gKwlkZWZfYm9vbCB5Cj4gKwo+ICBjb25maWcgQVJDSF9TVVBQT1JU
-U19DUkFTSF9IT1RQTFVHCj4gIAlkZWZfYm9vbCB5Cj4gIAo+IGRpZmYgLS1naXQgYS9rZXJuZWwv
-S2NvbmZpZy5rZXhlYyBiL2tlcm5lbC9LY29uZmlnLmtleGVjCj4gaW5kZXggNmMzNGU2M2M4OGZm
-Li40ZDExMWY4NzE5NTEgMTAwNjQ0Cj4gLS0tIGEva2VybmVsL0tjb25maWcua2V4ZWMKPiArKysg
-Yi9rZXJuZWwvS2NvbmZpZy5rZXhlYwo+IEBAIC05Nyw3ICs5Nyw3IEBAIGNvbmZpZyBLRVhFQ19K
-VU1QCj4gIAo+ICBjb25maWcgQ1JBU0hfRFVNUAo+ICAJYm9vbCAia2VybmVsIGNyYXNoIGR1bXBz
-Igo+IC0JZGVmYXVsdCB5Cj4gKwlkZWZhdWx0IEFSQ0hfREVGQVVMVF9DUkFTSF9EVU1QCj4gIAlk
-ZXBlbmRzIG9uIEFSQ0hfU1VQUE9SVFNfQ1JBU0hfRFVNUAo+ICAJZGVwZW5kcyBvbiBLRVhFQ19D
-T1JFCj4gIAlzZWxlY3QgVk1DT1JFX0lORk8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+Hi Andrew,
+
+On 09/19/24 at 10:57am, Baoquan He wrote:
+> On 09/17/24 at 12:37pm, Dave Vasilevsky wrote:
+> > Fixes boot failures on 6.9 on PPC_BOOK3S_32 machines using
+> > Open Firmware. On these machines, the kernel refuses to boot
+> > from non-zero PHYSICAL_START, which occurs when CRASH_DUMP is on.
+> > =
+
+> > Since most PPC_BOOK3S_32 machines boot via Open Firmware, it should
+> > default to off for them. Users booting via some other mechanism
+> > can still turn it on explicitly.
+> > =
+
+> > Does not change the default on any other architectures for the
+> > time being.
+> > =
+
+> > Signed-off-by: Dave Vasilevsky <dave@vasilevsky.ca>
+> > Reported-by: Reimar D=F6ffinger <Reimar.Doeffinger@gmx.de>
+> > Closes: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+> > Fixes: 75bc255a7444 ("crash: clean up kdump related config items")
+> > ---
+> >  arch/arm/Kconfig       | 3 +++
+> >  arch/arm64/Kconfig     | 3 +++
+> >  arch/loongarch/Kconfig | 3 +++
+> >  arch/mips/Kconfig      | 3 +++
+> >  arch/powerpc/Kconfig   | 4 ++++
+> >  arch/riscv/Kconfig     | 3 +++
+> >  arch/s390/Kconfig      | 3 +++
+> >  arch/sh/Kconfig        | 3 +++
+> >  arch/x86/Kconfig       | 3 +++
+> >  kernel/Kconfig.kexec   | 2 +-
+> >  10 files changed, 29 insertions(+), 1 deletion(-)
+> =
+
+> Thanks for the effort.
+> =
+
+> Acked-by: Baoquan He <bhe@redhat.com>
+
+Could you help pick this one?
+
+Thanks
+Baoquan
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
