@@ -4,88 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A29AED6DDEA
-	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 09:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7C06D6DDEC
+	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 09:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RorhOcPRXQj1dk9BtLyB46Na3zATBZ3YDRHJyzGTzXo=; b=w5IB8XnWOGrMiAqA30OSUxNdJw
-	yzIvc3FfGChetGdsPpkrOt3x//8HycpCVGXfLmTKtf6bk3b7Ic5Jvk+TYfY5dn0JFwtn3S74gKMLV
-	lkRGvOQQzrt7MPFWCn9DftchHSbwVCvnyEXWDzRl3qvK299jhavHig/d9ip5S5f8aEd/XhF/SG5GK
-	2KaxGFTNBxFXoUA1aOT5wtiwBEpcwSETRupka55X8JGCromplXkHJ4g1/npUBbTJQoRhVgH3NbWmR
-	f5VJVay3ydevNu85J6T+OtDyd1N2z+Z2NFVKzetrvwwaRlsOP2IB4RJhwHDA3CZGZLcLKPkV6Vhps
-	ZtjfBe4w==;
+	bh=UQVkmvFUb7omt6BspZ1f4lT2Qkjrgza0x8w6T4qgeNs=; b=aTVWNmJp9BgrE4ep1erswYBWkJ
+	9IlWTIR60VOJ2x8wwXSNoSyzvpiYEIzzYF8AmLYFuW3o+9CiatdS6HCmw96/SumyIbqo5hdAN0E60
+	NH/dxt5vmvuie+kK9slqneiialtrj33FSkbBKApf9BNNI28y5qLBUaHwIDg0KhxheL9m38GCXLPPm
+	RwdoNkGBVWxiNsqGvWo580UdlRC05+GGdR9Dk2pdg7Oatlv1UJpQsi3hu/roEGx2piEmrUiYzjoeA
+	l9+psd4ne9Sb18dBDvkkk9QkPEKqBGRrX2vmkRx6v5lPN3g7GW0hiiJwPO9M1Q0DZUie+ESQ96ziX
+	fQQCB0Ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBst2-00000002Edu-0Mln;
-	Fri, 15 Nov 2024 09:45:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tBst8-00000002Ega-2YBF;
+	Fri, 15 Nov 2024 09:45:14 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBssz-00000002EdQ-2Z1j
+	id 1tBst6-00000002Ef4-0ccW
 	for kexec@lists.infradead.org;
-	Fri, 15 Nov 2024 09:45:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731663904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RorhOcPRXQj1dk9BtLyB46Na3zATBZ3YDRHJyzGTzXo=;
-	b=gZWJ0MrhdpFVgTxWL9Z+Vg7oX1X4EjEYqlUXoF+BkEgAzIBXpGYQvul0oHDGvZogkIPAFG
-	qcbWNmyNjzIHx7a1gxQgOAxVz0hrbeihdpdYA+0vEtntOEN2q1zCUDRHkCwpimsHCwVXHu
-	1xpSxPUovS27M1T38KdNo5rT6ETBNiw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-5UXQeT7OMAuOayEhTmaTkQ-1; Fri,
- 15 Nov 2024 04:45:01 -0500
-X-MC-Unique: 5UXQeT7OMAuOayEhTmaTkQ-1
-X-Mimecast-MFC-AGG-ID: 5UXQeT7OMAuOayEhTmaTkQ
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5F9CD1956080;
-	Fri, 15 Nov 2024 09:44:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4929D3003B71;
-	Fri, 15 Nov 2024 09:44:55 +0000 (UTC)
-Date: Fri, 15 Nov 2024 17:44:49 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 04/11] fs/proc/vmcore: move vmcore definitions from
- kcore.h to crash_dump.h
-Message-ID: <ZzcYEQwLuLnGQM1y@MiWiFi-R3L-srv>
-References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-5-david@redhat.com>
+	Fri, 15 Nov 2024 09:45:13 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 203035C6261;
+	Fri, 15 Nov 2024 09:44:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86FBDC4CECF;
+	Fri, 15 Nov 2024 09:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731663911;
+	bh=fGGdFnBPXWrfufp78HOuQV0Y/XfBoTWQMxhvdckWiC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d3RC8YaEyrc9FrcTR96n2iVq393c63ZGB//mC3IbVTP4CJtgPV458pXfq5IlhOtci
+	 GDBmSiUhIja64DqCJ9zNsrbuOfza3ZWlCdhtg1mYEkgwUNTX6HgPdFH3AUae4A//Nk
+	 8rNcPce4YUd+x2x2x7uwlPeT6Mvu7gnvWfjGoOCEecmt9j3Cf6w+9sq83mJgbLJ4IB
+	 5lJtvtg8Sut+k3BmznnMhSVx4icbbL1tbbYnzkxExH9wluhwKGN+62dNezyz0ynj6Q
+	 MxDTAZi6SNUQWbigBav+6j/BjYXmuYC16r7aTXbm1ZZb7HLtZ8vEO2wPHFoDLjix83
+	 OODyz+QZloKKg==
+Date: Fri, 15 Nov 2024 09:45:08 +0000
+From: Simon Horman <horms@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH v1 1/1] kexec: x86: Include pref_address when looking for
+ a memory hole
+Message-ID: <20241115094508.GG1062410@kernel.org>
+References: <20241113154437.2860694-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241025151134.1275575-5-david@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20241113154437.2860694-1-andriy.shevchenko@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241115_014505_826898_B388784D 
-X-CRM114-Status: GOOD (  27.54  )
+X-CRM114-CacheID: sfid-20241115_014512_270232_765FCFF4 
+X-CRM114-Status: GOOD (  20.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,179 +71,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/25/24 at 05:11pm, David Hildenbrand wrote:
-> These defines are not related to /proc/kcore, move them to crash_dump.h
-> instead. While at it, rename "struct vmcore" to "struct
-> vmcore_mem_node", which is a more fitting name.
-
-Agree it's inappropriate to put the defintions in kcore.h. However for
-'struct vmcore', it's only used in fs/proc/vmcore.c from my code
-serching, do you think if we can put it in fs/proc/vmcore.c directly?
-And 'struct vmcoredd_node' too.
-
-And about the renaming, with my understanding each instance of struct
-vmcore represents one memory region, isn't it a little confusing to be
-called vmcore_mem_node? I understand you probablly want to unify the
-vmcore and vmcoredd's naming. I have to admit I don't know vmcoredd well
-and its naming, while most of people have been knowing vmcore representing
-memory region very well.
-
+On Wed, Nov 13, 2024 at 05:44:37PM +0200, Andy Shevchenko wrote:
+> When the kernel is built relocatable, the starting address can be
+> anything above 1Mb on x86. However, the startup_*() entries consider
+> that the minumum address for the kernel for the decompression has to
+> be at least LOAD_PHYSICAL_ADDR which is turn the value that is provided
+> as pref_address in boot protocol. The boot protocol itself says:
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  fs/proc/vmcore.c           | 20 ++++++++++----------
->  include/linux/crash_dump.h | 13 +++++++++++++
->  include/linux/kcore.h      | 13 -------------
->  3 files changed, 23 insertions(+), 23 deletions(-)
+>   This field, if nonzero, represents a preferred load address for the
+>   kernel.  A relocating bootloader should attempt to load at this
+>   address if possible.
 > 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 6371dbaa21be..47652df95202 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -304,10 +304,10 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
->   */
->  static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
->  {
-> +	struct vmcore_mem_node *m = NULL;
->  	ssize_t acc = 0, tmp;
->  	size_t tsz;
->  	u64 start;
-> -	struct vmcore *m = NULL;
->  
->  	if (!iov_iter_count(iter) || *fpos >= vmcore_size)
->  		return 0;
-> @@ -560,8 +560,8 @@ static int vmcore_remap_oldmem_pfn(struct vm_area_struct *vma,
->  static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
->  {
->  	size_t size = vma->vm_end - vma->vm_start;
-> +	struct vmcore_mem_node *m;
->  	u64 start, end, len, tsz;
-> -	struct vmcore *m;
->  
->  	start = (u64)vma->vm_pgoff << PAGE_SHIFT;
->  	end = start + size;
-> @@ -683,16 +683,16 @@ static const struct proc_ops vmcore_proc_ops = {
->  	.proc_mmap	= mmap_vmcore,
->  };
->  
-> -static struct vmcore* __init get_new_element(void)
-> +static struct vmcore_mem_node * __init get_new_element(void)
->  {
-> -	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
-> +	return kzalloc(sizeof(struct vmcore_mem_node), GFP_KERNEL);
->  }
->  
->  static u64 get_vmcore_size(size_t elfsz, size_t elfnotesegsz,
->  			   struct list_head *vc_list)
->  {
-> +	struct vmcore_mem_node *m;
->  	u64 size;
-> -	struct vmcore *m;
->  
->  	size = elfsz + elfnotesegsz;
->  	list_for_each_entry(m, vc_list, list) {
-> @@ -1090,11 +1090,11 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
->  						size_t elfnotes_sz,
->  						struct list_head *vc_list)
->  {
-> +	struct vmcore_mem_node *new;
->  	int i;
->  	Elf64_Ehdr *ehdr_ptr;
->  	Elf64_Phdr *phdr_ptr;
->  	loff_t vmcore_off;
-> -	struct vmcore *new;
->  
->  	ehdr_ptr = (Elf64_Ehdr *)elfptr;
->  	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr)); /* PT_NOTE hdr */
-> @@ -1133,11 +1133,11 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
->  						size_t elfnotes_sz,
->  						struct list_head *vc_list)
->  {
-> +	struct vmcore_mem_node *new;
->  	int i;
->  	Elf32_Ehdr *ehdr_ptr;
->  	Elf32_Phdr *phdr_ptr;
->  	loff_t vmcore_off;
-> -	struct vmcore *new;
->  
->  	ehdr_ptr = (Elf32_Ehdr *)elfptr;
->  	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr)); /* PT_NOTE hdr */
-> @@ -1175,8 +1175,8 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
->  static void set_vmcore_list_offsets(size_t elfsz, size_t elfnotes_sz,
->  				    struct list_head *vc_list)
->  {
-> +	struct vmcore_mem_node *m;
->  	loff_t vmcore_off;
-> -	struct vmcore *m;
->  
->  	/* Skip ELF header, program headers and ELF note segment. */
->  	vmcore_off = elfsz + elfnotes_sz;
-> @@ -1587,9 +1587,9 @@ void vmcore_cleanup(void)
->  
->  	/* clear the vmcore list. */
->  	while (!list_empty(&vmcore_list)) {
-> -		struct vmcore *m;
-> +		struct vmcore_mem_node *m;
->  
-> -		m = list_first_entry(&vmcore_list, struct vmcore, list);
-> +		m = list_first_entry(&vmcore_list, struct vmcore_mem_node, list);
->  		list_del(&m->list);
->  		kfree(m);
->  	}
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index acc55626afdc..5e48ab12c12b 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -114,10 +114,23 @@ struct vmcore_cb {
->  extern void register_vmcore_cb(struct vmcore_cb *cb);
->  extern void unregister_vmcore_cb(struct vmcore_cb *cb);
->  
-> +struct vmcore_mem_node {
-> +	struct list_head list;
-> +	unsigned long long paddr;
-> +	unsigned long long size;
-> +	loff_t offset;
-> +};
-> +
->  #else /* !CONFIG_CRASH_DUMP */
->  static inline bool is_kdump_kernel(void) { return false; }
->  #endif /* CONFIG_CRASH_DUMP */
->  
-> +struct vmcoredd_node {
-> +	struct list_head list;	/* List of dumps */
-> +	void *buf;		/* Buffer containing device's dump */
-> +	unsigned int size;	/* Size of the buffer */
-> +};
-> +
->  /* Device Dump information to be filled by drivers */
->  struct vmcoredd_data {
->  	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
-> diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-> index 86c0f1d18998..9a2fa013c91d 100644
-> --- a/include/linux/kcore.h
-> +++ b/include/linux/kcore.h
-> @@ -20,19 +20,6 @@ struct kcore_list {
->  	int type;
->  };
->  
-> -struct vmcore {
-> -	struct list_head list;
-> -	unsigned long long paddr;
-> -	unsigned long long size;
-> -	loff_t offset;
-> -};
-> -
-> -struct vmcoredd_node {
-> -	struct list_head list;	/* List of dumps */
-> -	void *buf;		/* Buffer containing device's dump */
-> -	unsigned int size;	/* Size of the buffer */
-> -};
-> -
->  #ifdef CONFIG_PROC_KCORE
->  void __init kclist_add(struct kcore_list *, void *, size_t, int type);
->  
-> -- 
-> 2.46.1
+> Besides that the code in the kernel (arch/x86/kernel/kexec-bzimage64.c)
+> has these lines (in bzImage64_load() function):
 > 
+>     if (header->pref_address < MIN_KERNEL_LOAD_ADDR)
+>         kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
+>     else
+>         kbuf.buf_min = header->pref_address;
+> 
+> All that said, do the same in kexec tools. Without this patch
+> the relocatable kernel may end up in the memory hole that is
+> not enough for in-place decompression and Bad Things will happen
+> as it's proven on Intel Merrifield, that has a reserved memory
+> block starting at 64Mb.
+> 
+> Note, it doesn't mean that kernel has no issues itself in this particular
+> stage, but at least we may work around some corner cases for kexec.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Thanks Andy, applied.
 
