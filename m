@@ -4,70 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36ED5D6A225
-	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 01:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0EA93D6DDED
+	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 08:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=auIunFr57gOFN1FNFHA32Az1353D4ZZkXxzIl3P/F3I=; b=z+V7V7V3KEM/f/aDPB3lJCP6pX
-	+CqiCyRY4gIHjcZOaTaheAX5wgg7/IpLKadTtgwNzdu3eU8R+brS7jL3xydPXvnlJYQP8JueHlsMI
-	hJT11qtueLVpALUKFWGNZJeBbq2jM6SEpi9i3wu200WM5+BlAqQl+rmM45E4jIQOU2XO3jt72ZdbM
-	muss+r0IwMCyxn9Y3VpKIUyjfy3TeN4e3bl247IF0myBanYvLh1981s19bhV6aCnlk8bffiuEqcc2
-	lURbi/5c2ZifzYXxfUd1a7fqVMdn336Vwe0gHzgoKQAUaMaF4yCXMSYuD/OF0d/YJrbCNDuvd7xgs
-	iEAxMsNw==;
+	bh=iU3AwiO23RxdWGWn7Yp7jp33a5YtE5yN//tDV9uC5Ss=; b=CalNJSnxNnCwOaBM++XLm9kgJC
+	pAVX8uZAGWcyF4XzFEA4Gii5Az8lueqM7edE5cQkP/XxKViUTN2QPYvdnevM8VnRUcsX7EAY1rozb
+	8eJcc07AV82z+74V6V+thsxVSSStfPpc9bBHmDrqqAA7Mw/Zukn8nXTjM8N6PM0lZjvBN3XCbxwZn
+	/V3L7OyYjJfc1Ny/Iokb8ycS350z0oMmkEynxTyVlwpVe5mj+kXAh8sO/l4qoij11MpIcMdBzZA+L
+	39Aw+IKT+WvPaHtPUM0aCrCjjsKYZZxbLZ1ynGDBC+xXIrVdtjipq0hEC6Uv/GvQtreQiDMtTLbJi
+	HQNWYP9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBl3o-00000001Im6-3Kt8;
-	Fri, 15 Nov 2024 01:23:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tBryX-000000024zO-2WwC;
+	Fri, 15 Nov 2024 08:46:45 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBl3l-00000001Il6-0md7
+	id 1tBryU-000000024yh-2jf1
 	for kexec@lists.infradead.org;
-	Fri, 15 Nov 2024 01:23:42 +0000
+	Fri, 15 Nov 2024 08:46:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731633818;
+	s=mimecast20190719; t=1731660401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=auIunFr57gOFN1FNFHA32Az1353D4ZZkXxzIl3P/F3I=;
-	b=CImER+3lbQfmzYqcdd+OLZru2oldshHQc1rG+xuHQZi7nkH/bomJqmplCS5T3STImy/DNk
-	qdXcrqU8mHhZfAhS12Qt9VwnPYlpoYdk5rb/jSJDEvneP7J2/yGIcyQ2X+ygG2yhZLpoyl
-	uGVsQNGQgHhzvzZZmvEiix+TZB9uySc=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=iU3AwiO23RxdWGWn7Yp7jp33a5YtE5yN//tDV9uC5Ss=;
+	b=DNvcV98o95278eYdFS1fxbZWTBdd+ftk0xI+ACyvgbNcnHigC5VNIp/BQj+DbiSpjs97pZ
+	RBw+hdC9CWy/jjyjbZUHjnzAReCYclgkEARqjWH8fR9ECuwgO/Ed1xjfOauoNW/fA47oGh
+	P/76ZS8viMMPgjyUTGpfIZ7KWfDFmMw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-jer0dGJqMXqiUqm9a4LeyA-1; Thu,
- 14 Nov 2024 20:23:35 -0500
-X-MC-Unique: jer0dGJqMXqiUqm9a4LeyA-1
-X-Mimecast-MFC-AGG-ID: jer0dGJqMXqiUqm9a4LeyA
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-Ae3uHm1KMM642lvste8crA-1; Fri,
+ 15 Nov 2024 03:46:37 -0500
+X-MC-Unique: Ae3uHm1KMM642lvste8crA-1
+X-Mimecast-MFC-AGG-ID: Ae3uHm1KMM642lvste8crA
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC0321955D62;
-	Fri, 15 Nov 2024 01:23:33 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.16])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9BC931955F43;
-	Fri, 15 Nov 2024 01:23:31 +0000 (UTC)
-Date: Fri, 15 Nov 2024 09:23:27 +0800
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C2E31955F41;
+	Fri, 15 Nov 2024 08:46:35 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.10])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A99EE1956054;
+	Fri, 15 Nov 2024 08:46:32 +0000 (UTC)
+Date: Fri, 15 Nov 2024 16:46:27 +0800
 From: Baoquan He <bhe@redhat.com>
-To: kexec@lists.infradead.org
-Cc: x86@kernel.org, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org,
-	bp@alien8.de
-Subject: Re: [PATCH 0/3] x86/ioremap: clean up the mess in xxx_is_setup_data
-Message-ID: <Zzaij4fbgBdMYqdi@MiWiFi-R3L-srv>
-References: <20241115012131.509226-1-bhe@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 00/11] fs/proc/vmcore: kdump support for virtio-mem on
+ s390
+Message-ID: <ZzcKY8hap3OMqTjC@MiWiFi-R3L-srv>
+References: <20241025151134.1275575-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241115012131.509226-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241025151134.1275575-1-david@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241114_172341_336418_D64A5959 
-X-CRM114-Status: GOOD (  12.70  )
+X-CRM114-CacheID: sfid-20241115_004642_764671_CE7391EC 
+X-CRM114-Status: GOOD (  35.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,32 +101,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Also CC kexec list.
+On 10/25/24 at 05:11pm, David Hildenbrand wrote:
+> This is based on "[PATCH v3 0/7] virtio-mem: s390 support" [1], which adds
+> virtio-mem support on s390.
+> 
+> The only "different than everything else" thing about virtio-mem on s390
+> is kdump: The crash (2nd) kernel allocates+prepares the elfcore hdr
+> during fs_init()->vmcore_init()->elfcorehdr_alloc(). Consequently, the
+> crash kernel must detect memory ranges of the crashed/panicked kernel to
+> include via PT_LOAD in the vmcore.
+> 
+> On other architectures, all RAM regions (boot + hotplugged) can easily be
+> observed on the old (to crash) kernel (e.g., using /proc/iomem) to create
+> the elfcore hdr.
+> 
+> On s390, information about "ordinary" memory (heh, "storage") can be
+> obtained by querying the hypervisor/ultravisor via SCLP/diag260, and
+> that information is stored early during boot in the "physmem" memblock
+> data structure.
+> 
+> But virtio-mem memory is always detected by as device driver, which is
+> usually build as a module. So in the crash kernel, this memory can only be
+                                       ~~~~~~~~~~~
+                                       Is it 1st kernel or 2nd kernel?
+Usually we call the 1st kernel as panicked kernel, crashed kernel, the
+2nd kernel as kdump kernel. 
+> properly detected once the virtio-mem driver started up.
+> 
+> The virtio-mem driver already supports the "kdump mode", where it won't
+> hotplug any memory but instead queries the device to implement the
+> pfn_is_ram() callback, to avoid reading unplugged memory holes when reading
+> the vmcore.
+> 
+> With this series, if the virtio-mem driver is included in the kdump
+> initrd -- which dracut already takes care of under Fedora/RHEL -- it will
+> now detect the device RAM ranges on s390 once it probes the devices, to add
+> them to the vmcore using the same callback mechanism we already have for
+> pfn_is_ram().
 
-On 11/15/24 at 09:21am, Baoquan He wrote:
-> Functions memremap_is_setup_data() and early_memremap_is_setup_data()
-> share completely the same process and handling, except of the
-> different memremap/unmap invocations. The code can be extracted and put
-> into a helper function __memremap_is_setup_data().
+Do you mean on s390 virtio-mem memory region will be detected and added
+to vmcore in kdump kernel when virtio-mem driver is initialized? Not
+sure if I understand it correctly.
+
 > 
-> And parameter 'size' is unused in implementation of memremap_is_efi_data(),
-> memremap_is_setup_data and early_memremap_is_setup_data().
+> To add these device RAM ranges to the vmcore ("patch the vmcore"), we will
+> add new PT_LOAD entries that describe these memory ranges, and update
+> all offsets vmcore size so it is all consistent.
 > 
-> This patchset is made to clean them up. It sits on top of tip/x86/urgent
-> commit 8d9ffb2fe65a ("x86/mm: Fix a kdump kernel failure on SME system
-> when CONFIG_IMA_KEXEC=y")
+> Note that makedumfile is shaky with v6.12-rcX, I made the "obvious" things
+> (e.g., free page detection) work again while testing as documented in [2].
 > 
-> Baoquan He (3):
->   x86/ioremap: introduce helper to check if physical address is in
->     setup_data
->   x86/ioremap: use helper to implement xxx_is_setup_data()
->   x86/mm: clean up unused parameters of functions
+> Creating the dumps using makedumpfile seems to work fine, and the
+> dump regions (PT_LOAD) are as expected. I yet have to check in more detail
+> if the created dumps are good (IOW, the right memory was dumped, but it
+> looks like makedumpfile reads the right memory when interpreting the
+> kernel data structures, which is promising).
 > 
->  arch/x86/mm/ioremap.c | 117 +++++++++++++++---------------------------
->  1 file changed, 41 insertions(+), 76 deletions(-)
+> Patch #1 -- #6 are vmcore preparations and cleanups
+> Patch #7 adds the infrastructure for drivers to report device RAM
+> Patch #8 + #9 are virtio-mem preparations
+> Patch #10 implements virtio-mem support to report device RAM
+> Patch #11 activates it for s390, implementing a new function to fill
+>           PT_LOAD entry for device RAM
+> 
+> [1] https://lkml.kernel.org/r/20241025141453.1210600-1-david@redhat.com
+> [2] https://github.com/makedumpfile/makedumpfile/issues/16
+> 
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Cc: "Eugenio Pérez" <eperezma@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: Janosch Frank <frankja@linux.ibm.com>
+> Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> Cc: Eric Farman <farman@linux.ibm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> 
+> David Hildenbrand (11):
+>   fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex
+>   fs/proc/vmcore: replace vmcoredd_mutex by vmcore_mutex
+>   fs/proc/vmcore: disallow vmcore modifications after the vmcore was
+>     opened
+>   fs/proc/vmcore: move vmcore definitions from kcore.h to crash_dump.h
+>   fs/proc/vmcore: factor out allocating a vmcore memory node
+>   fs/proc/vmcore: factor out freeing a list of vmcore ranges
+>   fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM to detect device RAM
+>     ranges in 2nd kernel
+>   virtio-mem: mark device ready before registering callbacks in kdump
+>     mode
+>   virtio-mem: remember usable region size
+>   virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM
+>   s390/kdump: virtio-mem kdump support (CONFIG_PROC_VMCORE_DEVICE_RAM)
+> 
+>  arch/s390/Kconfig             |   1 +
+>  arch/s390/kernel/crash_dump.c |  39 +++--
+>  drivers/virtio/Kconfig        |   1 +
+>  drivers/virtio/virtio_mem.c   | 103 +++++++++++++-
+>  fs/proc/Kconfig               |  25 ++++
+>  fs/proc/vmcore.c              | 258 +++++++++++++++++++++++++---------
+>  include/linux/crash_dump.h    |  47 +++++++
+>  include/linux/kcore.h         |  13 --
+>  8 files changed, 396 insertions(+), 91 deletions(-)
 > 
 > -- 
-> 2.41.0
+> 2.46.1
 > 
 
 
