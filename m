@@ -4,79 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8DCD0D6DDEC
-	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F912D6DDEE
+	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 10:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=X8E6eVxLWOK+GWUhh6BU4TxxW/inMa7I4h3tnqFTYNo=; b=FlKZN4ZnSVO1OPgEQGBMC51+H/
-	jVIpIlwh6j2UU91SCNiJ7V+bM5iM5sKhUqqoYw/qNi/EFaPNnufCeTKUXUHdSDD2DZNc/g92fFJbo
-	3WlLzpo+YUI3bquN5IIvm9OQGtDpOfuBBaueJPyZErW5A1TuflhLXNMWt1mM6LQCMIHa5jkLl7MDg
-	6qw64ndup3HT5gR72k1YWiqeUxMThpEs/J/4tRNv1hkGIcnqSJV7rk1BjUJD2WlwbOZdTAHr7oQhc
-	UZag39njfVayM4DIBONTIPsoGGJmO910v/u5azrej6hhE1xzCh5hztcbetliMb46e3KNI1Q1gEo69
-	53fqEbCw==;
+	bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=; b=NgyiXKJuiJts+lqMzHsA3LjzJ/
+	dV4RiYcBcA8miFNE3z8Ak0c9TrcXS4lxhP1dEg1X8tXBQb81874MoZj3b7JxyLxwFhJbNyBl5mkjS
+	DzX7TrhNt2oWlP4WSfQDRFjgTBGdsCU145T45JfCHSGbHcjytN7ILV4wq0FscuIdfkAs5Sp6xJBtP
+	h2kExaQCJgtwY0reIKE6RuMBEmSpXhu8eiHm+rl7tVmcZoEiRJqEV0fwv8w0wflytJ6qfi1Zm9uIg
+	dT6ebqR4aiAWyDZi6bss5FrBeGhEa1xs077J9oFGCvXPd1cSC13BotsmYo59DxNHVz+G/wL0MBez8
+	a/OLPzWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBt6p-00000002HEN-0yHd;
-	Fri, 15 Nov 2024 09:59:23 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tBtB9-00000002Hxm-0COt;
+	Fri, 15 Nov 2024 10:03:51 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBt6m-00000002HDU-2jOn
+	id 1tBtB6-00000002HxF-0Mcs
 	for kexec@lists.infradead.org;
-	Fri, 15 Nov 2024 09:59:22 +0000
+	Fri, 15 Nov 2024 10:03:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731664759;
+	s=mimecast20190719; t=1731665027;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=X8E6eVxLWOK+GWUhh6BU4TxxW/inMa7I4h3tnqFTYNo=;
-	b=Ji6hcrKCjjgGMliKtA4uonmL4654OFsbm2PoYANsWs2Cnbr7B3ZLcIjP4+X/csHo91lNZr
-	RDU5ZqVGDOlqrKS7aTT0F2b46VVUNuY/VHfWRErh1jY7/htoSx+T4c1qqZn01+ZSM8pAg3
-	zfXLMVpQZfaILJxBirzgr9+WeQ4fX8o=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=;
+	b=VfMT+Jp/U3m8qFStuidohr3PG2CMEsVDDO/K4I2eRk8kLgTTHN5i/3WIkxHuvaG2UeV144
+	V11cNRlmbsBax9HQA7yv08ubGLphNoV5U8Zb/QPUamyxVDwvTqyh9z7Wf+4TGY3VcHxEOw
+	WeT+F42v7gyJBZaPg8FWVwe9jgl72TQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-184-XpxTuwwyOlGtDqhvG7ssWA-1; Fri, 15 Nov 2024 04:59:16 -0500
-X-MC-Unique: XpxTuwwyOlGtDqhvG7ssWA-1
-X-Mimecast-MFC-AGG-ID: XpxTuwwyOlGtDqhvG7ssWA
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-381e8cf69a6so972471f8f.1
-        for <kexec@lists.infradead.org>; Fri, 15 Nov 2024 01:59:16 -0800 (PST)
+ us-mta-217-fRqaElWoPc2104YmsyqrhQ-1; Fri, 15 Nov 2024 05:03:45 -0500
+X-MC-Unique: fRqaElWoPc2104YmsyqrhQ-1
+X-Mimecast-MFC-AGG-ID: fRqaElWoPc2104YmsyqrhQ
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-382172035ecso952035f8f.1
+        for <kexec@lists.infradead.org>; Fri, 15 Nov 2024 02:03:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731664755; x=1732269555;
+        d=1e100.net; s=20230601; t=1731665024; x=1732269824;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=X8E6eVxLWOK+GWUhh6BU4TxxW/inMa7I4h3tnqFTYNo=;
-        b=jv+sga9HPjVEtxqkKruwKCVsH79FADiEPv2lWPtTxOPuNClhy2FQIMR7QeHtWezsJs
-         DGYlcYyc99oVQf6W6zY9Af4IEW5oFVJcUkVsLosYfAXCWpvBEQ2WmlJxNmAnQXEBTuqa
-         0CzBPHT73+3nA3GqbRZwykyHVqU9oIAJI9wex+X5B266+Ru6ZHqXIohPC9f/3+PeVKzP
-         WYmo91x/HEnBRuRnckAq8WYUlYLMT/MquJkvtBURlrZmWt3w4FvuP7tLBzSXmq/VF79f
-         f3dQ/XIN6bMKDcepSORReAkHtGN7tHBjfwAXYb10rpIw5LK9DuQolyWcUjspzP7IVE/1
-         WFHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmAVxrv/0E/805AgFqTc1xqoj3ucBJZSu7NZ5nznmm6ctO62i5MPwuSUpJMdJKwsSabh5Gyw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxrxwWdNafFEe2dcz2T4MtixkKl3VGucr+gctsCZR1gL2CfJync
-	paYsnF6pPwi91Ae4ZkGolS+HSNvLbMmWvFr7ljzrULACu+W82HlFrmw5npsgaDweRFMmQz3RrOn
-	nJc8e0/TdBiIBmXyjycIpztQhgAjrKnIicEFzE3VcLvHOpn1ackbWZQBQTA==
-X-Received: by 2002:a05:6000:2c6:b0:37d:3985:8871 with SMTP id ffacd0b85a97d-38225a92969mr1465105f8f.39.1731664755028;
-        Fri, 15 Nov 2024 01:59:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHZtrG1VPT+SoEB/3JsuRD2OwYh3OfRLaHmZweS8mwoREWkahoGdQaIQlreC1JDkXSdWnBgeA==
-X-Received: by 2002:a05:6000:2c6:b0:37d:3985:8871 with SMTP id ffacd0b85a97d-38225a92969mr1465079f8f.39.1731664754683;
-        Fri, 15 Nov 2024 01:59:14 -0800 (PST)
+        bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=;
+        b=OIM+1DTzT1f/fKYOGPhMQR7PUKR3VM8uR2LNonAMfMON0CDAdrVyl/KXTVIKGBRUow
+         Cjv5sT5SCWy2hUo0LKWG0PkZX/bP58wezsP0N3eLJRHVdNpDAgMPMmzNrL6HOm0e3F8O
+         TH2uhoQBa45oRlvnl15MnRt1BSe1bsFbbF+G8//wGzuujIJmSUTmKXJHy7wcAybsL2Ty
+         N2fFkUgGowKFub9mAhbLqSIMiU31a1Q+pds9ZuUgWkIygmH2WKDjeoqFFNIqKDJOF//E
+         tbSkRaAvNBEqHrGBJioSe1zVZTBWAOCKYoVrJxfqx8/wGyOVAyBlfxs3QTMTX8j/zrao
+         elXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBJuqCieHG4kd1oUwTztBi6gtjUwK1l0DBu/00WpJ4s9wjMublytN/iyGJyk5UQJWv2q7C9Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YziXvBeqmKsrTF/IroUe0PUhW/UyQ/YWPNO48kKpHh/TpV0OrAe
+	nP313H51Y7OVykoyS5/MpykBlNckNnC5Hq9j9W/9l4wCBcVyCVRA9eCvO9p0kqYJiKtA0mNQkRr
+	ASgM+ehu2h69vyAqAGPisTXsta1BGGhUcJs3+wGJj+oIisFDzKUYIKDD9jg==
+X-Received: by 2002:a05:6000:1865:b0:37d:443b:7ca4 with SMTP id ffacd0b85a97d-38214022068mr6154306f8f.14.1731665023913;
+        Fri, 15 Nov 2024 02:03:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEcalZaTTsWSZU/E4ZgekugNGYKtIjPxdb5azK2RW63irWlZEd/lURJaTLrMsANb0/rcEU5NA==
+X-Received: by 2002:a05:6000:1865:b0:37d:443b:7ca4 with SMTP id ffacd0b85a97d-38214022068mr6154132f8f.14.1731665023249;
+        Fri, 15 Nov 2024 02:03:43 -0800 (PST)
 Received: from ?IPV6:2003:cb:c721:8100:177e:1983:5478:64ec? (p200300cbc7218100177e1983547864ec.dip0.t-ipconnect.de. [2003:cb:c721:8100:177e:1983:5478:64ec])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ae3102asm3937372f8f.93.2024.11.15.01.59.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dac21a15sm48656425e9.38.2024.11.15.02.03.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2024 01:59:13 -0800 (PST)
-Message-ID: <ca0dd4a7-e007-4092-8f46-446fba26c672@redhat.com>
-Date: Fri, 15 Nov 2024 10:59:11 +0100
+        Fri, 15 Nov 2024 02:03:42 -0800 (PST)
+Message-ID: <2b5c2b71-d31b-406d-abc5-d9a0a67712f5@redhat.com>
+Date: Fri, 15 Nov 2024 11:03:40 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/11] fs/proc/vmcore: move vmcore definitions from
- kcore.h to crash_dump.h
+Subject: Re: [PATCH v1 01/11] fs/proc/vmcore: convert vmcore_cb_lock into
+ vmcore_mutex
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
@@ -93,7 +93,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
  <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-5-david@redhat.com> <ZzcYEQwLuLnGQM1y@MiWiFi-R3L-srv>
+ <20241025151134.1275575-2-david@redhat.com> <ZzcUpoDJ2xPc3FzF@MiWiFi-R3L-srv>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -140,16 +140,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ZzcYEQwLuLnGQM1y@MiWiFi-R3L-srv>
+In-Reply-To: <ZzcUpoDJ2xPc3FzF@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: xCaDX0hCkqCIJPe_vt0FAt-JW8Fa6Fdi4Xl58urAxd4_1731664755
+X-Mimecast-MFC-PROC-ID: DmXuAYLjuTv_JO-6KU3klGFvxBapz4K1eiH-3tlM4mE_1731665024
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241115_015920_792657_70DC9F65 
-X-CRM114-Status: GOOD (  15.96  )
+X-CRM114-CacheID: sfid-20241115_020348_220070_D370709F 
+X-CRM114-Status: GOOD (  14.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -164,36 +164,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 15.11.24 10:44, Baoquan He wrote:
+On 15.11.24 10:30, Baoquan He wrote:
 > On 10/25/24 at 05:11pm, David Hildenbrand wrote:
->> These defines are not related to /proc/kcore, move them to crash_dump.h
->> instead. While at it, rename "struct vmcore" to "struct
->> vmcore_mem_node", which is a more fitting name.
+>> We want to protect vmcore modifications from concurrent opening of
+>> the vmcore, and also serialize vmcore modiciations. Let's convert the
 > 
-> Agree it's inappropriate to put the defintions in kcore.h. However for
-> 'struct vmcore', it's only used in fs/proc/vmcore.c from my code
-> serching, do you think if we can put it in fs/proc/vmcore.c directly?
-> And 'struct vmcoredd_node' too.
-
-See the next patches and how virtio-mem will make use of the feactored 
-out functions. Not putting them as inline functions into a header will 
-require exporting symbols just do add a vmcore memory node to the list, 
-which I want to avoid -- overkill for these simple helpers.
-
 > 
-> And about the renaming, with my understanding each instance of struct
-> vmcore represents one memory region, isn't it a little confusing to be
-> called vmcore_mem_node? I understand you probablly want to unify the
-> vmcore and vmcoredd's naming. I have to admit I don't know vmcoredd well
-> and its naming, while most of people have been knowing vmcore representing
-> memory region very well.
+>> spinlock into a mutex, because some of the operations we'll be
+>> protecting might sleep (e.g., memory allocations) and might take a bit
+>> longer.
+> 
+> Could you elaborate this a little further. E.g the concurrent opening of
+> vmcore is spot before this patchset or have been seen, and in which place
+> the memory allocation is spot. Asking this becasue I'd like to learn and
+> make clear if this is a existing issue and need be back ported into our
+> old RHEL distros. Thanks in advance.
 
-I chose "vmcore_mem_node" because it is a memory range stored in a list. 
-Note the symmetry with "vmcoredd_node"
+It's a preparation for the other patches, that do what is described here:
 
-If there are strong feelings I can use a different name, but 
-"vmcore_mem_node" really describes what it actually is. Especially now 
-that we have different vmcore nodes.
+a) We can currently modify the vmcore after it was opened. This can 
+happen if the vmcoredd is added after the vmcore was loaded. Similar 
+things will happen with the PROC_VMCORE_DEVICE_RAM extension.
+
+b) To handle it cleanly we need to protect the modifications against 
+concurrent opening. And the modifcations end up allocating memory and 
+cannot easily take the spinlock.
+
+So far a spinlock was sufficient, now a mutex is required.
+
+Maybe we'd want to backport 1,2,3, but not sure if we consider this 
+critical enough.
 
 -- 
 Cheers,
