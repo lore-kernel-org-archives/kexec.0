@@ -4,78 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F912D6DDEE
-	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 10:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CC20D6DDED
+	for <kexec@archiver.kernel.org>; Fri, 15 Nov 2024 10:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=; b=NgyiXKJuiJts+lqMzHsA3LjzJ/
-	dV4RiYcBcA8miFNE3z8Ak0c9TrcXS4lxhP1dEg1X8tXBQb81874MoZj3b7JxyLxwFhJbNyBl5mkjS
-	DzX7TrhNt2oWlP4WSfQDRFjgTBGdsCU145T45JfCHSGbHcjytN7ILV4wq0FscuIdfkAs5Sp6xJBtP
-	h2kExaQCJgtwY0reIKE6RuMBEmSpXhu8eiHm+rl7tVmcZoEiRJqEV0fwv8w0wflytJ6qfi1Zm9uIg
-	dT6ebqR4aiAWyDZi6bss5FrBeGhEa1xs077J9oFGCvXPd1cSC13BotsmYo59DxNHVz+G/wL0MBez8
-	a/OLPzWg==;
+	bh=g1kAKAvwdmdjiltkVd6qbqhCfl7VUxLedhiq8NASCwc=; b=Lec/uoSw9EDT3X7Q/vsJS4NTqy
+	0DkWJ/dTdYdNASpJT2GiMy4/jhPOJDDKiyr0Mg62B+NJw7okNYR5tgYGNYD1t1PUMtnSBLoen09VG
+	9KNBZWnk0gsvw6kaGUjicxSns9HFA1KTy7SWyMcRCeK+/E02kb2seWDGgquUyJmRPRmYX9wFCtc/W
+	AjnGWbj9UvaBm1yMvr2j8sP81MVI53UQd9RfDDMUWmRS+GXG0WBHFVk/nki7co7WqzCRw1j0T/cyl
+	enqEn3+Pca1G9WKdCGzdztasJ/eatHNxD2ZZM5TlxXcILNTpxp1k2Hn7Y5zBXfZ4lAzOfR29q/iUh
+	3NKfyd2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBtB9-00000002Hxm-0COt;
-	Fri, 15 Nov 2024 10:03:51 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tBtCO-00000002IHm-0IfH;
+	Fri, 15 Nov 2024 10:05:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tBtB6-00000002HxF-0Mcs
+	id 1tBtCL-00000002IGb-3ylj
 	for kexec@lists.infradead.org;
-	Fri, 15 Nov 2024 10:03:49 +0000
+	Fri, 15 Nov 2024 10:05:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731665027;
+	s=mimecast20190719; t=1731665104;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=;
-	b=VfMT+Jp/U3m8qFStuidohr3PG2CMEsVDDO/K4I2eRk8kLgTTHN5i/3WIkxHuvaG2UeV144
-	V11cNRlmbsBax9HQA7yv08ubGLphNoV5U8Zb/QPUamyxVDwvTqyh9z7Wf+4TGY3VcHxEOw
-	WeT+F42v7gyJBZaPg8FWVwe9jgl72TQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=g1kAKAvwdmdjiltkVd6qbqhCfl7VUxLedhiq8NASCwc=;
+	b=gTDjr2QOCuxVoG5NX0rTmDbRQuiuW+c61jZh85nAB9QQx1Z5yRCwreUFZpcYmf2QE+DLSq
+	LA22RJUmRVcpGEliG1x6knzQLYSfFfHz9YltFuQIZR6TSqWerC1IsEi49uEEckqo+AnIsx
+	bbFFizD5Pj2g5wYyzPMIqi/H/9+dN/U=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-fRqaElWoPc2104YmsyqrhQ-1; Fri, 15 Nov 2024 05:03:45 -0500
-X-MC-Unique: fRqaElWoPc2104YmsyqrhQ-1
-X-Mimecast-MFC-AGG-ID: fRqaElWoPc2104YmsyqrhQ
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-382172035ecso952035f8f.1
-        for <kexec@lists.infradead.org>; Fri, 15 Nov 2024 02:03:45 -0800 (PST)
+ us-mta-212-V1YSIxevOcGVP-SVadOteA-1; Fri, 15 Nov 2024 05:05:02 -0500
+X-MC-Unique: V1YSIxevOcGVP-SVadOteA-1
+X-Mimecast-MFC-AGG-ID: V1YSIxevOcGVP-SVadOteA
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43157cff1d1so3777995e9.2
+        for <kexec@lists.infradead.org>; Fri, 15 Nov 2024 02:05:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731665024; x=1732269824;
+        d=1e100.net; s=20230601; t=1731665101; x=1732269901;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=EZnDRZ71uyzvr2+dGgO534gfg5ta2KTMQyX5WiGwzMw=;
-        b=OIM+1DTzT1f/fKYOGPhMQR7PUKR3VM8uR2LNonAMfMON0CDAdrVyl/KXTVIKGBRUow
-         Cjv5sT5SCWy2hUo0LKWG0PkZX/bP58wezsP0N3eLJRHVdNpDAgMPMmzNrL6HOm0e3F8O
-         TH2uhoQBa45oRlvnl15MnRt1BSe1bsFbbF+G8//wGzuujIJmSUTmKXJHy7wcAybsL2Ty
-         N2fFkUgGowKFub9mAhbLqSIMiU31a1Q+pds9ZuUgWkIygmH2WKDjeoqFFNIqKDJOF//E
-         tbSkRaAvNBEqHrGBJioSe1zVZTBWAOCKYoVrJxfqx8/wGyOVAyBlfxs3QTMTX8j/zrao
-         elXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBJuqCieHG4kd1oUwTztBi6gtjUwK1l0DBu/00WpJ4s9wjMublytN/iyGJyk5UQJWv2q7C9Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YziXvBeqmKsrTF/IroUe0PUhW/UyQ/YWPNO48kKpHh/TpV0OrAe
-	nP313H51Y7OVykoyS5/MpykBlNckNnC5Hq9j9W/9l4wCBcVyCVRA9eCvO9p0kqYJiKtA0mNQkRr
-	ASgM+ehu2h69vyAqAGPisTXsta1BGGhUcJs3+wGJj+oIisFDzKUYIKDD9jg==
-X-Received: by 2002:a05:6000:1865:b0:37d:443b:7ca4 with SMTP id ffacd0b85a97d-38214022068mr6154306f8f.14.1731665023913;
-        Fri, 15 Nov 2024 02:03:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEcalZaTTsWSZU/E4ZgekugNGYKtIjPxdb5azK2RW63irWlZEd/lURJaTLrMsANb0/rcEU5NA==
-X-Received: by 2002:a05:6000:1865:b0:37d:443b:7ca4 with SMTP id ffacd0b85a97d-38214022068mr6154132f8f.14.1731665023249;
-        Fri, 15 Nov 2024 02:03:43 -0800 (PST)
+        bh=g1kAKAvwdmdjiltkVd6qbqhCfl7VUxLedhiq8NASCwc=;
+        b=Pr1Dcv2Y/t1J2jLxkFaJUW4RdTUhyoFvVVfpHN2NI9sZyprcMT6DAZ+NknIKvkKj6o
+         +7IiVRWBhv6UlWDvvkEvNdPra9gbpBga+d4QabAwnkWcFTBXaUfPPbpAc3oNbXBxJlaA
+         2OEfCrgGdPiC1k59XYtD3I+P3AGmRshLbiTSstoF4thE1MfPV2/5bb5YmKh4Cja1nAEh
+         3vXkdFMmzrcZ2ham7L+ng/STU/9y9HWp/2c+fkHndXWMfJK1GDLSa463ftxlHVJjyBIC
+         YJwrzubNEML2feMz1yDlZWSBdRr3cp76ppexlhPzDpoNqLKo+ENriTBpD6/rZ0TzqzTg
+         SB+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWJmjwq41F7tr3aHRJ/Yr15VVhvALhBarp13UX5xDrY+QP03eVitkgIe2fsVTHkB2MMsO8A/Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxgGKFEELipvogdJsP6WEwTloz6eyqqSvmk9snV9vkde/UNk5rx
+	hNELgRy3nxLP95unkiW7ZDGou+YBx4W89EaxkFnKEtCswgSyevL6DAjNns2N8lLVhh9Oh7En6gZ
+	nidGsjId7qc5sakhqwkVMU4E6CU95xEad6n6gbGHUk19KZq9J57u60JGFQQ==
+X-Received: by 2002:a05:600c:3b2a:b0:431:6153:a246 with SMTP id 5b1f17b1804b1-432df726227mr16479695e9.13.1731665101487;
+        Fri, 15 Nov 2024 02:05:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEEz5+u3ZRZYo78oPclwnT1nZIiEdnYHBaxqmzIQBER+J7j/3O0koftmeu3voXxmbcw6vb7sQ==
+X-Received: by 2002:a05:600c:3b2a:b0:431:6153:a246 with SMTP id 5b1f17b1804b1-432df726227mr16479215e9.13.1731665101094;
+        Fri, 15 Nov 2024 02:05:01 -0800 (PST)
 Received: from ?IPV6:2003:cb:c721:8100:177e:1983:5478:64ec? (p200300cbc7218100177e1983547864ec.dip0.t-ipconnect.de. [2003:cb:c721:8100:177e:1983:5478:64ec])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dac21a15sm48656425e9.38.2024.11.15.02.03.40
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432da2444e7sm53797785e9.4.2024.11.15.02.04.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2024 02:03:42 -0800 (PST)
-Message-ID: <2b5c2b71-d31b-406d-abc5-d9a0a67712f5@redhat.com>
-Date: Fri, 15 Nov 2024 11:03:40 +0100
+        Fri, 15 Nov 2024 02:04:59 -0800 (PST)
+Message-ID: <9160c6b4-f8a0-431d-8a21-ead510a887a1@redhat.com>
+Date: Fri, 15 Nov 2024 11:04:57 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/11] fs/proc/vmcore: convert vmcore_cb_lock into
+Subject: Re: [PATCH v1 02/11] fs/proc/vmcore: replace vmcoredd_mutex by
  vmcore_mutex
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -93,7 +93,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
  <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-2-david@redhat.com> <ZzcUpoDJ2xPc3FzF@MiWiFi-R3L-srv>
+ <20241025151134.1275575-3-david@redhat.com> <ZzcVGrUcgNMXPkqw@MiWiFi-R3L-srv>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -140,16 +140,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ZzcUpoDJ2xPc3FzF@MiWiFi-R3L-srv>
+In-Reply-To: <ZzcVGrUcgNMXPkqw@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: DmXuAYLjuTv_JO-6KU3klGFvxBapz4K1eiH-3tlM4mE_1731665024
+X-Mimecast-MFC-PROC-ID: XLUPoX75xHn0vynXEjvfOD8-zxAdny4YcTn5omNYd_0_1731665101
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241115_020348_220070_D370709F 
-X-CRM114-Status: GOOD (  14.67  )
+X-CRM114-CacheID: sfid-20241115_020506_080582_05978CB4 
+X-CRM114-Status: GOOD (  10.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -164,36 +164,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 15.11.24 10:30, Baoquan He wrote:
+On 15.11.24 10:32, Baoquan He wrote:
 > On 10/25/24 at 05:11pm, David Hildenbrand wrote:
->> We want to protect vmcore modifications from concurrent opening of
->> the vmcore, and also serialize vmcore modiciations. Let's convert the
+>> Let's use our new mutex instead.
 > 
-> 
->> spinlock into a mutex, because some of the operations we'll be
->> protecting might sleep (e.g., memory allocations) and might take a bit
->> longer.
-> 
-> Could you elaborate this a little further. E.g the concurrent opening of
-> vmcore is spot before this patchset or have been seen, and in which place
-> the memory allocation is spot. Asking this becasue I'd like to learn and
-> make clear if this is a existing issue and need be back ported into our
-> old RHEL distros. Thanks in advance.
+> Is there reason vmcoredd_mutex need be replaced and integrated with the
+> vmcore_mutex? Is it the reason the concurrent opening of vmcore could
+> happen with the old vmcoredd_mutex?
 
-It's a preparation for the other patches, that do what is described here:
+Yes, see the next patch in this series. But I consider this valuable on 
+its own: there is no need to have two mutexes.
 
-a) We can currently modify the vmcore after it was opened. This can 
-happen if the vmcoredd is added after the vmcore was loaded. Similar 
-things will happen with the PROC_VMCORE_DEVICE_RAM extension.
-
-b) To handle it cleanly we need to protect the modifications against 
-concurrent opening. And the modifcations end up allocating memory and 
-cannot easily take the spinlock.
-
-So far a spinlock was sufficient, now a mutex is required.
-
-Maybe we'd want to backport 1,2,3, but not sure if we consider this 
-critical enough.
+I can make that clearer in the patch description.
 
 -- 
 Cheers,
