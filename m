@@ -4,79 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2F6AD63924
-	for <kexec@archiver.kernel.org>; Wed, 20 Nov 2024 10:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25124D63923
+	for <kexec@archiver.kernel.org>; Wed, 20 Nov 2024 10:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PUhTKpUDbhefVJVke+txqNXrs01kWRaTISFE+/T9pRw=; b=HNE1yYC4CK7+JOPRNfiPLToUy5
-	hhtAQdPuqG9PltrMz7f1JdGhjfeCeTfdkPmf+srGx38Mg17O7y4Q5WsI7LcnERC1aV52NzwPxtHQo
-	qfd8YLrL+jRLmOqlSyu20o2/UXiyxkf0VH098/SB9L98HrGW30Nvtyhe3/GxcH9HmcP+aRVC/KiiW
-	KehQmerfdcpIEMuop0tRu/Fm4s2O/nuwNjpjCldH4e6PLebFrYDpUCuCX3iSb8oljNSJNA5oisVg2
-	/2JPBxkbkknNg70CXzxT25Mrv2U2PyVTwJbkvBWmugjljrBdFjUXrM9idOBB86Ml5RB82PX9gEgKn
-	Sd4OAPOQ==;
+	bh=TYJiOMspK7IsPxdhCdCDQF9p6uoKVIA0MyWnICkfAEs=; b=MGpeihsGVTZvuhrX2a0+Q3aiJ4
+	lIhkcowzDEsQyp4pyyT/fzyozIb9+eloLTuA71zZ3kjw4gbRn3/4dR1Ey9mJpV53J8lk40nali0Fu
+	JS4ChvOAnpa4BfRTdAdKrp2+XcoxmvO4lWXRnbLRMZwobsL32w1eUfirvEdkilk49BqCb/zyGmHWx
+	kyrJUlfvf+/egZohCq54NflAw/N7ZPrsdY/2YbtNzzrhD8UkUQeBglpoaFjO+DlwVaE9PMBF4JM9h
+	0KL65m+TA4V666hrbH4B8sVGgIjFgcCrCmDZiaRblpL2tSzTOBLVTxPNh2SHoi9isNxQ8NWDlHUXO
+	mT1aDOpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDhx2-0000000F3cR-2SWc;
-	Wed, 20 Nov 2024 10:28:48 +0000
+	id 1tDiGw-0000000F5qE-2iLk;
+	Wed, 20 Nov 2024 10:49:22 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDhwz-0000000F3bB-0vM1
+	id 1tDiGR-0000000F5is-3IbP
 	for kexec@lists.infradead.org;
-	Wed, 20 Nov 2024 10:28:46 +0000
+	Wed, 20 Nov 2024 10:48:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732098523;
+	s=mimecast20190719; t=1732099730;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PUhTKpUDbhefVJVke+txqNXrs01kWRaTISFE+/T9pRw=;
-	b=iWq43684cFyyGPMgGQ7LNkHwt9qD4m1CNpv2JeYIb1FXZSkGQoxIpveR1MKykW6NKBK6Ey
-	m8Pa+xMCmUFV/sxu7Qs1AO4F0VXlqrpZipUa/tUM+52m5dHoWNqMXBkZecNYh92kbcActb
-	NO633A8B/67R9tpy2rvn63d5AgFGbd4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=TYJiOMspK7IsPxdhCdCDQF9p6uoKVIA0MyWnICkfAEs=;
+	b=MsucGR9RwDnFXUUOMPzbo07WFZqUJhBILV3CtDp8kIz7bQN+NKtbKO0UDWrmHGDgtjcQVq
+	EnrdjEBYT6uG2QQZhfa9Y6BbvT3eUEL4NGqZaScHsilq1/Re3hHw4tmu0rB2Pu0mR4z1EK
+	eWKoDsS57ZfLJ4omBHun/smhBcNe7uE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-219-iYHccbkbO9yRjfOYIocM_Q-1; Wed, 20 Nov 2024 05:28:41 -0500
-X-MC-Unique: iYHccbkbO9yRjfOYIocM_Q-1
-X-Mimecast-MFC-AGG-ID: iYHccbkbO9yRjfOYIocM_Q
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-382342b66f5so2406059f8f.1
-        for <kexec@lists.infradead.org>; Wed, 20 Nov 2024 02:28:41 -0800 (PST)
+ us-mta-685-N1zmp823MfCdMKh65Bbirw-1; Wed, 20 Nov 2024 05:48:47 -0500
+X-MC-Unique: N1zmp823MfCdMKh65Bbirw-1
+X-Mimecast-MFC-AGG-ID: N1zmp823MfCdMKh65Bbirw
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4315dd8fe7fso39887585e9.3
+        for <kexec@lists.infradead.org>; Wed, 20 Nov 2024 02:48:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732098520; x=1732703320;
+        d=1e100.net; s=20230601; t=1732099726; x=1732704526;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PUhTKpUDbhefVJVke+txqNXrs01kWRaTISFE+/T9pRw=;
-        b=LlLviNj/skPGGx7/I2j+15EPoucADuLJ+U79Un5j0ovXObxfArTAPX5BTWf0q53SH0
-         EkElKkiu7QgKUpcC0KoUWQpv8nFWlO04ACoxMqrrI18xcemQor3QHHSUCVEjjl32B0PU
-         UY7LzZwbB3d1DcilrHB4B9gLm2DaHk0G7daSXg9w0a5QuF6rVP92BecUi1YoNslKjmqq
-         nM/3Icra6W1uMiUp6O45lXpm9m88bFnxJYuYUgcSYdcs9MxiVmtMbAd83uBKwg+S2MPy
-         9AIOfAFGlRsW4cP6ky3+Qjm3RhBuDO9o7XSNIjqiTnrljShCrYpb2zKtEV8UfIQmfNU5
-         fl0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQvKdyeFcbsTpDaIE3ZIh63ZXdvoDoaITD7dTXIXT6NukAqZh3j5iceCkHC92vL2dls/sNjA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzPjUvgK2tBwjjW2aVoBZbOgc32YW4Hu4HeZbaGZvcNjXiE1rZV
-	G4G58HGcs0M6wwnj9ogNyMkjLsmPx5JPfkt99Lxl/WXUDMxNt0oucnlcPTc0V1ldH8D7QBzNuBg
-	MV5YY1NrfmRj+uN4w0hkG8Tm0+lhOv21nKmAIwqqJFXXuDdKaI+xCRIzNMA==
-X-Received: by 2002:a05:6000:1a8e:b0:382:4fb2:cc94 with SMTP id ffacd0b85a97d-38254adf53cmr1274899f8f.4.1732098520131;
-        Wed, 20 Nov 2024 02:28:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEJoRBPwyp9lbtADpyi1/+1hdX8YzDdgEC7iCXuHcfB/2DagZJPkXBzcXmpmHY2eSLwEvZ0XA==
-X-Received: by 2002:a05:6000:1a8e:b0:382:4fb2:cc94 with SMTP id ffacd0b85a97d-38254adf53cmr1274884f8f.4.1732098519755;
-        Wed, 20 Nov 2024 02:28:39 -0800 (PST)
+        bh=TYJiOMspK7IsPxdhCdCDQF9p6uoKVIA0MyWnICkfAEs=;
+        b=rr2mbTUfAESXXcMu9q4INnaxkAaYOegcYO1cCWGNIYBldyHsZkZLG4X/hKvIZkHvKJ
+         L1mybcp1b/KcqAAxwVeVnfoQ45ZXJ90/EO7o94ArNNV/Dt1JRvqOhgQfmFKoXKnkYIIy
+         mksTVg5JHroLk5L9hd6IJIDXq4kn8e+zw7QKhfNOEZOjAbCyPVaMLubeGrugZveRv+VC
+         UzrQvpkfXm+7NcUDP2MvLmYlIsVqYw5G7OxBqUfviCKtgD1cQn/MiAmxuiV741gGDe0r
+         KQF8VSyxyGsCL39IJbfDrk4B+DAv/HpZeV3oO3rhEvFahEhdVXhmVo/HZap1+Bj271rt
+         BUyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvswBneY5YoqsqT27J+xZnadAbIBqfcPtOTskds4FH2qjiohOb5h3nhchRPGERzoCc4oRquw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy2XZyfcBLj2uEgnnl7tgXcYdV6126i2VsMyZeBrDmMDqKvA9Q9
+	/l6JYEyRyeTqcl+G6b9oi0AEQ8Fj0NzDjWBB5TjilrxrmeXI5YY6xtUZS8nFsXQnz7G8K3XePRz
+	Frzd0hs3jb7MA2XY67pOdyr145nw+w1jW7+h07VYw+1sIB4IFwQiSPMpJjg==
+X-Received: by 2002:a05:600c:4ed2:b0:431:52a3:d9d5 with SMTP id 5b1f17b1804b1-43348903e9dmr25118915e9.0.1732099726071;
+        Wed, 20 Nov 2024 02:48:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH5ri0Ctyn0tsKk21xv1/ls13TeHxIMZx0VuvaIyqn9RF2BrSvePdGve47YAO822hbBk4iZ7Q==
+X-Received: by 2002:a05:600c:4ed2:b0:431:52a3:d9d5 with SMTP id 5b1f17b1804b1-43348903e9dmr25118425e9.0.1732099725605;
+        Wed, 20 Nov 2024 02:48:45 -0800 (PST)
 Received: from ?IPV6:2003:cb:c705:4200:ce79:acf6:d832:60df? (p200300cbc7054200ce79acf6d83260df.dip0.t-ipconnect.de. [2003:cb:c705:4200:ce79:acf6:d832:60df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825493e9bbsm1628011f8f.94.2024.11.20.02.28.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b45fa728sm14606045e9.14.2024.11.20.02.48.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2024 02:28:39 -0800 (PST)
-Message-ID: <120bc3d9-2993-47eb-a532-eb3a5f6c4116@redhat.com>
-Date: Wed, 20 Nov 2024 11:28:37 +0100
+        Wed, 20 Nov 2024 02:48:44 -0800 (PST)
+Message-ID: <4b07a3eb-aad6-4436-9591-289c6504bb92@redhat.com>
+Date: Wed, 20 Nov 2024 11:48:42 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/11] fs/proc/vmcore: move vmcore definitions from
- kcore.h to crash_dump.h
+Subject: Re: [PATCH v1 07/11] fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM
+ to detect device RAM ranges in 2nd kernel
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
@@ -93,9 +93,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
  <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-5-david@redhat.com> <ZzcYEQwLuLnGQM1y@MiWiFi-R3L-srv>
- <ca0dd4a7-e007-4092-8f46-446fba26c672@redhat.com>
- <Zz2u+2abswlwVcer@MiWiFi-R3L-srv>
+ <20241025151134.1275575-8-david@redhat.com> <Zz22ZidsMqkafYeg@MiWiFi-R3L-srv>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -142,16 +140,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <Zz2u+2abswlwVcer@MiWiFi-R3L-srv>
+In-Reply-To: <Zz22ZidsMqkafYeg@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TGGFa0R8SI7ws4ACx3DHuSk4ln_jdUZPnOxdbU9eX1I_1732098520
+X-Mimecast-MFC-PROC-ID: Unk1FHpfVWx4qIl2mo47nNXJc1e_NULnaEYJBhOxPlk_1732099726
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241120_022845_334954_46C970CC 
-X-CRM114-Status: GOOD (  28.14  )
+X-CRM114-CacheID: sfid-20241120_024851_905754_349D868F 
+X-CRM114-Status: GOOD (  31.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -166,84 +164,146 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20.11.24 10:42, Baoquan He wrote:
-> On 11/15/24 at 10:59am, David Hildenbrand wrote:
->> On 15.11.24 10:44, Baoquan He wrote:
->>> On 10/25/24 at 05:11pm, David Hildenbrand wrote:
->>>> These defines are not related to /proc/kcore, move them to crash_dump.h
->>>> instead. While at it, rename "struct vmcore" to "struct
->>>> vmcore_mem_node", which is a more fitting name.
->>>
->>> Agree it's inappropriate to put the defintions in kcore.h. However for
->>> 'struct vmcore', it's only used in fs/proc/vmcore.c from my code
->>> serching, do you think if we can put it in fs/proc/vmcore.c directly?
->>> And 'struct vmcoredd_node' too.
+On 20.11.24 11:13, Baoquan He wrote:
+> On 10/25/24 at 05:11pm, David Hildenbrand wrote:
+>> s390 allocates+prepares the elfcore hdr in the dump (2nd) kernel, not in
+>> the crashed kernel.
 >>
->> See the next patches and how virtio-mem will make use of the feactored out
->> functions. Not putting them as inline functions into a header will require
->> exporting symbols just do add a vmcore memory node to the list, which I want
->> to avoid -- overkill for these simple helpers.
-> 
-> I see. It makes sense to put them in crash_dump.h. Thanks for
-> explanation.
-> 
-
-I'll add these details to the description.
-
+>> RAM provided by memory devices such as virtio-mem can only be detected
+>> using the device driver; when vmcore_init() is called, these device
+>> drivers are usually not loaded yet, or the devices did not get probed
+>> yet. Consequently, on s390 these RAM ranges will not be included in
+>> the crash dump, which makes the dump partially corrupt and is
+>> unfortunate.
 >>
->>>
->>> And about the renaming, with my understanding each instance of struct
->>> vmcore represents one memory region, isn't it a little confusing to be
->>> called vmcore_mem_node? I understand you probablly want to unify the
->>> vmcore and vmcoredd's naming. I have to admit I don't know vmcoredd well
->>> and its naming, while most of people have been knowing vmcore representing
->>> memory region very well.
+>> Instead of deferring the vmcore_init() call, to an (unclear?) later point,
+>> let's reuse the vmcore_cb infrastructure to obtain device RAM ranges as
+>> the device drivers probe the device and get access to this information.
 >>
->> I chose "vmcore_mem_node" because it is a memory range stored in a list.
->> Note the symmetry with "vmcoredd_node"
-> 
-> I would say the justification of naming "vmcore_mem_node" is to keep
-> symmetry with "vmcoredd_node". If because it is a memory range, it really
-> should not be called vmcore_mem_node. As we know, memory node has
-> specific meaning in kernel, it's the memory range existing on a NUMA node.
-> 
-> And vmcoredd is not a widely used feature. At least in fedora/RHEL, we
-> leave it to customers themselves to use and handle, we don't support it.
-> And we add 'novmcoredd' to kdump kernel cmdline by default to disable it
-> in fedora/RHEL. So a rarely used feature should not be taken to decide
-> the naming of a mature and and widely used feature's name. My personal
-> opinion.
-
-It's a memory range that gets added to a list. So it's a node in a list 
-... representing a memory range. :) I don't particularly care about the 
-"node" part here.
-
-The old "struct vmcore" name is misleading: makes one believe it somehow 
-represents "/proc/vmcore", but it really doesn't. (see below on function 
-naming)
-
-> 
+>> Then, we'll add these ranges to the vmcore, adding more PT_LOAD
+>> entries and updating the offsets+vmcore size.
 >>
->> If there are strong feelings I can use a different name, but
+>> Use Kconfig tricks to include this code automatically only if (a) there is
+>> a device driver compiled that implements the callback
+>> (PROVIDE_PROC_VMCORE_DEVICE_RAM) and; (b) the architecture actually needs
+>> this information (NEED_PROC_VMCORE_DEVICE_RAM).
+>>
+>> The current target use case is s390, which only creates an elf64
+>> elfcore, so focusing on elf64 is sufficient.
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   fs/proc/Kconfig            |  25 ++++++
+>>   fs/proc/vmcore.c           | 156 +++++++++++++++++++++++++++++++++++++
+>>   include/linux/crash_dump.h |   9 +++
+>>   3 files changed, 190 insertions(+)
+>>
+>> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+>> index d80a1431ef7b..1e11de5f9380 100644
+>> --- a/fs/proc/Kconfig
+>> +++ b/fs/proc/Kconfig
+>> @@ -61,6 +61,31 @@ config PROC_VMCORE_DEVICE_DUMP
+>>   	  as ELF notes to /proc/vmcore. You can still disable device
+>>   	  dump using the kernel command line option 'novmcoredd'.
+>>   
+>> +config PROVIDE_PROC_VMCORE_DEVICE_RAM
+>> +	def_bool n
+>> +
+>> +config NEED_PROC_VMCORE_DEVICE_RAM
+>> +	def_bool n
+>> +
+>> +config PROC_VMCORE_DEVICE_RAM
+>> +	def_bool y
+>> +	depends on PROC_VMCORE
+>> +	depends on NEED_PROC_VMCORE_DEVICE_RAM
+>> +	depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
 > 
-> Yes, I would suggest we better keep the old name or take a more
-> appropriate one if have to change.
+> Kconfig item is always a thing I need learn to master.
 
-In light of patch #5 and #6, really only something like 
-"vmcore_mem_node" makes sense. Alternatively "vmcore_range" or 
-"vmcore_mem_range".
+Yes, it's usually a struggle to get it right. It took me a couple of 
+iterations to get to this point :)
 
-Leaving it as "struct vmcore" would mean that we had to do in #5 and #6:
+> When I checked
+> this part, I have to write them down to deliberate. I am wondering if
+> below 'simple version' works too and more understandable. Please help
+> point out what I have missed.
+> 
+> ===========simple version======
+> config PROC_VMCORE_DEVICE_RAM
+>          def_bool y
+>          depends on PROC_VMCORE && VIRTIO_MEM
+>          depends on NEED_PROC_VMCORE_DEVICE_RAM
+> 
+> config S390
+>          select NEED_PROC_VMCORE_DEVICE_RAM
+ > ============
 
-* vmcore_alloc_add_mem_node() -> vmcore_alloc_add()
-* vmcore_free_mem_nodes() -> vmcore_free()
+So the three changes you did are
 
-Which would *really* be misleading, because we are not "freeing" the vmcore.
+(a) Remove the config option but select/depend on them.
 
-Would "vmcore_range" work for you? Then we could do:
+(b) Remove the "depends on PROC_VMCORE" from PROC_VMCORE_DEVICE_RAM,
+     and the "if PROC_VMCORE" from s390.
 
-* vmcore_alloc_add_mem_node() -> vmcore_alloc_add_range()
-* vmcore_free_mem_nodes() -> vmcore_free_ranges()
+(c) Remove the PROVIDE_PROC_VMCORE_DEVICE_RAM
+
+
+Regarding (a), that doesn't work. If you select a config option that 
+doesn't exist, it is silently dropped. It's always treated as if it 
+wouldn't be set.
+
+Regarding (b), I think that's an anti-pattern (having config options 
+enabled that are completely ineffective) and I don't see a benefit 
+dropping them.
+
+Regarding (c), it would mean that s390x unconditionally includes that 
+code even if virtio-mem is not configured in.
+
+So while we could drop PROVIDE_PROC_VMCORE_DEVICE_RAM -- (c), it would 
+that we end up including code in configurations that don't possibly need 
+it. That's why I included that part.
+
+> 
+> 
+> ======= config items extracted from this patchset====
+> config PROVIDE_PROC_VMCORE_DEVICE_RAM
+>          def_bool n
+> 
+> config NEED_PROC_VMCORE_DEVICE_RAM
+>          def_bool n
+> 
+> config PROC_VMCORE_DEVICE_RAM
+>          def_bool y
+>          depends on PROC_VMCORE
+>          depends on NEED_PROC_VMCORE_DEVICE_RAM
+>          depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
+> 
+> config VIRTIO_MEM
+> 	depends on X86_64 || ARM64 || RISCV
+>           ~~~~~ I don't get why VIRTIO_MEM dones't depend on S390 if
+>                 s390 need PROC_VMCORE_DEVICE_RAM.
+
+This series depends on s390 support for virtio-mem, which just went 
+upstream.
+
+See
+
+commit 38968bcdcc1d46f2fdcd3a72599d5193bf8baf84
+Author: David Hildenbrand <david@redhat.com>
+Date:   Fri Oct 25 16:14:49 2024 +0200
+
+     virtio-mem: s390 support
+
+
+>          ......
+>          select PROVIDE_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
+> 
+> config S390
+>          select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
+> =================================================
+> 
+
+Thanks for having a look!
 
 -- 
 Cheers,
