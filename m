@@ -4,162 +4,221 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44710E6400C
-	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 19:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38F98E6400D
+	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 20:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=; b=lvuk3HGbo41N3+9Px42Ve+fZgE
-	KWBWyDNyCWka+MGD41G4Hap34vVRucwI3CoZSG6HbDW3L+4ejQoPowQAoNbLyG1vBRr6fadZKcsd+
-	4qA6D8hTNGXVpeRO1IqxqEwxVosNB3jQoHnNUj+smLdVfYKpvNZNyxuJDHe4tHjP+cq83VSeOXxnn
-	0SaC7EhagALKRefeQDeLV+d99m7BESqVxz50PBZV71isb7NAn2PMSLynPg0iWa7BRa4Ftx0g6MphQ
-	CImqW1sE7ABPxmg7+EAsmI5im+cLjwUSOW1Hc5oSBzWtoGnRbQMCkwKqeXR9wTcc+Tt1DsqETfzWD
-	PL+uDMSw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=yiENuGXV/+8fQ7zzkTpftLzJZB8rvD1+d7v4tVrnows=; b=UKzKg9CKYth2jH/J4vrzrCtiVQ
+	Y0TOXVPQWN9+VLFprxZOeYIbmWyOj/qdzOFlwQzJFiOybOjd+qQVq1aa9OKXJd8bQ6rLn38E8F7su
+	1HQZ105VyC34xuWoZYjgTm2XKVXkaPKlGBzs4qPFGqf5PxnvRMiDR94oW+u73h1wkg04xo2HNd3vd
+	e1+ko1qEssNV5Cqb5YmzMLLHOjynQFTbTMxZaR9vmcJAff5kIY81AhRQsvep8gmr3j69AF/7dqJIY
+	sGdJZ8oerrUOi4rsrELkt7BTR3024sQEL3CXkziMWo9i3oeSsb+cn/v1E+wz/G1Rpdj8SgPGUyCEB
+	J15zCiWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tED8x-00000000nKS-37Aa;
-	Thu, 21 Nov 2024 19:47:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tEDcC-00000000qMg-17VG;
+	Thu, 21 Nov 2024 20:17:24 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tED8u-00000000nJy-2JJz
+	id 1tEDc9-00000000qLZ-1ElN
 	for kexec@lists.infradead.org;
-	Thu, 21 Nov 2024 19:47:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732218427;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=;
-	b=BSTGR7iBPI7Nc6Nd/9TeYxMoZDEmBd3apEUFVOqHZ6HNRErLvYhceF1y1q+z/Mkm3yE9Yz
-	t9wJlDTmyFMo9+NxhIYMM4RLBVG7kdYJBV6Nq1uH6zGdYk2FeZz+i52QunGqnI9Uwz3kg7
-	8mZ5QVslPcZPAFVDFKTFHsaieamgk3Y=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-346-Fz3Fiyv0OkK-2hSCQ8lhrQ-1; Thu, 21 Nov 2024 14:47:06 -0500
-X-MC-Unique: Fz3Fiyv0OkK-2hSCQ8lhrQ-1
-X-Mimecast-MFC-AGG-ID: Fz3Fiyv0OkK-2hSCQ8lhrQ
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3825a721afaso714874f8f.0
-        for <kexec@lists.infradead.org>; Thu, 21 Nov 2024 11:47:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732218425; x=1732823225;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=;
-        b=UHnA9AwoMWSHnBRd5eVNHuWMPAxrS3rsDU0bT/0CUyrr0vemDWSabXangNmBXyTDcz
-         4YRRDcPJP80nTE5Xf6AE5kBRQj8tsvMLWMeVVwtjdDIroKTyOE/HHXCBja1MRcH4rHqQ
-         +eMSCZCIYCO9uxGToh/NRLLMNKfXK67UoLosUjWhZyUUEkljJyy57yzWiF8e4mn6gtKH
-         kycWy0QAV/varg+RY9Y3r+UpHoZUSykyFMZZf01FIG+zLnzhzmRSHRwMrJC32KEWmSIH
-         GTOWJLzcFN1Yk+fRPQz/EP+5r3yRzvz6jC6UaTuUE7T6ktPRd+hiM+Pj0CeMtf8WHWGe
-         daeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6QF18kPELSIsTSCE8ksTgLWtissdZmg0dXCo6k7+T/Cc4TNRM6ESttognuB9oOF6HT3ryzg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyKk7P1f6xWs7S/E6OnUkqrgyt0O/G2qbfVDvETREftk/ivoVVj
-	wfEUNZjzLweQKEJxoz1OYZXZCuiRGR0xfPU/xgRmV7JPFRYbKTnNZSVVrXsvQohZxa6TlaQ6UGO
-	yY3t48WBfczx39f9rtYA9ApoTsSg8f/sar2kUTBsL+kvTuWX3zMhuLlFxdA==
-X-Gm-Gg: ASbGncuUyVtY1nr0HMNMHsP2x1Q5EB9/A346k0Jd83r+fanc4zJqhECOI09de82f80E
-	BYC6MyQbi+yK4GKZKrNXirXsRZ+mD9uIv3b9CZGm2ElGaFrFXfR/QD7wn73CkojllLuDoOneQGx
-	/IcnrcfqZnq6uyAOjDGtzUC+eIN1QTcrAdNfnSabRgjwyEOwHQo60rwQ8P9RLk3VlpC9QfbKx1j
-	J3ZK3bd1VOr0HeorJyTbdJr+7RthhfncWlupStHa4xqX2Saq8AaMifxlMyEFIaXSmRcR4wv+qPS
-	zOTml8Hbv9z29EPClc70MM5tCGcLKWmLmuERPmqzAVa6wUP2OG+cdEZMek04lxyyC5bqOwYscZc
-	=
-X-Received: by 2002:a5d:64a4:0:b0:382:4978:2ab9 with SMTP id ffacd0b85a97d-38260b50178mr280900f8f.5.1732218425149;
-        Thu, 21 Nov 2024 11:47:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEwjpMyfPMDn7yzJZGj2fN3hdUzm6pJror1oFSbaD9p3e5FF3gpDG0hGN0f8NMCUBM9HBDVYw==
-X-Received: by 2002:a5d:64a4:0:b0:382:4978:2ab9 with SMTP id ffacd0b85a97d-38260b50178mr280863f8f.5.1732218424718;
-        Thu, 21 Nov 2024 11:47:04 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70c:de00:1200:8636:b63b:f43? (p200300cbc70cde0012008636b63b0f43.dip0.t-ipconnect.de. [2003:cb:c70c:de00:1200:8636:b63b:f43])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825fb537d4sm390281f8f.61.2024.11.21.11.47.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2024 11:47:03 -0800 (PST)
-Message-ID: <c353466b-6860-4ca2-a4fa-490648246ddc@redhat.com>
-Date: Thu, 21 Nov 2024 20:47:01 +0100
-MIME-Version: 1.0
+	Thu, 21 Nov 2024 20:17:22 +0000
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ALIBXLd004545;
+	Thu, 21 Nov 2024 20:11:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=yiENuGXV/+8fQ7zzkTpftLzJZB8rvD1+d7v4tVrnows=; b=
+	BS58Bhgrg08oUavqpXMzle+LeZs3K7T7X+8Ja4StKahCPM0JOLGNr8ic2ktj/Be2
+	IPuDwBRJzvzg58+2O9D7YYiLWjTxyanK0zSx5s/SVxrnYaTnta4HtWsFiB4boyGC
+	3EB3vkHASlAP4i6fk73DwBp0GthRDac59OMvpWH/yvFpmYmp1CEFca+5dQVHmUCA
+	7KzzPzkQHEsbtrlZ3AgfZaOIyUnS3oW0giJHVq4w4Rt8ImYiGjh+Hw4HGK33486K
+	UYzjtTN2WLbZsKD9hJX8YpU1q8U189XEiX0D24nK2ZBh06WdHOnH5fI82Ak1Igq4
+	mhql4NQ0JE1ByDn5tDRJrg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42xhtcam04-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Nov 2024 20:11:30 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4ALKB6tD007758;
+	Thu, 21 Nov 2024 20:11:30 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42xhuc8297-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Nov 2024 20:11:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A0kLZ91brTVP5bYjwyglCE6AVyj14hcj0L1G+hDKfdPN80yHs3QKs0fcjBid5jSPh01gpxqBpvKMI9Sw/C6vKpeXq8QjO2dzx3FZ6SulBSD7Jq/Qe6qOE+tUShLMU3lXUo3knZmAvTFrCeXmdm2LEysQVi2Suy29w5uP21zUHBCqiqEt/K0m2M1og1pNi1JP3Uwg+Y1PSwWivfNiybvnWHOhxWODxQLEtzS0eSx+gNauE+0OqdVaQCtr/dal2x/JQW/vttA5N0knJCPdE6zRMBehGVrEstc/YoMrl6jTbFf607riJT9exrsxlxBN3jezWebt5L52ZZPRAePFGvxukw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yiENuGXV/+8fQ7zzkTpftLzJZB8rvD1+d7v4tVrnows=;
+ b=nGSdUvqfxKt2YALXztMQCOhx9xwoYCdRweE61k4Bpow21l61GNfCO+GBNGb75vmRuSMekWMTxsrFbzKw6vxOdDFITa3PLCpxikmFwMc8R7ep2MRnpZykpuW7R6c90nsFIv3sd3TcKYp4kd6YqhlTrycRPGSXVZsOn0F0wacNyCgK0Jf1SqAU5WAVOfxqTrtqXzyijElJWWG4N4zbJCmemKw7khRKzk5FkQ/Ax3J5nrW/NnYrphQ1JkQ1TG0J+Qc4sQk1BYkMdiMCYBq45rZfht/XkQxmXQdCmuTzoUSK8qFf66ANiEf1unmc4IuI5N06d++mG3twD46qOHsA0McN1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yiENuGXV/+8fQ7zzkTpftLzJZB8rvD1+d7v4tVrnows=;
+ b=drQRZkdddAsqs2sgUWzu8kVsr7KtDwVCn7LoPJ2OhpoJFGON65mY8abHPByTLx4GgGimfueQXrCf6afHWyFBXTbUYudLXHgKO7rMsnCLbfvyj6Cwx/QSYpiPfptaIbkHPinXj2oEoBWWNLkOY8wcua3HQJLXxcarLfuOctxvaZ4=
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
+ DS7PR10MB5149.namprd10.prod.outlook.com (2603:10b6:5:3a7::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8158.27; Thu, 21 Nov 2024 20:11:26 +0000
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8%4]) with mapi id 15.20.8158.019; Thu, 21 Nov 2024
+ 20:11:26 +0000
+Message-ID: <66fabe21-7d0d-4978-806e-9a4af3e9257a@oracle.com>
+Date: Thu, 21 Nov 2024 12:11:22 -0800
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/11] fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM
- to detect device RAM ranges in 2nd kernel
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
- Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
- <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
-References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-8-david@redhat.com> <Zz22ZidsMqkafYeg@MiWiFi-R3L-srv>
- <4b07a3eb-aad6-4436-9591-289c6504bb92@redhat.com>
- <Zz3sm+BhCrTO3bId@MiWiFi-R3L-srv>
- <3ed18ba1-e4b1-461e-a3a7-5de2df59ca60@redhat.com>
- <Zz63aGL7NcrONk+p@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Zz63aGL7NcrONk+p@MiWiFi-R3L-srv>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: iNPH2c_NexGC9RYznKSzB1G7ZvEiNaxKuEfEZgnt-rg_1732218425
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+To: Andy Lutomirski <luto@amacapital.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-integrity@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        iommu@lists.linux-foundation.org, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+        mjg59@srcf.ucam.org, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+        andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx>
+ <CALCETrXQ7rChWLDqTG0+KY7rsfajSPguMnHO1G4VJi_mgwN9Zw@mail.gmail.com>
+ <1a1f0c41-70de-4f46-b91d-6dc7176893ee@apertussolutions.com>
+ <8a0b59a4-a5a2-42ae-bc1c-1ddc8f2aad16@apertussolutions.com>
+ <CALCETrX8caT5qvCUu24hQfxUF_wUC2XdGpS2YFP6SR++7FiM3Q@mail.gmail.com>
+ <c466ed57-35a8-41c0-9647-c70e588ad1d3@apertussolutions.com>
+ <CALCETrW9WNNGh1dEPKfQoeU+m5q6_m97d0_bzRkZsv2LxqB_ew@mail.gmail.com>
+ <ff0c8eed-8981-48c4-81d9-56b040ef1c7b@apertussolutions.com>
+ <446cf9c70184885e4cec6dd4514ae8daf7accdcb.camel@HansenPartnership.com>
+ <5d1e41d6-b467-4013-a0d0-45f9511c15c6@apertussolutions.com>
+ <CALCETrW6vMYZo-b7N9ojVSeZLVxhZjLBjnMHsULMGP6TaVYRHA@mail.gmail.com>
+ <9c80e779b6268fde33c93ed3765ff93b1d6d007b.camel@HansenPartnership.com>
+ <CALCETrX4vHnVorqWjPEOP0XLaA0uUWkKikDcCXWtbs2a7EBuiA@mail.gmail.com>
 Content-Language: en-US
+From: ross.philipson@oracle.com
+In-Reply-To: <CALCETrX4vHnVorqWjPEOP0XLaA0uUWkKikDcCXWtbs2a7EBuiA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PH8PR22CA0001.namprd22.prod.outlook.com
+ (2603:10b6:510:2d1::16) To DS0PR10MB7224.namprd10.prod.outlook.com
+ (2603:10b6:8:f5::14)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|DS7PR10MB5149:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60845d49-a70e-404f-f5d9-08dd0a68ad99
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OGpwb0MrMnhGZU9uS3pVYlJlYW8rRDJSVk9XeTFZb2JqRjh1VGdWaHF1YTZM?=
+ =?utf-8?B?emVEZ0t1Z2VDY3dWelA4cGt2SmkveEN2L3JUQlZkOW42OG5hZitYZjJBYnZz?=
+ =?utf-8?B?bjhBd0I3cWZkbVB2ZDVEcXlUdXhFdVl2L09vaXZ1aDZBbklSWGJBcjAyTmhu?=
+ =?utf-8?B?N09DOXBPMFR6UG1pcExJSHpOWlQvUFgzVjU4SjJpaTRmRndDMkFFbU9CM2w0?=
+ =?utf-8?B?K2pZSHdWKzg5bUFQOThndzJvRWtvQmJLTHBISjZpbzQ3TVRnelgxYzkrVVVZ?=
+ =?utf-8?B?QTduVVkxcHJqaVJ6cDhFcHVqZVp5aFRva1AxREFtYTlSczdIRUg3cEdkb1JI?=
+ =?utf-8?B?dkFLSkZmdGh2VU15R3pXMHVDaTViOHNPS2dNZ2xKMlF2bm0xSHlzbUk1aER1?=
+ =?utf-8?B?ZWhPenA1VUhHMkFwdmx4UGVPZFhEYmx4anJyWlBYMFI1Ynhva0JiVkRjMDZz?=
+ =?utf-8?B?SEttMGRib2ZwcDdqaitsMU1kUjN3Nmw4cWJTMEJkd08xM29SWEkwOXNJWldS?=
+ =?utf-8?B?UkVpakZ2RXR3dUFIU1ZkaGZOUURZNHNSZlZOU0ZOZG9ySENoMUFGWklMQk0v?=
+ =?utf-8?B?eEJGNnhFTndQeVo0ZHFrQUVialNMRmV1V1FMNHpMSURvVXlBNDBlczFzRjZr?=
+ =?utf-8?B?ekYvSTJ3dEdCazBYN1lHTGllbCt1UjJuaWNWOTVaZ25HQnZ5SVlEaWtVdkQr?=
+ =?utf-8?B?a0cwcDBoOEloOUV1bTBuSm90bVFZUGRnU0xjcW8vK3hyam8yOWtsNk1SMnBv?=
+ =?utf-8?B?T28yczk1T1ZtK2Q2cG54WXBCSlhGM1ovYjJjdVF5aGJUam16ZzFxZHRubkZX?=
+ =?utf-8?B?OGwwSkJWZGcyN1VjKzZGTFRrczlsMmtGclR3M2haVXhSTFEzbklCMXlkNzMy?=
+ =?utf-8?B?RCtaRkUwZUR0ZU9uQm1pRTBtMjRuUEZXTnZ0MFZIWWJBdmV1RjZGa201eGxS?=
+ =?utf-8?B?TVlGa1ZBOXQyeVhSNjNtQ3IrYmlUYXVnNThaeVhiMG85VS9BYXFYTHZDUjNx?=
+ =?utf-8?B?NS95aFY5Z2lwQTR2ZU1VOEhKb09ZSWhlZ1NCcEUxbDBRNWhGYXBRTXdxbU1t?=
+ =?utf-8?B?ZDgzRll1M0p0M2JpUGltNXh0YXVKRWIzRTFHcllEMDNseUs0WnZZU0xOQVlK?=
+ =?utf-8?B?K05SVVowdk9HVWZGRGZlN1ZHU29wdzl5L2xlYVByWUZFbVR6emZVVEw4NDFO?=
+ =?utf-8?B?eEs5UStwdEx3d3hlRE11MVorb2ttanNHR0ZhOGJYOXZvak5VL25EOGpObk5X?=
+ =?utf-8?B?RGlDSVZDcjRwUnVwcEJiZTFxVlZYdnZuNy9PQno5K3JIREVXTC9LK040REp5?=
+ =?utf-8?B?TDB3R2taWmN1ZzloUzd2bWgrK28vOEM4bFNBNmtncjNrSVZIOGxpc2pKWlpn?=
+ =?utf-8?B?dXpTWUJLQ0YxVWRjanM5VUU4WUlKc0pubS9Sblc2SWRLOVFDZ3dhS2NkTGw3?=
+ =?utf-8?B?dDMxM1pCZ2o3bjRaTEM1YmFLMGNIeGlZOGlPVHlWcm5Ca0ZDVUprWGJLUXRy?=
+ =?utf-8?B?dVZ6b1RXdnZncjA5a3ByWGNTci9PYTNSOWlPNFlxWU9uSG9yVEtIUDlycGFU?=
+ =?utf-8?B?NjJ6SHNQQThuRSthKzl2SVdROFJGN0lvbjBpSTh2RFpOa2UwWWZuaisvNDlJ?=
+ =?utf-8?B?YWhxNllOallBZjBna2VlR0d4TmpXbmlqSFFHQVdDb1dJcVVQOHRhS245aHR6?=
+ =?utf-8?B?L20vbzF5M1NSeU1vUndMZk9GRmZWQ3V5MzNsS0Z4cXF3aHZhMEx4VCtRPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Wm1YMmNxMFZaSS9yTEtDUG9mN1BudHI1STFKdmJFS0JMMmZXNEd6TUVvajBF?=
+ =?utf-8?B?aDkvc0x6U2xZZllWM0srRFoybHA0ZHJvOVZiUk9CSFlKZlVLalloYTZRcjI2?=
+ =?utf-8?B?WEkzT3pXWFhEWElRVnRwNnhxaWpKaFgwSGFISm1wZGtGQjdGZHVqMnJFQ1FV?=
+ =?utf-8?B?VEUwR0ZKMkFZd3RpU1BlaWQ1NGFKWWVyT2pPYkJDd0I4Qk1HSEo4MXBpOVFF?=
+ =?utf-8?B?QkhabHUybHNFWmZ6WkFaamZmU3d2cnVmS25rTTBzNmZ3RU9YcFNhaWRtZlIr?=
+ =?utf-8?B?Vjdzdm1rT3llb2lTQlk4VStmMEVqRllLZ09aWXk1UnpDWlF6UVZuRStVRklM?=
+ =?utf-8?B?bTFGTnVhVkZVQ0N1MU8rcjZjL2k4SWtZZFBNRlh0VkNtaGIycVFOWTlyQW10?=
+ =?utf-8?B?a3RYRlhhSFpvVEJQcTV6SzhZZG9QUmVxMFJVZUY1YldUbllNYk9udDhIcUh0?=
+ =?utf-8?B?V1pWWDdjRmtraXpHSDhJUHliSFc4djYycU83UDV2c1kvWnRPM2NLbUZFd1Q1?=
+ =?utf-8?B?RUNMSW9BQVdFZ2o2ekJUN1RSZ29YRjZ0NjFGbFpDREp6aUlxd0EwUHQvRkxU?=
+ =?utf-8?B?TW91cTZDOS80cW1MMW0yVVhlWVEwU3dGdHFyZHZ3S2JXM3k2WFRYS1ZabVpk?=
+ =?utf-8?B?RS9lOXFHZmZxcXc5cEZsbHMzeWhnVnNqQmFZZ0dHTU1EeFFxcmZseDNwWVFl?=
+ =?utf-8?B?clIwYVhISGx0MGNqT25SQUhBR3QyYkpOMmJ6NHl6Z0FoWkhjbkpCSHRUdEdQ?=
+ =?utf-8?B?Q0hpeWlldkVKRWFjNU1LeUhlVGIzRUwza0tIYUMyVFlucUZmUlUzUFJKTFdn?=
+ =?utf-8?B?VFJKQ1p6QzNZbzJLamZGYWNIQlF6elRBOXZ1amZ4RGlLN2ErRXgxNnRqTU95?=
+ =?utf-8?B?TGo3dHYzU21KZFJpSjFUZ1lJYXdPT0NTQU0yQ013SmR1NkliV2tiMElwZTF1?=
+ =?utf-8?B?RW05RWVSdk83VzF2T3BCTGIxWi9TaWhmdEgxNUhNQ3hWUnprSFNPazNuUUR1?=
+ =?utf-8?B?NnFVZlg3dEQzYzg1ZDJkK1ZZTTM1STZ0MEQrRHNWenRocWd0U1ZVNGdrQmtw?=
+ =?utf-8?B?U1g2Q2t4V2hNTmZ0RHZsSVJYT3ZoOU9zMSt3Rm5meE9IY2pmRW5qeEZta1hz?=
+ =?utf-8?B?Slp1cjU2WFRRTUlpaW9hSlBOdWtlYkg5emh6SXJYSlpuaXcwbmtKV2xJT3Ni?=
+ =?utf-8?B?c1BGRnpwQ1d3dlVvVUUrdk9rcHpqMStlVmE3ZGs5OHZiRWlkSnpUQ2tQSHZK?=
+ =?utf-8?B?a0NOQ3RGWmtVMEpybHlkYTZobDY1cENpRFRKdkVSanF5dVJHTDJxUjBydnha?=
+ =?utf-8?B?SklyL3owZzdHa1FjUStEZWVLME5aTU1Uem5JRGdSNXdNN3U1YXZkejJvN3Mx?=
+ =?utf-8?B?ZVNhcEN5T3hOUkphcXdzdDVqUTQ2U0ZQQ0FkaHdOWkRBcjVpazdHWWZ2NGda?=
+ =?utf-8?B?R1BhejBkNlRsSDErb3oyaGUydmxpcTAxMHlBa1diVG5QWlBBL0lVblYzaWo5?=
+ =?utf-8?B?MFV3aXdSbjEzMVZGU1ExMW5uMnhOajRCVzlvY3NkQzBVWUxkTjVPZ2lKdkFP?=
+ =?utf-8?B?SW52am5hWkxDNnV2cHNBVGhPV2o0VWFSTWI3VjFMQ3NCUWdsSEtjcE1RVHRY?=
+ =?utf-8?B?c0trM3J2ZW9hOER1bmd2T3pVSTYvMWxPWXVRM1M1YXBib1dManV4MGZmbXNv?=
+ =?utf-8?B?dEJIV2NWbVY5M0p1N3BiNUJuU1pxWWRmYVZJN05Zek55YzJRNFlETUJOaGNJ?=
+ =?utf-8?B?cVliYkNKT2RtT2p2Wm5JeFgxQm9meXo5bkVHbnZFSjdYSndzQ25kZ09TOEs4?=
+ =?utf-8?B?bXcrSzg5UUxCeU9QRm81QXJ4U2ZJMHpoS2dhUmhwT1lIRkt4WktFZmsvKzIr?=
+ =?utf-8?B?TVFWclpxbzhrL0E3MUJVM3gwOVlEUVM3bnlkQ2RlWXVZZWVUR2xvQklzVEpy?=
+ =?utf-8?B?SzVlZTJ2dWFnb21iNlAvOXVRMGF1U21NcHpEN01sQ1pKVXpUYXdVYzVPUFdZ?=
+ =?utf-8?B?QkU1OE1EOHhJVi9sYUo2dGxJMEhvalIzYVk1SXBwTlhHWmxxcEF5ak5zUnR2?=
+ =?utf-8?B?Q2xMelYvN1lzY1dTeXpsSXRMUDhDdkxDYWJBVFQ2Q3hZZ1RJOWZQdDhRTEhz?=
+ =?utf-8?B?TVBDMEFzOHVSaWl0NWNJNExKRlVlU2pPYmNHVjd3aXg4eUw3M0poVEVTelR6?=
+ =?utf-8?B?MHc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: YscwkF925iKtTSlfT523pAtUA0YsyLPY/QynireUbm583ii23z3WpAhY19SefVHrkumiS1Jp17A91vlIN69HIBiBO2BPQAkOULWDLqMYaCJkc0I9hFF0p0gGdYYKzhFpuCrslR3nAXdGwP3CNZG/+EjCf01OB9z6IWL3te6OvSrI+KWbKBx93+J/KJCVtdBwOmMvNIl7LgHPeARIqaFF4X4CuweCYwMrCj60nDgeOlA/vUGS0/ktmy6/OELMnsl3FZxGWusowaWXJdoc4nfV37buJfzGbeNesa0mgXkK+bg3GQL00YbD8EOE5qzRm0umk8is6X1pZmJt0nbi4OoKVJnzeb8/qtKdDSRVvth3zYsxsiHCY+Yi/fuO1B+O+Gil2T+ghxMuTswzai9rrTfbJ2nD9D0BZkyTcETWBmPrgb0Mhcs/F03dbrKcmrc2wISrQP+0kZ5mCBpkhfQ/KbQ9HPWwgEn0gqnJ1roN7DevstBxzR14/m42fb7I6j5mazM2MvlWM8C/UI14sMGgqGEPQ/EDHKTfUYNY7wp1o4Rw0NxK+FxP8bqZYk1wwhwqWrBox9lxoFVqC/44pmjZ0KsA0f6NR+RkxTFTnGdNKRQ3VmI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60845d49-a70e-404f-f5d9-08dd0a68ad99
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2024 20:11:26.4326
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hOSDZbE8OeQC8Q/9Vrf8LyHRKW/v07yntwpYQHVHX3O8YBIurBX2MSp4zJ7t3h/IiB82SWycA5Y+3ossKCjdqE8rX3RjMpZhhUt69STp+y0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5149
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-21_13,2024-11-21_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2411210152
+X-Proofpoint-GUID: NIi8hfmtR7YxicKusc1bz-3AmNt4J89a
+X-Proofpoint-ORIG-GUID: NIi8hfmtR7YxicKusc1bz-3AmNt4J89a
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241121_114708_669519_4B7308A4 
-X-CRM114-Status: GOOD (  26.26  )
+X-CRM114-CacheID: sfid-20241121_121721_462090_36F9D3EA 
+X-CRM114-Status: GOOD (  21.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,128 +233,116 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 11/18/24 12:02 PM, Andy Lutomirski wrote:
+> On Mon, Nov 18, 2024 at 11:12 AM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
 >>
->> That would work, but I don't completely like it.
+>> On Mon, 2024-11-18 at 10:43 -0800, Andy Lutomirski wrote:
+>>> Linux should not use TPM2_PCR_Extend *at all*.  Instead, Linux should
+>>> exclusively use TPM2_PCR_Event.  I would expect that passing, say,
+>>> the entire kernel image to TPM2_PCR_Event would be a big mistake, so
+>>> instead Linux should hash the relevant data with a reasonable
+>>> suggestion of hashes (which includes, mandatorily, SHA-384 and *does
+>>> not* include SHA-1, and may or may not be configurable at build time
+>>> to include things like SM3), concatenate them, and pass that to
+>>> TPM2_PCR_Event.  And Linux should make the value that it passed to
+>>> TPM2_PCR_Event readily accessible to software using it, and should
+>>> also include some straightforward tooling to calculate it from a
+>>> given input so that software that wants to figure out what value to
+>>> expect in a PCR can easily do so.
 >>
->> (a) I want s390x to select NEED_PROC_VMCORE_DEVICE_RAM instead. Staring at a
->> bunch of similar cases (git grep "config NEED" | grep Kconfig, git grep
->> "config ARCH_WANTS" | grep Kconfig), "select" is the common way to do it.
+>> Just for clarity, this is about how the agile log format works.  Each
+>> event entry in the log contains a list of bank hashes and the extends
+>> occur in log event order, so replaying a log should get you to exactly
+>> the head PCR value of each bank.  If a log doesn't understand a format,
+>> like SM3, then an entry for it doesn't appear in the log and a replay
+>> says nothing about the PCR value.
+> 
+> I have no idea what the "agile log format" is or what all the formats
+> in existence are.  I found section 4.2.4 here:
+> 
+> https://urldefense.com/v3/__https://trustedcomputinggroup.org/wp-content/uploads/TCG_IWG_CEL_v1_r0p41_pub.pdf__;!!ACWV5N9M2RV99hQ!Iw9aAHcJMT6j3t_DSb7cOk8iWy8VJYkJOlGQ_gtLUz0XwPcIZclY4I8GZJ5VP4OScLjBaz3RX1QlGGBWWZw$
+> 
+> It says:
+> 
+> This field contains the list of the digest values Extended. The Extend
+> method varies with TPM command, so there is
+> no uniform meaning of TPM Extend in this instance, and separate
+> descriptions are unavoidable. If using the
+> TPM2_PCR_Extend command, this field is the data sent to the TPM (i.e.,
+> not the resulting value of the PCR after the
+> TPM2_PCR_Extend command completes). If using the TPM2_PCR_Event
+> command, this field contains the digest
+> structure returned by the TPM2_PCR_Event command (that contains the
+> digest(s) submitted to each PCR bank as
+> the internal Extend operation). This field SHALL contain the
+> information from the TPML_DIGEST_VALUES used in
+> the Extend operation.
+> 
+> So we're logging the values with which we extend the PCRs.  Once upon
+> a time, someone decided it was okay to skip extending a PCR bank:
+> 
+> https://urldefense.com/v3/__https://google.github.io/security-research/pocs/bios/tpm-carte-blanche/writeup.html__;!!ACWV5N9M2RV99hQ!Iw9aAHcJMT6j3t_DSb7cOk8iWy8VJYkJOlGQ_gtLUz0XwPcIZclY4I8GZJ5VP4OScLjBaz3RX1QlKxD4S1w$
+> 
+> and it was not a great idea.
+> 
+> There seem to be six (!) currently defined hashes: SHA1, SHA256,
+> SHA384, SHA512, SM2 and SM3.  I haven't spotted anything promising not
+> to add more.  It seems to be that Linux really really ought to:
+> 
+> (a) extend all banks.  Not all banks that the maintainers like, and
+> not all banks that the maintainers knew about when having this
+> discussion.  *All* banks.  That means TPM2_PCR_Event().  (Or we refuse
+> to boot if there's a bank we don't like.)
+> 
+> (b) Make a best effort to notice if something is wrong with the TPM
+> and/or someone is MITMing us and messing with us.  That means
+> computing the hash algorithms we actually support and checking whether
+> TPM2_PCR_Event() returns the right thing.  I'm not seeing a specific
+> attack that seems likely that this prevents, but it does seem like
+> decent defense in depth, and if someone chooses to provision a machine
+> by reading its event log and then subsequently getting an attestation
+> that a future event log matches what was read, then avoiding letting
+> an attacker who temporarily controls the TPM connection from
+> corrupting the results seems wise.  And I don't see anything at all
+> that we gain by removing a check that (TPM's reported SHA1 == what we
+> calculated) in the name of "not supporting SHA1") other than a few
+> hundred bytes of object code.  (And yes, SHA1 is much more likely to
+> be supported than SM3, so it's not absurd to implement SHA1 and not
+> implement SM3.)
+> 
 >>
->> So unless there is a pretty good reason, I'll keep
->> NEED_PROC_VMCORE_DEVICE_RAM as is.
-> 
-> That's easy to satify, see below:
-
-Yes, this is mostly what I have right now, except
-
-> 
-> ============simple version=====
-> fs/proc/Kconfig:
-> config NEED_PROC_VMCORE_DEVICE_RAM
->          def n
-
-using "bool" here like other code. (I assume you meant "def_bool n", 
-"bool" seems to achieve the same thing)
-
-> 
-> config PROC_VMCORE_DEVICE_RAM
->          def_bool y
->          depends on PROC_VMCORE && VIRTIO_MEM
->          depends on NEED_PROC_VMCORE_DEVICE_RAM
-> 
-> arch/s390/Kconfig:
-> config S390
->          select NEED_PROC_VMCORE_DEVICE_RAM
-> ==============================
-> 
+>> For some events, the hash is actually the hash of the event entry
+>> itself and for others, the entry is just a hint and the hash is of
+>> something else.
 >>
->> (b) In the context of this patch, "depends on VIRTIO_MEM" does not make
->> sense. We could have an intermediate:
->>
->> config PROC_VMCORE_DEVICE_RAM
->>           def_bool n
->>           depends on PROC_VMCORE
->>           depends on NEED_PROC_VMCORE_DEVICE_RAM
->>
->> And change that with VIRTIO_MEM support in the relevant patch.
+>> I think part of the confusion stems from the twofold issues of PCRs: at
+>> their simplest they were expected to provide the end policy values
+>> (this turns out to be problematic because there are quite a few ways,
+>> that will produce different end PCR values, that a system could get to
+>> the same state).  If you don't trust a bank (or don't know about it),
+>> you don't code it into a required policy statement and its value
+>> becomes irrelevant.
 > 
-> Oh, it's not comment for this patch, I made the simple version based on
-> the whole patchset. When I had a glance at this patch, I also took
-> several iterations to get it after I applied the whole patchset and
-> tried to understand the whole code.
-
-Makes sense, I'm figuring out how I can split that up.
-
-If we can avoid the PROVIDE_* thing for now, great. Not a big fan of 
-that myself.
-
+> I think that "you" refers to multiple entities, and this is a problem.
 > 
->>
->>
->> I faintly remember that we try avoiding such dependencies and prefer
->> selecting Kconfigs instead. Just look at the SPLIT_PTE_PTLOCKS mess we still
->> have to clean up. But as we don't expect that many providers for now, I
->> don't care.
-> 
-> With the simple version, Kconfig learner as me can easily understand what
-> they are doing. If it took you a couple of iterations to make them as
-> you had mentioned earlier, and it took me several iterations to
-> understand them, I believe there must be room to improve the presented
-> ones in this patchset. These are only my humble opinion, and I am not
-> aware of virtio-mem at all, I'll leave this to you and other virtio-mem
-> dev to decide what should be taken. Thanks for your patience and
-> provided information, I learned a lot from this discussion.
+> If the vendor of an attestation-dependent thing trusts SM3 but *Linux*
+> does not like SM3, then the vendor's software should not become wildly
+> insecure because Linux does not like SM3.  And, as that 2004 CVE
+> shows, even two groups that are nominally associated with Microsoft
+> can disagree on which banks they like, causing a vulnerability.
 
-I hope I didn't express myself poorly: thanks a lot for the review and 
-the discussion! It helped to make the Kconfig stuff better. I'll get rid 
-of the PROVIDE_* thing for now and just depend on virtio-mem.
+Thanks everyone for all the feedback and discussions on this. I 
+understand it is important and perhaps the Linux TPM code should be 
+modified to do the extend operations differently but this seems like it 
+is outside the scope of our Secure Launch feature patch set.
 
-> 
-> ===================
-> fs/proc/Kconfig:
-> config PROVIDE_PROC_VMCORE_DEVICE_RAM
->          def_bool n
-> 
-> config NEED_PROC_VMCORE_DEVICE_RAM
->          def_bool n
-> 
-> config PROC_VMCORE_DEVICE_RAM
->          def_bool y
->          depends on PROC_VMCORE
->          depends on NEED_PROC_VMCORE_DEVICE_RAM
->          depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
-> 
-> drivers/virtio/Kconfig:
-> config VIRTIO_MEM
->          select PROVIDE_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
->                                                ~~~~~~~~~~~~~~
-> 
-> arch/s390/Kconfig:
-> config S390
->          select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
->                                             ~~~~~~~~~~~~~~
-> ========================
-> 
-> One last thing I haven't got well, If PROC_VMCORE_DEVICE_RAM has had
-> dependency on PROC_VMCORE, can we take off the ' if PROC_VMCORE' when
-> select PROVIDE_PROC_VMCORE_DEVICE_RAM and NEED_PROC_VMCORE_DEVICE_RAM?
+As far as our patch series goes, we have done the things that were asked 
+of us like documenting SHA-1 usage, fixing comments and commit message 
+and breaking up the original patch into two (one for SHA-1 and one for 
+SHA-256). It seems we should be able to submit our next version at this 
+point.
 
-We could; it would mean that in a .config file you would end up with
-"NEED_PROC_VMCORE_DEVICE_RAM=y" with "#PROC_VMCORE" and no notion of 
-"PROC_VMCORE_DEVICE_RAM".
-
-I don't particularly like that -- needing something that apparently does 
-not exist. Not sure if there is a best practice here, staring at some 
-examples I don't seem to find a consistent rule. I can just drop it, not 
-the end of the world.
-
-
-Did you get to look at the other code changes in this patch set? Your 
-feedback would be highly appreciated!
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks
+Ross
 
