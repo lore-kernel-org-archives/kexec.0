@@ -4,85 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 761BAD78780
-	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 15:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44710E6400C
+	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 19:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eS7bGCy5YRnQF1VVX3hqmSIuG3NddVnWmPFA2i7JUNM=; b=0OGVKY2ivmHUej4AO9tuLyDXRp
-	4KxB3VQz+TXHiRvPMi6vOuDXCIE5JE3za9Y770pUjvicOw0aYgVKGRtz2etZf9NKst0StKJkTbgBf
-	/gj3zqWVvc3ftoQsvMqRCtt4AkKqDJO3vAZypUkhZqnIJErXZV8u0UKo/rKASt3oRgNy7FvK0+DC4
-	1HfpMqv4Cly9mGXoU5XBT7yZ8ZZBmBa+yLQnmwPdZPOpRV3l2QRmrw7tIt6JrzNp+Ewnf2PquKcZA
-	q83Onxc7DhegN1VQ7RD+U4GBNXjFY0UrWH/1B1BF57C8oEId5ah0xZZp7g8Y9T/oSLonpcu3UyxVf
-	9a7u2wsw==;
+	bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=; b=lvuk3HGbo41N3+9Px42Ve+fZgE
+	KWBWyDNyCWka+MGD41G4Hap34vVRucwI3CoZSG6HbDW3L+4ejQoPowQAoNbLyG1vBRr6fadZKcsd+
+	4qA6D8hTNGXVpeRO1IqxqEwxVosNB3jQoHnNUj+smLdVfYKpvNZNyxuJDHe4tHjP+cq83VSeOXxnn
+	0SaC7EhagALKRefeQDeLV+d99m7BESqVxz50PBZV71isb7NAn2PMSLynPg0iWa7BRa4Ftx0g6MphQ
+	CImqW1sE7ABPxmg7+EAsmI5im+cLjwUSOW1Hc5oSBzWtoGnRbQMCkwKqeXR9wTcc+Tt1DsqETfzWD
+	PL+uDMSw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tE9G9-00000000LpK-3FVr;
-	Thu, 21 Nov 2024 15:38:21 +0000
+	id 1tED8x-00000000nKS-37Aa;
+	Thu, 21 Nov 2024 19:47:11 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tE9FJ-00000000Ldp-2Npp
+	id 1tED8u-00000000nJy-2JJz
 	for kexec@lists.infradead.org;
-	Thu, 21 Nov 2024 15:37:31 +0000
+	Thu, 21 Nov 2024 19:47:09 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732203447;
+	s=mimecast20190719; t=1732218427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=eS7bGCy5YRnQF1VVX3hqmSIuG3NddVnWmPFA2i7JUNM=;
-	b=TXwchD/KzN46d1G+/g4jbKHpLh2Npeue3sEkSuggG4UJsw4mxMkn1MjUh+B8PzFakfTUrj
-	LaW0jAZt5E39OK6PZYuoc3pbWYmxCk0hgBQJvMbqOn4gCs0JPbPmPPCtuHQ1XrCrZu4nCw
-	23HFZWyoUskg5jdQIuiBTp/Sjx7KxJQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=;
+	b=BSTGR7iBPI7Nc6Nd/9TeYxMoZDEmBd3apEUFVOqHZ6HNRErLvYhceF1y1q+z/Mkm3yE9Yz
+	t9wJlDTmyFMo9+NxhIYMM4RLBVG7kdYJBV6Nq1uH6zGdYk2FeZz+i52QunGqnI9Uwz3kg7
+	8mZ5QVslPcZPAFVDFKTFHsaieamgk3Y=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-ZSItuyINOqmeuko7M21ZiA-1; Thu, 21 Nov 2024 10:37:26 -0500
-X-MC-Unique: ZSItuyINOqmeuko7M21ZiA-1
-X-Mimecast-MFC-AGG-ID: ZSItuyINOqmeuko7M21ZiA
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4315dd8fe7fso9270535e9.3
-        for <kexec@lists.infradead.org>; Thu, 21 Nov 2024 07:37:26 -0800 (PST)
+ us-mta-346-Fz3Fiyv0OkK-2hSCQ8lhrQ-1; Thu, 21 Nov 2024 14:47:06 -0500
+X-MC-Unique: Fz3Fiyv0OkK-2hSCQ8lhrQ-1
+X-Mimecast-MFC-AGG-ID: Fz3Fiyv0OkK-2hSCQ8lhrQ
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3825a721afaso714874f8f.0
+        for <kexec@lists.infradead.org>; Thu, 21 Nov 2024 11:47:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732203445; x=1732808245;
+        d=1e100.net; s=20230601; t=1732218425; x=1732823225;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=eS7bGCy5YRnQF1VVX3hqmSIuG3NddVnWmPFA2i7JUNM=;
-        b=Ii2/LBGmaCBKbi75/gIza0XIFA+Ea1q9+t+1MRg77IpFbAAUVvkLx07ekbmDNSS+Bo
-         j6WyLVWm9OMZm0mYDhueorxW28lOAkGen1QuSkTnk3oV0hs8Qng0zQYcuk8fpiH6MceB
-         XKtzrP+iXt5Hrsmghcod3P9pI18Y8LXHIbfdijfcV5u/+j/FexnBdF1XAcRCPOGmNvcX
-         RA+PNHsQNatRfhUInSb7a4DxaWYel0QKoW8SqWx44f77yxHoE1Qz8vOGrUxsMNaNEZzc
-         AD72LCQtwlsOqEWc+rw6b7F3Vrgquuo3150ObcgX9scY6b2Yld8u1XX8Qk1DPXuJJFHK
-         3Mpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTNgYe56w2TO/dJau2HafMjAtOCBZ5/Q7/hC3ARaSxScHFpQQeOQwlPKfgUb6CdMuMw5HnQQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxQz/FoRT6HfyOCS2FTlNOuMTtyFDWyxz2e1vqKr7Pp5jmZMNbK
-	4JYwYq2djOBwav9PBlYxya3n9PxZ79AeZUnqoyMDb6kNuK+zBaqtNRM10eyZbdSOWIUhlQDel4M
-	IMUcc6sgQbT8nHKvRA7RzpwAr01ml2XglVkrRadDCx2G+5XN2jnmcKdIluQ==
-X-Gm-Gg: ASbGncuRgL6I46EOV3GR5JM+EdA6UmqQZ3XxAGzF/7NIchsz0lukVTJarRobl3bK9yR
-	QGp03iH2F+iyadqgnfHafWHNdryskudWNG6sSoYEc9KQjFDGioer8iclrsWuGriAeQZra92EOTj
-	+1Cy3ShU9C/aw2XZNg/jufWqRROY/tlEbhfrJcOliCpPLUgL2TRkwwDo6aqG8wvHrYDVIah7xEG
-	yr3jVUbSap7BLu3eoiFyvVRLhO22knZikmoEds8CEE8UkKPuw0PQKRXTd5hBkmOixjtdZpaWtrD
-	HaA5jfpkdHf1nr9og3qxZ0i56E1L6iLKF28etVlVzFxQi9YaPj1lKOFHvCmcaP3kodv+oQ88Un8
+        bh=9vPjFHjh3yXhS4HZP/mZR+2x681KUbGOAjt5WUat2I0=;
+        b=UHnA9AwoMWSHnBRd5eVNHuWMPAxrS3rsDU0bT/0CUyrr0vemDWSabXangNmBXyTDcz
+         4YRRDcPJP80nTE5Xf6AE5kBRQj8tsvMLWMeVVwtjdDIroKTyOE/HHXCBja1MRcH4rHqQ
+         +eMSCZCIYCO9uxGToh/NRLLMNKfXK67UoLosUjWhZyUUEkljJyy57yzWiF8e4mn6gtKH
+         kycWy0QAV/varg+RY9Y3r+UpHoZUSykyFMZZf01FIG+zLnzhzmRSHRwMrJC32KEWmSIH
+         GTOWJLzcFN1Yk+fRPQz/EP+5r3yRzvz6jC6UaTuUE7T6ktPRd+hiM+Pj0CeMtf8WHWGe
+         daeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6QF18kPELSIsTSCE8ksTgLWtissdZmg0dXCo6k7+T/Cc4TNRM6ESttognuB9oOF6HT3ryzg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyKk7P1f6xWs7S/E6OnUkqrgyt0O/G2qbfVDvETREftk/ivoVVj
+	wfEUNZjzLweQKEJxoz1OYZXZCuiRGR0xfPU/xgRmV7JPFRYbKTnNZSVVrXsvQohZxa6TlaQ6UGO
+	yY3t48WBfczx39f9rtYA9ApoTsSg8f/sar2kUTBsL+kvTuWX3zMhuLlFxdA==
+X-Gm-Gg: ASbGncuUyVtY1nr0HMNMHsP2x1Q5EB9/A346k0Jd83r+fanc4zJqhECOI09de82f80E
+	BYC6MyQbi+yK4GKZKrNXirXsRZ+mD9uIv3b9CZGm2ElGaFrFXfR/QD7wn73CkojllLuDoOneQGx
+	/IcnrcfqZnq6uyAOjDGtzUC+eIN1QTcrAdNfnSabRgjwyEOwHQo60rwQ8P9RLk3VlpC9QfbKx1j
+	J3ZK3bd1VOr0HeorJyTbdJr+7RthhfncWlupStHa4xqX2Saq8AaMifxlMyEFIaXSmRcR4wv+qPS
+	zOTml8Hbv9z29EPClc70MM5tCGcLKWmLmuERPmqzAVa6wUP2OG+cdEZMek04lxyyC5bqOwYscZc
 	=
-X-Received: by 2002:a05:600c:1d93:b0:42b:ac3d:3abc with SMTP id 5b1f17b1804b1-4334f01548dmr68139675e9.24.1732203445505;
-        Thu, 21 Nov 2024 07:37:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFcWfaRMIf30Hgg52d+hIlcLWUuMutdNfVmMqgbxuJi7boGn2lsfYZzyLLvkfHTbZQW2nzANQ==
-X-Received: by 2002:a05:600c:1d93:b0:42b:ac3d:3abc with SMTP id 5b1f17b1804b1-4334f01548dmr68139385e9.24.1732203445201;
-        Thu, 21 Nov 2024 07:37:25 -0800 (PST)
+X-Received: by 2002:a5d:64a4:0:b0:382:4978:2ab9 with SMTP id ffacd0b85a97d-38260b50178mr280900f8f.5.1732218425149;
+        Thu, 21 Nov 2024 11:47:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEwjpMyfPMDn7yzJZGj2fN3hdUzm6pJror1oFSbaD9p3e5FF3gpDG0hGN0f8NMCUBM9HBDVYw==
+X-Received: by 2002:a5d:64a4:0:b0:382:4978:2ab9 with SMTP id ffacd0b85a97d-38260b50178mr280863f8f.5.1732218424718;
+        Thu, 21 Nov 2024 11:47:04 -0800 (PST)
 Received: from ?IPV6:2003:cb:c70c:de00:1200:8636:b63b:f43? (p200300cbc70cde0012008636b63b0f43.dip0.t-ipconnect.de. [2003:cb:c70c:de00:1200:8636:b63b:f43])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b45d16f8sm58469525e9.2.2024.11.21.07.37.23
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825fb537d4sm390281f8f.61.2024.11.21.11.47.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2024 07:37:24 -0800 (PST)
-Message-ID: <b778d6d2-729b-4416-bc12-78a2e85b08f3@redhat.com>
-Date: Thu, 21 Nov 2024 16:37:23 +0100
+        Thu, 21 Nov 2024 11:47:03 -0800 (PST)
+Message-ID: <c353466b-6860-4ca2-a4fa-490648246ddc@redhat.com>
+Date: Thu, 21 Nov 2024 20:47:01 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/11] fs/proc/vmcore: move vmcore definitions from
- kcore.h to crash_dump.h
+Subject: Re: [PATCH v1 07/11] fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM
+ to detect device RAM ranges in 2nd kernel
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
@@ -99,11 +99,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
  <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-5-david@redhat.com> <ZzcYEQwLuLnGQM1y@MiWiFi-R3L-srv>
- <ca0dd4a7-e007-4092-8f46-446fba26c672@redhat.com>
- <Zz2u+2abswlwVcer@MiWiFi-R3L-srv>
- <120bc3d9-2993-47eb-a532-eb3a5f6c4116@redhat.com>
- <Zz64efFyFstyDdN8@MiWiFi-R3L-srv>
+ <20241025151134.1275575-8-david@redhat.com> <Zz22ZidsMqkafYeg@MiWiFi-R3L-srv>
+ <4b07a3eb-aad6-4436-9591-289c6504bb92@redhat.com>
+ <Zz3sm+BhCrTO3bId@MiWiFi-R3L-srv>
+ <3ed18ba1-e4b1-461e-a3a7-5de2df59ca60@redhat.com>
+ <Zz63aGL7NcrONk+p@MiWiFi-R3L-srv>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -150,16 +150,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <Zz64efFyFstyDdN8@MiWiFi-R3L-srv>
+In-Reply-To: <Zz63aGL7NcrONk+p@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NQH6VMNdUrDmLmYrpFkGsWsDKm-s2wJA6rZ_nHPnYkE_1732203445
+X-Mimecast-MFC-PROC-ID: iNPH2c_NexGC9RYznKSzB1G7ZvEiNaxKuEfEZgnt-rg_1732218425
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241121_073729_696389_957F38DD 
-X-CRM114-Status: GOOD (  10.13  )
+X-CRM114-CacheID: sfid-20241121_114708_669519_4B7308A4 
+X-CRM114-Status: GOOD (  26.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,31 +174,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
->>>> If there are strong feelings I can use a different name, but
->>>
->>> Yes, I would suggest we better keep the old name or take a more
->>> appropriate one if have to change.
 >>
->> In light of patch #5 and #6, really only something like "vmcore_mem_node"
->> makes sense. Alternatively "vmcore_range" or "vmcore_mem_range".
+>> That would work, but I don't completely like it.
 >>
->> Leaving it as "struct vmcore" would mean that we had to do in #5 and #6:
+>> (a) I want s390x to select NEED_PROC_VMCORE_DEVICE_RAM instead. Staring at a
+>> bunch of similar cases (git grep "config NEED" | grep Kconfig, git grep
+>> "config ARCH_WANTS" | grep Kconfig), "select" is the common way to do it.
 >>
->> * vmcore_alloc_add_mem_node() -> vmcore_alloc_add()
->> * vmcore_free_mem_nodes() -> vmcore_free()
->>
->> Which would *really* be misleading, because we are not "freeing" the vmcore.
->>
->> Would "vmcore_range" work for you? Then we could do:
->>
->> * vmcore_alloc_add_mem_node() -> vmcore_alloc_add_range()
->> * vmcore_free_mem_nodes() -> vmcore_free_ranges()
+>> So unless there is a pretty good reason, I'll keep
+>> NEED_PROC_VMCORE_DEVICE_RAM as is.
 > 
-> Yeah, vmcore_range is better, which won't cause misunderstanding.
-> Thanks.
-> 
+> That's easy to satify, see below:
 
-Thanks, I'll use that and adjust patch #5 and #6, keeping your ACKs.
+Yes, this is mostly what I have right now, except
+
+> 
+> ============simple version=====
+> fs/proc/Kconfig:
+> config NEED_PROC_VMCORE_DEVICE_RAM
+>          def n
+
+using "bool" here like other code. (I assume you meant "def_bool n", 
+"bool" seems to achieve the same thing)
+
+> 
+> config PROC_VMCORE_DEVICE_RAM
+>          def_bool y
+>          depends on PROC_VMCORE && VIRTIO_MEM
+>          depends on NEED_PROC_VMCORE_DEVICE_RAM
+> 
+> arch/s390/Kconfig:
+> config S390
+>          select NEED_PROC_VMCORE_DEVICE_RAM
+> ==============================
+> 
+>>
+>> (b) In the context of this patch, "depends on VIRTIO_MEM" does not make
+>> sense. We could have an intermediate:
+>>
+>> config PROC_VMCORE_DEVICE_RAM
+>>           def_bool n
+>>           depends on PROC_VMCORE
+>>           depends on NEED_PROC_VMCORE_DEVICE_RAM
+>>
+>> And change that with VIRTIO_MEM support in the relevant patch.
+> 
+> Oh, it's not comment for this patch, I made the simple version based on
+> the whole patchset. When I had a glance at this patch, I also took
+> several iterations to get it after I applied the whole patchset and
+> tried to understand the whole code.
+
+Makes sense, I'm figuring out how I can split that up.
+
+If we can avoid the PROVIDE_* thing for now, great. Not a big fan of 
+that myself.
+
+> 
+>>
+>>
+>> I faintly remember that we try avoiding such dependencies and prefer
+>> selecting Kconfigs instead. Just look at the SPLIT_PTE_PTLOCKS mess we still
+>> have to clean up. But as we don't expect that many providers for now, I
+>> don't care.
+> 
+> With the simple version, Kconfig learner as me can easily understand what
+> they are doing. If it took you a couple of iterations to make them as
+> you had mentioned earlier, and it took me several iterations to
+> understand them, I believe there must be room to improve the presented
+> ones in this patchset. These are only my humble opinion, and I am not
+> aware of virtio-mem at all, I'll leave this to you and other virtio-mem
+> dev to decide what should be taken. Thanks for your patience and
+> provided information, I learned a lot from this discussion.
+
+I hope I didn't express myself poorly: thanks a lot for the review and 
+the discussion! It helped to make the Kconfig stuff better. I'll get rid 
+of the PROVIDE_* thing for now and just depend on virtio-mem.
+
+> 
+> ===================
+> fs/proc/Kconfig:
+> config PROVIDE_PROC_VMCORE_DEVICE_RAM
+>          def_bool n
+> 
+> config NEED_PROC_VMCORE_DEVICE_RAM
+>          def_bool n
+> 
+> config PROC_VMCORE_DEVICE_RAM
+>          def_bool y
+>          depends on PROC_VMCORE
+>          depends on NEED_PROC_VMCORE_DEVICE_RAM
+>          depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
+> 
+> drivers/virtio/Kconfig:
+> config VIRTIO_MEM
+>          select PROVIDE_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
+>                                                ~~~~~~~~~~~~~~
+> 
+> arch/s390/Kconfig:
+> config S390
+>          select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
+>                                             ~~~~~~~~~~~~~~
+> ========================
+> 
+> One last thing I haven't got well, If PROC_VMCORE_DEVICE_RAM has had
+> dependency on PROC_VMCORE, can we take off the ' if PROC_VMCORE' when
+> select PROVIDE_PROC_VMCORE_DEVICE_RAM and NEED_PROC_VMCORE_DEVICE_RAM?
+
+We could; it would mean that in a .config file you would end up with
+"NEED_PROC_VMCORE_DEVICE_RAM=y" with "#PROC_VMCORE" and no notion of 
+"PROC_VMCORE_DEVICE_RAM".
+
+I don't particularly like that -- needing something that apparently does 
+not exist. Not sure if there is a best practice here, staring at some 
+examples I don't seem to find a consistent rule. I can just drop it, not 
+the end of the world.
+
+
+Did you get to look at the other code changes in this patch set? Your 
+feedback would be highly appreciated!
 
 -- 
 Cheers,
