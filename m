@@ -4,92 +4,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBC04D75BB4
-	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 04:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 334A0D78765
+	for <kexec@archiver.kernel.org>; Thu, 21 Nov 2024 14:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1oRBVeUrG/30shRvr2+oS14u3aaQZd0tcZcIHNfuOZU=; b=N/5aGn03kjI6alPsOajZPEaJhT
-	UfgLIWswgYr0Kkk1zZ1Y/3cKtp7b8lmG5zGABWIf13LHzaoQx4+Bxdp2MY17B0z6PbVm7nqB1D0CU
-	LsJkjixd9zlusX7k/C/EfvnQeLF36jTsQsvOTi75KAQ17LewvWlz6h5J9Hp6C9xdizzCEvS9eeF9E
-	3ZCZKWI6psuanYUdp7FkzNXH+VPtR4r7ditn8IzaQYnKQSZ9Mpbzj4HPnCv9yNyBvJ+cGUYbOb7Xr
-	NmXiFJiZmiHrN+vDKKy3JulXH8kp64dYK8F+6L+kl+Z4sfiLIax12dL7qvEdcDZGrE6CDQJL1SKsn
-	mor7DPzg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:Message-ID:Date:Subject:To:From:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=cZsPjv6TiDhGGSijhUTtMOJNgV6QwChyybRk7HuVuYI=; b=bYbI+KHaQK8mRy
+	Q7lPF/W1nGUAsrbzVDduczqNOyQfVmtt+d0TxQEycmM0elrFAp+xRGksf/s68Us258mNX2sbpMH6V
+	iHbtuuuTz6UD7ux2M3UIWJ8FUCsWq5AW3sqL6fcjU0G5DCHzOV0YS1w+bsdsFW9CzzGiC9g4yU5ly
+	cV4JA9ity/iEJlg0iGLlDtkMpbiS9AEXgFQF/MAy5vX3jNtBt4ZFr8KmLSXqFhmBOflMGU2SERHu9
+	jKfoT38tVvUltFAqa8e+cWqRfEprYY9zfEkIAJjQcMK2tYvqs1HQoOXrysbg8wR0jmKnqYQ+aX3l7
+	EjHqK3RXUYXfsJc74CJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDyuu-0000000GnuC-043m;
-	Thu, 21 Nov 2024 04:35:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tE875-00000000Clk-3U6k;
+	Thu, 21 Nov 2024 14:24:55 +0000
+Received: from mail-db8eur05on2061f.outbound.protection.outlook.com ([2a01:111:f403:2614::61f] helo=EUR05-DB8-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDyq6-0000000GnDC-2hVS
+	id 1tE873-00000000ClC-14sf
 	for kexec@lists.infradead.org;
-	Thu, 21 Nov 2024 04:30:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732163445;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1oRBVeUrG/30shRvr2+oS14u3aaQZd0tcZcIHNfuOZU=;
-	b=bWMXOu1UTZtpS4/7Qw/+IKsuW7LK783G8Qx7ymRWWo3X/RuF6XUBrsLf2ywydVyEhiwCrM
-	JmHU+cCTfpGBGH4QPumTJxlxibDOG/0x17sUFW7os1FHt92HT61c2K7vXCbcuSJyb6RAwW
-	5C83iukmo+tMGImYyNc8Ifj11Ut38ec=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-vNatiTkcPDWezXWdS3a--g-1; Wed,
- 20 Nov 2024 23:30:42 -0500
-X-MC-Unique: vNatiTkcPDWezXWdS3a--g-1
-X-Mimecast-MFC-AGG-ID: vNatiTkcPDWezXWdS3a--g
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 89EE219560B1;
-	Thu, 21 Nov 2024 04:30:39 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.10])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 361E81956086;
-	Thu, 21 Nov 2024 04:30:36 +0000 (UTC)
-Date: Thu, 21 Nov 2024 12:30:32 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 07/11] fs/proc/vmcore: introduce
- PROC_VMCORE_DEVICE_RAM to detect device RAM ranges in 2nd kernel
-Message-ID: <Zz63aGL7NcrONk+p@MiWiFi-R3L-srv>
-References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-8-david@redhat.com>
- <Zz22ZidsMqkafYeg@MiWiFi-R3L-srv>
- <4b07a3eb-aad6-4436-9591-289c6504bb92@redhat.com>
- <Zz3sm+BhCrTO3bId@MiWiFi-R3L-srv>
- <3ed18ba1-e4b1-461e-a3a7-5de2df59ca60@redhat.com>
+	Thu, 21 Nov 2024 14:24:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wHvN52U0YxVEdnwk1SKwa70khZCXP8XXBDrPEqpzBL96pkAbJmWwvrLPm1TvcEL3Z7uATVhE0JgfNklaW2dGpxUeSnVaAinJj0ZhG2qm1BsNKjmvl21B8374janEzgTTFfaDRgD4Sz27+u62Vui4A9w4yIz1eiRcZH3wqm0ITLS0Nxn3AO7ziuMEYF6Hu0sON7TrmxA068bNcXFDbEuV3IkuIG32EdJCGk8RN9TB0ffpUHx3wc8cyiWTIvkpNnNsxahyWajY4/NIt2/QwGF5mYexWFFdKioNH0Rv3fJgZfeuNYVBCQ7e7jwVOtP9M+GeylWudMQ9PP/zDCw7vp53oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cZsPjv6TiDhGGSijhUTtMOJNgV6QwChyybRk7HuVuYI=;
+ b=njiUxBiW4lj4VG1i2RIJ8pvUtHciVv2tJZ/ikfmL4zNFf8K1WtSFiI01dHw9l6xkLHr3B+Qs1SIqKg/fASCuwtYyEyQHlUFVp/jUYfUP8U5UiT9wkUxj3pft4ptLeWG0Hsnxf8MHcU0ljvTzZ7wLGnHz3rUFCgCpwEBgJ7d9Z6ykufyyi13cIQU+rUjHYtCVSQ8pqrg/tGF4BTgUxGO0jjD9ylPP7ruDSbZZS0BdYXwPsLsoICBZV6HoOXkPzXY5ErQXPLXdKgPkIqu/QNWJtCwhtuM2UsoS+WMHcIo6+/qKCefqXVy5rhv7SyRCRzYeATqlQtRbDbEDImmEim6PrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hubersuhner.com; dmarc=pass action=none
+ header.from=hubersuhner.com; dkim=pass header.d=hubersuhner.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hubersuhner.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZsPjv6TiDhGGSijhUTtMOJNgV6QwChyybRk7HuVuYI=;
+ b=XJoENPzWSzSMV7oWnFaxfkL5apu/Up58uP6reaEaBsYQMUYQCnFlxRd6QaAUeefvtCM1SFa10Uv9eQCGHQhoIUzJJsktkHjo3IczfAnSCcp5MT6sTKEyZfNrENn3FqJVszn3o+nVaFnCK93FUf0Vs2DZnn+zBlRs9y83xoQxxck=
+Received: from DB8P193MB0710.EURP193.PROD.OUTLOOK.COM (2603:10a6:10:156::23)
+ by AS8P193MB2400.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:445::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.17; Thu, 21 Nov
+ 2024 14:24:47 +0000
+Received: from DB8P193MB0710.EURP193.PROD.OUTLOOK.COM
+ ([fe80::fb9a:f764:7f57:e1a2]) by DB8P193MB0710.EURP193.PROD.OUTLOOK.COM
+ ([fe80::fb9a:f764:7f57:e1a2%5]) with mapi id 15.20.8158.023; Thu, 21 Nov 2024
+ 14:24:47 +0000
+From: McLaughlin Amy <amy.mclaughlin@hubersuhner.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Bug report - GZ magic check always fails in uImage_gz_load
+Thread-Topic: Bug report - GZ magic check always fails in uImage_gz_load
+Thread-Index: Ads8IPbWp/y+sL6yRwe23Bj6UAcjDQ==
+Date: Thu, 21 Nov 2024 14:24:47 +0000
+Message-ID: <DB8P193MB0710307EC147427C3B14E24383222@DB8P193MB0710.EURP193.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-codetwoprocessed: true
+x-codetwo-clientsignature-inserted: true
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hubersuhner.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB8P193MB0710:EE_|AS8P193MB2400:EE_
+x-ms-office365-filtering-correlation-id: d13a0c20-da40-43f1-cda6-08dd0a384078
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?K3SdOLwzlJk24wG+f4U+2yEdMAXZF/g9WZn5aPlCDvXwYGBmm6yK/kcUiS5y?=
+ =?us-ascii?Q?7dIwSCUlQnGv0Zw8dp5ho0eeWpNFyLL9PlMhzC4rJ7jeJw+oL4Rut4ndVo+t?=
+ =?us-ascii?Q?py+ZSJndmv6PKLapyLWQo08fOiIKhvCcUvibPvQ2ummOu3YQDlnRDtR/o9Vx?=
+ =?us-ascii?Q?jh12QifR9Knh8faM0XLLzaYDdEAvj7KR8KjvNv1w0EHj8P47OXtqyTe8Alcq?=
+ =?us-ascii?Q?c538WPA0P1Ar5LjjrYyOd1p0A9MWrKC6ueYHU3vA9Iyx7iTatN4JDqwLcNyr?=
+ =?us-ascii?Q?PqnPLmp0wPVIAeTtO8rw29joJFGUfmwxnD1LCJuQZBuplzvVjYnxM4sFUb9m?=
+ =?us-ascii?Q?CttKtDKwDWNvKNvt4X+t19PXpIMRGE0nI9SHwBvGG567s0KzznI7+WaXChDg?=
+ =?us-ascii?Q?LnS1EfH8Z639tUx6muNoWZiRCK4BkR5hnqKOMZ2ZBISPBpbLz4+CGK4jRxT4?=
+ =?us-ascii?Q?TgkPVnLjpaaKs/YQ4iLog8Do8/6LeQU18eCm3pRVpcfiXnbXuqhQi4/DdFUq?=
+ =?us-ascii?Q?bWJ0pANe2Ya/fP2/2kBBZLSPvi1KMJ9ts2sQPSkNoYdjk73Bb/V7KnO/1zKN?=
+ =?us-ascii?Q?0b/7Ewe9pVrkCAaYSUKgFzlGiGvhIFn7DXehfJVg0iHaRzCrKO1tsvSBm8hU?=
+ =?us-ascii?Q?XS29QXiqTtyo605ULeyU3Gz6X6BEFUY1M58ZgcMFV1h7yTNWKshHNkRt5HFE?=
+ =?us-ascii?Q?mbglEy46ApByPHaSjxXmYd2ORVEJBSH/UVFCrKMJqMqQK+1pRhN1ngJdZhsV?=
+ =?us-ascii?Q?FhoiwSgrRIto469MrJtQsCipS4atOvK8cyiyfL8ITvEAA4O5onQQB/2+Ds/Q?=
+ =?us-ascii?Q?2GaRHb2m1EdXX4brSkz+es0KQXoaKsroWLgWJFeCjMQVbRHjWZWvXpJNQ/bF?=
+ =?us-ascii?Q?Y8xLjj3TC5WMNK0nY1lu0h9XXP1ZblltgkMBOWCEEqv7Hay4o4EqqdMlM2/s?=
+ =?us-ascii?Q?mXDk95KMQYpvhQIaUQmUxA5iMyPhG0y3om6l1VNY+sT/yBlXmVDek50tx70C?=
+ =?us-ascii?Q?6fWnHxlM0ew1X/Q/8tNZndjPb2cQd65VXHT3rR34vfxDEea77pZ9ziXCKED2?=
+ =?us-ascii?Q?uI2sNRK5i5Ycj8ZOaxGiv2WJIQwteqQMeiB014NvUDiZWFiNwKNwqHVnEW+D?=
+ =?us-ascii?Q?rEp6j8jG9sOJeLhi9WkZh/MVgaO4EucJImsJMWX+pO1kW+Gq90aOzRtCE4j9?=
+ =?us-ascii?Q?EewQCTuQh8+roMx+JQ4DdYRpvxQBtRO+f1sKclBiikzusVEf1KfP78FSNQPO?=
+ =?us-ascii?Q?Mx5jBxl6CSpbQmk4fPEo7MxRb0eXC4tyLABdMLLQp0IiILZ7vvVG9GvxHFuV?=
+ =?us-ascii?Q?1OR+IwJefZx3VORHkq4jBCC20l47Hto8trtp9r1q24n3fG8DatwO5han+r86?=
+ =?us-ascii?Q?SqkHG9g=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8P193MB0710.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?M5R+lgWprYpY4ZW3oDiZOfGN1UHjNYsvWVU6hmLbHMsujcwkmp9L0vij2+Hn?=
+ =?us-ascii?Q?uy0hKy8OJAWbIbqWAA9+8D5cGvSvpm7Rl88x8AdbDRKVTrMLOIjLUmjMlFFu?=
+ =?us-ascii?Q?wSAFimizqDuqPzrzDOyKQ6Oyk3m8/vSG6eKpsNRrD/h1HQvfesKuEYZ1hsx+?=
+ =?us-ascii?Q?50chc7UBpJi9wE7tXrIY2X+ydLkQp834Ny4Bg57srWgH9JNis+0VHSSCAspJ?=
+ =?us-ascii?Q?4gb3JXOXQEcgHWEQOie/rawAugavcc/d8m8JPF4cYO30gbLLJq6QJ7C6zlCZ?=
+ =?us-ascii?Q?I6v2g21EmiHmayRp+Ckc12THf31Hv2gZ7FzsenXHt36vWn3pfQEDsgpq9sD4?=
+ =?us-ascii?Q?cQ+jXJ1b9Z/WrgY/IpVT4ehcPFGZ1WlWFzYBPeeCWk1QnuaMHzpH3LNMix6L?=
+ =?us-ascii?Q?Qlx9iU5INRbYKknweeYPMeURwVMD0jEPZeHn/J8khXbLICoea82SMy01oK03?=
+ =?us-ascii?Q?eDQrdjxUXrVVrxufEpM0NHh7Jt8KMTrpXHviLC2Bdgyj1vUacIWMEcht1Fzu?=
+ =?us-ascii?Q?IZcPCSLrag9ERPvOVPqhAI1qR+8FjHpGrrpBYYgXGwcKBu5wy2uky/T8YpyR?=
+ =?us-ascii?Q?Dh9r0bDtpsbc3hPUZcy8zggJA+1mRk+f/7RExrVisFOaLDLLwzHyHPw3W8Mo?=
+ =?us-ascii?Q?4aEV4r92M/COA+DlTLS0CDWiq+LjsqiqLaul7NlZ+Mqay8YMdp7zpgLkeaCR?=
+ =?us-ascii?Q?cB/f5GPLaPb3Ka3x0t1ihrZi2vLAwkY9ZxUynWyMxN7awNUZ210Aumfpt4cY?=
+ =?us-ascii?Q?4VfYKV8ha5MiNMruUelekjsoviT//RPwz+8KmQH3sh9QL82RWKBzcmR9x0wE?=
+ =?us-ascii?Q?Kei5pAAfRrf0xRvxTz5aCJKW+DdzuaXlWJafOwG6djDK/wZcQV6cRoDJ8+8c?=
+ =?us-ascii?Q?HpBGTK0yLkmdhMUGLlG9LLnZGBv3lbsAR3WtQc2tbtV+5aEqdrI5uv4rfu4H?=
+ =?us-ascii?Q?bzutOasbFgiHTMFibWGNFZJbmHVp3M0PSl8wL7DzcH/ZlcaC5AFB16npbsig?=
+ =?us-ascii?Q?zHD/gFs91cejzPqYDsfv9Eij2FIXiKEhLFr4j2ifZVLe3mlnnI75690v0Bmg?=
+ =?us-ascii?Q?B6rYxDM1mYkJ3k0unxy5LBy6kMJRLRWPK71/qqFleHoETePG7U1HXS1GwLzt?=
+ =?us-ascii?Q?Qy+ystlwNbgbNEA1VhqSADICR+SIalyJZT8+5esSVEWa9d4b0iCtSE33csEz?=
+ =?us-ascii?Q?WWyRT43XZLcJ+u97uZWBD23wY7SfhwP+q6ozY/z6TJ8jh8UoNHsii3Ku8b+J?=
+ =?us-ascii?Q?oZduDjD4UZ177trQlXJawrqu+eVvIgF6HD+4mKjWMpTGT3BtNEQJ3Nwu2K89?=
+ =?us-ascii?Q?93SkkDH4g8Ix+ZkaaZbACGIA8VNaVqgi4S7LmPgtfmmZa6VppVP/mwF18WGg?=
+ =?us-ascii?Q?1/Zi6Xe91wEJXNa/w+EZcetgG3lRe4g6Hh6OL+1D0fi6Ual+InLPD38hERyc?=
+ =?us-ascii?Q?7bPraUUMz5dQHyI1uPLN9NQnGasmZOAzmrEguzZxrdrh4xFcHPms9SpcztZJ?=
+ =?us-ascii?Q?eR000QBvwBTK47RwM9NBlNsXf73uggvWUQwI+HwQkvAo0rBz2zPYeULI+Om8?=
+ =?us-ascii?Q?miIXq4a6cczQgod6ZRh9IZE3cRHP0hWtA8S5AFPtKI973dLOF6+nxMDhcMh/?=
+ =?us-ascii?Q?5A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ed18ba1-e4b1-461e-a3a7-5de2df59ca60@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-OriginatorOrg: hubersuhner.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8P193MB0710.EURP193.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: d13a0c20-da40-43f1-cda6-08dd0a384078
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2024 14:24:47.2489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c6d8fe08-f565-4534-965a-95698574938a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AJPh68QHdHATwltknq4l747/JS+kcLoYm1T9qw+/q6EmI/V41GoJ3XAAOdXPgkff7AImQmWXLs7yiUtUWCTVlKrj/FJAWei1i1YItc8du3Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8P193MB2400
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241120_203046_787184_3CD7E952 
-X-CRM114-Status: GOOD (  45.63  )
+X-CRM114-CacheID: sfid-20241121_062453_513870_E098CB0B 
+X-CRM114-Status: UNSURE (   6.59  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,186 +158,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/20/24 at 03:39pm, David Hildenbrand wrote:
-> On 20.11.24 15:05, Baoquan He wrote:
-> > On 11/20/24 at 11:48am, David Hildenbrand wrote:
-> > > On 20.11.24 11:13, Baoquan He wrote:
-> > > > On 10/25/24 at 05:11pm, David Hildenbrand wrote:
-> > > > > s390 allocates+prepares the elfcore hdr in the dump (2nd) kernel, not in
-> > > > > the crashed kernel.
-> > > > > 
-> > > > > RAM provided by memory devices such as virtio-mem can only be detected
-> > > > > using the device driver; when vmcore_init() is called, these device
-> > > > > drivers are usually not loaded yet, or the devices did not get probed
-> > > > > yet. Consequently, on s390 these RAM ranges will not be included in
-> > > > > the crash dump, which makes the dump partially corrupt and is
-> > > > > unfortunate.
-> > > > > 
-> > > > > Instead of deferring the vmcore_init() call, to an (unclear?) later point,
-> > > > > let's reuse the vmcore_cb infrastructure to obtain device RAM ranges as
-> > > > > the device drivers probe the device and get access to this information.
-> > > > > 
-> > > > > Then, we'll add these ranges to the vmcore, adding more PT_LOAD
-> > > > > entries and updating the offsets+vmcore size.
-> > > > > 
-> > > > > Use Kconfig tricks to include this code automatically only if (a) there is
-> > > > > a device driver compiled that implements the callback
-> > > > > (PROVIDE_PROC_VMCORE_DEVICE_RAM) and; (b) the architecture actually needs
-> > > > > this information (NEED_PROC_VMCORE_DEVICE_RAM).
-> > > > > 
-> > > > > The current target use case is s390, which only creates an elf64
-> > > > > elfcore, so focusing on elf64 is sufficient.
-> > > > > 
-> > > > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > > > > ---
-> > > > >    fs/proc/Kconfig            |  25 ++++++
-> > > > >    fs/proc/vmcore.c           | 156 +++++++++++++++++++++++++++++++++++++
-> > > > >    include/linux/crash_dump.h |   9 +++
-> > > > >    3 files changed, 190 insertions(+)
-> > > > > 
-> > > > > diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-> > > > > index d80a1431ef7b..1e11de5f9380 100644
-> > > > > --- a/fs/proc/Kconfig
-> > > > > +++ b/fs/proc/Kconfig
-> > > > > @@ -61,6 +61,31 @@ config PROC_VMCORE_DEVICE_DUMP
-> > > > >    	  as ELF notes to /proc/vmcore. You can still disable device
-> > > > >    	  dump using the kernel command line option 'novmcoredd'.
-> > > > > +config PROVIDE_PROC_VMCORE_DEVICE_RAM
-> > > > > +	def_bool n
-> > > > > +
-> > > > > +config NEED_PROC_VMCORE_DEVICE_RAM
-> > > > > +	def_bool n
-> > > > > +
-> > > > > +config PROC_VMCORE_DEVICE_RAM
-> > > > > +	def_bool y
-> > > > > +	depends on PROC_VMCORE
-> > > > > +	depends on NEED_PROC_VMCORE_DEVICE_RAM
-> > > > > +	depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
-> > > > 
-> > > > Kconfig item is always a thing I need learn to master.
-> > > 
-> > > Yes, it's usually a struggle to get it right. It took me a couple of
-> > > iterations to get to this point :)
-> > > 
-> > > > When I checked
-> > > > this part, I have to write them down to deliberate. I am wondering if
-> > > > below 'simple version' works too and more understandable. Please help
-> > > > point out what I have missed.
-> > > > 
-> > > > ===========simple version======
-> > > > config PROC_VMCORE_DEVICE_RAM
-> > > >           def_bool y
-> > > >           depends on PROC_VMCORE && VIRTIO_MEM
-> > > >           depends on NEED_PROC_VMCORE_DEVICE_RAM
-> > > > 
-> > > > config S390
-> > > >           select NEED_PROC_VMCORE_DEVICE_RAM
-> > > > ============
-> > 
-> > Sorry, things written down didn't correctly reflect them in my mind.
-> > 
-> > ===========simple version======
-> > fs/proc/Kconfig:
-> > config PROC_VMCORE_DEVICE_RAM
-> >          def_bool y
-> >          depends on PROC_VMCORE && VIRTIO_MEM
-> >          depends on NEED_PROC_VMCORE_DEVICE_RAM
-> > config NEED_PROC_VMCORE_DEVICE_RAM
-> >          def y
-> > 
-> > arch/s390/Kconfig:
-> > config NEED_PROC_VMCORE_DEVICE_RAM
-> >          def y
-> > ==================================
-> 
-> That would work, but I don't completely like it.
-> 
-> (a) I want s390x to select NEED_PROC_VMCORE_DEVICE_RAM instead. Staring at a
-> bunch of similar cases (git grep "config NEED" | grep Kconfig, git grep
-> "config ARCH_WANTS" | grep Kconfig), "select" is the common way to do it.
-> 
-> So unless there is a pretty good reason, I'll keep
-> NEED_PROC_VMCORE_DEVICE_RAM as is.
+I tried adding -Wextra to Kexec's makefile, while compiling some work by a =
+colleague that built on the kexec source. It spotted the following:
 
-That's easy to satify, see below:
+```
+kexec/kexec-uImage.c: In function 'uImage_gz_load':
+kexec/kexec-uImage.c:160:31: warning: comparison is always true due to limi=
+ted range of data type [-Wtype-limits]
+  160 |  if (buf[0] !=3D 0x1f || buf[1] !=3D 0x8b) {
+      |                               ^~
+```
 
-============simple version=====
-fs/proc/Kconfig:
-config NEED_PROC_VMCORE_DEVICE_RAM
-        def n
-
-config PROC_VMCORE_DEVICE_RAM
-        def_bool y
-        depends on PROC_VMCORE && VIRTIO_MEM
-        depends on NEED_PROC_VMCORE_DEVICE_RAM
-
-arch/s390/Kconfig:
-config S390
-        select NEED_PROC_VMCORE_DEVICE_RAM
-==============================
-
-> 
-> (b) In the context of this patch, "depends on VIRTIO_MEM" does not make
-> sense. We could have an intermediate:
-> 
-> config PROC_VMCORE_DEVICE_RAM
->          def_bool n
->          depends on PROC_VMCORE
->          depends on NEED_PROC_VMCORE_DEVICE_RAM
-> 
-> And change that with VIRTIO_MEM support in the relevant patch.
-
-Oh, it's not comment for this patch, I made the simple version based on
-the whole patchset. When I had a glance at this patch, I also took
-several iterations to get it after I applied the whole patchset and
-tried to understand the whole code.
-
-> 
-> 
-> I faintly remember that we try avoiding such dependencies and prefer
-> selecting Kconfigs instead. Just look at the SPLIT_PTE_PTLOCKS mess we still
-> have to clean up. But as we don't expect that many providers for now, I
-> don't care.
-
-With the simple version, Kconfig learner as me can easily understand what
-they are doing. If it took you a couple of iterations to make them as
-you had mentioned earlier, and it took me several iterations to
-understand them, I believe there must be room to improve the presented
-ones in this patchset. These are only my humble opinion, and I am not
-aware of virtio-mem at all, I'll leave this to you and other virtio-mem
-dev to decide what should be taken. Thanks for your patience and
-provided information, I learned a lot from this discussion.
-
-===================
-fs/proc/Kconfig:
-config PROVIDE_PROC_VMCORE_DEVICE_RAM
-        def_bool n
-
-config NEED_PROC_VMCORE_DEVICE_RAM
-        def_bool n
-
-config PROC_VMCORE_DEVICE_RAM
-        def_bool y
-        depends on PROC_VMCORE
-        depends on NEED_PROC_VMCORE_DEVICE_RAM
-        depends on PROVIDE_PROC_VMCORE_DEVICE_RAM
-
-drivers/virtio/Kconfig:
-config VIRTIO_MEM
-        select PROVIDE_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
-                                              ~~~~~~~~~~~~~~
-
-arch/s390/Kconfig:
-config S390
-        select NEED_PROC_VMCORE_DEVICE_RAM if PROC_VMCORE
-                                           ~~~~~~~~~~~~~~
-========================
-
-One last thing I haven't got well, If PROC_VMCORE_DEVICE_RAM has had
-dependency on PROC_VMCORE, can we take off the ' if PROC_VMCORE' when
-select PROVIDE_PROC_VMCORE_DEVICE_RAM and NEED_PROC_VMCORE_DEVICE_RAM?
-
-Thanks
-Baoquan
-
+With buf being an array of signed char, buf[1] cannot equal 0x8b without a =
+cast, meaning that this function will always return -1 early on. Maybe repr=
+esenting it as an array of uint8_t/unsigned char would have been a better i=
+dea?
 
