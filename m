@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3C66E6ADCB
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B959AE6ADCE
 	for <kexec@archiver.kernel.org>; Fri, 22 Nov 2024 22:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,38 +12,38 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=S0QVtAVD7M7pFpqYQRYpOlRlIpsQlWjl3XEa+4AG3hg=; b=xOBJ002VKSNHhUpVOYfQpBzgF3
-	Bn08ydOBUTgt0xLLdwxl4tKISFqPZ+Mo+RPVy0EKL9M6YccAEBUAue2GhwimIMCEfC1CzKRpcjqBX
-	a7G8jvMa20MY0Gvo6fMnVXv569CvjDXpGxS8jCs2AOnUhwreRgO7nnhJvX70hQ2RgWkGwp813ZBz/
-	/7x3/UuNZBvYmbHTnZERt+3u9qlcA8pNlZO42hfe7tHboDo9Jyv+/9wnt1itPGpRoAZt3kgccEmfi
-	HbAdz/zG/5MAjUk4bLy96w46PDoQB8QFPbZsC+qs3uHYlYdJri/82HgUuLMbSIfEnlSrI9Wc4jFfq
-	ytwwFJTQ==;
+	bh=1mMILGYOmOJ50kB2grC2kFU1xTOvUAHt2PqPYBJoz2c=; b=iU9mf+wsw8fry/M3+PQ5MuComG
+	Z1pOMv8BoZZgmLWoNl0hVR5L1kDJuly0OXbKVA3zIsRs2PIDpmIzxhsDIQR3PdU7hHdjK9i6+stMK
+	iz5XZB9EmYuu64X0994E6oyjisj0AZmwFu3bptu6SNG6/kbvfJME5iFAeeCASV4JPreC0yBsMP8Om
+	11kS5ysYtV5hhAS+M7ZQ/7MaSK8jfd/VQxz8g4/8dbVRYntVFBprbBSpOGmVssnSy2F+4oVGX0jIT
+	YI1tMFkMX2hfK/cEBXLMoHePg0ATTnwC91rP3XZkb+mOZjpU6Gdg/ORf5FOwXbTNcTySdCb9p2+Xn
+	1krJVLvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tEcQw-00000003RLs-3i85;
-	Fri, 22 Nov 2024 22:47:26 +0000
+	id 1tEcQx-00000003RM0-18cE;
+	Fri, 22 Nov 2024 22:47:27 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tEcQu-00000003RKQ-3V1G
+	id 1tEcQu-00000003RKR-3V3D
 	for kexec@bombadil.infradead.org;
 	Fri, 22 Nov 2024 22:47:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=S0QVtAVD7M7pFpqYQRYpOlRlIpsQlWjl3XEa+4AG3hg=; b=jCMm6BNVrfGOtot4P6MWH5QfVr
-	Jaa98yGLe9SXtDBP7HNJm6Bj4EXEkUldoFDGZMjV2WsTkMKvcq0gEHh0kHy21FKLqaw7eb+munQpl
-	9w74HhVDAg4eQ7bZIWrVhQB+i6StbGjDlrAcusy/A22QCVNYoMQvD6UN40lqeyLXZnqNPRjhgsg3g
-	OkmpX88v3OdYPkk6JkOqugHeJ41SGbOUeNxH5HV6XD5SlUUvtoTeDtXVDP/WyDDgpUe8+AHvklQQK
-	/dgiDEx+D7xjXKej74Nk/9ZwPiJZic6d+rNmOWfVbTGXt/2uXS2v3KFnIvnKR5stFjjLb/Uu2CLXq
-	LC7y+aYQ==;
+	bh=1mMILGYOmOJ50kB2grC2kFU1xTOvUAHt2PqPYBJoz2c=; b=O2h2pjViyLSTCP7Ozn1mTqmoBC
+	FMVFz+vDuC6SvC9JfPMfjrx8q0FEncgN2xLnnxqnydc6EE0khAuF167GLgAcy9KzaDBloSWusYkFn
+	E6sEUzXgobVwZNC2eCr+BpJUMTQK+43XixU/QcI5Mpa5CccGadMlwS7SAdLcbwIP5zNmvHA32UeBZ
+	kxR89qod79D233IRJZuqnvwnJHokol62+CpJUuU5trQ/XSaq89H4LxHByeDsnTDpYoH6BH1og22mY
+	XYb/QyRHjRKsuWfL5pfDMp1XVKU+vT/kYhpMoano5j1ruJd2nCWP8gVikszKRwr0ZiFIlBusps2Dh
+	aLpp4uJA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tEcQp-00000008PHS-2CWY;
+	id 1tEcQp-00000008PHR-2Caq;
 	Fri, 22 Nov 2024 22:47:20 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tEcQp-00000000iiC-034R;
-	Fri, 22 Nov 2024 22:47:19 +0000
+	id 1tEcQo-00000000ii6-3ky3;
+	Fri, 22 Nov 2024 22:47:18 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -61,9 +61,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Dave Young <dyoung@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org
-Subject: [RFC PATCH v2 04/16] x86/kexec: Only swap pages for preserve_context mode
-Date: Fri, 22 Nov 2024 22:38:13 +0000
-Message-ID: <20241122224715.171751-5-dwmw2@infradead.org>
+Subject: [RFC PATCH v2 02/16] x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
+Date: Fri, 22 Nov 2024 22:38:11 +0000
+Message-ID: <20241122224715.171751-3-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241122224715.171751-1-dwmw2@infradead.org>
 References: <20241122224715.171751-1-dwmw2@infradead.org>
@@ -86,37 +86,74 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-There's no need to swap pages (which involves three memcopies for each
-page) in the plain kexec case. Just do a single copy from source to
-destination page.
+Make the code a little more readable.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Acked-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/relocate_kernel_64.S | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index ed2ae50535dd..92d5dbed3097 100644
+index 7ee32bcb6e01..ca01e3e2f097 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -308,6 +308,9 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 	movq	%rdi, %rdx    /* Save destination page to %rdx */
- 	movq	%rsi, %rax    /* Save source page to %rax */
+@@ -272,31 +272,31 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
+-	jmp	1f
++	jmp	.Lstart		/* Should start with an indirection record */
  
-+	testq	%r11, %r11    /* Only actually swap for preserve_context */
-+	jnz .Lnoswap
-+
- 	/* copy source page to swap page */
- 	movq	%r10, %rdi
- 	movl	$512, %ecx
-@@ -322,6 +325,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 	/* copy swap page to destination page */
- 	movq	%rdx, %rdi
- 	movq	%r10, %rsi
-+.Lnoswap:
- 	movl	$512, %ecx
+-0:	/* top, read another word for the indirection page */
++.Lloop:	/* top, read another word for the indirection page */
+ 
+ 	movq	(%rbx), %rcx
+ 	addq	$8,	%rbx
+-1:
++.Lstart:
+ 	testb	$0x1,	%cl   /* is it a destination page? */
+-	jz	2f
++	jz	.Lnotdest
+ 	movq	%rcx,	%rdi
+ 	andq	$0xfffffffffffff000, %rdi
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotdest:
+ 	testb	$0x2,	%cl   /* is it an indirection page? */
+-	jz	2f
++	jz	.Lnotind
+ 	movq	%rcx,   %rbx
+ 	andq	$0xfffffffffffff000, %rbx
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotind:
+ 	testb	$0x4,	%cl   /* is it the done indicator? */
+-	jz	2f
+-	jmp	3f
+-2:
++	jz	.Lnotdone
++	jmp	.Ldone
++.Lnotdone:
+ 	testb	$0x8,	%cl   /* is it the source indicator? */
+-	jz	0b	      /* Ignore it otherwise */
++	jz	.Lloop	      /* Ignore it otherwise */
+ 	movq	%rcx,   %rsi  /* For ever source page do a copy */
+ 	andq	$0xfffffffffffff000, %rsi
+ 
+@@ -321,8 +321,8 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
  	rep ; movsq
  
+ 	lea	PAGE_SIZE(%rax), %rsi
+-	jmp	0b
+-3:
++	jmp	.Lloop
++.Ldone:
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
+ 	int3
 -- 
 2.47.0
 
