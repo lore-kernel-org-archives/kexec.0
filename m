@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3637BD3B7FE
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6BE6D58D40
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 13:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yhWCNY2theg2cAIcWvRbdJeosieUTNG76cgsiJbqd8g=; b=g1mBKnFJViyX+XC8Bd0IMy4YOT
-	i0s3KhT4pB8GkCFXMY1nygGLVJwLlfpOy4v3wXlMQVE9xvOKQGjqxTW+4e3HhyyaDLv5f8Ogxsixh
-	1wM3GhcNitscjv2+E/j9FpAvNmXRrR1CFdKnq8o+aD02Y8YO4ePkm1ZyEBXauxCV6hKZACYzoEjnu
-	JyCdaJIWoUUax/vD5jHQXWs6q6qPvUeT+68Fbi9f7eYTu4arGBxbe4uL9uMdHIo5wYekeluZyFtKH
-	8/MGWp026PKSs9raDLGojbYAt21gHKE3fO8T98fVlHSxQ5MXB9JD+gcjuP7Ka/AWw14r0hMrXeghX
-	gu9B+Kcw==;
+	bh=Uo6SdHX5t3CR9WQPsFXOrSWtNueNCLN9mds7t2K1uwo=; b=uAJKHTMI7WObl/TenPI8vDxPB3
+	dhJJ3F0l4Zc/0wiuzW5LBDrtsWkwnpduLg/BbWYjY6Oqrez1i0JwxAxXtHzjVu23NTgLCNhaBmWGI
+	E+0HNZBCIYxugp5ZMZpokiwXis41zkf6jdHbo2BcSWQqQWiQIndcbsBcgkVTkjoMXLw0m8eq4RQl4
+	vlRdXW0859szaP7IM3jNNfEzKZolJDEIPfLDHZxgdtpryi/qHuPjzQSLCtG26OVurQcvshv9xT+hR
+	RIiD06zorVU6c77ag/cR7gAwhhi+/IPndRAG3Ci5FBKAh41X2h82W3nM9wzJlUjH1m6oBiqmAD35i
+	5VSVJswA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWLM-00000007lMc-0mxW;
-	Mon, 25 Nov 2024 10:29:24 +0000
+	id 1tFZ0F-000000086eI-27xY;
+	Mon, 25 Nov 2024 13:19:47 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWLK-00000007lM6-2X2g
+	id 1tFZ0E-000000086e7-2p6e
 	for kexec@bombadil.infradead.org;
-	Mon, 25 Nov 2024 10:29:22 +0000
+	Mon, 25 Nov 2024 13:19:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yhWCNY2theg2cAIcWvRbdJeosieUTNG76cgsiJbqd8g=; b=ujIsNFxc4cCSbe0ujQ/UAXc+GK
-	cKKoHJFIjlkQP6coYbEewFrHX9HCutlrZCmXH1iA0Egg1hD1pLpxJQZnrM4Td7832bhzVdIq4CXmh
-	JoKXKTcfKKytiuJmeEOXccsY3Swnh1hZvBxQwq/VRyHLPFzst2y5ZFHxwa+XfKkvzPq+9RAYQ1+d6
-	VnpJ3DTzQxJLS1QebT+gd15ZlR3b3tS1kwzRKpDkbuvdjeekOAYNyFo5dSnUd2rYdfARO6Q/U3H5u
-	R0bF/ilXwRT7IHe2qW+LGOAQjaQAO7teNOsTardBzjL5kbM8eOw7YbrmHAzzcXdAiLRsPL2RFbw/6
-	XjbnRjpA==;
+	bh=Uo6SdHX5t3CR9WQPsFXOrSWtNueNCLN9mds7t2K1uwo=; b=kg3CQ/1gN4zbxHsr5B00Z1T+j6
+	D1KC1Xa5vXV/hYnGo+hAp980hdpTaaaOGQfGs50nwgHzxx9E2fIIOyN6Dc3vgKFltBxGezzm46x8D
+	RGE5fGy9cK7NzLJhQop4prAsjZCM5nN3RuKjK041kB67r8zMHEgxsO4jnr3QH/UYzDJnHu/isfdy0
+	YRnevCsiU15srY9p0aemP2rv3uW1FwbIMLw0tjWkcEiioqwz2L4SWYV8n2EniDFXWi+ityjH8QLS0
+	gDsXBarTvDjsfZNGxZmpMwB7Oy8WVvffJvNoO/60sOHtQKskLEo7xCkRxZDdBAQovBomOQK11dT8g
+	4ks823Lg==;
 Received: from [54.239.6.187] (helo=edge-m3-r1-122.e-iad51.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWLF-0000000BkB5-3dGI;
-	Mon, 25 Nov 2024 10:29:20 +0000
-Message-ID: <8b7cd35ab5fec39b80eda8d5907b641af14c3272.camel@infradead.org>
+	id 1tFZ0A-0000000Bu85-0DrN;
+	Mon, 25 Nov 2024 13:19:43 +0000
+Message-ID: <7f75150e9d5d358c8fdc38b591f99a252071fba0.camel@infradead.org>
 Subject: Re: [EXTERNAL] [RFC PATCH v3 01/20] x86/kexec: Ensure
  control_code_page is mapped in kexec page tables
 From: David Woodhouse <dwmw2@infradead.org>
@@ -54,12 +54,13 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Borisov <nik.borisov@suse.com>,  linux-kernel@vger.kernel.org, Simon Horman
  <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
  <peterz@infradead.org>, jpoimboe@kernel.org,  bsz@amazon.de
-Date: Mon, 25 Nov 2024 10:29:17 +0000
-In-Reply-To: <20241125100815.2512-2-dwmw2@infradead.org>
+Date: Mon, 25 Nov 2024 13:19:41 +0000
+In-Reply-To: <8b7cd35ab5fec39b80eda8d5907b641af14c3272.camel@infradead.org>
 References: <20241125100815.2512-1-dwmw2@infradead.org>
 	 <20241125100815.2512-2-dwmw2@infradead.org>
+	 <8b7cd35ab5fec39b80eda8d5907b641af14c3272.camel@infradead.org>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-/rI6/xS8CNfSLar2S82a"
+	boundary="=-krq2nNCAWzYLFYkInkxm"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -78,123 +79,54 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-/rI6/xS8CNfSLar2S82a
+--=-krq2nNCAWzYLFYkInkxm
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-11-25 at 09:54 +0000, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On Mon, 2024-11-25 at 10:29 +0000, David Woodhouse wrote:
+> On Mon, 2024-11-25 at 09:54 +0000, David Woodhouse wrote:
+> > From: David Woodhouse <dwmw@amazon.co.uk>
+> >=20
+> > The control_code_page should be explicitly mapped into the identity
+> > mapped page tables for the relocate_kernel environment. This only seems
+> > to have worked by luck before, because it tended to be within the same
+> > 2MiB or 1GiB large page already mapped for another reason.
+> >=20
+> > A subsequent commit will reduce the control_code_page to a single 4KiB
+> > page instead of a higher-order allocation, and seems to make it much
+> > *less* likely that we get lucky with its placement. This leads to a
+> > fault when relocate_kernel() first tries to access the page through its
+> > identity-mapped virtual address.
 >=20
-> The control_code_page should be explicitly mapped into the identity
-> mapped page tables for the relocate_kernel environment. This only seems
-> to have worked by luck before, because it tended to be within the same
-> 2MiB or 1GiB large page already mapped for another reason.
->=20
-> A subsequent commit will reduce the control_code_page to a single 4KiB
-> page instead of a higher-order allocation, and seems to make it much
-> *less* likely that we get lucky with its placement. This leads to a
-> fault when relocate_kernel() first tries to access the page through its
-> identity-mapped virtual address.
+> This one is confusing me. Jan points out that it shouldn't be needed,
+> because the control page should come from kernel memory and thus should
+> be mapped anyway because the loop immediately below my added code adds
+> *all* of the pfn_mapped[] ranges.
 
-This one is confusing me. Jan points out that it shouldn't be needed,
-because the control page should come from kernel memory and thus should
-be mapped anyway because the loop immediately below my added code adds
-*all* of the pfn_mapped[] ranges.
+I think we understand this one now; it's because of PTI. So where the
+identmap code in e.g. ident_p4d_init() calls set_pte(), set_pte() is
+actually trying to write *both* the kernel and userspace copies of the
+page table, which it expects to be in adjacent pages. But in this case
+it's just scribbling over the end of the single 4KiB page that was
+allocated for it.
 
-And from code inspection he appears to be right, but if I disable the
-new mapping and add some printks...
+This should suffice to mask the problem (testing now) but obviously it
+isn't a great solution:
 
 --- a/arch/x86/kernel/machine_kexec_64.c
 +++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -247,15 +247,18 @@ static int init_pgtable(struct kimage *image, unsigne=
-d long control_page)
-                info.direct_gbpages =3D true;
+@@ -213,7 +213,7 @@ static void *alloc_pgt_page(void *data)
+        struct page *page;
+        void *p =3D NULL;
 =20
-        /* Ensure the control code page itself is in the direct map */
-+       pr_info("No Map control page at %lx", control_page);
-+#if 0
-        result =3D kernel_ident_mapping_init(&info, image->arch.pgd, contro=
-l_page,
-                                           control_page + KEXEC_CONTROL_COD=
-E_MAX_SIZE);
-        if (result)
-                return result;
--
-+#endif
-        for (i =3D 0; i < nr_pfn_mapped; i++) {
-                mstart =3D pfn_mapped[i].start << PAGE_SHIFT;
-                mend   =3D pfn_mapped[i].end << PAGE_SHIFT;
-=20
-+               pr_info("Map pfn_mapped[%d] %lx - %lx\n", i, mstart, mend);
-                result =3D kernel_ident_mapping_init(&info, image->arch.pgd=
-,
-                                                   mstart, mend);
-                if (result)
+-       page =3D kimage_alloc_control_pages(image, 0);
++       page =3D kimage_alloc_control_pages(image, 1);
+        if (page) {
+                p =3D page_address(page);
+                clear_page(p);
 
 
-... and run in a version of qemu which dumps the CPU state on triple-
-fault...
-
-+ ./loadret
-[    0.948097] kexec: No Map control page at 2b32000
-[    0.948103] kexec: Map pfn_mapped[0] 0 - 7ffdd000
-[    0.960192] Freezing user space processes
-[    0.961685] Freezing user space processes completed (elapsed 0.001 secon=
-ds)
-[    0.962372] OOM killer disabled.
-[    1.088668] ata2: found unknown device (class 0)
-[    1.095810] Disabling non-boot CPUs ...
-[    1.117990] smpboot: CPU 1 is now offline
-[    1.118595] crash hp: kexec_trylock() failed, kdump image may be inaccur=
-ate
-RAX=3D0000000080050033 RBX=3D0000000000000000 RCX=3D0000000000000001 RDX=3D=
-0000000000400000
-RSI=3D0000000002b3205a RDI=3D0000000003a44002 RBP=3Dffff9709c2109400 RSP=3D=
-0000000002b33000
-R8 =3D0000000000000000 R9 =3D00000000038a0000 R10=3D0000000000000000 R11=3D=
-0000000000000001
-R12=3D0000000000000000 R13=3D0000000000170ef0 R14=3D00000000fee1dead R15=3D=
-0000000000000000
-RIP=3Dffff9709c2b32057 RFL=3D00010006 [-----P-] CPL=3D0 II=3D0 A20=3D1 SMM=
-=3D0 HLT=3D0
-ES =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
-CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
-SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
-DS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
-FS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
-GS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
-LDT=3D0000 0000000000000000 00000000 00000000
-TR =3D0040 fffffe2fb91b2000 00004087 00008b00 DPL=3D0 TSS64-busy
-GDT=3D     0000000000000000 00000000
-IDT=3D     0000000000000000 00000000
-CR0=3D80050033 CR2=3D0000000002b32ff8 CR3=3D00000000038a0000 CR4=3D00170ef0
-DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
-0000000000000000=20
-DR6=3D00000000ffff0ff0 DR7=3D0000000000000400
-EFER=3D0000000000000d01
-Code=3D04 00 00 49 89 cb 48 8d a6 00 10 00 00 48 81 c6 5a 00 00 00 <56> c3 =
-cc 6a 00 52 48 8d 05 8c 04 00 00 50 66 ff 30 0f 01 14 24 48 83 c4 0a 8c d8 =
-8e d8 48
-
-
-RIP xxx057 is here, where relocate_kernel first touches the 1:1 mapping of =
-the control page:
-
-        /* setup a new stack at the end of the physical control page */
-        lea     PAGE_SIZE(%rsi), %rsp
-  49:   48 8d a6 00 10 00 00    lea    0x1000(%rsi),%rsp
-
-        /* jump to identity mapped page */
-        addq    $(identity_mapped - relocate_kernel), %rsi
-  50:   48 81 c6 5a 00 00 00    add    $0x5a,%rsi
-        pushq   %rsi
-  57:   56                      push   %rsi
-
-The control page at 2b32xxx *really* ought to be mapped, as it's
-clearly within the 0 - 7ffdd000 range. What's going on?
-
-
---=-/rI6/xS8CNfSLar2S82a
+--=-krq2nNCAWzYLFYkInkxm
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -286,25 +218,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMTI1MTAyOTE3WjAvBgkqhkiG9w0BCQQxIgQg1nuzVlcr
-tcwZS0Z3FWQI6WDDZxzZR4Zllze3EvOgxfEwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMTI1MTMxOTQxWjAvBgkqhkiG9w0BCQQxIgQgaR2rA6wJ
+qZX74hl8ls96Hy+84uD5wgfcYFhfk3xgEU0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAPWG1utmtMbCF6I8RhZV5keYwCFwn/S4+T
-1I4NjNI2AihXWHpOnOk5vVoPSY8zf5eFdHvpkSGf5MvFiix5vusvvCKzbnudeSoUeshiTA5Iq5Z+
-YRvYQI6vcv+0od8H0NUssA4KIT5XrPfmKSCI+yYenH4I9mioggvMjRP7qqBVuxr92FlJEU6TIkKY
-/FDag4BMXh74ntx0KuSuKFwGArcvLUcE49mFJFYi0P+1DuX0T7NwwWjjVYYpEV2Z4PJwyCGMwgMs
-bYA2bPExD/OojVGAtt79Ycswo8twKLwe7jhwQBqLLcAMFSIpid4yTfxaxQQU9/kKoXyPYC3pahDR
-9ia+4gbq7CXOJjvNctHTZOTmzHJo6SjQl9jOvnTBZE+BGe40QlV0u70f6xJGXWmD0zS4ZN/L/y+e
-oq38nwCPjFIORA7+6mi1NRLLO2v6RpL/eCAEVwEWxznsSr7X1rV8mYsRjoWbdKd1t8k6GuEXq1rl
-dSWmQEIErwIpuwLX25rXPUFluf8D7OFT0z4LaxOPWqnksmRptiRPtHzIuHij1krt6g5kN14rRVXg
-4PziXNZ0+wM3u3LPkpaEinuWg7mGoRyh1LlnJuLH//BAMRuaINXs73HtVTpAiNVbiXLyBlAbuBGb
-7RCldd2svY5czq99y9xM5CmZR5WILKXpNEjt5GlpWQAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBSGLLLfM5fkJ+weqGsxF9tcZ7I4Hop450U
+uGrQiquOmq/e5gPf3BlGCWr6O8PmIz5UsYXecDYU5OWWsKNykUgWG5sf8zW99bMpHcoAcSrpdgNw
+DuxyDksVlX/oIFyOoVWf2pS5zymrOGmaJL3hLeA/1uqQ0Y3A+gDB9gfvInJ5QyC839wzW7HbDO/O
+MkOtra1BzjPLI5OFef92qYZj+OFPj1MXe0FbUa53IozaGWKtbzO0hm9Xt3aotuSl2Zwu6Wbu9wy0
+kF1pFLrUJa1itPwbRLHQ9PV3to2pcZvuds04LDdpDm6XAJptwHdNT04ET0L3Tq7E//pBFn+2/yTY
+NvmY16Y0ARi4Pez4LmjdYxC11YThhLvYPljPrlwAECn8s9UeRMoA3TQR+N2uat/14VWitp7Vboge
+LUIe3uiosfgkM41zWCWsyNyh5fcr0yS7DaD1kc8ALywhJkbdVoKHWhbZXndGgeaREYTSp02ulyfZ
+aA9reTfXpcGUm6G0H0zW2p66R2kwgN09iRrimU4Z/yRLJQqlF1INfdeLjTcltpAIaAyIsTTPb0mq
+7nAzvmTeyo6sTtKzEi8FuptlccotenkuGPiO8aKCA3vVE4QNwkTqxdHFChDJGXKclL8HyEP1wZWG
+v95bYOgamrykTYrxhhCwi6xwVIVysVYXvGu7UDLi3wAAAAAAAA==
 
 
---=-/rI6/xS8CNfSLar2S82a--
+--=-krq2nNCAWzYLFYkInkxm--
 
