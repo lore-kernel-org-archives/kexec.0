@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD5E0D3B7F8
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B788CD3B7F6
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=J05THXe+YRacmOzA8KfGrmyEonAyJGQ1gSBRrJydwjs=; b=1wogUWSeysKhY68x2XT8WZaKEz
-	ijUwqspg92ydtAjV9J1fjzk7i7xl0ASl295WhVqHrpwtsGz4JMDSkhAafgjbz9H002W8zxpsTEYQ5
-	fKkAMshtr4kyHXQBGNNVmdOPiQaEVfDf2zzOrHlYfETi19pJBAEqVkHCvfGnIAvSBOkgUXSCqBKL0
-	tzFSRbxqysH3dh1q1+XDmqcwjSzCsuL4+HkZPTYNi3ErK5lquqj6ANmz1hUef26p+EadZIbO6fdkj
-	XELhBxPKvkut0vMn6acG54JMYH0+eZ+EYh8YD/YHyNUVq3uj3ibMLHCp5WVB4MagObJCc8ZgH70eH
-	th1LEICQ==;
+	bh=QK7nTo4lm65LCKqwI++i7+ahHOm8XXULtR+ZRmJpWIg=; b=wJr0XZ/S3VqQTuhNZu48nNTcoM
+	FVbRqM7Mvrhax9UNmfAaxHtzqljCTYsmifYQrOCs5TWsh8tytZcrWIq5o1SAq1v3Fm826ha0KmMc4
+	OnUDmDm0aRCy5SxpZm4xVUZSLKPWacqKOBnXMG+Bgbmh40DfiOXG7f0cNl7+SJh5NfLT+h8P+cBr/
+	Ig5VPahPknOTR4VxapE7xZbBKTgwl5RX1YJ/tPGMgLBUHlLFpD3XcYwQc8mBaG6Qf0PDGLyCYC2kE
+	D2+SevCmhm2y9s8NoGnvX/j1JFsi0rHc9da2DnuaoeeB96R2HUUeh5EWeenjuKUBeBgN2zOFPh+n0
+	cc6CMNqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWAu-00000007jFU-1OTS;
-	Mon, 25 Nov 2024 10:18:36 +0000
+	id 1tFWAv-00000007jGz-1WLu;
+	Mon, 25 Nov 2024 10:18:37 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW13-00000007gFj-0xe2
+	id 1tFW13-00000007gFi-0wnF
 	for kexec@bombadil.infradead.org;
 	Mon, 25 Nov 2024 10:08:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=J05THXe+YRacmOzA8KfGrmyEonAyJGQ1gSBRrJydwjs=; b=sxl6QURaNSNHXgV2EZa/YhJBp2
-	ELnUr+nDBcu0tCux8+OEQzLOob8oKO9lp7hG8zgwb9RwEYnceSLvE+wqwXZBmgv9NY5dAT63Ogl2+
-	qRsKWXSUH/OoRNiquun7QJSILVsC5qcDqyw/S5VGAiWoHsEH1rs6tvLSOU3zNaq9MkozTcIpOZ9st
-	xumVFD1zBEu+vR9HHmtJeY3Y5ZYeg9jo+gAipKOLjl7AzOyopmUuOuJabVOtZ3wzsGrVI1gcrkqao
-	/qwweKruA6tTlR8OKg3tghUkQazjhenvys2J2Ff628uQnHKWblKl/FtHcmie69XtLikgMC9PUfkyM
-	UNj8eV5g==;
+	bh=QK7nTo4lm65LCKqwI++i7+ahHOm8XXULtR+ZRmJpWIg=; b=LY5jkvPqmHglpM/80ENkijo+If
+	kWfD5dsVG0oadrPLFQk7xFkcSw5tp39UFreQf1Czl7MRl94jnbFMwQralzHcG1wQ3a1E+sOwSKPPP
+	3S4wlM5jXmSNdXLVOVe7OTKMIPJ9NjnmkSOnt+4OaZnfRPGNxP/JGsKFaLlfxGPYL0JKCGqZDzCkG
+	sov0Dgpv38LDHxXGwlaHbLxtR5Y6/NFLoHKz2sN5wHje0uCoSYkw4X/5b4SrMQiou8VZhFTSIveYi
+	JS2etOkgF6mOICvhPr/SstCpIUkumutqomDn6n/xkjGErQfxfJFMOV+l0uzf/xaWvPgYGoWtOABWd
+	vL+CeE1g==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW10-0000000BirA-1LQq;
+	id 1tFW0z-0000000Bir8-3z9e;
 	Mon, 25 Nov 2024 10:08:23 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW0z-000000000le-3mDi;
+	id 1tFW0z-000000000lM-2z8K;
 	Mon, 25 Nov 2024 10:08:21 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v3 16/20] x86/kexec: Debugging support: load a GDT
-Date: Mon, 25 Nov 2024 09:54:46 +0000
-Message-ID: <20241125100815.2512-17-dwmw2@infradead.org>
+Subject: [RFC PATCH v3 11/20] x86/kexec: Drop page_list argument from relocate_kernel()
+Date: Mon, 25 Nov 2024 09:54:41 +0000
+Message-ID: <20241125100815.2512-12-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241125100815.2512-1-dwmw2@infradead.org>
 References: <20241125100815.2512-1-dwmw2@infradead.org>
@@ -87,63 +87,193 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-There are some failure modes which lead to triple-faults in the
-relocate_kernel function, which is fairly much undebuggable for normal
-mortals.
+The kernel's virtual mapping of the relocate_kernel page currently needs
+to be RWX because it is written to before the %cr3 switch.
 
-Adding a GDT in the relocate_kernel environment is step 1 towards being
-able to catch faults and do something more useful.
+Now that the relocate_kernel page has its own .data section and local
+variables, it can also have *global* variables. So eliminate the separate
+page_list argument, and write the same information directly to variables
+in the relocate_kernel page instead. This way, the relocate_kernel code
+itself doesn't need to copy it.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/include/asm/kexec.h         | 12 ++++------
+ arch/x86/kernel/machine_kexec_64.c   | 18 ++++++--------
+ arch/x86/kernel/relocate_kernel_64.S | 36 ++++++++++------------------
+ 3 files changed, 24 insertions(+), 42 deletions(-)
 
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index ccb8ff37fa9d..48e4f44f794f 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -8,12 +8,6 @@
+ # define PA_PGD			2
+ # define PA_SWAP_PAGE		3
+ # define PAGES_NR		4
+-#else
+-# define PA_CONTROL_PAGE	0
+-# define VA_CONTROL_PAGE	1
+-# define PA_TABLE_PAGE		2
+-# define PA_SWAP_PAGE		3
+-# define PAGES_NR		4
+ #endif
+ 
+ # define KEXEC_CONTROL_PAGE_SIZE	4096
+@@ -60,6 +54,10 @@ struct kimage;
+ 
+ /* The native architecture */
+ # define KEXEC_ARCH KEXEC_ARCH_X86_64
++
++extern unsigned long kexec_va_control_page;
++extern unsigned long kexec_pa_table_page;
++extern unsigned long kexec_pa_swap_page;
+ #endif
+ 
+ /*
+@@ -122,7 +120,7 @@ relocate_kernel(unsigned long indirection_page,
+ #else
+ unsigned long
+ relocate_kernel(unsigned long indirection_page,
+-		unsigned long page_list,
++		unsigned long pa_control_page,
+ 		unsigned long start_address,
+ 		unsigned int preserve_context,
+ 		unsigned int host_mem_enc_active);
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 60232517f368..43db1739fd7a 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -321,6 +321,11 @@ int machine_kexec_prepare(struct kimage *image)
+ 	result = init_pgtable(image, __pa(control_page));
+ 	if (result)
+ 		return result;
++	kexec_va_control_page = (unsigned long)control_page;
++	kexec_pa_table_page = (unsigned long)__pa(image->arch.pgd);
++
++	if (image->type == KEXEC_TYPE_DEFAULT)
++		kexec_pa_swap_page = page_to_pfn(image->swap_page) << PAGE_SHIFT;
+ 
+ 	__memcpy(control_page, __relocate_kernel_start, reloc_end - reloc_start);
+ 
+@@ -345,12 +350,11 @@ void machine_kexec_cleanup(struct kimage *image)
+ void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+-					     unsigned long page_list,
++					     unsigned long pa_control_page,
+ 					     unsigned long start_address,
+ 					     unsigned int preserve_context,
+ 					     unsigned int host_mem_enc_active);
+ 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
+-	unsigned long page_list[PAGES_NR];
+ 	unsigned int host_mem_enc_active;
+ 	int save_ftrace_enabled;
+ 	void *control_page;
+@@ -388,14 +392,6 @@ void machine_kexec(struct kimage *image)
+ 
+ 	control_page = page_address(image->control_code_page);
+ 
+-	page_list[PA_CONTROL_PAGE] = virt_to_phys(control_page);
+-	page_list[VA_CONTROL_PAGE] = (unsigned long)control_page;
+-	page_list[PA_TABLE_PAGE] = (unsigned long)__pa(image->arch.pgd);
+-
+-	if (image->type == KEXEC_TYPE_DEFAULT)
+-		page_list[PA_SWAP_PAGE] = (page_to_pfn(image->swap_page)
+-						<< PAGE_SHIFT);
+-
+ 	/*
+ 	 * Allow for the possibility that relocate_kernel might not be at
+ 	 * the very start of the page.
+@@ -423,7 +419,7 @@ void machine_kexec(struct kimage *image)
+ 
+ 	/* now call it */
+ 	image->start = relocate_kernel_ptr((unsigned long)image->head,
+-					   (unsigned long)page_list,
++					   virt_to_phys(control_page),
+ 					   image->start,
+ 					   image->preserve_context,
+ 					   host_mem_enc_active);
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index b24198eb1fe9..6c6bfdccfe6a 100644
+index 469af51589ee..16f123527406 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -39,6 +39,18 @@ SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
+@@ -34,9 +34,9 @@ SYM_DATA_LOCAL(saved_cr0, .quad 0)
+ SYM_DATA_LOCAL(saved_cr3, .quad 0)
+ SYM_DATA_LOCAL(saved_cr4, .quad 0)
+ 	/* other data */
+-SYM_DATA_LOCAL(va_control_page, .quad 0)
+-SYM_DATA_LOCAL(pa_table_page, .quad 0)
+-SYM_DATA_LOCAL(pa_swap_page, .quad 0)
++SYM_DATA(kexec_va_control_page, .quad 0)
++SYM_DATA(kexec_pa_table_page, .quad 0)
++SYM_DATA(kexec_pa_swap_page, .quad 0)
  SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
  
-+#ifdef CONFIG_KEXEC_DEBUG
-+	.balign 16
-+SYM_DATA_START_LOCAL(kexec_debug_gdt)
-+	.word   kexec_debug_gdt_end - kexec_debug_gdt - 1
-+	.long   0
-+	.word   0
-+	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
-+	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
-+	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
-+SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
-+#endif /* CONFIG_KEXEC_DEBUG */
-+
  	.section .text.relocate_kernel,"ax";
- 	.code64
- SYM_CODE_START_NOALIGN(relocate_kernel)
-@@ -112,6 +124,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	/* store the start address on the stack */
- 	pushq   %rdx
- 
-+#ifdef CONFIG_KEXEC_DEBUG
-+	/* Create a GDTR (16 bits limit, 64 bits addr) on stack */
-+	leaq	kexec_debug_gdt(%rip), %rax
-+	pushq	%rax
-+	pushw	(%rax)
-+
-+	/* Load the GDT, put the stack back */
-+	lgdt	(%rsp)
-+	addq	$10, %rsp
-+
-+	/* Test that we can load segments */
-+	movq	%ds, %rax
-+	movq	%rax, %ds
-+#endif /* CONFIG_KEXEC_DEBUG */
-+
+@@ -46,7 +46,7 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	ANNOTATE_NOENDBR
  	/*
- 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
- 	 * below.
+ 	 * %rdi indirection_page
+-	 * %rsi page_list
++	 * %rsi pa_control_page
+ 	 * %rdx start address
+ 	 * %rcx preserve_context
+ 	 * %r8  host_mem_enc_active
+@@ -79,31 +79,19 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	/* Save SME active flag */
+ 	movq	%r8, %r12
+ 
+-	/*
+-	 * get physical and virtual address of control page now
+-	 * this is impossible after page table switch
+-	 */
+-	movq	PTR(PA_CONTROL_PAGE)(%rsi), %r8
+-	movq	PTR(VA_CONTROL_PAGE)(%rsi), %r11
+-
+-	/* get physical address of page table now too */
+-	movq	PTR(PA_TABLE_PAGE)(%rsi), %r9
+-
+-	/* get physical address of swap page now */
+-	movq	PTR(PA_SWAP_PAGE)(%rsi), %r10
+-
+-	/* save some information for jumping back */
+-	movq	%r9, pa_table_page(%rip)
+-	movq	%r10, pa_swap_page(%rip)
++	/* save indirection list for jumping back */
+ 	movq	%rdi, pa_backup_pages_map(%rip)
+-	movq	%r11, va_control_page(%rip)
+ 
+ 	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
+ 	movq	%rcx, %r11
+ 
+ 	/* Switch to the identity mapped page tables */
++	movq	kexec_pa_table_page(%rip), %r9
+ 	movq	%r9, %cr3
+ 
++	/* Physical address of control page */
++	movq    %rsi, %r8
++
+ 	/* setup a new stack at the end of the physical control page */
+ 	lea	PAGE_SIZE(%r8), %rsp
+ 
+@@ -227,13 +215,13 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	/* get the re-entry point of the peer system */
+ 	movq	0(%rsp), %rbp
+ 	leaq	relocate_kernel(%rip), %r8
+-	movq	pa_swap_page(%rip), %r10
++	movq	kexec_pa_swap_page(%rip), %r10
+ 	movq	pa_backup_pages_map(%rip), %rdi
+-	movq	pa_table_page(%rip), %rax
++	movq	kexec_pa_table_page(%rip), %rax
+ 	movq	%rax, %cr3
+ 	lea	PAGE_SIZE(%r8), %rsp
+ 	call	swap_pages
+-	movq	va_control_page(%rip), %rax
++	movq	kexec_va_control_page(%rip), %rax
+ 	addq	$(virtual_mapped - relocate_kernel), %rax
+ 	pushq	%rax
+ 	ANNOTATE_UNRET_SAFE
 -- 
 2.47.0
 
