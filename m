@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C21DD3B7F6
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10504D3B7FB
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n1NxLTesaxf1CmVmrYGt0DtpmfeNYvqyA55PeXFrYQI=; b=usHLrBPohNdYTyXq0Uan3Y44kk
-	H6bo6ybsas+ObHt3RJg1u3NdsdT0lKahdCMJbcj+MEexO/4JrW7WU/498T5M+Ra8D92ztq56YEr/Z
-	ji6hA//yLASA+LiUYIkOSlY1H9lnEhmL7MymEl0QBzXoGHOY+PVhPKjJdeGQfLLN4tCDemoHhYcQ1
-	KiaQuKa6cOsZh7tfVnmMrsUJk/jD0ky4DtLivOLnIMCvMcVHbkUtENDfw6ibjF6ABn7bwkR8Gkiwu
-	CU/jiEiqHiqpA+d4HHQUPPYIazT5FC3zq4ORE25A3SxSELW1NuvveserZJQUDrUUEB5/9XD7/EXS7
-	9dDU/Lxg==;
+	bh=905CV9ftpKJ0HPQLcIxyrOfAp/IXY8cX6AqTnVswgHw=; b=brUL3nxb6KyJejfsNSHPE0iGZk
+	hnLuD+uDlndTkC21KOEqlbCiDi+S4yjgZZ5a+2wmzFLvZXSc1lylz7teCuq8/2OHVgCoH8eNTLo7c
+	hTWJ6Lxj/4CsjkBSH4bK7kNtgnPZEwfB9C8bCzPKbpFWjS76hfunm5+zk6T5aY4boMwokOqsDlgW/
+	B3kWzDShk6pZXKv2Wv2goxX6CrKhPzEjcEW2+rLrftPvrEAl/uP6o9om9MsEGyasK8gS8Pf5DQ6PH
+	IcEi5v7LPrO8NPN4XTuSPHbIquxU1lm+Jca3noCzLJ6lfLyshVn1U3f8m2GMWxC/APdN9lSEJTe3Q
+	nem4Cm9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWB2-00000007jPw-2vYb;
-	Mon, 25 Nov 2024 10:18:44 +0000
+	id 1tFWB3-00000007jSI-2fhV;
+	Mon, 25 Nov 2024 10:18:45 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW13-00000007gGR-3Z0o
+	id 1tFW13-00000007gGN-3ZOF
 	for kexec@bombadil.infradead.org;
 	Mon, 25 Nov 2024 10:08:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=n1NxLTesaxf1CmVmrYGt0DtpmfeNYvqyA55PeXFrYQI=; b=p3ySAKarVWgraIsayXyhAQoqLI
-	HYTTmQfTwkADOlKLXFpvV4IhjIzTGqFWJWZNwiyYC5jbhzmKYpNacItSDP2+QIXE4QHHr/dEGuNhM
-	xKGlM+v3QAPrXrGlgPh1C/6UBt8h1U5FzQHJxoV6yHOT+oDVR3Axywb1nndgcIFArf7UXgs2bJpoa
-	KeWaqhMemP3gNKrAupjra4iQcbYb3ug8wwMzvGCY5nKFS5HLl5ATi8aPjA4gH2mJofMMEbWfZpZzF
-	S0D4x9c82M6RZExcTz8lbNN+XU8ZcKK6eIUsnLDDsnGXnUdpSn6KvHsIfHswDbgIhiF0qowbDYnpx
-	d6AcmsQA==;
+	bh=905CV9ftpKJ0HPQLcIxyrOfAp/IXY8cX6AqTnVswgHw=; b=KFH3G9TH0TK2PRl18yYH2hameh
+	nWg1EV1JfBaNIRnD42sGSmJGgQnz+JVkBjVkqoPRuhHvEMHTl3BeL1SDow+JE7I99qv2WbSQqks5b
+	ozEwm5AfcCqGPVpLR26nLkltBgdd8334QZwxdt8BXcPLMtjBt71BnplqSllAl/q7O/xqxrSjIrOkT
+	TgfR8N7AAKTvP+lrMS3SwUdYgXA1Bnka7RpoNQv3QbmG4dMqUq/APWXaZVtJUBzF/zRwXLU3MHd6H
+	tPnUzfifEc7QTnOBNUtkYRxt2nuI0tAm+CKumkJk6FDVqeHxETwBCqW0TFhYBOAAa02EoXL88cm30
+	ReEQUTgQ==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW12-000000014f9-16Iq;
-	Mon, 25 Nov 2024 10:08:24 +0000
+	id 1tFW11-000000014f4-04Ku;
+	Mon, 25 Nov 2024 10:08:23 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW0z-000000000lb-3cMg;
+	id 1tFW0z-000000000kq-17au;
 	Mon, 25 Nov 2024 10:08:21 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v3 15/20] x86/kexec: Add CONFIG_KEXEC_DEBUG option
-Date: Mon, 25 Nov 2024 09:54:45 +0000
-Message-ID: <20241125100815.2512-16-dwmw2@infradead.org>
+Subject: [RFC PATCH v3 01/20] x86/kexec: Ensure control_code_page is mapped in kexec page tables
+Date: Mon, 25 Nov 2024 09:54:31 +0000
+Message-ID: <20241125100815.2512-2-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241125100815.2512-1-dwmw2@infradead.org>
 References: <20241125100815.2512-1-dwmw2@infradead.org>
@@ -87,32 +87,40 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-This does nothing yet.
+The control_code_page should be explicitly mapped into the identity
+mapped page tables for the relocate_kernel environment. This only seems
+to have worked by luck before, because it tended to be within the same
+2MiB or 1GiB large page already mapped for another reason.
+
+A subsequent commit will reduce the control_code_page to a single 4KiB
+page instead of a higher-order allocation, and seems to make it much
+*less* likely that we get lucky with its placement. This leads to a
+fault when relocate_kernel() first tries to access the page through its
+identity-mapped virtual address.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Cc: stable@vger.kernel.org
 ---
- arch/x86/Kconfig.debug | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/machine_kexec_64.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 74777a97e394..9dde32865a9b 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -56,6 +56,14 @@ config EARLY_PRINTK_USB_XDBC
- 	  You should normally say N here, unless you want to debug early
- 	  crashes or need a very simple printk logging facility.
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9c9ac606893e..b9b6243ee223 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -240,6 +240,12 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	if (direct_gbpages)
+ 		info.direct_gbpages = true;
  
-+config KEXEC_DEBUG
-+	bool "Debug kexec transition"
-+	depends on KEXEC_CORE && EARLY_PRINTK
-+	help
-+	  Faults during kexec can be difficult to debug. This installs exception
-+	  handlers and attempts to report faults through the same serial port as
-+	  used for early_printk.
++	/* Ensure the control code page itself is in the direct map */
++	result = kernel_ident_mapping_init(&info, level4p, start_pgtable + PAGE_SIZE,
++					   start_pgtable + KEXEC_CONTROL_CODE_MAX_SIZE);
++	if (result)
++		return result;
 +
- config EFI_PGT_DUMP
- 	bool "Dump the EFI pagetable"
- 	depends on EFI
+ 	for (i = 0; i < nr_pfn_mapped; i++) {
+ 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
+ 		mend   = pfn_mapped[i].end << PAGE_SHIFT;
 -- 
 2.47.0
 
