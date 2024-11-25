@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06E92D3B7FB
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25231D3B7F5
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=bXmqZfne9wIEAoo4ONpQDgj54jhO/Xmxv8yTtbrY0pg=; b=lIx46ELVzKJLsV+7rL2KJMnE/T
-	jQ+8qu4GSCyKbLUV6wlWa7kxagXpIAfRJzXN05qYnSVVQPPJ07yJecio1oBJV/DZ6gC01fsIkfKsb
-	Gis/7f1l09lZCn/g7L/3LudjYYNWih1H5MHGrbIUtOD09kCvunbgujTpgbksPIMYacL/pQapb33tA
-	AXXcjr/xBgdnQDOGVHxX8A6k27+Zy4dOvvijcgcDUCCYIzfr4uC40vAyJRWB8bzGjRmOgFy+u23ky
-	sVCAfjPJDYYdfdq3bijCTdpywIt2gTA6Vh9WbuC30Wu4xmjT2MYUo9xZZOfoUiottio2AHHkhtc2i
-	/6KCZZBw==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=uDB0B/y8BEIJAdSME/L53tegScvP1ehfXftaZ5ENwBE=; b=BgtoPqiP6BPa8Y7wDoNh1dvtNA
+	k+bgzd/YcFsQPWnu3iXA4yKof/sSY4yvmy1Lg/hzxjZfGD+VjyrR+HSr6GKugB4v53BJeEYHU5ZL5
+	AM/0sccerVJPMHBL28m+vShfkfD1wVk1DaOXBkDN8vLgLVzmMjOtrmGjQMEnrDN5t17b6ofJfD4NH
+	FuUuxwHf3GWBncClrGn48WGwom9kqIXaHf8V9jTSEUToAZLW2M1fAAo2+U6epK1kZa8Yqm6YV6+k6
+	hTt4I2p25K7XYnriRWYsLkB46VAI9gNbhNoBsj7km6nx0IqUU8kQBPVMI1aQqRGZVSMnAXrU8PJQh
+	9cuhD2Jg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWB6-00000007jXp-2DPB;
-	Mon, 25 Nov 2024 10:18:48 +0000
+	id 1tFWB7-00000007jae-3PTH;
+	Mon, 25 Nov 2024 10:18:49 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW13-00000007gGO-3YoC
+	id 1tFW13-00000007gGT-3YvF
 	for kexec@bombadil.infradead.org;
 	Mon, 25 Nov 2024 10:08:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=bXmqZfne9wIEAoo4ONpQDgj54jhO/Xmxv8yTtbrY0pg=; b=WmWSKIYyS0X84wqKwhW8CrvIJN
-	r6ShI5FW0t3pCK/0k4oIDB9N2s1pYE9o0cKtV/qQmbbVqF9VKn9ZwtInKPVmU92oXkKnjcqy+ru5d
-	BT2FttN+UjTiqWlCOsI2D3J2KdPAEUfDllzbkDmyJemWsUy0UTRUrEl9vJVDX6NjsndKkclz5071M
-	kanfcAiT35y11lrVbRi8T8rZVkIqMlq6ZmOFQezsBbFo3JB0tSbcQ4gyy5NANbMgANjDaDL/IfHwc
-	4SmjbuN8+uBduxp1OI2qq7kj7affI12F7YYxndSrGFl5C2h97WE3MXC+4NjAxAzMF2rLBGKlpYlML
-	aWDGtJ2w==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=uDB0B/y8BEIJAdSME/L53tegScvP1ehfXftaZ5ENwBE=; b=EuNMYDjxVFZm3cJGRi/JveSTZc
+	cx4LwuYqlNEM54DjLQZeqUrXoGCf88hyZnXU9TT1/tZgzlNdBd49i5KKYMCev/01LZn5GaFMfyA9D
+	bGUlgFGZHc0aP1aDWulQ1XXz4fcbfuJvEwu8MOi5CJ7IP8E7ydZaPZLYjsHraCx8/Ao/klti6k2jG
+	kB5fUDUIWeMs+hzdT3YQMIiLe5TgcOBIuBZ7RuRrNsth0FQJJxs5D2bCacD9L/fEt6qR0meC91gUE
+	1LMixpgU/fDF6ggrwR0KQ6lNK7i3BvTMKT/8aQNyX2ttfOh0mD0N0atEzQMHQ1h9UxzPQONxzVuMY
+	efxFGhbA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW11-000000014f3-04Du;
-	Mon, 25 Nov 2024 10:08:23 +0000
+	id 1tFW12-000000014fA-16IG;
+	Mon, 25 Nov 2024 10:08:24 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW0z-000000000kn-0s7a;
-	Mon, 25 Nov 2024 10:08:21 +0000
+	id 1tFW10-000000000lq-08Pe;
+	Mon, 25 Nov 2024 10:08:22 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -62,10 +62,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v3 00/20] x86/kexec: Add exception handling for relocate_kernel and further yak-shaving
-Date: Mon, 25 Nov 2024 09:54:30 +0000
-Message-ID: <20241125100815.2512-1-dwmw2@infradead.org>
+Subject: [RFC PATCH v3 19/20] x86/kexec: Add 8250 serial port output
+Date: Mon, 25 Nov 2024 09:54:49 +0000
+Message-ID: <20241125100815.2512-20-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241125100815.2512-1-dwmw2@infradead.org>
+References: <20241125100815.2512-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
@@ -83,55 +85,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Debugging kexec failures is painful, as anything going wrong in execution
-of the critical relocate_kernel() function tends to just lead to a triple
-fault. Thus leading to *weeks* of my life that I won't get back. Having
-hacked something up for my own use, I figured I should share it...
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Add a CONFIG_KEXEC_DEBUG option which sets up a trivial exception handler
-in that environment, and outputs to the early_printk serial console if
-configured. Currently only I/O-based 8250 serial ports are supported, but
-that could be extended.
+If a serial port was configured for early_printk, use it for debug output
+from the relocate_kernel exception handler too.
 
-While we're here, clean the code up a little and fix some other problems.
-Most notably, load a suitable GDT on the way back into the kernel after a
-KEXEC_PRESERVE_CONTEXT invocation instead of trusting the called code to
-do so. And explicitly map the control_code_page into the identmap used by
-relocate_kernel() instead of depending on it being in the same superpage
-as something else that gets mapped.
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/include/asm/kexec.h         |  1 +
+ arch/x86/kernel/early_printk.c       |  6 +++++
+ arch/x86/kernel/relocate_kernel_64.S | 37 +++++++++++++++++++++++-----
+ 3 files changed, 38 insertions(+), 6 deletions(-)
 
-I should probably bring the i386 version into line with this, although
-the lack of rip-based addressing makes all the PIC code a bit harder.
-
-David Woodhouse (20):
-      x86/kexec: Ensure control_code_page is mapped in kexec page tables
-      x86/kexec: Restore GDT on return from preserve_context kexec
-      x86/kexec: Clean up and document register use in relocate_kernel_64.S
-      x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
-      x86/kexec: Only swap pages for preserve_context mode
-      x86/kexec: Allocate PGD for x86_64 transition page tables separately
-      x86/kexec: Copy control page into place in machine_kexec_prepare()
-      x86/kexec: Invoke copy of relocate_kernel() instead of the original
-      x86/kexec: Move relocate_kernel to kernel .data section
-      x86/kexec: Add data section to relocate_kernel
-      x86/kexec: Drop page_list argument from relocate_kernel()
-      x86/kexec: Eliminate writes through kernel mapping of relocate_kernel page
-      x86/kexec: Clean up register usage in relocate_kernel()
-      x86/kexec: Mark relocate_kernel page as ROX instead of RWX
-      x86/kexec: Add CONFIG_KEXEC_DEBUG option
-      x86/kexec: Debugging support: load a GDT
-      x86/kexec: Debugging support: Load an IDT and basic exception entry points
-      x86/kexec: Debugging support: Dump registers on exception
-      x86/kexec: Add 8250 serial port output
-      [DO NOT MERGE] x86/kexec: Add int3 in kexec path for testing
-
- arch/x86/Kconfig.debug               |   8 +
- arch/x86/include/asm/kexec.h         |  34 +++-
- arch/x86/include/asm/sections.h      |   1 +
- arch/x86/kernel/callthunks.c         |   6 +
- arch/x86/kernel/early_printk.c       |   6 +
- arch/x86/kernel/machine_kexec_64.c   | 127 ++++++++----
- arch/x86/kernel/relocate_kernel_64.S | 385 +++++++++++++++++++++++++++--------
- arch/x86/kernel/vmlinux.lds.S        |  16 +-
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index c14b0a2704c0..f37d2d9fda3f 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -63,6 +63,7 @@ extern unsigned long kexec_pa_table_page;
+ extern unsigned long kexec_pa_swap_page;
+ extern gate_desc kexec_debug_idt[];
+ extern unsigned char kexec_debug_exc_vectors[];
++extern uint16_t kexec_debug_8250_port;
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
+index 44f937015e1e..bf06866ee90a 100644
+--- a/arch/x86/kernel/early_printk.c
++++ b/arch/x86/kernel/early_printk.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/console.h>
+ #include <linux/kernel.h>
++#include <linux/kexec.h>
+ #include <linux/init.h>
+ #include <linux/string.h>
+ #include <linux/screen_info.h>
+@@ -141,6 +142,11 @@ static __init void early_serial_hw_init(unsigned divisor)
+ 	serial_out(early_serial_base, DLL, divisor & 0xff);
+ 	serial_out(early_serial_base, DLH, (divisor >> 8) & 0xff);
+ 	serial_out(early_serial_base, LCR, c & ~DLAB);
++
++#ifdef CONFIG_KEXEC_DEBUG
++	if (serial_in == io_serial_in)
++		kexec_debug_8250_port = early_serial_base;
++#endif
+ }
+ 
+ #define DEFAULT_BAUD 9600
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index cd349b6d34a7..01a31e4a0664 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -38,6 +38,7 @@ SYM_DATA(kexec_va_control_page, .quad 0)
+ SYM_DATA(kexec_pa_table_page, .quad 0)
+ SYM_DATA(kexec_pa_swap_page, .quad 0)
+ SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
++SYM_DATA(kexec_debug_8250_port, .word 0)
+ 
+ #ifdef CONFIG_KEXEC_DEBUG
+ 	.balign 16
+@@ -364,23 +365,47 @@ SYM_CODE_END(swap_pages)
+ 
+ #ifdef CONFIG_KEXEC_DEBUG
+ /*
+- * Generic 'print character' routine (as yet unimplemented)
++ * Generic 'print character' routine
+  *  - %al: Character to be printed (may clobber %rax)
+  *  - %rdx: MMIO address or port.
+  */
+-SYM_CODE_START_LOCAL_NOALIGN(pr_char)
++#define XMTRDY          0x20
++
++#define TXR             0       /*  Transmit register (WRITE) */
++#define LSR             5       /*  Line Status               */
++
++SYM_CODE_START_LOCAL_NOALIGN(pr_char_8250)
+ 	UNWIND_HINT_FUNC
++	addw	$LSR, %dx
++	xchg	%al, %ah
++.Lxmtrdy_loop:
++	inb	%dx, %al
++	testb	$XMTRDY, %al
++	jnz	.Lready
++	rep nop
++	jmp .Lxmtrdy_loop
++
++.Lready:
++	subw	$LSR, %dx
++	xchg	%al, %ah
++	outb	%al, %dx
++pr_char_null:
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
+-SYM_CODE_END(pr_char)
++SYM_CODE_END(pr_char_8250)
+ 
+ /*
+  * Load pr_char function pointer into %rsi and load %rdx with whatever
+  * that function wants to see there (typically port/MMIO address).
+  */
+-.macro	pr_setup
+-	/* No output; pr_char just returns */
+-	leaq	pr_char(%rip), %rsi
++.macro pr_setup
++	leaq	pr_char_8250(%rip), %rsi
++	movw	kexec_debug_8250_port(%rip), %dx
++	testw	%dx, %dx
++	jnz	1f
++
++	leaq	pr_char_null(%rip), %rsi
++1:
+ .endm
+ 
+ /* Print the nybble in %bl, clobber %rax */
+-- 
+2.47.0
 
 
