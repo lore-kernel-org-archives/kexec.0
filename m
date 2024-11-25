@@ -4,66 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6A7FD59D60
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 19:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 552FCD59D69
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 20:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=U5rJI5dJSpORspRIgPJSzFJ/vO7BoKUyaeN3OT2GWAw=; b=USt0cKeNuR8N8pNR70BmH6mpKZ
-	zhwcCHj9AOaNj2jUiO5ys277nuoWC9j3b1NoAUN4i5ThGsXq4UuXG3+eJqpjMlnr2vFUcK5k9j67S
-	TXkx7N6h9P9b37CGNTkm8OBSE+cZNzPglBgI4ZrNF9gIo+l/JtFbwgH3E4E4PEhAtnMzNA00eWQzQ
-	yu7tYnLnkKH+qD3eDdnFSD27qecCa62L0g8E373n7aw1fRq5yIfUsfehETg6xh4KwyInIq0fTz6k7
-	zEMqYJ+FpJzjkr9pibMhxC4d5sRuVjdLL+HIpsQRC/fjuJMpIFupmMV6JK0qDhTielSJMiqATBUT5
-	per0yrnQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MnDmNH6zIsn82b33mMwCY2LXLvCw3+6N+7WIBIewVSk=; b=Kcg9rgLKEZyq3Pg9jKo6RG2nLw
+	+kG5sSwemqXW9pt2YH1z5CGa2U6qx92rU/AMuAyviMXJpdK9RiM+h56aXG9mzAnv3fQlhC9HS/9eM
+	0LdQsBssB/N+HnJgWybK4iQg2SqmvcSTGFWgcpRKCu/CUidFZ13U4rRk/uk1NQieBFd8sfzneO9cm
+	tDJTXhEM4QbrVaPNusIDQ7Oym3PtekjnZaBCfoIvX4Qn4Qs7lfNZFxadZ5sYcFHYoVZwUhHbVKTk8
+	meGoNINBeH6eLo8ZLyEcXiClUlGAj2XZLWvfrj6/9Xs71co9hKtzt9c2Qp2JiyephAbH6LPceV6Fx
+	ryosY8sA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFetP-00000008yYN-36Bz;
-	Mon, 25 Nov 2024 19:37:07 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tFfnV-000000093JG-0zPK;
+	Mon, 25 Nov 2024 20:35:05 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFetO-00000008yYD-2ZxD
-	for kexec@bombadil.infradead.org;
-	Mon, 25 Nov 2024 19:37:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=U5rJI5dJSpORspRIgPJSzFJ/vO7BoKUyaeN3OT2GWAw=; b=jEuGuSX/9qBEhA0/IJathPaqDi
-	Vx23+sjJ/fS7x27labYotnZhw7Iy4CfH85tGeM/lTzxhAFirO66I1qZoeULYzqJHULS07s8+HeUdn
-	J4nqssyxE4G3WZdn2rr1nef79QF11YWIfWBiydYNtw31lGLIjOGe5NPWKRRqYcKmB6/cYlKTZ1jI9
-	lQLA4qfvqITUBbJ+pmU39NiUExFCK6mzxUjlqU+K9Ml3pO2syiuxyMDecg4/875KB+ezazmp3RYXF
-	wgN2ZBDCSQEaMYdqsfq6T7Hlsdf6THtY6hFioBI5eyfmNrWKLVRjkZ8Dd1wqo37FzyZ8XtUCGRH7Q
-	y7QfI0ew==;
-Received: from [172.31.31.140] (helo=[127.0.0.1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFetJ-000000017lv-0s4h;
-	Mon, 25 Nov 2024 19:37:01 +0000
-Date: Mon, 25 Nov 2024 19:36:03 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>, kexec@lists.infradead.org,
- =?ISO-8859-1?Q?Sch=F6nherr=2C_Jan_H=2E?= <jschoenh@amazon.de>,
- Rik van Riel <riel@surriel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- jpoimboe@kernel.org, bsz@amazon.de
-Subject: Re: [RFC PATCH] x86/mm: Disable PTI for kernel_ident_mapping_init()
-User-Agent: K-9 Mail for Android
-In-Reply-To: <5633d50d-0d61-4d18-b43f-11311b5ec920@intel.com>
-References: <20241125100815.2512-1-dwmw2@infradead.org> <20241125100815.2512-2-dwmw2@infradead.org> <8b7cd35ab5fec39b80eda8d5907b641af14c3272.camel@infradead.org> <7f75150e9d5d358c8fdc38b591f99a252071fba0.camel@infradead.org> <7e7cb9b21f17b345d8539962093d0c030cca3e34.camel@infradead.org> <88a87314-45ad-47f7-a93a-a9a53d7e8745@intel.com> <5d385e4c06ebd218cfdc20ef4f208ee4abcfa252.camel@infradead.org> <5633d50d-0d61-4d18-b43f-11311b5ec920@intel.com>
-Message-ID: <2C6F6BDC-16B5-41B4-AA3B-F2C23F4EBB75@infradead.org>
+	id 1tFfnR-000000093Hw-3svj
+	for kexec@lists.infradead.org;
+	Mon, 25 Nov 2024 20:35:03 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 2A1F2A418D7;
+	Mon, 25 Nov 2024 20:33:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D85C4CED2;
+	Mon, 25 Nov 2024 20:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732566900;
+	bh=0xJmV6Fv8F7uZ3U35bZV4ncl1VQmEU7hso9MskULO/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xn8m4EDoPqdYRheWzAvmNaWcws2w9cdBCps4+YXKKpWXF1KTrG1RIfyNybZMZhp9H
+	 K3kMNgntTQnJNbtASxmGP6IuSWPmcy2uoIRVd3BmOxLlFl2XqUsItbFpIiiQoY1aWg
+	 f2yuD1p2dfTj5MeuK3XypG5E7Dvpz1kOffEB8WOmP/m2XjuSAqSA3FGBpYrYNg8KSd
+	 t02Mi0uqREOvt01bgYkM8Nkwd4Tggmd6lEhw0KnvXBP63CJLBQjHMlV62VYR74IrLY
+	 78Szxonz86bABrxUh3tzQ4GH/HyRKFRXFy847d1/C/LelcmAIRdTJ+0LVulikL7lFb
+	 WmeIHV7vGgHDw==
+Date: Mon, 25 Nov 2024 21:34:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org
+Subject: Re: [RFC PATCH v2 16/16] [DO NOT MERGE] x86/kexec: enable DEBUG
+Message-ID: <Z0TfblQeVRnDc-S1@gmail.com>
+References: <20241122224715.171751-1-dwmw2@infradead.org>
+ <20241122224715.171751-17-dwmw2@infradead.org>
+ <Z0RBl6pzNf5irop9@gmail.com>
+ <334ae44077315e2b69529b6fef8d85ec55f80ecf.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <334ae44077315e2b69529b6fef8d85ec55f80ecf.camel@infradead.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241125_123502_094010_A1D342E4 
+X-CRM114-Status: GOOD (  23.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,35 +82,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 25 November 2024 19:13:02 GMT, Dave Hansen <dave=2Ehansen@intel=2Ecom> w=
-rote:
->On 11/25/24 10:53, David Woodhouse wrote:
->>> I think we have a lot of software-available space in the page table
->>> pointer entries=2E What would folks think if we set a special bit in t=
-hose
->>> p4d entries that said:
->>>
->>> 	"I don't need to be propagated to
->>> 	the user portion of the page tables=2E"
->>>
->>> It would obviously get set in this code that you're trying to fix=2E I=
-t
->>> might _also_ be able to be set in in "_USR", like here:
->>>
->>> #define _KERNPG_TABLE_NOENC=C2=A0 (__PP|__RW|=C2=A0=C2=A0 0|___A|=C2=
-=A0=C2=A0 0|___D|=C2=A0=C2=A0 0|=C2=A0=C2=A0 0)
->>> #define _PAGE_TABLE_NOENC=C2=A0=C2=A0=C2=A0 (__PP|__RW|_USR|___A|=C2=
-=A0=C2=A0 0|___D|=C2=A0=C2=A0 0|=C2=A0=C2=A0 0)
->>>
->>> like:
->>>
->>> #define _USR _PAGE_USER|_PAGE_SW_WHATEVER
->> In fact, do we even need a separate bit? Any PTE without the _PAGE_USER
->> bit set clearly doesn't need to be mirrored into the user page
->> tables=2E=2E=2E?
->
->I can't think of any exceptions where this would break off the top of my
->head=2E It seems too simple to work=2E ;)
 
-I'll throw something together and see if it explodes=2E
+* David Woodhouse <dwmw2@infradead.org> wrote:
+
+> > Just curious: did you write this code to debug the series, or was 
+> > there some original hair-tearing regression that motivated you? Is 
+> > there's an upstream fix to marvel at and be horrified about in 
+> > equal measure?
+> 
+> https://lore.kernel.org/all/2ab14f6f-2690-056b-cf9e-38a12dafd728@amd.com/t/#u
+> is the upstream fix.
+
+Which ended up being the following upstream commit:
+
+  88a921aa3c6b ("x86/sev: Ensure that RMP table fixups are reserved")
+
+Might make sense to add this commit reference to one of the central 
+patches of the GDT/IDT code, to document how this feature is able to 
+pin down very hard to debug regressions. (Even if the upstream fix was 
+done independently in probably luckier circumstances.)
+
+> [...] It's all the more horrifying because it was already *fixed* 
+> upstream before I lost weeks of my life to chasing it. And the 
+> trigger which actually made it *happen*, and made our production 
+> systems allocate memory within that dangerous 1MiB region adjacent to 
+> the RMP table, was a tweak to the NMI watchdog period... leading to 
+> an assumption that we were getting stray perf NMIs during the kexec, 
+> and a *long* wild goose chase based on that false assumption...
+
+:-/
+
+> Once I'd written the debug code, I just wanted to clean it up a bit 
+> and push it out for the benefit of others; that *was* the main point 
+> of this series. All the rest of the cleanups are just yak shaving.
+> 
+> The realisation that we never even explicitly mapped the control code 
+> page and always just got lucky because it happened to be in the same 
+> 2MiB or 1GiB superpage as something else that we did map... was just 
+> a bonus :)
+
+I'm amazed and horrified in equal measure ;-)
+
+> (That one is fixed in v3 which I'll post shortly, and is already in 
+> https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/kexec-debug
+> )
+> 
+> > I'd argue that this debugging code probably needs a default-off Kconfig 
+> > option, even with the obvious hard-coded environmental limitations & 
+> > assumptions it has. Could be useful to very early debugging & would 
+> > preserve your effort without it bitrotting too obviously.
+> 
+> Yeah. In v3 I've made it a config option, and made it use the 
+> early_printk serial console (as long as that's an I/O based 8250; we 
+> can add others too later).
+
+That's lovely!
+
+Thanks,
+
+	Ingo
 
