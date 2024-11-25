@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAD12D3B7F5
-	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18ED2D3B7F6
+	for <kexec@archiver.kernel.org>; Mon, 25 Nov 2024 10:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HZSTsH9jPmSjfGOA2jGMGLovn1Q55JGddszKWUZDjoo=; b=3Q+bEAkoYt9ggvLE1HijkyYfU9
-	nGIWwgkjj4r0AqGAlGGATMFyKt+ItdQTqMoA7NvTZ7H+Y72nTj+4hejSLgBcGZOE1NQjBlepJlQ8K
-	D+PgMRD+fsTL+yAm9PFeP8fjmY6rb5cH3/unDuknq2zcMmj0Yebi7H+2u5ELhpjfpf+1dl6BPTxY7
-	c/EET2M3NAXdzpCzVCCaYa/QTlLjd6fYSPGMHRfVCpEy6GEZz41QHItNmhdumkQM+5hrXlbD5Vrf/
-	zcqW24iVVshwc3CbhUZdLUW173NmWiuXAm0VVKM/lW/4wOBM9CCxr7951B7naGMT/yHSDm3uM5Rxv
-	5T/oPI1Q==;
+	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=ylSWzztZLR8iO4OS14KhJAJrKF
+	lcIa9U4qtjk102ckNJM7oS8ofqUJBSMyNOJGsWYQcsa7YuabmIIDnbXwn29PtufFMiGV7fB0bsupa
+	pKxgk28ASTzhbUBxVcU2/FpzqEaqthBjEDfKk9bEqb73MYiwktoX8RsGXP5qKVDpa35qG7bI8pFbb
+	pKEwfpABg7lMgjgleFYn6lCRVTQR/3lJMn0VXLgjI3zOLEgzrEkCYut2IGIq1akCB2VXhaoqSpbnl
+	TLKSzwbzPP+L8ddWVJth6yHAj4wfhJym1YDw85d5jW1xLoRIGJmPHgVpENLbv9ndv734KkaTeXbho
+	UNdDyKSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFWAn-00000007j5h-2ajp;
-	Mon, 25 Nov 2024 10:18:29 +0000
+	id 1tFWAr-00000007jAq-1Jfs;
+	Mon, 25 Nov 2024 10:18:33 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW13-00000007gFf-0vpX
+	id 1tFW13-00000007gFh-0wa3
 	for kexec@bombadil.infradead.org;
 	Mon, 25 Nov 2024 10:08:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=HZSTsH9jPmSjfGOA2jGMGLovn1Q55JGddszKWUZDjoo=; b=BQbjX1UAvu0ml5ClM6prv8L76b
-	34n3B5g7UqtborZhTdSMIel98t2zmKlixxdxgdyDzlLGo0lBjrc4xCRZyOe4qiJFRzLMUcqVbd57J
-	zroqkIkPOVIbVtkuyIbSmpjFD0Kauc3GcjhUD0JviRpOQ+ilSY/K/wIjwAbhSD9Wq+Rvt3DKUoyAR
-	UrdZQdeoQhMdl9hRD3KbPjLZf+izIlaWmj8NFwSk3uaQr0uOU1x6uGDtSd41MlDoOpShELmd2/2O/
-	YqzS4y/Plc6Fzo0dEex1ASmDuEx8QOl68PgiOhzXrQJH3yvPlHWXZC051dAYFjDnrpN5dYRn37tmk
-	BExG53nw==;
+	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=Hz9yRkL/51WZ+iQPTOfsXpI1M0
+	Io44/tFfv3HvNPTC30HtKctZcDnS9WF4bLtNX8jcHEPUnmYBRNaxz8Gd+ojnLpkUreLev8Vcufx5p
+	nu84JTKFS8WrDq3dwgy2Ih4S6NeAGMJ6v4PbKgVsk8B39QwY0gEaW6bm3OodUKL43MGDZVGB9bGqX
+	ZLx/uOI7aUY6U4yETF2fpw4h0Im15AGwaUD4RRMhIWtBxrEG/x4qD+fwG55uzwGw90ryXrDDh/gd2
+	zC7u/3um2egCEN/XYpCXFyDX6x+OBn6lOBvCBLeAwhHS4UUd4Uj6kIo/FEVvT5gothf5I5QteHh5/
+	qcXvO2+A==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW10-0000000BirC-1HZo;
+	id 1tFW0z-0000000Bir9-441i;
 	Mon, 25 Nov 2024 10:08:23 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFW0z-000000000lm-48vN;
+	id 1tFW0z-000000000lQ-3Amp;
 	Mon, 25 Nov 2024 10:08:21 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v3 18/20] x86/kexec: Debugging support: Dump registers on exception
-Date: Mon, 25 Nov 2024 09:54:48 +0000
-Message-ID: <20241125100815.2512-19-dwmw2@infradead.org>
+Subject: [RFC PATCH v3 12/20] x86/kexec: Eliminate writes through kernel mapping of relocate_kernel page
+Date: Mon, 25 Nov 2024 09:54:42 +0000
+Message-ID: <20241125100815.2512-13-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241125100815.2512-1-dwmw2@infradead.org>
 References: <20241125100815.2512-1-dwmw2@infradead.org>
@@ -87,144 +87,66 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-The actual serial output function is a no-op for now.
+All writes to the relocate_kernel control page are now done *after* the
+%cr3 switch via simple %rip-relative addressing, which means the DATA()
+macro with its pointer arithmetic can also now be removed.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 104 ++++++++++++++++++++++++---
- 1 file changed, 96 insertions(+), 8 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 29 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 2179f691a45b..cd349b6d34a7 100644
+index 16f123527406..288dfc08c63d 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -114,11 +114,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	int3
- SYM_CODE_END(relocate_kernel)
+@@ -61,21 +61,24 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	pushq %r15
+ 	pushf
  
--#ifdef DEBUG
--	UNWIND_HINT_UNDEFINED
--	.balign 0x100	/* relocate_kernel will be overwritten with an IDT */
--#endif
+-	movq	%rsp, saved_rsp(%rip)
+-	movq	%cr0, %rax
+-	movq	%rax, saved_cr0(%rip)
+-	movq	%cr3, %rax
+-	movq	%rax, saved_cr3(%rip)
+-	movq	%cr4, %rax
+-	movq	%rax, saved_cr4(%rip)
 -
- SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	UNWIND_HINT_END_OF_STACK
- 	/*
-@@ -368,6 +363,68 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- SYM_CODE_END(swap_pages)
+-	/* Save CR4. Required to enable the right paging mode later. */
+-	movq	%rax, %r13
+-
+ 	/* zero out flags, and disable interrupts */
+ 	pushq $0
+ 	popfq
  
- #ifdef CONFIG_KEXEC_DEBUG
-+/*
-+ * Generic 'print character' routine (as yet unimplemented)
-+ *  - %al: Character to be printed (may clobber %rax)
-+ *  - %rdx: MMIO address or port.
-+ */
-+SYM_CODE_START_LOCAL_NOALIGN(pr_char)
-+	UNWIND_HINT_FUNC
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+SYM_CODE_END(pr_char)
++	/* Switch to the identity mapped page tables */
++	movq	%cr3, %rax
++	movq	kexec_pa_table_page(%rip), %r9
++	movq	%r9, %cr3
 +
-+/*
-+ * Load pr_char function pointer into %rsi and load %rdx with whatever
-+ * that function wants to see there (typically port/MMIO address).
-+ */
-+.macro	pr_setup
-+	/* No output; pr_char just returns */
-+	leaq	pr_char(%rip), %rsi
-+.endm
++	/* Save %rsp and CRs. */
++	movq    %rsp, saved_rsp(%rip)
++	movq	%rax, saved_cr3(%rip)
++	movq	%cr0, %rax
++	movq	%rax, saved_cr0(%rip)
++	/* Leave CR4 in %r13 to enable the right paging mode later. */
++	movq	%cr4, %r13
++	movq	%r13, saved_cr4(%rip)
 +
-+/* Print the nybble in %bl, clobber %rax */
-+SYM_CODE_START_LOCAL_NOALIGN(pr_nybble)
-+	UNWIND_HINT_FUNC
-+	movb	%bl, %al
-+	nop
-+	andb	$0x0f, %al
-+	addb 	$0x30, %al
-+	cmpb	$0x3a, %al
-+	jb	1f
-+	addb	$('a' - '0' - 10), %al
-+	ANNOTATE_RETPOLINE_SAFE
-+1:	jmp	*%rsi
-+SYM_CODE_END(pr_nybble)
-+
-+SYM_CODE_START_LOCAL_NOALIGN(pr_qword)
-+	UNWIND_HINT_FUNC
-+	movq	$16, %rcx
-+1:	rolq	$4, %rbx
-+	call	pr_nybble
-+	loop	1b
-+	movb	$'\n', %al
-+	ANNOTATE_RETPOLINE_SAFE
-+	jmp	*%rsi
-+SYM_CODE_END(pr_qword)
-+
-+.macro print_reg a, b, c, d, r
-+	movb	$\a, %al
-+	ANNOTATE_RETPOLINE_SAFE
-+	call	*%rsi
-+	movb	$\b, %al
-+	ANNOTATE_RETPOLINE_SAFE
-+	call	*%rsi
-+	movb	$\c, %al
-+	ANNOTATE_RETPOLINE_SAFE
-+	call	*%rsi
-+	movb	$\d, %al
-+	ANNOTATE_RETPOLINE_SAFE
-+	call	*%rsi
-+	movq	\r, %rbx
-+	call	pr_qword
-+.endm
-+
- SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
- 	/* Each of these is 6 bytes. */
- .macro vec_err exc
-@@ -408,11 +465,42 @@ SYM_CODE_END(kexec_debug_exc_vectors)
+ 	/* Save SME active flag */
+ 	movq	%r8, %r12
  
- SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
- 	pushq	%rax
-+	pushq	%rbx
-+	pushq	%rcx
- 	pushq	%rdx
--	movw	$0x3f8, %dx
--	movb	$'A', %al
--	outb	%al, %dx
-+	pushq	%rsi
-+
-+	/* Set up %rdx/%rsi for debug output */
-+	pr_setup
-+
-+	/* rip and exception info */
-+	print_reg 'E', 'x', 'c', ':', 40(%rsp)
-+	print_reg 'E', 'r', 'r', ':', 48(%rsp)
-+	print_reg 'r', 'i', 'p', ':', 54(%rsp)
-+
-+	/* We spilled these to the stack */
-+	print_reg 'r', 'a', 'x', ':', 32(%rsp)
-+	print_reg 'r', 'b', 'x', ':', 24(%rsp)
-+	print_reg 'r', 'c', 'x', ':', 16(%rsp)
-+	print_reg 'r', 'd', 'x', ':', 8(%rsp)
-+
-+	/* Other registers */
-+	print_reg 'r', 's', 'i', ':', (%rsp)
-+	print_reg 'r', 'd', 'i', ':', %rdi
-+	print_reg 'r', '8', ' ', ':', %r8
-+	print_reg 'r', '9', ' ', ':', %r9
-+	print_reg 'r', '1', '0', ':', %r10
-+	print_reg 'r', '1', '1', ':', %r11
-+	print_reg 'r', '1', '2', ':', %r12
-+	print_reg 'r', '1', '3', ':', %r13
-+	print_reg 'r', '1', '4', ':', %r14
-+	print_reg 'r', '1', '5', ':', %r15
-+	print_reg 'c', 'r', '2', ':', %cr2
-+
-+	popq	%rsi
- 	popq	%rdx
-+	popq	%rcx
-+	popq	%rbx
- 	popq	%rax
+@@ -85,10 +88,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
+ 	movq	%rcx, %r11
  
- 	/* Only return from int3 */
+-	/* Switch to the identity mapped page tables */
+-	movq	kexec_pa_table_page(%rip), %r9
+-	movq	%r9, %cr3
+-
+ 	/* Physical address of control page */
+ 	movq    %rsi, %r8
+ 
 -- 
 2.47.0
 
