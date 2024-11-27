@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CFA69D6D22C
-	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 19:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F42BD6D227
+	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 19:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0nLJBUlnC0lJdbTn9E+DJez294BNmSeUZNgs1SMEfHk=; b=XPvVTCgSh4qT8Ifk9csbaUBwK6
-	RNZ4ACTjzQEZBArdmq4UjK5Le8BFQWznZJo1lsN7INMDE7tKbxZJdW+7PnQqf1wSCbgcpkJgvMUFg
-	+00c6o4M43ZzaYkfm2fgY8Q/qyHzRKvLsDUkT/QqqZH2pevZXai0ukZlF0nXjOKFsEK9W7ULvIfe1
-	DyYlbZCyigmYlJn2gBSYT/QDRC0/SM24ZaQr7Nqn/7cSAf1tszv7byfrVLyGGF9JerzNo/jQ8rxtj
-	YZ9CplOvT+X6/gOShnFNmS0b50/jNdHdVPWfZTtlx4HB4QlUJ4/1pTH5PF1mpJQe2eoYI3xSZ8elE
-	qo9JxeYw==;
+	bh=AbThuJMqNCEqi5OCJ2hHO8LahRmj/ISCryb2ADbdx9M=; b=DkkMQKRpB8JrLf9rn/DJKGiBTr
+	rfGcfGwAY6vPoWM97wGcJ+9x1zgL8lWfS2mGT8ukZZznkD4ZfF2w+iMzZDQxyWwyiVShRArgrpx3B
+	4MxuOTVGpjwpQMFHsvIjLXJTUkbkcfIyiMgDyf33SBc95/juzr/HUaJkVqvY2wwvuE+cWrovFb0VD
+	gC3KLvUJB3tiwkn6SAY2lWIB8lLyYKVu8kfqkXg3bvKhS2Duri4UBbdobDnbyRcUALX6weCBBgu3N
+	Qhr2HS72FMUyg+sURWsg3mWDFJIomcm+IcujLVJlt6LMZeDtcvQYwx9nyf+2yyeXOvOnbkg9HHt19
+	yVOB/6IQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKM-0000000Dt4k-2Jcb;
-	Wed, 27 Nov 2024 19:03:54 +0000
+	id 1tGNKN-0000000Dt5P-0961;
+	Wed, 27 Nov 2024 19:03:55 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKJ-0000000Dt0v-33DF
+	id 1tGNKJ-0000000Dt0u-33dG
 	for kexec@bombadil.infradead.org;
 	Wed, 27 Nov 2024 19:03:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=0nLJBUlnC0lJdbTn9E+DJez294BNmSeUZNgs1SMEfHk=; b=QTHP0tu7JkZrCncyFGKJwfhkRm
-	4kgZwolFREmY9Q0yPxR6t8QU8dlxFpifkLwvbrKa4iTOsF4HkoWjTrmVvtZ+pXQmw4VhN4gw/Fm/D
-	aCXp3rGDgv23xrXpXbvd1Z2JwBx/Z82vYYlPcE4/nr6SHk6kjpbj1kGEt7jzXJ40RfjodPFxBchB/
-	GqTnBWJuNaFVP5YrtpchS8naUcb6zc+n+flv0d0+pDoEX5CT731wbXbefvmVGWmWXb6FG4BdLYlez
-	T59Kc8iH/t8IcaDSe1SRUCYYIhnfqw86AEL+bitFLVqVvI9s7TdBLODjyqM/rt/+LsZ7dxOVcPU4Z
-	48M+TI7A==;
+	bh=AbThuJMqNCEqi5OCJ2hHO8LahRmj/ISCryb2ADbdx9M=; b=ah2JlbFUdHK5RQ1AnFOXYqBoiM
+	tXKSBRgBzcq16hLM8IfYjNoRPIMC90FYEnffspwc3822yDnFXeAP8s7HfB90kVpEgg1Wr3VSX+hGC
+	W7qZZPUcbEuGr1HoATjsjOT3fy/ppfYZk97D4+Xcc0cJ6AjeRxctXO/5zTxHwGEcRb9g37BWk5xjk
+	pA9NnhXAR0SLiT0Y/SveMSlviSlpvRnxTFhjLft2fBR+KmrKJxPl2BiBJxOh9llUCmOTaWWSAEKnz
+	+Rriu2nSpH4Fy+Uiu+7BwV/eRZalbMkyiC1MFOSpzDDsagkWf8LKrsX9D827x/15pxM/1gpL11FV4
+	b9H90kWg==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKF-00000001Suf-188l;
+	id 1tGNKF-00000001Sud-188j;
 	Wed, 27 Nov 2024 19:03:47 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKE-00000000BiY-0fVq;
+	id 1tGNKD-00000000BiM-47rP;
 	Wed, 27 Nov 2024 19:03:46 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v4 07/20] x86/kexec: Copy control page into place in machine_kexec_prepare()
-Date: Wed, 27 Nov 2024 19:00:21 +0000
-Message-ID: <20241127190343.44916-8-dwmw2@infradead.org>
+Subject: [RFC PATCH v4 04/20] x86/kexec: Only swap pages for preserve_context mode
+Date: Wed, 27 Nov 2024 19:00:18 +0000
+Message-ID: <20241127190343.44916-5-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241127190343.44916-1-dwmw2@infradead.org>
 References: <20241127190343.44916-1-dwmw2@infradead.org>
@@ -87,49 +87,37 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-There's no need for this to wait until the actual machine_kexec() invocation;
-future changes will need to make the control page read-only and executable,
-so all writes should be completed before machine_kexec_prepare() returns.
+There's no need to swap pages (which involves three memcopies for each
+page) in the plain kexec case. Just do a single copy from source to
+destination page.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/machine_kexec_64.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 7223c38a8708..3a4cbac1a0c6 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -301,17 +301,16 @@ static void load_segments(void)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index fea650f92606..50cc33f2ecb7 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -310,6 +310,9 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	movq	%rdi, %rdx    /* Save destination page to %rdx */
+ 	movq	%rsi, %rax    /* Save source page to %rax */
  
- int machine_kexec_prepare(struct kimage *image)
- {
--	unsigned long control_page;
-+	void *control_page = page_address(image->control_code_page);
- 	int result;
- 
--	/* Calculate the offsets */
--	control_page = page_to_pfn(image->control_code_page) << PAGE_SHIFT;
--
- 	/* Setup the identity mapped 64bit page table */
--	result = init_pgtable(image, control_page);
-+	result = init_pgtable(image, __pa(control_page));
- 	if (result)
- 		return result;
- 
-+	__memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
++	testq	%r11, %r11    /* Only actually swap for preserve_context */
++	jz	.Lnoswap
 +
- 	return 0;
- }
+ 	/* copy source page to swap page */
+ 	movq	%r10, %rdi
+ 	movl	$512, %ecx
+@@ -324,6 +327,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	/* copy swap page to destination page */
+ 	movq	%rdx, %rdi
+ 	movq	%r10, %rsi
++.Lnoswap:
+ 	movl	$512, %ecx
+ 	rep ; movsq
  
-@@ -363,7 +362,6 @@ void machine_kexec(struct kimage *image)
- 	}
- 
- 	control_page = page_address(image->control_code_page);
--	__memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
- 
- 	page_list[PA_CONTROL_PAGE] = virt_to_phys(control_page);
- 	page_list[VA_CONTROL_PAGE] = (unsigned long)control_page;
 -- 
 2.47.0
 
