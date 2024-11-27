@@ -4,73 +4,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 452C1D3B9B7
-	for <kexec@archiver.kernel.org>; Tue, 26 Nov 2024 16:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71D01D609C1
+	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 10:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	In-Reply-To:Content-Type:References:Message-ID:Subject:CC:To:From:Date:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=x+9pl3qoUUZrRucDsFvxJlCYP1qMRDE9nkMGrWK+aTs=; b=fBAdHBQlFhFtvAu+/F2igFdc9S
-	H9X0Mkq5l/e2JnLGZzVGU3wPYODrWDv3+6PbrVvey+PusoYINkA+TODOY8mP2bbiEQ++XcrGAD0X7
-	EOGi0UsPyvdStMif9H9SF6B9Uaw7MUE4/tRdnNJNKGDsbEHvRo91825g0yRO1QvnB2crE/3qu7Wei
-	q1KBnzGCeqiJaUQCJukBQrnrkypLRi3SHfcvcJSynrVnrp+WBpRbA5vfa1OAFtopNleYwo/mSDRA9
-	h7SLs//1WyqNRj1p9C4CpkMPFMCwQkxGDMWn19UggOu8gzdXmdKSEC5Qx9PJVl9wX4KY3oTfm0ALO
-	+3irCsQQ==;
+	bh=kaTZcNgjVpnlvi7ycnJW+VaezI4KbEwKoz411nEoP0U=; b=WNlSwxxQ0PBS4vlhkVSnGVfOA7
+	ccz2oXdb8CTUimLzeurRzpi0ccIwpOawclckQnqMWYMSBmdObsYLsT4jUPuBhroUXgdEsC9fmfeUh
+	0VYxCXbaq9L438quuKEkGQKwucs/tw6J1NldTACfiQ+pnbpHOsbxR8DwskgCvhLRN13eKSIZWrIFx
+	7aYLcQIWATB1jLK3i6oz5RHCaWz7R8EsWtp52r/FieKEeQ181leWwM2zONtjk4TBaEsBknBJoAWCs
+	n4QtlW3AFwuPe9EXcGMANqMi7iHtMQm6UgmNcCiZ48f69soKuTYHds1krKLylDAd4cD43kKzN29nE
+	X3BHvB2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFy8a-0000000B6j9-3fsj;
-	Tue, 26 Nov 2024 16:10:04 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tGF0E-0000000CnJu-0Xfs;
+	Wed, 27 Nov 2024 10:10:34 +0000
+Received: from mgamail.intel.com ([192.198.163.14])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFy8a-0000000B6j1-0g3M
-	for kexec@bombadil.infradead.org;
-	Tue, 26 Nov 2024 16:10:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=x+9pl3qoUUZrRucDsFvxJlCYP1qMRDE9nkMGrWK+aTs=; b=fYXZvRqCxlfIcgDifqVYFJ5MX+
-	cr3WGlEognCZFVVCO+03FGkT+aCTJ12+WW2lkapdVpZ32FdFwH5AZSmRHFsHdjwam+BMOgJ0soQht
-	Jslqjd4UBmYK/UtIIfArWz1lGzBwHOQLgLfMruSjb6mlg5oN5c+yDOJU4UYepT17ddC8zJzZLNjGh
-	0KntY3dp7Mh6DOxPWM0aQsfOCOJity/nVYCCouph/mCU02Maa/VvTBON5YXSkKqPHmC8UuBz5EN/s
-	MdbKeDeEmjtjDKHZfbqy/CcgFPhxVXLE42cb6oZoQ6YJutS62T330slztyD29xiBGrEseM0ER7a7G
-	6f/xketQ==;
-Received: from 54-240-197-236.amazon.com ([54.240.197.236] helo=edge-m3-r3-142.e-iad51.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFy8T-000000009oc-4Aai;
-	Tue, 26 Nov 2024 16:09:59 +0000
-Message-ID: <87c2a595a79b1421a36a5db6ae43960bf6cece64.camel@infradead.org>
-Subject: Re: [RFC PATCH] x86/mm: Disable PTI for kernel_ident_mapping_init()
-From: David Woodhouse <dwmw2@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>, kexec@lists.infradead.org, 
- =?ISO-8859-1?Q?Sch=F6nherr=2C?= "Jan H."
-	 <jschoenh@amazon.de>, Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
- Borisov <nik.borisov@suse.com>,  linux-kernel@vger.kernel.org, Simon Horman
- <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, jpoimboe@kernel.org,  bsz@amazon.de
-Date: Tue, 26 Nov 2024 16:09:58 +0000
-In-Reply-To: <efd1199c-b037-4e23-9982-7f466ec41720@intel.com>
-References: <20241125100815.2512-1-dwmw2@infradead.org>
-	 <20241125100815.2512-2-dwmw2@infradead.org>
-	 <8b7cd35ab5fec39b80eda8d5907b641af14c3272.camel@infradead.org>
-	 <7f75150e9d5d358c8fdc38b591f99a252071fba0.camel@infradead.org>
-	 <7e7cb9b21f17b345d8539962093d0c030cca3e34.camel@infradead.org>
-	 <88a87314-45ad-47f7-a93a-a9a53d7e8745@intel.com>
-	 <5d385e4c06ebd218cfdc20ef4f208ee4abcfa252.camel@infradead.org>
-	 <5633d50d-0d61-4d18-b43f-11311b5ec920@intel.com>
-	 <0c8fe87b34252966ecf558271b09c4b855700691.camel@infradead.org>
-	 <efd1199c-b037-4e23-9982-7f466ec41720@intel.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-TDpox0sMRi2pMNLfz1mh"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tGEtj-0000000CmA0-07vY
+	for kexec@lists.infradead.org;
+	Wed, 27 Nov 2024 10:03:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732701831; x=1764237831;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=QYJxnbinFYIQx3eLf7fKCOuXp9z4GQ3oqNLN3Nvbq9A=;
+  b=EQEtnu2db7NtD3J6vKLtkanB69qUm6NkOF+ydblRD0772DWYaCEczJHw
+   opUgtmChe4UawumAUSrzUt6GIJ6Iruv+BjEzs9vWETUk0/W36AViNRl7X
+   X2l6wWghJp+SnTntUytqpSU7P9OlFr6EF6uwYpfuGutQvOg11gulakk9C
+   vox+UmtSyXNkH1nM/0cj71507Ly0yOE3FzkqtncP2od5WjhF+G+qoXt96
+   wq1elUkJUZt7oty9ozIH/eMszxDxDchwpva7fRRrTZZ8baWH3gwvzI+BT
+   9m1BhhUu2T1zlUqqFjO8XXvWkQrjCxnrWa3p9lVBZ5m6QFrqBmmyzPLi0
+   A==;
+X-CSE-ConnectionGUID: N1IipjJ2Rk2510RpUrNshA==
+X-CSE-MsgGUID: NS+7l8JxSbeh/4I0FhkxIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="33148237"
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="33148237"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:03:50 -0800
+X-CSE-ConnectionGUID: nT3oAauwQw6gIY6B5pU5Tg==
+X-CSE-MsgGUID: b+LFYolbTGWAy9lFuryC1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="92044615"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Nov 2024 02:03:50 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 27 Nov 2024 02:03:49 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 27 Nov 2024 02:03:49 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 27 Nov 2024 02:03:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NqzTMWF2F3xCHzqy2Xbdy7E6D5M7o8+3PQ1H05T2JRXKLFsBRVgpGYdL5fquSs1HRTc8XI45x/6P7yxpsTTq3e7kZXLbQISgsAJBDrkhcL8BS8fFTlBzTKIlL63e6sjewMr5+NTwn1B/59M/z6ZEs9klG9R+pmhKI4YE8v/8rC13JAkBTgSQavQRUOsFaUUqJp3nM+J0NIV6puDVW1WlpXIyiD2COhiPiYzw3TTi2oVHSO90CDxAqp5YViG7mORB/d9i8AG9JlSDEpdj4VruuIafsVruZiZPvdW3XZpTnXGbbQG8cUZvjmTlaE4/tB13xXi8qfxcDyGHk2G1nesQmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kaTZcNgjVpnlvi7ycnJW+VaezI4KbEwKoz411nEoP0U=;
+ b=xyoABFR+2Y/A0cA1W+6m+WAqQT16A/CMk6yPJK90VWRa7wnazrZLW+ntPxb4JtNBnamnEi4PdslpAMqGmlccgf8YsKavicWyYDZ9XaYWl/z7r18aa0zU208ik6C36sMOmKNhW6JQlBP1QCV1H/LvDresrKJu9tUx9yc7TDSFg7lLjmLB8pEEryhm3VnrRrfD3RK3A9usCe0AsfPFi7h3thZheqvI3SwnRDbek2YUW/1J84gSTSSthf7DgH1KD3T3wylvtTKF/X9LrvdmqbBbO05LkmAqVtZWKpjOam4tqCrwnKX9wni9B8QxPgAfuKaDmyi1TJOdyg/CyFVq5j/xPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ DM6PR11MB4610.namprd11.prod.outlook.com (2603:10b6:5:2ab::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8207.13; Wed, 27 Nov 2024 10:03:47 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%5]) with mapi id 15.20.8182.019; Wed, 27 Nov 2024
+ 10:03:47 +0000
+Date: Wed, 27 Nov 2024 18:01:04 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Baoquan He <bhe@redhat.com>
+CC: "Eric W. Biederman" <ebiederm@xmission.com>, "Kirill A. Shutemov"
+	<kirill@shutemov.name>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<x86@kernel.org>, <rick.p.edgecombe@intel.com>,
+	<kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
+Message-ID: <Z0bt4HXAKqM3C1ZW@yzhao56-desk.sh.intel.com>
+References: <20241021034553.18824-1-yan.y.zhao@intel.com>
+ <87frop8r0y.fsf@email.froward.int.ebiederm.org>
+ <tpbcun3d4wrnbtsvx3b3hjpdl47f2zuxvx6zqsjoelazdt3eyv@kgqnedtcejta>
+ <87cyjq7rjo.fsf@email.froward.int.ebiederm.org>
+ <ZxmRkUNmx863Po2U@yzhao56-desk.sh.intel.com>
+ <Z0WzHZ+fNn6WuH/E@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z0WzHZ+fNn6WuH/E@MiWiFi-R3L-srv>
+X-ClientProxiedBy: SGXP274CA0011.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::23)
+ To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM6PR11MB4610:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0246f1aa-0eab-4a54-41c6-08dd0ecac8b9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/3vAXnajQcpqGmSpnz1Lv/Bv8hCds9vAO8yE9DAmjPgru8RqPxmhYpbuGRsa?=
+ =?us-ascii?Q?8ujCQ9bQdpoIuhsz8tgsXhBkITX8lRLOW/0wrYZpHmiOVihEWOA8lmWFGubD?=
+ =?us-ascii?Q?sJpZUjIpf7bgEyU441dUluiWg6SGQksz6uq0RtoEva7mGHJH9zng/O6yAhU+?=
+ =?us-ascii?Q?JCEheB8ux2Bs9bofGnGv1chMLLl3TKeAJOnZLLKAKZgK+us0fMZ0rvf+2bGy?=
+ =?us-ascii?Q?VQ2HJJDe/c1Di0MOi6J3OnZDhaknqOZBF5akjMs+XGeT57I8J7Ll4H1KEb40?=
+ =?us-ascii?Q?B4thOA0mFzeaRFQFl3ybtena9TxA+WwjF/pBe9ryEPcPrfZINFxZBRBTOXrL?=
+ =?us-ascii?Q?L2XUKEtqrIFNBc9g76aNsAxd0hDHbrDFUcO5bq4iE/oVt7rtD/LUp7ucqyP0?=
+ =?us-ascii?Q?Kyc07fwWb4y4MfIhIw2iiZS4wJtaQlJFjEWTIt1WGS1jJOI/JJq4qaHJdjkM?=
+ =?us-ascii?Q?lX2DujL6VPQhFkeXDELWH98fWahPg56cBZqa6Q72APNouBvu+9G2yzRJeAwa?=
+ =?us-ascii?Q?oHXzBOCX6InEFqrw/r8HGdiW4Gq3tw525o8C3qK28lRZiWUZg+Ms010ybjKK?=
+ =?us-ascii?Q?WE/GsZN7m9sOgBwhi8M4XpcB6yF0Oi3C3doFS5gEk+en0O+qxTQ4664xiMWf?=
+ =?us-ascii?Q?mrkNkK/bn0ed4jwD3d5nj4vC5irMEnDMMKs0S30oHv0PGlSqxvhGYOheqQQe?=
+ =?us-ascii?Q?FlJHEwPnHSqSbiE9qetag/8VmTRjNwj//3UMHr8W0LuSJSGk+j0P0rO/wGMN?=
+ =?us-ascii?Q?d1XJ43yKrsHERNuT9e9pFRJiHbq7tps4R7nbvMhBo0LqzZ7x4jEMmHjgCvmq?=
+ =?us-ascii?Q?yHfQDtY+7jQNMGlZasNNYt2f3pIE24Rx8mxjpP64rnWzf6lbDpUKBy2JWT8l?=
+ =?us-ascii?Q?HOc27G+sNjlnaKERS0BJvY2wY3Sg0cqO2QYgqDra6Cpuw/TJEX2MFtK5OVTX?=
+ =?us-ascii?Q?ZA4xCD6y/lgu+grBeM6Z9mG7PKT2eykHEwuEAmmkRh5zafUmLf2p3C9iHOR3?=
+ =?us-ascii?Q?auBGFVNPMwrElZ6yhqCCflGT9TNvWU9tK4OZvGKLUbwcH0VCeYczZHWm6wj3?=
+ =?us-ascii?Q?dj0j8BX4hXX7l2xaq5ex9ggsCPCgw8ccCfrQjrSrXi2Mg4iyczpe5OLlpNuy?=
+ =?us-ascii?Q?c2Iu+Ik0LqdUBLKdNzohWS3Myiemsb2v+CMjkgGqN9k8W9K4koFLuQEs0j+0?=
+ =?us-ascii?Q?soBO1sJX51cOpVOI4aWfPKyeCWEeC/RWqbRDY7yQ3lQ37D//GULK1Aaw7d7+?=
+ =?us-ascii?Q?FU0ju4xczxeBB9HSU9cpwJbmo4UeC7jfCxgPlZaVpBbW404geiITBv8E9G/l?=
+ =?us-ascii?Q?23xILJmJmyZLyUdhagRSDsfRqDkefTmUuQ1M/kVSwXnpvg=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XpC3gvRZHbbZWgbFfsUFZIvCpruf3DipeYlVafdf0KKfzjnQAu89zCHkPD1s?=
+ =?us-ascii?Q?j3R8dqgMMFHJbedLaxu+ltGJrtT4pBiFVk27LGMM52vUM2i264lkac/yeZCO?=
+ =?us-ascii?Q?kQh1R8LIM4iDheOtMVMgKXz2SqcNJErAUNwJO9NJjHEpwSYVAODsKaK954Kr?=
+ =?us-ascii?Q?ORF9vP1ym070MgoqC9K8mTa/wR+4j7Vk+nkLws3xLHw4qtdZh5tQArpZkXYo?=
+ =?us-ascii?Q?K4wcriPe9WsM6Pco6HSU0Blf/ryMI5mYFh5EUwJhVzt4GZQY+qPxuVLNLiSV?=
+ =?us-ascii?Q?pvuDNyU+YXXWnQh8ygJpL5YNcuH0zgj0Tp2amBRmDjwdd1L3eiNMuTxffxCV?=
+ =?us-ascii?Q?3Yyznuw5+3+DluMkNvAYZMfJLd22Z9aNLyPJBOPsKZjejzCLpks4p2GEGmQl?=
+ =?us-ascii?Q?DlkgfEuPwgTbIissb54NQMKjVF+et900+beBdJFZ1RdX/Ns3591m632ezsxo?=
+ =?us-ascii?Q?XpVbivs6ls9/Jk+b9LT3FZFgF08XndW646BTfm0LoMx8AkkW6CATPHPKbFH4?=
+ =?us-ascii?Q?jNis7QoWCjVV2XSK36a6pIPWUNIxtATld675hbAP/VZR6eMCtNhXv0c57CKe?=
+ =?us-ascii?Q?TBCX2FDp4af6M5tdLPlNFaGszdUqn7Tb9MCD1vsBXZt0qmuxuauLyB2c+dDH?=
+ =?us-ascii?Q?/MfB0bHY9iUNDHPz2SkMjIYWRkDly5jGZAWkmxqPuSQ17XzeYRvfHaxVC70/?=
+ =?us-ascii?Q?Xw4gta5+aL/8fWIVQA9Lbh/4E/WkW2oPDSQfePGJZf7wciZCmotc7QGySj1t?=
+ =?us-ascii?Q?gEL7UfFC2OPZGHyO689yfP3igQFVdSMt3fw1sN+zz/cqiwIi3UEiJGEzvDch?=
+ =?us-ascii?Q?fXdHnTtKOTzLkoFhLZf8FEy24+OwjHvYhCA2zXOTdX1hJadsqKabqI07hPHS?=
+ =?us-ascii?Q?Ale1GkaBQAwc1i9QqflRkO/i9nUPNmWmocJVLe9s0hKUkBmZAUi1/tFAsIv2?=
+ =?us-ascii?Q?+VAcyjJsXaARrpZ4exGpAOzbNWR5QLN10C74o5VYXzKqXDGkWXqSrfARGpn5?=
+ =?us-ascii?Q?5/AjwegugqlzDD+C74FJBgVCNsU0J4N6zQPmZ7saCUvi4HrMmSL7yGpXeasH?=
+ =?us-ascii?Q?fstP7WaJ4h1KhjZN8dhgaxIyoBT/FIej8FL/wvCFEbI2JpHsOC+oF0li4sAL?=
+ =?us-ascii?Q?1omYTTJZbM+Tj88HASvOdNgJtb7Y7GgWoKCowTzK1nn95LNFsusELqDTmpXx?=
+ =?us-ascii?Q?FzK3E6U2Z2HJ/bKUnQ5deigNDFtWZfdAdMxuICYCglfy5/qhup2KHmXp8k7R?=
+ =?us-ascii?Q?0tqCnUkGSA/kuQHdJdLTC1w2H3C4yo5HC6rQk29NXieHWNJKaP57zDKjPkMA?=
+ =?us-ascii?Q?dsvz9AGsNnH4tXchRNKs+5/lUj0JOEOlVAinGY2x9g7jRF1bCw0UXnF7YDWW?=
+ =?us-ascii?Q?N/lZYERukhNsgNje9O/V7WRBohF/2NlBe49RmayGSHiU95yMXr7a0HVWwM4+?=
+ =?us-ascii?Q?zx600LIcFr5FKeIlAovX9tPFC19bacMMrKFA9JR0yiTZIE9hxCSw8IJ7fRvy?=
+ =?us-ascii?Q?gXnQXpFfWSuQ3sDufAXeH/2wWY9Uyy9AdFSnjgm7yBFms4hrk4qDbvI1Ijnw?=
+ =?us-ascii?Q?dcp72MhhZKUiDO0nDsTJlBewtsB91WcRkkEWiMHX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0246f1aa-0eab-4a54-41c6-08dd0ecac8b9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2024 10:03:47.2137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ubbYqOevz/8kRAAlzuio16l/srJDIkxbNrFuNpi4eaNaHawVEzzNzkpPrWRz87Oc57LPqC9YYW3CrCSRuCx//w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4610
+X-OriginatorOrg: intel.com
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241127_020351_128368_1BAB8B34 
+X-CRM114-Status: GOOD (  41.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,264 +191,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue, Nov 26, 2024 at 07:38:05PM +0800, Baoquan He wrote:
+> On 10/24/24 at 08:15am, Yan Zhao wrote:
+> > On Wed, Oct 23, 2024 at 10:44:11AM -0500, Eric W. Biederman wrote:
+> > > "Kirill A. Shutemov" <kirill@shutemov.name> writes:
+> > > 
+> > > > Waiting minutes to get VM booted to shell is not feasible for most
+> > > > deployments. Lazy is sane default to me.
+> > > 
+> > > Huh?
+> > > 
+> > > Unless my guesses about what is happening are wrong lazy is hiding
+> > > a serious implementation deficiency.  From all hardware I have seen
+> > > taking minutes is absolutely ridiculous.
+> > > 
+> > > Does writing to all of memory at full speed take minutes?  How can such
+> > > a system be functional?
+> > > 
+> > > If you don't actually have to write to the pages and it is just some
+> > > accounting function it is even more ridiculous.
+> > > 
+> > > 
+> > > I had previously thought that accept_memory was the firmware call.
+> > > Now that I see that it is just a wrapper for some hardware specific
+> > > calls I am even more perplexed.
+> > > 
+> > > 
+> > > Quite honestly what this looks like to me is that someone failed to
+> > > enable write-combining or write-back caching when writing to memory
+> > > when initializing the protected memory.  With the result that everything
+> > > is moving dog slow, and people are introducing complexity left and write
+> > > to avoid that bad implementation.
+> > > 
+> > > 
+> > > Can someone please explain to me why this accept_memory stuff has to be
+> > > slow, why it has to take minutes to do it's job.
+> > This kexec patch is a fix to a guest(TD)'s kexce failure.
+> > 
+> > For a linux guest, the accept_memory() happens before the guest accesses a page.
+> > It will (if the guest is a TD)
+> > (1) trigger the host to allocate the physical page on host to map the accessed
+> >     guest page, which might be slow with wait and sleep involved, depending on
+> >     the memory pressure on host.
+> > (2) initializing the protected page.
+> > 
+> > Actually most of guest memory are not accessed by guest during the guest life
+> > cycle. accept_memory() may cause the host to commit a never-to-be-used page,
+> > with the host physical page not even being able to get swapped out.
+> 
+> So this sounds to me more like a business requirement on cloud platform,
+> e.g if one customer books a guest instance with 60G memory, while the
+> customer actually always only cost 20G memory at most. Then the 40G memory
+> can be saved to reduce pressure for host.
+Yes.
 
---=-TDpox0sMRi2pMNLfz1mh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> I could be shallow, just a wild guess.
+> If my guess is right, at least those cloud service providers must like this
+> accept_memory feature very much.
+> 
+> > 
+> > That's why we need a lazy accept, which does not accept_memory() until after a
+> > page is allocated by the kernel (in alloc_page(s)).
+> 
+> By the way, I have two questions, maybe very shallow.
+> 
+> 1) why can't we only find those already accepted memory to put kexec
+> kernel/initrd/bootparam/purgatory?
 
-On Tue, 2024-11-26 at 07:49 -0800, Dave Hansen wrote:
-> On 11/26/24 03:42, David Woodhouse wrote:
-> > I threw this version together and it didn't immediately explode...
->=20
-> It's better than playing #define games. The damage is also pretty
-> limited and it helps us avoid plumbing a bit through the page table
-> handling function arguments.
+Currently, the first kernel only accepts memory during the memory allocation in
+a lazy accept mode. Besides reducing boot time, it's also good for memory
+over-commitment as you mentioned above.
 
-Thanks. I guess I should write it a commit message then... and add
-Cc:stable since AFAICT the other users of this *are* already broken.
+My understanding of why the memory for the kernel/initrd/bootparam/purgatory is
+not allocated from the first kernel is that this memory usually needs to be
+physically contiguous. Since this memory will not be used by the first kernel,
+looking up from free RAM has a lower chance of failure compared to allocating it
+from the first kernel, especially when memory pressure is high in the first
+kernel.
 
-=46rom b474ea925a2ea566061552d8a6ca9e4a2945f45d Mon Sep 17 00:00:00 2001
-From: David Woodhouse <dwmw@amazon.co.uk>
-Date: Tue, 26 Nov 2024 15:55:13 +0000
-Subject: [PATCH 05/20] x86/mm: Add _PAGE_NOPTISHADOW bit to avoid updating
- userspace page tables
+ 
+> 2) why can't we accept memory for (kernel, boot params/cmdline/initrd)
+> in 2nd kernel? Surely this purgatory still need be accepted in 1st kernel.
+> Sorry, I just read accept_memory() code, haven't gone through x86 boot
+> code flow.
+If a page is not already accepted, invoking accept_memory() will trigger a
+memory accept to zero-out the page content. So, for the pages passed to the
+second kernel, they must have been accepted before page content is copied in.
 
-The set_p4d() and set_pgd() functions (in 4-level or 5-level page table set=
-ups
-respectively) assume that the root page table is actually a 8KiB allocation=
-,
-with the userspace root immediately after the kernel root page table (so th=
-at
-the former can enforce NX on on all the subordinate pages, which are actual=
-ly
-shared).
-
-However, users of the kernel_ident_mapping_init() code do not give it an 8K=
-iB
-allocation for its PGD. Both swsusp_arch_resume() and acpi_mp_setup_reset()
-allocate only a single 4KiB page. The kexec code on x86_64 currently gets
-away with it purely by chance, because it allocates 8KiB for its "control
-code page" and then actually uses the first half for the PGD, then copies t=
-he
-actual trampoline code into the second half only after the identmap code ha=
-s
-finished scribbling over it.
-
-Fix this by defining a _PAGE_NOPTISHADOW bit (which can use the same bit as
-_PAGE_SAVED_DIRTY since one is only for the PGD/P4D root and the other is
-exclusively for leaf PTEs.). This instructs __pti_set_user_pgtbl() not to
-write to the userspace 'shadow' PGD.
-
-Strictly, the _PAGE_NOPTISHADOW bit doesn't need to be written out to the
-actual page tables; since __pti_set_user_pgtbl() returns the value to be
-written to the kernel page table, it could be filtered out. But there seems
-to be no benefit to actually doing so.
-
-Cc: stable@kernel.org
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/include/asm/pgtable_types.h | 8 ++++++--
- arch/x86/mm/ident_map.c              | 6 +++---
- arch/x86/mm/pti.c                    | 2 +-
- 3 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pg=
-table_types.h
-index 6f82e75b6149..4b804531b03c 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -36,10 +36,12 @@
- #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
-=20
- #ifdef CONFIG_X86_64
--#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit */
-+#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit (leaf) *=
-/
-+#define _PAGE_BIT_NOPTISHADOW	_PAGE_BIT_SOFTW5 /* No PTI shadow (root PGD)=
- */
- #else
- /* Shared with _PAGE_BIT_UFFD_WP which is not supported on 32 bit */
--#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW2 /* Saved Dirty bit */
-+#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW2 /* Saved Dirty bit (leaf) *=
-/
-+#define _PAGE_BIT_NOPTISHADOW	_PAGE_BIT_SOFTW2 /* No PTI shadow (root PGD)=
- */
- #endif
-=20
- /* If _PAGE_BIT_PRESENT is clear, we use these: */
-@@ -139,6 +141,8 @@
-=20
- #define _PAGE_PROTNONE	(_AT(pteval_t, 1) << _PAGE_BIT_PROTNONE)
-=20
-+#define _PAGE_NOPTISHADOW (_AT(pteval_t, 1) << _PAGE_BIT_NOPTISHADOW)
-+
- /*
-  * Set of bits not changed in pte_modify.  The pte's
-  * protection key is treated like _PAGE_RW, for
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 437e96fb4977..5ab7bd2f1983 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -174,7 +174,7 @@ static int ident_p4d_init(struct x86_mapping_info *info=
-, p4d_t *p4d_page,
- 		if (result)
- 			return result;
-=20
--		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag));
-+		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 	}
-=20
- 	return 0;
-@@ -218,14 +218,14 @@ int kernel_ident_mapping_init(struct x86_mapping_info=
- *info, pgd_t *pgd_page,
- 		if (result)
- 			return result;
- 		if (pgtable_l5_enabled()) {
--			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag));
-+			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 		} else {
- 			/*
- 			 * With p4d folded, pgd is equal to p4d.
- 			 * The pgd entry has to point to the pud page table in this case.
- 			 */
- 			pud_t *pud =3D pud_offset(p4d, 0);
--			set_pgd(pgd, __pgd(__pa(pud) | info->kernpg_flag));
-+			set_pgd(pgd, __pgd(__pa(pud) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 		}
- 	}
-=20
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 851ec8f1363a..5f0d579932c6 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -132,7 +132,7 @@ pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
- 	 * Top-level entries added to init_mm's usermode pgd after boot
- 	 * will not be automatically propagated to other mms.
- 	 */
--	if (!pgdp_maps_userspace(pgdp))
-+	if (!pgdp_maps_userspace(pgdp) || (pgd.pgd & _PAGE_NOPTISHADOW))
- 		return pgd;
-=20
- 	/*
---=20
-2.43.0
-
-
-
---=-TDpox0sMRi2pMNLfz1mh
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMTI2MTYwOTU4WjAvBgkqhkiG9w0BCQQxIgQgMk3nTuZ/
-FDd2+ABASUmZge4nM/w847vcPShs5Ztr/80wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAnUuzy506mu04jZM4ucFk6E36bxxX2mgtx
-gPQFF6rMh2WV47wcliUDkBELrzECYmxvk0KO9LcNtQLwDc3oPxf3bdjbmTjup+mwNRwjVVGGEONJ
-pKjbu8APsW+SraJko23eEMTt8gJf5VgmqKI/5LzY8/Yp2wmn6uMOEOFqcojBGmZbqmPlTzkhwrIe
-44Plfxyd+Iy2FlVAzPzpWRu86AbrUZg3L3Vqpm5aou4PSQ/EScQU2eOiZo+r4whpS6Pblxipdydq
-a/D5bPTeaY+Q0Qgpar3A0tinjOyNsjQjXSMSGjLqkopmc41mj0ezFohKPtYqfnPzil5cYNd/d2Eq
-CSBpunxQ2ng9xfPpfpuzy6TtChSUOL8gcKWwyFhBfTBkui2aElqbt23mokRzde68stZ2Fbe1lkJZ
-IL+0dq4Dy7V7PwKxvd38Ts3I4Gs23DGNoIO5yWrOcHGoaVdx2IlkeckXlSSOSXn09LqaCgcMReMr
-VIKm31Ve/wW2GlcxIRZDLy33gA38ASWkYDDWq6nYpH0VR1+veryG8mFwovGBgg/ZEsAYAGqIJOpj
-1pBKtu1/5G4WizymoOBnCyug3A7ymVi3lFpcw+t5f2nCdDoyPgJy2p3VO3B0kCiVzbLNjvMOkvpL
-zzOoYhXgC662mX6aCqfO/fGjbEAcQXh73FbCmnltCwAAAAAAAA==
-
-
---=-TDpox0sMRi2pMNLfz1mh--
+For boot params/cmdline/initrd, perhaps we could make those pages in shared
+memory initially and have the second kernel to accept private memory for copy.
+However, that would be very complex and IMHO not ideal.
 
