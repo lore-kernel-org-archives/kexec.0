@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 210AED6D230
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B604D6D231
 	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 19:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,37 +12,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=G8KdxSUjA1BoxOPlX8D0AVdJHTOMU4u9sPbtmHj+Y10=; b=1eCIHptrC1eZacVL6740bNecuf
-	kVvLHsOYS1JsBU+Q76YgqQyW+B09/Rz8gxxf+8syCwLPPks0Hsmh0W0eV3Zd1S18JIq4ImNQFZ7Po
-	/aveWZyElSLLzqzndSJb5Sd69RS0T3KgfBZ2Ipez9OkW5qNW17HCtq5iJkq9rxUO4qD7O9En53LOW
-	QywBe3lfxmM70ZrCl54naLPxQy4VS6NvsVN89Q0Izbx2F3fqbvswbFxBbZWKJgpyLgR8Q71Xhueki
-	odT3WHqy69tOe7mHC54+1fcIy/Im5uxO21IvPtFw2X35YbflydvAKQLsETO4CXPhk22akfsQ37xfY
-	vdljnqMA==;
+	bh=wV5Ch2f/rekMRnAGWDqppVh4gVRb99fHt2UOyp/e2N0=; b=2bCrraAwUOpW1TEx68RnN2KnJs
+	GjUreoMh1mEP1u9s/NnAwBSeCFcsG+H+cTPz7IuJIPGg1vNJwIxUAhrYZb+0xQTc5TfshTYSfVwtH
+	C5e00AApqEJSPadLzEuGRJ6oDWRqj/Uc+DY6mJmgUFjhhY5wRMxQl8S8NlIcO7o0zE7RVJ8/vJyVt
+	vnixWvuMThLgIvSQQB+Br2o/xLyxCZ16XkHHvEwkp1QdvGQWt28lL9WXR+401sCF52IhaN8BcI4H+
+	sabfYUKfEi19EUZrn5Jck/Fj/iI3GJdWrXli2HWIDMHELNMyK7vKoUYLgesE2PUnOni8Y0Zo8wIWd
+	pZAZzC/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKO-0000000Dt8d-3fkz;
-	Wed, 27 Nov 2024 19:03:56 +0000
+	id 1tGNKP-0000000Dt9E-1Ej8;
+	Wed, 27 Nov 2024 19:03:57 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKJ-0000000Dt0t-33fE
+	id 1tGNKJ-0000000Dt10-33qF
 	for kexec@bombadil.infradead.org;
 	Wed, 27 Nov 2024 19:03:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=G8KdxSUjA1BoxOPlX8D0AVdJHTOMU4u9sPbtmHj+Y10=; b=oozLZbrufgQLvjMvST9Tk0OoKX
-	F2Y6DFOreM8CdHo3b6KM9q3DvDFNCM6NHxvnGFFWrqxJkP6gmQdl9RVPP4JY4rtmegp8a6X7Dmwde
-	Wse0mPybjCz99WPJYJsHyT928/VaWmqTtEO4IDpkBvwhlxTm3i9VI3cfl3nxODEMyq3vv9DhAt0hx
-	ncH0P1AWEumIdUc1qCf9y65HRZmR4q+K4TW4aoILXPp/JTL/6pnJ9XJx4NLmayRv+Y5+cn8/8SFMP
-	pqkxc+peG8tIhv3iGcx92fctxfId6z6jX1pvuYdVqRkuOMiuY4VK7IdLGG7V5sf7kBGXX4OeVfoXZ
-	zG73p7qg==;
+	bh=wV5Ch2f/rekMRnAGWDqppVh4gVRb99fHt2UOyp/e2N0=; b=ajAa6zngHwcn7K5Aa3M5D9KTC6
+	VAB7nGe2pyUne/Xv4EIWvecFnKgLWcBZKiF9bpSwKnlTffGJaoZ/n01mLHxEokcdPcwnBG0V10NxN
+	jPcm6sBdKJ9i56VFVyOalcgWe7cPe/Si9MZkZNBD9rWgjAKUiSKnm6gdbw+o8J2GncyHSDYsZF554
+	d+/yjrKqBbp3NrwuDCkCf9LhTuxwOMId3TNlFMztgIpzG5FBQrFzpMqPlJ4iYNViiBrjmvtl4YLWv
+	OLaVAKRkX6aJYfVH8Y9MVRghUVid/D6OrVEPo70Xyk91CYXJqPvXb4/vCxU7ZQPLNUI6xz/imUdt2
+	IOTEwGtA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKF-00000001Suc-17d4;
+	id 1tGNKF-00000001Sub-18GV;
 	Wed, 27 Nov 2024 19:03:47 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKD-00000000BiE-3dWr;
+	id 1tGNKD-00000000BiA-3OxZ;
 	Wed, 27 Nov 2024 19:03:45 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v4 02/20] x86/kexec: Clean up and document register use in relocate_kernel_64.S
-Date: Wed, 27 Nov 2024 19:00:16 +0000
-Message-ID: <20241127190343.44916-3-dwmw2@infradead.org>
+Subject: [RFC PATCH v4 01/20] x86/kexec: Restore GDT on return from preserve_context kexec
+Date: Wed, 27 Nov 2024 19:00:15 +0000
+Message-ID: <20241127190343.44916-2-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241127190343.44916-1-dwmw2@infradead.org>
 References: <20241127190343.44916-1-dwmw2@infradead.org>
@@ -87,71 +87,78 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-Add more comments explaining what each register contains, and save the
-preserve_context flag to a non-clobbered register sooner, to keep things
-simpler.
+The restore_processor_state() function explicitly states that "the asm code
+that gets us here will have restored a usable GDT". That wasn't true in the
+case of returning from a preserve_context kexec. Make it so.
+
+Without this, the kernel was depending on the called function to reload a
+GDT which is appropriate for the kernel before returning.
+
+Test program:
+
+ #include <unistd.h>
+ #include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <linux/kexec.h>
+ #include <linux/reboot.h>
+ #include <sys/reboot.h>
+ #include <sys/syscall.h>
+
+int main (void)
+{
+        struct kexec_segment segment = {};
+	unsigned char purgatory[] = {
+		0x66, 0xba, 0xf8, 0x03,	// mov $0x3f8, %dx
+		0xb0, 0x42,		// mov $0x42, %al
+		0xee,			// outb %al, (%dx)
+		0xc3,			// ret
+	};
+	int ret;
+
+	segment.buf = &purgatory;
+	segment.bufsz = sizeof(purgatory);
+	segment.mem = (void *)0x400000;
+	segment.memsz = 0x1000;
+	ret = syscall(__NR_kexec_load, 0x400000, 1, &segment, KEXEC_PRESERVE_CONTEXT);
+	if (ret) {
+		perror("kexec_load");
+		exit(1);
+	}
+
+	ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC);
+	if (ret) {
+		perror("kexec reboot");
+		exit(1);
+	}
+	printf("Success\n");
+	return 0;
+}
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Acked-by: Kai Huang <kai.huang@intel.com>
+Cc: stable@vger.kernel.org
 ---
- arch/x86/kernel/relocate_kernel_64.S | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 1236f25fc8d1..92478e2e254f 100644
+index e9e88c342f75..1236f25fc8d1 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -100,6 +100,9 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	%r10, CP_PA_SWAP_PAGE(%r11)
- 	movq	%rdi, CP_PA_BACKUP_PAGES_MAP(%r11)
- 
-+	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
-+	movq	%rcx, %r11
-+
- 	/* Switch to the identity mapped page tables */
- 	movq	%r9, %cr3
- 
-@@ -116,6 +119,14 @@ SYM_CODE_END(relocate_kernel)
- 
- SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	UNWIND_HINT_END_OF_STACK
-+	/*
-+	 * %rdi	indirection page
-+	 * %rdx start address
-+	 * %r11 preserve_context
-+	 * %r12 host_mem_enc_active
-+	 * %r13 original CR4 when relocate_kernel() was invoked
-+	 */
-+
- 	/* set return address to 0 if not preserving context */
- 	pushq	$0
- 	/* store the start address on the stack */
-@@ -170,8 +181,6 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	wbinvd
- .Lsme_off:
- 
--	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
--	movq	%rcx, %r11
- 	call	swap_pages
- 
- 	/*
-@@ -183,13 +192,14 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	movq	%cr3, %rax
+@@ -242,6 +242,13 @@ SYM_CODE_START_LOCAL_NOALIGN(virtual_mapped)
+ 	movq	CR0(%r8), %r8
  	movq	%rax, %cr3
- 
-+	testq	%r11, %r11	/* preserve_context */
-+	jnz .Lrelocate
+ 	movq	%r8, %cr0
 +
- 	/*
- 	 * set all of the registers to known values
- 	 * leave %rsp alone
- 	 */
++#ifdef CONFIG_KEXEC_JUMP
++	/* Saved in save_processor_state. */
++	movq    $saved_context, %rax
++	lgdt    saved_context_gdt_desc(%rax)
++#endif
++
+ 	movq	%rbp, %rax
  
--	testq	%r11, %r11
--	jnz .Lrelocate
- 	xorl	%eax, %eax
- 	xorl	%ebx, %ebx
- 	xorl    %ecx, %ecx
+ 	popf
 -- 
 2.47.0
 
