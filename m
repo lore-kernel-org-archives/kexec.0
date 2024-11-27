@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2CC4D6D229
-	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 19:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B7CED6D22D
+	for <kexec@archiver.kernel.org>; Wed, 27 Nov 2024 19:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=r3AYqthkhqE/hpsX8OlsrIm8YbRRATEjfUq8IVBi2fg=; b=YLtchR0D3rHyRzEEJM+9uWXZDP
-	V/uuDBfgw+K6wSfEmHPP4Hf1fIdO7/zzk/vg/7MdvGTfHptzX16u4vewPzLqHUmMn+goMgSf2po+S
-	Wo6ydRWlDjrIuRa2R6F0rvmAkQO7ckuuUD1CVuQelLQUbWokDskIaBl1eouQWmgn32lLHtPdVqCa3
-	OUW1DsBMPKHHjhHdwdgBde14VpFZBTU0QrwhhHpvstGidOyoD7Y9ARh6SBeJSVsyD1DFsyAlnJlin
-	3akcNGd+fTwwvL3PrCTLcXu+d8Run1/U7iK+9YbiDUCpQ7FzZvA6EnWa49ipM604BUN779xoi9RzT
-	g9597zGg==;
+	bh=n1NxLTesaxf1CmVmrYGt0DtpmfeNYvqyA55PeXFrYQI=; b=doLbhvA58uunBGv4B9rJWxMJmB
+	NsGDh7X2dd6wpJjq4DJ+wIoR0yhq6D4/Bn+JTJvNTpr6Pou8Bcuy0/lzRK8Jrd03A54ek3mj+U6hr
+	JwqxDhVAmSVDRluExpCLWE0KRQ16Dybk2ZhH1hhhag3Vn6FmM5g0Enqpg2eJ1xN4SFBml/Qe1u9qf
+	yhhi1fZIZVADp7AicczXPDQwOXN7ne2yCuukSNGHoIGc6QtGY3/D6OMNyF7iUXlh6AwOmQnKO90Bo
+	udtJLJlhJyVtbkuY4WmgsJ0IZ6+trCMd+lWQ8JFwxq3ja5aiEayUCmjsIGEOPg9/2kdLtn4OEy+zD
+	5Z0yLNgw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKN-0000000Dt6M-25i2;
+	id 1tGNKN-0000000Dt79-46sn;
 	Wed, 27 Nov 2024 19:03:55 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKJ-0000000Dt0w-33qP
+	id 1tGNKJ-0000000Dt12-33Qx
 	for kexec@bombadil.infradead.org;
 	Wed, 27 Nov 2024 19:03:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=r3AYqthkhqE/hpsX8OlsrIm8YbRRATEjfUq8IVBi2fg=; b=c6yI3hXuTHaVrvxd1yVnHBVNij
-	96A37jM/iCQUDKVKAlMQN8W8+Yr5+O/MCkQEvvGDHyzlceX95tnVQ54UTGjTo95FsiCzt8tHlqxjc
-	c7qG6T1XRoLA4sUABomX1yNBJDmi7TQO5p1nmcSXdtWaeC40ulDx7Om9isCCmryt1PDt9CFinKN6D
-	unqbwGZsLVdRZlU1D5ss+qnhvrbroS/4iJgXIL6lrH23QI6ZibbR1wH16QYsNmVFcgNrYbypb3sVK
-	etkrF/ftkKgYc/ACKnfRrGfJFJ1B6aUf/mUu/cX/rfcI0BSjIRQHATtN5B0LP33wtqiSTfY2TMOKx
-	wN42K1VA==;
+	bh=n1NxLTesaxf1CmVmrYGt0DtpmfeNYvqyA55PeXFrYQI=; b=cIpbPcdhiv/PxCBrA0udVBYnUb
+	jd6ot3jhec8XiieDBZTWAPnUeNeFCD3UDuRMG/y2mzrEK75n29vfsgS4GobkTq6RnUrhNjNtj1I6N
+	1C5cf7nVS3T+bi1e/pByQuKlAq/K1uUE0iJJ4bQKsLBTLQYjkSiw4SlMv0MFdDxd64aJVrVfe5W3a
+	xbrr6uSzejIarUWPhENLx4HgcL7MehRPW+i3qC/PohAnOjFBjel5Ga4+FZEvtjVDid1ViAdV0z3NV
+	7ZPnp732MaB2zlOkhuHr0WeExPfHFaP5LHXzumzFo2aq2FB2r1+KJmtEX2ocPPkJ70qPDNaY/OFsN
+	4sxXSfVg==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKF-00000001Sul-17l5;
+	id 1tGNKF-00000001Suh-1855;
 	Wed, 27 Nov 2024 19:03:47 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGNKE-00000000BjT-3JcL;
+	id 1tGNKE-00000000Bj6-2Qt6;
 	Wed, 27 Nov 2024 19:03:46 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [RFC PATCH v4 20/20] [DO NOT MERGE] x86/kexec: Add int3 in kexec path for testing
-Date: Wed, 27 Nov 2024 19:00:34 +0000
-Message-ID: <20241127190343.44916-21-dwmw2@infradead.org>
+Subject: [RFC PATCH v4 15/20] x86/kexec: Add CONFIG_KEXEC_DEBUG option
+Date: Wed, 27 Nov 2024 19:00:29 +0000
+Message-ID: <20241127190343.44916-16-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241127190343.44916-1-dwmw2@infradead.org>
 References: <20241127190343.44916-1-dwmw2@infradead.org>
@@ -87,24 +87,32 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
+This does nothing yet.
+
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/Kconfig.debug | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 01a31e4a0664..ff8a813a9f9b 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -152,7 +152,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	lidt	(%rsp)
- 	addq	$10, %rsp
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 74777a97e394..9dde32865a9b 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -56,6 +56,14 @@ config EARLY_PRINTK_USB_XDBC
+ 	  You should normally say N here, unless you want to debug early
+ 	  crashes or need a very simple printk logging facility.
  
--	//int3
-+	int3
- #endif /* CONFIG_KEXEC_DEBUG */
- 
- 	/*
++config KEXEC_DEBUG
++	bool "Debug kexec transition"
++	depends on KEXEC_CORE && EARLY_PRINTK
++	help
++	  Faults during kexec can be difficult to debug. This installs exception
++	  handlers and attempts to report faults through the same serial port as
++	  used for early_printk.
++
+ config EFI_PGT_DUMP
+ 	bool "Dump the EFI pagetable"
+ 	depends on EFI
 -- 
 2.47.0
 
