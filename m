@@ -4,90 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9D0BD690EB
-	for <kexec@archiver.kernel.org>; Thu, 28 Nov 2024 08:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33AD0D69114
+	for <kexec@archiver.kernel.org>; Thu, 28 Nov 2024 15:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=5NSN/0lDne+akCm3WWKmwH1H6R/w4T/EKwLN1O8iNGQ=; b=J8TYnr8rhf6eG0/fv6W9tV2clw
-	jtdVjzQqXGQQ6v+i1qDZglHz0XQnJednNm4cDty1oMNNtVWdQbTfeMGn6YMNfldglk0y8UJ/2hF47
-	E/Et8TfPRLCS4W+m4iMyNxomXj86q8ARnOfWwmLZjiBvsTivVfqkrrnQYTYQL2GKXsAlW13XXjXrK
-	bYlIHKPa3oGOPuAMf129eZlWcM8oVD1qVqqi0qkUFIqRH8xwtrGAiK0oK0hfV3xw9/fZvpneJlXqv
-	T+evs3CX+y2Xt0mOiXeWmJ/7gKMY3hK5TH96kiyo5J33prxWi5UuKtq4n/AjT0KAo6qvmNYVjreRg
-	uLK6kAnA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Id6THo/fI6vVef/8Eixc+rBcXSt5nmBVRnKcFs3SFmM=; b=SP/WX0kEWrdWqbiQv56z+9k/a4
+	Pb7UgBNu0fE+6oafPA/VqCTYicRhfLjNRekpy27M2XiZye/oF9GyedBShI5USrl/58/XSgOBy4TxK
+	eS2PJ9PRbhvSYSI+PDQRZAN4AZSwE5Tl5gig4lgtHofCGriXVBdZpG1G3jp0nQJNXpbLpUaDNWIKv
+	mDnquOdSeiws9d0LumqdHRK1zPZ04Yk18vvLb6abcunUq1K8UPryc4INx/TKkUHL9wQfRGt6ljj2v
+	un4xuKVpYvtABbKg91fjV2RErqavBI/B7zF58/56ZTnWUxJRz4hBBl0ZbRJ9Teksw1XBJrdTkHQjZ
+	fsb1JZyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGZsZ-0000000F0Bg-3Hpr;
-	Thu, 28 Nov 2024 08:28:03 +0000
-Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	id 1tGgNE-0000000FsXA-3dxw;
+	Thu, 28 Nov 2024 15:24:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGZrP-0000000Ezwe-3oTs
+	id 1tGgIr-0000000FriI-3rSs
 	for kexec@lists.infradead.org;
-	Thu, 28 Nov 2024 08:26:53 +0000
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-21238b669c5so56395ad.0
-        for <kexec@lists.infradead.org>; Thu, 28 Nov 2024 00:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732782410; x=1733387210; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5NSN/0lDne+akCm3WWKmwH1H6R/w4T/EKwLN1O8iNGQ=;
-        b=YHUYIqIQOYGoPpfnuvPAf1mlg6FIzmkeMqQ/YZUDJ6RJisXZyerUiAt4h+Rq8hPNLM
-         h0weE5LoQT8Y/iBJa1Gp/6OCwRchL3jkd52uycK3/SwIpUj5697j4FksUpZt4oyXLqKA
-         Oej1PkjKbRH2ILAY1YZTXe0Yy6pZdhYZtkYIDHdGicnIU24Z0LtHoRRgggT+BvvZZPD4
-         bNEUA0l/aCgqddL4LxeYcoQh4q5XUM/2YrV0meC7HU2dyFadmryqOdE4kS6Tdn0w39CP
-         NM2vNB0VEpTxvxbYIbErg8pGnIo9YxFk4HoZpwBN92tFwclrFjSdFYNLgEy7FNSyN/m5
-         BtkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732782410; x=1733387210;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5NSN/0lDne+akCm3WWKmwH1H6R/w4T/EKwLN1O8iNGQ=;
-        b=tWiQ9ggiJArXp8Pt2mSXXPX7DtS9BPUt0utY+BR5iEpB6rbh9CbA5YEKrLi7HL0bHd
-         Xk89QAWag44r+373F3b7aNFUFlnHLa2cJHIOZ8vLt4u7W/CwxUqKPcW54h5mTq1e3ATP
-         fYhHtSJiY0/RPc17/almjnIEP2UewXZedpHz47607Kz30cvHrKiWgEHjWaami4S9P0O8
-         VOBRkeVYMu/tiXbcVGZNVuquwSlej0zzmYZyAHYN5vZcdTKgLhR6ihcPavH1doA7cBLC
-         LiyT3zkVmvpazb70nSrs15LVOygXYGFQkJyN0p8nxHNSllVeCSz8YYLCOirpDllmDS5N
-         4BXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCtBP6ehjH2QFpogG1vkP84B4m72D0MIKUAAFrf/Ojxaxqh5YkPfkNEhWHgwra+RR1C2DMkQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz3Zeuadm9QmLH5tYN1kH+gYNUlGSFuMnOOnPz+mddtt/xngiOF
-	Rqqi+XuMG3alCkZ5c8xqJAd6/qZzIIwo2eBh/q5aNCnegQCuC/4HT46FEwONww==
-X-Gm-Gg: ASbGncvQwU5ljGa0bWRxaPQrvX001uYhmkjqcdYpM3AG2GqR0X3Xh8D9Kv3PtMIA1ZS
-	VQluM4B6d4q5pyCPf5sQLpOYCEPemabw6fPVpwElVujYMN/vf7//sBkB/W67BkqITKOGyI2Q/PN
-	v46GHGw8VT4wiod2CgeUJ9EnQnu6sJ3J8dn8xNHxLS797DRT9oXKNKmI4jahCmQqMq/xvTj6JQY
-	dk408i7ohGyFwc1RcbKoNIiLEb4hNym88kti83E0vAu7ZWb6JI8hFO0XVuGiJPzEEz/Jn3/zv10
-	vA==
-X-Google-Smtp-Source: AGHT+IEtj8CkDXMiXmCbKs6BX4Rxy94ikWgsDJaNIhQ2jSby+1T+GFcvsbimQUMi0XtSxOhhPkA3uw==
-X-Received: by 2002:a17:902:f649:b0:20c:e8df:2500 with SMTP id d9443c01a7336-21521acaba3mr989185ad.3.1732782410032;
-        Thu, 28 Nov 2024 00:26:50 -0800 (PST)
-Received: from [2620:0:1008:15:730:7cb8:2b36:45fd] ([2620:0:1008:15:730:7cb8:2b36:45fd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72541770349sm932627b3a.76.2024.11.28.00.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 00:26:49 -0800 (PST)
-Date: Thu, 28 Nov 2024 00:26:48 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: James Gowans <jgowans@amazon.com>, Dave Hansen <dave.hansen@intel.com>, 
-    David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
-    Mike Rapoport <mike.rapoport@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Alexander Graf <graf@amazon.com>, 
-    David Woodhouse <dwmw@amazon.co.uk>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Frank van der Linden <fvdl@google.com>, Vipin Sharma <vipinsh@google.com>, 
-    David Matlack <dmatlack@google.com>, Junaid Shahid <junaids@google.com>, 
-    "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-    Pratyush Yadav <pratyush@kernel.org>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: Kexec HandOver (KHO) discussion recap and open questions
-Message-ID: <52e189fa-bbb4-f031-8a64-716ddee14599@google.com>
+	Thu, 28 Nov 2024 15:19:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732807175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Id6THo/fI6vVef/8Eixc+rBcXSt5nmBVRnKcFs3SFmM=;
+	b=EIyJSqykR956lAqGSnGBvdacaqUxa+rGJe5xbAOwiq4j/RxFy5iCh0fp6NDBbcPTRCM+Hz
+	scodyMB0DLcU47ubVhFfoNssKqWPLE7iv0cuRUgSoZXsEjNWnhgcRnksrYKmVV2cZIdSwH
+	seyyCIiYZBYT5pXu0khby8oH9Zn1Q6Q=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-dqbCfCTmNz2cQMULusPfFw-1; Thu,
+ 28 Nov 2024 10:19:31 -0500
+X-MC-Unique: dqbCfCTmNz2cQMULusPfFw-1
+X-Mimecast-MFC-AGG-ID: dqbCfCTmNz2cQMULusPfFw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91E1C19560AB;
+	Thu, 28 Nov 2024 15:19:27 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.10])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99DF1195605A;
+	Thu, 28 Nov 2024 15:19:25 +0000 (UTC)
+Date: Thu, 28 Nov 2024 23:19:20 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, x86@kernel.org,
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH] kexec_core: Accept unaccepted kexec destination addresses
+Message-ID: <Z0iJ+DTPA2IkVDx7@MiWiFi-R3L-srv>
+References: <20241021034553.18824-1-yan.y.zhao@intel.com>
+ <87frop8r0y.fsf@email.froward.int.ebiederm.org>
+ <tpbcun3d4wrnbtsvx3b3hjpdl47f2zuxvx6zqsjoelazdt3eyv@kgqnedtcejta>
+ <87cyjq7rjo.fsf@email.froward.int.ebiederm.org>
+ <ZxmRkUNmx863Po2U@yzhao56-desk.sh.intel.com>
+ <Z0WzHZ+fNn6WuH/E@MiWiFi-R3L-srv>
+ <Z0bt4HXAKqM3C1ZW@yzhao56-desk.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z0bt4HXAKqM3C1ZW@yzhao56-desk.sh.intel.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241128_002651_974283_5843F22F 
-X-CRM114-Status: GOOD (  42.24  )
+X-CRM114-CacheID: sfid-20241128_071938_032732_2AE89A03 
+X-CRM114-Status: GOOD (  53.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,206 +91,137 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+On 11/27/24 at 06:01pm, Yan Zhao wrote:
+> On Tue, Nov 26, 2024 at 07:38:05PM +0800, Baoquan He wrote:
+> > On 10/24/24 at 08:15am, Yan Zhao wrote:
+> > > On Wed, Oct 23, 2024 at 10:44:11AM -0500, Eric W. Biederman wrote:
+> > > > "Kirill A. Shutemov" <kirill@shutemov.name> writes:
+> > > > 
+> > > > > Waiting minutes to get VM booted to shell is not feasible for most
+> > > > > deployments. Lazy is sane default to me.
+> > > > 
+> > > > Huh?
+> > > > 
+> > > > Unless my guesses about what is happening are wrong lazy is hiding
+> > > > a serious implementation deficiency.  From all hardware I have seen
+> > > > taking minutes is absolutely ridiculous.
+> > > > 
+> > > > Does writing to all of memory at full speed take minutes?  How can such
+> > > > a system be functional?
+> > > > 
+> > > > If you don't actually have to write to the pages and it is just some
+> > > > accounting function it is even more ridiculous.
+> > > > 
+> > > > 
+> > > > I had previously thought that accept_memory was the firmware call.
+> > > > Now that I see that it is just a wrapper for some hardware specific
+> > > > calls I am even more perplexed.
+> > > > 
+> > > > 
+> > > > Quite honestly what this looks like to me is that someone failed to
+> > > > enable write-combining or write-back caching when writing to memory
+> > > > when initializing the protected memory.  With the result that everything
+> > > > is moving dog slow, and people are introducing complexity left and write
+> > > > to avoid that bad implementation.
+> > > > 
+> > > > 
+> > > > Can someone please explain to me why this accept_memory stuff has to be
+> > > > slow, why it has to take minutes to do it's job.
+> > > This kexec patch is a fix to a guest(TD)'s kexce failure.
+> > > 
+> > > For a linux guest, the accept_memory() happens before the guest accesses a page.
+> > > It will (if the guest is a TD)
+> > > (1) trigger the host to allocate the physical page on host to map the accessed
+> > >     guest page, which might be slow with wait and sleep involved, depending on
+> > >     the memory pressure on host.
+> > > (2) initializing the protected page.
+> > > 
+> > > Actually most of guest memory are not accessed by guest during the guest life
+> > > cycle. accept_memory() may cause the host to commit a never-to-be-used page,
+> > > with the host physical page not even being able to get swapped out.
+> > 
+> > So this sounds to me more like a business requirement on cloud platform,
+> > e.g if one customer books a guest instance with 60G memory, while the
+> > customer actually always only cost 20G memory at most. Then the 40G memory
+> > can be saved to reduce pressure for host.
+> Yes.
 
-We had a great discussion today led by Mike Rapoport and James Gowans in
-the Linux MM Alignment Session, thank you both!  Thanks to everybody who
-attended and provided great questions, suggestions, and feedback.
+That's very interesting, thanks for confirming.
 
-Kexec HandOver (KHO)[1] is a proposal that enables compatible drivers to
-hand over their state to the kexec kernel.  Mainly geared toward enabling
-live updates for cloud providers, so that the host kernel can update
-without disruption to virtual machines, additional use cases have also
-been discussed such as persistence for database workloads.
+> 
+> > I could be shallow, just a wild guess.
+> > If my guess is right, at least those cloud service providers must like this
+> > accept_memory feature very much.
+> > 
+> > > 
+> > > That's why we need a lazy accept, which does not accept_memory() until after a
+> > > page is allocated by the kernel (in alloc_page(s)).
+> > 
+> > By the way, I have two questions, maybe very shallow.
+> > 
+> > 1) why can't we only find those already accepted memory to put kexec
+> > kernel/initrd/bootparam/purgatory?
+> 
+> Currently, the first kernel only accepts memory during the memory allocation in
+> a lazy accept mode. Besides reducing boot time, it's also good for memory
+> over-commitment as you mentioned above.
+> 
+> My understanding of why the memory for the kernel/initrd/bootparam/purgatory is
+> not allocated from the first kernel is that this memory usually needs to be
+> physically contiguous. Since this memory will not be used by the first kernel,
+> looking up from free RAM has a lower chance of failure compared to allocating it
 
------>o-----
-Mike noted there have been several memory persistence proposals over the
-past ten years: PRAM[2], PKRAM[3], persistent memory pools[4], prmem[5],
-and now KHO + guestmemfs[6].  The goal for KHO is to provide a framework
-for drivers to hook into and describe state while preserving arbitrary
-non-GFP_MOVABLE memory pages.
+Well, there could be misunderstanding here.The final loaded position of
+kernel/initrd/bootparam/purgatory is not searched from free RAM, it's
+just from RAM on x86. Means it possibly have been allocated and being
+used by other component of 1st kernel. Not like kdump, the 2nd kernel of
+kexec reboot doesn't care about 1st kernel's memory usage. We will copy
+them from intermediat position to the designated location when jumping.
 
-On x86, the DT is not required to boot and is passed through when data
-is filled in during the kexec.  Kirill Shutemov noted there's been a use
-of EFI configuration tables which was used for unaccepted memory to pass
-a bitmap of which memory has been accepted already.
+If we take this way, we need search unaccepted->bitmap top down or
+bottom up, according to setting. Then another suit of functions need
+be provided. That looks a little complicated.
 
-Mike described scratch memory as a CMA range reserved by the first kernel
-to be leveraged for GFP_MOVABLE during the lifetime of that kernel, but
-when used for kexec for the new kernel, it will use this scratch region
-as the only available memory.  This guarantees that memory that we want
-to persist across kexec remains outside of the usage of the first kernel.
-James thinks of this as a chunk of ephemeral memory, memory that will be
-blown away during kexec to be used as early memory.
+kexec_add_buffer()
+-->arch_kexec_locate_mem_hole()
+   -->kexec_locate_mem_hole()
+      -->kexec_walk_memblock(kbuf, locate_mem_hole_callback) -- on arm64
+      -->kexec_walk_resources(kbuf, locate_mem_hole_callback) -- on x86
+         -->walk_system_ram_res_rev()
 
------>o-----
-Pasha Tatashin asked what attributes affect the reboot performance in
-terms of being proportional to the amount of memory preserved, for
-example if you have one large preserved region this would be fast
-because there is only thing we'd need to reserve.  Mike noted that we
-wanted to use the scratch area all the way up until the buddy allocator
-was active.  For preserved pages, we don't push these to buddy allocator
-freelists.
+Besides, the change in your patch has one issue. Usually we do kexec load to
+read in the kernel/initrd/bootparam/purgatory, while they are loaded to
+the destinations till kexec jumping. We could do kexec loading while 
+never trigger the jumping, your change have done the accept_memory().
+But this doesn't impact much because it always searched and found the
+same location on one system.
 
-Pasha noted if we had one large area of persistence, this may be faster,
-and suggested it would be up to the device to carve this memory out.
-Mike noted there were earlier proposals for this that were not well
-received, although could be an extension later but not as part of KHO.
+> from the first kernel, especially when memory pressure is high in the first
+> kernel.
+> 
+>  
+> > 2) why can't we accept memory for (kernel, boot params/cmdline/initrd)
+> > in 2nd kernel? Surely this purgatory still need be accepted in 1st kernel.
+> > Sorry, I just read accept_memory() code, haven't gone through x86 boot
+> > code flow.
+> If a page is not already accepted, invoking accept_memory() will trigger a
+> memory accept to zero-out the page content. So, for the pages passed to the
+> second kernel, they must have been accepted before page content is copied in.
+> 
+> For boot params/cmdline/initrd, perhaps we could make those pages in shared
+> memory initially and have the second kernel to accept private memory for copy.
+> However, that would be very complex and IMHO not ideal.
 
------>o-----
-Pasha also asked whether persistence being specified during page
-allocation was still being considered for the design.  Mike believed this
-to be outside the scope of KHO.  James chimed in that any unmovable
-allocation could potentially be in scope for being preserved, and the
-use of persistent memory pools[4] could be done on top of KHO.  Callers
-could use these pools instead of general kernel memory allocations.
-Pasha noted this may be useful for some device drivers, although James
-noted changing allocations to do this was decided to not be a hard
-requirement.
+I asked this because I saw your reply to Eric in another thread, quote
+your saying at below. I am wondering why kernel can accept itself, why
+other parts can't do it similarly.
+=====
+Yes, the kernel actually will accept initial memory used by itself in
+extract_kernel(), as in arch/x86/boot/compressed/misc.c.
 
-Pasha asked whether the DT could be recreated before the reboot or only
-during serialization time.  Mike noted the DT was currently recreated on
-kexec load, not kexec execute, which was something still to address.
-Pasha noted that removing kexec load from the critical path would very
-much be needed.  James clarified that this was not exactly kexec load,
-but rather KHO's own activate phase which is driven by userspace right
-before the actual kexec.
+But the target kernel may not be able to accept memory for purgatory.
+And it's currently does not accept memory for boot params/cmdline,
+and initrd .
+====
 
-Mike agreed that this should be decoupled from kexec load and that we
-should be able to create the DT long before kexec execute.
-
------>o-----
-Kirill asked if the use case would differ at all between crash kernels
-and this use case.  Pasha noted that we could load the new kernel in the
-same way that the crash kernel is loaded today and then reboot when
-needed.
-
-Pasha noted this would be useful for storing state even before the
-shutdown, for things like kernel logs of the original kernel.
-
------>o-----
-Mike noted that the CMA area intended to be repurposed as the scratch
-area would be available as the same length for any future kexec as well.
-IOW, kernel n+1 would have the same size of scratch as kernel n.  The CMA
-area can only allocate movable allocations, which guarantees that no
-persistent memory is allocated from the scratch space.
-
-Pratyush Yadev noted that if we run out of memory that we could extend
-the scratch area, we would be able to use ranges of memory that are not
-used but this is not guaranteed to be available.  Mike acknowledged that
-running out of memory could become a problem since reclaiming from other
-memory and creating contiguous ranges out of it would only be best
-effort.
-
-I asked if this memory is carved out by the kernel command line and needs
-to be consistent between the original kernel and the kexec kernel.  Mike
-clarified that the CMA area is currently sized automatically based on the
-number of memblock allocations in the first kernel.  There was debate
-about whether this sizing should be automatically discovered or
-explicitly declared on the kernel command line, like crash kernel use
-cases.  This memory is not throwaway memory since it can be used by the
-original kernel before kexec, since it can be used for movable
-allocations at runtime.
-
------>o-----
-Junaid Shahid asked about preserving any non-movable allocation, the
-concern was that the kexec kernel would be doing buddy allocations from
-the CMA region that were non-movable and if we preserve them then we
-would have less scratch area available for the following kernel after
-that.  Mike clarified that the assumption was that we'll never preserve
-movable allocations and CMA does not allow non-movable allocations to be
-allocated from its areas, and the allocations using this scratch area are
-also not preserved.
-
------>o-----
-Pratyush noted he has been working on supporting persistent tmpfs on top
-of KHO using its own structure that has a "stable" version.  Kirill
-expressed the concern that we need to be careful because it becomes part
-of the kernel ABI.
-
-Pratyush, would it be possible to share your example code that you were
-referring to in chat today in response to this thread?
-
------>o-----
-The question came up about whether we should port hugetlbfs to use KHO
-and whether this would be useful for database workloads.  Matthew Wilcox
-noted hugetlbfs is used as a replacement for anonymous memory for the
-database, effectively as a way to share memory that would be anonymous
-across multiple processes (it's the database's page cache).  Matthew was
-unsure if this would need to be persistent across kexec.
-
-Mike noted another example would be virtual machines that use hugetlbfs
-instead of VM_PFNMAP memory and has been thinking about how to do this
-by serializing the superblock and inodes.  Matthew reiterated what he has
-said before at conferences, which is that we need to get filesystem
-experts involved when designing filesystems :)
-
------>o-----
-James observed that we should continue the discussion about when
-serialization happens: when we freeze things, what it means to become
-immutable, what point in the kexec process we do this.
-
------>o-----
-My takeaway:
-
- - we likely want to consider reboot performance as a key input into
-   design decisions
-
- - we should determine whether persistent memory pools, used for
-   allocations that indicate the require persistence across kexec, will
-   be out of scope for the initial landing of KHO upstream
-
-   + if outside of scope for the initial landing of KHO, we could discuss
-     a layer on top of KHO that could be used for allocations that want
-     to indicate their need for persistence at the time of allocation
-
- - we need to decide if DT recreation can happen as part of kexec execute
-   instead of kexec load and how to avoid having kexec load as part of
-   the critical path; Mike agreed this should be decoupled from kexec
-   load
-
- - we should explore loading the kexec kernel, like for crash kernels,
-   in memory whenever we want, which has some advantages noted above
-
- - we need to decide if the sizing of the scratch area should be done
-   automatically based on memblock allocations or if it should be
-   explicitly carved out by the kernel command line, including adding
-   more buffer room if declared that will be needed for future kexec
-   kernels
-
- - we need to decide what the minimal feature set required for the
-   initial upstream landing would be and we brainstormed this as
-   extending the scratch phase until the buddy allocator is up and
-   running, adding KHO support for reserve_mem, NUMA support, and
-   multiple scratch regions
-
- - we need to decide on the initial set of use cases for KHO, Mike noted
-   that reserve_mem is likely the best fit here given its straight
-   forward; we should also discuss if hugetlbfs is a likely candidate as
-   well
-
-Mike also noted that he is planning on sending out the next verison of
-KHO based upon the original work from Alex by the end of this year.
-
-We'll be looking to continue the discussion on this topic, as well as
-guestmemfs as an in-memory persistent file system, to accelerate progress
-and land foundational support in the kernel.  For this, we'd like to fork
-off a biweekly series focused exclusively on persistent guest memory and
-live updates through kexec.
-
-If you are interested in participating in this series of discussions,
-please let me know in email.  Everybody is welcome to participate and
-we'll have summary email threads such as this one to follow-up on the
-mailing lists.
-
-Thanks!
-
-[1] https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com/
-[2] https://lore.kernel.org/lkml/cover.1372582754.git.vdavydov@parallels.com/
-[3] https://lore.kernel.org/kexec/1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com/
-[4] https://lore.kernel.org/all/169645773092.11424.7258549771090599226.stgit@skinsburskii./
-[5] https://lore.kernel.org/linux-mm/20231016233215.13090-1-madvenka@linux.microsoft.com/
-[6] https://lore.kernel.org/all/20240805093245.889357-1-jgowans@amazon.com
-
-Also interesting, pkernfs: https://lpc.events/event/17/contributions/1485/
 
