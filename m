@@ -4,81 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EBCD9D70E02
-	for <kexec@archiver.kernel.org>; Fri, 29 Nov 2024 01:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61A14D70E09
+	for <kexec@archiver.kernel.org>; Fri, 29 Nov 2024 02:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AcoPBJqPfnrqXfE0kcWaR5Iv2I/oXQF2u1YaC3xN78U=; b=Diqm1Qd01VZ8gRFr3AseJS3Vmk
-	Uqw7SLPNJ4+/GRB+9wbE2+a7cop9XqX2UIdOiDo7fkvKCvaGgUe6ZvOfVg+nV3g4PwM/lrGJAnKR1
-	Vi7/tuIBGx4l+aEVd1Hgj8mK/ES4n80q5uHi5pJ0McadfsxLqQHiY6gZ0G+QM5cxHTLjxzJ5RkrMK
-	Z7MbME3nlcg1FKJQDS/JkyY3jYbjpZxfcVF72MbvImmJfHuPS6d5cpLUVNHFg3IJZDjXCzFGQ+Xy7
-	pvga9TBzvriSGczNPNu/smg6PC2HhuUT1mMa8DpUE3tKssly6yCEzKmeO6RG42Cdul8/HTNcgis10
-	bt++yEpA==;
+	bh=Hk9zMoDcE5wyq5i77c/JybahqCDfXnjy6iN9kcroPaI=; b=vcXzk4yzRwplox5F4iaDTSAxlf
+	PQyfYF3pk9Q2WUf3OgqewhyK/ZjEvmKOfYnuesUB7oJz+DL0vXY/CfnOWo3DOG4B0sozSbuPOMgjG
+	AhZMjgOMT2QCC1ech4eBsCvQx3v1kAX8i0ZNpqZwxp4vF5SBLetaom2oap/c4OJCGshwyDzojwu7K
+	rsfwjrUe7qV9khFzhIjrhaAwtIMAOp/CdMcPu2mRacGDG/zz1hlFdvQ/maaWo0fcIuIg7PWHssqjn
+	ZZKOPPPw/c46MKf25FdzntinqcHAfuEj/IE1+i+PZCUfbi4KtCRFs6INqjw6O5vG2HcX425E13ktv
+	Ms4b4tSg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGpyV-0000000Gggc-22a6;
-	Fri, 29 Nov 2024 01:39:15 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tGr3C-0000000GlU7-16pB;
+	Fri, 29 Nov 2024 02:48:10 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tGpyS-0000000Ggg4-0Si6
-	for kexec@lists.infradead.org;
-	Fri, 29 Nov 2024 01:39:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732844350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AcoPBJqPfnrqXfE0kcWaR5Iv2I/oXQF2u1YaC3xN78U=;
-	b=bdtnOufdRy9uDYAeYRVflbjnCMEHQsahgVS+HgXZ1g6mZ4jq15rzO17uq6tjMyXx1wU9u0
-	BaP9/75tEMv5B9NBNCXRJyMEP/FHPsUjC6fyfA+dn57vXrSguVZKR5/0LUONvmkmbi1pf+
-	gky1DhnC5piR1ggdmqf+V/vjbX1ER3I=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-aGobfphdNmyZWDPCBvHQVw-1; Thu,
- 28 Nov 2024 20:39:07 -0500
-X-MC-Unique: aGobfphdNmyZWDPCBvHQVw-1
-X-Mimecast-MFC-AGG-ID: aGobfphdNmyZWDPCBvHQVw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 513CC195609F;
-	Fri, 29 Nov 2024 01:39:05 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B91DB300018D;
-	Fri, 29 Nov 2024 01:39:02 +0000 (UTC)
-Date: Fri, 29 Nov 2024 09:38:58 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v6 1/7] kexec_file: allow to place kexec_buf randomly
-Message-ID: <Z0kbMm0HCZQcD2bI@MiWiFi-R3L-srv>
-References: <20241029055223.210039-1-coxu@redhat.com>
- <20241029055223.210039-2-coxu@redhat.com>
+	id 1tGr2B-0000000GlLG-3Pb0;
+	Fri, 29 Nov 2024 02:47:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732848428; x=1764384428;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Iyi+W+JKz0EAQaKtqkrUOsmAFLfBMZSMkSfcKblxaS8=;
+  b=EfR79ps/Zq19V7DvvfS32GHvgNoZVclNdj80OyTQOlBgEhsjEs79PUK7
+   UhywD7O+RVAf+T9r5ex0rpavz3lUbSPvZWYpGEENqJPCvm6Sks+bBgIr0
+   aRImfe3eryW6rosatUhR0MExuR0aLdRxh6wwzVIRkNDIE2Q982rwFLg7Z
+   +KLAykMCVbzz+8MPYNJY0hg9AEQW9n9YsVIo3Ecy1L+9BSuMbf4Qjz1de
+   YS9MT0X11gjxLV/uqaxVftW90q+BPSwxxFWNaDTovx51Fj5XvyqdrxSPq
+   YIA5ZjA9VfqsZKcRub0mV2r0jedB1IE1syCwJ6DAFZbMLgdFTmdPE+OSq
+   Q==;
+X-CSE-ConnectionGUID: DZ4DLcERRWmpApC1BSdRDg==
+X-CSE-MsgGUID: BiKnfxbhSmGjFUL4m6Ko+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="33137820"
+X-IronPort-AV: E=Sophos;i="6.12,194,1728975600"; 
+   d="scan'208";a="33137820"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 18:47:04 -0800
+X-CSE-ConnectionGUID: OcwmjXnURpODgunOkehPOg==
+X-CSE-MsgGUID: eL24zCVPSSGLJuhXw/TONg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,194,1728975600"; 
+   d="scan'208";a="92554387"
+Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Nov 2024 18:46:57 -0800
+Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tGr1y-000AGR-2s;
+	Fri, 29 Nov 2024 02:46:54 +0000
+Date: Fri, 29 Nov 2024 10:46:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Eliav Farber <farbere@amazon.com>, linux@armlinux.org.uk,
+	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org,
+	maddy@linux.ibm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, tglx@linutronix.de, ebiederm@xmission.com,
+	akpm@linux-foundation.org, bhe@redhat.com, hbathini@linux.ibm.com,
+	sourabhjain@linux.ibm.com, adityag@linux.ibm.com,
+	songshuaishuai@tinylab.org, takakura@valinux.co.jp,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	kexec@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, jonnyc@amazon.com
+Subject: Re: [PATCH v3 1/2] kexec: Consolidate
+ machine_kexec_mask_interrupts() implementation
+Message-ID: <202411291047.R9P698b2-lkp@intel.com>
+References: <20241128201027.10396-2-farbere@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029055223.210039-2-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20241128201027.10396-2-farbere@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241128_173912_241606_57A7AF76 
-X-CRM114-Status: GOOD (  25.82  )
+X-CRM114-CacheID: sfid-20241128_184707_901957_6AFC74CE 
+X-CRM114-Status: GOOD (  13.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,108 +96,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/29/24 at 01:52pm, Coiby Xu wrote:
-> Currently, kexec_buf is placed in order which means for the same
-> machine, the info in the kexec_buf is always located at the same
-> position each time the machine is booted. This may cause a risk for
-> sensitive information like LUKS volume key. Now struct kexec_buf has a
-> new field random which indicates it's supposed to be placed in a random
-> position.
+Hi Eliav,
 
-This change the generic code, but you don't mention this only takes
-effect in kdump case, won't impact kexec reboot case. I got this from
-code, while this should be mentioned in log.
+kernel test robot noticed the following build errors:
 
-> 
-> Suggested-by: Jan Pazdziora <jpazdziora@redhat.com>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  include/linux/kexec.h | 28 ++++++++++++++++++++++++++++
->  kernel/kexec_file.c   |  3 +++
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index f0e9f8eda7a3..0dc66ca2506a 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -25,6 +25,10 @@
->  
->  extern note_buf_t __percpu *crash_notes;
->  
-> +#ifdef CONFIG_CRASH_DUMP
-> +#include <linux/prandom.h>
-> +#endif
-> +
->  #ifdef CONFIG_KEXEC_CORE
->  #include <linux/list.h>
->  #include <linux/compat.h>
-> @@ -171,6 +175,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
->   * @buf_min:	The buffer can't be placed below this address.
->   * @buf_max:	The buffer can't be placed above this address.
->   * @top_down:	Allocate from top of memory.
-> + * @random:	Place the buffer at a random position.
->   */
->  struct kexec_buf {
->  	struct kimage *image;
-> @@ -182,8 +187,31 @@ struct kexec_buf {
->  	unsigned long buf_min;
->  	unsigned long buf_max;
->  	bool top_down;
-> +#ifdef CONFIG_CRASH_DUMP
-> +	bool random;
-> +#endif
->  };
->  
-> +
-> +#ifdef CONFIG_CRASH_DUMP
-> +static inline void kexec_random_start(unsigned long start, unsigned long end,
-                      ~~~~~~~~~~~~~~~~~~
-This function name is very confusing. I thought it's a starting to
-randomize at the first glance, then realized it's to randomize the
-starting position of range.
-> +				      struct kexec_buf *kbuf,
-> +				      unsigned long *temp_start)
-> +{
-> +	unsigned short i;
-> +
-> +	if (kbuf->random) {
-> +		get_random_bytes(&i, sizeof(unsigned short));
-> +		*temp_start = start + (end - start) / USHRT_MAX * i;
-> +	}
-> +}
-> +#else
-> +static inline void kexec_random_start(unsigned long start, unsigned long end,
-> +				      struct kexec_buf *kbuf,
-> +				      unsigned long *temp_start)
-> +{}
-> +#endif
-> +
->  int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
->  int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
->  				   void *buf, unsigned int size,
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3eedb8c226ad..06565d867b69 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -445,6 +445,7 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
->  
->  	temp_end = min(end, kbuf->buf_max);
->  	temp_start = temp_end - kbuf->memsz + 1;
-> +	kexec_random_start(temp_start, temp_end, kbuf, &temp_start);
->  
->  	do {
->  		/* align down start */
-> @@ -483,6 +484,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
->  
->  	temp_start = max(start, kbuf->buf_min);
->  
-> +	kexec_random_start(temp_start, end, kbuf, &temp_start);
-> +
->  	do {
->  		temp_start = ALIGN(temp_start, kbuf->buf_align);
->  		temp_end = temp_start + kbuf->memsz - 1;
-> -- 
-> 2.47.0
-> 
+[auto build test ERROR on powerpc/next]
+[also build test ERROR on powerpc/fixes tip/irq/core arm64/for-next/core linus/master v6.12 next-20241128]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Eliav-Farber/kexec-Consolidate-machine_kexec_mask_interrupts-implementation/20241129-041259
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/20241128201027.10396-2-farbere%40amazon.com
+patch subject: [PATCH v3 1/2] kexec: Consolidate machine_kexec_mask_interrupts() implementation
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20241129/202411291047.R9P698b2-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241129/202411291047.R9P698b2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411291047.R9P698b2-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   kernel/kexec_core.c: In function 'machine_kexec_mask_interrupts':
+>> kernel/kexec_core.c:1085:24: error: implicit declaration of function 'irq_desc_get_chip' [-Werror=implicit-function-declaration]
+    1085 |                 chip = irq_desc_get_chip(desc);
+         |                        ^~~~~~~~~~~~~~~~~
+>> kernel/kexec_core.c:1085:22: warning: assignment to 'struct irq_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+    1085 |                 chip = irq_desc_get_chip(desc);
+         |                      ^
+>> kernel/kexec_core.c:1097:38: error: invalid use of undefined type 'struct irq_chip'
+    1097 |                 if (check_eoi && chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+         |                                      ^~
+>> kernel/kexec_core.c:1097:51: error: implicit declaration of function 'irqd_irq_inprogress' [-Werror=implicit-function-declaration]
+    1097 |                 if (check_eoi && chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+         |                                                   ^~~~~~~~~~~~~~~~~~~
+>> kernel/kexec_core.c:1097:76: error: invalid use of undefined type 'struct irq_desc'
+    1097 |                 if (check_eoi && chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+         |                                                                            ^~
+   kernel/kexec_core.c:1098:29: error: invalid use of undefined type 'struct irq_chip'
+    1098 |                         chip->irq_eoi(&desc->irq_data);
+         |                             ^~
+   kernel/kexec_core.c:1098:44: error: invalid use of undefined type 'struct irq_desc'
+    1098 |                         chip->irq_eoi(&desc->irq_data);
+         |                                            ^~
+   kernel/kexec_core.c:1100:25: error: invalid use of undefined type 'struct irq_chip'
+    1100 |                 if (chip->irq_mask)
+         |                         ^~
+   kernel/kexec_core.c:1101:29: error: invalid use of undefined type 'struct irq_chip'
+    1101 |                         chip->irq_mask(&desc->irq_data);
+         |                             ^~
+   kernel/kexec_core.c:1101:45: error: invalid use of undefined type 'struct irq_desc'
+    1101 |                         chip->irq_mask(&desc->irq_data);
+         |                                             ^~
+   kernel/kexec_core.c:1103:25: error: invalid use of undefined type 'struct irq_chip'
+    1103 |                 if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+         |                         ^~
+   kernel/kexec_core.c:1103:43: error: implicit declaration of function 'irqd_irq_disabled'; did you mean 'arch_irqs_disabled'? [-Werror=implicit-function-declaration]
+    1103 |                 if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+         |                                           ^~~~~~~~~~~~~~~~~
+         |                                           arch_irqs_disabled
+   kernel/kexec_core.c:1103:66: error: invalid use of undefined type 'struct irq_desc'
+    1103 |                 if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+         |                                                                  ^~
+   kernel/kexec_core.c:1104:29: error: invalid use of undefined type 'struct irq_chip'
+    1104 |                         chip->irq_disable(&desc->irq_data);
+         |                             ^~
+   kernel/kexec_core.c:1104:48: error: invalid use of undefined type 'struct irq_desc'
+    1104 |                         chip->irq_disable(&desc->irq_data);
+         |                                                ^~
+   cc1: some warnings being treated as errors
+
+
+vim +/irq_desc_get_chip +1085 kernel/kexec_core.c
+
+  1075	
+  1076	void machine_kexec_mask_interrupts(void)
+  1077	{
+  1078		unsigned int i;
+  1079		struct irq_desc *desc;
+  1080	
+  1081		for_each_irq_desc(i, desc) {
+  1082			struct irq_chip *chip;
+  1083			int check_eoi = 1;
+  1084	
+> 1085			chip = irq_desc_get_chip(desc);
+  1086			if (!chip)
+  1087				continue;
+  1088	
+  1089			if (IS_ENABLED(CONFIG_ARM64)) {
+  1090				/*
+  1091				 * First try to remove the active state. If this fails, try to EOI the
+  1092				 * interrupt.
+  1093				 */
+  1094				check_eoi = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+  1095			}
+  1096	
+> 1097			if (check_eoi && chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
