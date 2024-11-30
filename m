@@ -4,84 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2C93D729E7
-	for <kexec@archiver.kernel.org>; Fri, 29 Nov 2024 17:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5413D7360A
+	for <kexec@archiver.kernel.org>; Sat, 30 Nov 2024 20:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:
-	From:CC:Message-ID:Date:Content-Type:Content-Transfer-Encoding:MIME-Version:
-	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NtnAJBiaXOZ9zNEkjDYjYXdU6aFjbbL/ZqV4zjqWvX8=; b=b3tj0EGkadUwBkPt7Uyj1DuCI0
-	oCxO3ofQ7EyIgNWyLcNP19Ow4t2p6FSYr+ogIU+Y7ShjxGu1dxMqtfUWroUTtvHyBPlQBYB2no0O/
-	ykQ+D8VO9Wkv48rZJCYeS8eYdoRprWogIuEPhEWk8vQXE83v97yg3P07IF+262LD5xQdnPIFjVGDn
-	+DtU3ykSs4Kp94sBnUoUUk3Vbfi/LrBecIkIYYmOl5GQl2BFQLGIID3WbcN8n8Fl4Si9j67XV3sej
-	TX/8RkHoPTgqtN0BMyJtsMoinr2QkOO2LccxYAZj7e5wUZMJDKNnrUaP1SUZ9gVUPm+XpMMWGFNfT
-	moVRj1HA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=AhSV92xctZtOIuDX4XdK6Ka318O9z4zvPM7btw6h77c=; b=Tp7KlUhOQa06yDej9c8tdaCc4A
+	Z6/ObkncwWVtJQD4KqbN7Tn4iUNcw8bzUfW22413s0CaeZ7HNNecvLD9eh9k/AVaunQ94bEmJZNdT
+	mgpOGY7EV5MZhhHroPuvi2aHK8UaCy3OrZeUnJPlRJxw17OPdKpdrLrOPvC+eXymS9cszc7Y78IRX
+	A3wZ2sJLedYId8d/CWC9det92gxCIj5psYg/zY37MNNA6+PM6ZiE0cAXpx325v5xv33Vwv5kbKEyK
+	l/ROmA73kLo5Hgw/drEISVVNzVQ06tQrcxGCZmT7qMjAmbPFTEZ4eOeG5dUnub7L/oR1q6Br/PGSN
+	49F/nOrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tH4P0-00000000fkx-1jvZ;
-	Fri, 29 Nov 2024 17:03:34 +0000
-Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
+	id 1tHTm3-00000002VWF-0rCv;
+	Sat, 30 Nov 2024 20:09:03 +0000
+Received: from smtp-fw-9106.amazon.com ([207.171.188.206])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tH4Ox-00000000fjv-0TEp
-	for kexec@lists.infradead.org;
-	Fri, 29 Nov 2024 17:03:32 +0000
+	id 1tHTlw-00000002VVK-3nCu;
+	Sat, 30 Nov 2024 20:08:58 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1732899812; x=1764435812;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   cc:from:to:references:in-reply-to:subject;
-  bh=NtnAJBiaXOZ9zNEkjDYjYXdU6aFjbbL/ZqV4zjqWvX8=;
-  b=kGe9EdmD2ctim2SiB7HLstrF8CQhkj6VMZwhKynhaEcUVf4gDjOfb4jq
-   4Abl/pJvWdXj+h1MXhtM7sbN+qT2utbFd02yw2wmMveSPK0Z7J70AzNVx
-   EXR67dI4hAzv25td/ho4TfR3mt0FK6oT5f1/GMtSplUbtfAgtlqf6p6z9
-   M=;
-X-IronPort-AV: E=Sophos;i="6.12,196,1728950400"; 
-   d="scan'208";a="356747171"
-Subject: Re: [PATCH v2 2/2] x86/efi: Apply EFI Memory Attributes after kexec
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2024 17:03:25 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:37136]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.13:2525] with esmtp (Farcaster)
- id 47e3b7c1-6e2d-419d-82e4-56743fc7e28b; Fri, 29 Nov 2024 17:03:23 +0000 (UTC)
-X-Farcaster-Flow-ID: 47e3b7c1-6e2d-419d-82e4-56743fc7e28b
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+  t=1732997338; x=1764533338;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=AhSV92xctZtOIuDX4XdK6Ka318O9z4zvPM7btw6h77c=;
+  b=XxsQxaG83u3kcaIEol2oSzKW29PsjOXxIx71oO0fxcayfD2HYTFmu25d
+   /WG9d5KC9YlTOjvW3MgufBKV5e0CRpxfHQjjjoiI8TL8BJwgS3hRCepNI
+   5zh73d2eohXOFgmkRN/eB33W/Ma2djysGSBh3E8BkeHQM04sFEN/2NzTj
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.12,199,1728950400"; 
+   d="scan'208";a="779857217"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2024 20:08:48 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.10.100:15968]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.11.83:2525] with esmtp (Farcaster)
+ id 6ac350d1-00ea-4165-8f54-56833500c432; Sat, 30 Nov 2024 20:08:45 +0000 (UTC)
+X-Farcaster-Flow-ID: 6ac350d1-00ea-4165-8f54-56833500c432
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Fri, 29 Nov 2024 17:03:22 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Fri, 29 Nov 2024
- 17:03:18 +0000
-MIME-Version: 1.0
+ Sat, 30 Nov 2024 20:08:45 +0000
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19D018EUA004.ant.amazon.com (10.252.50.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Sat, 30 Nov 2024 20:08:44 +0000
+Received: from EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d]) by
+ EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d%3]) with mapi id
+ 15.02.1258.034; Sat, 30 Nov 2024 20:08:44 +0000
+From: "Farber, Eliav" <farbere@amazon.com>
+To: Thomas Gleixner <tglx@linutronix.de>, "linux@armlinux.org.uk"
+	<linux@armlinux.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "mpe@ellerman.id.au"
+	<mpe@ellerman.id.au>, "npiggin@gmail.com" <npiggin@gmail.com>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"naveen@kernel.org" <naveen@kernel.org>, "maddy@linux.ibm.com"
+	<maddy@linux.ibm.com>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "aou@eecs.berkeley.edu"
+	<aou@eecs.berkeley.edu>, "ebiederm@xmission.com" <ebiederm@xmission.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "bhe@redhat.com"
+	<bhe@redhat.com>, "hbathini@linux.ibm.com" <hbathini@linux.ibm.com>,
+	"sourabhjain@linux.ibm.com" <sourabhjain@linux.ibm.com>,
+	"adityag@linux.ibm.com" <adityag@linux.ibm.com>, "songshuaishuai@tinylab.org"
+	<songshuaishuai@tinylab.org>, "takakura@valinux.co.jp"
+	<takakura@valinux.co.jp>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, Marc Zyngier <maz@kernel.org>
+CC: "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: RE: [PATCH v4 1/2] kexec: Consolidate machine_kexec_mask_interrupts()
+ implementation
+Thread-Topic: [PATCH v4 1/2] kexec: Consolidate
+ machine_kexec_mask_interrupts() implementation
+Thread-Index: AdtDYtCFjQWQn9I6QGW+NnB/V7SCxQ==
+Date: Sat, 30 Nov 2024 20:08:44 +0000
+Message-ID: <cd8809e379dc4dd089350ec2d1f8c210@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.85.143.175]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Fri, 29 Nov 2024 17:03:15 +0000
-Message-ID: <D5YTPJS0CBZE.3I95FH2WL1ZJK@amazon.com>
-CC: Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Matt Fleming <matt@codeblueprint.co.uk>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<stanspas@amazon.de>, <nh-open-source@amazon.com>, <stable@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Dave Young <dyoung@redhat.com>
-X-Mailer: aerc 0.18.2-100-gc2048ef30452-dirty
-References: <20241112185217.48792-1-nsaenz@amazon.com>
- <20241112185217.48792-2-nsaenz@amazon.com>
- <CALu+AoTnrPPFkRZpYDpYxt1gAoQuo_O7YZeLvTZO4qztxgSXHw@mail.gmail.com>
- <D5XXP2PU3PUK.3HN27QB1GEW09@amazon.com>
- <CALu+AoSDY6tmD-1nzqBoUh53-9C+Yr1dOktc0eaeSx+uYYEnzw@mail.gmail.com>
- <CALu+AoTAQ_v7SL-_c_F74TfXWmwYMNV_MRD9zWVyiHuXfa6WtA@mail.gmail.com>
-In-Reply-To: <CALu+AoTAQ_v7SL-_c_F74TfXWmwYMNV_MRD9zWVyiHuXfa6WtA@mail.gmail.com>
-X-Originating-IP: [10.13.235.138]
-X-ClientProxiedBy: EX19D039UWB002.ant.amazon.com (10.13.138.79) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+MIME-Version: 1.0
+X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241129_090331_455294_7D46C251 
-X-CRM114-Status: GOOD (  25.71  )
+X-CRM114-CacheID: sfid-20241130_120857_309280_64859C35 
+X-CRM114-Status: GOOD (  25.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,76 +110,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri Nov 29, 2024 at 7:31 AM UTC, Dave Young wrote:
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick links or open attachments unless you can confirm the sender and know t=
-he content is safe.
->
->
->
-> On Fri, 29 Nov 2024 at 15:11, Dave Young <dyoung@redhat.com> wrote:
->>
->> Hi Nicolas,
->>
->> On Thu, 28 Nov 2024 at 23:58, Nicolas Saenz Julienne <nsaenz@amazon.com>=
- wrote:
->> >
->> > Hi Dave,
->> >
->> > On Fri Nov 22, 2024 at 1:03 PM UTC, Dave Young wrote:
->> > > On Wed, 13 Nov 2024 at 02:53, Nicolas Saenz Julienne <nsaenz@amazon.=
-com> wrote:
->> > >>
->> > >> Kexec bypasses EFI's switch to virtual mode. In exchange, it has it=
-s own
->> > >> routine, kexec_enter_virtual_mode(), which replays the mappings mad=
-e by
->> > >> the original kernel. Unfortunately, that function fails to reinstat=
+On 11/29/2024 3:30 PM, Thomas Gleixner wrote:
+>> Move the machine_kexec_mask_interrupts function to a common location in
+>> kernel/kexec_core.c, removing duplicate implementations from architectur=
 e
->> > >> EFI's memory attributes, which would've otherwise been set after
->> > >> entering virtual mode. Remediate this by calling
->> > >> efi_runtime_update_mappings() within kexec's routine.
->> > >
->> > > In the function __map_region(), there are playing with the flags
->> > > similar to the efi_runtime_update_mappings though it looks a little
->> > > different.  Is this extra callback really necessary?
->> >
->> > EFI Memory attributes aren't tracked through
->> > `/sys/firmware/efi/runtime-map`, and as such, whatever happens in
->> > `__map_region()` after kexec will not honor them.
->>
->> From the comment below the reason to do the mappings update is that
->> firmware could perform some fixups.  But for kexec case I think doing
->> the mapping correctly in the mapping code would be good enough.
->>
->>         /*
->>          * Apply more restrictive page table mapping attributes now that
->>          * SVAM() has been called and the firmware has performed all
->>          * necessary relocation fixups for the new virtual addresses.
->>          */
->>         efi_runtime_update_mappings();
->>
->> Otherwise /sys/firmware/efi/runtime-map is a copy for kexec-tools to
->> create the virtual efi memmap,  but I think the __map_region is called
->> after kexecing into the 2nd kernel, so I feel that at that time the
->> mem attr table should be usable.
+>> specific files (arch/arm, arch/arm64, arch/powerpc, and arch/riscv).
 >
-> Another thing I'm not sure why the updated mem attr is not stored in
-> the memmap md descriptor "attribute" field, if that is possible then
-> the runtime-map will carry them,  anyway, the __map_region still needs
-> tweaking to use the attribute.
+> Can you please move this into kernel/irq/kexec.c?
+>
+> It's pure interrupt core internal code and there is no point to make
+> core internal functions visible to random other code just because.
+Done (in v5 series)
 
-AFAIK there isn't a technical reason we why couldn't do it through the
-runtime-map, but it's annoying to do so because EFI Memory Attributes
-are allowed to segment EFI memory regions into smaller sections with
-distinct attributes. We'd have to carefully update the kernel's
-representation of the EFI runtime memory map as we apply the attributes
-(the one that's ultimately used to populate
-`/sys/firmware/efi/runtime-map`).
+>> +void machine_kexec_mask_interrupts(void)
+>> +{
+>> +     unsigned int i;
+>> +     struct irq_desc *desc;
+>
+>         struct irq_desc *desc;
+>         unsigned int i;
+>
+> please
+Done (in v5 series)
 
-On the other hand, the config table and memory region that holds the
-attributes is already being persisted through kexec, so using it is
-straightforward.
+>> +     for_each_irq_desc(i, desc) {
+>> +             struct irq_chip *chip;
+>> +             int check_eoi =3D 1;
+>> +
+>> +             chip =3D irq_desc_get_chip(desc);
+>> +             if (!chip)
+>> +                     continue;
+>> +
+>> +             if (IS_ENABLED(CONFIG_ARM64)) {
+>
+> This should not be CONFIG_ARM64. Add something like:
+>
+> config GENERIC_IRQ_KEXEC_CLEAR_VM_FORWARD
+>         bool
+>
+> and select this from ARM64?
+Done (in v5 series)
 
-Nicolas
+>> +                     /*
+>> +                      * First try to remove the active state. If this f=
+ails, try to EOI the
+>> +                      * interrupt.
+>
+> This comment does not really explain what this is about. I know you
+> copied it from the ARM64 implementation, but it should explain what this
+> actually means. Something like:
+>
+>          First try to remove the active state from an interrupt which is
+>          forwarded to a VM. If the interrupt is not forwarded, try to
+>          EOI the interrupt.
+>
+> or something like that.
+Done (in v5 series)
+
+>> +                      */
+>> +                     check_eoi =3D irq_set_irqchip_state(i, IRQCHIP_STA=
+TE_ACTIVE, false);
+>
+> Looking deeper. This function actually cannot be called from this
+> context. It does:
+>
+>           irq_get_desc_buslock(irq, &flags, 0);
+>
+> which means for any interrupt which has an actual buslock implementation
+> it will end up in a sleepable function and deadlock in the worst case.
+>
+> Marc?
+I will wait for Marc's response regarding this issue.
+Regardless, if any changes are required, I believe it would be better
+to address them in a separate patch, as this behavior existed before my
+modification.
+
+Thanks, Eliav
 
