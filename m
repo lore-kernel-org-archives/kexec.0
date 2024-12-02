@@ -4,100 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EF223D3B7F7
-	for <kexec@archiver.kernel.org>; Mon,  2 Dec 2024 10:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26DE8D78318
+	for <kexec@archiver.kernel.org>; Mon,  2 Dec 2024 13:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=; b=k79M4EEbpNmVhf3DtxtBM9BOOU
-	fkoXlJ4RYZB+Eckxh9zk4lGjJlk3LmXE56KuxQHBFoTXSEPNRAWcAveS830PJ17c0YJyNKyeMVnzj
-	NYRTzrqN3LyujcnLjLJ1h9Bib4RlK/MZ67ekUvqcePAmJx5L4tewNXzYsNnzMQ4KqWU6FJPbXVgQp
-	7jH+UA/Cor55UN4OJFiACp40FBFNOFgdGvve55w8SdoOBeU3N+y458gK6cjZfTP8FAKZTYekAcgS0
-	1AMlBtQtRCFdKMa9+SV95bRSN7ou2Xcd/B3XGAUiEEbJ2UBPsefjMNnh805NYFqfL8I24MJap5pVj
-	iJou/aGA==;
+	bh=fprn1Bo1S4B9rxA6vRF4RN22TjR80E1ZGAoPZH62AJ0=; b=T+A92tQQmCIz6Nee9t5ZonEBSJ
+	edTikCfA4jn7kW9JgAELDCERY0fhOmvUjABTsIfNIl3LE5RG+HXQbV79OxdWduR4Ox328ras9zZXD
+	/d/tmmvSX+Rdl5mPFxjr+qGoEJbBIuZPbmfrHof8t1esCzrD0dJORsgjKdqfB3iEmxpMeIf7oRt8t
+	kmifLgt8pxn4Y+Bdn0xLoOZGkME3no7G81TaPQwFx3uTqeLogWsvJz4sClgnmVVT2gQLIgL5DFX2w
+	AhAccusIPqzFDC43S//EHOEC8WBd94BYTd2rOmbUX4mCnRvEn/VY5AUZYUuOjmZkvedi2Tgg39z0N
+	BrPqY3WQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tI3Ix-00000005f4d-3KKd;
-	Mon, 02 Dec 2024 10:05:23 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tI674-00000006AsA-16Ja;
+	Mon, 02 Dec 2024 13:05:18 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tI3Is-00000005f46-3vui
+	id 1tI672-00000006Ar8-15ba
 	for kexec@lists.infradead.org;
-	Mon, 02 Dec 2024 10:05:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733133916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=;
-	b=afrSt0j0nwl/JMxXwuFT3XpC2MRdCdfWKv6K+tifhbpwl3vCGvF0i7RXMwLlKHtK1vh3o9
-	Md87gvCXVn64Cc7lWl9plZXUa/q59xBkHWP5WJQYg7mh3DDMftkdBsXYntP4qpw/e2bRfY
-	O5fTLAJn00b+kGKCk/M1P5DYYMa9/y4=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-664-5TgAKa8CMsuc8heo1wn45g-1; Mon, 02 Dec 2024 05:05:15 -0500
-X-MC-Unique: 5TgAKa8CMsuc8heo1wn45g-1
-X-Mimecast-MFC-AGG-ID: 5TgAKa8CMsuc8heo1wn45g
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-7f80959f894so4123500a12.1
-        for <kexec@lists.infradead.org>; Mon, 02 Dec 2024 02:05:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733133914; x=1733738714;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=;
-        b=TzWlID+meBeAKpWtVRftC5aMRYybsq1+CeugogPiBM5e1fYX/B8tktpSCM7CtEjbKK
-         bb8neCLuqHYbhBOOVN5F8azN3Jmg56Lakf6bLL/Sfmby24kTYaVY+6YQaD6ZbZVNtuyR
-         tgwhl2JRKziZhwwG4nfRdCGT5gM9gaRGR6Puvi/HjUue3SVBcVWxD+I8yHTs9P/S7eSo
-         hf0G1E+gPc+yl59q7pE176BSKS/DK887RbUcjoVDxJYT9TA3xORzccdRRuk8uqkTs/Qv
-         BnV0DBfKcueWnqeG5t/SoQBhBb+GLMNvgEit9MxftIlwrGnHMjYr6fphhDBLigw/wS1B
-         HkYQ==
-X-Gm-Message-State: AOJu0YwY0zVjijitFtWzeySu6x7NM/QUnQmSTpHmHN5Cj4rhIVgPgsy6
-	LzFzfkIHLleMDWDoO/eoQAifRax6n3oGH7MjWYF92rJmYWC0WcVrewIXSTHfbSSgOsue4MYOuhs
-	n+4tTBUYn0n/yjk5JzsI8/dUQFvLtmE9Kb+ZsPAFYXYAUz0Atph6A50XIqxOJsQebMJsbngv4zA
-	==
-X-Gm-Gg: ASbGncutGCppyRZa58CMop6yjMub/VgK/RVTMkK7tKKVSAMpB3oS+NcOnBh33zCjxZr
-	Yg+5pDvwiO1FxGV3YXlFL5sOTD24PFFqwkCpdcVWtEbhHk+thPVcd6SXxTafUOxQXyuclgy6Ro7
-	EDPbcOcT7sJxb40bEwG58eDqCzRVIXM54YXe1GWBQCOl8oUrw+OxqAQ3JFJPCBRFGeGrq4dlPYA
-	2Ik1EE/6dUZqbfSZWMKYyKHRYvlLjcTRn07u25upA==
-X-Received: by 2002:a05:6a20:741f:b0:1e0:b319:fc05 with SMTP id adf61e73a8af0-1e0ec83cf22mr18681083637.12.1733133913954;
-        Mon, 02 Dec 2024 02:05:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEB3NSbvHNFkIbyngZ4ixvt1XNNHTdRsVlMICP66j5qS+PJTaT9IAiRRpmMF3Ih7NXyt+N12w==
-X-Received: by 2002:a05:6a20:741f:b0:1e0:b319:fc05 with SMTP id adf61e73a8af0-1e0ec83cf22mr18681064637.12.1733133913634;
-        Mon, 02 Dec 2024 02:05:13 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fc9c2d4946sm7438932a12.14.2024.12.02.02.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 02:05:12 -0800 (PST)
-Date: Mon, 2 Dec 2024 18:04:58 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v6 1/7] kexec_file: allow to place kexec_buf randomly
-Message-ID: <ry7sz5vcsergpc7cux2eotoj7eid652dw3fqrivhq3vhsbv7fo@vrinjqre7vbt>
-References: <20241029055223.210039-1-coxu@redhat.com>
- <20241029055223.210039-2-coxu@redhat.com>
- <Z0kbMm0HCZQcD2bI@MiWiFi-R3L-srv>
+	Mon, 02 Dec 2024 13:05:17 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 577905C1110;
+	Mon,  2 Dec 2024 13:04:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72B1EC4CED1;
+	Mon,  2 Dec 2024 13:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733144715;
+	bh=XpgX0srmdTe/626mDvb/kGxbeiBmfAW9NiBCRaMCNEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vNZf4oFXJZfJYd8FZX3LkohPit5wUjANaRNe1ypsmGzvoyEH4GwwD6uhOgjzw4zP9
+	 w0CvE1ua4T8QC8RmpLtOciDPNiZwRSHBg3AX08rNZqHX76h+EQpT6ttlgkIo2Hhigk
+	 oFfELDHskbtwEV9Lr0niiNweW3qjICeG1m67+dE0vbSn2g0mD510/bfhkOJZAfJOsr
+	 S0yHY/7PAp0sDQN9M3mgp5YZXlAERYs+p0xT49au9LvS7giMQjiKk0ilsdqMVLb0F2
+	 +iUohZsxFL++yqI0V/zfOh/b2XJZjqzZteqR1+vm8uf4xyvPgEliiCEb5KR0evHodP
+	 EmIAPwMpYv3nA==
+Date: Mon, 2 Dec 2024 13:05:12 +0000
+From: Simon Horman <horms@kernel.org>
+To: McLaughlin Amy <amy.mclaughlin@hubersuhner.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: Bug report - GZ magic check always fails in uImage_gz_load
+Message-ID: <20241202130512.GA3737@kernel.org>
+References: <DB8P193MB0710307EC147427C3B14E24383222@DB8P193MB0710.EURP193.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <Z0kbMm0HCZQcD2bI@MiWiFi-R3L-srv>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: kA12P7byZb5J4OknfMpNoUz7BVLrxBZ936T-JpRxoy0_1733133914
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <DB8P193MB0710307EC147427C3B14E24383222@DB8P193MB0710.EURP193.PROD.OUTLOOK.COM>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241202_020519_049565_AF8478B6 
-X-CRM114-Status: GOOD (  15.99  )
+X-CRM114-CacheID: sfid-20241202_050516_335231_A036D412 
+X-CRM114-Status: GOOD (  13.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,36 +70,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 29, 2024 at 09:38:58AM +0800, Baoquan He wrote:
->On 10/29/24 at 01:52pm, Coiby Xu wrote:
->> Currently, kexec_buf is placed in order which means for the same
->> machine, the info in the kexec_buf is always located at the same
->> position each time the machine is booted. This may cause a risk for
->> sensitive information like LUKS volume key. Now struct kexec_buf has a
->> new field random which indicates it's supposed to be placed in a random
->> position.
->
->This change the generic code, but you don't mention this only takes
->effect in kdump case, won't impact kexec reboot case. I got this from
->code, while this should be mentioned in log.
+On Thu, Nov 21, 2024 at 02:24:47PM +0000, McLaughlin Amy wrote:
+> I tried adding -Wextra to Kexec's makefile, while compiling some work by a colleague that built on the kexec source. It spotted the following:
+> 
+> ```
+> kexec/kexec-uImage.c: In function 'uImage_gz_load':
+> kexec/kexec-uImage.c:160:31: warning: comparison is always true due to limited range of data type [-Wtype-limits]
+>   160 |  if (buf[0] != 0x1f || buf[1] != 0x8b) {
+>       |                               ^~
+> ```
+> 
+> With buf being an array of signed char, buf[1] cannot equal 0x8b without a cast, meaning that this function will always return -1 early on. Maybe representing it as an array of uint8_t/unsigned char would have been a better idea?
 
-Thanks for the reminder! I'll put a note in the commit msg.
+Hi Amy,
 
->
-[...]
->> +
->> +#ifdef CONFIG_CRASH_DUMP
->> +static inline void kexec_random_start(unsigned long start, unsigned long end,
->                      ~~~~~~~~~~~~~~~~~~
->This function name is very confusing. I thought it's a starting to
->randomize at the first glance, then realized it's to randomize the
->starting position of range.
+Yes, I agree that seems wrong and that your proposed solution sounds good.
 
-Thanks for raising this concern! I'll rename it to
-kexec_random_range_start.
+But I do wonder if this code has been exercised. Since as you point out,
+it always returns early. I'm guessing no-one is using gzipped uImages.
+So perhaps we could consider a more radical approach of removing support
+for those images?
 
--- 
-Best regards,
-Coiby
-
+In any case, could you consider sending a patch to fix the problem
+you've found?
 
