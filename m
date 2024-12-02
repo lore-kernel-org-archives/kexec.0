@@ -4,83 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FC67D49762
-	for <kexec@archiver.kernel.org>; Sun,  1 Dec 2024 11:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EF223D3B7F7
+	for <kexec@archiver.kernel.org>; Mon,  2 Dec 2024 10:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WDyHPlNEUnQgzVFHMrpiQsLtL9Qxe5uHkWbmpd0Bcaw=; b=40zmDxJ5e0/sejbRauVDNRfJ0n
-	ZIMrBTm0Rk9T6Us4NCZv9LEEIF/Yy7ja4hMqmpbU2Dc2MsTaGdOFJlTI4xp01ySYbXUTHc77PGxhP
-	hUfVlQyoLe54tZvv0xuz18IBEqpucsuDAQ3UtDq9fo8V6CdUily2Jj136w6eWP1cacMOBwAIGNk+/
-	0ZAmfR2AajcCPRlzJeSHQJ+IWOgwBxbZ71tduQg5v0L9G3ts+uWHEM/hWsTZaEwyuaNMPRH1saEgz
-	o3VxL71mJIeBruCbZ0SommbgXhfLXplSmTwkgXZt02Y7k0XdpajmgjAAqjt/n6v5Ju2rEKtdYX02k
-	PYG8kaow==;
+	bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=; b=k79M4EEbpNmVhf3DtxtBM9BOOU
+	fkoXlJ4RYZB+Eckxh9zk4lGjJlk3LmXE56KuxQHBFoTXSEPNRAWcAveS830PJ17c0YJyNKyeMVnzj
+	NYRTzrqN3LyujcnLjLJ1h9Bib4RlK/MZ67ekUvqcePAmJx5L4tewNXzYsNnzMQ4KqWU6FJPbXVgQp
+	7jH+UA/Cor55UN4OJFiACp40FBFNOFgdGvve55w8SdoOBeU3N+y458gK6cjZfTP8FAKZTYekAcgS0
+	1AMlBtQtRCFdKMa9+SV95bRSN7ou2Xcd/B3XGAUiEEbJ2UBPsefjMNnh805NYFqfL8I24MJap5pVj
+	iJou/aGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tHhzG-00000003LoN-1fOk;
-	Sun, 01 Dec 2024 11:19:38 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1tI3Ix-00000005f4d-3KKd;
+	Mon, 02 Dec 2024 10:05:23 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tHhzE-00000003Lnr-1f7h;
-	Sun, 01 Dec 2024 11:19:37 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1733051975;
+	id 1tI3Is-00000005f46-3vui
+	for kexec@lists.infradead.org;
+	Mon, 02 Dec 2024 10:05:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733133916;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WDyHPlNEUnQgzVFHMrpiQsLtL9Qxe5uHkWbmpd0Bcaw=;
-	b=ZwIwIPeWzc5fJpnBy3tPkmLGRBSLhA0IhvVbKfuB3pCaqDtPBSoXPSSPzHJj5lqePQJXZh
-	saw2tyB35caaY1WRFOOTDakG87Rac2CiBdgcnEsVaETGUZ2LIkmO1J6YwGTSL60CTVkkH8
-	UPQytJ5nue8MzA2ECyCa5/jfb7zj3bdluniKiU5Dg6qFv7r0CF0BTSTzCVR2/kbHECM+qi
-	2dm1pSbgrZliexsj8Vvshwtgchh9EWLqZOT6d2lnwBtk5lNDOLeJPTs/ncJW8sQH6Q4ezl
-	X9WB+Csibt8PBhXoLKo6jpbXp4JW7Odw5JyXpzF67j4AGfJ9SoYaAWroXh/eFg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1733051975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDyHPlNEUnQgzVFHMrpiQsLtL9Qxe5uHkWbmpd0Bcaw=;
-	b=Qpo34jtob1LbosMBtAl47/xmhuQNsC1tJXAj85I8Uxf5h6BuaXY+7PhCcNAx7cLLndI2rx
-	VgnJuardsEMXGrDw==
-To: "Farber, Eliav" <farbere@amazon.com>, "linux@armlinux.org.uk"
- <linux@armlinux.org.uk>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "npiggin@gmail.com"
- <npiggin@gmail.com>, "christophe.leroy@csgroup.eu"
- <christophe.leroy@csgroup.eu>, "naveen@kernel.org" <naveen@kernel.org>,
- "maddy@linux.ibm.com" <maddy@linux.ibm.com>, "paul.walmsley@sifive.com"
- <paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
- "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "ebiederm@xmission.com"
- <ebiederm@xmission.com>, "akpm@linux-foundation.org"
- <akpm@linux-foundation.org>, "bhe@redhat.com" <bhe@redhat.com>,
- "hbathini@linux.ibm.com" <hbathini@linux.ibm.com>,
- "sourabhjain@linux.ibm.com" <sourabhjain@linux.ibm.com>,
- "adityag@linux.ibm.com" <adityag@linux.ibm.com>,
- "songshuaishuai@tinylab.org" <songshuaishuai@tinylab.org>,
- "takakura@valinux.co.jp" <takakura@valinux.co.jp>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
- <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
- <linux-riscv@lists.infradead.org>, "kexec@lists.infradead.org"
- <kexec@lists.infradead.org>, Marc Zyngier <maz@kernel.org>
-Cc: "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: RE: [PATCH v4 1/2] kexec: Consolidate
- machine_kexec_mask_interrupts() implementation
-In-Reply-To: <cd8809e379dc4dd089350ec2d1f8c210@amazon.com>
-References: <cd8809e379dc4dd089350ec2d1f8c210@amazon.com>
-Date: Sun, 01 Dec 2024 12:19:34 +0100
-Message-ID: <87frn7wszd.ffs@tglx>
+	bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=;
+	b=afrSt0j0nwl/JMxXwuFT3XpC2MRdCdfWKv6K+tifhbpwl3vCGvF0i7RXMwLlKHtK1vh3o9
+	Md87gvCXVn64Cc7lWl9plZXUa/q59xBkHWP5WJQYg7mh3DDMftkdBsXYntP4qpw/e2bRfY
+	O5fTLAJn00b+kGKCk/M1P5DYYMa9/y4=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664-5TgAKa8CMsuc8heo1wn45g-1; Mon, 02 Dec 2024 05:05:15 -0500
+X-MC-Unique: 5TgAKa8CMsuc8heo1wn45g-1
+X-Mimecast-MFC-AGG-ID: 5TgAKa8CMsuc8heo1wn45g
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-7f80959f894so4123500a12.1
+        for <kexec@lists.infradead.org>; Mon, 02 Dec 2024 02:05:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733133914; x=1733738714;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7OrPaqjsbcgeweoMhNllMsBWtFbTQTtneD0XhvQpzBI=;
+        b=TzWlID+meBeAKpWtVRftC5aMRYybsq1+CeugogPiBM5e1fYX/B8tktpSCM7CtEjbKK
+         bb8neCLuqHYbhBOOVN5F8azN3Jmg56Lakf6bLL/Sfmby24kTYaVY+6YQaD6ZbZVNtuyR
+         tgwhl2JRKziZhwwG4nfRdCGT5gM9gaRGR6Puvi/HjUue3SVBcVWxD+I8yHTs9P/S7eSo
+         hf0G1E+gPc+yl59q7pE176BSKS/DK887RbUcjoVDxJYT9TA3xORzccdRRuk8uqkTs/Qv
+         BnV0DBfKcueWnqeG5t/SoQBhBb+GLMNvgEit9MxftIlwrGnHMjYr6fphhDBLigw/wS1B
+         HkYQ==
+X-Gm-Message-State: AOJu0YwY0zVjijitFtWzeySu6x7NM/QUnQmSTpHmHN5Cj4rhIVgPgsy6
+	LzFzfkIHLleMDWDoO/eoQAifRax6n3oGH7MjWYF92rJmYWC0WcVrewIXSTHfbSSgOsue4MYOuhs
+	n+4tTBUYn0n/yjk5JzsI8/dUQFvLtmE9Kb+ZsPAFYXYAUz0Atph6A50XIqxOJsQebMJsbngv4zA
+	==
+X-Gm-Gg: ASbGncutGCppyRZa58CMop6yjMub/VgK/RVTMkK7tKKVSAMpB3oS+NcOnBh33zCjxZr
+	Yg+5pDvwiO1FxGV3YXlFL5sOTD24PFFqwkCpdcVWtEbhHk+thPVcd6SXxTafUOxQXyuclgy6Ro7
+	EDPbcOcT7sJxb40bEwG58eDqCzRVIXM54YXe1GWBQCOl8oUrw+OxqAQ3JFJPCBRFGeGrq4dlPYA
+	2Ik1EE/6dUZqbfSZWMKYyKHRYvlLjcTRn07u25upA==
+X-Received: by 2002:a05:6a20:741f:b0:1e0:b319:fc05 with SMTP id adf61e73a8af0-1e0ec83cf22mr18681083637.12.1733133913954;
+        Mon, 02 Dec 2024 02:05:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEB3NSbvHNFkIbyngZ4ixvt1XNNHTdRsVlMICP66j5qS+PJTaT9IAiRRpmMF3Ih7NXyt+N12w==
+X-Received: by 2002:a05:6a20:741f:b0:1e0:b319:fc05 with SMTP id adf61e73a8af0-1e0ec83cf22mr18681064637.12.1733133913634;
+        Mon, 02 Dec 2024 02:05:13 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fc9c2d4946sm7438932a12.14.2024.12.02.02.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2024 02:05:12 -0800 (PST)
+Date: Mon, 2 Dec 2024 18:04:58 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v6 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <ry7sz5vcsergpc7cux2eotoj7eid652dw3fqrivhq3vhsbv7fo@vrinjqre7vbt>
+References: <20241029055223.210039-1-coxu@redhat.com>
+ <20241029055223.210039-2-coxu@redhat.com>
+ <Z0kbMm0HCZQcD2bI@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <Z0kbMm0HCZQcD2bI@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: kA12P7byZb5J4OknfMpNoUz7BVLrxBZ936T-JpRxoy0_1733133914
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241201_031936_573594_FDDE4E78 
-X-CRM114-Status: UNSURE (   9.85  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20241202_020519_049565_AF8478B6 
+X-CRM114-Status: GOOD (  15.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,21 +112,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Nov 30 2024 at 20:08, Eliav Farber wrote:
-> On 11/29/2024 3:30 PM, Thomas Gleixner wrote:
->> Looking deeper. This function actually cannot be called from this
->> context. It does:
->>
->>           irq_get_desc_buslock(irq, &flags, 0);
->>
->> which means for any interrupt which has an actual buslock implementation
->> it will end up in a sleepable function and deadlock in the worst case.
->>
->> Marc?
-> I will wait for Marc's response regarding this issue.
-> Regardless, if any changes are required, I believe it would be better
-> to address them in a separate patch, as this behavior existed before my
-> modification.
+On Fri, Nov 29, 2024 at 09:38:58AM +0800, Baoquan He wrote:
+>On 10/29/24 at 01:52pm, Coiby Xu wrote:
+>> Currently, kexec_buf is placed in order which means for the same
+>> machine, the info in the kexec_buf is always located at the same
+>> position each time the machine is booted. This may cause a risk for
+>> sensitive information like LUKS volume key. Now struct kexec_buf has a
+>> new field random which indicates it's supposed to be placed in a random
+>> position.
+>
+>This change the generic code, but you don't mention this only takes
+>effect in kdump case, won't impact kexec reboot case. I got this from
+>code, while this should be mentioned in log.
 
-Correct.
+Thanks for the reminder! I'll put a note in the commit msg.
+
+>
+[...]
+>> +
+>> +#ifdef CONFIG_CRASH_DUMP
+>> +static inline void kexec_random_start(unsigned long start, unsigned long end,
+>                      ~~~~~~~~~~~~~~~~~~
+>This function name is very confusing. I thought it's a starting to
+>randomize at the first glance, then realized it's to randomize the
+>starting position of range.
+
+Thanks for raising this concern! I'll rename it to
+kexec_random_range_start.
+
+-- 
+Best regards,
+Coiby
+
 
