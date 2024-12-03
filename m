@@ -4,162 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF015E69EA6
-	for <kexec@archiver.kernel.org>; Tue,  3 Dec 2024 11:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 139B0E74AC3
+	for <kexec@archiver.kernel.org>; Tue,  3 Dec 2024 17:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GqDYXPSGry8fvFKf3Y6FQQzvxwwFWyLPiSnjxx0zMng=; b=pe66k2O87sDAezQ2HueOa80l9f
-	9jEVU2LxNAULvAXCnlDWBWK76qtR+vuqpBC+OqUErzcINZQZIREOb6C6hlLEnGDHTtUAg2lRx8bft
-	JYyEfRJq8I+lQxqGJkkeVTGOo1kA9sUEX/RYG4hUVXyXTKSk8XjA+M6gAmIjrSgCgv7Q7to8xWCVf
-	+A6XO9rZwEr7kxKFffLhHU1hNCTmcsHqPYrDBAvAj/omEUo1pgAn/mCAG1e0A58nFzl6B+3BMoVaf
-	mEV2i+oY1M9v5Pxj3nlYffmR2BQpVsMe7ykhhH/PVEeoh3/cHGSiGZXzj3AtlxJfWh26EkZPtcR8q
-	+zd8eMGQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ea3viUL8LivNMyBVOrqgxug9V7oi255y3CCrdwW6WX8=; b=Hg0lWmIda5Ubn8YtaTKaaffK7I
+	0RBiUiArnFdjtCHwEqgSqbgsMHODXtcpRh5GLn/FjgYA+Fml1tElVtd2zsDRewjc9SE/d5TI9RHbu
+	r9Uy1vHvVW/5fyG1o2UPBTvzdxXiDXlCxcdX3SzRhS4hD/GeER1Iv9M7Rm2S0giZLo4nKUENizvrX
+	gadcT33Ir2mTh6ZLqqIXnMQsxrcFtz1X0G2MX3QfpAisaUS05QCVHmaSwNoKZL2DcbMaDcy47ABBT
+	odnbm+6yE7JEytWap/H5jkCfI6Qy1DkK53Eys7IVRgkealTzd+xOTBwluFYUOBYy8P9CMzqfHfBRu
+	LeAqF9kA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIQk3-00000009CMp-0Viu;
-	Tue, 03 Dec 2024 11:06:55 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tIX5c-0000000AJTA-43Kl;
+	Tue, 03 Dec 2024 17:53:36 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIQVP-0000000990C-2UoX
-	for kexec@lists.infradead.org;
-	Tue, 03 Dec 2024 10:51:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733223106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GqDYXPSGry8fvFKf3Y6FQQzvxwwFWyLPiSnjxx0zMng=;
-	b=H5T4d0YPjlBR+0aOaMQFqcUvC5N/pFQ3Lr4++baPRE41EdodejH8DO9c8Ky/xtRggMw5+M
-	TJ6KYULrhr/qDgynd9pmIPaRbwDC1eM7PqzJuRT8rHnz+QJiCa54y6zqGb+pZEmOVrw8Op
-	c9LA8aexSgWN1i8N9m5542RYamaMI88=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-531-nW-4NyzeNYaabe5TetHVqA-1; Tue, 03 Dec 2024 05:51:43 -0500
-X-MC-Unique: nW-4NyzeNYaabe5TetHVqA-1
-X-Mimecast-MFC-AGG-ID: nW-4NyzeNYaabe5TetHVqA
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385d735965bso2579287f8f.1
-        for <kexec@lists.infradead.org>; Tue, 03 Dec 2024 02:51:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733223102; x=1733827902;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GqDYXPSGry8fvFKf3Y6FQQzvxwwFWyLPiSnjxx0zMng=;
-        b=D3J7mmvMUWRkJMZihuEB4q+yttu6xVqdbyUkN6C95psVua2Cskovkjf/xcMePLk8sO
-         GWeV8edknG/i0K9Q/5dhSXyyUavPsEHHkPfjElkSyOh/8h7+iZM3Ki9CAj/c5r3kNeUI
-         Z9fM5I1J+Z+3rcxRAnebTLCRd53bGwsdnSgsf08LnH2Ec4+dMVR3gyEPTwk2iLZJzt3s
-         d6HwqPsAwf23cNmXZiyJD84zyfmSckujJIxpfNqrI5cu5ygz84okq9mWNNcnFFC4PeYW
-         Qtk/CUFVoEniGzKaDZLgQJOWoPXCVPMSxIHR0sselfBqs8mTH+O8Sx3+FcDlikfeoLpp
-         xSGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaZJZzGQaeQVmib5pUj8Ntfb+uzDV5tNYBl8NY/4xxGAlEY/RhhFPF28j1aqFDikjuN6IA9A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YydX8j+nERuL56o5IKg5GqpFU4GsQwGunEi1CP4OiRx2t5Ui1SW
-	yTxrcJlixp3R1N6pKdlWbPVuGuJSYFQC6M+ahvl+nRwYhoPmtRmlHBV/or/JD210a62gtu2h76H
-	PwGGdVd4y/bhVfXZf9ql2x+EXvfCf1Jjvv2O2UPFWvm+uqarKRfFRXKGDXw==
-X-Gm-Gg: ASbGnctMiEC8h87i5E3dz2jjyqortW3BYQQaP8jFF8KJ676akYpeTvi3W696f+BhcJM
-	xHt/DaRiPt7AWuHZrv506qj+ob7r6D/zCoYbgQ3A93/MlfJniU9VLvaic4txDfTeK5Id7o02r1e
-	J0/5c9/wE/jSfmOfe3d4FxuVlKDEW5XLMhPcKuVmxHGvHMfErxGsZP9MHiWZWWS28yY7AHVfdAe
-	L9bPdmlGx9kLGtSaljoR+OWTLA0WAbUaNy5euqVr3A1abFaGaIfiVTVvdbU64bkf4saH02ZqXcR
-	l2jRojINChF78hK252YpFpe8S+Gu/Qafnaf5yKJYLoM2ldYTj+/ig9nHmCLlctJJFBAwJ2Y3obf
-	xtg==
-X-Received: by 2002:a05:6000:698:b0:385:de8d:c0f5 with SMTP id ffacd0b85a97d-385fd3ce003mr1805488f8f.16.1733223102024;
-        Tue, 03 Dec 2024 02:51:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHsiHmkxMqZNYBRMic15i3J+xhBUi5IkfKnDUhcGUpt0ArEviRKcEDiXtnq3XnP9doeeDQT1Q==
-X-Received: by 2002:a05:6000:698:b0:385:de8d:c0f5 with SMTP id ffacd0b85a97d-385fd3ce003mr1805453f8f.16.1733223101624;
-        Tue, 03 Dec 2024 02:51:41 -0800 (PST)
-Received: from ?IPV6:2003:cb:c746:1b00:fd9e:c26c:c552:1de7? (p200300cbc7461b00fd9ec26cc5521de7.dip0.t-ipconnect.de. [2003:cb:c746:1b00:fd9e:c26c:c552:1de7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385ccd2e1bdsm15556376f8f.9.2024.12.03.02.51.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 02:51:40 -0800 (PST)
-Message-ID: <29dfdbf6-e356-4555-a421-e4926610c32b@redhat.com>
-Date: Tue, 3 Dec 2024 11:51:38 +0100
+	id 1tIX5c-0000000AJSu-19V2
+	for kexec@bombadil.infradead.org;
+	Tue, 03 Dec 2024 17:53:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ea3viUL8LivNMyBVOrqgxug9V7oi255y3CCrdwW6WX8=; b=Hki/yZY1udILq4Vxni6g/+Xuj7
+	tBhJ4dKX6DF0qCd4/LVN26BElOxxwyKdo1nn77lBtFL9oTHFBICvmCz3Wq/G+zEIx0Kw+RAxVk0o8
+	ltrBR9dMQtLYoiFxWYDPdrYupJ32bK9Ux3AK/ItmETOX5BclfnqcXPG0vyVLbi+wiNTjIBaYqfzGi
+	EFa9o1DKZ6BRSBHqqiH8uYGle1MJWhAfyjvnQuhmJBvtVu7Tvy6h96+Yl8ctNHW2fGQtjlIgRXczL
+	E1wJtg9A952iMZ6IiO35HIQY/paGJJqWVD7ZLU7UBgurHgm/K+gnwfySP4yrwipNi7V5+bBOxUC55
+	uJLyHfgQ==;
+Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=edge-m1-r1-104.e-iad16.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tIX5X-0000000A1Vg-4BDM;
+	Tue, 03 Dec 2024 17:53:33 +0000
+Message-ID: <96266276b15bc3c1100b46c27b0fc19dfbea25ec.camel@infradead.org>
+Subject: Re: [PATCH v6 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+From: David Woodhouse <dwmw2@infradead.org>
+To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org, Alexander Graf
+	 <graf@amazon.com>
+Cc: Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
+ Thomas Staudt <tstaudt@de.ibm.com>, "Daniel P ."
+ =?ISO-8859-1?Q?Berrang=E9?= <berrange@redhat.com>, Kairui Song
+ <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu
+ <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young
+ <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, Dave
+ Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Date: Tue, 03 Dec 2024 17:53:32 +0000
+In-Reply-To: <20241029055223.210039-1-coxu@redhat.com>
+References: <20241029055223.210039-1-coxu@redhat.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-oueWtT74HJFqaqIASEjP"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/11] fs/proc/vmcore: disallow vmcore modifications
- after the vmcore was opened
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
- Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, Eric Farman
- <farman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
-References: <20241025151134.1275575-1-david@redhat.com>
- <20241025151134.1275575-4-david@redhat.com> <Z0BL/UopaH5Xg5jS@MiWiFi-R3L-srv>
- <d29d7816-a3e5-4f34-bb0c-dd427931efb4@redhat.com>
- <Z0SMqYX8gMvdiU4T@MiWiFi-R3L-srv>
- <a7ccbd86-2a62-4191-8742-ce45b6e8f73c@redhat.com>
- <Z07gkXQDrNfL10hu@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z07gkXQDrNfL10hu@MiWiFi-R3L-srv>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rQ2aROIEPeiiMQYM7NkeN5aHdXY2CurllmxbepFYbeA_1733223102
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241203_025147_714947_16184C52 
-X-CRM114-Status: GOOD (  22.87  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,93 +77,220 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03.12.24 11:42, Baoquan He wrote:
-> On 11/29/24 at 11:38am, David Hildenbrand wrote:
->> On 25.11.24 15:41, Baoquan He wrote:
->>> On 11/22/24 at 10:30am, David Hildenbrand wrote:
->>>> On 22.11.24 10:16, Baoquan He wrote:
->>>>> On 10/25/24 at 05:11pm, David Hildenbrand wrote:
->>>>> ......snip...
->>>>>> @@ -1482,6 +1470,10 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->>>>>>     		return -EINVAL;
->>>>>>     	}
->>>>>> +	/* We'll recheck under lock later. */
->>>>>> +	if (data_race(vmcore_opened))
->>>>>> +		return -EBUSY;
->>>>>
->>>>
->>>> Hi,
->>>>
->>>>> As I commented to patch 7, if vmcore is opened and closed after
->>>>> checking, do we need to give up any chance to add device dumping
->>>>> as below?
->>>>>
->>>>> fd = open(/proc/vmcore);
->>>>> ...do checking;
->>>>> close(fd);
->>>>>
->>>>> quit any device dump adding;
->>>>>
->>>>> run makedumpfile on s390;
->>>>>      ->fd = open(/proc/vmcore);
->>>>>        -> try to dump;
->>>>>      ->close(fd);
->>>>
->>>> The only reasonable case where this could happen (with virtio_mem) would be
->>>> when you hotplug a virtio-mem device into a VM that is currently in the
->>>> kdump kernel. However, in this case, the device would not provide any memory
->>>> we want to dump:
->>>>
->>>> (1) The memory was not available to the 1st (crashed) kernel, because
->>>>       the device got hotplugged later.
->>>> (2) Hotplugged virtio-mem devices show up with "no plugged memory",
->>>>       meaning there wouldn't be even something to dump.
->>>>
->>>> Drivers will be loaded (as part of the kernel or as part of the initrd)
->>>> before any kdump action is happening. Similarly, just imagine your NIC
->>>> driver not being loaded when you start dumping to a network share ...
->>>>
->>>> This should similarly apply to vmcoredd providers.
->>>>
->>>> There is another concern I had at some point with changing the effective
->>>> /proc/vmcore size after someone already opened it, and might assume the size
->>>> will stay unmodified (IOW, the file was completely static before vmcoredd
->>>> showed up).
->>>>
->>>> So unless there is a real use case that requires tracking whether the file
->>>> is no longer open, to support modifying the vmcore afterwards, we should
->>>> keep it simple.
->>>>
->>>> I am not aware of any such cases, and my experiments with virtio_mem showed
->>>> that the driver get loaded extremely early from the initrd, compared to when
->>>> we actually start messing with /proc/vmcore from user space.
-> 
-> It's OK, David, I don't have strong opinion about the current
-> implementation. I raised this concern because
-> 
-> 1) I saw the original vmcoredd only warn when doing register if
-> vmcore_opened is true;
-> 
-> 2) in patch 1, it says vmcore_mutex is introduced to protect vmcore
-> modifications from concurrent opening. If we are confident, the old
-> vmcoredd_mutex can guarantee it, I could be wrong here.
 
-I don't see how. We're protecting the list, but not the 
-vmcoredd_update_size(), which modifies sizes, offsets and all that.
+--=-oueWtT74HJFqaqIASEjP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Anyway, it's just a tiny concern, I believe it won't cause issue at
-> present. So it's up to you.
+On Tue, 2024-10-29 at 13:52 +0800, Coiby Xu wrote:
+> LUKS is the standard for Linux disk encryption, widely adopted by users,
+> and in some cases, such as Confidential VMs, it is a requirement. With=
+=20
+> kdump enabled, when the first kernel crashes, the system can boot into
+> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)=20
+> to a specified target. However, there are two challenges when dumping
+> vmcore to a LUKS-encrypted device:
+>=20
+> =C2=A0- Kdump kernel may not be able to decrypt the LUKS partition. For s=
+ome
+> =C2=A0=C2=A0 machines, a system administrator may not have a chance to en=
+ter the
+> =C2=A0=C2=A0 password to decrypt the device in kdump initramfs after the =
+1st kernel
+> =C2=A0=C2=A0 crashes; For cloud confidential VMs, depending on the policy=
+ the
+> =C2=A0=C2=A0 kdump kernel may not be able to unseal the keys with TPM and=
+ the
+> =C2=A0=C2=A0 console virtual keyboard is untrusted.
+>=20
+> =C2=A0- LUKS2 by default use the memory-hard Argon2 key derivation functi=
+on
+> =C2=A0=C2=A0 which is quite memory-consuming compared to the limited memo=
+ry reserved
+> =C2=A0=C2=A0 for kdump. Take Fedora example, by default, only 256M is res=
+erved for
+> =C2=A0=C2=A0 systems having memory between 4G-64G. With LUKS enabled, ~13=
+00M needs
+> =C2=A0=C2=A0 to be reserved for kdump. Note if the memory reserved for kd=
+ump can't
+> =C2=A0=C2=A0 be used by 1st kernel i.e. an user sees ~1300M memory missin=
+g in the
+> =C2=A0=C2=A0 1st kernel.
+>=20
+> Besides users (at least for Fedora) usually expect kdump to work out of
+> the box i.e. no manual password input or custom crashkernel value is
+> needed. And it doesn't make sense to derivate the keys again in kdump
+> kernel which seems to be redundant work.
+>=20
+> This patch set addresses the above issues by making the LUKS volume keys
+> persistent for kdump kernel with the help of cryptsetup's new APIs
+> (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+> the kdump copies of LUKS volume keys,
+>=20
+> =C2=A01. After the 1st kernel loads the initramfs during boot, systemd
+> =C2=A0=C2=A0=C2=A0 use an user-input passphrase to de-crypt the LUKS volu=
+me keys
+> =C2=A0=C2=A0=C2=A0 or TPM-sealed key and then save the volume keys to spe=
+cified keyring
+> =C2=A0=C2=A0=C2=A0 (using the --link-vk-to-keyring API) and the key will =
+expire within
+> =C2=A0=C2=A0=C2=A0 specified time.
+>=20
+> =C2=A02. A user space tool (kdump initramfs loader like kdump-utils) crea=
+te
+> =C2=A0=C2=A0=C2=A0 key items inside /sys/kernel/config/crash_dm_crypt_key=
+s to inform
+> =C2=A0=C2=A0=C2=A0 the 1st kernel which keys are needed.
+>=20
+> =C2=A03. When the kdump initramfs is loaded by the kexec_file_load
+> =C2=A0=C2=A0=C2=A0 syscall, the 1st kernel will iterate created key items=
+, save the
+> =C2=A0=C2=A0=C2=A0 keys to kdump reserved memory.
+>=20
+> =C2=A04. When the 1st kernel crashes and the kdump initramfs is booted, t=
+he
+> =C2=A0=C2=A0=C2=A0 kdump initramfs asks the kdump kernel to create a user=
+ key using the
+> =C2=A0=C2=A0=C2=A0 key stored in kdump reserved memory by writing yes to
+> =C2=A0=C2=A0=C2=A0 /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS=
+ encrypted
+> =C2=A0=C2=A0=C2=A0 device is unlocked with libcryptsetup's --volume-key-k=
+eyring API.
+>=20
+> =C2=A05. The system gets rebooted to the 1st kernel after dumping vmcore =
+to
+> =C2=A0=C2=A0=C2=A0 the LUKS encrypted device is finished
+>=20
+> After libcryptsetup saving the LUKS volume keys to specified keyring,
+> whoever takes this should be responsible for the safety of these copies
+> of keys. The keys will be saved in the memory area exclusively reserved
+> for kdump where even the 1st kernel has no direct access. And further
+> more, two additional protections are added,
+> =C2=A0- save the copy randomly in kdump reserved memory as suggested by J=
+an
+> =C2=A0- clear the _PAGE_PRESENT flag of the page that stores the copy as
+> =C2=A0=C2=A0 suggested by Pingfan
+>=20
+> This patch set only supports x86. There will be patches to support other
+> architectures once this patch set gets merged.
 
-I can keep allowing to add stuff after the vmcore was opened and closed 
-again (but not while it is open). It doesn't make any sense IMHO, but it 
-seems to be easy to add.
 
-Thanks!
+I'm not very keen on inventing lots of different mechanisms for passing
+data over kexec. Shouldn't this just be using the KHO infrastructure?
 
--- 
-Cheers,
+https://lwn.net/ml/linux-kernel/20240117144704.602-1-graf@amazon.com/
 
-David / dhildenb
+--=-oueWtT74HJFqaqIASEjP
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjAzMTc1MzMyWjAvBgkqhkiG9w0BCQQxIgQgPy2OCPAt
+f3Ls/ekECKr8LXezaplsKsLPMgOESVKtZA4wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCRhEA526x+LckJVRaVpplZDO45JXKHTUam
+CZxYvO8Gz2tjQU3G9OLbF9Cyf2oea+Zr8NA10MSpmGEVmdk+MqAMTto7rsMSGaHCo5Q0/vuQRuRB
+jAaCyu97Zf9byvX3+0NidKHT9v257BDN/mOpzEBXHZiwEOQw3bE+Lg+ynoEaGAAvHZcC//dZHAt1
+eukMKuPe44Gf/y9K52SfvVGUZljOr2dXyOGNhmB2HGdbb1CNBIY0lwUfDtKX3En46NaBYt0XjMiA
+aC82WWNXuF4pRThpuKb8kI3n6n/csJ/7DM4W4imHSF1D0N97+wG3RMXlALInyfLinmrFt/aoOgQk
+qTtlyrNddEbGUvw5lOpf/Hc0AOojChwQyQFY/bfYbOV68nUGKEcsw2Ql0bo6X4jeqWws0mqSGVpR
+0e3Vzgq00WNUeyzI0uvTv/L/BDQlP6csdCRG3cIyEgJcHjxtmGdLMUrCyBDIeOI4KYwfM0nA/D/c
+athvPF+vMzMVW6fi71cjaZ66/10F2B0tKrIcP7keUve5SjvMYTkDpEf+LtAfs8+f5bauK2LY/sMs
+cU0CUajbV/iTZlPaABLbreXMYH6waT6lnD1Ug1XHphMPfQQ5qOgD2SwVXd/0zLB2Csy669eNuc68
+Q4mfCS22HkpftWzzEEZSa0s/PvUgDZ8bDXKbfEIBnQAAAAAAAA==
+
+
+--=-oueWtT74HJFqaqIASEjP--
 
