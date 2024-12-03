@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 139B0E74AC3
-	for <kexec@archiver.kernel.org>; Tue,  3 Dec 2024 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13410E74AC8
+	for <kexec@archiver.kernel.org>; Tue,  3 Dec 2024 17:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ea3viUL8LivNMyBVOrqgxug9V7oi255y3CCrdwW6WX8=; b=Hg0lWmIda5Ubn8YtaTKaaffK7I
-	0RBiUiArnFdjtCHwEqgSqbgsMHODXtcpRh5GLn/FjgYA+Fml1tElVtd2zsDRewjc9SE/d5TI9RHbu
-	r9Uy1vHvVW/5fyG1o2UPBTvzdxXiDXlCxcdX3SzRhS4hD/GeER1Iv9M7Rm2S0giZLo4nKUENizvrX
-	gadcT33Ir2mTh6ZLqqIXnMQsxrcFtz1X0G2MX3QfpAisaUS05QCVHmaSwNoKZL2DcbMaDcy47ABBT
-	odnbm+6yE7JEytWap/H5jkCfI6Qy1DkK53Eys7IVRgkealTzd+xOTBwluFYUOBYy8P9CMzqfHfBRu
-	LeAqF9kA==;
+	bh=YhYh7Vwa6wp3IJgFTdZsSsKPBU9iMnaoQ1W0I0ymQGQ=; b=TwkfuT0qG0hsqRV1+AlOHrwUnT
+	WwhPOJQdl2Ru/2BHt6Hrs2E4mrXQeR/fd/YDR0+bc0OG2eI8xAEkWkK6tVc7pTwMqeeTxnjFPVlkh
+	PEWzQkvFx8BReef+4a1b1HEuXs0aKoXXpv2ZV20FCR3deFq//Gg69H4jIxE4olL+gGzaxFdl/499I
+	YF75KtLFZnC1IWxtspBpjInyCrtBvul7AQbDNjOeBOOv9m/Llel2Cn1cYRuRgcJa9aGFsfuvYvRQZ
+	kuLU52meLj0YY5JLEKECFhAwENpJ5I6eBezxxZzqckvcWNnBDZ+hEgsaCJKqiKxg6JbdNvREroLNo
+	tnyxf+vw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIX5c-0000000AJTA-43Kl;
-	Tue, 03 Dec 2024 17:53:36 +0000
+	id 1tIX8W-0000000AJl8-3OQA;
+	Tue, 03 Dec 2024 17:56:36 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIX5c-0000000AJSu-19V2
+	id 1tIX8V-0000000AJl1-2cLy
 	for kexec@bombadil.infradead.org;
-	Tue, 03 Dec 2024 17:53:36 +0000
+	Tue, 03 Dec 2024 17:56:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ea3viUL8LivNMyBVOrqgxug9V7oi255y3CCrdwW6WX8=; b=Hki/yZY1udILq4Vxni6g/+Xuj7
-	tBhJ4dKX6DF0qCd4/LVN26BElOxxwyKdo1nn77lBtFL9oTHFBICvmCz3Wq/G+zEIx0Kw+RAxVk0o8
-	ltrBR9dMQtLYoiFxWYDPdrYupJ32bK9Ux3AK/ItmETOX5BclfnqcXPG0vyVLbi+wiNTjIBaYqfzGi
-	EFa9o1DKZ6BRSBHqqiH8uYGle1MJWhAfyjvnQuhmJBvtVu7Tvy6h96+Yl8ctNHW2fGQtjlIgRXczL
-	E1wJtg9A952iMZ6IiO35HIQY/paGJJqWVD7ZLU7UBgurHgm/K+gnwfySP4yrwipNi7V5+bBOxUC55
-	uJLyHfgQ==;
+	bh=YhYh7Vwa6wp3IJgFTdZsSsKPBU9iMnaoQ1W0I0ymQGQ=; b=A3EoAVnqrbwVvqyBTapAR5Flbq
+	uWsgxYjDgikT9okBJ7m8KmfwD1+2NnaT3HiG5xZSao5whnsq5Pz8FHNQtjVATgo3ejVwlgca6gOeC
+	fuAZnLI6NNPqJNAw5I3lP/37F9aMmm7m+PIJX8vwHuvqY6Km/WlVLblWX/kEUKDMqMJ6BmhGBhME3
+	wb+eG2XpF7jevyXYPVReotKXZz4UrUcxLR1Zc3dcO5Ucx2Z0JYtnGh1RV9sHQamGD8EOXpSEVUCRx
+	d99giEq3UB3Iki8ewaeXBDAD+RC/Xv/TzUP2JSKXSltR3vQ3OexS3V6mZ3/p3wWfVIWchJGU8YtE5
+	er8ZNDkQ==;
 Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=edge-m1-r1-104.e-iad16.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIX5X-0000000A1Vg-4BDM;
-	Tue, 03 Dec 2024 17:53:33 +0000
-Message-ID: <96266276b15bc3c1100b46c27b0fc19dfbea25ec.camel@infradead.org>
-Subject: Re: [PATCH v6 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
+	id 1tIX8Q-0000000A1lS-3j0l;
+	Tue, 03 Dec 2024 17:56:32 +0000
+Message-ID: <c16ed8f5c960c34f05b88b84a31f28a610f6a3cf.camel@infradead.org>
+Subject: Re: [RFC PATCH v4 05/20] x86/mm: Add _PAGE_NOPTISHADOW bit to avoid
+ updating userspace page tables
 From: David Woodhouse <dwmw2@infradead.org>
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org, Alexander Graf
-	 <graf@amazon.com>
-Cc: Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
- Thomas Staudt <tstaudt@de.ibm.com>, "Daniel P ."
- =?ISO-8859-1?Q?Berrang=E9?= <berrange@redhat.com>, Kairui Song
- <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu
- <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young
- <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, Dave
- Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Greg KH <gregkh@linuxfoundation.org>
-Date: Tue, 03 Dec 2024 17:53:32 +0000
-In-Reply-To: <20241029055223.210039-1-coxu@redhat.com>
-References: <20241029055223.210039-1-coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
+ Borisov <nik.borisov@suse.com>,  linux-kernel@vger.kernel.org, Simon Horman
+ <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, jpoimboe@kernel.org,  bsz@amazon.de
+Date: Tue, 03 Dec 2024 17:56:31 +0000
+In-Reply-To: <20241127190343.44916-6-dwmw2@infradead.org>
+References: <20241127190343.44916-1-dwmw2@infradead.org>
+	 <20241127190343.44916-6-dwmw2@infradead.org>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-oueWtT74HJFqaqIASEjP"
+	boundary="=-S93rhy7XAih6PPeHn3if"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -78,109 +77,52 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-oueWtT74HJFqaqIASEjP
+--=-S93rhy7XAih6PPeHn3if
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-10-29 at 13:52 +0800, Coiby Xu wrote:
-> LUKS is the standard for Linux disk encryption, widely adopted by users,
-> and in some cases, such as Confidential VMs, it is a requirement. With=
-=20
-> kdump enabled, when the first kernel crashes, the system can boot into
-> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)=20
-> to a specified target. However, there are two challenges when dumping
-> vmcore to a LUKS-encrypted device:
+On Wed, 2024-11-27 at 19:00 +0000, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
 >=20
-> =C2=A0- Kdump kernel may not be able to decrypt the LUKS partition. For s=
-ome
-> =C2=A0=C2=A0 machines, a system administrator may not have a chance to en=
-ter the
-> =C2=A0=C2=A0 password to decrypt the device in kdump initramfs after the =
-1st kernel
-> =C2=A0=C2=A0 crashes; For cloud confidential VMs, depending on the policy=
+> The set_p4d() and set_pgd() functions (in 4-level or 5-level page table s=
+etups
+> respectively) assume that the root page table is actually a 8KiB allocati=
+on,
+> with the userspace root immediately after the kernel root page table (so =
+that
+> the former can enforce NX on on all the subordinate pages, which are actu=
+ally
+> shared).
+>=20
+> However, users of the kernel_ident_mapping_init() code do not give it an =
+8KiB
+> allocation for its PGD. Both swsusp_arch_resume() and acpi_mp_setup_reset=
+()
+> allocate only a single 4KiB page. The kexec code on x86_64 currently gets
+> away with it purely by chance, because it allocates 8KiB for its "control
+> code page" and then actually uses the first half for the PGD, then copies=
  the
-> =C2=A0=C2=A0 kdump kernel may not be able to unseal the keys with TPM and=
- the
-> =C2=A0=C2=A0 console virtual keyboard is untrusted.
+> actual trampoline code into the second half only after the identmap code =
+has
+> finished scribbling over it.
 >=20
-> =C2=A0- LUKS2 by default use the memory-hard Argon2 key derivation functi=
-on
-> =C2=A0=C2=A0 which is quite memory-consuming compared to the limited memo=
-ry reserved
-> =C2=A0=C2=A0 for kdump. Take Fedora example, by default, only 256M is res=
-erved for
-> =C2=A0=C2=A0 systems having memory between 4G-64G. With LUKS enabled, ~13=
-00M needs
-> =C2=A0=C2=A0 to be reserved for kdump. Note if the memory reserved for kd=
-ump can't
-> =C2=A0=C2=A0 be used by 1st kernel i.e. an user sees ~1300M memory missin=
-g in the
-> =C2=A0=C2=A0 1st kernel.
+> Fix this by defining a _PAGE_NOPTISHADOW bit (which can use the same bit =
+as
+> _PAGE_SAVED_DIRTY since one is only for the PGD/P4D root and the other is
+> exclusively for leaf PTEs.). This instructs __pti_set_user_pgtbl() not to
+> write to the userspace 'shadow' PGD.
 >=20
-> Besides users (at least for Fedora) usually expect kdump to work out of
-> the box i.e. no manual password input or custom crashkernel value is
-> needed. And it doesn't make sense to derivate the keys again in kdump
-> kernel which seems to be redundant work.
->=20
-> This patch set addresses the above issues by making the LUKS volume keys
-> persistent for kdump kernel with the help of cryptsetup's new APIs
-> (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
-> the kdump copies of LUKS volume keys,
->=20
-> =C2=A01. After the 1st kernel loads the initramfs during boot, systemd
-> =C2=A0=C2=A0=C2=A0 use an user-input passphrase to de-crypt the LUKS volu=
-me keys
-> =C2=A0=C2=A0=C2=A0 or TPM-sealed key and then save the volume keys to spe=
-cified keyring
-> =C2=A0=C2=A0=C2=A0 (using the --link-vk-to-keyring API) and the key will =
-expire within
-> =C2=A0=C2=A0=C2=A0 specified time.
->=20
-> =C2=A02. A user space tool (kdump initramfs loader like kdump-utils) crea=
-te
-> =C2=A0=C2=A0=C2=A0 key items inside /sys/kernel/config/crash_dm_crypt_key=
-s to inform
-> =C2=A0=C2=A0=C2=A0 the 1st kernel which keys are needed.
->=20
-> =C2=A03. When the kdump initramfs is loaded by the kexec_file_load
-> =C2=A0=C2=A0=C2=A0 syscall, the 1st kernel will iterate created key items=
-, save the
-> =C2=A0=C2=A0=C2=A0 keys to kdump reserved memory.
->=20
-> =C2=A04. When the 1st kernel crashes and the kdump initramfs is booted, t=
-he
-> =C2=A0=C2=A0=C2=A0 kdump initramfs asks the kdump kernel to create a user=
- key using the
-> =C2=A0=C2=A0=C2=A0 key stored in kdump reserved memory by writing yes to
-> =C2=A0=C2=A0=C2=A0 /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS=
- encrypted
-> =C2=A0=C2=A0=C2=A0 device is unlocked with libcryptsetup's --volume-key-k=
-eyring API.
->=20
-> =C2=A05. The system gets rebooted to the 1st kernel after dumping vmcore =
-to
-> =C2=A0=C2=A0=C2=A0 the LUKS encrypted device is finished
->=20
-> After libcryptsetup saving the LUKS volume keys to specified keyring,
-> whoever takes this should be responsible for the safety of these copies
-> of keys. The keys will be saved in the memory area exclusively reserved
-> for kdump where even the 1st kernel has no direct access. And further
-> more, two additional protections are added,
-> =C2=A0- save the copy randomly in kdump reserved memory as suggested by J=
-an
-> =C2=A0- clear the _PAGE_PRESENT flag of the page that stores the copy as
-> =C2=A0=C2=A0 suggested by Pingfan
->=20
-> This patch set only supports x86. There will be patches to support other
-> architectures once this patch set gets merged.
+> Strictly, the _PAGE_NOPTISHADOW bit doesn't need to be written out to the
+> actual page tables; since __pti_set_user_pgtbl() returns the value to be
+> written to the kernel page table, it could be filtered out. But there see=
+ms
+> to be no benefit to actually doing so.
+
+Ping? I think the rest of the kexec-debug series is in fairly good
+shape; this is the only part I'm slightly unsure about.
 
 
-I'm not very keen on inventing lots of different mechanisms for passing
-data over kexec. Shouldn't this just be using the KHO infrastructure?
-
-https://lwn.net/ml/linux-kernel/20240117144704.602-1-graf@amazon.com/
-
---=-oueWtT74HJFqaqIASEjP
+--=-S93rhy7XAih6PPeHn3if
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -272,25 +214,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjAzMTc1MzMyWjAvBgkqhkiG9w0BCQQxIgQgPy2OCPAt
-f3Ls/ekECKr8LXezaplsKsLPMgOESVKtZA4wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjAzMTc1NjMxWjAvBgkqhkiG9w0BCQQxIgQglpwliv5S
+dT5QRge0YvWg0wMo3yys5dbyNmjmcUxABcEwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCRhEA526x+LckJVRaVpplZDO45JXKHTUam
-CZxYvO8Gz2tjQU3G9OLbF9Cyf2oea+Zr8NA10MSpmGEVmdk+MqAMTto7rsMSGaHCo5Q0/vuQRuRB
-jAaCyu97Zf9byvX3+0NidKHT9v257BDN/mOpzEBXHZiwEOQw3bE+Lg+ynoEaGAAvHZcC//dZHAt1
-eukMKuPe44Gf/y9K52SfvVGUZljOr2dXyOGNhmB2HGdbb1CNBIY0lwUfDtKX3En46NaBYt0XjMiA
-aC82WWNXuF4pRThpuKb8kI3n6n/csJ/7DM4W4imHSF1D0N97+wG3RMXlALInyfLinmrFt/aoOgQk
-qTtlyrNddEbGUvw5lOpf/Hc0AOojChwQyQFY/bfYbOV68nUGKEcsw2Ql0bo6X4jeqWws0mqSGVpR
-0e3Vzgq00WNUeyzI0uvTv/L/BDQlP6csdCRG3cIyEgJcHjxtmGdLMUrCyBDIeOI4KYwfM0nA/D/c
-athvPF+vMzMVW6fi71cjaZ66/10F2B0tKrIcP7keUve5SjvMYTkDpEf+LtAfs8+f5bauK2LY/sMs
-cU0CUajbV/iTZlPaABLbreXMYH6waT6lnD1Ug1XHphMPfQQ5qOgD2SwVXd/0zLB2Csy669eNuc68
-Q4mfCS22HkpftWzzEEZSa0s/PvUgDZ8bDXKbfEIBnQAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBz3Gl7/2uYT80o+AFufhavBSzEJCJIQqnY
+PN2b0EzjAm8sCefRIoJXhzY9cxc7HriLbjGUUBVzKf6KjcM67E6y0b0YXCFNVj5Bl3RjklNpzOBK
+jKQ/+LHMinMvPTQv4NKCh38DyRw1fFYBIG8++rTe8rTdmZv7GK1fMLWPG6rnHgx6xx7lfitLc95R
+/dNIOvFh/Gr4wn0QpPEbVFAThBDCxmK9tVTg51d4HRd8zlFic0Y97imC5nLXQbhUcuRCzj0zX9oG
+FvoJCtmuf2Ue0otOwS1pisujRW+X/MJhNvg/VVge4OngsRxNn8/sxceQDj+Sbk3ZJu34KyKxbsEW
+PI3mP6xyEBkhwoWom5LMmHJJsGHzIGqC+cE9LJh0UPmTCra/TSoi6HpRw0gl/LIjX+ksx75iqbsH
+p/7sy9vGdYpuOS+WR1DNVFGTg4T4xFksY0VDyubP1HNlHCyf/NKMDZzT0gTGr74gwALA4UQnZr78
+kc2U1ahercX8Y6TMm/41QP5SlQo3mDDMrtlhgHD3FHhbPHuMuTARpHUqwHP+x82jDBLOBlp2JdU1
+VjeDL/63OUOYmAItEwmd86fjH9t2FEKwN7eosa/6bW4bn6uxghv3iLTsPQlvYlAP7JRacdfevShX
+atwLTr0kijQ5NOW9iqNDWZCIcydIZ8omFEPHMYAMoAAAAAAAAA==
 
 
---=-oueWtT74HJFqaqIASEjP--
+--=-S93rhy7XAih6PPeHn3if--
 
