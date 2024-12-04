@@ -4,76 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5BC1E77170
-	for <kexec@archiver.kernel.org>; Wed,  4 Dec 2024 12:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 673F4E7716E
+	for <kexec@archiver.kernel.org>; Wed,  4 Dec 2024 12:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=; b=QKkgnrITc9ILyWNPv5pGZ6ODQe
-	4D78AQZIJ8vtLcExq+ftOP1betwEBB0sQg4lGXEpmu62FbFPoZbptDGBvxS9XZiLGF6RW6/BS0f19
-	0GmRlC50z68BkTXB9hb5cPcrJz393i9XPNpk26p0GPM5EUrjmqHLBbTVVvK6ZgnZwdSTxylhhrGC2
-	AmiGToCV2u+B9UDgLPO9gHDirUL78LoAxfi7+z9EBvMBm7GDwtjfplcU9d4SWkTdwfEIW5nFldU65
-	pRMX8ReVsWomee6Uea2btcaS7bCpK6/ViKCP4jNJr1rEBYXYZiAEaAnT2xC6ZqQZMGz2MeQjvdU4p
-	fzcL86bw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OXGsdvv3AOb25EXWN4EjEJfR5qBP9EzuVcsjQaH9awM=; b=3E3LbvT4y0HOVKWEijuPAGHkUz
+	SzeGQrHZW39OQb6u4HPoOdWa5nDXjxwDFIqx9hlZiaZ7+4xqSimBZ/a3kl9Bs69nhw7ZCP/z7VmxH
+	osCedhOznZmnsST1sx70TSQweJG7FHncqSdTFaTNTVG1/MGJznA9eqU/SR+ygrdPFgYB207ut+R77
+	kejmnYBRnfwcspXTzhEbDJNbIyLlgWL/Hr0w7bOYKoWaTjHl3P5xrjiFmV+I2OEu1fDZQuuAImf6F
+	rEM8sOp9nR9SyzGnNhHkqggaJmPWv/vevNmCdoWSQ8qLRKBqdViIIFTCIO73RvPu1V7ErcJGVWNIv
+	FeC6oqQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIoxc-0000000CbMW-3zod;
-	Wed, 04 Dec 2024 12:58:32 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tIoxd-0000000CbNw-35fh;
+	Wed, 04 Dec 2024 12:58:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIou5-0000000Ca3A-1ym9
+	id 1tIou8-0000000Ca3T-1f1i
 	for kexec@lists.infradead.org;
-	Wed, 04 Dec 2024 12:54:55 +0000
+	Wed, 04 Dec 2024 12:54:57 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733316890;
+	s=mimecast20190719; t=1733316894;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=;
-	b=dQo4ssTxIMyeopv1YcD3KVbQGNNDW3P4KZYdCNxbig923f15xWFwztyquizyZ94zgoSqIa
-	3S+SdmXIZpkbLPOHz27GUV8fnaK36y+NfMpPtyQuHZHl0A6JpD90TzuCx4uQt9L7owuZhY
-	lT68kMjUzHBw4OpyoQo7wQjLBePg3Z8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXGsdvv3AOb25EXWN4EjEJfR5qBP9EzuVcsjQaH9awM=;
+	b=aIY6S0/pl2mAWKnk2YhdCjho6g5xm6MFB8zvXAQ7Ptn3s6S2aGka8EyXaMrOKnEmScgmqH
+	EbTG89VwsF0xgjbITvKU+Zh0aXZaKpjPPr9Xu2MK3IfDX09QVo//KIcsQOPNZLlimxQ/Kj
+	Yosthy0tJg7xCd+J521tOlIzGrVgjlQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-fzbN3uvlMRint8ySYq5Z7A-1; Wed, 04 Dec 2024 07:54:49 -0500
-X-MC-Unique: fzbN3uvlMRint8ySYq5Z7A-1
-X-Mimecast-MFC-AGG-ID: fzbN3uvlMRint8ySYq5Z7A
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43498af79a6so4979305e9.0
-        for <kexec@lists.infradead.org>; Wed, 04 Dec 2024 04:54:49 -0800 (PST)
+ us-mta-313-_1OjBS3lNj657iCfMi4sDg-1; Wed, 04 Dec 2024 07:54:52 -0500
+X-MC-Unique: _1OjBS3lNj657iCfMi4sDg-1
+X-Mimecast-MFC-AGG-ID: _1OjBS3lNj657iCfMi4sDg
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-385e9c69929so1598852f8f.1
+        for <kexec@lists.infradead.org>; Wed, 04 Dec 2024 04:54:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733316888; x=1733921688;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=;
-        b=tjdKlHmhZVihQ/PLMiaFDh9rbLKWDHioA8FG0KN1BR3Q7RJPfVPEeBg9rkY48s6L7M
-         ShUphMWtKkq432SlgNNwlzLi7uElND01RAakF8owNffKPixF2THkBx4/E5NBmdLI/ZU3
-         CIlIRXAWUmlNLKQ9EYye9ZViWSj3BFD1iHwTru5YzxoUkqYT+rOYYUzbfx9KSt3v+2tA
-         PGCwCt0OEh397Wrkq3OnslTXJ0btK0VNxOCBnTF6Z98kcrFzRztKDdUU3y4/gdww8ITQ
-         JlEZVQa/ArQz6XhXBlQXD0k2HtXWtTcK6EwQCsKcvwCxAINg59Fv+H55nbOoZZxAEXyM
-         7CWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+kfnO6esxv9rFLhB26rtURKLF6MPsZqTiJ0QCmhcjNRFoUZioi/xljDXEqodcFDmxqqIWSw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw5IEs1vUed7gOPX8vkTF14bc2y2ekxFa3S0KNdS1tbxL8sQXKf
-	Jg3p6C56qOmKKH9HUdwT7C5seELJphc4Uc++v6PbvTbyOZqzqG1dcVzliKQtnEbnA51LrUpOFAA
-	gAQHDbZprOkywPXnP6cWacAvtOY3TONFJpboTNcevLSKHCpAQNZnK55/pJg==
-X-Gm-Gg: ASbGnctvqU4JjHG1nrmzxMhRc/ROK25K1OBaEgebsbnS/ZqiVsjfKTLTlDFRkGVxM7p
-	wDFEty2rs5+eIRwQ4+u5fmeRXZjIanORhbYTIe2M+DN5IEBg7Ee14YLFKpuUiuT6lSYaXulXjrm
-	TWLcOk9+pEampGfX2FLTOomIUNPHmzJvX+YLenrFZubKVlZ5JdJcmxx0I2Zbwdagh29uFqelmUC
-	qyu9f3O5owDdqXnh4TYKq00bMT0Lb23S1o1Bxc+TsgeHAuP2Hn3zNc2dOOhsOAJ9ikOK1NHUTHu
-	uEIlWb0uI9EMK3xskC7OYJI9TSoU3xXhTZQ=
-X-Received: by 2002:a05:600c:6c8a:b0:434:8e8a:d4ec with SMTP id 5b1f17b1804b1-434afc3b6e1mr245982075e9.13.1733316888157;
-        Wed, 04 Dec 2024 04:54:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHjMr0hScnPOMMpphAyax2V0MFBHZqym1YHIjea01hMzMXczx6opOHdnARaXNIvDZGqHVvbtg==
-X-Received: by 2002:a05:600c:6c8a:b0:434:8e8a:d4ec with SMTP id 5b1f17b1804b1-434afc3b6e1mr245981785e9.13.1733316887744;
-        Wed, 04 Dec 2024 04:54:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733316891; x=1733921691;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OXGsdvv3AOb25EXWN4EjEJfR5qBP9EzuVcsjQaH9awM=;
+        b=uLx+44+9/PeBkQ6TmfQPI8soPNjtaoK4uSkeHxB3BZhhOrr5UhXxn4A9hUQfnxWn6Y
+         xkUetBo+jTOVfZgWkOzLqz5Z051SLYeGwpSewWbrnwgv5hvy7A9KU49/64++BnjUQZN5
+         D3JATPxgg58tGiHJ6rM8WRUUBB2FioZmng4JeU3LVoJbxP74lLNpnaRKWPfMhkZtX3Pg
+         XTkDBsW+HqZoL8JdQvqISAcZDBEBSLUoQru+5YUhFkvmE9CDO/7buyA6sYwa7SwKKDGF
+         BU2QDhdoQ1p2tSdW5nck58z+Y7dcTD4LawZ30jU2Fm8iZp3Sf0leLdzz/zbt1HogUCEy
+         +9cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWycboesVRy5hWJg2sRsDLFugEtYlU4RckgegsmJmSuPNgdlvwR9LWU5YQ7Kjn7TifAzVOCaA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx1wuo2xrMn3Xg3hDRv6rTEthjxmK6aoq3Ajlpowi8BL7PxB/sZ
+	mrYmjTPw/vuA5eD2L49cup3FZtpSbmVE0WzgNkYseSDCN1Ka5aAXsvtqFzXC2uz8yJnB5orlVj1
+	HOt0oHXlmajOOnzsF7f/JRI5gzkwCNFJ+HrpYp2zyOAmEqwjc6WGpHFYZOg==
+X-Gm-Gg: ASbGnctJ6XEqqdHUwhXRUMnVQ3SO7VebIHrtTXdum6k6HTeOasZt+sdJFQ8FfzbJ9oo
+	ZEvzT1jk9yxOmrVLlT/sB+k0y8oPcgO/IrjNmW937XZnPAG4wQCmDHsTqCqcAzCvPUMpRs093/g
+	KEvghVkI2RziLIoRlMgyyg5VLQYUiGHoEmGFzK9e7Dp86gntSUk1i32MPWS3vOWQxDXJUXtD8Q6
+	C8/MbnySli1zjqtAKIbgU9j27zp/5JILSWzHwpqAbo5O3gbds/wokujFiLv5Y5vty+ZON9IMfdX
+	O6CsEIpnGvYNFKukNrogKMQl8kPU/8/Rlds=
+X-Received: by 2002:a5d:6d08:0:b0:385:f280:d55 with SMTP id ffacd0b85a97d-385fd418db2mr5360099f8f.37.1733316890966;
+        Wed, 04 Dec 2024 04:54:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHGOcFoEjkEw+PoNC+LLaws3waLwovX9iW85k260HP1nxTmH4H7ZaUgV85wmWvqw6YlLZ08+Q==
+X-Received: by 2002:a5d:6d08:0:b0:385:f280:d55 with SMTP id ffacd0b85a97d-385fd418db2mr5360063f8f.37.1733316890620;
+        Wed, 04 Dec 2024 04:54:50 -0800 (PST)
 Received: from localhost (p200300cbc70be10038d68aa111b0a20a.dip0.t-ipconnect.de. [2003:cb:c70b:e100:38d6:8aa1:11b0:a20a])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-434d52c0bc7sm23514855e9.35.2024.12.04.04.54.44
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-385ea9c5952sm11045422f8f.67.2024.12.04.04.54.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 04:54:46 -0800 (PST)
+        Wed, 04 Dec 2024 04:54:49 -0800 (PST)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -101,19 +102,21 @@ Cc: linux-mm@kvack.org,
 	Claudio Imbrenda <imbrenda@linux.ibm.com>,
 	Eric Farman <farman@linux.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 00/12] fs/proc/vmcore: kdump support for virtio-mem on s390
-Date: Wed,  4 Dec 2024 13:54:31 +0100
-Message-ID: <20241204125444.1734652-1-david@redhat.com>
+Subject: [PATCH v2 01/12] fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex
+Date: Wed,  4 Dec 2024 13:54:32 +0100
+Message-ID: <20241204125444.1734652-2-david@redhat.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241204125444.1734652-1-david@redhat.com>
+References: <20241204125444.1734652-1-david@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: plVWvPb-Sm4uFWQaIZveLgPjzThq0C6acCQCfCNTi8Q_1733316888
+X-Mimecast-MFC-PROC-ID: mqYEPGZgUmMHMEXFj71ORIWbVFl6IVyYsTy_d3EWSiY_1733316891
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241204_045453_588262_A1D47A24 
-X-CRM114-Status: GOOD (  21.94  )
+X-CRM114-CacheID: sfid-20241204_045456_506732_BE06BBD3 
+X-CRM114-Status: GOOD (  13.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,131 +131,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The only "different than everything else" thing about virtio-mem on s390
-is kdump: The crash (2nd) kernel allocates+prepares the elfcore hdr
-during fs_init()->vmcore_init()->elfcorehdr_alloc(). Consequently, the
-kdump kernel must detect memory ranges of the crashed kernel to
-include via PT_LOAD in the vmcore.
+We want to protect vmcore modifications from concurrent opening of
+the vmcore, and also serialize vmcore modification.
 
-On other architectures, all RAM regions (boot + hotplugged) can easily be
-observed on the old (to crash) kernel (e.g., using /proc/iomem) to create
-the elfcore hdr.
+(a) We can currently modify the vmcore after it was opened. This can happen
+    if a vmcoredd is added after the vmcore module was initialized and
+    already opened by user space. We want to fix that and prepare for
+    new code wanting to serialize against concurrent opening.
 
-On s390, information about "ordinary" memory (heh, "storage") can be
-obtained by querying the hypervisor/ultravisor via SCLP/diag260, and
-that information is stored early during boot in the "physmem" memblock
-data structure.
+(b) To handle it cleanly we need to protect the modifications against
+    concurrent opening. As the modifications end up allocating memory and
+    can sleep, we cannot rely on the spinlock.
 
-But virtio-mem memory is always detected by as device driver, which is
-usually build as a module. So in the crash kernel, this memory can only be
-properly detected once the virtio-mem driver started up.
+Let's convert the spinlock into a mutex to prepare for further changes.
 
-The virtio-mem driver already supports the "kdump mode", where it won't
-hotplug any memory but instead queries the device to implement the
-pfn_is_ram() callback, to avoid reading unplugged memory holes when reading
-the vmcore.
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ fs/proc/vmcore.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-With this series, if the virtio-mem driver is included in the kdump
-initrd -- which dracut already takes care of under Fedora/RHEL -- it will
-now detect the device RAM ranges on s390 once it probes the devices, to add
-them to the vmcore using the same callback mechanism we already have for
-pfn_is_ram().
-
-To add these device RAM ranges to the vmcore ("patch the vmcore"), we will
-add new PT_LOAD entries that describe these memory ranges, and update
-all offsets vmcore size so it is all consistent.
-
-My testing when creating+analyzing crash dumps with hotplugged virtio-mem
-memory (incl. holes) did not reveal any surprises.
-
-Patch #1 -- #7 are vmcore preparations and cleanups
-Patch #8 adds the infrastructure for drivers to report device RAM
-Patch #9 + #10 are virtio-mem preparations
-Patch #11 implements virtio-mem support to report device RAM
-Patch #12 activates it for s390, implementing a new function to fill
-          PT_LOAD entry for device RAM
-
-v1 -> v2:
-* "fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex"
- -> Extend patch description
-* "fs/proc/vmcore: replace vmcoredd_mutex by vmcore_mutex"
- -> Extend patch description
-* "fs/proc/vmcore: disallow vmcore modifications while the vmcore is open"
- -> Disallow modifications only if it is currently open, but warn if it
-    was already open and got closed again.
- -> Track vmcore_open vs. vmcore_opened
- -> Extend patch description
-* "fs/proc/vmcore: prefix all pr_* with "vmcore:""
- -> Added
-* "fs/proc/vmcore: move vmcore definitions out if kcore.h"
- -> Call it "vmcore_range"
- -> Place vmcoredd_node into vmcore.c
- -> Adjust patch subject + description
-* "fs/proc/vmcore: factor out allocating a vmcore range and adding it to a
-   list"
- -> Adjust to "vmcore_range"
-* "fs/proc/vmcore: factor out freeing a list of vmcore ranges"
- -> Adjust to "vmcore_range"
-* "fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM to detect device RAM
-   ranges in 2nd kernel"
- -> Drop PROVIDE_PROC_VMCORE_DEVICE_RAM for now
- -> Simplify Kconfig a bit
- -> Drop "Kdump:" from warnings/errors
- -> Perform Elf64 check first
- -> Add regions also if the vmcore was opened, but got closed again. But
-    warn in any case, because it is unexpected.
- -> Adjust patch description
-* "virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM"
- -> "depends on VIRTIO_MEM" for PROC_VMCORE_DEVICE_RAM
-
-
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: "Eugenio Pérez" <eperezma@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Thomas Huth <thuth@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Eric Farman <farman@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-
-David Hildenbrand (12):
-  fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex
-  fs/proc/vmcore: replace vmcoredd_mutex by vmcore_mutex
-  fs/proc/vmcore: disallow vmcore modifications while the vmcore is open
-  fs/proc/vmcore: prefix all pr_* with "vmcore:"
-  fs/proc/vmcore: move vmcore definitions out of kcore.h
-  fs/proc/vmcore: factor out allocating a vmcore range and adding it to
-    a list
-  fs/proc/vmcore: factor out freeing a list of vmcore ranges
-  fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM to detect device RAM
-    ranges in 2nd kernel
-  virtio-mem: mark device ready before registering callbacks in kdump
-    mode
-  virtio-mem: remember usable region size
-  virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM
-  s390/kdump: virtio-mem kdump support (CONFIG_PROC_VMCORE_DEVICE_RAM)
-
- arch/s390/Kconfig             |   1 +
- arch/s390/kernel/crash_dump.c |  39 ++++-
- drivers/virtio/virtio_mem.c   | 103 ++++++++++++-
- fs/proc/Kconfig               |  19 +++
- fs/proc/vmcore.c              | 283 ++++++++++++++++++++++++++--------
- include/linux/crash_dump.h    |  41 +++++
- include/linux/kcore.h         |  13 --
- 7 files changed, 407 insertions(+), 92 deletions(-)
-
-
-base-commit: feffde684ac29a3b7aec82d2df850fbdbdee55e4
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index b4521b096058..586f84677d2f 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -62,7 +62,8 @@ core_param(novmcoredd, vmcoredd_disabled, bool, 0);
+ /* Device Dump Size */
+ static size_t vmcoredd_orig_sz;
+ 
+-static DEFINE_SPINLOCK(vmcore_cb_lock);
++static DEFINE_MUTEX(vmcore_mutex);
++
+ DEFINE_STATIC_SRCU(vmcore_cb_srcu);
+ /* List of registered vmcore callbacks. */
+ static LIST_HEAD(vmcore_cb_list);
+@@ -72,7 +73,7 @@ static bool vmcore_opened;
+ void register_vmcore_cb(struct vmcore_cb *cb)
+ {
+ 	INIT_LIST_HEAD(&cb->next);
+-	spin_lock(&vmcore_cb_lock);
++	mutex_lock(&vmcore_mutex);
+ 	list_add_tail(&cb->next, &vmcore_cb_list);
+ 	/*
+ 	 * Registering a vmcore callback after the vmcore was opened is
+@@ -80,13 +81,13 @@ void register_vmcore_cb(struct vmcore_cb *cb)
+ 	 */
+ 	if (vmcore_opened)
+ 		pr_warn_once("Unexpected vmcore callback registration\n");
+-	spin_unlock(&vmcore_cb_lock);
++	mutex_unlock(&vmcore_mutex);
+ }
+ EXPORT_SYMBOL_GPL(register_vmcore_cb);
+ 
+ void unregister_vmcore_cb(struct vmcore_cb *cb)
+ {
+-	spin_lock(&vmcore_cb_lock);
++	mutex_lock(&vmcore_mutex);
+ 	list_del_rcu(&cb->next);
+ 	/*
+ 	 * Unregistering a vmcore callback after the vmcore was opened is
+@@ -95,7 +96,7 @@ void unregister_vmcore_cb(struct vmcore_cb *cb)
+ 	 */
+ 	if (vmcore_opened)
+ 		pr_warn_once("Unexpected vmcore callback unregistration\n");
+-	spin_unlock(&vmcore_cb_lock);
++	mutex_unlock(&vmcore_mutex);
+ 
+ 	synchronize_srcu(&vmcore_cb_srcu);
+ }
+@@ -120,9 +121,9 @@ static bool pfn_is_ram(unsigned long pfn)
+ 
+ static int open_vmcore(struct inode *inode, struct file *file)
+ {
+-	spin_lock(&vmcore_cb_lock);
++	mutex_lock(&vmcore_mutex);
+ 	vmcore_opened = true;
+-	spin_unlock(&vmcore_cb_lock);
++	mutex_unlock(&vmcore_mutex);
+ 
+ 	return 0;
+ }
 -- 
 2.47.1
 
