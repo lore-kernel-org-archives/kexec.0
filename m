@@ -4,63 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 623FEE7716B
-	for <kexec@archiver.kernel.org>; Wed,  4 Dec 2024 11:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5BC1E77170
+	for <kexec@archiver.kernel.org>; Wed,  4 Dec 2024 12:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=KJ2Q4ZqhCNkrSiVW15tDffYs6TsIHHguf5lnK/PIUzU=; b=FSCv3ZGOsmf/mh28S1pPGZ27nx
-	HjF/JxPL+olmr9muz8tZFcpIgeiFSeSPc+wKMldeP9NIOnFEahzd7oUzfa3knPAL8Zevn9tkNH63p
-	kigCyD7wsBIcCEXvVvQ9zRxDXL4CWIvCuiAUWpcLV/1bQWgKsXyGsEUTISLyXv61nMZyq3Rm+AshP
-	Ys1X1ewJ/Rw2KoFV2Ua5iVhsfYd+Mepb93XALqgod+AvZWjzYI9ii9xJZWN3ZpPmX9T5+2wEpkRDN
-	FaHMKGpfsO5fouLS09ZEyc10xT3Md2t5OCMvHdIDK+K0XnyYY1nsS+eQgCjKCu6lwE+1vkkx/Xo0l
-	hQhaoIew==;
+	bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=; b=QKkgnrITc9ILyWNPv5pGZ6ODQe
+	4D78AQZIJ8vtLcExq+ftOP1betwEBB0sQg4lGXEpmu62FbFPoZbptDGBvxS9XZiLGF6RW6/BS0f19
+	0GmRlC50z68BkTXB9hb5cPcrJz393i9XPNpk26p0GPM5EUrjmqHLBbTVVvK6ZgnZwdSTxylhhrGC2
+	AmiGToCV2u+B9UDgLPO9gHDirUL78LoAxfi7+z9EBvMBm7GDwtjfplcU9d4SWkTdwfEIW5nFldU65
+	pRMX8ReVsWomee6Uea2btcaS7bCpK6/ViKCP4jNJr1rEBYXYZiAEaAnT2xC6ZqQZMGz2MeQjvdU4p
+	fzcL86bw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tInXP-0000000CNhY-1UDo;
-	Wed, 04 Dec 2024 11:27:23 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tIoxc-0000000CbMW-3zod;
+	Wed, 04 Dec 2024 12:58:32 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tInXM-0000000CNhC-114I
-	for kexec@bombadil.infradead.org;
-	Wed, 04 Dec 2024 11:27:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:Date:Cc:To:
-	From:Subject:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=KJ2Q4ZqhCNkrSiVW15tDffYs6TsIHHguf5lnK/PIUzU=; b=uUoB6lLfAdKU5wNmwfpKENuB6O
-	dNQWaUBJJWMfX5MAgjjVdVFT4+VuY2siWpTfVIH+tY30XINVPFjuvihxvIv1v0fcS34DDpD26hFD+
-	709HbPUoIFN7BOYDfqLJXufIVYVjKpPkmmvIl5WW7sJHrPtlcoaHUHuu6JFJgMaKI4KYDhKPBztIY
-	dLVr220F/k0WlgkOQ3tuL3nsncsxGkOliMG0LaeFo9rxCjU/EZYwMdqjlmuQQcimv1r/9JbRPa7rs
-	6Bms02+tbZ6nNuDfAYbCJpNyByxZdGM9OmwMqehFnUoMWEV8sRexcZfQGZkc9pBXSoq9FapBWDyoZ
-	DNAJQbRA==;
-Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=edge-m1-r1-104.e-iad16.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tInXG-0000000BHeU-1t95;
-	Wed, 04 Dec 2024 11:27:16 +0000
-Message-ID: <412c90a4df7aef077141d9f68d19cbe5602d6c6d.camel@infradead.org>
-Subject: [PATCH] x86/mm: Add _PAGE_NOPTISHADOW bit to avoid updating
- userspace page tables
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>,  Rick Edgecombe
- <rick.p.edgecombe@intel.com>, David Woodhouse <dwmw@amazon.co.uk>, Tom
- Lendacky <thomas.lendacky@amd.com>, Yue Haibing <yuehaibing@huawei.com>,
- Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-Cc: kexec <kexec@lists.infradead.org>, linux-mm@vger.kernel.org, stable
-	 <stable@vger.kernel.org>
-Date: Wed, 04 Dec 2024 11:27:14 +0000
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-quzhiDMlavBYSPCmnHEr"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tIou5-0000000Ca3A-1ym9
+	for kexec@lists.infradead.org;
+	Wed, 04 Dec 2024 12:54:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733316890;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=;
+	b=dQo4ssTxIMyeopv1YcD3KVbQGNNDW3P4KZYdCNxbig923f15xWFwztyquizyZ94zgoSqIa
+	3S+SdmXIZpkbLPOHz27GUV8fnaK36y+NfMpPtyQuHZHl0A6JpD90TzuCx4uQt9L7owuZhY
+	lT68kMjUzHBw4OpyoQo7wQjLBePg3Z8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-fzbN3uvlMRint8ySYq5Z7A-1; Wed, 04 Dec 2024 07:54:49 -0500
+X-MC-Unique: fzbN3uvlMRint8ySYq5Z7A-1
+X-Mimecast-MFC-AGG-ID: fzbN3uvlMRint8ySYq5Z7A
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43498af79a6so4979305e9.0
+        for <kexec@lists.infradead.org>; Wed, 04 Dec 2024 04:54:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733316888; x=1733921688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MB2MAmGSlUi5YLf0fUp0VNgn+MFysC4aDDm3o00zI78=;
+        b=tjdKlHmhZVihQ/PLMiaFDh9rbLKWDHioA8FG0KN1BR3Q7RJPfVPEeBg9rkY48s6L7M
+         ShUphMWtKkq432SlgNNwlzLi7uElND01RAakF8owNffKPixF2THkBx4/E5NBmdLI/ZU3
+         CIlIRXAWUmlNLKQ9EYye9ZViWSj3BFD1iHwTru5YzxoUkqYT+rOYYUzbfx9KSt3v+2tA
+         PGCwCt0OEh397Wrkq3OnslTXJ0btK0VNxOCBnTF6Z98kcrFzRztKDdUU3y4/gdww8ITQ
+         JlEZVQa/ArQz6XhXBlQXD0k2HtXWtTcK6EwQCsKcvwCxAINg59Fv+H55nbOoZZxAEXyM
+         7CWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+kfnO6esxv9rFLhB26rtURKLF6MPsZqTiJ0QCmhcjNRFoUZioi/xljDXEqodcFDmxqqIWSw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw5IEs1vUed7gOPX8vkTF14bc2y2ekxFa3S0KNdS1tbxL8sQXKf
+	Jg3p6C56qOmKKH9HUdwT7C5seELJphc4Uc++v6PbvTbyOZqzqG1dcVzliKQtnEbnA51LrUpOFAA
+	gAQHDbZprOkywPXnP6cWacAvtOY3TONFJpboTNcevLSKHCpAQNZnK55/pJg==
+X-Gm-Gg: ASbGnctvqU4JjHG1nrmzxMhRc/ROK25K1OBaEgebsbnS/ZqiVsjfKTLTlDFRkGVxM7p
+	wDFEty2rs5+eIRwQ4+u5fmeRXZjIanORhbYTIe2M+DN5IEBg7Ee14YLFKpuUiuT6lSYaXulXjrm
+	TWLcOk9+pEampGfX2FLTOomIUNPHmzJvX+YLenrFZubKVlZ5JdJcmxx0I2Zbwdagh29uFqelmUC
+	qyu9f3O5owDdqXnh4TYKq00bMT0Lb23S1o1Bxc+TsgeHAuP2Hn3zNc2dOOhsOAJ9ikOK1NHUTHu
+	uEIlWb0uI9EMK3xskC7OYJI9TSoU3xXhTZQ=
+X-Received: by 2002:a05:600c:6c8a:b0:434:8e8a:d4ec with SMTP id 5b1f17b1804b1-434afc3b6e1mr245982075e9.13.1733316888157;
+        Wed, 04 Dec 2024 04:54:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHjMr0hScnPOMMpphAyax2V0MFBHZqym1YHIjea01hMzMXczx6opOHdnARaXNIvDZGqHVvbtg==
+X-Received: by 2002:a05:600c:6c8a:b0:434:8e8a:d4ec with SMTP id 5b1f17b1804b1-434afc3b6e1mr245981785e9.13.1733316887744;
+        Wed, 04 Dec 2024 04:54:47 -0800 (PST)
+Received: from localhost (p200300cbc70be10038d68aa111b0a20a.dip0.t-ipconnect.de. [2003:cb:c70b:e100:38d6:8aa1:11b0:a20a])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-434d52c0bc7sm23514855e9.35.2024.12.04.04.54.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2024 04:54:46 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-s390@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	David Hildenbrand <david@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 00/12] fs/proc/vmcore: kdump support for virtio-mem on s390
+Date: Wed,  4 Dec 2024 13:54:31 +0100
+Message-ID: <20241204125444.1734652-1-david@redhat.com>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: plVWvPb-Sm4uFWQaIZveLgPjzThq0C6acCQCfCNTi8Q_1733316888
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241204_045453_588262_A1D47A24 
+X-CRM114-Status: GOOD (  21.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,256 +128,132 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+The only "different than everything else" thing about virtio-mem on s390
+is kdump: The crash (2nd) kernel allocates+prepares the elfcore hdr
+during fs_init()->vmcore_init()->elfcorehdr_alloc(). Consequently, the
+kdump kernel must detect memory ranges of the crashed kernel to
+include via PT_LOAD in the vmcore.
 
---=-quzhiDMlavBYSPCmnHEr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On other architectures, all RAM regions (boot + hotplugged) can easily be
+observed on the old (to crash) kernel (e.g., using /proc/iomem) to create
+the elfcore hdr.
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+On s390, information about "ordinary" memory (heh, "storage") can be
+obtained by querying the hypervisor/ultravisor via SCLP/diag260, and
+that information is stored early during boot in the "physmem" memblock
+data structure.
 
-The set_p4d() and set_pgd() functions (in 4-level or 5-level page table set=
-ups
-respectively) assume that the root page table is actually a 8KiB allocation=
-,
-with the userspace root immediately after the kernel root page table (so th=
-at
-the former can enforce NX on on all the subordinate page tables, which are
-actually shared).
+But virtio-mem memory is always detected by as device driver, which is
+usually build as a module. So in the crash kernel, this memory can only be
+properly detected once the virtio-mem driver started up.
 
-However, users of the kernel_ident_mapping_init() code do not give it an 8K=
-iB
-allocation for its PGD. Both swsusp_arch_resume() and acpi_mp_setup_reset()
-allocate only a single 4KiB page. The kexec code on x86_64 currently gets
-away with it purely by chance, because it allocates 8KiB for its "control
-code page" and then actually uses the first half for the PGD, then copies t=
-he
-actual trampoline code into the second half only after the identmap code ha=
-s
-finished scribbling over it.
+The virtio-mem driver already supports the "kdump mode", where it won't
+hotplug any memory but instead queries the device to implement the
+pfn_is_ram() callback, to avoid reading unplugged memory holes when reading
+the vmcore.
 
-Fix this by defining a _PAGE_NOPTISHADOW bit (which can use the same bit as
-_PAGE_SAVED_DIRTY since one is only for the PGD/P4D root and the other is
-exclusively for leaf PTEs.). This instructs __pti_set_user_pgtbl() not to
-write to the userspace 'shadow' PGD.
+With this series, if the virtio-mem driver is included in the kdump
+initrd -- which dracut already takes care of under Fedora/RHEL -- it will
+now detect the device RAM ranges on s390 once it probes the devices, to add
+them to the vmcore using the same callback mechanism we already have for
+pfn_is_ram().
 
-Strictly, the _PAGE_NOPTISHADOW bit doesn't need to be written out to the
-actual page tables; since __pti_set_user_pgtbl() returns the value to be
-written to the kernel page table, it could be filtered out. But there seems
-to be no benefit to actually doing so.
+To add these device RAM ranges to the vmcore ("patch the vmcore"), we will
+add new PT_LOAD entries that describe these memory ranges, and update
+all offsets vmcore size so it is all consistent.
 
-Cc: stable@kernel.org
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
-Split out from the kexec-debug series at=20
-https://lore.kernel.org/kexec/c16ed8f5c960c34f05b88b84a31f28a610f6a3cf.came=
-l@infradead.org/T/
-because it looks like it's an actual bug fix for the hibernate and
-acpi_mp cases. It only bites kexec after I take away the extra 4KiB
-that we were letting it safely scribble on purely by chance.
+My testing when creating+analyzing crash dumps with hotplugged virtio-mem
+memory (incl. holes) did not reveal any surprises.
 
-Added Cc:stable for discussion but the simpler fix there might just be
-to allocate a full 8KiB for the PGD for the affected use cases?
+Patch #1 -- #7 are vmcore preparations and cleanups
+Patch #8 adds the infrastructure for drivers to report device RAM
+Patch #9 + #10 are virtio-mem preparations
+Patch #11 implements virtio-mem support to report device RAM
+Patch #12 activates it for s390, implementing a new function to fill
+          PT_LOAD entry for device RAM
 
- arch/x86/include/asm/pgtable_types.h | 8 ++++++--
- arch/x86/mm/ident_map.c              | 6 +++---
- arch/x86/mm/pti.c                    | 2 +-
- 3 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pg=
-table_types.h
-index 6f82e75b6149..4b804531b03c 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -36,10 +36,12 @@
- #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
-=20
- #ifdef CONFIG_X86_64
--#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit */
-+#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit (leaf) *=
-/
-+#define _PAGE_BIT_NOPTISHADOW	_PAGE_BIT_SOFTW5 /* No PTI shadow (root PGD)=
- */
- #else
- /* Shared with _PAGE_BIT_UFFD_WP which is not supported on 32 bit */
--#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW2 /* Saved Dirty bit */
-+#define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW2 /* Saved Dirty bit (leaf) *=
-/
-+#define _PAGE_BIT_NOPTISHADOW	_PAGE_BIT_SOFTW2 /* No PTI shadow (root PGD)=
- */
- #endif
-=20
- /* If _PAGE_BIT_PRESENT is clear, we use these: */
-@@ -139,6 +141,8 @@
-=20
- #define _PAGE_PROTNONE	(_AT(pteval_t, 1) << _PAGE_BIT_PROTNONE)
-=20
-+#define _PAGE_NOPTISHADOW (_AT(pteval_t, 1) << _PAGE_BIT_NOPTISHADOW)
-+
- /*
-  * Set of bits not changed in pte_modify.  The pte's
-  * protection key is treated like _PAGE_RW, for
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 437e96fb4977..5ab7bd2f1983 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -174,7 +174,7 @@ static int ident_p4d_init(struct x86_mapping_info *info=
-, p4d_t *p4d_page,
- 		if (result)
- 			return result;
-=20
--		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag));
-+		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 	}
-=20
- 	return 0;
-@@ -218,14 +218,14 @@ int kernel_ident_mapping_init(struct x86_mapping_info=
- *info, pgd_t *pgd_page,
- 		if (result)
- 			return result;
- 		if (pgtable_l5_enabled()) {
--			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag));
-+			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 		} else {
- 			/*
- 			 * With p4d folded, pgd is equal to p4d.
- 			 * The pgd entry has to point to the pud page table in this case.
- 			 */
- 			pud_t *pud =3D pud_offset(p4d, 0);
--			set_pgd(pgd, __pgd(__pa(pud) | info->kernpg_flag));
-+			set_pgd(pgd, __pgd(__pa(pud) | info->kernpg_flag | _PAGE_NOPTISHADOW));
- 		}
- 	}
-=20
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 851ec8f1363a..5f0d579932c6 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -132,7 +132,7 @@ pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
- 	 * Top-level entries added to init_mm's usermode pgd after boot
- 	 * will not be automatically propagated to other mms.
- 	 */
--	if (!pgdp_maps_userspace(pgdp))
-+	if (!pgdp_maps_userspace(pgdp) || (pgd.pgd & _PAGE_NOPTISHADOW))
- 		return pgd;
-=20
- 	/*
---=20
-2.47.0
+v1 -> v2:
+* "fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex"
+ -> Extend patch description
+* "fs/proc/vmcore: replace vmcoredd_mutex by vmcore_mutex"
+ -> Extend patch description
+* "fs/proc/vmcore: disallow vmcore modifications while the vmcore is open"
+ -> Disallow modifications only if it is currently open, but warn if it
+    was already open and got closed again.
+ -> Track vmcore_open vs. vmcore_opened
+ -> Extend patch description
+* "fs/proc/vmcore: prefix all pr_* with "vmcore:""
+ -> Added
+* "fs/proc/vmcore: move vmcore definitions out if kcore.h"
+ -> Call it "vmcore_range"
+ -> Place vmcoredd_node into vmcore.c
+ -> Adjust patch subject + description
+* "fs/proc/vmcore: factor out allocating a vmcore range and adding it to a
+   list"
+ -> Adjust to "vmcore_range"
+* "fs/proc/vmcore: factor out freeing a list of vmcore ranges"
+ -> Adjust to "vmcore_range"
+* "fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM to detect device RAM
+   ranges in 2nd kernel"
+ -> Drop PROVIDE_PROC_VMCORE_DEVICE_RAM for now
+ -> Simplify Kconfig a bit
+ -> Drop "Kdump:" from warnings/errors
+ -> Perform Elf64 check first
+ -> Add regions also if the vmcore was opened, but got closed again. But
+    warn in any case, because it is unexpected.
+ -> Adjust patch description
+* "virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM"
+ -> "depends on VIRTIO_MEM" for PROC_VMCORE_DEVICE_RAM
 
 
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: "Eugenio Pérez" <eperezma@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Thomas Huth <thuth@redhat.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Eric Farman <farman@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 
---=-quzhiDMlavBYSPCmnHEr
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+David Hildenbrand (12):
+  fs/proc/vmcore: convert vmcore_cb_lock into vmcore_mutex
+  fs/proc/vmcore: replace vmcoredd_mutex by vmcore_mutex
+  fs/proc/vmcore: disallow vmcore modifications while the vmcore is open
+  fs/proc/vmcore: prefix all pr_* with "vmcore:"
+  fs/proc/vmcore: move vmcore definitions out of kcore.h
+  fs/proc/vmcore: factor out allocating a vmcore range and adding it to
+    a list
+  fs/proc/vmcore: factor out freeing a list of vmcore ranges
+  fs/proc/vmcore: introduce PROC_VMCORE_DEVICE_RAM to detect device RAM
+    ranges in 2nd kernel
+  virtio-mem: mark device ready before registering callbacks in kdump
+    mode
+  virtio-mem: remember usable region size
+  virtio-mem: support CONFIG_PROC_VMCORE_DEVICE_RAM
+  s390/kdump: virtio-mem kdump support (CONFIG_PROC_VMCORE_DEVICE_RAM)
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjA0MTEyNzE0WjAvBgkqhkiG9w0BCQQxIgQgoGaMmzAI
-AXQjEtPyaiQ2th7qByILrij8JfGLRWG08bYwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAj1j97z2IV/CT6zKjQpUlV7FITbkO9mzLj
-2iTMEn7WIBTcUjAYjoHm6wZ0OQaYlR61ciG98Qrk9bVW3abk849nn8EckZT58UUYDn7rMH2rXbOl
-in6F7EcKYzZKAdYDgdHOyKzPRpC/eC5DO5mgFgTW7ZLL72v6Nmge7Suhc9pLoMwgxzk2E8fj+4BZ
-Qwcg1AtNWmB6CjSe/7mCRpDTpewnKZ8zJAXYGPQumkLagaI8kWR2YC7XWFSoBMx8CeF8+eNVch5t
-hkHi1A3F8IIqJ/XpCZ29L/EoIyuCd+ogW1DgjKJM338KrFBU4khiGOa88jyBmLCY/hephyAF4l4K
-23Ct4xFzcYAEZ9oG8ktVYGJKQMIG5P/jQLgW/z0pcaORp1q44VlNo8m2WGYjT5XHpbzSHQlU2nJJ
-S/h2RXgEk8W/Il6POj2sniosppfPcQafdPzM+bp5lDaI83goK6z9DYcyA3kdMNgh1J2+k20BY1Ic
-qLjqGQgQdg1HvhhMcvnYSlP1XO/6n7pVWWHCNeKDKpHLUWDhRb2e5wpwlgB5SvkgJGP2HfQobCSn
-PILuJnuoVsR5SvLVAJ5gD70JQosgVEmauwTQXPSrW65HCVG915jG0C250+1ue+fP2Z+BirG/s6eT
-cORWpQ7nUYxx2o5iz48sqT+lAy1vUDVIopWPDvOshgAAAAAAAA==
+ arch/s390/Kconfig             |   1 +
+ arch/s390/kernel/crash_dump.c |  39 ++++-
+ drivers/virtio/virtio_mem.c   | 103 ++++++++++++-
+ fs/proc/Kconfig               |  19 +++
+ fs/proc/vmcore.c              | 283 ++++++++++++++++++++++++++--------
+ include/linux/crash_dump.h    |  41 +++++
+ include/linux/kcore.h         |  13 --
+ 7 files changed, 407 insertions(+), 92 deletions(-)
 
 
---=-quzhiDMlavBYSPCmnHEr--
+base-commit: feffde684ac29a3b7aec82d2df850fbdbdee55e4
+-- 
+2.47.1
+
 
