@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52685E7716D
-	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AD65E77178
+	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uDB0B/y8BEIJAdSME/L53tegScvP1ehfXftaZ5ENwBE=; b=4qh3y3yB3vcM9lajHz4q8H7yvf
-	dr39arlCqbKmF9i2BoJYXrFpAqji4jpGZIKVBNKW7l9xe2uQQ7g/fC+KCEdj+Te0goshcNviuVKQe
-	4UVFEL7weVT+hKbI3SBb0iFvRpuxABOGKxENlnHBaQeGx9bik1rKpjrWLT8IFywlcqUCtDi4tQFVO
-	E62NF8zXD+6IOGG3lprr0SjEYgUL9j6S7YVpaWXPsnqRtZQrz4MHOKPbiyLiuB3okDCvcBvCF5X15
-	tcPNUMa/eIvLn0T0OQdRt5ylVO9AS2Je7MWdj2Ea4CzSWHSogv/Gj120kMUhZZLMy4yKalQCqwIIv
-	X76awPWw==;
+	bh=fLZisNRVnIE7XYTDFZ5u5GD/dt85ViU8LD82f5fJODE=; b=XLE+Fqn0bF7U4PQn0cCN0H6jpA
+	RFzbju7BDunXZmD0UKItFNfSmJB33yNd6AwzRUlQB4l4Ih/XZjaXCZI8l844TCMROKpKpKwryk1pE
+	o/h4YmqU5JqyeeCz0YLihFnRltq8hUiq4gC201+m9SK1SmLpZEX+IJFSBJlQHUj4mjB88VImPlxVR
+	AYV2SzFhHHv3NXccdGwmUEEexqmhT4C6FMygc/YxNjSHxp9o31JqOHVCBnzBxgWCfx+CMDyXiXM8E
+	OuOF7SDc5sSnXbo3bxcvnm8S/itQkGcnZrHLVrh8Yfvmkokx0Y39ifa7NgXkeMuhbumWZev/w14KO
+	Tyq1TfRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDt0-0000000GZ8B-497H;
-	Thu, 05 Dec 2024 15:35:26 +0000
+	id 1tJDt3-0000000GZBv-04YK;
+	Thu, 05 Dec 2024 15:35:29 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrR-0000000GYRy-07JB
+	id 1tJDrR-0000000GYS1-07aQ
 	for kexec@bombadil.infradead.org;
 	Thu, 05 Dec 2024 15:33:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=uDB0B/y8BEIJAdSME/L53tegScvP1ehfXftaZ5ENwBE=; b=HbuxAzcvCqgu1FNHrdyDdXlOty
-	G2S21AHOBLt7BRpjnXpVDN/RYVqTvMmJZEizd8rICM3T3sg4LT8i/ROehao65+EYgI9c7tlolq841
-	NOcC4/o6Phlhx7bZjdMG2l1D+Us/1rLVHvxJn4Rhv0RIjDCqVR6L9rSsSFXxvdFs9JK4Lc96nZ5p9
-	QPsIjaW54Wm5BcDLxOmAhRMX+UVy19xDc6FmZCEHPhjssL0k1xMvHAw56fBQJW30cCCZYb/DGYVpf
-	QLea1vNyCaDD7x8GAjxx3/rglzUlaPqu0Y3MTD37RnOXEWVkDEBFPW2Q7QKXTg3xySfovcyBJ9RMo
-	6mAJQ4+A==;
+	bh=fLZisNRVnIE7XYTDFZ5u5GD/dt85ViU8LD82f5fJODE=; b=OvlLIdO8MBFyua0hQFVP1IO5U7
+	qk0EDfwd3osFg6IKBJsWAY6j5tbZPgIv7ULvPs0O8CkLX3YWLfpA70Ms64PpUy7/QPKi6mrzYJMGe
+	YZ9BJ3cSdkfhosq98d9UkIlkjgl+i5HUkJapeZLIHjeiilC62WC7JQ38PqXdEszVw3HwJwy8WTxfu
+	nwKZVnIh/b8mtH4jhUdiminVutNo8zMSwD/feY6RmaknURT4wxUvpRfZ+IsGg0sjvfm64okv+5IiP
+	wZfOLuq3ep7eUPx9yKcBcaty2kR+ja8LSgJKZjQncuXLJptGeKV/pip7Hy3XN430c/kbmdCUCUjVx
+	WdAl6M5A==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrO-00000002wF0-0lhX;
+	id 1tJDrN-00000002wEt-359S;
 	Thu, 05 Dec 2024 15:33:46 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrN-0000000DyMV-3szs;
+	id 1tJDrN-0000000DyLG-1Gvs;
 	Thu, 05 Dec 2024 15:33:45 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v5 18/20] x86/kexec: Add 8250 serial port output
-Date: Thu,  5 Dec 2024 15:05:24 +0000
-Message-ID: <20241205153343.3275139-19-dwmw2@infradead.org>
+Subject: [PATCH v5 03/20] x86/kexec: Use named labels in swap_pages in relocate_kernel_64.S
+Date: Thu,  5 Dec 2024 15:05:09 +0000
+Message-ID: <20241205153343.3275139-4-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205153343.3275139-1-dwmw2@infradead.org>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
@@ -87,118 +87,74 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-If a serial port was configured for early_printk, use it for debug output
-from the relocate_kernel exception handler too.
+Make the code a little more readable.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Acked-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/include/asm/kexec.h         |  1 +
- arch/x86/kernel/early_printk.c       |  6 +++++
- arch/x86/kernel/relocate_kernel_64.S | 37 +++++++++++++++++++++++-----
- 3 files changed, 38 insertions(+), 6 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index c14b0a2704c0..f37d2d9fda3f 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -63,6 +63,7 @@ extern unsigned long kexec_pa_table_page;
- extern unsigned long kexec_pa_swap_page;
- extern gate_desc kexec_debug_idt[];
- extern unsigned char kexec_debug_exc_vectors[];
-+extern uint16_t kexec_debug_8250_port;
- #endif
- 
- /*
-diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
-index 44f937015e1e..bf06866ee90a 100644
---- a/arch/x86/kernel/early_printk.c
-+++ b/arch/x86/kernel/early_printk.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/console.h>
- #include <linux/kernel.h>
-+#include <linux/kexec.h>
- #include <linux/init.h>
- #include <linux/string.h>
- #include <linux/screen_info.h>
-@@ -141,6 +142,11 @@ static __init void early_serial_hw_init(unsigned divisor)
- 	serial_out(early_serial_base, DLL, divisor & 0xff);
- 	serial_out(early_serial_base, DLH, (divisor >> 8) & 0xff);
- 	serial_out(early_serial_base, LCR, c & ~DLAB);
-+
-+#ifdef CONFIG_KEXEC_DEBUG
-+	if (serial_in == io_serial_in)
-+		kexec_debug_8250_port = early_serial_base;
-+#endif
- }
- 
- #define DEFAULT_BAUD 9600
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index cd349b6d34a7..01a31e4a0664 100644
+index 92478e2e254f..fea650f92606 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -38,6 +38,7 @@ SYM_DATA(kexec_va_control_page, .quad 0)
- SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
-+SYM_DATA(kexec_debug_8250_port, .word 0)
+@@ -279,31 +279,31 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
+-	jmp	1f
++	jmp	.Lstart		/* Should start with an indirection record */
  
- #ifdef CONFIG_KEXEC_DEBUG
- 	.balign 16
-@@ -364,23 +365,47 @@ SYM_CODE_END(swap_pages)
+-0:	/* top, read another word for the indirection page */
++.Lloop:	/* top, read another word for the indirection page */
  
- #ifdef CONFIG_KEXEC_DEBUG
- /*
-- * Generic 'print character' routine (as yet unimplemented)
-+ * Generic 'print character' routine
-  *  - %al: Character to be printed (may clobber %rax)
-  *  - %rdx: MMIO address or port.
-  */
--SYM_CODE_START_LOCAL_NOALIGN(pr_char)
-+#define XMTRDY          0x20
-+
-+#define TXR             0       /*  Transmit register (WRITE) */
-+#define LSR             5       /*  Line Status               */
-+
-+SYM_CODE_START_LOCAL_NOALIGN(pr_char_8250)
- 	UNWIND_HINT_FUNC
-+	addw	$LSR, %dx
-+	xchg	%al, %ah
-+.Lxmtrdy_loop:
-+	inb	%dx, %al
-+	testb	$XMTRDY, %al
-+	jnz	.Lready
-+	rep nop
-+	jmp .Lxmtrdy_loop
-+
-+.Lready:
-+	subw	$LSR, %dx
-+	xchg	%al, %ah
-+	outb	%al, %dx
-+pr_char_null:
+ 	movq	(%rbx), %rcx
+ 	addq	$8,	%rbx
+-1:
++.Lstart:
+ 	testb	$0x1,	%cl   /* is it a destination page? */
+-	jz	2f
++	jz	.Lnotdest
+ 	movq	%rcx,	%rdi
+ 	andq	$0xfffffffffffff000, %rdi
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotdest:
+ 	testb	$0x2,	%cl   /* is it an indirection page? */
+-	jz	2f
++	jz	.Lnotind
+ 	movq	%rcx,   %rbx
+ 	andq	$0xfffffffffffff000, %rbx
+-	jmp	0b
+-2:
++	jmp	.Lloop
++.Lnotind:
+ 	testb	$0x4,	%cl   /* is it the done indicator? */
+-	jz	2f
+-	jmp	3f
+-2:
++	jz	.Lnotdone
++	jmp	.Ldone
++.Lnotdone:
+ 	testb	$0x8,	%cl   /* is it the source indicator? */
+-	jz	0b	      /* Ignore it otherwise */
++	jz	.Lloop	      /* Ignore it otherwise */
+ 	movq	%rcx,   %rsi  /* For ever source page do a copy */
+ 	andq	$0xfffffffffffff000, %rsi
+ 
+@@ -328,8 +328,8 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	rep ; movsq
+ 
+ 	lea	PAGE_SIZE(%rax), %rsi
+-	jmp	0b
+-3:
++	jmp	.Lloop
++.Ldone:
  	ANNOTATE_UNRET_SAFE
  	ret
--SYM_CODE_END(pr_char)
-+SYM_CODE_END(pr_char_8250)
- 
- /*
-  * Load pr_char function pointer into %rsi and load %rdx with whatever
-  * that function wants to see there (typically port/MMIO address).
-  */
--.macro	pr_setup
--	/* No output; pr_char just returns */
--	leaq	pr_char(%rip), %rsi
-+.macro pr_setup
-+	leaq	pr_char_8250(%rip), %rsi
-+	movw	kexec_debug_8250_port(%rip), %dx
-+	testw	%dx, %dx
-+	jnz	1f
-+
-+	leaq	pr_char_null(%rip), %rsi
-+1:
- .endm
- 
- /* Print the nybble in %bl, clobber %rax */
+ 	int3
 -- 
 2.47.0
 
