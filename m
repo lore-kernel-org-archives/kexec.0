@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0BE0E77181
-	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BD2AE7717A
+	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=E6w28EbMFh9lr0u8Gar2QJflqT
-	pbWAHdN6ktestkaQqz/FMcJ85Mb1kyiw265UWva8M7O4CXJmCQziYCpWBMIKVbsGz+QoLeVXYrc8u
-	WCAQYN6/yucqubH4S2bRcVySRw8uetmQRnONc2BCW55WusS1DxIpaYExYeE+GvS12jkLEvjaZGk+W
-	D0oPyaKmlud8qLvLSWNKh8jK1R5nx1dZLK9l1yeawya3VCoKUHdTTxbOG3A2dEnrWNNKMN39GiMK/
-	qAO4RKy+6w9NCGGjsSBvVP+HYNtWVCFkGOoc5uewTAcZbu8A0aWrq65VaPPGTVsNA6iaCZv14wn58
-	t4aEuhsA==;
+	bh=hXa9QbU7K/rGf6uo0zUn9z43mlN4qPKbq20MGDTTVdM=; b=Uq4sMNGxKjfebxgMLWYjZsUN01
+	2ueDDnnfSVsMmp1ddoddJ3zukAxJGlF5TXiPagQdqH25l+L0/HwqAc7O2aPjBmI9eFEk41IJvi+MG
+	2Cwj2ZtehsCf1nepqp4XSE5kZUHGHq11CAy6Kodi9eZuLcBixvhWNIZnMBlHD75juDV2wLyruuuE7
+	GT7a8OXmq3ErwuiUjcbDCM7UNzVwDTLoGT/1OGKTpjU+8TEcOkYfCgRo/LY8KVr6YMY1GJQe+xcX2
+	tx0vJWvCtLJ/o+0VqXkpir2HKUpfwiEgkYJUcVvRjcxrIlUsdkyWU000kw8g9kdov7J+GhhRcoj6k
+	6Uy4hc9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDt0-0000000GZ7J-2J95;
-	Thu, 05 Dec 2024 15:35:26 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tJDsy-0000000GZ2I-0g4X;
+	Thu, 05 Dec 2024 15:35:24 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrR-0000000GYRv-07P6
+	id 1tJDrQ-0000000GYRo-2bZ5
 	for kexec@bombadil.infradead.org;
-	Thu, 05 Dec 2024 15:33:49 +0000
+	Thu, 05 Dec 2024 15:33:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=ZxiZ+Z+Ecm3YsJvQrDer5QffVj
-	0c6c/BJajg3VTFf5YgwrYY9t7pihAklo/RWKEOGyuRAfhZzDD3As5e2N9tSR2m6QRfW7SFrNi0xXf
-	lSQJyT54JV1K1+SuX0tLQxwHC127g/bzGvt8fdtrpqtmZGSZTeEPo/hGf7qibcGX0hdMOadJ0ApvG
-	2VYDGKWixU2qcqGpLcIGGYQfHzSY9ThIlprDqwQm53z00zGFUp8BzylwLUhFE+6/gvpEpAsjTUGlP
-	Xyi8FNtgAIdH9VQZF8Lv1yl+zOeSwcIpHbqj8dXU2hP//oKGZR4fAM90x+/Fp9B7pKUs4+dcQH+A0
-	plRhEYOQ==;
+	bh=hXa9QbU7K/rGf6uo0zUn9z43mlN4qPKbq20MGDTTVdM=; b=EDnvUCuPw9/dxMuvn27HuBanDg
+	sNKPh55q5T0dN7wMNx9PIePN727itFtNY4gI8wUJlP9HYZOU0LOHhclyKMTqT3S0D8AKSfR7I68tx
+	DNKoqz2kcxBxlWgSrzd/HMmsvU6hlccUfKFtG6QTTD+7dPWgwvENh2e1/tZAAF1EIbRr7sYAIisAm
+	Ft/ALhY2F7GiPIBic8BtY+z42MaB8UFSHcWS2uUAG6or+6lNdPT0hYvcxUMoA1j3ZvlXB3hcNX6l4
+	VQ8eiUJC0aoA7mUYbRN8PnANHT1xnFrjqGYGXDU3Ofrxy0hv6oCoVNAyZFNej2ZviNQXkcwoNDU5e
+	XyuyevXw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrO-00000002wEw-0jC0;
-	Thu, 05 Dec 2024 15:33:46 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tJDrM-0000000DDoz-1UzT;
+	Thu, 05 Dec 2024 15:33:45 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrN-0000000DyLv-2cnh;
+	id 1tJDrN-0000000DyLR-1g2P;
 	Thu, 05 Dec 2024 15:33:45 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,15 +62,15 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v5 11/20] x86/kexec: Eliminate writes through kernel mapping of relocate_kernel page
-Date: Thu,  5 Dec 2024 15:05:17 +0000
-Message-ID: <20241205153343.3275139-12-dwmw2@infradead.org>
+Subject: [PATCH v5 05/20] x86/kexec: Allocate PGD for x86_64 transition page tables separately
+Date: Thu,  5 Dec 2024 15:05:11 +0000
+Message-ID: <20241205153343.3275139-6-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205153343.3275139-1-dwmw2@infradead.org>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,66 +87,213 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-All writes to the relocate_kernel control page are now done *after* the
-%cr3 switch via simple %rip-relative addressing, which means the DATA()
-macro with its pointer arithmetic can also now be removed.
+Now that commit d0ceea662d45 ("x86/mm: Add _PAGE_NOPTISHADOW bit to
+avoid updating userspace page tables") stops kernel_ident_mapping_init()
+from scribbling over the end of a 4KiB PGD by assuming the following
+4KiB will be a userspace PGD, there's no good reason for the kexec PGD
+to be part of a single 8KiB allocation with the control_code_page.
+
+(It's not clear that that was the reason for x86_64 kexec doing it that
+way in the first place either; there were no comments to that effect and
+it seems to have been the case even before PTI came along. It looks like
+it was just a happy accident which prevented memory corruption on kexec.)
+
+Either way, it definitely isn't needed now. Just allocate the PGD
+separately on x86_64, like i386 already does.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 29 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/kexec.h       | 18 +++++++++---
+ arch/x86/kernel/machine_kexec_64.c | 45 ++++++++++++++++--------------
+ 2 files changed, 38 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 16f123527406..288dfc08c63d 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -61,21 +61,24 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	pushq %r15
- 	pushf
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index ae5482a2f0ca..ccb8ff37fa9d 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -16,6 +16,7 @@
+ # define PAGES_NR		4
+ #endif
  
--	movq	%rsp, saved_rsp(%rip)
--	movq	%cr0, %rax
--	movq	%rax, saved_cr0(%rip)
--	movq	%cr3, %rax
--	movq	%rax, saved_cr3(%rip)
--	movq	%cr4, %rax
--	movq	%rax, saved_cr4(%rip)
++# define KEXEC_CONTROL_PAGE_SIZE	4096
+ # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ 
+ #ifndef __ASSEMBLY__
+@@ -43,7 +44,6 @@ struct kimage;
+ /* Maximum address we can use for the control code buffer */
+ # define KEXEC_CONTROL_MEMORY_LIMIT TASK_SIZE
+ 
+-# define KEXEC_CONTROL_PAGE_SIZE	4096
+ 
+ /* The native architecture */
+ # define KEXEC_ARCH KEXEC_ARCH_386
+@@ -58,9 +58,6 @@ struct kimage;
+ /* Maximum address we can use for the control pages */
+ # define KEXEC_CONTROL_MEMORY_LIMIT     (MAXMEM-1)
+ 
+-/* Allocate one page for the pdp and the second for the code */
+-# define KEXEC_CONTROL_PAGE_SIZE  (4096UL + 4096UL)
 -
--	/* Save CR4. Required to enable the right paging mode later. */
--	movq	%rax, %r13
--
- 	/* zero out flags, and disable interrupts */
- 	pushq $0
- 	popfq
+ /* The native architecture */
+ # define KEXEC_ARCH KEXEC_ARCH_X86_64
+ #endif
+@@ -145,6 +142,19 @@ struct kimage_arch {
+ };
+ #else
+ struct kimage_arch {
++	/*
++	 * This is a kimage control page, as it must not overlap with either
++	 * source or destination address ranges.
++	 */
++	pgd_t *pgd;
++	/*
++	 * The virtual mapping of the control code page itself is used only
++	 * during the transition, while the current kernel's pages are all
++	 * in place. Thus the intermediate page table pages used to map it
++	 * are not control pages, but instead just normal pages obtained
++	 * with get_zeroed_page(). And have to be tracked (below) so that
++	 * they can be freed.
++	 */
+ 	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9c9ac606893e..7223c38a8708 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -146,7 +146,8 @@ static void free_transition_pgtable(struct kimage *image)
+ 	image->arch.pte = NULL;
+ }
  
-+	/* Switch to the identity mapped page tables */
-+	movq	%cr3, %rax
-+	movq	kexec_pa_table_page(%rip), %r9
-+	movq	%r9, %cr3
-+
-+	/* Save %rsp and CRs. */
-+	movq    %rsp, saved_rsp(%rip)
-+	movq	%rax, saved_cr3(%rip)
-+	movq	%cr0, %rax
-+	movq	%rax, saved_cr0(%rip)
-+	/* Leave CR4 in %r13 to enable the right paging mode later. */
-+	movq	%cr4, %r13
-+	movq	%r13, saved_cr4(%rip)
-+
- 	/* Save SME active flag */
- 	movq	%r8, %r12
+-static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
++static int init_transition_pgtable(struct kimage *image, pgd_t *pgd,
++				   unsigned long control_page)
+ {
+ 	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
+ 	unsigned long vaddr, paddr;
+@@ -157,7 +158,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 	pte_t *pte;
  
-@@ -85,10 +88,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
- 	movq	%rcx, %r11
+ 	vaddr = (unsigned long)relocate_kernel;
+-	paddr = __pa(page_address(image->control_code_page)+PAGE_SIZE);
++	paddr = control_page;
+ 	pgd += pgd_index(vaddr);
+ 	if (!pgd_present(*pgd)) {
+ 		p4d = (p4d_t *)get_zeroed_page(GFP_KERNEL);
+@@ -216,7 +217,7 @@ static void *alloc_pgt_page(void *data)
+ 	return p;
+ }
  
--	/* Switch to the identity mapped page tables */
--	movq	kexec_pa_table_page(%rip), %r9
--	movq	%r9, %cr3
--
- 	/* Physical address of control page */
- 	movq    %rsi, %r8
+-static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
++static int init_pgtable(struct kimage *image, unsigned long control_page)
+ {
+ 	struct x86_mapping_info info = {
+ 		.alloc_pgt_page	= alloc_pgt_page,
+@@ -225,12 +226,12 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 		.kernpg_flag	= _KERNPG_TABLE_NOENC,
+ 	};
+ 	unsigned long mstart, mend;
+-	pgd_t *level4p;
+ 	int result;
+ 	int i;
  
+-	level4p = (pgd_t *)__va(start_pgtable);
+-	clear_page(level4p);
++	image->arch.pgd = alloc_pgt_page(image);
++	if (!image->arch.pgd)
++		return -ENOMEM;
+ 
+ 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+ 		info.page_flag   |= _PAGE_ENC;
+@@ -244,8 +245,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
+ 		mend   = pfn_mapped[i].end << PAGE_SHIFT;
+ 
+-		result = kernel_ident_mapping_init(&info,
+-						 level4p, mstart, mend);
++		result = kernel_ident_mapping_init(&info, image->arch.pgd,
++						   mstart, mend);
+ 		if (result)
+ 			return result;
+ 	}
+@@ -260,8 +261,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 		mstart = image->segment[i].mem;
+ 		mend   = mstart + image->segment[i].memsz;
+ 
+-		result = kernel_ident_mapping_init(&info,
+-						 level4p, mstart, mend);
++		result = kernel_ident_mapping_init(&info, image->arch.pgd,
++						   mstart, mend);
+ 
+ 		if (result)
+ 			return result;
+@@ -271,15 +272,19 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
+ 	 * not covered by pfn_mapped.
+ 	 */
+-	result = map_efi_systab(&info, level4p);
++	result = map_efi_systab(&info, image->arch.pgd);
+ 	if (result)
+ 		return result;
+ 
+-	result = map_acpi_tables(&info, level4p);
++	result = map_acpi_tables(&info, image->arch.pgd);
+ 	if (result)
+ 		return result;
+ 
+-	return init_transition_pgtable(image, level4p);
++	/*
++	 * This must be last because the intermediate page table pages it
++	 * allocates will not be control pages and may overlap the image.
++	 */
++	return init_transition_pgtable(image, image->arch.pgd, control_page);
+ }
+ 
+ static void load_segments(void)
+@@ -296,14 +301,14 @@ static void load_segments(void)
+ 
+ int machine_kexec_prepare(struct kimage *image)
+ {
+-	unsigned long start_pgtable;
++	unsigned long control_page;
+ 	int result;
+ 
+ 	/* Calculate the offsets */
+-	start_pgtable = page_to_pfn(image->control_code_page) << PAGE_SHIFT;
++	control_page = page_to_pfn(image->control_code_page) << PAGE_SHIFT;
+ 
+ 	/* Setup the identity mapped 64bit page table */
+-	result = init_pgtable(image, start_pgtable);
++	result = init_pgtable(image, control_page);
+ 	if (result)
+ 		return result;
+ 
+@@ -357,13 +362,12 @@ void machine_kexec(struct kimage *image)
+ #endif
+ 	}
+ 
+-	control_page = page_address(image->control_code_page) + PAGE_SIZE;
++	control_page = page_address(image->control_code_page);
+ 	__memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
+ 
+ 	page_list[PA_CONTROL_PAGE] = virt_to_phys(control_page);
+ 	page_list[VA_CONTROL_PAGE] = (unsigned long)control_page;
+-	page_list[PA_TABLE_PAGE] =
+-	  (unsigned long)__pa(page_address(image->control_code_page));
++	page_list[PA_TABLE_PAGE] = (unsigned long)__pa(image->arch.pgd);
+ 
+ 	if (image->type == KEXEC_TYPE_DEFAULT)
+ 		page_list[PA_SWAP_PAGE] = (page_to_pfn(image->swap_page)
+@@ -573,8 +577,7 @@ static void kexec_mark_crashkres(bool protect)
+ 
+ 	/* Don't touch the control code page used in crash_kexec().*/
+ 	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
+-	/* Control code page is located in the 2nd page. */
+-	kexec_mark_range(crashk_res.start, control + PAGE_SIZE - 1, protect);
++	kexec_mark_range(crashk_res.start, control - 1, protect);
+ 	control += KEXEC_CONTROL_PAGE_SIZE;
+ 	kexec_mark_range(control, crashk_res.end, protect);
+ }
 -- 
 2.47.0
 
