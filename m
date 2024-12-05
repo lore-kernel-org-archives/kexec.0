@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D52B8E7717D
-	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0BE0E77181
+	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=B+cdGMrXlLMQ5gF/V+Me3rwZRfmBgngjB82bVhN99Q4=; b=bydIwSXSBYlHFC3FA3RqvcO+oy
-	cU9xszWHjwpNTkandEQKYae8Dai35pB+VergbZelv+3FQTKbljT++aLvr89k3hfhWoNfBZA/3pZvG
-	6R9LYmaOgfIcOsoO/at0fWjwa6dPCWEw6gCmaggVsCq8AR5TN5Bt8Amhq5Mf4s0xnRYzuKg9w813L
-	y/Er8tT5eNd0pu6XJWaiftuDh3V7MiCipTAATJDP+i+O+1K5iJCDT29LWBtQ2r3ZVD5u5JNaTcJgW
-	FdrYVJEev5S7UseoaqntiS2ht6FDLGspu3ERDFLmgUdxqquAbm+8W4NNTsr/oKsYKlY7boiMlOa/c
-	HqeFAwAw==;
+	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=E6w28EbMFh9lr0u8Gar2QJflqT
+	pbWAHdN6ktestkaQqz/FMcJ85Mb1kyiw265UWva8M7O4CXJmCQziYCpWBMIKVbsGz+QoLeVXYrc8u
+	WCAQYN6/yucqubH4S2bRcVySRw8uetmQRnONc2BCW55WusS1DxIpaYExYeE+GvS12jkLEvjaZGk+W
+	D0oPyaKmlud8qLvLSWNKh8jK1R5nx1dZLK9l1yeawya3VCoKUHdTTxbOG3A2dEnrWNNKMN39GiMK/
+	qAO4RKy+6w9NCGGjsSBvVP+HYNtWVCFkGOoc5uewTAcZbu8A0aWrq65VaPPGTVsNA6iaCZv14wn58
+	t4aEuhsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDsy-0000000GZ2g-2Lgv;
-	Thu, 05 Dec 2024 15:35:24 +0000
+	id 1tJDt0-0000000GZ7J-2J95;
+	Thu, 05 Dec 2024 15:35:26 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrR-0000000GYS0-07C6
+	id 1tJDrR-0000000GYRv-07P6
 	for kexec@bombadil.infradead.org;
 	Thu, 05 Dec 2024 15:33:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=B+cdGMrXlLMQ5gF/V+Me3rwZRfmBgngjB82bVhN99Q4=; b=I2oNb2UJjFauAMuN+/xgw3Gegw
-	HanPAJkk+IMhIBHHZjJ0hfJuHDRBcXEm1VCpBvit/OIkD4TAv87hGrtioxVbodAYdV4GNKnMAECYC
-	Giec+23STvlk9V/6RLRtEn7hqYQQzFnjW3F26t2qO7l9K3gUotLyd8shRifquSFfsOftZEXA3cvOo
-	lg0pKnePImyrFl65zHgJFgd4xnBWSp9LfIjSE8lfTDJKYupOrp55GrFnCmKDGisMUL1MzQR8XyXN2
-	HVTv4Xpw4drndPc8FkGFzD6Zpev9RESg9xOCltKLbIecM+Jkro1f6xB+YJ77sVlFCxtynaqBXZRRc
-	/40qu9QA==;
+	bh=1uC9ZsG8+iSDsihXzKgc5JDj2Gbt5KFaLk2mOsYAE18=; b=ZxiZ+Z+Ecm3YsJvQrDer5QffVj
+	0c6c/BJajg3VTFf5YgwrYY9t7pihAklo/RWKEOGyuRAfhZzDD3As5e2N9tSR2m6QRfW7SFrNi0xXf
+	lSQJyT54JV1K1+SuX0tLQxwHC127g/bzGvt8fdtrpqtmZGSZTeEPo/hGf7qibcGX0hdMOadJ0ApvG
+	2VYDGKWixU2qcqGpLcIGGYQfHzSY9ThIlprDqwQm53z00zGFUp8BzylwLUhFE+6/gvpEpAsjTUGlP
+	Xyi8FNtgAIdH9VQZF8Lv1yl+zOeSwcIpHbqj8dXU2hP//oKGZR4fAM90x+/Fp9B7pKUs4+dcQH+A0
+	plRhEYOQ==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrO-00000002wEx-0lzi;
+	id 1tJDrO-00000002wEw-0jC0;
 	Thu, 05 Dec 2024 15:33:46 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrN-0000000DyLz-2p7H;
+	id 1tJDrN-0000000DyLv-2cnh;
 	Thu, 05 Dec 2024 15:33:45 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v5 12/20] x86/kexec: Clean up register usage in relocate_kernel()
-Date: Thu,  5 Dec 2024 15:05:18 +0000
-Message-ID: <20241205153343.3275139-13-dwmw2@infradead.org>
+Subject: [PATCH v5 11/20] x86/kexec: Eliminate writes through kernel mapping of relocate_kernel page
+Date: Thu,  5 Dec 2024 15:05:17 +0000
+Message-ID: <20241205153343.3275139-12-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205153343.3275139-1-dwmw2@infradead.org>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
@@ -87,68 +87,66 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-The memory encryption flag is passed in %r8 because that's where the
-calling convention puts it. Instead of moving it to %r12 and then using
-%r8 for other things, just leave it in %r8 and use other registers
-instead.
+All writes to the relocate_kernel control page are now done *after* the
+%cr3 switch via simple %rip-relative addressing, which means the DATA()
+macro with its pointer arithmetic can also now be removed.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 29 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 288dfc08c63d..b24198eb1fe9 100644
+index 16f123527406..288dfc08c63d 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -79,24 +79,18 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	%cr4, %r13
- 	movq	%r13, saved_cr4(%rip)
+@@ -61,21 +61,24 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	pushq %r15
+ 	pushf
  
--	/* Save SME active flag */
--	movq	%r8, %r12
+-	movq	%rsp, saved_rsp(%rip)
+-	movq	%cr0, %rax
+-	movq	%rax, saved_cr0(%rip)
+-	movq	%cr3, %rax
+-	movq	%rax, saved_cr3(%rip)
+-	movq	%cr4, %rax
+-	movq	%rax, saved_cr4(%rip)
 -
- 	/* save indirection list for jumping back */
- 	movq	%rdi, pa_backup_pages_map(%rip)
+-	/* Save CR4. Required to enable the right paging mode later. */
+-	movq	%rax, %r13
+-
+ 	/* zero out flags, and disable interrupts */
+ 	pushq $0
+ 	popfq
  
++	/* Switch to the identity mapped page tables */
++	movq	%cr3, %rax
++	movq	kexec_pa_table_page(%rip), %r9
++	movq	%r9, %cr3
++
++	/* Save %rsp and CRs. */
++	movq    %rsp, saved_rsp(%rip)
++	movq	%rax, saved_cr3(%rip)
++	movq	%cr0, %rax
++	movq	%rax, saved_cr0(%rip)
++	/* Leave CR4 in %r13 to enable the right paging mode later. */
++	movq	%cr4, %r13
++	movq	%r13, saved_cr4(%rip)
++
+ 	/* Save SME active flag */
+ 	movq	%r8, %r12
+ 
+@@ -85,10 +88,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
  	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
  	movq	%rcx, %r11
  
--	/* Physical address of control page */
--	movq    %rsi, %r8
+-	/* Switch to the identity mapped page tables */
+-	movq	kexec_pa_table_page(%rip), %r9
+-	movq	%r9, %cr3
 -
- 	/* setup a new stack at the end of the physical control page */
--	lea	PAGE_SIZE(%r8), %rsp
-+	lea	PAGE_SIZE(%rsi), %rsp
+ 	/* Physical address of control page */
+ 	movq    %rsi, %r8
  
- 	/* jump to identity mapped page */
--	addq	$(identity_mapped - relocate_kernel), %r8
--	pushq	%r8
-+	addq	$(identity_mapped - relocate_kernel), %rsi
-+	pushq	%rsi
- 	ANNOTATE_UNRET_SAFE
- 	ret
- 	int3
-@@ -107,8 +101,9 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	/*
- 	 * %rdi	indirection page
- 	 * %rdx start address
-+	 * %r8 host_mem_enc_active
-+	 * %r9 page table page
- 	 * %r11 preserve_context
--	 * %r12 host_mem_enc_active
- 	 * %r13 original CR4 when relocate_kernel() was invoked
- 	 */
- 
-@@ -161,7 +156,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * entries that will conflict with the now unencrypted memory
- 	 * used by kexec. Flush the caches before copying the kernel.
- 	 */
--	testq	%r12, %r12
-+	testq	%r8, %r8
- 	jz .Lsme_off
- 	wbinvd
- .Lsme_off:
 -- 
 2.47.0
 
