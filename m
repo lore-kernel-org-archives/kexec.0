@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0093CE7717C
-	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D52B8E7717D
+	for <kexec@archiver.kernel.org>; Thu,  5 Dec 2024 15:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=khfTZJiJrlQc2+T6m9tSfcAmQEA7ac5eI6nmkzjnaik=; b=A+l5mRpW9a8isabBfPV5soEOfY
-	bx36rO5OJUjOTJd95bEcd7Csu6r3NkM4W1GiJvh5O+NHU8o3vJ2oC6GgdZcXP3PHcfju/jFZRdQZ4
-	FNWfrGeBg3UTBWB9rcXZqwBNzXsAg+AkovAjoYpllCc7lq8wHv6RQFC432stD3JyNXEkImRJcXWIv
-	D50fRuZvwepoIMU2RJXAVNk6beUH6NuugZzboh2cJ6ZAYLG/Dei1oSUwtX+BPFhdcyxB7DcwMZNHf
-	vKalYUm5pjkuROSMrSrwRIF63PVC4rm1AEChOUcD6o/0ejde9fIWH7LXLc51s1fQo5FrKwXstSI0o
-	w6ttQ5YQ==;
+	bh=B+cdGMrXlLMQ5gF/V+Me3rwZRfmBgngjB82bVhN99Q4=; b=bydIwSXSBYlHFC3FA3RqvcO+oy
+	cU9xszWHjwpNTkandEQKYae8Dai35pB+VergbZelv+3FQTKbljT++aLvr89k3hfhWoNfBZA/3pZvG
+	6R9LYmaOgfIcOsoO/at0fWjwa6dPCWEw6gCmaggVsCq8AR5TN5Bt8Amhq5Mf4s0xnRYzuKg9w813L
+	y/Er8tT5eNd0pu6XJWaiftuDh3V7MiCipTAATJDP+i+O+1K5iJCDT29LWBtQ2r3ZVD5u5JNaTcJgW
+	FdrYVJEev5S7UseoaqntiS2ht6FDLGspu3ERDFLmgUdxqquAbm+8W4NNTsr/oKsYKlY7boiMlOa/c
+	HqeFAwAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDsx-0000000GZ1c-37G8;
-	Thu, 05 Dec 2024 15:35:23 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tJDsy-0000000GZ2g-2Lgv;
+	Thu, 05 Dec 2024 15:35:24 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrQ-0000000GYRs-2bLw
+	id 1tJDrR-0000000GYS0-07C6
 	for kexec@bombadil.infradead.org;
-	Thu, 05 Dec 2024 15:33:48 +0000
+	Thu, 05 Dec 2024 15:33:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=khfTZJiJrlQc2+T6m9tSfcAmQEA7ac5eI6nmkzjnaik=; b=EANZkHbRL2VHSUfb+1K2sjYi5B
-	vG2Q/oU/NKzBEHljMTIe0TaGtF01TNVztQKMN1tKFjzK7SKfSH/bQftTkQnvNxX/lSSzFiL4fPk0I
-	qJePTTN1q86ymCKSxscKOxtXNAgv+nj+TtdYGztttJIkn60ru9zxd/c5PBojebANFuP429pMgea01
-	FbHBVwMSNGwi+mlqLA8gZsU2//ehTSPoSAY6HbjKMFgVi1Lck1ppJOM0I1KVJ4A98q79LQJ5evsNV
-	GOeWo4/Ypzpd4TgBFfaY070caKFdlZ72ZF0EZNY9IgAkcJTANa1J4zMrGawymPB55gu3QKbvDzXvB
-	OeTHoZ/g==;
+	bh=B+cdGMrXlLMQ5gF/V+Me3rwZRfmBgngjB82bVhN99Q4=; b=I2oNb2UJjFauAMuN+/xgw3Gegw
+	HanPAJkk+IMhIBHHZjJ0hfJuHDRBcXEm1VCpBvit/OIkD4TAv87hGrtioxVbodAYdV4GNKnMAECYC
+	Giec+23STvlk9V/6RLRtEn7hqYQQzFnjW3F26t2qO7l9K3gUotLyd8shRifquSFfsOftZEXA3cvOo
+	lg0pKnePImyrFl65zHgJFgd4xnBWSp9LfIjSE8lfTDJKYupOrp55GrFnCmKDGisMUL1MzQR8XyXN2
+	HVTv4Xpw4drndPc8FkGFzD6Zpev9RESg9xOCltKLbIecM+Jkro1f6xB+YJ77sVlFCxtynaqBXZRRc
+	/40qu9QA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrM-0000000DDp4-22s3;
-	Thu, 05 Dec 2024 15:33:45 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tJDrO-00000002wEx-0lzi;
+	Thu, 05 Dec 2024 15:33:46 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJDrN-0000000DyLi-28pf;
+	id 1tJDrN-0000000DyLz-2p7H;
 	Thu, 05 Dec 2024 15:33:45 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,15 +62,15 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v5 08/20] x86/kexec: Move relocate_kernel to kernel .data section
-Date: Thu,  5 Dec 2024 15:05:14 +0000
-Message-ID: <20241205153343.3275139-9-dwmw2@infradead.org>
+Subject: [PATCH v5 12/20] x86/kexec: Clean up register usage in relocate_kernel()
+Date: Thu,  5 Dec 2024 15:05:18 +0000
+Message-ID: <20241205153343.3275139-13-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241205153343.3275139-1-dwmw2@infradead.org>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,137 +87,68 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-Now that the copy is executed instead of the original, the relocate_kernel
-page can live in the kernel's .text section. This will allow subsequent
-commits to actually add real data to it and clean up the code somewhat as
-well as making the control page ROX.
+The memory encryption flag is passed in %r8 because that's where the
+calling convention puts it. Instead of moving it to %r12 and then using
+%r8 for other things, just leave it in %r8 and use other registers
+instead.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/sections.h      |  1 +
- arch/x86/kernel/callthunks.c         |  6 ++++++
- arch/x86/kernel/machine_kexec_64.c   |  4 +++-
- arch/x86/kernel/relocate_kernel_64.S |  7 +------
- arch/x86/kernel/vmlinux.lds.S        | 15 ++++++++++++++-
- 5 files changed, 25 insertions(+), 8 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
-index 3fa87e5e11ab..30e8ee7006f9 100644
---- a/arch/x86/include/asm/sections.h
-+++ b/arch/x86/include/asm/sections.h
-@@ -5,6 +5,7 @@
- #include <asm-generic/sections.h>
- #include <asm/extable.h>
- 
-+extern char __relocate_kernel_start[], __relocate_kernel_end[];
- extern char __brk_base[], __brk_limit[];
- extern char __end_rodata_aligned[];
- 
-diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
-index 465647456753..51c3e0049152 100644
---- a/arch/x86/kernel/callthunks.c
-+++ b/arch/x86/kernel/callthunks.c
-@@ -139,9 +139,15 @@ static bool skip_addr(void *dest)
- 		return true;
- #endif
- #ifdef CONFIG_KEXEC_CORE
-+# ifdef CONFIG_X86_64
-+	if (dest >= (void *)__relocate_kernel_start &&
-+	    dest < (void *)__relocate_kernel_end)
-+		return true;
-+# else
- 	if (dest >= (void *)relocate_kernel &&
- 	    dest < (void*)relocate_kernel + KEXEC_CONTROL_CODE_MAX_SIZE)
- 		return true;
-+# endif
- #endif
- #ifdef CONFIG_XEN
- 	if (dest >= (void *)hypercall_page &&
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 9567347f7a9b..23dffdc070dd 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -307,6 +307,8 @@ static void load_segments(void)
- int machine_kexec_prepare(struct kimage *image)
- {
- 	void *control_page = page_address(image->control_code_page);
-+	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
-+	unsigned long reloc_end = (unsigned long)__relocate_kernel_end;
- 	int result;
- 
- 	/* Setup the identity mapped 64bit page table */
-@@ -314,7 +316,7 @@ int machine_kexec_prepare(struct kimage *image)
- 	if (result)
- 		return result;
- 
--	__memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
-+	__memcpy(control_page, __relocate_kernel_start, reloc_end - reloc_start);
- 
- 	set_memory_x((unsigned long)control_page, 1);
- 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index b48bd82843fd..01138f862c59 100644
+index 288dfc08c63d..b24198eb1fe9 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -41,10 +41,8 @@
- #define CP_PA_BACKUP_PAGES_MAP	DATA(0x30)
- #define CP_VA_CONTROL_PAGE	DATA(0x38)
+@@ -79,24 +79,18 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	movq	%cr4, %r13
+ 	movq	%r13, saved_cr4(%rip)
  
--	.text
--	.align PAGE_SIZE
-+	.section .text.relocate_kernel,"ax";
- 	.code64
--SYM_CODE_START_NOALIGN(relocate_range)
- SYM_CODE_START_NOALIGN(relocate_kernel)
- 	UNWIND_HINT_END_OF_STACK
- 	ANNOTATE_NOENDBR
-@@ -341,6 +339,3 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+-	/* Save SME active flag */
+-	movq	%r8, %r12
+-
+ 	/* save indirection list for jumping back */
+ 	movq	%rdi, pa_backup_pages_map(%rip)
+ 
+ 	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
+ 	movq	%rcx, %r11
+ 
+-	/* Physical address of control page */
+-	movq    %rsi, %r8
+-
+ 	/* setup a new stack at the end of the physical control page */
+-	lea	PAGE_SIZE(%r8), %rsp
++	lea	PAGE_SIZE(%rsi), %rsp
+ 
+ 	/* jump to identity mapped page */
+-	addq	$(identity_mapped - relocate_kernel), %r8
+-	pushq	%r8
++	addq	$(identity_mapped - relocate_kernel), %rsi
++	pushq	%rsi
+ 	ANNOTATE_UNRET_SAFE
  	ret
  	int3
- SYM_CODE_END(swap_pages)
--
--	.skip KEXEC_CONTROL_CODE_MAX_SIZE - (. - relocate_kernel), 0xcc
--SYM_CODE_END(relocate_range);
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index fab3ac9a4574..17ebaa441e87 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -28,6 +28,7 @@
- #include <asm/orc_lookup.h>
- #include <asm/cache.h>
- #include <asm/boot.h>
-+#include <asm/kexec.h>
+@@ -107,8 +101,9 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	/*
+ 	 * %rdi	indirection page
+ 	 * %rdx start address
++	 * %r8 host_mem_enc_active
++	 * %r9 page table page
+ 	 * %r11 preserve_context
+-	 * %r12 host_mem_enc_active
+ 	 * %r13 original CR4 when relocate_kernel() was invoked
+ 	 */
  
- #undef i386     /* in case the preprocessor is a 32bit one */
- 
-@@ -95,7 +96,18 @@ const_pcpu_hot = pcpu_hot;
- #define BSS_DECRYPTED
- 
- #endif
--
-+#if defined(CONFIG_X86_64) && defined(CONFIG_KEXEC_CORE)
-+#define KEXEC_RELOCATE_KERNEL					\
-+	. = ALIGN(0x100);					\
-+	__relocate_kernel_start = .;				\
-+	*(.text.relocate_kernel);				\
-+	__relocate_kernel_end = .;
-+
-+ASSERT(__relocate_kernel_end - __relocate_kernel_start <= KEXEC_CONTROL_CODE_MAX_SIZE,
-+	"relocate_kernel code too large!")
-+#else
-+#define KEXEC_RELOCATE_KERNEL
-+#endif
- PHDRS {
- 	text PT_LOAD FLAGS(5);          /* R_E */
- 	data PT_LOAD FLAGS(6);          /* RW_ */
-@@ -181,6 +193,7 @@ SECTIONS
- 
- 		DATA_DATA
- 		CONSTRUCTORS
-+		KEXEC_RELOCATE_KERNEL
- 
- 		/* rarely changed data like cpu maps */
- 		READ_MOSTLY_DATA(INTERNODE_CACHE_BYTES)
+@@ -161,7 +156,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * entries that will conflict with the now unencrypted memory
+ 	 * used by kexec. Flush the caches before copying the kernel.
+ 	 */
+-	testq	%r12, %r12
++	testq	%r8, %r8
+ 	jz .Lsme_off
+ 	wbinvd
+ .Lsme_off:
 -- 
 2.47.0
 
