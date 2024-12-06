@@ -4,79 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B3A3E7716E
-	for <kexec@archiver.kernel.org>; Fri,  6 Dec 2024 02:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17BCAE7716E
+	for <kexec@archiver.kernel.org>; Fri,  6 Dec 2024 02:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PoABF8CKbzP0DlqAE1ugIaL0VmIlQw+M3/r+TkryE7s=; b=MNoOSQXU1dezPZ3kU/aThujmhP
-	zHni1Z/NjvtGdF1T0UUnmKzKqkERDaDLbBiwYF4pHfxEgFhbPZXKNVLVLTeiNpClaxxL0aI1sRu8D
-	LYhwa5Yc26NbEApAVpfW5lPlgSMBXlepZvnw6P5/QHNrZGD1mJAJRHEJnagAIc0hmovaMAsBNBoPU
-	NplmRmLwAIGQRHAGepWe79KI4VDBYwCwBQ80KkrJXNZNHfapGMXLtjDwRwRvp3Iz68j8n4SrNDmKR
-	rTNyuYLOzufz371QEQFzXHD+o+0HZkw81KrjKZmlsnUHDqkdYD9nUbBF8h2TksNm445ZanOOjTAX2
-	GDkEaz2A==;
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=N/YXaoLfwVt/YNB4rm+LaU/0leZ3LLmHo5RMMlqAd68=; b=kJFqQDRslDxZAN3tLm68GxIjCB
+	RMPQGmqh7OXAuIWWGaaENLte2gg2JXbzegD7S4yMBvYCvohdArk43tyTPLifTHVe2FX8TT3n9PK40
+	cY6FJPrrWKvLloxvoD6p/98PmE5BZcbZAGPba5bAUI5spGvZenCbB28hed2my8QNzbvcExWmgD+29
+	r0j59uwG0FaKIUAa3KB2qvW2w1yKu/ItvnSSR3+TtCGFs+7Cca6M/SZ+FtFPlZzxsXmpDWLI8tZjL
+	xBGcuKSgu56pzdqZOexM/HszmdPMsCER7ee9563JWS5M22xFfzzkJJa48mrmxlB5gcHEYxT3DbJTZ
+	rs2Kllxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJNno-00000000IPA-0hFc;
-	Fri, 06 Dec 2024 02:10:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tJOLC-00000000MJb-39mO;
+	Fri, 06 Dec 2024 02:45:14 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tJNnk-00000000IO7-3dqd
+	id 1tJOL8-00000000MI3-1nCY
 	for kexec@lists.infradead.org;
-	Fri, 06 Dec 2024 02:10:42 +0000
+	Fri, 06 Dec 2024 02:45:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733451040;
+	s=mimecast20190719; t=1733453108;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PoABF8CKbzP0DlqAE1ugIaL0VmIlQw+M3/r+TkryE7s=;
-	b=H0sQcZ5maLF4dKL31A7Uqedu1AOzfh2j2M+ofY/IdpW0+/ynjFDGz1gV+V7Def+dPn3r6i
-	QWbGeNn1JOVMl8BevbQvMWL35NA8mPpek+SctUa07J3dy7tx0wOgMvpB2aMJoGbjqrvu/y
-	9Zx5gCsY/qH2X7gUssoQk/Vmj6/kEzg=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=N/YXaoLfwVt/YNB4rm+LaU/0leZ3LLmHo5RMMlqAd68=;
+	b=Lkg9OQGD9XgwfOYf9IYr9R5A520qrVS49z7tPHrH3B0YX1Q4fHh847KB676qaCvXmpxNr2
+	siZw/S/VrWJbnqhVFFXn2VQRxfNGr51dzejlgMIPO1jWGbWv1SPkkCDFIXmXe9maY9V6cP
+	Nf7SHj09Qp0aO+nVFByOXndC3Ea+5jg=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-270-xRx4sDLZM5yfFpzuN9qhUw-1; Thu,
- 05 Dec 2024 21:10:36 -0500
-X-MC-Unique: xRx4sDLZM5yfFpzuN9qhUw-1
-X-Mimecast-MFC-AGG-ID: xRx4sDLZM5yfFpzuN9qhUw
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-209-kAOQHox0NVSHQHMFdKgXuw-1; Thu,
+ 05 Dec 2024 21:45:02 -0500
+X-MC-Unique: kAOQHox0NVSHQHMFdKgXuw-1
+X-Mimecast-MFC-AGG-ID: kAOQHox0NVSHQHMFdKgXuw
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C9171956057;
-	Fri,  6 Dec 2024 02:10:35 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D29FD1956087;
+	Fri,  6 Dec 2024 02:45:00 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.101])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 232941955F3F;
-	Fri,  6 Dec 2024 02:10:30 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B229619560A2;
+	Fri,  6 Dec 2024 02:44:58 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH 2/2] kexec: Introduce KEXEC_SIGN_IMAGE config option
-Date: Fri,  6 Dec 2024 10:09:57 +0800
-Message-ID: <20241206021000.8953-3-piliu@redhat.com>
-In-Reply-To: <20241206021000.8953-1-piliu@redhat.com>
-References: <20241206021000.8953-1-piliu@redhat.com>
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH 0/2] kexec-tools: Truncate PE file if it is signed
+Date: Fri,  6 Dec 2024 10:44:41 +0800
+Message-ID: <20241206024445.10442-1-piliu@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zNTGJiZFcM6U19iRHZ2-FZGsC0_CKr_NHTadYS85nyc_1733451035
+X-Mimecast-MFC-PROC-ID: XuIiFlm8US5F--796If6V_Vrw0Zc2S1-04GCoTwcVTg_1733453101
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241205_181040_971859_E8D48204 
-X-CRM114-Status: UNSURE (   8.94  )
+X-CRM114-CacheID: sfid-20241205_184510_595771_93926D93 
+X-CRM114-Status: UNSURE (   8.98  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -92,41 +84,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Only when kexec_file_load checks the signature and Image is packed into
-EFI-STUB, the internal Image should be signed.  Furthermore, it is
-signed with the module key.
+Note: This series is compatible with the ongoing kernel patches '[PATCH
+0/2] Kexec: Sign Image before packing into EFI STUB' [1]. It ensures
+functionality when kexec_file_load enforces signature verification on
+arm64, LoongArch, and RISC-V.
 
-Using the configuration condition to reflect the above dependency.
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
+*** Issue ***
+In the linux kernel drivers/firmware/efi/libstub/Makefile.zboot, the
+original Image is padded with zero, using the following instruction:
+        truncate -s $$(hexdump -s16 -n4 -e '"%u"' $<) $@
+
+Hence pe-zboot.c decomopresses and gets Image plus trailing zeroes.
+
+These trailing zeroes don't affect loading the original PE file. But
+they do raise an issue during the signature verfication. The root cause is
+that the kernel function:
+        static int pefile_digest_pe_contents(const void *pebuf, unsigned int pelen,
+                                             struct pefile_context *ctx,
+                                             struct shash_desc *desc)
+treats [pebuf, pebuf+pelen] as valid payload, which includes the
+trailing zeroes. But that is not the truth.
+
+*** Solution ***
+In pratice, the table of attribute certificates come at the end of a
+PE file. This patch utilizes that fact and truncates at the boundary of the
+certificate table to get the original Image.
+
+[1]: https://lore.kernel.org/linux-efi/20241206021000.8953-1-piliu@redhat.com/T/#t
+
+Cc: Simon Horman <horms@kernel.org>
 To: kexec@lists.infradead.org
----
- kernel/Kconfig.kexec | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 4d111f871951..cb8afe8e17e5 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -69,6 +69,15 @@ config KEXEC_SIG_FORCE
- 	  This option makes kernel signature verification mandatory for
- 	  the kexec_file_load() syscall.
- 
-+config KEXEC_SIGN_IMAGE
-+	bool "Sign Image before it is packed into EFI stub"
-+	depends on KEXEC_SIG && EFI_STUB && MODULE_SIG
-+	default y
-+	help
-+	  This option utilizes the module signing key to sign the kernel
-+	  inside EFI stub shell. So the internal kernel can pass through
-+	  the signature verification.
-+
- config KEXEC_IMAGE_VERIFY_SIG
- 	bool "Enable Image signature verification support (ARM)"
- 	default ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
+Pingfan Liu (2):
+  PE: Extract get_pehdr_offset() for reuse
+  pe-zboot: Truncate the trailing zero if Image is signed
+
+ include/pe.h           | 47 ++++++++++++++++++++++++++++++++++++++++++
+ kexec/kexec-pe-zboot.c | 25 +++++++++++++++++++---
+ kexec/kexec-uki.c      | 17 ---------------
+ 3 files changed, 69 insertions(+), 20 deletions(-)
+
 -- 
 2.41.0
 
