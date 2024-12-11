@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32B84E77182
-	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 13:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2636E7717D
+	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 13:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+DEcDh+LdwGMntwkxIbCzkLoVBb89ABtlpvYyrYztn0=; b=iUMcXLdPPfk40mLL4Y5zyEeuaV
-	0ljpKNPVbQ5zaANRlNv2yO0m7U8EFWGtSQVOmRF/gqlTGyhar3lMJMkwmvLM7EOZ789SEOIfYLm+l
-	oE7xZ5BXqzS8WvFG6y3NMt8mSfMSLBvsRRM1YXxiWto7hVYK/6M4FtYt2A9S0rKgsTWNiBQHqRQAo
-	4JzcYiG/f3LLJG3EWXYNroSi/b4Q86nod6CVRrDQEWtIjn/jHS2cUBt1PfL20c2jk33iMwcuQVvdp
-	77wPtmlD2U5L5aVcMQ5skctWZ0uX6UkpwfVNky5LpLk6pj6aoX81en999xq2h+qqKtDWYbF3pFGxF
-	1XS3q2ww==;
+	bh=Qd9NakjpvIytA6vjwOGgInJVtxHEb9hPMV7KW579E9c=; b=arywbv5vZhK/Og+cniTiWqCLCf
+	rbAiiygsC/3JkeAxdJpyhlF+SdaS9jcyI7/zfZkS6UpcOpNGu28rewfGas2xiGTrQHvejgRbqOk8a
+	7fR8+lKoeHJXwRc9asKnb8mRUjpP1dxkIECcDbcFrPx2KZu8/eOd5Kmd0sWZiKa8yuQ7XRTSbeVg/
+	RLTOSezxsmulpOBIcOF3n68YQq2x68L5nWllKAARobHRSFrpqPPkVuQUfrW1Y6OqrkcgRs2DQ24Vj
+	7WEuDrP0GzAf5gAquntujkCds3DImMj30PV4LShWBLAkT+Ja6uPGRC5h6SgZQ8o6VpuTgOeDi2sEm
+	VdT2AULA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLMNu-0000000EvCL-3N88;
+	id 1tLMNu-0000000EvCD-1nBd;
 	Wed, 11 Dec 2024 13:04:10 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLMIg-0000000Eu1K-3jNz
+	id 1tLMGC-0000000Eti6-17UQ
 	for kexec@lists.infradead.org;
-	Wed, 11 Dec 2024 12:58:48 +0000
+	Wed, 11 Dec 2024 12:56:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733921925;
+	s=mimecast20190719; t=1733921771;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+DEcDh+LdwGMntwkxIbCzkLoVBb89ABtlpvYyrYztn0=;
-	b=CvZRiIn43pzllFdN7DGuEroWhqo9wvog1nuXwDwV43wFTVvXobjcjVx78YymERmLhuYTdm
-	RIIDQ3rTCUp/uFOxpc8otbSr8IA5RC3hJjezukgpB0b8B6zwXgC3FZ+7borY+bTBok4nfP
-	etnVO8bOkIUOOxPReEuHIxc0+EP0u+I=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Qd9NakjpvIytA6vjwOGgInJVtxHEb9hPMV7KW579E9c=;
+	b=i13kWdb6hCubNK1Lua5wuNfxC9+dE6PARvQNOkS/ziU+eYybT7XSdvqMq+UECEhABNOzCn
+	kMYJwzGcbSzbhlDoFZk6CPR/LRk5ZP2Z87EhOpObNOhqSnzoVpu8WAO3ZN6velC9Q/AFUf
+	wr2t1pLShI+00++nT+mGUFrnm3s2TUA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-_hM7nGCVOMm_QIe9A0sMKw-1; Wed,
- 11 Dec 2024 07:58:42 -0500
-X-MC-Unique: _hM7nGCVOMm_QIe9A0sMKw-1
-X-Mimecast-MFC-AGG-ID: _hM7nGCVOMm_QIe9A0sMKw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-5w0geDonMzCS8396TgF_XQ-1; Wed,
+ 11 Dec 2024 07:56:06 -0500
+X-MC-Unique: 5w0geDonMzCS8396TgF_XQ-1
+X-Mimecast-MFC-AGG-ID: 5w0geDonMzCS8396TgF_XQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 905441956089;
-	Wed, 11 Dec 2024 12:58:40 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61670195609D;
+	Wed, 11 Dec 2024 12:56:04 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.3])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29C59300018D;
-	Wed, 11 Dec 2024 12:58:32 +0000 (UTC)
-Date: Wed, 11 Dec 2024 20:58:27 +0800
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 921081956048;
+	Wed, 11 Dec 2024 12:56:02 +0000 (UTC)
+Date: Wed, 11 Dec 2024 20:55:52 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Coiby Xu <coxu@redhat.com>
 Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
@@ -66,23 +66,22 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	Dave Hansen <dave.hansen@intel.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
 	Greg KH <gregkh@linuxfoundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v6 3/7] crash_dump: store dm crypt keys in kdump reserved
- memory
-Message-ID: <Z1mMc+/dCk+mSahu@MiWiFi-R3L-srv>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v6 6/7] x86/crash: pass dm crypt keys to kdump kernel
+Message-ID: <Z1mL2KBcRskFlffk@MiWiFi-R3L-srv>
 References: <20241029055223.210039-1-coxu@redhat.com>
- <20241029055223.210039-4-coxu@redhat.com>
+ <20241029055223.210039-7-coxu@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029055223.210039-4-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20241029055223.210039-7-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241211_045846_996196_FFE58F25 
-X-CRM114-Status: GOOD (  11.32  )
+X-CRM114-CacheID: sfid-20241211_045612_379592_214D716B 
+X-CRM114-Status: GOOD (  21.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,56 +97,98 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 10/29/24 at 01:52pm, Coiby Xu wrote:
-......
-> +int crash_load_dm_crypt_keys(struct kimage *image)
-> +{
-> +	struct kexec_buf kbuf = {
-> +		.image = image,
-> +		.buf_min = 0,
-> +		.buf_max = ULONG_MAX,
-> +		.top_down = false,
-> +		.random = true,
-> +	};
-> +	int r;
-> +
-> +
-> +	if (key_count <= 0) {
-> +		kexec_dprintk("No dm-crypt keys\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	image->dm_crypt_keys_addr = 0;
-> +	r = build_keys_header();
-> +	if (r)
-> +		return r;
-> +
-> +	kbuf.buffer = keys_header;
-> +	kbuf.bufsz = get_keys_header_size(key_count);
-> +
-> +	kbuf.memsz = kbuf.bufsz;
-> +	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> +	r = kexec_add_buffer(&kbuf);
-> +	if (r) {
-> +		kvfree((void *)kbuf.buffer);
-> +		return r;
-> +	}
-> +	image->dm_crypt_keys_addr = kbuf.mem;
-> +	image->dm_crypt_keys_sz = kbuf.bufsz;
-
-Wondering why not assigning kbuf.memsz, but bufsz.
-
-> +	kexec_dprintk(
-> +		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-> +		kbuf.bufsz, kbuf.bufsz);
-> +
-> +	return r;
-> +}
-> +
-> +
->  static int __init configfs_dmcrypt_keys_init(void)
+> 1st kernel will build up the kernel command parameter dmcryptkeys as
+> similar to elfcorehdr to pass the memory address of the stored info of
+> dm crypt key to kdump kernel.
+> 
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  arch/x86/kernel/crash.c           | 20 ++++++++++++++++++--
+>  arch/x86/kernel/kexec-bzimage64.c |  7 +++++++
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 340af8155658..99d50c31db02 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -278,6 +278,7 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
+>  				 unsigned long long mend)
 >  {
->  	int ret;
+>  	unsigned long start, end;
+> +	int ret;
+>  
+>  	cmem->ranges[0].start = mstart;
+>  	cmem->ranges[0].end = mend;
+> @@ -286,22 +287,37 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
+>  	/* Exclude elf header region */
+>  	start = image->elf_load_addr;
+>  	end = start + image->elf_headers_sz - 1;
+> -	return crash_exclude_mem_range(cmem, start, end);
+> +	ret = crash_exclude_mem_range(cmem, start, end);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Exclude dm crypt keys region */
+> +	if (image->dm_crypt_keys_addr) {
+> +		start = image->dm_crypt_keys_addr;
+> +		end = start + image->dm_crypt_keys_sz - 1;
+> +		return crash_exclude_mem_range(cmem, start, end);
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  /* Prepare memory map for crash dump kernel */
+>  int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+>  {
+> +	unsigned int max_nr_ranges = 3;
+
+Define a macro and add code comment to explain why this value is taken?
+
+>  	int i, ret = 0;
+>  	unsigned long flags;
+>  	struct e820_entry ei;
+>  	struct crash_memmap_data cmd;
+>  	struct crash_mem *cmem;
+>  
+> -	cmem = vzalloc(struct_size(cmem, ranges, 1));
+> +	cmem = vzalloc(struct_size(cmem, ranges, max_nr_ranges));
+>  	if (!cmem)
+>  		return -ENOMEM;
+>  
+> +	cmem->max_nr_ranges = max_nr_ranges;
+> +
+>  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
+>  	cmd.params = params;
+>  
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 68530fad05f7..9c94428927bd 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+>  	if (image->type == KEXEC_TYPE_CRASH) {
+>  		len = sprintf(cmdline_ptr,
+>  			"elfcorehdr=0x%lx ", image->elf_load_addr);
+> +
+> +		if (image->dm_crypt_keys_addr != 0)
+> +			len += sprintf(cmdline_ptr + len,
+> +					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
+>  	}
+>  	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+>  	cmdline_len += len;
+> @@ -441,6 +445,9 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  		ret = crash_load_segments(image);
+>  		if (ret)
+>  			return ERR_PTR(ret);
+> +		ret = crash_load_dm_crypt_keys(image);
+> +		if (ret)
+> +			pr_debug("Either no dm crypt key or error to retrieve the dm crypt key\n");
+
+If it's error, do we need change ti to pr_debug?
+>  	}
+>  #endif
+>  
 > -- 
 > 2.47.0
 > 
