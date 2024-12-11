@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4ED3DE77180
-	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 02:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AEF8E77183
+	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 02:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LDfJbSmW74D5dPGsqaQCVmXbD+E/Mx7Y3FYt1b/wAPE=; b=v3owZMum/kqCHC4u1UyXgRk8Y8
-	vn7wchTNz6Y3RY2rAyz2/yEL/5GN3E89/aZOKuWZX2G/Ox3Q87bMJn++rDj1HSjg8MkTSE5OFWVf3
-	0X41uEOB/ura+jFT+MlyQuMwBU4EHqr0EsT0Rwmb+83nAF8PZ/VC6263xj40UlTAFocLpYj/z0TAF
-	6ecmORoduvFSQ4hYNDxgpXzi80WbBzlgW7PsTcGX6fX5WfpuB5o48JqNkwWfK4IAkQ90tAvKFWTD3
-	JYGtiQQ0u4eVEhpgA4qKVvbuA3MClDsPa5NRQMsrl9iquhsWRujimICmkBJHeV3PfSfinAcvd7wYJ
-	fejqNvAA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=8vUqsqy9SxDx4Z1tYvDGdsUzg3OrjLYvGTeSYGx5cuQ=; b=zUFCinvBrcoeEVZxDnRieTI1KP
+	gYfVch51AuW5ctTxPKRSgHPugG7sHXn6wPo3I7p0s4ZLYRlKmea7ij7n1hzsdODcUzpbG5AlynHCD
+	rraVRcaISSca9O4ynSVCsRBukjmMShilawFkgwqI1Y37e41s5LWhyL2uF+vUbsy2l5ihcU2cR+Zc2
+	zd9Xp95Qj5lCCtOso5CXIXca92Glv9Nsip8PiXCPxqTVc//pAaiu6pFVxSkvPfwuB3uTl02r8OjVZ
+	4SmxQWHuSAyCGallAVxtFyPHoSWG93jxECDaYSzkfougwo5YFfc2qxyFjI4UL4M+NEop/xOaSAPGw
+	cqtyPtTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLCve-0000000DZ0p-3csu;
-	Wed, 11 Dec 2024 02:58:22 +0000
+	id 1tLCvh-0000000DZ2S-10GH;
+	Wed, 11 Dec 2024 02:58:25 +0000
 Received: from foss.arm.com ([217.140.110.172])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLCvc-0000000DYyY-0Lrq
+	id 1tLCvd-0000000DYyw-1fGz
 	for kexec@lists.infradead.org;
-	Wed, 11 Dec 2024 02:58:21 +0000
+	Wed, 11 Dec 2024 02:58:23 +0000
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DD9C1063;
-	Tue, 10 Dec 2024 18:58:42 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6572F1007;
+	Tue, 10 Dec 2024 18:58:41 -0800 (PST)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1617D3F720;
-	Tue, 10 Dec 2024 18:58:14 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B40B3F720;
+	Tue, 10 Dec 2024 18:58:13 -0800 (PST)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: kexec@lists.infradead.org
 Cc: piliu@redhat.com,
 	horms@kernel.org,
 	ardb@kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH 1/2] zstd: Add zstd decompression logic
-Date: Tue, 10 Dec 2024 20:58:09 -0600
-Message-ID: <20241211025810.242894-2-jeremy.linton@arm.com>
+Subject: [PATCH 0/2] ZBOOT zstd support
+Date: Tue, 10 Dec 2024 20:58:08 -0600
+Message-ID: <20241211025810.242894-1-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241211025810.242894-1-jeremy.linton@arm.com>
-References: <20241211025810.242894-1-jeremy.linton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241210_185820_209950_B6C7F2ED 
-X-CRM114-Status: GOOD (  31.26  )
+X-CRM114-CacheID: sfid-20241210_185821_475228_B786F910 
+X-CRM114-Status: UNSURE (   7.22  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,285 +63,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-zstd is becoming a popular zlib replacement because it both tends to
-get a better compression ratio as well performs considerably
-better. As such, zstd is now one of the options that can be used to
-compress the Linux kernel.
+This set adds zstd compressed image support to the image decompression
+logic. This enables kexec with PE-ZBOOT images compressed with
+zstd. zstd is one of those algorithms which is better in most regards
+than zlib because it both compresses data better an is at the same
+time faster. This is in large part because its written for modern
+machines and is less of a byte oriented compression algorithm which
+optimizes well on modern 64-bit machines.
 
-Lets enable it by using a system provided shared library, creating the
-required boilerplate to match the existing zlib/lzma function
-signatures, and creating build options to enable/disable it.
+Adding this logic to kexec allows distributions to ship zstd
+compressed kernels without loss of kexec/kdump functionatlity.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
----
- configure.ac       |  10 +++
- kexec/Makefile     |   4 +-
- kexec/kexec-zstd.h |   7 ++
- kexec/zstd.c       | 191 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 211 insertions(+), 1 deletion(-)
+Jeremy Linton (2):
+  zstd: Add zstd decompression logic
+  kexec: Enable zstd in kexec decompression paths
+
+ configure.ac           |  10 +++
+ kexec/Makefile         |   4 +-
+ kexec/kexec-pe-zboot.c |   3 +-
+ kexec/kexec-zstd.h     |   7 ++
+ kexec/kexec.c          |  10 ++-
+ kexec/zstd.c           | 191 +++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 220 insertions(+), 5 deletions(-)
  create mode 100644 kexec/kexec-zstd.h
  create mode 100644 kexec/zstd.c
 
-diff --git a/configure.ac b/configure.ac
-index e030302..43cdb64 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -106,6 +106,9 @@ AC_ARG_WITH([zlib], AS_HELP_STRING([--without-zlib],[disable zlib support]),
- AC_ARG_WITH([lzma], AS_HELP_STRING([--without-lzma],[disable lzma support]),
- 	[ with_lzma="$withval"], [ with_lzma=yes ] )
- 
-+AC_ARG_WITH([zstd], AS_HELP_STRING([--without-zstd],[disable zstd support]),
-+	[ with_zstd="$withval"], [ with_zstd=yes ] )
-+
- AC_ARG_WITH([xen], AS_HELP_STRING([--without-xen],
- 	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
- 
-@@ -180,6 +183,13 @@ if test "$with_lzma" = yes ; then
- 		AC_MSG_NOTICE([lzma support disabled]))])
- fi
- 
-+dnl See if I have a usable copy of zstd available
-+if test "$with_zstd" = yes ; then
-+	AC_CHECK_HEADER(zstd.h,
-+		[AC_CHECK_LIB(zstd, ZSTD_decompress, ,
-+		AC_MSG_NOTICE([zstd support disabled]))])
-+fi
-+
- dnl find Xen control stack libraries
- if test "$with_xen" = yes ; then
- 	AC_CHECK_HEADER(xenctrl.h,
-diff --git a/kexec/Makefile b/kexec/Makefile
-index d4f26d7..e969d1e 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -26,6 +26,7 @@ KEXEC_SRCS_base += kexec/crashdump-xen.c
- KEXEC_SRCS_base += kexec/phys_arch.c
- KEXEC_SRCS_base += kexec/lzma.c
- KEXEC_SRCS_base += kexec/zlib.c
-+KEXEC_SRCS_base += kexec/zstd.c
- KEXEC_SRCS_base += kexec/kexec-xen.c
- KEXEC_SRCS_base += kexec/symbols.c
- 
-@@ -36,7 +37,8 @@ dist += kexec/Makefile						\
- 	kexec/crashdump.h kexec/firmware_memmap.h		\
- 	kexec/kexec-elf-boot.h					\
- 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
--	kexec/kexec-zlib.h kexec/kexec-lzma.h			\
-+	kexec/kexec-zlib.h kexec/kexec-lzma.h                   \
-+	kexec/kexec-zstd.h                                      \
- 	kexec/kexec-xen.h 					\
- 	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
- 
-diff --git a/kexec/kexec-zstd.h b/kexec/kexec-zstd.h
-new file mode 100644
-index 0000000..c5dbb24
---- /dev/null
-+++ b/kexec/kexec-zstd.h
-@@ -0,0 +1,7 @@
-+#ifndef __KEXEC_ZSTD_H
-+#define __KEXEC_ZSTD_H
-+
-+#include <sys/types.h>
-+
-+char *zstd_decompress_file(const char *filename, off_t *r_size);
-+#endif /* __KEXEC_ZSTD_H */
-diff --git a/kexec/zstd.c b/kexec/zstd.c
-new file mode 100644
-index 0000000..9309251
---- /dev/null
-+++ b/kexec/zstd.c
-@@ -0,0 +1,191 @@
-+#include "kexec-zstd.h"
-+#include "kexec.h"
-+
-+#include "config.h"
-+
-+#ifdef HAVE_LIBZSTD
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+#include <ctype.h>
-+#include <zstd.h>
-+
-+
-+/*
-+ * Reimplementation of private function available if lib is statically linked.
-+ * Remove when said function becomes public.
-+ */
-+unsigned ZSTD_isFrame(const void* buffer, size_t size)
-+{
-+	uint8_t *buf = (uint8_t *)buffer;
-+	/* Magic zstd frame header value */
-+	if ((buf[0] == 0x28) &&
-+	    (buf[1] == 0xB5) &&
-+	    (buf[2] == 0x2F) &&
-+	    (buf[3] == 0xFD))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/*
-+ * A guess at the nax compression ratio for buffer overallocation
-+ * Real values are frequently around 4:1, if this is wrong
-+ * it just results in buffer reallocation and the decompression
-+ * operation being restarted from where it left off.
-+ */
-+#define EXPECTED_RATIO 8
-+
-+/*
-+ * This supports the streaming compression mode the kernel uses
-+ * that can result in multiple zstd frames comprising a single
-+ * compressed image. In order too be a bit more efficient than
-+ * the libz/lzma implementations, we attempt to discover the input
-+ * and output image sizes before performing the decompression.
-+ * But, in streaming mode the first frame may not have a length
-+ * or it seems the length could be incorrect if multiple frames
-+ * are appended together. So, its written with buffer resize logic
-+ * but a guess at the compression ratio is made to avoid the resize/copy
-+ * operation. Ideally this code efficiently allocates the
-+ * correct input buffer, and no more than 2-3x the output buffer
-+ * size so that it can perform the decompress operation with a
-+ * single decompress call.
-+ */
-+char *zstd_decompress_file(const char *filename, off_t *r_size)
-+{
-+	bool again;
-+	void *cBuff = NULL;
-+	FILE *fp = NULL; /* use c streams to match gzip/lzma logic */
-+	struct stat fp_stats;
-+	uint8_t magic[4];
-+	ZSTD_DCtx* dctx = NULL;
-+
-+	ZSTD_outBuffer output = { NULL, 0, 0 };
-+	ZSTD_inBuffer input = { NULL, 0, 0 };
-+
-+
-+	*r_size = 0;
-+	if (!filename) {
-+		return NULL;
-+	}
-+	if (stat(filename, &fp_stats))
-+	{
-+		dbgprintf("Cannot stat `%s'\n", filename);
-+		return NULL;
-+	}
-+	if (fp_stats.st_size < sizeof(magic))
-+	{
-+		dbgprintf("short file\n");
-+		return NULL;
-+	}
-+	input.size = fp_stats.st_size;
-+
-+	fp = fopen(filename, "rb");
-+	if (fp == 0) {
-+		dbgprintf("Cannot open `%s'\n", filename);
-+		goto fail;
-+	}
-+	/* before we read the whole buffer see if this looks like a zstd frame */
-+	if (fread(&magic, 1, sizeof(magic), fp) != sizeof(magic)) {
-+		dbgprintf("Unable to read zstd header\n");
-+		goto fail;
-+	}
-+
-+	if (!ZSTD_isFrame((void*)&magic, sizeof(magic)))
-+	{
-+		dbgprintf("Not zstd compressed\n");
-+		goto fail;
-+	}
-+
-+	cBuff = xmalloc(input.size);
-+	input.src = cBuff; /* use cBuff ptr to avoid const/mismatches */
-+	rewind(fp);
-+	if (fread(cBuff, 1, input.size, fp) != input.size)
-+	{
-+		dbgprintf("Unable to read compressed data\n");
-+		goto fail;
-+	}
-+	fclose(fp);
-+	fp = NULL;
-+
-+
-+	output.size = ZSTD_getFrameContentSize(input.src, input.size);
-+	if (output.size == ZSTD_CONTENTSIZE_ERROR)
-+	{
-+		dbgprintf("not compressed by zstd\n");
-+		goto fail;
-+	}
-+
-+	if (output.size == ZSTD_CONTENTSIZE_UNKNOWN)
-+	{
-+		/*
-+		 * The compressed size is an optional field in the header
-+		 * So we guess at the compression ratio to avoid reallocating
-+		 * the buffer, but this can fail so we still have code to
-+		 * handle that case.
-+		 */
-+		dbgprintf("original zstd size unknown!\n");
-+		output.size = fp_stats.st_size * EXPECTED_RATIO;
-+	}
-+	output.dst = xmalloc(output.size);
-+
-+	dctx = ZSTD_createDCtx();
-+	if (dctx == NULL) {
-+		dbgprintf("zstd context allocation error\n");
-+		goto fail;
-+	}
-+
-+	do {
-+		again = false;
-+		size_t const ret = ZSTD_decompressStream(dctx, &output , &input);
-+		if (ZSTD_isError(ret)) {
-+			dbgprintf("zstd error %s\n", ZSTD_getErrorName(ret));
-+			goto fail;
-+		}
-+		dbgprintf("zstd decompressed to input=%ld output=%ld\n", input.pos, output.pos);
-+		if (output.pos == output.size) {
-+			/* uh the output buffer wasn't large enough, double it */
-+			output.size <<= 1;
-+			output.dst = xrealloc(output.dst, output.size);
-+			/*
-+			 * handle case where all the input was consumed but not all the
-+			 * output was written because of insufficient output buffer
-+			 */
-+			again = true;
-+		}
-+
-+	} while ((input.pos < input.size) || again);
-+
-+	free(cBuff);
-+	ZSTD_freeDCtx(dctx);
-+
-+	*r_size = output.pos;
-+
-+	return output.dst;
-+
-+fail:
-+	if (fp)
-+		fclose(fp);
-+	if (dctx)
-+		ZSTD_freeDCtx(dctx);
-+	if (output.dst)
-+		free(output.dst);
-+	if (cBuff)
-+		free(cBuff);
-+
-+	return NULL;
-+
-+}
-+#else
-+
-+char *zstd_decompress_file(const char *filename, off_t *r_size)
-+{
-+	return NULL;
-+}
-+#endif
 -- 
 2.47.0
 
