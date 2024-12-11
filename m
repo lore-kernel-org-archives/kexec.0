@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AEF8E77183
-	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 02:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C099CE7717F
+	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 02:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=8vUqsqy9SxDx4Z1tYvDGdsUzg3OrjLYvGTeSYGx5cuQ=; b=zUFCinvBrcoeEVZxDnRieTI1KP
-	gYfVch51AuW5ctTxPKRSgHPugG7sHXn6wPo3I7p0s4ZLYRlKmea7ij7n1hzsdODcUzpbG5AlynHCD
-	rraVRcaISSca9O4ynSVCsRBukjmMShilawFkgwqI1Y37e41s5LWhyL2uF+vUbsy2l5ihcU2cR+Zc2
-	zd9Xp95Qj5lCCtOso5CXIXca92Glv9Nsip8PiXCPxqTVc//pAaiu6pFVxSkvPfwuB3uTl02r8OjVZ
-	4SmxQWHuSAyCGallAVxtFyPHoSWG93jxECDaYSzkfougwo5YFfc2qxyFjI4UL4M+NEop/xOaSAPGw
-	cqtyPtTA==;
+	bh=IfO9/oCHZjCjo42v2Mc1LVPYN0UeZN4vZ7FBVsa2sq0=; b=W6+6vfnG8V01SVWohOKawk9mdI
+	R+zDvZjv3w3PAmCcc644ngKnO8jRl3jDfikQTz3U89pRlO+h2aQEOM4Kj2pVoytStxB1RK7Q9rIXg
+	Eg6sTKtp7QXkSLsflQR7qNOBoI/tQh8jQPPr/cVpDHKcLfWt1cJkK3Gf4LlBhL2kNvW8MjGoR2ck8
+	hgImGBHHgadlmPLCvtMLW6+9D+KWP7yFKaCe5S02KxBnXu0VXHQVs4+Wv2voYU4DtLxdkyIoeCheN
+	oAf0ox1AVQDoO2ScoARF3zu6mWAeWu9XWlPzRmVLfu5FMsFi7pNIzGn4vmbLfdYTp7/DXxOKssNZ/
+	jBZXunLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLCvh-0000000DZ2S-10GH;
-	Wed, 11 Dec 2024 02:58:25 +0000
+	id 1tLCx6-0000000DZMX-2BjM;
+	Wed, 11 Dec 2024 02:59:52 +0000
 Received: from foss.arm.com ([217.140.110.172])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLCvd-0000000DYyw-1fGz
+	id 1tLCw5-0000000DZ9A-1vgb
 	for kexec@lists.infradead.org;
-	Wed, 11 Dec 2024 02:58:23 +0000
+	Wed, 11 Dec 2024 02:58:50 +0000
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6572F1007;
-	Tue, 10 Dec 2024 18:58:41 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A538816F2;
+	Tue, 10 Dec 2024 18:59:16 -0800 (PST)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B40B3F720;
-	Tue, 10 Dec 2024 18:58:13 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82AE53F720;
+	Tue, 10 Dec 2024 18:58:48 -0800 (PST)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: kexec@lists.infradead.org
 Cc: piliu@redhat.com,
 	horms@kernel.org,
-	ardb@kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH 0/2] ZBOOT zstd support
-Date: Tue, 10 Dec 2024 20:58:08 -0600
-Message-ID: <20241211025810.242894-1-jeremy.linton@arm.com>
+Subject: [PATCH] Correct string specifiers
+Date: Tue, 10 Dec 2024 20:58:46 -0600
+Message-ID: <20241211025846.243026-1-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.47.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241210_185821_475228_B786F910 
-X-CRM114-Status: UNSURE (   7.22  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20241210_185849_583671_41C58A16 
+X-CRM114-Status: GOOD (  10.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,31 +61,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This set adds zstd compressed image support to the image decompression
-logic. This enables kexec with PE-ZBOOT images compressed with
-zstd. zstd is one of those algorithms which is better in most regards
-than zlib because it both compresses data better an is at the same
-time faster. This is in large part because its written for modern
-machines and is less of a byte oriented compression algorithm which
-optimizes well on modern 64-bit machines.
+Recent GCC's on fedora complain about the use of
+%lld for uint64_t because its unsigned. Convert a number
+of these and similar calls.
 
-Adding this logic to kexec allows distributions to ship zstd
-compressed kernels without loss of kexec/kdump functionatlity.
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 4 ++--
+ kexec/arch/i386/crashdump-x86.c    | 2 +-
+ kexec/arch/i386/kexec-x86-common.c | 2 +-
+ kexec/arch/i386/x86-linux-setup.c  | 2 +-
+ util_lib/elf_info.c                | 4 ++--
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
-Jeremy Linton (2):
-  zstd: Add zstd decompression logic
-  kexec: Enable zstd in kexec decompression paths
-
- configure.ac           |  10 +++
- kexec/Makefile         |   4 +-
- kexec/kexec-pe-zboot.c |   3 +-
- kexec/kexec-zstd.h     |   7 ++
- kexec/kexec.c          |  10 ++-
- kexec/zstd.c           | 191 +++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 220 insertions(+), 5 deletions(-)
- create mode 100644 kexec/kexec-zstd.h
- create mode 100644 kexec/zstd.c
-
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index f23b2bf..73cb611 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -1,6 +1,6 @@
+ /*
+  * ARM64 crashdump.
+- *     partly derived from arm implementation
++ *     partly derived from                                    arm implementation
+  *
+  * Copyright (c) 2014-2017 Linaro Limited
+  * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+@@ -71,7 +71,7 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 		 */
+ 		for (i = 0; i < usablemem_rgns.max_size; i++) {
+ 			if (usablemem_rgns.ranges[i].start == base) {
+-				fprintf(stderr, "Warning, the range already exists in usablemem_rgns, base=%lx, length=%lx\n",
++				fprintf(stderr, "Warning, the range already exists in usablemem_rgns, base=%llx, length=%llx\n",
+ 						base, length);
+ 				return 0;
+ 			}
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 800ae2c..770e3f1 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -784,7 +784,7 @@ static void cmdline_add_efi(char *cmdline)
+ 	if (!acpi_rsdp)
+ 		return;
+ 
+-	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%llx", acpi_rsdp);
++	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%lux", acpi_rsdp);
+ 	if (strlen(cmdline) + strlen(acpi_rsdp_buf) > (COMMAND_LINE_SIZE - 1))
+ 		die("Command line overflow\n");
+ 
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index 67da043..acacb45 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -422,7 +422,7 @@ static uint64_t efi_get_acpi_rsdp(void) {
+ 		/* ACPI20= always goes before ACPI= */
+ 		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+ 			s = strchr(line, '=') + 1;
+-			sscanf(s, "0x%llx", &acpi_rsdp);
++			sscanf(s, "0x%lux", &acpi_rsdp);
+ 			break;
+ 		}
+ 	}
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 1f96372..70656e3 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -760,7 +760,7 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+ 				e820[i].type = E820_RESERVED;
+ 				break;
+ 		}
+-		dbgprintf("%016llx-%016llx (%d)\n",
++		dbgprintf("%016lux-%016lux (%d)\n",
+ 				e820[i].addr,
+ 				e820[i].addr + e820[i].size - 1,
+ 				e820[i].type);
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 8f84f52..5cf438c 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -890,7 +890,7 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Cycle when parsing dmesg detected.\n");
+ 				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+ 					log_buf, current_idx);
+ 				exit(68);
+ 			}
+@@ -904,7 +904,7 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Index outside log_buf detected.\n");
+ 				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+ 					log_buf, current_idx);
+ 				exit(69);
+ 			}
 -- 
 2.47.0
 
