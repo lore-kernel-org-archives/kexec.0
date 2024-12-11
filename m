@@ -4,85 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E88EE7717F
-	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 01:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 016BAE7717F
+	for <kexec@archiver.kernel.org>; Wed, 11 Dec 2024 02:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8aV+9fvOxxvmUTahU0xu8ly965n+mUXb5DBtkjTwFAU=; b=N4Ub1UEP7cqwZjzZLyuOgb8vKq
-	Q1pg7jtaqWRjQ5WXK6AjdDUVUlpCUTzsUG99XUTWTcVBR36st7W5JQJ7dmK4oBAzy1wRXBWJzgHLy
-	zccV6TfuIW5r2lLeG3TbdjzG31fs6igO0LyXTd9gGOROWgGXydZJ3p1Sf/UHQ0V3aeZngQs6UrPA/
-	t87JtPrPfAPA1ZAOddt8kkZmhw7Vb3pxYlpSX+xxfRCCsSwS3W3u9myexFSKDlpTicx8zKtGhnqUO
-	dcXjAVLbdHDHxyQzHLKrL1HocJhEN8aqxZMTfN0FmRQ+cYmYsegvbYKI1mlrb2CmFN5s7nwKz1ylk
-	HIM/e1vQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YQR2hx9Agnwas65hFGaIgBBKnBAL0mukbIYxo6IQ2Zg=; b=DWfRfV0cTe4LeMtjdAOUCF5Vnl
+	IS6VCNnrQl591aVH1TKGvh+TbaRfs5Q6oUkIx8o9Un2+czbau3UljkquEJ4ilOLoj2e/5k1g6zlPY
+	UyWcQrZzjJ5R47IywbvRM52HNLc9daCkztpDpUmoxxjYGyhOznF460TGtv/PQLWW+67ZkL2e0U3BT
+	67d4rqc24FIZXiarqSGfM/kHx1GSg9xYcc8ECaEpl0i3iLwAKdAEq4+qcgP0cJ6cy6uP0+6egdOuz
+	+X9gE1VvNgZOoOFlKtucETEEDY69CY2ac5FiLrS/Ce/LDltvBolYH2d/rqZ9iqYu6cHw5VgszHlsm
+	znZ5pBNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLBbg-0000000DQU1-3SlJ;
-	Wed, 11 Dec 2024 01:33:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLBbZ-0000000DQQU-1Lmr
+	id 1tLCve-0000000DZ0c-24L1;
+	Wed, 11 Dec 2024 02:58:22 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tLCvc-0000000DYya-0Jw0
 	for kexec@lists.infradead.org;
-	Wed, 11 Dec 2024 01:33:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733880810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8aV+9fvOxxvmUTahU0xu8ly965n+mUXb5DBtkjTwFAU=;
-	b=Du8FinGYMa9eqf9jrW375FpSFD13+AIDn5ZSlLtrKCcxFFcnkfgn5GqT4lrXk7CeKDDmhD
-	YizKgWQJL+U8HjRIifHsNXQKeWPOa3H7/u64ssx1K/9bIs8Owr/qeXO06t6TzGHJK5RFi6
-	rlfpgmnLTh3SgIKoIyJ4ftILXN9WlaQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-lb8kWb_iO1ioW3wfqaxV2A-1; Tue,
- 10 Dec 2024 20:33:27 -0500
-X-MC-Unique: lb8kWb_iO1ioW3wfqaxV2A-1
-X-Mimecast-MFC-AGG-ID: lb8kWb_iO1ioW3wfqaxV2A
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC1851955F2D;
-	Wed, 11 Dec 2024 01:33:25 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.3])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B1DCF1956094;
-	Wed, 11 Dec 2024 01:33:23 +0000 (UTC)
-Date: Wed, 11 Dec 2024 09:33:18 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
-	Alexander Graf <graf@amazon.com>,
-	Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <Z1jr3ghRNdwo2y5I@MiWiFi-R3L-srv>
-References: <20241029055223.210039-1-coxu@redhat.com>
- <96266276b15bc3c1100b46c27b0fc19dfbea25ec.camel@infradead.org>
+	Wed, 11 Dec 2024 02:58:21 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A29516A3;
+	Tue, 10 Dec 2024 18:58:43 -0800 (PST)
+Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73E303F720;
+	Tue, 10 Dec 2024 18:58:15 -0800 (PST)
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: kexec@lists.infradead.org
+Cc: piliu@redhat.com,
+	horms@kernel.org,
+	ardb@kernel.org,
+	Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH 2/2] kexec: Enable zstd in kexec decompression paths
+Date: Tue, 10 Dec 2024 20:58:10 -0600
+Message-ID: <20241211025810.242894-3-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241211025810.242894-1-jeremy.linton@arm.com>
+References: <20241211025810.242894-1-jeremy.linton@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <96266276b15bc3c1100b46c27b0fc19dfbea25ec.camel@infradead.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241210_173333_443185_FA496632 
-X-CRM114-Status: GOOD (  41.08  )
+X-CRM114-CacheID: sfid-20241210_185820_154501_1410573C 
+X-CRM114-Status: UNSURE (   8.63  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,94 +65,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/03/24 at 05:53pm, David Woodhouse wrote:
-> On Tue, 2024-10-29 at 13:52 +0800, Coiby Xu wrote:
-> > LUKS is the standard for Linux disk encryption, widely adopted by users,
-> > and in some cases, such as Confidential VMs, it is a requirement. With 
-> > kdump enabled, when the first kernel crashes, the system can boot into
-> > the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore) 
-> > to a specified target. However, there are two challenges when dumping
-> > vmcore to a LUKS-encrypted device:
-> > 
-> >  - Kdump kernel may not be able to decrypt the LUKS partition. For some
-> >    machines, a system administrator may not have a chance to enter the
-> >    password to decrypt the device in kdump initramfs after the 1st kernel
-> >    crashes; For cloud confidential VMs, depending on the policy the
-> >    kdump kernel may not be able to unseal the keys with TPM and the
-> >    console virtual keyboard is untrusted.
-> > 
-> >  - LUKS2 by default use the memory-hard Argon2 key derivation function
-> >    which is quite memory-consuming compared to the limited memory reserved
-> >    for kdump. Take Fedora example, by default, only 256M is reserved for
-> >    systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
-> >    to be reserved for kdump. Note if the memory reserved for kdump can't
-> >    be used by 1st kernel i.e. an user sees ~1300M memory missing in the
-> >    1st kernel.
-> > 
-> > Besides users (at least for Fedora) usually expect kdump to work out of
-> > the box i.e. no manual password input or custom crashkernel value is
-> > needed. And it doesn't make sense to derivate the keys again in kdump
-> > kernel which seems to be redundant work.
-> > 
-> > This patch set addresses the above issues by making the LUKS volume keys
-> > persistent for kdump kernel with the help of cryptsetup's new APIs
-> > (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
-> > the kdump copies of LUKS volume keys,
-> > 
-> >  1. After the 1st kernel loads the initramfs during boot, systemd
-> >     use an user-input passphrase to de-crypt the LUKS volume keys
-> >     or TPM-sealed key and then save the volume keys to specified keyring
-> >     (using the --link-vk-to-keyring API) and the key will expire within
-> >     specified time.
-> > 
-> >  2. A user space tool (kdump initramfs loader like kdump-utils) create
-> >     key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
-> >     the 1st kernel which keys are needed.
-> > 
-> >  3. When the kdump initramfs is loaded by the kexec_file_load
-> >     syscall, the 1st kernel will iterate created key items, save the
-> >     keys to kdump reserved memory.
-> > 
-> >  4. When the 1st kernel crashes and the kdump initramfs is booted, the
-> >     kdump initramfs asks the kdump kernel to create a user key using the
-> >     key stored in kdump reserved memory by writing yes to
-> >     /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
-> >     device is unlocked with libcryptsetup's --volume-key-keyring API.
-> > 
-> >  5. The system gets rebooted to the 1st kernel after dumping vmcore to
-> >     the LUKS encrypted device is finished
-> > 
-> > After libcryptsetup saving the LUKS volume keys to specified keyring,
-> > whoever takes this should be responsible for the safety of these copies
-> > of keys. The keys will be saved in the memory area exclusively reserved
-> > for kdump where even the 1st kernel has no direct access. And further
-> > more, two additional protections are added,
-> >  - save the copy randomly in kdump reserved memory as suggested by Jan
-> >  - clear the _PAGE_PRESENT flag of the page that stores the copy as
-> >    suggested by Pingfan
-> > 
-> > This patch set only supports x86. There will be patches to support other
-> > architectures once this patch set gets merged.
-> 
-> 
-> I'm not very keen on inventing lots of different mechanisms for passing
-> data over kexec. Shouldn't this just be using the KHO infrastructure?
+The kexec decompression routines support detecting zlib or lzma
+compressed images. Lets add the ability to automatically decompress
+zstd ones as well. The zstd attempt is made after gzip because its
+fairly inexpensive relative lzma and gzip at this point remains a
+popular option.
 
-Hmm, this focuses on kdump side to fix a kdump drawback, not on kexec
-reboot which KHO is related to. We have discussed this LUKS fix for a
-long time, Coiby cooperated with LUKS package maintainers to have swept
-all obstacles in userspace, now this patchset is doing its kernel part
-change.
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+---
+ kexec/kexec-pe-zboot.c |  3 ++-
+ kexec/kexec.c          | 10 +++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-Yes, it retrieves the keyrings and store it into the existed crashkernel 
-memory reserved for kdump kernel, then restore it in 2nd kernel. I think
-KHO is gonna take the similar way, a preliminarily reserved memory,
-while unified interfaces to store/restore data. Given KHO is still on
-draft high level design, there's nothing for people to use for the time
-being. I think later, when KHO is in mainline kernel, LUKS can change to
-use KHO's interfaces to simplify codes.
-
-Thanks
-Baoquan
+diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
+index 3abd17d..0a82097 100644
+--- a/kexec/kexec-pe-zboot.c
++++ b/kexec/kexec-pe-zboot.c
+@@ -59,8 +59,9 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
+ 	 * algorithms than are supported here, error out if we detect that.
+ 	 */
+ 	if (memcmp(&z->compress_type, "gzip", 4) &&
++	    memcmp(&z->compress_type, "zstd", 4) &&
+ 	    memcmp(&z->compress_type, "lzma", 4)) {
+-		dbgprintf("%s: kexec can only decompress gziped and lzma images.\n", __func__);
++		dbgprintf("%s: kexec can only decompress gziped, lzma and zstd images\n", __func__);
+ 		return -1;
+ 	}
+ 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 4f51987..70097ae 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -55,6 +55,7 @@
+ #include "kexec-sha256.h"
+ #include "kexec-zlib.h"
+ #include "kexec-lzma.h"
++#include "kexec-zstd.h"
+ #include <arch/options.h>
+ 
+ #define KEXEC_LOADED_PATH "/sys/kernel/kexec_loaded"
+@@ -639,9 +640,12 @@ char *slurp_decompress_file(const char *filename, off_t *r_size)
+ 
+ 	kernel_buf = zlib_decompress_file(filename, r_size);
+ 	if (!kernel_buf) {
+-		kernel_buf = lzma_decompress_file(filename, r_size);
+-		if (!kernel_buf)
+-			return slurp_file(filename, r_size);
++	        kernel_buf = zstd_decompress_file(filename, r_size);	        
++		if (!kernel_buf) {
++                        kernel_buf = lzma_decompress_file(filename, r_size);
++			if (!kernel_buf)
++				return slurp_file(filename, r_size);
++		}
+ 	}
+ 	return kernel_buf;
+ }
+-- 
+2.47.0
 
 
