@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89F6EE77180
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 19:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5C3AE7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 19:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=70YKGG4OOWXa7tuamtnJrMvy99i6WeQW73uEY1yyqNQ=; b=CHSRCKJlCzettDWcOATp8HS4Zy
-	J3Og5ilP/FxSX6DM/PAa57mtotyrchLKkUIAtg9deVy7vXwrc64e/uwbeiCK7xJvSvbnhsHku3Cdv
-	iL7gNKbYMDT1J0KIZpM6muqoxnHRCbANGgkhuWUz8q4pgM+UzEOcmqtOjBf5W+j9/Dk22u0OOTnnZ
-	CAiQ2YbGvFvMvbPrwrk5aG3JrUOw5tsnpWaVS8ZyzZRhsmV0a3G/UxHmBodzHYQ8ztaBAjXGI6uzd
-	f/mYFTk4NGZQskTSg+1siRzkJEdLF3mgx2NmPGDxH1MPj4PmnBIlhIB6QBbGHrvFti2DAMFPCwgmW
-	hAIhxRjA==;
+	bh=qGJpCBRtJsItNP89C7UrwDUcdwfM7ec+EQ8Q7edFggQ=; b=I94MEdW/WOCXO1LWfSJxVx02B/
+	XSmIP04dVqk3lQ84GvSliAg/aH4i2jtzHojnUWXFqT/S+QO6JRDc00z4nsT1Q96xCNrxuITeSgr9q
+	ACfgCUx1CQ3aoFAhwUc1Ka0eGo3x4tQMRmi3ZtMNIDqxctecFVfAmqFgfLPyeWq0zfce75cLxne3m
+	ngEDp0Xvqzz+wIw2ad/NVopJ6YTxSG4Peb2M71FV0teDwrVzn0Idz9eFhZlQVhKNyLV3u98UBHncO
+	5QKGjrVR6WKfhpdPxt8ZBGtkcU9j/PX2n8+TvJme0qHPNGlVygXpMvllQjopa7SnrWAqJW8/9PXTd
+	Um+jU0gA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLovV-00000001en9-38d0;
-	Thu, 12 Dec 2024 19:32:45 +0000
+	id 1tLowU-00000001f9j-2os7;
+	Thu, 12 Dec 2024 19:33:46 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLoiq-00000001bli-06hr
+	id 1tLouP-00000001eOQ-1Mj5
 	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 19:19:40 +0000
+	Thu, 12 Dec 2024 19:31:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=70YKGG4OOWXa7tuamtnJrMvy99i6WeQW73uEY1yyqNQ=; b=Jh4OCSNXTAlJLtSctafAnG/oM0
-	Gol5oELeVn+QZR1q5h1axY6l4CQ5qPR9D6sRMd4GdVZ8uJBqLXV/rMyLbl6GU5iaWtDabKxEDrAB3
-	aIpCRZWN+mngUQiHO42iZSBJipiI9HG9IzR72NW/a/v0Zk7Zg8ZlrspaiNhnxVtbDExlnJu7zKjor
-	wcHOwDtN+b2JIoqCpDO8WOYmQdGHRY7zVayXjAYmkFMsaEcr2IoI6I7+W/JHfHPeCHT6iWm6oXEHc
-	uof6ThHqjsYZ6Fj4BfxdrRYOAvAQN6+SwAmaEXH/4FoU2nJWZa72LqcSC+usXWeyeQIvxtOgbMmry
-	KDex1gxA==;
+	bh=qGJpCBRtJsItNP89C7UrwDUcdwfM7ec+EQ8Q7edFggQ=; b=KofwkWuXmfRx12rw5cA3d5oFtL
+	U2pW8qUt1pxVfX5TNYS7hxLgO4jWVahL8kSyDoFzQqj7vnkdCp4yY9AzV8N98GoprWfjFSDMYN3uG
+	pAw4q2vpF3QPVnQaNfpJydDHowJiksAHQqOgJexrMj31RXb+A4/2i5kXpRcQXnQHKRgZqGRGLnVzq
+	V9IfSu/3DOarm+cPRCBjBtnAEFFZ/D4WVxNyhnPwCsp4+s1zOAra3Vjj4lf4Nw2Un1Vm6PLv9LX89
+	sZtStgKnWDfGq56kVfx9tJSqSuEqW170PhhnRPdSikChWRGbOhTuawwCvGlmXfLpLkscoif+f4VAI
+	BB61mcTQ==;
 Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLoio-00000007bFY-0BGj;
-	Thu, 12 Dec 2024 19:19:38 +0000
-Message-ID: <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
-Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
+	id 1tLouM-00000007fHr-34Fw;
+	Thu, 12 Dec 2024 19:31:34 +0000
+Message-ID: <4b17807f5c80a3f3cbdf1cca0e305a48e0e24500.camel@infradead.org>
+Subject: Re: [PATCH v5 13/20] x86/kexec: Mark relocate_kernel page as ROX
+ instead of RWX
 From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Stefan Hajnoczi
- <stefanha@redhat.com>,  Jason Wang <jasowang@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung
- <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, linux-ext4
- <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
- Paolo Bonzini <bonzini@redhat.com>,  ming.lei@redhat.com, Petr Mladek
- <pmladek@suse.com>, John Ogness <jogness@linutronix.de>, Peter Zijlstra
- <peterz@infradead.org>
-Date: Thu, 12 Dec 2024 19:19:36 +0000
-In-Reply-To: <87a5d0aibc.ffs@tglx>
-References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org>
-	 <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com>
-	 <20241211124240.GA310916@fedora>
-	 <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
-	 <87ldwl9g93.ffs@tglx>
-	 <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
-	 <87a5d0aibc.ffs@tglx>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org,
+  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,  "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
+ Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman
+ <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, jpoimboe@kernel.org, bsz@amazon.de
+Date: Thu, 12 Dec 2024 19:31:33 +0000
+In-Reply-To: <20241212174243.GA2149156@ax162>
+References: <20241205153343.3275139-1-dwmw2@infradead.org>
+	 <20241205153343.3275139-14-dwmw2@infradead.org>
+	 <20241212014418.GA532802@ax162>
+	 <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
+	 <20241212150408.GA542727@ax162>
+	 <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
+	 <20241212174243.GA2149156@ax162>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-vkDF0f1ZNPByhTQ/0zpi"
+	boundary="=-/Lil5uwkUHFnA12iVe1i"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -82,80 +83,37 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-vkDF0f1ZNPByhTQ/0zpi
+--=-/Lil5uwkUHFnA12iVe1i
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-12-12 at 19:04 +0100, Thomas Gleixner wrote:
+On Thu, 2024-12-12 at 10:42 -0700, Nathan Chancellor wrote:
+> =C2=A0
+> > What CPU is this? Shouldn't loading %cr3 have caused the existing TLB
+> > entry to be flushed?
 >=20
-> I tried to reproduce, but failed. Do you have a simple reproducer
-> recipe?
+> The machine I have mainly been reproducing and testing this issue on is
+> an Intel Xeon Gold 6314U but I initially noticed this problem on a few
+> consumer AMD and Intel chips that I have locally.
+>=20
+Not on my Haswell Xeon box though, it seems.
 
-Build current master (231825b2e1ff here). The config I'm using is at
-http://david.woodhou.se/config-x86-kjump-irqs although I don't think
-there's anything special other than CONFIG_KEXEC_JUMP and enough
-lockdep to trigger the complaints.
+Dave Hansen points out that it's probably the _PAGE_GLOBAL bit; that
+TLB entry *won't* get flushed.
 
-Build the test case from
-https://git.kernel.org/torvalds/c/07fa619f2a40c (which at some point
-I'll clean up and add to the kernel selftests).
+> > Can you tell me what happens if we don't write through *that* virtual
+> > mapping of the page, but instead do it a few instructions later through
+> > the identity mapping of the same page (which surely *won't* have an
+> > older, non-writeable TLB entry already...)?
+>=20
+> Applying that diff on top of 5a82223e0743 makes the issue go away for
+> me.
 
-Then just run it repeatedly. Ten or twenty invocations should trigger
-it at least once.
+Thanks. It actually seems to break the preserve_context mode for me, so
+I'll give it a bit more thought and probably come back to you with
+another version to test.
 
-I've been running in qemu with the test case shoved into an initrd for
-faster testing, but it works just as well done manually. If it matters,
-the QEMU command line on my Haswell box is
-
- qemu-system-x86_64 -accel kvm,kernel-irqchip=3Dsplit -display none \
-   -serial mon:stdio -kernel arch/x86/boot/bzImage -smp 2 -m 2g \
-   -append "console=3DttyS0 root=3D/dev/vda1 no_console_suspend earlyprintk=
-=3Dserial" \
-   -drive file=3D/var/lib/libvirt/images/fedora.qcow2,if=3Dvirtio \
-   -cpu host --no-reboot -nic user,model=3Dvirtio=20
-
-Probably the only important part of that is the no_console_suspend.
-
-A normal invocation looks like this:
-
-[root@localhost ~]# ./loadret
-[   83.908243] Freezing user space processes
-[   83.910587] Freezing user space processes completed (elapsed 0.001 secon=
-ds)
-[   83.911614] OOM killer disabled.
-[   83.923550] ata2: found unknown device (class 0)
-[   83.938623] Disabling non-boot CPUs ...
-[   83.962083] smpboot: CPU 1 is now offline
-[   83.963022] crash hp: kexec_trylock() failed, kdump image may be inaccur=
-ate
-B[   83.983498] Enabling non-boot CPUs ...
-[   83.984410] crash hp: kexec_trylock() failed, kdump image may be inaccur=
-ate
-[   83.985792] smpboot: Booting Node 0 Processor 1 APIC 0x1
-[   83.989823] CPU1 is up
-[   83.999270] virtio_blk virtio1: 2/0/0 default/read/poll queues
-[   84.004705] OOM killer enabled.
-[   84.005299] Restarting tasks ... done.
-Success
-
-
-But sometimes it looks like this...
-
-[root@localhost ~]# ./loadret
-[   84.618610] Freezing user space processes
-[   84.621427] Freezing user space processes completed (elapsed 0.001 secon=
-ds)
-[   84.622510] OOM killer disabled.
-[   84.628613] ata2: found unknown device (class 0)
-[   84.652758] Disabling non-boot CPUs ...
-[   84.672223] smpboot: CPU 1 is now offline
-[   84.673091] crash hp: kexec_trylock() failed, kdump image may be inaccur=
-ate
-B[   84.682946] ------------[ cut here ]------------
-[   84.683584] Interrupts enabled after irqrouter_resume+0x0/0x50
-
-
---=-vkDF0f1ZNPByhTQ/0zpi
+--=-/Lil5uwkUHFnA12iVe1i
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -247,25 +205,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTkxOTM2WjAvBgkqhkiG9w0BCQQxIgQglEKFGC4P
-WEMXWhWzaaDnbolueg/xGEqXDOZPHck1RBswgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTkzMTMzWjAvBgkqhkiG9w0BCQQxIgQgEipW9q4F
+RFn7Qwu3G/JlZC0uiu8xQ9M2do7C+udWvAEwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCh+AywGOueU/DDY7y8TfT6DGlLgSlELHh3
-yvCZ4WRcNdjCBNTjBI0dFO7Hss0wryqjmZhhL+j3ByKjZZzyq1KkptgE3OgK/iJcCvSdwBWxw9iZ
-wLjUsd6H56/pEQIPHWjTuNLEExXBvBxziJSOFgp4i2LlHRfbUNeU0VFyQFVuee2cFwhdM1rIEVWz
-/IckgfrlxyxxUqg/7Dky1kuqyN0cJZy6ZDuKSGSq32ArUjKIMufUOD2pvrDDN9jt3AM6Ks0x7Q+1
-aHjknqyQ+9l6pu5BQz2r1DhfVNaA5SH+PQ+Ytw5sb6eX+n/Kgwioj5y1IyYQpnpRIDWZp3S3ozwC
-OvN0ERkLfBPWrUQLCS/dt8+K0OFmBSsJhbyaDXJeXkDwos2ZQx6hhAQvy+Sqa2wegfQ8wtmzzGCx
-TPLfXmR5jJQvkmP7/qhJKzUt31V6vG1HTSinj8X4vrW+e4S5JpW31xSa19CIq4RTs0Vx5fnTWyMJ
-aTyppmXR7dqxLH5NK4v9C9DfOZdP+vBUxeVWkN+ir5PsjPT+0gvJWwk+2fyJ+NwzaoK33XhkLNRn
-lPDQ1l3UpB3QPwj7fadLjXdSTyI6nVOxN0XX6Q1Qbi2lk5kQ7S7zuAvMdOQifpL4KHcMPK/W19Ci
-4cmNxyj8qGxhKkinfwnzmrizzZ7n88fOK074x9vU9wAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAACg7lIRptnk+8BlkWvqyZiE99E7ysyQQE
+9Z96hqfqTyG4vcv5sXrXftDwfuhec6VcCgYdQRTzOE4HiqmotReHi5XI/MHLXMMwwq0qsfvQ+vie
+JOg0HsYzY9lcZgQIwpVe6+ouYuaR5sPvuCIi5zDyYDhyrY8WG0oQvo5Dnly2KyGs9HJyVwjVqHYj
+axmJEldYpz7q0Z99FA7aHm/pFcG6MaT15Qcx5waHaEefYWxrKfLZDyzzxG+XnyrM32g4q3TV+8Ie
++TbTyIji2BOKxBZN8alezUU4caRwrWu4nqT8H1b7Igk/2bNEjN1//qQ9kQLXpG4bT8d11ntViRjF
+HqJns/AojljvhTZRVYXUO2GOT8Qi7WRXC27L2FqHe1f3ZuxzvrfahrXep/eFep5LcUn8LEgDrpPe
+D7pXySM161Dl/tDA8iA4MlrkW2HZoNr1aiVo2F3ezUz4A4yAVpfSYumUGyuHNBs7XGDh4qwcZ2kO
+kgTT7RDU+q7meEdCsV53kR7bjdT7ZP1PPUiMadWlkW/3+m30tZI1NwVpfhxje7WxoS7SRkHxCKDk
+qS8Obx3tB4uOF0VNMTwzB1Tcx3NpMO3OU0p18zKQWfVzz7z4eNI4eK4wJiVdy+EmBpMf0BiOLd0O
+owYeN5t9g3NWa6cj5P1E86i8Bgf8udkXNAIFnWW5JQAAAAAAAA==
 
 
---=-vkDF0f1ZNPByhTQ/0zpi--
+--=-/Lil5uwkUHFnA12iVe1i--
 
