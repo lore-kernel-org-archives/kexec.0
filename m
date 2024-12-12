@@ -4,97 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E80BEE7717D
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 02:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3346E7717D
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 03:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sz2LwSl/boxagL/G99gMkSY83O4TLOki/0YjWQPvsig=; b=Xg2D10uZGCUaD23gXZhfc13wns
-	dxqJ486xlGuBCOXL2DhnXJSy2yHCLQ47LZhN/pMUOjSq+Dfo06eqnePEXtVTDrLll+Xa+Xqkk4k1w
-	cJ+KpKvLfrhWlGeKqRu3w5ObNgsy7Rhy9DjPsUzjHGfN87mUpp3FqQDTuQWlbpJt0WzMrLGcwDsm9
-	LMJAAIPxzQvR1roMfiN62FRQrnGGRgNxHhthWXalAulpIEcBF8z2u+q8MpePmqYxsboHfdMcOLEEY
-	nXxHx3D9+8j8zhXrri0FzSd2mJeUeo+2s9qUZBnCQUv8giIMJev7NsqdoBJGpi84TWwMicpEz7UuY
-	+5FGzSEQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=N6E3IyIU7BB8nI8dLsUO7tmTfsJXF8TuiliqLS1zmxQ=; b=zKK/o5JrofsuocNMdcCHDymwx5
+	tqYICN5HH+CtJi2nvTM7SQ8/cvVAmSMM3G45sw+i+lnXLHmfQhctogoDBV3E9bsL8xvVHeoW5jg6N
+	LpBNymtLrMd2RQyuoYSSm9AcN07soq9+ZeErT0m67DVCrhc25PVvXazyxb+eh3sbZYVs4OUPtK0Bp
+	gK5r798VEPAv/P0QqlgZiw5KKMjtv3+008NBGhowmYlvCTtikFhWr4K5b/Ro8PMcFsouLCL0BHEZM
+	B8Ls47gtzVLGxj7vle3uuXc7gTpb2QoFNpCjbnOBMr3famF5FI0q2VNADf9nK2w5D87jrqjMlWLVw
+	62UIE4/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLZQa-0000000GmLQ-2Vep;
-	Thu, 12 Dec 2024 02:59:48 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1tLZT1-0000000GmeK-26lZ;
+	Thu, 12 Dec 2024 03:02:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLZQX-0000000GmKg-37mh
+	id 1tLZSy-0000000Gmdi-3kqk
 	for kexec@lists.infradead.org;
-	Thu, 12 Dec 2024 02:59:46 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBK3o2w004130;
-	Thu, 12 Dec 2024 02:59:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sz2LwS
-	l/boxagL/G99gMkSY83O4TLOki/0YjWQPvsig=; b=C0lAudPKZdA2B7LjkLQJPS
-	1t8GnsFN9C5HYBNo5Lrkhyw0j2eFJiKA/Fer9DZdJjEqvFNddGU6nhPeT8LyDsaL
-	Xu9fc+AFyGcUvwwvUbr6gOxBmgM8FOBKqEsU3CFsR4y6DeTuwVVhvHEYpLLOk0pn
-	xosXuwVxoHVza6TPY3h08R/0U8E+PI665A8mnLqQIaR/p3J6xPPGr4ls2laUvmA5
-	ybYoVcCnofGb6rfXGXqAMwsrKcOyZgM3tEN4E+YCqVn4KqlOn2OTrUCPio9ChKGH
-	+BV5tNaqLjwkwdMcUKpOj1a6a3/an/RuBAgLi05eFj00PIlgvwISslQjnOkoF6zw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43cdv91hrm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Dec 2024 02:59:35 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BC0WNji016930;
-	Thu, 12 Dec 2024 02:58:55 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43d12ydwj7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Dec 2024 02:58:55 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BC2wp0k60555520
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Dec 2024 02:58:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62D1E20043;
-	Thu, 12 Dec 2024 02:58:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4DB8F20040;
-	Thu, 12 Dec 2024 02:58:49 +0000 (GMT)
-Received: from [9.109.204.94] (unknown [9.109.204.94])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 12 Dec 2024 02:58:49 +0000 (GMT)
-Message-ID: <ed53108f-29e3-4d8a-bcf3-f602011918f3@linux.ibm.com>
-Date: Thu, 12 Dec 2024 08:28:47 +0530
+	Thu, 12 Dec 2024 03:02:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733972535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N6E3IyIU7BB8nI8dLsUO7tmTfsJXF8TuiliqLS1zmxQ=;
+	b=HXFh9L5GcSwtO2SA+PFHaORnl/OylyBVRmRQhzjanbCydCUnokKKSjSLGrA0qzTbQzEjfn
+	ACN6i3R2X2V3JFsKkgdCAhz2sSwqHjCQv4QPVt8XSkDw8I6kPY8vPcNcvUebAs7b1dS/Wc
+	EbKmu6gnSbpJU1t9GKcy3yNj+JQ6rtY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-301-hHk3rGRyPE-IKWao27364A-1; Wed,
+ 11 Dec 2024 22:02:14 -0500
+X-MC-Unique: hHk3rGRyPE-IKWao27364A-1
+X-Mimecast-MFC-AGG-ID: hHk3rGRyPE-IKWao27364A
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F309D195608C;
+	Thu, 12 Dec 2024 03:02:12 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.3])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02ABC19560AA;
+	Thu, 12 Dec 2024 03:02:10 +0000 (UTC)
+Date: Thu, 12 Dec 2024 11:02:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec <kexec@lists.infradead.org>
+Subject: Re: Can't use kexec-tools for preserve-context kexec 'call'?
+Message-ID: <Z1pSLg3H6Sz0HOU2@MiWiFi-R3L-srv>
+References: <f6f1395fafb6ea927ad71d7b041c3f0efe0678e7.camel@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec: Initialize ELF lowest address to ULONG_MAX
-To: Baoquan he <bhe@redhat.com>
-Cc: ebiederm@xmission.com, Hari Bathini <hbathini@linux.ibm.com>,
-        akpm@linux-foundation.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20241210091314.185785-1-sourabhjain@linux.ibm.com>
- <Z1pQoh7IwtERIWe5@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <Z1pQoh7IwtERIWe5@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yrx1KC4-pPj3pWd1OB3VrXvb-MrgZQKx
-X-Proofpoint-ORIG-GUID: Yrx1KC4-pPj3pWd1OB3VrXvb-MrgZQKx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412120021
+In-Reply-To: <f6f1395fafb6ea927ad71d7b041c3f0efe0678e7.camel@infradead.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: v2Bl4sLDN_xaKFfMOl8RRtMDFIFpu9AuKqLFJhicM10_1733972533
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241211_185945_797880_2C6D70BE 
-X-CRM114-Status: GOOD (  16.87  )
+X-CRM114-CacheID: sfid-20241211_190217_005616_6403F2E5 
+X-CRM114-Status: GOOD (  21.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,52 +84,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi David,
 
-On 12/12/24 08:25, Baoquan he wrote:
-> On 12/10/24 at 02:43pm, Sourabh Jain wrote:
->> kexec_elf_load() loads an ELF executable and sets the address of the
->> lowest PT_LOAD section to the address held by the lowest_load_addr
->> function argument.
->>
->> To determine the lowest PT_LOAD address, a local variable lowest_addr
->> (type unsigned long) is initialized to UINT_MAX. After loading each
->> PT_LOAD, its address is compared to lowest_addr. If a loaded PT_LOAD
->> address is lower, lowest_addr is updated. However, setting lowest_addr
->> to UINT_MAX won't work when the kernel image is loaded above 4G, as the
->> returned lowest PT_LOAD address would be invalid. This is resolved by
->> initializing lowest_addr to ULONG_MAX instead.
->>
->> This issue was discovered while implementing crashkernel high/low
->> reservation on the PowerPC architecture.
->>
->> Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
->> Cc: Baoquan he <bhe@redhat.com>
->> Cc: Hari Bathini <hbathini@linux.ibm.com>
->> CC: Madhavan Srinivasan <maddy@linux.ibm.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: kexec@lists.infradead.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> ---
->>   kernel/kexec_elf.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
->> index d3689632e8b9..3a5c25b2adc9 100644
->> --- a/kernel/kexec_elf.c
->> +++ b/kernel/kexec_elf.c
->> @@ -390,7 +390,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
->>   			 struct kexec_buf *kbuf,
->>   			 unsigned long *lowest_load_addr)
->>   {
->> -	unsigned long lowest_addr = UINT_MAX;
->> +	unsigned long lowest_addr = ULONG_MAX;
-> Great catch.
->
-> Acked-by: Baoquan He <bhe@redhat.com>
+On 12/09/24 at 02:07pm, David Woodhouse wrote:
+> In https://git.kernel.org/torvalds/c/07fa619f2a40c there is a test
+> program which uses kexec to invoke a 4-instruction 'executable' which
+> merely writes a byte to a serial port and returns.
+> 
+> It just loads a single kexec segment containing those four
+> instructions.
+> 
+> Should I have been able to do that using kexec-tools? I couldn't work
+> out how.
+> 
+> And even once it's loaded, 'kexec -f -e' does manage to invoke it, but
+> then reports 'No such file or directory' after the reboot() system call
+> returns success. Strace shows:
 
-Thanks for the Ack Baoquan.
+May I know why you are testing preserve-context feature recently? I
+noticed you have raised an issue inside kernel and worked out a draft
+patch, while you did't tell what use case or scenario preserve-context
+is used in. Asking this because you could be the 1st one to test it and
+report issues on preserve-context as far as I know these years.
 
-- Sourabh Jain
+If there's newly found scenario preserve-context is needed, that's a
+good thing. Otherwise we may consider to put it in DEPRECATED list in
+kernel config so that we can finally take it off from kernel in several
+years, like this people won't meet it and need take time to study what
+it is and why it doesn't work as it was declared. What do you think?
+
+Thanks
+Baoquan
+
+> 
+> reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC[  143.979879] Freezing user space processes
+> [  143.981493] Freezing user space processes completed (elapsed 0.000 seconds)
+> [  143.982148] OOM killer disabled.
+> [  143.999573] Disabling non-boot CPUs ...
+> [  144.017504] smpboot: CPU 1 is now offline
+> [  144.018298] crash hp: kexec_trylock() failed, kdump image may be inaccurate
+> B[  144.034246] Enabling non-boot CPUs ...
+> [  144.034666] crash hp: kexec_trylock() failed, kdump image may be inaccurate
+> [  144.035396] smpboot: Booting Node 0 Processor 1 APIC 0x1
+> [  144.037406] CPU1 is up
+> [  144.042020] virtio_blk virtio1: 2/0/0 default/read/poll queues
+> [  144.046702] OOM killer enabled.
+> [  144.047368] Restarting tasks ... done.
+> ) = 0
+> write(2, "kexec failed: No such file or di"..., 40kexec failed: No such file or directory
+> ) = 40
+> exit_group(-1)                          = ?
+> +++ exited with 255 +++
+> 
+> 
+> 
+> 
+> 
+
+
 
