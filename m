@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F875E7717F
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F33AE7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 10:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4HIWtFV37En8Z7xZDF5i/+XpdRbky2W7O+FRZ0Zrtf4=; b=DdvoXjyPUsY6wOA7RCSMPMNhGH
-	m9BXXXZ2e9EIV7dd/2eF3cQrkC3YD3VCGaWgCjkrop4IgD2rc+eC04tOFgve47Oo19rGnk3YcU129
-	N1gDTQhBhGZCRwU36BdHg74faXsvEIRjz9ywAnEr5o91voQY5sEcOnTus6KGlpRnx/JbY3Yn1ZS4I
-	gEbD7nd6ttnHydrDjRL8+beZWrBi3m/c3ghvnm+uY+BPEF4CvWWG+EWv1qqTxgrak6WF3PqncZFmZ
-	LLNliKR6vlCsMs9DGJlN28m9yWQGcMeX1Wxqtdo85fIHEf83RheqmNkKugoVg/98v46wlTJYAnBiE
-	B9Fy768A==;
+	bh=HN9Y7ELJ2Ns4Rm5BYxgEavxb6TgAru9gwwq/IhU09h4=; b=4775z9ozMcAJdJ3l7h7YlGVaC1
+	TaxFHn87grJptAlGJEZhkJw31+AiYwERxNd3SiTkXmvRAm0V3UiJBaTNRIvFrmgZ24UvlTlvSmN3D
+	W9fW2Qg3IG6PFfsK13JhkIlkMDYCgJKODr0/DQ5bammXmOT5L9VGx9SE1rw0a2zfFFNPym3OsDTBT
+	RKfRJPN4RnrYBxgfEZWrWwfj+2hWfTAuGShhYkXAFSrGTh6S2cGzVTShMDJk/SVCm2NRECSS8QYQh
+	NmvDNsFVrZsgd6Ao353z37wuL9dboAQUuZmQMEUwzkV6OnAeb5NlihsJykeYVvf1cjNvF4BpJUTiN
+	WqpVdx3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgCU-000000000zR-3Cgp;
-	Thu, 12 Dec 2024 10:13:42 +0000
+	id 1tLgSU-000000003wd-2uiv;
+	Thu, 12 Dec 2024 10:30:14 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgCD-000000000wy-2Upv
+	id 1tLgST-000000003wQ-3Bz2
 	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 10:13:25 +0000
+	Thu, 12 Dec 2024 10:30:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4HIWtFV37En8Z7xZDF5i/+XpdRbky2W7O+FRZ0Zrtf4=; b=fCR2SNSeYfiCgz5olZrhr/ivL9
-	Jgz6/RXmfJ/Zfx+J1M5hn0MBqnzlfgzV1nFHSkZLKc8WwExui2Cd/TxTf5BDJ7G9CGAjLWrgclFPk
-	GkKLAYb88whUh9/9tc2uuUfBOf5a8v855iMF/E/APyTJbE5sZTlBD6ZZRjsYPdylSRYn0xwopY4Cr
-	2+ZUzDkScQXLe6rw3+hNfaR+UAGnw0qMQTPXYR335fggeDcpWNEYZvukh84tPAyQyQayM6miQUBsC
-	QaF//CLKJbRJYKt2/ZWbwSczr4/DffTDT+Mnqt0p1ggIw5N1wjnJovTN9Mc2mdqW38f41JALVHss3
-	b5XEnJ9Q==;
+	bh=HN9Y7ELJ2Ns4Rm5BYxgEavxb6TgAru9gwwq/IhU09h4=; b=immnlbY6PP7BCotFnp8b2tmvuA
+	lLehE8Y3gUbsqkhcyTtyZkviulXSRY4kN1crEU5lrx536fL6VAjYxIURq8bt/dUF/gfJ7IVJmUGUt
+	GkTIRE/rHcAVvnr54a/gNC/33m87+pSFTAJQ9SxVVUlS91C+EwxTLcr6Ph8Xp0DRhJefDQnx4m6Jn
+	Dt7sqbTf76IMGbqzAxkMDc41xatxTYnVp0AGDOshxsru/qJTW65oS/1Ec+89kzLlvIL8WkYAFoPP1
+	3NPo93iKNFL3Wt8hp7FUJWJ9p4p1rjvGbjmymaqCZsc0sRcVh5WVakvuibTPTvfWMBdWKnWGYiIJe
+	GfNtARbw==;
 Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgC9-00000004vZK-3ebp;
-	Thu, 12 Dec 2024 10:13:22 +0000
-Message-ID: <b4104c271b461dc1958ffac299d6741746a0728a.camel@infradead.org>
+	id 1tLgSR-000000050lo-2cnO;
+	Thu, 12 Dec 2024 10:30:11 +0000
+Message-ID: <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
 Subject: Re: [PATCH v5 13/20] x86/kexec: Mark relocate_kernel page as ROX
  instead of RWX
 From: David Woodhouse <dwmw2@infradead.org>
-To: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
- Borisov <nik.borisov@suse.com>,  linux-kernel@vger.kernel.org, Simon Horman
- <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, jpoimboe@kernel.org,  bsz@amazon.de
-Date: Thu, 12 Dec 2024 10:13:20 +0000
-In-Reply-To: <5bb26488-f5fb-4186-92c3-de6a07631f91@linux.intel.com>
+To: Nathan Chancellor <nathan@kernel.org>, "Ning, Hongyu"
+	 <hongyu.ning@linux.intel.com>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>,  "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
+ <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ jpoimboe@kernel.org, bsz@amazon.de
+Date: Thu, 12 Dec 2024 10:30:10 +0000
+In-Reply-To: <20241212014418.GA532802@ax162>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
 	 <20241205153343.3275139-14-dwmw2@infradead.org>
-	 <5bb26488-f5fb-4186-92c3-de6a07631f91@linux.intel.com>
+	 <20241212014418.GA532802@ax162>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-MFODfwyI2dERy4RSXKOr"
+	boundary="=-U3V50r4KUyX/UkUvsdhO"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -78,35 +80,111 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-MFODfwyI2dERy4RSXKOr
+--=-U3V50r4KUyX/UkUvsdhO
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-12-12 at 11:03 +0800, Ning, Hongyu wrote:
->=20
+On Wed, 2024-12-11 at 18:44 -0700, Nathan Chancellor wrote:
 > Hi David,
 >=20
-> I've hit some kdump/kexec regression issue for guest kernel in KVM/QEMU=
-=20
-> based VM and reported in https://bugzilla.kernel.org/show_bug.cgi?id=3D21=
-9592.
+> On Thu, Dec 05, 2024 at 03:05:19PM +0000, David Woodhouse wrote:
+> > From: David Woodhouse <dwmw@amazon.co.uk>
+> >=20
+> > All writes to the page now happen before it gets marked as executable
+> > (or after it's already switched to the identmap page tables where it's
+> > OK to be RWX).
+> >=20
+> > Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> > ---
+> > =C2=A0 arch/x86/kernel/machine_kexec_64.c | 3 ++-
+> > =C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machi=
+ne_kexec_64.c
+> > index c9fd60f8f806..9232ad1562c8 100644
+> > --- a/arch/x86/kernel/machine_kexec_64.c
+> > +++ b/arch/x86/kernel/machine_kexec_64.c
+> > @@ -323,7 +323,7 @@ int machine_kexec_prepare(struct kimage *image)
+> > =C2=A0=20
+> > =C2=A0=C2=A0	__memcpy(control_page, __relocate_kernel_start, reloc_end =
+- reloc_start);
+> > =C2=A0=20
+> > -	set_memory_x((unsigned long)control_page, 1);
+> > +	set_memory_rox((unsigned long)control_page, 1);
+> > =C2=A0=20
+> > =C2=A0=C2=A0	return 0;
+> > =C2=A0 }
+> > @@ -333,6 +333,7 @@ void machine_kexec_cleanup(struct kimage *image)
+> > =C2=A0=C2=A0	void *control_page =3D page_address(image->control_code_pa=
+ge);
+> > =C2=A0=20
+> > =C2=A0=C2=A0	set_memory_nx((unsigned long)control_page, 1);
+> > +	set_memory_rw((unsigned long)control_page, 1);
+> > =C2=A0=20
+> > =C2=A0=C2=A0	free_transition_pgtable(image);
+> > =C2=A0 }
+> > --=20
+> > 2.47.0
+> >=20
 >=20
-> based on further git bisect, it seems to be related with this commit,
-> would you help to take a look?
+> I just bisected a change in behavior that I see in to this change in
+> -next as commit 5a82223e0743 ("x86/kexec: Mark relocate_kernel page as
+> ROX instead of RWX"). I usually kexec my machines by running:
+>=20
+> =C2=A0 # kexec --load /boot/vmlinuz-linux --initrd /boot/initramfs-linux.=
+img --reuse-cmdline
+>=20
+> =C2=A0 # systemctl kexec
+>=20
+> to cleanly shutdown userspace then kexec into the new kernel after
+> installing it via the package manager. After this change, I get sent to
+> systemd-boot after running 'systemctl kexec', which selects the default
+> entry, my distribution kernel.
+>=20
+> I just see:
+>=20
+> =C2=A0 [=C2=A0 OK=C2=A0 ] Reached target Reboot via kexec.
+> =C2=A0 BdsDxe: loading Boot0007 "Linux Boot Manager" from HD(1,GPT,4B5AFD=
+80-5EC7-47FC-83EA-7EC88ACB15A7,0x800,0x200000)/\EFI\systemd\systemd-bootx64=
+.efi
+> =C2=A0 BdsDxe: starting Boot0007 "Linux Boot Manager" from HD(1,GPT,4B5AF=
+D80-5EC7-47FC-83EA-7EC88ACB15A7,0x800,0x200000)/\EFI\systemd\systemd-bootx6=
+4.efi
+>=20
+> then the systemd-boot menu in QEMU when reproducing this there.
+>=20
+> Is this expected? If not, I am happy to provide any information or test
+> patches as necessary.
 
-Thanks for the report; I'll take a look. Please could you share your
-kernel .config?
+No, definitely not expected. Thanks for the report. I'll see if I can
+reproduce it; please could you share your kernel .config?
 
-Also, you say that this is in QEMU running on an IA64 host. Is that
-true, or did you mean x86_64 host? Are you using OVMF or SeaBIOS as the
-QEMU firmware?
+Please could you also confirm that it still occurs if you don't use
+systemctl; for speed of testing I have mostly been booting my test
+kernel with no actual root file system; just an initrd which does
+'kexec -f' immediately.
 
-In the short term, I think that just reverting the 'offending' commit
-should be OK. I'd *prefer* not to leave the page RWX for the whole time
-period that the image is loaded, but that's how it's been on i386 for
-ever anyway.
+Since you are running in QEMU, if you can reproduce with this patch to
+QEMU itself which should dump the CPU state on a triple-fault, it would
+be very useful please:
 
---=-MFODfwyI2dERy4RSXKOr
+--- a/accel/kvm/kvm-all.c
++++ b/accel/kvm/kvm-all.c
+@@ -3133,6 +3133,7 @@ int kvm_cpu_exec(CPUState *cpu)
+             ret =3D EXCP_INTERRUPT;
+             break;
+         case KVM_EXIT_SHUTDOWN:
++            cpu_dump_state(cpu, stderr, CPU_DUMP_CODE);
+             qemu_system_reset_request(SHUTDOWN_CAUSE_GUEST_RESET);
+             ret =3D EXCP_INTERRUPT;
+             break;
+
+If you get output from that, please also send the output of 'objdump -S
+arch/x86/kernel/relocate_kernel_64.o' to help interpret it.
+
+Thanks.
+
+--=-U3V50r4KUyX/UkUvsdhO
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -198,25 +276,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTAxMzIwWjAvBgkqhkiG9w0BCQQxIgQgYGhPpeq5
-zbK73o7ysEUB6g4qtRPF18ZalyCAKvGgGOwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTAzMDEwWjAvBgkqhkiG9w0BCQQxIgQgdzgdBGtQ
+4FNZ3fhyG/7GlGtYCC9Gm82QsGw946h0k3wwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCcL0+EIMcdR3T08extT5iYzthJTEkf2Y4i
-Ib7Aly9tAZTtbYTU9TfCIkcNRW/t2nTFqchGf1YOMnvZQh+vK2v19hLSBL9N0jW/b3Ikh3FOLx58
-kn5GhOTKTvodZm1uQEljxsBDcU76Ug6QLBHYvNDCtq3fAbpnMBUrHRjjkKvytnCo1BCC+7jHI+9O
-5qIP+j1iJe71iaXi9jRBVvZGY8+dzvb82j2Y81OWL8y+fZxDaIW1jecs4eKyMJqlqkIj405iR2Rm
-1N8Ikh9G8s/MRrQqf3qT/Y8MbkBszu2daX2B64+DJYRdZyiWjQ7QoY+WgFvS93scm9WVhjHTm7K0
-zx3aW3sNCSACLGF+OtY5ba/qP0sLZTEYqDQ7EIwSCzvAIIbOeTRVRsOVZg5/cRwLZ9bMoWWZAEdY
-hRCJKIPr4bXbFgCbzARODM14vKmRxjXXonnO9wJEdWPnZpKV0QcFszBLinITc/3O9ItwFrUAvvuK
-n8LDo/z8VsTkHz8QaFFlTVdqt2PXN8XC6qtAz7dPT9/Tao9SLo0FbWaSZynT4fjUN7PiJe1W8P/H
-g2hVc6+FdhK6iCO1mlGdesBy2qQRAxCHUZ5wWNaESge9aMAbqkUYOz/EX9PLqoLjSt95yGOTz18c
-zUSmoCdlr+rrvjvh8XMayfM1CoW1kddyTQZRBpBjBgAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCpDHiZ9XHsriZYfQ1SO9PqOfipTZmXIG/A
+HVhs/q2MVnORoc80D+UbpXBgapT38Klz84wju8ZsBX72o5v/LiDUwq1/i4YW7bSiYeajxgAolsoi
+kAYHYvIOub05v+z8wms6FIGiLnpqXY9GMRcPOeZ955ZH7ERrLRheAifF5uTuNntgk81AGc1xYcWD
+bIZWSEXtghxgkUDSP+hcAmmYNB0DA+H+0TqrSQtNUFa29DOWPUYPVWboS3M1PaghoxWn6sDHPYtu
+2JNZj/+QIm61roZV9uLylsZbDaO/Ux4tVaMWMDryKDU863H6mbH1QkgfdC2Mez2G+wVQp1huNrsk
+7KqFXVGQGYarLrKZdssyOWk9FUngazRsJS6daWhPJS1G/hNhggGENX/l+8RM1HkgU/spE0tq6CEg
+Sgry2RZH7WEizbBrvaM7jKE9bIptpnRYdV8luFazIWuFDzRWjRqcFXMtO1/AnvQX0ikVgt7v7cEK
+onpmYm0yqA+Q4YjGgSJmsBi4CG0DxMn5qqpPzz2K2P5BYYqzwhVVOT1hXrtxAMqQFWVXQU4cCg3g
+oxSetJh6uuHBoBkSQUlWZWPKy0xZZHNJSfJI6SkTr3z4/uR9seV18QEMQgK9KDikOftG0tgkZeqg
+p4hfUzw53wRLzRvKpECyUjdvrLNWDMxt5lH+X+ix2QAAAAAAAA==
 
 
---=-MFODfwyI2dERy4RSXKOr--
+--=-U3V50r4KUyX/UkUvsdhO--
 
