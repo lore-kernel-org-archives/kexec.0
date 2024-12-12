@@ -4,53 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D75E2E77182
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 21:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B260E7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 21:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5ETj8e4Zz4TNZc+M5aYDvyiWkKKX7Z8xejiyDfP3/k8=; b=HcRdDZW1nCex8bKNxY8ZGGy13v
-	3VN2Alo3jC/8QHcaT/yf0O82g5XEWndQCt5IjnGyyNdh7POPbFxyjQlOyR5aqcghbsa3UROlmTQ9R
-	+bYdG6H8bZzmvI9JfD/iHugrfbVID06NePOV69aKYlFNyeHTkpEOd4DMqJ9Xlai8T5/2Uv5aePooq
-	QHK+F8+QbtDWL46MpprQnDhJnElSsRywNw4KkjzylSmDEWxdgIgU/BBGfUXgp1en658I/3HUffr2V
-	+b3B69WYnZNFDkxol+Q65XlLsh+R06NIhYEENN+DENB1A3ZVT1QTtQTdMv5hRD7CoGuOduW7wXqw/
-	KxRbkVLA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:
+	Cc:To:Subject:MIME-Version:Date:Message-ID:Content-Type:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=VMZNo7NPmWsGKF5GF5JCY/SKxwxdIEXrloUvJJEJyuU=; b=QdgkYwYt6yBGMu1KqWvw/zHlL/
+	9ozzRrkHjyvvh8M7hk/73Yr11wgKyz64Y0RC8jj3Tp7tQ6aelFMuXIRvl12BC1ooSlSBwzndpfNo1
+	w78xeFyVVmrLLkNZD0OZVkj93lLgASuxQwroO/MFDcYauMkMlV9mb6KttZ4ASIxljikGE1sDO4YDy
+	GbnB27B4pqfV0PeKJ8QI1suMdM2UcDwfQcypQoHSrotKfAA2QMpowkR0FU6pME38YUTFxwKIN7uQ0
+	qWBdWNnQLSv1A7UFCBoqnkEHvkr2FM/xdXMCdtd8c9MXm8wzjpbtPERxPvJ7xOAR6X3O3QL8IjBJS
+	YR5c8m4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLqWE-00000001vLl-2Ath;
-	Thu, 12 Dec 2024 21:14:46 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLqVL-00000001vDw-1AQc
+	id 1tLqZj-00000001vxA-3G9k;
+	Thu, 12 Dec 2024 21:18:23 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tLqZg-00000001vwX-3Rno
 	for kexec@lists.infradead.org;
-	Thu, 12 Dec 2024 21:13:52 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 311011A25;
-	Thu, 12 Dec 2024 13:14:17 -0800 (PST)
-Received: from u200865.usa.arm.com (U203867.austin.arm.com [10.118.30.38])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 045703F58B;
-	Thu, 12 Dec 2024 13:13:49 -0800 (PST)
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: kexec@lists.infradead.org
-Cc: piliu@redhat.com,
-	horms@kernel.org,
-	arb@kernel.org,
-	dyoung@redhat.com,
-	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [Patch v2 1/2] zstd: Add zstd decompression logic
-Date: Thu, 12 Dec 2024 15:13:24 -0600
-Message-ID: <20241212211325.805138-2-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241212211325.805138-1-jeremy.linton@arm.com>
-References: <20241212211325.805138-1-jeremy.linton@arm.com>
+	Thu, 12 Dec 2024 21:18:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734038301; x=1765574301;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to;
+  bh=f5ACnRexztK7l9ld99nnyP9ovl7Hc7HhsC6nVgy4KoY=;
+  b=gJVp+wdAhiCRODrMmI3Rm5Psi8OKUg3JF68LPoGTx96tuYLYMYgKwjQb
+   1wUmtMLvrZoiSa4zOyJPEMLiqSvjMAV1+ZD0b6A5qEMLki3tJNYkYSQhm
+   Xh4XZ7PBTUbM5tAHV6yOenI8zkt+7wSJbNcWUYkimNMKWw0sWw/RVMyV2
+   qwq6Bz1xjqnIHDXnX7PoJQsq5YKDje3K+UDYnX0x7dvDxzP8WHDbbNwBf
+   a+jQB9bpdEr8JmNDXjGwlW3n2X7/gd7+qYH9xltAfQXJUWSnQlTVvhaMF
+   4bhJPr0rGqUkDaYQwIhJSyIs2lv+cOO+xY84lnK7LMETfsKNBi/vUpa40
+   A==;
+X-CSE-ConnectionGUID: 4PcLmhMFRIa71XF4WKEM3w==
+X-CSE-MsgGUID: R5h4iuqXTUiVgbEjDDkMAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="33784146"
+X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
+   d="scan'208";a="33784146"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 13:18:20 -0800
+X-CSE-ConnectionGUID: uS/bY5rLQAi0T4BJtOq2gA==
+X-CSE-MsgGUID: H85enkTyQ6aRaXBgOeRBOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
+   d="scan'208";a="101375786"
+Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO [10.124.223.26]) ([10.124.223.26])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 13:18:19 -0800
+Content-Type: multipart/mixed; boundary="------------OxHzUR6N6tQ0toSbMptMxSQY"
+Message-ID: <4517cb69-3c5c-4e75-8a14-dab136b29c19@intel.com>
+Date: Thu, 12 Dec 2024 13:18:10 -0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kexec: Only write through identity mapping of control
+ page
+To: David Woodhouse <dwmw2@infradead.org>,
+ Nathan Chancellor <nathan@kernel.org>
+Cc: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+ Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ jpoimboe@kernel.org, bsz@amazon.de
+References: <20241205153343.3275139-1-dwmw2@infradead.org>
+ <20241205153343.3275139-14-dwmw2@infradead.org>
+ <20241212014418.GA532802@ax162>
+ <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
+ <20241212150408.GA542727@ax162>
+ <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
+ <20241212174243.GA2149156@ax162>
+ <9c68688625f409104b16164da30aa6d3eb494e5d.camel@infradead.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <9c68688625f409104b16164da30aa6d3eb494e5d.camel@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241212_131351_464722_97C8882D 
-X-CRM114-Status: GOOD (  29.12  )
+X-CRM114-CacheID: sfid-20241212_131820_876656_72F576BB 
+X-CRM114-Status: GOOD (  12.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,277 +143,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-zstd is becoming a popular zlib replacement because it both tends to
-get a better compression ratio as well performs considerably
-better. As such, zstd is now one of the options that can be used to
-compress the Linux kernel.
+This is a multi-part message in MIME format.
+--------------OxHzUR6N6tQ0toSbMptMxSQY
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Lets enable it by using a system provided shared library, creating the
-required boilerplate to match the existing zlib/lzma function
-signatures, and creating build options to enable/disable it.
+On 12/12/24 12:11, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> The virtual mapping of the control page may have been _PAGE_GLOBAL and
+> thus its PTE might not have been flushed on the %cr3 switch and it might
+> effectively still be read-only. Move the writes to it down into the
+> identity_mapped() function where the same %rip-relative addressing will
+> get the new mapping.
+> 
+> The stack is fine, as that's using the identity mapped address anyway.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Acked-by: Pingfan Liu <piliu@redhat.com>
----
- configure.ac       |  10 +++
- kexec/Makefile     |   4 +-
- kexec/kexec-zstd.h |   7 ++
- kexec/zstd.c       | 181 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 201 insertions(+), 1 deletion(-)
- create mode 100644 kexec/kexec-zstd.h
- create mode 100644 kexec/zstd.c
+Shouldn't we also ensure that Global entries don't bite anyone else?
+Something like the completely untested attached patch?
+--------------OxHzUR6N6tQ0toSbMptMxSQY
+Content-Type: text/x-patch; charset=UTF-8; name="pge.patch"
+Content-Disposition: attachment; filename="pge.patch"
+Content-Transfer-Encoding: base64
 
-diff --git a/configure.ac b/configure.ac
-index e030302..43cdb64 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -106,6 +106,9 @@ AC_ARG_WITH([zlib], AS_HELP_STRING([--without-zlib],[disable zlib support]),
- AC_ARG_WITH([lzma], AS_HELP_STRING([--without-lzma],[disable lzma support]),
- 	[ with_lzma="$withval"], [ with_lzma=yes ] )
- 
-+AC_ARG_WITH([zstd], AS_HELP_STRING([--without-zstd],[disable zstd support]),
-+	[ with_zstd="$withval"], [ with_zstd=yes ] )
-+
- AC_ARG_WITH([xen], AS_HELP_STRING([--without-xen],
- 	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
- 
-@@ -180,6 +183,13 @@ if test "$with_lzma" = yes ; then
- 		AC_MSG_NOTICE([lzma support disabled]))])
- fi
- 
-+dnl See if I have a usable copy of zstd available
-+if test "$with_zstd" = yes ; then
-+	AC_CHECK_HEADER(zstd.h,
-+		[AC_CHECK_LIB(zstd, ZSTD_decompress, ,
-+		AC_MSG_NOTICE([zstd support disabled]))])
-+fi
-+
- dnl find Xen control stack libraries
- if test "$with_xen" = yes ; then
- 	AC_CHECK_HEADER(xenctrl.h,
-diff --git a/kexec/Makefile b/kexec/Makefile
-index d4f26d7..e969d1e 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -26,6 +26,7 @@ KEXEC_SRCS_base += kexec/crashdump-xen.c
- KEXEC_SRCS_base += kexec/phys_arch.c
- KEXEC_SRCS_base += kexec/lzma.c
- KEXEC_SRCS_base += kexec/zlib.c
-+KEXEC_SRCS_base += kexec/zstd.c
- KEXEC_SRCS_base += kexec/kexec-xen.c
- KEXEC_SRCS_base += kexec/symbols.c
- 
-@@ -36,7 +37,8 @@ dist += kexec/Makefile						\
- 	kexec/crashdump.h kexec/firmware_memmap.h		\
- 	kexec/kexec-elf-boot.h					\
- 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
--	kexec/kexec-zlib.h kexec/kexec-lzma.h			\
-+	kexec/kexec-zlib.h kexec/kexec-lzma.h                   \
-+	kexec/kexec-zstd.h                                      \
- 	kexec/kexec-xen.h 					\
- 	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
- 
-diff --git a/kexec/kexec-zstd.h b/kexec/kexec-zstd.h
-new file mode 100644
-index 0000000..c5dbb24
---- /dev/null
-+++ b/kexec/kexec-zstd.h
-@@ -0,0 +1,7 @@
-+#ifndef __KEXEC_ZSTD_H
-+#define __KEXEC_ZSTD_H
-+
-+#include <sys/types.h>
-+
-+char *zstd_decompress_file(const char *filename, off_t *r_size);
-+#endif /* __KEXEC_ZSTD_H */
-diff --git a/kexec/zstd.c b/kexec/zstd.c
-new file mode 100644
-index 0000000..79d5bf3
---- /dev/null
-+++ b/kexec/zstd.c
-@@ -0,0 +1,181 @@
-+#include "kexec-zstd.h"
-+#include "kexec.h"
-+
-+#include "config.h"
-+
-+#ifdef HAVE_LIBZSTD
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+#include <ctype.h>
-+#include <zstd.h>
-+
-+
-+/*
-+ * Reimplementation of private function available if zstd is
-+ * statically linked. Remove when it becomes public.
-+ */
-+unsigned ZSTD_isFrame(const void* buffer, size_t size)
-+{
-+	uint8_t *buf = (uint8_t *)buffer;
-+	/* Magic zstd frame header value */
-+	if ((buf[0] == 0x28) &&
-+	    (buf[1] == 0xB5) &&
-+	    (buf[2] == 0x2F) &&
-+	    (buf[3] == 0xFD))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/*
-+ * A guess at the max compression ratio for buffer overallocation.
-+ * Real values are frequently around 4:1, if this is wrong
-+ * it simply results in buffer reallocation and the decompression
-+ * operation being restarted from where it stopped.
-+ */
-+#define EXPECTED_RATIO 8
-+
-+/*
-+ * This supports the streaming compression mode the kernel uses
-+ * that can result in multiple zstd frames comprising a single
-+ * compressed image. In order too be a bit more efficient than
-+ * the libz/lzma implementations, we attempt to discover the input
-+ * and output image sizes before performing the decompression.
-+ * But, in streaming mode the first frame may not have a length
-+ * or it seems the length could be incorrect if multiple frames
-+ * are appended together. So, its written with buffer resize logic
-+ * but a guess at the compression ratio is made to avoid the resize/copy
-+ * operation. Ideally this code efficiently allocates the
-+ * correct input buffer, and no more than 2-3x the output buffer
-+ * size so that it can perform the decompress operation with a
-+ * single decompress call.
-+ */
-+char *zstd_decompress_file(const char *filename, off_t *r_size)
-+{
-+	void *cBuff = NULL;
-+	ZSTD_DCtx* dctx = NULL;
-+	FILE *fp = NULL; /* use c streams to match gzip/lzma logic */
-+	struct stat fp_stats;
-+	uint8_t magic[4];
-+	size_t ret;
-+
-+	ZSTD_outBuffer output = { NULL, 0, 0 };
-+	ZSTD_inBuffer input = { NULL, 0, 0 };
-+
-+	dbgprintf("Try zstd decompression.\n");
-+
-+	*r_size = 0;
-+	if (!filename) {
-+		return NULL;
-+	}
-+	if (stat(filename, &fp_stats)) {
-+		dbgprintf("Cannot stat `%s'\n", filename);
-+		return NULL;
-+	}
-+	if (fp_stats.st_size < sizeof(magic)) {
-+		dbgprintf("short file\n");
-+		return NULL;
-+	}
-+	input.size = fp_stats.st_size;
-+
-+	fp = fopen(filename, "rb");
-+	if (fp == 0) {
-+		dbgprintf("Cannot open `%s'\n", filename);
-+		goto fail;
-+	}
-+	/* before we read the whole buffer see if this looks like a zstd frame */
-+	if (fread(&magic, 1, sizeof(magic), fp) != sizeof(magic)) {
-+		dbgprintf("Unable to read zstd header\n");
-+		goto fail;
-+	}
-+
-+	if (!ZSTD_isFrame((void*)&magic, sizeof(magic))) {
-+		dbgprintf("Not zstd compressed\n");
-+		goto fail;
-+	}
-+
-+	cBuff = xmalloc(input.size);
-+	input.src = cBuff; /* use cBuff ptr to avoid const/mismatches */
-+	rewind(fp);
-+	if (fread(cBuff, 1, input.size, fp) != input.size) {
-+		dbgprintf("Unable to read compressed data\n");
-+		goto fail;
-+	}
-+	fclose(fp);
-+	fp = NULL;
-+
-+
-+	output.size = ZSTD_getFrameContentSize(input.src, input.size);
-+	if (output.size == ZSTD_CONTENTSIZE_ERROR) {
-+		dbgprintf("not compressed by zstd\n");
-+		goto fail;
-+	}
-+
-+	if (output.size == ZSTD_CONTENTSIZE_UNKNOWN) {
-+		dbgprintf("original zstd size unknown!\n");
-+		/*
-+		 * The compressed size is an optional field in the header
-+		 * So we guess at the compression ratio to avoid reallocating
-+		 * the buffer, but this can fail so we still have code to
-+		 * handle that case.
-+		 */
-+		output.size = fp_stats.st_size * EXPECTED_RATIO;
-+	}
-+
-+	output.dst = xmalloc(output.size);
-+
-+	dctx = ZSTD_createDCtx();
-+	if (dctx == NULL) {
-+		dbgprintf("zstd context allocation error\n");
-+		goto fail;
-+	}
-+
-+	do {
-+		if (output.pos == output.size) {
-+			output.size <<= 1;
-+			output.dst = xrealloc(output.dst, output.size);
-+		}
-+
-+		ret = ZSTD_decompressStream(dctx, &output , &input);
-+		if (ZSTD_isError(ret)) {
-+			dbgprintf("zstd error %s\n", ZSTD_getErrorName(ret));
-+			goto fail;
-+		}
-+		dbgprintf("zstd decompressed input=%ld to output=%ld\n", input.pos, output.pos);
-+
-+	} while ((input.pos < input.size) || ret);
-+
-+	free(cBuff);
-+	ZSTD_freeDCtx(dctx);
-+
-+	*r_size = output.pos;
-+
-+	return output.dst;
-+
-+fail:
-+	if (fp)
-+		fclose(fp);
-+	if (dctx)
-+		ZSTD_freeDCtx(dctx);
-+	if (output.dst)
-+		free(output.dst);
-+	if (cBuff)
-+		free(cBuff);
-+
-+	return NULL;
-+
-+}
-+#else
-+
-+char *zstd_decompress_file(const char *filename, off_t *r_size)
-+{
-+	return NULL;
-+}
-+#endif
--- 
-2.47.0
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9yZWxvY2F0ZV9rZXJuZWxfNjQuUyBiL2Fy
+Y2gveDg2L2tlcm5lbC9yZWxvY2F0ZV9rZXJuZWxfNjQuUwppbmRleCBlOWU4OGMzNDJmNzUy
+Li5lY2JkNzdhYWIxMjIxIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvcmVsb2NhdGVf
+a2VybmVsXzY0LlMKKysrIGIvYXJjaC94ODYva2VybmVsL3JlbG9jYXRlX2tlcm5lbF82NC5T
+CkBAIC0xNTUsNiArMTU1LDggQEAgU1lNX0NPREVfU1RBUlRfTE9DQUxfTk9BTElHTihpZGVu
+dGl0eV9tYXBwZWQpCiAJICovCiAJYW5kbAkkKFg4Nl9DUjRfUEFFIHwgWDg2X0NSNF9MQTU3
+KSwgJXIxM2QKIAlBTFRFUk5BVElWRSAiIiwgX19zdHJpbmdpZnkob3JsICRYODZfQ1I0X01D
+RSwgJXIxM2QpLCBYODZfRkVBVFVSRV9URFhfR1VFU1QKKwkvKiBJbnZhbGlkYXRlIEdsb2Jh
+bCBlbnRyaWVzIGZyb20gdGhlIFRMQjogKi8KKwlhbmRxCSR+KFg4Nl9DUjBfUEdFKSwgJXIx
+M2QKIAltb3ZxCSVyMTMsICVjcjQKIAogCS8qIEZsdXNoIHRoZSBUTEIgKG5lZWRlZD8pICov
+Cg==
 
+--------------OxHzUR6N6tQ0toSbMptMxSQY--
 
