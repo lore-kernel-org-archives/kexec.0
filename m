@@ -4,68 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA669E7717F
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 17:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05767E7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 17:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZhgJZr3qWee9gpuHvgnSKH12MexXSa7FFIcE5oueOz4=; b=R82AwNWV3TX8Vn3AO3qsOtFZw2
-	Ad7QMdakKpS4XL3nKte0ZXcq8HtzJ8xcV5hWCANwU9FNIewXBha9t7O4F6Gzogjcq1Gl5JOeyhoNf
-	+PLHIdAZoh8QstSfmv2MMh9ATgEBfB2ctVqVc6iBF1d+34TQn5JW3EHg8hTr3+Ii0ZdOmHD/k8/Ta
-	nnTLfXJgRaitQKWydLq6jdV3QXAdQ6KOTFTqAy8nGcOgmwCMUupYiAIIDSXpvUV7cpp2wC0OqUGG2
-	8aEsuaUB3qsE5Bpxa2n4SwZWCOiXiSXV6nR2td/RtQE+V0R1HCLkSIsWUiNxnP/qHTR6dtGcSO7H9
-	N+lQlTrg==;
+	bh=39EUgKEl/VvAGmKk8/SDx7m2AjZbYLaprowB0PZ3kHY=; b=TzMROze/Ewy0nLHcoIHrRzUvmn
+	jBqU/W1IH/sa9NFNQivRwgOGfJJUteKiRoArJzbJ3HzM6HQNiu4nk/7EaiqzJjJymgZSwW1VXVisy
+	fslt1vr7SKSjLKEaAXhyWIucKZIZwNT/irZtpxOT8EyObGhm0QZxOxFWjR6OprvtP6JIMohdAt7Co
+	MA7m+F1oOvZ4wwMsF6eGgwxBXgGIXjwbUWRy94KnTcdQcxEnuEFsU50aApH2rP52vi0ngynLIjRiL
+	O/g99EPopyadfdhKIJGSfM9Bs9tUNRk8Msrz80sO7tuUawy9vf+KpuzAJq8VKm+0JQ50FjGGzDf5t
+	tFxVhk+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLn59-00000001CYH-49mP;
-	Thu, 12 Dec 2024 17:34:35 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tLnHc-00000001GUG-29oc;
+	Thu, 12 Dec 2024 17:47:28 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLmXl-000000015OT-2A6Q
-	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 17:00:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZhgJZr3qWee9gpuHvgnSKH12MexXSa7FFIcE5oueOz4=; b=favOzIhBK0nNj8SpBeZk32X0ab
-	19fK2Dl7Y1QfYZP8egJU3amlN2WBWTffri33HHx+kot/pytDnwLzBcraWojw7jTWwgtFfWqWABeg+
-	6ZydRBLASemRrO8JicT38rmrM1hDSLQHmqfZOG1Sztzee53pDZfdlCc1t7oj7E54DaIAg6QqxfBNQ
-	PUirpCDnOQ0MPMEZB4YKNE4nDj78SvtzPmYA9N0sySBHoBwz3T1+q2tlhlm4Z0OPtk71xzuBwtpUp
-	zzrMAIWxuYPZUMAmbrj76zDegxwLYOdQX2tk/cm51Gccd2E8gFj5HHQc8uUBpRLd0vtiZs0/5gL8Y
-	l/327uFQ==;
-Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=freeip.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLmXh-00000006ttm-33vt;
-	Thu, 12 Dec 2024 17:00:01 +0000
-Message-ID: <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
+	id 1tLnD8-00000001EYr-3P8a
+	for kexec@lists.infradead.org;
+	Thu, 12 Dec 2024 17:42:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id CF8ADA42926;
+	Thu, 12 Dec 2024 17:40:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68A0C4CEE7;
+	Thu, 12 Dec 2024 17:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734025369;
+	bh=mL38+B3WmzlGzE9gik8JWUe5iqxZz7gEor3abGo0zA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T2jxWGObLV/p6Q0fXx7esNLeLmx4/iZ9pXCBJDATMddk0JmxUVDaUwiS+CHOV+1Z3
+	 VMk1NkdnIe0CEXI5zpTp7X4dE1C8GvvuRECzzp1SB+y19WJFSoDX3j812dxUo4X2PK
+	 oVeTKPt8e5+L03+51DZ/ip4v5ZL+lXE4dQ1mT6IXfA005iIc5WVDP741bT+L5Dv/4L
+	 Mx3BNL6eIfSI9nOGNeU9e4a0CkwMk+tw+Uvl12ZQbLeqdlml37X7hLZoUvz9TM36mU
+	 QXUZfEHYOkPn3OeDnwvzkQFKyPKaVmOnB8n51DO4m91ZK7W9/Kh9r2n2f3dzL6Gzvc
+	 /RlxDEwPFu8vg==
+Date: Thu, 12 Dec 2024 10:42:43 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
+	bsz@amazon.de
 Subject: Re: [PATCH v5 13/20] x86/kexec: Mark relocate_kernel page as ROX
  instead of RWX
-From: David Woodhouse <dwmw2@infradead.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org,
-  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,  "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
- Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman
- <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, jpoimboe@kernel.org, bsz@amazon.de
-Date: Thu, 12 Dec 2024 17:00:00 +0000
-In-Reply-To: <20241212150408.GA542727@ax162>
+Message-ID: <20241212174243.GA2149156@ax162>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
-	 <20241205153343.3275139-14-dwmw2@infradead.org>
-	 <20241212014418.GA532802@ax162>
-	 <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
-	 <20241212150408.GA542727@ax162>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-6dSxTWcPqVwL29kY8xvb"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+ <20241205153343.3275139-14-dwmw2@infradead.org>
+ <20241212014418.GA532802@ax162>
+ <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
+ <20241212150408.GA542727@ax162>
+ <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241212_094250_993954_C6C1B558 
+X-CRM114-Status: GOOD (  31.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,249 +88,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Thu, Dec 12, 2024 at 05:00:00PM +0000, David Woodhouse wrote:
+> > 
+> > Here is the output that I see with that patch applied when rebooting via
+> > 'systemctl kexec':
+> > 
+> > RAX=000000010c070001 RBX=0000000000000000 RCX=0000000000000000 RDX=000000047fffb1a0
+> > RSI=000000011c444000 RDI=000000011c450002 RBP=ff1cd0424d6e8c00 RSP=ff4178d5c5aebc60
+> > R8 =0000000000000000 R9 =000000011c446000 R10=ffffffff909f3e00 R11=0000000000000003
+> > R12=0000000000000000 R13=0000000000000001 R14=00000000fee1dead R15=0000000000000000
+> > RIP=ff1cd0425c44401c RFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
+> > ES =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+> > CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
+> > SS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+> > DS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+> > FS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+> > GS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+> > LDT=0000 0000000000000000 ffffffff 00c00000
+> > TR =0040 fffffe043fedb000 00004087 00008b00 DPL=0 TSS64-busy
+> > GDT=     0000000000000000 00000000
+> > IDT=     0000000000000000 00000000
+> > CR0=80050033 CR2=ff1cd0425c4441de CR3=000000011c446000 CR4=00771ef0
+> > DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
+> > DR6=00000000fffe0ff0 DR7=0000000000000400
+> > EFER=0000000000000d01
+> > Code=41 57 9c 6a 00 9d 0f 20 d8 4c 8b 0d ee 01 00 00 41 0f 22 d9 <48> 89 25 bb 01 00 00 48 89 05 c4 01 00 00 0f 20 c0 48 89 05 b2 01 00 00 41 0f 20 e5 4c 89
+> 
+> ...
+> 
+> > I have attached the output of 'objdump -S'. Please let me know if you
+> > would like any other information or testing.
+> 
+> 	/* Switch to the identity mapped page tables */
+> 	movq	%cr3, %rax
+>    e:	0f 20 d8             	mov    %cr3,%rax
+> 	movq	kexec_pa_table_page(%rip), %r9
+>   11:	4c 8b 0d 00 00 00 00 	mov    0x0(%rip),%r9        # 18 <relocate_kernel+0x18>
+> 	movq	%r9, %cr3
+>   18:	41 0f 22 d9          	mov    %r9,%cr3
+> 
+> 	/* Save %rsp and CRs. */
+> 	movq    %rsp, saved_rsp(%rip)
+>   1c:	48 89 25 00 00 00 00 	mov    %rsp,0x0(%rip)        # 23 <relocate_kernel+0x23>
+> 	movq	%rax, saved_cr3(%rip)
+> 
+> 
+> So it's faulting when it tries to write to saved_rsp, which is the
+> first instruction after it loads the new page tables into %cr3.
+> 
+> Before loading %cr3, the CPU is running on the original kernel page
+> tables, It's running from the *virtual* address of the control page,
+> which in your case is ff1cd0425c444000. In those old page tables, this
+> control page is read-only.
+> 
+> But in the newly-loaded page tables, this control page should be read-
+> write. 
+> 
+> What CPU is this? Shouldn't loading %cr3 have caused the existing TLB
+> entry to be flushed?
 
---=-6dSxTWcPqVwL29kY8xvb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The machine I have mainly been reproducing and testing this issue on is
+an Intel Xeon Gold 6314U but I initially noticed this problem on a few
+consumer AMD and Intel chips that I have locally.
 
->=20
-> Here is the output that I see with that patch applied when rebooting via
-> 'systemctl kexec':
->=20
-> RAX=3D000000010c070001 RBX=3D0000000000000000 RCX=3D0000000000000000 RDX=
-=3D000000047fffb1a0
-> RSI=3D000000011c444000 RDI=3D000000011c450002 RBP=3Dff1cd0424d6e8c00 RSP=
-=3Dff4178d5c5aebc60
-> R8 =3D0000000000000000 R9 =3D000000011c446000 R10=3Dffffffff909f3e00 R11=
-=3D0000000000000003
-> R12=3D0000000000000000 R13=3D0000000000000001 R14=3D00000000fee1dead R15=
-=3D0000000000000000
-> RIP=3Dff1cd0425c44401c RFL=3D00010002 [-------] CPL=3D0 II=3D0 A20=3D1 SM=
-M=3D0 HLT=3D0
-> ES =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS=C2=A0=C2=A0 [-WA=
-]
-> CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
-> SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS=C2=A0=C2=A0 [-WA=
-]
-> DS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS=C2=A0=C2=A0 [-WA=
-]
-> FS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS=C2=A0=C2=A0 [-WA=
-]
-> GS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS=C2=A0=C2=A0 [-WA=
-]
-> LDT=3D0000 0000000000000000 ffffffff 00c00000
-> TR =3D0040 fffffe043fedb000 00004087 00008b00 DPL=3D0 TSS64-busy
-> GDT=3D=C2=A0=C2=A0=C2=A0=C2=A0 0000000000000000 00000000
-> IDT=3D=C2=A0=C2=A0=C2=A0=C2=A0 0000000000000000 00000000
-> CR0=3D80050033 CR2=3Dff1cd0425c4441de CR3=3D000000011c446000 CR4=3D00771e=
-f0
-> DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=
-=3D0000000000000000
-> DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
-> EFER=3D0000000000000d01
-> Code=3D41 57 9c 6a 00 9d 0f 20 d8 4c 8b 0d ee 01 00 00 41 0f 22 d9 <48> 8=
-9 25 bb 01 00 00 48 89 05 c4 01 00 00 0f 20 c0 48 89 05 b2 01 00 00 41 0f 2=
-0 e5 4c 89
+> Can you tell me what happens if we don't write through *that* virtual
+> mapping of the page, but instead do it a few instructions later through
+> the identity mapping of the same page (which surely *won't* have an
+> older, non-writeable TLB entry already...)?
 
-...
+Applying that diff on top of 5a82223e0743 makes the issue go away for
+me.
 
-> I have attached the output of 'objdump -S'. Please let me know if you
-> would like any other information or testing.
-
-	/* Switch to the identity mapped page tables */
-	movq	%cr3, %rax
-   e:	0f 20 d8             	mov    %cr3,%rax
-	movq	kexec_pa_table_page(%rip), %r9
-  11:	4c 8b 0d 00 00 00 00 	mov    0x0(%rip),%r9        # 18 <relocate_kern=
-el+0x18>
-	movq	%r9, %cr3
-  18:	41 0f 22 d9          	mov    %r9,%cr3
-
-	/* Save %rsp and CRs. */
-	movq    %rsp, saved_rsp(%rip)
-  1c:	48 89 25 00 00 00 00 	mov    %rsp,0x0(%rip)        # 23 <relocate_ker=
-nel+0x23>
-	movq	%rax, saved_cr3(%rip)
-
-
-So it's faulting when it tries to write to saved_rsp, which is the
-first instruction after it loads the new page tables into %cr3.
-
-Before loading %cr3, the CPU is running on the original kernel page
-tables, It's running from the *virtual* address of the control page,
-which in your case is ff1cd0425c444000. In those old page tables, this
-control page is read-only.
-
-But in the newly-loaded page tables, this control page should be read-
-write.=C2=A0
-
-What CPU is this? Shouldn't loading %cr3 have caused the existing TLB
-entry to be flushed?
-
-Can you tell me what happens if we don't write through *that* virtual
-mapping of the page, but instead do it a few instructions later through
-the identity mapping of the same page (which surely *won't* have an
-older, non-writeable TLB entry already...)?
-
-
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocat=
-e_kernel_64.S
-index 8bc86a1e056a..2763c509e513 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -70,6 +70,18 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	kexec_pa_table_page(%rip), %r9
- 	movq	%r9, %cr3
-=20
-+	/* setup a new stack at the end of the physical control page */
-+	lea	PAGE_SIZE(%rsi), %rsp
-+
-+	/* jump to identity mapped page */
-+	addq	$(identity_mapped - relocate_kernel), %rsi
-+	ANNOTATE_RETPOLINE_SAFE
-+	jmp	*%rsi
-+	int3
-+SYM_CODE_END(relocate_kernel)
-+
-+SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-+	UNWIND_HINT_END_OF_STACK
- 	/* Save %rsp and CRs. */
- 	movq    %rsp, saved_rsp(%rip)
- 	movq	%rax, saved_cr3(%rip)
-@@ -85,19 +97,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
- 	movq	%rcx, %r11
-=20
--	/* setup a new stack at the end of the physical control page */
--	lea	PAGE_SIZE(%rsi), %rsp
--
--	/* jump to identity mapped page */
--	addq	$(identity_mapped - relocate_kernel), %rsi
--	pushq	%rsi
--	ANNOTATE_UNRET_SAFE
--	ret
--	int3
--SYM_CODE_END(relocate_kernel)
--
--SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
--	UNWIND_HINT_END_OF_STACK
- 	/*
- 	 * %rdi	indirection page
- 	 * %rdx start address
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 8bc86a1e056a..2763c509e513 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -70,6 +70,18 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+>  	movq	kexec_pa_table_page(%rip), %r9
+>  	movq	%r9, %cr3
+>  
+> +	/* setup a new stack at the end of the physical control page */
+> +	lea	PAGE_SIZE(%rsi), %rsp
+> +
+> +	/* jump to identity mapped page */
+> +	addq	$(identity_mapped - relocate_kernel), %rsi
+> +	ANNOTATE_RETPOLINE_SAFE
+> +	jmp	*%rsi
+> +	int3
+> +SYM_CODE_END(relocate_kernel)
+> +
+> +SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> +	UNWIND_HINT_END_OF_STACK
+>  	/* Save %rsp and CRs. */
+>  	movq    %rsp, saved_rsp(%rip)
+>  	movq	%rax, saved_cr3(%rip)
+> @@ -85,19 +97,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+>  	/* Save the preserve_context to %r11 as swap_pages clobbers %rcx. */
+>  	movq	%rcx, %r11
+>  
+> -	/* setup a new stack at the end of the physical control page */
+> -	lea	PAGE_SIZE(%rsi), %rsp
+> -
+> -	/* jump to identity mapped page */
+> -	addq	$(identity_mapped - relocate_kernel), %rsi
+> -	pushq	%rsi
+> -	ANNOTATE_UNRET_SAFE
+> -	ret
+> -	int3
+> -SYM_CODE_END(relocate_kernel)
+> -
+> -SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> -	UNWIND_HINT_END_OF_STACK
+>  	/*
+>  	 * %rdi	indirection page
+>  	 * %rdx start address
+> 
 
 
---=-6dSxTWcPqVwL29kY8xvb
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTcwMDAwWjAvBgkqhkiG9w0BCQQxIgQgNikioKRg
-b3PshUr12AVhBhHHhj9hkcmu3PmFHBk2EMgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgA2/OMMRITPZbqJ7e1CWbZPJFpjjG0/L5lG
-2wiHnBSnMLw92CLQT9Rx18P/z1Phtnz2BlNfk5KhZkGEovCZ6NJ3GH7FBq995h2TVPnm09LZoRVo
-+gcw2KDbZRbfpM1xayFtz2lSfhDeH6iV7jhlGe9lOAA2thXEZgNHcChTDGlk04wgc7ccEAWMfbwG
-ZYmNX+xQcEcgPZ7YM9+0eap9aCAeGNOgx9n46v/hzX7yGDsL6RQ7UEbeW+GqrMPwsoh/tXW6ZhMQ
-gVIDle2cA/AumtiWlH4f8M59U9U49zTeMFQXosCH+ssljXz3i4uXVjPvfMJ3sSTIVYYsv0rMcXL0
-YpuPO3gGylAkpfRdWadyJJSUQ9idyZnNFUk5vdv18cWbVoaNzTD7mnAx2IdqgwfwSReEgFTnBBB9
-OFI6HZxEPjZ6QTzEayMrTitSsbuP9zn0OxLB3H/L2E4ZxIvuR7gXP7q3Bwk7g4ePk3qOj75ZTNxQ
-QVUJku94fwv+1mKk2waK17b9enHDEvY0KbffDC7PvzuDrCJzbTzcog13qJZSsgAqwft2UVr958IB
-lWpfzWGpvOV6TqxL+NOpaE8byTeChbY6eD3ew+tbbI6aQVjhCeB0SFX3jM5CkUTmFSp44gGa5Mkx
-2d0U6i6vANjPg1/QzhDlzcGZMeUK1x0Wu4ePPpKkUAAAAAAAAA==
-
-
---=-6dSxTWcPqVwL29kY8xvb--
 
