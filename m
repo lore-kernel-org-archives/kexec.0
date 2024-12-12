@@ -4,64 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F33AE7717F
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 10:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8786AE7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 11:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HN9Y7ELJ2Ns4Rm5BYxgEavxb6TgAru9gwwq/IhU09h4=; b=4775z9ozMcAJdJ3l7h7YlGVaC1
-	TaxFHn87grJptAlGJEZhkJw31+AiYwERxNd3SiTkXmvRAm0V3UiJBaTNRIvFrmgZ24UvlTlvSmN3D
-	W9fW2Qg3IG6PFfsK13JhkIlkMDYCgJKODr0/DQ5bammXmOT5L9VGx9SE1rw0a2zfFFNPym3OsDTBT
-	RKfRJPN4RnrYBxgfEZWrWwfj+2hWfTAuGShhYkXAFSrGTh6S2cGzVTShMDJk/SVCm2NRECSS8QYQh
-	NmvDNsFVrZsgd6Ao353z37wuL9dboAQUuZmQMEUwzkV6OnAeb5NlihsJykeYVvf1cjNvF4BpJUTiN
-	WqpVdx3Q==;
+	bh=lbyhn9AaMh6cMvtv8QsfTcoH9zaHxiYszRy22yXKL3k=; b=AdqMe3bXSAlharCK0cjhcMi276
+	S0EPXMipxK5c7FDGGv7oXwbTMS6U05xC+jh8fXw3XcXKeIofSix83R72KtUxqIoq13VdaChiL0FCm
+	e0h0r+FhdT/j54Jao14ORTeh/f/mknar++ehkrzR4dnw2dru99n3VLtTHIWakyxzLvLmTf3UfSQcg
+	HND0F7yjvoN6ScSRzaqBesk4wsP3Mv2YRWJYKu/zDp/9rF1db7zYbh6N8yR1QxqbLqA7MZWLGHhHa
+	DDYIJmMtdN7T+0Chw/SLq0KzTUtPl6JMumdEUueKb7Ht9HsISerUgbeT1d6fxaYIavxQHBYuLHyfy
+	fchrzGYw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgSU-000000003wd-2uiv;
-	Thu, 12 Dec 2024 10:30:14 +0000
+	id 1tLh2r-000000008yR-3GRI;
+	Thu, 12 Dec 2024 11:07:49 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgST-000000003wQ-3Bz2
+	id 1tLh2q-000000008y6-0M3L
 	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 10:30:13 +0000
+	Thu, 12 Dec 2024 11:07:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HN9Y7ELJ2Ns4Rm5BYxgEavxb6TgAru9gwwq/IhU09h4=; b=immnlbY6PP7BCotFnp8b2tmvuA
-	lLehE8Y3gUbsqkhcyTtyZkviulXSRY4kN1crEU5lrx536fL6VAjYxIURq8bt/dUF/gfJ7IVJmUGUt
-	GkTIRE/rHcAVvnr54a/gNC/33m87+pSFTAJQ9SxVVUlS91C+EwxTLcr6Ph8Xp0DRhJefDQnx4m6Jn
-	Dt7sqbTf76IMGbqzAxkMDc41xatxTYnVp0AGDOshxsru/qJTW65oS/1Ec+89kzLlvIL8WkYAFoPP1
-	3NPo93iKNFL3Wt8hp7FUJWJ9p4p1rjvGbjmymaqCZsc0sRcVh5WVakvuibTPTvfWMBdWKnWGYiIJe
-	GfNtARbw==;
+	bh=lbyhn9AaMh6cMvtv8QsfTcoH9zaHxiYszRy22yXKL3k=; b=lQhzLYUxTboQpIM2reN6tt3t1+
+	rMnDoxMtRLURFmyp/5fTNPKxuSV9FfcrIQ+H6dC44R0Lai02zsu8bBS0Aaeo7zUuDLft4a+e2BH2Z
+	F9W7txqMrmcpyh6gNWgazpH6YPQr3UCt6/pA1gl6t98JBhEUGlWdk+hMeNC402VkVvBbOKUQn8IAf
+	9+RfQtkP3s42fAqfGCH11ICfAxAJ3/ncGdyHJhv4LQL4w7fu9Def76x2yw7RB7ZN84IeHwu4YspJO
+	S43RoaTDOShuXR4qRGz4eftEcFpYSC5bfsHd5VQKieXjvVHUzV/75xZ7mnCfNJ8MTboYYilP5bgsb
+	77qmsukQ==;
 Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLgSR-000000050lo-2cnO;
-	Thu, 12 Dec 2024 10:30:11 +0000
-Message-ID: <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
-Subject: Re: [PATCH v5 13/20] x86/kexec: Mark relocate_kernel page as ROX
- instead of RWX
+	id 1tLh2o-00000005Cw9-28HQ;
+	Thu, 12 Dec 2024 11:07:46 +0000
+Message-ID: <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
+Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
 From: David Woodhouse <dwmw2@infradead.org>
-To: Nathan Chancellor <nathan@kernel.org>, "Ning, Hongyu"
-	 <hongyu.ning@linux.intel.com>
-Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>,  "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
- <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- jpoimboe@kernel.org, bsz@amazon.de
-Date: Thu, 12 Dec 2024 10:30:10 +0000
-In-Reply-To: <20241212014418.GA532802@ax162>
-References: <20241205153343.3275139-1-dwmw2@infradead.org>
-	 <20241205153343.3275139-14-dwmw2@infradead.org>
-	 <20241212014418.GA532802@ax162>
+To: Stefan Hajnoczi <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung
+ <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, linux-ext4
+ <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
+ Paolo Bonzini <bonzini@redhat.com>,  ming.lei@redhat.com
+Date: Thu, 12 Dec 2024 11:07:45 +0000
+In-Reply-To: <20241211124240.GA310916@fedora>
+References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org>
+	 <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com>
+	 <20241211124240.GA310916@fedora>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-U3V50r4KUyX/UkUvsdhO"
+	boundary="=-eAs6ZMokKcdHbolCA3FX"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -80,111 +75,319 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-U3V50r4KUyX/UkUvsdhO
+--=-eAs6ZMokKcdHbolCA3FX
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-12-11 at 18:44 -0700, Nathan Chancellor wrote:
-> Hi David,
+On Wed, 2024-12-11 at 07:42 -0500, Stefan Hajnoczi wrote:
+> On Tue, Dec 10, 2024 at 09:56:43AM +0800, Jason Wang wrote:
+> > Adding more virtio-blk people here.
 >=20
-> On Thu, Dec 05, 2024 at 03:05:19PM +0000, David Woodhouse wrote:
-> > From: David Woodhouse <dwmw@amazon.co.uk>
-> >=20
-> > All writes to the page now happen before it gets marked as executable
-> > (or after it's already switched to the identmap page tables where it's
-> > OK to be RWX).
-> >=20
-> > Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> > ---
-> > =C2=A0 arch/x86/kernel/machine_kexec_64.c | 3 ++-
-> > =C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machi=
-ne_kexec_64.c
-> > index c9fd60f8f806..9232ad1562c8 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -323,7 +323,7 @@ int machine_kexec_prepare(struct kimage *image)
-> > =C2=A0=20
-> > =C2=A0=C2=A0	__memcpy(control_page, __relocate_kernel_start, reloc_end =
-- reloc_start);
-> > =C2=A0=20
-> > -	set_memory_x((unsigned long)control_page, 1);
-> > +	set_memory_rox((unsigned long)control_page, 1);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	return 0;
-> > =C2=A0 }
-> > @@ -333,6 +333,7 @@ void machine_kexec_cleanup(struct kimage *image)
-> > =C2=A0=C2=A0	void *control_page =3D page_address(image->control_code_pa=
-ge);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	set_memory_nx((unsigned long)control_page, 1);
-> > +	set_memory_rw((unsigned long)control_page, 1);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	free_transition_pgtable(image);
-> > =C2=A0 }
-> > --=20
-> > 2.47.0
-> >=20
+> Please try Ming Lei's recent fix in Jens' tree:
 >=20
-> I just bisected a change in behavior that I see in to this change in
-> -next as commit 5a82223e0743 ("x86/kexec: Mark relocate_kernel page as
-> ROX instead of RWX"). I usually kexec my machines by running:
+> =C2=A0 virtio-blk: don't keep queue frozen during system suspend
+> =C2=A0 commit: 7678abee0867e6b7fb89aa40f6e9f575f755fb37
 >=20
-> =C2=A0 # kexec --load /boot/vmlinuz-linux --initrd /boot/initramfs-linux.=
-img --reuse-cmdline
->=20
-> =C2=A0 # systemctl kexec
->=20
-> to cleanly shutdown userspace then kexec into the new kernel after
-> installing it via the package manager. After this change, I get sent to
-> systemd-boot after running 'systemctl kexec', which selects the default
-> entry, my distribution kernel.
->=20
-> I just see:
->=20
-> =C2=A0 [=C2=A0 OK=C2=A0 ] Reached target Reboot via kexec.
-> =C2=A0 BdsDxe: loading Boot0007 "Linux Boot Manager" from HD(1,GPT,4B5AFD=
-80-5EC7-47FC-83EA-7EC88ACB15A7,0x800,0x200000)/\EFI\systemd\systemd-bootx64=
-.efi
-> =C2=A0 BdsDxe: starting Boot0007 "Linux Boot Manager" from HD(1,GPT,4B5AF=
-D80-5EC7-47FC-83EA-7EC88ACB15A7,0x800,0x200000)/\EFI\systemd\systemd-bootx6=
-4.efi
->=20
-> then the systemd-boot menu in QEMU when reproducing this there.
->=20
-> Is this expected? If not, I am happy to provide any information or test
-> patches as necessary.
+> https://git.kernel.dk/cgit/linux/commit/?h=3Dblock-6.13&id=3D7678abee0867=
+e6b7fb89aa40f6e9f575f755fb37
 
-No, definitely not expected. Thanks for the report. I'll see if I can
-reproduce it; please could you share your kernel .config?
+Thanks. That does make those warnings go away. I do still get this one
+occasionally though. It seems to go away without 'no_console_suspend'
+on the command line, but I'm not sure that makes it OK.
 
-Please could you also confirm that it still occurs if you don't use
-systemctl; for speed of testing I have mostly been booting my test
-kernel with no actual root file system; just an initrd which does
-'kexec -f' immediately.
+B[   23.665211] ------------[ cut here ]------------
+[   23.665790] Interrupts enabled after irqrouter_resume+0x0/0x50
+[   23.666596] WARNING: CPU: 0 PID: 560 at drivers/base/syscore.c:103 sysco=
+re_resume+0x18a/0x220
+[   23.667587] Modules linked in:
+[   23.667964] CPU: 0 UID: 0 PID: 560 Comm: loadret Not tainted 6.13.0-rc1+=
+ #2033
+[   23.668806] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   23.670086] RIP: 0010:syscore_resume+0x18a/0x220
+[   23.670614] Code: 00 e9 21 ff ff ff 80 3d 62 d0 d3 01 00 0f 85 03 ff ff =
+ff 48 8b 73 18 48 c7 c7 06 f6 e9 a9 c6 05 4a d0 d3 01 01 e8 16 56 46 ff <0f=
+> 0b e9 e5 fe ff ff e8 ea e9 54 ff 84 c0 0f 85 fb fe ff ff 80 3d
+[   23.672525] RSP: 0018:ffffb2f640aefbb8 EFLAGS: 00010282
+[   23.673060] RAX: 0000000000000000 RBX: ffffffffaa9918c0 RCX: 00000000000=
+00027
+[   23.673759] RDX: ffff8d75fdc21a88 RSI: 0000000000000001 RDI: ffff8d75fdc=
+21a80
+[   23.674474] RBP: 0000000000037e0c R08: 0000000000000000 R09: 00000000000=
+00000
+[   23.675198] R10: 0000000000000001 R11: ffffffffaa782fd8 R12: ffffb2f640a=
+efbe8
+[   23.675905] R13: ffffffffaa68ebe0 R14: 00000000fee1dead R15: 00000000000=
+00000
+[   23.676610] FS:  00007f058661a540(0000) GS:ffff8d75fdc00000(0000) knlGS:=
+0000000000000000
+[   23.677431] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   23.678015] CR2: 000055a0b9f49b70 CR3: 0000000014798001 CR4: 00000000001=
+70ef0
+[   23.678727] Call Trace:
+[   23.679015]  <TASK>
+[   23.679248]  ? __warn.cold+0xb7/0x151
+[   23.679629]  ? syscore_resume+0x18a/0x220
+[   23.680086]  ? report_bug+0xff/0x140
+[   23.680484]  ? console_unlock+0x9d/0x150
+[   23.680891]  ? handle_bug+0x58/0x90
+[   23.681257]  ? exc_invalid_op+0x17/0x70
+[   23.681643]  ? asm_exc_invalid_op+0x1a/0x20
+[   23.682077]  ? syscore_resume+0x18a/0x220
+[   23.682493]  ? syscore_resume+0x18a/0x220
+[   23.682929]  kernel_kexec+0xf6/0x180
+[   23.683305]  __do_sys_reboot+0x206/0x250
+[   23.683721]  do_syscall_64+0x95/0x180
+[   23.684163]  ? __lock_acquire+0x45f/0x25c0
+[   23.684622]  ? __lock_acquire+0x45f/0x25c0
+[   23.685100]  ? __handle_mm_fault+0x7df/0xfa0
+[   23.685612]  ? reacquire_held_locks+0xd2/0x1f0
+[   23.686118]  ? do_user_addr_fault+0x555/0x8a0
+[   23.686615]  ? lock_acquire+0xd0/0x310
+[   23.687022]  ? find_held_lock+0x2b/0x80
+[   23.687470]  ? do_user_addr_fault+0x59f/0x8a0
+[   23.687928]  ? do_user_addr_fault+0x5a9/0x8a0
+[   23.688406]  ? trace_hardirqs_off+0x4b/0xc0
+[   23.688837]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
+[   23.689367]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   23.689866] RIP: 0033:0x7f058654c15d
+[   23.690244] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 =
+89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fb 5c 0c 00 f7 d8 64 89 01 48
+[   23.692088] RSP: 002b:00007ffccf368718 EFLAGS: 00000246 ORIG_RAX: 000000=
+00000000a9
+[   23.692857] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f05865=
+4c15d
+[   23.693575] RDX: 0000000045584543 RSI: 0000000028121969 RDI: 00000000fee=
+1dead
+[   23.694317] RBP: 00007ffccf368760 R08: 0000004d00000000 R09: 0000004d000=
+00000
+[   23.695017] R10: 00007f0586640f30 R11: 0000000000000246 R12: 00000000004=
+01070
+[   23.695719] R13: 00007ffccf368840 R14: 0000000000000000 R15: 00000000000=
+00000
+[   23.696453]  </TASK>
+[   23.696681] irq event stamp: 15565
+[   23.697043] hardirqs last  enabled at (15573): [<ffffffffa8281b8e>] __up=
+_console_sem+0x7e/0x90
+[   23.697855] hardirqs last disabled at (15580): [<ffffffffa8281b73>] __up=
+_console_sem+0x63/0x90
+[   23.698673] softirqs last  enabled at (14798): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.699481] softirqs last disabled at (14777): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.700284] ---[ end trace 0000000000000000 ]---
+[   23.702460] ------------[ cut here ]------------
+[   23.702963] WARNING: CPU: 0 PID: 560 at kernel/time/hrtimer.c:995 hrtime=
+rs_resume_local+0x29/0x40
+[   23.703885] Modules linked in:
+[   23.704223] CPU: 0 UID: 0 PID: 560 Comm: loadret Tainted: G        W    =
+      6.13.0-rc1+ #2033
+[   23.705089] Tainted: [W]=3DWARN
+[   23.705415] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   23.706536] RIP: 0010:hrtimers_resume_local+0x29/0x40
+[   23.707068] Code: 90 66 0f 1f 00 0f 1f 44 00 00 8b 05 c5 57 81 02 85 c0 =
+74 18 65 8b 05 0e 8c d4 57 85 c0 75 0d 65 8b 05 c7 88 d4 57 85 c0 74 02 <0f=
+> 0b 31 ff e9 de ee ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
+[   23.708834] RSP: 0018:ffffb2f640aefb50 EFLAGS: 00010202
+[   23.709429] RAX: 0000000000000001 RBX: 000000059af022d0 RCX: 00000000000=
+006e0
+[   23.710121] RDX: 000000000000000e RSI: 000000008e2b60ca RDI: 00000000000=
+006e0
+[   23.710831] RBP: ffffb2f640aefba8 R08: 0000000000000001 R09: 00000000000=
+00000
+[   23.711559] R10: 0000000000000001 R11: ffffffffac18d188 R12: 00000000000=
+00206
+[   23.712249] R13: ffffffffaa666ca0 R14: 00000000fee1dead R15: 00000000000=
+00000
+[   23.712952] FS:  00007f058661a540(0000) GS:ffff8d75fdc00000(0000) knlGS:=
+0000000000000000
+[   23.713746] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   23.714301] CR2: 000055a0b9f49b70 CR3: 0000000014798001 CR4: 00000000001=
+70ef0
+[   23.714997] Call Trace:
+[   23.715274]  <TASK>
+[   23.715512]  ? __warn.cold+0xb7/0x151
+[   23.715884]  ? hrtimers_resume_local+0x29/0x40
+[   23.716330]  ? report_bug+0xff/0x140
+[   23.716711]  ? handle_bug+0x58/0x90
+[   23.717071]  ? exc_invalid_op+0x17/0x70
+[   23.717465]  ? asm_exc_invalid_op+0x1a/0x20
+[   23.717890]  ? hrtimers_resume_local+0x29/0x40
+[   23.718356]  timekeeping_resume+0x148/0x190
+[   23.718772]  syscore_resume+0x67/0x220
+[   23.719151]  kernel_kexec+0xf6/0x180
+[   23.719568]  __do_sys_reboot+0x206/0x250
+[   23.720044]  do_syscall_64+0x95/0x180
+[   23.720429]  ? __lock_acquire+0x45f/0x25c0
+[   23.720849]  ? __lock_acquire+0x45f/0x25c0
+[   23.721258]  ? __handle_mm_fault+0x7df/0xfa0
+[   23.721697]  ? reacquire_held_locks+0xd2/0x1f0
+[   23.722139]  ? do_user_addr_fault+0x555/0x8a0
+[   23.722618]  ? lock_acquire+0xd0/0x310
+[   23.723053]  ? find_held_lock+0x2b/0x80
+[   23.723505]  ? do_user_addr_fault+0x59f/0x8a0
+[   23.724010]  ? do_user_addr_fault+0x5a9/0x8a0
+[   23.724467]  ? trace_hardirqs_off+0x4b/0xc0
+[   23.724916]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
+[   23.725404]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   23.725935] RIP: 0033:0x7f058654c15d
+[   23.726318] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 =
+89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fb 5c 0c 00 f7 d8 64 89 01 48
+[   23.728079] RSP: 002b:00007ffccf368718 EFLAGS: 00000246 ORIG_RAX: 000000=
+00000000a9
+[   23.728827] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f05865=
+4c15d
+[   23.729560] RDX: 0000000045584543 RSI: 0000000028121969 RDI: 00000000fee=
+1dead
+[   23.730358] RBP: 00007ffccf368760 R08: 0000004d00000000 R09: 0000004d000=
+00000
+[   23.731089] R10: 00007f0586640f30 R11: 0000000000000246 R12: 00000000004=
+01070
+[   23.731755] R13: 00007ffccf368840 R14: 0000000000000000 R15: 00000000000=
+00000
+[   23.732455]  </TASK>
+[   23.732681] irq event stamp: 16269
+[   23.733016] hardirqs last  enabled at (16277): [<ffffffffa8281b8e>] __up=
+_console_sem+0x7e/0x90
+[   23.733823] hardirqs last disabled at (16286): [<ffffffffa8281b73>] __up=
+_console_sem+0x63/0x90
+[   23.734639] softirqs last  enabled at (15872): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.735463] softirqs last disabled at (15863): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.736316] ---[ end trace 0000000000000000 ]---
+[   23.736789]=20
+[   23.736993] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   23.737439] WARNING: inconsistent lock state
+[   23.737908] 6.13.0-rc1+ #2033 Tainted: G        W        =20
+[   23.738493] --------------------------------
+[   23.738900] inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+[   23.739468] loadret/560 [HC0[0]:SC0[0]:HE1:SE1] takes:
+[   23.739957] ffff8d75fdc267d8 (hrtimer_bases.lock){?.-.}-{2:2}, at: retri=
+gger_next_event+0x38/0xd0
+[   23.740813] {IN-HARDIRQ-W} state was registered at:
+[   23.741276]   lock_acquire+0xd0/0x310
+[   23.741628]   _raw_spin_lock_irqsave+0x48/0x70
+[   23.742058]   hrtimer_run_queues+0x4d/0x150
+[   23.742455]   update_process_times+0x34/0xf0
+[   23.742853]   tick_periodic+0x29/0xe0
+[   23.743216]   tick_handle_periodic+0x24/0x70
+[   23.743621]   timer_interrupt+0x18/0x30
+[   23.743999]   __handle_irq_event_percpu+0x87/0x260
+[   23.744449]   handle_irq_event+0x38/0x90
+[   23.744819]   handle_level_irq+0x8e/0x160
+[   23.745212]   __common_interrupt+0x5c/0x120
+[   23.745603]   common_interrupt+0x80/0xa0
+[   23.745986]   asm_common_interrupt+0x26/0x40
+[   23.746395]   __x86_return_thunk+0x0/0x10
+[   23.746772]   _raw_spin_unlock_irqrestore+0x45/0x70
+[   23.747251]   __setup_irq+0x34d/0x6a0
+[   23.747602]   request_threaded_irq+0x115/0x1b0
+[   23.748039]   hpet_time_init+0x31/0x50
+[   23.748396]   x86_late_time_init+0x1b/0x40
+[   23.748786]   start_kernel+0x998/0xa40
+[   23.749154]   x86_64_start_reservations+0x24/0x30
+[   23.749600]   x86_64_start_kernel+0xed/0xf0
+[   23.750011]   common_startup_64+0x13e/0x141
+[   23.750398] irq event stamp: 16325
+[   23.750745] hardirqs last  enabled at (16325): [<ffffffffa8281b8e>] __up=
+_console_sem+0x7e/0x90
+[   23.751549] hardirqs last disabled at (16324): [<ffffffffa8281b73>] __up=
+_console_sem+0x63/0x90
+[   23.752349] softirqs last  enabled at (15872): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.753138] softirqs last disabled at (15863): [<ffffffffa81c6c12>] __ir=
+q_exit_rcu+0xe2/0x100
+[   23.753956]=20
+[   23.753956] other info that might help us debug this:
+[   23.754597]  Possible unsafe locking scenario:
+[   23.754597]=20
+[   23.755163]        CPU0
+[   23.755397]        ----
+[   23.755637]   lock(hrtimer_bases.lock);
+[   23.756010]   <Interrupt>
+[   23.756264]     lock(hrtimer_bases.lock);
+[   23.756640]=20
+[   23.756640]  *** DEADLOCK ***
+[   23.756640]=20
+[   23.757197] 1 lock held by loadret/560:
+[   23.757555]  #0: ffffffffaa6902c8 (system_transition_mutex){+.+.}-{4:4},=
+ at: __do_sys_reboot+0xc5/0x250
+[   23.758426]=20
+[   23.758426] stack backtrace:
+[   23.758867] CPU: 0 UID: 0 PID: 560 Comm: loadret Tainted: G        W    =
+      6.13.0-rc1+ #2033
+[   23.759806] Tainted: [W]=3DWARN
+[   23.760151] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   23.761228] Call Trace:
+[   23.761481]  <TASK>
+[   23.761713]  dump_stack_lvl+0x84/0xd0
+[   23.762117]  print_usage_bug.part.0+0x257/0x340
+[   23.762553]  mark_lock+0x735/0x960
+[   23.762911]  ? vprintk_emit+0x111/0x460
+[   23.763288]  ? hrtimers_resume_local+0x29/0x40
+[   23.763704]  ? _printk+0x6c/0x90
+[   23.764018]  __lock_acquire+0x7ee/0x25c0
+[   23.764385]  ? __warn.cold+0x7f/0x151
+[   23.764727]  ? hrtimers_resume_local+0x29/0x40
+[   23.765161]  ? nbcon_get_cpu_emergency_nesting+0xa/0x30
+[   23.765643]  ? nbcon_cpu_emergency_exit+0xe/0x40
+[   23.766081]  ? report_bug+0xff/0x140
+[   23.766428]  lock_acquire+0xd0/0x310
+[   23.766771]  ? retrigger_next_event+0x38/0xd0
+[   23.767189]  _raw_spin_lock+0x30/0x40
+[   23.767542]  ? retrigger_next_event+0x38/0xd0
+[   23.767967]  retrigger_next_event+0x38/0xd0
+[   23.768365]  timekeeping_resume+0x148/0x190
+[   23.768763]  syscore_resume+0x67/0x220
+[   23.769136]  kernel_kexec+0xf6/0x180
+[   23.769478]  __do_sys_reboot+0x206/0x250
+[   23.769851]  do_syscall_64+0x95/0x180
+[   23.770205]  ? __lock_acquire+0x45f/0x25c0
+[   23.770590]  ? __lock_acquire+0x45f/0x25c0
+[   23.770987]  ? __handle_mm_fault+0x7df/0xfa0
+[   23.771395]  ? reacquire_held_locks+0xd2/0x1f0
+[   23.771812]  ? do_user_addr_fault+0x555/0x8a0
+[   23.772229]  ? lock_acquire+0xd0/0x310
+[   23.772584]  ? find_held_lock+0x2b/0x80
+[   23.772934]  ? do_user_addr_fault+0x59f/0x8a0
+[   23.773350]  ? do_user_addr_fault+0x5a9/0x8a0
+[   23.773761]  ? trace_hardirqs_off+0x4b/0xc0
+[   23.774169]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
+[   23.774643]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   23.775111] RIP: 0033:0x7f058654c15d
+[   23.775451] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 =
+89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fb 5c 0c 00 f7 d8 64 89 01 48
+[   23.777180] RSP: 002b:00007ffccf368718 EFLAGS: 00000246 ORIG_RAX: 000000=
+00000000a9
+[   23.777872] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f05865=
+4c15d
+[   23.778535] RDX: 0000000045584543 RSI: 0000000028121969 RDI: 00000000fee=
+1dead
+[   23.779181] RBP: 00007ffccf368760 R08: 0000004d00000000 R09: 0000004d000=
+00000
+[   23.779836] R10: 00007f0586640f30 R11: 0000000000000246 R12: 00000000004=
+01070
+[   23.780497] R13: 00007ffccf368840 R14: 0000000000000000 R15: 00000000000=
+00000
+[   23.781181]  </TASK>
+[   23.781485] Enabling non-boot CPUs ...
+[   23.781875] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[   23.782558] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[   23.784675] CPU1 is up
+[   23.789380] virtio_blk virtio1: 2/0/0 default/read/poll queues
+[   23.794137] OOM killer enabled.
+Success794454] Restarting tasks ... done.
 
-Since you are running in QEMU, if you can reproduce with this patch to
-QEMU itself which should dump the CPU state on a triple-fault, it would
-be very useful please:
 
---- a/accel/kvm/kvm-all.c
-+++ b/accel/kvm/kvm-all.c
-@@ -3133,6 +3133,7 @@ int kvm_cpu_exec(CPUState *cpu)
-             ret =3D EXCP_INTERRUPT;
-             break;
-         case KVM_EXIT_SHUTDOWN:
-+            cpu_dump_state(cpu, stderr, CPU_DUMP_CODE);
-             qemu_system_reset_request(SHUTDOWN_CAUSE_GUEST_RESET);
-             ret =3D EXCP_INTERRUPT;
-             break;
-
-If you get output from that, please also send the output of 'objdump -S
-arch/x86/kernel/relocate_kernel_64.o' to help interpret it.
-
-Thanks.
-
---=-U3V50r4KUyX/UkUvsdhO
+--=-eAs6ZMokKcdHbolCA3FX
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -276,25 +479,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTAzMDEwWjAvBgkqhkiG9w0BCQQxIgQgdzgdBGtQ
-4FNZ3fhyG/7GlGtYCC9Gm82QsGw946h0k3wwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTEwNzQ1WjAvBgkqhkiG9w0BCQQxIgQgn1b0E2ib
+M7lx6XbDbcdf5cy3BT89/D2kEZLcXl7UCgIwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCpDHiZ9XHsriZYfQ1SO9PqOfipTZmXIG/A
-HVhs/q2MVnORoc80D+UbpXBgapT38Klz84wju8ZsBX72o5v/LiDUwq1/i4YW7bSiYeajxgAolsoi
-kAYHYvIOub05v+z8wms6FIGiLnpqXY9GMRcPOeZ955ZH7ERrLRheAifF5uTuNntgk81AGc1xYcWD
-bIZWSEXtghxgkUDSP+hcAmmYNB0DA+H+0TqrSQtNUFa29DOWPUYPVWboS3M1PaghoxWn6sDHPYtu
-2JNZj/+QIm61roZV9uLylsZbDaO/Ux4tVaMWMDryKDU863H6mbH1QkgfdC2Mez2G+wVQp1huNrsk
-7KqFXVGQGYarLrKZdssyOWk9FUngazRsJS6daWhPJS1G/hNhggGENX/l+8RM1HkgU/spE0tq6CEg
-Sgry2RZH7WEizbBrvaM7jKE9bIptpnRYdV8luFazIWuFDzRWjRqcFXMtO1/AnvQX0ikVgt7v7cEK
-onpmYm0yqA+Q4YjGgSJmsBi4CG0DxMn5qqpPzz2K2P5BYYqzwhVVOT1hXrtxAMqQFWVXQU4cCg3g
-oxSetJh6uuHBoBkSQUlWZWPKy0xZZHNJSfJI6SkTr3z4/uR9seV18QEMQgK9KDikOftG0tgkZeqg
-p4hfUzw53wRLzRvKpECyUjdvrLNWDMxt5lH+X+ix2QAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAQJW+mureLkDPdEQc3xHNXCHeiTp/epYw+
+5K1ta+L9pUKYVucoOG+l8UbWTR2A3+Eu9YKgjko8xEMGLAxKO7H0ijr0vBIA0Sz8g25+KL7v9Hyz
+JpKtQyjGEyrZn8YWcZrco48ir2TUFhbLpbmF3mPDaJb2H0pgyx2MrxqjE2ltL17Qal4OUcEA3/Pi
+OlqLmt8ArL797kO99I6AYWJP/vHRop2o5qCMzyimDRKQ92mLHC+IKghStAK59Px3AOW+Czsi/Xiz
+zXfWJ2Scsy4XIsMyebJaekTmWPukHkVNeLxGLdFVU4ILVSKTVGrfTiYp3u7nMOr71cBTHn1hYLC9
+AbKVB7VfrwNzBGo/pWlOgkCKNNC6sbTMlSFIclT2lGkOnQd3SDZZjsQkVCplmLMop169l2l5bKYb
+OvQ+HqkAUWlvIjNtvPABLUK9xNIN3hMZX+SAbB0yo8iH+SeMUZ6Wx20liVasBPsLqW2hNXqRRHm1
+FlXLZhlDqDp3pgrRLx5PJOApaC1Sqf8JG3LKUdQb+YRebdd5qOjdTqJNMG0UXEXHQr3yjmjCXaLc
+Le6WdpR8LyXa/LM9L+QZRshQLYZmZuRMrn71S7aY88CnaSujAxBSG3g1oUlBPjIG8QR5jo24SVdf
+Us7ftIuiso0pQpodpZCjKC4l+eNdl726F0QQFRvWNAAAAAAAAA==
 
 
---=-U3V50r4KUyX/UkUvsdhO--
+--=-eAs6ZMokKcdHbolCA3FX--
 
