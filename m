@@ -4,54 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2F9DE7717F
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 09:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F875E7717F
+	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 10:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WyUf1YEHBmIXRwarflhf30xo1NPTCEsStX13R1uN+Ro=; b=AwrLsTV9Icc0nMUmyr0UhF1udi
-	rnkuk9HHJLNjI8eE2qmFcy5tQXea8zjcdi8khdLqgPFMTqwyZ1DDZKD9JR/Jb9vsnAAlWZjNio7bP
-	JPVO8OxyRn88k2Hkp6hPv/Vq92lx9+3m+sGXuosMdv/mZXe1IU8cfvYQWU+7ZGbp08sTXqO0A9b8d
-	deKS9Zaf60HaawZ4cs1/6PQONSBoPZL+Kblb4WrMOSyztHgLrYyv4fYru8ktQ5ak4w/1aOx7pMBIL
-	3VB5v+yUXhI2+HjpXJoxl6SpHdOporZ63bsDbZMuU4npNy5uQuk5NvkyLnKTmrPbH3uG+7jLN5Ji6
-	ExVQY4NA==;
+	bh=4HIWtFV37En8Z7xZDF5i/+XpdRbky2W7O+FRZ0Zrtf4=; b=DdvoXjyPUsY6wOA7RCSMPMNhGH
+	m9BXXXZ2e9EIV7dd/2eF3cQrkC3YD3VCGaWgCjkrop4IgD2rc+eC04tOFgve47Oo19rGnk3YcU129
+	N1gDTQhBhGZCRwU36BdHg74faXsvEIRjz9ywAnEr5o91voQY5sEcOnTus6KGlpRnx/JbY3Yn1ZS4I
+	gEbD7nd6ttnHydrDjRL8+beZWrBi3m/c3ghvnm+uY+BPEF4CvWWG+EWv1qqTxgrak6WF3PqncZFmZ
+	LLNliKR6vlCsMs9DGJlN28m9yWQGcMeX1Wxqtdo85fIHEf83RheqmNkKugoVg/98v46wlTJYAnBiE
+	B9Fy768A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLfl7-0000000HY0a-3dSx;
-	Thu, 12 Dec 2024 09:45:25 +0000
+	id 1tLgCU-000000000zR-3Cgp;
+	Thu, 12 Dec 2024 10:13:42 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLfgt-0000000HX2W-0K49
+	id 1tLgCD-000000000wy-2Upv
 	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 09:41:03 +0000
+	Thu, 12 Dec 2024 10:13:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WyUf1YEHBmIXRwarflhf30xo1NPTCEsStX13R1uN+Ro=; b=iik/oKbu+erxt1mLHrvXrHwfak
-	GRK5o+RI8KoLRU6puU0Wrodpm9FFqKDK6v7rVApgy7bU1mNUvsdZ4ReZLHlUIzssv0Tu+1Sqg4US+
-	3SnsWVMo4sIdXx+NJeFU44tFCJNgZJ9tu5lbxWIJnATgPOD682uLXbMQaHMIBCEw5TX1VcFIcB65Q
-	isFPpWvQ8869jA9y7Q/i3J+h+37ntaG86vVyV8/E749pEuUpcoZcy9hjPBdVTh7wKGdGMAKjLZ7sc
-	og2R3IqNpKO8dlRuVXvvMWb7YQWLkACS/FsyOtCJrRgQSKslddqjRCQwHShm9ovXOkE/vs/7mWo0x
-	sFnWHGXA==;
-Received: from 54-240-197-230.amazon.com ([54.240.197.230] helo=freeip.amazon.com)
+	bh=4HIWtFV37En8Z7xZDF5i/+XpdRbky2W7O+FRZ0Zrtf4=; b=fCR2SNSeYfiCgz5olZrhr/ivL9
+	Jgz6/RXmfJ/Zfx+J1M5hn0MBqnzlfgzV1nFHSkZLKc8WwExui2Cd/TxTf5BDJ7G9CGAjLWrgclFPk
+	GkKLAYb88whUh9/9tc2uuUfBOf5a8v855iMF/E/APyTJbE5sZTlBD6ZZRjsYPdylSRYn0xwopY4Cr
+	2+ZUzDkScQXLe6rw3+hNfaR+UAGnw0qMQTPXYR335fggeDcpWNEYZvukh84tPAyQyQayM6miQUBsC
+	QaF//CLKJbRJYKt2/ZWbwSczr4/DffTDT+Mnqt0p1ggIw5N1wjnJovTN9Mc2mdqW38f41JALVHss3
+	b5XEnJ9Q==;
+Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLfgr-00000004khT-29iO;
-	Thu, 12 Dec 2024 09:41:01 +0000
-Message-ID: <5b240f142cbe9d5e6674e31edc1779d423d1b380.camel@infradead.org>
-Subject: Re: Can't use kexec-tools for preserve-context kexec 'call'?
+	id 1tLgC9-00000004vZK-3ebp;
+	Thu, 12 Dec 2024 10:13:22 +0000
+Message-ID: <b4104c271b461dc1958ffac299d6741746a0728a.camel@infradead.org>
+Subject: Re: [PATCH v5 13/20] x86/kexec: Mark relocate_kernel page as ROX
+ instead of RWX
 From: David Woodhouse <dwmw2@infradead.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec <kexec@lists.infradead.org>
-Date: Thu, 12 Dec 2024 09:41:00 +0000
-In-Reply-To: <Z1pSLg3H6Sz0HOU2@MiWiFi-R3L-srv>
-References: <f6f1395fafb6ea927ad71d7b041c3f0efe0678e7.camel@infradead.org>
-	 <Z1pSLg3H6Sz0HOU2@MiWiFi-R3L-srv>
+To: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
+ Borisov <nik.borisov@suse.com>,  linux-kernel@vger.kernel.org, Simon Horman
+ <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, jpoimboe@kernel.org,  bsz@amazon.de
+Date: Thu, 12 Dec 2024 10:13:20 +0000
+In-Reply-To: <5bb26488-f5fb-4186-92c3-de6a07631f91@linux.intel.com>
+References: <20241205153343.3275139-1-dwmw2@infradead.org>
+	 <20241205153343.3275139-14-dwmw2@infradead.org>
+	 <5bb26488-f5fb-4186-92c3-de6a07631f91@linux.intel.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-+xXlhYOVl1/tJNWedQRV"
+	boundary="=-MFODfwyI2dERy4RSXKOr"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -70,54 +78,35 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-+xXlhYOVl1/tJNWedQRV
+--=-MFODfwyI2dERy4RSXKOr
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-12-12 at 11:02 +0800, Baoquan He wrote:
+On Thu, 2024-12-12 at 11:03 +0800, Ning, Hongyu wrote:
+>=20
 > Hi David,
 >=20
-> On 12/09/24 at 02:07pm, David Woodhouse wrote:
-> > In https://git.kernel.org/torvalds/c/07fa619f2a40c=C2=A0there is a test
-> > program which uses kexec to invoke a 4-instruction 'executable' which
-> > merely writes a byte to a serial port and returns.
-> >=20
-> > It just loads a single kexec segment containing those four
-> > instructions.
-> >=20
-> > Should I have been able to do that using kexec-tools? I couldn't work
-> > out how.
-> >=20
-> > And even once it's loaded, 'kexec -f -e' does manage to invoke it, but
-> > then reports 'No such file or directory' after the reboot() system call
-> > returns success. Strace shows:
+> I've hit some kdump/kexec regression issue for guest kernel in KVM/QEMU=
+=20
+> based VM and reported in https://bugzilla.kernel.org/show_bug.cgi?id=3D21=
+9592.
 >=20
-> May I know why you are testing preserve-context feature recently? I
-> noticed you have raised an issue inside kernel and worked out a draft
-> patch, while you did't tell what use case or scenario preserve-context
-> is used in. Asking this because you could be the 1st one to test it and
-> report issues on preserve-context as far as I know these years.
+> based on further git bisect, it seems to be related with this commit,
+> would you help to take a look?
 
-Right now, I'm testing it because I touched that code path in
-relocate_kernel_64.S and thus of *course* I have to test it. How could
-anyone touch this code and *not* test for regressions?
+Thanks for the report; I'll take a look. Please could you share your
+kernel .config?
 
-> If there's newly found scenario preserve-context is needed, that's a
-> good thing. Otherwise we may consider to put it in DEPRECATED list in
-> kernel config so that we can finally take it off from kernel in several
-> years, like this people won't meet it and need take time to study what
-> it is and why it doesn't work as it was declared. What do you think?
+Also, you say that this is in QEMU running on an IA64 host. Is that
+true, or did you mean x86_64 host? Are you using OVMF or SeaBIOS as the
+QEMU firmware?
 
-By coincidence, however, I do happen to know of a production scenario
-in which preserve-context kexec is used a few million times a week.
-(Which is lucky, because I was able to crib some of my test case from
-that code base.)
+In the short term, I think that just reverting the 'offending' commit
+should be OK. I'd *prefer* not to leave the page RWX for the whole time
+period that the image is loaded, but that's how it's been on i386 for
+ever anyway.
 
-The reload-GDT fix is also already in that code base, FWIW, and I have
-already frowned at them for not upstreaming it immediately, which was a
-violation of our development policy.
-
---=-+xXlhYOVl1/tJNWedQRV
+--=-MFODfwyI2dERy4RSXKOr
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -209,25 +198,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMDk0MTAwWjAvBgkqhkiG9w0BCQQxIgQgbLK23Rhu
-eby91CNEN4Ps88WbkKwzZCdQEtvpuPk84NIwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMTAxMzIwWjAvBgkqhkiG9w0BCQQxIgQgYGhPpeq5
+zbK73o7ysEUB6g4qtRPF18ZalyCAKvGgGOwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAw7CzDC7yfexr7zAWvxoiIaxTsIsFnuacA
-HQUB6Mj0XX8GLlLijS9GvFiFJW8RVEADQby29GosZCsjgSqfC43AGnC+FKf+rPJ0dxluPJiOMXxN
-Jep6bEbgWL2YgKRZrFeYeoLdqw/GG8GKxnHB8uUgOxn8ZfyDdQ2USoyi7dbRyFFuGpC8yXN7txg6
-qFDXmkSoCM/N8JuQ7uncR91BnWP4EU4XhBxyLwrvvRVthbUKgql1oxzEfewpsQoJOiDc5+Rl6IR8
-Fb+ZDwTlhOzi0zbIzNZeX0YdcRnf4n7AfT0k1QcwjZh5KQeFJp9sMPbLYDTZbYdZp4wdK0WEaBc8
-0gHIfDTkR1tycFD+z5b84VL9FSH440i/yqqb6VvbUyrTB4xL37uqSqB+gyGUj28cg6Tu6Ar2E0Ch
-oI6WKMqnlKa+HTXKKskMX3x5/MDoVPCHyKI3H8E+sff/tT39Sm+tWSWa8g1sFFJ10v9HDqqUeccn
-Hq62QOnE13+7+sEEFVOKvibMVoxvzHqXaczuqK2QnZC5qpHiaz4dlZcVwZ3fcyyFZilHemeJzaTf
-TcmhPsh2AwR28QzgvnBdZx2L2gDz10peGPb656jix00RZUXjAwLO7+S2LeN5iWnjSr4ojG9ZMHzD
-qYXA8lTiGXAjY6Y/bgKdIGXgZjz60crnCgY49K6kkwAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCcL0+EIMcdR3T08extT5iYzthJTEkf2Y4i
+Ib7Aly9tAZTtbYTU9TfCIkcNRW/t2nTFqchGf1YOMnvZQh+vK2v19hLSBL9N0jW/b3Ikh3FOLx58
+kn5GhOTKTvodZm1uQEljxsBDcU76Ug6QLBHYvNDCtq3fAbpnMBUrHRjjkKvytnCo1BCC+7jHI+9O
+5qIP+j1iJe71iaXi9jRBVvZGY8+dzvb82j2Y81OWL8y+fZxDaIW1jecs4eKyMJqlqkIj405iR2Rm
+1N8Ikh9G8s/MRrQqf3qT/Y8MbkBszu2daX2B64+DJYRdZyiWjQ7QoY+WgFvS93scm9WVhjHTm7K0
+zx3aW3sNCSACLGF+OtY5ba/qP0sLZTEYqDQ7EIwSCzvAIIbOeTRVRsOVZg5/cRwLZ9bMoWWZAEdY
+hRCJKIPr4bXbFgCbzARODM14vKmRxjXXonnO9wJEdWPnZpKV0QcFszBLinITc/3O9ItwFrUAvvuK
+n8LDo/z8VsTkHz8QaFFlTVdqt2PXN8XC6qtAz7dPT9/Tao9SLo0FbWaSZynT4fjUN7PiJe1W8P/H
+g2hVc6+FdhK6iCO1mlGdesBy2qQRAxCHUZ5wWNaESge9aMAbqkUYOz/EX9PLqoLjSt95yGOTz18c
+zUSmoCdlr+rrvjvh8XMayfM1CoW1kddyTQZRBpBjBgAAAAAAAA==
 
 
---=-+xXlhYOVl1/tJNWedQRV--
+--=-MFODfwyI2dERy4RSXKOr--
 
