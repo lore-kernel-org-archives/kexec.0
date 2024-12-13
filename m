@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE44BE7717F
-	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1025BE7717D
+	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 12:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=seg56wEn4x/gV1V32Q+7/9PzRw2+AhF/OxpGg6C1CVM=; b=glok+N35MViJLjJwiG+nxZo5eq
-	1ELov4qNwex3KL4F1+QwCuqaHQrsgjbTsuUZ3SX/l7vq266d4TGa7KiNtvQ4+Yx9oHQNuTlLTV3OJ
-	KSTu8n8HWzHXT/ZF9tqrEP2C5Rta2G5ETYN4aKFlg1eUv9RU3xpeLgZLC/NI7FBTSK4lnlU7QkEmp
-	508qqtkLgqlrf21nnrwsNHuaCVCuAaMlxovf+aBK1y60dqkPxavGjJJYhYO8zASKEczHhNN3+FXN1
-	VGDbVb9aE7tzHVLja9LNIWQ5+70ZWltJetOwD3ePxhL/WBc9wgZjSthWFdPOXDxLpMQWTUVn/Sm9u
-	kqtQsbgg==;
+	bh=5/cUb9EXCmvkwk1YD2pVYN1OsHlQlRssug7uzeFSNpE=; b=SZLrzEwmD3Y2UhUwT3RZ55bthn
+	EDe73DeVSUCeG1vW51DfUNW+QncyRbnz89UfoAj+ZSLXtQ+ghEefhS0qyvHM4Cab9rANN2NaYGupC
+	Pj08Vz8nlkpUFZvAu91YgNy/Xip+hD+oY29eetiDhRkiwZHfCwFnxYkCcE+wLW6O5lK2oR2Yi+V4W
+	oexI09ILAKNk+GfIwR/1fzBRfvP8QuhJlsr6DCzBlSuctwjxoTJubH+d5L+DzYVKIqQ8boBcZsxAl
+	dZ5j3glMzbYJDFOanHNmrTeGUquaz+EURx8ru8QQ9A5iw6mpBWts4ich/YuSN9xKC5zFxrj5UqRwP
+	lnl866HA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM50p-00000003kVj-0HaT;
-	Fri, 13 Dec 2024 12:43:19 +0000
+	id 1tM514-00000003kYi-2xt0;
+	Fri, 13 Dec 2024 12:43:34 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM50m-00000003kVI-2fQt
+	id 1tM511-00000003kXl-3xQN
 	for kexec@lists.infradead.org;
-	Fri, 13 Dec 2024 12:43:17 +0000
+	Fri, 13 Dec 2024 12:43:32 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id C345D5C6C0D;
-	Fri, 13 Dec 2024 12:42:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C219C4CED0;
-	Fri, 13 Dec 2024 12:43:14 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 1C8AF5C68FD;
+	Fri, 13 Dec 2024 12:42:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6232BC4CED0;
+	Fri, 13 Dec 2024 12:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734093795;
-	bh=pIJ10irMhjIWYyQruv5wNK7V2LnmcQQ+bf0Hx3kjKUI=;
+	s=k20201202; t=1734093811;
+	bh=0ccmnE6bPUuW0SpqbzF+rXta7c6B+RofMABWCBlIgwo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rc1ftK+Ei1KOQsJh/d6gCEy0qgmiUDq+yZQU9jEpkkpeQnUybwdnE6VxYxoMHE9tZ
-	 YAnv9iA7NRQwSiI3N5h7c/lcume5e67L5kULfCVRV5CbHWtIfVZ6Bc7hK5Ljno5RxB
-	 JCysvdG4avfVZl4GIm8FXXiH/YBeaBUXyflJnCxx95txV/bYesN1hHwscWGVaAtjwz
-	 T8CbpfdK08hHFIoopPkc88TFow2R7ginZuUPpwZDQINqETI3eMQF7TzPb5UfX+2lsY
-	 CQUaiIeAOxmsfLTTxpwtTBlCQD/qDyHZ6Bi1tiTVCJCUnV5o+090K3yaB7z0dTdOhV
-	 1MT+zfjp+TV1A==
-Date: Fri, 13 Dec 2024 12:43:13 +0000
+	b=MClqXLdxHKlxqPJ4wekisXpvdk/9n6YFl0wtrnUM/aO3ss+8OekJ1zKQYaBy5Gmaq
+	 XovLUt/6VafDFvsZ5HKTq0hQNG5XqZ4Q8tToZ9fX03VVcQdL0wKagsK4vvkEQFMiBq
+	 wANe1hoo04Lt1Lclgd7y/mg1np748hFnbjQkrky0gmhs5l8bs7l2Fg2Roa7KbkbS4I
+	 F2iJR+TygVbs85nyTmb6NA43WM5482E5Ebwq0btmN+sCLQN21uETcVBJ/qBoPrrQhk
+	 2/6lkw4jqT/3V3vmB1TIKuiDj794mBv8zxJMxyMzWZJj+3TvfbpC4VR+lzdoKgOMac
+	 gC2DWkVzgDWLw==
+Date: Fri, 13 Dec 2024 12:43:28 +0000
 From: Simon Horman <horms@kernel.org>
 To: Pingfan Liu <piliu@redhat.com>
 Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH 2/2] pe-zboot: Truncate the trailing zero if Image is
- signed
-Message-ID: <20241213124313.GV2110@kernel.org>
+Subject: Re: [PATCH 1/2] PE: Extract get_pehdr_offset() for reuse
+Message-ID: <20241213124328.GW2110@kernel.org>
 References: <20241206024445.10442-1-piliu@redhat.com>
- <20241206024445.10442-3-piliu@redhat.com>
+ <20241206024445.10442-2-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241206024445.10442-3-piliu@redhat.com>
+In-Reply-To: <20241206024445.10442-2-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241213_044316_714300_023D1664 
-X-CRM114-Status: GOOD (  12.61  )
+X-CRM114-CacheID: sfid-20241213_044332_022768_A6A2978A 
+X-CRM114-Status: UNSURE (   8.19  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,32 +72,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Dec 06, 2024 at 10:44:43AM +0800, Pingfan Liu wrote:
-> *** Issue ***
-> In the linux kernel drivers/firmware/efi/libstub/Makefile.zboot, the
-> original Image is padded with zero, using the following instruction:
-> 	truncate -s $$(hexdump -s16 -n4 -e '"%u"' $<) $@
-> 
-> Hence pe-zboot.c decomopresses and gets Image plus trailing zeroes.
-> 
-> These trailing zeroes don't affect loading the original PE file. But
-> they do raise an issue during the signature verfication. The root cause is
-> that the kernel function:
-> 	static int pefile_digest_pe_contents(const void *pebuf, unsigned int pelen,
-> 					     struct pefile_context *ctx,
-> 					     struct shash_desc *desc)
-> treats [pebuf, pebuf+pelen] as valid payload, which includes the
-> trailing zeroes. But that is not the truth.
-> 
-> *** Solution ***
-> In pratice, the table of attribute certificates come at the end of a
-> PE file. This patch utilizes that fact and truncates at the boundary of the
-> certificate table to get the original Image.
+On Fri, Dec 06, 2024 at 10:44:42AM +0800, Pingfan Liu wrote:
+> The get_pehdr_offset() function helps skip the DOS stub in a PE file to
+> locate the start of the PE header. Since it can be used in multiple C
+> files, it is being moved to a header file.
 > 
 > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> Cc: Simon Horman <horms@kernel.org>
-> To: kexec@lists.infradead.org
 
-Thanks, applied after addressing some minor spelling issues
-in the patch description.
+Thanks, applied.
+
 
