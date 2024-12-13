@@ -4,77 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 250D2E77180
-	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3C51E7717D
+	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 10:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NJ3rben+RQ8oyImGV7wZYRl0G6OTWhxJqURb3T1hywY=; b=ASfWi2zMocj7Eef6tsH8gQj3jk
-	zTt1430V+Nq2rIIEj0DXvgtaPVNFon2xjc4R9SufKdQPCrpzgkZxiDZft1dIb6U+riUUo9We0YC+O
-	7Hq8eZOWP0efpPEkEnjhSzs80AMu7I3MCaJxPkl0FbCl6RfR8dyzb2tHGSmh6Dg9AW2lXmOlSZl3q
-	WR9fuBHEcrH+ywDlEn9hsFf/UOhY2kgk17bjzJqWqal4KaNyQE1Kktq3e5+sW2MLYkTBfcoAYv6B9
-	cf4K9C3/zvlZdzw6SJOZ71xsaIZhhZJaMKDKCnIdcxYEZyXMdUe/CUHBoj/lG3tPQkpp2a5cHUdR+
-	WSVqNRsg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4v7iI7NsdR7W7wI3JpdV5vWmxBirJALp5sc+8kyw1GU=; b=4w/jEbgKPqLfOQpjvDly9rPg2q
+	+OAD7Dvcf3LAwRLmJ4pt2IWZyI9V9pK8NlAbfodxV2O3Q7dpbK1ZpOAOBxr3ezocxloVwKKV9ENn8
+	T+uPvAemo55ESDSRamKcjuvsbADVcpmKFj+Rju9nQvy4BgR7iamvhnpTjOnHXVlcU4L9NPPctgIkN
+	kp0vHWbo6gre3XvULD6WbbkYKhKDfcGtdYjfrTf4sNQ0Xw0BfAJ/xLU7lx1V5QViq5p+yuo9A7jww
+	1WmzDmRX4oo4/dcNXpLZvuDsoro1nZt9sdd9aXU5NHJEj6j/sW+BzTHLHBEulmtWqgYhh124SyNhb
+	T9bQ7ryw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM2QY-00000003Lsb-3cXz;
-	Fri, 13 Dec 2024 09:57:42 +0000
-Received: from mgamail.intel.com ([198.175.65.18])
+	id 1tM38T-00000003Saq-0RoG;
+	Fri, 13 Dec 2024 10:43:05 +0000
+Received: from galois.linutronix.de ([193.142.43.55])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM2QW-00000003LrH-2i8B
+	id 1tM38Q-00000003SZz-1lkZ
 	for kexec@lists.infradead.org;
-	Fri, 13 Dec 2024 09:57:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734083861; x=1765619861;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GH1L5UbCox+/l9a3Rv/+h7MmSzvbSrhCbpBcYNUY9OQ=;
-  b=cXvSiAeBc8FkP4yM6kQMs3WEiWaux9naHPZsB8vXCSkcHfFFXQyg/5i+
-   yqrlfuW6cfBrP7LAATotRq/eFqQ5DHkl4KKv4uDtdFeYMI3EtohRK9b3s
-   wgPeiPdImYTynA5+ufI6ebqnuni5qv6Kwx+Ycyj/bZMRxuUoCX0H5obaI
-   K1WYgoIt1aAzc+R/CS1YENP6p4tmKeyVkSsX96RIoP+4kmLaWDDQCx8N+
-   Fy8SnJEDAhIN7fhgMyE1i7oZ1X/8+LbsWFWZ0WI5qRMxSg6qNDYE3vQ3O
-   nfoEN1nP5vY71+qSgHIxSq16WXN1Caz54urSK7FZkbFjTYdTNP5AQyVn5
-   w==;
-X-CSE-ConnectionGUID: TXdmIqy7Rx2PEkZIBmMt8g==
-X-CSE-MsgGUID: 5eMvUs08QyWEatfL/gShcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="34666951"
-X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
-   d="scan'208";a="34666951"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 01:57:40 -0800
-X-CSE-ConnectionGUID: CyrDsqVNQpq9aVXhn30Ofw==
-X-CSE-MsgGUID: R2kEnO8rTTKX9eAophPF8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
-   d="scan'208";a="96262543"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 01:57:37 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: ebiederm@xmission.com
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	x86@kernel.org,
-	rick.p.edgecombe@intel.com,
-	kirill.shutemov@linux.intel.com,
-	bhe@redhat.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 1/1] kexec_core: Accept unaccepted kexec segments' destination addresses
-Date: Fri, 13 Dec 2024 17:54:49 +0800
-Message-ID: <20241213095449.881-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20241213094930.748-1-yan.y.zhao@intel.com>
-References: <20241213094930.748-1-yan.y.zhao@intel.com>
+	Fri, 13 Dec 2024 10:43:03 +0000
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1734086580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4v7iI7NsdR7W7wI3JpdV5vWmxBirJALp5sc+8kyw1GU=;
+	b=tv/3FauS2tZFkNX+Xpf41e+97r2jY578h6xXIgjIaO8Zruqbjmkfo1vHnlwLLZI4Ns1vzL
+	GdwAdoutp8GrLb7Eu88I8AdeorE6IFPJlcsy8p7GnQnc9DAiSnLxysXrrHDcR5AvQJAQZb
+	Xcdi/bO6jzIi7xfnUgq/xT8p+sP1qIKTWZXZ8lGnFcA1wx8uTHfoeRMcMfv1wTyOFJY+pS
+	hUnHMu4QOC/Aj9CcR/BAR+yRWqhRD9V4wjIqgXPgk7VqgqPRYQTmJbphTH7PmDRnGiPSKM
+	50iZF9FSRAes1Po49/+Q3wn2aLLxlSUrEuHBGqeU4keFP6VwQ/8jXn6dM8FzUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1734086580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4v7iI7NsdR7W7wI3JpdV5vWmxBirJALp5sc+8kyw1GU=;
+	b=ksx2RuHKHeyUpzrATTiczcoFIxOazBpzr/wc5/beWTteLjyDwIqhB846HZIPvkd+/rVDWO
+	LuDwNdF5bwh3evDA==
+To: David Woodhouse <dwmw2@infradead.org>, Stefan Hajnoczi
+ <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung
+ <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, linux-ext4
+ <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
+ Paolo Bonzini <bonzini@redhat.com>, ming.lei@redhat.com, Petr Mladek
+ <pmladek@suse.com>, John Ogness <jogness@linutronix.de>, Peter Zijlstra
+ <peterz@infradead.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
+In-Reply-To: <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
+References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org>
+ <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com>
+ <20241211124240.GA310916@fedora>
+ <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
+ <87ldwl9g93.ffs@tglx>
+ <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
+ <87a5d0aibc.ffs@tglx>
+ <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
+ <874j38a16p.ffs@tglx>
+ <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
+ <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
+Date: Fri, 13 Dec 2024 11:42:59 +0100
+Message-ID: <871pybamoc.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241213_015740_755851_4C01F042 
-X-CRM114-Status: GOOD (  23.26  )
+X-CRM114-CacheID: sfid-20241213_024302_596967_9D5ED78B 
+X-CRM114-Status: UNSURE (   8.52  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,92 +91,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In TDX, to run a linux guest, TDs (hardware-isolated VMs) must accept
-before accessing private memory. Accessing private memory before acceptance
-is considered a fatal error and may result in the termination of the TD.
+On Fri, Dec 13 2024 at 09:43, David Woodhouse wrote:
+> On Fri, 2024-12-13 at 09:31 +0000, David Woodhouse wrote:
+>> 
+>> (gdb) p sysrq_handle_showstate('t')
+>> 
+>> That didn't work. Maybe if I'd actually had no_console_suspend on this
+>> boot. Will try again.
+>
+> With your fix I get the same thing (both CPUs in idle thread). And with
+> no_console_suspend on the command line, 'p sysrq_handle_showstate('t')'
+> does work...
+>
+> [  113.462898] task:loadret         state:D stack:0     pid:707   tgid:707   ppid:531    flags:0x00004002
+> [  113.463615] Call Trace:
+> [  113.463841]  <TASK>
+> [  113.464029]  __schedule+0x502/0x1a10
+> [  113.464961]  schedule+0x3a/0x140
+> [  113.465234]  schedule_timeout+0xcc/0x110
+> [  113.465580]  __wait_for_common+0x91/0x1c0
+> [  113.466304]  cpuhp_kick_ap_work+0x13e/0x390
+> [  113.466657]  _cpu_down+0xd4/0x370
+> [  113.466936]  freeze_secondary_cpus.cold+0x3f/0xd4
+> [  113.467326]  kernel_kexec+0xa2/0x1a0
 
-The "accepting memory" operation in guest includes the following steps:
-- trigger a VM-exit
-- the host OS allocates a physical page and requests hardware to map the
-  physical page to the GPA.
-- initialize memory content to 0.
-- encrypt the memory
+That's the control thread on CPU0. The hotplug thread on CPU1 is stuck
+here:
 
-For a Linux guest, eagerly accepting all memory during kernel boot can slow
-down the boot process and cause unnecessary memory occupation on the host
-for pages that may never be accessed. Therefore, Linux guests usually opt
-for a lazy mode to delay page acceptance operations by not moving the pages
-to the buddy allocator's freelists. Instead, the kernel tracks memory
-in 4M units and places them in a zone->unaccepted_pages list if any page in
-the entire 4M range is in an unaccepted state (even if part of the memory
-range may have been accepted by firmware or the kernel). When the kernel
-does not have enough free pages, it will move memory from the
-zone->unaccepted_pages list and accept it, ensuring that the memory is
-accepted before moving it to the freelists and being available to the buddy
-allocator.
+ task:cpuhp/1         state:D stack:0     pid:24    tgid:24    ppid:2      flags:0x00004000
+ Call Trace:
+  <TASK>
+  __schedule+0x51f/0x1a80
+  schedule+0x3a/0x140
+  schedule_timeout+0x90/0x110
+  msleep+0x2b/0x40
+  blk_mq_hctx_notify_offline+0x160/0x3a0
+  cpuhp_invoke_callback+0x2a8/0x6c0
+  cpuhp_thread_fun+0x1ed/0x270
+  smpboot_thread_fn+0xda/0x1d0
 
-The kexec segments' destination addresses are not allocated by the buddy
-allocator. Instead, they are searched from normal system RAM (top-down or
-bottom-up) and exclude driver-managed memory, ACPI, persistent, and
-reserved memory... Although these addresses may fall within the memory
-range managed by the buddy allocator (which must be in an accepted state),
-they could also be outside that range and in an unaccepted state.
+So something with those blk_mq fixes went sideways.
 
-Since the kexec code will access the segments' destination addresses during
-the kexec process by swapping their content with the segments' source
-pages, it is necessary to accept the memory before performing the swap
-operations.
+Thanks,
 
-Accept the destination addresses during the kexec load, immediately after
-they pass sanity checks. This ensures the code is located in a common place
-shared by both the kexec_load and kexec_file_load system calls.
-
-This will not conflict with the accounting in try_to_accept_memory_one()
-since the accounting is set during kernel boot and decremented when pages
-are moved to the freelists. There is no harm in invoking accept_memory() on
-a page before making it available to the buddy allocator.
-
-No need to worry about re-accepting memory since accept_memory() checks the
-unaccepted bitmap before accepting a memory page.
-
-Although a user may perform kexec loading without ever triggering the jump,
-it doesn't impact much since kexec loading is not in a performance-critical
-path. Additionally, the destination addresses are always searched and found
-in the same location on a given system.
-
-Changes to the destination address searching logic to locate only memory in
-either unaccepted or accepted status are unnecessary and complicated.
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Baoquan He <bhe@redhat.com>
----
- kernel/kexec_core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3..f8eee0516bd9 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -210,6 +210,16 @@ int sanity_check_segment_list(struct kimage *image)
- 	}
- #endif
- 
-+	/*
-+	 * The destination addresses are searched from system RAM rather than
-+	 * being allocated from the buddy allocator, so they are not guaranteed
-+	 * to be accepted by the current kernel.  Accept the destination
-+	 * addresses before kexec swaps their content with the segments' source
-+	 * pages to avoid accessing memory before it is accepted.
-+	 */
-+	for (i = 0; i < nr_segments; i++)
-+		accept_memory(image->segment[i].mem, image->segment[i].memsz);
-+
- 	return 0;
- }
- 
--- 
-2.43.2
-
+        tglx
 
