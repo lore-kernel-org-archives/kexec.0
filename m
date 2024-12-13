@@ -4,72 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6DDCE7717D
-	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 09:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34121E7717F
+	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 09:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CUqYjnXsMN+oSPtTmZi3DhK7LyH+5WwKibaStVAMcSw=; b=dnH0gH5PX+PKHddgIe+W2Lemri
-	Qp1pkiba8YbIwEMybDAXoxQKMSGHufDtPEKNPkB1+9ezmJN6y77ZuJXDNpSDQMbU2QhWwSwJutSV3
-	BtmuYblJlxfv0v3bqB7DWnMlIOXTNy8KcOUEXMiQJTSVXgQ9mHmNk6Wn1lBlEEL0xgNE2xrcGVci0
-	For37kICX0/Q79HFVRElHBOjTgpkupkzCtntAy0O++Om+es9TjQ4jtiewUFmhd1fuMM4HFis5uFrx
-	VTY5SbjXaoTYpd46VKKgab4fliwzVeAZg6arbcfCJy/1/tZj5B0FdJwBDoWhKH7gDHDj3YLUwM1I2
-	TbVgMTbg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=BBR1B87usRIUDaVEporfDZt2rFFwqwL5FJmFnOaQGVQ=; b=OKY5xbLxqN1Ekf2INtMGP7i5Sl
+	xqd2aK+GKdxVjI8gUZcUJ3T2HKBY9qG7ghV4lpaKijMJ1m8PVfhr4G4ZDCtDCh7rfECp2fSQTE+nk
+	8zHomRZlfjSl+MqzLARDx/jNdOkUC0bZ7mWMN/FyPjy2jwOYUd2K/PXIp31kRa9+iq2ltKAJcDPdD
+	TwW/qY9AQd3Jq2VKq6/CZVtb4AtjZsq4w334Lgm9Y4K2iLqP2Z2aEyATYQyLvIRaRssuomurdASEE
+	A1NAwTkpVWcWZO1q/0IBHG0GC9swGPIZiLuzFV3G+esnjtuDq0ZZx5K590Vvyzm9bUAc95dswESKe
+	90ADl0AA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM2EZ-00000003J47-0ziO;
-	Fri, 13 Dec 2024 09:45:19 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tM2On-00000003LDc-3GiE;
+	Fri, 13 Dec 2024 09:55:53 +0000
+Received: from mgamail.intel.com ([198.175.65.15])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM2CU-00000003Il9-1oib
-	for kexec@bombadil.infradead.org;
-	Fri, 13 Dec 2024 09:43:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=CUqYjnXsMN+oSPtTmZi3DhK7LyH+5WwKibaStVAMcSw=; b=NhcQCVKbrDGh6dycp4YLpRHurH
-	EwLnJjjBIajRTdfvAgP9YSMMpVxfZQDZQs47G42dfW5h3oPGpoSnR8maIapKZL5T4qzBXvJKSgwSB
-	pTdQ5v23sdArFgDfjQMBn2Vza0hANhxW5Nj5tb7XeUVgHyec1EV/73VJYQW/YzoeM4i53toffZZZi
-	OJBJHmiEdIIELE1tIRB/ny45IiFUI7CUnjgoVAZ77bHLTSywQaG7p/L3kimqf7i5yvPaekwNQgxmu
-	UhVQWeYJiaBVLUPGWFvyKCQ0BQlaPjldX+U9FjXBa9sQrOs6DM4kcbOHMxm25YAlOn7avnABOFBTn
-	xvTEjIRQ==;
-Received: from 54-240-197-239.amazon.com ([54.240.197.239] helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM2CS-0000000BwqF-2E5C;
-	Fri, 13 Dec 2024 09:43:09 +0000
-Message-ID: <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
-Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Stefan Hajnoczi
- <stefanha@redhat.com>,  Jason Wang <jasowang@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung
- <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, linux-ext4
- <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
- Paolo Bonzini <bonzini@redhat.com>,  ming.lei@redhat.com, Petr Mladek
- <pmladek@suse.com>, John Ogness <jogness@linutronix.de>, Peter Zijlstra
- <peterz@infradead.org>
-Date: Fri, 13 Dec 2024 09:43:07 +0000
-In-Reply-To: <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
-References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org>
-	 <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com>
-	 <20241211124240.GA310916@fedora>
-	 <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
-	 <87ldwl9g93.ffs@tglx>
-	 <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
-	 <87a5d0aibc.ffs@tglx>
-	 <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
-	 <874j38a16p.ffs@tglx>
-	 <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-/ZPcwx7owdc+dW7sB28c"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tM2LT-00000003KIZ-02Br
+	for kexec@lists.infradead.org;
+	Fri, 13 Dec 2024 09:52:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734083548; x=1765619548;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xwlk6T0nmyV++vOWX/z4H8mtusZ/0NhrBUoKvYKhCZM=;
+  b=B6L2UyeoQHzd0PqM5dd+SkWXwCJZWP4Bz9Oru7hSWzvuPkDOy7Bxc/hn
+   sQUGv5bHhuPW1hfAh2xtxfxySuNoFuMv2duK5fSxecvvaUFbEQ7vmzxdB
+   AMwn1203meEwiBytvOHzxFEc5NJ6CIG+Aw3DV+I/HdVnhvLtx+aqf0odn
+   tZ4v1aOEOobI6o6a3f7KT0D0GWaJ6bq+cXNHSdgQXFSB4MFqo+ETZXc9m
+   luNFII1UzpLw3faicpJSBmqFyAzLV+0uKHBLF5P7ta/z1ttsFnoNA5GMI
+   nBnZ6Vwi3mN/GngjW1mXHi1qC8d+2FDNEtKn55G2FfDN0S5SHs21mrxLC
+   A==;
+X-CSE-ConnectionGUID: Oit6HvJeRqqT1zGgIN0gjg==
+X-CSE-MsgGUID: /Q2ays8cQOK00F6oAfsRmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="38208348"
+X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
+   d="scan'208";a="38208348"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 01:52:23 -0800
+X-CSE-ConnectionGUID: RbaQtVoiRRCjzNuo9wo9dw==
+X-CSE-MsgGUID: xampagART3u7nhSiZyDG4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
+   d="scan'208";a="96394961"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2024 01:52:19 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	x86@kernel.org,
+	rick.p.edgecombe@intel.com,
+	kirill.shutemov@linux.intel.com,
+	bhe@redhat.com,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH v2 0/1] Accept unaccepted kexec segments' destination addresses
+Date: Fri, 13 Dec 2024 17:49:30 +0800
+Message-ID: <20241213094930.748-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241213_015227_109631_F7822FE3 
+X-CRM114-Status: GOOD (  21.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,162 +87,157 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Eric,
 
---=-/ZPcwx7owdc+dW7sB28c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This is a repost of the patch "kexec_core: Accept unaccepted kexec
+destination addresses" [1], rebased to v6.13-rc2.
 
-On Fri, 2024-12-13 at 09:31 +0000, David Woodhouse wrote:
->=20
-> (gdb) p sysrq_handle_showstate('t')
->=20
-> That didn't work. Maybe if I'd actually had no_console_suspend on this
-> boot. Will try again.
+The code implementation remains unchanged, but the patch message now
+includes more background and explanations to address previous concerns from
+you and Baoquan.
 
-With your fix I get the same thing (both CPUs in idle thread). And with
-no_console_suspend on the command line, 'p sysrq_handle_showstate('t')'
-does work...
-
-[  113.462898] task:loadret         state:D stack:0     pid:707   tgid:707 =
-  ppid:531    flags:0x00004002
-[  113.463615] Call Trace:
-[  113.463841]  <TASK>
-[  113.464029]  __schedule+0x502/0x1a10
-[  113.464331]  ? find_held_lock+0x2b/0x80
-[  113.464661]  ? schedule+0xea/0x140
-[  113.464961]  schedule+0x3a/0x140
-[  113.465234]  schedule_timeout+0xcc/0x110
-[  113.465580]  __wait_for_common+0x91/0x1c0
-[  113.465923]  ? __pfx_schedule_timeout+0x10/0x10
-[  113.466304]  cpuhp_kick_ap_work+0x13e/0x390
-[  113.466657]  _cpu_down+0xd4/0x370
-[  113.466936]  freeze_secondary_cpus.cold+0x3f/0xd4
-[  113.467326]  kernel_kexec+0xa2/0x1a0
-[  113.467634]  __do_sys_reboot+0x206/0x250
-[  113.467974]  do_syscall_64+0x95/0x180
-[  113.468266]  ? kfree+0xdb/0x3a0
-[  113.468542]  ? __x64_sys_kexec_load+0xa9/0xe0
-[  113.468906]  ? kfree+0xdb/0x3a0
-[  113.469177]  ? do_kexec_load+0x120/0x340
-[  113.469525]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
-[  113.469940]  ? syscall_exit_to_user_mode+0x97/0x290
-[  113.470338]  ? do_syscall_64+0xa1/0x180
-[  113.470667]  ? trace_hardirqs_off+0x4b/0xc0
-[  113.471021]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
-[  113.471414]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Additionally, below is a more detailed explanation of unaccepted memory in
+TDX. Please let me know if it is still not clear enough.
 
 
---=-/ZPcwx7owdc+dW7sB28c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+== UnAccepted memory in TDX ==
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEzMDk0MzA3WjAvBgkqhkiG9w0BCQQxIgQggUTcSglY
-Arii8IAb7ufs82emxNnRZD/eyw+AXeAlbsQwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAItzt+wQiAUQQ5dycOJAe4+xFPdRRXU+9c
-gdKHKXMXzNlWrc9Q18MuEQH91CLnp3N0OaCQ0Cwq24ckBZZmFalrMYNHERIRnQRO3p8UyALbQfiy
-yngwSVNA1YhwEc0X0Q8hzUSA+e3RfZbnBaEkhhK6UdvK61PXSitq5AcOl/KYuUUGXfxCRk5lLR93
-BEQOK3QwDG81s+S30YF+KvwOIhVEOT2losCyk3PV7weZ/tZvOYXAhg0QEt4jFYxSvj33b407+ENW
-zq/En3cTINPAvpXxKGwOpCXk9uS//1woSFOGoquI0dLQvYMn4NZhLOivL1N1x9OVieTddlxjBQdF
-uxcM4vYbRUEo3rcDLMirPqRERw+A1eFoSrNpSIHc+lfpar1b2hEDWTFWUdn6TsOZqTg1LnUyAjPb
-NRfHqedZPl36sfq0FgmovsqiZnaJLUPEz4wfllqoqiP6L9WInO5+fH2NcOaa3tBvLi8XEINtySdr
-LvNkymtnTS+SXmT0/4ZFrD+raozukj1SLrd6tt0kmV4erjX3izObLdR7Qdnaeux37blq4Dho51Zh
-TiXL8SlUFD8uP49KT12wTvT1ZSnoZmSRIAfWhhsPDydVDrII1bL76r0fDN/jdNrbKwS1KuH4dT58
-1ge0Km6YV5B2F0A7ZEbKTj/CJMxHzJDU9vLULlLBdgAAAAAAAA==
+Intel TDX (Trusted Domain Extension) provides a hardware-based trusted
+execution environment for TDs (hardware-isolated VMs). The host OS is not
+trusted. Although it allocates physical pages for TDs, it does not and
+cannot know the content of TD's pages.
+
+TD's memory is added via two methods by invoking different instructions in
+the host:
+1. For TD's initial private memory, such as for firmware HOBs:
+   - This type of memory is added without requiring the TD's acceptance.
+   - The TD will perform attestation of the page GPA and content later.
+
+2. For TD's runtime private memory:
+   - After the host adds memory, it is pending for the TD's acceptance.
+
+Memory added by method 1 is not relevant to the unaccepted memory we will
+discuss.
+
+For memory added by method 2, the TD's acceptance can occur before or after
+the TD's memory access:
+(a) Access first:
+    - TD accesses a private GPA,
+    - Host OS allocates physical memory,
+    - Host OS requests hardware to map the physical page to the GPA,
+    - TD accepts the GPA.
+
+(b) Accept first:
+    - TD accepts a private GPA,
+    - Host OS allocates physical memory,
+    - Host OS requests hardware to map the physical page to the GPA,
+    - TD accesses the GPA.
+
+For "(a) Access first", it is regarded as unsafe for a Linux guest and is
+therefore not chosen.
+For "(b) Accept first", the TD's "accept" operation includes the following
+steps:
+- Trigger a VM-exit
+- The host OS allocates a physical page and requests hardware to map the
+  physical page to the GPA.
+- Initialize the physical page with content set to 0.
+- Encrypt the memory 
 
 
---=-/ZPcwx7owdc+dW7sB28c--
+To enable the "Accept first" approach, an "unaccepted memory" mechanism is
+used, which requires cooperation from the virtual firmware and the Linux
+guest.
+
+1. The host OS adds initial private memory that does not require TD's
+   acceptance. The host OS composes EFI_HOB_RESOURCE_DESCRIPTORs and loads
+   the virtual firmware first. Guest RAM, excluding that for initial
+   memory, is reported as UNACCEPTED in the descriptor.
+
+2. The virtual firmware parses the descriptors and accepts the UNACCEPTED
+   memory below 4G. It then excludes the below-4G range from the UNACCEPTED
+   range.
+
+3. The virtual firmware loads the Linux guest image (the address to load is
+   below 4G).
+
+4. The Linux guest requests the UNACCEPTED bitmap from the virtual
+   firmware:
+   - Locate EFI_UNACCEPTED_MEMORY entries from the memory map returned by
+     the efi_get_memory_map boot service.
+   - Request via EFI boot service to allocate an unaccepted_table in memory
+     of type EFI_ACPI_RECLAIM_MEMORY (E820_TYPE_ACPI) to hold the
+     unaccepted bitmap.
+   - Install the unaccepted_table as an EFI configuration table via the
+     boot service.
+   - Initialize the unaccepted bitmap according to the
+     EFI_UNACCEPTED_MEMORY entries.
+
+5. The Linux guest decompresses the kernel image. It accepts the target GPA
+   for decompression first in case it is not accepted by the virtual
+   firmware.
+
+6. The Linux guest calls memblock_free_all() to put all memory into the
+   freelists for the buddy allocator. memblock_free_all() further calls
+   down to __free_pages_core() to handle memory in 4M (order 10) units.
+
+  - In eager mode, the Linux guest accepts all memory and appends it to the
+    freelists.
+  - In lazy mode, the Linux guest checks if the entire 4M memory has been
+    accepted by querying the unaccepted bitmap.
+    a) If all memory is accepted, it adds the 4M memory to the freelists.
+    b) If any memory is unaccepted (even if the range contains accepted
+       pages), the Linux guest does not add the 4M memory to the freelists.
+       Instead, it queues the first page in the 4M range onto the list
+       zone->unaccepted_pages and sets the first page with the Unaccepted
+       flag.
+
+7. When there is not enough free memory, cond_accept_memory() in the Linux
+   guest calls try_to_accept_memory_one() to dequeue a page from the list
+   zone->unaccepted_pages, clear its Unaccepted flag, accept the entire 4M
+   memory range represented by the page, and add the 4M memory to the
+   freelists.
+
+
+== Conclusion ==
+- The zone->unaccepted_pages is a mechanism to conditionally make accepted
+  private memory available to the page allocators.
+- The unaccepted bitmap resides in the firmware's reserved memory and
+  persists across guest OSs. It records exactly which pages have not been
+  accepted.
+- Memory ranges represented by zone->unaccepted_pages may contain accepted
+  pages.
+
+
+For kexec in TDs,
+- If the segments' destination addresses are within the range managed by
+  the buddy allocator, the pages must have been in an accepted state.
+  Calling accept_memory() will check the unaccepted bitmap and do nothing.
+- If the segments' destination addresses are not yet managed by the buddy
+  allocator, the pages may or may not have been accepted.
+  Calling accept_memory() will perform the "accept" operation if they are
+  not accepted.
+
+For the kexec's second guest kernel, it obtains the unaccepted bitmap by
+locating the unaccepted_table in the EFI configuration tables. So, pages
+unset in the unaccepted bitmap are not accepted repeatedly.
+
+
+The unaccepted table/bitmap is only useful for TDs. For a Linux host, it
+will detect that the physical firmware does not support the memory
+acceptance protocol, and accept_memory() will simply bail out.
+
+Thanks
+Yan
+
+[1] https://lore.kernel.org/all/20241021034553.18824-1-yan.y.zhao@intel.com
+
+Yan Zhao (1):
+  kexec_core: Accept unaccepted kexec segments' destination addresses
+
+ kernel/kexec_core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+-- 
+2.43.2
+
 
