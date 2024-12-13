@@ -4,63 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FD1DE7717F
-	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 11:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D8E79E7717F
+	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 11:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tTLtkHzy12odtnIO1vKXAuWcEdu57bgB/Jv6GnuDHv8=; b=NtXI/84TnxuTIC+3TUtQxmsSi2
-	GKmkcno3DijGm2edSGig5fL3RM46+8DpWjUQaNT0wDPaNcBbzZ11u9ke40Z5x5jXTBIIqd7xisoAO
-	ziAGo+RLKK0HttBEodEVG7cjYVyBvcGprcglLFiyb1Vr2uaK1GZ8UPyUi4bX3mRcMGZ/umoJB3Z5O
-	js5ZvCxmWRFpqXXBBrX4VjXexL/CskHMS43QqBQy4ftYvsxVE15gzWFhvnfmpXWNBzptTafdg0L0v
-	o9z3PRyAJ5LHm5ZFWmOXM20UDb57QA92+zKoaweUEX9LVN7NT67V9NccNk0nU7VuF41SKQNVqO5r1
-	LIJL7yMw==;
+	bh=Acbf4O5mwC8ef2Hr5VcWYBHCRMx3zMFSJ+cKK6lNDy0=; b=0bB+psxQPcbnarN832m/iaqPMA
+	ES4A9kW/NSWsB3FFvqR7VJVbQzSN2owWizk+toae2uuK4FGoG1dMi2c94EXzB1F6ujEvnTtRFjQkv
+	fdNXPYTIq0clpp43NokyCmLkutaJSmxXjLjbJB747yQj678K6To8MSfWLcDMSkCFILRJ7tP55cwSp
+	xoAIvSom8eV6MWy5aKsprh5crPsWW3j4FIPvQWD0KdJuIo12xFUz2z0VLVHpgdr3ks0IUTmbKjVi5
+	JKn5BUcd6TAsY1RjEkd/2P2J45kwEi/jFZSk55n24FbFQmgwitWvGuK3+Th2+vyvkiL7i+VBvqEv4
+	Xg6E4GIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM3tJ-00000003ZLd-1nVr;
-	Fri, 13 Dec 2024 11:31:29 +0000
-Received: from galois.linutronix.de ([193.142.43.55])
+	id 1tM3ve-00000003aJ1-2E0S;
+	Fri, 13 Dec 2024 11:33:54 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM3tG-00000003ZJb-2V9m
+	id 1tM3vc-00000003aGV-1er3
 	for kexec@lists.infradead.org;
-	Fri, 13 Dec 2024 11:31:27 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1734089485;
+	Fri, 13 Dec 2024 11:33:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734089631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tTLtkHzy12odtnIO1vKXAuWcEdu57bgB/Jv6GnuDHv8=;
-	b=VywlZE7Op2Oh8h+Qlwj9/jXaq+/RyeLicQk7Cq7agGYzio/IP444cZ0fqTF4crgtZeKEiQ
-	WhibYjTmNouqzSDV+dtuyrxRoRBMoX6r9ZlJ/eTidYA3HuKAf2knJvM/QDjKoo+GC06QWg
-	lEDuKIWbHtvcugxjWd2Juscycw6ixuUL3kU/63GRN2KsvzRJE/DuNKEY3ojFsGrdtatOVd
-	//p7WDMdMQSnv817KZcjy8Wyra596mrxLMiR+asbRc2zoA/8cTQnSByAhHSjwNYqxRCsQi
-	L4h/rawJ6TV2WgdFbHWGHzSibCpKSI7H1NuHHPgXGUoDD1Oi5bvvAtqrJFn0QA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1734089485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tTLtkHzy12odtnIO1vKXAuWcEdu57bgB/Jv6GnuDHv8=;
-	b=+x5pgMyGr+foe7ZajdaaP14Qe3MGcUj0dv86Jw9Nzc8gz6PaSG+97PvZOjrqYUiGnAzc02
-	x2Z4VBjRu+Gh8JAw==
-To: Ming Lei <ming.lei@redhat.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Stefan Hajnoczi
- <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>, "x86@kernel.org"
- <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung <dyoung@redhat.com>, kexec
- <kexec@lists.infradead.org>, linux-ext4 <linux-ext4@vger.kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Stefano Garzarella
- <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>, Paolo Bonzini
- <bonzini@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
- <jogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Jens Axboe
- <axboe@kernel.dk>, "Rafael J. Wysocki" <rafael@kernel.org>
+	bh=Acbf4O5mwC8ef2Hr5VcWYBHCRMx3zMFSJ+cKK6lNDy0=;
+	b=esRDtmUBI6muTpadRiO6rsilYT11Oun0qPO1ENmyXnXbQLGywRicflZkxq+qlWAZqQAWmX
+	aDom/Sl4nJO/FzwoXtQ0tVMsdeZrJV83uGZjErX5Jo9S285mN0Ot8Y81NITVdd/hHcl3xW
+	kPn2HkBoBF1fFnF8esfXvYTHjJ9VLYE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-RQSdDPSdNGeAeQYX5H1e4g-1; Fri,
+ 13 Dec 2024 06:33:48 -0500
+X-MC-Unique: RQSdDPSdNGeAeQYX5H1e4g-1
+X-Mimecast-MFC-AGG-ID: RQSdDPSdNGeAeQYX5H1e4g
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C56D019560AE;
+	Fri, 13 Dec 2024 11:33:44 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.91])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2D3B195605A;
+	Fri, 13 Dec 2024 11:33:33 +0000 (UTC)
+Date: Fri, 13 Dec 2024 19:33:28 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Jason Wang <jasowang@redhat.com>, "x86@kernel.org" <x86@kernel.org>,
+	hpa <hpa@zytor.com>, dyoung <dyoung@redhat.com>,
+	kexec <kexec@lists.infradead.org>,
+	linux-ext4 <linux-ext4@vger.kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	eperezma <eperezma@redhat.com>, Paolo Bonzini <bonzini@redhat.com>,
+	Petr Mladek <pmladek@suse.com>, John Ogness <jogness@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, Jens Axboe <axboe@kernel.dk>
 Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
-In-Reply-To: <Z1wV9SsaVe3torbO@fedora>
-References: <20241211124240.GA310916@fedora>
- <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
+Message-ID: <Z1wbiF7FhkO5VQFJ@fedora>
+References: <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
  <87ldwl9g93.ffs@tglx>
  <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
  <87a5d0aibc.ffs@tglx>
@@ -68,14 +77,17 @@ References: <20241211124240.GA310916@fedora>
  <874j38a16p.ffs@tglx>
  <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
  <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
- <871pybamoc.ffs@tglx> <Z1wV9SsaVe3torbO@fedora>
-Date: Fri, 13 Dec 2024 12:31:24 +0100
-Message-ID: <87y10j95v7.ffs@tglx>
+ <871pybamoc.ffs@tglx>
+ <71ffc2acd355ceb2b0554b2410a772fd698aabd3.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <71ffc2acd355ceb2b0554b2410a772fd698aabd3.camel@infradead.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241213_033126_770719_EBBCE578 
-X-CRM114-Status: GOOD (  15.30  )
+X-CRM114-CacheID: sfid-20241213_033352_506649_B966F444 
+X-CRM114-Status: GOOD (  18.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,52 +102,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Dec 13 2024 at 19:09, Ming Lei wrote:
-> On Fri, Dec 13, 2024 at 11:42:59AM +0100, Thomas Gleixner wrote:
->> That's the control thread on CPU0. The hotplug thread on CPU1 is stuck
->> here:
->> 
->>  task:cpuhp/1         state:D stack:0     pid:24    tgid:24    ppid:2      flags:0x00004000
->>  Call Trace:
->>   <TASK>
->>   __schedule+0x51f/0x1a80
->>   schedule+0x3a/0x140
->>   schedule_timeout+0x90/0x110
->>   msleep+0x2b/0x40
->>   blk_mq_hctx_notify_offline+0x160/0x3a0
->>   cpuhp_invoke_callback+0x2a8/0x6c0
->>   cpuhp_thread_fun+0x1ed/0x270
->>   smpboot_thread_fn+0xda/0x1d0
->> 
->> So something with those blk_mq fixes went sideways.
->
-> The cpuhp callback is just waiting for inflight IOs to be completed when
-> the irq is still live.
->
-> It looks same with the following report:
->
-> https://lore.kernel.org/linux-scsi/F991D40F7D096653+20241203211857.0291ab1b@john-PC/
->
-> Still triggered in case of kexec & qemu, which should be one qemu
-> problem.
+On Fri, Dec 13, 2024 at 11:12:41AM +0000, David Woodhouse wrote:
+> On Fri, 2024-12-13 at 11:42 +0100, Thomas Gleixner wrote:
+> > 
+> > That's the control thread on CPU0. The hotplug thread on CPU1 is stuck
+> > here:
+> > 
+> >  task:cpuhp/1         state:D stack:0     pid:24    tgid:24    ppid:2      flags:0x00004000
+> >  Call Trace:
+> >   <TASK>
+> >   __schedule+0x51f/0x1a80
+> >   schedule+0x3a/0x140
+> >   schedule_timeout+0x90/0x110
+> >   msleep+0x2b/0x40
+> >   blk_mq_hctx_notify_offline+0x160/0x3a0
+> >   cpuhp_invoke_callback+0x2a8/0x6c0
+> >   cpuhp_thread_fun+0x1ed/0x270
+> >   smpboot_thread_fn+0xda/0x1d0
+> > 
+> > So something with those blk_mq fixes went sideways.
+> 
+>  $ git bisect bad
+> 7678abee0867e6b7fb89aa40f6e9f575f755fb37 is the first bad commit
+> commit 7678abee0867e6b7fb89aa40f6e9f575f755fb37 (HEAD)
+> Author: Ming Lei <ming.lei@redhat.com>
+> Date:   Tue Nov 12 20:58:21 2024 +0800
+> 
+>     virtio-blk: don't keep queue frozen during system suspend
 
-I'd rather say, that's a kexec problem. On the same instance a loop test
-of suspend to ram with pm_test=core just works fine. That's equivalent
-to the kexec scenario. It goes down to syscore_suspend() and skips the
-actual suspend low level magic. It then resumes with syscore_resume()
-and brings the machine back up.
+The above commit just adds blk_mq_unfreeze_queue() in virtblk_freeze(),
+which may wake up pending request allocation.
 
-That runs for 2 hours now, while the kexec muck dies within 2
-minutes....
+Seems frozen processes still can be woken up after suspend_freeze_processes()
+returns, then new request allocation can't be completed because there
+isn't good CPU for this allocation.
 
-And if you look at the difference of these implementations, you might
-notice that kexec just implemented some rudimentary version of the
-actual suspend logic. Based on let's hope it works that way.
+Is it expected to see frozen process to be wakeup during suspend?
 
-This is just insane and should be rewritten to actually reuse the suspend
-mechanism, which is way better tested than this kexec jump muck.
+If yes, the following patch may be helpful:
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index aa340b097b6e..0cfc7a927e7e 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -557,6 +557,9 @@ static struct request *__blk_mq_alloc_requests(struct blk_mq_alloc_data *data)
+ 	if (tag == BLK_MQ_NO_TAG) {
+ 		if (data->flags & BLK_MQ_REQ_NOWAIT)
+ 			return NULL;
++
++		if (system_state != SYSTEM_RUNNING)
++			return NULL;
+ 		/*
+ 		 * Give up the CPU and sleep for a random short time to
+ 		 * ensure that thread using a realtime scheduling class
+
 
 Thanks,
+Ming
 
-        tglx
 
