@@ -4,75 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0F27E7717F
-	for <kexec@archiver.kernel.org>; Thu, 12 Dec 2024 23:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E545CE7717F
+	for <kexec@archiver.kernel.org>; Fri, 13 Dec 2024 00:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GUu5+Nbt/m586fJB9x7cqr4q4Omv/+HS7o+nOWgcHLE=; b=AwrjgHgbIA/IJXoC2IMlooTP5u
-	9YpbZGHVSro9iXwpvkUBeVL9tiqSAoPxBIHfjqxWmrp/KusjlcEuDec5qJExofwsRnbPybGDSIHxo
-	sTeS+O605CzbYfML9CdfitxE0YonxgGqYWKMi/ZBpjt6hZblCwgFvnuepyirstbo8h49WykY/hzfs
-	5D/D6mMExOFfVLACq4DdmB1q2bOfmNdHJto/9O3b13Ub5EyL++38nbol5Njtri3luwAZqzdHLX3YV
-	rLpICrExUM3NToXQGkPE3ceXEcLrS45YJtW/avvweGgbilIMOY7c+4cq4QGyZUnA1XieIHdCiyr3Y
-	18/KjNCw==;
+	bh=Rp3xPwocfjm9qhxrmFTFMUFGxqVLS1Y07azwxFJGGUM=; b=Y2W67JUOXfDP7gSZzEnXq3Tp7K
+	dMTKBxcYfYvR1jiDPFkrMX6arvY5CnrIEVFvLMZ6Ioqa6qsjLlW3pwZQXXQ8Gi3aITrt1NHfJm20w
+	NqHHeOOqUpUGcCow0f4LfGczx3v/YLHYJ/ZEjPA+/nM3pZ13f6LJjg/bUG7oHx0WaiwI/ipPcFU9Z
+	VAsgQU9NEPHKWqeQ8ESbJc3+V6cF+0AmX0zxBfviHe1sHJUHdxQfq1lY5EVxR2dQSy+Al6rTuOLlC
+	Kaz94dAZEYEAoCUFJgzfORnbvr84fl8iPwH4aj1fN4F6gaJhtOn8jnal/xbIMfQk9eOLq1opWPTDt
+	okMTYn3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLsI5-000000029ss-11Yx;
-	Thu, 12 Dec 2024 23:08:17 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tLtKf-00000002GTa-3KyW;
+	Fri, 13 Dec 2024 00:15:01 +0000
+Received: from galois.linutronix.de ([193.142.43.55])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLsI3-000000029sg-25ou
-	for kexec@bombadil.infradead.org;
-	Thu, 12 Dec 2024 23:08:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GUu5+Nbt/m586fJB9x7cqr4q4Omv/+HS7o+nOWgcHLE=; b=Te+Qxv76XOFh8GLB34TBI0e4Yw
-	5vOCFe49xdvMySUJI1QbAhDEddCZDQ4MqDhniw+aQ4ptvwZBUiSjEozigts3woSJuUUJsd3Edbt2L
-	Dk0W2RnWroxYGoS8FTu5nIs3h8JwbY7NiD/zZ4fORiQQ23Nv8gvUUyLMP9jU/m6svkKnygYD2/aWp
-	pzO4Us1BDs+VGdBLUzKP2VLQYrYNXDAZs6me/fXf10g+Wy7j048J4nA983iNFsi+B7LSEj7ixT7sF
-	9rppQxJUWlehAJJHz40G1w5xGqYV8eflDiAhO0d/uDu8hpampBJhxoK/pAtZM7+3HXJafyajWN3Sq
-	x2hhSrDg==;
-Received: from [54.240.197.238] (helo=freeip.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLsHy-00000008igA-47Az;
-	Thu, 12 Dec 2024 23:08:11 +0000
-Message-ID: <ed7dd45f89e8f286478791137447a21d53735dbd.camel@infradead.org>
-Subject: [PATCH] x86/kexec: Disable global pages before writing to control
- page
-From: David Woodhouse <dwmw2@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>, Nathan Chancellor
- <nathan@kernel.org>
-Cc: "Ning, Hongyu" <hongyu.ning@linux.intel.com>, kexec@lists.infradead.org,
-  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,  "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, Nikolay
- Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman
- <horms@kernel.org>, Dave Young <dyoung@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, jpoimboe@kernel.org, bsz@amazon.de
-Date: Thu, 12 Dec 2024 23:08:09 +0000
-In-Reply-To: <a14ff894-9268-4a62-87bd-3b2553e0bc01@intel.com>
-References: <20241205153343.3275139-1-dwmw2@infradead.org>
-	 <20241205153343.3275139-14-dwmw2@infradead.org>
-	 <20241212014418.GA532802@ax162>
-	 <10a4058d9a667ca7aef7e1862375c2da84ef53a3.camel@infradead.org>
-	 <20241212150408.GA542727@ax162>
-	 <38aaf87162d10c79b3d3ecae38df99e89ad16fce.camel@infradead.org>
-	 <20241212174243.GA2149156@ax162>
-	 <9c68688625f409104b16164da30aa6d3eb494e5d.camel@infradead.org>
-	 <4517cb69-3c5c-4e75-8a14-dab136b29c19@intel.com>
-	 <212CBB8E-CC94-4A56-8399-1419D8F2FA5C@infradead.org>
-	 <a14ff894-9268-4a62-87bd-3b2553e0bc01@intel.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-XjCHlqians+uM/FioCbB"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tLtKc-00000002GSW-3Fy8
+	for kexec@lists.infradead.org;
+	Fri, 13 Dec 2024 00:15:00 +0000
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1734048896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rp3xPwocfjm9qhxrmFTFMUFGxqVLS1Y07azwxFJGGUM=;
+	b=yysfRy72t9wmeVCIufe4FiZ2N/H9tlGvU8ULVf52glj6jBzhuGIJeIhBPs3HR+H2G/MaOy
+	B+PpJp80Ac8CJPnBgZGbWCP+gVcpQQNZ6kbTZWyz9yYC6yqtgy0kjJGSMjK4H9KWVFf5nC
+	BkqNTVGzT3Qr5TjpLsd+QpchACHYiyYcUT+cF4w+L2ttcK368VNj0aDEM7IChf3LyrkjXB
+	5o61J44AHy/n5rBXBMys5zaP4JwEyAZVjdvOxxsfjpq6zkDD7/MMbpjsD0lT3dU/5wQpR6
+	mVaIBzL9yZ2g1fWVI6XbQtacXA54TXgr0BEh0NFF5lh3Qse93XGi2i+tWndcjw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1734048896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rp3xPwocfjm9qhxrmFTFMUFGxqVLS1Y07azwxFJGGUM=;
+	b=bU1relTOVcEd3jjsdmiYy5byo54/SifkfCHU9sulH5/j/dPuZRedInu6pvV84tlJcCgLaX
+	EEwRwySyGoHTjMDQ==
+To: David Woodhouse <dwmw2@infradead.org>, Stefan Hajnoczi
+ <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, dyoung
+ <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, linux-ext4
+ <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
+ Paolo Bonzini <bonzini@redhat.com>, ming.lei@redhat.com, Petr Mladek
+ <pmladek@suse.com>, John Ogness <jogness@linutronix.de>, Peter Zijlstra
+ <peterz@infradead.org>
+Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
+In-Reply-To: <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
+References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org>
+ <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com>
+ <20241211124240.GA310916@fedora>
+ <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org>
+ <87ldwl9g93.ffs@tglx>
+ <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
+ <87a5d0aibc.ffs@tglx>
+ <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
+Date: Fri, 13 Dec 2024 01:14:54 +0100
+Message-ID: <874j38a16p.ffs@tglx>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241212_161459_106429_405C87E2 
+X-CRM114-Status: GOOD (  22.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,196 +87,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Thu, Dec 12 2024 at 19:19, David Woodhouse wrote:
+> On Thu, 2024-12-12 at 19:04 +0100, Thomas Gleixner wrote:
+> Build current master (231825b2e1ff here). The config I'm using is at
+> http://david.woodhou.se/config-x86-kjump-irqs although I don't think
+> there's anything special other than CONFIG_KEXEC_JUMP and enough
+> lockdep to trigger the complaints.
+>
+> I've been running in qemu with the test case shoved into an initrd for
+> faster testing, but it works just as well done manually. If it matters,
+> the QEMU command line on my Haswell box is
+>
+>  qemu-system-x86_64 -accel kvm,kernel-irqchip=split -display none \
+>    -serial mon:stdio -kernel arch/x86/boot/bzImage -smp 2 -m 2g \
+>    -append "console=ttyS0 root=/dev/vda1 no_console_suspend earlyprintk=serial" \
+>    -drive file=/var/lib/libvirt/images/fedora.qcow2,if=virtio \
+>    -cpu host --no-reboot -nic user,model=virtio 
+>
+> Probably the only important part of that is the no_console_suspend.
 
---=-XjCHlqians+uM/FioCbB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I misread that and somehow thought it does _not_ happen with
+no_console_suspend. Duh!
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+So that made it reproduce and after adding some more lockdep hacks here
+is the culprit:
 
-The kernel switches to a new set of page tables during kexec. The global
-mappings (_PAGE_GLOBAL=3D=3D1) can remain in the TLB after this switch. Thi=
-s
-is generally not a problem because the new page tables use a different
-portion of the virtual address space than the normal kernel mappings.
+[   15.177945] DEBUG_LOCKS_WARN_ON(suspend_syscore_active)
+[   15.178980] CPU: 0 UID: 0 PID: 410 Comm: k.1 Not tainted 6.13.0-rc2+ #118
+[   15.185613] Call Trace:
+[   15.185760]  <TASK>
+[   15.187678]  __cond_resched+0x21/0x60
+[   15.187923]  down_timeout+0x18/0x60
+[   15.188159]  acpi_os_wait_semaphore+0x4c/0x80
+[   15.188424]  acpi_ut_acquire_mutex+0x3d/0x100
+[   15.188665]  acpi_ns_get_node+0x27/0x60
+[   15.188879]  acpi_ns_evaluate+0x1cb/0x2d0
+[   15.189106]  acpi_rs_set_srs_method_data+0x156/0x190
+[   15.189382]  acpi_pci_link_set+0x11c/0x290
+[   15.189618]  irqrouter_resume+0x54/0x60
+[   15.189826]  syscore_resume+0x6a/0x200
+[   15.190033]  kernel_kexec+0x145/0x1c0
+[   15.190239]  __do_sys_reboot+0xeb/0x240
+[   15.190561]  do_syscall_64+0x95/0x180
 
-The critical exception to that generalisation (and the only mapping
-which isn't an identity mapping) is the kexec control page itself =E2=80=94
-which was ROX in the original kernel mapping, but should be RWX in the
-new page tables. If there is a global TLB entry for that in its prior
-read-only state, it definitely needs to be flushed before attempting to
-write through that virtual mapping.
+This is a long standing problem, which probably got more visible with
+the recent printk changes. Something does a wakeup and the scheduler
+sets the NEED_RESCHED flag.
 
-It would be possible to just avoid writing to the virtual address of the
-page and defer all writes until they can be done through the identity
-mapping. But there's no good reason to keep the old TLB entries around,
-as they can cause nothing but trouble.
+cond_resched() sees it set and invokes schedule() from a completely bogus
+context.
 
-Clear the PGE bit in %cr4 early, before storing data in the control page.
+Nothing knowns about the current system state and therefore happily
+assumes that everything is cool and shiny.
 
-Fixes: 5a82223e0743 ("x86/kexec: Mark relocate_kernel page as ROX instead o=
-f RWX")
-Co-authored-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219592
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+I also found that kexec jump fails to set system_state = SYSTEM_SUSPEND
+before syscore_suspend() and back to SYSTEM_RUNNING after
+syscore_resume().  See suspend/hibernate...
+
+But setting this does not solve the problem because NEED_RESCHED still
+gets set and cond_resched() is oblivious of the state.
+
+Quite some of the code paths in syscore_suspend()/resume() can result in
+triggering a wakeup with the exactly same consequences. They might not
+have done so yet, but as they share a lot of code with normal operation
+it's just a question of time.
+
+And of course then you need a code path which is invoked after that,
+which actually invokes cond_resched().
+
+Adding more debug, there are indeed a couple of ways to set NEED_RESCHED
+between invoking syscore_suspend() and returning from syscore_resume().
+Some stuff schedules work [un]conditonally.
+
+So the real question is how to deal with the general problem, which
+obviously affects suspend as well.
+
+The only thing I came up with so far is the hack below. It cures the
+problem for PREEMPT_NONE and PREEMPT_VOLUNTARY. PREEMPT_FULL is not
+affected because preemptible() checks whether the preemption count is
+zero and interrupts are enabled and cond_resched() not active.
+
+We could check for interrupts enabled in cond_resched() too, but that's
+not pretty either.
+
+With that applied the problem goes away, but after a lot of repetitions
+of the reproducer in a tight loop the whole machinery stops dead:
+
+[   29.913179] Disabling non-boot CPUs ...
+[   29.930328] smpboot: CPU 1 is now offline
+[   29.930593] crash hp: kexec_trylock() failed, kdump image may be inaccurate
+B[   29.940588] Enabling non-boot CPUs ...
+[   29.940856] crash hp: kexec_trylock() failed, kdump image may be inaccurate
+[   29.941242] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[   29.942654] CPU1 is up
+[   29.945856] virtio_blk virtio1: 2/0/0 default/read/poll queues
+[   29.948556] OOM killer enabled.
+[   29.948750] Restarting tasks ... done.
+Success
+[   29.960044] Freezing user space processes
+[   29.961447] Freezing user space processes completed (elapsed 0.001 seconds)
+[   29.961861] OOM killer disabled.
+[   30.102485] ata2: found unknown device (class 0)
+[   30.107387] Disabling non-boot CPUs ...
+
+That happens without 'no_console_suspend' on the command line as
+well, but that's for tomorrow ...
+
+Thanks,
+
+        tglx
 ---
-This supersedes the previous 'Only write through identity mapping of
-control page' patch as Dave's approach is much saner now he's actually
-figured out what's going on.
-
-
- arch/x86/kernel/relocate_kernel_64.S | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocat=
-e_kernel_64.S
-index 553d67845b84..cbadf0142fcb 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -90,14 +90,20 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	kexec_pa_table_page(%rip), %r9
- 	movq	%r9, %cr3
-=20
-+	/* Leave CR4 in %r13 to enable the right paging mode later. */
-+	movq	%cr4, %r13
-+
-+	/* Disable global pages immediately to ensure this mapping is RWX */
-+	movq	%r13, %r12
-+	andq	$~(X86_CR4_PGE), %r12
-+	movq	%r12, %cr4
-+
- 	/* Save %rsp and CRs. */
-+	movq	%r13, saved_cr4(%rip)
- 	movq    %rsp, saved_rsp(%rip)
- 	movq	%rax, saved_cr3(%rip)
- 	movq	%cr0, %rax
- 	movq	%rax, saved_cr0(%rip)
--	/* Leave CR4 in %r13 to enable the right paging mode later. */
--	movq	%cr4, %r13
--	movq	%r13, saved_cr4(%rip)
-=20
- 	/* save indirection list for jumping back */
- 	movq	%rdi, pa_backup_pages_map(%rip)
---=20
-2.47.0
-
-
-
---=-XjCHlqians+uM/FioCbB
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjEyMjMwODA5WjAvBgkqhkiG9w0BCQQxIgQginEwkcM9
-DZ6pTQKwm/gMIddwh/l1T93QLZt5zGJ8DkAwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCadcckUti+MO6pOi7VVAaZHGHShfGrImXG
-D2NSvyrKGKDnNeGyCWJG0mt7egJHvFc8FrKLgmkchI63vrbL0QApst8GjyCMy+86uvudflTvPhKI
-LLYAezHgVllbpPaR4t84cCoFemyenbiwJbGqY7lxFDAZaM1sE+zGHZfSDLIxLEkdJV97t7a+ugHY
-IK84yeqTdxQ/LpXCnoO/JzRQOVNQVyCJaxzyKY4QaVyrRnlR4e9L8TFAMErBA3u/YNtoQLq7611/
-E06RbSlD0dRndtIEIYNLjYaGGYPWZllxF06nLsnIPaEZJ1fH5XKpjuCW1j4OlBVybEKtctBumLWJ
-dOk60/2FDTStpo9GVfxIlLeNGQq7mIx7XCQKnE2ITICFs5pwwmegReV3alSm4V7q8JImPszaGwp8
-kYcYVeGisuP0dLlPl+bhkrBP7Q9B0XIuWKx9AapUCDz0K+kksZRftz8bkEvlKXKLFPypeux2l6Bq
-xhwW9h1rc21KOTnD9lKX0QeTMj5DKQNB6iUsRuPlgp+/5KgkvCmdv/ohiRG35cCR3fzTc04QPXN2
-1+nxii5OrNJg/yx42p83FC3H6+qwcO5EQJfeCFQZZvu4F2jPlxWvDkkGohTJiqJ30ffPpD4q0Drr
-uzAuRreZRNTnynAUNSD+fRvIoXOoEgmziTpXnZ5TagAAAAAAAA==
-
-
---=-XjCHlqians+uM/FioCbB--
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1025,6 +1025,7 @@ int kernel_kexec(void)
+ 		if (error)
+ 			goto Enable_cpus;
+ 		local_irq_disable();
++		system_state = SYSTEM_SUSPEND;
+ 		error = syscore_suspend();
+ 		if (error)
+ 			goto Enable_irqs;
+@@ -1054,6 +1055,7 @@ int kernel_kexec(void)
+ 	if (kexec_image->preserve_context) {
+ 		syscore_resume();
+  Enable_irqs:
++		system_state = SYSTEM_RUNNING;
+ 		local_irq_enable();
+  Enable_cpus:
+ 		suspend_enable_secondary_cpus();
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7276,7 +7276,7 @@ void rt_mutex_setprio(struct task_struct
+ #if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
+ int __sched __cond_resched(void)
+ {
+-	if (should_resched(0)) {
++	if (should_resched(0) && system_state != SYSTEM_SUSPEND) {
+ 		preempt_schedule_common();
+ 		return 1;
+ 	}
 
