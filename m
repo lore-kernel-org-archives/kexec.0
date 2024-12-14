@@ -4,78 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A5F9E7716A
-	for <kexec@archiver.kernel.org>; Sat, 14 Dec 2024 09:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 555F0E7716A
+	for <kexec@archiver.kernel.org>; Sat, 14 Dec 2024 23:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HROOz1jnArq5bSt6mkcKD2c8jVNtju58yB7qeOd+yyk=; b=gmMExZyT9qyVNHTaMaOyjq52b1
-	Z9ULsU4lwQzDRFqNdqW4j1x0vImELuHHx6PWqYWYNPN64MeK3r9AAniJ1THNkqWdQL8VJzwVy9zke
-	a8zFAFLq+EFBeXyy5uxBLni16xE+P8KOUZRHmTxQZ3x4mSn6Lr0GHlkNTlxp+9PVe3e3111MoNkTG
-	rriV1O4vA8y9eDOfbxKC+YT6/SvvmL8v2nfUv4F9qRC3erR6la5olzRlaMdn+TKI035IUivDE7Nxi
-	ZcYksodq5pgCtBjr7N/Y5NaQnIzYn93qGo3jz8zxknFMOoY67zLTRJyvNkEwXV3jTBST6yli5CN97
-	Tyo9nEfQ==;
+	bh=P9GZOdHJyMnLtn/5US1w19AD05bI1lPKCcSCs2o7NOI=; b=Uz5iYE7jwSoqWmCPGHZl3IJ7FJ
+	QhrdB2TZXMPDWIXEAbh1Zo3x77EPsMytPidZ/TL1L6FH6vu/Z6GC5LSpECvFrgnpcab2Nn39Z5hyz
+	0LOx8VJ5QLCtQGIFpIwYRphkTgdf+YqY3XNRwIXuyZAz9VRWfftYbhpH2iOw8OvfE52ruNPUdgeNV
+	A/MSiPY5K09tR6fp/Q/HkRCnk/cn5ViF64EbBprs6q6G6r5jLw0cfcDi3YgqmOe0kmguxALBhRUK0
+	W4BZ4qNbMxlTEMwaCPShvNY42zNGkrvQ1Fd/IO/VcTTMAASEelDRGlMNjylLOn/JBqHDAD5Xl1ndi
+	yr24derw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tMOuK-000000068l6-1xGx;
-	Sat, 14 Dec 2024 09:57:56 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tMbFO-000000075lH-31Ye;
+	Sat, 14 Dec 2024 23:08:30 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tMOuF-000000068ks-2V2M
-	for kexec@bombadil.infradead.org;
-	Sat, 14 Dec 2024 09:57:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HROOz1jnArq5bSt6mkcKD2c8jVNtju58yB7qeOd+yyk=; b=iIVgzBdlGc8rpyoLrpIA+5r1dg
-	Kb7wkinbiXGVuf7BDY5LiG27qPwhcyYwzoHWQ6GUYoMFrRjxTP8HEBOnelSQDxb5uxLSXIb1H6Ox3
-	IgRFFSR/BFWcXHcOrGHQJ8sKyYwQcnwbMNn23qAetdsVrr2iquO4c4bjFOKp1o4QBgYJ5at1tuMoz
-	7vi9vDLMCUGLqdFpKmFGti5osjMQE1IkQhRFwyHMF4yZwH4gjDbnaXGYKr4EjyI1uqr2FASWYbmm/
-	R7mkXYazkIBBxfMyCHXXSEp5qXlaFXnpQUkPTniZI6g1pI4nfePSMz9LyeNy+naCfmAQFUa+K+z8e
-	ijdMWnuA==;
-Received: from [172.31.31.142] (helo=u09cd745991455d.lumleys.internal)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tMOuC-00000001jIB-0Ekt;
-	Sat, 14 Dec 2024 09:57:48 +0000
-Message-ID: <febd10dae881f29fa8236f3e2d6ad77a8f094d72.camel@infradead.org>
-Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
-From: David Woodhouse <dwmw2@infradead.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
-	 <tglx@linutronix.de>
-Cc: Ming Lei <ming.lei@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
- Jason Wang <jasowang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, hpa
- <hpa@zytor.com>, dyoung <dyoung@redhat.com>, kexec
- <kexec@lists.infradead.org>, linux-ext4 <linux-ext4@vger.kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Stefano Garzarella
- <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>, Paolo Bonzini
- <bonzini@redhat.com>,  Petr Mladek <pmladek@suse.com>, John Ogness
- <jogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,  Jens Axboe
- <axboe@kernel.dk>
-Date: Sat, 14 Dec 2024 09:57:47 +0000
-In-Reply-To: <73E84E2B-001B-48D6-9BB4-B104D43F8FBF@infradead.org>
-References: <87ldwl9g93.ffs@tglx>
-	 <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
-	 <87a5d0aibc.ffs@tglx>
-	 <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
-	 <874j38a16p.ffs@tglx>
-	 <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
-	 <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
-	 <871pybamoc.ffs@tglx> <Z1wV9SsaVe3torbO@fedora> <87y10j95v7.ffs@tglx>
-	 <Z1wfF6NJRZh1jROz@fedora> <87pllv90ow.ffs@tglx>
-	 <1a7c126f3ab8ae75e755d01a6bf9bc06730dd239.camel@infradead.org>
-	 <87msgz8qes.ffs@tglx>
-	 <CAJZ5v0i3zg1ee9p7vc0xEN4cEyCoO-d9OOyV_m65=f251tnxXQ@mail.gmail.com>
-	 <CAJZ5v0hBUgOB4QhhwjusRcP+jksWFL-upR5En58g9RD5+n70JA@mail.gmail.com>
-	 <73E84E2B-001B-48D6-9BB4-B104D43F8FBF@infradead.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-2uiQt9Gj1bLQhTpWG53w"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tMbFK-000000075jk-2X6b
+	for kexec@lists.infradead.org;
+	Sat, 14 Dec 2024 23:08:28 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8FFC55C5795;
+	Sat, 14 Dec 2024 23:07:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12482C4CED1;
+	Sat, 14 Dec 2024 23:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734217704;
+	bh=DCMAcL7xDPXNdRkO1BP6RdRGqW8I674U+TFd6LbBtHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WdJbRokLLiebkYAty5HRFTuNoEBFv+zchY6xmNb93rcz04AttZm3DiARt36gLktBv
+	 xYcjHs7nDk4qTXLZ80HCjQwaSrzPikxnqp9ZlX6ZWqnKqiW2sJHIX9v0qyvQWFuuw4
+	 +0cNkOaCY+dSwI086aqpJ86yyOcQIIggsnCZCO2TZgV5q6i+BVcOeJOfoxGrdn+OIZ
+	 86R+xZ7IDKYaJnsUzawbFI8AmNGf7mIqyKL2dPtXZivzciEAHSXb35xVIZHF1hZyXZ
+	 bTAp1GSIvEai88GAFhqVsWeNjeTaGalWcF7VrFVQ+IV/zG7JarRVQOJJT5kjn2zTtB
+	 TzPXM97dt/JJQ==
+Date: Sat, 14 Dec 2024 16:08:18 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: Re: [PATCH v5 07/20] x86/kexec: Invoke copy of relocate_kernel()
+ instead of the original
+Message-ID: <20241214230818.GA677337@ax162>
+References: <20241205153343.3275139-1-dwmw2@infradead.org>
+ <20241205153343.3275139-8-dwmw2@infradead.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241205153343.3275139-8-dwmw2@infradead.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241214_150826_777299_8A77129C 
+X-CRM114-Status: GOOD (  30.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,197 +83,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi David,
 
---=-2uiQt9Gj1bLQhTpWG53w
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 05, 2024 at 03:05:13PM +0000, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> This currently calls set_memory_x() from machine_kexec_prepare() just
+> like the 32-bit version does. That's actually a bit earlier than I'd
+> like, as it leaves the page RWX all the time the image is even *loaded*.
+> 
+> Subsequent commits will eliminate all the writes to the page between the
+> point it's marked executable in machine_kexec_prepare() the time that
+> relocate_kernel() is running and has switched to the identmap %cr3, so
+> that it can be ROX. But that can't happen until it's moved to the .data
+> section of the kernel, and *that* can't happen until we start executing
+> the copy instead of executing it in place in the kernel .text. So break
+> the circular dependency in those commits by letting it be RWX for now.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c   | 30 ++++++++++++++++++++++------
+>  arch/x86/kernel/relocate_kernel_64.S |  5 ++++-
+>  2 files changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 3a4cbac1a0c6..9567347f7a9b 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+...
+>  void machine_kexec(struct kimage *image)
+>  {
+> +	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+> +					     unsigned long page_list,
+> +					     unsigned long start_address,
+> +					     unsigned int preserve_context,
+> +					     unsigned int host_mem_enc_active);
+>  	unsigned long page_list[PAGES_NR];
+>  	unsigned int host_mem_enc_active;
+>  	int save_ftrace_enabled;
+> @@ -371,6 +387,8 @@ void machine_kexec(struct kimage *image)
+>  		page_list[PA_SWAP_PAGE] = (page_to_pfn(image->swap_page)
+>  						<< PAGE_SHIFT);
+>  
+> +	relocate_kernel_ptr = control_page;
+> +
 
-On Fri, 2024-12-13 at 20:16 +0000, David Woodhouse wrote:
->=20
-> > As discussed with Dave over IRC, the current implementation isn't
-> > actually that bad.=C2=A0 It might use PMSG_THAW instead of PMSG_RESTORE=
- in
-> > kernel_kexec(), but other than this it reflects the code flow around
-> > the jump from the restore kernel to the image one during resume from
-> > hibernation.
-> >=20
-> > This means that hibernation and kexec jump could be unified somewhat.
->=20
-> Fair enough. I'm happy to do whatever cleanups or consolidation make
-> sense, if we have a consensus.
->=20
-> There remains the question of why the blk-mq thing explodes on the
-> way down for both kjump and, apparently, even the plain kexec case.
+Because of this change...
 
-In case it's of any use, here's a test case I put together recently for
-kexec stress testing.
+>  	/*
+>  	 * The segment registers are funny things, they have both a
+>  	 * visible and an invisible part.  Whenever the visible part is
+> @@ -390,11 +408,11 @@ void machine_kexec(struct kimage *image)
+>  	native_gdt_invalidate();
+>  
+>  	/* now call it */
+> -	image->start = relocate_kernel((unsigned long)image->head,
+> -				       (unsigned long)page_list,
+> -				       image->start,
+> -				       image->preserve_context,
+> -				       host_mem_enc_active);
+> +	image->start = relocate_kernel_ptr((unsigned long)image->head,
+> +					   (unsigned long)page_list,
+> +					   image->start,
+> +					   image->preserve_context,
+> +					   host_mem_enc_active);
 
- http://david.woodhou.se/kexec.initramfs
+kexec-ing on a CONFIG_CFI_CLANG kernel crashes and burns:
 
-It's just an initrd I boot in qemu with '-initrd kexec.initramfs' and
-it builds a copy of itself, then kexecs back into the same kernel with
-the same initrd. You'll need to drop your own bzImage into it.
+RAX=0000000000000018 RBX=ff408cf982596000 RCX=0000000000000000 RDX=000000047fffb280
+RSI=ff6c99a785943d20 RDI=000000011e145002 RBP=ff6c99a785943d70 RSP=ff6c99a785943d10
+R8 =0000000000000000 R9 =0000000000000000 R10=00000000ab150dc6 R11=ff408cf99e139000
+R12=0000000028121969 R13=00000000fee1dead R14=0000000000000000 R15=0000000000000001
+RIP=ffffffff84c9c510 RFL=00010086 [--S--P-] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ES =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
+SS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+DS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+FS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+GS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+LDT=0000 0000000000000000 ffffffff 00c00000
+TR =0040 fffffe441f360000 00004087 00008b00 DPL=0 TSS64-busy
+GDT=     0000000000000000 00000000
+IDT=     0000000000000000 00000000
+CR0=80050033 CR2=00007ffde71dbfc0 CR3=00000001140b0002 CR4=00771ef0
+DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
+DR6=00000000fffe0ff0 DR7=0000000000000400
+EFER=0000000000000d01
+Code=83 e1 01 48 8d 74 24 10 41 ba c6 0d 15 ab 45 03 53 f1 74 02 <0f> 0b 41 ff d3 0f 1f 00 48 89 43 18 f6 83 78 02 00 00 02 74 05 e8 16 06 da 00 44 89 3d 17
 
-It was designed to run without a block device, but to trigger the
-blk-mq thing or the one at
-https://lore.kernel.org/linux-scsi/F991D40F7D096653+20241203211857.0291ab1b=
-@john-PC/
-we'd probably need to actually mount something and maybe do some disk
-I/O.
+     a0c: 83 e1 01                      andl    $0x1, %ecx
+     a0f: 48 8d 74 24 10                leaq    0x10(%rsp), %rsi
+;   image->start = relocate_kernel_ptr((unsigned long)image->head,
+     a14: 41 ba 67 a6 7c e6             movl    $0xe67ca667, %r10d      # imm = 0xE67CA667
+     a1a: 45 03 53 f1                   addl    -0xf(%r11), %r10d
+     a1e: 74 02                         je  0xa22 <machine_kexec+0x1c2>
+     a20: 0f 0b                         ud2
+     a22: 2e e8 00 00 00 00             callq   0xa28 <machine_kexec+0x1c8>
+     a28: 48 89 43 18                   movq    %rax, 0x18(%rbx)
 
-(Which means the fact that the initrd can rebuild itself with cpio is
-no longer quite so useful, as it could have just loaded the initrd for
-the next kernel from the file system. But I already did that part, so
-whatever.)
+I guess this seems somewhat unavoidable because control_page is just a
+'void *', perhaps machine_kexec() should just be marked as __nocfi? This
+diff resolves that issue for me.
 
+Cheers,
+Nathan
 
- $ cat init
-#!/bin/sh
-
-find . > files.txt
-mount -tproc none /proc
-
-cat /proc/sys/kernel/watchdog_thresh
-echo 20 >  /proc/sys/kernel/watchdog_thresh
-
-mount -tramfs none /tmp
-NEXTCOUNT=3D$(($LOOPCOUNT+1))
-CMDLINE=3D$(cat /proc/cmdline)
-NEWCMDLINE=3D"${CMDLINE/LOOPCOUNT=3D$LOOPCOUNT/} LOOPCOUNT=3D$NEXTCOUNT"
-
-echo KEXEC LOOP $LOOPCOUNT
-echo $NEWCMDLINE
-
-cpio --quiet -H newc -o < files.txt | gzip -n9 > /tmp/initramfs.gz
-kexec -f /bzImage --initrd /tmp/initramfs.gz --append "$NEWCMDLINE"
-
-
- $ cp ~/git/linux/arch/x86/boot/bzImage .
- $ find . | cpio --quiet -H newc -o  | gzip -n9 > ../kexec.initramfs
- $ ls -d `find .`
-.              ./bin/mount              ./lib64/ld-linux-x86-64.so.2
-./bin          ./bin/sh                 ./lib64/libc.so.6
-./bin/busybox  ./bin/sleep              ./lib64/liblzma.so.5
-./bin/cat      ./dev                    ./lib64/liblzma.so.5.4.4
-./bin/cpio     ./dev/console            ./lib64/libz.so.1
-./bin/echo     ./dev/null               ./lib64/libz.so.1.2.13
-./bin/find     ./dev/ttyS5              ./loadret
-./bin/gzip     ./init                   ./loadret.c
-./bin/kexec    ./init.preserve-context  ./proc
-./bin/mknod    ./lib64                  ./tmp
-
-
---=-2uiQt9Gj1bLQhTpWG53w
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjE0MDk1NzQ3WjAvBgkqhkiG9w0BCQQxIgQgf2x9Y5T7
-1vF65OaWjm81GzfVjPZwkdJEoHTlRWlEAUwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCkZPFx6BO7rcmZ6cYchu7ZUFsj2+MFgz2Z
-N85F5u0D5vSv5GuolokAqOGVOH8lh5/hyn9Ie1JvYCIApmyvLIDl0p5Ux1YNR/mPxqdJPufoo3Ii
-aYkvzcTdEcfQWl3+qpxp8Jzpxjh7MxeGIU3DFPvxxzNifUlhqqgHgmCX6aOhDPzQ4zyFRLoO0YDA
-roFZUPO60Y82nqDB9iiCJIdPdvBjXhfVjDtcN/Eo59Q3cxI4R31/AaIPOzphOkJLhykWHDScnF1P
-CdpBCnlR9zHKRzOpd4HBcTAXrsYu8pux8CkaaoE59o4Y3XO+7U3B36E0+qUslB07cQnez8xlzFhF
-hXjLQqj3UIiyDe3hGpyD8o438FddDLwI3Hm58rGO3tuy3Mt0pGLcK6WOCVWxcC2w57OHgk5gq9Of
-CfOcculK/8AVeup36v6A6kRsTZIMWwlUuQSxaVYXo4mMZFDjG5Iy/IPzrfNvmYG7Hm69ErB1TDHO
-Pjjjwvs1qcR16+QyCAqg0MZ2zxnFapPq72bjIS5RLkYrtuWHrLtrLI3ntyRKyA7dlJVzQsuIzdtT
-x7xuk4oqAbjYrst0Z8skrie7VA740P1hGHSxC3VxleuP+/EUVHIH7ftRFdKk4C4BF3AXQ/c/ixJi
-wCuCpDHOxfHiEI4H9I+xDoIMVouwNqEqth5MydtWSQAAAAAAAA==
-
-
---=-2uiQt9Gj1bLQhTpWG53w--
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9567347f7a9b..e77110c4bb91 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -334,7 +334,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void machine_kexec(struct kimage *image)
++void __nocfi machine_kexec(struct kimage *image)
+ {
+ 	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+ 					     unsigned long page_list,
 
