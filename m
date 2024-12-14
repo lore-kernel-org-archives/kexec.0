@@ -4,94 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6CC7E7717F
-	for <kexec@archiver.kernel.org>; Sat, 14 Dec 2024 02:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A5F9E7716A
+	for <kexec@archiver.kernel.org>; Sat, 14 Dec 2024 09:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yTLX58/fR9Jhi/uY5ah/JDfKClGzaUuJTL0r4DQjPxQ=; b=L/zVEpfQTJ5v72xBJLj6IbDo5I
-	AihaGF2GjhCJIrXwNXMNj9wX77Q8bSNV2eOeu8UbOTh9K2EDPYamhR7GOL8x+8Ro3BE85Mvpm14tN
-	vlzBpd+wdCT9NTFhRsWiaplIW9IbeljlD/IYZSX0Yj0FGn6bFKCIeJVL9q3EAAPswIsWUCCnfLHfe
-	mpK5VrChC4NO0tfuvkh5F8viYnrk3RCRuxQDVn0tqZ/l1PgiiX7yt/sFcUiSBttxwPMoh4629cdJo
-	/uvBYtfoCOwx+No90XNwt7pJKaJwN3k3AqOK7Ihl7xu9AvZ/j9vqZC2A9V3PiKhzmt2n81t+E9A5N
-	WWjq4w7Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=HROOz1jnArq5bSt6mkcKD2c8jVNtju58yB7qeOd+yyk=; b=gmMExZyT9qyVNHTaMaOyjq52b1
+	Z9ULsU4lwQzDRFqNdqW4j1x0vImELuHHx6PWqYWYNPN64MeK3r9AAniJ1THNkqWdQL8VJzwVy9zke
+	a8zFAFLq+EFBeXyy5uxBLni16xE+P8KOUZRHmTxQZ3x4mSn6Lr0GHlkNTlxp+9PVe3e3111MoNkTG
+	rriV1O4vA8y9eDOfbxKC+YT6/SvvmL8v2nfUv4F9qRC3erR6la5olzRlaMdn+TKI035IUivDE7Nxi
+	ZcYksodq5pgCtBjr7N/Y5NaQnIzYn93qGo3jz8zxknFMOoY67zLTRJyvNkEwXV3jTBST6yli5CN97
+	Tyo9nEfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tMILV-00000005b2C-2440;
-	Sat, 14 Dec 2024 02:57:33 +0000
-Received: from sender4-of-o51.zoho.com ([136.143.188.51])
+	id 1tMOuK-000000068l6-1xGx;
+	Sat, 14 Dec 2024 09:57:56 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tMILT-00000005b1R-1AkW
-	for kexec@lists.infradead.org;
-	Sat, 14 Dec 2024 02:57:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1734145007; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=awW+SO0XKfy+0Pyi8ms7Cp4QZGyd4GSS0XoyLpNZ+3KR4GlJldIQRAYxtIalKXFl1fEFdisd8D97ja3DjnohuFmSB1Ygw5D97ISKbidoeX6+AmF/APCcCTG6/UzKbjkkVGRJltHvAGPonTQcTNtVyPFrWKySiBL0GqrcmhJfNI8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1734145007; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yTLX58/fR9Jhi/uY5ah/JDfKClGzaUuJTL0r4DQjPxQ=; 
-	b=CTuxE1O+s21+0aPjUFyTrerXIgUIiKt7ah+lthtZoumZR7nSTL+zGSTvt0agOuXHkLAZwmrXfxt9KSW6rov1a3dd0kiE6Lrx/J+N6JZhojMxpKYXJdxZsBV0meQ/Qe9rtKgaITO2lYGRd/aFOiTiOv1hcO2+hRl4Dr15RIQxM0Q=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734145007;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=yTLX58/fR9Jhi/uY5ah/JDfKClGzaUuJTL0r4DQjPxQ=;
-	b=i9wFs1ixxA7BrvBE2uuw9mPD8rk4qfbIvREXIubQVyrEXf50FdudxBFP+JxaW0WL
-	y6u4NCewpCrGXiCsxMoLM/jx4cb/Q4o4cC7QCD280PX7naa1cQZzP0vJTG1RBD8eaSd
-	9JNjKqNoAj2jHCMwpd0BeiVFz1ALbpPTUONd/Eq0=
-Received: by mx.zohomail.com with SMTPS id 1734145005147748.7051374178144;
-	Fri, 13 Dec 2024 18:56:45 -0800 (PST)
-Message-ID: <5330397a-e74a-4061-ba6d-fa522877f237@apertussolutions.com>
-Date: Fri, 13 Dec 2024 21:56:40 -0500
+	id 1tMOuF-000000068ks-2V2M
+	for kexec@bombadil.infradead.org;
+	Sat, 14 Dec 2024 09:57:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HROOz1jnArq5bSt6mkcKD2c8jVNtju58yB7qeOd+yyk=; b=iIVgzBdlGc8rpyoLrpIA+5r1dg
+	Kb7wkinbiXGVuf7BDY5LiG27qPwhcyYwzoHWQ6GUYoMFrRjxTP8HEBOnelSQDxb5uxLSXIb1H6Ox3
+	IgRFFSR/BFWcXHcOrGHQJ8sKyYwQcnwbMNn23qAetdsVrr2iquO4c4bjFOKp1o4QBgYJ5at1tuMoz
+	7vi9vDLMCUGLqdFpKmFGti5osjMQE1IkQhRFwyHMF4yZwH4gjDbnaXGYKr4EjyI1uqr2FASWYbmm/
+	R7mkXYazkIBBxfMyCHXXSEp5qXlaFXnpQUkPTniZI6g1pI4nfePSMz9LyeNy+naCfmAQFUa+K+z8e
+	ijdMWnuA==;
+Received: from [172.31.31.142] (helo=u09cd745991455d.lumleys.internal)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tMOuC-00000001jIB-0Ekt;
+	Sat, 14 Dec 2024 09:57:48 +0000
+Message-ID: <febd10dae881f29fa8236f3e2d6ad77a8f094d72.camel@infradead.org>
+Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
+	 <tglx@linutronix.de>
+Cc: Ming Lei <ming.lei@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, hpa
+ <hpa@zytor.com>, dyoung <dyoung@redhat.com>, kexec
+ <kexec@lists.infradead.org>, linux-ext4 <linux-ext4@vger.kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Stefano Garzarella
+ <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>, Paolo Bonzini
+ <bonzini@redhat.com>,  Petr Mladek <pmladek@suse.com>, John Ogness
+ <jogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,  Jens Axboe
+ <axboe@kernel.dk>
+Date: Sat, 14 Dec 2024 09:57:47 +0000
+In-Reply-To: <73E84E2B-001B-48D6-9BB4-B104D43F8FBF@infradead.org>
+References: <87ldwl9g93.ffs@tglx>
+	 <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
+	 <87a5d0aibc.ffs@tglx>
+	 <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
+	 <874j38a16p.ffs@tglx>
+	 <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
+	 <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
+	 <871pybamoc.ffs@tglx> <Z1wV9SsaVe3torbO@fedora> <87y10j95v7.ffs@tglx>
+	 <Z1wfF6NJRZh1jROz@fedora> <87pllv90ow.ffs@tglx>
+	 <1a7c126f3ab8ae75e755d01a6bf9bc06730dd239.camel@infradead.org>
+	 <87msgz8qes.ffs@tglx>
+	 <CAJZ5v0i3zg1ee9p7vc0xEN4cEyCoO-d9OOyV_m65=f251tnxXQ@mail.gmail.com>
+	 <CAJZ5v0hBUgOB4QhhwjusRcP+jksWFL-upR5En58g9RD5+n70JA@mail.gmail.com>
+	 <73E84E2B-001B-48D6-9BB4-B104D43F8FBF@infradead.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-2uiQt9Gj1bLQhTpWG53w"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
- early measurements
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- Eric Biggers <ebiggers@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, peterhuewe@gmx.de, jarkko@kernel.org,
- jgg@ziepe.ca, nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
- davem@davemloft.net, corbet@lwn.net, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <CALCETrXQ7rChWLDqTG0+KY7rsfajSPguMnHO1G4VJi_mgwN9Zw@mail.gmail.com>
- <1a1f0c41-70de-4f46-b91d-6dc7176893ee@apertussolutions.com>
- <8a0b59a4-a5a2-42ae-bc1c-1ddc8f2aad16@apertussolutions.com>
- <CALCETrX8caT5qvCUu24hQfxUF_wUC2XdGpS2YFP6SR++7FiM3Q@mail.gmail.com>
- <c466ed57-35a8-41c0-9647-c70e588ad1d3@apertussolutions.com>
- <CALCETrW9WNNGh1dEPKfQoeU+m5q6_m97d0_bzRkZsv2LxqB_ew@mail.gmail.com>
- <ff0c8eed-8981-48c4-81d9-56b040ef1c7b@apertussolutions.com>
- <446cf9c70184885e4cec6dd4514ae8daf7accdcb.camel@HansenPartnership.com>
- <5d1e41d6-b467-4013-a0d0-45f9511c15c6@apertussolutions.com>
- <CALCETrW6vMYZo-b7N9ojVSeZLVxhZjLBjnMHsULMGP6TaVYRHA@mail.gmail.com>
- <9c80e779b6268fde33c93ed3765ff93b1d6d007b.camel@HansenPartnership.com>
- <CALCETrX4vHnVorqWjPEOP0XLaA0uUWkKikDcCXWtbs2a7EBuiA@mail.gmail.com>
- <61a4e812-9514-41a6-a000-e6c026a4ec45@apertussolutions.com>
- <CALCETrXQqR6Az7puNXLfhoL37iLHtG1qOyqC_K301TGmMOQvvA@mail.gmail.com>
-Content-Language: en-US
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-In-Reply-To: <CALCETrXQqR6Az7puNXLfhoL37iLHtG1qOyqC_K301TGmMOQvvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241213_185731_399831_92713811 
-X-CRM114-Status: GOOD (  54.98  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,267 +90,197 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/12/24 17:30, Andy Lutomirski wrote:
-> On Thu, Dec 12, 2024 at 11:56 AM Daniel P. Smith
-> <dpsmith@apertussolutions.com> wrote:
->>
->> Hey Luto!
->>
->> Let me try to address your concerns below.
->>
->> On 11/18/24 15:02, Andy Lutomirski wrote:
->>> On Mon, Nov 18, 2024 at 11:12 AM James Bottomley
->>> <James.Bottomley@hansenpartnership.com> wrote:
->>>>
->>>> On Mon, 2024-11-18 at 10:43 -0800, Andy Lutomirski wrote:
->>>>> Linux should not use TPM2_PCR_Extend *at all*.  Instead, Linux should
->>>>> exclusively use TPM2_PCR_Event.  I would expect that passing, say,
->>>>> the entire kernel image to TPM2_PCR_Event would be a big mistake, so
->>>>> instead Linux should hash the relevant data with a reasonable
->>>>> suggestion of hashes (which includes, mandatorily, SHA-384 and *does
->>>>> not* include SHA-1, and may or may not be configurable at build time
->>>>> to include things like SM3), concatenate them, and pass that to
->>>>> TPM2_PCR_Event.  And Linux should make the value that it passed to
->>>>> TPM2_PCR_Event readily accessible to software using it, and should
->>>>> also include some straightforward tooling to calculate it from a
->>>>> given input so that software that wants to figure out what value to
->>>>> expect in a PCR can easily do so.
->>>>
->>>> Just for clarity, this is about how the agile log format works.  Each
->>>> event entry in the log contains a list of bank hashes and the extends
->>>> occur in log event order, so replaying a log should get you to exactly
->>>> the head PCR value of each bank.  If a log doesn't understand a format,
->>>> like SM3, then an entry for it doesn't appear in the log and a replay
->>>> says nothing about the PCR value.
->>>
->>> I have no idea what the "agile log format" is or what all the formats
->>> in existence are.  I found section 4.2.4 here:
->>>
->>> https://trustedcomputinggroup.org/wp-content/uploads/TCG_IWG_CEL_v1_r0p41_pub.pdf
->>>
->>> It says:
->>>
->>> This field contains the list of the digest values Extended. The Extend
->>> method varies with TPM command, so there is
->>> no uniform meaning of TPM Extend in this instance, and separate
->>> descriptions are unavoidable. If using the
->>> TPM2_PCR_Extend command, this field is the data sent to the TPM (i.e.,
->>> not the resulting value of the PCR after the
->>> TPM2_PCR_Extend command completes). If using the TPM2_PCR_Event
->>> command, this field contains the digest
->>> structure returned by the TPM2_PCR_Event command (that contains the
->>> digest(s) submitted to each PCR bank as
->>> the internal Extend operation). This field SHALL contain the
->>> information from the TPML_DIGEST_VALUES used in
->>> the Extend operation.
->>
->>
->> Let me start with providing background on the two measurement policies
->> that is implemented by Intel TXT (from Intel TXT Developers Guide):
->>
->>    - Maximum Agility PCR Extend Policy: ACM can support algorithm agile
->> commands TPM2_PCR_Event; TPM2_HashSequenceStart; TPM2_HashUpdate;
->> TPM2_EventSequenceComplete. When this policy is selected, ACM will use
->> the commands above if not all PCR algorithms are covered by embedded set
->> of algorithms and will extend all existing PCR banks. Side effect of
->> this policy is possible performance loss.
->>
->> ‒ Maximum Performance PCR Extend Policy: ACM can support several hash
->> algorithms via embedded SW. When this policy is selected, ACM will use
->> embedded SW to compute hashes and then will use TPM2_PCR_Extend commands
->> to extend them into PCRs. If PCRs utilizing hash algorithms not
->> supported by SW are discovered, they will be capped with “1” value. This
->> policy, when selected, will ensure maximum possible performance but has
->> side effect of possible capping of some of the PCRs.
->>
-> 
-> What is responsible for choosing which of these policies to use?
+
+--=-2uiQt9Gj1bLQhTpWG53w
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2024-12-13 at 20:16 +0000, David Woodhouse wrote:
+>=20
+> > As discussed with Dave over IRC, the current implementation isn't
+> > actually that bad.=C2=A0 It might use PMSG_THAW instead of PMSG_RESTORE=
+ in
+> > kernel_kexec(), but other than this it reflects the code flow around
+> > the jump from the restore kernel to the image one during resume from
+> > hibernation.
+> >=20
+> > This means that hibernation and kexec jump could be unified somewhat.
+>=20
+> Fair enough. I'm happy to do whatever cleanups or consolidation make
+> sense, if we have a consensus.
+>=20
+> There remains the question of why the blk-mq thing explodes on the
+> way down for both kjump and, apparently, even the plain kexec case.
+
+In case it's of any use, here's a test case I put together recently for
+kexec stress testing.
+
+ http://david.woodhou.se/kexec.initramfs
+
+It's just an initrd I boot in qemu with '-initrd kexec.initramfs' and
+it builds a copy of itself, then kexecs back into the same kernel with
+the same initrd. You'll need to drop your own bzImage into it.
+
+It was designed to run without a block device, but to trigger the
+blk-mq thing or the one at
+https://lore.kernel.org/linux-scsi/F991D40F7D096653+20241203211857.0291ab1b=
+@john-PC/
+we'd probably need to actually mount something and maybe do some disk
+I/O.
+
+(Which means the fact that the initrd can rebuild itself with cpio is
+no longer quite so useful, as it could have just loaded the initrd for
+the next kernel from the file system. But I already did that part, so
+whatever.)
 
 
-It is setup by the Dynamic Launch Preamble (GRUB) that will invoke the 
-Dynamic Launch Event (GETSEC[SENTER]).
+ $ cat init
+#!/bin/sh
+
+find . > files.txt
+mount -tproc none /proc
+
+cat /proc/sys/kernel/watchdog_thresh
+echo 20 >  /proc/sys/kernel/watchdog_thresh
+
+mount -tramfs none /tmp
+NEXTCOUNT=3D$(($LOOPCOUNT+1))
+CMDLINE=3D$(cat /proc/cmdline)
+NEWCMDLINE=3D"${CMDLINE/LOOPCOUNT=3D$LOOPCOUNT/} LOOPCOUNT=3D$NEXTCOUNT"
+
+echo KEXEC LOOP $LOOPCOUNT
+echo $NEWCMDLINE
+
+cpio --quiet -H newc -o < files.txt | gzip -n9 > /tmp/initramfs.gz
+kexec -f /bzImage --initrd /tmp/initramfs.gz --append "$NEWCMDLINE"
 
 
->> Allow me to clarify/expand on the last statement in Maximum Agility.
->> There is almost certainly a performance loss as anything larger than
->> 1024 bytes, for example the Linux kernel, the ACM will bit-banging the
->> bytes to the TPM using the TPM2_Hash* functions.
-> 
-> Surely, if Linux's stub started using TPM2_PCR_Event, it would first
-> hash any large inputs and then send the _hash_ to TPM2_PCR_Event
-> instead of, say, bit-banging the entire initramfs to the TPM.  But
-> you're talking about the ACM and I'm talking about the Linux stub code
-> in this patchset.
+ $ cp ~/git/linux/arch/x86/boot/bzImage .
+ $ find . | cpio --quiet -H newc -o  | gzip -n9 > ../kexec.initramfs
+ $ ls -d `find .`
+.              ./bin/mount              ./lib64/ld-linux-x86-64.so.2
+./bin          ./bin/sh                 ./lib64/libc.so.6
+./bin/busybox  ./bin/sleep              ./lib64/liblzma.so.5
+./bin/cat      ./dev                    ./lib64/liblzma.so.5.4.4
+./bin/cpio     ./dev/console            ./lib64/libz.so.1
+./bin/echo     ./dev/null               ./lib64/libz.so.1.2.13
+./bin/find     ./dev/ttyS5              ./loadret
+./bin/gzip     ./init                   ./loadret.c
+./bin/kexec    ./init.preserve-context  ./proc
+./bin/mknod    ./lib64                  ./tmp
 
 
-I think there might be some confusion on how this starts, let me provide 
-a quick, enumerated flow:
+--=-2uiQt9Gj1bLQhTpWG53w
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-1. GRUB prepares launch environment (Linux kernel, SINIT ACM, 
-OsSinitData) and calls GETSEC[SENTER] instruction
-2. The CPU signals PCH that DRTM has started, unlocking Locality 4
-3. The CPU loads the SINIT ACM into CRAM, measures it with SHA256 and 
-uses _TPM_HASH_START /_TPM_HASH_DATA / _TPM_HASH / _TPM_HASH_END to 
-extend SHA256(ACM) | EDX into PCR17 for all PCR banks
-4. The CPU then jumps into the ACM
-5. The ACM does a series of actions and measurements of the system into 
-PCRs 17 and 18 for SHA1, SHA256, SHA384, and SM3_256 (PCR Performance 
-Policy)
-6. The ACM then measures the "MLE", the Linux kernel in this case, using 
-the same algorithms
-7. The ACM then caps PCRs 17 and 18 by extending 0x01 for any 
-unsupported algorithm the TPM supports.
-8. The ACM then jumps to the Secure Launch entry point in the setup kernel
-
-If the initramfs is external, then yes, the setup kernel would get to do 
-the measurement. If it is a unified kernel image, well, that whole thing 
-will be bit banged to the TPM by the ACM if the PCR Agile Policy is used.
-
-> But the capping-with-"1" does suggest that maybe one can actually cap
-> with "1" without preventing downstream software from consuming the
-> event log.
-
-Correct, capping the PCR should never block downstream software from 
-consuming the event log.
-
->>
->> Before addressing the next point, I would also clarify how the D-CRTM
->> measurement taken by the CPU is done. It uses the _TPM_HASH_* functions,
->> Section 22.9 of TPM2 Commands specification, to store SHA256(SINIT ACM)
->> | EDX into all active PCR banks. For clarity, when this done, EDX holds
->> the 4-byte value of the SENTER parameters for which 0 is the only valid
->> value currently.
->>
->>
->>> So we're logging the values with which we extend the PCRs.  Once upon
->>> a time, someone decided it was okay to skip extending a PCR bank:
->>>
->>> https://google.github.io/security-research/pocs/bios/tpm-carte-blanche/writeup.html
->>>
->>> and it was not a great idea.
->>
->>
->> Let's begin by why/how that attack occurs. The TPM Carte Blanche attack
->> took advantage of the fact that without BootGuard in place, the SRTM
->> measurements are done by the software/firmware, to include the
->> self-referential S-CRTM measurement. In particular, for the target
->> platform, it just so happens that it was possible to construct a
->> configuration where not a single hash would be sent to the SHA256 bank.
->> This allowed the attacker the ability to replay any set of measurements,
->> i.e. carte blanche control, into a completely empty PCR bank for which
->> the attestation service would accept quotes. The key to this attack
->> requires both, access to an empty PCR bank, and an attestation service
->> that will accept a quote with only the exploited bank present.
->>
->> Let us return to my statements above, which will demonstrate why
->> TXT/DRTM completely invalidates the attack. First, as noted above, when
->> the CPU is processing the GETSEC[SENTER] instruction, it (the CPU) will
->> compute the D-CRTM as SHA256(SINIT ACM) | EDX, sending it to the TPM
->> using _TPM_HASH_* functions. The _TPM_HASH_* functions result in all PCR
->> banks to be extended with the D-CRTM value. If Maximum Performance PCR
->> Extend policy is in use, which is the default policy used by TrenchBoot,
->> any algorithm not supported by the ACM is capped by sending the value
->> "1" as the digest value for the extend. Therefore, after the TXT
->> sequence has completed and before control is given to the Linux kernel
->> by the ACM, all PCR banks will consist of either, the D-CRTM + all ACM
->> measurements, or the D-CRTM + TPM2_PCR_Extend(0x1). There will be no PCR
->> banks with empty DRTM PCRs, thus none of the banks would be usable for a
->> TPM Carte Blanche-style attack.
-> 
-> Sure, a "carte blanche" attack in the sense that the PCRs are entirely
-> blank won't happen, but if any component in the chain does not extend
-> a bank, then an attacker can replace the code _after_ that component
-> without being noticed.
-
-
-There are two scenarios that could be considered here. The first is if 
-an algorithm is added to the TPM that neither the ACM nor the TPM driver 
-supports. The second is if an algorithm supported by the ACM and the TPM 
-driver is added, but not supported by Secure Launch.
-
-In the first case, the PCR and corresponding log entries for the new 
-algorithm will have the D-CRTM event and Cap (0x01) event. Rendering the 
-bank unusable for the attacker.
-
-For the second case, this is a "it all depends on the usage". First and 
-foremost, I would say it is ultimately a failure of the Attestation 
-Service if it evaluated algorithms that Secure Launch is not advertised 
-to support.
-
-With that, let's consider the options for bad components under the 
-second case:
-- A bad kernel image will be detected since the ACM is what measures it.
-- A bad initramfs, assuming that (c) below was not implemented, then the 
-initramfs could add a fake entry for itself into the bank in question.
-- Any component after this depends on the use case. The primary use case 
-currently is to combine Secure Launch with TrenchBoot additions to 
-u-root making it an intermediate bootloader that kexec's into the target 
-kernel. I bring this up because when the kexec is done, Secure Launch 
-does GETSEC[SEXIT]. The result being that it closes all localities 
-except Locality 0. They cannot be re-opened without doing a new Dynamic 
-Launch, which will reset them all back to 0.
-
-I would also like to note that Secure Launch would not be the only 
-in-kernel capability that would have to scramble to add support for the 
-additional algorithm if it suddenly became available to block a Carte 
-Blanche attack.
-
-
->> (c) Upon initialization, cap the PCR banks with unsupported algorithms
->> using a well-known value.
->>
->> A problem with (a) is that the result will be an unorthodox event,
->> PCR_EXTEND(H(H'(data))). An attestation verifier will have to be aware
->> of that this is being done, and have a way to determine which method was
->> used for each event. This creates a potentially expensive cost for any
->> existing attestation solutions to incorporate support for the unorthodox
->> event. At least for DRTM solutions, it seeks to solve a problem that TXT
->> does not experience.
->>
->> For Linux Secure Launch, I would like to propose an alternative to what
->> the current logic does in the setup kernel. Specifically, Secure Launch
->> will trigger a TXT reset when an unsupported algorithm is encountered.
->> Instead, I would like to propose the adoption of (c), and have it
->> extends a well-known, fixed value for unsupported algorithms. Secure
->> Launch can leverage the fact that the TPM driver's extend function
->> already expects to be given digests for all active algorithms.
->> Therefore, it will record the well-known value, 0x01 to follow the ACM,
->> into the digest buffers of any algorithms that Secure Launch does not
->> support. This will result in the well-known value being extended each
->> time a measurement is recorded. This will not be a problem as no one
->> should be using those banks for attestation and can ignore those digests
->> in the event log.
-> 
-> This seems to be at least not terrible.
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjE0MDk1NzQ3WjAvBgkqhkiG9w0BCQQxIgQgf2x9Y5T7
+1vF65OaWjm81GzfVjPZwkdJEoHTlRWlEAUwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCkZPFx6BO7rcmZ6cYchu7ZUFsj2+MFgz2Z
+N85F5u0D5vSv5GuolokAqOGVOH8lh5/hyn9Ie1JvYCIApmyvLIDl0p5Ux1YNR/mPxqdJPufoo3Ii
+aYkvzcTdEcfQWl3+qpxp8Jzpxjh7MxeGIU3DFPvxxzNifUlhqqgHgmCX6aOhDPzQ4zyFRLoO0YDA
+roFZUPO60Y82nqDB9iiCJIdPdvBjXhfVjDtcN/Eo59Q3cxI4R31/AaIPOzphOkJLhykWHDScnF1P
+CdpBCnlR9zHKRzOpd4HBcTAXrsYu8pux8CkaaoE59o4Y3XO+7U3B36E0+qUslB07cQnez8xlzFhF
+hXjLQqj3UIiyDe3hGpyD8o438FddDLwI3Hm58rGO3tuy3Mt0pGLcK6WOCVWxcC2w57OHgk5gq9Of
+CfOcculK/8AVeup36v6A6kRsTZIMWwlUuQSxaVYXo4mMZFDjG5Iy/IPzrfNvmYG7Hm69ErB1TDHO
+Pjjjwvs1qcR16+QyCAqg0MZ2zxnFapPq72bjIS5RLkYrtuWHrLtrLI3ntyRKyA7dlJVzQsuIzdtT
+x7xuk4oqAbjYrst0Z8skrie7VA740P1hGHSxC3VxleuP+/EUVHIH7ftRFdKk4C4BF3AXQ/c/ixJi
+wCuCpDHOxfHiEI4H9I+xDoIMVouwNqEqth5MydtWSQAAAAAAAA==
 
 
-With (c) in place, it would completely close off the second case for the 
-case when the initramfs is not part of the kernel image.
-
-
-> Or I suppose one could use TPM_HASH_ functions? The spec for them is
-> somewhat impenetrable to me.
-
-
-Do you mean TPM2_HashSequenceStart / TPM2_SequenceUpdate / 
-TPM2_EventSequenceComplete? If you really meant _TPM_Hash_Start / 
-_TPM_Hash_Data / _TPM_Hash_End, then no, you cannot call these. They are 
-not sent via the Command Buffer but directly through the TPM interface. 
-Have a look at Section 34 of the TPM Architecture[1]. While the spec 
-authors wrote it generically, as if there is more than one way for an 
-H-CRTM to be established, the only way available for x86 is DRTM.
-
-[1] 
-https://trustedcomputinggroup.org/wp-content/uploads/TPM-2.0-1.83-Part-1-Architecture.pdf
-
-Ross has prepared a new version of the series using (c), which actually 
-reduces the size and complexity of the SL setup code. Once it has been 
-tested, Ross will post it so you can have some concrete code to look at 
-and consider the proposal.
-
-V/r,
-Daniel P. Smith
-
-
-
+--=-2uiQt9Gj1bLQhTpWG53w--
 
