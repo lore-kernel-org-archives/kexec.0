@@ -4,65 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F6EFE77180
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F0A7E7717F
 	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 18:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Subject:Content-Type:
-	MIME-Version:Message-ID:In-Reply-To:Date:References:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DI8N+uG9ECaO9MtUeDVcCbPw1YWgb8PFeENftVe0d2Y=; b=zW0LpCBxgC2epMPthpyrdyI3Dt
-	umgxLMpxIXgUuFamDvjZIPMphjgYOySBnOENrwkXbDz1oz+ed+TzOXwdXO5M1j/7IVl+mTjklfYgL
-	DTAzX8clTD7QSUnev4F6nEkFu5m8W8zpLxbFtkmkWJFi66N+JDpqFWUINWeBKM2aUhVeAljWguSBx
-	uhQCorsVpvy6hYBU7NmF0TTxjtDyde4jJIyLHb+mcsc+isgMpnkDlGB2B1nool4dYMguO+9baxuTo
-	CwDsFbvPdjatNOwH+49V4lFeHBe6TLRKhJvEqATnHPpPCQKtxnpmc7eQDgHEYTGFV7oWDl8RuhTZY
-	mpjjg7HQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=SjfNhuvGiolOyrjKsZTgRFX8OJYdur2afUKbQ/gvW4o=; b=hjYvu5Ab2x5b2uv4MDN5MGmPeC
+	P79C4LV0aGieH2fTBA3Sx3qi1XospTgi6863ah/BzVl8e5t9bPE8GSiXuITsPXwcuRT1Nf/cxT6v7
+	H3wuxedYWRez5ZWECCP4+AgdHQE8KnSADbaV+u7EfIoSZp4tmYyXcUkz+chu/MixZZoVW7Y/ilKWH
+	c04gvCOzGGQUQwavoTlwzpV0B/L+vgAfmuySxOPVWoaH8MEOnZzizagYtM6pPI2mgRIU77Pk8guzS
+	b5gC5leXfjJWDC7UZ1mb2xoNgbnMt61eNyL/iB+S9TJ4BQDLKSdpuWKgA5ya8nS2ZK5weA3hytysj
+	9XqjHWFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNFmM-0000000AxfZ-3hhC;
+	id 1tNFmM-0000000AxfM-22ih;
 	Mon, 16 Dec 2024 18:25:14 +0000
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNFin-0000000Ax0u-1Sxe;
-	Mon, 16 Dec 2024 18:21:34 +0000
-Received: from in01.mta.xmission.com ([166.70.13.51]:35192)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tNFil-004lrv-IE; Mon, 16 Dec 2024 11:21:31 -0700
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:49960 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tNFik-00FtDO-Lx; Mon, 16 Dec 2024 11:21:31 -0700
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,  Thomas Gleixner
- <tglx@linutronix.de>,  Ming Lei <ming.lei@redhat.com>,  LKML
- <linux-kernel@vger.kernel.org>,  Linux PM <linux-pm@vger.kernel.org>,
-  Kexec Mailing List <kexec@lists.infradead.org>
-References: <4968818.GXAFRqVoOG@rjwysocki.net>
-	<d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org>
-	<87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
-	<E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org>
-Date: Mon, 16 Dec 2024 12:21:01 -0600
-In-Reply-To: <E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org> (David
-	Woodhouse's message of "Mon, 16 Dec 2024 18:14:17 +0000")
-Message-ID: <87bjxbzdyq.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1tNFik-00FtDO-Lx;;;mid=<87bjxbzdyq.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+z7hsfZYbh2h99As8mJSOdcZfr7Fg2uXQ=
+	id 1tNFbl-0000000AvUr-3kKP
+	for kexec@bombadil.infradead.org;
+	Mon, 16 Dec 2024 18:14:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=SjfNhuvGiolOyrjKsZTgRFX8OJYdur2afUKbQ/gvW4o=; b=drxG7okGe1i9XAqvE98rdkL0gK
+	6VQceyOgk6MPOf4drANwU2q98fmfn1dEvTiTFWC4Q/Ou1nSK47fOv9uBDYQEMVq0lxa5khv8mq0kY
+	S5Ba6HXcZMuv1w3OiUK1W+FWmj1dQ2bOSuUUkjCOe65fzrmAFQXNuutOD9kpE+RjLtudyDAyNmYeD
+	iS0aLblPISiXb48W40Ht6LSGH0i9anIIPfEXsSbtvh7eFNN/7zQVIAm2OodCyuHC0cF5t7qeH+hhD
+	b0TyLv5fCRtyslQ7DcOmQ5u+Hr6OlyWEvsZfEcUOfpWzMm/jIyTg04+DiyWEi+ud5zbSfV4HS6Wn4
+	C+OeZxnw==;
+Received: from [2a00:23ee:2908:bad:cd3a:995:e233:9fc1] (helo=[IPv6:::1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNFbk-00000004vCP-0VOE;
+	Mon, 16 Dec 2024 18:14:16 +0000
+Date: Mon, 16 Dec 2024 18:14:17 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>,
+ Ming Lei <ming.lei@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Linux PM <linux-pm@vger.kernel.org>,
+ Kexec Mailing List <kexec@lists.infradead.org>
 Subject: Re: Does anyone actually use KEXEC_JUMP?
-X-SA-Exim-Connect-IP: 166.70.13.51
-X-SA-Exim-Rcpt-To: kexec@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, ming.lei@redhat.com, tglx@linutronix.de, rjw@rjwysocki.net, dwmw2@infradead.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241216_102133_388147_83683F98 
-X-CRM114-Status: GOOD (  17.35  )
+User-Agent: K-9 Mail for Android
+In-Reply-To: <87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
+References: <4968818.GXAFRqVoOG@rjwysocki.net> <d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org> <87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
+Message-ID: <E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,29 +72,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-David Woodhouse <dwmw2@infradead.org> writes:
-
-> It isn't broken. I know of it being used a few million times a week.
+On 16 December 2024 16:00:00 GMT, "Eric W=2E Biederman" <ebiederm@xmission=
+=2Ecom> wrote:
+>David Woodhouse <dwmw2@infradead=2Eorg> writes:
 >
-> There are corner cases which have never worked right, like the callee
-> putting a different return address for its next invocation, on the
-> stack *above* the address it 'ret's to. Which since the first kjump
-> patch has been the first word of the page *after* the swap page (and
-> is now fixed in my tree). But fundamentally it *does* work.
+>> On Mon, 2024-12-16 at 14:39 +0100, Rafael J=2E Wysocki wrote:
+>>> From: Rafael J=2E Wysocki <rafael=2Ej=2Ewysocki@intel=2Ecom>
+>>>=20
+>>> The KEXEC_JUMP flow is analogous to hibernation flows occurring
+>>> before
+>>> and after creating an image and before and after jumping from the
+>>> restore kernel to the image one, which is why it uses the same device
+>>> callbacks as those hibernation flows=2E
+>>>=20
+>>> Add comments explaining that to the code in question and update an
+>>> existing comment in it which appears a bit out of context=2E
+>>>=20
+>>> No functional changes=2E
+>>>=20
+>>> Signed-off-by: Rafael J=2E Wysocki <rafael=2Ej=2Ewysocki@intel=2Ecom>
+>>
+>> Thanks=2E I'll round that up into my kexec-debug tree, which Ingo has
+>> been taking into tip/x86/boot=2E Once I'm done fighting with
+>> objtool(qv)=2E
 >
-> I only started messing with it because I was working on
-> relocate_kernel() and needed to write a test case for it; the fact
-> that I know of it being used in production is actually just a
-> coincidence.
+>I have no objection to getting kexec jump more in sync with the
+>rest of the power management code=2E
+>
+>I do have a question though=2E  Does anyone actually use kexec jump?
+>
+>It is fine if folks do, but I haven't actually heard of anyone using
+>it=2E  If folks aren't using it, it might make sense to just use the fact
+>that it is broken as a nudge to remove that option=2E
+>
+>Eric
+>
+>
+>
 
-Cool.  I had the sense that the original developer never got around
-to using it, so I figured I should check.
+It isn't broken=2E I know of it being used a few million times a week=2E
 
-Mind if I ask what you know of it being used for?
+There are corner cases which have never worked right, like the callee putt=
+ing a different return address for its next invocation, on the stack *above=
+* the address it 'ret's to=2E Which since the first kjump patch has been th=
+e first word of the page *after* the swap page (and is now fixed in my tree=
+)=2E But fundamentally it *does* work=2E
 
-I had imagined it might be a way to call firmware code preventing the
-need to code of a specific interface for each type of firmware.
-
-Eric
-
+I only started messing with it because I was working on relocate_kernel() =
+and needed to write a test case for it; the fact that I know of it being us=
+ed in production is actually just a coincidence=2E
 
