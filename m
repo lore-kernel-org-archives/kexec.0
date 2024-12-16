@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1434E7717F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA21EE77183
 	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xrUqJHk+DC7MJiWSLIDNfBawd31aIE7V5wzrcp1W6yM=; b=Waug0NVCXi4CrSuIFxkA1uPyWj
-	xgXqCTkT6Lx28yWzXXErWIbiFU+DEfEAX41hafAWwsl/YgO0XgEl692+zTKO2pjw+GQWJEMKsxl9E
-	SY8sVd0g84XJpdsbUQHNa+WCFSjqkutoL8i88UyfSdXh1dgbX1uJBJVR13FcLFVfD71MT3KalsP7H
-	/ZZyEhJFvPAS8rfmG/RlDAe6cpr0ntpshuWv0MeEsjbxOy14OwF2hZyqvWfAhD9FXQQZ8bakzS/IK
-	F87ZNeTHz+Szk0ldQOukJhf0Goxopdk6R449Q98whaUGjVqpzYpsJq9Bhw3U/e4KM8S4srbRycM25
-	ZxjOh6ig==;
+	bh=siK05iL8Sl6AWnRvb8/748kKl/nChwb5EZxS4049r5c=; b=z85wGZPtLPOyj6x21XNxyi6Ohq
+	ImZcY9xHfctrX7w4HvMkYQlZCwxJ/V527y5dbTnbsZWu1VH7yDovgsP5Oq+r1y6vaJA6adCcLughX
+	SXrIyUAeWJWByl1wBbR/fVJ5d5McGY1V8Z14jNr67OckOFOSwKBQA6Xf8yLI7cHUCqC/hvRsc6fYe
+	A+LRPFrGTV1sdOhsSxaO5mgaGkj+t5WPfZSfNUG9oVfj682ZOCWdPVoZiNSm6IcAPRASq7k8O7S/7
+	XU+KHq/aB89/jLKnsxzO5bX1yTllE39fB4kmXlVqkgQTtC/qVL4joY4cUWaFihQDkWWRHdbhq63OP
+	roihIEPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeJ-0000000BesD-1D9x;
+	id 1tNKeJ-0000000BesJ-2jWW;
 	Mon, 16 Dec 2024 23:37:15 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeI-0000000Berf-0c7l
+	id 1tNKeI-0000000Berb-0bqo
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description;
-	bh=xrUqJHk+DC7MJiWSLIDNfBawd31aIE7V5wzrcp1W6yM=; b=Zx7gwPn0rmONbPxIOvq+ePXTKW
-	Zk15pJZDZDIkZLHFUp+nojiZHr5XeijgkL8l3gO/TpUea3CrhEhTjETXv6Y4iJY/jLacu/A1U5SEU
-	UEVnOqaYEe6+B+OU8nCinx2QzHl/Vy0g5vpoMhcqyuNdibs++Cyh8pRrpIsbJX8Y3GpTO2XiWAozH
-	7539NDgNLojJl0KsYBe+6LAOwmS1NfJ3wguZtVUXGGlisG+9LJ1X+ndafT77hAKn5b3vsjqvv/Dv7
-	POPmXVwbmLF0IRf5vJKX/AIlVT86HwqM2md1pmSvQinWdKVQxuujVZUJdM1MHsHWoITKTDtxmzCVu
-	nxh12/jQ==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description;
+	bh=siK05iL8Sl6AWnRvb8/748kKl/nChwb5EZxS4049r5c=; b=qvaNRGwUFC5FsBbeIs6VVrSnBe
+	WbdfBwGzFPGSuxtAJlPzlK3kEAsmjb3fbEYVnEQPt0u2zYf9NRL/ttY09zBY2hMIHU4u3m6aGDKII
+	jkkzC7rJlMsFboQaNYUbNnRpJmg5RWJZKBwCxmSqjXkpjFmLcDTAAWAV4JllqeMO6JJCh7ASYUMtE
+	ezZGQz/5KZZeKbL2Rdr8m8AsmR4b/oAng2yu1xaUfCKil0/pWZ1qi/Dm1yb5IPeiiJP+eeiesmw82
+	/xpgrD+l9ZN+m0Y3mvxYmmArGtoVytSqpPNVbulOqP+Y0OpE5O98zHpUfoJbXBZBWYgJc78/fyGGn
+	q9pBrmJA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-000000034na-2gcj;
-	Mon, 16 Dec 2024 23:37:07 +0000
+	id 1tNKeA-000000034nU-1cjU;
+	Mon, 16 Dec 2024 23:37:06 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeWQ-1HY4;
+	id 1tNKeA-0000000DeW3-00b8;
 	Mon, 16 Dec 2024 23:37:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,13 +77,14 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 7/9] kexec_core: Add and update comments regarding the KEXEC_JUMP flow
-Date: Mon, 16 Dec 2024 23:24:14 +0000
-Message-ID: <20241216233704.3208607-8-dwmw2@infradead.org>
+Subject: [PATCH 1/9] x86/kexec: Disable global pages before writing to control page
+Date: Mon, 16 Dec 2024 23:24:08 +0000
+Message-ID: <20241216233704.3208607-2-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -100,72 +101,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-The KEXEC_JUMP flow is analogous to hibernation flows occurring before
-and after creating an image and before and after jumping from the
-restore kernel to the image one, which is why it uses the same device
-callbacks as those hibernation flows.
+The kernel switches to a new set of page tables during kexec. The global
+mappings (_PAGE_GLOBAL==1) can remain in the TLB after this switch. This
+is generally not a problem because the new page tables use a different
+portion of the virtual address space than the normal kernel mappings.
 
-Add comments explaining that to the code in question and update an
-existing comment in it which appears a bit out of context.
+The critical exception to that generalisation (and the only mapping
+which isn't an identity mapping) is the kexec control page itself —
+which was ROX in the original kernel mapping, but should be RWX in the
+new page tables. If there is a global TLB entry for that in its prior
+read-only state, it definitely needs to be flushed before attempting to
+write through that virtual mapping.
 
-No functional changes.
+It would be possible to just avoid writing to the virtual address of the
+page and defer all writes until they can be done through the identity
+mapping. But there's no good reason to keep the old TLB entries around,
+as they can cause nothing but trouble.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Clear the PGE bit in %cr4 early, before storing data in the control page.
+
+Fixes: 5a82223e0743 ("x86/kexec: Mark relocate_kernel page as ROX instead of RWX")
+Co-authored-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Reported-by: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219592
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
 ---
- kernel/kexec_core.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3..7cf8437e0f38 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1001,6 +1001,12 @@ int kernel_kexec(void)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 8bc86a1e056a..9bd601dd8659 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -70,14 +70,20 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	movq	kexec_pa_table_page(%rip), %r9
+ 	movq	%r9, %cr3
  
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
-+		/*
-+		 * This flow is analogous to hibernation flows that occur before
-+		 * creating an image and before jumping from the restore kernel
-+		 * to the image one, so it uses the same device device callbacks
-+		 * as those two flows.
-+		 */
- 		pm_prepare_console();
- 		error = freeze_processes();
- 		if (error) {
-@@ -1011,12 +1017,10 @@ int kernel_kexec(void)
- 		error = dpm_suspend_start(PMSG_FREEZE);
- 		if (error)
- 			goto Resume_console;
--		/* At this point, dpm_suspend_start() has been called,
--		 * but *not* dpm_suspend_end(). We *must* call
--		 * dpm_suspend_end() now.  Otherwise, drivers for
--		 * some devices (e.g. interrupt controllers) become
--		 * desynchronized with the actual state of the
--		 * hardware at resume time, and evil weirdness ensues.
-+		/*
-+		 * dpm_suspend_end() must be called after dpm_suspend_start()
-+		 * to complete the transition, like in the hibernation flows
-+		 * mentioned above.
- 		 */
- 		error = dpm_suspend_end(PMSG_FREEZE);
- 		if (error)
-@@ -1052,6 +1056,13 @@ int kernel_kexec(void)
++	/* Leave CR4 in %r13 to enable the right paging mode later. */
++	movq	%cr4, %r13
++
++	/* Disable global pages immediately to ensure this mapping is RWX */
++	movq	%r13, %r12
++	andq	$~(X86_CR4_PGE), %r12
++	movq	%r12, %cr4
++
+ 	/* Save %rsp and CRs. */
++	movq	%r13, saved_cr4(%rip)
+ 	movq    %rsp, saved_rsp(%rip)
+ 	movq	%rax, saved_cr3(%rip)
+ 	movq	%cr0, %rax
+ 	movq	%rax, saved_cr0(%rip)
+-	/* Leave CR4 in %r13 to enable the right paging mode later. */
+-	movq	%cr4, %r13
+-	movq	%r13, saved_cr4(%rip)
  
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
-+		/*
-+		 * This flow is analogous to hibernation flows that occur after
-+		 * creating an image and after the image hernel has got control
-+		 * back, and in case the devices have been reset or otherwise
-+		 * manipulated in the meantime, it uses the device callbacks
-+		 * used by the latter.
-+		 */
- 		syscore_resume();
-  Enable_irqs:
- 		local_irq_enable();
+ 	/* save indirection list for jumping back */
+ 	movq	%rdi, pa_backup_pages_map(%rip)
+
+base-commit: 35aafa1d41cee0d3d50164561bca34befc1d9ce3
 -- 
 2.47.0
 
