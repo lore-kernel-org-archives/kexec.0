@@ -4,68 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B9EEE7717F
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 12:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3EF4E7717F
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 12:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=74gAHTXI+ywIX2A8hk1OKUCfUVL1JoQXbn4IDSPLkjk=; b=Ma7fYVBHjD4aKe00yGz3DypOmF
-	FwmqsiA2hZjfNrs4rsNKcJe+kog9171tM7rBlH9GHn0PAz0PV+Olh84HPYys7wLKAXlg4I2GpQmnZ
-	7a+ON6NbIsypd8fYn3h3VeyYgDE+JWwLY5Ztl0EcSocJsias+fu+yggrvmtN1PrCOXPw0gOVCuuPu
-	PzsbkRCa6veTH3zEtKf9XM/4yF1JXiAS6m4e3RDpZH8OyL0svboIi8wo2WqAThOLHvoQio3H+hIQB
-	6t5qLW/CpYSEF20ypNrY+I/80+Vde9qJbSaE/jp+J3ldiC3+6YMawFV8hohlh74TcBCXe8YWPWJOE
-	QNBJOrYQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+U2cB2AR6c3PWXFbRG1BRKzFnatFei3DSH4V4HnGDdU=; b=o9LpiqPrvECh/VJ7aeNmeHTKld
+	/YEWE2fRq99g9T1qJNTyw9rQxzEXTQGnO4r5v0RegUYYcMcY6+Sc6yytPLVZKNglPRucVpzi4O4Q5
+	VGjy/eoNIObk0iwCtFiM543hXo3kZV+f77Fb7ARnkg3MI2DuNuSRXqw+KDB3att0dQnJVYs9TzUqG
+	gcDLP7ZftNSglyv97gkdY6nqNZb7k1FTum7K+CkjxYEV4UtWJmjz7oMMzXAs9hUb1DFOZh1XTr3yo
+	SwrhoJ8KeS2l5dNcLhH3Qr5VGviS431K1NmWIPksCBJGWomO+n/ZaWl/KCjOmRhProM9CRMQnW/MH
+	JWbj1eUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN9vL-00000009vSa-0rQ7;
-	Mon, 16 Dec 2024 12:10:07 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tN9zp-00000009wSn-1hB3;
+	Mon, 16 Dec 2024 12:14:45 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN9vH-00000009vST-1y5R
-	for kexec@bombadil.infradead.org;
-	Mon, 16 Dec 2024 12:10:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=74gAHTXI+ywIX2A8hk1OKUCfUVL1JoQXbn4IDSPLkjk=; b=MbB76F7dROCJmQG54TgPs5YdjD
-	P9SPtLxsGTq36Mh4yKHppTGFeEsxL/5ZOgdiGa6M5dTohRlW+7zomdv2uJ3O9ApjWuIYATBbVPEc+
-	aon5Id3OuPTD508vHKUBdA+TgT6hpbv9tnIX34XlzPKj9XFZZJpVWgWCBlDxOQee3TldYu2XSsiTO
-	1NvYbL/g3tneXEaEghVSgJFIdwU5vsPUqjbuOM9gnkrmft+0gjEPCXjPYgfsvyklriojryha78rU7
-	ExxFzXxsbSCg2KdwTwKDyWCEjLhL2BFeSTyYC/zI2AFkHCnMtYZdKeb5IA8UnPi+BLMCe0rxilEOG
-	r/9i0/YA==;
-Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN9vE-0000000G7ZG-1k8j;
-	Mon, 16 Dec 2024 12:10:00 +0000
-Message-ID: <79ea9c10ae4f1dae16be8c05bb7b7e6b72512f10.camel@infradead.org>
-Subject: Re: [PATCH v5 07/20] x86/kexec: Invoke copy of relocate_kernel()
- instead of the original
-From: David Woodhouse <dwmw2@infradead.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>,  "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
- <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- jpoimboe@kernel.org, bsz@amazon.de
-Date: Mon, 16 Dec 2024 12:09:59 +0000
-In-Reply-To: <20241216054942.GA25019@ax162>
-References: <20241205153343.3275139-1-dwmw2@infradead.org>
-	 <20241205153343.3275139-8-dwmw2@infradead.org>
-	 <20241214230818.GA677337@ax162>
-	 <24d843d2ceb09acdae494ee9a17ec94bf8bb4e4f.camel@infradead.org>
-	 <20241216054942.GA25019@ax162>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-hW907ZVE7ouGIs8pX2sn"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tN9zm-00000009wRR-2GYt
+	for kexec@lists.infradead.org;
+	Mon, 16 Dec 2024 12:14:43 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id E5D24A40F67
+	for <kexec@lists.infradead.org>; Mon, 16 Dec 2024 12:12:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D1A9C4AF09
+	for <kexec@lists.infradead.org>; Mon, 16 Dec 2024 12:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734351281;
+	bh=I8BRA+E+7sIy/PeX8Wl+oBzLMGuM9Kf3XA5Fd7iH730=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YQj3weIs3D0RsxFOU/sVgtLeEdSz667AUOEk+xDN2Rt5+CQ5obHd+6BZ+BI3Oqi5d
+	 F8dUx6PBKhU/nCkpczkCgMi88tJl12LYcJd7/6YK1nXFETpZI2qb+nvOS60oawk04W
+	 mNnpl4RtDPzZk+eKGgcdblBDtdHhywW59U4SA45xT62imOuhCDcHjHxXUTh8Q0oTSW
+	 0JpM2fdGooco3+Y41nNqTbKB9emnqa6AW37N4ayDXEOtKwpSro0ffBzpA9mqH/WRyX
+	 Leb6xYOctNK1ONLf9zc5rBWUlfsdWz3xUASV+3QzIitrmI6nzMvopeLLE9bGUufQU0
+	 dDUgf9CwcX8YQ==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3eb790888c6so1182652b6e.2
+        for <kexec@lists.infradead.org>; Mon, 16 Dec 2024 04:14:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXGNjgG6oTpo8ZZtQjCIb0F1SJrTdT1T7u6h/IfuYkn5RvTvYohRBcDyZG6GDYMpEV1293dPw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz3dbQ0v6YYbU0VI68ql36cvzfDNZfBfzq7hG4xz4k9LYJAf9td
+	+DLRMNwD+9CDQIr6qrFrS5h/9+1XMy2e5EonnR8J8WqQ5jYwR/rt/84bC17PDmj70pVsz0W2DU+
+	J9+gpK3gYzTO4w1o+g0bi999+uYE=
+X-Google-Smtp-Source: AGHT+IEhIKzcP+ystGs9qCnC3kW6RLBVF8CarVw7viRsnLYJ5LXOeqEfGVxJYtIBVsNYGyJ3I71rnEn8fd++4R7Silg=
+X-Received: by 2002:a05:6808:201a:b0:3e8:1ed7:e6cf with SMTP id
+ 5614622812f47-3eba67fec07mr6100991b6e.7.1734351280709; Mon, 16 Dec 2024
+ 04:14:40 -0800 (PST)
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <87ldwl9g93.ffs@tglx> <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org>
+ <87a5d0aibc.ffs@tglx> <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org>
+ <874j38a16p.ffs@tglx> <9c4b189656a0a773227a11568171903989130bb7.camel@infradead.org>
+ <adf6981fcfd3b23d0a293404879598e8fcf072f6.camel@infradead.org>
+ <871pybamoc.ffs@tglx> <Z1wV9SsaVe3torbO@fedora> <87y10j95v7.ffs@tglx>
+ <Z1wfF6NJRZh1jROz@fedora> <87pllv90ow.ffs@tglx> <1a7c126f3ab8ae75e755d01a6bf9bc06730dd239.camel@infradead.org>
+ <87msgz8qes.ffs@tglx> <CAJZ5v0i3zg1ee9p7vc0xEN4cEyCoO-d9OOyV_m65=f251tnxXQ@mail.gmail.com>
+ <CAJZ5v0hBUgOB4QhhwjusRcP+jksWFL-upR5En58g9RD5+n70JA@mail.gmail.com>
+ <73E84E2B-001B-48D6-9BB4-B104D43F8FBF@infradead.org> <febd10dae881f29fa8236f3e2d6ad77a8f094d72.camel@infradead.org>
+In-Reply-To: <febd10dae881f29fa8236f3e2d6ad77a8f094d72.camel@infradead.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 16 Dec 2024 13:14:25 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jcOCffvfB3558eJxv39aMog1BtiJ1PQG0v-sJAPuV6JQ@mail.gmail.com>
+Message-ID: <CAJZ5v0jcOCffvfB3558eJxv39aMog1BtiJ1PQG0v-sJAPuV6JQ@mail.gmail.com>
+Subject: Re: Lockdep warnings on kexec (virtio_blk, hrtimers)
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ming Lei <ming.lei@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>, 
+	dyoung <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>, 
+	linux-ext4 <linux-ext4@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>, 
+	Paolo Bonzini <bonzini@redhat.com>, Petr Mladek <pmladek@suse.com>, 
+	John Ogness <jogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
+	Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241216_041442_702409_C0A37FE5 
+X-CRM114-Status: GOOD (  25.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,165 +97,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Sat, Dec 14, 2024 at 10:57=E2=80=AFAM David Woodhouse <dwmw2@infradead.o=
+rg> wrote:
+>
+> On Fri, 2024-12-13 at 20:16 +0000, David Woodhouse wrote:
+> >
+> > > As discussed with Dave over IRC, the current implementation isn't
+> > > actually that bad.  It might use PMSG_THAW instead of PMSG_RESTORE in
+> > > kernel_kexec(), but other than this it reflects the code flow around
+> > > the jump from the restore kernel to the image one during resume from
+> > > hibernation.
+> > >
+> > > This means that hibernation and kexec jump could be unified somewhat.
+> >
+> > Fair enough. I'm happy to do whatever cleanups or consolidation make
+> > sense, if we have a consensus.
+> >
+> > There remains the question of why the blk-mq thing explodes on the
+> > way down for both kjump and, apparently, even the plain kexec case.
+>
+> In case it's of any use, here's a test case I put together recently for
+> kexec stress testing.
+>
+>  http://david.woodhou.se/kexec.initramfs
+>
+> It's just an initrd I boot in qemu with '-initrd kexec.initramfs' and
+> it builds a copy of itself, then kexecs back into the same kernel with
+> the same initrd. You'll need to drop your own bzImage into it.
+>
+> It was designed to run without a block device, but to trigger the
+> blk-mq thing or the one at
+> https://lore.kernel.org/linux-scsi/F991D40F7D096653+20241203211857.0291ab=
+1b@john-PC/
 
---=-hW907ZVE7ouGIs8pX2sn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Which BTW includes some quite convincing analysis of what's going on.
 
-On Sun, 2024-12-15 at 22:49 -0700, Nathan Chancellor wrote:
-> On Sun, Dec 15, 2024 at 10:09:57AM +0000, David Woodhouse wrote:
-> > On Sat, 2024-12-14 at 16:08 -0700, Nathan Chancellor wrote:
-> > >=20
-> > > I guess this seems somewhat unavoidable because control_page is just =
-a
-> > > 'void *', perhaps machine_kexec() should just be marked as __nocfi? T=
-his
-> > > diff resolves that issue for me.
-> >=20
-> > The patch below seems to work too. I already wanted to deal with the
->=20
-> Can confirm, thanks for the quick fix. With your fix for the first issue
-> I reported, the fix I sent for LTO, and this patch below, I can kexec on
-> a CFI and LTO enabled kernel without any issues.
+> we'd probably need to actually mount something and maybe do some disk
+> I/O.
 
-Argh, using SYM_TYPED_FUNC_START() leads to objtool having more opinions.
-
-I have the Clang build working in my tree now, but the GCC build now compla=
-ins
-
-vmlinux.o: warning: objtool: relocate_kernel+0x0: unreachable instruction
-
-It seems like adding UNWIND_HINT_FUNC ought to be the answer for that?
-But then it complains about this instead:
-
-vmlinux.o: warning: objtool: relocate_kernel+0x69: unsupported stack regist=
-er modification
-
-That's the lea instruction at
-       lea     PAGE_SIZE(%rsi), %rsp
- 79:   48 8d a6 00 10 00 00    lea    0x1000(%rsi),%rsp
-
-I've pushed what I have to my kexec-debug branch; I was hoping to post
-the fixes for the tip/x86/boot branch this morning but I've run out of
-time and will be travelling for the rest of the week. Will try to get
-something sent out this evening when I land.
-
-I may resort to the __nocfi option for now. As noted on the typedef
-patch and in IRC, the whole SYM_TYPED_FUNC_START() thing using the type
-information from the *C* code which is actually doing the call anyway,
-is a bit tautological anyway.
-
---=-hW907ZVE7ouGIs8pX2sn
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjE2MTIwOTU5WjAvBgkqhkiG9w0BCQQxIgQgAQXyYvIS
-IzF74eTqNNCYrqZ02Pfg4Ki8Te9tBicjJBMwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCY4hMAyaASTDLmv1YgdHRXF0kk5RGj9IS6
-TrneIIIsPNmpj0NiIZZNT4ku3Kk46iTdkzCbZOMAZ5l7xjK55z7OeYnBbdTjdpMY4mI7JqGdP8Fs
-g61rgQaD3pr2aG3LCEpsId4DMdB9OiegutUxlsA4U4z6yBuG8PXBijFbBWdVoal6YCSVa5UHB/nt
-A3DyHDRw7uxIj98MhHtLJlNEYeeYM88ravhw11ciNEeg6rBh6p4vDv4xA527GJpYJm4eNs9V4Hdw
-e2WfWCnNe126qRs+VrGNLCjzuatExnEaNvR7F/I92Fq/jyMvyw6elbr8QYJdipLXfSkzQFCcyLon
-1WZeEmhbVTx+BYks20qmALw5B6PN12PYf7KtHSVhmwRfvDtn8G9ibAxYPCMOOXyHbJuEFjW11/aW
-u2m0RcaWIwEAxB4whlH5O1HwU6fxKmdglkTs5VKpT3urcxgBFjDImAgrOM79YB/ZWiWQXOEM43CZ
-mJk0O9Ydrz2DxFTxkNlZkCUk0/LzPhSeC6nft7hNYJU5nuFhhT5ky32fbQM1KL/2JJrIr+kzP2uU
-r4eFJ0lTn1gh3b9TqIU3iNTR1PyKVqFPY07C/bkIS7wHx+ZF4Cqg9Vhr7dnhxw9GYzH4Uq4DG3fX
-xdyM5PF5tGMJAZFizAwCGOptKima5CFUM6TfSie/0AAAAAAAAA==
-
-
---=-hW907ZVE7ouGIs8pX2sn--
+If I'm not mistaken, this should be also reproducible by echoing
+"core" into /sys/power/pm_test and running "echo disk >
+/sys/power/state" in a loop after that, unless the ksys_sync()
+triggered by hibernate() makes it extremely unlikely.
 
