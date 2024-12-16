@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CCF9E7717F
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 08:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B9EEE7717F
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 12:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bk6tom/r1bd7soaLJq9KziLGI67q8MGQb3U84zmrc/A=; b=HUjFKllAdaWsUM4zgmuQUgXh0p
-	uIGBp8qtETSHa/FxcAJ64vYpiG4FmA1nY9WKicbOSn+Mdgye3xpUAT8d2c0JmV+qn0asKQo6NFwdI
-	QxD3rgtFHf/4pg50pZzuvfGr/J6b3i2uhLVMu1A9/t3dfpq5S6WtjvL+F2kLVieeGwYibhW5/brXA
-	rUTSYMR0Iiz2kq5XYp3SqRGtYXnreBT5MfxfwHzNqC74GqWcgO1nx77eYQ6Tc1sXxcJFsBBZdBqVn
-	h6QeXVQyfOPd/aoUKi6imc1UPyRMClwfugcSvwoEmoSYGkrQdccE1IKdNh0ggVRczLiUOcxuWcfTh
-	pyVBpkog==;
+	bh=74gAHTXI+ywIX2A8hk1OKUCfUVL1JoQXbn4IDSPLkjk=; b=Ma7fYVBHjD4aKe00yGz3DypOmF
+	FwmqsiA2hZjfNrs4rsNKcJe+kog9171tM7rBlH9GHn0PAz0PV+Olh84HPYys7wLKAXlg4I2GpQmnZ
+	7a+ON6NbIsypd8fYn3h3VeyYgDE+JWwLY5Ztl0EcSocJsias+fu+yggrvmtN1PrCOXPw0gOVCuuPu
+	PzsbkRCa6veTH3zEtKf9XM/4yF1JXiAS6m4e3RDpZH8OyL0svboIi8wo2WqAThOLHvoQio3H+hIQB
+	6t5qLW/CpYSEF20ypNrY+I/80+Vde9qJbSaE/jp+J3ldiC3+6YMawFV8hohlh74TcBCXe8YWPWJOE
+	QNBJOrYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN6EW-00000009MUf-3Y2I;
-	Mon, 16 Dec 2024 08:13:40 +0000
+	id 1tN9vL-00000009vSa-0rQ7;
+	Mon, 16 Dec 2024 12:10:07 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN6EV-00000009MUT-319p
+	id 1tN9vH-00000009vST-1y5R
 	for kexec@bombadil.infradead.org;
-	Mon, 16 Dec 2024 08:13:39 +0000
+	Mon, 16 Dec 2024 12:10:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bk6tom/r1bd7soaLJq9KziLGI67q8MGQb3U84zmrc/A=; b=BpV6L7YBUPzoCtRMB/MyIiax2v
-	hJ+fe58v+4Y0t/yFN+j/rycl7+vLrBmgx4y+eg1liqfB03RIWOChGQShePuQwfFycYcAsZiscg/eF
-	o3NKIueP1wNPt0WjgKBl+NymiysR3fXyUyt6G/+11EojDJLH9s1Yq9Xa1dpGGrdT2HnUtnEznFjKl
-	nqR1qjash8cbLIpSrynGmakXHFLCv1BhEWAKJIWPa1Ugf5cGc+VoyyOSXqsEtJxAblTY/EztTvpVd
-	EXOT2dK9qAXXCNZ3Xge1viXCageHuKpcRGKQqxOw2YgleoTzXh+nC4I8R2iWJPWs+veU18GUcqRkL
-	a6GhYUdQ==;
+	bh=74gAHTXI+ywIX2A8hk1OKUCfUVL1JoQXbn4IDSPLkjk=; b=MbB76F7dROCJmQG54TgPs5YdjD
+	P9SPtLxsGTq36Mh4yKHppTGFeEsxL/5ZOgdiGa6M5dTohRlW+7zomdv2uJ3O9ApjWuIYATBbVPEc+
+	aon5Id3OuPTD508vHKUBdA+TgT6hpbv9tnIX34XlzPKj9XFZZJpVWgWCBlDxOQee3TldYu2XSsiTO
+	1NvYbL/g3tneXEaEghVSgJFIdwU5vsPUqjbuOM9gnkrmft+0gjEPCXjPYgfsvyklriojryha78rU7
+	ExxFzXxsbSCg2KdwTwKDyWCEjLhL2BFeSTyYC/zI2AFkHCnMtYZdKeb5IA8UnPi+BLMCe0rxilEOG
+	r/9i0/YA==;
 Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=u09cd745991455d.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN6ES-0000000EdQW-2Ehf;
-	Mon, 16 Dec 2024 08:13:36 +0000
-Message-ID: <ca9a3dfaf9859319c350b06314ebdd276e1a0e08.camel@infradead.org>
+	id 1tN9vE-0000000G7ZG-1k8j;
+	Mon, 16 Dec 2024 12:10:00 +0000
+Message-ID: <79ea9c10ae4f1dae16be8c05bb7b7e6b72512f10.camel@infradead.org>
 Subject: Re: [PATCH v5 07/20] x86/kexec: Invoke copy of relocate_kernel()
  instead of the original
 From: David Woodhouse <dwmw2@infradead.org>
@@ -54,7 +54,7 @@ Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
  linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
  <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
  jpoimboe@kernel.org, bsz@amazon.de
-Date: Mon, 16 Dec 2024 08:13:35 +0000
+Date: Mon, 16 Dec 2024 12:09:59 +0000
 In-Reply-To: <20241216054942.GA25019@ax162>
 References: <20241205153343.3275139-1-dwmw2@infradead.org>
 	 <20241205153343.3275139-8-dwmw2@infradead.org>
@@ -62,7 +62,7 @@ References: <20241205153343.3275139-1-dwmw2@infradead.org>
 	 <24d843d2ceb09acdae494ee9a17ec94bf8bb4e4f.camel@infradead.org>
 	 <20241216054942.GA25019@ax162>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-CYBa1FNHKVUHwI9j55o4"
+	boundary="=-hW907ZVE7ouGIs8pX2sn"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -81,7 +81,7 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-CYBa1FNHKVUHwI9j55o4
+--=-hW907ZVE7ouGIs8pX2sn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -100,18 +100,35 @@ his
 > Can confirm, thanks for the quick fix. With your fix for the first issue
 > I reported, the fix I sent for LTO, and this patch below, I can kexec on
 > a CFI and LTO enabled kernel without any issues.
->=20
 
-Thank you for testing.  Which is the LTO one? Is it in my tree yet or
-have I missed it?
-https://git.infradead.org/?p=3Dusers/dwmw2/linux.git;a=3Dshortlog;h=3Drefs/=
-heads/kexec-debug
+Argh, using SYM_TYPED_FUNC_START() leads to objtool having more opinions.
 
-(The fix we're discussing here isn't there yet; it still needs
-polishing)
+I have the Clang build working in my tree now, but the GCC build now compla=
+ins
 
+vmlinux.o: warning: objtool: relocate_kernel+0x0: unreachable instruction
 
---=-CYBa1FNHKVUHwI9j55o4
+It seems like adding UNWIND_HINT_FUNC ought to be the answer for that?
+But then it complains about this instead:
+
+vmlinux.o: warning: objtool: relocate_kernel+0x69: unsupported stack regist=
+er modification
+
+That's the lea instruction at
+       lea     PAGE_SIZE(%rsi), %rsp
+ 79:   48 8d a6 00 10 00 00    lea    0x1000(%rsi),%rsp
+
+I've pushed what I have to my kexec-debug branch; I was hoping to post
+the fixes for the tip/x86/boot branch this morning but I've run out of
+time and will be travelling for the rest of the week. Will try to get
+something sent out this evening when I land.
+
+I may resort to the __nocfi option for now. As noted on the typedef
+patch and in IRC, the whole SYM_TYPED_FUNC_START() thing using the type
+information from the *C* code which is actually doing the call anyway,
+is a bit tautological anyway.
+
+--=-hW907ZVE7ouGIs8pX2sn
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -203,25 +220,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjE2MDgxMzM1WjAvBgkqhkiG9w0BCQQxIgQgieReOlK6
-H+S+Uqt9DmeuvDzp49eHoEQ4Q1Ho9EcdKp0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMjE2MTIwOTU5WjAvBgkqhkiG9w0BCQQxIgQgAQXyYvIS
+IzF74eTqNNCYrqZ02Pfg4Ki8Te9tBicjJBMwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAvCXOyEEdkxyB6vwcXSWDvgAzRA/wgQCLJ
-Z3ZdAwCqSGinUuc43NyI0U3Owub8rdRWl1rnlojwAbH9MULtgAPBnfd+5l6T4of7jUw9uz8nVSQ2
-mkxA0oXW93sSXUQOd/Xr2ZSTpEKFe1PT5lzwJtxiTLnlDB6vUr+VejM50N71WD/AtadaBxYo/i+I
-ZTb1kv20f1JAl5oHATJ+dCM7uidziADVi4q6foxW5LNO+6vMFeyYMVtQP8iJclmZqvJlSKqhuPbx
-H2LW1jQXhCtUSBpKwVbPw9JF3Kgv3gTX705gWWpkbNxaosAgr69OhP1bwIjzJ3HLTHp8LHIiCVHy
-myqo+46ROrD2bejdG7AKoyVixzkHvT68yiiRBxPirMLLcIo9t//PwvaoNIL5hYNVmF3MHCXTEcyp
-KNRSt48A5T5ovOTT0xV9lXFjJcanRDELBWgJb6ywgAk+GVfiDwiDtaRWQCljGbnp8kDX/VfeEhAK
-3MY/aUfpcIk7ecp2il74iVg52GQHLewjLW5BFkCYdOCfFvay+GEYHrQvgRYqANUePCYH0AwsjEY6
-rFcWXXyfA3R6Vsh9Cr5j1IYwBbpYh3MrPoAkMS34cHjrIRLw9aRFR28HZSTc2YKi7rb2huxaXX5z
-XxV2l5NwaNmBfbtCu77RinTLHUIL2Q7G/hzd/a8QvwAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCY4hMAyaASTDLmv1YgdHRXF0kk5RGj9IS6
+TrneIIIsPNmpj0NiIZZNT4ku3Kk46iTdkzCbZOMAZ5l7xjK55z7OeYnBbdTjdpMY4mI7JqGdP8Fs
+g61rgQaD3pr2aG3LCEpsId4DMdB9OiegutUxlsA4U4z6yBuG8PXBijFbBWdVoal6YCSVa5UHB/nt
+A3DyHDRw7uxIj98MhHtLJlNEYeeYM88ravhw11ciNEeg6rBh6p4vDv4xA527GJpYJm4eNs9V4Hdw
+e2WfWCnNe126qRs+VrGNLCjzuatExnEaNvR7F/I92Fq/jyMvyw6elbr8QYJdipLXfSkzQFCcyLon
+1WZeEmhbVTx+BYks20qmALw5B6PN12PYf7KtHSVhmwRfvDtn8G9ibAxYPCMOOXyHbJuEFjW11/aW
+u2m0RcaWIwEAxB4whlH5O1HwU6fxKmdglkTs5VKpT3urcxgBFjDImAgrOM79YB/ZWiWQXOEM43CZ
+mJk0O9Ydrz2DxFTxkNlZkCUk0/LzPhSeC6nft7hNYJU5nuFhhT5ky32fbQM1KL/2JJrIr+kzP2uU
+r4eFJ0lTn1gh3b9TqIU3iNTR1PyKVqFPY07C/bkIS7wHx+ZF4Cqg9Vhr7dnhxw9GYzH4Uq4DG3fX
+xdyM5PF5tGMJAZFizAwCGOptKima5CFUM6TfSie/0AAAAAAAAA==
 
 
---=-CYBa1FNHKVUHwI9j55o4--
+--=-hW907ZVE7ouGIs8pX2sn--
 
