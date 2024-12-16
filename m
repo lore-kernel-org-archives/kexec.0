@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45AB0E77183
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C909E77184
 	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,37 +12,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2QdnXzG6oBq2pMrwUNHKRzdcvGBvqjVeazTvAuBzw50=; b=l4vkG7/mnqpNGD2SYgf/CtpOhM
-	DS4r2NLBGDtsFc2f+AYwITE5Su7lYw3txbjErjWAwkfCWHxfMqB0DRVBcarSKByOLWS3GspRis5th
-	z9G1jsY5yA1iLUWMMLs5cnvQpXukrBzvX4DcmVYWKf7LHsv1X57uh8fP3FMNWO4GSvtxvbObYI1py
-	iIYKXwCZPc5V9gmA2X4DWLti+JeiXjLdTm4ZtliaKLEGcw17KQZlQghhgwJAOW1oY+PwraBsHtnGa
-	9Nqc7wq8P8g0hjORrC2DldopPGUbr6d3zcALVwPDFSabN7NYOZkhVDMoyUI3jxxg7A3Wm+z8JmGVf
-	sm53xH9g==;
+	bh=qnDZGmQXXRBfaYMiHf8RcgZ8w0/B4+1DdFBULwwOb1o=; b=3RJ9lziMdUS7fQw+9QDdoMZtfF
+	D9pUn4+6Q6CX6XiRkq65kslamC6+n6l5cUYA6dkKESCRt6p/TY7zbq2revYfJdLH9CE9G0o39NrB/
+	afw24Me8rTUbN76k5eAj8WPeOjzcNbmJYWNo7teSUbV6dGubddMV+CtlNUO0dy/eWFUzLXTyPN5+c
+	7hSa5n9RC/HMU0D6U7KuhnNjktsxBh75PowDWeCs9EjxNZhV+iMtfHaRPOIAETyjF/QDOp7waGH7x
+	aDYkqNIZcckQRcp5tM0UN6nQM1ndWYDw7mmtcUdWS4qaHFIHlYLI8+WK+dJqv9u2gVP24wBw1UEPe
+	FGdfFGLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeO-0000000Bewe-3pHv;
-	Mon, 16 Dec 2024 23:37:20 +0000
+	id 1tNKeP-0000000Bewx-1PZJ;
+	Mon, 16 Dec 2024 23:37:21 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeM-0000000Betf-2NsN
+	id 1tNKeM-0000000Beth-2Njd
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description;
-	bh=2QdnXzG6oBq2pMrwUNHKRzdcvGBvqjVeazTvAuBzw50=; b=YtrdpZV5q7RwJLVF+vAMRjX/iH
-	svvl4giWUH2iMjCT5ixTY4kEOHrtcZbHf0sb7EjpmCJgmE/sGAbZE5/TzDdZp41nJPLVbK0OwDsxK
-	7CRv9x10roEGFw+y3DjL/ybkPrACOs5l3dm3GetsvoZmvSWI9cVn2hEHt2XQqQnC9+/1zuG/pvOlh
-	h8sKTArFfHWsPva6AJ2ueEWgthsJtT7pZtQuWLu7h916ye+6ENMw/Cy5CHBM85kTuKjE1/Qv2zxS7
-	l+1YD1+ry43OOQg5tRoITUxi0CR0Hs2zxOI2dNwgK02GphYE/IqWU2Qk8pggCLFvwNc7Ssv1ZbqI6
-	I8LqVnJQ==;
+	bh=qnDZGmQXXRBfaYMiHf8RcgZ8w0/B4+1DdFBULwwOb1o=; b=C4BhlY9tosLdIgFYuh5FbO/pL/
+	7pNlWsSUXRZ1uO0qtK2mm/dZ0iRLw8BpfekA09Za0yudhv6GpxK5wD9LykP53btHBu8t84yPPLeJc
+	hR4RYsxmPxIjQ+gIfBazGmf3BYNpEgmJuQVvPgQiBny2vTiCeytTB1OrzDrwiwjGLf9pLrFOKu+SA
+	X3AS/tMDFA29VUlMJdqqTllWAqPSXjP6LTmuQ4oUP6EGhKLRleXwIBhpqe+eXYSsny4nZ/OhwQ95n
+	R1pH7h1yp/HOhIEXY6kRe9vqzQKXt/+qGQlM1G3hWAZ3paIT2bnB3dX4UJrUOA8hfayYQ+LdkrPwn
+	hPpVuuVw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeB-00000004xiR-2Ak7;
-	Mon, 16 Dec 2024 23:37:08 +0000
+	id 1tNKeB-00000004xiQ-2AqD;
+	Mon, 16 Dec 2024 23:37:09 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeWZ-1mhY;
+	id 1tNKeA-0000000DeWV-1XPO;
 	Mon, 16 Dec 2024 23:37:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,9 +77,9 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 9/9] x86/kexec: Use typedef for relocate_kernel_fn function prototype
-Date: Mon, 16 Dec 2024 23:24:16 +0000
-Message-ID: <20241216233704.3208607-10-dwmw2@infradead.org>
+Subject: [PATCH 8/9] x86/kexec: Cope with relocate_kernel() not being at the start of the page
+Date: Mon, 16 Dec 2024 23:24:15 +0000
+Message-ID: <20241216233704.3208607-9-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
@@ -102,96 +102,71 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-Both i386 and x86_64 now copy the relocate_kernel function into the control
-page and execute it from there, using an open-coded function pointer.
+A few places in the kexec control code page make the assumption that the
+first instruction of relocate_kernel is at the very start of the page.
 
-Use a typedef for it instead.
+To allow for Clang CFI information to be added to relocate_kernel(), as
+well as the general principle of removing unwarranted assumptions, fix
+them to use the external __relocate_kernel_start symbol that the linker
+adds. This means using a separate addq and subq for calculating offsets,
+as the assembler can no longer calculate the delta directly for itself
+and relocations aren't that versatile.
+
+Turn the jump from relocate_kernel() to identity_mapped() into a real
+indirect 'jmp *%rsi' too, while touching it. There was no real reason
+for it to be a push+ret in the first place, and adding Clang CFI info
+will also give objtool enough visibility to start complaining 'return
+with modified stack frame' about it.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/kexec.h       | 26 +++++++++++++-------------
- arch/x86/kernel/machine_kexec_32.c |  7 +------
- arch/x86/kernel/machine_kexec_64.c |  6 +-----
- 3 files changed, 15 insertions(+), 24 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 48e4f44f794f..8ad187462b68 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -111,21 +111,21 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
- }
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 1996cea909ff..d74798d78263 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -95,11 +95,10 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	lea	PAGE_SIZE(%rsi), %rsp
  
- #ifdef CONFIG_X86_32
--asmlinkage unsigned long
--relocate_kernel(unsigned long indirection_page,
--		unsigned long control_page,
--		unsigned long start_address,
--		unsigned int has_pae,
--		unsigned int preserve_context);
-+typedef asmlinkage unsigned long
-+relocate_kernel_fn(unsigned long indirection_page,
-+		   unsigned long control_page,
-+		   unsigned long start_address,
-+		   unsigned int has_pae,
-+		   unsigned int preserve_context);
- #else
--unsigned long
--relocate_kernel(unsigned long indirection_page,
--		unsigned long pa_control_page,
--		unsigned long start_address,
--		unsigned int preserve_context,
--		unsigned int host_mem_enc_active);
-+typedef unsigned long
-+relocate_kernel_fn(unsigned long indirection_page,
-+		   unsigned long pa_control_page,
-+		   unsigned long start_address,
-+		   unsigned int preserve_context,
-+		   unsigned int host_mem_enc_active);
- #endif
--
-+extern relocate_kernel_fn relocate_kernel;
- #define ARCH_HAS_KIMAGE_ARCH
+ 	/* jump to identity mapped page */
+-	addq	$(identity_mapped - relocate_kernel), %rsi
+-	pushq	%rsi
+-	ANNOTATE_UNRET_SAFE
+-	ret
+-	int3
++	addq	$identity_mapped, %rsi
++	subq	$__relocate_kernel_start, %rsi
++	ANNOTATE_RETPOLINE_SAFE
++	jmp	*%rsi
+ SYM_CODE_END(relocate_kernel)
  
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-index 1b373d79cedc..80265162aeff 100644
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -160,15 +160,10 @@ void machine_kexec_cleanup(struct kimage *image)
-  */
- void machine_kexec(struct kimage *image)
- {
-+	relocate_kernel_fn *relocate_kernel_ptr;
- 	unsigned long page_list[PAGES_NR];
- 	void *control_page;
- 	int save_ftrace_enabled;
--	asmlinkage unsigned long
--		(*relocate_kernel_ptr)(unsigned long indirection_page,
--				       unsigned long control_page,
--				       unsigned long start_address,
--				       unsigned int has_pae,
--				       unsigned int preserve_context);
+ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+@@ -219,16 +218,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
  
- #ifdef CONFIG_KEXEC_JUMP
- 	if (image->preserve_context)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1440f792a86d..dd75a51463a2 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -344,12 +344,8 @@ void machine_kexec_cleanup(struct kimage *image)
-  */
- void __nocfi machine_kexec(struct kimage *image)
- {
--	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
--					     unsigned long pa_control_page,
--					     unsigned long start_address,
--					     unsigned int preserve_context,
--					     unsigned int host_mem_enc_active);
- 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
-+	relocate_kernel_fn *relocate_kernel_ptr;
- 	unsigned int host_mem_enc_active;
- 	int save_ftrace_enabled;
- 	void *control_page;
+ 	/* get the re-entry point of the peer system */
+ 	popq	%rbp
+-	leaq	relocate_kernel(%rip), %r8
+ 	movq	kexec_pa_swap_page(%rip), %r10
+ 	movq	pa_backup_pages_map(%rip), %rdi
+ 	movq	kexec_pa_table_page(%rip), %rax
+ 	movq	%rax, %cr3
++
++	/* Find start (and end) of this physical mapping of control page */
++	leaq	(%rip), %r8
++	ANNOTATE_NOENDBR
++	andq	$PAGE_MASK, %r8
+ 	lea	PAGE_SIZE(%r8), %rsp
+ 	movq	$1, %r11	/* Ensure preserve_context flag is set */
+ 	call	swap_pages
+ 	movq	kexec_va_control_page(%rip), %rax
+-	addq	$(virtual_mapped - relocate_kernel), %rax
++	addq	$virtual_mapped, %rax
++	subq	$__relocate_kernel_start, %rax
+ 	pushq	%rax
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
 -- 
 2.47.0
 
