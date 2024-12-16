@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C575CE77188
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45AB0E77183
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tC7qQ0TyIBftkKD3qsN4aGjl/EaVH0eOIxBQvILwXpc=; b=SJCS5ikzN50RAka3RLKanvk34a
-	d/RWvZenLBj23t0dgFLyaO28DqiB7sKrXyDmRX5NlKhU1XIF/4rNac5z1prs/PehUUuw2pHxQmbV0
-	ZcSTMutzyzcrpP3jVFJDWAnprmFcyb+B38m5lwjAtI0ybQvvhWJvqdfDYe8xEHCxOtZkG5hKCgSU4
-	ym6q0WbnuCK3EnLnKfQPeQu0+2YLJ9cb7EZh432ifBV1QoSPHI1JQoovdUFaL/CslcZZjKHG14lM2
-	Lc23KWrPpS6xyBhlZP1Ym8SVqnMzbfWWLARfqJyCEjE+Rd1XNk7wcnNBDJpHBSz2Jr9D4CunVopzL
-	GOwcUR3A==;
+	bh=2QdnXzG6oBq2pMrwUNHKRzdcvGBvqjVeazTvAuBzw50=; b=l4vkG7/mnqpNGD2SYgf/CtpOhM
+	DS4r2NLBGDtsFc2f+AYwITE5Su7lYw3txbjErjWAwkfCWHxfMqB0DRVBcarSKByOLWS3GspRis5th
+	z9G1jsY5yA1iLUWMMLs5cnvQpXukrBzvX4DcmVYWKf7LHsv1X57uh8fP3FMNWO4GSvtxvbObYI1py
+	iIYKXwCZPc5V9gmA2X4DWLti+JeiXjLdTm4ZtliaKLEGcw17KQZlQghhgwJAOW1oY+PwraBsHtnGa
+	9Nqc7wq8P8g0hjORrC2DldopPGUbr6d3zcALVwPDFSabN7NYOZkhVDMoyUI3jxxg7A3Wm+z8JmGVf
+	sm53xH9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeO-0000000BewA-25Xw;
+	id 1tNKeO-0000000Bewe-3pHv;
 	Mon, 16 Dec 2024 23:37:20 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeM-0000000Betd-2NQV
+	id 1tNKeM-0000000Betf-2NsN
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description;
-	bh=tC7qQ0TyIBftkKD3qsN4aGjl/EaVH0eOIxBQvILwXpc=; b=o6LkWnyX2Y1FY1IHBX8dWfzjEC
-	Oargtl0xKp3FA9E7/BFmUs5BT4/GpkY4on/TIsvS/USNH3AoUt3RkeogGdJYl6O/l7rtdSKyDJDFd
-	S0cSBYTp6INO+7XPmjwY4wJ5U7YAz11PGTWhYBITeopPfKbNvIw3u9bmsgAGH0stZ6cQ9vBYrem6q
-	MsDSgyJ33S6VURHETBwQmcoNm6NGgX49KAnWOgVLYVXKfQ5djQw5eJuZcOkgAllFo2y1SzZVEV1hw
-	g7Ph+DghE3+WIovQJ4XfLU/KbSAYj8SCD824VOVmna6FREWru7cy3RJU8d/z9vz5GmyXvoVWZthXC
-	AuVzCnag==;
+	bh=2QdnXzG6oBq2pMrwUNHKRzdcvGBvqjVeazTvAuBzw50=; b=YtrdpZV5q7RwJLVF+vAMRjX/iH
+	svvl4giWUH2iMjCT5ixTY4kEOHrtcZbHf0sb7EjpmCJgmE/sGAbZE5/TzDdZp41nJPLVbK0OwDsxK
+	7CRv9x10roEGFw+y3DjL/ybkPrACOs5l3dm3GetsvoZmvSWI9cVn2hEHt2XQqQnC9+/1zuG/pvOlh
+	h8sKTArFfHWsPva6AJ2ueEWgthsJtT7pZtQuWLu7h916ye+6ENMw/Cy5CHBM85kTuKjE1/Qv2zxS7
+	l+1YD1+ry43OOQg5tRoITUxi0CR0Hs2zxOI2dNwgK02GphYE/IqWU2Qk8pggCLFvwNc7Ssv1ZbqI6
+	I8LqVnJQ==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeB-00000004xiP-29zs;
+	id 1tNKeB-00000004xiR-2Ak7;
 	Mon, 16 Dec 2024 23:37:08 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeWI-0qm5;
+	id 1tNKeA-0000000DeWZ-1mhY;
 	Mon, 16 Dec 2024 23:37:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,9 +77,9 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 5/9] x86/kexec: Fix location of relocate_kernel with -ffunction-sections
-Date: Mon, 16 Dec 2024 23:24:12 +0000
-Message-ID: <20241216233704.3208607-6-dwmw2@infradead.org>
+Subject: [PATCH 9/9] x86/kexec: Use typedef for relocate_kernel_fn function prototype
+Date: Mon, 16 Dec 2024 23:24:16 +0000
+Message-ID: <20241216233704.3208607-10-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
@@ -100,94 +100,98 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-After commit cb33ff9e063c ("x86/kexec: Move relocate_kernel to kernel
-.data section"), kernels configured with an option that uses
--ffunction-sections, such as CONFIG_LTO_CLANG, crash when kexecing
-because the value of relocate_kernel does not match the value of
-__relocate_kernel_start so incorrect code gets copied via
-machine_kexec_prepare().
+Both i386 and x86_64 now copy the relocate_kernel function into the control
+page and execute it from there, using an open-coded function pointer.
 
-  $ llvm-nm good-vmlinux &| rg relocate_kernel
-  ffffffff83280d41 T __relocate_kernel_end
-  ffffffff83280b00 T __relocate_kernel_start
-  ffffffff83280b00 T relocate_kernel
+Use a typedef for it instead.
 
-  $ llvm-nm bad-vmlinux &| rg relocate_kernel
-  ffffffff83266100 D __relocate_kernel_end
-  ffffffff83266100 D __relocate_kernel_start
-  ffffffff8120b0d8 T relocate_kernel
-
-When -ffunction-sections is enabled, TEXT_MAIN matches on
-'.text.[0-9a-zA-Z_]*' to coalesce the function specific functions back
-into .text during link time after they have been optimized. Due to the
-placement of TEXT_TEXT before KEXEC_RELOCATE_KERNEL in the x86 linker
-script, the .text.relocate_kernel section ends up in .text instead of
-.data.
-
-Use a second dot in the relocate_kernel section name to avoid matching
-on TEXT_MAIN, which matches a similar situation that happened in
-commit 79cd2a11224e ("x86/retpoline,kprobes: Fix position of thunk
-sections with CONFIG_LTO_CLANG"), which allows kexec to function
-properly.
-
-While .data.relocate_kernel still ends up in the .data section via
-DATA_MAIN -> DATA_DATA, ensure it is located with the
-.text.relocate_kernel section as intended by performing the same
-transformation.
-
-Fixes: cb33ff9e063c ("x86/kexec: Move relocate_kernel to kernel .data section")
-Fixes: 8dbec5c77bc3 ("x86/kexec: Add data section to relocate_kernel")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 6 +++---
- arch/x86/kernel/vmlinux.lds.S        | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kexec.h       | 26 +++++++++++++-------------
+ arch/x86/kernel/machine_kexec_32.c |  7 +------
+ arch/x86/kernel/machine_kexec_64.c |  6 +-----
+ 3 files changed, 15 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index b680f24896b8..1996cea909ff 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -23,11 +23,11 @@
- #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 48e4f44f794f..8ad187462b68 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -111,21 +111,21 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
+ }
  
- /*
-- * The .text.relocate_kernel and .data.relocate_kernel sections are copied
-+ * The .text..relocate_kernel and .data..relocate_kernel sections are copied
-  * into the control page, and the remainder of the page is used as the stack.
+ #ifdef CONFIG_X86_32
+-asmlinkage unsigned long
+-relocate_kernel(unsigned long indirection_page,
+-		unsigned long control_page,
+-		unsigned long start_address,
+-		unsigned int has_pae,
+-		unsigned int preserve_context);
++typedef asmlinkage unsigned long
++relocate_kernel_fn(unsigned long indirection_page,
++		   unsigned long control_page,
++		   unsigned long start_address,
++		   unsigned int has_pae,
++		   unsigned int preserve_context);
+ #else
+-unsigned long
+-relocate_kernel(unsigned long indirection_page,
+-		unsigned long pa_control_page,
+-		unsigned long start_address,
+-		unsigned int preserve_context,
+-		unsigned int host_mem_enc_active);
++typedef unsigned long
++relocate_kernel_fn(unsigned long indirection_page,
++		   unsigned long pa_control_page,
++		   unsigned long start_address,
++		   unsigned int preserve_context,
++		   unsigned int host_mem_enc_active);
+ #endif
+-
++extern relocate_kernel_fn relocate_kernel;
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+index 1b373d79cedc..80265162aeff 100644
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -160,15 +160,10 @@ void machine_kexec_cleanup(struct kimage *image)
   */
+ void machine_kexec(struct kimage *image)
+ {
++	relocate_kernel_fn *relocate_kernel_ptr;
+ 	unsigned long page_list[PAGES_NR];
+ 	void *control_page;
+ 	int save_ftrace_enabled;
+-	asmlinkage unsigned long
+-		(*relocate_kernel_ptr)(unsigned long indirection_page,
+-				       unsigned long control_page,
+-				       unsigned long start_address,
+-				       unsigned int has_pae,
+-				       unsigned int preserve_context);
  
--	.section .data.relocate_kernel,"a";
-+	.section .data..relocate_kernel,"a";
- /* Minimal CPU state */
- SYM_DATA_LOCAL(saved_rsp, .quad 0)
- SYM_DATA_LOCAL(saved_cr0, .quad 0)
-@@ -39,7 +39,7 @@ SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
- 
--	.section .text.relocate_kernel,"ax";
-+	.section .text..relocate_kernel,"ax";
- 	.code64
- SYM_CODE_START_NOALIGN(relocate_kernel)
- 	UNWIND_HINT_END_OF_STACK
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0c893997f023..63ff60a11be5 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -100,8 +100,8 @@ const_pcpu_hot = pcpu_hot;
- #define KEXEC_RELOCATE_KERNEL					\
- 	. = ALIGN(0x100);					\
- 	__relocate_kernel_start = .;				\
--	*(.text.relocate_kernel);				\
--	*(.data.relocate_kernel);				\
-+	*(.text..relocate_kernel);				\
-+	*(.data..relocate_kernel);				\
- 	__relocate_kernel_end = .;
- 
- ASSERT(__relocate_kernel_end - __relocate_kernel_start <= KEXEC_CONTROL_CODE_MAX_SIZE,
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (image->preserve_context)
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 1440f792a86d..dd75a51463a2 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -344,12 +344,8 @@ void machine_kexec_cleanup(struct kimage *image)
+  */
+ void __nocfi machine_kexec(struct kimage *image)
+ {
+-	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+-					     unsigned long pa_control_page,
+-					     unsigned long start_address,
+-					     unsigned int preserve_context,
+-					     unsigned int host_mem_enc_active);
+ 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
++	relocate_kernel_fn *relocate_kernel_ptr;
+ 	unsigned int host_mem_enc_active;
+ 	int save_ftrace_enabled;
+ 	void *control_page;
 -- 
 2.47.0
 
