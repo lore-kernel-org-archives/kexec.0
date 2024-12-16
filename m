@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED62BE7717F
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F6EFE77180
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 18:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ATnv+s1QuLqYt1l9NjHqZOiQjphfAro4ahyFQSrmFEo=; b=AYC//95E2OAhTv3Nq1uyRZa6mW
-	+gh/qVHaHIGrZe/39ysjWastY+M9SSqKZXDqhcExfXkYM4IHKwfVeYHev5xMOoraQK6JknWjElMBP
-	nuOw3ShV9G/zRxQZSH5Nfzv+BgVHlGJWiRMtXDPb+nBWSZ03yGFB+g6zkI4Kh//DzXC380Er9u6f9
-	JExoEmfIcor/KFcX30yukXIhuo3cpmmrVOL1YWqkC7qwjzLQYyntGTzqx86w00rItOX78XVXCffAB
-	62ZvFlvU/mYqtn1dX50pXhIqWSSZZiyNYZiFyxHe44d1MNmc7+g4hhCwTKReAqnoZv6xxTKaRbJKk
-	3Sh7t7KQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Subject:Content-Type:
+	MIME-Version:Message-ID:In-Reply-To:Date:References:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=DI8N+uG9ECaO9MtUeDVcCbPw1YWgb8PFeENftVe0d2Y=; b=zW0LpCBxgC2epMPthpyrdyI3Dt
+	umgxLMpxIXgUuFamDvjZIPMphjgYOySBnOENrwkXbDz1oz+ed+TzOXwdXO5M1j/7IVl+mTjklfYgL
+	DTAzX8clTD7QSUnev4F6nEkFu5m8W8zpLxbFtkmkWJFi66N+JDpqFWUINWeBKM2aUhVeAljWguSBx
+	uhQCorsVpvy6hYBU7NmF0TTxjtDyde4jJIyLHb+mcsc+isgMpnkDlGB2B1nool4dYMguO+9baxuTo
+	CwDsFbvPdjatNOwH+49V4lFeHBe6TLRKhJvEqATnHPpPCQKtxnpmc7eQDgHEYTGFV7oWDl8RuhTZY
+	mpjjg7HQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNF61-0000000Anwv-2vd5;
-	Mon, 16 Dec 2024 17:41:29 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tNFmM-0000000AxfZ-3hhC;
+	Mon, 16 Dec 2024 18:25:14 +0000
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNF60-0000000AnwQ-0Ekn
-	for kexec@bombadil.infradead.org;
-	Mon, 16 Dec 2024 17:41:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ATnv+s1QuLqYt1l9NjHqZOiQjphfAro4ahyFQSrmFEo=; b=FgjQDjqjd9hDErMOJmiOK3hYLI
-	PgAWLm8SklSl5yssBJGV/rz6J2nF6O78QNmIn+3QbVTMQCF5++tXeQneyFuVjxDCDlfjq13AJtVgt
-	5e8/XcUjudYnuHVqx5UAahRNcrHHZJuEjc0I402qapjDyhyPeac2PRzrJn8ug0/Zi4oFlBBoDtBRG
-	nvZvi2gJez9/WyvShMGH2mPdpNahy9iNnBlQ2K6UYnAalq3cXbw3kY9AJhCDuByvm0Dzr1WsM9Hhy
-	LoYhrWU8AwSdZP6MDv1+1M5h+j28u4bQclnbQvDBmMnLwxtPIpf47HnaCkJonZNWCEacv8FEE6D1G
-	jnGRWZbQ==;
-Received: from [2a00:23ee:2908:bad:cd3a:995:e233:9fc1] (helo=[IPv6:::1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNF5x-00000004uxN-4A2X;
-	Mon, 16 Dec 2024 17:41:26 +0000
-Date: Mon, 16 Dec 2024 17:41:27 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
-CC: Stefan Hajnoczi <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>,
- "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>,
- dyoung <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>,
- linux-ext4 <linux-ext4@vger.kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
- Paolo Bonzini <bonzini@redhat.com>, ming.lei@redhat.com,
- Petr Mladek <pmladek@suse.com>, John Ogness <jogness@linutronix.de>
-Subject: Re: [PATCH] sched: Prevent rescheduling when interrupts are disabled
-User-Agent: K-9 Mail for Android
-In-Reply-To: <87a5cv932f.ffs@tglx>
-References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org> <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com> <20241211124240.GA310916@fedora> <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org> <87ldwl9g93.ffs@tglx> <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org> <87a5d0aibc.ffs@tglx> <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org> <874j38a16p.ffs@tglx> <20241213112028.GE21636@noisy.programming.kicks-ass.net> <87seqr914v.ffs@tglx> <87a5cv932f.ffs@tglx>
-Message-ID: <082A11A1-404B-4FFE-B6DC-64A543CA61AD@infradead.org>
+	id 1tNFin-0000000Ax0u-1Sxe;
+	Mon, 16 Dec 2024 18:21:34 +0000
+Received: from in01.mta.xmission.com ([166.70.13.51]:35192)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tNFil-004lrv-IE; Mon, 16 Dec 2024 11:21:31 -0700
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:49960 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tNFik-00FtDO-Lx; Mon, 16 Dec 2024 11:21:31 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Ming Lei <ming.lei@redhat.com>,  LKML
+ <linux-kernel@vger.kernel.org>,  Linux PM <linux-pm@vger.kernel.org>,
+  Kexec Mailing List <kexec@lists.infradead.org>
+References: <4968818.GXAFRqVoOG@rjwysocki.net>
+	<d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org>
+	<87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
+	<E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org>
+Date: Mon, 16 Dec 2024 12:21:01 -0600
+In-Reply-To: <E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org> (David
+	Woodhouse's message of "Mon, 16 Dec 2024 18:14:17 +0000")
+Message-ID: <87bjxbzdyq.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-XM-SPF: eid=1tNFik-00FtDO-Lx;;;mid=<87bjxbzdyq.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+z7hsfZYbh2h99As8mJSOdcZfr7Fg2uXQ=
+Subject: Re: Does anyone actually use KEXEC_JUMP?
+X-SA-Exim-Connect-IP: 166.70.13.51
+X-SA-Exim-Rcpt-To: kexec@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, ming.lei@redhat.com, tglx@linutronix.de, rjw@rjwysocki.net, dwmw2@infradead.org
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241216_102133_388147_83683F98 
+X-CRM114-Status: GOOD (  17.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,89 +77,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 16 December 2024 13:20:56 GMT, Thomas Gleixner <tglx@linutronix=2Ede> wr=
-ote:
->David reported a warning observed while loop testing kexec jump:
->
->  Interrupts enabled after irqrouter_resume+0x0/0x50
->  WARNING: CPU: 0 PID: 560 at drivers/base/syscore=2Ec:103 syscore_resume=
-+0x18a/0x220
->   kernel_kexec+0xf6/0x180
->   __do_sys_reboot+0x206/0x250
->   do_syscall_64+0x95/0x180
->
->The corresponding interrupt flag trace:
->
->  hardirqs last  enabled at (15573): [<ffffffffa8281b8e>] __up_console_se=
-m+0x7e/0x90
->  hardirqs last disabled at (15580): [<ffffffffa8281b73>] __up_console_se=
-m+0x63/0x90
->
->That means __up_console_sem() was invoked with interrupts enabled=2E Furt=
-her
->instrumentation revealed that in the interrupt disabled section of kexec
->jump one of the syscore_suspend() callbacks woke up a task, which set the
->NEED_RESCHED flag=2E A later callback in the resume path invoked
->cond_resched() which in turn led to the invocation of the scheduler:
->
->  __cond_resched+0x21/0x60
->  down_timeout+0x18/0x60
->  acpi_os_wait_semaphore+0x4c/0x80
->  acpi_ut_acquire_mutex+0x3d/0x100
->  acpi_ns_get_node+0x27/0x60
->  acpi_ns_evaluate+0x1cb/0x2d0
->  acpi_rs_set_srs_method_data+0x156/0x190
->  acpi_pci_link_set+0x11c/0x290
->  irqrouter_resume+0x54/0x60
->  syscore_resume+0x6a/0x200
->  kernel_kexec+0x145/0x1c0
->  __do_sys_reboot+0xeb/0x240
->  do_syscall_64+0x95/0x180
->
->This is a long standing problem, which probably got more visible with
->the recent printk changes=2E Something does a task wakeup and the
->scheduler sets the NEED_RESCHED flag=2E cond_resched() sees it set and
->invokes schedule() from a completely bogus context=2E The scheduler
->enables interrupts after context switching, which causes the above
->warning at the end=2E
->
->Quite some of the code paths in syscore_suspend()/resume() can result in
->triggering a wakeup with the exactly same consequences=2E They might not
->have done so yet, but as they share a lot of code with normal operations
->it's just a question of time=2E
->
->The problem only affects the PREEMPT_NONE and PREEMPT_VOLUNTARY schedulin=
-g
->models=2E Full preemption is not affected as cond_resched() is disabled a=
-nd
->the preemption check preemptible() takes the interrupt disabled flag into
->account=2E
->
->Cure the problem by adding a corresponding check into cond_resched()=2E
->
->Reported-by: David Woodhouse <dwmw2@infradead=2Eorg>
->Signed-off-by: Thomas Gleixner <tglx@linutronix=2Ede>
->Tested-by: David Woodhouse <dwmw2@infradead=2Eorg>
->Cc: stable@vger=2Ekernel=2Eorg
->Closes: https://lore=2Ekernel=2Eorg/all/7717fe2ac0ce5f0a2c43fdab8b11f4483=
-d54a2a4=2Ecamel@infradead=2Eorg
->---
-> kernel/sched/core=2Ec |    2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->--- a/kernel/sched/core=2Ec
->+++ b/kernel/sched/core=2Ec
->@@ -7276,7 +7276,7 @@ void rt_mutex_setprio(struct task_struct
-> #if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
-> int __sched __cond_resched(void)
-> {
->-	if (should_resched(0)) {
->+	if (should_resched(0) && !irqs_disabled()) {
-> 		preempt_schedule_common();
-> 		return 1;
-> 	}
+David Woodhouse <dwmw2@infradead.org> writes:
 
-Thank you=2E Slight preference for dwmw@amazon=2Eco=2Euk as the Reported-b=
-y and Tested-by addresses if it's not too late=2E I'm assuming you will han=
-dle this and don't want me to round it up with the kexec bits=2E
+> It isn't broken. I know of it being used a few million times a week.
+>
+> There are corner cases which have never worked right, like the callee
+> putting a different return address for its next invocation, on the
+> stack *above* the address it 'ret's to. Which since the first kjump
+> patch has been the first word of the page *after* the swap page (and
+> is now fixed in my tree). But fundamentally it *does* work.
+>
+> I only started messing with it because I was working on
+> relocate_kernel() and needed to write a test case for it; the fact
+> that I know of it being used in production is actually just a
+> coincidence.
+
+Cool.  I had the sense that the original developer never got around
+to using it, so I figured I should check.
+
+Mind if I ask what you know of it being used for?
+
+I had imagined it might be a way to call firmware code preventing the
+need to code of a specific interface for each type of firmware.
+
+Eric
+
 
