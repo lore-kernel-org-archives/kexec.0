@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25B36E77184
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FD2AE77186
 	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zzCHIqIiQJDgySmzgmnKF8ZlcgBrOOsvhFm4kYphShs=; b=g3gvYzXmKgomo+IKzvGimSyoU/
-	yx/V7XF1mcIVQ1HuGSxQdaZej+3WzPxeArehQ+4TDGKoG9HuLrlgieJKklazfuLJTZBkF+yFGGIfP
-	IO8NUWz9Q+FFwljLQiGv9DWQzOuQs7XyxDdXCF+OfgFzIPwfCPlJGio3MdRGDPKZC086qGtjj0T8K
-	p2HFXkRTTUZOnguacI3tMC13Re/5WbN2DEF+HsK1lHGuqgPa0fU2AwQvDsDztOZwgHBkp27z+io/O
-	XfB9o1PKamZHcgKWE1+aUpB0hGecHS4bjPzjhz6AHuc98ZmUMVejVzaSbmr0Bqb/w26FiifBxALeA
-	2RnBWCtg==;
+	bh=KF9I8gMwuVGDi5vu6drdRG3X3dHP+mrVfyO8mKUOGvk=; b=KSQJ4GQHGWUnDfNhPgondMMz3y
+	vZ0Yz0VGuW2RVGsGacnXvr+pF9cCUb9YvHFKFs8zEiUfRZKv59KI9OWBA4PdlhxbBaAYfJIuGECWF
+	QbRi7fMwj8T1dF7wQs4enL7hvztnjCzVnJ7rhSy3sijojhyXOzVuoaXpqiMrlXJ0VLmFECo6gso9f
+	Jz7UWqvuqpAREQxqZFSBiEBvVK13pwKlzn14M9/tnh3+UwPV+ZFZdy3iHxIGyFJEgz25nVgotLw+p
+	Essl61CtKEfP8NaVQcOXHzf4g82gvz/IRLxj4Izsmgq+ijOWTB14cn1AEBvJyZ+NwligeRzLqQRG5
+	7TiPU5UA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeK-0000000BetA-3Bur;
+	id 1tNKeK-0000000BesY-1cMR;
 	Mon, 16 Dec 2024 23:37:16 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeI-0000000Bere-0boV
+	id 1tNKeI-0000000Berd-0c7O
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description;
-	bh=zzCHIqIiQJDgySmzgmnKF8ZlcgBrOOsvhFm4kYphShs=; b=gY/TwmhMVrUX4ruTov+kQpAeXq
-	vUof0P+v8tmNgZzieQgAPFNfKsdCHZ/fwo462vl2AG6mOxorwVgsneYQhjXjghSswbLIN6yyq2tG4
-	MLM5EBtf9WXI43ph0N7ap72TpygIWsaBhtBU+fFNKjt/VY3Rpmjp1TLnWE0uLjvSh15dTjVNS0Zqq
-	xsxKda+QdQW9Z/ITvj5zEnY921zH0MMyZEtqdA6/StFGUzAoRPMx0NaN6IQY4fANl3FpmUJQlxLGP
-	TX9n2KDYVOHgvF5DsVSzF60WeTB/u/TkkLqwmClvBnb+T2Wv3wqAtEWxJKwwFM/tQCqlMGEFmxN56
-	4l17Grwg==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description;
+	bh=KF9I8gMwuVGDi5vu6drdRG3X3dHP+mrVfyO8mKUOGvk=; b=m94t7MaEEu9OBNPTDHoiuf70Fq
+	Tp+6Tautcgn9+y4v+iOpPpRA7dlOW5BExNEZlyaWF6c5MembvO9E+FFAn0uqXpg5K1RzSXcq4jav2
+	0bPZNV6y+IFYVMhUtDQZqYbSCItpaxpTV1ihMtfL8DxE6H6VkEvxzqAqu4H8t5WnoBViQ3X5Z1Jra
+	KCkt6QMGdR3bdWpiBS2RER03GULc8H1xzIA+fy/pEXdzwv5vxGdcmVMSrO6KJSnfRCNFZl5s+xqv7
+	W9sQtfqIFJO3Yz2pT5PTiGNtw22ueBKpuEkj9w2CSSaof8josM9C5BZT6ffocA8+uiijHgK8XXaqU
+	YCQ/yO3w==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-000000034nX-25us;
-	Mon, 16 Dec 2024 23:37:06 +0000
+	id 1tNKeA-000000034nY-2fG0;
+	Mon, 16 Dec 2024 23:37:07 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeW9-0Qg3;
+	id 1tNKeA-0000000DeWN-17Kz;
 	Mon, 16 Dec 2024 23:37:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,13 +77,14 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 3/9] x86/kexec: Use correct swap page in swap_pages function
-Date: Mon, 16 Dec 2024 23:24:10 +0000
-Message-ID: <20241216233704.3208607-4-dwmw2@infradead.org>
+Subject: [PATCH 6/9] x86/kexec: Mark machine_kexec() with __nocfi
+Date: Mon, 16 Dec 2024 23:24:13 +0000
+Message-ID: <20241216233704.3208607-7-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -102,59 +103,41 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-The swap_pages function expects the swap page to be in %r10, but there
-was no documentation to that effect. Once upon a time the setup code
-used to load its value from a kernel virtual address and save it to an
-address which is accessible in the identity-mapped page tables, and
-*happened* to use %r10 to do so, with no comment that it was left there
-on *purpose* instead of just being a scratch register. Once that was no
-longer necessary, %r10 just holds whatever the kernel happened to leave
-in it.
+A recent commit caused the relocate_kernel() function to be invoked
+through a function pointer, but it does not have CFI information. The
+resulting trap occurs after the IDT and GDT have been invalidated,
+leading to a triple-fault if CONFIG_CFI_CLANG is enabled.
 
-Now that the original value passed by the kernel is accessible via
-%rip-relative addressing, load directly from there instead of using %r10
-for it. But document the other parameters that the swap_pages function
-*does* expect in registers.
+Using SYM_TYPED_FUNC_START() to provide the CFI information looks like
+it will require a prolonged battle with objtool. And is fairly pointless
+anyway, as the actual signature comes from a __kcfi_typeid_… symbol
+emitted from the C code based on the function prototype it thinks that
+relocate_kernel has, rendering the check somewhat tautological.
 
-Fixes: b3adabae8a96 ("x86/kexec: Drop page_list argument from relocate_kernel()")
+The simple fix is just to mark machine_kexec() with __nocfi.
+
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Fixes: eeebbde57113 ("x86/kexec: Invoke copy of relocate_kernel() instead of
+the original")
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/machine_kexec_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 1a52e4339c1d..0d6fce1e0a32 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -264,6 +264,10 @@ SYM_CODE_END(virtual_mapped)
- 	/* Do the copies */
- SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 	UNWIND_HINT_END_OF_STACK
-+	/*
-+	 * %rdi indirection page
-+	 * %r11 preserve_context
-+	 */
- 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
- 	xorl	%edi, %edi
- 	xorl	%esi, %esi
-@@ -302,7 +306,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 	jz	.Lnoswap
- 
- 	/* copy source page to swap page */
--	movq	%r10, %rdi
-+	movq	kexec_pa_swap_page(%rip), %rdi
- 	movl	$512, %ecx
- 	rep ; movsq
- 
-@@ -314,7 +318,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- 
- 	/* copy swap page to destination page */
- 	movq	%rdx, %rdi
--	movq	%r10, %rsi
-+	movq	kexec_pa_swap_page(%rip), %rsi
- .Lnoswap:
- 	movl	$512, %ecx
- 	rep ; movsq
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9232ad1562c8..1440f792a86d 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -342,7 +342,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void machine_kexec(struct kimage *image)
++void __nocfi machine_kexec(struct kimage *image)
+ {
+ 	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+ 					     unsigned long pa_control_page,
 -- 
 2.47.0
 
