@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C909E77184
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EFCBE77187
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qnDZGmQXXRBfaYMiHf8RcgZ8w0/B4+1DdFBULwwOb1o=; b=3RJ9lziMdUS7fQw+9QDdoMZtfF
-	D9pUn4+6Q6CX6XiRkq65kslamC6+n6l5cUYA6dkKESCRt6p/TY7zbq2revYfJdLH9CE9G0o39NrB/
-	afw24Me8rTUbN76k5eAj8WPeOjzcNbmJYWNo7teSUbV6dGubddMV+CtlNUO0dy/eWFUzLXTyPN5+c
-	7hSa5n9RC/HMU0D6U7KuhnNjktsxBh75PowDWeCs9EjxNZhV+iMtfHaRPOIAETyjF/QDOp7waGH7x
-	aDYkqNIZcckQRcp5tM0UN6nQM1ndWYDw7mmtcUdWS4qaHFIHlYLI8+WK+dJqv9u2gVP24wBw1UEPe
-	FGdfFGLw==;
+	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=ApUmt5w5j50ZzE4CN8B8im/cB0YzhpqvQRJfxOmpDKc=; b=uwvvGSI/eKi6+JJwXhoPRkeMkW
+	fmPZn6MVNFWOadEHf/u0LnL7rKEs41S/qxtzjg5B5e+/1HSF+VcAhOsqc018i3E4My5aES7A5SMNb
+	nIw25zW46Zff3v2t3y5KPkN8DNwcxvUdfxKXyDxp9e3gCU032Sff3HKeiLdZWi/beumXKCcZXUzIc
+	jBOrdFC0/WHe0JEjkGOChNX+smfqSt1NMm1ElwlkIt6OxMbvlB6YNk4p1XeYV5EboNPL79NTHPKBi
+	Y+/QtclgA71vAYH8wTdM+16xi8QET0unxZFH9gL3OGgwX81Ujc4o0x2+PPaU+7++zLWM+fqA+qEay
+	smalcjtQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeP-0000000Bewx-1PZJ;
+	id 1tNKeP-0000000BexR-37zU;
 	Mon, 16 Dec 2024 23:37:21 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeM-0000000Beth-2Njd
+	id 1tNKeM-0000000Betg-2NZK
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description;
-	bh=qnDZGmQXXRBfaYMiHf8RcgZ8w0/B4+1DdFBULwwOb1o=; b=C4BhlY9tosLdIgFYuh5FbO/pL/
-	7pNlWsSUXRZ1uO0qtK2mm/dZ0iRLw8BpfekA09Za0yudhv6GpxK5wD9LykP53btHBu8t84yPPLeJc
-	hR4RYsxmPxIjQ+gIfBazGmf3BYNpEgmJuQVvPgQiBny2vTiCeytTB1OrzDrwiwjGLf9pLrFOKu+SA
-	X3AS/tMDFA29VUlMJdqqTllWAqPSXjP6LTmuQ4oUP6EGhKLRleXwIBhpqe+eXYSsny4nZ/OhwQ95n
-	R1pH7h1yp/HOhIEXY6kRe9vqzQKXt/+qGQlM1G3hWAZ3paIT2bnB3dX4UJrUOA8hfayYQ+LdkrPwn
-	hPpVuuVw==;
+	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ApUmt5w5j50ZzE4CN8B8im/cB0YzhpqvQRJfxOmpDKc=; b=aIW8v66qJZpnRx4m3gzUvZqAl9
+	45t1gnTqyeP3Azx2aZfITl6GbsRtFlM2MyIKtCOZpuQQ84GB9JrWXxsvtH+He4besVhXQr6QLduir
+	/eNlzMwd8DDqg0pmKOkSjeskGPIpiYltdMJVayJA1dQvPqs+ndHzc3ccRYjogdE/zP1gZYw+UDcMt
+	pvFCNZ1bRMoA5+rhhxsXw/vbkjGLB91eQE5WkFKb8ECaggDgCt8F8Rmc679Tyhwjk/mctU5xXWNef
+	siWqn4HujzYmScywJ39NEOlc/iaCGEGnnLnnF3vFg3iAumiGzvde4hmgHVcpCreJg9RKwsfg83Slb
+	lbeUcrHA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeB-00000004xiQ-2AqD;
-	Mon, 16 Dec 2024 23:37:09 +0000
+	id 1tNKeB-00000004xiN-2ANX;
+	Mon, 16 Dec 2024 23:37:07 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeWV-1XPO;
-	Mon, 16 Dec 2024 23:37:06 +0000
+	id 1tNKe9-0000000DeW0-3qcI;
+	Mon, 16 Dec 2024 23:37:05 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -77,13 +77,12 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 8/9] x86/kexec: Cope with relocate_kernel() not being at the start of the page
-Date: Mon, 16 Dec 2024 23:24:15 +0000
-Message-ID: <20241216233704.3208607-9-dwmw2@infradead.org>
+Subject: [PATCH 0/9] x86/kexec: Fixes for tip/x86/boot
+Date: Mon, 16 Dec 2024 23:24:07 +0000
+Message-ID: <20241216233704.3208607-1-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
-References: <20241216233704.3208607-1-dwmw2@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -100,74 +99,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Fix a few bugs introduced by the recent rework of the relocate_kernel()
+code, and one which has been there in the kjump code from the beginning.
 
-A few places in the kexec control code page make the assumption that the
-first instruction of relocate_kernel is at the very start of the page.
+ • Global read-only TLB entries made relocate_kernel() crash when writing
+   to its own page after the %cr3 switch should have made it writeable.
+ • The preserve_context flag was lost when invoking swap_pages on the way
+   back, causing pages not to be swapped.
+ • The wrong page was being used as the swap page.
+ • The ABI for the kjump call asks the callee to put its entry address for
+   next time at %rsp+8 before returning, but we set %rsp to the top of the
+   available page, such that the entry address is at the start of some
+   other page.
+ • The relocate_kernel() function lacked Clang CFI information, but is now
+   called via a function pointer, leading to a crash¹.
+ • The relocate_kernel() code and data could end up being linked into the
+   wrong place for a LTO / -ffunction-sections build.
 
-To allow for Clang CFI information to be added to relocate_kernel(), as
-well as the general principle of removing unwarranted assumptions, fix
-them to use the external __relocate_kernel_start symbol that the linker
-adds. This means using a separate addq and subq for calculating offsets,
-as the assembler can no longer calculate the delta directly for itself
-and relocations aren't that versatile.
+Thanks to Nathan for reporting many of the above.
 
-Turn the jump from relocate_kernel() to identity_mapped() into a real
-indirect 'jmp *%rsi' too, while touching it. There was no real reason
-for it to be a push+ret in the first place, and adding Clang CFI info
-will also give objtool enough visibility to start complaining 'return
-with modified stack frame' about it.
+Also a few minor cleanups, including a comments-only patch from Rafael 
+on the suspend-like part of kjump as a prelude to actually cleaning that 
+up.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/relocate_kernel_64.S | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+¹ Fixed by just adding __nocfi. Actually providing the CFI information 
+for relocate_kernel() will need a bit more work, so let's just do the 
+simple fix for now.
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 1996cea909ff..d74798d78263 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -95,11 +95,10 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	lea	PAGE_SIZE(%rsi), %rsp
- 
- 	/* jump to identity mapped page */
--	addq	$(identity_mapped - relocate_kernel), %rsi
--	pushq	%rsi
--	ANNOTATE_UNRET_SAFE
--	ret
--	int3
-+	addq	$identity_mapped, %rsi
-+	subq	$__relocate_kernel_start, %rsi
-+	ANNOTATE_RETPOLINE_SAFE
-+	jmp	*%rsi
- SYM_CODE_END(relocate_kernel)
- 
- SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-@@ -219,16 +218,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 
- 	/* get the re-entry point of the peer system */
- 	popq	%rbp
--	leaq	relocate_kernel(%rip), %r8
- 	movq	kexec_pa_swap_page(%rip), %r10
- 	movq	pa_backup_pages_map(%rip), %rdi
- 	movq	kexec_pa_table_page(%rip), %rax
- 	movq	%rax, %cr3
-+
-+	/* Find start (and end) of this physical mapping of control page */
-+	leaq	(%rip), %r8
-+	ANNOTATE_NOENDBR
-+	andq	$PAGE_MASK, %r8
- 	lea	PAGE_SIZE(%r8), %rsp
- 	movq	$1, %r11	/* Ensure preserve_context flag is set */
- 	call	swap_pages
- 	movq	kexec_va_control_page(%rip), %rax
--	addq	$(virtual_mapped - relocate_kernel), %rax
-+	addq	$virtual_mapped, %rax
-+	subq	$__relocate_kernel_start, %rax
- 	pushq	%rax
- 	ANNOTATE_UNRET_SAFE
- 	ret
--- 
-2.47.0
+David Woodhouse (7):
+      x86/kexec: Disable global pages before writing to control page
+      x86/kexec: Ensure preserve_context flag is set on return to kernel
+      x86/kexec: Use correct swap page in swap_pages function
+      x86/kexec: Fix stack and handling of re-entry point for ::preserve_context
+      x86/kexec: Mark machine_kexec() with __nocfi
+      x86/kexec: Cope with relocate_kernel() not being at the start of the page
+      x86/kexec: Use typedef for relocate_kernel_fn function prototype
+
+Nathan Chancellor (1):
+      x86/kexec: Fix location of relocate_kernel with -ffunction-sections
+
+Rafael J. Wysocki (1):
+      kexec_core: Add and update comments regarding the KEXEC_JUMP flow
+
+ arch/x86/include/asm/kexec.h         | 26 ++++++++--------
+ arch/x86/kernel/machine_kexec_32.c   |  7 +----
+ arch/x86/kernel/machine_kexec_64.c   |  8 ++---
+ arch/x86/kernel/relocate_kernel_64.S | 57 ++++++++++++++++++++++++------------
+ arch/x86/kernel/vmlinux.lds.S        |  4 +--
+ kernel/kexec_core.c                  | 23 +++++++++++----
+ 6 files changed, 74 insertions(+), 51 deletions(-)
 
 
