@@ -4,74 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30D41E7717F
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 17:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED62BE7717F
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 17:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=; b=qN7IZMWl+GaF4JKQi6GMC1OdvE
-	4ot9XFWEcCO87g69cojAvkXIIwiPQM379ZKlYveNREM+XmkdBBzaJ+ifvxovqR486JsSDTIYaEC0n
-	NYLc5DCT7qsA3I2LOd9X2jQk2HotS2EsfYOC5mRjYAJmdyXqaMo0Lv3eQMgfEx95+f9dCaazI6+Gu
-	zdG/2t3o1+tquu4Zm7ZjYxTTo49LeeKwXhTPjLOikUORqliBwsinRJuhcVscvQOi/HwBa4yXmFKPP
-	zaBKHksi7xZ5OvhWt10PRx463hYjaG6Qng93BdBEi2rcO1I2Me3ztf2By/4lgvCUjtRoWYMb4nsFX
-	GrEOFeZQ==;
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ATnv+s1QuLqYt1l9NjHqZOiQjphfAro4ahyFQSrmFEo=; b=AYC//95E2OAhTv3Nq1uyRZa6mW
+	+gh/qVHaHIGrZe/39ysjWastY+M9SSqKZXDqhcExfXkYM4IHKwfVeYHev5xMOoraQK6JknWjElMBP
+	nuOw3ShV9G/zRxQZSH5Nfzv+BgVHlGJWiRMtXDPb+nBWSZ03yGFB+g6zkI4Kh//DzXC380Er9u6f9
+	JExoEmfIcor/KFcX30yukXIhuo3cpmmrVOL1YWqkC7qwjzLQYyntGTzqx86w00rItOX78XVXCffAB
+	62ZvFlvU/mYqtn1dX50pXhIqWSSZZiyNYZiFyxHe44d1MNmc7+g4hhCwTKReAqnoZv6xxTKaRbJKk
+	3Sh7t7KQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNF0i-0000000An0F-2pGK;
-	Mon, 16 Dec 2024 17:36:00 +0000
-Received: from sender4-op-o15.zoho.com ([136.143.188.15])
+	id 1tNF61-0000000Anwv-2vd5;
+	Mon, 16 Dec 2024 17:41:29 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNF0g-0000000AmzF-2zpS
-	for kexec@lists.infradead.org;
-	Mon, 16 Dec 2024 17:36:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1734370532; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Vp0Iu6WdbMoF1nXM5SnCyiFrgm+BDTTNnovEHr3eLz0NQKz/zfx5bJiDUaqTLXmjF/IrctuEI+gH9FH2yuTHr4mKE8vjWNgQLdOCcNLlLWX+VuREs3+vFPezAQ+a5uG0QzMVqUs7PHKCSEJaPqKy8BNTNMxyxicXMqB09eHc/6E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1734370532; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=; 
-	b=HQDuLCTZ4BGk/ey1MN57Y7Uzrf95t624UDRepS6W8RrQVfOU9woYFYU0R3qBb0gOXyNncdwA0eqyXxb9oCR31KMAlDpIzGDGEafpS98PielASxILX6jmfdmIdN6TK+rtOTHo79tGZKKWCn9IXklj8/zyig50B8OqEbNnYVnPasU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734370532;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=;
-	b=MSxLuYEpwZ0O8h0j+Rypp0FGvTc0pvs9ZgT8QwNZx7mgRBcUDkFoHWWd74rwVB+v
-	39XLkxIwAO6l4YoVHfRwn4Szqs4S1o9C8AvY0DNWbzlw+QbSluj72kknxpDK4vd0HsW
-	RlsqBp4epFR4A7FlQHsZf009W4uGWKV48qja8Y5XdL+0r/vGdV73AJE9PQq8LKQQpy5
-	BfjICz3nSFvNtAfyZhW5vRsvjc+VWJLE+h6hTX9leRL+rMI+IL86anX1HpdP6svU7Kr
-	JLDL/FWN8jViUZgWBukOTqDWUJLKQsIuvI1jx1nggx9XNk9/ALdSIayuGvyj02fadTf
-	z+qwqyv/Vw==
-Received: by mx.zohomail.com with SMTPS id 1734370530165398.6022361701732;
-	Mon, 16 Dec 2024 09:35:30 -0800 (PST)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH] mips: disable CRASH_DUMP by default
-Date: Tue, 17 Dec 2024 01:35:14 +0800
-Message-ID: <20241216173514.495638-1-uwu@icenowy.me>
-X-Mailer: git-send-email 2.47.1
+	id 1tNF60-0000000AnwQ-0Ekn
+	for kexec@bombadil.infradead.org;
+	Mon, 16 Dec 2024 17:41:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ATnv+s1QuLqYt1l9NjHqZOiQjphfAro4ahyFQSrmFEo=; b=FgjQDjqjd9hDErMOJmiOK3hYLI
+	PgAWLm8SklSl5yssBJGV/rz6J2nF6O78QNmIn+3QbVTMQCF5++tXeQneyFuVjxDCDlfjq13AJtVgt
+	5e8/XcUjudYnuHVqx5UAahRNcrHHZJuEjc0I402qapjDyhyPeac2PRzrJn8ug0/Zi4oFlBBoDtBRG
+	nvZvi2gJez9/WyvShMGH2mPdpNahy9iNnBlQ2K6UYnAalq3cXbw3kY9AJhCDuByvm0Dzr1WsM9Hhy
+	LoYhrWU8AwSdZP6MDv1+1M5h+j28u4bQclnbQvDBmMnLwxtPIpf47HnaCkJonZNWCEacv8FEE6D1G
+	jnGRWZbQ==;
+Received: from [2a00:23ee:2908:bad:cd3a:995:e233:9fc1] (helo=[IPv6:::1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNF5x-00000004uxN-4A2X;
+	Mon, 16 Dec 2024 17:41:26 +0000
+Date: Mon, 16 Dec 2024 17:41:27 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
+CC: Stefan Hajnoczi <stefanha@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ "x86@kernel.org" <x86@kernel.org>, hpa <hpa@zytor.com>,
+ dyoung <dyoung@redhat.com>, kexec <kexec@lists.infradead.org>,
+ linux-ext4 <linux-ext4@vger.kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, eperezma <eperezma@redhat.com>,
+ Paolo Bonzini <bonzini@redhat.com>, ming.lei@redhat.com,
+ Petr Mladek <pmladek@suse.com>, John Ogness <jogness@linutronix.de>
+Subject: Re: [PATCH] sched: Prevent rescheduling when interrupts are disabled
+User-Agent: K-9 Mail for Android
+In-Reply-To: <87a5cv932f.ffs@tglx>
+References: <1f631458c180c975c238d4d33d333f9fa9a4d2a3.camel@infradead.org> <CACGkMEtOdYorGPdSjxC1Lb1LJtZ+ZqHam3agHJ6JdpS-tE1qAQ@mail.gmail.com> <20241211124240.GA310916@fedora> <7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org> <87ldwl9g93.ffs@tglx> <10f5d22150b548ec271e0a847ba2eb91139e6f61.camel@infradead.org> <87a5d0aibc.ffs@tglx> <dd06cd643ee7fa0be08ac3082cff443b8bfbfb58.camel@infradead.org> <874j38a16p.ffs@tglx> <20241213112028.GE21636@noisy.programming.kicks-ass.net> <87seqr914v.ffs@tglx> <87a5cv932f.ffs@tglx>
+Message-ID: <082A11A1-404B-4FFE-B6DC-64A543CA61AD@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241216_093558_809087_4233FBCE 
-X-CRM114-Status: UNSURE (   7.07  )
-X-CRM114-Notice: Please train this message.
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,35 +76,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On MIPS, the space of a crash dump kernel needs to be manually specified
-by both the debugee and the crash dump kernel PHYSICAL_START config
-option, and the default PHYSICAL_START config will make the kernel
-load quite higher, which isn't acceptable when using as a daily use
-kernel (and will even confuse some naive Loongson-3 bootloaders).
+On 16 December 2024 13:20:56 GMT, Thomas Gleixner <tglx@linutronix=2Ede> wr=
+ote:
+>David reported a warning observed while loop testing kexec jump:
+>
+>  Interrupts enabled after irqrouter_resume+0x0/0x50
+>  WARNING: CPU: 0 PID: 560 at drivers/base/syscore=2Ec:103 syscore_resume=
++0x18a/0x220
+>   kernel_kexec+0xf6/0x180
+>   __do_sys_reboot+0x206/0x250
+>   do_syscall_64+0x95/0x180
+>
+>The corresponding interrupt flag trace:
+>
+>  hardirqs last  enabled at (15573): [<ffffffffa8281b8e>] __up_console_se=
+m+0x7e/0x90
+>  hardirqs last disabled at (15580): [<ffffffffa8281b73>] __up_console_se=
+m+0x63/0x90
+>
+>That means __up_console_sem() was invoked with interrupts enabled=2E Furt=
+her
+>instrumentation revealed that in the interrupt disabled section of kexec
+>jump one of the syscore_suspend() callbacks woke up a task, which set the
+>NEED_RESCHED flag=2E A later callback in the resume path invoked
+>cond_resched() which in turn led to the invocation of the scheduler:
+>
+>  __cond_resched+0x21/0x60
+>  down_timeout+0x18/0x60
+>  acpi_os_wait_semaphore+0x4c/0x80
+>  acpi_ut_acquire_mutex+0x3d/0x100
+>  acpi_ns_get_node+0x27/0x60
+>  acpi_ns_evaluate+0x1cb/0x2d0
+>  acpi_rs_set_srs_method_data+0x156/0x190
+>  acpi_pci_link_set+0x11c/0x290
+>  irqrouter_resume+0x54/0x60
+>  syscore_resume+0x6a/0x200
+>  kernel_kexec+0x145/0x1c0
+>  __do_sys_reboot+0xeb/0x240
+>  do_syscall_64+0x95/0x180
+>
+>This is a long standing problem, which probably got more visible with
+>the recent printk changes=2E Something does a task wakeup and the
+>scheduler sets the NEED_RESCHED flag=2E cond_resched() sees it set and
+>invokes schedule() from a completely bogus context=2E The scheduler
+>enables interrupts after context switching, which causes the above
+>warning at the end=2E
+>
+>Quite some of the code paths in syscore_suspend()/resume() can result in
+>triggering a wakeup with the exactly same consequences=2E They might not
+>have done so yet, but as they share a lot of code with normal operations
+>it's just a question of time=2E
+>
+>The problem only affects the PREEMPT_NONE and PREEMPT_VOLUNTARY schedulin=
+g
+>models=2E Full preemption is not affected as cond_resched() is disabled a=
+nd
+>the preemption check preemptible() takes the interrupt disabled flag into
+>account=2E
+>
+>Cure the problem by adding a corresponding check into cond_resched()=2E
+>
+>Reported-by: David Woodhouse <dwmw2@infradead=2Eorg>
+>Signed-off-by: Thomas Gleixner <tglx@linutronix=2Ede>
+>Tested-by: David Woodhouse <dwmw2@infradead=2Eorg>
+>Cc: stable@vger=2Ekernel=2Eorg
+>Closes: https://lore=2Ekernel=2Eorg/all/7717fe2ac0ce5f0a2c43fdab8b11f4483=
+d54a2a4=2Ecamel@infradead=2Eorg
+>---
+> kernel/sched/core=2Ec |    2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>--- a/kernel/sched/core=2Ec
+>+++ b/kernel/sched/core=2Ec
+>@@ -7276,7 +7276,7 @@ void rt_mutex_setprio(struct task_struct
+> #if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
+> int __sched __cond_resched(void)
+> {
+>-	if (should_resched(0)) {
+>+	if (should_resched(0) && !irqs_disabled()) {
+> 		preempt_schedule_common();
+> 		return 1;
+> 	}
 
-So I don't think a MIPS kernel should be built as a crash dump kernel by
-default, therefore this patch disables selecting CRASH_DUMP by default.
-
-Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
----
- arch/mips/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index a33f05e1ad6d3..f80ea80d792f5 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2873,9 +2873,6 @@ config ARCH_SUPPORTS_KEXEC
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool y
- 
--config ARCH_DEFAULT_CRASH_DUMP
--	def_bool y
--
- config PHYSICAL_START
- 	hex "Physical address where the kernel is loaded"
- 	default "0xffffffff84000000"
--- 
-2.47.1
-
+Thank you=2E Slight preference for dwmw@amazon=2Eco=2Euk as the Reported-b=
+y and Tested-by addresses if it's not too late=2E I'm assuming you will han=
+dle this and don't want me to round it up with the kexec bits=2E
 
