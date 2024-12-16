@@ -4,65 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83350E77183
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 16:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30D41E7717F
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 17:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Subject:Content-Type:
-	MIME-Version:Message-ID:In-Reply-To:Date:References:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Q0pY5UmBxAG4qsrTUdR16vU5Dk8H3SLuygEtjRZFKWM=; b=CeZW7Rn8ZpBlqGROcUkmASQM45
-	IBZc6q+cakcMlAvhX7dWhm47j063Rkk3rpCCiIQs6kpH0mUgaHldPvNTOsOm35cg6GtW7qozRVV0D
-	HFhyGXw7wqRpHI97HJq0SQgs35wrrYig/VExk1j0yL+gsJIHJ2R1QrPedLTXM6hqlMT5ZQ28GR0vM
-	MCxooeHax7gqFqDSr3ov5U5jP11dxcY88SCoQUPUT7icv9m/7iGUQh0j8LbvRvd3Eao0NvLW23BhI
-	EcX2/yS+Nk9lzJzMaC4Z6x86M9R+4LSh0+h6IiUwuACSb8UwjHl6d3TM7HtMD06OqTMUINU691Bw9
-	KRBjEg9g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=; b=qN7IZMWl+GaF4JKQi6GMC1OdvE
+	4ot9XFWEcCO87g69cojAvkXIIwiPQM379ZKlYveNREM+XmkdBBzaJ+ifvxovqR486JsSDTIYaEC0n
+	NYLc5DCT7qsA3I2LOd9X2jQk2HotS2EsfYOC5mRjYAJmdyXqaMo0Lv3eQMgfEx95+f9dCaazI6+Gu
+	zdG/2t3o1+tquu4Zm7ZjYxTTo49LeeKwXhTPjLOikUORqliBwsinRJuhcVscvQOi/HwBa4yXmFKPP
+	zaBKHksi7xZ5OvhWt10PRx463hYjaG6Qng93BdBEi2rcO1I2Me3ztf2By/4lgvCUjtRoWYMb4nsFX
+	GrEOFeZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNDWh-0000000AV3C-498A;
-	Mon, 16 Dec 2024 16:00:55 +0000
-Received: from out01.mta.xmission.com ([166.70.13.231])
+	id 1tNF0i-0000000An0F-2pGK;
+	Mon, 16 Dec 2024 17:36:00 +0000
+Received: from sender4-op-o15.zoho.com ([136.143.188.15])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNDWf-0000000AV0Q-2HQL;
-	Mon, 16 Dec 2024 16:00:54 +0000
-Received: from in02.mta.xmission.com ([166.70.13.52]:53580)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tNDWM-004V9m-Dg; Mon, 16 Dec 2024 09:00:34 -0700
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:59886 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tNDWL-007X7c-36; Mon, 16 Dec 2024 09:00:33 -0700
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Thomas Gleixner <tglx@linutronix.de>,  Ming Lei <ming.lei@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux PM <linux-pm@vger.kernel.org>,
- Kexec Mailing List <kexec@lists.infradead.org> 
-References: <4968818.GXAFRqVoOG@rjwysocki.net>
-	<d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org>
-Date: Mon, 16 Dec 2024 10:00:00 -0600
-In-Reply-To: <d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org>
-	(David Woodhouse's message of "Mon, 16 Dec 2024 13:43:05 +0000")
-Message-ID: <87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	id 1tNF0g-0000000AmzF-2zpS
+	for kexec@lists.infradead.org;
+	Mon, 16 Dec 2024 17:36:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1734370532; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Vp0Iu6WdbMoF1nXM5SnCyiFrgm+BDTTNnovEHr3eLz0NQKz/zfx5bJiDUaqTLXmjF/IrctuEI+gH9FH2yuTHr4mKE8vjWNgQLdOCcNLlLWX+VuREs3+vFPezAQ+a5uG0QzMVqUs7PHKCSEJaPqKy8BNTNMxyxicXMqB09eHc/6E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1734370532; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=; 
+	b=HQDuLCTZ4BGk/ey1MN57Y7Uzrf95t624UDRepS6W8RrQVfOU9woYFYU0R3qBb0gOXyNncdwA0eqyXxb9oCR31KMAlDpIzGDGEafpS98PielASxILX6jmfdmIdN6TK+rtOTHo79tGZKKWCn9IXklj8/zyig50B8OqEbNnYVnPasU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734370532;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=4+hbfmOKjnlASf4EoCiuUoXr7Qw32w/Un/7tGNMOLBU=;
+	b=MSxLuYEpwZ0O8h0j+Rypp0FGvTc0pvs9ZgT8QwNZx7mgRBcUDkFoHWWd74rwVB+v
+	39XLkxIwAO6l4YoVHfRwn4Szqs4S1o9C8AvY0DNWbzlw+QbSluj72kknxpDK4vd0HsW
+	RlsqBp4epFR4A7FlQHsZf009W4uGWKV48qja8Y5XdL+0r/vGdV73AJE9PQq8LKQQpy5
+	BfjICz3nSFvNtAfyZhW5vRsvjc+VWJLE+h6hTX9leRL+rMI+IL86anX1HpdP6svU7Kr
+	JLDL/FWN8jViUZgWBukOTqDWUJLKQsIuvI1jx1nggx9XNk9/ALdSIayuGvyj02fadTf
+	z+qwqyv/Vw==
+Received: by mx.zohomail.com with SMTPS id 1734370530165398.6022361701732;
+	Mon, 16 Dec 2024 09:35:30 -0800 (PST)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH] mips: disable CRASH_DUMP by default
+Date: Tue, 17 Dec 2024 01:35:14 +0800
+Message-ID: <20241216173514.495638-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1tNDWL-007X7c-36;;;mid=<87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/IoUPRXc2CZDplraCLK6J/GomP+OYV8hI=
-Subject: Does anyone actually use KEXEC_JUMP?
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: kexec@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, ming.lei@redhat.com, tglx@linutronix.de, rjw@rjwysocki.net, dwmw2@infradead.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241216_080053_577532_F84B5CDF 
-X-CRM114-Status: GOOD (  19.07  )
+X-CRM114-CacheID: sfid-20241216_093558_809087_4233FBCE 
+X-CRM114-Status: UNSURE (   7.07  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,39 +86,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-David Woodhouse <dwmw2@infradead.org> writes:
+On MIPS, the space of a crash dump kernel needs to be manually specified
+by both the debugee and the crash dump kernel PHYSICAL_START config
+option, and the default PHYSICAL_START config will make the kernel
+load quite higher, which isn't acceptable when using as a daily use
+kernel (and will even confuse some naive Loongson-3 bootloaders).
 
-> On Mon, 2024-12-16 at 14:39 +0100, Rafael J. Wysocki wrote:
->> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> 
->> The KEXEC_JUMP flow is analogous to hibernation flows occurring
->> before
->> and after creating an image and before and after jumping from the
->> restore kernel to the image one, which is why it uses the same device
->> callbacks as those hibernation flows.
->> 
->> Add comments explaining that to the code in question and update an
->> existing comment in it which appears a bit out of context.
->> 
->> No functional changes.
->> 
->> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Thanks. I'll round that up into my kexec-debug tree, which Ingo has
-> been taking into tip/x86/boot. Once I'm done fighting with
-> objtool(qv).
+So I don't think a MIPS kernel should be built as a crash dump kernel by
+default, therefore this patch disables selecting CRASH_DUMP by default.
 
-I have no objection to getting kexec jump more in sync with the
-rest of the power management code.
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+---
+ arch/mips/Kconfig | 3 ---
+ 1 file changed, 3 deletions(-)
 
-I do have a question though.  Does anyone actually use kexec jump?
-
-It is fine if folks do, but I haven't actually heard of anyone using
-it.  If folks aren't using it, it might make sense to just use the fact
-that it is broken as a nudge to remove that option.
-
-Eric
-
-
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index a33f05e1ad6d3..f80ea80d792f5 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2873,9 +2873,6 @@ config ARCH_SUPPORTS_KEXEC
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
+-config ARCH_DEFAULT_CRASH_DUMP
+-	def_bool y
+-
+ config PHYSICAL_START
+ 	hex "Physical address where the kernel is loaded"
+ 	default "0xffffffff84000000"
+-- 
+2.47.1
 
 
