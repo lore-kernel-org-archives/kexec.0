@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA21EE77183
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25B36E77184
+	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
-	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=siK05iL8Sl6AWnRvb8/748kKl/nChwb5EZxS4049r5c=; b=z85wGZPtLPOyj6x21XNxyi6Ohq
-	ImZcY9xHfctrX7w4HvMkYQlZCwxJ/V527y5dbTnbsZWu1VH7yDovgsP5Oq+r1y6vaJA6adCcLughX
-	SXrIyUAeWJWByl1wBbR/fVJ5d5McGY1V8Z14jNr67OckOFOSwKBQA6Xf8yLI7cHUCqC/hvRsc6fYe
-	A+LRPFrGTV1sdOhsSxaO5mgaGkj+t5WPfZSfNUG9oVfj682ZOCWdPVoZiNSm6IcAPRASq7k8O7S/7
-	XU+KHq/aB89/jLKnsxzO5bX1yTllE39fB4kmXlVqkgQTtC/qVL4joY4cUWaFihQDkWWRHdbhq63OP
-	roihIEPw==;
+	bh=zzCHIqIiQJDgySmzgmnKF8ZlcgBrOOsvhFm4kYphShs=; b=g3gvYzXmKgomo+IKzvGimSyoU/
+	yx/V7XF1mcIVQ1HuGSxQdaZej+3WzPxeArehQ+4TDGKoG9HuLrlgieJKklazfuLJTZBkF+yFGGIfP
+	IO8NUWz9Q+FFwljLQiGv9DWQzOuQs7XyxDdXCF+OfgFzIPwfCPlJGio3MdRGDPKZC086qGtjj0T8K
+	p2HFXkRTTUZOnguacI3tMC13Re/5WbN2DEF+HsK1lHGuqgPa0fU2AwQvDsDztOZwgHBkp27z+io/O
+	XfB9o1PKamZHcgKWE1+aUpB0hGecHS4bjPzjhz6AHuc98ZmUMVejVzaSbmr0Bqb/w26FiifBxALeA
+	2RnBWCtg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeJ-0000000BesJ-2jWW;
-	Mon, 16 Dec 2024 23:37:15 +0000
+	id 1tNKeK-0000000BetA-3Bur;
+	Mon, 16 Dec 2024 23:37:16 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeI-0000000Berb-0bqo
+	id 1tNKeI-0000000Bere-0boV
 	for kexec@bombadil.infradead.org;
 	Mon, 16 Dec 2024 23:37:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
-	From:Reply-To:Cc:Content-ID:Content-Description;
-	bh=siK05iL8Sl6AWnRvb8/748kKl/nChwb5EZxS4049r5c=; b=qvaNRGwUFC5FsBbeIs6VVrSnBe
-	WbdfBwGzFPGSuxtAJlPzlK3kEAsmjb3fbEYVnEQPt0u2zYf9NRL/ttY09zBY2hMIHU4u3m6aGDKII
-	jkkzC7rJlMsFboQaNYUbNnRpJmg5RWJZKBwCxmSqjXkpjFmLcDTAAWAV4JllqeMO6JJCh7ASYUMtE
-	ezZGQz/5KZZeKbL2Rdr8m8AsmR4b/oAng2yu1xaUfCKil0/pWZ1qi/Dm1yb5IPeiiJP+eeiesmw82
-	/xpgrD+l9ZN+m0Y3mvxYmmArGtoVytSqpPNVbulOqP+Y0OpE5O98zHpUfoJbXBZBWYgJc78/fyGGn
-	q9pBrmJA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description;
+	bh=zzCHIqIiQJDgySmzgmnKF8ZlcgBrOOsvhFm4kYphShs=; b=gY/TwmhMVrUX4ruTov+kQpAeXq
+	vUof0P+v8tmNgZzieQgAPFNfKsdCHZ/fwo462vl2AG6mOxorwVgsneYQhjXjghSswbLIN6yyq2tG4
+	MLM5EBtf9WXI43ph0N7ap72TpygIWsaBhtBU+fFNKjt/VY3Rpmjp1TLnWE0uLjvSh15dTjVNS0Zqq
+	xsxKda+QdQW9Z/ITvj5zEnY921zH0MMyZEtqdA6/StFGUzAoRPMx0NaN6IQY4fANl3FpmUJQlxLGP
+	TX9n2KDYVOHgvF5DsVSzF60WeTB/u/TkkLqwmClvBnb+T2Wv3wqAtEWxJKwwFM/tQCqlMGEFmxN56
+	4l17Grwg==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-000000034nU-1cjU;
+	id 1tNKeA-000000034nX-25us;
 	Mon, 16 Dec 2024 23:37:06 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeA-0000000DeW3-00b8;
+	id 1tNKeA-0000000DeW9-0Qg3;
 	Mon, 16 Dec 2024 23:37:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,14 +77,13 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH 1/9] x86/kexec: Disable global pages before writing to control page
-Date: Mon, 16 Dec 2024 23:24:08 +0000
-Message-ID: <20241216233704.3208607-2-dwmw2@infradead.org>
+Subject: [PATCH 3/9] x86/kexec: Use correct swap page in swap_pages function
+Date: Mon, 16 Dec 2024 23:24:10 +0000
+Message-ID: <20241216233704.3208607-4-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216233704.3208607-1-dwmw2@infradead.org>
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -103,68 +102,59 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-The kernel switches to a new set of page tables during kexec. The global
-mappings (_PAGE_GLOBAL==1) can remain in the TLB after this switch. This
-is generally not a problem because the new page tables use a different
-portion of the virtual address space than the normal kernel mappings.
+The swap_pages function expects the swap page to be in %r10, but there
+was no documentation to that effect. Once upon a time the setup code
+used to load its value from a kernel virtual address and save it to an
+address which is accessible in the identity-mapped page tables, and
+*happened* to use %r10 to do so, with no comment that it was left there
+on *purpose* instead of just being a scratch register. Once that was no
+longer necessary, %r10 just holds whatever the kernel happened to leave
+in it.
 
-The critical exception to that generalisation (and the only mapping
-which isn't an identity mapping) is the kexec control page itself —
-which was ROX in the original kernel mapping, but should be RWX in the
-new page tables. If there is a global TLB entry for that in its prior
-read-only state, it definitely needs to be flushed before attempting to
-write through that virtual mapping.
+Now that the original value passed by the kernel is accessible via
+%rip-relative addressing, load directly from there instead of using %r10
+for it. But document the other parameters that the swap_pages function
+*does* expect in registers.
 
-It would be possible to just avoid writing to the virtual address of the
-page and defer all writes until they can be done through the identity
-mapping. But there's no good reason to keep the old TLB entries around,
-as they can cause nothing but trouble.
-
-Clear the PGE bit in %cr4 early, before storing data in the control page.
-
-Fixes: 5a82223e0743 ("x86/kexec: Mark relocate_kernel page as ROX instead of RWX")
-Co-authored-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219592
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Fixes: b3adabae8a96 ("x86/kexec: Drop page_list argument from relocate_kernel()")
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 8bc86a1e056a..9bd601dd8659 100644
+index 1a52e4339c1d..0d6fce1e0a32 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -70,14 +70,20 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	movq	kexec_pa_table_page(%rip), %r9
- 	movq	%r9, %cr3
+@@ -264,6 +264,10 @@ SYM_CODE_END(virtual_mapped)
+ 	/* Do the copies */
+ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	UNWIND_HINT_END_OF_STACK
++	/*
++	 * %rdi indirection page
++	 * %r11 preserve_context
++	 */
+ 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
+@@ -302,7 +306,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	jz	.Lnoswap
  
-+	/* Leave CR4 in %r13 to enable the right paging mode later. */
-+	movq	%cr4, %r13
-+
-+	/* Disable global pages immediately to ensure this mapping is RWX */
-+	movq	%r13, %r12
-+	andq	$~(X86_CR4_PGE), %r12
-+	movq	%r12, %cr4
-+
- 	/* Save %rsp and CRs. */
-+	movq	%r13, saved_cr4(%rip)
- 	movq    %rsp, saved_rsp(%rip)
- 	movq	%rax, saved_cr3(%rip)
- 	movq	%cr0, %rax
- 	movq	%rax, saved_cr0(%rip)
--	/* Leave CR4 in %r13 to enable the right paging mode later. */
--	movq	%cr4, %r13
--	movq	%r13, saved_cr4(%rip)
+ 	/* copy source page to swap page */
+-	movq	%r10, %rdi
++	movq	kexec_pa_swap_page(%rip), %rdi
+ 	movl	$512, %ecx
+ 	rep ; movsq
  
- 	/* save indirection list for jumping back */
- 	movq	%rdi, pa_backup_pages_map(%rip)
-
-base-commit: 35aafa1d41cee0d3d50164561bca34befc1d9ce3
+@@ -314,7 +318,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 
+ 	/* copy swap page to destination page */
+ 	movq	%rdx, %rdi
+-	movq	%r10, %rsi
++	movq	kexec_pa_swap_page(%rip), %rsi
+ .Lnoswap:
+ 	movl	$512, %ecx
+ 	rep ; movsq
 -- 
 2.47.0
 
