@@ -4,95 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04086E77189
-	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 06:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD0E4E7716A
+	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 08:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dCDK6BOsU4ZX7A04sKP0HMI7l9HAPh7z4+ZQG7MoYvY=; b=CC7/8WMuRqDlUF7DpbCh0yaPvt
-	fEh5vCL4MooljqOzQombIZXIq/QOMc/13iis6MO2sz4SD6JHTpjHUCTanozcOZ/u7U8OaY6MiwusI
-	XzVmd9VdB1ZsJP33yMTXXv0XPDtp5NnVFj/ZxGUsuaocEi9Z7pgGDa+rueYQTgCjIqIho4QyNlEfl
-	UHHQ+E4mNagrcaOwULjfCmyxLeaDgoMK3cqWEmk+iZnZdhgjxC+xYYkAF2EpIOBaXbwlYCOho9MHm
-	YncETfoZPfEnZEoZIYB7gxxhdwUr/CtuJHGVhjo9IMLo+GoasUL8kbw5CoH5tzzZNnRmTAQ9N4wkO
-	LCjMDxxw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=W/3onW9J6qyk6juEhYkTK/PHag200Hum/OSkyepKois=; b=D9Gdnz3BmHQXf5tN92WzLmqpql
+	/esOUasxNUd9PODcnu008VgNeaADPFIsnL/dWCbsic1E8kx2Usg/X7MIRnpUFM+Eh9+aSiqvlD2Lp
+	0bQGLAPnfwYVGT8jQhkS9QmpAgwCSNYCAe6dAAivIgwZcIqiAPSYErP0+CYKFUon2NEloTEvboXqT
+	rC8QWvgOqdnDpVGRUYZZiBGP+BWFei7x/ttCEkY1kF8QbOQx5EKAGNbxjEK5sb/GuMuMRT2WrPVoK
+	u24hnty83dUANCugbCZEW3DQRXuhl84AGZZCivwUoEzB+UP3wbcLk6M11+xROuKYa9d4tSZbfA5ok
+	71pVNSiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNRXr-0000000CVHy-2Nck;
-	Tue, 17 Dec 2024 06:59:03 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1tNTLD-0000000Cmt4-2kkE;
+	Tue, 17 Dec 2024 08:54:07 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNRMR-0000000CSlS-3SFl
+	id 1tNTF9-0000000ClHR-0EUE
 	for kexec@lists.infradead.org;
-	Tue, 17 Dec 2024 06:47:17 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BH16JJZ013078;
-	Tue, 17 Dec 2024 06:47:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=dCDK6BOsU4ZX7A04s
-	KP0HMI7l9HAPh7z4+ZQG7MoYvY=; b=VtQc36TjvM5fvJHlT506feBCvqiJTF7H6
-	oxwolecRAtV5MFNPjZsm5JYxDW1Apm1y8nCCoYIAGRG724wl5bl4HXzGGBXfk8mF
-	/NbeqwrXAUNuCyQbijZx0znO2iiajWLk4riGWZCsllUHTKnIgoQyJyC6H0Na+0Bq
-	kLGfTMFERwFOLOjJDg9vVvC8bNX2OWoQw753gSVD8Byq/0/DddQC9FyavPmtb286
-	EK865XbcphZkm2INiHh/Ltb5OrVUSwOIKuEaiYon6eqqO5f0P7pKq9Wuru8Thtrg
-	UDEQwcX2cbQhhaE40Ur7aAVSBCKAMPCn6+WdsjO1ShUxJyNgMelRA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jnp4ks37-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Dec 2024 06:47:08 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BH6OduF014340;
-	Tue, 17 Dec 2024 06:47:07 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43hmqy1qve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Dec 2024 06:47:07 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BH6l4Q231981902
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Dec 2024 06:47:04 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E30192004B;
-	Tue, 17 Dec 2024 06:47:03 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4084F20040;
-	Tue, 17 Dec 2024 06:47:01 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.29.128])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 17 Dec 2024 06:47:00 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] crash: option to let arch decide mem range is usable
-Date: Tue, 17 Dec 2024 12:16:13 +0530
-Message-ID: <20241217064613.1042866-6-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241217064613.1042866-1-sourabhjain@linux.ibm.com>
-References: <20241217064613.1042866-1-sourabhjain@linux.ibm.com>
+	Tue, 17 Dec 2024 08:47:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 287815C64E4
+	for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 08:47:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6808C4CEE1
+	for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 08:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734425269;
+	bh=Sdc+++6gPgnnOYqx/g7c38oTFPeiaCCYx369j2QdBFU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nWmPBSFwGJ9pKaFe8pVG9haHH2dzSxoWpnvgFIXUxF50wQIY8heB3Zoyc2eDbNIdx
+	 wCpWtxcvIdA3PQvf6T2bTlb+hD71qc+lhyDhdrTEUSz9Opnfa/N9zgUIKJtmtztZy4
+	 PZW0hAOKqOJKOc3NVXddN60nRO+T7KzziDWLShitUrMOcng/qbXAygeiTMlGFGohHB
+	 z++84uaHw2eocH8Erf1QsgqFPy/pgB9NJxbBwNtdBCeVIV1ZCMi7xtUf6nhTnjMh9Q
+	 +EFBr00HgFw1dAoskr/vfXA4k7i3Bz5h53GCCUugdLJRKcYO7S5ma1KKb77Q5et8EM
+	 FAhIc3BprBhtg==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30227ccf803so54147451fa.2
+        for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 00:47:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVtgc1nkcLjp/HpG1+HHvWN94nskyVnsYjwd0vwEb85qHMdeHq6YjrXgItXG0KC/+3Ov7bpuA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyFrT4ELet4/0OohMriKXMm7CAKVm1rAnvcf8xoC0vD/ktwQvCl
+	KRa+N4oo2q9JSI5X8+cDoTCn/1rEUuOjZS4y0yHpDClTomz9lcSS0djbJcWJFK4x8x/Op4K+nWh
+	r8ZP6+Bquc+T9pkokQZuydYL0mAI=
+X-Google-Smtp-Source: AGHT+IH5eLSLKUNPUxwrLLug55kMDEvGO8iTkt7KKa2ptm7n109+n2f50khrbdJ3Mnh6LumZiUhvLgKXYRn1UmcY7B4=
+X-Received: by 2002:a05:651c:1545:b0:300:26bc:4311 with SMTP id
+ 38308e7fff4ca-3025454ffadmr56056541fa.18.1734425267978; Tue, 17 Dec 2024
+ 00:47:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SdvJdPM8P27VchBEF8GkxHQecpPbbdXl
-X-Proofpoint-ORIG-GUID: SdvJdPM8P27VchBEF8GkxHQecpPbbdXl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412170052
+References: <20241216233704.3208607-1-dwmw2@infradead.org> <20241216233704.3208607-9-dwmw2@infradead.org>
+In-Reply-To: <20241216233704.3208607-9-dwmw2@infradead.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 17 Dec 2024 09:47:36 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEvpPbkeUb-2nt28M0yCNzo6NqauCcCNpj2psoVRH+C=A@mail.gmail.com>
+Message-ID: <CAMj1kXEvpPbkeUb-2nt28M0yCNzo6NqauCcCNpj2psoVRH+C=A@mail.gmail.com>
+Subject: Re: [PATCH 8/9] x86/kexec: Cope with relocate_kernel() not being at
+ the start of the page
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, 
+	David Woodhouse <dwmw@amazon.co.uk>, Sourabh Jain <sourabhjain@linux.ibm.com>, 
+	Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>, David Kaplan <david.kaplan@amd.com>, 
+	Tao Liu <ltao@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Breno Leitao <leitao@debian.org>, Wei Yang <richard.weiyang@gmail.com>, Rong Xu <xur@google.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	Simon Horman <horms@kernel.org>, Dave Young <dyoung@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de, nathan@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241216_224715_992132_1E37E86B 
-X-CRM114-Status: GOOD (  28.45  )
+X-CRM114-CacheID: sfid-20241217_004751_176004_FF5D47C0 
+X-CRM114-Status: GOOD (  26.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,382 +94,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On PowerPC, the memory reserved for the crashkernel can contain
-components like RTAS, TCE, OPAL, etc., which should be avoided when
-loading kexec segments into crashkernel memory. Due to these special
-components, PowerPC has its own set of functions to locate holes in the
-crashkernel memory for loading kexec segments for kdump. However, for
-loading kexec segments in the kexec case, PowerPC uses generic functions
-to locate holes.
+On Tue, 17 Dec 2024 at 00:37, David Woodhouse <dwmw2@infradead.org> wrote:
+>
+> From: David Woodhouse <dwmw@amazon.co.uk>
+>
+> A few places in the kexec control code page make the assumption that the
+> first instruction of relocate_kernel is at the very start of the page.
+>
+> To allow for Clang CFI information to be added to relocate_kernel(), as
+> well as the general principle of removing unwarranted assumptions, fix
+> them to use the external __relocate_kernel_start symbol that the linker
+> adds. This means using a separate addq and subq for calculating offsets,
+> as the assembler can no longer calculate the delta directly for itself
+> and relocations aren't that versatile.
+>
 
-So, let's use generic functions to locate memory holes for kdump on
-PowerPC by adding an arch hook to handle such special regions while
-loading kexec segments, and remove the PowerPC functions to locate
-holes.
+You can still avoid the absolute relocations though, ...
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-CC: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/include/asm/kexec.h  |   6 +-
- arch/powerpc/kexec/file_load_64.c | 259 ++----------------------------
- include/linux/kexec.h             |   9 ++
- kernel/kexec_file.c               |  12 ++
- 4 files changed, 34 insertions(+), 252 deletions(-)
+> Turn the jump from relocate_kernel() to identity_mapped() into a real
+> indirect 'jmp *%rsi' too, while touching it. There was no real reason
+> for it to be a push+ret in the first place, and adding Clang CFI info
+> will also give objtool enough visibility to start complaining 'return
+> with modified stack frame' about it.
+>
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 1996cea909ff..d74798d78263 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -95,11 +95,10 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+>         lea     PAGE_SIZE(%rsi), %rsp
+>
+>         /* jump to identity mapped page */
+> -       addq    $(identity_mapped - relocate_kernel), %rsi
+> -       pushq   %rsi
+> -       ANNOTATE_UNRET_SAFE
+> -       ret
+> -       int3
+> +       addq    $identity_mapped, %rsi
+> +       subq    $__relocate_kernel_start, %rsi
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 64741558071f..5e4680f9ff35 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -95,8 +95,10 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long
- int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
- 
--int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
--#define arch_kexec_locate_mem_hole arch_kexec_locate_mem_hole
-+int arch_check_excluded_range(struct kimage *image, unsigned long start,
-+			      unsigned long end);
-+#define arch_check_excluded_range  arch_check_excluded_range
-+
- 
- int load_crashdump_segments_ppc64(struct kimage *image,
- 				  struct kexec_buf *kbuf);
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index dc65c1391157..e7ef8b2a2554 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -49,201 +49,18 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	NULL
- };
- 
--/**
-- * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
-- *                              in the memory regions between buf_min & buf_max
-- *                              for the buffer. If found, sets kbuf->mem.
-- * @kbuf:                       Buffer contents and memory parameters.
-- * @buf_min:                    Minimum address for the buffer.
-- * @buf_max:                    Maximum address for the buffer.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
--				      u64 buf_min, u64 buf_max)
--{
--	int ret = -EADDRNOTAVAIL;
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range_rev(i, &start, &end) {
--		/*
--		 * memblock uses [start, end) convention while it is
--		 * [start, end] here. Fix the off-by-one to have the
--		 * same convention.
--		 */
--		end -= 1;
--
--		if (start > buf_max)
--			continue;
--
--		/* Memory hole not found */
--		if (end < buf_min)
--			break;
--
--		/* Adjust memory region based on the given range */
--		if (start < buf_min)
--			start = buf_min;
--		if (end > buf_max)
--			end = buf_max;
--
--		start = ALIGN(start, kbuf->buf_align);
--		if (start < end && (end - start + 1) >= kbuf->memsz) {
--			/* Suitable memory range found. Set kbuf->mem */
--			kbuf->mem = ALIGN_DOWN(end - kbuf->memsz + 1,
--					       kbuf->buf_align);
--			ret = 0;
--			break;
--		}
--	}
--
--	return ret;
--}
--
--/**
-- * locate_mem_hole_top_down_ppc64 - Skip special memory regions to find a
-- *                                  suitable buffer with top down approach.
-- * @kbuf:                           Buffer contents and memory parameters.
-- * @buf_min:                        Minimum address for the buffer.
-- * @buf_max:                        Maximum address for the buffer.
-- * @emem:                           Exclude memory ranges.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--static int locate_mem_hole_top_down_ppc64(struct kexec_buf *kbuf,
--					  u64 buf_min, u64 buf_max,
--					  const struct crash_mem *emem)
-+int arch_check_excluded_range(struct kimage *image, unsigned long start,
-+			      unsigned long end)
- {
--	int i, ret = 0, err = -EADDRNOTAVAIL;
--	u64 start, end, tmin, tmax;
--
--	tmax = buf_max;
--	for (i = (emem->nr_ranges - 1); i >= 0; i--) {
--		start = emem->ranges[i].start;
--		end = emem->ranges[i].end;
--
--		if (start > tmax)
--			continue;
--
--		if (end < tmax) {
--			tmin = (end < buf_min ? buf_min : end + 1);
--			ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
--			if (!ret)
--				return 0;
--		}
--
--		tmax = start - 1;
--
--		if (tmax < buf_min) {
--			ret = err;
--			break;
--		}
--		ret = 0;
--	}
--
--	if (!ret) {
--		tmin = buf_min;
--		ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
--	}
--	return ret;
--}
--
--/**
-- * __locate_mem_hole_bottom_up - Looks bottom up for a large enough memory hole
-- *                               in the memory regions between buf_min & buf_max
-- *                               for the buffer. If found, sets kbuf->mem.
-- * @kbuf:                        Buffer contents and memory parameters.
-- * @buf_min:                     Minimum address for the buffer.
-- * @buf_max:                     Maximum address for the buffer.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--static int __locate_mem_hole_bottom_up(struct kexec_buf *kbuf,
--				       u64 buf_min, u64 buf_max)
--{
--	int ret = -EADDRNOTAVAIL;
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range(i, &start, &end) {
--		/*
--		 * memblock uses [start, end) convention while it is
--		 * [start, end] here. Fix the off-by-one to have the
--		 * same convention.
--		 */
--		end -= 1;
--
--		if (end < buf_min)
--			continue;
--
--		/* Memory hole not found */
--		if (start > buf_max)
--			break;
--
--		/* Adjust memory region based on the given range */
--		if (start < buf_min)
--			start = buf_min;
--		if (end > buf_max)
--			end = buf_max;
--
--		start = ALIGN(start, kbuf->buf_align);
--		if (start < end && (end - start + 1) >= kbuf->memsz) {
--			/* Suitable memory range found. Set kbuf->mem */
--			kbuf->mem = start;
--			ret = 0;
--			break;
--		}
--	}
--
--	return ret;
--}
--
--/**
-- * locate_mem_hole_bottom_up_ppc64 - Skip special memory regions to find a
-- *                                   suitable buffer with bottom up approach.
-- * @kbuf:                            Buffer contents and memory parameters.
-- * @buf_min:                         Minimum address for the buffer.
-- * @buf_max:                         Maximum address for the buffer.
-- * @emem:                            Exclude memory ranges.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--static int locate_mem_hole_bottom_up_ppc64(struct kexec_buf *kbuf,
--					   u64 buf_min, u64 buf_max,
--					   const struct crash_mem *emem)
--{
--	int i, ret = 0, err = -EADDRNOTAVAIL;
--	u64 start, end, tmin, tmax;
--
--	tmin = buf_min;
--	for (i = 0; i < emem->nr_ranges; i++) {
--		start = emem->ranges[i].start;
--		end = emem->ranges[i].end;
--
--		if (end < tmin)
--			continue;
--
--		if (start > tmin) {
--			tmax = (start > buf_max ? buf_max : start - 1);
--			ret = __locate_mem_hole_bottom_up(kbuf, tmin, tmax);
--			if (!ret)
--				return 0;
--		}
--
--		tmin = end + 1;
-+	struct crash_mem *emem;
-+	int i;
- 
--		if (tmin > buf_max) {
--			ret = err;
--			break;
--		}
--		ret = 0;
--	}
-+	emem = image->arch.exclude_ranges;
-+	for (i = 0; i < emem->nr_ranges; i++)
-+		if (start < emem->ranges[i].end && end > emem->ranges[i].start)
-+			return 1;
- 
--	if (!ret) {
--		tmax = buf_max;
--		ret = __locate_mem_hole_bottom_up(kbuf, tmin, tmax);
--	}
--	return ret;
-+	return 0;
- }
- 
- #ifdef CONFIG_CRASH_DUMP
-@@ -1004,64 +821,6 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt, struct crash_mem
- 	return ret;
- }
- 
--/**
-- * arch_kexec_locate_mem_hole - Skip special memory regions like rtas, opal,
-- *                              tce-table, reserved-ranges & such (exclude
-- *                              memory ranges) as they can't be used for kexec
-- *                              segment buffer. Sets kbuf->mem when a suitable
-- *                              memory hole is found.
-- * @kbuf:                       Buffer contents and memory parameters.
-- *
-- * Assumes minimum of PAGE_SIZE alignment for kbuf->memsz & kbuf->buf_align.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
--{
--	struct crash_mem **emem;
--	u64 buf_min, buf_max;
--	int ret;
--
--	/* Look up the exclude ranges list while locating the memory hole */
--	emem = &(kbuf->image->arch.exclude_ranges);
--	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
--		pr_warn("No exclude range list. Using the default locate mem hole method\n");
--		return kexec_locate_mem_hole(kbuf);
--	}
--
--	buf_min = kbuf->buf_min;
--	buf_max = kbuf->buf_max;
--	/* Segments for kdump kernel should be within crashkernel region */
--	if (IS_ENABLED(CONFIG_CRASH_DUMP) && kbuf->image->type == KEXEC_TYPE_CRASH) {
--		buf_min = (buf_min < crashk_res.start ?
--			   crashk_res.start : buf_min);
--		buf_max = (buf_max > crashk_res.end ?
--			   crashk_res.end : buf_max);
--	}
--
--	if (buf_min > buf_max) {
--		pr_err("Invalid buffer min and/or max values\n");
--		return -EINVAL;
--	}
--
--	if (kbuf->top_down)
--		ret = locate_mem_hole_top_down_ppc64(kbuf, buf_min, buf_max,
--						     *emem);
--	else
--		ret = locate_mem_hole_bottom_up_ppc64(kbuf, buf_min, buf_max,
--						      *emem);
--
--	/* Add the buffer allocated to the exclude list for the next lookup */
--	if (!ret) {
--		add_mem_range(emem, kbuf->mem, kbuf->memsz);
--		sort_memory_ranges(*emem, true);
--	} else {
--		pr_err("Failed to locate memory buffer of size %lu\n",
--		       kbuf->memsz);
--	}
--	return ret;
--}
--
- /**
-  * arch_kexec_kernel_image_probe - Does additional handling needed to setup
-  *                                 kexec segments.
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f0e9f8eda7a3..407f8b0346aa 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -205,6 +205,15 @@ static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
- }
- #endif
- 
-+#ifndef arch_check_excluded_range
-+static inline int arch_check_excluded_range(struct kimage *image,
-+					    unsigned long start,
-+					    unsigned long end)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_KEXEC_SIG
- #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
- int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad..52e1480dbfa1 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -464,6 +464,12 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
- 			continue;
- 		}
- 
-+		/* Make sure this does not conflict exclude range */
-+		if (arch_check_excluded_range(image, temp_start, temp_end)) {
-+			temp_start = temp_start - PAGE_SIZE;
-+			continue;
-+		}
-+
- 		/* We found a suitable memory range */
- 		break;
- 	} while (1);
-@@ -498,6 +504,12 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
- 			continue;
- 		}
- 
-+		/* Make sure this does not conflict exclude range */
-+		if (arch_check_excluded_range(image, temp_start, temp_end)) {
-+			temp_start = temp_start + PAGE_SIZE;
-+			continue;
-+		}
-+
- 		/* We found a suitable memory range */
- 		break;
- 	} while (1);
--- 
-2.47.1
+... if you turn this into
 
+0:     addq    $identity_mapped - 0b, %rsi
+       subq    $__relocate_kernel_start - 0b, %rsi
+
+
+> +       ANNOTATE_RETPOLINE_SAFE
+> +       jmp     *%rsi
+>  SYM_CODE_END(relocate_kernel)
+>
+>  SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> @@ -219,16 +218,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>
+>         /* get the re-entry point of the peer system */
+>         popq    %rbp
+> -       leaq    relocate_kernel(%rip), %r8
+>         movq    kexec_pa_swap_page(%rip), %r10
+>         movq    pa_backup_pages_map(%rip), %rdi
+>         movq    kexec_pa_table_page(%rip), %rax
+>         movq    %rax, %cr3
+> +
+> +       /* Find start (and end) of this physical mapping of control page */
+> +       leaq    (%rip), %r8
+> +       ANNOTATE_NOENDBR
+> +       andq    $PAGE_MASK, %r8
+>         lea     PAGE_SIZE(%r8), %rsp
+>         movq    $1, %r11        /* Ensure preserve_context flag is set */
+>         call    swap_pages
+>         movq    kexec_va_control_page(%rip), %rax
+> -       addq    $(virtual_mapped - relocate_kernel), %rax
+> +       addq    $virtual_mapped, %rax
+> +       subq    $__relocate_kernel_start, %rax
+>         pushq   %rax
+>         ANNOTATE_UNRET_SAFE
+>         ret
+> --
+> 2.47.0
+>
 
