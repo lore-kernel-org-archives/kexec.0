@@ -4,84 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B69FE7716A
-	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 09:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0BA1E7716A
+	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 09:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vemBA6SLX9RgsTvIBo8EoN6jWnxnttcIB56J02CNQMg=; b=MxLB0JAqFKuA7fppx+tiivVgXp
-	F5i7fmwoSE8g/bD2mPUpZ25tQBmEfr90QQVyCPBn7FJRtDl+QWfJ9Dw2ebdKGD/Ou4Gd7LCEGMA7B
-	kghNFZpLpB3YMZaTkAfAAU5ZGXkwf78jhMdsFBOhmPUvj+H3eKwGXqYi4LkcHCOSwCfOC6OduUfZ6
-	ygxp8GP9gfcUlGEyrbratNgMzVpl31kGhmW8cr/5RSSGbRSv0+1EBDvfpmRRxd2U2IzwIa4J4hk9V
-	KyNsEpAHxwfCyNDyuJ/L7pQpEwPD+GoDWTr7GJKHDA2VhpUeLzD13NhcJWhKisgVQCxtPu2J1nOuv
-	n9BvDmIA==;
+	bh=x4Kq1ApCTlotm3kGOsN5CuO5LU5x9azOwncXT/pe8tY=; b=do//EsHlimo2M9vmd6KrOwyi7F
+	uTDzpG3vs7DB+b1laKGFDofWamfhLKWbZRePuOp3CI3w2WD9E2srxxy+QWRU9LpTCNcZPfw2rMLe6
+	zWjGVBCjESeOd342oXd3mfZwbDV6+Alu9liTLkLE+/O28NR6Aa+zs/eWBfyM1wG+skJCm+lyPyQhJ
+	ZjcT/1qDMsUlLNq/GGv5/mW+wGCTxC2TdMJdrAF21aBcu+9cvdJV6Geiy/+f4ue+Dxsr9TPiwVyMA
+	v7MEK3oiHzjOwMvoF1vyiNHwrCJ/7lSPHku9vIkzsQMiszeeS30M9BdFbSFjuIqOn60WjIiCGMOS9
+	l6VTiMiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNUIC-0000000D0eb-1pqb;
-	Tue, 17 Dec 2024 09:55:04 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1tNULN-0000000D1d6-1heF;
+	Tue, 17 Dec 2024 09:58:21 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNTtW-0000000CvOi-3cGQ
-	for kexec@lists.infradead.org;
-	Tue, 17 Dec 2024 09:29:36 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 0CEB05C65E2
-	for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 09:28:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAF78C4CED3
-	for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 09:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734427773;
-	bh=/JXGSjeuFwORUWi/GcIJoWS9cDLwv2BhC9G+AZ7MvpQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WjOsiImCc/s5SPnoNqZ73CkMchLWdya0i1gowe1qsVLYDPCqVp8k/f2hrsXcwtiNn
-	 cGaoWFDX82SvjxSSV2qkaAorkoxD0l5vteR/Men/NsNqattBEM1FQCJkdpBE8fXp9F
-	 ZOTBMLfpRJV06sULhWx7PMzE3XLn22d4HWEwzQKyCvYzI2UimzDyTdOocPo2CT4ZE5
-	 xwEai7yrhvbDAEjKs2Qj1XPveUrb9/+ZRO6yqEKD1KMUcDTgQLY3o+qE5ONYi8Ci+H
-	 m47E2Xt5p/2O88A+nrilNChmiYernXkGQo6NOGUm2Kw3zOwHPf3Fqwb0/mpS7YJEdh
-	 GCZIJxTTSdMCQ==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3022c6155edso49996661fa.2
-        for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 01:29:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUPV1+qBQsdhc/TLYWpIcCPRA0Bd/ywhBL5xtTGNcaDyuRaw0JRKnGOKqF/IbKt46dnG0f2/w==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwgdDwo+ffTpVz7loYlQlIhkyYOiy+YWsSdfsX0axsf6W/M16Mw
-	ECbn0i0W1MGQXc2Z8/R6P+9/uC4D49FMe5luXmEtWUSyqjEp+s5Nh0Q5wmOfdRVd5OiLBSWxPxz
-	xgs2BbEEyP+KFrOeKqBlmP1IFRvg=
-X-Google-Smtp-Source: AGHT+IGOH5xXs/+jrxW1Uzgqvgm0yh2wLN2TclacuxMVFx8bCIsWqUKBZFrn5vEMXVVRDkoO62PL6n0VVePgSX65jPA=
-X-Received: by 2002:a05:6512:158e:b0:53e:3740:4a86 with SMTP id
- 2adb3069b0e04-5409055551emr5018316e87.18.1734427772258; Tue, 17 Dec 2024
- 01:29:32 -0800 (PST)
+	id 1tNTzt-0000000Cwqr-3oui
+	for kexec@bombadil.infradead.org;
+	Tue, 17 Dec 2024 09:36:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=x4Kq1ApCTlotm3kGOsN5CuO5LU5x9azOwncXT/pe8tY=; b=DjhXm7HRsnmyAQ13PT8NE0U5hC
+	5NeyC1gq0vPhkhGp//zZmyr/3s5zc3sIEj6nZlf/wmJQs54ukBUu0IOMi2kAmAFEjRbgPK6IdHP8u
+	jBEAfvERHncEye0MG5Wtdx9To8HAgqer5pyJNJ8vCSdpqOITxYFP4Ja9LWtOJim1qTRJam00jzjqJ
+	ccEP9T/IbHn9a9F6rKcIe/MocE0bJS53d8VL0ZZt+W22Gphe0XRx2plwGCUx2YPnN1WNVyb6ogDEt
+	6pri9GfL52N0KngLGZYOGGGj6J0qauIyiYZCsdL7PNn95RMZ6s+sur8LlbDOI4mNgijv4sN18LYaH
+	6T1YyMzw==;
+Received: from [89.27.170.32] (helo=[127.0.0.1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNTzp-000000053Ry-46wr;
+	Tue, 17 Dec 2024 09:36:06 +0000
+Date: Tue, 17 Dec 2024 10:36:05 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>,
+ Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Yuntao Wang <ytcoode@gmail.com>, David Kaplan <david.kaplan@amd.com>,
+ Tao Liu <ltao@redhat.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Breno Leitao <leitao@debian.org>, Wei Yang <richard.weiyang@gmail.com>,
+ Rong Xu <xur@google.com>,
+ =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Simon Horman <horms@kernel.org>, Dave Young <dyoung@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de, nathan@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_8/9=5D_x86/kexec=3A_Cope_with_relocat?=
+ =?US-ASCII?Q?e=5Fkernel=28=29_not_being_at_the_start_of_the_page?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXF5C8TF02obuNrd6tZBZg0_Yz_VskGuNMnmoqyjLRAVRg@mail.gmail.com>
+References: <20241216233704.3208607-1-dwmw2@infradead.org> <20241216233704.3208607-9-dwmw2@infradead.org> <CAMj1kXEvpPbkeUb-2nt28M0yCNzo6NqauCcCNpj2psoVRH+C=A@mail.gmail.com> <6C7C48A4-4BF6-435F-B40D-D667DDB6F8C1@infradead.org> <CAMj1kXF5C8TF02obuNrd6tZBZg0_Yz_VskGuNMnmoqyjLRAVRg@mail.gmail.com>
+Message-ID: <FF6D6B84-58BC-4768-A112-C5B9A684F1A5@infradead.org>
 MIME-Version: 1.0
-References: <20241216233704.3208607-1-dwmw2@infradead.org> <20241216233704.3208607-10-dwmw2@infradead.org>
- <CAMj1kXE2abZ8v83vSr5sDZ1QNF-WMr4XCMRhZoc9EW=JAwvdCA@mail.gmail.com> <A18A8675-B1FB-496E-9D8F-FAD412A3FF65@infradead.org>
-In-Reply-To: <A18A8675-B1FB-496E-9D8F-FAD412A3FF65@infradead.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 17 Dec 2024 10:29:21 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFiZvT1joU5gOhZTC18aYi4dPOnFbX1nsHgmnXNy6c6Wg@mail.gmail.com>
-Message-ID: <CAMj1kXFiZvT1joU5gOhZTC18aYi4dPOnFbX1nsHgmnXNy6c6Wg@mail.gmail.com>
-Subject: Re: [PATCH 9/9] x86/kexec: Use typedef for relocate_kernel_fn
- function prototype
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, 
-	David Woodhouse <dwmw@amazon.co.uk>, Sourabh Jain <sourabhjain@linux.ibm.com>, 
-	Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>, David Kaplan <david.kaplan@amd.com>, 
-	Tao Liu <ltao@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Kai Huang <kai.huang@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Wei Yang <richard.weiyang@gmail.com>, Rong Xu <xur@google.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	Simon Horman <horms@kernel.org>, Dave Young <dyoung@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de, nathan@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241217_012935_023973_BF3F112F 
-X-CRM114-Status: GOOD (  24.82  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,63 +87,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 17 Dec 2024 at 10:21, David Woodhouse <dwmw2@infradead.org> wrote:
+On 17 December 2024 10:25:56 CET, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
+>On Tue, 17 Dec 2024 at 10:17, David Woodhouse <dwmw2@infradead=2Eorg> wro=
+te:
+>>
+>> On 17 December 2024 09:47:36 CET, Ard Biesheuvel <ardb@kernel=2Eorg> wr=
+ote:
+>> >On Tue, 17 Dec 2024 at 00:37, David Woodhouse <dwmw2@infradead=2Eorg> =
+wrote:
+>> >>
+>> >> From: David Woodhouse <dwmw@amazon=2Eco=2Euk>
+>> >>
+>> >> A few places in the kexec control code page make the assumption that=
+ the
+>> >> first instruction of relocate_kernel is at the very start of the pag=
+e=2E
+>> >>
+>> >> To allow for Clang CFI information to be added to relocate_kernel(),=
+ as
+>> >> well as the general principle of removing unwarranted assumptions, f=
+ix
+>> >> them to use the external __relocate_kernel_start symbol that the lin=
+ker
+>> >> adds=2E This means using a separate addq and subq for calculating of=
+fsets,
+>> >> as the assembler can no longer calculate the delta directly for itse=
+lf
+>> >> and relocations aren't that versatile=2E
+>> >>
+>> >
+>> >You can still avoid the absolute relocations though, =2E=2E=2E
+>> =2E=2E=2E
+>> >> +       addq    $identity_mapped, %rsi
+>> >> +       subq    $__relocate_kernel_start, %rsi
+>> >
+>> >=2E=2E=2E if you turn this into
+>> >
+>> >0:     addq    $identity_mapped - 0b, %rsi
+>> >       subq    $__relocate_kernel_start - 0b, %rsi
+>>
+>> Is there any benefit to doing so? Are absolute relocations problematic?
 >
-> On 17 December 2024 09:49:04 CET, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >On Tue, 17 Dec 2024 at 00:37, David Woodhouse <dwmw2@infradead.org> wrot=
-e:
-> >>
-> >> From: David Woodhouse <dwmw@amazon.co.uk>
-> >>
-> >> Both i386 and x86_64 now copy the relocate_kernel function into the co=
-ntrol
-> >> page and execute it from there, using an open-coded function pointer.
-> >>
-> >> Use a typedef for it instead.
-> >>
-> >> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> >> ---
-> >>  arch/x86/include/asm/kexec.h       | 26 +++++++++++++-------------
-> >>  arch/x86/kernel/machine_kexec_32.c |  7 +------
-> >>  arch/x86/kernel/machine_kexec_64.c |  6 +-----
-> >>  3 files changed, 15 insertions(+), 24 deletions(-)
-> >>
-> >> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec=
-.h
-> >> index 48e4f44f794f..8ad187462b68 100644
-> >> --- a/arch/x86/include/asm/kexec.h
-> >> +++ b/arch/x86/include/asm/kexec.h
-> >> @@ -111,21 +111,21 @@ static inline void crash_setup_regs(struct pt_re=
-gs *newregs,
-> >>  }
-> >>
-> >>  #ifdef CONFIG_X86_32
-> >> -asmlinkage unsigned long
-> >> -relocate_kernel(unsigned long indirection_page,
-> >> -               unsigned long control_page,
-> >> -               unsigned long start_address,
-> >> -               unsigned int has_pae,
-> >> -               unsigned int preserve_context);
-> >> +typedef asmlinkage unsigned long
-> >> +relocate_kernel_fn(unsigned long indirection_page,
-> >> +                  unsigned long control_page,
-> >> +                  unsigned long start_address,
-> >> +                  unsigned int has_pae,
-> >> +                  unsigned int preserve_context);
-> >
-> >linkage is not part of the type. 'asmlinkage' is #define'd to the
-> >empty string today, so it doesn't matter, but better to omit it here.
+>Every absolute relocation produces an entry in the relocation table
+>that needs to be applied at every boot when KASLR is in effect=2E Beyond
+>that, it doesn't matter=2E
 >
-> This is the i386 version. I thought ut was something like regparm(3) ther=
-e?
->
-> And... WTF? How is the calling convention not part of the fundamental typ=
-e of the function? If I have a pointer to such a function, using this typed=
-ef to ensure we all share the same prototype, are you telling me all the us=
-ers of the typedef have to remember to tag that part on for themselves?
+>I've looked into PIC codegen/PIE linking for the core kernel, which is
+>why this caught my eye=2E If that effort ever advances, I'll need to
+>revisit this code as well and apply the change I suggested=2E
 
-No. I am talking about linkage not the calling convention.
+Ack, I'll roll it in to the next revision if Ingo hasn't rounded this set =
+up of fixes up already=2E (On which topic, since I took the easy way out of=
+ the CFO thing, this patch isn't strictly needed to fix a regression in tip=
+/x86/boot so can be dropped for now too=2E)
 
-Look at how __efiapi is used in the kernel if you would like to
-understand the difference.
+Thanks=2E
+
 
