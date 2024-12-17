@@ -4,87 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EFCBE77187
-	for <kexec@archiver.kernel.org>; Mon, 16 Dec 2024 23:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1825E77184
+	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 06:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=ApUmt5w5j50ZzE4CN8B8im/cB0YzhpqvQRJfxOmpDKc=; b=uwvvGSI/eKi6+JJwXhoPRkeMkW
-	fmPZn6MVNFWOadEHf/u0LnL7rKEs41S/qxtzjg5B5e+/1HSF+VcAhOsqc018i3E4My5aES7A5SMNb
-	nIw25zW46Zff3v2t3y5KPkN8DNwcxvUdfxKXyDxp9e3gCU032Sff3HKeiLdZWi/beumXKCcZXUzIc
-	jBOrdFC0/WHe0JEjkGOChNX+smfqSt1NMm1ElwlkIt6OxMbvlB6YNk4p1XeYV5EboNPL79NTHPKBi
-	Y+/QtclgA71vAYH8wTdM+16xi8QET0unxZFH9gL3OGgwX81Ujc4o0x2+PPaU+7++zLWM+fqA+qEay
-	smalcjtQ==;
+	bh=U5qV1v2Jt6QjYaeHXBdYfuAXSU8rjSHTL5Bu78iPvGY=; b=q+rVcvQUMrlaf24aTItTQuCYm+
+	uIk5mdnEL7vqwA9bhgRRsNt4VOlntGkFMf572L+3f4PvyVbagNFZMe83v9+6Osuqjoqps1gjbwCrL
+	hvpstsjeFy1nF2Vzmxvy7+U/7wbvDO2dvuXB2rLXE97CS2RFhbf/bjj+8wAogo/XCEqon3poIYFXA
+	pQokk9kd4ewbwe5NHyBKDKdAmChx4M4LaRffBoHy6BGuvWTCN9B1yBAX38KbUPGvT0taUxfDLfJWL
+	sZOXHVEOYSVOXyKXpuNR1NIThi4Ggb4rKmbSu3Lx+aKbqLjQAFAoczq32LHXeB2kKOIUUd05m+/mh
+	X7yUf3wg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeP-0000000BexR-37zU;
-	Mon, 16 Dec 2024 23:37:21 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tNRXo-0000000CVEw-3oUf;
+	Tue, 17 Dec 2024 06:59:00 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeM-0000000Betg-2NZK
-	for kexec@bombadil.infradead.org;
-	Mon, 16 Dec 2024 23:37:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=ApUmt5w5j50ZzE4CN8B8im/cB0YzhpqvQRJfxOmpDKc=; b=aIW8v66qJZpnRx4m3gzUvZqAl9
-	45t1gnTqyeP3Azx2aZfITl6GbsRtFlM2MyIKtCOZpuQQ84GB9JrWXxsvtH+He4besVhXQr6QLduir
-	/eNlzMwd8DDqg0pmKOkSjeskGPIpiYltdMJVayJA1dQvPqs+ndHzc3ccRYjogdE/zP1gZYw+UDcMt
-	pvFCNZ1bRMoA5+rhhxsXw/vbkjGLB91eQE5WkFKb8ECaggDgCt8F8Rmc679Tyhwjk/mctU5xXWNef
-	siWqn4HujzYmScywJ39NEOlc/iaCGEGnnLnnF3vFg3iAumiGzvde4hmgHVcpCreJg9RKwsfg83Slb
-	lbeUcrHA==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKeB-00000004xiN-2ANX;
-	Mon, 16 Dec 2024 23:37:07 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNKe9-0000000DeW0-3qcI;
-	Mon, 16 Dec 2024 23:37:05 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	David Kaplan <david.kaplan@amd.com>,
-	Tao Liu <ltao@redhat.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Rong Xu <xur@google.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	bsz@amazon.de,
-	nathan@kernel.org
-Subject: [PATCH 0/9] x86/kexec: Fixes for tip/x86/boot
-Date: Mon, 16 Dec 2024 23:24:07 +0000
-Message-ID: <20241216233704.3208607-1-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.47.0
+	id 1tNRMC-0000000CSd9-3L2B
+	for kexec@lists.infradead.org;
+	Tue, 17 Dec 2024 06:47:01 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BH6jliI027742;
+	Tue, 17 Dec 2024 06:46:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=U5qV1v2Jt6QjYaeHXBdYfuAXSU8rjSHTL5Bu78iPv
+	GY=; b=OG2oT9l+GEeJu4B04R3qtpEDbibssrJZo8b7wBQ2GeTbaxkBPk+gB0+8N
+	e7bwCUMhN5JIVuuWmRg7Z/Dr6m7HFXAKP3MWpQix4Mqgi7YBLA/1FGldBq9xu6hi
+	fSIIyNMSFQ10px+on1ScB3LPfLA+cR2Ap8L5dLSBeHFX4dMsHkLan73kpxv6DFI+
+	YrWrY/jzezRruqTPl++b0IChD+8MPf3Xkyt6+jLUdKMHDMsWmitKT3VVGCaNLs8O
+	7Jwosx1Dr7tYLhpUmSfIG2zKlML46KdczW0/2aezCFUcFockum9AVuazNHNUgAcb
+	PkXbnQp6SzhRsY+AjIN6olpaWueGQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jgd2dcs8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Dec 2024 06:46:40 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BH6OduD014340;
+	Tue, 17 Dec 2024 06:46:40 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43hmqy1quu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Dec 2024 06:46:40 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BH6kaFP39256514
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Dec 2024 06:46:36 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BA9420043;
+	Tue, 17 Dec 2024 06:46:36 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0624920040;
+	Tue, 17 Dec 2024 06:46:33 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.29.128])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 17 Dec 2024 06:46:32 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] powerpc/crash: use generic crashkernel reservation
+Date: Tue, 17 Dec 2024 12:16:08 +0530
+Message-ID: <20241217064613.1042866-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5ds-IUGe8QsRQd2fFWvz29VEdeeBgx4n
+X-Proofpoint-GUID: 5ds-IUGe8QsRQd2fFWvz29VEdeeBgx4n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ mlxlogscore=877 priorityscore=1501 malwarescore=0 impostorscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412170052
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20241216_224700_957345_04C644E9 
+X-CRM114-Status: GOOD (  14.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,54 +105,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Fix a few bugs introduced by the recent rework of the relocate_kernel()
-code, and one which has been there in the kjump code from the beginning.
+Commit 0ab97169aa05 ("crash_core: add generic function to do
+reservation") added a generic function to reserve crashkernel memory.
+So let's use the same function on powerpc and remove the
+architecture-specific code that essentially does the same thing.
 
- • Global read-only TLB entries made relocate_kernel() crash when writing
-   to its own page after the %cr3 switch should have made it writeable.
- • The preserve_context flag was lost when invoking swap_pages on the way
-   back, causing pages not to be swapped.
- • The wrong page was being used as the swap page.
- • The ABI for the kjump call asks the callee to put its entry address for
-   next time at %rsp+8 before returning, but we set %rsp to the top of the
-   available page, such that the entry address is at the start of some
-   other page.
- • The relocate_kernel() function lacked Clang CFI information, but is now
-   called via a function pointer, leading to a crash¹.
- • The relocate_kernel() code and data could end up being linked into the
-   wrong place for a LTO / -ffunction-sections build.
+The generic crashkernel reservation also provides a way to split the
+crashkernel reservation into high and low memory reservations, which can
+be enabled for powerpc in the future.
 
-Thanks to Nathan for reporting many of the above.
+Additionally move powerpc to use generic APIs to locate memory hole for
+kexec segments while loading kdump kernel.
 
-Also a few minor cleanups, including a comments-only patch from Rafael 
-on the suspend-like part of kjump as a prelude to actually cleaning that 
-up.
+Patch series summary:
+=====================
+Patch 1-2: generic changes
+Patch 3-4: powerpc changes
+Patch 5:   generic + powerpc changes
 
-¹ Fixed by just adding __nocfi. Actually providing the CFI information 
-for relocate_kernel() will need a bit more work, so let's just do the 
-simple fix for now.
+Sourabh Jain (5):
+  crash: remove an unused argument from reserve_crashkernel_generic()
+  crash: let arch decide crash memory export to iomem_resource
+  powerpc/kdump: preserve user-specified memory limit
+  powerpc/crash: use generic crashkernel reservation
+  crash: option to let arch decide mem range is usable
 
-David Woodhouse (7):
-      x86/kexec: Disable global pages before writing to control page
-      x86/kexec: Ensure preserve_context flag is set on return to kernel
-      x86/kexec: Use correct swap page in swap_pages function
-      x86/kexec: Fix stack and handling of re-entry point for ::preserve_context
-      x86/kexec: Mark machine_kexec() with __nocfi
-      x86/kexec: Cope with relocate_kernel() not being at the start of the page
-      x86/kexec: Use typedef for relocate_kernel_fn function prototype
+ arch/arm64/mm/init.c                     |   6 +-
+ arch/loongarch/kernel/setup.c            |   5 +-
+ arch/powerpc/Kconfig                     |   3 +
+ arch/powerpc/include/asm/crash_reserve.h |  18 ++
+ arch/powerpc/include/asm/kexec.h         |  10 +-
+ arch/powerpc/kernel/prom.c               |   2 +-
+ arch/powerpc/kexec/core.c                |  96 ++++-----
+ arch/powerpc/kexec/file_load_64.c        | 259 +----------------------
+ arch/riscv/mm/init.c                     |   6 +-
+ arch/x86/kernel/setup.c                  |   6 +-
+ include/linux/crash_reserve.h            |  22 +-
+ include/linux/kexec.h                    |   9 +
+ kernel/crash_reserve.c                   |  12 +-
+ kernel/kexec_file.c                      |  12 ++
+ 14 files changed, 127 insertions(+), 339 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crash_reserve.h
 
-Nathan Chancellor (1):
-      x86/kexec: Fix location of relocate_kernel with -ffunction-sections
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+CC: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: sourabhjain@linux.ibm.com
 
-Rafael J. Wysocki (1):
-      kexec_core: Add and update comments regarding the KEXEC_JUMP flow
-
- arch/x86/include/asm/kexec.h         | 26 ++++++++--------
- arch/x86/kernel/machine_kexec_32.c   |  7 +----
- arch/x86/kernel/machine_kexec_64.c   |  8 ++---
- arch/x86/kernel/relocate_kernel_64.S | 57 ++++++++++++++++++++++++------------
- arch/x86/kernel/vmlinux.lds.S        |  4 +--
- kernel/kexec_core.c                  | 23 +++++++++++----
- 6 files changed, 74 insertions(+), 51 deletions(-)
+-- 
+2.47.1
 
 
