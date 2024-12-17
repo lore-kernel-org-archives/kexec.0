@@ -4,137 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E90AFE7717F
-	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 15:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3AF8E7717F
+	for <kexec@archiver.kernel.org>; Tue, 17 Dec 2024 16:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gH2PyObVwOTb7IJJA/kCLtpfRftXTti8G2/J9onHbvw=; b=MbyRdEYzeymhzu7aR3Sv/vk4md
-	PO3zDKc2xgRQm4qtDS0Cky/3dtpR1hfagHV4+TiCdonSSgDVth9eebrYrJMKfOLD4BIxplZruR7pN
-	C9sHXUgVAx6dNlFoi8Pcd59fkUbwZS0o0Lk9kza+RYQBphGIyBj8fdxOCblxKyzBMPskByX8CSBrS
-	+Yq9YDJrQFLrRDsCw3MvZr1vo4Gv4DAW7QGtoje5LfQnXfy4axrpwBCGa7NzjOLddYAvsGpK5vrVG
-	o3jeZQskW5USPhTRXjKQbBtq4qOyttJ9WfSel9VovYyxHtKzjICdcVUyIbNX7t8oSoQWVsQA935qA
-	lzWZUrNg==;
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=iH70s4kN1OmYyU7l5ZxBv++8EBPGyuzfTKRoG/MitJE=; b=1RKDNIISR6JYUqVx80QTItn+cj
+	Izob7a2uppwaGbdsXggSwKY9rQTVEAmr+Lk9wAYEZqmnZzQTYYZOv73cocfJSV7seVe5xHAD6NIDh
+	jXb0JYZTnOjktNScv4tRBq88Nzg/EvX6z5WZOqRVhAacyck2laB/YbqccG6NqqiqPXkhrzt1i2zRK
+	1PiWBEe0+59sGOFdQwPK18ezbLWhwtjm1/1e8jeNC02VWcnbdh9f650ROaRUBSo80I/PZiCDxoIhi
+	lz1cLpOsoeiqE0ilU9AgTnATIwfaf0WBrjSjRLIEDqmhLUR2k/b+G3SHqbo4PqQt6xeCn4Z/V+4lv
+	zcI2F6uA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNZ9G-0000000DsoN-19Se;
-	Tue, 17 Dec 2024 15:06:10 +0000
-Received: from mgamail.intel.com ([198.175.65.20])
+	id 1tNafo-0000000EEjP-311r;
+	Tue, 17 Dec 2024 16:43:52 +0000
+Received: from mail-ej1-x62a.google.com ([2a00:1450:4864:20::62a])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNZ9D-0000000Dsmm-3I9c
+	id 1tNaaH-0000000EDfL-2aTG
 	for kexec@lists.infradead.org;
-	Tue, 17 Dec 2024 15:06:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734447968; x=1765983968;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VYgUBCCBapVjhIc533Rzulgo4zhAc4lsjV5YP7+N/ME=;
-  b=a+6C0Kk2Nn3vlw4yC1/h1ohaNaFaS+QN8cCcd+b1CRLMFnTthscy3M8u
-   u29566XKpBnplOa48xEtSzDtYAWPl0qe4XJ+xsbyUpN1HI6DWNywasnBQ
-   9wb5WHW1AILffw8qUhgmj9wzWdqQkDK4+ZLQwrXnRx5BS1t5j7OcVl+qP
-   FFG9B2pGrqjcNzTaOAtKXExTPl7lvRroEKEF+72bKjpXyP7KBzFG52fK6
-   Srd5+BRfvh8AabglYX83A+WHUmf1SEEhTX/OtrSwhG4wt5Tk3hhDB7Yx+
-   zjHvmTL3XqBpKu/R84f9IX9j2cIAGHQlDJzqWvdUo92Ny0xNYi6xQDtuY
-   g==;
-X-CSE-ConnectionGUID: TTdtNVfrR2GKesucN+DA+w==
-X-CSE-MsgGUID: fmW+DZHPSdGfKIMedtgexA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34606911"
-X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
-   d="scan'208";a="34606911"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 07:06:07 -0800
-X-CSE-ConnectionGUID: 0HCoLGcPS36/QgdTdVVypA==
-X-CSE-MsgGUID: 9Y8BEF/kR+Sqb8PeC7alNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120810844"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.220.135]) ([10.124.220.135])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 07:06:05 -0800
-Message-ID: <ca888eb1-056c-436e-9471-91dbf2f6abf4@intel.com>
-Date: Tue, 17 Dec 2024 07:06:03 -0800
+	Tue, 17 Dec 2024 16:38:11 +0000
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-aa670ffe302so1020169166b.2
+        for <kexec@lists.infradead.org>; Tue, 17 Dec 2024 08:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734453487; x=1735058287; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iH70s4kN1OmYyU7l5ZxBv++8EBPGyuzfTKRoG/MitJE=;
+        b=GlNqXKoNGlIWHoR97fngDhX/KMxOgcS2nThlhrPOn4z+2kyaK2/hVcN5utMW9OZlSY
+         Z88VTeFFbjhQnX7DN4edNUWuSMctK22o2/x+tJJ7wtN2bTOMxBYIShwzg6u/N9dKa/RP
+         chufaa0SzfQZ3y82mN0eq3Vn6MHqjdMWrQSOlPYmwhhOwBM/A8joxkGsZQrcQUSMm4Um
+         HVumQqS6gI+eNePFSkL8JwbzQoegYWPixmHEU/kN65BLdMup685PTLrAGMiSxL8t6IRD
+         oMv1WDH05fryStFbRp8rLge1OuN1ZF8RqAsm436UbEoYyl+kRzyQAs7/WoXtTdol3ZXl
+         Jwrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734453487; x=1735058287;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iH70s4kN1OmYyU7l5ZxBv++8EBPGyuzfTKRoG/MitJE=;
+        b=F6BiK540A7vsTWsUymZROJRW8kJkp2gXd8+MLB2IT0tKN0ePONKBloqNl469IEF+4m
+         K8WNIkusK0k/ARA/ljwCJeOttfkGTIMH1p31TYUXiwymFhrjobFD6/hmaw4zvPCbRsst
+         XrUBuly+iISskP6MYLU9zIa3+vIt7fYLoXQYei2snsvF98ixlguDJ0XaSMoT8gUCP/YT
+         YpSpHOMXyQ+vfVTqho5QO7jAKmrDjhQFe38taWj/AM2i1+vOfSbXo2CjYLXPdoacq2qn
+         FgPK3cYrZhSFV92TDsLT0NwwKJwaLHRB3bYomJws8NSsywwUDt4KdlGluTZql0/SXE6G
+         Wydg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXFJbNM1yi4s98uyS8X9c7k1JKmbEDbpnsEivHPnqNpvubRto9tpHuc2uc18Mn6k7XWlcgqw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyUtR0aIbUprLsNBBybUokgIYPupLx8KuZRDg+sfK3prhh/8aWy
+	MdyF2yG0Sg/HqJy3HlTwPlkplBqkWkZIQndUqnl49GP9+IYiKH/q
+X-Gm-Gg: ASbGncvowi+w0VT7NIoX5p8M4ozzNZ9b4QtmT+b3b6iQYxuUE7kSZ39EFHQ36ZkjzPa
+	wRZ0da77ejisLS8Z5vxxcQJXVz4joocz56rWxzSKuAG+6xdVRUEltBOyuEhMFUPTjAuk4pSygk0
+	tkrtqe5a6y2W5MTLbZ1VcrbU77zagC+2YTdRELsrnG0Bwqz3W27S7/gpzaHQvHY/2LFNlybtM7b
+	MsvBrrsKYwkWzK7W9PgNUA3h3so4g1fOGA8I6zgJ1z6y5OdKNZLVTv+9A==
+X-Google-Smtp-Source: AGHT+IFdOTWlQ3XGT9Bbtyc5hUf6TLwfRJLJZcM8KJ/JAayRtZbKneHKECG4frLOlCSEzCF6vLj9aw==
+X-Received: by 2002:a17:906:dc92:b0:aab:736c:558 with SMTP id a640c23a62f3a-aab77ebcacdmr2066488266b.55.1734453486800;
+        Tue, 17 Dec 2024 08:38:06 -0800 (PST)
+Received: from [192.168.1.100] ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab963595ffsm463142266b.94.2024.12.17.08.38.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2024 08:38:06 -0800 (PST)
+Message-ID: <05bde41f-9f2a-18e9-05ef-c5b29a66caf8@gmail.com>
+Date: Tue, 17 Dec 2024 17:38:04 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] [PATCH 1/9] x86/kexec: Disable global pages before
- writing to control page
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 2/9] x86/kexec: Ensure preserve_context flag is set on
+ return to kernel
 To: David Woodhouse <dwmw2@infradead.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
  x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Eric Biederman <ebiederm@xmission.com>,
+ Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw@amazon.co.uk>,
  Sourabh Jain <sourabhjain@linux.ibm.com>,
  Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman
  <mpe@ellerman.id.au>, Thomas Zimmermann <tzimmermann@suse.de>,
  Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
  Yuntao Wang <ytcoode@gmail.com>, David Kaplan <david.kaplan@amd.com>,
- Tao Liu <ltao@redhat.com>, Kai Huang <kai.huang@intel.com>,
- Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Breno Leitao <leitao@debian.org>, Wei Yang <richard.weiyang@gmail.com>,
- Rong Xu <xur@google.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, Simon Horman <horms@kernel.org>,
- Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- bsz@amazon.de, nathan@kernel.org
+ Tao Liu <ltao@redhat.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Breno Leitao <leitao@debian.org>,
+ Wei Yang <richard.weiyang@gmail.com>, Rong Xu <xur@google.com>,
+ =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas.weissschuh@linutronix.de>,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ Simon Horman <horms@kernel.org>, Dave Young <dyoung@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de, nathan@kernel.org
 References: <20241216233704.3208607-1-dwmw2@infradead.org>
- <20241216233704.3208607-2-dwmw2@infradead.org>
- <tksesvqt266x6a6mnoi5aqa3fhsoyo7mbp277elrrft5eieoba@7ospdizq22y6>
- <28a98c27-7307-4698-9182-35e0d2cf12ad@intel.com>
- <7593b839a8c7d3122e08660ca2e957d834665005.camel@infradead.org>
-From: Dave Hansen <dave.hansen@intel.com>
+ <20241216233704.3208607-3-dwmw2@infradead.org>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <7593b839a8c7d3122e08660ca2e957d834665005.camel@infradead.org>
-Content-Type: text/plain; charset=UTF-8
+From: Uros Bizjak <ubizjak@gmail.com>
+In-Reply-To: <20241216233704.3208607-3-dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241217_070607_878175_F8E62ACF 
-X-CRM114-Status: GOOD (  10.26  )
+X-CRM114-CacheID: sfid-20241217_083809_660794_A094836C 
+X-CRM114-Status: GOOD (  19.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -149,16 +117,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/17/24 06:56, David Woodhouse wrote:
->> Anyway, I think we can leave the belt-and-suspenders programming in this
->> case. A comment wouldn't hurt I guess.
-> I'm a little lost. In this case I don't see belt-and-suspenders
-> programming. We're not loading CR3 after clearing CR4.PGE just to be
-> paranoid about making really really sure the TLB is flushed.
-> 
-> We're loading CR3 because we're switching from the kernel's page tables
-> to the new identity mapping set up for the relocate_kernel environment.
 
-Yes, agreed, that's another reason the CR3 write must stay. I hadn't
-even considered that part yet honestly.
+
+On 17. 12. 24 00:24, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> The swap_pages function will only actually *swap*, as its name implies,
+> if the preserve_context flag in the %r11 register is non-zero. On the
+> way back from a ::preserve_context kexec, ensure that the %r11 register
+> is non-zero so that the pages get swapped back.
+> 
+> Fixes: 9e5683e2d0b5 ("x86/kexec: Only swap pages for ::preserve_context mode")
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>   arch/x86/kernel/relocate_kernel_64.S | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 9bd601dd8659..1a52e4339c1d 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -220,6 +220,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>   	movq	kexec_pa_table_page(%rip), %rax
+>   	movq	%rax, %cr3
+>   	lea	PAGE_SIZE(%r8), %rsp
+> +	movq	$1, %r11	/* Ensure preserve_context flag is set */
+
+You can save a byte here by using "movl $1, %r11d".
+
+>   	call	swap_pages
+>   	movq	kexec_va_control_page(%rip), %rax
+>   	addq	$(virtual_mapped - relocate_kernel), %rax
+
+Uros.
 
