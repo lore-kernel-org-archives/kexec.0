@@ -4,95 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EF424E7718C
-	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 19:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6539DE7718A
+	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 22:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CAR2XDvMpSDNgRI4ba9QodPpLgYuOG3w5cBkcUBDh0g=; b=N62f+tXToGiUZQTyD3mgKMDfQs
-	xqlxWNN8b//pZyCf3bNUQmzX8gtRB89FLjNjhGH7opuh6Uvx9U7aEFJ6ZFNB+CL8VdO/P54bTUcPx
-	wGuWdCC7mWXsctHqjSojQxMdheTEGbSgiKv28L7SfuUPs7VRdDZIFWfVp5kJqCKIMvzsgWczWEWWL
-	XWhXpRqd7KY8nJO7rly4dtowXRtiM9Z1XwhzdkNiduRIzQzDUQVYv9DZuEQ82akdpA6bjNc3s/d/C
-	GmZjvlScSwo5g8my2QmO3rMOcSBiqCBa0+GfLJDvHIQad4oS9u/vilVkmpIxTQE2B1aTaZdJZfLqD
-	76AZbDPg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3/QwrzJsiwP+XrKwjXSVNe4saEEyevlgRCTrrfhZb+E=; b=K5HH54//VHFRd/5ZOOhSSlEth8
+	rb5CFxfc0DS+Ut+pu45wkijN1lz0DRlXAex3vmFwVbnNStnBIGFnl4Tvs+i/fLfMbUiF01fqWvIae
+	T4C0z/srfttEt2xgRrqUisner4tbfBIhtj5u7ROUbKfm6KRHuidROBnGPFbwIiZXomBYHtQY0akBL
+	46VsK37y8eaJ8oKJ+AMOBSRdKcODNelXHEi3wEHNb2JRxwPBzV5fDSKgrTrN7jtHELFhFFQ4MoYE0
+	N5vfCML510c0jQ9jM3wd6R7tCFGwRBCUeL/J6ad6q5F0cHRx1Z1z2Tsu3XmbtR90KuoxGP6VSrRmc
+	DWRZKaog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMfV-00000002vy9-2To0;
-	Thu, 19 Dec 2024 19:58:45 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1tOP0Q-00000003GWm-1imZ;
+	Thu, 19 Dec 2024 22:28:30 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMet-00000002vcV-1lW1
+	id 1tOP0L-00000003GVp-3eHP
 	for kexec@lists.infradead.org;
-	Thu, 19 Dec 2024 19:58:08 +0000
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIMh9G029748;
-	Thu, 19 Dec 2024 19:56:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=CAR2X
-	DvMpSDNgRI4ba9QodPpLgYuOG3w5cBkcUBDh0g=; b=EDrL977flAIHAN2R2MTGb
-	r0LSdAUHvjZxGmUdu+JcB2XC7CumxXPw6SbNh6/bmnL4HJbdh6UPhItXq3Vn7iTU
-	k4MEpidVnaEMZ6d3Mm7fVVwSBOvjAyuNjwvfYlvry46CHDXq0CtzCSP//JZbFFjE
-	wtbvaJeij0hJux2qbW1uXi1DNjHEsT9aR/FkN9rj2B0d2t1OTzl+jzmbNAeQV3tf
-	6wMiF/lGGhCdfNuuViTPnl391YL6lqd6XppdrocGQem7kdVAMwWdVAZUY43YlVFm
-	W50ZICD7oSudfinCgskpbUo7zcaiGexE4CgCM6zY63dvZZzUtCKWdrTHSR80ecK7
-	w==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h22cuvc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Dec 2024 19:56:51 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJJHs6P018324;
-	Thu, 19 Dec 2024 19:56:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbvwk8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:56:50 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BJJunsH002858;
-	Thu, 19 Dec 2024 19:56:49 GMT
-Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbvwgm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:56:49 +0000
-From: Ross Philipson <ross.philipson@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-Subject: [PATCH v12 19/19] x86/efi: EFI stub DRTM launch support for Secure Launch
-Date: Thu, 19 Dec 2024 11:42:16 -0800
-Message-Id: <20241219194216.152839-20-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20241219194216.152839-1-ross.philipson@oracle.com>
-References: <20241219194216.152839-1-ross.philipson@oracle.com>
+	Thu, 19 Dec 2024 22:28:26 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id DAEB2A42A2B;
+	Thu, 19 Dec 2024 22:26:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A583FC4CED0;
+	Thu, 19 Dec 2024 22:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734647304;
+	bh=79H2dkuKzWYOcCVtdE3fcGrUAnwuaGNK/vpt2JprKBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dgM93Nt4ID+MkG/UCIiE9fEhFrjZGJxqpq6lDw6rHGhLS5hhOMjBxzFHQ/AMMGpdO
+	 Rm2FsD6TRpxuMH0tYp99HXT4SrsqdfJeYFq14RChd7E/9pWubXsSFNuxSkBUTa5oj6
+	 QeASkzstE2EvvMYJicWawVNSJiLLzBWndYXoQAXm4yeqKRrIRiLLNPCPTI8pQuUU3C
+	 9lhLqG951HnX57VCO29r0D4eTDg1FBsKUJ7zmoR+uuAaV1KLrgZbqs3krx9+SxEX8J
+	 xTrw1iDRb/jGPYOSIIcjz/PTnrFfaUQwLNyOguH4nad9jUW7o6sMbCRXIUp55a9Ovu
+	 zioXsPjqUvgDg==
+Date: Thu, 19 Dec 2024 14:28:21 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, kexec@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
+Subject: Re: [PATCH v5 07/20] x86/kexec: Invoke copy of relocate_kernel()
+ instead of the original
+Message-ID: <20241219222821.c6o3peznyzoxaslj@jpoimboe>
+References: <24d843d2ceb09acdae494ee9a17ec94bf8bb4e4f.camel@infradead.org>
+ <20241216054942.GA25019@ax162>
+ <79ea9c10ae4f1dae16be8c05bb7b7e6b72512f10.camel@infradead.org>
+ <9ee61d2b89b4cecd10ece64002bf2c06648e1de7.camel@infradead.org>
+ <20241218090305.y4o62pmdwq32732h@jpoimboe>
+ <5857ef047402c3ded29d4c024f8fdc32608f1696.camel@infradead.org>
+ <20241218212326.44qff3i5n6cxuu5d@jpoimboe>
+ <dc059a127d59ccc77be0c92b686f72616c2d1c0f.camel@infradead.org>
+ <20241219002015.7y5ohlfofc6c3njr@jpoimboe>
+ <7e7eda28bf697752435dc730d689cd3edf9bf013.camel@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-19_09,2024-12-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- malwarescore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2412190158
-X-Proofpoint-GUID: n26lGIjuWLBeE41cJiA9lwyEURTykH58
-X-Proofpoint-ORIG-GUID: n26lGIjuWLBeE41cJiA9lwyEURTykH58
+In-Reply-To: <7e7eda28bf697752435dc730d689cd3edf9bf013.camel@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241219_115807_569471_1BB40792 
-X-CRM114-Status: GOOD (  20.28  )
+X-CRM114-CacheID: sfid-20241219_142825_968192_D032D699 
+X-CRM114-Status: GOOD (  18.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,157 +91,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This support allows the DRTM launch to be initiated after an EFI stub
-launch of the Linux kernel is done. This is accomplished by providing
-a handler to jump to when a Secure Launch is in progress. This has to be
-called after the EFI stub does Exit Boot Services.
+On Thu, Dec 19, 2024 at 11:02:55AM +0100, David Woodhouse wrote:
+> On Wed, 2024-12-18 at 16:20 -0800, Josh Poimboeuf wrote:
+> > Anyway, what I think you're looking for is UNWIND_HINT_UNDEFINED.  In
+> > fact all the unwind annotations in that file should be UNDEFINED since
+> > the hints are all referring to the wrong addresses (because copied code)
+> > and the ORC unwinder isn't reachable for most of that code anyway.
+> > 
+> > Also, it's fine to make relocate_kernel() a proper function with
+> > SYM_FUNC_END, you'd just need to add the following line afterwards:
+> > 
+> >   STACK_FRAME_NON_STANDARD relocate_kernel
+> > 
+> 
+> Thanks, I'll take a look. The next thing objtool is actually
+> complaining about is that relocate_kernel() itself is not reachable
+> (since it's never invoked in its original location):
+> 
+> vmlinux.o: warning: objtool: relocate_kernel+0x0: unreachable instruction
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/libstub/efistub.h  |  8 +++
- drivers/firmware/efi/libstub/x86-stub.c | 94 +++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
+Right, I think UNWIND_HINT_UNDEFINED should fix that.
 
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 76e44c185f29..f63e5197ea53 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -135,6 +135,14 @@ void efi_set_u64_split(u64 data, u32 *lo, u32 *hi)
- 	*hi = upper_32_bits(data);
- }
- 
-+static inline
-+void efi_set_u64_form(u32 lo, u32 hi, u64 *data)
-+{
-+	u64 upper = hi;
-+
-+	*data = lo | upper << 32;
-+}
-+
- /*
-  * Allocation types for calls to boottime->allocate_pages.
-  */
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 188c8000d245..403a191c31cc 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -9,6 +9,8 @@
- #include <linux/efi.h>
- #include <linux/pci.h>
- #include <linux/stddef.h>
-+#include <linux/slr_table.h>
-+#include <linux/slaunch.h>
- 
- #include <asm/efi.h>
- #include <asm/e820/types.h>
-@@ -922,6 +924,93 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
- 	return efi_adjust_memory_range_protection(addr, kernel_text_size);
- }
- 
-+#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
-+static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
-+						 struct boot_params *boot_params)
-+{
-+	struct slr_entry_intel_info *txt_info;
-+	struct slr_entry_policy *policy;
-+	bool updated = false;
-+	int i;
-+
-+	txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
-+	if (!txt_info)
-+		return false;
-+
-+	txt_info->boot_params_addr = (u64)boot_params;
-+
-+	policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
-+	if (!policy)
-+		return false;
-+
-+	for (i = 0; i < policy->nr_entries; i++) {
-+		if (policy->policy_entries[i].entity_type == SLR_ET_BOOT_PARAMS) {
-+			policy->policy_entries[i].entity = (u64)boot_params;
-+			updated = true;
-+			break;
-+		}
-+	}
-+
-+	/*
-+	 * If this is a PE entry into EFI stub the mocked up boot params will
-+	 * be missing some of the setup header data needed for the second stage
-+	 * of the Secure Launch boot.
-+	 */
-+	if (image) {
-+		struct setup_header *hdr = (struct setup_header *)((u8 *)image->image_base +
-+					    offsetof(struct boot_params, hdr));
-+		u64 cmdline_ptr;
-+
-+		boot_params->hdr.setup_sects = hdr->setup_sects;
-+		boot_params->hdr.syssize = hdr->syssize;
-+		boot_params->hdr.version = hdr->version;
-+		boot_params->hdr.loadflags = hdr->loadflags;
-+		boot_params->hdr.kernel_alignment = hdr->kernel_alignment;
-+		boot_params->hdr.min_alignment = hdr->min_alignment;
-+		boot_params->hdr.xloadflags = hdr->xloadflags;
-+		boot_params->hdr.init_size = hdr->init_size;
-+		boot_params->hdr.kernel_info_offset = hdr->kernel_info_offset;
-+		efi_set_u64_form(boot_params->hdr.cmd_line_ptr, boot_params->ext_cmd_line_ptr,
-+				 &cmdline_ptr);
-+		boot_params->hdr.cmdline_size = strlen((const char *)cmdline_ptr);
-+	}
-+
-+	return updated;
-+}
-+
-+static void efi_secure_launch(struct boot_params *boot_params)
-+{
-+	struct slr_entry_dl_info *dlinfo;
-+	efi_guid_t guid = SLR_TABLE_GUID;
-+	dl_handler_func handler_callback;
-+	struct slr_table *slrt;
-+
-+	/*
-+	 * The presence of this table indicated a Secure Launch
-+	 * is being requested.
-+	 */
-+	slrt = (struct slr_table *)get_efi_config_table(guid);
-+	if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
-+		return;
-+
-+	/*
-+	 * Since the EFI stub library creates its own boot_params on entry, the
-+	 * SLRT and TXT heap have to be updated with this version.
-+	 */
-+	if (!efi_secure_launch_update_boot_params(slrt, boot_params))
-+		return;
-+
-+	/* Jump through DL stub to initiate Secure Launch */
-+	dlinfo = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
-+
-+	handler_callback = (dl_handler_func)dlinfo->dl_handler;
-+
-+	handler_callback(&dlinfo->bl_context);
-+
-+	unreachable();
-+}
-+#endif
-+
- static void __noreturn enter_kernel(unsigned long kernel_addr,
- 				    struct boot_params *boot_params)
- {
-@@ -1049,6 +1138,11 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
- 		goto fail;
- 	}
- 
-+#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
-+	/* If a Secure Launch is in progress, this never returns */
-+	efi_secure_launch(boot_params);
-+#endif
-+
- 	/*
- 	 * Call the SEV init code while still running with the firmware's
- 	 * GDT/IDT, so #VC exceptions will be handled by EFI.
 -- 
-2.39.3
-
+Josh
 
