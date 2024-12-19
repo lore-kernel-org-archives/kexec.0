@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C906DE77192
-	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 19:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51702E7718D
+	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 19:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hi5Cvi6W0EnpZmrRTj9AQy6lu91T7AQBkJhdBnD37Bo=; b=JDeka+cggeGpxrXWYc30hOpuVH
-	UGOvxV+gY5CNqyzS4nym59aWpZ5soY+vTWkG0F41etRRVfDmYYltohbomfaWpnyvF+vGXoUhf4JxE
-	s2sftrcKvo50tovP36S9LDkfTmpDB6kL8E8bv1fB5PfRkr8wvadSle9EzxiKv1Kbv9b7FHtXKt4Z7
-	TnjPVVKz+Lyk46SipDcJEVPv8loRcS6+hs27wpg67MEYABx5CpjfHUurHLBBErYM5KtSyxaB2vJFK
-	y3jTjF3x5ZCSkOd8ZsIKkHYgF7SRzN7D7XpEZh4dv3QJrxTvlW5zFC8PgYSST6rB+IG3fT5cVMr1e
-	WAf50lYw==;
+	bh=OVn8CJbKyYyAUpJZHUbkI2QMxxAeDSdmJGU2s8s51Mc=; b=2zARds9XkYTSz5a6mgGxOcHfSx
+	4tDlPGyphRS61GkLU3luygEOkARvVW4/OtboNUhWpmcNrD4o7q2TfombBbYvjudqRMoq5KfFqcy1Q
+	6DDMW1z0ztcZ2T2skxIuFynKvoeo5bJW2YY+nrf2VDA6byGLOSzpZJfSqOEI9VHc3k2NGtnZRc4x1
+	nAKk371TZzyIF/WzyQ4wiPZU/3SKCHcM9kUgARZxgN7QaQ93tibC+3yZ1jfu3iHlxkSfu9GP5CDjQ
+	J1FobCRYHFbm1udxodX//qbSr9yQkUwqtv4eGRBb4wWbfQ1JxIGMWn51Teu18NLoffdCOir1JBKva
+	hui8M3Bg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMfS-00000002vsn-27U0;
-	Thu, 19 Dec 2024 19:58:42 +0000
+	id 1tOMfS-00000002vtb-4C0q;
+	Thu, 19 Dec 2024 19:58:43 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMdw-00000002vBt-0XYU
+	id 1tOMe5-00000002vEd-1GK4
 	for kexec@lists.infradead.org;
-	Thu, 19 Dec 2024 19:57:09 +0000
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIMkTS007019;
-	Thu, 19 Dec 2024 19:55:51 GMT
+	Thu, 19 Dec 2024 19:57:18 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIMnWI030973;
+	Thu, 19 Dec 2024 19:56:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=hi5Cv
-	i6W0EnpZmrRTj9AQy6lu91T7AQBkJhdBnD37Bo=; b=DWnzpxGdjIu2O13RVUzMn
-	kDqTp9NdAbsZdKhwKTpUFCd2MD0a8qbtwxU7SPgynLd7Qw5lxbgPRkIFx0mnJ8dV
-	8m8rZfGXRttHdDlKEw9i6zYlvhQsIy2l1enH5Dl+0YVKnqgzPZVzzhM/mmOWBpeI
-	xllv7DpAQ9zj4+dy/ajpCdnz1iE+G2WG9nx/7qldOh1UjFiEBPOdE5arL4BBFGpf
-	G1AY8a/SRIXbDNR6ZOh4KNnuuqK2kNejYzqvv8l0l11QPZz9GeIhdJuvOB7KJRc8
-	lOLWVt7jPByD8M8VeR/XM1E1Q8UDWq0Nb54ZnyI3ds+rv/InA9gHZCjVljCGzAd5
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=OVn8C
+	JbKyYyAUpJZHUbkI2QMxxAeDSdmJGU2s8s51Mc=; b=i4UoEne0/dyAGBe/UhGjn
+	kX2ayVIVqqr8QrXMeA6gbnIlriY1q7hHM6q5O3UO88rcfPM3YEeOKYPpTPylaxEv
+	QL1DEt+zTn7cHhW3Qyq8mzPpHH8lMBmcDkqhZY2j5FiSVZYB0+2djIkg9VP4eqEV
+	dKwy+ojPDfT5RaWtYrb14YcLLDvBTEdWLigjwtKpDarjts6pcSsMth/vPAMyib35
+	xy8lX6L87nb7WxZKPsKN1TOg4PxcmMYJ9Qb3LuE6kjtXrOz+JXFN3WgpGcuYFevB
+	9RceuEpr+Q8pJjmGlhzYq8XqFm4HM7F5UKfKVnQtycCyTH98V+/FR6ws6//UGs3F
 	w==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h1w9krqe-1
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h2jtc1b9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Dec 2024 19:55:51 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIsvoN032785;
-	Thu, 19 Dec 2024 19:55:50 GMT
+	Thu, 19 Dec 2024 19:56:00 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJILiVH010875;
+	Thu, 19 Dec 2024 19:56:00 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fhvnct-1
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbfpvj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:55:50 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BJJtnth014303;
-	Thu, 19 Dec 2024 19:55:49 GMT
+	Thu, 19 Dec 2024 19:56:00 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BJJtxO5020600;
+	Thu, 19 Dec 2024 19:55:59 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fhvnbf-1
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbfpt6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:55:49 +0000
+	Thu, 19 Dec 2024 19:55:59 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v12 12/19] kexec: Secure Launch kexec SEXIT support
-Date: Thu, 19 Dec 2024 11:42:09 -0800
-Message-Id: <20241219194216.152839-13-ross.philipson@oracle.com>
+Subject: [PATCH v12 13/19] x86/reboot: Secure Launch SEXIT support on reboot paths
+Date: Thu, 19 Dec 2024 11:42:10 -0800
+Message-Id: <20241219194216.152839-14-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20241219194216.152839-1-ross.philipson@oracle.com>
 References: <20241219194216.152839-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2024-12-19_09,2024-12-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
  definitions=main-2412190158
-X-Proofpoint-GUID: sscU-uA9FJgmhahSxoQ8ovxm2ztcs6-H
-X-Proofpoint-ORIG-GUID: sscU-uA9FJgmhahSxoQ8ovxm2ztcs6-H
+X-Proofpoint-GUID: tq07Y-AFYrY-yb9zly0Su2t5UWuureen
+X-Proofpoint-ORIG-GUID: tq07Y-AFYrY-yb9zly0Su2t5UWuureen
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241219_115708_164116_D5E0A70E 
-X-CRM114-Status: GOOD (  18.73  )
+X-CRM114-CacheID: sfid-20241219_115717_336932_56F23057 
+X-CRM114-Status: GOOD (  14.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,118 +107,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Prior to running the next kernel via kexec, the Secure Launch code
-closes down private SMX resources and does an SEXIT. This allows the
-next kernel to start normally without any issues starting the APs etc.
+If the MLE kernel is being powered off, rebooted or halted,
+then SEXIT must be called. Note that the SEXIT GETSEC leaf
+can only be called after a machine_shutdown() has been done on
+these paths. The machine_shutdown() is not called on a few paths
+like when poweroff action does not have a poweroff callback (into
+ACPI code) or when an emergency reset is done. In these cases,
+just the TXT registers are finalized but SEXIT is skipped.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/kernel/slaunch.c | 72 +++++++++++++++++++++++++++++++++++++++
- kernel/kexec_core.c       |  4 +++
- 2 files changed, 76 insertions(+)
+ arch/x86/kernel/reboot.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
-index 5c54288ce980..c828d46f3271 100644
---- a/arch/x86/kernel/slaunch.c
-+++ b/arch/x86/kernel/slaunch.c
-@@ -522,3 +522,75 @@ void __init slaunch_setup_txt(void)
- 
- 	pr_info("Intel TXT setup complete\n");
- }
-+
-+static inline void smx_getsec_sexit(void)
-+{
-+	asm volatile ("getsec\n"
-+		      : : "a" (SMX_X86_GETSEC_SEXIT));
-+}
-+
-+/*
-+ * Used during kexec and on reboot paths to finalize the TXT state
-+ * and do an SEXIT exiting the DRTM and disabling SMX mode.
-+ */
-+void slaunch_finalize(int do_sexit)
-+{
-+	u64 one = TXT_REGVALUE_ONE, val;
-+	void __iomem *config;
-+
-+	if (!slaunch_is_txt_launch())
-+		return;
-+
-+	config = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
-+			 PAGE_SIZE);
-+	if (!config) {
-+		pr_emerg("Error SEXIT failed to ioremap TXT private reqs\n");
-+		return;
-+	}
-+
-+	/* Clear secrets bit for SEXIT */
-+	memcpy_toio(config + TXT_CR_CMD_NO_SECRETS, &one, sizeof(one));
-+	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
-+
-+	/* Unlock memory configurations */
-+	memcpy_toio(config + TXT_CR_CMD_UNLOCK_MEM_CONFIG, &one, sizeof(one));
-+	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
-+
-+	/* Close the TXT private register space */
-+	memcpy_toio(config + TXT_CR_CMD_CLOSE_PRIVATE, &one, sizeof(one));
-+	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
-+
-+	/*
-+	 * Calls to iounmap are not being done because of the state of the
-+	 * system this late in the kexec process. Local IRQs are disabled and
-+	 * iounmap causes a TLB flush which in turn causes a warning. Leaving
-+	 * thse mappings is not an issue since the next kernel is going to
-+	 * completely re-setup memory management.
-+	 */
-+
-+	/* Map public registers and do a final read fence */
-+	config = ioremap(TXT_PUB_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
-+			 PAGE_SIZE);
-+	if (!config) {
-+		pr_emerg("Error SEXIT failed to ioremap TXT public reqs\n");
-+		return;
-+	}
-+
-+	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
-+
-+	pr_emerg("TXT clear secrets bit and unlock memory complete.\n");
-+
-+	if (!do_sexit)
-+		return;
-+
-+	if (smp_processor_id() != 0)
-+		panic("Error TXT SEXIT must be called on CPU 0\n");
-+
-+	/* In case SMX mode was disabled, enable it for SEXIT */
-+	cr4_set_bits(X86_CR4_SMXE);
-+
-+	/* Do the SEXIT SMX operation */
-+	smx_getsec_sexit();
-+
-+	pr_info("TXT SEXIT complete.\n");
-+}
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3..53d5ae8326a3 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -40,6 +40,7 @@
- #include <linux/hugetlb.h>
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 615922838c51..c02463d8d1e9 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -13,6 +13,7 @@
  #include <linux/objtool.h>
- #include <linux/kmsg_dump.h>
+ #include <linux/pgtable.h>
+ #include <linux/kexec.h>
 +#include <linux/slaunch.h>
+ #include <acpi/reboot.h>
+ #include <asm/io.h>
+ #include <asm/apic.h>
+@@ -778,6 +779,7 @@ static void native_machine_restart(char *__unused)
  
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -1045,6 +1046,9 @@ int kernel_kexec(void)
- 		cpu_hotplug_enable();
- 		pr_notice("Starting new kernel\n");
+ 	if (!reboot_force)
  		machine_shutdown();
-+
-+		/* Finalize TXT registers and do SEXIT */
-+		slaunch_finalize(1);
- 	}
++	slaunch_finalize(!reboot_force);
+ 	__machine_emergency_restart(0);
+ }
  
- 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+@@ -788,6 +790,9 @@ static void native_machine_halt(void)
+ 
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ 
++	/* SEXIT done after machine_shutdown() to meet TXT requirements */
++	slaunch_finalize(1);
++
+ 	stop_this_cpu(NULL);
+ }
+ 
+@@ -796,8 +801,12 @@ static void native_machine_power_off(void)
+ 	if (kernel_can_power_off()) {
+ 		if (!reboot_force)
+ 			machine_shutdown();
++		slaunch_finalize(!reboot_force);
+ 		do_kernel_power_off();
++	} else {
++		slaunch_finalize(0);
+ 	}
++
+ 	/* A fallback in case there is no PM info available */
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ }
+@@ -825,6 +834,7 @@ void machine_shutdown(void)
+ 
+ void machine_emergency_restart(void)
+ {
++	slaunch_finalize(0);
+ 	__machine_emergency_restart(1);
+ }
+ 
 -- 
 2.39.3
 
