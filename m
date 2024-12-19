@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 452A9E7718D
-	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 19:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22B48E7718B
+	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 19:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IpsTobJ04sYQOJBIvjI0eq+ZVmpFmQLHLX6nTaCMkoo=; b=tLrhwjF4jWfFlOrul9PsM3AQEN
-	OEwSxY7VnBUgG850HEok0Rdqgkbxzd3f0OnVw5JXluvJiO53UBAUsNdkHH8He1A7fYCq2c4+J5jkX
-	7COvBzTpgSlHxd0nFJpZhHNUC1W+TyG+2wTAQ6l3/1uIAVSYjPrKUH3ZrolvUDgVvXMI+X1kU/Fdy
-	A2xwRfDpnszFg1w64daVr3f/QcG3w/3LwDLCbFEQp4NyPMGNuxzaU4M79BIwsR1ZpjYzqBb2G+l/B
-	jGXhANLUoJuZrMeYnqYJ7YVrOSENizN5edLP4MnGRg2/e24Gb4Nkz447yQj7HCjBu6Mq8vLbP9BDU
-	yYRefdHA==;
+	bh=uDNXOdjIDZ2pepvz0H8Ff8Q+nWp+KjGtYzkywbiPSuQ=; b=OrJ4Yw53QOuaVcMPLitdWSlLxr
+	//m4E6QvrbutlsAV8I6CP4JN1waclSEuIfj64p1uxU1h/L4LagO+lEf4rW7HhR8GRiK8Q6Y5MfLer
+	FBo1xHuElLNky3IpXO+iY/5UOfxwIB8ZAhkW653l1sNZ5WsSrv31ujXJ3Oh5tiF8TA4eaJKLVV+lv
+	Hnp1lE8nhJM/KX7NUl6PfnMuLqcwa54xgfONPv5ZMbFRjnUjN50pn9rb44D2uHMPos3dMVh8b9avr
+	j8eaIXQzWjDeoOBf3iSClFmTzspOgfXu28Nr7a72LeEZm0qyA6XYgL2KYbzumEMrZyRikwFahdakK
+	1xE7j/OQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMfO-00000002vnB-44gE;
-	Thu, 19 Dec 2024 19:58:38 +0000
+	id 1tOMfN-00000002vly-3d6A;
+	Thu, 19 Dec 2024 19:58:37 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOMct-00000002upc-0BP8
+	id 1tOMcg-00000002ukf-2pZt
 	for kexec@lists.infradead.org;
-	Thu, 19 Dec 2024 19:56:04 +0000
+	Thu, 19 Dec 2024 19:55:51 +0000
 Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIMjbB028193;
-	Thu, 19 Dec 2024 19:55:43 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIMl1j028283;
+	Thu, 19 Dec 2024 19:54:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=IpsTo
-	bJ04sYQOJBIvjI0eq+ZVmpFmQLHLX6nTaCMkoo=; b=AYt5yKzJtMgs9sFIlsoPR
-	9MG8q5HLET87pevWhCDYB8p8+/96hFXtaTS8knIMHUyACSKDNyEiOEFIiy0XQZ3B
-	4YKnGZEUuWaGgkaL0i6h5kenvangnb6/TWrBItJEO7rXH+nOHmryO9JCpW8gT3rO
-	u/LBGWFbIufJBHWAAmcjZ1SC8q+3W2+zPPMpeZPcLVmnKSEqfuc03mLr35vxcxcC
-	+xxiE12UhdMPksbUAVyANMEzKsoIq/4Nbw59bWeYWjytWMwpJwYqV64oRgwiqFrK
-	yAdj0k7oxRN4Fz9g9kKPGB7TkD9IKA3J5jZDb0wDG1Nrx9vZWhKv2RjBc3MyLMMb
-	Q==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h0xb3y5k-1
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=uDNXO
+	djIDZ2pepvz0H8Ff8Q+nWp+KjGtYzkywbiPSuQ=; b=llMt36urO35Zh1T1EMaDg
+	IpK9S5yizOTz/Baqa+rpj0u9d6KLyBsuHewYIas1hoDKWAovxWR5N2oDgZ3Vsy84
+	R6ozgu4k+Aph87KjaV+UshTeuFK7HeLdFcRJMgGIPwnN0HCAM3cJDccZTp+Ptd/D
+	qAbwjkFAflQZwyr2mB1+AowqSryMck2SWm4q8pR+7qSnZExWF5FodgdOB337e8HP
+	Gsk2pO6Wm+fqld+8c/Uanua4Yk6NHyMB7p4ZjsCMb2BRFsDOZi/3XB+X7jf/jAcq
+	BG4u6eLXMNOq77H7NFw4XS/LzizVc/OOJB8iVrHo3rFPas4ZiT7JzAyhC2AoYTj3
+	A==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h0xb3y48-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Dec 2024 19:55:43 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJJFKEY006410;
-	Thu, 19 Dec 2024 19:55:42 GMT
+	Thu, 19 Dec 2024 19:54:31 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJIeqKT018984;
+	Thu, 19 Dec 2024 19:54:29 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fcgn0t-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbvua8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:55:42 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BJJtf5V020884;
-	Thu, 19 Dec 2024 19:55:41 GMT
+	Thu, 19 Dec 2024 19:54:29 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4BJJsSwp036312;
+	Thu, 19 Dec 2024 19:54:28 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fcgmx5-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fbvu90-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 19 Dec 2024 19:55:41 +0000
+	Thu, 19 Dec 2024 19:54:28 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v12 11/19] x86: Secure Launch SMP bringup support
-Date: Thu, 19 Dec 2024 11:42:08 -0800
-Message-Id: <20241219194216.152839-12-ross.philipson@oracle.com>
+Subject: [PATCH v12 03/19] x86: Secure Launch Resource Table header file
+Date: Thu, 19 Dec 2024 11:42:00 -0800
+Message-Id: <20241219194216.152839-4-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20241219194216.152839-1-ross.philipson@oracle.com>
 References: <20241219194216.152839-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2024-12-19_09,2024-12-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2411120000 definitions=main-2412190158
-X-Proofpoint-GUID: r08Hna-QKYdylXcBGTbtecHGo1SrtQrR
-X-Proofpoint-ORIG-GUID: r08Hna-QKYdylXcBGTbtecHGo1SrtQrR
+X-Proofpoint-GUID: WKysqdpQebXSAoD1NCMg1ioE23kruob1
+X-Proofpoint-ORIG-GUID: WKysqdpQebXSAoD1NCMg1ioE23kruob1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241219_115603_081057_7EF7366C 
-X-CRM114-Status: GOOD (  26.36  )
+X-CRM114-CacheID: sfid-20241219_115550_714297_C9B1A113 
+X-CRM114-Status: GOOD (  17.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,197 +107,298 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Intel, the APs are left in a well documented state after TXT performs
-the late launch. Specifically they cannot have #INIT asserted on them so
-a standard startup via INIT/SIPI/SIPI cannot be performed. Instead the
-early SL stub code uses MONITOR and MWAIT to park the APs. The realmode/init.c
-code updates the jump address for the waiting APs with the location of the
-Secure Launch entry point in the RM piggy after it is loaded and fixed up.
-As the APs are woken up by writing the monitor, the APs jump to the Secure
-Launch entry point in the RM piggy which mimics what the real mode code would
-do then jumps to the standard RM piggy protected mode entry point.
+Introduce the Secure Launch Resource Table which forms the formal
+interface between the pre and post launch code.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/include/asm/realmode.h      |  3 ++
- arch/x86/kernel/smpboot.c            | 43 ++++++++++++++++++++++++++--
- arch/x86/realmode/init.c             |  3 ++
- arch/x86/realmode/rm/header.S        |  3 ++
- arch/x86/realmode/rm/trampoline_64.S | 32 +++++++++++++++++++++
- 5 files changed, 82 insertions(+), 2 deletions(-)
+ include/linux/slr_table.h | 277 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 277 insertions(+)
+ create mode 100644 include/linux/slr_table.h
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 87e5482acd0d..339b48e2543d 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -38,6 +38,9 @@ struct real_mode_header {
- #ifdef CONFIG_X86_64
- 	u32	machine_real_restart_seg;
- #endif
-+#ifdef CONFIG_SECURE_LAUNCH
-+	u32	sl_trampoline_start32;
-+#endif
- };
- 
- /* This must match data at realmode/rm/trampoline_{32,64}.S */
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index b5a8f0891135..fafd062603b3 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -61,6 +61,7 @@
- #include <linux/cpuhotplug.h>
- #include <linux/mc146818rtc.h>
- #include <linux/acpi.h>
-+#include <linux/slaunch.h>
- 
- #include <asm/acpi.h>
- #include <asm/cacheinfo.h>
-@@ -870,6 +871,41 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- 	return 0;
- }
- 
-+#ifdef CONFIG_SECURE_LAUNCH
+diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
+new file mode 100644
+index 000000000000..48d85d505a50
+--- /dev/null
++++ b/include/linux/slr_table.h
+@@ -0,0 +1,277 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * TrenchBoot Secure Launch Resource Table
++ *
++ * The Secure Launch Resource Table is TrenchBoot project defined
++ * specfication to provide cross-architecture compatibility. See
++ * TrenchBoot Secure Launch kernel documentation for details.
++ *
++ * Copyright (c) 2024 Apertus Solutions, LLC
++ * Copyright (c) 2024, Oracle and/or its affiliates.
++ */
++
++#ifndef _LINUX_SLR_TABLE_H
++#define _LINUX_SLR_TABLE_H
++
++/* Put this in efi.h if it becomes a standard */
++#define SLR_TABLE_GUID				EFI_GUID(0x877a9b2a, 0x0385, 0x45d1, 0xa0, 0x34, 0x9d, 0xac, 0x9c, 0x9e, 0x56, 0x5f)
++
++/* SLR table header values */
++#define SLR_TABLE_MAGIC		0x4452544d
++#define SLR_TABLE_REVISION	1
++
++/* Current revisions for the policy and UEFI config */
++#define SLR_POLICY_REVISION		1
++#define SLR_UEFI_CONFIG_REVISION	1
++
++/* SLR defined architectures */
++#define SLR_INTEL_TXT		1
++#define SLR_AMD_SKINIT		2
++
++/* SLR defined bootloaders */
++#define SLR_BOOTLOADER_INVALID	0
++#define SLR_BOOTLOADER_GRUB	1
++
++/* Log formats */
++#define SLR_DRTM_TPM12_LOG	1
++#define SLR_DRTM_TPM20_LOG	2
++
++/* DRTM Policy Entry Flags */
++#define SLR_POLICY_FLAG_MEASURED	0x1
++#define SLR_POLICY_IMPLICIT_SIZE	0x2
++
++/* Array Lengths */
++#define TPM_EVENT_INFO_LENGTH		32
++#define TXT_VARIABLE_MTRRS_LENGTH	32
++
++/* Tags */
++#define SLR_ENTRY_INVALID	0x0000
++#define SLR_ENTRY_DL_INFO	0x0001
++#define SLR_ENTRY_LOG_INFO	0x0002
++#define SLR_ENTRY_ENTRY_POLICY	0x0003
++#define SLR_ENTRY_INTEL_INFO	0x0004
++#define SLR_ENTRY_AMD_INFO	0x0005
++#define SLR_ENTRY_ARM_INFO	0x0006
++#define SLR_ENTRY_UEFI_INFO	0x0007
++#define SLR_ENTRY_UEFI_CONFIG	0x0008
++#define SLR_ENTRY_END		0xffff
++
++/* Entity Types */
++#define SLR_ET_UNSPECIFIED	0x0000
++#define SLR_ET_SLRT		0x0001
++#define SLR_ET_BOOT_PARAMS	0x0002
++#define SLR_ET_SETUP_DATA	0x0003
++#define SLR_ET_CMDLINE		0x0004
++#define SLR_ET_UEFI_MEMMAP	0x0005
++#define SLR_ET_RAMDISK		0x0006
++#define SLR_ET_TXT_OS2MLE	0x0010
++#define SLR_ET_UNUSED		0xffff
++
++#ifndef __ASSEMBLY__
 +
 +/*
-+ * TXT AP startup is quite different than normal. The APs cannot have #INIT
-+ * asserted on them or receive SIPIs. The early Secure Launch code has parked
-+ * the APs using monitor/mwait. This will wake the APs by writing the monitor
-+ * and have them jump to the protected mode code in the rmpiggy where the rest
-+ * of the SMP boot of the AP will proceed normally.
++ * Primary Secure Launch Resource Table Header
 + */
-+static void slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
++struct slr_table {
++	u32 magic;
++	u16 revision;
++	u16 architecture;
++	u32 size;
++	u32 max_size;
++	/* table entries */
++} __packed;
++
++/*
++ * Common SLRT Table Header
++ */
++struct slr_entry_hdr {
++	u32 tag;
++	u32 size;
++} __packed;
++
++/*
++ * Boot loader context
++ */
++struct slr_bl_context {
++	u16 bootloader;
++	u16 reserved[3];
++	u64 context;
++} __packed;
++
++/*
++ * Dynamic Launch Callback Function type
++ */
++typedef void (*dl_handler_func)(struct slr_bl_context *bl_context);
++
++/*
++ * DRTM Dynamic Launch Configuration
++ */
++struct slr_entry_dl_info {
++	struct slr_entry_hdr hdr;
++	u64 dce_size;
++	u64 dce_base;
++	u64 dlme_size;
++	u64 dlme_base;
++	u64 dlme_entry;
++	struct slr_bl_context bl_context;
++	u64 dl_handler;
++} __packed;
++
++/*
++ * TPM Log Information
++ */
++struct slr_entry_log_info {
++	struct slr_entry_hdr hdr;
++	u16 format;
++	u16 reserved;
++	u32 size;
++	u64 addr;
++} __packed;
++
++/*
++ * DRTM Measurement Entry
++ */
++struct slr_policy_entry {
++	u16 pcr;
++	u16 entity_type;
++	u16 flags;
++	u16 reserved;
++	u64 size;
++	u64 entity;
++	char evt_info[TPM_EVENT_INFO_LENGTH];
++} __packed;
++
++/*
++ * DRTM Measurement Policy
++ */
++struct slr_entry_policy {
++	struct slr_entry_hdr hdr;
++	u16 reserved[2];
++	u16 revision;
++	u16 nr_entries;
++	struct slr_policy_entry policy_entries[];
++} __packed;
++
++/*
++ * Secure Launch defined MTRR saving structures
++ */
++struct slr_txt_mtrr_pair {
++	u64 mtrr_physbase;
++	u64 mtrr_physmask;
++} __packed;
++
++struct slr_txt_mtrr_state {
++	u64 default_mem_type;
++	u64 mtrr_vcnt;
++	struct slr_txt_mtrr_pair mtrr_pair[TXT_VARIABLE_MTRRS_LENGTH];
++} __packed;
++
++/*
++ * Intel TXT Info table
++ */
++struct slr_entry_intel_info {
++	struct slr_entry_hdr hdr;
++	u64 boot_params_addr;
++	u64 txt_heap;
++	u64 saved_misc_enable_msr;
++	struct slr_txt_mtrr_state saved_bsp_mtrrs;
++} __packed;
++
++/*
++ * UEFI config measurement entry
++ */
++struct slr_uefi_cfg_entry {
++	u16 pcr;
++	u16 reserved;
++	u32 size;
++	u64 cfg; /* address or value */
++	char evt_info[TPM_EVENT_INFO_LENGTH];
++} __packed;
++
++/*
++ * UEFI config measurements
++ */
++struct slr_entry_uefi_config {
++	struct slr_entry_hdr hdr;
++	u16 reserved[2];
++	u16 revision;
++	u16 nr_entries;
++	struct slr_uefi_cfg_entry uefi_cfg_entries[];
++} __packed;
++
++static inline void *slr_end_of_entries(struct slr_table *table)
 +{
-+	struct sl_ap_stack_and_monitor *stack_monitor;
-+	struct sl_ap_wake_info *ap_wake_info;
++	return (void *)table + table->size;
++}
 +
-+	ap_wake_info = slaunch_get_ap_wake_info();
++static inline void *
++slr_next_entry(struct slr_table *table,
++	       struct slr_entry_hdr *curr)
++{
++	struct slr_entry_hdr *next = (struct slr_entry_hdr *)((u8 *)curr + curr->size);
 +
-+	stack_monitor = (struct sl_ap_stack_and_monitor *)__va(ap_wake_info->ap_wake_block +
-+							       ap_wake_info->ap_stacks_offset);
++	if ((void *)next >= slr_end_of_entries(table))
++		return NULL;
++	if (next->tag == SLR_ENTRY_END)
++		return NULL;
 +
-+	for (unsigned int i = TXT_MAX_CPUS - 1; i >= 0; i--) {
-+		if (stack_monitor[i].apicid == apicid) {
-+			stack_monitor[i].monitor = 1;
-+			break;
-+		}
++	return next;
++}
++
++static inline void *
++slr_next_entry_by_tag(struct slr_table *table,
++		      struct slr_entry_hdr *entry,
++		      u16 tag)
++{
++	if (!entry) /* Start from the beginning */
++		entry = (struct slr_entry_hdr *)(((u8 *)table) + sizeof(*table));
++
++	for ( ; ; ) {
++		if (entry->tag == tag)
++			return entry;
++
++		entry = slr_next_entry(table, entry);
++		if (!entry)
++			return NULL;
 +	}
++
++	return NULL;
 +}
 +
-+#else
-+
-+static inline void slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
++static inline int
++slr_add_entry(struct slr_table *table,
++	      struct slr_entry_hdr *entry)
 +{
++	struct slr_entry_hdr *end;
++
++	if ((table->size + entry->size) > table->max_size)
++		return -1;
++
++	memcpy((u8 *)table + table->size - sizeof(*end), entry, entry->size);
++	table->size += entry->size;
++
++	end  = (struct slr_entry_hdr *)((u8 *)table + table->size - sizeof(*end));
++	end->tag = SLR_ENTRY_END;
++	end->size = sizeof(*end);
++
++	return 0;
 +}
 +
-+#endif  /* !CONFIG_SECURE_LAUNCH */
++static inline void
++slr_init_table(struct slr_table *slrt, u16 architecture, u32 max_size)
++{
++	struct slr_entry_hdr *end;
 +
- /*
-  * NOTE - on most systems this is a PHYSICAL apic ID, but on multiquad
-  * (ie clustered apic addressing mode), this is a LOGICAL apic ID.
-@@ -879,7 +915,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
- {
- 	unsigned long start_ip = real_mode_header->trampoline_start;
--	int ret;
-+	int ret = 0;
- 
- #ifdef CONFIG_X86_64
- 	/* If 64-bit wakeup method exists, use the 64-bit mode trampoline IP */
-@@ -924,12 +960,15 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
- 
- 	/*
- 	 * Wake up a CPU in difference cases:
-+	 * - Intel TXT DRTM launch uses its own method to wake the APs
- 	 * - Use a method from the APIC driver if one defined, with wakeup
- 	 *   straight to 64-bit mode preferred over wakeup to RM.
- 	 * Otherwise,
- 	 * - Use an INIT boot APIC message
- 	 */
--	if (apic->wakeup_secondary_cpu_64)
-+	if (slaunch_is_txt_launch())
-+		slaunch_wakeup_cpu_from_txt(cpu, apicid);
-+	else if (apic->wakeup_secondary_cpu_64)
- 		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
- 	else if (apic->wakeup_secondary_cpu)
- 		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index f9bc444a3064..d95776cb30d3 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -4,6 +4,7 @@
- #include <linux/memblock.h>
- #include <linux/cc_platform.h>
- #include <linux/pgtable.h>
-+#include <linux/slaunch.h>
- 
- #include <asm/set_memory.h>
- #include <asm/realmode.h>
-@@ -210,6 +211,8 @@ void __init init_real_mode(void)
- 
- 	setup_real_mode();
- 	set_real_mode_permissions();
++	slrt->magic = SLR_TABLE_MAGIC;
++	slrt->revision = SLR_TABLE_REVISION;
++	slrt->architecture = architecture;
++	slrt->size = sizeof(*slrt) + sizeof(*end);
++	slrt->max_size = max_size;
++	end = (struct slr_entry_hdr *)((u8 *)slrt + sizeof(*slrt));
++	end->tag = SLR_ENTRY_END;
++	end->size = sizeof(*end);
++}
 +
-+	slaunch_fixup_jump_vector();
- }
- 
- static int __init do_init_real_mode(void)
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index 2eb62be6d256..3b5cbcbbfc90 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -37,6 +37,9 @@ SYM_DATA_START(real_mode_header)
- #ifdef CONFIG_X86_64
- 	.long	__KERNEL32_CS
- #endif
-+#ifdef CONFIG_SECURE_LAUNCH
-+	.long	pa_sl_trampoline_start32
-+#endif
- SYM_DATA_END(real_mode_header)
- 
- 	/* End signature, used to verify integrity */
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 14d9c7daf90f..b0ce6205d7ea 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -122,6 +122,38 @@ SYM_CODE_END(sev_es_trampoline_start)
- 
- 	.section ".text32","ax"
- 	.code32
-+#ifdef CONFIG_SECURE_LAUNCH
-+	.balign 4
-+SYM_CODE_START(sl_trampoline_start32)
-+	/*
-+	 * The early secure launch stub AP wakeup code has taken care of all
-+	 * the vagaries of launching out of TXT. This bit just mimics what the
-+	 * 16b entry code does and jumps off to the real startup_32.
-+	 */
-+	cli
-+	wbinvd
++#endif /* !__ASSEMBLY */
 +
-+	/*
-+	 * The %ebx provided is not terribly useful since it is the physical
-+	 * address of tb_trampoline_start and not the base of the image.
-+	 * Use pa_real_mode_base, which is fixed up, to get a run time
-+	 * base register to use for offsets to location that do not have
-+	 * pa_ symbols.
-+	 */
-+	movl    $pa_real_mode_base, %ebx
-+
-+	LOCK_AND_LOAD_REALMODE_ESP lock_pa=1
-+
-+	lgdt    tr_gdt(%ebx)
-+	lidt    tr_idt(%ebx)
-+
-+	movw	$__KERNEL_DS, %dx	# Data segment descriptor
-+
-+	/* Jump to where the 16b code would have jumped */
-+	ljmpl	$__KERNEL32_CS, $pa_startup_32
-+SYM_CODE_END(sl_trampoline_start32)
-+#endif
-+
- 	.balign 4
- SYM_CODE_START(startup_32)
- 	movl	%edx, %ss
++#endif /* _LINUX_SLR_TABLE_H */
 -- 
 2.39.3
 
