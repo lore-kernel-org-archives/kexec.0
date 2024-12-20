@@ -4,79 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6539DE7718A
-	for <kexec@archiver.kernel.org>; Thu, 19 Dec 2024 22:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86ABFE77188
+	for <kexec@archiver.kernel.org>; Fri, 20 Dec 2024 07:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3/QwrzJsiwP+XrKwjXSVNe4saEEyevlgRCTrrfhZb+E=; b=K5HH54//VHFRd/5ZOOhSSlEth8
-	rb5CFxfc0DS+Ut+pu45wkijN1lz0DRlXAex3vmFwVbnNStnBIGFnl4Tvs+i/fLfMbUiF01fqWvIae
-	T4C0z/srfttEt2xgRrqUisner4tbfBIhtj5u7ROUbKfm6KRHuidROBnGPFbwIiZXomBYHtQY0akBL
-	46VsK37y8eaJ8oKJ+AMOBSRdKcODNelXHEi3wEHNb2JRxwPBzV5fDSKgrTrN7jtHELFhFFQ4MoYE0
-	N5vfCML510c0jQ9jM3wd6R7tCFGwRBCUeL/J6ad6q5F0cHRx1Z1z2Tsu3XmbtR90KuoxGP6VSrRmc
-	DWRZKaog==;
+	bh=VV1GAbU6vs/Ml1xhCadOL44dM9zTf3oC8kpgBVJ9ouw=; b=wBlrbMOZz48H3gNixSQxnb6VJ2
+	nPaWAWJlV9gBu359rt0+piUL2bBtb9/7/+OGZoEd+heqC5efeTDMCVis6WMU3kE5EZBEnfE1IGx4e
+	OccAzXpt8ygg1uydZUBrPwRrPQBGbvmE3ct169068Wg8O8egt4yTsVSQWwZ58WIcisHR+KAr1Ktp1
+	NcluRwM4/H0XvbPCTIPbsixUtLqVqL2kd8hAsLxa6luAwod4eOn7lIBOTg7u+LajL3U9t0rB8b2UP
+	Obla3bzZCUhSDAN7qRiBzsuRefdGQVCPVO2BSY3n7miuTWlqc/BR6eEXEOy12m6fE2nJytAhd+Xpy
+	MioRDZnQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOP0Q-00000003GWm-1imZ;
-	Thu, 19 Dec 2024 22:28:30 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tOXLH-000000049bf-0dUB;
+	Fri, 20 Dec 2024 07:22:35 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tOP0L-00000003GVp-3eHP
+	id 1tOXLE-000000049bF-3ztU
 	for kexec@lists.infradead.org;
-	Thu, 19 Dec 2024 22:28:26 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id DAEB2A42A2B;
-	Thu, 19 Dec 2024 22:26:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A583FC4CED0;
-	Thu, 19 Dec 2024 22:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734647304;
-	bh=79H2dkuKzWYOcCVtdE3fcGrUAnwuaGNK/vpt2JprKBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dgM93Nt4ID+MkG/UCIiE9fEhFrjZGJxqpq6lDw6rHGhLS5hhOMjBxzFHQ/AMMGpdO
-	 Rm2FsD6TRpxuMH0tYp99HXT4SrsqdfJeYFq14RChd7E/9pWubXsSFNuxSkBUTa5oj6
-	 QeASkzstE2EvvMYJicWawVNSJiLLzBWndYXoQAXm4yeqKRrIRiLLNPCPTI8pQuUU3C
-	 9lhLqG951HnX57VCO29r0D4eTDg1FBsKUJ7zmoR+uuAaV1KLrgZbqs3krx9+SxEX8J
-	 xTrw1iDRb/jGPYOSIIcjz/PTnrFfaUQwLNyOguH4nad9jUW7o6sMbCRXIUp55a9Ovu
-	 zioXsPjqUvgDg==
-Date: Thu, 19 Dec 2024 14:28:21 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, kexec@lists.infradead.org,
+	Fri, 20 Dec 2024 07:22:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734679350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VV1GAbU6vs/Ml1xhCadOL44dM9zTf3oC8kpgBVJ9ouw=;
+	b=bRcQGZ3vEO8upouDA2q+oT8Ehz2tdfdn1fM4brJ9BSdeVi2TfuuQgPDEbLmr7Gao2e0cuN
+	6makcYIfy5xglsaDxF2lXVUzhzA3DmFoo8fefCqEXZJFyXNGKU6m+oGs2yD8bNC6QI3Qh8
+	TpMPYFQX35EliK/39p4KZxtTGfl7NZQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-r-LCiKK2MmeyGdwoo16F7g-1; Fri,
+ 20 Dec 2024 02:22:25 -0500
+X-MC-Unique: r-LCiKK2MmeyGdwoo16F7g-1
+X-Mimecast-MFC-AGG-ID: r-LCiKK2MmeyGdwoo16F7g
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BD7B195608C;
+	Fri, 20 Dec 2024 07:22:24 +0000 (UTC)
+Received: from localhost (unknown [10.66.37.175])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A1B719560A2;
+	Fri, 20 Dec 2024 07:22:21 +0000 (UTC)
+Date: Fri, 20 Dec 2024 15:22:17 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: David Woodhouse <dwmw2@infradead.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
-Subject: Re: [PATCH v5 07/20] x86/kexec: Invoke copy of relocate_kernel()
- instead of the original
-Message-ID: <20241219222821.c6o3peznyzoxaslj@jpoimboe>
-References: <24d843d2ceb09acdae494ee9a17ec94bf8bb4e4f.camel@infradead.org>
- <20241216054942.GA25019@ax162>
- <79ea9c10ae4f1dae16be8c05bb7b7e6b72512f10.camel@infradead.org>
- <9ee61d2b89b4cecd10ece64002bf2c06648e1de7.camel@infradead.org>
- <20241218090305.y4o62pmdwq32732h@jpoimboe>
- <5857ef047402c3ded29d4c024f8fdc32608f1696.camel@infradead.org>
- <20241218212326.44qff3i5n6cxuu5d@jpoimboe>
- <dc059a127d59ccc77be0c92b686f72616c2d1c0f.camel@infradead.org>
- <20241219002015.7y5ohlfofc6c3njr@jpoimboe>
- <7e7eda28bf697752435dc730d689cd3edf9bf013.camel@infradead.org>
+	Ming Lei <ming.lei@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	Kexec Mailing List <kexec@lists.infradead.org>
+Subject: Re: Does anyone actually use KEXEC_JUMP?
+Message-ID: <Z2UbKdmmgd/IzMoz@MiWiFi-R3L-srv>
+References: <4968818.GXAFRqVoOG@rjwysocki.net>
+ <d29738023f117bbd4031579443e0c2f8f1f78592.camel@infradead.org>
+ <87h673zkhr.fsf_-_@email.froward.int.ebiederm.org>
+ <E64227FF-E6A2-4E2C-85F3-EF1D9EFEC91F@infradead.org>
+ <87bjxbzdyq.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7e7eda28bf697752435dc730d689cd3edf9bf013.camel@infradead.org>
+In-Reply-To: <87bjxbzdyq.fsf@email.froward.int.ebiederm.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20241219_142825_968192_D032D699 
-X-CRM114-Status: GOOD (  18.56  )
+X-CRM114-CacheID: sfid-20241219_232233_086427_1CC88BBD 
+X-CRM114-Status: GOOD (  22.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,27 +90,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Dec 19, 2024 at 11:02:55AM +0100, David Woodhouse wrote:
-> On Wed, 2024-12-18 at 16:20 -0800, Josh Poimboeuf wrote:
-> > Anyway, what I think you're looking for is UNWIND_HINT_UNDEFINED.  In
-> > fact all the unwind annotations in that file should be UNDEFINED since
-> > the hints are all referring to the wrong addresses (because copied code)
-> > and the ORC unwinder isn't reachable for most of that code anyway.
-> > 
-> > Also, it's fine to make relocate_kernel() a proper function with
-> > SYM_FUNC_END, you'd just need to add the following line afterwards:
-> > 
-> >   STACK_FRAME_NON_STANDARD relocate_kernel
-> > 
+On 12/16/24 at 12:21pm, Eric W. Biederman wrote:
+> David Woodhouse <dwmw2@infradead.org> writes:
 > 
-> Thanks, I'll take a look. The next thing objtool is actually
-> complaining about is that relocate_kernel() itself is not reachable
-> (since it's never invoked in its original location):
+> > It isn't broken. I know of it being used a few million times a week.
+> >
+> > There are corner cases which have never worked right, like the callee
+> > putting a different return address for its next invocation, on the
+> > stack *above* the address it 'ret's to. Which since the first kjump
+> > patch has been the first word of the page *after* the swap page (and
+> > is now fixed in my tree). But fundamentally it *does* work.
+> >
+> > I only started messing with it because I was working on
+> > relocate_kernel() and needed to write a test case for it; the fact
+> > that I know of it being used in production is actually just a
+> > coincidence.
 > 
-> vmlinux.o: warning: objtool: relocate_kernel+0x0: unreachable instruction
+> Cool.  I had the sense that the original developer never got around
+> to using it, so I figured I should check.
+> 
+> Mind if I ask what you know of it being used for?
 
-Right, I think UNWIND_HINT_UNDEFINED should fix that.
+I am also very curious about the use case and asked David in other
+thread, while David didn't tell. Not sure if it's one company's
+confidential information. We may want to know what it's used for to
+evaluate if it's a generally useful use case, or an unintentional
+testing.
 
--- 
-Josh
+> 
+> I had imagined it might be a way to call firmware code preventing the
+> need to code of a specific interface for each type of firmware.
+> 
+> Eric
+> 
+> 
+
 
