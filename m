@@ -4,58 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B5EBE77199
-	for <kexec@archiver.kernel.org>; Mon,  6 Jan 2025 17:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E994E77197
+	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 07:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rRA2mT1FDJLw9rDAL19zAy8V1ZZTmoCMlSJNj6lQNi4=; b=lVfhg01QXSyqnFHY6AMgM/TBx1
-	HE1G5dsjp7ozVZIvmCfuWuICP+Xn7UAHmQxahPcIB4CzgGJE6ewqYCZknZe7YQVw0T5wUXC6EVNRC
-	zfwGzJoDVn6Dovhu3foGO9GuDI93SLWWoWM+rOp4VkGgdMp6uKsnpkP8JxUiv3cpWD+bxBuoTtYps
-	58dD6D7ZLs4H5ZjhqOLOeuw3qoz1eWyNVdD0a0nT/hboEwAEp6tSgoJpsNMsuwrQu0Dns2gpOWw+L
-	Bj7DaGiKwB0Y93+DrDEY3PaUG5+SlpiWIJXwLSOFmAVq05EEO09dlB/ZJZYwJpR7663LVeSdTyRrJ
-	tYcwlFPQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=41zeF5kjw+XkbJSNRkY+VVaLzVuF8GzeYhbtKT3NSIg=; b=t6kq/C6IgGiIrHLhDGSZExx0tN
+	n2t1RCZKYC5vPO+aZllt0A9jvhkmd//qgkd1eYcrWMUn4QolIOg+ETRAN/KrT6krc2PxJETRXn+Yc
+	sBBeJeH4Hz0bY3onOM5pNlbdT6mJKo82KBBZTQF7Mp5fJym2ozv7iVwYN3jtTcA+JVuSZCCzgCoHB
+	NcKbvDxusfdz28U2JyDirjJi1HUL87XeCg4aKeu+VHu7xw1iuIwL257/y3bdtXMO/DdhKpe2sgQfv
+	VpD9IQowrO1n4vnEugrET+yM/z2hBt+yquJGc6ThY9TbbLuLgZEYCWzd6WRkPgO5Kw//co4uvq3l9
+	uGc6V78Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tUqpp-000000026mO-2mtq;
-	Mon, 06 Jan 2025 17:24:13 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tUqpm-000000026ku-2yNj
+	id 1tV3xR-00000003kVr-2Opn;
+	Tue, 07 Jan 2025 07:24:57 +0000
+Received: from mgamail.intel.com ([198.175.65.9])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tV3xH-00000003kTu-2izT
 	for kexec@lists.infradead.org;
-	Mon, 06 Jan 2025 17:24:12 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33A32143D;
-	Mon,  6 Jan 2025 09:24:37 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F35C43F673;
-	Mon,  6 Jan 2025 09:24:06 -0800 (PST)
-Date: Mon, 6 Jan 2025 17:23:50 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Brown <broonie@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	kexec@lists.infradead.org, devel@daynix.com
-Subject: Re: [PATCH v2 1/5] elf: Define note name macros
-Message-ID: <Z3wRnX4RHg7KDYDT@e133380.arm.com>
-References: <20250104-elf-v2-0-77dc2e06db4e@daynix.com>
- <20250104-elf-v2-1-77dc2e06db4e@daynix.com>
- <202501060830.B735C3A@keescook>
+	Tue, 07 Jan 2025 07:24:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736234688; x=1767770688;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MYKXwdTHiTpkj5LiSFzpJO0XjaknE2n0IzL7//tNtI4=;
+  b=m82oxcFo8GY9MGIeHO/5yS0PUMgC0MlZmisEaW/99uZUQ+5+1RljWAmG
+   0av1Q9HazMCN0nbq42D62l3xls+8icL4nQusLeHPBYJR7Iwk+3tASzbOa
+   c2pjw7mn0aiIaCwJSYEuYg9h+Wh3meXSAd5vXGaSmlmaD4c8x718MSqar
+   Rv4TEXA8Zdy5fe3DISKHkJEAVDfysmeKo9LDacmFGJskz62F1TM22ZpQV
+   lwvYWtd57jcaYp9yod9yjDTMI9ltkL8Ji+0kwyJqL8NK+uWh0JKy1DByj
+   CLM81B1Jqu7l4hn4lbuk4YvB5ycj0DFD6FABdEs+432pYneCNhMD0LVO8
+   w==;
+X-CSE-ConnectionGUID: gjXjTQDbRW283Oo0iMQQQg==
+X-CSE-MsgGUID: dgQjQsExRVSA8BzEBRH0WA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11307"; a="58865046"
+X-IronPort-AV: E=Sophos;i="6.12,294,1728975600"; 
+   d="scan'208";a="58865046"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 23:24:45 -0800
+X-CSE-ConnectionGUID: Elhni2JwTtOFL5jkXJcvVw==
+X-CSE-MsgGUID: vg9c1GqsRxOj08Z4+qB5uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="103175500"
+Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
+  by orviesa007.jf.intel.com with ESMTP; 06 Jan 2025 23:24:42 -0800
+From: Zhiquan Li <zhiquan1.li@intel.com>
+To: bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com,
+	kirill.shutemov@linux.intel.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhiquan1.li@intel.com
+Subject: [PATCH v2] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
+Date: Tue,  7 Jan 2025 16:01:06 +0800
+Message-Id: <20250107080106.3997268-1-zhiquan1.li@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202501060830.B735C3A@keescook>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250106_092410_841467_D421B2E6 
-X-CRM114-Status: GOOD (  35.24  )
+X-CRM114-CacheID: sfid-20250106_232447_731165_482922BA 
+X-CRM114-Status: GOOD (  12.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,108 +85,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+On Intel TDX guest, unaccepted memory is unusable free memory which is
+not managed by buddy, until it's accepted by guest.  Before that, it
+cannot be accessed by the first kernel as well as the kexec'ed kernel.
+The kexec'ed kernel will skip these pages and fill in zero data for the
+reader of vmcore.
 
-On Mon, Jan 06, 2025 at 08:48:05AM -0800, Kees Cook wrote:
-> On Sat, Jan 04, 2025 at 11:38:34PM +0900, Akihiko Odaki wrote:
-> > elf.h had a comment saying:
-> > > Notes used in ET_CORE. Architectures export some of the arch register
-> > > sets using the corresponding note types via the PTRACE_GETREGSET and
-> > > PTRACE_SETREGSET requests.
-> > > The note name for these types is "LINUX", except NT_PRFPREG that is
-> > > named "CORE".
-> > 
-> > However, NT_PRSTATUS is also named "CORE". It is also unclear what
-> > "these types" refers to.
-> > 
-> > To fix these problems, define a name for each note type. The added
-> > definitions are macros so the kernel and userspace can directly refer to
-> > them.
-> 
-> While ELF is specified in the Tool Interface Standard[1], the core dump
-> format doesn't have an official specification. It does follow a lot of
-> agreed rules, though, and the "note name" is intended to help coredump
-> consumers distinguish between "common" things ("CORE") and Linux-specific
-> things ("LINUX").
-> 
-> I think this should be explicitly spelled out in the UAPI header,
-> even if we have "mistakes" for this mapping.
+The dump tool like makedumpfile creates a page descriptor (size 24
+bytes) for each non-free page, including zero data page, but it will not
+create descriptor for free pages.  If it is not able to distinguish
+these unaccepted pages with zero data pages, a certain amount of space
+will be wasted in proportion.  In fact, as a special kind of free page
+the unaccepted pages should be excluded, like the real free pages.
 
-This seems reasonable.
+Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
+that dump tool can identify whether a page is unaccepted.
 
-> I'm not convinced we need these macros, though: everything is "LINUX"
-> expect the common types. And the GNU types are "GNU". There are only 7
-> types under the "CORE" name. :)
+Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
 
-My starting point for suggesting the new macros was that the current
-usage seems to be a historical accident; there doesn't seem to be an
-underlying logic to it, except that arch-independent core note types
-defined by Linux are named "CORE" ... except when they aren't.
+Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Although the number of exceptional cases is small today, this doesn't
-make for a robust rule -- nothing really prevents more unintentional
-anomalies being added in future, so it seems prone to bitrot.
+---
 
-If the names are arbitrary, having a table rather than trying to
-describe a rule seems the best way to avoid confusion.
+V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
 
-Documenting these in a regular way may also encourage people to treat
-the name as a formal part of the identifier, rather than a sort of
-"comment" that nobody is quite sure what to do with (even if [1] makes
-it clear).
+Changes since V1:
+- Rebase to v6.13-rc6.
+- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
+  suggestion.
+- Add Kirill's Reviewed-by tag.
+---
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 2 +-
+ kernel/vmcore_info.c                           | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-That said, software does cope with the situation today; it's just a bit
-gross.
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 0f714fc945ac..3b47916f1856 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -331,7 +331,7 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
+ Page attributes. These flags are used to filter various unnecessary for
+ dumping pages.
+ 
+-PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
++PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
+ -----------------------------------------------------------------------------
+ 
+ More page attributes. These flags are used to filter various unnecessary for
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 1fec61603ef3..e066d31d08f8 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
+ #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
+ 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
++#ifdef CONFIG_UNACCEPTED_MEMORY
++#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
++	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
++#endif
+ 
+ #ifdef CONFIG_KALLSYMS
+ 	VMCOREINFO_SYMBOL(kallsyms_names);
 
-> 
-> For the macros, I'd much prefer NN_CORE, NN_LINUX, and NN_GNU.
+base-commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
+-- 
+2.25.1
 
-What would be the point of these?
-
-#define NN_CORE "CORE" doesn't convey any information at all, though I
-suppose it does provide a layer of typo-resistance.
-
-> If you really want to be able to examine the name from the type, then
-> yeah, I guess we need something like the macros you have, but I'd much
-> prefer also adding a macro like Dave suggested[2], and then replace the
-> fill_note() with a macro that can unwrap it:
-> 
-> 	fill_note(note, NT_SIGINFO, size..., data...);
-> 
-> The repetition of NN_type, NT_type doesn't feel robust if we have a
-> programmatic mapping: only the "type" is needed to determine both, so
-> why supply both?
-> 
-> -Kees
-> 
-> [1] https://refspecs.linuxfoundation.org/elf/elf.pdf
-> [2] https://lore.kernel.org/lkml/Z3vuBTiQvnRvv9DQ@e133380.arm.com/
-
-Although not "robust", it should at least be obvious to the eye of
-anyone pasting and repurposing an existing snippet of code that the
-"type" is probably supposed to match in a single call.
-
-I suppose we could have a kernel helper function containing a big
-switch that gives you the name for each recognised note type though.
-At the source code level, that would avoid specifying the "NN_"
-arguments explicitly.  But if we still want a canonical way to describe
-this mapping in elf.h, the "NN_" macros still serve a purpose.
-
-
-With a literal string instead, I would expect then when adapting
-
-	fill_note(note, NT_SIGINFO, "CORE", ...)
-
-to
-
-	fill_note(note, NT_WIZZFOO, ???, ...)
-
-it's not clear what ??? should be.  I think people have tended to shrug
-and just leave it unchanged -- so, it depends on which bit of code was
-randomly chosen to serve as a template.  I could be guessing wrongly
-about that, but if that's how the name gets chosen for new notes then
-it doesn't feel ideal.
-
-Cheers
----Dave
 
