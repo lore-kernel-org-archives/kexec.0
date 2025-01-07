@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C9FDE7719B
-	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 12:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B12F3E7719F
+	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 12:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NDoGkIZOBZADHox4rebBhOBkiub95NT2vaNCAf0u1/w=; b=GIDW/JJrcu5PcR6XseRiPphqZw
-	f2/8MUSDr9FGeVpYd9z87beOUC/Bo4gtvhKCwsfYE0Z1J1rdx2LPNLkbApSadPsBfKSNPbyScPorG
-	W36Fe75i5O9G2rEisGVztyxOYG1JnbYoM7nWvLlGKeNeOeuWuxfGOjFFnXEPeu1Un4CJRd8yOzuSK
-	fAyU+wsGNH5Q2UKazhZpsw9sPW5hjGDqXxCw84hA29evtp3yK0M/YwfP/G/6wYPbqY0DkzFxW6DZ3
-	LhwS8H1pt5KxlApnHkbZfdRbaSM8ceVgLfi1VgSm1DKUPBQOunM5xibJh8fLDrwMTbHBtyc+y+aRm
-	xRy5Bbdw==;
+	bh=hJIM5PjsK5XkECqCUUoGiieCybrsun7CzYeIZbw5syM=; b=gTaB7jw7jc422xRcQZuHrufrhb
+	Stcfvj4sqLfCTeIUYyQf+SQRxuxJd2vxDU2N9WNeB16f3eAay74wKatRv9oLH/8Tew11fadRQp4Gk
+	4kFvARRojihoTH2UF/2Yi3wjDQ9K/e1PcM8euALvKWcAxi45MHz3x5G1NbWByWkJGDZf9AubHJ/zj
+	ysyU2frf9EBFhVe4QZtF7C0C/K8N+SFKboeq18L4Zmua4ealbbFW1N7EeJNy7maLnLJrMMFfN2YRd
+	RIkcUZqQ0u/5JrszZWeJN7wztTD8VSVrdQhKsVdFKSPW/qYC1DqlmvL92XYB7RDRNphZ/kP1lv5BJ
+	oukppP/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tV90z-00000004piE-33TX;
-	Tue, 07 Jan 2025 12:48:57 +0000
-Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
+	id 1tV911-00000004pl2-1u0J;
+	Tue, 07 Jan 2025 12:48:59 +0000
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tV90H-00000004pOx-1chh
+	id 1tV90b-00000004pZ8-0L40
 	for kexec@lists.infradead.org;
-	Tue, 07 Jan 2025 12:48:14 +0000
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so22991495a91.2
-        for <kexec@lists.infradead.org>; Tue, 07 Jan 2025 04:48:13 -0800 (PST)
+	Tue, 07 Jan 2025 12:48:34 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2166f1e589cso6813985ad.3
+        for <kexec@lists.infradead.org>; Tue, 07 Jan 2025 04:48:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736254092; x=1736858892; darn=lists.infradead.org;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736254112; x=1736858912; darn=lists.infradead.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NDoGkIZOBZADHox4rebBhOBkiub95NT2vaNCAf0u1/w=;
-        b=OjelsiyFP4LmebrXGW1hH84Qo33DMCDNVfcF4dK+7RrxNfGcodVcCYXG9Mq1y4D8tZ
-         5a0Dah+rhlUruWfhDMfBpNskh9ih4HyvhwYI5oCrURGTzZy468AtJ34K7rJlM+w5KALy
-         G9CPg1upll1nWnJRwVQtGzQ0QC9+MsF4/ix4cO+X7Fy+VvAIJsJQxZAyF8GdB/PsGeHw
-         CvH+SFo542xfgw70GT/G4tDlp6xCDmLmrBd1L94rLljLQwcFSGgU8g9dbcSozRnFiDoC
-         C1DwJRFxgM8kAPXT77BynACXm4i0RbYYZjRkRktzWEix6qESAYCVVs6YdrX0PKCi3fY6
-         Jxzw==
+        bh=hJIM5PjsK5XkECqCUUoGiieCybrsun7CzYeIZbw5syM=;
+        b=NEQb52MPmDYYgJg2TY/O53FePluXCaCeRlELOdZfAlCD0cdVrTzCMG/GaNLGXYt0Na
+         xGR78ptquiQTn/Or8UYAt05o44pddMbh9OxK+pHI0eE2Z4o4cqBDT7TUo91RGpze2ljc
+         cUzyBtONeFgWmMOwFImPGHGKQvNFaQT3+X84YADwQITYtasAHztPZ1zEAVAyiHgxnmNk
+         PvG9o3ywowKcrZlJWJj+yXz2iurrOV+H2o7527eqEz3F4jQ9/McUTiokdBv5+ogCJhUc
+         3YMGkFoidJilsD7wqyzo2aZ1NiDxRGpZ0wQcP37parPywjXCIpZ3BvoHeBC9G3IEBMEc
+         sRZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736254092; x=1736858892;
+        d=1e100.net; s=20230601; t=1736254112; x=1736858912;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NDoGkIZOBZADHox4rebBhOBkiub95NT2vaNCAf0u1/w=;
-        b=Gli+jO8ySF8G52+CrlnFvTW8mT50I3qYhYA/oYG5FEesqL/+xlWXJnobLY1C12Bgj1
-         UyyhFQvLMvbEC24NB7Gn4HLHi1new77hPFPAVPdybMyi91RLhy5WuFH4ZBdfJjAdbuML
-         xfqQZzEJJ0nbqXPH6YBPBR7AI6dcwlfUc39NU7zDfIAdo3mF9Cb1QvMwWw55WzKqhMJM
-         gKVYzGXpEVfuMbZkPIp9VAm6SKYhS/bMfYQvMSlWWgCloLevhOjzW7FcJoL+MySXMd4j
-         HOtN7hLjUv+flwiTB3JU2+GUynJKWbK63zPQKWE46gpu4QJK9m3Mlib+ZkP8KhFfh2Py
-         r7Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe2GZJ1By44a7u9T12V4XTwRUDe0JdyOnyVl0cDmeVCZMBQBQ15ms56f6VY1mAzZ/bgAS2GQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzlLC7yaLh0Cn9YS+rmipGj5f6DWZXfLgNpyg7trC0GJctl8/KW
-	SKmpfhC5vGD5ZfSXVOUlU8sz3OV39R2/YhcPTaWNJO1XkXYlPXwUpzlyHPJd2Qw=
-X-Gm-Gg: ASbGncsiOzVIErmwWvBv9zdj4v9O4ldY66yEfi94XceILOyVb+nnv/wtG2n9zeuevDV
-	kM9AmgAvsjZ0nf2O86ReYZeL1rGi+xivcoYjMVBqykIps/1i7iC7z0KdKFksELYLkAtneiqus3w
-	t4GZKHVmIzjA3fgNhsuBoDT81T3edzmhVS+TY9vzDjpa46EBfRPF71ZYEhO0Yz2InFXkCDwXhhA
-	/DX+gdsUuq2Ef9IUlnG8CimNU68OJAzm0xkUu/QXcxH9iZ+xP81qBaqU7k=
-X-Google-Smtp-Source: AGHT+IEVKBP005EvKmW5Tl+CNM3WgQ4gF7V3wiTUcNw/Hf4GbFW1YRz6KtZiTE3d5Nc2ByQmLcCTzA==
-X-Received: by 2002:a05:6a00:240d:b0:71e:6b8:2f4a with SMTP id d2e1a72fcca58-72abde04f6fmr85408908b3a.12.1736254092437;
-        Tue, 07 Jan 2025 04:48:12 -0800 (PST)
+        bh=hJIM5PjsK5XkECqCUUoGiieCybrsun7CzYeIZbw5syM=;
+        b=F7ZUaRAOMVBk7LiEY1rwYurkQ1UfZ4ZC+jM2OMo1P6RXYx7+sqRx5879NLs+50rJmW
+         tLWJgwLlIqDegtOQU2oL0lkD9RBv2pfzGrr+fdW8SOuGPlFa4bWnKRSViVeQvbFi5t8r
+         c76dhuef7Af2TAsYcWI/xeOedltApTjGzOvsHxqW39EIp76mThRR0AO/c6wnt14hRqFB
+         N1O+jUlaNYpDtbd1F6YzUJ/POpx17xztjAK79ieLjV91/LQbsvGT94BBvGd9x+eB+vJO
+         hZGVFVe5Zl9nnnKrHgv+2Wmz72EHGgZmzsqDNpYBPnAW3KxabBI3XyP5fC9W2RYWukTD
+         vk5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXLeM/eH7xOxuwOGgPG6qC9QKj58AoChlFzv9iEtlqlGSaSJYzOszIhpe4YCR6i6nn8EORUIw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwV8WJumfx0xsuPbbHHHXmXJCr/93Ylz1zezlhiEAJKefAEPN/E
+	nJODzcqcOhAv7HFr4377PWfxV8Th+73+PsYBjKHOiE4HOaDcgAUWJ7nxWnWsH8Q=
+X-Gm-Gg: ASbGnctf9qs9CimzjSiIwNAkcmsgtFzPwvvnIwnFLMGU16xE/M/FDRmfw5xMyCjFPe+
+	SB2YpmscDoH+7Zrn5g5IzH+n8sT7QLUfPtecNOJSOripxE8wiOiuSbHlGRdRC79xhqAyVQfQ0oh
+	+22DWziyvxM5TB9Rg914rP7apnXvySlM2D/3/dCfzKEPOZdQ0hxbsX9aH/5hqOhXToXjFLsZdvr
+	ueqcUdaIISLjhgUafmpqURjPyDcQO97gqTBgx0sXsZ934K0pZbsTSPoBLU=
+X-Google-Smtp-Source: AGHT+IEgGWm+TwbUeO+9N7FURX28AGtJrPEUj7uS49yO94eCRFf85XIQjkIdMNAyflZYWE42i4plAQ==
+X-Received: by 2002:a17:903:22c6:b0:216:2474:3c9f with SMTP id d9443c01a7336-219e6f38177mr919043015ad.52.1736254112256;
+        Tue, 07 Jan 2025 04:48:32 -0800 (PST)
 Received: from localhost ([157.82.203.37])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72aad90c133sm34268685b3a.183.2025.01.07.04.48.08
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-219dca02f72sm310596305ad.249.2025.01.07.04.48.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2025 04:48:12 -0800 (PST)
+        Tue, 07 Jan 2025 04:48:31 -0800 (PST)
 From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Tue, 07 Jan 2025 21:45:54 +0900
-Subject: [PATCH v3 3/6] powwerpc: Use note name macros
+Date: Tue, 07 Jan 2025 21:45:57 +0900
+Subject: [PATCH v3 6/6] crash: Remove KEXEC_CORE_NOTE_NAME
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250107-elf-v3-3-99cb505b1ab2@daynix.com>
+Message-Id: <20250107-elf-v3-6-99cb505b1ab2@daynix.com>
 References: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
 In-Reply-To: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
 To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
@@ -86,8 +86,8 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Akihiko Odaki <akihiko.odaki@daynix.com>
 X-Mailer: b4 0.14-dev-fd6e3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250107_044813_435195_E9B35CC6 
-X-CRM114-Status: GOOD (  13.23  )
+X-CRM114-CacheID: sfid-20250107_044833_122492_73D3244D 
+X-CRM114-Status: GOOD (  10.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,68 +102,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use note name macros to match with the userspace's expectation.
+KEXEC_CORE_NOTE_NAME is no longer used.
 
-Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/powerpc/kernel/fadump.c               | 2 +-
- arch/powerpc/platforms/powernv/opal-core.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/kexec.h       | 2 --
+ include/linux/vmcore_info.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 4b371c738213..d44349fe8e2b 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -751,7 +751,7 @@ u32 *__init fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
- 	 * prstatus.pr_pid = ????
- 	 */
- 	elf_core_copy_regs(&prstatus.pr_reg, regs);
--	buf = append_elf_note(buf, CRASH_CORE_NOTE_NAME, NT_PRSTATUS,
-+	buf = append_elf_note(buf, NN_PRSTATUS, NT_PRSTATUS,
- 			      &prstatus, sizeof(prstatus));
- 	return buf;
- }
-diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
-index c9a9b759cc92..a379ff86c120 100644
---- a/arch/powerpc/platforms/powernv/opal-core.c
-+++ b/arch/powerpc/platforms/powernv/opal-core.c
-@@ -149,7 +149,7 @@ static Elf64_Word *__init auxv_to_elf64_notes(Elf64_Word *buf,
- 	/* end of vector */
- 	bufp[idx++] = cpu_to_be64(AT_NULL);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..c840431eadda 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -68,8 +68,6 @@ extern note_buf_t __percpu *crash_notes;
+ #define KEXEC_CRASH_MEM_ALIGN PAGE_SIZE
+ #endif
  
--	buf = append_elf64_note(buf, CRASH_CORE_NOTE_NAME, NT_AUXV,
-+	buf = append_elf64_note(buf, NN_AUXV, NT_AUXV,
- 				oc_conf->auxv_buf, AUXV_DESC_SZ);
- 	return buf;
- }
-@@ -252,7 +252,7 @@ static Elf64_Word * __init opalcore_append_cpu_notes(Elf64_Word *buf)
- 	 * crashing CPU's prstatus.
- 	 */
- 	first_cpu_note = buf;
--	buf = append_elf64_note(buf, CRASH_CORE_NOTE_NAME, NT_PRSTATUS,
-+	buf = append_elf64_note(buf, NN_PRSTATUS, NT_PRSTATUS,
- 				&prstatus, sizeof(prstatus));
+-#define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+-
+ /*
+  * This structure is used to hold the arguments that are used when loading
+  * kernel binaries.
+diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
+index 1672801fd98c..37e003ae5262 100644
+--- a/include/linux/vmcore_info.h
++++ b/include/linux/vmcore_info.h
+@@ -6,7 +6,6 @@
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
  
- 	for (i = 0; i < oc_conf->num_cpus; i++, bufp += size_per_thread) {
-@@ -279,7 +279,7 @@ static Elf64_Word * __init opalcore_append_cpu_notes(Elf64_Word *buf)
- 		fill_prstatus(&prstatus, thread_pir, &regs);
- 
- 		if (thread_pir != oc_conf->crashing_cpu) {
--			buf = append_elf64_note(buf, CRASH_CORE_NOTE_NAME,
-+			buf = append_elf64_note(buf, NN_PRSTATUS,
- 						NT_PRSTATUS, &prstatus,
- 						sizeof(prstatus));
- 		} else {
-@@ -287,7 +287,7 @@ static Elf64_Word * __init opalcore_append_cpu_notes(Elf64_Word *buf)
- 			 * Add crashing CPU as the first NT_PRSTATUS note for
- 			 * GDB to process the core file appropriately.
- 			 */
--			append_elf64_note(first_cpu_note, CRASH_CORE_NOTE_NAME,
-+			append_elf64_note(first_cpu_note, NN_PRSTATUS,
- 					  NT_PRSTATUS, &prstatus,
- 					  sizeof(prstatus));
- 		}
+-#define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(NN_PRSTATUS), 4)
+ #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
 
 -- 
 2.47.1
