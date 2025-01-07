@@ -4,189 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6217E77197
-	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 15:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1F15E77197
+	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 16:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Tou2A62XUOC9VeyhkK82Uz3+DM5jkBwyVLg/r2ToCwg=; b=3y/klm92rFzIHCyll5UHlGlRMO
-	ZukYKULZpgbJGhBeAt7aUpmSGwRyuzwhQAHbNW8BUBEtNGHFmKQgPU3lXLodnGb5nEl4EVd4y+AvM
-	aoKxyxlLAFVw6PbzIuouxQegh+Ajeo1dDl8cpeKc/N5t2xeJjUhxEyM92MEBo3KEuKh+JsMSZ6o5U
-	IUZbcuB1KSPisURuDM2eKRuZvpjXgXHxc1sVRhdHBEa3PY96EA+WQEwuMsZtftBiJ1gHX68nIchH0
-	zenRFNhtylo8dBk6P0WKYrmegH5cdk/wQr4/U/TX2zOYKhp6FcYr/uEy13RmtqjYTBASPYRIbkYwv
-	CrUP+7cg==;
+	bh=t8CtES2oYL8C/kvAQfa6mDbgVViASQ+zfjrwizDMYAU=; b=FRehEXZPXakawpRcxSQ33WoXIC
+	ztRrRyYOHU/birCjYF9yVlmh3MEjvLbEgcKs0WCl9RMcAGn3bgNtF4RBhft/DO5U58pubyTmjiSWY
+	QUbOOouhz9Hc8mBcc9P18KjjTVP3F+4miDEdWiSGWEOAXXbezfuNd6OMNZwzP6Vb26l9t/3ldLeZT
+	0EPcBw068pHEzbO0qDLIq0RuDX1EQhfZDEyPTlmA2ZNRiasEc9ozK1pDa31xE0X6v/4iYNmGEjA1I
+	7rldqOPsGzn4RI71Jtd5gn2iarUgApHzAGKyHJZUqC7aznUYLNuc9Am80NWDJ/kpfERp4q65C1fYb
+	KifaSZ6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVBs8-00000005Viv-1AeV;
-	Tue, 07 Jan 2025 15:52:00 +0000
-Received: from mail-db5eur02on2061b.outbound.protection.outlook.com ([2a01:111:f403:2608::61b] helo=EUR02-DB5-obe.outbound.protection.outlook.com)
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVAiL-00000005FEY-46JI
+	id 1tVCIt-00000005b7w-2OaI;
+	Tue, 07 Jan 2025 16:19:39 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tVCHE-00000005ajT-46mZ
 	for kexec@lists.infradead.org;
-	Tue, 07 Jan 2025 14:37:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uxG/qRJeaifQQ8nZx6jGNfZYOy5FGfgD0Nf7ZAuJO2XqO86n2zuiXKJpNvwygEbF70T/goSHaq96uXLgeViJ8jdCItO8YUT9eH+ppHszz+5zY5qf7JXd1JI6/HEzDTYSfDkLAmWKO0QO7b4A2f2mGpxiqkUcfPGMbwfDIEBPAiUrMihkD5bDoMEvu10XT45TnzV8jFIT5CTBCR/1VDZva9zbPzISsGZmHVD+itAiyJ53+WPQZUKuYlBTFDEwu4WuWMp8xQw8UbTUviUPzToJT5wpY9cURQtXmvd4OQQPozM3QHeVJ4qXR70g2qxIAMRIk+NDGMtKPC2BgZ3/pguvqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tou2A62XUOC9VeyhkK82Uz3+DM5jkBwyVLg/r2ToCwg=;
- b=LR90Y3XkaA+j4wdvVWEMhOopIqK5cmSZWJ8zWOqqqn0f4UsGVFbZFzyB4OxcJFhsNQNZoRys3jslPlFJlQweCoVz+eSp8Pc5Mo5Vj/47/z70qxkChZyPSgFsK+HepJcNP8rdv2NeJVRaXzXwgmJVgayDm9Bjp9CAVkkM6f2Hcq8bSDF6GE4r02CevXrn6jRubR5uRV6WFv610cjY6MgmVGghQGmE4m3x/UxU3q07k97dIlU7XegNVfg8Cv3HRgRde4lyiDICwk8g9rTFX92r0opn5EgY1ys2Db1xdoD0atPSG4tQ537uaBGNoZ6TwMAmGHVSA0OdgkoNFE+kaBU/6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cs-soprasteria.com; dmarc=pass action=none
- header.from=cs-soprasteria.com; dkim=pass header.d=cs-soprasteria.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs-soprasteria.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tou2A62XUOC9VeyhkK82Uz3+DM5jkBwyVLg/r2ToCwg=;
- b=PUNoMnpjFKFo080ntyUleKlw2odv22GUsg6RGX2a/41mzfm0DBI71zEKeP9ay2FpEWIUiD7Ggg/3xT878ld8ljCl1HBBbh0d1j71Y2jQilvH3ntCHwKXx/kybHRT9139APhCsaM4B6YIO2Na/3cG3Kzz6o4uNj4izEjP0fiVCZnz2SZIvtyDdcHFVcCQoJ8sKILyDrw+ALKL9vBU1DfBdSBBfUwGTYjLUvEhvQTErmtEzt+uhT3t2SOo8xpmHWe8s9qwUKEFaxEbwCcbtSArd6/2a5k/ur6bkvMIW/PEF/9UwT5Y88Pw8mINTIeXuN7enP7FkqNcSBl/ooGygQTR5w==
-Received: from AS8PR07MB7447.eurprd07.prod.outlook.com (2603:10a6:20b:2ad::15)
- by AS8PR07MB7576.eurprd07.prod.outlook.com (2603:10a6:20b:2a6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.18; Tue, 7 Jan
- 2025 14:37:42 +0000
-Received: from AS8PR07MB7447.eurprd07.prod.outlook.com
- ([fe80::8713:e6f3:1f5b:cd6f]) by AS8PR07MB7447.eurprd07.prod.outlook.com
- ([fe80::8713:e6f3:1f5b:cd6f%3]) with mapi id 15.20.8314.013; Tue, 7 Jan 2025
- 14:37:42 +0000
-From: LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
-To: Akihiko Odaki <akihiko.odaki@daynix.com>, Eric Biederman
-	<ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, Dave Martin
-	<Dave.Martin@arm.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal
-	<vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
-	<linux-s390@vger.kernel.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>, "binutils@sourceware.org"
-	<binutils@sourceware.org>, "devel@daynix.com" <devel@daynix.com>
-Subject: Re: [PATCH v3 3/6] powwerpc: Use note name macros
-Thread-Topic: [PATCH v3 3/6] powwerpc: Use note name macros
-Thread-Index: AQHbYQJt8vSyaxXYwEmBNk+ysBRLfLMLYWUA
-Date: Tue, 7 Jan 2025 14:37:42 +0000
-Message-ID: <ceb65b63-3b16-490b-adfb-daf8838bb54a@cs-soprasteria.com>
+	Tue, 07 Jan 2025 16:17:58 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 955311424;
+	Tue,  7 Jan 2025 08:18:22 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FDFC3F59E;
+	Tue,  7 Jan 2025 08:17:52 -0800 (PST)
+Date: Tue, 7 Jan 2025 16:17:43 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	kexec@lists.infradead.org, binutils@sourceware.org,
+	devel@daynix.com
+Subject: Re: [PATCH v3 5/6] s390/crash: Use note name macros
+Message-ID: <Z31Tp0nMhb/ntUW0@e133380.arm.com>
 References: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
- <20250107-elf-v3-3-99cb505b1ab2@daynix.com>
-In-Reply-To: <20250107-elf-v3-3-99cb505b1ab2@daynix.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cs-soprasteria.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR07MB7447:EE_|AS8PR07MB7576:EE_
-x-ms-office365-filtering-correlation-id: b5ddb174-25e0-4cd8-80d7-08dd2f28d833
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?S1VhNmpJT3o3eHJGZEJIRWV0N2VpS3AzdXR6d3Qydlk4YnZrbnhLQVB1ZzVT?=
- =?utf-8?B?NUdLM0pRcllBQ1pmQzA4TGhmUVg3N0tNVzBKOEwwWXFuamFnMG8rODhrdWZV?=
- =?utf-8?B?bkFGc1BvbGM5KzNqRTJoM1l1Uk5KdVRuYWMxWUUweE9mZWxRdzF6WFVwQkJn?=
- =?utf-8?B?UHdueEF5Q3JDVDN0aktNYWpSVlVsVDBRTHZzK3I5ZnNNa2JlL3Juem9nSktL?=
- =?utf-8?B?aHRJTDYycndGSDVES1VpSXY2bDUvYldKOU1CdjR1Uk40ZVJhS3BpVTVKbFFW?=
- =?utf-8?B?M1FpcHc0S09nTTJETlRHb3Y0RHJZek9WQnU2c1p3cDdOOEVMRi9jTS9ITUdv?=
- =?utf-8?B?SGlObVVoYWJxalVWTFJWVEJRYUd3NzlUQnJSd3FRT2Uwd0ZXdEpBbDFxN3pQ?=
- =?utf-8?B?ekNLQ3QzdndaMGh1Y29QbElHWlFnaWcvY3M2K2V5L21yNEoyeVNXY1I5QzZO?=
- =?utf-8?B?ZjlvTnJWRy8wTS90elVkSkgwWWRNai9jUWxRMTZjL0lzMk00VjMyR3JHOUx1?=
- =?utf-8?B?bHdwbFJFRVlBZmpqYitsbEFvVjBXQ0duN05Cd09HZ0Rtcjc5RXJMSjdSVk15?=
- =?utf-8?B?RTZZZ3VlYmtucGExNG9zRUgwMk1mbnkrVnBMVE1UWnRRbXFsanRPUW5wc1gx?=
- =?utf-8?B?ZlR0QkFQNU1oazJETWFUOUFMOXNIazRudlhPU3VOL0FNb0tFTWlTajgvNG5Z?=
- =?utf-8?B?b3BrM3hZbHMyU2xHd2p1cFMvUHV6MXZJY0NvNTZKZDU1QzJ3YW5JKzZjUFpC?=
- =?utf-8?B?MkFocDFSWkpPWlZkQ0h0RnpGUENHbDExeWx4RTYxRDVIMmFjTFNqZ0tzM2hZ?=
- =?utf-8?B?eUN3Smc3UGEyQnlCMGptR3VWRnlnV3UrUGZidTc1dXE4dm94TnFQanYva2Nk?=
- =?utf-8?B?YjJ4S0M4WVNCWHFhZFREb2ZlcWJRblN1eTFuODFBdENISEFEeHZ1aElrMjN1?=
- =?utf-8?B?dUVZcU5EcUVOWlh6VHgxUUVtQjhTeUc3d1BObXBGRDdLQjdvUUZmaFI5a2Ew?=
- =?utf-8?B?ZENKQU96dFhoUVkxNk41dU9WT01BTEJyVkVtWWNlb21jejFqZVJHWTI0QzdF?=
- =?utf-8?B?dXQvWWRsMUJaalVCM3c1M3dLN2tuVEQ4ZllxTWxnRVFwUkNJSGJFeXExVEtX?=
- =?utf-8?B?cW9UcVdOOVFmQ3d5OVJLbEJKMjhjcWREaXZsYzJvaDA5bVhmajJFMTc3bHMx?=
- =?utf-8?B?OGE5bE5rc3hXamR0eHoyVXNXSzQ3L0xqMCtVUTEvVlV6c0lrUmlYY0NJZW9j?=
- =?utf-8?B?S3JIS0VDdHVpanVTcE5tM3krSFRLdm9XUnhlRlQxbWVwa0lGcldickpCUjQz?=
- =?utf-8?B?SWtWdFVhR0ZFdnIzQ3BGQTFsOEdodmdxNXF2N3p1elh6bnZxVGFDR3paUDh5?=
- =?utf-8?B?cjBpbEhlZkR1ZDUySWRMdytnZlpYcXVlY09aOUZQY0p0NVBvcUZCdmNla2tz?=
- =?utf-8?B?VFdFeVF1bFZ2b0pJT0dJU2QvZCtMV1lKaitIOFMybkx4dFdSV25hTjhNeWtl?=
- =?utf-8?B?Z0FaODI0UkUzdFFCSGcwYm1vTGYxNmRHeEtrb3hLelB1cFhLa2MwKzZaaWhr?=
- =?utf-8?B?TjNQRFNqdDIxZzNJcm9XenpCTGNPSGFrTXo2dWdmRVRlcEZyZTF5Ky9LR0ZB?=
- =?utf-8?B?UzhTUExuYjlqM3o1S3pXdmZ0RlJVQ0ZjaThUUUtDZU1KVnArZnhGMEhTUU5W?=
- =?utf-8?B?WUU1SUtJNmY4UFB2b3Y0YXpYUlY4K0FUMEt6S3RJMTlJV1lFdWRiaWhWVGVI?=
- =?utf-8?B?ekJjaHZLUFBRWm1kTmdVd0xna0RjcFpkci9ZazBBOEdjaHVKL2xCaUVFVzBn?=
- =?utf-8?B?U0Z6aWNLZ0REdkdQQjZpVUtnaCtTWHVyUzRXSmVoeDdqQ1MyZ29QNmRqMVVT?=
- =?utf-8?B?NDhQdndITzZQV3FUUVh3czQxbzRrOVBtSnV5UTlBSzdwVjBoQjlKZHc2dXFY?=
- =?utf-8?Q?Q9FS/TNbkwqLiYcVE8vdiAboFLZZOEMG?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR07MB7447.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SWhaVmpHZ2R5Uk5tQTJWVVF5VGI2OVB3YTJ0MmxvWmVpWFNnZ2wza0xxaVpL?=
- =?utf-8?B?Ryt2VzA1ajhkSlE1c2Mramw3bGZhREtuMTJTOGFCMEpMeWpjZk5HbCtZeVlr?=
- =?utf-8?B?b2pvK3I4UWZTWlVmaFJzdC9neWYvQWxuWkN5TmpmYllLUWE5NjBIMGNzally?=
- =?utf-8?B?ejNKQmI1cFRvelo0UmlHeW1lZ1JGcElVM21WMlBtMVdyZmpjNDlwdWE2NUlm?=
- =?utf-8?B?USt1OE5XS2VDajJBaXlwWGJUQzNFSHNLRXdtR00waE4vNUMyS3NBbHpRVUxn?=
- =?utf-8?B?YThjZlptSThWRDdZaFltZFZMbW15YmMvYzVmVVpJaWx5Z0Vaamo1YXFLWjJu?=
- =?utf-8?B?YkxQOFpibjYwZVp2MEIxRTNaWDd5aXczZndxenhUeU00bWRxd0VTWFRhbElx?=
- =?utf-8?B?aWNuZ0RXQmREOEo0UDdDcXBCSnYzeGxkZWZDOGhIY2RyZzJMTjhTMWRzRVdE?=
- =?utf-8?B?N2FUc3g3QkJkMkhNSlh2M284a2Y1Nzg4b3ZyUlI3QkV3OURRMTlBZm1Uc1pr?=
- =?utf-8?B?SzZHYncyTG14SXVPWnJ5cUd1NEpuVWx5YlRlNWVWUlhJMmJqOGpibVVyY3ly?=
- =?utf-8?B?UkdHSXRnemhjejZTNUZFYU5aYmJkVmFaUlhXK3pnQzIrdHRDck1YT29iZkZi?=
- =?utf-8?B?d21Kc2xnNFlrQ0ZoTjdWMmg0bDZ6SnNIOWJ6eU5BRkY3TDM0VE9udW9RWU5j?=
- =?utf-8?B?MUJlOTd5V1pncTI4dUlxaFhlYWpTelRFMDB2ZkNPR25tQVYwMk5IMS9vSnUw?=
- =?utf-8?B?L1BxSXRxejZpN1ZEWE9iaUlNcnFpNi9tY2RVellwT3R0cDJoOFRKR05sOUo2?=
- =?utf-8?B?NHpuWlNBVGZiRlV5U0g3ZUVUV3VvY3hzbDN0WnJRK1ljWUhFVlR3VmVpcnRW?=
- =?utf-8?B?S0xYcnUyZ015b016d1VLODQ0Y2Q2T05PNDJZb1VJYkJjVGNiNHlQb0YvSENF?=
- =?utf-8?B?N09xZEZVVmRFOStjOXlGK2ZMN3VubG5hMnJtWDJ5RDVINUZ3SnFldU5qZ0tK?=
- =?utf-8?B?cjlaNE0vWERhR2I4S3RGbnpNNm5HNzBEV1FaRDlSOXNpWGlLMlNPcXpHQXV4?=
- =?utf-8?B?Z2NHKzM1QU5uRkY4UVU4ZFEzbVhwaVo1eHBMUWtaQmZjKzRSd0h6RE8rWFh2?=
- =?utf-8?B?bFB3ZnhOdTBQeXpObWhvN1p1cVFkZHBHSHJwV1ZjeXY5eVFhY21teE05b2Fl?=
- =?utf-8?B?UEF3VVdkSlRrYVFaeHNpWEc2QU1PaXMwZ3haWGs2TVAvOFZCZ2dzeFZQRm4x?=
- =?utf-8?B?K1REaytOZ3VkczRaR3NCZVZHSjZZSVBIME1DdS9rNW90QkNjNFdLMDB1ZWFJ?=
- =?utf-8?B?ODNUUGpPOTRqTnlGeXU4M0M3Q2pvTGd4bEVCNStVTmZWUjRqb2RVKzZ3ZENZ?=
- =?utf-8?B?Qm5HVGhTVDlKVCtsUlhLS2RsOHRIR1lnbVlPQi81cmdGS3ZSMm9McHQ1S1h1?=
- =?utf-8?B?Z1c3L09peTZma2xOZXlwd2dlMCtCTEZnSXNMQmtsZjBPUCtsUTFFSllyOW1q?=
- =?utf-8?B?RE1KRFJwb28yTWppUWZ5VWFwckNXQ0g2V3ZQNUdySnUxcFcwenR4R1NseUF4?=
- =?utf-8?B?TTd1Nm8rTG92UjNRT0wrUnU4MmVPZFhubjdWMkxHTG1MSTJKelJkbHlnanVj?=
- =?utf-8?B?UXYwdWx0Z3lIeVdjeDB4ZTcvWUpPN0x1eExEM3lJS01FSDlxMm9reUNJaHcr?=
- =?utf-8?B?bEtZblNaMmxQVXMzN1FPYTR6L0lwa0FkRndQb0dxK3NrZVNkQUkwTk96YmNz?=
- =?utf-8?B?TTVoSEgwK1JzTk9YOW54aEc1YnN2cTUxTThQSENkN3VEalN2ajdyR0V4UkRR?=
- =?utf-8?B?Vm9mU2FBTGVFanl0UGpONHQ5ejhldVUxNFI4RGV3dlJWUGNNeGxQbWVNdFNQ?=
- =?utf-8?B?ZkpGb1duZHZITXlyWlZvc0NFL09UY0JlVXlKRis2QTZ1ZGNMLzUrUE5meXl6?=
- =?utf-8?B?ck90M0J5eDN5M2ZYZ1IzcU5BaEdWeVg1cnZGZmVUV0hPUVA4NGpRRUIvRXFC?=
- =?utf-8?B?U1YxUmJvL0p5UnByNHhMRHVQQi9wVVVML2wvcS9Ia0MzdmlVSUpBWUZURXZa?=
- =?utf-8?B?S1BnSTRER2E2Q2tKRWFUOUQrZ2J2MG4vVjFKMFdiTTkxdzBGcG5VK0R4dGdo?=
- =?utf-8?B?QkZUYlhNUllxNWd4ZFVrcndaMmxYN292Qjl4ak5rTlJ6Y0I2cXhPS05ZYTFT?=
- =?utf-8?B?c3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6B1F92D880573742B2F45685F8258343@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <20250107-elf-v3-5-99cb505b1ab2@daynix.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cs-soprasteria.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR07MB7447.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5ddb174-25e0-4cd8-80d7-08dd2f28d833
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2025 14:37:42.8554
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8b87af7d-8647-4dc7-8df4-5f69a2011bb5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 25voWRYnYJRvad+OWkzpGVWJ5yDjA69BRzjSeUGBlikHKGRyauPirVwpRIvHnwOreEerfKjnCsAodjwebN9m539eGH+Q3Dj//Xik0dW2DkK8vJ12ibJqecrNjFvqwuyF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB7576
-X-MS-Exchange-CrossPremises-AuthAs: Internal
-X-MS-Exchange-CrossPremises-AuthMechanism: 04
-X-MS-Exchange-CrossPremises-AuthSource: AS8PR07MB7447.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossPremises-TransportTrafficType: Email
-X-MS-Exchange-CrossPremises-SCL: 1
-X-MS-Exchange-CrossPremises-messagesource: StoreDriver
-X-MS-Exchange-CrossPremises-BCC: 
-X-MS-Exchange-CrossPremises-originalclientipaddress: 93.17.236.2
-X-MS-Exchange-CrossPremises-transporttraffictype: Email
-X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
-X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
-X-OrganizationHeadersPreserved: AS8PR07MB7576.eurprd07.prod.outlook.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250107-elf-v3-5-99cb505b1ab2@daynix.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250107_063750_287759_6090A2DF 
-X-CRM114-Status: GOOD (  17.29  )
+X-CRM114-CacheID: sfid-20250107_081757_107612_D40C7AAA 
+X-CRM114-Status: GOOD (  18.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -201,55 +69,110 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-DQpMZSAwNy8wMS8yMDI1IMOgIDEzOjQ1LCBBa2loaWtvIE9kYWtpIGEgw6ljcml0wqA6DQo+IFVz
-ZSBub3RlIG5hbWUgbWFjcm9zIHRvIG1hdGNoIHdpdGggdGhlIHVzZXJzcGFjZSdzIGV4cGVjdGF0
-aW9uLg0KDQpJbiB0aGUgc3ViamVjdDoNCg0Kcy9wb3d3ZXJwYy9wb3dlcnBjDQoNCkNocmlzdG9w
-aGUNCg0KDQo+IA0KPiBBY2tlZC1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+DQo+IFNp
-Z25lZC1vZmYtYnk6IEFraWhpa28gT2Rha2kgPGFraWhpa28ub2Rha2lAZGF5bml4LmNvbT4NCj4g
-LS0tDQo+ICAgYXJjaC9wb3dlcnBjL2tlcm5lbC9mYWR1bXAuYyAgICAgICAgICAgICAgIHwgMiAr
-LQ0KPiAgIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9vcGFsLWNvcmUuYyB8IDggKysr
-Ky0tLS0NCj4gICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMva2VybmVsL2ZhZHVtcC5jIGIvYXJj
-aC9wb3dlcnBjL2tlcm5lbC9mYWR1bXAuYw0KPiBpbmRleCA0YjM3MWM3MzgyMTMuLmQ0NDM0OWZl
-OGUyYiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9mYWR1bXAuYw0KPiArKysg
-Yi9hcmNoL3Bvd2VycGMva2VybmVsL2ZhZHVtcC5jDQo+IEBAIC03NTEsNyArNzUxLDcgQEAgdTMy
-ICpfX2luaXQgZmFkdW1wX3JlZ3NfdG9fZWxmX25vdGVzKHUzMiAqYnVmLCBzdHJ1Y3QgcHRfcmVn
-cyAqcmVncykNCj4gICAJICogcHJzdGF0dXMucHJfcGlkID0gPz8/Pw0KPiAgIAkgKi8NCj4gICAJ
-ZWxmX2NvcmVfY29weV9yZWdzKCZwcnN0YXR1cy5wcl9yZWcsIHJlZ3MpOw0KPiAtCWJ1ZiA9IGFw
-cGVuZF9lbGZfbm90ZShidWYsIENSQVNIX0NPUkVfTk9URV9OQU1FLCBOVF9QUlNUQVRVUywNCj4g
-KwlidWYgPSBhcHBlbmRfZWxmX25vdGUoYnVmLCBOTl9QUlNUQVRVUywgTlRfUFJTVEFUVVMsDQo+
-ICAgCQkJICAgICAgJnByc3RhdHVzLCBzaXplb2YocHJzdGF0dXMpKTsNCj4gICAJcmV0dXJuIGJ1
-ZjsNCj4gICB9DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYv
-b3BhbC1jb3JlLmMgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvb3BhbC1jb3JlLmMN
-Cj4gaW5kZXggYzlhOWI3NTljYzkyLi5hMzc5ZmY4NmMxMjAgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
-cG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9vcGFsLWNvcmUuYw0KPiArKysgYi9hcmNoL3Bvd2Vy
-cGMvcGxhdGZvcm1zL3Bvd2VybnYvb3BhbC1jb3JlLmMNCj4gQEAgLTE0OSw3ICsxNDksNyBAQCBz
-dGF0aWMgRWxmNjRfV29yZCAqX19pbml0IGF1eHZfdG9fZWxmNjRfbm90ZXMoRWxmNjRfV29yZCAq
-YnVmLA0KPiAgIAkvKiBlbmQgb2YgdmVjdG9yICovDQo+ICAgCWJ1ZnBbaWR4KytdID0gY3B1X3Rv
-X2JlNjQoQVRfTlVMTCk7DQo+ICAgDQo+IC0JYnVmID0gYXBwZW5kX2VsZjY0X25vdGUoYnVmLCBD
-UkFTSF9DT1JFX05PVEVfTkFNRSwgTlRfQVVYViwNCj4gKwlidWYgPSBhcHBlbmRfZWxmNjRfbm90
-ZShidWYsIE5OX0FVWFYsIE5UX0FVWFYsDQo+ICAgCQkJCW9jX2NvbmYtPmF1eHZfYnVmLCBBVVhW
-X0RFU0NfU1opOw0KPiAgIAlyZXR1cm4gYnVmOw0KPiAgIH0NCj4gQEAgLTI1Miw3ICsyNTIsNyBA
-QCBzdGF0aWMgRWxmNjRfV29yZCAqIF9faW5pdCBvcGFsY29yZV9hcHBlbmRfY3B1X25vdGVzKEVs
-ZjY0X1dvcmQgKmJ1ZikNCj4gICAJICogY3Jhc2hpbmcgQ1BVJ3MgcHJzdGF0dXMuDQo+ICAgCSAq
-Lw0KPiAgIAlmaXJzdF9jcHVfbm90ZSA9IGJ1ZjsNCj4gLQlidWYgPSBhcHBlbmRfZWxmNjRfbm90
-ZShidWYsIENSQVNIX0NPUkVfTk9URV9OQU1FLCBOVF9QUlNUQVRVUywNCj4gKwlidWYgPSBhcHBl
-bmRfZWxmNjRfbm90ZShidWYsIE5OX1BSU1RBVFVTLCBOVF9QUlNUQVRVUywNCj4gICAJCQkJJnBy
-c3RhdHVzLCBzaXplb2YocHJzdGF0dXMpKTsNCj4gICANCj4gICAJZm9yIChpID0gMDsgaSA8IG9j
-X2NvbmYtPm51bV9jcHVzOyBpKyssIGJ1ZnAgKz0gc2l6ZV9wZXJfdGhyZWFkKSB7DQo+IEBAIC0y
-NzksNyArMjc5LDcgQEAgc3RhdGljIEVsZjY0X1dvcmQgKiBfX2luaXQgb3BhbGNvcmVfYXBwZW5k
-X2NwdV9ub3RlcyhFbGY2NF9Xb3JkICpidWYpDQo+ICAgCQlmaWxsX3Byc3RhdHVzKCZwcnN0YXR1
-cywgdGhyZWFkX3BpciwgJnJlZ3MpOw0KPiAgIA0KPiAgIAkJaWYgKHRocmVhZF9waXIgIT0gb2Nf
-Y29uZi0+Y3Jhc2hpbmdfY3B1KSB7DQo+IC0JCQlidWYgPSBhcHBlbmRfZWxmNjRfbm90ZShidWYs
-IENSQVNIX0NPUkVfTk9URV9OQU1FLA0KPiArCQkJYnVmID0gYXBwZW5kX2VsZjY0X25vdGUoYnVm
-LCBOTl9QUlNUQVRVUywNCj4gICAJCQkJCQlOVF9QUlNUQVRVUywgJnByc3RhdHVzLA0KPiAgIAkJ
-CQkJCXNpemVvZihwcnN0YXR1cykpOw0KPiAgIAkJfSBlbHNlIHsNCj4gQEAgLTI4Nyw3ICsyODcs
-NyBAQCBzdGF0aWMgRWxmNjRfV29yZCAqIF9faW5pdCBvcGFsY29yZV9hcHBlbmRfY3B1X25vdGVz
-KEVsZjY0X1dvcmQgKmJ1ZikNCj4gICAJCQkgKiBBZGQgY3Jhc2hpbmcgQ1BVIGFzIHRoZSBmaXJz
-dCBOVF9QUlNUQVRVUyBub3RlIGZvcg0KPiAgIAkJCSAqIEdEQiB0byBwcm9jZXNzIHRoZSBjb3Jl
-IGZpbGUgYXBwcm9wcmlhdGVseS4NCj4gICAJCQkgKi8NCj4gLQkJCWFwcGVuZF9lbGY2NF9ub3Rl
-KGZpcnN0X2NwdV9ub3RlLCBDUkFTSF9DT1JFX05PVEVfTkFNRSwNCj4gKwkJCWFwcGVuZF9lbGY2
-NF9ub3RlKGZpcnN0X2NwdV9ub3RlLCBOTl9QUlNUQVRVUywNCj4gICAJCQkJCSAgTlRfUFJTVEFU
-VVMsICZwcnN0YXR1cywNCj4gICAJCQkJCSAgc2l6ZW9mKHByc3RhdHVzKSk7DQo+ICAgCQl9DQo+
-IA0KDQo=
+Hi,
+
+On Tue, Jan 07, 2025 at 09:45:56PM +0900, Akihiko Odaki wrote:
+> Use note name macros to match with the userspace's expectation.
+> 
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> ---
+>  arch/s390/kernel/crash_dump.c | 62 ++++++++++++++++---------------------------
+>  1 file changed, 23 insertions(+), 39 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+
+[...]
+
+> @@ -281,10 +272,8 @@ static void *nt_init_name(void *buf, Elf64_Word type, void *desc, int d_len,
+>  	return PTR_ADD(buf, len);
+>  }
+>  
+> -static inline void *nt_init(void *buf, Elf64_Word type, void *desc, int d_len)
+> -{
+> -	return nt_init_name(buf, type, desc, d_len, nt_name(type));
+> -}
+> +#define NT_INIT(buf, type, desc) \
+> +	(nt_init_name((buf), NT_ ## type, &(desc), sizeof(desc), NN_ ## type))
+
+Nit: this macro name clashes with the naming scheme in elf.h.
+
+I think that there is a (weak) convention that macros with upper-case
+names don't expand to a C function call; thus, a macro with an upper-
+case name can be invoked in places where a C function call would not be
+allowed.  (This convention is not followed everywhere, though -- it's
+up to the maintainer what they prefer here.)
+
+(Note also, the outer parentheses and the parentheses around (buf)
+appear redundant -- although harmless?)
+
+>  
+>  /*
+>   * Calculate the size of ELF note
+> @@ -300,10 +289,7 @@ static size_t nt_size_name(int d_len, const char *name)
+>  	return size;
+>  }
+>  
+> -static inline size_t nt_size(Elf64_Word type, int d_len)
+> -{
+> -	return nt_size_name(d_len, nt_name(type));
+> -}
+> +#define NT_SIZE(type, desc) (nt_size_name(sizeof(desc), NN_ ## type))
+
+Nit: name prefix clash (again); possibly redundant parentheses.
+
+[...]
+
+> @@ -348,16 +332,16 @@ static size_t get_cpu_elf_notes_size(void)
+>  	struct save_area *sa = NULL;
+>  	size_t size;
+>  
+> -	size =	nt_size(NT_PRSTATUS, sizeof(struct elf_prstatus));
+> -	size +=  nt_size(NT_PRFPREG, sizeof(elf_fpregset_t));
+> -	size +=  nt_size(NT_S390_TIMER, sizeof(sa->timer));
+> -	size +=  nt_size(NT_S390_TODCMP, sizeof(sa->todcmp));
+> -	size +=  nt_size(NT_S390_TODPREG, sizeof(sa->todpreg));
+> -	size +=  nt_size(NT_S390_CTRS, sizeof(sa->ctrs));
+> -	size +=  nt_size(NT_S390_PREFIX, sizeof(sa->prefix));
+> +	size =	NT_SIZE(PRSTATUS, struct elf_prstatus);
+> +	size +=  NT_SIZE(PRFPREG, elf_fpregset_t);
+> +	size +=  NT_SIZE(S390_TIMER, sa->timer);
+> +	size +=  NT_SIZE(S390_TODCMP, sa->todcmp);
+> +	size +=  NT_SIZE(S390_TODPREG, sa->todpreg);
+> +	size +=  NT_SIZE(S390_CTRS, sa->ctrs);
+> +	size +=  NT_SIZE(S390_PREFIX, sa->prefix);
+
+It might be worth fixing the funny spacing on these lines, since all
+the affected lines are being replaced.
+
+>  	if (cpu_has_vx()) {
+> -		size += nt_size(NT_S390_VXRS_HIGH, sizeof(sa->vxrs_high));
+> -		size += nt_size(NT_S390_VXRS_LOW, sizeof(sa->vxrs_low));
+> +		size += NT_SIZE(S390_VXRS_HIGH, sa->vxrs_high);
+> +		size += NT_SIZE(S390_VXRS_LOW, sa->vxrs_low);
+>  	}
+>  
+>  	return size;
+> @@ -373,7 +357,7 @@ static void *nt_prpsinfo(void *ptr)
+>  	memset(&prpsinfo, 0, sizeof(prpsinfo));
+>  	prpsinfo.pr_sname = 'R';
+>  	strcpy(prpsinfo.pr_fname, "vmlinux");
+> -	return nt_init(ptr, NT_PRPSINFO, &prpsinfo, sizeof(prpsinfo));
+> +	return NT_INIT(ptr, PRPSINFO, prpsinfo);
+>  }
+>  
+>  /*
+> @@ -589,7 +573,7 @@ static size_t get_elfcorehdr_size(int phdr_count)
+>  	/* PT_NOTES */
+>  	size += sizeof(Elf64_Phdr);
+>  	/* nt_prpsinfo */
+> -	size += nt_size(NT_PRPSINFO, sizeof(struct elf_prpsinfo));
+> +	size += NT_SIZE(PRPSINFO, struct elf_prpsinfo);
+>  	/* regsets */
+>  	size += get_cpu_cnt() * get_cpu_elf_notes_size();
+>  	/* nt_vmcoreinfo */
+
+Otherwise, this looks sensible to me.
+
+Cheers
+---Dave
 
