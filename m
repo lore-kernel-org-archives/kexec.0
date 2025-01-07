@@ -4,78 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 936FFE77198
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B452BE77199
 	for <kexec@archiver.kernel.org>; Tue,  7 Jan 2025 12:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=To6WceQOVEAdrv9VIwdrgLUfIkfIZojfYpt2+tcFAZE=; b=NwPdF/Sf+I4cZM10SrztgBZ86s
-	wMSY5e/PlYAxcl63lO/kokFUOd7J4U53im78oYLaxzsXe95uVNFJ8Wo1i4jbYjb0wOYsGkFL//7Qo
-	Avd0xuHGwSf1q1f7TM9DXOUAW+XgEefTFQehS+TTkeX9IpWCitFFe5jK/du6eIMShSPW9nhp4tl/5
-	tjIN/bQKfXAB4dljizizhD9KDS+slkodCFYB9LSQ3WUVtVjSLO9+85c1EoJUbbkCCtIJw78dRk6HY
-	ePLURTNJUhhOduLPEjoy7Tslm0fiW/bvuYQDCIEXSmXK3CD829NKbe/LOtO/BAom0STKOGTEjjtGc
-	+NXolapA==;
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=opIuyGFUTzWuwcM2pYQXlXkOFxHji1aKoxh7XPTxYrQ=; b=rQrxKvVO2YEAdy
+	Lv0V79WGdAKzN5h46AACWNl/Lnl7ArCLVDsGXlSXMBRZhimydKhGUMdZ67dEle7UZs8kABN0Vay2l
+	hQLGdSsfK1P4xXcKqsNy2+gRgle/xompJm5LGBIDshBVBl9wAgEB8IfTtQARBzor+UC8efLbTDfzR
+	AvksKvdyfZRDj4tI4b5HLicrAmI1xbrZLA5d9wxfiwJDCohHCoctycb/J+DpwhdV5DFhfuzCKR07H
+	eB7SEaw1+FohD0K2N9kOn238WBJt3n25Bt/+sgP/GlsaTytXkH3UILVLj2oK6/17E1WGyHihw5fPO
+	nFREcKqzgALw1FK4hClQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tV90z-00000004phq-0spw;
-	Tue, 07 Jan 2025 12:48:57 +0000
-Received: from mail-pj1-x102a.google.com ([2607:f8b0:4864:20::102a])
+	id 1tV90y-00000004phR-1e9I;
+	Tue, 07 Jan 2025 12:48:56 +0000
+Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tV90A-00000004pMO-2khI
+	id 1tV8zy-00000004pGY-0V6f
 	for kexec@lists.infradead.org;
-	Tue, 07 Jan 2025 12:48:10 +0000
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-2eeb4d643a5so22989893a91.3
-        for <kexec@lists.infradead.org>; Tue, 07 Jan 2025 04:48:06 -0800 (PST)
+	Tue, 07 Jan 2025 12:47:57 +0000
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-219f8263ae0so178323785ad.0
+        for <kexec@lists.infradead.org>; Tue, 07 Jan 2025 04:47:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736254086; x=1736858886; darn=lists.infradead.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=To6WceQOVEAdrv9VIwdrgLUfIkfIZojfYpt2+tcFAZE=;
-        b=HbACcbSsN4UifQs+bqTDt3eFsHC1+i3cPCs/o71m4EfySBuYinJfOIt7mUCf2bVR0T
-         GhbMdHWkKq1kCqJxzmwUf+gV9cwyRcP4oSH9QToAbKb/W6VuXpok/FMM4mLG8BrJKB8I
-         MqVyElc6WSFDHgs41iYbYwQH+lMnKxM2lqlyXHV1sCMWiSVSKXoR6hO/1z/AR5tOppCC
-         +2gf1QbqN+W4aPBQDUQh3vD89YyaqMxnj8gSRDZWYS7Y4fPc6BnddXgpuxRmiTseWgA7
-         Cy4Xkk9m94VXsdsMr6B8ll/HqB8BA4k5Da9sMwtGOtGAs8wKMFnU/QAuXeVVS3gqUbA4
-         1/Cw==
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736254073; x=1736858873; darn=lists.infradead.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=opIuyGFUTzWuwcM2pYQXlXkOFxHji1aKoxh7XPTxYrQ=;
+        b=KYatoF/GSubJN9wrGZK4mzNGQbx9ZNoFwBHGrcKd2ss9G7fKuu0qYmXdYTanMv5bPB
+         77eLhMMEhQbCdui5kPgpDX43Cq6y3QaQSkrdCdTzfwJhUhiWkwSN7TO0oKDSwnOd3W7d
+         kGx5yR2VzIBa5dGXH80msU47mRa1adyZAkWwH304W7XBrT4OYoS2ftQHiS0HIIYa6ei8
+         FeM4iivDANyLvfLMP9KCzpnPX+PAtiX34c4D5ofnUEoATcztqZV5oeQ5+JZggvi368tR
+         KHovEB4/BikdZeDvfi8uk6rZNtwSliLejmDdpVAh9IXL4TEvUNLVoSTXuPTMMnUpQ7JT
+         gI4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736254086; x=1736858886;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=To6WceQOVEAdrv9VIwdrgLUfIkfIZojfYpt2+tcFAZE=;
-        b=wVGc9uJwiYX32PD242xIlQ/bSKm5X8j4RsPn9vJRuqYiEnbtGfsYIWSZC8ItdOAwa/
-         uC2MrAjjyIuUSJi0ea6vGGUe/Cild7O+fhcyaM2yTlhMpCz4VqgPMUcD1ECKF5Gk4/u/
-         n1tuxTFfGOFM2tc6vmmC4jRlvjOPsUuGo9Xepj5Cz9dzFQisRMUM9VcOHScNfZp6dBlT
-         oZ3fR40wcSZ1FWKx2Q/dIFqn7JnDhcWqwzndop9aPxC54b7d2j8OKW8in+BiDiRt0dH9
-         dFzqwLPWPd0GkNB/gXwi1WeuMlLXX/wJub2buMdTfXA1tcvng15lyHw9jrFVxvg5E747
-         dJxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVL/SU0/C+RE9/5znuBjkuvS8lYqzCU5FzcOwds+0OTRxkkrGSRUWjNfOL57emVa2KTNDGOQg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxr2PAoYaHlYknvMMeInFA5xmzPP5RdFLMz5zyhJ5OHrMAqV92f
-	vVEZuttZlS1jhjR8jG2FWQOnQcQrT18cTr47r1wuJWqd83DssqnzfBuHMEC8GOs=
-X-Gm-Gg: ASbGncvySaKICsB95+BCPnJBKjaRgHEjjpeg2UWYX4i7aMI8Nc5heWVHmqQGXD89nyG
-	xVNu4US3Jd/9ctlnuaXdoFocj3tl5EAw3F8VUPB441cjaNhjRmmGsd+ZZyJfJxaz1sz76fripvg
-	LDQkNpfkImSWy7CbwPMuiaZ2+HgQvwOA9ttgt02vfgexaWOIFIDZxpGhMjtSD/C12R2wnpBeKxo
-	GL9ez7HPl5U4m+mY3D1djFV2AtKo7OVh3yZHqpQwgOL/y2r133KPU/HemQ=
-X-Google-Smtp-Source: AGHT+IHmQrtd6DArE28HS9MI+ljcSHS0URGz6WZZfYPdopYVfnKvqXeHpkFOcVWEZed1yb1h138/0Q==
-X-Received: by 2002:a05:6a00:22c2:b0:725:ef4b:de33 with SMTP id d2e1a72fcca58-72abdbe4de8mr79321688b3a.0.1736254085564;
-        Tue, 07 Jan 2025 04:48:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736254073; x=1736858873;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=opIuyGFUTzWuwcM2pYQXlXkOFxHji1aKoxh7XPTxYrQ=;
+        b=fgQ2ZwrlILN0NiNQFt1rAlsqtQpDi9U/TWnyNpteefHxi0Fxyw9OBw9E+k4V/oolZ0
+         sQmXAbQCLxnczJgfsP4SlHZC9JoDBAF7OMRT66Gakkwj2JOfqSnQedx9BQzono6p08Bo
+         mrdW7N31BJhY5etuBaZdysEp8CWNNeoRmJp3Sy/qGUM8hz2zXUpB2ewLImYzJQnb9OYB
+         Qcca48uZMe7ZZ1OdvSVXchycr7N/n8ULVzlZWrJ+1BTLg/dVVrl/9OjbcMitwBgQFOF/
+         EiWW8XReGvUEf/cyTDGP+HPyGbvWY8K/36qYkUI60Y9WYdBQyQcBAhtqq/tSDPhA7781
+         geVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlQ/l7Hm8s3avw+Upsft6o9umDZPcxV/g+h9n6ynob3CvTw5AjJn4JHpIkVbTHveMJ10jVQA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwWgj1ftsSgzqr+qEOLUWVW2XMUp3xk/sjQz0Wd5tCeTiqhzZlf
+	JExZ1mfmgmGyGRwBG96UROBJbolMP5xq+OzDHhbqzgMM8rBj5F2JlR917ntFTAg=
+X-Gm-Gg: ASbGncsMlgnutnt2yyqoTu70BQx7bXfF+Ae+UritTGQf5efkMF3wzF8uH/Hcb4UAzth
+	FVzzJUOWGECIPv4bo3vpBJE+F2j33bRBISCIu5+Wj4PDuQ/3rdNVz8UjiLuJsEDAlPsB5l0OgzG
+	ShBhEStmY/KyebXNdZYHP8QvhaELBXzc1Iz8vLKEz7F2B0pw58rLO8jsZz15Ee5n/ElF0305pTC
+	SUT9IVxp+hPHsoGPKvIWJoU2XYQT2p2XCjWzKK6pkx3YAMJrrisp0Fknyk=
+X-Google-Smtp-Source: AGHT+IH/TI3sUb6l2+b2WaTSh1evq6vZuS5S4szn4UoWwy5hsMxR0UzHoKY9BZVjFfB8co0JCgCCAg==
+X-Received: by 2002:a17:903:11d2:b0:216:2f91:92c7 with SMTP id d9443c01a7336-219e6e89278mr972540505ad.12.1736254072686;
+        Tue, 07 Jan 2025 04:47:52 -0800 (PST)
 Received: from localhost ([157.82.203.37])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72aad90b338sm33355957b3a.174.2025.01.07.04.48.01
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-219dc972b0dsm309970895ad.112.2025.01.07.04.47.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2025 04:48:05 -0800 (PST)
+        Tue, 07 Jan 2025 04:47:52 -0800 (PST)
 From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Tue, 07 Jan 2025 21:45:53 +0900
-Subject: [PATCH v3 2/6] binfmt_elf: Use note name macros
+Subject: [PATCH v3 0/6] elf: Define note name macros
+Date: Tue, 07 Jan 2025 21:45:51 +0900
+Message-Id: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250107-elf-v3-2-99cb505b1ab2@daynix.com>
-References: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
-In-Reply-To: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
+X-B4-Tracking: v=1; b=H4sIAP8hfWcC/1WMwQ7CIBAFf6XhLGZZwIon/8N4aGFrSbQYMKRN0
+ 3+XVj14nJc3M7NE0VNip2pmkbJPPgwF5K5itm+GG3HvCjMEVAIFcLp3vD0CNdIoY6Vh5fmM1Pl
+ xq1yuhXufXiFOWzSLdf36qDc/Cy54bcgokBqchrNrpsGPexsebA1k/EkaBKiPhBx4XTuLBAfXK
+ vqTlmV5A7A3TXfMAAAA
 To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
  Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
  Dave Martin <Dave.Martin@arm.com>, Baoquan He <bhe@redhat.com>, 
@@ -86,8 +87,8 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Akihiko Odaki <akihiko.odaki@daynix.com>
 X-Mailer: b4 0.14-dev-fd6e3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250107_044806_700743_A52CE794 
-X-CRM114-Status: GOOD (  12.51  )
+X-CRM114-CacheID: sfid-20250107_044754_427368_E156BEDB 
+X-CRM114-Status: GOOD (  15.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,151 +103,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use note name macros to match with the userspace's expectation.
+elf.h had a comment saying:
+> Notes used in ET_CORE. Architectures export some of the arch register
+> sets using the corresponding note types via the PTRACE_GETREGSET and
+> PTRACE_SETREGSET requests.
+> The note name for these types is "LINUX", except NT_PRFPREG that is
+> named "CORE".
+
+However, NT_PRSTATUS is also named "CORE". It is also unclear what
+"these types" refers to.
+
+To fix these problems, define a name for each note type. The added
+definitions are macros so the kernel and userspace can directly refer to
+them.
+
+For userspace program developers
+---------------------------------------------------
+While the main purpose of new macros is documentation, they are also
+hoped to be useful for userspace programs. Please check patch
+"elf: Define note name macros" and if you have a suggestion to make it
+more convenient for you, please share.
+
+I added the Binutils mailing list to the CC as it contains code to parse
+dumps. I'm also planning to share this series on LLVM Discourse.
 
 Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- fs/binfmt_elf.c       | 21 ++++++++++-----------
- fs/binfmt_elf_fdpic.c |  8 ++++----
- 2 files changed, 14 insertions(+), 15 deletions(-)
+Changes in v3:
+- Added patch "s390/crash: Use note name macros".
+- Changed to interleave note name and type macros.
+- Described NN_ and NT_ macros.
+- Link to v2: https://lore.kernel.org/r/20250104-elf-v2-0-77dc2e06db4e@daynix.com
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 106f0e8af177..5b4a92e5e508 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -762,8 +762,7 @@ static int parse_elf_property(const char *data, size_t *off, size_t datasz,
- }
- 
- #define NOTE_DATA_SZ SZ_1K
--#define GNU_PROPERTY_TYPE_0_NAME "GNU"
--#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
-+#define NOTE_NAME_SZ (sizeof(NN_GNU_PROPERTY_TYPE_0))
- 
- static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
- 				struct arch_elf_state *arch)
-@@ -800,7 +799,7 @@ static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
- 	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
- 	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
- 	    strncmp(note.data + sizeof(note.nhdr),
--		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
-+		    NN_GNU_PROPERTY_TYPE_0, n - sizeof(note.nhdr)))
- 		return -ENOEXEC;
- 
- 	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
-@@ -1603,14 +1602,14 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
- 	do
- 		i += 2;
- 	while (auxv[i - 2] != AT_NULL);
--	fill_note(note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
-+	fill_note(note, NN_AUXV, NT_AUXV, i * sizeof(elf_addr_t), auxv);
- }
- 
- static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
- 		const kernel_siginfo_t *siginfo)
- {
- 	copy_siginfo_to_external(csigdata, siginfo);
--	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
-+	fill_note(note, NN_SIGINFO, NT_SIGINFO, sizeof(*csigdata), csigdata);
- }
- 
- /*
-@@ -1706,7 +1705,7 @@ static int fill_files_note(struct memelfnote *note, struct coredump_params *cprm
- 	}
- 
- 	size = name_curpos - (char *)data;
--	fill_note(note, "CORE", NT_FILE, size, data);
-+	fill_note(note, NN_FILE, NT_FILE, size, data);
- 	return 0;
- }
- 
-@@ -1767,7 +1766,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 	regset_get(t->task, &view->regsets[0],
- 		   sizeof(t->prstatus.pr_reg), &t->prstatus.pr_reg);
- 
--	fill_note(&t->notes[0], "CORE", NT_PRSTATUS,
-+	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS,
- 		  PRSTATUS_SIZE, &t->prstatus);
- 	info->size += notesize(&t->notes[0]);
- 
-@@ -1801,7 +1800,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 		if (is_fpreg)
- 			SET_PR_FPVALID(&t->prstatus);
- 
--		fill_note(&t->notes[note_iter], is_fpreg ? "CORE" : "LINUX",
-+		fill_note(&t->notes[note_iter], is_fpreg ? NN_PRFPREG : "LINUX",
- 			  note_type, ret, data);
- 
- 		info->size += notesize(&t->notes[note_iter]);
-@@ -1821,7 +1820,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 	fill_prstatus(&t->prstatus.common, p, signr);
- 	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);
- 
--	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
-+	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS, sizeof(t->prstatus),
- 		  &(t->prstatus));
- 	info->size += notesize(&t->notes[0]);
- 
-@@ -1832,7 +1831,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 	}
- 
- 	t->prstatus.pr_fpvalid = 1;
--	fill_note(&t->notes[1], "CORE", NT_PRFPREG, sizeof(*fpu), fpu);
-+	fill_note(&t->notes[1], NN_PRFPREG, NT_PRFPREG, sizeof(*fpu), fpu);
- 	info->size += notesize(&t->notes[1]);
- 
- 	return 1;
-@@ -1852,7 +1851,7 @@ static int fill_note_info(struct elfhdr *elf, int phdrs,
- 	psinfo = kmalloc(sizeof(*psinfo), GFP_KERNEL);
- 	if (!psinfo)
- 		return 0;
--	fill_note(&info->psinfo, "CORE", NT_PRPSINFO, sizeof(*psinfo), psinfo);
-+	fill_note(&info->psinfo, NN_PRPSINFO, NT_PRPSINFO, sizeof(*psinfo), psinfo);
- 
- #ifdef CORE_DUMP_USE_REGSET
- 	view = task_user_regset_view(dump_task);
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index f1a7c4875c4a..96bd9d2f23d7 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1397,7 +1397,7 @@ static struct elf_thread_status *elf_dump_thread_status(long signr, struct task_
- 	regset_get(p, &view->regsets[0],
- 		   sizeof(t->prstatus.pr_reg), &t->prstatus.pr_reg);
- 
--	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
-+	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS, sizeof(t->prstatus),
- 		  &t->prstatus);
- 	t->num_notes++;
- 	*sz += notesize(&t->notes[0]);
-@@ -1415,7 +1415,7 @@ static struct elf_thread_status *elf_dump_thread_status(long signr, struct task_
- 	}
- 
- 	if (t->prstatus.pr_fpvalid) {
--		fill_note(&t->notes[1], "CORE", NT_PRFPREG, sizeof(t->fpu),
-+		fill_note(&t->notes[1], NN_PRFPREG, NT_PRFPREG, sizeof(t->fpu),
- 			  &t->fpu);
- 		t->num_notes++;
- 		*sz += notesize(&t->notes[1]);
-@@ -1530,7 +1530,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	 */
- 
- 	fill_psinfo(psinfo, current->group_leader, current->mm);
--	fill_note(&psinfo_note, "CORE", NT_PRPSINFO, sizeof(*psinfo), psinfo);
-+	fill_note(&psinfo_note, NN_PRPSINFO, NT_PRPSINFO, sizeof(*psinfo), psinfo);
- 	thread_status_size += notesize(&psinfo_note);
- 
- 	auxv = (elf_addr_t *) current->mm->saved_auxv;
-@@ -1538,7 +1538,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	do
- 		i += 2;
- 	while (auxv[i - 2] != AT_NULL);
--	fill_note(&auxv_note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
-+	fill_note(&auxv_note, NN_AUXV, NT_AUXV, i * sizeof(elf_addr_t), auxv);
- 	thread_status_size += notesize(&auxv_note);
- 
- 	offset = sizeof(*elf);				/* ELF header */
+Changes in v2:
+- Added a macro definition for each note type instead of trying to
+  describe in a comment.
+- Link to v1: https://lore.kernel.org/r/20241225-elf-v1-1-79e940350d50@daynix.com
 
+---
+Akihiko Odaki (6):
+      elf: Define note name macros
+      binfmt_elf: Use note name macros
+      powwerpc: Use note name macros
+      crash: Use note name macros
+      s390/crash: Use note name macros
+      crash: Remove KEXEC_CORE_NOTE_NAME
+
+ arch/powerpc/kernel/fadump.c               |  2 +-
+ arch/powerpc/platforms/powernv/opal-core.c |  8 +--
+ arch/s390/kernel/crash_dump.c              | 62 ++++++++-------------
+ fs/binfmt_elf.c                            | 21 ++++----
+ fs/binfmt_elf_fdpic.c                      |  8 +--
+ fs/proc/kcore.c                            | 12 ++---
+ include/linux/kexec.h                      |  2 -
+ include/linux/vmcore_info.h                |  3 +-
+ include/uapi/linux/elf.h                   | 86 ++++++++++++++++++++++++++++--
+ kernel/crash_core.c                        |  2 +-
+ 10 files changed, 133 insertions(+), 73 deletions(-)
+---
+base-commit: a32e14f8aef69b42826cf0998b068a43d486a9e9
+change-id: 20241210-elf-b80ea3949c39
+
+Best regards,
 -- 
-2.47.1
+Akihiko Odaki <akihiko.odaki@daynix.com>
 
 
