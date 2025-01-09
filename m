@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 741CAE77199
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2087E7719E
 	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,37 +12,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bFcppKCEUBjugJ7xwZiGVN+OuHVqmS8GOG0BIifw77s=; b=lWqTPZHlByIzFRUQDCXiNXp0Yj
-	bEIHIvTtS3iiyxgMh+hfC5nS7N+xb6XtHJjzyO3+9m9r37O5Vk1x/crt5oUPvM3oU93rSjwbBrkfk
-	hu5uddAbU8Vn5PpeqQ9959Xi7FZVkFd8kVw1B844UgdD8i9wIF4QH7sP3MgvWqYmYqgv5DuMb6tY/
-	3JQfdaRxTdH8QwSg68R10P7+hgsurEGYi0ZyVLFtVUM0XMLSHhpeu+6KFahHfciZZzLoPPseM9yWL
-	v8MOu2fsCcgXi35IT6Zpcx2BwlS2SZGzs18HGnA2E2qrC3Xqo1JeYdxmi/T3A5jUtYDDd2WfT9HLy
-	Ajj9cm8w==;
+	bh=Fe3DN3ndw9ctJtc0ND815AU97XruK260fddKsjsDX6w=; b=wCowfqQdApiphE1fipOPmq59jr
+	djdGkQOA342if03sZt+VF7CWStlmQtFZyXzrh7sYzNSsAZbI6zX43+LXjyzuGUtzVQ2M7+EVGrCK7
+	1UbcX3d1LQ/RBnFyxq4RSPhliOJML/uZ6W5lO2ffmmVYBLPvJoVatYvgOwWyYzwvVw8W+rfC7WSpH
+	3nNb8SLHICAk40XrdYHFiGtNjpk6uuysP8Pc0MSPLpgsT5DpDEZz2njjDc8QCkFQsGtK81Qf+xpEj
+	1kLPMePaGx+9Jangevjr0/SAWg1rPoElRe4H49rwCuouBV5xtZYNQ6rnQqpkV7/bTVP+allrGDK3f
+	3IO+NZZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtDv-0000000CB3C-0eAd;
+	id 1tVtDv-0000000CB4I-33IV;
 	Thu, 09 Jan 2025 14:09:23 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCh-0000000CAfU-157s
+	id 1tVtCh-0000000CAfS-15y6
 	for kexec@bombadil.infradead.org;
 	Thu, 09 Jan 2025 14:08:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description;
-	bh=bFcppKCEUBjugJ7xwZiGVN+OuHVqmS8GOG0BIifw77s=; b=qh68UCXENO/RYJFF8kUFvYLW+Y
-	01DQVBz9CP2uynDSDCh7y+78zF7+fMfrmnOdrr9gMkpR2zAsy4p/Zfn/kaTkgM5WJmLL9yv0R2op7
-	T72cPT1au2Hz0HiQqTDp2ik0OQrpbYzTEoipTWQgvMP0n4oeQa3PwY7wC+y43mgPv37taurGILhj3
-	ZRNib6VCwnkDIEmkfd4MHTFHU9H4UNv6BOU3IfGAQAoI5c9blASIIvLfimYyCafBZOhHcLv/bYNfJ
-	Gb2xdvlmK9CWpkOBTFSS49wPAvHdhnozIkve9D20xYbtOPC3qL7WqG/6j5Hq4gPBvcKdmRLffVgI6
-	a50uzDiA==;
+	bh=Fe3DN3ndw9ctJtc0ND815AU97XruK260fddKsjsDX6w=; b=hlBqLaT9Cgu8uFFmIH0eBCfh1P
+	IFq6xNRdw+UbHAw6WBfhV95Rzu4M9q1ZJvwUpy4jPXYdl3IomhJvcTSvksbAStshQrDi+16j3828+
+	70WWTQ4JuWeT5wRSgphebXocZ8ee+ke+KxjXYT2BEzudFGHs1V/8WzL9TZCDDenwdMfztmw0REJYU
+	9j4xD/Sl6eHWeaa0yfzulf8XH+xzh+4lWW/3VueWoXCyvxebchOFIcEuZOW1YubiBOBWac8x7gRP3
+	jHk+YCxHaVV4imH+ZMW6taepLJ1z26wnvYqAGKjRSSTaXf8SzGF6PZBRMoqy1nPY4eWCXg9yh1JHP
+	sGefLqmw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCa-00000009Zhg-3Cr9;
-	Thu, 09 Jan 2025 14:08:01 +0000
+	id 1tVtCa-00000009Zhf-3Dct;
+	Thu, 09 Jan 2025 14:08:02 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCY-0000000Bx6P-3fUv;
+	id 1tVtCY-0000000Bx65-2p5c;
 	Thu, 09 Jan 2025 14:07:58 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,9 +77,9 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH v2 7/9] kexec_core: Add and update comments regarding the KEXEC_JUMP flow
-Date: Thu,  9 Jan 2025 14:04:19 +0000
-Message-ID: <20250109140757.2841269-8-dwmw2@infradead.org>
+Subject: [PATCH v2 3/9] x86/kexec: Use correct swap page in swap_pages function
+Date: Thu,  9 Jan 2025 14:04:15 +0000
+Message-ID: <20250109140757.2841269-4-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250109140757.2841269-1-dwmw2@infradead.org>
 References: <20250109140757.2841269-1-dwmw2@infradead.org>
@@ -100,72 +100,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-The KEXEC_JUMP flow is analogous to hibernation flows occurring before
-and after creating an image and before and after jumping from the
-restore kernel to the image one, which is why it uses the same device
-callbacks as those hibernation flows.
+The swap_pages function expects the swap page to be in %r10, but there
+was no documentation to that effect. Once upon a time the setup code
+used to load its value from a kernel virtual address and save it to an
+address which is accessible in the identity-mapped page tables, and
+*happened* to use %r10 to do so, with no comment that it was left there
+on *purpose* instead of just being a scratch register. Once that was no
+longer necessary, %r10 just holds whatever the kernel happened to leave
+in it.
 
-Add comments explaining that to the code in question and update an
-existing comment in it which appears a bit out of context.
+Now that the original value passed by the kernel is accessible via
+%rip-relative addressing, load directly from there instead of using %r10
+for it. But document the other parameters that the swap_pages function
+*does* expect in registers.
 
-No functional changes.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: b3adabae8a96 ("x86/kexec: Drop page_list argument from relocate_kernel()")
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- kernel/kexec_core.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ arch/x86/kernel/relocate_kernel_64.S | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3..464ab059c58d 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1001,6 +1001,12 @@ int kernel_kexec(void)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 6fce4b459652..3ca3bf6b3f49 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -264,6 +264,10 @@ SYM_CODE_END(virtual_mapped)
+ 	/* Do the copies */
+ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	UNWIND_HINT_END_OF_STACK
++	/*
++	 * %rdi indirection page
++	 * %r11 preserve_context
++	 */
+ 	movq	%rdi, %rcx	/* Put the indirection_page in %rcx */
+ 	xorl	%edi, %edi
+ 	xorl	%esi, %esi
+@@ -302,7 +306,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	jz	.Lnoswap
  
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
-+		/*
-+		 * This flow is analogous to hibernation flows that occur
-+		 * before creating an image and before jumping from the
-+		 * restore kernel to the image one, so it uses the same
-+		 * device callbacks as those two flows.
-+		 */
- 		pm_prepare_console();
- 		error = freeze_processes();
- 		if (error) {
-@@ -1011,12 +1017,10 @@ int kernel_kexec(void)
- 		error = dpm_suspend_start(PMSG_FREEZE);
- 		if (error)
- 			goto Resume_console;
--		/* At this point, dpm_suspend_start() has been called,
--		 * but *not* dpm_suspend_end(). We *must* call
--		 * dpm_suspend_end() now.  Otherwise, drivers for
--		 * some devices (e.g. interrupt controllers) become
--		 * desynchronized with the actual state of the
--		 * hardware at resume time, and evil weirdness ensues.
-+		/*
-+		 * dpm_suspend_end() must be called after dpm_suspend_start()
-+		 * to complete the transition, like in the hibernation flows
-+		 * mentioned above.
- 		 */
- 		error = dpm_suspend_end(PMSG_FREEZE);
- 		if (error)
-@@ -1052,6 +1056,13 @@ int kernel_kexec(void)
+ 	/* copy source page to swap page */
+-	movq	%r10, %rdi
++	movq	kexec_pa_swap_page(%rip), %rdi
+ 	movl	$512, %ecx
+ 	rep ; movsq
  
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
-+		/*
-+		 * This flow is analogous to hibernation flows that occur after
-+		 * creating an image and after the image hernel has got control
-+		 * back, and in case the devices have been reset or otherwise
-+		 * manipulated in the meantime, it uses the device callbacks
-+		 * used by the latter.
-+		 */
- 		syscore_resume();
-  Enable_irqs:
- 		local_irq_enable();
+@@ -314,7 +318,7 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 
+ 	/* copy swap page to destination page */
+ 	movq	%rdx, %rdi
+-	movq	%r10, %rsi
++	movq	kexec_pa_swap_page(%rip), %rsi
+ .Lnoswap:
+ 	movl	$512, %ecx
+ 	rep ; movsq
 -- 
 2.47.0
 
