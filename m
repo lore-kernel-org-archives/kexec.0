@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE8EAE77197
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 741CAE77199
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lpLME9O4Hrgm0YpKuGQMslbI8cpLYo5TkEgKVoEpH/Y=; b=Y124EGnHty2l9GJV/l01DA/+Fx
-	6zAe+wm4AdeSFqXmHXCrTbhdxYV1tQlR7sBpZyl3sUeHXriDZmVtxl0FMi6FJULbxTD4aUhFlOzFC
-	NkJWNK8Vd2goIGHNh6NyWKbVUChckGDH5K2uu4KqJQDdFw+OMT3DAkOAn1oCKXkQUM04EyTYlDLU3
-	K797UEYO/VEuFBpaZWc8VPDvaEbcbynq1wSFLZ0k+euPV/p4kDKp2/WD5vLwS3drhWSDZ4L5jMggA
-	KyhDRJYpLXijDi/9vZJVIVB+yyWfNJqGLce9lmKwHilx+CWslIqRJccVEekZ+T9T6kTunpYwsWOVj
-	A9GEyC2g==;
+	bh=bFcppKCEUBjugJ7xwZiGVN+OuHVqmS8GOG0BIifw77s=; b=lWqTPZHlByIzFRUQDCXiNXp0Yj
+	bEIHIvTtS3iiyxgMh+hfC5nS7N+xb6XtHJjzyO3+9m9r37O5Vk1x/crt5oUPvM3oU93rSjwbBrkfk
+	hu5uddAbU8Vn5PpeqQ9959Xi7FZVkFd8kVw1B844UgdD8i9wIF4QH7sP3MgvWqYmYqgv5DuMb6tY/
+	3JQfdaRxTdH8QwSg68R10P7+hgsurEGYi0ZyVLFtVUM0XMLSHhpeu+6KFahHfciZZzLoPPseM9yWL
+	v8MOu2fsCcgXi35IT6Zpcx2BwlS2SZGzs18HGnA2E2qrC3Xqo1JeYdxmi/T3A5jUtYDDd2WfT9HLy
+	Ajj9cm8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtDu-0000000CB2L-2Hae;
-	Thu, 09 Jan 2025 14:09:22 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tVtDv-0000000CB3C-0eAd;
+	Thu, 09 Jan 2025 14:09:23 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCf-0000000CAe2-1GRv
+	id 1tVtCh-0000000CAfU-157s
 	for kexec@bombadil.infradead.org;
-	Thu, 09 Jan 2025 14:08:06 +0000
+	Thu, 09 Jan 2025 14:08:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description;
-	bh=lpLME9O4Hrgm0YpKuGQMslbI8cpLYo5TkEgKVoEpH/Y=; b=Qg7ot0dXIkUrzgylpdi1LK+NTp
-	4UQiZZu6ioGgls8rwTSSTJmJjZ6u5fqTryHrC+c0zH+aqinRTMxTU0nLmFMhrs6pCFCy8q1UxEc4q
-	X2S2KTeijTnBan2P4L26rBVJM/VokS5Ap6i3OZ65qaSYYapabPf/x1b4bNgJVJf8M2/ifNklOKymF
-	6J6atdSGWLL4LtAYJZKhpdJb6lHv0p9018qxP9jR38r0LulxMCaz960dr9FatHXgAQ7ra1kzITO10
-	QhE0gWj4986pnc8tZwPrVZgbxYgNHLxyaMcREpHkLGc80HZxfgPuYsi7D7qFkBPOUuXtwdTTlrMng
-	YE0vBURw==;
+	bh=bFcppKCEUBjugJ7xwZiGVN+OuHVqmS8GOG0BIifw77s=; b=qh68UCXENO/RYJFF8kUFvYLW+Y
+	01DQVBz9CP2uynDSDCh7y+78zF7+fMfrmnOdrr9gMkpR2zAsy4p/Zfn/kaTkgM5WJmLL9yv0R2op7
+	T72cPT1au2Hz0HiQqTDp2ik0OQrpbYzTEoipTWQgvMP0n4oeQa3PwY7wC+y43mgPv37taurGILhj3
+	ZRNib6VCwnkDIEmkfd4MHTFHU9H4UNv6BOU3IfGAQAoI5c9blASIIvLfimYyCafBZOhHcLv/bYNfJ
+	Gb2xdvlmK9CWpkOBTFSS49wPAvHdhnozIkve9D20xYbtOPC3qL7WqG/6j5Hq4gPBvcKdmRLffVgI6
+	a50uzDiA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCZ-00000006IQI-3C1i;
-	Thu, 09 Jan 2025 14:07:59 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tVtCa-00000009Zhg-3Cr9;
+	Thu, 09 Jan 2025 14:08:01 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCY-0000000Bx6F-3GY5;
+	id 1tVtCY-0000000Bx6P-3fUv;
 	Thu, 09 Jan 2025 14:07:58 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,15 +77,15 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH v2 5/9] x86/kexec: Fix location of relocate_kernel with -ffunction-sections
-Date: Thu,  9 Jan 2025 14:04:17 +0000
-Message-ID: <20250109140757.2841269-6-dwmw2@infradead.org>
+Subject: [PATCH v2 7/9] kexec_core: Add and update comments regarding the KEXEC_JUMP flow
+Date: Thu,  9 Jan 2025 14:04:19 +0000
+Message-ID: <20250109140757.2841269-8-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250109140757.2841269-1-dwmw2@infradead.org>
 References: <20250109140757.2841269-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,94 +100,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-After commit cb33ff9e063c ("x86/kexec: Move relocate_kernel to kernel
-.data section"), kernels configured with an option that uses
--ffunction-sections, such as CONFIG_LTO_CLANG, crash when kexecing
-because the value of relocate_kernel does not match the value of
-__relocate_kernel_start so incorrect code gets copied via
-machine_kexec_prepare().
+The KEXEC_JUMP flow is analogous to hibernation flows occurring before
+and after creating an image and before and after jumping from the
+restore kernel to the image one, which is why it uses the same device
+callbacks as those hibernation flows.
 
-  $ llvm-nm good-vmlinux &| rg relocate_kernel
-  ffffffff83280d41 T __relocate_kernel_end
-  ffffffff83280b00 T __relocate_kernel_start
-  ffffffff83280b00 T relocate_kernel
+Add comments explaining that to the code in question and update an
+existing comment in it which appears a bit out of context.
 
-  $ llvm-nm bad-vmlinux &| rg relocate_kernel
-  ffffffff83266100 D __relocate_kernel_end
-  ffffffff83266100 D __relocate_kernel_start
-  ffffffff8120b0d8 T relocate_kernel
+No functional changes.
 
-When -ffunction-sections is enabled, TEXT_MAIN matches on
-'.text.[0-9a-zA-Z_]*' to coalesce the function specific functions back
-into .text during link time after they have been optimized. Due to the
-placement of TEXT_TEXT before KEXEC_RELOCATE_KERNEL in the x86 linker
-script, the .text.relocate_kernel section ends up in .text instead of
-.data.
-
-Use a second dot in the relocate_kernel section name to avoid matching
-on TEXT_MAIN, which matches a similar situation that happened in
-commit 79cd2a11224e ("x86/retpoline,kprobes: Fix position of thunk
-sections with CONFIG_LTO_CLANG"), which allows kexec to function
-properly.
-
-While .data.relocate_kernel still ends up in the .data section via
-DATA_MAIN -> DATA_DATA, ensure it is located with the
-.text.relocate_kernel section as intended by performing the same
-transformation.
-
-Fixes: cb33ff9e063c ("x86/kexec: Move relocate_kernel to kernel .data section")
-Fixes: 8dbec5c77bc3 ("x86/kexec: Add data section to relocate_kernel")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 6 +++---
- arch/x86/kernel/vmlinux.lds.S        | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ kernel/kexec_core.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index a95691b42c5c..14ed40b7f322 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -23,11 +23,11 @@
- #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3..464ab059c58d 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1001,6 +1001,12 @@ int kernel_kexec(void)
  
- /*
-- * The .text.relocate_kernel and .data.relocate_kernel sections are copied
-+ * The .text..relocate_kernel and .data..relocate_kernel sections are copied
-  * into the control page, and the remainder of the page is used as the stack.
-  */
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (kexec_image->preserve_context) {
++		/*
++		 * This flow is analogous to hibernation flows that occur
++		 * before creating an image and before jumping from the
++		 * restore kernel to the image one, so it uses the same
++		 * device callbacks as those two flows.
++		 */
+ 		pm_prepare_console();
+ 		error = freeze_processes();
+ 		if (error) {
+@@ -1011,12 +1017,10 @@ int kernel_kexec(void)
+ 		error = dpm_suspend_start(PMSG_FREEZE);
+ 		if (error)
+ 			goto Resume_console;
+-		/* At this point, dpm_suspend_start() has been called,
+-		 * but *not* dpm_suspend_end(). We *must* call
+-		 * dpm_suspend_end() now.  Otherwise, drivers for
+-		 * some devices (e.g. interrupt controllers) become
+-		 * desynchronized with the actual state of the
+-		 * hardware at resume time, and evil weirdness ensues.
++		/*
++		 * dpm_suspend_end() must be called after dpm_suspend_start()
++		 * to complete the transition, like in the hibernation flows
++		 * mentioned above.
+ 		 */
+ 		error = dpm_suspend_end(PMSG_FREEZE);
+ 		if (error)
+@@ -1052,6 +1056,13 @@ int kernel_kexec(void)
  
--	.section .data.relocate_kernel,"a";
-+	.section .data..relocate_kernel,"a";
- /* Minimal CPU state */
- SYM_DATA_LOCAL(saved_rsp, .quad 0)
- SYM_DATA_LOCAL(saved_cr0, .quad 0)
-@@ -39,7 +39,7 @@ SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
- 
--	.section .text.relocate_kernel,"ax";
-+	.section .text..relocate_kernel,"ax";
- 	.code64
- SYM_CODE_START_NOALIGN(relocate_kernel)
- 	UNWIND_HINT_END_OF_STACK
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0c893997f023..63ff60a11be5 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -100,8 +100,8 @@ const_pcpu_hot = pcpu_hot;
- #define KEXEC_RELOCATE_KERNEL					\
- 	. = ALIGN(0x100);					\
- 	__relocate_kernel_start = .;				\
--	*(.text.relocate_kernel);				\
--	*(.data.relocate_kernel);				\
-+	*(.text..relocate_kernel);				\
-+	*(.data..relocate_kernel);				\
- 	__relocate_kernel_end = .;
- 
- ASSERT(__relocate_kernel_end - __relocate_kernel_start <= KEXEC_CONTROL_CODE_MAX_SIZE,
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (kexec_image->preserve_context) {
++		/*
++		 * This flow is analogous to hibernation flows that occur after
++		 * creating an image and after the image hernel has got control
++		 * back, and in case the devices have been reset or otherwise
++		 * manipulated in the meantime, it uses the device callbacks
++		 * used by the latter.
++		 */
+ 		syscore_resume();
+  Enable_irqs:
+ 		local_irq_enable();
 -- 
 2.47.0
 
