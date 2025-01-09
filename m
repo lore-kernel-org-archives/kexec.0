@@ -4,73 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BE86E77197
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 15:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C5B4E77197
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 15:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QfPumVhxmW44KPDHbWCPCC6NHA7pW5e/EmTJnTfES50=; b=SpNYUROxd4qfcqN+R85+hu4I9w
-	cux8RhhxJspa9paHSMGH7MFrIMAbTM5BIug9NSfG87cELRww9IT7cyAabmJmjpoAO8BcbkEpRGqBy
-	/OgZB1rJN7sQ8Acrd2dKX1uSa8LQK+W5za7il0D/1ALYIPPBhNKM5AICfPpYF+RA2MqddVJ9XgB+1
-	1iXxMZWjZc2KwAluAUa7/BUkCbbG+PAFBy2yBL5xhVjYdzV7T5uF7id8sCI1bTH09C4/d1vO1mWPK
-	xxJ9vARgAr5rKwZf3J71wLUm53qHFdrUC35ymbfe+K3oRJ+KaHcVCFUSQ3Jykx8FWntaX4/UTiiKT
-	4XFy+V1g==;
+	bh=cgTp2x21PamB5G5tjbV3jPSQRWSgTUkiJmrzV93coW4=; b=z7e4C+nwJq9ywXeEbFmS4vdlzt
+	mHXqOO9s+Ux5BSdPeejKY5MwkjPOaXQo/GNc+/QzpwhsqUh6DRdznkSPbEe5uXSQ2aC2OIKu0Agtp
+	T0UheI48Sfvw8k2dTpD3en1SW3ustItBlhCtb7/+r9K8A3Thef5XXmEefHgdMdUsxfKhUmsn5JPYc
+	1Yg94QtJom1GatwjwW5K+CcPT3/fzPu/yjmZzPpiDP+zxqIhFynGYMx64yPetM7myRW8+uZEdKnLI
+	rb2d2NVsyCDO4OXGDlWuq2GCWlTMR9wkGNU/dlHFD3O51h3BzPFMbl/KCkXyKlJBwhTCNxGaWkmY3
+	7kZE9yXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVuj1-0000000CWeS-0GOk;
-	Thu, 09 Jan 2025 15:45:35 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tVukI-0000000CX2q-0vG0;
+	Thu, 09 Jan 2025 15:46:54 +0000
+Received: from mail-ot1-x32c.google.com ([2607:f8b0:4864:20::32c])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVuiz-0000000CWdf-0NzY
+	id 1tVuj3-0000000CWf2-3ffJ
 	for kexec@lists.infradead.org;
-	Thu, 09 Jan 2025 15:45:34 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id BBB87A4202A
-	for <kexec@lists.infradead.org>; Thu,  9 Jan 2025 15:43:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E757CC4CEE4
-	for <kexec@lists.infradead.org>; Thu,  9 Jan 2025 15:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736437531;
-	bh=B5qGzh3F3kerw7P377R3DsRB1w+E7Ta1ahc6bkUY/1M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cmRkMjY8OsIYYJDWKSpjhw+g+1zB4rBWS7SE3iX5pPFtvLujNylb8kt2Fqr54vP+q
-	 KUra8lVVKeiRM3F4onBR98Rv59+Nkv/C4T8tzq3ZNjJC5PUpPQLC7EnnketY4MN7WP
-	 5laxah/hDyJw1lb6Pn+padKhPWYms3hI3auLtTSmpeXvlXlm5PZ2BOzP2RAW/zBPBL
-	 X35uZMXUS0ZWzlrkIyaO7BoOVGP0+M1UlyNNalPNAoKE3zEg81soUYNbTw2JZ9jMV8
-	 mA+/O8ObKIEh4ksS647Y287P4Jok/a82Zrt5pN7c/XGRZUGIVfJ8RJyYv0gQf9iJe6
-	 Yaj9Jgygdp5kg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53ff1f7caaeso1076073e87.0
-        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 07:45:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCURKjWXBsz1P36D45G1yNLELPeLlBUnz4OPhq+5H17cMHZQahPE8sU5R4d6Xo6Xo+HB88ES5Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyZWaTFguyJsSy1PdQ0VtuEVFVtAyLMsEVXY8bs7HZzMJ4rl5Yj
-	NRS/sXGfxYcrFsDxKLMrL5nkxr4ulEiVOHk9mh6eBsaEILoFz8+ZpAfqfFG/fj/D4R6AuOP4KBj
-	qZuOZQ8FuoeLRcgApe1qfMkWSTfw=
-X-Google-Smtp-Source: AGHT+IFGG2VZLnb6Rf9cPbXGfRKdHD2AX/axHtZpfvjPsUUlrem6ul0qd2lRvBmBrREq0G7sO/Ktr8Z6TbVGz2UNujk=
-X-Received: by 2002:a05:6512:b8b:b0:542:249c:2156 with SMTP id
- 2adb3069b0e04-5428452b8bcmr2118447e87.15.1736437530239; Thu, 09 Jan 2025
- 07:45:30 -0800 (PST)
+	Thu, 09 Jan 2025 15:45:39 +0000
+Received: by mail-ot1-x32c.google.com with SMTP id 46e09a7af769-71e157a79c8so289676a34.2
+        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 07:45:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1736437536; x=1737042336; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cgTp2x21PamB5G5tjbV3jPSQRWSgTUkiJmrzV93coW4=;
+        b=V+xIZFRRXjjkjXNKCh/p6QquS7JPNASpAxp2k58+8qW6xMRQDkpnj/0zlMvpzyjPZU
+         jaGBWj9HbUvA2uDBQ6XsxiHJtOfikcZRTYbIIBE9i2OO011yRosjTs+oGDHxEs3PsjAS
+         zIoAjOeY8/Wh94XNNfFQipFw3jwA53msoo7BxQsStsj3FSeGxDL0Die/gaehMiS6gUgU
+         ZGeBBtzDxtoYT9xQQSJcxLcjF5lhTtF7Di+8FdbFdnQaLnQcr7YU19iRV+1EbOvECIpB
+         IMb49r4V3kPn/cIMkuzrvg10ciYGYtQJBimtCVZfEEEmtcIBLOMjF+niuMRV2+Ou72iK
+         43bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736437536; x=1737042336;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cgTp2x21PamB5G5tjbV3jPSQRWSgTUkiJmrzV93coW4=;
+        b=NOm7ObZ7lv21L56Gb4WpY6nm54RwnH0T22D4LLJduilQfcT54Ljw96ElEWqhh6ZA7A
+         31ZZ5XexB7rublRmHhI7cra1LJvqgHRBQEf0DwwqAxfJN0OifH3/xTgoijLEHKOxo+B+
+         uGAvo78uwGa7V5LER/f5sxiRpkbTqvNGYK/+m5Wx6xPX2BkUF2PXW5CU5WCv7OEhtpAM
+         amhbdihW39ldqG8hp4JoXiC2Yflzr+D3SqT7rc+RaxJwSHYBDU20Do7wXAj5ZehNAa66
+         PwBRgvLHPIKua7G9Q6GFg9zcDGhklhs3szTXk4V0YaikA/elZTrotbAcwGHoBjvNtLHK
+         mTdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhlmRlqEvGvW24NN+JOOPGyQlZwGXXTyrX4NnM76mf30ni/AAnafs21gy4mLsu6iCrSWbrPg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzu9qYfyknerxfdjwRsd7ebKbrCYMjz79xZYIh6fTdZdeVDv8/3
+	Itkq8Iu/EMND7o3iUcW7Oa28hJlFUmt1yAdx2ZDmjJGHTxpLefOlVk7YAvUMvj0=
+X-Gm-Gg: ASbGncstqoNfvNq9fVn5/UerA2UAQfqY/r1TghLmB2zTYtWAyJA+xEU6OA5q6HUhPyS
+	MJ9wxgMx3vDaeWhJOexkJZne2IjDDSsBoXgP3P+OAbwfySqYKnBTxJvc8BmirHYvFdTtHm6zNWv
+	b8TScl6IrfUcJV2HNzXV7ojRBFWB+ogd9LrIea26ednz6IZMpRq9qfe1darJn6Jc1vqDS0Y02Sq
+	/GgX0hOYQHWXqeK9pqm9s1k27ihEeRuXh2rOghiFXxN9K94TPKycIRqe+Po
+X-Google-Smtp-Source: AGHT+IHELUnxP9ZvL+e2Ztemz39I9ORoPYZLTVwEa+XG73J5uz7w7yM0cuXu9KZqTaUsGk+1/+jmGA==
+X-Received: by 2002:a05:6830:6610:b0:716:a95d:9ef with SMTP id 46e09a7af769-721e2e000d6mr4949630a34.2.1736437534534;
+        Thu, 09 Jan 2025 07:45:34 -0800 (PST)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:9076:47eb:1e0a:16fb])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5f882625f0esm386258eaf.9.2025.01.09.07.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 07:45:34 -0800 (PST)
+Date: Thu, 9 Jan 2025 09:45:27 -0600
+From: Corey Minyard <corey@minyard.net>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+	io-uring@vger.kernel.org, bpf@vger.kernel.org,
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+Message-ID: <Z3_vF3I453flXoZv@mail.minyard.net>
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
 MIME-Version: 1.0
-References: <20250108215957.3437660-1-usamaarif642@gmail.com> <20250108215957.3437660-2-usamaarif642@gmail.com>
-In-Reply-To: <20250108215957.3437660-2-usamaarif642@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 9 Jan 2025 16:45:18 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
-X-Gm-Features: AbW1kvY3sSuQK6Y-79x26wc0_PSSMv_8bcWle1lLxS4GweITKQnpqDTYjg3HPTc
-Message-ID: <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] efi/memattr: Use desc_size instead of total size to
- check for corruption
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io, kexec@lists.infradead.org, 
-	hannes@cmpxchg.org, dyoung@redhat.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, leitao@debian.org, gourry@gourry.net, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250109_074533_270407_9C343CDE 
-X-CRM114-Status: GOOD (  32.83  )
+X-CRM114-CacheID: sfid-20250109_074538_126598_1DB9516E 
+X-CRM114-Status: GOOD (  13.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,101 +110,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: corey@minyard.net
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 8 Jan 2025 at 23:00, Usama Arif <usamaarif642@gmail.com> wrote:
->
-> The commit in [1] introduced a check to see if EFI memory attributes
-> table was corrupted. It assumed that efi.memmap.nr_map remains
-> constant, but it changes during late boot.
-> Hence, the check is valid during cold boot, but not in the subsequent
-> kexec boot.
->
-> This is best explained with an exampled. At cold boot, for a test
-> machine:
-> efi.memmap.nr_map=91,
-> memory_attributes_table->num_entries=48,
-> desc_size = 48
-> Hence, the check introduced in [1] where 3x the size of the
-> entire EFI memory map is a reasonable upper bound for the size of this
-> table is valid.
->
-> In late boot __efi_enter_virtual_mode calls 2 functions that updates
-> efi.memmap.nr_map:
-> - efi_map_regions which reduces the `count` of map entries
->   (for e.g. if should_map_region returns false) and which is reflected
->   in efi.memmap by __efi_memmap_init.
->   At this point efi.memmap.nr_map becomes 46 in the test machine.
-> - efi_free_boot_services which also reduces the number of memory regions
->   available (for e.g. if md->type or md->attribute is not the right value).
->   At this point efi.memmap.nr_map becomes 9 in the test machine.
-> Hence when you kexec into a new kernel and pass efi.memmap, the
-> paramaters that are compared are:
-> efi.memmap.nr_map=9,
-> memory_attributes_table->num_entries=48,
-> desc_size = 48
-> where the check in [1] is no longer valid with such a low efi.memmap.nr_map
-> as it was reduced due to efi_map_regions and efi_free_boot_services.
->
-> A more appropriate check is to see if the description size reported by
-> efi and memory attributes table is the same.
->
-> [1] https://lore.kernel.org/all/20241031175822.2952471-2-ardb+git@google.com/
->
-> Fixes: 8fbe4c49c0cc ("efi/memattr: Ignore table if the size is clearly bogus")
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> ---
->  drivers/firmware/efi/memattr.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
->
+On Thu, Jan 09, 2025 at 02:16:39PM +0100, Joel Granados wrote:
+> Add the const qualifier to all the ctl_tables in the tree except the
+> ones in ./net dir. The "net" sysctl code is special as it modifies the
+> arrays before passing it on to the registration function.
+> 
+...
+> diff --git a/drivers/char/ipmi/ipmi_poweroff.c b/drivers/char/ipmi/ipmi_poweroff.c
+> index 941d2dcc8c9d..de84f59468a9 100644
+> --- a/drivers/char/ipmi/ipmi_poweroff.c
+> +++ b/drivers/char/ipmi/ipmi_poweroff.c
+> @@ -650,7 +650,7 @@ static struct ipmi_smi_watcher smi_watcher = {
+>  #ifdef CONFIG_PROC_FS
+>  #include <linux/sysctl.h>
+>  
+> -static struct ctl_table ipmi_table[] = {
+> +static const struct ctl_table ipmi_table[] = {
+>  	{ .procname	= "poweroff_powercycle",
+>  	  .data		= &poweroff_powercycle,
+>  	  .maxlen	= sizeof(poweroff_powercycle),
 
-The more I think about this, the more I feel that kexec on x86 should
-simply discard this table, and run with the firmware code RWX (which
-is not the end of the world).
+For the IPMI portion:
 
-The main reason is that the EFI memory map and the EFI memory
-attributes table are supposed to be a matched pair, where each RTcode
-entry in the former is broken down into multiple code and data
-segments in the latter. The amount of mangling that the x86 arch code
-does of the EFI memory map makes it intractable to ensure that they
-remain in sync, and so it is better not to bother.
+Acked-by: Corey Minyard <cminyard@mvista.com>
 
-
-> diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-> index c38b1a335590..d3bc161361fb 100644
-> --- a/drivers/firmware/efi/memattr.c
-> +++ b/drivers/firmware/efi/memattr.c
-> @@ -40,21 +40,17 @@ int __init efi_memattr_init(void)
->                 goto unmap;
->         }
->
-> -
->         /*
-> -        * Sanity check: the Memory Attributes Table contains up to 3 entries
-> -        * for each entry of type EfiRuntimeServicesCode in the EFI memory map.
-> -        * So if the size of the table exceeds 3x the size of the entire EFI
-> -        * memory map, there is clearly something wrong, and the table should
-> -        * just be ignored altogether.
-> +        * Sanity check: the Memory Attributes Table desc_size and
-> +        * efi.memmap.desc_size should match.
->          */
-> -       size = tbl->num_entries * tbl->desc_size;
-> -       if (size > 3 * efi.memmap.nr_map * efi.memmap.desc_size) {
-> -               pr_warn(FW_BUG "Corrupted EFI Memory Attributes Table detected! (version == %u, desc_size == %u, num_entries == %u)\n",
-> -                       tbl->version, tbl->desc_size, tbl->num_entries);
-> +       if (efi.memmap.desc_size != tbl->desc_size) {
-> +               pr_warn(FW_BUG "Corrupted EFI Memory Attributes Table detected! (version == %u, table desc_size == %u, efi.memmap.desc_size == %lu, table num_entries == %u)\n",
-> +                       tbl->version, tbl->desc_size, efi.memmap.desc_size, tbl->num_entries);
->                 goto unmap;
->         }
->
-> +       size = tbl->num_entries * tbl->desc_size;
->         tbl_size = sizeof(*tbl) + size;
->         memblock_reserve(efi_mem_attr_table, tbl_size);
->         set_bit(EFI_MEM_ATTR, &efi.flags);
-> --
-> 2.43.5
->
 
