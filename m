@@ -4,93 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E2E6E77188
-	for <kexec@archiver.kernel.org>; Wed,  8 Jan 2025 22:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC660E77188
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 03:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Lxzi816vsV82LbZekUeaxCWiwSFstfTOO/juIDysp+o=; b=CiEItPxkJWFX4ixzEe4XqYQWoI
-	eKJen/HF0lyp85tizI8T6qhJ6fVg5Jwth5JXipRYeZZW3muHTwcWHL4HYQJs1eKuUg1sRgkeR2pfa
-	D8uyPOCt2M/VoH6X+77s3rfcPwGzx62kBuEDJTA/Otb/Pw8kbZAWoW08SLwY6XabYVJGB808xi/uR
-	3GqX5Yuk451KC/P8jUxFtpiC03AHHSzfmZ1tasCvVwq0K5dfUAT5k5UIlM5AYp5AbuWrHCnqAdlar
-	MON5eEuRnpyyAEygVlddVw/3P17BKfqbeFAaSlglKpy4uXOd/Z+wGpObKkYyH/XeMIxxZW417z6LO
-	N4RVHp0Q==;
+	bh=Ev41nye3EYCrH/8qKuYkTcjX/MgP5c6SOfM76NspYuQ=; b=P0+oE52dO+t1BikUSchKtcio0u
+	pktwZfdIByi2xrF6lGsEX10HPcEyR9mlB0fX8ONCrC4W5nI2NlNkrpTvlVl3YJkHPLDijR2Ol1R4o
+	WfN0eZWebpZ/qXvqn0ZPP3Uptis2Uz5jpF7WAZVsOFMNtTOJnsL3GPMB0x7RuwtbnarnTMqGLZxkT
+	e+m+UV/VpP2kfLvdGa/WAhYwB6wO34cMtAm7C8t8uXDInJ+wNB+vyKV7gOOHqO0gZh4wYwCo9fYgQ
+	/X1Hn8k9Jknn416tkNK0YcGW14ORlMdan89D31xLxBHXktuUoIOdDwxuA594rtD5wGzWH61e2ceIy
+	drNg0vcQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVe6L-00000009xcG-3Tvn;
-	Wed, 08 Jan 2025 22:00:33 +0000
-Received: from mail-qv1-xf2e.google.com ([2607:f8b0:4864:20::f2e])
+	id 1tVjAB-0000000AZEj-3USZ;
+	Thu, 09 Jan 2025 03:24:51 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVe6C-00000009xZp-2moG
+	id 1tVjA9-0000000AZDy-0xal
 	for kexec@lists.infradead.org;
-	Wed, 08 Jan 2025 22:00:26 +0000
-Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-6d8e8445219so2870576d6.0
-        for <kexec@lists.infradead.org>; Wed, 08 Jan 2025 14:00:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736373623; x=1736978423; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lxzi816vsV82LbZekUeaxCWiwSFstfTOO/juIDysp+o=;
-        b=QQiztxZ81xymXQY6eT1IuXo4WdIS2/N7iECnTnkNoev8jJmlE6JDqbcMr159UzmZLE
-         8MO5nNwm1bu/sv7NJGlkyFMxIabyP1fExcdjKt0Gbitr8sRoCg6XsYhrQpbf8JAKTBj2
-         axNKKTWIoF7juIOIUA0erqCxz2L6zGH7uhIrk53Op+DLL8KjL6NnhC4wKWuLRMhwcR3o
-         sVzIDRTc9m4xceAuvSnwbBtcfs6foBgKZ6q93O0q82BADgWJagd46fRgrmixFCcX4EwM
-         FWARZKfrcmirOV0tmcRmD6a/ItpOkFCviaRTQF7IPjNDK8rVMUI+76b/OGVePOVuTvRe
-         uX2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736373623; x=1736978423;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lxzi816vsV82LbZekUeaxCWiwSFstfTOO/juIDysp+o=;
-        b=Im6WDeVuCcKqu3do6LTwtLoUfA5NskagTgH3PWnJk0SFjNyw2fw3iwW6raLBbo5vhs
-         TCUphiA5Or6W2JJ5k+gpwzBsHcC8ktiMr0hcAKS8LkLdzqxdQOF1EKqxUdVxI3ISZAxq
-         EVe0zPGw/NI4AzYFVY3mnpqkg27RtW7ngl/wo0HZH05+kqXJzl2+T9j4ZdllgkKYvtFe
-         uqLYkXDE+PJb0gwhS9H+NudQ0J2zQ60R6901tUOttUd0/5okHoCT8PfCbZgREWTvVnQr
-         9lSiPI1P79N4d7B+jznfn2Gww0cblsq/tcUZvsvQ1eAOHalCzbAmLZ+FDIiDaWxa2ZK7
-         1kiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIGQ1ECvpI+iiD9jicTEo43g+DynSgCW/OJ7PA1xeDX1tbXxBpyqewNX7Sk1yMG5v3fBBKOQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxXsTE55UYiLAp0P5IFLdTY+NhYGlI1xvf1bw4WHxeQolSsmjpF
-	+ZZPMUo4N2FE8KqbGKpx1S4j+S3HZVo2yrS0qGisHs+VxBIltQ6V
-X-Gm-Gg: ASbGncs0yN/7MPrN3eHVl/qX/0HAV5GY2k9wafmirIKqvOPvFwiUXN93gVWrmllx4vJ
-	gl9uIc/fAdrrVCvQC2lCewEBOkc7aoyv9ti2JOJFDD33C+ty9UNQo4X4H7Ze3sj5+tqtXI60JZc
-	xqLnqNqaRTjwP2IviJdNfSDJ3k+vzEr4UK0pdQxdPxXG9gB1Q+ox9PfffbKKE8Flg4bRco36Wg/
-	h9SqnCRDZtWRVtnTy3j6Z2YAmOIHis+ANPdZzyHA3BadZ0QpdPyvQ==
-X-Google-Smtp-Source: AGHT+IERhB4z90VYqb4Dv2R+PhhDYDodptRvo0eGmXLkrsvBtS5WFJP/mvaGuTVc1PGcKc2NU8POeg==
-X-Received: by 2002:a05:6214:3008:b0:6d4:2646:109c with SMTP id 6a1803df08f44-6df9b1cf3c5mr54781556d6.3.1736373623069;
-        Wed, 08 Jan 2025 14:00:23 -0800 (PST)
-Received: from localhost ([2a03:2880:20ff:6::])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd181372easm195398346d6.63.2025.01.08.14.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 14:00:21 -0800 (PST)
-From: Usama Arif <usamaarif642@gmail.com>
-To: linux-efi@vger.kernel.org,
-	devel@edk2.groups.io,
-	kexec@lists.infradead.org
-Cc: ardb@kernel.org,
-	hannes@cmpxchg.org,
-	dyoung@redhat.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	leitao@debian.org,
-	gourry@gourry.net,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [RFC 2/2] efi/memattr: add efi_mem_attr_table as a reserved region in 820_table_firmware
-Date: Wed,  8 Jan 2025 21:53:37 +0000
-Message-ID: <20250108215957.3437660-3-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250108215957.3437660-1-usamaarif642@gmail.com>
-References: <20250108215957.3437660-1-usamaarif642@gmail.com>
+	Thu, 09 Jan 2025 03:24:50 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5090lRFL016024;
+	Thu, 9 Jan 2025 03:24:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Ev41ny
+	e3EYCrH/8qKuYkTcjX/MgP5c6SOfM76NspYuQ=; b=IfKc/qRHSi3too9zjUGngr
+	yd5Whg+EMcZmvDUFrUhW0Vvr/nJUD1aLtTTlMT+em4RdcDGZa2UCn7tINV1yewaC
+	gmvbQSrvi3qySpIONBfn0BSI+s/rKIxzByrmgTVAAXwwAUBD2mKHuMi++XORau0+
+	DstnVuMrpaC+CByzxeAT2B4ucghcNdUJDbqnIsn3hZiCS+FsOB1ll0evW1ncdCNa
+	FSd06hoWxqCdGrX9Bjv7CM/kTZ2mFd716aw1920yBcjoCS2d9jTr+DFUmPWFeLn6
+	bV3sJJsmEydfmTmv9eiN84o+BYpizEAdfWz5rBK1ZjDadOhE+h9WBE8RIuIOsMig
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 441huc5st0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jan 2025 03:24:40 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5091oCht027963;
+	Thu, 9 Jan 2025 03:24:39 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43yhhkawqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jan 2025 03:24:39 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5093OZ2Y56099216
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Jan 2025 03:24:35 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CAEAC20049;
+	Thu,  9 Jan 2025 03:24:35 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E983E20040;
+	Thu,  9 Jan 2025 03:24:32 +0000 (GMT)
+Received: from [9.43.18.121] (unknown [9.43.18.121])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 Jan 2025 03:24:32 +0000 (GMT)
+Message-ID: <bbad32bd-20fb-4d7b-8744-25d4c3fa7f8e@linux.ibm.com>
+Date: Thu, 9 Jan 2025 08:54:31 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v1 3/5] powerpc/kdump: preserve user-specified
+ memory limit
+To: mahesh@linux.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan he <bhe@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20250108101458.406806-1-sourabhjain@linux.ibm.com>
+ <20250108101458.406806-4-sourabhjain@linux.ibm.com>
+ <k2eoi22mh5lod4nzee3qfbaagh36yljcqwxcyvvewmzbktcual@mzleqvtlojj3>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <k2eoi22mh5lod4nzee3qfbaagh36yljcqwxcyvvewmzbktcual@mzleqvtlojj3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bZFNVDDvboEUw35uLegZ6MU7qopIFoUk
+X-Proofpoint-GUID: bZFNVDDvboEUw35uLegZ6MU7qopIFoUk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ spamscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 mlxlogscore=850
+ bulkscore=0 mlxscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501090022
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250108_140024_719763_6F593B3F 
-X-CRM114-Status: GOOD (  18.47  )
+X-CRM114-CacheID: sfid-20250108_192449_278959_D802C9BC 
+X-CRM114-Status: GOOD (  10.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,118 +112,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When this area is not reserved, it comes up as usable in
-/sys/firmware/memmap. This means that kexec, which uses that memmap
-to find usable memory regions, can select the region where
-efi_mem_attr_table is and overwrite it and relocate_kernel.
+Hello Mahesh,
 
-Since the patch in [1] was merged, all boots after kexec
-are producing the warning that it introduced.
 
-Having a fix in firmware can be difficult to get through.
-The next ideal place would be in libstub. However, it looks like
-InstallMemoryAttributesTable [2] is not available as a boot service
-call option [3], [4], and install_configuration_table does not
-seem to work as a valid substitute.
+On 08/01/25 22:36, Mahesh J Salgaonkar wrote:
+> On 2025-01-08 15:44:56 Wed, Sourabh Jain wrote:
+>> Commit 59d58189f3d9 ("crash: fix crash memory reserve exceed system
+>> memory bug") fails crashkernel parsing if the crash size is found to be
+>> higher than system RAM, which makes the memory_limit adjustment code
+>> ineffective due to an early exit from reserve_crashkernel().
+>>
+>> Regardless lets not violated the user-specified memory limit by
+>> adjusting it. Remove this adjustment to ensure all reservations stay
+>> within the limit. Commit f94f5ac07983 ("powerpc/fadump: Don't update
+>> the user-specified memory limit") did the same for fadump.
+> Agreed.
+>
+> Reviewed-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
 
-As a last option for a fix, this patch marks that region as reserved in
-e820_table_firmware if it is currently E820_TYPE_RAM so that kexec doesn't
-use it for kernel segments.
+Thanks for the review.
 
-[1] https://lore.kernel.org/all/20241031175822.2952471-2-ardb+git@google.com/
-[2] https://github.com/tianocore/edk2/blob/master/MdeModulePkg/Core/Dxe/Misc/MemoryAttributesTable.c#L100
-[3] https://github.com/tianocore/edk2/blob/42a141800c0c26a09d2344e84a89ce4097a263ae/MdeModulePkg/Core/Dxe/DxeMain/DxeMain.c#L41
-[4] https://elixir.bootlin.com/linux/v6.12.6/source/drivers/firmware/efi/libstub/efistub.h#L327
-
-Reported-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- arch/x86/include/asm/e820/api.h | 2 ++
- arch/x86/kernel/e820.c          | 6 ++++++
- arch/x86/platform/efi/efi.c     | 9 +++++++++
- drivers/firmware/efi/memattr.c  | 1 +
- include/linux/efi.h             | 7 +++++++
- 5 files changed, 25 insertions(+)
-
-diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
-index 2e74a7f0e935..4e9aa24f03bd 100644
---- a/arch/x86/include/asm/e820/api.h
-+++ b/arch/x86/include/asm/e820/api.h
-@@ -16,6 +16,8 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
- 
- extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
- extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
-+extern u64  e820__range_update_firmware(u64 start, u64 size, enum e820_type old_type,
-+					enum e820_type new_type);
- extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
- extern u64  e820__range_update_table(struct e820_table *t, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
- 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 82b96ed9890a..01d7d3c0d299 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -538,6 +538,12 @@ u64 __init e820__range_update_table(struct e820_table *t, u64 start, u64 size,
- 	return __e820__range_update(t, start, size, old_type, new_type);
- }
- 
-+u64 __init e820__range_update_firmware(u64 start, u64 size, enum e820_type old_type,
-+				       enum e820_type new_type)
-+{
-+	return __e820__range_update(e820_table_firmware, start, size, old_type, new_type);
-+}
-+
- /* Remove a range of memory from the E820 table: */
- u64 __init e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
- {
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index a7ff189421c3..13684c5d7c05 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -168,6 +168,15 @@ static void __init do_add_efi_memmap(void)
- 	e820__update_table(e820_table);
- }
- 
-+/* Reserve firmware area if it was marked as RAM */
-+void arch_update_firmware_area(u64 addr, u64 size)
-+{
-+	if (e820__get_entry_type(addr, addr + size) == E820_TYPE_RAM) {
-+		e820__range_update_firmware(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__update_table(e820_table_firmware);
-+	}
-+}
-+
- /*
-  * Given add_efi_memmap defaults to 0 and there is no alternative
-  * e820 mechanism for soft-reserved memory, import the full EFI memory
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index d3bc161361fb..d131781e2d7b 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -53,6 +53,7 @@ int __init efi_memattr_init(void)
- 	size = tbl->num_entries * tbl->desc_size;
- 	tbl_size = sizeof(*tbl) + size;
- 	memblock_reserve(efi_mem_attr_table, tbl_size);
-+	arch_update_firmware_area(efi_mem_attr_table, tbl_size);
- 	set_bit(EFI_MEM_ATTR, &efi.flags);
- 
- unmap:
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index e5815867aba9..8eb9698bd6a4 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1358,4 +1358,11 @@ extern struct blocking_notifier_head efivar_ops_nh;
- void efivars_generic_ops_register(void);
- void efivars_generic_ops_unregister(void);
- 
-+#ifdef CONFIG_X86_64
-+void __init arch_update_firmware_area(u64 addr, u64 size);
-+#else
-+static inline void __init arch_update_firmware_area(u64 addr, u64 size)
-+{
-+}
-+#endif
- #endif /* _LINUX_EFI_H */
--- 
-2.43.5
-
+- Sourabh Jain
 
