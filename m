@@ -4,87 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2F6EE7719D
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B189E77197
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=h57faAuSzAxCss48S50xg8gyErd3bJ9VneT8C0mRQ4E=; b=OKsVmk4I7F4n7wFfkimpWThxEB
-	GRLgmyC42ryLIL8KslbuvtgBydD3/uJ0qYHKoCgpKEL7jT9H3lOXtHSh7q8bLAW+HVT/ah2ak9VkF
-	MOtH3ryStUI6blOEEZp5wmUYRwnzixSFNDzNwu69dfZwxPn4XGzYoQg5A2z5aFdxVmV2YBq12tB8T
-	PscGMnrcu/kF1+Jkc6fYNGFRPuddzU/8AV+V9Azg9Vla5ra7VO+y1IyeRAbpOLJxGiZjBsMFnNedQ
-	ahRVG/WHZgoSVmjMbxRFCJl1tsc7LNOs28Q6jcyEyF7i45LxLrzv9OUhaEqwZiC2TtZrFjD54kpxS
-	DD5jxBlg==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hItSMR0IDjkdMJUBRKLD8SPiYiiCgPMm35ASO9oVDjg=; b=2VnzwoqTqm5+9f4waYIIVkcT5F
+	3yQowQe38M5uuTz6pWsJdOR6LS5RRHncdnL2cafddggWYcjZH/3endcGZsMfn9xC7wrryh/nhebwS
+	rMnfuVsIT3stKeGAppW2g1DpgYHUg45Fc91FSndH69X+H6uPxz7Xt6tnWK6MKb3Nu7eSVSVLLceS+
+	ZqhoSMHnheeOWiYpag5Mhrdcg+S2bmP06S7my2RZmeQDKkKMRJRbrOQT4I2fECrG5F8wgyEoCQ1OE
+	6XW2n20xnPWic1DN2+3HTOgPeqb8g9e5AW6C/Uwmh7e1mKcYAyx9ADqQkbQfKWDjskb27NJ/6Undz
+	IyEE1pHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtDw-0000000CB57-1p2W;
-	Thu, 09 Jan 2025 14:09:24 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tVtqz-0000000CIsS-3GI8;
+	Thu, 09 Jan 2025 14:49:45 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCh-0000000CAfV-15Bk
-	for kexec@bombadil.infradead.org;
-	Thu, 09 Jan 2025 14:08:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=h57faAuSzAxCss48S50xg8gyErd3bJ9VneT8C0mRQ4E=; b=pzgG0B5egMmevfyW9B7KzovKlY
-	nDiT/uE4u35xPzfDnqp3dF+4gd8pryKZxPd/BgDCP18nxRlJSNRMp0SAaO+buL2yWH5YakeG3nIdi
-	0b/mB/7nLzSx27mvTezJ66rkrUzsqi7alw4rCF/qkLPJf84O+Q2AyetJEZKwsFu2gRYLvpka/QP2u
-	UQxvQM81TOroDTE6pPVXhdn+T0jd+AH+IOhlWdGBZLNz4ZiGpUeI9opUk0Teco9Bk3ZXvDwPdADfB
-	3gLC8rbpHnoccsvLu/mxvoQ05la17BCQycP5orUIFyccLo5mFkgNZ0VpQq171P28vtHHzwiUXnms7
-	NnFJmP5Q==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCa-00000009Zhe-3Db8;
-	Thu, 09 Jan 2025 14:08:01 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCY-0000000Bx5j-1vs9;
-	Thu, 09 Jan 2025 14:07:58 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	David Kaplan <david.kaplan@amd.com>,
-	Tao Liu <ltao@redhat.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Rong Xu <xur@google.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	bsz@amazon.de,
-	nathan@kernel.org
-Subject: [PATCH v2 0/9] x86/kexec: Fixes for tip/x86/boot
-Date: Thu,  9 Jan 2025 14:04:12 +0000
-Message-ID: <20250109140757.2841269-1-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.47.0
+	id 1tVtqO-0000000CIfD-4BVl;
+	Thu, 09 Jan 2025 14:49:10 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 861CE5C5A84;
+	Thu,  9 Jan 2025 14:48:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F4DC4CED2;
+	Thu,  9 Jan 2025 14:49:04 +0000 (UTC)
+Date: Thu, 9 Jan 2025 09:50:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Kees Cook
+ <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+ codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev,
+ linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org,
+ kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+Message-ID: <20250109095037.0ac3fe09@gandalf.local.home>
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250109_064909_076047_825B7447 
+X-CRM114-Status: GOOD (  10.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,61 +76,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Fix a few bugs introduced by the recent rework of the relocate_kernel()
-code, and one which has been there in the kjump code from the beginning.
+On Thu, 09 Jan 2025 14:16:39 +0100
+Joel Granados <joel.granados@kernel.org> wrote:
 
- • Global read-only TLB entries made relocate_kernel() crash when writing
-   to its own page after the %cr3 switch should have made it writeable.
- • The preserve_context flag was lost when invoking swap_pages on the way
-   back, causing pages not to be swapped.
- • The wrong page was being used as the swap page.
- • The ABI for the kjump call asks the callee to put its entry address for
-   next time at %rsp+8 before returning, but we set %rsp to the top of the
-   available page, such that the entry address is at the start of some
-   other page.
- • The relocate_kernel() function lacked Clang CFI information, but is now
-   called via a function pointer, leading to a crash¹.
- • The relocate_kernel() code and data could end up being linked into the
-   wrong place for a LTO / -ffunction-sections build.
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 2e113f8b13a2..489cbab3d64c 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table ftrace_sysctls[] = {
+> +static const struct ctl_table ftrace_sysctls[] = {
+>  	{
+>  		.procname       = "ftrace_enabled",
+>  		.data           = &ftrace_enabled,
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 17bcad8f79de..97325fbd6283 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table user_event_sysctls[] = {
+> +static const struct ctl_table user_event_sysctls[] = {
+>  	{
+>  		.procname	= "user_events_max",
+>  		.data		= &max_user_events,
 
-Thanks to Nathan for reporting many of the above.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org> # for kernel/trace/
 
-Also a few minor cleanups, including a comments-only patch from Rafael
-on the suspend-like part of kjump as a prelude to actually cleaning that
-up.
-
-¹ Fixed by just adding __nocfi. Actually providing the CFI information
-for relocate_kernel() will need a bit more work, so let's just do the
-simple fix for now.
-
- v2:
- • Rebase
- • Save a whole byte on a 'movq $1, %r11' instruction.
- • Fix duplicated word in comment.
- • Avoid absolute relocations against __relocate_kernel_start
-
-David Woodhouse (7):
-      x86/kexec: Disable global pages before writing to control page
-      x86/kexec: Ensure preserve_context flag is set on return to kernel
-      x86/kexec: Use correct swap page in swap_pages function
-      x86/kexec: Fix stack and handling of re-entry point for ::preserve_context
-      x86/kexec: Mark machine_kexec() with __nocfi
-      x86/kexec: Cope with relocate_kernel() not being at the start of the page
-      x86/kexec: Use typedef for relocate_kernel_fn function prototype
-
-Nathan Chancellor (1):
-      x86/kexec: Fix location of relocate_kernel with -ffunction-sections
-
-Rafael J. Wysocki (1):
-      kexec_core: Add and update comments regarding the KEXEC_JUMP flow
-
- arch/x86/include/asm/kexec.h         | 26 ++++++++--------
- arch/x86/kernel/machine_kexec_32.c   |  7 +----
- arch/x86/kernel/machine_kexec_64.c   |  8 ++---
- arch/x86/kernel/relocate_kernel_64.S | 57 ++++++++++++++++++++++++------------
- arch/x86/kernel/vmlinux.lds.S        |  4 +--
- kernel/kexec_core.c                  | 23 +++++++++++----
- 6 files changed, 74 insertions(+), 51 deletions(-)
-
-
+-- Steve
 
