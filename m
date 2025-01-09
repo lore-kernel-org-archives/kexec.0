@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FBE8E7719B
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A304E7719A
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 14:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UXXMy8NjgmXapI75A+lfqUhBwTskcOXo5TKctXbko48=; b=4rtPEGdoZLUUZR1BXROguhi6nz
-	RgKCx9cXhpkm6ogc3xVUFAQ7r7Y+o4ciCOr84ipAcYN4Ssm6Vo8uSrRrwthFULAaGVWdqxQNzK7PB
-	8SZpSrzLSuSgZXQTxR7k+bOlTJ0hYc4XkvSVnALjTVhT8JhlQJxbYWF38pcNe8wrrqgK1cnJT/9rs
-	YIciZV6wgxK/jc/ZJRcqJCnX50JrbsxOvQxtUvx9RcfteBc/AR5RseWVG3kFEj1ePX1U1MvKrAvpm
-	d+mr5tITqL1PPLUAF9+XLEC5cwKvcF1YxgLGU+lhmNfKtft6DgtB5x1Dy2NP0KUqKFgHgMkhtRoer
-	9fgt9yqw==;
+	bh=KF9I8gMwuVGDi5vu6drdRG3X3dHP+mrVfyO8mKUOGvk=; b=s4hhQZmHOiiU2E1Bci4tBNcsyR
+	ZLMMep4oRFfR+/PbNYTJwZkIitweVfUZBuQ+5TfA6el07u2HhoCGlb+fpf0a3U2O32HruUFWA+aMG
+	LumAWEU6RXQrPXsPVL1bZoaLH139WOxga622RsClnaJH8lebD2Crf4p8EwrpYFgUBbk4lHK1UU4WY
+	WEFSIF3sZ9+0RnVTJpOq0NmhEJwzEbA2qECLonXirvEnjmkgfy1+m4bEvdsD34UbhASL0xpm4SpLU
+	1pF9Tk1bbK5TYkq9b8YU3jcgMH9OJSg9Q35IeXR7jr2PrU8Xc8ZgUHt8LiFFaKg2Dq74kByeGTP2r
+	Vv8MDpYw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtDt-0000000CB1N-3ESt;
-	Thu, 09 Jan 2025 14:09:21 +0000
+	id 1tVtDs-0000000CB09-3bER;
+	Thu, 09 Jan 2025 14:09:20 +0000
 Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCf-0000000CAe1-1GD0
+	id 1tVtCf-0000000CAe0-1Get
 	for kexec@bombadil.infradead.org;
-	Thu, 09 Jan 2025 14:08:05 +0000
+	Thu, 09 Jan 2025 14:08:06 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description;
-	bh=UXXMy8NjgmXapI75A+lfqUhBwTskcOXo5TKctXbko48=; b=eEewo2DqTqYsZN0oqse9fjK050
-	Bkp6wVR+qVdk9ZRZSMunW1WYpzMyKt0yh2LCYqLhNpBiMAmQ5BXufoemNej9jBhlVSpklEAgHxuxU
-	0hZPf5RkIyhWuUqxzTjdZ8duCJA16X3u5Yi/Vvn0rd7ZpnhyRW7EdLJtAdx/HNg/l/S5wCrc2u4xv
-	uQ1FFZWzIqiLIlaYIJ77sDhTe8rUa5l53vQlSPNoP7KD0ZQy6PN2P2EtjRGL7tlEcfGezlOOgehl0
-	3jFiKFQTgMNa/u58uh16wSpIbLNbghwn1TnE5Ty3XbboyMYnykVXQ0hkg9+hv0hXLHyCMwEOUCO5E
-	UHlfmhow==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description;
+	bh=KF9I8gMwuVGDi5vu6drdRG3X3dHP+mrVfyO8mKUOGvk=; b=ayFO2bubDxOj1KYg7nlMD/P8px
+	C6a8e1XvolmwF+rYqh7lXuzDY+tB871wjnfQsny8+naV2xZNG3KYcmopHtIE2Z97GIfiP5A2Ek9iX
+	5RANKGBe4Q35241suVWSdTfz3Asr3XVBu9OmR/EEWmvcWa2n1KUyXho5BQWHJDjx6rFqbaWrW2c/P
+	5JeGZvcKiquuNPYEY9a5wJRKPKtQv4OY3OdEHIFmgwK4/BFahAf3djZ0KprECugu5xDZjIf/QKsWB
+	oHRpScMQygCsTCOZCmUPYPESB7pUeiWc/kBOsQhoY6WF1t7HJyAPT+WuVFgPHUCtke2JPeJER7hMm
+	6cMdpH8g==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCZ-00000006IQH-30ko;
+	id 1tVtCZ-00000006IQJ-3NBC;
 	Thu, 09 Jan 2025 14:07:59 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVtCY-0000000Bx6B-35Gp;
+	id 1tVtCY-0000000Bx6L-3Q4F;
 	Thu, 09 Jan 2025 14:07:58 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -77,13 +77,14 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	bsz@amazon.de,
 	nathan@kernel.org
-Subject: [PATCH v2 4/9] x86/kexec: Fix stack and handling of re-entry point for ::preserve_context
-Date: Thu,  9 Jan 2025 14:04:16 +0000
-Message-ID: <20250109140757.2841269-5-dwmw2@infradead.org>
+Subject: [PATCH v2 6/9] x86/kexec: Mark machine_kexec() with __nocfi
+Date: Thu,  9 Jan 2025 14:04:18 +0000
+Message-ID: <20250109140757.2841269-7-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250109140757.2841269-1-dwmw2@infradead.org>
 References: <20250109140757.2841269-1-dwmw2@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
@@ -102,82 +103,41 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-A ::preserve_context kimage can be invoked more than once, and the entry
-point can be different every time. When the callee returns to the kernel,
-it leaves the address of its entry point for next time on the stack.
+A recent commit caused the relocate_kernel() function to be invoked
+through a function pointer, but it does not have CFI information. The
+resulting trap occurs after the IDT and GDT have been invalidated,
+leading to a triple-fault if CONFIG_CFI_CLANG is enabled.
 
-That being the case, one might reasonably assume that the caller would
-allocate space for it on the stack fram before actually performing the
-'call' into the callee.
+Using SYM_TYPED_FUNC_START() to provide the CFI information looks like
+it will require a prolonged battle with objtool. And is fairly pointless
+anyway, as the actual signature comes from a __kcfi_typeid_… symbol
+emitted from the C code based on the function prototype it thinks that
+relocate_kernel has, rendering the check somewhat tautological.
 
-Apparently not, though. Ever since the kjump code was first added in
-2009, it has set up a *new* stack at the top of the swap_page scratch
-page, then just performed the 'call' without allocating any space for
-the re-entry address to be returned. It then reads the re-entry point
-for next time from 0(%rsp) which is actually the first qword of the page
-*after* the swap page, which might not exist at all! And if the callee
-has written to that, then it will have corrupted memory it doesn't own.
+The simple fix is just to mark machine_kexec() with __nocfi.
 
-Correct this by pushing the entry point of the callee onto the stack
-before calling it. The callee may then adjust it, or not, as it sees fit,
-and subsequent invocations should work correctly either way.
-
-Remove a stray push of zero to the *relocate_kernel* stack, which may
-have been intended for this purpose, but which was actually just noise.
-
-Also, loading the stack for the callee relied on the address of the swap
-page being in %r10 without ever documenting that fact. Recent code
-changes made that no longer true, so load it directly from the local
-kexec_pa_swap_page variable instead.
-
-Fixes: b3adabae8a96 ("x86/kexec: Drop page_list argument from relocate_kernel()")
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Fixes: eeebbde57113 ("x86/kexec: Invoke copy of relocate_kernel() instead of
+the original")
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/machine_kexec_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 3ca3bf6b3f49..a95691b42c5c 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -113,8 +113,6 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * %r13 original CR4 when relocate_kernel() was invoked
- 	 */
- 
--	/* set return address to 0 if not preserving context */
--	pushq	$0
- 	/* store the start address on the stack */
- 	pushq   %rdx
- 
-@@ -208,12 +206,19 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 
- .Lrelocate:
- 	popq	%rdx
-+
-+	/* Use the swap page for the callee's stack */
-+	movq	kexec_pa_swap_page(%rip), %r10
- 	leaq	PAGE_SIZE(%r10), %rsp
-+
-+	/* push the existing entry point onto the callee's stack */
-+	pushq	%rdx
-+
- 	ANNOTATE_RETPOLINE_SAFE
- 	call	*%rdx
- 
- 	/* get the re-entry point of the peer system */
--	movq	0(%rsp), %rbp
-+	popq	%rbp
- 	leaq	relocate_kernel(%rip), %r8
- 	movq	kexec_pa_swap_page(%rip), %r10
- 	movq	pa_backup_pages_map(%rip), %rdi
-@@ -247,6 +252,7 @@ SYM_CODE_START_LOCAL_NOALIGN(virtual_mapped)
- 	lgdt    saved_context_gdt_desc(%rax)
- #endif
- 
-+	/* relocate_kernel() returns the re-entry point for next time */
- 	movq	%rbp, %rax
- 
- 	popf
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9232ad1562c8..1440f792a86d 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -342,7 +342,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void machine_kexec(struct kimage *image)
++void __nocfi machine_kexec(struct kimage *image)
+ {
+ 	unsigned long (*relocate_kernel_ptr)(unsigned long indirection_page,
+ 					     unsigned long pa_control_page,
 -- 
 2.47.0
 
