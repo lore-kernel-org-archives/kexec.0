@@ -4,70 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEC8AE77197
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AAECE77197
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 12:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=Z7mGlKvKy5SqZStSpEOrC66l/cJcotrJit7imygcRDE=; b=WXII9D27juEa8gqXQY0+JdC7K+
-	T6UQ+b55MtDMBbLxHIGlfKRlZK1gEDkjk4v4yv29kJow3ABTDFbZfET69c9qczLtjPM8JhxGf21il
-	ltTsvNAnotdqD2WPAtqR5mM8gdjvGuNfE6OjlEp+l2l1I4lI7mLoAwsi2CErbWHXRvxrb+2GiekLF
-	l70KNcxN/DWKfItKwDHQgwMaKVuB3QCZcW4AgnBqDu8LxS3imrYfCducQAWHNEEkMQtrlkRNUGvds
-	pH84SPQjd+XmOuih/vNErhxiVF2VwFfBktGUzlTr7SpMGOqF1FC6/Cm6LlsEfld1ZNOLZn26+wZri
-	lq8ca79A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4YVgIS/5ZlAwoAZTi+PHEKdEfNzJGY2kEocFY8AfogE=; b=urCtcWYqWLe5pnrxNYErNhU+Rl
+	Fk6klMj2sgUWZ8eFzafhEhP08EimYqItPRruI6dauW9nyYsRxs9wwNLzp47sm+mJ9kYlnDSYjL0Vq
+	P6f4QIkU4p+jfUZrdeCONmdnJUP3DA7XipY7lEO38FaVDC2hPi7rXFGDc60x8Sxzy6liZLeyYRbub
+	Q18S7zJzzhL3p3Z8WRMYki/raDCAuqWTW3E45/3iVa8SHud3nCK1J3tljUsI+56tAvTTqy4ZVHiv1
+	hjwwlF4YkzUDpMBZDD6fX0mZojCGOMjUf+0GJwKhabc7fi6/9/dp7NsZ4Kh5+tD+QQlwNlvPu1V8T
+	6gDIlc9Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVnSA-0000000B7aa-3uJU;
-	Thu, 09 Jan 2025 07:59:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVnS8-0000000B7aG-0fUM
+	id 1tVrKj-0000000Bo2x-437n;
+	Thu, 09 Jan 2025 12:08:17 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tVrKf-0000000Bo2S-0LzM
 	for kexec@lists.infradead.org;
-	Thu, 09 Jan 2025 07:59:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736409579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z7mGlKvKy5SqZStSpEOrC66l/cJcotrJit7imygcRDE=;
-	b=BOQKYZ8pRazoRlZZH7xMgzwqvJLr/UgNz/H2GvLZYxXRrqVYLZWth/XL8jO7q1E1PsMDqY
-	T0m/ap32/lnmcTgigG9LAEsEeaQ6MjW4glM2vHC+KMyvSpnQfDRDALI27zdjv5OfwGT1Gw
-	71329jsqxs+EPZ/ZNZIgxP1Vovy07PM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-u0WExUGLMe6RfrsA1kaCTw-1; Thu,
- 09 Jan 2025 02:59:37 -0500
-X-MC-Unique: u0WExUGLMe6RfrsA1kaCTw-1
-X-Mimecast-MFC-AGG-ID: u0WExUGLMe6RfrsA1kaCTw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E65351954195
-	for <kexec@lists.infradead.org>; Thu,  9 Jan 2025 07:59:36 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.88.21])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB78030001BE;
-	Thu,  9 Jan 2025 07:59:35 +0000 (UTC)
-From: Seiji Nishikawa <snishika@redhat.com>
-To: kexec@lists.infradead.org
-Cc: snishika@redhat.com
-Subject: [PATCH] Improve message readability and fix typos
-Date: Thu,  9 Jan 2025 16:59:31 +0900
-Message-ID: <20250109075931.6976-1-snishika@redhat.com>
+	Thu, 09 Jan 2025 12:08:14 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ABC712FC;
+	Thu,  9 Jan 2025 04:08:37 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD483F673;
+	Thu,  9 Jan 2025 04:08:06 -0800 (PST)
+Date: Thu, 9 Jan 2025 12:08:04 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	kexec@lists.infradead.org, binutils@sourceware.org,
+	devel@daynix.com
+Subject: Re: [PATCH v3 5/6] s390/crash: Use note name macros
+Message-ID: <Z3+8JGoiUyPFYGE8@e133380.arm.com>
+References: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
+ <20250107-elf-v3-5-99cb505b1ab2@daynix.com>
+ <Z31Tp0nMhb/ntUW0@e133380.arm.com>
+ <965b73e7-d0a3-4fae-b0ec-70b5497cb6c4@daynix.com>
+ <Z36Cljsz2p0hYsFd@e133380.arm.com>
+ <2ad7234d-bfc5-49e3-abe6-7a85d992329d@daynix.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: K4JmSF7ZvT3XBBpnrsQKcE_q6MCTpP258Xd5vAWFes4_1736409577
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ad7234d-bfc5-49e3-abe6-7a85d992329d@daynix.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250108_235940_354139_FC8B252E 
-X-CRM114-Status: GOOD (  12.34  )
+X-CRM114-CacheID: sfid-20250109_040813_183325_93BA88EE 
+X-CRM114-Status: GOOD (  23.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,80 +77,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch enhances the readability of several messages printed by
-adding a space after a comma that is not followed by a newline. These
-changes ensure that messages are easier to read and understand.
+Hi,
 
-For example:
-Before: "The kernel doesn't support mmap(),read() will be used instead."
-After: "The kernel doesn't support mmap(), read() will be used instead."
+On Thu, Jan 09, 2025 at 02:29:19PM +0900, Akihiko Odaki wrote:
+> On 2025/01/08 22:50, Dave Martin wrote:
+> > On Wed, Jan 08, 2025 at 01:53:51PM +0900, Akihiko Odaki wrote:
+> > > On 2025/01/08 1:17, Dave Martin wrote:
+> > > > Hi,
+> > > > 
+> > > > On Tue, Jan 07, 2025 at 09:45:56PM +0900, Akihiko Odaki wrote:
+> > > > > Use note name macros to match with the userspace's expectation.
+> > > > > 
+> > > > > Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> > > > > ---
+> > > > >    arch/s390/kernel/crash_dump.c | 62 ++++++++++++++++---------------------------
+> > > > >    1 file changed, 23 insertions(+), 39 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+> > > > 
+> > > > [...]
+> > 
+> > > > > +#define NT_INIT(buf, type, desc) \
+> > > > > +	(nt_init_name((buf), NT_ ## type, &(desc), sizeof(desc), NN_ ## type))
+> > 
+> > [...]
+> > 
+> > > > (Note also, the outer parentheses and the parentheses around (buf)
+> > > > appear redundant -- although harmless?)
+> > > 
+> > > They only make a difference in trivial corner cases and may look needlessly
+> > > verbose.
+> > 
+> > (In case there was a misunderstanding here, I meant that some
+> > parentheses can be removed without affecting correctness:
+> > 
+> > #define NT_INIT(buf, type, desc) \
+> > 	nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc), NN_ ## type))
+> > 
+> > It still doesn't matter though -- and some people do prefer to be
+> > defensive anyway and err on the side of having too many parentheses
+> > rather than too few.)
+> 
+> Well, being very pedantic, there are some cases where these parentheses have
+> some effect.
+> 
+> If you omit the outer parentheses, the following code will have different
+> consequences:
+> a->NT_INIT(buf, PRSTATUS, desc)
+> 
+> The parentheses around buf will make difference for the following code:
+> #define COMMA ,
+> NT_INIT(NULL COMMA buf, PRSTATUS, desc)
+> 
+> But nobody will write such code.
 
-Additionally, this patch fixes minor typos in the messages, further
-improving clarity and correctness.
+Ah, it looks like you're right on both!
 
-Signed-off-by: Seiji Nishikawa <snishika@redhat.com>
----
- makedumpfile.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Apologies for the noise.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index bad3c48..2d3b08b 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4444,7 +4444,7 @@ initial(void)
- #endif
- 
- 	if (info->flag_exclude_xen_dom && !is_xen_memory()) {
--		MSG("'-X' option is disable,");
-+		MSG("'-X' option is disabled, ");
- 		MSG("because %s is not Xen's memory core image.\n", info->name_memory);
- 		MSG("Commandline parameter is invalid.\n");
- 		MSG("Try `makedumpfile --help' for more information.\n");
-@@ -4527,7 +4527,7 @@ initial(void)
- 
- 	if (info->flag_refiltering) {
- 		if (info->flag_elf_dumpfile) {
--			MSG("'-E' option is disable, ");
-+			MSG("'-E' option is disabled, ");
- 			MSG("because %s is kdump compressed format.\n",
- 							info->name_memory);
- 			return FALSE;
-@@ -4541,7 +4541,7 @@ initial(void)
- 
- 	} else if (info->flag_sadump) {
- 		if (info->flag_elf_dumpfile) {
--			MSG("'-E' option is disable, ");
-+			MSG("'-E' option is disabled, ");
- 			MSG("because %s is sadump %s format.\n",
- 			    info->name_memory, sadump_format_type_name());
- 			return FALSE;
-@@ -4635,14 +4635,14 @@ out:
- 
- 	if (info->num_threads) {
- 		if (is_xen_memory()) {
--			MSG("'--num-threads' option is disable,\n");
-+			MSG("'--num-threads' option is disabled,\n");
- 			MSG("because %s is Xen's memory core image.\n",
- 							info->name_memory);
- 			return FALSE;
- 		}
- 
- 		if (info->flag_sadump) {
--			MSG("'--num-threads' option is disable,\n");
-+			MSG("'--num-threads' option is disabled,\n");
- 			MSG("because %s is sadump %s format.\n",
- 			    info->name_memory, sadump_format_type_name());
- 			return FALSE;
-@@ -4721,7 +4721,7 @@ out:
- 			DEBUG_MSG("mmap() is available on the kernel.\n");
- 			info->flag_usemmap = MMAP_ENABLE;
- 		} else {
--			DEBUG_MSG("The kernel doesn't support mmap(),");
-+			DEBUG_MSG("The kernel doesn't support mmap(), ");
- 			DEBUG_MSG("read() will be used instead.\n");
- 			info->flag_usemmap = MMAP_DISABLE;
- 		}
--- 
-2.47.1
+(I must try find a neat use for these...)
 
+Cheers
+---Dave
 
