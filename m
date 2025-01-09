@@ -4,92 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A0D4E77199
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E49C1E77197
+	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 16:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2ck84cJZLqXsIJaAUcqVFx7P3SIRlgvwU0gI9j6xgbA=; b=mjqUqY2rFc55LQjZDNsDMaDVDO
-	L2Zkjg0LrmG5uMXTHseAqVDmmhqDMQGA/7+tNPVJr1FSvpbdQty84Z8ZIpReO1n5vrNklWKldBWQG
-	ntnxyKk60s3SzRGhwd2R/K8d72ijV2stA3N7IrcO4GxAh4kZ8qTGK4IwWTyiiZKBpdLAFik+Rtt8i
-	7Ntf2x8lRyW7fl91V0tP/vRjB3dujjr2/77kjhlKQgch3raY9Gl6jks4mViRShg2DGsup/j/vfpIA
-	/dams/9eHBxv2tSXBcfs7qMdDSmDjcBUauP6fsxvt3U0XEGU2zQUCFrYp6+Pifh/fKbsnuuxzAUMx
-	hBVTTqhg==;
+	bh=dX4VAIGuA5p4o4v1mMF/f2hbtB1svOw3Z2SHsNP1eCA=; b=WZb0Bvcs6ImVGg7suvqQ6O9ldD
+	f42+k+dWhwKnNpO+qFIjvIVLdW4K0FqvPI0qwxtQU3gOwZ3hYCoMUYW0hkMOmkdKSge/HD00pEIVB
+	XunFA9HP9mm69X/gFRpDyai9o1get4Tpoh+orVi32ScZql7R/+tPnsXlJ0DCjaDu9ge1l6edSHZ9t
+	Q9/XQlLEltg1T3wX72H+a57LKbnpmy5wJj/ezkgpnsbe7b8HoU5v8VChNR6WdxFSm60xNB/HHwgxH
+	6X8nKbx6SjMP6BlF0l55RdY/RWSgQi/1ngASyWfqhjBBfV+DGqj+HnPsHXa02cGv9/4tDJuFmjWSK
+	VUFNun0A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVvTE-0000000ChX5-3KC8;
-	Thu, 09 Jan 2025 16:33:20 +0000
-Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
+	id 1tVvWV-0000000Ci8m-2ejm;
+	Thu, 09 Jan 2025 16:36:43 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVvSB-0000000ChGA-1EZo
+	id 1tVvWI-0000000Ci5U-0fJ0
+	for kexec@bombadil.infradead.org;
+	Thu, 09 Jan 2025 16:36:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=dX4VAIGuA5p4o4v1mMF/f2hbtB1svOw3Z2SHsNP1eCA=; b=rI1UF9QZhJ1C+hwBuaBpqRL4yz
+	8L8R8e7ZGU3Y0WsQqy//8y7QK+sXQEAkqA3ZlMvIKakHaPBLazg8sFMe6C+QnmmYTwmg6o3cIpVhS
+	DGRgo6mK/uvUwql94XAsZ2AApQhKcQb1Ul4fO1ypb+N3+ExnxqcCkkrs7xX+DTpUG2v0D7Z0Mi4rN
+	SKZG6d+ZPdRpCZyNzTEIrRv6yIyyQJJGI6NuClnx1Y03CvWjrDxN/ZGa3Bxrziyww8CnPb7tF35nL
+	IrXvGe8oinJrjBJOarBcnckb9eyMcv9gLcBMiTMYfsN7vLcll9OXY/OfpjJ0X9DfBbsS5j+WueIOf
+	9T7S/t1A==;
+Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tVvWB-00000009bXq-00bp
 	for kexec@lists.infradead.org;
-	Thu, 09 Jan 2025 16:32:16 +0000
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5d8c1950da7so1788711a12.3
-        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 08:32:14 -0800 (PST)
+	Thu, 09 Jan 2025 16:36:28 +0000
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5d3f28a4fccso1414008a12.2
+        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 08:36:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736440333; x=1737045133; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1736440579; x=1737045379; darn=lists.infradead.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2ck84cJZLqXsIJaAUcqVFx7P3SIRlgvwU0gI9j6xgbA=;
-        b=BiFoIr24RvWBF18WJ9ArPCRMuLjel9cxsfv0BxVtYyOP+rszBEo009VybN7FCaELBD
-         AH9a19OGgQGGwXxSaklKYVrJoHzGfXM1DZNWC3iGiefel2uIcgfbLpk9BB918WIS0afj
-         DZf4tqTXZZbTMJNqsk5IvXAVxNc6oDoc/z06tqg+Uq6mQsd6r61ZKkosnSm0FU6vDMuM
-         9nZ/1LUTN5VBgoRXsCPFW1EU0amBwsBc/ayg2g4mQSqj9RaeeGeh9W0/SgcmsDRO7eb4
-         QcwDAh9qLBruSdlIAv8jh47MTIDK3seDGESaFh/Ro391QalaThGxdylWfAcKmMSfNS7H
-         7L6g==
+        bh=dX4VAIGuA5p4o4v1mMF/f2hbtB1svOw3Z2SHsNP1eCA=;
+        b=L4EjtwdvlIQcA2Yi/Kz7TutWA9LLppmtMC1N8cdBrZAM50/ToE8LWzlpr3bOTstdFd
+         VjEwtd8EUn+j8D9zbnzyaoB3VYh0ujW7yYelNj8bq733V4i8M4uWvt0f6XN7XZsW9Zac
+         fPf7od6RJsL3zoDizGu3KfVWHW9VEINSzNVLF3j9LZcC4lZCFvRBhvB9Y4rZu3t+DJ5A
+         REGYABtUeJIga9+OU3S4DdTWv9omGdE0EbWU1gcENTRsTsPvml2PHL5KxcjYsKa7tAJP
+         hEUKvbvhYkK48epctNVMY9QsUUaGMf7e6ZW7jXhq9W723ZrwsjmG6M+xtBASebE6f4PR
+         YaBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736440333; x=1737045133;
+        d=1e100.net; s=20230601; t=1736440579; x=1737045379;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ck84cJZLqXsIJaAUcqVFx7P3SIRlgvwU0gI9j6xgbA=;
-        b=ZQhFA8ssEiVu6vCtwLoEmQ5PWfdfCbw01a9Q7sAxgcXT7vhQNm+odzrLagLwWdLAYv
-         8vZfikJpX5dc53R0BxEFIRjGk9yQYeKUnKmsAt1xdkAVC5tRBnY03H5lFq9IM1hvSWA9
-         Sq8dTQeXnz2kh7PvTnWL0hXajRbsWh0G+uLik0Nkf9fU7nrqlKA4PcSspAZ/zmdm24Di
-         5Bd7fbTo7oN0SYwAHQb8nyLlEQ5iqMesav1koAvJFhO9bL4+BHYjrBO0osVPp0s/Ohxo
-         SNyWAqwrr8AndkR3NERn8aEMr3FLIaxEXL0jrw+W/j3u0LHwjHODLlLxTBNMZst0Ayqs
-         K6aw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg+38YzhqaT7PYbIs8nXuOMNzIvhLZfPgKeyee9YNwMvuup5+MPn81RYNKevseeAChrXlhEw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwmkhsBnTb4e73SRH01lHPsOUekySOOmmPWXGDvFMBl6NqvTJty
-	L6zQp+DyAbVasLdbFh9YLY8JQOZg8/CVXoNS50R5Jme+vXehF4gS
-X-Gm-Gg: ASbGncuFf4wrZqCGCD0NxNCM1LoucUcM3IG1RO2SmlECR3v/eOvWTeyNy6gIXXFrWwB
-	Kep/7rWObWLH1yp5gK3dJdDYSJaPnI5xgAOxbQQVO+stEk0Hf9SsCj4DWUaLtDf41vGbjWvWxNp
-	bOohmWEKX9OxrIRl6b1Y2sv3YUhlDow1ni2oBc81tKUX0duO+bAbFhQnFVa9gNoHq0E4T/Rc/he
-	gC4p7uSvKQ/gT9Ib3FCU9ynDQL01a5PFqh9tH179t48et/vqxwm4GI6tVbZ7Av0q7LX/fR90rJa
-	FNDZQplQ3n1IFRuMuD8SYMT37M5l
-X-Google-Smtp-Source: AGHT+IET95vGKgOoOgihxI5Y69+gtj6ZhylVDaWZo4Dnakul58/pEHmiKxDp/vg/0dYX/btNLYrQaw==
-X-Received: by 2002:a05:6402:2105:b0:5d3:d7b0:b834 with SMTP id 4fb4d7f45d1cf-5d972df67ecmr5972933a12.1.1736440331324;
-        Thu, 09 Jan 2025 08:32:11 -0800 (PST)
+        bh=dX4VAIGuA5p4o4v1mMF/f2hbtB1svOw3Z2SHsNP1eCA=;
+        b=U6qHR1nW5/rNFIQCiXOLp9kapGa9kcWUCFif64dPHdWdcIIrZ7+Cvc9zLDRXb7sEGL
+         7R43eoJEqlmdLUS3VdtCNbXOQANsAmOwMGb7TG/UfHk5gJP12ZsufWjW7siHXeJVGbXC
+         uBlhJJZQ0evy44v7boU08C7T3Djft7KCbUYwXFgwDTUIY3QvF6Z7ioI0oQ9KHAxJcRbJ
+         AgJ6rjZFopBjFe6aY9y/QUGJLQVNZJk4lGeF1NDL8QysIXgEHcaSPdABfnJAIXs4ZfIe
+         KmXtR5KOlph/VlA+OPW3hmKqrUb/XVMXrQaYQ+CODcRV1sL8g2N+H2TXJn5pxPsbxzue
+         44hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPz+4Qz9GV19jtW2IszgZHEJdVD9DdPOpvlyBkUjmo3zHBUloBPk7zPAF81+6oSOwUW2A1yQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwoRBpO5ueqiGdeAPt9l4N7CGAwd+2mCfjhtjTatrw1lFke1mF/
+	IuIt58Al8UOis2OrIxCIA3e6q1qCsgBghm9CX8Bfzt7cxVvIzyLx
+X-Gm-Gg: ASbGncs9KKVhK75lOZCwr+vc392MVDEP24XprkcpwUxjewRdR6HqBhlrYRAcIE/VhnD
+	HfPaXyWcKxMfV6nRMDvULfP0c4AsOQEht3R70aq7gD/Hn/aALB+x66LB4VWVeHiiLm28bkrEkGg
+	mdRr63gq1e7edocL6MOA3SlG8vOastpHtj/u8ZEwON6T2ksh+ZJ2n4JAMV0FuSBBSjFRagZN+T1
+	lDj2fuG4R7DUDqIDfI8wujF+tSqWEfnD9zhzolSSGb+pRXYS1F1MPQv0ph0skv/jaE7yF36f1Ga
+	BcgYFG7ApRaECBFA3SzuUG7CSOVn
+X-Google-Smtp-Source: AGHT+IFH4Mf4jMgpRx3khbxhhYmeEL2WA8ovuW6XBYno3NsJIZaj1ShKSo8fqHjrVfklGFxDEAk+6g==
+X-Received: by 2002:a05:6402:1ed4:b0:5d0:bcdd:ff8f with SMTP id 4fb4d7f45d1cf-5d972dfbcc3mr6581488a12.4.1736440578846;
+        Thu, 09 Jan 2025 08:36:18 -0800 (PST)
 Received: from ?IPV6:2a03:83e0:1126:4:829:739b:3caa:6500? ([2620:10d:c092:500::5:337c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99046d822sm719871a12.56.2025.01.09.08.32.10
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d9903c3333sm785494a12.47.2025.01.09.08.36.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2025 08:32:10 -0800 (PST)
-Message-ID: <cade51c5-5fcc-4208-b46c-f2e2038f03e7@gmail.com>
-Date: Thu, 9 Jan 2025 16:32:10 +0000
+        Thu, 09 Jan 2025 08:36:18 -0800 (PST)
+Message-ID: <d9c84079-6593-43f4-9483-648b665f03db@gmail.com>
+Date: Thu, 9 Jan 2025 16:36:17 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/2] efi/memattr: add efi_mem_attr_table as a reserved
- region in 820_table_firmware
+Subject: Re: [RFC 1/2] efi/memattr: Use desc_size instead of total size to
+ check for corruption
 To: Ard Biesheuvel <ardb@kernel.org>
 Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io,
  kexec@lists.infradead.org, hannes@cmpxchg.org, dyoung@redhat.com,
  x86@kernel.org, linux-kernel@vger.kernel.org, leitao@debian.org,
  gourry@gourry.net, kernel-team@meta.com
 References: <20250108215957.3437660-1-usamaarif642@gmail.com>
- <20250108215957.3437660-3-usamaarif642@gmail.com>
- <CAMj1kXFWZNRwx1H2HT8V9hNvUKDi0O3kcLku+g94UOvNBzz5eQ@mail.gmail.com>
+ <20250108215957.3437660-2-usamaarif642@gmail.com>
+ <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
 Content-Language: en-US
 From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CAMj1kXFWZNRwx1H2HT8V9hNvUKDi0O3kcLku+g94UOvNBzz5eQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250109_083215_341908_71763683 
-X-CRM114-Status: GOOD (  30.46  )
+X-CRM114-CacheID: sfid-20250109_163626_511712_182CD5A9 
+X-CRM114-Status: GOOD (  29.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,154 +121,106 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 09/01/2025 16:15, Ard Biesheuvel wrote:
+On 09/01/2025 15:45, Ard Biesheuvel wrote:
 > On Wed, 8 Jan 2025 at 23:00, Usama Arif <usamaarif642@gmail.com> wrote:
 >>
->> When this area is not reserved, it comes up as usable in
->> /sys/firmware/memmap. This means that kexec, which uses that memmap
->> to find usable memory regions, can select the region where
->> efi_mem_attr_table is and overwrite it and relocate_kernel.
+>> The commit in [1] introduced a check to see if EFI memory attributes
+>> table was corrupted. It assumed that efi.memmap.nr_map remains
+>> constant, but it changes during late boot.
+>> Hence, the check is valid during cold boot, but not in the subsequent
+>> kexec boot.
 >>
->> Since the patch in [1] was merged, all boots after kexec
->> are producing the warning that it introduced.
+>> This is best explained with an exampled. At cold boot, for a test
+>> machine:
+>> efi.memmap.nr_map=91,
+>> memory_attributes_table->num_entries=48,
+>> desc_size = 48
+>> Hence, the check introduced in [1] where 3x the size of the
+>> entire EFI memory map is a reasonable upper bound for the size of this
+>> table is valid.
 >>
->> Having a fix in firmware can be difficult to get through.
-> 
-> I don't follow. I don't think there is anything wrong with the
-> firmware here. Could you elaborate?
-> 
-
-So the problem is, kexec sees this memory as System RAM, and decides
-it can be used to place an image here.
-
-I guess the question is (and I actually don't know the answer here),
-whose responsibility is it to mark this region as reserved so that 
-its not touched by anyone else. I would have thought it should be
-firmware?
-
-Maybe its not the firmwares' job to mark it as reserved, but just pass
-it to kernel and the kernel is supposed to make sure it gets reserved
-in a proper way, even across kexecs.
-
-I think in the end whoevers' responsibility it is, the easiest path forward
-seems to be in kernel? (and not firmware or libstub)
-
-> 
->> The next ideal place would be in libstub. However, it looks like
->> InstallMemoryAttributesTable [2] is not available as a boot service
->> call option [3], [4], and install_configuration_table does not
->> seem to work as a valid substitute.
+>> In late boot __efi_enter_virtual_mode calls 2 functions that updates
+>> efi.memmap.nr_map:
+>> - efi_map_regions which reduces the `count` of map entries
+>>   (for e.g. if should_map_region returns false) and which is reflected
+>>   in efi.memmap by __efi_memmap_init.
+>>   At this point efi.memmap.nr_map becomes 46 in the test machine.
+>> - efi_free_boot_services which also reduces the number of memory regions
+>>   available (for e.g. if md->type or md->attribute is not the right value).
+>>   At this point efi.memmap.nr_map becomes 9 in the test machine.
+>> Hence when you kexec into a new kernel and pass efi.memmap, the
+>> paramaters that are compared are:
+>> efi.memmap.nr_map=9,
+>> memory_attributes_table->num_entries=48,
+>> desc_size = 48
+>> where the check in [1] is no longer valid with such a low efi.memmap.nr_map
+>> as it was reduced due to efi_map_regions and efi_free_boot_services.
 >>
-> 
-> To do what, exactly?
-> 
-
-To change the memory type from System RAM to either reserved or
-something more appropriate, i.e. any type that is not touched by
-kexec or any other userspace.
-
-Basically the example code I attached at the end of the cover letter in 
-https://lore.kernel.org/all/20250108215957.3437660-1-usamaarif642@gmail.com/
-It could be EFI_ACPI_RECLAIM_MEMORY or EFI_RESERVED_TYPE, both of which aren't
-touched by kexec.
-
->> As a last option for a fix, this patch marks that region as reserved in
->> e820_table_firmware if it is currently E820_TYPE_RAM so that kexec doesn't
->> use it for kernel segments.
+>> A more appropriate check is to see if the description size reported by
+>> efi and memory attributes table is the same.
 >>
 >> [1] https://lore.kernel.org/all/20241031175822.2952471-2-ardb+git@google.com/
->> [2] https://github.com/tianocore/edk2/blob/master/MdeModulePkg/Core/Dxe/Misc/MemoryAttributesTable.c#L100
->> [3] https://github.com/tianocore/edk2/blob/42a141800c0c26a09d2344e84a89ce4097a263ae/MdeModulePkg/Core/Dxe/DxeMain/DxeMain.c#L41
->> [4] https://elixir.bootlin.com/linux/v6.12.6/source/drivers/firmware/efi/libstub/efistub.h#L327
 >>
+>> Fixes: 8fbe4c49c0cc ("efi/memattr: Ignore table if the size is clearly bogus")
 >> Reported-by: Breno Leitao <leitao@debian.org>
 >> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
 >> ---
->>  arch/x86/include/asm/e820/api.h | 2 ++
->>  arch/x86/kernel/e820.c          | 6 ++++++
->>  arch/x86/platform/efi/efi.c     | 9 +++++++++
->>  drivers/firmware/efi/memattr.c  | 1 +
->>  include/linux/efi.h             | 7 +++++++
->>  5 files changed, 25 insertions(+)
+>>  drivers/firmware/efi/memattr.c | 16 ++++++----------
+>>  1 file changed, 6 insertions(+), 10 deletions(-)
 >>
->> diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
->> index 2e74a7f0e935..4e9aa24f03bd 100644
->> --- a/arch/x86/include/asm/e820/api.h
->> +++ b/arch/x86/include/asm/e820/api.h
->> @@ -16,6 +16,8 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
->>
->>  extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
->>  extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
->> +extern u64  e820__range_update_firmware(u64 start, u64 size, enum e820_type old_type,
->> +                                       enum e820_type new_type);
->>  extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
->>  extern u64  e820__range_update_table(struct e820_table *t, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
->>
->> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
->> index 82b96ed9890a..01d7d3c0d299 100644
->> --- a/arch/x86/kernel/e820.c
->> +++ b/arch/x86/kernel/e820.c
->> @@ -538,6 +538,12 @@ u64 __init e820__range_update_table(struct e820_table *t, u64 start, u64 size,
->>         return __e820__range_update(t, start, size, old_type, new_type);
->>  }
->>
->> +u64 __init e820__range_update_firmware(u64 start, u64 size, enum e820_type old_type,
->> +                                      enum e820_type new_type)
->> +{
->> +       return __e820__range_update(e820_table_firmware, start, size, old_type, new_type);
->> +}
->> +
->>  /* Remove a range of memory from the E820 table: */
->>  u64 __init e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
->>  {
->> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
->> index a7ff189421c3..13684c5d7c05 100644
->> --- a/arch/x86/platform/efi/efi.c
->> +++ b/arch/x86/platform/efi/efi.c
->> @@ -168,6 +168,15 @@ static void __init do_add_efi_memmap(void)
->>         e820__update_table(e820_table);
->>  }
->>
->> +/* Reserve firmware area if it was marked as RAM */
->> +void arch_update_firmware_area(u64 addr, u64 size)
->> +{
->> +       if (e820__get_entry_type(addr, addr + size) == E820_TYPE_RAM) {
->> +               e820__range_update_firmware(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
->> +               e820__update_table(e820_table_firmware);
->> +       }
->> +}
->> +
->>  /*
->>   * Given add_efi_memmap defaults to 0 and there is no alternative
->>   * e820 mechanism for soft-reserved memory, import the full EFI memory
+> 
+> The more I think about this, the more I feel that kexec on x86 should
+> simply discard this table, and run with the firmware code RWX (which
+> is not the end of the world).
+
+
+By discard this table, do you mean kexec not use e820_table_firmware?
+Also a very basic question, what do you mean by run with the firmware RWX?
+
+Sorry for the very basic questions above!
+
+
+> 
+> The main reason is that the EFI memory map and the EFI memory
+> attributes table are supposed to be a matched pair, where each RTcode
+> entry in the former is broken down into multiple code and data
+> segments in the latter. The amount of mangling that the x86 arch code
+> does of the EFI memory map makes it intractable to ensure that they
+> remain in sync, and so it is better not to bother.
+> 
+> 
 >> diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
->> index d3bc161361fb..d131781e2d7b 100644
+>> index c38b1a335590..d3bc161361fb 100644
 >> --- a/drivers/firmware/efi/memattr.c
 >> +++ b/drivers/firmware/efi/memattr.c
->> @@ -53,6 +53,7 @@ int __init efi_memattr_init(void)
->>         size = tbl->num_entries * tbl->desc_size;
+>> @@ -40,21 +40,17 @@ int __init efi_memattr_init(void)
+>>                 goto unmap;
+>>         }
+>>
+>> -
+>>         /*
+>> -        * Sanity check: the Memory Attributes Table contains up to 3 entries
+>> -        * for each entry of type EfiRuntimeServicesCode in the EFI memory map.
+>> -        * So if the size of the table exceeds 3x the size of the entire EFI
+>> -        * memory map, there is clearly something wrong, and the table should
+>> -        * just be ignored altogether.
+>> +        * Sanity check: the Memory Attributes Table desc_size and
+>> +        * efi.memmap.desc_size should match.
+>>          */
+>> -       size = tbl->num_entries * tbl->desc_size;
+>> -       if (size > 3 * efi.memmap.nr_map * efi.memmap.desc_size) {
+>> -               pr_warn(FW_BUG "Corrupted EFI Memory Attributes Table detected! (version == %u, desc_size == %u, num_entries == %u)\n",
+>> -                       tbl->version, tbl->desc_size, tbl->num_entries);
+>> +       if (efi.memmap.desc_size != tbl->desc_size) {
+>> +               pr_warn(FW_BUG "Corrupted EFI Memory Attributes Table detected! (version == %u, table desc_size == %u, efi.memmap.desc_size == %lu, table num_entries == %u)\n",
+>> +                       tbl->version, tbl->desc_size, efi.memmap.desc_size, tbl->num_entries);
+>>                 goto unmap;
+>>         }
+>>
+>> +       size = tbl->num_entries * tbl->desc_size;
 >>         tbl_size = sizeof(*tbl) + size;
 >>         memblock_reserve(efi_mem_attr_table, tbl_size);
->> +       arch_update_firmware_area(efi_mem_attr_table, tbl_size);
 >>         set_bit(EFI_MEM_ATTR, &efi.flags);
->>
->>  unmap:
->> diff --git a/include/linux/efi.h b/include/linux/efi.h
->> index e5815867aba9..8eb9698bd6a4 100644
->> --- a/include/linux/efi.h
->> +++ b/include/linux/efi.h
->> @@ -1358,4 +1358,11 @@ extern struct blocking_notifier_head efivar_ops_nh;
->>  void efivars_generic_ops_register(void);
->>  void efivars_generic_ops_unregister(void);
->>
->> +#ifdef CONFIG_X86_64
->> +void __init arch_update_firmware_area(u64 addr, u64 size);
->> +#else
->> +static inline void __init arch_update_firmware_area(u64 addr, u64 size)
->> +{
->> +}
->> +#endif
->>  #endif /* _LINUX_EFI_H */
 >> --
 >> 2.43.5
 >>
