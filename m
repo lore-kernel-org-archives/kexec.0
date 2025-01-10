@@ -4,85 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D4D1E7719A
-	for <kexec@archiver.kernel.org>; Thu,  9 Jan 2025 18:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B22FCE7719A
+	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 02:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Oj14ywmszEKTo8pcqpdQOE/Eg/vLBK+a32sIyoJJO2E=; b=3I5tam2LS22evDWuWpXUh0TUbr
-	MCgk889Iqjmyke3rEdVfoZr74ryRup23cvokNw01K6M+/I3m1tadPf2iW+aqfEG0ytpRHKyW48vRC
-	V4COTilXSaSXDkLqfmx9/kJ2mbsc14Xa21Avth+epF+AqK6rHev689SFENcrvVywd1IbcSllEjwQf
-	SDCWsO7792cgx2S27JH46f7WG2vBRhzRrdUy9Iv+s7EWY+6uXltH5QAUlP0liXKrLRE3u4kocSIlY
-	Qvjf+XJekVi1bEwbFzgEP2p43n4/VpqXVl8RznlU2XXJoWKIKhP8tSNruVWCQ11y9SBUx9iuJyMYU
-	5a/CvGxg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=l28W7IOIAFJp9UnHqZfLXzZT+Zn5UtLpsfOiE7ovBeo=; b=Su3XYogK70P2xPDDuxQLJwU7iS
+	XjaJ1SpyWNs8EPo3zY/kaeMAeWtY933tuUAMWsNa/2iKf93/MquSw6n1xUWN1gIgnRaGT3VjLmn2r
+	fBm7QVsWbawKGbA7/3gKujqlpQ7tO9PLb8zdSkPOs/XZe+Rr/Iu1RGhKl+EQOdrtjGnV36IpFfwvv
+	AKmZosgTIHPxOOORW9PuLTENXwN/gXuQR5QJRtNfTEBR718W/+Z0XnV7WMlv9P9Ps49VByNyHnIoj
+	j34kVv4p8A0psKqVltrxsY/+i0aClYqPd8PB1jaHcN9CaE0q2btUGbk/BWf0ONmoj5PLwL6ccjZEW
+	o3RAfk8Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVwv2-0000000Cw6T-29Ar;
-	Thu, 09 Jan 2025 18:06:08 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tW56a-0000000Ds6C-2BPG;
+	Fri, 10 Jan 2025 02:50:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tVwuz-0000000Cw4v-1JNV;
-	Thu, 09 Jan 2025 18:06:06 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 8FA88A4253A;
-	Thu,  9 Jan 2025 18:04:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA89AC4CED2;
-	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736445963;
-	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hXJVC9TEna9TWYKbS9F02aIUvOHalq4E7m1+cvMk0ArDdbnyNkOQeESQ7Ur7QTEYq
-	 oV3fJnNHiU6ugTU9/tuOjHdJ9qaR831jsML8BcJ2B2+uzRQfA4kpmr3AmZ+XqRvw70
-	 BTN8HX8ggLtR2WOIhN2X2Ipa4OKa5qs1wwTNGfy1p+9su4jHqsiWIAwGFmgaxU7Nfw
-	 H9Abn1fQ/2SPP2QU6lVw0EYHITfjtwSWp9wIQJbaVZRVNv4TDYE1jWwRNuescPEqI8
-	 vYK392uOFALwuMqP1HoC1bERclFcBuYV7fmAeGJqkaXECHPwUoHQw9LVho0fFgK9tk
-	 fJ+fXn+JQWXLQ==
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-84ceaf2667aso76226639f.3;
-        Thu, 09 Jan 2025 10:06:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUh3/TaDryMy96Ctb0nKux1KhLBkgpyNliwkqrQ2kA9Pgl1s3JeAAv0VuucTjWXB1Sz23u2Ub++1M9m5xC9r2uUmA==@lists.infradead.org, AJvYcCVbcE+PIo0iD7rKr/89BzN0IFDiOkHim47pDBLxVcB6UwJ5C4TxIvL0Od7vQGRQIIwQKeQ3J60GDpp0yvg=@lists.infradead.org, AJvYcCXu6yyt99u8V/gpDWSzYkNddSjLWXfCYKPGdBKQ6mZjpw3QbVv9oQQafEa4D9lDDQCK/BD+Mw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YykZZGg4hITuEN3+ZPZq8oo2LeOrwEEU4R7jTNaPMhRDzc9zo4c
-	gi6Kn+0yU1X7MQInQuq02VxUlkgMQlYtwIldlVOaE+wBZVs7QV1tBp71j5mMfNmWX1DlP69yqZL
-	UpDXrJbL3PS7E/S6gBo+gXBOGTo0=
-X-Google-Smtp-Source: AGHT+IHw82IqZn0L3vIWI2GRAE2/Fu1vkOzFuTOkK3ccul7HxPp7E2ac95iMCNTUN8mztI4YyZ2Kf9FZUsicSlonzfg=
-X-Received: by 2002:a05:6e02:3048:b0:3a7:6a98:3fdf with SMTP id
- e9e14a558f8ab-3ce3a9da817mr60484875ab.14.1736445963152; Thu, 09 Jan 2025
- 10:06:03 -0800 (PST)
+	id 1tW56W-0000000Ds5d-2dp3
+	for kexec@lists.infradead.org;
+	Fri, 10 Jan 2025 02:50:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736477430;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l28W7IOIAFJp9UnHqZfLXzZT+Zn5UtLpsfOiE7ovBeo=;
+	b=LAgjjuwHu5lk5x3k2WRo6CjUCXZrDNGH030uSlx4saVVQuWdV2/Y7Q2oqMHE/X/sAWVpDn
+	yH3gsjCWIHm5LrmvGGSbCwUxrpmXWs9efT87SugiXLxbgbSDTlfNnxEh2spjGbC2AcjD5C
+	e/rA9FlMkbqULvFYN0tT6xmLD+YYfDA=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-260-uw6UyqyrOb2BW0pdfHQx-Q-1; Thu, 09 Jan 2025 21:50:26 -0500
+X-MC-Unique: uw6UyqyrOb2BW0pdfHQx-Q-1
+X-Mimecast-MFC-AGG-ID: uw6UyqyrOb2BW0pdfHQx-Q
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce51b2fcc6so12371135ab.1
+        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 18:50:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736477426; x=1737082226;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l28W7IOIAFJp9UnHqZfLXzZT+Zn5UtLpsfOiE7ovBeo=;
+        b=baSbLHHgOfluImS2GQXSCcPb0XZJ9hmPmLRgqsC4zH9Q+09wrLPC6dgXtEFzcVSwwe
+         dIRofvTCBOPW3PSUMK54SMihMuUUVsBEVAdUw2me8rM1yi1bqGZuA/vP7VC4McuhQMcF
+         NmUDoKkfg3yCAwRGEjYZwfCwpkWAQCE/nHHjSiO/ef4CQSxPIhz13UJtx1TtgPZvzLXj
+         l133HqEm6Fdw08ONUCCuEIjtQBu3LqhqQ1dzf1f2YmLC8Cgj47GdprI91SjdHolLfIMy
+         tCbU8J/ElpKA/5BQprxpuLiJpMd1RmRNCJQSVJJ+tdkR9OcENEsxrNoJNEChKaKqB9vy
+         kixw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr284tg5gltspGS5kQL4/s4gLxw+m+TJExpB+6LzBD0KRAUwNnZ+cmah5ivFfSeKsZROX2gA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzeCW8MigGXHjj+qFZR7h7lhbXCDUkj3uXsgeHIrQOrUzem/zor
+	NCWsjQJ8gleuCF0hiBa7MakXSyaAWdl+hmNaqTNGajEnkRObAmRspVGwqdU3OjegjnD2WUnsiqZ
+	Lngvsjs8KnvTsuitNOJzGpDqEImWvXMyh58LBk8rWfHEDO9TCJBM8GrCK/DhWpvNkpRWvzSw73h
+	kEAC164v6oZCimrBX0DI+XDAflmNqrQDmt
+X-Gm-Gg: ASbGncvqADDIgACz2Tf2TEWm77rblq/P1gnLwqG7jXfVgT6Yj7AZA2fbxjkj/H/othg
+	kkD8Hw1LmoMasRqzMkaZQktYwRUrLCLWEz/GYWXc=
+X-Received: by 2002:a05:6e02:1b03:b0:3a7:e539:c27b with SMTP id e9e14a558f8ab-3ce3a8bebd1mr56015665ab.17.1736477426100;
+        Thu, 09 Jan 2025 18:50:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFDGtliUz8u4ArhQvsNK3hU4dY2KdsRiD/CY4zDcby6FNqeeWso+rG5xRZbGE13XAQ77Nf1qFOrtPh284YbRLQ=
+X-Received: by 2002:a05:6e02:1b03:b0:3a7:e539:c27b with SMTP id
+ e9e14a558f8ab-3ce3a8bebd1mr56015555ab.17.1736477425788; Thu, 09 Jan 2025
+ 18:50:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 9 Jan 2025 10:05:51 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-X-Gm-Features: AbW1kvZZD8oqcdTZ9DXv7tEUC7bpyqeBsuw6nnhXboAE2kNg_1eTiibnv93HXj8
-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-To: Joel Granados <joel.granados@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+References: <20250108215957.3437660-1-usamaarif642@gmail.com> <20250108215957.3437660-3-usamaarif642@gmail.com>
+In-Reply-To: <20250108215957.3437660-3-usamaarif642@gmail.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Fri, 10 Jan 2025 10:50:30 +0800
+X-Gm-Features: AbW1kvYxA86BWuq5GqR14CbuyK2tb5JSgfWl1vXKLE_oVV-bgv-0DWHCSCe-nz4
+Message-ID: <CALu+AoTgjdq+kUbv-5CGQr=UTLd2+zDLbHt=kXaoMYYptBYnAA@mail.gmail.com>
+Subject: Re: [RFC 2/2] efi/memattr: add efi_mem_attr_table as a reserved
+ region in 820_table_firmware
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io, kexec@lists.infradead.org, 
+	ardb@kernel.org, hannes@cmpxchg.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, leitao@debian.org, gourry@gourry.net, 
+	kernel-team@meta.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: PC3_0KzCo58Aan7koa_IBbHe_RkTkv5J5bzF5xP19j8_1736477426
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250109_100605_476314_89F4B2FD 
-X-CRM114-Status: UNSURE (   5.09  )
+X-CRM114-CacheID: sfid-20250109_185032_753845_C9519645 
+X-CRM114-Status: UNSURE (   9.01  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,29 +105,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 9, 2025 at 5:16=E2=80=AFAM Joel Granados <joel.granados@kernel.=
-org> wrote:
+Hi Usama,
+
+On Thu, 9 Jan 2025 at 06:00, Usama Arif <usamaarif642@gmail.com> wrote:
 >
-[...]
->  drivers/base/firmware_loader/fallback_table.c | 2 +-
->  drivers/cdrom/cdrom.c                         | 2 +-
->  drivers/char/hpet.c                           | 2 +-
->  drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
->  drivers/char/random.c                         | 2 +-
->  drivers/gpu/drm/i915/i915_perf.c              | 2 +-
->  drivers/gpu/drm/xe/xe_observation.c           | 2 +-
->  drivers/hv/hv_common.c                        | 2 +-
->  drivers/infiniband/core/iwcm.c                | 2 +-
->  drivers/infiniband/core/ucma.c                | 2 +-
->  drivers/macintosh/mac_hid.c                   | 2 +-
->  drivers/md/md.c                               | 2 +-
+> When this area is not reserved, it comes up as usable in
+> /sys/firmware/memmap. This means that kexec, which uses that memmap
+> to find usable memory regions, can select the region where
+> efi_mem_attr_table is and overwrite it and relocate_kernel.
 
-For md bits:
+Is the attr table BOOT SERVICE DATA?  If so, does efi_mem_reserve()
+work for you?
+Just refer to esrt.c.
 
-Reviewed-by: Song Liu <song@kernel.org>
+Thanks
+Dave
 
-Thanks,
-Song
-
-[...]
 
