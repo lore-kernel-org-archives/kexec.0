@@ -4,97 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 902A7E7719D
-	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66DE5E7719C
+	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 10:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/ZjpKehOtHC5qkYry/2xS79wePNMJtKjfmLm74RohwE=; b=uEfKRFDD7/9PxdpJcKwnhQHzXE
-	j28XffAnyBkw4vLD+TXNrARILp39rewXLDzP4LQWBlauC3GfChB1/5QKRkO91KeQ/qn5NpTXaEr1J
-	X9RXVSDC136jgY/Yn9hrSF9ykVSSQpUH5T5SSt1pNiaazMsjA19vkDC/rs6yQxXNZP3mtn7a0cVhf
-	d3w3EOSRkWLh4vPdYvqGS5+YePPVw6dWTXBAyOIqXMmRGSqRn67oHBG+DBW2++wFqvoL9HGetppVE
-	04a6N8N8I4uTxp0VKJwfQLct12DEEuPQ2luwI4Y/TUmuBDvFE6t2SsNuXELwjJMWjCxtHSF7wWSrV
-	o3yFAzxw==;
+	bh=Ve3lNtLuYnUEedIKyQHjHUym+uf/AdZFMUlHp8J/SPs=; b=IBpKEeHrR4GY74tcc03ejGdqPf
+	5JbU9/7Z+r6pdRW8+fHOHig89qh31cAeY9/KEt5XpHEDykuB7hZiHEYQIkbs7HMktn/p6lggF8wb2
+	CWzgu7Qc/4KL4++KG0DcdTonhfWy0lvWhg4y6yAY0wHC4iOLe9OweD5/HC0v1d7n4c9Uine1axHdn
+	1oWysy1DSAF41W9grqD1OcGW5c+ChNm+jrPE1E7h9ckbzjd9qvehZ3sYgspQx+DohbrizZQkvTSVl
+	vRXW8uJzQQ0HIksbKOOel57D0RbrpjPKJ9l1tBDQZvrdGKWvYXCCFyWDHZa4nXvPl1ECmFy/GFr6x
+	vxu1uyAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWBOJ-0000000Ek2m-0SqJ;
-	Fri, 10 Jan 2025 09:33:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tWCif-0000000F2Jk-0mUZ;
+	Fri, 10 Jan 2025 10:58:25 +0000
+Received: from mail-ed1-x529.google.com ([2a00:1450:4864:20::529])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWBED-0000000EgRa-1TEh
+	id 1tWCeL-0000000F1Zh-1qU2
 	for kexec@lists.infradead.org;
-	Fri, 10 Jan 2025 09:22:55 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736500971;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/ZjpKehOtHC5qkYry/2xS79wePNMJtKjfmLm74RohwE=;
-	b=jIK98APTg7CWgxUfcU9RFKnUbdl7riHuxSsnNUTqS6aWwZhqxRs+dhQnHJ+WOsZ5YObSrF
-	p5UgZD9mMe9B4yBz6KgH6+StdX3H9/XoXjlEuqZkdCvXjRIwjI0bO+GnS9Yus3Er+enQCL
-	9GKVnTW9nN5LqwecgwppnuhJLOlhWdo=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-353-BAE4wnFwP1GkDF7oC0YfIg-1; Fri, 10 Jan 2025 04:22:49 -0500
-X-MC-Unique: BAE4wnFwP1GkDF7oC0YfIg-1
-X-Mimecast-MFC-AGG-ID: BAE4wnFwP1GkDF7oC0YfIg
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a78c40fa96so13585815ab.3
-        for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 01:22:49 -0800 (PST)
+	Fri, 10 Jan 2025 10:53:58 +0000
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5d90a5581fcso3097251a12.1
+        for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 02:53:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736506435; x=1737111235; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ve3lNtLuYnUEedIKyQHjHUym+uf/AdZFMUlHp8J/SPs=;
+        b=BDNly1OLwgkQXo3SujRQmgHwnBpfOIQt1wRyFMlCC2SCvWgzvz8sWo0LW0zCxsJgjO
+         FRATW+4S27j8AjWYMbxiCkDq2tNI1XhYaHdqH6ckzlKOfUEQY3ROQMxu/zikLz1IgYm9
+         Ftl2HM+MO5Dp6WB6hPiaWqnuo7yiksNU8SLwF5HY8DXbYDd6sxfBS/34XDyt56pkMpPK
+         fIdpGiVvO0YPsf/j89FY/K4XUAe4tfZjnq/VplwrqMCb6yABv13xzrVSYzQBHQLA+Hat
+         S8/olnK9Mc5cpLwQJq03MotLi6uO0wcbfGk0Y6iDS/txKcI7U/kdAPh515gkLQrKubjt
+         c6fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736500969; x=1737105769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ZjpKehOtHC5qkYry/2xS79wePNMJtKjfmLm74RohwE=;
-        b=bH1Tt9If2v8TF+EMbp4ZgR+pieuFofuFs9u+Wt/zKOeC7L9dojN4V+TCbsrq3r3HiO
-         /Q7+raoRNOFwHxkE3UuekRMDj8GE35kp5hUaJZlnM5kUJsM4EovNUe5JLLmtZP9Yp7S2
-         kx+tCgS4M01vh51CERiKwfc+Uq1ali7ijummd6zILkUf57eHtH8oii9PfDBvHHQVvHm3
-         0ry8E+ZcDr65sRUYqUcFynQpb1f98Zonb35BPk+e3G7bgFCPy37Gvi5UCvUSNeaMORkM
-         gqScOpHCyHWcG5oqzwRJPiNOl+eVT4NBt01NxAo2TfRZIR8urvLUiCU/xHtNh+5+OF3V
-         o5AA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrRkh/6WXNXMCNcDzsVAlYuFQcLlbQdzKcOH0QLwtrTPHo5x9hd/SOj1hbXE+3YEPETAmO3g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YysAuUhI0ITTMEv6tCN8Y6sLWSGius07ms8h2Xj0HicNnVxA+tC
-	XDLVNwGnFtVIX9j4EJRXNMypyREiXyNFqTHl3gdMPALBlAFkKFrOVHxe9mOgqtwdhTtw1MYTZsN
-	3kVIp8Ilm4Jgwqb8eUxfSUot1RT0AqvZv9DFwsBrRvsKUht4udseK39KEF8ZZC8iOfv/mfK7/b7
-	CzmWxID0JiD2WTeZ/hKH2RQtSMn1fHJglR
-X-Gm-Gg: ASbGnctiHXXNmXZC2K/aR0LOit5k4oOzuorn3NgXNeAyNjj3OKk8YeUzGc0h4h66fRq
-	iYb8KvmcGwHAyYHiazaenkm5SJHvLVrYf56jBXAc=
-X-Received: by 2002:a05:6e02:1d0a:b0:3a7:a553:72f with SMTP id e9e14a558f8ab-3ce3aa5b1ddmr73319725ab.18.1736500969125;
-        Fri, 10 Jan 2025 01:22:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGZPBLoOgF/w7LAXCeJHG8+rXEgrBNBJ+ZjTuYwAwxQ9wqV6jcnanChGwwjC8+FizLEPCmzZ3MuoI1M+qOs8ik=
-X-Received: by 2002:a05:6e02:1d0a:b0:3a7:a553:72f with SMTP id
- e9e14a558f8ab-3ce3aa5b1ddmr73319595ab.18.1736500968804; Fri, 10 Jan 2025
- 01:22:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736506435; x=1737111235;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ve3lNtLuYnUEedIKyQHjHUym+uf/AdZFMUlHp8J/SPs=;
+        b=H0YbDyN6wEpRmzo8fXmkmsh1aI5X/GGZO2HNMAyDdw1J35tG+bU+2k3BCjnqPNnl4D
+         gb0qnGyXCr3TniqSy+/B0v1HOvLocr/h1XNpIeYlsPm0ErMdiO3NPglB5fDfLU2otJlO
+         mIdyI0pCYKkwfjHz8Pn0i3lqMc6NfJnPTb9UFM6l6GyRPl+ESN5MKThz9YrgIPSZFKKW
+         sm6K26YvdAgP5c2e2u60qYlKS+BKHsJK57aFn1kRhxRyi70V4fENYy/uVhroLVXX+hp0
+         1KgM279CSwgu0PIQtXhnDMKdetJ5HiEJvQK6Ewyln2DXprqs+YVuzTXMDqNTu7G8RRdP
+         ToOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOi7GKqHaDWol06SSBtuvX5Y43VVRx8lcPjq7nvswtKc7StEArNCx8dVgMRfZ987+RsR337Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy1XAD7V3GTTcbEHuodZKfi9HoaX4laH1ofsfATSw9y0Jhi9ZWw
+	1vn78obkAB5tZoqmAyN5yrPdjdT34V9mhq0jS3kekfcjcL7DPtrH
+X-Gm-Gg: ASbGncssea6G4ulH1ajGgttUdFJAFMV3ej0TGcbuiG04KXvkCzewBXX4UarCqzsmzff
+	amcdPvLhsi9VD+33pd5NGjJ1eO/dx3GJwbKmMd4sZ8r4U55WRIRYhEhryopF3oxvl9dWSvwHMq3
+	f9Gb5KjUPRIxozibbplHaqbbrqRE0D0WBcaUvOFGa19w7wNPsDG4yAfFxGniw62mUcM+p6/BEoY
+	FCC49p1C+mMhO8FP6cdJgoQ+pPmmiEIeKetXnG8HMICAxC8b8BSMeACqTl5P3DgaZmHqHxaosES
+	rf0c5cyS/sELd2KTwCxtD+6J9Ugc
+X-Google-Smtp-Source: AGHT+IHUoKF5CCleTB2jU9vLsvOAEPHxoqMfeJizDfgZZl9x+zXjW5TDWSL8oHA1WM8ocRBnyA/UtQ==
+X-Received: by 2002:a05:6402:2347:b0:5d2:729f:995f with SMTP id 4fb4d7f45d1cf-5d972e6f957mr8778390a12.29.1736506435017;
+        Fri, 10 Jan 2025 02:53:55 -0800 (PST)
+Received: from ?IPV6:2a03:83e0:1126:4:829:739b:3caa:6500? ([2620:10d:c092:500::5:e213])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d98fe8f68csm1544698a12.0.2025.01.10.02.53.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 02:53:54 -0800 (PST)
+Message-ID: <8613563a-ee7c-4271-b1f0-4d1ac365ad3a@gmail.com>
+Date: Fri, 10 Jan 2025 10:53:53 +0000
 MIME-Version: 1.0
-References: <20230915035013.1582679-1-songshuaishuai@tinylab.org>
- <20230920115634.GG224399@kernel.org> <DA84A55096BADE15+594e239a-ff6a-368f-ae92-b6cfebbf8dc0@tinylab.org>
- <CALu+AoSr+an7Ps-jhcSbvrq4E4FnqkiNZVH-2BhV_3=B+oDcFQ@mail.gmail.com>
- <20240518083304.GD475595@kernel.org> <20240812163633.098f8f07@mordecai.tesarici.cz>
- <CALu+AoSmG9eehL+udT2KHzn4H5Gq9eJ_t-C_H8mkJMhvB3VpPQ@mail.gmail.com>
-In-Reply-To: <CALu+AoSmG9eehL+udT2KHzn4H5Gq9eJ_t-C_H8mkJMhvB3VpPQ@mail.gmail.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Fri, 10 Jan 2025 17:22:54 +0800
-X-Gm-Features: AbW1kvZpAMIcdQxAdswCJo-qVHiJaK8CPVkY_OQ4GsqEBgDGEU_VS_T0f3FvfZ4
-Message-ID: <CALu+AoQ6g3BXhYEx0b0AwfOHGVCzZhwbUwjWtakyRwng-OYo8Q@mail.gmail.com>
-Subject: Re: [PATCH 0/7] Kexec-tools: Improve RISC-V port
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Simon Horman <horms@kernel.org>, Song Shuai <songshuaishuai@tinylab.org>, mick@ics.forth.gr, 
-	lizhengyu3@huawei.com, liaochang1@huawei.com, xianting.tian@linux.alibaba.com, 
-	guoren@kernel.org, huanyi.xj@alibaba-inc.com, yixun.lan@gmail.com, 
-	kexec@lists.infradead.org, hursand@fedoraproject.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gpQDszaO7TY-do9RYncpRugQL-OMVind25axIUoNUE4_1736500969
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] efi/memattr: Use desc_size instead of total size to
+ check for corruption
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io,
+ kexec@lists.infradead.org, hannes@cmpxchg.org, dyoung@redhat.com,
+ x86@kernel.org, linux-kernel@vger.kernel.org, leitao@debian.org,
+ gourry@gourry.net, kernel-team@meta.com
+References: <20250108215957.3437660-1-usamaarif642@gmail.com>
+ <20250108215957.3437660-2-usamaarif642@gmail.com>
+ <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
+ <d9c84079-6593-43f4-9483-648b665f03db@gmail.com>
+ <CAMj1kXGYsJrqDzy_+g_wSAAEuQ_OnxvyJ8ZE+4gbr6KOY7iuow@mail.gmail.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <CAMj1kXGYsJrqDzy_+g_wSAAEuQ_OnxvyJ8ZE+4gbr6KOY7iuow@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250110_012253_463323_4B756DF8 
-X-CRM114-Status: GOOD (  41.66  )
+X-CRM114-CacheID: sfid-20250110_025357_482660_E962FBE6 
+X-CRM114-Status: GOOD (  23.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,115 +106,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 14 Aug 2024 at 16:23, Dave Young <dyoung@redhat.com> wrote:
->
-> On Mon, 12 Aug 2024 at 22:36, Petr Tesarik <ptesarik@suse.com> wrote:
-> >
-> > Hi,
-> >
-> > On Sat, 18 May 2024 09:33:04 +0100
-> > Simon Horman <horms@kernel.org> wrote:
-> >
-> > > On Sat, May 18, 2024 at 11:39:18AM +0800, Dave Young wrote:
-> > > > On Wed, 11 Oct 2023 at 13:24, Song Shuai <songshuaishuai@tinylab.or=
-g> wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > > =E5=9C=A8 2023/9/20 19:56, Simon Horman =E5=86=99=E9=81=93:
-> > > > > > On Fri, Sep 15, 2023 at 11:50:06AM +0800, Song Shuai wrote:
-> > > > > >> Hi,
-> > > > > >>
-> > > > > >> This series is created to improve RISC-V port of kexec-tools,
-> > > > > >> and is based on the horms/kexec-tools:build-test-riscv-v2 bran=
-ch.
-> > > > > >
-> > > > > > In my mind the big question is how to move RISC-V support
-> > > > > > from that branch, to being merged into main.
-> > > > > >
-> > > > > > IIRC there were some issues that needed to be addressed.
-> > > > > > Perhaps they are all addressed by this series, and with
-> > > > > > some appropriate squashing we can move forwards with a series
-> > > > > > based on main?
-> > > > >
-> > > > > Hi, Simon and Nick:
-> > > > >
-> > > > > I squashed the first four patches as a "RISC-V: Some fixes for ri=
-scv
-> > > > > port" patch and then took the horms/main as the base to collect t=
-he 2
-> > > > > patches from horms/build-test-riscv-v2 branch and this series tog=
-other.
-> > > > > These are the Github link and all commits for RISC-V.
-> > > > >
-> > > > > https://github.com/sugarfillet/kexec-tools/commits/main_rv
-> > > > >
-> > > > > 5dc133e RISC-V: Support loading Image binary file
-> > > > > b042f6d RISC-V: Separate elf_riscv_find_pbase out
-> > > > > 8f344c7 RISC-V: Enable kexec_file_load syscall
-> > > > > 7d4b982 RISC-V: Some fixes for riscv port
-> > > > > 3205c1c local: RISC-V: distribute purgatory/riscv/Makefile
-> > > > > 54f9daf RISC-V: Add support for riscv kexec/kdump on kexec-tools
-> > > > >
-> > > > > Since I didn't found the issues/fixes as Nick mentioned with thes=
-e
-> > > > > commits, I prefer to merge them into horms/main and let more kexe=
-c/kdump
-> > > > > users to help improve/fixup RISC-V port.
-> > > >
-> > > > Hi,  I noticed another pr for Fedora kexec-tools:
-> > > > https://src.fedoraproject.org/rpms/kexec-tools/pull-request/24
-> > > >
-> > > > It is bad to take it as Fedora only,   I would suggest posting all =
-the
-> > > > refreshed patches together here again for review.
-> > > >
-> > > > If no enough reviewers can review them my another suggestion is to
-> > > > drop the kexec_load support code for the time being, and only enabl=
-e
-> > > > the kexec_file_load support code in kexec-tools, and I assume below
-> > > > kernel commit make the kexec_file_load kernel piece of work done.
-> > > > Then it will be easier to review and make something working at leas=
-t.
-> > > > commit 6261586e0c91db14c34f894f4bc48f2300cff1d4
-> > > > Author: Liao Chang <liaochang1@huawei.com>
-> > > > Date:   Fri Apr 8 18:09:11 2022 +0800
-> > > >
-> > > >     RISC-V: Add kexec_file support
-> > >
-> > > Hi,
-> > >
-> > > I would gladly take a patchset for kexec-tools that adds RISC-V suppo=
-rt in
-> > > a coherent manner.
-> >
-> > Have I missed some progress on this topic? FWIW I can take care of
-> > RISC-V support in kexec-tools, I even received a VisionFive 2 board
-> > from RVI last year specifically to help with kexec.
-> >
-> > I merely don't want to duplicate efforts or "steal" someone else's
-> > project. Is RISC-V support in kexec-tools an orphaned project now?
-> >
->
-> I thought about a simple kexec_file_load only approach previously but
-> I have no time to work on it actually.  In theory I think a simple
-> kexec_file_load implementation should only share some common functions
-> eg. arguments parsing, file reading etc. and load the kernel and
-> initrd into memory, pass the fds and cmdline buffer into kernel,
-> that's all,  Even no need to have the arch specific file format
-> checking as they should have been done in the related kernel code.
-> But looking at the code it is not easy.  Currently the kexec_load and
-> kexec_file_load implementations are not logically separate in the code
-> and the cleanup is hard.
 
-Hi,
 
-My concept is like below (an ugly draft, not polished and well tested,
-also missing zboot/uki decompressing), maybe people can use it
-temporarily before a full support code is ready:
-https://github.com/daveyoung/kexecfile
+On 10/01/2025 07:21, Ard Biesheuvel wrote:
+> On Thu, 9 Jan 2025 at 17:36, Usama Arif <usamaarif642@gmail.com> wrote:
+>>
+>>
+>>
+>> On 09/01/2025 15:45, Ard Biesheuvel wrote:
+>>> On Wed, 8 Jan 2025 at 23:00, Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>
+>>>> The commit in [1] introduced a check to see if EFI memory attributes
+>>>> table was corrupted. It assumed that efi.memmap.nr_map remains
+>>>> constant, but it changes during late boot.
+>>>> Hence, the check is valid during cold boot, but not in the subsequent
+>>>> kexec boot.
+>>>>
+>>>> This is best explained with an exampled. At cold boot, for a test
+>>>> machine:
+>>>> efi.memmap.nr_map=91,
+>>>> memory_attributes_table->num_entries=48,
+>>>> desc_size = 48
+>>>> Hence, the check introduced in [1] where 3x the size of the
+>>>> entire EFI memory map is a reasonable upper bound for the size of this
+>>>> table is valid.
+>>>>
+>>>> In late boot __efi_enter_virtual_mode calls 2 functions that updates
+>>>> efi.memmap.nr_map:
+>>>> - efi_map_regions which reduces the `count` of map entries
+>>>>   (for e.g. if should_map_region returns false) and which is reflected
+>>>>   in efi.memmap by __efi_memmap_init.
+>>>>   At this point efi.memmap.nr_map becomes 46 in the test machine.
+>>>> - efi_free_boot_services which also reduces the number of memory regions
+>>>>   available (for e.g. if md->type or md->attribute is not the right value).
+>>>>   At this point efi.memmap.nr_map becomes 9 in the test machine.
+>>>> Hence when you kexec into a new kernel and pass efi.memmap, the
+>>>> paramaters that are compared are:
+>>>> efi.memmap.nr_map=9,
+>>>> memory_attributes_table->num_entries=48,
+>>>> desc_size = 48
+>>>> where the check in [1] is no longer valid with such a low efi.memmap.nr_map
+>>>> as it was reduced due to efi_map_regions and efi_free_boot_services.
+>>>>
+>>>> A more appropriate check is to see if the description size reported by
+>>>> efi and memory attributes table is the same.
+>>>>
+>>>> [1] https://lore.kernel.org/all/20241031175822.2952471-2-ardb+git@google.com/
+>>>>
+>>>> Fixes: 8fbe4c49c0cc ("efi/memattr: Ignore table if the size is clearly bogus")
+>>>> Reported-by: Breno Leitao <leitao@debian.org>
+>>>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+>>>> ---
+>>>>  drivers/firmware/efi/memattr.c | 16 ++++++----------
+>>>>  1 file changed, 6 insertions(+), 10 deletions(-)
+>>>>
+>>>
+>>> The more I think about this, the more I feel that kexec on x86 should
+>>> simply discard this table, and run with the firmware code RWX (which
+>>> is not the end of the world).
+>>
+>>
+>> By discard this table, do you mean kexec not use e820_table_firmware?
+> 
+> No, I mean kexec ignores the memory attributes table.
+> 
+>> Also a very basic question, what do you mean by run with the firmware RWX?
+>>
+> 
+> The memory attributes table is an overlay for the EFI memory map that
+> describes which runtime code regions may be mapped with restricted
+> permissions. Without this table, everything will be mapped writable as
+> well as executable, but only in the EFI page tables, which are only
+> active when an EFI call is in progress.
+> 
 
-Thanks
-Dave
+Thanks for explaining!
 
+So basically get rid of memattr.c :)
+
+Do you mean get rid of it only for kexec, or not do it for any
+boot (including cold boot)?
+I do like this idea! I couldn't find this in the git history,
+but do you know if this was added in the linux kernel just
+because EFI spec added support for it, or if there was a
+specific security problem?
+
+Thanks!
 
