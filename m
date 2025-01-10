@@ -4,95 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 47696E7719D
-	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 16:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01130E7719C
+	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 17:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7/c1zoXGuzll6xGx17OnRXhTktRZuXOkRRbzbli15PE=; b=Nh6a2MGcwkqIY967JBcLfnCKit
-	R+p8KVvDUHPAuH3z4thO+OYL1yszVePh2Cwz0M2DszaFmUenAfE2mIwvRJej06hlOlSgmaMwBTQUG
-	DhgviJu1xJ8ULeYTmOxmcCaZl/FWU3/A6z8bf6iMdOJ9Y+a0hR0BdaHAWxQuQ1YLM+y/FqJNe18BB
-	aoX14qJ8Tvepz4gzhGSAbctTs2RYcOrpEP/wcb/l79fWtxxCPbyoyIo3nyzs844O8foUrU9d2o4+m
-	0XjwEMT6Zpa0m6F4AF9+0TtAD0J2K9RVzJY/qiMoqkb4I1ymXXkofOdUTmep4UpUVDkQTjhLy5M91
-	IdUdZKnA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=rU8B9pXUWMp+CstKuXw+YGxa2kBNtjGh+nPj+/URa+U=; b=pFVnY/md0vYWJ6iKyrPlLSPmEu
+	LPt307+QCH2uKKj/np14sT90qX568rIyKzs2C0wQJ2CZFrgF2WkLwD1dXyj1CyrnEK67W7tkIZq5j
+	R3ZNf2M0eZhVt5UITTRrWC5afuc/W+CQ2/XQAU/HYp0imwzMIGqvXib4mHco7H0BSVvXaZDX5W4Rg
+	0QCWAj3FESRJGqLMaN9FwTA14HB5Zh6wogQ41ZuX1fQIDfBkP5UGvI1MBOpAKld+tp1FVok2Bor+r
+	MXStPyuUxJlT15yKicAzcQ75QPWJQtArzLeCuLsS4RiRB0Ek/VaGQ1tqwJaxT6CvrlJrc3JJ3OiVP
+	A/JI+hjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWHev-0000000GBAR-01bT;
-	Fri, 10 Jan 2025 16:14:53 +0000
-Received: from mail-wr1-x432.google.com ([2a00:1450:4864:20::432])
+	id 1tWIbN-0000000GOQ8-41Tt;
+	Fri, 10 Jan 2025 17:15:17 +0000
+Received: from mgamail.intel.com ([198.175.65.21])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWHGv-0000000G5rP-2JUN
-	for kexec@lists.infradead.org;
-	Fri, 10 Jan 2025 15:50:06 +0000
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso1926942f8f.1
-        for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 07:50:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736524204; x=1737129004; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7/c1zoXGuzll6xGx17OnRXhTktRZuXOkRRbzbli15PE=;
-        b=cAAyBkhp6KMabvtYYg/W6pe4BGq/XJ7TgmlfSlePKdUtBIaOA517GCvKyMDrmj4N9l
-         MbtupXy3hJCF9lHzW/oWJmQvo6Rn7DgJhHYVqh7GXLwUkNXKTBJblrs6S5aHNh+aZrWh
-         AU8Tl4PoMVxbGlVi4YZMZ8p7xEFxeCBYK2AYcPJJIg8nOnES+9WlgzeD8ba+C0qOxK+q
-         XK9PT0QEJDoWSRhVC+DIAuoq5Wz+8KwffNadHV55NA56Xm+qI0TTeErMCnzYq3+BCFMH
-         JvMYRz7VWIyTBL0VtEHCBSJXG6K81zES8tazYmVuUbNsUW8FwgoMpzm32koH0G25qBEc
-         B1Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736524204; x=1737129004;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/c1zoXGuzll6xGx17OnRXhTktRZuXOkRRbzbli15PE=;
-        b=H88aCf/uOrklmHxrayqFqFBB+rufAbQn1WINhMMAw3TQV9oHV39ucCCDqTbPmpqaQM
-         k9vJ2QBuNK6LqminfiXx5DPsVT4tgDlojacxMfjbUrpyGE5SQpiWdQB4fe/VIVhp9LVv
-         46z6k00JZk+ijLDUlX6PGZCBjRecDUXJ+YR7fcQdlkt6+7zY8n5HF/O8fqI2VnrUvh9e
-         NM3EhtM5X6WWyzoay6gSmcL9sCZy1C5+8ItStYFKoVxzDV2KxCx8fbxI8zO1Jz19N7UB
-         d2P0qLpaJno8qt97hPsVu4Qp84+1a0GIKUsjLZyoDpa+UTMEkDMTlMAz5j5ilNNduawB
-         rz6A==
-X-Forwarded-Encrypted: i=1; AJvYcCX44nHCqemFqwovGv+IJa60NsSiwFKO1+4Uf6XM99FXgT/z+3NrFypjMlmWOIAEuXd2uaHcRA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzaz1cGMMqto8Vo3K38zOmvw0DxeTjzVL9oTHCVh+c8A9FwpFQl
-	QxN/HN2Rx/BTewD3PGBkehl+bOCtu1Ip6FfpTauUi8W1/S8SSwwH
-X-Gm-Gg: ASbGncswz4jBP0hBA/mT4an7VcADnlJQH8UVF11AtN6EdyQYe2pAakee6m9dIgA3bqe
-	383ZmnU1Vjk9Rrm7sZk7OG1H4d90K06Cw21RJxuQ6hM77KUSYNJ4Ft6NrIJk1+sPYKN1fF0IT0z
-	aChq8Tc3CtNjuk3CV1Ofx3EN/x+JsNu4QTSKIQillIa+iFmvLDVy1SCXTqKBFGBG6HGgLE3Po7m
-	EKKHG038GDYPpMK0eISfD5eU5ItYPJzVlefMwU0jkl1EP6ojd/8NXHKTwouNQK6ONM63sDoB4K+
-	QdTVfy7ZjwUx2lHK9GaPzys5SukumnBljkORZaVcFLwZtQbJqw==
-X-Google-Smtp-Source: AGHT+IG99ba+3EjbnJDKEadpRExVV0uXfnt4rvpxoh7E9vujPX4RITwsVLvUeQ3NSOG9KobH9SAa/A==
-X-Received: by 2002:a5d:598e:0:b0:38a:8b56:f6c with SMTP id ffacd0b85a97d-38a8b56119emr6950772f8f.14.1736524203663;
-        Fri, 10 Jan 2025 07:50:03 -0800 (PST)
-Received: from ?IPV6:2a02:6b67:d752:5f00:c46:86ac:45ea:7590? ([2a02:6b67:d752:5f00:c46:86ac:45ea:7590])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1dc6sm4864460f8f.96.2025.01.10.07.50.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2025 07:50:03 -0800 (PST)
-Message-ID: <fd63613c-fd26-42de-b5ed-cc734f72eb36@gmail.com>
-Date: Fri, 10 Jan 2025 15:50:02 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/2] efi/memattr: add efi_mem_attr_table as a reserved
- region in 820_table_firmware
-From: Usama Arif <usamaarif642@gmail.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io,
- kexec@lists.infradead.org, hannes@cmpxchg.org, dyoung@redhat.com,
- x86@kernel.org, linux-kernel@vger.kernel.org, leitao@debian.org,
- gourry@gourry.net, kernel-team@meta.com
-References: <20250108215957.3437660-1-usamaarif642@gmail.com>
- <20250108215957.3437660-3-usamaarif642@gmail.com>
- <CAMj1kXFWZNRwx1H2HT8V9hNvUKDi0O3kcLku+g94UOvNBzz5eQ@mail.gmail.com>
- <cade51c5-5fcc-4208-b46c-f2e2038f03e7@gmail.com>
- <CAMj1kXFwgnQT4jQF8zsX05PdrF_QDXK0+Z-6DD6LiSgjqY738A@mail.gmail.com>
- <d3ee6521-fae3-41b2-a759-e454681dde6f@gmail.com>
-Content-Language: en-US
-In-Reply-To: <d3ee6521-fae3-41b2-a759-e454681dde6f@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+	id 1tWIa7-0000000GO6f-0jbm;
+	Fri, 10 Jan 2025 17:14:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736529239; x=1768065239;
+  h=date:message-id:from:to:cc:subject:in-reply-to:
+   references:mime-version;
+  bh=zCD9wMt7oj+kJBhlIcsVVTGT43QE2wPIyfO0mHZuo3E=;
+  b=DemtaSeYwH+WRO0/KzyGdpFW3f7qYSBZoH+TGZyGXYMHRWgyRC+LqDhO
+   PjH8BE37zAG66e29MGjCZ8RQ2S2xU+x8NdVd/xqzJaiUFZjLHiMeci3pr
+   yUpL4ehVYiGQKZ2szAvf2Xy1ldHEx1Rso0Y6C69QzBTCsdVbmTXWK0uRS
+   Ni9tnwRaWKZjVsr1WTC+7QioAu+MCeGhW+pOH3YR9EP8UAqkU1TLwQiKp
+   rNDfH2RBYqxmHtWjvXxb2rKtQqHqng/9NO4UYXh626uH16SY69Vh+YwiQ
+   sMYA2DCCm9PhB9ADDsn/qWlM9+P9hgw8bHfxfxOjDjlwhFcb8jh1VsvXH
+   Q==;
+X-CSE-ConnectionGUID: TwCtQd3OR/2VbHetj3mVZA==
+X-CSE-MsgGUID: IkvnLbeFQEKr0V1mhcTOqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="36712481"
+X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
+   d="scan'208";a="36712481"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 09:13:58 -0800
+X-CSE-ConnectionGUID: d+N1H3FPQryemumCSoERgQ==
+X-CSE-MsgGUID: skCK+1HISZSgobnkHZdoJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="127073384"
+Received: from orsosgc001.jf.intel.com (HELO orsosgc001.intel.com) ([10.165.21.142])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 09:13:57 -0800
+Date: Fri, 10 Jan 2025 09:13:56 -0800
+Message-ID: <8534hqvbfv.wl-ashutosh.dixit@intel.com>
+From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,	Kees Cook
+ <kees@kernel.org>,	Luis Chamberlain <mcgrof@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,	linux-crypto@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,	intel-xe@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,	linux-rdma@vger.kernel.org,
+	linux-raid@vger.kernel.org,	linux-scsi@vger.kernel.org,
+	linux-serial@vger.kernel.org,	xen-devel@lists.xenproject.org,
+	linux-aio@kvack.org,	linux-fsdevel@vger.kernel.org,	netfs@lists.linux.dev,
+	codalist@coda.cs.cmu.edu,	linux-mm@kvack.org,	linux-nfs@vger.kernel.org,
+	ocfs2-devel@lists.linux.dev,	fsverity@lists.linux.dev,
+	linux-xfs@vger.kernel.org,	io-uring@vger.kernel.org,	bpf@vger.kernel.org,
+	kexec@lists.infradead.org,	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,	keyrings@vger.kernel.org
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/28.2 (x86_64-redhat-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250110_075005_596784_2955D90B 
-X-CRM114-Status: GOOD (  20.36  )
+X-CRM114-CacheID: sfid-20250110_091359_259148_B7F3B509 
+X-CRM114-Status: GOOD (  11.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,75 +99,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Thu, 09 Jan 2025 05:16:39 -0800, Joel Granados wrote:
+>
+> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> index 2406cda75b7b..5384d1bb4923 100644
+> --- a/drivers/gpu/drm/i915/i915_perf.c
+> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> @@ -4802,7 +4802,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+>	return ret;
+>  }
+>
+> -static struct ctl_table oa_table[] = {
+> +static const struct ctl_table oa_table[] = {
+>	{
+>	 .procname = "perf_stream_paranoid",
+>	 .data = &i915_perf_stream_paranoid,
+> diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_observation.c
+> index 8ec1b84cbb9e..57cf01efc07f 100644
+> --- a/drivers/gpu/drm/xe/xe_observation.c
+> +++ b/drivers/gpu/drm/xe/xe_observation.c
+> @@ -56,7 +56,7 @@ int xe_observation_ioctl(struct drm_device *dev, void *data, struct drm_file *fi
+>	}
+>  }
+>
+> -static struct ctl_table observation_ctl_table[] = {
+> +static const struct ctl_table observation_ctl_table[] = {
+>	{
+>	 .procname = "observation_paranoid",
+>	 .data = &xe_observation_paranoid,
 
+For i915 and xe:
 
-On 10/01/2025 14:31, Usama Arif wrote:
-> 
-> 
-> On 10/01/2025 07:32, Ard Biesheuvel wrote:
->> On Thu, 9 Jan 2025 at 17:32, Usama Arif <usamaarif642@gmail.com> wrote:
->>>
->>>
->>>
->>> On 09/01/2025 16:15, Ard Biesheuvel wrote:
-> 
->>> I think in the end whoevers' responsibility it is, the easiest path forward
->>> seems to be in kernel? (and not firmware or libstub)
->>>
->>
->> Agreed. But as I pointed out in the other thread, the memory
->> attributes table only augments the memory map with permission
->> information, and can be disregarded, and given how badly we mangle the
->> memory map on x86, maybe this is the right choice here.
->>
->>>>
->>>>> The next ideal place would be in libstub. However, it looks like
->>>>> InstallMemoryAttributesTable [2] is not available as a boot service
->>>>> call option [3], [4], and install_configuration_table does not
->>>>> seem to work as a valid substitute.
->>>>>
->>>>
->>>> To do what, exactly?
->>>>
->>>
->>> To change the memory type from System RAM to either reserved or
->>> something more appropriate, i.e. any type that is not touched by
->>> kexec or any other userspace.
->>>
->>> Basically the example code I attached at the end of the cover letter in
->>> https://lore.kernel.org/all/20250108215957.3437660-1-usamaarif642@gmail.com/
->>> It could be EFI_ACPI_RECLAIM_MEMORY or EFI_RESERVED_TYPE, both of which aren't
->>> touched by kexec.
->>>
->>
->> This is a kexec problem (on x86 only) so let's fix it there.
-> 
-> 
-> I don't believe we can accurately tell if we are booting from a cold boot or kexec.
-> There is bootloader_type available for x86, but not sure if we should rely on
-> that. I think a way forward would be to move it behind a Kconfig option, something like
-> below, which defaults to n for x86. Anyone who needs it can enable it. What do you think?
-> 
-
-Or we can do something like below?
-
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index d131781e2d7b..4add694b18d0 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -24,6 +24,15 @@ int __init efi_memattr_init(void)
-        efi_memory_attributes_table_t *tbl;
-        unsigned long size;
- 
-+#ifdef CONFIG_X86_64
-+       /*
-+        * On x86_64, do not initialize memory attributes table
-+        * if booting from kexec
-+        */
-+       if (bootloader_type >> 4 == 0xd)
-+               return 0;
-+#endif
-+
-        if (efi_mem_attr_table == EFI_INVALID_TABLE_ADDR)
-                return 0;
+Acked-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
 
