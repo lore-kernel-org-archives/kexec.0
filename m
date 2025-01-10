@@ -4,75 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5146E77188
-	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 07:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F35DE77188
+	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 08:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kYqbSLzknzruTkzUb3qvktdfdDW95zy1Jf8hzJJDvMM=; b=Rv5hMxXOmI1eBZdljNP1qNzwrU
-	BGME7k9BobYQtGYl1IEva2F3if9O/0xxE35yMztsKzcsNbXtwmI186kzuXvvSDQsT4Xfob2FyjPqE
-	Rg5dO36XfohUEz5lt9G7gvlPWl0PYBPmBJM07l82qqvYWR61ubGQXk4ZHzxGaJs4plJ9vx4crkdpE
-	VJAcqfoOGn79y3m51V4WPIQNKrnofpz2mzsjPd+8/240nmS6veJsaYk3yZkv2wJCk5prOvNlNH5BZ
-	TCNjhHkpl2naFhpT5b2cDMjLTVrlP71dM4UoHhgU46xUg4wOV2Z8g/d1nnbNzYKE6HI2cf4hu+Okz
-	m3C8WuzA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=QueUkPpGIdH4dHXXuyMmUFm7m9Ovl4HSasK15DTt+X0=; b=rkxktn1eaDoiCtUI/N/3ZgcAPD
+	IriClUeXqK3Zi2gQFW8A7/Nq7Yq9Pg5k5tWo2P86i127NmOGjQml8c9HUz192vH0CyjOIffXo06Dt
+	raVXzFisVuPWpidGarnDpC6bP2KZPt7z7GvAibFrn2T81UWDuXh9OwWXptkPEpPTPG6Zc9LbHvbU5
+	44eb5UySOfJ9HXr6lq0X8HGJzlyws073CX3S4DGKHTl0JEr1/wtxUj9s5GpaD7bJe+Prs1d3gdy0F
+	WLsXZURoKqVM2dGZwrfLzgajoV3T92YBT8Lty8zBftDAxavqsEUrbymQ5j8CCm2Rd7cJtjSeE4S+Y
+	N16DqPXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tW9ZI-0000000EO0k-0xJy;
-	Fri, 10 Jan 2025 07:36:32 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tWAVX-0000000EYgd-1T1j;
+	Fri, 10 Jan 2025 08:36:43 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tW9Xh-0000000ENpA-3D1f
+	id 1tWAV1-0000000EYZV-3Lix
+	for kexec@bombadil.infradead.org;
+	Fri, 10 Jan 2025 08:36:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Subject:To:From:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=QueUkPpGIdH4dHXXuyMmUFm7m9Ovl4HSasK15DTt+X0=; b=CBxNz1QFsEKSRYloT1XxZ7wvFP
+	+kbdKCfY5fnRwbsRywSvPFgF1Mta5Aw9pqAzmTmMMeYGjBsp0ZEGX1wPUbOdVJ1nu6aIVe24Bx/Hg
+	zQN8SpYmeiw2p2bG6yHdeUYB59OknUxKGe9fotvMACxCmdza64ZddVKOWFDpUDu1WKLs1A/ZsN+N0
+	EZjO2DzUbHfNf+La88tieWDJUzUeX3Qv/OgdkAysmM3OIiiEi9NwG3rg5C+DwsEUIw1PSTBRBEeIV
+	aAqEsENE1cv2UPdZGVLOyKq7Fk8tUDK8JRBG/oZWVFDfsiM8lqup11MamJF3CxN5reuDmMdAmsmKI
+	S3KtgX/w==;
+Received: from mail.ventrixio.pl ([5.249.154.219])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tWAUx-00000009jOK-3wbn
 	for kexec@lists.infradead.org;
-	Fri, 10 Jan 2025 07:34:55 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 80F62A41A18
-	for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 07:33:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9AD5C4CEE4
-	for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 07:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736494492;
-	bh=kYqbSLzknzruTkzUb3qvktdfdDW95zy1Jf8hzJJDvMM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RSWPXrXq938Ij3QM6DZYS+bTFT/0HhHNLE+f8evIgqGIN0HqrHunna1C8DUEBqgh+
-	 GMPIBrYuEkYWG3JYpbDeDsPA98WOnKmPZBehjAkSrLB7QJwR8Lns9q0P3FkB2c1Ky9
-	 og172lpGKRWO0JB2zRIv2bNTsz3Iu6MPx8+qtCZIk7LfkRF7YyBrQGpKbVUVgA2qMC
-	 A1gYS9/2xdmgx9Px0SHQqKZfxUo4oMQRUIoKjbcbMQXr4S9V+1blVFsWg9hFXUciHH
-	 N5mM7PCnFnWIVEtogOsNS7xoiBSxJwXz2gnSOZhkNkJsTHd+xYjMXx17Q1e7WGqKdC
-	 jlf3/Rsnpk4RQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-53e3a227b82so1530021e87.0
-        for <kexec@lists.infradead.org>; Thu, 09 Jan 2025 23:34:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWNrariAr5o2FLVu3p3dnqGOnd4HEIEFzvnYCL5PcA4lvNPjD/C9uyGDRxu1SJ6aJCc/Av5dw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywfv8ORs78GXkFrlhZFUApSywK/MHYwWUmF9Rchm53uEucrMY3n
-	5B50yJxkcAjmap0qneooApQVHsWzGuXwc1AmwDDUdq5PncgjyTk0tZ+YOFx9GMeVhJLAr4H9VM4
-	kw3WiiOwnjVDXUoEgDWPkWBsmeiY=
-X-Google-Smtp-Source: AGHT+IHcf2xM9VvsYkjaloDENOtP+ZvDGKm/5QwUX3w3+EsHJCn4Dx75mqct7KEITe06bcj8EHmwCzJigOu+TQuR7FA=
-X-Received: by 2002:ac2:4e08:0:b0:540:2ff1:309d with SMTP id
- 2adb3069b0e04-542845c56cfmr3059582e87.34.1736494490953; Thu, 09 Jan 2025
- 23:34:50 -0800 (PST)
+	Fri, 10 Jan 2025 08:36:10 +0000
+Received: by mail.ventrixio.pl (Postfix, from userid 1002)
+	id 9F63C82FD7; Fri, 10 Jan 2025 09:35:48 +0100 (CET)
+Received: by mail.ventrixio.pl for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 08:35:24 GMT
+Message-ID: <20250110084501-0.1.52.6m2k.0.u6b3qojkwa@DevelopSphere.pl>
+Date: Fri, 10 Jan 2025 08:35:24 GMT
+From: "Robert Paczkowski" <robert.paczkowski@ventrixio.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Wsp=C3=B3=C5=82praca?=
+X-Mailer: mail.DevelopSphere.pl
 MIME-Version: 1.0
-References: <20250108215957.3437660-1-usamaarif642@gmail.com>
- <20250108215957.3437660-3-usamaarif642@gmail.com> <CAMj1kXFWZNRwx1H2HT8V9hNvUKDi0O3kcLku+g94UOvNBzz5eQ@mail.gmail.com>
- <cade51c5-5fcc-4208-b46c-f2e2038f03e7@gmail.com>
-In-Reply-To: <cade51c5-5fcc-4208-b46c-f2e2038f03e7@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 10 Jan 2025 08:32:08 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFwgnQT4jQF8zsX05PdrF_QDXK0+Z-6DD6LiSgjqY738A@mail.gmail.com>
-X-Gm-Features: AbW1kvad1Ep7ZJNKHY5SzNw-aw7vA2PCxxRZNUDwL7taXhAPV5dXJQCNTI_QuUA
-Message-ID: <CAMj1kXFwgnQT4jQF8zsX05PdrF_QDXK0+Z-6DD6LiSgjqY738A@mail.gmail.com>
-Subject: Re: [RFC 2/2] efi/memattr: add efi_mem_attr_table as a reserved
- region in 820_table_firmware
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-efi@vger.kernel.org, devel@edk2.groups.io, kexec@lists.infradead.org, 
-	hannes@cmpxchg.org, dyoung@redhat.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, leitao@debian.org, gourry@gourry.net, 
-	kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250109_233453_935449_96151A56 
-X-CRM114-Status: GOOD (  35.89  )
+X-CRM114-CacheID: sfid-20250110_083608_341087_4658462A 
+X-CRM114-Status: UNSURE (   1.22  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,77 +72,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 9 Jan 2025 at 17:32, Usama Arif <usamaarif642@gmail.com> wrote:
->
->
->
-> On 09/01/2025 16:15, Ard Biesheuvel wrote:
-> > On Wed, 8 Jan 2025 at 23:00, Usama Arif <usamaarif642@gmail.com> wrote:
-> >>
-> >> When this area is not reserved, it comes up as usable in
-> >> /sys/firmware/memmap. This means that kexec, which uses that memmap
-> >> to find usable memory regions, can select the region where
-> >> efi_mem_attr_table is and overwrite it and relocate_kernel.
-> >>
-> >> Since the patch in [1] was merged, all boots after kexec
-> >> are producing the warning that it introduced.
-> >>
-> >> Having a fix in firmware can be difficult to get through.
-> >
-> > I don't follow. I don't think there is anything wrong with the
-> > firmware here. Could you elaborate?
-> >
->
-> So the problem is, kexec sees this memory as System RAM, and decides
-> it can be used to place an image here.
->
-> I guess the question is (and I actually don't know the answer here),
-> whose responsibility is it to mark this region as reserved so that
-> its not touched by anyone else. I would have thought it should be
-> firmware?
->
+Dzie=C5=84 dobry,=20
 
-No, it is the OS. The firmware only reserves regions that are needed
-for its own correct operation at runtime. For informational tables
-such as this one, it is up to the OS whether it wants to reserve it
-and keep it in place, consume it and release the memory, or ignore it
-altogether.
+Czy interesuje Pa=C5=84stwa pozyskanie nowych klient=C3=B3w?
 
-> Maybe its not the firmwares' job to mark it as reserved, but just pass
-> it to kernel and the kernel is supposed to make sure it gets reserved
-> in a proper way, even across kexecs.
->
+Zajmujemy si=C4=99 profesjonalnie wsparciem firm w tym zakresie.=20
 
-Indeed.
+Nasi partnerzy zyskuj=C4=85 sta=C5=82y nap=C5=82yw nowych zlece=C5=84 ora=
+z zam=C3=B3wie=C5=84, a tym samym zwi=C4=99kszaj=C4=85 swoje wyniki sprze=
+da=C5=BCy.
 
-> I think in the end whoevers' responsibility it is, the easiest path forward
-> seems to be in kernel? (and not firmware or libstub)
->
+Czy mo=C5=BCemy przedstawi=C4=87 szczeg=C3=B3=C5=82y dotycz=C4=85ce zasad=
+ i mo=C5=BCliwo=C5=9Bci wsp=C3=B3=C5=82pracy?
 
-Agreed. But as I pointed out in the other thread, the memory
-attributes table only augments the memory map with permission
-information, and can be disregarded, and given how badly we mangle the
-memory map on x86, maybe this is the right choice here.
 
-> >
-> >> The next ideal place would be in libstub. However, it looks like
-> >> InstallMemoryAttributesTable [2] is not available as a boot service
-> >> call option [3], [4], and install_configuration_table does not
-> >> seem to work as a valid substitute.
-> >>
-> >
-> > To do what, exactly?
-> >
->
-> To change the memory type from System RAM to either reserved or
-> something more appropriate, i.e. any type that is not touched by
-> kexec or any other userspace.
->
-> Basically the example code I attached at the end of the cover letter in
-> https://lore.kernel.org/all/20250108215957.3437660-1-usamaarif642@gmail.com/
-> It could be EFI_ACPI_RECLAIM_MEMORY or EFI_RESERVED_TYPE, both of which aren't
-> touched by kexec.
->
-
-This is a kexec problem (on x86 only) so let's fix it there.
+Z powa=C5=BCaniem
+Robert Paczkowski
 
