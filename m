@@ -4,87 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4B1EE77188
-	for <kexec@archiver.kernel.org>; Fri, 10 Jan 2025 21:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A7A4E7719D
+	for <kexec@archiver.kernel.org>; Sat, 11 Jan 2025 05:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Subject:To:From:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=uelumPW6y4IBgwZvCWG1L7ZVSOgXlVtIrmVJXy2FhwY=; b=EXMsqHZgD9kCMiPUX46OmfvpYh
-	13zOimOmg15m170WE9eRgLS7ecpfv+KwJUwzMzVc1fIG4bG2GI8psUwyB9wB2ETno+Qjkg1ykC7nA
-	87iVGjzqtINxMqN7VaeCQM1k2TLJPvjQcaPXaPH3U4RpsAR52zsG9yA90VORvTVuhuMk/xpXUmKW8
-	kFMzPcN0d+I3xNygtyNsKtGZENh+x/ko+TVtT0TNkoyPNJoIaRehbDIEXVVZWUGfMDUo+Q+nhNljA
-	hgmijc7Omm8k2lRcxKghBIV3w5knT4CVOgYXadmBibw25trINjCGtwE1aoLKCAeyO1rvoloNQGdo2
-	D6HzI8qQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=3P73rJyuNl3Q0nwSoWVJRyshylUCVEtly88Ev7msAUs=; b=PNzpEc9WiLtGds
+	7T0htnpbibNFf7vOP47d5RRs0XCqTRHAyHASInshI2efL1Rq79IMwml5rTyRABAvkT9OLEA93EK9X
+	FKV0Bz+Dg7ceALFjx4Lhlr+fypeLmxpxv4zxziAfbka9xE/1VkImY6y0sj+JzCdFkJq4wYES3exb9
+	zoJ+cgxXsMQqnmDg0X0szXnxB+2kpK2WViMwD7khJA4Xz8osYbTKGBspjiNiMNfi44xH2kwRJ6y1e
+	qJeV/+0L5s7lL3YAGKLScYn1IyIbBHSAo4vaD8Iy0CMJGGqccesbOZfQ+vY1HKDZsKZ0spcJQwhY9
+	yY16FEf03QMVO/O3iFUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWMAq-0000000Gy6T-2niQ;
-	Fri, 10 Jan 2025 21:04:08 +0000
-Received: from mail-oi1-x242.google.com ([2607:f8b0:4864:20::242])
+	id 1tWUMk-00000000EYk-39ER;
+	Sat, 11 Jan 2025 05:48:58 +0000
+Received: from mail-pj1-x1034.google.com ([2607:f8b0:4864:20::1034])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWMAo-0000000Gy66-0pov
+	id 1tWUMh-00000000EXu-1x4k
 	for kexec@lists.infradead.org;
-	Fri, 10 Jan 2025 21:04:07 +0000
-Received: by mail-oi1-x242.google.com with SMTP id 5614622812f47-3ebb4aae80dso893888b6e.2
-        for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 13:04:05 -0800 (PST)
+	Sat, 11 Jan 2025 05:48:56 +0000
+Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-2ef89dbd8eeso3559889a91.0
+        for <kexec@lists.infradead.org>; Fri, 10 Jan 2025 21:48:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bizdrive.in.net; s=google; t=1736543044; x=1737147844; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:date:subject:to:from
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=uelumPW6y4IBgwZvCWG1L7ZVSOgXlVtIrmVJXy2FhwY=;
-        b=exjwL4fWecPN7e8xd/3Pohzx4dWaJcKHhGhkKWgsqFw0LVxmdwoyOXYewrcvYl6FiQ
-         TbZSNPmtgFf0HMVnfav8aXXpfKI3M2aWLtAaWC9xtOeC8sZ+IBFSZcVr38j9EJq883kx
-         1rukbQDkTFCw9zr3mNeMG/uzgqsKgBN2DCtjYeUUFK3etyVKbqPnHch7Pw6KV9s0Z8Bd
-         xwxePp61NdEcZCjGA6aVSfgC6pItnYFM66r8PSPtESRXppsyIAElJ+8VNjIqIG2OoPzI
-         TTUzLQshabpJQznZYNKZPKXT0aIV4yrrI7Mh+JhrLRFW8Zfhnul8dBrQwuIyJAMeMqkb
-         1T2g==
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736574534; x=1737179334; darn=lists.infradead.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3P73rJyuNl3Q0nwSoWVJRyshylUCVEtly88Ev7msAUs=;
+        b=VnFLzTjneSSF3joEZaehSQufX08VNlyrz1A/8Tcn5ivtlipiwHRMmI1uY6QzKryl+y
+         IWLS49WApmV1WvmwLqg2s56BFnKBLJ9OscrXZ6nk+JJqXJ9g5Q0K6AKJjs4f2MEsbxq9
+         v9gW/vqC9Ddxt118JYjt53bTDbGjccnmth9V5CnJ3HgALNcJWSYswsqrHW0rtsIicxwL
+         6wMqoN+x+ZPqvfprAL9hZj52zsTXSWmrJzfo7S1+8SAD/ZDhVGmRSjJtzuCHluaUGMiJ
+         peajG4Kk+MLpNL5F3i42YN74CCKQgcnLznYMWzzLiiWkOPEWGeKrlIpkb0KLZf0KSqU0
+         7lng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736543044; x=1737147844;
-        h=content-transfer-encoding:mime-version:date:subject:to:from
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1736574534; x=1737179334;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uelumPW6y4IBgwZvCWG1L7ZVSOgXlVtIrmVJXy2FhwY=;
-        b=DivJox1AFoOP3a+XEHiBG8Qn6c8olBOf7Of0poiVTww5hudX4GeXBXcd0hC87QbKPD
-         epwkdAuOOtncHyPFvxGkVx6y0mZUhVaQOrYScA5078zlAxCX1CT0Z0z1QD0cALYa/6fF
-         LQVzcym6vZk1gnNt7XTgY96kH0Lptl2zjAI4bWZQ8yzbrXx1uaJBUvrZMXq6tXeuQr5D
-         jNm/GEIv4VHxw+/prc4/cKCWvoqwaW2SWoBfipTDXCvcdDCgXk9soK4ck03Y6w2uPu3S
-         l8t3MlqrrkTVYQsVYWaF225YDrw56n/OAwg4JFF1Kl4NesbiywS/sm5r2GjJlgsp+l1X
-         q9XQ==
-X-Gm-Message-State: AOJu0YzIcY9nYJoUd+t77tYdz8MOjbMRm60IXzKhtTOQVX3QEz7mC1/H
-	CP5IpCJ1ETJ1aUz9WI1OAvv78mwVHfoC2Rvwp0b4ABi6TEkPPMgERrJLtifZxLhsIIGMzEAik+K
-	LjiQ=
-X-Gm-Gg: ASbGncvT9V5R5fJkIaEqiaVzYxrSMzQkEbqbnYU9lJTF91pQlAZmbEWgKC7ImN/0iNX
-	E4uR8G+Ik54cswTwk+32fyYaEsla6wNQD2Q2CzzJl+IuUTCKUo8AEJr0MkvgZ+fo1bYYreE5530
-	rBpw3HbjzwOm8zxEgdj27gIpvRXQRtG5yxYLAVYy6IOxK1n1N3d/eofFRarU6/B2NGXYASvvWmd
-	aG8q18fwgY3LJL02ZTr8PAknXKcZoOikwHDVAkjgm13OL2Q+QFysc6P7wy5jXVwxMMP7z5uAHJu
-	7JMqOtibQKJE4GRqU0sDb51F/5dMPP8mNuIX
-X-Google-Smtp-Source: AGHT+IFnwcOQ/2Pq7i9AYzu4vdalVTDjFhQ7k7yCs9NkccCOgd55u/m2H++yh4brbjOZSJq+/DDxZA==
-X-Received: by 2002:a05:6808:2f05:b0:3eb:63c9:fe87 with SMTP id 5614622812f47-3ef2ec267ecmr7581137b6e.16.1736543044596;
-        Fri, 10 Jan 2025 13:04:04 -0800 (PST)
-Received: from sxwps.de (69-209-96-243.lightspeed.sntcca.sbcglobal.net. [69.209.96.243])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5f88266e273sm1096693eaf.26.2025.01.10.13.04.03
-        for <kexec@lists.infradead.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Jan 2025 13:04:04 -0800 (PST)
-Message-ID: <6ccb48591a7e5bb1e4c637ce008888f5@bizdrive.in.net>
-From: =?utf-8?Q?=EF=BC=AA=EF=BC=A1=E3=83=8D=E3=83=83=E3=83=88=E3=83=90=E3=83=B3=E3=82=AF?= <sendonly313@bizdrive.in.net>
-To: "=?utf-8?Q?kexec@lists.infradead.org?=" <kexec@lists.infradead.org>
-Subject: =?utf-8?Q?=E3=80=90=E7=B7=8A=E6=80=A5=E6=83=85=E5=A0=B1?=
-	=?utf-8?Q?=E3=80=91=E7=99=BB=E9=8C=B2=E5=80=8B=E4=BA=BA=E6=83=85?=
-	=?utf-8?Q?=E5=A0=B1=E5=86=8D=E7=A2=BA=E8=AA=8D=E3=81=AE=E3=81=8A?=
-	=?utf-8?Q?=E9=A1=98=E3=81=84?=
-Date: Fri, 10 Jan 2025 21:04:02 +0000
-X-Priority: 3
+        bh=3P73rJyuNl3Q0nwSoWVJRyshylUCVEtly88Ev7msAUs=;
+        b=pUrzcfts4uP/CTbr+Ms+6FL9BVAOoduijBo0ebedCqlK+mF9uObVmqIVSLs9oMlfv0
+         phoUlu/sZd2Arp+lssUIj1WYDcF7VarRKLEpSldN5E+bLI5NzVUKBlgAx4fauu3enUjK
+         VRm6Hqkib2vCHWakV6EZaTDK+5Q/d4n1WkXbjmGclsk41A55f9IeusWCdZaqqcFoPZVv
+         GcMSUH+3BagCp7uLlz3B7pjNGt7M8r8IcttwV8JWvHIPL/JwMuvk7hywf3RWqOkhODiX
+         c5yP7bfDgc2Y6Dk5jFJ9IUMzNCBrrD7W7QkXSpDLceloLjlmSWhhhqB6jIsrJUgOLk/r
+         VJHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGYMhTz1GL01fdkSjwcx1fu4HeVuY4Yk8srULrSWHHuYuZ/KgQmA48SK+6YFCgS8lgQbjZLg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwEoZf5G1/Gtw1Yo0og883bnXGriPWa89mW7PhpoVhMR3VYMs4O
+	hWI/ea2dQkoD6O/v/MYLSzqVWvluw1OuZ6HAhnpJ83TGFJ5PiBVaWdWcp6C5E3g=
+X-Gm-Gg: ASbGncuPV2Retzzgryz6JV3p1VVu4AjLiEuasxgr2IM5wDGhwBykFTnB2GE2Gu26jkh
+	50clPq3SUR5aIF2O9JSZL9vCm+KDCjrdbX/ORyIYytY8e2AU9SL0MevSJx58ymhy8xavgLzEr6n
+	mWR3FXAlufLbH/es9Ei6JLM4YcJI1WRhGqeqLbjbjeZvixlQGgiHr4+yNRXbLBHTWy+mkx9D/Zz
+	Ku1gtJ/1tSiKF97UB0iOqmkLO5Fe9RZ36hxezcxckhUFuYbUUAYgm7HNMs=
+X-Google-Smtp-Source: AGHT+IHnxhywBj4CVIR5TvzIlJFphpilQTNTWugzFhTp+kcciB5abGLTfjWrtU8KJEUcfzvGCQC8ng==
+X-Received: by 2002:a17:90b:538e:b0:2ee:3cc1:793a with SMTP id 98e67ed59e1d1-2f548f580femr19629798a91.29.1736574534006;
+        Fri, 10 Jan 2025 21:48:54 -0800 (PST)
+Received: from localhost ([157.82.203.37])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-21a9f1372e7sm21407345ad.83.2025.01.10.21.48.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 21:48:53 -0800 (PST)
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: [PATCH v4 0/6] elf: Define note name macros
+Date: Sat, 11 Jan 2025 14:48:43 +0900
+Message-Id: <20250111-elf-v4-0-b3841fa0dcd9@daynix.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADwGgmcC/2XMywrCMBCF4VcpWRuZ3Kxx5XuIi1xGG9BWEgktp
+ e9u2iooLs8w3z+ShDFgIodqJBFzSKFry5CbirjGtFekwZdNOHDJOAOKtwu1e0AjtNROaFI+HxE
+ voV8qp3PZTUjPLg5LNLP5+vZcLT4zymitUUsQCryCozdDG/qt6+5kDmT+QQoYyBVxCrSuveMIO
+ 28l/iHxjeoViYK0dlaBssxY/oOmaXoB8zVRagEBAAA=
+To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
+ Dave Martin <Dave.Martin@arm.com>, Baoquan He <bhe@redhat.com>, 
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
+ LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ kexec@lists.infradead.org, binutils@sourceware.org, devel@daynix.com, 
+ Akihiko Odaki <akihiko.odaki@daynix.com>, 
+ Heiko Carstens <hca@linux.ibm.com>
+X-Mailer: b4 0.14-dev-fd6e3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250110_130406_242372_B979F56F 
-X-CRM114-Status: UNSURE (   2.02  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250110_214855_509933_E9977C61 
+X-CRM114-Status: GOOD (  15.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,48 +105,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-=E3=81=84=E3=81=A4=E3=82=82=EF=BC=AA=EF=BC=A1=E3=83=8D=E3=83=83=E3=83=88=E3=
-=83=90=E3=83=B3=E3=82=AF=E3=82=92=E3=81=94=E5=88=A9=E7=94=A8=E3=81=84=E3=81=
-=9F=E3=81=A0=E3=81=8D=E3=81=82=E3=82=8A=E3=81=8C=E3=81=A8=E3=81=86=E3=81=94=
-=E3=81=96=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=0D=0A=E7=8F=BE=E5=9C=A8=
-=E3=80=81=E5=BD=93=E8=A1=8C=E3=81=AB=E3=81=A7=E3=81=AF=E9=87=91=E8=9E=8D=E5=
-=BA=81=E6=8C=87=E5=B0=8E=E3=81=AE=E3=82=82=E3=81=A8=E3=80=81=E3=83=9E=E3=83=
-=8D=E3=83=AD=E3=83=B3=E7=AD=89=E5=AF=BE=E7=AD=96=E3=81=AE=E4=B8=80=E7=92=B0=
-=E3=81=A8=E3=81=97=E3=81=A6=E3=80=81=E3=81=8A=E5=8F=96=E5=BC=95=E3=81=AE=E5=
-=86=85=E5=AE=B9=E3=80=81=E7=8A=B6=E6=B3=81=E7=AD=89=E3=81=AB=E5=BF=9C=E3=81=
-=98=E3=81=A6=E3=80=81=E9=81=8E=E5=8E=BB=E3=81=AB=E7=A2=BA=E8=AA=8D=E3=81=97=
-=E3=81=9F=E6=B0=8F=E5=90=8D=E3=83=BB=E4=BD=8F=E6=89=80=E3=83=BB=E7=94=9F=E5=
-=B9=B4=E6=9C=88=E6=97=A5=E3=83=BB=E3=81=94=E8=81=B7=E6=A5=AD=E3=82=84=E3=80=
-=81=E5=8F=96=E5=BC=95=E3=81=AE=E7=9B=AE=E7=9A=84=E7=AD=89=E3=81=AB=E3=81=A4=
-=E3=81=84=E3=81=A6=E3=80=81=E5=86=8D=E5=BA=A6=E7=A2=BA=E8=AA=8D=E3=82=92=E3=
-=81=95=E3=81=9B=E3=81=A6=E3=81=84=E3=81=9F=E3=81=A0=E3=81=84=E3=81=A6=E3=81=
-=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82=0D=0A=0D=0A=E3=81=8A=E6=89=8B=E6=95=
-=B0=E3=81=8A=E3=81=8B=E3=81=91=E3=81=97=E3=81=BE=E3=81=99=E3=81=8C=E3=80=81=
-=E4=B8=8B=E8=A8=98=E3=81=AE=E3=83=AA=E3=83=B3=E3=82=AF=E3=82=92=E3=82=A2=E3=
-=82=AF=E3=82=BB=E3=82=B9=E3=81=97=E3=80=81=E6=8F=90=E5=87=BA=E3=81=AB=E3=81=
-=94=E5=8D=94=E5=8A=9B=E3=81=8F=E3=81=A0=E3=81=95=E3=81=84=E3=80=82=0D=0A=0D=
-=0Ahttps://genrepllc.com/yabitha.html=0D=0A=0D=0A=0D=0A=E3=81=94=E7=A2=BA=
-=E8=AA=8D=E3=82=92=E3=81=84=E3=81=9F=E3=81=A0=E3=81=91=E3=81=AA=E3=81=84=E5=
-=A0=B4=E5=90=88=E3=80=81=E3=82=BB=E3=82=AD=E3=83=A5=E3=83=AA=E3=83=86=E3=82=
-=A3=E4=B8=8A=E3=81=AE=E8=A6=B3=E7=82=B9=E3=81=8B=E3=82=89=E3=81=94=E5=88=A9=
-=E7=94=A8=E5=88=B6=E9=99=90=E3=82=92=E3=81=8B=E3=81=91=E3=81=95=E3=81=9B=E3=
-=81=A6=E3=81=84=E3=81=9F=E3=81=A0=E3=81=8F=E3=81=93=E3=81=A8=E3=82=92=E4=BA=
-=88=E3=82=81=E3=81=94=E4=BA=86=E6=89=BF=E4=B8=8B=E3=81=95=E3=81=84=E3=80=82=
-=0D=0A=0D=0A=E3=81=8A=E5=AE=A2=E6=A7=98=E3=81=AB=E3=81=AF=E3=81=94=E8=BF=B7=
-=E6=83=91=E3=80=81=E3=81=94=E5=BF=83=E9=85=8D=E3=82=92=E3=81=8A=E6=8E=9B=E3=
-=81=91=E3=81=97=E3=80=81=E8=AA=A0=E3=81=AB=E7=94=B3=E3=81=97=E8=A8=B3=E3=81=
-=94=E3=81=96=E3=81=84=E3=81=BE=E3=81=9B=E3=82=93=0D=0A=EF=BC=8D=EF=BC=8D=EF=
-=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=
-=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=
-=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=BC=8D=EF=
-=BC=8D=0D=0A=0D=0A=E3=81=94=E4=B8=8D=E6=98=8E=E3=81=AA=E7=82=B9=E3=81=8C=E3=
-=81=94=E3=81=96=E3=81=84=E3=81=BE=E3=81=97=E3=81=9F=E3=82=89=E3=80=81=E4=B8=
-=8B=E8=A8=98=E3=81=BE=E3=81=A7=E3=81=94=E9=80=A3=E7=B5=A1=E3=81=8F=E3=81=A0=
-=E3=81=95=E3=81=84=E3=80=82=0D=0A=E9=80=A3=E7=B5=A1=E5=85=88 =EF=BC=90=EF=
-=BC=91=EF=BC=92=EF=BC=90=EF=BC=8D=EF=BC=90=EF=BC=95=EF=BC=98=EF=BC=8D=EF=BC=
-=90=EF=BC=99=EF=BC=98=0D=0A=E3=81=93=E3=82=8C=E3=81=8B=E3=82=89=E3=82=82=EF=
-=BC=AA=EF=BC=A1=E3=83=8D=E3=83=83=E3=83=88=E3=83=90=E3=83=B3=E3=82=AF=E3=82=
-=92=E3=82=88=E3=82=8D=E3=81=97=E3=81=8F=E3=81=8A=E9=A1=98=E3=81=84=E3=81=97=
-=E3=81=BE=E3=81=99=E3=80=82
+elf.h had a comment saying:
+> Notes used in ET_CORE. Architectures export some of the arch register
+> sets using the corresponding note types via the PTRACE_GETREGSET and
+> PTRACE_SETREGSET requests.
+> The note name for these types is "LINUX", except NT_PRFPREG that is
+> named "CORE".
+
+However, NT_PRSTATUS is also named "CORE". It is also unclear what
+"these types" refers to.
+
+To fix these problems, define a name for each note type. The added
+definitions are macros so the kernel and userspace can directly refer to
+them.
+
+For userspace program developers
+---------------------------------------------------
+While the main purpose of new macros is documentation, they are also
+hoped to be useful for userspace programs. Please check patch
+"elf: Define note name macros" and if you have a suggestion to make it
+more convenient for you, please share.
+
+I added the Binutils mailing list to the CC as it contains code to parse
+dumps. I'm also planning to share this series on LLVM Discourse.
+
+Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+---
+Changes in v4:
+- s/powwerpc/powerpc/
+- s/NT_INIT/nt_init/g s/NT_SIZE/nt_size/g
+- Removed parentheses that have little value.
+- Fixed the code alignment in get_cpu_elf_notes_size().
+- Link to v3: https://lore.kernel.org/r/20250107-elf-v3-0-99cb505b1ab2@daynix.com
+
+Changes in v3:
+- Added patch "s390/crash: Use note name macros".
+- Changed to interleave note name and type macros.
+- Described NN_ and NT_ macros.
+- Link to v2: https://lore.kernel.org/r/20250104-elf-v2-0-77dc2e06db4e@daynix.com
+
+Changes in v2:
+- Added a macro definition for each note type instead of trying to
+  describe in a comment.
+- Link to v1: https://lore.kernel.org/r/20241225-elf-v1-1-79e940350d50@daynix.com
+
+---
+Akihiko Odaki (6):
+      elf: Define note name macros
+      binfmt_elf: Use note name macros
+      powerpc: Use note name macros
+      crash: Use note name macros
+      s390/crash: Use note name macros
+      crash: Remove KEXEC_CORE_NOTE_NAME
+
+ arch/powerpc/kernel/fadump.c               |  2 +-
+ arch/powerpc/platforms/powernv/opal-core.c |  8 +--
+ arch/s390/kernel/crash_dump.c              | 62 ++++++++-------------
+ fs/binfmt_elf.c                            | 21 ++++----
+ fs/binfmt_elf_fdpic.c                      |  8 +--
+ fs/proc/kcore.c                            | 12 ++---
+ include/linux/kexec.h                      |  2 -
+ include/linux/vmcore_info.h                |  3 +-
+ include/uapi/linux/elf.h                   | 86 ++++++++++++++++++++++++++++--
+ kernel/crash_core.c                        |  2 +-
+ 10 files changed, 133 insertions(+), 73 deletions(-)
+---
+base-commit: a32e14f8aef69b42826cf0998b068a43d486a9e9
+change-id: 20241210-elf-b80ea3949c39
+
+Best regards,
+-- 
+Akihiko Odaki <akihiko.odaki@daynix.com>
 
 
