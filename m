@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF163E77188
-	for <kexec@archiver.kernel.org>; Tue, 14 Jan 2025 12:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DDF3E77188
+	for <kexec@archiver.kernel.org>; Tue, 14 Jan 2025 12:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4M9snT9qbDvQ88PdgmNC6RL0sxoR82CuhIh6v4YfX4A=; b=1qqzAl4y/bxZWODeZikEckZ3uV
-	+QybE4by4jX5cHbTkSqWrE9H2+aoCxGGM38MzgvsJn1cT6YtYABGuYMPjwNPMHFWXvjFN2yekuvYH
-	DVUtrXVCtfygRf53NoidLvGW5xO1UxY80V6UjiIqeYtnPjOxn5mGRoxvJlylKIiYDzv2oBY4B6BLM
-	ZJWWSh/SLc+Scx2WyIdbUPtp5h1sy7yc5SmJ/fCVpL4bBYCrgQa+u+ybnz0JYnqMcpgO46wtBEcX8
-	p/gBXTlaBhvL8NIyJnOy2GrJ4Nmt14DIM/WwRtWX6UxocGWhdoLLoW6DYK9OVEHGFdwsalk59Rh/F
-	7Wl0VwMg==;
+	bh=lFaT5V9iLjcuviqJulMhohixe0NuD4SmyA9c3JpQtUc=; b=qLwNRtx4EMUterE3IbC9UEJ4bu
+	TErgPnZwS6aAQCv7LKpP+SQeezNDyeqc+whh0W3QJUngVL0jgiTg5QzZhs1ifNSju0ytp004agFV6
+	+bhg3QMoKQe/2c5g+LUeyTy5z7IJUz/2518UW3tOp8ROk+gTNcEmvTY4wiq5Sp/FFSIoJdK1/yLUt
+	gWinG0jacnVpfr9PDscG4UuJcuGGb/ITLQ/+7G1CDg4AjZOAunQjPFK4CEghKJJIdBoObHWXnxGIl
+	Y/xhVrdOLXZ9TF0Z0ZvQlsVWSu1vYKx7VsqPfGMl+HjzTMxk5ZaecQOLlA53GquNhhvMJ7DSsrTNh
+	58SVvNkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXfwV-00000008NS1-1jNE;
-	Tue, 14 Jan 2025 12:22:47 +0000
+	id 1tXfwd-00000008NUv-3NhG;
+	Tue, 14 Jan 2025 12:22:55 +0000
 Received: from foss.arm.com ([217.140.110.172])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXfwR-00000008NRf-3Hx5
+	id 1tXfwc-00000008NUB-0CJ3
 	for kexec@lists.infradead.org;
-	Tue, 14 Jan 2025 12:22:45 +0000
+	Tue, 14 Jan 2025 12:22:55 +0000
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E61311FB;
-	Tue, 14 Jan 2025 04:23:09 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9524A12FC;
+	Tue, 14 Jan 2025 04:23:21 -0800 (PST)
 Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E5BF3F66E;
-	Tue, 14 Jan 2025 04:22:38 -0800 (PST)
-Date: Tue, 14 Jan 2025 12:22:31 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 035FE3F66E;
+	Tue, 14 Jan 2025 04:22:50 -0800 (PST)
+Date: Tue, 14 Jan 2025 12:22:48 +0000
 From: Dave Martin <Dave.Martin@arm.com>
 To: Akihiko Odaki <akihiko.odaki@daynix.com>
 Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
@@ -45,17 +45,17 @@ Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
 	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
 	kexec@lists.infradead.org, binutils@sourceware.org,
 	devel@daynix.com
-Subject: Re: [PATCH v4 1/6] elf: Define note name macros
-Message-ID: <Z4ZXB2UJaZWOmshN@e133380.arm.com>
+Subject: Re: [PATCH v4 2/6] binfmt_elf: Use note name macros
+Message-ID: <Z4ZXGN6C9J/jibD4@e133380.arm.com>
 References: <20250111-elf-v4-0-b3841fa0dcd9@daynix.com>
- <20250111-elf-v4-1-b3841fa0dcd9@daynix.com>
+ <20250111-elf-v4-2-b3841fa0dcd9@daynix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250111-elf-v4-1-b3841fa0dcd9@daynix.com>
+In-Reply-To: <20250111-elf-v4-2-b3841fa0dcd9@daynix.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250114_042243_922514_3960961A 
-X-CRM114-Status: GOOD (  25.25  )
+X-CRM114-CacheID: sfid-20250114_042254_187409_D178F5E3 
+X-CRM114-Status: GOOD (  17.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,97 +70,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-On Sat, Jan 11, 2025 at 02:48:44PM +0900, Akihiko Odaki wrote:
-> elf.h had a comment saying:
-> > Notes used in ET_CORE. Architectures export some of the arch register
-> > sets using the corresponding note types via the PTRACE_GETREGSET and
-> > PTRACE_SETREGSET requests.
-> > The note name for these types is "LINUX", except NT_PRFPREG that is
-> > named "CORE".
+On Sat, Jan 11, 2025 at 02:48:45PM +0900, Akihiko Odaki wrote:
+> Use note name macros to match with the userspace's expectation.
 > 
-> However, NT_PRSTATUS is also named "CORE". It is also unclear what
-> "these types" refers to.
-> 
-> To fix these problems, define a name for each note type. The added
-> definitions are macros so the kernel and userspace can directly refer to
-> them.
-
-I guess another motivation is to move towards having elf.h as the
-single point of definition for the note names, so that obscure and
-duplicate logic for determining note names can be removed.
-
-(Could be worth adding a note on this is the patch is respun, but this
-would be overkill otherwise...)
-
-
 > Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
 > Acked-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/uapi/linux/elf.h | 86 ++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 83 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index b44069d29cec..343f5c40d03a 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -368,99 +368,179 @@ typedef struct elf64_shdr {
->  #define ELF_OSABI ELFOSABI_NONE
->  #endif
->  
-> +/* Note definitions: NN_ defines names. NT_ defines types. */
-> +
->  /*
->   * Notes used in ET_CORE. Architectures export some of the arch register sets
->   * using the corresponding note types via the PTRACE_GETREGSET and
->   * PTRACE_SETREGSET requests.
-> - * The note name for these types is "LINUX", except NT_PRFPREG that is named
-> - * "CORE".
->   */
-> +#define NN_PRSTATUS	"CORE"
->  #define NT_PRSTATUS	1
-> +#define NN_PRFPREG	"CORE"
->  #define NT_PRFPREG	2
-> +#define NN_PRPSINFO	"CORE"
->  #define NT_PRPSINFO	3
-> +#define NN_TASKSTRUCT	"CORE"
->  #define NT_TASKSTRUCT	4
-> +#define NN_AUXV		"CORE"
->  #define NT_AUXV		6
->  /*
->   * Note to userspace developers: size of NT_SIGINFO note may increase
->   * in the future to accomodate more fields, don't assume it is fixed!
->   */
-> +#define NN_SIGINFO      "CORE"
->  #define NT_SIGINFO      0x53494749
-> +#define NN_FILE         "CORE"
->  #define NT_FILE         0x46494c45
-> +#define NN_PRXFPREG     "LINUX"
->  #define NT_PRXFPREG     0x46e62b7f      /* copied from gdb5.1/include/elf/common.h */
-
-[...]
-
-> +#define NN_LOONGARCH_HW_WATCH	"LINUX"
->  #define NT_LOONGARCH_HW_WATCH	0xa06   /* LoongArch hardware watchpoint registers */
->  
-> -/* Note types with note name "GNU" */
-> +/* Note used in other file types. */
-
-For this, it may make sense to be vaguer, e.g.
-
-	/* Other notes */
-
-(We don't dump NT_GNU_PROPERTY_TYPE_0 in coredumps, but I don't think
-it would be nonsensical to do so.)
-
-> +#define NN_GNU_PROPERTY_TYPE_0	"GNU"
->  #define NT_GNU_PROPERTY_TYPE_0	5
-
-[...]
-
-With or without those changes,
 
 Reviewed-by: Dave Martin <Dave.Martin@arm.com>
 
+> ---
+>  fs/binfmt_elf.c       | 21 ++++++++++-----------
+>  fs/binfmt_elf_fdpic.c |  8 ++++----
+>  2 files changed, 14 insertions(+), 15 deletions(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 106f0e8af177..5b4a92e5e508 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -762,8 +762,7 @@ static int parse_elf_property(const char *data, size_t *off, size_t datasz,
+>  }
+>  
+>  #define NOTE_DATA_SZ SZ_1K
+> -#define GNU_PROPERTY_TYPE_0_NAME "GNU"
+> -#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
+> +#define NOTE_NAME_SZ (sizeof(NN_GNU_PROPERTY_TYPE_0))
+>  
+>  static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
+>  				struct arch_elf_state *arch)
+> @@ -800,7 +799,7 @@ static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
+>  	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
+>  	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
+>  	    strncmp(note.data + sizeof(note.nhdr),
+> -		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
+> +		    NN_GNU_PROPERTY_TYPE_0, n - sizeof(note.nhdr)))
+>  		return -ENOEXEC;
+>  
+>  	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
+> @@ -1603,14 +1602,14 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
+>  	do
+>  		i += 2;
+>  	while (auxv[i - 2] != AT_NULL);
+> -	fill_note(note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
+> +	fill_note(note, NN_AUXV, NT_AUXV, i * sizeof(elf_addr_t), auxv);
+>  }
+>  
+>  static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
+>  		const kernel_siginfo_t *siginfo)
+>  {
+>  	copy_siginfo_to_external(csigdata, siginfo);
+> -	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
+> +	fill_note(note, NN_SIGINFO, NT_SIGINFO, sizeof(*csigdata), csigdata);
+>  }
+>  
+>  /*
+> @@ -1706,7 +1705,7 @@ static int fill_files_note(struct memelfnote *note, struct coredump_params *cprm
+>  	}
+>  
+>  	size = name_curpos - (char *)data;
+> -	fill_note(note, "CORE", NT_FILE, size, data);
+> +	fill_note(note, NN_FILE, NT_FILE, size, data);
+>  	return 0;
+>  }
+>  
+> @@ -1767,7 +1766,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+>  	regset_get(t->task, &view->regsets[0],
+>  		   sizeof(t->prstatus.pr_reg), &t->prstatus.pr_reg);
+>  
+> -	fill_note(&t->notes[0], "CORE", NT_PRSTATUS,
+> +	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS,
+>  		  PRSTATUS_SIZE, &t->prstatus);
+>  	info->size += notesize(&t->notes[0]);
+>  
+> @@ -1801,7 +1800,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+>  		if (is_fpreg)
+>  			SET_PR_FPVALID(&t->prstatus);
+>  
+> -		fill_note(&t->notes[note_iter], is_fpreg ? "CORE" : "LINUX",
+> +		fill_note(&t->notes[note_iter], is_fpreg ? NN_PRFPREG : "LINUX",
+>  			  note_type, ret, data);
+>  
+>  		info->size += notesize(&t->notes[note_iter]);
+> @@ -1821,7 +1820,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+>  	fill_prstatus(&t->prstatus.common, p, signr);
+>  	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);
+>  
+> -	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
+> +	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS, sizeof(t->prstatus),
+>  		  &(t->prstatus));
+>  	info->size += notesize(&t->notes[0]);
+>  
+> @@ -1832,7 +1831,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+>  	}
+>  
+>  	t->prstatus.pr_fpvalid = 1;
+> -	fill_note(&t->notes[1], "CORE", NT_PRFPREG, sizeof(*fpu), fpu);
+> +	fill_note(&t->notes[1], NN_PRFPREG, NT_PRFPREG, sizeof(*fpu), fpu);
+>  	info->size += notesize(&t->notes[1]);
+>  
+>  	return 1;
+> @@ -1852,7 +1851,7 @@ static int fill_note_info(struct elfhdr *elf, int phdrs,
+>  	psinfo = kmalloc(sizeof(*psinfo), GFP_KERNEL);
+>  	if (!psinfo)
+>  		return 0;
+> -	fill_note(&info->psinfo, "CORE", NT_PRPSINFO, sizeof(*psinfo), psinfo);
+> +	fill_note(&info->psinfo, NN_PRPSINFO, NT_PRPSINFO, sizeof(*psinfo), psinfo);
+>  
+>  #ifdef CORE_DUMP_USE_REGSET
+>  	view = task_user_regset_view(dump_task);
+> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+> index f1a7c4875c4a..96bd9d2f23d7 100644
+> --- a/fs/binfmt_elf_fdpic.c
+> +++ b/fs/binfmt_elf_fdpic.c
+> @@ -1397,7 +1397,7 @@ static struct elf_thread_status *elf_dump_thread_status(long signr, struct task_
+>  	regset_get(p, &view->regsets[0],
+>  		   sizeof(t->prstatus.pr_reg), &t->prstatus.pr_reg);
+>  
+> -	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
+> +	fill_note(&t->notes[0], NN_PRSTATUS, NT_PRSTATUS, sizeof(t->prstatus),
+>  		  &t->prstatus);
+>  	t->num_notes++;
+>  	*sz += notesize(&t->notes[0]);
+> @@ -1415,7 +1415,7 @@ static struct elf_thread_status *elf_dump_thread_status(long signr, struct task_
+>  	}
+>  
+>  	if (t->prstatus.pr_fpvalid) {
+> -		fill_note(&t->notes[1], "CORE", NT_PRFPREG, sizeof(t->fpu),
+> +		fill_note(&t->notes[1], NN_PRFPREG, NT_PRFPREG, sizeof(t->fpu),
+>  			  &t->fpu);
+>  		t->num_notes++;
+>  		*sz += notesize(&t->notes[1]);
+> @@ -1530,7 +1530,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+>  	 */
+>  
+>  	fill_psinfo(psinfo, current->group_leader, current->mm);
+> -	fill_note(&psinfo_note, "CORE", NT_PRPSINFO, sizeof(*psinfo), psinfo);
+> +	fill_note(&psinfo_note, NN_PRPSINFO, NT_PRPSINFO, sizeof(*psinfo), psinfo);
+>  	thread_status_size += notesize(&psinfo_note);
+>  
+>  	auxv = (elf_addr_t *) current->mm->saved_auxv;
+> @@ -1538,7 +1538,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+>  	do
+>  		i += 2;
+>  	while (auxv[i - 2] != AT_NULL);
+> -	fill_note(&auxv_note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
+> +	fill_note(&auxv_note, NN_AUXV, NT_AUXV, i * sizeof(elf_addr_t), auxv);
+>  	thread_status_size += notesize(&auxv_note);
+>  
+>  	offset = sizeof(*elf);				/* ELF header */
+> 
+> -- 
+> 2.47.1
+> 
+> 
 
