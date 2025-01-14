@@ -4,95 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65C1EC02184
-	for <kexec@archiver.kernel.org>; Tue, 14 Jan 2025 12:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF163E77188
+	for <kexec@archiver.kernel.org>; Tue, 14 Jan 2025 12:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=h0cZ5eOPrcn5CfJRAquYo6SG1W7RrnVKQnK/aXoihrs=; b=HFp7UWCW9KR+wd5SN/7/y9JECG
-	UtiHrBzzP1k9wqR5TKDp/8YK1X4gFwd8TUKCogRhoQ0ZknSgI0vRbJd3Y3WaV3559KoOftpfYcHjY
-	3ObLOp9HvH3qrRiNBRhTghuGK7uPJeq02AGQ48NXzvRpOWwrRsYQsGJX7KnunZrDCPde0QgkGrcqm
-	JdTcQvS1m7AyZ4lrQa4+l8iDy+q/6m0U7BbVlFePgdg09QL0OfMAyOvOJharkZq13r/gcX88Gu90a
-	vzCfG1xqqYJbfMsbRrgpTw+2k68t+K20NnK2t+kYG/5C1khEE3FV6vDMIHsn9pP2guu2eNdntj8xp
-	0+2r6zTw==;
+	bh=4M9snT9qbDvQ88PdgmNC6RL0sxoR82CuhIh6v4YfX4A=; b=1qqzAl4y/bxZWODeZikEckZ3uV
+	+QybE4by4jX5cHbTkSqWrE9H2+aoCxGGM38MzgvsJn1cT6YtYABGuYMPjwNPMHFWXvjFN2yekuvYH
+	DVUtrXVCtfygRf53NoidLvGW5xO1UxY80V6UjiIqeYtnPjOxn5mGRoxvJlylKIiYDzv2oBY4B6BLM
+	ZJWWSh/SLc+Scx2WyIdbUPtp5h1sy7yc5SmJ/fCVpL4bBYCrgQa+u+ybnz0JYnqMcpgO46wtBEcX8
+	p/gBXTlaBhvL8NIyJnOy2GrJ4Nmt14DIM/WwRtWX6UxocGWhdoLLoW6DYK9OVEHGFdwsalk59Rh/F
+	7Wl0VwMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXfmw-00000008M9J-2Pki;
-	Tue, 14 Jan 2025 12:12:54 +0000
-Received: from mail.alien8.de ([65.109.113.108])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXfmt-00000008M5o-0Bsu
+	id 1tXfwV-00000008NS1-1jNE;
+	Tue, 14 Jan 2025 12:22:47 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tXfwR-00000008NRf-3Hx5
 	for kexec@lists.infradead.org;
-	Tue, 14 Jan 2025 12:12:52 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 456E740E0277;
-	Tue, 14 Jan 2025 12:12:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id hfPSlQjBFZgl; Tue, 14 Jan 2025 12:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1736856756; bh=h0cZ5eOPrcn5CfJRAquYo6SG1W7RrnVKQnK/aXoihrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PRK84YZPeSd40UgFDHJJY3/YgkYiG0eX2nSUdh4TT6/s94h6zwLQu3oWilFsT0HYb
-	 dlqZf4mguLarxnqQ+hO/Ub61wy6AlF1D9eQOa9wHfAEuQymKVX6pIg8ErFHMsQzyVx
-	 oeenNt19kV3tpVpSgxL7SKZJG1DPr48RuiZw0u06OHzsCzRk5LGOPP+4o8X2B1ytvv
-	 nEpRf4PEqXvbQzEqORiJ0xvVi+VzlwF7FEGkQRtyeKm+JM55dTWdwSBJCpniLVImGq
-	 xE/R5Kaz8k5qFy06Plg4sL7x1+wmyKCn0gnvRlzxxHVn/pMis3m7HppE4hsJykMAX0
-	 i+C5NLvmiCXxGlB66My3DdPEbUnFP12Wmah+ur+NLqPuVXCY2l++mPswzEv8j5di3Z
-	 XkBpSEM5csy2tIQkVpP4B/qE95Cq6rhN8QzabNkLvlkvpxoYKEddQz5Cm25Dgb1eJL
-	 PCXHCiNlIOXyaCLPPcGTBZTWECxNcwYRvrIDZGRFRvj2wS/nEZlX527QFHbbgG9pZb
-	 kao/wdLv2cNuWF8RobLbUKa7obhQNVG0+TlKkbJvRaGn0xUaMwueqSCGTNxZainkaz
-	 uZZcf0oszdEb9BrEDlGVNZ4gV8amaUGJZH+/NSh0sEG3wVlWmND9Fpd/Ql+3uiOuNa
-	 YzmGKuP0sl4tXEBEfMTZ+d4s=
-Received: from zn.tnic (p200300eA971f93a7329C23ffFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93a7:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B369540E0269;
-	Tue, 14 Jan 2025 12:12:04 +0000 (UTC)
-Date: Tue, 14 Jan 2025 13:11:59 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>,
-	David Kaplan <david.kaplan@amd.com>, Tao Liu <ltao@redhat.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Wei Yang <richard.weiyang@gmail.com>, Rong Xu <xur@google.com>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	Simon Horman <horms@kernel.org>, Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de,
-	nathan@kernel.org
-Subject: Re: [PATCH v2 0/9] x86/kexec: Fixes for tip/x86/boot
-Message-ID: <20250114121159.GBZ4ZUjze3oZ3WT3ey@fat_crate.local>
-References: <20250109140757.2841269-1-dwmw2@infradead.org>
- <a3ca6fb291674f92fd2f94acf45bf3813baa3a49.camel@infradead.org>
- <20250114115115.GAZ4ZPs4R-Sw2NBZHL@fat_crate.local>
- <5E5117F9-2A7A-4100-BC72-7CDE8DD8361A@infradead.org>
+	Tue, 14 Jan 2025 12:22:45 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E61311FB;
+	Tue, 14 Jan 2025 04:23:09 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E5BF3F66E;
+	Tue, 14 Jan 2025 04:22:38 -0800 (PST)
+Date: Tue, 14 Jan 2025 12:22:31 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	LEROY Christophe <christophe.leroy2@cs-soprasteria.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	kexec@lists.infradead.org, binutils@sourceware.org,
+	devel@daynix.com
+Subject: Re: [PATCH v4 1/6] elf: Define note name macros
+Message-ID: <Z4ZXB2UJaZWOmshN@e133380.arm.com>
+References: <20250111-elf-v4-0-b3841fa0dcd9@daynix.com>
+ <20250111-elf-v4-1-b3841fa0dcd9@daynix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5E5117F9-2A7A-4100-BC72-7CDE8DD8361A@infradead.org>
+In-Reply-To: <20250111-elf-v4-1-b3841fa0dcd9@daynix.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250114_041251_231264_A4502296 
-X-CRM114-Status: GOOD (  11.29  )
+X-CRM114-CacheID: sfid-20250114_042243_922514_3960961A 
+X-CRM114-Status: GOOD (  25.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,15 +70,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jan 14, 2025 at 12:53:45PM +0100, David Woodhouse wrote:
-> Thank you. Once the dust settles on these I can resend the debugging stuff
-> which is actually what I came here to do.
+Hi,
 
-Sure, let's carry over the merge window successfully first. :)
+On Sat, Jan 11, 2025 at 02:48:44PM +0900, Akihiko Odaki wrote:
+> elf.h had a comment saying:
+> > Notes used in ET_CORE. Architectures export some of the arch register
+> > sets using the corresponding note types via the PTRACE_GETREGSET and
+> > PTRACE_SETREGSET requests.
+> > The note name for these types is "LINUX", except NT_PRFPREG that is
+> > named "CORE".
+> 
+> However, NT_PRSTATUS is also named "CORE". It is also unclear what
+> "these types" refers to.
+> 
+> To fix these problems, define a name for each note type. The added
+> definitions are macros so the kernel and userspace can directly refer to
+> them.
 
--- 
-Regards/Gruss,
-    Boris.
+I guess another motivation is to move towards having elf.h as the
+single point of definition for the note names, so that obscure and
+duplicate logic for determining note names can be removed.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+(Could be worth adding a note on this is the patch is respun, but this
+would be overkill otherwise...)
+
+
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>  include/uapi/linux/elf.h | 86 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 83 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index b44069d29cec..343f5c40d03a 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -368,99 +368,179 @@ typedef struct elf64_shdr {
+>  #define ELF_OSABI ELFOSABI_NONE
+>  #endif
+>  
+> +/* Note definitions: NN_ defines names. NT_ defines types. */
+> +
+>  /*
+>   * Notes used in ET_CORE. Architectures export some of the arch register sets
+>   * using the corresponding note types via the PTRACE_GETREGSET and
+>   * PTRACE_SETREGSET requests.
+> - * The note name for these types is "LINUX", except NT_PRFPREG that is named
+> - * "CORE".
+>   */
+> +#define NN_PRSTATUS	"CORE"
+>  #define NT_PRSTATUS	1
+> +#define NN_PRFPREG	"CORE"
+>  #define NT_PRFPREG	2
+> +#define NN_PRPSINFO	"CORE"
+>  #define NT_PRPSINFO	3
+> +#define NN_TASKSTRUCT	"CORE"
+>  #define NT_TASKSTRUCT	4
+> +#define NN_AUXV		"CORE"
+>  #define NT_AUXV		6
+>  /*
+>   * Note to userspace developers: size of NT_SIGINFO note may increase
+>   * in the future to accomodate more fields, don't assume it is fixed!
+>   */
+> +#define NN_SIGINFO      "CORE"
+>  #define NT_SIGINFO      0x53494749
+> +#define NN_FILE         "CORE"
+>  #define NT_FILE         0x46494c45
+> +#define NN_PRXFPREG     "LINUX"
+>  #define NT_PRXFPREG     0x46e62b7f      /* copied from gdb5.1/include/elf/common.h */
+
+[...]
+
+> +#define NN_LOONGARCH_HW_WATCH	"LINUX"
+>  #define NT_LOONGARCH_HW_WATCH	0xa06   /* LoongArch hardware watchpoint registers */
+>  
+> -/* Note types with note name "GNU" */
+> +/* Note used in other file types. */
+
+For this, it may make sense to be vaguer, e.g.
+
+	/* Other notes */
+
+(We don't dump NT_GNU_PROPERTY_TYPE_0 in coredumps, but I don't think
+it would be nonsensical to do so.)
+
+> +#define NN_GNU_PROPERTY_TYPE_0	"GNU"
+>  #define NT_GNU_PROPERTY_TYPE_0	5
+
+[...]
+
+With or without those changes,
+
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+
 
