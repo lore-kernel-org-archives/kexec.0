@@ -4,63 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5FD3C02183
-	for <kexec@archiver.kernel.org>; Fri, 17 Jan 2025 07:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE9A3C02187
+	for <kexec@archiver.kernel.org>; Sat, 18 Jan 2025 08:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=E1LQIE7A3BgeZ+4yFDmM8zl4yAhscW3P2uZTCe0E7QQ=; b=F3Rd6igTegLRmEqCPHPUTGCDXR
-	XaarEt75szvpa7J0Fb+Jw+c2h5rbLHzIaLalQMsZgnYl5+uE2MgI+DhpymDw6JPvOTUG9cLeS3a2l
-	RF4wEaqsnN5VPoormAMRQ2uj8yw2+pYw8HVJMKhCPlXib37h8s6GGxzJumnTGnbd3d6ouE0FGosQK
-	JbUOQz499BRaycFh5JuTNHuXIcYr+65ONBiz4Rj5bzsknP1iOGDW76qhV1HA5ijG8B7rbbwm61IiK
-	k0beextglvzc7uUXrwama+oBI+yw0r5zn4sx6jCeRV2ieUMTid+2qc9SbO3al/vD4zBA3hY35SKk1
-	+I6iRVkg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MstsdCK7fs6TiHB2aoEPFnlipyR3FTW1b6bpj6iFCyM=; b=QPIL++UkUWSNVQKBc2hvRxl2Zn
+	xVKEK4ko46Bd1hG1DAMXCmpXKbHe9hSBAOHpIbAQi3I6zRDq7gPHohfS9fGVed2i40EQFQTvMSMYT
+	j2Oz6F/s3kA0gshHVeGPPCLa2D70OVFiNgJsMKLdusrkerwAtvqYeZcWryyYnG388GcFlrAlk5GIv
+	/ei7oQYsrEQkbDpkA7JACn8PKnulvqAxyIWUZaMNzJSSHswd3kpoQVbmqwsJ6SpHdAdx7UBzRpfwi
+	hmv3IS53IcDHoiHTkNPHeFhfkUKpwl19id5pMNuGh8seKHAhfq8DPEesIqTDobGTGHwpPooFhfYkt
+	pJuwPNtQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYh9m-0000000HFjk-0BXP;
-	Fri, 17 Jan 2025 07:52:42 +0000
-Received: from out-183.mta0.migadu.com ([2001:41d0:1004:224b::b7])
+	id 1tZ49j-000000021Ln-0JgQ;
+	Sat, 18 Jan 2025 08:26:11 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYh9g-0000000HFit-0gS6
-	for kexec@lists.infradead.org;
-	Fri, 17 Jan 2025 07:52:38 +0000
-Date: Fri, 17 Jan 2025 08:52:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1737100347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E1LQIE7A3BgeZ+4yFDmM8zl4yAhscW3P2uZTCe0E7QQ=;
-	b=KCBHr6PpbeKy+Ngi4T06ug2ZvbfATktuu3JnlVaBVNoIkHgi7IOqZwbgYQBny79GEfWKJA
-	zfI046qs2mMrfgHHn4MyrDnNVN85Wkk8Ig1ezp3UQuf5hBqn0sfaOY3mnQBbyL8f4pbL6b
-	bnpU3jCMDSRzS2QJzrvb5SsASz2WWbBIF3rXKEeifiNt4RskNO4uUX4gRW9IsOtcZT+pVB
-	q46aioIDLKdPxZu7A/t5bJYlzvhe4gPIopELEGyffLbJZ/bbJphADZZJ8L8nxOG+U3ISui
-	B2POw8E5xEARl6/cfEs/fveS1aMFX2903rV12KyANd1E4K0Yd9RFus9/Bj/ESw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, ebiederm@xmission.com,
- rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
- kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BREGRESSION=5D_Kernel_booted_via_k?=
- =?US-ASCII?Q?exec_fails_to_resume_from_hibernation?=
-In-Reply-To: <Z4nRWnysvuxLWU32@MiWiFi-R3L-srv>
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4Zjmva-pLbLjtQv@desktop0a> <Z4czuvi2BiNlDWPP@MiWiFi-R3L-srv> <Z4ejbdJr87V3IwV8@desktop0a> <Z4jy-NoLxpwaLfyD@desktop0a> <Z4m4q8yfIjfMRgZ+@MiWiFi-R3L-srv> <Z4nRWnysvuxLWU32@MiWiFi-R3L-srv>
-Message-ID: <1A927798-F31C-49EE-8CE9-657FA6E72842@r-ricci.it>
+	id 1tY9hd-0000000CxxV-2yvs;
+	Wed, 15 Jan 2025 20:09:27 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 41F7BA42164;
+	Wed, 15 Jan 2025 20:07:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A6BC4CED1;
+	Wed, 15 Jan 2025 20:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736971763;
+	bh=HKd2BYN0EJzvcqr3Xx3Vueop4tDJh+K1d/v1F43ixq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mMh7oPcJEGeeR1CbLFNvT6sYm/PkFQwDWfBsQ90yztglpZ3/YZEBVnarQ1AC7szWo
+	 7TIaoC/5Ds9yuqwsCSv511HrZQrz9DYKTCs5teywBQChtbtwCLdUU15B57wDXyESFf
+	 A/x13wKP5lj3nSG+MtRjOv+yVwR6g+BlMg1RaQLmyhmo5lqJ4XKmsH9giN7zUcgT0G
+	 JjdlmRxxbsFDdoqRPMfd7BNNsEMs0mR8Cyqj/oCkFnsbRsTmQflWeOU3bRrVWJH9mq
+	 wFz46x9sk38sYnuYTKWOXCW+bAgDPbIH7khSU1whNzE/e3Hn5P+2qU6Lun6bUVc/Ly
+	 lJaxe0RpKwpyA==
+Date: Wed, 15 Jan 2025 20:09:21 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+	io-uring@vger.kernel.org, bpf@vger.kernel.org,
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Corey Minyard <cminyard@mvista.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
+Message-ID: <Z4gV8QNnafm-iCC4@liuwe-devbox-debian-v2>
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250116_235236_765488_ABBB5DCF 
-X-CRM114-Status: UNSURE (   8.24  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250115_120925_815868_468455B6 
+X-CRM114-Status: GOOD (  11.44  )
+X-Mailman-Approved-At: Sat, 18 Jan 2025 00:25:42 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,37 +94,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 17 January 2025 04:41:14 CET, Baoquan He <bhe@redhat=2Ecom> wrote:
->On 01/17/25 at 09:55am, Baoquan He wrote:
->> On 01/16/25 at 12:52pm, Roberto Ricci wrote:
->> > On 2025-01-15 Wed 13:00:52 +0100, Roberto Ricci wrote:
->> > > On 2025-01-15 Wed 12:04:10 +0800, Baoquan He wrote:
->> > > > On 01/14/25 at 02:16pm, Roberto Ricci wrote:
->> > > > > On 2025-01-13 Mon 22:28:48 +0100, Roberto Ricci wrote:
->> =2E=2E=2Esnip=2E=2E=2E
->> > Also, I can't reproduce with the default config (make defconfig),
->> > therefore something in my config (I already sent it) may play a role=
-=2E
->>=20
->> What I tried is defconfig on 6=2E13-rc7, let me try your config again=
-=2E
->
->I tried your config on the latest kernel, reboot will fail during the
->new kernel bootup after newly built kernel was installed=2E
->
->I haven't compared your config with the defconfig to see their
->difference=2E Wondering where your config comes from=2E
->
+On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
+[...]
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 7a35c82976e0..9453f0c26f2a 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -141,7 +141,7 @@ static int sysctl_record_panic_msg = 1;
+>   * sysctl option to allow the user to control whether kmsg data should be
+>   * reported to Hyper-V on panic.
+>   */
+> -static struct ctl_table hv_ctl_table[] = {
+> +static const struct ctl_table hv_ctl_table[] = {
+>  	{
+>  		.procname	= "hyperv_record_panic_msg",
+>  		.data		= &sysctl_record_panic_msg,
 
-(Re-sending as I forgot to add CC, sorry)
-
-It's based on the config used by my distribution:
-https://raw=2Egithubusercontent=2Ecom/void-linux/void-packages/41335626868=
-0b477b42a4af9462b9bb49491ca19/srcpkgs/linux6=2E12/files/x86_64-dotconfig
-I ran `make olddefconfig` and `make localmodconfig`, then
-I made a few changes in nconfig, such as enabling KASAN
-and UBSAN=2E
-
-The kernels provided by the distribution, which have very
-minimal patches, are affected as well=2E
+Acked-by: Wei Liu <wei.liu@kernel.org>
 
