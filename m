@@ -4,76 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23BB6C02187
-	for <kexec@archiver.kernel.org>; Wed, 15 Jan 2025 05:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2167C02180
+	for <kexec@archiver.kernel.org>; Wed, 15 Jan 2025 05:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gqxfn2Bh8pqSgpWAhYuCaH8o2BUeXgVOaRACTrcmMAY=; b=20HltWuWptC60Vi80x4mLMfdi4
-	1ZGcXZyVV1gkX+o/0NmVWdQq69sLMyVtAqhpx3rDYcfXAIBVIx52TpicezXi7QlahNy0JOGS1sgFD
-	alYkPmI+rk/vbnct3O+jcP+PQpSRumrdLp+mbjP41Y4xusHjsX5ZokTnY/9u7w5JWdcGDG71cNp1W
-	wgc1wHHQApxX6nUHwRz/PpWDd1BJNbij9Mj0Hr8X2+qy6uFDDCm2dORU5EhOEL3zcSpfF+AUGnx8q
-	itB4a17ZJyYajD+uWabGY5dtgdceaSferIZM37BYpqyeAkxkOBQXApEU4kXr5Y/hoWOfBzXRKuIrQ
-	Mx7/GKKA==;
+	bh=88SqYtXaTV08jsATT/J9IavghVGb0T0MbX3fafAbdCI=; b=uvkS5vsPJZFbz13YQ3+RuJ/1aw
+	SH4sq5TnTK4cft3sgsbGcapPQBydlVsUb2NGSHzbCW6tVDqN7l6j7YCdfPQp5xiqvInwFfEokyfSw
+	rIyrpeDVTpGJNUBraT5BOdAKa+xAH5VP48VVZhh9tFaKMdiC804syyo/Toq3itLJ31qJobLudekEY
+	PX7OTQIixQ4q5j8/jJeLbBTYsP57NV5dcuQLVP/+vyOxYGJiAf8zztB22R6TL/l9CHx6e6z4qHMeY
+	u2ZCDBPVQiE4REmNjAzZoMCGoxvdMOkioVZLAgYHvIwFEIkSSBb8JH58uOP8ENitAFzo5gvUR/WO9
+	0BeqdO6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXwHC-0000000AjI3-3b3Q;
-	Wed, 15 Jan 2025 05:49:14 +0000
-Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+	id 1tXwHI-0000000AjLx-2XH5;
+	Wed, 15 Jan 2025 05:49:20 +0000
+Received: from mail-pl1-x62f.google.com ([2607:f8b0:4864:20::62f])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXwH9-0000000AjFS-1ZtA
+	id 1tXwHF-0000000AjK9-2qpE
 	for kexec@lists.infradead.org;
-	Wed, 15 Jan 2025 05:49:12 +0000
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-21636268e43so148571275ad.2
-        for <kexec@lists.infradead.org>; Tue, 14 Jan 2025 21:49:11 -0800 (PST)
+	Wed, 15 Jan 2025 05:49:19 +0000
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-21670dce0a7so137018975ad.1
+        for <kexec@lists.infradead.org>; Tue, 14 Jan 2025 21:49:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736920151; x=1737524951; darn=lists.infradead.org;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736920157; x=1737524957; darn=lists.infradead.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gqxfn2Bh8pqSgpWAhYuCaH8o2BUeXgVOaRACTrcmMAY=;
-        b=tv5xYgO6OfC0yeoPI6dI1psXPjb2YAoSnwsCExNOWnQkR+ZypbRNeYYFISlI4rGXey
-         KjN50q+VxayZsfsXoFfAjmxa2agpsEh7KGFwJnbucjKN+iDmu1KFSfrUGVdatjP6ZFiR
-         dreXy7gDMnoORKUnI3hCnf0FVXJ9EDcV9JU5hE1GqHn8slHoIDmj8zAXZye+0dVfyWXt
-         EnpytX/sgCbktEiIE9q/SF2xe0jievOV4vbyTN7Br/E8Wo9BlV16PE12b9W4BHXvnoFh
-         KXbrEqFSnmapTcXfbezXMqU9Bi1HdhFPYzoWNPab5DNtp3L4HXHKrohDNXXqY5YOpTcw
-         zHXg==
+        bh=88SqYtXaTV08jsATT/J9IavghVGb0T0MbX3fafAbdCI=;
+        b=sMHgi+n6ZKJI+ywkMCuWowzg6vKPtia7AknYUAblfWFMG0UlmxAg5T2/oPhGIQmVyt
+         p8LoXf6v80gG3lcPpgoXBERZ6G5gIo45LowtVxzZZoT8WH9kTTAtl12PcBnaiRCKNIgF
+         7MNZ1ZKRbXF9Vcsrj9Nl2WLVzc/AQlyws+p9xU+jsAOo0Vlj8ZZb2QXcpmKli+sTdKW1
+         TCjtPeLnkA2Drp7c7aU4zkptB36ICPMD9UogcUCrbvz2rJs4BId4XaZDbyFX84bMfxhH
+         aEHk7TwF/dNSri2w9suuSQCpEceHokWuzCY19Y7YZycVJrxE3v3jwtKcM0+aUURImweX
+         K9qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736920151; x=1737524951;
+        d=1e100.net; s=20230601; t=1736920157; x=1737524957;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gqxfn2Bh8pqSgpWAhYuCaH8o2BUeXgVOaRACTrcmMAY=;
-        b=oflZzRUJb6LjJvxYsUHMrf79UE0s6bEvB3EWGY2pC/8lBOJvNgFrbtXCK6BGz7Yn+m
-         ry3XTNV2wuRbmh9tJz14v9FBxeDCVOthdkU9Hh6Jk7c0D24Lpv7Up3dQOZpIWvwJeUXY
-         2+N3d8Zw5iw84FwA1yW/FcnX8D4ZXB2nurLe3un2ivVlq9Fm90/hq+zaUQRvEkMPCAEN
-         ySQmRsViiRLmtAF+6rr8F5TX6y2+MHKd5BQ35om/FWgJzrsI4c9zLHunq3u/mAqcIeJZ
-         6nKnhZ/98neMR4cuXqKXyM8cfTBwt9KDcVaGjnwmX1fZ6OQ3hsPCvdXJmb5AudinEKVK
-         AR8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWxxvDwP2d0vmF9NREikGZceOM9QrFkaDbwlRJo/pkgCX0vsFnET5nOHk1Pjq6JoC1OVX/uOA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy74eVUaf9LVqIR/66bwquuupOIk3dlbK25l0BE1hRfyWyMuR6f
-	M4Vm79xmbyPIarCzG+bBh3qIQPCrMGhfsGwlMKRcAVpaS4OFdBg6ybOkfPHL71I=
-X-Gm-Gg: ASbGncsYkzoZwwbDbCsqY/GWS63H+VRISfD72oafm8m+t0v29Lq/O/pfJKeq42i6Ogq
-	q9avjHb0L9roLWxqTciCoD4NUg2Dr9vJJRrOcGhGoaVwhzyGCi3R/Mu1b6k7wPayI0xjhjVe6+/
-	aaaQQ7lfk+zw1lLNFgxR9/cdhPAd7OtW/xJxj8V47c+zb8Zik4YHZCDw+C0+cIwHDRr53YsYntP
-	HnjT9ecunhm41UxwROFtG5304q9jplCf0jeeTTyBs/XvODwvsdiql2pX/8=
-X-Google-Smtp-Source: AGHT+IGEE8Fm6k+e43goXL9XR3kNG0Qk7QvIMeGK5viYe25EF4qO0xqHuY9x+AzGWdKmvE+R7dTOXQ==
-X-Received: by 2002:a05:6a21:1087:b0:1e1:b727:181a with SMTP id adf61e73a8af0-1e88cfd3cb1mr47297876637.24.1736920150754;
-        Tue, 14 Jan 2025 21:49:10 -0800 (PST)
+        bh=88SqYtXaTV08jsATT/J9IavghVGb0T0MbX3fafAbdCI=;
+        b=j7vMis0Ead6TF1xgC/MC4W5u0sKWjG1LM+W5U6Tg0JH4fhrzcbIe5nLbzIRcr8SqD1
+         XkbnPGE37exW6R7KAkTHGD2MYOwsid/Nx+NleZpLqtdrTvArsiB6bvNVzz/Xtuf3EH6n
+         BlLjgpVHnC6Jbq9JOmg50Q5so9ilvH2uGc/RFU0C+hdjWLhLbGgEUEYdmYw0VQlnR48G
+         B+KKTDj65loZc0mBl8bWEkqt58yFaaitHENDhTjWSGd+rNHVBrudkTswBwEpm1eTq3EW
+         ZxGQymPj6IFQPwFpUlwmCZRhPvAKro5BUcxraesSKFI12LMBauort+guD5tdLt7vwc4n
+         cC/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVhjV/rhQ2wsRaVPoQOCWPF9iFnmRjazppOKiQ422a/zYOG4zU5V4RVp8vTQ3Y7y8N5cL20Ag==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyVioQUFo+ABCU/ASpB2E/s55KYATaXREjFJ52S4Bhstkhw8qxa
+	CgxJI7vlzmKPMlPTn9WV+UnlFd2GGRmQ/u46OOu3SbcovAByMnlXaOegaG3o6mucgfy061AeT5H
+	sQrA=
+X-Gm-Gg: ASbGncsK7JBtsljM5F4w7L/EKgxr/yMjxKWUoDf1vnHacemAh4vTG7X1Z/8bHR+pewO
+	IOM30O5+LGMRgZFtwvk55uTI9JXr1hGVumTSkud2AsHmlO0UFngHV9CRUV/MVObkzfbhaMI3Yij
+	p/Or1unK2vNZZwsvv3KOarhlGElHCNV781JfX1h+oN98PmL5BGYWqPS95Chs5/0CzN1/pjaG5fI
+	z3ZJ0OfUlcTf1WrDta8GCVEvrCipYCiMdw5dAggRln03n7VGYBqGqA3w8c=
+X-Google-Smtp-Source: AGHT+IE7CP/5jGWZAR0IrIqQIqvoQb7g5wi9hxFsU0CFVXu0dR68h2h3F8IAezzLwnE0Rlv/Ybh8/Q==
+X-Received: by 2002:a17:902:d48a:b0:216:4064:53ad with SMTP id d9443c01a7336-21a840109d2mr433462125ad.48.1736920157113;
+        Tue, 14 Jan 2025 21:49:17 -0800 (PST)
 Received: from localhost ([157.82.203.37])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72d406a94b8sm8295174b3a.167.2025.01.14.21.49.06
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-21a9f22e591sm76124125ad.180.2025.01.14.21.49.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2025 21:49:10 -0800 (PST)
+        Tue, 14 Jan 2025 21:49:16 -0800 (PST)
 From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Wed, 15 Jan 2025 14:48:02 +0900
-Subject: [PATCH v5 5/6] s390/crash: Use note name macros
+Date: Wed, 15 Jan 2025 14:48:03 +0900
+Subject: [PATCH v5 6/6] crash: Remove KEXEC_CORE_NOTE_NAME
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250115-elf-v5-5-0f9e55bbb2fc@daynix.com>
+Message-Id: <20250115-elf-v5-6-0f9e55bbb2fc@daynix.com>
 References: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
 In-Reply-To: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
 To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
@@ -84,12 +85,11 @@ To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
  kexec@lists.infradead.org, binutils@sourceware.org, devel@daynix.com, 
- Akihiko Odaki <akihiko.odaki@daynix.com>, 
- Heiko Carstens <hca@linux.ibm.com>
+ Akihiko Odaki <akihiko.odaki@daynix.com>
 X-Mailer: b4 0.14-dev-fd6e3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250114_214911_417436_00E00ED7 
-X-CRM114-Status: GOOD (  12.32  )
+X-CRM114-CacheID: sfid-20250114_214917_722300_236D58F5 
+X-CRM114-Status: GOOD (  10.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,132 +104,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use note name macros to match with the userspace's expectation.
+KEXEC_CORE_NOTE_NAME is no longer used.
 
 Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 Reviewed-by: Dave Martin <Dave.Martin@arm.com>
 ---
- arch/s390/kernel/crash_dump.c | 62 ++++++++++++++++---------------------------
- 1 file changed, 23 insertions(+), 39 deletions(-)
+ include/linux/kexec.h       | 2 --
+ include/linux/vmcore_info.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index cd0c93a8fb8b..022f4f198edf 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -248,15 +248,6 @@ bool is_kdump_kernel(void)
- }
- EXPORT_SYMBOL_GPL(is_kdump_kernel);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..c840431eadda 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -68,8 +68,6 @@ extern note_buf_t __percpu *crash_notes;
+ #define KEXEC_CRASH_MEM_ALIGN PAGE_SIZE
+ #endif
  
--static const char *nt_name(Elf64_Word type)
--{
--	const char *name = "LINUX";
--
--	if (type == NT_PRPSINFO || type == NT_PRSTATUS || type == NT_PRFPREG)
--		name = KEXEC_CORE_NOTE_NAME;
--	return name;
--}
+-#define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
 -
  /*
-  * Initialize ELF note
-  */
-@@ -281,10 +272,8 @@ static void *nt_init_name(void *buf, Elf64_Word type, void *desc, int d_len,
- 	return PTR_ADD(buf, len);
- }
+  * This structure is used to hold the arguments that are used when loading
+  * kernel binaries.
+diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
+index 1672801fd98c..37e003ae5262 100644
+--- a/include/linux/vmcore_info.h
++++ b/include/linux/vmcore_info.h
+@@ -6,7 +6,6 @@
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
  
--static inline void *nt_init(void *buf, Elf64_Word type, void *desc, int d_len)
--{
--	return nt_init_name(buf, type, desc, d_len, nt_name(type));
--}
-+#define nt_init(buf, type, desc) \
-+	nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc), NN_ ## type)
- 
- /*
-  * Calculate the size of ELF note
-@@ -300,10 +289,7 @@ static size_t nt_size_name(int d_len, const char *name)
- 	return size;
- }
- 
--static inline size_t nt_size(Elf64_Word type, int d_len)
--{
--	return nt_size_name(d_len, nt_name(type));
--}
-+#define nt_size(type, desc) nt_size_name(sizeof(desc), NN_ ## type)
- 
- /*
-  * Fill ELF notes for one CPU with save area registers
-@@ -324,18 +310,16 @@ static void *fill_cpu_elf_notes(void *ptr, int cpu, struct save_area *sa)
- 	memcpy(&nt_fpregset.fpc, &sa->fpc, sizeof(sa->fpc));
- 	memcpy(&nt_fpregset.fprs, &sa->fprs, sizeof(sa->fprs));
- 	/* Create ELF notes for the CPU */
--	ptr = nt_init(ptr, NT_PRSTATUS, &nt_prstatus, sizeof(nt_prstatus));
--	ptr = nt_init(ptr, NT_PRFPREG, &nt_fpregset, sizeof(nt_fpregset));
--	ptr = nt_init(ptr, NT_S390_TIMER, &sa->timer, sizeof(sa->timer));
--	ptr = nt_init(ptr, NT_S390_TODCMP, &sa->todcmp, sizeof(sa->todcmp));
--	ptr = nt_init(ptr, NT_S390_TODPREG, &sa->todpreg, sizeof(sa->todpreg));
--	ptr = nt_init(ptr, NT_S390_CTRS, &sa->ctrs, sizeof(sa->ctrs));
--	ptr = nt_init(ptr, NT_S390_PREFIX, &sa->prefix, sizeof(sa->prefix));
-+	ptr = nt_init(ptr, PRSTATUS, nt_prstatus);
-+	ptr = nt_init(ptr, PRFPREG, nt_fpregset);
-+	ptr = nt_init(ptr, S390_TIMER, sa->timer);
-+	ptr = nt_init(ptr, S390_TODCMP, sa->todcmp);
-+	ptr = nt_init(ptr, S390_TODPREG, sa->todpreg);
-+	ptr = nt_init(ptr, S390_CTRS, sa->ctrs);
-+	ptr = nt_init(ptr, S390_PREFIX, sa->prefix);
- 	if (cpu_has_vx()) {
--		ptr = nt_init(ptr, NT_S390_VXRS_HIGH,
--			      &sa->vxrs_high, sizeof(sa->vxrs_high));
--		ptr = nt_init(ptr, NT_S390_VXRS_LOW,
--			      &sa->vxrs_low, sizeof(sa->vxrs_low));
-+		ptr = nt_init(ptr, S390_VXRS_HIGH, sa->vxrs_high);
-+		ptr = nt_init(ptr, S390_VXRS_LOW, sa->vxrs_low);
- 	}
- 	return ptr;
- }
-@@ -348,16 +332,16 @@ static size_t get_cpu_elf_notes_size(void)
- 	struct save_area *sa = NULL;
- 	size_t size;
- 
--	size =	nt_size(NT_PRSTATUS, sizeof(struct elf_prstatus));
--	size +=  nt_size(NT_PRFPREG, sizeof(elf_fpregset_t));
--	size +=  nt_size(NT_S390_TIMER, sizeof(sa->timer));
--	size +=  nt_size(NT_S390_TODCMP, sizeof(sa->todcmp));
--	size +=  nt_size(NT_S390_TODPREG, sizeof(sa->todpreg));
--	size +=  nt_size(NT_S390_CTRS, sizeof(sa->ctrs));
--	size +=  nt_size(NT_S390_PREFIX, sizeof(sa->prefix));
-+	size =	nt_size(PRSTATUS, struct elf_prstatus);
-+	size += nt_size(PRFPREG, elf_fpregset_t);
-+	size += nt_size(S390_TIMER, sa->timer);
-+	size += nt_size(S390_TODCMP, sa->todcmp);
-+	size += nt_size(S390_TODPREG, sa->todpreg);
-+	size += nt_size(S390_CTRS, sa->ctrs);
-+	size += nt_size(S390_PREFIX, sa->prefix);
- 	if (cpu_has_vx()) {
--		size += nt_size(NT_S390_VXRS_HIGH, sizeof(sa->vxrs_high));
--		size += nt_size(NT_S390_VXRS_LOW, sizeof(sa->vxrs_low));
-+		size += nt_size(S390_VXRS_HIGH, sa->vxrs_high);
-+		size += nt_size(S390_VXRS_LOW, sa->vxrs_low);
- 	}
- 
- 	return size;
-@@ -373,7 +357,7 @@ static void *nt_prpsinfo(void *ptr)
- 	memset(&prpsinfo, 0, sizeof(prpsinfo));
- 	prpsinfo.pr_sname = 'R';
- 	strcpy(prpsinfo.pr_fname, "vmlinux");
--	return nt_init(ptr, NT_PRPSINFO, &prpsinfo, sizeof(prpsinfo));
-+	return nt_init(ptr, PRPSINFO, prpsinfo);
- }
- 
- /*
-@@ -589,7 +573,7 @@ static size_t get_elfcorehdr_size(int phdr_count)
- 	/* PT_NOTES */
- 	size += sizeof(Elf64_Phdr);
- 	/* nt_prpsinfo */
--	size += nt_size(NT_PRPSINFO, sizeof(struct elf_prpsinfo));
-+	size += nt_size(PRPSINFO, struct elf_prpsinfo);
- 	/* regsets */
- 	size += get_cpu_cnt() * get_cpu_elf_notes_size();
- 	/* nt_vmcoreinfo */
+-#define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(NN_PRSTATUS), 4)
+ #define CRASH_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
 
 -- 
 2.47.1
