@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A6B4C02187
-	for <kexec@archiver.kernel.org>; Wed, 15 Jan 2025 19:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EEFF9C0218A
+	for <kexec@archiver.kernel.org>; Wed, 15 Jan 2025 19:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gSlCkcjgZBWAkesEhGWssA+8sh3qmIYNjsyEtgrDo9o=; b=zlxPXIBCxWVsK7m6CKAxh+uLRc
-	3BhB20r2V3kjZg7UtVQwlWyCNPM9fO+7DENWGz5iwxJgtxPq2KTIm2hu6mKvU1x6+eyMdjODm7HkQ
-	N7wDuWgeUGRpd/YMINzlGSl0ykbe1WafulxZKsNekGreLzGWi9E0YKxxBNITbCRGTC9dtJtKRnkLq
-	NvkqgM4fGyau3fjRn5m0dk8KGs+3mPjSf1f9zHHndajQjlcdd4FZxs3lF576ZnD7Z0fNhFFWZSor3
-	+w4D5EL2bRVi61hyKunXtNHIGMMioAcfCNnU65fM5BC2U0vDQVOFGR1AI9SF990NVqJbH/9yMoNBZ
-	kQExHLhA==;
+	bh=O03Tc2q45eY1dgZWv0tL053b8rPNbzwQjWQWfzAB6PA=; b=2Fs8sV4vj+ALWCeCkORrO3gPpK
+	dmtliVYE4KExWq7f79eB0vzK5CwyGoTdfcCJoZ8+iahXktABj8at232hEukr6WTMbIyA3gbKzbxgh
+	Su0x9QKb/XaZMCGpJuWtrALalbItv88zyWICEEaoGMQvUBH9MYnFmf2IkNqVITTMoGC+CSHrhvuwt
+	iL3iIEWJXg7mMUJD+DPjk4m8REHILzXUkDCF0IMGWY8R+kXmbFQmXZ7dtrmYNF79P71uSiA23T6LS
+	Iig74hzloD8i+KrAafvo3YlvaVKordrmxuyxBIP4zuKNllDH4zpj0EFMQ2JSPzn0vR8Qdub41WLRc
+	ydJLzWkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tY8rO-0000000CsBW-0cb2;
-	Wed, 15 Jan 2025 19:15:26 +0000
+	id 1tY8rN-0000000CsAj-2n1z;
+	Wed, 15 Jan 2025 19:15:25 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tY8qV-0000000CrwV-3z4L
+	id 1tY8qV-0000000CrwX-3yno
 	for kexec@bombadil.infradead.org;
 	Wed, 15 Jan 2025 19:14:31 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=gSlCkcjgZBWAkesEhGWssA+8sh3qmIYNjsyEtgrDo9o=; b=CmJydDU/dAvjj4CnxjPLH6YzMp
-	xL7tbn0ps9im7A6cSChwUu7TxpcKV0+MpI4IDFG868u6Mp00Ci1pPnFj5E4xWxaRnzp9Vy6kTJykI
-	KWDB0XphijgmIpsYjCOZnA7j75hLVXzWlP37SefhuHRFM2hdEa7z8EFjVjYpQUQP3CgjIhYQo8ieP
-	00mwG9JQJyLXAp5LFTESxbaMo21zpkMi5O5hVivkOy9QwQIO6m2z1RlJfJgIiXV6vsVvVdfy39AGQ
-	Hx3kIsIk2X40EJzhRF96dxqQCBDrAODLkAIe1Tc0wXNVeinWMWTR/uQkq0l0YVpW33Ghst0qneIqJ
-	0QrbJaUQ==;
+	bh=O03Tc2q45eY1dgZWv0tL053b8rPNbzwQjWQWfzAB6PA=; b=nrdkr+Tq+pjs/xef8ARok0TTNm
+	us2M71UipT8QCVTEp7EN9WdiMQM0yDRMtFg5mMMyuB5o5BNv+MDzvUkANFWVhxJ5oNa0LFpLp/twd
+	/ju1xD3XH4F6np2GQLlxTGitTWFFSnLdZ6AuINFAf868vd17O6X8kMjWIdBSXZhX2wjMOyf3zpPnT
+	r+Vx2J33WYVC8hNMd+MtwarJlDm0KglMWUBQFYA2yQeMG0+nKjkYl9k6r/MbCt4PMsXeeXvpPVpBY
+	+Da+mpBnugY67vcoG2mBNtJJdYkmLA3OqGOWk2m/IcF+pJxm1cwux9MnHFNAfEiBYk/EPYQNfKbeI
+	8svrmF8A==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tY8qS-0000000AvMc-07ML;
+	id 1tY8qS-0000000AvMd-034B;
 	Wed, 15 Jan 2025 19:14:29 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tY8qO-00000002Uvx-3ogr;
-	Wed, 15 Jan 2025 19:14:24 +0000
+	id 1tY8qO-00000002Uw4-46fA;
+	Wed, 15 Jan 2025 19:14:25 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v6 2/7] x86/kexec: Debugging support: load a GDT
-Date: Wed, 15 Jan 2025 19:09:31 +0000
-Message-ID: <20250115191423.587774-3-dwmw2@infradead.org>
+Subject: [PATCH v6 4/7] x86/kexec: Debugging support: Dump registers on exception
+Date: Wed, 15 Jan 2025 19:09:33 +0000
+Message-ID: <20250115191423.587774-5-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250115191423.587774-1-dwmw2@infradead.org>
 References: <20250115191423.587774-1-dwmw2@infradead.org>
@@ -87,63 +87,146 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-There are some failure modes which lead to triple-faults in the
-relocate_kernel function, which is fairly much undebuggable for normal
-mortals.
-
-Adding a GDT in the relocate_kernel environment is step 1 towards being
-able to catch faults and do something more useful.
+The actual serial output function is a no-op for now.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/kernel/relocate_kernel_64.S | 106 +++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index af2cd06ff318..c62f03808f18 100644
+index f5b134a81827..020f0f6e3e2e 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -39,6 +39,18 @@ SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
+@@ -119,11 +119,6 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	jmp	*%rsi
+ SYM_CODE_END(relocate_kernel)
  
-+#ifdef CONFIG_KEXEC_DEBUG
-+	.balign 16
-+SYM_DATA_START_LOCAL(kexec_debug_gdt)
-+	.word   kexec_debug_gdt_end - kexec_debug_gdt - 1
-+	.long   0
-+	.word   0
-+	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
-+	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
-+	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
-+SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
-+#endif /* CONFIG_KEXEC_DEBUG */
-+
- 	.section .text..relocate_kernel,"ax";
- 	.code64
- SYM_CODE_START_NOALIGN(relocate_kernel)
-@@ -115,6 +127,21 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	/* store the start address on the stack */
- 	pushq   %rdx
- 
-+#ifdef CONFIG_KEXEC_DEBUG
-+	/* Create a GDTR (16 bits limit, 64 bits addr) on stack */
-+	leaq	kexec_debug_gdt(%rip), %rax
-+	pushq	%rax
-+	pushw	(%rax)
-+
-+	/* Load the GDT, put the stack back */
-+	lgdt	(%rsp)
-+	addq	$10, %rsp
-+
-+	/* Test that we can load segments */
-+	movq	%ds, %rax
-+	movq	%rax, %ds
-+#endif /* CONFIG_KEXEC_DEBUG */
-+
+-#ifdef DEBUG
+-	UNWIND_HINT_UNDEFINED
+-	.balign 0x100	/* relocate_kernel will be overwritten with an IDT */
+-#endif
+-
+ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	UNWIND_HINT_END_OF_STACK
  	/*
- 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
- 	 * below.
+@@ -389,6 +384,69 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ SYM_CODE_END(swap_pages)
+ 
+ #ifdef CONFIG_KEXEC_DEBUG
++/*
++ * Generic 'print character' routine (as yet unimplemented)
++ *  - %al: Character to be printed (may clobber %rax)
++ *  - %rdx: MMIO address or port.
++ */
++SYM_CODE_START_LOCAL_NOALIGN(pr_char)
++	UNWIND_HINT_FUNC
++	ANNOTATE_NOENDBR
++	ANNOTATE_UNRET_SAFE
++	ret
++SYM_CODE_END(pr_char)
++
++/*
++ * Load pr_char function pointer into %rsi and load %rdx with whatever
++ * that function wants to see there (typically port/MMIO address).
++ */
++.macro	pr_setup
++	/* No output; pr_char just returns */
++	leaq	pr_char(%rip), %rsi
++.endm
++
++/* Print the nybble in %bl, clobber %rax */
++SYM_CODE_START_LOCAL_NOALIGN(pr_nybble)
++	UNWIND_HINT_FUNC
++	movb	%bl, %al
++	nop
++	andb	$0x0f, %al
++	addb 	$0x30, %al
++	cmpb	$0x3a, %al
++	jb	1f
++	addb	$('a' - '0' - 10), %al
++	ANNOTATE_RETPOLINE_SAFE
++1:	jmp	*%rsi
++SYM_CODE_END(pr_nybble)
++
++SYM_CODE_START_LOCAL_NOALIGN(pr_qword)
++	UNWIND_HINT_FUNC
++	movq	$16, %rcx
++1:	rolq	$4, %rbx
++	call	pr_nybble
++	loop	1b
++	movb	$'\n', %al
++	ANNOTATE_RETPOLINE_SAFE
++	jmp	*%rsi
++SYM_CODE_END(pr_qword)
++
++.macro print_reg a, b, c, d, r
++	movb	$\a, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\b, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\c, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\d, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movq	\r, %rbx
++	call	pr_qword
++.endm
++
+ SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
+ 	/* Each of these is 6 bytes. */
+ .macro vec_err exc
+@@ -429,11 +487,43 @@ SYM_CODE_END(kexec_debug_exc_vectors)
+ 
+ SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
+ 	pushq	%rax
++	pushq	%rbx
++	pushq	%rcx
+ 	pushq	%rdx
+-	movw	$0x3f8, %dx
+-	movb	$'A', %al
+-	outb	%al, %dx
++	pushq	%rsi
++
++	/* Set up %rdx/%rsi for debug output */
++	pr_setup
++
++	/* rip and exception info */
++	print_reg 'E', 'x', 'c', ':', 0x28(%rsp)
++	print_reg 'E', 'r', 'r', ':', 0x30(%rsp)
++	print_reg 'r', 'i', 'p', ':', 0x38(%rsp)
++	print_reg 'r', 's', 'p', ':', 0x50(%rsp)
++
++	/* We spilled these to the stack */
++	print_reg 'r', 'a', 'x', ':', 0x20(%rsp)
++	print_reg 'r', 'b', 'x', ':', 0x18(%rsp)
++	print_reg 'r', 'c', 'x', ':', 0x10(%rsp)
++	print_reg 'r', 'd', 'x', ':', 0x08(%rsp)
++
++	/* Other registers */
++	print_reg 'r', 's', 'i', ':', (%rsp)
++	print_reg 'r', 'd', 'i', ':', %rdi
++	print_reg 'r', '8', ' ', ':', %r8
++	print_reg 'r', '9', ' ', ':', %r9
++	print_reg 'r', '1', '0', ':', %r10
++	print_reg 'r', '1', '1', ':', %r11
++	print_reg 'r', '1', '2', ':', %r12
++	print_reg 'r', '1', '3', ':', %r13
++	print_reg 'r', '1', '4', ':', %r14
++	print_reg 'r', '1', '5', ':', %r15
++	print_reg 'c', 'r', '2', ':', %cr2
++
++	popq	%rsi
+ 	popq	%rdx
++	popq	%rcx
++	popq	%rbx
+ 	popq	%rax
+ 
+ 	/* Only return from int3 */
 -- 
 2.47.0
 
