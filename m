@@ -4,111 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00FCDE77188
-	for <kexec@archiver.kernel.org>; Thu, 16 Jan 2025 07:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10274E77188
+	for <kexec@archiver.kernel.org>; Thu, 16 Jan 2025 07:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tQvCsR9EXSN3ga2DmGxkK/BjC0F26mqQj7WZLS4qcAw=; b=YLmIbBjrMtMABaAi3qat2rDcsK
-	jjfhKF+gq7ceTgsqoP4RA60WJd8eomsNddVhsCZBZFe83Z864wZbAgyMo/cBtc+Ggybb1rCqSemOB
-	h4PeEYdMgK9TjQaWtsgSW+ReCVi7AJOcbbuuddNxZBxNftl2v+j5MYQwnpx/80O7ou80O5A/TN2Jy
-	FbNu++g69DF+Nshylae6ofrl+Du0xEKoj0K6FXjo99Vf7o48bPLvF5jFM2+ZpGzKhk5WweL2vS3WQ
-	eoYCS4I7ajVXZnQxNhR91f6fuLF8F1TH/Tob/JR6pdaT6TZEwDvcoWQhOFrjTuNWAaMn1M5hRm5dD
-	3sbtQW7g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=okdt0fx0NV20NIbFUTu8L5bpNAapNYnpnIywHGLF0Ck=; b=oa8uXuVT+MqzuUaHfg3+n9PdjO
+	S/Z+d7zh59tC2CQGGQNu26Zmd1Yindm4gf2WliLXd3lJ6hQsMPNFiGFP/eFgJqmfCOlE+ztRrWy/S
+	hfcMF3Tn3AlIPmGVb2TWc51VcL/KHf2EWPYSUcg9dQMRpjtqu8tRQ+qo8lA/+BXyrYIJzrJN1wyw6
+	EsAd9+SQ3h5x3BPvHMksK4dPwPoOPl+HvXmZxiCXmOGqdgd7OMHhZYg4DX0OWx1zYkClIkM2Shdhl
+	I9+M+DW06gbKnz/EMGDWyVA8X0Sz9e5aRFxuxXD90/iEDUx6L2bfYcoe6Qt2SA0N5wnSsYFXElrox
+	C6rcdjVQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYJrJ-0000000Dzrs-2w4c;
-	Thu, 16 Jan 2025 07:00:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tYJvg-0000000E0Ul-3F0Q;
+	Thu, 16 Jan 2025 07:04:36 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYJq4-0000000Dzb6-3Qn6
-	for kexec@lists.infradead.org;
-	Thu, 16 Jan 2025 06:58:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737010728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tQvCsR9EXSN3ga2DmGxkK/BjC0F26mqQj7WZLS4qcAw=;
-	b=GrXs+BlJhsJRyJzlFhApK1veuHoUu/jQza1WcRwnrBEvWAng3A+9/LC++0atBgFUKREGyc
-	f3bUvFiJgW2chTZyzeCo/3yiLsDrI7H2b6zxbq0jWiUOjmqxJubR/EvCRfLn9WwhPN7xHU
-	qVV+upcKZR0I9X4UESl9oH1BzetRRDo=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-201-NIhjloVMO2ajlsW4AdhkKg-1; Thu, 16 Jan 2025 01:58:46 -0500
-X-MC-Unique: NIhjloVMO2ajlsW4AdhkKg-1
-X-Mimecast-MFC-AGG-ID: NIhjloVMO2ajlsW4AdhkKg
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2164fad3792so11335945ad.0
-        for <kexec@lists.infradead.org>; Wed, 15 Jan 2025 22:58:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737010721; x=1737615521;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tQvCsR9EXSN3ga2DmGxkK/BjC0F26mqQj7WZLS4qcAw=;
-        b=StA6wWgpxwDfZwH44lirBiOsZLvHGF01wosWeQxceyLlt3M+m0KCEliTGgiqUe+8ib
-         5qX/vtadivwisvX98AcjcVO+EtAWy0SfeBbi+4VW2YhvIB1tadmpY7tjtob6hoYC20Wq
-         95I9zSEdhgc4RJHwQas/AEn8YHMABB/MfS1LSNEWpFUDDjFZ5bxBHSCNVq3Ep/a9eN91
-         Ute6iFI/afvQjYrmDQihIDFZJPIRHLYJqIqXKbaTvBIPPIj0iuOdKsEL90yLK+l0arUI
-         B9C3aotljo+LHqmXLj/lVmIEUw8zhXUzaz6r8TJapteLi0TlEOV30tHi3xQ/X8hkRmC9
-         uoBQ==
-X-Gm-Message-State: AOJu0YwCphG1BKs7oEC0zq9KghbpGvS1d8CN9pIE96ED/wZvOodM8ZaE
-	jZswLiyRbKGiYq+de9EIpLZ2EFE6m2GNAHLA8OR5jhs2hesh4FyacDEvL9mMcylQMd4NTcKbKX3
-	5IVh/eoXJ53fckx6pXa2SxDnI3eDDntCIN1ZWNBFnc82xqMjb5y2vzj6jkiWrwZdhr3/OJWOeMX
-	NH3MitjkYbRrwg1sP3M4S/5tiPyS+Xk1q6cP18w4lYdg==
-X-Gm-Gg: ASbGncufUxAT1DgaVm/SMXxKTBxDglLjx+K4yiORsL5H/p4MxH5MZvgRgsdQ0DXPrCs
-	x46v79mWdB0dGnVYD/oxPtrZyla8kYG+VclpXu5PmqWhLZZcQKBgF5kgio8dkJNYTnjN8KHR15d
-	lnZHZG9kJju/Mr7936Q8woLaiOkgShxo5OYo0D0EXlONzVJ1ws2gugu5TKpCh7h9SlhlPeuuyEk
-	0LeyrgDdDoSToQ5jNePApmYEHRe0kw0v4VJiNjYuWYXGHJ2
-X-Received: by 2002:a05:6a20:4325:b0:1e1:b062:f3fa with SMTP id adf61e73a8af0-1e88d1dba97mr60123661637.34.1737010720676;
-        Wed, 15 Jan 2025 22:58:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF0mUbg5KfGVjWvvefswEmAHcx/8ryY08l4nYmf/QtfmhIT1/A0W8mtD2C6GcsE+LcNZkwPgw==
-X-Received: by 2002:a05:6a20:4325:b0:1e1:b062:f3fa with SMTP id adf61e73a8af0-1e88d1dba97mr60123596637.34.1737010720061;
-        Wed, 15 Jan 2025 22:58:40 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d40658efdsm10700322b3a.90.2025.01.15.22.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 22:58:39 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH v7 3/7] crash_dump: store dm crypt keys in kdump reserved memory
-Date: Thu, 16 Jan 2025 14:58:18 +0800
-Message-ID: <20250116065825.1041558-4-coxu@redhat.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250116065825.1041558-1-coxu@redhat.com>
-References: <20250116065825.1041558-1-coxu@redhat.com>
+	id 1tYJvf-0000000E0U8-0T8N
+	for kexec@bombadil.infradead.org;
+	Thu, 16 Jan 2025 07:04:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=okdt0fx0NV20NIbFUTu8L5bpNAapNYnpnIywHGLF0Ck=; b=Z7jYqtNH7s6Xj5dyR+8YdH0hDz
+	HLDocw6jpb8gU6SZZM6jmwtUFLPSrV42IxYqXoCWq77u5VIZzEXLGb4XHFn4VWRhTFIJyjDdi24bs
+	ddwCQi9+D5AUq401N6+IxYQoeLvQ2HBPOQd9vUKrNzsZfo9ZKZ52N8JpJWIKG3Jv7SriGh7xMV6Kw
+	XMaomfqfbKK19IDNRs64YMu9s68h+RNKtzMa2sqdw9L/DFp5U9WCpXfZIum9kezTYqqxQTGhcNu3M
+	aOc9GEz9R6LPUivZAPFljj97thIKN65TLqOtLKzvUdL775x4ac6bqRM8Tf3663O0TZsyUoj6zY0Tm
+	qrPtSMgQ==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tYJva-0000000B0pO-0Bys;
+	Thu, 16 Jan 2025 07:04:30 +0000
+Message-ID: <4a663a07-2442-4552-b524-a5cc6b06b727@infradead.org>
+Date: Wed, 15 Jan 2025 23:04:23 -0800
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bMUOnPmATRnjI58fTbAYbmELaIjaVxQsgLHeFp-GJ3o_1737010726
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250115_225848_928233_F5DCDFBE 
-X-CRM114-Status: GOOD (  19.36  )
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
+Cc: Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>,
+ Thomas Staudt <tstaudt@de.ibm.com>, =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?=
+ <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>,
+ Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>,
+ Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+References: <20250116065825.1041558-1-coxu@redhat.com>
+ <20250116065825.1041558-3-coxu@redhat.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250116065825.1041558-3-coxu@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,207 +78,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When the kdump kernel image and initrd are loaded, the dm crypts keys
-will be read from keyring and then stored in kdump reserved memory.
+Hi,
 
-Assume a key won't exceed 256 bytes thus MAX_KEY_SIZE=256 according to
-"cryptsetup benchmark".
+On 1/15/25 10:58 PM, Coiby Xu wrote:
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 5376890adbeb..192d6796ab94 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -551,6 +551,34 @@ from within add_taint() whenever the value set in this bitmask matches with the
+>  bit flag being set by add_taint().
+>  This will cause a kdump to occur at the add_taint()->panic() call.
+>  
+> +Write the dump file to encrypted disk volume
+> +============================================
+> +
+> +CONFIG_CRASH_DM_CRYPT can be enabled to support saving the dump file to
+> +encrypted disk volume. User space can interact with
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- include/linux/crash_core.h   |   6 +-
- include/linux/kexec.h        |   4 ++
- kernel/crash_dump_dm_crypt.c | 129 +++++++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+), 1 deletion(-)
+   an encrypted disk volume.
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 44305336314e..2e6782239034 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -34,7 +34,11 @@ static inline void arch_kexec_protect_crashkres(void) { }
- static inline void arch_kexec_unprotect_crashkres(void) { }
- #endif
- 
--
-+#ifdef CONFIG_CRASH_DM_CRYPT
-+int crash_load_dm_crypt_keys(struct kimage *image);
-+#else
-+static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
-+#endif
- 
- #ifndef arch_crash_handle_hotplug_event
- static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 61269e97502a..ec7504ba80e9 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -398,6 +398,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
-+
-+	/* dm crypt keys buffer */
-+	unsigned long dm_crypt_keys_addr;
-+	unsigned long dm_crypt_keys_sz;
- };
- 
- /* kexec interface functions */
-diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 62a3c47d8b3b..8c093c743d58 100644
---- a/kernel/crash_dump_dm_crypt.c
-+++ b/kernel/crash_dump_dm_crypt.c
-@@ -1,14 +1,62 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/key.h>
-+#include <linux/keyctl.h>
- #include <keys/user-type.h>
- #include <linux/crash_dump.h>
- #include <linux/configfs.h>
- #include <linux/module.h>
- 
- #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
-+#define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
- #define KEY_DESC_MAX_LEN 128	/* maximum dm crypt key description size */
- 
- static unsigned int key_count;
- 
-+struct dm_crypt_key {
-+	unsigned int key_size;
-+	char key_desc[KEY_DESC_MAX_LEN];
-+	u8 data[KEY_SIZE_MAX];
-+};
-+
-+static struct keys_header {
-+	unsigned int total_keys;
-+	struct dm_crypt_key keys[] __counted_by(total_keys);
-+} *keys_header;
-+
-+static size_t get_keys_header_size(size_t total_keys)
-+{
-+	return struct_size(keys_header, keys, total_keys);
-+}
-+
-+static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
-+{
-+	const struct user_key_payload *ukp;
-+	struct key *key;
-+
-+	kexec_dprintk("Requesting key %s", dm_key->key_desc);
-+	key = request_key(&key_type_logon, dm_key->key_desc, NULL);
-+
-+	if (IS_ERR(key)) {
-+		pr_warn("No such key %s\n", dm_key->key_desc);
-+		return PTR_ERR(key);
-+	}
-+
-+	ukp = user_key_payload_locked(key);
-+	if (!ukp)
-+		return -EKEYREVOKED;
-+
-+	if (ukp->datalen > KEY_SIZE_MAX) {
-+		pr_err("Key size %u exceeds maximum (%u)\n", ukp->datalen, KEY_SIZE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(dm_key->data, ukp->data, ukp->datalen);
-+	dm_key->key_size = ukp->datalen;
-+	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
-+		      dm_key->key_desc, dm_key->data);
-+	return 0;
-+}
-+
- struct config_key {
- 	struct config_item item;
- 	const char *description;
-@@ -130,6 +178,87 @@ static struct configfs_subsystem config_keys_subsys = {
- 	},
- };
- 
-+static int build_keys_header(void)
-+{
-+	struct config_item *item = NULL;
-+	struct config_key *key;
-+	int i, r;
-+
-+	if (keys_header != NULL)
-+		kvfree(keys_header);
-+
-+	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
-+	if (!keys_header)
-+		return -ENOMEM;
-+
-+	keys_header->total_keys = key_count;
-+
-+	i = 0;
-+	list_for_each_entry(item, &config_keys_subsys.su_group.cg_children,
-+			    ci_entry) {
-+		if (item->ci_type != &config_key_type)
-+			continue;
-+
-+		key = to_config_key(item);
-+
-+		strscpy(keys_header->keys[i].key_desc, key->description,
-+			KEY_DESC_MAX_LEN);
-+		r = read_key_from_user_keying(&keys_header->keys[i]);
-+		if (r != 0) {
-+			kexec_dprintk("Failed to read key %s\n",
-+				      keys_header->keys[i].key_desc);
-+			return r;
-+		}
-+		i++;
-+		kexec_dprintk("Found key: %s\n", item->ci_name);
-+	}
-+
-+	return 0;
-+}
-+
-+int crash_load_dm_crypt_keys(struct kimage *image)
-+{
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+	int r;
-+
-+
-+	if (key_count <= 0) {
-+		kexec_dprintk("No dm-crypt keys\n");
-+		return -ENOENT;
-+	}
-+
-+	image->dm_crypt_keys_addr = 0;
-+	r = build_keys_header();
-+	if (r)
-+		return r;
-+
-+	kbuf.buffer = keys_header;
-+	kbuf.bufsz = get_keys_header_size(key_count);
-+
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	r = kexec_add_buffer(&kbuf);
-+	if (r) {
-+		kvfree((void *)kbuf.buffer);
-+		return r;
-+	}
-+	image->dm_crypt_keys_addr = kbuf.mem;
-+	image->dm_crypt_keys_sz = kbuf.bufsz;
-+	kexec_dprintk(
-+		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-+		kbuf.bufsz, kbuf.memsz);
-+
-+	return r;
-+}
-+
-+
- static int __init configfs_dmcrypt_keys_init(void)
- {
- 	int ret;
+> +/sys/kernel/config/crash_dm_crypt_keys for setup,
+> +
+> +1. Tell the 1st kernel what keys are needed to unlock the disk volumes,
+
+               first
+
+> +    # Add key #1
+> +    mkdir /sys/kernel/config/crash_dm_crypt_keys/7d26b7b4-e342-4d2d-b660-7426b0996720
+> +    # Add key #1's description
+> +    echo cryptsetup:7d26b7b4-e342-4d2d-b660-7426b0996720 > /sys/kernel/config/crash_dm_crypt_keys/description
+> +
+> +    # how many keys do we have now?
+> +    cat /sys/kernel/config/crash_dm_crypt_keys/count
+> +    1
+> +
+> +    # Add key#2 in the same way
+
+             key #2
+(be consisent)
+
+> +
+> +    # how many keys do we have now?
+> +    cat /sys/kernel/config/crash_dm_crypt_keys/count
+> +    2
+> +
+> +2. Load the dump-capture kernel
+> +
+> +3. After dump-capture kerne get booted, restore the keys to user keyring
+
+      After the dump-capture kernel is booted,
+
+> +   echo yes > /sys/kernel/crash_dm_crypt_keys/restore
+> +
+>  Contact
+>  =======
+>  
+
 -- 
-2.47.1
+~Randy
 
 
