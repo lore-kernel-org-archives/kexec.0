@@ -4,78 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7D436C02183
-	for <kexec@archiver.kernel.org>; Fri, 17 Jan 2025 03:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5FD3C02183
+	for <kexec@archiver.kernel.org>; Fri, 17 Jan 2025 07:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JicVrS6630U6GLKgttTEGLfxPYMVZnTHvkxIjdKwIR8=; b=T/dtMUEucXbYBubgs2DK44ijhH
-	3QcroLDReO0r5RLs3xqg+Ho1XP5uyg2Sz/sCbpJqo/1aSyYtkMX0SfMJ02UKg2LUuIsM2+0zmoQgw
-	9B3xK4oI13oCq+ez8QVtjqHQflH/cI0LGrAsjIJn3VdFBB+DFT4JfLV7rIX6+TeMgbvj5pRPY2cc9
-	cW3T6EFLr5kpDoEDD0dWx2JzVAPxnRPAAN8r0n5F8tzam+VdPgHT+ScuYseo9Qdmkh6qF7N0O5fR8
-	JgHP9M86ZwGjzogQMEfBTO7Axp8XJL4x+MlrW2WJIIshnNq9wYqM2q16A45g92iv2OFCWDxSiOzlz
-	FdPFeQnA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=E1LQIE7A3BgeZ+4yFDmM8zl4yAhscW3P2uZTCe0E7QQ=; b=F3Rd6igTegLRmEqCPHPUTGCDXR
+	XaarEt75szvpa7J0Fb+Jw+c2h5rbLHzIaLalQMsZgnYl5+uE2MgI+DhpymDw6JPvOTUG9cLeS3a2l
+	RF4wEaqsnN5VPoormAMRQ2uj8yw2+pYw8HVJMKhCPlXib37h8s6GGxzJumnTGnbd3d6ouE0FGosQK
+	JbUOQz499BRaycFh5JuTNHuXIcYr+65ONBiz4Rj5bzsknP1iOGDW76qhV1HA5ijG8B7rbbwm61IiK
+	k0beextglvzc7uUXrwama+oBI+yw0r5zn4sx6jCeRV2ieUMTid+2qc9SbO3al/vD4zBA3hY35SKk1
+	+I6iRVkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYdEi-0000000Gw2w-0lQ6;
-	Fri, 17 Jan 2025 03:41:32 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tYh9m-0000000HFjk-0BXP;
+	Fri, 17 Jan 2025 07:52:42 +0000
+Received: from out-183.mta0.migadu.com ([2001:41d0:1004:224b::b7])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYdEf-0000000Gw2T-04wq
+	id 1tYh9g-0000000HFit-0gS6
 	for kexec@lists.infradead.org;
-	Fri, 17 Jan 2025 03:41:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737085287;
+	Fri, 17 Jan 2025 07:52:38 +0000
+Date: Fri, 17 Jan 2025 08:52:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1737100347;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JicVrS6630U6GLKgttTEGLfxPYMVZnTHvkxIjdKwIR8=;
-	b=ePLS2SBJdeo0UNtQ34ed2TF+dPsa2a6ki5xMNRUbe1cnxdbdNWuACmFXD0bKiundsmInXL
-	9WKe0bRLHArqo5PTmotwlMT7KHi+yJRZC0j/bdaIiQeXqSAog3S/R1yTTnyCmVjYV17Ah1
-	U1DgH6TAPZXs+SB9+z19WqWKe90Qe40=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-178-9Nugs1zqOY6ARK2pr1smzg-1; Thu,
- 16 Jan 2025 22:41:23 -0500
-X-MC-Unique: 9Nugs1zqOY6ARK2pr1smzg-1
-X-Mimecast-MFC-AGG-ID: 9Nugs1zqOY6ARK2pr1smzg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6A4D619560B7;
-	Fri, 17 Jan 2025 03:41:21 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.4])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B113E30001BE;
-	Fri, 17 Jan 2025 03:41:19 +0000 (UTC)
-Date: Fri, 17 Jan 2025 11:41:14 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: Andrew Morton <akpm@linux-foundation.org>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z4nRWnysvuxLWU32@MiWiFi-R3L-srv>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z4Zjmva-pLbLjtQv@desktop0a>
- <Z4czuvi2BiNlDWPP@MiWiFi-R3L-srv>
- <Z4ejbdJr87V3IwV8@desktop0a>
- <Z4jy-NoLxpwaLfyD@desktop0a>
- <Z4m4q8yfIjfMRgZ+@MiWiFi-R3L-srv>
+	bh=E1LQIE7A3BgeZ+4yFDmM8zl4yAhscW3P2uZTCe0E7QQ=;
+	b=KCBHr6PpbeKy+Ngi4T06ug2ZvbfATktuu3JnlVaBVNoIkHgi7IOqZwbgYQBny79GEfWKJA
+	zfI046qs2mMrfgHHn4MyrDnNVN85Wkk8Ig1ezp3UQuf5hBqn0sfaOY3mnQBbyL8f4pbL6b
+	bnpU3jCMDSRzS2QJzrvb5SsASz2WWbBIF3rXKEeifiNt4RskNO4uUX4gRW9IsOtcZT+pVB
+	q46aioIDLKdPxZu7A/t5bJYlzvhe4gPIopELEGyffLbJZ/bbJphADZZJ8L8nxOG+U3ISui
+	B2POw8E5xEARl6/cfEs/fveS1aMFX2903rV12KyANd1E4K0Yd9RFus9/Bj/ESw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: Baoquan He <bhe@redhat.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, ebiederm@xmission.com,
+ rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+ kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BREGRESSION=5D_Kernel_booted_via_k?=
+ =?US-ASCII?Q?exec_fails_to_resume_from_hibernation?=
+In-Reply-To: <Z4nRWnysvuxLWU32@MiWiFi-R3L-srv>
+References: <Z4WFjBVHpndct7br@desktop0a> <Z4Zjmva-pLbLjtQv@desktop0a> <Z4czuvi2BiNlDWPP@MiWiFi-R3L-srv> <Z4ejbdJr87V3IwV8@desktop0a> <Z4jy-NoLxpwaLfyD@desktop0a> <Z4m4q8yfIjfMRgZ+@MiWiFi-R3L-srv> <Z4nRWnysvuxLWU32@MiWiFi-R3L-srv>
+Message-ID: <1A927798-F31C-49EE-8CE9-657FA6E72842@r-ricci.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4m4q8yfIjfMRgZ+@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250116_194129_139562_C4751107 
-X-CRM114-Status: GOOD (  10.19  )
+X-CRM114-CacheID: sfid-20250116_235236_765488_ABBB5DCF 
+X-CRM114-Status: UNSURE (   8.24  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,22 +75,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 01/17/25 at 09:55am, Baoquan He wrote:
-> On 01/16/25 at 12:52pm, Roberto Ricci wrote:
-> > On 2025-01-15 Wed 13:00:52 +0100, Roberto Ricci wrote:
-> > > On 2025-01-15 Wed 12:04:10 +0800, Baoquan He wrote:
-> > > > On 01/14/25 at 02:16pm, Roberto Ricci wrote:
-> > > > > On 2025-01-13 Mon 22:28:48 +0100, Roberto Ricci wrote:
-> ...snip...
-> > Also, I can't reproduce with the default config (make defconfig),
-> > therefore something in my config (I already sent it) may play a role.
-> 
-> What I tried is defconfig on 6.13-rc7, let me try your config again.
+On 17 January 2025 04:41:14 CET, Baoquan He <bhe@redhat=2Ecom> wrote:
+>On 01/17/25 at 09:55am, Baoquan He wrote:
+>> On 01/16/25 at 12:52pm, Roberto Ricci wrote:
+>> > On 2025-01-15 Wed 13:00:52 +0100, Roberto Ricci wrote:
+>> > > On 2025-01-15 Wed 12:04:10 +0800, Baoquan He wrote:
+>> > > > On 01/14/25 at 02:16pm, Roberto Ricci wrote:
+>> > > > > On 2025-01-13 Mon 22:28:48 +0100, Roberto Ricci wrote:
+>> =2E=2E=2Esnip=2E=2E=2E
+>> > Also, I can't reproduce with the default config (make defconfig),
+>> > therefore something in my config (I already sent it) may play a role=
+=2E
+>>=20
+>> What I tried is defconfig on 6=2E13-rc7, let me try your config again=
+=2E
+>
+>I tried your config on the latest kernel, reboot will fail during the
+>new kernel bootup after newly built kernel was installed=2E
+>
+>I haven't compared your config with the defconfig to see their
+>difference=2E Wondering where your config comes from=2E
+>
 
-I tried your config on the latest kernel, reboot will fail during the
-new kernel bootup after newly built kernel was installed.
+(Re-sending as I forgot to add CC, sorry)
 
-I haven't compared your config with the defconfig to see their
-difference. Wondering where your config comes from.
+It's based on the config used by my distribution:
+https://raw=2Egithubusercontent=2Ecom/void-linux/void-packages/41335626868=
+0b477b42a4af9462b9bb49491ca19/srcpkgs/linux6=2E12/files/x86_64-dotconfig
+I ran `make olddefconfig` and `make localmodconfig`, then
+I made a few changes in nconfig, such as enabling KASAN
+and UBSAN=2E
 
+The kernels provided by the distribution, which have very
+minimal patches, are affected as well=2E
 
