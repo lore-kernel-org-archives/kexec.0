@@ -4,93 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71EDDC02182
-	for <kexec@archiver.kernel.org>; Tue, 21 Jan 2025 11:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2A41C0218E
+	for <kexec@archiver.kernel.org>; Tue, 21 Jan 2025 11:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=dLbhr622cQ1xIK0R85mQA3G5m9RnW7dW6gcJ5N4+qVk=; b=tkg5Hq3IqmRhY7wYgewm5+xMb7
-	w7e3/z5c/t8oIWa1p++aBXO31WTWpi8ytzPONM41Fsdru19tdhHAxwSms0U3A4ta6Y3Z1ISY/Dpxm
-	QAwPkDtupnCQk09o/JQirWqILHONW4VNs530YMXLYajZBk9Ic4rjeFKehH7WW5piiSjHTRxERxzsm
-	i7Q9vPVeAz6jbEoWkVnySlQ4nOXe/Ahme12aEFIp8Rl4Pgq68h8Zu0BuCtxLkpXIXkD7gd9zdmV/x
-	WZpPryqWN99DXOWDI4UzrYHDFUP+KI43BcjGArCdWiVf/jNK/6bHgWGS8KAWkltbwuRd9zejSEaky
-	lxjCMpzA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=7MKiwUiMorQ2m9dugkm4c4e1LN4evDlFQwO4FRny26c=; b=yEn0PkSJGOR3UtO3r7LBcNxvDU
+	6k9kuRtqSYnP7O8HW6xal2/MvjTUT4/BDvSx+4YjoKvrA0+2ZcJMjtBXPjvTeVm4LrkNmvDwjdukt
+	bT08xVKbJIdHLH7nIEE55zzShnR3N5OfuGPrGJrma55tu1Kb3SOAk6aEZ6vPX2Bdp16vpnVJF2lHh
+	cbr/30VHjS8SlkTI4kzsLVTBgv8WWOb/OaRaEpT2Nu+Cc53pI4DAGXFXTiAoGRXGwkQWDxlDmjMo5
+	eW2oVyHt6yH9fHVKCV0GPMhAIJ5UXP/1e+3Rm42hHsxrJMbgXxWlIKrukFlKa0ElPHQMbBnLUZLbT
+	GJAcm2NA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1taCqZ-00000007nHb-2yMA;
-	Tue, 21 Jan 2025 11:55:07 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1taCqc-00000007nJp-2F5E;
+	Tue, 21 Jan 2025 11:55:10 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1taCqU-00000007nGz-1yUD
+	id 1taCqZ-00000007nIK-3jrD
 	for kexec@lists.infradead.org;
-	Tue, 21 Jan 2025 11:55:03 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50L1950Q023030;
-	Tue, 21 Jan 2025 11:54:54 GMT
+	Tue, 21 Jan 2025 11:55:09 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50L20jru003271;
+	Tue, 21 Jan 2025 11:55:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=dLbhr622cQ1xIK0R85mQA3G5m9RnW7dW6gcJ5N4+q
-	Vk=; b=HwD6PcpE81dnGL3Doy1ZUNd7DYKiW41wc2QIzqnjwS0oPlsMotiL9NVWu
-	NChiGlqer4g3Kp2L7GXOwzbADOiHlWSiXk5QXostGHwneg3jWoUFUa5fr4VWN/EQ
-	rBCDdHX2ihn5M8EyQde0Rvd2yONq9OAjg1tu3Carp/MqSpQQ+4+7V1ujuWMa171N
-	13MW/BgK7PvEqZkaAf6DqyI3zlClG6SoOKVEYYy7ih1GMjNSlwQXf+iN3CIIgn4Y
-	mzY7/2DvTJa5LUYYnGIsGtvWnXlJsTwwtHI1XfMtJ32UB3Eho3bBqEuBy7bZVIWI
-	4hv/3zsaXxkltXMDRnZeIO4sqL9vg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44a1n9ah3x-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=7MKiwUiMorQ2m9dug
+	km4c4e1LN4evDlFQwO4FRny26c=; b=myEcGYrCA217doP4fXYc3kQIL6Hv9NN4w
+	fUabfBOZLYYQmgMhsUYW6JgTZWQ0fRiMpxHhr2uGlMlIx3Gi/xC28dd82Do/xZ7u
+	jQ3SVxLenoGOTS8H1B0Pt0K0pc5bKTmIaN5OtN2ur+FkUHVc2Jh6xPOpNc3U4kaw
+	6NvDJvO8lS1YecJkoyLbqzHF2pCA19OlCMvnzF6oE5060szS1X4yhEbLOI+G4q/W
+	T8KbH99PYKKN4os4jawaLR29/8mHgZ7jmyKSstROJcXUaXcX9eEflOv9jsa4Pojt
+	GFHn3DMZrodBUnuAtSSmLsMiY4x0XRcu4Jlo+j0KPO0BPdxS42vYw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44a2dyabbq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jan 2025 11:54:53 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50LAufS6032261;
-	Tue, 21 Jan 2025 11:54:52 GMT
+	Tue, 21 Jan 2025 11:55:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50LAP7wp029622;
+	Tue, 21 Jan 2025 11:55:00 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 448rujjpk4-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 448qmnayq7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jan 2025 11:54:52 +0000
+	Tue, 21 Jan 2025 11:55:00 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50LBsn7Z59441448
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50LBsuti58786262
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Jan 2025 11:54:49 GMT
+	Tue, 21 Jan 2025 11:54:56 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0ECFA2004B;
-	Tue, 21 Jan 2025 11:54:49 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9121A2004B;
+	Tue, 21 Jan 2025 11:54:56 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9C3CF20040;
-	Tue, 21 Jan 2025 11:54:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id F2DA120040;
+	Tue, 21 Jan 2025 11:54:53 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.54.128])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Jan 2025 11:54:46 +0000 (GMT)
+	Tue, 21 Jan 2025 11:54:53 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Hari Bathini <hbathini@linux.ibm.com>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] powerpc/crash: use generic crashkernel reservation
-Date: Tue, 21 Jan 2025 17:24:36 +0530
-Message-ID: <20250121115442.1278458-1-sourabhjain@linux.ibm.com>
+        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 2/6] crash: remove an unused argument from reserve_crashkernel_generic()
+Date: Tue, 21 Jan 2025 17:24:38 +0530
+Message-ID: <20250121115442.1278458-3-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250121115442.1278458-1-sourabhjain@linux.ibm.com>
+References: <20250121115442.1278458-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: s2Fd2Q7__MB_-Yrqi3Ft05a6Eb_k7m0U
-X-Proofpoint-GUID: s2Fd2Q7__MB_-Yrqi3Ft05a6Eb_k7m0U
+X-Proofpoint-GUID: Z6-DVn_Dz9QAnLAslqPL55Q8Q_uaILiA
+X-Proofpoint-ORIG-GUID: Z6-DVn_Dz9QAnLAslqPL55Q8Q_uaILiA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-21_05,2025-01-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=939
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxscore=0 phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ adultscore=0 mlxlogscore=857 spamscore=0 suspectscore=0 lowpriorityscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
  definitions=main-2501210095
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250121_035502_527172_B1819AA5 
-X-CRM114-Status: GOOD (  19.11  )
+X-CRM114-CacheID: sfid-20250121_035508_057100_1A975C5F 
+X-CRM114-Status: GOOD (  17.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,105 +108,183 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit 0ab97169aa05 ("crash_core: add generic function to do
-reservation") added a generic function to reserve crashkernel memory.
-So let's use the same function on powerpc and remove the
-architecture-specific code that essentially does the same thing.
+cmdline argument is not used in reserve_crashkernel_generic() so remove
+it. Correspondingly, all the callers have been updated as well.
 
-The generic crashkernel reservation also provides a way to split the
-crashkernel reservation into high and low memory reservations, which can
-be enabled for powerpc in the future.
-
-Additionally move powerpc to use generic APIs to locate memory hole for
-kexec segments while loading kdump kernel.
-
-Patch series summary:
-=====================
-Patch 1-3: generic changes
-Patch 4-5: powerpc changes
-Patch 6:   generic + powerpc changes
-
-Changelog:
-
-v1 Resend:
- - Rebased on top of 6.13-rc6
-
-v2:
- - 01/06 new patch, fixes a bug with ELF load address
-   It was posted in community as individual path but
-   since it align with this patch series so include here:
-   https://lore.kernel.org/all/20241210091314.185785-1-sourabhjain@linux.ibm.com/
- - Fixed a typo 06/06
- - Added Acked-by and Reviewed-by tags
- - Rebased it on 6.13
- - It was suggested to try HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY and
-   see if 03/06 patch can be avoided:
-   https://lore.kernel.org/all/Z35gnO2N%2FLFt1E7E@MiWiFi-R3L-srv/
-   But after adding HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY the issue
-   persisted and kernel prints below logs on boot:
-
-   [    0.646339] ------------[ cut here ]------------
-   [    0.646351] WARNING: CPU: 0 PID: 1 at arch/powerpc/mm/mem.c:379
-   add_system_ram_resources+0xf0/0x15c
-   [    0.646369] Modules linked in:
-   [    0.646376] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-   6.13.0-rc6+ #1
-   [    0.646386] Hardware name: IBM,9105-22A POWER10 (architected)
-   0x800200 0xf000006 of:IBM,FW1060.00 (NL1060_027) hv:phyp pSeries
-   [    0.646397] NIP:  c000000002016b3c LR: c000000002016b34 CTR:
-   0000000000000000
-   [    0.646406] REGS: c000000004817920 TRAP: 0700   Not tainted
-   (6.13.0-rc6+)
-   e8/0x15c (unreliable)
-   [    0.646603] [c000000004817c20] [c000000000010a4c]
-   do_one_initcall+0x7c/0x39c
-   [    0.646618] [c000000004817d00] [c000000002005418]
-   do_initcalls+0x144/0x18c
-   0x290
-   [    0.646648] [c000000004817df0] [c0000000000110f4]
-   kernel_init+0x2c/0x1b8
-   +0x14/0x1c
-   [    0.646676] --- interrupt: 0 at 0x0
-   010020 
-   [    0.646720] ---[ end trace 0000000000000000 ]---
-
-   So 03/06 is not removed from patch series.
+No functional change intended.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
 Cc: Hari Bathini <hbathini@linux.ibm.com>
-CC: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Cc: sourabhjain@linux.ibm.com
+Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/arm64/mm/init.c          |  6 ++----
+ arch/loongarch/kernel/setup.c |  5 ++---
+ arch/riscv/mm/init.c          |  6 ++----
+ arch/x86/kernel/setup.c       |  6 ++----
+ include/linux/crash_reserve.h | 11 +++++------
+ kernel/crash_reserve.c        |  9 ++++-----
+ 6 files changed, 17 insertions(+), 26 deletions(-)
 
-Sourabh Jain (6):
-  kexec: Initialize ELF lowest address to ULONG_MAX
-  crash: remove an unused argument from reserve_crashkernel_generic()
-  crash: let arch decide crash memory export to iomem_resource
-  powerpc/kdump: preserve user-specified memory limit
-  powerpc/crash: use generic crashkernel reservation
-  crash: option to let arch decide mem range is usable
-
- arch/arm64/mm/init.c                     |   6 +-
- arch/loongarch/kernel/setup.c            |   5 +-
- arch/powerpc/Kconfig                     |   3 +
- arch/powerpc/include/asm/crash_reserve.h |  18 ++
- arch/powerpc/include/asm/kexec.h         |  10 +-
- arch/powerpc/kernel/prom.c               |   2 +-
- arch/powerpc/kexec/core.c                |  96 ++++-----
- arch/powerpc/kexec/file_load_64.c        | 259 +----------------------
- arch/riscv/mm/init.c                     |   6 +-
- arch/x86/kernel/setup.c                  |   6 +-
- include/linux/crash_reserve.h            |  22 +-
- include/linux/kexec.h                    |   9 +
- kernel/crash_reserve.c                   |  12 +-
- kernel/kexec_elf.c                       |   2 +-
- kernel/kexec_file.c                      |  12 ++
- 15 files changed, 128 insertions(+), 340 deletions(-)
- create mode 100644 arch/powerpc/include/asm/crash_reserve.h
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 9c0b8d9558fc..6c5a1ee4b5d3 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -98,21 +98,19 @@ static void __init arch_reserve_crashkernel(void)
+ {
+ 	unsigned long long low_size = 0;
+ 	unsigned long long crash_base, crash_size;
+-	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+-	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+ 				&low_size, &high);
+ 	if (ret)
+ 		return;
+ 
+-	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+-				    low_size, high);
++	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+ }
+ 
+ static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 56934fe58170..ece9c4266c3f 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -259,18 +259,17 @@ static void __init arch_reserve_crashkernel(void)
+ 	int ret;
+ 	unsigned long long low_size = 0;
+ 	unsigned long long crash_base, crash_size;
+-	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 
+ 	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+-	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base, &low_size, &high);
+ 	if (ret)
+ 		return;
+ 
+-	reserve_crashkernel_generic(cmdline, crash_size, crash_base, low_size, high);
++	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+ }
+ 
+ static void __init fdt_setup(void)
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 8d167e09f1fe..16b81beb41bf 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -1392,21 +1392,19 @@ static void __init arch_reserve_crashkernel(void)
+ {
+ 	unsigned long long low_size = 0;
+ 	unsigned long long crash_base, crash_size;
+-	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+-	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+ 				&low_size, &high);
+ 	if (ret)
+ 		return;
+ 
+-	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+-				    low_size, high);
++	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+ }
+ 
+ void __init paging_init(void)
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index f1fea506e20f..15b6823556c8 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -469,14 +469,13 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ static void __init arch_reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size, low_size = 0;
+-	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+-	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+ 				&low_size, &high);
+ 	if (ret)
+@@ -487,8 +486,7 @@ static void __init arch_reserve_crashkernel(void)
+ 		return;
+ 	}
+ 
+-	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+-				    low_size, high);
++	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+ }
+ 
+ static struct resource standard_io_resources[] = {
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index 5a9df944fb80..1fe7e7d1b214 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -32,13 +32,12 @@ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ #define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
+ #endif
+ 
+-void __init reserve_crashkernel_generic(char *cmdline,
+-		unsigned long long crash_size,
+-		unsigned long long crash_base,
+-		unsigned long long crash_low_size,
+-		bool high);
++void __init reserve_crashkernel_generic(unsigned long long crash_size,
++					unsigned long long crash_base,
++					unsigned long long crash_low_size,
++					bool high);
+ #else
+-static inline void __init reserve_crashkernel_generic(char *cmdline,
++static inline void __init reserve_crashkernel_generic(
+ 		unsigned long long crash_size,
+ 		unsigned long long crash_base,
+ 		unsigned long long crash_low_size,
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index a620fb4b2116..aff7c0fdbefa 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -375,11 +375,10 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ 	return 0;
+ }
+ 
+-void __init reserve_crashkernel_generic(char *cmdline,
+-			     unsigned long long crash_size,
+-			     unsigned long long crash_base,
+-			     unsigned long long crash_low_size,
+-			     bool high)
++void __init reserve_crashkernel_generic(unsigned long long crash_size,
++					unsigned long long crash_base,
++					unsigned long long crash_low_size,
++					bool high)
+ {
+ 	unsigned long long search_end = CRASH_ADDR_LOW_MAX, search_base = 0;
+ 	bool fixed_base = false;
 -- 
 2.47.1
 
