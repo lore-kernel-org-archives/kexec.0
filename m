@@ -4,89 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1DC9C02181
-	for <kexec@archiver.kernel.org>; Mon, 20 Jan 2025 20:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71EDDC02182
+	for <kexec@archiver.kernel.org>; Tue, 21 Jan 2025 11:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FBGTlpktnfLnmWiv2pwLE8GsviTICX8GzHtpXO/5y+Q=; b=jNrLpCSloqg7MHXGOZgBFKVaHe
-	hv1qf2871YKpBXPe2XB+H2uZwqzUb7QkFXP1Q5xm8mLVqNTnc2rlUU/Xsv3xz21AUa5NyT5q0iYjq
-	z4LqjWUkTx6AdsKC8ABQqQ1RSEcLkaFPUjCLmLXKsETmPVz4UwqUPLNiz/JbKW0S332R8PlQqu2HD
-	RthUGI8t+lCn+lfJcFMFbu3VErJorp6As4BIvTKvuIBCC0x++wCi3d5Py29xULT0liWl50/75uxJt
-	Px1ZbwDhq+cUqjntSMyapkLgzNEIX/iuNUtrrepaZzdnJi/1/TOuudvGKB0dItEdfk4GYglT94JUA
-	0ZQfL0pQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=dLbhr622cQ1xIK0R85mQA3G5m9RnW7dW6gcJ5N4+qVk=; b=tkg5Hq3IqmRhY7wYgewm5+xMb7
+	w7e3/z5c/t8oIWa1p++aBXO31WTWpi8ytzPONM41Fsdru19tdhHAxwSms0U3A4ta6Y3Z1ISY/Dpxm
+	QAwPkDtupnCQk09o/JQirWqILHONW4VNs530YMXLYajZBk9Ic4rjeFKehH7WW5piiSjHTRxERxzsm
+	i7Q9vPVeAz6jbEoWkVnySlQ4nOXe/Ahme12aEFIp8Rl4Pgq68h8Zu0BuCtxLkpXIXkD7gd9zdmV/x
+	WZpPryqWN99DXOWDI4UzrYHDFUP+KI43BcjGArCdWiVf/jNK/6bHgWGS8KAWkltbwuRd9zejSEaky
+	lxjCMpzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tZyGS-00000006OLE-0LRe;
-	Mon, 20 Jan 2025 20:20:52 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1taCqZ-00000007nHb-2yMA;
+	Tue, 21 Jan 2025 11:55:07 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tZyGP-00000006OKA-3Gx5
+	id 1taCqU-00000007nGz-1yUD
 	for kexec@lists.infradead.org;
-	Mon, 20 Jan 2025 20:20:51 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-215740b7fb8so300005ad.0
-        for <kexec@lists.infradead.org>; Mon, 20 Jan 2025 12:20:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737404449; x=1738009249; darn=lists.infradead.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FBGTlpktnfLnmWiv2pwLE8GsviTICX8GzHtpXO/5y+Q=;
-        b=XE/QBm/leQ3L+Utehs83vhr+f/q9CwwHkHqLfA+/6jDg4JdFs03HBodN+q5Z0QerOg
-         5RQMVhnLHGAJxQ4+sdLhrKQvdV5hWHvW+io2IVJ2MFRQL4Fhqr1UwoCVCcls28MYpa/g
-         Yw5ErYj1sZ2P7GPe3IE8g5VBkprkpXywzF5aZ64Am3nkYuW6e4hetSanjANBWs9o2En7
-         vio++S1vqCM7o0PtOdEfJ3TM04cyFBfu80OoC5wiNm8cOqFOw+Aojoxi//ekAdt4EB2I
-         PJ9DCjZyydK5WKmhwzJFDe/AO/PtTO1Ujun0R+CTilJqq5KsDcNXRL7Aj1Dp9LdsUAGq
-         QXAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737404449; x=1738009249;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FBGTlpktnfLnmWiv2pwLE8GsviTICX8GzHtpXO/5y+Q=;
-        b=aTv65x3ZVGvPrNKYEElZNSgjr/mB9lrFdUZQsJNgx7WblWlnY/kjIUIkZd7oZhWZBB
-         KEF7h7zQSIgGYY7mF2ULlBlhn4u9y8UlcQb2jBQUPRCMK0fbSCJPoju1gosxIy+4+53/
-         EhpebRcjf5av0UiQZ6TQKBZyEuBR19f9KT40fKAIPWzUih2lJqRmyL6yFKmkK36UfUm7
-         BM9XKF7/HLekGQeVIuplzuVqXlYarO/OTQWjazstwuWWh5AJVymBKzAFw4bWR3OIqUh+
-         YOiaw6kBiU8RwAHU4LNPTkeYb0PNh++08a17+n87LN6Qf1B204uAuz+ZRro04dEX5att
-         S0RA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVF1g3CxsKjjWNjnOLSdtTZSKsNlZ6XgwKCSlbQ5qDyVjzow500dNO/cskEuss9TrhNiUzAw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxaOPTvbboF4FTzSdZC/b10UGklOvTnrsRC4IwJ3LTkcltmBqq+
-	usxL+JFV2JnzDN69RwvNX0H9kNzDlNgBgM1eIBwaVNaRsQKCiKHw5yYHNNrU5g==
-X-Gm-Gg: ASbGncsJKLMPbx7EJ87IKsAltt8D9trFj0E5w1FpdDWilTZP+RVh2SFnili5Q2hLlvl
-	L+fSjVuxOhyBrQV0zORPWfehNwX0LT0iZAVhv8GTMkzEiPa2934LS+nag3NZwHQloBkaiJspCRw
-	SliHu6U1QNjjg7kBuBTCUYAamfSGVNLtAGRBVBPkA2wCfV0rRbpBFK/h5tmzUQUmcCr+IqsjB4k
-	XESvOZhoyRoxZOxDtytKOZDfu43VVuH8oRooftDbtMguChapvpaTqLcD+laCodtK9TYS5r4PRGC
-	kmSWXHsXVfm2uJrEPLp+4J6y
-X-Google-Smtp-Source: AGHT+IEd1ApI/OQZNmQfRLrN8Eck/MuZnrlsi5Pe9zFkGWjJKyPOP67Jh9+eGUR6plDu9H9eHXwsYA==
-X-Received: by 2002:a17:903:2cd:b0:215:7ced:9d67 with SMTP id d9443c01a7336-21c5d602c71mr4537565ad.24.1737404448773;
-        Mon, 20 Jan 2025 12:20:48 -0800 (PST)
-Received: from [2620:0:1008:15:1620:99d0:894d:83f7] ([2620:0:1008:15:1620:99d0:894d:83f7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aab358fc6d8sm4112886a12.51.2025.01.20.12.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 12:20:48 -0800 (PST)
-Date: Mon, 20 Jan 2025 12:20:47 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: James Gowans <jgowans@amazon.com>, Dave Hansen <dave.hansen@intel.com>, 
-    Matthew Wilcox <willy@infradead.org>, Pasha Tatashin <tatashin@google.com>, 
-    Alexander Graf <graf@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Frank van der Linden <fvdl@google.com>, 
-    Vipin Sharma <vipinsh@google.com>, David Matlack <dmatlack@google.com>, 
-    Junaid Shahid <junaids@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>
-cc: David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-    Pratyush Yadav <pratyush@kernel.org>, linux-mm@kvack.org, 
-    kexec@lists.infradead.org
-Subject: Re: [Feedback Needed] Hypervisor live update biweekly meeting time
-In-Reply-To: <2908e4ab-abc4-ddd0-b191-fe820856cfb4@google.com>
-Message-ID: <1ed0e895-bc74-897d-d9a0-23d10a031cde@google.com>
-References: <2908e4ab-abc4-ddd0-b191-fe820856cfb4@google.com>
+	Tue, 21 Jan 2025 11:55:03 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50L1950Q023030;
+	Tue, 21 Jan 2025 11:54:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=dLbhr622cQ1xIK0R85mQA3G5m9RnW7dW6gcJ5N4+q
+	Vk=; b=HwD6PcpE81dnGL3Doy1ZUNd7DYKiW41wc2QIzqnjwS0oPlsMotiL9NVWu
+	NChiGlqer4g3Kp2L7GXOwzbADOiHlWSiXk5QXostGHwneg3jWoUFUa5fr4VWN/EQ
+	rBCDdHX2ihn5M8EyQde0Rvd2yONq9OAjg1tu3Carp/MqSpQQ+4+7V1ujuWMa171N
+	13MW/BgK7PvEqZkaAf6DqyI3zlClG6SoOKVEYYy7ih1GMjNSlwQXf+iN3CIIgn4Y
+	mzY7/2DvTJa5LUYYnGIsGtvWnXlJsTwwtHI1XfMtJ32UB3Eho3bBqEuBy7bZVIWI
+	4hv/3zsaXxkltXMDRnZeIO4sqL9vg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44a1n9ah3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Jan 2025 11:54:53 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50LAufS6032261;
+	Tue, 21 Jan 2025 11:54:52 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 448rujjpk4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Jan 2025 11:54:52 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50LBsn7Z59441448
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 21 Jan 2025 11:54:49 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0ECFA2004B;
+	Tue, 21 Jan 2025 11:54:49 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9C3CF20040;
+	Tue, 21 Jan 2025 11:54:46 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.54.128])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 21 Jan 2025 11:54:46 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] powerpc/crash: use generic crashkernel reservation
+Date: Tue, 21 Jan 2025 17:24:36 +0530
+Message-ID: <20250121115442.1278458-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: s2Fd2Q7__MB_-Yrqi3Ft05a6Eb_k7m0U
+X-Proofpoint-GUID: s2Fd2Q7__MB_-Yrqi3Ft05a6Eb_k7m0U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-21_05,2025-01-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=939
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501210095
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250120_122049_817127_4894FE43 
-X-CRM114-Status: GOOD (  17.10  )
+X-CRM114-CacheID: sfid-20250121_035502_527172_B1819AA5 
+X-CRM114-Status: GOOD (  19.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,41 +105,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, 12 Jan 2025, David Rientjes wrote:
+Commit 0ab97169aa05 ("crash_core: add generic function to do
+reservation") added a generic function to reserve crashkernel memory.
+So let's use the same function on powerpc and remove the
+architecture-specific code that essentially does the same thing.
 
-> Hi all,
-> 
-> Following up from discussions at the end of last year on two topics from 
-> the Linux MM Alignment Sessions, memory persistence across kexec[1] and 
-> Kexec Hand-Off (KHO)[2], we'd like to start up a biweekly series dedicated 
-> to this topic to accelerate alignment and progress.
-> 
-> We discussed this in-session as a mechanism to accelerate discussion on 
-> pertinent topics as well as get regular status updates on progress.  This 
-> obviously does *not* replace upstream discussion on the mailing list, but 
-> is rather meant to accelerate it.  Regular summaries for each session will 
-> continue to be posted on linux-mm and kexec mailing lists.
-> 
-> Per the attendees on the Cc list, the ideal time is likely biweekly on 
-> Mondays at 8:00-9:00am PST (UTC-8).  Since next Monday is a holiday in the 
-> United States, we'd start Monday, January 27 (this will also avoid the 
-> holiday in February).
-> 
-> I'm planning on inviting everybody on the To and Cc lists of this email.  
-> If you are also interested in attending, please email me *privately* so I 
-> can add you to the invite and shared drive.  If you are listed and are not 
-> interested in attending, same thing :)
-> 
+The generic crashkernel reservation also provides a way to split the
+crashkernel reservation into high and low memory reservations, which can
+be enabled for powerpc in the future.
 
-Quick update on this, the calendar invites have gone out for the 
-Hypervisor Live Update biweekly to everybody on the To and Cc lists of 
-this email.
+Additionally move powerpc to use generic APIs to locate memory hole for
+kexec segments while loading kdump kernel.
 
-If you are also interested in attending, please email me privately and 
-I'll add your email address to the invite and shared drive.
+Patch series summary:
+=====================
+Patch 1-3: generic changes
+Patch 4-5: powerpc changes
+Patch 6:   generic + powerpc changes
 
-Summaries of all discussions will be sent to linux-mm@kvack.org and 
-kexec@lists.infradead.org.
+Changelog:
 
-Thanks!
+v1 Resend:
+ - Rebased on top of 6.13-rc6
+
+v2:
+ - 01/06 new patch, fixes a bug with ELF load address
+   It was posted in community as individual path but
+   since it align with this patch series so include here:
+   https://lore.kernel.org/all/20241210091314.185785-1-sourabhjain@linux.ibm.com/
+ - Fixed a typo 06/06
+ - Added Acked-by and Reviewed-by tags
+ - Rebased it on 6.13
+ - It was suggested to try HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY and
+   see if 03/06 patch can be avoided:
+   https://lore.kernel.org/all/Z35gnO2N%2FLFt1E7E@MiWiFi-R3L-srv/
+   But after adding HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY the issue
+   persisted and kernel prints below logs on boot:
+
+   [    0.646339] ------------[ cut here ]------------
+   [    0.646351] WARNING: CPU: 0 PID: 1 at arch/powerpc/mm/mem.c:379
+   add_system_ram_resources+0xf0/0x15c
+   [    0.646369] Modules linked in:
+   [    0.646376] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+   6.13.0-rc6+ #1
+   [    0.646386] Hardware name: IBM,9105-22A POWER10 (architected)
+   0x800200 0xf000006 of:IBM,FW1060.00 (NL1060_027) hv:phyp pSeries
+   [    0.646397] NIP:  c000000002016b3c LR: c000000002016b34 CTR:
+   0000000000000000
+   [    0.646406] REGS: c000000004817920 TRAP: 0700   Not tainted
+   (6.13.0-rc6+)
+   e8/0x15c (unreliable)
+   [    0.646603] [c000000004817c20] [c000000000010a4c]
+   do_one_initcall+0x7c/0x39c
+   [    0.646618] [c000000004817d00] [c000000002005418]
+   do_initcalls+0x144/0x18c
+   0x290
+   [    0.646648] [c000000004817df0] [c0000000000110f4]
+   kernel_init+0x2c/0x1b8
+   +0x14/0x1c
+   [    0.646676] --- interrupt: 0 at 0x0
+   010020 
+   [    0.646720] ---[ end trace 0000000000000000 ]---
+
+   So 03/06 is not removed from patch series.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+CC: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: sourabhjain@linux.ibm.com
+
+Sourabh Jain (6):
+  kexec: Initialize ELF lowest address to ULONG_MAX
+  crash: remove an unused argument from reserve_crashkernel_generic()
+  crash: let arch decide crash memory export to iomem_resource
+  powerpc/kdump: preserve user-specified memory limit
+  powerpc/crash: use generic crashkernel reservation
+  crash: option to let arch decide mem range is usable
+
+ arch/arm64/mm/init.c                     |   6 +-
+ arch/loongarch/kernel/setup.c            |   5 +-
+ arch/powerpc/Kconfig                     |   3 +
+ arch/powerpc/include/asm/crash_reserve.h |  18 ++
+ arch/powerpc/include/asm/kexec.h         |  10 +-
+ arch/powerpc/kernel/prom.c               |   2 +-
+ arch/powerpc/kexec/core.c                |  96 ++++-----
+ arch/powerpc/kexec/file_load_64.c        | 259 +----------------------
+ arch/riscv/mm/init.c                     |   6 +-
+ arch/x86/kernel/setup.c                  |   6 +-
+ include/linux/crash_reserve.h            |  22 +-
+ include/linux/kexec.h                    |   9 +
+ kernel/crash_reserve.c                   |  12 +-
+ kernel/kexec_elf.c                       |   2 +-
+ kernel/kexec_file.c                      |  12 ++
+ 15 files changed, 128 insertions(+), 340 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crash_reserve.h
+
+-- 
+2.47.1
+
 
