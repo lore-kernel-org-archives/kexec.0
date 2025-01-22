@@ -4,104 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CE0FC02181
-	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 11:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8918C02181
+	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 12:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=; b=dQrSRLJDUZ3pIUXo4rnfzoTp+S
-	iryER/DEfInh7OgN8HAI0Ve5EHv2tPfZXYifLwr4S02eVAyrf5NJ1BMtAtCz/328Cs39/FtLJp1yS
-	y2c8r1ACxMiD0yue12tjWIReSXRjlr/vtaojrSgj75GmE6/51CFo+XF4AMYLc7lg4Puqst8EbP6iZ
-	ufxWDkqFh0YKnkXtydKU0Ty4PC/uLnrmEXp+SrYIc4Q27EcvTWTwXhfNdF+QOKqCLh6bhux2VD015
-	9lcOTHtQQ4ZSReSAoFSY9VJ6HdDytHRwW4PNtCeek7RVkzs9NorpD9LGN2ojASdrjMe0F2AOxXfF5
-	4TOQ13rQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=GKsy0CgAI7HNXTSqszrGM2CRCHMFPbrE3yv+YuKGi6g=; b=sP4bJmNKV10euIxfIIWVD9GW3X
+	6nX3R5bnURuGdOlZKgAaSVhdIo4Bn/tiANdQdSTuFuOMN9A81phHgagcb8K0WaJzcr73q9Rj88kIu
+	eCjk2TRokaTC1kUeKAndK26BXgj4znviOz074MVIKrgzXHLZa60JeRpuWDmQiPxv7Dawet1qsthKp
+	m8qndL6SyNQqTXnfpQf0Vg5FsQyGfALiwVJALGr9OrZ/yIcU0rWclRIhV0hEB7p0UcH4X/xRb6SAc
+	WXv+hBX6teGoEvHh2qA4oaBwL/yWDzH430XLJ+B7rVd08CHeEyv5JC8I2mVCoyW1rhSrAnc2GeuTn
+	D/3VwKCw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1taZFe-0000000A5m1-2jKl;
-	Wed, 22 Jan 2025 11:50:30 +0000
-Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
+	id 1taZvN-0000000A9kR-1m7L;
+	Wed, 22 Jan 2025 12:33:37 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1taZFc-0000000A5ld-0t9A
-	for kexec@lists.infradead.org;
-	Wed, 22 Jan 2025 11:50:29 +0000
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-aaeef97ff02so1113477266b.1
-        for <kexec@lists.infradead.org>; Wed, 22 Jan 2025 03:50:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737546626; x=1738151426; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=;
-        b=DBatpwHM2G/7mQPsDZm7Z2r6e1eUrIsPbYmfG4LoMpwsMvYRB43py5fHwpALoxPXJp
-         EFLAERmhgcY84CVO8QFAzq6JNNYOJRHqj6ar/vz/HUpA0rJfbc+4uG3hag/0p9DUQ0o7
-         cg/rDR4t8gaVxBERQwihVB2lYSAfQqBrk2uroFa+QcGlM1PSZiimT1a+SEiSg3OSxBxY
-         xr4s/wcodIBOQC4DjprHVvhzIbL9JQqRjo09T44W5WhnN3FlhI068emVy6SgQdBV1Eny
-         V2Pc8+I8pxNlyu+qRoEKjsyZgJ0u5kmnsXF1e3Ih3lM35iIEBJSuBKcZLm4pdFYJk2CY
-         Qh2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737546626; x=1738151426;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=;
-        b=Mi6C/BR2wGPXUWQ17un/qE/mtBMSDJQp7vH/rb6qaffxK/kyxIxnBRpawukEpMP6aU
-         F33pFwg6k12TzQONskidJq6fM7WtG3hf0/cUhqZbx8Xvi+wD137+x1voCcDD7Vac3xsL
-         XElBDngfqzf+BWec9EBrKUCc5oYx/6HD262luRJot/LcGYRuJAp1gXQrX9AqA6itj2Nz
-         zjN4SS0mx8eF7vZ3AOwKw4AQrLDId7+KGDFlSa3vNYxNe5WQhhR4K9aUiyV8fpvdE/76
-         FY6T9va78Llu0TjgSTCJdWZpYTtq9FPajsCbSrXjtVr1zu08CmMI2fzfSAlYxdbfX4NG
-         F7bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ/+qNr7/qBI+3YqMw6LhSde0Tt1MILhzXwbkaMx/FjQSWAx7A+QCnVNR92p7h3KU3OmyO0Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz5FqkSQkhaVP23kPLY/u+EulNFhfW1+JfONjoGCW2jlhI3HHGw
-	j6U6imWyLqf6xo8H7QZwPJ/JL//3oCW1HSNgNyhm+Uif4k6lTlG6
-X-Gm-Gg: ASbGnctJawnzHf+vvNZRRlVlzISnfgKgf7zLeXo8EK3XZW9r2FCGBxZtOhYuwbPtLXS
-	zNOZs4DdcPsMtx9AqcReDLRVWMvjC27Iz1fH2k5l1vef6UqDfEY2J54GCRBDwKPZyqAhM6hAvjy
-	owCvoTfTsEb9vV81i6nJJxfonIXAasqD76RsHmJlvC1gfWA14F9brNsQDcaH0crP98JvRUOdIZW
-	LpXSQwP/nawan2LjgL+YsQA1u1ALtkOnJ5s/jd2OCNkxaEqwB4X4TU7cFhbWukVep5JqSF/tqof
-	8rXJtpmvNOphqoujrfP4KK22oumDCFPALv4wwXOLwQ==
-X-Google-Smtp-Source: AGHT+IF+incGb/IZc3tkpwYf1H3kUvKL8NDvsH89F25knBJMw3Vy2+yLj3qjgDdMHXGS49J7p9SFOw==
-X-Received: by 2002:a17:907:7f89:b0:aa6:29dc:11b with SMTP id a640c23a62f3a-ab38b1ff059mr1576763966b.16.1737546625488;
-        Wed, 22 Jan 2025 03:50:25 -0800 (PST)
-Received: from ?IPV6:2a03:83e0:1126:4:829:739b:3caa:6500? ([2620:10d:c092:500::4:1c5b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384d2cfc2sm887377566b.82.2025.01.22.03.50.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2025 03:50:25 -0800 (PST)
-Message-ID: <1a4223a2-77ae-4f15-a40b-dc33de9e6c2d@gmail.com>
-Date: Wed, 22 Jan 2025 11:50:24 +0000
+	id 1taZns-0000000A8uJ-25yL;
+	Wed, 22 Jan 2025 12:25:53 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8086E5C54FD;
+	Wed, 22 Jan 2025 12:25:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DED6C4CED6;
+	Wed, 22 Jan 2025 12:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737548751;
+	bh=Xfp892u0X0rMtHWkGD3r2bVHj+FTM/t28M4VtoJ0Wyc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZRnNn+6Tt76019xBirdMVmzRbeL8Q2odMq6HFhgkth9P5ZrYdpErYPlXsxL6Fl3rj
+	 ZI5VtP10jvH/fQAv6HRDykVpsfGmvb0d/xEWjnDE5tgAnq++jvuWWHT6WYDemhqEh2
+	 qhtEzGq7/MMx5/wpO74r4FRgEujUuclOLSKI/Yy3NZM6X5dfnqSKY4Ag8uJB7GG8XW
+	 AQ7J/NzQdgEpLRKLYUKh7jqPAvOBjZZ+gq5nRJ0qTwqiguA+mChUjtx0pX3QTt2bwy
+	 E0gMyTw1G3DnV5TJGaTuN+E86ySP5PQe5fDrGHlTa+/9p9roru7zJ1Awo7fm8PfyZm
+	 vQJdRIi7afA0Q==
+Date: Wed, 22 Jan 2025 13:25:46 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, 
+	netfs@lists.linux.dev, codalist@coda.cs.cmu.edu, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	keyrings@vger.kernel.org, Song Liu <song@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Jani Nikula <jani.nikula@intel.com>, 
+	Corey Minyard <cminyard@mvista.com>
+Subject: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where
+ applicable
+Message-ID: <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+ <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] efi/memattr: Use desc_size instead of total size to
- check for corruption
-To: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
- devel@edk2.groups.io, kexec@lists.infradead.org, hannes@cmpxchg.org,
- x86@kernel.org, linux-kernel@vger.kernel.org, leitao@debian.org,
- gourry@gourry.net, kernel-team@meta.com
-References: <20250108215957.3437660-1-usamaarif642@gmail.com>
- <20250108215957.3437660-2-usamaarif642@gmail.com>
- <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
- <d9c84079-6593-43f4-9483-648b665f03db@gmail.com>
- <CAMj1kXGYsJrqDzy_+g_wSAAEuQ_OnxvyJ8ZE+4gbr6KOY7iuow@mail.gmail.com>
- <8613563a-ee7c-4271-b1f0-4d1ac365ad3a@gmail.com>
- <CALu+AoS8tb=HgaybDw5OG4A1QbOXHvuidpu0ynmz-nE1nBqzTA@mail.gmail.com>
- <db7edff7-8a87-41db-9e40-202a498c5e29@gmail.com>
- <138f28ec-341e-4c48-a14b-4371a8198de8@gmail.com>
- <ed7ad48f-2270-4966-bdba-ccd4592a0fd4@gmail.com>
- <CAMj1kXFMxfOswAdBEVsCoVO90y_m1TUigWRG-3FJTsv4xOGTpw@mail.gmail.com>
- <029cff22-f2e0-4796-9c27-1df056e08f8f@gmail.com>
- <CAMj1kXEhKbuqVz9paggxQQz1Wyk_UNRvWZ46X7YKx9b-xMfWyQ@mail.gmail.com>
- <c5f68f9f-1494-426b-a5b2-bf6c1483c02f@gmail.com>
- <CALu+AoS5_w2CV5w+b1WrFRFH7nfwmkLZUh=AXn=D=7rAhDNVAQ@mail.gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CALu+AoS5_w2CV5w+b1WrFRFH7nfwmkLZUh=AXn=D=7rAhDNVAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250122_035028_270761_9E408620 
-X-CRM114-Status: GOOD (  18.18  )
+X-CRM114-CacheID: sfid-20250122_042552_618129_76CA570D 
+X-CRM114-Status: GOOD (  26.52  )
+X-Mailman-Approved-At: Wed, 22 Jan 2025 04:33:34 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,59 +88,151 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 22/01/2025 05:36, Dave Young wrote:
-> Hi,
-> On Mon, 20 Jan 2025 at 19:48, Usama Arif <usamaarif642@gmail.com> wrote:
->>
->>
->>
->> On 20/01/2025 11:29, Ard Biesheuvel wrote:
->>> On Mon, 20 Jan 2025 at 11:50, Usama Arif <usamaarif642@gmail.com> wrote:
->>>>
->>>>
->>>>
->>>> On 20/01/2025 10:32, Ard Biesheuvel wrote:
->>>>> On Mon, 20 Jan 2025 at 11:27, Usama Arif <usamaarif642@gmail.com> wrote:
->>>>>>
->>>>>>
->>>>> ...
->>>>>> Hi Ard,
->>>>>>
->>>>>> Just wanted to check how should we proceed forward? Should we try and fix the warning
->>>>>> and corruption during kexec as done in this series or not initialize memory attributes
->>>>>> table at all in kexec boot? I would prefer fixing the issues as in this series.
->>>>>>
->>>>>
->>>>> I would prefer kexec boot on x86 to disregard the memory attributes
->>>>> table entirely.
->>>>
->>>> Would you like Dave to send something like
->>>> https://lore.kernel.org/all/CALu+AoS8tb=HgaybDw5OG4A1QbOXHvuidpu0ynmz-nE1nBqzTA@mail.gmail.com/
->>>> on the mailing list (wrapped in ifdef CONFIG_X86_64)
->>>>
->>>
->>> I prefer this approach. and no need for the ifdef, this is x86
->>> specific code, and the memory attributes table is already ignored
->>> entirely on 32-bit x86 iirc
->>
->> ah yes, I ignored the file name when reviewing it and just focused on the function :)
->>
->> Will wait for Dave to send it.
+On Tue, Jan 21, 2025 at 02:40:16PM +0100, Alexander Gordeev wrote:
+> On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
 > 
-> Ok,  I will add reported-by from you and suggested-by from Ard.  But I
-> can not test the efi mem attr, I'd prefer to have your test results
-> first.  Could you confirm that?
+> Hi Joel,
 > 
+> > Add the const qualifier to all the ctl_tables in the tree except for
+> > watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
+> > loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
+> > drivers/inifiniband dirs). These are special cases as they use a
+> > registration function with a non-const qualified ctl_table argument or
+> > modify the arrays before passing them on to the registration function.
+> > 
+> > Constifying ctl_table structs will prevent the modification of
+> > proc_handler function pointers as the arrays would reside in .rodata.
+> > This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
+> > constify the ctl_table argument of proc_handlers") constified all the
+> > proc_handlers.
+> 
+> I could identify at least these occurences in s390 code as well:
+Hey Alexander
 
-Please also add Reported-by: Breno Leitao <leitao@debian.org>
-who originally discovered and reported the issue.
+Thx for bringing these to my attention. I had completely missed them as
+the spatch only deals with ctl_tables outside functions.
 
-I have tested it and it works, efi_memattr_init will just return 0 as
-efi_mem_attr_table = EFI_INVALID_TABLE_ADDR, so it won't be
-initialized. Feel free to add Tested-by tag from me.
+Short answer:
+These should not be included in the current patch because they are a
+different pattern from how sysctl tables are usually used. So I will not
+include them.
 
-Thanks,
-Usama
+With that said, I think it might be interesting to look closer at them
+as they seem to be complicating the proc_handler (I have to look at them
+closer).
+
+I see that they are defining a ctl_table struct within the functions and
+just using the data (from the incoming ctl_table) to forward things down
+to proc_do{u,}intvec_* functions. This is very odd and I have only seen
+it done in order to change the incoming ctl_table (which is not what is
+being done here).
+
+I will take a closer look after the merge window and circle back with
+more info. Might take me a while as I'm not very familiar with s390
+code; any additional information on why those are being used inside the
+functions would be helpfull.
+
+Best
+
+
+> 
+> diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
+> index dd7ba7587dd5..9b83c318f919 100644
+> --- a/arch/s390/appldata/appldata_base.c
+> +++ b/arch/s390/appldata/appldata_base.c
+> @@ -204,7 +204,7 @@ appldata_timer_handler(const struct ctl_table *ctl, int write,
+>  {
+>  	int timer_active = appldata_timer_active;
+>  	int rc;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &timer_active,
+>  		.maxlen		= sizeof(int),
+> @@ -237,7 +237,7 @@ appldata_interval_handler(const struct ctl_table *ctl, int write,
+>  {
+>  	int interval = appldata_interval;
+>  	int rc;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &interval,
+>  		.maxlen		= sizeof(int),
+> @@ -269,7 +269,7 @@ appldata_generic_handler(const struct ctl_table *ctl, int write,
+>  	struct list_head *lh;
+>  	int rc, found;
+>  	int active;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.data		= &active,
+>  		.maxlen		= sizeof(int),
+>  		.extra1		= SYSCTL_ZERO,
+> diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
+> index 7857a7e8e56c..7d0ba16085c1 100644
+> --- a/arch/s390/kernel/hiperdispatch.c
+> +++ b/arch/s390/kernel/hiperdispatch.c
+> @@ -273,7 +273,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
+>  {
+>  	int hiperdispatch;
+>  	int rc;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &hiperdispatch,
+>  		.maxlen		= sizeof(int),
+> diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
+> index 6691808bf50a..26e50de83d80 100644
+> --- a/arch/s390/kernel/topology.c
+> +++ b/arch/s390/kernel/topology.c
+> @@ -629,7 +629,7 @@ static int topology_ctl_handler(const struct ctl_table *ctl, int write,
+>  	int enabled = topology_is_enabled();
+>  	int new_mode;
+>  	int rc;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &enabled,
+>  		.maxlen		= sizeof(int),
+> @@ -658,7 +658,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
+>  {
+>  	int polarization;
+>  	int rc;
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &polarization,
+>  		.maxlen		= sizeof(int),
+> diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
+> index 939e3bec2db7..8e354c90a3dd 100644
+> --- a/arch/s390/mm/cmm.c
+> +++ b/arch/s390/mm/cmm.c
+> @@ -263,7 +263,7 @@ static int cmm_pages_handler(const struct ctl_table *ctl, int write,
+>  			     void *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	long nr = cmm_get_pages();
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &nr,
+>  		.maxlen		= sizeof(long),
+> @@ -283,7 +283,7 @@ static int cmm_timed_pages_handler(const struct ctl_table *ctl, int write,
+>  				   loff_t *ppos)
+>  {
+>  	long nr = cmm_get_timed_pages();
+> -	struct ctl_table ctl_entry = {
+> +	const struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &nr,
+>  		.maxlen		= sizeof(long),
+> 
+> 
+> > Best regards,
+> > -- 
+> > Joel Granados <joel.granados@kernel.org>
+> 
+> Thanks!
+
+-- 
+
+Joel Granados
 
