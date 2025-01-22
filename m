@@ -4,76 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8918C02181
-	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 12:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51758C02181
+	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 13:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GKsy0CgAI7HNXTSqszrGM2CRCHMFPbrE3yv+YuKGi6g=; b=sP4bJmNKV10euIxfIIWVD9GW3X
-	6nX3R5bnURuGdOlZKgAaSVhdIo4Bn/tiANdQdSTuFuOMN9A81phHgagcb8K0WaJzcr73q9Rj88kIu
-	eCjk2TRokaTC1kUeKAndK26BXgj4znviOz074MVIKrgzXHLZa60JeRpuWDmQiPxv7Dawet1qsthKp
-	m8qndL6SyNQqTXnfpQf0Vg5FsQyGfALiwVJALGr9OrZ/yIcU0rWclRIhV0hEB7p0UcH4X/xRb6SAc
-	WXv+hBX6teGoEvHh2qA4oaBwL/yWDzH430XLJ+B7rVd08CHeEyv5JC8I2mVCoyW1rhSrAnc2GeuTn
-	D/3VwKCw==;
+	bh=n2phdRioz+FPeu2qwKUYHdIsmJATa7bzMGgHi9VlFHo=; b=G+ZvXI4/DHqqrXtGqUParNKYCQ
+	JQJhIf6G5X6p/kJlwCXSEdqcTpTiNH+LqEyOMI5HAZns8xwgAkFPMx7qEJoBbYYfjwEfstdqcE+vh
+	V58bmUM/aaFg9K5o3EwQT8+Ea+qLIBO0C3ROvQFVs65JkJ2C4Czp2CvMRDBFLptZ9j2ECusXIHpSI
+	G+22RgCA/hqt9y8CjxkS+NTTYw+EA3oPeasE1huMYsBv9XrdPbtUPyWWVMjfrtlOZAf1h3tSw03c9
+	AbX4rrXcOJMXdA3aEE6N/uqZNzxRRxCkWgNsg8Z3OSYPsTfI2JNjkmEf8fK+nEqiiCUBP/xLV7sSa
+	RT9DFdMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1taZvN-0000000A9kR-1m7L;
-	Wed, 22 Jan 2025 12:33:37 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1taaMH-0000000AEMp-1HNX;
+	Wed, 22 Jan 2025 13:01:25 +0000
+Received: from out-178.mta1.migadu.com ([2001:41d0:203:375::b2])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1taZns-0000000A8uJ-25yL;
-	Wed, 22 Jan 2025 12:25:53 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 8086E5C54FD;
-	Wed, 22 Jan 2025 12:25:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DED6C4CED6;
-	Wed, 22 Jan 2025 12:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737548751;
-	bh=Xfp892u0X0rMtHWkGD3r2bVHj+FTM/t28M4VtoJ0Wyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZRnNn+6Tt76019xBirdMVmzRbeL8Q2odMq6HFhgkth9P5ZrYdpErYPlXsxL6Fl3rj
-	 ZI5VtP10jvH/fQAv6HRDykVpsfGmvb0d/xEWjnDE5tgAnq++jvuWWHT6WYDemhqEh2
-	 qhtEzGq7/MMx5/wpO74r4FRgEujUuclOLSKI/Yy3NZM6X5dfnqSKY4Ag8uJB7GG8XW
-	 AQ7J/NzQdgEpLRKLYUKh7jqPAvOBjZZ+gq5nRJ0qTwqiguA+mChUjtx0pX3QTt2bwy
-	 E0gMyTw1G3DnV5TJGaTuN+E86ySP5PQe5fDrGHlTa+/9p9roru7zJ1Awo7fm8PfyZm
-	 vQJdRIi7afA0Q==
-Date: Wed, 22 Jan 2025 13:25:46 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, 
-	netfs@lists.linux.dev, codalist@coda.cs.cmu.edu, linux-mm@kvack.org, 
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	keyrings@vger.kernel.org, Song Liu <song@kernel.org>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Jani Nikula <jani.nikula@intel.com>, 
-	Corey Minyard <cminyard@mvista.com>
-Subject: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where
- applicable
-Message-ID: <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
- <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	id 1taaMD-0000000AEJt-2wyT
+	for kexec@lists.infradead.org;
+	Wed, 22 Jan 2025 13:01:24 +0000
+Date: Wed, 22 Jan 2025 14:01:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1737550876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n2phdRioz+FPeu2qwKUYHdIsmJATa7bzMGgHi9VlFHo=;
+	b=FTfL7UZTsxDgahGFlDHjMsxRy3TFUFJosHWHwbYxc4KCdjdAX3AfEFqEEPWVggte/W5i5T
+	//NlabcvalcZnazUIma/vyF+Khg5JhBmNHpX+Two97l1iHu5OVmmHSJEudrM87NaC8E4XJ
+	B3d1BBuPQb+lXA0Vl8cCHR5z3kOWytna4TrKneHGzFBTD8I0HQNpriqRUSPCyoLkRRneC2
+	XkSCx9dCoMJjYweVEFoFZPbWMneS6aBsbksvf58yvSlaAgtC38ZLcf0VsRqqrB/6VKSr9X
+	WcUilMOUdRLXuDxp5EvpaQrImwCJwsy14MqbAmmW3SMk+ON4WVCRsmY2duYdlg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: RuiRui Yang <ruyang@redhat.com>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+	ytcoode@gmail.com, kexec@lists.infradead.org,
+	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z5DsGE4n2uYWedRX@desktop0a>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+In-Reply-To: <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250122_042552_618129_76CA570D 
-X-CRM114-Status: GOOD (  26.52  )
-X-Mailman-Approved-At: Wed, 22 Jan 2025 04:33:34 -0800
+X-CRM114-CacheID: sfid-20250122_050123_101918_4BF0DBD2 
+X-CRM114-Status: GOOD (  13.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,151 +73,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jan 21, 2025 at 02:40:16PM +0100, Alexander Gordeev wrote:
-> On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
+On 2025-01-22 Wed 17:45:41 +0800, RuiRui Yang wrote:
+> > I can reproduce this with kernel 6.13-rc7 in a qemu x86_64 virtual machine
+> > running Void Linux, with the following commands:
+> >
+> > ```
+> > # kexec -l /boot/vmlinuz-6.13.0-rc7 --initrd=/boot/initramfs-6.13.0-rc7 --reuse-cmdline
+> > # reboot
+> > # printf reboot >/sys/power/disk
+> > # printf disk >/sys/power/state
+> > ```
 > 
-> Hi Joel,
-> 
-> > Add the const qualifier to all the ctl_tables in the tree except for
-> > watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
-> > loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
-> > drivers/inifiniband dirs). These are special cases as they use a
-> > registration function with a non-const qualified ctl_table argument or
-> > modify the arrays before passing them on to the registration function.
-> > 
-> > Constifying ctl_table structs will prevent the modification of
-> > proc_handler function pointers as the arrays would reside in .rodata.
-> > This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
-> > constify the ctl_table argument of proc_handlers") constified all the
-> > proc_handlers.
-> 
-> I could identify at least these occurences in s390 code as well:
-Hey Alexander
+> Which kexec-tools version have you used?  I'm just asking to see which
+> syscall is used for loading the new kernel.   From your bisect results
+> it seems kexec_file_load, but just a double check as kexec_load and
+> kexec_file_load use different sources for building the e820 table.
 
-Thx for bringing these to my attention. I had completely missed them as
-the spatch only deals with ctl_tables outside functions.
+I have kexec-tools 2.0.29. strace confirms that kexec_file_load() is being used:
 
-Short answer:
-These should not be included in the current patch because they are a
-different pattern from how sysctl tables are usually used. So I will not
-include them.
+```
+execve("/usr/sbin/kexec", ["kexec", "-l", "/boot/vmlinuz-6.13.0_ricci", "--initrd=/boot/initramfs-6.13.0_"..., "--reuse-cmdline"], 0x7ffeab8e8910 /* 15 vars */) = 0
+brk(NULL)                               = 0x55f2897ea000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=10415, ...}) = 0
+mmap(NULL, 10415, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff2d596e000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/liblzma.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=194704, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d596c000
+mmap(NULL, 192544, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d593c000
+mmap(0x7ff2d5940000, 122880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) = 0x7ff2d5940000
+mmap(0x7ff2d595e000, 49152, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7ff2d595e000
+mmap(0x7ff2d596a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2e000) = 0x7ff2d596a000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=100488, ...}) = 0
+mmap(NULL, 102416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5922000
+mmap(0x7ff2d5925000, 57344, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7ff2d5925000
+mmap(0x7ff2d5933000, 28672, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x11000) = 0x7ff2d5933000
+mmap(0x7ff2d593a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17000) = 0x7ff2d593a000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\236\2\0\0\0\0\0"..., 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+fstat(3, {st_mode=S_IFREG|0755, st_size=12652992, ...}) = 0
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+mmap(NULL, 2006416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5738000
+mmap(0x7ff2d5760000, 1413120, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7ff2d5760000
+mmap(0x7ff2d58b9000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x181000) = 0x7ff2d58b9000
+mmap(0x7ff2d590f000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1d6000) = 0x7ff2d590f000
+mmap(0x7ff2d5915000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5915000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5735000
+arch_prctl(ARCH_SET_FS, 0x7ff2d5735740) = 0
+set_tid_address(0x7ff2d5735a10)         = 587
+set_robust_list(0x7ff2d5735a20, 24)     = 0
+rseq(0x7ff2d5736060, 0x20, 0, 0x53053053) = 0
+mprotect(0x7ff2d590f000, 16384, PROT_READ) = 0
+mprotect(0x7ff2d593a000, 4096, PROT_READ) = 0
+mprotect(0x7ff2d596a000, 4096, PROT_READ) = 0
+mprotect(0x55f260483000, 20480, PROT_READ) = 0
+mprotect(0x7ff2d59a9000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7ff2d596e000, 10415)           = 0
+access("/proc/xen", F_OK)               = -1 ENOENT (No such file or directory)
+getrandom("\xa1\x28\xc8\xbe\xf9\xc2\xac\xa0", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x55f2897ea000
+brk(0x55f28980b000)                     = 0x55f28980b000
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+lseek(3, 0, SEEK_CUR)                   = 0
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 8192) = 8192
+close(3)                                = 0
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
+close(3)                                = 0
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
+mmap(NULL, 26566656, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d3ddf000
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
+close(3)                                = 0
+close(3)                                = -1 EBADF (Bad file descriptor)
+memfd_create("kernel", MFD_ALLOW_SEALING) = 3
+write(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
+openat(AT_FDCWD, "/proc/cmdline", O_RDONLY) = 4
+read(4, "BOOT_IMAGE=/boot/vmlinuz-6.13.0_"..., 128) = 128
+read(4, "el=512M\n", 128)               = 8
+read(4, "", 120)                        = 0
+read(4, "", 376)                        = 0
+openat(AT_FDCWD, "/boot/initramfs-6.13.0_ricci.img", O_RDONLY) = 5
+kexec_file_load(3, 5, 98, "root=UUID=71b5e20d-efaa-4c09-b18"..., 0) = 0
+close(3)                                = 0
+sync()                                  = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+```
 
-With that said, I think it might be interesting to look closer at them
-as they seem to be complicating the proc_handler (I have to look at them
-closer).
+The issue persists with the latest 6.13 kernel.
 
-I see that they are defining a ctl_table struct within the functions and
-just using the data (from the incoming ctl_table) to forward things down
-to proc_do{u,}intvec_* functions. This is very odd and I have only seen
-it done in order to change the incoming ctl_table (which is not what is
-being done here).
-
-I will take a closer look after the merge window and circle back with
-more info. Might take me a while as I'm not very familiar with s390
-code; any additional information on why those are being used inside the
-functions would be helpfull.
-
-Best
-
-
-> 
-> diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
-> index dd7ba7587dd5..9b83c318f919 100644
-> --- a/arch/s390/appldata/appldata_base.c
-> +++ b/arch/s390/appldata/appldata_base.c
-> @@ -204,7 +204,7 @@ appldata_timer_handler(const struct ctl_table *ctl, int write,
->  {
->  	int timer_active = appldata_timer_active;
->  	int rc;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &timer_active,
->  		.maxlen		= sizeof(int),
-> @@ -237,7 +237,7 @@ appldata_interval_handler(const struct ctl_table *ctl, int write,
->  {
->  	int interval = appldata_interval;
->  	int rc;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &interval,
->  		.maxlen		= sizeof(int),
-> @@ -269,7 +269,7 @@ appldata_generic_handler(const struct ctl_table *ctl, int write,
->  	struct list_head *lh;
->  	int rc, found;
->  	int active;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.data		= &active,
->  		.maxlen		= sizeof(int),
->  		.extra1		= SYSCTL_ZERO,
-> diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
-> index 7857a7e8e56c..7d0ba16085c1 100644
-> --- a/arch/s390/kernel/hiperdispatch.c
-> +++ b/arch/s390/kernel/hiperdispatch.c
-> @@ -273,7 +273,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
->  {
->  	int hiperdispatch;
->  	int rc;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &hiperdispatch,
->  		.maxlen		= sizeof(int),
-> diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
-> index 6691808bf50a..26e50de83d80 100644
-> --- a/arch/s390/kernel/topology.c
-> +++ b/arch/s390/kernel/topology.c
-> @@ -629,7 +629,7 @@ static int topology_ctl_handler(const struct ctl_table *ctl, int write,
->  	int enabled = topology_is_enabled();
->  	int new_mode;
->  	int rc;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &enabled,
->  		.maxlen		= sizeof(int),
-> @@ -658,7 +658,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
->  {
->  	int polarization;
->  	int rc;
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &polarization,
->  		.maxlen		= sizeof(int),
-> diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
-> index 939e3bec2db7..8e354c90a3dd 100644
-> --- a/arch/s390/mm/cmm.c
-> +++ b/arch/s390/mm/cmm.c
-> @@ -263,7 +263,7 @@ static int cmm_pages_handler(const struct ctl_table *ctl, int write,
->  			     void *buffer, size_t *lenp, loff_t *ppos)
->  {
->  	long nr = cmm_get_pages();
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &nr,
->  		.maxlen		= sizeof(long),
-> @@ -283,7 +283,7 @@ static int cmm_timed_pages_handler(const struct ctl_table *ctl, int write,
->  				   loff_t *ppos)
->  {
->  	long nr = cmm_get_timed_pages();
-> -	struct ctl_table ctl_entry = {
-> +	const struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &nr,
->  		.maxlen		= sizeof(long),
-> 
-> 
-> > Best regards,
-> > -- 
-> > Joel Granados <joel.granados@kernel.org>
-> 
-> Thanks!
-
--- 
-
-Joel Granados
+I also noticed that the bug is not 100% deterministic, but occurs most
+of the times. I could test again with KMSAN and KCSAN, if I have a bit
+of time this week.
 
