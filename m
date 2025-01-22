@@ -4,92 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00127C02181
-	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 09:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CE0FC02181
+	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 11:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yyCjRrkbGde3kvq5V4txWDKrLIctP6FAvSzHNKivVTM=; b=blGD8ojHpkPe0gJdHfvKVkJCqr
-	ufLF0NZmv33WO1dAz2WTU/JR2XQbqY1v1d8/bqft4CnqyPpB9/FnI6ZVBF9LyBYyhF96J2fxVQbRA
-	xkZ08KI8WriNfERKDZonAy+T3zy50z4PvBNNRKZcj1kj45JdFidNMTjLIWv37jYPuUZ9NeM0IE2Zc
-	seORfSzBR10PpGnqLh/ZcYgHwLv3yI9g4wOPZOE5ZL+FC5kIDsu/+gTigCA2A6+uSC2/TWibnPg1N
-	QUklG+vmyj18M/Im6tLLZg2h0T54GQEfOvJeNRR9Y/6Q6V21TEVP6z6QQlT1kUS9E6cXxPrnZ7bcz
-	o0W2XaVg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=; b=dQrSRLJDUZ3pIUXo4rnfzoTp+S
+	iryER/DEfInh7OgN8HAI0Ve5EHv2tPfZXYifLwr4S02eVAyrf5NJ1BMtAtCz/328Cs39/FtLJp1yS
+	y2c8r1ACxMiD0yue12tjWIReSXRjlr/vtaojrSgj75GmE6/51CFo+XF4AMYLc7lg4Puqst8EbP6iZ
+	ufxWDkqFh0YKnkXtydKU0Ty4PC/uLnrmEXp+SrYIc4Q27EcvTWTwXhfNdF+QOKqCLh6bhux2VD015
+	9lcOTHtQQ4ZSReSAoFSY9VJ6HdDytHRwW4PNtCeek7RVkzs9NorpD9LGN2ojASdrjMe0F2AOxXfF5
+	4TOQ13rQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1taXJV-00000009pJu-3yXQ;
-	Wed, 22 Jan 2025 09:46:21 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1taZFe-0000000A5m1-2jKl;
+	Wed, 22 Jan 2025 11:50:30 +0000
+Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1taXIn-00000009pDk-0Ues
+	id 1taZFc-0000000A5ld-0t9A
 	for kexec@lists.infradead.org;
-	Wed, 22 Jan 2025 09:45:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737539136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yyCjRrkbGde3kvq5V4txWDKrLIctP6FAvSzHNKivVTM=;
-	b=BNW6GM1ypiUQ3ggy1OfTq9uFhMjC1J22ro+64agm0x6qhjTlr4L3D+iEPH7djogJyagTws
-	N/duy6K2aGZKHkpzP361qVf3ptlJycfn48lq3Glun+eEAX0swUlg0+RbTxGhd5ooHZ76DE
-	ApDXiNTDPUUsQoS9p6Dwi8WHAcr7Tx8=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-90-0B_Bw-icPB63sGnpXAWvtQ-1; Wed, 22 Jan 2025 04:45:34 -0500
-X-MC-Unique: 0B_Bw-icPB63sGnpXAWvtQ-1
-X-Mimecast-MFC-AGG-ID: 0B_Bw-icPB63sGnpXAWvtQ
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ac98b49e4dso49890165ab.1
-        for <kexec@lists.infradead.org>; Wed, 22 Jan 2025 01:45:34 -0800 (PST)
+	Wed, 22 Jan 2025 11:50:29 +0000
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-aaeef97ff02so1113477266b.1
+        for <kexec@lists.infradead.org>; Wed, 22 Jan 2025 03:50:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737546626; x=1738151426; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=;
+        b=DBatpwHM2G/7mQPsDZm7Z2r6e1eUrIsPbYmfG4LoMpwsMvYRB43py5fHwpALoxPXJp
+         EFLAERmhgcY84CVO8QFAzq6JNNYOJRHqj6ar/vz/HUpA0rJfbc+4uG3hag/0p9DUQ0o7
+         cg/rDR4t8gaVxBERQwihVB2lYSAfQqBrk2uroFa+QcGlM1PSZiimT1a+SEiSg3OSxBxY
+         xr4s/wcodIBOQC4DjprHVvhzIbL9JQqRjo09T44W5WhnN3FlhI068emVy6SgQdBV1Eny
+         V2Pc8+I8pxNlyu+qRoEKjsyZgJ0u5kmnsXF1e3Ih3lM35iIEBJSuBKcZLm4pdFYJk2CY
+         Qh2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737539134; x=1738143934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yyCjRrkbGde3kvq5V4txWDKrLIctP6FAvSzHNKivVTM=;
-        b=DdsiuDxh74SjJCwAidh3L9xm4mx3CZ3zp9zEuokxPKP8EQ1DXTdf/iuitCIauqy3v/
-         kaNkBEGHP3EGn1fMqbFH5dSdQgRzHkdA7mlgixuG6Xq6kH4tzAokAxCHtSysKTM7PJoq
-         qV/0UzFG3dObHuIArBn12u4gHIXNOoZMtJc/macYQ1n5qtKKPaasdaYPHzNKQFej4H6n
-         I34wy3OxTL8dlzVXd8Dng1qTy4VyXGM5MBN9dzrkk/E62s9joRiL8sETGid1J4+V7lW/
-         hRb+XsQNv3jmgWxUEPVNrSNymarugKSpHazefbeFAOLISo2xvmhub4GM6OGhmxu/7l9F
-         uhhw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2M97nkpKtES9AijrK/th7/XDDHCxUn6zfQgAOm7zjcrXAuP9chAte8yiuFOtY6me9ongP6A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxxpfBKo9T50YLTYrQx6Sb5BpBkVGLasK5h57csoxe9ZX4mP7zq
-	K7bQ7YrkR/jf3layfsfuPlysf4p+wuhwk4pB+NgiVtggXplt9cGfDjJ8UZAKlFK/XQrp+vSH2e8
-	IHQZlMVOCD14h9zRGbIq3ul2MxiozZb39X39emqIUQfTpWoXnle7/rMo+Nk4b9J1g2oYVeARKy9
-	EKefzrn4nAyw9/xPD0tLOVaKN5q47nnxKB
-X-Gm-Gg: ASbGncujrxlwvgUOcTGb4v1CZlNb1E1vEgNza5Rvi/oaCfcrevjlBJKKj0VEuNtROjw
-	SSo67AI0skoP1O4coq+2bMZR0l6jJhTxv2VptDv69VmCiqMIC0Y8l
-X-Received: by 2002:a05:6e02:4708:b0:3cf:b62a:d38b with SMTP id e9e14a558f8ab-3cfb62ad548mr6839305ab.12.1737539133952;
-        Wed, 22 Jan 2025 01:45:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEIPD077b4G8AkO2RvsoOP8ZsRfpujjR36pn01SrQFGxp7KGByKkBoan7/VXdsRXY43BKX2FEh2Wdm8Pbn+dpI=
-X-Received: by 2002:a05:6e02:4708:b0:3cf:b62a:d38b with SMTP id
- e9e14a558f8ab-3cfb62ad548mr6839035ab.12.1737539133320; Wed, 22 Jan 2025
- 01:45:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737546626; x=1738151426;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oh23WD6b9+c/DI2oI9FQ/B0EymzRbxc0VAjw7ASF7LU=;
+        b=Mi6C/BR2wGPXUWQ17un/qE/mtBMSDJQp7vH/rb6qaffxK/kyxIxnBRpawukEpMP6aU
+         F33pFwg6k12TzQONskidJq6fM7WtG3hf0/cUhqZbx8Xvi+wD137+x1voCcDD7Vac3xsL
+         XElBDngfqzf+BWec9EBrKUCc5oYx/6HD262luRJot/LcGYRuJAp1gXQrX9AqA6itj2Nz
+         zjN4SS0mx8eF7vZ3AOwKw4AQrLDId7+KGDFlSa3vNYxNe5WQhhR4K9aUiyV8fpvdE/76
+         FY6T9va78Llu0TjgSTCJdWZpYTtq9FPajsCbSrXjtVr1zu08CmMI2fzfSAlYxdbfX4NG
+         F7bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ/+qNr7/qBI+3YqMw6LhSde0Tt1MILhzXwbkaMx/FjQSWAx7A+QCnVNR92p7h3KU3OmyO0Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz5FqkSQkhaVP23kPLY/u+EulNFhfW1+JfONjoGCW2jlhI3HHGw
+	j6U6imWyLqf6xo8H7QZwPJ/JL//3oCW1HSNgNyhm+Uif4k6lTlG6
+X-Gm-Gg: ASbGnctJawnzHf+vvNZRRlVlzISnfgKgf7zLeXo8EK3XZW9r2FCGBxZtOhYuwbPtLXS
+	zNOZs4DdcPsMtx9AqcReDLRVWMvjC27Iz1fH2k5l1vef6UqDfEY2J54GCRBDwKPZyqAhM6hAvjy
+	owCvoTfTsEb9vV81i6nJJxfonIXAasqD76RsHmJlvC1gfWA14F9brNsQDcaH0crP98JvRUOdIZW
+	LpXSQwP/nawan2LjgL+YsQA1u1ALtkOnJ5s/jd2OCNkxaEqwB4X4TU7cFhbWukVep5JqSF/tqof
+	8rXJtpmvNOphqoujrfP4KK22oumDCFPALv4wwXOLwQ==
+X-Google-Smtp-Source: AGHT+IF+incGb/IZc3tkpwYf1H3kUvKL8NDvsH89F25knBJMw3Vy2+yLj3qjgDdMHXGS49J7p9SFOw==
+X-Received: by 2002:a17:907:7f89:b0:aa6:29dc:11b with SMTP id a640c23a62f3a-ab38b1ff059mr1576763966b.16.1737546625488;
+        Wed, 22 Jan 2025 03:50:25 -0800 (PST)
+Received: from ?IPV6:2a03:83e0:1126:4:829:739b:3caa:6500? ([2620:10d:c092:500::4:1c5b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384d2cfc2sm887377566b.82.2025.01.22.03.50.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2025 03:50:25 -0800 (PST)
+Message-ID: <1a4223a2-77ae-4f15-a40b-dc33de9e6c2d@gmail.com>
+Date: Wed, 22 Jan 2025 11:50:24 +0000
 MIME-Version: 1.0
-References: <Z4WFjBVHpndct7br@desktop0a>
-In-Reply-To: <Z4WFjBVHpndct7br@desktop0a>
-From: RuiRui Yang <ruyang@redhat.com>
-Date: Wed, 22 Jan 2025 17:45:41 +0800
-X-Gm-Features: AbW1kvYNw_qRoZSbVWcaArR-_IblaJucJ-H4UePBgio9Q2kKLmrwRXL4Nk8Joco
-Message-ID: <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from hibernation
-To: io@r-ricci.it
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com, 
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org, 
-	akpm@linux-foundation.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bm4P9tgVaDDhIQApie-baabGKXXUVGzBMK8aTZA7iLI_1737539134
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] efi/memattr: Use desc_size instead of total size to
+ check for corruption
+To: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+ devel@edk2.groups.io, kexec@lists.infradead.org, hannes@cmpxchg.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org, leitao@debian.org,
+ gourry@gourry.net, kernel-team@meta.com
+References: <20250108215957.3437660-1-usamaarif642@gmail.com>
+ <20250108215957.3437660-2-usamaarif642@gmail.com>
+ <CAMj1kXH54Y0ae1OGwBe7-UiRBq9cFkDHbjxos_rEZPtan7NNzQ@mail.gmail.com>
+ <d9c84079-6593-43f4-9483-648b665f03db@gmail.com>
+ <CAMj1kXGYsJrqDzy_+g_wSAAEuQ_OnxvyJ8ZE+4gbr6KOY7iuow@mail.gmail.com>
+ <8613563a-ee7c-4271-b1f0-4d1ac365ad3a@gmail.com>
+ <CALu+AoS8tb=HgaybDw5OG4A1QbOXHvuidpu0ynmz-nE1nBqzTA@mail.gmail.com>
+ <db7edff7-8a87-41db-9e40-202a498c5e29@gmail.com>
+ <138f28ec-341e-4c48-a14b-4371a8198de8@gmail.com>
+ <ed7ad48f-2270-4966-bdba-ccd4592a0fd4@gmail.com>
+ <CAMj1kXFMxfOswAdBEVsCoVO90y_m1TUigWRG-3FJTsv4xOGTpw@mail.gmail.com>
+ <029cff22-f2e0-4796-9c27-1df056e08f8f@gmail.com>
+ <CAMj1kXEhKbuqVz9paggxQQz1Wyk_UNRvWZ46X7YKx9b-xMfWyQ@mail.gmail.com>
+ <c5f68f9f-1494-426b-a5b2-bf6c1483c02f@gmail.com>
+ <CALu+AoS5_w2CV5w+b1WrFRFH7nfwmkLZUh=AXn=D=7rAhDNVAQ@mail.gmail.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <CALu+AoS5_w2CV5w+b1WrFRFH7nfwmkLZUh=AXn=D=7rAhDNVAQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250122_014537_227301_0BE80BFA 
-X-CRM114-Status: UNSURE (   8.97  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250122_035028_270761_9E408620 
+X-CRM114-Status: GOOD (  18.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,22 +116,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> I can reproduce this with kernel 6.13-rc7 in a qemu x86_64 virtual machine
-> running Void Linux, with the following commands:
->
-> ```
-> # kexec -l /boot/vmlinuz-6.13.0-rc7 --initrd=/boot/initramfs-6.13.0-rc7 --reuse-cmdline
-> # reboot
-> # printf reboot >/sys/power/disk
-> # printf disk >/sys/power/state
-> ```
 
-Which kexec-tools version have you used?  I'm just asking to see which
-syscall is used for loading the new kernel.   From your bisect results
-it seems kexec_file_load, but just a double check as kexec_load and
-kexec_file_load use different sources for building the e820 table.
 
-Thanks
-Dave
+On 22/01/2025 05:36, Dave Young wrote:
+> Hi,
+> On Mon, 20 Jan 2025 at 19:48, Usama Arif <usamaarif642@gmail.com> wrote:
+>>
+>>
+>>
+>> On 20/01/2025 11:29, Ard Biesheuvel wrote:
+>>> On Mon, 20 Jan 2025 at 11:50, Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 20/01/2025 10:32, Ard Biesheuvel wrote:
+>>>>> On Mon, 20 Jan 2025 at 11:27, Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>>>
+>>>>>>
+>>>>> ...
+>>>>>> Hi Ard,
+>>>>>>
+>>>>>> Just wanted to check how should we proceed forward? Should we try and fix the warning
+>>>>>> and corruption during kexec as done in this series or not initialize memory attributes
+>>>>>> table at all in kexec boot? I would prefer fixing the issues as in this series.
+>>>>>>
+>>>>>
+>>>>> I would prefer kexec boot on x86 to disregard the memory attributes
+>>>>> table entirely.
+>>>>
+>>>> Would you like Dave to send something like
+>>>> https://lore.kernel.org/all/CALu+AoS8tb=HgaybDw5OG4A1QbOXHvuidpu0ynmz-nE1nBqzTA@mail.gmail.com/
+>>>> on the mailing list (wrapped in ifdef CONFIG_X86_64)
+>>>>
+>>>
+>>> I prefer this approach. and no need for the ifdef, this is x86
+>>> specific code, and the memory attributes table is already ignored
+>>> entirely on 32-bit x86 iirc
+>>
+>> ah yes, I ignored the file name when reviewing it and just focused on the function :)
+>>
+>> Will wait for Dave to send it.
+> 
+> Ok,  I will add reported-by from you and suggested-by from Ard.  But I
+> can not test the efi mem attr, I'd prefer to have your test results
+> first.  Could you confirm that?
+> 
 
+Please also add Reported-by: Breno Leitao <leitao@debian.org>
+who originally discovered and reported the issue.
+
+I have tested it and it works, efi_memattr_init will just return 0 as
+efi_mem_attr_table = EFI_INVALID_TABLE_ADDR, so it won't be
+initialized. Feel free to add Tested-by tag from me.
+
+Thanks,
+Usama
 
