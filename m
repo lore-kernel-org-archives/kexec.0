@@ -4,90 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8433C02182
-	for <kexec@archiver.kernel.org>; Thu, 23 Jan 2025 09:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D40B9C02182
+	for <kexec@archiver.kernel.org>; Thu, 23 Jan 2025 10:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=uo8Cx30dCXpTlveUxDtkpyhLzmGF8WktVGE/fkEV+uI=; b=dObIopAJGv0BMmmd5qGW6F+TXM
-	PjhoMTrPDPmMNtQsBtwXFV5DOcpM5zaEvaeW64F23KBAYGEvCYS+RgrmiQmpgy1Vhx7pp/dlnfFjj
-	Mv7AX3qfLcpgFC93NmtW9KgrfFPb7Of7elSgyzxPkBvZ/4p6oOYMzoSou0x+LQlRuIbf6U2lsH4QE
-	KWP+xZLSsdl9P/6ROZl8zAugsa6XkYDCzKz07cRPYLA08FYzLL45PAp9r6XJLicEmSmq6sfkoaX3Z
-	MwGrTBgsuJkdWhJpOU0VFli6Cnqk1FdzB4/CKG3Ko+W/Jt3ZjjkClvDipmC9RGtTSXk5YmarR56DP
-	Q2ftjW/A==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/axuqOfplzRqeu8Ps/HCNnf4ssDFrofS4hczNmz3VQ8=; b=jrl+9bCn/HBK6P1N+RhRtjCj06
+	0p0/nCfskeR13j9yMe/6QkGwXQMP7JMv8WgA/3MYHbklh3voFNNagBNBUSG/uq18dCJju81NWRPTZ
+	tQcv6+7g/16brOd7hdZ3ofgH5gnJTnI4yodhFhD9GCsFqM+LDYcG4ap8aSmU/VYN4QbjP7571/v9y
+	e+ePWGmgrkdegYcC5YgJhH64TxYsxlhDb7U03ATsEb3N9tFN8MZvIPRhl35XUOHdqQO1Gfc5OaxvS
+	LYXe1QRCBwRWYCxOrN2uvD9qTWXNq8AfKhSteh82fSmEtqv7Axqd39wF7jiHktfSB5diU+wDWktBv
+	bPTOB6TA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tato5-0000000C7iC-0TnR;
-	Thu, 23 Jan 2025 09:47:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tau51-0000000C9Ih-08O8;
+	Thu, 23 Jan 2025 10:04:55 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tato2-0000000C7gI-07LX
+	id 1tau4Y-0000000C9FF-3xnh
 	for kexec@lists.infradead.org;
-	Thu, 23 Jan 2025 09:47:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737625640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uo8Cx30dCXpTlveUxDtkpyhLzmGF8WktVGE/fkEV+uI=;
-	b=hTlERlP0GzP+Fi+zDTrIf8FmO8WdOUgtlvLKjqb1SluK/CbOxSos+XtLY1hMzEj+L0E0wG
-	qEjB+XNM0G5JtHht2nciUaWLsUflzhr43iWr3Q1DWP1UGmbd1LFG+Hm5kbf1dJxFoZExj5
-	ny2VokT7S28lxLSZhtKElesgaZuEcNo=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-1AShxQ3WNx645fNCft0tTg-1; Thu, 23 Jan 2025 04:47:17 -0500
-X-MC-Unique: 1AShxQ3WNx645fNCft0tTg-1
-X-Mimecast-MFC-AGG-ID: 1AShxQ3WNx645fNCft0tTg
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2166a1a5cc4so14837965ad.3
-        for <kexec@lists.infradead.org>; Thu, 23 Jan 2025 01:47:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737625635; x=1738230435;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uo8Cx30dCXpTlveUxDtkpyhLzmGF8WktVGE/fkEV+uI=;
-        b=JjMQqILCUq52U+cStr14dnZYBbHJlJV25igVSJUv/RQ3RioSSupMhg3mXg7PLvZEGN
-         eq/MI8c7bhWoKqAxIxvbz/QfVhQxuKr969y/1Z8D+FEDB7L6KV79N03j45LBilh836nQ
-         Sn+tczJGnLdx3IR2RJtiVcU7YHCd3piQLBh1ZZUmIder2VgsmEi4y9FQQessKl6Pi+Yt
-         H7U89L3OzSQNteNQMFjtNhPJUG1XrR1VgwufEw6gmgHXmipM+915QSVSHmDMAEV8B5dQ
-         cvTV9x6SroGNE33a9sYwUmfRQav/VOfjLgyIitiHOD9JwvHb/Ji5+YqGhE5nOngXF56O
-         H1zA==
-X-Gm-Message-State: AOJu0YwTot46yUGXOTmG5l6KFYELya0uxuUe0cid7d04r5ADCr443lGk
-	EN3B2mINBQkdggteYsr33iJQiVI02yjBekOf/OHQOa2Ss5JIpKx+El29vEGCo0I1H5nzwWj/lj9
-	iTGr+JI1nGke+Bg0phWlW97rxeX/yY6albCFTXBNljCI0ObDyClH6mDBkGrKb7Nq7YkMVH9Q9Ll
-	paIeMrJnMtit3X9h4qjoMFRlYsb1Y1XK+ePA51OYw4zA==
-X-Gm-Gg: ASbGncsg3/DD8oajT6s95zOm5qywCDjJBdOUN4ptjQCMdPTkH6TNcowMhO6uaLu/dGb
-	495FRE7Az0viEIGtxt18PFK7vPYN1GkQoM/ZxgLlQl91v1W+/sW6ohG2pOaezhxypuMA25d1wlS
-	LvmvH40RAjGBbX91DeCrk8Vj3oecx1yk0Mij7cwxODkioGYhJ1K0mxGQ5QYcz9oBCIsWeu6KFi6
-	pH/tyhh0Nf/IODmf18X2OabbWH+KmppwVm3rX8nBNZyMGKWKY2ZOpHFIXE4DQ==
-X-Received: by 2002:a05:6a21:329c:b0:1e1:a829:bfb6 with SMTP id adf61e73a8af0-1eb2144d339mr38365126637.3.1737625635308;
-        Thu, 23 Jan 2025 01:47:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFtUI2Y5Q2lmYLXXk5yM73Wgh2k93Y2CkVbw456gB2BcyX+aNcv84YNDoHyrzswWqNbgkvo0w==
-X-Received: by 2002:a05:6a21:329c:b0:1e1:a829:bfb6 with SMTP id adf61e73a8af0-1eb2144d339mr38365095637.3.1737625634911;
-        Thu, 23 Jan 2025 01:47:14 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a9bcc3234c4sm12183154a12.19.2025.01.23.01.47.13
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 01:47:14 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Subject: [PATCH] fix gcc-15 compiling error: too many arguments to function eppic_init
-Date: Thu, 23 Jan 2025 17:47:10 +0800
-Message-ID: <20250123094710.212511-1-coxu@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	Thu, 23 Jan 2025 10:04:28 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50N20kZa014157;
+	Thu, 23 Jan 2025 10:04:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/axuqO
+	fplzRqeu8Ps/HCNnf4ssDFrofS4hczNmz3VQ8=; b=T/79fFUxJBcqN9K7dOj/K+
+	PkJ6M0sSZgxPx/SJx5Ug6T7ksZfrRafcLhL/mgZTI0Sof2R7R/ZgxgPwrwzSnRuI
+	RnQVE9ywzjnzv4ANsjlLI3uRuzRq/Fx5Fm32f4bgvdNrcaz7H0GTLsP9mPju+vxK
+	S5ugUQt+7WMQR3LSPdqQZNFZCCKpbuYLjPq+yfBGIhjRS/7aIvs20JkoYso07WSP
+	IRlbRSfJzofFKpKN1TORQ1NxwOxlx4wbGe5lB/kyzcWGXoWkScxQ+bHev8215RxP
+	9wDBqRAJUvR5dNaEuHNvbikzCq8zQIlLottSb4vfR+vVKqwj1HWKhaAASOQttpSQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44bckysv9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Jan 2025 10:04:18 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50N7mxVI032266;
+	Thu, 23 Jan 2025 10:04:17 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 448rujvmdk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Jan 2025 10:04:16 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50NA4DVm40698334
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Jan 2025 10:04:13 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7299F200CE;
+	Thu, 23 Jan 2025 10:04:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB906200C2;
+	Thu, 23 Jan 2025 10:04:11 +0000 (GMT)
+Received: from [9.203.114.244] (unknown [9.203.114.244])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 23 Jan 2025 10:04:11 +0000 (GMT)
+Message-ID: <7cfe94c9-4ca5-48b1-ab53-bc08fcf8fbc0@linux.ibm.com>
+Date: Thu, 23 Jan 2025 15:34:11 +0530
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: dU2tYVdbizcXaaXNDtN9EHkHJTbwdJOxcZ37oTPFU3I_1737625636
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] kexec: Initialize ELF lowest address to ULONG_MAX
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+References: <20250121115442.1278458-1-sourabhjain@linux.ibm.com>
+ <20250121115442.1278458-2-sourabhjain@linux.ibm.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20250121115442.1278458-2-sourabhjain@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: iVIl_PKY5o8bpvR2QGLyZcy1lwgBkRvv
+X-Proofpoint-ORIG-GUID: iVIl_PKY5o8bpvR2QGLyZcy1lwgBkRvv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-23_04,2025-01-22_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ clxscore=1011 mlxscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501230076
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250123_014722_138534_BF8D458B 
-X-CRM114-Status: GOOD (  11.36  )
+X-CRM114-CacheID: sfid-20250123_020427_108826_4191FD73 
+X-CRM114-Status: GOOD (  20.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,36 +110,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=2340813
 
-When building makekdumpfile against gcc-15, the following error is
-shown,
 
-    erase_info.c: In function ‘process_eppic_file’:
-    erase_info.c:2226:13: error: too many arguments to function ‘eppic_init’; expected 0, have 1
-     2226 |         if (eppic_init(&eppic_cb)) {
-          |             ^~~~~~~~~~ ~~~~~~~~~
-    make: *** [Makefile:109: erase_info.o] Error 1
+On 21/01/25 5:24 pm, Sourabh Jain wrote:
+> kexec_elf_load() loads an ELF executable and sets the address of the
+> lowest PT_LOAD section to the address held by the lowest_load_addr
+> function argument.
+> 
+> To determine the lowest PT_LOAD address, a local variable lowest_addr
+> (type unsigned long) is initialized to UINT_MAX. After loading each
+> PT_LOAD, its address is compared to lowest_addr. If a loaded PT_LOAD
+> address is lower, lowest_addr is updated. However, setting lowest_addr
+> to UINT_MAX won't work when the kernel image is loaded above 4G, as the
+> returned lowest PT_LOAD address would be invalid. This is resolved by
+> initializing lowest_addr to ULONG_MAX instead.
+> 
+> This issue was discovered while implementing crashkernel high/low
+> reservation on the PowerPC architecture.
+> 
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- erase_info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
 
-diff --git a/erase_info.c b/erase_info.c
-index cbe1681..af6bfae 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -2192,7 +2192,7 @@ process_eppic_file(char *name_config)
- {
- 	void *handle;
- 	void (*eppic_load)(char *), (*eppic_unload)(char *);
--	int (*eppic_init)();
-+	int (*eppic_init)(struct call_back *);
- 
- 	/*
- 	 * Dynamically load the eppic_makedumpfile.so library.
--- 
-2.48.1
+> Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: kexec@lists.infradead.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+>   kernel/kexec_elf.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+> index d3689632e8b9..3a5c25b2adc9 100644
+> --- a/kernel/kexec_elf.c
+> +++ b/kernel/kexec_elf.c
+> @@ -390,7 +390,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+>   			 struct kexec_buf *kbuf,
+>   			 unsigned long *lowest_load_addr)
+>   {
+> -	unsigned long lowest_addr = UINT_MAX;
+> +	unsigned long lowest_addr = ULONG_MAX;
+>   	int ret;
+>   	size_t i;
+>   
 
 
