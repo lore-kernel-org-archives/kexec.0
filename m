@@ -4,89 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDCA7C02181
-	for <kexec@archiver.kernel.org>; Wed, 22 Jan 2025 13:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C64FCC02182
+	for <kexec@archiver.kernel.org>; Thu, 23 Jan 2025 06:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/nRt7/FOVju0HHPP7y/y/GmcikIqd0uun9LCjQjrq7E=; b=UeG31da9ELrFoB0PvLg5xCm/6P
-	dJQrLZXMUJLpRWBkCFnq2GL5Exk0WknuC2Jgg4wVDF6BCxhPz0/IF0R383vnn2amM4098CDaktgcS
-	Mf7TmXGnrK/LfblrMNrIkrS0DBupSa5qaySaR34GKs0Y3Tg2nOc2fjCu1u7tPQgm1DNx6Uc27A3Vw
-	HuD49HRZtVrPPEzyap9f0KeX3qxzIhRt4lpEF+B22b+X++btPzUjHI9ZZIAO5XaCSfMIIaWsL7MAo
-	Jk2lpXktHwvxvF5U1NcjhabCIW0seGxn6Hq2g6+ceA62Ym9tdaYCCLHUwDmw2hRBR813VHFvAH7UY
-	lNs/59pQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=9GWnA6cQazWu1ukn6JyrCDn9phCCCsDqKbbThQSvZEM=; b=EHOSp6Q7ujXaxq3i7MGptuE/Vo
+	bNFwB1dGfOkvHXTS4RSmYejai6Ki/Z7Jf4I71xY2EWFozhjox63egHu4bpPqgZorFZJGxb0WFm62x
+	uEOiwVkX40Lk0iPqJ6FXQmEra0vdXRqBcDzgZsGIkfV910Q7wRf+nfNxKgpaBtapL/z5drhSCwWwN
+	H0RS9AnyGWxqK0pQrCTYQos+AayJqLiBRqyq68wpOILmTcZ0mcQAHeMNNwnEmow4uC758+coVYEFz
+	WoQOLb7UE3G03uA/I/YvjewNSlzFNG++mo/pwd9NlyRMDw+jNpBRqMc5fQDTvjZkPmbLzhETbtHme
+	Q62Tk5jQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tabFP-0000000ALjy-1lvY;
-	Wed, 22 Jan 2025 13:58:23 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1taqr1-0000000BoMi-0v7e;
+	Thu, 23 Jan 2025 06:38:15 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1taa3J-0000000AAo6-3yA5;
-	Wed, 22 Jan 2025 12:41:51 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 9C751A42535;
-	Wed, 22 Jan 2025 12:40:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9005FC4CEF0;
-	Wed, 22 Jan 2025 12:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737549708;
-	bh=/nRt7/FOVju0HHPP7y/y/GmcikIqd0uun9LCjQjrq7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VoyrM/KR3y6SyzXqcrUXIeXUzSXAukF1jTugO3Tp/XeZbDQsZz0btjWFVZexImUyA
-	 GNv9Ye0JlCb6LXyPS9Jx9MVxR+Wdtkk0Ms+qZSrA1Lr8Xe+0i9vU/ISeGtF/6vb7Vs
-	 1Uj3RovlFmNzqVfmuzQ82cCacT+Fx0ki2YqsVx1IY92F3iqqKCafCCMLWLqphwdRxg
-	 srLeLPCzyALTJw1qCRW7tcb44xO01Rx4zDtdApARN9p2pthq2z1LppbizS751cMHo9
-	 cZn++ylUYdHjeWMHwboi8qRzV/CerfY2kd1XCsOqWLze560AIlYM8svAXpyzid0N54
-	 v69z43CGgr7bQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3022484d4e4so70972151fa.1;
-        Wed, 22 Jan 2025 04:41:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU12AHSYENHOBv9iyePprsHgX21JujcFIf6S6xnslX/So4jFvCmhtFbqjZHkz2ggk8yxTNlp9a9ClUza14=@lists.infradead.org, AJvYcCUl5qpudej6+aPG4PBeopzEIZnQyKyQQp71PNMZ/GEnJXL3jmSGem4gmuwn+GdCLG4LapXqutNsINLMlqU2C7kINg==@lists.infradead.org, AJvYcCWnw2gpxdPFWHcGA/WKrhZ491mmPhHHe3Qgtgz872PCG0zVL/j7w83rjgISDPN1FOBLRsTgfA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzAxlOxUw7qoG98Wl7vjres/aJWrut/b6fntwsJHhSq5vDl3o1N
-	2v6baBDof58LqiFJRrQeHWYsRdbZb9pkSJZMFAoeblF3yoWq5MnIMxxzvxgi8uHk1Xe6DRKxa35
-	4K/qqL3gCYL+6/chUctBBnq3X8hg=
-X-Google-Smtp-Source: AGHT+IFcRSReB7hah7mapcirnp1PWu31SswN3BbR4HjBYPEG79Tzl030J0TjqkE7fYQS4xaDIi2/KgOUqh2J3fswv1A=
-X-Received: by 2002:a05:651c:2228:b0:302:4130:e19c with SMTP id
- 38308e7fff4ca-3072caa15c1mr71017091fa.19.1737549706586; Wed, 22 Jan 2025
- 04:41:46 -0800 (PST)
+	id 1taqqx-0000000BoMC-1fsD
+	for kexec@lists.infradead.org;
+	Thu, 23 Jan 2025 06:38:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737614289;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=9GWnA6cQazWu1ukn6JyrCDn9phCCCsDqKbbThQSvZEM=;
+	b=ZlZIKx5O8L+LzjLvAXzwETvy+zydgDybTP5qut/ePMVc4MGCbSOdlEepTb848Q6qkzI5vS
+	PO0YwBb8Hbgzfohna9VDE2h9P3DSFvdtx5G0mHLE+T2r7bHzHhV3K2LHce72a/fhkDQM0F
+	RSYW32uEL0xHJ0cZmxOrZ+v0+6j8PWY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-577-4SHC3acIOBiWlyhUCODqXg-1; Thu,
+ 23 Jan 2025 01:36:32 -0500
+X-MC-Unique: 4SHC3acIOBiWlyhUCODqXg-1
+X-Mimecast-MFC-AGG-ID: 4SHC3acIOBiWlyhUCODqXg
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E49F195396F;
+	Thu, 23 Jan 2025 06:36:18 +0000 (UTC)
+Received: from darkstar.users.ipa.redhat.com (unknown [10.72.112.125])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2F89195608A;
+	Thu, 23 Jan 2025 06:36:13 +0000 (UTC)
+Date: Thu, 23 Jan 2025 14:36:27 +0800
+From: Dave Young <dyoung@redhat.com>
+To: Ard Biesheuvel <ardb@kernel.org>, Usama Arif <usamaarif642@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	Breno Leitao <leitao@debian.org>, kexec@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH] x86/efi: skip memattr table on kexec boot
+Message-ID: <Z5Hja30Wb94uGQ3L@darkstar.users.ipa.redhat.com>
 MIME-Version: 1.0
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
- <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com> <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
-In-Reply-To: <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 22 Jan 2025 13:41:35 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
-X-Gm-Features: AbW1kvaDj3u8bGVj1m4rnYAkpiRSTpmPAB3bThAH-GyuG2Tmgw9okzkp1e58uCc
-Message-ID: <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
-Subject: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, 
-	Song Liu <song@kernel.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Jani Nikula <jani.nikula@intel.com>, Corey Minyard <cminyard@mvista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250122_044150_109602_19C141B8 
-X-CRM114-Status: GOOD (  28.42  )
-X-Mailman-Approved-At: Wed, 22 Jan 2025 05:54:06 -0800
+X-CRM114-CacheID: sfid-20250122_223811_563109_480452A7 
+X-CRM114-Status: UNSURE (   7.54  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,59 +81,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 22 Jan 2025 at 13:25, Joel Granados <joel.granados@kernel.org> wrote:
->
-> On Tue, Jan 21, 2025 at 02:40:16PM +0100, Alexander Gordeev wrote:
-> > On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
-> >
-> > Hi Joel,
-> >
-> > > Add the const qualifier to all the ctl_tables in the tree except for
-> > > watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
-> > > loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
-> > > drivers/inifiniband dirs). These are special cases as they use a
-> > > registration function with a non-const qualified ctl_table argument or
-> > > modify the arrays before passing them on to the registration function.
-> > >
-> > > Constifying ctl_table structs will prevent the modification of
-> > > proc_handler function pointers as the arrays would reside in .rodata.
-> > > This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
-> > > constify the ctl_table argument of proc_handlers") constified all the
-> > > proc_handlers.
-> >
-> > I could identify at least these occurences in s390 code as well:
-> Hey Alexander
->
-> Thx for bringing these to my attention. I had completely missed them as
-> the spatch only deals with ctl_tables outside functions.
->
-> Short answer:
-> These should not be included in the current patch because they are a
-> different pattern from how sysctl tables are usually used. So I will not
-> include them.
->
-> With that said, I think it might be interesting to look closer at them
-> as they seem to be complicating the proc_handler (I have to look at them
-> closer).
->
-> I see that they are defining a ctl_table struct within the functions and
-> just using the data (from the incoming ctl_table) to forward things down
-> to proc_do{u,}intvec_* functions. This is very odd and I have only seen
-> it done in order to change the incoming ctl_table (which is not what is
-> being done here).
->
-> I will take a closer look after the merge window and circle back with
-> more info. Might take me a while as I'm not very familiar with s390
-> code; any additional information on why those are being used inside the
-> functions would be helpfull.
->
+efi_memattr_init() added a sanity check to avoid firmware caused corruption.
+The check is based on efi memmap entry numbers, but kexec only takes the
+runtime related memmap entries thus this caused many false warnings, see
+below thread for details:
 
-Using const data on the stack is not as useful, because the stack is
-always mapped writable.
+https://lore.kernel.org/all/20250108215957.3437660-2-usamaarif642@gmail.com/
 
-Global data structures marked 'const' will be moved into an ELF
-section that is typically mapped read-only in its entirely, and so the
-data cannot be modified by writing to it directly. No such protection
-is possible for the stack, and so the constness there is only enforced
-at compile time.
+Ard suggests to skip the efi memattr table in kexec, this makes sense because
+those memattr fixups are not critical.
+
+Reported-by: Breno Leitao <leitao@debian.org>
+Reported-and-tested-by: Usama Arif <usamaarif642@gmail.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 846bf49f2508..553f330198f2 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -561,6 +561,11 @@ int __init efi_reuse_config(u64 tables, int nr_tables)
+ 
+ 		if (!efi_guidcmp(guid, SMBIOS_TABLE_GUID))
+ 			((efi_config_table_64_t *)p)->table = data->smbios;
++
++		/* Do not bother to play with mem attr table across kexec */
++		if (!efi_guidcmp(guid, EFI_MEMORY_ATTRIBUTES_TABLE_GUID))
++			((efi_config_table_64_t *)p)->table = EFI_INVALID_TABLE_ADDR;
++
+ 		p += sz;
+ 	}
+ 	early_memunmap(tablep, nr_tables * sz);
+
 
