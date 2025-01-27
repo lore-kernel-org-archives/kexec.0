@@ -4,58 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B3F6C02181
-	for <kexec@archiver.kernel.org>; Sat, 25 Jan 2025 02:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43F18C0218D
+	for <kexec@archiver.kernel.org>; Mon, 27 Jan 2025 02:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QGutGOzJ4Co3VkfpT/t2wxb6M/f0IZF/aDABHVyFPNA=; b=s+wEoWyP9E61N+Jai+heotNYKH
-	CVGMA+Tv/oadqcAVtSQb6BVbqXzwc7SkOmLS9/A+nVIoWH59WsTSSbjuwLBE4gqv7nNnOiD9z5VX4
-	H2/XweP2GQdVX4+cm9FATryay5SHLf6DzdT9oqlugzcdfrC5SFg/62xggBYFiIIncfYP8QRrWFggl
-	Pjfxr9iUDOh2BFtASFwdNnQKQaEV7PcEICk0uPRRuLUkKfqi6EkrNGqgGBR71gZ8S+ODGz0+gwDkV
-	hOBBRUSzbTPiKEgjWW3Y4+6B14QS0uTUWRHTXAkR0Ty0yHh9FzDZO44xsEcEMjkTFQHXaFTB+pmKO
-	B+YHacKA==;
+	bh=n299+t0qqLIolcife9m6YZJG+Wr7nelCXZ3ze/Xmptw=; b=5C/PwyTIRvDcc/VQChbPihiCjO
+	+G2bScyBIuVUWYV2ZjmXB3ap+Eb4wNWrBttFnbJ6hoiei77LWCMeF8GQJAsDlF4/hq3edgnVs7Ew/
+	YzAmpGGvHiny+Ywo36UA1lIjcJbmVVQLhfdJOJ6kims2GUFJWLKThye4gMfDxjllAthbiKidWlwfJ
+	sE2ArNVy5vkhu5jqFfyL+H2cpbg015H//5Hnky1o/Smcsb9TG+NLifZu2dgpwi55jz3EOJLw4tdHn
+	HzQrYtY7wBcRsmi03rajFDZd9rJvAJu8So3DVVPmvaXJw4M1txEXAoUsCiq03xAnKu9i+JUn8BGXL
+	gZ62F5yQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tbWLp-0000000Fw8n-1tqm;
-	Sat, 25 Jan 2025 02:56:49 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tcF2d-00000001WIi-16f0;
+	Mon, 27 Jan 2025 02:39:59 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tbWLl-0000000Fw8b-079M
-	for kexec@bombadil.infradead.org;
-	Sat, 25 Jan 2025 02:56:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QGutGOzJ4Co3VkfpT/t2wxb6M/f0IZF/aDABHVyFPNA=; b=huE/Gfn894Ct4BkQDmkHb+tV+Z
-	bs25xAAOPSQSCqiUn6CoV5rMz08RmidBXnUVqU5Tg3BujGps8vah0n2PECgZwgc+aCxGBJae5bdXR
-	9BkWscuBtw8Ay70RyanNiN4KiyYhT8xueJ4h9yX6XJmLwcdcRbLeAdJ8hnyoqx+n5hIPWxZAACFb0
-	ZX7KSmoNkGk4O6ezJStOMNzfZAVWAENT80A/yvrdlLBqR/izySHvP4wxUrEsJCpuJQHw8NO4+AgoW
-	IFDcjok0iGwd2FvCFijHSAgwJNAK2WsTJG9nsbR5k24jbB4Z90zReEYkGhruHQNcTXYyvd85/qWWg
-	cLSkSeWQ==;
-Received: from [205.251.233.179] (helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tbWLi-00000002kH9-20nu;
-	Sat, 25 Jan 2025 02:56:43 +0000
-Message-ID: <2efca4b5750b46003512d33019bf2e1d3b9d067d.camel@infradead.org>
-Subject: Re: [dwmw2:kexec-debug-6 5/7] arch/x86/kernel/early_printk.c:148:3:
- error: use of undeclared identifier 'kexec_debug_8250_port'
-From: David Woodhouse <dwmw2@infradead.org>
-To: kernel test robot <lkp@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kexec
-	 <kexec@lists.infradead.org>
-Date: Fri, 24 Jan 2025 18:56:40 -0800
-In-Reply-To: <202501250944.JEBhawoz-lkp@intel.com>
-References: <202501250944.JEBhawoz-lkp@intel.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-xivremf9rYAmjVsXVgKb"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	id 1tcF2X-00000001WI8-2cDB
+	for kexec@lists.infradead.org;
+	Mon, 27 Jan 2025 02:39:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737945591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n299+t0qqLIolcife9m6YZJG+Wr7nelCXZ3ze/Xmptw=;
+	b=Stsf2+LcpRW2BzDMBA6zk6ZCnTjFfoHvHrUOAK8wId/QKgJhKEbMPfo6YpG8Pqe8WibObA
+	sHy5781pVZ1AIvzGoy1xDnuzJG7ye3ybGD/t+pb+WRdASVnbtIHOZFrsDEz1PEMsKzFDWw
+	4840rdX8N7pU8GFlbOZLS05D5tYUOZU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-160-rVJKwHnPM265pC_t51xbIw-1; Sun,
+ 26 Jan 2025 21:39:44 -0500
+X-MC-Unique: rVJKwHnPM265pC_t51xbIw-1
+X-Mimecast-MFC-AGG-ID: rVJKwHnPM265pC_t51xbIw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 100D31800378;
+	Mon, 27 Jan 2025 02:39:37 +0000 (UTC)
+Received: from darkstar.users.ipa.redhat.com (unknown [10.72.112.65])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3317819560AD;
+	Mon, 27 Jan 2025 02:39:27 +0000 (UTC)
+Date: Mon, 27 Jan 2025 10:39:41 +0800
+From: Dave Young <dyoung@redhat.com>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+	ytcoode@gmail.com, kexec@lists.infradead.org,
+	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+References: <Z4WFjBVHpndct7br@desktop0a>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4WFjBVHpndct7br@desktop0a>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250126_183953_736792_5E96362C 
+X-CRM114-Status: GOOD (  15.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,158 +87,144 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi
+On 01/13/25 at 10:28pm, Roberto Ricci wrote:
+> After rebooting the system via kexec, hibernating and rebooting the machine, this oops occurs:
+> 
+[snip]
+> 
+> I will send the kernel config and dmesg in replies to this email.
+> 
 
---=-xivremf9rYAmjVsXVgKb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I tried your config (removed some config driver related which is not useful), but it can not boot on my kvm guest.
+Firstly I saw a panic in ftrace path,  then I rebuilt the kernel without ftrace, it panicked again but in kvm related code path.
+Both are not related to kexec at all so I suspect your bug is not kexec specific.
 
-On Sat, 2025-01-25 at 09:38 +0800, kernel test robot wrote:
->=20
-> =C2=A0=C2=A0 In file included from arch/x86/kernel/early_printk.c:4:
-> =C2=A0=C2=A0 In file included from include/linux/kexec.h:18:
-> =C2=A0=C2=A0 In file included from include/linux/vmcore_info.h:6:
-> =C2=A0=C2=A0 In file included from include/linux/elfcore.h:11:
-> =C2=A0=C2=A0 In file included from include/linux/ptrace.h:10:
-> =C2=A0=C2=A0 In file included from include/linux/pid_namespace.h:7:
-> =C2=A0=C2=A0 In file included from include/linux/mm.h:2223:
-> =C2=A0=C2=A0 include/linux/vmstat.h:518:36: warning: arithmetic between d=
-ifferent enumeration types ('enum node_stat_item' and 'enum lru_list') [-We=
-num-enum-conversion]
-> =C2=A0=C2=A0=C2=A0=C2=A0 518 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 ~~~~~~~~~~~ ^ ~~~
+Ftrace panic:
+----
+    0.215515] software IO TLB: area num 4.
+[    0.298815] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+Poking KASLR using RDRAND RDTSC...
+[    0.299813] ftrace: allocating 40381 entries in 158 pages
+[    0.300603] Oops: general protection fault, probably for non-canonical address 0xdffffc0000008a30: 0000 [#1] PREEMPT SMP KASAN NOPTI
+[    0.301877] KASAN: probably user-memory-access in range [0x0000000000045180-0x0000000000045187]
+[    0.302734] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.13.0_ricci+ #913
+[    0.303401] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
+[    0.304187] RIP: 0010:__text_poke+0x370/0x840
+[    0.304591] Code: c6 48 8b 04 24 48 8d 78 08 e8 cc fb ff ff 48 c7 c0 80 51 04 00 48 8b 0d 96 32 d9 02 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 <0f> b6 04 10 84 c0 74 06 0f 8e cc 03 00 00 65 0f b6 1d aa 3c ed 6e
+[    0.306646] RSP: 0000:ffffffff94007d88 EFLAGS: 00010006
+[    0.307139] RAX: 0000000000008a30 RBX: ffffffff93f0e070 RCX: ffff8881000744c0
+[    0.307839] RDX: dffffc0000000000 RSI: 8000000072001063 RDI: ffff88810006d0d8
+[    0.308634] RBP: ffffffff91001b24 R08: 0000000000000001 R09: fffffbfff2800f91
+[    0.309359] R10: 0000000000000003 R11: 0000000000000100 R12: 0000000000000005
+[    0.309994] R13: 0000000000000b24 R14: 0000000000000b29 R15: 8000000000000063
+[    0.310631] FS:  0000000000000000(0000) GS:ffff88815b400000(0000) knlGS:0000000000000000
+[    0.311351] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.311867] CR2: ffff88817ffff000 CR3: 0000000075070001 CR4: 00000000000200b0
+[    0.312510] Call Trace:
+[    0.312731]  <TASK>
+[    0.312922]  ? __die_body.cold+0x19/0x2b
+[    0.313280]  ? die_addr+0x46/0x70
+[    0.313582]  ? exc_general_protection+0x150/0x240
+[    0.314010]  ? asm_exc_general_protection+0x26/0x30
+[    0.314454]  ? trace_initcall_start_cb+0x4/0x90
+[    0.314868]  ? __text_poke+0x370/0x840
+[    0.315211]  ? __text_poke+0x2ab/0x840
+[    0.315552]  ? __pfx_text_poke_memcpy+0x10/0x10
+[    0.315965]  ? __pfx___text_poke+0x10/0x10
+[    0.316345]  ? mutex_lock+0x87/0xe0
+[    0.316662]  ? __pfx_mutex_lock+0x10/0x10
+[    0.317096]  ? ftrace_now+0xc0/0xd0
+[    0.317431]  ? __pfx_ftrace_now+0x10/0x10
+[    0.317813]  ? trace_initcall_start_cb+0x4/0x90
+[    0.318245]  ftrace_modify_code_direct+0x58/0x70
+[    0.318696]  ftrace_process_locs+0x514/0xb70
+[    0.319105]  ftrace_init+0x80/0x150
+[    0.319458]  start_kernel+0x181/0x3c0
+[    0.319802]  x86_64_start_reservations+0x24/0x30
+[    0.320219]  x86_64_start_kernel+0x84/0x90
+[    0.320584]  common_startup_64+0x13e/0x141
+[    0.320952]  </TASK>
+[    0.321149] Modules linked in:
+[    0.321423] ---[ end trace 0000000000000000 ]---
+[    0.321832] RIP: 0010:__text_poke+0x370/0x840
+[    0.322227] Code: c6 48 8b 04 24 48 8d 78 08 e8 cc fb ff ff 48 c7 c0 80 51 04 00 48 8b 0d 96 32 d9 02 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 <0f> b6 04 10 84 c0 74 06 0f 8e cc 03 00 00 65 0f b6 1d aa 3c ed 6e
+[    0.323906] RSP: 0000:ffffffff94007d88 EFLAGS: 00010006
+[    0.324383] RAX: 0000000000008a30 RBX: ffffffff93f0e070 RCX: ffff8881000744c0
+[    0.325025] RDX: dffffc0000000000 RSI: 8000000072001063 RDI: ffff88810006d0d8
+[    0.325681] RBP: ffffffff91001b24 R08: 0000000000000001 R09: fffffbfff2800f91
+[    0.326332] R10: 0000000000000003 R11: 0000000000000100 R12: 0000000000000005
+[    0.326986] R13: 0000000000000b24 R14: 0000000000000b29 R15: 8000000000000063
+[    0.327658] FS:  0000000000000000(0000) GS:ffff88815b400000(0000) knlGS:0000000000000000
+[    0.328411] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.328931] CR2: ffff88817ffff000 CR3: 0000000075070001 CR4: 00000000000200b0
+[    0.329595] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.330278] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
 
-I don't believe that one's mine.
-
-> > > arch/x86/kernel/early_printk.c:148:3: error: use of undeclared identi=
-fier 'kexec_debug_8250_port'
-> =C2=A0=C2=A0=C2=A0=C2=A0 148 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kexec_debug_8250_por=
-t =3D early_serial_base;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ^
-> =C2=A0=C2=A0 1 warning and 1 error generated.
-
-That one is though; turns out I was allowing CONFIG_KEXEC_DEBUG to be
-set without KEXEC_CORE.
-
-Rolling this into the next revision:
-
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -100,7 +100,7 @@ config KEXEC_JUMP
-=20
- config KEXEC_DEBUG
-        bool "Debug kexec transition"
--       depends on HAVE_KEXEC_DEBUG
-+       depends on HAVE_KEXEC_DEBUG && KEXEC_CORE
-        help
-          Faults during kexec can be difficult to debug. This installs exce=
-ption
-          handlers and attempts to report faults. On x86_64 this would use =
-the
-
-
-
---=-xivremf9rYAmjVsXVgKb
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDEyNTAyNTY0
-MFowLwYJKoZIhvcNAQkEMSIEIMRdjD7B88V+1Bcl+vcsw7yG3Dzkfoa6o0ISLAZkG4HlMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAsd9NTNO1iraW
-AyOz6Ov0KoGxDhkm4js5CB9un9bsjdSBkLfUKDc5hcSO/WMxANQlKJnqx53zzciURLEg3XcjzwUP
-ENz9EWRrHI6PNiBIsYXAiGI3mfjM/dIaJ8Lrk9IqDRKU4gh+ieiBLGQIf8nQ3ZF5XHo0CCvR+g0v
-Rk2oDn8u5gDVdCvLYgjhEwOSeXzPxMLN7GozMl8jKjYzZal4BYMyjENSLuspbvhR/JkqlhGkXg17
-++n+O226z9BmwDqz4tfhoNpRFf31qtNjXPueYtQnzzvZxaOX8qUeL4B8oSbJN3cSknM0DOS3zo3b
-nOlqKIMdGsiLg46mbUDwq4Fq8/jKud5S6DO6MFM4Ns/uWnyWPHnMXltT4FIwkZJoWdY6ASqYwCH4
-ftXy4n6gBbNvyqWyMPORIfrQEkVxHBq5/gLAebRrqd62EJ+nzDjISSKAqwB/NfL9yx9bYWQKIZp1
-eJJ51GVPMKLCAQmin2GdTX0bX2DowLHCnciZ+VMZU7ako6vKlJsjGf5dOBZX98jfGQ8XI8uAXBhc
-earg315uOGmfuCy9PZqi28RzH38doTJU/12HI1AMlaKE2sTcQ/WcwCKnaa5uf/7B7wt9sDsGtgZj
-jRHaARLX2JSfeiJS6lOnx4ZP3EV0hg9PCoDjhDLOHBTCYGwG1y5Lcc6yeHFvu0wAAAAAAAA=
+kvm panic:
+-------
+[    0.222231] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.222824] kfence: initialized - using 2097152 bytes for 255 objects at 0x(____ptrval____)-0x(____ptrval____)
+[    0.223470] Oops: general protection fault, probably for non-canonical address 0xdffffc0000005356: 0000 [#1] PREEMPT SMP KASAN NOPTI
+[    0.224200] KASAN: probably user-memory-access in range [0x0000000000029ab0-0x0000000000029ab7]
+[    0.224747] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.13.0_ricci+ #917
+[    0.225223] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
+[    0.225779] RIP: 0010:__sysvec_kvm_asyncpf_interrupt+0x64/0x110
+[    0.226169] Code: 7c e4 4a 48 c7 c7 40 35 27 b7 e8 67 c2 cd 01 48 c7 c0 b0 9a 02 00 48 ba 00 00 00 00 00 fc ff df 48 89 c1 83 e0 07 48 c1 e9 03 <0f> b6 14 11 38 c2 7f 08 84 d2 0f 85 80 00 00 00 65 0f b6 1d 54 61
+[    0.227327] RSP: 0000:ffff888157009fe0 EFLAGS: 00010006
+[    0.227657] RAX: 0000000000000000 RBX: ffffffffb7a07e68 RCX: 0000000000005356
+[    0.228088] RDX: dffffc0000000000 RSI: ffffffffb7273540 RDI: ffffffffb740be40
+[    0.228523] RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102ae07c08
+[    0.228960] R10: ffff88815703e047 R11: ffff888157009ff8 R12: 0000000000000000
+[    0.229390] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    0.229848] FS:  0000000000000000(0000) GS:ffff888157000000(0000) knlGS:0000000000000000
+[    0.230375] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.231089] CR2: ffff88815d201000 CR3: 000000015ba66001 CR4: 00000000000200b0
+[    0.231567] Call Trace:
+[    0.231727]  <IRQ>
+[    0.231859]  ? __die_body.cold+0x19/0x26
+[    0.232125]  ? die_addr+0x41/0x70
+[    0.232354]  ? exc_general_protection+0x150/0x240
+[    0.232663]  ? asm_exc_general_protection+0x26/0x30
+[    0.232988]  ? __sysvec_kvm_asyncpf_interrupt+0x64/0x110
+[    0.233341]  sysvec_kvm_asyncpf_interrupt+0x9b/0xe0
+[    0.233668]  </IRQ>
+[    0.233805]  <TASK>
+[    0.233942]  asm_sysvec_kvm_asyncpf_interrupt+0x1a/0x20
+[    0.234295] RIP: 0010:__x86_return_thunk+0x0/0x10
+[    0.234606] Code: 01 00 00 00 cc e8 01 00 00 00 cc 48 81 c4 80 00 00 00 65 48 c7 05 3c 54 14 49 ff ff ff ff c3 cc 66 2e 0f 1f 84 00 00 00 00 00 <c3> 90 90 90 90 cc cc cc cc cc cc cc cc cc cc cc e9 eb ff ff ff 0f
+[    0.235828] RSP: 0000:ffffffffb7a07f18 EFLAGS: 00000296
+[    0.236168] RAX: 0000000000000096 RBX: 0000000000000000 RCX: 1ffff1102ae07af0
+[    0.236677] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 000000000000000f
+[    0.237148] RBP: 00000000000000b0 R08: 0000000000000001 R09: 0000000000000000
+[    0.237610] R10: ffff8881571c1e40 R11: 0000000000000007 R12: 0000000000000000
+[    0.238071] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000094770
+[    0.238547]  start_kernel+0x263/0x3a0
+[    0.238787]  x86_64_start_reservations+0x24/0x30
+[    0.239088]  x86_64_start_kernel+0x84/0x90
+[    0.239355]  common_startup_64+0x13e/0x141
+[    0.239637]  </TASK>
+[    0.239786] Modules linked in:
+[    0.239987] ---[ end trace 0000000000000000 ]---
+[    0.240287] RIP: 0010:__sysvec_kvm_asyncpf_interrupt+0x64/0x110
+[    0.240676] Code: 7c e4 4a 48 c7 c7 40 35 27 b7 e8 67 c2 cd 01 48 c7 c0 b0 9a 02 00 48 ba 00 00 00 00 00 fc ff df 48 89 c1 83 e0 07 48 c1 e9 03 <0f> b6 14 11 38 c2 7f 08 84 d2 0f 85 80 00 00 00 65 0f b6 1d 54 61
+[    0.241896] RSP: 0000:ffff888157009fe0 EFLAGS: 00010006
+[    0.242242] RAX: 0000000000000000 RBX: ffffffffb7a07e68 RCX: 0000000000005356
+[    0.242708] RDX: dffffc0000000000 RSI: ffffffffb7273540 RDI: ffffffffb740be40
+[    0.243194] RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102ae07c08
+[    0.243659] R10: ffff88815703e047 R11: ffff888157009ff8 R12: 0000000000000000
+[    0.244122] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    0.244595] FS:  0000000000000000(0000) GS:ffff888157000000(0000) knlGS:0000000000000000
+[    0.245121] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.245502] CR2: ffff88815d201000 CR3: 000000015ba66001 CR4: 00000000000200b0
+[    0.245968] Kernel panic - not syncing: Fatal exception in interrupt
+[    0.246411] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
 
---=-xivremf9rYAmjVsXVgKb--
+You can find the kernel config here (with the ftrace enabled):
+https://people.redhat.com/~ruyang/snakeyear/panic-ftrace.config
+
+Thanks
+Dave
+
 
