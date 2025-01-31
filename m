@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7EA5C3DA4A
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF1AEC02195
 	for <kexec@archiver.kernel.org>; Fri, 31 Jan 2025 11:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,88 +12,88 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sRPw8EikbB6hNm82Kwvptzvv0MyQS1J/WqpM4E2FbYQ=; b=dVJaL42J3l6Q3+3ujFGSix9hiV
-	LxlZZnMt3DDTqsT8WaHCHM20GFouOz0K+uJmaNcJ8c4vAeNIP4dOYkP2JkDFawVF1PM2Ar9okgzx+
-	3scU9dqD+2FI1niWmZyZKYHMk8jg7hs6UbLeENh1hEFn4uq1hG5I/T2ADR7CfbWk/vu/Eto7r3FER
-	eT8soTCtTbhpA4QTuCnCWGftrZ7dgK9uoy3pk7fph8e3eeYeoFGsummavjOzsnOP68ExnjRRBJB4g
-	f4186ZZWSSKA7u/ovUYi3ndPsVgbscxSL8hR9XZb0uEM1JQdXEUP+8ZqpFSbbGQwmfK5J1IgaaMcH
-	+ndf1U1A==;
+	bh=clpl7xQ0yaQp9TfGzpaWmiLCwaf5fcSluD2eOBnQoEE=; b=vX1WIJllngWLfEfA+XErPXxjCJ
+	dSEuupcNng/VoF4yXZe6Wvi2sab23d/lK3Aixwaciku0/HgqmFHJ0RL6AwFoyCCMOyltcQr+LRxfI
+	67y+oGNnpGgYYBQqNHcIfIlNghhPpLqlRrKtNkGcOmkdje4Tfj9otnDapaRUBWQNjd4gGtWRGMajn
+	HTNt34EqzUHlSXY+98TLCYVTup17Tye4k51ARMk1U9XH9czm/dwZmiLV3ZmEHpliBz5w3Tovj2lLF
+	ydSLtPA2ZC6GsBBuzgSvDvxThlVsxiqsQhft0oZRvJy/Ujr7Q68N8+TaVGxoVzuRg08VUrqmP/Ksz
+	DiLBsslw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdpXO-0000000AY7i-1ydN;
-	Fri, 31 Jan 2025 11:50:18 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1tdpXP-0000000AY7x-18c1;
+	Fri, 31 Jan 2025 11:50:19 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tdpMS-0000000AWWW-0grY
+	id 1tdpMZ-0000000AWYC-1nD7
 	for kexec@lists.infradead.org;
-	Fri, 31 Jan 2025 11:39:01 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OZ3j030769;
-	Fri, 31 Jan 2025 11:38:51 GMT
+	Fri, 31 Jan 2025 11:39:08 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OJgT016476;
+	Fri, 31 Jan 2025 11:39:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=sRPw8EikbB6hNm82K
-	wvptzvv0MyQS1J/WqpM4E2FbYQ=; b=SF2XRTvBQrACH84/+sKr9pjKsxR4gWyeW
-	JRavQ1iLeDVaFSIEgerJpVToqSfyiirlJqw+3f0Xj6iSR2NbLPcaWA6dH5nYdwvF
-	xReUPV6iO8sKwpIL6nzvCRxWdp9jhjYarKJV4IYR+mIYInBoMeFz1xnqoXFgxNEQ
-	kX8UGKmY/5O/+pTeHYKewdMAymAFTp5n1dr2Z5SvaywnZ+U5E+CvlKQz5nnlDCB7
-	Z4tEvAs9QM+gcjyq96xGm7WeizBolrWl9eky6zvQbnzwTLe820U0oLzPahTMItO2
-	4Peo3nWgOpr8MgTsSkXzDPufGqXSZvPjsmnI3fio13sm+kX/7MFaQ==
+	:mime-version:references:subject:to; s=pp1; bh=clpl7xQ0yaQp9TfGz
+	paWmiLCwaf5fcSluD2eOBnQoEE=; b=hDgdvC4ptpcATZHhqEiH1t2MFv5AD+wVC
+	awMl6mS4Ji3t1YvczK4G9j+VbGUzrQOQpjXETZDRgz12LRiaCfhbbl7uXDeaOues
+	osCrhHZusorCEqZtL4KmdVmTrns+FQ+keq/lSYwO8nvNTUCkU/5VTk1FcfSspM13
+	t66SMVrNP124dvyTR5cPcXbou7QXL14FiFDnA6T/QRMIekR0WdP8Y/QqRwIx8Sw3
+	0FmzozmLkfDK09yeLJeiE2TfO/FYxVZWv1Xa+/MqoFGqAC3M6lrh451Q7O8d1POk
+	uIRpmeTJ183fON33oCjMvcpyc8BY4BYm4QLiMre8guJIBwqFzAe6A==
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gfn5ba8v-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gmk925r7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:38:51 +0000 (GMT)
+	Fri, 31 Jan 2025 11:39:00 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8Ejtn013896;
-	Fri, 31 Jan 2025 11:38:50 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93bb2v-1
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V88j0p013883;
+	Fri, 31 Jan 2025 11:38:59 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93bb39-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:38:50 +0000
+	Fri, 31 Jan 2025 11:38:59 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBckI960424624
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBctvr10551742
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 11:38:47 GMT
+	Fri, 31 Jan 2025 11:38:55 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D4B80200FD;
-	Fri, 31 Jan 2025 11:38:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8C81720101;
+	Fri, 31 Jan 2025 11:38:55 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 38C50200F9;
-	Fri, 31 Jan 2025 11:38:43 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 6BD22200FD;
+	Fri, 31 Jan 2025 11:38:52 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.16.21])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 11:38:42 +0000 (GMT)
+	Fri, 31 Jan 2025 11:38:52 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
         Mahesh Salgaonkar <mahesh@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Hari Bathini <hbathini@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 1/7] kexec: Initialize ELF lowest address to ULONG_MAX
-Date: Fri, 31 Jan 2025 17:08:24 +0530
-Message-ID: <20250131113830.925179-2-sourabhjain@linux.ibm.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/7] crash: Let arch decide usable memory range in reserved area
+Date: Fri, 31 Jan 2025 17:08:26 +0530
+Message-ID: <20250131113830.925179-4-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
 References: <20250131113830.925179-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ieB63_zMsBoY1bOPmlpBdsX9Y-n-S2AS
-X-Proofpoint-GUID: ieB63_zMsBoY1bOPmlpBdsX9Y-n-S2AS
+X-Proofpoint-GUID: 4ZqbfbbS3Q6GLbeMVSSS6aul_oN0FR2N
+X-Proofpoint-ORIG-GUID: 4ZqbfbbS3Q6GLbeMVSSS6aul_oN0FR2N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-31_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- adultscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2501310087
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 spamscore=0 phishscore=0 priorityscore=1501 mlxlogscore=912
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2501310087
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250131_033900_321431_3FA7E6E3 
-X-CRM114-Status: GOOD (  16.86  )
+X-CRM114-CacheID: sfid-20250131_033907_468533_6DD3C3BD 
+X-CRM114-Status: GOOD (  16.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,49 +108,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kexec_elf_load() loads an ELF executable and sets the address of the
-lowest PT_LOAD section to the address held by the lowest_load_addr
-function argument.
+Although the crashkernel area is reserved, on architectures like
+PowerPC, it is possible for the crashkernel reserved area to contain
+components like RTAS, TCE, OPAL, etc. To avoid placing kexec segments
+over these components, PowerPC has its own set of APIs to locate holes
+in the crashkernel reserved area.
 
-To determine the lowest PT_LOAD address, a local variable lowest_addr
-(type unsigned long) is initialized to UINT_MAX. After loading each
-PT_LOAD, its address is compared to lowest_addr. If a loaded PT_LOAD
-address is lower, lowest_addr is updated. However, setting lowest_addr
-to UINT_MAX won't work when the kernel image is loaded above 4G, as the
-returned lowest PT_LOAD address would be invalid. This is resolved by
-initializing lowest_addr to ULONG_MAX instead.
+Add an arch hook in the generic locate mem hole APIs so that
+architectures can handle such special regions in the crashkernel area
+while locating memory holes for kexec segments using generic APIs.
+With this, a lot of redundant arch-specific code can be removed, as it
+performs the exact same job as the generic APIs.
 
-This issue was discovered while implementing crashkernel high/low
-reservation on the PowerPC architecture.
+To keep the generic and arch-specific changes separate, the changes
+related to moving PowerPC to use the generic APIs and the removal of
+PowerPC-specific APIs for memory hole allocation are done in a
+subsequent patch titled "powerpc/crash: Use generic APIs to locate
+memory hole for kdump.
 
-Fixes: a0458284f062 ("powerpc: Add support code for kexec_file_load()")
 Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
 Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: kexec@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- kernel/kexec_elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kexec.h |  9 +++++++++
+ kernel/kexec_file.c   | 12 ++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index d3689632e8b9..3a5c25b2adc9 100644
---- a/kernel/kexec_elf.c
-+++ b/kernel/kexec_elf.c
-@@ -390,7 +390,7 @@ int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
- 			 struct kexec_buf *kbuf,
- 			 unsigned long *lowest_load_addr)
- {
--	unsigned long lowest_addr = UINT_MAX;
-+	unsigned long lowest_addr = ULONG_MAX;
- 	int ret;
- 	size_t i;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..407f8b0346aa 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -205,6 +205,15 @@ static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ #endif
  
++#ifndef arch_check_excluded_range
++static inline int arch_check_excluded_range(struct kimage *image,
++					    unsigned long start,
++					    unsigned long end)
++{
++	return 0;
++}
++#endif
++
+ #ifdef CONFIG_KEXEC_SIG
+ #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..fba686487e3b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -464,6 +464,12 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+ 			continue;
+ 		}
+ 
++		/* Make sure this does not conflict with exclude range */
++		if (arch_check_excluded_range(image, temp_start, temp_end)) {
++			temp_start = temp_start - PAGE_SIZE;
++			continue;
++		}
++
+ 		/* We found a suitable memory range */
+ 		break;
+ 	} while (1);
+@@ -498,6 +504,12 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+ 			continue;
+ 		}
+ 
++		/* Make sure this does not conflict with exclude range */
++		if (arch_check_excluded_range(image, temp_start, temp_end)) {
++			temp_start = temp_start + PAGE_SIZE;
++			continue;
++		}
++
+ 		/* We found a suitable memory range */
+ 		break;
+ 	} while (1);
 -- 
 2.48.1
 
