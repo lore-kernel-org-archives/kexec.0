@@ -4,98 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B0BEC0218F
-	for <kexec@archiver.kernel.org>; Sun,  2 Feb 2025 14:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04F3CC02192
+	for <kexec@archiver.kernel.org>; Mon,  3 Feb 2025 19:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZOGOWUhNvwsL+/Ptr5bDnaYoGT37Wj3VkceFTYs845A=; b=Qq8yxOG82oXkAq3bMbKQBvSzuk
-	nXKj/DEEXzMdkidEf44i36tmfu5BS76tUvgh/MT+jcXmNDJRm8C5UiC1l2zaNbdxU5Vd+4yCsjLYB
-	94zZFBGMTOHtPRIU60rQN2zo5L9xN+/8fBePpSOe/tmwe/6UU6mTRlgIMHMGE4XdLHLK00sLwYqjx
-	/UkKTzot+B0Loyr4Oau5Gvu4hghlpoydzoR7TK8HLRb7h3pByY/dMeCz3+PQgS4CJ20sggY882gj1
-	ztm9GUC0IFs1UmSe9De3vSQE8ubbR2vyS4y/QE72s6eqhudqdVIrJ6ZaB5FHCcHRkvpVJ0falRf6W
-	dOqeQe8A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=l74eF+4+r695BFOwyov/kRxEW4Z5jvFKpT/pUDEgh3Q=; b=VkzPFdTudYZUh4w9y4ieFnqzDk
+	ORnTXuK9NnNTc+WpsECUcJh+JDyZG1qdDhbj8Sb/O4n1ZudATpABFO/OwHoNXEv76Nr5Z4IVDGx9e
+	Sq9ta9WSBslL+P/yYRxZ9+vDndfTTr0qHG+5zRbbZVzCGhJA9Pvoir+Nv254+UjSfeDRVOteeiDRE
+	PpKB/cR5A6W1j8o3T8vPShwBjHhecvmTz1HmMd4p4etTHSFgN/GnvPXw4qIrMMuPz+UiBOkJxE5BP
+	HnicKKPiFRC6Eu8zw59ZZJqLCa3G9jtzaqp3JehOlpmX9pvKiYwzRtX46vVBoYRN21Sy1KMTLAqrB
+	+GQlDgYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1teatF-0000000DrUg-2k4w;
-	Sun, 02 Feb 2025 14:24:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1teat9-0000000DrUE-2Zyv
+	id 1tf1g7-0000000GMWS-344u;
+	Mon, 03 Feb 2025 19:00:15 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tf1PV-0000000GInb-2QpN
 	for kexec@lists.infradead.org;
-	Sun, 02 Feb 2025 14:23:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738506232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZOGOWUhNvwsL+/Ptr5bDnaYoGT37Wj3VkceFTYs845A=;
-	b=OfXvHJONIOw2y16oPTBFf/YgyHFsVEKQU3wFdPdXMqDFv9y2zuYXmUS14TJirxlfQWfxi5
-	9GcJvIqPqQGEQAdWvV7iIgO9Aa/6mH8RF1vM7l1RFRilmHi1AaqTqnHycsFx2xbACxJikB
-	qWrlyAel1F7vo8jKc8UQvXduHbWCP/U=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-581-ZNBabcWKNBKGtRjoQxmBAg-1; Sun, 02 Feb 2025 09:23:51 -0500
-X-MC-Unique: ZNBabcWKNBKGtRjoQxmBAg-1
-X-Mimecast-MFC-AGG-ID: ZNBabcWKNBKGtRjoQxmBAg
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ab69e4c2563so379556866b.1
-        for <kexec@lists.infradead.org>; Sun, 02 Feb 2025 06:23:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738506230; x=1739111030;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZOGOWUhNvwsL+/Ptr5bDnaYoGT37Wj3VkceFTYs845A=;
-        b=k/2i5CmiZZmq4W7kbHodRTV+3bQWeb91+L5HRhVcTrDdfKHMLD0jx6pgtl0onpQnVw
-         Fd9R9pqBAQdx8ZZNjZNffXWaqMYM4TjOFdaNhZ5dVVKgqvoTw6Q6/ytLq9Z/SzE2GUOE
-         olfTPanyEQABD5vgUuwjow/O7rMB8pDaeFvUE7gPCKXDldtfrYw2mU3t3mXM+hSj6dH1
-         RqpGedM6l7pSbQ5BICpdaE3/QdjnCmDEfN+f7jlMqKuiwwA1p+qRuOkwKdSiACx7jwDi
-         rdMExJg1qnPQvegPlpdM96rJnc38Q0HTFbpz/SRcN3JWypd9/Oi1ohYyX7Vva2wBz9b9
-         xsyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf5GWMJeWyBRNHDxKtkAnxPawlpy9wCVoVNwg/n46av/P5c6rtM8GoFYsK21AbzGHEtOjCtQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxnIM4W2IyJPbhsjB8/zE0vAq5OOYEWddwNf8+xnh7mhItDKaLE
-	Ca5J2w7DlKWlyq8I6kbWbhLausb34Kp4vdUoz6p76ytVks4qlzBbjAU/A8cM2y1p/6W7Pe3AhhP
-	ZbblCl6sSu+jfV1qvBcDc8zXHDe05wzxF2jxHSMjJi2JFdblIG0ljx8XOlA==
-X-Gm-Gg: ASbGncuTQD4VRIW6C6O1gTTGITiTsyfW/5J1VhYUVIondy9nrXDPmfHj4AW3X4iVBbN
-	AwIJ44aeldGgldJCDTGTxkRlb9P0fQ1iFfJiPtyKujElciQnARnFawhCkd4eGCGNLiHm9Xt3QYy
-	82L00DDxdO2QNwL0LMXclTsAmifgmdYHc0Ko8SNxSu08flyTRRLBo3HxZDELWihEGXk7aR+C4oR
-	XtW+Ywf6L6IlkIeDRrwYvRSYLQqTkni1IIEcZG61fobWRUbgdd+ndcdhv0fQQaBj4w=
-X-Received: by 2002:a17:907:968e:b0:ab6:f998:794 with SMTP id a640c23a62f3a-ab6f998082dmr1141288866b.45.1738506229947;
-        Sun, 02 Feb 2025 06:23:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHsgHqcbZYXqRwH4/X7TogMqo4Q775tDp3ZqS7HD4WcJ6uncT9knWgSnfJY1093rpp0kepfAw==
-X-Received: by 2002:a17:907:968e:b0:ab6:f998:794 with SMTP id a640c23a62f3a-ab6f998082dmr1141287166b.45.1738506229574;
-        Sun, 02 Feb 2025 06:23:49 -0800 (PST)
-Received: from redhat.com ([2.52.7.142])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc72404887sm6057950a12.38.2025.02.02.06.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 06:23:48 -0800 (PST)
-Date: Sun, 2 Feb 2025 09:23:28 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bart Van Assche <bvanassche@acm.org>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH] procfs: Fix a locking bug in a vmcore_add_device_dump()
- error path
-Message-ID: <20250202092300-mutt-send-email-mst@kernel.org>
-References: <20250129222003.1495713-1-bvanassche@acm.org>
- <20250130020209-mutt-send-email-mst@kernel.org>
- <20250130155843.05418f6dacfc094c7cc587fb@linux-foundation.org>
- <9f3dac06-1329-43d0-89c7-6888d2c96bd2@acm.org>
- <20250130172053.74f94d9c5eb9291b64ab586f@linux-foundation.org>
+	Mon, 03 Feb 2025 18:43:07 +0000
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 346972054938;
+	Mon,  3 Feb 2025 10:43:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 346972054938
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738608184;
+	bh=l74eF+4+r695BFOwyov/kRxEW4Z5jvFKpT/pUDEgh3Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nXqgAAht6jT01pU7JPYfhksyK7TVNJFMaqlOrI/jiibAqJH5enZoJpMdov4u/s9Z/
+	 AhmtKylAk2jLZLjSBLz/m9cdR+n0tZqJ2ZQRfAjOJVOst3K2Cq220hNXTfQOPUW4Tv
+	 vD+XmLH4sB+oTGkUXfU04ucBTkE8QnItoeIHYPh8=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	inux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenste@linux.microsoft.com
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com
+Subject: [PATCH v7 2/7] kexec: define functions to map and unmap segments
+Date: Mon,  3 Feb 2025 10:42:51 -0800
+Message-Id: <20250203184256.61285-3-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250203184256.61285-1-chenste@linux.microsoft.com>
+References: <20250203184256.61285-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20250130172053.74f94d9c5eb9291b64ab586f@linux-foundation.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Dn_fStyevZFGTKH2lBITqzxALw_n0Im63QHw_a45mgY_1738506230
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250202_062355_734010_9D317577 
-X-CRM114-Status: GOOD (  16.99  )
+X-CRM114-CacheID: sfid-20250203_104305_678836_F7D10872 
+X-CRM114-Status: GOOD (  16.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,35 +81,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 30, 2025 at 05:20:53PM -0800, Andrew Morton wrote:
-> On Thu, 30 Jan 2025 17:02:08 -0800 Bart Van Assche <bvanassche@acm.org> wrote:
-> 
-> > On 1/30/25 3:58 PM, Andrew Morton wrote:
-> > > On Thu, 30 Jan 2025 02:02:38 -0500 "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > 
-> > >> On Wed, Jan 29, 2025 at 02:20:03PM -0800, Bart Van Assche wrote:
-> > >>> Unlock vmcore_mutex when returning -EBUSY.
-> > >>>
-> > >>> Cc: David Hildenbrand <david@redhat.com>
-> > >>> Cc: Andrew Morton <akpm@linux-foundation.org>
-> > >>> Cc: Michael S. Tsirkin <mst@redhat.com>
-> > >>> Fixes: 0f3b1c40c652 ("fs/proc/vmcore: disallow vmcore modifications while the vmcore is open")
-> > >>> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> > >>
-> > >> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> > > 
-> > > This applies to patches which are in linux-next via your tree (I
-> > > think), so I'll take the above to mean "thanks, applied" ;)
-> > 
-> > Is my understanding correct that the commit fixed by this patch made it
-> > into Linus' tree a few days ago?
-> > 
-> 
-> Ah, OK, thanks, grabbed.
-> 
-> (So that's what "git pull" does.  I'll have to write that down.)
+Currently, the mechanism to map and unmap segments to the kimage
+structure is not available to the subsystems outside of kexec.  This
+functionality is needed when IMA is allocating the memory segments
+during kexec 'load' operation.  Implement functions to map and unmap
+segments to kimage.
 
-:)
-Thanks.
+Implement kimage_map_segment() to enable mapping of IMA buffer source
+pages to the kimage structure post kexec 'load'.  This function,
+accepting a kimage pointer, an address, and a size, will gather the
+source pages within the specified address range, create an array of page
+pointers, and map these to a contiguous virtual address range.  The
+function returns the start of this range if successful, or NULL if
+unsuccessful.
+
+Implement kimage_unmap_segment() for unmapping segments
+using vunmap().
+
+From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+---
+ include/linux/kexec.h |  7 ++++++
+ kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..f8413ea5c8c8 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -467,6 +467,9 @@ extern bool kexec_file_dbg_print;
+ #define kexec_dprintk(fmt, arg...) \
+         do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+ 
++extern void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size);
++extern void kimage_unmap_segment(void *buffer);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+@@ -474,6 +477,10 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
++static inline void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size)
++{ return NULL; }
++static inline void kimage_unmap_segment(void *buffer) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3..4029df8f6860 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+ 	return result;
+ }
+ 
++void *kimage_map_segment(struct kimage *image,
++			 unsigned long addr, unsigned long size)
++{
++	unsigned long eaddr = addr + size;
++	unsigned long src_page_addr, dest_page_addr;
++	unsigned int npages;
++	struct page **src_pages;
++	int i;
++	kimage_entry_t *ptr, entry;
++	void *vaddr = NULL;
++
++	/*
++	 * Collect the source pages and map them in a contiguous VA range.
++	 */
++	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
++	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
++	if (!src_pages) {
++		pr_err("Could not allocate ima pages array.\n");
++		return NULL;
++	}
++
++	i = 0;
++	for_each_kimage_entry(image, ptr, entry) {
++		if (entry & IND_DESTINATION)
++			dest_page_addr = entry & PAGE_MASK;
++		else if (entry & IND_SOURCE) {
++			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
++				src_page_addr = entry & PAGE_MASK;
++				src_pages[i++] =
++					virt_to_page(__va(src_page_addr));
++				if (i == npages)
++					break;
++				dest_page_addr += PAGE_SIZE;
++			}
++		}
++	}
++
++	/* Sanity check. */
++	WARN_ON(i < npages);
++
++	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
++	kfree(src_pages);
++
++	if (!vaddr)
++		pr_err("Could not map ima buffer.\n");
++
++	return vaddr;
++}
++
++void kimage_unmap_segment(void *segment_buffer)
++{
++	vunmap(segment_buffer);
++}
++
+ struct kexec_load_limit {
+ 	/* Mutex protects the limit count. */
+ 	struct mutex mutex;
+-- 
+2.25.1
 
 
