@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CFF92C02192
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E46EDC02194
 	for <kexec@archiver.kernel.org>; Mon,  3 Feb 2025 23:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,32 +12,32 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0pLOnkZ3BBhZrWSrqRS0hKDrePzR0/4CteyR8x89gQk=; b=qfUuTA7ZQa5XlSf+f2YpBZK++E
-	MyQXCfppDUm+HMCheXLdllOSQIkwI3PZ6UtYF1IdnFhie5Hs1rSS/TsvlLRDsVfttXb7MceNAhGGS
-	oKAQMnyfTOe9QvGgrsUqVI90Qk+cL2g3st+AsI3LZUg7J3AhrfzB4vdjAZ8p7+ozNpJwVlyPOehN+
-	36i0otVQ8Yj5FS5YbkBhwjjQtbGo6+LXpGHlGVuZCyXAt15TGpnvBwVPbHXkPJLexpnlx8v3KxyV3
-	m+zZBv4WTKhDzb9Mq6QoDVBAeLykwkbyFbq9aeUaPuPgfLH27mm24FAuDt05wz+W4jQGQ8wrbcPT0
-	lXoi6usA==;
+	bh=DwTIiVhUQSRukvrNOWSPzDC+an9T5YM/JpQkQduIjo4=; b=r71/qLqxlKQawnFeh4jK5NePa6
+	24es6X+RaQohVDSrjoOCsiWniPi0cYwCZhlsrQ26wDxuIkcKcH8g9NvprevlJDvHTXUC65SVTuAoA
+	0mHVtcUibz20FbcOdeVstM/MwVplh89zvT2QRBIGyhUK4wWvcEODH7hr/CVlrGSjfP1G8+RqtRWAT
+	rIMY4Yk1E89Sc37F/iJ290wJCX+zViyBpJtmMXP7ZvUF9RbV47907faC43M+IzW9wghLNMokxFXbb
+	ZRHWxNFfj3DQL7uQzdNsGMtU2W/2DN7O0GiLyuq3N5kplZjmcsjioB9zp+hglW5FUAq4xrl3wc8bU
+	y+0tqJgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf5kE-0000000Gs6L-0f6c;
-	Mon, 03 Feb 2025 23:20:46 +0000
+	id 1tf5kD-0000000Gs6D-3JIn;
+	Mon, 03 Feb 2025 23:20:45 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf5kA-0000000Gs3R-05Hi
+	id 1tf5k9-0000000Gs2f-3Qp8
 	for kexec@lists.infradead.org;
 	Mon, 03 Feb 2025 23:20:44 +0000
 Received: from localhost.localdomain (unknown [167.220.59.4])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 391DE205493E;
-	Mon,  3 Feb 2025 15:20:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 391DE205493E
+	by linux.microsoft.com (Postfix) with ESMTPSA id C72F1205493C;
+	Mon,  3 Feb 2025 15:20:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C72F1205493C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738624841;
-	bh=0pLOnkZ3BBhZrWSrqRS0hKDrePzR0/4CteyR8x89gQk=;
+	s=default; t=1738624840;
+	bh=DwTIiVhUQSRukvrNOWSPzDC+an9T5YM/JpQkQduIjo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KRGm4uKa6uwqYp++gYLVkz+w0G7XRLKWZaiSa9r29oDDeni8lIRGaUO621/GkcQqz
-	 f4DvTtm91iRY4M/PLDUtRvf74WyB/q92NbJ5YXcU86f8KDZAoOOGX9f9yAU2MBPzAu
-	 UUF/xF5N5b0aCSP4671roPFX9K8P9odm+R1FPLSk=
+	b=qOV6M7LV3usmDdcfVH31Xsy4vXRWWGzXIXuqnjXpRN2EoFMPVBGZl7FUF5fTSQZDA
+	 fe2U8+rvrB4fvkG5/K7Gb3fp09moW3ffMZLF1niZcgirn/tkXAX9s9SIhQLjJ7dd/6
+	 QBe2vs0AnWMvhizFwPR6tEIbjoXjjHvOsHOb0ZwI=
 From: steven chen <chenste@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	stefanb@linux.ibm.com,
@@ -56,17 +56,17 @@ To: zohar@linux.ibm.com,
 Cc: madvenka@linux.microsoft.com,
 	nramas@linux.microsoft.com,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after kexec soft reboot
-Date: Mon,  3 Feb 2025 15:20:28 -0800
-Message-Id: <20250203232033.64123-4-chenste@linux.microsoft.com>
+Subject: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
+Date: Mon,  3 Feb 2025 15:20:26 -0800
+Message-Id: <20250203232033.64123-2-chenste@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250203232033.64123-1-chenste@linux.microsoft.com>
 References: <20250203232033.64123-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250203_152042_139296_180F7E49 
-X-CRM114-Status: GOOD (  14.41  )
+X-CRM114-CacheID: sfid-20250203_152041_910402_9B35237D 
+X-CRM114-Status: GOOD (  25.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,109 +81,246 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kexec_calculate_store_digests() calculates and stores the digest of the
-segment at kexec_file_load syscall where the IMA segment is also
-allocated.  With this series, the IMA segment will be updated with the
-measurement log at kexec excute stage when soft reboot is initiated. 
-Therefore, it may fail digest verification in verify_sha256_digest() 
-after kexec soft reboot into the new kernel. Therefore, the digest 
-calculation/verification of the IMA segment needs to be skipped.
+Carrying the IMA measurement list across kexec requires allocating a
+buffer and copying the measurement records.  Separate allocating the
+buffer and copying the measurement records into separate functions in
+order to allocate the buffer at kexec 'load' and copy the measurements
+at kexec 'execute'.
 
-Skip IMA segment from calculating and storing digest in function
-kexec_calculate_store_digests() so that it is not added to the
-'purgatory_sha_regions'.
-
-Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
-no change is needed in verify_sha256_digest() in this context.
-
-With this change, the IMA segment is not included in the digest
-calculation, storage, and verification.
+This patch includes the following changes:
+ - Refactor ima_dump_measurement_list() to move the memory allocation
+   to a separate function ima_alloc_kexec_file_buf() which allocates
+   buffer of size 'kexec_segment_size' at kexec 'load'.
+ - Make the local variable ima_kexec_file in ima_dump_measurement_list()
+   a local static to the file, so that it can be accessed from 
+   ima_alloc_kexec_file_buf(). Compare actual memory required to ensure 
+   there is enough memory for the entire measurement record.
+ - Copy as many measurement events as possible.
+ - Make necessary changes to the function ima_add_kexec_buffer() to call
+   the above two functions.
+ - Compared the memory size allocated with memory size of the entire 
+   measurement record. If there is not enough memory, it will copy as many
+   IMA measurement records as possible, and this situation will result
+   in a failure of remote attestation.
 
 Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 Signed-off-by: steven chen <chenste@linux.microsoft.com>
 ---
- include/linux/kexec.h              |  3 +++
- kernel/kexec_file.c                | 23 +++++++++++++++++++++++
- security/integrity/ima/ima_kexec.c |  3 +++
- 3 files changed, 29 insertions(+)
+ security/integrity/ima/ima.h       |   1 +
+ security/integrity/ima/ima_kexec.c | 105 +++++++++++++++++++++--------
+ security/integrity/ima/ima_queue.c |   4 +-
+ 3 files changed, 80 insertions(+), 30 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f8413ea5c8c8..f3246e881ac8 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -362,6 +362,9 @@ struct kimage {
- 
- 	phys_addr_t ima_buffer_addr;
- 	size_t ima_buffer_size;
-+
-+	unsigned long ima_segment_index;
-+	bool is_ima_segment_index_set;
- #endif
- 
- 	/* Core ELF header buffer */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad..a3370a0dce20 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
- }
- #endif
- 
-+#ifdef CONFIG_IMA_KEXEC
-+static bool check_ima_segment_index(struct kimage *image, int i) 
-+{
-+	if (image->is_ima_segment_index_set &&
-+			i == image->ima_segment_index)
-+		return true;
-+	else
-+		return false;
-+}
-+#else
-+static bool check_ima_segment_index(struct kimage *image, int i)
-+{
-+	return false;
-+}
-+#endif
-+
- static int kexec_calculate_store_digests(struct kimage *image);
- 
- /* Maximum size in bytes for kernel/initrd files. */
-@@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		if (ksegment->kbuf == pi->purgatory_buf)
- 			continue;
- 
-+		/*
-+		 * Skip the segment if ima_segment_index is set and matches
-+		 * the current index
-+		 */
-+		if (check_ima_segment_index(image, i))
-+			continue;
-+
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
- 					  ksegment->bufsz);
- 		if (ret)
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 3c323ca213d4..447a6eb07c2d 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -274,6 +274,7 @@ bool ima_template_has_modsig(const struct ima_template_desc *ima_template);
+ int ima_restore_measurement_entry(struct ima_template_entry *entry);
+ int ima_restore_measurement_list(loff_t bufsize, void *buf);
+ int ima_measurements_show(struct seq_file *m, void *v);
++int ima_get_binary_runtime_entry_size(struct ima_template_entry *entry);
+ unsigned long ima_get_binary_runtime_size(void);
+ int ima_init_template(void);
+ void ima_init_template_list(void);
 diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index b60a902460e2..283860d20521 100644
+index 52e00332defe..b60a902460e2 100644
 --- a/security/integrity/ima/ima_kexec.c
 +++ b/security/integrity/ima/ima_kexec.c
-@@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+@@ -15,62 +15,99 @@
+ #include "ima.h"
+ 
+ #ifdef CONFIG_IMA_KEXEC
++static struct seq_file ima_kexec_file;
++
++static void ima_reset_kexec_file(struct seq_file *sf)
++{
++	sf->buf = NULL;
++	sf->size = 0;
++	sf->read_pos = 0;
++	sf->count = 0;
++}
++
++static void ima_free_kexec_file_buf(struct seq_file *sf)
++{
++	vfree(sf->buf);
++	ima_reset_kexec_file(sf);
++}
++
++static int ima_alloc_kexec_file_buf(size_t segment_size)
++{
++	/*
++	 * kexec 'load' may be called multiple times.
++	 * Free and realloc the buffer only if the segment_size is
++	 * changed from the previous kexec 'load' call.
++	 */
++	if (ima_kexec_file.buf &&
++		(ima_kexec_file.size == segment_size)) {
++		goto out;
++	}
++
++	ima_free_kexec_file_buf(&ima_kexec_file);
++
++	/* segment size can't change between kexec load and execute */
++	ima_kexec_file.buf = vmalloc(segment_size);
++	if (!ima_kexec_file.buf)
++		return -ENOMEM;
++
++	ima_kexec_file.size = segment_size;
++
++out:
++	ima_kexec_file.read_pos = 0;
++	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
++
++	return 0;
++}
++
+ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+ 				     unsigned long segment_size)
+ {
+ 	struct ima_queue_entry *qe;
+-	struct seq_file file;
+ 	struct ima_kexec_hdr khdr;
+ 	int ret = 0;
++	size_t entry_size = 0;
+ 
+-	/* segment size can't change between kexec load and execute */
+-	file.buf = vmalloc(segment_size);
+-	if (!file.buf) {
+-		ret = -ENOMEM;
+-		goto out;
++	if (!ima_kexec_file.buf) {
++		pr_err("Kexec file buf not allocated\n");
++		return -EINVAL;
+ 	}
+ 
+-	file.file = NULL;
+-	file.size = segment_size;
+-	file.read_pos = 0;
+-	file.count = sizeof(khdr);	/* reserved space */
+-
+ 	memset(&khdr, 0, sizeof(khdr));
+ 	khdr.version = 1;
++
++	/* Copy as many IMA measurements list records as possible */
+ 	list_for_each_entry_rcu(qe, &ima_measurements, later) {
+-		if (file.count < file.size) {
++		entry_size += ima_get_binary_runtime_entry_size(qe->entry);
++		if (entry_size <= segment_size) {
+ 			khdr.count++;
+-			ima_measurements_show(&file, qe);
++			ima_measurements_show(&ima_kexec_file, qe);
+ 		} else {
+ 			ret = -EINVAL;
++			pr_err("IMA log file is too big for Kexec buf\n");
+ 			break;
+ 		}
+ 	}
+ 
+-	if (ret < 0)
+-		goto out;
+-
+ 	/*
+ 	 * fill in reserved space with some buffer details
+ 	 * (eg. version, buffer size, number of measurements)
+ 	 */
+-	khdr.buffer_size = file.count;
++	khdr.buffer_size = ima_kexec_file.count;
+ 	if (ima_canonical_fmt) {
+ 		khdr.version = cpu_to_le16(khdr.version);
+ 		khdr.count = cpu_to_le64(khdr.count);
+ 		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
+ 	}
+-	memcpy(file.buf, &khdr, sizeof(khdr));
++	memcpy(ima_kexec_file.buf, &khdr, sizeof(khdr));
+ 
+ 	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
+-			     file.buf, file.count < 100 ? file.count : 100,
++			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
++			     ima_kexec_file.count : 100,
+ 			     true);
+ 
+-	*buffer_size = file.count;
+-	*buffer = file.buf;
+-out:
+-	if (ret == -EINVAL)
+-		vfree(file.buf);
++	*buffer_size = ima_kexec_file.count;
++	*buffer = ima_kexec_file.buf;
++
+ 	return ret;
+ }
+ 
+@@ -89,7 +126,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 
+ 	/* use more understandable variable names than defined in kbuf */
+ 	void *kexec_buffer = NULL;
+-	size_t kexec_buffer_size;
++	size_t kexec_buffer_size = 0;
+ 	size_t kexec_segment_size;
+ 	int ret;
+ 
+@@ -109,13 +146,19 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 		return;
+ 	}
+ 
+-	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+-				  kexec_segment_size);
+-	if (!kexec_buffer) {
++	ret = ima_alloc_kexec_file_buf(kexec_segment_size);
++	if (ret < 0) {
+ 		pr_err("Not enough memory for the kexec measurement buffer.\n");
+ 		return;
+ 	}
+ 
++	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
++					kexec_segment_size);
++	if (ret < 0) {
++		pr_err("Failed to dump IMA measurements. Error:%d.\n", ret);
++		return;
++	}
++
  	kbuf.buffer = kexec_buffer;
  	kbuf.bufsz = kexec_buffer_size;
  	kbuf.memsz = kexec_segment_size;
-+	image->is_ima_segment_index_set = false;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret) {
- 		pr_err("Error passing over kexec measurement buffer.\n");
-@@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	image->ima_buffer_addr = kbuf.mem;
+@@ -130,6 +173,12 @@ void ima_add_kexec_buffer(struct kimage *image)
  	image->ima_buffer_size = kexec_segment_size;
  	image->ima_buffer = kexec_buffer;
-+	image->ima_segment_index = image->nr_segments - 1;
-+	image->is_ima_segment_index_set = true;
  
- 	/*
- 	 * kexec owns kexec_buffer after kexec_add_buffer() is called
++	/*
++	 * kexec owns kexec_buffer after kexec_add_buffer() is called
++	 * and it will vfree() that buffer.
++	 */
++	ima_reset_kexec_file(&ima_kexec_file);
++
+ 	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+ 		      kbuf.mem);
+ }
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 532da87ce519..a3559bae251f 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -71,7 +71,7 @@ static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
+  * binary_runtime_measurement list entry, which contains a
+  * couple of variable length fields (e.g template name and data).
+  */
+-static int get_binary_runtime_size(struct ima_template_entry *entry)
++int ima_get_binary_runtime_entry_size(struct ima_template_entry *entry)
+ {
+ 	int size = 0;
+ 
+@@ -115,7 +115,7 @@ static int ima_add_digest_entry(struct ima_template_entry *entry,
+ 	if (binary_runtime_size != ULONG_MAX) {
+ 		int size;
+ 
+-		size = get_binary_runtime_size(entry);
++		size = ima_get_binary_runtime_entry_size(entry);
+ 		binary_runtime_size = (binary_runtime_size < ULONG_MAX - size) ?
+ 		     binary_runtime_size + size : ULONG_MAX;
+ 	}
 -- 
 2.25.1
 
