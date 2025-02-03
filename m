@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4580AC02197
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3074CC0219A
 	for <kexec@archiver.kernel.org>; Mon,  3 Feb 2025 19:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0df9k6YmLXTRB5Kdzk0atr6aQfh11G9ejUhwNmP0edM=; b=smLffKwyEdUBzIJ0arLfbDvlyi
-	jtlj38X/jGvMUJaSFpONqLP+wqwInvO3xMKHK/NObrY2LfLZcqCucgHfdV6yUTwP5khV2nGQBbt+W
-	WyN92wsreHWpzJyXuLlikrdPYMTeYa2SHVJCsGArPIbvfiU0GbGWWWWS2pxR6Tj4z92zgh0YvMI33
-	Oxadtwf2y8mjQO50cVLyuPVCT5mtP660kiotSV2UW1V2Yl1+XLNi/aephzQ9MkAUq6CnwXDCDkfer
-	uIUZdz+FwAy6Dox2UDmyzITj01678AxqGcBzzQ9yRAvP1Hik7G1Yr4N4Rkyqwuy2KpB3EOo+8g6dP
-	lzqoEnnA==;
+	bh=VwNfvVLfL00S8Xn+X+PulIftmjpln6BGP2uOmQnQBPE=; b=MtTmkEI2/YWG0QltzQpY9SJ8CO
+	M2hS+V1BNH8Bk1Dl85KErsdsyK+pTCXTyx/xWzrPgTUt+weOP+IzXBEkeNSgiknvwmYX8t1mwxkw5
+	Zo1tOtiOqkVGRtY0GbGPIgv0Edwh4KpTpCMzK6qQpHFhTFZO3NdXBwYU2DtvWaI3pLeHafWglsCps
+	NGJz9slOeo9HkOUawTYdNI+z90cApYlYQBuKRuD/C5qR+uBtBsDjaCdy7GI3ja07jCxc5iHA7SOtV
+	dEag7zHrmJoI9L/eU9X8OXWCd86ky/VLx8iRYKhJbArmCivvzWhMXFyzL3kwCXsMasSK7dR8KNOHM
+	tQ7v/aFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf1g8-0000000GMXV-3rtC;
+	id 1tf1g8-0000000GMWt-2F5M;
 	Mon, 03 Feb 2025 19:00:16 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf1PX-0000000GIpg-3Ltr
+	id 1tf1PX-0000000GIp0-0jCJ
 	for kexec@lists.infradead.org;
 	Mon, 03 Feb 2025 18:43:08 +0000
 Received: from localhost.localdomain (unknown [167.220.59.4])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3C555205493D;
-	Mon,  3 Feb 2025 10:43:05 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3C555205493D
+	by linux.microsoft.com (Postfix) with ESMTPSA id CB572205493B;
+	Mon,  3 Feb 2025 10:43:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB572205493B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738608185;
-	bh=0df9k6YmLXTRB5Kdzk0atr6aQfh11G9ejUhwNmP0edM=;
+	s=default; t=1738608184;
+	bh=VwNfvVLfL00S8Xn+X+PulIftmjpln6BGP2uOmQnQBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BJKYWamXpkjeuurKVkv5FF152NbrMo16MnW3MkFsqMenuewB+i0T+rIE/FLOrVu5w
-	 CbKEvCHM0HKek4NMX/zDsltIvQBEcbJhPx1QTM8HYpb4L81hnTV+qFSgTuBcEpiSB0
-	 JDsvv3vRgSha8jeKqnB0zrzFcL/m1yEEh+QlZWmw=
+	b=Kj2orzZ2dJo9QqLE09KOEwZBq+3InxC2HnaNE//7Q4cy+9gDIuVT+GglMj0aAoiON
+	 8Ydi/SBDdJZgPSCafUTv/hY7MZyhAgfhLrba89Ha7eCTlDlrWB1E8TqF5wQqWzZ716
+	 QmlMztUPcmY+gVXM14bXFjY7oZaNwzsr9AgujSZo=
 From: steven chen <chenste@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	stefanb@linux.ibm.com,
@@ -56,17 +56,18 @@ To: zohar@linux.ibm.com,
 Cc: madvenka@linux.microsoft.com,
 	nramas@linux.microsoft.com,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH v7 7/7] ima: measure kexec load and exec events as critical data
-Date: Mon,  3 Feb 2025 10:42:56 -0800
-Message-Id: <20250203184256.61285-8-chenste@linux.microsoft.com>
+Subject: [PATCH v7 4/7] ima: kexec: define functions to copy IMA log at soft boot
+Date: Mon,  3 Feb 2025 10:42:54 -0800
+Message-Id: <20250203184256.61285-6-chenste@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250203184256.61285-1-chenste@linux.microsoft.com>
 References: <20250203184256.61285-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250203_104307_881946_DE8F1BED 
-X-CRM114-Status: GOOD (  12.09  )
+X-CRM114-CacheID: sfid-20250203_104307_264922_3EC11134 
+X-CRM114-Status: GOOD (  13.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,88 +82,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The amount of memory allocated at kexec load, even with the extra memory
-allocated, might not be large enough for the entire measurement list.  The
-indeterminate interval between kexec 'load' and 'execute' could exacerbate
-this problem.
+IMA log is copied to the new Kernel during kexec 'load' using 
+ima_dump_measurement_list().  The log copy at kexec 'load' may result in
+loss of IMA measurements during kexec soft reboot.  It needs to be copied
+over during kexec 'execute'.  Setup the needed infrastructure to move the
+IMA log copy from kexec 'load' to 'execute'. 
 
-Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
-measured as critical data at kexec 'load' and 'execute' respectively.
-Report the allocated kexec segment size, IMA binary log size and the
-runtime measurements count as part of those events.
+Define a new IMA hook ima_update_kexec_buffer() as a stub function.
+It will be used to call ima_dump_measurement_list() during kexec 
+'execute'.   
 
-These events, and the values reported through them, serve as markers in
-the IMA log to verify the IMA events are captured during kexec soft
-reboot.  The presence of a 'kexec_load' event in between the last two
-'boot_aggregate' events in the IMA log implies this is a kexec soft
-reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-after kexec soft reboot implies missing events in that window which
-results in inconsistency with TPM PCR quotes, necessitating a cold boot
-for a successful remote attestation.
+Implement ima_kexec_post_load() function to be invoked after the new 
+Kernel image has been loaded for kexec. ima_kexec_post_load() maps the 
+IMA buffer to a segment in the newly loaded Kernel.  It also registers 
+the reboot notifier_block to trigger ima_update_kexec_buffer() at 
+exec 'execute'.
 
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: "Petr Tesařík" <petr@tesarici.cz>
 Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 Signed-off-by: steven chen <chenste@linux.microsoft.com>
 ---
- security/integrity/ima/ima_kexec.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ include/linux/ima.h                |  3 ++
+ security/integrity/ima/ima_kexec.c | 46 ++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 0bae61a15b60..8e29cb4e6a01 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -32,6 +32,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
+ 
+ #ifdef CONFIG_IMA_KEXEC
+ extern void ima_add_kexec_buffer(struct kimage *image);
++extern void ima_kexec_post_load(struct kimage *image);
++#else
++static inline void ima_kexec_post_load(struct kimage *image) {}
+ #endif
+ 
+ #else
 diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index c9c916f69ca7..0342ddfa9342 100644
+index 283860d20521..854b90d34e2d 100644
 --- a/security/integrity/ima/ima_kexec.c
 +++ b/security/integrity/ima/ima_kexec.c
-@@ -17,6 +17,8 @@
+@@ -12,10 +12,14 @@
+ #include <linux/kexec.h>
+ #include <linux/of.h>
+ #include <linux/ima.h>
++#include <linux/reboot.h>
++#include <asm/page.h>
  #include "ima.h"
  
  #ifdef CONFIG_IMA_KEXEC
-+#define IMA_KEXEC_EVENT_LEN 256
-+
  static struct seq_file ima_kexec_file;
- static void *ima_kexec_buffer;
- static size_t kexec_segment_size;
-@@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
- 	ima_reset_kexec_file(sf);
- }
++static void *ima_kexec_buffer;
++static bool ima_kexec_update_registered;
  
-+static void ima_measure_kexec_event(const char *event_name)
+ static void ima_reset_kexec_file(struct seq_file *sf)
+ {
+@@ -185,6 +189,48 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+ 		      kbuf.mem);
+ }
++
++/*
++ * Called during kexec execute so that IMA can update the measurement list.
++ */
++static int ima_update_kexec_buffer(struct notifier_block *self,
++				   unsigned long action, void *data)
 +{
-+	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-+	size_t buf_size = 0;
-+	long len;
-+
-+	buf_size = ima_get_binary_runtime_size();
-+	len = atomic_long_read(&ima_htable.len);
-+
-+	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-+			"kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
-+			"ima_runtime_measurements_count=%ld;",
-+				kexec_segment_size, buf_size, len);
-+
-+	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event,
-+					strlen(ima_kexec_event), false, NULL, 0);
++	return NOTIFY_OK;
 +}
 +
- static int ima_alloc_kexec_file_buf(size_t segment_size)
- {
- 	/*
-@@ -60,6 +80,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
- out:
- 	ima_kexec_file.read_pos = 0;
- 	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-+	ima_measure_kexec_event("kexec_load");
- 
- 	return 0;
- }
-@@ -201,6 +222,8 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
- 		return ret;
- 	}
- 
-+	ima_measure_kexec_event("kexec_execute");
++struct notifier_block update_buffer_nb = {
++	.notifier_call = ima_update_kexec_buffer,
++};
 +
- 	ret = ima_dump_measurement_list(&buf_size, &buf,
- 					kexec_segment_size);
++/*
++ * Create a mapping for the source pages that contain the IMA buffer
++ * so we can update it later.
++ */
++void ima_kexec_post_load(struct kimage *image)
++{
++	if (ima_kexec_buffer) {
++		kimage_unmap_segment(ima_kexec_buffer);
++		ima_kexec_buffer = NULL;
++	}
++
++	if (!image->ima_buffer_addr)
++		return;
++
++	ima_kexec_buffer = kimage_map_segment(image,
++					      image->ima_buffer_addr,
++					      image->ima_buffer_size);
++	if (!ima_kexec_buffer) {
++		pr_err("Could not map measurements buffer.\n");
++		return;
++	}
++
++	if (!ima_kexec_update_registered) {
++		register_reboot_notifier(&update_buffer_nb);
++		ima_kexec_update_registered = true;
++	}
++}
++
+ #endif /* IMA_KEXEC */
  
+ /*
 -- 
 2.25.1
 
