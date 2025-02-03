@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0439C0219B
-	for <kexec@archiver.kernel.org>; Mon,  3 Feb 2025 19:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 341D4C0219D
+	for <kexec@archiver.kernel.org>; Mon,  3 Feb 2025 19:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=uNLRDUwysbzATtnr84eaWtXYshfkEgTr8zUspFLSKYk=; b=gwwh7rxAmylpWJAnKTxHB1RypP
-	DKPQ7GREQhoHU1aGyfiLkgkjdYcpr4Il0aQ+z4L9E1EpFMdg4TttJmc97nA7zX9WrXQ/8VCkQnyy0
-	cynikMyPv0a8H7k3FSNWrga+C1/zMLAtICDjr7zndlfy/ZSlcPyue0Hx75y9LpsycEMT2FYupIARD
-	VROntAVDUMTmTl1td/TNbbeltM4wnyjZUvqo3YBbfPUQOXqOhHjnB5TkbjopktM09TAvLJyMNEWhf
-	ASEi6bSj9P73T9vvs2tkZvwacUarnVFVB/RkLLeLy+SO4eu4EcOLiDozH2g4jtDAVXYEg9YB2SM7/
-	e8uXfF3A==;
+	bh=uNLRDUwysbzATtnr84eaWtXYshfkEgTr8zUspFLSKYk=; b=uz1SqvLVcWUi0mdwSZw2hx4s2/
+	0ZvymcpHrm+mooLSVJS5tO53JklJ3LMQBIqhXtYVc2jC9Mu8ASZitxd/61oxEDFLWWwS5gR2q6hrM
+	8a+5a2rVnPlX8AFbJM8vso4fJMPH1DuvaDftrjtnjqVQB8GKbQKGJm758tw/MoudlXuyrx0o3R5Na
+	5acFosf1uwN1j2dCmEzZTlKOZDmXAWk9MMo6ek+pEg2hrK3QBR3VvC1FWZSxD+SdlWWFAwOc7Qb48
+	rs/XAcpPCKaD0Xmp37Zn1I4WSuIzfbv4cLOuGKOG+900uwHCRCJ1UbKlrpNsbINIxgafseFjS75KU
+	56k3lOeg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf1g9-0000000GMXr-1yt7;
-	Mon, 03 Feb 2025 19:00:17 +0000
+	id 1tf1gC-0000000GMe5-3huc;
+	Mon, 03 Feb 2025 19:00:20 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf1PV-0000000GInY-1ijH
+	id 1tf1SP-0000000GJbI-2VjK
 	for kexec@lists.infradead.org;
-	Mon, 03 Feb 2025 18:43:09 +0000
+	Mon, 03 Feb 2025 18:46:06 +0000
 Received: from localhost.localdomain (unknown [167.220.59.4])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BD73E20BCAF2;
-	Mon,  3 Feb 2025 10:43:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BD73E20BCAF2
+	by linux.microsoft.com (Postfix) with ESMTPSA id 120092037170;
+	Mon,  3 Feb 2025 10:46:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 120092037170
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738608183;
+	s=default; t=1738608365;
 	bh=uNLRDUwysbzATtnr84eaWtXYshfkEgTr8zUspFLSKYk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=LK3/5lP+hGGoPVyPT9tTxUCSCkIkoSHWQEOSsnmXudathiIzdV9H/OrUgP4cMbaWJ
-	 DMjdnI/eEGULYZXRJKdyCCPv6hxmADH54TeRCZ9AUZmLEg+PDDF0EOjnlqvA69igjG
-	 CO9UKriVv6r6+k5+XMKHsdK4SW8bNPoBqXcXa50A=
+	b=ZQzV2YaQNxQWWBGsPJv4C0L24Csq5mS+Ex5+qjqMUb+HDngMf06gvsuthh0tD4dz9
+	 3342zH8EaTafG+fxISaLjyvh+WxH6N0oeTN9bW7wFlYhz/G6FjtfcS3uM06VfaZspZ
+	 ShXrsxoUutY7JnNcKIvCaVaEs+hDFg9Ms2XY5JhM=
 From: steven chen <chenste@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	stefanb@linux.ibm.com,
@@ -48,7 +48,7 @@ To: zohar@linux.ibm.com,
 	paul@paul-moore.com,
 	code@tyhicks.com,
 	bauermann@kolabnow.com,
-	inux-integrity@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -57,14 +57,14 @@ Cc: madvenka@linux.microsoft.com,
 	nramas@linux.microsoft.com,
 	James.Bottomley@HansenPartnership.com
 Subject: [PATCH v7 0/7] ima: kexec: measure events between kexec load and excute
-Date: Mon,  3 Feb 2025 10:42:49 -0800
-Message-Id: <20250203184256.61285-1-chenste@linux.microsoft.com>
+Date: Mon,  3 Feb 2025 10:45:51 -0800
+Message-Id: <20250203184558.61367-1-chenste@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250203_104305_502274_F5DCED6E 
+X-CRM114-CacheID: sfid-20250203_104605_676645_220F60E7 
 X-CRM114-Status: GOOD (  32.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
