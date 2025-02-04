@@ -4,100 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5041EC02192
-	for <kexec@archiver.kernel.org>; Tue,  4 Feb 2025 00:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 229E4C02192
+	for <kexec@archiver.kernel.org>; Tue,  4 Feb 2025 00:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zURu7cRFYgaTclhMaPWE8ZTD4BaYAbPfUWCvWujBMx4=; b=T1WtLqOx2dEch47OGgSSEgmjw9
-	qwY3T8k1bWztRM4Monci/qTqXXJCqJuOx0B1hiRkOa4wexhYhNx30KzFAgNkANHQ85m8QDJHUrZl8
-	7xNcuLIceHvxBZlgNCtI87cnqyNKnb5P35FFVMMts9Ea3p+F55JKUnOzcUec/LI1y+cpNylVUmjtd
-	+uc1C9MV8NM/flIwkeYWkyLXIttkJnzps5RB5PLgYYl9YhwfI19y2I0OhxO9NZUTYiN8PWqdG+93v
-	sSvksuDhFDzQYLJ9igIuT06V03Ap6smv5diVyTYHKOvgX4nwgHeWa9EajTofQr4Vsi6x0dkVcWkMW
-	lFpLQonw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=8wiA7A5oplocwPTbfHbf28Kt1oSZNYikOUM55aAquNU=; b=RI4oQJF1Tu+mYjk39LKBjY2l6R
+	l1YyKgL0xsCLfb2YVa8BY10IMC3pIQkWXBoJ+8c2SHzuP7wa1JI42/zelI1+BVIhYMtQ0a3esYiOh
+	0sICyyT5Gh6O5lWD3ULjQ+y20RBaHVJeB4PPNv93e1Izy5wnVzHGt6M90exmwnDEXqoBEqFn8K5nS
+	TCp/o9EjQ+5e7rD7F1pnXQNkUBDW90U59f7NsAK/TbFTjoVEDYBfy+QiAE88zeQUjIf82GNg/e12h
+	Wp2TVIzKkAawD9tzYj7JOCLhSGFhzbPZqUf9giG8ZOedEOaXtl6vyMBA04/eUGVViX6zCNQ9JzqOJ
+	INL/vVIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf7AI-0000000H0A3-0mZr;
-	Tue, 04 Feb 2025 00:51:46 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tf7AF-0000000H09N-2rnf
+	id 1tf7Es-0000000H0i6-2dsl;
+	Tue, 04 Feb 2025 00:56:30 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tf7Eq-0000000H0hk-0cpV
 	for kexec@lists.infradead.org;
-	Tue, 04 Feb 2025 00:51:44 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5140SKfo013315;
-	Tue, 4 Feb 2025 00:50:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zURu7c
-	RFYgaTclhMaPWE8ZTD4BaYAbPfUWCvWujBMx4=; b=TZuhpXxQ4KEwH3Su09kvXc
-	PLKWnRRhwdy2VtSdqX55iLwzJOCLI9qMi0uDgdTrguvHcgJg4PBeExabxe/1hP63
-	zUwaNq4aXbxFO90g6uXYg3tLiW2jupxLW8AGB3qyDmNkjfcwDPQh4B9erJ3n0XZS
-	Qich9hVfHkIr2h68SbWD9aY6nDNwKFRnZnKiXbSWGo61kd8mRFvV3w/mDMj+UaeG
-	ATEl8xdcYOVILY/+UC1nPtTt1y//dh9CGnQXwKduYVndQl7CJRnWdaWQZroBYzT6
-	QERuawbOhFkP+8zrlZjdmhLGOjlIC+9M6F1LEgr+D34Agf1//ZYnBXEW62IHqozw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7d7a7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 00:50:25 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513Kgkms021477;
-	Tue, 4 Feb 2025 00:50:24 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n18py8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 00:50:24 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5140oOxJ29819460
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 00:50:24 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61FE958062;
-	Tue,  4 Feb 2025 00:50:24 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75EAB5805E;
-	Tue,  4 Feb 2025 00:50:23 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.18.96])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Feb 2025 00:50:23 +0000 (GMT)
-Message-ID: <8091ed0d942806e16f995e8444da29df7843df62.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 0/7] ima: kexec: measure events between kexec load
- and excute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Mon, 03 Feb 2025 19:50:23 -0500
-In-Reply-To: <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
-References: <20250203184558.61367-1-chenste@linux.microsoft.com>
-	 <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	Tue, 04 Feb 2025 00:56:29 +0000
+Received: from [10.17.64.74] (unknown [131.107.8.74])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E896B205493B;
+	Mon,  3 Feb 2025 16:56:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E896B205493B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738630587;
+	bh=8wiA7A5oplocwPTbfHbf28Kt1oSZNYikOUM55aAquNU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=atLHGOwBOcjpVxbjMIkShaTJjqRpjXXbwi6BYhHWxRjiAJFniD9fNWQtEmFEb3XRJ
+	 gZ+/2EVFp1VTDXW6DpR8cA2F6BtL1/9WwqGYNSizCmKWZm3guE50d8lo6gLusvHLgs
+	 ZAArZYgabwqImy0Z1BwGQmyTlFQvkGpZzrrya/l0=
+Message-ID: <b07a4b44-b76f-4691-ac01-6e91b6b83672@linux.microsoft.com>
+Date: Mon, 3 Feb 2025 16:56:26 -0800
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8KgdoFyypmOzWMISKdhZ-rl885ZAvrsb
-X-Proofpoint-ORIG-GUID: 8KgdoFyypmOzWMISKdhZ-rl885ZAvrsb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_10,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502040002
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/7] ima: kexec: measure events between kexec load and
+ excute
+To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203184558.61367-1-chenste@linux.microsoft.com>
+ <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
+ <8091ed0d942806e16f995e8444da29df7843df62.camel@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <8091ed0d942806e16f995e8444da29df7843df62.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250203_165143_731122_7A1EA7F2 
-X-CRM114-Status: GOOD (  10.96  )
+X-CRM114-CacheID: sfid-20250203_165628_223930_246BD7D3 
+X-CRM114-Status: UNSURE (   9.45  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,25 +78,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 2025-02-03 at 15:25 -0800, steven chen wrote:
-> Hi all,
->=20
-> The below is the correct version for review.
->=20
-> [PATCH v7 0/7] ima: kexec: measure events between kexec load and excute=
-=20
-> <
-> https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenste@li=
-nux.microso
-> ft.com/T/#t>
->=20
-> Please ignore the this version because patch 5 is missing.
->=20
-> I am really sorry to have troubled you.
+On 2/3/2025 4:50 PM, Mimi Zohar wrote:
+> On Mon, 2025-02-03 at 15:25 -0800, steven chen wrote:
+>> Hi all,
+>>
+>> The below is the correct version for review.
+>>
+>> [PATCH v7 0/7] ima: kexec: measure events between kexec load and excute
+>> <
+>> https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenste@linux.microso
+>> ft.com/T/#t>
+>>
+>> Please ignore the this version because patch 5 is missing.
+>>
+>> I am really sorry to have troubled you.
+> Thanks, Steven.  I was able to apply the patch set to v6.13.  For some reason, b4
+> downloads a duplicate 4/7 patch.
+>
+> Mimi
 
-Thanks, Steven.  I was able to apply the patch set to v6.13.  For some reas=
-on, b4
-downloads a duplicate 4/7 patch.
+Hi Mimi,
 
-Mimi
+Please use the one below
+
+[PATCH v7 0/7] ima: kexec: measure events between kexec load and excute 
+<https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenste@linux.microsoft.com/T/#t>
+
+Please ignore the this version because patch 5 is missing.
+
+I am really sorry.
+
+Steven
+
 
