@@ -4,90 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2555AC02197
-	for <kexec@archiver.kernel.org>; Tue,  4 Feb 2025 04:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC58C02193
+	for <kexec@archiver.kernel.org>; Tue,  4 Feb 2025 19:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=GFdQhGirlKFkv6SspInQshhQMw1bVlSUURS7hK7cLdE=; b=D4vAOShoIng8YRAW0k8/UfcoK9
-	UcRIIpYMYL9Z6XwOzUiC07tKYz7zoCivfTIaWWTwUTXuVG7QjSSYunLWLbqKSIsHFDOpO8b2QAYsG
-	btQgHWCKCQGmjzxOnZBhY/AmfPOlq7l3sZ4I5YualjewEBz/+SGoKZZQst2BKBc44M47ZD+QiX1Bo
-	jsR654te7ys8pm/9G8+tYJnk03r0JpzRTH/NdBNcNM/qTyUA990Te4PfAaIdn2IdgYpFElZUHvwwz
-	t7qPuwJ79cC0a3tZDeR/e+3Tr11+bCZZhkuUxABlHONeT8IXOND6Zq4HkiqEMvVJyv76UXX+VOfBd
-	QbDuUjtQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=nbwy+nGq+1o1SgLagklaC9pBWpqbNKasmV3JuWKyZLs=; b=uMlRWvxofYto7L0x1Fyk3Y0Gh2
+	W8BYigbystSl/NexSWXygmUkzJb/AELDynLKtrlZH6xO82ql6uKwJu6F0MtQuNBCFTeg3JZETGo8B
+	G163jBTNkjtgg9aMhWV/597x03WGvmoeYvzOfhWBiFfNjO3vpazpjbEiYaWbrsHRLoaJPI+uSss2i
+	mnfDcaWfzGVkgmxo+2UB1+p32F2PLnjn3UeEOeF5BJOKjeQulWd3q2KQWEQXfsQBpB6UdPDhiVrWc
+	EUcDYrQKnNRT1KR9oJ1k/ni61e1NXNCfoB6qepX71MM7duMl3Dld7eHDm69TbpR0h+5EI91SGOJdG
+	WAAKwi1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfA6i-0000000HCvh-1ny3;
-	Tue, 04 Feb 2025 04:00:16 +0000
-Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
+	id 1tfOo6-00000001OK5-0Fd5;
+	Tue, 04 Feb 2025 19:42:02 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfA6f-0000000HCv4-3auG
+	id 1tfOmc-00000001Nug-1ud4
 	for kexec@lists.infradead.org;
-	Tue, 04 Feb 2025 04:00:15 +0000
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2163affd184so39935ad.1
-        for <kexec@lists.infradead.org>; Mon, 03 Feb 2025 20:00:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738641613; x=1739246413; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GFdQhGirlKFkv6SspInQshhQMw1bVlSUURS7hK7cLdE=;
-        b=BtL8n0s1LYZD57D9T8yta0o/7dHRoGbLpPx4ZFFHpR+b1tdLoBmuUQe4F2SFB1Xiye
-         Fq/hVOiob9ocPqp0n4B9yNXitPDxKCIFG10Ja9K2RI9hx19QdYW1hBgflW6ZNUn0pQzq
-         iJjHchPixeqxxGsDTRx64e2MU6RpRM5cvxKhxDabLv43kaDjJEfHSpv6GPpejRbwOCUD
-         Ru15FLj94azVKqBxXRMv4IkubpaaCRlE6r8+cS30NV5Q+qaw9geSisNplgy3sJpJMj3j
-         Tt/KSUounFjwgHvaVpB7c1W5TVASqPuWhFfhavL6CtKXHQ3xRLvhK2UKCg/iaIVwTk/N
-         c5QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738641613; x=1739246413;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GFdQhGirlKFkv6SspInQshhQMw1bVlSUURS7hK7cLdE=;
-        b=LG7smPn4zyNH/E+8TZt678WVq5ng04LmEnE1vEKYInDJ3EXikfZ0BYodfJp0OWEnIy
-         UBRlyZ2WxyMLkBalC9SxZTkrd1jXZRSMiwdYi98YTMKnaDo+PfPTVRHp79dJ157BdUXl
-         t0k1j6Fx6wCGxgQVvuoBjaBco8k9zmQs8b3bg36/CmUyR5LoAVbbvR3fhlMJAuWUW3xS
-         h+jQumeZcC7sS/UhOwVWB5dh4Ngtu+WDhHjKBW6WzXFDm3KzRtWH0aaNNkcU69vJkHXO
-         lmoEWMjrT8G8sXdL/SRLvv4MGBiRr73e1RccSVrtc5Ok1eyhLhyG1grjHjUccb29DKsL
-         scoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWv8bNQKWCe7o98VfB/UUJaig68P3PJrORIBpXtN1c7LILX30kvB/NLMUDgZ2+NnkdflN4uvw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwzbWZCGb/5o9YJlEevVAmfmDdEOJ9XzrGlMABqsr2zwi+1tZyz
-	nx2CpZ8+VKjg7bVHNFiv4SXOqhFh3BFxyj4KSTWu30wPdwgCHMO2b19Ehfih7w==
-X-Gm-Gg: ASbGnctFKt4mjoX2vEJyvebQWnUuOq3IzDvOEZrzH289YMkelufH92Cy5J+xvjuO9ES
-	yDH3Z4X6U5Wnd0sxEX8EILsV4nCvu4NfT+s5qKpnY4Kz9AM4vTlTLCapL9r9rBpyrZdLtH++JtN
-	fahLY7+BeYVbMKfS1UJ9ZGRqCBbcVBPnxtDxmXw7XQytWFygVoiw+YD6Q84kLOdHX666JCJ+PRO
-	Jbnz7ttc6Q+zPgsrPC4uBLJskdpPbi+XacDHwDAmoca1jWTWG7O3U9hasVa65NUVNA8d9AKcZHN
-	Bs5BCLMrkF84EvkUlD02vW5u97nk0u8Z+9SuZ7IUlqbjZCv23J3JWwK26nIdYgBjbOaNj+LETaB
-	ZIo4DobFODw==
-X-Google-Smtp-Source: AGHT+IHS9Kq2kj1R8wYY+KP/a5zdghZPF6LytpK2VuTrqxReA4Envd5jDikCxeZV1geusqrivtuEvQ==
-X-Received: by 2002:a17:902:eb83:b0:215:aca2:dc04 with SMTP id d9443c01a7336-21f005bbe49mr1613695ad.26.1738641612613;
-        Mon, 03 Feb 2025 20:00:12 -0800 (PST)
-Received: from [2a00:79e0:2eb0:8:62bb:5433:88e3:2227] ([2a00:79e0:2eb0:8:62bb:5433:88e3:2227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cf042sm9282202b3a.152.2025.02.03.20.00.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 20:00:11 -0800 (PST)
-Date: Mon, 3 Feb 2025 20:00:10 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
-    Matthew Wilcox <willy@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from January 27, 2025
-Message-ID: <26a4b7ca-93a6-30e2-923b-f551ced03d62@google.com>
+	Tue, 04 Feb 2025 19:40:31 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GEqdr029409;
+	Tue, 4 Feb 2025 19:39:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=nbwy+n
+	Gq+1o1SgLagklaC9pBWpqbNKasmV3JuWKyZLs=; b=UfBeuDgtkXLMAI5NU2Sdtm
+	YtpMl3HS6smuCs0CwZNbh0KxzTG3wY4FZO+LfJpmJPN3fx3Yq72q5z8RfH24kas0
+	ntawlnZH/6EKALI6j0VvZS4lFB+GyT/3KIP50blMRse81ueGCvzIs1UbF4hvu/OY
+	neuesc3TYK39T8JexvYCViU/iRZoe4EMy2NlsbOIfcWGQ/TRum9oxVdloeoZHuVf
+	H7VTNA9tVVXk/j/HQ8+He5dqLC+Twn9KAoW0VEN5yyn9tdjVGW/yt8EQVi+a83mC
+	brO9HH0vZHfRNGMRMT68ZHqp0jPo0oOvIPONyy/UL0SwFR6DOK/s1V9J1jUkvGdg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k8y9n2br-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 19:39:11 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514GagLE006516;
+	Tue, 4 Feb 2025 19:39:09 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekd2jd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 19:39:09 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514Jd92H28705426
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 19:39:09 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0CD2D58055;
+	Tue,  4 Feb 2025 19:39:09 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3033458043;
+	Tue,  4 Feb 2025 19:39:08 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  4 Feb 2025 19:39:08 +0000 (GMT)
+Message-ID: <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
+Date: Tue, 4 Feb 2025 14:39:07 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after
+ kexec soft reboot
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-4-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250203232033.64123-4-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3lTu4algauG_2DnpSlkJw5Wp7jnps3fb
+X-Proofpoint-ORIG-GUID: 3lTu4algauG_2DnpSlkJw5Wp7jnps3fb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_09,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 mlxscore=0 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040145
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250203_200013_923187_30E08C49 
-X-CRM114-Status: GOOD (  30.19  )
+X-CRM114-CacheID: sfid-20250204_114030_507883_97688B09 
+X-CRM114-Status: GOOD (  26.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,127 +113,123 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+On 2/3/25 6:20 PM, steven chen wrote:
+> kexec_calculate_store_digests() calculates and stores the digest of the
+> segment at kexec_file_load syscall where the IMA segment is also
+> allocated.  With this series, the IMA segment will be updated with the
+> measurement log at kexec excute stage when soft reboot is initiated.
 
-Here are the notes from the inaugural Hypervisor Live Update call that
-happened on Monday, January 27.  Thanks for everybody who was involved!
+s/excute/execute
 
------>o-----
-I talked about the logistics and goals of the biweekly.  If you would
-like to be added to the calendar invite, please email me privately.  I
-can also share our cover letter and shared drive with you that contains
-recordings and slides (if any) if you provide an email address associated
-with a Google account.
+> Therefore, it may fail digest verification in verify_sha256_digest()
+> after kexec soft reboot into the new kernel. Therefore, the digest
+> calculation/verification of the IMA segment needs to be skipped.
+> 
+> Skip IMA segment from calculating and storing digest in function
 
-We also discussed the scope of the biweekly series to include:
- - KHO
-   + Including potential early adopters (hugetlbfs, tmpfs)
- - Persistence of PCIe devices
-   + IOMMU(fd) persistence
- - Guest memory
-   + Including Confidential Computing use cases
- - Reboot optimizations
+Skip the calculation and storing of the digest of the IMA segment in 
+kexec_calculate_store_digests() so that ...
 
------>o-----
-Mike is planning on sending out another KHO patch series, likely this
-week (v4).
 
------>o-----
-James discussed work last year on iommufd persistence and hooking iommu
-drivers into KHO to persistent their state into kexec.  Feedback
-suggested setting up new page tables and then transferring over after the
-kexec is completed.  James will start implementing this on top of his
-existing patch series and include qemu changes as well.  To minimize
-downtime, the plan was to resume the VM with the old page tables.  He
-suggested userspace would initiate the switch to the new page tables.
+> kexec_calculate_store_digests() so that it is not added to the
+> 'purgatory_sha_regions'.
+> 
+> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+> no change is needed in verify_sha256_digest() in this context.
+> 
+> With this change, the IMA segment is not included in the digest
+> calculation, storage, and verification.
+> 
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+ > --->   include/linux/kexec.h              |  3 +++
+>   kernel/kexec_file.c                | 23 +++++++++++++++++++++++
+>   security/integrity/ima/ima_kexec.c |  3 +++
+>   3 files changed, 29 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f8413ea5c8c8..f3246e881ac8 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -362,6 +362,9 @@ struct kimage {
+>   
+>   	phys_addr_t ima_buffer_addr;
+>   	size_t ima_buffer_size;
+> +
+> +	unsigned long ima_segment_index;
+> +	bool is_ima_segment_index_set;
+>   #endif
+>   
+>   	/* Core ELF header buffer */
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 3eedb8c226ad..a3370a0dce20 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
+>   }
+>   #endif
+>   
+> +#ifdef CONFIG_IMA_KEXEC
+> +static bool check_ima_segment_index(struct kimage *image, int i)
+> +{
+> +	if (image->is_ima_segment_index_set &&
+> +			i == image->ima_segment_index)
 
-Jason noted KHO has been too focused on preserving memory and needs to
-preserve file descriptors, we need to take iommufd, freeze it, give it to
-KHO, and then pick it back up after kexec.  When you're done with it
-after the hand over, like an atomic attach, then it gets destroyed.
-Jason also noted we'll have to consider preserving vIOMMU state to
-support latest NV hardware, which is highly complex.
+The 'i =' should be indented under 'image->'.
 
-Alexander Graf previously developed a concept called fdbox that turned
-out to be very intrusive in the kernel.  Jason noted that all of this
-work will be invasive, but we should prefer to compartmentalize it as
-much as possible (like for iommufd stuff, a kho.c).
+With these nits fixed:
 
------>o-----
-Pasha suggested KHO should be kept as a mechanism to preserve kernel
-memory across kexec, the serialization requires different mechanisms.  He
-plans to propose separate an API for callbacks into drivers.
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 
-Jason noted it was going to be critical to provide a state machine that
-we all agree on, including for definitions.  One aspect he would like to
-align on is whether you could put a guest_memfd into an fdbox or even a
-tmpfs into an fdbox.  Mike Rapoport noted there are multiple layers here,
-where KHO is very lower level and fdbox is built on top of it.  Mike
-emphasized it will be critical to establish a format between multiple
-kernel versions that will be standardized.
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +#else
+> +static bool check_ima_segment_index(struct kimage *image, int i)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>   static int kexec_calculate_store_digests(struct kimage *image);
+>   
+>   /* Maximum size in bytes for kernel/initrd files. */
+> @@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>   		if (ksegment->kbuf == pi->purgatory_buf)
+>   			continue;
+>   
+> +		/*
+> +		 * Skip the segment if ima_segment_index is set and matches
+> +		 * the current index
+> +		 */
+> +		if (check_ima_segment_index(image, i))
+> +			continue;
+> +
+>   		ret = crypto_shash_update(desc, ksegment->kbuf,
+>   					  ksegment->bufsz);
+>   		if (ret)
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index b60a902460e2..283860d20521 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	kbuf.buffer = kexec_buffer;
+>   	kbuf.bufsz = kexec_buffer_size;
+>   	kbuf.memsz = kexec_segment_size;
+> +	image->is_ima_segment_index_set = false;
+>   	ret = kexec_add_buffer(&kbuf);
+>   	if (ret) {
+>   		pr_err("Error passing over kexec measurement buffer.\n");
+> @@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	image->ima_buffer_addr = kbuf.mem;
+>   	image->ima_buffer_size = kexec_segment_size;
+>   	image->ima_buffer = kexec_buffer;
+> +	image->ima_segment_index = image->nr_segments - 1;
+> +	image->is_ima_segment_index_set = true;
+>   
+>   	/*
+>   	 * kexec owns kexec_buffer after kexec_add_buffer() is called
 
------>o-----
-There was lots of discussion on stable ABIs for allowing continuous
-upgrading of kernels without requiring a reboot.  Jason suggested
-upstream can provide a mechanism for upgrading from 6.12 -> 6.13 but not
-6.16 as an example.  Doing any version -> any version is much harder and
-likely cannot be supported, at least in the short term, because it's so
-invasive.  A good example would be for the mlx driver.
-
-James and Alexander noted that we must be able to rollback and this can
-be enabled by the downstream customer, it may not be a burden on the
-upstream kernel.  There was a general acknowledgment that upstream pairs
-must be supported, but much of this could become the responsibility of
-the downstream user.  (Alexander noted some users may care about mlx,
-others may not, for example.)
-
-David Woodhouse inquired about rollback functionality and how we would
-support a VM that has deserialized after kexec using a new feature and
-then still support a downgrade afterwards.  Alexander said it was
-important that the user of KHO supports very controlled A->B environments
-for this to work properly, and, if provided, they can control downgrade
-paths as well.
-
-Dave Hansen noted this was similar to discussions about checkpoint
-restart and CRIU.  The burden in this case may be very similar, that it
-is taken upon by those who care about upgrading from one version to
-another and that it is not a general upstream requirement.  It was
-acknowledged that this will be a ton of work to maintain reliably,
-however.  Dave noted it will be important to socialize the work that
-needs to be done with upstream developers, but that the work will be
-taken on those who care to use KHO.
-
-It was agreed on that once you roll out, you enable new features only
-when you are confident there will not be a rollback, and then once the
-feature is enabled you've passed the point of no return.
-
------>o-----
-Jason provided a nice early milestone for KHO work: demonstrate a kexec
-while the VM survives and the VFIO attached to it survives.  Pasha noted
-this has been done before with PKRAM, but needs to now be done in a way
-that KHO would support.
-
------>o-----
-Next meeting is scheduled for Monday, February 10 at 8am PST (UTC-8).
-I'll send a reminder on this mailing list.
-
-Topics I think we should cover in the next meeting:
-
- - LSF/MM/BPF topics of interest for the group
- - v4 of the KHO patch series sent out by Mike Rapoport
- - iommufd patch series (as well as qemu) sent out (hopefully) by James
-   Gowans this week, otherwise a week or two from now
- - establishing an API for callbacks into drivers to serialize state
- - establishing an FSM for all of the various states that are agreed upon
-   with common language
- - finalizing the decision on upstream support for minor version upgrades
-   across KHO and the burden of downstream users to define what versions
-   can be upgraded
- - topics proposed by Pasha: reducing blackout window, relaxed
-   serialization, KHO activation requirements, and decoupling KHO from
-   kexec
- - implications of preserving vIOMMU state
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
 
