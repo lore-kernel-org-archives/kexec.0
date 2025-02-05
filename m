@@ -4,70 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF328C02192
-	for <kexec@archiver.kernel.org>; Wed,  5 Feb 2025 12:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A70CC02192
+	for <kexec@archiver.kernel.org>; Wed,  5 Feb 2025 16:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:From:To:MIME-Version:Date:Message-ID:Reply-To:Cc:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=SpUOOK8GzB36zHOudH5smL0yDrIEKj5b/YwJYn+IlIE=; b=LW09yMQXvT/U1+LIRfKVYbuVka
-	Oyg0CyX9VZcAGIHpii7Uo0Js7XwB//1KBWrgZqhkUXlQjmXZlq8FlSLuQ5LmF7LUdPt0VC8QyX3o3
-	eiZi69boWzzl++LvdNBpm3bLEvrtWbWPAkBmTyDWZphmYiKyOuRn/U38V8TXgjCg0JaemDkF+XHn5
-	yK6yhykAd40t5g5YKgNGR1Bbe5gGU78E6lNyF4x2FkNXRsscpfT+HUsE0ClLcvpg7fg1jZG3JC1Kn
-	hV1plNoiNmg1S48YdsvI0oS17SFtYjI+NO3iGfOIZL5n4wdWDiybzfMju+XDDRmXrPOno9bnOd8kX
-	VkeAe0UQ==;
+	bh=m9zEItUpZOnlTrWDpqNfuvQizDFcyBJT9ipgz4nC9Sg=; b=QcPWaELHdPLVXF3uFzWhMyeXzK
+	gWLr0XiK2arjeLa/xEOepb/Huhuu/Dhgxw7X9Gru99PQoxW0Ay2J9fgtLD2aDkexGLGl8+Kyy4V6n
+	zqYWDYKYeK910ZzGaBy9OBmAgBzJ+CxYgX6WNiMYfIb3qwxFcqEZTj/KpsNT9QFrgU2wu8l/5FNoa
+	F8EyqNdtWYFRkqMEcOV5YilMUqqo7VuHp5C6iVEiigCxBDrWbVmIwdReDaTOGxRPqZZXk9FdZlovp
+	R2G3/wPToZ1BNXdSvl7lbPRO00X+fBNlfXTNMRZsZl19htgHtnJ5prJYt9fUmNo0AtMILmuT7e+l2
+	mgfDYL5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfebg-00000003DpO-279R;
-	Wed, 05 Feb 2025 12:34:16 +0000
-Received: from lelvem-ot01.ext.ti.com ([198.47.23.234])
+	id 1tfi61-00000003wVH-2dm8;
+	Wed, 05 Feb 2025 16:17:49 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfeOL-00000003B0c-2PeU
+	id 1tfhvf-00000003uMx-2oXW
+	for kexec@bombadil.infradead.org;
+	Wed, 05 Feb 2025 16:07:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=m9zEItUpZOnlTrWDpqNfuvQizDFcyBJT9ipgz4nC9Sg=; b=OkbC9Udv7rGG5wXWFx/ZEx88vY
+	bQeTjoKz7A/pbcG/uu2PCmGDTKfMEjkG8IDNilDn8ydw5KtwpdqGVcpqlUsgbjwxR2fv7U8IbBhZm
+	AWpZ737LFXpMR3u9p1ipTX4ogs19ouqCKzvuMXV63PiK+vDlpHDoT3SHAh2uz86G4UKr9VQKHNm88
+	GwrxZT/JUB7VP52X3Nq0VFIiJ8K8NyDsvAlq+6+ahG87qjf6mIFjfJjC7N3i4GY+h7HVQtamuBkQW
+	Sslhz+7+1qQXSd/X6j5dFI2m31oS1cIaja4xQ2s4eBd7XP3oOM1cS8yznHQX/7AkmFG75XvVDqAX/
+	hkgk717A==;
+Received: from dfw.source.kernel.org ([139.178.84.217])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfhvc-0000000Ggii-0YVp
 	for kexec@lists.infradead.org;
-	Wed, 05 Feb 2025 12:20:30 +0000
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515CKQpX3419303
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <kexec@lists.infradead.org>; Wed, 5 Feb 2025 06:20:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738758026;
-	bh=SpUOOK8GzB36zHOudH5smL0yDrIEKj5b/YwJYn+IlIE=;
-	h=Date:To:From:Subject;
-	b=GFQ/R4w8ebSkU4Ls3eieSysAsoOzxPQdsvhmw74gkay8kYIMYDEq50Q0z0SNVqns1
-	 S00RaW8mnzkP3F/XYg25gewWVbxCWrxv3g6jQzR19B6+Og9SWrolIKnpfoPBCXqFj/
-	 hcFmsFDC2nkeuOWGfpcDR0f0l/e5eEPdKgZwXuP4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515CKQrv010431
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-	for <kexec@lists.infradead.org>; Wed, 5 Feb 2025 06:20:26 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 06:20:26 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 06:20:26 -0600
-Received: from [10.24.72.64] (a0507176-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.72.64])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515CKOAW078443
-	for <kexec@lists.infradead.org>; Wed, 5 Feb 2025 06:20:25 -0600
-Message-ID: <4ccd4d81-2efd-4369-a759-552dbb9a007f@ti.com>
-Date: Wed, 5 Feb 2025 17:50:24 +0530
+	Wed, 05 Feb 2025 16:07:06 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id E3EC95C4B56;
+	Wed,  5 Feb 2025 16:06:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025E6C4CEDD;
+	Wed,  5 Feb 2025 16:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738771620;
+	bh=fdaBYMhNywx3SBQczSGppmG5pefI/VXyodeBWOMusZI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rmJCzdWSdeO/MZyuaGwpd3jRF4Q7jUka+PZeP49a22TpzZIKQBxOWeNTrxRVzF71r
+	 V8cJdZ9EWOL1BmPdt2MwvMKLkjtM7JwRiP5Gf9yKXTCLQi/XGNgf/u2TrHWnCZekMs
+	 KcnR/4aFUNtySkDVs/QdAPjDdL4eOJD+qPlLcdju2mvIxQZvlapbjwGmQsPKFtP/DT
+	 j2CkRdt+yuULeZ7J0auOX45nDI4eIN4QBns9+uFaj5ZTCnVUJ1pc4TPoJEUQqvAxJD
+	 mrB4B9L1UmziRtJnfUOKo+FV7ymUCTH4T7WcVd9qGBuOvdhKT6IBEsdMgfbN3AIA3S
+	 CTy3ep8u3Pyeg==
+Date: Wed, 5 Feb 2025 17:06:56 +0100
+From: Helge Deller <deller@kernel.org>
+To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Sven Schnelle <svens@stackframe.org>, linux-parisc@vger.kernel.org
+Subject: [PATCH] kexec_elf: Fix some trivial kerneldoc warnings
+Message-ID: <Z6OMoCQridWMs0at@p100>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <kexec@lists.infradead.org>
-Content-Language: en-US
-From: Gokul Praveen <g-praveen@ti.com>
-Subject: VMCORE and kdump.conf file not found LINUX 6.12 KERNEL
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250205_042029_703702_5DEAF94C 
-X-CRM114-Status: UNSURE (   6.24  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250205_160704_660065_99D374DF 
+X-CRM114-Status: GOOD (  13.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,99 +84,104 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Team,
+Document missing parameters of various functions to avoid warnings
+when compiling with W=1.
 
-It would be really great,if you could help me with a couple of questions 
-regarding kexec and kdump.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502051744.Bjxxm10L-lkp@intel.com/
+Cc: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-I tried kdump on my SOC and it is rebooting fine . However,the VMCORE 
-file and /etc/kdump.conf file is not found.
-
-VERSION:
-kexec-tools 2.0.30.
-kernel 6.12v
-
-STEPS FOLLOWED:
-
-1)git clone git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-2)
-    HOST PC:
-	>cd $KEXEC_TOOLS_DIR
-	>./bootstrap LDFLAGS=-static ./configure --prefix=/usr/local 
---host=aarch64-linux-gnu --target=aarch64-linux-gnu
-	>make
-	>cp $KEXEC_TOOLS_DIR/build/sbin/kexec /media/$USER/rootfs/usr/sbin (To 
-copy the kexec binary to the rootfs filesystem of the target board)
-
-    TARGET BOARD:
-	>Booted upto linux
-	>cmdline="crashkernel=128M console=ttyS2,115200n8 root=/dev/mmcblk0p2 
-rw rootfste=ext4 rootwait" (/dev/mmcblk0p2 refers to EMMC)
-	> /kexec -p /Image --command-line="$cmdline" 
---dtb=/k3-j721e-common-proc-board.dtb
-	> echo c > /proc/sysrq-trigger
-
-
-LOGS:
-
-          Starting Reboot and dump vmcore via kexec...
-[  OK  ] Listening on Docker Socket for the API.
-[  OK  ] Listening on Weston socket.
-[  OK  ] Started D-Bus System Message Bus.
-[  OK  ] Reached target Socket Units.
-[  OK  ] Reached target Basic System.
-[  OK  ] Started Job spooling tools.
-          Starting Avahi mDNS/DNS-SD Stack...
-[  OK  ] Started Periodic Command Scheduler.
-          Starting Print notice about GPLv3 packages...
-          Starting IPv6 Packet Filtering Framework...
-          Starting IPv4 Packet Filtering Framework...
-[  OK  ] Started irqbalance daemon.
-          Starting Telephony service...
-          Starting Expand the rootfs partiti…to full size of the boot 
-device....
-[    5.992254] audit: type=1334 audit(1728487094.820:10): prog-id=14 op=LOAD
-
-[    6.003634] audit: type=1334 audit(1728487094.832:11): prog-id=15 op=LOAD
-[    6.010482] audit: type=1334 audit(1728487094.832:12): prog-id=16 op=LOAD
-          Starting User Login Management...
-          Starting Telnet Server...
-[  OK  ] Finished IPv6 Packet Filtering Framework.
-[  OK  ] Finished IPv4 Packet Filtering Framework.
-[  OK  ] Finished Telnet Server.
-[  OK  ] Started User Login Management.
-[  OK  ] Finished Expand the rootfs partition to full size of the boot 
-device..
-[  OK  ] Started Telephony service.
-[  OK  ] Started Avahi mDNS/DNS-SD Stack.
-[  OK  ] Created slice Slice /system/systemd-fsck.
-          Expecting device /dev/mmcblk0p1...
-[  OK  ] Reached target Preparation for Network.
-          Starting Load Kernel Module drm...
-[    6.406000] audit: type=1334 audit(1728487095.236:13): prog-id=17 op=LOAD
-          Starting Network Configuration...
-          Starting Virtual Console Setup...
-[  OK  ] Stopped target RPC Port Mapper.
-[  OK  ] Stopped target Timer Units.
-[  OK  ] Stopped Daily rotation of log files.
-[  OK  ] Stopped Daily Cleanup of Temporary Directories.
-[  OK  ] Stopped target System Time Set.
-          Stopping Job spooling tools...
-          Stopping Avahi mDNS/DNS-SD Stack...
-          Stopping Periodic Command Scheduler...
-          Stopping irqbalance daemon...
-[  OK  ] Stopped target Host and Network Name Lookups.
-          Stopping Telephony service...
-[  OK  ] Stopped Expand the rootfs partition to full size of the boot 
-device..
-          Stopping strongSwan IPsec IKEv1/IKEv2 daemon using ipsec.conf...
-[  OK  ] Removed slice Slice /system/getty.
-[  OK  ] Removed slice Slice /system/serial-getty.
-          Stopping User Login Management...
-          Stopping Load/Save OS Random Seed...
-          Starting Record Runlevel Change in UTMP...
-          Stopping Telnet Server...
-[  OK  ] Stopped target Remote File Systems.
-[  OK  ] Stopped Reboot and dump vmcore via kexec.
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index d3689632e8b9..f71448ac27c6 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -58,6 +58,7 @@ static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
+ 
+ /**
+  * elf_is_ehdr_sane - check that it is safe to use the ELF header
++ * @ehdr:	pointer to ELF header to be checked.
+  * @buf_len:	size of the buffer in which the ELF file is loaded.
+  */
+ static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
+@@ -180,7 +181,8 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
+ 
+ /**
+  * elf_is_phdr_sane - check that it is safe to use the program header
+- * @buf_len:	size of the buffer in which the ELF file is loaded.
++ * @phdr:	pointer to elf_phdr struct to be checked
++ * @buf_len:	size of the buffer in which the ELF file was loaded
+  */
+ static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
+ {
+@@ -244,6 +246,9 @@ static int elf_read_phdr(const char *buf, size_t len,
+ 
+ /**
+  * elf_read_phdrs - read the program headers from the buffer
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
+  *
+  * This function assumes that the program header table was checked for sanity.
+  * Use elf_is_ehdr_sane() if it wasn't.
+@@ -280,10 +285,10 @@ static int elf_read_phdrs(const char *buf, size_t len,
+ 
+ /**
+  * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
+- * @buf:	Buffer to read ELF file from.
+- * @len:	Size of @buf.
+- * @ehdr:	Pointer to existing struct which will be populated.
+- * @elf_info:	Pointer to existing struct which will be populated.
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @ehdr:	pointer to existing elfhdr struct which will be populated
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
+  *
+  * This function allows reading ELF files with different byte order than
+  * the kernel, byte-swapping the fields as needed.
+@@ -315,6 +320,8 @@ static int elf_read_from_buffer(const char *buf, size_t len,
+ 
+ /**
+  * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be freed
++ *		and zeroed.
+  */
+ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+ {
+@@ -322,7 +329,15 @@ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+ 	memset(elf_info, 0, sizeof(*elf_info));
+ }
+ /**
+- * kexec_build_elf_info - read ELF executable and check that we can use it
++ * kexec_build_elf_info - read ELF executable headers from buffer and
++ *		check that we can use them
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @ehdr:	pointer to existing elfhdr struct which will be populated
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
++ *
++ * Return:
++ * 0 on success, negative value on failure.
+  */
+ int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+ 			       struct kexec_elf_info *elf_info)
+@@ -378,9 +393,15 @@ int kexec_elf_probe(const char *buf, unsigned long len)
+ }
+ 
+ /**
+- * kexec_elf_load - load ELF executable image
+- * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
+- *			section will be loaded in memory.
++ * kexec_elf_load - load an ELF executable image
++ * @image:		pointer to kimage struct of file to be loaded
++ * @ehdr:		pointer to the ELF header of file to be loaded
++ * @elf_info:		pointer to kexec_elf_info struct of file to be loaded
++ * @kbuf:		pointer to kexec_buf struct which will be used to
++ *			load the ELF file
++ * @lowest_load_addr:	when the kernel was successfully loaded, the address
++ *			where the first PT_LOAD section was loaded is stored
++ *			in the variable pointed to by this pointer
+  *
+  * Return:
+  * 0 on success, negative value on failure.
 
