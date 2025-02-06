@@ -4,94 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CC2BC02194
-	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 15:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E0DAC02198
+	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 16:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fClrLX1vxpbaBk7T2PaHkDCgbYCk70prspsVws/dy+w=; b=GELiv6EaUtZPsr2cr3wKz6lZsY
-	w0d2hMhGOnZ2vFN5P5mJUv9vVL8vQAxjTUNnoJiqPaMSa+ljvFO19y14SoOTdsiXyK62DHUxguRV9
-	uVjVlXbKDVQ/aXgfsIZa7Q5yo+qyVRC5kp3mwaKaM8Na7TK5jBnRTTpsHs0p2tTdMxxLeg41+kPWm
-	WlTGVe1MY0Jm6IuISDusUHQj2VJ63JyLh/zhQPAl2imq3n0uY8Qu0pFPJqpjqGQaCfa6yJqdt2rsg
-	31AxDGObnTrPApQaqSeFW0Q/RoHs/QMh2sGa7l0lR6PY9YgO8bUFTYO6Lqpxjy4Dq1Uk5zTLDeEod
-	nbWU7WRg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=87apyh57lCqrmormY0JxtDEbgGCBEuSc8jI7v0zlMvI=; b=1u+qFKSUwDINLzwVkQ0duGtVSJ
+	NNSbbuE51zGvG0RbaA8vAsOrZkm+Jv7QDgpv/w07Nt9uuAUd1eeLMELnaWw/97dwLfe+dNtr4G3Mo
+	shr4uGlDjU/Qf9sWdRCevwTmGZvBuMn6uaYDcvhofAn2FvtaY7e20NzORXZqBmLu47HGZ3NPYMxgT
+	+Ji4/bAonVVj4vw1qy/lSx4spotjdGPgibc0LDMxg0Cu5h+F0JXdbU14L2HR/3h3Cd8NQni01qHHU
+	ywwwCqcYtO3rZbqnfGQMRcOp1ZlhhABjvlgQihYUI5W1EdtYYQMGsPM1psYSt/ltjSA/oaYtRY44l
+	xzXDhXRA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg3Na-00000006fKu-1Msx;
-	Thu, 06 Feb 2025 15:01:22 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tg55z-00000006uJm-3xl5;
+	Thu, 06 Feb 2025 16:51:19 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg1xB-00000006R7U-1SXY;
-	Thu, 06 Feb 2025 13:30:02 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 8D6BFA43CAA;
-	Thu,  6 Feb 2025 13:28:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D0AC4CEE9;
-	Thu,  6 Feb 2025 13:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848600;
-	bh=ZLI3PhtfbLyx7JnTAOow9a9GGOT0TaY/xFogSnBbQeU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZKP2u0DmQtzkHULrFH/6I9xUJaeF14jOC22mE3/TdRIN5KIY+tqvl22/iMfUSIMB7
-	 ssJ07XcHsfiBXs4ZMugUK8Nv2eF7PCFeVqM/PLV8nUKFLAa9Nv5UrmDU1cczs+JXqC
-	 mF2k8z8sD/iXn8fdH0JjbPArU+rAppsJAS/kDGwUodoqRKPrV6FOdfB0wMTExbXQYI
-	 S1O68MIju5Y6e3S80+QWPnUImIvd22PIz//r8WiLTwXzL1I5U7NL1eMHD/g2kXn0F8
-	 q7Aszxn7QllRcHUNHaru/Li90DSjqGIyY65LSyFzHMnbAC+EIGsdGO12L/LElXxX53
-	 QHivTVOmdIJ2A==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [PATCH v4 12/14] x86: Add KHO support
-Date: Thu,  6 Feb 2025 15:27:52 +0200
-Message-ID: <20250206132754.2596694-13-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
+	id 1tg55x-00000006uJS-22zn
+	for kexec@lists.infradead.org;
+	Thu, 06 Feb 2025 16:51:18 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516ESLnv009659;
+	Thu, 6 Feb 2025 16:49:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=87apyh
+	57lCqrmormY0JxtDEbgGCBEuSc8jI7v0zlMvI=; b=r7o+9REJsqkM4wai6G0ECo
+	crieIq7a3vPTutv/jbe+TJ/KWXdPIdmYXD2B/p5ZOvolj//bisS8CMBF52U8xe3Y
+	qvGCPgf0lMng6Du2lrFqQkRq7tbBh3hwx1QDN5CIFEhJMp337ou3FvvkE6vXPYey
+	hcTIdzKG169qIUInbt5MzFk2SChvtCC0unrb+4ZC1fLbVM7/8r/Na0s0U2tZZHte
+	dWusE1XYlg/xuSiVqATR9ci56HUBpsJneX63aTLgWKEv5O5UMNgBsH3/ESGbVXVK
+	kQWBZkFGDCWbIPzZgoygNkkKqNHhwA6+1PdQK1eqxfGxPqGuPbRg8I8jqSQ44R8Q
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mk5a4cr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 16:49:51 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 516EZ345007150;
+	Thu, 6 Feb 2025 16:49:50 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayyd0v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 16:49:50 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 516Gnnfj29295206
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Feb 2025 16:49:49 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 83A4058052;
+	Thu,  6 Feb 2025 16:49:49 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 79DC458056;
+	Thu,  6 Feb 2025 16:49:48 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.168.13])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  6 Feb 2025 16:49:48 +0000 (GMT)
+Message-ID: <4d258641d36088b1a1239724a2951211159d81f0.camel@linux.ibm.com>
+Subject: Re: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+Date: Thu, 06 Feb 2025 11:49:48 -0500
+In-Reply-To: <20250203232033.64123-2-chenste@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+	 <20250203232033.64123-2-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 82HIc3utkTw5hw7G6_oAjrNeCVhsuthI
+X-Proofpoint-ORIG-GUID: 82HIc3utkTw5hw7G6_oAjrNeCVhsuthI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 malwarescore=0
+ suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0 adultscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060133
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_053001_529543_79788D99 
-X-CRM114-Status: GOOD (  31.05  )
+X-CRM114-CacheID: sfid-20250206_085117_536848_5166F190 
+X-CRM114-Status: GOOD (  20.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,308 +111,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Alexander Graf <graf@amazon.com>
+Thanks, Steven, for picking up and working on Tushar's patch set.
 
-We now have all bits in place to support KHO kexecs. This patch adds
-awareness of KHO in the kexec file as well as boot path for x86 and
-adds the respective kconfig option to the architecture so that it can
-use KHO successfully.
+I normally finish reviewing the patch set, before commenting.  In this case=
+, there's
+a generic comment that relates to all of the patches.  It's also a way of l=
+etting you
+know that I've started reviewing the patch set.  The remaining comments wil=
+l come
+after I finish reviewing the patch set.
 
-In addition, it enlightens it decompression code with KHO so that its
-KASLR location finder only considers memory regions that are not already
-occupied by KHO memory.
+On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+> Carrying the IMA measurement list across kexec requires allocating a
+> buffer and copying the measurement records.=C2=A0 Separate allocating the
+> buffer and copying the measurement records into separate functions in
+> order to allocate the buffer at kexec 'load' and copy the measurements
+> at kexec 'execute'.
+>=20
+> This patch includes the following changes:
+> =C2=A0- Refactor ima_dump_measurement_list() to move the memory allocatio=
+n
+> =C2=A0=C2=A0 to a separate function ima_alloc_kexec_file_buf() which allo=
+cates
+> =C2=A0=C2=A0 buffer of size 'kexec_segment_size' at kexec 'load'.
+> =C2=A0- Make the local variable ima_kexec_file in ima_dump_measurement_li=
+st()
+> =C2=A0=C2=A0 a local static to the file, so that it can be accessed from=
+=20
+> =C2=A0=C2=A0 ima_alloc_kexec_file_buf(). Compare actual memory required t=
+o ensure=20
+> =C2=A0=C2=A0 there is enough memory for the entire measurement record.
+> =C2=A0- Copy as many measurement events as possible.
+> =C2=A0- Make necessary changes to the function ima_add_kexec_buffer() to =
+call
+> =C2=A0=C2=A0 the above two functions.
+> =C2=A0- Compared the memory size allocated with memory size of the entire=
+=20
+> =C2=A0=C2=A0 measurement record. If there is not enough memory, it will c=
+opy as many
+> =C2=A0=C2=A0 IMA measurement records as possible, and this situation will=
+ result
+> =C2=A0=C2=A0 in a failure of remote attestation.
+>=20
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/Kconfig                       |  3 ++
- arch/x86/boot/compressed/kaslr.c       | 52 +++++++++++++++++++++++++-
- arch/x86/include/asm/setup.h           |  4 ++
- arch/x86/include/uapi/asm/setup_data.h | 13 ++++++-
- arch/x86/kernel/e820.c                 | 18 +++++++++
- arch/x86/kernel/kexec-bzimage64.c      | 36 ++++++++++++++++++
- arch/x86/kernel/setup.c                | 25 +++++++++++++
- arch/x86/realmode/init.c               |  2 +
- 8 files changed, 151 insertions(+), 2 deletions(-)
+I understand you want to credit Tushar for the patch, but the mechanism is =
+described
+in Documentation/process/submitting-patches.rst.  Refer to the paragraph on=
+ "Co-
+developed-by".  There is no tag named "Author".
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 87198d957e2f..3a2d7b381704 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2090,6 +2090,9 @@ config ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG
- config ARCH_SUPPORTS_KEXEC_JUMP
- 	def_bool y
- 
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool y
-+
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool X86_64 || (X86_32 && HIGHMEM)
- 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index f03d59ea6e40..c932a30deb20 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -760,6 +760,55 @@ static void process_e820_entries(unsigned long minimum,
- 	}
- }
- 
-+/*
-+ * If KHO is active, only process its scratch areas to ensure we are not
-+ * stepping onto preserved memory.
-+ */
-+#ifdef CONFIG_KEXEC_HANDOVER
-+static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
-+{
-+	struct kho_mem *kho_scratch;
-+	struct setup_data *ptr;
-+	int i, nr_areas = 0;
-+
-+	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
-+	while (ptr) {
-+		if (ptr->type == SETUP_KEXEC_KHO) {
-+			struct kho_data *kho = (struct kho_data *)ptr->data;
-+
-+			kho_scratch = (void *)kho->scratch_addr;
-+			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
-+
-+			break;
-+		}
-+
-+		ptr = (struct setup_data *)(unsigned long)ptr->next;
-+	}
-+
-+	if (!nr_areas)
-+		return false;
-+
-+	for (i = 0; i < nr_areas; i++) {
-+		struct kho_mem *area = &kho_scratch[i];
-+		struct mem_vector region = {
-+			.start = area->addr,
-+			.size = area->size,
-+		};
-+
-+		if (process_mem_region(&region, minimum, image_size))
-+			break;
-+	}
-+
-+	return true;
-+}
-+#else
-+static inline bool process_kho_entries(unsigned long minimum,
-+				       unsigned long image_size)
-+{
-+	return false;
-+}
-+#endif
-+
- static unsigned long find_random_phys_addr(unsigned long minimum,
- 					   unsigned long image_size)
- {
-@@ -775,7 +824,8 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
- 		return 0;
- 	}
- 
--	if (!process_efi_entries(minimum, image_size))
-+	if (!process_kho_entries(minimum, image_size) &&
-+	    !process_efi_entries(minimum, image_size))
- 		process_e820_entries(minimum, image_size);
- 
- 	phys_addr = slots_fetch_random();
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 85f4fde3515c..70e045321d4b 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -66,6 +66,10 @@ extern void x86_ce4100_early_setup(void);
- static inline void x86_ce4100_early_setup(void) { }
- #endif
- 
-+#ifdef CONFIG_KEXEC_HANDOVER
-+#include <linux/kexec_handover.h>
-+#endif
-+
- #ifndef _SETUP
- 
- #include <asm/espfix.h>
-diff --git a/arch/x86/include/uapi/asm/setup_data.h b/arch/x86/include/uapi/asm/setup_data.h
-index b111b0c18544..c258c37768ee 100644
---- a/arch/x86/include/uapi/asm/setup_data.h
-+++ b/arch/x86/include/uapi/asm/setup_data.h
-@@ -13,7 +13,8 @@
- #define SETUP_CC_BLOB			7
- #define SETUP_IMA			8
- #define SETUP_RNG_SEED			9
--#define SETUP_ENUM_MAX			SETUP_RNG_SEED
-+#define SETUP_KEXEC_KHO			10
-+#define SETUP_ENUM_MAX			SETUP_KEXEC_KHO
- 
- #define SETUP_INDIRECT			(1<<31)
- #define SETUP_TYPE_MAX			(SETUP_ENUM_MAX | SETUP_INDIRECT)
-@@ -78,6 +79,16 @@ struct ima_setup_data {
- 	__u64 size;
- } __attribute__((packed));
- 
-+/*
-+ * Locations of kexec handover metadata
-+ */
-+struct kho_data {
-+	__u64 dt_addr;
-+	__u64 dt_size;
-+	__u64 scratch_addr;
-+	__u64 scratch_size;
-+} __attribute__((packed));
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _UAPI_ASM_X86_SETUP_DATA_H */
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 82b96ed9890a..0b81cd70b02a 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1329,6 +1329,24 @@ void __init e820__memblock_setup(void)
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
-+	/*
-+	 * At this point with KHO we only allocate from scratch memory.
-+	 * At the same time, we configure memblock to only allow
-+	 * allocations from memory below ISA_END_ADDRESS which is not
-+	 * a natural scratch region, because Linux ignores memory below
-+	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
-+	 * allocations, we must allocate real-mode trapoline below
-+	 * ISA_END_ADDRESS.
-+	 *
-+	 * To make sure that we can actually perform allocations during
-+	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
-+	 * so we can allocate from there in a scratch-only world.
-+	 *
-+	 * After real mode trampoline is allocated, we clear scratch
-+	 * marking from the memory below ISA_END_ADDRESS
-+	 */
-+	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
-+
- 	/* Throw away partial pages: */
- 	memblock_trim_memory(PAGE_SIZE);
- 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 68530fad05f7..15fc3c1a92e8 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
- #endif /* CONFIG_IMA_KEXEC */
- }
- 
-+static void setup_kho(const struct kimage *image, struct boot_params *params,
-+		      unsigned long params_load_addr,
-+		      unsigned int setup_data_offset)
-+{
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	struct setup_data *sd = (void *)params + setup_data_offset;
-+	struct kho_data *kho = (void *)sd + sizeof(*sd);
-+
-+	sd->type = SETUP_KEXEC_KHO;
-+	sd->len = sizeof(struct kho_data);
-+
-+	/* Only add if we have all KHO images in place */
-+	if (!image->kho.dt.buffer || !image->kho.scratch.buffer)
-+		return;
-+
-+	/* Add setup data */
-+	kho->dt_addr = image->kho.dt.mem;
-+	kho->dt_size = image->kho.dt.bufsz;
-+	kho->scratch_addr = image->kho.scratch.mem;
-+	kho->scratch_size = image->kho.scratch.bufsz;
-+	sd->next = params->hdr.setup_data;
-+	params->hdr.setup_data = params_load_addr + setup_data_offset;
-+#endif /* CONFIG_KEXEC_HANDOVER */
-+}
-+
- static int
- setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 		      unsigned long params_load_addr,
-@@ -312,6 +337,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 				     sizeof(struct ima_setup_data);
- 	}
- 
-+	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER)) {
-+		/* Setup space to store preservation metadata */
-+		setup_kho(image, params, params_load_addr, setup_data_offset);
-+		setup_data_offset += sizeof(struct setup_data) +
-+				     sizeof(struct kho_data);
-+	}
-+
- 	/* Setup RNG seed */
- 	setup_rng_seed(params, params_load_addr, setup_data_offset);
- 
-@@ -479,6 +511,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		kbuf.bufsz += sizeof(struct setup_data) +
- 			      sizeof(struct ima_setup_data);
- 
-+	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-+		kbuf.bufsz += sizeof(struct setup_data) +
-+			      sizeof(struct kho_data);
-+
- 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index c80c124af332..e0a89f4bb46f 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -385,6 +385,28 @@ int __init ima_get_kexec_buffer(void **addr, size_t *size)
- }
- #endif
- 
-+static void __init add_kho(u64 phys_addr, u32 data_len)
-+{
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	struct kho_data *kho;
-+	u64 addr = phys_addr + sizeof(struct setup_data);
-+	u64 size = data_len - sizeof(struct setup_data);
-+
-+	kho = early_memremap(addr, size);
-+	if (!kho) {
-+		pr_warn("setup: failed to memremap kho data (0x%llx, 0x%llx)\n",
-+			addr, size);
-+		return;
-+	}
-+
-+	kho_populate(kho->dt_addr, kho->scratch_addr, kho->scratch_size);
-+
-+	early_memunmap(kho, size);
-+#else
-+	pr_warn("Passed KHO data, but CONFIG_KEXEC_HANDOVER not set. Ignoring.\n");
-+#endif
-+}
-+
- static void __init parse_setup_data(void)
- {
- 	struct setup_data *data;
-@@ -413,6 +435,9 @@ static void __init parse_setup_data(void)
- 		case SETUP_IMA:
- 			add_early_ima_buffer(pa_data);
- 			break;
-+		case SETUP_KEXEC_KHO:
-+			add_kho(pa_data, data_len);
-+			break;
- 		case SETUP_RNG_SEED:
- 			data = early_memremap(pa_data, data_len);
- 			add_bootloader_randomness(data->data, data->len);
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index f9bc444a3064..9b9f4534086d 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -65,6 +65,8 @@ void __init reserve_real_mode(void)
- 	 * setup_arch().
- 	 */
- 	memblock_reserve(0, SZ_1M);
-+
-+	memblock_clear_kho_scratch(0, SZ_1M);
- }
- 
- static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
--- 
-2.47.2
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
 
+"Suggested-by" goes before the Signed-off-by tag(s). "Reviewed-by" tag goes=
+ after
+your and/or Tushar's Signed-off-tag.
+
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+
+Before the "Co-developed-by" tag was defined, it was implied simply by this=
+ ordering
+of the "Signed-off-by" tags.
+
+For those patches you didn't modify, simply import Tushar's patch with him =
+as the
+author and add your Signed-off-by tag after his.
+
+thanks,
+
+Mimi
 
