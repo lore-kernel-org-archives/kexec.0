@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E5DAC02194
-	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 13:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED480C02194
+	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 13:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OqhPo9ta4iBL6YwMdbyL5HGD55Dm8ujj4PSl7i6Hsgs=; b=A7aavwqKHnfg510IzQbti0x/I8
-	LIn5HlAAWHINEQjQ21TKscCJl2SWsFnRCkfc6i/urA54Zhk3vRzqvtPMTb99x5CC+rubXuvjaJ12K
-	oRKdCoNESz+YZpjWUzAvadokYXNcvPgo9PU/eXnUeF0dzLiebLfuQKcvvtQrNcMX53KYHAtP8S2UO
-	Z5GJ++b1sfdyeRMhKSZTGTFuWVJKkhu9GrsjSn8Pi7GSJDch8ym59eikwTxVoVhH4QXfKIMCDRame
-	VvLkRRLzjyWnXdcRLMAHlyhtC2roB/U9hOUdGy1OdguBK1UHz9nNMnY9amBwB+WllMRkRUB86QewV
-	wS1mumTg==;
+	bh=HRU1eY8lQWE+WdlV3otZw/7J3jFpvj6dJXq20rk8Gjo=; b=ujtWwDuN9JZz5nlt8RkEf03bpE
+	5Qyj0DJmRabwB7vU0ea5DHggRRRN+fmDlgC3hNtZoUTGAsrPj4H8KOxq0KxULtgOwuF45cyX4/xaG
+	65LWvAbmuofHbGQUAVJYelfTOSoHXl0A8cSDvoUie7OMbP7S9ZNWyghNaFnaA15qwgFSlW3Zska75
+	BvNoL2KCgcQoYqTKcPE3KTP26r/Km//2MR5L2+4z3V73G5oTzjSubo/em3U6agKbja1Dn/SJO/yRo
+	KZXOHdHhKpKOsExn0Ddx1ZnuTOA6Y1XIwWXQPOaiY5aaldDawWU52WundUzWsL7h24oVOTYayQIwx
+	nM2Syq3w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg2ES-00000006TqV-41Y1;
-	Thu, 06 Feb 2025 13:47:52 +0000
+	id 1tg2IT-00000006UNL-1tQZ;
+	Thu, 06 Feb 2025 13:52:01 +0000
 Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg1wt-00000006R0g-2mLb;
-	Thu, 06 Feb 2025 13:29:44 +0000
+	id 1tg1xK-00000006RBl-1kFW;
+	Thu, 06 Feb 2025 13:30:12 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 90828A43521;
-	Thu,  6 Feb 2025 13:27:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6746C4CEE5;
-	Thu,  6 Feb 2025 13:29:33 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 8FC82A4426C;
+	Thu,  6 Feb 2025 13:28:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5DAC4CEE7;
+	Thu,  6 Feb 2025 13:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848582;
-	bh=YhQ3gt0FcvyhHrH/fq8eDTzHj2J/JGVva+XZhcAjRME=;
+	s=k20201202; t=1738848609;
+	bh=DoJEW5UPWLB+Obb+G1lnBQtqt27Wrp5AJwpwp06AFOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WFHeaz2Wf6zAlFKNEJGYupJoP4tb+oKUBXfVqahTutVYbwIRBynlBQHaXayGwkEu2
-	 DuphCe8xk2pe+8oH7+XZQSe9pjgWZGsmkIospzcHjxO3RytUcsVovJmfiYKBBORcsL
-	 4luOZoe358T6aqKuQn/upUfy7Z5PmlquzBJHTrWLVRYP7hc0VriUcgl4lPKOe4bajV
-	 ZVwAy9jBA2xpMFC/I3n9y07yrA5AKtZFTK9AcidCwRDnRl6rYTvWRjSGn6dW1qiFfP
-	 OHYDZqXXjaHUsYQmI1svg4fNC3oyX5TyerVpmcK3gD0lOT5H5hMpCAfnQUVx3w8RiF
-	 MCVMFhIn9tgsQ==
+	b=UlLGwm05L5QcpmJWTDfel287vfdneKikF+X9x1PLxloCZkQFYSTdwfZk67H4CbACf
+	 SjpGYMrBglL1eCrzUUZK57n5/M23b+qmEwIJqInUyuIAYnn+TmqNQ3nPdRbyYMKuNl
+	 ZByOBYnqMEy5lY8CmeFvD9vgr6at+lROV7TfunAKx2CDVXwvh1AKBfFFfGVYMSC8vi
+	 EMegz5keLq3kHnLZZhSOtnzyesXeNk71x3PhY+aFp5TEzIu3szzKS+tzHxI8Radxu8
+	 EOITqVt3uvy9poaB8XIXos09+EVWO6TlgoFm05ynd9PhrdVKy6VE0uZZJFIrSgxsnl
+	 do126iSCoB9zQ==
 From: Mike Rapoport <rppt@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Alexander Graf <graf@amazon.com>,
@@ -81,17 +81,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-doc@vger.kernel.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v4 10/14] arm64: Add KHO support
-Date: Thu,  6 Feb 2025 15:27:50 +0200
-Message-ID: <20250206132754.2596694-11-rppt@kernel.org>
+Subject: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
+Date: Thu,  6 Feb 2025 15:27:53 +0200
+Message-ID: <20250206132754.2596694-14-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_052943_824207_3AA5F6A3 
-X-CRM114-Status: GOOD (  20.96  )
+X-CRM114-CacheID: sfid-20250206_053010_600734_9A9B09AF 
+X-CRM114-Status: GOOD (  24.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,148 +108,190 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Alexander Graf <graf@amazon.com>
 
-We now have all bits in place to support KHO kexecs. This patch adds
-awareness of KHO in the kexec file as well as boot path for arm64 and
-adds the respective kconfig option to the architecture so that it can
-use KHO successfully.
+Linux has recently gained support for "reserve_mem": A mechanism to
+allocate a region of memory early enough in boot that we can cross our
+fingers and hope it stays at the same location during most boots, so we
+can store for example ftrace buffers into it.
+
+Thanks to KASLR, we can never be really sure that "reserve_mem"
+allocations are static across kexec. Let's teach it KHO awareness so
+that it serializes its reservations on kexec exit and deserializes them
+again on boot, preserving the exact same mapping across kexec.
+
+This is an example user for KHO in the KHO patch set to ensure we have
+at least one (not very controversial) user in the tree before extending
+KHO's use to more subsystems.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/arm64/Kconfig |  3 +++
- drivers/of/fdt.c   | 36 ++++++++++++++++++++++++++++++++++++
- drivers/of/kexec.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 81 insertions(+)
+ mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fcdd0ed3eca8..5d9f07cea258 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1590,6 +1590,9 @@ config ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
- config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
- 	def_bool y
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 84df96efca62..fdb08b60efc1 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -16,6 +16,9 @@
+ #include <linux/kmemleak.h>
+ #include <linux/seq_file.h>
+ #include <linux/memblock.h>
++#include <linux/kexec_handover.h>
++#include <linux/kexec.h>
++#include <linux/libfdt.h>
  
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool y
-+
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool y
- 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index aedd0e2dcd89..3178bf9c6bd2 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -875,6 +875,39 @@ void __init early_init_dt_check_for_usable_mem_range(void)
- 		memblock_add(rgn[i].base, rgn[i].size);
+ #include <asm/sections.h>
+ #include <linux/io.h>
+@@ -2423,6 +2426,70 @@ int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *
  }
+ EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
  
-+/**
-+ * early_init_dt_check_kho - Decode info required for kexec handover from DT
-+ */
-+static void __init early_init_dt_check_kho(void)
++static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
++					  phys_addr_t align)
 +{
-+	unsigned long node = chosen_node_offset;
-+	u64 kho_start, scratch_start, scratch_size;
-+	const __be32 *p;
-+	int l;
++	const void *fdt = kho_get_fdt();
++	const char *path = "/reserve_mem";
++	int node, child, err;
 +
-+	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
-+		return;
++	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
++		return false;
 +
-+	p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
++	if (!fdt)
++		return false;
 +
-+	kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++	node = fdt_path_offset(fdt, "/reserve_mem");
++	if (node < 0)
++		return false;
 +
-+	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
++	err = fdt_node_check_compatible(fdt, node, "reserve_mem-v1");
++	if (err) {
++		pr_warn("Node '%s' has unknown compatible", path);
++		return false;
++	}
 +
-+	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
++	fdt_for_each_subnode(child, fdt, node) {
++		const struct kho_mem *mem;
++		const char *child_name;
++		int len;
 +
-+	p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
++		/* Search for old kernel's reserved_mem with the same name */
++		child_name = fdt_get_name(fdt, child, NULL);
++		if (strcmp(name, child_name))
++			continue;
 +
-+	kho_populate(kho_start, scratch_start, scratch_size);
-+}
++		err = fdt_node_check_compatible(fdt, child, "reserve_mem_map-v1");
++		if (err) {
++			pr_warn("Node '%s/%s' has unknown compatible", path, name);
++			continue;
++		}
 +
- #ifdef CONFIG_SERIAL_EARLYCON
- 
- int __init early_init_dt_scan_chosen_stdout(void)
-@@ -1169,6 +1202,9 @@ void __init early_init_dt_scan_nodes(void)
- 
- 	/* Handle linux,usable-memory-range property */
- 	early_init_dt_check_for_usable_mem_range();
++		mem = fdt_getprop(fdt, child, "mem", &len);
++		if (!mem || len != sizeof(*mem))
++			continue;
 +
-+	/* Handle kexec handover */
-+	early_init_dt_check_kho();
- }
- 
- bool __init early_init_dt_scan(void *dt_virt, phys_addr_t dt_phys)
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index 5b924597a4de..f6cf0bc13246 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -264,6 +264,43 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
- }
- #endif /* CONFIG_IMA_KEXEC */
- 
-+static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
-+{
-+	void *dt = NULL;
-+	phys_addr_t dt_mem = 0;
-+	phys_addr_t dt_len = 0;
-+	phys_addr_t scratch_mem = 0;
-+	phys_addr_t scratch_len = 0;
-+	int ret = 0;
++		if (mem->addr & (align - 1)) {
++			pr_warn("KHO reserved_mem '%s' has wrong alignment (0x%lx, 0x%lx)",
++				name, (long)align, (long)mem->addr);
++			continue;
++		}
 +
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	dt = image->kho.dt.buffer;
-+	dt_mem = image->kho.dt.mem;
-+	dt_len = image->kho.dt.bufsz;
++		if (mem->size != size) {
++			pr_warn("KHO reserved_mem '%s' has wrong size (0x%lx != 0x%lx)",
++				name, (long)mem->size, (long)size);
++			continue;
++		}
 +
-+	scratch_mem = image->kho.scratch.mem;
-+	scratch_len = image->kho.scratch.bufsz;
-+#endif
++		reserved_mem_add(mem->addr, mem->size, name);
++		pr_info("Revived memory reservation '%s' from KHO", name);
 +
-+	if (!dt)
-+		goto out;
++		return true;
++	}
 +
-+	pr_debug("Adding kho metadata to DT");
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
-+				       dt_mem, dt_len);
-+	if (ret)
-+		goto out;
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
-+				       scratch_mem, scratch_len);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	return ret;
++	return false;
 +}
 +
  /*
-  * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
-  *
-@@ -414,6 +451,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- #endif
- 	}
+  * Parse reserve_mem=nn:align:name
+  */
+@@ -2478,6 +2545,11 @@ static int __init reserve_mem(char *p)
+ 	if (reserve_mem_find_by_name(name, &start, &tmp))
+ 		return -EBUSY;
  
-+	/* Add kho metadata if this is a KHO image */
-+	ret = kho_add_chosen(image, fdt, chosen_node);
-+	if (ret)
-+		goto out;
++	/* Pick previous allocations up from KHO if available */
++	if (reserve_mem_kho_revive(name, size, align))
++		return 1;
 +
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
++	/* TODO: Allocation must be outside of scratch region */
+ 	start = memblock_phys_alloc(size, align);
+ 	if (!start)
+ 		return -ENOMEM;
+@@ -2488,6 +2560,65 @@ static int __init reserve_mem(char *p)
+ }
+ __setup("reserve_mem=", reserve_mem);
+ 
++static int reserve_mem_kho_write_map(void *fdt, struct reserve_mem_table *map)
++{
++	int err = 0;
++	const char compatible[] = "reserve_mem_map-v1";
++	struct kho_mem mem = {
++		.addr = map->start,
++		.size = map->size,
++	};
++
++	err |= fdt_begin_node(fdt, map->name);
++	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
++	err |= fdt_property(fdt, "mem", &mem, sizeof(mem));
++	err |= fdt_end_node(fdt);
++
++	return err;
++}
++
++static int reserve_mem_kho_notifier(struct notifier_block *self,
++				    unsigned long cmd, void *v)
++{
++	const char compatible[] = "reserve_mem-v1";
++	void *fdt = v;
++	int err = 0;
++	int i;
++
++	switch (cmd) {
++	case KEXEC_KHO_ABORT:
++		return NOTIFY_DONE;
++	case KEXEC_KHO_DUMP:
++		/* Handled below */
++		break;
++	default:
++		return NOTIFY_BAD;
++	}
++
++	if (!reserved_mem_count)
++		return NOTIFY_DONE;
++
++	err |= fdt_begin_node(fdt, "reserve_mem");
++	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
++	for (i = 0; i < reserved_mem_count; i++)
++		err |= reserve_mem_kho_write_map(fdt, &reserved_mem_table[i]);
++	err |= fdt_end_node(fdt);
++
++	return err ? NOTIFY_BAD : NOTIFY_DONE;
++}
++
++static struct notifier_block reserve_mem_kho_nb = {
++	.notifier_call = reserve_mem_kho_notifier,
++};
++
++static int __init reserve_mem_init(void)
++{
++	register_kho_notifier(&reserve_mem_kho_nb);
++
++	return 0;
++}
++core_initcall(reserve_mem_init);
++
+ #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+ static const char * const flagname[] = {
+ 	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
 -- 
 2.47.2
 
