@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F090FC02194
-	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 13:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40029C02198
+	for <kexec@archiver.kernel.org>; Thu,  6 Feb 2025 15:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=d2NqMw/5VR+un3i5cyW8rSGlyShyy5beN9EqcYd6H7I=; b=B0JBgWcv7qHnAhKxa3kKgJmIDQ
-	Bzer39KunNPXHuzyq9ZGofrF7YjbhBv4H2lRC83FVTm+pdAKftXO6nwO4YRph2O1LydxgO8idWR0q
-	OhL/eqQUIuh67JbNBjWV0nJgTmcRNp5p6WRnsqPczmLPkIDMsS3qBX2RZXZMNmw0PfzgWhAW+Nnco
-	9oEzAbxOH+KVBnlvAXr4Nv1SZiw7LpAqfowDY7BA7rBLsTdM1HW9ELxi2ND2ZDy1b6tmy5jsgnWHp
-	+OQDG7jqi3/MktEinypWqgH2c+0W6Yz7ELtmwnUrIiH5QggrGnYHdPBNRBkKyxoWsqh+ev/lymGMx
-	2ochLsxQ==;
+	bh=eSODbqt1dCHlKuqG5gOGW7Y2t1iZh7V36JKTjYF1S7o=; b=kFhOgLVh1OuLbpFoGLnUDnVT8F
+	YGKNzLjZ+932M4M17+BwOV1FG5hOTyaPl4d6wu3wDrOiIbSFpr+OI3DjsSqtMYN0e04B1qPWOy5ia
+	OVJkPjRfuqbwXhliztx5/CcyI6zFS/nbzEhDvtGF/3KsOjxsLw39NU0lSALqQzYOiOglmH28lwUkk
+	hN9M8g3ldUl90OZAzEaDV7XrGegT+TUXoN0fKjstF1DpEangEKZL/KuuIRTFTg4coeStzarsiRfkI
+	YZqn1oFm/JPNQZ0Mt3qy0ehPpP78gN94PWxAtFfEFEJpHSdIDYDqyLVCOziJHFBgJU+imHUoldp2T
+	JkjJophQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg2Jo-00000006UbG-2Luo;
-	Thu, 06 Feb 2025 13:53:24 +0000
+	id 1tg3NZ-00000006fKi-1gto;
+	Thu, 06 Feb 2025 15:01:21 +0000
 Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg1xT-00000006RFn-1WUK;
-	Thu, 06 Feb 2025 13:30:20 +0000
+	id 1tg1x2-00000006R47-1YvY;
+	Thu, 06 Feb 2025 13:29:53 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 955A5A43E68;
-	Thu,  6 Feb 2025 13:28:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB81C4CEE8;
-	Thu,  6 Feb 2025 13:30:09 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 8CC13A4426C;
+	Thu,  6 Feb 2025 13:28:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8439C4CEDD;
+	Thu,  6 Feb 2025 13:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848618;
-	bh=DEPWTj2lMxZNBMBbVuId7YwohjOTilwE4mRuWlbJrXA=;
+	s=k20201202; t=1738848591;
+	bh=1txtjW96JxUndZYD9a00W/76sD+LvXXvrxBD/8JuEQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JHyCveIB+H+hP369+oAVupUsNOhw1rXCFbz/HMMrekGHYAW5g4PNpWIwrA8MwexgL
-	 4yMDEsor1brMgVYnrKTNOKQMYqerjM3u2rtawVm++rzJDLZojHWhKDBkq33U5MfHSV
-	 NQtV2EFA/lMKTVnsQP2JZSAaMs3oEfA7VLfyV889coTXhhEVxMdqkij+tqxaqUj2Tc
-	 +ihizHttzw+XGMKcXveRsjk85ki9HH1SFWo0iThELJ22q8Xi9jHv9Q91sHpsMVossU
-	 ZgFgJe+G3yxv9QmNthG7QhvnBHAriJsMyUex426XIiM46CWpwr37AZ05MfQc08FbZ1
-	 R1sab0YI6csgw==
+	b=Mvy2lbhpllMBnnyJK/ZkaYgJSkQKeGHs+Q9PA1rGGi1MWQw8SCI9y53zhVA8MhcPW
+	 umRbwPhZK1MIY+MGeqpJY+Q4K1KriPoBHFFeU1mUXBHZNVykg6dnluODkAN0hAGvyM
+	 a+pW17FtbIxucMLTKmm2OLhVdZBXxATM+cFA5MiyCLIMwQ+ubMNwe8H2BVfuaYKRPx
+	 VijP3Vocku1QnN/NBswC9idxp0054VWMo+t7FpS7i4O0OMK2rmyHCU72RxHmRitVI8
+	 hzEmnGVnh1y0Ziuiwgpf/8Ap0fUKJN5vJbWyQe29fgLAKaxyNyv9bB2KWVsgmUri/l
+	 JhEn8cdB5h2Yw==
 From: Mike Rapoport <rppt@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Alexander Graf <graf@amazon.com>,
@@ -81,17 +81,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-doc@vger.kernel.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
-Date: Thu,  6 Feb 2025 15:27:54 +0200
-Message-ID: <20250206132754.2596694-15-rppt@kernel.org>
+Subject: [PATCH v4 11/14] x86/setup: use memblock_reserve_kern for memory used by kernel
+Date: Thu,  6 Feb 2025 15:27:51 +0200
+Message-ID: <20250206132754.2596694-12-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_053019_526183_2A3A46E1 
-X-CRM114-Status: GOOD (  19.88  )
+X-CRM114-CacheID: sfid-20250206_052952_545359_F0C77DB9 
+X-CRM114-Status: GOOD (  16.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,127 +108,81 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-We introduced KHO into Linux: A framework that allows Linux to pass
-metadata and memory across kexec from Linux to Linux. KHO reuses fdt
-as file format and shares a lot of the same properties of firmware-to-
-Linux boot formats: It needs a stable, documented ABI that allows for
-forward and backward compatibility as well as versioning.
+memblock_reserve() does not distinguish memory used by firmware from memory
+used by kernel.
 
-As first user of KHO, we introduced memblock which can now preserve
-memory ranges reserved with reserve_mem command line options contents
-across kexec, so you can use the post-kexec kernel to read traces from
-the pre-kexec kernel.
+The distinction is nice to have for accounting of early memory allocations
+and reservations, but it is essential for kexec handover (kho) to know how
+much memory kernel consumes during boot.
 
-This patch adds memblock schemas similar to "device" device tree ones to
-a new kho bindings directory. This allows us to force contributors to
-document the data that moves across KHO kexecs and catch breaking change
-during review.
+Use memblock_reserve_kern() to reserve kernel memory, such as kernel image,
+initrd and setup data.
 
-Co-developed-by: Alexander Graf <graf@amazon.com>
-Signed-off-by: Alexander Graf <graf@amazon.com>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- .../kho/bindings/memblock/reserve_mem.yaml    | 41 ++++++++++++++++++
- .../bindings/memblock/reserve_mem_map.yaml    | 42 +++++++++++++++++++
- 2 files changed, 83 insertions(+)
- create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
- create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
+ arch/x86/kernel/setup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/kho/bindings/memblock/reserve_mem.yaml b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-new file mode 100644
-index 000000000000..7b01791b10b3
---- /dev/null
-+++ b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Memblock reserved memory
-+
-+maintainers:
-+  - Mike Rapoport <rppt@kernel.org>
-+
-+description: |
-+  Memblock can serialize its current memory reservations created with
-+  reserve_mem command line option across kexec through KHO.
-+  The post-KHO kernel can then consume these reservations and they are
-+  guaranteed to have the same physical address.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - reserve_mem-v1
-+
-+patternProperties:
-+  "$[0-9a-f_]+^":
-+    $ref: reserve_mem_map.yaml#
-+    description: reserved memory regions
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    reserve_mem {
-+      compatible = "reserve_mem-v1";
-+        r1 {
-+          compatible = "reserve_mem_map-v1";
-+          mem = <0xc07c 0x2000000 0x01 0x00>;
-+        };
-+    };
-diff --git a/Documentation/kho/bindings/memblock/reserve_mem_map.yaml b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-new file mode 100644
-index 000000000000..09001c5f2124
---- /dev/null
-+++ b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memblock/reserve_mem_map.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Memblock reserved memory regions
-+
-+maintainers:
-+  - Mike Rapoport <rppt@kernel.org>
-+
-+description: |
-+  Memblock can serialize its current memory reservations created with
-+  reserve_mem command line option across kexec through KHO.
-+  This object describes each such region.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - reserve_mem_map-v1
-+
-+  mem:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: |
-+      Array of { u64 phys_addr, u64 len } elements that describe a list of
-+      memory ranges.
-+
-+required:
-+  - compatible
-+  - mem
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    reserve_mem {
-+      compatible = "reserve_mem-v1";
-+        r1 {
-+          compatible = "reserve_mem_map-v1";
-+          mem = <0xc07c 0x2000000 0x01 0x00>;
-+        };
-+    };
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cebee310e200..c80c124af332 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -220,8 +220,8 @@ static void __init cleanup_highmap(void)
+ static void __init reserve_brk(void)
+ {
+ 	if (_brk_end > _brk_start)
+-		memblock_reserve(__pa_symbol(_brk_start),
+-				 _brk_end - _brk_start);
++		memblock_reserve_kern(__pa_symbol(_brk_start),
++				      _brk_end - _brk_start);
+ 
+ 	/* Mark brk area as locked down and no longer taking any
+ 	   new allocations */
+@@ -294,7 +294,7 @@ static void __init early_reserve_initrd(void)
+ 	    !ramdisk_image || !ramdisk_size)
+ 		return;		/* No initrd provided by bootloader */
+ 
+-	memblock_reserve(ramdisk_image, ramdisk_end - ramdisk_image);
++	memblock_reserve_kern(ramdisk_image, ramdisk_end - ramdisk_image);
+ }
+ 
+ static void __init reserve_initrd(void)
+@@ -347,7 +347,7 @@ static void __init add_early_ima_buffer(u64 phys_addr)
+ 	}
+ 
+ 	if (data->size) {
+-		memblock_reserve(data->addr, data->size);
++		memblock_reserve_kern(data->addr, data->size);
+ 		ima_kexec_buffer_phys = data->addr;
+ 		ima_kexec_buffer_size = data->size;
+ 	}
+@@ -447,7 +447,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 		len = sizeof(*data);
+ 		pa_next = data->next;
+ 
+-		memblock_reserve(pa_data, sizeof(*data) + data->len);
++		memblock_reserve_kern(pa_data, sizeof(*data) + data->len);
+ 
+ 		if (data->type == SETUP_INDIRECT) {
+ 			len += data->len;
+@@ -461,7 +461,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 			indirect = (struct setup_indirect *)data->data;
+ 
+ 			if (indirect->type != SETUP_INDIRECT)
+-				memblock_reserve(indirect->addr, indirect->len);
++				memblock_reserve_kern(indirect->addr, indirect->len);
+ 		}
+ 
+ 		pa_data = pa_next;
+@@ -649,7 +649,7 @@ static void __init early_reserve_memory(void)
+ 	 * __end_of_kernel_reserve symbol must be explicitly reserved with a
+ 	 * separate memblock_reserve() or they will be discarded.
+ 	 */
+-	memblock_reserve(__pa_symbol(_text),
++	memblock_reserve_kern(__pa_symbol(_text),
+ 			 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
+ 
+ 	/*
 -- 
 2.47.2
 
