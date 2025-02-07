@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE9BBC02192
-	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 08:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D7B5C0219B
+	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 08:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xGCEQWnsV0DXZyX4AZtteWaBo+Ye/T/FHSq8IEPdnnc=; b=A/WftuBuauRmaRwabw7CFb0YDY
-	i0I8xRDWUKCSvQHwgdt2izkfhbDY3ZViaa/DGkGg7Sis4iZAT3pLG497CId2leNr4u2Z+o2j7ACZE
-	R7ndEKD5cdku0BQk9mlHzAZm7CHhRpXZ9Od9csJGPQ92pfKiOyK5fe71cZtuOfFWCJEgundPSIwR5
-	WjU5UgOgL7euTwCE2kBVBBQ57ZiMBLDmtzaxSWextowFaV3P/SPFl6jFlAaWqPS/WEbJXF70aMkmt
-	nd9vdR6Eqc7q72Ps/zLLsW3AcyzMStUKwvw6TWQdN0rNXJw2IXBH3GhrFbclBdGq76+XqIHSlZaRw
-	X5912bHw==;
+	bh=p3nkfxSaNeN7hJYI9UBbIfRFZwlZD8sEoPkfxHM5WLE=; b=UxGU3m26jqhbAVOzdN4BOY/+0t
+	ZOlN2StQG4pO/EVbwxnfw2vDTMP/h8+Y/WladnN/9s7s9DFOXJ0VMK5zu7h4IayI+6G8Xuo48S7qb
+	lK/lSNd7Z6vIBTQMpBx71BQ2obJWV1lMd2itzcPwsXS7Fv2w7VpuzvUIu0jAWywUvKatbIqUvYENe
+	ZVVtbu2RrjA/Ft7yj26lCUveW93Jxph8RGa5TFKbVAi78alKOAjl5/eB6mSSPwakjez+DMnjG0M3a
+	1+5p+eSsywav3aljYiqtihbTsetLCI7y1qm+LZ15LJTIRJPLm/cu7F5ue8p990aSPnGbnK8AmOGyB
+	Wm8GCDFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJJ3-00000008jGR-1wa6;
-	Fri, 07 Feb 2025 08:01:45 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1tgJOD-00000008kMr-2mvr;
+	Fri, 07 Feb 2025 08:07:05 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJJ1-00000008jFR-0P80;
-	Fri, 07 Feb 2025 08:01:44 +0000
+	id 1tgJOB-00000008kLM-0CAT;
+	Fri, 07 Feb 2025 08:07:04 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 9B37C5C662A;
-	Fri,  7 Feb 2025 08:01:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CFCC4CED1;
-	Fri,  7 Feb 2025 08:01:30 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id F3EECA4289D;
+	Fri,  7 Feb 2025 08:05:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3BEC4CED1;
+	Fri,  7 Feb 2025 08:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738915302;
-	bh=kFDeL/SJLlnJWVrJNKoLmxn9dhqX2WUHrbLloiO0mH4=;
+	s=k20201202; t=1738915621;
+	bh=gmvjh4dkLXQWB/aNPOCFxhvy4MCVdZfnnTa23d2Vqx4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FjyuP9Y4T8Fan+zoNUKCQyuX6jxV85gLTZoZl7hEYpJX0wcJ9Ctafn5JB4bniEoFv
-	 SRkEJ61x6qG5jit8nnguB76u3YF0z83cdx1SC73KnrQlo65sYoDYjNF/UqkYX8TYUd
-	 bCmI4+wD37/kwXdMLzB1jxhIP+dKPVsS2Ufjzms022j0pW2Bt1nKew4tWOZJRGhCTD
-	 kgzARsNkHKsPZIn6VJM0V5oKERYoKKUqLbyB+tjXl7V0B9DPzDkjQjNaTK6Rlw8X1m
-	 qoMEe5lFxkKWH3vGFGn4uYLipyVg/XSaNFkC30V3xMSio2VBL0kcdTLfmhgm1pd5gF
-	 SflwleruakgWw==
-Date: Fri, 7 Feb 2025 10:01:22 +0200
+	b=N9hGFt1MT9MudOB8G3xhPsgVkPL13CsGiEUsLxyCU38gOEui2kZK2TRDIJuOwNn9d
+	 3LIB+f8dOdcZerYT7pIiLFGBBv3bhQdSSBnOKrJ3b1XwzaZvoXfU1qYQIWj0ngmh69
+	 p//fwX1B1vzkSXX3A5dH7nIbzFPmXcKnMSPSs5YWDWVpC1BuLcz0KBpWZZXW+CkvwE
+	 UObo9g70YkW+RiyeycGMCSps8itwC4ifzY34sO99kkNeTyp5bijklQEj0VbqEndkq5
+	 ZKExFJOSeC4i1Y+VcMCFjWcQ06zZUJ33AFWJ1Q88KJo74WN355g5NTlF4Nz5ZJaFaH
+	 CKchBYGyDprFw==
+Date: Fri, 7 Feb 2025 10:06:41 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
@@ -74,16 +74,16 @@ Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-Message-ID: <Z6W90hz6WaXfZCjQ@kernel.org>
+Message-ID: <Z6W_EcyPO5lBbCKZ@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
+ <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
+In-Reply-To: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250207_000143_221791_51D9758D 
-X-CRM114-Status: GOOD (  20.39  )
+X-CRM114-CacheID: sfid-20250207_000703_203893_9627BED6 
+X-CRM114-Status: GOOD (  25.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,47 +98,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 06, 2025 at 08:50:30PM -0800, Andrew Morton wrote:
-> My x86_64 allmodconfig sayeth:
+On Thu, Feb 06, 2025 at 04:29:39PM -0800, Andrew Morton wrote:
+> On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xca (section: .text) -> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xf5 (section: .text) -> scratch_scale (section: .init.data)
+> > This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+> > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+> > just to make things simpler instead of ftrace we decided to preserve
+> > "reserve_mem" regions.
+> > 
+> > The patches are also available in git:
+> > https://git.kernel.org/rppt/h/kho/v4
+> > 
+> > 
+> > Kexec today considers itself purely a boot loader: When we enter the new
+> > kernel, any state the previous kernel left behind is irrelevant and the
+> > new kernel reinitializes the system.
+> 
+> I tossed this into mm.git for some testing and exposure.
+> 
+> What merge path are you anticipating?
 
-This should fix it:
+I think your tree is the most appropriate, but let's wait for Acks from x86
+and arm64 people ;-)
 
-From 176767698d4ac5b7cddffe16677b60cb18dce786 Mon Sep 17 00:00:00 2001
+> Review activity seems pretty thin thus far?
+
+Yeah :(
+Maybe with Pasha's version on top of that we'll have more people reviewing.
+
+And here is another fixup for a sparse error kbuild reported:
+
+
+From e1e34b96b96b89a01ee31be223c8dfc2ce1c4cbe Mon Sep 17 00:00:00 2001
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Fri, 7 Feb 2025 09:57:09 +0200
-Subject: [PATCH] kho: make kho_reserve_scratch and kho_init_reserved_pages
- __init
+Date: Fri, 7 Feb 2025 09:55:03 +0200
+Subject: [PATCH] kho: make bin_attr_dt_kern static
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- kernel/kexec_handover.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/kexec_handover.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index c21ea2a09d47..e0b92011afe2 100644
+index c26753d613cb..c21ea2a09d47 100644
 --- a/kernel/kexec_handover.c
 +++ b/kernel/kexec_handover.c
-@@ -620,7 +620,7 @@ static phys_addr_t __init scratch_size(int nid)
-  * active. This CMA region will only be used for movable pages which are not a
-  * problem for us during KHO because we can just move them somewhere else.
-  */
--static void kho_reserve_scratch(void)
-+static void __init kho_reserve_scratch(void)
+@@ -258,7 +258,7 @@ static ssize_t dt_read(struct file *file, struct kobject *kobj,
+ 	return count;
+ }
+ 
+-struct bin_attribute bin_attr_dt_kern = __BIN_ATTR(dt, 0400, dt_read, NULL, 0);
++static struct bin_attribute bin_attr_dt_kern = __BIN_ATTR(dt, 0400, dt_read, NULL, 0);
+ 
+ static int kho_expose_dt(void *fdt)
  {
- 	phys_addr_t addr, size;
- 	int nid, i = 1;
-@@ -672,7 +672,7 @@ static void kho_reserve_scratch(void)
-  * Scan the DT for any memory ranges and make sure they are reserved in
-  * memblock, otherwise they will end up in a weird state on free lists.
-  */
--static void kho_init_reserved_pages(void)
-+static void __init kho_init_reserved_pages(void)
- {
- 	const void *fdt = kho_get_fdt();
- 	int offset = 0, depth = 0, initial_depth = 0, len;
 -- 
 2.47.2
 
