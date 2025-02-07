@@ -4,98 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60288C02196
-	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 07:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE9BBC02192
+	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 08:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+E4tyOIaMD9iTV+vxsPHkI9fcl7y9d2AE2AY86e0L5A=; b=FSGeXBYa6NRsqiv4dd00W+aruX
-	fmXDBoqOZaGeb72Eo65Zy2pZukSPnyCdsRL3Q8MW5hTRdtrKHNdL7afeQQ4ObqEMMSRsD2rdRn+El
-	1AreYdDyookrE06H+u/PSOVxf3RfuGms1yHNbinweYyyHo5zIAv9dapJkLp0uNG06MyQYIJ3x1Zuu
-	oA6E3d5v4mmqj8H6yJOzXdZ2GPVaDYmiWW5NfXxBx8fbY6dVhJxLC4uP6eUPfIQ4EbfaefHR8sPsW
-	yvx8NnMXsoIg9UWbZyfRXtFkQaH9ZEnjukQjOtl2vkW/xo8TnSlP26HzgmaUCuj0F6YDHVP2nWGNb
-	8ptH51yQ==;
+	bh=xGCEQWnsV0DXZyX4AZtteWaBo+Ye/T/FHSq8IEPdnnc=; b=A/WftuBuauRmaRwabw7CFb0YDY
+	i0I8xRDWUKCSvQHwgdt2izkfhbDY3ZViaa/DGkGg7Sis4iZAT3pLG497CId2leNr4u2Z+o2j7ACZE
+	R7ndEKD5cdku0BQk9mlHzAZm7CHhRpXZ9Od9csJGPQ92pfKiOyK5fe71cZtuOfFWCJEgundPSIwR5
+	WjU5UgOgL7euTwCE2kBVBBQ57ZiMBLDmtzaxSWextowFaV3P/SPFl6jFlAaWqPS/WEbJXF70aMkmt
+	nd9vdR6Eqc7q72Ps/zLLsW3AcyzMStUKwvw6TWQdN0rNXJw2IXBH3GhrFbclBdGq76+XqIHSlZaRw
+	X5912bHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJEw-00000008iHG-1KzN;
-	Fri, 07 Feb 2025 07:57:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tgJJ3-00000008jGR-1wa6;
+	Fri, 07 Feb 2025 08:01:45 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJEq-00000008iFg-2puV
-	for kexec@lists.infradead.org;
-	Fri, 07 Feb 2025 07:57:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738915042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+E4tyOIaMD9iTV+vxsPHkI9fcl7y9d2AE2AY86e0L5A=;
-	b=QHS/RuJlvpn+tuEr3ZdHyOt/d626DCcvPc9rf50o2MxqQTuOnDv9tUIkCS6SPml+C0uKja
-	jL6xtEaITNdmFYdM8IhxQfKkj4WWebBEVOT4mnY63IIQR9COi4HoC9LewaT1Xs18qT1nkP
-	vqUNsDR9jeD1r8X7hyHh+q9r2qePxdA=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-258UONttNAyG--JjENDnwg-1; Fri, 07 Feb 2025 02:57:20 -0500
-X-MC-Unique: 258UONttNAyG--JjENDnwg-1
-X-Mimecast-MFC-AGG-ID: 258UONttNAyG--JjENDnwg
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2f9c02f54f2so3786910a91.3
-        for <kexec@lists.infradead.org>; Thu, 06 Feb 2025 23:57:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738915040; x=1739519840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+E4tyOIaMD9iTV+vxsPHkI9fcl7y9d2AE2AY86e0L5A=;
-        b=hXU1Hxs6J69bDT1E26DJkwBAMuipJAoGuzXkGl2aIpVIbsMydFCkq5epJsLKp+mSJg
-         owDrFwxgz73RXvSN0HcXXC0UsVHrQ4Wo2faLfngjQ5u23VmeLyOr32QC9rC/8JA3seMr
-         7/xbeZ7Ifxs39l6glmbbFVU/9K5CSy6NtOTqpHrXSWp64qQ6hgqmWahRVESZJv/LbjEN
-         idikXzED+D293Yy5hSorHHIpVzL3QBg47+7kWuc/fOs8gpeJSR3CGPm789yXO/phcDD5
-         kHRn/LfJVKIVMlJQ7Yi8gqi+VhU8rcWLP7/wGQU9UxqXPjgayAkY4wPRXrY0LhS40TnH
-         0rnw==
-X-Gm-Message-State: AOJu0Ywu0qZrLUj1MuNKRKgMTOZ7c9414+RJxX7qNOjz4dSRr8fX2pnL
-	JpDDC+Q27fgJ2NCsupw505UyuDYmzDsqVDZ8mQgJ5rmkXo3M/BZMy9zFRSPzLecrBRKnhIwAV3e
-	RaqDOlGt1wcF/3zun0PgRclXisLyN5cruQWO3RNyL98Cw5Ef+WPuL8xNaZw==
-X-Gm-Gg: ASbGncuSO2ochkEzGYaJ9XP+9fFBMdKtrCDjqpRRj4jATggcrOlnU7oWJziW5uSbTy7
-	r2HVhAzh8+C4p6DEsUxD84B8S9BhKg7YAKM5/HbsPxt/HMaaDuIkBYhRjNVUbg2ECFgfnPi/8Dr
-	5vV77HmD34GOacs8gCNdCtgnuMQkLOWjZnC7Vvnt+mnq6qDFDkDMEVW/eQya/ONmpGJkYIQEPKK
-	FDB7+41VTjEF2eWK57k3FUJeWULxBWuBD37ZCPVMOjq0+Yqhwgc8YuqE80+A41G0rtMog91
-X-Received: by 2002:a05:6a00:999:b0:725:ea30:aafc with SMTP id d2e1a72fcca58-7305d42551emr3689018b3a.5.1738915039680;
-        Thu, 06 Feb 2025 23:57:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFlCduPvZoT2kdtGUGIf3M+qw7MXxQrIVbDVUudc4+qEcL6XKQWqM8w4dZu6STeAHsFx4TyuQ==
-X-Received: by 2002:a05:6a00:999:b0:725:ea30:aafc with SMTP id d2e1a72fcca58-7305d42551emr3688992b3a.5.1738915039282;
-        Thu, 06 Feb 2025 23:57:19 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d4a0sm2490403b3a.15.2025.02.06.23.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 23:57:18 -0800 (PST)
-Date: Fri, 7 Feb 2025 15:57:05 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v7 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <36wuxuweax7e5p3q7nqrgh64m3c5xbizvanxdzkkrsuarhejws@tmjheoas6stx>
-References: <20250116065825.1041558-1-coxu@redhat.com>
- <Z6V3e3yPQyhaRBCN@fedora>
+	id 1tgJJ1-00000008jFR-0P80;
+	Fri, 07 Feb 2025 08:01:44 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 9B37C5C662A;
+	Fri,  7 Feb 2025 08:01:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CFCC4CED1;
+	Fri,  7 Feb 2025 08:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738915302;
+	bh=kFDeL/SJLlnJWVrJNKoLmxn9dhqX2WUHrbLloiO0mH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FjyuP9Y4T8Fan+zoNUKCQyuX6jxV85gLTZoZl7hEYpJX0wcJ9Ctafn5JB4bniEoFv
+	 SRkEJ61x6qG5jit8nnguB76u3YF0z83cdx1SC73KnrQlo65sYoDYjNF/UqkYX8TYUd
+	 bCmI4+wD37/kwXdMLzB1jxhIP+dKPVsS2Ufjzms022j0pW2Bt1nKew4tWOZJRGhCTD
+	 kgzARsNkHKsPZIn6VJM0V5oKERYoKKUqLbyB+tjXl7V0B9DPzDkjQjNaTK6Rlw8X1m
+	 qoMEe5lFxkKWH3vGFGn4uYLipyVg/XSaNFkC30V3xMSio2VBL0kcdTLfmhgm1pd5gF
+	 SflwleruakgWw==
+Date: Fri, 7 Feb 2025 10:01:22 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+Message-ID: <Z6W90hz6WaXfZCjQ@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <Z6V3e3yPQyhaRBCN@fedora>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: csWnTCr8EGEEjFVcK6phVwQtT7RV9gmUFc2H84vdC6c_1738915040
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_235724_788793_2367C0A0 
-X-CRM114-Status: GOOD (  13.03  )
+X-CRM114-CacheID: sfid-20250207_000143_221791_51D9758D 
+X-CRM114-Status: GOOD (  20.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,33 +98,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Feb 07, 2025 at 11:01:15AM +0800, Baoquan He wrote:
->Hi Coiby,
+On Thu, Feb 06, 2025 at 08:50:30PM -0800, Andrew Morton wrote:
+> My x86_64 allmodconfig sayeth:
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xca (section: .text) -> memblock_alloc_try_nid (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xf5 (section: .text) -> scratch_scale (section: .init.data)
 
-Hi Baoquan,
+This should fix it:
 
->
->On 01/16/25 at 02:58pm, Coiby Xu wrote:
->> LUKS is the standard for Linux disk encryption, widely adopted by users,
->> and in some cases, such as Confidential VMs, it is a requirement. With
->> kdump enabled, when the first kernel crashes, the system can boot into
->> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
->> to a specified target. However, there are two challenges when dumping
->> vmcore to a LUKS-encrypted device:
->
->This v7 series looks good to me, other than Randy's concern. Do you plan
->to repost to update the document?
+From 176767698d4ac5b7cddffe16677b60cb18dce786 Mon Sep 17 00:00:00 2001
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Date: Fri, 7 Feb 2025 09:57:09 +0200
+Subject: [PATCH] kho: make kho_reserve_scratch and kho_init_reserved_pages
+ __init
 
-Thanks for reviewing the patch set! I'll send a new version which will
-apply Randy's suggestions!
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ kernel/kexec_handover.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
->Thanks
->Baoquan
->
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index c21ea2a09d47..e0b92011afe2 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -620,7 +620,7 @@ static phys_addr_t __init scratch_size(int nid)
+  * active. This CMA region will only be used for movable pages which are not a
+  * problem for us during KHO because we can just move them somewhere else.
+  */
+-static void kho_reserve_scratch(void)
++static void __init kho_reserve_scratch(void)
+ {
+ 	phys_addr_t addr, size;
+ 	int nid, i = 1;
+@@ -672,7 +672,7 @@ static void kho_reserve_scratch(void)
+  * Scan the DT for any memory ranges and make sure they are reserved in
+  * memblock, otherwise they will end up in a weird state on free lists.
+  */
+-static void kho_init_reserved_pages(void)
++static void __init kho_init_reserved_pages(void)
+ {
+ 	const void *fdt = kho_get_fdt();
+ 	int offset = 0, depth = 0, initial_depth = 0, len;
+-- 
+2.47.2
+
 
 -- 
-Best regards,
-Coiby
-
+Sincerely yours,
+Mike.
 
