@@ -4,98 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87626C02194
-	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 01:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C55D6C02194
+	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 03:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=E/B6rKXoRP9BkkuR2mn1tTK5oITIELKG2LYs8WqA/Z0=; b=ujCzqWPNkhZ6AuXXOx+3Ifu1rt
-	pNtPG/zWkUp7YER3+2DdhXdXku64Gc64NHlfHRjPrD3+hHpcKoRY0dZFduE1xE13tqYx0iRVwmHdE
-	pIph0ahZD57uror+KISPA36xpN10gQEMKvbY3+YtnxYzVCgiBR+DPc+pA34r6WozUisXFwjJa3jWP
-	StdBJZ/3WqDS1FQkfbbMJeAPGfeZDsW4+0EBUn7z1GBM/ssgUk52Ohr1PXoPfpmopwMiDPQNwIK4Q
-	cIsGkrcbhjL7asjvukShhkEZ5wU57a4AtoX/MA6wmjOvcCzN96xR2tXasrvICteSCuXDFwcfOazbL
-	BpePx1uA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bovCnASvGHhB/zWZqXML/1CrlUVnFOGyxkprm/QLHBA=; b=UI9hupXwkkA8PUpTAfN9TCA2wq
+	JJei7+UHgsspGHKMa5mNn4gSxas574JEB20sFECQsAgwVfPeH056r5q5adDaIQ6lLT1hlp2zCt8pX
+	gY5I4aHWshPXIOZl2hFQi5HNKwcl1/FbrnxwR8LboytfY/+nxZA9rFeXUuTzlyGEztJE1a75Lz2/H
+	JurCcGGRD9c5ZEYEo7XJ+CCb+2wnNKRvSiNJJLgRPhRV1n84e9LiSLiD2og3jlqgEu/tz8vFhRTlw
+	Ax006prSXdOrFa52dugF56hA88Z3sUxbLNM1GsUl0YRDdyg+xuU2TGpFq79Pe6fFzTinjyYzr+p6g
+	IaL7cGqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgDCO-00000007xFJ-1TtB;
-	Fri, 07 Feb 2025 01:30:28 +0000
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+	id 1tgEdq-000000089GE-2IBK;
+	Fri, 07 Feb 2025 03:02:54 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgDAy-00000007wwk-2dVa
+	id 1tgEcU-0000000890d-26jd
 	for kexec@lists.infradead.org;
-	Fri, 07 Feb 2025 01:29:02 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-46788c32a69so20946471cf.2
-        for <kexec@lists.infradead.org>; Thu, 06 Feb 2025 17:28:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1738891739; x=1739496539; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/B6rKXoRP9BkkuR2mn1tTK5oITIELKG2LYs8WqA/Z0=;
-        b=CLOZLCvdtEvWZ4hJXVffHN7qAfsCKg1FPRFFEkYFCPDG2dVY6YYp7nGXPRrMH/9EVT
-         0dSM6fLZGjfH5h6qzxWT2NN7hgH29hrLCIBw6IGQN+R6jxXQiDnkvmt/wrEaAqmXk4My
-         aJ7BstcSIUOFgFodoPVpukpc7arA4OB1ZBSnVNUcLaYV79mdEEOtuPDgkA4ayVU8HCbF
-         eRIP3QUZAOQejlWtb++8CL251MgW5KkITBkogFZM186TZ0ksshI9qLdn0FwPfvnyZGxw
-         YXmX5i9Ro10i4+brevB1q/YUYPBJCe+iLtSwFtC14QBt4l6YC4yxksQlUdzpy1SDfGul
-         mbDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738891739; x=1739496539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E/B6rKXoRP9BkkuR2mn1tTK5oITIELKG2LYs8WqA/Z0=;
-        b=gE1tPbhZuf4dwHo3BImOQ2N1m6Rr0EeX/J44dyKzEZ3bj9d3mtki3Vx+1wCda5xPFx
-         M9YKsFUAPIZykR/TgZ9PVXuZJ1pdkfEa+FH+wOTQ6yYsvUptIbgEm6PpsYQbFBcTgLyo
-         QnhUkJU/tBqB+20BmQAXG0su/lObabvUd4KMczZ2WdKYgFE7kr+ac8ue6K9JVpKfAd5I
-         VyUeWVEF2XY+t2yat12lB6dqqOpZG9ZGDlz0gloVbUHGohYY508tU5GPOpLWWohcxrI2
-         1+alSFuR2lUuzZPcEigSpBeSGcbIWOXINsKUIJI0nqL7Lty+xmYhhE7PeVyn9BLFqw84
-         C4Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLlRtmvYyXHv/sdExW7LEB5GPjlhiBjw7qMD3QnV/eVwryY3LRcaI+eydtK4khgwu9YJ4G8Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxzZ8BgrqMzAhmRAm4gKyEbac2DP7Xia4Qnul9gKJWOnEnP3wMF
-	9NV/t9mh3xnCPlC1LPZRzvRgP9Unx4hLtOw5kiVfHcPbzft6M/xHQudw2LyuU7jiAS74xNp317q
-	xEpXXbBOykHqR+2hJkeAEHL1n9f0yER5WxWA7VA==
-X-Gm-Gg: ASbGncs7i8u7UsytRxqH0JEou5c8UQNUUXimgFSvylpXvjAoMzyy2bI8L8SbRxqicvk
-	fMXbE5wYE7QXUb1AitVmaPkqiY1I+Zh/QHVQCOabK7WDmv7RqkSveRHjfqqkOl9JRPC71xQ==
-X-Google-Smtp-Source: AGHT+IG/qU+DQGRbIVpasPJX4dEgRbGI1bwsgyRQgH7sLyexv6ztYzz7dd87jk6gdrjtGjTpHMmepc+RecJuVSIbOWM=
-X-Received: by 2002:a05:622a:30f:b0:46e:24b1:dcd1 with SMTP id
- d75a77b69052e-47167ae2a56mr22008491cf.32.1738891738868; Thu, 06 Feb 2025
- 17:28:58 -0800 (PST)
+	Fri, 07 Feb 2025 03:01:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738897288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bovCnASvGHhB/zWZqXML/1CrlUVnFOGyxkprm/QLHBA=;
+	b=hGZjPyyON7xRKP7ehp6tAcoLqrbMQOueEomNxe3ipieB9PBsdfeq5l7Ui19RFtfD6S7mWZ
+	cFZPFuqj+QbWaX8PF9o7tNvScYpZfqeXnmpqHF6rfIIDpjn/vxkNP1iKbTc+XpCCwWa66y
+	Fu06KZ4/V+iTvx5Fx5KSvJo5QA4qtaM=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-EAWj6CjfObSvsuBwm3Abqg-1; Thu,
+ 06 Feb 2025 22:01:24 -0500
+X-MC-Unique: EAWj6CjfObSvsuBwm3Abqg-1
+X-Mimecast-MFC-AGG-ID: EAWj6CjfObSvsuBwm3Abqg
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02B451956086;
+	Fri,  7 Feb 2025 03:01:23 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.206])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C51F71800570;
+	Fri,  7 Feb 2025 03:01:19 +0000 (UTC)
+Date: Fri, 7 Feb 2025 11:01:15 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v7 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <Z6V3e3yPQyhaRBCN@fedora>
+References: <20250116065825.1041558-1-coxu@redhat.com>
 MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
-In-Reply-To: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 6 Feb 2025 20:28:21 -0500
-X-Gm-Features: AWEUYZl6iTKJpq_CKya0Z3uq2I-kaX8PhW2bxqIFxSemVzQfHVc82dvbk7pP-8Y
-Message-ID: <CA+CK2bD6204AKWGOgzLMiMsnVZ=tk+DGc+VWgi3RVt2byaLJJA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Alexander Graf <graf@amazon.com>, Andy Lutomirski <luto@kernel.org>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	changyuanl@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116065825.1041558-1-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_172900_859307_29FC8E08 
-X-CRM114-Status: GOOD (  19.61  )
+X-CRM114-CacheID: sfid-20250206_190130_619928_C5DD180D 
+X-CRM114-Status: GOOD (  10.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,46 +91,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 6, 2025 at 7:29=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
->
-> On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
->
-> > This a next version of Alex's "kexec: Allow preservation of ftrace buff=
-ers"
-> > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.co=
-m),
-> > just to make things simpler instead of ftrace we decided to preserve
-> > "reserve_mem" regions.
-> >
-> > The patches are also available in git:
-> > https://git.kernel.org/rppt/h/kho/v4
-> >
-> >
-> > Kexec today considers itself purely a boot loader: When we enter the ne=
-w
-> > kernel, any state the previous kernel left behind is irrelevant and the
-> > new kernel reinitializes the system.
->
-> I tossed this into mm.git for some testing and exposure.
->
-> What merge path are you anticipating?
->
-> Review activity seems pretty thin thus far?
+Hi Coiby,
 
-KHO is going to be discussed at the upcoming lsfmm, we are also
-planning to send v5 of this patch series (discussed with Mike
-Rapoport) in a couple of weeks. It will include enhancements needed
-for the hypervisor live update scenario:
+On 01/16/25 at 02:58pm, Coiby Xu wrote:
+> LUKS is the standard for Linux disk encryption, widely adopted by users,
+> and in some cases, such as Confidential VMs, it is a requirement. With 
+> kdump enabled, when the first kernel crashes, the system can boot into
+> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore) 
+> to a specified target. However, there are two challenges when dumping
+> vmcore to a LUKS-encrypted device:
 
-1. Allow nodes to be added to the KHO tree at any time
-2. Remove "activate" (I will also send a live update framework that
-provides the activate functionality).
-3. Allow serialization during shutdown.
-4. Decouple KHO from kexec_file_load(), as kexec_file_load() should
-not be used during live update blackout time.
-5. Enable multithreaded serialization by using hash-table as an
-intermediate step before conversion to FDT.
+This v7 series looks good to me, other than Randy's concern. Do you plan
+to repost to update the document?
 
-Pasha
+Thanks
+Baoquan
+
 
