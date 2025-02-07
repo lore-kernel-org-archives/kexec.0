@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F135BC0219D
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0926CC02196
 	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 08:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,68 +12,68 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wiArPs1+avBHMZbi2nWrtxJACPoRgCcLG1Yosqozl6w=; b=FBS3G3WUALYHXLKolzjFuzBkcK
-	B0AcLjwij2Ny994tGy9BDSqAUuY4nhZcD7P1uC6y32EHRD/sEPXoVZhyBAz6dnd7PdPEsA/rtxBww
-	S57FvTvfjFvPtQBHwV0oKXISTgVspFtRD4gXFv1gBlczbpdpfHbQleJ+xQ6dMaZ6RaAGfgfnxf6aA
-	U/7nBHsiTfEqJ5eZ4esewDLikp14Y+TfuI5tuywVXtQhr5aNR8RASeayIMjyRNn4+z+VpN16YqY2k
-	Af341OOfgay5fZfqQ0Iq0xj/6rw9viVtrYyIPrGWJ4+FmOXRmVUCIz4yggYEeUNMgXtWvRUHDdH+m
-	D3pJjh+w==;
+	bh=SAfH8CaZcdNlX6bGu3s15qKUzaN5EneIuMEhM/Mtjyc=; b=Gye3JBGsYYBKhJ4C0QKJCwb1fC
+	Ci8nr5hqartA7WosCbzXVpGDXXPZ8OPv8NQ6XpQ2Q+2bm1uzolWtD2kxIQEPTgvQfdHDDPotsYZgg
+	OHmcO4+KLJVGHQOkurtmMUUaZblwH7HQBCBIOpUrSAkAxmry+kWposb3LjrX/Ck5psRFdDlnbQ5M8
+	rmchbAkx3c2tZiTPphdl6+tfWZj9anA2LcYtrgpCgKOzOXc82IOzH+xunpjWbFENq5u/nFR/MJDft
+	3YOF8wIwnt4CjztF2QP8vUk0LJX6Ffwbvczn7fu/B+338cMv3cdCoaGQxGvn1sjIn83CoAu8qp8xQ
+	Gu/YMDXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJQx-00000008l9z-2qrF;
-	Fri, 07 Feb 2025 08:09:55 +0000
+	id 1tgJQw-00000008l8p-33IW;
+	Fri, 07 Feb 2025 08:09:54 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJPk-00000008kgt-2P3g
+	id 1tgJPZ-00000008kat-46xA
 	for kexec@lists.infradead.org;
-	Fri, 07 Feb 2025 08:08:42 +0000
+	Fri, 07 Feb 2025 08:08:31 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738915719;
+	s=mimecast20190719; t=1738915709;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wiArPs1+avBHMZbi2nWrtxJACPoRgCcLG1Yosqozl6w=;
-	b=MRlF67aucAqvDteyGmkOmmicMxJC8pANC7okIOh6uiZAmjejZcwJPvv8g1PcZ5581qhDnf
-	sHdWx0WainlaAEHHXECpq8yKt7VLkfu7ZhxPQer8nMIm+VGnMnbvsT29+jprz8YwOgCxva
-	ebgUXFHpASCPNv6Ed5CN0rZFUAtD+BE=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=SAfH8CaZcdNlX6bGu3s15qKUzaN5EneIuMEhM/Mtjyc=;
+	b=cEgYv4tuh7Z6TFtX1QMiUlLRETomrYRuSyXGdk8Z9lIBmb/1JyGQN/1Cc2egPjJ3RgD8sQ
+	OdX9BA6AgwEJs7elIcjbDgOkDCVJ/BEVE49CKSAzWM6zlzWJooPptb2/b9FV55e5Bs9Exw
+	klgDXpeQxtyJgPGfyV0X/P3OWY2C1WE=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-670-vhzlvAOHMeCwFsmXIqMvUw-1; Fri, 07 Feb 2025 03:08:38 -0500
-X-MC-Unique: vhzlvAOHMeCwFsmXIqMvUw-1
-X-Mimecast-MFC-AGG-ID: vhzlvAOHMeCwFsmXIqMvUw
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21f5060ef10so25200495ad.2
-        for <kexec@lists.infradead.org>; Fri, 07 Feb 2025 00:08:38 -0800 (PST)
+ us-mta-586-uD7PR90tMe6IHu1FMBnxQA-1; Fri, 07 Feb 2025 03:08:28 -0500
+X-MC-Unique: uD7PR90tMe6IHu1FMBnxQA-1
+X-Mimecast-MFC-AGG-ID: uD7PR90tMe6IHu1FMBnxQA
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-21f444af89fso18545175ad.1
+        for <kexec@lists.infradead.org>; Fri, 07 Feb 2025 00:08:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738915714; x=1739520514;
+        d=1e100.net; s=20230601; t=1738915706; x=1739520506;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wiArPs1+avBHMZbi2nWrtxJACPoRgCcLG1Yosqozl6w=;
-        b=wHgXivWDEbEkIjVz8hhqq5+YNFZxYetY/IBrEhvqHZRMMAuusozl882jIjv4P+Ee9n
-         eXb9VT8yaw7OS9GKVOCP3Q9MgBGXOhApgTegwRmTU/sG4df71GXP4KWlgg72U0V/awZt
-         idqGoDH7aEPWIiyuoiTtk6b5aRrhdbSh5itb1cqfknaXF3bEvOA9DpmovKaEs76LGiOQ
-         7RAzsJYKmBKL4smYPqZklSWhHBlx1dD4UgjRaSvUzhGAKlQ/cJomybOgpxSwxKDax+Vd
-         EQP8Bh7xrmnaUfo0ibbnAKUDWuXl9UAmk4yTIt47dZo6cLiXJ7xo/TcrA9zgRQS9l0JN
-         t81Q==
-X-Gm-Message-State: AOJu0YzV4InxkPwTYLwLtjKavRLiSQlXjZHR5nXeHi6NZF5a8bALnLdf
-	Jh/7sxDMXRjXFCzzPHroKuHPR59ab5B8x1QJsraYUat6YMcItZNMYv1A7D5VI8Hd8JPO9xjTV+R
-	qxo+vdRC91psxNqnvp+aslfqpQatTfRyF5RYq7PNbDxBrNAEgf6Esfd4pyBzDjSI/vufLcg/+rY
-	1xKJgs7P4eMDVcUOtwSMEHFhFbpRaP35BvBBkw2Qod50l2
-X-Gm-Gg: ASbGncs+wyqj5BLVvPWeVoseer2BhSZKWWfcNwfTTHxDYL7Ahh+l0YWDHcNJK2ogwo2
-	E9MMNpqLbjjNX1tHgBw8v1Ikg7AxACrpquJuhfhkwb5QGUmIbU5ClqAe0e8FFe1u7InoTlDl6u3
-	WV0b5PbBovhX7wfg0dJZe/FnMBJm7FOUTdP77MXr6jbX3DQbYZmRwCCt6deqJ0KH4jKlNMZ3WFy
-	JV+UomRP++VgSNx2o0hd8u+2bgyN4FiHW9fhsAZr2FoxlbZyb8NUPz8mFPIebKaXiF8o5uU
-X-Received: by 2002:a17:902:e552:b0:219:cdf1:a0b8 with SMTP id d9443c01a7336-21f4e70becemr33812855ad.30.1738915714476;
-        Fri, 07 Feb 2025 00:08:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEOy2GKcmqR9hVKPcRIgrcrNltxpouvX9yK078gbyYuEyZ9aHqEHHcHMDTXf7Funzs6C/FVgQ==
-X-Received: by 2002:a17:902:e552:b0:219:cdf1:a0b8 with SMTP id d9443c01a7336-21f4e70becemr33812455ad.30.1738915714085;
-        Fri, 07 Feb 2025 00:08:34 -0800 (PST)
+        bh=SAfH8CaZcdNlX6bGu3s15qKUzaN5EneIuMEhM/Mtjyc=;
+        b=ifarPe2yefIYMFHIkutQKOD6Ypb5aC2VQQ7qHsllNq+G5zdjT1ZXNld0cwR/FZPr5n
+         2xO9unUaUip8h6cwHc4Q+/nP8hmCz4YLrZ2YmhGibrXnv3dFiJqIJaC5T0/jwk94R6FR
+         aXrhhsvjWkFtkef3/APYkmnoELjTjLISlyRIdHQMIO7TSrR4zoSgCOf61NxGYChNeuBP
+         sNxQ1Q9L1w8ea2EgLgWHh4vmdgowzqAAXAbe5JjtrpO4ubXELNT9qNam7G31zrBEIxvH
+         vPI/SYphzAY7kBL7qLuSQsjDNVWZgFjIVRjyCB1qouRob4C3HxvCGScxJCkwfSXBQiul
+         4EPA==
+X-Gm-Message-State: AOJu0YyjohSccxVrYTT+5hdXLijXSWyHSdnB3ymTqdfizmRkED526Oo9
+	a1nzgyo/xFZM00lWj6unvLegyjkW9j0BMxlWWiXAFyjdOa8H7ugLjlrG4CIxUwRP4B09D2Onw3X
+	SizMLdwobLrAdelT6NJcg5ozOptcYd7omTf0XgmfKY1dhAv7hqwSkd1m/80PKUzidLG5/11op3g
+	L2zu7pYLG6yX+vt6RdhGhrXHJDatJ+Q7TzO2DDfnQN6A==
+X-Gm-Gg: ASbGncta4BddC5PPHgJVTIdb1gDIizC9QUmYmdlv3GBbmhRXYKsLwkqUIL90xMnaCHe
+	1Fq/LGWE2tSfZwTS4Iz1kbQU9dXaomVPR3Th1jLa9U11uckgHSzyHWN5QwUeeQ52mDsmLaEuJq/
+	AmoI1KSxNZtKGyIjr58Zq7sYFNYYHRB+crNQyzuRTL54lXNGHM6/XpFczxitPORi/F0a8uu3cLf
+	7/Kkyr9ucpVwcpBJj9rg4q+i4mYFBd0ZsiGJZNbEz7wIVWrQi3i3qtmi+zo65AOTpuLQZBa
+X-Received: by 2002:a17:902:ef51:b0:215:6995:1ef3 with SMTP id d9443c01a7336-21f4e6a1125mr40433775ad.3.1738915706612;
+        Fri, 07 Feb 2025 00:08:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEPE/gqMkWPnB/djnJNY/obb5cFGvAP4LjWDnm8O0PsSmswh+uBBdXKftkoZyy8le1irXB8Pg==
+X-Received: by 2002:a17:902:ef51:b0:215:6995:1ef3 with SMTP id d9443c01a7336-21f4e6a1125mr40433315ad.3.1738915706122;
+        Fri, 07 Feb 2025 00:08:26 -0800 (PST)
 Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650cd10sm24776065ad.31.2025.02.07.00.08.32
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce21sm24790205ad.26.2025.02.07.00.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:08:33 -0800 (PST)
+        Fri, 07 Feb 2025 00:08:25 -0800 (PST)
 From: Coiby Xu <coxu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Ondrej Kozina <okozina@redhat.com>,
@@ -88,26 +88,23 @@ Cc: Ondrej Kozina <okozina@redhat.com>,
 	x86@kernel.org,
 	Dave Hansen <dave.hansen@intel.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH v8 3/7] crash_dump: store dm crypt keys in kdump reserved memory
-Date: Fri,  7 Feb 2025 16:08:11 +0800
-Message-ID: <20250207080818.129165-4-coxu@redhat.com>
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: [PATCH v8 1/7] kexec_file: allow to place kexec_buf randomly
+Date: Fri,  7 Feb 2025 16:08:09 +0800
+Message-ID: <20250207080818.129165-2-coxu@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
 References: <20250207080818.129165-1-coxu@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mBAOwsjcPOIqb-VoT9bQCThSWVDdtie0kdXxynZSbxE_1738915717
+X-Mimecast-MFC-PROC-ID: e7iNLtnAUc3MggASx-8e0ylhMXU1ueCFHXXVm3rVPws_1738915707
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250207_000840_705677_AFA4228F 
-X-CRM114-Status: GOOD (  18.12  )
+X-CRM114-CacheID: sfid-20250207_000830_089507_C71FB73A 
+X-CRM114-Status: GOOD (  15.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,205 +119,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When the kdump kernel image and initrd are loaded, the dm crypts keys
-will be read from keyring and then stored in kdump reserved memory.
+Currently, kexec_buf is placed in order which means for the same
+machine, the info in the kexec_buf is always located at the same
+position each time the machine is booted. This may cause a risk for
+sensitive information like LUKS volume key. Now struct kexec_buf has a
+new field random which indicates it's supposed to be placed in a random
+position.
 
-Assume a key won't exceed 256 bytes thus MAX_KEY_SIZE=256 according to
-"cryptsetup benchmark".
+Note this feature is enabled only when CONFIG_CRASH_DUMP is enabled. So
+it only takes effect for kdump and won't impact kexec reboot.
 
+Suggested-by: Jan Pazdziora <jpazdziora@redhat.com>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- include/linux/crash_core.h   |   6 +-
- include/linux/kexec.h        |   4 ++
- kernel/crash_dump_dm_crypt.c | 128 +++++++++++++++++++++++++++++++++++
- 3 files changed, 137 insertions(+), 1 deletion(-)
+ include/linux/kexec.h | 30 ++++++++++++++++++++++++++++++
+ kernel/kexec_file.c   |  3 +++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 44305336314e..2e6782239034 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -34,7 +34,11 @@ static inline void arch_kexec_protect_crashkres(void) { }
- static inline void arch_kexec_unprotect_crashkres(void) { }
- #endif
- 
--
-+#ifdef CONFIG_CRASH_DM_CRYPT
-+int crash_load_dm_crypt_keys(struct kimage *image);
-+#else
-+static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
-+#endif
- 
- #ifndef arch_crash_handle_hotplug_event
- static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 61269e97502a..ec7504ba80e9 100644
+index f0e9f8eda7a3..61269e97502a 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -398,6 +398,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
+@@ -25,6 +25,10 @@
+ 
+ extern note_buf_t __percpu *crash_notes;
+ 
++#ifdef CONFIG_CRASH_DUMP
++#include <linux/prandom.h>
++#endif
 +
-+	/* dm crypt keys buffer */
-+	unsigned long dm_crypt_keys_addr;
-+	unsigned long dm_crypt_keys_sz;
+ #ifdef CONFIG_KEXEC_CORE
+ #include <linux/list.h>
+ #include <linux/compat.h>
+@@ -171,6 +175,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+  * @buf_min:	The buffer can't be placed below this address.
+  * @buf_max:	The buffer can't be placed above this address.
+  * @top_down:	Allocate from top of memory.
++ * @random:	Place the buffer at a random position.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -182,8 +187,33 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++#ifdef CONFIG_CRASH_DUMP
++	bool random;
++#endif
  };
  
- /* kexec interface functions */
-diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 62a3c47d8b3b..00dc6a3f71ca 100644
---- a/kernel/crash_dump_dm_crypt.c
-+++ b/kernel/crash_dump_dm_crypt.c
-@@ -1,14 +1,62 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/key.h>
-+#include <linux/keyctl.h>
- #include <keys/user-type.h>
- #include <linux/crash_dump.h>
- #include <linux/configfs.h>
- #include <linux/module.h>
- 
- #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
-+#define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
- #define KEY_DESC_MAX_LEN 128	/* maximum dm crypt key description size */
- 
- static unsigned int key_count;
- 
-+struct dm_crypt_key {
-+	unsigned int key_size;
-+	char key_desc[KEY_DESC_MAX_LEN];
-+	u8 data[KEY_SIZE_MAX];
-+};
 +
-+static struct keys_header {
-+	unsigned int total_keys;
-+	struct dm_crypt_key keys[] __counted_by(total_keys);
-+} *keys_header;
-+
-+static size_t get_keys_header_size(size_t total_keys)
++#ifdef CONFIG_CRASH_DUMP
++static inline void kexec_random_range_start(unsigned long start,
++					    unsigned long end,
++					    struct kexec_buf *kbuf,
++					    unsigned long *temp_start)
 +{
-+	return struct_size(keys_header, keys, total_keys);
-+}
++	unsigned short i;
 +
-+static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
-+{
-+	const struct user_key_payload *ukp;
-+	struct key *key;
-+
-+	kexec_dprintk("Requesting key %s", dm_key->key_desc);
-+	key = request_key(&key_type_logon, dm_key->key_desc, NULL);
-+
-+	if (IS_ERR(key)) {
-+		pr_warn("No such key %s\n", dm_key->key_desc);
-+		return PTR_ERR(key);
++	if (kbuf->random) {
++		get_random_bytes(&i, sizeof(unsigned short));
++		*temp_start = start + (end - start) / USHRT_MAX * i;
 +	}
-+
-+	ukp = user_key_payload_locked(key);
-+	if (!ukp)
-+		return -EKEYREVOKED;
-+
-+	if (ukp->datalen > KEY_SIZE_MAX) {
-+		pr_err("Key size %u exceeds maximum (%u)\n", ukp->datalen, KEY_SIZE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(dm_key->data, ukp->data, ukp->datalen);
-+	dm_key->key_size = ukp->datalen;
-+	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
-+		      dm_key->key_desc, dm_key->data);
-+	return 0;
 +}
++#else
++static inline void kexec_random_range_start(unsigned long start,
++					    unsigned long end,
++					    struct kexec_buf *kbuf,
++					    unsigned long *temp_start)
++{}
++#endif
 +
- struct config_key {
- 	struct config_item item;
- 	const char *description;
-@@ -130,6 +178,86 @@ static struct configfs_subsystem config_keys_subsys = {
- 	},
- };
+ int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   void *buf, unsigned int size,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..875fe108cc83 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -445,6 +445,7 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
  
-+static int build_keys_header(void)
-+{
-+	struct config_item *item = NULL;
-+	struct config_key *key;
-+	int i, r;
+ 	temp_end = min(end, kbuf->buf_max);
+ 	temp_start = temp_end - kbuf->memsz + 1;
++	kexec_random_range_start(temp_start, temp_end, kbuf, &temp_start);
+ 
+ 	do {
+ 		/* align down start */
+@@ -483,6 +484,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+ 
+ 	temp_start = max(start, kbuf->buf_min);
+ 
++	kexec_random_range_start(temp_start, end, kbuf, &temp_start);
 +
-+	if (keys_header != NULL)
-+		kvfree(keys_header);
-+
-+	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
-+	if (!keys_header)
-+		return -ENOMEM;
-+
-+	keys_header->total_keys = key_count;
-+
-+	i = 0;
-+	list_for_each_entry(item, &config_keys_subsys.su_group.cg_children,
-+			    ci_entry) {
-+		if (item->ci_type != &config_key_type)
-+			continue;
-+
-+		key = to_config_key(item);
-+
-+		strscpy(keys_header->keys[i].key_desc, key->description,
-+			KEY_DESC_MAX_LEN);
-+		r = read_key_from_user_keying(&keys_header->keys[i]);
-+		if (r != 0) {
-+			kexec_dprintk("Failed to read key %s\n",
-+				      keys_header->keys[i].key_desc);
-+			return r;
-+		}
-+		i++;
-+		kexec_dprintk("Found key: %s\n", item->ci_name);
-+	}
-+
-+	return 0;
-+}
-+
-+int crash_load_dm_crypt_keys(struct kimage *image)
-+{
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+	int r;
-+
-+
-+	if (key_count <= 0) {
-+		kexec_dprintk("No dm-crypt keys\n");
-+		return -ENOENT;
-+	}
-+
-+	image->dm_crypt_keys_addr = 0;
-+	r = build_keys_header();
-+	if (r)
-+		return r;
-+
-+	kbuf.buffer = keys_header;
-+	kbuf.bufsz = get_keys_header_size(key_count);
-+
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	r = kexec_add_buffer(&kbuf);
-+	if (r) {
-+		kvfree((void *)kbuf.buffer);
-+		return r;
-+	}
-+	image->dm_crypt_keys_addr = kbuf.mem;
-+	image->dm_crypt_keys_sz = kbuf.bufsz;
-+	kexec_dprintk(
-+		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-+		kbuf.bufsz, kbuf.memsz);
-+
-+	return r;
-+}
-+
- static int __init configfs_dmcrypt_keys_init(void)
- {
- 	int ret;
+ 	do {
+ 		temp_start = ALIGN(temp_start, kbuf->buf_align);
+ 		temp_end = temp_start + kbuf->memsz - 1;
 -- 
 2.48.1
 
