@@ -4,79 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C55D6C02194
-	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 03:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1352C02192
+	for <kexec@archiver.kernel.org>; Fri,  7 Feb 2025 04:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bovCnASvGHhB/zWZqXML/1CrlUVnFOGyxkprm/QLHBA=; b=UI9hupXwkkA8PUpTAfN9TCA2wq
-	JJei7+UHgsspGHKMa5mNn4gSxas574JEB20sFECQsAgwVfPeH056r5q5adDaIQ6lLT1hlp2zCt8pX
-	gY5I4aHWshPXIOZl2hFQi5HNKwcl1/FbrnxwR8LboytfY/+nxZA9rFeXUuTzlyGEztJE1a75Lz2/H
-	JurCcGGRD9c5ZEYEo7XJ+CCb+2wnNKRvSiNJJLgRPhRV1n84e9LiSLiD2og3jlqgEu/tz8vFhRTlw
-	Ax006prSXdOrFa52dugF56hA88Z3sUxbLNM1GsUl0YRDdyg+xuU2TGpFq79Pe6fFzTinjyYzr+p6g
-	IaL7cGqg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=929Exw51MEvbwVtcyaVIc6NPKRlggudvA42S70626J4=; b=dwdN75MGFSdYXft5NpUEnzVPPl
+	aF7A7AgpBD/btNUUoRCKZiofJas3CR9mrbhCi8JSntggFYXAY34SNZPUED/VsMlxMFiwjtMP0Gv+a
+	ipY36KTjuQAYBvU6Zgxh3VvfD3mT7SdEXk9u0cAB2vfEzkG6OKO7/xJnk9Z6DdCb49ZpfnDlBdTvY
+	DFczxlOZ0kB8NPa9Q2L0bgZKmFP80z+huKdZUfHrssrGEkk78+ptj2vUmawMGW+v1+NpwGK8R8AAu
+	J9i/27sSs2i+z6pceMqWHDOV5RMM432rgPqftwPLawCISMhUy66R+L6mMqUkGkCM2m5M+1pV1EI+Y
+	R1RXO+qg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgEdq-000000089GE-2IBK;
-	Fri, 07 Feb 2025 03:02:54 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tgGK4-00000008Jvt-3ULQ;
+	Fri, 07 Feb 2025 04:50:36 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgEcU-0000000890d-26jd
-	for kexec@lists.infradead.org;
-	Fri, 07 Feb 2025 03:01:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738897288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bovCnASvGHhB/zWZqXML/1CrlUVnFOGyxkprm/QLHBA=;
-	b=hGZjPyyON7xRKP7ehp6tAcoLqrbMQOueEomNxe3ipieB9PBsdfeq5l7Ui19RFtfD6S7mWZ
-	cFZPFuqj+QbWaX8PF9o7tNvScYpZfqeXnmpqHF6rfIIDpjn/vxkNP1iKbTc+XpCCwWa66y
-	Fu06KZ4/V+iTvx5Fx5KSvJo5QA4qtaM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-EAWj6CjfObSvsuBwm3Abqg-1; Thu,
- 06 Feb 2025 22:01:24 -0500
-X-MC-Unique: EAWj6CjfObSvsuBwm3Abqg-1
-X-Mimecast-MFC-AGG-ID: EAWj6CjfObSvsuBwm3Abqg
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02B451956086;
-	Fri,  7 Feb 2025 03:01:23 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.206])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C51F71800570;
-	Fri,  7 Feb 2025 03:01:19 +0000 (UTC)
-Date: Fri, 7 Feb 2025 11:01:15 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v7 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <Z6V3e3yPQyhaRBCN@fedora>
-References: <20250116065825.1041558-1-coxu@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250116065825.1041558-1-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+	id 1tgGK2-00000008Jur-07YF;
+	Fri, 07 Feb 2025 04:50:35 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 2068BA43718;
+	Fri,  7 Feb 2025 04:48:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C32C4CED1;
+	Fri,  7 Feb 2025 04:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738903832;
+	bh=929Exw51MEvbwVtcyaVIc6NPKRlggudvA42S70626J4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=On3L20QTFvBoRzk52pz2o4yw/IhLGEHzp1u8xRVp0xO85cLpGUYcclJZ2Y3ygco1V
+	 M5q/ZLQT4hzi5FemSU+WzQVhqTnsrlqjK+Df1nMm2hYV+KDSDKy1Uy3h//gt1Csa9S
+	 XOzvTPH1QHsbJh22r9A6pQfp4DZgWwmsJnqoNW7Y=
+Date: Thu, 6 Feb 2025 20:50:30 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Andy
+ Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov
+ <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, Eric
+ Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, James
+ Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>, Rob
+ Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky
+ <thomas.lendacky@amd.com>, Usama Arif <usama.arif@bytedance.com>, Will
+ Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+ kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+Message-Id: <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
+In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250206_190130_619928_C5DD180D 
-X-CRM114-Status: GOOD (  10.35  )
+X-CRM114-CacheID: sfid-20250206_205034_216762_33022790 
+X-CRM114-Status: UNSURE (   9.46  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,20 +86,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
+My x86_64 allmodconfig sayeth:
 
-On 01/16/25 at 02:58pm, Coiby Xu wrote:
-> LUKS is the standard for Linux disk encryption, widely adopted by users,
-> and in some cases, such as Confidential VMs, it is a requirement. With 
-> kdump enabled, when the first kernel crashes, the system can boot into
-> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore) 
-> to a specified target. However, there are two challenges when dumping
-> vmcore to a LUKS-encrypted device:
-
-This v7 series looks good to me, other than Randy's concern. Do you plan
-to repost to update the document?
-
-Thanks
-Baoquan
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xca (section: .text) -> memblock_alloc_try_nid (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xf5 (section: .text) -> scratch_scale (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x100 (section: .text) -> scratch_size_global (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x11d (section: .text) -> scratch_size_global (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x129 (section: .text) -> scratch_size_pernode (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x14e (section: .text) -> memblock_phys_alloc_range (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x261 (section: .text) -> scratch_size_pernode (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x26d (section: .text) -> scratch_size_pernode (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x29b (section: .text) -> memblock_alloc_range_nid (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x334 (section: .text) -> scratch_scale (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x33f (section: .text) -> scratch_size_global (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x363 (section: .text) -> scratch_scale (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x371 (section: .text) -> scratch_size_global (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x3a1 (section: .text) -> scratch_scale (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0x3af (section: .text) -> scratch_size_global (section: .init.data)
 
 
