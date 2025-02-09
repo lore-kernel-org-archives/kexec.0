@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E043C021A0
-	for <kexec@archiver.kernel.org>; Sun,  9 Feb 2025 10:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C464C02199
+	for <kexec@archiver.kernel.org>; Sun,  9 Feb 2025 10:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+eEd8Cpmbkx/+llQzl1PYD3FeY2HCNcpVkUuausLuxw=; b=i7ZbxlmSeclVxcSDglV5Pby8IL
-	PWkERjcTdp8mtMdO52LvYcCl9Ubujd2epTjATdWAfPimbCRu3zqZB30dgGrhDuA66sXwrCq76wzoe
-	E8U34g6nTiZLEQDwJKsalJPC5QrLcTGsKC8HkrHppGOBUtNqONcH7gmDhVF/KVNxcF2ngkZRQi6vP
-	8sklc0IL5xvk+Ft7diocrW+X89ZMYkxs/u2sRb0vdY9R3mbjsG5i6aY2uaSd3RB/lVYe17BQ3KDar
-	o4zc/T/ycoZKo8XSc1NLrgHDZhHyi5vBW17cpjdrZHuxT66u6LiCICzqmJSHZswQL/NWJa/oaQulY
-	MBbOzfYQ==;
+	bh=V2lNdwdhXHqdiRtSdbKOiuD6gH9UyQEuj4koMfqlz6g=; b=R77BGy+X1DUdYj5NlIbgSLfihu
+	M4DvNljbu0H5v8wOCNrsDZB/wTYy6igPvb4fgaMvw0vutkNI3SlUqfu9qERnP8yuabUx530VpAEre
+	ReQ6XekNpuWIi0tVc8YH0zKw8V30Kwx+t97gyiGD/0tHPkHX+Nd14pNF1920XGOW2zYYEkXO0sxIl
+	4NFF97B6y54rtj8TbJwc1FaiU+vIbRXhklSTF6r+OUF0+ISWSg6Uaj+R8NztQVeqkcYTStZDIaOn6
+	N2GO5y453WNj2k4+Y1Yy88RrVuYVUTeFJ4RgyIWfIoifanmJFwi8wQg8/pcm4An3Ht+ftu+SYGEGm
+	MaRiKjMA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1th4dY-0000000EWIj-03NF;
-	Sun, 09 Feb 2025 10:34:04 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1th4iJ-0000000EX6b-1lqo;
+	Sun, 09 Feb 2025 10:38:59 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1th4dU-0000000EWHK-3tLQ;
-	Sun, 09 Feb 2025 10:34:02 +0000
+	id 1th4iG-0000000EX4s-2y8s;
+	Sun, 09 Feb 2025 10:38:58 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id E43CDA400FF;
-	Sun,  9 Feb 2025 10:32:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6717C4CEDD;
-	Sun,  9 Feb 2025 10:33:47 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 5C6B85C575C;
+	Sun,  9 Feb 2025 10:38:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7973BC4CEDD;
+	Sun,  9 Feb 2025 10:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739097239;
-	bh=We0XZHoLdXOxG23rAGcxkdrurkckLFtDgf9bPyAFWYU=;
+	s=k20201202; t=1739097535;
+	bh=9nFwagNxCfn0j52uHcSSNAhPNFRHroONyYXsrNVJahI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pLHtO5NGgVmIhbPh2MFnEBtEoLWZLcqTeuEgsU93kD4gnbxS88D9/LpPjnwuXRvbg
-	 OUUcHJyJWqm7S+AH/EDDOKICNZdtq4YjYjYDeNlYXWbrxPmhwt0SrucEwRwn3Mnvu8
-	 kuBsxK+lZVI1MjDEeQVq4dV7g+fUYgKlPYaevO09WA3ZpszbMIx1DPCIbkhpoUC58R
-	 XMXfKMnTEZSHGLLnPpnL+apOMsuPvH73aDxq4TVMxGV9U+FiMHvqf2dWfaq6C+pEC6
-	 AkSzq2O9YZFBqsZawjMpbYGRztUNpX1KHXrxsasmmQ5A6vKNgHmaBdUVHGvUuwWZYp
-	 rO2JvpZLvL4SQ==
-Message-ID: <41a505db-225f-4c9c-afbc-74c13ee4d44a@kernel.org>
-Date: Sun, 9 Feb 2025 11:33:45 +0100
+	b=e0l8jxZwRnj6FN5X+Zi4CNSdeS98Z610zj9MbxG1WkmXcbrodAatfXuGDO7pc8iMO
+	 JUKsC+JTn43AnT1hvYhXKteip7hBHI1rN+4yBOsNfPIkHxr9QIJw80IMRxWQ44whUB
+	 z5POpknvfD+L0LtegF9LPOlegv3wXvO6zCwCQbkLllpNBxTgiv4RC9CJv2VR4y90gE
+	 CA95KwA84hGYr+0Q2inTeFdFHyDUrgp/bdQMLGwsDmGkS8poP8NflN8hQ0l7dNSmwC
+	 7ppSZF04BbR5YbcCj6qZvwMx2dd2pJmlrKdrD1pJWVDwGVkdDenZsLychX7S0jzG7I
+	 tSG8bP1yfetvQ==
+Message-ID: <b1e59928-b2f4-47d4-87b8-424234c52f8d@kernel.org>
+Date: Sun, 9 Feb 2025 11:38:37 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
- Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
- <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
- Ashish Kalra <ashish.kalra@amd.com>,
+Subject: Re: [PATCH v4 10/14] arm64: Add KHO support
+To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
+ <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
  Benjamin Herrenschmidt <benh@kernel.crashing.org>,
  Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
  Dave Hansen <dave.hansen@linux.intel.com>,
@@ -70,7 +70,7 @@ Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
  linux-mm@kvack.org, x86@kernel.org
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
+ <20250206132754.2596694-11-rppt@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -116,12 +116,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
+In-Reply-To: <20250206132754.2596694-11-rppt@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250209_023401_122390_C02B5AB4 
-X-CRM114-Status: GOOD (  15.96  )
+X-CRM114-CacheID: sfid-20250209_023856_873174_DCD38CFF 
+X-CRM114-Status: GOOD (  16.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -136,35 +136,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/02/2025 01:29, Andrew Morton wrote:
-> On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+On 06/02/2025 14:27, Mike Rapoport wrote:
+> From: Alexander Graf <graf@amazon.com>
 > 
->> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
->> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
->> just to make things simpler instead of ftrace we decided to preserve
->> "reserve_mem" regions.
->>
->> The patches are also available in git:
->> https://git.kernel.org/rppt/h/kho/v4
->>
->>
->> Kexec today considers itself purely a boot loader: When we enter the new
->> kernel, any state the previous kernel left behind is irrelevant and the
->> new kernel reinitializes the system.
-> 
-> I tossed this into mm.git for some testing and exposure.
-> 
-> What merge path are you anticipating?
-> 
-> Review activity seems pretty thin thus far?
+> We now have all bits in place to support KHO kexecs. This patch adds
 
 
-At least for DT ABI because:
-1. For some reason this escaped Patchwork. Maybe was blocked by spam
-filters, maybe Cc list is too big. No clue.
-2. In the same time fallback to Patchwork was avoided by:
-Cc-ing wrong address and not using expected (see git log) subject prefixes.
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
+> awareness of KHO in the kexec file as well as boot path for arm64 and
+> adds the respective kconfig option to the architecture so that it can
+> use KHO successfully.
+> 
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+
+
+...
+
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +	dt = image->kho.dt.buffer;
+> +	dt_mem = image->kho.dt.mem;
+> +	dt_len = image->kho.dt.bufsz;
+> +
+> +	scratch_mem = image->kho.scratch.mem;
+> +	scratch_len = image->kho.scratch.bufsz;
+> +#endif
+> +
+> +	if (!dt)
+> +		goto out;
+> +
+> +	pr_debug("Adding kho metadata to DT");
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
+
+Where is the ABI documentation for this?
+
+> +				       dt_mem, dt_len);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
+
+Same question.
+
+> +				       scratch_mem, scratch_len);
+> +	if (ret)
+> +		goto out;
+> +
 Best regards,
 Krzysztof
 
