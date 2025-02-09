@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6F63C0219E
-	for <kexec@archiver.kernel.org>; Sun,  9 Feb 2025 10:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E043C021A0
+	for <kexec@archiver.kernel.org>; Sun,  9 Feb 2025 10:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NebjuaHD8KIt519fdA1ciVFf/Yp8vdsJwLx5f/gy+Oo=; b=2I+kuf5p00zmr2nB53Wc0/dyTG
-	M63DdF/xavJH4X5P/qiP7M34AB0qcouRf/2i7kJpjpa0Dyd4d8i1m5jL2/vMI5e3zdXsMLEQGk25s
-	ZjCawfnr8eshM5pTgfT6boitGBoLCSSxVwl90Vd+2Fb0UzNAGrGbvesqEYqzDkLtkeiPXjVrqGoOY
-	LSNooFRhP2BjC07gOAUOCOZbxzdDHzh9sWCHTxEUeWe9WIB45D9epqCkokMR6JRtjB0TV3cOHyw1n
-	iA88/hI1wcVHknZTLvbovaeo1XQ+BZ3Y77CUAo39/uozbFD1PiXB6PFOxOIbKt1p88djRSKccCPSX
-	ssWwZRWg==;
+	bh=+eEd8Cpmbkx/+llQzl1PYD3FeY2HCNcpVkUuausLuxw=; b=i7ZbxlmSeclVxcSDglV5Pby8IL
+	PWkERjcTdp8mtMdO52LvYcCl9Ubujd2epTjATdWAfPimbCRu3zqZB30dgGrhDuA66sXwrCq76wzoe
+	E8U34g6nTiZLEQDwJKsalJPC5QrLcTGsKC8HkrHppGOBUtNqONcH7gmDhVF/KVNxcF2ngkZRQi6vP
+	8sklc0IL5xvk+Ft7diocrW+X89ZMYkxs/u2sRb0vdY9R3mbjsG5i6aY2uaSd3RB/lVYe17BQ3KDar
+	o4zc/T/ycoZKo8XSc1NLrgHDZhHyi5vBW17cpjdrZHuxT66u6LiCICzqmJSHZswQL/NWJa/oaQulY
+	MBbOzfYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1th4Zg-0000000EVsX-3Fgy;
-	Sun, 09 Feb 2025 10:30:04 +0000
+	id 1th4dY-0000000EWIj-03NF;
+	Sun, 09 Feb 2025 10:34:04 +0000
 Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1th4Zb-0000000EVrD-2L86;
-	Sun, 09 Feb 2025 10:30:01 +0000
+	id 1th4dU-0000000EWHK-3tLQ;
+	Sun, 09 Feb 2025 10:34:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 8955EA400E3;
-	Sun,  9 Feb 2025 10:28:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B78CC4CEDD;
-	Sun,  9 Feb 2025 10:29:45 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id E43CDA400FF;
+	Sun,  9 Feb 2025 10:32:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6717C4CEDD;
+	Sun,  9 Feb 2025 10:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739096997;
-	bh=1yGof8I2F4W/Hb7MDQYpGdg/n+Iik8KRR7siiST/D/M=;
+	s=k20201202; t=1739097239;
+	bh=We0XZHoLdXOxG23rAGcxkdrurkckLFtDgf9bPyAFWYU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LpvC5t3ixJoW+PP5Jv/FmpJg8Q6CAVTFRhrNdn6pVZ0EhXvBM/ioCCjlLbloGnjhN
-	 PpD303J0nJvsqx+T7rwN7jjpk7wnt5RwC62I/3rwIn4roLtGNbjHeBi3dD0+uMmN5+
-	 /OUC+xTizMdJJ2qH0/6TmYrdtw+VmiSiovJPoSAZ4A/ihlz/4o6ka1H/1Kj1W8LAI+
-	 yLbqiLFQU7gztzyYktPF60/l5TwTXCmM8KEVEu9phPoPiMChXmVc5V0aLVw0DxLXL1
-	 gAp/MbVaiXU4OE469AlK1COKHGB84s9P69AB25WbaFW/x1YRawGZusYTn8cAnDSM1s
-	 iFqqmTmqlvv3A==
-Message-ID: <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
-Date: Sun, 9 Feb 2025 11:29:41 +0100
+	b=pLHtO5NGgVmIhbPh2MFnEBtEoLWZLcqTeuEgsU93kD4gnbxS88D9/LpPjnwuXRvbg
+	 OUUcHJyJWqm7S+AH/EDDOKICNZdtq4YjYjYDeNlYXWbrxPmhwt0SrucEwRwn3Mnvu8
+	 kuBsxK+lZVI1MjDEeQVq4dV7g+fUYgKlPYaevO09WA3ZpszbMIx1DPCIbkhpoUC58R
+	 XMXfKMnTEZSHGLLnPpnL+apOMsuPvH73aDxq4TVMxGV9U+FiMHvqf2dWfaq6C+pEC6
+	 AkSzq2O9YZFBqsZawjMpbYGRztUNpX1KHXrxsasmmQ5A6vKNgHmaBdUVHGvUuwWZYp
+	 rO2JvpZLvL4SQ==
+Message-ID: <41a505db-225f-4c9c-afbc-74c13ee4d44a@kernel.org>
+Date: Sun, 9 Feb 2025 11:33:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
-To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Alexander Graf <graf@amazon.com>,
- Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
- <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
- Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+To: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+ Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
+ <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
+ Ashish Kalra <ashish.kalra@amd.com>,
  Benjamin Herrenschmidt <benh@kernel.crashing.org>,
  Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
  Dave Hansen <dave.hansen@linux.intel.com>,
@@ -70,7 +70,7 @@ Cc: Alexander Graf <graf@amazon.com>,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
  linux-mm@kvack.org, x86@kernel.org
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-15-rppt@kernel.org>
+ <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -116,12 +116,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206132754.2596694-15-rppt@kernel.org>
+In-Reply-To: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250209_022959_719815_371B3A05 
-X-CRM114-Status: GOOD (  26.36  )
+X-CRM114-CacheID: sfid-20250209_023401_122390_C02B5AB4 
+X-CRM114-Status: GOOD (  15.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -136,132 +136,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/02/2025 14:27, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 07/02/2025 01:29, Andrew Morton wrote:
+> On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> We introduced KHO into Linux: A framework that allows Linux to pass
-> metadata and memory across kexec from Linux to Linux. KHO reuses fdt
-> as file format and shares a lot of the same properties of firmware-to-
-> Linux boot formats: It needs a stable, documented ABI that allows for
-> forward and backward compatibility as well as versioning.
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-
+>> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+>> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+>> just to make things simpler instead of ftrace we decided to preserve
+>> "reserve_mem" regions.
+>>
+>> The patches are also available in git:
+>> https://git.kernel.org/rppt/h/kho/v4
+>>
+>>
+>> Kexec today considers itself purely a boot loader: When we enter the new
+>> kernel, any state the previous kernel left behind is irrelevant and the
+>> new kernel reinitializes the system.
 > 
-> As first user of KHO, we introduced memblock which can now preserve
-> memory ranges reserved with reserve_mem command line options contents
-> across kexec, so you can use the post-kexec kernel to read traces from
-> the pre-kexec kernel.
+> I tossed this into mm.git for some testing and exposure.
 > 
-> This patch adds memblock schemas similar to "device" device tree ones to
-> a new kho bindings directory. This allows us to force contributors to
-> document the data that moves across KHO kexecs and catch breaking change
-> during review.
+> What merge path are you anticipating?
 > 
-> Co-developed-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  .../kho/bindings/memblock/reserve_mem.yaml    | 41 ++++++++++++++++++
->  .../bindings/memblock/reserve_mem_map.yaml    | 42 +++++++++++++++++++
->  2 files changed, 83 insertions(+)
->  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
->  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-> 
-> diff --git a/Documentation/kho/bindings/memblock/reserve_mem.yaml b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-> new file mode 100644
-> index 000000000000..7b01791b10b3
-> --- /dev/null
-> +++ b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Memblock reserved memory
-> +
-> +maintainers:
-> +  - Mike Rapoport <rppt@kernel.org>
-> +
-> +description: |
-> +  Memblock can serialize its current memory reservations created with
-> +  reserve_mem command line option across kexec through KHO.
-> +  The post-KHO kernel can then consume these reservations and they are
-> +  guaranteed to have the same physical address.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - reserve_mem-v1
-
-NAK, underscores are not allowed. Please follow carefully DTS coding style.
-
-> +
-> +patternProperties:
-> +  "$[0-9a-f_]+^":
-
-No underscores.
-
-> +    $ref: reserve_mem_map.yaml#
-> +    description: reserved memory regions
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    reserve_mem {
-
-Again, do not introduce own coding style.
-
-I don't understand why do you need this in the first place. There is
-already reserved-memory block.
+> Review activity seems pretty thin thus far?
 
 
-> +      compatible = "reserve_mem-v1";
-> +        r1 {
-> +          compatible = "reserve_mem_map-v1";
-> +          mem = <0xc07c 0x2000000 0x01 0x00>;
-> +        };
-> +    };
-> diff --git a/Documentation/kho/bindings/memblock/reserve_mem_map.yaml b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-> new file mode 100644
-> index 000000000000..09001c5f2124
-> --- /dev/null
-> +++ b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/memblock/reserve_mem_map.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Memblock reserved memory regions
-> +
-> +maintainers:
-> +  - Mike Rapoport <rppt@kernel.org>
-> +
-> +description: |
-> +  Memblock can serialize its current memory reservations created with
-> +  reserve_mem command line option across kexec through KHO.
-> +  This object describes each such region.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - reserve_mem_map-v1
-
-Explain why you cannot use existing reserved memory bindings.
-
+At least for DT ABI because:
+1. For some reason this escaped Patchwork. Maybe was blocked by spam
+filters, maybe Cc list is too big. No clue.
+2. In the same time fallback to Patchwork was avoided by:
+Cc-ing wrong address and not using expected (see git log) subject prefixes.
 
 Best regards,
 Krzysztof
