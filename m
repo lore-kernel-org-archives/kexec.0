@@ -4,85 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CB1BC02198
-	for <kexec@archiver.kernel.org>; Mon, 10 Feb 2025 16:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83FE2C02198
+	for <kexec@archiver.kernel.org>; Mon, 10 Feb 2025 18:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iMSmHPU88YDOwPSpB5j+WYq7IwFLmL60+7nFTkoWpv8=; b=ujWBRV/LQ653uIvdd0kPjkdAPo
-	P9cAOC/UiOjPaRn5Y7aSaJoownST5C7SwkzcuBLXNCEg5HV13M1oL+HC3xJTPeJE/sHg20hThFZi7
-	I0uGrYwZ4Pep4AQTRSjnbdSD3/PSBFNYRM2U1wpa81UAlFlxTfQC/TH2K5OYyBOI/7lM7X7oh2lA1
-	McPVSe7tAocVbRlLJy6/wy2hAsWeq0HWHKX1QRkt1tAZ4G0kKPzXuFZb6VqSgldKYMnOp4oKHE+a4
-	8jmN3G+FHplGTNXt66XgkKZpA+0jjVy5qMo4Zx3mBcjyx5eOexVSiP9n1Sma2RWIZ3+x08+obRIk6
-	7xrvUqRA==;
+	bh=hBpyYwH84HCTrmNtrOfgoYnF3s0Iwvrtgi04480qzkU=; b=Cc/Ew74FImeoR8f2nHr8Ws2xwO
+	zCvUYDp+msgA0xr9C519uJSxoWXoga46qBKlppUOKxIqe0r5KRtYormPnnP+uSnAaYxfKj1lzXjle
+	paTYypPDiqRBEsoHrFz1jLLRaL0vqCQlcCjvx7aV4aLOnVTaRtM5sAAhfgDxM1AcqO4mTLOxfbfTF
+	ZW/X+GCS7/3IOI7nKGcFMlCt2bXKQIdTXEyntDTPAqM2kKODkkCYwBDsmm6PifNRG+Y0a11ob1vF8
+	f4+8ZRw+68v9KHedk3GuirwJqiHeZmCneeSiryIwYlU5AQm+qT6wn933V4DDL+QdF95VHYn27b5Oo
+	LfBH2vwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1thWJw-00000000RBk-02xe;
-	Mon, 10 Feb 2025 16:07:40 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1thWGa-00000000QNf-2z30;
-	Mon, 10 Feb 2025 16:04:13 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id EF3375C5A95;
-	Mon, 10 Feb 2025 16:03:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492DEC4CEE5;
-	Mon, 10 Feb 2025 16:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739203451;
-	bh=MmLzTVOIrpo7J0HmbhxBdjKvlFVJINa0c786cp4K2is=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IMZF+ghuSiCCJz57Q5USpgV4CW3vxkE+nfMG1knu6gzbU8ZVVARB0CrktiwrIk67E
-	 Hp+1zFYkDBupPWkLP2fek6SjxBtdd8uZX3bsyrNGaGd3VDsFNAQzMV0B8Bw7PLqno7
-	 J8yGHYrFy3lE1q9NnvTqoTJ6L6/fNTihHlNov7BXlXsi3mInlQtMMtxsIsIU8E/YP2
-	 6fuhEdcGiIM2KpifkoHYPYf7AyXzUlFejV237V6OD7muNrezl//ORBJCZM9V0Z2cGP
-	 fe78vxqe0+Y6PyqE84mgPUSfNDFYrpSDzRGZFIFOrU6co1irCDDPsKdgFbxPQ6BLzB
-	 vldIL+nl53Ugw==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso5034094a12.0;
-        Mon, 10 Feb 2025 08:04:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU73aOjIrKOrTr8FH+snA6xDDLSlf6tfAKyZ8rzM20eidHLtx6wh8qRSDteR7RUDSAR6uJ0kg==@lists.infradead.org, AJvYcCWOh8QrSp7em/Q//sGN+zN1E8L4Ywkaz6RTRuUEXNp9pB8PXt3xVSgHAu1reBGAvRvu7JQ1/DKM2ygaLkdyxWbgIA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywjw/PY1gqF5U6hFp/KfpCiL6VOnuGawElbGyYvQg2mQ/D72sCz
-	GIKXSQNYScZOpAVyglisvofcQa8eU5NV6Ofr8QB8AoshdBi4js95rRguNpOI5p5u88qpoXQN2HC
-	ebgL5zdE8F3aJDgAHQrmZFtr/FQ==
-X-Google-Smtp-Source: AGHT+IFRZNJEmIDWeGq7jBDTWhH6Y05jOZW3+7OggCVpp9D3eKLI+N0SQhYn4TTzkQ07b3SjWfpk0D6PnrkmWhtaNlQ=
-X-Received: by 2002:a05:6402:4308:b0:5de:5cea:869e with SMTP id
- 4fb4d7f45d1cf-5de5cea8b38mr8326232a12.32.1739203449824; Mon, 10 Feb 2025
- 08:04:09 -0800 (PST)
+	id 1thYfl-00000000xDg-1pOb;
+	Mon, 10 Feb 2025 18:38:21 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1thXF6-00000000eNM-2ynD
+	for kexec@lists.infradead.org;
+	Mon, 10 Feb 2025 17:06:45 +0000
+Received: from [10.17.64.80] (unknown [131.107.8.16])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C2DF12107A8C;
+	Mon, 10 Feb 2025 09:06:42 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2DF12107A8C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739207203;
+	bh=hBpyYwH84HCTrmNtrOfgoYnF3s0Iwvrtgi04480qzkU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wu7tXo2u19roGC3JKJIuc8Lip2MC7atTL9MEET8GC+paes93zHV3Yvh2rI8g8qFpL
+	 y/spmSThEjUpGTNvdL4+4tQuc4XJNZ1C7kcxFZoCP1LLSdiijmgaaolHCZg5wutVe6
+	 OP3RuYFwggt0BggyJQqLZhfsTwaAkzWUM4DFTQCk=
+Message-ID: <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
+Date: Mon, 10 Feb 2025 09:06:42 -0800
 MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <20250206132754.2596694-14-rppt@kernel.org>
-In-Reply-To: <20250206132754.2596694-14-rppt@kernel.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Mon, 10 Feb 2025 10:03:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLBf1Vv6K5mK6x9JRqegvScSNFpAEE2iJOkJ4JuBTLsCw@mail.gmail.com>
-X-Gm-Features: AWEUYZkqxkn1PB0pgkw5chjo9LRqD9SA0TtsGYB7u__vI-ErDb4_rUvPql-Dcx4
-Message-ID: <CAL_JsqLBf1Vv6K5mK6x9JRqegvScSNFpAEE2iJOkJ4JuBTLsCw@mail.gmail.com>
-Subject: Re: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/7] kexec: define functions to map and unmap segments
+To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-3-chenste@linux.microsoft.com>
+ <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250210_080412_847298_246F4B7B 
-X-CRM114-Status: GOOD (  36.49  )
+X-CRM114-CacheID: sfid-20250210_090644_795286_11565851 
+X-CRM114-Status: GOOD (  18.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,121 +76,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 6, 2025 at 7:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
+On 2/7/2025 11:15 AM, Mimi Zohar wrote:
+> Hi Steven,
 >
-> From: Alexander Graf <graf@amazon.com>
+> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+>> Currently, the mechanism to map and unmap segments to the kimage
+>> structure is not available to the subsystems outside of kexec.  This
+>> functionality is needed when IMA is allocating the memory segments
+>> during kexec 'load' operation.  Implement functions to map and unmap
+>> segments to kimage.
+>>
+>> Implement kimage_map_segment() to enable mapping of IMA buffer source
+>> pages to the kimage structure post kexec 'load'.  This function,
+>> accepting a kimage pointer, an address, and a size, will gather the
+>> source pages within the specified address range, create an array of page
+>> pointers, and map these to a contiguous virtual address range.  The
+>> function returns the start of this range if successful, or NULL if
+>> unsuccessful.
+>>
+>> Implement kimage_unmap_segment() for unmapping segments
+>> using vunmap().
+>>
+>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> I don't recall previously adding my "Reviewed-by" tag.
 >
-> Linux has recently gained support for "reserve_mem": A mechanism to
-> allocate a region of memory early enough in boot that we can cross our
-> fingers and hope it stays at the same location during most boots, so we
-> can store for example ftrace buffers into it.
+> Eric, I'd appreciate your reviewing this and the subsequent patch "[PATCH v7 3/7]
+> ima: kexec: skip IMA segment validation after kexec soft reboot" in particular.
+Hi Eric, Could you help to review this patch as Mimi mentioned? Thanks!
 >
-> Thanks to KASLR, we can never be really sure that "reserve_mem"
-> allocations are static across kexec. Let's teach it KHO awareness so
-> that it serializes its reservations on kexec exit and deserializes them
-> again on boot, preserving the exact same mapping across kexec.
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>> ---
+>>   include/linux/kexec.h |  7 ++++++
+>>   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 61 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index f0e9f8eda7a3..f8413ea5c8c8 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -467,6 +467,9 @@ extern bool kexec_file_dbg_print;
+>>   #define kexec_dprintk(fmt, arg...) \
+>>           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+>>   
+>> +extern void *kimage_map_segment(struct kimage *image,
+>> +					unsigned long addr, unsigned long size);
+> scripts/Checkpatch.pl complains about the parenthesis alignment here and elsewhere.
 >
-> This is an example user for KHO in the KHO patch set to ensure we have
-> at least one (not very controversial) user in the tree before extending
-> KHO's use to more subsystems.
+> Mimi
 >
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 84df96efca62..fdb08b60efc1 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -16,6 +16,9 @@
->  #include <linux/kmemleak.h>
->  #include <linux/seq_file.h>
->  #include <linux/memblock.h>
-> +#include <linux/kexec_handover.h>
-> +#include <linux/kexec.h>
-> +#include <linux/libfdt.h>
->
->  #include <asm/sections.h>
->  #include <linux/io.h>
-> @@ -2423,6 +2426,70 @@ int reserve_mem_find_by_name(const char *name, phy=
-s_addr_t *start, phys_addr_t *
->  }
->  EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
->
-> +static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t =
-size,
-> +                                         phys_addr_t align)
-> +{
-> +       const void *fdt =3D kho_get_fdt();
-> +       const char *path =3D "/reserve_mem";
-> +       int node, child, err;
-> +
-> +       if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-> +               return false;
-> +
-> +       if (!fdt)
-> +               return false;
-> +
-> +       node =3D fdt_path_offset(fdt, "/reserve_mem");
-> +       if (node < 0)
-> +               return false;
-> +
-> +       err =3D fdt_node_check_compatible(fdt, node, "reserve_mem-v1");
-> +       if (err) {
-> +               pr_warn("Node '%s' has unknown compatible", path);
-> +               return false;
-> +       }
-> +
-> +       fdt_for_each_subnode(child, fdt, node) {
-> +               const struct kho_mem *mem;
-> +               const char *child_name;
-> +               int len;
-> +
-> +               /* Search for old kernel's reserved_mem with the same nam=
-e */
-> +               child_name =3D fdt_get_name(fdt, child, NULL);
-> +               if (strcmp(name, child_name))
-> +                       continue;
-> +
-> +               err =3D fdt_node_check_compatible(fdt, child, "reserve_me=
-m_map-v1");
+>> +extern void kimage_unmap_segment(void *buffer);
+>>   #else /* !CONFIG_KEXEC_CORE */
+>>   struct pt_regs;
+>>   struct task_struct;
+>> @@ -474,6 +477,10 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+>>   static inline void crash_kexec(struct pt_regs *regs) { }
+>>   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>>   static inline int kexec_crash_loaded(void) { return 0; }
+>> +static inline void *kimage_map_segment(struct kimage *image,
+>> +					unsigned long addr, unsigned long size)
+>> +{ return NULL; }
+>> +static inline void kimage_unmap_segment(void *buffer) { }
+>>   #define kexec_in_progress false
+>>   #endif /* CONFIG_KEXEC_CORE */
+>>   
 
-It really seems you all are trying to have things both ways. It's not
-Devicetree, just the FDT file format, but then here you use
-"compatible" which *is* Devicetree. At best, it's all just confusing
-for folks. At worst, you're just picking and choosing what you want to
-use.
+Thanks, Mimi, I will update in next version
 
-I'm not saying don't use "compatible" just for the sake of looking
-less like DT, but perhaps your versioning should be done differently.
-You are reading the 'mem' property straight into a struct. Maybe the
-struct should have a version. Or the size of the struct is the version
-much like the userspace ABI is handled for structs.
-
-> +               if (err) {
-> +                       pr_warn("Node '%s/%s' has unknown compatible", pa=
-th, name);
-> +                       continue;
-> +               }
-> +
-> +               mem =3D fdt_getprop(fdt, child, "mem", &len);
-> +               if (!mem || len !=3D sizeof(*mem))
-> +                       continue;
-> +
-> +               if (mem->addr & (align - 1)) {
-
-It's stated somewhere in this that the FDT data is LE, but here you
-are assuming the FDT is the same endianness as the CPU not that it's
-LE. Arm64 can do BE. PowerPC does both. I'm not sure if kexec from one
-endianness to another is possible. I would guess in theory it is and
-in practice it's broken already (because kexec is always an
-afterthought). Either you need to guarantee that native endianness
-will never be an issue for any arch or you need to make the endianness
-fixed.
-
-Rob
 
