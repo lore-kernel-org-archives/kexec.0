@@ -4,64 +4,177 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83FE2C02198
-	for <kexec@archiver.kernel.org>; Mon, 10 Feb 2025 18:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05331C0219E
+	for <kexec@archiver.kernel.org>; Mon, 10 Feb 2025 19:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hBpyYwH84HCTrmNtrOfgoYnF3s0Iwvrtgi04480qzkU=; b=Cc/Ew74FImeoR8f2nHr8Ws2xwO
-	zCvUYDp+msgA0xr9C519uJSxoWXoga46qBKlppUOKxIqe0r5KRtYormPnnP+uSnAaYxfKj1lzXjle
-	paTYypPDiqRBEsoHrFz1jLLRaL0vqCQlcCjvx7aV4aLOnVTaRtM5sAAhfgDxM1AcqO4mTLOxfbfTF
-	ZW/X+GCS7/3IOI7nKGcFMlCt2bXKQIdTXEyntDTPAqM2kKODkkCYwBDsmm6PifNRG+Y0a11ob1vF8
-	f4+8ZRw+68v9KHedk3GuirwJqiHeZmCneeSiryIwYlU5AQm+qT6wn933V4DDL+QdF95VHYn27b5Oo
-	LfBH2vwQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=dMbwJQcncNRuCF5ruUNedHuUdsNoWdFxyhybKtyBlfI=; b=OE8ytdA+fY8tPXai2NJQsrAyte
+	wYXOrj4m6D7htSv01Fc+4sbgJQOTvwsrOjU5FXT90liBCVhLN+5LUYtX/BhNnAdCdUhqkof6TT/7x
+	H8WE8LCSb+26VUaa+rargcjqwC4hExVLkKRUqn5+6D3LPPU9pRow1Fzl1M+wuLrgydabeMLZS5N5Z
+	KebDvl5oDGXmlA4RWS+2Z0MJKocph6l960vT5caAsggn+D8ZBbpPDqu9KBjQN03xosVK9W/zoPeNi
+	mxqYzNJmTt/zj5niakTy5KuCap047ii9DnSivPDldwK7qW21sk6LD3fZMqWbWDFuRMHpw/XYRTTcH
+	QX4/VZ3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1thYfl-00000000xDg-1pOb;
-	Mon, 10 Feb 2025 18:38:21 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1thXF6-00000000eNM-2ynD
-	for kexec@lists.infradead.org;
-	Mon, 10 Feb 2025 17:06:45 +0000
-Received: from [10.17.64.80] (unknown [131.107.8.16])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C2DF12107A8C;
-	Mon, 10 Feb 2025 09:06:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2DF12107A8C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739207203;
-	bh=hBpyYwH84HCTrmNtrOfgoYnF3s0Iwvrtgi04480qzkU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wu7tXo2u19roGC3JKJIuc8Lip2MC7atTL9MEET8GC+paes93zHV3Yvh2rI8g8qFpL
-	 y/spmSThEjUpGTNvdL4+4tQuc4XJNZ1C7kcxFZoCP1LLSdiijmgaaolHCZg5wutVe6
-	 OP3RuYFwggt0BggyJQqLZhfsTwaAkzWUM4DFTQCk=
-Message-ID: <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
-Date: Mon, 10 Feb 2025 09:06:42 -0800
+	id 1thZZ0-000000017c9-1ClP;
+	Mon, 10 Feb 2025 19:35:26 +0000
+Received: from mail-mw2nam12on2060e.outbound.protection.outlook.com ([2a01:111:f403:200a::60e] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1thZG3-000000013mq-02KC;
+	Mon, 10 Feb 2025 19:15:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p9SZgmo++jdpzjx4YdWycwWNwG/to1WwNzQKny7UrQMFizDoo5YyTfpBNTLx1akweTdNIOeeBjGMEueeBDu5Ad0QbDF3XroVlq7paNa22E0v/APYNHRcjBrtW+huspv858ZDPi/pZ6VQpoymSBL7i+ZDBzE2ceIDmxM0aqGNNzKIUt/maPNSDUW1szqij9/JxO/TrUN1qi4z5oviOKCBc4RKpp7zzW9gRiK0bRWSN9SPbnHAa5wwZkQpyJLo3mtQmCk9g/NXdm/alxKEM69p1aLuX3Qi4sjTNAnQzulih1vmCtySx/oHP3+DgZOZizwThoXiJIRU7noI8NRHV8wi4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dMbwJQcncNRuCF5ruUNedHuUdsNoWdFxyhybKtyBlfI=;
+ b=yVXsvoOB3Trh2WyYnd+NrrY8DSWEwgtjLBKs9RcgcjsxPQsHoo5z7fkuF2SPeyJpAyY6gYktKR88dWpUOQm8KyLWa2G6msf3U9FZz2z/bmtCZcD8W8MsljITx2EhUvKNU0cDK+WKlYVA6eUZkTyyMoCu51qe/4Hztm2jaSqwFRRbtg0S0eh5MvYQpiFzi0gDuacWCtuNiT2e3zXytifqn4t1QUSxrtIbzEH+mMals3ck0Eguf5CftC/9TCVbOc6QkOyrkfe73OHupgjqTf3X72itvj0xy/MXBqGc2gSOteR9GtznrKQ1519OKLnTDF9XHStIJfX0eBfNP6EUI8kAaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dMbwJQcncNRuCF5ruUNedHuUdsNoWdFxyhybKtyBlfI=;
+ b=Pm9fmdlkUpaFAGey2B3Zd8GR2DOz1clEoFpMlDVABFqzJ5mVCgvSYX+fKgTyZDiuLJzxPfoDnXXtgk1FDrsuH4h9YP6rClCvp4BQdcV10bIVzsaFv8Eco3cXuL3mlPoLQi+8i37LHnvUyU684UdZ3CaUQpbM8snv6OHWbyvY4pn2mFutEDD98MyCgYCJHquz6rz41bLvY/qPMRJj7f79IdGs8jJry226YS5uuOXGhLFvrbacW0NIbkpfaJWydyBOqwj2X9iSflv5PbyTCsxkgfm4H5tKdSxxAY5CBJSH2N39WS7fUeQD3/6NUtMlXAlnSB1ykr4isTIA2yvlc+hylA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by PH7PR12MB5596.namprd12.prod.outlook.com (2603:10b6:510:136::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Mon, 10 Feb
+ 2025 19:15:40 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 19:15:40 +0000
+Date: Mon, 10 Feb 2025 15:15:39 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
+Message-ID: <20250210191539.GA3765641@nvidia.com>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-15-rppt@kernel.org>
+ <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
+ <Z6jFZII5b-j7hzkj@kernel.org>
+ <a3cca0ed-64ca-4921-bb4c-27c0e06b78c6@kernel.org>
+ <Z6kTCvex3DGhB-3C@kernel.org>
+ <18529b1f-dc79-4c85-a485-a0a2cdd48670@kernel.org>
+ <aa4ec16a-b35f-41b0-92f7-40b3eb64124a@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa4ec16a-b35f-41b0-92f7-40b3eb64124a@kernel.org>
+X-ClientProxiedBy: BLAPR03CA0053.namprd03.prod.outlook.com
+ (2603:10b6:208:32d::28) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/7] kexec: define functions to map and unmap segments
-To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-3-chenste@linux.microsoft.com>
- <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH7PR12MB5596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2263249e-fb3d-4cb3-1c48-08dd4a074eba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Hc+34+Ix4wh6GTli800yD7GbE70kCxVmrPj5AbE6VYIhEFEz6ZVJsupcE2wK?=
+ =?us-ascii?Q?X03N/cZqspU2Zt1lXrqKgzJRZaXfA3OKptdD4auyRBge8PQGwFJ7PsDqKGxy?=
+ =?us-ascii?Q?vo8Wj4KcrF5pTm35RfQc70wSJlaOO99BATOR8BVJDCyBBpuNsBaKPWG3Q3Fr?=
+ =?us-ascii?Q?XNV++enbx/67PBzNw0fgKZJ4h4YNhjhxvNSBKd5bvxFgGlrIv6CnVFwlyp0b?=
+ =?us-ascii?Q?gMyitaeYoyzw0w+CG6p7MDd2FShvNkFpXdm7jZxCCh/LnZ0uFwuZBXUwF3cf?=
+ =?us-ascii?Q?YDE811kC7b8/8q4axLqIfcPSj1QfqVKatnqbww2xwXKKOHhWG8GNlPbe8OI0?=
+ =?us-ascii?Q?ynWv61OLLPd2TR7DqfOLEu9eaLKlvR9tkCphS6L+THUxpblL+mhF/eGT9j1y?=
+ =?us-ascii?Q?SsmmInxuSSkQ/UuLnEPMD2pdLvnvR6/5N7ZfgjdaNrR0k9eOwjZJPQWhcNIG?=
+ =?us-ascii?Q?o+zLbjxsXgSX9IS877M/hPIWZ8kK/AzFgpbdQSIUY/2v2AE1i3bn2TV2HjA2?=
+ =?us-ascii?Q?ZPOQVhNW9qVIIptx6WQL7natY//CLP0UoJFSuxWOg3nqFjIaage+Mt2hWT54?=
+ =?us-ascii?Q?e2UzJYOktCbJ/poJFQyOZiGVhW6Wuk7NleiDQ89wwMmOVGoZeTbPmLtKzrBE?=
+ =?us-ascii?Q?sTigDkD/aLclGKYJgXZdQcXefpU8f87+UBqfEe3v8oK5XwNkb9bvvtiShCi9?=
+ =?us-ascii?Q?2T/sd4FVO/L3dKSZ+8jK94Zb8Hmu8sntUfGDiJ03IJsD5iMNamVDdAsqefoW?=
+ =?us-ascii?Q?sLHgSwisScZjh5H0oz+gXeybWWpQbG4cLK/iQO04UcVHEYe83zl7VqkuvR7R?=
+ =?us-ascii?Q?xcGQ1EuleXRtHSzdsl0lD7ljAJ9i5Qub2P7V7IPtEWN7NczjYzoBQ4Qw/Lus?=
+ =?us-ascii?Q?zdoI1JL2AhDAw1sF6OoRA4QPTG7fpPwS4q58ywHC+l0F+38rgyDzN9LtdB7i?=
+ =?us-ascii?Q?1LLg9fYsyM5RJMhL+FrkOe4JqmqNujK+Uh8KtQermNjyItOAf2vcH37GXqnk?=
+ =?us-ascii?Q?wJ8iA0oQvnxKSZNolxDQEfR+gHgRVGVX6YH8jXQfiGqtjJ9dArdguZEBSCVW?=
+ =?us-ascii?Q?hCEJG3MmZa65+EupGK/+wd6Td/NxEqRP9QsktRubfJgw5VAOfjMgT0DZaHz6?=
+ =?us-ascii?Q?5ZmQS4zQGvTaGDyrZpbXHhQDY2DpR57NcYfYnggH8VrPXLhipVnCFQIrEJbb?=
+ =?us-ascii?Q?1V/8fmFQAEtmEt2Z+Dhcrhv6GHU/8I/23polaYWCAzfkKarY3l5GIZoY6Xhc?=
+ =?us-ascii?Q?XWKfeepfiy99Ey/zM+Vpb2TYej816+Gcb11HHjgHYR3OVWzr0h4YkBQUUlfe?=
+ =?us-ascii?Q?UDzi65fin8iAjzTbb6xRRtEVCOK+9z44nmFp1wLEcTSCqTNmKH355xwZEdjN?=
+ =?us-ascii?Q?htuqeFqhzkt1YIjZpmzuTWI/xjfy?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GtrlpOGxZuWDAIUZrcqxcsxqfO9l/w+xUosIGRQ9CWZhEl4c+2aZc00XY+pr?=
+ =?us-ascii?Q?Pc9oxWnvUpwstII1biX34AzSVXD8Q5eWllvDRr49ok9OM99v+G8KnaQWrpIi?=
+ =?us-ascii?Q?iJyNwoB1+VJlbzd59PwG9lez0FCZRfsgo6jB7kxl1uHvQg1R9srCbny8w4+y?=
+ =?us-ascii?Q?+eTs6GyK6ogDjTxxYu2SUcb8P4l5pZa/i8+EpalqS037hMc913cTa61p+6AV?=
+ =?us-ascii?Q?AdLVm+Y9orLm8gfOvFDI5urPcJhO/2fpggkII5aZTUXgrOWTvCKFMQlKM53p?=
+ =?us-ascii?Q?kMxjgxndZqec3A99ZVfnnJe4CTN+fV0jQ7n+TQ9/6NSsRcQYKk3Edp6ho0ke?=
+ =?us-ascii?Q?C8I9eYar6FC7/Oh+W1UBrgh9BT816EGQF0CopmRMuY+0iyeOqHlEdWEOQ6Cu?=
+ =?us-ascii?Q?SqPesbqWdR4Ijxnxpyd1XHwW9/ssi5OPudFaDPrGgET+U+5Sij9EZ3Nyzyev?=
+ =?us-ascii?Q?b8MLtPc12Ai1uddjk+XbMrLRdoKTEMW4kxryBML8LDHhwT0xV7PR85+JyL6N?=
+ =?us-ascii?Q?ja+EfU5BILKWuquRWw9m0KzcS4QDIFX5bSbHyXc0Abvu7kL52SJcvbYE0DI+?=
+ =?us-ascii?Q?mQWsaNB0nw5I4I0FIo5qYmbjql53XdDqufMnuImPURW37ObBq/cbOtnPEHmx?=
+ =?us-ascii?Q?MrP/2w9GYPW2CmNoNSa+YeNMzcBi77QilHtRSu2BVr8p513VF7OKIaiE+WYK?=
+ =?us-ascii?Q?1fkR3esSJqml0SV81/bVLRpH0OR9sz0H+8yUvChHmlx3sGfKEOThzbO5Laa2?=
+ =?us-ascii?Q?gcRePBtgZLNPf8qJ785Z4aWfvTmUPf2RkRisRn/8+ci6rjYJFwrZlGGw5kX7?=
+ =?us-ascii?Q?gLZdP/EYUvbf1VjYJU8bu/rYA0R48H9fz8v3ydCM4963ZhKqcj62ALONbPjv?=
+ =?us-ascii?Q?+HT9cKwyWIyq6Wo2z2TQFJPVysJ36Uld8kbvRd/NmogTy1ZIOBPALxOorco4?=
+ =?us-ascii?Q?fEkOPMcDN5xpi/f8W02VPJe5YLTmA3GaGkbuOhopNeATTxAAEqR5t1esF3j3?=
+ =?us-ascii?Q?JvEiVdKkbkqlCcKZ2lxpYEyqXL5m0IcrvJHt3miO3ZShXzNcJy+jcmrtQPhV?=
+ =?us-ascii?Q?331shrsbnjpLivb9HCzB1rnWSngjsdaN1tt0hM+TMUxQB5U5Oxv8P8BrrQA5?=
+ =?us-ascii?Q?QQ9jDr3KrwLArQOGYRO2sfyt5KSeN8S2x5ZZATZXIXP44S9H1L+6tPMkXshx?=
+ =?us-ascii?Q?xVCwqo6hWVrfdJCv5LbwYdj+0G7/fksQre5vu1OxoWbj18TYQE95sb4iumJY?=
+ =?us-ascii?Q?7gE0CT9sJAKa9+GGz15Ef9ccCVpoLwvbYjRPOHULoud/v94CfEjggPZndlWo?=
+ =?us-ascii?Q?pwQRLcsn17I359wE7Ta3lHdiCsPxGaQ4QLVqzgoTyMVVq9HK52mhWSme6CZr?=
+ =?us-ascii?Q?aqA0aor242T1yAph1w6BrhH0HTnnm7Piknu2gHXnxpDYaSVMhGAXd7IFelHN?=
+ =?us-ascii?Q?ldtWwiJ/LNSh4cChLt3/pROBOZTkHlUePmtDZZOAwondDGpYaKj5swjDGrbu?=
+ =?us-ascii?Q?w0SYLgomTN8Ma2w03QRugGJ1O2ih2CUp94PKgJhpV/tF2sq7FvB0+d4+r9wm?=
+ =?us-ascii?Q?HSRJo8+/1jeSs9rrCcotX+1p050E2ixtpptXPAK7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2263249e-fb3d-4cb3-1c48-08dd4a074eba
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:15:40.6409
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UQm2K2IEk/rj7FZKjTVNOfNevkbckGDcsTPGKm/1aVrhpIURrRWOwDfGh8D2Ubb3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5596
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250210_090644_795286_11565851 
-X-CRM114-Status: GOOD (  18.52  )
+X-CRM114-CacheID: sfid-20250210_111551_042440_7EEC59DE 
+X-CRM114-Status: GOOD (  14.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,74 +189,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2/7/2025 11:15 AM, Mimi Zohar wrote:
-> Hi Steven,
->
-> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
->> Currently, the mechanism to map and unmap segments to the kimage
->> structure is not available to the subsystems outside of kexec.  This
->> functionality is needed when IMA is allocating the memory segments
->> during kexec 'load' operation.  Implement functions to map and unmap
->> segments to kimage.
->>
->> Implement kimage_map_segment() to enable mapping of IMA buffer source
->> pages to the kimage structure post kexec 'load'.  This function,
->> accepting a kimage pointer, an address, and a size, will gather the
->> source pages within the specified address range, create an array of page
->> pointers, and map these to a contiguous virtual address range.  The
->> function returns the start of this range if successful, or NULL if
->> unsuccessful.
->>
->> Implement kimage_unmap_segment() for unmapping segments
->> using vunmap().
->>
->> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> I don't recall previously adding my "Reviewed-by" tag.
->
-> Eric, I'd appreciate your reviewing this and the subsequent patch "[PATCH v7 3/7]
-> ima: kexec: skip IMA segment validation after kexec soft reboot" in particular.
-Hi Eric, Could you help to review this patch as Mimi mentioned? Thanks!
->
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->> ---
->>   include/linux/kexec.h |  7 ++++++
->>   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 61 insertions(+)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index f0e9f8eda7a3..f8413ea5c8c8 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -467,6 +467,9 @@ extern bool kexec_file_dbg_print;
->>   #define kexec_dprintk(fmt, arg...) \
->>           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
->>   
->> +extern void *kimage_map_segment(struct kimage *image,
->> +					unsigned long addr, unsigned long size);
-> scripts/Checkpatch.pl complains about the parenthesis alignment here and elsewhere.
->
-> Mimi
->
->> +extern void kimage_unmap_segment(void *buffer);
->>   #else /* !CONFIG_KEXEC_CORE */
->>   struct pt_regs;
->>   struct task_struct;
->> @@ -474,6 +477,10 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
->>   static inline void crash_kexec(struct pt_regs *regs) { }
->>   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
->>   static inline int kexec_crash_loaded(void) { return 0; }
->> +static inline void *kimage_map_segment(struct kimage *image,
->> +					unsigned long addr, unsigned long size)
->> +{ return NULL; }
->> +static inline void kimage_unmap_segment(void *buffer) { }
->>   #define kexec_in_progress false
->>   #endif /* CONFIG_KEXEC_CORE */
->>   
+On Sun, Feb 09, 2025 at 09:50:37PM +0100, Krzysztof Kozlowski wrote:
+> > Ah, neat, that would almost solve the problem but you wrote:
+> > 
+> > +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > 
+> > so no, this does not work like that. You use devicetree here namespace
+> > and ignore its rules.
+> 
+> ... and that obviously is barely parseable, so maybe one more try:
+> "You use here devicetree namespace but ignore its rules."
 
-Thanks, Mimi, I will update in next version
+It makes sense to me, there should be zero cross-over of the two
+specs, KHO should be completely self defined and stand alone.
 
+There is some documentation missing, I think. This yaml describes one
+node type, but the entire overall structure of the fdt does not seem
+to have documentation?
+
+Jason
 
