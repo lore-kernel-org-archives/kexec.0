@@ -4,46 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72F76C021A0
-	for <kexec@archiver.kernel.org>; Wed, 12 Feb 2025 17:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AD85C021A0
+	for <kexec@archiver.kernel.org>; Wed, 12 Feb 2025 17:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=o9EcgwaoNH9P8S3TSPAC5aJNBCxAKdO1YHsWC1zruTc=; b=OdQ4jMy+fWKLSmBqwBSOxb1BeU
-	CyIOHWw8tqsrlmaahbfhNhSQnshxKIFGJGJqdzomwicWMCUVZuxlZv6/xnUCe0Oga06OnbsPgW0Vl
-	/vLZbFqyjOKpzgTnojX8S+DaaiRM9SCWtxGiR0ahsaOxRknqhtvs/UlObVoFx/fH3pjzlt9/SMtIr
-	c510vJO+Pk7L0DlHqLQWDOgQBaNs07SAm9GJDqB7n8GZB+tx4F+OX84wSUkIAYmKIwwLHCMftRE7H
-	NOPrR4RiEm7tX55Cu1d4XrtEDG4auQ8+JRpcyIZkyoQrNXnSbfLthD3ewiBWEmdKNML2HMnpM94aU
-	Outo5PBA==;
+	bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=; b=OPUciCDyfPKAy3MyZ5Gj7qtpRk
+	+xqywZaq/O07XKHHdpAuMcIYmmK9VMgM0j9DIFOyZsZep0bU+iosDsz0F4G1eAxJZP1s7ZXygh4Rl
+	sqZfLgllq5FYifFPe/XcTm9e470kt1z1fKLjjMs8EkDI6httaOTGpy62aO6nvFOK4Fj2/iCnIEArl
+	KQuSuotUp+GHsiqn2bB5lpF0WydDSfa3oMAJ5tiLKWwma6xvkAD5Qklb0AIUxRiQGUVP7zLr8NPrL
+	eqHZzs0hx3oybhmuaAFGm4Qjj/AQxo0QVpfHbktZQioZUrn9Sn4ey/Sr5Pj9mV9V2J3PmHhwowrVG
+	Hqkb2prA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiGGV-00000008F0O-0XMh;
-	Wed, 12 Feb 2025 17:11:11 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tiGt0-00000008O3c-1eSt;
+	Wed, 12 Feb 2025 17:50:58 +0000
+Received: from mail-bn7nam10on2060a.outbound.protection.outlook.com ([2a01:111:f403:2009::60a] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiFlm-000000087y2-3jVa;
-	Wed, 12 Feb 2025 16:39:28 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id B22D2A40C19;
-	Wed, 12 Feb 2025 16:37:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45E0C4CEDF;
-	Wed, 12 Feb 2025 16:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739378365;
-	bh=zfEIpiTrcj/R2Ru79c+QdETWalY9N06YUbZ/uIkxoRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LwS+nkzE62iYAWY6oMvTiOE2hZdqZW4je7lUt/Tn8svDT0aqJyRSG1Te50dWeoSK6
-	 yZO90wTxRzWvs64nxtq+JimjJqslPOcN7j/gDEv42ILOhCNdmCR6wWLQcePUqYZ0Yz
-	 uadqjYhtm/BeUJnOKtwxaC2USAWhcuMi9AeP4KLnjL50JLMhS7jyRHMJsejxavbVDh
-	 sV1QU2dtmz9BzlPJHJQTzkrOQXYWw8C3AzJ/mP1FzbO60nnOuds/LnOuA/bs/jEEl1
-	 +GgoenuPWq9nhK1ojBt2vq5J0TI5Wg9+EvPg0Lk5i7f20zfeNS5Qm+VHUuZdt6qoTp
-	 WjzuuOLLR6qTQ==
-Date: Wed, 12 Feb 2025 18:39:06 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
+	id 1tiGlR-00000008MOr-3D4Q;
+	Wed, 12 Feb 2025 17:43:10 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hVJBSwDw2qAPMBIclB5NQARQtlUAmjOiiEwinfHtuz708pu/+Kz9UAAsQywdHczHU2cwrxlb5j8i+neZZmikM564uV92M0NVuwn2PVSWRWmCGpXwrJFgqlklVJc+IBUbdIbeH/NapL9yK2VKlqbTmzpU/OvT5b+9XoCrVQG2i519VjzzqiG8R4nVHZMMf3vGIGCfQgGW4HoJu3plD6GmA7eEyC5aydAQna9/tPOvjSYBj1QKszZd0MCzS4GsG8t8+ovq3mt1WBjXx3th/hquL0Ppf/kSQ3n9KS4jqFtd7Bb9J5LXs/Wr3SLm6UgE2nZg0Nd8pzJWxIdpXWMSSrDWAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=;
+ b=xNHOpSjxJB2dVr97AchlClMUt7pZkoO+vG/NOB1r5edbWAL8hartgZjW/LA/32wnWDIwM5eAf6zLmwfUBoBzjd6Rr1paCavxlQTeb66HQ/jBNn3O5dMkyrncuevjlrKESSTy3Yjbc/tk+lZ8JpbjiQq7Tkc+Fs1+fR6K8CBnFgO5upe8yBi8r3giM3gx+jgiIUfLrNMR5AKuxj5ymXbBjpY0Rcq5pCVyySW133I0iM69xKaqzRAIgqlHNsE3fYDYXTjMxYEpO8hYqsMuAqOHzDK+tm/w5kpJwCrOchjP7rkCx/QacZTg2ZyT7ACx4KeVHmLbo8Rdl7Bmsk2M16Jg8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=;
+ b=B5mT3kVEfHmiQQhmC0MYKqyKcfPVbLuuFFJ2o7idT/yGzWvqfdCxXs4wOJT37RaM4NeeQatDnqzx92hZT1AMujQYGcFf5Gtt5Bv5Nb1Y2MZ2JSVyriamWtBKK6pUv/Iu/GHDsOzBGRDmYheZZSRlNc5B3JbVx3DsrXKHufVx0BuelS2g5rKThZNkU1ubjvnH/eUN+NviT45chJgz25VbfMjdx2Wxy8i7tjlEq8L30WSkgy/sTYmXS1hXvJqovg8jqmWXoTFa1yvtHpZ+OL9W+fmZHdzVQ+JqXKQ6WQmjaCdukOjGX5eB8MP39VD+qE759uT8j09Fwk2xRU7dcjrSZA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
+ by IA1PR12MB8221.namprd12.prod.outlook.com (2603:10b6:208:3f0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Wed, 12 Feb
+ 2025 17:43:04 +0000
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
+ 17:43:04 +0000
+Date: Wed, 12 Feb 2025 13:43:03 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Mike Rapoport <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -76,7 +87,7 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation
  helpers
-Message-ID: <Z6zOqtaLQwnIWl2E@kernel.org>
+Message-ID: <20250212174303.GU3754072@nvidia.com>
 References: <20250206132754.2596694-1-rppt@kernel.org>
  <20250206132754.2596694-6-rppt@kernel.org>
  <20250210202220.GC3765641@nvidia.com>
@@ -85,13 +96,87 @@ References: <20250206132754.2596694-1-rppt@kernel.org>
  <CA+CK2bAEnaPUJmd3LxFwCRa9xWrSJ478c4xisvD4pwvNMiTCgA@mail.gmail.com>
  <20250211163720.GH3754072@nvidia.com>
  <20250212152336.GA3848889@nvidia.com>
-MIME-Version: 1.0
+ <Z6zOqtaLQwnIWl2E@kernel.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250212152336.GA3848889@nvidia.com>
+In-Reply-To: <Z6zOqtaLQwnIWl2E@kernel.org>
+X-ClientProxiedBy: MN2PR20CA0021.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::34) To MW6PR12MB8663.namprd12.prod.outlook.com
+ (2603:10b6:303:240::9)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|IA1PR12MB8221:EE_
+X-MS-Office365-Filtering-Correlation-Id: fcda6154-e116-4491-99c7-08dd4b8cb3fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?eCRtdU5NxRln6L2vSD9zK3Np5n0fC70kE9dYCC7RxAz3J+sxt7LICm5NxsNt?=
+ =?us-ascii?Q?27NvA9BOzP3/NTtZHdMGVr9ERDLt9Mqjb13sR1IrJKySHT4kNPkGrFBZOEDH?=
+ =?us-ascii?Q?HH6U30i32HBa4W2IAOApEvCitZzkURf9k3K1FuZwCLJoI63v5UCI7Pk4Hh1a?=
+ =?us-ascii?Q?TqeDPsDwU5sdYQ9lIi0fpPbo4HOAovmqj2k+B9gf33ke+/IJeT9vCxaGbPVB?=
+ =?us-ascii?Q?lUpE4pZFt2rykDk/RA/nzierCZ/lNmZMmUDDmhp81cRX8YOLV74Rsu2HDIY4?=
+ =?us-ascii?Q?K1DShJUsi+fi2yKtzDzyeW1aQSSAdYzMBaV2Db8FTDjD1kpSGoPtIQOTzQIN?=
+ =?us-ascii?Q?TQ4oVcDQmFSc9Aloutqtk4BPr62uHviY+PibF2nIe99LeotniTQGtnBzKVQD?=
+ =?us-ascii?Q?OExKzvf3qRHaoew+oBKd4e1Tl0NTiZb5+uOREhH0Vp+T6ctqS9Gk8dTDs9uo?=
+ =?us-ascii?Q?6DcCVKqztwBG0RRar7IQWSN83RRx2sKwWXvf85Wa71VrAUKCNVFt88VTQQZe?=
+ =?us-ascii?Q?Wbh0GS2llWLViSInnFVgnXZk9zZOnb0IC77Fo/af7anBfmyA+/SRy/UW5S7J?=
+ =?us-ascii?Q?T0nunRMY76Dnh9A3Eje+f4Gg86aYmi//Ogkgm2DWyfB3MEZC9RIPU3n+o04J?=
+ =?us-ascii?Q?fjELK+Aa4keBvIaZb3zG7uPbDPzEmXFG4yZ6Nhldm8krSwhwoHhHMv8GDXY0?=
+ =?us-ascii?Q?p/Si/ywjB3W/gi8rCpEfJrUcdTMwLaEAB88jTvU6IpUrnc5AMkBIuNJHzM4M?=
+ =?us-ascii?Q?kZzgWVG3Tt9YqNX+GYWZy1zKOb6359JupFiujj9hMZFb8klmMJBtUcEycmgG?=
+ =?us-ascii?Q?O6T6rxNXixD4ZXcUKKiRQZeMDTrYWNJ3cQrET67DnbmC8DxmyXbokJN/esFq?=
+ =?us-ascii?Q?9VqhJlQuUN+ZRTM+ZjLpq8RuKS8Cwq+9vHnYgRMIr+PwivooCXsz5e6aUrfe?=
+ =?us-ascii?Q?LOI9EfRTUO3EpytBbDBSKGrkZkx6+v2wfLhFf5tw8ljm6voCLkiDHeYUs53I?=
+ =?us-ascii?Q?iHhEGsmjqVCnIfMHM3AGQZGL+r8/nJ2OSZ/zzZS+O1RrXHSSdehOHJu9PDd7?=
+ =?us-ascii?Q?SyPgQ88jiEJ4gwQSAZjVGR3rjxdTcFdkMV4JVp/9tw6m/uMJ8oDEsIb6a8Yt?=
+ =?us-ascii?Q?9Q1ubHS+9z0cJgEE+9PWMvE1yTKrLUb7ZUzkzlPWpyy11ZmcgNfu59eKyS4Z?=
+ =?us-ascii?Q?DL4nU+cspC0jJI64Q7W06TCodMii6ZI1d/GEOWVwDzj98E3HxpRh7B9Qrzgh?=
+ =?us-ascii?Q?Hatv5iWtuyHchnaqff1u48ZxsDUFM8PrLuCZFn3A6vvkmS+po3jAqC5WF/xz?=
+ =?us-ascii?Q?hSUzeUze5DYqrOc90o++K8bnnEQoub3Bth4Czp5TVP+/DdYx9HgcPerJ20xb?=
+ =?us-ascii?Q?zBhXRsXRdqOC+uo2QFUYA2gB4U/6?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?k6pKXTxW+ltA8nSIxzihH4SzSnKE55QKEUfZGww6P7DKYjl0UqrlI2UfuK16?=
+ =?us-ascii?Q?PmhT6qRWiUDCmdmBuuSymrVjhMb8/ds6QI6tFQZqUSa3RlITlu80J142r32n?=
+ =?us-ascii?Q?53Z47mQKT4xqle4DPuLpwg686HXlmFXUXRUATIoriCtRZkkvxTnzhiaP2DY0?=
+ =?us-ascii?Q?2vjQAgcuCzkuHFeWYJg/0OeMo1P0LdX2srFeZoX9SS+fGEmZHJVRbcRBm057?=
+ =?us-ascii?Q?vwsw6yjGRmf8fNpgWXL3IucTzPjdGh5O7UZSVl+B0vk303JKazEaxcts6nGv?=
+ =?us-ascii?Q?eEPRMQm0z0xvivo9KP+Bm+YUfLDKCgdxsfD2FJlRHbY8s3cO6aRBdxeNIifh?=
+ =?us-ascii?Q?5mfpMiUot0KB1PJdNH65D/gtwb7DBc88ZNNf5QFhdG2xfzjAKENR+UWH+zKU?=
+ =?us-ascii?Q?AxtGYI/lfEVJXiT7svdaTlPB7DdHQspwT4tkdLNTNZFl2gg61TuqcnuDHOS6?=
+ =?us-ascii?Q?tKzRfmZNIozDMIyPJ1RLeVqAwf+NE1bOolbB0EtpQsHkv6aGnDm2F21ApE1a?=
+ =?us-ascii?Q?5qXND3D7kuJgCgF+H9MQfHcJpzA/xACe6Iin1WW9MyT/AiWGkXBnaLz49WiD?=
+ =?us-ascii?Q?qlUcGqaCvnOd3YN1AYPdSsOIG8/1VTuwlnqAry66df25CmqC4ovVi+98/Aec?=
+ =?us-ascii?Q?6/RbUUPw8K9EzvsO92QkJ6z5v2KnZ4gGK0+imS4YDpvzuMQpmA+zf7k3Cpro?=
+ =?us-ascii?Q?OfdACLRY96+3Ulp3cGIUxy98jgJzvFBaNcarNUk9d4p7cRm17QrFvr877BEz?=
+ =?us-ascii?Q?Hk+SCK+eo1QPsBO/rxj90ATPk266Zd7U24TZMg4aiU1d6yJeXRKQTjBfB1cW?=
+ =?us-ascii?Q?GVW9n0sMIFv8g5LXuokGegQUqqoqYe5BUrCrzIN/3Y017zVmY/LxrzEbvMOv?=
+ =?us-ascii?Q?wKkB3tQpgb6ZILSpgifnIHIbHmtM4ZRXqbaFS3A3FK6BZVQUcjZH9eP0xGKG?=
+ =?us-ascii?Q?ygJgQkYIOQvrIqsj6D4+Wt0VGN5wQHCb1JSWzcSs/R2AnQWSmZvwsBkY3142?=
+ =?us-ascii?Q?rUlbQSyQS5Kq65n/1lbdoOulOV9a6CboWIYGHCHoIEysNDa3gXg/27wNtepk?=
+ =?us-ascii?Q?Of01/PcBxyN4Xqrn7Vn7sUtVYHV7gGzjdOIZ9EYV9k25xW/YwjESRETyWtiM?=
+ =?us-ascii?Q?CqhmpR2yOIxfQ8oaIV0ePjEXoPzN8sYgFgicwyZoRe/fo7/mpQQC9plUFV5X?=
+ =?us-ascii?Q?K9QYBzFrB5G6hC2L4nRIRVEbNdMUuVedXcIQWyJ6BrTgpfYDdC89ywge9uV1?=
+ =?us-ascii?Q?iLyUpUDuoyUoKSlU4/Y9onLHo2rzx+plL9FFpzIhffP4Rd+GNBerBRwlaLkc?=
+ =?us-ascii?Q?Fj30lcvOb8AnE2OajA7yN9fYsdKv4pb3RLxhbpCNTe8FaBJOXnZbQ5yBpyrS?=
+ =?us-ascii?Q?jE0plZu5B15d1LC8yGtpqjuP2MKDISfxUjjSrsbVqeGSbVGOt5pAtrtyf9Yz?=
+ =?us-ascii?Q?YeW3sHqYqYgugMRBY0YjxgsVbNjETjnJgTPHuzRO+/nadrL/N93TTrqNRe55?=
+ =?us-ascii?Q?6/DjKh9lsaLE8Zh9Gu0HXlAKUZSTBTLxXxNmKkBr60eWNnrbpK/U0aiE9Bf0?=
+ =?us-ascii?Q?cOIg92EPW3kJ+73YS2oaGTOR95BG2p3tVLLa1tDw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcda6154-e116-4491-99c7-08dd4b8cb3fd
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 17:43:04.5053
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0P8Jj8OH+WGU64qtS4cFL034ya9n+OiNd7/9MkzdFHwZT/PxjorcgP9YJm7OOU71
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8221
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250212_083927_068040_C751FF21 
-X-CRM114-Status: GOOD (  24.44  )
+X-CRM114-CacheID: sfid-20250212_094309_820111_DECE1FF1 
+X-CRM114-Status: GOOD (  17.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,60 +191,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jason,
+On Wed, Feb 12, 2025 at 06:39:06PM +0200, Mike Rapoport wrote:
 
-On Wed, Feb 12, 2025 at 11:23:36AM -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 11, 2025 at 12:37:20PM -0400, Jason Gunthorpe wrote:
-> 
-> > To do that you need to preserve folios as the basic primitive.
-> 
-> I made a small sketch of what I suggest.
-> 
-> I imagine the FDT schema for this would look something like this:
-> 
-> /dts-v1/;
-> / {
->   compatible = "linux-kho,v1";
->   phys-addr-size = 64;
->   void-p-size = 64;
->   preserved-folio-map = <phys_addr>;
-> 
->   // The per "driver" storage
->   instance@1 {..};
->   instance@2 {..};
-> };
-> 
-> I think this is alot better than what is in this series. It uses much
-> less memory when there are alot of allocation, it supports any order
-> folios, it is efficient for 1G guestmemfd folios, and it only needs a
-> few bytes in the FDT. It could preserve and restore the high order
-> folio struct page folding (HVO).
-> 
-> The use cases I'm imagining for drivers would be pushing gigabytes of
-> memory into this preservation mechanism. It needs to be scalable!
-> 
-> This also illustrates my point that I don't think FDT is a good
-> representation to use exclusively. This in-memory structure is much
-> better and faster than trying to represent the same information
-> embedded directly into the FDT. I imagine this to be the general
-> pattern that drivers will want to use. A few bytes in the FDT pointing
-> at a scalable in-memory structure for the bulk of the data.
+> As I've mentioned off-list earlier, KHO in its current form is the lowest
+> level of abstraction for state preservation and it is by no means is
+> intended to provide complex drivers with all the tools necessary.
 
-As I've mentioned off-list earlier, KHO in its current form is the lowest
-level of abstraction for state preservation and it is by no means is
-intended to provide complex drivers with all the tools necessary.
+My point, is I think it is the wrong level of abstraction and the
+wrong FDT schema. It does not and cannot solve the problems we know we
+will have, so why invest anything into that schema?
 
-It's sole purpose is to allow preserving simple properties and ensure that
-memory ranges KHO clients need to preserve won't be overwritten.
+I think the scratch system is great, and an amazing improvement over
+past version. Upgrade the memory preservation to match and it will be
+really good.
 
-What you propose is a great optimization for memory preservation mechanism,
-and additional and very useful abstraction layer on top of "basic KHO"!
+> What you propose is a great optimization for memory preservation mechanism,
+> and additional and very useful abstraction layer on top of "basic KHO"!
 
-But I think it will be easier to start with something *very simple* and
-probably suboptimal and then extend it rather than to try to build complex
-comprehensive solution from day one.
+I do not see this as a layer on top, I see it as fundamentally
+replacing the memory preservation mechanism with something more
+scalable.
 
--- 
-Sincerely yours,
-Mike.
+> But I think it will be easier to start with something *very simple* and
+> probably suboptimal and then extend it rather than to try to build complex
+> comprehensive solution from day one.
+
+But why? Just do it right from the start? I spent like a hour
+sketching that, the existing preservation code is also very simple,
+why not just fix it right now?
+
+Jason
 
