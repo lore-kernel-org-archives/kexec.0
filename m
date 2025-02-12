@@ -4,176 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B39AC0219B
-	for <kexec@archiver.kernel.org>; Tue, 11 Feb 2025 16:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50755C0219B
+	for <kexec@archiver.kernel.org>; Wed, 12 Feb 2025 00:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=E4ZAffZ9o+WX/fFe6IM8pD+RM8sf+0UDCjX7ldo7nL8=; b=oyKhnG+r/bni7UfmiSAEqP4DvH
-	G+C/kr1ETIEhkx6PyJ267zLeQekHOS8tL1atoDwTeluo7+uS1Dg709lYeWIE4H1mvONrFioEjBh2h
-	8Ody2/beCySEjctrn/uA9M34BjvtzwDwUBiUd68ovwBXf/iBGePWw7Ekp1TU8417uVrK/QEVeNG92
-	7dfOYbrojoJ/3Mrv8/FdTiE2/WBxL++EWqt13ILMG78/mGGiKQ536nSFGw5pdfconHpWO3PF64deR
-	sF6wAcl9jlBu0FClxVwwoJA/uXbL4D156KOrrMWlEglv2nQ6wphK92KE9ymRttazN+cLpOpnKBgL9
-	1HqBRGpA==;
+	bh=eua/hApNBjEqd+RMENEi87Sr+Mh/D0hB/oWXPr8GJgk=; b=m+ZEDGd09irEZwq5WpT3fcTXMA
+	NYlTbiIHjVEatB5HsO30ZzR/s31EPzBa3gMJrsONhf3Gq0eZE31GzEFJxtWfE6VwrNmkc5VzoRpvy
+	O3BogHe0iDzsBuzXw2ZSfPW5ganySILrz8scIiK7CkJI/46gbs7GePUbjnlfFWfnR4ckdPUMNYLRZ
+	99Cp83hJK0Hqloumrr4moWNegktBVrFQ9KGe8usWn3vwMGq9TqjAx/ZR4Qwmtpy53ELPcnBlQ/34M
+	6Ia8LKddDA5OPQ1Hi2VM5DpnW1Tj7oUyVdQ9MMa9ikbHcpaky30vy7/YjDeeutCxb5/k6vgdHTHmQ
+	3/H659EQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1thta4-00000004bGM-2elu;
-	Tue, 11 Feb 2025 16:57:52 +0000
-Received: from mail-dm6nam04on20614.outbound.protection.outlook.com ([2a01:111:f403:2409::614] helo=NAM04-DM6-obe.outbound.protection.outlook.com)
+	id 1ti0u3-00000005kDQ-3m4g;
+	Wed, 12 Feb 2025 00:46:59 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1thtGL-00000004XxY-422o;
-	Tue, 11 Feb 2025 16:37:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mNkgE0ErGjr6IgcZur3447OVMo1NzhQkFppfI6o2woPHJw3ZIaIXVU/w5vdRNkfKlKjcXp26gJ5oEFeKxxGtnRF3YwmPvZWLna0TfZaP/CaLnP3ZoIzlO7Dl1CM6ZdqRb2+PxMfsZV5tE2fBFz1x5LdE9e8XGLZztSFzDF+Rs2irCl5azNzSKv4nS/TQmxRWUCvccxKk/lYSNNAy1y6WN7pKgkjHaWVCCNRPQyrzKOVjJuC4Lwe0cnUqiGZKTOqmxO7B6RCG6fEGfXD2zrgLCsoC+llAM7jY2Si7pJUVUeeP71NjjRiHOKQvOyJQrYfkHv6JYRTuebBrV0xh6RatoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E4ZAffZ9o+WX/fFe6IM8pD+RM8sf+0UDCjX7ldo7nL8=;
- b=vkHSaV18rSQDOYFLjX2iv7LIpc4+/rVCpqpvFdjd751Dtcl3/e1ScREUooCGCtQtxeRf7VfIriVzbmp42QWkCbv/yYlXfiIGUP6hFapfVrMRhOpmIZXsWCebh0clnjLn9N7IACh4kh56xL7cMOjydeYLaafoVshVm6LpvGWyUlJ8i60xhG6SL+cVfc2qhzL1QaEEj+OtdcLwgSEyD0yrvrmQbqKfUObKXZUKIVyGJbMBbj1w6hrddSxgEwtUpH2ruONkbjGk2ups68ZjeKMDoLlmdKXmgOTYIfHmCTEtA8ZkU3lJV5FHyxE9jx7hCGBomqhgekqmflB5GqzHVX2yhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E4ZAffZ9o+WX/fFe6IM8pD+RM8sf+0UDCjX7ldo7nL8=;
- b=q9dXDPAcfOcTC1h8m2DmNXp8scpsgg6wRQ5HHePYo3LA8vw5JNhHGvp51tY+Q0aLROy2T2cyn/GpsgCA+MfSdrTircuWTaatJ7fEiMOgM7XG8g+TWfqMC3uBBo5yuZZU2Ri7Qvl0i3zrMSjdYNFu8dGts4eRAQRswkWA/+CvtCL+oB7z02r8Jacsii99TgkqNbVmxt/5nBDeZayBcciI6WKFJK+PcslWFM8fNaiTEZJFXyCXbgkGzYpcwCeI+YRAXaB3TZxJ2xouGdCekz6Tk2nnoIF8Ste7aiKIT4umbdOQDb+E7dqJ+Au9N82Ec04bZC3+tz80aztwyyRI5hVZuA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CH3PR12MB7595.namprd12.prod.outlook.com (2603:10b6:610:14c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.15; Tue, 11 Feb
- 2025 16:37:23 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 16:37:22 +0000
-Date: Tue, 11 Feb 2025 12:37:20 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation
- helpers
-Message-ID: <20250211163720.GH3754072@nvidia.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-6-rppt@kernel.org>
- <20250210202220.GC3765641@nvidia.com>
- <CA+CK2bBBX+HgD0HLj-AyTScM59F2wXq11BEPgejPMHoEwqj+_Q@mail.gmail.com>
- <20250211124943.GC3754072@nvidia.com>
- <CA+CK2bAEnaPUJmd3LxFwCRa9xWrSJ478c4xisvD4pwvNMiTCgA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bAEnaPUJmd3LxFwCRa9xWrSJ478c4xisvD4pwvNMiTCgA@mail.gmail.com>
-X-ClientProxiedBy: BN0PR02CA0053.namprd02.prod.outlook.com
- (2603:10b6:408:e5::28) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	id 1ti0t4-00000005k4P-492o
+	for kexec@lists.infradead.org;
+	Wed, 12 Feb 2025 00:46:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739321157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eua/hApNBjEqd+RMENEi87Sr+Mh/D0hB/oWXPr8GJgk=;
+	b=F7Q+1cUwtjFx88vB6UAeWKVYkzqr3SgSGz1YoDgIvuLffSVa/NVD4YmmBSWiJnFkaPQ5tc
+	IXrlfpAxgDR3k8kdl6/eMgtSyJUHmncLDbDs5NK6AbGUMo7K0OdRVpT7K1dpblB54IwqVW
+	ZccO3SbKQr5Xw3ltU07ttRfJCGXT9ac=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-474-qx-rW1KdOnqjeMh0nhnXOQ-1; Tue, 11 Feb 2025 19:45:56 -0500
+X-MC-Unique: qx-rW1KdOnqjeMh0nhnXOQ-1
+X-Mimecast-MFC-AGG-ID: qx-rW1KdOnqjeMh0nhnXOQ
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fa6409c0baso9077973a91.1
+        for <kexec@lists.infradead.org>; Tue, 11 Feb 2025 16:45:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739321155; x=1739925955;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eua/hApNBjEqd+RMENEi87Sr+Mh/D0hB/oWXPr8GJgk=;
+        b=pzdAv0iholqQHpQL+x2yJeuWNN9QB7VsmOeOOzevKQU34NmU3eZnatwPRDhnx9EnqF
+         48QpM98RksEmXS8F9aYGZ1nXoBE1GqXfIDw8umH0MVfOv2Mt01VdHd9SLIjVaeQ+H9fX
+         eLJK+N+evcEbUykZ1MBsL1CFiasrgoDGlVZvU+Gzi9RmzpmBADALq616qsB6p3Oq7lb/
+         XTFpWUczt0aBe8+SWVHrTYhKjwe+yqo2pLsfta4FZQ+P/WJ+QcYUAW50CzuqDPtIxMV6
+         WmVZ8lsB8SuUpmNzCFOmDf0Uf6+vqYrCINmsJMh+w1/xGatqJlzubF++uauw3OYKK+fd
+         ykbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi4ycQoJKb0xE3gwmnSp6sT2/SC4dGDUcFf0lm4UhV21T+te3PCViP9t26wiVX1heFq3qZ4Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzwY1Wd7ieEZARJ+xmB9RbQ7igjAfXIdQwmQQyrxMwpwoIyDmHY
+	lk2MqCUv1udw2QS/wdJ22GwQtg7FiHUTzM0DaByOOs41k32bYyiymyeRglzL8ROIfeq0MAqwkkw
+	DGKWePcDVETpE/hP4zDAj1AN9Q/etWtgaJv6sfP1NHAKKJmX1Y5+lm0sZvQ==
+X-Gm-Gg: ASbGnctTNXH7UaRXP2R0OKEXD54cOBEci3SqDMM7Qqdf4y04vTtJwsFCcEuV16ig6E/
+	Y7sGGBoz30AyPauFbS876bZJ0L4ySPUuNqKuO+70pY5CdGnDDA35sVDeQwJiZPJ9n5M+ks5CTs7
+	EqEaqZpTN1cQXktba9ZdGecG9EKqBecK89x5wLlY1voRVR8PAKh6/m4DfGwzFhb2zWOhAqdzYZC
+	+EL5W3adfZwxhVi0JBOPTl95cC4GaAH6Q2Am6CcnuwB+6iQUoOOrKa+oprzYW2GORtxW0VN
+X-Received: by 2002:a17:90b:544f:b0:2ee:aed6:9ec2 with SMTP id 98e67ed59e1d1-2fbf5c0f653mr2103367a91.14.1739321155473;
+        Tue, 11 Feb 2025 16:45:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE6IIMJ+3Hvx8Id8rTg0AZzH7XEwW28qToMrNpGHIdmEypuProqH9OrCUS32B2pihOhAwnVBg==
+X-Received: by 2002:a17:90b:544f:b0:2ee:aed6:9ec2 with SMTP id 98e67ed59e1d1-2fbf5c0f653mr2103334a91.14.1739321155171;
+        Tue, 11 Feb 2025 16:45:55 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf9908960sm202009a91.41.2025.02.11.16.45.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 16:45:54 -0800 (PST)
+Date: Wed, 12 Feb 2025 08:43:21 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, 
+	Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <uo2q3jxzcu3d4noiznxpw5woaclikmywyzi7yjlnpef3fdjt4e@idvs7tiv3znb>
+References: <20250207080818.129165-1-coxu@redhat.com>
+ <Z6sljm1lurDKPCvj@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH3PR12MB7595:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba8ce82d-5a0c-4dab-e3aa-08dd4aba5baf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?MX5o2klHZUk7hWl+G/pyMgEiHhpvgcKvHh2WPr+wX4Nrq28alC/jUCShP6Ue?=
- =?us-ascii?Q?Lh36c9d9B5b3gsUT3QOrtP0gUXdfR1Gj69WgtHYHBEUv6yWdeeziI7tnhNFq?=
- =?us-ascii?Q?q3jftEoTyNeg+yWYh9QztxdQ8ATXBAKsHUBirrYvX6Asx7rqvC7Sd743CHqW?=
- =?us-ascii?Q?PW/icKM6Q0AeiwvTafscHCuVdeYqwogk45/zt76hKexCUBkC0kSye/7cdeqc?=
- =?us-ascii?Q?625ZL2F3E6qrctPG4YiKPgd2LtIN3OnZhgcKbBw5Cr8bdlMbbXJnShzL+0cA?=
- =?us-ascii?Q?fYFYYQInLuAxLlCwKFdfFy0ByKKVmCG0V7cZyf0woY9hpzxBjn5xcMHxu2MU?=
- =?us-ascii?Q?NbodZuARftUFWJu9B3xmbgSOXzJUQMkZV8SwwbS0uSsHDWxPr9HA2Qzy8uTn?=
- =?us-ascii?Q?40tF0zfLf9drOYrSDvNGLT0Cequjx24FX424iJgdcZkWuyTxecz7ggWX3nNM?=
- =?us-ascii?Q?O8axXVWbhVOtlKcBA7wqWFfwB/aw7Zj7w+jDetDKN5Q9V0maOnGGSxFXZgiA?=
- =?us-ascii?Q?VSoIQGSSufsz4P1ovsQiKswdR8C5hHFI+yyTJGJWXyB69ub/mmPYgJGE6pBs?=
- =?us-ascii?Q?PiQJ+gLsfNS3m7sG5WUneK0396LorRUkCRCqDwzvCKsmXEw0wy67ncJ7MyUe?=
- =?us-ascii?Q?MzVJ4XDTGJy4ILfxmkqdIBUxPFwq73kBuQiLr0LazOKdiM3SeEV5SMvDnb20?=
- =?us-ascii?Q?KOJETL1yKaWdlH011gk//hnqIe/EWL3DK+luuimbUKXVUDztGqaffQQ8OwS5?=
- =?us-ascii?Q?BdnHafYKn5sU0e0VmtLXpk5sqINUuH4HHZgd0/oMeiAS8A/9V8qp6AzxJfB+?=
- =?us-ascii?Q?A+jFEueu/ylugKl37POEe/in0PkeFx4UER4p+b5kLB4qKRYWIcHImSFKKVjg?=
- =?us-ascii?Q?+bQ8zsasSME82qL9Ide4VapLTf583HYgOpwChPq7TwZIMPwH3sEYxS4No30w?=
- =?us-ascii?Q?LZWy2KcT15q/66eGSUpLr9g6cHXeXMZNmweBmjx26YNYZeDjQCfbuobFReBl?=
- =?us-ascii?Q?RXNQO5p9NIYUwNXspCZyeg9vgvOMfrRDXMN7hzur5U4i0mlKrMp+fUTbgb66?=
- =?us-ascii?Q?AgC23VmDso/YAjo8X8MXhIpZUptr2MuBcKf7wrUJFa0hl1BBewVH5oFC77aI?=
- =?us-ascii?Q?kygJtnbOJ7G+zYPMc0/qRLYvQUmWBs5L/YxN3fkuceGBaY9BgqdedLReZcfy?=
- =?us-ascii?Q?t1kINb0VfMN+vkp7tyvxOmKTDjcDEFM60HXWWhhkPV6Z4MB1uReAkcsBKQGQ?=
- =?us-ascii?Q?byqAyNQ9CLjifSYC9s4RWFtP5An8pb4Yq7gkh9MblycbWbKIRVQUYuC36b+2?=
- =?us-ascii?Q?Wvx8jzjxF2m8Q7xWbF86No/32aCKsEA+qDcN2YD/BmyCuh1d/DeAbezH59wD?=
- =?us-ascii?Q?XUp7HP0widoip3ok5iNUYWafW4Ka?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VhYoX36gvLiXV1RImsQuaCQko77tEy6fIeMj8a9Y9OcDqbn/qTFjOzoMQ1oH?=
- =?us-ascii?Q?K4a/YUWOgp41HNh1uQpKTyqSXgYeCQFzTUC0tno5tx03D1v+pg7s60z8B7S0?=
- =?us-ascii?Q?YeFDEsbq8Ux3qksnnM0P5f1qfeI54DCOYc+3y1kD+sk2Aeel+YOofDSru7B/?=
- =?us-ascii?Q?zmj8TVNhU+56SktHlPqeYvqRmEovODIsxado7LAJrIFZqibIJ/QIImx0vMdy?=
- =?us-ascii?Q?De9MUh0pC+VjhbMPrKU+B3sTy/b2blZsMp1ePOkcF+1xO152M7NkkrB5mCdc?=
- =?us-ascii?Q?ms6qsg4MJS9ND8eatsuBCQTNSebpU7P+wkl/4PCaUSMWbBG4zr1Ken/vJClo?=
- =?us-ascii?Q?jENi4IymEVt1IJWlHcUnB6g0824lb79vzhvFkHr2/J3f6FkR7q0A6b6O09jA?=
- =?us-ascii?Q?UmXJ0Gg1nlxTVie5mOUlx0r3KGOtl+x2e+VGweA0OCMqMFQJmgjXc1aWwItj?=
- =?us-ascii?Q?XZilgxTn0Gg8+FrDnTDRBSgXxleq8g8rM4jTkUUGs4nODIokoovjc+dKP+k8?=
- =?us-ascii?Q?zOxZOGlsgCh4rYd8wKcw0k40pR+E+Vuz4UVOIHHtniArNYjYlIQYy99153S/?=
- =?us-ascii?Q?d0tXsVLe+CG3CCnIeyGoIyqlH+AjRABTr4ZDOho8AfB8Gv4zmLiA+sSJmgdj?=
- =?us-ascii?Q?iPrlCDLrSCNNXhzElBgyFAdgf64ua/ZGHulTIiVyscOziDQKMvmjpLSxPc01?=
- =?us-ascii?Q?cY3cw2z71SQ/1t4VRhO3BZQM19DUncYRlO0TWdrTu0dhEzhCxGTFKi8OGFt4?=
- =?us-ascii?Q?rGOUDHoHhKKGZqs8D53TOzppGKnq/yJELKcB+swdzRcBTwsRozgY4MTK+YlT?=
- =?us-ascii?Q?CeHI7HKRlstds/UiBo7HWFcmkK8I8aGZWvrRR9S4lsrYhOpomxRyMUpDZbPD?=
- =?us-ascii?Q?xI5CuqSTbcp8dz+n8r8Y2qAwX/NW1tVSqdP1NgLFsQIXFu7MPbevpajsHhe3?=
- =?us-ascii?Q?Xp8HwBnIewxbhR7o0kNFbd2wkg2N8kJtslcct3V32VAwWWdj+M0tEnrMKGHI?=
- =?us-ascii?Q?1QI0CwDIpYjrjZE+07H9jbH4Rl8tbOEDjGPDrV72uaf/CJd3Q6sQgqpHw5fq?=
- =?us-ascii?Q?pBLl+4FUHKr6Ma0iPiXRz3svxF3muM0V9SGvYJbn2JLs6T+WNOIXpKN4P/SU?=
- =?us-ascii?Q?fK+6cYMe7miAR9DwCdvqH97ac7pTz5cI/rHvZ+43GT9mFltk8aH0BLs4WLyo?=
- =?us-ascii?Q?Z6dCnFlFIn7mfHTVsB+7QRmtK6z8R6d79p+BDEIjmLhJm1R6uMXkYX7ENEPX?=
- =?us-ascii?Q?ZUS9/Yw5em/vTeEVCUGA92vCxdFSjEQxlKH8jc0cEvDw0r/nbktpZKUqxYAu?=
- =?us-ascii?Q?pbkY1F5UmKvsO1TFzhGjotfR7ERoAvM4PDI7RDc+nluECQiUGsdrPzqx3SUK?=
- =?us-ascii?Q?RL4NqDPHXZTWKOytKfzdkKnayKO0ORT29nTXjIW4JfgJAP1X6lCKANjYlW+Q?=
- =?us-ascii?Q?tCRl8YiUDIvP8csZETB9Bc8yB8HFxtdkw7iOG3DXnIJuM+2ZwBmv/+ueTGMl?=
- =?us-ascii?Q?q8BZWh5fS/piD7jJZxV2P45G/Yj1nG/1nHbosklsUdK79gY1z3c6XlPvlR8W?=
- =?us-ascii?Q?hl2BaT1mtBajHZ75f3WL2PUeHx/EHzM1gqdsbn3/?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba8ce82d-5a0c-4dab-e3aa-08dd4aba5baf
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 16:37:22.0841
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IfNuhZNUjLSUmGJCm8C0DO1AH5CHVEbCxqDysD2pXl34T6k8rOLNUIXT8Nk6IO1u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7595
+In-Reply-To: <Z6sljm1lurDKPCvj@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: M65nxrZa7lMQ2hmrXq2_15D0b8q8kQR-Z7DEC3WrXSw_1739321155
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250211_083730_014224_622B1F49 
-X-CRM114-Status: GOOD (  19.74  )
+X-CRM114-CacheID: sfid-20250211_164559_097257_F92E4E48 
+X-CRM114-Status: GOOD (  26.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -188,45 +111,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Feb 11, 2025 at 11:14:06AM -0500, Pasha Tatashin wrote:
-> > think you should not add this when there are enough ideas on how to
-> > completely avoid it.
-> 
-> Thinking about it some more, I'm actually leaning towards keeping
-> things as they are, instead of going with a sparse FDT. 
+On Tue, Feb 11, 2025 at 06:25:18PM +0800, Baoquan He wrote:
+>On 02/07/25 at 04:08pm, Coiby Xu wrote:
+>> LUKS is the standard for Linux disk encryption, widely adopted by users,
+>> and in some cases, such as Confidential VMs, it is a requirement. With
+>> kdump enabled, when the first kernel crashes, the system can boot into
+>> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
+>> to a specified target. However, there are two challenges when dumping
+>> vmcore to a LUKS-encrypted device:
+>>
+>>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>>    machines, a system administrator may not have a chance to enter the
+>>    password to decrypt the device in kdump initramfs after the 1st kernel
+>>    crashes; For cloud confidential VMs, depending on the policy the
+>>    kdump kernel may not be able to unseal the keys with TPM and the
+>>    console virtual keyboard is untrusted.
+>>
+>>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>>    which is quite memory-consuming compared to the limited memory reserved
+>>    for kdump. Take Fedora example, by default, only 256M is reserved for
+>>    systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
+>>    to be reserved for kdump. Note if the memory reserved for kdump can't
+>>    be used by 1st kernel i.e. an user sees ~1300M memory missing in the
+>>    1st kernel.
+>>
+>> Besides users (at least for Fedora) usually expect kdump to work out of
+>> the box i.e. no manual password input or custom crashkernel value is
+>> needed. And it doesn't make sense to derivate the keys again in kdump
+>> kernel which seems to be redundant work.
+>>
+>> This patch set addresses the above issues by making the LUKS volume keys
+>> persistent for kdump kernel with the help of cryptsetup's new APIs
+>> (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+>> the kdump copies of LUKS volume keys,
+>>
+>>  1. After the 1st kernel loads the initramfs during boot, systemd
+>>     use an user-input passphrase to de-crypt the LUKS volume keys
+>>     or TPM-sealed key and then save the volume keys to specified keyring
+>>     (using the --link-vk-to-keyring API) and the key will expire within
+>>     specified time.
+>>
+>>  2. A user space tool (kdump initramfs loader like kdump-utils) create
+>>     key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
+>>     the 1st kernel which keys are needed.
+>>
+>>  3. When the kdump initramfs is loaded by the kexec_file_load
+>>     syscall, the 1st kernel will iterate created key items, save the
+>>     keys to kdump reserved memory.
+>>
+>>  4. When the 1st kernel crashes and the kdump initramfs is booted, the
+>>     kdump initramfs asks the kdump kernel to create a user key using the
+>>     key stored in kdump reserved memory by writing yes to
+>>     /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
+>>     device is unlocked with libcryptsetup's --volume-key-keyring API.
+>>
+>>  5. The system gets rebooted to the 1st kernel after dumping vmcore to
+>>     the LUKS encrypted device is finished
+>>
+>> After libcryptsetup saving the LUKS volume keys to specified keyring,
+>> whoever takes this should be responsible for the safety of these copies
+>> of keys. The keys will be saved in the memory area exclusively reserved
+>> for kdump where even the 1st kernel has no direct access. And further
+>> more, two additional protections are added,
+>>  - save the copy randomly in kdump reserved memory as suggested by Jan
+>>  - clear the _PAGE_PRESENT flag of the page that stores the copy as
+>>    suggested by Pingfan
+>>
+>> This patch set only supports x86. There will be patches to support other
+>> architectures once this patch set gets merged.
+>
+>This v8 looks good to me, thanks for the great effort, Coiby.
+>
+>Acked-by: Baoquan He <bhe@redhat.com>
 
-What is a sparse FDT? My suggestion each driver make its own FDT?
+Great, thanks for reviewing and acknowledging the patch set!
 
-The reason for this was sequencing because we need a more more
-flexable way to manage all this serialization than just a notifier
-chain. The existing FDT construction process is too restrictive to
-accommodate this, IMHO.
+-- 
+Best regards,
+Coiby
 
-That it also resolves the weird dt_max stuff above is a nice side
-effect.
-
-> With a sparse KHO-tree, we'd be kinda trying to fix something that
-> should be handled higher up. All userspace preservable memory (like
-> emulated pmem with devdax/fsdax and also pstore for logging) can
-> already survive cold reboots with modified firmware Google and
-> Microsoft do this.
-
-I was hoping the VM memory wouldn't be in DAX. If you want some DAX
-stuff to interact with FW, OK, but I think the design here should be
-driving toward preserving a memfd/guestmemfd/hugetlbfs FDs directly
-and eliminate the DAX backed VMs. We won't get to CC guestmemfd with
-DAX.
-
-fdbox of a guestmemfd, for instance.
-
-To do that you need to preserve folios as the basic primitive.
-
-> Similarly, the firmware could give the kernel the KHO-tree (generated
-> by firmware or from the previous kernel) to keep stuff like telemetry,
-> oops messages, time stamps etc. 
-
-This feels like a mistake to comingle things like this. KHO is complex
-enough, it should stay focused on its thing..
-
-Jason
 
