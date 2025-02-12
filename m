@@ -4,67 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7834BC02198
-	for <kexec@archiver.kernel.org>; Wed, 12 Feb 2025 12:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D04AFC021A0
+	for <kexec@archiver.kernel.org>; Wed, 12 Feb 2025 13:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TvPbFPdhs4rsZAIf9ArjWz0MAEl7abAALU3gmrYlJXw=; b=pjKEefO9zsdsdPA6Byc9UUGdsE
-	z2f0PzkVUX3en83Mp+fJxZ1+D2hHirVSPaWp2nWMjYLVCdEdwDvn/O/Ykz5/EJt6kOD8qsHTzHp/q
-	NUI9qJmRN2AsE3tCu8/1/nrv0DATjezdZfydwP3lU0opS/Pqo1ljyLMlnN3eu2eiMdaljcuyiWNeo
-	f0BlpfzzglUwv5W43nqlIDLoHoEjQNBnUT0jDEGBX//NjZmjDdBQSWmR1dS7VYpUc5d6WFF5wBRPS
-	UcF/14rYpeSAOiYxLujQVBOWFzc8Kiv3MKjfmDw6oEqv9TFtGUSc4EELM4gmC3Y5mJjwYdNVPuBrD
-	IimuxOYQ==;
+	bh=krHBiN5fDn9iL+VMLKCmrS+HPrhLWm4BXzABiQLQpLw=; b=TfHpVNXs23zhygdAwd3+P2ht46
+	ldp/VqN5snsP2u60YEiIVA4SWdqHr4/u1jQWsB8Qi8W5H5AQkDrdWJlKqkm8DXV0s+RW4omtGjz6S
+	bOSIKNth6+TUsQXMPCnYeNUw9102ZdryWDb/dqFiHDdf55tvlbMazFNdzAZXvEhCBkJNAnikxhpyM
+	zkIhDLHLxs+YEYO1ChgLUYqjKZeXxCuUS1+XKcAlQCn4gXOWoM9bihWzrgfPkUu75xXFc8CY6+3Pl
+	sXldlpELD79aXSwmxdVADDivbyMGpduW8RywMAgrVhd/rduZEU/RuNHWMgEVcBYDgmwphjMcS5t8e
+	mRXmGUjQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiBvV-00000007MTZ-2bIs;
-	Wed, 12 Feb 2025 12:33:13 +0000
-Received: from todd.t-8ch.de ([2a01:4f8:c010:41de::1])
+	id 1tiCP1-00000007R8Z-29B9;
+	Wed, 12 Feb 2025 13:03:43 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiBrX-00000007Lsh-0x62;
-	Wed, 12 Feb 2025 12:29:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739363341;
-	bh=CQ3SUXjx0/f8m1n41c4a7SuLTF0PmDTDTSkoGsVR/Bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RPqGCMmKw9maDfoACsq5XCW1kNFM6USyJeTgaD0ZKnBDjJTzkCAXYBi0J0p/zs+gW
-	 CqjmKFSFDdJ1G1DqeLIdoAIUzFk59nzTIK1L5fU/sV+967mEPcUqwhoHA45Q4Y6o++
-	 DEc57IMn3o42I47CfAucVGa1HdoUC+cRjFDTaZ2E=
-Date: Wed, 12 Feb 2025 13:29:00 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif <usama.arif@bytedance.com>, 
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation
- helpers
-Message-ID: <ae80c1b9-bafb-401c-9789-37a774c702c0@t-8ch.de>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-6-rppt@kernel.org>
+	id 1tiCOz-00000007R7i-0lht
+	for kexec@lists.infradead.org;
+	Wed, 12 Feb 2025 13:03:42 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CAxSbX013670;
+	Wed, 12 Feb 2025 13:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=krHBiN
+	5fDn9iL+VMLKCmrS+HPrhLWm4BXzABiQLQpLw=; b=JexrGaX++PInzP3zdCZjD3
+	KbkFtDaJsk3RVitxji+enBcU3Rt1JPEFclfW7tGURxY+sQK4uiv8/rP6fE5udfuD
+	etkhmGGIaCJmOgGPosuxlqotL8lgDmvzh/6e1qiXkRNnWvh9MCwprerHMA+q/cYm
+	apU79lmHhkus3D6Eb0vJ36I3RFGcwhZgJdnv7k1gj0sK3smFjjBkRx9wRdd7Bpe0
+	1eE2bSH+LxoDCH1q9U0sVX5bsqtWam7aTMCLgCMC9+gJiT04UioUvfWgM+/XoihA
+	0ivcaVGGv9ZM8kEXCy/Vnkjlyx+VsMe0pyMV+guTWlvFM6u0u7jpgsJtZmADWCVA
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rjfytvs8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 13:03:20 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51CCZBb4028197;
+	Wed, 12 Feb 2025 13:03:19 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyygsnt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 13:03:19 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51CD3JrI27132602
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Feb 2025 13:03:19 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1505958077;
+	Wed, 12 Feb 2025 13:03:19 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A32E25806F;
+	Wed, 12 Feb 2025 13:03:17 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.169.88])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 12 Feb 2025 13:03:17 +0000 (GMT)
+Message-ID: <b7dd78f21a9fa9dc3b6f90eae2668cfe5c7670c7.camel@linux.ibm.com>
+Subject: Re: [PATCH v7 2/7] kexec: define functions to map and unmap segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+Date: Wed, 12 Feb 2025 08:03:17 -0500
+In-Reply-To: <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+	 <20250203232033.64123-3-chenste@linux.microsoft.com>
+	 <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
+	 <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206132754.2596694-6-rppt@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Wb7pe2c-W48JJx9ojXknjIakieQe4wt2
+X-Proofpoint-ORIG-GUID: Wb7pe2c-W48JJx9ojXknjIakieQe4wt2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_04,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502120101
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250212_042907_732754_A043A925 
-X-CRM114-Status: GOOD (  25.44  )
+X-CRM114-CacheID: sfid-20250212_050341_340511_8716D0E0 
+X-CRM114-Status: GOOD (  21.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,84 +113,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025-02-06 15:27:45+0200, Mike Rapoport wrote:
-> From: Alexander Graf <graf@amazon.com>
-> 
-> This patch adds the core infrastructure to generate Kexec HandOver
-> metadata. Kexec HandOver is a mechanism that allows Linux to preserve
-> state - arbitrary properties as well as memory locations - across kexec.
-> 
-> It does so using 2 concepts:
-> 
->   1) Device Tree - Every KHO kexec carries a KHO specific flattened
->      device tree blob that describes the state of the system. Device
->      drivers can register to KHO to serialize their state before kexec.
-> 
->   2) Scratch Regions - CMA regions that we allocate in the first kernel.
->      CMA gives us the guarantee that no handover pages land in those
->      regions, because handover pages must be at a static physical memory
->      location. We use these regions as the place to load future kexec
->      images so that they won't collide with any handover data.
-> 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  Documentation/ABI/testing/sysfs-kernel-kho    |  53 +++
->  .../admin-guide/kernel-parameters.txt         |  24 +
->  MAINTAINERS                                   |   1 +
->  include/linux/cma.h                           |   2 +
->  include/linux/kexec.h                         |  18 +
->  include/linux/kexec_handover.h                |  10 +
->  kernel/Makefile                               |   1 +
->  kernel/kexec_handover.c                       | 450 ++++++++++++++++++
->  mm/internal.h                                 |   3 -
->  mm/mm_init.c                                  |   8 +
->  10 files changed, 567 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-kernel-kho
->  create mode 100644 include/linux/kexec_handover.h
->  create mode 100644 kernel/kexec_handover.c
+On Mon, 2025-02-10 at 09:06 -0800, steven chen wrote:
+> On 2/7/2025 11:15 AM, Mimi Zohar wrote:
+> > Hi Steven,
+> >=20
+> > On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+> > > Currently, the mechanism to map and unmap segments to the kimage
+> > > structure is not available to the subsystems outside of kexec.=C2=A0 =
+This
+> > > functionality is needed when IMA is allocating the memory segments
+> > > during kexec 'load' operation.=C2=A0 Implement functions to map and u=
+nmap
+> > > segments to kimage.
+> > >=20
+> > > Implement kimage_map_segment() to enable mapping of IMA buffer source
+> > > pages to the kimage structure post kexec 'load'.=C2=A0 This function,
+> > > accepting a kimage pointer, an address, and a size, will gather the
+> > > source pages within the specified address range, create an array of p=
+age
+> > > pointers, and map these to a contiguous virtual address range.=C2=A0 =
+The
+> > > function returns the start of this range if successful, or NULL if
+> > > unsuccessful.
+> > >=20
+> > > Implement kimage_unmap_segment() for unmapping segments
+> > > using vunmap().
+> > >=20
+> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > I don't recall previously adding my "Reviewed-by" tag.
+> >=20
+> > Eric, I'd appreciate your reviewing this and the subsequent patch "[PAT=
+CH v7 3/7]
+> > ima: kexec: skip IMA segment validation after kexec soft reboot" in par=
+ticular.
+> Hi Eric, Could you help to review this patch as Mimi mentioned? Thanks!
+> >=20
+> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 
-<snip>
+Steven, since these patches impact kdump, before re-posting the patch set, =
+please
+include the following tags before your Signed-off-by tag on the kexec patch=
+es.
 
-> --- /dev/null
-> +++ b/include/linux/kexec_handover.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef LINUX_KEXEC_HANDOVER_H
-> +#define LINUX_KEXEC_HANDOVER_H
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>                                            =
+=20
+Cc: Vivek Goyal <vgoyal@redhat.com>                                        =
+=20
+Cc: Dave Young <dyoung@redhat.com>  =20
 
-#include <linux/types.h>
+> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
 
-> +
-> +struct kho_mem {
-> +	phys_addr_t addr;
-> +	phys_addr_t size;
-> +};
-> +
-> +#endif /* LINUX_KEXEC_HANDOVER_H */
+thanks,
 
-<snip>
+Mimi
 
-> +static ssize_t dt_read(struct file *file, struct kobject *kobj,
-> +		       struct bin_attribute *attr, char *buf,
 
-Please make the bin_attribute argument const. Currently both work, but
-the non-const variant will go away.
-This way I can test my stuff on linux-next.
-
-> +		       loff_t pos, size_t count)
-> +{
-> +	mutex_lock(&kho_out.lock);
-> +	memcpy(buf, attr->private + pos, count);
-> +	mutex_unlock(&kho_out.lock);
-> +
-> +	return count;
-> +}
-> +
-> +struct bin_attribute bin_attr_dt_kern = __BIN_ATTR(dt, 0400, dt_read, NULL, 0);
-
-The new __BIN_ATTR_ADMIN_RO() could make this slightly shorter.
-
-<snip>
 
