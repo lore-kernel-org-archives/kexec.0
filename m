@@ -4,105 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 284DCC021A6
-	for <kexec@archiver.kernel.org>; Mon, 17 Feb 2025 03:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA81DC021A6
+	for <kexec@archiver.kernel.org>; Mon, 17 Feb 2025 04:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EgbKbeBQm7lkao3p6uQLBUr3dfHH6Bslim0jMF3gJaE=; b=DeLdV4dzv7SatOqfSNg4iJU1hv
-	w6mAA7V7oiYgnz1INIvca+2w1Sq/su+vzaOkASPpxsGk45vNfjH53Up0/Qg4RYiI1DFLf3EbEnJF5
-	IlLWbWxooVSZ0TAL1LJbqegxxQ0MXUSJrq5GPuFRYgAIGiyRP1519XVQhwxA4xeKLBQlbCIcKEy7q
-	kk/GgBAUzdJazrTr7MOVK1rAlDIljRXyAE703ck+Sl9AfbYRKI7rN/r8zNCqSsXLvna+3qh+6g9KJ
-	KJL1JuJ06b2CITMZRpvZ5sQ5ARTDOqRQL8xTdSXvw3O2V6CYd6wV6WYDKmdS2hipfl7OqmQKPINRl
-	XxaDwD7g==;
+	bh=/V2mmoCanQT/pwcWtV0/o0PvfX4+qGd2AcVlqml8A+o=; b=MOjbQDkAUjZc4P6fc1beXFz+RZ
+	IvhO8hx91C+i6DArfAq+oT53m2tqL49RwvCw+tUjgRJVdSrBHd4JHw3xKwNO9FlboEHqawpsGr9FP
+	x+ghCsAMy1SjUZ7UitfDp9JIR/7cm7p1Xhju5ivWrJ5hsBV6ICFsG8VxQTtr4713Wv7zmJzoue/YW
+	mdklZ2aT4XiwDydAEDr/c1IO5J6qTKhJW2tEOHTJytXfvqI52UgQmsE9D86Am3Oolb4OL2m6u/7mF
+	It6Vnv7od+oViVGw2L5pCitWUXNTAbTCyYNob2iFqyhmO80gHye/0Eu5s1aPm16z6hESI7f2za+gF
+	ifMvL/fQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tjrfX-000000037el-2ALn;
-	Mon, 17 Feb 2025 03:19:39 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tjsNL-00000003BWJ-2Rfd;
+	Mon, 17 Feb 2025 04:04:55 +0000
+Received: from mail-ej1-x62e.google.com ([2a00:1450:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tjrfU-000000037dQ-2ygI
-	for kexec@lists.infradead.org;
-	Mon, 17 Feb 2025 03:19:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739762374;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EgbKbeBQm7lkao3p6uQLBUr3dfHH6Bslim0jMF3gJaE=;
-	b=cKYSpcVN82Li331bz/K+rHyBcOloznPdKoFJgT4dzMmb698dPOFAKA+nYc0UhSc9+UCDdL
-	14ns5WcCqpQ48V74GuUeEzpok0upG8tTzBuAdCKgUWIhv+CSDA+uVcJnIWGRiIjcXPb540
-	9QoIb9+iIiXGtPEsAHGdFa+kxnma7eM=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-281-iLVR2JlXO1elUk-Kvnl_xg-1; Sun, 16 Feb 2025 22:19:32 -0500
-X-MC-Unique: iLVR2JlXO1elUk-Kvnl_xg-1
-X-Mimecast-MFC-AGG-ID: iLVR2JlXO1elUk-Kvnl_xg_1739762372
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so74970595ab.0
-        for <kexec@lists.infradead.org>; Sun, 16 Feb 2025 19:19:32 -0800 (PST)
+	id 1tjsNJ-00000003BVm-0tmf;
+	Mon, 17 Feb 2025 04:04:54 +0000
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-aba868c6e88so360774666b.2;
+        Sun, 16 Feb 2025 20:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739765091; x=1740369891; darn=lists.infradead.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/V2mmoCanQT/pwcWtV0/o0PvfX4+qGd2AcVlqml8A+o=;
+        b=YghMIsSrPG7ZgZGUMwKMHXvUM+d81IT6DyEqTm2vOSsEFIq4vXAchDw+La9bH3PzYz
+         tqeNxam2+ohJ9fMl6bAgxJnfAWJ8sNV0ERPacI9+a5WtNYPPfw+7q/Tfzn0ABBg+AZOm
+         zvI9IOS1/d8ZIc3pgL218OqXK0eAobHlAjCC1rQHtuAARJ5IMouKihxVViBXhJS4Vuuk
+         3sxY50qYKH0Z9IstfZrIxF0vlFTla+GKBVWZSjUj1yVfBg8DvQgIdFJpXD7sbLo8sCgx
+         BxaSLcFkiGqWG+s21GqjAA1J4Bc154c+SQn9nklhImuoNZb+oE8kAjDuacnnj1fW+o9A
+         024g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739762372; x=1740367172;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EgbKbeBQm7lkao3p6uQLBUr3dfHH6Bslim0jMF3gJaE=;
-        b=VE5eZuVJ32vuIMPgf26edMxcZrUBL+FlRScdBDQ1eokQKq8rNYCZQg3z8w/Horkxiv
-         9GX31IfoSAlFqMRlB351i/3zG3X0FvpKQGIiNvEdofbuZcuw3mWVjlbC63ZdY6ZYzlvk
-         j0R0ap5HZAiGlJZ8BCKPAR8DRMm14xfa/wrsgh48bUVYUzgYK7PrO9vi+y9sBtCh8HR8
-         AbgZZCLL9uwZIUpk86FljRifQZXnN8xmBhzuJChpqpozgU5VXWT/dlKGNafTkQ1dRBDU
-         NEJMD7z/fi7acA3czMCwg5MMVNn/rPGyKQQP84gm+SkyUiC6Pj1LtP53Aq8/AMJdUfw/
-         93XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHnoDZzIQJDmq8TrNRl/ISLCkWhKmwQwwgDAl9jog86SIRPuekaP6EtOR2alhtcPL51ydmDA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz0j1A3/2uijUksVunONcdZZ5xuvt6V6jURxPtMItXmUnphcwF4
-	BD9gJJLD6TyXzHKGcOc2yM68L/zjautFM89ZqHNTTXJb76obvNjGZH9IWDoI2olnLpJvjxJTB/f
-	nw1Aowrgt+YPfhb+Ea1U7PfZHD+G42rBEoU7uM6JiProOH0GGDhnWRvRp3j6p9QK3CD4TkTU9t0
-	skO/tWl2VVlArRi7L4/CRcqz3GAvY95T5J
-X-Gm-Gg: ASbGnctttDJiexSFOOf3VsmXECepMT+S6L4c5fr0YgIZRvR/bWsBRSV+ewEzBGv6QU3
-	JiLVhapYG84hcaanTtnc2dM7AUK+DCuhVSkSRUgmZ6f4zTOlkWbkNjtrigOnVHbw=
-X-Received: by 2002:a05:6e02:1b09:b0:3d0:fe8:607e with SMTP id e9e14a558f8ab-3d280940c9bmr64357355ab.14.1739762371858;
-        Sun, 16 Feb 2025 19:19:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFLJ+sakoWDc92vC5PVdrAPLBDgA51ioqiveqE/kVlhzpNtt+A2nTfHDcNxz2e0uNeHln7kmPyQMRXuDBPUaYI=
-X-Received: by 2002:a05:6e02:1b09:b0:3d0:fe8:607e with SMTP id
- e9e14a558f8ab-3d280940c9bmr64357085ab.14.1739762371480; Sun, 16 Feb 2025
- 19:19:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org>
-In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
-From: RuiRui Yang <ruyang@redhat.com>
-Date: Mon, 17 Feb 2025 11:19:45 +0800
-X-Gm-Features: AWEUYZmTtRGOQe_1FWRhP6QKOKg6j7aVMk1lhIeHe6H83IiAgYz-eSDseytmTwE
-Message-ID: <CALu+AoRMQyRDFS_4L0KQkmrFT_S+yk=uZ-Mqt86JQYKKnj-5Ug@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+        d=1e100.net; s=20230601; t=1739765091; x=1740369891;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/V2mmoCanQT/pwcWtV0/o0PvfX4+qGd2AcVlqml8A+o=;
+        b=FhSkeHizbJZUfEQ/Jooa4g17mtVes1rj1GJgWWNu66Pohc46nLAzFIJq16ntfuXoOT
+         wxAoMg/UeHuYLtUlXBWUPfEfzo5UDJNQK4VCD0uLd/Q12Q+8aHkj5eywgvPUJH10hFuB
+         tgHHNqtexRinVKxe149thQvh4LsXFwFzQtynxZL3mlqwUYJiFR07I5z8SZ4ZSIRQBS3b
+         DBbwwergF+uAo2mH0K2vXqb7KfMuL2jrvglXDJlm+6MIiA2OKY4bbSRN2riyYe2W0pPW
+         GXsBXKt2EnsEH9hQCB2xTaOQLYd0ZORVzypQnJR+u768gBFzLsBMF8cgFYjEvHaA72+d
+         pTNg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7z2rlyqg5IBQr9tqoi6NT2ClguuKGOcN/95KnpKczyVvRPXGvjl5i//Ymk4c3g5frgHvlOQ==@lists.infradead.org, AJvYcCXE1dBtZq1QJS0fDJRbT85C791WJL3VyT5KdDtY7MLkvsUvoQbZGKYDFXr5zczWACnT0ctighOGeTeKnxeQ5d5sFw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxHUv6Yo+H7TPFf5b1Vo8QN+dpyRGPnIkvPy8vms5yGJVQEXG9f
+	JCC5tYIZlC7McugAs6YCs1CCLfqBFnl1/JLzactG045jkW5HqQbb
+X-Gm-Gg: ASbGnctFulvcIGl6EKXUVNeI04hel1mobAwNNl6dTNN/bl0m9yPW0LwJUjoXqh41GVc
+	zEzltv3ONAhh0c4qWRcSKdUUUXXU7SOxCUiaW84NJUcHsHG2C702SeY0YGj/dpMX3ieNez3zeWr
+	zZ/LGUr4RqKPBzXMbHtRqVJKZvQUg1ZC7fjbvwJC9eEonl6HNWlLthoFba3ajkAFYx3MKGFQkTE
+	cnePhc8XRoIpTQLaDcOFQi9WflOFRjkJvop4NJoB/VVtRYtjUMKCMQZex3toErVkmdCq/WsBjxB
+	+WK+pDhHTDSoVpo=
+X-Google-Smtp-Source: AGHT+IGMLRPGsc1YpdO8muFNdeSP2zhH8Ioro7wmde7M2ghBjV9zkhB7Y03DXnpBI6WgZUsZLU2s/w==
+X-Received: by 2002:a17:907:2da0:b0:ab7:c4db:a044 with SMTP id a640c23a62f3a-abb70a7a647mr781879666b.8.1739765090766;
+        Sun, 16 Feb 2025 20:04:50 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5323202dsm806661766b.6.2025.02.16.20.04.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 16 Feb 2025 20:04:49 -0800 (PST)
+Date: Mon, 17 Feb 2025 04:04:48 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: l16lUG-5yoRtytE2rKcxUFEjdKld7AxlAmsNao1yl4U_1739762372
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
+Message-ID: <20250217040448.56xejbvsr2a73h4c@master>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-14-rppt@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206132754.2596694-14-rppt@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250216_191936_828077_B467358B 
-X-CRM114-Status: GOOD (  38.45  )
+X-CRM114-CacheID: sfid-20250216_200453_255009_223863AD 
+X-CRM114-Status: GOOD (  18.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,100 +123,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 6 Feb 2025 at 21:34, Mike Rapoport <rppt@kernel.org> wrote:
+On Thu, Feb 06, 2025 at 03:27:53PM +0200, Mike Rapoport wrote:
+>From: Alexander Graf <graf@amazon.com>
 >
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>Linux has recently gained support for "reserve_mem": A mechanism to
+>allocate a region of memory early enough in boot that we can cross our
+>fingers and hope it stays at the same location during most boots, so we
+>can store for example ftrace buffers into it.
 >
-> Hi,
+>Thanks to KASLR, we can never be really sure that "reserve_mem"
+>allocations are static across kexec. Let's teach it KHO awareness so
+>that it serializes its reservations on kexec exit and deserializes them
+>again on boot, preserving the exact same mapping across kexec.
 >
-> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
-> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
-> just to make things simpler instead of ftrace we decided to preserve
-> "reserve_mem" regions.
+>This is an example user for KHO in the KHO patch set to ensure we have
+>at least one (not very controversial) user in the tree before extending
+>KHO's use to more subsystems.
 >
-> The patches are also available in git:
-> https://git.kernel.org/rppt/h/kho/v4
+>Signed-off-by: Alexander Graf <graf@amazon.com>
+>Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>---
+> mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 131 insertions(+)
 >
->
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
->
-> However, there are use cases where this mode of operation is not what we
-> actually want. In virtualization hosts for example, we want to use kexec
-> to update the host kernel while virtual machine memory stays untouched.
-> When we add device assignment to the mix, we also need to ensure that
-> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-> need to do the same for the PCI subsystem. If we want to kexec while an
-> SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> context pages and physical memory. See "pkernfs: Persisting guest memory
-> and kernel/device state safely across kexec" Linux Plumbers
-> Conference 2023 presentation for details:
->
->   https://lpc.events/event/17/contributions/1485/
->
-> To start us on the journey to support all the use cases above, this patch
-> implements basic infrastructure to allow hand over of kernel state across
-> kexec (Kexec HandOver, aka KHO). As a really simple example target, we use
-> memblock's reserve_mem.
-> With this patch set applied, memory that was reserved using "reserve_mem"
-> command line options remains intact after kexec and it is guaranteed to
-> reside at the same physical address.
->
-> == Alternatives ==
->
-> There are alternative approaches to (parts of) the problems above:
->
->   * Memory Pools [1] - preallocated persistent memory region + allocator
->   * PRMEM [2] - resizable persistent memory regions with fixed metadata
->                 pointer on the kernel command line + allocator
->   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
->                   address location on the kernel command line
->   * PKRAM [4] - handover of user space pages using a fixed metadata page
->                 specified via command line
->
-> All of the approaches above fundamentally have the same problem: They
-> require the administrator to explicitly carve out a physical memory
-> location because they have no mechanism outside of the kernel command
-> line to pass data (including memory reservations) between kexec'ing
-> kernels.
->
-> KHO provides that base foundation. We will determine later whether we
-> still need any of the approaches above for fast bulk memory handover of for
-> example IOMMU page tables. But IMHO they would all be users of KHO, with
-> KHO providing the foundational primitive to pass metadata and bulk memory
-> reservations as well as provide easy versioning for data.
->
-> == Overview ==
->
-> We introduce a metadata file that the kernels pass between each other. How
-> they pass it is architecture specific. The file's format is a Flattened
-> Device Tree (fdt) which has a generator and parser already included in
-> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
-> kernel invokes callbacks to every driver that supports KHO to serialize
-> its state. When the actual kexec happens, the fdt is part of the image
-> set that we boot into. In addition, we keep a "scratch regions" available
-> for kexec: A physically contiguous memory regions that is guaranteed to
-> not have any memory that KHO would preserve.  The new kernel bootstraps
-> itself using the scratch regions and sets all handed over memory as in use.
-> When drivers initialize that support KHO, they introspect the fdt and
-> recover their state from it. This includes memory reservations, where the
-> driver can either discard or claim reservations.
->
-> == Limitations ==
->
-> Currently KHO is only implemented for file based kexec. The kernel
-> interfaces in the patch set are already in place to support user space
-> kexec as well, but it is still not implemented it yet inside kexec tools.
->
+>diff --git a/mm/memblock.c b/mm/memblock.c
+>index 84df96efca62..fdb08b60efc1 100644
+>--- a/mm/memblock.c
+>+++ b/mm/memblock.c
+>@@ -16,6 +16,9 @@
+> #include <linux/kmemleak.h>
+> #include <linux/seq_file.h>
+> #include <linux/memblock.h>
+>+#include <linux/kexec_handover.h>
 
-What architecture exactly does this KHO work fine?   Device Tree
-should be ok on arm*, x86 and power*, but how about s390?
+Looks this one breaks the memblock test in tools/testing/memblock.
 
-Thanks
-Dae
+memblock.c:19:10: fatal error: linux/kexec_handover.h: No such file or directory
+   19 | #include <linux/kexec_handover.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
 
+>+#include <linux/kexec.h>
+>+#include <linux/libfdt.h>
+> 
+
+-- 
+Wei Yang
+Help you, Help me
 
