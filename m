@@ -4,76 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CA0CC021AA
-	for <kexec@archiver.kernel.org>; Tue, 18 Feb 2025 16:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4648C3DA4A
+	for <kexec@archiver.kernel.org>; Tue, 18 Feb 2025 17:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VSEg3Y4i5j62GBuWJlLVAxhF31nxTfKQ6QtAYtI7m5Y=; b=CtTQ8ycApSEVahA6VvS59W4B6u
-	PH8l74/bMENpcwUot8kyqPEKBr+r7GX9N1++poLCY6yTaXZpWx1mlrk69WJME5mX7C3oDiNp2vCQN
-	dN2YRUNfS+9qYFKv4NRDSnI20Z/Q26U9BI5LZ7P+fpVerJA7DK3kb1gwaTc9qKtHd6AM/p8T0INLx
-	Q4AlYo0DhuBuX+S9qgLNRHhPwvTtDqxq8f9Pm0Itxk+y/Yt9Knytgx2W1Qb1FnEtyIj8bsJBOkKom
-	Twd8A9CLpEgK0aEfU34FsMHLUBpGaY5dtNe92s0/d2Y1CMLT+HZ2/35PFWxdDApCYZSMwGEiGh8+b
-	g5jfLSXQ==;
+	bh=l74eF+4+r695BFOwyov/kRxEW4Z5jvFKpT/pUDEgh3Q=; b=vewwaZ5G7mPMQAWZKqI7T4wKoO
+	0QlRzFgGobYRwBXP2arXr44laEHtFTbeC17YQ1r5BzSQJw2UtB3oMHh1ChWZNyY+8xXJWrCbRXCcC
+	dHV0zWN9vGHKxA4tSxcat37SWdh+/0BRPGTyCAMlzF67SqhVDfIjcJsLOXzoOaA4cSimuA+uv0gkk
+	yLx7cxqwiVdmT476mjtUu+x2C8t8UktMHStFvHsKuhAr+IbyXxux5sn/9Z3aNQIV834Ei8zM7gpGV
+	kqKcEB+65qknXe/zSebIA1Ea9OuCPm40lK8Bc91AqPMr7MwkbW3BYzCNpYaaHRHpuvHV0aoRA5a3Q
+	Qgq7f+wg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkQB2-00000008trp-125A;
-	Tue, 18 Feb 2025 16:10:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkQ6G-00000008sYb-0wSA
+	id 1tkRJF-000000099K9-13UD;
+	Tue, 18 Feb 2025 17:23:01 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tkRHC-000000098bQ-1aWU
 	for kexec@lists.infradead.org;
-	Tue, 18 Feb 2025 16:05:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739894730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VSEg3Y4i5j62GBuWJlLVAxhF31nxTfKQ6QtAYtI7m5Y=;
-	b=Ilva2k2hf8wRJLe73ZvJ/CrHnGug0gN0zBlTypd/1z9IPsl18QxUhk7QtcdRyMntOn+e+5
-	0fWoI2huwj+okV5anFJEMbVaiGB/6iTm9SuKDQzDqfFUS5MOFguQRoqkvbkWH9NKoTDaK2
-	QlMZwKHOOcerVPKSPFeBw5PTag276ZM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-cGrgj5P3MAiTPUxFNtVITg-1; Tue,
- 18 Feb 2025 11:05:28 -0500
-X-MC-Unique: cGrgj5P3MAiTPUxFNtVITg-1
-X-Mimecast-MFC-AGG-ID: cGrgj5P3MAiTPUxFNtVITg_1739894728
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDBE81800874;
-	Tue, 18 Feb 2025 16:05:27 +0000 (UTC)
-Received: from rotkaeppchen (unknown [10.44.32.80])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 475E91800352;
-	Tue, 18 Feb 2025 16:05:25 +0000 (UTC)
-Date: Tue, 18 Feb 2025 17:05:22 +0100
-From: Philipp Rudo <prudo@redhat.com>
-To: Dave Young <dyoung@redhat.com>
-Cc: Gokul Praveen <g-praveen@ti.com>, kexec@lists.infradead.org
-Subject: Re: VMCORE and kdump.conf file not found LINUX 6.12 KERNEL
-Message-ID: <20250218170522.0861f62f@rotkaeppchen>
-In-Reply-To: <CALu+AoRDtPRgZS6t57xXpQvQ9bXv7hTyebAVfPLXH69Op2qRzA@mail.gmail.com>
-References: <4ccd4d81-2efd-4369-a759-552dbb9a007f@ti.com>
-	<a69a8eaf-9fc0-468b-b39a-1486e6054878@ti.com>
-	<CALu+AoRDtPRgZS6t57xXpQvQ9bXv7hTyebAVfPLXH69Op2qRzA@mail.gmail.com>
-Organization: Red Hat inc.
+	Tue, 18 Feb 2025 17:20:55 +0000
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 43B2020376E8;
+	Tue, 18 Feb 2025 09:20:53 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 43B2020376E8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739899253;
+	bh=l74eF+4+r695BFOwyov/kRxEW4Z5jvFKpT/pUDEgh3Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oJSfz9Ig0QWhpbMYyiHRMFq/FgcOI75lBhUBnnlWtx17eqoxIV4eU46ks2Oj84ehn
+	 2i2LSXiKRajXXyVU2rWxkaZWWI0lpqsxQSeoPti8fONTrG6zqZQfiJuJw6XM+Sq1vp
+	 MRaJvhDKHwItUXCQMFeFQMdGENNUGhJa1yMGwjM0=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: [PATCH v7 2/7] kexec: define functions to map and unmap segments
+Date: Tue, 18 Feb 2025 09:20:41 -0800
+Message-Id: <20250218172046.649307-3-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250218172046.649307-1-chenste@linux.microsoft.com>
+References: <20250218172046.649307-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: slenbFOuKKA8tXgf6415iPguqfKnzlfZKgLq7VZN0K8_1739894728
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250218_080532_344875_A9338813 
-X-CRM114-Status: GOOD (  20.05  )
+X-CRM114-CacheID: sfid-20250218_092054_474858_54A92DF0 
+X-CRM114-Status: GOOD (  16.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,74 +83,125 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Currently, the mechanism to map and unmap segments to the kimage
+structure is not available to the subsystems outside of kexec.  This
+functionality is needed when IMA is allocating the memory segments
+during kexec 'load' operation.  Implement functions to map and unmap
+segments to kimage.
 
-On Tue, 18 Feb 2025 16:48:26 +0800
-Dave Young <dyoung@redhat.com> wrote:
+Implement kimage_map_segment() to enable mapping of IMA buffer source
+pages to the kimage structure post kexec 'load'.  This function,
+accepting a kimage pointer, an address, and a size, will gather the
+source pages within the specified address range, create an array of page
+pointers, and map these to a contiguous virtual address range.  The
+function returns the start of this range if successful, or NULL if
+unsuccessful.
 
-> On Tue, 18 Feb 2025 at 14:07, Gokul Praveen <g-praveen@ti.com> wrote:
-> >
-> > Hi Team,
-> >
-> > Just a reminder.
-> > It would be really great if you could help me with the following.
-> >
-> > Regards
-> > Gokul
-> >
-> > On 05/02/25 17:50, Gokul Praveen wrote:  
-> > > Hi Team,
-> > >
-> > > It would be really great,if you could help me with a couple of questions
-> > > regarding kexec and kdump.
-> > >
-> > > I tried kdump on my SOC and it is rebooting fine . However,the VMCORE
-> > > file and /etc/kdump.conf file is not found.
-> > >
-> > > VERSION:
-> > > kexec-tools 2.0.30.
-> > > kernel 6.12v
-> > >
-> > > STEPS FOLLOWED:
-> > >
-> > > 1)git clone git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> > >
-> > > 2)
-> > >     HOST PC:  
-> > >      >cd $KEXEC_TOOLS_DIR
-> > >      >./bootstrap LDFLAGS=-static ./configure --prefix=/usr/local  
-> > > --host=aarch64-linux-gnu --target=aarch64-linux-gnu  
-> > >      >make
-> > >      >cp $KEXEC_TOOLS_DIR/build/sbin/kexec /media/$USER/rootfs/usr/sbin  
-> > > (To copy the kexec binary to the rootfs filesystem of the target board)
-> > >
-> > >     TARGET BOARD:  
-> > >      >Booted upto linux
-> > >      >cmdline="crashkernel=128M console=ttyS2,115200n8  
-> > > root=/dev/mmcblk0p2 rw rootfste=ext4 rootwait" (/dev/mmcblk0p2 refers to
-> > > EMMC)  
-> > >      > /kexec -p /Image --command-line="$cmdline"  
-> > > --dtb=/k3-j721e-common-proc-board.dtb
+Implement kimage_unmap_segment() for unmapping segments
+using vunmap().
 
-The kdump kernel only presents the dump via /proc/vmcore but doesn't
-write it to disk. That is done by user space contained in the initrd.
-So for it to work you also have to provide an initrd that mounts the
-target disk and writes the dump to it. But, as Dave already pointed
-out, the creation of initrds is highly distro specific.
+From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+---
+ include/linux/kexec.h |  7 ++++++
+ kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
 
-Thanks
-Philipp
-
-> > >      > echo c > /proc/sysrq-trigger  
-> 
-> Hi,
-> 
-> This looks more like a distribution related issue, I suggest you ask
-> distribution developers to help.
-> 
-> Thanks
-> Dave
-> 
-> 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..f8413ea5c8c8 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -467,6 +467,9 @@ extern bool kexec_file_dbg_print;
+ #define kexec_dprintk(fmt, arg...) \
+         do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+ 
++extern void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size);
++extern void kimage_unmap_segment(void *buffer);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+@@ -474,6 +477,10 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
++static inline void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size)
++{ return NULL; }
++static inline void kimage_unmap_segment(void *buffer) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3..4029df8f6860 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+ 	return result;
+ }
+ 
++void *kimage_map_segment(struct kimage *image,
++			 unsigned long addr, unsigned long size)
++{
++	unsigned long eaddr = addr + size;
++	unsigned long src_page_addr, dest_page_addr;
++	unsigned int npages;
++	struct page **src_pages;
++	int i;
++	kimage_entry_t *ptr, entry;
++	void *vaddr = NULL;
++
++	/*
++	 * Collect the source pages and map them in a contiguous VA range.
++	 */
++	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
++	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
++	if (!src_pages) {
++		pr_err("Could not allocate ima pages array.\n");
++		return NULL;
++	}
++
++	i = 0;
++	for_each_kimage_entry(image, ptr, entry) {
++		if (entry & IND_DESTINATION)
++			dest_page_addr = entry & PAGE_MASK;
++		else if (entry & IND_SOURCE) {
++			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
++				src_page_addr = entry & PAGE_MASK;
++				src_pages[i++] =
++					virt_to_page(__va(src_page_addr));
++				if (i == npages)
++					break;
++				dest_page_addr += PAGE_SIZE;
++			}
++		}
++	}
++
++	/* Sanity check. */
++	WARN_ON(i < npages);
++
++	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
++	kfree(src_pages);
++
++	if (!vaddr)
++		pr_err("Could not map ima buffer.\n");
++
++	return vaddr;
++}
++
++void kimage_unmap_segment(void *segment_buffer)
++{
++	vunmap(segment_buffer);
++}
++
+ struct kexec_load_limit {
+ 	/* Mutex protects the limit count. */
+ 	struct mutex mutex;
+-- 
+2.25.1
 
 
