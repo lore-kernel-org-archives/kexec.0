@@ -4,82 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A762FC02198
-	for <kexec@archiver.kernel.org>; Tue, 18 Feb 2025 04:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 862BEC02198
+	for <kexec@archiver.kernel.org>; Tue, 18 Feb 2025 06:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QEVwY6828gii5G/EHkyb4svsHTFTS04m4XYv3raJ3OY=; b=F4coyA1MBeLubD+1COE/TqlHwu
-	2GZ1yhzQs96+s5H3i9ECStZYsJc2mFeF+BjIZyVm73+aoKrxLoc5A3V+I4gynRCl32YU0y+1kjWyJ
-	0uyYzzjoRBe0xnzESvnmAKNEoyVJrPpR8t9At7JbyUz/zSqQ/xXgSykRUkBa83Mv+QELRZvYncQKX
-	OMUJKVsvF5mHernDhjQLTUlKJ6yT9I4gfHu8QiOBQK9BTm6ETuUnZVQvZA239pWPKI7xMHJ5oV2YA
-	EUAMopHmD+KHklsPgJdItqpYrV5h6qek7Qhpmbjo61Y9Rh/AoE9fouPJncAuNg6EiiFWQ4NuFcfSC
-	8EBEebmA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:References:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=iJvBrvfSqJVVEUrBz/DFtx1SwLDqwHZYI30PBbPuvjM=; b=cMNVPFuJRBqEVJoSU4KcJOTGa/
+	YTbBg2c+nl+85rkzyDL9Cm2CTGoZPBUsPDHiBZz/l7NBUsQo3kgPr2l4g5olQapyoJ9xMt40vrD2y
+	usGX3xRDtYoKSvMcTBp1+c9E1qJ+cAX8YktHy5eqMJ/zE75vYXwu1GaCdqAHH9zBPcMfVjA003KSo
+	U1nHZImVji3DnhrofRzjcIxH9I7egWiNHOb5jjQ+/HAg13ymaPBNS6RuSVt4/GnxP4j8mBQCqCCD/
+	PDuAL0lKH7ysyrBMLem5dSzYNhq7pCGFgVMfV6Gq0QSnN/19BSyH+IjVf5oeMdduxkXjCJRUTnlbm
+	CXklNyVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkFE2-00000006ksK-2XqD;
-	Tue, 18 Feb 2025 04:28:50 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tkGkl-00000006x2B-38Y9;
+	Tue, 18 Feb 2025 06:06:43 +0000
+Received: from fllvem-ot04.ext.ti.com ([198.47.19.246])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkF9h-00000006kJR-0sbc
+	id 1tkGkj-00000006x1W-1MyE
 	for kexec@lists.infradead.org;
-	Tue, 18 Feb 2025 04:24:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739852658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QEVwY6828gii5G/EHkyb4svsHTFTS04m4XYv3raJ3OY=;
-	b=VXeddWH1VufdxZ8JHsL58CSacEXZgHy1dNhZ8XYYpKVMe8cDf0dH9E7RwxItohVniyc3Ym
-	/vMur0OLMMuGRDwBCf4AF2jXbX9msUxmMZb+E49r4UWbDMy5iaYDZ5BbF8HJulI3C5UhPI
-	GSYpnYIravQVXl74/3uuo9fNCEEW/8w=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-385-fzAP0MCyPn2tE5cfF2uWcA-1; Mon,
- 17 Feb 2025 23:24:12 -0500
-X-MC-Unique: fzAP0MCyPn2tE5cfF2uWcA-1
-X-Mimecast-MFC-AGG-ID: fzAP0MCyPn2tE5cfF2uWcA_1739852650
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 00B6B180056F;
-	Tue, 18 Feb 2025 04:24:09 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.207])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61F6D19560AA;
-	Tue, 18 Feb 2025 04:24:05 +0000 (UTC)
-Date: Tue, 18 Feb 2025 12:24:01 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com
-Subject: Re: [PATCH v7 2/7] kexec: define functions to map and unmap segments
-Message-ID: <Z7QLYd5ZFmQuV8Gx@MiWiFi-R3L-srv>
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-3-chenste@linux.microsoft.com>
- <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
- <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
- <b7dd78f21a9fa9dc3b6f90eae2668cfe5c7670c7.camel@linux.ibm.com>
+	Tue, 18 Feb 2025 06:06:42 +0000
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51I66dtR654251
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <kexec@lists.infradead.org>; Tue, 18 Feb 2025 00:06:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739858799;
+	bh=iJvBrvfSqJVVEUrBz/DFtx1SwLDqwHZYI30PBbPuvjM=;
+	h=Date:Subject:From:To:References:In-Reply-To;
+	b=EJfWqrNj15ty135ZoSaHTjSjEG2A6f2Fv/AnjUNAmfK+yGnU5fnz7+4eiauuZAsNY
+	 BorGZE1wG02eo2V4dkCN2TS3i7RqDPn6YdYZ2/sjP4YoJA/+B8SH4SbEf+mDqkUyfG
+	 5wDdnNAYQp1fq3MYwsgm7TDnnXKbPl5D0XGB9QIY=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51I66d8L021700
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+	for <kexec@lists.infradead.org>; Tue, 18 Feb 2025 00:06:39 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Feb 2025 00:06:39 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Feb 2025 00:06:38 -0600
+Received: from [10.24.68.214] (a0507176-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.68.214])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51I66b0Q029056
+	for <kexec@lists.infradead.org>; Tue, 18 Feb 2025 00:06:38 -0600
+Message-ID: <a69a8eaf-9fc0-468b-b39a-1486e6054878@ti.com>
+Date: Tue, 18 Feb 2025 11:36:37 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: VMCORE and kdump.conf file not found LINUX 6.12 KERNEL
+From: Gokul Praveen <g-praveen@ti.com>
+To: <kexec@lists.infradead.org>
+References: <4ccd4d81-2efd-4369-a759-552dbb9a007f@ti.com>
+Content-Language: en-US
+In-Reply-To: <4ccd4d81-2efd-4369-a759-552dbb9a007f@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b7dd78f21a9fa9dc3b6f90eae2668cfe5c7670c7.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250217_202421_323606_E60ECD48 
-X-CRM114-Status: GOOD (  22.10  )
+X-CRM114-CacheID: sfid-20250217_220641_461743_853EFE48 
+X-CRM114-Status: GOOD (  12.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,56 +83,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02/12/25 at 08:03am, Mimi Zohar wrote:
-> On Mon, 2025-02-10 at 09:06 -0800, steven chen wrote:
-> > On 2/7/2025 11:15 AM, Mimi Zohar wrote:
-> > > Hi Steven,
-> > > 
-> > > On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
-> > > > Currently, the mechanism to map and unmap segments to the kimage
-> > > > structure is not available to the subsystems outside of kexec.� This
-> > > > functionality is needed when IMA is allocating the memory segments
-> > > > during kexec 'load' operation.� Implement functions to map and unmap
-> > > > segments to kimage.
-> > > > 
-> > > > Implement kimage_map_segment() to enable mapping of IMA buffer source
-> > > > pages to the kimage structure post kexec 'load'.� This function,
-> > > > accepting a kimage pointer, an address, and a size, will gather the
-> > > > source pages within the specified address range, create an array of page
-> > > > pointers, and map these to a contiguous virtual address range.� The
-> > > > function returns the start of this range if successful, or NULL if
-> > > > unsuccessful.
-> > > > 
-> > > > Implement kimage_unmap_segment() for unmapping segments
-> > > > using vunmap().
-> > > > 
-> > > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > > Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > I don't recall previously adding my "Reviewed-by" tag.
-> > > 
-> > > Eric, I'd appreciate your reviewing this and the subsequent patch "[PATCH v7 3/7]
-> > > ima: kexec: skip IMA segment validation after kexec soft reboot" in particular.
-> > Hi Eric, Could you help to review this patch as Mimi mentioned? Thanks!
-> > > 
-> > > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Hi Team,
+
+Just a reminder.
+It would be really great if you could help me with the following.
+
+Regards
+Gokul
+
+On 05/02/25 17:50, Gokul Praveen wrote:
+> Hi Team,
 > 
-> Steven, since these patches impact kdump, before re-posting the patch set, please
-> include the following tags before your Signed-off-by tag on the kexec patches.
-
-Thanks, Mimi.
-
-Yes, Steven, please add me in CC when reposting. Thanks in advance.
-
-I will check this version to see if there's impact on kexec/kdump
-from my side.
-
-And by the way, kdump should not need IMA, it's better be disabled by
-default. I will have a look and try disabling it in kdump kernel, while
-really appreciate it if any IMA expert can do it.
-
-Thanks
-Baoquan
-
+> It would be really great,if you could help me with a couple of questions 
+> regarding kexec and kdump.
+> 
+> I tried kdump on my SOC and it is rebooting fine . However,the VMCORE 
+> file and /etc/kdump.conf file is not found.
+> 
+> VERSION:
+> kexec-tools 2.0.30.
+> kernel 6.12v
+> 
+> STEPS FOLLOWED:
+> 
+> 1)git clone git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> 
+> 2)
+>     HOST PC:
+>      >cd $KEXEC_TOOLS_DIR
+>      >./bootstrap LDFLAGS=-static ./configure --prefix=/usr/local 
+> --host=aarch64-linux-gnu --target=aarch64-linux-gnu
+>      >make
+>      >cp $KEXEC_TOOLS_DIR/build/sbin/kexec /media/$USER/rootfs/usr/sbin 
+> (To copy the kexec binary to the rootfs filesystem of the target board)
+> 
+>     TARGET BOARD:
+>      >Booted upto linux
+>      >cmdline="crashkernel=128M console=ttyS2,115200n8 
+> root=/dev/mmcblk0p2 rw rootfste=ext4 rootwait" (/dev/mmcblk0p2 refers to 
+> EMMC)
+>      > /kexec -p /Image --command-line="$cmdline" 
+> --dtb=/k3-j721e-common-proc-board.dtb
+>      > echo c > /proc/sysrq-trigger
+> 
+> 
+> LOGS:
+> 
+>           Starting Reboot and dump vmcore via kexec...
+> [  OK  ] Listening on Docker Socket for the API.
+> [  OK  ] Listening on Weston socket.
+> [  OK  ] Started D-Bus System Message Bus.
+> [  OK  ] Reached target Socket Units.
+> [  OK  ] Reached target Basic System.
+> [  OK  ] Started Job spooling tools.
+>           Starting Avahi mDNS/DNS-SD Stack...
+> [  OK  ] Started Periodic Command Scheduler.
+>           Starting Print notice about GPLv3 packages...
+>           Starting IPv6 Packet Filtering Framework...
+>           Starting IPv4 Packet Filtering Framework...
+> [  OK  ] Started irqbalance daemon.
+>           Starting Telephony service...
+>           Starting Expand the rootfs partiti…to full size of the boot 
+> device....
+> [    5.992254] audit: type=1334 audit(1728487094.820:10): prog-id=14 
+> op=LOAD
+> 
+> [    6.003634] audit: type=1334 audit(1728487094.832:11): prog-id=15 
+> op=LOAD
+> [    6.010482] audit: type=1334 audit(1728487094.832:12): prog-id=16 
+> op=LOAD
+>           Starting User Login Management...
+>           Starting Telnet Server...
+> [  OK  ] Finished IPv6 Packet Filtering Framework.
+> [  OK  ] Finished IPv4 Packet Filtering Framework.
+> [  OK  ] Finished Telnet Server.
+> [  OK  ] Started User Login Management.
+> [  OK  ] Finished Expand the rootfs partition to full size of the boot 
+> device..
+> [  OK  ] Started Telephony service.
+> [  OK  ] Started Avahi mDNS/DNS-SD Stack.
+> [  OK  ] Created slice Slice /system/systemd-fsck.
+>           Expecting device /dev/mmcblk0p1...
+> [  OK  ] Reached target Preparation for Network.
+>           Starting Load Kernel Module drm...
+> [    6.406000] audit: type=1334 audit(1728487095.236:13): prog-id=17 
+> op=LOAD
+>           Starting Network Configuration...
+>           Starting Virtual Console Setup...
+> [  OK  ] Stopped target RPC Port Mapper.
+> [  OK  ] Stopped target Timer Units.
+> [  OK  ] Stopped Daily rotation of log files.
+> [  OK  ] Stopped Daily Cleanup of Temporary Directories.
+> [  OK  ] Stopped target System Time Set.
+>           Stopping Job spooling tools...
+>           Stopping Avahi mDNS/DNS-SD Stack...
+>           Stopping Periodic Command Scheduler...
+>           Stopping irqbalance daemon...
+> [  OK  ] Stopped target Host and Network Name Lookups.
+>           Stopping Telephony service...
+> [  OK  ] Stopped Expand the rootfs partition to full size of the boot 
+> device..
+>           Stopping strongSwan IPsec IKEv1/IKEv2 daemon using ipsec.conf...
+> [  OK  ] Removed slice Slice /system/getty.
+> [  OK  ] Removed slice Slice /system/serial-getty.
+>           Stopping User Login Management...
+>           Stopping Load/Save OS Random Seed...
+>           Starting Record Runlevel Change in UTMP...
+>           Stopping Telnet Server...
+> [  OK  ] Stopped target Remote File Systems.
+> [  OK  ] Stopped Reboot and dump vmcore via kexec.
 
