@@ -4,95 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DA9BC021AA
-	for <kexec@archiver.kernel.org>; Wed, 19 Feb 2025 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B699C021B0
+	for <kexec@archiver.kernel.org>; Wed, 19 Feb 2025 15:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=57nPLxtLibpkK5qPp8QpRrsWkbDlQlqDET5gkkKYRG8=; b=IZ2hlT8BSXLk3mG9R6TmhIerP+
-	dPfR135NLrGx3Q5zuMNep8opMpb0gFnzXCDSz+ZhUFstauQRNgBTadZI+Eg6bIj++mh+2brRil7xa
-	mEcVsw5WIm3MX5Buh4t+fpFCDU+RLyyL4yS7+oxHHnpQ+AT5tdWI5kt9pox/RNRrCyeGrwZOJ6i3Z
-	MDIwkpa7jW0vd+vvETiHV0uBK2nSf5ZgeQxo8HJuZjyxTvAfUM7HuAbgIIK4yJtH3wgJbclI4dioQ
-	cJZ9M/cY1S9pTT7zNnN3SVNBetetzxBCqYJ8DDzv1jx3cOQSbsqYjN6p+PXARh8rcxtKZchO5IrR5
-	23R0dVVg==;
+	bh=RNRYAFZ+vWlXibKC7lWNvKEzI0madAammI6tr38yBJI=; b=JMEUoBnTfyooxTA6wuqMKfDFTh
+	iWxkq8q7m5tHpzX/rAumAhK6UD2YjDkmy23ht/xjKXELLrLFCgdb06v/mM9vyZ2vWJFCVb/qBIcTr
+	q4GOmY0r57JtN84BDqRYyr30OBMaSRtA6nrMeAHblTtfs5N7mm12Bzl7phkt03K+/E3Pd4g2VjRbU
+	wPeGEkWuxHsVtp1EMM3pUxWkV6K9fjnEj+NmMv1nUuCM4/br7dKiAgOujKBrv3wjeGovIn7qIe0V6
+	nvNHm4+XuF0T3MEtQr2QrAPh9BQOnk6IeTvwM5ob19cg9j6aNoc9roofk0wvbpZ6MySgIyqmveFL3
+	v19c4ffQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkkXx-0000000D6IG-26s4;
-	Wed, 19 Feb 2025 13:55:29 +0000
-Received: from smtp-fw-80009.amazon.com ([99.78.197.220])
+	id 1tkmS7-0000000Dfrg-1YLn;
+	Wed, 19 Feb 2025 15:57:35 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkkXp-0000000D6ES-3D1e;
-	Wed, 19 Feb 2025 13:55:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739973321; x=1771509321;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=57nPLxtLibpkK5qPp8QpRrsWkbDlQlqDET5gkkKYRG8=;
-  b=dxGHxGJ8nRdcWggCk0UKFW6ggY1nqPPPGm7ICMsfZqAz6xXqGfyZjevJ
-   En/XbivAJzswh+du7sEsoNSufpzQ8LlBnrZJl5u5IkZiUU5U+IJ5bJIpG
-   Rl8YxSAeOKDke3O/XQX/42RcUxgAYp3r5rnZm4a6bbp10w0/5FEX/ojzB
-   M=;
-X-IronPort-AV: E=Sophos;i="6.13,299,1732579200"; 
-   d="scan'208";a="173851478"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 13:55:18 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:64466]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.12.97:2525] with esmtp (Farcaster)
- id 109703bc-b166-4b29-a69a-d899c4750143; Wed, 19 Feb 2025 13:55:17 +0000 (UTC)
-X-Farcaster-Flow-ID: 109703bc-b166-4b29-a69a-d899c4750143
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Wed, 19 Feb 2025 13:55:08 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Wed, 19 Feb 2025
- 13:55:00 +0000
-Message-ID: <d8c43707-65a2-4176-85e2-acdb4c9d16ad@amazon.com>
-Date: Wed, 19 Feb 2025 14:54:57 +0100
+	id 1tkmS4-0000000DfqZ-2uOO
+	for kexec@lists.infradead.org;
+	Wed, 19 Feb 2025 15:57:33 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J75Cq4005346;
+	Wed, 19 Feb 2025 15:57:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=RNRYAF
+	Z+vWlXibKC7lWNvKEzI0madAammI6tr38yBJI=; b=TjsD02zpA5OQUHOFu9tBNY
+	e0ZXRdvZSquZN+rlqwDxa+fL4iTI06177bEGHn+61Dnpk2rzqGv7FuozNywgYj+3
+	DqMvQejPpoOYMJ4JdVQxSorLrjiDkjUgA6Uq/feARiFq+X0QgAYntfQ1MwKiW/ab
+	1gayuPKGnWHCaPdUOMF+jf7hkjV27aeua+AjGg73OjVRWE9q8ljSTmxYkRFB138Q
+	CSExsiqjjrAtknEQ3cGZLYbTJEtz18Kaq1qbeirm054+zm+DagwvzIrrgMPD4djc
+	/VoGYVi25MC4PZ4XTKmMbz/KLqBSnIeBEYKkYnskTK4+Nc1CnTYM5AbdHHNMQL5g
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44w650bhd0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 15:57:16 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51JE1Ewr030243;
+	Wed, 19 Feb 2025 15:57:15 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w01x4vr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 15:57:15 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51JFvDd318416154
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 15:57:13 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 753435805D;
+	Wed, 19 Feb 2025 15:57:14 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 65CFC58055;
+	Wed, 19 Feb 2025 15:57:13 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Feb 2025 15:57:13 +0000 (GMT)
+Message-ID: <7433b986-f048-494d-a66a-5888cd37b081@linux.ibm.com>
+Date: Wed, 19 Feb 2025 10:57:13 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, Ashish Kalra
-	<ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse
-	<dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar
-	<mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan Corbet
-	<corbet@lwn.net>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
-	<pasha.tatashin@soleen.com>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
-	<peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, Rob Herring
-	<robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan
-	<saravanak@google.com>, Stanislav Kinsburskii
-	<skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<linux-mm@kvack.org>, <x86@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <CALu+AoRMQyRDFS_4L0KQkmrFT_S+yk=uZ-Mqt86JQYKKnj-5Ug@mail.gmail.com>
- <Z7WJD6eBLuIRnLwk@kernel.org>
- <CALu+AoSaEthfed1NOYPiQgm_g-dhibVMRAp0+=_+9qTT4_x=tg@mail.gmail.com>
+Subject: Re: [PATCH v8 5/7] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+ <20250218225502.747963-6-chenste@linux.microsoft.com>
 Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <CALu+AoSaEthfed1NOYPiQgm_g-dhibVMRAp0+=_+9qTT4_x=tg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250218225502.747963-6-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D041UWA003.ant.amazon.com (10.13.139.105) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: fIeIYbbJTYuYoV9uVtLxM_3bePvUUM8D
+X-Proofpoint-GUID: fIeIYbbJTYuYoV9uVtLxM_3bePvUUM8D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_06,2025-02-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502190122
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250219_055521_861479_E8ECE50B 
-X-CRM114-Status: GOOD (  22.63  )
+X-CRM114-CacheID: sfid-20250219_075732_858437_98D09F6F 
+X-CRM114-Status: GOOD (  33.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,37 +115,160 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-On 19.02.25 13:49, Dave Young wrote:
-> On Wed, 19 Feb 2025 at 15:32, Mike Rapoport <rppt@kernel.org> wrote:
->> On Mon, Feb 17, 2025 at 11:19:45AM +0800, RuiRui Yang wrote:
->>> On Thu, 6 Feb 2025 at 21:34, Mike Rapoport <rppt@kernel.org> wrote:
->>>> == Limitations ==
->>>>
->>>> Currently KHO is only implemented for file based kexec. The kernel
->>>> interfaces in the patch set are already in place to support user space
->>>> kexec as well, but it is still not implemented it yet inside kexec tools.
->>>>
->>> What architecture exactly does this KHO work fine?   Device Tree
->>> should be ok on arm*, x86 and power*, but how about s390?
->> KHO does not use device tree as the boot protocol, it uses FDT as a data
->> structure and adds architecture specific bits to the boot structures to
->> point to that data, very similar to how IMA_KEXEC works.
->>
->> Currently KHO is implemented on arm64 and x86, but there is no fundamental
->> reason why it wouldn't work on any architecture that supports kexec.
-> Well,  the problem is whether there is a way to  add dtb in the early
-> boot path,  for X86 it is added via setup_data,  if there is no such
-> way I'm not sure if it is doable especially for passing some info for
-> early boot use.  Then the KHO will be only for limited use cases.
 
+On 2/18/25 5:55 PM, steven chen wrote:
+> ima_dump_measurement_list() is called during kexec 'load', which may
+> result in loss of IMA measurements during kexec soft reboot.  It needs
 
-Every architecture has a platform specific way of passing data into the 
-kernel so it can find its command line and initrd. S390x for example has 
-struct parmarea. To enable s390x, you would remove some of its padding 
-and replace it with a KHO base addr + size, so that the new kernel can 
-find the KHO state tree.
+... due to missed measurements that only occurred after kexec 'load'. 
+Therefore, this function needs to be ...
 
+> to be called during kexec 'execute'.
+> 
+> This patch includes the following changes:
+>   - Implement kimage_file_post_load() function to be invoked after the new
+>     Kernel image has been loaded for kexec.
 
-Alex
+s/Kernel/kernel
+
+>   - Call kimage_file_post_load() from kexec_file_load() syscall only for
+>     kexec soft reboot scenarios and not for KEXEC_FILE_ON_CRASH.  It will
+>     map the IMA segment, and register reboot notifier for the function
+>     ima_update_kexec_buffer() which would copy the IMA log at kexec soft
+>     reboot.
+>   - Make kexec_segment_size variable local static to the file, for it to be
+
+... to the file so that it becomes accessible ...
+
+>     accessible both during kexec 'load' and 'execute'.
+>   - Move ima_dump_measurement_list() call from ima_add_kexec_buffer()
+>     to ima_update_kexec_buffer().
+>   - Remove ima_reset_kexec_file() call from ima_add_kexec_buffer(), now
+>     that the buffer is being copied at kexec 'execute', and resetting the
+>     file at kexec 'load' will corrupt the buffer.
+
+s/will/would
+
+> 
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+
+With  the above changes:
+
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+> ---
+>   kernel/kexec_file.c                |  8 ++++++
+>   security/integrity/ima/ima_kexec.c | 43 +++++++++++++++++++-----------
+>   2 files changed, 36 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 606132253c79..76b6a877b842 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -201,6 +201,11 @@ kimage_validate_signature(struct kimage *image)
+>   }
+>   #endif
+>   
+> +static void kimage_file_post_load(struct kimage *image)
+> +{
+> +	ima_kexec_post_load(image);
+> +}
+> +
+>   /*
+>    * In file mode list of segments is prepared by kernel. Copy relevant
+>    * data from user space, do error checking, prepare segment list
+> @@ -428,6 +433,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>   
+>   	kimage_terminate(image);
+>   
+> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+> +		kimage_file_post_load(image);
+> +
+>   	ret = machine_kexec_post_load(image);
+>   	if (ret)
+>   		goto out;
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 0fa65f91414b..f9dd7ff95b84 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -19,6 +19,7 @@
+>   #ifdef CONFIG_IMA_KEXEC
+>   static struct seq_file ima_kexec_file;
+>   static void *ima_kexec_buffer;
+> +static size_t kexec_segment_size;
+>   static bool ima_kexec_update_registered;
+>   
+>   static void ima_reset_kexec_file(struct seq_file *sf)
+> @@ -129,7 +130,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	/* use more understandable variable names than defined in kbuf */
+>   	void *kexec_buffer = NULL;
+>   	size_t kexec_buffer_size = 0;
+> -	size_t kexec_segment_size;
+>   	int ret;
+>   
+>   	/*
+> @@ -154,13 +154,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   		return;
+>   	}
+>   
+> -	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+> -					kexec_segment_size);
+> -	if (ret < 0) {
+> -		pr_err("Failed to dump IMA measurements. Error:%d.\n", ret);
+> -		return;
+> -	}
+> -
+>   	kbuf.buffer = kexec_buffer;
+>   	kbuf.bufsz = kexec_buffer_size;
+>   	kbuf.memsz = kexec_segment_size;
+> @@ -178,12 +171,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	image->ima_segment_index = image->nr_segments - 1;
+>   	image->is_ima_segment_index_set = true;
+>   
+> -	/*
+> -	 * kexec owns kexec_buffer after kexec_add_buffer() is called
+> -	 * and it will vfree() that buffer.
+> -	 */
+> -	ima_reset_kexec_file(&ima_kexec_file);
+> -
+>   	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+>   		      kbuf.mem);
+>   }
+> @@ -194,7 +181,33 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   static int ima_update_kexec_buffer(struct notifier_block *self,
+>   				   unsigned long action, void *data)
+>   {
+> -	return NOTIFY_OK;
+> +	void *buf = NULL;
+> +	size_t buf_size = 0;
+> +	int ret = NOTIFY_OK;
+> +
+> +	if (!kexec_in_progress) {
+> +		pr_info("No kexec in progress.\n");
+> +		return ret;
+> +	}
+> +
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("Kexec buffer not set.\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = ima_dump_measurement_list(&buf_size, &buf,
+> +					kexec_segment_size);
+> +
+> +	if (ret)
+> +		pr_err("Dump measurements failed. Error:%d\n", ret);
+> +
+> +	if (buf_size != 0)
+> +		memcpy(ima_kexec_buffer, buf, buf_size);
+> +
+> +	kimage_unmap_segment(ima_kexec_buffer);
+> +	ima_kexec_buffer = NULL;
+> +
+> +	return ret;
+>   }
+>   
+>   struct notifier_block update_buffer_nb = {
 
 
