@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F7F7C021AA
-	for <kexec@archiver.kernel.org>; Wed, 19 Feb 2025 07:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BB88C021AA
+	for <kexec@archiver.kernel.org>; Wed, 19 Feb 2025 07:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TWGXF7MV8G9MqF/3hcMNPYM338Vdzeo61cefvJOSakI=; b=Rn8szrgpDUDm6ABDzvMwsbAyi/
-	mCEaxvHPNwMadG4uEzxL7SHX1Qruka0Cwr3jineBFOSuo0V2nFp1rZsmAj2FEG5fIe9kSKrmEnT0q
-	6WqazMtdLBa7DHU2jdZT1Hl3PiWM4sefRd9DjBDB7ocbYpLAcLepPq1FVvVpmmscIeYnlowpcpLtc
-	1nlG6JZM0LRWStWOHQ/8jQd5dvqR9vMpf/FvYp20K/xWBJ4gIkyvbp2LLUKK34Z01bQ4Vd+CHQe4r
-	yC/MPUBlog9s0rY8LfFH594Y8XrmsoNc1ZgQTTJITWG01haT28wke8D7ao6BT1ZjT+Qqzspt7XhdN
-	w3VD1+IA==;
+	bh=8VZ4jL8diAc1EN7dg417QGXOWLpNluAlP2CUguqhcio=; b=HjvmhJeUbjavMMG6AFWCC05fJI
+	5Apb7JDxvKasCnMAzNEKeN2mlhoRrGffLQliS96XX7ZsUTu0FxKz27oN7fK6U/OvUrv29uQBTPyrR
+	LosuPjItXuoV16O1U7PZuEW7QCVkE7re8uEdRNJOWIwy3AtOrrkXpyAjNcDG/q57UPy/CDC9MBVC9
+	ztAm5Z0/r446K1WMUjMbmxMF8JsEtA5VIZGy2e2UVoZn7FtPXSQNoykXx7P5l8jwXhFqokdGNH90q
+	DRtDOweXAQPxd0bYJYnPAur8/KAWgaR6F6ZCFpUT5UCqnXN6TczrkMkRY0I8GmCqqSmyX8xhhsERy
+	r+JIITgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkeSI-0000000BE8A-3Y0V;
-	Wed, 19 Feb 2025 07:25:14 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1tkeTj-0000000BEcq-0rc6;
+	Wed, 19 Feb 2025 07:26:43 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkeRz-0000000BE0x-3v2f;
-	Wed, 19 Feb 2025 07:24:57 +0000
+	id 1tkeSm-0000000BEJp-3mmE;
+	Wed, 19 Feb 2025 07:25:46 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 7F5B45C4B20;
-	Wed, 19 Feb 2025 07:24:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1235C4CED1;
-	Wed, 19 Feb 2025 07:24:41 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 49C5BA41F32;
+	Wed, 19 Feb 2025 07:23:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25288C4CED1;
+	Wed, 19 Feb 2025 07:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739949894;
-	bh=SRqj9MZLCV8OPtw+RLc/L0/R3k9RqsqUSw55QX9OOlE=;
+	s=k20201202; t=1739949943;
+	bh=mn7g0i0MWinLv2YGo+kZxHpbfVUa4TgH6wIWEUwX83A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FtKBbQaYTslR+0p7SefBILIuS73xk2HkHE9X1wi3f1RYXdzexSpsyIrHcPKNtZYjL
-	 BvKiLvIz6tiQbKcH9IhyUrzpRPaTkQMGYuEz3o1+LwRY6+cXJ2ZdV6QYVU7JbUtlYQ
-	 05YBQSpFJ0o9+4PFttNGG2I4B8gyRtwm24/vnas8DwL/rcu9i5Hz/rxhmWxht1y1Dw
-	 wkLpe3ZZgtmacfwPN46ynU8iy+ypPSs9dwF5Tdr7KWenmjNUChafxZkv2PmgFVMNfi
-	 6mdnd8DQM0qYd4dN8GiXu45YvQUX49U1bZ45kTkOBpF0wvbKLl80gJxVUX5K2raMUR
-	 MM9jdOERGv5AQ==
-Date: Wed, 19 Feb 2025 09:24:31 +0200
+	b=Jo0MN+L40nZsA1Z3XLmqtTAFU4+nInYDLglMHXNfS2AWgOzeetC9vn00TVjVV+H9+
+	 rQaOBtcGPzPXGVyyTiFcCpL/nBV8pOM8Q4gmV4co22EBNknyhAhIQ5IzurwH1xZs5D
+	 9ZupQiXqdfdhBvy4JD5VrKUeuKr1eVOMSSkdgtpySL+EufzrfLjrRGqbFNvu3nHa6B
+	 /b5W+Y0ntMGSBuAk5O+mNwS70ivu6sfNCZi3UJ8fCaFpIZ1/CRE0Cn1aAnZq16m/Q5
+	 Um3231KPD8ZPih0fAIySoNxdGrfA0cv8JPQSfDj/hyxBae0+mQMSkcmUV9eOwlWzAf
+	 EzSsDgPrKpVQQ==
+Date: Wed, 19 Feb 2025 09:25:23 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Wei Yang <richard.weiyang@gmail.com>
 Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
@@ -74,18 +74,18 @@ Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
 	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <Z7WHL_Xqgoln9oLg@kernel.org>
+Subject: Re: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
+Message-ID: <Z7WHY5RBJc9YxPPY@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
+ <20250206132754.2596694-14-rppt@kernel.org>
+ <20250217040448.56xejbvsr2a73h4c@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218155004.n53fcuj2lrl5rxll@master>
+In-Reply-To: <20250217040448.56xejbvsr2a73h4c@master>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250218_232456_081084_CF3DC300 
-X-CRM114-Status: GOOD (  22.98  )
+X-CRM114-CacheID: sfid-20250218_232545_067094_EA4FC239 
+X-CRM114-Status: GOOD (  24.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,60 +100,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
-> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
-> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Mon, Feb 17, 2025 at 04:04:48AM +0000, Wei Yang wrote:
+> On Thu, Feb 06, 2025 at 03:27:53PM +0200, Mike Rapoport wrote:
+> >From: Alexander Graf <graf@amazon.com>
 > >
-> >to denote areas that were reserved for kernel use either directly with
-> >memblock_reserve_kern() or via memblock allocations.
+> >Linux has recently gained support for "reserve_mem": A mechanism to
+> >allocate a region of memory early enough in boot that we can cross our
+> >fingers and hope it stays at the same location during most boots, so we
+> >can store for example ftrace buffers into it.
 > >
+> >Thanks to KASLR, we can never be really sure that "reserve_mem"
+> >allocations are static across kexec. Let's teach it KHO awareness so
+> >that it serializes its reservations on kexec exit and deserializes them
+> >again on boot, preserving the exact same mapping across kexec.
+> >
+> >This is an example user for KHO in the KHO patch set to ensure we have
+> >at least one (not very controversial) user in the tree before extending
+> >KHO's use to more subsystems.
+> >
+> >Signed-off-by: Alexander Graf <graf@amazon.com>
+> >Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > >---
-> > include/linux/memblock.h | 16 +++++++++++++++-
-> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
-> > 2 files changed, 39 insertions(+), 9 deletions(-)
+> > mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> > 1 file changed, 131 insertions(+)
 > >
-> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> >index e79eb6ac516f..65e274550f5d 100644
-> >--- a/include/linux/memblock.h
-> >+++ b/include/linux/memblock.h
-> >@@ -50,6 +50,7 @@ enum memblock_flags {
-> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
-> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
-> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
-> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+> >diff --git a/mm/memblock.c b/mm/memblock.c
+> >index 84df96efca62..fdb08b60efc1 100644
+> >--- a/mm/memblock.c
+> >+++ b/mm/memblock.c
+> >@@ -16,6 +16,9 @@
+> > #include <linux/kmemleak.h>
+> > #include <linux/seq_file.h>
+> > #include <linux/memblock.h>
+> >+#include <linux/kexec_handover.h>
 > 
-> Above memblock_flags, there are comments on explaining those flags.
+> Looks this one breaks the memblock test in tools/testing/memblock.
 > 
-> Seems we miss it for MEMBLOCK_RSRV_KERN.
+> memblock.c:19:10: fatal error: linux/kexec_handover.h: No such file or directory
+>    19 | #include <linux/kexec_handover.h>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Right, thanks!
+Thanks, will fix.
  
+> >+#include <linux/kexec.h>
+> >+#include <linux/libfdt.h>
 > > 
-> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-> > again:
-> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
-> > 					    flags);
-> >-	if (found && !memblock_reserve(found, size))
-> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
 > 
-> Maybe we could use memblock_reserve_kern() directly. If my understanding is
-> correct, the reserved region's nid is not used.
-
-We use nid of reserved regions in reserve_bootmem_region() (commit
-61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
-know the distribution of reserved memory among the nodes before
-memmap_init_reserved_pages().
- 
-> BTW, one question here. How we handle concurrent memblock allocation? If two
-> threads find the same available range and do the reservation, it seems to be a
-> problem to me. Or I missed something?
-
-memblock allocations end before smp_init(), there is no possible concurrency.
- 
 > -- 
 > Wei Yang
 > Help you, Help me
