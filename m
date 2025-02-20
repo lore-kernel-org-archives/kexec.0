@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD9CCC021B1
-	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 16:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1CB6C021B3
+	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 16:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=; b=FNyzqctHuNyHAkSe0+foUsBOsy
-	e7L2bNSNdNN6pWYT3GJIVlyK8eYk3XIJdxfq78vcjtHI7/rHJqUrlssDZblQnoi0zTeK7VwGaKSkb
-	R5ZtVuKHIoY0ntbegDj5NpqA8k6GJwtn3swNujKUa1QhcqEdsLtjW3vUfpDpI66qk5aUMebcPrIc0
-	HwwhnqUXLWQ52/XUcIt980nTAhzqvnrCkUBUpM4clYjN3adbu+pqb2J7gLsc3A1SE9JZFw0FE82Cm
-	uByc1k1tx6FqCqSwzzbI1Ea0RQKpRHWwUuygsKSw0+8u4ey7IW0Ypk71YQUKd0R1jngbbmAKYeqLE
-	YkbbdxFw==;
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=; b=dOE7zJAQrAkXMZ1Zaaxr1t5clH
+	7ZjyhVQNJsfYAohqj31iXUxGw4BDaKwaih0Dw61VSltLxhb2fXFKoBlDLcm61sYDri04GVnwvmy36
+	kBD3M9PjyiGE3D9eZBnMRkohuhyiOagLJUfvThi19vz/AEMPEfv2OE1p25cglaxCZVLuAxRc9TmJR
+	I/KpUQqYwluyagngt+J/AcjR8KFndMj3/M732ruWW/+Y9UUdNs4BA6wEha7e3s/VmBldbT9DE6wrC
+	Hwqm3gu9rOG6yI9/ivX+xrJaPeOTqXoSSBh+J6rRfC0D+owamfu2fVzBK7t8IJhIbnoa7Ove6Qhdk
+	3AfpqPLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9qj-00000001zm5-1ImF;
-	Thu, 20 Feb 2025 16:56:33 +0000
+	id 1tl9ro-000000020FT-1qbK;
+	Thu, 20 Feb 2025 16:57:40 +0000
 Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9of-00000001zAP-40LS
+	id 1tl9rl-000000020EE-3axJ
 	for kexec@lists.infradead.org;
-	Thu, 20 Feb 2025 16:54:27 +0000
+	Thu, 20 Feb 2025 16:57:39 +0000
 Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 7976721186;
-	Thu, 20 Feb 2025 16:54:24 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTP id 45FF721174;
+	Thu, 20 Feb 2025 16:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740070656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
-	b=XTMerqX0GICjNsYCmpT3d86Y5d/iCOx3eeIgF+zW9pC0xqJUBLi1xpGj28SIdC6SbeWbMa
-	7NpY3W4Q9XcH8kNohCHJQ5QQWWzOPd1txXDLDLIIh5qQmdD73YynIG3U3SSssZMdl78yqh
-	Uc7N/GG8qI0ZFM7ZFs7VsucAXvt/wCU=
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=WRAG8TLSypGQ5C466jsiybvF2rx1BbQ4YXGiULc5T1WjBBMQMMS52pS4+K2TNj/zsPM2sn
+	JuR6P5Qp3ib3PiWZf+v9N2AknxrG6LY+d9zj+cYuUNA8nul5lVGymKdByh3HwYuZtqhCwQ
+	mRPI/hNfy6iyTcAa49pm0LCISTL8XAQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070464;
+	s=susede2_ed25519; t=1740070656;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
-	b=eaoodYHMSTrDFPSZZoxEeoyhBJcAyVrRgb032l5UFSC5tZ7yzLRtWRtBEwYIhzM6LA/9La
-	Q5TByx/Su9H0/ZDw==
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=3qcjb+yB67/aGGYDFCnH2i57/Z4h7UfX8KLx9GCpinpge687TQPf0+n8Khrc12fdlN1TK7
+	tO/2SgvjOlBWMcBg==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740070656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
-	b=XTMerqX0GICjNsYCmpT3d86Y5d/iCOx3eeIgF+zW9pC0xqJUBLi1xpGj28SIdC6SbeWbMa
-	7NpY3W4Q9XcH8kNohCHJQ5QQWWzOPd1txXDLDLIIh5qQmdD73YynIG3U3SSssZMdl78yqh
-	Uc7N/GG8qI0ZFM7ZFs7VsucAXvt/wCU=
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=WRAG8TLSypGQ5C466jsiybvF2rx1BbQ4YXGiULc5T1WjBBMQMMS52pS4+K2TNj/zsPM2sn
+	JuR6P5Qp3ib3PiWZf+v9N2AknxrG6LY+d9zj+cYuUNA8nul5lVGymKdByh3HwYuZtqhCwQ
+	mRPI/hNfy6iyTcAa49pm0LCISTL8XAQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070464;
+	s=susede2_ed25519; t=1740070656;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
-	b=eaoodYHMSTrDFPSZZoxEeoyhBJcAyVrRgb032l5UFSC5tZ7yzLRtWRtBEwYIhzM6LA/9La
-	Q5TByx/Su9H0/ZDw==
-Date: Thu, 20 Feb 2025 17:54:24 +0100
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=3qcjb+yB67/aGGYDFCnH2i57/Z4h7UfX8KLx9GCpinpge687TQPf0+n8Khrc12fdlN1TK7
+	tO/2SgvjOlBWMcBg==
+Date: Thu, 20 Feb 2025 17:57:36 +0100
 From: Jiri Bohac <jbohac@suse.cz>
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
@@ -73,9 +73,8 @@ Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	David Hildenbrand <dhildenb@redhat.com>,
 	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v2 3/5] kdump, documentation: describe craskernel CMA
- reservation
-Message-ID: <Z7deQKy1F8BW1ibi@dwarf.suse.cz>
+Subject: [PATCH v2 5/5] x86: implement crashkernel cma reservation
+Message-ID: <Z7dfAFIP2Ne0QFOy@dwarf.suse.cz>
 References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -84,7 +83,7 @@ In-Reply-To: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
 X-Spamd-Result: default: False [-4.26 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.16)[-0.785];
+	NEURAL_HAM_SHORT(-0.16)[-0.782];
 	MIME_GOOD(-0.10)[text/plain];
 	ARC_NA(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -98,10 +97,10 @@ X-Spamd-Result: default: False [-4.26 / 50.00];
 	TO_DN_SOME(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo,dwarf.suse.cz:mid]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250220_085426_136704_F9B8FB1C 
-X-CRM114-Status: GOOD (  16.35  )
+X-CRM114-CacheID: sfid-20250220_085738_039891_2A63C044 
+X-CRM114-Status: GOOD (  17.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,74 +115,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Describe the new crashkernel ",cma" suffix in Documentation/
----
- Documentation/admin-guide/kdump/kdump.rst     | 19 +++++++++++++++++--
- .../admin-guide/kernel-parameters.txt         | 14 ++++++++++++++
- 2 files changed, 31 insertions(+), 2 deletions(-)
+Implement the crashkernel CMA reservation for x86:
+- enable parsing of the cma suffix by parse_crashkernel()
+- reserve memory with reserve_crashkernel_cma()
+- add the CMA-reserved ranges to the e820 map for the crash kernel
+- exclude the CMA-reserved ranges from vmcore
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 5376890adbeb..3f7ff301c604 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -213,8 +213,7 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
-    kernel.
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+---
+ arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++----
+ arch/x86/kernel/setup.c |  5 +++--
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 340af8155658..70823fa9abea 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -163,10 +163,10 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 		return NULL;
  
-    Otherwise it should be the start of memory region reserved for
--   second kernel using boot parameter "crashkernel=Y@X". Here X is
--   start of memory region reserved for dump-capture kernel.
-+   second kernel using boot parameter "crashkernel=Y@X". Here X is start of memory region reserved for dump-capture kernel.
-    Generally X is 16MB (0x1000000). So you can set
-    CONFIG_PHYSICAL_START=0x1000000
+ 	/*
+-	 * Exclusion of crash region and/or crashk_low_res may cause
+-	 * another range split. So add extra two slots here.
++	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
++	 * may cause range splits. So add extra slots here.
+ 	 */
+-	nr_ranges += 2;
++	nr_ranges += 2 + crashk_cma_cnt;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return NULL;
+@@ -184,6 +184,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ {
+ 	int ret = 0;
++	int i;
  
-@@ -315,6 +314,22 @@ crashkernel syntax
+ 	/* Exclude the low 1M because it is always reserved */
+ 	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
+@@ -198,8 +199,17 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ 	if (crashk_low_res.end)
+ 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
+ 					      crashk_low_res.end);
++	if (ret)
++		return ret;
  
-             crashkernel=0,low
- 
-+4) crashkernel=size,cma
+-	return ret;
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
++					      crashk_cma_ranges[i].end);
++		if (ret)
++			return ret;
++	}
 +
-+   Reserves additional memory from CMA. A standard crashkernel reservation, as
-+   described above, is still needed, but can be just big enough to hold the
-+   kernel and initrd. All the memory the crash kernel needs for its runtime and
-+   for running the kdump userspace processes can be provided by this CMA
-+   reservation, re-using memory available to the production system's userspace.
-+   Because of this, the CMA reservation should not be used if kdump is configured
-+   to dump userspace memory - the re-used memory ranges won't be in the vmcore.
-+
-+   This option increases the risk of a kdump failure: DMA transfers configured
-+   by the first kernel may end up corrupting the second kernel's memory. This
-+   reservation method is intended for systems that can't afford to sacrifice
-+   enough memory for standard crashkernel reservation and where less reliable
-+   kdump is preferrable to no kdump at all.
-+
- Boot into System Kernel
- -----------------------
- 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..ea4d53435515 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -987,6 +987,20 @@
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
-+	crashkernel=size[KMG],cma
-+			[KNL, X86] Reserve additional crash kernel memory from CMA.
-+			This reservation is usable by the first system's userspace,
-+			so this should not be used if dumping of userspace
-+			memory is intended. A standard crashkernel reservation,
-+			as described above, is still needed to hold the crash
-+			kernel and initrd.
-+			This option increases the risk of a kdump failure: DMA
-+			transfers configured by the first kernel may end up
-+			corrupting the second kernel's memory. This reservation
-+			method is intended for systems that can't afford to
-+			sacrifice enough memory for standard crashkernel
-+			reservation and where less reliable kdump is preferrable 
-+			to no kdump at all.
++	return 0;
+ }
  
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
+ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+@@ -352,6 +362,14 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 		add_e820_entry(params, &ei);
+ 	}
+ 
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ei.addr = crashk_cma_ranges[i].start;
++		ei.size = crashk_cma_ranges[i].end -
++			  crashk_cma_ranges[i].start + 1;
++		ei.type = E820_TYPE_RAM;
++		add_e820_entry(params, &ei);
++	}
++
+ out:
+ 	vfree(cmem);
+ 	return ret;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 853afde761a7..90e10a18f0c9 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -471,7 +471,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 
+ static void __init arch_reserve_crashkernel(void)
+ {
+-	unsigned long long crash_base, crash_size, low_size = 0;
++	unsigned long long crash_base, crash_size, low_size = 0, cma_size = 0;
+ 	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+@@ -481,7 +481,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, NULL, &high);
++				&low_size, &cma_size, &high);
+ 	if (ret)
+ 		return;
+ 
+@@ -492,6 +492,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+ 				    low_size, high);
++	reserve_crashkernel_cma(cma_size);
+ }
+ 
+ static struct resource standard_io_resources[] = {
 
 -- 
 Jiri Bohac <jbohac@suse.cz>
