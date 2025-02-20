@@ -4,121 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9E63C021AA
-	for <kexec@archiver.kernel.org>; Wed, 19 Feb 2025 23:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F9DDC021B0
+	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 00:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=v34G1esLBZXaAKmdauy1fpUMAwGoN76yBW71sn8HJdU=; b=Jop3UBiZetjk2LtO3Z3PurEMow
-	gA/p9Hy6AwjWTu2HhFBWJlQzzDbkRQxfhk16O60byGLD84L+X/HKFqu8eBdbeAeD5i/JedjqPKjWN
-	Ueq1F58+fcAifa9cXUNEWou7JCDncRlu3kR6nP2BQ0lbyNkJYOcuSWy9Suuj0G2plmS6H+5K7Y1tD
-	rJiemIRpgnfLCtRxBj/N6pUT+euh4W7O1olCzG7g2dPnPJBlAoLDTzJWx5IIs9jFfvdCwj82T3FvV
-	uSEVYTa1A8tqTIwxS24vGtbFqNXkyrcFUKf5Tb0wygmvy+lg9tm0y6dYdlxlZEFc568d3ch8pmMgB
-	Nh8569KA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Hz+bDR58Mw0kpihNuBZkR2f/j8rc3VxjOC1S2g28+Gg=; b=qUOV9rxRQ4BSMF+SY/ACZTiiQn
+	Pyqsz99Prxsql1OhpzVA5wqfKmbvK5Y8E+Y55fM8fQqGU+d3QPV3MjycsMWSIy1/x1jXZd+WL/Pmx
+	7iWf8s+zb1f458431hhRim0Q5NrB02zgKuvrK2UqblahdMqiZyuBR66T5qR+1V7jL4xzhVd2zJ+HE
+	dr+wWnuypVla2okyUASM+7ZKJTaKXaSb/arKIsg69TPpg0T1loGAHa/+3DSrUW2GG7zrtKsA3fZBa
+	TblgETJJ1ZjfmU+eBmLJ1sQGbEeVFVx5TKUVY2zhxxaNowoKmhp2YlF83ObIYze3YhzTYpdIxhcI2
+	jCyrRvdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tktOz-0000000Fg4j-0oo7;
-	Wed, 19 Feb 2025 23:22:49 +0000
-Received: from mgamail.intel.com ([198.175.65.18])
+	id 1tkupy-0000000FzN1-0u01;
+	Thu, 20 Feb 2025 00:54:46 +0000
+Received: from mgamail.intel.com ([192.198.163.10])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tktId-0000000FeAH-43O7
+	id 1tkupu-0000000FzLa-2wm5
 	for kexec@lists.infradead.org;
-	Wed, 19 Feb 2025 23:16:17 +0000
+	Thu, 20 Feb 2025 00:54:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740006977; x=1771542977;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v34G1esLBZXaAKmdauy1fpUMAwGoN76yBW71sn8HJdU=;
-  b=S1QImMm7dJkbE5ZmsL9pN5dtT+l6NG2dvoCLov8JbnMkNTQSeIzHWs+7
-   i7HO3f9tswpds+8g1LKlfGl0YtavxKZ6IjhrvZnJjqBBfSVUoz0/v0mFC
-   A+zr2JRqJ71GuO5B7mk/NQw5aKebznzPRI2OeWCDQ/U+E7tEvBoaRs5KQ
-   Wk24uDo6FYDgT3W4aHlu0RhyNeK6yX7P/RQZpwTOkEN+18hL+NkpfWdNA
-   hDAxfBeuR092dYdK6ZDp8wCYNRfdSCDjUpZhWtfygjwqbUYH0OZDfSis4
-   htumpj67Z5zuUr1mvbJrUIepoICvaSk9d176AY/6CEIWttoc8sgoJ5y7H
+  t=1740012883; x=1771548883;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hwUtCzqyh6aH1mIHsXsfvOdcnu0WliYUJzQAHSkkG70=;
+  b=IK/lSSctVuwyLlFVZFn7VODGu2qRbF5h1eW6EyPwv49WECZpq7OHfe5m
+   Ra2a8bzECFuo0ZVAk+Q3+OkDXnP4vYCFsBAbLN18HqMz8X+feGvYCsjBG
+   30+YD1E5Sn62AIUAuY/1e7/sonoSxeU/ImR7gayJWs3kz+fS+7/8eLnyJ
+   BFcIUvAVRBUWbU+7GLfrvChIZGlT4olafBYrshAI1W+NNe6wRzQYnM5My
+   xOINrnDGw25uewPZ1oPeRl0BjU6SZuArhx5nZ0xKQVwwjl28fc+2ngJ9p
+   TjLDf9ORjVTCbexWjDzJ2KfqWi4fjCJkNflg76F/1QWMxyYJjy8CIJqWq
    Q==;
-X-CSE-ConnectionGUID: 2hXy6aSqTX+1HileyCNQSQ==
-X-CSE-MsgGUID: bCI4MTcCQoi8Y/4khpPXSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40974515"
+X-CSE-ConnectionGUID: liZ+cv8cSlyLXRZrAkIelw==
+X-CSE-MsgGUID: 4U1LUprHTs21w0ikusvXcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52209155"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40974515"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 15:16:16 -0800
-X-CSE-ConnectionGUID: Ic7EysGdQW64EyjdROkCZA==
-X-CSE-MsgGUID: 2BWnipDbRPaqhqV2HSR8aQ==
+   d="scan'208";a="52209155"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 16:54:39 -0800
+X-CSE-ConnectionGUID: qeMsjbubQyOQIon3FZs7uQ==
+X-CSE-MsgGUID: 4Mqc+Lu2SYmP5XegMdo/+Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="115057454"
-Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.109.250]) ([10.125.109.250])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 15:16:14 -0800
-Message-ID: <5007ae91-f4d5-430b-a403-aff9af1d6375@intel.com>
-Date: Wed, 19 Feb 2025 15:16:14 -0800
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115785521"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 19 Feb 2025 16:54:34 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkupg-0003hv-13;
+	Thu, 20 Feb 2025 00:54:29 +0000
+Date: Thu, 20 Feb 2025 08:53:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+	stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+	ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+	bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+Message-ID: <202502200848.MJEuphR1-lkp@intel.com>
+References: <20250218225502.747963-3-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] kexec_core: Accept unaccepted kexec segments'
- destination addresses
-To: Yan Zhao <yan.y.zhao@intel.com>, ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com,
- kirill.shutemov@linux.intel.com, bhe@redhat.com,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>
-References: <20241213094930.748-1-yan.y.zhao@intel.com>
- <20241213095449.881-1-yan.y.zhao@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20241213095449.881-1-yan.y.zhao@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218225502.747963-3-chenste@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250219_151616_065402_7DA66DBB 
-X-CRM114-Status: UNSURE (   8.53  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250219_165442_784115_4AD74231 
+X-CRM114-Status: GOOD (  13.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,26 +94,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/13/24 01:54, Yan Zhao wrote:
-> Accept the destination addresses during the kexec load, immediately after
-> they pass sanity checks. This ensures the code is located in a common place
-> shared by both the kexec_load and kexec_file_load system calls.
+Hi steven,
 
-So, we've got an end-user-visible bug. Eric raised some good concerns
-about the hardware and firmware design, but I think they've all been
-addressed. The only other even solution I've seen proposed is to not do
-unaccepted memory in the first place. I don't think that's viable or
-justified, especially since we've got at least one end user[1] that
-seems to think unaccepted memory fits their needs.
+kernel test robot noticed the following build warnings:
 
-This bug can _probably_ be fixed in arch/x86 as well, but having the
-solution in general code seems like the right place to me:
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.14-rc3 next-20250219]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/steven-chen/ima-define-and-call-ima_alloc_kexec_file_buf/20250219-065931
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250218225502.747963-3-chenste%40linux.microsoft.com
+patch subject: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+config: x86_64-buildonly-randconfig-004-20250220 (https://download.01.org/0day-ci/archive/20250220/202502200848.MJEuphR1-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250220/202502200848.MJEuphR1-lkp@intel.com/reproduce)
 
-Andrew, it seems like a lot of kexec work flows through you. Are you the
-right one to pick this up?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502200848.MJEuphR1-lkp@intel.com/
 
-1.
-https://lore.kernel.org/all/CAMGD6P3r-S-Va-TRvVjZ808on9+-wFJ_VeTpQ+FEN1jBbhmnXw@mail.gmail.com/
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/crash_dump.h:5,
+                    from mm/mm_init.c:30:
+>> include/linux/kexec.h:479:47: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     479 | static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+         |                                               ^~~~~~
+
+
+vim +479 include/linux/kexec.h
+
+   466	
+   467	#define kexec_dprintk(fmt, arg...) \
+   468	        do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+   469	
+   470	extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+   471	extern void kimage_unmap_segment(void *buffer);
+   472	#else /* !CONFIG_KEXEC_CORE */
+   473	struct pt_regs;
+   474	struct task_struct;
+   475	static inline void __crash_kexec(struct pt_regs *regs) { }
+   476	static inline void crash_kexec(struct pt_regs *regs) { }
+   477	static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+   478	static inline int kexec_crash_loaded(void) { return 0; }
+ > 479	static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+   480	{ return NULL; }
+   481	static inline void kimage_unmap_segment(void *buffer) { }
+   482	#define kexec_in_progress false
+   483	#endif /* CONFIG_KEXEC_CORE */
+   484	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
