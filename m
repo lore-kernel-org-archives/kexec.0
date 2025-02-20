@@ -4,91 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 656FFC021B1
-	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 14:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9151DC021B2
+	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 15:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ywthUrsaZUgbi1jImCfUyZ9XeZtfacq1MlreX2juEEk=; b=piEWL/eoOu/iHk4Qp73tVe3DCP
-	CvzlceqYYnICJukbfEr/UJ1SvPpkbKOE5vrT3mj7RIQ1Cz787hh7ioeeuqTGFMxTFFn9/rGrdizVb
-	65HmkSg0M8pOepJJYiVA9BMjDAxbttI4wQWEYZe1Kv2eKErpr59zUokLeYEuKk6toDht44TemcrWE
-	AURfsYbAO05nfm8Cslw8vkdm6M18wqMmsbsJYNA42BAWMtEiooPmfCBhiVc3h+oG9zJnZ4hwWsfiE
-	MISpmBj5tUn6JnwyWuEJRGdQdJQ9M7NTQdkN8OWIZDqTAztGoHocwYS20YMKfYh2YjDjuAesyjSkL
-	KdiKmWlA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qv+ri0zG5ZPwUpAfRcaaODEZ1zTIuMqQ81MpUonQdf0=; b=sN5AFafRuHBEqUHzvJ4PMJ8vHR
+	NLKQJA6VwQ7m5HIbAt7pRSZTxg/kLuYcDc0C1QZHglVxjicfONXqGurMxSnYeDV76JdziobwgABef
+	NIQeOd7fDCaRiwAy3tfGQe9dh20euGW0UF8BS9rn73GNyfRxxT0K/VXT24d9o6LyTPC86VB0jScvN
+	dslclAN/OiZiUuHBjDYB+ashlUhXrrcD2zGPt7U31hvnNwm7+nfOU1VgMefZ0QbN0hUxqmMwzlOGW
+	veq0VmeQ1apX2sA8qVJNAwJTUM+yWhmVAV3uUTRa3/id2k/cmwniNXqpSrTXRRQgt55qd8MXLFaB3
+	F9pq3aDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl7wq-00000001QV4-08Nw;
-	Thu, 20 Feb 2025 14:54:44 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1tl86F-00000001TBh-2jEu;
+	Thu, 20 Feb 2025 15:04:27 +0000
+Received: from lamorak.hansenpartnership.com ([198.37.111.173])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl7wn-00000001QTw-3iGy;
-	Thu, 20 Feb 2025 14:54:43 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 771B95C5DAF;
-	Thu, 20 Feb 2025 14:54:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63166C4CED1;
-	Thu, 20 Feb 2025 14:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740063280;
-	bh=BC0dhBX7Eg81uhggtuEZHVM8dUwnpQ+dA2ufHLGdn4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=InovFzdwowCfkaS3mdofhqdbNRDT0QPSXwLh3w3Ks3gabjyfLh3ZoKBTtSmNarqnX
-	 NWSycHqGlN7yNd+0eWaOU0+ODeMj6drkyWUBF0F3RDCZrjku80gpxCYmc+kAAFUIhF
-	 cIdOH8Da91vYXQfiFliQAi78+0x05PEFtzKvkt3XktgkdC4Zn64/wMsF41e4w438lb
-	 73um6//H3gzH4CFINfnDIYtLDsWM0e8qrbcvmRP2pP+F9H/e6WTApFpXNGqIxMY23P
-	 l5ycIRreRRuogv2tc/sBZpVOPGfjbPnHoaxZx2Ce/d5jWstSBddCKPXyzlLKyYjqF8
-	 fPv0Kjhu6R8bQ==
-Date: Thu, 20 Feb 2025 16:54:19 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 01/14] mm/mm_init: rename init_reserved_page to
- init_deferred_page
-Message-ID: <Z7dCG3ihTnDuJ8_c@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-2-rppt@kernel.org>
- <20250218145904.x57chhz3whvckzu3@master>
- <Z7WEktyNoCPylytL@kernel.org>
- <20250220083601.4p6ehmfhyvs5q5io@master>
+	id 1tl86C-00000001T91-3Y4F
+	for kexec@lists.infradead.org;
+	Thu, 20 Feb 2025 15:04:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1740063859;
+	bh=A7/Yz6iPqpOl1AQaKSL6cMZJ1TR+XUEScQ1/Yddl1p4=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=eZGl9HgqGOv4cwfgOfl62WrZM/Qo+Ayk0yF3FP92tKsygSY2mlvkHL4gVdne7euNH
+	 nmMjnr6NyzLVU07/LaxslNBd5txn1PBIkl+nxey3JB40SCq9SrQDdc+ENkO39uIfDK
+	 HQIBqLwlPCQ1y+NFvNlVtTs7Gypk9f4m9K2koKis=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id E67991C2581;
+	Thu, 20 Feb 2025 10:04:18 -0500 (EST)
+Message-ID: <58e70121aaee33679ac295847197c1e5511b2a81.camel@HansenPartnership.com>
+Subject: Re: [PATCH v8 1/7] ima: define and call ima_alloc_kexec_file_buf
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, steven chen
+ <chenste@linux.microsoft.com>,  stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com, 
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com, 
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ bhe@redhat.com,  vgoyal@redhat.com, dyoung@redhat.com
+Date: Thu, 20 Feb 2025 10:04:18 -0500
+In-Reply-To: <8023fa50a84817cc911a117db9bd3757c34fddfb.camel@linux.ibm.com>
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+	 <20250218225502.747963-2-chenste@linux.microsoft.com>
+	 <8023fa50a84817cc911a117db9bd3757c34fddfb.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220083601.4p6ehmfhyvs5q5io@master>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250220_065442_036945_221AF70A 
-X-CRM114-Status: GOOD (  30.00  )
+X-CRM114-CacheID: sfid-20250220_070424_947036_12AA0892 
+X-CRM114-Status: GOOD (  10.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,73 +75,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 20, 2025 at 08:36:01AM +0000, Wei Yang wrote:
-> On Wed, Feb 19, 2025 at 09:13:22AM +0200, Mike Rapoport wrote:
-> >Hi,
-> >
-> >On Tue, Feb 18, 2025 at 02:59:04PM +0000, Wei Yang wrote:
-> >> On Thu, Feb 06, 2025 at 03:27:41PM +0200, Mike Rapoport wrote:
-> >> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> >> >
-> >> >When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
-> >> >function performs initialization of a struct page that would have been
-> >> >deferred normally.
-> >> >
-> >> >Rename it to init_deferred_page() to better reflect what the function does.
-> >> 
-> >> Would it be confused with deferred_init_pages()?
-> >
-> >Why? It initializes a single page, deferred_init_pages() initializes many.
-> >
+On Thu, 2025-02-20 at 09:53 -0500, Mimi Zohar wrote:
+> On Tue, 2025-02-18 at 14:54 -0800, steven chen wrote:
+[...
+> > Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 > 
-> See below.
+> Steven, thank you again for picking up this patch set.
 > 
-> >> And it still calls __init_reserved_page_zone(), even we __SetPageReserved()
-> >> after it. Current logic looks not clear.
-> >
-> >There's no __init_reserved_page_zone(). Currently init_reserved_page()
-> >detects the zone of the page and calls __init_single_page(), so essentially
-> >it initializes one struct page.
-> >
-> >And we __SetPageReserved() in reserve_bootmem_region() after call to
-> >init_reseved_page() because pages there are indeed reserved.
-> > 
-> 
-> Hmm... I am not sure we are looking at the same code. I take a look at current
-> mm-unstable, this patch set is not included.
+> As previously explained, there is no tag named "Author" in
+> https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
+> .  To give credit to the original author use "Co-developed-by".
 
-I was looking at Linus tree, it was not there yet :)
+Just on this, only use the co-developed-by if you actually *modified*
+the patch.  If you're just transmitting the patch unmodified you can
+give original author credit by including a 
 
-> So I am looking at previous version with this last commit:
-> 
->   8bf30f9d23eb 2025-02-06 Documentation: KHO: add memblock bindings
-> 
-> Here is what I see for init_deferred_page()'s definition:
-> 
-> init_deferred_page()
->   __init_deferred_page()
->     __init_reserved_page_zone()   <--- I do see this function, it is removed?
->       __init_single_page()
-> 
-> What I want to say is __init_deferred_page() calls
-> __init_reserved_page_zone(). This sounds imply a deferred page is always
-> reserved page. But we know it is not.  deferred_init_pages() initialize the
-> pages are not reserved one. Or we want to have this context in
-> __init_deferred_page()?
+From: original author <email>
 
-If the commit that introduced __init_reserved_page_zone goes in before KHO,
-I'll just rename both functions, there is nothing about reserved pages
-there.
- 
-> >-- 
-> >Sincerely yours,
-> >Mike.
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
+Followed by a blank line at the beginning of the email.  That makes the
+git author field contan whatever the From: line says.  You still need a
+signoff from yourself in the original patch because you transmitted it.
 
--- 
-Sincerely yours,
-Mike.
+Some people also consider minor modifications to be insufficient to
+disturb the original copyright ownership and simply document what they
+did in square brackets under their signoff, like this:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b5d1e6ee761a109400e97ac6a1b91c57d0f6a43a
+
+Regards,
+
+James
+
 
