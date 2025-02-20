@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7477C021B3
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD9CCC021B1
 	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 16:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,59 +12,59 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Zg9TqkBWUtlYqKI0kTqM9WGsbClJXO8S/5dxvIXqVjg=; b=w+m3fuTdpQ/eVPLN1fOYwpqonb
-	BUpDGohwpTDgEiEzZUKtT/QfLkZdPv7XmAR5O4uAEuR5CKHMB2Bigitgvc2H/MTgX9TwVM3KDmaTN
-	Vb8ALguUE06fpi2zCT1FiiPQzih6n+Q7NewyNRsZy3qmMrgGP10hxrebKuRDH9bYVsd6mDNd0vsic
-	xMbRxrTqGXDCjSwysra3tRHyqA0LaphyKcHP3Aydj4ofkQOg7JRXeD5+PROt8Us5a7Jcyq8K5NVFm
-	K0NMAMLvcycDXnyYrp9IhaM0a69hvxRJa0w8wX1P1Jq9f04Ru87p/ryUXB0JTKoKX/x3NrNyDs6Dw
-	Bf9PyRBQ==;
+	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=; b=FNyzqctHuNyHAkSe0+foUsBOsy
+	e7L2bNSNdNN6pWYT3GJIVlyK8eYk3XIJdxfq78vcjtHI7/rHJqUrlssDZblQnoi0zTeK7VwGaKSkb
+	R5ZtVuKHIoY0ntbegDj5NpqA8k6GJwtn3swNujKUa1QhcqEdsLtjW3vUfpDpI66qk5aUMebcPrIc0
+	HwwhnqUXLWQ52/XUcIt980nTAhzqvnrCkUBUpM4clYjN3adbu+pqb2J7gLsc3A1SE9JZFw0FE82Cm
+	uByc1k1tx6FqCqSwzzbI1Ea0RQKpRHWwUuygsKSw0+8u4ey7IW0Ypk71YQUKd0R1jngbbmAKYeqLE
+	YkbbdxFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9qj-00000001zmK-2tbu;
+	id 1tl9qj-00000001zm5-1ImF;
 	Thu, 20 Feb 2025 16:56:33 +0000
 Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9q5-00000001zcZ-41Ur
+	id 1tl9of-00000001zAP-40LS
 	for kexec@lists.infradead.org;
-	Thu, 20 Feb 2025 16:55:55 +0000
+	Thu, 20 Feb 2025 16:54:27 +0000
 Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id A1BBB21186;
-	Thu, 20 Feb 2025 16:55:52 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTP id 7976721186;
+	Thu, 20 Feb 2025 16:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070552; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740070464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zg9TqkBWUtlYqKI0kTqM9WGsbClJXO8S/5dxvIXqVjg=;
-	b=t69T0NATPpXZOU2SA8VYkNz0WUA60d7ENH3ZlMqKl+QcuykmdEThkCXST2Sl+3Z+3avg0K
-	wBktJb7Iuy7TEVa9EVp5y17DJJJNISQDUUMEGJD1r1s2BFFtYhvOvFh8h/HDfLp5wGxW0i
-	rrO6jxlXRHRkOp/lEHfOPRo0ZNFdaag=
+	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
+	b=XTMerqX0GICjNsYCmpT3d86Y5d/iCOx3eeIgF+zW9pC0xqJUBLi1xpGj28SIdC6SbeWbMa
+	7NpY3W4Q9XcH8kNohCHJQ5QQWWzOPd1txXDLDLIIh5qQmdD73YynIG3U3SSssZMdl78yqh
+	Uc7N/GG8qI0ZFM7ZFs7VsucAXvt/wCU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070552;
+	s=susede2_ed25519; t=1740070464;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zg9TqkBWUtlYqKI0kTqM9WGsbClJXO8S/5dxvIXqVjg=;
-	b=8GLOAiAwgV61PAlnDUgNuZ79byMhByQu4gP4ibAQQGNRevOWgppNYgBu893Erf64B16Ktn
-	1ouARot+VJXZ8hCw==
+	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
+	b=eaoodYHMSTrDFPSZZoxEeoyhBJcAyVrRgb032l5UFSC5tZ7yzLRtWRtBEwYIhzM6LA/9La
+	Q5TByx/Su9H0/ZDw==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070552; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740070464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zg9TqkBWUtlYqKI0kTqM9WGsbClJXO8S/5dxvIXqVjg=;
-	b=t69T0NATPpXZOU2SA8VYkNz0WUA60d7ENH3ZlMqKl+QcuykmdEThkCXST2Sl+3Z+3avg0K
-	wBktJb7Iuy7TEVa9EVp5y17DJJJNISQDUUMEGJD1r1s2BFFtYhvOvFh8h/HDfLp5wGxW0i
-	rrO6jxlXRHRkOp/lEHfOPRo0ZNFdaag=
+	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
+	b=XTMerqX0GICjNsYCmpT3d86Y5d/iCOx3eeIgF+zW9pC0xqJUBLi1xpGj28SIdC6SbeWbMa
+	7NpY3W4Q9XcH8kNohCHJQ5QQWWzOPd1txXDLDLIIh5qQmdD73YynIG3U3SSssZMdl78yqh
+	Uc7N/GG8qI0ZFM7ZFs7VsucAXvt/wCU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070552;
+	s=susede2_ed25519; t=1740070464;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zg9TqkBWUtlYqKI0kTqM9WGsbClJXO8S/5dxvIXqVjg=;
-	b=8GLOAiAwgV61PAlnDUgNuZ79byMhByQu4gP4ibAQQGNRevOWgppNYgBu893Erf64B16Ktn
-	1ouARot+VJXZ8hCw==
-Date: Thu, 20 Feb 2025 17:55:52 +0100
+	bh=wakkuwf1ugz5t/UIuNizagYe9kFHhtgEfpZOsreDN3A=;
+	b=eaoodYHMSTrDFPSZZoxEeoyhBJcAyVrRgb032l5UFSC5tZ7yzLRtWRtBEwYIhzM6LA/9La
+	Q5TByx/Su9H0/ZDw==
+Date: Thu, 20 Feb 2025 17:54:24 +0100
 From: Jiri Bohac <jbohac@suse.cz>
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
@@ -73,8 +73,9 @@ Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	David Hildenbrand <dhildenb@redhat.com>,
 	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v2 4/5] kdump: wait for DMA to finish when using CMA
-Message-ID: <Z7demEmgm-D_fqi2@dwarf.suse.cz>
+Subject: [PATCH v2 3/5] kdump, documentation: describe craskernel CMA
+ reservation
+Message-ID: <Z7deQKy1F8BW1ibi@dwarf.suse.cz>
 References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -83,7 +84,7 @@ In-Reply-To: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
 X-Spamd-Result: default: False [-4.26 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.16)[-0.782];
+	NEURAL_HAM_SHORT(-0.16)[-0.785];
 	MIME_GOOD(-0.10)[text/plain];
 	ARC_NA(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -97,10 +98,10 @@ X-Spamd-Result: default: False [-4.26 / 50.00];
 	TO_DN_SOME(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email,dwarf.suse.cz:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250220_085554_142181_9BB8D3B6 
-X-CRM114-Status: GOOD (  16.15  )
+X-CRM114-CacheID: sfid-20250220_085426_136704_F9B8FB1C 
+X-CRM114-Status: GOOD (  16.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,83 +116,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When re-using the CMA area for kdump there is a risk of pending DMA into
-pinned user pages in the CMA area.
-
-Pages that are pinned long-term are migrated away from CMA, so these are not a
-concern. Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
-be the source or destination of a pending DMA transfer.
-
-Although there is no clear specification how long a page may be pinned without
-FOLL_LONGTERM, pinning without the flag shows an intent of the caller to
-only use the memory for short-lived DMA transfers, not a transfer initiated
-by a device asynchronously at a random time in the future.
-
-Add a delay of CMA_DMA_TIMEOUT_MSEC milliseconds before starting the kdump
-kernel, giving such short-lived DMA transfers time to finish before the CMA
-memory is re-used by the kdump kernel.
-
-Set CMA_DMA_TIMEOUT_MSEC to 1000 (one second) - chosen arbitrarily as both a
-huge margin for a DMA transfer, yet not increasing the kdump time
-significantly.
-
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Describe the new crashkernel ",cma" suffix in Documentation/
 ---
- include/linux/crash_core.h |  5 +++++
- kernel/crash_core.c        | 10 ++++++++++
- 2 files changed, 15 insertions(+)
+ Documentation/admin-guide/kdump/kdump.rst     | 19 +++++++++++++++++--
+ .../admin-guide/kernel-parameters.txt         | 14 ++++++++++++++
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 44305336314e..543e4a71f13c 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -56,6 +56,11 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
- /* Alignment required for elf header segment */
- #define ELF_CORE_HEADER_ALIGN   4096
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 5376890adbeb..3f7ff301c604 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -213,8 +213,7 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
+    kernel.
  
-+/* Time to wait for possible DMA to finish before starting the kdump kernel
-+ * when a CMA reservation is used
-+ */
-+#define CMA_DMA_TIMEOUT_MSEC 1000
+    Otherwise it should be the start of memory region reserved for
+-   second kernel using boot parameter "crashkernel=Y@X". Here X is
+-   start of memory region reserved for dump-capture kernel.
++   second kernel using boot parameter "crashkernel=Y@X". Here X is start of memory region reserved for dump-capture kernel.
+    Generally X is 16MB (0x1000000). So you can set
+    CONFIG_PHYSICAL_START=0x1000000
+ 
+@@ -315,6 +314,22 @@ crashkernel syntax
+ 
+             crashkernel=0,low
+ 
++4) crashkernel=size,cma
 +
- extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mstart,
- 				   unsigned long long mend);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 078fe5bc5a74..543e509b7926 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -21,6 +21,7 @@
- #include <linux/reboot.h>
- #include <linux/btf.h>
- #include <linux/objtool.h>
-+#include <linux/delay.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -97,6 +98,14 @@ int kexec_crash_loaded(void)
- }
- EXPORT_SYMBOL_GPL(kexec_crash_loaded);
- 
-+static void crash_cma_clear_pending_dma(void)
-+{
-+	if (!crashk_cma_cnt)
-+		return;
++   Reserves additional memory from CMA. A standard crashkernel reservation, as
++   described above, is still needed, but can be just big enough to hold the
++   kernel and initrd. All the memory the crash kernel needs for its runtime and
++   for running the kdump userspace processes can be provided by this CMA
++   reservation, re-using memory available to the production system's userspace.
++   Because of this, the CMA reservation should not be used if kdump is configured
++   to dump userspace memory - the re-used memory ranges won't be in the vmcore.
 +
-+	mdelay(CMA_DMA_TIMEOUT_MSEC);
-+}
++   This option increases the risk of a kdump failure: DMA transfers configured
++   by the first kernel may end up corrupting the second kernel's memory. This
++   reservation method is intended for systems that can't afford to sacrifice
++   enough memory for standard crashkernel reservation and where less reliable
++   kdump is preferrable to no kdump at all.
 +
- /*
-  * No panic_cpu check version of crash_kexec().  This function is called
-  * only when panic_cpu holds the current CPU number; this is the only CPU
-@@ -116,6 +125,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
- 		if (kexec_crash_image) {
- 			struct pt_regs fixed_regs;
+ Boot into System Kernel
+ -----------------------
+ 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..ea4d53435515 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -987,6 +987,20 @@
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
++	crashkernel=size[KMG],cma
++			[KNL, X86] Reserve additional crash kernel memory from CMA.
++			This reservation is usable by the first system's userspace,
++			so this should not be used if dumping of userspace
++			memory is intended. A standard crashkernel reservation,
++			as described above, is still needed to hold the crash
++			kernel and initrd.
++			This option increases the risk of a kdump failure: DMA
++			transfers configured by the first kernel may end up
++			corrupting the second kernel's memory. This reservation
++			method is intended for systems that can't afford to
++			sacrifice enough memory for standard crashkernel
++			reservation and where less reliable kdump is preferrable 
++			to no kdump at all.
  
-+			crash_cma_clear_pending_dma();
- 			crash_setup_regs(&fixed_regs, regs);
- 			crash_save_vmcoreinfo();
- 			machine_crash_shutdown(&fixed_regs);
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
 
 -- 
 Jiri Bohac <jbohac@suse.cz>
