@@ -4,103 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1CB6C021B3
-	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 16:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C51EC021B3
+	for <kexec@archiver.kernel.org>; Thu, 20 Feb 2025 17:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=; b=dOE7zJAQrAkXMZ1Zaaxr1t5clH
-	7ZjyhVQNJsfYAohqj31iXUxGw4BDaKwaih0Dw61VSltLxhb2fXFKoBlDLcm61sYDri04GVnwvmy36
-	kBD3M9PjyiGE3D9eZBnMRkohuhyiOagLJUfvThi19vz/AEMPEfv2OE1p25cglaxCZVLuAxRc9TmJR
-	I/KpUQqYwluyagngt+J/AcjR8KFndMj3/M732ruWW/+Y9UUdNs4BA6wEha7e3s/VmBldbT9DE6wrC
-	Hwqm3gu9rOG6yI9/ivX+xrJaPeOTqXoSSBh+J6rRfC0D+owamfu2fVzBK7t8IJhIbnoa7Ove6Qhdk
-	3AfpqPLQ==;
+	bh=S+lsw3J2GGZrkffZVS1uXbFw8jdnLUvAixzKeCH+EC0=; b=m8fhk+5ycpu8QGV3bS2zjndNM6
+	8AhVq6u/HhHnYFcqiQ+TSVS5Lyxw16JW/qhyLHi+fhQtScQXuPdkoHq5y4wstXXDryNx+YbjO20dN
+	4UrBiW1UzWtzv/92JyBMxB4NbT2kVoV+tYI9JdnYNuVlnjelV1vxexDw1zRNRXWAAX97kMODZxtFl
+	bR5OBFK1HX5AP3ifGAu+2wLARSXPAfSctKaCd+CexYjXeUxGGYGkdZejj2ApDW5f1L+vsU62/Lr1y
+	1BRo0+6DIPuuRt7VpompzefxUoFURggI/FBDcHPvzG6rPRLtrf+plJGo36ljCdvQ6VSNUaCUdfLkQ
+	1uu3TDDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9ro-000000020FT-1qbK;
-	Thu, 20 Feb 2025 16:57:40 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1tlAG7-0000000274j-3QaT;
+	Thu, 20 Feb 2025 17:22:47 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tl9rl-000000020EE-3axJ
+	id 1tlAG5-0000000273E-1T6t
 	for kexec@lists.infradead.org;
-	Thu, 20 Feb 2025 16:57:39 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 45FF721174;
-	Thu, 20 Feb 2025 16:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
-	b=WRAG8TLSypGQ5C466jsiybvF2rx1BbQ4YXGiULc5T1WjBBMQMMS52pS4+K2TNj/zsPM2sn
-	JuR6P5Qp3ib3PiWZf+v9N2AknxrG6LY+d9zj+cYuUNA8nul5lVGymKdByh3HwYuZtqhCwQ
-	mRPI/hNfy6iyTcAa49pm0LCISTL8XAQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070656;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
-	b=3qcjb+yB67/aGGYDFCnH2i57/Z4h7UfX8KLx9GCpinpge687TQPf0+n8Khrc12fdlN1TK7
-	tO/2SgvjOlBWMcBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
-	b=WRAG8TLSypGQ5C466jsiybvF2rx1BbQ4YXGiULc5T1WjBBMQMMS52pS4+K2TNj/zsPM2sn
-	JuR6P5Qp3ib3PiWZf+v9N2AknxrG6LY+d9zj+cYuUNA8nul5lVGymKdByh3HwYuZtqhCwQ
-	mRPI/hNfy6iyTcAa49pm0LCISTL8XAQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070656;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
-	b=3qcjb+yB67/aGGYDFCnH2i57/Z4h7UfX8KLx9GCpinpge687TQPf0+n8Khrc12fdlN1TK7
-	tO/2SgvjOlBWMcBg==
-Date: Thu, 20 Feb 2025 17:57:36 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v2 5/5] x86: implement crashkernel cma reservation
-Message-ID: <Z7dfAFIP2Ne0QFOy@dwarf.suse.cz>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+	Thu, 20 Feb 2025 17:22:46 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KH1ew6007899;
+	Thu, 20 Feb 2025 17:22:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=S+lsw3
+	J2GGZrkffZVS1uXbFw8jdnLUvAixzKeCH+EC0=; b=XYDRTG/pmvtz43XuqCR8Lk
+	q4wHnqTWDvJyI0a7mnMN/TMyrLAhH596y1MmXEgma9OFnlhI+iKKbjY6fviALDQn
+	6aiO/uZAbxz5/5aRiMeOEWEiQICjUbrSiNEyKH5g2+cThWluGSBhHTB5rF4df7Tf
+	hDRuP2ebQnkB42k2hPyuQzOgqQhFCh3B8YV8sWeAbl6Lk5d96FXd+LgPxIxC3YOA
+	7rhN9NYb2ZsL7YskeRvvtBbJ2uoUa4CkK++p6X+h9qI5Km6CTMYp61Twel/meDIq
+	L3BQnS0D9aQHN+1NRj8JmS2ayvrOgbf4/I3lnazhbl2AsEjXyDVeGdaaVEHLR7XQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa4bag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 17:22:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KF6sLU002343;
+	Thu, 20 Feb 2025 17:22:26 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03xb6d3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 17:22:26 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KHMPT129098640
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 17:22:25 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E5D558052;
+	Thu, 20 Feb 2025 17:22:25 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E475F58056;
+	Thu, 20 Feb 2025 17:22:23 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.68.26])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 17:22:23 +0000 (GMT)
+Message-ID: <c76a6a741b6f465d270153b65ea6f728383ca608.camel@linux.ibm.com>
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Thu, 20 Feb 2025 12:22:23 -0500
+In-Reply-To: <20250218225502.747963-3-chenste@linux.microsoft.com>
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+	 <20250218225502.747963-3-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
-X-Spamd-Result: default: False [-4.26 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.16)[-0.782];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo,dwarf.suse.cz:mid]
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9eyMENDAtdtjGXHKLQ0XI_TrwLnteDmW
+X-Proofpoint-GUID: 9eyMENDAtdtjGXHKLQ0XI_TrwLnteDmW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_07,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200119
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250220_085738_039891_2A63C044 
-X-CRM114-Status: GOOD (  17.66  )
+X-CRM114-CacheID: sfid-20250220_092245_428370_920AD4C4 
+X-CRM114-Status: GOOD (  16.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,111 +112,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Implement the crashkernel CMA reservation for x86:
-- enable parsing of the cma suffix by parse_crashkernel()
-- reserve memory with reserve_crashkernel_cma()
-- add the CMA-reserved ranges to the e820 map for the crash kernel
-- exclude the CMA-reserved ranges from vmcore
+Hi Steven,
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++----
- arch/x86/kernel/setup.c |  5 +++--
- 2 files changed, 25 insertions(+), 6 deletions(-)
+On Tue, 2025-02-18 at 14:54 -0800, steven chen wrote:
+> Currently, the mechanism to map and unmap segments to the kimage
+> structure is not available to the subsystems outside of kexec.=C2=A0 This
+> functionality is needed when IMA is allocating the memory segments
+> during kexec 'load' operation.=C2=A0 Implement functions to map and unmap
+> segments to kimage.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 340af8155658..70823fa9abea 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -163,10 +163,10 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 		return NULL;
- 
- 	/*
--	 * Exclusion of crash region and/or crashk_low_res may cause
--	 * another range split. So add extra two slots here.
-+	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
-+	 * may cause range splits. So add extra slots here.
- 	 */
--	nr_ranges += 2;
-+	nr_ranges += 2 + crashk_cma_cnt;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -184,6 +184,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- static int elf_header_exclude_ranges(struct crash_mem *cmem)
- {
- 	int ret = 0;
-+	int i;
- 
- 	/* Exclude the low 1M because it is always reserved */
- 	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
-@@ -198,8 +199,17 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- 	if (crashk_low_res.end)
- 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
- 					      crashk_low_res.end);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
-+					      crashk_cma_ranges[i].end);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-@@ -352,6 +362,14 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 		add_e820_entry(params, &ei);
- 	}
- 
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ei.addr = crashk_cma_ranges[i].start;
-+		ei.size = crashk_cma_ranges[i].end -
-+			  crashk_cma_ranges[i].start + 1;
-+		ei.type = E820_TYPE_RAM;
-+		add_e820_entry(params, &ei);
-+	}
-+
- out:
- 	vfree(cmem);
- 	return ret;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 853afde761a7..90e10a18f0c9 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -471,7 +471,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- 
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long crash_base, crash_size, low_size = 0;
-+	unsigned long long crash_base, crash_size, low_size = 0, cma_size = 0;
- 	char *cmdline = boot_command_line;
- 	bool high = false;
- 	int ret;
-@@ -481,7 +481,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
-@@ -492,6 +492,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
- 				    low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- static struct resource standard_io_resources[] = {
+Obviously up to now Kexec was mapping the segments. Missing from this patch=
+ description is
+the reason "why" these functions are needed now.  It's not enough to say "i=
+s needed when
+IMA is allocating the memory segments during kexec 'load' operation".  The =
+question is why
+does "IMA" need to allocate the memory segments.  Don't make the kexec/kexe=
+c_dump
+maintainers guess.
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+Refer to the section "Describe your changes" in
+https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
+
+>=20
+> Implement kimage_map_segment() to enable mapping of IMA buffer source
+> pages to the kimage structure post kexec 'load'.=C2=A0 This function,
+> accepting a kimage pointer, an address, and a size, will gather the
+> source pages within the specified address range, create an array of page
+> pointers, and map these to a contiguous virtual address range.=C2=A0 The
+> function returns the start of this range if successful, or NULL if
+> unsuccessful.
+>=20
+> Implement kimage_unmap_segment() for unmapping segments
+> using vunmap().
+>=20
+> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+Again, no such thing as an "Author" tag.  Refer to the comments on 1/7.
+
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+As previously requested, please add the Cc's inline here and in all the kex=
+ec/kdump
+related patches:
+
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>=20
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+
+thanks,
+
+Mimi
 
 
