@@ -4,66 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 976F1C021B3
-	for <kexec@archiver.kernel.org>; Fri, 21 Feb 2025 21:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2B91C021B2
+	for <kexec@archiver.kernel.org>; Sun, 23 Feb 2025 09:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0lziOMlEQrQGXDNHLwwuurA3vZdazKZBrZ/C9W/SZGI=; b=eQWdJVRtZvsVrkQYOA7aJE0zIk
-	ZZKZ4BpH2SHAU5IcZep0FblXpg8k472PZRcP5/NZ9fcJs+KuHwNm2Yo6vL2D/eEO69BiDnWhIUGVj
-	sR+03T5J5C/Z2b3H6QvvFZVA2053sxl5RnAP8pZFOu0hlGsrv3ldHTGln8nPdkazPX8QkbvEJxtaH
-	MURdSjBL0kQrd6uZFEaG07mgFJMhvVUVzwxSTNAihRd8RO2VQEP+JNzxeFLURXFsb6phZo6EkGlfB
-	AERGq50iqxsu1VzCtBRw32+p2zyOVZTC91JcaZGtQ7VcPukDu1NG/OM/87dUnxQhP2+oTk45gJG25
-	23up0Psg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lkOwpvyn5ZXwqceHj9vbT7VPfFI3uFx17BjfOibXqw4=; b=bKXREO6A9twQ0Jmx9MI5zkTFaE
+	MlMKiIPW5nePl/grdi2WJP1FmmicjULMCwmMGKppLZmP/sola0lWIgVGMFXOTmiglkG97VIIuw1j2
+	CvngKLplqabRo7KTNjn5qRW50gcDbLsQdzMnTqlkkPx2RI3vdSiyVy6e/Ea6XCCzKWAhTvmKlDCvj
+	knEFkImVdqbfeGpNkTv2dNzhIh2z30ObBtI8c5fMUu6nLcu/EBCWByZ7GQylqzR9mu67maUUgZahe
+	RawIZscUDDaAC3Qr5DpllZudNw3vidaWY8S5ajAArjy6KMQdAdhK+lGnUv4hZGy49v1DpzKJA74fZ
+	Y7LbuIbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tlaIx-00000006t64-0oPf;
-	Fri, 21 Feb 2025 21:11:27 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tlaHe-00000006suq-46PK
+	id 1tm8fs-0000000AoRb-1TDn;
+	Sun, 23 Feb 2025 09:53:24 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tm8fn-0000000AoQ0-1sdq
 	for kexec@lists.infradead.org;
-	Fri, 21 Feb 2025 21:10:08 +0000
-Received: from [10.17.64.59] (unknown [131.107.8.59])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A64022053679;
-	Fri, 21 Feb 2025 13:10:05 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A64022053679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740172206;
-	bh=0lziOMlEQrQGXDNHLwwuurA3vZdazKZBrZ/C9W/SZGI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VIxqpjej/OSCHR0ZVlCRJfVuJEX+zyZGmdXuTGtc1kP3oPNhC1FEG99PJyxGUstA5
-	 oN8r/pRyJtT2u2tnzk7FsP3EuVI3zupdoA1Fy2QZ1/YX5lmPBmcQTOftCRMvSqO8VW
-	 NYJ5nOEogIpGUB8LdfY8OMe6IcTCP+p3b+HnvW1s=
-Message-ID: <7903ffe0-75f9-49f8-b638-9a4964897676@linux.microsoft.com>
-Date: Fri, 21 Feb 2025 13:10:04 -0800
+	Sun, 23 Feb 2025 09:53:21 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id A01C25C6691;
+	Sun, 23 Feb 2025 09:52:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5E7C4CEDD;
+	Sun, 23 Feb 2025 09:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740304398;
+	bh=K7CO8Lrs4keAG8R3V4xMDGh7oNAIoEsVthwZm0p0UA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ot35b3B9o74y0ZW1yh9Xu17CwBgDZtTIRFy5wUdBX2QLt/goPhUli1fT0/nJTthvW
+	 sKwCwWph3guEFEim3dXjdupAMUVxVTJg1v36mgWmiZvcN7+vnUsYGKMu1TJyTkc8nC
+	 RFH+mGB0RClDnEONs7RrccKyLTuyj36Ft21hdmP5wOG5LkJgmQwT5vzC4K+yoyy+xB
+	 dhBM7JtlDEQ2FzOocYA+zmY7BcTM5r8Fj8qdpmX3y0SNtd2K9TASYlUP/7OxT+xI+/
+	 +DrLTruIU1VrBlfhtMMWtl1xzv09vrgEw7uFnhFN2SMMzGv4KgRuD+TUM5TW+Z4Owi
+	 DvVqMVhZTHF3Q==
+Date: Sun, 23 Feb 2025 10:53:07 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: Re: [PATCH v6 2/7] x86/kexec: Debugging support: load a GDT
+Message-ID: <Z7rwA-qVauX7lY8G@gmail.com>
+References: <20250115191423.587774-1-dwmw2@infradead.org>
+ <20250115191423.587774-3-dwmw2@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 7/7] ima: measure kexec load and exec events as
- critical data
-To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
- <20250218225502.747963-8-chenste@linux.microsoft.com>
- <436c898a39a9bdaa2ab24fc111b50d3c885aa028.camel@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <436c898a39a9bdaa2ab24fc111b50d3c885aa028.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250115191423.587774-3-dwmw2@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250221_131007_060276_2B0A789D 
-X-CRM114-Status: GOOD (  21.57  )
+X-CRM114-CacheID: sfid-20250223_015319_533787_FA12C8A3 
+X-CRM114-Status: GOOD (  19.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,136 +82,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2/20/2025 4:46 PM, Mimi Zohar wrote:
-> On Tue, 2025-02-18 at 14:55 -0800, steven chen wrote:
->> The amount of memory allocated at kexec load, even with the extra memory
->> allocated, might not be large enough for the entire measurement list.  The
->> indeterminate interval between kexec 'load' and 'execute' could exacerbate
->> this problem.
->>
->> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->> measured as critical data at kexec 'load' and 'execute' respectively.
->> Report the allocated kexec segment size, IMA binary log size and the
->> runtime measurements count as part of those events.
->>
->> These events, and the values reported through them, serve as markers in
->> the IMA log to verify the IMA events are captured during kexec soft
->> reboot.  The presence of a 'kexec_load' event in between the last two
->> 'boot_aggregate' events in the IMA log implies this is a kexec soft
->> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
->> after kexec soft reboot implies missing events in that window which
->> results in inconsistency with TPM PCR quotes, necessitating a cold boot
->> for a successful remote attestation.
->>
->> The 'kexec_load' event IMA log can be found using the following command:
->> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
->>     grep kexec_load
->>
->> The 'kexec_load' event IMA log can be found using the following command:
-> -> kexec_execute
->
->> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
->>     grep kexec_execute
-> These critical data events are displayed as hex encoded ascii in the
-> ascii_runtime_measurement_list.  Verifying the critical data hash requires calculating the
-> hash of the decoded ascii string.  For example:
->
-> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | grep  kexec_load
-> | cut -d' ' -f 6 | xxd -r -p | sha256sum
->
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->> ---
->>   security/integrity/ima/ima.h       |  6 ++++++
->>   security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
->>   security/integrity/ima/ima_queue.c |  5 +++++
->>   3 files changed, 32 insertions(+)
->>
->> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
->> index 4428fcf42167..1452c98242a4 100644
->> --- a/security/integrity/ima/ima.h
->> +++ b/security/integrity/ima/ima.h
->> @@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key
->> *key,
->>   				   unsigned long flags, bool create);
->>   #endif
->>   
->> +#ifdef CONFIG_IMA_KEXEC
->> +void ima_measure_kexec_event(const char *event_name);
->> +#else
->> +static inline void ima_measure_kexec_event(const char *event_name) {}
->> +#endif
->> +
->>   /*
->>    * The default binary_runtime_measurements list format is defined as the
->>    * platform native format.  The canonical format is defined as little-endian.
->> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->> index 6c8c203ad81e..8d0782e51ffa 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -17,6 +17,8 @@
->>   #include "ima.h"
->>   
->>   #ifdef CONFIG_IMA_KEXEC
->> +#define IMA_KEXEC_EVENT_LEN 256
->> +
->>   static struct seq_file ima_kexec_file;
->>   static void *ima_kexec_buffer;
->>   static size_t kexec_segment_size;
->> @@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
->>   	ima_reset_kexec_file(sf);
->>   }
->>   
->> +void ima_measure_kexec_event(const char *event_name)
->> +{
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->> +	size_t buf_size = 0;
->> +	long len;
->> +
->> +	buf_size = ima_get_binary_runtime_size();
->> +	len = atomic_long_read(&ima_htable.len);
->> +
->> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		  "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
->> +		 "ima_runtime_measurements_count=%ld;",
->> +		 kexec_segment_size, buf_size, len);
->> +
->> +	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event,
->> +				  strlen(ima_kexec_event), false, NULL, 0);
-> As previously mentioned, scnprintf() returns the length.  No need to use strlen() here.
->
-> Mimi
->
->> +}
->> +
->>   static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   {
->>   	/*
->> @@ -58,6 +78,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   out:
->>   	ima_kexec_file.read_pos = 0;
->>   	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
->> +	ima_measure_kexec_event("kexec_load");
->>   
->>   	return 0;
->>   }
->> diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
->> index 3dfd178d4292..6afb46989cf6 100644
->> --- a/security/integrity/ima/ima_queue.c
->> +++ b/security/integrity/ima/ima_queue.c
->> @@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
->>   			       unsigned long action,
->>   			       void *data)
->>   {
->> +#ifdef CONFIG_IMA_KEXEC
->> +	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
->> +		ima_measure_kexec_event("kexec_execute");
->> +#endif
->> +
->>   	ima_measurements_suspend();
->>   
->>   	return NOTIFY_DONE;
 
-Thanks, I will update in next version
+* David Woodhouse <dwmw2@infradead.org> wrote:
 
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> There are some failure modes which lead to triple-faults in the
+> relocate_kernel function, which is fairly much undebuggable for normal
+> mortals.
+> 
+> Adding a GDT in the relocate_kernel environment is step 1 towards being
+> able to catch faults and do something more useful.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index af2cd06ff318..c62f03808f18 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -39,6 +39,18 @@ SYM_DATA(kexec_pa_table_page, .quad 0)
+>  SYM_DATA(kexec_pa_swap_page, .quad 0)
+>  SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
+>  
+> +#ifdef CONFIG_KEXEC_DEBUG
+> +	.balign 16
+> +SYM_DATA_START_LOCAL(kexec_debug_gdt)
+> +	.word   kexec_debug_gdt_end - kexec_debug_gdt - 1
+> +	.long   0
+> +	.word   0
+> +	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
+> +	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
+> +	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
+> +SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
+> +#endif /* CONFIG_KEXEC_DEBUG */
+
+Yeah, so is there any reason (other than paranoia) why the early-early 
+GDT and IDT shouldn't be unconditional? There's many ways for such an 
+approach to bitrot, it's much better to not hide it behind a 
+default-disabled debug option...
+
+Some of the other bits, like the hard-coded serial debugging 
+assumptions, probably need to be behind the debug option - but much of 
+the new debug mechanism looks safe and generic and can be always-on, 
+IMHO.
+
+This would also throw regressions back into the face of whoever manages 
+to introduce them, ideally. ;-)
+
+Thanks,
+
+	Ingo
 
