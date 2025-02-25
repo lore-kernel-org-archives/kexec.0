@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8EE3FC3600B
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 15:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25A7AC36009
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 15:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=A4GvaqVIL/hNKQlnj0DT9cN3mMKxJVdcE+NJpBmVvb8=; b=FdqbC0dPOxsHiqDGplZDIfzz4Q
-	pjqGv/myRlHGWM6LbyX62ct76LaURCfWt8C81DofsZ9tj3XaZN1pX2q9TqM/S1GGhCM8ha9HJM4O9
-	kaBuaHGyOMgiRrdA7dyjJiud4L9/du1eL+kjks/WMlhh/rZENR35Md8B/0Hf38PvV7T9iOnBtBsvX
-	QKDhZfKHVKPPyCOcA9Dh+dwZ3Vf63XfjrsMrXHs5OgJrZKSNdjn73EQGpozou2fozYqqYqEp35sK0
-	1JH6r3Vd5GJIq4MHWXFUqzsZ6QgT06aL1he8WX3/jZEmNvKKwe3hlIELaOcZ720fmdsl0g2YVoz/X
-	mUPPKkuA==;
+	bh=Zwmz29OaB4anSC3HDaaMnvvDxasPenPirxVhby3n1zg=; b=RSO10eALglKD0G0yxaz2STkYMR
+	e6izdVMYl7fKFbjlH5qvfKDqC8iV+xVFuZkn6vz/9k+72hK8gRPRG44MLlZTltOVC6O56muiWKG/j
+	QPxohqwRUYwNEuZ2N27nQzyC3t5RLgoxvgkkPr5YuXfjcHFFvAPYfbAyTSU4MI/DlxkoGKqnBcuIC
+	HpTRoxJzvORHbXa7P1b+ptjcx5kZHz3ZtKHqVOylEy1RNhPnPSarztFhQDMIgRWE1xhFk+51Hx+d+
+	s1KbDx43K0dbx3ttIxbfRKh7P3Jl/LhIykNCv7sZO01LGadrL3MYzAPMvnFijIvR3HgutgX3x+Noz
+	/mlWLmKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvHRz-0000000CU1k-0uNh;
+	id 1tvHRz-0000000CU2a-39DK;
 	Thu, 20 Mar 2025 15:04:51 +0000
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+Received: from mail-ej1-x636.google.com ([2a00:1450:4864:20::636])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmNJn-0000000C4OU-18Ao;
-	Mon, 24 Feb 2025 01:31:36 +0000
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so5560279a12.0;
-        Sun, 23 Feb 2025 17:31:34 -0800 (PST)
+	id 1tmiNY-0000000FZUL-04hm;
+	Tue, 25 Feb 2025 00:00:54 +0000
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-abec8c122e4so129552566b.1;
+        Mon, 24 Feb 2025 16:00:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740360693; x=1740965493; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1740441650; x=1741046450; darn=lists.infradead.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A4GvaqVIL/hNKQlnj0DT9cN3mMKxJVdcE+NJpBmVvb8=;
-        b=X1MVpz5IvdD3JyFjiq4k8Hu200l0vQa4R+b0ABs4h5WENUUMfHqKE3vlx0CzVBsOWV
-         JC7W2rYixVUsN+fvoOuF21txuLgtp4Ee4RvvInsfSU5qNwtmsS5NGre9ZTS07p3Y+s7H
-         5gHQbXOgOVSa3FSi9vV1vMDYapabjWiMNFMy0pzI7tnoA87AKrM3Iw/SPbYKc0bfgbIS
-         dETxff06ggJENSp+l5173qwTEWIcNRFGK8TTOMJ+z6f44cqNecYjrOC+M/iiI3MFB3l8
-         VY1EuCG9uLuCQ9aPSOEdfdkm7WJtInG86BAWN4PZgdU5HsQ2LgaWhHC1LD1ePjt2ExBi
-         UI7w==
+        bh=Zwmz29OaB4anSC3HDaaMnvvDxasPenPirxVhby3n1zg=;
+        b=lt+EILZhEKRI/ojsIYkVjvXVTRocAhVdoNXzeTPlbkOvH/w+4UoaFuWR4W9He1qzQb
+         lFenVWYyXm37Hsqw2o51+0pqnm9Z3lcrv2TTQVjSb46i1Cl+2HwiskOr5RZMSBNyX22c
+         f9Je9uq3ZmfxA/asQ64bzC+HKzVKRqUQd/qlEwd6R3d5WRReZLc4AxRnOEv05PYDViWW
+         OZMZzYlXFCID5dODtLUOVDI1aO8uKObV3QynGlm4vPC6yeoNIRlUjmjz9rOTwfZGMRmS
+         TWh1XcGbwwpGsGLEE1JPf65UD6dSwj629CcSS9Lv482iO7LbuZcpclkr8zG8PvmsQPyu
+         gPZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740360693; x=1740965493;
+        d=1e100.net; s=20230601; t=1740441650; x=1741046450;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=A4GvaqVIL/hNKQlnj0DT9cN3mMKxJVdcE+NJpBmVvb8=;
-        b=kmEgXlbe3g39zLTebS/uNUvlrYtXR8gubXwbibI+gazilsYUMHBaYtkIR22NP3qaRT
-         jGRaDOExGi1XEfTnUstpn2cTwnGOPRIcWcJok44aTQqD0+YaNsNwXw6Yz3dLivWkLWNQ
-         7j/8JxquOauGK5sZF+bG3pfngo4H/mLEMBzWD0sknafP7I3OXksZoVuwLSMj5CAoBTCS
-         3lFIcZ+0Tk8auqHCtCjr5W7c8v4AzmeE3xaBcZTeoCnTWxnVzgLU9kXga9iudyeAno03
-         wFFftqVoisNiu71UQrhSBLA8WO5UiepDvy1EUviZ2oMktaxZ3Kb6Up0wZgwdBaH/7NBs
-         hYsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVE2KqNUQidrbuWklOFttPc+CQG4gyeNdRdiCYR3flqHBsYF5sjQVXbcCx9GB7VomRLVMlXlN0K5GCFhaGX6UeIkg==@lists.infradead.org, AJvYcCX1Gl+X79E0Ati6nW10sWl8UCHDcGRsdCQ0svke/x3Z8eROx4/b8N2FazwxPkI2HI/hhwKzCg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy0vBsDDnfKKNbGZBFigjvwb2dBkpzZ1IxtfBcqXfbGqrB1aW3y
-	HmhnNzBAFcrBhqRwn4Tawh6a93D3KSHTphZiSxusetZ24TKSTMU2
-X-Gm-Gg: ASbGncuWsbOr8JQLEJAfDriRcgQ7c9cL9KkJ3tNhNuwpHsduj7NmIzwFYfKoGuOaE20
-	CVfRB47ocTlvp49umfkZ7WX99/5z5wLetfKM9zjPXDGdJD9BXFBqM5NIIfJwquIznxMobAhjNSa
-	XwXjF9hAWdx/CBJBc7Ti8LQKD+1i+WgWRx7dstpWHnXE+oPXXO2w+tKfAinK4jn+MTDXlztS0ic
-	hX/19so4gBb0M1s1HgN9RbXloDmRVtfVEUJUPO3d0UlmFEPi0T8xlEN5cxfHmh4y0M3XhEU4c80
-	TTI1BakL3ziMRZFCXGg6fA6oSg==
-X-Google-Smtp-Source: AGHT+IHSNuXjvZ6j34bY7irzKgYOPZ2Pc9eRXhFT7vf6gvwUpLsnEqOodUyWWZF1htL/xJzW8ObUNw==
-X-Received: by 2002:a05:6402:4313:b0:5de:4b81:d3fd with SMTP id 4fb4d7f45d1cf-5e0b70fa0efmr10728444a12.13.1740360692719;
-        Sun, 23 Feb 2025 17:31:32 -0800 (PST)
+        bh=Zwmz29OaB4anSC3HDaaMnvvDxasPenPirxVhby3n1zg=;
+        b=tkncSqHE5zyxuvJcLgn/fETLT7+vDe5oi9QpCRIB3VRjcmEwoKDo93B7b2BJ7c2Xw0
+         A3tXdZQJ1dL5CLiCbCvWb6TMMxgIFIeD69oVIkQmJPrvPFwNqu9zfDQwNrjhHqqsDnr+
+         n4TCas/vUPpzyLsOAJh1Htej0zKMWu+1EH2efawZ9wXznPYTmMW3as4aDvgS0imVMcgu
+         vzdgiKBcYcKWLXBvkmsyjK+T9tYRfKUCHbwyogXOjqy+9yYVw67AkyEickKZXXrvUwhM
+         9738CgNkwzqG+1zVbSOZK8NR2+omjqQHY/NTXzrKkieVy33ncZZnzjC1WtGPeKrMfkNL
+         SOxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJn5EDyJ0cJBsEHiKIHe5QVW/MM8cARySg+W9InQ5R1JhGghSHUJWHX7ZYjaqZNUfCeupOk88U5XIFgsbKUwZuQg==@lists.infradead.org, AJvYcCXiJaHqEUNqD45t6XW45mT+Ji7RSly01DouFA794KbkBQq/71D0cqM+XZWlq9gklPo4wwmPvA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxSyQYZyvMuUJdF0lseHhVEVBzT5nO2KGS/slwgexRVClxMruCK
+	eBvfMEP0966mM8PtTn3KdVv7ihk8hzTharYK3r7Q5GxGKUsPpXaK
+X-Gm-Gg: ASbGncse6j6OjASOmE+O8vUxUGz7fR70gr1rZZozVV2stsYbNRr9pY7C/xSHuP6KGXK
+	B5oBSV+LwUMcrbg2UpXxHtCgs8IwrynBbwa4b8elCzycse6wsUcuZnHE//iASnq+Ar94uB3OWr/
+	Ni4TAJUnxsIpHNLGi5rZm72L01M86bAqoPuczF6/Ra7V7njedRqibTHk/xsdB14gxro2xaXlQUH
+	xbqDwb8e6KW7i/8Yc+yJze4hxB9xgCyNSj8FtjmPA0ivQqHBAforZxYay0iJ8vug5T+nUq0r6QN
+	DTm/AQSI9NpIvB4Ypea6qzP2NQ==
+X-Google-Smtp-Source: AGHT+IHCiDeg8iTtlMHBTT+8rsM3bDbDCpBQksJY/HtiteE5vEuZdMawubgKL7nC7L+KAJkK6uv0bg==
+X-Received: by 2002:a17:906:2c4b:b0:abe:bfdd:e68c with SMTP id a640c23a62f3a-abebfdde8f5mr390505766b.4.1740441650101;
+        Mon, 24 Feb 2025 16:00:50 -0800 (PST)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c43a0sm17589157a12.28.2025.02.23.17.31.31
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1da4892sm42880766b.82.2025.02.24.16.00.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2025 17:31:31 -0800 (PST)
-Date: Mon, 24 Feb 2025 01:31:31 +0000
+        Mon, 24 Feb 2025 16:00:49 -0800 (PST)
+Date: Tue, 25 Feb 2025 00:00:48 +0000
 From: Wei Yang <richard.weiyang@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
@@ -101,20 +101,20 @@ Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
 	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <20250224013131.fzz552bn7fs64umq@master>
+Subject: Re: [PATCH v4 12/14] x86: Add KHO support
+Message-ID: <20250225000048.f2nmfn5isuh3fn6s@master>
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
- <Z7WHL_Xqgoln9oLg@kernel.org>
+ <20250206132754.2596694-13-rppt@kernel.org>
+ <20250224071355.xsl2dbupda4dhfzl@master>
+ <Z7yD9g1AgtUUfKr0@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7WHL_Xqgoln9oLg@kernel.org>
+In-Reply-To: <Z7yD9g1AgtUUfKr0@kernel.org>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250223_173135_314234_AA2E936A 
-X-CRM114-Status: GOOD (  28.08  )
+X-CRM114-CacheID: sfid-20250224_160052_073047_27DB573C 
+X-CRM114-Status: GOOD (  20.19  )
 X-Mailman-Approved-At: Thu, 20 Mar 2025 08:04:44 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -131,91 +131,64 @@ Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 19, 2025 at 09:24:31AM +0200, Mike Rapoport wrote:
->Hi,
->
->On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
->> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
->> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> >
->> >to denote areas that were reserved for kernel use either directly with
->> >memblock_reserve_kern() or via memblock allocations.
->> >
->> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> >---
->> > include/linux/memblock.h | 16 +++++++++++++++-
->> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
->> > 2 files changed, 39 insertions(+), 9 deletions(-)
->> >
->> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> >index e79eb6ac516f..65e274550f5d 100644
->> >--- a/include/linux/memblock.h
->> >+++ b/include/linux/memblock.h
->> >@@ -50,6 +50,7 @@ enum memblock_flags {
->> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
->> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
->> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
->> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
->> 
->> Above memblock_flags, there are comments on explaining those flags.
->> 
->> Seems we miss it for MEMBLOCK_RSRV_KERN.
->
->Right, thanks!
-> 
+On Mon, Feb 24, 2025 at 04:36:38PM +0200, Mike Rapoport wrote:
+>On Mon, Feb 24, 2025 at 07:13:55AM +0000, Wei Yang wrote:
+>> On Thu, Feb 06, 2025 at 03:27:52PM +0200, Mike Rapoport wrote:
+>> >From: Alexander Graf <graf@amazon.com>
+>> [...]
+>> >diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>> >index 82b96ed9890a..0b81cd70b02a 100644
+>> >--- a/arch/x86/kernel/e820.c
+>> >+++ b/arch/x86/kernel/e820.c
+>> >@@ -1329,6 +1329,24 @@ void __init e820__memblock_setup(void)
+>> > 		memblock_add(entry->addr, entry->size);
+>> > 	}
 >> > 
->> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
->> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->> > again:
->> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
->> > 					    flags);
->> >-	if (found && !memblock_reserve(found, size))
->> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
+>> >+	/*
+>> >+	 * At this point with KHO we only allocate from scratch memory.
+>> >+	 * At the same time, we configure memblock to only allow
+>> >+	 * allocations from memory below ISA_END_ADDRESS which is not
+>> >+	 * a natural scratch region, because Linux ignores memory below
+>> >+	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+>> >+	 * allocations, we must allocate real-mode trapoline below
+>> >+	 * ISA_END_ADDRESS.
+>> >+	 *
+>> >+	 * To make sure that we can actually perform allocations during
+>> >+	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+>> >+	 * so we can allocate from there in a scratch-only world.
+>> >+	 *
+>> >+	 * After real mode trampoline is allocated, we clear scratch
+>> >+	 * marking from the memory below ISA_END_ADDRESS
+>> >+	 */
+>> >+	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+>> >+
 >> 
->> Maybe we could use memblock_reserve_kern() directly. If my understanding is
->> correct, the reserved region's nid is not used.
+>> At the beginning of e820__memblock_setup() we call memblock_allow_resize(),
+>> which means during adding memory region it could double the array. And the
+>> memory used here is from some region just added.
 >
->We use nid of reserved regions in reserve_bootmem_region() (commit
->61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
->know the distribution of reserved memory among the nodes before
->memmap_init_reserved_pages().
-> 
->> BTW, one question here. How we handle concurrent memblock allocation? If two
->> threads find the same available range and do the reservation, it seems to be a
->> problem to me. Or I missed something?
->
->memblock allocations end before smp_init(), there is no possible concurrency.
+>There are large KHO scratch areas that will be used for most allocations.
+>Marking the memory below ISA_END_ADDRESS as KHO scratch is required to
+>satisfy allocations that explicitly limit the allocation to ISA_END_ADDRESS,
+>e.g the real time trampoline.
 > 
 
-Thanks, I still have one question here.
+Thanks, I see you point. We would add memory region during kho_populate() and
+mark it scratch.
 
-Below is a simplified call flow.
-
-    mm_core_init()
-        mem_init()
-            memblock_free_all()
-                free_low_memory_core_early()
-                    memmap_init_reserved_pages()
-                        memblock_set_node(..., memblock.reserved, )   --- (1)
-                    __free_memory_core()
-        kmem_cache_init()
-            slab_state = UP;                                          --- (2)
-
-And memblock_allloc_range_nid() is not supposed to be called after
-slab_is_available(). Even someone do dose it, it will get memory from slab
-instead of reserve region in memblock.
-
-From the above call flow and background, there are three cases when
-memblock_alloc_range_nid() would be called:
-
-  * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
-  * If it is called after (2), we don't touch memblock.reserved.
-  * If it happens between (1) and (2), it looks would break the consistency of
-    nid information in memblock.reserved. Because when we use
-    memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
-
-So my question is if the third case happens, would it introduce a bug? If it
-won't happen, seems we don't need to specify the nid here?
+>> But with KHO, I am afraid it would fail?
+>> 
+>> > 	/* Throw away partial pages: */
+>> > 	memblock_trim_memory(PAGE_SIZE);
+>> > 
+>> 
+>> -- 
+>> Wei Yang
+>> Help you, Help me
+>
+>-- 
+>Sincerely yours,
+>Mike.
 
 -- 
 Wei Yang
