@@ -4,85 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD894C021B2
-	for <kexec@archiver.kernel.org>; Tue, 25 Feb 2025 07:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E29FC021B2
+	for <kexec@archiver.kernel.org>; Tue, 25 Feb 2025 18:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=a+nNbrVcpzRfg0cVt9oM4NlAg5n7LMGEi6yC9l2ygE4=; b=eK8bFyIPGlr0w+ZXgdba3rPpHo
-	BvRDNahu5xWZVPRIF44AisJwWVBv+yRS7/lpf5RsRmlBLgL7nobVVy4gj7P3S5znPpQzBVeIegBdo
-	QeigEZdBZDHD43VnzrLK65ooSV7MvmO1maqZAiV/Y/QYnlGM3vA2MI4PC0Ep2W/PO33+Cton3ht/Q
-	HowHfH5Bi/B9p+lKorK94VmRYQBmMiQpLvSLL2Us2bwsb/IwlRZiKuJzPvL6gPybQvEHiCiqL8e6+
-	tKg0iNNZEmitzCIWuf/DRKmVme1I7JzkNU2LykUxkTKa4I7q5mivNS96FVH9qskCmacWC58gCxJPb
-	F3gRejpw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oAPMpgeQTX575axIRAvAGNwitPSc2FROHu2Kj3FuMr4=; b=RFyWye7PaGeA4GgQ2aRLEhearr
+	A/a1BevcFo8qaNbuMKqcVGMbvpXFw5sPV4px//s4XnadOtw1nghlb+IFLEfUgAlcoX4AvJ9NxrCkA
+	88IvSlXO+gNr4YSN1strXOjn2Dr9SVmax0tqG4FiBqTxKRMoZoDe5byAKdoUqVHVhwa3r3gt1GzNu
+	mA2F71/MltGSRfOLSiFmeAMMOMpFUlaBjuq24Y5yDP4y76rqzoN+OtplxO5+fstMFjda2aqldQIKW
+	eSA0HKgrO95wV8pftJK8VQRxQufARJKYV5nWD1fXcYK3L0wUwiL6XathAA0iEoNBFnxmRD9htbg1y
+	/YJN32JQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmphR-0000000GGEm-1hPN;
-	Tue, 25 Feb 2025 07:49:53 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmpfi-0000000GFsj-0f1E;
-	Tue, 25 Feb 2025 07:48:06 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id F0F7C6122F;
-	Tue, 25 Feb 2025 07:47:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7196C4CEDD;
-	Tue, 25 Feb 2025 07:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740469685;
-	bh=eClZUkFpGoFoPisFcTGx3FOMVVxAN549qNzYuXDaN6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MfehpgzAULJOLOZKi9leXW7NoihGeIwZGfgqqDeu5KiV1mGWrDwPVnYfTRgxdvz/x
-	 eUEiMbxM3XxYo/gmkSSg4xx8xTFkRQppUlh3HUxKONPfFFg/CDnfnacUmmTxgJ/Nl0
-	 p03c6jGvE33coM+dHriSIwpAGcEALD6rf9GR0yiK3xOwkPBH/7Aw7fEccJA5pPsujz
-	 ioZNQPMfXKd7AoR2Kqkh+jT67yt7GirH7eFeS9NW11qqcNBhAVIKkRdeHuNLA4FcsI
-	 VWFcsDgf2SamOyzaQaxOBPvKzWILeKBO0pYTSGt//hRXbLnUc8avjE5frZYFP0WbVU
-	 ypiGxCjITbKtg==
-Date: Tue, 25 Feb 2025 09:47:44 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 03/14] memblock: Add support for scratch memory
-Message-ID: <Z711oEMpogAHohs8@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-4-rppt@kernel.org>
- <20250224025034.g4htzqgm3r3ja4yy@master>
+	id 1tn020-000000012SH-3HWE;
+	Tue, 25 Feb 2025 18:51:48 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmzm7-00000000xlF-3WNn
+	for kexec@lists.infradead.org;
+	Tue, 25 Feb 2025 18:35:24 +0000
+Received: from [10.17.64.147] (unknown [131.107.1.147])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 95078203CDDE;
+	Tue, 25 Feb 2025 10:35:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95078203CDDE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740508523;
+	bh=oAPMpgeQTX575axIRAvAGNwitPSc2FROHu2Kj3FuMr4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oGQjoobXgkyRRqjRFRYg+q70hz6uhg5zsrVj8sKaiZST2hHQzUfdy24mpz723gJq3
+	 wk6LbK9qyHkwSvnY/nWhMXJ+/pbvW5MV3urcV4jMxmRXdRhzymB2vjTgPaLEvtvDsr
+	 QnlelFhG8GfsJ2T3GYOr1XpVnIav81F+3bT3m/g4=
+Message-ID: <8504fd93-8fff-4fd9-8d2d-26b4e1e84bee@linux.microsoft.com>
+Date: Tue, 25 Feb 2025 10:35:22 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224025034.g4htzqgm3r3ja4yy@master>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+ <20250218225502.747963-3-chenste@linux.microsoft.com>
+ <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
+ <658b52e4-a4bb-40fc-a00b-bfdb3bf15b52@linux.microsoft.com>
+ <Z70MZD+BssRG4R1H@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z70MZD+BssRG4R1H@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250225_103523_937889_46B00683 
+X-CRM114-Status: GOOD (  19.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,50 +79,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Feb 24, 2025 at 02:50:34AM +0000, Wei Yang wrote:
-> On Thu, Feb 06, 2025 at 03:27:43PM +0200, Mike Rapoport wrote:
-> >From: Alexander Graf <graf@amazon.com>
-> >
-> >With KHO (Kexec HandOver), we need a way to ensure that the new kernel
-> >does not allocate memory on top of any memory regions that the previous
-> >kernel was handing over. But to know where those are, we need to include
-> >them in the memblock.reserved array which may not be big enough to hold
-> >all ranges that need to be persisted across kexec. To resize the array,
-> >we need to allocate memory. That brings us into a catch 22 situation.
-> >
-> >The solution to that is limit memblock allocations to the scratch regions:
-> >safe regions to operate in the case when there is memory that should remain
-> >intact across kexec.
-> >
-> >KHO provides several "scratch regions" as part of its metadata. These
-> >scratch regions are contiguous memory blocks that known not to contain any
-> >memory that should be persisted across kexec. These regions should be large
-> >enough to accommodate all memblock allocations done by the kexeced kernel.
-> >
-> >We introduce a new memblock_set_scratch_only() function that allows KHO to
-> 
-> memblock_set_kho_scratch_only?
-> 
-> >indicate that any memblock allocation must happen from the scratch regions.
-> >
-> >Later, we may want to perform another KHO kexec. For that, we reuse the
-> >same scratch regions. To ensure that no eventually handed over data gets
-> >allocated inside a scratch region, we flip the semantics of the scratch
-> >region with memblock_clear_scratch_only(): After that call, no allocations
-> 
-> memblock_clear_kho_scratch_only?
+On 2/24/2025 4:18 PM, Baoquan He wrote:
+> On 02/24/25 at 03:05pm, steven chen wrote:
+>> On 2/23/2025 10:14 PM, Baoquan He wrote:
+>>> Hi Steve, Mimi,
+>>>
+>>> On 02/18/25 at 02:54pm, steven chen wrote:
+>>>> Currently, the mechanism to map and unmap segments to the kimage
+>>>> structure is not available to the subsystems outside of kexec.  This
+>>>> functionality is needed when IMA is allocating the memory segments
+>>>> during kexec 'load' operation.  Implement functions to map and unmap
+>>>> segments to kimage.
+>>> I am done with the whole patchset understanding. My concern is if this
+>>> TPM PCRs content can be carried over through newly introduced KHO. I can
+>>> see that these patchset doesn't introduce too much new code changes,
+>>> while if many conponents need do this, kexec reboot will be patched all
+>>> over its body and become ugly and hard to maintain.
+>>>
+>>> Please check Mike Rapoport's v4 patchset to see if IMA can register
+>>> itself to KHO and do somthing during 2nd kernel init to restore those
+>>> TPM PCRs content to make sure all measurement logs are read correctly.
+>>> [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+>>>
+>>> Thanks
+>>> Baoquan
+>> Hi Baoquan,
+>>
+>> For IMA, it appears that there are no current issues with TPM PCRs after a
+>> kernel soft reboot.
+> I mean using KHO to hold in 1st kernel and restore the IMA log in 2nd
+> kernel.
+>
+>> This patches is used to get currently missed IMA measurements during the
+>> kexec process copied to new kernel after the kernel soft reboot. I think
+>> it's ok to leave it at current location: it will be easy to maintain for
+>> IMA.
+> Yeah, but I am saying this patchset increase unnecessary code
+> complexity in kexec code maintaining.
+>
+>> Overall, for these patches, do you see any major blockers for kexec?
+>>
+>> If you have any specific concerns or need further details, please let me
+>> know.
+> I have no concerns for this patchset implementation itself, I saw you using
+> vmap to maping the possible scattered source pages smartly and taking
+> the mapped buffer pointers to update later duing kexec jumping. That's very
+> great and clever method. BUT I am concerned about the solution, if we
+> can make use of the existed way of KHO to implement it more simply. Could
+> you please do investigation?
 
-Right, I missed those in the commit message.
- 
-> >may happen from scratch memblock regions. We will lift that restriction
-> >in the next patch.
-> >
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
+Hi Baoquan,
 
--- 
-Sincerely yours,
-Mike.
+I will conduct an investigation. Thank you for your comments.
+
+Steven
+
 
