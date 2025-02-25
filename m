@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D19B0C021B2
-	for <kexec@archiver.kernel.org>; Tue, 25 Feb 2025 07:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF4B9C021B8
+	for <kexec@archiver.kernel.org>; Tue, 25 Feb 2025 07:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QME+3JDwrUqrq8SilTHOaPJhJ/ckQHJayAqZ27tvt/Y=; b=VvI9mUKiRKWdK3yy0M5ho6XobN
-	ZsDfD1zP+KhKm+GaYdy+jcuJBqiogv4nUfgYwoYVO81qsPJZiOayT1Uqe6u7mb/d7s3ZOl7B9XmxB
-	pUSrIyb5DZfDMFbsgOoSlRxhYZEa4tyLf6sA76GOXUXwf+59l9zQEUUoS6YUP5tsHhT7r9PDLcQFE
-	z6GiwgnDPbNzDA+kjQF198h25C9DVck1XPx4tzn0E7uETp5U3qZVZvZuq2h32chmDRo/sp229g25w
-	tp62Ls3t2/lfkMTpQnIzBMQ3FvnpXiMlliaqoDjdX7ETy03wSGv+TFAFQw9T3tMOrsuFQidFo12KO
-	As1akgog==;
+	bh=Uwv0a4dzm+5HpJk54FntQugqsgzOGHWa5a/atNDvfEI=; b=yeSkhVw7Ce7TS1eaG9FGRdSoSC
+	KjzC2yWw4ZPIaRyQkCaOit0PwOc/xjC/VmZZz5oElEuUgX3jOxJFylJjoN9NxKRAKN8bSLsky9uFG
+	BL20tr9RtOeUjspYAfjLmmppBony7VYffbV4w3afUmraHfwPKNazuCTMGAer3FrfFdUW198X2UdEn
+	iOx3Za7I6piO6e5qmYeI6kjE9kTUZEb3fcWckybkXqhBWvRpCCA+Hw6ge9v028+zANCn6UXskt3Ez
+	DFO/nSrAspTnMhX6j1wcW8yWDcbSg/nFiS5Xnh7fW8+GsWBa838QM3idHCVLh/ZJIXCxgDGffxPlT
+	mOj1jY8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmpZP-0000000GEQW-0u0c;
-	Tue, 25 Feb 2025 07:41:35 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1tmpfw-0000000GFw5-181v;
+	Tue, 25 Feb 2025 07:48:20 +0000
+Received: from tor.source.kernel.org ([2600:3c04::f03c:95ff:fe5e:7468])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmpYn-0000000GEKW-3cld;
-	Tue, 25 Feb 2025 07:40:57 +0000
+	id 1tmpeV-0000000GFOI-0RBC;
+	Tue, 25 Feb 2025 07:46:51 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B2ADD61228;
-	Tue, 25 Feb 2025 07:40:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E466FC4CEDD;
-	Tue, 25 Feb 2025 07:40:46 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id ECB006123A;
+	Tue, 25 Feb 2025 07:46:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BF0C4CEDD;
+	Tue, 25 Feb 2025 07:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740469256;
-	bh=ieVX5d6YbG4CbbEuq39MSmzMjPRvSdy5tV/uQ7x4Blc=;
+	s=k20201202; t=1740469609;
+	bh=ufWHWQ1xjvwW0hl8NZb6j0p51Ljh1vhupp5zrhn05g0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DyCwUZXionE7MxaCDSn4U72FlesRhQrFrGpuMkiOxiKqybMwty65HMnnUQtV0dWsq
-	 x7yf1ePenepDvJ7E87xmvqClkzk8+fAfDEKxnIAi7R5KdEWrq/HbBGK6/m824N9Aac
-	 l/wqdDYxYnTxZuXavRvIjBWLEcQoGK0tFSLRdgKP4cC/B9wTs4vNJBGhVFg/YUZjBa
-	 DyGpLBRzZb6r41IoQvdNrSFndL/1MSZxBxXbqTMC8G/XX8sPECLY2vNOeYn9agTBnv
-	 XprvoyMTyo3iA3MRoUHy8tQHkZD1ybG+SlCOHiI+8kBb9UqYcJF8jATpbmYw4ARQPa
-	 aHoMQW26rsx9w==
-Date: Tue, 25 Feb 2025 09:40:37 +0200
+	b=mNF5vIXE8AI1M72/t0vxMc2XxKToFenm/PAwm6NZlyzcXaF3GjKp3p8wjKOQxZsS7
+	 U5SdmrZ6BYaIYN/FwLyRn6F6fE1le5OiAG1N1ERsiHU12nBZ0Mpu+uoTJxsNcrzgL5
+	 FecXJjFgXjXiQvXjfk0dv540gXmPw1NfbWIvf34KHRA1eYhDFFirjnTSuwgDS6kEOd
+	 1qDcx0OgryYeV466p9C+RQAkPDKOvmVtK2XQyZFdYwXGOngf8RClrW5TVTs70NL83+
+	 yvakFILGXUbl3fYUBTPeGqmiA4fnXW4OaTfniPVNR1nBcO4RYgvzzBPR4DQ+sz2u+j
+	 fzz+pKVE/XpLg==
+Date: Tue, 25 Feb 2025 09:46:28 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Wei Yang <richard.weiyang@gmail.com>
 Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
@@ -74,18 +74,17 @@ Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
 	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 01/14] mm/mm_init: rename init_reserved_page to
- init_deferred_page
-Message-ID: <Z71z9fO6tE5Px8rT@kernel.org>
+Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
+Message-ID: <Z711VP45tjBi0kwx@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-2-rppt@kernel.org>
- <20250218145904.x57chhz3whvckzu3@master>
- <Z7WEktyNoCPylytL@kernel.org>
- <20250220083601.4p6ehmfhyvs5q5io@master>
+ <20250206132754.2596694-3-rppt@kernel.org>
+ <20250218155004.n53fcuj2lrl5rxll@master>
+ <Z7WHL_Xqgoln9oLg@kernel.org>
+ <20250224013131.fzz552bn7fs64umq@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220083601.4p6ehmfhyvs5q5io@master>
+In-Reply-To: <20250224013131.fzz552bn7fs64umq@master>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,68 +99,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 20, 2025 at 08:36:01AM +0000, Wei Yang wrote:
-> On Wed, Feb 19, 2025 at 09:13:22AM +0200, Mike Rapoport wrote:
+On Mon, Feb 24, 2025 at 01:31:31AM +0000, Wei Yang wrote:
+> On Wed, Feb 19, 2025 at 09:24:31AM +0200, Mike Rapoport wrote:
 > >Hi,
 > >
-> >On Tue, Feb 18, 2025 at 02:59:04PM +0000, Wei Yang wrote:
-> >> On Thu, Feb 06, 2025 at 03:27:41PM +0200, Mike Rapoport wrote:
+> >On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
+> >> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
 > >> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > >> >
-> >> >When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
-> >> >function performs initialization of a struct page that would have been
-> >> >deferred normally.
+> >> >to denote areas that were reserved for kernel use either directly with
+> >> >memblock_reserve_kern() or via memblock allocations.
 > >> >
-> >> >Rename it to init_deferred_page() to better reflect what the function does.
+> >> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> >> >---
+> >> > include/linux/memblock.h | 16 +++++++++++++++-
+> >> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
+> >> > 2 files changed, 39 insertions(+), 9 deletions(-)
+> >> >
+> >> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> >> >index e79eb6ac516f..65e274550f5d 100644
+> >> >--- a/include/linux/memblock.h
+> >> >+++ b/include/linux/memblock.h
+> >> >@@ -50,6 +50,7 @@ enum memblock_flags {
+> >> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+> >> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+> >> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
+> >> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
 > >> 
-> >> Would it be confused with deferred_init_pages()?
+> >> Above memblock_flags, there are comments on explaining those flags.
+> >> 
+> >> Seems we miss it for MEMBLOCK_RSRV_KERN.
 > >
-> >Why? It initializes a single page, deferred_init_pages() initializes many.
+> >Right, thanks!
+> > 
+> >> > 
+> >> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+> >> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> >> > again:
+> >> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
+> >> > 					    flags);
+> >> >-	if (found && !memblock_reserve(found, size))
+> >> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
+> >> 
+> >> Maybe we could use memblock_reserve_kern() directly. If my understanding is
+> >> correct, the reserved region's nid is not used.
 > >
-> 
-> See below.
-> 
-> >> And it still calls __init_reserved_page_zone(), even we __SetPageReserved()
-> >> after it. Current logic looks not clear.
+> >We use nid of reserved regions in reserve_bootmem_region() (commit
+> >61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
+> >know the distribution of reserved memory among the nodes before
+> >memmap_init_reserved_pages().
+> > 
+> >> BTW, one question here. How we handle concurrent memblock allocation? If two
+> >> threads find the same available range and do the reservation, it seems to be a
+> >> problem to me. Or I missed something?
 > >
-> >There's no __init_reserved_page_zone(). Currently init_reserved_page()
-> >detects the zone of the page and calls __init_single_page(), so essentially
-> >it initializes one struct page.
-> >
-> >And we __SetPageReserved() in reserve_bootmem_region() after call to
-> >init_reseved_page() because pages there are indeed reserved.
+> >memblock allocations end before smp_init(), there is no possible concurrency.
 > > 
 > 
-> Hmm... I am not sure we are looking at the same code.
-
-By "currently" I meant the Linus tree.
-
-> I take a look at current
-> mm-unstable, this patch set is not included.  So I am looking at previous
-> version with this last commit:
+> Thanks, I still have one question here.
 > 
->   8bf30f9d23eb 2025-02-06 Documentation: KHO: add memblock bindings
+> Below is a simplified call flow.
 > 
-> Here is what I see for init_deferred_page()'s definition:
+>     mm_core_init()
+>         mem_init()
+>             memblock_free_all()
+>                 free_low_memory_core_early()
+>                     memmap_init_reserved_pages()
+>                         memblock_set_node(..., memblock.reserved, )   --- (1)
+>                     __free_memory_core()
+>         kmem_cache_init()
+>             slab_state = UP;                                          --- (2)
 > 
-> init_deferred_page()
->   __init_deferred_page()
->     __init_reserved_page_zone()   <--- I do see this function, it is removed?
->       __init_single_page()
+> And memblock_allloc_range_nid() is not supposed to be called after
+> slab_is_available(). Even someone do dose it, it will get memory from slab
+> instead of reserve region in memblock.
 > 
-> What I want to say is __init_deferred_page() calls
-> __init_reserved_page_zone(). This sounds imply a deferred page is always
-> reserved page. But we know it is not.  deferred_init_pages() initialize the
-> pages are not reserved one. Or we want to have this context in
-> __init_deferred_page()?
+> From the above call flow and background, there are three cases when
+> memblock_alloc_range_nid() would be called:
+> 
+>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
+>   * If it is called after (2), we don't touch memblock.reserved.
+>   * If it happens between (1) and (2), it looks would break the consistency of
+>     nid information in memblock.reserved. Because when we use
+>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
+> 
+> So my question is if the third case happens, would it introduce a bug? If it
+> won't happen, seems we don't need to specify the nid here?
 
-In mm-unstable the code is slightly reorganized, but in the end it still
-initializes a deferred page. It's just only called for reserved page, but
-the initialization itself does not presume that the page is reserved.
+We don't really care about proper assignment of nodes between (1) and (2)
+from one side and the third case does not happen on the other side. Nothing
+should call membloc_alloc() after memblock_free_all(). 
 
-So both functions are misnamed here,  __init_reserved_page_zone() and
-init_reserved_page().
-
+But it's easy to make the window between (1) and (2) disappear by replacing
+checks for slab_is_available() in memblock with a variable local to
+memblock.
+ 
 > -- 
 > Wei Yang
 > Help you, Help me
