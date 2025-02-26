@@ -4,107 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4555EC021B2
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 01:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB089C021B8
+	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=; b=Hj0u1VMMWdAdp/
-	63QBO8yyYK4BWTV/514uieAf+wq1wxZTD9c/VCM8VTRvtwpdobJSzmuCDYkYk1J3eWg/0zVtYTTie
-	hUS2+Sf+ua8YTZmhAEkDC+YVEPP+TptzC7PsW7Wbt53ftn6ZZFowTavvw3XEhXPh651T2K0o5Wv4X
-	Is9HesVpMgwHb1YpKTUR7XhNTSXsPkePXDzd/dGU1Hla85DHXGKsMrhzCWoqsYZDElrGoc7XUSG1t
-	tHb021+tnObOw1keM2Wz91MtoMqFVt1ksjovKpeB4ti31t/cwSJ6dongXGiizg1hiLv148zTaOP8+
-	MojvogQPU4viiMnlab7A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=iRBPg6dcRG/frt2aeGEkFVcsNiGZUVEbU71z9ho3GW8=; b=rAbWPw4JAA0Nj3
+	2AI5nhTXh4PTcluHPuZHcrFBmBMCO0PTglFPcytwYLpAOCJkulPmT8ZyHFe47E0DcOAmIazOnrvkU
+	17k9wrSpdNerw+dPkFJRGTlBvZsFexH5sC1dTfSBFAtkx2ke+zpiIYhV25k4uvGQB6eMDqSbzwxcl
+	lziCMPr4BO0q6Y7jw6UVg4PEqMqwt6yodxY29QWzNxO6FMW08OowYjbed4hTLyRL0L5bvcn8GB1qL
+	A7qWYwKmgnNxbhpXr7OLHpV78QbD3rNAafKW5+5kf7jbMk8JnWajpkFoag9gM5wRuGQpYEMde0+zC
+	17nNi68UZnn0aiFgBBcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn6e9-000000023SO-0Q2d;
-	Wed, 26 Feb 2025 01:55:37 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tnNYr-00000005F0L-3SXn;
+	Wed, 26 Feb 2025 19:59:17 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn6cm-000000023Hw-23Xx
-	for kexec@bombadil.infradead.org;
-	Wed, 26 Feb 2025 01:54:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
-	Message-ID:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:References;
-	bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=; b=natpDd/F/x76C2h8QD1zMR3zsk
-	6YTlDGz020X/QE+hh/EasA5Av/IHdra9kupjT+DqKn92FMtaVBb4x01GitN+/RteKqYA2OOi1jcG+
-	yhO1hyqiS/VS9LgTlUmRIqzIOuyNnBLBUOoiBGnu71FRpWN8vxuMgd7MzLJytanedya13C4BByBt8
-	TPNUy/XH7R74/JKorWwmyaJ3CiWPyy9zr+kKIVz9jKSTSts9hwwfmY4xvMWa+I3PrxdrVsxFLy3t9
-	9SD+PZjVNW7D7lHQTqEtt7lzsHyucKh6hAAknXpqCS8dk8yxZw74P4GVdBNhpplaUvW05ZMaBiqB8
-	Jpa+Sxfg==;
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
-	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn6cg-00000003UDE-2Uty
+	id 1tnNYn-00000005Eyl-3x8f
 	for kexec@lists.infradead.org;
-	Wed, 26 Feb 2025 01:54:09 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-22101351b1dso127446505ad.3
-        for <kexec@lists.infradead.org>; Tue, 25 Feb 2025 17:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740534840; x=1741139640; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=;
-        b=byxFdDOxZwJWNimAgp5tisBHznaFweaX2B+5Sc2jD8pn/2a9DHyoF3Y6W5+YZcG9Z9
-         RPQ52/Px9K/1NTDIWFcMQ9Yvea4T1zC32l0lxDBONVpMRLFJoS3hmRTHdA4BdaDJipwp
-         8mUG7rKP5+N9Xjs+NHC/A0dVcApKBemIol7++C7oA3KFWDYZmANPxkuQjR6sk4tOJ5hM
-         yxcKUD/Skl2HMWW96NDrQF5PYorO/HrUzY7Z2uCsXy4KeXQrTYv+8XFywQXvlzL5njBo
-         l/QQ4WR30n7SWdl8rYXv9zo8HXdsxvjLvz+O6Pa+CuPYx0hskEBH45Rx7sdAhrVCFeNH
-         RxaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740534840; x=1741139640;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=;
-        b=Zg5Zz1uiCWlabM0XtpvCVmpcVmawyfaNixZUagRr3aSV0qhHBCrmIOKHBUrGpeKIb5
-         SsuoQVnOkzMXeWS3JZJi6r03o3W0CL4/elmrLe34TRiplcZknxhA0zOlA/V/CYllN656
-         qfseCWCb5sweV0qGy9SUUWfnIMW29/DybQrLieT287ejx5ylgsUNhgOwE8OIyxWdtlYl
-         mBmeXT5tuRmc6hmPEj+giQ8Qj4v58+uX4Yo+hSAu2U8b1IH/STd7A5byRCfuV/gfGJKP
-         9B0G36NDQa8cmCUk3NFQq9ayNm/gKB33qINQl41JsRRgs+VkzfPUN2YAhb3GgZ8NcZQS
-         5jWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTyR//LrooE2AEHwYczP8YVp1vPQZqFTShX5jhnD6SyHWMT9xCvm9r/GvUlcAKXW28TvtIbQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyPd2XRE/Kmx7iT6rq6BAyzHhrMKsO3arzwPGk+57+o6WddiGrX
-	MUEFzf/nUw16lCLWoM5jhhvyB7O4Y6PV6xeq+YBJzesn4Lx8QN97ZmelGG+sf6d5YZbogqrEi+5
-	X/SGsCBSRN+NifcTMtw==
-X-Google-Smtp-Source: AGHT+IFkznZMkNBk5de2vOfANCIGfGmFUq4ZoIai/G7n3JkeCyYN8XDtQ2NLIWeTlmgvn0M2N7vBP6JVrlIIeeRX
-X-Received: from pfbna17.prod.google.com ([2002:a05:6a00:3e11:b0:732:502c:4a0f])
- (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:2e1e:b0:725:df1a:285 with SMTP id d2e1a72fcca58-7348bdd003bmr2703166b3a.12.1740534840070;
- Tue, 25 Feb 2025 17:54:00 -0800 (PST)
-Date: Tue, 25 Feb 2025 17:53:39 -0800
-In-Reply-To: <20250206132754.2596694-3-rppt@kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250226015342.2136669-1-changyuanl@google.com>
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-From: Changyuan Lyu <changyuanl@google.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Changyuan Lyu <changyuanl@google.com>, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+	Wed, 26 Feb 2025 19:59:15 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1C4452119B;
+	Wed, 26 Feb 2025 19:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1740599951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iRBPg6dcRG/frt2aeGEkFVcsNiGZUVEbU71z9ho3GW8=;
+	b=exazJCv4CCpSOv+6z3lE6sioVYMw5udqsKf6GPDwIi8dbvReIAYuXfTrQgPfe8b4LWW3bH
+	sYxcpi6th/VtY5VZRvmjY4/5z24waOjFbXlOO79ya67zOwR4Caz5fkiAf7pXAw6oyoirZX
+	7DJ28eE9b0xOu4lCOkkj3vYl9BdX7NI=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=exazJCv4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1740599951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iRBPg6dcRG/frt2aeGEkFVcsNiGZUVEbU71z9ho3GW8=;
+	b=exazJCv4CCpSOv+6z3lE6sioVYMw5udqsKf6GPDwIi8dbvReIAYuXfTrQgPfe8b4LWW3bH
+	sYxcpi6th/VtY5VZRvmjY4/5z24waOjFbXlOO79ya67zOwR4Caz5fkiAf7pXAw6oyoirZX
+	7DJ28eE9b0xOu4lCOkkj3vYl9BdX7NI=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8DF1E13A53;
+	Wed, 26 Feb 2025 19:59:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mdxnFY5yv2c/MgAAD6G6ig
+	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:10 +0000
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+Subject: [PATCH 0/5] printk: renaming some suspend/resume functions and one
+ fix for unblanking
+Date: Wed, 26 Feb 2025 16:59:00 -0300
+Message-Id: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIVyv2cC/x3MwQpAQBCA4VfRnG2ZKZRXkcNkB5MMzUpK3t3m+
+ B3+/4EkrpKgKx5wuTTpbhlYFjAubLMEjdlAFdUVUR0OVzvX4GK8qc0BqRmRETm2DLk6XCa9/2M
+ /vO8H9BTQImEAAAA=
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Eric Biederman <ebiederm@xmission.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, 
+ Pavel Machek <pavel@ucw.cz>, Petr Mladek <pmladek@suse.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Todd E Brandt <todd.e.brandt@linux.intel.com>, 
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
+ Marcos Paulo de Souza <mpdesouza@suse.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=1675;
+ i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
+ bh=g10VNxu+J+WpDkUkbQm/mJqITFnxcJsd5sZ1tSpU5sM=;
+ b=QNm2ZQ2aUdO0uJpHRox2rnWzw+hwkQdsqRU9EXSRQeDPxZXkfT6tNb98fsSiJ+tXAdlHyQ2Yr
+ vdTFP8Of308CSXcTnV03u7iq6vWGJcJ/6i6gPtVLowOL2VJ/zyDIMyJ
+X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
+ pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
+X-Rspamd-Queue-Id: 1C4452119B
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.com:dkim,suse.com:mid];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250226_015407_936597_57AAD485 
-X-CRM114-Status: GOOD (  17.23  )
+X-CRM114-CacheID: sfid-20250226_115914_133913_ED3DD064 
+X-CRM114-Status: UNSURE (   9.31  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,60 +138,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike,
+Hello, I've being working on some patches that help to clarify the suspend/resume
+of printk machinery. The last patch on this patchset address one issue regarding
+suspended consoles and blanking.
 
-On Thu,  6 Feb 2025 15:27:42 +0200, Mike Rapoport <rppt@kernel.org> wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> to denote areas that were reserved for kernel use either directly with
-> memblock_reserve_kern() or via memblock allocations.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  include/linux/memblock.h | 16 +++++++++++++++-
->  mm/memblock.c            | 32 ++++++++++++++++++++++++--------
->  2 files changed, 39 insertions(+), 9 deletions(-)
->
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index e79eb6ac516f..65e274550f5d 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> ......
-> @@ -116,7 +117,19 @@ int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
->  int memblock_add(phys_addr_t base, phys_addr_t size);
->  int memblock_remove(phys_addr_t base, phys_addr_t size);
->  int memblock_phys_free(phys_addr_t base, phys_addr_t size);
-> -int memblock_reserve(phys_addr_t base, phys_addr_t size);
-> +int __memblock_reserve(phys_addr_t base, phys_addr_t size, int nid,
-> +		       enum memblock_flags flags);
-> +
-> +static __always_inline int memblock_reserve(phys_addr_t base, phys_addr_t size)
-> +{
-> +	return __memblock_reserve(base, size, NUMA_NO_NODE, 0);
+This is a part one patchset that I would like to see merged before I send more patches
+that will rework the suspend flag (a global suspend flag istead of per console) and
+the removal of CON_ENABLED flag later on (I've created a function that will forcibly)
+register the console instead of using this flag.
 
-Without this patch `memblock_reserve` eventually calls `memblock_add_range`
-with `MAX_NUMNODES`, but with this patch, `memblock_reserve` calls
-`memblock_add_range` with `NUMA_NO_NODE`. Is it intended or an
-accidental typo? Thanks!
+Please review!
 
-> ......
->
-> -int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
-> +int __init_memblock __memblock_reserve(phys_addr_t base, phys_addr_t size,
-> +				       int nid, enum memblock_flags flags)
->  {
->  	phys_addr_t end = base + size - 1;
->
-> -	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
-> -		     &base, &end, (void *)_RET_IP_);
-> +	memblock_dbg("%s: [%pa-%pa] nid=%d flags=%x %pS\n", __func__,
-> +		     &base, &end, nid, flags, (void *)_RET_IP_);
->
-> -	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+---
+Marcos Paulo de Souza (5):
+      printk: Rename suspend_console to console_suspend_all
+      printk: Rename resume_console to console_resume_all
+      printk: Rename console_stop to console_suspend
+      printk: Rename console_start to console_resume
+      printk: Check CON_SUSPEND when unblanking a console
 
-Originally `memblock_reserve` calls `memblock_add_range` with `MAX_NUMNODES`,
-See my comments above.
+ drivers/tty/serial/serial_core.c                   |  6 ++---
+ include/linux/console.h                            |  8 +++---
+ kernel/kexec_core.c                                |  4 +--
+ kernel/power/hibernate.c                           | 16 ++++++------
+ kernel/power/suspend.c                             |  8 +++---
+ kernel/printk/printk.c                             | 30 ++++++++++++++--------
+ .../pm-graph/config/custom-timeline-functions.cfg  |  4 +--
+ tools/power/pm-graph/sleepgraph.py                 |  6 ++---
+ 8 files changed, 46 insertions(+), 36 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250225-printk-renaming-126c1a11ad7a
 
-Best,
-Changyuan
+Best regards,
+-- 
+Marcos Paulo de Souza <mpdesouza@suse.com>
+
 
