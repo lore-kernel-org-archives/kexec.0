@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 826EBC19F2E
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40F33C021B8
+	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JwO0/gaDg8J0sH8a6P82P5z42V5b4mLRLuPZ7KLgpvQ=; b=YADePzqVIm0VdDTEMeJxLQo3zH
-	rFb0mAUgo5UM6QFx8knWq7zJ8+GmomGdU2rLo1ZVujwh5i1kffgMntV7ju3wOfhaBd0i9ML5t7zoL
-	bCAKQ01qaKLXAfLBBW2sxajLFp8H3942N0m8pfOhBbkUTL06KG5VjzaaZAXje0L459trAsVb/+JJ0
-	GuF3cBHycBYjso27PA08zAIzriy64aGDf6/XDlGzOfRvU2ob6j98GilTHbHB7x7fYA/+npN/9WcJK
-	SVJVehZQ+zY9ZSXofHHlswBWij3yBoD1ylIogYBpl1udbjrU/iuopFJxpuherE+tOMR6TdvfPH6X5
-	Z6xOoRiQ==;
+	bh=u40wel1uByZ+NuxZjQ9Eq88cyevFevGwKfBlTGuYmDo=; b=dw3KvN8861jKlWqYzIkbcEAzxC
+	1VvrX2E6a75FEqvakcIasFzxEy/EzXHOfzpSBF9gCsbFXgpNid9pPdKLKuGnyttF2ZEygE4h/xlAo
+	hX5l6N8euHv0GWYyyWMOGoFKiYhp8bDjIPPDdHnnwjAAknPWkTI9USZ1Szfft6jzjRhTGNis4TZHW
+	deWUB+gZr+HRKb3CbaJQEdxh+uonBNrOsaWvQkgJXExnaNWiblCQ67tWGEWZKXncLWIEk4xAY8k9d
+	A/9OBj3ry5scDUrJ67arfVIAx5Qd6AhsDiwqeGUE1gZiARahiDw3Gd781AQvp2UvDywM8yefrwdxk
+	T21awIxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNYt-00000005F1w-10Ci;
-	Wed, 26 Feb 2025 19:59:19 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1tnNYx-00000005F5b-4AJW;
+	Wed, 26 Feb 2025 19:59:23 +0000
+Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNYq-00000005F09-1ud6
+	id 1tnNYv-00000005F2O-3LFT
 	for kexec@lists.infradead.org;
-	Wed, 26 Feb 2025 19:59:17 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	Wed, 26 Feb 2025 19:59:23 +0000
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 719DF1F387;
-	Wed, 26 Feb 2025 19:59:14 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CD89D1F38A;
+	Wed, 26 Feb 2025 19:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740599957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JwO0/gaDg8J0sH8a6P82P5z42V5b4mLRLuPZ7KLgpvQ=;
-	b=MGCvkUf9Qbsw/U7pv72/zu6zjQDtt5Ydf+v64PyGsUy4fEmghMNtDsMJQwg6b+4nyA6bv0
-	oBXE6LMomLoHFX1OAXgseXXOQHIAQ2a34zi5dHYSanwd7Ux6WINkuWgpuKvnGdLS0ZeoHy
-	cW25UDmxIhq0NzLwu7mTJjbuFK//W9Y=
+	bh=u40wel1uByZ+NuxZjQ9Eq88cyevFevGwKfBlTGuYmDo=;
+	b=qPwVt1Cc1fHH2nKJ8cMSNKZCYR1By1k9TyvRld0TI3KeJGKI8VldjC1kuB9+MsU+DAQ1QR
+	nFgfd/t8ZMzNPLBY1iT2Hs5MQt/Vjs3Qtob6Ng5/OP6IKavzpORqtOE9Eyt9utVe7Rnqny
+	o6To2KvLf/QIST3K6K1DqIjN3HD1ZTs=
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=MGCvkUf9
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740599957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JwO0/gaDg8J0sH8a6P82P5z42V5b4mLRLuPZ7KLgpvQ=;
-	b=MGCvkUf9Qbsw/U7pv72/zu6zjQDtt5Ydf+v64PyGsUy4fEmghMNtDsMJQwg6b+4nyA6bv0
-	oBXE6LMomLoHFX1OAXgseXXOQHIAQ2a34zi5dHYSanwd7Ux6WINkuWgpuKvnGdLS0ZeoHy
-	cW25UDmxIhq0NzLwu7mTJjbuFK//W9Y=
+	bh=u40wel1uByZ+NuxZjQ9Eq88cyevFevGwKfBlTGuYmDo=;
+	b=qPwVt1Cc1fHH2nKJ8cMSNKZCYR1By1k9TyvRld0TI3KeJGKI8VldjC1kuB9+MsU+DAQ1QR
+	nFgfd/t8ZMzNPLBY1iT2Hs5MQt/Vjs3Qtob6Ng5/OP6IKavzpORqtOE9Eyt9utVe7Rnqny
+	o6To2KvLf/QIST3K6K1DqIjN3HD1ZTs=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0EAB13A53;
-	Wed, 26 Feb 2025 19:59:13 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 58CB213A53;
+	Wed, 26 Feb 2025 19:59:17 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bW2ELZFyv2dLMgAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:13 +0000
+	id 4cFaCJVyv2dPMgAAD6G6ig
+	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:17 +0000
 From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Wed, 26 Feb 2025 16:59:01 -0300
-Subject: [PATCH 1/5] printk: Rename suspend_console to console_suspend_all
+Date: Wed, 26 Feb 2025 16:59:02 -0300
+Subject: [PATCH 2/5] printk: Rename resume_console to console_resume_all
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-printk-renaming-v1-1-0b878577f2e6@suse.com>
+Message-Id: <20250226-printk-renaming-v1-2-0b878577f2e6@suse.com>
 References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
 In-Reply-To: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -85,45 +85,35 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
  Marcos Paulo de Souza <mpdesouza@suse.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=4788;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=5062;
  i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=yBYQ10xYqvupj3cLB6Z51JIzDI6B7P/SvNMp935zzWg=;
- b=zrnT3yx0F2MoLtIJp2AhyC1iNzfy4fhxdeGTi2s5QJTPVqhMhNXC2FD35987w1tZZZQsH6OsE
- RHljdJwQpf5AJ/+2nwp0001WVLBTm8OYWbiGe1dbrE8QPqeFbnzoTQU
+ bh=o4dSv2Q4KBStBPNP7ZCwyp3Xj3sypPx1cqkkCUPu63k=;
+ b=eMPqNrB0UnFvEc27q5UbM6ptmyIqQUxeZ1y9TkP23XXXhdu3RbT7teaugAudqjEZZDtKG3DdZ
+ 1fnkdYMObgrBMG2Ucq75IhCtkaDgjnwlPypdFhWKFZWL7yZEQlSelfg
 X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
  pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
-X-Rspamd-Queue-Id: 719DF1F387
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
+X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
 	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL95jnbcaqr857snmuoeu7oxeq)];
-	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:mid]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250226_115916_681418_E29F5A24 
-X-CRM114-Status: GOOD (  13.76  )
+X-CRM114-CacheID: sfid-20250226_115922_002743_EDA2874B 
+X-CRM114-Status: GOOD (  11.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,7 +128,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The function suspend_console has a misleading name, since it suspends all
+The function resume_console has a misleading name,  since it resumes all
 consoles, so rename it accordly.
 
 Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
@@ -146,135 +136,143 @@ Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
  include/linux/console.h                                   | 2 +-
  kernel/kexec_core.c                                       | 2 +-
  kernel/power/hibernate.c                                  | 8 ++++----
- kernel/power/suspend.c                                    | 2 +-
- kernel/printk/printk.c                                    | 4 ++--
+ kernel/power/suspend.c                                    | 6 +++---
+ kernel/printk/printk.c                                    | 2 +-
  tools/power/pm-graph/config/custom-timeline-functions.cfg | 2 +-
- tools/power/pm-graph/sleepgraph.py                        | 2 +-
- 7 files changed, 11 insertions(+), 11 deletions(-)
+ tools/power/pm-graph/sleepgraph.py                        | 4 ++--
+ 7 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/include/linux/console.h b/include/linux/console.h
-index eba367bf605d..fa5941f4f9c5 100644
+index fa5941f4f9c5..0d48e0deb213 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -648,7 +648,7 @@ static inline void console_sysfs_notify(void)
- extern bool console_suspend_enabled;
+@@ -649,7 +649,7 @@ extern bool console_suspend_enabled;
  
  /* Suspend and resume console messages over PM events */
--extern void suspend_console(void);
-+extern void console_suspend_all(void);
- extern void resume_console(void);
+ extern void console_suspend_all(void);
+-extern void resume_console(void);
++extern void console_resume_all(void);
  
  int mda_console_init(void);
+ 
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c0caa14880c3..8f95870030a3 100644
+index 8f95870030a3..6fcc46f3eb39 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -1007,7 +1007,7 @@ int kernel_kexec(void)
- 			error = -EBUSY;
- 			goto Restore_console;
- 		}
--		suspend_console();
-+		console_suspend_all();
- 		error = dpm_suspend_start(PMSG_FREEZE);
- 		if (error)
- 			goto Resume_console;
+@@ -1061,7 +1061,7 @@ int kernel_kexec(void)
+  Resume_devices:
+ 		dpm_resume_end(PMSG_RESTORE);
+  Resume_console:
+-		resume_console();
++		console_resume_all();
+ 		thaw_processes();
+  Restore_console:
+ 		pm_restore_console();
 diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 1f87aa01ba44..a18f6016ce6c 100644
+index a18f6016ce6c..c9f60670a261 100644
 --- a/kernel/power/hibernate.c
 +++ b/kernel/power/hibernate.c
-@@ -411,7 +411,7 @@ int hibernation_snapshot(int platform_mode)
- 		goto Thaw;
+@@ -437,7 +437,7 @@ int hibernation_snapshot(int platform_mode)
+ 	if (error || !in_suspend)
+ 		pm_restore_gfp_mask();
+ 
+-	resume_console();
++	console_resume_all();
+ 	dpm_complete(msg);
+ 
+  Close:
+@@ -561,7 +561,7 @@ int hibernation_restore(int platform_mode)
  	}
+ 	dpm_resume_end(PMSG_RECOVER);
+ 	pm_restore_gfp_mask();
+-	resume_console();
++	console_resume_all();
+ 	pm_restore_console();
+ 	return error;
+ }
+@@ -634,7 +634,7 @@ int hibernation_platform_enter(void)
+  Resume_devices:
+ 	entering_platform_hibernation = false;
+ 	dpm_resume_end(PMSG_RESTORE);
+-	resume_console();
++	console_resume_all();
  
--	suspend_console();
-+	console_suspend_all();
- 	pm_restrict_gfp_mask();
+  Close:
+ 	hibernation_ops->end();
+@@ -920,7 +920,7 @@ int hibernate_quiet_exec(int (*func)(void *data), void *data)
+ dpm_resume:
+ 	dpm_resume(PMSG_THAW);
  
- 	error = dpm_suspend(PMSG_FREEZE);
-@@ -547,7 +547,7 @@ int hibernation_restore(int platform_mode)
- 	int error;
+-	resume_console();
++	console_resume_all();
  
- 	pm_prepare_console();
--	suspend_console();
-+	console_suspend_all();
- 	pm_restrict_gfp_mask();
- 	error = dpm_suspend_start(PMSG_QUIESCE);
- 	if (!error) {
-@@ -586,7 +586,7 @@ int hibernation_platform_enter(void)
- 		goto Close;
- 
- 	entering_platform_hibernation = true;
--	suspend_console();
-+	console_suspend_all();
- 	error = dpm_suspend_start(PMSG_HIBERNATE);
- 	if (error) {
- 		if (hibernation_ops->recover)
-@@ -896,7 +896,7 @@ int hibernate_quiet_exec(int (*func)(void *data), void *data)
- 	if (error)
- 		goto dpm_complete;
- 
--	suspend_console();
-+	console_suspend_all();
- 
- 	error = dpm_suspend(PMSG_FREEZE);
- 	if (error)
+ dpm_complete:
+ 	dpm_complete(PMSG_THAW);
 diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 09f8397bae15..f296dd0a1a18 100644
+index f296dd0a1a18..c3da3db58cdf 100644
 --- a/kernel/power/suspend.c
 +++ b/kernel/power/suspend.c
-@@ -502,7 +502,7 @@ int suspend_devices_and_enter(suspend_state_t state)
- 	if (error)
- 		goto Close;
- 
--	suspend_console();
-+	console_suspend_all();
+@@ -521,9 +521,9 @@ int suspend_devices_and_enter(suspend_state_t state)
  	suspend_test_start();
- 	error = dpm_suspend_start(PMSG_SUSPEND);
- 	if (error) {
+ 	dpm_resume_end(PMSG_RESUME);
+ 	suspend_test_finish("resume devices");
+-	trace_suspend_resume(TPS("resume_console"), state, true);
+-	resume_console();
+-	trace_suspend_resume(TPS("resume_console"), state, false);
++	trace_suspend_resume(TPS("console_resume_all"), state, true);
++	console_resume_all();
++	trace_suspend_resume(TPS("console_resume_all"), state, false);
+ 
+  Close:
+ 	platform_resume_end(state);
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 80910bc3470c..6cfb1e6d3613 100644
+index 6cfb1e6d3613..ef259660563a 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2733,11 +2733,11 @@ module_param_named(console_no_auto_verbose, printk_console_no_auto_verbose, bool
- MODULE_PARM_DESC(console_no_auto_verbose, "Disable console loglevel raise to highest on oops/panic/etc");
+@@ -2760,7 +2760,7 @@ void console_suspend_all(void)
+ 	synchronize_srcu(&console_srcu);
+ }
  
- /**
-- * suspend_console - suspend the console subsystem
-+ * console_suspend_all - suspend the console subsystem
-  *
-  * This disables printk() while we go into suspend states
-  */
--void suspend_console(void)
-+void console_suspend_all(void)
+-void resume_console(void)
++void console_resume_all(void)
  {
+ 	struct console_flush_type ft;
  	struct console *con;
- 
 diff --git a/tools/power/pm-graph/config/custom-timeline-functions.cfg b/tools/power/pm-graph/config/custom-timeline-functions.cfg
-index 4f80ad7d7275..80ba55250163 100644
+index 80ba55250163..0321b59518f3 100644
 --- a/tools/power/pm-graph/config/custom-timeline-functions.cfg
 +++ b/tools/power/pm-graph/config/custom-timeline-functions.cfg
-@@ -122,7 +122,7 @@ freeze_processes:
- freeze_kernel_threads:
- pm_restrict_gfp_mask:
- acpi_suspend_begin:
--suspend_console:
-+console_suspend_all:
- acpi_pm_prepare:
- syscore_suspend:
+@@ -128,7 +128,7 @@ syscore_suspend:
  arch_enable_nonboot_cpus_end:
+ syscore_resume:
+ acpi_pm_finish:
+-resume_console:
++console_resume_all:
+ acpi_pm_end:
+ pm_restore_gfp_mask:
+ thaw_processes:
 diff --git a/tools/power/pm-graph/sleepgraph.py b/tools/power/pm-graph/sleepgraph.py
-index 918eae58b0b4..114c3d0c6619 100755
+index 114c3d0c6619..e2261f33a082 100755
 --- a/tools/power/pm-graph/sleepgraph.py
 +++ b/tools/power/pm-graph/sleepgraph.py
-@@ -210,7 +210,7 @@ class SystemValues:
- 		'hibernate_preallocate_memory': {},
- 		'create_basic_memory_bitmaps': {},
- 		'swsusp_write': {},
--		'suspend_console': {},
-+		'console_suspend_all': {},
- 		'acpi_pm_prepare': {},
- 		'syscore_suspend': {},
+@@ -216,7 +216,7 @@ class SystemValues:
  		'arch_enable_nonboot_cpus_end': {},
+ 		'syscore_resume': {},
+ 		'acpi_pm_finish': {},
+-		'resume_console': {},
++		'console_resume_all': {},
+ 		'acpi_pm_end': {},
+ 		'pm_restore_gfp_mask': {},
+ 		'thaw_processes': {},
+@@ -3459,7 +3459,7 @@ def parseTraceLog(live=False):
+ 	tracewatch = ['irq_wakeup']
+ 	if sysvals.usekprobes:
+ 		tracewatch += ['sync_filesystems', 'freeze_processes', 'syscore_suspend',
+-			'syscore_resume', 'resume_console', 'thaw_processes', 'CPU_ON',
++			'syscore_resume', 'console_resume_all', 'thaw_processes', 'CPU_ON',
+ 			'CPU_OFF', 'acpi_suspend']
+ 
+ 	# extract the callgraph and traceevent data
 
 -- 
 2.48.1
