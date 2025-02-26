@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA2D4C19776
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10A6DC021B8
+	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Hztst8rCope3yPsUAByJQrdEWrA738Z2BNiSTBEfhvg=; b=AmO+2mjUL+YhMbrVdnlVlmGrK0
-	yyNsDfKMgxB57Pe7wSS+HbSAe2/auqrExHpa2aJQHCAr6P+cvV2XjKGSRW4azlNwf+f3ZEkVkihSg
-	8t86YCEftulLJYO+P972YM8KPV0R4tWRexnEyv7DQIyJsXxtObSfxDX8E59+TayKuMqPYYnpPfwHd
-	D7kNysrb0kzyZb8135pyjibldN2+oreoFAixjUzs69L3Yq3kGvgKFyTyjoo3rkmGPXPgMgaezY8Kv
-	pQB15tVlfLc7QMRDEgiD5kDF/NnP+xz1FwCATiz8iIRNLZ63topXB2ty0+2Myk25bmOSjPkAPZ/G9
-	A70L9isA==;
+	bh=q9hLbnXassT/V3Jk+YjNRU+hmDwAv67Hc8h4w4noxGs=; b=qs04fSuFLEuvfSLoMwOd/t67Zz
+	JY0h86ZAyBIUYPYQ/dPpajkhUmYDrKEyRt13Iqt4gSMo/BBnuR7asnWXXB+cMX4xSllq+u5/mjWTj
+	lX8U/5tWYPxtZoZQvCpnrWRRQAPgFPJRPQ4CxxZVtFTUSw0/vWFITpPsH5Z5xPEZ/5XxIuUDiBFP0
+	S4xTcHK0P26UaEQuJfhfzZce4EKvEqpuB8CrAGk0r13af91c2zHHsOT9sx3u1ImVcce++PgsVRpoY
+	3IRnbpRlOJBOyKqbRqxaGwunXwV6pXeBhs6eif60mFa55Hp7W3LCSpvvT9cMXAAI9rcHl3my6pI6H
+	7/fv46xw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNYz-00000005F6z-1ihv;
-	Wed, 26 Feb 2025 19:59:25 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1tnNZ3-00000005FAs-3QK7;
+	Wed, 26 Feb 2025 19:59:29 +0000
+Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNYw-00000005F33-350R
+	id 1tnNZ1-00000005F80-0rLl
 	for kexec@lists.infradead.org;
-	Wed, 26 Feb 2025 19:59:24 +0000
+	Wed, 26 Feb 2025 19:59:28 +0000
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3A6DF2119E;
-	Wed, 26 Feb 2025 19:59:21 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A61571F38F;
+	Wed, 26 Feb 2025 19:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599961; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740599964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hztst8rCope3yPsUAByJQrdEWrA738Z2BNiSTBEfhvg=;
-	b=gHJfNanNPJP3h+Lf3chmY0WpPbVmRWlcpFMZbByp4s0josKGNeawbMeniIkTaRpaadAFKZ
-	N/iXUQRKgKWzjFMzru4EH1xyrpO0/ARopQ7uFffY2P+MlsasDdBBZp7jbpjFpm+aokkG1F
-	ITUeQsj0lhHqyH4SXnd7PZxrAok0ZS0=
-Authentication-Results: smtp-out1.suse.de;
+	bh=q9hLbnXassT/V3Jk+YjNRU+hmDwAv67Hc8h4w4noxGs=;
+	b=jBpRUffiOvKnLry2cBIvbx9HTN0o/PyoenfX1kefKCc0OKoYvpEeYpPQqqISOWV3GdJL6j
+	Urx6UAY4LpmcvqHbsp0YcvKP6VqeR8d4Mu8t4OShro4QkXpWeDlIiIafeTL6WhBlcdMPDE
+	/cqY4U0kNHRRRvcgAV3OTAdiAUXNplc=
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599961; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1740599964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hztst8rCope3yPsUAByJQrdEWrA738Z2BNiSTBEfhvg=;
-	b=gHJfNanNPJP3h+Lf3chmY0WpPbVmRWlcpFMZbByp4s0josKGNeawbMeniIkTaRpaadAFKZ
-	N/iXUQRKgKWzjFMzru4EH1xyrpO0/ARopQ7uFffY2P+MlsasDdBBZp7jbpjFpm+aokkG1F
-	ITUeQsj0lhHqyH4SXnd7PZxrAok0ZS0=
+	bh=q9hLbnXassT/V3Jk+YjNRU+hmDwAv67Hc8h4w4noxGs=;
+	b=jBpRUffiOvKnLry2cBIvbx9HTN0o/PyoenfX1kefKCc0OKoYvpEeYpPQqqISOWV3GdJL6j
+	Urx6UAY4LpmcvqHbsp0YcvKP6VqeR8d4Mu8t4OShro4QkXpWeDlIiIafeTL6WhBlcdMPDE
+	/cqY4U0kNHRRRvcgAV3OTAdiAUXNplc=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B996113A53;
-	Wed, 26 Feb 2025 19:59:20 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 26F5F13A53;
+	Wed, 26 Feb 2025 19:59:23 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Rjn+H5hyv2dUMgAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:20 +0000
+	id 0rDON5tyv2dXMgAAD6G6ig
+	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:23 +0000
 From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Wed, 26 Feb 2025 16:59:03 -0300
-Subject: [PATCH 3/5] printk: Rename console_stop to console_suspend
+Date: Wed, 26 Feb 2025 16:59:04 -0300
+Subject: [PATCH 4/5] printk: Rename console_start to console_resume
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-printk-renaming-v1-3-0b878577f2e6@suse.com>
+Message-Id: <20250226-printk-renaming-v1-4-0b878577f2e6@suse.com>
 References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
 In-Reply-To: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -85,11 +85,11 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
  Marcos Paulo de Souza <mpdesouza@suse.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=2479;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=2165;
  i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=3mnkmbgrg6fvlcvRcHnS6RS4+e5nVoMg1rbp3WZ9G7k=;
- b=H/7BdSR/6yQobDX4aZH1XWsHy0Ldvwt4jJC4N5C8ZP9FzPgppEFsl9KC/P/8XwMv2JcTOCFVE
- 44S9dI7kSk0DDjWP0Vza6VKVEAwh+2it5qfL1vHgeziHcGBCKAnIOwF
+ bh=w5VO+oRXeQA2tzKp+Ki2raOgvFvjyAZ7O1+whc7zoyo=;
+ b=zWXJBssCbR3hm4WbbynsGLrujAmM12datM6pdRySPk16/u4JYX2jMFr1TuPsxZT7Ddfm2z/Et
+ sQNm9u9T93zBWRkWP+NORyKRquNYPSX00PeGqXq/z9DdR0JdmmpzTko
 X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
  pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
 X-Spamd-Result: default: False [-4.30 / 50.00];
@@ -113,8 +113,8 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:mid]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250226_115923_067678_0E6C728C 
-X-CRM114-Status: GOOD (  12.23  )
+X-CRM114-CacheID: sfid-20250226_115927_398906_2DFAB2E5 
+X-CRM114-Status: GOOD (  11.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,72 +129,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The intent of console_stop was in fact to suspend it, so rename the
-function accordly.
+The intent of console_start was to resume a previosly suspended console,
+so rename it accordly.
 
 Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
- drivers/tty/serial/serial_core.c | 4 ++--
+ drivers/tty/serial/serial_core.c | 2 +-
  include/linux/console.h          | 2 +-
- kernel/printk/printk.c           | 6 +++---
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/printk/printk.c           | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 74fa02b23772..ff2499dbbb82 100644
+index ff2499dbbb82..4e6bbbeeb2bf 100644
 --- a/drivers/tty/serial/serial_core.c
 +++ b/drivers/tty/serial/serial_core.c
-@@ -2442,10 +2442,10 @@ int uart_suspend_port(struct uart_driver *drv, struct uart_port *uport)
+@@ -2500,7 +2500,7 @@ int uart_resume_port(struct uart_driver *drv, struct uart_port *uport)
+ 			uart_port_unlock_irq(uport);
+ 		}
+ 		if (console_suspend_enabled)
+-			console_start(uport->cons);
++			console_resume(uport->cons);
  	}
  
- 	/*
--	 * Disable the console device before suspending.
-+	 * Suspend the console device before suspending the port.
- 	 */
- 	if (uart_console(uport))
--		console_stop(uport->cons);
-+		console_suspend(uport->cons);
- 
- 	uart_change_pm(state, UART_PM_STATE_OFF);
- 
+ 	if (tty_port_suspended(port)) {
 diff --git a/include/linux/console.h b/include/linux/console.h
-index 0d48e0deb213..74587eeea3c7 100644
+index 74587eeea3c7..8f10d0a85bb4 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -633,7 +633,7 @@ extern void console_conditional_schedule(void);
- extern void console_unblank(void);
+@@ -634,7 +634,7 @@ extern void console_unblank(void);
  extern void console_flush_on_panic(enum con_flush_mode mode);
  extern struct tty_driver *console_device(int *);
--extern void console_stop(struct console *);
-+extern void console_suspend(struct console *);
- extern void console_start(struct console *);
+ extern void console_suspend(struct console *);
+-extern void console_start(struct console *);
++extern void console_resume(struct console *);
  extern int is_console_locked(void);
  extern int braille_register_console(struct console *, int index,
+ 		char *console_options, char *braille_options);
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ef259660563a..c40b841c191b 100644
+index c40b841c191b..fbbaec06c9f3 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -3497,10 +3497,10 @@ struct tty_driver *console_device(int *index)
- 
- /*
-  * Prevent further output on the passed console device so that (for example)
-- * serial drivers can disable console output before suspending a port, and can
-+ * serial drivers can suspend console output before suspending a port, and can
-  * re-enable output afterwards.
-  */
--void console_stop(struct console *console)
-+void console_suspend(struct console *console)
- {
- 	__pr_flush(console, 1000, true);
- 	console_list_lock();
-@@ -3515,7 +3515,7 @@ void console_stop(struct console *console)
- 	 */
- 	synchronize_srcu(&console_srcu);
+@@ -3517,7 +3517,7 @@ void console_suspend(struct console *console)
  }
--EXPORT_SYMBOL(console_stop);
-+EXPORT_SYMBOL(console_suspend);
+ EXPORT_SYMBOL(console_suspend);
  
- void console_start(struct console *console)
+-void console_start(struct console *console)
++void console_resume(struct console *console)
  {
+ 	struct console_flush_type ft;
+ 	bool is_nbcon;
+@@ -3542,7 +3542,7 @@ void console_start(struct console *console)
+ 
+ 	__pr_flush(console, 1000, true);
+ }
+-EXPORT_SYMBOL(console_start);
++EXPORT_SYMBOL(console_resume);
+ 
+ #ifdef CONFIG_PRINTK
+ static int unregister_console_locked(struct console *console);
 
 -- 
 2.48.1
