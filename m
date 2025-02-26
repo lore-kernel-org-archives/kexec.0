@@ -4,82 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C73CBC021B2
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 00:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4555EC021B2
+	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 01:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/fLOI8OoddJLVPbWF8PdboZeiEPg5BhgTCWlbYEUGLE=; b=YEoPcvlRJpHiZ8cAb8IJiadZZk
-	XpAoutLh7AZjvaUNQIvQJo+UnAy4tS2NPhfK+jPy8E6EvqlOFTZnOiRCe6h9AAslxfUrDJNSNQ/Lo
-	TRU4YteJLC3c9bkZVJXIozLxOo854NhlB1a97+DQOtQXMHpJZuSnIVi4icxFKlAh/e3uUt22Jv6ow
-	hlJtVTrt6H6PwjyFIAmunhcOY0npCbG/anocDqMsEld+FyNNqZcaN50QZUjLbY5V11M7UjaYRWVOJ
-	RdhxGw5ys15p7YlzCUneRvGNLMzabSs/CcEbXRbGEksUFhtxN24LAiFuKbJxu4ysrBUUsWYXbn/oi
-	pKtnqaNQ==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=; b=Hj0u1VMMWdAdp/
+	63QBO8yyYK4BWTV/514uieAf+wq1wxZTD9c/VCM8VTRvtwpdobJSzmuCDYkYk1J3eWg/0zVtYTTie
+	hUS2+Sf+ua8YTZmhAEkDC+YVEPP+TptzC7PsW7Wbt53ftn6ZZFowTavvw3XEhXPh651T2K0o5Wv4X
+	Is9HesVpMgwHb1YpKTUR7XhNTSXsPkePXDzd/dGU1Hla85DHXGKsMrhzCWoqsYZDElrGoc7XUSG1t
+	tHb021+tnObOw1keM2Wz91MtoMqFVt1ksjovKpeB4ti31t/cwSJ6dongXGiizg1hiLv148zTaOP8+
+	MojvogQPU4viiMnlab7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn5TE-00000001tJ3-2j3j;
-	Wed, 26 Feb 2025 00:40:16 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1tn6e9-000000023SO-0Q2d;
+	Wed, 26 Feb 2025 01:55:37 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn5TB-00000001tIL-1JIT
+	id 1tn6cm-000000023Hw-23Xx
+	for kexec@bombadil.infradead.org;
+	Wed, 26 Feb 2025 01:54:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
+	Message-ID:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:References;
+	bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=; b=natpDd/F/x76C2h8QD1zMR3zsk
+	6YTlDGz020X/QE+hh/EasA5Av/IHdra9kupjT+DqKn92FMtaVBb4x01GitN+/RteKqYA2OOi1jcG+
+	yhO1hyqiS/VS9LgTlUmRIqzIOuyNnBLBUOoiBGnu71FRpWN8vxuMgd7MzLJytanedya13C4BByBt8
+	TPNUy/XH7R74/JKorWwmyaJ3CiWPyy9zr+kKIVz9jKSTSts9hwwfmY4xvMWa+I3PrxdrVsxFLy3t9
+	9SD+PZjVNW7D7lHQTqEtt7lzsHyucKh6hAAknXpqCS8dk8yxZw74P4GVdBNhpplaUvW05ZMaBiqB8
+	Jpa+Sxfg==;
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tn6cg-00000003UDE-2Uty
 	for kexec@lists.infradead.org;
-	Wed, 26 Feb 2025 00:40:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740530412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/fLOI8OoddJLVPbWF8PdboZeiEPg5BhgTCWlbYEUGLE=;
-	b=ToI3ynVuvRGSzXOWChssqXSrz+vubRxuoOFqXxzzwwEJGg0kNG+ihlp+L4DSZUkUEcHS0N
-	pJgz0gIUs+8p78ovGwTo8l7i2eByMfAcwjjzwDNfr15cZD/W7hD+MlWpQuoB97xf1aWPi8
-	PtI/ITAFhhOa4dXMZ0Y0dquRTZKMEVo=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-540--42mYKK8MTS4avnePE08_Q-1; Tue,
- 25 Feb 2025 19:40:10 -0500
-X-MC-Unique: -42mYKK8MTS4avnePE08_Q-1
-X-Mimecast-MFC-AGG-ID: -42mYKK8MTS4avnePE08_Q_1740530408
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24DDB180087A;
-	Wed, 26 Feb 2025 00:40:07 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.127])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CFD39300018D;
-	Wed, 26 Feb 2025 00:40:03 +0000 (UTC)
-Date: Wed, 26 Feb 2025 08:39:59 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
-Message-ID: <Z75i31INh5DAfW+R@MiWiFi-R3L-srv>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
- <20250218225502.747963-3-chenste@linux.microsoft.com>
- <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
- <658b52e4-a4bb-40fc-a00b-bfdb3bf15b52@linux.microsoft.com>
- <Z70MZD+BssRG4R1H@MiWiFi-R3L-srv>
- <8504fd93-8fff-4fd9-8d2d-26b4e1e84bee@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8504fd93-8fff-4fd9-8d2d-26b4e1e84bee@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+	Wed, 26 Feb 2025 01:54:09 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-22101351b1dso127446505ad.3
+        for <kexec@lists.infradead.org>; Tue, 25 Feb 2025 17:54:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740534840; x=1741139640; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=;
+        b=byxFdDOxZwJWNimAgp5tisBHznaFweaX2B+5Sc2jD8pn/2a9DHyoF3Y6W5+YZcG9Z9
+         RPQ52/Px9K/1NTDIWFcMQ9Yvea4T1zC32l0lxDBONVpMRLFJoS3hmRTHdA4BdaDJipwp
+         8mUG7rKP5+N9Xjs+NHC/A0dVcApKBemIol7++C7oA3KFWDYZmANPxkuQjR6sk4tOJ5hM
+         yxcKUD/Skl2HMWW96NDrQF5PYorO/HrUzY7Z2uCsXy4KeXQrTYv+8XFywQXvlzL5njBo
+         l/QQ4WR30n7SWdl8rYXv9zo8HXdsxvjLvz+O6Pa+CuPYx0hskEBH45Rx7sdAhrVCFeNH
+         RxaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740534840; x=1741139640;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WEgQbAyN812Od1PLDKL03NyhRQA8kQhgcIrLRcSGxlQ=;
+        b=Zg5Zz1uiCWlabM0XtpvCVmpcVmawyfaNixZUagRr3aSV0qhHBCrmIOKHBUrGpeKIb5
+         SsuoQVnOkzMXeWS3JZJi6r03o3W0CL4/elmrLe34TRiplcZknxhA0zOlA/V/CYllN656
+         qfseCWCb5sweV0qGy9SUUWfnIMW29/DybQrLieT287ejx5ylgsUNhgOwE8OIyxWdtlYl
+         mBmeXT5tuRmc6hmPEj+giQ8Qj4v58+uX4Yo+hSAu2U8b1IH/STd7A5byRCfuV/gfGJKP
+         9B0G36NDQa8cmCUk3NFQq9ayNm/gKB33qINQl41JsRRgs+VkzfPUN2YAhb3GgZ8NcZQS
+         5jWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTyR//LrooE2AEHwYczP8YVp1vPQZqFTShX5jhnD6SyHWMT9xCvm9r/GvUlcAKXW28TvtIbQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyPd2XRE/Kmx7iT6rq6BAyzHhrMKsO3arzwPGk+57+o6WddiGrX
+	MUEFzf/nUw16lCLWoM5jhhvyB7O4Y6PV6xeq+YBJzesn4Lx8QN97ZmelGG+sf6d5YZbogqrEi+5
+	X/SGsCBSRN+NifcTMtw==
+X-Google-Smtp-Source: AGHT+IFkznZMkNBk5de2vOfANCIGfGmFUq4ZoIai/G7n3JkeCyYN8XDtQ2NLIWeTlmgvn0M2N7vBP6JVrlIIeeRX
+X-Received: from pfbna17.prod.google.com ([2002:a05:6a00:3e11:b0:732:502c:4a0f])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:2e1e:b0:725:df1a:285 with SMTP id d2e1a72fcca58-7348bdd003bmr2703166b3a.12.1740534840070;
+ Tue, 25 Feb 2025 17:54:00 -0800 (PST)
+Date: Tue, 25 Feb 2025 17:53:39 -0800
+In-Reply-To: <20250206132754.2596694-3-rppt@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250226015342.2136669-1-changyuanl@google.com>
+Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
+From: Changyuan Lyu <changyuanl@google.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Changyuan Lyu <changyuanl@google.com>, Alexander Graf <graf@amazon.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
+	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, 
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250225_164013_426515_A51FD8F5 
-X-CRM114-Status: GOOD (  31.74  )
+X-CRM114-CacheID: sfid-20250226_015407_936597_57AAD485 
+X-CRM114-Status: GOOD (  17.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,60 +119,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02/25/25 at 10:35am, steven chen wrote:
-> On 2/24/2025 4:18 PM, Baoquan He wrote:
-> > On 02/24/25 at 03:05pm, steven chen wrote:
-> > > On 2/23/2025 10:14 PM, Baoquan He wrote:
-> > > > Hi Steve, Mimi,
-> > > > 
-> > > > On 02/18/25 at 02:54pm, steven chen wrote:
-> > > > > Currently, the mechanism to map and unmap segments to the kimage
-> > > > > structure is not available to the subsystems outside of kexec.  This
-> > > > > functionality is needed when IMA is allocating the memory segments
-> > > > > during kexec 'load' operation.  Implement functions to map and unmap
-> > > > > segments to kimage.
-> > > > I am done with the whole patchset understanding. My concern is if this
-> > > > TPM PCRs content can be carried over through newly introduced KHO. I can
-> > > > see that these patchset doesn't introduce too much new code changes,
-> > > > while if many conponents need do this, kexec reboot will be patched all
-> > > > over its body and become ugly and hard to maintain.
-> > > > 
-> > > > Please check Mike Rapoport's v4 patchset to see if IMA can register
-> > > > itself to KHO and do somthing during 2nd kernel init to restore those
-> > > > TPM PCRs content to make sure all measurement logs are read correctly.
-> > > > [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-> > > > 
-> > > > Thanks
-> > > > Baoquan
-> > > Hi Baoquan,
-> > > 
-> > > For IMA, it appears that there are no current issues with TPM PCRs after a
-> > > kernel soft reboot.
-> > I mean using KHO to hold in 1st kernel and restore the IMA log in 2nd
-> > kernel.
-> > 
-> > > This patches is used to get currently missed IMA measurements during the
-> > > kexec process copied to new kernel after the kernel soft reboot. I think
-> > > it's ok to leave it at current location: it will be easy to maintain for
-> > > IMA.
-> > Yeah, but I am saying this patchset increase unnecessary code
-> > complexity in kexec code maintaining.
-> > 
-> > > Overall, for these patches, do you see any major blockers for kexec?
-> > > 
-> > > If you have any specific concerns or need further details, please let me
-> > > know.
-> > I have no concerns for this patchset implementation itself, I saw you using
-> > vmap to maping the possible scattered source pages smartly and taking
-> > the mapped buffer pointers to update later duing kexec jumping. That's very
-> > great and clever method. BUT I am concerned about the solution, if we
-> > can make use of the existed way of KHO to implement it more simply. Could
-> > you please do investigation?
-> 
-> Hi Baoquan,
-> 
-> I will conduct an investigation. Thank you for your comments.
+Hi Mike,
 
-Thanks a lot, Steven.
+On Thu,  6 Feb 2025 15:27:42 +0200, Mike Rapoport <rppt@kernel.org> wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> to denote areas that were reserved for kernel use either directly with
+> memblock_reserve_kern() or via memblock allocations.
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  include/linux/memblock.h | 16 +++++++++++++++-
+>  mm/memblock.c            | 32 ++++++++++++++++++++++++--------
+>  2 files changed, 39 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index e79eb6ac516f..65e274550f5d 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> ......
+> @@ -116,7 +117,19 @@ int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
+>  int memblock_add(phys_addr_t base, phys_addr_t size);
+>  int memblock_remove(phys_addr_t base, phys_addr_t size);
+>  int memblock_phys_free(phys_addr_t base, phys_addr_t size);
+> -int memblock_reserve(phys_addr_t base, phys_addr_t size);
+> +int __memblock_reserve(phys_addr_t base, phys_addr_t size, int nid,
+> +		       enum memblock_flags flags);
+> +
+> +static __always_inline int memblock_reserve(phys_addr_t base, phys_addr_t size)
+> +{
+> +	return __memblock_reserve(base, size, NUMA_NO_NODE, 0);
 
+Without this patch `memblock_reserve` eventually calls `memblock_add_range`
+with `MAX_NUMNODES`, but with this patch, `memblock_reserve` calls
+`memblock_add_range` with `NUMA_NO_NODE`. Is it intended or an
+accidental typo? Thanks!
+
+> ......
+>
+> -int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+> +int __init_memblock __memblock_reserve(phys_addr_t base, phys_addr_t size,
+> +				       int nid, enum memblock_flags flags)
+>  {
+>  	phys_addr_t end = base + size - 1;
+>
+> -	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+> -		     &base, &end, (void *)_RET_IP_);
+> +	memblock_dbg("%s: [%pa-%pa] nid=%d flags=%x %pS\n", __func__,
+> +		     &base, &end, nid, flags, (void *)_RET_IP_);
+>
+> -	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+
+Originally `memblock_reserve` calls `memblock_add_range` with `MAX_NUMNODES`,
+See my comments above.
+
+Best,
+Changyuan
 
