@@ -4,117 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BBE4CC19776
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 19:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31C50C19F2E
+	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 20:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=P3WmfFEnCvDs4KrvRf1+gcJdaZ6nkRrsX2UH5OZ2D/Y=; b=HSvc4GZLFR3pxC3qaU003m4x6U
-	TAtFtMpqpq6uHaljBtd9t+A9mWz8B6fYvKBhrsvsHf2ERFx25++Tn5tWd6n9J36Lr7wz1aVvuqUkh
-	r+uQ5c/U7apnbdyhMby6VaPUjNPMG72B/igPGRle8bo1B8LZfdbtOmoZcy3HOCbOYGbCyan0NCgHm
-	gB7flc3WAGVsJAAwJypbWoqeYD/oE7PIFWBS9vVX13aRYk3WKVaRHeOy4S4VpB/ucWz3jM++ONsLb
-	Bd94ujlRkfHiIKkbP6fEWiiC/q5vxmS5LrYEwLG4nudUS8Tb9e0o0g6zyP8uZAYdIBLC6ifo/CziE
-	Ut1kFpbg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=799ywvcUyhx2UxHktogDN5ekutBUXjzubgG695SUbqQ=; b=nX0Zh4hFwetaP8/dtSfGmWFfWe
+	rkuWKCJGGY6OMZyps07C5UNeOoD0ERItjEUBr5sJErOdovmEeXjJPXDKQ0lrBjdfWtp0OPI4KkzW5
+	+G2U4DtVliGFAYdpitj5yy0/ykbb4UijkHC6pRWqfSarVyEfXifwGaU7Qm5/xZ14SEI7LK70qC3no
+	+WTRBxGeR50/MWZlDn48jT30FLuN+egaabzAUm4QLbAHHOJTBu21uJ8pHdMPitl3fj7VwT9NM6Nx5
+	bl0jPk91/jGQziY/taosS+STWgrGRa6BVUrQtdu4ECDx/1oF0/pTGWHT9E5O4nAJrgbi+MfUUbrsW
+	ZJH/t+dA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNZ7-00000005FDr-26TP;
-	Wed, 26 Feb 2025 19:59:33 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1tnNhu-00000005HqB-0CT5;
+	Wed, 26 Feb 2025 20:08:38 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNZ4-00000005FAm-2mtr
-	for kexec@lists.infradead.org;
-	Wed, 26 Feb 2025 19:59:31 +0000
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2A803211A1;
-	Wed, 26 Feb 2025 19:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P3WmfFEnCvDs4KrvRf1+gcJdaZ6nkRrsX2UH5OZ2D/Y=;
-	b=gu5rAJ4ln2UxWzssNDciupNk61EvKVzSJankbY07PY9XaK3SnqBmfZj8lsUw62H0oO5eMj
-	GMJoxtpmApYaTW1HI3w0aoDX8Gr58rp2mmDyTi1yM5GLcISMc6wo7pvpRZ4sXtKpyOtgCr
-	u2LGAjokAzm1aecIi73WSBfpa6jYdTw=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P3WmfFEnCvDs4KrvRf1+gcJdaZ6nkRrsX2UH5OZ2D/Y=;
-	b=gu5rAJ4ln2UxWzssNDciupNk61EvKVzSJankbY07PY9XaK3SnqBmfZj8lsUw62H0oO5eMj
-	GMJoxtpmApYaTW1HI3w0aoDX8Gr58rp2mmDyTi1yM5GLcISMc6wo7pvpRZ4sXtKpyOtgCr
-	u2LGAjokAzm1aecIi73WSBfpa6jYdTw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AA30713A53;
-	Wed, 26 Feb 2025 19:59:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id myk8HKByv2ddMgAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:28 +0000
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Wed, 26 Feb 2025 16:59:05 -0300
-Subject: [PATCH 5/5] printk: Check CON_SUSPEND when unblanking a console
+	id 1tnNhr-00000005Hnt-2CZs;
+	Wed, 26 Feb 2025 20:08:36 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id A408E5C7530;
+	Wed, 26 Feb 2025 20:07:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4686FC4CED6;
+	Wed, 26 Feb 2025 20:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740600513;
+	bh=eyjq2Ww0jb1bZoJZAm8Lti1Xqu4cmFY5VmjvlWk4yqA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=hIsCK2HEyhp8nnDLJ+Ekvog5QghvhFW4Cl+KDfi0CZGOJKkMDEC9CaRuDg/XDA1fC
+	 qVqjjzFJyeQkF0X5bHt6W0Q7BuiacZqYGew1xs6zh8qQFVvmDVywAdlAO4gdvGBQhA
+	 3394HsxFSmco+PRk6EEbmQDrCd0V+MGYMIWXPw5/uxsNmLRZAbI3PJJy7EZeZ4N8US
+	 ykjC/ZKl/0ceKcYQtfp5CzccSnJO3mMsJ8D/wzkYmtl7zDlfLyIcljMsUqeUnTndqq
+	 ydBaPiAoBMBdxvWMy52tcsFQBFOkIEe/3go+jCHkQNSrWKTxzoT6woIf2uu2euVfT6
+	 J7GWf8+UFCESQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org,  Alexander Graf <graf@amazon.com>,  Andrew
+ Morton <akpm@linux-foundation.org>,  Andy Lutomirski <luto@kernel.org>,
+  Anthony Yznaga <anthony.yznaga@oracle.com>,  Arnd Bergmann
+ <arnd@arndb.de>,  Ashish Kalra <ashish.kalra@amd.com>,  Benjamin
+ Herrenschmidt <benh@kernel.crashing.org>,  Borislav Petkov <bp@alien8.de>,
+  Catalin Marinas <catalin.marinas@arm.com>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  David Woodhouse <dwmw2@infradead.org>,
+  Eric Biederman <ebiederm@xmission.com>,  Ingo Molnar <mingo@redhat.com>,
+  James Gowans <jgowans@amazon.com>,  Jonathan Corbet <corbet@lwn.net>,
+  Krzysztof Kozlowski <krzk@kernel.org>,  Mark Rutland
+ <mark.rutland@arm.com>,  Paolo Bonzini <pbonzini@redhat.com>,  Pasha
+ Tatashin <pasha.tatashin@soleen.com>,  "H. Peter Anvin" <hpa@zytor.com>,
+  Peter Zijlstra <peterz@infradead.org>,  Rob Herring <robh+dt@kernel.org>,
+  Rob Herring <robh@kernel.org>,  Saravana Kannan <saravanak@google.com>,
+  Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,  Steven Rostedt
+ <rostedt@goodmis.org>,  Thomas Gleixner <tglx@linutronix.de>,  Tom
+ Lendacky <thomas.lendacky@amd.com>,  Usama Arif
+ <usama.arif@bytedance.com>,  Will Deacon <will@kernel.org>,
+  devicetree@vger.kernel.org,  kexec@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  x86@kernel.org
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org> (Mike Rapoport's
+	message of "Thu, 6 Feb 2025 15:27:40 +0200")
+References: <20250206132754.2596694-1-rppt@kernel.org>
+Date: Wed, 26 Feb 2025 20:08:27 +0000
+Message-ID: <mafs0cyf4ii4k.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-printk-renaming-v1-5-0b878577f2e6@suse.com>
-References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
-In-Reply-To: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Eric Biederman <ebiederm@xmission.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, 
- Pavel Machek <pavel@ucw.cz>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- John Ogness <john.ogness@linutronix.de>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Todd E Brandt <todd.e.brandt@linux.intel.com>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
- Marcos Paulo de Souza <mpdesouza@suse.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=1376;
- i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=JRnPNS2R+SoIrKYk5hs0jEUL60OqbTaEnku8x/ZnQT4=;
- b=YZG7GhXC7DlbzU/tfnWu5ZJWEdMcKKy+w3hDjFcb440sfvdbAMzpmhJ3Bxk21gPTiahZl9MRA
- xAt8RkWljJoCoHFjFTT5BAcz42UiIfBD1jRnQDzOo0STCf7ts7Cddnd
-X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
- pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLsew83exbyfiapi7twtunf83p)];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:mid]
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250226_115930_876616_ECA5D79B 
-X-CRM114-Status: GOOD (  10.06  )
+X-CRM114-CacheID: sfid-20250226_120835_647822_1D072DEA 
+X-CRM114-Status: GOOD (  20.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,50 +90,140 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The commit 9e70a5e109a4 ("printk: Add per-console suspended state")
-introduced the CON_SUSPENDED flag for consoles. The suspended consoles
-will stop receiving messages, so don't unblank suspended consoles
-because it won't be showing anything either way.
+Hi Mike,
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- kernel/printk/printk.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+On Thu, Feb 06 2025, Mike Rapoport wrote:
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index fbbaec06c9f3..4b7ed40bf808 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3342,7 +3342,12 @@ void console_unblank(void)
- 	 */
- 	cookie = console_srcu_read_lock();
- 	for_each_console_srcu(c) {
--		if ((console_srcu_read_flags(c) & CON_ENABLED) && c->unblank) {
-+		short flags = console_srcu_read_flags(c);
-+
-+		if (flags & CON_SUSPENDED)
-+			continue;
-+
-+		if ((flags & CON_ENABLED) && c->unblank) {
- 			found_unblank = true;
- 			break;
- 		}
-@@ -3379,7 +3384,12 @@ void console_unblank(void)
- 
- 	cookie = console_srcu_read_lock();
- 	for_each_console_srcu(c) {
--		if ((console_srcu_read_flags(c) & CON_ENABLED) && c->unblank)
-+		short flags = console_srcu_read_flags(c);
-+
-+		if (flags & CON_SUSPENDED)
-+			continue;
-+
-+		if ((flags & CON_ENABLED) && c->unblank)
- 			c->unblank();
- 	}
- 	console_srcu_read_unlock(cookie);
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Hi,
+>
+> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+> just to make things simpler instead of ftrace we decided to preserve
+> "reserve_mem" regions.
+[...]
+
+I applied the patches on top of v6.14-rc1 and tried them out on an x86
+qemu machine . When I do a plain KHO activate and kexec, I get the below
+errors on boot. This causes networking to fail on the VM. The errors are
+consistent and happen every kexec-reboot, though fairly late in boot
+after systemd tries to bring up network. The same setup has worked fine
+with Alex's v3 of KHO patches.
+
+Do you see anything obvious that might cause this? I can try to debug
+this tomorrow, but if it rings any loud bells it would be nice to know.
+
+    [    1.665225] ------------[ cut here ]------------
+    [    1.665606] e1000 0000:00:03.0: DMA addr 0x0000000107978040+1522 overflow (mask ffffffff, bus limit 0).
+    [    1.666364] WARNING: CPU: 6 PID: 2033 at kernel/dma/direct.h:103 dma_direct_map_page+0x271/0x280
+    [    1.667074] Modules linked in:
+    [    1.667335] CPU: 6 UID: 980 PID: 2033 Comm: systemd-network Not tainted 6.14.0-rc1+ #70
+    [    1.668004] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+    [    1.668760] RIP: 0010:dma_direct_map_page+0x271/0x280
+    [    1.669166] Code: 04 48 8b 5d 00 48 89 ef e8 7c 5f 7a 00 4d 89 e9 4d 89 e0 48 89 da 48 89 e1 41 56 48 89 c6 48 c7 c7 58 a9 4f 82 e8 3f 09 f4 ff <0f> 0b 58 eb 88 e8 05 b7 b9 00 0f 1f 44 00 00 90 90 90 90 90 90 90
+    [    1.670624] RSP: 0018:ffffc90002baf628 EFLAGS: 00010282
+    [    1.671035] RAX: 0000000000000000 RBX: ffff888100dd2e00 RCX: 0000000000000027
+    [    1.671607] RDX: ffff88842d920a88 RSI: 0000000000000001 RDI: ffff88842d920a80
+    [    1.672177] RBP: ffff8881015530c0 R08: 0000000000000000 R09: ffffc90002baf4b0
+    [    1.672757] R10: ffffffff82deeec8 R11: 0000000000000003 R12: 00000000000005f2
+    [    1.673320] R13: 00000000ffffffff R14: 0000000000000000 R15: 0000000000000040
+    [    1.673882] FS:  00007f15c3edb880(0000) GS:ffff88842d900000(0000) knlGS:0000000000000000
+    [    1.674516] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [    1.674977] CR2: 00007f15c430cb50 CR3: 0000000102d28000 CR4: 00000000000006f0
+    [    1.675554] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    [    1.676117] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+    [    1.676698] Call Trace:
+    [    1.676914]  <TASK>
+    [    1.677097]  ? show_trace_log_lvl+0x1a7/0x2f0
+    [    1.677458]  ? show_trace_log_lvl+0x1a7/0x2f0
+    [    1.677811]  ? dma_map_page_attrs+0x6e/0x1f0
+    [    1.678158]  ? dma_direct_map_page+0x271/0x280
+    [    1.678510]  ? __warn.cold+0x93/0xf1
+    [    1.678802]  ? dma_direct_map_page+0x271/0x280
+    [    1.679158]  ? report_bug+0xff/0x140
+    [    1.679461]  ? handle_bug+0x53/0x90
+    [    1.679768]  ? exc_invalid_op+0x17/0x70
+    [    1.680077]  ? asm_exc_invalid_op+0x1a/0x20
+    [    1.680428]  ? dma_direct_map_page+0x271/0x280
+    [    1.680789]  ? dma_direct_map_page+0x271/0x280
+    [    1.681149]  dma_map_page_attrs+0x6e/0x1f0
+    [    1.681483]  e1000_alloc_rx_buffers+0x140/0x340
+    [    1.681852]  e1000_configure+0xf9/0x110
+    [    1.682163]  e1000_open+0xc5/0x200
+    [    1.682441]  __dev_open+0xff/0x1d0
+    [    1.682728]  __dev_change_flags+0x1f8/0x240
+    [    1.683066]  ? __nla_put+0x10/0x30
+    [    1.683345]  dev_change_flags+0x26/0x70
+    [    1.683668]  do_setlink.isra.0+0x2ca/0xbe0
+    [    1.684002]  ? cred_has_capability.isra.0+0x6a/0x110
+    [    1.684411]  ? blk_mq_get_tags+0x33/0x70
+    [    1.684731]  ? virtqueue_add_split+0xa4/0x6b0
+    [    1.685086]  ? security_capable+0x70/0xc0
+    [    1.685409]  rtnl_setlink+0x184/0x220
+    [    1.685712]  ? cred_has_capability.isra.0+0x6a/0x110
+    [    1.686110]  ? xa_load+0x7a/0xb0
+    [    1.686374]  ? __pfx_rtnl_setlink+0x10/0x10
+    [    1.686710]  rtnetlink_rcv_msg+0x354/0x3f0
+    [    1.687039]  ? folio_wait_bit_common+0x28b/0x300
+    [    1.687407]  ? ___pte_offset_map+0x1b/0x140
+    [    1.687757]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
+    [    1.688123]  netlink_rcv_skb+0x53/0x100
+    [    1.688451]  netlink_unicast+0x245/0x390
+    [    1.688772]  netlink_sendmsg+0x21b/0x470
+    [    1.689085]  ? __check_object_size.part.0+0x39/0xd0
+    [    1.689481]  __sys_sendto+0x1d4/0x1e0
+    [    1.689788]  __x64_sys_sendto+0x24/0x30
+    [    1.690108]  do_syscall_64+0x4b/0x110
+    [    1.690414]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+    [    1.690820] RIP: 0033:0x7f15c40fc897
+    [    1.691114] Code: c7 c0 ff ff ff ff eb be 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 80 3d d5 37 0d 00 00 41 89 ca 74 10 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 69 c3 55 48 89 e5 53 48 83 ec 38 44 89 4d d0
+    [    1.692589] RSP: 002b:00007ffc3c3080b8 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+    [    1.693191] RAX: ffffffffffffffda RBX: 000055eda6a76a70 RCX: 00007f15c40fc897
+    [    1.693752] RDX: 0000000000000020 RSI: 000055eda6a93260 RDI: 0000000000000003
+    [    1.694308] RBP: 00007ffc3c308150 R08: 00007ffc3c3080c0 R09: 0000000000000080
+    [    1.694867] R10: 0000000000000000 R11: 0000000000000202 R12: 000055eda6a93bc0
+    [    1.695423] R13: 000055eda6a8c748 R14: 0000000000000000 R15: 000055eda6a8c700
+    [    1.695998]  </TASK>
+    [    1.696183] ---[ end trace 0000000000000000 ]---
+    [    1.707952] e1000: ens3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+    [...]
+    [    3.071312] e1000 0000:00:03.0: TX DMA map failed
+    [    3.263302] e1000 0000:00:03.0: TX DMA map failed
+    [    3.388180] e1000 0000:00:03.0: TX DMA map failed
+    [many more times]
+
+Qemu version:
+
+    QEMU emulator version 9.2.0
+    Copyright (c) 2003-2024 Fabrice Bellard and the QEMU Project developers
+
+Command to run qemu:
+
+    qemu-system-x86_64 \
+            -m 16G \
+            -smp 10 \
+            -kernel arch/x86/boot/bzImage \
+            -append "console=ttyS0 root=/dev/vda rw earlyprintk=serial net.ifnames=0 kho=1 kho_scratch=200M,200M nokaslr" \
+            -drive file=/local/home/ptyadav/qemu/drive.ext4,format=raw,if=virtio \
+            -nic user,hostfwd=tcp::10022-:22 \
+            -gdb tcp::1234 \
+            -nographic
+
+Steps used to kexec:
+
+    $ echo 1 > /sys/kernel/kho/active
+    $ kexec -l bzImage -s --initrd /boot/initramfs-linux.img --reuse-cmdline
+
+DT after KHO activate:
+
+    /dts-v1/;
+
+    / {
+            compatible = "kho-v1";
+    };
 
 -- 
-2.48.1
-
+Regards,
+Pratyush Yadav
 
