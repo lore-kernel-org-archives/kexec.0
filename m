@@ -4,78 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31C50C19F2E
-	for <kexec@archiver.kernel.org>; Wed, 26 Feb 2025 20:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85416C021BE
+	for <kexec@archiver.kernel.org>; Thu, 27 Feb 2025 06:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=799ywvcUyhx2UxHktogDN5ekutBUXjzubgG695SUbqQ=; b=nX0Zh4hFwetaP8/dtSfGmWFfWe
-	rkuWKCJGGY6OMZyps07C5UNeOoD0ERItjEUBr5sJErOdovmEeXjJPXDKQ0lrBjdfWtp0OPI4KkzW5
-	+G2U4DtVliGFAYdpitj5yy0/ykbb4UijkHC6pRWqfSarVyEfXifwGaU7Qm5/xZ14SEI7LK70qC3no
-	+WTRBxGeR50/MWZlDn48jT30FLuN+egaabzAUm4QLbAHHOJTBu21uJ8pHdMPitl3fj7VwT9NM6Nx5
-	bl0jPk91/jGQziY/taosS+STWgrGRa6BVUrQtdu4ECDx/1oF0/pTGWHT9E5O4nAJrgbi+MfUUbrsW
-	ZJH/t+dA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=mhbM9D3yx08Y2BNiRZg+mj0b2LzOItCie0bhQh4S2Bc=; b=unULH46UYWERD+uqkUKOm69vIy
+	3Sh69OnoKDMhTnhlzVbm+Eu243oiHEEY6oPYk4qMAcoB5zjAIEdSUIftSQRcCZJvSl4PR/bTxj39B
+	Ul8bVtCic0qs3ZRJzfo4Gk5M1nxtQZ3QV94dMa1Y5uFLChakpgzysiypr+oh38jU6N+eIa6qPCkiv
+	cm2rXYYckO3+voPaEQb2kwTNO9KZjJ90IwfgLc1EDBNmlQoqdlTZzJJUpZpPHVmVqv2p/jTdKjJhT
+	AQj6fo1hB7WSEDSsIT9ZXfd28Cn8NMGO76FYoW7dJW78y9Y4SRYdUKZAjkPqxIMiLoURyewK+55G2
+	6FttIJCg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNhu-00000005HqB-0CT5;
-	Wed, 26 Feb 2025 20:08:38 +0000
+	id 1tnXRR-00000006TuR-3NGk;
+	Thu, 27 Feb 2025 06:32:17 +0000
 Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnNhr-00000005Hnt-2CZs;
-	Wed, 26 Feb 2025 20:08:36 +0000
+	id 1tnXPy-00000006Tlt-3lBi
+	for kexec@lists.infradead.org;
+	Thu, 27 Feb 2025 06:30:48 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id A408E5C7530;
-	Wed, 26 Feb 2025 20:07:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4686FC4CED6;
-	Wed, 26 Feb 2025 20:08:28 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7AA955C1128;
+	Thu, 27 Feb 2025 06:30:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 143A0C4CEE4;
+	Thu, 27 Feb 2025 06:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740600513;
-	bh=eyjq2Ww0jb1bZoJZAm8Lti1Xqu4cmFY5VmjvlWk4yqA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=hIsCK2HEyhp8nnDLJ+Ekvog5QghvhFW4Cl+KDfi0CZGOJKkMDEC9CaRuDg/XDA1fC
-	 qVqjjzFJyeQkF0X5bHt6W0Q7BuiacZqYGew1xs6zh8qQFVvmDVywAdlAO4gdvGBQhA
-	 3394HsxFSmco+PRk6EEbmQDrCd0V+MGYMIWXPw5/uxsNmLRZAbI3PJJy7EZeZ4N8US
-	 ykjC/ZKl/0ceKcYQtfp5CzccSnJO3mMsJ8D/wzkYmtl7zDlfLyIcljMsUqeUnTndqq
-	 ydBaPiAoBMBdxvWMy52tcsFQBFOkIEe/3go+jCHkQNSrWKTxzoT6woIf2uu2euVfT6
-	 J7GWf8+UFCESQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org,  Alexander Graf <graf@amazon.com>,  Andrew
- Morton <akpm@linux-foundation.org>,  Andy Lutomirski <luto@kernel.org>,
-  Anthony Yznaga <anthony.yznaga@oracle.com>,  Arnd Bergmann
- <arnd@arndb.de>,  Ashish Kalra <ashish.kalra@amd.com>,  Benjamin
- Herrenschmidt <benh@kernel.crashing.org>,  Borislav Petkov <bp@alien8.de>,
-  Catalin Marinas <catalin.marinas@arm.com>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  David Woodhouse <dwmw2@infradead.org>,
-  Eric Biederman <ebiederm@xmission.com>,  Ingo Molnar <mingo@redhat.com>,
-  James Gowans <jgowans@amazon.com>,  Jonathan Corbet <corbet@lwn.net>,
-  Krzysztof Kozlowski <krzk@kernel.org>,  Mark Rutland
- <mark.rutland@arm.com>,  Paolo Bonzini <pbonzini@redhat.com>,  Pasha
- Tatashin <pasha.tatashin@soleen.com>,  "H. Peter Anvin" <hpa@zytor.com>,
-  Peter Zijlstra <peterz@infradead.org>,  Rob Herring <robh+dt@kernel.org>,
-  Rob Herring <robh@kernel.org>,  Saravana Kannan <saravanak@google.com>,
-  Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,  Steven Rostedt
- <rostedt@goodmis.org>,  Thomas Gleixner <tglx@linutronix.de>,  Tom
- Lendacky <thomas.lendacky@amd.com>,  Usama Arif
- <usama.arif@bytedance.com>,  Will Deacon <will@kernel.org>,
-  devicetree@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  x86@kernel.org
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org> (Mike Rapoport's
-	message of "Thu, 6 Feb 2025 15:27:40 +0200")
-References: <20250206132754.2596694-1-rppt@kernel.org>
-Date: Wed, 26 Feb 2025 20:08:27 +0000
-Message-ID: <mafs0cyf4ii4k.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20201202; t=1740637846;
+	bh=ps9/B83qtBWijfCtUNRpgDe9XFUk00fiiz5pYBvH//I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KoV2yQYVQu1Qs41zUv8dEyuWbzxymE6GGOJ5EXwAf9cFAIHCjEQYTq8v6+JURiMzv
+	 DZKBchWeG3FxC/HjmoSwHBRDuTIGyRHyJJ2eeU6ruC43xjM7hDoq3IeRzWb3CL6Gmp
+	 jariueANcbMnRpoS4oeDJD+8qucrh5h7Ny8mnWfM03FXQV+H5yBSmVrnauMiEv6owy
+	 4BGkPboEQccIXlhryxIRLDxKxF4xDMMnJK9s4HSL9x/tg3rxASV3oYk0M7i1QR4SSD
+	 rzewJihLzjerIkv5Y0Kk4OnZcDeABqybuhtTWSY7O+AWbS3s5XT3tNmKYASgK8AVQ6
+	 8QdHo8aO35toQ==
+Message-ID: <1ae23c8f-75a3-4bb6-93a2-04a8ab54db60@kernel.org>
+Date: Thu, 27 Feb 2025 07:30:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] printk: Rename console_start to console_resume
+To: Marcos Paulo de Souza <mpdesouza@suse.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Eric Biederman <ebiederm@xmission.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, John Ogness
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Todd E Brandt <todd.e.brandt@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
+ <20250226-printk-renaming-v1-4-0b878577f2e6@suse.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250226-printk-renaming-v1-4-0b878577f2e6@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250226_120835_647822_1D072DEA 
-X-CRM114-Status: GOOD (  20.76  )
+X-CRM114-CacheID: sfid-20250226_223047_021417_1DBF6213 
+X-CRM114-Status: UNSURE (   4.91  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,140 +124,15 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike,
+On 26. 02. 25, 20:59, Marcos Paulo de Souza wrote:
+> The intent of console_start was to resume a previosly suspended console,
+> so rename it accordly.
 
-On Thu, Feb 06 2025, Mike Rapoport wrote:
+FWIW no objections re code change. Except "previosly" here and 
+"accordly" in 1-4 :D. (In case you resend.)
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Hi,
->
-> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
-> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
-> just to make things simpler instead of ftrace we decided to preserve
-> "reserve_mem" regions.
-[...]
-
-I applied the patches on top of v6.14-rc1 and tried them out on an x86
-qemu machine . When I do a plain KHO activate and kexec, I get the below
-errors on boot. This causes networking to fail on the VM. The errors are
-consistent and happen every kexec-reboot, though fairly late in boot
-after systemd tries to bring up network. The same setup has worked fine
-with Alex's v3 of KHO patches.
-
-Do you see anything obvious that might cause this? I can try to debug
-this tomorrow, but if it rings any loud bells it would be nice to know.
-
-    [    1.665225] ------------[ cut here ]------------
-    [    1.665606] e1000 0000:00:03.0: DMA addr 0x0000000107978040+1522 overflow (mask ffffffff, bus limit 0).
-    [    1.666364] WARNING: CPU: 6 PID: 2033 at kernel/dma/direct.h:103 dma_direct_map_page+0x271/0x280
-    [    1.667074] Modules linked in:
-    [    1.667335] CPU: 6 UID: 980 PID: 2033 Comm: systemd-network Not tainted 6.14.0-rc1+ #70
-    [    1.668004] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
-    [    1.668760] RIP: 0010:dma_direct_map_page+0x271/0x280
-    [    1.669166] Code: 04 48 8b 5d 00 48 89 ef e8 7c 5f 7a 00 4d 89 e9 4d 89 e0 48 89 da 48 89 e1 41 56 48 89 c6 48 c7 c7 58 a9 4f 82 e8 3f 09 f4 ff <0f> 0b 58 eb 88 e8 05 b7 b9 00 0f 1f 44 00 00 90 90 90 90 90 90 90
-    [    1.670624] RSP: 0018:ffffc90002baf628 EFLAGS: 00010282
-    [    1.671035] RAX: 0000000000000000 RBX: ffff888100dd2e00 RCX: 0000000000000027
-    [    1.671607] RDX: ffff88842d920a88 RSI: 0000000000000001 RDI: ffff88842d920a80
-    [    1.672177] RBP: ffff8881015530c0 R08: 0000000000000000 R09: ffffc90002baf4b0
-    [    1.672757] R10: ffffffff82deeec8 R11: 0000000000000003 R12: 00000000000005f2
-    [    1.673320] R13: 00000000ffffffff R14: 0000000000000000 R15: 0000000000000040
-    [    1.673882] FS:  00007f15c3edb880(0000) GS:ffff88842d900000(0000) knlGS:0000000000000000
-    [    1.674516] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [    1.674977] CR2: 00007f15c430cb50 CR3: 0000000102d28000 CR4: 00000000000006f0
-    [    1.675554] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    [    1.676117] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    [    1.676698] Call Trace:
-    [    1.676914]  <TASK>
-    [    1.677097]  ? show_trace_log_lvl+0x1a7/0x2f0
-    [    1.677458]  ? show_trace_log_lvl+0x1a7/0x2f0
-    [    1.677811]  ? dma_map_page_attrs+0x6e/0x1f0
-    [    1.678158]  ? dma_direct_map_page+0x271/0x280
-    [    1.678510]  ? __warn.cold+0x93/0xf1
-    [    1.678802]  ? dma_direct_map_page+0x271/0x280
-    [    1.679158]  ? report_bug+0xff/0x140
-    [    1.679461]  ? handle_bug+0x53/0x90
-    [    1.679768]  ? exc_invalid_op+0x17/0x70
-    [    1.680077]  ? asm_exc_invalid_op+0x1a/0x20
-    [    1.680428]  ? dma_direct_map_page+0x271/0x280
-    [    1.680789]  ? dma_direct_map_page+0x271/0x280
-    [    1.681149]  dma_map_page_attrs+0x6e/0x1f0
-    [    1.681483]  e1000_alloc_rx_buffers+0x140/0x340
-    [    1.681852]  e1000_configure+0xf9/0x110
-    [    1.682163]  e1000_open+0xc5/0x200
-    [    1.682441]  __dev_open+0xff/0x1d0
-    [    1.682728]  __dev_change_flags+0x1f8/0x240
-    [    1.683066]  ? __nla_put+0x10/0x30
-    [    1.683345]  dev_change_flags+0x26/0x70
-    [    1.683668]  do_setlink.isra.0+0x2ca/0xbe0
-    [    1.684002]  ? cred_has_capability.isra.0+0x6a/0x110
-    [    1.684411]  ? blk_mq_get_tags+0x33/0x70
-    [    1.684731]  ? virtqueue_add_split+0xa4/0x6b0
-    [    1.685086]  ? security_capable+0x70/0xc0
-    [    1.685409]  rtnl_setlink+0x184/0x220
-    [    1.685712]  ? cred_has_capability.isra.0+0x6a/0x110
-    [    1.686110]  ? xa_load+0x7a/0xb0
-    [    1.686374]  ? __pfx_rtnl_setlink+0x10/0x10
-    [    1.686710]  rtnetlink_rcv_msg+0x354/0x3f0
-    [    1.687039]  ? folio_wait_bit_common+0x28b/0x300
-    [    1.687407]  ? ___pte_offset_map+0x1b/0x140
-    [    1.687757]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
-    [    1.688123]  netlink_rcv_skb+0x53/0x100
-    [    1.688451]  netlink_unicast+0x245/0x390
-    [    1.688772]  netlink_sendmsg+0x21b/0x470
-    [    1.689085]  ? __check_object_size.part.0+0x39/0xd0
-    [    1.689481]  __sys_sendto+0x1d4/0x1e0
-    [    1.689788]  __x64_sys_sendto+0x24/0x30
-    [    1.690108]  do_syscall_64+0x4b/0x110
-    [    1.690414]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-    [    1.690820] RIP: 0033:0x7f15c40fc897
-    [    1.691114] Code: c7 c0 ff ff ff ff eb be 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 80 3d d5 37 0d 00 00 41 89 ca 74 10 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 69 c3 55 48 89 e5 53 48 83 ec 38 44 89 4d d0
-    [    1.692589] RSP: 002b:00007ffc3c3080b8 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
-    [    1.693191] RAX: ffffffffffffffda RBX: 000055eda6a76a70 RCX: 00007f15c40fc897
-    [    1.693752] RDX: 0000000000000020 RSI: 000055eda6a93260 RDI: 0000000000000003
-    [    1.694308] RBP: 00007ffc3c308150 R08: 00007ffc3c3080c0 R09: 0000000000000080
-    [    1.694867] R10: 0000000000000000 R11: 0000000000000202 R12: 000055eda6a93bc0
-    [    1.695423] R13: 000055eda6a8c748 R14: 0000000000000000 R15: 000055eda6a8c700
-    [    1.695998]  </TASK>
-    [    1.696183] ---[ end trace 0000000000000000 ]---
-    [    1.707952] e1000: ens3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
-    [...]
-    [    3.071312] e1000 0000:00:03.0: TX DMA map failed
-    [    3.263302] e1000 0000:00:03.0: TX DMA map failed
-    [    3.388180] e1000 0000:00:03.0: TX DMA map failed
-    [many more times]
-
-Qemu version:
-
-    QEMU emulator version 9.2.0
-    Copyright (c) 2003-2024 Fabrice Bellard and the QEMU Project developers
-
-Command to run qemu:
-
-    qemu-system-x86_64 \
-            -m 16G \
-            -smp 10 \
-            -kernel arch/x86/boot/bzImage \
-            -append "console=ttyS0 root=/dev/vda rw earlyprintk=serial net.ifnames=0 kho=1 kho_scratch=200M,200M nokaslr" \
-            -drive file=/local/home/ptyadav/qemu/drive.ext4,format=raw,if=virtio \
-            -nic user,hostfwd=tcp::10022-:22 \
-            -gdb tcp::1234 \
-            -nographic
-
-Steps used to kexec:
-
-    $ echo 1 > /sys/kernel/kho/active
-    $ kexec -l bzImage -s --initrd /boot/initramfs-linux.img --reuse-cmdline
-
-DT after KHO activate:
-
-    /dts-v1/;
-
-    / {
-            compatible = "kho-v1";
-    };
-
+thanks,
 -- 
-Regards,
-Pratyush Yadav
+js
+suse labs
 
