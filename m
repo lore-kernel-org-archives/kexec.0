@@ -4,90 +4,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87C32C282D1
-	for <kexec@archiver.kernel.org>; Mon,  3 Mar 2025 04:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 991EFC282C5
+	for <kexec@archiver.kernel.org>; Mon,  3 Mar 2025 08:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=jSwTz98KJxkNrhvDmMikiQIq7w0EbnaiUYR+WiVAYwg=; b=G5BvD/84N0agSQvZZaduw5knLb
-	B19vOXRwamFXQ+PIvk2/G17GNTjCXduamObKOhY4pQC9J67rwrP3dm6UMf23eCYJo/5fyTEh89O23
-	sscXWfQSnVWePPvUjaaKABRuD47hSP4foF3sblD8EOAfhRmCXSeNSHWCfVtuC2WI61r0fr6vB0ElS
-	g9qsPuIQGoE2LWfBm4Hx4glJdFs98ZXAz+YH/1bnWY7TjnwdUhr2VqzSrOmgxWQsB8Nhsh5oY3OFN
-	qoUFx0VZZBnkvgjOAcgkusjAZCgtXaaw985tE+HNSPVfaII8UIlMaV2rFSDqLcGrjw2AtKJWREHnJ
-	pJZF3aJg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xQJa5hq33EwCeIlC6ZAKrgfFf28o5I5tCi+O9hYDtj8=; b=RwuzhZy0ufKLb4mNr7KQK8zZD5
+	BNXT60304o/nfYhYB4pnt3DebQcQGJk8oldPtlY6fQkvKQKC5/rdQnF7DuJqZuKrE3FM1WD7XGz42
+	3DkZtdtlRrsu1bI1dZ+wmAEyE2aMLlb3eEVkXehrSE5JNEKWAjDlCWOqNy2A8Xid1S2joIj6P3UTv
+	ndJmoZH9dleMaOuSQAAJP15v7aa6ZUo1xMKDnfL3OxtrWyn9Xl7sqwSiYa7Hwb71SR9ixOBA/cgzP
+	b+JItND++i9YW/whj5F/rgoUHhkHsdvZoVZ08MuMSWAdKu5tyjPz9IjEFez3p0AAfzkemSNyeJiC2
+	Qq9gjw9Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1toxIw-0000000H9J9-3gY0;
-	Mon, 03 Mar 2025 04:21:22 +0000
-Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
+	id 1tp17N-0000000HWCO-17nk;
+	Mon, 03 Mar 2025 08:25:41 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1toxIu-0000000H9IR-1VkT
+	id 1tp17J-0000000HWAj-43Jz
 	for kexec@lists.infradead.org;
-	Mon, 03 Mar 2025 04:21:21 +0000
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-2237a32c03aso202505ad.1
-        for <kexec@lists.infradead.org>; Sun, 02 Mar 2025 20:21:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740975679; x=1741580479; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jSwTz98KJxkNrhvDmMikiQIq7w0EbnaiUYR+WiVAYwg=;
-        b=J5Y/DfOo+YGyEeLpfODp0Osaz94ogiqdMc7oUgZ5xGDL54R9/AN2khE4Y8JFfcFjyj
-         GGSoV5/WhiJsblyTRIkRXlOliCEjaS8pHG/BeHVf9Cjjvu5ROigkIMpUFEFNAg6GkWW2
-         hdP1/ZzIsluT6e2YFmml7Fd2xI1e2wb+ROBwL2qe14yYvhw3QxhzoWbntwtaDof7I5Ti
-         L9PbUIhqL0miTkYXS7l5KQc7CLHNqIN85fJXrOgXRTrIe1rdpXKFI5EIeQ2UEooXlHGA
-         SiQHNT6zhPgG3VgPWf74FiLlmpxXKLHjwnoTEeLdjva/AbRu32D74kejOzUhfnTEW9Ql
-         7Lzw==
+	Mon, 03 Mar 2025 08:25:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740990335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xQJa5hq33EwCeIlC6ZAKrgfFf28o5I5tCi+O9hYDtj8=;
+	b=DRW5vrPuxJTN95DsFn1J3EBPFczCRyAxI7FHZympQWhhmyVMHMgd8H2bKn3+moLcHuvhiR
+	NzwmPYjYXC+m1Dso1IUCc6HcWP1uYuF1xtXInUHzDrxuySYdUsKN+Ffh+SXh4iDEtZ9qwS
+	t3AYVgs54znJVtHWtDPb6Hg9JVoeixQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-347-2MTNxbEaP9Se4KjVLTW-LQ-1; Mon, 03 Mar 2025 03:25:33 -0500
+X-MC-Unique: 2MTNxbEaP9Se4KjVLTW-LQ-1
+X-Mimecast-MFC-AGG-ID: 2MTNxbEaP9Se4KjVLTW-LQ_1740990332
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4399c32efb4so21635995e9.1
+        for <kexec@lists.infradead.org>; Mon, 03 Mar 2025 00:25:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740975679; x=1741580479;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jSwTz98KJxkNrhvDmMikiQIq7w0EbnaiUYR+WiVAYwg=;
-        b=IuR3v0bydqQW3LMO4TrK10nkmxljk2sRSe8cCtwuTgtrcDR9MFi4sNI4o56YceJ4HQ
-         pELm9YWIBG4ostNQrp/s4CQVHjRPuyyEIwhhqX4kOK4WYXyDDAN51UsTC/fWypxiOeVq
-         Kdnafy6uW6JVt3Kge9ZZzg3Kedu7WGlei/nvB+20+IEgLHG2cFM1bkl/oBv7u17g4R5m
-         MNRaLjjVKAeJPOku4AjnOXUB6HMgykIZnNfY+IZOerCPfYsceBdwWWMRFZ0WWiM7x4Ab
-         4+zgkqhtTQ1mIjfqHWiaz3Co9S9OvClmL8x43e5TilLmVn7zvn5u5rg4sfOChTiI89ur
-         s5xA==
-X-Forwarded-Encrypted: i=1; AJvYcCUddbx8ZcfM/1HrvoWx4OcRm5qnidAXP8YbDOP8slbW0Bf4YDaM2yTSm+N/A62/0B9ey8ndkw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxv6Zl3ZKqNsWljsZ7Umx7lgjdRy8+aPQ8OvqtsilDgkKlkaZBT
-	VoITg8AbZpdTZONCVlUBKiNtYImH4xSCfNRELVc3uJtjkdFy7KMI2UZbZMLcrA==
-X-Gm-Gg: ASbGncsQr8FoPOad8jXSRW3aaNbNauRRfa88R/OPqHtZczxU7B/tnNZlaoO6beUtGF/
-	kmVu4DpjgnsFjl9zGxzeOGNMqUj9RMlRhUOXbO0wG0yzSo6ifEANrbBmnodnyoaV4KyKqgCUL8+
-	71SrKOgpC9ujpUvB1EbNMOqhMAgJhKSr2JHgFNC2UHnQay8i/KL3aZMZfbs6nLicMWCVelx/1Z1
-	AfjjId0uw/xo5Vpgj6t5Q+wWKEMbQdvOZ8/pheaYadf5Cg1hz2goW//rhStGs029y7NrOfyIM1Y
-	X00YVYHiR5OnKug6AIB90PFq/e/zE5sY6Ry9peBp8KLbGl8EEJ4/VuTBOVGKLdlNoaetH1LRLcb
-	bT6l9y3HnTkTeUyKDuuHaiIYEqIu0E9YlgXot/yw=
-X-Google-Smtp-Source: AGHT+IHTmDLjkL4kLc2K4ZyNgMK9wi9iHW9R9e1KRi5T48mrWugtz12tqUtkXco7ZpSBGpURw5rxJg==
-X-Received: by 2002:a17:902:f68c:b0:215:aca2:dc04 with SMTP id d9443c01a7336-2238367038fmr3140475ad.26.1740975678929;
-        Sun, 02 Mar 2025 20:21:18 -0800 (PST)
-Received: from [2a00:79e0:2eb0:8:ab03:d519:56de:e7bb] ([2a00:79e0:2eb0:8:ab03:d519:56de:e7bb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736550edf72sm931936b3a.167.2025.03.02.20.21.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Mar 2025 20:21:18 -0800 (PST)
-Date: Sun, 2 Mar 2025 20:21:17 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
-    Matthew Wilcox <willy@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from February 24, 2025
-Message-ID: <7154b857-01cf-a8c6-ea02-51d095bafabf@google.com>
+        d=1e100.net; s=20230601; t=1740990332; x=1741595132;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xQJa5hq33EwCeIlC6ZAKrgfFf28o5I5tCi+O9hYDtj8=;
+        b=W6jIAM4rtkFrS9YFiDPWGt6B8SABlHJln2SLVG9EZnODB6nrdN6l2bMPxixCee2h4R
+         obiau+RQWHgKY0yswimWMvDATmKLKRlSYntZm3ZNvBiDcnwLViI9n4y7T0aOsVZ9pcVo
+         gjOOmcB10ypSc+DWP2MSzPX1hywjEr2tX64JBG9Nbx5bXCWddZ+aSxHYGluUMt05YTTC
+         fwDr6o4l4yfSzxV5wRBPzmrwjPjA9djW+hHQRL5MnomQtSvNSOSDxNXBwKgzu4aBue+5
+         xREpl1Yj0uX56sMFmih+PObnCHNdsNWO8G+ST6C3bYQS5A3Rf5kaO+ke2yvbqmdrrkny
+         lLaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuTE8inkiWlTUtOmN1vfVtQsJz531Nhq4UZ5P+pfscMqrbGaxy/zWQLHdAlMC/MunRxrz3IQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywyw+x+DRPSTC2sUEE7xO1/Ag78FMtu273g5zE7YWI3eHimsYq+
+	YNLLUGH9fdeHIV6pMOcET+g9kv3SUPiHImzXL0jVizhuVoEaDiHBJwWNY/I5OpbTAx3lU2NJyXB
+	qCrXHQ3NnlmOMPK4be4NterZQJEFhnbil6PI3irvKiVCRjuOOZ1qX9FaZ9g==
+X-Gm-Gg: ASbGncuc2zgj8KzCndCEn4bbVUog8e6HLpzbxKxMS9qqAswZRbuCes+my8nNNHLQJVr
+	VkOPOq86VCRUaMj8ZLF46qwK4BGwPWfMcVmckQQ9dI79yUUVROlN51mrdvB/xd9uoJwN3HAc/ff
+	hNzW5Gh51rPBMNErKgngbhJhvhlVaq455NNJ5SjktmcSMzziURpEsyuLN8MCr4/yLSmgaTCGr4i
+	sl4lABpHSBaSifystx80sEEyH+d5NxPnrDDRtbmbgj7xhI3umkJZbD6gXnwhsTtnR13gypIv8QS
+	wSqIOthw2IvzGlksowAPo1vPA9YseMrwR56IRnQK7TK/dVDJUpU2kiVn29uD6UN2wDAGB3sWb93
+	dNyHEZH+cC/FJkdsy8BxGq5HsxA47w+DltaWCX+e3BL8=
+X-Received: by 2002:a5d:5f96:0:b0:38d:afc8:954e with SMTP id ffacd0b85a97d-390e168d26amr12598022f8f.11.1740990332282;
+        Mon, 03 Mar 2025 00:25:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFHXdEcK466k9cymsnu6lkTJiaTmjAeBQ+6arxNNNOBmOvsqU6SoLHa6hs0wN1owqcbaCRBJg==
+X-Received: by 2002:a5d:5f96:0:b0:38d:afc8:954e with SMTP id ffacd0b85a97d-390e168d26amr12597996f8f.11.1740990331870;
+        Mon, 03 Mar 2025 00:25:31 -0800 (PST)
+Received: from ?IPV6:2003:cb:c734:9600:af27:4326:a216:2bfb? (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bad347823sm96630265e9.0.2025.03.03.00.25.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 00:25:31 -0800 (PST)
+Message-ID: <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
+Date: Mon, 3 Mar 2025 09:25:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+To: Jiri Bohac <jbohac@suse.cz>, Baoquan He <bhe@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+ kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+ Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+ linux-kernel@vger.kernel.org, David Hildenbrand <dhildenb@redhat.com>,
+ Michal Hocko <mhocko@suse.cz>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: -xINJxnWBMcRsIN7U7WPJS_b7L-_CMqpvaTi3qsGh1k_1740990332
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250302_202120_421798_94EFBB43 
-X-CRM114-Status: GOOD (  32.07  )
+X-CRM114-CacheID: sfid-20250303_002538_097262_CF902A73 
+X-CRM114-Status: GOOD (  33.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,138 +160,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+On 20.02.25 17:48, Jiri Bohac wrote:
+> Hi,
+> 
+> this series implements a way to reserve additional crash kernel
+> memory using CMA.
+> 
+> Link to the v1 discussion:
+> https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
+> See below for the changes since v1 and how concerns from the
+> discussion have been addressed.
+> 
+> Currently, all the memory for the crash kernel is not usable by
+> the 1st (production) kernel. It is also unmapped so that it can't
+> be corrupted by the fault that will eventually trigger the crash.
+> This makes sense for the memory actually used by the kexec-loaded
+> crash kernel image and initrd and the data prepared during the
+> load (vmcoreinfo, ...). However, the reserved space needs to be
+> much larger than that to provide enough run-time memory for the
+> crash kernel and the kdump userspace. Estimating the amount of
+> memory to reserve is difficult. Being too careful makes kdump
+> likely to end in OOM, being too generous takes even more memory
+> from the production system. Also, the reservation only allows
+> reserving a single contiguous block (or two with the "low"
+> suffix). I've seen systems where this fails because the physical
+> memory is fragmented.
+> 
+> By reserving additional crashkernel memory from CMA, the main
+> crashkernel reservation can be just large enough to fit the
+> kernel and initrd image, minimizing the memory taken away from
+> the production system. Most of the run-time memory for the crash
+> kernel will be memory previously available to userspace in the
+> production system. As this memory is no longer wasted, the
+> reservation can be done with a generous margin, making kdump more
+> reliable. Kernel memory that we need to preserve for dumping is
+> never allocated from CMA. User data is typically not dumped by
+> makedumpfile. When dumping of user data is intended this new CMA
+> reservation cannot be used.
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, February 24.  Thanks for everybody who was involved!
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+Hi,
 
------>o-----
-We discussed the KHO v5 patch series that would be posted shortly.  Two
-major changes were noted: decoupling of KHO activation from kexec load
-(no KHO finalize stage triggered from userspace or kexec reboot), and
-more dynamic internal representation of the tree that gets serialized
-into the FDT at the end of the process.  The memory preservation
-mechanism did not change.
+I'll note that your comment about "user space" is currently the case, 
+but will likely not hold in the long run. The assumption you are making 
+is that only user-space memory will be allocated from MIGRATE_CMA, which 
+is not necessarily the case. Any movable allocation will end up in there.
 
-Specifically, we were discussing the elements that were proposed for
-sysfs: the activation interface, FDT blob, dt max, and scratch area
-definitions.
+Besides LRU folios (user space memory and the pagecache), we already 
+support migration of some kernel allocations using the non-lru migration 
+framework. Such allocations (which use __GFP_MOVABLE, see 
+__SetPageMovable()) currently only include
+* memory balloon: pages we never want to dump either way
+* zsmalloc (->zpool): only used by zswap (-> compressed LRU pages)
+* z3fold (->zpool): only used by zswap (-> compressed LRU pages)
 
-Jason noted a general concern on all of the UAPIs that are being
-developed and suggested scaling them back.  Mike noted also noted a
-concern with the activation trigger: we may want it to represent the
-state in the KHO state machine.  He also agreed with Jason that dt max
-may want to be removed altogether.  The suggestion would be to hard code
-for prototyping, Mike said this should not be in sysfs.
+Just imagine if we support migration of other kernel allocations, such 
+as user page tables. The dump would be missing important information.
 
-Mike noted that recent changes in KHO would do vmap and vmalloc in kexec
-reboot.  Mike said that we need to have a point where state becomes
-immutable and Jason suggested a simple read from sysfs, i.e. when you
-read byte zero of the sysfs file the kernel would go and do the callback.
-This could at least be used early in development.
+Once that happens, it will become a lot harder to judge whether CMA can 
+be used or not. At least, the kernel could bail out/warn for these 
+kernel configs.
 
------>o-----
-Jason suggested that we agree on the FSM first because of
-unpredictability with future changes, especially for UAPI.  I suggested
-that we align this across stakeholders as soon as possible, especially
-before going into v6 or v7 of KHO.  In this case, I was referring to both
-state machines for the live update process as well as for activation.
+> 
+> There are five patches in this series:
+> 
+> The first adds a new ",cma" suffix to the recenly introduced generic
+> crashkernel parsing code. parse_crashkernel() takes one more
+> argument to store the cma reservation size.
+> 
+> The second patch implements reserve_crashkernel_cma() which
+> performs the reservation. If the requested size is not available
+> in a single range, multiple smaller ranges will be reserved.
+> 
+> The third patch updates Documentation/, explicitly mentioning the
+> potential DMA corruption of the CMA-reserved memory.
+> 
+> The fourth patch adds a short delay before booting the kdump
+> kernel, allowing pending DMA transfers to finish.
 
-Jason pushed to understand what the scope of the v5 that will be sent out
-will be.  Is the objective to get some things merged as a foot in the
-door, or is it something that is complete and does everything we intend
-to do?  Mike suggested getting started with something that was minimal to
-address concerns from devicetree and kexec communities.
 
-Jason strongly suggested minimizing the UAPI in this case and relying on
-the dt blob for now.  I suggested perhaps we should use debugfs for now
-instead of relying on sysfs where we have more flexibility for changes.
-Jason noted this may not be sysfs in the end anyway, we might have
-different interfaces later.
+What does "short" mean? At least in theory, long-term pinning is 
+forbidden for MIGRATE_CMA, so we should not have such pages mapped into 
+an iommu where DMA can happily keep going on for quite a while.
 
-Mike noted that Alex may have a strong opinion about this, but would
-suspect that this is ok for debugfs.
+But that assumes that our old kernel is not buggy, and doesn't end up 
+mapping these pages into an IOMMU where DMA will just continue. I recall 
+that DRM might currently be a problem, described here [1].
 
------>o-----
-Mike discussed playing around with hugetlb, Jason suggested causing the
-fd's to round trip through the kexec.  If hugetlb is thrown into fdbox,
-then this informs the kernel that this memory should be preserved.  This
-would be similar for memfd.  Jason suggested against something like
-guestmemfs and pointed in the direction of fdbox instead.
+If kdump starts not working as expected in case our old kernel is buggy, 
+doesn't that partially destroy the purpose of kdump (-> debug bugs in 
+the old kernel)?
 
-David Matlack asked what would be the point of the fdbox for things
-already in a filesystem.  Jason noted this was for the concept of
-creating the inode in the first place (could be an anonymous file
-description), then we give it a label, and expect it to be there on the
-other side of the kexec.  Instead of hugetlbfs, this might be a memfd
-that supports 1GB hugepages; additionally, guest_memfd development has
-been trying to untangle 1GB hugepages from guest_memfd in general.
 
-We discussed what metadata should be preserved, independent of whether it
-is regular memfd or guest_memfd.  The other side of the kexec would do
-memfd_create() to restore the filesystem on the new kernel.
+[1] https://lore.kernel.org/all/Z6MV_Y9WRdlBYeRs@phenom.ffwll.local/T/#u
 
-Pratyush took the AI to look at implementation on memfd.  Mike took the
-AI to look at memory reservation.
+-- 
+Cheers,
 
------>o-----
-I pivoted the discussion toward fdbox which ended up never being posted
-upstream.  Pratyush provided the link to the most recent code:
-https://github.com/agraf/linux-2.6/blob/kvm-kho-gmem-test/drivers/misc/fdbox.c
-This work likely would need to be picked up to pursue upstream because
-the current code has several TODO's.  (A struct miscdevice was called out
-as curious.)
+David / dhildenb
 
-It was noted that it would be difficult to support memfd without
-something like fdbox, so whether the fdbox code itself were upstreamed or
-it becomes more generic from the work on memfd, the base support would
-need to be provided somehow.
-
-Mike and Jason suggested designing fdbox and then starting to use it for
-memfd.  This would need to be aligned by stakeholders, including the UAPI
-for fdbox.  Pratyush will be looking into fdbox or inventing something
-similar while working on memfd.
-
-We need to propose the fdbox design and UAPI.
-
------>o-----
-David Matlack suggested a future topic: testing of the live update
-process, including kexec and KHO.  It will be challenging to do full
-integration testing with this, so low level selftests would be strongly
-preferred as this becomes more mature.
-
------>o-----
-Next meeting is scheduled for Monday, March 10 at 8am PDT (UTC-7).  Note
-the time change due to Daylight Savings Time, this is now UTC-7 instead
-of UTC-8.  I'll send a reminder on this mailing list.
-
-Topics I think we should cover in the next meeting:
-
- - any objections to using debugfs as the initial interface for
-   development and prototyping
- - update from Pratyush on implementation on memfd
- - update from Mike on implementation on memory reservation
- - design for fdbox and its use as a conceptual replacement for
-   guestmemfs, gaining alignment within the group, and agreeing on its
-   UAPI
- - decoupling 1GB pages for hugetlb, guest_memfd, and memfds and how fds
-   can be added to an fdbox
- - establishing an FSM for all of the various states that are agreed upon
-   with common language (when memory mappings can happen, what is
-   disallowed at certain stages)
- - extending the above topic on a separate FSM for the entire live update
-   process (what happens in brownout, blackout, shutdown, etc)
- - iommufd patch series (as well as qemu) from James
- - establishing an API for callbacks into drivers to serialize state
-   during brownout
- - topics proposed by Pasha: reducing blackout window, relaxed
-   serialization, and KHO activation requirements
- - implications of preserving vIOMMU state
- - testing methodology for these components, including selftests
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
 
