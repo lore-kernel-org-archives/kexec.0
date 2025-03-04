@@ -4,112 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D62ECC282D2
-	for <kexec@archiver.kernel.org>; Tue,  4 Mar 2025 17:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55972C021B8
+	for <kexec@archiver.kernel.org>; Tue,  4 Mar 2025 19:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+IoJ+2H9c2CFdb09znTxlwvThy3kn7nz7db1xHQkKkM=; b=RTjpqircmoCd35UFdooEqtLs/g
-	XGVBePARk/Hteu7lcEakIAIf4+67pM8jmludQV5KtGT2kO8Vx1SA4oPC/5oNAYOj6AbOz5fi8Mfu4
-	i0AXJR8XVAap6BWDV5ahY9knrYTEd7TGPRCbmFp1CFq2uj5qLon2Ir0TT+Ps41hg7XDmNDW1jQEbx
-	ava6i/QPb/y0i/Pxh9bzwLd3u3JlU08g1v8biqU8gB3dM/9RKErXibo27/q3+DM3JGmejK2ahcRwb
-	uLh22Y1Dif0w7FzMI4LXIxPo8N/cAXigjhql1STOJ/Go5VMffXLqisR+kNJUjJBYaYczEF2Nbu3RH
-	NcgpkQkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=rDwLyG8x98JlAJ3JT4WjH9zB21oyx+c9LLRVfLQwzE8=; b=Bu8JDNWTLpc6dInm6cByOJtWWk
+	H/G6cRIHic4BLoQWREIleIQbz9VS2v86aqkkQxoj6tnFZQUwTGnrwoP7BqdsZKBuOP+s3zGdt2J5n
+	TLfNShumUSJXOb+Z4XZiUrAIcn9cCyYaU6uiYIRbNk6ea4X1GG8Y2f7fZ2uN+8KKdRCvTpT3ZnFSf
+	eym0y+AScEYytJuVBtthrY2xmgOFHuknBMidYmgRMNGlW74ArVXdUpW7BnGqHn8UMm/RehUDmHjta
+	Ce/2I9hAhG1az7EXv/JVbfNaRDmRkeFglFrGs4ge+G4W2FZeHB5XYq/0GEMou7Wz4PfDYIthKQtf0
+	onBD2jEg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpWPL-00000005iEh-3PnY;
-	Tue, 04 Mar 2025 17:50:19 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpUvf-00000005Nvn-1IvP
+	id 1tpYGz-000000066A2-2l9G;
+	Tue, 04 Mar 2025 19:49:49 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tpXYc-00000005wuy-3ehH
 	for kexec@lists.infradead.org;
-	Tue, 04 Mar 2025 16:15:37 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524E3Ku9019009;
-	Tue, 4 Mar 2025 16:15:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=+IoJ+2
-	H9c2CFdb09znTxlwvThy3kn7nz7db1xHQkKkM=; b=enFC4w7iAxa7xBJJ50nn5r
-	YHwcsrqCj91bKzXNDMt/lK3Da6qrxKeOdyw55vTS+5tSRh/LCW7VTHne1QB6PDCH
-	E04yAMBr5R0IT1MIh+lsBn12jaenqDXOL0kCAMHHp2uTEbSNtevMf7+6e0dWDjb3
-	0lY9UYLFpaVgOmnxytJ40rCGXSXuXH4TBYq/l7WJhu8JIKDqVnSBaTqC7YQ2TDxY
-	0QahawjYm0acYxmOxim50YEc2M6BG6sI/rWcct/6OOuBbSKYvlDUKuuZPlrWfyX+
-	nVpHiXi756zfn953xIufU7xfTR8gGUa/HI/Lm5pZABYEOnqa+UXBjLdlMmRhLMTg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpgp2j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:18 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 524GFI8F012989;
-	Tue, 4 Mar 2025 16:15:18 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpgp2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:17 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524Fxqlx013776;
-	Tue, 4 Mar 2025 16:15:16 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2kp52f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:16 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524GFGpZ53936398
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 16:15:16 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4700E58060;
-	Tue,  4 Mar 2025 16:15:16 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A27758050;
-	Tue,  4 Mar 2025 16:15:14 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.136.132])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Mar 2025 16:15:14 +0000 (GMT)
-Message-ID: <6828fbeeff42ce962cc0195466760ea136f9c049.camel@linux.ibm.com>
-Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-        madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-        dyoung@redhat.com, Mike Rapoport
- <mike.rapoport@gmail.com>
-Date: Tue, 04 Mar 2025 11:15:13 -0500
-In-Reply-To: <Z8FDlp8QvnSR58Vd@MiWiFi-R3L-srv>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
-	 <20250218225502.747963-3-chenste@linux.microsoft.com>
-	 <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
-	 <55acf768b52b47dd9d33fa0486772d8c7ae38779.camel@linux.ibm.com>
-	 <Z8FDlp8QvnSR58Vd@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	Tue, 04 Mar 2025 19:04:00 +0000
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1C963210EAF6;
+	Tue,  4 Mar 2025 11:03:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C963210EAF6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741115038;
+	bh=rDwLyG8x98JlAJ3JT4WjH9zB21oyx+c9LLRVfLQwzE8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aPWmRBFITjcXbcl1gxET8+qChdsH2s0kFGBJeKYeVmBoRPlaVQotLjfreDCfmaF1z
+	 TkqFOSKhzqAfL8HX55bOr/DT0mQSUeO9BakMo3MWOT0/FEdUPLCETOPP7mNsbVjbtB
+	 NeRCBIfpPry6C7Q2qQlegjT0MrB+9RnSyRnj33v4=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: [PATCH v9 3/7] ima: kexec: skip IMA segment validation after kexec soft reboot
+Date: Tue,  4 Mar 2025 11:03:47 -0800
+Message-Id: <20250304190351.96975-4-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250304190351.96975-1-chenste@linux.microsoft.com>
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -oBsvbmbJu1H4kuwA-IK6n9CtSiRlunB
-X-Proofpoint-GUID: _0Rk9JlUBxHxaloj8zlUADdSvGWN6oiI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_06,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503040129
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250304_081535_375641_8D36D23C 
-X-CRM114-Status: GOOD (  30.71  )
+X-CRM114-CacheID: sfid-20250304_110358_956883_7ADD2D8A 
+X-CRM114-Status: GOOD (  18.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,78 +83,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 2025-02-28 at 13:03 +0800, Baoquan He wrote:
-> On 02/27/25 at 10:41am, Mimi Zohar wrote:
-> > [Cc'ing Mike Rapoport]
-> >=20
-> > On Mon, 2025-02-24 at 14:14 +0800, Baoquan He wrote:
-> > > Hi Steve, Mimi,
-> > >=20
-> > > On 02/18/25 at 02:54pm, steven chen wrote:
-> > > > Currently, the mechanism to map and unmap segments to the kimage
-> > > > structure is not available to the subsystems outside of kexec.  Thi=
-s
-> > > > functionality is needed when IMA is allocating the memory segments
-> > > > during kexec 'load' operation.  Implement functions to map and unma=
-p
-> > > > segments to kimage.
-> > >=20
-> > > I am done with the whole patchset understanding. My concern is if thi=
-s
-> > > TPM PCRs content can be carried over through newly introduced KHO. I =
-can
-> > > see that these patchset doesn't introduce too much new code changes,
-> > > while if many conponents need do this, kexec reboot will be patched a=
-ll
-> > > over its body and become ugly and hard to maintain.
-> > >=20
-> > > Please check Mike Rapoport's v4 patchset to see if IMA can register
-> > > itself to KHO and do somthing during 2nd kernel init to restore those
-> > > TPM PCRs content to make sure all measurement logs are read correctly=
-.
-> > > [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-> >=20
-> > Hi Baoquan,
-> >=20
-> > I was hoping to look at Mike's patch set before responding, but perhaps=
- it is
-> > better to respond earlier rather than later with my initial thoughts.
-> >=20
-> > The IMA measurement list isn't stored in contiguous memory, but has to =
-be
-> > marshalled before being carried across kexec, and then unmarshalled to =
-restore
-> > it after the kexec.  Roberto Sassu has been thinking about changing how=
- the IMA
-> > measurement list is stored so marshalling/unmarshalling wouldn't be nec=
-essary.=20
-> > Making both this change and using KHO going forward would be a good ide=
-a.
-> >=20
-> > However, that sort of change wouldn't be appropriate to backport.  So t=
-he
-> > question comes down to whether being unable to attest the measurement l=
-ist,
-> > because the measurements are copied too early at kexec load, but the TP=
-M is
-> > being extended through kexec exec, is considered a bug.  If that is the=
- case,
-> > then I suggest finish cleaning up and upstreaming this patch set so tha=
-t it
-> > could be backported.
->=20
-> Ah, I understand your concern. There are stable kernels or distros
-> kernels which need be taken care of. If then, we can continue to work on
-> polishing this patchset, as you have pointed out, there are still room
-> in this patchset to improve before merging.
+The kexec_calculate_store_digests() function calculates and stores the
+digest of the segment during the kexec_file_load syscall, where the 
+IMA segment is also allocated.
 
-Thanks, Baoquan!
+With this series, the IMA segment will be updated with the measurement 
+log at the kexec execute stage when a soft reboot is initiated. 
+Therefore, the digests should be updated for the IMA segment in the 
+normal case.
 
-I've already provided feedback on the IMA related patches.  Hopefully that =
-will
-be it.
+The content of memory segments carried over to the new kernel during the
+kexec systemcall can be changed at kexec 'execute' stage, but the size
+and the location of the memory segments cannot be changed at kexec
+'execute' stage.
 
-Mimi
+However, during the kexec execute stage, if kexec_calculate_store_digests()
+API is call to update the digest, it does not reuse the same memory segment
+allocated during the kexec 'load' stage and the new memory segment required
+cannot be transferred/mapped to the new kernel.
 
+As a result, digest verification will fail in verify_sha256_digest() 
+after a kexec soft reboot into the new kernel. Therefore, the digest
+calculation/verification of the IMA segment needs to be skipped.
+
+To address this, skip the calculation and storage of the digest for the
+IMA segment in kexec_calculate_store_digests() so that it is not added 
+to the purgatory_sha_regions.
+
+Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+no change is needed in verify_sha256_digest() in this context.
+
+With this change, the IMA segment is not included in the digest
+calculation, storage, and verification.
+
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com> 
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ include/linux/kexec.h              |  3 +++
+ kernel/kexec_file.c                | 22 ++++++++++++++++++++++
+ security/integrity/ima/ima_kexec.c |  3 +++
+ 3 files changed, 28 insertions(+)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7d6b12f8b8d0..107e726f2ef3 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -362,6 +362,9 @@ struct kimage {
+ 
+ 	phys_addr_t ima_buffer_addr;
+ 	size_t ima_buffer_size;
++
++	unsigned long ima_segment_index;
++	bool is_ima_segment_index_set;
+ #endif
+ 
+ 	/* Core ELF header buffer */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..606132253c79 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_IMA_KEXEC
++static bool check_ima_segment_index(struct kimage *image, int i)
++{
++	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
++		return true;
++	else
++		return false;
++}
++#else
++static bool check_ima_segment_index(struct kimage *image, int i)
++{
++	return false;
++}
++#endif
++
+ static int kexec_calculate_store_digests(struct kimage *image);
+ 
+ /* Maximum size in bytes for kernel/initrd files. */
+@@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		if (ksegment->kbuf == pi->purgatory_buf)
+ 			continue;
+ 
++		/*
++		 * Skip the segment if ima_segment_index is set and matches
++		 * the current index
++		 */
++		if (check_ima_segment_index(image, i))
++			continue;
++
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+ 					  ksegment->bufsz);
+ 		if (ret)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 6195df128482..0465beca8867 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -169,6 +169,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	kbuf.buffer = kexec_buffer;
+ 	kbuf.bufsz = kexec_buffer_size;
+ 	kbuf.memsz = kexec_segment_size;
++	image->is_ima_segment_index_set = false;
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret) {
+ 		pr_err("Error passing over kexec measurement buffer.\n");
+@@ -179,6 +180,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	image->ima_buffer_addr = kbuf.mem;
+ 	image->ima_buffer_size = kexec_segment_size;
+ 	image->ima_buffer = kexec_buffer;
++	image->ima_segment_index = image->nr_segments - 1;
++	image->is_ima_segment_index_set = true;
+ 
+ 	/*
+ 	 * kexec owns kexec_buffer after kexec_add_buffer() is called
+-- 
+2.25.1
 
 
