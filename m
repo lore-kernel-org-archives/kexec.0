@@ -4,71 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55972C021B8
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CB39C282DC
 	for <kexec@archiver.kernel.org>; Tue,  4 Mar 2025 19:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rDwLyG8x98JlAJ3JT4WjH9zB21oyx+c9LLRVfLQwzE8=; b=Bu8JDNWTLpc6dInm6cByOJtWWk
-	H/G6cRIHic4BLoQWREIleIQbz9VS2v86aqkkQxoj6tnFZQUwTGnrwoP7BqdsZKBuOP+s3zGdt2J5n
-	TLfNShumUSJXOb+Z4XZiUrAIcn9cCyYaU6uiYIRbNk6ea4X1GG8Y2f7fZ2uN+8KKdRCvTpT3ZnFSf
-	eym0y+AScEYytJuVBtthrY2xmgOFHuknBMidYmgRMNGlW74ArVXdUpW7BnGqHn8UMm/RehUDmHjta
-	Ce/2I9hAhG1az7EXv/JVbfNaRDmRkeFglFrGs4ge+G4W2FZeHB5XYq/0GEMou7Wz4PfDYIthKQtf0
-	onBD2jEg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Subject:Content-Type:
+	MIME-Version:Message-ID:In-Reply-To:Date:References:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5TCsW9XHfUCO29/pSg3et6o21s2sj6bi4Wbc2rT3bmI=; b=cvasfNkuN6ScKr+dB93neJPMCw
+	a+Mzjkmy5x2OsN1aVnByNX0P9BDYHKLBGaD0ecM0CGYMkLlFmp9jwsq7Yx6FS/4fSKgWaehQD0g6u
+	ffPwhDdWBDd4gzNM7JkcpXbBwhY2MtSVKnDukB8waAMBuL6MI6rdrzb1/CuLcS+Buydn6VqaoMEK1
+	ZEFG52YSeLWqk+rxp/cVVYF+1//hJCz5PEKFRCWv9BzHP8f8CtdJCEaCMr67v97yycpEJqs9aaQIM
+	+kzuczUFsxkooHPylsiYzvucyzBoi75NaN57dMUCCAh5gYp1/iRPZAhM+OGibgqjd2kdgpq+7jDr9
+	TuCkyy5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpYGz-000000066A2-2l9G;
+	id 1tpYGz-0000000669r-03Cb;
 	Tue, 04 Mar 2025 19:49:49 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpXYc-00000005wuy-3ehH
+Received: from out02.mta.xmission.com ([166.70.13.232])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tpXLM-00000005u5v-0o6G
 	for kexec@lists.infradead.org;
-	Tue, 04 Mar 2025 19:04:00 +0000
-Received: from localhost.localdomain (unknown [167.220.59.4])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1C963210EAF6;
-	Tue,  4 Mar 2025 11:03:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C963210EAF6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741115038;
-	bh=rDwLyG8x98JlAJ3JT4WjH9zB21oyx+c9LLRVfLQwzE8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aPWmRBFITjcXbcl1gxET8+qChdsH2s0kFGBJeKYeVmBoRPlaVQotLjfreDCfmaF1z
-	 TkqFOSKhzqAfL8HX55bOr/DT0mQSUeO9BakMo3MWOT0/FEdUPLCETOPP7mNsbVjbtB
-	 NeRCBIfpPry6C7Q2qQlegjT0MrB+9RnSyRnj33v4=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v9 3/7] ima: kexec: skip IMA segment validation after kexec soft reboot
-Date: Tue,  4 Mar 2025 11:03:47 -0800
-Message-Id: <20250304190351.96975-4-chenste@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250304190351.96975-1-chenste@linux.microsoft.com>
-References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+	Tue, 04 Mar 2025 18:50:17 +0000
+Received: from in02.mta.xmission.com ([166.70.13.52]:41330)
+	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tpXL4-003CrC-Sf; Tue, 04 Mar 2025 11:49:58 -0700
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:43810 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tpXL3-009qdL-OE; Tue, 04 Mar 2025 11:49:58 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: akpm@linux-foundation.org,  Dave Hansen <dave.hansen@intel.com>,
+  Baoquan He <bhe@redhat.com>,  "Kirill A. Shutemov"
+ <kirill@shutemov.name>,  kexec@lists.infradead.org,  Yan Zhao
+ <yan.y.zhao@intel.com>,  linux-kernel@vger.kernel.org,
+  linux-coco@lists.linux.dev,  x86@kernel.org,  rick.p.edgecombe@intel.com,
+  security@kernel.org
+References: <20241213094930.748-1-yan.y.zhao@intel.com>
+	<xgycziy2o56hnom3oau7sbqed3meoni3razc6njj7ujatldnmm@s7odbl4splbn>
+	<Z4T1G4dwzo7qdwSP@MiWiFi-R3L-srv>
+	<87zfjuoj3i.fsf@email.froward.int.ebiederm.org>
+	<f38f1b56-a5df-4644-be59-56c70499ed92@intel.com>
+	<fslhdizolr4twqm4ixevzj6ai5l5qg6mxky25jasn3yctsnvt4@hpwphlmfs5cp>
+	<4599571f-804b-40d8-b5c8-e19478a3ad18@intel.com>
+	<wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
+Date: Tue, 04 Mar 2025 12:49:15 -0600
+In-Reply-To: <wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
+	(Kirill A. Shutemov's message of "Tue, 4 Mar 2025 10:41:56 +0200")
+Message-ID: <87o6ygskb8.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1tpXL3-009qdL-OE;;;mid=<87o6ygskb8.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+GBcBx8IrnL69HP7CI9T5d+uij0wQ3VeY=
+Subject: Re: [PATCH v2 0/1] Accept unaccepted kexec segments' destination
+ addresses
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: security@kernel.org, rick.p.edgecombe@intel.com, x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, kexec@lists.infradead.org, kirill@shutemov.name, bhe@redhat.com, dave.hansen@intel.com, akpm@linux-foundation.org, kirill.shutemov@linux.intel.com
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out02.mta.xmission.com); SAEximRunCond expanded to false
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250304_110358_956883_7ADD2D8A 
-X-CRM114-Status: GOOD (  18.96  )
+X-CRM114-CacheID: sfid-20250304_105016_223566_B33CD9EB 
+X-CRM114-Status: GOOD (  22.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,129 +85,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The kexec_calculate_store_digests() function calculates and stores the
-digest of the segment during the kexec_file_load syscall, where the 
-IMA segment is also allocated.
+"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> writes:
 
-With this series, the IMA segment will be updated with the measurement 
-log at the kexec execute stage when a soft reboot is initiated. 
-Therefore, the digests should be updated for the IMA segment in the 
-normal case.
+> On Fri, Feb 14, 2025 at 08:20:07AM -0800, Dave Hansen wrote:
+>> On 2/14/25 05:46, Kirill A. Shutemov wrote:
+>> >> It sounds like you're advocating for the "slow guest boot" option.
+>> >> Kirill, can you remind us how fast a guest boots to the shell for
+>> >> modestly-sized (say 256GB) memory with "accept_memory=eager" versus
+>> >> "accept_memory=lazy"? IIRC, it was a pretty remarkable difference.
+>> > I only have 128GB machine readily available and posted some number on
+>> > other thread[1]:
+>> > 
+>> >   On single vCPU it takes about a minute to accept 90GiB of memory.
+>> > 
+>> >   It improves a bit with number of vCPUs. It is 40 seconds with 4 vCPU, but
+>> >   it doesn't scale past that in my setup.
+>> > 
+>> > I've mentioned it before in other thread:
+>> > 
+>> > [1] https://lore.kernel.org/all/ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm
+>> 
+>> Oh, wow, from that other thread, you've been trying to get this crash
+>> fix accepted since November?
+>> 
+>> From the looks of it, Eric stopped responding to that thread. I _think_
+>> you gave a reasonable explanation of why memory acceptance is slow. He
+>> then popped back up last month raising security concerns. But I don't
+>> see anyone that shares those concerns.
+>> 
+>> The unaccepted memory stuff is also _already_ touching the page
+>> allocator. If it's a dumb idea, then we should be gleefully ripping it
+>> out of the page allocator, not rejecting a 2-line kexec patch.
+>> 
+>> Baoquan has also said this looks good to him.
+>> 
+>> I'm happy to give Eric another week to respond in case he's on vacation
+>> or something, but I'm honestly not seeing a good reason to hold this bug
+>> fix up.
+>> 
+>> Andrew, is this the kind of thing you can stick into mm and hold on to
+>> for a bit while we give Eric time to respond?
+>
+> Andrew, Eric, can we get this patch in?
 
-The content of memory segments carried over to the new kernel during the
-kexec systemcall can be changed at kexec 'execute' stage, but the size
-and the location of the memory segments cannot be changed at kexec
-'execute' stage.
+How goes the work to fix this horrifically slow firmware interface?
 
-However, during the kexec execute stage, if kexec_calculate_store_digests()
-API is call to update the digest, it does not reuse the same memory segment
-allocated during the kexec 'load' stage and the new memory segment required
-cannot be transferred/mapped to the new kernel.
-
-As a result, digest verification will fail in verify_sha256_digest() 
-after a kexec soft reboot into the new kernel. Therefore, the digest
-calculation/verification of the IMA segment needs to be skipped.
-
-To address this, skip the calculation and storage of the digest for the
-IMA segment in kexec_calculate_store_digests() so that it is not added 
-to the purgatory_sha_regions.
-
-Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
-no change is needed in verify_sha256_digest() in this context.
-
-With this change, the IMA segment is not included in the digest
-calculation, storage, and verification.
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com> 
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Signed-off-by: steven chen <chenste@linux.microsoft.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
----
- include/linux/kexec.h              |  3 +++
- kernel/kexec_file.c                | 22 ++++++++++++++++++++++
- security/integrity/ima/ima_kexec.c |  3 +++
- 3 files changed, 28 insertions(+)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 7d6b12f8b8d0..107e726f2ef3 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -362,6 +362,9 @@ struct kimage {
- 
- 	phys_addr_t ima_buffer_addr;
- 	size_t ima_buffer_size;
-+
-+	unsigned long ima_segment_index;
-+	bool is_ima_segment_index_set;
- #endif
- 
- 	/* Core ELF header buffer */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad..606132253c79 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
- }
- #endif
- 
-+#ifdef CONFIG_IMA_KEXEC
-+static bool check_ima_segment_index(struct kimage *image, int i)
-+{
-+	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
-+		return true;
-+	else
-+		return false;
-+}
-+#else
-+static bool check_ima_segment_index(struct kimage *image, int i)
-+{
-+	return false;
-+}
-+#endif
-+
- static int kexec_calculate_store_digests(struct kimage *image);
- 
- /* Maximum size in bytes for kernel/initrd files. */
-@@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		if (ksegment->kbuf == pi->purgatory_buf)
- 			continue;
- 
-+		/*
-+		 * Skip the segment if ima_segment_index is set and matches
-+		 * the current index
-+		 */
-+		if (check_ima_segment_index(image, i))
-+			continue;
-+
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
- 					  ksegment->bufsz);
- 		if (ret)
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 6195df128482..0465beca8867 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -169,6 +169,7 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	kbuf.buffer = kexec_buffer;
- 	kbuf.bufsz = kexec_buffer_size;
- 	kbuf.memsz = kexec_segment_size;
-+	image->is_ima_segment_index_set = false;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret) {
- 		pr_err("Error passing over kexec measurement buffer.\n");
-@@ -179,6 +180,8 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	image->ima_buffer_addr = kbuf.mem;
- 	image->ima_buffer_size = kexec_segment_size;
- 	image->ima_buffer = kexec_buffer;
-+	image->ima_segment_index = image->nr_segments - 1;
-+	image->is_ima_segment_index_set = true;
- 
- 	/*
- 	 * kexec owns kexec_buffer after kexec_add_buffer() is called
--- 
-2.25.1
+Eric
 
 
