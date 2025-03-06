@@ -4,80 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCAAAC19F32
-	for <kexec@archiver.kernel.org>; Wed,  5 Mar 2025 15:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53306C282D1
+	for <kexec@archiver.kernel.org>; Thu,  6 Mar 2025 06:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nPD0UOTEO7BZdukD/bAEu6xyXvJzP0L9ZegfMly/jBo=; b=TTF2fynPwNrx1LdhcAG1kwnyqD
-	cfECcynAXr2/Wxh0452sm34WrKYPiVjrrxUI2ARIc1wgnq38sYaix7ZDQsLUXwqcnN9Nz4Zv+5XbP
-	4MJnkxgXiCwU5E5NWCNTzaKFEXtKT3I1N/nEQpMPzF6sPlrTqZmoETtaDPfegur7FpuskLu9iHvLQ
-	ZWMk82Dt/kGCVYRBuC6BPbc108bwxYe8ZKubKhlERomdhGaIAZBxDubh3/CuJjuQj1OqqXQ6elEpm
-	NzRw3kM7Zaru4nEa/4YIjZg8ekM4bsArFN4v/aMYNuBcFGRPkSe0Z8sxzZcc25o9JvscaWdu4kQh4
-	cT2Zixaw==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=Mx4eXhc4yqpVhI7TdTQuRC9iguxZspH9NuwtaHcC+Lc=; b=Df7t+EVhLGl5DL
+	JJB5pw76RsVTqLp26+LkdTWQHU/fZX9ex4HypzRsvPAqnVnGTiPgbxjKZEPHf9Fp85dYvLY73G9d0
+	zcBKquiX8oMIAHfbM2/7tHk5AcerUQs+ROTQrBG9AkxN8ed92zWEpE88k36Z2eibkDCjQ/buQMXV6
+	wpZuAO8Q/GnHnTWsyIyBsBoMqn3sRp3wCRNTX/Pr/VqP4jXIqn3isMkVKCOeQ/nfgDBqmtnSwzYQQ
+	N2/ABeA31PhoajtdfEVxEvsECklBe4XTSqtA9E7wwWTwSsu0p2TNJxCSGyH1hgdUR1gqPqV7OJBPW
+	U1Mnqkqsc1dbMKe0pkUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpqHe-00000008SRS-2mNZ;
-	Wed, 05 Mar 2025 15:03:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tq4pW-0000000A8Nt-1yPK;
+	Thu, 06 Mar 2025 06:35:38 +0000
+Received: from mail-wm1-x334.google.com ([2a00:1450:4864:20::334])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpnoG-000000080vN-3zTN
+	id 1tq4pQ-0000000A8NR-25Tx
 	for kexec@lists.infradead.org;
-	Wed, 05 Mar 2025 12:25:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741177512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nPD0UOTEO7BZdukD/bAEu6xyXvJzP0L9ZegfMly/jBo=;
-	b=Fz/R/h9fTiYTN/lFlbsN0ZQHQvqvuIvPdirhhLgpsHPGeBvawqcBvyKJdQJU2fxHaCBbaV
-	MSiXqbtwtw1qsKeVwdMQgEX8/HRsVlb3hIgDLqjjyCgPUheZte44wsiahFRPfTVlMyajJu
-	Okqlg9gSsha79fMlrOaNm1mMcbzXQAc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-59-Yx81Eq4iOCWRfZEs9r8sNg-1; Wed,
- 05 Mar 2025 07:25:05 -0500
-X-MC-Unique: Yx81Eq4iOCWRfZEs9r8sNg-1
-X-Mimecast-MFC-AGG-ID: Yx81Eq4iOCWRfZEs9r8sNg_1741177503
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 142091800DB3;
-	Wed,  5 Mar 2025 12:25:03 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.32])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4A091954B32;
-	Wed,  5 Mar 2025 12:25:00 +0000 (UTC)
-Date: Wed, 5 Mar 2025 20:24:55 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, zohar@linux.ibm.com,
-	stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-	ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-	bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+	Thu, 06 Mar 2025 06:35:33 +0000
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso1277805e9.0
+        for <kexec@lists.infradead.org>; Wed, 05 Mar 2025 22:35:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741242931; x=1741847731; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mx4eXhc4yqpVhI7TdTQuRC9iguxZspH9NuwtaHcC+Lc=;
+        b=CdO4dN0S1AVUTDhMpvYDDwcv4nAv2rsJXDzVOdpqwB1kfOkb7gWtarRz29y4IDKN79
+         5+2Lc114b9RuGZXsj/PEERieBTCuvqJUo5q+nlTWl8geYwn2FBWQBUFqzhECYZc7mSI3
+         CwoAILPUEV3QvZdfZ3ZTr3w+Nl4IOPAvr239LfMLSDQoWSbbU8uV6Ol9JLSSiOYIr47W
+         /0QId8FNJFmEbYRAkpawVgRfO+IJAlAoIsLzkfNgi9ugV5lBxz9+zSKmyFiBPkI1OS7p
+         pSZB2hTbs34h9EEJPuiED38dXJuEGncEi83MbNCES5fNATECZeriS/NF+5gQXNXWcu17
+         8lkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741242931; x=1741847731;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mx4eXhc4yqpVhI7TdTQuRC9iguxZspH9NuwtaHcC+Lc=;
+        b=B9XFhlzM6AVwuJsVDnC9ohTqgZ4LlSUyqOEbpfky2eMz48Huf/uOVMsl83+pU0DZzy
+         t4IX1UnYvlmKMWJrHLUJJvG1Op9w9IhEOp4dS/I/1zzBNdCWR+R4Gsuh3UT+TMr3Raxi
+         JHTaVhtwQl/+tvit3SQTiyaFR3PRILfPkr2ukGGj/SZhBXBTrlP+yfT8DIR7OAIunLEi
+         nXkaFInjDS00WYsiXBnA4HB3wwcKdqppz1UABYzT8wLREa3lTBtGqcQMxcAb4yv9/q1D
+         /vrcIANI8FjDbOtG3X9p+j7mTJCgJRh/fi9+cma89EmyM70CXfdS0GUFY15IOJQLDS/T
+         7fWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGiSuk2jSmIkJ0D2jlrMDzQWLOXl+o2ckMsFmIOS+wjyXueHVvzkoROEhcqjyu2sJk6K/81A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YweAFiXLeIKQiHn56Bw8ObQc0w69jkdruwrNwOesKQR673MDN1x
+	TYoFCqEJNs/pvJa49NHqiAuGIpWlgvYW3GzBP/4KoRSLqAXWIOcX6oARkP4/MCNIcsHr2b11Bep
+	c
+X-Gm-Gg: ASbGncvxQ9ShCPrseI0Nen1FnjzplyGy6eZf9XPEURnI9wPTd7ybW8D40ADSl3ypgiI
+	yGWLBf83+0HRLtjCJoA/zX7yrtFPhsWTX0PDkvof0xJCw0UP3QKjTpIDbqUdG5DJ5UFNZ3dFVYg
+	+DD0hJOzx9XJB0C2TuLwwcuY4dEjo/LRZmNtFIn7ZoVCWjnC8HKX5WKtaxiaz+svLXCHygYHpbU
+	QL8ZMBhJy2/wyi7yvHbzQm3eULu6/4rsu1TraCujUBxh2wJBjIvklTuo6i7wQ3UU8nKbPAa9uQT
+	d542oTlNRJRJAXcTBCTh+MfRF6eeFBzhP4/U5Q8+SLMrfIKVfw==
+X-Google-Smtp-Source: AGHT+IEldEFBJ6GcJ/9AsmwidDi0MW22pFoTiX1DY3pYgmQW8PLpDd7QMPBO5UsdG2P8Z7W4b9nJlQ==
+X-Received: by 2002:a05:600c:1551:b0:43b:cb0c:3556 with SMTP id 5b1f17b1804b1-43bd2af49cemr38379685e9.28.1741242930569;
+        Wed, 05 Mar 2025 22:35:30 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bdd8c314asm9415525e9.10.2025.03.05.22.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 22:35:30 -0800 (PST)
+Date: Thu, 6 Mar 2025 09:35:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, steven chen <chenste@linux.microsoft.com>,
+	zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, bhe@redhat.com,
 	vgoyal@redhat.com, dyoung@redhat.com
 Subject: Re: [PATCH v9 2/7] kexec: define functions to map and unmap segments
-Message-ID: <Z8hCl4piQ1Sfpi7h@MiWiFi-R3L-srv>
-References: <20250304190351.96975-1-chenste@linux.microsoft.com>
- <20250304190351.96975-3-chenste@linux.microsoft.com>
- <Z8d9RvRWPOADOgsx@kernel.org>
- <97c27a30-a5ee-4825-ab7e-82dcddedd688@linux.microsoft.com>
+Message-ID: <7bde870f-07eb-48a6-8b8d-edac57640775@stanley.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97c27a30-a5ee-4825-ab7e-82dcddedd688@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20250304190351.96975-3-chenste@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250305_042513_066546_5FE3CED1 
-X-CRM114-Status: GOOD (  45.18  )
+X-CRM114-CacheID: sfid-20250305_223532_546369_3D61CA76 
+X-CRM114-Status: UNSURE (   8.57  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,179 +105,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/04/25 at 04:55pm, steven chen wrote:
-> On 3/4/2025 2:23 PM, Jarkko Sakkinen wrote:
-> > On Tue, Mar 04, 2025 at 11:03:46AM -0800, steven chen wrote:
-> > > The content of memory segments carried over to the new kernel during the
-> > > kexec systemcall can be changed at kexec 'execute' stage, but the size of
-> > > the memory segments cannot be changed at kexec 'execute' stage.
-> > > 
-> > > To copy IMA measurement logs during the kexec operation, IMA needs to
-> > > allocate memory at the kexec 'load' stage and map the segments to the
-> > > kimage structure. The mapped address will then be used to copy IMA
-> > > measurements during the kexec 'execute' stage.
-> > > 
-> > > Currently, the mechanism to map and unmap segments to the kimage
-> > > structure is not available to subsystems outside of kexec.
-> > How does IMA work with kexec without having this? Just interested
-> > (and confused).
-> Currently, all IMA-related operations during a soft reboot, such as memory
-> allocation and IMA log list copy, are handled in the kexec 'load' stage, so
-> the map/unmap mechanism is not required.
-> 
-> The new design separates these two operations into different stages: memory
-> allocation remains in the kexec 'load' stage, while the IMA log list copy is
-> moved to the kexec 'execute' stage. Therefore, the map/unmap mechanism is
-> introduced.
+Hi steven,
 
-I think the log can be improved. About the found problem and solution
-part, we possible can describe them like below:
+kernel test robot noticed the following build warnings:
 
-===
-Currently, the kernel behaviour of kexec load is the IMA measurements
-log is fetched from TPM PCRs and stored into buffer and hold. When
-kexec reboot is triggered, the stored log buffer is carried over to the
-2nd kernel. However, the time gap between kexec load and kexec reboot
-could be very long. Then those new events extended into TPM PCRs during
-the time window misses the chance to be carried over to 2nd kernel. This
-results in mismatch between TPM PCR quotes and the actual IMA measurements
-list after kexec reboot, which in turn results in remote attestation
-failure.
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-To solve this problem, the new design is to defer the reading TPM PCRs
-content out into kexec buffer to kexec reboot phase. While still
-allocating the necessary buffer at kexec load time because it's not
-appropriate to allocate memory at kexec reboot moment.
-===
+url:    https://github.com/intel-lab-lkp/linux/commits/steven-chen/ima-copy-only-complete-measurement-records-across-kexec/20250305-031719
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+patch link:    https://lore.kernel.org/r/20250304190351.96975-3-chenste%40linux.microsoft.com
+patch subject: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+config: x86_64-randconfig-161-20250306 (https://download.01.org/0day-ci/archive/20250306/202503061449.gbVGafZc-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-It may still need be improved, just for your reference. You can change
-and add more detail needed and add them into your log.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202503061449.gbVGafZc-lkp@intel.com/
 
-> 
-> Please refer to "[PATCH v9 0/7] ima: kexec: measure events between kexec
-> load and execute" for the reason why to add this.
-> 
-> Steven
-> 
-> > > Implement kimage_map_segment() to enable IMA to map measurement log list to
-> > > the kimage structure during kexec 'load' stage.  This function takes a kimage
-> > > pointer, a memory address, and a size, then gathers the
-> > > source pages within the specified address range, creates an array of page
-> > > pointers, and maps these to a contiguous virtual address range.  The
-> > > function returns the start virtual address of this range if successful, or NULL on
-> > > failure.
-> > > 
-> > > Implement kimage_unmap_segment() for unmapping segments
-> > > using vunmap().
-> > > 
-> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: Baoquan He <bhe@redhat.com>
-> > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > Cc: Dave Young <dyoung@redhat.com>
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> > > ---
-> > >   include/linux/kexec.h |  6 +++++
-> > >   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
-> > >   2 files changed, 60 insertions(+)
-> > > 
-> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > > index f0e9f8eda7a3..7d6b12f8b8d0 100644
-> > > --- a/include/linux/kexec.h
-> > > +++ b/include/linux/kexec.h
-> > > @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
-> > >   #define kexec_dprintk(fmt, arg...) \
-> > >           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
-> > > +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
-> > > +extern void kimage_unmap_segment(void *buffer);
-> > >   #else /* !CONFIG_KEXEC_CORE */
-> > >   struct pt_regs;
-> > >   struct task_struct;
-> > > +struct kimage;
-> > >   static inline void __crash_kexec(struct pt_regs *regs) { }
-> > >   static inline void crash_kexec(struct pt_regs *regs) { }
-> > >   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
-> > >   static inline int kexec_crash_loaded(void) { return 0; }
-> > > +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
-> > > +{ return NULL; }
-> > > +static inline void kimage_unmap_segment(void *buffer) { }
-> > >   #define kexec_in_progress false
-> > >   #endif /* CONFIG_KEXEC_CORE */
-> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > > index c0bdc1686154..63e4d16b6023 100644
-> > > --- a/kernel/kexec_core.c
-> > > +++ b/kernel/kexec_core.c
-> > > @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
-> > >   	return result;
-> > >   }
-> > > +void *kimage_map_segment(struct kimage *image,
-> > > +			 unsigned long addr, unsigned long size)
-> > > +{
-> > > +	unsigned long eaddr = addr + size;
-> > > +	unsigned long src_page_addr, dest_page_addr;
-> > > +	unsigned int npages;
-> > > +	struct page **src_pages;
-> > > +	int i;
-> > > +	kimage_entry_t *ptr, entry;
-> > > +	void *vaddr = NULL;
+smatch warnings:
+kernel/kexec_core.c:896 kimage_map_segment() error: uninitialized symbol 'dest_page_addr'.
 
-When adding a new function, it's suggested to take the reverse xmas tree
-style for local variable ordering usually.
+vim +/dest_page_addr +896 kernel/kexec_core.c
 
-> > > +
-> > > +	/*
-> > > +	 * Collect the source pages and map them in a contiguous VA range.
-> > > +	 */
-> > > +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
-> > > +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
-> > > +	if (!src_pages) {
-> > > +		pr_err("Could not allocate ima pages array.\n");
-> > > +		return NULL;
-> > > +	}
-> > > +
-> > > +	i = 0;
-> > > +	for_each_kimage_entry(image, ptr, entry) {
-> > > +		if (entry & IND_DESTINATION) {
-> > > +			dest_page_addr = entry & PAGE_MASK;
-> > > +		} else if (entry & IND_SOURCE) {
-> > > +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
-> > > +				src_page_addr = entry & PAGE_MASK;
-> > > +				src_pages[i++] =
-> > > +					virt_to_page(__va(src_page_addr));
-> > > +				if (i == npages)
-> > > +					break;
-> > > +				dest_page_addr += PAGE_SIZE;
-> > > +			}
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* Sanity check. */
-> > > +	WARN_ON(i < npages);
-> > > +
-> > > +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
-> > > +	kfree(src_pages);
-> > > +
-> > > +	if (!vaddr)
-> > > +		pr_err("Could not map ima buffer.\n");
-> > > +
-> > > +	return vaddr;
-> > > +}
-> > > +
-> > > +void kimage_unmap_segment(void *segment_buffer)
-> > > +{
-> > > +	vunmap(segment_buffer);
-> > > +}
-> > > +
-> > >   struct kexec_load_limit {
-> > >   	/* Mutex protects the limit count. */
-> > >   	struct mutex mutex;
-> > > -- 
-> > > 2.25.1
-> > > 
-> > > 
-> > BR, Jarkko
-> 
-> 
+bf06eab7ae0f04 steven chen 2025-03-04  870  void *kimage_map_segment(struct kimage *image,
+bf06eab7ae0f04 steven chen 2025-03-04  871  			 unsigned long addr, unsigned long size)
+bf06eab7ae0f04 steven chen 2025-03-04  872  {
+bf06eab7ae0f04 steven chen 2025-03-04  873  	unsigned long eaddr = addr + size;
+bf06eab7ae0f04 steven chen 2025-03-04  874  	unsigned long src_page_addr, dest_page_addr;
+bf06eab7ae0f04 steven chen 2025-03-04  875  	unsigned int npages;
+bf06eab7ae0f04 steven chen 2025-03-04  876  	struct page **src_pages;
+bf06eab7ae0f04 steven chen 2025-03-04  877  	int i;
+bf06eab7ae0f04 steven chen 2025-03-04  878  	kimage_entry_t *ptr, entry;
+bf06eab7ae0f04 steven chen 2025-03-04  879  	void *vaddr = NULL;
+bf06eab7ae0f04 steven chen 2025-03-04  880  
+bf06eab7ae0f04 steven chen 2025-03-04  881  	/*
+bf06eab7ae0f04 steven chen 2025-03-04  882  	 * Collect the source pages and map them in a contiguous VA range.
+bf06eab7ae0f04 steven chen 2025-03-04  883  	 */
+bf06eab7ae0f04 steven chen 2025-03-04  884  	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+bf06eab7ae0f04 steven chen 2025-03-04  885  	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+bf06eab7ae0f04 steven chen 2025-03-04  886  	if (!src_pages) {
+bf06eab7ae0f04 steven chen 2025-03-04  887  		pr_err("Could not allocate ima pages array.\n");
+bf06eab7ae0f04 steven chen 2025-03-04  888  		return NULL;
+bf06eab7ae0f04 steven chen 2025-03-04  889  	}
+bf06eab7ae0f04 steven chen 2025-03-04  890  
+bf06eab7ae0f04 steven chen 2025-03-04  891  	i = 0;
+bf06eab7ae0f04 steven chen 2025-03-04  892  	for_each_kimage_entry(image, ptr, entry) {
+bf06eab7ae0f04 steven chen 2025-03-04  893  		if (entry & IND_DESTINATION) {
+bf06eab7ae0f04 steven chen 2025-03-04  894  			dest_page_addr = entry & PAGE_MASK;
+
+Is the first entry always IND_DESTINATION?
+
+bf06eab7ae0f04 steven chen 2025-03-04  895  		} else if (entry & IND_SOURCE) {
+bf06eab7ae0f04 steven chen 2025-03-04 @896  			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+                                                                    ^^^^^^^^^^^^^^
+otherwise this is uninitialized
+
+bf06eab7ae0f04 steven chen 2025-03-04  897  				src_page_addr = entry & PAGE_MASK;
+bf06eab7ae0f04 steven chen 2025-03-04  898  				src_pages[i++] =
+bf06eab7ae0f04 steven chen 2025-03-04  899  					virt_to_page(__va(src_page_addr));
+bf06eab7ae0f04 steven chen 2025-03-04  900  				if (i == npages)
+bf06eab7ae0f04 steven chen 2025-03-04  901  					break;
+bf06eab7ae0f04 steven chen 2025-03-04  902  				dest_page_addr += PAGE_SIZE;
+bf06eab7ae0f04 steven chen 2025-03-04  903  			}
+bf06eab7ae0f04 steven chen 2025-03-04  904  		}
+bf06eab7ae0f04 steven chen 2025-03-04  905  	}
+bf06eab7ae0f04 steven chen 2025-03-04  906  
+bf06eab7ae0f04 steven chen 2025-03-04  907  	/* Sanity check. */
+bf06eab7ae0f04 steven chen 2025-03-04  908  	WARN_ON(i < npages);
+bf06eab7ae0f04 steven chen 2025-03-04  909  
+bf06eab7ae0f04 steven chen 2025-03-04  910  	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+bf06eab7ae0f04 steven chen 2025-03-04  911  	kfree(src_pages);
+bf06eab7ae0f04 steven chen 2025-03-04  912  
+bf06eab7ae0f04 steven chen 2025-03-04  913  	if (!vaddr)
+bf06eab7ae0f04 steven chen 2025-03-04  914  		pr_err("Could not map ima buffer.\n");
+bf06eab7ae0f04 steven chen 2025-03-04  915  
+bf06eab7ae0f04 steven chen 2025-03-04  916  	return vaddr;
+bf06eab7ae0f04 steven chen 2025-03-04  917  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
