@@ -4,67 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99278C282EC
-	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 01:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B7C0C282D1
+	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 02:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=j2br9eadG+prJRkVEuLtzkTzi1DZEsFzj7t8tTGOrhQ=; b=hWSMksS+gKEXsJH0WPdSDkvFXe
-	qW1fv9EwsEikFUMYhwkt5f986Q178bsJvYO1cgSbjPxWoP+S8TCdYXbFeiLQO1U/KLu0OIejFwSrz
-	t0SHpopTkfeFlM4g0oir+E03Gye7534G1NUswWNycuZkXB/X8ekoJGa2XmKhGiFkSXSG6uiZANXVY
-	hHWBN1o1ZtWVPOUIxYjylrlwadN06Aijf5s+uXeVX+VQ92x0jdjeXJeIyYv7SUafm98wT+fZjtWcP
-	T2dTiNQqVupcvvkhd2NJ3cUhg74Xrlxj7z90yOWCNdKXWRXv801nIuOsJJq1t6lPwzMjblWe+IwY6
-	lfsUF9/Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MI9+ZmbRyN8XMo/CxM02plIhNjOeHxU5pdUvVUUf+v8=; b=KV4b+vVWJyie+IIZBZNlCbBDWR
+	t9ed5L8YlGva+mfuMWH0Ik2uJDo115X4yJCMDOsSf5nR2DhmpV77WLzbvg8QuABlvHkvUhpFVlcHG
+	rHhr133mrwfKo48ogleJw/jEr8rZWLSk8WOSWwCde9ddJjrjlfUwOioU/lkuU4uGoihs1AvuZnr42
+	8y8uH2luvgHeJ9cKPn9bVHcbyo7RzLpkGeFD1KhHrUQx0rq6BwFhGciVe8ETenW1jPk/80woC5any
+	ijzd4SsJBWWMGJRUHhbZH1LCTDXe4kZVltBROMXrPl98StWp8gjkyDt+I7hB4FUEmy17EAt638fFJ
+	B1Y0QPkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqMWR-0000000CnjO-195S;
-	Fri, 07 Mar 2025 01:29:07 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tqNN1-0000000Ctty-0o7b;
+	Fri, 07 Mar 2025 02:23:27 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqMDn-0000000Ckit-291r
-	for kexec@lists.infradead.org;
-	Fri, 07 Mar 2025 01:09:52 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 6BC1CA44A7C;
-	Fri,  7 Mar 2025 01:04:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CECDC4CEE0;
-	Fri,  7 Mar 2025 01:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741309789;
-	bh=yKuo8ItUdzoMnE+DZFQ9ipnfPDk0P9XbGS1ILoFZ5kk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=YyRSh1AY/kLvcXE2EMoEKJ23nXytxgWZvz58cGiz5RT3NrBZHUXzJn24OjryqiwRV
-	 laegr90sLsUyToXcAMLFgdV13xazA5Ncou0kjL3VIDucIF2qqlGwPO6QsYUKE8GLas
-	 YaI8zgX/SIKLti5MMpwGGmiylScsZ/4GQYOFIj415F/v77L9Gxj5i/lxcEmpk76X7D
-	 7TtvZ8Cunn4C9kkzpwIVBV/h5d9UEyqDz3Z303MIBDZG+1ndgTNRQfHUfeIHfoeu5p
-	 v9uj0lkcpzBVG2ZHgnWcdaGyr2/iF56Rp84Ikzxkm3wOIy0JB/kuoa8VtdfGoQ/0zc
-	 c/9iimlBG4GIA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: David Rientjes <rientjes@google.com>
-Cc: Alexander Graf <graf@amazon.com>,  Anthony Yznaga
- <anthony.yznaga@oracle.com>,  Dave Hansen <dave.hansen@intel.com>,  David
- Hildenbrand <david@redhat.com>,  Frank van der Linden <fvdl@google.com>,
-  James Gowans <jgowans@amazon.com>,  Jason Gunthorpe <jgg@nvidia.com>,
-  Junaid Shahid <junaids@google.com>,  Matthew Wilcox
- <willy@infradead.org>,  Mike Rapoport <rppt@kernel.org>,  Pankaj Gupta
- <pankaj.gupta.linux@gmail.com>,  Pasha Tatashin <tatashin@google.com>,
-  Pratyush Yadav <pratyush@kernel.org>,  Vipin Sharma <vipinsh@google.com>,
-  Vishal Annapurve <vannapurve@google.com>,  "Woodhouse, David"
- <dwmw@amazon.co.uk>,  linux-mm@kvack.org,  kexec@lists.infradead.org
-Subject: Re: [Hypervisor Live Update] Notes from February 24, 2025
-In-Reply-To: <7154b857-01cf-a8c6-ea02-51d095bafabf@google.com>
-References: <7154b857-01cf-a8c6-ea02-51d095bafabf@google.com>
-Date: Fri, 07 Mar 2025 01:09:45 +0000
-Message-ID: <mafs01pv9k5nq.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1tqNJs-0000000CtRM-2aHa
+	for kexec@bombadil.infradead.org;
+	Fri, 07 Mar 2025 02:20:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=MI9+ZmbRyN8XMo/CxM02plIhNjOeHxU5pdUvVUUf+v8=; b=G3gPeqyyG4G1SQ6aGiFsK38WIo
+	XNW/6Ot2orS6FRjfNdySmr6Y/ws8PgrDtHrV5/BvPtyi3UUozUJJ38q4WEw9OvaPyOF2U+X7QZJ0d
+	cl6fwREnWyiW/EVurz9Y7vi27xw7rjU1A+iypGqwCzgFwwkxaAl/w6uHe0geNKry2Tjo7DUpDRviC
+	RoyfTjd1VbrLdM+VQ3j4YzWp22UeiKcaIF8f8Mn7L7crI83TACZxjKA8kBjU2amv/rESVFGGJWLpy
+	u/euK5vWQYbYhA8855NCkZLmrFSVJ2CEa001u5UAEaaNl7qvW/GoGrelqnCGcPe7tyzeSAbiTwYl2
+	6ttXf01w==;
+Received: from [129.95.238.77] (helo=[127.0.0.1])
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tqNJj-0000000Bey7-1Eol;
+	Fri, 07 Mar 2025 02:20:03 +0000
+Date: Thu, 06 Mar 2025 18:19:58 -0800
+From: Randy Dunlap <rdunlap@infradead.org>
+To: Pratyush Yadav <ptyadav@amazon.de>, linux-kernel@vger.kernel.org
+CC: Jonathan Corbet <corbet@lwn.net>, Eric Biederman <ebiederm@xmission.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Hugh Dickins <hughd@google.com>, Alexander Graf <graf@amazon.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>,
+ Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Pasha Tatashin <tatashin@google.com>,
+ Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Wei Yang <richard.weiyang@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 2/5] misc: add documentation for FDBox
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250307005830.65293-3-ptyadav@amazon.de>
+References: <20250307005830.65293-1-ptyadav@amazon.de> <20250307005830.65293-3-ptyadav@amazon.de>
+Message-ID: <E41DA7C8-635C-4E6E-A2CA-5D657526BE85@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250306_170951_633916_E141ADA3 
-X-CRM114-Status: GOOD (  22.34  )
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,55 +83,385 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
-
-On Sun, Mar 02 2025, David Rientjes wrote:
-
-> Hi everybody,
+On March 6, 2025 4:57:36 PM PST, Pratyush Yadav <ptyadav@amazon=2Ede> wrote=
+:
+>With FDBox in place, add documentation that describes what it is and how
+>it is used, along with its UAPI and in-kernel API=2E
 >
-> Here are the notes from the last Hypervisor Live Update call that happened 
-> on Monday, February 24.  Thanks for everybody who was involved!
+>Since the document refers to KHO, add a reference tag in kho/index=2Erst=
+=2E
 >
-[...]
+>Signed-off-by: Pratyush Yadav <ptyadav@amazon=2Ede>
+>---
+> Documentation/filesystems/locking=2Erst |  21 +++
+> Documentation/kho/fdbox=2Erst           | 224 ++++++++++++++++++++++++++
+> Documentation/kho/index=2Erst           |   3 +
+> MAINTAINERS                           |   1 +
+> 4 files changed, 249 insertions(+)
+> create mode 100644 Documentation/kho/fdbox=2Erst
 >
-> Pratyush took the AI to look at implementation on memfd.  Mike took the
-> AI to look at memory reservation.
->
-> ----->o-----
-> I pivoted the discussion toward fdbox which ended up never being posted
-> upstream.  Pratyush provided the link to the most recent code:
-> https://github.com/agraf/linux-2.6/blob/kvm-kho-gmem-test/drivers/misc/fdbox.c
-> This work likely would need to be picked up to pursue upstream because
-> the current code has several TODO's.  (A struct miscdevice was called out
-> as curious.)
->
-> It was noted that it would be difficult to support memfd without
-> something like fdbox, so whether the fdbox code itself were upstreamed or
-> it becomes more generic from the work on memfd, the base support would
-> need to be provided somehow.
->
-> Mike and Jason suggested designing fdbox and then starting to use it for
-> memfd.  This would need to be aligned by stakeholders, including the UAPI
-> for fdbox.  Pratyush will be looking into fdbox or inventing something
-> similar while working on memfd.
->
-> We need to propose the fdbox design and UAPI.
+>diff --git a/Documentation/filesystems/locking=2Erst b/Documentation/file=
+systems/locking=2Erst
+>index d20a32b77b60f=2E=2E5526833faf79a 100644
+>--- a/Documentation/filesystems/locking=2Erst
+>+++ b/Documentation/filesystems/locking=2Erst
+>@@ -607,6 +607,27 @@ used=2E To block changes to file contents via a memo=
+ry mapping during the
+> operation, the filesystem must take mapping->invalidate_lock to coordina=
+te
+> with ->page_mkwrite=2E
+>=20
+>+fdbox_file_ops
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>+
+>+prototypes::
+>+
+>+	int (*kho_write)(struct fdbox_fd *box_fd, void *fdt);
+>+	int (*seal)(struct fdbox *box);
+>+	int (*unseal)(struct fdbox *box);
+>+
+>+
+>+locking rules:
+>+	all may block
+>+
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>+ops		i_rwsem(box_fd->file->f_inode)
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>+kho_write:	exclusive
+>+seal:		no
+>+unseal:		no
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>+
+> dquot_operations
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+>diff --git a/Documentation/kho/fdbox=2Erst b/Documentation/kho/fdbox=2Ers=
+t
+>new file mode 100644
+>index 0000000000000=2E=2E44a3f5cdf1efb
+>--- /dev/null
+>+++ b/Documentation/kho/fdbox=2Erst
+>@@ -0,0 +1,224 @@
+>+=2E=2E SPDX-License-Identifier: GPL-2=2E0-or-later
+>+
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>+File Descriptor Box (FDBox)
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>+
+>+:Author: Pratyush Yadav
+>+
+>+Introduction
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>+
+>+The File Descriptor Box (FDBox) is a mechanism for userspace to name fil=
+e
+>+descriptors and give them over to the kernel to hold=2E They can later b=
+e
+>+retrieved by passing in the same name=2E
+>+
+>+The primary purpose of FDBox is to be used with :ref:`kho`=2E There are =
+many kinds
 
-As promised, I have taken the last couple weeks in coming up with a
-basic FDBox design, along with having memfd use it (currently via shmem,
-since I am more familiar with that than with hugetlbfs). The patches can
-be found at [0].
+    many kinds of=20
 
-I am travelling next week so I am not sure if I will be able to attend
-the next session. If I do, I would like to talk more about the patches
-and FDBox if time permits. Anyway, looking forward to getting some
-feedback on the patches :-)
+>+anonymous file descriptors in the kernel like memfd, guest_memfd, iommuf=
+d, etc=2E
 
-[0] https://lore.kernel.org/linux-mm/20250307005830.65293-1-ptyadav@amazon.de/T/#u
+   etc=2E,
 
-[...]
+>+that would be useful to be preserved using KHO=2E To be able to do that,=
+ there
+>+needs to be a mechanism to label FDs that allows userspace to set the la=
+bel
+>+before doing KHO and to use the label to map them back after KHO=2E FDBo=
+x achieves
+>+that purpose by exposing a miscdevice which exposes ioctls to label and =
+transfer
+>+FDs between the kernel and userspace=2E FDBox is not intended to work wi=
+th any
+>+generic file descriptor=2E Support for each kind of FDs must be explicit=
+ly
+>+enabled=2E
+>+
+>+FDBox can be enabled by setting the ``CONFIG_FDBOX`` option to ``y``=2E =
+While the
+>+primary purpose of FDBox is to be used with KHO, it does not explicitly =
+require
+>+``CONFIG_KEXEC_HANDOVER``, since it can be used without KHO, simply as a=
+ way to
+>+preserve or transfer FDs when userspace exits=2E
+>+
+>+Concepts
+>+=3D=3D=3D=3D=3D=3D=3D=3D
+>+
+>+Box
+>+---
+>+
+>+The box is a container for FDs=2E Boxes are identified by their name, wh=
+ich must
+>+be unique=2E Userspace can put FDs in the box using the ``FDBOX_PUT_FD``
+>+operation, and take them out of the box using the ``FDBOX_GET_FD`` opera=
+tion=2E
 
--- 
-Regards,
-Pratyush Yadav
+Is this ioctl range documented is ioctl-number=2Erst?
+I didn't notice a patch for that=2E
+
+>+Once all the required FDs are put into the box, it can be sealed to make=
+ it
+>+ready for shipping=2E This can be done by the ``FDBOX_SEAL`` operation=
+=2E The seal
+>+operation notifies each FD in the box=2E If any of the FDs have a depend=
+ency on
+>+another, this gives them an opportunity to ensure all dependencies are m=
+et, or
+>+fail the seal if not=2E Once a box is sealed, no FDs can be added or rem=
+oved from
+>+the box until it is unsealed=2E Only sealed boxes are transported to a n=
+ew kernel
+
+What if KHO is not being used?
+
+>+via KHO=2E The box can be unsealed by the ``FDBOX_UNSEAL`` operation=2E =
+This is the
+>+opposite of seal=2E It also notifies each FD in the box to ensure all de=
+pendencies
+>+are met=2E This can be useful in case some FDs fail to be restored after=
+ KHO=2E
+>+
+>+Box FD
+>+------
+
+I can't tell in my email font, but is each underlinoat least as long as th=
+e title above it?
+
+>+
+>+The Box FD is a FD that is currently in a box=2E It is identified by its=
+ name,
+>+which must be unique in the box it belongs to=2E The Box FD is created w=
+hen a FD
+>+is put into a box by using the ``FDBOX_PUT_FD`` operation=2E This operat=
+ion
+>+removes the FD from the calling task=2E The FD can be restored by passin=
+g the
+>+unique name to the ``FDBOX_GET_FD`` operation=2E
+>+
+>+FDBox control device
+>+--------------------
+>+
+>+This is the ``/dev/fdbox/fdbox`` device=2E A box can be created using th=
+e
+>+``FDBOX_CREATE_BOX`` operation on the device=2E A box can be removed usi=
+ng the
+>+``FDBOX_DELETE_BOX`` operation=2E
+>+
+>+UAPI
+>+=3D=3D=3D=3D
+>+
+>+FDBOX_NAME_LEN
+>+--------------
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_NAME_LEN			256
+>+
+>+Maximum length of the name of a Box or Box FD=2E
+>+
+>+Ioctls on /dev/fdbox/fdbox
+>+--------------------------
+>+
+>+FDBOX_CREATE_BOX
+>+~~~~~~~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_CREATE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 0)
+>+    struct fdbox_create_box {
+>+    	__u64 flags;
+>+    	__u8 name[FDBOX_NAME_LEN];
+>+    };
+>+
+>+Create a box=2E
+>+
+>+After this returns, the box is available at ``/dev/fdbox/<name>``=2E
+>+
+>+``name``
+>+    The name of the box to be created=2E Must be unique=2E
+>+
+>+``flags``
+>+    Flags to the operation=2E Currently, no flags are defined=2E
+>+
+>+Returns:
+>+    0 on success, -1 on error, with errno set=2E
+>+
+>+FDBOX_DELETE_BOX
+>+~~~~~~~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_DELETE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 1)
+>+    struct fdbox_delete_box {
+>+    	__u64 flags;
+>+    	__u8 name[FDBOX_NAME_LEN];
+>+    };
+>+
+>+Delete a box=2E
+>+
+>+After this returns, the box is no longer available at ``/dev/fdbox/<name=
+>``=2E
+>+
+>+``name``
+>+    The name of the box to be deleted=2E
+>+
+>+``flags``
+>+    Flags to the operation=2E Currently, no flags are defined=2E
+>+
+>+Returns:
+>+    0 on success, -1 on error, with errno set=2E
+>+
+>+Ioctls on /dev/fdbox/<boxname>
+>+------------------------------
+>+
+>+These must be performed on the ``/dev/fdbox/<boxname>`` device=2E
+>+
+>+FDBX_PUT_FD
+>+~~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_PUT_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 2)
+>+    struct fdbox_put_fd {
+>+    	__u64 flags;
+>+    	__u32 fd;
+>+    	__u32 pad;
+>+    	__u8 name[FDBOX_NAME_LEN];
+>+    };
+>+
+>+
+>+Put FD into the box=2E
+>+
+>+After this returns, ``fd`` is removed from the task and can no longer be=
+ used by
+>+it=2E
+>+
+>+``name``
+>+    The name of the FD=2E
+>+
+>+``fd``
+>+    The file descriptor number to be
+>+
+>+``flags``
+>+    Flags to the operation=2E Currently, no flags are defined=2E
+>+
+>+Returns:
+>+    0 on success, -1 on error, with errno set=2E
+>+
+>+FDBX_GET_FD
+>+~~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_GET_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 3)
+>+    struct fdbox_get_fd {
+>+    	__u64 flags;
+>+    	__u8 name[FDBOX_NAME_LEN];
+>+    };
+>+
+>+Get an FD from the box=2E
+>+
+>+After this returns, the FD identified by ``name`` is mapped into the tas=
+k and is
+>+available for use=2E
+>+
+>+``name``
+>+    The name of the FD to get=2E
+>+
+>+``flags``
+>+    Flags to the operation=2E Currently, no flags are defined=2E
+>+
+>+Returns:
+>+    FD number on success, -1 on error with errno set=2E
+>+
+>+FDBOX_SEAL
+>+~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_SEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 4)
+>+
+>+Seal the box=2E
+>+
+>+Gives the kernel an opportunity to ensure all dependencies are met in th=
+e box=2E
+>+After this returns, the box is sealed and FDs can no longer be added or =
+removed
+>+from it=2E A box must be sealed for it to be transported across KHO=2E
+>+
+>+Returns:
+>+    0 on success, -1 on error with errno set=2E
+>+
+>+FDBOX_UNSEAL
+>+~~~~~~~~~~~~
+>+
+>+=2E=2E code-block:: c
+>+
+>+    #define FDBOX_UNSEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 5)
+>+
+>+Unseal the box=2E
+>+
+>+Gives the kernel an opportunity to ensure all dependencies are met in th=
+e box,
+>+and in case of KHO, no FDs have been lost in transit=2E
+>+
+>+Returns:
+>+    0 on success, -1 on error with errno set=2E
+>+
+>+Kernel functions and structures
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>+
+>+=2E=2E kernel-doc:: include/linux/fdbox=2Eh
+>diff --git a/Documentation/kho/index=2Erst b/Documentation/kho/index=2Ers=
+t
+>index 5e7eeeca8520f=2E=2E051513b956075 100644
+>--- a/Documentation/kho/index=2Erst
+>+++ b/Documentation/kho/index=2Erst
+>@@ -1,5 +1,7 @@
+> =2E=2E SPDX-License-Identifier: GPL-2=2E0-or-later
+>=20
+>+=2E=2E _kho:
+>+
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Kexec Handover Subsystem
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>@@ -9,6 +11,7 @@ Kexec Handover Subsystem
+>=20
+>    concepts
+>    usage
+>+   fdbox
+>=20
+> =2E=2E only::  subproject and html
+>=20
+>diff --git a/MAINTAINERS b/MAINTAINERS
+>index d329d3e5514c5=2E=2E135427582e60f 100644
+>--- a/MAINTAINERS
+>+++ b/MAINTAINERS
+>@@ -8866,6 +8866,7 @@ FDBOX
+> M:	Pratyush Yadav <pratyush@kernel=2Eorg>
+> L:	linux-fsdevel@vger=2Ekernel=2Eorg
+> S:	Maintained
+>+F:	Documentation/kho/fdbox=2Erst
+> F:	drivers/misc/fdbox=2Ec
+> F:	include/linux/fdbox=2Eh
+> F:	include/uapi/linux/fdbox=2Eh
+
+
+~Randy
 
