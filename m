@@ -4,71 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B7C0C282D1
-	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 02:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DF60C282EC
+	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 02:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MI9+ZmbRyN8XMo/CxM02plIhNjOeHxU5pdUvVUUf+v8=; b=KV4b+vVWJyie+IIZBZNlCbBDWR
-	t9ed5L8YlGva+mfuMWH0Ik2uJDo115X4yJCMDOsSf5nR2DhmpV77WLzbvg8QuABlvHkvUhpFVlcHG
-	rHhr133mrwfKo48ogleJw/jEr8rZWLSk8WOSWwCde9ddJjrjlfUwOioU/lkuU4uGoihs1AvuZnr42
-	8y8uH2luvgHeJ9cKPn9bVHcbyo7RzLpkGeFD1KhHrUQx0rq6BwFhGciVe8ETenW1jPk/80woC5any
-	ijzd4SsJBWWMGJRUHhbZH1LCTDXe4kZVltBROMXrPl98StWp8gjkyDt+I7hB4FUEmy17EAt638fFJ
-	B1Y0QPkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LSX7u7hpQG9kzrD00xcMaeuOdbSpidIB6YttNQE9Zog=; b=bGYpt2hjFuNdqotKQxsTjT2v2U
+	vRZcpC4H+oSSytbtr5yPVZq2IDVm6yD0dhSb5TToD4gE2Af+u+GYASJdfjW1f+WiUIiB+1yCoKDEa
+	qLdYFIJn0+uOMJKsFr7IYxKD/MkXAjEmZDDKskunk/5UtAuiE2GeQSOoeDkmlYMGfP/rqIbPp6E1j
+	jZ2ViEnGn05Mvk6dj4Y7/4Wg825K1ML1GnzC7OvoYWBsMo6v4k5N2nWDj7XwDqzCZas87gs0G+3zu
+	2wWaOqjEEi97tYn/CboBjvbzstK1h601jVj038XocA84U+U1NMKtf6AxMtAlQI7rNv14w9wgwE3wv
+	IKtyLekQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqNN1-0000000Ctty-0o7b;
-	Fri, 07 Mar 2025 02:23:27 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tqNoy-0000000Cw6t-0K1d;
+	Fri, 07 Mar 2025 02:52:20 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqNJs-0000000CtRM-2aHa
-	for kexec@bombadil.infradead.org;
-	Fri, 07 Mar 2025 02:20:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=MI9+ZmbRyN8XMo/CxM02plIhNjOeHxU5pdUvVUUf+v8=; b=G3gPeqyyG4G1SQ6aGiFsK38WIo
-	XNW/6Ot2orS6FRjfNdySmr6Y/ws8PgrDtHrV5/BvPtyi3UUozUJJ38q4WEw9OvaPyOF2U+X7QZJ0d
-	cl6fwREnWyiW/EVurz9Y7vi27xw7rjU1A+iypGqwCzgFwwkxaAl/w6uHe0geNKry2Tjo7DUpDRviC
-	RoyfTjd1VbrLdM+VQ3j4YzWp22UeiKcaIF8f8Mn7L7crI83TACZxjKA8kBjU2amv/rESVFGGJWLpy
-	u/euK5vWQYbYhA8855NCkZLmrFSVJ2CEa001u5UAEaaNl7qvW/GoGrelqnCGcPe7tyzeSAbiTwYl2
-	6ttXf01w==;
-Received: from [129.95.238.77] (helo=[127.0.0.1])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqNJj-0000000Bey7-1Eol;
-	Fri, 07 Mar 2025 02:20:03 +0000
-Date: Thu, 06 Mar 2025 18:19:58 -0800
-From: Randy Dunlap <rdunlap@infradead.org>
-To: Pratyush Yadav <ptyadav@amazon.de>, linux-kernel@vger.kernel.org
-CC: Jonathan Corbet <corbet@lwn.net>, Eric Biederman <ebiederm@xmission.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Hugh Dickins <hughd@google.com>, Alexander Graf <graf@amazon.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>,
- Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Pasha Tatashin <tatashin@google.com>,
- Anthony Yznaga <anthony.yznaga@oracle.com>,
- Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
- Wei Yang <richard.weiyang@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 2/5] misc: add documentation for FDBox
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250307005830.65293-3-ptyadav@amazon.de>
-References: <20250307005830.65293-1-ptyadav@amazon.de> <20250307005830.65293-3-ptyadav@amazon.de>
-Message-ID: <E41DA7C8-635C-4E6E-A2CA-5D657526BE85@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+	id 1tqNov-0000000Cw6Y-0t9Y
+	for kexec@lists.infradead.org;
+	Fri, 07 Mar 2025 02:52:18 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526MOQlj023805;
+	Fri, 7 Mar 2025 02:51:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=LSX7u7
+	hpQG9kzrD00xcMaeuOdbSpidIB6YttNQE9Zog=; b=pGSCZJTcoSXR8zGp2dMuo1
+	U2kpuyIqgc4U3CJhjYQ1lqparoY/ADpqNpOYCc+nkQIl8ClpXKL6Qf8kepwvhrm8
+	dXBJC9xNn86/DkoSBc6AkZcGs+zXuSfYNgEE8hs0KrQHXmIAOWYhUx2XvVk2yXMW
+	DbqnP8XNEGRfLJjgv/OdnMCJCApaZTUc3n9FNQpov4mfWUaPb+tZIosYiT+tX2Yn
+	pLI7W/RTBHRgyvTurBxEiID9YolyFyc/DYnD4YaUnCu9uYpnDJ+5HVu6e22WUdos
+	up5lZZ4M774B+ksCcwmfb3lrsSpRtxhsh2WNpwRNinEjdtZYy6pNwM6IfWItiJRw
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4574396btd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Mar 2025 02:51:53 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5271a7X2020841;
+	Fri, 7 Mar 2025 02:51:52 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djnvf29-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Mar 2025 02:51:52 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5272ppD727525806
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Mar 2025 02:51:52 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C82E958056;
+	Fri,  7 Mar 2025 02:51:51 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E63B5805E;
+	Fri,  7 Mar 2025 02:51:50 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.66.15])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Mar 2025 02:51:50 +0000 (GMT)
+Message-ID: <69f43be0ed70eee45d3d9d9ac2aeaf39def5770a.camel@linux.ibm.com>
+Subject: Re: [PATCH v9 1/7] ima: copy only complete measurement records
+ across kexec
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Thu, 06 Mar 2025 21:51:50 -0500
+In-Reply-To: <8bc74dd8-ecd0-44ad-88a2-8b36fa61100a@linux.microsoft.com>
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+	 <20250304190351.96975-2-chenste@linux.microsoft.com>
+	 <Z8g+uhZQ6totYLmp@MiWiFi-R3L-srv>
+	 <fe6e3c1333a50d66dc876b5a196d3491170802a8.camel@linux.ibm.com>
+	 <8bc74dd8-ecd0-44ad-88a2-8b36fa61100a@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tcXPqrwRdfAvKYDFQQvRS5oy_sLHQISR
+X-Proofpoint-ORIG-GUID: tcXPqrwRdfAvKYDFQQvRS5oy_sLHQISR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-07_01,2025-03-06_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503070015
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250306_185217_263993_4C4C1289 
+X-CRM114-Status: GOOD (  32.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,385 +116,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On March 6, 2025 4:57:36 PM PST, Pratyush Yadav <ptyadav@amazon=2Ede> wrote=
-:
->With FDBox in place, add documentation that describes what it is and how
->it is used, along with its UAPI and in-kernel API=2E
->
->Since the document refers to KHO, add a reference tag in kho/index=2Erst=
-=2E
->
->Signed-off-by: Pratyush Yadav <ptyadav@amazon=2Ede>
->---
-> Documentation/filesystems/locking=2Erst |  21 +++
-> Documentation/kho/fdbox=2Erst           | 224 ++++++++++++++++++++++++++
-> Documentation/kho/index=2Erst           |   3 +
-> MAINTAINERS                           |   1 +
-> 4 files changed, 249 insertions(+)
-> create mode 100644 Documentation/kho/fdbox=2Erst
->
->diff --git a/Documentation/filesystems/locking=2Erst b/Documentation/file=
-systems/locking=2Erst
->index d20a32b77b60f=2E=2E5526833faf79a 100644
->--- a/Documentation/filesystems/locking=2Erst
->+++ b/Documentation/filesystems/locking=2Erst
->@@ -607,6 +607,27 @@ used=2E To block changes to file contents via a memo=
-ry mapping during the
-> operation, the filesystem must take mapping->invalidate_lock to coordina=
-te
-> with ->page_mkwrite=2E
->=20
->+fdbox_file_ops
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->+
->+prototypes::
->+
->+	int (*kho_write)(struct fdbox_fd *box_fd, void *fdt);
->+	int (*seal)(struct fdbox *box);
->+	int (*unseal)(struct fdbox *box);
->+
->+
->+locking rules:
->+	all may block
->+
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->+ops		i_rwsem(box_fd->file->f_inode)
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->+kho_write:	exclusive
->+seal:		no
->+unseal:		no
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->+
-> dquot_operations
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->diff --git a/Documentation/kho/fdbox=2Erst b/Documentation/kho/fdbox=2Ers=
-t
->new file mode 100644
->index 0000000000000=2E=2E44a3f5cdf1efb
->--- /dev/null
->+++ b/Documentation/kho/fdbox=2Erst
->@@ -0,0 +1,224 @@
->+=2E=2E SPDX-License-Identifier: GPL-2=2E0-or-later
->+
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
->+File Descriptor Box (FDBox)
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
->+
->+:Author: Pratyush Yadav
->+
->+Introduction
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->+
->+The File Descriptor Box (FDBox) is a mechanism for userspace to name fil=
+On Thu, 2025-03-06 at 14:45 -0800, steven chen wrote:
+> On 3/5/2025 4:27 AM, Mimi Zohar wrote:
+> > On Wed, 2025-03-05 at 20:08 +0800, Baoquan He wrote:
+> > > On 03/04/25 at 11:03am, steven chen wrote:
+> > > > Carrying the IMA measurement list across kexec requires allocating =
+a
+> > > > buffer and copying the measurement records.  Separate allocating th=
 e
->+descriptors and give them over to the kernel to hold=2E They can later b=
-e
->+retrieved by passing in the same name=2E
->+
->+The primary purpose of FDBox is to be used with :ref:`kho`=2E There are =
-many kinds
-
-    many kinds of=20
-
->+anonymous file descriptors in the kernel like memfd, guest_memfd, iommuf=
-d, etc=2E
-
-   etc=2E,
-
->+that would be useful to be preserved using KHO=2E To be able to do that,=
- there
->+needs to be a mechanism to label FDs that allows userspace to set the la=
-bel
->+before doing KHO and to use the label to map them back after KHO=2E FDBo=
-x achieves
->+that purpose by exposing a miscdevice which exposes ioctls to label and =
-transfer
->+FDs between the kernel and userspace=2E FDBox is not intended to work wi=
-th any
->+generic file descriptor=2E Support for each kind of FDs must be explicit=
-ly
->+enabled=2E
->+
->+FDBox can be enabled by setting the ``CONFIG_FDBOX`` option to ``y``=2E =
-While the
->+primary purpose of FDBox is to be used with KHO, it does not explicitly =
-require
->+``CONFIG_KEXEC_HANDOVER``, since it can be used without KHO, simply as a=
- way to
->+preserve or transfer FDs when userspace exits=2E
->+
->+Concepts
->+=3D=3D=3D=3D=3D=3D=3D=3D
->+
->+Box
->+---
->+
->+The box is a container for FDs=2E Boxes are identified by their name, wh=
-ich must
->+be unique=2E Userspace can put FDs in the box using the ``FDBOX_PUT_FD``
->+operation, and take them out of the box using the ``FDBOX_GET_FD`` opera=
-tion=2E
-
-Is this ioctl range documented is ioctl-number=2Erst?
-I didn't notice a patch for that=2E
-
->+Once all the required FDs are put into the box, it can be sealed to make=
- it
->+ready for shipping=2E This can be done by the ``FDBOX_SEAL`` operation=
-=2E The seal
->+operation notifies each FD in the box=2E If any of the FDs have a depend=
-ency on
->+another, this gives them an opportunity to ensure all dependencies are m=
-et, or
->+fail the seal if not=2E Once a box is sealed, no FDs can be added or rem=
-oved from
->+the box until it is unsealed=2E Only sealed boxes are transported to a n=
-ew kernel
-
-What if KHO is not being used?
-
->+via KHO=2E The box can be unsealed by the ``FDBOX_UNSEAL`` operation=2E =
-This is the
->+opposite of seal=2E It also notifies each FD in the box to ensure all de=
-pendencies
->+are met=2E This can be useful in case some FDs fail to be restored after=
- KHO=2E
->+
->+Box FD
->+------
-
-I can't tell in my email font, but is each underlinoat least as long as th=
-e title above it?
-
->+
->+The Box FD is a FD that is currently in a box=2E It is identified by its=
- name,
->+which must be unique in the box it belongs to=2E The Box FD is created w=
-hen a FD
->+is put into a box by using the ``FDBOX_PUT_FD`` operation=2E This operat=
+> > > > buffer and copying the measurement records into separate functions =
+in
+> > > > order to allocate the buffer at kexec 'load' and copy the measureme=
+nts
+> > > > at kexec 'execute'.
+> > > >=20
+> > > > This patch includes the following changes:
+> > > I don't know why one patch need include so many changes. From below l=
+og,
+> > > it should be split into separate patches. It may not need to make one
+> > > patch to reflect one change, we should at least split and wrap severa=
+l
+> > > kind of changes to ease patch understanding and reviewing. My persona=
+l
+> > > opinion.
+> > Agreed, well explained.
+> >=20
+> > Mimi
+> >=20
+> > > >   - Refactor ima_dump_measurement_list() to move the memory allocat=
 ion
->+removes the FD from the calling task=2E The FD can be restored by passin=
-g the
->+unique name to the ``FDBOX_GET_FD`` operation=2E
->+
->+FDBox control device
->+--------------------
->+
->+This is the ``/dev/fdbox/fdbox`` device=2E A box can be created using th=
-e
->+``FDBOX_CREATE_BOX`` operation on the device=2E A box can be removed usi=
-ng the
->+``FDBOX_DELETE_BOX`` operation=2E
->+
->+UAPI
->+=3D=3D=3D=3D
->+
->+FDBOX_NAME_LEN
->+--------------
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_NAME_LEN			256
->+
->+Maximum length of the name of a Box or Box FD=2E
->+
->+Ioctls on /dev/fdbox/fdbox
->+--------------------------
->+
->+FDBOX_CREATE_BOX
->+~~~~~~~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_CREATE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 0)
->+    struct fdbox_create_box {
->+    	__u64 flags;
->+    	__u8 name[FDBOX_NAME_LEN];
->+    };
->+
->+Create a box=2E
->+
->+After this returns, the box is available at ``/dev/fdbox/<name>``=2E
->+
->+``name``
->+    The name of the box to be created=2E Must be unique=2E
->+
->+``flags``
->+    Flags to the operation=2E Currently, no flags are defined=2E
->+
->+Returns:
->+    0 on success, -1 on error, with errno set=2E
->+
->+FDBOX_DELETE_BOX
->+~~~~~~~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_DELETE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 1)
->+    struct fdbox_delete_box {
->+    	__u64 flags;
->+    	__u8 name[FDBOX_NAME_LEN];
->+    };
->+
->+Delete a box=2E
->+
->+After this returns, the box is no longer available at ``/dev/fdbox/<name=
->``=2E
->+
->+``name``
->+    The name of the box to be deleted=2E
->+
->+``flags``
->+    Flags to the operation=2E Currently, no flags are defined=2E
->+
->+Returns:
->+    0 on success, -1 on error, with errno set=2E
->+
->+Ioctls on /dev/fdbox/<boxname>
->+------------------------------
->+
->+These must be performed on the ``/dev/fdbox/<boxname>`` device=2E
->+
->+FDBX_PUT_FD
->+~~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_PUT_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 2)
->+    struct fdbox_put_fd {
->+    	__u64 flags;
->+    	__u32 fd;
->+    	__u32 pad;
->+    	__u8 name[FDBOX_NAME_LEN];
->+    };
->+
->+
->+Put FD into the box=2E
->+
->+After this returns, ``fd`` is removed from the task and can no longer be=
- used by
->+it=2E
->+
->+``name``
->+    The name of the FD=2E
->+
->+``fd``
->+    The file descriptor number to be
->+
->+``flags``
->+    Flags to the operation=2E Currently, no flags are defined=2E
->+
->+Returns:
->+    0 on success, -1 on error, with errno set=2E
->+
->+FDBX_GET_FD
->+~~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_GET_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 3)
->+    struct fdbox_get_fd {
->+    	__u64 flags;
->+    	__u8 name[FDBOX_NAME_LEN];
->+    };
->+
->+Get an FD from the box=2E
->+
->+After this returns, the FD identified by ``name`` is mapped into the tas=
-k and is
->+available for use=2E
->+
->+``name``
->+    The name of the FD to get=2E
->+
->+``flags``
->+    Flags to the operation=2E Currently, no flags are defined=2E
->+
->+Returns:
->+    FD number on success, -1 on error with errno set=2E
->+
->+FDBOX_SEAL
->+~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_SEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 4)
->+
->+Seal the box=2E
->+
->+Gives the kernel an opportunity to ensure all dependencies are met in th=
-e box=2E
->+After this returns, the box is sealed and FDs can no longer be added or =
-removed
->+from it=2E A box must be sealed for it to be transported across KHO=2E
->+
->+Returns:
->+    0 on success, -1 on error with errno set=2E
->+
->+FDBOX_UNSEAL
->+~~~~~~~~~~~~
->+
->+=2E=2E code-block:: c
->+
->+    #define FDBOX_UNSEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 5)
->+
->+Unseal the box=2E
->+
->+Gives the kernel an opportunity to ensure all dependencies are met in th=
-e box,
->+and in case of KHO, no FDs have been lost in transit=2E
->+
->+Returns:
->+    0 on success, -1 on error with errno set=2E
->+
->+Kernel functions and structures
->+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->+
->+=2E=2E kernel-doc:: include/linux/fdbox=2Eh
->diff --git a/Documentation/kho/index=2Erst b/Documentation/kho/index=2Ers=
-t
->index 5e7eeeca8520f=2E=2E051513b956075 100644
->--- a/Documentation/kho/index=2Erst
->+++ b/Documentation/kho/index=2Erst
->@@ -1,5 +1,7 @@
-> =2E=2E SPDX-License-Identifier: GPL-2=2E0-or-later
+> > > >     to a separate function ima_alloc_kexec_file_buf() which allocat=
+es
+> > > >     buffer of size 'kexec_segment_size' at kexec 'load'.
+> > > >   - Make the local variable ima_kexec_file in ima_dump_measurement_=
+list()
+> > > >     a local static to the file, so that it can be accessed from
+> > > >     ima_alloc_kexec_file_buf(). Compare actual memory required to e=
+nsure
+> > > >     there is enough memory for the entire measurement record.
+> > > >   - Copy only complete measurement records.
+> > > >   - Make necessary changes to the function ima_add_kexec_buffer() t=
+o call
+> > > >     the above two functions.
+> > > >   - Compared the memory size allocated with memory size of the enti=
+re
+> > > >     measurement record. Copy only complete measurement records if t=
+here
+> > > >     is enough memory. If there is not enough memory, it will not co=
+py
+> > > >     any IMA measurement records, and this situation will result in =
+a
+> > > >     failure of remote attestation.
+> > > >=20
+> > > > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> > > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
 >=20
->+=2E=2E _kho:
->+
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Kexec Handover Subsystem
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->@@ -9,6 +11,7 @@ Kexec Handover Subsystem
+> I will split this patch into the following two patches:
 >=20
->    concepts
->    usage
->+   fdbox
->=20
-> =2E=2E only::  subproject and html
->=20
->diff --git a/MAINTAINERS b/MAINTAINERS
->index d329d3e5514c5=2E=2E135427582e60f 100644
->--- a/MAINTAINERS
->+++ b/MAINTAINERS
->@@ -8866,6 +8866,7 @@ FDBOX
-> M:	Pratyush Yadav <pratyush@kernel=2Eorg>
-> L:	linux-fsdevel@vger=2Ekernel=2Eorg
-> S:	Maintained
->+F:	Documentation/kho/fdbox=2Erst
-> F:	drivers/misc/fdbox=2Ec
-> F:	include/linux/fdbox=2Eh
-> F:	include/uapi/linux/fdbox=2Eh
+>  =C2=A0 =C2=A0 ima: define and call ima_alloc_kexec_file_buf
+>  =C2=A0=C2=A0=C2=A0 ima: copy measurement records as much as possible acr=
+oss kexec
+
+Steven, breaking up code into patches is in order to simplify patch review.=
+=20
+This is done by limiting each patch to a single "logical change" [1].  For
+example, the change below has nothing to do with "separate allocating the b=
+uffer
+and copying the measurement records into separate functions".
+
+        /* This is an append-only list, no need to hold the RCU read lock *=
+/
+        list_for_each_entry_rcu(qe, &ima_measurements, later, true) {
+-               if (file.count < file.size) {
++               entry_size +=3D ima_get_binary_runtime_entry_size(qe->entry=
+);=20
++               if (entry_size <=3D segment_size) {
+                        khdr.count++;
+-                       ima_measurements_show(&file, qe);
++                       ima_measurements_show(&ima_kexec_file, qe);
+                } else {
+                        ret =3D -EINVAL;
++                       pr_err("IMA log file is too big for Kexec buf\n");
+                        break;
+                }
+        }
+
+The original code potentially copied a partial last measurement record, not=
+ a
+complete measurement record.  For ease of review, the above change is fine,=
+ but
+it needs to be a separate patch.
+
+Patches:
+1. ima: copy only complete measurement records across kexec
+2. ima: define and call ima_alloc_kexec_file_buf()
+
+The original code copied as many measurement records as possible.  Please d=
+o not
+change it.
+
+thanks,
+
+Mimi
+
+[1] Refer to the section "Separate your changes" in
+https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
 
 
-~Randy
+
+
+
 
