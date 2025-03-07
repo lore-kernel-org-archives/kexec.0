@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50677C19F32
-	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 07:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66EC0C19F32
+	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 07:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Xl3Bkss25PUY54rHOYqsRkz77bSckvoxfPXZPQfuFK0=; b=EUWlrLCAREz4KtAMzJd4wRX8um
-	veowQyEl3QhkyW0iWIb2mGZ5DukOWMq23IJkQaeEnnhCJcStJppBwqbglU2FvViRvaqKSWBb+E6OD
-	H9w9EHdNhwB3jZwTUrO8kFfVtUwro0MEm4ij3ULuQsXVRyf4Ue9+GR62Ik3jWrw2dUl/4I+spXsK+
-	9E7cllCa/vVjCtYy8v81zPOqtr9tCmrPXRhBHugzawSdz1KyMXbDUzEeHn2ZsFJm21qU2TeZU4rAz
-	o6YLi9gnEMMv+iCr7PHNGjhYvuDbeCaK+MUPiuc+Fst1VapTHN3uPcBk8bAwj1vgTGA7xeX+AG8t8
-	gH4nC4Mw==;
+	bh=vMQPUTwmV0j9B4DCHhA7OkXHIAowtpM7HYq7HSZekv4=; b=smmqg4BrzohzXmrT66FmiHtMNI
+	GDBntwqEi0xDFEpNa1EyvYsM/nlfQiu/QJB2/19iT7QsTtDlNrfot6AsQl1xXEc755l33HHbS7JBT
+	OoQwrQhZbmQOkTox8NNJL0PMRylZHkA2LikRpObe+cvc9slvFMsMgKJiMxMr6y/LcDYwmUZVKvylV
+	0/130UJFMot66PxAB4crlxLf3RnQymf4LBLkrN5tIZm5YZMDrcKpC9DsyiAmYcfbiIUFPnP9VEvrC
+	v4AL2y10XuM7sIx2ZMV/Ll0VSNKMVjp6Q8ec7z7zGp1jd4lN60rFcmHxKnMUha0xOerVN88FDuenu
+	p1o+/HmQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqRjP-0000000DO3z-05Gp;
-	Fri, 07 Mar 2025 07:02:51 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tqRn5-0000000DOTP-3wsD;
+	Fri, 07 Mar 2025 07:06:39 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqRjL-0000000DO2X-3G4M
+	id 1tqRmD-0000000DONI-0qih
 	for kexec@lists.infradead.org;
-	Fri, 07 Mar 2025 07:02:49 +0000
+	Fri, 07 Mar 2025 07:05:46 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 32A17A45523;
-	Fri,  7 Mar 2025 06:57:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA20DC4CED1;
-	Fri,  7 Mar 2025 07:02:45 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 88F475C10C6;
+	Fri,  7 Mar 2025 07:03:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DDDC4CED1;
+	Fri,  7 Mar 2025 07:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741330966;
-	bh=s0Xv8Pqr7o4l7Qibu9DKl61p8Xb8wiCce4s4Bg4r9FU=;
+	s=k20201202; t=1741331144;
+	bh=sg8lIGdAcGl0Nr7oC/i8DO5aGMtK0VBBp7rTicPtVSk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dPSDzGD7e91W0D6L4Tgfev4YR5SWUrgerBvMAn7tOupWyz2kAf4MCvmp56Xh9hzQV
-	 1pLDmmHhaU46Gq9bCNhUmmkDcyygILzhV6njDp51w2eziuPgLWl9WlYVyUEGpHeiH4
-	 73e3/h5x2ME8DQz1wGETGpTu3kc2+e0jozf26h2uE7aMbYiXKZig5fQRJr4xuR9uM9
-	 SnkoqolMUxLyyH++9gxmNZNmns/AIZjzSNq37GElrC4eWYTXfFTBrK9/Buh33gvQET
-	 e+z7BZWeRUtFVTPYQEeiTxSgSt9QbQuPNUaDIcnEoqxyDE+oF29T9Haya1UerubN0w
-	 O5T6knCM5r4Ww==
-Date: Fri, 7 Mar 2025 09:02:41 +0200
+	b=K+TToUeVCHBzNksGAEG0u+yLGt8bvrcxM7loUzqKPduGAUIlplwWspTULdQPdjlH4
+	 GiIHNjrpiuW7p+QViOsfTzbBmyCiyApLGI5cCE2MFrSQ0RrJYp5TgavHxM9owckfo7
+	 NMglh+EaRJwTZ3teO30vIMBPemxWXlznQAg2i1MHbowYQWEvEaGY7ENdAydD1TyH67
+	 w2kgj5te2Uhvtan2sHnLEdv9rhdXCkkJU8/djRahDRp/Z6nQlO/+Yu08ym29ot3XPi
+	 stHDV+5JeyLLIGeEw57wTTTeQTZntvfQ0G0PMMoNrAI5y+srz6NQ6G9rAzc8aOzmXl
+	 0ZJOQUqSdSzlA==
+Date: Fri, 7 Mar 2025 09:05:39 +0200
 From: Jarkko Sakkinen <jarkko@kernel.org>
 To: Ross Philipson <ross.philipson@oracle.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -58,18 +58,17 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	ebiederm@xmission.com, dwmw2@infradead.org,
 	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
 	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v12 10/19] x86: Secure Launch kernel late boot stub
-Message-ID: <Z8qaEdBD8wZLo-yb@kernel.org>
+Subject: Re: [PATCH v12 14/19] tpm, tpm_tis: Close all localities
+Message-ID: <Z8qaw4XwH3QljLEM@kernel.org>
 References: <20241219194216.152839-1-ross.philipson@oracle.com>
- <20241219194216.152839-11-ross.philipson@oracle.com>
+ <20241219194216.152839-15-ross.philipson@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241219194216.152839-11-ross.philipson@oracle.com>
+In-Reply-To: <20241219194216.152839-15-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250306_230247_891204_FA0D9BF0 
-X-CRM114-Status: UNSURE (   8.00  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250306_230545_324457_FB844877 
+X-CRM114-Status: GOOD (  22.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,25 +83,84 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Dec 19, 2024 at 11:42:07AM -0800, Ross Philipson wrote:
-> The routine slaunch_setup is called out of the x86 specific setup_arch()
-> routine during early kernel boot. After determining what platform is
-> present, various operations specific to that platform occur. This
-> includes finalizing setting for the platform late launch and verifying
-> that memory protections are in place.
+On Thu, Dec 19, 2024 at 11:42:11AM -0800, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 > 
-> Intel VT-d/IOMMU hardware provides special registers called Protected
-> Memory Regions (PMRs) that allow all memory to be protected from
-> DMA during a TXT DRTM launch. This coverage is validated during the
+> There are environments, for example, those that comply with the TCG D-RTM
+> specification that requires the TPM to be left in locality 2. Prepare
+> kernel for such environments by closing all the localities.
+> 
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+>  drivers/char/tpm/tpm_tis_core.c | 11 ++++++++++-
+>  include/linux/tpm.h             |  6 ++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index fdef214b9f6b..c58f360fb4a4 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -1104,7 +1104,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+>  	u32 intmask;
+>  	u32 clkrun_val;
+>  	u8 rid;
+> -	int rc, probe;
+> +	int rc, probe, i;
+>  	struct tpm_chip *chip;
+>  
+>  	chip = tpmm_chip_alloc(dev, &tpm_tis);
+> @@ -1166,6 +1166,15 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+>  		goto out_err;
+>  	}
+>  
+> +	/*
+> +	 * There are environments, for example, those that comply with the TCG D-RTM
+> +	 * specification that requires the TPM to be left in Locality 2.
+> +	 */
 
-Hair cutting again. Check through patch set:
+I'd just shorten this into
 
-1. D-RTM
-2. DRTM
+/*
+ * In order to comply with the TCG D-RTM specification, relinquish all
+ * the localities.
+ */
 
-Pick one and use it consistently. Small details like this in the end
-make the overall thing less exhausting to read.
+And that's it. It's a punctual reminder and that is what source code
+comments should be for.
 
+
+> +	for (i = 0; i <= TPM_MAX_LOCALITY; i++) {
+> +		if (check_locality(chip, i))
+> +			tpm_tis_relinquish_locality(chip, i);
+> +	}
+> +
+>  	/* Take control of the TPM's interrupt hardware and shut it off */
+>  	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+>  	if (rc < 0)
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 20a40ade8030..c5a4a2d7dd15 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -147,6 +147,12 @@ struct tpm_chip_seqops {
+>   */
+>  #define TPM2_MAX_CONTEXT_SIZE 4096
+>  
+> +/*
+> + * The maximum locality (0 - 4) for a TPM, as defined in section 3.2 of the
+> + * Client Platform Profile Specification.
+> + */
+> +#define TPM_MAX_LOCALITY		4
+> +
+>  struct tpm_chip {
+>  	struct device dev;
+>  	struct device devs;
+> -- 
+> 2.39.3
+> 
+
+Otherwise, this is great.
 
 BR, Jarkko
 
