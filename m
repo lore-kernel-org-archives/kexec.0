@@ -4,164 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7620DC282DE
-	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 15:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C772C28B25
+	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 15:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4hxm+V7PlelwUAl+JpzMwrbVK7spdNtBOJxfwWJxcyA=; b=Pb3XYr1I0fG+BVePTkiv1WQ0YT
-	69+Vkvc/bPww2/wWL7qQ+VmVm5QYDBVG7rmu3BI9FS8WSPVAkBuIKukVhRRzwOAsjDi+Wa2pEOnt3
-	4z5zjgVnWLcvDdi2mysWMrgfRQW6PoNkOaUyNlG97XutUjOzRlDDuQJ/tIiShljjo+cuVO8TR2LGe
-	jAO9AZ5dG1SYXquKvmk0OOIgkmR8fvSPHrtllJKVT4sbhzXDcyLZHZIqDN2ZrdGKjht0a6M/5MchM
-	S7bnb2Mk/sJ3yQBWUz4jMQMcvHkqq18ZkGLRJg+Y8dKUWWCH6bofgnwxoXCb9r/qSfZ3stRFz4rmv
-	dRiady6w==;
+	bh=6uBJ1YUDIOKuMkF8J+Ow27cEIe6pHr5CJF/jr/dLLA4=; b=hPNh8nNKQa3i8wejWSDp3seOvY
+	x7sEyaS3LX1ECxdsmBUUJTtr2LJ9qAs0GuD2jB0JXcbVlylAs8skLOysh5ug27G74qaJnR2YJDZMz
+	Ej6JXu05zdVsmaOWN/OftRr82kuLHTCAXPOj/H+csQeRrKJQBIQZA+efSQeSthsyzeXzSvEGRuUAw
+	miK9rywkqgUbD/5PiGn1TfD157Y32INdhWm/vo9/n3g19ggdHOh160jH8WaiwLQuW9+WX4NX5H7iu
+	d88QQVlmckhR66B6kgPvIO/DunJs/opeD7ODpYa9dsCHkpHWukDid917UVHLL0NJADIAcQstHAwBy
+	EVFVgTbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqZSw-0000000Ec9j-489F;
-	Fri, 07 Mar 2025 15:18:22 +0000
-Received: from mail-dm6nam12on20605.outbound.protection.outlook.com ([2a01:111:f403:2417::605] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1tqZhM-0000000EgJr-19QC;
+	Fri, 07 Mar 2025 15:33:16 +0000
+Received: from ms.lwn.net ([2600:3c01:e000:3a1::42])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqZP7-0000000EbBs-06Np
+	id 1tqZZV-0000000EdxH-0WIN
 	for kexec@lists.infradead.org;
-	Fri, 07 Mar 2025 15:14:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Txu4h2fzFsU5Y4jt3MeG7aEq47IaqSSj8HZ/+sSj8/+i1Yp6uIabRHtULMMDqMKJbE0pnCDJVkGP6WwQWGdUg/i0bwd4wfT6122wz3v048hRDhQhQhOVZeMrfqAQtmGMByq/QqipfcEUoea67COKVtjbRwqUshxItgvEJBOngv4rr+1D2TzLTZL5sxTjDhyh6zeHXeZd3kwkas95653PAqPn+DP49B2XiTNA/5bs+O/EahAlQ6K4h6zLi48v/IiIBqDTD0ZxU4XGhcHW29JNxROFMoZCWVJlVymYvdSkH9U+VyufovRm/yBT50lQ0h14pGFO1I9oV0152SBhtetGJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4hxm+V7PlelwUAl+JpzMwrbVK7spdNtBOJxfwWJxcyA=;
- b=UmMuKoyiV2ytSHrYrpNkbu0NoWOBLJSFFksBSgSbcAl9JcsKKcI2e7eR5Cr93GTgD7NDvo9kCalQzwFMLFp+hwCYmhxY3JKAk6Sq68oH+N/a+7PE3O8dx6IEAGjTQ+pfzVEokPo6OL8q63svL8GL0ScTTx9XII4VnS2VZi97eCuNhgHKYA3vXf1rqgZd1pTQQDWmIoYjuMxZAG4h6ZqLxIZS+JTb6lc8qJByNNBdloC3Ry9U66hJpVzhOuju+pSZzOqrT/EovyS+2CSYv+brp+fqGX6KyhSFZbLzklrBO2AvnriDV9kWqPk8PCMbYbKR8sOzPlIALvzYMPMAQ+auvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4hxm+V7PlelwUAl+JpzMwrbVK7spdNtBOJxfwWJxcyA=;
- b=GkS2HEE8QR32ZfjvA17jzViNG5/XG8M4HDewzMxuZKA6tuOt7ddwed8FpSgkBI39CLNcG8NFVd0xhPumBsF4YhgRbArOgRno53bSvN8nLnvtlNDfIKYZUqqI1AgTSrcH3YuqVssY19NDsjVzXmFQrmnbaIfAASRgfRPUtmHIMdp3aN8QgxnvzejyRCBtT3euGT2RgPbzQDLWp3K1j+Acb402NJeGhSogVofSIk3JGlPFlQI6qAySZR8xQHjj5a8NTQIygc05zrI9zHv943EgFZBjqVR1HMdL6TYimamsAOjZ5lV/igrgPzJsRHF+LwxgQiep+Mqgsb1uw+Fws4m05g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
- by PH7PR12MB6836.namprd12.prod.outlook.com (2603:10b6:510:1b6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
- 2025 15:14:19 +0000
-Received: from MW6PR12MB8663.namprd12.prod.outlook.com
- ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
- ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 15:14:19 +0000
-Date: Fri, 7 Mar 2025 11:14:17 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	Hugh Dickins <hughd@google.com>, Alexander Graf <graf@amazon.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Gowans <jgowans@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-Message-ID: <20250307151417.GQ354511@nvidia.com>
+	Fri, 07 Mar 2025 15:25:10 +0000
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net E458441061
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1741361108; bh=6uBJ1YUDIOKuMkF8J+Ow27cEIe6pHr5CJF/jr/dLLA4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=U+c0IOxtLK/yHL6U9gVkTGNWfKeHe7Cxjetxvjp7L3+fhF0t5VqDLayHbnkOecFGu
+	 qYn3EHi24lLNRlLwjvlcLjABGf3zNwLrc8NYTpQSqMb92Gzc3qmlijh49B1IC8QrGG
+	 UGpuzlIDPTGX+TwKiLQ0xQM6aM9HjXgxRQ5961CtqRyW7hfcBlIFZrACerkGfbpFkp
+	 qu8xTV/BIFh3GFTh4pYOiZCjBYXHWrLS+X/cWVmYzCIxv2PeaasmQLVOj730bUc7dd
+	 7PzVO1c/UzvHCkp59SI9KNrfQho474Mgp4bMa0u0xA2UxewlYHUGniiP9REVJ7Voo4
+	 LlVqxpyEj6WqQ==
+Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id E458441061;
+	Fri,  7 Mar 2025 15:25:07 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Pratyush Yadav <ptyadav@amazon.de>
+Cc: linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+ Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Hugh
+ Dickins <hughd@google.com>, Alexander Graf <graf@amazon.com>, Benjamin
+ Herrenschmidt <benh@kernel.crashing.org>, David Woodhouse
+ <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, Mike Rapoport
+ <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
+ <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, Dave
+ Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, Jason
+ Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>, Wei Yang
+ <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 2/5] misc: add documentation for FDBox
+In-Reply-To: <mafs0v7skj3m2.fsf@amazon.de>
 References: <20250307005830.65293-1-ptyadav@amazon.de>
- <20250307005830.65293-2-ptyadav@amazon.de>
- <20250307-sachte-stolz-18d43ffea782@brauner>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307-sachte-stolz-18d43ffea782@brauner>
-X-ClientProxiedBy: BN9PR03CA0872.namprd03.prod.outlook.com
- (2603:10b6:408:13c::7) To MW6PR12MB8663.namprd12.prod.outlook.com
- (2603:10b6:303:240::9)
+ <20250307005830.65293-3-ptyadav@amazon.de> <87ikok7wf4.fsf@trenco.lwn.net>
+ <mafs0v7skj3m2.fsf@amazon.de>
+Date: Fri, 07 Mar 2025 08:25:07 -0700
+Message-ID: <87ecz87tik.fsf@trenco.lwn.net>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|PH7PR12MB6836:EE_
-X-MS-Office365-Filtering-Correlation-Id: 89a2e814-51eb-4f83-dfff-08dd5d8abb83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?89UNm2TcdpvZIGJw3ctH91wFvXPFgHD44Gi4AQzNHLuMxYYIqTfZekcBwnnR?=
- =?us-ascii?Q?rfh2frF5BUQq5YbLaU43ubk827F3CdbE1jrpBr/tzmWqscPRz/SIgBlXjhey?=
- =?us-ascii?Q?sS6D0egv8Kr8jwq3gMgsvSksSqJp0svtp3gkS0GKu4HDsU3CZN5TLRa9wQht?=
- =?us-ascii?Q?8ovBUNzuqXd6/LUjwCt5EIQQFnx6vgmx3jVhHAbfPiurz6ZlieVwFrU8UGn5?=
- =?us-ascii?Q?+WZiF250fUjaf5Zamf0JxGigiU2tQ80bh7UCL5/LsWBmQP3E4HtXn6IhyC1H?=
- =?us-ascii?Q?ZlK6oh8uN7RLJnFdj114T1K11PTcB+WLBWSbvaotrL/qCHDR/iObjGbvM1/t?=
- =?us-ascii?Q?I1kzVuAUSUaVRkipkM/BCjbFpv7qzgS2U6d3O5chclOjh1kb47tsk182Pg9s?=
- =?us-ascii?Q?KeYR9WEZWljq6NEGrqW/rAgqxnPqLicYQ7xdne1EBp8e3bBCRzvwSDazEL2C?=
- =?us-ascii?Q?a3xeykaTJHCy027CfFnRFQkfwZMJzxk05sy678dmZMPclVelQzYceiKV1kFb?=
- =?us-ascii?Q?iRb3RLXUmmg/l3yAevWIOGPCESMCcrpts8lhkuzfdz5Z77sk3t7MHUnIibyv?=
- =?us-ascii?Q?p79s325CIWPC7UkZ5Mh02RD0Osu7YTSVEaihge1yrjPiL/KwdDVQBMnkGMmQ?=
- =?us-ascii?Q?VgNBlabjhrfVdIgbx5a5X8YWS6lfO5t7AChJJ2hqt+xsIL8DPjLW7ax2VWdd?=
- =?us-ascii?Q?AEEWUlhA5DsXgRiaUvDVffLqlBseP6Rh6aUTPcJ4lPvUM3zq4Gr3yia3YZQ2?=
- =?us-ascii?Q?SRtwrRnfz9MNBZnSy9lO6L+Tjkc13Yh9Wc6jA2cpQHO4SEfB1aO7PYBT//Ak?=
- =?us-ascii?Q?jIerqb6pzJl1axO9+VxNnRsNS+rg22gETv30+QI1HEwLQc8nbIXHJdFaiKoA?=
- =?us-ascii?Q?spVZQOVcfsBcWCLlpD5+jDthh+NhKYaRbtPE88ATxjNW48cQZkJXlCMZm2LM?=
- =?us-ascii?Q?SdqUHFy7i02uKpi2B38ZXH7mjVPRCiVeU7HhjfLPwTzS9Or1G3mX+AgGmIcZ?=
- =?us-ascii?Q?eOcxbvkf0eW+nofabgA1PndEZBaOiQRA09P/szJ8VvvOEJdbsI72M6QgMpiI?=
- =?us-ascii?Q?o/PIrXFuUxpS7WW1PSIeLYtND8aL8Bj3pUKd4yjOJWn3jIKWrgHFmvaC+NQ5?=
- =?us-ascii?Q?oAHQKa1ZlVjvxACmHEPI/dx2rFSmYj4Zzffxm/fzsFXaW1O6cFcOYZ5Oa0bJ?=
- =?us-ascii?Q?kaDOeim56iGypKwV79t1XExd+fTX44L8W+Y15erJLyvZRPwrzZNzBdAtpznc?=
- =?us-ascii?Q?BrzkYv9QroGTeJwycGt7Lui8oRR/m9O9CMFUjoFjlMwF+BT0QxZMzVxdXwSA?=
- =?us-ascii?Q?82tOjQ2A5uLvXqDSUG2feUe/dWuDf4iLvPpGIOcrdJIav+JvJTEPYxOu/L77?=
- =?us-ascii?Q?pPYmsWrotmgg8rDgy8elFZhyeHjY?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AyiL3WkWmOWgBee2X+P3ysH7+g9yXxtuVJhCavtFosbEFyWou29DP3CJPyGB?=
- =?us-ascii?Q?CzrZM5gC/Mj/RoOcl+V+o9yNzocbZQyhiF+l9MESIiTe23/k+OPfUiLIOXxI?=
- =?us-ascii?Q?pt5AcIRqECWQV/ULTtHe1MwXjsU7WCzj5BdtNcokxrUcBEEUup8n7TLIo2iy?=
- =?us-ascii?Q?GvozsRQaAlz9OuqS/O4aTo/dApnMxQunzLn+F1BdjjVfBnUpSs8Zcu1JQb0q?=
- =?us-ascii?Q?x1uygGKv5kRksFS/W+5RZbzqNcen0bor/p2XiqhI7nCljZ5so4nUVVPerlyq?=
- =?us-ascii?Q?uutwmSC4k0EAFoR7qc/VOMyTZwPh1xESWEWS5VJOR7jErHgwnChp6v7WlFl0?=
- =?us-ascii?Q?Yqh6pyN0V8QzIVNi9D8Bv2m399AJ7PUOGw5ygXTAPp9GJ+m5f8Rg1wiflJTe?=
- =?us-ascii?Q?O+NolMV2ORGX0QIDwOASpppE4isBxMEUkesfvbowCZDSAXGB6I/NCGSMMNVF?=
- =?us-ascii?Q?tSlrnJubvb278/XboBnOB1dWP2LFk0QVgLq2NM71ByePuos6HZmKFXE7nN7V?=
- =?us-ascii?Q?TSYXXMlu54L+8EC9Bq1J8c8/cn3VjywiEiECcbKW5SL1tiEUKRs6l65zaABJ?=
- =?us-ascii?Q?Ic6g2Q+Cn9LY38LV4vIkDm3wHg2z3HZ+GlLICIkev9Xbj//x2oqe7eYUxGFp?=
- =?us-ascii?Q?wY5Rpb9bjzBcPEd+fqDPnVvz9fsmk8rWIW9969u98kpqgbXOH5ZHhcHNPq/T?=
- =?us-ascii?Q?3ZJYw2ap4OK7fMTD54mg7PSaMEKFPPmeImo1MvSvGsLEQ6ejrXfjK/hfjbXy?=
- =?us-ascii?Q?eOLYR5ZHngzB4/ButpuvneotFBmajtwGF5yjJfFGllTy666fI7GviH7SmJ03?=
- =?us-ascii?Q?FaRXN0Ho6OnX3JHsMoVr+2wnkM0332WPnclDO9YvgIjimP2UBaFTRjY169uO?=
- =?us-ascii?Q?cMqsVIpNswHbo7JwNHINVBUUih4+zmfw4R8+ymxLDxjqC1DHfTcHCphkvHcA?=
- =?us-ascii?Q?z4cxxqwXCcLBIaIEhzQYV7lbRAeKR4PZtrK1LYSnhAOEd0wN7mM6mAwdmi6d?=
- =?us-ascii?Q?Pf5OJyaN+nYO9JnLZGTl+rq9yAZ1ZVykGcSF/gDA0LTy/54mKS7OTiXClwdE?=
- =?us-ascii?Q?0DAUItm+0zOz3KTf3xUkZ7sXw8mJv3iwQT9ycxg1lMVy3u4JI6sAbBOCs8+u?=
- =?us-ascii?Q?Vn8uEtv8ZqC6W8E0ksqRWMVGlfYy59strQ7TE4RSxrvgqK5hey615g4DGMMw?=
- =?us-ascii?Q?hFGcSMeH9roYesRDIacEoGvZAJKXHTbZR98Mxb1LLulHjKkVFi62HSo/nlr2?=
- =?us-ascii?Q?l/jreDZqPzojkFkIz3D1BbQTKgB2QPyy00P1epYXq/6NnAgMJHiL75Ju+6+f?=
- =?us-ascii?Q?/fOTwPWFgKQ8ySRYaBz8w2iGN3SdqHDPujEgUBHUE4jASdE7X43Kb14rmmLk?=
- =?us-ascii?Q?3fVGT/cNf6hqI39Q14R6lDmhhGaeg/DSxPYAUiGsrx9SFkn/yqpOfJ2HUKye?=
- =?us-ascii?Q?ruG199AJkIErIWfhj9vJuXU/iNir3XBmRTUJ8lzpTeMZnh1FNAvZTz5i0LDo?=
- =?us-ascii?Q?VNQLT0B0igYlfqHxHGolb85zuzQoM4QTH09T9POO3sPWPDoAAn2JRPEttOl6?=
- =?us-ascii?Q?9svULuoJR4VV4ABaIAEvGLpHeZ397aTUUXyc0H18?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89a2e814-51eb-4f83-dfff-08dd5d8abb83
-X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 15:14:19.1241
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z+yGrvHgQaDk2ILmZaF/it++XhBJtDwBiFxYivQjPtKZbaoIxwnep5GlTuEJ3vPL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6836
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250307_071425_066742_7E5D3BBC 
-X-CRM114-Status: GOOD (  26.96  )
+X-CRM114-CacheID: sfid-20250307_072509_163241_90DFFEA5 
+X-CRM114-Status: GOOD (  17.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -176,58 +85,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 07, 2025 at 10:31:39AM +0100, Christian Brauner wrote:
-> On Fri, Mar 07, 2025 at 12:57:35AM +0000, Pratyush Yadav wrote:
-> > The File Descriptor Box (FDBox) is a mechanism for userspace to name
-> > file descriptors and give them over to the kernel to hold. They can
-> > later be retrieved by passing in the same name.
-> > 
-> > The primary purpose of FDBox is to be used with Kexec Handover (KHO).
-> > There are many kinds anonymous file descriptors in the kernel like
-> > memfd, guest_memfd, iommufd, etc. that would be useful to be preserved
-> > using KHO. To be able to do that, there needs to be a mechanism to label
-> > FDs that allows userspace to set the label before doing KHO and to use
-> > the label to map them back after KHO. FDBox achieves that purpose by
-> > exposing a miscdevice which exposes ioctls to label and transfer FDs
-> > between the kernel and userspace. FDBox is not intended to work with any
-> > generic file descriptor. Support for each kind of FDs must be explicitly
-> > enabled.
-> 
-> This makes no sense as a generic concept. If you want to restore shmem
-> and possibly anonymous inodes files via KHO then tailor the solution to
-> shmem and anon inodes but don't make this generic infrastructure. This
-> has zero chances to cover generic files.
+Pratyush Yadav <ptyadav@amazon.de> writes:
 
-We need it to cover a range of FD types in the kernel like iommufd and
-vfio.
+> On Fri, Mar 07 2025, Jonathan Corbet wrote:
+>
+>> Pratyush Yadav <ptyadav@amazon.de> writes:
+>>
+>>> With FDBox in place, add documentation that describes what it is and how
+>>> it is used, along with its UAPI and in-kernel API.
+>>>
+>>> Since the document refers to KHO, add a reference tag in kho/index.rst.
+>>>
+>>> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+>>> ---
+>>>  Documentation/filesystems/locking.rst |  21 +++
+>>>  Documentation/kho/fdbox.rst           | 224 ++++++++++++++++++++++++++
+>>>  Documentation/kho/index.rst           |   3 +
+>>>  MAINTAINERS                           |   1 +
+>>>  4 files changed, 249 insertions(+)
+>>>  create mode 100644 Documentation/kho/fdbox.rst
+>>
+>> Please do not create a new top-level directory under Documentation for
+>> this; your new file belongs in userspace-api/.
+>
+> I did not. The top-level directory comes from the KHO patches [0] (not
+> merged yet). This series is based on top of those. You can find the full
+> tree here [1].
+>
+> Since this is closely tied to KHO I found it a good fit for putting it
+> on KHO's directory. I don't have strong opinions about this so don't
+> mind moving it elsewhere if you think that is better.
 
-It is not "generic" in the sense every FD in the kernel magicaly works
-with fdbox, but that any driver/subsystem providing a FD could be
-enlightened to support it.
+I've not seen the KHO stuff, but I suspect I'll grumble about that too.
+Our documentation should be organized for its audience, not for its
+authors.  So yes, I think that your documentation of the user-space
+interface should definitely go in the userspace-api book.
 
-Very much do not want the infrastructure tied to just shmem and memfd.
+Thanks,
 
-> As soon as you're dealing with non-kernel internal mounts that are not
-> guaranteed to always be there or something that depends on superblock or
-> mount specific information that can change you're already screwed.
+jon
 
-This is really targetting at anonymous or character device file
-descriptors that don't have issues with mounts.
-
-Same remark about inode permissions and what not. The successor
-kernel would be responsible to secure the FDBOX and when it takes
-anything out it has to relabel it if required.
-
-inode #s and things can change because this is not something like CRIU
-that would have state linked to inode numbers. The applications in the
-sucessor kernels are already very special, they will need to cope with
-inode number changes along with all the other special stuff they do.
-
-> And struct file should have zero to do with this KHO stuff. It doesn't
-> need to carry new operations and it doesn't need to waste precious space
-> for any of this.
-
-Yeah, it should go through file_operations in some way.
-
-Jason
+(Who now realizes he has been arguing this point of view for over ten
+years ... eventually it will get across... :)
 
