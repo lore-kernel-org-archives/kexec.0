@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B84CC282D1
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11D38C282EC
 	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 01:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,56 +12,56 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c17Kf0Er2P2sLGN5x8xcm8SJt/PbgebI9se/WEG3Bh0=; b=tEE4evUVXiCAGMp4wPvR00PQjI
-	ZD9kr3w5TjicI0+JsxZ2Z3GGWzRXiW6PlPDQdl1L5lD+4F+EM8KSdrcZrnqWsxZnhscX+e6uZ408J
-	+QC5ijnSuRopqhVxVR21m7k8xyH7loO29EppwGbelxBCY45OiesyAlrysKD/rWzIUIFogyP2KViXZ
-	56MYrNJ+qb8Kw7o0lpdvkvIIp/dK1ulimP3dDlSRpXgCIVSs86DGJ56t6KWsz0+J+0kE+GMDvyxb4
-	nSWU/1+koZOO+gzA8NtBlnSYCtQbL9mwHlQbCV9flz353q6lP9qWRffEYktl387WxPcwltcr2HpM/
-	GEOZWbTQ==;
+	bh=Us+2oflLvLaA9Q+lohHm25RujTrS6yw5N7o3L4t/IOc=; b=jvVYHFl+c3xweszlQnXZ20U/xI
+	LoU6v0svkmUORIiTGfeT7D5GobcO0QjGdxt0p+b9XrnS/FsZiOvv4FysLoEEojXjzdyVnhE3hyxmu
+	3mSYbtdaQgjGfeNj16igrtZbs7xSXcGVr1+rtKNK7YqwZEmmIAqzr6AZJWJi6V+o2GiY6QF/MJnXh
+	7D6VmcLhTgArpZQvSNHNn1Eix8Y4ukS0RJu+nZlIrwu1Nxz013EU9VIJclyoODHAnNvBWjMCz+J8D
+	Ua5RWlCPKvDIaC0Ny6AUIgylwixI05PuF9ft0yQJICvzNluaXmX5ul6QsWHhoIkNildUCMTlci4xq
+	1RdBX6yg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqMUr-0000000CnOx-0E3k;
-	Fri, 07 Mar 2025 01:27:29 +0000
-Received: from smtp-fw-52003.amazon.com ([52.119.213.152])
+	id 1tqMUq-0000000CnOo-2mo2;
+	Fri, 07 Mar 2025 01:27:28 +0000
+Received: from smtp-fw-80006.amazon.com ([99.78.197.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqM2x-0000000CiHw-3K11
+	id 1tqM2w-0000000CiGz-1ljB
 	for kexec@lists.infradead.org;
-	Fri, 07 Mar 2025 00:58:41 +0000
+	Fri, 07 Mar 2025 00:58:39 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1741309120; x=1772845120;
+  t=1741309118; x=1772845118;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=c17Kf0Er2P2sLGN5x8xcm8SJt/PbgebI9se/WEG3Bh0=;
-  b=qm3DtJU3YN5m4T3Vt6dl9uXzt/7VEfA4EjMincYlyCLoQYZSXdVCVsN9
-   BvVKWKbi0vGa+GcH2QjT0UUjxNR+77Sut28QuvdmOA3KDSdvaVfoottQ5
-   8TXIIcIQbgre64//dJ6FU3aSm6uJOiXlVlc/9PFxdpNLjkuCUmbtncwxF
-   U=;
+  bh=Us+2oflLvLaA9Q+lohHm25RujTrS6yw5N7o3L4t/IOc=;
+  b=sHT4RbJvinCqc+EOPRR/mW8SrFgzVAoAieuHQKlHwvgDSafb1k63SLz8
+   /zWtBX/l0Dz9n/DmW6PuzINXfEeJ3LLtR5U3OE+b3fIVrYxeWyHc8kqO0
+   ZDsiAeLd1KLOJkM7JhLPqTHbEoxZ6cOXTE4G19PHX7GlqgTm6xU6UZO6V
+   k=;
 X-IronPort-AV: E=Sophos;i="6.14,227,1736812800"; 
-   d="scan'208";a="72017059"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:58:36 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:64899]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.58.39:2525] with esmtp (Farcaster)
- id cb54e298-4a3c-4851-97b6-2bac0b19c9ca; Fri, 7 Mar 2025 00:58:34 +0000 (UTC)
-X-Farcaster-Flow-ID: cb54e298-4a3c-4851-97b6-2bac0b19c9ca
-Received: from EX19D020UWA004.ant.amazon.com (10.13.138.231) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+   d="scan'208";a="29275899"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:58:35 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:32828]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.101:2525] with esmtp (Farcaster)
+ id 9eec1440-3b96-4a48-a704-b02f65525c99; Fri, 7 Mar 2025 00:58:34 +0000 (UTC)
+X-Farcaster-Flow-ID: 9eec1440-3b96-4a48-a704-b02f65525c99
+Received: from EX19D020UWA003.ant.amazon.com (10.13.138.254) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
  Fri, 7 Mar 2025 00:58:34 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D020UWA004.ant.amazon.com (10.13.138.231) with Microsoft SMTP Server
+Received: from EX19MTAUWA002.ant.amazon.com (10.250.64.202) by
+ EX19D020UWA003.ant.amazon.com (10.13.138.254) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
  Fri, 7 Mar 2025 00:58:34 +0000
-Received: from email-imr-corp-prod-iad-all-1a-f1af3bd3.us-east-1.amazon.com
- (10.25.36.214) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
+Received: from email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.203) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
  15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 00:58:33 +0000
 Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-iad-all-1a-f1af3bd3.us-east-1.amazon.com (Postfix) with ESMTP id 463AE40235;
+	by email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com (Postfix) with ESMTP id 4FF9A401E0;
 	Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
 Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id 05EB84FDD; Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
+	id 0F4D14FF6; Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
 From: Pratyush Yadav <ptyadav@amazon.de>
 To: <linux-kernel@vger.kernel.org>
 CC: Pratyush Yadav <ptyadav@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
@@ -78,9 +78,9 @@ CC: Pratyush Yadav <ptyadav@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
  Yang" <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
 	<linux-mm@kvack.org>, <kexec@lists.infradead.org>
-Subject: [RFC PATCH 2/5] misc: add documentation for FDBox
-Date: Fri, 7 Mar 2025 00:57:36 +0000
-Message-ID: <20250307005830.65293-3-ptyadav@amazon.de>
+Subject: [RFC PATCH 4/5] mm: shmem: allow preserving file over FDBOX + KHO
+Date: Fri, 7 Mar 2025 00:57:38 +0000
+Message-ID: <20250307005830.65293-5-ptyadav@amazon.de>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250307005830.65293-1-ptyadav@amazon.de>
 References: <20250307005830.65293-1-ptyadav@amazon.de>
@@ -88,8 +88,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250306_165839_987117_1FA35525 
-X-CRM114-Status: GOOD (  31.30  )
+X-CRM114-CacheID: sfid-20250306_165838_517449_6118B40D 
+X-CRM114-Status: GOOD (  30.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,314 +104,403 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With FDBox in place, add documentation that describes what it is and how
-it is used, along with its UAPI and in-kernel API.
+For applications with a large amount of memory that takes time to
+rebuild, reboots to consume kernel upgrades can be very expensive. FDBox
+allows preserving file descriptors over kexec using KHO. Combining that
+with memfd gives those applications reboot-persistent memory that they
+can use to quickly save and reconstruct that state.
 
-Since the document refers to KHO, add a reference tag in kho/index.rst.
+Since memfd is backed either by hugetlbfs or shmem, use shmem as the
+first backend for memfd that is FDBOX + KHO capable.
+
+To preserve the file's contents during KHO activation, the file's page
+cache must be walked and all entries removed, and their indices stored.
+Use the newly introduced shmem_undo_range_ops to achieve this. Walk each
+entry and before truncating it, take a refcount on the folio so it does
+not get freed, and store its physical address and index in the kho_mem
+and indices arrays.
+
+Swap pages, partial folios, and huge folios are not supported yet.
+Encountering those results in an error.
+
+On the restore side, an empty file is created and then the mems array
+walked to insert the pages into the page cache. The logic in
+shmem_alloc_and_add_folio() is roughly followed.
 
 Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
 ---
- Documentation/filesystems/locking.rst |  21 +++
- Documentation/kho/fdbox.rst           | 224 ++++++++++++++++++++++++++
- Documentation/kho/index.rst           |   3 +
- MAINTAINERS                           |   1 +
- 4 files changed, 249 insertions(+)
- create mode 100644 Documentation/kho/fdbox.rst
+ include/linux/shmem_fs.h |   6 +
+ mm/shmem.c               | 333 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 339 insertions(+)
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index d20a32b77b60f..5526833faf79a 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -607,6 +607,27 @@ used. To block changes to file contents via a memory mapping during the
- operation, the filesystem must take mapping->invalidate_lock to coordinate
- with ->page_mkwrite.
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index 0b273a7b9f01d..263416f357fe1 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -205,6 +205,12 @@ extern int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
+ #endif /* CONFIG_SHMEM */
+ #endif /* CONFIG_USERFAULTFD */
  
-+fdbox_file_ops
-+==============
++#if defined(CONFIG_FDBOX) && defined(CONFIG_KEXEC_HANDOVER)
++bool is_node_shmem(const void *fdt, int offset);
++int shmem_fdbox_kho_write(struct fdbox_fd *ffd, void *fdt);
++struct file *shmem_fdbox_kho_recover(const void *fdt, int offset);
++#endif
 +
-+prototypes::
-+
-+	int (*kho_write)(struct fdbox_fd *box_fd, void *fdt);
-+	int (*seal)(struct fdbox *box);
-+	int (*unseal)(struct fdbox *box);
-+
-+
-+locking rules:
-+	all may block
-+
-+==============	==================================================
-+ops		i_rwsem(box_fd->file->f_inode)
-+==============	==================================================
-+kho_write:	exclusive
-+seal:		no
-+unseal:		no
-+==============	==================================================
-+
- dquot_operations
- ================
+ /*
+  * Used space is stored as unsigned 64-bit value in bytes but
+  * quota core supports only signed 64-bit values so use that
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d6d9266b27b75..c2efdb34a1a18 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -41,6 +41,12 @@
+ #include <linux/swapfile.h>
+ #include <linux/iversion.h>
+ #include <linux/unicode.h>
++#include <linux/libfdt.h>
++#include <linux/fdbox.h>
++#include <linux/vmalloc.h>
++#include <linux/kexec.h>
++#include <linux/kexec_handover.h>
++#include <linux/cleanup.h>
+ #include "swap.h"
  
-diff --git a/Documentation/kho/fdbox.rst b/Documentation/kho/fdbox.rst
-new file mode 100644
-index 0000000000000..44a3f5cdf1efb
---- /dev/null
-+++ b/Documentation/kho/fdbox.rst
-@@ -0,0 +1,224 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+===========================
-+File Descriptor Box (FDBox)
-+===========================
-+
-+:Author: Pratyush Yadav
-+
-+Introduction
-+============
-+
-+The File Descriptor Box (FDBox) is a mechanism for userspace to name file
-+descriptors and give them over to the kernel to hold. They can later be
-+retrieved by passing in the same name.
-+
-+The primary purpose of FDBox is to be used with :ref:`kho`. There are many kinds
-+anonymous file descriptors in the kernel like memfd, guest_memfd, iommufd, etc.
-+that would be useful to be preserved using KHO. To be able to do that, there
-+needs to be a mechanism to label FDs that allows userspace to set the label
-+before doing KHO and to use the label to map them back after KHO. FDBox achieves
-+that purpose by exposing a miscdevice which exposes ioctls to label and transfer
-+FDs between the kernel and userspace. FDBox is not intended to work with any
-+generic file descriptor. Support for each kind of FDs must be explicitly
-+enabled.
-+
-+FDBox can be enabled by setting the ``CONFIG_FDBOX`` option to ``y``. While the
-+primary purpose of FDBox is to be used with KHO, it does not explicitly require
-+``CONFIG_KEXEC_HANDOVER``, since it can be used without KHO, simply as a way to
-+preserve or transfer FDs when userspace exits.
-+
-+Concepts
-+========
-+
-+Box
-+---
-+
-+The box is a container for FDs. Boxes are identified by their name, which must
-+be unique. Userspace can put FDs in the box using the ``FDBOX_PUT_FD``
-+operation, and take them out of the box using the ``FDBOX_GET_FD`` operation.
-+Once all the required FDs are put into the box, it can be sealed to make it
-+ready for shipping. This can be done by the ``FDBOX_SEAL`` operation. The seal
-+operation notifies each FD in the box. If any of the FDs have a dependency on
-+another, this gives them an opportunity to ensure all dependencies are met, or
-+fail the seal if not. Once a box is sealed, no FDs can be added or removed from
-+the box until it is unsealed. Only sealed boxes are transported to a new kernel
-+via KHO. The box can be unsealed by the ``FDBOX_UNSEAL`` operation. This is the
-+opposite of seal. It also notifies each FD in the box to ensure all dependencies
-+are met. This can be useful in case some FDs fail to be restored after KHO.
-+
-+Box FD
-+------
-+
-+The Box FD is a FD that is currently in a box. It is identified by its name,
-+which must be unique in the box it belongs to. The Box FD is created when a FD
-+is put into a box by using the ``FDBOX_PUT_FD`` operation. This operation
-+removes the FD from the calling task. The FD can be restored by passing the
-+unique name to the ``FDBOX_GET_FD`` operation.
-+
-+FDBox control device
-+--------------------
-+
-+This is the ``/dev/fdbox/fdbox`` device. A box can be created using the
-+``FDBOX_CREATE_BOX`` operation on the device. A box can be removed using the
-+``FDBOX_DELETE_BOX`` operation.
-+
-+UAPI
-+====
-+
-+FDBOX_NAME_LEN
-+--------------
-+
-+.. code-block:: c
-+
-+    #define FDBOX_NAME_LEN			256
-+
-+Maximum length of the name of a Box or Box FD.
-+
-+Ioctls on /dev/fdbox/fdbox
-+--------------------------
-+
-+FDBOX_CREATE_BOX
-+~~~~~~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_CREATE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 0)
-+    struct fdbox_create_box {
-+    	__u64 flags;
-+    	__u8 name[FDBOX_NAME_LEN];
-+    };
-+
-+Create a box.
-+
-+After this returns, the box is available at ``/dev/fdbox/<name>``.
-+
-+``name``
-+    The name of the box to be created. Must be unique.
-+
-+``flags``
-+    Flags to the operation. Currently, no flags are defined.
-+
-+Returns:
-+    0 on success, -1 on error, with errno set.
-+
-+FDBOX_DELETE_BOX
-+~~~~~~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_DELETE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 1)
-+    struct fdbox_delete_box {
-+    	__u64 flags;
-+    	__u8 name[FDBOX_NAME_LEN];
-+    };
-+
-+Delete a box.
-+
-+After this returns, the box is no longer available at ``/dev/fdbox/<name>``.
-+
-+``name``
-+    The name of the box to be deleted.
-+
-+``flags``
-+    Flags to the operation. Currently, no flags are defined.
-+
-+Returns:
-+    0 on success, -1 on error, with errno set.
-+
-+Ioctls on /dev/fdbox/<boxname>
-+------------------------------
-+
-+These must be performed on the ``/dev/fdbox/<boxname>`` device.
-+
-+FDBX_PUT_FD
-+~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_PUT_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 2)
-+    struct fdbox_put_fd {
-+    	__u64 flags;
-+    	__u32 fd;
-+    	__u32 pad;
-+    	__u8 name[FDBOX_NAME_LEN];
-+    };
-+
-+
-+Put FD into the box.
-+
-+After this returns, ``fd`` is removed from the task and can no longer be used by
-+it.
-+
-+``name``
-+    The name of the FD.
-+
-+``fd``
-+    The file descriptor number to be
-+
-+``flags``
-+    Flags to the operation. Currently, no flags are defined.
-+
-+Returns:
-+    0 on success, -1 on error, with errno set.
-+
-+FDBX_GET_FD
-+~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_GET_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 3)
-+    struct fdbox_get_fd {
-+    	__u64 flags;
-+    	__u8 name[FDBOX_NAME_LEN];
-+    };
-+
-+Get an FD from the box.
-+
-+After this returns, the FD identified by ``name`` is mapped into the task and is
-+available for use.
-+
-+``name``
-+    The name of the FD to get.
-+
-+``flags``
-+    Flags to the operation. Currently, no flags are defined.
-+
-+Returns:
-+    FD number on success, -1 on error with errno set.
-+
-+FDBOX_SEAL
-+~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_SEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 4)
-+
-+Seal the box.
-+
-+Gives the kernel an opportunity to ensure all dependencies are met in the box.
-+After this returns, the box is sealed and FDs can no longer be added or removed
-+from it. A box must be sealed for it to be transported across KHO.
-+
-+Returns:
-+    0 on success, -1 on error with errno set.
-+
-+FDBOX_UNSEAL
-+~~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+    #define FDBOX_UNSEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 5)
-+
-+Unseal the box.
-+
-+Gives the kernel an opportunity to ensure all dependencies are met in the box,
-+and in case of KHO, no FDs have been lost in transit.
-+
-+Returns:
-+    0 on success, -1 on error with errno set.
-+
-+Kernel functions and structures
-+===============================
-+
-+.. kernel-doc:: include/linux/fdbox.h
-diff --git a/Documentation/kho/index.rst b/Documentation/kho/index.rst
-index 5e7eeeca8520f..051513b956075 100644
---- a/Documentation/kho/index.rst
-+++ b/Documentation/kho/index.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0-or-later
+ static struct vfsmount *shm_mnt __ro_after_init;
+@@ -5283,6 +5289,333 @@ static int shmem_error_remove_folio(struct address_space *mapping,
+ 	return 0;
+ }
  
-+.. _kho:
++#if defined(CONFIG_FDBOX) && defined(CONFIG_KEXEC_HANDOVER)
++static const char fdbox_kho_compatible[] = "fdbox,shmem-v1";
 +
- ========================
- Kexec Handover Subsystem
- ========================
-@@ -9,6 +11,7 @@ Kexec Handover Subsystem
- 
-    concepts
-    usage
-+   fdbox
- 
- .. only::  subproject and html
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d329d3e5514c5..135427582e60f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8866,6 +8866,7 @@ FDBOX
- M:	Pratyush Yadav <pratyush@kernel.org>
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
-+F:	Documentation/kho/fdbox.rst
- F:	drivers/misc/fdbox.c
- F:	include/linux/fdbox.h
- F:	include/uapi/linux/fdbox.h
++bool is_node_shmem(const void *fdt, int offset)
++{
++	return fdt_node_check_compatible(fdt, offset, fdbox_kho_compatible) == 0;
++}
++
++struct shmem_fdbox_put_arg {
++	struct kho_mem *mems;
++	unsigned long *indices;
++	unsigned long nr_mems;
++	unsigned long idx;
++};
++
++static long shmem_fdbox_undo_swap(struct address_space *mapping, pgoff_t index,
++				  void *old, void *arg)
++{
++	return -EOPNOTSUPP;
++}
++
++static int shmem_fdbox_undo_folio(struct address_space *mapping,
++				  struct folio *folio, void *__arg)
++{
++	struct shmem_fdbox_put_arg *arg = __arg;
++	struct kho_mem *mem;
++
++	if (arg->idx == arg->nr_mems)
++		return -ENOSPC;
++
++	if (folio_nr_pages(folio) != 1)
++		return -EOPNOTSUPP;
++
++	/*
++	 * Grab an extra refcount to the folio so it sticks around after
++	 * truncation.
++	 */
++	folio_get(folio);
++
++	mem = arg->mems + arg->idx;
++
++	mem->addr = PFN_PHYS(folio_pfn(folio));
++	mem->size = PAGE_SIZE;
++	arg->indices[arg->idx] = folio_index(folio);
++	arg->idx++;
++
++	truncate_inode_folio(mapping, folio);
++	return 0;
++}
++
++static int shmem_fdbox_undo_partial_folio(struct folio *folio, pgoff_t lstart,
++					  pgoff_t lend, void *arg)
++{
++	return -EOPNOTSUPP;
++}
++
++static const struct shmem_undo_range_ops shmem_fdbox_undo_ops = {
++	.undo_swap = shmem_fdbox_undo_swap,
++	.undo_folio = shmem_fdbox_undo_folio,
++	.undo_partial_folio = shmem_fdbox_undo_partial_folio,
++};
++
++static struct kho_mem *shmem_fdbox_kho_get_mems(struct inode *inode,
++						unsigned long **indicesp,
++						unsigned long *nr)
++{
++	struct shmem_inode_info *info = SHMEM_I(inode);
++	unsigned long *indices __free(kvfree) = NULL;
++	struct kho_mem *mems __free(kvfree) = NULL;
++	struct shmem_fdbox_put_arg arg;
++	unsigned long nr_mems;
++	int ret, i;
++
++	scoped_guard(spinlock, &info->lock) {
++		/* TODO: Support swapped pages. Perhaps swap them back in? */
++		if (info->swapped)
++			return ERR_PTR(-EOPNOTSUPP);
++
++		/*
++		 * Estimate the size of the array using the size of the inode,
++		 * assuming there are no contiguous pages.
++		 */
++		nr_mems = info->alloced;
++	}
++
++	mems = kvmalloc_array(nr_mems, sizeof(*mems), GFP_KERNEL);
++	if (!mems)
++		return ERR_PTR(-ENOMEM);
++
++	indices = kvmalloc_array(nr_mems, sizeof(*indices), GFP_KERNEL);
++	if (!indices)
++		return ERR_PTR(-ENOMEM);
++
++	arg.mems = mems;
++	arg.indices = indices;
++	arg.nr_mems = nr_mems;
++	arg.idx = 0;
++
++	ret = shmem_undo_range(inode, 0, -1, false, &shmem_fdbox_undo_ops, &arg);
++	if (ret < 0) {
++		pr_err("shmem: failed to undo fdbox range: %d\n", ret);
++		goto err;
++	}
++
++	*nr = arg.idx;
++	*indicesp = no_free_ptr(indices);
++	return_ptr(mems);
++
++err:
++	/*
++	 * TODO: This kills the whole file on failure to KHO. We should keep the
++	 * contents around for another try later. The problem is, if re-adding
++	 * pages fails, there would be no recovery at that point. Ideally, we
++	 * should first serialize the whole file, and only then remove things
++	 * from page cache so we are sure to never fail.
++	 */
++	for (i = 0; i < arg.idx; i++) {
++		struct folio *folio = page_folio(phys_to_page(mems[i].addr));
++
++		folio_put(folio);
++	}
++
++	/* Undo the rest of the file. This should not fail. */
++	WARN_ON(shmem_undo_range(inode, 0, -1, false, &shmem_default_undo_ops, NULL));
++	return ERR_PTR(ret);
++}
++
++int shmem_fdbox_kho_write(struct fdbox_fd *box_fd, void *fdt)
++{
++	struct inode *inode = box_fd->file->f_inode;
++	unsigned long *indices __free(kvfree) = NULL;
++	struct kho_mem *mems __free(kvfree) = NULL;
++	u64 pos = box_fd->file->f_pos, size = inode->i_size;
++	unsigned long nr_mems, i;
++	int ret = 0;
++
++	/*
++	 * mems can be larger than sizeof(*mems) * nr_mems, but we should only
++	 * look at things in the range of 0 to nr_mems.
++	 */
++	mems = shmem_fdbox_kho_get_mems(inode, &indices, &nr_mems);
++	if (IS_ERR(mems))
++		return PTR_ERR(mems);
++
++	/*
++	 * fdbox should have already started the node. We can start adding
++	 * properties directly.
++	 */
++	ret |= fdt_property(fdt, "compatible", fdbox_kho_compatible,
++			    sizeof(fdbox_kho_compatible));
++	ret |= fdt_property(fdt, "pos", &pos, sizeof(u64));
++	ret |= fdt_property(fdt, "size",  &size, sizeof(u64));
++	ret |= fdt_property(fdt, "mem", mems, sizeof(*mems) * nr_mems);
++	ret |= fdt_property(fdt, "indices", indices, sizeof(*indices) * nr_mems);
++
++	if (ret) {
++		pr_err("shmem: failed to add properties to FDT!\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	return 0;
++
++err:
++	/*
++	 * TODO: This kills the whole file on failure to KHO. We should keep the
++	 * contents around for another try later. The problem is, if re-adding
++	 * pages fails, there would be no recovery at that point. Ideally, we
++	 * should first serialize the whole file, and only then remove things
++	 * from page cache so we are sure to never fail.
++	 */
++	for (i = 0; i < nr_mems; i++) {
++		struct folio *folio = page_folio(phys_to_page(mems[i].addr));
++
++		folio_put(folio);
++	}
++	return ret;
++}
++
++struct file *shmem_fdbox_kho_recover(const void *fdt, int offset)
++{
++	struct address_space *mapping;
++	char pathbuf[1024] = "", *path;
++	const unsigned long *indices;
++	const struct kho_mem *mems;
++	unsigned long nr_mems, i = 0;
++	const u64 *pos, *size;
++	struct inode *inode;
++	struct file *file;
++	int len, ret;
++
++	ret = fdt_node_check_compatible(fdt, offset, fdbox_kho_compatible);
++	if (ret) {
++		pr_err("shmem: invalid compatible\n");
++		goto err;
++	}
++
++	mems = fdt_getprop(fdt, offset, "mem", &len);
++	if (!mems || len % sizeof(*mems)) {
++		pr_err("shmem: invalid mems property\n");
++		goto err;
++	}
++	nr_mems = len / sizeof(*mems);
++
++	indices = fdt_getprop(fdt, offset, "indices", &len);
++	if (!indices || len % sizeof(unsigned long)) {
++		pr_err("shmem: invalid indices property\n");
++		goto err_return;
++	}
++	if (len / sizeof(unsigned long) != nr_mems) {
++		pr_err("shmem: number of indices and mems do not match\n");
++		goto err_return;
++	}
++
++	size = fdt_getprop(fdt, offset, "size", &len);
++	if (!size || len != sizeof(u64)) {
++		pr_err("shmem: invalid size property\n");
++		goto err_return;
++	}
++
++	pos = fdt_getprop(fdt, offset, "pos", &len);
++	if (!pos || len != sizeof(u64)) {
++		pr_err("shmem: invalid pos property\n");
++		goto err_return;
++	}
++
++	/*
++	 * TODO: This sets UID/GID, cgroup accounting to root. Should this
++	 * be given to the first user that maps the FD instead?
++	 */
++	file = shmem_file_setup(fdt_get_name(fdt, offset, NULL), 0,
++				VM_NORESERVE);
++	if (IS_ERR(file)) {
++		pr_err("shmem: failed to setup file\n");
++		goto err_return;
++	}
++
++	inode = file->f_inode;
++	mapping = inode->i_mapping;
++	vfs_setpos(file, *pos, MAX_LFS_FILESIZE);
++
++	for (; i < nr_mems; i++) {
++		struct folio *folio;
++		void *va;
++
++		if (mems[i].size != PAGE_SIZE) {
++			pr_err("shmem: unknown kho_mem size %llx. Expected %lx\n",
++			       mems[i].size, PAGE_SIZE);
++			goto err_return;
++		}
++
++		va = kho_claim_mem(&mems[i]);
++		folio = virt_to_folio(va);
++
++		/* Set up the folio for insertion. */
++
++		/*
++		 * TODO: This breaks falloc-ed folios since now they get marked
++		 * uptodate when they might not actually be zeroed out yet. Need
++		 * a way to distinguish falloc-ed folios.
++		 */
++		folio_mark_uptodate(folio);
++		folio_mark_dirty(folio);
++
++		/*
++		 * TODO: Should find a way to unify this and
++		 * shmem_alloc_and_add_folio().
++		 */
++		__folio_set_locked(folio);
++		__folio_set_swapbacked(folio);
++
++		ret = mem_cgroup_charge(folio, NULL, mapping_gfp_mask(mapping));
++		if (ret) {
++			folio_unlock(folio);
++			folio_put(folio);
++			fput(file);
++			pr_err("shmem: failed to charge folio index %lu\n", i);
++			goto err_return_next;
++		}
++
++		ret = shmem_add_to_page_cache(folio, mapping, indices[i], NULL,
++					      mapping_gfp_mask(mapping));
++		if (ret) {
++			folio_unlock(folio);
++			folio_put(folio);
++			fput(file);
++			pr_err("shmem: failed to add to page cache folio index %lu\n", i);
++			goto err_return_next;
++		}
++
++		ret = shmem_inode_acct_blocks(inode, 1);
++		if (ret) {
++			folio_unlock(folio);
++			folio_put(folio);
++			fput(file);
++			pr_err("shmem: failed to account folio index %lu\n", i);
++			goto err_return_next;
++		}
++
++		shmem_recalc_inode(inode, 1, 0);
++		folio_add_lru(folio);
++		folio_unlock(folio);
++		folio_put(folio);
++	}
++
++	inode->i_size = *size;
++
++	return file;
++
++err_return:
++	kho_return_mem(mems + i);
++err_return_next:
++	for (i = i + 1; i < nr_mems; i++)
++		kho_return_mem(mems + i);
++err:
++	ret = fdt_get_path(fdt, offset, pathbuf, sizeof(pathbuf));
++	if (ret)
++		path = "unknown";
++	else
++		path = pathbuf;
++
++	pr_err("shmem: error when recovering KHO node '%s'\n", path);
++	return NULL;
++}
++
++#endif /* CONFIG_FDBOX && CONFIG_KEXEC_HANDOVER */
++
+ static const struct address_space_operations shmem_aops = {
+ 	.writepage	= shmem_writepage,
+ 	.dirty_folio	= noop_dirty_folio,
 -- 
 2.47.1
 
