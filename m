@@ -4,90 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C425C28B23
-	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 01:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99278C282EC
+	for <kexec@archiver.kernel.org>; Fri,  7 Mar 2025 01:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=vUnosHPz47fWK45st0LZ5YJp1oss1R9eNp+qhCVevDg=; b=zAlRUDoYg+JNXDR3mQIh2FqeNv
-	dXj0C7i02XhbM8lV9QJCFLQf+qFHmBNoNj2kWf7g9ewjuwtprNA7RcSGBVyXzAuOi8KQv1Ji98z4c
-	sbnJEcsvJlgeh7uON+ieXKQop0qFwk4OgBU05ygFLcxW71BDFYWrVW/J+RVWm+J7qXkUR3FX+/nR/
-	YSwFO/D6VtCY7Tc9PGXYRpXH5GuEUScy+DX4S4Sslhnzceydbd0xnFbKI6FUvYHocd+8dHN43yLq8
-	IxvklnwRHsxp9SDEpQ8PdNp4/ReKCdM4Ga7E6+v3Ee7qMDQPH7EH4QiMQKc4m2tZH3xGjMEfDuuW5
-	6H6JYAdQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=j2br9eadG+prJRkVEuLtzkTzi1DZEsFzj7t8tTGOrhQ=; b=hWSMksS+gKEXsJH0WPdSDkvFXe
+	qW1fv9EwsEikFUMYhwkt5f986Q178bsJvYO1cgSbjPxWoP+S8TCdYXbFeiLQO1U/KLu0OIejFwSrz
+	t0SHpopTkfeFlM4g0oir+E03Gye7534G1NUswWNycuZkXB/X8ekoJGa2XmKhGiFkSXSG6uiZANXVY
+	hHWBN1o1ZtWVPOUIxYjylrlwadN06Aijf5s+uXeVX+VQ92x0jdjeXJeIyYv7SUafm98wT+fZjtWcP
+	T2dTiNQqVupcvvkhd2NJ3cUhg74Xrlxj7z90yOWCNdKXWRXv801nIuOsJJq1t6lPwzMjblWe+IwY6
+	lfsUF9/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqMUs-0000000CnPz-3Js8;
-	Fri, 07 Mar 2025 01:27:30 +0000
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154])
+	id 1tqMWR-0000000CnjO-195S;
+	Fri, 07 Mar 2025 01:29:07 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqM34-0000000CiHe-3NMG
+	id 1tqMDn-0000000Ckit-291r
 	for kexec@lists.infradead.org;
-	Fri, 07 Mar 2025 00:58:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1741309126; x=1772845126;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vUnosHPz47fWK45st0LZ5YJp1oss1R9eNp+qhCVevDg=;
-  b=UI9YsCAEfu7hrGGxL06ezF5UeKGB93ZT5EWar8hU553lqC+dgjGBy+gP
-   pZ6U8KJTtAYJygom2t/4A8ZEMtLyRv/9E9yE3q5pWtyi95inMqEYVgoeU
-   XtL4LtLAS9y6N6kLKtXdBrzS6GFHYyl5rOGdxGGgzZ2nNOf8WUaSEdRKM
-   w=;
-X-IronPort-AV: E=Sophos;i="6.14,227,1736812800"; 
-   d="scan'208";a="468696731"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:58:34 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:51103]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.40:2525] with esmtp (Farcaster)
- id 7db8d410-3306-4a9b-a196-6db5e20f1018; Fri, 7 Mar 2025 00:58:34 +0000 (UTC)
-X-Farcaster-Flow-ID: 7db8d410-3306-4a9b-a196-6db5e20f1018
-Received: from EX19D020UWC002.ant.amazon.com (10.13.138.147) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 7 Mar 2025 00:58:34 +0000
-Received: from EX19MTAUWA002.ant.amazon.com (10.250.64.202) by
- EX19D020UWC002.ant.amazon.com (10.13.138.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 7 Mar 2025 00:58:33 +0000
-Received: from email-imr-corp-prod-pdx-all-2b-5ec155c2.us-west-2.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 00:58:33 +0000
-Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-pdx-all-2b-5ec155c2.us-west-2.amazon.com (Postfix) with ESMTP id 68D5D4024E;
-	Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
-Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id F0F9B4FBC; Fri,  7 Mar 2025 00:58:32 +0000 (UTC)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: <linux-kernel@vger.kernel.org>
-CC: Pratyush Yadav <ptyadav@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
-	"Eric Biederman" <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, Hugh Dickins <hughd@google.com>, Alexander Graf
-	<graf@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David
- Woodhouse" <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, "Mike
- Rapoport" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, "Pasha
- Tatashin" <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>, "Wei
- Yang" <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-mm@kvack.org>, <kexec@lists.infradead.org>
-Subject: [RFC PATCH 0/5] Introduce FDBox, and preserve memfd with shmem over KHO
-Date: Fri, 7 Mar 2025 00:57:34 +0000
-Message-ID: <20250307005830.65293-1-ptyadav@amazon.de>
-X-Mailer: git-send-email 2.47.1
+	Fri, 07 Mar 2025 01:09:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 6BC1CA44A7C;
+	Fri,  7 Mar 2025 01:04:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CECDC4CEE0;
+	Fri,  7 Mar 2025 01:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741309789;
+	bh=yKuo8ItUdzoMnE+DZFQ9ipnfPDk0P9XbGS1ILoFZ5kk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=YyRSh1AY/kLvcXE2EMoEKJ23nXytxgWZvz58cGiz5RT3NrBZHUXzJn24OjryqiwRV
+	 laegr90sLsUyToXcAMLFgdV13xazA5Ncou0kjL3VIDucIF2qqlGwPO6QsYUKE8GLas
+	 YaI8zgX/SIKLti5MMpwGGmiylScsZ/4GQYOFIj415F/v77L9Gxj5i/lxcEmpk76X7D
+	 7TtvZ8Cunn4C9kkzpwIVBV/h5d9UEyqDz3Z303MIBDZG+1ndgTNRQfHUfeIHfoeu5p
+	 v9uj0lkcpzBVG2ZHgnWcdaGyr2/iF56Rp84Ikzxkm3wOIy0JB/kuoa8VtdfGoQ/0zc
+	 c/9iimlBG4GIA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Rientjes <rientjes@google.com>
+Cc: Alexander Graf <graf@amazon.com>,  Anthony Yznaga
+ <anthony.yznaga@oracle.com>,  Dave Hansen <dave.hansen@intel.com>,  David
+ Hildenbrand <david@redhat.com>,  Frank van der Linden <fvdl@google.com>,
+  James Gowans <jgowans@amazon.com>,  Jason Gunthorpe <jgg@nvidia.com>,
+  Junaid Shahid <junaids@google.com>,  Matthew Wilcox
+ <willy@infradead.org>,  Mike Rapoport <rppt@kernel.org>,  Pankaj Gupta
+ <pankaj.gupta.linux@gmail.com>,  Pasha Tatashin <tatashin@google.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Vipin Sharma <vipinsh@google.com>,
+  Vishal Annapurve <vannapurve@google.com>,  "Woodhouse, David"
+ <dwmw@amazon.co.uk>,  linux-mm@kvack.org,  kexec@lists.infradead.org
+Subject: Re: [Hypervisor Live Update] Notes from February 24, 2025
+In-Reply-To: <7154b857-01cf-a8c6-ea02-51d095bafabf@google.com>
+References: <7154b857-01cf-a8c6-ea02-51d095bafabf@google.com>
+Date: Fri, 07 Mar 2025 01:09:45 +0000
+Message-ID: <mafs01pv9k5nq.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250306_165847_130813_42C50B3D 
-X-CRM114-Status: GOOD (  22.37  )
+X-CRM114-CacheID: sfid-20250306_170951_633916_E141ADA3 
+X-CRM114-Status: GOOD (  22.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,97 +79,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series introduces the File Descriptor Box (FDBox), along with
-support in memfd and shmem for persisting memfds over KHO using FDBox.
+Hi all,
 
-FDBox is a mechanism for userspace to name file descriptors and give
-them over to the kernel to hold. They can later be retrieved by passing
-in the same name. The primary purpose of it is to be used with Kexec
-Handover (KHO) [0]. See Documentation/kho/fdbox.rst for more details.
+On Sun, Mar 02 2025, David Rientjes wrote:
 
-The original idea for FDBox came from Alex Graf. The main problem it
-attempts to solve is to give a name to anonymous file descriptors like
-memfd, guest_memfd, iommufd, etc. so they can be retrieved after KHO.
-Alex wrote some initial code [1] which this series is based upon, though
-that code is quite hacky and proof-of-concept, and has been
-significantly refactored and polished with this series. Alex's code
-mainly played around with KVM, but since I am more familiar with memfd
-and shmem, I have picked those as the first users.
+> Hi everybody,
+>
+> Here are the notes from the last Hypervisor Live Update call that happened 
+> on Monday, February 24.  Thanks for everybody who was involved!
+>
+[...]
+>
+> Pratyush took the AI to look at implementation on memfd.  Mike took the
+> AI to look at memory reservation.
+>
+> ----->o-----
+> I pivoted the discussion toward fdbox which ended up never being posted
+> upstream.  Pratyush provided the link to the most recent code:
+> https://github.com/agraf/linux-2.6/blob/kvm-kho-gmem-test/drivers/misc/fdbox.c
+> This work likely would need to be picked up to pursue upstream because
+> the current code has several TODO's.  (A struct miscdevice was called out
+> as curious.)
+>
+> It was noted that it would be difficult to support memfd without
+> something like fdbox, so whether the fdbox code itself were upstreamed or
+> it becomes more generic from the work on memfd, the base support would
+> need to be provided somehow.
+>
+> Mike and Jason suggested designing fdbox and then starting to use it for
+> memfd.  This would need to be aligned by stakeholders, including the UAPI
+> for fdbox.  Pratyush will be looking into fdbox or inventing something
+> similar while working on memfd.
+>
+> We need to propose the fdbox design and UAPI.
 
-That is not to say this series is in a top notch state already. There is
-still a lot of room for improvement, both in FDBox and in memfd and
-shmem. The aim of the patches is to present the idea to get early
-feedback, and to demonstrate KHO in action, potentially having a
-consumer of KHO ready by the time those patches are ready for prime
-time.
+As promised, I have taken the last couple weeks in coming up with a
+basic FDBox design, along with having memfd use it (currently via shmem,
+since I am more familiar with that than with hugetlbfs). The patches can
+be found at [0].
 
-I have written a simple userspace tool to interact with FDBox and memfd.
-It can be found here [2]. It is quite simple currently. When given the
-create command, it creates a box, and a memfd, and fills the memfd with data
-from a file called "data". It then adds the memfd to the box and seals
-it. Then one can do KHO. After KHO, the restore command gets the FD out
-of the box and writes the output to a file called "out". The original
-and new file can be compared to ensure data consistency.
+I am travelling next week so I am not sure if I will be able to attend
+the next session. If I do, I would like to talk more about the patches
+and FDBox if time permits. Anyway, looking forward to getting some
+feedback on the patches :-)
 
-I have tested using the tool and a 1 GiB file, and the memfd came back
-over KHO with the same contents. The performance was fast enough to not
-be noticeable to the naked eye, though I have not done much more
-performance analysis than that.
+[0] https://lore.kernel.org/linux-mm/20250307005830.65293-1-ptyadav@amazon.de/T/#u
 
-The whole process can be seen in action in this Asciinema [4].
-
-Sample instructions to use the tool:
-
-       $ make
-       $ dd if=/dev/urandom of=data bs=1G count=1
-       $ ./fdbox create
-       $ echo 1 > /sys/kernel/kho/active
-       $ kexec -s -l [...]
-       $ kexec -e
-
-After the kexec is done,
-
-      $ ./fdbox restore
-      $ cmp data out
-      $ echo $?
-
-The full tree with the patches can be found at [3]. It contains a couple
-of my patches on top of Mike's KHO patches [0] to fix some small bugs.
-
-[0] https://lore.kernel.org/lkml/20250206132754.2596694-1-rppt@kernel.org/
-[1] https://github.com/agraf/linux-2.6/blob/kvm-kho-gmem-test/drivers/misc/fdbox.c
-[2] https://github.com/prati0100/fdbox-utils/blob/main/fdbox.c
-[3] https://web.git.kernel.org/pub/scm/linux/kernel/git/pratyush/linux.git/log/?h=kho
-[4] https://asciinema.org/a/mnyVpy1w67mueIkKZzqHI0oAN
-
-Pratyush Yadav (5):
-  misc: introduce FDBox
-  misc: add documentation for FDBox
-  mm: shmem: allow callers to specify operations to shmem_undo_range
-  mm: shmem: allow preserving file over FDBOX + KHO
-  mm/memfd: allow preserving FD over FDBOX + KHO
-
- Documentation/filesystems/locking.rst |  21 +
- Documentation/kho/fdbox.rst           | 224 ++++++++
- Documentation/kho/index.rst           |   3 +
- MAINTAINERS                           |   9 +
- drivers/misc/Kconfig                  |   7 +
- drivers/misc/Makefile                 |   1 +
- drivers/misc/fdbox.c                  | 758 ++++++++++++++++++++++++++
- include/linux/fdbox.h                 | 119 ++++
- include/linux/fs.h                    |   7 +
- include/linux/miscdevice.h            |   1 +
- include/linux/shmem_fs.h              |   6 +
- include/uapi/linux/fdbox.h            |  61 +++
- mm/memfd.c                            | 128 ++++-
- mm/shmem.c                            | 498 +++++++++++++++--
- 14 files changed, 1800 insertions(+), 43 deletions(-)
- create mode 100644 Documentation/kho/fdbox.rst
- create mode 100644 drivers/misc/fdbox.c
- create mode 100644 include/linux/fdbox.h
- create mode 100644 include/uapi/linux/fdbox.h
+[...]
 
 -- 
-2.47.1
-
+Regards,
+Pratyush Yadav
 
