@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20C33C28B25
-	for <kexec@archiver.kernel.org>; Sat,  8 Mar 2025 11:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD3C7C282D1
+	for <kexec@archiver.kernel.org>; Sun,  9 Mar 2025 12:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7Pz6VrciSx71wEb25sg5vUXxnUNFA9WwPiYqkWeWYKM=; b=D/f2vhOAkckP7iNTt1EEi1dohE
-	NvBC9K7p4c/YWBIUtd64C9i4N/MhN2GgcTNbpn5lq3Kj2ThrvasrMeKZjQg8VRqUP9bqXcKRN7Qo2
-	yGcFYpxWy4+UfSjHv5EZRQuhg0+wImZzFAtG+NiTQlILhMy2nXY9PPr/VFvGmv3a3Qz6AOZjCggHi
-	cS40uuIObtZLDoAU9UITC/D6qzX4bxIkGdS0FU9Jmmh1egZN95XSiYHbZxztTdOp4yyUEhmGjVkeV
-	1q7qbDe7l6RY1g1HMY+0cw364kUf+Otvd2vuihlvCJR+10J4b9OltyBQGglg/ZwgEbDu9GHJlEncu
-	QAv9ywxQ==;
+	bh=ryHXxnvblF8yjtCN9QZtxXO7vDDSeFvVFlLMAGAlZqM=; b=h1arFUlrXfe37k0r86lmOJ8faA
+	5qAiwlvbj4Zz6NhdyfglRVp0lTWjTyAyX119ismQQvwkZF2rAgzL3Ks0AGfuKwiR3gf48xsaboKTW
+	HS6U1ubtXRyfJxvddeCbnx7dXi61fgOxeMhfd4y7TaKEJMgt6r6yETt7TczKAVl8FVWu7X7zx64D2
+	qw3K/dn7/SDNqelo1Lv8/1UhLB971RB//gtQPEvWK46Ah9Y/I8JWH3RgWAI4SIPJm6o3JR2DSGgej
+	8lmeqvPKQhRTrkfdnfT4JnmgI7fM4nNcW/VeuN74rzFh74LdUoNaPf0DwO3MsiAfSPpVEXHLy8liB
+	E/yv47/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqs4I-0000000GWt7-3otQ;
-	Sat, 08 Mar 2025 11:10:10 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1trFNj-00000000Tjy-3TWz;
+	Sun, 09 Mar 2025 12:03:47 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqs4E-0000000GWsR-29aR
+	id 1trFNf-00000000TjE-1Ij3
 	for kexec@lists.infradead.org;
-	Sat, 08 Mar 2025 11:10:07 +0000
+	Sun, 09 Mar 2025 12:03:44 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id B9600A45A07;
-	Sat,  8 Mar 2025 11:04:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1039C4CEE0;
-	Sat,  8 Mar 2025 11:09:56 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id C12725C1D21;
+	Sun,  9 Mar 2025 12:01:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0CFC4CEE5;
+	Sun,  9 Mar 2025 12:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741432202;
-	bh=wjd4lKQpkpaeMS8a8WAbOFRqGjEHqDFGgmCn5GH9lJY=;
+	s=k20201202; t=1741521819;
+	bh=x8LiHcCv8DTXMAg2ZcZKR2faXOH9UvWMVP3REFZJBHc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jI558XKLWX4PB6OS6TWHt63q8OOLntXovXrL6g7R2IoQRHOlRc/x7GiCAlKt0cPFy
-	 UJ0m3En3iOcOcnQcbaVNuygjBEHCamf6ZkdzcnkQIRvMuUudvdzJWQWRp7TahzpnMt
-	 po0NZYAOhJI6nMu6namwhF1JZ8c6L4Uwwsy+Qf0MIpylpTrKc5oTGhRkKIHp9gZqjx
-	 vUxCFDU4Ipw5VzgvYnbEX12w67Cv5lQXFJ9DU8slKx5BVC73IiYGs+zAZrXqdfkRlH
-	 pt5tWcD9gqJHqEDOAFRx9ppRpRmQMDbjsaWfFTMiOSAlIuSw7Ly4btwIUFTyVT8+VV
-	 waKmgfyh1ZNxQ==
-Date: Sat, 8 Mar 2025 12:09:53 +0100
+	b=MMN3iFTtKavUVNDKnRfSBedIJcy4ZJzQvZLr7uIufEVSHRR1ZoxrNAVbq+N4I0AJS
+	 MXWAqypAHyLu860XVaJ9HolV8bZebhOJR3DbWWOm2oPMsyLPvLuQzsHyq77WGGuG0K
+	 1TPUvSi00ykZ8CVUwsHaOKsMdvAo4cJCuwdMm3RKY/mD93O6zHbbuwexP7zSEcMgfQ
+	 T/WNkljDQHub56fTSTgfgdeTuVBWsJTtpIMXYaSNUEXorrN4EoW7rddkjRCQiiOvW2
+	 5XnXS/MkyFfmAZRpFp7smfbHx2AhYYnYVyfQkZc3iSsuM9rqumwc+7edu1yVDhSyXv
+	 ruUNUCYoPgzhQ==
+Date: Sun, 9 Mar 2025 13:03:31 +0100
 From: Christian Brauner <brauner@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+To: Pratyush Yadav <ptyadav@amazon.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
 	Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
 	Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
@@ -55,22 +55,23 @@ Cc: Pratyush Yadav <ptyadav@amazon.de>,
 	Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Pasha Tatashin <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
 	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, kexec@lists.infradead.org
+	Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	kexec@lists.infradead.org
 Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-Message-ID: <20250308-wutanfall-ersetzbar-2aedc820d80d@brauner>
+Message-ID: <20250309-unerwartet-alufolie-96aae4d20e38@brauner>
 References: <20250307005830.65293-1-ptyadav@amazon.de>
  <20250307005830.65293-2-ptyadav@amazon.de>
  <20250307-sachte-stolz-18d43ffea782@brauner>
- <20250307151417.GQ354511@nvidia.com>
+ <mafs0ikokidqz.fsf@amazon.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250307151417.GQ354511@nvidia.com>
+In-Reply-To: <mafs0ikokidqz.fsf@amazon.de>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250308_031006_696729_608111B9 
-X-CRM114-Status: GOOD (  36.89  )
+X-CRM114-CacheID: sfid-20250309_050343_447960_E4793C91 
+X-CRM114-Status: GOOD (  27.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,79 +86,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 07, 2025 at 11:14:17AM -0400, Jason Gunthorpe wrote:
-> On Fri, Mar 07, 2025 at 10:31:39AM +0100, Christian Brauner wrote:
-> > On Fri, Mar 07, 2025 at 12:57:35AM +0000, Pratyush Yadav wrote:
-> > > The File Descriptor Box (FDBox) is a mechanism for userspace to name
-> > > file descriptors and give them over to the kernel to hold. They can
-> > > later be retrieved by passing in the same name.
-> > > 
-> > > The primary purpose of FDBox is to be used with Kexec Handover (KHO).
-> > > There are many kinds anonymous file descriptors in the kernel like
-> > > memfd, guest_memfd, iommufd, etc. that would be useful to be preserved
-> > > using KHO. To be able to do that, there needs to be a mechanism to label
-> > > FDs that allows userspace to set the label before doing KHO and to use
-> > > the label to map them back after KHO. FDBox achieves that purpose by
-> > > exposing a miscdevice which exposes ioctls to label and transfer FDs
-> > > between the kernel and userspace. FDBox is not intended to work with any
-> > > generic file descriptor. Support for each kind of FDs must be explicitly
-> > > enabled.
-> > 
-> > This makes no sense as a generic concept. If you want to restore shmem
-> > and possibly anonymous inodes files via KHO then tailor the solution to
-> > shmem and anon inodes but don't make this generic infrastructure. This
-> > has zero chances to cover generic files.
+On Sat, Mar 08, 2025 at 12:10:12AM +0000, Pratyush Yadav wrote:
+> Hi Christian,
 > 
-> We need it to cover a range of FD types in the kernel like iommufd and
+> Thanks for the review!
 
-anonymous inode
+No worries, I'm not trying to be polemic. It's just that this whole
+proposed concept is pretty lightweight in terms of thinking about
+possible implications.
 
-> vfio.
-
-anonymous inode
-
+> > This use-case is covered with systemd's fdstore and it's available to
+> > unprivileged userspace. Stashing arbitrary file descriptors in the
+> > kernel in this way isn't a good idea.
 > 
-> It is not "generic" in the sense every FD in the kernel magicaly works
-> with fdbox, but that any driver/subsystem providing a FD could be
-> enlightened to support it.
-> 
-> Very much do not want the infrastructure tied to just shmem and memfd.
+> For one, it can't be arbitrary FDs, but only explicitly enabled ones.
+> Beyond that, while not intended, there is no way to stop userspace from
+> using it as a stash. Stashing FDs is a needed operation for this to
+> work, and there is no way to guarantee in advance that userspace will
+> actually use it for KHO, and not just stash it to grab back later.
 
-Anything you can reasonably want will either be an internal shmem mount,
-devtmpfs, or anonymous inodes. Anything else isn't going to work.
+As written it can't ever function as a generic file descriptor store.
 
-> 
-> > As soon as you're dealing with non-kernel internal mounts that are not
-> > guaranteed to always be there or something that depends on superblock or
-> > mount specific information that can change you're already screwed.
-> 
-> This is really targetting at anonymous or character device file
-> descriptors that don't have issues with mounts.
-> 
-> Same remark about inode permissions and what not. The successor
-> kernel would be responsible to secure the FDBOX and when it takes
-> anything out it has to relabel it if required.
-> 
-> inode #s and things can change because this is not something like CRIU
-> that would have state linked to inode numbers. The applications in the
-> sucessor kernels are already very special, they will need to cope with
-> inode number changes along with all the other special stuff they do.
-> 
-> > And struct file should have zero to do with this KHO stuff. It doesn't
-> > need to carry new operations and it doesn't need to waste precious space
-> > for any of this.
-> 
-> Yeah, it should go through file_operations in some way.
+It only allows fully privileged processes to stash file descriptors.
+Which makes it useless for generic userspace. A generic fdstore should
+have a model that makes it usable unprivileged it probably should also
+be multi-instance and work easily with namespaces. This doesn't and
+hitching it on devtmpfs and character devices is guaranteed to not work
+well with such use-cases.
 
-I'm fine with a new method. There's not going to be three new methods
-just for the sake of this special-purpose thing. And want this to be
-part of fs/ and co-maintained by fs people.
+It also has big time security issues and implications. Any file you
+stash in there will have the credentials of the opener attached to it.
+So if someone stashes anything in there you need permission mechanisms
+that ensures that Joe Random can't via FDBOX_GET_FD pull out a file for
+e.g., someone else's cgroup and happily migrate processses under the
+openers credentials or mess around some random executing binary.
 
-I'm not yet sold that this needs to be a character device. Because
-that's fundamentally limiting in how useful this can be.
+So you need a model of who is allowed to pull out what file descriptors
+from a file descriptor stash. What are the semantics for that? What's
+the security model for that? What are possible corner cases?
 
-It might be way more useful if this ended up being a separate tiny
-filesystem where such preserved files are simply shown as named entries
-that you can open instead of ioctl()ing your way through character
-devices. But I need to think about that.
+For systemd's userspace fstore that's covered by policy it can implement
+quite easily what fds it accepts. For the kernel it's a lot more
+complicated.
+
+If someone puts in file descriptors for a bunch of files in there opened
+in different mount namespaces then this will pin said mount namespaces.
+If the last process in the mount namespace exists the mount namespace
+would be cleaned up but not anymore. The mount namespace would stay
+pinned. Not wrong, but needs to be spelled out what the implications of
+this are.
+
+What if someone puts a file descriptor from devtmpfs or for /dev/fdbox
+into an fdbox? Even if that's blocked, what happens if someone creates a
+detached bind-mount of a /dev/fdbox mount and mounts it into a different
+mount namespace and then puts a file descriptor for that mount namespace
+into the fdbox? Tons of other scenarios come to mind. Ignoring when
+networking is brought into the mix as well.
+
+It's not done by just letting the kernel stash some files and getting
+them out later somehow and then see whether it's somehow useful in the
+future for other stuff. A generic globally usable fdstore is not
+happening without a clear and detailed analysis what the semantics are
+going to be.
+
+So either that work is done right from the start or that stashing files
+goes out the window and instead that KHO part is implemented in a way
+where during a KHO dump relevant userspace is notified that they must
+now serialize their state into the serialization stash. And no files are
+actually kept in there at all.
 
