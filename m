@@ -4,78 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BA9CC282EC
-	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 03:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4E03C282DE
+	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 08:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XvsmY/JjLBpjK3oBugk8F8gXHOkWN8ooUJaY0xPdhNg=; b=jqgK8hHE4y5ZFThrTFdxK94gMo
-	fLcQB4wJ41/irZJmknlkodtigc9s9rgTT0xt6XIdt1GTTbTx7XLhAHFoMECnqOvf4saTYIiwH1hI1
-	gEzurSVTV5rNPGc6QViSW2jXbMdhVjKLJuG/7EngNQdGUqcMnfw7cZLq6GUgOYD9S3y/aC1zhDC6S
-	JsQl/uDfoCGEnwNaK80C0j13UZE7ZzuscvqUyOzN0Hy1ct5/E7G6oahSX/3k9Sc2oZArKsTyrNfcZ
-	lsnVVjeH+o60NWLwEIad/rzIGBnysORH5ZqiLe8O6FIUivnUSEkt3u7/qOsRZ0Sfesr/Zpjj+lLkD
-	1sG9l+3A==;
+	bh=csWbwEiXnN3k3hOiqezshSsmwqgj7zqeo9XkzzIm5Ds=; b=rVSmhCvIMgNV99EMvE76/wwTwQ
+	FuFn/X6aUWT6I8UslW9MJ/++3ZvioBQ5YkhT7ueZF1oJSCrFl7Xjwslg3jpDaEgFqZsa2aYzH9JUY
+	+TeBh8LuL/cEiz8UodPjqr/8RPQRaTQyopZRU82VdYjRCx1ML38/UKhASI8FpxsvEyLbUnc7A4EM/
+	6vbxMY1uL/yykRNQiP+goJBQJw8dBTyGDiC+V9pLoC+By0k66RLG8IS3zUqfaO/fg5R4MWq4Jw+90
+	RZskxXl+BfnJr8p30tUO3em2c9fUGazm0B/DqlcmppNIl6N/7mea3IMk66K6ALOA4X32F7Jd5Jl05
+	m8+47ZSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trTqZ-00000001Ubh-3J7F;
-	Mon, 10 Mar 2025 03:30:31 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1trYWY-00000001v5y-2puC;
+	Mon, 10 Mar 2025 08:30:10 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trTqW-00000001Ub2-1dq6
-	for kexec@lists.infradead.org;
-	Mon, 10 Mar 2025 03:30:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741577427;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XvsmY/JjLBpjK3oBugk8F8gXHOkWN8ooUJaY0xPdhNg=;
-	b=fWf0un3OqqISm/xiRqEPI0DGoRbUezowH2OrqRO2xxThoa7lh7Efqfj/jDZB95AfuNUfF7
-	AvZuphq0jWzIs7xKrTt+xPjmGJ0rf/sQkszqctc4yGh1WX6bbLB6kOH8Wh2g6JtB99yWZk
-	sVkhNek/QYBRJEOD06DLskKi+X06JCA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-5DRDCMvMM2OaPcK41SI6KQ-1; Sun,
- 09 Mar 2025 23:30:22 -0400
-X-MC-Unique: 5DRDCMvMM2OaPcK41SI6KQ-1
-X-Mimecast-MFC-AGG-ID: 5DRDCMvMM2OaPcK41SI6KQ_1741577420
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 449081956080;
-	Mon, 10 Mar 2025 03:30:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.225])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 85B60180094A;
-	Mon, 10 Mar 2025 03:30:17 +0000 (UTC)
-Date: Mon, 10 Mar 2025 11:30:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Coiby Xu <coxu@redhat.com>,
-	dwmw2@infradead.org
-Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <Z85cxCfnRkLve16D@MiWiFi-R3L-srv>
-References: <20250207080818.129165-1-coxu@redhat.com>
+	id 1trYUq-00000001ubf-2g7l;
+	Mon, 10 Mar 2025 08:28:25 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8AAEF5C488E;
+	Mon, 10 Mar 2025 08:26:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20474C4CEED;
+	Mon, 10 Mar 2025 08:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741595303;
+	bh=7uCFQcex+j6cpQPJF/6LfRBEaDs9jns/4ey91A2Sm5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dt+61OBuhSx0XzWa7kuR97NtRZolf+Ni76hFMdBs33YLt/1k+RMsxShKq8ywE5izv
+	 Xq0lyi+y7SJzKRcmF6pLe0/pMIp2CN1NtohvIhp4Lfz70fUXaKP8fdlcvDgL6nFqFz
+	 egPccLakn6UNDZwAc49vCsDGQvAccm2S6VOGcQu87kNkGYRfcWBfvdZMHBeMdQgSn4
+	 J/L+XCc+GdJd0FpcGKyrg/IzPOfmKo79PxsSU2iqjEbBsVqKufsF8EZdPd3pBHuFq6
+	 ipnF9XH2wTyTICRsMyZozegPxkb/EOVYqYIAdiNDHZduHzAW48E8qnjKEoT8Kf1pgw
+	 OUmx0WBZnksfg==
+Date: Mon, 10 Mar 2025 10:28:02 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
+Message-ID: <Z86ikkLVHQhLmBWj@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-3-rppt@kernel.org>
+ <20250218155004.n53fcuj2lrl5rxll@master>
+ <Z7WHL_Xqgoln9oLg@kernel.org>
+ <20250224013131.fzz552bn7fs64umq@master>
+ <Z711VP45tjBi0kwx@kernel.org>
+ <20250226020915.ytxusrrl7rv4g64l@master>
+ <20250310075627.5hettrn2j2ien5bj@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250310075627.5hettrn2j2ien5bj@master>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250309_203028_524823_D0E86A9C 
-X-CRM114-Status: GOOD (  10.81  )
+X-CRM114-CacheID: sfid-20250310_012824_796553_C1BE378C 
+X-CRM114-Status: GOOD (  24.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,43 +105,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Andrew,
+Hi Wei,
 
-On 02/07/25 at 04:08pm, Coiby Xu wrote:
-......snip...
-
-Ping again.
-
-This patchset is adding a generic infrastructure for luks support in
-crash dumping, and it adds the support in x86 ARCH. Since the x86
-related change is only located in kdump only files, won't impact other
-x86 codes. Could you consider pick this into your tree?
-
-And by the way, this is a kdump only fix, not related to KHO (Kexec
-HandOver) which David suggested to adapt to earlier. Explained it here
-to remove misunderstanding. 
-
-Thanks
-Baoquan
-
->  Documentation/admin-guide/kdump/kdump.rst |  32 ++
->  arch/x86/kernel/crash.c                   |  26 +-
->  arch/x86/kernel/kexec-bzimage64.c         |  11 +
->  arch/x86/kernel/machine_kexec_64.c        |  22 ++
->  include/linux/crash_core.h                |   7 +-
->  include/linux/crash_dump.h                |   2 +
->  include/linux/kexec.h                     |  34 ++
->  kernel/Kconfig.kexec                      |  10 +
->  kernel/Makefile                           |   1 +
->  kernel/crash_dump_dm_crypt.c              | 459 ++++++++++++++++++++++
->  kernel/kexec_file.c                       |   3 +
->  11 files changed, 604 insertions(+), 3 deletions(-)
->  create mode 100644 kernel/crash_dump_dm_crypt.c
+On Mon, Mar 10, 2025 at 07:56:27AM +0000, Wei Yang wrote:
+> On Wed, Feb 26, 2025 at 02:09:15AM +0000, Wei Yang wrote:
+> >>> 
+> >>> From the above call flow and background, there are three cases when
+> >>> memblock_alloc_range_nid() would be called:
+> >>> 
+> >>>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
+> >>>   * If it is called after (2), we don't touch memblock.reserved.
+> >>>   * If it happens between (1) and (2), it looks would break the consistency of
+> >>>     nid information in memblock.reserved. Because when we use
+> >>>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
+> >>> 
+> >>> So my question is if the third case happens, would it introduce a bug? If it
+> >>> won't happen, seems we don't need to specify the nid here?
+> >>
+> >>We don't really care about proper assignment of nodes between (1) and (2)
+> >>from one side and the third case does not happen on the other side. Nothing
+> >>should call membloc_alloc() after memblock_free_all(). 
+> >>
+> >
+> >My point is if no one would call memblock_alloc() after memblock_free_all(),
+> >which set nid in memblock.reserved properly, it seems not necessary to do
+> >__memblock_reserve() with exact nid during memblock_alloc()? 
+> >
+> >As you did __memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN) in this
+> >patch.
+> >
 > 
+> Hi, Mike
 > 
-> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> Do you think my understanding is reasonable?
+
+Without KHO it is indeed not strictly necessary to set nid during memblock_alloc().
+But since we anyway have nid parameter in memblock_alloc_range_nid() and it
+anyway propagates to memblock_add_range(), I think it's easier and cleaner
+to pass nid to __memblock_reserve() there.
+
+And for KHO estimation of scratch size it is important to have nid assigned to
+the reserved areas before memblock_free_all(), at least for the allocations
+that request particular nid explicitly.
+ 
 > -- 
-> 2.48.1
-> 
+> Wei Yang
+> Help you, Help me
 
+-- 
+Sincerely yours,
+Mike.
 
