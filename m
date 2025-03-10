@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A099C3ABA0
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF423C28B30
 	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,35 +12,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1b7amWEdfOMn3dBa5y8kCkl4gC/rL4o8XC5y5Q7zNnY=; b=dT7dIU42fkaegHCYGoRYk60Pi1
-	hVql4tJYrsw9KcvfasxFeYtkEV/cgaz5dKk8PHpM13k3MoHcQ5YCEseGn07ScKWpHAOh+KICE55wR
-	436KCyR6K26N3CxDIf72rybylEAp4XohbUbUjk9n+ilcuS8De/4x+DqVkVmZNnn8D8PhOV8cp75HU
-	ruklNPWgG5sF2alt4rj5GsxbMOwX7mzyNovEAq4divhA6psWbwnrVoiOtmVimnnFu6iY1x9MQ/rZi
-	Y651uu12TKdZWXzbVlZPKA0D4gAPJy5AHzwKOs66pXYdPFHnssMENuVQmcp8kF1Vt47It4zvJhH+E
-	olXG7q3g==;
+	bh=9sCYhPB2JXvpHRR7mGAnOD5wFhzVOzlRXeW9jewkrPs=; b=Q4NbtPqCpVIteeJsRyAgmxiNG0
+	NqFL86QG77hM3zC5VQ1pxLlTZpBBc0W4Tyj390yRiz9+oJNpDrdGCYJnG8cgMvBuAD4+6UMF48Neb
+	ogIYZmmAqMk1hkmtTQEwEH6AEt7upeTPCDXhbwk8dvAyp0+1RHgPfPgW8KyUOiWGeH513CI7Qjxjs
+	T9kA9ACrwdFPd+4dbchOTvIkawVxBO35DDWJd2JVvVdNwdAGM+FmnGRuChSohZ7myEFxtuaUa/kJ5
+	cEeGeaFAKVt390/p0yRx/voD5tCPDr1+ZZu1LF5rp5XoR5hn4OvB0skZ5tJYyrzRwiXQ9RMDXB5Nz
+	KRWzx4KA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trc41-00000002ZQk-1G1h;
-	Mon, 10 Mar 2025 12:16:57 +0000
+	id 1trc42-00000002ZRk-2Jgf;
+	Mon, 10 Mar 2025 12:16:58 +0000
 Received: from forwardcorp1a.mail.yandex.net ([178.154.239.72])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trbrd-00000002WDz-2wp8
+	id 1trbri-00000002WHQ-14r2
 	for kexec@lists.infradead.org;
-	Mon, 10 Mar 2025 12:04:12 +0000
+	Mon, 10 Mar 2025 12:04:15 +0000
 Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 03EC360B5B;
-	Mon, 10 Mar 2025 15:04:04 +0300 (MSK)
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id D8CAE60EAF;
+	Mon, 10 Mar 2025 15:04:12 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-wpbfwx9m;
-	Mon, 10 Mar 2025 15:04:02 +0300
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-nBaQjWYT;
+	Mon, 10 Mar 2025 15:04:12 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1741608243;
-	bh=1b7amWEdfOMn3dBa5y8kCkl4gC/rL4o8XC5y5Q7zNnY=;
+	s=default; t=1741608252;
+	bh=9sCYhPB2JXvpHRR7mGAnOD5wFhzVOzlRXeW9jewkrPs=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=YmAdzPZ6RtAzCKFkm/3kw3wrdqegk5mcA5h8cUxsfgsVjemo8cq/ZFPdS717vlMeI
-	 eosrMAMlEZ1IzlszEE9Z4z08VMWAer6yN0gi/IBi+yJJ9S/5qQGFDAuRRnUR03yAJO
-	 fX9DMIwj0e2Fd0FPp8DyK3kUZU8pVYI4/J6Kb2vo=
+	b=tKVDYRr1Fc9PZMG5kcffLo5ML52XYvjB9fT2RP6/B4ZrI68qC5XErlG3jfkkQS0xQ
+	 LrPykZVjqAxqEQcIvjW8Q1fYRGUY3Nxe3UrpdFO1uG7CnyBvoqCzCxivetoS5oBrG4
+	 Z3/CxdprsbnC7nsU6PIIrdFT3yANX6Z3kGq3BFqU=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -62,17 +62,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	David Rientjes <rientjes@google.com>,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [PATCH v2 1/7] kstate: Add kstate - a mechanism to describe and migrate kernel state across kexec
-Date: Mon, 10 Mar 2025 13:03:12 +0100
-Message-ID: <20250310120318.2124-2-arbn@yandex-team.com>
+Subject: [PATCH v2 5/7] x86, kstate: Add the ability to preserve memory pages across kexec.
+Date: Mon, 10 Mar 2025 13:03:16 +0100
+Message-ID: <20250310120318.2124-6-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250310120318.2124-1-arbn@yandex-team.com>
 References: <20250310120318.2124-1-arbn@yandex-team.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250310_050410_092616_E13BD9AA 
-X-CRM114-Status: GOOD (  37.84  )
+X-CRM114-CacheID: sfid-20250310_050414_465129_BDA6C04E 
+X-CRM114-Status: GOOD (  19.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,564 +87,255 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-KSTATE (kernel state) is a mechanism to describe internal kernel state
-save it into the memory and restore the state after kexec in new kernel.
+This adds ability to specify page of memory that kstate needs to
+preserve across kexec.
 
-The end goal here and the main use case for this is to be able to
-update host kernel under VMs with VFIO pass-through devices running
-on that host.
-
-The idea behind KSTATE resembles QEMU's migration framework [1], which
-solves quite similar problem - migrate state of VM/emulated devices
-across different versions of QEMU.
-
-This and following patches try to establish some basic infrastructure
-to describe and migrate in-kernel data structures.
-
-State of kernel data (usually it's some struct) is described by the
-'struct kstate_description' containing the array of individual
-fields descpriptions - 'struct kstate_field'. Each field
-has set of bits in ->flags which instructs how to save/restore
-a certain field of the struct. E.g. (see kstate.h for the full list):
-    KS_BASE_TYPE flag tells that field can be just copied by value,
-
-    KS_POINTER means that the struct member is a pointer to the actual
-     data, so it needs to be dereference before saving/restoring data
-     to/from kstate data steam.
-
-kstate_register() call accepts kstate_description along with an instance
-of an object and registers it in the global 'states' list.
-
-During kexec reboot phase we go through the list of 'kstate_description's
-and each instance of kstate_description forms the 'struct kstate_entry'
-which save into the kstate's data stream.
-
-The 'kstate_entry' contains information like ID of kstate_description, version
-of it, size of migration data and the data itself. The ->data is formed in
-accordance to the kstate_field's of the corresponding kstate_description.
-
-After the reboot, when the kstate_register() called it parses migration
-stream, finds the appropriate 'kstate_entry' and restores the contents of
-the object in accordance with kstate_description and ->fields.
-
- [1] https://www.qemu.org/docs/master/devel/migration/main.html#vmstate
+kstate_register_page() stores struct page in the special list of
+'struct kpage_state's. At kexec reboot stage this list iterated, pfns
+saved into kstate's data stream. The new kernel after kexec reads
+pfns from the stream and marks memory as reserved to keep it
+intact.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
- include/linux/kstate.h | 178 ++++++++++++++++++++++++++
- kernel/Kconfig.kexec   |  13 ++
- kernel/Makefile        |   1 +
- kernel/kstate.c        | 282 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 474 insertions(+)
- create mode 100644 include/linux/kstate.h
- create mode 100644 kernel/kstate.c
+ include/linux/kstate.h |  30 ++++++++++
+ kernel/kexec_core.c    |   3 +-
+ kernel/kstate.c        | 124 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 156 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-new file mode 100644
-index 000000000000..4fc01e535bc0
---- /dev/null
+index ae583d090111..36cfefd87572 100644
+--- a/include/linux/kstate.h
 +++ b/include/linux/kstate.h
-@@ -0,0 +1,178 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _KSTATE_H
-+#define _KSTATE_H
-+
-+#include <linux/atomic.h>
-+#include <linux/build_bug.h>
-+#include <linux/list.h>
-+#include <linux/stringify.h>
-+
-+struct kstate_description;
-+struct kstate_stream;
-+struct kimage;
-+
-+enum kstate_flags {
-+
-+	/*
-+	 * The struct member at 'obj + kstate_field.offset' is some basic
-+	 * type, just copy it by value. The size is kstate_field->size.
-+	 */
-+
-+	KS_BASE_TYPE = (1 << 0),
-+
-+	/*
-+	 * The struct member at 'obj + kstate_field.offset' is a pointer
-+	 * to the actual data (e.g. struct a { int *b; }).
-+	 * save_kstate() will dereference the pointer to get the actual data
-+	 * and store it to the stream. restore_kstate() will copy the data from
-+	 * the stream to wherever the pointer points to.
-+	 */
-+	KS_POINTER = (1 << 1),
-+
-+	/*
-+	 * The struct member at 'obj + kstate_field.offset' is another struct.
-+	 * kstate_field->ksd points to 'kstate_description' of that struct.
-+	 */
-+	KS_STRUCT = (1 << 2),
-+
-+	/*
-+	 * Some non-trivial field that requires custom kstate_field->save()
-+	 * ->restore() callbacks to save/restore data.
-+	 */
-+	KS_CUSTOM = (1 << 3),
-+
-+	/*
-+	 * The field is a array of kstate_field->count() pointers
-+	 * (e.g. struct a { uint8_t *b[]; }). Dereference each array entry
-+	 * before store/restore data.
-+	 */
-+	KS_ARRAY_OF_POINTER = (1 << 4),
-+
-+	/*
-+	 * The field is a pointer to vmemmap or linear memory (determined by
-+	 * kstate_field->addr_type). This is used for pointers to persistent
-+	 * pages/data. Store offset from the start of the area instead of
-+	 * pointer itself, so we could defeat KASLR on restore phase (by adding
-+	 * new kernel's corresponding offset).
-+	 */
-+	KS_ADDRESS = (1 << 5),
-+
-+	/* Marks the end of fields list */
-+	KS_END = (1UL << 31),
-+};
-+
-+enum kstate_addr_type {
-+	KS_VMEMMAP_ADDR,
-+	KS_LINEAR_ADDR,
-+};
-+
-+struct kstate_stream {
-+	void *start;
-+	void *pos;
-+	size_t size;
-+};
-+
-+struct kstate_field {
-+	const char *name;
-+	size_t offset;
-+	size_t size;
-+	enum kstate_flags flags;
-+	const struct kstate_description *ksd;
-+	enum kstate_addr_type addr_type;
-+	int version_id;
-+	int (*restore)(struct kstate_stream *stream, void *obj,
-+		const struct kstate_field *field);
-+	int (*save)(struct kstate_stream *stream, void *obj,
-+		const struct kstate_field *field);
-+	int (*count)(void);
-+};
-+
-+enum kstate_ids {
-+	KSTATE_LAST_ID = -1,
-+};
-+
-+struct kstate_description {
-+	const char *name;
-+	enum kstate_ids id;
-+	atomic_t instance_id;
-+	int version_id;
-+	struct list_head state_list;
-+
-+	const struct kstate_field *fields;
-+};
-+
-+struct state_entry {
-+	u64 id;
-+	struct list_head list;
-+	struct kstate_description *kstd;
-+	void *obj;
-+};
-+
-+extern int kstate_save_data(struct kstate_stream *stream, void *val, size_t size);
-+
-+static inline bool kstate_get_byte(struct kstate_stream *stream)
-+{
-+	bool ret = *(u8 *)stream->pos;
-+	stream->pos++;
-+        return ret;
-+}
-+
-+static inline unsigned long kstate_get_ulong(struct kstate_stream *stream)
-+{
-+	unsigned long ret = *(unsigned long *)stream->pos;
-+	stream->pos += sizeof(unsigned long);
-+        return ret;
-+}
-+
-+#ifdef CONFIG_KSTATE
-+
-+int kstate_save_state(void);
-+void free_kstate_stream(void);
-+
-+int kstate_register(struct kstate_description *state, void *obj);
-+
-+struct kstate_entry;
-+int save_kstate(struct kstate_stream *stream, int id,
-+		const struct kstate_description *kstate,
-+		void *obj);
-+void restore_kstate(struct kstate_stream *stream, int id,
-+		const struct kstate_description *kstate, void *obj);
-+
-+#else
-+
-+#define kstate_register(state, obj)
-+
-+static inline int kstate_save_state(void) { return 0; }
-+static inline void free_kstate_stream(void) { }
-+
-+#endif
-+
-+
-+#define KSTATE_BASE_TYPE(_f, _state, _type) {		\
-+	.name = (__stringify(_f)),			\
-+	.size = sizeof(_type) + BUILD_BUG_ON_ZERO(	\
-+			!__same_type(typeof_member(_state, _f), _type)),\
-+	.flags = KS_BASE_TYPE,				\
-+	.offset = offsetof(_state, _f),			\
-+}
-+
-+#define KSTATE_POINTER(_f, _state) {			\
-+		.name = (__stringify(_f)),		\
-+		.size = sizeof(*(((_state *)0)->_f)),	\
-+		.flags = KS_POINTER,			\
-+		.offset = offsetof(_state, _f),		\
-+	}
-+
-+#define KSTATE_ADDRESS(_f, _state, _addr_type) {	\
-+		.name = (__stringify(_f)),		\
-+		.size = sizeof(*(((_state *)0)->_f)),	\
-+		.addr_type = (_addr_type),		\
-+		.flags = KS_ADDRESS,			\
-+		.offset = offsetof(_state, _f),		\
-+	}
-+
-+#define KSTATE_END_OF_LIST() {	\
-+		.flags = KS_END,\
-+	}
-+
-+#endif
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 4d111f871951..480dc156b08b 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -151,4 +151,17 @@ config CRASH_MAX_MEMORY_RANGES
- 	  the computation behind the value provided through the
- 	  /sys/kernel/crash_elfcorehdr_size attribute.
+@@ -88,6 +88,8 @@ struct kstate_field {
+ };
  
-+config ARCH_HAS_KSTATE
-+	bool
+ enum kstate_ids {
++	KSTATE_RSVD_MEM_ID = 1,
++	KSTATE_STRUCT_PAGE_ID,
+ 	KSTATE_LAST_ID = -1,
+ };
+ 
+@@ -124,6 +126,8 @@ static inline unsigned long kstate_get_ulong(struct kstate_stream *stream)
+         return ret;
+ }
+ 
++extern struct kstate_description page_state;
 +
-+config KSTATE
-+	bool "Migrate internal kernel state across kexec"
-+	default n
-+	depends on ARCH_HAS_KSTATE
-+	depends on KEXEC_FILE
-+	help
-+	  KSTATE (kernel state) is a mechanism to describe internal kernel
-+	  state, save it into the memory and restore the state after kexec
-+	  in new kernel.
+ #ifdef CONFIG_KSTATE
+ 
+ void kstate_init(void);
+@@ -141,6 +145,12 @@ void restore_kstate(struct kstate_stream *stream, int id,
+ 		const struct kstate_description *kstate, void *obj);
+ int kstate_load_migrate_buf(struct kimage *image);
+ 
++int kstate_page_save(struct kstate_stream *stream, void *obj,
++		const struct kstate_field *field);
++int kstate_register_page(struct page *page, int order);
 +
- endmenu
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 87866b037fbe..6bdf947fc84f 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -75,6 +75,7 @@ obj-$(CONFIG_CRASH_DUMP) += crash_core.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
- obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-+obj-$(CONFIG_KSTATE) += kstate.o
- obj-$(CONFIG_BACKTRACE_SELF_TEST) += backtracetest.o
- obj-$(CONFIG_COMPAT) += compat.o
- obj-$(CONFIG_CGROUPS) += cgroup/
-diff --git a/kernel/kstate.c b/kernel/kstate.c
-new file mode 100644
-index 000000000000..a73a9a42e55b
---- /dev/null
-+++ b/kernel/kstate.c
-@@ -0,0 +1,282 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/ctype.h>
-+#include <linux/kexec.h>
++bool kstate_range_is_preserved(unsigned long start, unsigned long end);
++
+ #else
+ 
+ static inline void kstate_init(void) { }
+@@ -150,6 +160,11 @@ static inline int kstate_save_state(void) { return 0; }
+ static inline void free_kstate_stream(void) { }
+ 
+ static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
++
++static inline bool kstate_range_is_preserved(unsigned long start,
++					unsigned long end)
++{ return 0; }
++
+ #endif
+ 
+ 
+@@ -176,6 +191,21 @@ static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
+ 		.offset = offsetof(_state, _f),		\
+ 	}
+ 
++#define KSTATE_PAGE(_f, _state)				\
++	{						\
++		.name = "page",				\
++		.flags = KS_CUSTOM,			\
++		.offset = offsetof(_state, _f),		\
++		.save = kstate_page_save,		\
++	},						\
++	KSTATE_ADDRESS(_f, _state, KS_VMEMMAP_ADDR),	\
++	{ 						\
++		.name = "struct_page",			\
++		.flags = KS_STRUCT | KS_POINTER,	\
++		.offset = offsetof(_state, _f),		\
++		.ksd = &page_state,			\
++	}
++
+ #define KSTATE_END_OF_LIST() {	\
+ 		.flags = KS_END,\
+ 	}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 7c79addeb93b..5d001b7a9e44 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -13,6 +13,7 @@
+ #include <linux/slab.h>
+ #include <linux/fs.h>
+ #include <linux/kexec.h>
 +#include <linux/kstate.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/vmalloc.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/highmem.h>
+@@ -261,7 +262,7 @@ int kimage_is_destination_range(struct kimage *image,
+ 			return 1;
+ 	}
+ 
+-	return 0;
++	return kstate_range_is_preserved(start, end);
+ }
+ 
+ int kimage_is_control_page(struct kimage *image,
+diff --git a/kernel/kstate.c b/kernel/kstate.c
+index d35996287b76..68a1272abceb 100644
+--- a/kernel/kstate.c
++++ b/kernel/kstate.c
+@@ -309,6 +309,13 @@ int kstate_register(struct kstate_description *state, void *obj)
+ 	return 0;
+ }
+ 
++int kstate_page_save(struct kstate_stream *stream, void *obj,
++		const struct kstate_field *field)
++{
++	kstate_register_page(*(struct page **)obj, 0);
++	return 0;
++}
 +
-+static LIST_HEAD(states);
-+
-+struct kstate_entry {
-+	int state_id;
-+	int version_id;
-+	int instance_id;
-+	int size;
-+	DECLARE_FLEX_ARRAY(u8, data);
+ static int __init setup_kstate(char *arg)
+ {
+ 	char *end;
+@@ -323,7 +330,124 @@ static int __init setup_kstate(char *arg)
+ }
+ early_param("kstate_stream", setup_kstate);
+ 
++/*
++ * TODO: probably should use folio instead/in addition,
++ * also will need to think/decide what fields
++ * to preserve or not
++ */
++struct kstate_description page_state = {
++	.name = "struct_page",
++	.id = KSTATE_STRUCT_PAGE_ID,
++	.state_list = LIST_HEAD_INIT(page_state.state_list),
++	.fields = (const struct kstate_field[]) {
++		KSTATE_BASE_TYPE(_mapcount, struct page, atomic_t),
++		KSTATE_BASE_TYPE(_refcount, struct page, atomic_t),
++		KSTATE_END_OF_LIST()
++	},
 +};
 +
-+struct kstate_stream kstate_stream;
++struct state_entry preserved_se;
 +
-+static unsigned long get_addr_offset(const struct kstate_field *field)
++struct preserved_pages {
++	unsigned int nr_pages;
++	struct list_head list;
++};
++struct kpage_state {
++	struct list_head list;
++	u8 order;
++	struct page *page;
++};
++
++struct preserved_pages preserved_pages = {
++	.list = LIST_HEAD_INIT(preserved_pages.list)
++};
++
++int kstate_register_page(struct page *page, int order)
 +{
-+	switch (field->addr_type) {
-+	case KS_VMEMMAP_ADDR:
-+		return VMEMMAP_START;
-+	case KS_LINEAR_ADDR:
-+		return PAGE_OFFSET;
-+	default:
-+		WARN_ON(1);
-+	}
-+	return 0;
-+}
++	struct kpage_state *state;
 +
-+static int alloc_space(struct kstate_stream *stream, size_t size)
-+{
-+	void *new_start;
-+	size_t new_size;
-+	size_t cur_size = stream->pos - stream->start;
-+
-+	size = size + 4; /* Always alloc extra for KSTATE_LAST_ID */
-+	if (cur_size + size < stream->size)
-+		return 0;
-+
-+	new_size = PAGE_ALIGN(cur_size + size);
-+
-+	new_start = vrealloc(stream->start, new_size, GFP_KERNEL);
-+	if (!new_start)
++	state = kmalloc(sizeof(*state), GFP_KERNEL);
++	if (!state)
 +		return -ENOMEM;
 +
-+	stream->start = new_start;
-+	stream->size = new_size;
-+	stream->pos = stream->start + cur_size;
++	state->page = page;
++	state->order = order;
++	list_add(&state->list, &preserved_pages.list);
++	preserved_pages.nr_pages++;
 +	return 0;
 +}
 +
-+int kstate_save_data(struct kstate_stream *stream, void *val, size_t size)
++static int kstate_pages_save(struct kstate_stream *stream, void *obj,
++			const struct kstate_field *field)
 +{
++	struct kpage_state *p_state;
 +	int ret;
 +
-+	ret = alloc_space(stream, size);
-+	if (ret)
-+		return ret;
-+	memcpy(stream->pos, val, size);
-+	stream->pos += size;
-+	return 0;
-+}
++	list_for_each_entry(p_state, &preserved_pages.list, list) {
++		unsigned long paddr = page_to_phys(p_state->page);
 +
-+int save_kstate(struct kstate_stream *stream, int id,
-+		const struct kstate_description *kstate,
-+		void *obj)
-+{
-+	const struct kstate_field *field = kstate->fields;
-+	struct kstate_entry *ke;
-+	unsigned long ke_off;
-+	int ret = 0;
-+
-+	ret = alloc_space(stream, sizeof(*ke));
-+	if (ret)
-+		goto err;
-+
-+	ke_off = stream->pos - stream->start;
-+	ke = stream->pos;
-+	stream->pos += sizeof(*ke);
-+
-+	ke->state_id = kstate->id;
-+	ke->version_id = kstate->version_id;
-+	ke->instance_id = id;
-+
-+	while (field->flags != KS_END) {
-+		void *first,  *cur;
-+		int n_elems = 1;
-+		int size, i;
-+
-+		first = obj + field->offset;
-+
-+		if (field->flags & KS_POINTER)
-+			first = *(void **)(obj + field->offset);
-+		if (field->count)
-+			n_elems = field->count();
-+		size = field->size;
-+		for (i = 0; i < n_elems; i++) {
-+			cur = first + i * size;
-+
-+			if (field->flags & KS_ARRAY_OF_POINTER)
-+				cur = *(void **)cur;
-+
-+			if (field->flags & KS_STRUCT) {
-+				ret = save_kstate(stream, 0, field->ksd, cur);
-+				if (ret)
-+					goto err;
-+			} else if (field->flags & KS_CUSTOM) {
-+				if (field->save) {
-+					ret = field->save(stream, cur, field);
-+					if (ret)
-+						goto err;
-+				}
-+			} else if (field->flags & (KS_BASE_TYPE|KS_POINTER)) {
-+				ret = kstate_save_data(stream, cur, size);
-+				if (ret)
-+					goto err;
-+			} else if (field->flags & KS_ADDRESS) {
-+				void *addr_offset = *(void **)cur
-+					- get_addr_offset(field);
-+				ret = kstate_save_data(stream, &addr_offset,
-+						sizeof(addr_offset));
-+				if (ret)
-+					goto err;
-+			} else
-+				WARN_ON_ONCE(1);
-+		}
-+		field++;
-+
-+	}
-+
-+	ke = stream->start + ke_off;
-+	ke->size = (stream->pos - stream->start) - (ke_off + sizeof(*ke));
-+err:
-+	if (ret)
-+		pr_err("kstate: save of state %s failed\n", kstate->name);
-+
-+	return ret;
-+}
-+
-+static int alloc_kstate_stream(void)
-+{
-+	size_t size = PAGE_SIZE;
-+	void *buf;
-+
-+	buf = vzalloc(size);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	kstate_stream.size = size;
-+	kstate_stream.start = kstate_stream.pos = buf;
-+	return 0;
-+}
-+
-+void free_kstate_stream(void)
-+{
-+	vfree(kstate_stream.start);
-+	kstate_stream.start = NULL;
-+	kstate_stream.size = 0;
-+}
-+
-+int kstate_save_state(void)
-+{
-+	struct state_entry *se;
-+	struct kstate_entry *ke;
-+	int ret;
-+
-+	ret = alloc_kstate_stream();
-+	if (ret)
-+		return ret;
-+
-+	list_for_each_entry(se, &states, list) {
-+		ret = save_kstate(&kstate_stream, se->id, se->kstd, se->obj);
++		ret = kstate_save_data(stream, &p_state->order,
++				sizeof(p_state->order));
++		if (ret)
++			return ret;
++		ret = kstate_save_data(stream, &paddr, sizeof(paddr));
 +		if (ret)
 +			return ret;
 +	}
-+	ke = kstate_stream.pos;
-+	ke->state_id = KSTATE_LAST_ID;
 +	return 0;
 +}
 +
-+void restore_kstate(struct kstate_stream *stream, int id,
-+		const struct kstate_description *kstate, void *obj)
++bool kstate_range_is_preserved(unsigned long start, unsigned long end)
 +{
-+	const struct kstate_field *field = kstate->fields;
-+	struct kstate_entry *ke = stream->pos;
-+	stream->pos = ke->data;
++	struct kpage_state *p_state;
 +
-+	WARN_ONCE(ke->version_id != kstate->version_id, "version mismatch %d %d\n",
-+		ke->version_id, kstate->version_id);
-+
-+	WARN_ONCE(ke->instance_id != id, "instance id mismatch %d %d\n",
-+		ke->instance_id, id);
-+
-+	while (field->flags != KS_END) {
-+		void *first, *cur;
-+		int n_elems = 1;
-+		int size, i;
-+
-+		first = obj + field->offset;
-+		if (field->flags & KS_POINTER)
-+			first = *(void **)(obj + field->offset);
-+		if (field->count)
-+			n_elems = field->count();
-+		size = field->size;
-+		for (i = 0; i < n_elems; i++) {
-+			cur = first + i * size;
-+
-+			if (field->flags & KS_ARRAY_OF_POINTER)
-+				cur = *(void **)cur;
-+
-+			if (field->flags & KS_STRUCT)
-+				restore_kstate(stream, 0, field->ksd, cur);
-+			else if (field->flags & KS_CUSTOM) {
-+				if (field->restore)
-+					field->restore(stream, cur, field);
-+			} else if (field->flags & (KS_BASE_TYPE | KS_POINTER)) {
-+				memcpy(cur, stream->pos, size);
-+				stream->pos += size;
-+			} else if (field->flags & KS_ADDRESS) {
-+				*(void **)cur = (*(void **)stream->pos) +
-+					get_addr_offset(field);
-+				stream->pos += sizeof(void *);
-+			} else
-+				WARN_ON_ONCE(1);
-+
-+		}
-+		field++;
++	list_for_each_entry(p_state, &preserved_pages.list, list) {
++		unsigned long pstart, pend;
++		pstart = page_to_boot_pfn(p_state->page);
++		pend = pstart + (p_state->order << PAGE_SHIFT) - 1;
++		if ((end >= pstart) && (start <= pend))
++			return 1;
 +	}
-+}
-+
-+static void restore_migrate_state(unsigned long kstate_data,
-+				struct state_entry *se)
-+{
-+	struct kstate_stream stream;
-+	struct kstate_entry *ke;
-+
-+	if (kstate_data == -1)
-+		return;
-+
-+	ke = (struct kstate_entry *)phys_to_virt(kstate_data);
-+	if (WARN_ON_ONCE(ke->state_id == 0))
-+		return;
-+
-+	stream.start = stream.pos = ke;
-+	while (ke->state_id != KSTATE_LAST_ID) {
-+		if (ke->state_id != se->kstd->id ||
-+		    ke->instance_id != se->id) {
-+			ke = (struct kstate_entry *)(ke->data + ke->size);
-+			continue;
-+		}
-+		stream.pos = ke;
-+		restore_kstate(&stream, se->id, se->kstd, se->obj);
-+		ke = (struct kstate_entry *)(ke->data + ke->size);
-+	}
-+}
-+
-+static void __kstate_register(struct kstate_description *state, void *obj,
-+			struct state_entry *se)
-+{
-+	se->kstd = state;
-+	se->id = atomic_inc_return(&state->instance_id);
-+	se->obj = obj;
-+	list_add(&se->list, &states);
-+	restore_migrate_state(0 /*migrate_stream_addr*/, se);
-+}
-+
-+int kstate_register(struct kstate_description *state, void *obj)
-+{
-+	struct state_entry *se;
-+
-+	se = kmalloc(sizeof(*se), GFP_KERNEL);
-+	if (!se)
-+		return -ENOMEM;
-+
-+	__kstate_register(state, obj, se);
 +	return 0;
 +}
 +
++static int __init kstate_pages_restore(struct kstate_stream *stream, void *obj,
++			const struct kstate_field *field)
++{
++	struct preserved_pages *preserved_pages = obj;
++	int nr_pages, i;
++
++	nr_pages = preserved_pages->nr_pages;
++	for (i = 0; i < nr_pages; i++) {
++		int order = kstate_get_byte(stream);
++		unsigned long phys = kstate_get_ulong(stream);
++
++		memblock_reserve(phys, PAGE_SIZE << order);
++	}
++	return 0;
++}
++
++struct kstate_description kstate_preserved_mem = {
++	.name = "preserved_range",
++	.id = KSTATE_RSVD_MEM_ID,
++	.state_list = LIST_HEAD_INIT(kstate_preserved_mem.state_list),
++	.fields = (const struct kstate_field[]) {
++		KSTATE_BASE_TYPE(nr_pages, struct preserved_pages, unsigned int),
++		{
++			.name = "pages",
++			.flags = KS_CUSTOM,
++			.size = sizeof(struct preserved_pages),
++			.save = kstate_pages_save,
++			.restore = kstate_pages_restore,
++		},
++
++		KSTATE_END_OF_LIST()
++	},
++};
++
+ void __init kstate_init(void)
+ {
+ 	memblock_reserve(kstate_stream_addr, kstate_size);
++	__kstate_register(&kstate_preserved_mem, &preserved_pages,
++			&preserved_se);
+ }
 -- 
 2.45.3
 
