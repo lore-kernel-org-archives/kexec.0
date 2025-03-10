@@ -4,93 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4E03C282DE
-	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 08:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FEBFC282DE
+	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=csWbwEiXnN3k3hOiqezshSsmwqgj7zqeo9XkzzIm5Ds=; b=rVSmhCvIMgNV99EMvE76/wwTwQ
-	FuFn/X6aUWT6I8UslW9MJ/++3ZvioBQ5YkhT7ueZF1oJSCrFl7Xjwslg3jpDaEgFqZsa2aYzH9JUY
-	+TeBh8LuL/cEiz8UodPjqr/8RPQRaTQyopZRU82VdYjRCx1ML38/UKhASI8FpxsvEyLbUnc7A4EM/
-	6vbxMY1uL/yykRNQiP+goJBQJw8dBTyGDiC+V9pLoC+By0k66RLG8IS3zUqfaO/fg5R4MWq4Jw+90
-	RZskxXl+BfnJr8p30tUO3em2c9fUGazm0B/DqlcmppNIl6N/7mea3IMk66K6ALOA4X32F7Jd5Jl05
-	m8+47ZSA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=dCfHmi7JSqwfRn9hK0doUgOfig37g7tF5ZyIee0j3QQ=; b=lHBeNHvPCAJVQfSrOdy5M3Pn2D
+	Nvz2nLC7nabz0xaNhSA67dqtpaSUS6/HrbVePk004hqrtmxa5Pg1WDwjgct/WT9a/oGiVY7I2x5gd
+	6MPfC78bipA7BiNBqjcIF+Qr0+aKdr3PJ/FNwqXW4dEiSNdk3aLTOEmtkDz5TLEv6sprNgPK2vbuR
+	DaLjPRfH8VYTzEVKItADCEsQ8gdc/gKZ1ZoYGnDLkxEPEXk6fHMaMOvvFo+pGPyn2voYKTyLhU/Vv
+	YUuhGdNiHuqENl1HWAk6HTG1COr1qfh8xpB95nbYoOeT4GI+6eHH10AieHUxVTu0eVfh72K7HF4/l
+	4wMQb8Og==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trYWY-00000001v5y-2puC;
-	Mon, 10 Mar 2025 08:30:10 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1trc41-00000002ZQr-30ba;
+	Mon, 10 Mar 2025 12:16:57 +0000
+Received: from forwardcorp1a.mail.yandex.net ([2a02:6b8:c0e:500:1:45:d181:df01])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trYUq-00000001ubf-2g7l;
-	Mon, 10 Mar 2025 08:28:25 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 8AAEF5C488E;
-	Mon, 10 Mar 2025 08:26:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20474C4CEED;
-	Mon, 10 Mar 2025 08:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741595303;
-	bh=7uCFQcex+j6cpQPJF/6LfRBEaDs9jns/4ey91A2Sm5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dt+61OBuhSx0XzWa7kuR97NtRZolf+Ni76hFMdBs33YLt/1k+RMsxShKq8ywE5izv
-	 Xq0lyi+y7SJzKRcmF6pLe0/pMIp2CN1NtohvIhp4Lfz70fUXaKP8fdlcvDgL6nFqFz
-	 egPccLakn6UNDZwAc49vCsDGQvAccm2S6VOGcQu87kNkGYRfcWBfvdZMHBeMdQgSn4
-	 J/L+XCc+GdJd0FpcGKyrg/IzPOfmKo79PxsSU2iqjEbBsVqKufsF8EZdPd3pBHuFq6
-	 ipnF9XH2wTyTICRsMyZozegPxkb/EOVYqYIAdiNDHZduHzAW48E8qnjKEoT8Kf1pgw
-	 OUmx0WBZnksfg==
-Date: Mon, 10 Mar 2025 10:28:02 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	id 1trbre-00000002WEb-3B93
+	for kexec@lists.infradead.org;
+	Mon, 10 Mar 2025 12:04:13 +0000
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 5958960DCE;
+	Mon, 10 Mar 2025 15:04:08 +0300 (MSK)
+Received: from dellarbn.yandex.net (unknown [10.214.35.248])
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-61iTaEl4;
+	Mon, 10 Mar 2025 15:04:07 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
+	s=default; t=1741608247;
+	bh=dCfHmi7JSqwfRn9hK0doUgOfig37g7tF5ZyIee0j3QQ=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=Zt+/vVXDKpSCu8KDQZJ8u8uEpxL5R4fTTyn3U+HF42BdMdqDXozWrf/zuiX14bZkH
+	 oTU0E2qHEUTnKlbABGK7W3Ny4IiGns9mKIZhLDvhYoLMNrAZ/l3Mgu8cIFmpSlrxFX
+	 CW2cOcIjkxXIsVbLsjrUPNEkV+dqhsmZyuQeWDOQ=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
+From: Andrey Ryabinin <arbn@yandex-team.com>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+	James Gowans <jgowans@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	linux-mm@kvack.org,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <Z86ikkLVHQhLmBWj@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
- <Z7WHL_Xqgoln9oLg@kernel.org>
- <20250224013131.fzz552bn7fs64umq@master>
- <Z711VP45tjBi0kwx@kernel.org>
- <20250226020915.ytxusrrl7rv4g64l@master>
- <20250310075627.5hettrn2j2ien5bj@master>
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	David Rientjes <rientjes@google.com>,
+	Andrey Ryabinin <arbn@yandex-team.com>
+Subject: [PATCH v2 3/7] kexec: exclude control pages from the destination addresses
+Date: Mon, 10 Mar 2025 13:03:14 +0100
+Message-ID: <20250310120318.2124-4-arbn@yandex-team.com>
+X-Mailer: git-send-email 2.45.3
+In-Reply-To: <20250310120318.2124-1-arbn@yandex-team.com>
+References: <20250310120318.2124-1-arbn@yandex-team.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310075627.5hettrn2j2ien5bj@master>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250310_012824_796553_C1BE378C 
-X-CRM114-Status: GOOD (  24.87  )
+X-CRM114-CacheID: sfid-20250310_050410_965206_CEDC6133 
+X-CRM114-Status: GOOD (  16.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,54 +87,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Wei,
+Kexec relies on control pages allocated after all destination ranges
+have been chosen. To be able to preserve memory across kexec we need
+to be able to pick destination ranges after the control pages
+allocated. Add check for control pages to locate_mem_hole() callbacks
+so it excludes control pages, hence we can allocate them in any order.
 
-On Mon, Mar 10, 2025 at 07:56:27AM +0000, Wei Yang wrote:
-> On Wed, Feb 26, 2025 at 02:09:15AM +0000, Wei Yang wrote:
-> >>> 
-> >>> From the above call flow and background, there are three cases when
-> >>> memblock_alloc_range_nid() would be called:
-> >>> 
-> >>>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
-> >>>   * If it is called after (2), we don't touch memblock.reserved.
-> >>>   * If it happens between (1) and (2), it looks would break the consistency of
-> >>>     nid information in memblock.reserved. Because when we use
-> >>>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
-> >>> 
-> >>> So my question is if the third case happens, would it introduce a bug? If it
-> >>> won't happen, seems we don't need to specify the nid here?
-> >>
-> >>We don't really care about proper assignment of nodes between (1) and (2)
-> >>from one side and the third case does not happen on the other side. Nothing
-> >>should call membloc_alloc() after memblock_free_all(). 
-> >>
-> >
-> >My point is if no one would call memblock_alloc() after memblock_free_all(),
-> >which set nid in memblock.reserved properly, it seems not necessary to do
-> >__memblock_reserve() with exact nid during memblock_alloc()? 
-> >
-> >As you did __memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN) in this
-> >patch.
-> >
-> 
-> Hi, Mike
-> 
-> Do you think my understanding is reasonable?
+Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
+---
+ kernel/kexec_core.c     | 18 ++++++++++++++++++
+ kernel/kexec_file.c     | 18 ++++--------------
+ kernel/kexec_internal.h |  3 +++
+ 3 files changed, 25 insertions(+), 14 deletions(-)
 
-Without KHO it is indeed not strictly necessary to set nid during memblock_alloc().
-But since we anyway have nid parameter in memblock_alloc_range_nid() and it
-anyway propagates to memblock_add_range(), I think it's easier and cleaner
-to pass nid to __memblock_reserve() there.
-
-And for KHO estimation of scratch size it is important to have nid assigned to
-the reserved areas before memblock_free_all(), at least for the allocations
-that request particular nid explicitly.
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0bdc1686154..647ab5705c37 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -264,6 +264,24 @@ int kimage_is_destination_range(struct kimage *image,
+ 	return 0;
+ }
  
-> -- 
-> Wei Yang
-> Help you, Help me
-
++int kimage_is_control_page(struct kimage *image,
++			unsigned long start,
++			unsigned long end)
++{
++
++	struct page *page;
++
++	list_for_each_entry(page, &image->control_pages, lru) {
++		unsigned long pstart, pend;
++		pstart = page_to_boot_pfn(page) << PAGE_SHIFT;
++		pend = pstart + PAGE_SIZE * (1 << page_private(page)) - 1;
++		if ((end >= pstart) && (start <= pend))
++			return 1;
++	}
++
++	return 0;
++}
++
+ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
+ {
+ 	struct page *pages;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index a024ff379133..8ecd34071bfa 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -464,7 +464,8 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+ 		 * Make sure this does not conflict with any of existing
+ 		 * segments
+ 		 */
+-		if (kimage_is_destination_range(image, temp_start, temp_end)) {
++		if (kimage_is_destination_range(image, temp_start, temp_end) ||
++			kimage_is_control_page(image, temp_start, temp_end)) {
+ 			temp_start = temp_start - PAGE_SIZE;
+ 			continue;
+ 		}
+@@ -498,7 +499,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+ 		 * Make sure this does not conflict with any of existing
+ 		 * segments
+ 		 */
+-		if (kimage_is_destination_range(image, temp_start, temp_end)) {
++		if (kimage_is_destination_range(image, temp_start, temp_end) ||
++			kimage_is_control_page(image, temp_start, temp_end)) {
+ 			temp_start = temp_start + PAGE_SIZE;
+ 			continue;
+ 		}
+@@ -671,18 +673,6 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * Make sure we are not trying to add buffer after allocating
+-	 * control pages. All segments need to be placed first before
+-	 * any control pages are allocated. As control page allocation
+-	 * logic goes through list of segments to make sure there are
+-	 * no destination overlaps.
+-	 */
+-	if (!list_empty(&kbuf->image->control_pages)) {
+-		WARN_ON(1);
+-		return -EINVAL;
+-	}
+-
+ 	/* Ensure minimum alignment needed for segments. */
+ 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index d35d9792402d..12e655a70e25 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -14,6 +14,9 @@ int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
+ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
++int kimage_is_control_page(struct kimage *image,
++			unsigned long start,
++			unsigned long end);
+ 
+ /*
+  * Whatever is used to serialize accesses to the kexec_crash_image needs to be
 -- 
-Sincerely yours,
-Mike.
+2.45.3
+
 
