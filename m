@@ -4,74 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD3C7C282D1
-	for <kexec@archiver.kernel.org>; Sun,  9 Mar 2025 12:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BA9CC282EC
+	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 03:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ryHXxnvblF8yjtCN9QZtxXO7vDDSeFvVFlLMAGAlZqM=; b=h1arFUlrXfe37k0r86lmOJ8faA
-	5qAiwlvbj4Zz6NhdyfglRVp0lTWjTyAyX119ismQQvwkZF2rAgzL3Ks0AGfuKwiR3gf48xsaboKTW
-	HS6U1ubtXRyfJxvddeCbnx7dXi61fgOxeMhfd4y7TaKEJMgt6r6yETt7TczKAVl8FVWu7X7zx64D2
-	qw3K/dn7/SDNqelo1Lv8/1UhLB971RB//gtQPEvWK46Ah9Y/I8JWH3RgWAI4SIPJm6o3JR2DSGgej
-	8lmeqvPKQhRTrkfdnfT4JnmgI7fM4nNcW/VeuN74rzFh74LdUoNaPf0DwO3MsiAfSPpVEXHLy8liB
-	E/yv47/w==;
+	bh=XvsmY/JjLBpjK3oBugk8F8gXHOkWN8ooUJaY0xPdhNg=; b=jqgK8hHE4y5ZFThrTFdxK94gMo
+	fLcQB4wJ41/irZJmknlkodtigc9s9rgTT0xt6XIdt1GTTbTx7XLhAHFoMECnqOvf4saTYIiwH1hI1
+	gEzurSVTV5rNPGc6QViSW2jXbMdhVjKLJuG/7EngNQdGUqcMnfw7cZLq6GUgOYD9S3y/aC1zhDC6S
+	JsQl/uDfoCGEnwNaK80C0j13UZE7ZzuscvqUyOzN0Hy1ct5/E7G6oahSX/3k9Sc2oZArKsTyrNfcZ
+	lsnVVjeH+o60NWLwEIad/rzIGBnysORH5ZqiLe8O6FIUivnUSEkt3u7/qOsRZ0Sfesr/Zpjj+lLkD
+	1sG9l+3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trFNj-00000000Tjy-3TWz;
-	Sun, 09 Mar 2025 12:03:47 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1trTqZ-00000001Ubh-3J7F;
+	Mon, 10 Mar 2025 03:30:31 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trFNf-00000000TjE-1Ij3
+	id 1trTqW-00000001Ub2-1dq6
 	for kexec@lists.infradead.org;
-	Sun, 09 Mar 2025 12:03:44 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id C12725C1D21;
-	Sun,  9 Mar 2025 12:01:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0CFC4CEE5;
-	Sun,  9 Mar 2025 12:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741521819;
-	bh=x8LiHcCv8DTXMAg2ZcZKR2faXOH9UvWMVP3REFZJBHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MMN3iFTtKavUVNDKnRfSBedIJcy4ZJzQvZLr7uIufEVSHRR1ZoxrNAVbq+N4I0AJS
-	 MXWAqypAHyLu860XVaJ9HolV8bZebhOJR3DbWWOm2oPMsyLPvLuQzsHyq77WGGuG0K
-	 1TPUvSi00ykZ8CVUwsHaOKsMdvAo4cJCuwdMm3RKY/mD93O6zHbbuwexP7zSEcMgfQ
-	 T/WNkljDQHub56fTSTgfgdeTuVBWsJTtpIMXYaSNUEXorrN4EoW7rddkjRCQiiOvW2
-	 5XnXS/MkyFfmAZRpFp7smfbHx2AhYYnYVyfQkZc3iSsuM9rqumwc+7edu1yVDhSyXv
-	 ruUNUCYoPgzhQ==
-Date: Sun, 9 Mar 2025 13:03:31 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Pratyush Yadav <ptyadav@amazon.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
-	Alexander Graf <graf@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, 
-	Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-Message-ID: <20250309-unerwartet-alufolie-96aae4d20e38@brauner>
-References: <20250307005830.65293-1-ptyadav@amazon.de>
- <20250307005830.65293-2-ptyadav@amazon.de>
- <20250307-sachte-stolz-18d43ffea782@brauner>
- <mafs0ikokidqz.fsf@amazon.de>
+	Mon, 10 Mar 2025 03:30:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741577427;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XvsmY/JjLBpjK3oBugk8F8gXHOkWN8ooUJaY0xPdhNg=;
+	b=fWf0un3OqqISm/xiRqEPI0DGoRbUezowH2OrqRO2xxThoa7lh7Efqfj/jDZB95AfuNUfF7
+	AvZuphq0jWzIs7xKrTt+xPjmGJ0rf/sQkszqctc4yGh1WX6bbLB6kOH8Wh2g6JtB99yWZk
+	sVkhNek/QYBRJEOD06DLskKi+X06JCA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-5DRDCMvMM2OaPcK41SI6KQ-1; Sun,
+ 09 Mar 2025 23:30:22 -0400
+X-MC-Unique: 5DRDCMvMM2OaPcK41SI6KQ-1
+X-Mimecast-MFC-AGG-ID: 5DRDCMvMM2OaPcK41SI6KQ_1741577420
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 449081956080;
+	Mon, 10 Mar 2025 03:30:20 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.225])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 85B60180094A;
+	Mon, 10 Mar 2025 03:30:17 +0000 (UTC)
+Date: Mon, 10 Mar 2025 11:30:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Coiby Xu <coxu@redhat.com>,
+	dwmw2@infradead.org
+Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <Z85cxCfnRkLve16D@MiWiFi-R3L-srv>
+References: <20250207080818.129165-1-coxu@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mafs0ikokidqz.fsf@amazon.de>
+In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250309_050343_447960_E4793C91 
-X-CRM114-Status: GOOD (  27.99  )
+X-CRM114-CacheID: sfid-20250309_203028_524823_D0E86A9C 
+X-CRM114-Status: GOOD (  10.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,72 +90,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Mar 08, 2025 at 12:10:12AM +0000, Pratyush Yadav wrote:
-> Hi Christian,
+Hi Andrew,
+
+On 02/07/25 at 04:08pm, Coiby Xu wrote:
+......snip...
+
+Ping again.
+
+This patchset is adding a generic infrastructure for luks support in
+crash dumping, and it adds the support in x86 ARCH. Since the x86
+related change is only located in kdump only files, won't impact other
+x86 codes. Could you consider pick this into your tree?
+
+And by the way, this is a kdump only fix, not related to KHO (Kexec
+HandOver) which David suggested to adapt to earlier. Explained it here
+to remove misunderstanding. 
+
+Thanks
+Baoquan
+
+>  Documentation/admin-guide/kdump/kdump.rst |  32 ++
+>  arch/x86/kernel/crash.c                   |  26 +-
+>  arch/x86/kernel/kexec-bzimage64.c         |  11 +
+>  arch/x86/kernel/machine_kexec_64.c        |  22 ++
+>  include/linux/crash_core.h                |   7 +-
+>  include/linux/crash_dump.h                |   2 +
+>  include/linux/kexec.h                     |  34 ++
+>  kernel/Kconfig.kexec                      |  10 +
+>  kernel/Makefile                           |   1 +
+>  kernel/crash_dump_dm_crypt.c              | 459 ++++++++++++++++++++++
+>  kernel/kexec_file.c                       |   3 +
+>  11 files changed, 604 insertions(+), 3 deletions(-)
+>  create mode 100644 kernel/crash_dump_dm_crypt.c
 > 
-> Thanks for the review!
-
-No worries, I'm not trying to be polemic. It's just that this whole
-proposed concept is pretty lightweight in terms of thinking about
-possible implications.
-
-> > This use-case is covered with systemd's fdstore and it's available to
-> > unprivileged userspace. Stashing arbitrary file descriptors in the
-> > kernel in this way isn't a good idea.
 > 
-> For one, it can't be arbitrary FDs, but only explicitly enabled ones.
-> Beyond that, while not intended, there is no way to stop userspace from
-> using it as a stash. Stashing FDs is a needed operation for this to
-> work, and there is no way to guarantee in advance that userspace will
-> actually use it for KHO, and not just stash it to grab back later.
+> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> -- 
+> 2.48.1
+> 
 
-As written it can't ever function as a generic file descriptor store.
-
-It only allows fully privileged processes to stash file descriptors.
-Which makes it useless for generic userspace. A generic fdstore should
-have a model that makes it usable unprivileged it probably should also
-be multi-instance and work easily with namespaces. This doesn't and
-hitching it on devtmpfs and character devices is guaranteed to not work
-well with such use-cases.
-
-It also has big time security issues and implications. Any file you
-stash in there will have the credentials of the opener attached to it.
-So if someone stashes anything in there you need permission mechanisms
-that ensures that Joe Random can't via FDBOX_GET_FD pull out a file for
-e.g., someone else's cgroup and happily migrate processses under the
-openers credentials or mess around some random executing binary.
-
-So you need a model of who is allowed to pull out what file descriptors
-from a file descriptor stash. What are the semantics for that? What's
-the security model for that? What are possible corner cases?
-
-For systemd's userspace fstore that's covered by policy it can implement
-quite easily what fds it accepts. For the kernel it's a lot more
-complicated.
-
-If someone puts in file descriptors for a bunch of files in there opened
-in different mount namespaces then this will pin said mount namespaces.
-If the last process in the mount namespace exists the mount namespace
-would be cleaned up but not anymore. The mount namespace would stay
-pinned. Not wrong, but needs to be spelled out what the implications of
-this are.
-
-What if someone puts a file descriptor from devtmpfs or for /dev/fdbox
-into an fdbox? Even if that's blocked, what happens if someone creates a
-detached bind-mount of a /dev/fdbox mount and mounts it into a different
-mount namespace and then puts a file descriptor for that mount namespace
-into the fdbox? Tons of other scenarios come to mind. Ignoring when
-networking is brought into the mix as well.
-
-It's not done by just letting the kernel stash some files and getting
-them out later somehow and then see whether it's somehow useful in the
-future for other stuff. A generic globally usable fdstore is not
-happening without a clear and detailed analysis what the semantics are
-going to be.
-
-So either that work is done right from the start or that stashing files
-goes out the window and instead that KHO part is implemented in a way
-where during a KHO dump relevant userspace is notified that they must
-now serialize their state into the serialization stash. And no files are
-actually kept in there at all.
 
