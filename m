@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16C3CC3DA4A
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62DA0C2BA1B
 	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,35 +12,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QkhEET4Wo+gouJiK8Lgb4vMFbcgAXJpnZW6CjWUXYUI=; b=33C3Pju9YC+Bs4DSsFxDUbLIp3
-	7Ec1ZeKS+AKSEu+/snauf74S+ub9Tcvs3ZmecOrm/C/OqZd2+Pw0ACNzgH6WVOzUDYmyS5fmGEh3G
-	sidAiEA8aE2iFMfABKDW5/FcQzBlwwkaBXmYlad/SC2bmi81SdtlW2/XPRxta/fe1s/tOTO6DVVVd
-	BFlPH1HLnqrbxXZkpsK5U7QLBWmN1SGUKpursbSofYPNhyfMqcSbUnXjZyVgxBFbxGeLlIqnGXwL+
-	Jetg9dpdEqec5YO/UldUSLXxEkLeVkK2IrrsoCnCnPgYMf3CaB61RY7vCR+UStsgxJf6fW7mpnkzu
-	gsviofDQ==;
+	bh=C5c3jBE2oO6bqhBgG572MhRimfpuB96f90y0qeqDqaE=; b=ZS6bx9CoorGYi1l3B5lt2XiD/v
+	zU3eIDxuhxqqUi3miJ5aGAGNbNMscfpv5pAwCKm0XVkj1I/O8tobVC1Tqx19e01DzCKuzGr8vJsTl
+	qz6JuEqNixaX9dxfB6+WojO7pUpjq/UndHkt3STLU3oroYPd3qBQNoXS7meY+QPsJR04vJKtB67kt
+	9T+FUcl/MAE5nX4Qps2mvbpr5WWKHqSyFJIToZ98mFWB24gKelzchMKQiwdU14QDRiXnth3z+qXo/
+	OTEZ43CeJi5uA0D/ATrqc+8EXs29jKHedNs95TkdPga2+oLdMnlIxyQEHQhr9lBV2ebjMrpm4rHRD
+	Cy+3+msQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trc40-00000002ZPs-28Ag;
-	Mon, 10 Mar 2025 12:16:56 +0000
-Received: from forwardcorp1a.mail.yandex.net ([178.154.239.72])
+	id 1trc42-00000002ZRJ-0Wdr;
+	Mon, 10 Mar 2025 12:16:58 +0000
+Received: from forwardcorp1a.mail.yandex.net ([2a02:6b8:c0e:500:1:45:d181:df01])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trbrd-00000002WEO-361H
+	id 1trbrg-00000002WGD-0SSH
 	for kexec@lists.infradead.org;
-	Mon, 10 Mar 2025 12:04:12 +0000
+	Mon, 10 Mar 2025 12:04:13 +0000
 Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 3D4D160DE9;
-	Mon, 10 Mar 2025 15:04:06 +0300 (MSK)
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id A80A160E06;
+	Mon, 10 Mar 2025 15:04:10 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-U5ZTnMcq;
-	Mon, 10 Mar 2025 15:04:05 +0300
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-3q4ic3FI;
+	Mon, 10 Mar 2025 15:04:09 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1741608245;
-	bh=QkhEET4Wo+gouJiK8Lgb4vMFbcgAXJpnZW6CjWUXYUI=;
+	s=default; t=1741608250;
+	bh=C5c3jBE2oO6bqhBgG572MhRimfpuB96f90y0qeqDqaE=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=N3tQSyH7q5Aw8vLpj6oIzXJUFol2N5amtQM0FyQ56H5V1ZTHW1L15Ttrhb4B+gc9s
-	 kwO45GOraHszy2v9J2VM/BFPgJC3K8JF8XkbIkUICHgn30PaHURZx5W6AKTRCMaz9h
-	 /YGOyUFNzrS71N7G5BQA84g6wuvpXWXemUAU3A/g=
+	b=x72TBAYJRosfJkV7QqfGY6QJIW4ozXZqVj+oHuUpLHNMH2cZMJvUt085RbtBwN2x+
+	 d7TAjQWgFTsAD4ThVtRq38Oxh4sxvtZW/C5NJi3+wwzfXsmGrTOuJh6TQNaT1lZGRs
+	 bX2YRijLOeTBrqHRVuYuRUt4MkNUCTd9QMpWNxT4=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -62,17 +62,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	David Rientjes <rientjes@google.com>,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [PATCH v2 2/7] kstate, kexec, x86: transfer kstate data across kexec
-Date: Mon, 10 Mar 2025 13:03:13 +0100
-Message-ID: <20250310120318.2124-3-arbn@yandex-team.com>
+Subject: [PATCH v2 4/7] kexec, kstate: delay loading of kexec segments
+Date: Mon, 10 Mar 2025 13:03:15 +0100
+Message-ID: <20250310120318.2124-5-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250310120318.2124-1-arbn@yandex-team.com>
 References: <20250310120318.2124-1-arbn@yandex-team.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250310_050409_952865_9152A08A 
-X-CRM114-Status: GOOD (  19.61  )
+X-CRM114-CacheID: sfid-20250310_050412_334871_7B0E01AA 
+X-CRM114-Status: GOOD (  22.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,230 +87,271 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add kstate data to kexec segments so it got copied to the new kernel.
-Use cmdline to inform next kernel about kstate data location and size.
+KSTATE's purpose is to preserve some memory across kexec. To make this
+happen kexec needs to choose destination ranges after the KSTATE, so
+these ranges doesn't collide with KSTATE preserved memory.
+
+Kexec chooses destination ranges on the kexec load stage which might
+happen long before the actual reboot to the new kernel. This means that
+KSTATE must know all preserved memory before the kexec_file_load(), unless
+we delay loading of kexec segments/destination addresses to the latter,
+at the point of reboot to the new kernel. So let's do that.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
-I've used cmdline as it's the simplest way to transfer address
-to the new kernel. Perhaps passing it via dtb would be more elegant
-solution, but I don't have strong opinion here.
----
- arch/x86/Kconfig                  |  1 +
- arch/x86/kernel/kexec-bzimage64.c |  4 +++
- arch/x86/kernel/setup.c           |  2 ++
- include/linux/kexec.h             |  2 ++
- include/linux/kstate.h            |  5 ++++
- kernel/kexec_file.c               |  5 ++++
- kernel/kstate.c                   | 49 ++++++++++++++++++++++++++++++-
- 7 files changed, 67 insertions(+), 1 deletion(-)
+ include/linux/kexec.h   |   1 +
+ kernel/kexec_core.c     |   6 ++
+ kernel/kexec_file.c     | 144 ++++++++++++++++++++++++++--------------
+ kernel/kexec_internal.h |   6 ++
+ 4 files changed, 108 insertions(+), 49 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 0e27ebd7e36a..7358d9e15957 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -90,6 +90,7 @@ config X86
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_KCOV			if X86_64
- 	select ARCH_HAS_KERNEL_FPU_SUPPORT
-+	select ARCH_HAS_KSTATE			if X86_64
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 68530fad05f7..d3c98c8bda29 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -15,6 +15,7 @@
- #include <linux/slab.h>
- #include <linux/kexec.h>
- #include <linux/kernel.h>
-+#include <linux/kstate.h>
- #include <linux/mm.h>
- #include <linux/efi.h>
- #include <linux/random.h>
-@@ -77,6 +78,9 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
- 		len = sprintf(cmdline_ptr,
- 			"elfcorehdr=0x%lx ", image->elf_load_addr);
- 	}
-+	if (IS_ENABLED(CONFIG_KSTATE))
-+		len = sprintf(cmdline_ptr, "kstate_stream=0x0%lx@%ld ",
-+			image->kstate_stream_addr, image->kstate_size);
- 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
- 	cmdline_len += len;
- 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index cebee310e200..b32c141ffcdd 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -15,6 +15,7 @@
- #include <linux/init_ohci1394_dma.h>
- #include <linux/initrd.h>
- #include <linux/iscsi_ibft.h>
-+#include <linux/kstate.h>
- #include <linux/memblock.h>
- #include <linux/panic_notifier.h>
- #include <linux/pci.h>
-@@ -992,6 +993,7 @@ void __init setup_arch(char **cmdline_p)
- 
- 	memblock_set_current_limit(ISA_END_ADDRESS);
- 	e820__memblock_setup();
-+	kstate_init();
- 
- 	/*
- 	 * Needs to run after memblock setup because it needs the physical
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f0e9f8eda7a3..bd82f04888a1 100644
+index bd82f04888a1..539aaacfd3fd 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -299,6 +299,8 @@ struct kimage {
- 	unsigned long start;
- 	struct page *control_code_page;
- 	struct page *swap_page;
-+	unsigned long kstate_stream_addr;
-+	size_t kstate_size;
- 	void *vmcoreinfo_data_copy; /* locates in the crash memory */
+@@ -377,6 +377,7 @@ extern void machine_kexec(struct kimage *image);
+ extern int machine_kexec_prepare(struct kimage *image);
+ extern void machine_kexec_cleanup(struct kimage *image);
+ extern int kernel_kexec(void);
++extern int kexec_file_load_segments(struct kimage *image);
+ extern struct page *kimage_alloc_control_pages(struct kimage *image,
+ 						unsigned int order);
  
- 	unsigned long nr_segments;
-diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-index 4fc01e535bc0..ae583d090111 100644
---- a/include/linux/kstate.h
-+++ b/include/linux/kstate.h
-@@ -126,6 +126,8 @@ static inline unsigned long kstate_get_ulong(struct kstate_stream *stream)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 647ab5705c37..7c79addeb93b 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1017,6 +1017,12 @@ int kernel_kexec(void)
+ 		goto Unlock;
+ 	}
  
- #ifdef CONFIG_KSTATE
- 
-+void kstate_init(void);
++	if (kexec_late_load(kexec_image)) {
++		error = kexec_file_load_segments(kexec_image);
++		if (error)
++			goto Unlock;
++	}
 +
- int kstate_save_state(void);
- void free_kstate_stream(void);
- 
-@@ -137,14 +139,17 @@ int save_kstate(struct kstate_stream *stream, int id,
- 		void *obj);
- void restore_kstate(struct kstate_stream *stream, int id,
- 		const struct kstate_description *kstate, void *obj);
-+int kstate_load_migrate_buf(struct kimage *image);
- 
- #else
- 
-+static inline void kstate_init(void) { }
- #define kstate_register(state, obj)
- 
- static inline int kstate_save_state(void) { return 0; }
- static inline void free_kstate_stream(void) { }
- 
-+static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
- #endif
- 
- 
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (kexec_image->preserve_context) {
+ 		/*
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad..a024ff379133 100644
+index 8ecd34071bfa..634e2ed4cc4c 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/file.h>
- #include <linux/slab.h>
- #include <linux/kexec.h>
-+#include <linux/kstate.h>
- #include <linux/memblock.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
-@@ -253,6 +254,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	/* IMA needs to pass the measurement list to the next kernel. */
- 	ima_add_kexec_buffer(image);
+@@ -187,6 +187,34 @@ kimage_validate_signature(struct kimage *image)
+ }
+ #endif
  
++static int kimage_add_buffers(struct kimage *image)
++{
++	void *ldata;
++	int ret = 0;
++
++	/* IMA needs to pass the measurement list to the next kernel. */
++	ima_add_kexec_buffer(image);
++
 +	ret = kstate_load_migrate_buf(image);
 +	if (ret)
 +		goto out;
 +
- 	/* Call image load handler */
- 	ldata = kexec_image_load_default(image);
++	/* Call image load handler */
++	ldata = kexec_image_load_default(image);
++
++	if (IS_ERR(ldata)) {
++		ret = PTR_ERR(ldata);
++		goto out;
++	}
++
++	image->image_loader_data = ldata;
++out:
++	/* In case of error, free up all allocated memory in this function */
++	if (ret)
++		kimage_file_post_load_cleanup(image);
++	return ret;
++
++}
+ /*
+  * In file mode list of segments is prepared by kernel. Copy relevant
+  * data from user space, do error checking, prepare segment list
+@@ -197,7 +225,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			     unsigned long cmdline_len, unsigned flags)
+ {
+ 	ssize_t ret;
+-	void *ldata;
  
-diff --git a/kernel/kstate.c b/kernel/kstate.c
-index a73a9a42e55b..d35996287b76 100644
---- a/kernel/kstate.c
-+++ b/kernel/kstate.c
-@@ -2,6 +2,7 @@
- #include <linux/ctype.h>
- #include <linux/kexec.h>
- #include <linux/kstate.h>
-+#include <linux/memblock.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/vmalloc.h>
-@@ -182,6 +183,31 @@ int kstate_save_state(void)
- 	return 0;
+ 	ret = kernel_read_file_from_fd(kernel_fd, 0, &image->kernel_buf,
+ 				       KEXEC_FILE_SIZE_MAX, NULL,
+@@ -251,22 +278,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 				  image->cmdline_buf_len - 1);
+ 	}
+ 
+-	/* IMA needs to pass the measurement list to the next kernel. */
+-	ima_add_kexec_buffer(image);
+-
+-	ret = kstate_load_migrate_buf(image);
+-	if (ret)
+-		goto out;
+-
+-	/* Call image load handler */
+-	ldata = kexec_image_load_default(image);
+-
+-	if (IS_ERR(ldata)) {
+-		ret = PTR_ERR(ldata);
+-		goto out;
+-	}
+-
+-	image->image_loader_data = ldata;
+ out:
+ 	/* In case of error, free up all allocated memory in this function */
+ 	if (ret)
+@@ -303,10 +314,6 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 	if (ret)
+ 		goto out_free_image;
+ 
+-	ret = sanity_check_segment_list(image);
+-	if (ret)
+-		goto out_free_post_load_bufs;
+-
+ 	ret = -ENOMEM;
+ 	image->control_code_page = kimage_alloc_control_pages(image,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+@@ -334,6 +341,70 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 	return ret;
  }
  
-+int kstate_load_migrate_buf(struct kimage *image)
++static int kimage_post_load(struct kimage *image)
++{
++	int ret, i;
++
++	ret = kexec_calculate_store_digests(image);
++	if (ret)
++		goto out;
++
++	kexec_dprintk("nr_segments = %lu\n", image->nr_segments);
++	for (i = 0; i < image->nr_segments; i++) {
++		struct kexec_segment *ksegment;
++
++		ksegment = &image->segment[i];
++		kexec_dprintk("segment[%d]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
++			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
++			      ksegment->memsz);
++
++		ret = kimage_load_segment(image, &image->segment[i]);
++		if (ret)
++			goto out;
++	}
++
++	kimage_terminate(image);
++
++	ret = machine_kexec_post_load(image);
++	if (ret)
++		goto out;
++
++	kexec_dprintk("kexec_file_load: type:%u, start:0x%lx head:0x%lx\n",
++		image->type, image->start, image->head);
++out:
++	return ret;
++}
++
++int kexec_file_load_segments(struct kimage *image)
 +{
 +	int ret;
-+	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
-+		.buf_max = ULONG_MAX, .top_down = true };
 +
-+	kbuf.bufsz = kstate_stream.size;
-+	kbuf.buffer = kstate_stream.start;
++	ret = kimage_add_buffers(image);
++	if (ret) {
++		pr_err("failed to add kimage buffers %d\n", ret);
++		goto out;
++	}
 +
-+	kbuf.memsz = kstate_stream.size;
++	ret = sanity_check_segment_list(image);
++	if (ret) {
++		pr_err("sanity check failed %d\n", ret);
++		goto out;
++	}
 +
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	ret = kexec_add_buffer(&kbuf);
++	ret = kimage_post_load(image);
 +	if (ret)
-+		return ret;
-+	image->kstate_stream_addr = kbuf.mem;
-+	image->kstate_size = kstate_stream.size;
++		pr_err("kimage post load failed %d\n", ret);
 +
-+	pr_info("kstate: Loaded mig_stream at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		kbuf.mem, kbuf.bufsz, kbuf.memsz);
++out:
++	/*
++	 * Free up any temporary buffers allocated which are not needed
++	 * after image has been loaded
++	 */
++	kimage_file_post_load_cleanup(image);
 +
 +	return ret;
 +}
 +
- void restore_kstate(struct kstate_stream *stream, int id,
- 		const struct kstate_description *kstate, void *obj)
- {
-@@ -258,6 +284,9 @@ static void restore_migrate_state(unsigned long kstate_data,
+ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
+ 		unsigned long, flags)
+@@ -341,7 +412,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	int image_type = (flags & KEXEC_FILE_ON_CRASH) ?
+ 			 KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
+ 	struct kimage **dest_image, *image;
+-	int ret = 0, i;
++	int ret = 0;
+ 
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!kexec_load_permitted(image_type))
+@@ -398,37 +469,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = kexec_calculate_store_digests(image);
+-	if (ret)
+-		goto out;
+-
+-	kexec_dprintk("nr_segments = %lu\n", image->nr_segments);
+-	for (i = 0; i < image->nr_segments; i++) {
+-		struct kexec_segment *ksegment;
+-
+-		ksegment = &image->segment[i];
+-		kexec_dprintk("segment[%d]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
+-			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+-			      ksegment->memsz);
+-
+-		ret = kimage_load_segment(image, &image->segment[i]);
++	if (!kexec_late_load(image)) {
++		ret = kexec_file_load_segments(image);
+ 		if (ret)
+ 			goto out;
  	}
+ 
+-	kimage_terminate(image);
+-
+-	ret = machine_kexec_post_load(image);
+-	if (ret)
+-		goto out;
+-
+-	kexec_dprintk("kexec_file_load: type:%u, start:0x%lx head:0x%lx flags:0x%lx\n",
+-		      image->type, image->start, image->head, flags);
+-	/*
+-	 * Free up any temporary buffers allocated which are not needed
+-	 * after image has been loaded
+-	 */
+-	kimage_file_post_load_cleanup(image);
+ exchange:
+ 	image = xchg(dest_image, image);
+ out:
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 12e655a70e25..690b1c21b642 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -34,6 +34,12 @@ static inline void kexec_unlock(void)
+ 	atomic_set_release(&__kexec_lock, 0);
  }
  
-+static unsigned long kstate_stream_addr = -1;
-+static unsigned long kstate_size;
-+
- static void __kstate_register(struct kstate_description *state, void *obj,
- 			struct state_entry *se)
- {
-@@ -265,7 +294,7 @@ static void __kstate_register(struct kstate_description *state, void *obj,
- 	se->id = atomic_inc_return(&state->instance_id);
- 	se->obj = obj;
- 	list_add(&se->list, &states);
--	restore_migrate_state(0 /*migrate_stream_addr*/, se);
-+	restore_migrate_state(kstate_stream_addr, se);
- }
- 
- int kstate_register(struct kstate_description *state, void *obj)
-@@ -280,3 +309,21 @@ int kstate_register(struct kstate_description *state, void *obj)
- 	return 0;
- }
- 
-+static int __init setup_kstate(char *arg)
++static inline bool kexec_late_load(struct kimage *image)
 +{
-+	char *end;
-+
-+	if (!arg)
-+		return -EINVAL;
-+	kstate_stream_addr = memparse(arg, &end);
-+	if (*end == '@')
-+		kstate_size = memparse(end + 1, &end);
-+
-+	return end > arg ? 0 : -EINVAL;
++	return IS_ENABLED(CONFIG_KSTATE) && image->file_mode &&
++		(image->type == KEXEC_TYPE_DEFAULT);
 +}
-+early_param("kstate_stream", setup_kstate);
 +
-+void __init kstate_init(void)
-+{
-+	memblock_reserve(kstate_stream_addr, kstate_size);
-+}
+ #ifdef CONFIG_KEXEC_FILE
+ #include <linux/purgatory.h>
+ void kimage_file_post_load_cleanup(struct kimage *image);
 -- 
 2.45.3
 
