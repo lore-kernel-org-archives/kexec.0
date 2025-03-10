@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E8B9C36001
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFB9AC36002
 	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 15:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
@@ -12,65 +12,65 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tMClGTb/xowiN+wUj5f6h9i/suU0YoMn0juoJl6ktWM=; b=owXB6f2LarEP7UYEnlak6azieZ
-	/hcqdHQMUCLny5TewSdg8gKOpYTTXP652g+2ahgBKJ/yl6Q3J0zxetIAbTrERCrsC6zoRPm+fhaLg
-	vfHr/SHFsQwpW5o7//3XjRaWZo6SJqpg8zZOcZb8suEm3/23qBPUA5cJuLUJDLe83e5BrVcJDAQXf
-	sDIHqCcL1Wtx4EJiiNKM1yLPQr/UeRibxPpz1tb3slcqdDIZ5EJMkx4E4A1AXAM2qLEfxR+dZVn+U
-	RF3NGAA+b035U+Us5ZbDLIL49t6tcxi6M4yec0UIQeMWsoA5uXsPRiC4+cRXA+LPaN/DRKK9h7zFc
-	lUXdGwwQ==;
+	bh=7fIk/wLn8siLSomZZskx1hmM4iyC641S3xGJlKKijlM=; b=vW9JXlrBGjE0PWz2xiTfQyGaTw
+	kHqtvek72rEsoyp6c/UEs2sps1g3QK9chrXlSEzK8f81YLcTK71a/xjCai/8djhpIIHzBcdV35XrS
+	rj4ftP+FpR/DWidJbmpqAW3iQkv14nZx/4CUNgxsu+BddggWelzftpBDeZOCO0kJf9A78OptiskME
+	zc4tKcz1hf8xzo9Lgo7cJbb//w4WLUnkx9XrzZOMv4oJqEBR/t4hLJcJRXY2YmLJno0Wsn3nqmWxC
+	A29ZULWCqedGFnIZZ2VjzyZy8ZbfpJX8XBlbSEv6Rwm+0CVQKkq32sS9VKorTXJBDeD8GnIl9WBZ+
+	jNkhftrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvHS1-0000000CU5p-2rup;
-	Thu, 20 Mar 2025 15:04:53 +0000
-Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
+	id 1tvHS2-0000000CU7E-1SFd;
+	Thu, 20 Mar 2025 15:04:54 +0000
+Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trZel-000000027Uz-20IH;
-	Mon, 10 Mar 2025 09:42:45 +0000
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-aaec111762bso771723366b.2;
-        Mon, 10 Mar 2025 02:42:43 -0700 (PDT)
+	id 1trZnL-000000029Vo-3QEv;
+	Mon, 10 Mar 2025 09:51:37 +0000
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-ac2ae81dd81so53665566b.0;
+        Mon, 10 Mar 2025 02:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741599762; x=1742204562; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1741600294; x=1742205094; darn=lists.infradead.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tMClGTb/xowiN+wUj5f6h9i/suU0YoMn0juoJl6ktWM=;
-        b=Kgyuv+N+Q8UQ1SacwLg7Flt03X4LVQSkJIOn24rO/lgA9WYPWc+/AR5Lb7K030nbVE
-         iOStAo4qDPL6csXLNXM71Etu8+UgIoiMJ+9XKoc7uKptOM8gRQpFLAxDF6pcMdWe0ylV
-         kx04AhnsdQgsoF8X5As4KwV9rVbZNR3WfugAdEREgIwEIQ660VGEzWuvFHMWxz9GCGYg
-         qlB9PSnjY0fxpAy02x6VhdJeMzYzMFzXHMXoqBQuA9T9b5Jw5VtIaJ935T+mYyLQtpRD
-         1BTmV6smAaANUpE6y0c1LixQ1FKcwoh4CZ5WNdPVWjCI2iTpzdHv7dkZtBvo6NUZ97KS
-         0AAQ==
+        bh=7fIk/wLn8siLSomZZskx1hmM4iyC641S3xGJlKKijlM=;
+        b=EX0stzQdVxuZLvUJ9yz2Fw2H1pCiUIufDdk4D999Kt4bSTJdmYNcZNMhELY8UDvwv6
+         OoxNQYd2nFtlZEdQZWddMZFxq58KDqOUlsEUQ8GwisEmznZbYpFX7CHLW+msm3bopE+L
+         jDZvfRAaKRBnyBgxDX6uJ3IL5fzYA6evyDXujRh6ma+nG7L2UeJWfwOysve/Q5wstGgJ
+         AmSWtsXNUJ1EO/CZWpo/fk7zpjr7tjr7uQUeS6ZMJao4Og5ZVuq8/X5a8/r7s2Vsuz72
+         IfDbUhqrUdwyCrXIalc22rEmtKLYZzIRL+8zY85tnnRY15mWSV+MRthZy9kuElegyEB6
+         GnwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741599762; x=1742204562;
+        d=1e100.net; s=20230601; t=1741600294; x=1742205094;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tMClGTb/xowiN+wUj5f6h9i/suU0YoMn0juoJl6ktWM=;
-        b=fXt3/WnhyUptr+Q/vRaklH3n4PSyoHAj6upqQLOXwh/K8ZD5Jktl46cMRopQQNFvUJ
-         gO/tPOI9GJexeVIWT8LngBpdtNg97rz2+eXcT+ZUAn91GTFNXP4CwRU5UpIztribihi1
-         jso2IQbaSFxPx6EgHHFG3dXKRjlwA28ND98v7z0HTt4GZkYt9YuyNiZF24OA1eZOmHbY
-         dnqTc2cf02lC2uOP7BDT8Je+5FfuN4zdeLUHx/ijszdG1QCVuZfaV6UavD02LBNPNBCh
-         7dfCKpcjH6HJAdHUnGTShikWfiHXdE1Crld8qzKMB2zBKAPX9UYLv9h43ddjj+opeutt
-         2OUA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/eJTxrOiq1ILYAMHZtejkht4Nr5fHDKIfJLo1LMkxhz2j4dOtYbkoUk8qKZFnBDG7hYRTt8yub+BOo8iGndA/aQ==@lists.infradead.org, AJvYcCXW7KmE5IAZ4ragFANZkGCQ6bUkG8yxojKrTIJ1JsUBAPkOOH46RlxCbR7j2L9vGHTKWbhD3Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxukZ7qU9iWIix+uibe0H0kvIWfUhx1YURwk5+UW8dOY7/krR9t
-	WtO6xGgFMp3egIrKhpRVz58s7WhB+kmtItkOwqWxKD2uMBBM7lo6
-X-Gm-Gg: ASbGncsaA18lULck1krQxLGPNZ+eMIfLcXVLA4gUd4XX29X/HzXzNbMDddNxaumo0/f
-	c5hGncslyhb7rg+K5eo928Heyk62SwmSsd8hMHSWG6mW2sfL+S2/uHeS2WIUJnJdCY4oszy0EFK
-	tJLvbAWiIaVVJ6JmLICd712mFx9P28sZy8tbqRu6EdejfnjWOai9DHwPWA4AHB7tvdjHS+j76uK
-	TqBCeKtOqXzJTKLp6OMfzpw71kHiXL2Lcu8hvutsvelbxYHdow8WzX0bbCWstIjiT6AI8SKOFMv
-	T70pfhJTiZkkg6dO7+FNJw2vPtqevO17HrFLqon/0VVk
-X-Google-Smtp-Source: AGHT+IGr1BXamH0TMzryWGEFJPRvklcDIRXonoj2fHuOVeIPkUnC7Qwd3/v9Pu02iEAlM/2ZB1tn9g==
-X-Received: by 2002:a17:907:3f96:b0:abf:62a4:14ef with SMTP id a640c23a62f3a-ac25274a051mr1561659766b.9.1741599761642;
-        Mon, 10 Mar 2025 02:42:41 -0700 (PDT)
+        bh=7fIk/wLn8siLSomZZskx1hmM4iyC641S3xGJlKKijlM=;
+        b=gDsy0Q0s/DzreItM7FhmEqSrSApxA65NPAMB0KU3Rc/Q/YnK0T5N+zoc4wzmSLY2ez
+         C0nCGyf4OGWcFDz5LMudDlDkmNmwFN71Mfqo4IDnSTW7flx3FJflk/9F2dFM5M/GkrSN
+         iXIIMCZ3ztTRg/1w6eHxzjyKsmMFI9urtseO8NVft2kSj+LoFYQLY9a95NY+bIj69Y/1
+         jHAUHEc3kLKIAMsqPA6BbRvO5u2F309UmcNRthKz7FSQevELvNJAxy7fk6MLordkTWkG
+         E/0l89ZPDTCCFDD0vhGg4WHfj/81vNxCfX2rvxW5iyDKNFW2ArZNY6a4GMsZYd+D6x2P
+         UAiA==
+X-Forwarded-Encrypted: i=1; AJvYcCV27x5P1QPQpprWe0+loywbYOR1mgH1G3fy8pQNxSTDY3MRRDOnitz3cwL/W5x0mlVrbRkHUg==@lists.infradead.org, AJvYcCWWqlT080e5GGc0vFZZ1zR16hLV251kyU4gJYHp2d2pSyoEG9D4mALY+1fzGd7JmDHSg7OcTNmvg90LOILcFutT2A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwC4uwoLKw+bRymnGrHGsR3FDmw0kHCxBvoPXpzQe0b5BxPjliK
+	2UZpsh6MVBcDOwU0Y4dx7f5XW1ed8P7G8H44c4E/hQx2qyVNYZGr
+X-Gm-Gg: ASbGnctNEbe9vMQkqEWBfVbjhbnJlUeeg/6cvi3ixZlsBDmflwINQ4bfLat3OD+rp9D
+	R7XwhtR0dxv8KRBc8d69fXYppxA1nPiqZQcSkrQCqNq3/7duEQbnn4A7jI/grlRjIS2+HltspLp
+	LTKROXSDtBXzbR0hdTjY2r3eTFSNWJL+yO+4lqdEO4+J8HCwSaS1gO+KSrVSViLN/TpZQGaptc9
+	OBtV9YPG0AJmGMQoPbcPJCh23CeNG8sIVEzgnQTgnoagCBcPV82hzGcn2mFx63COt3iaIUBCZ+s
+	/Jc4NGgy0OzN4fEfuQBgqfcdPU6VEWSNWjZo94YzQWsJK5I90otaSpE=
+X-Google-Smtp-Source: AGHT+IEnsaBC89bibOD1BqC+ZZ1kovv3JGu+umNRENY/jx8wzQl9KTymklI/3Rp6DH54iA+FTxPRUw==
+X-Received: by 2002:a17:907:3f2a:b0:abf:5fa3:cf96 with SMTP id a640c23a62f3a-ac252a879d7mr1234111666b.14.1741600293920;
+        Mon, 10 Mar 2025 02:51:33 -0700 (PDT)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2b0daaa0asm28863966b.38.2025.03.10.02.42.40
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac255589a30sm594247266b.107.2025.03.10.02.51.25
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Mar 2025 02:42:40 -0700 (PDT)
-Date: Mon, 10 Mar 2025 09:42:38 +0000
+        Mon, 10 Mar 2025 02:51:25 -0700 (PDT)
+Date: Mon, 10 Mar 2025 09:51:24 +0000
 From: Wei Yang <richard.weiyang@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
 	Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Andy Lutomirski <luto@kernel.org>,
@@ -102,24 +102,20 @@ Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <20250310094238.lgsiyqci3aqdzrhj@master>
+Message-ID: <20250310095124.pa7dwgqhxglqrfes@master>
 References: <20250206132754.2596694-1-rppt@kernel.org>
  <20250206132754.2596694-3-rppt@kernel.org>
  <20250218155004.n53fcuj2lrl5rxll@master>
  <Z7WHL_Xqgoln9oLg@kernel.org>
- <20250224013131.fzz552bn7fs64umq@master>
- <Z711VP45tjBi0kwx@kernel.org>
- <20250226020915.ytxusrrl7rv4g64l@master>
- <20250310075627.5hettrn2j2ien5bj@master>
- <Z86ikkLVHQhLmBWj@kernel.org>
+ <20250223002229.xuk6xlp23zr72hkc@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z86ikkLVHQhLmBWj@kernel.org>
+In-Reply-To: <20250223002229.xuk6xlp23zr72hkc@master>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250310_024243_516227_09DFE64B 
-X-CRM114-Status: GOOD (  23.46  )
+X-CRM114-CacheID: sfid-20250310_025135_855710_734A6302 
+X-CRM114-Status: GOOD (  24.20  )
 X-Mailman-Approved-At: Thu, 20 Mar 2025 08:04:44 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -136,60 +132,88 @@ Reply-To: Wei Yang <richard.weiyang@gmail.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 10, 2025 at 10:28:02AM +0200, Mike Rapoport wrote:
->Hi Wei,
->
->On Mon, Mar 10, 2025 at 07:56:27AM +0000, Wei Yang wrote:
->> On Wed, Feb 26, 2025 at 02:09:15AM +0000, Wei Yang wrote:
->> >>> 
->> >>> From the above call flow and background, there are three cases when
->> >>> memblock_alloc_range_nid() would be called:
->> >>> 
->> >>>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
->> >>>   * If it is called after (2), we don't touch memblock.reserved.
->> >>>   * If it happens between (1) and (2), it looks would break the consistency of
->> >>>     nid information in memblock.reserved. Because when we use
->> >>>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
->> >>> 
->> >>> So my question is if the third case happens, would it introduce a bug? If it
->> >>> won't happen, seems we don't need to specify the nid here?
->> >>
->> >>We don't really care about proper assignment of nodes between (1) and (2)
->> >>from one side and the third case does not happen on the other side. Nothing
->> >>should call membloc_alloc() after memblock_free_all(). 
->> >>
->> >
->> >My point is if no one would call memblock_alloc() after memblock_free_all(),
->> >which set nid in memblock.reserved properly, it seems not necessary to do
->> >__memblock_reserve() with exact nid during memblock_alloc()? 
->> >
->> >As you did __memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN) in this
->> >patch.
->> >
+On Sun, Feb 23, 2025 at 12:22:29AM +0000, Wei Yang wrote:
+>On Wed, Feb 19, 2025 at 09:24:31AM +0200, Mike Rapoport wrote:
+>>Hi,
+>>
+>>On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
+>>> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
+>>> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>> >
+>>> >to denote areas that were reserved for kernel use either directly with
+>>> >memblock_reserve_kern() or via memblock allocations.
+>>> >
+>>> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>> >---
+>>> > include/linux/memblock.h | 16 +++++++++++++++-
+>>> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
+>>> > 2 files changed, 39 insertions(+), 9 deletions(-)
+>>> >
+>>> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>>> >index e79eb6ac516f..65e274550f5d 100644
+>>> >--- a/include/linux/memblock.h
+>>> >+++ b/include/linux/memblock.h
+>>> >@@ -50,6 +50,7 @@ enum memblock_flags {
+>>> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+>>> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+>>> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
+>>> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+>>> 
+>>> Above memblock_flags, there are comments on explaining those flags.
+>>> 
+>>> Seems we miss it for MEMBLOCK_RSRV_KERN.
+>>
+>>Right, thanks!
 >> 
->> Hi, Mike
+>>> > 
+>>> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+>>> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>>> > again:
+>>> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
+>>> > 					    flags);
+>>> >-	if (found && !memblock_reserve(found, size))
+>>> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
+>>> 
+>>> Maybe we could use memblock_reserve_kern() directly. If my understanding is
+>>> correct, the reserved region's nid is not used.
+>>
+>>We use nid of reserved regions in reserve_bootmem_region() (commit
+>>61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
+>>know the distribution of reserved memory among the nodes before
+>>memmap_init_reserved_pages().
 >> 
->> Do you think my understanding is reasonable?
 >
->Without KHO it is indeed not strictly necessary to set nid during memblock_alloc().
->But since we anyway have nid parameter in memblock_alloc_range_nid() and it
->anyway propagates to memblock_add_range(), I think it's easier and cleaner
->to pass nid to __memblock_reserve() there.
+>I took another look into this commit. There maybe a very corner case in which
+>will leave a reserved region with no nid set.
 >
->And for KHO estimation of scratch size it is important to have nid assigned to
->the reserved areas before memblock_free_all(), at least for the allocations
->that request particular nid explicitly.
+>memmap_init_reserved_pages()
+>    for_each_mem_region() {
+>        ...
+>	memblock_set_node(start, end, &memblock.reserved, nid);
+>    }
+>
+>We leverage the iteration here to set nid to all regions in memblock.reserved.
+>But memblock_set_node() may call memblock_double_array() to expand the array,
+>which may get a range before current start. So we would miss to set the
+>correct nid to the new reserved region.
+>
+>I have tried to create a case in memblock test. This would happen when there
+>are 126 memblock.reserved regions. And the last region is across the last two
+>node.
+>
+>One way to fix this is compare type->max in memblock_set_node(). Then check
+>this return value in memmap_init_reserved_pages(). If we found the size
+>changes, repeat the iteration.
+>
+>But this is a very trivial one, not sure it worth fix.
+>
 
-Thanks, I see your point.
+Hi, Mike
 
-> 
->> -- 
->> Wei Yang
->> Help you, Help me
->
->-- 
->Sincerely yours,
->Mike.
+I have done a user space test which shows we may have a chance to leave a
+region with non-nid set.
+
+Not sure you are ok with my approach of fixing.
 
 -- 
 Wei Yang
