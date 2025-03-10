@@ -4,75 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE679C35FF3
-	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 12:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F6CFC28B2E
+	for <kexec@archiver.kernel.org>; Mon, 10 Mar 2025 17:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yQbSR/IJoyQ0CM0slHnQK+Nqd9vWCYt9LC8hjrwd9hg=; b=RRZDf7lL/J1ITKuu/TEWRF4UwO
-	jtNSLtQu6ho8ICo9yqgnEHWJKN1rkFFw0EVeuGo+PoG+/zjrs0CckODdJcHcRv+8tdUYc0+BGx7Ju
-	+m3a5L5tPNs/NIF7tWAW8vasaAC2QnlSVQm3j5U5mEoiILNCWWm2kFLTV+LqUBymLyxvoHXjVDQr6
-	tpNIikHzHEQMNdQN4hwOlaWhmsVxx/p6wG3pcpm4yF7qBKA0thVCpQy8V++7koqONjlBdqLuGZ7TF
-	BUeHtjUhuuozeqhg86mZzp8CywBMsYT9icm8o8mr0yb3d1qxC4j0Xi3J+lEpXG7kXjTbhb66F+Sfx
-	vWdugNwQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:CC:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=kua1+P7pBuS50I7egTYFseHRI4Y7N92xh/jBVSs2A1g=; b=JA0KSf5KJSOqZTFQF2BOJhXkFJ
+	OsacTC1zPlYBdIK9n7rmsdlfojzh+ECC09Ol2CBXi0a6DELk9qBkFispBJ3mAmgCJxCboXz6j2gNV
+	/6ttG38rwhWknROemqADdNolFvv9haBe5h9MFeR8N7mbHKpUadiqywIZt+qCjJ5b7Sr6FhXogmbAx
+	jQQLCG0i1njPnZXfok9MX9PwFbW4Fb43qITdsTquc3UTVAX2ncdmDTUhaXuppguQ6sTUmwUXlnS6I
+	A8EYXhCCM2FKX7wihNgjRej/zDv5SZ6hWVI3jy/HshfylF/XtHFKlf5B+mVQcpjQLGg1l30crFcWH
+	2gIuVs/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trc43-00000002ZSI-1ikF;
-	Mon, 10 Mar 2025 12:16:59 +0000
-Received: from forwardcorp1a.mail.yandex.net ([2a02:6b8:c0e:500:1:45:d181:df01])
+	id 1trhH1-00000003X6g-0Mwl;
+	Mon, 10 Mar 2025 17:50:43 +0000
+Received: from smtp-fw-80006.amazon.com ([99.78.197.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trbrm-00000002WJ0-258w
-	for kexec@lists.infradead.org;
-	Mon, 10 Mar 2025 12:04:19 +0000
-Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 1ED3460EB2;
-	Mon, 10 Mar 2025 15:04:17 +0300 (MSK)
-Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-HnZRPCd1;
-	Mon, 10 Mar 2025 15:04:16 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1741608256;
-	bh=yQbSR/IJoyQ0CM0slHnQK+Nqd9vWCYt9LC8hjrwd9hg=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=3N8MAR+n+0LltwNhIsUCsS4z9ZdlN3mVjT3YjhVxhQapXN9CB0W8hACTOOcCmQHqZ
-	 mfYcPKoqXadSjs+nvISkRWgKPHTOWWT9SOuKc3vWVBZnWWdW6b1pj0AUVYfILPIgOg
-	 7txAX17EwUCueYGi5I8why2gQaWxCynL+viNswMM=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
-From: Andrey Ryabinin <arbn@yandex-team.com>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Graf <graf@amazon.com>,
-	James Gowans <jgowans@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	kexec@lists.infradead.org,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	David Rientjes <rientjes@google.com>,
-	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [PATCH v2 7/7] kstate, test: add test module for testing kstate subsystem.
-Date: Mon, 10 Mar 2025 13:03:18 +0100
-Message-ID: <20250310120318.2124-8-arbn@yandex-team.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250310120318.2124-1-arbn@yandex-team.com>
-References: <20250310120318.2124-1-arbn@yandex-team.com>
+	id 1trfrk-00000003Kv2-0q8J;
+	Mon, 10 Mar 2025 16:20:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1741623632; x=1773159632;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=kua1+P7pBuS50I7egTYFseHRI4Y7N92xh/jBVSs2A1g=;
+  b=B0mQCK9mTRSvF5OZ6ColUCzzCcQbLBbXB0NE/ctvQEzxcCX+IRXjuPYA
+   XuQEbzdr93LiNaQG3tLncayRSYcd466U7+BDFQnqCq/SqZLgPZ7tGSadO
+   Az84E6+lMQG3KgB9Rl0tNh+Ao0zrtSP4quWnNOA6PnTQlqfBKb79Z9UKM
+   E=;
+X-IronPort-AV: E=Sophos;i="6.14,236,1736812800"; 
+   d="scan'208";a="30459260"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 16:20:19 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:25065]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.22.127:2525] with esmtp (Farcaster)
+ id 4286f8c0-5c5d-4095-b20b-85582cfebec2; Mon, 10 Mar 2025 16:20:18 +0000 (UTC)
+X-Farcaster-Flow-ID: 4286f8c0-5c5d-4095-b20b-85582cfebec2
+Received: from EX19D020UWC001.ant.amazon.com (10.13.138.157) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 10 Mar 2025 16:20:02 +0000
+Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
+ EX19D020UWC001.ant.amazon.com (10.13.138.157) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 10 Mar 2025 16:20:02 +0000
+Received: from email-imr-corp-prod-pdx-all-2c-475d797d.us-west-2.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Mon, 10 Mar 2025 16:20:02 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-pdx-all-2c-475d797d.us-west-2.amazon.com (Postfix) with ESMTP id 1694FA04AA;
+	Mon, 10 Mar 2025 16:20:02 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id A154B6221; Mon, 10 Mar 2025 16:20:01 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Graf <graf@amazon.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
+	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt
+	<benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, Catalin Marinas
+	<catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, "David
+ Woodhouse" <dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>,
+	"Ingo Molnar" <mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan
+ Corbet <corbet@lwn.net>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+	<peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring
+	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "Stanislav
+ Kinsburskii" <skinsburskii@linux.microsoft.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky
+	<thomas.lendacky@amd.com>, Usama Arif <usama.arif@bytedance.com>, Will Deacon
+	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH v4 06/14] kexec: Add KHO parsing support
+In-Reply-To: <20250206132754.2596694-7-rppt@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+	<20250206132754.2596694-7-rppt@kernel.org>
+Date: Mon, 10 Mar 2025 16:20:01 +0000
+Message-ID: <mafs0zfhs97ta.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250310_050418_708783_9DCED813 
-X-CRM114-Status: GOOD (  19.88  )
+X-CRM114-CacheID: sfid-20250310_092032_296683_2D081AEE 
+X-CRM114-Status: GOOD (  23.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,162 +108,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is simple test and playground useful kstate subsystem development.
-It contains some structure with different kind of data which migrated
-across kexec to the new kernel using kstate.
+Hi Mike,
 
-Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
----
- include/linux/kstate.h |  3 ++
- kernel/kstate.c        |  5 +++
- lib/Makefile           |  2 +
- lib/test_kstate.c      | 86 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+)
- create mode 100644 lib/test_kstate.c
+On Thu, Feb 06 2025, Mike Rapoport wrote:
+[...]
+> @@ -444,7 +576,141 @@ static void kho_reserve_scratch(void)
+>  	kho_enable = false;
+>  }
+>  
+> +/*
+> + * Scan the DT for any memory ranges and make sure they are reserved in
+> + * memblock, otherwise they will end up in a weird state on free lists.
+> + */
+> +static void kho_init_reserved_pages(void)
+> +{
+> +	const void *fdt = kho_get_fdt();
+> +	int offset = 0, depth = 0, initial_depth = 0, len;
+> +
+> +	if (!fdt)
+> +		return;
+> +
+> +	/* Go through the mem list and add 1 for each reference */
+> +	for (offset = 0;
+> +	     offset >= 0 && depth >= initial_depth;
+> +	     offset = fdt_next_node(fdt, offset, &depth)) {
+> +		const struct kho_mem *mems;
+> +		u32 i;
+> +
+> +		mems = fdt_getprop(fdt, offset, "mem", &len);
+> +		if (!mems || len & (sizeof(*mems) - 1))
+> +			continue;
+> +
+> +		for (i = 0; i < len; i += sizeof(*mems)) {
+> +			const struct kho_mem *mem = &mems[i];
 
-diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-index 36cfefd87572..0bde76aa4d8f 100644
---- a/include/linux/kstate.h
-+++ b/include/linux/kstate.h
-@@ -90,6 +90,7 @@ struct kstate_field {
- enum kstate_ids {
- 	KSTATE_RSVD_MEM_ID = 1,
- 	KSTATE_STRUCT_PAGE_ID,
-+	KSTATE_TEST_ID,
- 	KSTATE_LAST_ID = -1,
- };
+i goes from 0 to len in steps of 16, but you use it to dereference an
+array of type struct kho_mem. So you end up only looking at only one of
+every 16 mems and do an out of bounds access. I found this when testing
+the memfd patches and any time the file was more than 1 page, it started
+to crash randomly.
+
+Below patch should fix that:
+
+---- 8< ----
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index c26753d613cbc..40d1d8ac68d44 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -685,13 +685,15 @@ static void kho_init_reserved_pages(void)
+             offset >= 0 && depth >= initial_depth;
+             offset = fdt_next_node(fdt, offset, &depth)) {
+                const struct kho_mem *mems;
+-               u32 i;
++               u32 i, nr_mems;
  
-@@ -132,6 +133,8 @@ extern struct kstate_description page_state;
+                mems = fdt_getprop(fdt, offset, "mem", &len);
+                if (!mems || len & (sizeof(*mems) - 1))
+                        continue;
  
- void kstate_init(void);
+-               for (i = 0; i < len; i += sizeof(*mems)) {
++               nr_mems = len / sizeof(*mems);
++
++               for (i = 0; i < nr_mems; i++) {
+                        const struct kho_mem *mem = &mems[i];
  
-+bool is_kstate_kernel(void);
-+
- int kstate_save_state(void);
- void free_kstate_stream(void);
- 
-diff --git a/kernel/kstate.c b/kernel/kstate.c
-index 68a1272abceb..3d9b786da72a 100644
---- a/kernel/kstate.c
-+++ b/kernel/kstate.c
-@@ -287,6 +287,11 @@ static void restore_migrate_state(unsigned long kstate_data,
- static unsigned long kstate_stream_addr = -1;
- static unsigned long kstate_size;
- 
-+bool is_kstate_kernel(void)
-+{
-+	return kstate_stream_addr != -1;
-+}
-+
- static void __kstate_register(struct kstate_description *state, void *obj,
- 			struct state_entry *se)
- {
-diff --git a/lib/Makefile b/lib/Makefile
-index d5cfc7afbbb8..1395b852b58d 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -356,6 +356,8 @@ obj-$(CONFIG_PARMAN) += parman.o
- 
- obj-y += group_cpus.o
- 
-+obj-$(CONFIG_KSTATE) += test_kstate.o
-+
- # GCC library routines
- obj-$(CONFIG_GENERIC_LIB_ASHLDI3) += ashldi3.o
- obj-$(CONFIG_GENERIC_LIB_ASHRDI3) += ashrdi3.o
-diff --git a/lib/test_kstate.c b/lib/test_kstate.c
-new file mode 100644
-index 000000000000..1d9feb017415
---- /dev/null
-+++ b/lib/test_kstate.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/io.h>
-+#include <linux/kstate.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+
-+static unsigned long ulong_val;
-+struct kstate_test_data {
-+	int i;
-+	unsigned long *p_ulong;
-+	char s[10];
-+	struct page *page;
-+};
-+
-+struct kstate_description test_state = {
-+	.name = "test",
-+	.version_id = 1,
-+	.id = KSTATE_TEST_ID,
-+	.state_list = LIST_HEAD_INIT(test_state.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_BASE_TYPE(i, struct kstate_test_data, int),
-+		KSTATE_BASE_TYPE(s, struct kstate_test_data, char [10]),
-+		KSTATE_POINTER(p_ulong, struct kstate_test_data),
-+		KSTATE_PAGE(page, struct kstate_test_data),
-+		KSTATE_END_OF_LIST()
-+	},
-+};
-+
-+static struct kstate_test_data test_data;
-+
-+static int init_test_data(void)
-+{
-+	struct page *page;
-+	int i;
-+
-+	test_data.i = 10;
-+	ulong_val = 20;
-+	memcpy(test_data.s, "abcdefghk", sizeof(test_data.s));
-+	page = alloc_page(GFP_KERNEL);
-+	if (!page)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < PAGE_SIZE/4; i += 4)
-+		*((u32 *)page_address(page) + i) = 0xdeadbeef;
-+	test_data.page = page;
-+	return 0;
-+}
-+
-+static void validate_test_data(void)
-+{
-+	int i;
-+
-+	if (WARN_ON(test_data.i != 10))
-+		return;
-+	if (WARN_ON(*test_data.p_ulong != 20))
-+		return;
-+	if (WARN_ON(strcmp(test_data.s, "abcdefghk") != 0))
-+		return;
-+
-+	for (i = 0; i < PAGE_SIZE/4; i += 4) {
-+		u32 val = *((u32 *)page_address(test_data.page) + i);
-+
-+		WARN_ON(val != 0xdeadbeef);
-+	}
-+}
-+
-+static int __init test_kstate_init(void)
-+{
-+	int ret = 0;
-+
-+	test_data.p_ulong = &ulong_val;
-+
-+	if (!is_kstate_kernel()) {
-+		ret = init_test_data();
-+		if (ret)
-+			goto out;
-+	}
-+
-+	kstate_register(&test_state, &test_data);
-+
-+	validate_test_data();
-+
-+out:
-+	return ret;
-+}
-+__initcall(test_kstate_init);
+                        memblock_reserve(mem->addr, mem->size);
+---- >8 ----
+[...]
+
 -- 
-2.45.3
-
+Regards,
+Pratyush Yadav
 
