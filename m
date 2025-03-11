@@ -4,105 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 736E7C28B30
-	for <kexec@archiver.kernel.org>; Tue, 11 Mar 2025 12:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 831E6C28B2F
+	for <kexec@archiver.kernel.org>; Tue, 11 Mar 2025 14:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
 	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
 	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kmXfptVW9q2WaIV8tj2ijtdDlxZ/5KSD1Ekbp7i9cuM=; b=tC1hYSH+ShG7/hXQi9q12emKpT
-	tL4Z9yoSdidviUwIocfRGaXq+xXjTOlF3PVHVzZsr5jFu5Pl+Jw/jLQKNqgQicR9peEUrngG3eiCa
-	KtbTWbf852OQnqrpZMo59p0EjLvb2c19wgpweI7HBCg8W7GW+LDDhmJ56cCKHorn7mesHY1VL4ZJI
-	ep+OJqRCCzbKd+oy4GPw4spiMNybhrqhOpZUYvFPqqkbcYicC8hSi+JsMrBnjCavNPseSA3vNhhS1
-	EPzZ1n0/dzmx93Nxi55nm351V5FMGevE6W2Ks1k6L301HlvHdqfkFuhHz7zXgmB+kPNOO/+VubYu2
-	Iwm8z6gQ==;
+	bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=; b=am/oT+aZ0eWCKOdsoO/emrb+5y
+	rkD2RYXRC4P08MyZ+jaurgpNyaVjuB/SGtNRJd3BzM61iS3SLfwqWLZszXvQHeUPwzYbAGbPXtO5H
+	9Wve57pTVBwDf9GBYVSFtv+aT2nx2ZppsAT8Nz0vco2okqPuy4XYlvlfjtAPEpJr7gurX96NOHKHH
+	CkAHBCrqXoijnaPdbv64jHfgxeXxgd9SNxp2g1g0YgTxQBZ8+jpsuKM4J+RBLUD5FiLTFOOOf+Nm7
+	4OOaEhrsQ3Z0u1iv9HqsCelufDISKbRhnP9loIz0aqKItO3W6cTWOKKsrWXxLzBC9AlPii4JqWnDS
+	KLL8PHDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trz3f-00000005jne-0nyf;
-	Tue, 11 Mar 2025 12:50:07 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1ts0oT-000000061CO-1EjQ;
+	Tue, 11 Mar 2025 14:42:33 +0000
+Received: from mail-wr1-x42d.google.com ([2a00:1450:4864:20::42d])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tryyg-00000005iMC-2YHe
+	id 1ts0nM-000000060uV-3yeL
 	for kexec@lists.infradead.org;
-	Tue, 11 Mar 2025 12:44:59 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9vOFU005892;
-	Tue, 11 Mar 2025 12:44:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=kmXfpt
-	VW9q2WaIV8tj2ijtdDlxZ/5KSD1Ekbp7i9cuM=; b=a180WzogI/vru5HC+uWMdy
-	vh3s3wLkFb93WWzLc2wsiU2I+SWifbCbHVeayXonBY59goNuwa5nDdGbcoPlJ4DG
-	fs7fwONjAvw3ObzU0SrEa0mNRgIRz0nGvmuVobFJrQE4yZBK/KsHTf0Gc/zabgJ2
-	NajFQFNIyj9WThcO+u2fiKND7u+MmFXZhuxfUxM//GuY/BB+KtT239lR88Hzp6n2
-	PROjIeFw23xRC0bNt5n+Y35unxLE7UcjzvtUHtOHXeroinrnDwsFUSN95PNR2aDp
-	3jCVQHGYQ5NlDporctugz61HWAPa5fDnxB272zQV7TB5o+HA09m8Mlm4IQlRnv+Q
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a78quw37-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 12:44:37 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BCN9E0006941;
-	Tue, 11 Mar 2025 12:44:36 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45907t4ct0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 12:44:36 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BCiZWA12124844
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 12:44:36 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B303A5804B;
-	Tue, 11 Mar 2025 12:44:35 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DED3F58055;
-	Tue, 11 Mar 2025 12:44:33 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.163.116])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 11 Mar 2025 12:44:33 +0000 (GMT)
-Message-ID: <631f326006226e23f4f755fd32255792f6514a90.camel@linux.ibm.com>
-Subject: Re: [PATCH v9 1/7] ima: copy only complete measurement records
- across kexec
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Tue, 11 Mar 2025 08:44:33 -0400
-In-Reply-To: <69f43be0ed70eee45d3d9d9ac2aeaf39def5770a.camel@linux.ibm.com>
-References: <20250304190351.96975-1-chenste@linux.microsoft.com>
-	 <20250304190351.96975-2-chenste@linux.microsoft.com>
-	 <Z8g+uhZQ6totYLmp@MiWiFi-R3L-srv>
-	 <fe6e3c1333a50d66dc876b5a196d3491170802a8.camel@linux.ibm.com>
-	 <8bc74dd8-ecd0-44ad-88a2-8b36fa61100a@linux.microsoft.com>
-	 <69f43be0ed70eee45d3d9d9ac2aeaf39def5770a.camel@linux.ibm.com>
+	Tue, 11 Mar 2025 14:41:26 +0000
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-39143200ddaso1600005f8f.1
+        for <kexec@lists.infradead.org>; Tue, 11 Mar 2025 07:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741704082; x=1742308882; darn=lists.infradead.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=;
+        b=A7zSE2qSGnRwM2ho4oeIv/bBJ3KyNxUBuBAwaCQY1w5TQWIfxNt9e6oNDjamAoyXGo
+         SCTT1AU0+8GgeXn7jm2LHmv0Dgpkkuqmq8ljFb2v1rgsadlZI0DR16SNW3R91w6hFyUD
+         mTMEKVRG2iJk3kI5FxAciED3DPcty7PKcxcH2nlV2p0G3sucWQ3Zefwnkfcqpg6k80O1
+         DafiSruQsc4H95G2KeJC+WdrMot9emOoeoZwcfsSZMd+6nBcNgkWu0SOSyIcxR3lveIx
+         rfsQjFfdFbAna7mzsM4BIqRAIeJYUA2YqUzTVNwWbvxXNQAKRiIZYpX7IxrCus+v18Hv
+         qLVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741704082; x=1742308882;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=;
+        b=hAB5t34wVG7/lKTjHthHaI80vdhCweSAT0CO8uWdxhQDmxUted042uaG20xEyzLMB9
+         YIGuWR8xR/B2HTWz7B2rFkpMfEBHT/3oKj4h7x7aMsusYhJFVv0YT+QLefU3lTjq5Gm+
+         iSqT2AspLTSjYVl9bIoljU6GIyVZ7s+J/1RBBJO7m/uguBXhDlVMN3wOivZl5Zsg9Hu8
+         CBbvXDYLClcJuePYgH+p9+bXBe9YRgsCd7n0hZfhJ45J88fhQ9bj4tl7U5N0Dr4RLpqW
+         Fds6YuozVRypFtMZ+R1cJaSeMIO7sO77TKhO8MlP/kfajKrvAFCkMmXeLTBrZFh4atmR
+         re1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRUNCpjl9fTXs+YZKwWRWLz8iT/S85kDKOvoYCuYuo8sl1Tezek2ZzcpdNhybY4RTXp26r0A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzykZalVrSi+ogwzL5Cm97ks5gPVEA2cKukNr82YJm1CaVRFVWo
+	0KmuPFz04o5cbU5/mFrGODB+Dqy8t5yj7/oNnwFvMT7yc+5tatzmj0ae1OzhIYM=
+X-Gm-Gg: ASbGnct4p9E3jFu21L5djYPtUkxvTO2LPJD+BymXpMjYlT1fkl3JYGDXr/kIqGsWZez
+	u4gGrn5lsmQYkXDe+/Kgr9F7zfEWX7FPZc4ntZ1CrPaTDmfZlebn0JnUVLZTA3H+BGAVn6HqoEn
+	qa9iHnMKjtRTF3i9JwUXlhySz1OXj1BKSYQSTdOIyza0gxsKpzwcW6IaONFMulbueHJgmQD5Wf9
+	QdnbnfQzo2FuWINvPlPEGzb0S3u7m1CfddSuXZJ3zL8JTWoKFjWlcosCZ3MvfjmP1WU1VXGiW34
+	iJFyMd7T29j3Nh8XBbBkIyl7zcN5/F6+awnrZon9+EaGjdGAdog8+m8Fj74e8DCQgjG5G7bQz9s
+	=
+X-Google-Smtp-Source: AGHT+IHedVj4RUj6sW41ewt21ZWFTQVrQn0/iCeA7D/35qQUSXCzs/EtRBqy+mOCc1u29u+Bx4/luQ==
+X-Received: by 2002:a5d:584b:0:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3926c78f6b5mr4736641f8f.54.1741704082203;
+        Tue, 11 Mar 2025 07:41:22 -0700 (PDT)
+Received: from [192.168.3.33] (110.39.160.45.gramnet.com.br. [45.160.39.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0195casm18675615f8f.53.2025.03.11.07.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 07:41:21 -0700 (PDT)
+Message-ID: <9a8b7634b123e82c3eaf278a5944feafd91279cc.camel@suse.com>
+Subject: Re: [PATCH 0/5] printk: renaming some suspend/resume functions and
+ one fix for unblanking
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eric Biederman	
+ <ebiederm@xmission.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	 <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, Todd E Brandt
+ <todd.e.brandt@linux.intel.com>, Jiri Slaby	 <jirislaby@kernel.org>,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-serial@vger.kernel.org
+Date: Tue, 11 Mar 2025 11:41:14 -0300
+In-Reply-To: <Z9AvKmM4Li57-E2E@pathway.suse.cz>
+References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
+	 <Z9AShs1dEO0jrgjL@pathway.suse.cz> <Z9AvKmM4Li57-E2E@pathway.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LKRc30FZcYrokCVrh36qHk1wdT_YHYkV
-X-Proofpoint-ORIG-GUID: LKRc30FZcYrokCVrh36qHk1wdT_YHYkV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_02,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503110080
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250311_054458_764272_A5809756 
-X-CRM114-Status: GOOD (  36.51  )
+X-CRM114-CacheID: sfid-20250311_074124_984986_CA31A277 
+X-CRM114-Status: GOOD (  25.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,119 +107,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 2025-03-06 at 21:51 -0500, Mimi Zohar wrote:
-> On Thu, 2025-03-06 at 14:45 -0800, steven chen wrote:
-> > On 3/5/2025 4:27 AM, Mimi Zohar wrote:
-> > > On Wed, 2025-03-05 at 20:08 +0800, Baoquan He wrote:
-> > > > On 03/04/25 at 11:03am, steven chen wrote:
-> > > > > Carrying the IMA measurement list across kexec requires allocatin=
-g a
-> > > > > buffer and copying the measurement records.  Separate allocating =
-the
-> > > > > buffer and copying the measurement records into separate function=
-s in
-> > > > > order to allocate the buffer at kexec 'load' and copy the measure=
-ments
-> > > > > at kexec 'execute'.
-> > > > >=20
-> > > > > This patch includes the following changes:
-> > > > I don't know why one patch need include so many changes. From below=
- log,
-> > > > it should be split into separate patches. It may not need to make o=
-ne
-> > > > patch to reflect one change, we should at least split and wrap seve=
-ral
-> > > > kind of changes to ease patch understanding and reviewing. My perso=
-nal
-> > > > opinion.
-> > > Agreed, well explained.
+On Tue, 2025-03-11 at 13:40 +0100, Petr Mladek wrote:
+> On Tue 2025-03-11 11:38:00, Petr Mladek wrote:
+> > On Wed 2025-02-26 16:59:00, Marcos Paulo de Souza wrote:
+> > > Hello, I've being working on some patches that help to clarify
+> > > the suspend/resume
+> > > of printk machinery. The last patch on this patchset address one
+> > > issue regarding
+> > > suspended consoles and blanking.
 > > >=20
-> > > Mimi
+> > > This is a part one patchset that I would like to see merged
+> > > before I send more patches
+> > > that will rework the suspend flag (a global suspend flag istead
+> > > of per console) and
+> > > the removal of CON_ENABLED flag later on (I've created a function
+> > > that will forcibly)
+> > > register the console instead of using this flag.
 > > >=20
-> > > > >   - Refactor ima_dump_measurement_list() to move the memory alloc=
-ation
-> > > > >     to a separate function ima_alloc_kexec_file_buf() which alloc=
-ates
-> > > > >     buffer of size 'kexec_segment_size' at kexec 'load'.
-> > > > >   - Make the local variable ima_kexec_file in ima_dump_measuremen=
-t_list()
-> > > > >     a local static to the file, so that it can be accessed from
-> > > > >     ima_alloc_kexec_file_buf(). Compare actual memory required to=
- ensure
-> > > > >     there is enough memory for the entire measurement record.
-> > > > >   - Copy only complete measurement records.
-> > > > >   - Make necessary changes to the function ima_add_kexec_buffer()=
- to call
-> > > > >     the above two functions.
-> > > > >   - Compared the memory size allocated with memory size of the en=
-tire
-> > > > >     measurement record. Copy only complete measurement records if=
- there
-> > > > >     is enough memory. If there is not enough memory, it will not =
-copy
-> > > > >     any IMA measurement records, and this situation will result i=
-n a
-> > > > >     failure of remote attestation.
-> > > > >=20
-> > > > > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> > > Please review!
+> > >=20
+> > > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 > >=20
-> > I will split this patch into the following two patches:
+> > Looks good to me. I could fix the typos when pushing.
 > >=20
-> >  =C2=A0 =C2=A0 ima: define and call ima_alloc_kexec_file_buf
-> >  =C2=A0=C2=A0=C2=A0 ima: copy measurement records as much as possible a=
-cross kexec
+> > Well, there is one more thing. It seems that the simple graphic
+> > logger
+> > was merged for 6.14-rc1. And the console_stop()/console_start() API
+> > is used also in drivers/gpu/drm/clients/drm_log.c.
+> >=20
+> > It is actually the code which motivated this rename, as already
+> > pointed out by John, see
+> > https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.suse.cz/
+> >=20
+> > Well, I am going to update these two locations when pushing this
+> > as well. Let's just get this change done.
 >=20
-> Steven, breaking up code into patches is in order to simplify patch revie=
-w.=20
-> This is done by limiting each patch to a single "logical change" [1].  Fo=
-r
-> example, the change below has nothing to do with "separate allocating the=
- buffer
-> and copying the measurement records into separate functions".
+> And I did as mentioned above.
 >=20
->         /* This is an append-only list, no need to hold the RCU read lock=
- */
->         list_for_each_entry_rcu(qe, &ima_measurements, later, true) {
-> -               if (file.count < file.size) {
-> +               entry_size +=3D ima_get_binary_runtime_entry_size(qe->ent=
-ry);=20
-> +               if (entry_size <=3D segment_size) {
->                         khdr.count++;
-> -                       ima_measurements_show(&file, qe);
-> +                       ima_measurements_show(&ima_kexec_file, qe);
->                 } else {
->                         ret =3D -EINVAL;
-> +                       pr_err("IMA log file is too big for Kexec buf\n")=
-;
->                         break;
->                 }
->         }
+> JFYI, the patcheset has been committed into printk/linux.git,
+> branch for-6.15-console-suspend-api-cleanup.
+
+Thanks to all reviewers and to you Petr for taking the patches and
+adjusting the typos!
+
 >=20
-> The original code potentially copied a partial last measurement record, n=
-ot a
-> complete measurement record.  For ease of review, the above change is fin=
-e, but
-> it needs to be a separate patch.
->=20
-> Patches:
-> 1. ima: copy only complete measurement records across kexec
-> 2. ima: define and call ima_alloc_kexec_file_buf()
+> Best Regards,
+> Petr
 
-Steven,
-
-The alternative would be to revert using ima_get_binary_runtime_entry_size(=
-) and
-simply use "ima_kexec_file.count < ima_kexec_file.size".  Only
-ima_kexec_file.size would be initialized in ima_alloc_kexec_buf().  The res=
-t
-would remain in ima_dump_measurement_list().  get_binary_runtime_size() wou=
-ldn't
-need to be made global.
-
-To further simplify the patch review, first define a separate patch to just
-rename the seq_file "file" to "ima_kexec_file".
-
-Mimi
 
