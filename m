@@ -4,88 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61BABC282EC
-	for <kexec@archiver.kernel.org>; Tue, 11 Mar 2025 11:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 387BBC282EC
+	for <kexec@archiver.kernel.org>; Tue, 11 Mar 2025 12:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2S7J75ioEQf5j+mrR+hGMyBT53/iTxjv1FPkZemc36s=; b=3QOINdbZcuTtLnOmjYYMbG431t
-	C+iS25iOlNruwlfmWcZD8jHUFujpSUIFvlILNxnLs5lzqDe8Mp1BjsLTipdne3xjXoIjHOrfm9FeS
-	iwPzFzPDfN/16yCWzDmZLjuE7LFFBJhA4FkvNwainIMVwcDwXNRYL5R2DJ1fmkDNnZHyXrxXvDkTR
-	rUvLRhVs15zk/yEnKmyOaGJuwq32H8GUJ2f5pbCp7gULfZ8w/swtTFjl+bZZCP73KJzphQTcLcTST
-	2OaTZHIlpzwBsAU9K0/ruIkFlykDrUJtufTWWl7z5uqN5vlGuJi+sm5+aCmi5gOLmFe2UxJE3cQGO
-	HYfZYajA==;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=; b=fPcvuQWRu9/blRh8IK/MD/8jC8
+	+tAbUS31klRI3TYmHdPBtvORCehTbA4SPIOTiE/XoyDE2UrqoS94IPWIIrD6O3qqLoda02rH9h0xJ
+	WYxa/7FHTcEGgm9zjvsGrsMxbwN0jXDkcujA/CvA/wN0W+SPfAPkejNm3N9rUmyZtynQYL204X9Jl
+	ZiS5EUsCCPO725kBRl+dXHEmo93JIVnHG82P9wSs9PCSXGcVQKzGrYZc38wdCdqd80cBSVDH/nId8
+	NTzWHTza9VwVfgIjqfgr7rVU5710WCjSbvdp5mqdazCfs+kpLsxQ16vIWYYO3Xy9b+2ClWMBm7xTJ
+	r/hyjkMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1trxsu-00000005UM8-3lIy;
-	Tue, 11 Mar 2025 11:34:56 +0000
-Received: from mgamail.intel.com ([198.175.65.9])
+	id 1tryHi-00000005Y7n-00hr;
+	Tue, 11 Mar 2025 12:00:34 +0000
+Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1trxpn-00000005TYE-2vJe
+	id 1tryHf-00000005Y76-1AOa
 	for kexec@lists.infradead.org;
-	Tue, 11 Mar 2025 11:31:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741692704; x=1773228704;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0tsQsh3zhZV4peIz77XXKqRoGd4Q7VV6Rr61QE3yElU=;
-  b=U3TfXIcUngk35Xm8qr/QChtoPWf0b+05cwCXMMmp+1mW0XmE2hIZ65H4
-   wSS7y3K+1LRVtMas0S4Q4u3pH8OJhWx5bZLUK63HcE/HRRZuLsvqoLruR
-   4MIS2PTFYKCRW4Z7wjPEyxBka3Re71MsOZV4yblcEMUPYMAmxCoszHH5Z
-   Md6M4TIpgB1kAoxhQQwpl0uq+e/ZqsZ+WA5fECr77vviD36yH+sRJ6Oxq
-   ZKBmC/43iBCGiakyhTDi3TQeX62ksrsXNnJm3KZ8FgBIBpMGWHAk7qr57
-   u2Q5wwXDPscSufzfvfriCEZ09WP3vMjaSmmh/KVSo/w4K90d0w0jq/qwB
-   w==;
-X-CSE-ConnectionGUID: mj/2UMgCQ/aXcBTCIwQumw==
-X-CSE-MsgGUID: r6TyaaYbTkC243uRDOaIlQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="65182180"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="65182180"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 04:31:41 -0700
-X-CSE-ConnectionGUID: saD4g5O3RZC3b8rSV/pfXw==
-X-CSE-MsgGUID: cabz44ZsQo6Mwgwk+BYESQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="124897106"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 11 Mar 2025 04:31:36 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1trxpd-0006c0-2r;
-	Tue, 11 Mar 2025 11:31:33 +0000
-Date: Tue, 11 Mar 2025 19:31:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrey Ryabinin <arbn@yandex-team.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alexander Graf <graf@amazon.com>, James Gowans <jgowans@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	David Rientjes <rientjes@google.com>,
-	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: Re: [PATCH v2 4/7] kexec, kstate: delay loading of kexec segments
-Message-ID: <202503111944.pfx9UdvP-lkp@intel.com>
-References: <20250310120318.2124-5-arbn@yandex-team.com>
+	Tue, 11 Mar 2025 12:00:32 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 1060D2117D;
+	Tue, 11 Mar 2025 12:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741694428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=vBIeQqR9gJGCprOzJvE8U38YdIcTjjSKjKx09YIiqEc/VFCj9oVYGWtFbhuR4MYobQeV0S
+	vKZr050O4csrIn3QPrZq7p1YmnnRN4jKmUMSH/G7c2vPNlK5dg+GTYwkmf7tFvrYKO9I+u
+	reom673AlFCk5A5fEmKBatc4hkPySj8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741694428;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=kuoDrVEno3+Qe8velVwmuLL+SaoaDe8p6or5q+nTiq/09nKhZYx0xK2CpQ9Mtz1Iza+NhR
+	XsfLA47NwE4U3xBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741694428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=vBIeQqR9gJGCprOzJvE8U38YdIcTjjSKjKx09YIiqEc/VFCj9oVYGWtFbhuR4MYobQeV0S
+	vKZr050O4csrIn3QPrZq7p1YmnnRN4jKmUMSH/G7c2vPNlK5dg+GTYwkmf7tFvrYKO9I+u
+	reom673AlFCk5A5fEmKBatc4hkPySj8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741694428;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=kuoDrVEno3+Qe8velVwmuLL+SaoaDe8p6or5q+nTiq/09nKhZYx0xK2CpQ9Mtz1Iza+NhR
+	XsfLA47NwE4U3xBA==
+Date: Tue, 11 Mar 2025 13:00:28 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v2 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <Z9Al3DI_PsWPN83k@dwarf.suse.cz>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <Z7demEmgm-D_fqi2@dwarf.suse.cz>
+ <Z8UNvvEF2Ow/qigk@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310120318.2124-5-arbn@yandex-team.com>
+In-Reply-To: <Z8UNvvEF2Ow/qigk@MiWiFi-R3L-srv>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250311_043143_775957_8E77612D 
-X-CRM114-Status: GOOD (  12.27  )
+X-CRM114-CacheID: sfid-20250311_050031_491956_1674C564 
+X-CRM114-Status: GOOD (  14.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,61 +117,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Andrey,
+On Mon, Mar 03, 2025 at 10:02:38AM +0800, Baoquan He wrote:
+> On 02/20/25 at 05:55pm, Jiri Bohac wrote:
+> > +static void crash_cma_clear_pending_dma(void)
+> > +{
+> > +	if (!crashk_cma_cnt)
+> > +		return;
+> > +
+> > +	mdelay(CMA_DMA_TIMEOUT_MSEC);
+> > +}
+> > +
+> >  /*
+> >   * No panic_cpu check version of crash_kexec().  This function is called
+> >   * only when panic_cpu holds the current CPU number; this is the only CPU
+> > @@ -116,6 +125,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+> >  		if (kexec_crash_image) {
+> >  			struct pt_regs fixed_regs;
+> >  
+> > +			crash_cma_clear_pending_dma();
+> 
+> This could be too ideal, I am not sure if it's a good way. When crash
+> triggered, we need do the urgent and necessary thing as soon as
+> possible, then shutdown all CPU to avoid further damage. This one second
+> of waiting could give the strayed system too much time. My personal
+> opinion.
 
-kernel test robot noticed the following build errors:
+Good point! I think it makes sense to move the call to crash_cma_clear_pending_dma()
+past the call of machine_crash_shutdown where all the shutdown
+happens, like this:
 
-[auto build test ERROR on tip/x86/core]
-[also build test ERROR on akpm-mm/mm-nonmm-unstable akpm-mm/mm-everything linus/master v6.14-rc6 next-20250307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >  			crash_setup_regs(&fixed_regs, regs);
+> >  			crash_save_vmcoreinfo();
+> >  			machine_crash_shutdown(&fixed_regs);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrey-Ryabinin/kstate-Add-kstate-a-mechanism-to-describe-and-migrate-kernel-state-across-kexec/20250310-200803
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20250310120318.2124-5-arbn%40yandex-team.com
-patch subject: [PATCH v2 4/7] kexec, kstate: delay loading of kexec segments
-config: i386-buildonly-randconfig-003-20250311 (https://download.01.org/0day-ci/archive/20250311/202503111944.pfx9UdvP-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250311/202503111944.pfx9UdvP-lkp@intel.com/reproduce)
++			crash_cma_clear_pending_dma();
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503111944.pfx9UdvP-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/vmcore_info.c:24:
->> kernel/kexec_internal.h:39:43: error: incomplete definition of type 'struct kimage'
-      39 |         return IS_ENABLED(CONFIG_KSTATE) && image->file_mode &&
-         |                                             ~~~~~^
-   kernel/kexec_internal.h:9:8: note: forward declaration of 'struct kimage'
-       9 | struct kimage *do_kimage_alloc_init(void);
-         |        ^
-   kernel/kexec_internal.h:40:9: error: incomplete definition of type 'struct kimage'
-      40 |                 (image->type == KEXEC_TYPE_DEFAULT);
-         |                  ~~~~~^
-   kernel/kexec_internal.h:9:8: note: forward declaration of 'struct kimage'
-       9 | struct kimage *do_kimage_alloc_init(void);
-         |        ^
->> kernel/kexec_internal.h:40:19: error: use of undeclared identifier 'KEXEC_TYPE_DEFAULT'
-      40 |                 (image->type == KEXEC_TYPE_DEFAULT);
-         |                                 ^
-   3 errors generated.
-
-
-vim +39 kernel/kexec_internal.h
-
-    36	
-    37	static inline bool kexec_late_load(struct kimage *image)
-    38	{
-  > 39		return IS_ENABLED(CONFIG_KSTATE) && image->file_mode &&
-  > 40			(image->type == KEXEC_TYPE_DEFAULT);
-    41	}
-    42	
+I'll post a v3 with this change included.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
 
