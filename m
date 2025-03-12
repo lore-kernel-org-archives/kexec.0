@@ -4,63 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89D22C28B28
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 21:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73BBBC28B28
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 21:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=; b=1BloxGH4WpH2cY7njAQuyNbByh
-	6J4JYuYczDMKGmPdWEdWhaHtX5V22TNg1tQlzEtSOjuw/XRRrFMXYfln40oXGgTsRGPOQKr3ZdYZb
-	93Tg0jmn3MxKn1gvLq9l0vcNEUFQ2wYj065WA2NasbTJ1jXzO0qXMT84pLHrfIUD4hQSssV58QLtD
-	oyCes16YZ/Gv+THASyKGHLa5csQOreAxy1O4BspsjoqE4WGDkjetb5ZJ+NQwvcKYMU4AaSfmgiwDV
-	zMXIZzJndcBBFODkdhf+GM3YrMg3cTzn+DxWcFNfkYPiC4LmyfbYGaLP4rLNTShLcsTjw5IeMoahH
-	+NUKf+9g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=; b=eaR+v1W2OKq9xvXl3r0Dm0lzun
+	QgQRad3Ropy02dJxCWYnYL+yTI0PuEiafM5chRJQl7OsMo0yw/M/qcUqUVI748DNXSsC2HN7LbP9n
+	DVPNDr9NE7SR9h/gn1dN/Lb04PLPzl4b9CG6s/FU1g4TeiFdjMmn7beGlI9Nng9b2y/EAi2Tyktoo
+	FAglfUR1uMidN/QCuNA5B0JSvJRoD/238O5VC0ADggaEAbHHE1RPIxCvIuEucRl9+yUbqYK5bqhO3
+	fMT7Q23HYpARcHeIfdTtcnmjZ0CcCk/rFsSmSpob5pgBY4nR/IOGOqMhC5Y870t32JfVFZXfJGs1Y
+	hVxbsdGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsTBP-00000009Tks-1Vl8;
-	Wed, 12 Mar 2025 21:00:07 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1tsTEN-00000009UKK-45TE;
+	Wed, 12 Mar 2025 21:03:11 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsTBM-00000009Tje-14YO
+	id 1tsTEL-00000009UJW-1Hdf
 	for kexec@lists.infradead.org;
-	Wed, 12 Mar 2025 21:00:05 +0000
+	Wed, 12 Mar 2025 21:03:10 +0000
 Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 7A51A2118B;
-	Wed, 12 Mar 2025 21:00:02 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTP id 8D41B21169;
+	Wed, 12 Mar 2025 21:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
-	b=m2YcEtLsU2vwXNV4FhAUDIfdZ0rMIiYUM9fY+0HG8+b/3QhL7ZxsAopQYA3bRH/xp6m2fe
-	ugC4g7Iz05c4+E/slzCalJmGTcsBHh2wJonLNtMuJDECmco9EKwQxb/XWzHdN3jTx3OJgQ
-	yO2ZFQGktK3ybTf7wMOy2rKzHS5gYCM=
+	t=1741813387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
+	b=igNDsUhAvWy+YUiNrJnRnQDC0ArpaeNtUrBmYcEDdZh0wFR5Mw+Z0QJPNh0c1VmD991fT8
+	Z27g/xiL303sApjcrXhDO7pYq/1pv0NCnNFfPYU7Ug5kwXcLk0nWYqohQo8sLNCwz29nnL
+	GT2k+s4++ck5iMyka2t8MQIigcIBSvg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813202;
+	s=susede2_ed25519; t=1741813387;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
-	b=if+Pa02u/ZkmWQCDKTXynTtEhigXIfPM3j959XOl2EJ0yk3C5qoEyenotfpcmqm4AYGVk/
-	bhqa5yX3oNcN+bAw==
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
+	b=RnZmJeOiBjydxZ1YIiLlUR6JHiXCnzJo3F+DNMqrOOuWb5QsVONJODP/7AS5aYljf6Sgeg
+	bHzUN6KCtJewJ2Bw==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
-	b=m2YcEtLsU2vwXNV4FhAUDIfdZ0rMIiYUM9fY+0HG8+b/3QhL7ZxsAopQYA3bRH/xp6m2fe
-	ugC4g7Iz05c4+E/slzCalJmGTcsBHh2wJonLNtMuJDECmco9EKwQxb/XWzHdN3jTx3OJgQ
-	yO2ZFQGktK3ybTf7wMOy2rKzHS5gYCM=
+	t=1741813387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
+	b=igNDsUhAvWy+YUiNrJnRnQDC0ArpaeNtUrBmYcEDdZh0wFR5Mw+Z0QJPNh0c1VmD991fT8
+	Z27g/xiL303sApjcrXhDO7pYq/1pv0NCnNFfPYU7Ug5kwXcLk0nWYqohQo8sLNCwz29nnL
+	GT2k+s4++ck5iMyka2t8MQIigcIBSvg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813202;
+	s=susede2_ed25519; t=1741813387;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
-	b=if+Pa02u/ZkmWQCDKTXynTtEhigXIfPM3j959XOl2EJ0yk3C5qoEyenotfpcmqm4AYGVk/
-	bhqa5yX3oNcN+bAw==
-Date: Wed, 12 Mar 2025 22:00:02 +0100
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
+	b=RnZmJeOiBjydxZ1YIiLlUR6JHiXCnzJo3F+DNMqrOOuWb5QsVONJODP/7AS5aYljf6Sgeg
+	bHzUN6KCtJewJ2Bw==
+Date: Wed, 12 Mar 2025 22:03:07 +0100
 From: Jiri Bohac <jbohac@suse.cz>
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
@@ -69,32 +73,35 @@ Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	David Hildenbrand <dhildenb@redhat.com>,
 	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v3 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+Subject: [PATCH v3 1/5] Add a new optional ",cma" suffix to the crashkernel=
+ command line option
+Message-ID: <Z9H2iw83e7eXD8JB@dwarf.suse.cz>
+References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spamd-Result: default: False [-4.30 / 50.00];
+In-Reply-To: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+X-Spamd-Result: default: False [-4.29 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.977];
+	NEURAL_HAM_SHORT(-0.19)[-0.950];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email]
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250312_140004_441232_782755EB 
-X-CRM114-Status: GOOD (  25.65  )
+X-CRM114-CacheID: sfid-20250312_140309_646930_0E541CE3 
+X-CRM114-Status: GOOD (  16.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,140 +116,240 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Add a new cma_size parameter to parse_crashkernel().
+When not NULL, call __parse_crashkernel to parse the CMA
+reservation size from "crashkernel=size,cma" and store it
+in cma_size.
 
-this series implements a way to reserve additional crash kernel
-memory using CMA.
+Set cma_size to NULL in all calls to parse_crashkernel().
 
-Link to the v1 discussion:
-https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
-See below for the changes since v1 and how concerns from the 
-discussion have been addressed.
-
-Currently, all the memory for the crash kernel is not usable by
-the 1st (production) kernel. It is also unmapped so that it can't
-be corrupted by the fault that will eventually trigger the crash.
-This makes sense for the memory actually used by the kexec-loaded
-crash kernel image and initrd and the data prepared during the
-load (vmcoreinfo, ...). However, the reserved space needs to be
-much larger than that to provide enough run-time memory for the
-crash kernel and the kdump userspace. Estimating the amount of
-memory to reserve is difficult. Being too careful makes kdump
-likely to end in OOM, being too generous takes even more memory
-from the production system. Also, the reservation only allows
-reserving a single contiguous block (or two with the "low"
-suffix). I've seen systems where this fails because the physical
-memory is fragmented.
-
-By reserving additional crashkernel memory from CMA, the main
-crashkernel reservation can be just large enough to fit the
-kernel and initrd image, minimizing the memory taken away from
-the production system. Most of the run-time memory for the crash
-kernel will be memory previously available to userspace in the
-production system. As this memory is no longer wasted, the
-reservation can be done with a generous margin, making kdump more
-reliable. Kernel memory that we need to preserve for dumping is
-normally not allocated from CMA, unless it is explicitly
-allocated as movable. Currently this is only the case for memory
-ballooning and zswap. Such movable memory will be missing from
-the vmcore. User data is typically not dumped by makedumpfile.
-When dumping of user data is intended this new CMA reservation
-cannot be used.
-
-There are five patches in this series:
-
-The first adds a new ",cma" suffix to the recenly introduced generic
-crashkernel parsing code. parse_crashkernel() takes one more
-argument to store the cma reservation size.
-
-The second patch implements reserve_crashkernel_cma() which
-performs the reservation. If the requested size is not available
-in a single range, multiple smaller ranges will be reserved.
-
-The third patch updates Documentation/, explicitly mentioning the
-potential DMA corruption of the CMA-reserved memory.
-
-The fourth patch adds a short delay before booting the kdump
-kernel, allowing pending DMA transfers to finish.
-
-The fifth patch enables the functionality for x86 as a proof of
-concept. There are just three things every arch needs to do:
-- call reserve_crashkernel_cma()
-- include the CMA-reserved ranges in the physical memory map
-- exclude the CMA-reserved ranges from the memory available
-  through /proc/vmcore by excluding them from the vmcoreinfo
-  PT_LOAD ranges.
-
-Adding other architectures is easy and I can do that as soon as
-this series is merged.
-
-With this series applied, specifying
-	crashkernel=100M craskhernel=1G,cma
-on the command line will make a standard crashkernel reservation
-of 100M, where kexec will load the kernel and initrd.
-
-An additional 1G will be reserved from CMA, still usable by the
-production system. The crash kernel will have 1.1G memory
-available. The 100M can be reliably predicted based on the size
-of the kernel and initrd.
-
-The new cma suffix is completely optional. When no
-crashkernel=size,cma is specified, everything works as before.
-
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 ---
-Changes since v2:
+ arch/arm/kernel/setup.c              |  2 +-
+ arch/arm64/mm/init.c                 |  2 +-
+ arch/loongarch/kernel/setup.c        |  2 +-
+ arch/mips/kernel/setup.c             |  2 +-
+ arch/powerpc/kernel/fadump.c         |  2 +-
+ arch/powerpc/kexec/core.c            |  2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c |  2 +-
+ arch/riscv/mm/init.c                 |  2 +-
+ arch/s390/kernel/setup.c             |  2 +-
+ arch/sh/kernel/machine_kexec.c       |  2 +-
+ arch/x86/kernel/setup.c              |  2 +-
+ include/linux/crash_reserve.h        |  3 ++-
+ kernel/crash_reserve.c               | 16 ++++++++++++++--
+ 13 files changed, 27 insertions(+), 14 deletions(-)
 
-based on feedback from Baoquan He and David Hildenbrand:
-- kept original formatting of suffix_tbl[]
-- updated documentation to mention movable pages missing from vmcore
-- fixed whitespace in documentation
-- moved the call crash_cma_clear_pending_dma() after
-  machine_crash_shutdown() so that non-crash CPUs and timers are
-  shut down before the delay
-
----
-Changes since v1:
-
-The key concern raised in the v1 discussion was that pages in the
-CMA region may be pinned and used for a DMA transfer, potentially
-corrupting the new kernel's memory. When the cma suffix is used, kdump
-may be less reliable and the corruption hard to debug
-
-This v2 series addresses this concern in two ways:
-
-1) Clearly stating the potential problem in the updated
-Documentation and setting the expectation (patch 3/5)
-
-Documentation now explicitly states that:
-- the risk of kdump failure is increased
-- the CMA reservation is intended for users who can not or don't
-  want to sacrifice enough memory for a standard crashkernel reservation
-  and who prefer less reliable kdump to no kdump at all
-
-This is consistent with the documentation of the
-crash_kexec_post_notifiers option, which can also increase the
-risk of kdump failure, yet may be the only way to use kdump on
-some systems. And just like the crash_kexec_post_notifiers
-option, the cma crashkernel suffix is completely optional:
-the series has zero effect when the suffix is not used.
-
-2) Giving DMA time to finish before booting the kdump kernel
-   (patch 4/5)
-
-Pages can be pinned for long term use using the FOLL_LONGTERM
-flag. Then they are migrated outside the CMA region. Pinning
-without this flag shows that the intent of their user is to only
-use them for short-lived DMA transfers. 
-
-Delay the boot of the kdump kernel when the CMA reservation is
-used, giving potential pending DMA transfers time to finish.
-
-Other minor changes since v1:
-- updated for 6.14-rc2
-- moved #ifdefs and #defines to header files
-- added __always_unused in parse_crashkernel() to silence a false
-  unused variable warning
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index a41c93988d2c..0bfd66c7ada0 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -1004,7 +1004,7 @@ static void __init reserve_crashkernel(void)
+ 	total_mem = get_total_mem();
+ 	ret = parse_crashkernel(boot_command_line, total_mem,
+ 				&crash_size, &crash_base,
+-				NULL, NULL);
++				NULL, NULL, NULL);
+ 	/* invalid value specified or crashkernel=0 */
+ 	if (ret || !crash_size)
+ 		return;
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 9c0b8d9558fc..06bf216a4b0d 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -107,7 +107,7 @@ static void __init arch_reserve_crashkernel(void)
  
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, &high);
++				&low_size, NULL, &high);
+ 	if (ret)
+ 		return;
+ 
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index edcfdfcad7d2..ffdfb5407043 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -266,7 +266,7 @@ static void __init arch_reserve_crashkernel(void)
+ 		return;
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+-				&crash_size, &crash_base, &low_size, &high);
++				&crash_size, &crash_base, &low_size, NULL, &high);
+ 	if (ret)
+ 		return;
+ 
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index fbfe0771317e..11b9b6b63e19 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -458,7 +458,7 @@ static void __init mips_parse_crashkernel(void)
+ 	total_mem = memblock_phys_mem_size();
+ 	ret = parse_crashkernel(boot_command_line, total_mem,
+ 				&crash_size, &crash_base,
+-				NULL, NULL);
++				NULL, NULL, NULL);
+ 	if (ret != 0 || crash_size <= 0)
+ 		return;
+ 
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 4b371c738213..f90aaa2263aa 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -334,7 +334,7 @@ static __init u64 fadump_calculate_reserve_size(void)
+ 	 * memory at a predefined offset.
+ 	 */
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+-				&size, &base, NULL, NULL);
++				&size, &base, NULL, NULL, NULL);
+ 	if (ret == 0 && size > 0) {
+ 		unsigned long max_size;
+ 
+diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
+index 58a930a47422..35f92427d282 100644
+--- a/arch/powerpc/kexec/core.c
++++ b/arch/powerpc/kexec/core.c
+@@ -66,7 +66,7 @@ void __init reserve_crashkernel(void)
+ 	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+ 	/* use common parsing */
+ 	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+-			&crash_size, &crash_base, NULL, NULL);
++			&crash_size, &crash_base, NULL, NULL, NULL);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+ 		crashk_res.end = crash_base + crash_size - 1;
+diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+index 5c8d1bb98b3e..5e4897daaaea 100644
+--- a/arch/powerpc/mm/nohash/kaslr_booke.c
++++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+@@ -178,7 +178,7 @@ static void __init get_crash_kernel(void *fdt, unsigned long size)
+ 	int ret;
+ 
+ 	ret = parse_crashkernel(boot_command_line, size, &crash_size,
+-				&crash_base, NULL, NULL);
++				&crash_base, NULL, NULL, NULL);
+ 	if (ret != 0 || crash_size == 0)
+ 		return;
+ 	if (crash_base == 0)
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 15b2eda4c364..9634a800629b 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -1405,7 +1405,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, &high);
++				&low_size, NULL, &high);
+ 	if (ret)
+ 		return;
+ 
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index d78bcfe707b5..4d9b5b5d0cb2 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -607,7 +607,7 @@ static void __init reserve_crashkernel(void)
+ 	int rc;
+ 
+ 	rc = parse_crashkernel(boot_command_line, ident_map_size,
+-			       &crash_size, &crash_base, NULL, NULL);
++			       &crash_size, &crash_base, NULL, NULL, NULL);
+ 
+ 	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
+ 	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
+diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
+index 8321b31d2e19..37073ca1e0ad 100644
+--- a/arch/sh/kernel/machine_kexec.c
++++ b/arch/sh/kernel/machine_kexec.c
+@@ -146,7 +146,7 @@ void __init reserve_crashkernel(void)
+ 		return;
+ 
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+-			&crash_size, &crash_base, NULL, NULL);
++			&crash_size, &crash_base, NULL, NULL, NULL);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+ 		crashk_res.end = crash_base + crash_size - 1;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cebee310e200..853afde761a7 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -481,7 +481,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, &high);
++				&low_size, NULL, &high);
+ 	if (ret)
+ 		return;
+ 
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index 5a9df944fb80..a681f265a361 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -16,7 +16,8 @@ extern struct resource crashk_low_res;
+ 
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base,
+-		unsigned long long *low_size, bool *high);
++		unsigned long long *low_size, unsigned long long *cma_size,
++		bool *high);
+ 
+ #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index a620fb4b2116..4969d60c00d6 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -172,17 +172,19 @@ static int __init parse_crashkernel_simple(char *cmdline,
+ 
+ #define SUFFIX_HIGH 0
+ #define SUFFIX_LOW  1
+-#define SUFFIX_NULL 2
++#define SUFFIX_CMA  2
++#define SUFFIX_NULL 3
+ static __initdata char *suffix_tbl[] = {
+ 	[SUFFIX_HIGH] = ",high",
+ 	[SUFFIX_LOW]  = ",low",
++	[SUFFIX_CMA]  = ",cma",
+ 	[SUFFIX_NULL] = NULL,
+ };
+ 
+ /*
+  * That function parses "suffix"  crashkernel command lines like
+  *
+- *	crashkernel=size,[high|low]
++ *	crashkernel=size,[high|low|cma]
+  *
+  * It returns 0 on success and -EINVAL on failure.
+  */
+@@ -298,9 +300,11 @@ int __init parse_crashkernel(char *cmdline,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base,
+ 			     unsigned long long *low_size,
++			     unsigned long long *cma_size,
+ 			     bool *high)
+ {
+ 	int ret;
++	unsigned long long __always_unused cma_base;
+ 
+ 	/* crashkernel=X[@offset] */
+ 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
+@@ -331,6 +335,14 @@ int __init parse_crashkernel(char *cmdline,
+ 
+ 		*high = true;
+ 	}
++
++	/*
++	 * optional CMA reservation
++	 * cma_base is ignored
++	 */
++	if (cma_size)
++		__parse_crashkernel(cmdline, 0, cma_size,
++			&cma_base, suffix_tbl[SUFFIX_CMA]);
+ #endif
+ 	if (!*crash_size)
+ 		ret = -EINVAL;
 
 -- 
 Jiri Bohac <jbohac@suse.cz>
