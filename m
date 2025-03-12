@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B430C28B2F
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08CFBC35FF2
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qp5MUfxf+oIzYOLbQwnOjHsqB6Ar6RASj1HyEhE99qw=; b=UfboCHoAZUWzkw+tgjYiJ0d4dD
-	HSQ9UlGerLOfrgLz9fEmPMKNCeBdn9uu6NGn8t7IkU2URS3W7lKhY8aFkGGvuPYyrUXmO3f6kRzO4
-	MmjlClVUsqcxDKzoZNMRWKgAwMz+E4lSEcjC5vS1qVVlU7EHyC/qMHaDXHpQcgR4YH/c2ST0rhRuL
-	4sgfZIWKilQrFaAaTl/sPGee4ja9/nAJh/vPOIDw7fhNOpYfkW44BqJktiq1PYYPRi3gpiiwLEDDQ
-	xDXV9HEAOlEwRrYl4kbuP5UMG+xH6MMzoz4QGgQXMrbrQlJf87PM/6hI7ALDmWWNvo3ihITZag87A
-	lrF9BIXA==;
+	bh=oInsi2D7axo2egqLTm6zsJ7BfqLAvSOVJG6AQYZo6i4=; b=ysb0nfm+inwKVmLGJbpRJvWA9+
+	iHwHi1rpFZFUTJEdwUACDrgltyDaIIwrbEWc33GPeLkmbGjqV7O8xsRqRRam14NmcFubOmNSs4SZ9
+	OdafkqLpaEVPzwLe4vF9CbHmYLYi7n33BDKqNHcvxhHg61uRXkiO+zL71+uZLAW5ulZwN9Myi4BPk
+	awW/zxdZK7TWQ3IUP7yXpd3UxDIIUC3flTXY039DcxIJHIefrlXAGplJE26KpiGoPGG8BmtTgQYd9
+	Yyew6QIz1I75U3wg90X/aEcJIvHLD6f9Yw+8f+VfNKHRF552TJuvayHmIS+AJGowS8ZYOMSC/+pZK
+	NEL6NCwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsOM4-00000008viP-22Lx;
-	Wed, 12 Mar 2025 15:50:48 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tsOM5-00000008vj8-37ZV;
+	Wed, 12 Mar 2025 15:50:49 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIU-00000008jRN-14g3
+	id 1tsNIV-00000008jRp-1LMb
 	for kexec@bombadil.infradead.org;
-	Wed, 12 Mar 2025 14:43:02 +0000
+	Wed, 12 Mar 2025 14:43:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=qp5MUfxf+oIzYOLbQwnOjHsqB6Ar6RASj1HyEhE99qw=; b=k49P0ETXliA0XX6kn82w6hNg23
-	S9B/Jk3XcTx62r3X+AgrBf798mgnDOSJ4pY9B+bsXVdJSED7+AN6rFQL7LgSmq5t/ZNCZjy5Af/mk
-	cngj6qFga/dUmCtw9+nHGNzmGjHrturGnr0hhpbVtrAP+kMliBAB6FSawqXVuzcRlbxFlEYsBfBPd
-	ZFAOI6A6ykC6dJXjJLYk75V8czDygBUVeD2MipZVK0ewrhkdv3Zp33cCipKQSCKf1K8LAOoBQDDOQ
-	+7cnGulWpjkgmel/JPYE4eQMfuH7bM84v+HnIUYbCUIJZnDov+vRM8MYyMrVvWgaL8uvzMmZYyJmE
-	xp43lrpQ==;
+	bh=oInsi2D7axo2egqLTm6zsJ7BfqLAvSOVJG6AQYZo6i4=; b=K6NXXWypJEHl+g3kj4kkSGqGfu
+	up08gClhXsMJsUWf5e5D2727V1MfG1Tr+1UtL6FsLLem+iaWKM26oRNeTGwR2LLoHVsYi1sxIsRF3
+	3molZPfDWGwrRfXIUvYO/Wvz6q4qBSten06E2YlZJD1dhmQrzoJYt0EsWCESGiVFN3/zILYKtwKtN
+	qgLa8hWEO437Ljep2PIxBIN04pXPaGzweCVkFpR5KtlW4QleFhTzAQ/+MH33XIjiIJubAxVdUQyjk
+	YFbUgTGdCFZ1PYPin3HOLhlICQcvnk2WezL79kLIQr2FYteEmyZTkncyVN8dtSujygRibdr7IYJlA
+	rRtF6k0Q==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIR-0000000CxJG-3ivn;
-	Wed, 12 Mar 2025 14:42:59 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNIS-00000002QEt-2cM2;
+	Wed, 12 Mar 2025 14:43:00 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIR-00000009uUg-2mAN;
+	id 1tsNIR-00000009uUn-31Yp;
 	Wed, 12 Mar 2025 14:42:59 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,15 +62,15 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v7 7/8] [DO NOT MERGE] x86/kexec: Add int3 in kexec path for testing
-Date: Wed, 12 Mar 2025 14:34:19 +0000
-Message-ID: <20250312144257.2348250-8-dwmw2@infradead.org>
+Subject: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type information to relocate_kernel()
+Date: Wed, 12 Mar 2025 14:34:20 +0000
+Message-ID: <20250312144257.2348250-9-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,24 +87,59 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
+A previous commit added __nocfi to machine_kexec() because it makes an
+indirect call to relocate_kernel() which lacked CFI type information,
+and caused the system to crash.
+
+Use SYM_TYPED_FUNC_START() to ensure that the type information is
+present, and remove the __nocfi tag.
+
+I still can't make objtool happy with this in both GCC and Clang builds
+at the same time, so not yet for merging; only included in this series
+to nerd-snipe the objtool maintainers.
+
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/machine_kexec_64.c   | 2 +-
+ arch/x86/kernel/relocate_kernel_64.S | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 7abc7aa0261b..84f59f18dcb6 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -380,7 +380,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void __nocfi machine_kexec(struct kimage *image)
++void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
+ 	relocate_kernel_fn *relocate_kernel_ptr;
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 17d41e6e1a4b..2b7fc59af373 100644
+index 2b7fc59af373..999aca909803 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -158,7 +158,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	lidt	(%rsp)
- 	addq	$10, %rsp
+@@ -5,6 +5,7 @@
+  */
  
--	//int3
-+	int3
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <linux/stringify.h>
+ #include <asm/alternative.h>
+ #include <asm/page_types.h>
+@@ -59,8 +60,9 @@ SYM_DATA_END(kexec_debug_idt)
  
+ 	.section .text..relocate_kernel,"ax";
+ 	.code64
+-SYM_CODE_START_NOALIGN(relocate_kernel)
++SYM_TYPED_FUNC_START(relocate_kernel)
+ 	UNWIND_HINT_END_OF_STACK
++	UNWIND_HINT_FUNC
+ 	ANNOTATE_NOENDBR
  	/*
- 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
+ 	 * %rdi indirection_page
 -- 
 2.48.1
 
