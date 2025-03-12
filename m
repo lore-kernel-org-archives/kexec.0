@@ -4,73 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20C26C28B2F
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 14:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D19CC28B2F
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mkqpwbuf7ByU0xfvlRvrXlds+3LpjxULaClXMZ1zD6k=; b=htvQjOFGIz/Lc1uyKydy56ClcV
-	isqDWkNuWfGHf8AGw5V7MuFkUir3EuLx4s/FRh1RDenFYbKZTDetQVP2daCND+oTFR1EBzGqPcpac
-	20Z/4c4dOnOPOfxmeoxvl+KAR4YYAtCENRuuVARLHTlgeQwc5G7RaaIN8YOtk8z1PhBPWBafJgdrQ
-	NnEXFkkBEQgJiuORG3da5V/IlJCU7F7aKNy0urhxWAuv2odybxRlM2RV/XwJnaBL0cE6jNdKBxLot
-	NdNH+RXSLuTpaBzTnRm2i1JBAttsF9LuFTAyU3A+3IP9pzK1nkgv1QllzQg3nlYWnNL0nltC2xCxD
-	HxzV87Og==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oX8M8QqGtnL0HTCgbbxAWVuYLqQ6RLyqgkzfCrg0ngE=; b=nUGEgFoYBLlX5Ec/HHuQ7Aq3dn
+	OuJICvz8tT07qfhBn4TrC4q40hJ+cVDTiCq3qGWhuQyB5gptQUMaBzG6IyeXi4U31W43Bheple76W
+	Y/GLlxO0HZxzpeWf6KXDpzcjOxv+R+Vi1rGLAhGTPlbIQQdWmr6axPgZ93281MdaPFdEzF2f34+QY
+	r1Z9yO8qzcbj5iCw78FAqg7+Fp/tyGZebChSAyhYCA14d7+fFDCKUH9CBf6R9wMlkGWnLpO+7qsIK
+	RqZaFvIjq/RcVjRAbbq36Nzx1VsN13eBejblxGchGxZDcnrDaEOjj1LteWGNHUviHLh5yxxYxF6lI
+	TEL4zQXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIZ-00000008jT6-057m;
-	Wed, 12 Mar 2025 14:43:07 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tsO8T-00000008tPd-39Kc;
+	Wed, 12 Mar 2025 15:36:45 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIV-00000008jRr-1StJ
-	for kexec@bombadil.infradead.org;
-	Wed, 12 Mar 2025 14:43:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=mkqpwbuf7ByU0xfvlRvrXlds+3LpjxULaClXMZ1zD6k=; b=FiU4biJpxiyp8NJeFDNSNgrH3O
-	tZnDWg2pd+US5yJl7J7G/fdhOCFvrmwCKCx/v9/cGvWAFcWHyr2GuUcBrF9xTAkZ/f9FipgPLz3hp
-	rBB35afcY3rYtGPSQJ3BC3CHWsIWm1PmFmYQa23ycqxdcI7GHNr84vm241nQ79x2LUQ68fjx4SZFE
-	iFl+VV92LrZDfRid6fIafgn4UYd30eaSp8RooFX+wjZdIyKSJFrTZaqM5yE7u5m3/rx6kvuz7VMBX
-	yZiAu6ts2ua2zzxysEGCMdzhN9yojTnNRGcEtsfPdyigagyDGnBL1xT2k8uZnXFwxu4UV4yz6yGKx
-	aRQigbmw==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIS-00000002QEr-2cQq;
-	Wed, 12 Mar 2025 14:43:00 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIR-00000009uUV-2Th4;
-	Wed, 12 Mar 2025 14:42:59 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
+	id 1tsO8R-00000008tNP-0U5i
+	for kexec@lists.infradead.org;
+	Wed, 12 Mar 2025 15:36:44 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id E3387211CF;
+	Wed, 12 Mar 2025 15:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741793800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oX8M8QqGtnL0HTCgbbxAWVuYLqQ6RLyqgkzfCrg0ngE=;
+	b=IqdrYTHh2O1WJBtSCpzlk273Zt5h6e8rO0dR2KFjC2fVNtLdP/ovRaIhvL+f6i2co2o+Yd
+	jmyQIkNa2eWRFwFe65cnJqSHbCwucvSaZ62hDpDrYweHkTeknMV77FZ/m92HWwZ4Pnk/cf
+	dec26tzrzRkoxswRSCD78KgZaDSxpdY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741793800;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oX8M8QqGtnL0HTCgbbxAWVuYLqQ6RLyqgkzfCrg0ngE=;
+	b=00RXRHR8be3lFO5p2b/GOxRHVa6IpgwxIG0VashnlL1qcVGU+oVM6ojmKFV6+IBKf1e/Gw
+	p+nlVUkAghlRaoCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741793799; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oX8M8QqGtnL0HTCgbbxAWVuYLqQ6RLyqgkzfCrg0ngE=;
+	b=F0BePVfHsxyFXqqhCO7tBiewuL/s48a8aBEBqcJGc2/kJzJ0Ln4Xfqz0iV7d/NcqM8nM9g
+	F8/JX19ROYWUY2u1o0aE5l6eco/eODi4J1LW1y/ZYW8rXE5XxqVm+lx2aU348uLZ1KSju0
+	aSQD3heH20L76U+dzs6v8QjurfyEERw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741793799;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oX8M8QqGtnL0HTCgbbxAWVuYLqQ6RLyqgkzfCrg0ngE=;
+	b=2grvEfKjon+NHI/ZnIAQ4NdBzQOqwo02KtUjYyBv5c/Wk2EC8H2mKuNpUvA6Lnspkd79fT
+	qmTtf/72BliDwvDQ==
+Date: Wed, 12 Mar 2025 16:36:39 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	jpoimboe@kernel.org,
-	bsz@amazon.de
-Subject: [PATCH v7 5/8] x86/kexec: Add 8250 MMIO serial port output
-Date: Wed, 12 Mar 2025 14:34:17 +0000
-Message-ID: <20250312144257.2348250-6-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
-References: <20250312144257.2348250-1-dwmw2@infradead.org>
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <Z9GqB1cRSD-IQM_s@dwarf.suse.cz>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250312_083643_449328_ADFB6A54 
+X-CRM114-Status: GOOD (  34.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,132 +117,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+On Mon, Mar 03, 2025 at 09:25:30AM +0100, David Hildenbrand wrote:
+> On 20.02.25 17:48, Jiri Bohac wrote:
+> > 
+> > By reserving additional crashkernel memory from CMA, the main
+> > crashkernel reservation can be just large enough to fit the
+> > kernel and initrd image, minimizing the memory taken away from
+> > the production system. Most of the run-time memory for the crash
+> > kernel will be memory previously available to userspace in the
+> > production system. As this memory is no longer wasted, the
+> > reservation can be done with a generous margin, making kdump more
+> > reliable. Kernel memory that we need to preserve for dumping is
+> > never allocated from CMA. User data is typically not dumped by
+> > makedumpfile. When dumping of user data is intended this new CMA
+> > reservation cannot be used.
+> 
+> I'll note that your comment about "user space" is currently the case, but
+> will likely not hold in the long run. The assumption you are making is that
+> only user-space memory will be allocated from MIGRATE_CMA, which is not
+> necessarily the case. Any movable allocation will end up in there.
+> 
+> Besides LRU folios (user space memory and the pagecache), we already support
+> migration of some kernel allocations using the non-lru migration framework.
+> Such allocations (which use __GFP_MOVABLE, see __SetPageMovable()) currently
+> only include
+> * memory balloon: pages we never want to dump either way
+> * zsmalloc (->zpool): only used by zswap (-> compressed LRU pages)
+> * z3fold (->zpool): only used by zswap (-> compressed LRU pages)
+> 
+> Just imagine if we support migration of other kernel allocations, such as
+> user page tables. The dump would be missing important information.
+> 
+> Once that happens, it will become a lot harder to judge whether CMA can be
+> used or not. At least, the kernel could bail out/warn for these kernel
+> configs.
 
-This supports the same 32-bit MMIO-mapped 8250 as the early_printk code.
+Thanks for ponting this out. I still don't see this as a
+roadblock for my primary usecase of the CMA reservation: 
+get at least some (less reliable and potentially
+less useful) kdump where the user is not prepared to sacrifice
+the memory needed for the standard reservation and where the only
+other option is no kdump at all.
 
-It's not clear why the early_printk code supports this form and only this
-form; the actual runtime 8250_pci doesn't seem to support it. But having
-hacked up QEMU to expose such a device, early_printk does work with it,
-and now so does the kexec debug code.
+Still a lot can be analyzed with a vmcore that is missing those
+__GFP_MOVABLE pages. Even if/when some user page tables are
+missing.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/include/asm/kexec.h         |  1 +
- arch/x86/kernel/early_printk.c       |  3 +++
- arch/x86/kernel/machine_kexec_64.c   | 17 +++++++++++++++++
- arch/x86/kernel/relocate_kernel_64.S | 22 ++++++++++++++++++++++
- 4 files changed, 43 insertions(+)
+I'll send a v3 with the documenatation part updated to better
+describe this.
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 8cbdb6fd10c2..5081d0b9e290 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -64,6 +64,7 @@ extern unsigned long kexec_pa_swap_page;
- extern gate_desc kexec_debug_idt[];
- extern unsigned char kexec_debug_exc_vectors[];
- extern uint16_t kexec_debug_8250_port;
-+extern unsigned long kexec_debug_8250_mmio32;
- #endif
+> > The fourth patch adds a short delay before booting the kdump
+> > kernel, allowing pending DMA transfers to finish.
+> 
+> 
+> What does "short" mean? At least in theory, long-term pinning is forbidden
+> for MIGRATE_CMA, so we should not have such pages mapped into an iommu where
+> DMA can happily keep going on for quite a while.
  
- /*
-diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
-index ed4e8d0218ad..989117b2d455 100644
---- a/arch/x86/kernel/early_printk.c
-+++ b/arch/x86/kernel/early_printk.c
-@@ -296,6 +296,9 @@ static __init void early_pci_serial_init(char *s)
- 		/* WARNING! assuming the address is always in the first 4G */
- 		early_serial_base =
- 			(unsigned long)early_ioremap(bar0 & PCI_BASE_ADDRESS_MEM_MASK, 0x10);
-+#ifdef CONFIG_KEXEC_CORE
-+		kexec_debug_8250_mmio32 = bar0 & PCI_BASE_ADDRESS_MEM_MASK;
-+#endif
- 		write_pci_config(bus, slot, func, PCI_COMMAND,
- 				 cmdreg|PCI_COMMAND_MEMORY);
- 	}
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index faf2fb1cd9f6..a2e00a814708 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -76,6 +76,19 @@ map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
- #endif
- 
-+static int map_mmio_serial(struct x86_mapping_info *info, pgd_t *level4p)
-+{
-+	unsigned long mstart, mend;
-+
-+	if (!kexec_debug_8250_mmio32)
-+		return 0;
-+
-+	mstart = kexec_debug_8250_mmio32 & PAGE_MASK;
-+	mend = (kexec_debug_8250_mmio32 + PAGE_SIZE + 23) & PAGE_MASK;
-+	pr_info("Map PCI serial at %lx - %lx\n", mstart, mend);
-+	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-+}
-+
- #ifdef CONFIG_KEXEC_FILE
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 		&kexec_bzImage64_ops,
-@@ -285,6 +298,10 @@ static int init_pgtable(struct kimage *image, unsigned long control_page)
- 	if (result)
- 		return result;
- 
-+	result = map_mmio_serial(&info, image->arch.pgd);
-+	if (result)
-+		return result;
-+
- 	/*
- 	 * This must be last because the intermediate page table pages it
- 	 * allocates will not be control pages and may overlap the image.
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index a51b9340934b..d58b4686645c 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -39,6 +39,7 @@ SYM_DATA(kexec_va_control_page, .quad 0)
- SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
-+SYM_DATA(kexec_debug_8250_mmio32, .quad 0)
- SYM_DATA(kexec_debug_8250_port, .word 0)
- 
- 	.balign 16
-@@ -413,6 +414,22 @@ pr_char_null:
- 	ret
- SYM_CODE_END(pr_char_8250)
- 
-+SYM_CODE_START_LOCAL_NOALIGN(pr_char_8250_mmio32)
-+	UNWIND_HINT_FUNC
-+	ANNOTATE_NOENDBR
-+.Lxmtrdy_loop_mmio:
-+	movb	(LSR*4)(%rdx), %ah
-+	testb	$XMTRDY, %ah
-+	jnz	.Lready_mmio
-+	rep nop
-+	jmp .Lxmtrdy_loop_mmio
-+
-+.Lready_mmio:
-+	movb	%al, (%rdx)
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+SYM_CODE_END(pr_char_8250_mmio32)
-+
- /*
-  * Load pr_char function pointer into %rsi and load %rdx with whatever
-  * that function wants to see there (typically port/MMIO address).
-@@ -423,6 +440,11 @@ SYM_CODE_END(pr_char_8250)
- 	testw	%dx, %dx
- 	jnz	1f
- 
-+	leaq	pr_char_8250_mmio32(%rip), %rsi
-+	movq	kexec_debug_8250_mmio32(%rip), %rdx
-+	testq	%rdx, %rdx
-+	jnz	1f
-+
- 	leaq	pr_char_null(%rip), %rsi
- 1:
- .endm
+See patch 4/5 in the series:
+I propose 1 second, which is a negligible time from the kdump POV
+but I assume it should be plenty enough for non-long-term pins in
+MIGRATE_CMA. 
+
+> But that assumes that our old kernel is not buggy, and doesn't end up
+> mapping these pages into an IOMMU where DMA will just continue. I recall
+> that DRM might currently be a problem, described here [1].
+>
+> If kdump starts not working as expected in case our old kernel is buggy,
+> doesn't that partially destroy the purpose of kdump (-> debug bugs in the
+> old kernel)?
+
+Again, this is meant as a kind of "lightweight best effort
+kdump". If there is a bug that causes the crash _and_ a bug in a
+driver that hogs MIGRATE_CMA and maps it into IOMMU then this
+lightweight kdump may break. Then it's time to sacrifice more
+memory and use a normal crashkernel reservation.
+
+It's not like any bug in the old kernel will break it. It's a
+very specific kind of bug that can potentially break it.
+
+I see this whole thing as particularly useful for VMs. Unlike big
+physical machines, where taking away a couple hundred MBs of
+memory for kdump does not really hurt, a VM can ideally be given just
+enough memory for its particular task. This can often be less
+than 1 GB. Proper kdump reservation needs a couple hundred MBs,
+so a very large proportion of the VM memory. In case of a
+virtualization host running hundreds or thousands such VMs this
+means a huge waste of memory. And VMs often don't use too many
+drivers for real hardware, decreasing the risk of hitting a buggy
+driver like this.
+
+Thanks,
+
 -- 
-2.48.1
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
 
