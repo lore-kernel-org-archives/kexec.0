@@ -4,84 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3711C28B2E
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 08:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E4F9C28B28
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 14:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qFBtxCm2NNfm7x2M1GghiCKntj9sXi1mQQfDL+fSHLc=; b=s3sBn2C8dvjBNgUuajbRl46+wA
-	RhjxBvWOgWU0yrsW6+Rm5W8bBRdNNDgL1x41K2f3AKgFrM8ojufz4asgCxHM+Yd9Hdl8g6qe7SaQ0
-	qr21p45MgjH5V6aIxQsoC6AGXeUxPmNvY8IpnsrQLtJBSQw0nQ16xKJNycKobGudGcwfZhy3NPCFj
-	c8kP1NPmEhahmZOwbHJ2i2+6NrRlwu3/Z5QxqvT8LiLYeVQAaenB6DZlKuUK/XL5JBpqeLk85h+uK
-	68cc1X6Ns4AwENOdqWGLY9MZMs5rHMi7K4/Y/N6DxMLtFLP+nOrCk7u1zZrsVUEHioF3mC44MGcig
-	rmtkzAug==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=jrC7MfMsKB+3hH8HtkmSOc1gkuu+QdseKg28Q2AbN0c=; b=WXIKNoFudJAAGgtHCNtorUPRzM
+	ubnXHGt1XHmLp+R8RSOMdbfSFKZZPJVuHaDqmNkLdtZHnUL+5Ot2n5xUiXRg0fthXVpADoprXnlx+
+	OIWPDJfodB++sA4dAC+rWOTswIQxjz25liYrHR13Rl10SwCxRqNlRqqhkY5v0TyTtXnFzna+IsI0O
+	4WVDCKDFp05Svka2fGUtium2xT01mfhAWKWnKSKHUv4GiZ1HyLbVI7icLONBCCVaARjeTN6CSeq5Q
+	561peVispXOmYiRPqydPmD1k4VclhI9owWmEX1sakjTJ8tRF9wPnrfjWntAbM3vN3zwlSQmxe9e7z
+	RHruB9dw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsHut-00000007sxS-0n19;
-	Wed, 12 Mar 2025 08:58:19 +0000
-Received: from mgamail.intel.com ([192.198.163.13])
+	id 1tsNIZ-00000008jUo-1jkC;
+	Wed, 12 Mar 2025 14:43:07 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsHup-00000007svb-3PVq
-	for kexec@lists.infradead.org;
-	Wed, 12 Mar 2025 08:58:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741769896; x=1773305896;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HttexNxW0KtxV4sJ29IXJAlxzJTo/xsJm31W440ao9w=;
-  b=mNvmMihDke/8GvPKfq3nqqUJ9IZZixpTo320Bkys80YD7amEmBFOgaTv
-   I6WeBODtNSTfM57ElNGy35jDDd3z4mSxHFHlcUPGFXIaj1cMScaEgo8ef
-   sIRdBhefh4+03e+CRxbJ3+23Om8DnGEGWRrTLPspWOF+1HpCpMj02Wxue
-   eVDQgQfaq2pyHWGV0B/dPky7AcmlBso+e8v+IuR7rjdJ9243RuVV6vlyJ
-   z9h9VqOE8qkKb7qM+dFZiKRsh8iHuxw49Wubit9eO9h/zDIJSLRXWqbQI
-   /pY9wH/L9Uvt3+NNwvN3kit45xuEV8lWkFcCN85/JtOYA4dcpepbGcwXA
-   g==;
-X-CSE-ConnectionGUID: xXKC/wfRRA+dDOoNcVlkfw==
-X-CSE-MsgGUID: QMe5zVr1QS++PtEij+HyeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="45618598"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="45618598"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 01:58:14 -0700
-X-CSE-ConnectionGUID: UzbWyRTKQ0+krqIOMX7qPw==
-X-CSE-MsgGUID: UBs0sv0gTUSLN+/Dr7g3Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="121475893"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 12 Mar 2025 01:58:09 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsHug-0008Im-0k;
-	Wed, 12 Mar 2025 08:58:06 +0000
-Date: Wed, 12 Mar 2025 16:57:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-	stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-	ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-	bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com
-Subject: Re: [PATCH v9 4/7] ima: kexec: define functions to copy IMA log at
- soft boot
-Message-ID: <202503121600.IMBKp2gC-lkp@intel.com>
-References: <20250304190351.96975-5-chenste@linux.microsoft.com>
+	id 1tsNIV-00000008jRq-1Pdu
+	for kexec@bombadil.infradead.org;
+	Wed, 12 Mar 2025 14:43:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=jrC7MfMsKB+3hH8HtkmSOc1gkuu+QdseKg28Q2AbN0c=; b=JZXh6XOyLQd18bUtexXLGC+YZj
+	W5ZrCmEs4KfUv0hH6+FrKhnOEBQH3i68J56skQ5OZo+v68R+AWXQytgXW/KoqYFtf1d6P5YeHY7RT
+	7zfFMO4i1D1I08p8YE3sSmQOwhSdp/4zUqcbSH53G9qvkTLhWfY9QmrlO4AWR4gHgIBp4+QrlKTrN
+	8b+DPNq9TY+gmK1fF1BcOtTR9FkftHK+73U6xRNgqXrEx4I5LRRjBZLxrGZcrTTO3TOxOlZC/hatP
+	KGMAYN8S7yCoELC6ZYlKkr4GDZaG7zKxwLWzZ8B+WzHLVfiuoR41Dtk57ZRYydl4pwEeQ6He5wYk4
+	IiGdyNVw==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNIS-00000002QEo-2cfb;
+	Wed, 12 Mar 2025 14:43:00 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNIR-00000009uU9-1ntu;
+	Wed, 12 Mar 2025 14:42:59 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: [PATCH v7 2/8] x86/kexec: Debugging support: Load an IDT and basic exception entry points
+Date: Wed, 12 Mar 2025 14:34:14 +0000
+Message-ID: <20250312144257.2348250-3-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
+References: <20250312144257.2348250-1-dwmw2@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304190351.96975-5-chenste@linux.microsoft.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250312_015815_889695_AE1ADAEC 
-X-CRM114-Status: UNSURE (   9.94  )
-X-CRM114-Notice: Please train this message.
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,51 +85,174 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi steven,
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/include/asm/kexec.h         |  5 ++
+ arch/x86/kernel/machine_kexec_64.c   | 21 ++++++++
+ arch/x86/kernel/relocate_kernel_64.S | 74 ++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
 
-[auto build test WARNING on zohar-integrity/next-integrity]
-[also build test WARNING on linus/master v6.14-rc6 next-20250311]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/steven-chen/ima-copy-only-complete-measurement-records-across-kexec/20250305-031719
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
-patch link:    https://lore.kernel.org/r/20250304190351.96975-5-chenste%40linux.microsoft.com
-patch subject: [PATCH v9 4/7] ima: kexec: define functions to copy IMA log at soft boot
-config: powerpc64-randconfig-r133-20250312 (https://download.01.org/0day-ci/archive/20250312/202503121600.IMBKp2gC-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250312/202503121600.IMBKp2gC-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503121600.IMBKp2gC-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   security/integrity/ima/ima_kexec.c:107:30: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] version @@     got restricted __le16 [usertype] @@
-   security/integrity/ima/ima_kexec.c:107:30: sparse:     expected unsigned short [addressable] [assigned] [usertype] version
-   security/integrity/ima/ima_kexec.c:107:30: sparse:     got restricted __le16 [usertype]
-   security/integrity/ima/ima_kexec.c:108:28: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long [addressable] [assigned] [usertype] count @@     got restricted __le64 [usertype] @@
-   security/integrity/ima/ima_kexec.c:108:28: sparse:     expected unsigned long long [addressable] [assigned] [usertype] count
-   security/integrity/ima/ima_kexec.c:108:28: sparse:     got restricted __le64 [usertype]
-   security/integrity/ima/ima_kexec.c:109:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long [addressable] [assigned] [usertype] buffer_size @@     got restricted __le64 [usertype] @@
-   security/integrity/ima/ima_kexec.c:109:34: sparse:     expected unsigned long long [addressable] [assigned] [usertype] buffer_size
-   security/integrity/ima/ima_kexec.c:109:34: sparse:     got restricted __le64 [usertype]
->> security/integrity/ima/ima_kexec.c:209:23: sparse: sparse: symbol 'update_buffer_nb' was not declared. Should it be static?
-
-vim +/update_buffer_nb +209 security/integrity/ima/ima_kexec.c
-
-   208	
- > 209	struct notifier_block update_buffer_nb = {
-   210		.notifier_call = ima_update_kexec_buffer,
-   211		.priority = 1,
-   212	};
-   213	
-
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 8ad187462b68..ec7636f4f86a 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -8,6 +8,9 @@
+ # define PA_PGD			2
+ # define PA_SWAP_PAGE		3
+ # define PAGES_NR		4
++#else
++/* Size of each exception handler referenced by the IDT */
++# define KEXEC_DEBUG_EXC_HANDLER_SIZE	6 /* pushi, pushi, 2-byte jmp */
+ #endif
+ 
+ # define KEXEC_CONTROL_PAGE_SIZE	4096
+@@ -58,6 +61,8 @@ struct kimage;
+ extern unsigned long kexec_va_control_page;
+ extern unsigned long kexec_pa_table_page;
+ extern unsigned long kexec_pa_swap_page;
++extern gate_desc kexec_debug_idt[];
++extern unsigned char kexec_debug_exc_vectors[];
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index a68f5a0a9f37..faf2fb1cd9f6 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -304,6 +304,24 @@ static void load_segments(void)
+ 		);
+ }
+ 
++static void prepare_debug_idt(unsigned long control_page, unsigned long vec_ofs)
++{
++	gate_desc idtentry = { 0 };
++	int i;
++
++	idtentry.bits.p = 1;
++	idtentry.bits.type = GATE_TRAP;
++	idtentry.segment = __KERNEL_CS;
++	idtentry.offset_low = (control_page & 0xFFFF) + vec_ofs;
++	idtentry.offset_middle = (control_page >> 16) & 0xFFFF;
++	idtentry.offset_high = control_page >> 32;
++
++	for (i = 0; i < 16; i++) {
++		kexec_debug_idt[i] = idtentry;
++		idtentry.offset_low += KEXEC_DEBUG_EXC_HANDLER_SIZE;
++	}
++}
++
+ int machine_kexec_prepare(struct kimage *image)
+ {
+ 	void *control_page = page_address(image->control_code_page);
+@@ -321,6 +339,9 @@ int machine_kexec_prepare(struct kimage *image)
+ 	if (image->type == KEXEC_TYPE_DEFAULT)
+ 		kexec_pa_swap_page = page_to_pfn(image->swap_page) << PAGE_SHIFT;
+ 
++	prepare_debug_idt((unsigned long)__pa(control_page),
++			  (unsigned long)kexec_debug_exc_vectors - reloc_start);
++
+ 	__memcpy(control_page, __relocate_kernel_start, reloc_end - reloc_start);
+ 
+ 	set_memory_rox((unsigned long)control_page, 1);
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index ac058971a382..5bf3eec2821b 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -50,6 +50,11 @@ SYM_DATA_START_LOCAL(kexec_debug_gdt)
+ 	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
+ SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
+ 
++	.balign 8
++SYM_DATA_START(kexec_debug_idt)
++	.skip 0x100, 0x00
++SYM_DATA_END(kexec_debug_idt)
++
+ 	.section .text..relocate_kernel,"ax";
+ 	.code64
+ SYM_CODE_START_NOALIGN(relocate_kernel)
+@@ -139,6 +144,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	movq	%ds, %rax
+ 	movq	%rax, %ds
+ 
++	/* Now an IDTR on the stack to load the IDT the kernel created */
++	leaq	kexec_debug_idt(%rip), %rsi
++	pushq	%rsi
++	pushw	$0xff
++	lidt	(%rsp)
++	addq	$10, %rsp
++
++	//int3
++
+ 	/*
+ 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
+ 	 * below.
+@@ -364,3 +378,63 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	ret
+ 	int3
+ SYM_CODE_END(swap_pages)
++
++SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
++	/* Each of these is 6 bytes. */
++.macro vec_err exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	nop
++	nop
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++.macro vec_noerr exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	pushq	$0
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++	ANNOTATE_NOENDBR
++	vec_noerr 0 // #DE
++	vec_noerr 1 // #DB
++	vec_noerr 2 // #NMI
++	vec_noerr 3 // #BP
++	vec_noerr 4 // #OF
++	vec_noerr 5 // #BR
++	vec_noerr 6 // #UD
++	vec_noerr 7 // #NM
++	vec_err 8   // #DF
++	vec_noerr 9
++	vec_err 10 // #TS
++	vec_err 11 // #NP
++	vec_err 12 // #SS
++	vec_err 13 // #GP
++	vec_err 14 // #PF
++	vec_noerr 15
++SYM_CODE_END(kexec_debug_exc_vectors)
++
++SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
++	pushq	%rax
++	pushq	%rdx
++	movw	$0x3f8, %dx
++	movb	$'A', %al
++	outb	%al, %dx
++	popq	%rdx
++	popq	%rax
++
++	/* Only return from int3 */
++	cmpq	$3, (%rsp)
++	jne	.Ldie
++
++	addq	$16, %rsp
++	iretq
++
++.Ldie:
++	hlt
++	jmp	.Ldie
++
++SYM_CODE_END(exc_handler)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
 
