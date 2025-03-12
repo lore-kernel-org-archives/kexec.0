@@ -4,130 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42FE9C28B28
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 20:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89D22C28B28
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 21:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=88GBzbK7SHQe3MsJcPgR8t63Je+MXumEN25cwFg8WLE=; b=25T2TPdhJOvFQkGsRj5CoI4ZcI
-	TEQm27BHKQ4ZTGILsXDao1sux+zXN3Hg534LIbnUNl9fwlf5wxT6H8SA8/JgSSU5vgCUNrYnf2E/S
-	5sCcOJHur5Nt4AvKClzGmkOReCtEx81Rmu8YIOyYVXMylYqasHpIKHwMccSREsspvKtifz17+KeOp
-	doR9pKbWG22Lb/r0Ow41EZ1hWbpizLvI9UwPfaus7sotu5O2oJs3BYe7GqtDxuUZpRVAsfjdXHJ+J
-	Dx+0iBac2DjCgB1Uj9QA3LijxbnJUmiq6g3iywaOkFg+8mmLx3Fa6fANjdusY21SsryPhJLcpGNqI
-	8FwhE9TA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=; b=1BloxGH4WpH2cY7njAQuyNbByh
+	6J4JYuYczDMKGmPdWEdWhaHtX5V22TNg1tQlzEtSOjuw/XRRrFMXYfln40oXGgTsRGPOQKr3ZdYZb
+	93Tg0jmn3MxKn1gvLq9l0vcNEUFQ2wYj065WA2NasbTJ1jXzO0qXMT84pLHrfIUD4hQSssV58QLtD
+	oyCes16YZ/Gv+THASyKGHLa5csQOreAxy1O4BspsjoqE4WGDkjetb5ZJ+NQwvcKYMU4AaSfmgiwDV
+	zMXIZzJndcBBFODkdhf+GM3YrMg3cTzn+DxWcFNfkYPiC4LmyfbYGaLP4rLNTShLcsTjw5IeMoahH
+	+NUKf+9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsSn1-00000009RRz-10Tz;
-	Wed, 12 Mar 2025 20:34:55 +0000
-Received: from mgamail.intel.com ([192.198.163.12])
+	id 1tsTBP-00000009Tks-1Vl8;
+	Wed, 12 Mar 2025 21:00:07 +0000
+Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsSlZ-00000009RFt-3BUm
+	id 1tsTBM-00000009Tje-14YO
 	for kexec@lists.infradead.org;
-	Wed, 12 Mar 2025 20:33:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741811606; x=1773347606;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=88GBzbK7SHQe3MsJcPgR8t63Je+MXumEN25cwFg8WLE=;
-  b=li/b7/c0DvaUftocgAL7qvB0rFnguxIQfI6MJv+ADA6zDWFOVKGobU5V
-   ZSvFf345FbUZlmiCtKr9Awaf2sJc+uP+HmWz45FfBK+uDjMivfoNRuCbR
-   TJDlFwluUzK1lSIvL0UyRnP22AP+8I0gWmodRRRzWEqcoH0IseKMGgsie
-   Sy4GqvhhZh+vr/cWNU1hbsTujyt4ihQIKHe5wnmMFwo2e4L9a9IjGnV7W
-   7wLhk3909SOFge30Rs8yQ0FDSEZR9T2HirMT+8AXLvhezKc5eRjoOyFiL
-   JmqQTTreVDunNMNHXrtua0wjJjzdXrg10Poty7zxi47ANSdNf6v1zVYxw
-   A==;
-X-CSE-ConnectionGUID: MJcWotz7ShOeO4dw4kRzog==
-X-CSE-MsgGUID: 4LADPiwgQkGgut5ZJPzAwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="46819852"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="46819852"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:33:22 -0700
-X-CSE-ConnectionGUID: CUU320IxSsC1p8pmhEJVAg==
-X-CSE-MsgGUID: xdDkkXWCSf2inGz7F6reKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="125922456"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.3]) ([10.125.108.3])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:33:22 -0700
-Message-ID: <527a8fc8-3154-4822-8a78-43bd0696221b@intel.com>
-Date: Wed, 12 Mar 2025 13:33:21 -0700
+	Wed, 12 Mar 2025 21:00:05 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 7A51A2118B;
+	Wed, 12 Mar 2025 21:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
+	b=m2YcEtLsU2vwXNV4FhAUDIfdZ0rMIiYUM9fY+0HG8+b/3QhL7ZxsAopQYA3bRH/xp6m2fe
+	ugC4g7Iz05c4+E/slzCalJmGTcsBHh2wJonLNtMuJDECmco9EKwQxb/XWzHdN3jTx3OJgQ
+	yO2ZFQGktK3ybTf7wMOy2rKzHS5gYCM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813202;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
+	b=if+Pa02u/ZkmWQCDKTXynTtEhigXIfPM3j959XOl2EJ0yk3C5qoEyenotfpcmqm4AYGVk/
+	bhqa5yX3oNcN+bAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
+	b=m2YcEtLsU2vwXNV4FhAUDIfdZ0rMIiYUM9fY+0HG8+b/3QhL7ZxsAopQYA3bRH/xp6m2fe
+	ugC4g7Iz05c4+E/slzCalJmGTcsBHh2wJonLNtMuJDECmco9EKwQxb/XWzHdN3jTx3OJgQ
+	yO2ZFQGktK3ybTf7wMOy2rKzHS5gYCM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813202;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=EKRGBWsyZi1wiUOiswHXSRL8V+SVETl/0JBDCl1+UN8=;
+	b=if+Pa02u/ZkmWQCDKTXynTtEhigXIfPM3j959XOl2EJ0yk3C5qoEyenotfpcmqm4AYGVk/
+	bhqa5yX3oNcN+bAw==
+Date: Wed, 12 Mar 2025 22:00:02 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: [PATCH v3 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/1] Accept unaccepted kexec segments' destination
- addresses
-From: Dave Hansen <dave.hansen@intel.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>,
- "Kirill A. Shutemov" <kirill@shutemov.name>, kexec@lists.infradead.org,
- Yan Zhao <yan.y.zhao@intel.com>, linux-kernel@vger.kernel.org,
- linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com,
- security@kernel.org
-References: <20241213094930.748-1-yan.y.zhao@intel.com>
- <xgycziy2o56hnom3oau7sbqed3meoni3razc6njj7ujatldnmm@s7odbl4splbn>
- <Z4T1G4dwzo7qdwSP@MiWiFi-R3L-srv>
- <87zfjuoj3i.fsf@email.froward.int.ebiederm.org>
- <f38f1b56-a5df-4644-be59-56c70499ed92@intel.com>
- <fslhdizolr4twqm4ixevzj6ai5l5qg6mxky25jasn3yctsnvt4@hpwphlmfs5cp>
- <4599571f-804b-40d8-b5c8-e19478a3ad18@intel.com>
- <wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
- <87o6ygskb8.fsf@email.froward.int.ebiederm.org>
- <99cc1c36-ba3d-40c7-a5bd-d13655fba171@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <99cc1c36-ba3d-40c7-a5bd-d13655fba171@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.977];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250312_133325_803110_9ABE6531 
-X-CRM114-Status: GOOD (  10.57  )
+X-CRM114-CacheID: sfid-20250312_140004_441232_782755EB 
+X-CRM114-Status: GOOD (  25.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,27 +109,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 3/4/25 11:16, Dave Hansen wrote:
-> On 3/4/25 10:49, Eric W. Biederman wrote:
->> How goes the work to fix this horrifically slow firmware interface?
-> The firmware interface isn't actually all that slow.
+Hi,
 
-Hey Eric,
+this series implements a way to reserve additional crash kernel
+memory using CMA.
 
-I've noticed a trend on this series. It seems like every time there's
-some forward progress on a fix, you pop up, and ask a question. Someone
-answers the question. Then, a couple of months later, you seem to pop up
-again and ask another form of the same question. It kinda seems to me
-like you may not be thoroughly reading the answers from the previous
-round of discussion. Or, maybe you're like me and have a hard time
-recalling any discussions more than a week ago. ;)
+Link to the v1 discussion:
+https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
+See below for the changes since v1 and how concerns from the 
+discussion have been addressed.
 
-Either way, I hope you're finally convinced that the hardware design
-here is reasonable.
+Currently, all the memory for the crash kernel is not usable by
+the 1st (production) kernel. It is also unmapped so that it can't
+be corrupted by the fault that will eventually trigger the crash.
+This makes sense for the memory actually used by the kexec-loaded
+crash kernel image and initrd and the data prepared during the
+load (vmcoreinfo, ...). However, the reserved space needs to be
+much larger than that to provide enough run-time memory for the
+crash kernel and the kdump userspace. Estimating the amount of
+memory to reserve is difficult. Being too careful makes kdump
+likely to end in OOM, being too generous takes even more memory
+from the production system. Also, the reservation only allows
+reserving a single contiguous block (or two with the "low"
+suffix). I've seen systems where this fails because the physical
+memory is fragmented.
 
-If not, I'd really like to continue the conversation now when this is
-all fresh in our heads instead of having to poke at cold brain cells in
-another month.
+By reserving additional crashkernel memory from CMA, the main
+crashkernel reservation can be just large enough to fit the
+kernel and initrd image, minimizing the memory taken away from
+the production system. Most of the run-time memory for the crash
+kernel will be memory previously available to userspace in the
+production system. As this memory is no longer wasted, the
+reservation can be done with a generous margin, making kdump more
+reliable. Kernel memory that we need to preserve for dumping is
+normally not allocated from CMA, unless it is explicitly
+allocated as movable. Currently this is only the case for memory
+ballooning and zswap. Such movable memory will be missing from
+the vmcore. User data is typically not dumped by makedumpfile.
+When dumping of user data is intended this new CMA reservation
+cannot be used.
 
-Any more questions, or can we finally put this issue to bed?
+There are five patches in this series:
+
+The first adds a new ",cma" suffix to the recenly introduced generic
+crashkernel parsing code. parse_crashkernel() takes one more
+argument to store the cma reservation size.
+
+The second patch implements reserve_crashkernel_cma() which
+performs the reservation. If the requested size is not available
+in a single range, multiple smaller ranges will be reserved.
+
+The third patch updates Documentation/, explicitly mentioning the
+potential DMA corruption of the CMA-reserved memory.
+
+The fourth patch adds a short delay before booting the kdump
+kernel, allowing pending DMA transfers to finish.
+
+The fifth patch enables the functionality for x86 as a proof of
+concept. There are just three things every arch needs to do:
+- call reserve_crashkernel_cma()
+- include the CMA-reserved ranges in the physical memory map
+- exclude the CMA-reserved ranges from the memory available
+  through /proc/vmcore by excluding them from the vmcoreinfo
+  PT_LOAD ranges.
+
+Adding other architectures is easy and I can do that as soon as
+this series is merged.
+
+With this series applied, specifying
+	crashkernel=100M craskhernel=1G,cma
+on the command line will make a standard crashkernel reservation
+of 100M, where kexec will load the kernel and initrd.
+
+An additional 1G will be reserved from CMA, still usable by the
+production system. The crash kernel will have 1.1G memory
+available. The 100M can be reliably predicted based on the size
+of the kernel and initrd.
+
+The new cma suffix is completely optional. When no
+crashkernel=size,cma is specified, everything works as before.
+
+---
+Changes since v2:
+
+based on feedback from Baoquan He and David Hildenbrand:
+- kept original formatting of suffix_tbl[]
+- updated documentation to mention movable pages missing from vmcore
+- fixed whitespace in documentation
+- moved the call crash_cma_clear_pending_dma() after
+  machine_crash_shutdown() so that non-crash CPUs and timers are
+  shut down before the delay
+
+---
+Changes since v1:
+
+The key concern raised in the v1 discussion was that pages in the
+CMA region may be pinned and used for a DMA transfer, potentially
+corrupting the new kernel's memory. When the cma suffix is used, kdump
+may be less reliable and the corruption hard to debug
+
+This v2 series addresses this concern in two ways:
+
+1) Clearly stating the potential problem in the updated
+Documentation and setting the expectation (patch 3/5)
+
+Documentation now explicitly states that:
+- the risk of kdump failure is increased
+- the CMA reservation is intended for users who can not or don't
+  want to sacrifice enough memory for a standard crashkernel reservation
+  and who prefer less reliable kdump to no kdump at all
+
+This is consistent with the documentation of the
+crash_kexec_post_notifiers option, which can also increase the
+risk of kdump failure, yet may be the only way to use kdump on
+some systems. And just like the crash_kexec_post_notifiers
+option, the cma crashkernel suffix is completely optional:
+the series has zero effect when the suffix is not used.
+
+2) Giving DMA time to finish before booting the kdump kernel
+   (patch 4/5)
+
+Pages can be pinned for long term use using the FOLL_LONGTERM
+flag. Then they are migrated outside the CMA region. Pinning
+without this flag shows that the intent of their user is to only
+use them for short-lived DMA transfers. 
+
+Delay the boot of the kdump kernel when the CMA reservation is
+used, giving potential pending DMA transfers time to finish.
+
+Other minor changes since v1:
+- updated for 6.14-rc2
+- moved #ifdefs and #defines to header files
+- added __always_unused in parse_crashkernel() to silence a false
+  unused variable warning
+ 
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
 
