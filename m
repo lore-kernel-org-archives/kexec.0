@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89E9DC28B30
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F172C35FF1
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UGBco74UEYtsLTTTX3f7OR5frmdbTjVeJ6n+VsqW3y8=; b=hrLN8vG8ku+FcWi6xbfrQqzzHf
-	UNEjUJT83FrvMRI1Hb7HmqQb+Uqd8njdpNl6eF5Ca79Mz/sGOXeCj7+RcFajUhNO0eNjEtT5WgY8Q
-	TpV56Ar1gh3G7XYBdZYo/pcAMUydph6L+VE5E/2N4HlPt6huMMazAPMbQ3CQElTWU37DdwU6SvS1q
-	ShngXAtVpDEAL9W4peYi6+2jJoOLf5V4YsnZgqnmMEgkSDE1XfU60lMI0wJklSYvDNduGDc2ESN7X
-	yuRilzqUu5UXBRFL77zlxm80heRcWQMpaSYRym0LRvxJue3Y56El048Zp901LgZ2duBwAMw1lZ7vW
-	lbUwP71w==;
+	bh=smwmDBLOWfUhJklrdermZZW/GJNGuEkisxlZADiwt80=; b=ODDqDxeYwzbYN+UB50xqSAUFt+
+	AhzS3XgtlbrOvkkTAe4e2IgT20CqO9WBL9aElFV0E6tdYL0SNTgGUd3xUBwQD/iG3Ogm1GkwksZSF
+	osw3IAxmnmPhAfm7ZXttWdu1w7+5zST/phm4vZsBV4slmHTBxnEwaOFJ10Qqe2x6skvyiQcd36xSw
+	NwlpsEMgd5ei5NPGTkgKQ5UV2iIzxnt4/g50+VYCP4XFo4m/QkPSCbAL7kyY5NGv/Sq+ZWwI4b2hH
+	kzsHc59Mu4uyA6ShTlrAcZG2/+c/joUpfeoRTFA8y5710cemNUsZrCiabgdQ++pfZYw66sh+OKf26
+	gcJEYLrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsOM6-00000008vjl-1Cf4;
-	Wed, 12 Mar 2025 15:50:50 +0000
+	id 1tsOM7-00000008vlr-342G;
+	Wed, 12 Mar 2025 15:50:51 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIV-00000008jRt-1V26
+	id 1tsNIV-00000008jRu-1WI4
 	for kexec@bombadil.infradead.org;
 	Wed, 12 Mar 2025 14:43:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=UGBco74UEYtsLTTTX3f7OR5frmdbTjVeJ6n+VsqW3y8=; b=iGUsHI0s5RSuXhq1rO7rmmSoaz
-	hMWNiHodcjFc66IRlZkEbvhprLkRDwxV1maP5E2JP2z5DGARO64Ha24kLuQvsuln6X/aTDhhwLB8p
-	pHz5ihYxIcENbJGnLDsQDwgrmaAOw9VMhNBmUf1aEMY6Dn+DbWHdrW+T/WQrX325KYfePnh0vhs5s
-	5/eW4Q/ixY/Amkp/ArzjiIXgwrZzDLchAI6z2yviEm/6QFPyaj2DsulfuFOyne13u7yr6DlFj4pEu
-	tFgIdsRstVmD5+B3e3jJay6yiVsJYy9yjCpxMDD6yA+9BNvyoA38H3+a/4T6/V5DX69I2L+EB9ksf
-	A33v6d4w==;
+	bh=smwmDBLOWfUhJklrdermZZW/GJNGuEkisxlZADiwt80=; b=RbnOGxjYBz98oRqawqOY0eW/OF
+	msz2Cc3lSLeyxwEwziWg51tcedhkawDdCSaIMwfmH9tDT3P4rjPwc6cQicRTetKsTKl+XQGKbltb4
+	9xT1PMk/1KvwGc+fteEKwTTJV62/ucIaUbaD47TARCJfEDEy/Ijn3Sw5A4mZ+4en8P0KKb4vYV+mh
+	Z1Ty6ksFmWmAUKMDy6uUnJqWZgGgy0ADNURLWpt5m+2hfb9HfCx4XLdw69SXy3sb/LCdM1wm6KoLi
+	sKAKrSAUpanBRVteyV7SUZNWFcq7CZmqqO/+kuO8yMpgrmpkd7s7Y56qgS8bPoBYZ1lHas4xHa6u5
+	+/GiIu+Q==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIS-00000002QEq-2czy;
+	id 1tsNIS-00000002QEs-2cNj;
 	Wed, 12 Mar 2025 14:43:00 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIR-00000009uUO-2K9H;
+	id 1tsNIR-00000009uUc-2cfY;
 	Wed, 12 Mar 2025 14:42:59 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v7 4/8] x86/kexec: Add 8250 serial port output
-Date: Wed, 12 Mar 2025 14:34:16 +0000
-Message-ID: <20250312144257.2348250-5-dwmw2@infradead.org>
+Subject: [PATCH v7 6/8] x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of earlier
+Date: Wed, 12 Mar 2025 14:34:18 +0000
+Message-ID: <20250312144257.2348250-7-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
@@ -87,121 +87,71 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-If a serial port was configured for early_printk, use it for debug output
-from the relocate_kernel exception handler too.
+Commit 2114796ca041 ("x86/kexec: Mark machine_kexec() with __nocfi") marked
+the machine_kexec() function with __nocfi because I failed to make objtool
+happy when actually *providing* CFI information for the relocate_kernel()
+function that it calls, and __nocfi was the easy workaround.
+
+When that eventually gets fixed, the check on calling the relocate_kernel()
+function pointer may trap. Obviously that should never happen unless the
+function prototype gets messed up, but that's exactly what the CFI check is
+for.
+
+So it would be kind of helpful if the IDT was still in place and the trap
+could be *handled*. It can remain valid until the moment that %cr3 gets
+replaced, so shift the invalidation down into relocate_kernel() itself.
+
+This is a useful cleanup regardless of making CFI work, so do it now.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/kexec.h         |  1 +
- arch/x86/kernel/early_printk.c       |  6 +++++
- arch/x86/kernel/relocate_kernel_64.S | 39 +++++++++++++++++++++++-----
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ arch/x86/kernel/machine_kexec_64.c   | 10 ++--------
+ arch/x86/kernel/relocate_kernel_64.S |  9 +++++++--
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index ec7636f4f86a..8cbdb6fd10c2 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -63,6 +63,7 @@ extern unsigned long kexec_pa_table_page;
- extern unsigned long kexec_pa_swap_page;
- extern gate_desc kexec_debug_idt[];
- extern unsigned char kexec_debug_exc_vectors[];
-+extern uint16_t kexec_debug_8250_port;
- #endif
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index a2e00a814708..7abc7aa0261b 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -434,16 +434,10 @@ void __nocfi machine_kexec(struct kimage *image)
+ 	 * with from a table in memory.  At no other time is the
+ 	 * descriptor table in memory accessed.
+ 	 *
+-	 * I take advantage of this here by force loading the
+-	 * segments, before I zap the gdt with an invalid value.
++	 * Take advantage of this here by force loading the segments,
++	 * before the GDT is zapped with an invalid value.
+ 	 */
+ 	load_segments();
+-	/*
+-	 * The gdt & idt are now invalid.
+-	 * If you want to load them you must set up your own idt & gdt.
+-	 */
+-	native_idt_invalidate();
+-	native_gdt_invalidate();
  
- /*
-diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
-index 44f937015e1e..ed4e8d0218ad 100644
---- a/arch/x86/kernel/early_printk.c
-+++ b/arch/x86/kernel/early_printk.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/console.h>
- #include <linux/kernel.h>
-+#include <linux/kexec.h>
- #include <linux/init.h>
- #include <linux/string.h>
- #include <linux/screen_info.h>
-@@ -141,6 +142,11 @@ static __init void early_serial_hw_init(unsigned divisor)
- 	serial_out(early_serial_base, DLL, divisor & 0xff);
- 	serial_out(early_serial_base, DLH, (divisor >> 8) & 0xff);
- 	serial_out(early_serial_base, LCR, c & ~DLAB);
-+
-+#ifdef CONFIG_KEXEC_CORE
-+	if (serial_in == io_serial_in)
-+		kexec_debug_8250_port = early_serial_base;
-+#endif
- }
- 
- #define DEFAULT_BAUD 9600
+ 	/* now call it */
+ 	image->start = relocate_kernel_ptr((unsigned long)image->head,
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 2cc35ca11c3e..a51b9340934b 100644
+index d58b4686645c..17d41e6e1a4b 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -39,6 +39,7 @@ SYM_DATA(kexec_va_control_page, .quad 0)
- SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
-+SYM_DATA(kexec_debug_8250_port, .word 0)
+@@ -79,8 +79,13 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	pushq %r15
+ 	pushf
  
- 	.balign 16
- SYM_DATA_START_LOCAL(kexec_debug_gdt)
-@@ -380,24 +381,50 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- SYM_CODE_END(swap_pages)
+-	/* zero out flags, and disable interrupts */
+-	pushq $0
++	/* Invalidate GDT/IDT, zero out flags */
++	pushq	$0
++	pushq	$0
++
++	lidt	(%rsp)
++	lgdt	(%rsp)
++	addq	$8, %rsp
+ 	popfq
  
- /*
-- * Generic 'print character' routine (as yet unimplemented)
-+ * Generic 'print character' routine
-  *  - %al: Character to be printed (may clobber %rax)
-  *  - %rdx: MMIO address or port.
-  */
--SYM_CODE_START_LOCAL_NOALIGN(pr_char)
-+#define XMTRDY          0x20
-+
-+#define TXR             0       /*  Transmit register (WRITE) */
-+#define LSR             5       /*  Line Status               */
-+
-+SYM_CODE_START_LOCAL_NOALIGN(pr_char_8250)
- 	UNWIND_HINT_FUNC
- 	ANNOTATE_NOENDBR
-+	addw	$LSR, %dx
-+	xchg	%al, %ah
-+.Lxmtrdy_loop:
-+	inb	%dx, %al
-+	testb	$XMTRDY, %al
-+	jnz	.Lready
-+	rep nop
-+	jmp .Lxmtrdy_loop
-+
-+.Lready:
-+	subw	$LSR, %dx
-+	xchg	%al, %ah
-+	outb	%al, %dx
-+pr_char_null:
-+	ANNOTATE_NOENDBR
-+
- 	ANNOTATE_UNRET_SAFE
- 	ret
--SYM_CODE_END(pr_char)
-+SYM_CODE_END(pr_char_8250)
- 
- /*
-  * Load pr_char function pointer into %rsi and load %rdx with whatever
-  * that function wants to see there (typically port/MMIO address).
-  */
--.macro	pr_setup
--	/* No output; pr_char just returns */
--	leaq	pr_char(%rip), %rsi
-+.macro pr_setup
-+	leaq	pr_char_8250(%rip), %rsi
-+	movw	kexec_debug_8250_port(%rip), %dx
-+	testw	%dx, %dx
-+	jnz	1f
-+
-+	leaq	pr_char_null(%rip), %rsi
-+1:
- .endm
- 
- /* Print the nybble in %bl, clobber %rax */
+ 	/* Switch to the identity mapped page tables */
 -- 
 2.48.1
 
