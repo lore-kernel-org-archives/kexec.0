@@ -4,73 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F172C35FF1
-	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 15:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42FE9C28B28
+	for <kexec@archiver.kernel.org>; Wed, 12 Mar 2025 20:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=smwmDBLOWfUhJklrdermZZW/GJNGuEkisxlZADiwt80=; b=ODDqDxeYwzbYN+UB50xqSAUFt+
-	AhzS3XgtlbrOvkkTAe4e2IgT20CqO9WBL9aElFV0E6tdYL0SNTgGUd3xUBwQD/iG3Ogm1GkwksZSF
-	osw3IAxmnmPhAfm7ZXttWdu1w7+5zST/phm4vZsBV4slmHTBxnEwaOFJ10Qqe2x6skvyiQcd36xSw
-	NwlpsEMgd5ei5NPGTkgKQ5UV2iIzxnt4/g50+VYCP4XFo4m/QkPSCbAL7kyY5NGv/Sq+ZWwI4b2hH
-	kzsHc59Mu4uyA6ShTlrAcZG2/+c/joUpfeoRTFA8y5710cemNUsZrCiabgdQ++pfZYw66sh+OKf26
-	gcJEYLrg==;
+	bh=88GBzbK7SHQe3MsJcPgR8t63Je+MXumEN25cwFg8WLE=; b=25T2TPdhJOvFQkGsRj5CoI4ZcI
+	TEQm27BHKQ4ZTGILsXDao1sux+zXN3Hg534LIbnUNl9fwlf5wxT6H8SA8/JgSSU5vgCUNrYnf2E/S
+	5sCcOJHur5Nt4AvKClzGmkOReCtEx81Rmu8YIOyYVXMylYqasHpIKHwMccSREsspvKtifz17+KeOp
+	doR9pKbWG22Lb/r0Ow41EZ1hWbpizLvI9UwPfaus7sotu5O2oJs3BYe7GqtDxuUZpRVAsfjdXHJ+J
+	Dx+0iBac2DjCgB1Uj9QA3LijxbnJUmiq6g3iywaOkFg+8mmLx3Fa6fANjdusY21SsryPhJLcpGNqI
+	8FwhE9TA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsOM7-00000008vlr-342G;
-	Wed, 12 Mar 2025 15:50:51 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1tsSn1-00000009RRz-10Tz;
+	Wed, 12 Mar 2025 20:34:55 +0000
+Received: from mgamail.intel.com ([192.198.163.12])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIV-00000008jRu-1WI4
-	for kexec@bombadil.infradead.org;
-	Wed, 12 Mar 2025 14:43:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=smwmDBLOWfUhJklrdermZZW/GJNGuEkisxlZADiwt80=; b=RbnOGxjYBz98oRqawqOY0eW/OF
-	msz2Cc3lSLeyxwEwziWg51tcedhkawDdCSaIMwfmH9tDT3P4rjPwc6cQicRTetKsTKl+XQGKbltb4
-	9xT1PMk/1KvwGc+fteEKwTTJV62/ucIaUbaD47TARCJfEDEy/Ijn3Sw5A4mZ+4en8P0KKb4vYV+mh
-	Z1Ty6ksFmWmAUKMDy6uUnJqWZgGgy0ADNURLWpt5m+2hfb9HfCx4XLdw69SXy3sb/LCdM1wm6KoLi
-	sKAKrSAUpanBRVteyV7SUZNWFcq7CZmqqO/+kuO8yMpgrmpkd7s7Y56qgS8bPoBYZ1lHas4xHa6u5
-	+/GiIu+Q==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIS-00000002QEs-2cNj;
-	Wed, 12 Mar 2025 14:43:00 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsNIR-00000009uUc-2cfY;
-	Wed, 12 Mar 2025 14:42:59 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	jpoimboe@kernel.org,
-	bsz@amazon.de
-Subject: [PATCH v7 6/8] x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of earlier
-Date: Wed, 12 Mar 2025 14:34:18 +0000
-Message-ID: <20250312144257.2348250-7-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
-References: <20250312144257.2348250-1-dwmw2@infradead.org>
+	id 1tsSlZ-00000009RFt-3BUm
+	for kexec@lists.infradead.org;
+	Wed, 12 Mar 2025 20:33:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741811606; x=1773347606;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=88GBzbK7SHQe3MsJcPgR8t63Je+MXumEN25cwFg8WLE=;
+  b=li/b7/c0DvaUftocgAL7qvB0rFnguxIQfI6MJv+ADA6zDWFOVKGobU5V
+   ZSvFf345FbUZlmiCtKr9Awaf2sJc+uP+HmWz45FfBK+uDjMivfoNRuCbR
+   TJDlFwluUzK1lSIvL0UyRnP22AP+8I0gWmodRRRzWEqcoH0IseKMGgsie
+   Sy4GqvhhZh+vr/cWNU1hbsTujyt4ihQIKHe5wnmMFwo2e4L9a9IjGnV7W
+   7wLhk3909SOFge30Rs8yQ0FDSEZR9T2HirMT+8AXLvhezKc5eRjoOyFiL
+   JmqQTTreVDunNMNHXrtua0wjJjzdXrg10Poty7zxi47ANSdNf6v1zVYxw
+   A==;
+X-CSE-ConnectionGUID: MJcWotz7ShOeO4dw4kRzog==
+X-CSE-MsgGUID: 4LADPiwgQkGgut5ZJPzAwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="46819852"
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="46819852"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:33:22 -0700
+X-CSE-ConnectionGUID: CUU320IxSsC1p8pmhEJVAg==
+X-CSE-MsgGUID: xdDkkXWCSf2inGz7F6reKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="125922456"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.3]) ([10.125.108.3])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:33:22 -0700
+Message-ID: <527a8fc8-3154-4822-8a78-43bd0696221b@intel.com>
+Date: Wed, 12 Mar 2025 13:33:21 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/1] Accept unaccepted kexec segments' destination
+ addresses
+From: Dave Hansen <dave.hansen@intel.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>,
+ "Kirill A. Shutemov" <kirill@shutemov.name>, kexec@lists.infradead.org,
+ Yan Zhao <yan.y.zhao@intel.com>, linux-kernel@vger.kernel.org,
+ linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com,
+ security@kernel.org
+References: <20241213094930.748-1-yan.y.zhao@intel.com>
+ <xgycziy2o56hnom3oau7sbqed3meoni3razc6njj7ujatldnmm@s7odbl4splbn>
+ <Z4T1G4dwzo7qdwSP@MiWiFi-R3L-srv>
+ <87zfjuoj3i.fsf@email.froward.int.ebiederm.org>
+ <f38f1b56-a5df-4644-be59-56c70499ed92@intel.com>
+ <fslhdizolr4twqm4ixevzj6ai5l5qg6mxky25jasn3yctsnvt4@hpwphlmfs5cp>
+ <4599571f-804b-40d8-b5c8-e19478a3ad18@intel.com>
+ <wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
+ <87o6ygskb8.fsf@email.froward.int.ebiederm.org>
+ <99cc1c36-ba3d-40c7-a5bd-d13655fba171@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <99cc1c36-ba3d-40c7-a5bd-d13655fba171@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250312_133325_803110_9ABE6531 
+X-CRM114-Status: GOOD (  10.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,74 +142,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+On 3/4/25 11:16, Dave Hansen wrote:
+> On 3/4/25 10:49, Eric W. Biederman wrote:
+>> How goes the work to fix this horrifically slow firmware interface?
+> The firmware interface isn't actually all that slow.
 
-Commit 2114796ca041 ("x86/kexec: Mark machine_kexec() with __nocfi") marked
-the machine_kexec() function with __nocfi because I failed to make objtool
-happy when actually *providing* CFI information for the relocate_kernel()
-function that it calls, and __nocfi was the easy workaround.
+Hey Eric,
 
-When that eventually gets fixed, the check on calling the relocate_kernel()
-function pointer may trap. Obviously that should never happen unless the
-function prototype gets messed up, but that's exactly what the CFI check is
-for.
+I've noticed a trend on this series. It seems like every time there's
+some forward progress on a fix, you pop up, and ask a question. Someone
+answers the question. Then, a couple of months later, you seem to pop up
+again and ask another form of the same question. It kinda seems to me
+like you may not be thoroughly reading the answers from the previous
+round of discussion. Or, maybe you're like me and have a hard time
+recalling any discussions more than a week ago. ;)
 
-So it would be kind of helpful if the IDT was still in place and the trap
-could be *handled*. It can remain valid until the moment that %cr3 gets
-replaced, so shift the invalidation down into relocate_kernel() itself.
+Either way, I hope you're finally convinced that the hardware design
+here is reasonable.
 
-This is a useful cleanup regardless of making CFI work, so do it now.
+If not, I'd really like to continue the conversation now when this is
+all fresh in our heads instead of having to poke at cold brain cells in
+another month.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/machine_kexec_64.c   | 10 ++--------
- arch/x86/kernel/relocate_kernel_64.S |  9 +++++++--
- 2 files changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index a2e00a814708..7abc7aa0261b 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -434,16 +434,10 @@ void __nocfi machine_kexec(struct kimage *image)
- 	 * with from a table in memory.  At no other time is the
- 	 * descriptor table in memory accessed.
- 	 *
--	 * I take advantage of this here by force loading the
--	 * segments, before I zap the gdt with an invalid value.
-+	 * Take advantage of this here by force loading the segments,
-+	 * before the GDT is zapped with an invalid value.
- 	 */
- 	load_segments();
--	/*
--	 * The gdt & idt are now invalid.
--	 * If you want to load them you must set up your own idt & gdt.
--	 */
--	native_idt_invalidate();
--	native_gdt_invalidate();
- 
- 	/* now call it */
- 	image->start = relocate_kernel_ptr((unsigned long)image->head,
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index d58b4686645c..17d41e6e1a4b 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -79,8 +79,13 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	pushq %r15
- 	pushf
- 
--	/* zero out flags, and disable interrupts */
--	pushq $0
-+	/* Invalidate GDT/IDT, zero out flags */
-+	pushq	$0
-+	pushq	$0
-+
-+	lidt	(%rsp)
-+	lgdt	(%rsp)
-+	addq	$8, %rsp
- 	popfq
- 
- 	/* Switch to the identity mapped page tables */
--- 
-2.48.1
-
+Any more questions, or can we finally put this issue to bed?
 
