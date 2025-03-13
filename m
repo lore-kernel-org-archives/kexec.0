@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7623C35FF6
-	for <kexec@archiver.kernel.org>; Thu, 13 Mar 2025 18:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 175A8C282DE
+	for <kexec@archiver.kernel.org>; Thu, 13 Mar 2025 19:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
 	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R+6TXmpQQr1smtkdg3jjiiOUU23YO7K/+AmImGT4WPY=; b=xGQ3OhBcIt6ojeqcGnMiEGL7BW
-	Et+/LyFHMZ9xefIlnmRgWWdPU5epYuKLF+C0Pfte6bf3FtYoEmpuqNm3+CQb90AJeEUySUPdQnjhw
-	jeiMSQsmPIF9j49FShl9a+Pon6mvNvIvJeE+Zd4Hcsf6qALPRrhbWwcJU5qlr6elFWjiE/SJlHaDS
-	wXf8ljXuXPC7PEhDbM65TJENws3IIrRsdshA30Q1awFWPOT3gx2x/f4YBSh98kk1HX/N1ezIczIe8
-	qac7Cw/q0WP501uC+Sy81jrGJRL2Ul7wtNBTsO+0yTOC33e7uXaVj219GI6kHSb/0YVWW/C9nvLwn
-	7gg2GuPw==;
+	bh=Jve+Xyq94Yg6ueZY2tids1pGB6JCzbQ6LlcNUKf7Ipw=; b=Hs7ulbPJ9M/9A5qwXE6lifH1xJ
+	eJL2Cade7mU2Vq2/PUWMZ1pwMevjoCJUH/7TXQYt+vhB32Xl33tz1HJyz5hV1eRTIWaCJpxI15Kfz
+	JHnTA5oSo8Qn75KBQPHU4m5wBkLXgK+zQ0OpZFL+NBnguyoXfjqn+g8yHT+V8k/oay1v70/eBmAne
+	C4SYc6NQL5l+NnndHC8zWY7ylAZ4tfsewUWdkhkvrbQ92YRRfI4K8IfINKeCz5UNA96YW89QXiwKO
+	Fc+CqjfLxP9s7uC/zVaRWLjASl0KoEeQKFYrZ4W2rgp+/0XDh8TdrfWXJ7ENpP9vP6XXC4J5SEuoA
+	pM5iEZAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsng6-0000000CEsQ-1fdK;
-	Thu, 13 Mar 2025 18:53:10 +0000
+	id 1tsoh5-0000000CN8s-0jbi;
+	Thu, 13 Mar 2025 19:58:15 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsnS6-0000000CDH3-2EPr
+	id 1tsoh3-0000000CN88-3784
 	for kexec@bombadil.infradead.org;
-	Thu, 13 Mar 2025 18:38:42 +0000
+	Thu, 13 Mar 2025 19:58:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=R+6TXmpQQr1smtkdg3jjiiOUU23YO7K/+AmImGT4WPY=; b=eZcbWLAfTLq5W8s5BTHUXfGs6N
-	OHzbCqdboaFUadQsVEUK6GbxdOHjzy2FkTUKSgtk2D4PFq7K2JAl06UDtbdYODUA5W7SjLEIjmnut
-	YG/L+3cgBbp1B4IhVkeLGHpW3luJMZDA/YowVkMWH16ucFcj0cfYVqpGHlG89EXzlH1XXL/g/kvAP
-	JjbOZE7FbgWtij8kYiusEGlraYLyDt2R/MSLVspA1afrsfQFpuWRZQOjQZWPAQQboLAJuLdNqbjWW
-	oEYZaqC/k8eU/r8ecmP1CKcDWxveLtZEXtqo5kK4TNszUq0uxGdOi3W4IgN/OC3F0/2V9QqMGmP6U
-	2+zldIuA==;
+	bh=Jve+Xyq94Yg6ueZY2tids1pGB6JCzbQ6LlcNUKf7Ipw=; b=S+MlHairJZ1+CVveB6WZ+NAS+P
+	6aTcrCVJ5JW9X3ROVFkVM5pEhdIugBTSOT8MtGx8/Stc8VfZ7npC/e11s9ijZunhSP9/HBDTRn4WJ
+	G/AM3ZWIZtRfvnjikwtrUAzFyjwp2K4uleMgMd5myvC06iwU8Ea1xQobz1+GqrP3qwKSFyHEzKSe/
+	qHvmhp5lPKd3tSCuPZg6yeRPDPn5RVpYGqrT18Xu5cAoY8XZhOsDKcRvxEMjz5EExLr3kZ8cW6/sj
+	pyUJhC9MvCckwlh5wGceccJ7HZX6gdRJz4fV6ALZ2RMqvBEs7mfQNxocWVtETXI/B5YvDlP0oXu8F
+	6VB9XNRQ==;
 Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsnS2-00000002mdR-1WbO;
-	Thu, 13 Mar 2025 18:38:38 +0000
-Message-ID: <8d9253eda0fd74595db05eb3449ccc5be2f563be.camel@infradead.org>
-Subject: Re: [PATCH v7 7/8] [DO NOT MERGE] x86/kexec: Add int3 in kexec path
- for testing
+	id 1tsoh0-00000002n15-2X8u;
+	Thu, 13 Mar 2025 19:58:10 +0000
+Message-ID: <7f36d90ada07281dd0efa4339c991cb2ecec4da2.camel@infradead.org>
+Subject: Re: [PATCH v7 0/8] x86/kexec: Add exception handling for
+ relocate_kernel
 From: David Woodhouse <dwmw2@infradead.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
@@ -54,14 +54,12 @@ Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
  linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
  <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
  jpoimboe@kernel.org,  bsz@amazon.de
-Date: Thu, 13 Mar 2025 18:38:38 +0000
-In-Reply-To: <Z9MQqYbGBAvTz4Ox@gmail.com>
+Date: Thu, 13 Mar 2025 19:58:10 +0000
+In-Reply-To: <Z9K5TGMvmS1ApBCW@gmail.com>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
-	 <20250312144257.2348250-8-dwmw2@infradead.org> <Z9K3GXSaZUcVr8cb@gmail.com>
-	 <0CDE8ED7-D8D2-4053-AE4B-4CFF59DB56F7@infradead.org>
-	 <Z9MQqYbGBAvTz4Ox@gmail.com>
+	 <Z9K3dcMAgu3cot85@gmail.com> <Z9K5TGMvmS1ApBCW@gmail.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-cMsUoNzWHQXVIuwFJn1s"
+	boundary="=-oH+uD1IlVSVLINYYXlcp"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
@@ -80,54 +78,68 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-cMsUoNzWHQXVIuwFJn1s
+--=-oH+uD1IlVSVLINYYXlcp
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-03-13 at 18:06 +0100, Ingo Molnar wrote:
+On Thu, 2025-03-13 at 11:54 +0100, Ingo Molnar wrote:
 >=20
-> * David Woodhouse <dwmw2@infradead.org> wrote:
+> * Ingo Molnar <mingo@kernel.org> wrote:
 >=20
-> > The exception handler already returns if the exception was int3, but=
-=20
-> > not for anything else. Less so the "print something warm and fuzzy"
-> > part; it just does the same register dump. But we could change that.
-> >=20
-> > I'm less keen on making it unconditional though. Kexec is a=20
-> > performance-critical path when every millisecond is perceived as=20
-> > guest steal time, and the serial output should only happen in=20
-> > production if something goes *wrong*.
-> >=20
-> > And besides, most kexec users don't have early_printk enabled anyway=
-=20
-> > so if we break them, this idea doesn't help.
+> > I applied the first 3 patches to tip:x86/boot for=20
+> > phased-risk-reduction reasons, and because I had some questions and
+> > suggestions starting at patch #4.
 >=20
-> So this check would only cause any real overhead if serial debugging is=
-=20
-> enabled - in which case there's already substantial overhead due to the=
-=20
-> serial console overhead (virtual or otherwise).
->
-> As to not printing anything unless the early serial console is enabled=
-=20
-> - that's fine, we'd still *break* if something doesn't work in this=20
-> code path, so at least the exception handling machinery is kept=20
-> well-tested. :-)
+> So there's a new objtool build warning from the new exc_handler code:
+>=20
+> =C2=A0vmlinux.o: warning: objtool: exc_handler+0xe: early indirect call
+>=20
+> That's with a x86-64 defconfig + KVM enablement.
 
-I suppose so, although it's also fairly easy to test by adding an int3
-into a kexec-jump test case like http://david.woodhou.se/loadret.c
+Reproduced that by going back to x86-64 defconfig.=20
 
-But yeah, it's easy enough to make the int3 register dump a little less
-scary and then remove the 'DO NOT MERGE' tag from the commit which adds
-the unconditional int3.
+vmlinux.o: warning: objtool: exc_handler+0xe: early indirect call
 
-I'm still trying to chase down the new objtool warning you noted (which
-I swear I saw once but now can't reproduce), and I note I need to make
-the early_printk hooks depend on (KEXEC_CORE && X86_64) since I removed
-the separate KEXEC_DEBUG option and made it all unconditional.
+SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
+        pushq   %rax
+ 2b6:   50                      push   %rax
+        pushq   %rbx
+ 2b7:   53                      push   %rbx
+        pushq   %rcx
+ 2b8:   51                      push   %rcx
+        pushq   %rdx
+ 2b9:   52                      push   %rdx
+        pushq   %rsi
+ 2ba:   56                      push   %rsi
+
+        /* Set up %rdx/%rsi for debug output */
+        pr_setup
+ 2bb:   48 8d 35 6e ff ff ff    lea    -0x92(%rip),%rsi        # 230 <pr_ch=
+ar>
+
+        /* rip and exception info */
+        print_reg 'E', 'x', 'c', ':', 0x28(%rsp)
+ 2c2:   b0 45                   mov    $0x45,%al
+ 2c4:   ff d6                   call   *%rsi
 
 
---=-cMsUoNzWHQXVIuwFJn1s
+
+So it's the 'call *$rsi' instruction at 0x2c4, but that's annotated
+with ANNOTATE_RETPOLINE_SAFE:
+
+.macro print_reg a, b, c, d, r
+	movb	$\a, %al
+	ANNOTATE_RETPOLINE_SAFE
+	call	*%rsi
+
+So what's wrong with that? What *more* do I have to tell objtool to
+make it shut up and go away?
+
+Am I missing some documentation which would tell me what it's actually
+unhappy about? Because "early indirect call" doesn't enlighten me very
+much, and reading tools/objtool/check.c doesn't either.
+
+--=-oH+uD1IlVSVLINYYXlcp
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -206,22 +218,22 @@ QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
 nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
 MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
 VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-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
+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
-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
+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
 
 
---=-cMsUoNzWHQXVIuwFJn1s--
+--=-oH+uD1IlVSVLINYYXlcp--
 
