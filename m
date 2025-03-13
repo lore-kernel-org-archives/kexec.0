@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81320C282DE
-	for <kexec@archiver.kernel.org>; Thu, 13 Mar 2025 10:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 059A6C28B28
+	for <kexec@archiver.kernel.org>; Thu, 13 Mar 2025 10:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=x7zASUItQnpEtXCiku4VqH1IsXtYlinmRro9uTjTIYc=; b=RsMHqa5KPt2vsiWhVQHxil/go7
-	IT4Q/rtlGOSFKu32GTJGfFuweIbVLDgtT1AVnyzJtwCYmOR244Uh2q6RXK0x3nRTeqKICBWN99U2T
-	hi2ySl8ASNUiKRQVuJ/oqPbizuWMbOw4DQuGjB48Yr8TqnZfUmlwVMFDJAKF4Hhow+Y20CMoL17M/
-	D8aGD8Kha13V16Z9Qrm4LUtyMwdIKcfhBkOn2fSZnWVznEmV7NG0mqTKMvNwQREC0s3vKzvBrU47B
-	DnVJ7U6ZpwCE8UDCKMw92HQEeklzrziYj3Hbn1QZmJZ42w9hakoxT4sPYarQCo8L8+KdCaMcFPPxd
-	o30qoO8w==;
+	bh=t2wVH/+uVa56tL6a/6AWA++ewImTFb95ux60x2+KI2M=; b=1V4cX1AgyuLKUZfGGORVKjKZl6
+	vhM3zGkOr6MEthYv2fPHnagPbthVkBMc9kqS8rEjOYxcDK+ABnjaTyXKjmsj8JwzDBmm4HbzT0lbQ
+	ajxq+ljyGUjWiFfGOwJHFqqwwmQQ0Fw8ctgMPCLTXnm1d7nG4FLYS5KMsx2aFobR+1Iw1ZGzd1JJh
+	sDExD0ow8gEv1yki8Z6uyly07Gmsaf8bgqG+a64QawaRNmGtenPSfbP1He8gBH0vKhFExLyaNOUf8
+	n3uet60HiI8M+Te1YNt0kzEwwHgOgmtIvTTeSWoXjx/fReW3k4KLv9L/IjQFEynlFXQvHagiMk5J9
+	I2xHz6Dg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsfwI-0000000AtYk-2Bsd;
-	Thu, 13 Mar 2025 10:37:22 +0000
+	id 1tsgES-0000000AxKT-46Vg;
+	Thu, 13 Mar 2025 10:56:08 +0000
 Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsfui-0000000AtN8-1MtR
+	id 1tsg3V-0000000AvCc-0p2r
 	for kexec@lists.infradead.org;
-	Thu, 13 Mar 2025 10:35:45 +0000
+	Thu, 13 Mar 2025 10:44:51 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 85346A46BAB;
-	Thu, 13 Mar 2025 10:30:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E345BC4CEEE;
-	Thu, 13 Mar 2025 10:35:38 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 86DE1A4657A;
+	Thu, 13 Mar 2025 10:39:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E27C4CEDD;
+	Thu, 13 Mar 2025 10:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741862143;
-	bh=HwddNMKoRxMnPfOo1Zy1wl6DJgyF9AKmbUbp/4mYZVM=;
+	s=k20201202; t=1741862688;
+	bh=Ea/nF/6yF8q+yD6HjryxJLrzxjPzAhV6V2F/wso++vc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WPJDy0LysT8DO/IFgRSu1ybIe0REzyyiM7ojFXE5bnQbKp/p/UVi+89gj4xHJ/5xb
-	 kNhyCFdLobiFV9uQCVwHo9KnJyt3XVHbChLvmqpQFRFt/ZkMwXWCZ7WUwkPNSp5tZm
-	 oyCo4XZ0lea4vWlZctbPFoOdsfZ12Zqxj0a1+fAgOYXpRJPbkjd/MWotqgu/qyiACn
-	 Qs2kiUEkSekfypds2s1uzlFZ81ruIW9OzJ2HCYe1hKacasjBiXAGMl92LCfg1yTHqa
-	 9cA7nttj7NKX20MGggXOpDvVt1SPiaCfhIXCNgwz5X3RnhSOzzCOG+EiQ+RqfJ16Zv
-	 I5azTI4BnjYnQ==
-Date: Thu, 13 Mar 2025 11:35:36 +0100
+	b=ZfwuO4E7CBH0225uI4SAo32VIdUKvpQ2GRBTZkOarnahlXaW9r933s3zWIgLiurhe
+	 /RZbf0TQLYgyWwGN9gqyZ067XyA3AUe60Z8xL9UB1KynBpWSH4tReS6K+hvnwgxUMj
+	 RQEFKCEbTeXXH7uyPtnlm/aqiZ+hAZFrJLW/WS2JLmVS2Ouc4QKk9vY3dRLzykS2a7
+	 1PJsvBSbGr53MrI9FvxGdwaDom62AUo68cqHlP3dHM2G6cIwm3WH1fskmz0nubAen/
+	 F5XtF8pZjchZ5e2ZHS83RaIVya7AcB73xx3N3IR/0JYmJVXdsZx+KjYGCVdMP2pQc/
+	 2x86DWb/qTzwQ==
+Date: Thu, 13 Mar 2025 11:44:41 +0100
 From: Ingo Molnar <mingo@kernel.org>
 To: David Woodhouse <dwmw2@infradead.org>
 Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -57,17 +57,18 @@ Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
 	Dave Young <dyoung@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: Re: [PATCH v7 4/8] x86/kexec: Add 8250 serial port output
-Message-ID: <Z9K0-CFdaBkptAJR@gmail.com>
+Subject: Re: [PATCH v7 7/8] [DO NOT MERGE] x86/kexec: Add int3 in kexec path
+ for testing
+Message-ID: <Z9K3GXSaZUcVr8cb@gmail.com>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
- <20250312144257.2348250-5-dwmw2@infradead.org>
+ <20250312144257.2348250-8-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312144257.2348250-5-dwmw2@infradead.org>
+In-Reply-To: <20250312144257.2348250-8-dwmw2@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250313_033544_456836_713392E4 
-X-CRM114-Status: GOOD (  11.13  )
+X-CRM114-CacheID: sfid-20250313_034449_342157_247FA87C 
+X-CRM114-Status: GOOD (  17.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,20 +88,55 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 > From: David Woodhouse <dwmw@amazon.co.uk>
 > 
-> If a serial port was configured for early_printk, use it for debug output
-> from the relocate_kernel exception handler too.
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 17d41e6e1a4b..2b7fc59af373 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -158,7 +158,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>  	lidt	(%rsp)
+>  	addq	$10, %rsp
+>  
+> -	//int3
+> +	int3
 
-Does the early console output something once it's initialized? If not 
-then I'd go one step further here: if early_printk serial debugging was 
-configured, let's output some sort of message as early as it's expected 
-to work. That way if any of this debug codepath regresses for 
-relocate_kernel, the discovery of that regression won't be delayed 
-until something nasty triggers within relocate_kernel that would 
-necessitate a working debug mechanism ...
+So this is all boot-serialized functionality with no SMP concerns 
+whatsoever, right?
 
-Also, printing something to the early console using these new 
-relocate_kernel printing functions would be an additional bonus as 
-well, for similar reasons.
+If yes then we could use something like this:
+
+	static int exception_selftest = 1;
+
+and add the INT3 point:
+
+	int3
+.globl after_int3
+after_int3:
+
+And do this in the early exception handler:
+
+	...
+	
+	if (exception_selftest) {
+		exception_selftest = 0;
+
+		print_something_warm_and_fuzzy();
+
+		IRET-to-after_int3;
+	}
+
+	...
+
+	... regular exception path ...
+
+... but all in assembly or so ;-)
+
+This would make it reasonably certain that the most complex bits of 
+this new debuging code are in working order, all the time.
 
 Thanks,
 
