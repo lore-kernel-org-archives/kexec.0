@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 059A6C28B28
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6E83C282DE
 	for <kexec@archiver.kernel.org>; Thu, 13 Mar 2025 10:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,37 +12,37 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t2wVH/+uVa56tL6a/6AWA++ewImTFb95ux60x2+KI2M=; b=1V4cX1AgyuLKUZfGGORVKjKZl6
-	vhM3zGkOr6MEthYv2fPHnagPbthVkBMc9kqS8rEjOYxcDK+ABnjaTyXKjmsj8JwzDBmm4HbzT0lbQ
-	ajxq+ljyGUjWiFfGOwJHFqqwwmQQ0Fw8ctgMPCLTXnm1d7nG4FLYS5KMsx2aFobR+1Iw1ZGzd1JJh
-	sDExD0ow8gEv1yki8Z6uyly07Gmsaf8bgqG+a64QawaRNmGtenPSfbP1He8gBH0vKhFExLyaNOUf8
-	n3uet60HiI8M+Te1YNt0kzEwwHgOgmtIvTTeSWoXjx/fReW3k4KLv9L/IjQFEynlFXQvHagiMk5J9
-	I2xHz6Dg==;
+	bh=H0cQvAKCp2QBzH5Iqn/xhey3MnO7N7m8c86D0wXyaXo=; b=cEPl78qGbicAgHDGRyZbV9ZoVk
+	OyGl1SALX4bCrlTnRYwCpgqDC+CqyTdepO/zwXbX6hEBMlNrNOxsHDsTnu9H5KJzXJpgg7pd54WtN
+	kje3i/0R5FPMTLWTyVoX0ZEEUmBz87zIj//hinKkMd2w9dT4gbIM4t6rLaDQpeD0F4aYHuiBifFLB
+	TYubsugoi2U3/qW1Nm5NLm+kxM2Wza+/f0pUAYZF+vfoGWZvPqCC6/JIaISEXTW3DQrbSln3WWLeD
+	w6+lMQqb18IxqhLqZOTwfVr41bp7m3MMevBbKThmVpLbeUrBd0AH64OdIkWrC+kvaW8xNUWFiqun9
+	s00muYjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsgES-0000000AxKT-46Vg;
-	Thu, 13 Mar 2025 10:56:08 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tsgET-0000000AxKj-1YGR;
+	Thu, 13 Mar 2025 10:56:09 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsg3V-0000000AvCc-0p2r
+	id 1tsg4z-0000000AvTy-3Jkn
 	for kexec@lists.infradead.org;
-	Thu, 13 Mar 2025 10:44:51 +0000
+	Thu, 13 Mar 2025 10:46:22 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 86DE1A4657A;
-	Thu, 13 Mar 2025 10:39:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E27C4CEDD;
-	Thu, 13 Mar 2025 10:44:43 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 449A55C487D;
+	Thu, 13 Mar 2025 10:44:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A139C4CEDD;
+	Thu, 13 Mar 2025 10:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741862688;
-	bh=Ea/nF/6yF8q+yD6HjryxJLrzxjPzAhV6V2F/wso++vc=;
+	s=k20201202; t=1741862780;
+	bh=vp6EbvU1rvNWK2KUsT3PKhqiMCwg7EHYtb3O8meg2es=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZfwuO4E7CBH0225uI4SAo32VIdUKvpQ2GRBTZkOarnahlXaW9r933s3zWIgLiurhe
-	 /RZbf0TQLYgyWwGN9gqyZ067XyA3AUe60Z8xL9UB1KynBpWSH4tReS6K+hvnwgxUMj
-	 RQEFKCEbTeXXH7uyPtnlm/aqiZ+hAZFrJLW/WS2JLmVS2Ouc4QKk9vY3dRLzykS2a7
-	 1PJsvBSbGr53MrI9FvxGdwaDom62AUo68cqHlP3dHM2G6cIwm3WH1fskmz0nubAen/
-	 F5XtF8pZjchZ5e2ZHS83RaIVya7AcB73xx3N3IR/0JYmJVXdsZx+KjYGCVdMP2pQc/
-	 2x86DWb/qTzwQ==
-Date: Thu, 13 Mar 2025 11:44:41 +0100
+	b=uLLh1Bwu+h7c8wLZOnsoo6txJm3UYCHpIXJ4M3GjWJzoDusKCvkROHfDm92bCWiZk
+	 co6XAVN2udWnzHSwWRlfmidQtp9AkGR8Yw+zdFPnXgPjfZEmN0BWG4/G24wRHcNYC8
+	 WMdQZVB2DlknBVRFFePGftf3dhM7I8/wblddoL1Oz+6iFr3MtMYyljWw/iLgbWL+d0
+	 vdSBAs7LkQRcXtgZk/DIfrzNY1HjE/+jLohlQJ9CzrXQ8cI3beFMV4ytO0UNhg3pLi
+	 YURe7XMvIDBQ036BDXYWXzXvgOpd2vKFmPUYpkW6A9RCxNiglwwzsCuxpOZ7Okp6dw
+	 oV1635hkw4g3w==
+Date: Thu, 13 Mar 2025 11:46:13 +0100
 From: Ingo Molnar <mingo@kernel.org>
 To: David Woodhouse <dwmw2@infradead.org>
 Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -57,18 +57,17 @@ Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
 	Dave Young <dyoung@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: Re: [PATCH v7 7/8] [DO NOT MERGE] x86/kexec: Add int3 in kexec path
- for testing
-Message-ID: <Z9K3GXSaZUcVr8cb@gmail.com>
+Subject: Re: [PATCH v7 0/8] x86/kexec: Add exception handling for
+ relocate_kernel
+Message-ID: <Z9K3dcMAgu3cot85@gmail.com>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
- <20250312144257.2348250-8-dwmw2@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312144257.2348250-8-dwmw2@infradead.org>
+In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250313_034449_342157_247FA87C 
-X-CRM114-Status: GOOD (  17.43  )
+X-CRM114-CacheID: sfid-20250313_034621_884567_F5EC5209 
+X-CRM114-Status: GOOD (  21.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,57 +85,44 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 * David Woodhouse <dwmw2@infradead.org> wrote:
 
-> From: David Woodhouse <dwmw@amazon.co.uk>
+> Debugging kexec failures is painful, as anything going wrong in execution
+> of the critical relocate_kernel() function tends to just lead to a triple
+> fault. Thus leading to *weeks* of my life that I won't get back. Having
+> hacked something up for my own use, I figured I should share it...
 > 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  arch/x86/kernel/relocate_kernel_64.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Add a trivial exception handler in the relocate_kernel environment which 
+> outputs to the early_printk serial console if configured. Currently only 
+> 8250-compatible serial ports are supported, but that could be extended.
 > 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index 17d41e6e1a4b..2b7fc59af373 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -158,7 +158,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
->  	lidt	(%rsp)
->  	addq	$10, %rsp
->  
-> -	//int3
-> +	int3
+> I had to hack up QEMU support for a PCI serial port which matches what
+> the existing early_printk code can drive, and the *real* 8250_pci driver
+> doesn't seem to cope with that setup at all, but whatever... the kexec
+> code now drives the same 32-bit stride which is all that earlyprintk
+> supports. We can always add more later, if anyone cares.
+> 
+> Someone who cares might want to bring the i386 version into line with
+> this, although the lack of rip-based addressing makes all the PIC code a
+> bit harder.
+> 
+> David Woodhouse (8):
+>       x86/kexec: Debugging support: load a GDT
+>       x86/kexec: Debugging support: Load an IDT and basic exception entry points
+>       x86/kexec: Debugging support: Dump registers on exception
+>       x86/kexec: Add 8250 serial port output
+>       x86/kexec: Add 8250 MMIO serial port output
+>       x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of earlier
+>       [DO NOT MERGE] x86/kexec: Add int3 in kexec path for testing
+>       [DO NOT MERGE] x86/kexec: Add CFI type information to relocate_kernel()
+> 
+>  arch/x86/include/asm/kexec.h         |   7 ++
+>  arch/x86/kernel/early_printk.c       |   9 ++
+>  arch/x86/kernel/machine_kexec_64.c   |  50 ++++++--
+>  arch/x86/kernel/relocate_kernel_64.S | 254 +++++++++++++++++++++++++++++++++++++++-
+>  4 files changed, 308 insertions(+), 12 deletions(-)
 
-So this is all boot-serialized functionality with no SMP concerns 
-whatsoever, right?
-
-If yes then we could use something like this:
-
-	static int exception_selftest = 1;
-
-and add the INT3 point:
-
-	int3
-.globl after_int3
-after_int3:
-
-And do this in the early exception handler:
-
-	...
-	
-	if (exception_selftest) {
-		exception_selftest = 0;
-
-		print_something_warm_and_fuzzy();
-
-		IRET-to-after_int3;
-	}
-
-	...
-
-	... regular exception path ...
-
-... but all in assembly or so ;-)
-
-This would make it reasonably certain that the most complex bits of 
-this new debuging code are in working order, all the time.
+I applied the first 3 patches to tip:x86/boot for phased-risk-reduction 
+reasons, and because I had some questions and suggestions starting at 
+patch #4.
 
 Thanks,
 
