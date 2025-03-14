@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11087C35FF8
-	for <kexec@archiver.kernel.org>; Fri, 14 Mar 2025 17:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DD40C35FF7
+	for <kexec@archiver.kernel.org>; Fri, 14 Mar 2025 17:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7ZEU4ooB9JbXRgCaEf2/WOsbQmZpDXUsz2616q1hGqk=; b=zqGJ4DLtDMkfo1W8oTzCbfQFU/
-	BWR8cFuuc5UZTzyymX/K1kS5oS2J0Wcsbtvi/wKbDf1YH0cvPfN5yNOgTQ2IRldlZY0hijj2ZgUWN
-	LJA694Lvy28ccOSMc+LjeJn2eoLmShKt+hRzFWTwWlldPg5XFIT+dDYundrGHoBOZlkksUkAjzWsB
-	wUxd/1W1rBr2YXWyMZRpMgS2vlKLOQHAKTHsk2DR2ohY2jA1LcsohwCPejssrJL+qI+unuCb7mx9E
-	esUM74xEKn/jBADWDU8Ejt9+KufJV20hMtG4hpNdsEq64Gz/jEjBYjp01nk7tOTt20JVBejM/1ykb
-	hMhy2AUQ==;
+	bh=I5Awq6moaztxY22uQpLVPuBkTzBbIxEtYFjSbRAN49Y=; b=gehwj1wwvk0JCA6Xe9hyKE38Lt
+	vrqzm5KHwubXKdjR32y+U1dDDZMpGhU+E//93Esvwa87wzE4Ev6aGKx89/ZQignwGTjG5H8SeWkcu
+	rdyBCnbmcgJRZqHrfn89ecqM+H2qzEUOHWdlJo+DCiAkHGPI9cT9Ck8FpcYE68Ht//DZc9vXf+AjT
+	6dHtgYC01mytJiAEAeGbex7L8CH9MDo1rSDbA++AQ0J0R2hIZIBYzgWs26ysJm/at1422uExT1pij
+	NsDb5tweY0PEJs3WTi86LLAjTubITwK/OdAIyoC4YBfK1jl89P4tCiEMgFU/yGC58KmQb1H2DqPd/
+	w3l49B9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8tg-0000000EsPy-3JuT;
+	id 1tt8tg-0000000EsPR-1Zua;
 	Fri, 14 Mar 2025 17:32:36 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8te-0000000EsN3-1gxj
+	id 1tt8te-0000000EsN5-1gxW
 	for kexec@bombadil.infradead.org;
 	Fri, 14 Mar 2025 17:32:34 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=7ZEU4ooB9JbXRgCaEf2/WOsbQmZpDXUsz2616q1hGqk=; b=h8NSWW9622lyf+TkR66+QUn3pB
-	vnD9qJh9YuRa82X3/xejTJyv4mUvkP02rihXQkbmK9S7TSOHAABGDtKRRHlDRYrdEU4RlAO/8S3fE
-	DcDjjNZLB5FK7pL7gWtdVbWck58neWnKh6XbdGCIWD6Pv/qO6tNprEj3VN1ZIBdPkFfb8JyBxEtIB
-	6/evZ7cZ3tJC0hGc1NaK6/wjYhN/TtnpM9KV5whneVvCSs2tMHyluC+6Q71rzWr883CJu2uvYXgGr
-	5S44TQNl/dX2pQ8l22tfnJP5WyVBCDevxUUtj5gBd/PzlSSYlvJ7mjBfb0v+/vDhpb+m0T2CVAw8R
-	4V0G+bcw==;
+	bh=I5Awq6moaztxY22uQpLVPuBkTzBbIxEtYFjSbRAN49Y=; b=CaR08mpK+sw0slWVjMplYOL9ou
+	8OaStTEcVYPeMmXoOSQ/y4t41ZXejoGL40x32rlJ0ltjUw56aQmTN/JaSd+NloQNKQ5Yu6JYSfMPv
+	tn3exLJQlbxB+sJrb8hLhaqkGute3MV3eG2vrQ2HCCJANlAQ4WS2/pj5ehW0b2MXTFRE0Khjaisyp
+	4hYUfM0+cjyIkVU4ouKmHo/FXmq3sQAhMUQjepR4nrTWKm5M4kGs/cxOBmE5vdQHGKchsfUBLm4md
+	QraBeazfY3zr9/M+msg5KTr7knguUpW/LR3z+KA9oKD+Lxbmk97QE8kmdv5Y8zOB4mCNLMucnn4o4
+	Oono+19A==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8tb-00000002vUA-3fSj;
+	id 1tt8tb-00000002vUC-3fT3;
 	Fri, 14 Mar 2025 17:32:32 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8tZ-0000000CsWL-0pvp;
-	Fri, 14 Mar 2025 17:32:29 +0000
+	id 1tt8tY-0000000CsVj-3Mn6;
+	Fri, 14 Mar 2025 17:32:28 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -62,9 +62,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v8 7/7] [DO NOT MERGE] x86/kexec: Add CFI type information to relocate_kernel()
-Date: Fri, 14 Mar 2025 17:27:39 +0000
-Message-ID: <20250314173226.3062535-8-dwmw2@infradead.org>
+Subject: [PATCH v8 1/7] x86/kexec: Debugging support: Load an IDT and basic exception entry points
+Date: Fri, 14 Mar 2025 17:27:33 +0000
+Message-ID: <20250314173226.3062535-2-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250314173226.3062535-1-dwmw2@infradead.org>
 References: <20250314173226.3062535-1-dwmw2@infradead.org>
@@ -87,59 +87,174 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-A previous commit added __nocfi to machine_kexec() because it makes an
-indirect call to relocate_kernel() which lacked CFI type information,
-and caused the system to crash.
-
-Use SYM_TYPED_FUNC_START() to ensure that the type information is
-present, and remove the __nocfi tag.
-
-I still can't make objtool happy with this in both GCC and Clang builds
-at the same time, so not yet for merging; only included in this series
-to nerd-snipe the objtool maintainers.
-
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/machine_kexec_64.c   | 2 +-
- arch/x86/kernel/relocate_kernel_64.S | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kexec.h         |  5 ++
+ arch/x86/kernel/machine_kexec_64.c   | 21 ++++++++
+ arch/x86/kernel/relocate_kernel_64.S | 77 ++++++++++++++++++++++++++++
+ 3 files changed, 103 insertions(+)
 
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 8ad187462b68..ec7636f4f86a 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -8,6 +8,9 @@
+ # define PA_PGD			2
+ # define PA_SWAP_PAGE		3
+ # define PAGES_NR		4
++#else
++/* Size of each exception handler referenced by the IDT */
++# define KEXEC_DEBUG_EXC_HANDLER_SIZE	6 /* pushi, pushi, 2-byte jmp */
+ #endif
+ 
+ # define KEXEC_CONTROL_PAGE_SIZE	4096
+@@ -58,6 +61,8 @@ struct kimage;
+ extern unsigned long kexec_va_control_page;
+ extern unsigned long kexec_pa_table_page;
+ extern unsigned long kexec_pa_swap_page;
++extern gate_desc kexec_debug_idt[];
++extern unsigned char kexec_debug_exc_vectors[];
+ #endif
+ 
+ /*
 diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 7abc7aa0261b..84f59f18dcb6 100644
+index a68f5a0a9f37..faf2fb1cd9f6 100644
 --- a/arch/x86/kernel/machine_kexec_64.c
 +++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -380,7 +380,7 @@ void machine_kexec_cleanup(struct kimage *image)
-  * Do not allocate memory (or fail in any way) in machine_kexec().
-  * We are past the point of no return, committed to rebooting now.
-  */
--void __nocfi machine_kexec(struct kimage *image)
-+void machine_kexec(struct kimage *image)
+@@ -304,6 +304,24 @@ static void load_segments(void)
+ 		);
+ }
+ 
++static void prepare_debug_idt(unsigned long control_page, unsigned long vec_ofs)
++{
++	gate_desc idtentry = { 0 };
++	int i;
++
++	idtentry.bits.p = 1;
++	idtentry.bits.type = GATE_TRAP;
++	idtentry.segment = __KERNEL_CS;
++	idtentry.offset_low = (control_page & 0xFFFF) + vec_ofs;
++	idtentry.offset_middle = (control_page >> 16) & 0xFFFF;
++	idtentry.offset_high = control_page >> 32;
++
++	for (i = 0; i < 16; i++) {
++		kexec_debug_idt[i] = idtentry;
++		idtentry.offset_low += KEXEC_DEBUG_EXC_HANDLER_SIZE;
++	}
++}
++
+ int machine_kexec_prepare(struct kimage *image)
  {
- 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
- 	relocate_kernel_fn *relocate_kernel_ptr;
+ 	void *control_page = page_address(image->control_code_page);
+@@ -321,6 +339,9 @@ int machine_kexec_prepare(struct kimage *image)
+ 	if (image->type == KEXEC_TYPE_DEFAULT)
+ 		kexec_pa_swap_page = page_to_pfn(image->swap_page) << PAGE_SHIFT;
+ 
++	prepare_debug_idt((unsigned long)__pa(control_page),
++			  (unsigned long)kexec_debug_exc_vectors - reloc_start);
++
+ 	__memcpy(control_page, __relocate_kernel_start, reloc_end - reloc_start);
+ 
+ 	set_memory_rox((unsigned long)control_page, 1);
 diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 228301ac66e9..dbcef3430285 100644
+index ac058971a382..b07c55019ce5 100644
 --- a/arch/x86/kernel/relocate_kernel_64.S
 +++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,7 @@
-  */
+@@ -50,6 +50,11 @@ SYM_DATA_START_LOCAL(kexec_debug_gdt)
+ 	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
+ SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <linux/stringify.h>
- #include <asm/alternative.h>
- #include <asm/page_types.h>
-@@ -59,8 +60,9 @@ SYM_DATA_END(kexec_debug_idt)
- 
++	.balign 8
++SYM_DATA_START(kexec_debug_idt)
++	.skip 0x100, 0x00
++SYM_DATA_END(kexec_debug_idt)
++
  	.section .text..relocate_kernel,"ax";
  	.code64
--SYM_CODE_START_NOALIGN(relocate_kernel)
-+SYM_TYPED_FUNC_START(relocate_kernel)
- 	UNWIND_HINT_END_OF_STACK
-+	UNWIND_HINT_FUNC
- 	ANNOTATE_NOENDBR
+ SYM_CODE_START_NOALIGN(relocate_kernel)
+@@ -139,6 +144,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	movq	%ds, %rax
+ 	movq	%rax, %ds
+ 
++	/* Now an IDTR on the stack to load the IDT the kernel created */
++	leaq	kexec_debug_idt(%rip), %rsi
++	pushq	%rsi
++	pushw	$0xff
++	lidt	(%rsp)
++	addq	$10, %rsp
++
++	//int3
++
  	/*
- 	 * %rdi indirection_page
+ 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
+ 	 * below.
+@@ -364,3 +378,66 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	ret
+ 	int3
+ SYM_CODE_END(swap_pages)
++
++SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
++	/* Each of these is 6 bytes. */
++.macro vec_err exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	nop
++	nop
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++.macro vec_noerr exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	pushq	$0
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++	ANNOTATE_NOENDBR
++	vec_noerr 0 // #DE
++	vec_noerr 1 // #DB
++	vec_noerr 2 // #NMI
++	vec_noerr 3 // #BP
++	vec_noerr 4 // #OF
++	vec_noerr 5 // #BR
++	vec_noerr 6 // #UD
++	vec_noerr 7 // #NM
++	vec_err 8   // #DF
++	vec_noerr 9
++	vec_err 10 // #TS
++	vec_err 11 // #NP
++	vec_err 12 // #SS
++	vec_err 13 // #GP
++	vec_err 14 // #PF
++	vec_noerr 15
++SYM_CODE_END(kexec_debug_exc_vectors)
++
++SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
++	/* No need for ret mitigations during kexec */
++	VALIDATE_UNRET_END
++
++	pushq	%rax
++	pushq	%rdx
++	movw	$0x3f8, %dx
++	movb	$'A', %al
++	outb	%al, %dx
++	popq	%rdx
++	popq	%rax
++
++	/* Only return from int3 */
++	cmpq	$3, (%rsp)
++	jne	.Ldie
++
++	addq	$16, %rsp
++	iretq
++
++.Ldie:
++	hlt
++	jmp	.Ldie
++
++SYM_CODE_END(exc_handler)
 -- 
 2.48.1
 
