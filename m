@@ -4,73 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 121E8C35FF1
-	for <kexec@archiver.kernel.org>; Fri, 14 Mar 2025 18:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2F09C282EC
+	for <kexec@archiver.kernel.org>; Fri, 14 Mar 2025 18:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YA4cz3IqKYs8g/T34NdCWeOqKjRd9LcnyNkGC/9OpFU=; b=E+pv3LLWEy41H6SMF9F0fsTGXz
-	YXY1Sn1Y3qQ+UlbfNPyqu2qq9/LoiPBsYwN3xBik0LnVminh46NZLxAH7XikbqcDV4tCPGzLcMg9W
-	vXNj9ZhlU6fnesUpAAzoijWpjvHQSkTXm1zXWDGPQM8siYB1JomvhJmsnnRjE0w9hCJCUBR698/pf
-	Q2EuXrN8KL7+9T7yRG/NMeKduV/9oaMb4F2lG/6b4D4Q0fe/dUfNlmgZ/8FV0BYyacP/xo/iIzZsL
-	QCWhRy0PYttzjY0VZTJd1hmlulF7KEiBbrIK1kTOrbU7+HQVchZY0xQ03vG7x4fP6FYujXJV7NPyK
-	1gFi3ETQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vY68TClbdVrf7vczBIBQFMUfXJzLuYL9cKOVsidML4E=; b=AX5maAXPt298Oox/U72EI3YyoW
+	OX6q7gixE1nFLn3Uu/IW8fgqDOD1ybcN5AGo5WbrzcQDbdjTMiuY+1sYzJQTClq3aNdRmdMY6rXw3
+	sbHUkAiIcrj3gipcFXg0WohCwnGSXT+wjpNaT3wOZTPQulIBOFFqUhiqEiMimbVaBX11FaZxPqFyg
+	ytM2eo6LG0qSI88udUvqTchUh03/0Cdto8Lz1ArdDuQgTN+GQxYZSNXc9fe87c9RlU/g+n4LsWVRY
+	dll68CoU0kf2K/CW2zzdaCQBRZG75mp/WzFpHd5v7t9/54gyzeu/Mu4BfLyt/6ZSyLDTv97aXy7HC
+	bSyzpgMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt9W7-0000000EzRU-2qjY;
-	Fri, 14 Mar 2025 18:12:19 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1tt9t8-0000000F2Mm-1aHo;
+	Fri, 14 Mar 2025 18:36:06 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt9GS-0000000Ex32-0zTw
+	id 1tt9mX-0000000F1RK-2IwO
 	for kexec@bombadil.infradead.org;
-	Fri, 14 Mar 2025 17:56:08 +0000
+	Fri, 14 Mar 2025 18:29:17 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=YA4cz3IqKYs8g/T34NdCWeOqKjRd9LcnyNkGC/9OpFU=; b=gUQO3UtyUMXfkoHY35Due7617c
-	GQLNYIyJZ6cu5vT2UBXPDrWAmV0dG5RR+gk9dgwnutpLoljUUiHv1KXha68ASFKh0eQNsXvQPAkfH
-	BV1pE5gV3kckJ9Zk1oa3GEJ+izc7bY1jHUqAgvXynaas1/9dxJfzLEaXDZmxG6n1s+tJZ3jiuEijP
-	b8XpJxWBW4H0RvHS53dLW0+99NsJEiOpxTP69TJTY5pu24vCAipSQc6EjaxKhaVDe9kXF6NKwdnAT
-	YfAJTMjs3RrHcwM8Er7/iWGVjdvRl9e5uXtsW8WVB/mYlzFTzEQPITJLsN0j4hmn/DiQozPaJDNrx
-	YqcHAo9Q==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8ta-00000003tcs-2mto;
-	Fri, 14 Mar 2025 17:32:35 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt8tZ-0000000CsW8-0KEO;
-	Fri, 14 Mar 2025 17:32:29 +0000
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vY68TClbdVrf7vczBIBQFMUfXJzLuYL9cKOVsidML4E=; b=MQpa9JhOLeiLCmwzgsuo5LaYQl
+	9PqsItBHT0Ndx0KVSyXH1wo2SaFe4TEOnE2wAbmqXZNofeR7WETn2cV9LbbjG7aWY1WnOxG60LpYt
+	+Q9owu0K1w2JTJ6o23BsmkNMVSUVFN9qHYJ1Pwpwz1hq+TqCDGW00CE6o4oN0CUq8bHoWJoM19AU7
+	kZRHYT15zWAHZDTx0H3R51/4SwpuB9YCQfXbXjb50jvfOkr+wo0BBRCPn5xHPi0onNt9CseJaFyDr
+	JlmWIbb2/DIPLqOtxtveIy2/ac9D5REWcOtgENx71QtAlKM5LY72xEyPImhEGZQYaeoygtjGU1RxL
+	3w/ROlJA==;
+Received: from [31.94.74.194] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tt9mR-00000002vzU-45Zi;
+	Fri, 14 Mar 2025 18:29:12 +0000
+Message-ID: <cb9978537cc64941cfc607f2b8b38fa7f7eea884.camel@infradead.org>
+Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
+ information to relocate_kernel()
 From: David Woodhouse <dwmw2@infradead.org>
-To: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Dave Young <dyoung@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	jpoimboe@kernel.org,
-	bsz@amazon.de
-Subject: [PATCH v8 5/7] x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of earlier
-Date: Fri, 14 Mar 2025 17:27:37 +0000
-Message-ID: <20250314173226.3062535-6-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250314173226.3062535-1-dwmw2@infradead.org>
-References: <20250314173226.3062535-1-dwmw2@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
+ <hpa@zytor.com>,  "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>, 
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
+ <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
+Date: Fri, 14 Mar 2025 18:29:08 +0000
+In-Reply-To: <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
+References: <20250312144257.2348250-1-dwmw2@infradead.org>
+	 <20250312144257.2348250-9-dwmw2@infradead.org>
+	 <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
+	 <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
+	 <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-nkM76pZz83D3z85hx+hS"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,74 +79,148 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
 
-Commit 2114796ca041 ("x86/kexec: Mark machine_kexec() with __nocfi") marked
-the machine_kexec() function with __nocfi because I failed to make objtool
-happy when actually *providing* CFI information for the relocate_kernel()
-function that it calls, and __nocfi was the easy workaround.
+--=-nkM76pZz83D3z85hx+hS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When that eventually gets fixed, the check on calling the relocate_kernel()
-function pointer may trap. Obviously that should never happen unless the
-function prototype gets messed up, but that's exactly what the CFI check is
-for.
+On Fri, 2025-03-14 at 10:52 -0700, Josh Poimboeuf wrote:
+> On Fri, Mar 14, 2025 at 05:23:15PM +0000, David Woodhouse wrote:
+> > ISTR this version is OK with Clang and CONFIG_CFI_CLANG but with GCC I
+> > get this:
+> >=20
+> > vmlinux.o: warning: objtool: relocate_kernel+0x69: unsupported stack re=
+gister modification
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* setup a new stack at the =
+end of the physical control page */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lea=C2=A0=C2=A0=C2=A0=C2=A0 =
+PAGE_SIZE(%rsi), %rsp
+> > =C2=A0 79:=C2=A0=C2=A0 48 8d a6 00 10 00 00=C2=A0=C2=A0=C2=A0 lea=C2=A0=
+=C2=A0=C2=A0 0x1000(%rsi),%rsp
+> >=20
+> >=20
+> > Maybe the answer is to put the UNWIND_HINT_FUNC into #ifdef
+> > CONFIG_CFI_CLANG but that seems wrong.
+>=20
+> The UNWIND_HINT_FUNC definitely looks wrong, why would Clang need it?
 
-So it would be kind of helpful if the IDT was still in place and the trap
-could be *handled*. It can remain valid until the moment that %cr3 gets
-replaced, so shift the invalidation down into relocate_kernel() itself.
+I think it's when CONFIG_CFI_CLANG makes the SYM_TYPED_FUNC_START()
+macro actually emit the CFI prologue?=20
 
-This is a useful cleanup regardless of making CFI work, so do it now.
+> > I'll have another look at putting it in the data section, and see if I
+> > can remember why I didn't want to do that before (and if that's still
+> > relevant now).
+>=20
+> IIRC, the reasons were the patched alternative, and also you wanted to
+> disassemble (but note that's still possible with gdb).
+>=20
+> Here was a patch to make it work:
+>=20
+> =C2=A0 https://lore.kernel.org/20241218212326.44qff3i5n6cxuu5d@jpoimboe
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/machine_kexec_64.c   | 10 ++--------
- arch/x86/kernel/relocate_kernel_64.S |  9 +++++++--
- 2 files changed, 9 insertions(+), 10 deletions(-)
+Yeah, that does seem reasonable. Sorry, I think I missed that before
+Christmas. I'll look at rolling it in. This part is kind of orthogonal
+to the actual debug support so it's fine to keep it separate.
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index a2e00a814708..7abc7aa0261b 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -434,16 +434,10 @@ void __nocfi machine_kexec(struct kimage *image)
- 	 * with from a table in memory.  At no other time is the
- 	 * descriptor table in memory accessed.
- 	 *
--	 * I take advantage of this here by force loading the
--	 * segments, before I zap the gdt with an invalid value.
-+	 * Take advantage of this here by force loading the segments,
-+	 * before the GDT is zapped with an invalid value.
- 	 */
- 	load_segments();
--	/*
--	 * The gdt & idt are now invalid.
--	 * If you want to load them you must set up your own idt & gdt.
--	 */
--	native_idt_invalidate();
--	native_gdt_invalidate();
- 
- 	/* now call it */
- 	image->start = relocate_kernel_ptr((unsigned long)image->head,
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index cf736bbaec98..4f8b7d318025 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -79,8 +79,13 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- 	pushq %r15
- 	pushf
- 
--	/* zero out flags, and disable interrupts */
--	pushq $0
-+	/* Invalidate GDT/IDT, zero out flags */
-+	pushq	$0
-+	pushq	$0
-+
-+	lidt	(%rsp)
-+	lgdt	(%rsp)
-+	addq	$8, %rsp
- 	popfq
- 
- 	/* Switch to the identity mapped page tables */
--- 
-2.48.1
+Thanks.
 
+
+--=-nkM76pZz83D3z85hx+hS
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxNDE4Mjkw
+OFowLwYJKoZIhvcNAQkEMSIEICjahdtlz82kU5PowReoywbuMSp7U2D7QpMcq5rJ4WXJMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAJK+Yxbzmi5Zp
+4YWrGu9grFi2Jl26hPKvvTTzrTjPyE9KNcpCVPN/eYICU8jDxXfhfTt4gTPRTiQZpH3g6aisXcl9
+6km5/DkDDJARngkLiOvQdl4YUrZFSuv80kxl8TmsqHS1rgN3IjT019eFT1zvRaFW55Z3qHteavD5
+m4AJjtu6jqy3mBnsC+5Q/fLvnDXBnKNjk62u3PkcxLfxgAK7z2nQe88cqPIRvh1VXVQDQRXKc34H
+iS67S2IKuG1eTXuJgGNuy4SOEyOPE33PUQlztNH/thp7q+W/cOlK1e2+Cc57gMjQ3S5ihtZuTJ2P
+O/6hOIEP/PiSULXUFCMFO0U6qw6aPNx2BRunL4Vb9uzgMXrN21eCkm645zKK2UQq7gHq+6xLkcrc
++c8yVzVSXjbQkfiV1k9AmQehUxnBiLXd2SFgBHK4nOOhc0TzIsfIj9YYVznAhGQdbjPUdPCJd7dH
+vs6OPxcroAFSWTsqO1DDaICcr6MIQazva+GqxvXSEolFcarwZXGRICRKm6G0YtjKnu+QkPYE5VQM
+c1HqzJdpLf6KsR+yw+F1U19TqAuOM8Gl01V82d4Mss5lNIjch48vrmsWVsthZ4SXrUOnb+9NSjlr
+w1fAFSc4ch1eDDFFKn32eeayxuFP4aFu6Yu7EjOxc0wqtd+aTTuL/TuYlJlEHQoAAAAAAAA=
+
+
+--=-nkM76pZz83D3z85hx+hS--
 
