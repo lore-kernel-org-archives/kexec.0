@@ -4,157 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E9EEC282EC
-	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 17:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB2DCC282EC
+	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 18:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lufeK9vbnwGEJnYpqZhfpGvzGQh65DFkqZjuzFxgQVY=; b=fw3ThQBLvM3va6rzXyQdqsizkC
-	G5JnRXYKsHvPJw+VuweU1FBA96KlD0NaSXcBlRLm7oYRgzyuU8En7iiIQxqEQHTxIGeU7Xc2Hc9Up
-	SLFRWeAgMH/bsJhcZqhNbAfCH9bwqABBvhfk3lJOXtEaoaLa75NJ1UqSnzP19bT4jgpf6Hn+B6u2d
-	pIlUsWHcpsueohwDlTzGP3b1LtWFKan4pqWC5ivyn+DiHYrl9yRm0GcTJrbkr3xHjilZZ2tHeCnXT
-	ogcIKJNa/hmVUrPOj/WN7KFpPQIHchxN7BM91p+Oo9GliU6H9XLtSutTCS7ncfJBX8+8GaKQFS3EX
-	0+K8AvkQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qp2xI3QTzUgxM5S5rM6E+Zs1aGPEVZUMHtXpZqPzgJc=; b=JlHqKdV38jCAs/FoW7L5OpFxtn
+	g9yLdp38BhxQvPmRlTMbl/6PTUezFR/WNCDIYB20AszG3PI7+CFITs+lG7jHgxZ6YukF/fzAxsmom
+	RPOQD9ZoxnCsCcKsZCYUsk0SnKB/1nbrOgpnuSKqlo6/B6asA9sy6PguQl8d+fVcPTMv/lNFDDzsN
+	Rt+sVJxXA47C1A+eNILhMbYCUcE8PB4S3R2yGazAksBpfP6JxcNtOs7qwNbxe5CGoc2JIKYI42XoU
+	MxWcajsWkn2aEvW4qEvFtJkN33wvGGOBcYC7stzVersbrXee3nzNOIQQcW1c6nrBc5E30srn52/Ox
+	qSIb6JrA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuEB4-00000003YGN-3gQ0;
-	Mon, 17 Mar 2025 17:23:02 +0000
-Received: from mail-dm6nam10on20630.outbound.protection.outlook.com ([2a01:111:f403:2413::630] helo=NAM10-DM6-obe.outbound.protection.outlook.com)
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuEB2-00000003YEg-0Byd
+	id 1tuFCe-00000003h86-3Mcr;
+	Mon, 17 Mar 2025 18:28:44 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
+	id 1tuFAU-00000003gw4-00Ku
 	for kexec@lists.infradead.org;
-	Mon, 17 Mar 2025 17:23:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=laVHAZ7jBqyymvGL3vYLHqQiDvE51BOqDC8tIAnDSja1kVJ/CmDUUP8CkJhe1PooVKJeBrAaN8EOW+Louqt7BoQiRlVT4UQWM+2zr65FCUvyqxsgNCL8DIDNtHGtxxptP5533hCJqaI1il6TQ4njuRF3cNqiglDidYqIsrTECUU9qFwGzu7hB+0ZK/+7C7QUU1+JOWEHJ3aCjfjJaP6wapSsHucY6t3dXgHWjSi9ySnr06HsUhGGD9RaHGrHWxXgNeWTNCYSxD5yJzzU473H9EUE8wD2VHv9/cRGmCYIJyaKme0KHo4DnvxEuQkF/uvSMP52c6fIG0E/S4P8LjSNlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lufeK9vbnwGEJnYpqZhfpGvzGQh65DFkqZjuzFxgQVY=;
- b=OTPw45TneKBetRCOj2xC8FZsJ67qKp8ZEJCpoRzriELUPow5WHhBHm+pbeMiN6sp425RNDKLFEpjjyopNzXJtifJ4DGq+jLXVGbTPRDOfA1QlVORuG9Tv2sxunJPcaSKe9uLPxh4ltO4BD5N/MdJlcB9FlDwPdGH+kGClreH2YrFgheeB+dEl3f6+bS37yipV8/sMocrXdGWR0Kj3avGbOogMap7Ng5Ry6h6Zui7OGRRp3ZyOFFb5z40QMDKg/K5cc5w4b8P9Y0plS5MB/HLuNqYsmAmoHTYsninrnpLzr1MiS5hRf5DWmwbdCj8RaYsO6TvMZ1yE2U9GYeiIMkMOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lufeK9vbnwGEJnYpqZhfpGvzGQh65DFkqZjuzFxgQVY=;
- b=rJF995La16OPJ8gTk9a0nLdG5MrWS7I3ijv8hw3JxfpfbpULPTi/Xx9bkzTlF9em7RLfuaeaHtHs8dYHM415daX1AP/mvKx3/PmVPdqPT6eLK3H6DIEUV9riBtT54U0dZ7T48psvse2MkBtxO/8fz3Q2LgpuriVd0eL/wsX6KD8n0uZNFIdgozHT9Ce+acgA73eJPRBuc00nXNevnvw7tAHOK9UKHAg2uzfWsrVoXefZauUWtGLoxo8/2SmR/PYBAx+VFxA6K6GzHLv4Zy8wDq/lJK46GMkq8Hw0Td0dGcJNujrFwsfI6CYgJkTP7V5JROZG9yl60iaUmFY8/iPO6A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY8PR12MB7586.namprd12.prod.outlook.com (2603:10b6:930:99::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 17:22:56 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 17:22:56 +0000
-Date: Mon, 17 Mar 2025 14:22:55 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: David Rientjes <rientjes@google.com>
-Cc: Alexander Graf <graf@amazon.com>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Frank van der Linden <fvdl@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	Junaid Shahid <junaids@google.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vishal Annapurve <vannapurve@google.com>,
-	"Woodhouse, David" <dwmw@amazon.co.uk>, linux-mm@kvack.org,
-	kexec@lists.infradead.org
-Subject: Re: [Hypervisor Live Update] Notes from March 10, 2025
-Message-ID: <20250317172255.GO9311@nvidia.com>
-References: <a350f3e5-e764-4ba6-f871-da7252f314da@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a350f3e5-e764-4ba6-f871-da7252f314da@google.com>
-X-ClientProxiedBy: MN0P221CA0019.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:52a::33) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	Mon, 17 Mar 2025 18:26:31 +0000
+Received: from [10.17.64.108] (unknown [131.107.147.236])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0A1392033446;
+	Mon, 17 Mar 2025 11:26:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A1392033446
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742235988;
+	bh=qp2xI3QTzUgxM5S5rM6E+Zs1aGPEVZUMHtXpZqPzgJc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BByOTodA2rsY66J+N49CcTYDbbdQti49s8SiLd+O0iAQ/vkj9vEDbkudszCWMlzAv
+	 REYofXu+RdkvOhLCXd8vJdqNR8M0UDacd78xKnx917rsICHJnLBgyiPkFi3MvbcVo1
+	 j+Leqq9h3DNiQ/nogyjoxpsr/Sk8M3XJCpuimjkc=
+Message-ID: <30eea6c2-cc42-4836-ad70-ccae99b3afda@linux.microsoft.com>
+Date: Mon, 17 Mar 2025 11:26:27 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY8PR12MB7586:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c8f569d-7809-4424-5c64-08dd65785b4e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?duGSdK4Z1qW6NcOhTACShZCM6zj3cWDeyBoApJbnR8iZPSI9jN0pdHwiLSHC?=
- =?us-ascii?Q?1Mc6iJQrKA0OqW6kx9dFYaAcLwZp/CofM3pv+bR/3uv3pwnw52Zyu0Pa/T8r?=
- =?us-ascii?Q?tjhm2T7egBe3GFwlIGrBdofAdtC6F2qMtT3AvNzhjsXlRwG0tzsHFoFPK1v0?=
- =?us-ascii?Q?BgVZ1vbXlDSVfKj8Rb9dqZVh0gSAL1sXnkoxaEVnbLSo947xbmPUMlzqhnM0?=
- =?us-ascii?Q?kxAgu/KR9+3rkNz4atMywr7pLkSrmWMqWOtyoEThbjUzELKju0G2EorS8rF/?=
- =?us-ascii?Q?rIIB2BfChs1/5zGCSdlbrmVkpunjJXXKPALfkx0F+YZAy1JCOKLjl7tnUzxt?=
- =?us-ascii?Q?PiUoeSWw1qrCN+ut5Mlb9lYvAzxb9W0iwb/prP6wW1TKZgPAPbCuOxKFKDrG?=
- =?us-ascii?Q?KZR7SBGwpgvx6ldZDniTPHeSKlPvyk43HyEFwHLkwuQ6U4qxrKDoFx6ijvNx?=
- =?us-ascii?Q?WPqMi3VSBQ8jf8tXiw4W5vqpzqcBsyZGbwsdzDJDjbWJLA6e7wVYv9TUNyxQ?=
- =?us-ascii?Q?MSjXmQcz2+jP5WcBmVUy+KXIghRiOpi1cd2vkpVlqCBpAZqtSxrATE/f4wjU?=
- =?us-ascii?Q?g9lxL3XCxLW7RrNE9u/7zGKN6tSu320PzfPocBnxTusycWYJFYYsJCde11JW?=
- =?us-ascii?Q?CqifyWSAgH7lGgZwNFORTmSlz77/dY/EMY27Xz9rt3AUPIb72jHVL/yi+33X?=
- =?us-ascii?Q?q0hqnvrPAhwS0XFeJyrvzbK72cnUaFwYn0cC1Aw/4p8OdP/+hdaH+YyVgXcC?=
- =?us-ascii?Q?ERbnNNk9ImQIt9mTG+J5eTld8KossgHTPpuz2jiYlybKfhnK75E4aAQS6six?=
- =?us-ascii?Q?6Bg3e1zFks0NvO63NyY/NMwXYK474oZO2XP4jDfPNrz9ypVTZxdVUzqXeSBy?=
- =?us-ascii?Q?BsEK4k3cYC6geG9HH1AfgupAMKS67y0NifzUIk0dizpr28uHUVram0qEFIB3?=
- =?us-ascii?Q?+r062uYgViCRhyv6gAgxtNMK80rWkgiUmkt8bL68vYmJ77NisGoaymd9PQqn?=
- =?us-ascii?Q?gXZLluyWdwTp40x+fHI5R1B+YANmY/3uJU6QJuyIt745gFokctyBnRo4MCTx?=
- =?us-ascii?Q?emEgEzyl+wJfnXz/z2jNhs2bTrh/zm15q6PFvRR1XXZPkn5Sv6O+kpwjMS/W?=
- =?us-ascii?Q?0aialFoEhuA0nspIVGEpdCecVhitUSOuMysuG/B5jvBGBvUOITTrEyqu6Ann?=
- =?us-ascii?Q?l6KRCyTlLQjkwOI/sehoByUWWuBX+jqLS/605R50MF3rbYCNlyXTPOHwjLoY?=
- =?us-ascii?Q?gXqwkQS20mZ54WG6wHZedfgzX51EbQWvo6Bu+EnWaobDnMhpXtaSEa+iJ40u?=
- =?us-ascii?Q?604HlobUVvoiz669Pe+XE8fJlvT/wrreZUUjOnWnf9v1wtF2zKuDxnJSVmqy?=
- =?us-ascii?Q?5Uusur0bw1w1W3LIJk2t8Y3A994T?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8jkFOMsZ3KC06V64Abz2/jH6/r6S9V8UZ2D/SiM5Yj4Rvgv+LSeSJ47bdixZ?=
- =?us-ascii?Q?RH91bRHfY3R21OFZCQ04qgJpJO3ou9Np3elgH+L0HHknJ/3J9j0Szzedsad4?=
- =?us-ascii?Q?eCz11Ah4zpLDdqNjNqveAmeCvtLO/42vG+7mOeGHWNTMlDYz7aGXqv6X8BlG?=
- =?us-ascii?Q?1FZ/1gqHeDAYJ3eOPiHjJbc+VRQgtXSFgvecU40IGsb2KDw0gN6AhggBde88?=
- =?us-ascii?Q?CTWHTkWy5iEVCoBANpb+uxYAsf5CR0WaxI3Xz8syVc4upKzLt0lQUbN6oa/O?=
- =?us-ascii?Q?gz42xOiW492QP/eC46JfTi3YTsq0xw6ZxpiUQ6CtsGuagrhNhndvVYOOYkU5?=
- =?us-ascii?Q?bdSJuWFMJ1AcJTQFt0OPDwPGV6rVIfJ2MOujxXGjVAhdoE1t4GLU09HUlAGR?=
- =?us-ascii?Q?94r7EzQsUosn+4vXXAY1MGvtz0j4iIJobksX3UaMFyZBdzI4EkaYxlpEKQiS?=
- =?us-ascii?Q?UqUoS6ykhRosRwv75wuP15ceKXFpg0nMMyE1pDSx+pl2LEJV1WuSplAoswSQ?=
- =?us-ascii?Q?uypoRtd0jv9Xmqu6cIXe3He6dLy4OBWFpIok7Q4OCv3lCnMsttGomSLao63B?=
- =?us-ascii?Q?9+VuHQ3vwRfqvaL/L+IukEWzyHJPmrD16RS+VItslLqPSgC2LTkrO1IXZM8m?=
- =?us-ascii?Q?2CHBayPut4Stkpb4SWfRU6AaxtCodLpdOeom6l3gyOkpj+6yJS4pmMxsyr/6?=
- =?us-ascii?Q?qeWKIcppzYAEh/92Map+/qLpPLBMjw3fqg3WKMD67yJNH4IramelOLGAP5Ej?=
- =?us-ascii?Q?Sehp6t85PzIJBtXBL35xplxN4uB7QVHaCpZbFAVJZsTd4Z6t/4HCWUyeFhR5?=
- =?us-ascii?Q?+jQ4wIlCwtNiFVXnjAwZr3dCfgUuztNYDKs0LIWwIxZnBMbZihXnguxAcVkP?=
- =?us-ascii?Q?fL21wIDxZBalzZz9NsOxrNiOhlBmzs3+/VoBJisDLkpETjqnN2LmL1xbJGNP?=
- =?us-ascii?Q?yzzl7XuyQ0UdhBGkaX2a+jQDG/NKiLM/lRVoQ8/svpgCEA7LugGD+6U9iveL?=
- =?us-ascii?Q?TqOxDdIUM48HOYH7APgLZaJ6Fd14bYsgJykRApXaJgmJQDgHFFVf0ZaFvZd7?=
- =?us-ascii?Q?Hp/QMNDOXksaHOFdExnA1gVZ8tF58k5WCzvgkAGuc338pCpp8uj6UWbxi62s?=
- =?us-ascii?Q?SOpFDAHpN9zlGXQafsn/poRttZs31XCn9Fe5ETBVthqTTN/KRMwqTACRUndd?=
- =?us-ascii?Q?ZexWiVf9AmhWRHi9X8l28HIXMbyzVUhYEK6tTJeGyoIIn45ch/ZSkFK35J8u?=
- =?us-ascii?Q?sRF5cMkugOC3kehFm6+zjRTjdxi40kyPNa5r+Sq7Lj/xuZwzxITa5yzod2PW?=
- =?us-ascii?Q?45VDL+LMhzjLrrQAhkmsxF7ST2lavBuLEhAFEC6Lszs487qUyBfhiMNu5zdb?=
- =?us-ascii?Q?bVjR6NnyjCeOeGmtfNDvRReGn6GaIN19l87KtDCwRwEQtC+86oCoaI5N6wvm?=
- =?us-ascii?Q?lTQyVvgJMV+QVG1UlCYR2sK7UqKxkZz66xZRBOufr8xwOt3IpKF4PZZHfgpG?=
- =?us-ascii?Q?oeDxFCDXkCF26t8TdM7vaIZNJPqB7JUHu3Oj2MyYRkZKb6GeNQ8R0VQciuIR?=
- =?us-ascii?Q?8TvThLabXd06WsORf9bOoYA/prAw6VEZkV5TjFoD?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c8f569d-7809-4424-5c64-08dd65785b4e
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 17:22:56.1046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nvQj4Xni6l6SDRZSi79GH3di7Y3obHBj4K9LYkmt1A7C5QOLeMDGjJBu705OPt0P
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7586
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+To: Baoquan He <bhe@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, zohar@linux.ibm.com,
+ stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+ roberto.sassu@huawei.com, eric.snowberg@oracle.com, ebiederm@xmission.com,
+ paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+ linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@hansenpartnership.com, vgoyal@redhat.com, dyoung@redhat.com
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+ <20250304190351.96975-3-chenste@linux.microsoft.com>
+ <Z8d9RvRWPOADOgsx@kernel.org>
+ <97c27a30-a5ee-4825-ab7e-82dcddedd688@linux.microsoft.com>
+ <Z8hCl4piQ1Sfpi7h@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z8hCl4piQ1Sfpi7h@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250317_102300_085964_AF09D705 
-X-CRM114-Status: GOOD (  24.48  )
+X-CRM114-CacheID: sfid-20250317_112630_099253_1CBBC550 
+X-CRM114-Status: GOOD (  34.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -169,74 +79,181 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Mar 16, 2025 at 08:52:43PM -0700, David Rientjes wrote:
+On 3/5/2025 4:24 AM, Baoquan He wrote:
+> On 03/04/25 at 04:55pm, steven chen wrote:
+>> On 3/4/2025 2:23 PM, Jarkko Sakkinen wrote:
+>>> On Tue, Mar 04, 2025 at 11:03:46AM -0800, steven chen wrote:
+>>>> The content of memory segments carried over to the new kernel during the
+>>>> kexec systemcall can be changed at kexec 'execute' stage, but the size of
+>>>> the memory segments cannot be changed at kexec 'execute' stage.
+>>>>
+>>>> To copy IMA measurement logs during the kexec operation, IMA needs to
+>>>> allocate memory at the kexec 'load' stage and map the segments to the
+>>>> kimage structure. The mapped address will then be used to copy IMA
+>>>> measurements during the kexec 'execute' stage.
+>>>>
+>>>> Currently, the mechanism to map and unmap segments to the kimage
+>>>> structure is not available to subsystems outside of kexec.
+>>> How does IMA work with kexec without having this? Just interested
+>>> (and confused).
+>> Currently, all IMA-related operations during a soft reboot, such as memory
+>> allocation and IMA log list copy, are handled in the kexec 'load' stage, so
+>> the map/unmap mechanism is not required.
+>>
+>> The new design separates these two operations into different stages: memory
+>> allocation remains in the kexec 'load' stage, while the IMA log list copy is
+>> moved to the kexec 'execute' stage. Therefore, the map/unmap mechanism is
+>> introduced.
+> I think the log can be improved. About the found problem and solution
+> part, we possible can describe them like below:
+>
+> ===
+> Currently, the kernel behaviour of kexec load is the IMA measurements
+> log is fetched from TPM PCRs and stored into buffer and hold. When
+> kexec reboot is triggered, the stored log buffer is carried over to the
+> 2nd kernel. However, the time gap between kexec load and kexec reboot
+> could be very long. Then those new events extended into TPM PCRs during
+> the time window misses the chance to be carried over to 2nd kernel. This
+> results in mismatch between TPM PCR quotes and the actual IMA measurements
+> list after kexec reboot, which in turn results in remote attestation
+> failure.
+>
+> To solve this problem, the new design is to defer the reading TPM PCRs
+> content out into kexec buffer to kexec reboot phase. While still
+> allocating the necessary buffer at kexec load time because it's not
+> appropriate to allocate memory at kexec reboot moment.
+> ===
+>
+> It may still need be improved, just for your reference. You can change
+> and add more detail needed and add them into your log.
+>
+>> Please refer to "[PATCH v9 0/7] ima: kexec: measure events between kexec
+>> load and execute" for the reason why to add this.
+>>
+>> Steven
+>>
+>>>> Implement kimage_map_segment() to enable IMA to map measurement log list to
+>>>> the kimage structure during kexec 'load' stage.  This function takes a kimage
+>>>> pointer, a memory address, and a size, then gathers the
+>>>> source pages within the specified address range, creates an array of page
+>>>> pointers, and maps these to a contiguous virtual address range.  The
+>>>> function returns the start virtual address of this range if successful, or NULL on
+>>>> failure.
+>>>>
+>>>> Implement kimage_unmap_segment() for unmapping segments
+>>>> using vunmap().
+>>>>
+>>>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>>> Cc: Baoquan He <bhe@redhat.com>
+>>>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>>>> Cc: Dave Young <dyoung@redhat.com>
+>>>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>>>> ---
+>>>>    include/linux/kexec.h |  6 +++++
+>>>>    kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+>>>>    2 files changed, 60 insertions(+)
+>>>>
+>>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>>> index f0e9f8eda7a3..7d6b12f8b8d0 100644
+>>>> --- a/include/linux/kexec.h
+>>>> +++ b/include/linux/kexec.h
+>>>> @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+>>>>    #define kexec_dprintk(fmt, arg...) \
+>>>>            do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+>>>> +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+>>>> +extern void kimage_unmap_segment(void *buffer);
+>>>>    #else /* !CONFIG_KEXEC_CORE */
+>>>>    struct pt_regs;
+>>>>    struct task_struct;
+>>>> +struct kimage;
+>>>>    static inline void __crash_kexec(struct pt_regs *regs) { }
+>>>>    static inline void crash_kexec(struct pt_regs *regs) { }
+>>>>    static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>>>>    static inline int kexec_crash_loaded(void) { return 0; }
+>>>> +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+>>>> +{ return NULL; }
+>>>> +static inline void kimage_unmap_segment(void *buffer) { }
+>>>>    #define kexec_in_progress false
+>>>>    #endif /* CONFIG_KEXEC_CORE */
+>>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>>> index c0bdc1686154..63e4d16b6023 100644
+>>>> --- a/kernel/kexec_core.c
+>>>> +++ b/kernel/kexec_core.c
+>>>> @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+>>>>    	return result;
+>>>>    }
+>>>> +void *kimage_map_segment(struct kimage *image,
+>>>> +			 unsigned long addr, unsigned long size)
+>>>> +{
+>>>> +	unsigned long eaddr = addr + size;
+>>>> +	unsigned long src_page_addr, dest_page_addr;
+>>>> +	unsigned int npages;
+>>>> +	struct page **src_pages;
+>>>> +	int i;
+>>>> +	kimage_entry_t *ptr, entry;
+>>>> +	void *vaddr = NULL;
+> When adding a new function, it's suggested to take the reverse xmas tree
+> style for local variable ordering usually.
+>
+>>>> +
+>>>> +	/*
+>>>> +	 * Collect the source pages and map them in a contiguous VA range.
+>>>> +	 */
+>>>> +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+>>>> +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+>>>> +	if (!src_pages) {
+>>>> +		pr_err("Could not allocate ima pages array.\n");
+>>>> +		return NULL;
+>>>> +	}
+>>>> +
+>>>> +	i = 0;
+>>>> +	for_each_kimage_entry(image, ptr, entry) {
+>>>> +		if (entry & IND_DESTINATION) {
+>>>> +			dest_page_addr = entry & PAGE_MASK;
+>>>> +		} else if (entry & IND_SOURCE) {
+>>>> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+>>>> +				src_page_addr = entry & PAGE_MASK;
+>>>> +				src_pages[i++] =
+>>>> +					virt_to_page(__va(src_page_addr));
+>>>> +				if (i == npages)
+>>>> +					break;
+>>>> +				dest_page_addr += PAGE_SIZE;
+>>>> +			}
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	/* Sanity check. */
+>>>> +	WARN_ON(i < npages);
+>>>> +
+>>>> +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+>>>> +	kfree(src_pages);
+>>>> +
+>>>> +	if (!vaddr)
+>>>> +		pr_err("Could not map ima buffer.\n");
+>>>> +
+>>>> +	return vaddr;
+>>>> +}
+>>>> +
+>>>> +void kimage_unmap_segment(void *segment_buffer)
+>>>> +{
+>>>> +	vunmap(segment_buffer);
+>>>> +}
+>>>> +
+>>>>    struct kexec_load_limit {
+>>>>    	/* Mutex protects the limit count. */
+>>>>    	struct mutex mutex;
+>>>> -- 
+>>>> 2.25.1
+>>>>
+>>>>
+>>> BR, Jarkko
+>>
+Hi Baoquan,
 
-> Pasha asked how drivers would know if reservations would be denied in the
-> first 4GB of memory.  Mike said an error code would be returned.  Pasha
-> was specific about devices that wanted to preserve the memory because
-> they knew DMA would be on-going during the reboot.  This became a more
-> general question: what devices should we support for KHO and what should
-> we not (what is considered too legacy?).  In the meantime, Pratyush
-> suggested explicit checks for this.
+Thanks for your comments. I will update it in next version.
 
-IMHO supports DMA to all memory, and doesn't require swiotlb seem like
-reasonable starting points for device capability.
+Steven
 
-If you can't start swiotlb later, after the buddy allocator, maybe
-just make it KConfig conflicting with KHO?
-
-You could probably also preserve the swiotlb memory across the kexec
-to bootstrap it, but why? It should never be used on modern HW..
-
-> Pratyush noted there was no way to preserve folio orders in KHO and he
-> also noted there was a need for page flags.
-
-I think the xarray idea will preserve folio orders, that was a big
-point of it.
-
-Not clear why we'd need to preserve page flags. The same page flags
-may not even exist in the new kernel? New kernel should set the page
-flags correctly based on what it is doing. Shouldn't, say, memfd know
-exactly what it's page flags should be in the new kernel when adopting
-the memory?
-
-> Pasha asked how cgroups would be handled, but there was no current
-> support for that.  Pratyush said the current RFC focused on anon memfd
-> and has not yet looked at hugetlb.  Pasha emphasized the importance of
-> focusing on one type of memory to start.
-
-I'd say userspace should deal with this. It should de-serialize the FD
-within the context of the cgroup it wants to charge that FD too, and
-the de-serializing process should charge that cgroups accounting with
-whatever is restored inside the FD.
-
-Is that possible?
-
-> Andrey had recently sent another patch series for KSTATE[3] that was
-> discussed, now in v2, which was closer to being a formal submission
-> rather than an RFC.  He noted his concern with KHO was how hard it was to
-> write serialization code.  His goal was to give drivers the ability to
-> migrate structs across kexec which could be more elegant (see the
-> struct kstate_description).  
-
-I think we will have structs, I think most things will be structs. The
-KHO just gives a small FDT area to keep track of the top level struct
-pointers in a more understandable and auditable way.
-
-> Mike suggested on top of KHO we have FDT, then what Pasha is proposing
-> for dynamic tree on top of that, then perhaps kstate on top of that.  He
-> would need to look more into kstate.
-
-This makes sense to me. I think the FDT should be the first layer, and
-then we can go item by item and decide the best serialization to use,
-always starting from the FDT.
-
-At worst the FD is just an expensive way to store a pointer to a
-struct.
-
-If we determine at the end that the FDT is predominantly used for very
-simple struct things then maybe it gets replaced..
-
-Regards,
-Jason
 
