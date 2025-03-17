@@ -4,91 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 101FAC282EC
-	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 11:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75CD6C282EC
+	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 12:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mUD4UeStP/nHaOauQgFhtHc18qaLFR2neX3hG45AnXI=; b=Q4ZH2MScrxbXJUY4H71xt4jvga
-	y3X5tt2qVYOHXU7FKdc6HRC4sQJzhF1lD09Gp5IDfhbEGshKn2fRaCzrdv8ORS/HkzsS+clviob7s
-	xuakTlpTJF5voIYZLZYuFWVPVfP35DoQz5aH/HUrcdZTlxTu9Ay3gUw+1TAcrnpHAx0IViiYRlTj2
-	uK74Ps7a45NwOLHh2gnVOErDbzBp1QMrqKch/7+JtWh93gbvbdhyz0gfzNHfN52ykZaeQyjBWcTgJ
-	mOZ1G1Ym8z8uO/Dark9K5wNYj8Voofqm+kIAd3SadOuPK4AGx8rZS8exDUOw1fKHh7F42xsMiWaim
-	XLQLgRnQ==;
+	bh=orPCysawwRPllczDX7Ts+fD7Y7RbEDmQgWfnbJvXvdk=; b=KjOZO0nxDpcWLhRnvX5DnWpjCt
+	8tOxOsdOF77UVj3sxhDWVOPCFU6aN0uICKrBmSi44zGTKoajrMl6d+Md/DMAF0sq/D0/59VabHpli
+	8lyAg/xzSEO7Kh1quTWd5QOIchaRGIqrRUBVCbkKrQBywB1mX0VOnBQoTBtYrZDtrXlPmujOtr+4g
+	JA7qCeie+et9J6+klZSNK9CZwlY/81oXwt5gJ1Erp/ZveWDLVFXdanTjMU8f4ZUaAtQ3SyZHAhJwp
+	HCPSpF8TYXkz2YVyuJ6DoBIuH5625IyHlCxRgvPSxsTulZIxrOvUCLDqsYyct3H93BmTTF6bkEBUq
+	pvM/2f1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu989-00000002Tsn-2HMm;
-	Mon, 17 Mar 2025 11:59:41 +0000
-Received: from mgamail.intel.com ([192.198.163.13])
+	id 1tu9lU-00000002azu-0K8g;
+	Mon, 17 Mar 2025 12:40:20 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu986-00000002TrM-1xFc
-	for kexec@lists.infradead.org;
-	Mon, 17 Mar 2025 11:59:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742212778; x=1773748778;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=XFwYDEKcjNARc420Br7HZrIehcMEHv2O4FnRcaIVt6I=;
-  b=EWXxeb5LEh82KrNZH/pNPgtiWaVYckEa2ct/QDy82xSFa23N1iY3Hw48
-   lruEvifCpHGkGarXt9I+8Vor5PtDqbH1I/iforryU1X9e3RnLGmV/HvLC
-   vqt3thB/QG5Q+fEdFU3icVQHCEwOGZaXYYnBlJlZb3b085U73lwzQ5gjv
-   tor8M+dIc2r0u3J/YGb/Hv5rG4iNNAPcen9nJEaOLKnZvkrXL90VMxzGO
-   HZb5jdc3inxkqg7BterFbl1dO7IwUFFWd03nmPQ2wiqftBx8lNO7y1ElK
-   kaejQ6BHlUeku23rF1GUYkwW8HtetzeBp2f16o+f2OB++v57ziQBkNweQ
-   g==;
-X-CSE-ConnectionGUID: 0J40mf+ERHavb1zJDLR7vQ==
-X-CSE-MsgGUID: NGhmwvb4R8iQi1yJ7Un2yQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="46069375"
-X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
-   d="scan'208";a="46069375"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 04:59:33 -0700
-X-CSE-ConnectionGUID: 49VgUIGlTg6X23qk61NTDA==
-X-CSE-MsgGUID: FidGX7h5QvKWATo2WsUIXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
-   d="scan'208";a="122655091"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Mar 2025 04:59:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 405B41FC; Mon, 17 Mar 2025 13:59:27 +0200 (EET)
-Date: Mon, 17 Mar 2025 13:59:27 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Huang, Kai" <kai.huang@intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-Message-ID: <mfkjehhth2pwwzcueircxl57afmip5kwqlajopnjuwunztmqvn@vx6k62dgdxkq>
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
- <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
- <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
- <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
- <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
- <8e4e1d80-11ef-472f-befc-f61310281f18@intel.com>
- <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
- <f74db2c44ee7ef8ec127b5135ff80885c21c6836.camel@infradead.org>
- <uchg74rtpcpwlkxgqww2n6nh23p4ouaswqc737xy7y6rqzowtb@pbf4whogx2s4>
- <0c6cab4ea4e898a62ecb0b047959f09011d3c85f.camel@infradead.org>
+	id 1tu9lS-00000002azl-4AZV
+	for kexec@bombadil.infradead.org;
+	Mon, 17 Mar 2025 12:40:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=orPCysawwRPllczDX7Ts+fD7Y7RbEDmQgWfnbJvXvdk=; b=WIUAWoUUBnljhVsYc6y0bn+ux2
+	ZUyrDM1AhQxiqMlQ90gaaToSt7ayP7ThXnoQloqkUjD3ftNm+C8ps+dGuzs2K4WRH/v7LSXqtxj0b
+	/HSKFagVAwPkSA7xYkYOWDQ/wGuERVvqi24YFNfwO66KgVXf/at04RClJPqi9jl452rrpR/9kMq7q
+	nyVOGvUF3mPwiQCiYDcC963OpKiAKXy/k762sHhadHX6jVTrzryCMV38I+ClWZZBLarZUQnOUs2bs
+	qc7PhCRd4JD5EmAEhJ0Yxi9m419/jLukkEM7+j49sHN5xmBzwfVZscKABta+jWOEV0ciaKLzszbfn
+	A3hwDA6g==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tu9lO-00000003RUT-3lev;
+	Mon, 17 Mar 2025 12:40:15 +0000
+Message-ID: <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
+Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
+ information to relocate_kernel()
+From: David Woodhouse <dwmw2@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
+ <hpa@zytor.com>,  "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>, 
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
+ <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
+Date: Mon, 17 Mar 2025 12:40:14 +0000
+In-Reply-To: <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
+References: <20250312144257.2348250-1-dwmw2@infradead.org>
+	 <20250312144257.2348250-9-dwmw2@infradead.org>
+	 <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
+	 <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
+	 <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-36S8nfd6cdxuk7ghP8WD"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0c6cab4ea4e898a62ecb0b047959f09011d3c85f.camel@infradead.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250317_045938_507481_D8F5CD4A 
-X-CRM114-Status: GOOD (  15.94  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,34 +79,193 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 17, 2025 at 11:32:42AM +0000, David Woodhouse wrote:
-> > And we don't want MCE to be enabled during kexec for !TDX_GUEST:
-> > 
-> > https://lore.kernel.org/all/1144340e-dd95-ee3b-dabb-579f9a65b3c7@citrix.com/
-> 
-> Actually now I've added proper exception handling in relocate_kernel
-> perhaps we could rethink that. But that's for the future.
 
-There still going to be a gap once the new kernel is started until it gets
-proper exception handling in place.
+--=-36S8nfd6cdxuk7ghP8WD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > I think we should patch AND instruction to include X86_CR4_MCE on
-> > TDX_GUEST:
-> > ...
-> > -	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
-> > -	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
-> > +	ALTERNATIVE __stringify(andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d), \
-> > +		    __stringify(andl	$(X86_CR4_PAE | X86_CR4_LA57 | X86_CR4_MCE), %r13d), X86_FEATURE_TDX_GUEST
-> 
-> Yeah... although the reason I'm looking at this is because I want to
-> kill the ALTERNATIVE so that I can move the relocate_kernel() function
-> into a data section:
-> https://lore.kernel.org/all/20241218212326.44qff3i5n6cxuu5d@jpoimboe/
-> 
-> So I think I'll do it like this instead:
+On Fri, 2025-03-14 at 10:52 -0700, Josh Poimboeuf wrote:
+>=20
+> IIRC, the reasons were the patched alternative, and also you wanted to
+> disassemble (but note that's still possible with gdb).
 
-Looks good to me. Thanks for the cleanup you are doing!
+It's meaningful output from 'objdump -S' that I miss. But OK.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> Here was a patch to make it work:
+>=20
+> =C2=A0 https://lore.kernel.org/20241218212326.44qff3i5n6cxuu5d@jpoimboe
+
+I've reworked that and the CR4 filtering, and now it doesn't like me
+using SYM_TYPED_FUNC_START() to add the CFI information for the
+relocate_kernel() function.
+
+  LD      vmlinux.o
+vmlinux.o: warning: objtool: bad call to elf_init_reloc_text_sym() for
+data symbol .data..relocate_kernel
+ ...
+
+  SORTTAB vmlinux
+incomplete ORC unwind tables in file: vmlinux
+Failed to sort kernel tables
+
+This happens when I build with (clang and) CONFIG_CFI_CLANG, with and
+updated version of your patch above, and this on top of it. This is at
+https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/kexec-d=
+ebug
+
+=46rom 0f08a44613764e9b38a1c3332812685b61c99c2e Mon Sep 17 00:00:00 2001
+From: David Woodhouse <dwmw@amazon.co.uk>
+Date: Mon, 16 Dec 2024 10:26:24 +0000
+Subject: [PATCH] x86/kexec: Add CFI type information to relocate_kernel()
+
+A previous commit added __nocfi to machine_kexec() because it makes an
+indirect call to relocate_kernel() which lacked CFI type information,
+and caused the system to crash.
+
+Use SYM_TYPED_FUNC_START() to ensure that the type information is
+present, and remove the __nocfi tag.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/kernel/machine_kexec_64.c   | 2 +-
+ arch/x86/kernel/relocate_kernel_64.S | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_k=
+exec_64.c
+index 016862d2b544..e1f5fc858aee 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -396,7 +396,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void __nocfi machine_kexec(struct kimage *image)
++void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long reloc_start =3D (unsigned long)__relocate_kernel_start;
+ 	relocate_kernel_fn *relocate_kernel_ptr;
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocat=
+e_kernel_64.S
+index 814af7fa6318..c859fbe507e8 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -5,6 +5,7 @@
+  */
+=20
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <linux/stringify.h>
+ #include <asm/alternative.h>
+ #include <asm/page_types.h>
+@@ -68,7 +69,7 @@ SYM_DATA_END(kexec_debug_idt)
+  * opinions about it.
+  */
+ 	.code64
+-SYM_CODE_START_NOALIGN(relocate_kernel)
++SYM_TYPED_FUNC_START(relocate_kernel)
+ 	/*
+ 	 * %rdi indirection_page
+ 	 * %rsi pa_control_page
+--=20
+2.48.1
+
+
+--=-36S8nfd6cdxuk7ghP8WD
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxNzEyNDAx
+NFowLwYJKoZIhvcNAQkEMSIEIDeEsHzegrxgjHLbvpIo/1WrbIl614qJFikdRv9Ro6aRMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAuF0NPpCaDBN6
+K/Z7DDtKrsghwxusBMKvFAF4Zx5b9GiF9TaL0CeUjNnnDcXf5CH9+v/6OgVTwEQA+oPcimC4UK+n
+NhFhXe3Pg8FtHHRka7Wwqhbws0JrG+c/o9yhhRwdct2NpUYs092KWPb/1AZE8MtuAFnMnbIqXr68
+Y9+unExHbOcb1qqWauz+13n+ZtBSUeixXg3hkyLQBSYH/cM2GyWXZIC7PpBNPYDmhSpIpcR4/QrR
+jGnxaTFzNhyt1byax0Rj/NU6+RSZLOXkOD8ref65GYNaDQlJ4SSeuOrucpV6w1EZwYP4pU2RxJlG
+gAxtW5q6rGYk321sBP8+lW4Vj0fiZBIN88NZixeq+yp/uXcgENKUojvbrrs1L/wg1RqBiwAKlO/4
+4Sx9fATx/z9kc/VysMvhOZh3Fc0uPy+fSLKc3kAY3hm8m2l6UA7xwSoBZ2wpkUbVx0OEgo59jiUe
+dAJ1pfXfxa9Bz1WUCN8y+k7RxNQUHQSsQ3bHjTl4GgX01hYUDk6E4xfApyopT+eGtr0A0pQtbFM6
+uCbySZ3mBXdSVDJHYQzPvWWJDbTzGNTp9FTRFwwEsjCIXP4jlDDRJiXT+eiFYA7lJx/GrOSLM82P
+zc5tW8XpFGZypw+2O4dg91COIo9VPH3a6WScTSlIqL4Ao1dIk8+8aaVbaKwMBHwAAAAAAAA=
+
+
+--=-36S8nfd6cdxuk7ghP8WD--
 
