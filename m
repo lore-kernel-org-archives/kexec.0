@@ -4,90 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF10EC35FF7
-	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 03:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28FC4C282EC
+	for <kexec@archiver.kernel.org>; Mon, 17 Mar 2025 09:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=NlW8w4RRBWj9GTYyM0QR0pwlik2bQU9FbiljA2VJaMo=; b=1FH9FYexgKjV6TzfHe3AXFh2vm
-	wzEnYf3WJug/+r5yPg8QOnXZwKF3zuBZ0yesUuw524Tq+fTJaRxMDv1Y5gLD+Ytcx5R+OsM8jc5rK
-	VHnTrre1XHAvYklLDMrAd9FwrrmAGmaN+0Zmq2JeSlJw6xznSFqf3j5banStkDIWsP+Zoy88+VVgo
-	NpXqTqgiU41f18XqObJZ7VUNCgsiBMTcurMC1NwC2mealHwAtHGsfm/OHl1tWnU/VEIh37CmPJLmK
-	WXinhlJS2J7ginnpS2Mq2uv/LxbOq6XvNnvGqvT61qIR1zW7wFttK8JB8nZR7OgiVNidXAU0JQlbq
-	nVoAMCUg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=CTLzdgzNn3MAanDyZN8BjXMkbYJDEvPGI3lVbCinBdU=; b=CU+JcJDuG5rwe9j3SpnmYvlTfu
+	dmutfOsaPSt56dz4pJgcdALNMeTrG2+cSc0ZDKATtVcOQBSDDY9oxxn2aZa+13gLFqVXaizJpV3q+
+	0Qla0enX1IQ4vrVEeklmAsNFRTF7yBFhuiaJprSVbRqGe5XJ5PCYFB7vVkUvIVkF9/nKJwWF1gxqI
+	t5jo0G+XWUx36i6WHIeuGz/06F487RMk7YQimKThO9Rdlz94Ef1L3Y7TJQPUzF+wTi5n+EoVykMkU
+	I+XUwSWMy89mTo0gjjVws4Lr6eKUK0EYxV+hmFGnThFk1ut5/xRJBqFvyk7UfmgntfbdBnJVBLoqa
+	WytKC90Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu1X1-000000016Gp-2XUc;
-	Mon, 17 Mar 2025 03:52:51 +0000
-Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
+	id 1tu6kl-00000001v6v-0zyz;
+	Mon, 17 Mar 2025 09:27:23 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu1Wx-000000016Fk-1DHG
-	for kexec@lists.infradead.org;
-	Mon, 17 Mar 2025 03:52:48 +0000
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-225489a0ae6so321575ad.0
-        for <kexec@lists.infradead.org>; Sun, 16 Mar 2025 20:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742183565; x=1742788365; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NlW8w4RRBWj9GTYyM0QR0pwlik2bQU9FbiljA2VJaMo=;
-        b=pKu9J92HGuWdYKICXgixYl4emkawyjZ6VHD0SnKSqZE9pf6YX0Pcm1ghp8ezqCDIUL
-         KNlG6xDf8bdVVXSUWzdw7AhhjEZN/EJ0CYNGebvpxfXI2jM6hJ+UixHXLgSynT4+4fPl
-         3jeXnDNsnUb4/SC5sa8XOw5+po+kQWIuQTZuQ0lLh7CmNiznnjlEP1wKWTVst/ZcG+4p
-         IgGofF0BhmrQ38r9BoMG7s5ZN5KiqiYnYSQ5o2hR8f9LNW/lqdp174cwOKMgaPQUQtV5
-         vdnaQoEKhbBJKqvSW/uq16Fdxd/2sQCidSWtEQ8AVlRDOiCRCUncUnlKjEQu6EgBDhB5
-         zIjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742183565; x=1742788365;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NlW8w4RRBWj9GTYyM0QR0pwlik2bQU9FbiljA2VJaMo=;
-        b=jbluDpklfB9C9J+KkR6bEMGpKPYNbO0bgPQY16TWkVpHT20dJ+jBsTwjpfl+UW+DIb
-         r3aUUapOxMdb7Q+JBqg6v+hEaoqmXw+APnksAVPex+GvYLnv/vjaGXZNIbNkgtKWUwhq
-         x0ClaQibWobGocuRy+NZayOixPiIJC3qe/A9GTPeahKa3JY2RYUOCkO670at13+blVy2
-         Y5dTSzAxFQxCmTOG/ngmhfF6SAdHZXONvskHWIQMdM8hXnrIpzH3swg+3yEk0z9ouXCG
-         L67kx8+fDL4oQzIaHw1Z4lB//S2OyEL3WpPBoJLJr3agt6m8h/P7Fupg2Ry4URJY6qHJ
-         qriw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi0SVKmEVj2L1w5Auhh6eSQ0yoCUtom2Fk77RlC3GGUgzN0Wll7DffeKklEk7WkLOFHEjEBA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx8oC+5N2PkVKGsdpuaJtvUGzxBcvo+E8uRjX2Hcfa5D+PAVtEH
-	B3CxB6vtHybC0hS2Trhc7Eap2QONor1agu5gX0uufKd9+nmGtvfURGPSTOrE5Q==
-X-Gm-Gg: ASbGncuX9HPz0tBy+V8CkXCICeC8IgXM8zEu5xVK/q3xqk8pODUl0vqe0InxilMBh9d
-	T3Q/IuToxKqbQExj6WQ1z+g/KsB0chQzq5GQFTuaJlnCFVEzxcEX/4Z5s99d1dlKDe+zL/U9bsU
-	1NWCgn2qmZCHk2Er28PNqnnUuIrigg+cCznQt2kkfw5yRb08LHQkrzJYsC7GEgvD+fY+INbxGKj
-	rFvgjYWJiW5EzrZmp6ANZpw3p3iShyoQvWuT4X4kaC/6sBEbghp5HpfJBzaG+g9k2Lg+4no+oy5
-	Fi2pfAUdQHidPWJwHP/mwvk3j1fXWGHPw2T57qN6MXPQJwlbZFZpun/iVaUJFViqjmya8CNGfBe
-	swCNdPucrxq/yU1+Ky4dNcSt7wSeLQkkEzhxxKOc=
-X-Google-Smtp-Source: AGHT+IGFM2A4MRU9B7FIvTISeZ8zh3JOwAXWXqa/+F5Ql3k1wf0V5Gs+c+TCo+oRN1EITcTysPQTCA==
-X-Received: by 2002:a17:903:41cc:b0:223:37ec:63be with SMTP id d9443c01a7336-225f3c14de3mr2958175ad.4.1742183564977;
-        Sun, 16 Mar 2025 20:52:44 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:37fc:ef4d:16b9:8b63] ([2a00:79e0:2eb0:8:37fc:ef4d:16b9:8b63])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3015364ec12sm4950195a91.44.2025.03.16.20.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 20:52:44 -0700 (PDT)
-Date: Sun, 16 Mar 2025 20:52:43 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
-    Matthew Wilcox <willy@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from March 10, 2025
-Message-ID: <a350f3e5-e764-4ba6-f871-da7252f314da@google.com>
+	id 1tu6kj-00000001v6l-1kwd
+	for kexec@bombadil.infradead.org;
+	Mon, 17 Mar 2025 09:27:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CTLzdgzNn3MAanDyZN8BjXMkbYJDEvPGI3lVbCinBdU=; b=VZlcjlWE9Sipt4dbpDt/7WciGL
+	ouFcpBRZ2PrE6R1JmVSiiPtGkEqAMGe63AXiskgOXqXWOgbfGBsnpk8yVwQhdtgG0nIY6mwRrWlh4
+	6EsP1zEiP8oW8Z8awFWNht1/jgecjw6LfLNj2nYBnmoWdH/u0eNLHOWqhL4cZMM2XfdfqhZeHpuZF
+	AWL0Yp4K6UndPQDJ90e8+0pKjZJ/hj/lrYL3bCB+DF8e9qt2P0a1CHiT74eb4DVDjNOfQfax1D2aS
+	UGu2ihjiUN4xbRc3nfSo8nDfOaMAWsN2KniXUMbOkOtoUsxrG10FRBPwVXKc6mnEpBZSASSlOQdjA
+	oTHPipmw==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tu6ke-00000003PXn-42Ye;
+	Mon, 17 Mar 2025 09:27:17 +0000
+Message-ID: <f74db2c44ee7ef8ec127b5135ff80885c21c6836.camel@infradead.org>
+Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for
+ TDX guest
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Huang, Kai"
+	 <kai.huang@intel.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+  Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Adrian Hunter
+ <adrian.hunter@intel.com>, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova
+ <elena.reshetova@intel.com>, Jun Nakajima <jun.nakajima@intel.com>, Rick
+ Edgecombe <rick.p.edgecombe@intel.com>, Tom Lendacky
+ <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, Sean
+ Christopherson <seanjc@google.com>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org,  linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Date: Mon, 17 Mar 2025 09:27:16 +0000
+In-Reply-To: <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+	 <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+	 <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
+	 <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+	 <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
+	 <8e4e1d80-11ef-472f-befc-f61310281f18@intel.com>
+	 <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-mrd/9ZSVcxnQW81VZ+0H"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250316_205247_356555_752729C9 
-X-CRM114-Status: GOOD (  39.99  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,164 +87,216 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, March 10.  Thanks for everybody who was involved!
+--=-mrd/9ZSVcxnQW81VZ+0H
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+On Thu, 2024-04-04 at 12:32 +0300, Kirill A. Shutemov wrote:
+> On Thu, Apr 04, 2024 at 10:40:34AM +1300, Huang, Kai wrote:
+> >=20
+> >=20
+> > On 3/04/2024 4:42 am, Kirill A. Shutemov wrote:
+> > > On Fri, Mar 29, 2024 at 06:48:21PM +0200, Kirill A. Shutemov wrote:
+> > > > On Fri, Mar 29, 2024 at 11:21:32PM +0800, Xiaoyao Li wrote:
+> > > > > On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
+> > > > > > TDX guests are not allowed to clear CR4.MCE. Attempt to clear i=
+t leads
+> > > > > > to #VE.
+> > > > >=20
+> > > > > Will we consider making it more safe and compatible for future to=
+ guard
+> > > > > against X86_FEATURE_MCE as well?
+> > > > >=20
+> > > > > If in the future, MCE becomes configurable for TD guest, then CR4=
+.MCE might
+> > > > > not be fixed1.
+> > > >=20
+> > > > Good point.
+> > > >=20
+> > > > I guess we can leave it clear if it was clear. This should be easy
+> > > > enough. But we might want to clear even if was set if clearing is a=
+llowed.
+> > > >=20
+> > > > It would require some kind of indication that clearing MCE is fine.=
+ We
+> > > > don't have such indication yet. Not sure we can reasonably future-p=
+roof
+> > > > the code at this point.
+> > > >=20
+> > > > But let me think more.
+> > >=20
+> > > I think I will go with the variant below.
+> > >=20
+> > > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/r=
+elocate_kernel_64.S
+> > > index 56cab1bb25f5..8e2037d78a1f 100644
+> > > --- a/arch/x86/kernel/relocate_kernel_64.S
+> > > +++ b/arch/x86/kernel/relocate_kernel_64.S
+> > > @@ -5,6 +5,8 @@
+> > > =C2=A0=C2=A0 */
+> > > =C2=A0 #include <linux/linkage.h>
+> > > +#include <linux/stringify.h>
+> > > +#include <asm/alternative.h>
+> > > =C2=A0 #include <asm/page_types.h>
+> > > =C2=A0 #include <asm/kexec.h>
+> > > =C2=A0 #include <asm/processor-flags.h>
+> > > @@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> > > =C2=A0=C2=A0	 * Set cr4 to a known state:
+> > > =C2=A0=C2=A0	 *=C2=A0 - physical address extension enabled
+> > > =C2=A0=C2=A0	 *=C2=A0 - 5-level paging, if it was enabled before
+> > > +	 *=C2=A0 - Machine check exception on TDX guest, if it was enabled =
+before.
+> > > +	 *=C2=A0=C2=A0=C2=A0 Clearing MCE might not allowed in TDX guests, =
+depending on setup.
+> >=20
+> > Nit:=C2=A0 Perhaps we can just call out:
+> >=20
+> > 	Clearing MCE is not allowed if it _was_ enabled before.
+> >=20
+> > Which is always true I suppose.
+>=20
+> It is true now. Future TDX will allow to clear CR4.MCE and we don't want
+> to flip it back on in this case.
 
------>o-----
-Mike discussed taking Jason's proposal in response to v4 with xarray and
-extending it a bit for memory reservations, it appeared to be working
-correctly.  He's hoping to have the first implementation for that by this
-week.
+And yet v12 of the patch which became commit de60613173df does
+precisely that.
 
-Mike noted that the next KHO series was being prepared to be sent out
-before LSF/MM/BPF, including device tree.
+It uses the original contents of CR4 which are stored in %r13 (instead
+of building a completely new set of bits for CR4 as before). So it
+would never have *cleared* the CR4.MCE bit now anyway... what it does
+is explicitly *set* the bit even if it wasn't set before?
 
------>o-----
-Mike noted that Pratyush found that the KHO scratch area does not work
-well with swiotlb[1].  The scratch area is reserved before the swiotlb is
-initialized; the second kernel doesn't have enough low memory for the
-swiotlb because it's still allocated from memblock.  The current scratch
-areas are allocated in higher memory.  Mike posted a patch series that
-split meminit for all architectures so this should be easier to fix.
-This will affect any driver that requires memory in the first 4GB.
+This is what got committed, and I think we can just drop the
+ALTERNATIVE line completely because it's redundant in the case that
+CR4.MCE was already set, and *wrong* in the case that it wasn't already
+set?
 
-Alexander suggested allocating a scratch region in the low memory area.
-Pratyush proposed this as a solution, although he wondered if it would be
-possible to move swiotlb allocations to after the buddy allocator was up.
-Heuristics were discussed to determine how much memory should be reserved
-in low memory for this.
+@@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+         * Set cr4 to a known state:
+         *  - physical address extension enabled
+         *  - 5-level paging, if it was enabled before
++        *  - Machine check exception on TDX guest, if it was enabled befor=
+e.
++        *    Clearing MCE might not be allowed in TDX guests, depending on=
+ setup.
++        *
++        * Use R13 that contains the original CR4 value, read in relocate_k=
+ernel().
++        * PAE is always set in the original CR4.
+         */
+-       movl    $X86_CR4_PAE, %eax
+-       testq   $X86_CR4_LA57, %r13
+-       jz      .Lno_la57
+-       orl     $X86_CR4_LA57, %eax
+-.Lno_la57:
+-
+-       movq    %rax, %cr4
++       andl    $(X86_CR4_PAE | X86_CR4_LA57), %r13d
++       ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_T=
+DX_GUEST
++       movq    %r13, %cr4
+=20
+        /* Flush the TLB (needed?) */
+        movq    %r9, %cr3
 
-Mike noted that for successive kexecs, there will be multiple regions of
-scratch area for each NUMA node.  For low memory, this would be sized
-suitable for allocations that must originate below 4GB for DMA.  Mike
-said a solution would still need to be developed for overlap with
-preserved scratch memory and Pratyush noted that should be explicit by
-denying those reservations.
 
-Pasha asked how drivers would know if reservations would be denied in the
-first 4GB of memory.  Mike said an error code would be returned.  Pasha
-was specific about devices that wanted to preserve the memory because
-they knew DMA would be on-going during the reboot.  This became a more
-general question: what devices should we support for KHO and what should
-we not (what is considered too legacy?).  In the meantime, Pratyush
-suggested explicit checks for this.
 
------>o-----
-We shifted to talking about Pratyush's patch series supporting fdbox for
-memfd[2].  Reaction was mixed to this: some feedback focused on the use
-of miscdevice and there were security concerns.  Pratyush noted that
-there was no intent to propose this as a generic concept outside KHO.
+--=-mrd/9ZSVcxnQW81VZ+0H
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-Pratyush noted there was no way to preserve folio orders in KHO and he
-also noted there was a need for page flags.  He also said it would be
-possible to move away from miscdevice and perhaps toward VFS but would
-need to look more into this.
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxNzA5Mjcx
+NlowLwYJKoZIhvcNAQkEMSIEIM+ZDlARM66Df0GU2I9/SJ+ATBsL+lBhIUfnQBP1R1qpMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAz/QjAKoqQpgI
+hJAZ5WrR8YHKfvPm4N4iodIBoO2molUhB/lts0TtmTdiXhxl0PuLI/f57DZBMqp87U8s0KhWboiC
+CNYTorOrxabmKB0V8TTdBvwALD3SmFxljFSnc00jhSEG4dUEThjeHoRCxvGeU5rf5zFIWrYy0ecA
+25/wKD1pGFVMZFImwovRzz7H2DDENsxpmIaGctyR7yg8mU/WQ7rn5GxJqfm1dzryB6hnLliX4sGD
+/LrtV+U8cbFKk8OgfIsnYWyeaLhE77np4G4am5xXmtaOcPjz4l23q3tuJsYIzmcaPfVgp5IXt63y
+DlTWUi/2/gPEsYIfVl/MlrA+6nsxFB6N2yvDrQy/wBRxOTD16tplkA2rNXJI2mQiSmupP4nkp7m6
+ld1ADkPUGOeDR+ZtUZEOx2w05Ja83EUUxAYce7RBdtE/3WZGsOYyjejMVTgfQDzY/JN5KJTbkZhO
++YnHtOnT23EfBumdp2ms19HugYbI4w2VTavgp7pYF+JwNdN9cID08OuCFOIUO89+IXQy3B6qpc+J
+Wch4hXvmEpFv1ie4c8HK2c9lec/FnUKyBI+0IrMd+NbEtwGQf8x+uDEpuw7PwVpGRYBDFjh83nTY
+L5oFKyZJwe2+iBbPs24WGn96gTiNCWbqn2c8TW+mY2h+sZx03W3itZ2qe8zoTA8AAAAAAAA=
 
-Pasha asked about how the page flags were preserved.  Pratyush said there
-was another property that would store them currently.
 
-Pasha asked how cgroups would be handled, but there was no current
-support for that.  Pratyush said the current RFC focused on anon memfd
-and has not yet looked at hugetlb.  Pasha emphasized the importance of
-focusing on one type of memory to start.
-
-Pratyush noted in chat: "With FDBox work, I also realized that you can't
-use FDT code from modules. Should not really be a problem since we can
-export those symbols I suppose, but it doesn't work _currently_ at
-least".
-
------>o-----
-Andrey had recently sent another patch series for KSTATE[3] that was
-discussed, now in v2, which was closer to being a formal submission
-rather than an RFC.  He noted his concern with KHO was how hard it was to
-write serialization code.  His goal was to give drivers the ability to
-migrate structs across kexec which could be more elegant (see the
-struct kstate_description).  He suggested this would be more
-maintainable.  It had previously been used for live migration in qemu.
-
-Andrey noted that each description would have a version field that
-enables defining the minimal supported version for each driver.  He made
-the connection between this and version control in qemu.  Pasha asked how
-this solves the problem when memory becomes sufficiently fragmented and
-the next kernel cannot boot due to it; Andrey noted the kexec would fail.
-Andrey suggested allocating a big contiguous area, the source and
-destination ranges would be the same.
-
-Mike noted that kstate_description definitions and the way drivers
-declare their state to preserve are independent from scratch memory
-reservation.  Andrey noted this wasn't a replacement for KHO but rather
-could be built on top of KHO.
-
-Mike suggested on top of KHO we have FDT, then what Pasha is proposing
-for dynamic tree on top of that, then perhaps kstate on top of that.  He
-would need to look more into kstate.
-
------>o-----
-Mike asked if kstate descriptions depend on how it's preserved on the
-backend, an earlier version had a migration stream.  Andrey suggested
-using FDT underneath, but there is no strong dependency.
-
-Pasha asked what architectures were supported today for kstate, Andrey
-said x86.  Pasha suggested that anything that lands upstream should
-likely support both x86 and ARM.
-
-Chris Li asked about kstate descriptions and if a struct adds or removes
-a member.  Andrey said if you want to add a new member, then you can bump
-the version number.  He showed an example from qemu[4] that could be used
-as reference for this.  You could also add a new kstate description with
-a new id, on downgrade it wouldn't be used for backward compatibility.
-
-Alexander suggested starting with FDT logic because it already exists and
-then serialize and de-serialize binary data using a UAPI.  Then, we
-should discuss deprecating FDT if/when we have something better.  That
-won't be problematic unless we gain hundreds of users.  He emphaszied we
-should focus on how to easily and quickly preserve memory across kexec,
-calling back to drivers to store their state at the right time, etc.  The
-data format for how to serialize is a tiny detail in comparison.  Pasha
-fully agreed with this.
-
------>o-----
-Next meeting is PREEMPTED for LSF/MM/BPF 2025 in Montreal.  So the next 
-meeting will be on Monday, April 7 at 8am PDT (UTC-7).  I'll send a 
-reminder on this mailing list.
-
-Topics I think we should cover in the next meeting:
-
- - debrief discussions at LSF/MM/BPF 2025
- - update on Mike's patch series for memory reservation
- - update on Pratyush's progress for allocating swiotlb in low memory
-   regions and any additional support required based on device
-   requirements (who needs this scratch support?)
- - discuss whether the fdbox support would obsolete the need for
-   guestmemfs in the long term
- - alignment on memblock as the first use case for KHO to justify
-   upstreaming, including ftrace use cases
- - discuss Live Update Orchestrater (LUO) based on RFC patches sent by
-   Pasha before then that helps to define the state machine
- - discuss how KSTATE plays into KHO upstreaming and complementary or
-   overlapping goals
- - decoupling 1GB pages for hugetlb, guest_memfd, and memfds and how fds
-   can be added to an fdbox
- - iommufd patch series (as well as qemu) from James
- - establishing an API for callbacks into drivers to serialize state
-   during brownout
- - topics proposed by Pasha: reducing blackout window, relaxed
-   serialization, and KHO activation requirements
- - implications of preserving vIOMMU state
- - testing methodology for these components, including selftests
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://lore.kernel.org/all/mafs0cyf4ii4k.fsf@kernel.org
-[2] 
-https://lore.kernel.org/lkml/20250307005830.65293-5-ptyadav@amazon.de/T/
-[3] 
-https://lore.kernel.org/linux-mm/20250310120318.2124-6-arbn@yandex-team.com/T/
-[4] https://www.qemu.org/docs/master/devel/migration/main.html#vmstate
+--=-mrd/9ZSVcxnQW81VZ+0H--
 
