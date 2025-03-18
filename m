@@ -4,71 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F614C282EC
-	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 22:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CAADAC282EC
+	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 23:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:CC:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HVXLQex27aDQ6kR57/FDTXFg+FA4zcNeY0ZgHInK9F8=; b=iPGr/PWn4vmKR2eu+MZFvyhREY
-	MtcOgGhqo964qOmipPPPg0oCcKutvinnBopjcrdBbn1OyRqtkr8K5WIuurKOXWKYQFAHZGTaykibD
-	RkYKnP7Gnl7CcIkZRIBC617kt+GLo4A2T4NcoveP+TAtBayxoqGZ7dw8mN0ei5yGgOocHWf6iOL/i
-	iiO0GBHX4kfsDFTtQCb46qzvoGP5rvD0pXHHS+Z/x96Mkp1YKCipDhHqIRCXb8uNLMCQuuF4N+6ms
-	o953leXYtYyyXGPqCayHA+Lw1M886kXdgxyhic122MF+JhEyeWBNZQwSPunvyKqbCrtDIlZBtrNqg
-	yJev8icg==;
+	bh=o9Gs8I6caiy1/fPWZYvSLm6+kkS17oGi9fBfJW9dipQ=; b=zITj6xIFumQnU80FL5Sva+l+f1
+	Vmqqtwkf88tB/IT8lPlsSTkiSIB23rBlaVjUMgVQ923hEfbnbCIW7yGPBUhrEtOQc24ZsSaGc+igx
+	gz+ZMZN/zSpyF7OOPCngz8nf5g0Ia8nKzE1FXuvb0ahhpClF2S2h77sn48OMaTnxGKYRAWJFzJlKC
+	cL3v6J1WSKv1AoZYDePTKAG//XQ2D8d9ZPN+a8sQhQRQleitQKNFcZsEdYRoEnz79ws8W6cIkCHsb
+	bCmxyMhC+SXMgDorI6D9Uh4RzBtC+zVUo5hwrGwaEZFK82ycfysoLb13j8fRHorpKY1fvzybaApxS
+	GLK6+1Lg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tufd5-00000007H68-2AhL;
-	Tue, 18 Mar 2025 22:41:47 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1tug5I-00000007LGr-3oai;
+	Tue, 18 Mar 2025 23:10:56 +0000
+Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tufd4-00000007H5w-2qui
+	id 1tufxI-00000007JP9-0kkh
 	for kexec@lists.infradead.org;
-	Tue, 18 Mar 2025 22:41:46 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2AC1C615A6;
-	Tue, 18 Mar 2025 22:41:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E15C4CEDD;
-	Tue, 18 Mar 2025 22:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742337705;
-	bh=MlZnSdtmYtlbROC1AkQXerbxO3/nmB10SHRGM5Kp1PM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EzvPDZdSElDHFT8DaTJnJBTNqxnpm+MLnvx5+Txq0bJJMl/h5RzXnBm22UmnhBIdx
-	 uIWXaWW//yYr7VzrSI3PDG8EJ906Q5FK7H76VquFBscNkbHa4DREWOj9luxXI9Mm77
-	 /pae93lcO4FHRjlq5jlMvjF6/4Bz0Un38y4OjnqfVFu3y4/hIDbIV6GCxnebGdxTqN
-	 rEnJYVNYrgMutoNWQJpoEJbhgEzImHOC2qiz0agZPLz1ytXdtICCbMqA25ZnjicvtD
-	 mamEVXWjBnbU3u+Qb0uQDeee6dVWg3WKsg1JdLinmVGxgpAYrEC093LkGQZNh4YBq9
-	 rbwbskpeXgXxg==
-Date: Tue, 18 Mar 2025 15:41:43 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Nikolay Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, 
-	Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
-Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
- information to relocate_kernel()
-Message-ID: <orpk67p2yolcb4gi462wqwphaaio6ivny2gcfcw4jna3uyaak5@oty7arlxxykl>
-References: <20250312144257.2348250-9-dwmw2@infradead.org>
- <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
- <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
- <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
- <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
- <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
- <6swzz4732x5kfeg3qsif2r5s5ado3nbweznm6alsxvniy4xq6a@z6foorhlhelj>
- <9c41ab61efc573e3ab5a75b6e4031f81db84a846.camel@infradead.org>
- <awucsfjn475mvwg7xhihexln2hfbtvrie2uv333u7awtkz4mrf@t57pi7jibytc>
- <e48391c54a4ba27795919099f8ea25c29d868000.camel@infradead.org>
+	Tue, 18 Mar 2025 23:02:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1742338960; x=1773874960;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=o9Gs8I6caiy1/fPWZYvSLm6+kkS17oGi9fBfJW9dipQ=;
+  b=GRh9JyZysKcHF6ChcWEPz+1wdgLRWqwxt9BZjoFu/LeY/WtZjpFBqYCX
+   feabq7ETEnTmBRJS5/x/QNzo3/SjF/egfmG5E4m/znuj//4qgAViJqW0B
+   hbN9Inu2VKY1feylaWTK9k/ImLiZJw62gMqKzHFeaEn0rRl6DVJdPxQxU
+   s=;
+X-IronPort-AV: E=Sophos;i="6.14,258,1736812800"; 
+   d="scan'208";a="706160683"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 23:02:34 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:9378]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.40:2525] with esmtp (Farcaster)
+ id 587d40c0-f869-4b16-8e9b-ae504ea90e33; Tue, 18 Mar 2025 23:02:32 +0000 (UTC)
+X-Farcaster-Flow-ID: 587d40c0-f869-4b16-8e9b-ae504ea90e33
+Received: from EX19D020UWC003.ant.amazon.com (10.13.138.187) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 18 Mar 2025 23:02:32 +0000
+Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
+ EX19D020UWC003.ant.amazon.com (10.13.138.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 18 Mar 2025 23:02:32 +0000
+Received: from email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com
+ (10.25.36.214) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Tue, 18 Mar 2025 23:02:32 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com (Postfix) with ESMTP id 201F480140;
+	Tue, 18 Mar 2025 23:02:32 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id AB4514EA8; Tue, 18 Mar 2025 23:02:31 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Christian Brauner <brauner@kernel.org>, Linus Torvalds
+	<torvalds@linux-foundation.org>, <linux-kernel@vger.kernel.org>, "Jonathan
+ Corbet" <corbet@lwn.net>, Eric Biederman <ebiederm@xmission.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, "Hugh
+ Dickins" <hughd@google.com>, Alexander Graf <graf@amazon.com>, "Benjamin
+ Herrenschmidt" <benh@kernel.crashing.org>, David Woodhouse
+	<dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, Mike Rapoport
+	<rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
+	<tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, "Dave
+ Hansen" <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>, Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-mm@kvack.org>,
+	<kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
+In-Reply-To: <20250318145707.GX9311@nvidia.com>
+References: <20250307005830.65293-1-ptyadav@amazon.de>
+	<20250307005830.65293-2-ptyadav@amazon.de>
+	<20250307-sachte-stolz-18d43ffea782@brauner> <mafs0ikokidqz.fsf@amazon.de>
+	<20250309-unerwartet-alufolie-96aae4d20e38@brauner>
+	<20250317165905.GN9311@nvidia.com>
+	<20250318-toppen-elfmal-968565e93e69@brauner>
+	<20250318145707.GX9311@nvidia.com>
+Date: Tue, 18 Mar 2025 23:02:31 +0000
+Message-ID: <mafs0a59i3ptk.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e48391c54a4ba27795919099f8ea25c29d868000.camel@infradead.org>
+Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250318_160240_375765_3BFBF0EE 
+X-CRM114-Status: GOOD (  32.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,35 +110,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 18, 2025 at 09:06:58PM +0000, David Woodhouse wrote:
-> On Tue, 2025-03-18 at 10:14 -0700, Josh Poimboeuf wrote:
-> > On Tue, Mar 18, 2025 at 03:56:36PM +0000, David Woodhouse wrote:
-> > > For the relocate_kernel() case I don't think we care much about the
-> > > first. Without a CFI prologue, no *other* code can be tricked into
-> > > calling relocate_kernel()
-> > 
-> > But for FineIBT the hash is checked on the callee side.  So it loses
-> > FineIBT protection.
-> 
-> Right now the relocate_kernel() code doesn't even have an endbr, does
-> it? So it isn't a useful gadget?
+On Tue, Mar 18 2025, Jason Gunthorpe wrote:
 
-In that case wouldn't IBT explode when you indirect call it?  Or is IBT
-getting disabled beforehand?
+> On Tue, Mar 18, 2025 at 03:25:25PM +0100, Christian Brauner wrote:
+>
+>> > It is not really a stash, it is not keeping files, it is hardwired to
+>> 
+>> Right now as written it is keeping references to files in these fdboxes
+>> and thus functioning both as a crippled high-privileged fdstore and a
+>> serialization mechanism. 
+>
+> I think Pratyush went a bit overboard on that, I can see it is useful
+> for testing, but really the kho control FD should be in either
+> serializing or deserializing mode and it should not really act as an
+> FD store.
+>
+> However, edge case handling makes this a bit complicated. 
+>
+> Once a FD is submitted to be serialized that FD has to be frozen and
+> can't be allowed to change anymore.
+>
+> If the kexec process aborts then we need to unwind all of this stuff
+> and unfreeze all the FDs.
 
-> > > — and besides, it's in the kernel's data
-> > > section and isn't executable anyway until the kexec code copies it to a
-> > > page that *is*.
-> > 
-> > Does the code get copied immediately before getting called, or can it be
-> > initialized earlier during boot when kdump does its initial setup?
-> 
-> It's initialized earlier, in machine_kexec_prepare(), and then the page
-> is set ROX.
+I do think I might have went a bit overboard, but this was one of the
+reasons for doing so. Having the struct file around, and having the
+ability to map it back in allowed for kexec failure to be recoverable
+easily and quickly.
 
-If that happens during boot (like for kdump init) then it'll be in text
-the whole time after boot, right?
+I suppose we can serialize all FDs when the box is sealed and get rid of
+the struct file. If kexec fails, userspace can unseal the box, and FDs
+will be deserialized into a new struct file. This way, the behaviour
+from userspace perspective also stays the same regardless of whether
+kexec went through or not. This also helps tie FDBox closer to KHO.
+
+The downside is that the recovery time will be slower since the state
+has to be deserialized, but I suppose kexec failure should not happen
+too often so that is something we can live with.
+
+What do you think about doing it this way?
+
+>
+> It sure would be nice if the freezing process could be managed
+> generically somehow.
+>
+> One option for freezing would have the kernel enforce that userspace
+> has closed and idled the FD everywhere (eg check the struct file
+> refcount == 1). If userspace doesn't have access to the FD then it is
+> effectively frozen.
+
+Yes, that is what I want to do in the next revision. FDBox itself will
+not close the file descriptors when you put a FD in the box. It will
+just grab a reference and let the userspace close the FD. Then when the
+box is sealed, the operation can be refused if refcount != 1.
+
+>
+> In this case the error path would need to bring the FD back out of the
+> fdbox.
+>
+> Jason
+>
 
 -- 
-Josh
+Regards,
+Pratyush Yadav
 
