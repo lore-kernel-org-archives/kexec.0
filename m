@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A4AFC282EC
-	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 00:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5C89C282EC
+	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 00:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gcs1r5lExcQ2+N1cHXuzwPsja81gy91Sl6aiQCeKgOs=; b=5BwgoJW+03YQBWS1vmwMK6UV5O
-	1uYTw+xHtjvihCQZniGN2KRHoao3USvSHWkRMIaSAvi/PrOQ+PRTdoUH7qVOaios9JlVUbuuQIpsf
-	5zyQ2Jc3+2fnNUrtqJlrJFYZ0oD4hvPmTlY+Po4wdofjPrANjJZWMpQuIcZERFXbDQDb9VqNfof33
-	yyLAELMH1h18ZeFvveHAHekkMbzUKdB0dIF0a6/y1s3tpc9hfkdGBsX+ETz7rEWhLAgqETwhV+EvC
-	edC4ygqHJovHr4W7djt+7AyfthU0HCYkIYZAd5NDQXxTRd8hStnTxXNS3K4fOkD843N8I43mksSE+
-	MTUEPXcQ==;
+	bh=jzT0lHXMqCo0FVNh4EW0uLwal7ywPfd5DI6lemkBlgU=; b=O0SrpX8ebhHoDsKCOw8cfIZMU2
+	94/O6KdSTnxfCHu7YKkpXwxu5Of7JqziMjV8fAB6rQ5FomqIDdkPgxe4ccjJ8laRHK0J+hiAe9iSQ
+	ogJQEPufcEQemNtcRmN4hvbrsmJ1NFlWZyhMklm9ylAV2OD4TMbdudi6sn3vxNm3kFCoQn2V8X9NV
+	deIu+48LCtACvLifxcMAug6RAygvp+52LpK+AlOzTrF+632n47ciEeRJ2IE5dkje6ED0Cjg1pZbJ8
+	tVp6pRzY6w3BjhzxzQ6+GzGiASBUzhDPdedRp/AQsMrp9ySj4cWr16kTkC7LUyeukPy5ksg5INkvv
+	QOJrHT4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuKeA-00000004Fsy-1MFB;
-	Tue, 18 Mar 2025 00:17:30 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1tuKkh-00000004G5V-0xZR;
+	Tue, 18 Mar 2025 00:24:15 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuKe8-00000004Fs6-1xho
+	id 1tuKkf-00000004G4c-0PQL
 	for kexec@lists.infradead.org;
-	Tue, 18 Mar 2025 00:17:29 +0000
+	Tue, 18 Mar 2025 00:24:14 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id EBF31A48E1E;
-	Tue, 18 Mar 2025 00:11:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C63C4CEE3;
-	Tue, 18 Mar 2025 00:17:26 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7E5D85C1D32;
+	Tue, 18 Mar 2025 00:21:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AEA3C4CEE3;
+	Tue, 18 Mar 2025 00:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742257047;
-	bh=ilTqUgoJ9BEMCciAl8Q1ZAI+r6rC2qfPQ3ckpNm9Nb4=;
+	s=k20201202; t=1742257452;
+	bh=ig9ih0A11KohCT91l/yVMWlq4EmXyFnYoyq69nfYDl4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f0sRRK4JcoDNftM5pE/Wu12IXxKsmc+62rtuit13aMh4UlbbVi7zO9RCqXFtzEL3S
-	 JPOFGVdgcS8NydfE4SvXhwTvnePoTmYfP0g84d51pLNMlKxwwza07A5iPtmW9MC54k
-	 5P8PKkLpdAZ65xsYmX1BLsR39Gu67yi4XES1mTkTYtTuFF6j+LfCNDFf8rDPwDbcqw
-	 tK3wIvaMuaWKECnVkFRLumaJPULv+zeUQhJnrtd+uL/GXFGEdDyi0sI9x5TtfhRPWM
-	 voQs6+LVLC1gMgwAJJer4jD2+1ZVtm6K3hzNb7dz6J/hq6RwL3qaGhCag6LjgdTFs2
-	 nqR+HiBQUchNA==
-Date: Mon, 17 Mar 2025 17:17:24 -0700
+	b=fux+aLOT/wJw4GJHH1d2iSwMLHDlXGeKF2TA8+UZeIRyLosEB+8mSymv5GMzid6Dw
+	 QyXNCsl1tE5E8z+hPVlEYtpCCh7yhDkeGo86nHD0aHx+CBpLxtH5FRze2RLekk+RRQ
+	 5x3AA5h8q2/8W6pGx7FW2a17WbfHZVFeNwec2+dSSBgbsgheLqy43ytIlT2RQB86rj
+	 BBCCqLfpz9lPlxSf4GKmJypBb1Cykm/xXXYh/AcUBO3QtwVfT8rvB9VkGhViIakhuE
+	 nOcIEITcmrROaB5tuVCPONdTfmMrr0zYEhBiJ+qnJP668pGKuSlhmeL+RgJZs99vK/
+	 iIUAT8tpr93Xg==
+Date: Mon, 17 Mar 2025 17:24:09 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: David Woodhouse <dwmw2@infradead.org>
 Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, 
@@ -53,20 +53,21 @@ Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
 	Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
 Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
  information to relocate_kernel()
-Message-ID: <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
+Message-ID: <6swzz4732x5kfeg3qsif2r5s5ado3nbweznm6alsxvniy4xq6a@z6foorhlhelj>
 References: <20250312144257.2348250-1-dwmw2@infradead.org>
  <20250312144257.2348250-9-dwmw2@infradead.org>
  <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
  <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
  <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
  <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
+ <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
+In-Reply-To: <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250317_171728_560652_136821D8 
-X-CRM114-Status: GOOD (  10.20  )
+X-CRM114-CacheID: sfid-20250317_172413_184539_3C323FF2 
+X-CRM114-Status: GOOD (  11.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,17 +82,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 17, 2025 at 12:40:14PM +0000, David Woodhouse wrote:
-> On Fri, 2025-03-14 at 10:52 -0700, Josh Poimboeuf wrote:
+On Mon, Mar 17, 2025 at 05:17:24PM -0700, Josh Poimboeuf wrote:
+> On Mon, Mar 17, 2025 at 12:40:14PM +0000, David Woodhouse wrote:
+> > On Fri, 2025-03-14 at 10:52 -0700, Josh Poimboeuf wrote:
+> > > 
+> > > IIRC, the reasons were the patched alternative, and also you wanted to
+> > > disassemble (but note that's still possible with gdb).
 > > 
-> > IIRC, the reasons were the patched alternative, and also you wanted to
-> > disassemble (but note that's still possible with gdb).
+> > It's meaningful output from 'objdump -S' that I miss. But OK.
 > 
-> It's meaningful output from 'objdump -S' that I miss. But OK.
+> FYI, this works:
+> 
+>   objdump -Srw -j .data..relocate_kernel vmlinux.o
 
-FYI, this works:
-
-  objdump -Srw -j .data..relocate_kernel vmlinux.o
+... but I see now that it doesn't intersperse the source.  Never mind...
 
 -- 
 Josh
