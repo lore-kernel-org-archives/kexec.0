@@ -4,71 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E80AC35FF3
-	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 01:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43BCBC35FF3
+	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 14:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tSaoksgCpr/zt6e9/PPNt+iQGGb9Nj0ejv7ujQxrg2Y=; b=bROIFnvrrzAFI/o9HOwV+4lUam
-	SPptBBZH8rQ6RfRcQLi5MkqXMHtpKDb1yaf8ojokCGxjsVawCq7mEwC5GU/C8A065Ci4NrMBCgAfd
-	8lVCLPSpiVlyxl4Cth3dEdjuOmH1olGVGZ4KxCOZf3xF+rvLthSv8W69WYIPOOVnnCM+iT33Nfkw3
-	NCwx1HZ1ZYB0Wi3v9f0EYde6LqSw9mi1FdbHX1OjcaDrQJPyBpZfsGWZMEpby0YIJwij1/yqFrE0g
-	smZPqdQxdtIWu2MW6JldIsnNaYKTDE5HGfO7ps1OtIxcFDh/rQI+qRtI5Of8ir1D6xlkt1zzZkGT4
-	HV1Bnggw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oCmUU37RFA28L3WpdgFI/QbjJNm+Pno5sfSsKFa4p1g=; b=rhL2zRMzjxcLGf/EkKSl9VJLad
+	viHR+vTl2xR3l4/tb0zVv75eNx4+pfQ989R5FBFPPVGm3/x9VsDMqtvh50RaP4wvnXQsCt0/kq3wT
+	J74pKHCHITMP5qppHMCU9J2mOY8GH1uPasH7n/xkdLK5OGTKYbLvEHD8r7wd1mEsJCBsguLMmnPFp
+	wV7kl6+VT51YAWIJsqjtTbCHa8ottAwBCn06/iS6i4K6yzfNpr1U+PzzKZFoDygE+EfDWRXfzGYsV
+	eU2LMtJIRyKlHSULEiR9yDsNEXFkpeqQQpwXO+48R+gxjW6opODFChNxMu7E0gmTe5zrXKQNPs1KJ
+	tpV395ZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuLOW-00000004JUx-1B2i;
-	Tue, 18 Mar 2025 01:05:24 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuLOS-00000004JPb-1Min
+	id 1tuXts-00000006BDt-0xeG;
+	Tue, 18 Mar 2025 14:26:36 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
+	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tuXss-00000006B1V-3f6w
 	for kexec@lists.infradead.org;
-	Tue, 18 Mar 2025 01:05:22 +0000
-Received: from localhost.localdomain (unknown [131.107.147.236])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9A8AD210731C;
-	Mon, 17 Mar 2025 18:05:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A8AD210731C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742259919;
-	bh=tSaoksgCpr/zt6e9/PPNt+iQGGb9Nj0ejv7ujQxrg2Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N48p2xzfrti8JQnuKF0bQrv/Y3K5akEtb9qJWCLqQKMUgnXU/LMVW56z20Wi5IoGI
-	 f/rmkFKEw+Y5TIT0xKl3hSijwJ9ohRrPFEX8Q0Ks2uFVZquGyTypX9oUZoD5wY678S
-	 qLIhxtBA3SFrut3HuQEjpDHYjTagY0KC3VuczkSs=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v10 8/8] ima: measure kexec load and exec events as critical data
-Date: Mon, 17 Mar 2025 18:04:46 -0700
-Message-ID: <20250318010448.954-9-chenste@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250318010448.954-1-chenste@linux.microsoft.com>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
+	Tue, 18 Mar 2025 14:25:36 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 2934DA48782;
+	Tue, 18 Mar 2025 14:20:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDB4C4CEE3;
+	Tue, 18 Mar 2025 14:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742307933;
+	bh=nZIVy8rDifxs0gFezfDSsyY7SSuvanD4bNKBzieVH6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eM8GGehuJpGvKpivoD4QSR+KNpQOrsTrQe+Eub+aqiMOwfDX+Sd0MybIJqruOhLex
+	 biGvEmTGReQmgJ0IFMiGSlsFCq55zmnjRdh9Dlq8a6caIHoCMo3/rPvEJL08UzkuDN
+	 toN9B7pWXLt+twkHsRTlar9Rfb66Cl4bQcgCIOS8cFxXk2uIFCHgdYG8XQb4ijRSm1
+	 w0PNZNXJFIdg+wPtVYcf+3mmQxVsJ26tSr9ThAZwKrW6wApcHfaFvTr2sYnUovdUby
+	 vejqSYllChZiA15Jx6PSxONI+qOkHqf4Bvr4azaaeG/UCSBsE68OPkVC5lNPRzkyLS
+	 65BarMYc5GzlQ==
+Date: Tue, 18 Mar 2025 15:25:25 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
+	Alexander Graf <graf@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
+	David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, 
+	Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
+	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
+	Matthew Wilcox <willy@infradead.org>, Wei Yang <richard.weiyang@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
+Message-ID: <20250318-toppen-elfmal-968565e93e69@brauner>
+References: <20250307005830.65293-1-ptyadav@amazon.de>
+ <20250307005830.65293-2-ptyadav@amazon.de>
+ <20250307-sachte-stolz-18d43ffea782@brauner>
+ <mafs0ikokidqz.fsf@amazon.de>
+ <20250309-unerwartet-alufolie-96aae4d20e38@brauner>
+ <20250317165905.GN9311@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250317165905.GN9311@nvidia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250317_180520_428087_D70F126A 
-X-CRM114-Status: GOOD (  15.68  )
+X-CRM114-CacheID: sfid-20250318_072535_049140_16CE5BE2 
+X-CRM114-Status: GOOD (  30.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,129 +87,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The amount of memory allocated at kexec load, even with the extra memory
-allocated, might not be large enough for the entire measurement list.  The
-indeterminate interval between kexec 'load' and 'execute' could exacerbate
-this problem.
+On Mon, Mar 17, 2025 at 01:59:05PM -0300, Jason Gunthorpe wrote:
+> On Sun, Mar 09, 2025 at 01:03:31PM +0100, Christian Brauner wrote:
+> 
+> > So either that work is done right from the start or that stashing files
+> > goes out the window and instead that KHO part is implemented in a way
+> > where during a KHO dump relevant userspace is notified that they must
+> > now serialize their state into the serialization stash. And no files are
+> > actually kept in there at all.
+> 
+> Let's ignore memfd/shmem for a moment..
+> 
+> It is not userspace state that is being serialized, it is *kernel*
+> state inside device drivers like VFIO/iommufd/kvm/etc that is being
+> serialized to the KHO.
+> 
+> The file descriptor is simply the handle to the kernel state. It is
+> not a "file" in any normal filesystem sense, it is just an uAPI handle
+> for a char dev that is used with IOCTL.
+> 
+> When KHO is triggered triggered whatever is contained inside the FD is
+> serialized into the KHO.
+> 
+> So we need:
+>  1) A way to register FDs to be serialized. For instance, not every
+>     VFIO FD should be retained.
+>  2) A way for the kexecing kernel to make callbacks to the char dev
+>     owner (probably via struct file operations) to perform the
+>     serialization
+>  3) A way for the new kernel to ask the char dev owner to create a new
+>     struct file out of the serialized data. Probably allowed to happen
+>     only once, ie you can't clone these things. This is not the same
+>     as just opening an empty char device, it would also fill the char
+>     device with whatever data was serialized.
+>  4) A way to get the struct file into a process fd number so userspace
+>     can route it to the right place.
+> 
+> It is not really a stash, it is not keeping files, it is hardwired to
 
-Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
-measured as critical data at kexec 'load' and 'execute' respectively.
-Report the allocated kexec segment size, IMA binary log size and the
-runtime measurements count as part of those events.
+Right now as written it is keeping references to files in these fdboxes
+and thus functioning both as a crippled high-privileged fdstore and a
+serialization mechanism. Please get rid of the fdstore bits and
+implement it in a way that it serializes files without stashing
+references to live files that can at arbitrary points in time before the
+fdbox is "sealed" be pulled out and installed into the caller's fdtable
+again.
 
-These events, and the values reported through them, serve as markers in
-the IMA log to verify the IMA events are captured during kexec soft
-reboot.  The presence of a 'kexec_load' event in between the last two
-'boot_aggregate' events in the IMA log implies this is a kexec soft
-reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-after kexec soft reboot implies missing events in that window which
-results in inconsistency with TPM PCR quotes, necessitating a cold boot
-for a successful remote attestation.
-
-These critical data events are displayed as hex encoded ascii in the
-ascii_runtime_measurement_list.  Verifying the critical data hash requires 
-calculating the hash of the decoded ascii string.  
-
-For example, to verify the 'kexec_load' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep  kexec_load | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-
-To verify the 'kexec_execute' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep kexec_execute | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: steven chen <chenste@linux.microsoft.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
----
- security/integrity/ima/ima.h       |  6 ++++++
- security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_queue.c |  5 +++++
- 3 files changed, 32 insertions(+)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 24d09ea91b87..34815baf5e21 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 				   unsigned long flags, bool create);
- #endif
- 
-+#ifdef CONFIG_IMA_KEXEC
-+void ima_measure_kexec_event(const char *event_name);
-+#else
-+static inline void ima_measure_kexec_event(const char *event_name) {}
-+#endif
-+
- /*
-  * The default binary_runtime_measurements list format is defined as the
-  * platform native format.  The canonical format is defined as little-endian.
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 0f214e41dd33..43223eb99046 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -17,6 +17,8 @@
- #include "ima.h"
- 
- #ifdef CONFIG_IMA_KEXEC
-+#define IMA_KEXEC_EVENT_LEN 256
-+
- static bool ima_kexec_update_registered;
- static struct seq_file ima_kexec_file;
- static size_t kexec_segment_size;
-@@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
- 	ima_reset_kexec_file(sf);
- }
- 
-+void ima_measure_kexec_event(const char *event_name)
-+{
-+	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-+	size_t buf_size = 0;
-+	long len;
-+	int n;
-+
-+	buf_size = ima_get_binary_runtime_size();
-+	len = atomic_long_read(&ima_htable.len);
-+
-+	n = scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-+		      "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
-+		      "ima_runtime_measurements_count=%ld;",
-+		      kexec_segment_size, buf_size, len);
-+
-+	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event, n, false, NULL, 0);
-+}
-+
- static int ima_alloc_kexec_file_buf(size_t segment_size)
- {
- 	/*
-@@ -58,6 +78,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
- out:
- 	ima_kexec_file.read_pos = 0;
- 	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-+	ima_measure_kexec_event("kexec_load");
- 
- 	return 0;
- }
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 83d53824aa98..590637e81ad1 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
- 			       unsigned long action,
- 			       void *data)
- {
-+#ifdef CONFIG_IMA_KEXEC
-+	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
-+		ima_measure_kexec_event("kexec_execute");
-+#endif
-+
- 	ima_measurements_suspend();
- 
- 	return NOTIFY_DONE;
--- 
-2.25.1
-
+> KHO to drive it's serialize/deserialize mechanism around char devs in
+> a very limited way.
+> 
+> If you have that then feeding an anonymous memfd/guestmemfd through
+> the same machinery is a fairly small and logical step.
+> 
+> Jason
 
