@@ -4,75 +4,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43BCBC35FF3
-	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 14:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32F27C282EC
+	for <kexec@archiver.kernel.org>; Tue, 18 Mar 2025 14:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oCmUU37RFA28L3WpdgFI/QbjJNm+Pno5sfSsKFa4p1g=; b=rhL2zRMzjxcLGf/EkKSl9VJLad
-	viHR+vTl2xR3l4/tb0zVv75eNx4+pfQ989R5FBFPPVGm3/x9VsDMqtvh50RaP4wvnXQsCt0/kq3wT
-	J74pKHCHITMP5qppHMCU9J2mOY8GH1uPasH7n/xkdLK5OGTKYbLvEHD8r7wd1mEsJCBsguLMmnPFp
-	wV7kl6+VT51YAWIJsqjtTbCHa8ottAwBCn06/iS6i4K6yzfNpr1U+PzzKZFoDygE+EfDWRXfzGYsV
-	eU2LMtJIRyKlHSULEiR9yDsNEXFkpeqQQpwXO+48R+gxjW6opODFChNxMu7E0gmTe5zrXKQNPs1KJ
-	tpV395ZA==;
+	bh=ogcfrtzzt29VDumlXK3kHrxVLVRlWSU7xHD/Bo/IXPI=; b=qPyob0RRU23EoMYep1GnSCB5qC
+	SSaaS2/anQPslJLI0gqLIsq+7K6+e2KHrqWm+bQbkpruIN2yWGPl4xyo6+iToTc/+/Kb9mP3iabBd
+	VlCT3H9ndFFDF0LoLza5PcSrMQQSsjLvVK3jzUgS0KWlA0S98z9oVm0tDEDxMqE9zMz4vlIrNk1rx
+	uPtiM0gUNUbQ4wD7og5iVKR8Zj6VzgbNUqe/WP85GXtDkHwCOfRggqtMojr9Kwy/nhwe/tv8uqldw
+	hXqlU0v8M5XsB+pwLuthPZHkqswR3Vn7Qu2nh6SA8UD/pE6fhmyrRAMB16JSRXe0NmNr0+WeuwSG5
+	9l877dPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuXts-00000006BDt-0xeG;
-	Tue, 18 Mar 2025 14:26:36 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tuYNZ-00000006GTK-0GAZ;
+	Tue, 18 Mar 2025 14:57:17 +0000
+Received: from mail-bn7nam10on20606.outbound.protection.outlook.com ([2a01:111:f403:2009::606] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuXss-00000006B1V-3f6w
+	id 1tuYNW-00000006GSL-3Woy
 	for kexec@lists.infradead.org;
-	Tue, 18 Mar 2025 14:25:36 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 2934DA48782;
-	Tue, 18 Mar 2025 14:20:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDB4C4CEE3;
-	Tue, 18 Mar 2025 14:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742307933;
-	bh=nZIVy8rDifxs0gFezfDSsyY7SSuvanD4bNKBzieVH6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eM8GGehuJpGvKpivoD4QSR+KNpQOrsTrQe+Eub+aqiMOwfDX+Sd0MybIJqruOhLex
-	 biGvEmTGReQmgJ0IFMiGSlsFCq55zmnjRdh9Dlq8a6caIHoCMo3/rPvEJL08UzkuDN
-	 toN9B7pWXLt+twkHsRTlar9Rfb66Cl4bQcgCIOS8cFxXk2uIFCHgdYG8XQb4ijRSm1
-	 w0PNZNXJFIdg+wPtVYcf+3mmQxVsJ26tSr9ThAZwKrW6wApcHfaFvTr2sYnUovdUby
-	 vejqSYllChZiA15Jx6PSxONI+qOkHqf4Bvr4azaaeG/UCSBsE68OPkVC5lNPRzkyLS
-	 65BarMYc5GzlQ==
-Date: Tue, 18 Mar 2025 15:25:25 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
-	Alexander Graf <graf@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, 
-	Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Tue, 18 Mar 2025 14:57:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Su8FDxaAiuJCXgAo1Bs58S/KdAVOSlVVqgBlxeEqYUSRTz10h+NRozl9vxLsKsiztp2SImJOG2Jv5gK1vKXpyMvu0KoSji8ZIcmLg/+E/drGigkDcl+uUmtVKPkxnjJTIqHfmj7mlkJvnJlX5GjvrQ7W6TALuMaPxpah/3CTKdZ8v/LEPlYxaLXbzMD1UjSbB65N2hRBsn/oDNxtDJNiIezApITw6jxMPnO6Cexg73VNI8qYaBeHBJbwlBwNGjmDJP09onj1k61lUnphgHzoNIQeBr8SPBRIUAG7JWsvbxg9uCdSSb68VBfF1vuFzbFWPXbUmGV5Hvl7Uv/HhYA08Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ogcfrtzzt29VDumlXK3kHrxVLVRlWSU7xHD/Bo/IXPI=;
+ b=FkUPKz1RAk4fkop3IbCdCzKKszbfJBG2cMCypR6RTytQZ/ezGSkIoMZWo6o7ZRscKCtBzX+LfIYPvRK+gwSg/TgZyy8l80q1gAQbjPMrDeYhVvU7B4N7xKWn7HGtFzCf+UWWYMTAyMLmeF2O3BL/YAWbnMhsDevJx6vUt8/dUJCSpHF+MB25kg2xeVqmOx58SNRVsSCI2qwNns5VlLigI5W5R58XUvXjmjsVdlatlt8UuXk9ImCs2tHUvUV/T6hM7/ENXjHa0jTZk3VIhRl/C0mm9EwhprFujjIeS/Jo7Hib12b/ucx5NsxAiVoqeBuVc4qYBDuozti/71fuotQiGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ogcfrtzzt29VDumlXK3kHrxVLVRlWSU7xHD/Bo/IXPI=;
+ b=KhjnGd68SNYatVO045NCJLW95kvTCQDnoUglcFcNLTyYVgBgPhlu5vOo19WAW6L+pnHs5JsCenNEB2fYbTwZX//sANclFFnRMFHCWU5Tnf/kbcnpjHPo0wZwWqMKGwcEzExfqxgCXHDjyrNkREXwwZualcPRUQGNuxdSQ/mU4imfmFXA+9n4Jrq7Y+J3MXpcqiWI4ilLwDMpJaoutQpeGvu4ZZe7rqJQuphgb19PaL0/wL1zugm3YZ97B1Xd3K3Zjnwl4/jXajM5i/NvlYI/dLtuYM93hwVlqnLkW2yjUMc2rz9J81zUZRjrppTkBMKa79TpXlgPiXmiDap9xcuaHA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN2PR12MB4285.namprd12.prod.outlook.com (2603:10b6:208:1d7::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
+ 2025 14:57:08 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.034; Tue, 18 Mar 2025
+ 14:57:08 +0000
+Date: Tue, 18 Mar 2025 11:57:07 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Hugh Dickins <hughd@google.com>, Alexander Graf <graf@amazon.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	James Gowans <jgowans@amazon.com>, Mike Rapoport <rppt@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-mm@kvack.org, kexec@lists.infradead.org
 Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-Message-ID: <20250318-toppen-elfmal-968565e93e69@brauner>
+Message-ID: <20250318145707.GX9311@nvidia.com>
 References: <20250307005830.65293-1-ptyadav@amazon.de>
  <20250307005830.65293-2-ptyadav@amazon.de>
  <20250307-sachte-stolz-18d43ffea782@brauner>
  <mafs0ikokidqz.fsf@amazon.de>
  <20250309-unerwartet-alufolie-96aae4d20e38@brauner>
  <20250317165905.GN9311@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+ <20250318-toppen-elfmal-968565e93e69@brauner>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250317165905.GN9311@nvidia.com>
+In-Reply-To: <20250318-toppen-elfmal-968565e93e69@brauner>
+X-ClientProxiedBy: BN9PR03CA0940.namprd03.prod.outlook.com
+ (2603:10b6:408:108::15) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN2PR12MB4285:EE_
+X-MS-Office365-Filtering-Correlation-Id: 229f80aa-c68c-4515-864e-08dd662d27af
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?CWxsKH2xpePXRMFf/RLQEQrQVEZTB4/PiPsBxDeYKZF04qOvE3oiGF3l2MGg?=
+ =?us-ascii?Q?8zxCRx8XeXKgT/Jb/zKopRU6dbz64AvUC75VpJDIpACJqrZT+3MsvULNNH63?=
+ =?us-ascii?Q?NLHnorgQxhuHieJNh0sKGGDvndg+RFA1kR5+xtZ/WYQqRX6NISzGWlRDJArZ?=
+ =?us-ascii?Q?vzRtvXDk9QKZO+BkRRJQVYQvBDjq9j+p87yxpAxyZZ0BGNzFJblBzqG8hgti?=
+ =?us-ascii?Q?RxcBxug2XVCAEBUYYBiIdzZkNZNCuDpC+Lwi50tp1VhMgg9s3TFrcPMAso1u?=
+ =?us-ascii?Q?W0SEzH0/RrfvfKloU0Z00Vp9DcKYjO2GZjZ+Ji89cpPqMfhLT49/k3LQ9iej?=
+ =?us-ascii?Q?/x89p7QUjL43T0D9cm/a8Ut/qiMGMvD7idM2TB84gQtLKOT8j54jufwWU7eB?=
+ =?us-ascii?Q?hJ9O5V7dKT3WNSh/Oe0MTkGapy5pdSAd1wPWfMlqW08GfGtBRFdne5y2ihT8?=
+ =?us-ascii?Q?hcWheV2i1dBdysAbg6TAhvjUYpVN51GtXnDFEz9pbUs71Jgqsl2hOrmS7APG?=
+ =?us-ascii?Q?h/XOLEdvWy0qHM+zwcH6aJN/kxnr4P6zM7FQiRjw5On1Wop/PVHVucEfIeiF?=
+ =?us-ascii?Q?4VItRbNP9WhGrv1f24uCxsqdEeBrFSkBE2sxvuJ0nLLvBALWfsAa1VTkkTEL?=
+ =?us-ascii?Q?xnwblSNUTrb/2yl+R7x0jzL016XohvqHT/4gArgU1EMqrdprhmUGE+ZeMQqU?=
+ =?us-ascii?Q?yH2lSjxP+k8knzutQhXQ3PtDwzpqXVXZgTW4Bvgvoxb1xjzqAfATsLxtTU8K?=
+ =?us-ascii?Q?/pi26T/S9qjWa2PmInJONtUXOp3KzBUTj5260P36XQvaQjCM/1WyW2Iqf46u?=
+ =?us-ascii?Q?Tm4aYqKA3sz23cCoQSn8mUiqwwzG4L42jQnfmGtkKghafeoGRi6R7ZiRaVKq?=
+ =?us-ascii?Q?ovZSZRRv0yra+qZAwcFL0OkSpKMT4K5s8NlPT2searCugWvXcLMxfofBg1FS?=
+ =?us-ascii?Q?ARqzxAriVYRCSyXRgu1NELYcsmONqCyXobBXT/v3SzboXwztREmF4exTjIHZ?=
+ =?us-ascii?Q?BCJipFb+pWzyL2T2aQcAxFEhuD5HTFxE2sWq8Y9avewz4L2vDKVq/LAlH2L+?=
+ =?us-ascii?Q?i7DLThCeFZTeNIT+dKWmEmv3LoKEzEUfCAWKiD702WZ/NCGBMdpIYp4nC4WZ?=
+ =?us-ascii?Q?bUqPQcCNSR1/cDLq4X2Co5soasgCzHhdbyKtcxQ93eSV/WhRZnjG79lR9gSq?=
+ =?us-ascii?Q?bYythG945rEPWiTKAZLFfASuncyeCMdtdi0HsMPP86u8ZkfsQ31eSU9+SfHH?=
+ =?us-ascii?Q?3VMrDuOyHwp+90XN3zf5jXCcR32p3YHd58PKQBfFzEXveLPX/XtKuLjuGgyA?=
+ =?us-ascii?Q?Ps9OKodPRY88zMHvf2s5Xlk7CF7sMDkjIZrDNPM6JwKNMxwL3EuWyDT7Jl6e?=
+ =?us-ascii?Q?R6/Ut0q4bDrUTTscURsQChCi3w72?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JKuDdmNMohkCWe8R1+7/2utP2vzINzxaDdFhWD1wAKJYuHiK2f0EdEFjCOzP?=
+ =?us-ascii?Q?BBph6Wd905ioJOI0KaJtgBHP3tKQerAi0CapPRkwbc2DCcNUGlhbjjQ0jB8W?=
+ =?us-ascii?Q?QuwiFgfLkRzzNG+syWGzZ15QMPk8g+SaCxm/rlc3jbf4fwbE3+9sGLTbfND5?=
+ =?us-ascii?Q?5ya/LIfephbPX5IIXwcEKDFumL7jq9DOtitic8OnurLeCIWK5fSxeOc/inMZ?=
+ =?us-ascii?Q?sCqD9DQf5lkO8YMkVMsUbcFmacaLejpnxRy7TUDbQpulfTxBNHUtr3D0Dva1?=
+ =?us-ascii?Q?CMZDMHqoevFJxMOCifZ7IJVl/0D5UsuQdScTUuSK8rSqHsMPjBDpU1bA8sf2?=
+ =?us-ascii?Q?j5kIwJPZzDL4yZy8MnUAaUBA6zp5P6ndaaUrmRVrZUeesH5vSLqzURS95fMM?=
+ =?us-ascii?Q?2Q7sxFKJc6NwWq9Pzbg2qm9hlsjbpf4RJszzjMySupro5OlVcYhhKTXszEs1?=
+ =?us-ascii?Q?XjkrSmi/968sfHTcfkHhmArd7NUp4T2Vhx1bJSkmqNg40DWaSljHt0MapK8M?=
+ =?us-ascii?Q?HAgZhVcvHgmBllC1D8LWbMvmqS+uvCmmiVHOBxHy6EtEWlEMb+1L0A4NQgIf?=
+ =?us-ascii?Q?TfYAXuWlm+NBKpoSTH1jN9yZifk2ty7AdXoff9h27CZz4kIahlm54EoF2lmZ?=
+ =?us-ascii?Q?W3ZkQ02RV03uzWfBwWPasFhllnJmn2SfWOatf3cK8zLDpS70EUqqY2sN3fti?=
+ =?us-ascii?Q?ssjURY+qU5/ZBUIGX+GSttomcKG1N+wvLMh0ZAR+uJEarlwwJAjiY9Z3+kCY?=
+ =?us-ascii?Q?Le0q4AQInJwJP/k5iG8SGd2/g93Uq768fXpkismC6sViUMvfAiVKqaNoKJZy?=
+ =?us-ascii?Q?Uepcu3DEYosqaIXBwPB38FKlT8liqGWLWYvBWfS0/hIlVk6A5yrLzpuvP7Kf?=
+ =?us-ascii?Q?ZqstB/Q2V5djo7E2bHcM2Nj1kCWAdo2ghHXThkwuFwKQyCwHGj0OgwcZwcQC?=
+ =?us-ascii?Q?Rk7zMjQxRaXB48QeJgU8E+KdloA5n5/v1CROQaluHYcSbgHO192XFLA826h1?=
+ =?us-ascii?Q?5N7KqlvQlZxV70fYNVZeabvAfnvzLDbwrn0cmX1DKLAQ/lS0LwYcr6EBzL9H?=
+ =?us-ascii?Q?fS05/9XqFbou/wNQ2AsZat6QWBF1Z0zOEZkXly/QYJ1OgyzcWtl52s3lrAwp?=
+ =?us-ascii?Q?Sh0bbSKL+s1FgA8hsjf26q+cpVKgDK+Bh6+cTHVmtAan/C5kUwSvDNm8VXqK?=
+ =?us-ascii?Q?xQzmbURfhQ+o9X2sG4JtwoEpA89UhwvZ0A9W+K9Yx2Ibc7xe08UxT0cgC/fo?=
+ =?us-ascii?Q?DXS4xHO2vAgk3/NguYQWLZpOe8e+BAtAt5OwGzLWVefO6o4TXwzrdVpgJOEa?=
+ =?us-ascii?Q?KZ/Dl7M3lPNIOQopxSTcm6fhoEa7DDa8paJrIHx7CtGqj+WGJQZqobrl1dQN?=
+ =?us-ascii?Q?YLf1xb4eWmMBNjceasktTPHmSDKaMcpd9KZMNbeB0TeSArOoraWnLfFYazSh?=
+ =?us-ascii?Q?gGWyq8VNBjpzcGdKrBbdSN8C/6cz36y3OJoTyi2goS52G0zFT5oOky1BKGKd?=
+ =?us-ascii?Q?PXS39Ft9EjULusbME7MU0d2Ec2ygdp2Mmmvbrb5FxlZFFlOPFpeyWfITz0Iq?=
+ =?us-ascii?Q?FNuOeO4zYfu2VyPHwVysC+iiAPWfO9A/O4isHl4W?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 229f80aa-c68c-4515-864e-08dd662d27af
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 14:57:08.3810
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JoEjJK3Vrvt3vnYAMw9rn7nyc1ikH2zGSjfAgx8SR/00OU1+9DTzZ7vTFdloNfhi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4285
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250318_072535_049140_16CE5BE2 
-X-CRM114-Status: GOOD (  30.15  )
+X-CRM114-CacheID: sfid-20250318_075714_880377_FDB6F6FB 
+X-CRM114-Status: GOOD (  17.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,57 +180,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 17, 2025 at 01:59:05PM -0300, Jason Gunthorpe wrote:
-> On Sun, Mar 09, 2025 at 01:03:31PM +0100, Christian Brauner wrote:
-> 
-> > So either that work is done right from the start or that stashing files
-> > goes out the window and instead that KHO part is implemented in a way
-> > where during a KHO dump relevant userspace is notified that they must
-> > now serialize their state into the serialization stash. And no files are
-> > actually kept in there at all.
-> 
-> Let's ignore memfd/shmem for a moment..
-> 
-> It is not userspace state that is being serialized, it is *kernel*
-> state inside device drivers like VFIO/iommufd/kvm/etc that is being
-> serialized to the KHO.
-> 
-> The file descriptor is simply the handle to the kernel state. It is
-> not a "file" in any normal filesystem sense, it is just an uAPI handle
-> for a char dev that is used with IOCTL.
-> 
-> When KHO is triggered triggered whatever is contained inside the FD is
-> serialized into the KHO.
-> 
-> So we need:
->  1) A way to register FDs to be serialized. For instance, not every
->     VFIO FD should be retained.
->  2) A way for the kexecing kernel to make callbacks to the char dev
->     owner (probably via struct file operations) to perform the
->     serialization
->  3) A way for the new kernel to ask the char dev owner to create a new
->     struct file out of the serialized data. Probably allowed to happen
->     only once, ie you can't clone these things. This is not the same
->     as just opening an empty char device, it would also fill the char
->     device with whatever data was serialized.
->  4) A way to get the struct file into a process fd number so userspace
->     can route it to the right place.
-> 
-> It is not really a stash, it is not keeping files, it is hardwired to
+On Tue, Mar 18, 2025 at 03:25:25PM +0100, Christian Brauner wrote:
 
-Right now as written it is keeping references to files in these fdboxes
-and thus functioning both as a crippled high-privileged fdstore and a
-serialization mechanism. Please get rid of the fdstore bits and
-implement it in a way that it serializes files without stashing
-references to live files that can at arbitrary points in time before the
-fdbox is "sealed" be pulled out and installed into the caller's fdtable
-again.
+> > It is not really a stash, it is not keeping files, it is hardwired to
+> 
+> Right now as written it is keeping references to files in these fdboxes
+> and thus functioning both as a crippled high-privileged fdstore and a
+> serialization mechanism. 
 
-> KHO to drive it's serialize/deserialize mechanism around char devs in
-> a very limited way.
-> 
-> If you have that then feeding an anonymous memfd/guestmemfd through
-> the same machinery is a fairly small and logical step.
-> 
-> Jason
+I think Pratyush went a bit overboard on that, I can see it is useful
+for testing, but really the kho control FD should be in either
+serializing or deserializing mode and it should not really act as an
+FD store.
+
+However, edge case handling makes this a bit complicated. 
+
+Once a FD is submitted to be serialized that FD has to be frozen and
+can't be allowed to change anymore.
+
+If the kexec process aborts then we need to unwind all of this stuff
+and unfreeze all the FDs.
+
+It sure would be nice if the freezing process could be managed
+generically somehow.
+
+One option for freezing would have the kernel enforce that userspace
+has closed and idled the FD everywhere (eg check the struct file
+refcount == 1). If userspace doesn't have access to the FD then it is
+effectively frozen.
+
+In this case the error path would need to bring the FD back out of the
+fdbox.
+
+Jason
 
