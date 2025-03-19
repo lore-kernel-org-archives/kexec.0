@@ -4,101 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72C88C35FFC
-	for <kexec@archiver.kernel.org>; Wed, 19 Mar 2025 13:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7C27C35FFA
+	for <kexec@archiver.kernel.org>; Wed, 19 Mar 2025 15:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hibXXx1/tkAqZb4o1JLhcDjbMgUARFxDE4ALNQxZcMc=; b=2UFR80eu/v1GxW9gvcvEVW2r1c
-	Qd5Ns8/E3ylrZNYQEwjFlE14rE4OjBCcbnKRKUZrWv9PGDQM+i49gMZZGAC6eCeIIXSdqN6wV3ck7
-	Vb8xphb3rs7xQB24rHQpJCcg7GVHgSIktQ1PoCDwdxM1aCLTIs+KVt1egXdlog8jmIv/VuKoGq8dm
-	CGpAeTtRoSElWx2/EVIkjGd0iprGVyHph4lwAElmgB1LXeeZbwnvsF5hxrYiTTq/RY75fSV1OCgen
-	y2BuAz8xJDUf4cSwR7HXwCLQy5PjOW/l6TS+dxLxg5fETk22WLA3yF/nwS4gvFx6s7U15TqN7qKzn
-	CVLOysNA==;
+	bh=+JO+N9vGTqMELmBg0aSnIioKQwJ0RPUknHqhYpGTi90=; b=BqRhXF3j9fMEaMsPn179wtiLmw
+	2nyqGdmajLQCEDk3vetJR5hn90fQikHcLkeME/PG6yKTsI8ZNJ7fVGmFiPMU5gCviu0/h7Jum8GbG
+	Rg/TjD35sEc5XLm5dRmiU4oscKkYHdZTkCOY28jye8DE8s815nKR7PcBuvn9XvCvEe5oVeu/LjK7W
+	ptgLe8YC8FD3ccH66mG7PmjDK6DFkLv81T8sjwbkYxLExF72vLwjYbG1bJ60zjNASiMGOmMoZOqq3
+	yijQsrV8FeXtXQXCOl8Kn9/QHoT0Xhn6EmD4Tec0kb17UeUBIl9OxOT49FyvaS6zIdHOH2KIayAqE
+	SAVnRdEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tutln-000000097jr-3Q06;
-	Wed, 19 Mar 2025 13:47:43 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1tuve3-00000009Ryi-3y6h;
+	Wed, 19 Mar 2025 15:47:51 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tutll-000000097jO-1tfS
+	id 1tuvdz-00000009RxH-310b
 	for kexec@lists.infradead.org;
-	Wed, 19 Mar 2025 13:47:42 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JCwqVm027756;
-	Wed, 19 Mar 2025 13:42:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hibXXx
-	1/tkAqZb4o1JLhcDjbMgUARFxDE4ALNQxZcMc=; b=hhQtIAD8t4t2WtJ4l0UN/C
-	5NV/Aw7WCrcUSBJoAAJ1S0DeWBVe8Evn1Sx3Yl1A62jZ/NUfw+/ozdKRfFi7VvTR
-	GE707mtlFKQN2iR1AlgzL895bvB5ezBSj4X/OQS7I2WMKc/csnZuzXfHpkiMHZtd
-	IL2Ty4eRzZkUiGys36HiHyg6ox4QNY5q/5cCbH+aKNG51l3CNzFGSRjQDUVbP0hD
-	TGeMmLL3lQ9cqVmOH/SIUIjCaXYNg94aautZM5sXA2+8//XVsLxizbDcPQpWnNox
-	Nw/VFlvPXU+gR0OeiVm8fGmASgZI0Eo2Qt8VonNJ6+KQ9yDiKcBFDr6+dSTDuNLg
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fa8pe72u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 13:42:17 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52JBMNMB023214;
-	Wed, 19 Mar 2025 13:42:16 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dp3ksndp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 13:42:16 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52JDgFUU26083906
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 13:42:15 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6FE2258057;
-	Wed, 19 Mar 2025 13:42:15 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48B9658061;
-	Wed, 19 Mar 2025 13:42:14 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.177.219])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Mar 2025 13:42:14 +0000 (GMT)
-Message-ID: <255e75954d9418e2658a6eba6879804c31b3713f.camel@linux.ibm.com>
-Subject: Re: [PATCH v10 1/8] ima: rename variable the ser_file "file" to
- "ima_kexec_file"
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Wed, 19 Mar 2025 09:42:13 -0400
-In-Reply-To: <20250318010448.954-2-chenste@linux.microsoft.com>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
-	 <20250318010448.954-2-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	Wed, 19 Mar 2025 15:47:48 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 0F6095C5706;
+	Wed, 19 Mar 2025 15:45:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D80C4CEE4;
+	Wed, 19 Mar 2025 15:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742399266;
+	bh=lAjVQdTPRzzpOcaWKxBbmeTz8ix+m8SuzeHqkBCr0UM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ObyD9DX6BZweAsb6Fmkp+8baqxl74XIy5lSYdJuHrL6zjHExJhT8TWx/1mU6gin1h
+	 mttNl50AnFAuCtRsry0jJeuofZoxU1Ahha4Y0X0HQ8mxf8XBRSOc6EhIjmr3pmXxpF
+	 cm8EM/Vi+J503HW2fgER+/t2F0uOvIiiCbf8zWfBJ+YnC//F5ii1naFBVTWbgU6fgQ
+	 m/2qYccXiVO+KDDFevX8hvy8G99+4BjzGWHKxIiAdgjgQmmVX7Z+sLrRM/p2FbRICf
+	 L8GkKftAbynDpQe3E8vPn+KzUFKOfVA13PtYFLuSbUl14ZbPBflUN3NOPMA5GalNyJ
+	 4Tp+xc0OjhGVQ==
+Date: Wed, 19 Mar 2025 08:47:43 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, 
+	Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
+Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
+ information to relocate_kernel()
+Message-ID: <7jpwi6r564hdpw2n7b75o6oqvtjdx3wpmq43e5khhwa2lh3yij@cis5aamxquol>
+References: <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
+ <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
+ <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
+ <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
+ <6swzz4732x5kfeg3qsif2r5s5ado3nbweznm6alsxvniy4xq6a@z6foorhlhelj>
+ <9c41ab61efc573e3ab5a75b6e4031f81db84a846.camel@infradead.org>
+ <awucsfjn475mvwg7xhihexln2hfbtvrie2uv333u7awtkz4mrf@t57pi7jibytc>
+ <e48391c54a4ba27795919099f8ea25c29d868000.camel@infradead.org>
+ <orpk67p2yolcb4gi462wqwphaaio6ivny2gcfcw4jna3uyaak5@oty7arlxxykl>
+ <8BD39200-583E-4835-BA0B-90409E0E55C4@infradead.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: S3orxwh3KxQBkV_RUEJ9W7ZkTdvzT8VT
-X-Proofpoint-ORIG-GUID: S3orxwh3KxQBkV_RUEJ9W7ZkTdvzT8VT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_05,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxscore=0 spamscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190092
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8BD39200-583E-4835-BA0B-90409E0E55C4@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250319_064741_498160_A4878E7F 
-X-CRM114-Status: GOOD (  30.90  )
+X-CRM114-CacheID: sfid-20250319_084747_810612_6E31347A 
+X-CRM114-Status: GOOD (  22.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,145 +86,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Fix spelling: set_file
+On Wed, Mar 19, 2025 at 01:04:20PM +0000, David Woodhouse wrote:
+> On 18 March 2025 22:41:43 GMT, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >On Tue, Mar 18, 2025 at 09:06:58PM +0000, David Woodhouse wrote:
+> >> On Tue, 2025-03-18 at 10:14 -0700, Josh Poimboeuf wrote:
+> >> > On Tue, Mar 18, 2025 at 03:56:36PM +0000, David Woodhouse wrote:
+> >> > > For the relocate_kernel() case I don't think we care much about the
+> >> > > first. Without a CFI prologue, no *other* code can be tricked into
+> >> > > calling relocate_kernel()
+> >> > 
+> >> > But for FineIBT the hash is checked on the callee side.  So it loses
+> >> > FineIBT protection.
+> >> 
+> >> Right now the relocate_kernel() code doesn't even have an endbr, does
+> >> it? So it isn't a useful gadget?
+> >
+> >In that case wouldn't IBT explode when you indirect call it?  Or is IBT
+> >getting disabled beforehand?
+> 
+> Not sure of the details. The machine_kexec() function which is the
+> *caller* is currently marked with the __nocfi tag which stops any
+> software checks. I guess any hardware feature which requires an endbr
+> to be the target of an indirect branch has to already disabled on the
+> way down? What specifically am I looking for, to check that? Or the
+> hardware support has just never worked with kexec, perhaps?
 
+Looking at machine_kexec(), it calls cet_disable() before the indirect
+call.  So yeah, it seems fine for relocate_kernel() to not have a CFI
+prologue or ENDBR.
 
-On Mon, 2025-03-17 at 18:04 -0700, steven chen wrote:
-> The name of the local variable "file" of type seq_file defined in the
-> ima_dump_measurement_list function is too generic. To better reflect the
-> purpose of the variable, rename it to "ima_kexec_file". This change will=
-=20
-> help improve code readability and maintainability by making the variable'=
-s
-> role more explicit.
-
-The reason for making the variable name change is the variable scope.
-
--> Before making the function local seq_file "file" variable global, rename=
- it
-to ima_kexec_file.
-
->=20
-> The variable ima_kexec_file is indeed the memory allocated for copying IM=
-A
-> measurement records. The ima_dump_measurement_list function calculates th=
-e=20
-> actual memory occupied by the IMA logs and compares it with the allocated=
-=20
-> memory. If there is enough memory, it copies all IMA measurement records;=
-=20
-> otherwise, it does not copy any records, which would result in a failure
-> of remote attestation.
-
-This paragraph is not applicable to the patch change.
-
->=20
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_kexec.c | 39 ++++++++++++++++++------------
->  1 file changed, 24 insertions(+), 15 deletions(-)
->=20
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/=
-ima_kexec.c
-> index 9d45f4d26f73..8567619889d1 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -15,33 +15,41 @@
->  #include "ima.h"
-> =20
->  #ifdef CONFIG_IMA_KEXEC
-> +/*
-> + * Copy the measurement list to the allocated memory
-> + * compare the size of IMA measurement list with the size of the allocat=
-ed memory
-> + *    if the size of the allocated memory is not less than the size of I=
-MA measurement list
-> + *        copy the measurement list to the allocated memory.
-> + *    else
-> + *        return error
-> + */
-
-Please minimize patch changes.  Before posting, please look at the patch(s)=
- and
-remove anything not applicable to it.  In this case, the comment is not
-applicable to the variable name change.
-
-thanks,
-
-Mimi
- =20
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **=
-buffer,
->  				     unsigned long segment_size)
->  {
-> +	struct seq_file ima_kexec_file;
->  	struct ima_queue_entry *qe;
-> -	struct seq_file file;
->  	struct ima_kexec_hdr khdr;
->  	int ret =3D 0;
-> =20
->  	/* segment size can't change between kexec load and execute */
-> -	file.buf =3D vmalloc(segment_size);
-> -	if (!file.buf) {
-> +	ima_kexec_file.buf =3D vmalloc(segment_size);
-> +	if (!ima_kexec_file.buf) {
->  		ret =3D -ENOMEM;
->  		goto out;
->  	}
-> =20
-> -	file.file =3D NULL;
-> -	file.size =3D segment_size;
-> -	file.read_pos =3D 0;
-> -	file.count =3D sizeof(khdr);	/* reserved space */
-> +	ima_kexec_file.file =3D NULL;
-> +	ima_kexec_file.size =3D segment_size;
-> +	ima_kexec_file.read_pos =3D 0;
-> +	ima_kexec_file.count =3D sizeof(khdr);	/* reserved space */
-> =20
->  	memset(&khdr, 0, sizeof(khdr));
->  	khdr.version =3D 1;
->  	/* This is an append-only list, no need to hold the RCU read lock */
->  	list_for_each_entry_rcu(qe, &ima_measurements, later, true) {
-> -		if (file.count < file.size) {
-> +		if (ima_kexec_file.count < ima_kexec_file.size) {
->  			khdr.count++;
-> -			ima_measurements_show(&file, qe);
-> +			ima_measurements_show(&ima_kexec_file, qe);
->  		} else {
->  			ret =3D -EINVAL;
->  			break;
-> @@ -55,23 +63,24 @@ static int ima_dump_measurement_list(unsigned long *b=
-uffer_size, void **buffer,
->  	 * fill in reserved space with some buffer details
->  	 * (eg. version, buffer size, number of measurements)
->  	 */
-> -	khdr.buffer_size =3D file.count;
-> +	khdr.buffer_size =3D ima_kexec_file.count;
->  	if (ima_canonical_fmt) {
->  		khdr.version =3D cpu_to_le16(khdr.version);
->  		khdr.count =3D cpu_to_le64(khdr.count);
->  		khdr.buffer_size =3D cpu_to_le64(khdr.buffer_size);
->  	}
-> -	memcpy(file.buf, &khdr, sizeof(khdr));
-> +	memcpy(ima_kexec_file.buf, &khdr, sizeof(khdr));
-> =20
->  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
-> -			     file.buf, file.count < 100 ? file.count : 100,
-> +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
-> +			     ima_kexec_file.count : 100,
->  			     true);
-> =20
-> -	*buffer_size =3D file.count;
-> -	*buffer =3D file.buf;
-> +	*buffer_size =3D ima_kexec_file.count;
-> +	*buffer =3D ima_kexec_file.buf;
->  out:
->  	if (ret =3D=3D -EINVAL)
-> -		vfree(file.buf);
-> +		vfree(ima_kexec_file.buf);
->  	return ret;
->  }
-> =20
-
+-- 
+Josh
 
