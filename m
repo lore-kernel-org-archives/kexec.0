@@ -4,79 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 373E9C35FFA
-	for <kexec@archiver.kernel.org>; Wed, 19 Mar 2025 10:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BAAFCC36000
+	for <kexec@archiver.kernel.org>; Wed, 19 Mar 2025 13:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Dp8VU/SCWRwVp8kB15++yu9BYimqEEC2BvbtYj7rnoo=; b=0KOmjyeY/I6OPv1URhoDWTyvj2
-	DlFJIKiD9gHmerYmXS8+XgbPSe78jQBdUukGwudxqZ6icTDCbgTS1ToA/BiTLNi81JL0R/4WDHFni
-	JBhwNtenoqFctTfw1ooe0rQ+xwR9n0BfKE6xaFcdQO6/RToF3bOVakTw1IcUM8cfomdei0TR2JhIS
-	mV7ickNDr9cs9t1xojJ+0zD+nf4w27SNLwlac4sMIghP/pg1vJ1yfIT2BVuruVxrn7/7uOv1IG96n
-	Vz/+vxbExGscRxjYyVLYYh/oU2rZCna3zAtECaSoJlYlOnqoKUSZKIp7tekhRUrnFJvVOzjBwt9p9
-	dYBGymrw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ewqf9+grSmpFEbh21C/yVk01rtLR2PLzAxGZJjplfd4=; b=Rqg5DkMuea3AGtrvKNQJEL9xcK
+	xhdZo7iWyGXuc6MohTr9NgNLa0Rs+znye3G7xWOHdF/u44E626TPCwd1xgadG7zbjWN/hSiCSc1lV
+	ztn2yyai5k8UbI4T/kRW+jeywnawfUmIVfZdC8wn2juHwp8JYWlkV5K1+8Nhs2PMGOZhRxll2ynAH
+	vnLJxHDgfW9V+SIygdWEsvvqXjzLiNQ02zFiUvENdpgRARXfK9eQP1gLHILytYCdwy74C/2rLmMSJ
+	DoV8swpnMD5hbXE0kinCCjrNF0U9ay0l3Xt97wyp7ngWrIjIrxKympRRWQ+y70Kd5EMnUhgfg3Tmx
+	B0T5+4mg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuqTZ-00000008dJM-3Eoj;
-	Wed, 19 Mar 2025 10:16:41 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tut5t-000000092Um-3tSs;
+	Wed, 19 Mar 2025 13:04:25 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuqTX-00000008dIx-1Z1Q
-	for kexec@lists.infradead.org;
-	Wed, 19 Mar 2025 10:16:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742379398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dp8VU/SCWRwVp8kB15++yu9BYimqEEC2BvbtYj7rnoo=;
-	b=V4+eozCKFINts6WICZj0KsMBuMptZi3kaHs/Y1+2VJ/sDdkAJlo39Say+S4lQHIlSiF6qX
-	8AUvsmzCdAlGmATkAVy45oblOM5RHLaH2yv+LdR23Kh53N0gFbIvwcedweVPmcqCL//CD8
-	x722gTrEHb4IPxTsMhkRckEvGn+Bj9o=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-463-sEFPcyY_MxyO6Atw7jxUSg-1; Wed,
- 19 Mar 2025 06:16:33 -0400
-X-MC-Unique: sEFPcyY_MxyO6Atw7jxUSg-1
-X-Mimecast-MFC-AGG-ID: sEFPcyY_MxyO6Atw7jxUSg_1742379391
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C8E941809CA3;
-	Wed, 19 Mar 2025 10:16:30 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.30])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC6021800946;
-	Wed, 19 Mar 2025 10:16:28 +0000 (UTC)
-Date: Wed, 19 Mar 2025 18:16:23 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v10 4/8] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-Message-ID: <Z9qZd/d9h6d4bTHH@MiWiFi-R3L-srv>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
- <20250318010448.954-5-chenste@linux.microsoft.com>
+	id 1tut5t-000000092U2-0OFo
+	for kexec@bombadil.infradead.org;
+	Wed, 19 Mar 2025 13:04:25 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ewqf9+grSmpFEbh21C/yVk01rtLR2PLzAxGZJjplfd4=; b=QdsrnKnf/WhbDzETUnkmiQ2e0B
+	LlWSpcbbVp6YIXgDbhdhMIB9kepeMA0l7s+RIu8qzHrWFge3jRcUrrIoOLz1iws6/xepEmw0LVx4q
+	w7WS+nGDiqmoEIfmESD7dzwjpU5MmNb/bz7eywfAzVSYDvkxbQv5dDUIMe+cMhaMlfWPmMSd9lDfw
+	h8g+jPl4xeoHBapsMuRdyZ9ixaiMUBaY8zSi1LgyLuis4hE6ssKcn5c/REEQHbNquM9IUwI7gsGER
+	k4+qVlTuoYwhIL0N5chJ1uiSCpKNa3dZvAsUajxPQOP3U9xZ7YWPDziOZ38MhM031kxcFooYn1c31
+	+/ECdUhA==;
+Received: from [2a00:23ee:2938:208a:ce64:7b9e:6eae:d0dc] (helo=[IPv6:::1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tut5p-00000003xtA-3jDH;
+	Wed, 19 Mar 2025 13:04:22 +0000
+Date: Wed, 19 Mar 2025 13:04:20 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+CC: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+ Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ bsz@amazon.de
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v7_8/8=5D_=5BDO_NOT_MERGE=5D_x86/kexec=3A_?=
+ =?US-ASCII?Q?Add_CFI_type_information_to_relocate=5Fkernel=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <orpk67p2yolcb4gi462wqwphaaio6ivny2gcfcw4jna3uyaak5@oty7arlxxykl>
+References: <20250312144257.2348250-9-dwmw2@infradead.org> <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn> <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org> <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7> <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org> <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd> <6swzz4732x5kfeg3qsif2r5s5ado3nbweznm6alsxvniy4xq6a@z6foorhlhelj> <9c41ab61efc573e3ab5a75b6e4031f81db84a846.camel@infradead.org> <awucsfjn475mvwg7xhihexln2hfbtvrie2uv333u7awtkz4mrf@t57pi7jibytc> <e48391c54a4ba27795919099f8ea25c29d868000.camel@infradead.org> <orpk67p2yolcb4gi462wqwphaaio6ivny2gcfcw4jna3uyaak5@oty7arlxxykl>
+Message-ID: <8BD39200-583E-4835-BA0B-90409E0E55C4@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318010448.954-5-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250319_031639_483669_34CFA6F9 
-X-CRM114-Status: GOOD (  31.96  )
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,132 +78,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/17/25 at 06:04pm, steven chen wrote:
-> With this series, the IMA segment will be updated with the measurement 
-> log at the kexec execute stage when a soft reboot is initiated. 
-> Therefore, the digests should be updated for the IMA segment in the 
-> normal case.
-> 
-> The content of memory segments carried over to the new kernel during the
-> kexec systemcall can be changed at kexec 'execute' stage, but the size
-> and the location of the memory segments cannot be changed at kexec
-> 'execute' stage.
-> 
-> However, during the kexec execute stage, if kexec_calculate_store_digests()
-> API is called to update the digest, it does not reuse the same memory
-> segment allocated during the kexec 'load' stage and the new memory segment
-> required cannot be transferred/mapped to the new kernel.
-> 
-> As a result, digest verification will fail in verify_sha256_digest() 
-> after a kexec soft reboot into the new kernel. Therefore, the digest
-> calculation/verification of the IMA segment needs to be skipped.
-> 
-> To address this, skip the calculation and storage of the digest for the
-> IMA segment in kexec_calculate_store_digests() so that it is not added 
-> to the purgatory_sha_regions.
-> 
-> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
-> no change is needed in verify_sha256_digest() in this context.
-> 
-> With this change, the IMA segment is not included in the digest
-> calculation, storage, and verification.
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com> 
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  include/linux/kexec.h              |  3 +++
->  kernel/kexec_file.c                | 22 ++++++++++++++++++++++
->  security/integrity/ima/ima_kexec.c |  3 +++
->  3 files changed, 28 insertions(+)
+On 18 March 2025 22:41:43 GMT, Josh Poimboeuf <jpoimboe@kernel=2Eorg> wrote=
+:
+>On Tue, Mar 18, 2025 at 09:06:58PM +0000, David Woodhouse wrote:
+>> On Tue, 2025-03-18 at 10:14 -0700, Josh Poimboeuf wrote:
+>> > On Tue, Mar 18, 2025 at 03:56:36PM +0000, David Woodhouse wrote:
+>> > > For the relocate_kernel() case I don't think we care much about the
+>> > > first=2E Without a CFI prologue, no *other* code can be tricked int=
+o
+>> > > calling relocate_kernel()
+>> >=20
+>> > But for FineIBT the hash is checked on the callee side=2E=C2=A0 So it=
+ loses
+>> > FineIBT protection=2E
+>>=20
+>> Right now the relocate_kernel() code doesn't even have an endbr, does
+>> it? So it isn't a useful gadget?
+>
+>In that case wouldn't IBT explode when you indirect call it?  Or is IBT
+>getting disabled beforehand?
 
-LGTM,
+Not sure of the details=2E The machine_kexec() function which is the *call=
+er* is currently marked with the __nocfi tag which stops any software check=
+s=2E I guess any hardware feature which requires an endbr to be the target =
+of an indirect branch has to already disabled on the way down? What specifi=
+cally am I looking for, to check that? Or the hardware support has just nev=
+er worked with kexec, perhaps?
 
-Acked-by: Baoquan He <bhe@redhat.com>
+>> > > =E2=80=94 and besides, it's in the kernel's data
+>> > > section and isn't executable anyway until the kexec code copies it =
+to a
+>> > > page that *is*=2E
+>> >=20
+>> > Does the code get copied immediately before getting called, or can it=
+ be
+>> > initialized earlier during boot when kdump does its initial setup?
+>>=20
+>> It's initialized earlier, in machine_kexec_prepare(), and then the page
+>> is set ROX=2E
+>
+>If that happens during boot (like for kdump init) then it'll be in text
+>the whole time after boot, right?
 
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 7d6b12f8b8d0..107e726f2ef3 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -362,6 +362,9 @@ struct kimage {
->  
->  	phys_addr_t ima_buffer_addr;
->  	size_t ima_buffer_size;
-> +
-> +	unsigned long ima_segment_index;
-> +	bool is_ima_segment_index_set;
->  #endif
->  
->  	/* Core ELF header buffer */
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3eedb8c226ad..606132253c79 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
->  }
->  #endif
->  
-> +#ifdef CONFIG_IMA_KEXEC
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +#else
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->  static int kexec_calculate_store_digests(struct kimage *image);
->  
->  /* Maximum size in bytes for kernel/initrd files. */
-> @@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  		if (ksegment->kbuf == pi->purgatory_buf)
->  			continue;
->  
-> +		/*
-> +		 * Skip the segment if ima_segment_index is set and matches
-> +		 * the current index
-> +		 */
-> +		if (check_ima_segment_index(image, i))
-> +			continue;
-> +
->  		ret = crypto_shash_update(desc, ksegment->kbuf,
->  					  ksegment->bufsz);
->  		if (ret)
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 45170e283272..34020b1513b0 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -168,6 +168,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	kbuf.buffer = kexec_buffer;
->  	kbuf.bufsz = kexec_buffer_size;
->  	kbuf.memsz = kexec_segment_size;
-> +	image->is_ima_segment_index_set = false;
->  	ret = kexec_add_buffer(&kbuf);
->  	if (ret) {
->  		pr_err("Error passing over kexec measurement buffer.\n");
-> @@ -178,6 +179,8 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	image->ima_buffer_addr = kbuf.mem;
->  	image->ima_buffer_size = kexec_segment_size;
->  	image->ima_buffer = kexec_buffer;
-> +	image->ima_segment_index = image->nr_segments - 1;
-> +	image->is_ima_segment_index_set = true;
->  
->  	/*
->  	 * kexec owns kexec_buffer after kexec_add_buffer() is called
-> -- 
-> 2.25.1
-> 
+In an executable page, yes=2E
+
 
 
