@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE2F6C28B30
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 07:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 394CCC28B30
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 07:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RZRCapvOHd4BYYSW8dQ3yTfPxQr9M9ZXGlODdOARUlk=; b=Sl9i2LIcQEAgoDDkHgWYt0CRUF
-	ED5PRgS9jHXT65vWkr6mEVtBXD8GsV7UmXZJYetfyQ2dxauEL3mXU9J4GMJgR6WsT/CUZ0xBdAg5o
-	c1VBAJFie5+Xn4HIoQre5AvJYQ81wmhaL2UuSvfwipuVf5NBfx+wO3NBAznyRigAhUBWyYcLRCJXz
-	ksN81HbemsSmeK9xv/ho7mKMjySDRG8D9Ivfk+0gux7onRV9wXAbg/G4gA8kT+h/arGZXxvyIBUWa
-	heHHojdL+TkojzumSO88xLy3nRKO87DZvo9EXsWZxjYbuKqxrXn0drTaIl8y7ye3yRdnzVMNujnnW
-	iTjbyawg==;
+	bh=A1MiJca6rcPrflh+NCZltfjRpcezrNat3ifqNMhtIUY=; b=mZoAuOOfTs3NQLB6E3OcmzGmWx
+	QtU8YMfkw18fuH8GMk7j6oUgkITnQ0/W3KTVqG6WuqcynqqJkquPqDbfo3YamqV8p01Uy3YAzH5s/
+	oG5Wrc0EsiF8kVD0c2SRLKWzX5zhMngOEkeG/z8mEREDwcCnlUDtlmbJiASWMG1VPlmhBtc3cw5nG
+	O2OUN+IbnDYmR597tmxDwNcebKyq91yuGp6pg+7wYrgkv3pbfRoTcpAmUrDkMf1XF+kwGmS7xHA+R
+	c39Yuzqgw/ZMBA5jDQzlz1vUVEkw9WuFzKLoYUQQb0WMyWmispep+87r+6AJwqJNIht86qXKxvDkf
+	70oe/RFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvA3N-0000000BNHa-3Kf1;
-	Thu, 20 Mar 2025 07:10:57 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1tvA52-0000000BNYZ-3eDb;
+	Thu, 20 Mar 2025 07:12:40 +0000
+Received: from nyc.source.kernel.org ([147.75.193.91])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvA3K-0000000BNGR-3y6i;
-	Thu, 20 Mar 2025 07:10:56 +0000
+	id 1tvA3Z-0000000BNMC-18Jn;
+	Thu, 20 Mar 2025 07:11:10 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0F9C7436D9;
+	by nyc.source.kernel.org (Postfix) with ESMTP id E5FD9A4903B;
+	Thu, 20 Mar 2025 07:05:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 238BEC4CEE7;
 	Thu, 20 Mar 2025 07:10:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5D1C4CEDD;
-	Thu, 20 Mar 2025 07:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742454654;
-	bh=7plPKqx81avtzFveE1j64iGTt+fd3g0+7dE0AJIyv/Q=;
+	s=k20201202; t=1742454668;
+	bh=ofKcg6Jw4XQiuJNA+UQgX1XP/VvJ056b5xfgIenWamA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QPT2nCmZHczibCXuIz3DWc12CGF6vij5ny2ZxI4QWAElJANdlhrUKRRHhm8/qRMJx
-	 LGUe2Lewg76oc9S8zwRgDos2/spq+SlFnrwGvvFsiYObhiYDAaiAeAehEiDYgkttZz
-	 bt5V6wk1QAn4jsH7OaiU81jc4aPN/HL4dUnWvp8f+EeX16UaWCS+LFDDgp3vEdDlxH
-	 zw8yilSBK4QIAhvzuCldg84HbrC4idOIivSysmk5HyYoiHppwsSut3FIT0CusQ1SNL
-	 zJq0S7F6YoV/jxRyveQDHXNEOSZl9r9cA7qb9GfOrydXl2n3sf+mJTCoF5f8VCtHnL
-	 1f5c6A6g4MlSw==
-Message-ID: <d5f7379c-c66b-47f5-bc97-eab90ab34346@kernel.org>
-Date: Thu, 20 Mar 2025 08:10:37 +0100
+	b=aD9hkPNjqy15EuSIzjKCpaOfe6I1L3lv0AbIOUbPp5nVXl0tUm+BWVx5TDgmhj/AE
+	 l79BcGv+F+x/NdW2kUUn/+Eyy6Ipe5/H9/deo1xVyTiVpwmDwfM9HH5+ESmr1B4JSS
+	 qVmPv+0MSBYEdjmWyAw17klsP31h1guQE25x6w4Q/UnxVGtGTeoCObHAqzjWhgaOad
+	 X9D2kBU7LDfZSIeBHG4nhGgW9LQMOECFcqfa4kIsouOKUK2Zs8/+PflABiOf2lCSt8
+	 d22KIax95MOK5mrReAyhevdgCgVA38lbW0XNmM0Je4iqUwU83nVIWmHH3YJrdlvr/y
+	 Q1PbQMW+zyPHA==
+Message-ID: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
+Date: Thu, 20 Mar 2025 08:10:48 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
+Subject: Re: [PATCH v5 02/16] mm/mm_init: rename init_reserved_page to
+ init_deferred_page
 To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
 Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
  anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
@@ -60,9 +61,9 @@ Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
  kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-12-changyuanl@google.com>
-Content-Language: en-US
+ <20250320015551.2157511-3-changyuanl@google.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -106,12 +107,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250320015551.2157511-12-changyuanl@google.com>
+In-Reply-To: <20250320015551.2157511-3-changyuanl@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250320_001055_027374_8A68CDC3 
-X-CRM114-Status: UNSURE (   7.80  )
+X-CRM114-CacheID: sfid-20250320_001109_434614_56B790F8 
+X-CRM114-Status: UNSURE (   6.95  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -128,19 +129,17 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 20/03/2025 02:55, Changyuan Lyu wrote:
-> From: Alexander Graf <graf@amazon.com>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> We have all generic code in place now to support Kexec with KHO. This
-> patch adds a config option that depends on architecture support to
-> enable KHO support.
+> When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
+> function performs initialization of a struct page that would have been
+> deferred normally.
 > 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Rename it to init_deferred_page() to better reflect what the function does.
+> 
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
-> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-What did you exactly co-develop here? Few changes does not mean you are
-a co-developer.
+
+Incorrect DCO chain.
 
 Best regards,
 Krzysztof
