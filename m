@@ -4,106 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D4A2C36002
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 05:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE2F6C28B30
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 07:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=i4DroqneBG6x0AD5NkBo68XH9/ZkMAi74MRpFzbuPbA=; b=WT42FPVsKjbc3PhYkTjns19S5g
-	rliDahcRHLc8GoSJNciUl6TD/XTWrgrMszma9BcbKpPnHE5BqHAWVA2JqgF4Oqzqipykyu3EZH0a8
-	yweGQ5UPmB8ctbls9OT2uWrlDaXCngb4CPHNNQR/ydcbdPD5BGD3qea/RrJpdvnDbYR1hHBPpXZ27
-	6DzEX5LZwe9v9Vst5bLyi92Ep2lBeXDaXHWE4Ppk0MxTVMfO0+S7yo8BwZ5aDQQQAovdiTC55TOeR
-	FizaQbjOpHf0muwIn7IuxleC3a1JOJm73lctqmvxkUyFZpYvtm3G27R1WNYNKduK57AnlewJhzanb
-	1zdzl1ug==;
+	bh=RZRCapvOHd4BYYSW8dQ3yTfPxQr9M9ZXGlODdOARUlk=; b=Sl9i2LIcQEAgoDDkHgWYt0CRUF
+	ED5PRgS9jHXT65vWkr6mEVtBXD8GsV7UmXZJYetfyQ2dxauEL3mXU9J4GMJgR6WsT/CUZ0xBdAg5o
+	c1VBAJFie5+Xn4HIoQre5AvJYQ81wmhaL2UuSvfwipuVf5NBfx+wO3NBAznyRigAhUBWyYcLRCJXz
+	ksN81HbemsSmeK9xv/ho7mKMjySDRG8D9Ivfk+0gux7onRV9wXAbg/G4gA8kT+h/arGZXxvyIBUWa
+	heHHojdL+TkojzumSO88xLy3nRKO87DZvo9EXsWZxjYbuKqxrXn0drTaIl8y7ye3yRdnzVMNujnnW
+	iTjbyawg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tv8bn-0000000BEXV-0Z7i;
-	Thu, 20 Mar 2025 05:38:23 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tvA3N-0000000BNHa-3Kf1;
+	Thu, 20 Mar 2025 07:10:57 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tv8bk-0000000BEWn-0gcp
-	for kexec@lists.infradead.org;
-	Thu, 20 Mar 2025 05:38:21 +0000
+	id 1tvA3K-0000000BNGR-3y6i;
+	Thu, 20 Mar 2025 07:10:56 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 2E570A48F7B;
-	Thu, 20 Mar 2025 05:32:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51B8C4AF09;
-	Thu, 20 Mar 2025 05:38:17 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0F9C7436D9;
+	Thu, 20 Mar 2025 07:10:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5D1C4CEDD;
+	Thu, 20 Mar 2025 07:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742449098;
-	bh=NQpmUMJVyMyFJpKpG5jMIUbPPQhrRkv3l6n2VcE0EUg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=fuMNo4sNK9rhmK+emalGQ6LXJk0BvGUhlA+tpCOWs9uNaHCOVaqQgbYFz0NLLgdlp
-	 aAV9LjSUwTiji7kc13eE91Xk1LgTrGMChLjL3VKl5uXggr9wkmTIAASEsexsTeXQTo
-	 hgyaGgEFm3B/LdGBy4FdSRAM8UxBjBOYC0t9ObIBbMaGLje7prvIQSdPGMoNLyaVyz
-	 njn4Km2JW7uFIMW5csKuRKRQ4XTnxUegzEj7m8jRpFX13pT6Q4gahNXo21WmTN/ss5
-	 XmjNPrw3/ldi8geuBfhZv573ycrN5nPvkAzFfBjxLcybFsfqRhBiQ9WVhmJzG503Et
-	 TV1QD7SwzHqvQ==
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C4767120006F;
-	Thu, 20 Mar 2025 01:38:16 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Thu, 20 Mar 2025 01:38:16 -0400
-X-ME-Sender: <xms:yKnbZ0PcaGRKeZZuFl7w0-BrS2uZdik9z1k5XaAUyC38Tqu1nw71kA>
-    <xme:yKnbZ68WRGZZrSaNsR7C6px1Orztvveivv_mwb4EYxcwWSTgcUwKV7arQWUMZ2s8F
-    0D3TylCOC9F_urGbP8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeejfeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedfrfhrrghthihushhhucgjrggurghvfdcuoehprhgrthihuhhshh
-    eskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpedtleelvdejtdeiudfhtdev
-    feeujefhgfetleeifeffleevtedtgeevkeehhfeludenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgdomhgvshhmthhprghuthhhphgvrhhs
-    ohhnrghlihhthidqudegjeefudejtddtkedqfedtvdelkeefiedtqdhprhgrthihuhhshh
-    eppehkvghrnhgvlhdrohhrgheshigruggrvhhprhgrthihuhhshhdrtghomhdpnhgspghr
-    tghpthhtohepudekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegufihmfiesrg
-    hmrgiiohhnrdgtohdruhhkpdhrtghpthhtohepghhrrghfsegrmhgriihonhdrtghomhdp
-    rhgtphhtthhopehjghhofigrnhhssegrmhgriihonhdrtghomhdprhgtphhtthhopehprg
-    hnkhgrjhdrghhuphhtrgdrlhhinhhugiesghhmrghilhdrtghomhdprhgtphhtthhopehf
-    vhgulhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhunhgrihgushesghhoohhglh
-    gvrdgtohhmpdhrtghpthhtoheprhhivghnthhjvghssehgohhoghhlvgdrtghomhdprhgt
-    phhtthhopehtrghtrghshhhinhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepvhgrnh
-    hnrghpuhhrvhgvsehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:yKnbZ7Q6E1rgEp6Xk-smVSHYdF4IVNsSUSQkuOV5QV4DztyGPextvQ>
-    <xmx:yKnbZ8siwRsO6fIQbGpDpwJyfBxgk8Rf_CiBF0XdzqAIXwU70LHv8A>
-    <xmx:yKnbZ8f25a-AEd3xThLVU_BTtBDvWTEfHPEC8x870ZbB3MnRtJ_71A>
-    <xmx:yKnbZw15-xIIhKafN5vXynVwBRLZ9y4rlnNIw4zE9CCdb5jcTy-Xmw>
-    <xmx:yKnbZw_KbVQ6OGp1oKpvEH1ecD13Vok88VWRXm4EukMqAjZh_kVAlUvS>
-Feedback-ID: id4c94969:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 951301C20066; Thu, 20 Mar 2025 01:38:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1742454654;
+	bh=7plPKqx81avtzFveE1j64iGTt+fd3g0+7dE0AJIyv/Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QPT2nCmZHczibCXuIz3DWc12CGF6vij5ny2ZxI4QWAElJANdlhrUKRRHhm8/qRMJx
+	 LGUe2Lewg76oc9S8zwRgDos2/spq+SlFnrwGvvFsiYObhiYDAaiAeAehEiDYgkttZz
+	 bt5V6wk1QAn4jsH7OaiU81jc4aPN/HL4dUnWvp8f+EeX16UaWCS+LFDDgp3vEdDlxH
+	 zw8yilSBK4QIAhvzuCldg84HbrC4idOIivSysmk5HyYoiHppwsSut3FIT0CusQ1SNL
+	 zJq0S7F6YoV/jxRyveQDHXNEOSZl9r9cA7qb9GfOrydXl2n3sf+mJTCoF5f8VCtHnL
+	 1f5c6A6g4MlSw==
+Message-ID: <d5f7379c-c66b-47f5-bc97-eab90ab34346@kernel.org>
+Date: Thu, 20 Mar 2025 08:10:37 +0100
 MIME-Version: 1.0
-X-ThreadId: Tb8cb476dfbc5618c
-Date: Thu, 20 Mar 2025 09:37:56 +0400
-From: "Pratyush Yadav" <pratyush@kernel.org>
-To: "Jason Gunthorpe" <jgg@nvidia.com>, "David Rientjes" <rientjes@google.com>
-Cc: "Alexander Graf" <graf@amazon.com>,
- "Anthony Yznaga" <anthony.yznaga@oracle.com>,
- "Dave Hansen" <dave.hansen@intel.com>,
- "David Hildenbrand" <david@redhat.com>,
- "Frank van der Linden" <fvdl@google.com>,
- "James Gowans" <jgowans@amazon.com>, "Junaid Shahid" <junaids@google.com>,
- "Matthew Wilcox" <willy@infradead.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Pankaj Gupta" <pankaj.gupta.linux@gmail.com>,
- "Pasha Tatashin" <tatashin@google.com>, "Vipin Sharma" <vipinsh@google.com>,
- "Vishal Annapurve" <vannapurve@google.com>,
- "Woodhouse, David" <dwmw@amazon.co.uk>, linux-mm@kvack.org,
- kexec@lists.infradead.org
-Message-Id: <755e80a2-60a7-4a04-9eb2-714e89ea34c5@app.fastmail.com>
-In-Reply-To: <20250317172255.GO9311@nvidia.com>
-References: <a350f3e5-e764-4ba6-f871-da7252f314da@google.com>
- <20250317172255.GO9311@nvidia.com>
-Subject: Re: [Hypervisor Live Update] Notes from March 10, 2025
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
+To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
+Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+ anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+ benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+ dave.hansen@linux.intel.com, dwmw2@infradead.org, ebiederm@xmission.com,
+ mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, rppt@kernel.org,
+ mark.rutland@arm.com, pbonzini@redhat.com, pasha.tatashin@soleen.com,
+ hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org,
+ robh@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com,
+ rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+ usama.arif@bytedance.com, will@kernel.org, devicetree@vger.kernel.org,
+ kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-12-changyuanl@google.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250320015551.2157511-12-changyuanl@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250319_223820_348189_BBAECDA5 
-X-CRM114-Status: GOOD (  20.52  )
+X-CRM114-CacheID: sfid-20250320_001055_027374_8A68CDC3 
+X-CRM114-Status: UNSURE (   7.80  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,45 +127,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 20/03/2025 02:55, Changyuan Lyu wrote:
+> From: Alexander Graf <graf@amazon.com>
+> 
+> We have all generic code in place now to support Kexec with KHO. This
+> patch adds a config option that depends on architecture support to
+> enable KHO support.
+> 
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+What did you exactly co-develop here? Few changes does not mean you are
+a co-developer.
 
-Writing this from my phone so apologies in advance if it messes up formatting somewhere.
-
-On Mon, Mar 17, 2025, at 9:22 PM, Jason Gunthorpe wrote:
-> On Sun, Mar 16, 2025 at 08:52:43PM -0700, David Rientjes wrote:
-[...]
->> Pratyush noted there was no way to preserve folio orders in KHO and he
->> also noted there was a need for page flags.
->
-> I think the xarray idea will preserve folio orders, that was a big
-> point of it.
->
-> Not clear why we'd need to preserve page flags. The same page flags
-> may not even exist in the new kernel? New kernel should set the page
-> flags correctly based on what it is doing. Shouldn't, say, memfd know
-> exactly what it's page flags should be in the new kernel when adopting
-> the memory?
-
-I didn't mean the exact flags value, but the ability to have per-folio flags. The exact bits and their meaning would of course need to be part of the ABI. Shmem uses the dirty and uptodate flags to track some state on the folios, and the flags can affect it's behavior (lazily zeroing out falloc-ed pages for example). I am assuming other FD types or drivers might also want to store per-folio information. Having KHO core provide this facility can avoid duplicating the logic in each subsystem.
-
-That said, I don't think this is a blocking feature that should be present from the get go. I would be happy if it is, since that would make the shmem flag tracking easy, but for now I can have a separate property to track this.
-
->
->> Pasha asked how cgroups would be handled, but there was no current
->> support for that.  Pratyush said the current RFC focused on anon memfd
->> and has not yet looked at hugetlb.  Pasha emphasized the importance of
->> focusing on one type of memory to start.
->
-> I'd say userspace should deal with this. It should de-serialize the FD
-> within the context of the cgroup it wants to charge that FD too, and
-> the de-serializing process should charge that cgroups accounting with
-> whatever is restored inside the FD.
->
-> Is that possible?
-
-For FDBox, it is certainly possible. In the current patch version, deserialization happens on boot so it can't be done, but in later versions I want to give userspace control on when to deserialize. So whichever context triggers that gets charged.
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Best regards,
+Krzysztof
 
