@@ -4,80 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEF88C35FFC
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 01:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5425DC35FFC
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 02:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=00VnZr9jO8VuByi8MLDHm6KsHvC5R2pokiPIwqQJpHQ=; b=wUsOEYsW5Wc89uPqfLEa+wVyIk
-	/PQQbvybqNEhPcnP8WvXb4+2Pai/drka4yPnPkZy6rk6UQkag2CeH2ZI94GUe0T1QW3+mc8oKPiPN
-	A3IA5Zi9gGSNTR6rWq/VA8KiSZ6qV1GKndmhICfC6sSO/keFVOUsmKYMWMYLxIxscFXSztpc0yewc
-	qeHKTyytxg/x/ReRQQLkUH4gJ8EtRZPEhAagLxdbshlK/YiS89Kg/dLFGyntT+vM8NoocDPrMWfVh
-	Y9xW0lh9TkZT2DTaqpPANIX+aj6fcX1pd7LVaSVzw7aE3J1tkFFmkmfQED90HZ1AtI1UbMBkBYsPa
-	DAs2YNCA==;
+	bh=ilsQeNiRJnAcOliWxyBDLHi9DId7Z2YXJm9lAmFy6DI=; b=E/a6ym77DUvUDrIGYiyf8E2LeJ
+	b5bhLyheUH9jSHCjjLzRqf2J0uw//ikCFcTuNHifGqWIGVxEn7t7FRf1sKfE405SeQEeAuORP7+Xx
+	fnpryn35u3m3LvQ+BE5/PVE7T1lZT2iSsaWwZQRMJXxDOobk/l2SUMLnT1a/6wHW6GFQlFr+fbUAO
+	chbJnehNPO6A/2iHW4VG8aZHkuQ3NAj7gK8Q10MzL3Z5CeLBKD9o4lAfbekw9FYF0+7OJC8Ir0eDi
+	BrW+sV6K4XBCXr9X9G0ySVYxjm78SxegW/QRNVBi64LhgfAjVPXbzulcF4n6/bpKPvw5hvHgh3P7+
+	zOOLvOPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tv547-0000000AjQB-3rOj;
-	Thu, 20 Mar 2025 01:51:23 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1tv5Dj-0000000Amf8-2usl;
+	Thu, 20 Mar 2025 02:01:19 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tv545-0000000AjOp-0rdi
+	id 1tv58e-0000000AkJh-2JvW
 	for kexec@lists.infradead.org;
-	Thu, 20 Mar 2025 01:51:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742435479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=00VnZr9jO8VuByi8MLDHm6KsHvC5R2pokiPIwqQJpHQ=;
-	b=ihjY/1GiG77reT5r89iSWRTRitC6EhAt0BbqftJFSiuxQbclmt9V9Uk+lOdXvVEJSw3fP6
-	j2BZOgWknEk4uuhAOi6B7dFXAc55nsTgVDUpxVBT/85AgOhAsFQhbmhrT6I8+AZC+IzGdS
-	jMU0s15wvp5szYaH/OP9yDnrmiX+meM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-us51ET_TOn6wmhx3h5TLRQ-1; Wed,
- 19 Mar 2025 21:51:13 -0400
-X-MC-Unique: us51ET_TOn6wmhx3h5TLRQ-1
-X-Mimecast-MFC-AGG-ID: us51ET_TOn6wmhx3h5TLRQ_1742435471
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CACE1956046;
-	Thu, 20 Mar 2025 01:51:10 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E3DD51955DCD;
-	Thu, 20 Mar 2025 01:51:07 +0000 (UTC)
-Date: Thu, 20 Mar 2025 09:51:03 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v10 2/8] ima: define and call ima_alloc_kexec_file_buf()
-Message-ID: <Z9t0h5vvxP+meMkO@MiWiFi-R3L-srv>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
- <20250318010448.954-3-chenste@linux.microsoft.com>
- <Z9p7rwXqjB3vjCpj@MiWiFi-R3L-srv>
- <447b1bf7b31e936ab959b8ba13f09a9c25bb3977.camel@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <447b1bf7b31e936ab959b8ba13f09a9c25bb3977.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+	Thu, 20 Mar 2025 01:56:05 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-2ff78bd3026so447100a91.1
+        for <kexec@lists.infradead.org>; Wed, 19 Mar 2025 18:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742435763; x=1743040563; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilsQeNiRJnAcOliWxyBDLHi9DId7Z2YXJm9lAmFy6DI=;
+        b=jlwA9Nfc60IaXYizbVB3sDRygeOe1l6K2q8sj6rT8I1zO5qPstiZwINuL77WA752dG
+         WCQTjVk8b3Lwsw7w5juaHz8YEDC5ApcK7Ekh6qQjvkghzxKDcInsapYJQRjUuN5iCbQE
+         P3QwWf16HjulEfV9SBveLCNHR2kROcqh88uGp5ziPZPt37RSjbD4go+j+2hhKUkVkIsD
+         rMlZe1EuL8gHCXpysorpkDBhS6uNhSSYYfq5wVjbPy9esA3bSTCqHf4v0PCqjipvjz22
+         Ei0Ol2ORn16tGdAzPRtUwGAbqhZN7jURqgySk8ot9SLoRQ+oH4WS1MzuKOo7v7NaGhKo
+         foww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742435763; x=1743040563;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilsQeNiRJnAcOliWxyBDLHi9DId7Z2YXJm9lAmFy6DI=;
+        b=sA9bHbu4/r0hrVAvlx/ieR30c7cfMH0UsB04VMzxs1Yn+SNMUAD/YvlAdy7x36VDTi
+         ULZupqHKlGN9/+yiBdbygSjNG0zPDcpuksCv/ideWBoWnGCtEF11n+H3X3TowOwIWy4Q
+         2kLVQY0aKEPtCVMPj3aK3ycNyPN6eozvOcqwKQRHsDpgEh9PXG7d8L1EUOZGz5AaycLc
+         zM1HqeYpi4SXae2BzP/kQUbQjHzthAs+U/fx96LCHmRzZ/HpU4dEsYDla3PdfwCjAS/X
+         GmuyaKYFsy/T5liHTK+X6m7Y7tO2EN1/TYaamGIiGfDgf1XeMuzIBOmhAO6Np9kSrYd5
+         N3aA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHxvJYRBTvIYNww2DesHYm+6YjzasERuqfeimZUiEPTjAeSWo593LDIyAJN/lIp6o81AXqVg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwXtyLsfw4usJSLOG9vz6MjBS8j+8PFNRP7ODanp/VPwgNPa+Hh
+	9Pe0WpbSyXa7N1SAwCImv6Ru0Kri+wRcfETcJJopUr8C7xhGaLQFyDEZiCvt+exzF7Ei3hU+ySc
+	22gG1K1If6FaBTqhYuQ==
+X-Google-Smtp-Source: AGHT+IHLp0TM25605mfB4iWKOjzImtCB+u2sC+62Tcd+2pSs/X0minmUzplavXz6x1NXqtyXk3N9lUuGrg30J6Xe
+X-Received: from pgbdo13.prod.google.com ([2002:a05:6a02:e8d:b0:af2:8474:f67e])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:594:b0:1f5:7b6f:f8e8 with SMTP id adf61e73a8af0-1fbeae9141bmr8613381637.6.1742435763548;
+ Wed, 19 Mar 2025 18:56:03 -0700 (PDT)
+Date: Wed, 19 Mar 2025 18:55:37 -0700
+In-Reply-To: <20250320015551.2157511-1-changyuanl@google.com>
+Mime-Version: 1.0
+References: <20250320015551.2157511-1-changyuanl@google.com>
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250320015551.2157511-3-changyuanl@google.com>
+Subject: [PATCH v5 02/16] mm/mm_init: rename init_reserved_page to init_deferred_page
+From: Changyuan Lyu <changyuanl@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org, 
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
+	dave.hansen@linux.intel.com, dwmw2@infradead.org, ebiederm@xmission.com, 
+	mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, krzk@kernel.org, 
+	rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
+	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250319_185121_332759_87E36023 
-X-CRM114-Status: GOOD (  43.02  )
+X-CRM114-CacheID: sfid-20250319_185604_604445_58F01D93 
+X-CRM114-Status: GOOD (  10.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,170 +100,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/19/25 at 12:27pm, Mimi Zohar wrote:
-> On Wed, 2025-03-19 at 16:09 +0800, Baoquan He wrote:
-> > On 03/17/25 at 06:04pm, steven chen wrote:
-> > > Carrying the IMA measurement list across kexec requires allocating a
-> > > buffer and copying the measurement records.  Separate allocating the
-> > > buffer and copying the measurement records into separate functions in
-> > > order to allocate the buffer at kexec 'load' and copy the measurements
-> > > at kexec 'execute'.
-> > > 
-> > > This patch includes the following changes:
-> > >  - Refactor ima_dump_measurement_list() to move the memory allocation
-> > >    to a separate function ima_alloc_kexec_file_buf() which allocates
-> > >    buffer of size 'kexec_segment_size' at kexec 'load'.
-> > >  - Make the local variable ima_kexec_file in ima_dump_measurement_list()
-> > >    a local static to the file, so that it can be accessed from 
-> > >    ima_alloc_kexec_file_buf().
-> > >  - Make necessary changes to the function ima_add_kexec_buffer() to call
-> > >    the above two functions.
-> > 
-> > We may not need above details about code change because it's not so
-> > difficult to get them from patch.
-> 
-> Agreed.  The changes don't even reflect the current patch.  Please remove the
-> entire section.
-> 
-> > 
-> > > 
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> > > ---
-> > >  security/integrity/ima/ima_kexec.c | 67 +++++++++++++++++++++++++-----
-> > >  1 file changed, 56 insertions(+), 11 deletions(-)
-> > > 
-> > > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> > > index 8567619889d1..45170e283272 100644
-> > > --- a/security/integrity/ima/ima_kexec.c
-> > > +++ b/security/integrity/ima/ima_kexec.c
-> > > @@ -15,6 +15,48 @@
-> > >  #include "ima.h"
-> > >  
-> > >  #ifdef CONFIG_IMA_KEXEC
-> > > +static struct seq_file ima_kexec_file;
-> > > +
-> > > +static void ima_reset_kexec_file(struct seq_file *sf)
-> > > +{
-> > > +	sf->buf = NULL;
-> > > +	sf->size = 0;
-> > > +	sf->read_pos = 0;
-> > > +	sf->count = 0;
-> > > +}
-> > > +
-> > > +static void ima_free_kexec_file_buf(struct seq_file *sf)
-> > > +{
-> > > +	vfree(sf->buf);
-> > > +	ima_reset_kexec_file(sf);
-> > > +}
-> > > +
-> > > +static int ima_alloc_kexec_file_buf(size_t segment_size)
-> > > +{
-> > > +	/*
-> > > +	 * kexec 'load' may be called multiple times.
-> > > +	 * Free and realloc the buffer only if the segment_size is
-> > > +	 * changed from the previous kexec 'load' call.
-> > > +	 */
-> > > +	if (ima_kexec_file.buf && ima_kexec_file.size == segment_size)
-> > > +		goto out;
-> 
-> The call to ima_reset_kexec_file() in ima_add_kexec_buffer() resets
-> ima_kexec_file.buf() hiding the fact that the above test always fails and falls
-> through.  As a result, 'buf' is always being re-allocated.
-> 
-> > > +
-> > > +	ima_free_kexec_file_buf(&ima_kexec_file);
-> > > +
-> > > +	/* segment size can't change between kexec load and execute */
-> > > +	ima_kexec_file.buf = vmalloc(segment_size);
-> > > +	if (!ima_kexec_file.buf)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ima_kexec_file.size = segment_size;
-> > > +
-> > > +out:
-> > > +	ima_kexec_file.read_pos = 0;
-> > > +	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  /*
-> > >   * Copy the measurement list to the allocated memory
-> > >   * compare the size of IMA measurement list with the size of the allocated memory
-> > > @@ -26,23 +68,16 @@
-> > >  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
-> > >  				     unsigned long segment_size)
-> > >  {
-> > > -	struct seq_file ima_kexec_file;
-> > >  	struct ima_queue_entry *qe;
-> > >  	struct ima_kexec_hdr khdr;
-> > >  	int ret = 0;
-> > >  
-> > >  	/* segment size can't change between kexec load and execute */
-> > > -	ima_kexec_file.buf = vmalloc(segment_size);
-> > >  	if (!ima_kexec_file.buf) {
-> > > -		ret = -ENOMEM;
-> > > -		goto out;
-> > > +		pr_err("Kexec file buf not allocated\n");
-> > > +		return -EINVAL;
-> > >  	}
-> > >  
-> > > -	ima_kexec_file.file = NULL;
-> > > -	ima_kexec_file.size = segment_size;
-> > > -	ima_kexec_file.read_pos = 0;
-> > > -	ima_kexec_file.count = sizeof(khdr);	/* reserved space */
-> > > -
-> > >  	memset(&khdr, 0, sizeof(khdr));
-> > >  	khdr.version = 1;
-> > >  	/* This is an append-only list, no need to hold the RCU read lock */
-> > > @@ -79,8 +114,6 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
-> > >  	*buffer_size = ima_kexec_file.count;
-> > >  	*buffer = ima_kexec_file.buf;
-> > >  out:
-> > > -	if (ret == -EINVAL)
-> > > -		vfree(ima_kexec_file.buf);
-> > >  	return ret;
-> > >  }
-> > >  
-> > > @@ -119,6 +152,12 @@ void ima_add_kexec_buffer(struct kimage *image)
-> > >  		return;
-> > >  	}
-> > >  
-> > > +	ret = ima_alloc_kexec_file_buf(kexec_segment_size);
-> > > +	if (ret < 0) {
-> > > +		pr_err("Not enough memory for the kexec measurement buffer.\n");
-> > > +		return;
-> > > +	}
-> > > +
-> > >  	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
-> > >  				  kexec_segment_size);
-> > >  	if (!kexec_buffer) {
-> > > @@ -140,6 +179,12 @@ void ima_add_kexec_buffer(struct kimage *image)
-> > >  	image->ima_buffer_size = kexec_segment_size;
-> > >  	image->ima_buffer = kexec_buffer;
-> > >  
-> > > +	/*
-> > > +	 * kexec owns kexec_buffer after kexec_add_buffer() is called
-> > > +	 * and it will vfree() that buffer.
-> > > +	 */
-> > > +	ima_reset_kexec_file(&ima_kexec_file);
-> > 
-> > I can't see why we need call ima_reset_kexec_file() here. If we need
-> > reuse the buffer, we will reset the needed fields at the end of
-> > ima_alloc_kexec_file_buf(). Not sure if I miss anything.
-> 
-> Without ima_reset_kexec_file(), calling 'kexec load' consecutively without
-> "kexec -s -e" in between fails.
-> 
-> # kexec -s -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname -r`.img --reuse-cmdline
-> # kexec -s -l /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname -r`.img --reuse-cmdline
-> Killed
-> 
-> As mentioned above, the call to ima_reset_kexec_file() resets
-> ima_kexec_file.buf, so the segment size test always fails and the memory is
-> being allocated.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Indeed, I didn't realize this.
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
+function performs initialization of a struct page that would have been
+deferred normally.
+
+Rename it to init_deferred_page() to better reflect what the function does.
+
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ mm/mm_init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 2630cc30147e..c4b425125bad 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -705,7 +705,7 @@ defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ 	return false;
+ }
+ 
+-static void __meminit init_reserved_page(unsigned long pfn, int nid)
++static void __meminit init_deferred_page(unsigned long pfn, int nid)
+ {
+ 	pg_data_t *pgdat;
+ 	int zid;
+@@ -739,7 +739,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ 	return false;
+ }
+ 
+-static inline void init_reserved_page(unsigned long pfn, int nid)
++static inline void init_deferred_page(unsigned long pfn, int nid)
+ {
+ }
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+@@ -760,7 +760,7 @@ void __meminit reserve_bootmem_region(phys_addr_t start,
+ 		if (pfn_valid(start_pfn)) {
+ 			struct page *page = pfn_to_page(start_pfn);
+ 
+-			init_reserved_page(start_pfn, nid);
++			init_deferred_page(start_pfn, nid);
+ 
+ 			/*
+ 			 * no need for atomic set_bit because the struct
+-- 
+2.48.1.711.g2feabab25a-goog
 
 
