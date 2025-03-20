@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 394CCC28B30
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 07:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69985C28B30
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 07:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=A1MiJca6rcPrflh+NCZltfjRpcezrNat3ifqNMhtIUY=; b=mZoAuOOfTs3NQLB6E3OcmzGmWx
-	QtU8YMfkw18fuH8GMk7j6oUgkITnQ0/W3KTVqG6WuqcynqqJkquPqDbfo3YamqV8p01Uy3YAzH5s/
-	oG5Wrc0EsiF8kVD0c2SRLKWzX5zhMngOEkeG/z8mEREDwcCnlUDtlmbJiASWMG1VPlmhBtc3cw5nG
-	O2OUN+IbnDYmR597tmxDwNcebKyq91yuGp6pg+7wYrgkv3pbfRoTcpAmUrDkMf1XF+kwGmS7xHA+R
-	c39Yuzqgw/ZMBA5jDQzlz1vUVEkw9WuFzKLoYUQQb0WMyWmispep+87r+6AJwqJNIht86qXKxvDkf
-	70oe/RFQ==;
+	bh=DfSB8xbBdfqB4ulp7UTJyQuaRszLo3ZUS1+3HWEpcAc=; b=eNR74J1YUu+bXEcAt/ttpmllSg
+	2yFtyIqfU1d/gx0yHk4YAZ/0yFnCVQUUrWyo3BQV9YDhkEB9Yj+9IlWB4ReoNRAbVBTIS3dRNpCYR
+	nvMddl8uKNL4/Z+qTCKq0k5nxoaOfw/yzhqXatOv7rwA//t3hpwlGUPhethXxnFacJqWmFxIVy3j+
+	1yPqECEFzcdUKQ7ULNHurRl+aKB+gYKwrYQXjTSzOGph9sX/do8Hr43+jpq3hrsYyfBWDBDZjZPvT
+	TsTpzYzCXPD4wGolc03czz83y4XbRbez6O53ozDJtKXKFMeC0A4XaYcnhx5+o6pUvKEQ+VKyUurTV
+	z4kHBYGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvA52-0000000BNYZ-3eDb;
-	Thu, 20 Mar 2025 07:12:40 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1tvA6i-0000000BNqn-3tHH;
+	Thu, 20 Mar 2025 07:14:24 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvA3Z-0000000BNMC-18Jn;
-	Thu, 20 Mar 2025 07:11:10 +0000
+	id 1tvA60-0000000BNie-2dRS;
+	Thu, 20 Mar 2025 07:13:42 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id E5FD9A4903B;
-	Thu, 20 Mar 2025 07:05:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 238BEC4CEE7;
-	Thu, 20 Mar 2025 07:10:54 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id B0E495C5D8B;
+	Thu, 20 Mar 2025 07:11:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFAF9C4CEDD;
+	Thu, 20 Mar 2025 07:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742454668;
-	bh=ofKcg6Jw4XQiuJNA+UQgX1XP/VvJ056b5xfgIenWamA=;
+	s=k20201202; t=1742454819;
+	bh=UuARulmInnBUADHH7bXdcjHIkE+FWXcsYmX41MdIaHw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aD9hkPNjqy15EuSIzjKCpaOfe6I1L3lv0AbIOUbPp5nVXl0tUm+BWVx5TDgmhj/AE
-	 l79BcGv+F+x/NdW2kUUn/+Eyy6Ipe5/H9/deo1xVyTiVpwmDwfM9HH5+ESmr1B4JSS
-	 qVmPv+0MSBYEdjmWyAw17klsP31h1guQE25x6w4Q/UnxVGtGTeoCObHAqzjWhgaOad
-	 X9D2kBU7LDfZSIeBHG4nhGgW9LQMOECFcqfa4kIsouOKUK2Zs8/+PflABiOf2lCSt8
-	 d22KIax95MOK5mrReAyhevdgCgVA38lbW0XNmM0Je4iqUwU83nVIWmHH3YJrdlvr/y
-	 Q1PbQMW+zyPHA==
-Message-ID: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
-Date: Thu, 20 Mar 2025 08:10:48 +0100
+	b=LNSPxtcIT+quFnMch+1xRe99sSi2+AhhMvgDgUtHtkPqDjHwmeMNVqFGGBKFQF3YT
+	 PLvYOAVUgt+EsFLGPeZo3oh8iJ0nLWEkATaGqBjDu2pu/UauFkyGvbUG6a9eG9a03X
+	 P7YzeTbU+axLToXgOtAIIb4cpHgdqfhDaNgXtm8xRd+q87oBJ4V42Ol/xgmQAhebyC
+	 iYr0HvYbPqk8KOB9Rz71WVSvX572uSNv17ZoYEVSFX/ISWfEaTWjVs6czgYKtJLmSJ
+	 zLULHCG2Ct8W3Pi1qloDBzglAV8eNW5qlWv23gdz49f6HF9boFblxeP5fzXY3/fmCo
+	 MeE9c8uW2V9jA==
+Message-ID: <55a5e3f3-1b3f-469b-bde0-69abfff826e4@kernel.org>
+Date: Thu, 20 Mar 2025 08:13:24 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/16] mm/mm_init: rename init_reserved_page to
- init_deferred_page
+Subject: Re: [PATCH v5 12/16] arm64: add KHO support
 To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
 Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
  anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
@@ -61,7 +60,7 @@ Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
  kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-3-changyuanl@google.com>
+ <20250320015551.2157511-13-changyuanl@google.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,12 +106,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250320015551.2157511-3-changyuanl@google.com>
+In-Reply-To: <20250320015551.2157511-13-changyuanl@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250320_001109_434614_56B790F8 
-X-CRM114-Status: UNSURE (   6.95  )
+X-CRM114-CacheID: sfid-20250320_001340_769737_EE5EBE23 
+X-CRM114-Status: UNSURE (   7.75  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,17 +128,28 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 20/03/2025 02:55, Changyuan Lyu wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
-> function performs initialization of a struct page that would have been
-> deferred normally.
-> 
-> Rename it to init_deferred_page() to better reflect what the function does.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>  
+> +/**
+> + * early_init_dt_check_kho - Decode info required for kexec handover from DT
+> + */
+> +static void __init early_init_dt_check_kho(void)
+> +{
+> +	unsigned long node = chosen_node_offset;
+> +	u64 kho_start, scratch_start, scratch_size;
+> +	const __be32 *p;
+> +	int l;
+> +
+> +	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
+> +		return;
+> +
+> +	p = of_get_flat_dt_prop(node, "linux,kho-fdt", &l);
 
-Incorrect DCO chain.
+
+You are adding undocumented ABI for OF properties. That's not what was
+explained last time.
+
+NAK.
+
 
 Best regards,
 Krzysztof
