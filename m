@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C14C0C28B30
-	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 17:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BED7CC35FFF
+	for <kexec@archiver.kernel.org>; Thu, 20 Mar 2025 17:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=; b=yeLg1ezTluJN5Dcym2yfvMkVBs
-	6CL0fHaJ8NDe9lBFHNadhMgnqkjPyzZLOxXUGJq0zND56gK3kGumToonmh97uNeF057s9jq4JU5yT
-	L1xGlbg28gpIUdcMEShGCgPfxtik6PDW7defUpTVKI3PV3NwpcOLBL/Sw6J+HYu7Nu7CLkx/xWJX1
-	LDsMqoVQyht39F5UD27HBIqjulCuEUhQl40zldt6MeTrWI3YksjumlNNJeiQS67BQxCs38EuMacN4
-	x6ptOYCWK80HWEo5ILYFx61MBl8HkQYNCwmDH/w24PGxMcdNIJhY4Fz1KROywfgQPSwEW0P6V9wOa
-	qLSQ2BPQ==;
+	bh=88p1w7uEcFSCHYKOCDuBHPZGg/x3AAPkfIOOrr6qmRE=; b=42aH+NQNckOVTjiGRemCwp5GbY
+	6JZIUvxl16OcJcc044feVdHOOI49N+jmJzAY/NXlcEcXGD/rX796vmIr9VU7ZqZQJ9EEox0gP1oB3
+	D3YJ3Me2kBoZVPellhuQTuyBfCudEzFDaZVTtOvbHNXlRXTBdqKdvAUm9rsD8uCounH0UmyiqK6I5
+	44xPvJjB3Pm1QeDWr1KtkfbpLSz2Ybi4F/2gSUXVa8NR1bHXSEpyMN6rVgTa56cne3F3WGJRmbJFw
+	WWed4ubZUls8tw7tZ0SFXT01AygoVsEZcYaGSAYokslTjNeh4fdMPW0Ogsc2td2I7hCl6n5pITABn
+	DZyt2xvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvJY0-0000000CmhH-3nc6;
-	Thu, 20 Mar 2025 17:19:12 +0000
-Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
+	id 1tvJef-0000000CnTQ-0xFB;
+	Thu, 20 Mar 2025 17:26:05 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvJUt-0000000Cm4n-279d
+	id 1tvJX7-0000000CmaQ-2iMY
 	for kexec@lists.infradead.org;
-	Thu, 20 Mar 2025 17:16:00 +0000
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-224191d9228so19671175ad.3
-        for <kexec@lists.infradead.org>; Thu, 20 Mar 2025 10:15:58 -0700 (PDT)
+	Thu, 20 Mar 2025 17:18:18 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-2ff799be8f5so1727986a91.1
+        for <kexec@lists.infradead.org>; Thu, 20 Mar 2025 10:18:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742490958; x=1743095758; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1742491096; x=1743095896; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=;
-        b=hpTwb5vLr9Bvq0SRrz6wAXxLHr0I+uAypgGcr6I4XOB95adEYDqp0oXGqx3T/sAMH2
-         KoSpKLdHfYJLoxs/hLXQqnMxqjK3M7qu5vNvTDCpfgAD7QiPMFX/LxGoAH5y/+9tr8Ce
-         3uRcoi83tryog8CPt105yrsXAaLLmexR1IMXh04zYkfr5qF0zZhs+TlloL6cC2EeYG0Z
-         mhpZ4tZrRIURSsS07a4HmE0cIcDn9+90jEldJWHriUJOkoavjzAMgTilGXrPSEdq5DrD
-         RlT33A2sC0vZbhisy1+X91cqoPUu1T+JuLRxKiVdzSZeanVRoMIYxv7r/YmHSq28+LUp
-         1Mxg==
+        bh=88p1w7uEcFSCHYKOCDuBHPZGg/x3AAPkfIOOrr6qmRE=;
+        b=lEptnLmktB/e/BZeoEA03sW/XKu+vAZJt2X2N9Z1rkytTqOWV8lgOzwOhlB7KzE/4h
+         ktfWRkIL88dlUNuVJWbH9D6ofdJzsXFBicIN5ePnP+K9jTLaxSCeHkT+lRNzxU2aM7An
+         Cy2LnZhGwEkMD3oXxHJhsvgeqmAj9dMW/naWwieL/jbImL/dd8o7rEwiLlJyssQMIfyy
+         JA9v1W5gun33qeHTfRqO3EdxflZNgz09MHXe4zYdMJpiV1cl8ZMu+twsxHPXK4IGksHo
+         zKMYn4WtzyI/zNSYP+KHUPZwmYLNPaTDkpbtdOtOKjD2Vn6mzwIpAk8Lreag2DYlCtm3
+         yHZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742490958; x=1743095758;
+        d=1e100.net; s=20230601; t=1742491096; x=1743095896;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=;
-        b=c1g3Jgw6cpXRS8EPBfQIjkPV2iFAkvApa2ReMHy8Q8ax8PHx7guFrMwvePNvAsdlue
-         8L8KvwvEoT8sbZgedT39jzRuPwQ/Fo+FsIL5jQgmEVNYqoy/THUTt6EtQSOQSWoUxp8Q
-         VidjULgsNua7/FOQd+dBTTzZe0CygJDqV7LR6C9Lt22WkYGWAU+iE8sGm6ou2RPYi7vQ
-         /bLfp0MQyViYJCfu3wOhCp7bC8wCSShy6LU/z1GbxjNFT7/L6Z0xDi+TuzRkJZx9U7Fh
-         mv8AaFRV4AHk5qx7Edc6Mf8JujG3w3YMhNOECLvQny84DzV4Uh/0IrGrll7GAmeFofw3
-         5M+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWWfzbbXEdqT+tQ+bp2T4Ujx/U06oBZM/BM59BRfBAKLrpuL8RFFaJnsR6joCvOmDAu1z0ECg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxFXOX2ELAROv82vQ1NaNJsgBpUlJ4lFqKHY+69WOJOxXlup2Mm
-	iPCWEFVAwm6WGwSGfmdeEKF0+JkTBhFa5kzQ1y276tb8sHLfmKDTrCPL0+8f+0g+DG/vS+WUIAW
-	01PmgcNk8BfUcyioLvQ==
-X-Google-Smtp-Source: AGHT+IFSTOZJPhF0A6p4zYu8XqyFCbfj+1u7L3mgdhQb13y/kwPpTEfBMQ3apw/ZGc9/6LxAV+vBXTVj5vs9bXs4
-X-Received: from pfbkq8.prod.google.com ([2002:a05:6a00:4b08:b0:732:6425:de9a])
+        bh=88p1w7uEcFSCHYKOCDuBHPZGg/x3AAPkfIOOrr6qmRE=;
+        b=NrvXauk4O0rJdGmw4kiTjFTa4+67V7FlkNmtkCNef9tiBk6bOteiRJNCZeZWe5qeTB
+         sHkSA03Ey6FkrbA34qdTt3cqNCECAvKGWzep2whFV5U15G4BVLdOEQYiHSY2U1sboVPU
+         ePjGvUZwZYOAYN5h1y4QTqvjaoBj8tSnweoh3XvxQTfmQebEPsSUS3fsKupcIHW92Rxn
+         UbGXYssvQkOQxvROwrFJJlY1SGKzQMm9LFXXxCz3MfFBl7JXaffJ9wf0MIegjU7VrqoT
+         1GNPRyvh/ANqLwINC9c+yJ+wf9JsoUXEu8HbJT/n72NXp7qAoVGkusgQ5dK0vR3/gDdl
+         1n4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUYCYxm9NfKNUyHP1wpF7y8cem8ksBGdS/L1JNThf5pCAud7VStUn93tslCeYIH8ljh52NNpw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzjbZTUq4QgNexTjy2zFsNEGgOGhlb/l//vcrx/fw75uO/t9Cyf
+	ojTIMPVx4H8Km0FvTJJuc5Wzpocw7IElD0XCZNq/vzE4IJgNR0a8gNemR6Es0OuGD8zRci46D4S
+	IPqoAKBvmb+qkEggKSQ==
+X-Google-Smtp-Source: AGHT+IGpaoCewgRhvYW5fa+HpkkDxI6GYIKVShvL+72MGW8IdbGecEsEYFRFVCnEraF7VtF/dPJ/f4MPXZFrOdbn
+X-Received: from pjbpq9.prod.google.com ([2002:a17:90b:3d89:b0:2fa:a101:755])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:b55:b0:737:678d:fb66 with SMTP id d2e1a72fcca58-73905955db0mr383661b3a.5.1742490957851;
- Thu, 20 Mar 2025 10:15:57 -0700 (PDT)
-Date: Thu, 20 Mar 2025 10:15:45 -0700
-In-Reply-To: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
+ 2002:a17:90b:2707:b0:2ff:6488:e01c with SMTP id 98e67ed59e1d1-3030fefe3e4mr5163a91.29.1742491096376;
+ Thu, 20 Mar 2025 10:18:16 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:18:02 -0700
+In-Reply-To: <d5f7379c-c66b-47f5-bc97-eab90ab34346@kernel.org>
 Mime-Version: 1.0
-References: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
+References: <d5f7379c-c66b-47f5-bc97-eab90ab34346@kernel.org>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250320171545.2324955-1-changyuanl@google.com>
-Subject: Re: [PATCH v5 02/16] mm/mm_init: rename init_reserved_page to init_deferred_page
+Message-ID: <20250320171802.2325561-1-changyuanl@google.com>
+Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
 From: Changyuan Lyu <changyuanl@google.com>
 To: krzk@kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
@@ -83,8 +83,8 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
 	tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250320_101559_563094_1EFDF59A 
-X-CRM114-Status: GOOD (  11.29  )
+X-CRM114-CacheID: sfid-20250320_101817_683404_533413E4 
+X-CRM114-Status: GOOD (  13.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,27 +101,29 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hi Krzysztof,
 
-On Thu, Mar 20, 2025 at 08:10:48 +0100, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Mar 20, 2025 at 08:10:37 +0100, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > On 20/03/2025 02:55, Changyuan Lyu wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > From: Alexander Graf <graf@amazon.com>
 > >
-> > When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
-> > function performs initialization of a struct page that would have been
-> > deferred normally.
+> > We have all generic code in place now to support Kexec with KHO. This
+> > patch adds a config option that depends on architecture support to
+> > enable KHO support.
 > >
-> > Rename it to init_deferred_page() to better reflect what the function does.
-> >
+> > Signed-off-by: Alexander Graf <graf@amazon.com>
+> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> What did you exactly co-develop here? Few changes does not mean you are
+> a co-developer.
 
-Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+I proposed and implemented the hashtable-based state tree API in the
+previous patch "kexec: add Kexec HandOver (KHO) generation helpers" [1]
+and then added `select XXHASH` here. If one line of change is not
+qualified for "Co-developed-by", I will remove it from the commit message
+in the next version.
 
->
-> Incorrect DCO chain.
->
-
-Thanks for the reminder! I missed "Signed-off-by" in a few patches from
-Mike and Alex where I did not make any changes. I will fix them in the
-next version.
+[1] https://lore.kernel.org/all/20250320015551.2157511-8-changyuanl@google.com/
 
 Best,
 Changyuan
