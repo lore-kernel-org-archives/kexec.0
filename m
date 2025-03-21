@@ -4,73 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 70C2FC36000
-	for <kexec@archiver.kernel.org>; Fri, 21 Mar 2025 13:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC931C36001
+	for <kexec@archiver.kernel.org>; Fri, 21 Mar 2025 14:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2bzQ39oJ6FKRT59C+Uimbt2z4p+cGnCUiJQU6Ut1RkE=; b=KBegGfy6BS3PG6XuVxL7e9W8L+
-	pVFIpjZ/uiGBP3CIt4M81F359iHU0x67UEJZuMS7x/GiegGTolOVozseU10RcUuTtft/oODDp6zm4
-	g3r3CexZprzgN/Y8ni8z+tVUS8MIAY+UHsMIbJ6t4xgsbPTLP+83ml87w+YQlcO6128fX6HtHCNvl
-	qWO5ql2bJZktni9DC5dPW/6H0qTpqF8MnhCODsqRdyxNwFavZp0Ow2iVQUak2C2aSCziUf912rrSV
-	wbDmsNTT6jUhRj5+e7ty8HPacqRAAZaBb7I761RvmpgzRcPT0VMOt7uoRpHzANfFwQrIYc5/cTaLB
-	QPuNl10A==;
+	bh=r19dy1h/efUoSCKQjibx6+2/93JkupqYItH8fkWVixY=; b=XbM2a2sJDux8QHDNSuc7io97aA
+	Mz4O3YM01fLm99vP2U4RSBly8+vxUM5uVUX7lPES0TBvnh+LEGE1zm1GtEZOjFPn1fcjyCRe8xhCd
+	TLykpaQdXcXpz3BYUg8d6QKJzbqtjKlrJ3PCg7PWWEmPoeAFZLWeeLIV8wYYQoSrATauOarwirvbi
+	LQTFdZVO5ivB2FAEh+gqFiCTVg4Q0ybTlqdGlVQSoKce7lI17MPJSmQEwBS0BvCAm9jo6Baevaaom
+	5FCgD9bmUKJh3gT306HaoEA8W0gh/bUyvxPnxDY5xhantHQb9lLXQN+fx5GBbXQaVOYaP6qEVNLPC
+	lQtCfcoA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvcjb-0000000EyQx-1ja2;
-	Fri, 21 Mar 2025 13:48:27 +0000
-Received: from ms.lwn.net ([45.79.88.28])
+	id 1tvdDh-0000000F4tl-3KCr;
+	Fri, 21 Mar 2025 14:19:33 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tvciA-0000000Ey81-1xIA;
-	Fri, 21 Mar 2025 13:46:59 +0000
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net AFB0541061
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1742564812; bh=2bzQ39oJ6FKRT59C+Uimbt2z4p+cGnCUiJQU6Ut1RkE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JEshP6ni6yTLpiaYeOas9Jrjng77WDd/fjCMr/gyDDWDqacAJ+YuUA8xDXXFER0bT
-	 skcsq4eOugcFKMrAOhAi5bJelZY5jeMWSuiex8mG+kjmeigm/4eb4IX4uDvZ3rhzjb
-	 uTPpLNk55qCifj+0RtgKCO8lr13t4OjPqyVdNXdKWcdpjLB8vdRS7mmYjWkYli1QVF
-	 T6JGg6nJ5dp6Iys4YrQyveK3B7Qdrjs1qbajVQPpCSuKoxwQMgI28OvBtX2zxUm4cl
-	 YmbNWfFdDGyr3sOosFT031TE7EXwH8N3uAYsRNSTCevKWhC1dLLjJq+wYgtYrWpFIA
-	 t+cnjbyGdB9jA==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id AFB0541061;
-	Fri, 21 Mar 2025 13:46:52 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
+	id 1tvcWY-0000000EwOF-3MVR;
+	Fri, 21 Mar 2025 13:34:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:In-Reply-To:Content-Type:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=r19dy1h/efUoSCKQjibx6+2/93JkupqYItH8fkWVixY=; b=FtbYW/LllHDtOz4StYRGsvkso/
+	9481CTPssthokqxJmIknzPVeBEKb1zaej7gQYagzTCdYk6kguuqBYURCuB8MbXZybAHCStAGxiFZ5
+	+KisczDDtnA5SlFXbZ2MwrgkWjEJq/ePex8XuyDxO/k87ZT3avaBbg0c2kkosBCBO8PatcrBY0akL
+	t2Gb9ZM30IA9Jytzw4xs9HuzyhKedV1naVzzgWWdu2TDgbW9Q3fzYLJqmI4+qJafXwqWYpkjPR303
+	pHPI/G/D41sJBwbP1/wnu4HZlTxMb+6aPkwhDbz0LKCS516JJR0x8VaJzOXxjRN9p/e7Z9P67Sih7
+	vXKiijkw==;
+Received: from mail-dm3nam02on2060a.outbound.protection.outlook.com ([2a01:111:f403:2405::60a] helo=NAM02-DM3-obe.outbound.protection.outlook.com)
+	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
+	id 1tvcWV-00000004MPK-3PVU;
+	Fri, 21 Mar 2025 13:34:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SvHf3KddWjGaG7JFvOzRSXMj+VF0HVo5ogsnVMc5aI3+/8LNsasWSBFUz4yzg+LrJKXAgzF2FSNtbHv0HShCinZwoCvTLKxtbKllrGWnPTCgivZdR+YEb9RLt3WgtHTe7PeDUZjHclj4J41BfZ0PmSAux5Lr2jfpnA8bAA9Tem0lhvnaAywoRMMCDphdGdEA0/E3SfW0UKHFNT5aVBF6JYkXYiXW/bXY2wloh58GX2hCOkIl7SA+mgmBe77kQ3aOl7y8WII+lZgBesdFLBwFcFsJ8StcuEIv8Te15suyzj31mJliXTrnDMHWMVcggFhtoxoRxHPV6/H6fYQ12AkAqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r19dy1h/efUoSCKQjibx6+2/93JkupqYItH8fkWVixY=;
+ b=s7ClVZVQyMj5zOGrZ6OZhxsXkSKE9sicHZUVJ3VZKXCaKOF2Di1E3FKS69FACiq7s4yU0wQQO85+0XOyM6q1kfgKmbaBPrDw14q1/7AvZaPPVN7xH705JLQhv0b253nvQ+Qi4lzKiX/XQQj2jx/jUwXyq2JV0OGinW+B+cw+nzrlnjAIVtn1VOwJsHC9y3u4KAqmAZAEmFFPO74BKAe4D6lGolaD0kTvdY9aur1NGUaSmy8b3fIeg9kJEBd8Qtb902luF9fG7osp/bcnm1DIoQI9p7PG11qtfp7WvjQHc1CvCD3Ymhpwf7p+Cyu5ds/QPw+H/5+vR6xCajhM4lQLEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r19dy1h/efUoSCKQjibx6+2/93JkupqYItH8fkWVixY=;
+ b=mmUwS8GS/ixtccZu0UTYiz4Z1lq0GQ2UlGW9EszZ4e8SkoG8R7NrMFdI1Xsyp6KLHwFY3YtJtUL953sg02OGcoeQfEY3E9P5LcfqJcuisxEBpO6DzHF61pzJbhc/NKyT6El7jXYq477a4KOprRbo5Rkk3Fh+y/b7rj0wioeF31umebLdrjGmBpb1KIl4xdoVOAhP8/nec6N9lLUlNPDZUPbtMOsXqyhs0kFvlx3baFcjBWbGGe6bWnUC4VUmUIn08oTW9aX8Yfyzrq+mboxUoiH6KWjQkpXovy0CaE/JYPm0v0XNNAunPHBDfQd69pN1vezmvJxO9AqI/AXBF7ZkEg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN0PR12MB5761.namprd12.prod.outlook.com (2603:10b6:208:374::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Fri, 21 Mar
+ 2025 13:34:49 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.036; Fri, 21 Mar 2025
+ 13:34:48 +0000
+Date: Fri, 21 Mar 2025 10:34:47 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
 To: Changyuan Lyu <changyuanl@google.com>
-Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
- ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
- catalin.marinas@arm.com, changyuanl@google.com,
- dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
- dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
- hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
- krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
- mingo@redhat.com, pasha.tatashin@soleen.com, pbonzini@redhat.com,
- peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org,
- robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org,
- saravanak@google.com, skinsburskii@linux.microsoft.com,
- tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org,
- x86@kernel.org
-Subject: Re: [PATCH v5 16/16] Documentation: add documentation for KHO
-In-Reply-To: <20250321063356.381646-1-changyuanl@google.com>
-References: <87wmcj69sg.fsf@trenco.lwn.net>
- <20250321063356.381646-1-changyuanl@google.com>
-Date: Fri, 21 Mar 2025 07:46:51 -0600
-Message-ID: <87frj6o5ro.fsf@trenco.lwn.net>
+Cc: linux-kernel@vger.kernel.org, graf@amazon.com,
+	akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, rppt@kernel.org,
+	mark.rutland@arm.com, pbonzini@redhat.com,
+	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org,
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 07/16] kexec: add Kexec HandOver (KHO) generation
+ helpers
+Message-ID: <20250321133447.GA251739@nvidia.com>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-8-changyuanl@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320015551.2157511-8-changyuanl@google.com>
+X-ClientProxiedBy: BL1PR13CA0416.namprd13.prod.outlook.com
+ (2603:10b6:208:2c2::31) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB5761:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94e8a737-876f-48a0-8728-08dd687d267e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?686swMVR76sdl35h7IhFiCO+06XxqMBVtd9wSydxcgG6fgrhc8JS4EbTpEjU?=
+ =?us-ascii?Q?hFVQmDYOesHEiBeYW6N9gavUexIvlkDiFIjDNaYI6WQ+hCqZYp12f3nzI0HW?=
+ =?us-ascii?Q?7DQjCC8iJKQjnENGAcOtIAmlIJGIISYMNL+MtbLX8HuWa5crrIY24j+wkCd+?=
+ =?us-ascii?Q?th0zrnHtjSK+UAZAa8s5T3eV7KDtySYxo48sRh/THxKU9yQETCiiDixByiSq?=
+ =?us-ascii?Q?U43Jg4c2wr/5OjF39AavHJax4ovBLtlX8Y//WYFdlbJ8OP0Cw13labsBuB5y?=
+ =?us-ascii?Q?5zJSCVS7C3XhFCvRPCwsFoYTsuwRyu18WIdw7FerMqZjKaW2RvJt6lT4oyR8?=
+ =?us-ascii?Q?BMW+U3DRVR5Znl/moiCIocgfrdOBmSuiXm5Aryx+SJLu4QNL57pLJBhy59TT?=
+ =?us-ascii?Q?JkR2NqkNJMAXC5uTevmVQvyM6Yv/chGa1ZnAFtGL3+ChZxqBPmGxSyWFjr46?=
+ =?us-ascii?Q?Rif8izTlzVX8tC8RqoDWyNw4WhS0htc2Fi1pHoUs2XEkSEMF/Z7/ARw0qd9b?=
+ =?us-ascii?Q?XMwWNRFcYXfPHRiefl68MnspO/q2wByg/zAatP20d6FZNDSQNXdtBaeN68bo?=
+ =?us-ascii?Q?BAhBMywJBeiQkl7oob1vi4Lr9qmqjLtmjLXi+pSoUdFd/QJw0aEE+DjLrHu/?=
+ =?us-ascii?Q?4HxuBb6xXoAH37p3+lGP4VxVtjze8qx3wMxqzMv5RmQoPwJuLqrvESIpVjAe?=
+ =?us-ascii?Q?39wBBl3Yq6sh/s/O/1Grzm4iipXr2Tm3g6Xy+NWrCgigQziBL1TOFm5OtCIV?=
+ =?us-ascii?Q?7AsMKXi277ZgFyj1CMVrNIb2gT0sq1DGGaEYj28RX4FxsvBsEjdqPnV/nAzZ?=
+ =?us-ascii?Q?jaJw94cc87u9WtlZr+ibcBL8Vp3z8T1GNMDQK0797dCPec2YbgTn+lba1OWA?=
+ =?us-ascii?Q?UhbGcOSoSjfpFgsOjwcNiI5cz5NmxxkBjFZ0j2Svdg2U3aDBJLIICmcRYtYn?=
+ =?us-ascii?Q?XrYdDdu8jkcV5Ng/buNEtqea/UqAdf7FGD+11Z9AYHiIHwYkqMDVt4tiXCV7?=
+ =?us-ascii?Q?AVgjVJP5mlxUPmm0HWG9811uoTmaXZhqkf5FTInJ21/9R0CyI+jQOV0Qbo+6?=
+ =?us-ascii?Q?EwC8YVDjGTDDpikq0PodkovRuwc4BhbcO92Pz/DtXi/Fbtb1xqmn6dyFg529?=
+ =?us-ascii?Q?s/IyJ4u9gtHdRKRy1iRnTzqMNiyzVFJCRdvsWdtEvbNXDK/7v4l2S/9Wzb0+?=
+ =?us-ascii?Q?6aJ+tjObpvzbQHMQQR0AokukCOmq2bJRmmAVQHKXU53McRsaxiQJT8WoD64I?=
+ =?us-ascii?Q?2/nvxylGGksGQtIsZFNJgPvopAMQdJaEf+uIuSngTig7/C+22mgah9UnZUgG?=
+ =?us-ascii?Q?zqjqWut3TQdVTaXuboIWCCSuoSYo47v6EeSycThHBw6AT6Dn7Sefhlzh5aOK?=
+ =?us-ascii?Q?ocmeV0z0IarGesys68ZZyVWejfoS?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mtjm435sHx8Zw7oJLc0CovVcZP4stk6QDQJEa5WMyKEXLFhxLLLbZvhuqsVF?=
+ =?us-ascii?Q?jF0GDHecfZctrKWvDQrjoThdraTR76K9L9TjDD+bLrObqj8cZkvZcbT9AwIK?=
+ =?us-ascii?Q?BtMjSzgQeX5JCn1aVcxKJhsQ/mzW4ZFBo9c4Bwx6L8F0ffVThQgRTJZ0UZbi?=
+ =?us-ascii?Q?m2ngJHEt7lOqsHQ246HTfU1UifitSPwi+sUlIEyizut2N7OtesCavDCD52/o?=
+ =?us-ascii?Q?Hsvs9CN02iVUlENrDSULCYI6ThpQGelQMY1X0zmUzxYSmSihN29iIp2Z8SSa?=
+ =?us-ascii?Q?0yTWMBK4N4PKplJVdsOlZlK6Zn+2PqjaHHteo/GlSnd5PIVfyuhT3HPhXQbd?=
+ =?us-ascii?Q?oQ0vstP4WqeNRITkifPBy3CA0uYxCas5IQmp9LGU/k5RgKsc+NugyZ98Z3Nl?=
+ =?us-ascii?Q?YUhxxmt2rly1CWhK+FTKra9s+dE38FU8qEDrX3wVS/QpU1bGwU/5biNSGiJV?=
+ =?us-ascii?Q?HmQaxEyCRHXplw/nG7jl5+o45C1Ha71IOMOmwyjUp6iRNVfPFKJksmNna9Hg?=
+ =?us-ascii?Q?TpVDe95cWGlc8yTfAUmK9eVQJHZp256OEr611SC0NIpAvLyS4lmkOYreEaY6?=
+ =?us-ascii?Q?KL3y07Ho1JV1jc3xcbnEeEmO6CMqyz1yrPGfh69Vt3M9p6NKLINYrOVwXd1N?=
+ =?us-ascii?Q?XUGLoz0vsK05byC4pE6wiNjxrEBXag6iWBjeTSOEC067a4nV8omu+0YT6erd?=
+ =?us-ascii?Q?MmpPO4TJtUeMBnhijTjCJepXm5talYhkwBPZUckoIScFGSDwAjpAmj56yNga?=
+ =?us-ascii?Q?HcmzGUShKVVwy7uQblizjHWkf/wLabxExKS/LgVrn4Jr/UUiXO/4BRsnGxEr?=
+ =?us-ascii?Q?n2KqvBhPOfs+13SqxnQ67qWrBx8T2MoRzgRYPGB+vUtYP0b+/YUQWOjy9BRW?=
+ =?us-ascii?Q?Sjpp34nA50pZfK7SjBL1Hn89kWhLfSCqyFrSY5TRaHPiPubA1W6ZvInmAQFU?=
+ =?us-ascii?Q?XLg8CWYfh2Y0C3x35+869NsRa2paHHp3mkcCsOQNhoKKk3nXFx/zaf1yV0O+?=
+ =?us-ascii?Q?UVWDsDrc/ZfFXhHWn3ALS1w7GNn0CUCnAjp6j/GIbYTqMsfTg+SapU3x2B8J?=
+ =?us-ascii?Q?RlxC18R4iRgdoNl3kALUVG7k5JiIG7mF5M5TjK0ouh6CwnIavGFbuBTkagwf?=
+ =?us-ascii?Q?NgmHHot+rTYGYIemrAZTN/Ca6enLUvgvgzVm9JW4nlRKJvcxv8eHWOHIkYME?=
+ =?us-ascii?Q?tx4rtzGTzidsXZ45COBi3aPDZfR2LBttKiHmZdZYgFCm1pepZGHu2jWk/rX6?=
+ =?us-ascii?Q?cLvL4FERdM0Sn4tfpY8kBdmsipLvjGU8Asy9L4np22wmSy9XtOF/NANFAmHn?=
+ =?us-ascii?Q?0D9iqJsYvKUnXJcQd8yr26jX+YikUVM/xlbefRJFAvl5PUAcR6USTZeCknHz?=
+ =?us-ascii?Q?D38T2wACEj4rsEMAnE/2glfusyJIicr9aEazyNVpCbYLVUfyvZF3MK0jB3DK?=
+ =?us-ascii?Q?yr+rUoEg6FaXEGwZstgI0W/VebiWgiCxuSuZ0nv9jYwcse35VcVoCWgj+Dgw?=
+ =?us-ascii?Q?qpG6g0fzP/4ADB3yzkErYTSVh/v1SR39RsgJzPAOb0bBary5ns6ZGA/oE7GA?=
+ =?us-ascii?Q?eQS4kHTaiBryVFSJaGY7X/GWPa9VuLAk5E1iuywE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94e8a737-876f-48a0-8728-08dd687d267e
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 13:34:48.7320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2IuKN+c69obwKlXgvMZcNaAn7QIs6xSQ3A/LOHPLvALE5hVpcbucYwMIZQZ7Ol0j
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5761
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250321_064658_497428_1765F231 
-X-CRM114-Status: UNSURE (   7.85  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250321_133455_903364_0D5B01BB 
+X-CRM114-Status: GOOD (  17.29  )
+X-Mailman-Approved-At: Fri, 21 Mar 2025 07:02:13 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,17 +185,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Changyuan Lyu <changyuanl@google.com> writes:
+On Wed, Mar 19, 2025 at 06:55:42PM -0700, Changyuan Lyu wrote:
+> From: Alexander Graf <graf@amazon.com>
+> 
+> Add the core infrastructure to generate Kexec HandOver metadata. Kexec
+> HandOver is a mechanism that allows Linux to preserve state - arbitrary
+> properties as well as memory locations - across kexec.
+> 
+> It does so using 2 concepts:
+> 
+>   1) State Tree - Every KHO kexec carries a state tree that describes the
+>      state of the system. The state tree is represented as hash-tables.
+>      Device drivers can add/remove their data into/from the state tree at
+>      system runtime. On kexec, the tree is converted to FDT (flattened
+>      device tree).
 
-> However, I think concepts.rst and fdt.rst are not not end-user oriented,
-> but for kernel developers of other subsystems to use KHO API (I also plan
-> to include the kernel-doc generated from kernel/kexec_handover.c and
-> include/linux/kexec_handover.h here in the next version).
-> Should Documentation/core-api be a better choice?
+Why are we changing this? I much prefered the idea of having recursive
+FDTs than this notion copying eveything into tables then out into FDT?
+Now that we have the preserved pages mechanism there is a pretty
+direct path to doing recursive FDT.
 
-Yes, I think it would be.
+I feel like this patch is premature, it should come later in the
+project along with a stronger justification for this approach.
 
-Thanks,
+IHMO keep things simple for this series, just the very basics.
 
-jon
+> +int register_kho_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&kho_out.chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(register_kho_notifier);
+
+And another different set of notifiers? :(
+
+> +static int kho_finalize(void)
+> +{
+> +	int err = 0;
+> +	void *fdt;
+> +
+> +	fdt = kvmalloc(kho_out.fdt_max, GFP_KERNEL);
+> +	if (!fdt)
+> +		return -ENOMEM;
+
+We go to all the trouble of keeping track of stuff in dynamic hashes
+but still can't automatically size the fdt and keep the dumb uapi to
+have the user say? :( :(
+
+Jason
 
