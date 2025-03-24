@@ -4,160 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27231C36010
-	for <kexec@archiver.kernel.org>; Thu, 27 Mar 2025 13:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6241CC36013
+	for <kexec@archiver.kernel.org>; Thu, 27 Mar 2025 13:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9nAG/qQRQpu//rLtAVyPzvPWzctU8u3buhONBO6yYrU=; b=xufd1kbG2YdH08xet+B8crOLhw
-	TyImprHyTbjBtRjjxSIg7MMBzD1QGbzkK0dMqKhH0hezByX97Hijdfu9u0f23gA1gjm/AyI/liyKs
-	9Wbd3xtXD3c5ynsfOiq5GPcK/rnL9T0dGbjdt6nSR1fBLLTT1CNCUuwvYJ64c/E3ydZAmVid2W3EO
-	C9eyY+b0qoUKikGOK8zZJaDa637J9DXEd/vjZVXHIG5nxtk/sJ825mpEpC7yMQoCoecJGU+Rpp03H
-	YXQScZBpV3udV6avVRLrfpflg4glBWmeIt6AWHKXZ4Z+v33QcUmjJAdAZFpF8IhmVpmlznxoa314Z
-	Iy0E7J/w==;
+	bh=tauycDhLSHK8+Z4SEw1ULV8RR4SX0dqi01Ofyz18GyY=; b=z1Is1aYD3oFrQWNSgiCwDxzw/v
+	htrQSt1JbwPc4OvIRx2hgPA8/J+Tfpuxj2dGZ5jV4vGLwkU0pRgdLVox0CyJm/Q1E+ysL7u7mJMwk
+	wDcPEdwmRq6yWCVXIXqUQJkutxXL4Q8liRCSu3rKY2WMsmD2GxDicbzOvdSE3CaMjJdyPsIWuNywn
+	gt6rkh6ArhdYUO5soNmkKK1PV6O6eT/IcHUuKUAMW5SjZeZ5y4oNkMZOtyMLfM7pivQ6w5q/MeYQm
+	1jev9TAOIGrWXAQA6GFkF7Bp8+V5HQEBWIV+/1/t5F8Ecd+CMJD9F3h9hF2X3H5mBEhHleuTuL2rX
+	3F4zdpWw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txnTp-0000000B5yk-3oWS;
-	Thu, 27 Mar 2025 13:41:09 +0000
-Received: from mail-bn1nam02on2062e.outbound.protection.outlook.com ([2a01:111:f403:2407::62e] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
+	id 1txnTr-0000000B5zQ-0SlY;
+	Thu, 27 Mar 2025 13:41:11 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1twQUR-00000001bTY-1BqU;
-	Sun, 23 Mar 2025 18:56:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JSyMWh8nS8h/04iE80vfCLbsXZLU+/8sq+ceFexk3bKKOGwUYjsDEX2Z3ABdh93JSzKQfZt+3iB8A268Y8E1Ko/1SFMK622q9iht1yzIsciaQlqzLGwuRI2qFxsOEvlpFc16ueksyDGSqIp8PwT9lfbOn2pe9dPFN2Ep20j21XFw2vkOKhrP8AQer9Id/68nKDpHpZN5fv4BxBPpK2dTwJrv13L8jTmkcgmw+7NADlO8Y2Qsna9JnupG+vhwxr9dp+0J0+epkNZFwcnTzIK6ooSUN9mXGzBHhoEVWz0ZrZFDoe+on/k1RGzEU/t+WqGIUDdFtlkUi/hU0xHUb7UbEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9nAG/qQRQpu//rLtAVyPzvPWzctU8u3buhONBO6yYrU=;
- b=I7XBgcviTpqY1vuFFn0u1EU/8YTHz6X1rHf27bDvG5MiypDPfPMrKSngU/i2OYwaCSxb388V+7J3bIdY8BYThWYSD3J0kORj0+G5/DIPLAq4iE0q3h6AomYkj6U7rUEtNk6gwE9hUlf/rUAPg3L/7DGUW7Eqy7opqQ18mIqpQ+UJKVzsdBUqOqEEx9y6/diwozLqX1MyWHvOrvr1HnxeLgd8pSnRZDXB9jnhGt4knTiGTxgkudrzKOvfdewDxOMvQ1Ltcim/uweiI/P3a9Twrt/yuFlxQdCtIjtDLQuI4OQSeBbbw+w1Bik5h+sKyZdNLm0h6R6z8CA52xsWjOrdKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nAG/qQRQpu//rLtAVyPzvPWzctU8u3buhONBO6yYrU=;
- b=UngI4r6C7vQ2n9H+gtGZhws6/qrBhSx43bAEGwBYrUdAW+CawijtqyIRTMjHgQxA/4DD13N8Mxsg8nkCW5c/2+BuePkX8ibVxDuWzzM5B6rTPDFRCUPq23E3JgNi0N8irotbUaYX95EQNaQC28LGn8hdkfIWmhYsHj7Wn+OA+bFRoPtJN/pUGcB8da5Nd04Dp0YUWyXIOhuSoGOZvVPLjoWUlLef2hzb37ApEotjdNLIqm4DDJsbbrDrpYEYAwopSGgQ/TZ3DhnE+4cvkJ+/ef0fgENegAC0Fo8/ZRplLW1M13V/yZdVc2gVLyf/IT1Fkfxs6H3XxRrvffb9NSJI9Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY5PR12MB6297.namprd12.prod.outlook.com (2603:10b6:930:22::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Sun, 23 Mar
- 2025 18:55:54 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.040; Sun, 23 Mar 2025
- 18:55:53 +0000
-Date: Sun, 23 Mar 2025 15:55:52 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org,
-	robh@kernel.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, rostedt@goodmis.org,
-	tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z+BZOKSpyPA1Pyu+@nvidia.com>
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-10-changyuanl@google.com>
- <20250321134629.GA252045@nvidia.com>
- <Z98Lmo50h5RboFXq@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z98Lmo50h5RboFXq@kernel.org>
-X-ClientProxiedBy: YQBPR0101CA0123.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:5::26) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	id 1twZGK-00000002APL-39oS
+	for kexec@lists.infradead.org;
+	Mon, 24 Mar 2025 04:18:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742789886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tauycDhLSHK8+Z4SEw1ULV8RR4SX0dqi01Ofyz18GyY=;
+	b=FgYbdGRNCAgpSn5cUClOdMTia/xSZtWYcc28/vt6HsAoS46bJSo90RSHO+kkW2ed3G4RNh
+	BNRPFvs7XGF+HsUJdOfSbxzqqFXlwgPoU8noZPfBhcEsinuz3a6MOCKpdwS+HdUnPnmJY4
+	lUhxDJJPoUzK2lvhiiBJTOuPYO5PKBc=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-19-L-yiT-h-P12QrZHuGqrm1Q-1; Mon, 24 Mar 2025 00:18:04 -0400
+X-MC-Unique: L-yiT-h-P12QrZHuGqrm1Q-1
+X-Mimecast-MFC-AGG-ID: L-yiT-h-P12QrZHuGqrm1Q_1742789884
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5b3819ff6so152855ab.2
+        for <kexec@lists.infradead.org>; Sun, 23 Mar 2025 21:18:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742789884; x=1743394684;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tauycDhLSHK8+Z4SEw1ULV8RR4SX0dqi01Ofyz18GyY=;
+        b=cY0FcPncyXeIRpWK9qlXYp4nMgSw49TTzKSnsxl0YzfYD/Pl2IP1VM4ovZ4UUWiGOy
+         Gs5RxyaszIWZgcYliuWv+fjgmpc+4cbf2Bdmb8W0ALLAiN/BLLAbMVh6McAVUeYB7XEs
+         IFAMAf7fpa66WTV7uenLUwW5nyfvnKNCg1Wh66QeDUU6adf9wPH+9Qd3nIkiWzSx8SZx
+         mP7AgF9to75RT0knjtNeB47ceWCq3e/SFk4TYaSv2Vu8VIiK24V8A1hCwocEsTDBikTk
+         wOOI/a7qg5qDlsBDKAd3lEXtce9zJqy6n5CuXSqkqPcxKatrcM+cWR+V7ovtQjrQHKKY
+         QIjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUinVrkiyINprcqn4YZF1j9mrQU932BT2c44p3xmBBzsAhPe1XpVNeTB0OyWiiJCF+sDBO9gQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw95jccDatvmObXf1GrZ6Hq/FUJgP21D2slTrH8DvT96z05H4uK
+	dMWlqADPxfgIUIOAiQ7lFj+N92E89AVNQ7j7KtHWSa6+QjJjfIXN+bhDGiRW8lNhir+nzUbMM2q
+	nn3lGRA0QWXf5PJs/WPVGoL1pqphQt+uIcYj/8wP347mWMXdDvYewZMbnKlP0wYrw5VjDHtKP9C
+	cvIrvCVmVMEioh6Gl8HLia767EZsfVNv2z
+X-Gm-Gg: ASbGnctOvsQtDsi+eW7Tukf481nKRZFcqR8iS/v5h12rWKkCMVYdx2eaopQ40bgYR1B
+	sEm/jT5MwhfnPpAsLJ28ioersXKeBl7ZHI4pwaFcJ2DaBecOV9E70dQLn3R4gaSWU1JiQF0lkwQ
+	==
+X-Received: by 2002:a05:6e02:3e03:b0:3d4:3cd7:d29c with SMTP id e9e14a558f8ab-3d5961087a4mr114773265ab.11.1742789883496;
+        Sun, 23 Mar 2025 21:18:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKTYUkEhLDCfmTqCzwmW7lTzNOrlm9PhUUN5r+ilaum3pQSmAXsd7VnN9OVuQyn+lnI6uMUA4yOPPaWTzR6xc=
+X-Received: by 2002:a05:6e02:3e03:b0:3d4:3cd7:d29c with SMTP id
+ e9e14a558f8ab-3d5961087a4mr114772865ab.11.1742789883003; Sun, 23 Mar 2025
+ 21:18:03 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY5PR12MB6297:EE_
-X-MS-Office365-Filtering-Correlation-Id: d70fbe72-ad15-4802-0ca6-08dd6a3c565f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?odjoHHyQ0FxiSX0H5pcOJzT32iQwjwxvJhX9xmj/+oE+tpwAR+mWZ8LHhYEg?=
- =?us-ascii?Q?+7DcN8MtdkL6le8IEG0XRcrjXKYpofURtY0yGp+tauwWsQdzXhRvMI8gkcfY?=
- =?us-ascii?Q?37w+iEFZvSHuv0UJMjCeMrGlSjF5BS0n4awzKKTUlD3G6bDTHhK1cPohDAmT?=
- =?us-ascii?Q?XgoGxnEhnRG9lTUojkx9ANSelB1AjdlU5LvHN31RSr4wo9E3c6jAWPbZ9X62?=
- =?us-ascii?Q?U1iJ6j4aGmotWWw61VtOglLyjRbPRvkuivyH3mK42qWvhNfmwZjwrJYrdmSc?=
- =?us-ascii?Q?xA6Kza6R0r/r3cLjEYGjoHq5fe48KKDfnreKrcLF0+CNt4O2HYWkaNfOuz/F?=
- =?us-ascii?Q?EBtSCtATMnS/oIDymQyyTieYYUvtbZobhdMic8AaQerQkD2WR+VO/haS1xOm?=
- =?us-ascii?Q?kLl4G/nUYFlCNGad7LxcJjUo9BMEL5pD1CrbHmOLdmUec+p6wgsgw+dxQDBb?=
- =?us-ascii?Q?mC/7TjoFZ9e1qSXjd1Rw7pHVGASLVbwMCz1roSk4XlavOf7UezLVGp0LXL5C?=
- =?us-ascii?Q?IY6Vp2ndeTF5vMHOgMuH1fruWzUO2JfdQJPiLXPYWyYvxT6MEkx2yF/lumtc?=
- =?us-ascii?Q?RAFAjEoneNCl7HmRK60gnRDaAU++froNzch6BF6Jgc8mP1US3OXnG51dsPZM?=
- =?us-ascii?Q?Z8spHWydjLhpY+G3/1OTKH2ouzkKeyPzVeatiqaWIAo4rY5wO7UaKCDy7yxq?=
- =?us-ascii?Q?vkxULmW9ds2DQUH8ZFLeYbyidZxxkPTmFtrrt1HL4N1Et0uK37vsJtVZVu41?=
- =?us-ascii?Q?5zhTaBzjsVGgJHRuxaQXBPdzzim8rQ8nn1kjA8dYRLhjROgSdCmy4OcS3YYm?=
- =?us-ascii?Q?hqTxdJg6IUtBvkjHJjRdajYXOSevDKr5V8SXquEo/j0StmcjUHzU+8amLSp2?=
- =?us-ascii?Q?EfTplKj7n2OxCRC98r/+3BypkBaVGM7ywcVUl+c3HbziQnX36MR6Lq5Njv7r?=
- =?us-ascii?Q?2/8unVO4jk12AaansdWjZMKxJUmShVjV+Mx4KjNAf2vBlcFDcbWYsCa4qCDs?=
- =?us-ascii?Q?DiEG6XVwsC62iCKOfaWPeah/KYC8DT9+hJ/myiFeiW3t6krkFwn2/6DoHXbi?=
- =?us-ascii?Q?mn9ksksE9+51KAhvYCK3VZdj4V9SA/gxKH3WyBA3/ZyeVFP4AOag0OC6HMIq?=
- =?us-ascii?Q?rKoX3aYHo5lwkk0K3HqVnmhDVbwCJYaFrdoTN26p1iRoA2NIjiIVZlZbELNA?=
- =?us-ascii?Q?O9xdTM2+D4J6FPT/5Hx9yT/eKYRzsdA5Kn18ZpvgT+BtBLGTh2YpHqr2ZmBs?=
- =?us-ascii?Q?HzwlAHEIOMuGEAQdXTuOHHfejrKfDdwrMgqcYy1CfxOky89HgXYu+XFFdf9p?=
- =?us-ascii?Q?CK66xiQ20ZV8g+0ZBCQIbenKBDhqTaRnHmzq86gUjWayCFY0Iib0qA+RkEgp?=
- =?us-ascii?Q?ASUv8mQXpG8Lyo2DY8hlbTi7q2HF?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fsNp4Y3v/uIAENqRxBR9lJqflaoGqma77DUjBEB1XRbcnEWi3ps82ty8dojg?=
- =?us-ascii?Q?sSM6k6BLABRBYfdd0iJZwJryXBx2Ym3nJmM6Ua8j7TE217JzD2avEeTyj4TF?=
- =?us-ascii?Q?7GTaTBYAM5H6u0dwcxGIce6oO4gimx1217XrtFQ3wcne7Al8ZUxQGXUBh7fI?=
- =?us-ascii?Q?ZGeI0QypduTQQJyWRkZZY0Hsk8jXzCXdHrgUSRcqjnshuT8pn7+KWwvEJdQe?=
- =?us-ascii?Q?4ZRh4T0PFFYqo5xJulIS26m7kRcs2lbVFsz6pB2HUWXK4xqH70FEUl5ZHr6I?=
- =?us-ascii?Q?TaKdL4+po0RT/nVCMM0u49KaOiEgXJdtePSfi5nddN3wZCF5qy5VoUbFkzSI?=
- =?us-ascii?Q?X4l9n6RRxi0JjgONz6qehVgL4PSoiMiPYwOxO8EkYkcNIp1Ypalk0vsNmwYy?=
- =?us-ascii?Q?q0Q7P0XPSalQ1qzEmtBiieL5R68QJZARXB13epL+TtSvFwtsFcb6NrY10STt?=
- =?us-ascii?Q?ONggKYvGliFTY9ilKUDguqLYQAYJ15DZIRuMPyHihEKyDqt0+dNjbZmWV6XP?=
- =?us-ascii?Q?6B/73j/1URh+8B3AMAdftrSTv74urDwfg+YmmSprnMKcOQh49if/x5sxMVRa?=
- =?us-ascii?Q?05znogQeQx0eeczC6mrByRAZn1zXOEVWRw/bEVus+oyb2Nq68eRUdv27sN9o?=
- =?us-ascii?Q?04iPjG435EOieO27gksKayrNIGzLGB9YH/RQzyfuTMgx9FckJXuM5i4kFjGO?=
- =?us-ascii?Q?DcGzjo31V0swi5v+38Ecle9Qhccj7F+0clVr14RQCcAMYDDP91bU7GN0yLCa?=
- =?us-ascii?Q?lhXsRdq3FkhFf939BI7jgJ5hyCw3NRI3nM0LOyAu6L2FMRq68Qe0K03vsJ03?=
- =?us-ascii?Q?z/Ftq/IFRp0yQ8Cn9iycMlY4f3ZkDDpfw2cBf4T9zH5jJ0bita+81UVH/7Ra?=
- =?us-ascii?Q?Hvprka82QinXKEYEpbBjqYLu2lypBD5Ncsyp1l/6e76dC6Cbb1g4HQGE6I4w?=
- =?us-ascii?Q?GZRNuY6a01bLRfg2jflByk5CBZ+LjFDwscpYyvaOlwoB5EA5ylbDIpe6FrUF?=
- =?us-ascii?Q?MxtZTWI5FIkNZ24qVEQj+b8xgjnO+Hckku4Rpkpwidt9GYIW8+UF4ZPl4Wnd?=
- =?us-ascii?Q?xqzs9TmNcznaPVBHAtXNhBDbnZXq17BUk/2ZWrJGqUH7xh0O4vrmEA4QCXhC?=
- =?us-ascii?Q?TMGxLVbcNKyY1cdsNeKmSazyU9OiDi9j4aRmcRhus0wpkmiwcvKn/HNE418A?=
- =?us-ascii?Q?OzIVNL+LDjignGZ73JbJW8Zn/4z41MATHjOX+p/8vwTQUFqDcSc4v3fTgBCS?=
- =?us-ascii?Q?KLBQjHMf2t5n9TYEIml4nWGKIgRrhZC1UqzCkocAjMNgu24L6x1rSgLdsT7E?=
- =?us-ascii?Q?pcZPd1N62J6vkbbKLneYvFO6HhnxAh1cPWxlgmiDb8Q7/9E0nzHM2rLbFJmW?=
- =?us-ascii?Q?kRXtrFtwIM4r2BCSEgtIH60NFtd5O6J3yYQ5ZaY6MPR1XzoLVXqUlqu9SsTC?=
- =?us-ascii?Q?OFNPJPwGKKsZ9tbgX7z+hm8XkPPokAp4dJeGye0lv2hYu1F18LNCVAPRIf7R?=
- =?us-ascii?Q?x08N6XCJ+FWLaMndud8xJxdnEIS5V4I/XxEGjxbFAiFE+Glrvoi48QTdf1SO?=
- =?us-ascii?Q?dj9FqUTc1rbXIL77/QJxopAbw/kmmGeEghkh0Bp0?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d70fbe72-ad15-4802-0ca6-08dd6a3c565f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2025 18:55:53.7539
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 93inFYzSfLw8BQQU10/cBXQfp93jyBY5w1ozhrFZ2r+OucIUX3coYeOtcaKamXth
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6297
+References: <20250320015551.2157511-1-changyuanl@google.com> <20250320015551.2157511-12-changyuanl@google.com>
+In-Reply-To: <20250320015551.2157511-12-changyuanl@google.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Mon, 24 Mar 2025 12:18:24 +0800
+X-Gm-Features: AQ5f1Jo8cgDtoQHR7bje9Ajd-fT5hflpJGHeRbJSkzX-LSsy1GnvBgRPYu2INeE
+Message-ID: <CALu+AoS01QJ-H5Vpr378rbx==iRQLG0HajtMCUzDXRO75biCag@mail.gmail.com>
+Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: linux-kernel@vger.kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
+	luto@kernel.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, dave.hansen@linux.intel.com, dwmw2@infradead.org, 
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, 
+	krzk@kernel.org, rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
+	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: pYjyxGI63mFZW9MgA0BD0v-SVrKN9BOnJSzmqwbnax0_1742789884
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250323_115607_323869_9818D0B6 
-X-CRM114-Status: GOOD (  14.05  )
+X-CRM114-CacheID: sfid-20250323_211808_889043_CD0BF7A5 
+X-CRM114-Status: GOOD (  19.80  )
 X-Mailman-Approved-At: Thu, 27 Mar 2025 06:41:08 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -173,34 +114,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Mar 22, 2025 at 03:12:26PM -0400, Mike Rapoport wrote:
-> This hunk actually came from me. I decided to keep it simple for now and
-> check what are the alternatives, like moving away from memblock_reserve(),
-> adding a maple_tree or even something else.
+On Thu, 20 Mar 2025 at 23:05, Changyuan Lyu <changyuanl@google.com> wrote:
+>
+> From: Alexander Graf <graf@amazon.com>
+>
+> We have all generic code in place now to support Kexec with KHO. This
+> patch adds a config option that depends on architecture support to
+> enable KHO support.
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> ---
+>  kernel/Kconfig.kexec | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 4d111f871951..57db99e758a8 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -95,6 +95,21 @@ config KEXEC_JUMP
+>           Jump between original kernel and kexeced kernel and invoke
+>           code in physical address mode via KEXEC
+>
+> +config KEXEC_HANDOVER
+> +       bool "kexec handover"
+> +       depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
+> +       select MEMBLOCK_KHO_SCRATCH
+> +       select KEXEC_FILE
+> +       select DEBUG_FS
+> +       select LIBFDT
+> +       select CMA
+> +       select XXHASH
+> +       help
+> +         Allow kexec to hand over state across kernels by generating and
+> +         passing additional metadata to the target kernel. This is useful
+> +         to keep data or state alive across the kexec. For this to work,
+> +         both source and target kernels need to have this option enabled.
+> +
 
-Okat, makes sense to me
- 
-> > > +		page->private = order;
-> > 
-> > Can't just set the page order directly? Why use private?
-> 
-> Setting the order means recreating the folio the way prep_compound_page()
-> does. I think it's better to postpone it until the folio is requested. This
-> way it might run after SMP is enabled. 
+Have you tested kdump?  In my mind there are two issues,  one is with
+CMA enabled, it could cause kdump crashkernel memory reservation
+failures more often due to the fragmented low memory.  Secondly,  in
+kdump kernel dump the crazy scratch memory in vmcore is not very
+meaningful.  Otherwise I suspect this is not tested under kdump.  If
+so please disable this option for kdump.
 
-I see, that makes sense, but also it could stil use page->order..
+>  config CRASH_DUMP
+>         bool "kernel crash dumps"
+>         default ARCH_DEFAULT_CRASH_DUMP
+> --
+> 2.48.1.711.g2feabab25a-goog
+>
+>
 
-> Besides, when we start allocating
-> folios separately from struct page, initializing it here would be a real
-> issue.
-
-Yes, but also we wouldn't have page->private to make it work.. Somehow
-anything we want to carry over would have to become encoded in the
-memdesc directly.
-
-I think this supports my remark someplace else that any user of this
-that wants to preserve per-page data should do it on its own somehow
-as an add-on-top?
-
-Jason
 
