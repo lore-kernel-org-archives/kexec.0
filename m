@@ -4,105 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83A50C35FFC
-	for <kexec@archiver.kernel.org>; Tue, 25 Mar 2025 15:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1510EC36005
+	for <kexec@archiver.kernel.org>; Tue, 25 Mar 2025 22:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6R9zA86q92q5KNyTPt/KezT2KM642idnT1llXfBvGGY=; b=scN4vu5BtI8uBHsILcWNeLqM7K
-	n8WahtDRn52r4EZIo+LnExeHwcPo8eeoNjkfeu1oJ9A/q0MvwbJ7fYdrMrW6VQxJz/toJYM96VCvY
-	iSWsThra1ukYywbJ7Qqz1F7aiuV2R8aMUwYFGE666c9H4klYZr2pmA7rGqtkLLGWyAsnijL+hTBxH
-	eo7C7/HIv+sHMjoMDrnyvlnfuF/Y3brBRF20xz0ABVS9ASwhAz2QRBxzv3U2OosSyY//eyixVNcJT
-	WMwlA+AS1zU/gOfEqfQie0QNUF9MBE88osRp4ldN1ojvYXEIeN5i953BCMqSN5Digh5IACjtEPDL8
-	YtA74Mgg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=yu+zl6twDuJmGCQvb+BJhKb1ZJUDVREmR4BMuDWngzo=; b=dyU2lB4/W86zReCDUknjAJDpxx
+	2Dy7qoOYzfXbyXgLOCIIQteptXgHmxe+/3fwYSs9wnW75NCt4UHKvDZLe9Hipt6ZM7fGO7K/q//5K
+	Lgx3GcqMFkfTM0qx5TVfvzR7TyKhwwb6W2wr9LCA4opV4P3LTpAozvwESGu0QfhtRNVBs6DiwAi+W
+	UO6LFf3Jvu99tjDU1xFryp7eXmzLoG48ZSFbBRAT1YJpiXAUldX4vUANEe0/MymhPUJnrlkRbIODi
+	jUvFnaQZAx5GHhuTwxP2+fJsvVALWYHuUBX8GHJ+69Qt9ShhfWfeop6sPgbk98ZeQ19vBCCYHDS/I
+	hnW5P5UQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tx67v-00000006K9A-3m90;
-	Tue, 25 Mar 2025 15:23:39 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tx58u-00000006BQq-15OU
-	for kexec@bombadil.infradead.org;
-	Tue, 25 Mar 2025 14:20:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:Subject:Message-ID:
-	Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6R9zA86q92q5KNyTPt/KezT2KM642idnT1llXfBvGGY=; b=fD6c3rDjQaa2/Rf3njxll1/Hx+
-	uobDJP/mOfUy78l9dxs2DaZZhoYnRhwCS6+uvoJq/gJr1n1dj4APXtsHahs36whZOKtOJrIM9YU7p
-	vEHD56ZR9bBPi97sePNixd11wBYJ2y7C7YHmUJ9ncWbNfDGHyiT6YuecMlILPcPGqkPI7gOqDcS1x
-	yOe2/0NFc7D1mbquaGg7zU8dPvoapQcmpjmFN3gwZ4BdNSEavcRkHhrZORXf9HpJcpt47A+W6HkAh
-	wgK3v4xoPxs30uDsFQIJvIZpHDieZl+qcB1kjXJ+wGparUKikzPzlepSlYnhkGmWlVtdHxMU1KxLX
-	SyYqBEuA==;
-Received: from mail-qt1-x82e.google.com ([2607:f8b0:4864:20::82e])
-	by desiato.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1tx58q-00000005VI0-4543
+	id 1txCkO-00000007AeS-3LQW;
+	Tue, 25 Mar 2025 22:27:48 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txCkN-00000007Adu-0MKe
 	for kexec@lists.infradead.org;
-	Tue, 25 Mar 2025 14:20:35 +0000
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-47688ae873fso57620811cf.0
-        for <kexec@lists.infradead.org>; Tue, 25 Mar 2025 07:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1742912430; x=1743517230; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6R9zA86q92q5KNyTPt/KezT2KM642idnT1llXfBvGGY=;
-        b=ESZwnXi4vWfsCrCQB7oEbfPPNvori7VAW08K0rPoD7UCENbL6p/wQI8FZtCaro4jLb
-         GbKbKD90UzzezuTbgCmSShykuVzmdgFpWOQPXlePCBnXWQD4vnGYJbVcGiBCUVPnWKkF
-         scRZs/k1KtmItLZQpUYvkYhndp1GEToXVDrY/1mhIZppUioyE9uTtx1Gls8C0amSu+ao
-         cYyKLk6/ao22qLK3qz8bzaiJPa4IQntqk9hMi8Ovhkm1MKe3DH5GXap8TezTm6gSd+7/
-         xrWjzvfQZER9bvUlz/+C0bQFLRjvsn+tQ5W+V+c0DxuV3OU4C9RVMBZudv3+mmwdSBIo
-         31Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742912430; x=1743517230;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6R9zA86q92q5KNyTPt/KezT2KM642idnT1llXfBvGGY=;
-        b=fit4vWZDRZRIO4boOLwRK637jTzlPPG+v8WZ1vUyln+B0S4TxjpzxboQKGL29sqi9z
-         SvpPurDNGuoJQ2QMDXlTgV0Z5t3QIs3Vm9JKtjkea2fB+QsEA7DZNmp3Kim3BFsI3s+7
-         QneraHwTsCjGMkdkDjzfCMSh8/N1FH8xqhOybeKEiwTo8dp6Whbr9clRIzEPp3iToYuo
-         rdbkiyyidzL96YoVV4yema4Y5oMwH0S+1uWkzn3699G34ObmWuSvNw060hydDSiX3+DG
-         wY9+Nka5nhlJtRuixUmFI58M6+DCDZWSV/9ak0XTqNOOraX7A6GN39pdyk0Z5EaO7Mf9
-         Q2sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWIWnM4ebsUErwYkVEYJEG81jGEiQ88FtPHDs+Zp5kiyju/Trazlu72OnLgBRmqu0iKi2iKg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxmD/E102ffxRQbENbCGfYYwuC8vbRYKaLfn9ZaYM30aLATnUEJ
-	fYDASg2VRXjrBMP16fMwTSnNPIj4H9HBpfGo5s8GbxujGYpTmUQvYr6L3ezJWoaSPumyN37DFJ3
-	RnYFk9EaTHl67SE2bajFtexrSqAQuwcIZ9kXmag==
-X-Gm-Gg: ASbGncu0NGNdDboDw0UUosZFcmqY8AY4lk1zboQzwI056a14fZyCACbKqQ3gJw6yo+4
-	HwJmLW0ys3x61x/lYk+Tl+W7gvRRvFxlzTRFTmeda5Ira1z1JM/wqy7XExDxt9nuV60mnmP4W8X
-	+vM6TJRNbBFE+xLRKnrQvzmifP
-X-Google-Smtp-Source: AGHT+IGc+rzcOSqRq1NAurG0wArv+f9TNDXi3NJHkDUdzPbqAqbmujaqTIOq09aOpi8XwtONse7qgR0mbQ4HEgDxOjc=
-X-Received: by 2002:ac8:529a:0:b0:477:29f5:53eb with SMTP id
- d75a77b69052e-47729f55467mr169156461cf.6.1742912430244; Tue, 25 Mar 2025
- 07:20:30 -0700 (PDT)
+	Tue, 25 Mar 2025 22:27:48 +0000
+Received: from [10.17.64.173] (unknown [131.107.8.109])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3AD04204E596;
+	Tue, 25 Mar 2025 15:27:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AD04204E596
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742941665;
+	bh=yu+zl6twDuJmGCQvb+BJhKb1ZJUDVREmR4BMuDWngzo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ys7MDF98d7F6l7lO9UCnXF/KFQKz7cXYNKkmxX7+w/ntWkDq23pjCzvFEabp0ldlI
+	 yZr6ADwe2o1JSR5oVDNsw3uMxSyxVLVT+h+iKf2UIUheJgaUP+FqcD3CVAFghPZ4WW
+	 GBj5l4/HREsMBvqHdkzChu8fcboRIvH/w57jXdeU=
+Message-ID: <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
+Date: Tue, 25 Mar 2025 15:27:44 -0700
 MIME-Version: 1.0
-References: <20250320015551.2157511-1-changyuanl@google.com>
-In-Reply-To: <20250320015551.2157511-1-changyuanl@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 25 Mar 2025 10:19:53 -0400
-X-Gm-Features: AQ5f1JpBD7J0LGV4vivBPILeYhry8D0ETPzHZusd7bV5-E3dLFdBAyFaK8Fs_Bw
-Message-ID: <CA+CK2bDtBk=49hbz+C=fDswz_Nbtj8kVjsY-pTsmBt+O8YPLmg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/16] kexec: introduce Kexec HandOver (KHO)
-To: Changyuan Lyu <changyuanl@google.com>
-Cc: linux-kernel@vger.kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
-	luto@kernel.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com, dwmw2@infradead.org, 
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, 
-	krzk@kernel.org, rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
-	hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org, 
-	robh@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, will@kernel.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-7-chenste@linux.microsoft.com>
+ <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+ <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+ <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250325_142033_164831_C345BEFF 
-X-CRM114-Status: GOOD (  10.36  )
+X-CRM114-CacheID: sfid-20250325_152747_156052_1A9FF82B 
+X-CRM114-Status: GOOD (  10.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,25 +80,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> To use the code, please boot the kernel with the "kho=on" command line
-> parameter.
-> KHO will automatically create scratch regions. If you want to set the
-> scratch size explicitly you can use "kho_scratch=" command line parameter.
-> For instance, "kho_scratch=16M,512M,256M" will reserve a 16 MiB low
-> memory scratch area, a 512 MiB global scratch region, and 256 MiB
-> per NUMA node scratch regions on boot.
+On 3/24/2025 4:00 AM, Baoquan He wrote:
+> On 03/21/25 at 09:23am, steven chen wrote:
+>> On 3/19/2025 7:06 PM, Baoquan He wrote:
+>>> On 03/17/25 at 06:04pm, steven chen wrote:
+>>> ...snip...
+>>>> ---
+>>>>    kernel/kexec_file.c                | 10 ++++++
+>>>>    security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
+>>>>    2 files changed, 40 insertions(+), 21 deletions(-)
+>>>>
+>>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>>>> index 606132253c79..ab449b43aaee 100644
+>>>> --- a/kernel/kexec_file.c
+>>>> +++ b/kernel/kexec_file.c
+>>>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
+>>>>    }
+>>>>    #endif
+>>>> +static void kimage_file_post_load(struct kimage *image)
+>>>> +{
+>>>> +#ifdef CONFIG_IMA_KEXEC
+>>>> +	ima_kexec_post_load(image);
+>>>> +#endif
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * In file mode list of segments is prepared by kernel. Copy relevant
+>>>>     * data from user space, do error checking, prepare segment list
+>>>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>>>>    	kimage_terminate(image);
+>>>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+>>>> +		kimage_file_post_load(image);
+>>> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
+>>> we should use it to do things post load, but not introducing another
+>>> kimage_file_post_load().
+>> Hi Baoquan,
+>>
+>> Could you give me more detail about this?
+> I mean machine_kexec_post_load() is the place where post load operations
+> are done, including kexec_load and kexec_file_load. There's no need to
+> specifically introduce a kimage_file_post_load() to do post load
+> operaton for kexec_file_load.
 
-kho_scratch= is confusing. It should be renamed to what this memory
-actually represents, which is memory that cannot be preserved by KHO.
+Hi Baoquan,
 
-I suggest renaming all references to "scratch" and this parameter to:
+Updating the machine_kexec_post_load() API to carry flags would indeed 
+require changes to multiple files. This approach involves the condition 
+check if (!(flags & KEXEC_FILE_ON_CRASH)) and ensuring that the flags 
+are properly passed and handled across the relevant file
 
-kho_nopersistent= or kho_nopreserve=
+if just adding a API kimage_file_post_load() here, it is much easy and 
+clean, right?
 
-This way, we can also add checks that early allocations done by the
-kernel in this memory do not get preserved. We can also add checks to
-ensure that scarce low DMA memory does not get preserved across
-reboots, and we avoid adding fragmentation to that region.
+How do you think?
 
-Pasha
+Thanks,
+
+Steven
+
 
