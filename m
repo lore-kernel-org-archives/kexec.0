@@ -4,103 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 507E1C36012
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4B4FC36016
 	for <kexec@archiver.kernel.org>; Thu, 27 Mar 2025 13:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bXwOjnHMzxUdXRa1xbPJFsVQQAIPiDayu2d6sm6acno=; b=LhnCcauwLOA8tqJA5nagp2yRqW
-	mCSZnk8KywyRSj77DdXZBiNWUan3QLLbWhL4Pwf3EKPkv2C1iCp+9HnEBubhBJ+aioEuDHxPlBNuT
-	KJCJDgegvQ3XZTvLwqb9JVWV/6U2saAg44AYjndwFi2UYIE/oqwRcU0v/myPJ7NXKP0/TX+K4jIkG
-	EQLXRUpmHc0J2loJ/oXTXlT4GUnHhy03N8zrVYcyF0q36nFwy5shmtUEbc/9AE1dnOCrz7IObSoW3
-	BElsrmRdrx63U4iCAgdl+Hgjn4HdlomQVErvsjsWalCPKW5qWyijP0aG35+FdxMhoRpCLg/qsAUcR
-	xUA2MltQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=KKMJVcSSYFhFkaF9OI9BOHOle5JxWrFZ54yuemRi3B0=; b=Ms3lAfMRc+LMS8veXhLT1AEa0v
+	opNXPWdil6rZV2BG9cmQ1DHA5j+us4lo41TYi/M1qdrK3q8NFijMZUYVr3X5kEHTiOySZs59BB2Cx
+	dqXeWQ0zQZVsDC9f56fmoIH6L5uuBjCQ96q0+1F7lKQhGFAcgWjl47c5i6yMiN7HIjj6g6UdtXVrW
+	bxWtIjrXMTr0pm14C4byVuokt1BX8ylbANhQ3Jge8XsLDw0OY4vSrpLmjqlwsfhCVi9c1RWGFVGtk
+	FgdYk88iASO2rDa46D56b7gGZzcopGCpcvne3l8LrwOFATZXcuTebQdHyhbYpe9+WwDArOt1MfdWz
+	a5eui75w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txnTv-0000000B66t-46K8;
-	Thu, 27 Mar 2025 13:41:15 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-	id 1twzlW-00000005D4w-1LJm
+	id 1txnTw-0000000B67s-2VFX;
+	Thu, 27 Mar 2025 13:41:16 +0000
+Received: from mail-qk1-x729.google.com ([2607:f8b0:4864:20::729])
+	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tx4to-000000069JW-3vAU
 	for kexec@lists.infradead.org;
-	Tue, 25 Mar 2025 08:36:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742891763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXwOjnHMzxUdXRa1xbPJFsVQQAIPiDayu2d6sm6acno=;
-	b=XfLjqI8nqqnCKjQoi71MLE1vs/XNLRcgxmwZITzzzCBAh3HsB24rxP6loqtD1tt7iJQMQS
-	QoXpFYpYciukOK5wUn1TbDF0MjIIwF/vTBosDHALGI1PO6/qVO0N6oLmWZKcAF86xg/fHY
-	r8FEa4Dcmw9Ppqpd6ojGyxkiMt2luxE=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-lsEej6amMGuOwya_ngNhOQ-1; Tue, 25 Mar 2025 04:36:02 -0400
-X-MC-Unique: lsEej6amMGuOwya_ngNhOQ-1
-X-Mimecast-MFC-AGG-ID: lsEej6amMGuOwya_ngNhOQ_1742891761
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so50087055ab.1
-        for <kexec@lists.infradead.org>; Tue, 25 Mar 2025 01:36:01 -0700 (PDT)
+	Tue, 25 Mar 2025 14:05:03 +0000
+Received: by mail-qk1-x729.google.com with SMTP id af79cd13be357-7c542ffec37so597994585a.2
+        for <kexec@lists.infradead.org>; Tue, 25 Mar 2025 07:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1742911500; x=1743516300; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KKMJVcSSYFhFkaF9OI9BOHOle5JxWrFZ54yuemRi3B0=;
+        b=AROCbu2ANCTZKO/AYOds/JGwIxoOJ+ropXG02/nK/tawFCLaIv3WaTRaAdTmsJqv1/
+         TYAVK0sFN/SMIrSBfH3J3Lo7PGYnGXwN/2DgD8mArjllHhIYglx8j7yNTv/voz+BM9sy
+         Heql1rvI1XcPyT2Af2SqPszzRtBpT46fW/761lsAAq2OtihL+zEeFaG8VQuozExX7K8W
+         I1nHpmbMRhXx9qSnrr6qV4Qfga7tmuWsYF7f/GjguzSXm874gmniR6q+tu6A0xfcTkjj
+         6jCFSiakxYIDbxbsOIK/4nIckGHdgrpNlYzptcxYZIieAFyg/NRJUfWka6hBlEph4WBe
+         qQ5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742891761; x=1743496561;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bXwOjnHMzxUdXRa1xbPJFsVQQAIPiDayu2d6sm6acno=;
-        b=qtZNSG6M52Lu3oP4ivcipL52PidMBjg9QzqhYqgzWZoAq3aNrb5aqR7M6knyRDGOPT
-         N16qcglLISX9AUxDQOgYIQpylYZiZ2BPFfFW02BptNYiQtd07wl7B90cflWnhaTfWMSX
-         GuexM2giHFaENXXtzkQCl0K2UWMaFdvwI6V5fXzJkix16Q8Az7zbRgC3YMPb23ojRnm8
-         m4qNCwHTfwMX2ywhxsezY+zyhc3xqXzIm2xQmMor+R+rt2ARYIiyhqhmKG7XJG319/x7
-         Pptg99jzRip58VOyJaFh3P42BmTkLa9NkvtfTFO7T/NSpqeVGcC28dImh0HlEV1AW+Ut
-         YNTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc3orFftUWtEccH7ogwV5k1A//UU5ozToBa5KZjSeTIUheWVIlYweS0XTFxvS1AJTj//1Kyw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyfpnsQ2mi5q/AuJM0LEJSHdymC8kN4JGibZ0YRwSrFsbFZHekx
-	LFJjbPoohMyIZhV0bygHleaR6yfwjs75xMJqa73pU87J7m+SDZDy6lxf3CoItCkW8JghkMk8hJh
-	d2YD9yiBZ8BktBcjrm/skJAzorm7RMCbMiOW2n0TT45jg7uGKbrSpGeI3dAmOyfkn6Z5lsgZyAR
-	aWU1KXlZDc5xykB/HvojrtTk/8KU1f0Q3A
-X-Gm-Gg: ASbGncuTiFFmaKIcNOxJaaj/REtc11du3l5OsCnnYwq9enufdaAQgrJG7gfbMzRFTT3
-	0nYFCGPuzNlauREavvzg8uSzzllnczYgv262UGSNq/S2JluFdq8jG9ISn9m0qXH3LyluP2paWSw
-	==
-X-Received: by 2002:a05:6e02:12c9:b0:3d1:4a69:e58f with SMTP id e9e14a558f8ab-3d58e81374emr209274305ab.2.1742891761211;
-        Tue, 25 Mar 2025 01:36:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9E4/EucEBc/+iE2lWu+YyJiDtrud2DOWwH9Ttz3ALKtbFpsWVzZCuYuuSTYSC3OfYElupM2e2tE7hTWgAmd4=
-X-Received: by 2002:a05:6e02:12c9:b0:3d1:4a69:e58f with SMTP id
- e9e14a558f8ab-3d58e81374emr209274145ab.2.1742891760802; Tue, 25 Mar 2025
- 01:36:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742911500; x=1743516300;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KKMJVcSSYFhFkaF9OI9BOHOle5JxWrFZ54yuemRi3B0=;
+        b=pYQPjY5wbItBV31em1WCWEuucDr+DJJ4qGj+dplmUw6GtbsEZswVOiaaPT15LYJ5RM
+         3MdqcrQqCyrYoDDvPPHTTsZL+jir/p9QMpGl3Sc2tPSV+LxKbqmHOEwb+zHhNZgOySek
+         2c0xaaVTi97/IDtMOFjoZMN6CzhrhK8cJMpXrnhCn3erpncx+M/9OzcKv1KA9Hws6RrZ
+         ivx4AeadLQWVqB+2F0ZqCcl8HyNWwonSY68rnsSNS898xu2GA8aA4suoCEM9BXV5iRMY
+         WjnHemTPSJf3Q5dqDFVjK2rRrsuRWe509BRJDkuyoucM4GCxEuJirptj9+CiFpyQiwWD
+         DCJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPj/x1eNlIX+PbdsN56BsqUu3cIO8LHiDYnv4b+6OXkEEFk8qW4INd5I9DLJ93VDJYjBgnzw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxYexPAYADLGf2oJwmyk+cbiHftPd8CQSRs3kDBjc3y+GaFxVOc
+	IeJzk9IKqnMzD+nmcG85R1G417bCPv030g/qZa+hqhyqSLetGn4v/sN6APNK4wowuESmW+BdqYi
+	SE3rV/by7JbN3q+u6ZKbIPsz4Zc5I//iaxAtinw==
+X-Gm-Gg: ASbGncuQIAMO6GLWA/qjFD46Pgn+zsGs/R1gdxVjyqVjcQKKV99XOLfDzfshrgdYHus
+	XNKHgzkNSKExnCGS48/TGaRHa5Sln7ufIr+xhC2lUWQJcGgcU8M9qfEKbAsErV790Ig4+gutQP3
+	XPMdayXRhYLst0QbFky9td5cNU
+X-Google-Smtp-Source: AGHT+IGMYVQtiX/h+EVJlPHZz5Rq/az3V8wIPVjd4SZUiiPGocRCmY6VSmvm0irS2U8qQcxFKzIzc2oRCd6fuO2LGmc=
+X-Received: by 2002:a05:622a:248e:b0:476:b56d:eb46 with SMTP id
+ d75a77b69052e-4771dd77d25mr264001271cf.15.1742911499617; Tue, 25 Mar 2025
+ 07:04:59 -0700 (PDT)
 MIME-Version: 1.0
 References: <20250320015551.2157511-1-changyuanl@google.com>
  <20250320015551.2157511-12-changyuanl@google.com> <CALu+AoS01QJ-H5Vpr378rbx==iRQLG0HajtMCUzDXRO75biCag@mail.gmail.com>
  <Z+JT7kx+sfPqfWFA@MiWiFi-R3L-srv>
 In-Reply-To: <Z+JT7kx+sfPqfWFA@MiWiFi-R3L-srv>
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 25 Mar 2025 16:36:22 +0800
-X-Gm-Features: AQ5f1JqjFlzQ1M_D50CQArcQW8YwNNz0vfJYofXBEYquREvaq-g04uQRlGUrUgs
-Message-ID: <CALu+AoQj+mHECTvbuK8CpUTmOYgx6n2oMFm5kQXtSigL+5Ks2w@mail.gmail.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 25 Mar 2025 10:04:21 -0400
+X-Gm-Features: AQ5f1Jrjo6HkojvC1uIVMuAy34VVl7CYnqSMt1jjfTIiYkTHpp9oYG_kKxOqyPA
+Message-ID: <CA+CK2bB-qPV-QnqUwAv+OGujZwWLAAgBT0xH6fyKY8-cP1bNSQ@mail.gmail.com>
 Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
 To: Baoquan He <bhe@redhat.com>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org, graf@amazon.com, 
-	akpm@linux-foundation.org, luto@kernel.org, anthony.yznaga@oracle.com, 
-	arnd@arndb.de, ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+Cc: Dave Young <dyoung@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	linux-kernel@vger.kernel.org, graf@amazon.com, akpm@linux-foundation.org, 
+	luto@kernel.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
 	catalin.marinas@arm.com, dave.hansen@linux.intel.com, dwmw2@infradead.org, 
 	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, 
 	krzk@kernel.org, rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
-	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org, 
-	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, saravanak@google.com, 
-	skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org, 
-	devicetree@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, x86@kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: HuPXcsd6isEhEi0xMrEV3I8PpZNLhKVtOcKKYXNr_5k_1742891761
-X-Mimecast-Originator: redhat.com
+	hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org, 
+	robh@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, will@kernel.org, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250325_013606_430441_E32AFD68 
-X-CRM114-Status: GOOD (  12.87  )
+X-CRM114-CacheID: sfid-20250325_070501_062016_F00C89E5 
+X-CRM114-Status: GOOD (  29.30  )
 X-Mailman-Approved-At: Thu, 27 Mar 2025 06:41:08 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -116,6 +108,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue, Mar 25, 2025 at 2:58=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 03/24/25 at 12:18pm, Dave Young wrote:
+> > On Thu, 20 Mar 2025 at 23:05, Changyuan Lyu <changyuanl@google.com> wro=
+te:
+> > >
+> > > From: Alexander Graf <graf@amazon.com>
+> > >
+> > > We have all generic code in place now to support Kexec with KHO. This
+> > > patch adds a config option that depends on architecture support to
+> > > enable KHO support.
+> > >
+> > > Signed-off-by: Alexander Graf <graf@amazon.com>
+> > > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > > Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> > > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> > > ---
+> > >  kernel/Kconfig.kexec | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> > > index 4d111f871951..57db99e758a8 100644
+> > > --- a/kernel/Kconfig.kexec
+> > > +++ b/kernel/Kconfig.kexec
+> > > @@ -95,6 +95,21 @@ config KEXEC_JUMP
+> > >           Jump between original kernel and kexeced kernel and invoke
+> > >           code in physical address mode via KEXEC
+> > >
+> > > +config KEXEC_HANDOVER
+> > > +       bool "kexec handover"
+> > > +       depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXE=
+C_FILE
+> > > +       select MEMBLOCK_KHO_SCRATCH
+> > > +       select KEXEC_FILE
+> > > +       select DEBUG_FS
+> > > +       select LIBFDT
+> > > +       select CMA
+> > > +       select XXHASH
+> > > +       help
+> > > +         Allow kexec to hand over state across kernels by generating=
+ and
+> > > +         passing additional metadata to the target kernel. This is u=
+seful
+> > > +         to keep data or state alive across the kexec. For this to w=
+ork,
+> > > +         both source and target kernels need to have this option ena=
+bled.
+> > > +
 > >
 > > Have you tested kdump?  In my mind there are two issues,  one is with
 > > CMA enabled, it could cause kdump crashkernel memory reservation
@@ -123,7 +164,7 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 >
 > kho scracth memorys are reserved much later than crashkernel, we may not
 > need to worry about it.
-> ====================
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > start_kernel()
 >   ......
 >   -->setup_arch(&command_line);
@@ -135,13 +176,16 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 > > kdump kernel dump the crazy scratch memory in vmcore is not very
 > > meaningful.  Otherwise I suspect this is not tested under kdump.  If
 > > so please disable this option for kdump.
+>
+> Yeah, it's not meaningful to dump out scratch memorys into vmcore. We
+> may need to dig them out from eflcorehdr. While it's an optimization,
+> kho scratch is not big relative to the entire system memory. It can be
+> done in later stage. My personal opinion.
 
-Ok,  it is fine if this is the case, thanks Baoquan for clearing this worry.
+But, we don't; we only dump out the regular CMA memory that absolutely
+should be part of vmcore. When scratch is used during boot, it is used
+for regular early boot kernel allocations, such as to allocate memmap,
+which is an essential part of the crash dump.
 
-But the other concerns are still need to address, eg. KHO use cases
-are not good for kdump.
-There could be more to think about.
-eg. the issues talked in thread:
-https://lore.kernel.org/lkml/Z7dc9Cd8KX3b_brB@dwarf.suse.cz/T/
-
+Pasha
 
