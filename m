@@ -4,104 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38B58C3600B
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6A8AC36016
 	for <kexec@archiver.kernel.org>; Thu, 27 Mar 2025 13:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nDjBICGKa43kYHEOCFvDUYcy1IhXoeMUQwDGcLiaSWE=; b=F3mu7HzFeroXJ6H8rYxA5tb3Fi
-	QKU3wOPTcFI/pWnVZQ6yEoFHwOxNQwibQci1m2BJDTiPEd2/2rAmKQ2jmmPyq210x1bV80VLTmPVn
-	XI/vk7upSOXlJIFH5G8SB2duhWBRcNwSQvry5zFOf25dkTVhdjU3DsBN2VQgzyiex9Lth9oUiMRJo
-	aCfTBhEYQ2ewiiz+adbX082NewaYoqklTpT6zHm2jycVuluMDkzvHX762bVPf3GNgxHVlYAhdhSgh
-	KTYH0uMQFpIA+19oBPdgx9gn7xmpq6mGHGwL7//+/zQRPJHHJ82l0NJOfyV1Yp4qK3VDlHPvJBJVB
-	/RALlBBg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=TP3pQO3RlTwxLWj//K05AHCYcZl/96NtoRgWC1Sg7VM=; b=bXsXqtuy+b24H+cCoDGeqKLo3S
+	LKk+h52DGRf3GLYUmBlKVrwSzaHYN8Cii+VlrNkkTIDN8QA6HLlq7+Y/+IaKT+sQBUrT/Zb1Qwc7s
+	Athf1krbURiehdn5i3DbfaWv3OEZC1LoAmCuHWgwLWU9v5U66i2chGLVfNz4JYFYCovrGsptRpXlI
+	lM0Cd4kqv747lSR4QAtzSEuRaLQXRMFbKh/X+AtBAhSUT1fGtW6IO2py1YtTgDKAOlPEHGU+vVjQx
+	ZNY0u6TkUjsYjVtjJS48MglLpmLupFxIFaNW5TsLizr5eIs9fciXNMi0AYPCxY2EOVFM0SMGLedzW
+	NHODp8jA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txnU0-0000000B6GD-3ns4;
-	Thu, 27 Mar 2025 13:41:20 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1txnU1-0000000B6H3-1gG4;
+	Thu, 27 Mar 2025 13:41:21 +0000
+Received: from mail-qt1-x831.google.com ([2607:f8b0:4864:20::831])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txPZi-00000008QYn-1u9k
+	id 1txTa0-000000090lj-3dXZ
 	for kexec@lists.infradead.org;
-	Wed, 26 Mar 2025 12:09:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742990977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nDjBICGKa43kYHEOCFvDUYcy1IhXoeMUQwDGcLiaSWE=;
-	b=GOn4KtUItv62qh4FcdWTg+JkdpxJZBj/dqrP/oGX5Ff6FF8vU7Lnd7CivG54iREUow8vZY
-	WbLEA9p/MIettlYoPLSjH2+Q0cACqkTZnzE5JM0wKZcDRNOuXPgtgv+OWee9xJqaf9by8H
-	8WkmyxbQohswA2VuNXaxeaVglXm2Qag=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-465-P4WFKd4QP7C7-zTqA3R0AA-1; Wed, 26 Mar 2025 08:09:35 -0400
-X-MC-Unique: P4WFKd4QP7C7-zTqA3R0AA-1
-X-Mimecast-MFC-AGG-ID: P4WFKd4QP7C7-zTqA3R0AA_1742990975
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b3827969dso676701139f.1
-        for <kexec@lists.infradead.org>; Wed, 26 Mar 2025 05:09:35 -0700 (PDT)
+	Wed, 26 Mar 2025 16:26:14 +0000
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-4769e30af66so421911cf.1
+        for <kexec@lists.infradead.org>; Wed, 26 Mar 2025 09:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743006371; x=1743611171; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TP3pQO3RlTwxLWj//K05AHCYcZl/96NtoRgWC1Sg7VM=;
+        b=D7ZeMDrLted6Ru8qg5xxnKKQzlm6GRmQh6iCPxCfQ/rZz0lwh4gTlGd+QPy3p7xTVT
+         SiviPh8EOOeEPw73QhW7+IIukGVHunXaChoPOaOKkgEDlUWB3aSplHDyLkJwmcjSqsQx
+         bwUR2wZrDhqNrKjVvVU5YPP/FIxc6WybW55amz5DhyfQ62vQ/Ith0VGA8rUHxIXRq6BE
+         kb+MCkUSy+pa/B/mlp6h3eQyeQqeeLiJVAMD+fhL/teV0HBALYzCHQeUlqwV2Yk8aDcP
+         USiXHly2H4qTgcybWkJrgLkm+loR62xO9/FP/pX/03cp/8cCDgsUnsgozGoLYIH03Bjn
+         A8kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742990975; x=1743595775;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nDjBICGKa43kYHEOCFvDUYcy1IhXoeMUQwDGcLiaSWE=;
-        b=DvI4SC7jEuGBy0vE1IUGDD3RnIiBOMlPwMOCED4e47uTGLxuyagA4sjmvZGAFTiYBa
-         UZD5CfmAV9V3MwWGWzxIzPj0mkgio6o9wYdeLptMfh8JesWx7f8zJtSi6k98DZtTzYXv
-         qF/L3kLi2EPLaYAVXpmlQ65Pt9fVCkNEBvWYg6ZZN2rXj3ZjCDw9Vt1i64lAArN38obV
-         Zurz7rQbVu7515d9wcLYpBClbRNr6NOC3mZnl7sv3jNos2EzY5aAhowDN2TEz35OsVmz
-         /IH5nIfyydoql+fE1w9bCeeYir6yhU+V/+J+4Ya8/BzjtsmVe1N19pDUuxjzbJPr+6Nz
-         mCtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ7YmHBwyU5W+VJxepNcJfK7sTdEoZqGIgsXSnngWjlJoyf8sVvtoeFXi1VozHWtJwogdQEw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwDE5M6yYS5Ec3gFBg4Izx8QWPTcaVhcKLlHG0PbRfjnDOEizap
-	9OCkoycw6d+haIE4N8LrQ3wdC2rHgYC0WZtIUlsKT1HkJd4Z02iKRZ0xccBjGhuH+BiecvI2wRl
-	iPjKxYOFWfgxNDITu5GPLSXGhkfLOT31kdI9MucScL8udVPLuyCB+ihaywp5oXoEEF1R/ELw+Rv
-	Hdw6EbHRGfgqhgkyNpuT8lzDxkvg1v28dT
-X-Gm-Gg: ASbGncv32HMTbJRKxtfDZQ3V7/y1IPx21XW4zjZ1NhrSb8Y81wGsCbARmPwWddeWEfU
-	s2Jjw4YoDTOzF2yKxfgmAX26NVWskoWC2vwTjn0NQb3P58H6oTAZdd+kXRkyydxQ1EqlhIELwyg
-	==
-X-Received: by 2002:a05:6e02:3a0c:b0:3d4:6f37:372c with SMTP id e9e14a558f8ab-3d5960e2419mr225832905ab.7.1742990974580;
-        Wed, 26 Mar 2025 05:09:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOuyfQGVOhYyFSi3hsb9kc2zJRzczpD7XPzwNdnwVuHyYQPBafKpH087OtVwDsIyzVWltmG166ADE4aJfipJU=
-X-Received: by 2002:a05:6e02:3a0c:b0:3d4:6f37:372c with SMTP id
- e9e14a558f8ab-3d5960e2419mr225831915ab.7.1742990973998; Wed, 26 Mar 2025
- 05:09:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743006371; x=1743611171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TP3pQO3RlTwxLWj//K05AHCYcZl/96NtoRgWC1Sg7VM=;
+        b=kKo2c2de3YXMtFQmtQq9M8vFDoybFuAlXHITrBE7BqITcLkRUGGEDd9s+iUSGJ3n3Q
+         OD2u2fkRhs0RwltAxOkk3+isSoZbQiijURCnmVgEd+Q4qIR5X9kjbdgnw1LwvNHumeaw
+         op+tnR3TSNxF3GqLjk9YL8Igbt+LgQhwo2kjYxEI3T/CnH9k6YTJ75m+bJ2xXLQoDpPj
+         9VNmTMfj4GsoeihSNnqGvc6F5fmlLOKOe4RZXNOHc6Jl3bckkmS838qfwF0nCii4qSzJ
+         hAuTPE5s/GQ8/+qWPRfaBtlWdj7boDFxcpFEQztapsklsZbl63fYgA75QDTPTIOe4FJi
+         qKnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdULHVdjM3iqnLf1AzU6QCVujd4b+wUXeTZAOnDswordf20Au7BRoAixvwR9niP9/unsf84w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxwW1aiIF/FJ3a2mEuQfq9YdGTLv4lRdx24+sXY/3AdF8vkS3xW
+	TLBoTjARU5Vl3Zix3TICFahMqW9uB56bVvCKdrcChUYPCa867dlLnQzXo31yu/z/qQ/JClPRziZ
+	GbNFZhwnnF4B9IdHh8PeM8hROTRAm/Mm2oUB9
+X-Gm-Gg: ASbGncvNTebfaYBZ8EAJVoMB4gZH7a51SM59qq4LuLM7IpXx6NBL7lN7bagYaNJQQRF
+	pBmNqAK6KK3LhmbHOToclUZK9aVy6/zciG/B+FAaEW062410zFIC8cE0p83wHqMYnYETpDEr7xM
+	uUIAuLo8HvY8KlgcHEbWmplvYCaZjBwaEG+g==
+X-Google-Smtp-Source: AGHT+IFOa5U4EkoXfdO0+LtQUSzYhAnBQIC8ww9fg/mAwgTBmcE9rzJd63FTHpnj7/g5eVnvx4SFKaBHLQRjG62h4KA=
+X-Received: by 2002:a05:622a:2515:b0:477:2c1e:d252 with SMTP id
+ d75a77b69052e-47762eb2ac5mr4836571cf.20.1743006371331; Wed, 26 Mar 2025
+ 09:26:11 -0700 (PDT)
 MIME-Version: 1.0
 References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-12-changyuanl@google.com> <CALu+AoS01QJ-H5Vpr378rbx==iRQLG0HajtMCUzDXRO75biCag@mail.gmail.com>
- <Z+JT7kx+sfPqfWFA@MiWiFi-R3L-srv> <CALu+AoQj+mHECTvbuK8CpUTmOYgx6n2oMFm5kQXtSigL+5Ks2w@mail.gmail.com>
- <CALu+AoRdfjNcjweq_ipxCC6UGBzM-a5ma417RBr-C3EQ=Em9OQ@mail.gmail.com> <Z-Pk9Bnr0lDVopKj@kernel.org>
-In-Reply-To: <Z-Pk9Bnr0lDVopKj@kernel.org>
-From: Dave Young <dyoung@redhat.com>
-Date: Wed, 26 Mar 2025 20:09:55 +0800
-X-Gm-Features: AQ5f1JrnxWyTc7ruwIDaX1fnmt0FdUmOV-OtIvcwHa3Skex-wO_kM_31tXed_lg
-Message-ID: <CALu+AoS9=KttzqgR+xi11jur5eX7dBwUfOoueHoOss3eFn+Hkw@mail.gmail.com>
-Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
+ <20250320015551.2157511-8-changyuanl@google.com> <CAPTztWbFXajArSN8yKu32eSoR=xsk1CHM_4V7MJ0eQxydFqPUQ@mail.gmail.com>
+ <Z-MB0Cj4tM6QgOAg@kernel.org> <CAPTztWbDtDhKZS89-aEBaZoPW2jZM2CAWW1Y_m3OnNE26=d9UQ@mail.gmail.com>
+ <Z-PsLDv-DkxitRv1@kernel.org>
+In-Reply-To: <Z-PsLDv-DkxitRv1@kernel.org>
+From: Frank van der Linden <fvdl@google.com>
+Date: Wed, 26 Mar 2025 09:25:59 -0700
+X-Gm-Features: AQ5f1JqROvSmDfkTDrNCkDrxnAL_58GWFP96LlXcUaVtPVLlGbzUuTMgIm7BDUs
+Message-ID: <CAPTztWazH=bJHTvpLfqHK3cYRnO=TXcLWEUJKYsxW1WV8XifrA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/16] kexec: add Kexec HandOver (KHO) generation helpers
 To: Mike Rapoport <rppt@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org, 
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org, 
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
-	dave.hansen@linux.intel.com, dwmw2@infradead.org, ebiederm@xmission.com, 
-	mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, krzk@kernel.org, 
-	mark.rutland@arm.com, pbonzini@redhat.com, pasha.tatashin@soleen.com, 
-	hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org, 
-	robh@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, will@kernel.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1o-GdxV3n3wdN5xHVNjowMTPmEn8eEGZ3XqK0nYfQKI_1742990975
-X-Mimecast-Originator: redhat.com
+Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org, graf@amazon.com, 
+	akpm@linux-foundation.org, luto@kernel.org, anthony.yznaga@oracle.com, 
+	arnd@arndb.de, ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, dave.hansen@linux.intel.com, dwmw2@infradead.org, 
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, 
+	krzk@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
+	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250326_050938_565662_1EC8F681 
-X-CRM114-Status: GOOD (  23.46  )
+X-CRM114-CacheID: sfid-20250326_092612_984889_77910740 
+X-CRM114-Status: GOOD (  34.69  )
 X-Mailman-Approved-At: Thu, 27 Mar 2025 06:41:08 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -117,54 +109,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 26 Mar 2025 at 19:34, Mike Rapoport <rppt@kernel.org> wrote:
+On Wed, Mar 26, 2025 at 4:59=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+[...]
+> > There has, for example, been some talk about making hugetlbfs
+> > persistent. You could have hugetlb_cma active. The hugetlb CMA areas
+> > are set up quite early, quite some time before KHO restores memory. So
+> > that would have to be changed somehow if the location of the KHO init
+> > call would remain as close as possible to buddy init as possible. I
+> > suspect there may be other uses.
 >
-> Hi Dave,
+> I think we can address this when/if implementing preservation for hugetlb=
+fs
+> and it will be tricky.
+> If hugetlb in the first kernel uses a lot of memory, we just won't have
+> enough scratch space for early hugetlb reservations in the second kernel
+> regardless of hugetlb_cma. On the other hand, we already have the preserv=
+ed
+> hugetlbfs memory, so we'd probably need to reserve less memory in the
+> second kernel.
 >
-> On Wed, Mar 26, 2025 at 05:17:16PM +0800, Dave Young wrote:
-> > On Tue, 25 Mar 2025 at 16:36, Dave Young <dyoung@redhat.com> wrote:
+> But anyway, it's completely different discussion about how to preserve
+> hugetlbfs.
+
+Right, there would have to be a KHO interface way to carry over the
+early reserved memory and reinit it early too.
+
+>
+> > > > current requirement in the patch set seems to be "after sparse/page
+> > > > init", but I'm not sure why it needs to be as close as possibly to
+> > > > buddy init.
 > > >
-> > > > >
-> > > > > Have you tested kdump?  In my mind there are two issues,  one is with
-> > > > > CMA enabled, it could cause kdump crashkernel memory reservation
-> > > > > failures more often due to the fragmented low memory.  Secondly,  in
-> > > >
-> > > > kho scracth memorys are reserved much later than crashkernel, we may not
-> > > > need to worry about it.
-> > > > ====================
-> > > > start_kernel()
-> > > >   ......
-> > > >   -->setup_arch(&command_line);
-> > > >      -->arch_reserve_crashkernel();
-> > > >   ......
-> > > >   -->mm_core_init();
-> > > >      -->kho_memory_init();
-> > > >
-> > > > > kdump kernel dump the crazy scratch memory in vmcore is not very
-> > > > > meaningful.  Otherwise I suspect this is not tested under kdump.  If
-> > > > > so please disable this option for kdump.
-> > >
-> > > Ok,  it is fine if this is the case, thanks Baoquan for clearing this worry.
-> > >
-> > > But the other concerns are still need to address, eg. KHO use cases
-> > > are not good for kdump.
-> > > There could be more to think about.
-> > > eg. the issues talked in thread:
-> > > https://lore.kernel.org/lkml/Z7dc9Cd8KX3b_brB@dwarf.suse.cz/T/
+> > > Why would you say that sparse/page init would be a requirement here?
 > >
-> > Rethink about this,  other than previous concerns.  Transferring the
-> > old kernel state to kdump kernel makes no sense since the old state is
-> > not stable as the kernel has crashed.
+> > At least in its current form, the KHO code expects vmemmap to be
+> > initialized, as it does its restore base on page structures, as
+> > deserialize_bitmap expects them. I think the use of the page->private
+> > field was discussed in a separate thread, I think. If that is done
+> > differently, it wouldn't rely on vmemmap being initialized.
 >
-> KHO won't be active for kdump case. The KHO segments are only added to
-> kexec_image and never to kexec_crash_image.
+> In the current form KHO does relies on vmemmap being allocated, but it do=
+es
+> not rely on it being initialized. Marking memblock ranges NOINT ensures
+> nothing touches the corresponding struct pages and KHO can use their fiel=
+ds
+> up to the point the memory is returned to KHO callers.
+>
+> > A few more things I've noticed (not sure if these were discussed before=
+):
+> >
+> > * Should KHO depend on CONFIG_DEFERRED_STRUCT_PAGE_INIT? Essentially,
+> > marking memblock ranges as NOINIT doesn't work without
+> > DEFERRED_STRUCT_PAGE_INIT. Although, if the page->private use
+> > disappears, this wouldn't be an issue anymore.
+>
+> It does.
+> memmap_init_reserved_pages() is called always, no matter of
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT is set or not and it skips initializatio=
+n
+> of NOINIT regions.
 
-Good to know, thanks!
+Yeah, I see - the ordering makes this work out.
+
+MEMBLOCK_RSRV_NOINIT is a bit confusing in the sense that if you do a
+memblock allocation in the !CONFIG_DEFERRED_STRUCT_PAGE_INIT case, and
+that allocation is done before free_area_init(), the pages will always
+get initialized regardless, since memmap_init_range() will do it. But
+this is done before the KHO deserialize, so it works out.
 
 >
-> --
-> Sincerely yours,
-> Mike.
+> > * As a future extension, it could be nice to store vmemmap init
+> > information in the KHO FDT. Then you can use that to init ranges in an
+> > optimized way (HVO hugetlb or DAX-style persisted ranges) straight
+> > away.
 >
+> These days memmap contents is unstable because of the folio/memdesc
+> project, but in general carrying memory map data from kernel to kernel is
+> indeed something to consider.
 
+Yes, I think we might have a need for that, but we'll see.
+
+Thanks,
+
+- Frank
 
