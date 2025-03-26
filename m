@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC953C3600B
-	for <kexec@archiver.kernel.org>; Wed, 26 Mar 2025 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C82BC36011
+	for <kexec@archiver.kernel.org>; Wed, 26 Mar 2025 14:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jMnqwnKFeunkNFt2xA902escEge7LjBq+yD8v//V6S4=; b=tw0NWbYVRgNcSHhS0JUsP8I3/H
-	gOV9ktRwSqCFLPMpuXbLiJ3zgLN40x54xbcv9e9sQu713kSYoGbtJwFHDuuSCo6ccSrqeSDxdksSI
-	Z6uvPbWqNG4SbozkLvygvSwyTC4WtTM+wAIjd51lLaRWBCIWeS+iLoS1u/3/DwZNSpDYfZjHsPekN
-	HobN3LthuzPulqiDd63isT7ZLvy7j6P2+KFSZDPo5tbuQDZ2EKG5qQ/5OWtRfr3VZPRB/URdA9pdo
-	rbBgirWqEsiLMa2B5KotKKR4oxkkNHLIDLzYwomKb9b/PaVMhwEs2aorvOPoUEM+66//feAeAfMB5
-	vMTJ9uBw==;
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=+YQTbf9wJEHM5R9aZVe7muVaiiyPNtqgtwKl9iBTy1A=; b=pPofbTUG8Ur0qiL6CU/FysLu9K
+	E+yfBp8LQXpVROBhn2gfLD3/JDIM+VGnwAaG391wnL4eNdVqRv0bQHShcvKxrSmZxwfPQrtTsCJaF
+	aLZkr4SCf07324o8EMulrwP9nq5wTqWkX/FKGycTDObmkLN/8nof5nF6mr7zs/we+U1UXjfQ/y7dz
+	qu1EyzFEADxIiKrKpNakpK9/+/U3ncx4zp1a0318Sb9ans72I4/IzP8I2bNn0u5JLmZaCK2PAPdYO
+	jxVqrtjRbLJTU2EVXkrh4jLHUUkH7eVnzpBgwDvlyKAC1mCDDHNyy2pxl1BRFEgQZVN3R13CowkuZ
+	LOPVCZuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txRhJ-00000008gNf-265p;
+	id 1txRhJ-00000008gO1-3lmY;
 	Wed, 26 Mar 2025 14:25:37 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txRfu-00000008gAr-35jm
+	id 1txRfv-00000008gAy-1lo1
 	for kexec@bombadil.infradead.org;
-	Wed, 26 Mar 2025 14:24:10 +0000
+	Wed, 26 Mar 2025 14:24:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=jMnqwnKFeunkNFt2xA902escEge7LjBq+yD8v//V6S4=; b=QK3NxM+L8hY5loEuRFMnINQ7nQ
-	pSdpzFlRSRA1/KhyK290WhDGv4aJnouPOFloJrej2srPkW7zXnET1KWmYLbUF3602qS5E17+VmF+B
-	3rxUugDIBIsAKzwPOgeKUyrM5jggzWIL7nHolh4+7MS+HQ824L7UavTw1QbF56NxOa5Eq7LNmQre8
-	GlDsRRFLSJcg8/3eoaJ8Ion7H15fGhSVG9y+39OQ0SlcfBF0miY/jVIuCL4yhhEy6b/NPq+mqpies
-	W4JUMBPHLBDu9MKFFzbTCwnvg0IXiDChIdpv4ScsexT07PEYhcLZXs8ocjmaXar1e3/vjgnFsvga2
-	FaFwGtog==;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=+YQTbf9wJEHM5R9aZVe7muVaiiyPNtqgtwKl9iBTy1A=; b=kN3gyvyodsSjFcGbPWrFFaIL+0
+	mCW0up+AEH1HRKlGwnV0oqQpmKn2lKe3QkAp5jUJoxMVcf4yVFFdcO/RVmX07mofCvCHFs6PQY/Ph
+	E/RSJV6P22v9hcMQZ25FhGWtGbl03X9eA6j6gsuQ1YUPY0K7t4hQXRLEvoHtlJvNWQEmaySbXRvB4
+	vpw99Dl2Y744UX6D8BsIBHPkvCMm3dy3/TApYhNBxPuxEjxse6tNsU7qry0XERB/ckeh2mAlbheKA
+	KEz3T+BlK1flWcjzJiaUQwnbz3PS+d66hBGGKw/VICpgSe+A4kl5XtVN6c0QgBmIhVFpKNfEfyVZF
+	YFrqZaGg==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txRfq-000000005rh-3ZZ7;
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txRfr-00000005oes-0VOC;
 	Wed, 26 Mar 2025 14:24:07 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1txRfq-00000001A9U-2chY;
+	id 1txRfq-00000001A9B-1fVF;
 	Wed, 26 Mar 2025 14:24:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -62,15 +62,14 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v9 4/4] selftests/kexec: Add x86_64 selftest for kexec-jump and exception handling
-Date: Wed, 26 Mar 2025 14:16:04 +0000
-Message-ID: <20250326142404.256980-5-dwmw2@infradead.org>
+Subject: [PATCH v9 0/4] x86/kexec: Add exception handling for relocate_kernel
+Date: Wed, 26 Mar 2025 14:16:00 +0000
+Message-ID: <20250326142404.256980-1-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250326142404.256980-1-dwmw2@infradead.org>
-References: <20250326142404.256980-1-dwmw2@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,169 +84,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Continuing the drip-feed of the exception handling support, on top of the
+current tip/x86/asm branch. This adds output to the serial port configured
+by earlyprintk, reduces the window during which exceptions can't be handled
+during the transition from kernel to relocate_kernel environment, and adds
+a kselftest for the kexec-jump and exception handling.
 
-Add a self test which exercises both the kexec-jump facility, and the
-kexec exception handling.
+v9:
+ • Rebase on top of partial merge into tip/x86/asm (commit 0717b1392dc7).
+ • Add kselftest.
+ • Update to cope with static_call() usage in earlyprintk.
+ • Drop the attempt at adding CFI support for relocate_kernel().
 
-Invoke a trivial payload which just does an int3 and returns,
-flip-flopping its entry point for the next invocation between two
-implementations of the same thing.
+v8: https://lore.kernel.org/all/20250314173226.3062535-1-dwmw2@infradead.org/
+ • Fix UNRET objtool warning in exc_handler.
+ • Clean up magic numbers in stack frame for exc_handler.
+ • Fix i386 build error due to making the debug support unconditional.
+ • The int3 is still a [DO NOT APPLY] hack for later, and I plan to deal
+   with that with a userspace test case based on
+   http://david.woodhou.se/loadret.c which will exercise kexec-jump at the
+   same time.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- tools/testing/selftests/kexec/Makefile        |  7 ++
- .../testing/selftests/kexec/test_kexec_jump.c | 72 +++++++++++++++++++
- .../selftests/kexec/test_kexec_jump.sh        | 42 +++++++++++
- 3 files changed, 121 insertions(+)
- create mode 100644 tools/testing/selftests/kexec/test_kexec_jump.c
- create mode 100755 tools/testing/selftests/kexec/test_kexec_jump.sh
+v7: https://lore.kernel.org/kexec/20250312144257.2348250-1-dwmw2@infradead.org/
+ • Drop CONFIG_KEXEC_DEBUG and make it all unconditional in order to
+   "throw regressions back into the face of whoever manages to introduce
+   them" (Ingo, https://lore.kernel.org/kexec/Z7rwA-qVauX7lY8G@gmail.com/)
+ • Move IDT invalidation into relocate_kernel() itself.
 
-diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
-index 67fe7a46cb62..e3000ccb9a5d 100644
---- a/tools/testing/selftests/kexec/Makefile
-+++ b/tools/testing/selftests/kexec/Makefile
-@@ -8,6 +8,13 @@ ifeq ($(ARCH_PROCESSED),$(filter $(ARCH_PROCESSED),x86 ppc64le))
- TEST_PROGS := test_kexec_load.sh test_kexec_file_load.sh
- TEST_FILES := kexec_common_lib.sh
- 
-+include ../../../scripts/Makefile.arch
-+
-+ifeq ($(IS_64_BIT)$(ARCH_PROCESSED),1x86)
-+TEST_PROGS += test_kexec_jump.sh
-+test_kexec_jump.sh: $(OUTPUT)/test_kexec_jump
-+endif
-+
- include ../lib.mk
- 
- endif
-diff --git a/tools/testing/selftests/kexec/test_kexec_jump.c b/tools/testing/selftests/kexec/test_kexec_jump.c
-new file mode 100644
-index 000000000000..fbce287866f5
---- /dev/null
-+++ b/tools/testing/selftests/kexec/test_kexec_jump.c
-@@ -0,0 +1,72 @@
-+#include <unistd.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <linux/kexec.h>
-+#include <linux/reboot.h>
-+#include <sys/reboot.h>
-+#include <sys/syscall.h>
-+
-+asm(
-+    "  .code64\n"
-+    "  .data\n"
-+    "purgatory_start:\n"
-+
-+    // Trigger kexec debug exception handling
-+    "  int3\n"
-+
-+    // Set load address for next time
-+    "  leaq purgatory_start_b(%rip), %r11\n"
-+    "  movq %r11, 8(%rsp)\n"
-+
-+    // Back to Linux
-+    "  ret\n"
-+
-+    // Same again
-+    "purgatory_start_b:\n"
-+
-+    // Trigger kexec debug exception handling
-+    "  int3\n"
-+
-+    // Set load address for next time
-+    "  leaq purgatory_start(%rip), %r11\n"
-+    "  movq %r11, 8(%rsp)\n"
-+
-+    // Back to Linux
-+    "  ret\n"
-+
-+    "purgatory_end:\n"
-+    ".previous"
-+);
-+extern char purgatory_start[], purgatory_end[];
-+
-+int main (void)
-+{
-+        struct kexec_segment segment = {};
-+	int ret;
-+
-+	segment.buf = purgatory_start;
-+	segment.bufsz = purgatory_end - purgatory_start;
-+	segment.mem = (void *)0x400000;
-+	segment.memsz = 0x1000;
-+	ret = syscall(__NR_kexec_load, 0x400000, 1, &segment, KEXEC_PRESERVE_CONTEXT);
-+	if (ret) {
-+		perror("kexec_load");
-+		exit(1);
-+	}
-+
-+	ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC);
-+	if (ret) {
-+		perror("kexec reboot");
-+		exit(1);
-+	}
-+
-+	ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC);
-+	if (ret) {
-+		perror("kexec reboot");
-+		exit(1);
-+	}
-+	printf("Success\n");
-+	return 0;
-+}
-+
-diff --git a/tools/testing/selftests/kexec/test_kexec_jump.sh b/tools/testing/selftests/kexec/test_kexec_jump.sh
-new file mode 100755
-index 000000000000..6ae977054ba2
---- /dev/null
-+++ b/tools/testing/selftests/kexec/test_kexec_jump.sh
-@@ -0,0 +1,42 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Prevent loading a kernel image via the kexec_load syscall when
-+# signatures are required.  (Dependent on CONFIG_IMA_ARCH_POLICY.)
-+
-+TEST="$0"
-+. ./kexec_common_lib.sh
-+
-+# kexec requires root privileges
-+require_root_privileges
-+
-+# get the kernel config
-+get_kconfig
-+
-+kconfig_enabled "CONFIG_KEXEC_JUMP=y" "kexec_jump is enabled"
-+if [ $? -eq 0 ]; then
-+	log_skip "kexec_jump is not enabled"
-+fi
-+
-+kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
-+ima_appraise=$?
-+
-+kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
-+	"IMA architecture specific policy enabled"
-+arch_policy=$?
-+
-+get_secureboot_mode
-+secureboot=$?
-+
-+if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
-+    log_skip "Secure boot and CONFIG_IMA_ARCH_POLICY are enabled"
-+fi
-+
-+./test_kexec_jump
-+if [ $? -eq 0 ]; then
-+    log_pass "kexec_jump succeeded"
-+else
-+    # The more likely failure mode if anything went wrong is that the
-+    # kernel just crashes. But if we get back here, sure, whine anyway.
-+    log_fail "kexec_jump failed"
-+fi
--- 
-2.48.1
+v6: https://lore.kernel.org/kexec/20250115191423.587774-1-dwmw2@infradead.org/
+ • Rebase onto already-merged fixes in tip/x86/boot.
+ • Move CONFIG_KEXEC_DEBUG to generic kernel/Kconfig.kexec as Bartosz is
+   working on an Arm64 version.
+
+v5: https://lore.kernel.org/kexec/20241205153343.3275139-1-dwmw2@infradead.org/T/
+ • Drop [RFC].
+ • Drop _PAGE_NOPTISHADOW fix, which Ingo already took into tip/x86/urgent.
+ • Add memory-mapped serial port support (32-bit MMIO spacing only).
+
+v4 (RFC): https://lore.kernel.org/kexec/20241127190343.44916-1-dwmw2@infradead.org/T/
+ • Add _PAGE_NOPTISHADOW fix for the identmap code.
+ • Drop explicit map of control page, which was masking the identmap bug.
+
+v3 (RFC): https://lore.kernel.org/kexec/20241125100815.2512-1-dwmw2@infradead.org/T/
+ • Add CONFIG_KEXEC_DEBUG option and use earlyprintk config.
+ • Allocate PGD separately from control page.
+ • Explicitly map control page into identmap.
+
+V2 (RFC): https://lore.kernel.org/kexec/20241122224715.171751-1-dwmw2@infradead.org/T/
+ • Introduce linker script, start to clean up data access.
+
+V1 (RFC): https://lore.kernel.org/kexec/20241103054019.3795299-1-dwmw2@infradead.org/T/
+ • Initial proof-of-concept hacks.
+
+
+David Woodhouse (4):
+      x86/kexec: Add 8250 serial port output
+      x86/kexec: Add 8250 MMIO serial port output
+      x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of earlier
+      selftests/kexec: Add x86_64 selftest for kexec-jump and exception handling
+
+ arch/x86/include/asm/kexec.h                     |  2 +
+ arch/x86/kernel/early_printk.c                   |  9 +++
+ arch/x86/kernel/machine_kexec_64.c               | 27 ++++++---
+ arch/x86/kernel/relocate_kernel_64.S             | 70 ++++++++++++++++++++---
+ tools/testing/selftests/kexec/Makefile           |  7 +++
+ tools/testing/selftests/kexec/test_kexec_jump.c  | 72 ++++++++++++++++++++++++
+ tools/testing/selftests/kexec/test_kexec_jump.sh | 42 ++++++++++++++
+ 7 files changed, 213 insertions(+), 16 deletions(-)
 
 
