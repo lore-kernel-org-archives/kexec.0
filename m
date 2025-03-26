@@ -4,99 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3826DC3600C
-	for <kexec@archiver.kernel.org>; Wed, 26 Mar 2025 22:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CD69C36008
+	for <kexec@archiver.kernel.org>; Wed, 26 Mar 2025 22:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:CC:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=clwLN2YhLA41I0snKPHwdNicUbCluLtbHF3lSV2GSW8=; b=MqTOVE9zLbv701/S8TJCx9o1fR
-	XquRD8L+Pj9YolyboB903O3WSCCvekxPGmOg4fSNYkED6t0cleoq72GXOA+4mrT5w+t99CyHzZRXU
-	PpYoPvKS5k9rXcOHGWbxd62+xt53jLkDReR2wmXyr1vS7HXUreaxrgWvA6LO9O017wFen6XAYcxh7
-	RS6Ygy/qNsLCeU5cdmGJmCACSutQyFo/pkJEgJX/cDZWbVxvO7JKIBYcz1xQGHG+CJEcZeZ5bWp6h
-	oftVsO/vDsD+s0i/MI6SPX8kXp2C5nlFgb4GtjlcUtrYbq3LrBz14EFtoZfyLoB6mP8YevMS8d5H9
-	D8o3ByJw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WpQRiPMWre5w+oBe5t52C7npv5APr1INrJO/mypsiTE=; b=kHiRTQEADiSFrLvcYZEvBuV8sD
+	18lQxq8fKQE05s/QWupm/L8/TrWc6GsKr13wIkqNrgePF41fyGZ1WkT4oS3wzzjZq9xS/H8s3Hsuz
+	Ag5OhFAPLHJD3+xINLvdfodninckChvBw/yEFREUh/EUhBlLs7E+vEusItyXN9JmeO/ifqrq29UmR
+	CwyrzE8oMi7FTkeTG/+pSqdmthsqfBIbIGxVJGWEaXft+W1qUfbA1dyulrlanhw8toce2gP04iP6s
+	iTJyX1OgjBA08poKupkuyJYH+uQ6/M2HxciIruETfVPHiZ8Sspn+DfrzwD7Zzx/kF5z6o90QC40BX
+	oByj26iA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txZSG-00000009jJO-1mR6;
-	Wed, 26 Mar 2025 22:42:36 +0000
-Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
-	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txZQP-00000009ivK-2PyO
+	id 1txZWW-00000009jh5-30ak;
+	Wed, 26 Mar 2025 22:47:00 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txZWU-00000009jgI-3MXt
 	for kexec@lists.infradead.org;
-	Wed, 26 Mar 2025 22:40:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1743028841; x=1774564841;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=clwLN2YhLA41I0snKPHwdNicUbCluLtbHF3lSV2GSW8=;
-  b=F5xdrjQVqrCx6+B15ZuvvgqKOJs5ZLrBz2+vwjJ1lIo4vdOaSk3VPeb8
-   ooyuw/XTvc8TqJzk8tXodH2C/3rC2GDvT5KvefUPDfWgld2teiCIZ8Cvt
-   a8FF3DetZiIcnjg4vkpvihd1d2BNA1RNPkMvi1RmLo0w2nnF9D9qbEjd1
-   U=;
-X-IronPort-AV: E=Sophos;i="6.14,279,1736812800"; 
-   d="scan'208";a="708491672"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 22:40:34 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:62713]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.254:2525] with esmtp (Farcaster)
- id 21996b69-f902-4603-9409-820b1efec001; Wed, 26 Mar 2025 22:40:33 +0000 (UTC)
-X-Farcaster-Flow-ID: 21996b69-f902-4603-9409-820b1efec001
-Received: from EX19D020UWC002.ant.amazon.com (10.13.138.147) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 26 Mar 2025 22:40:31 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D020UWC002.ant.amazon.com (10.13.138.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 26 Mar 2025 22:40:30 +0000
-Received: from email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com
- (10.25.36.214) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Wed, 26 Mar 2025 22:40:30 +0000
-Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com (Postfix) with ESMTP id 363B540391;
-	Wed, 26 Mar 2025 22:40:30 +0000 (UTC)
-Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id E67211568; Wed, 26 Mar 2025 22:40:29 +0000 (UTC)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Christian Brauner <brauner@kernel.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, <linux-kernel@vger.kernel.org>, "Jonathan
- Corbet" <corbet@lwn.net>, Eric Biederman <ebiederm@xmission.com>, "Arnd
- Bergmann" <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, "Hugh
- Dickins" <hughd@google.com>, Alexander Graf <graf@amazon.com>, "Benjamin
- Herrenschmidt" <benh@kernel.crashing.org>, David Woodhouse
-	<dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, Mike Rapoport
-	<rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
-	<tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, "Dave
- Hansen" <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>, Wei Yang <richard.weiyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-mm@kvack.org>,
-	<kexec@lists.infradead.org>
-Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-In-Reply-To: <20250320121459.GS9311@nvidia.com>
-References: <20250307005830.65293-2-ptyadav@amazon.de>
-	<20250307-sachte-stolz-18d43ffea782@brauner> <mafs0ikokidqz.fsf@amazon.de>
-	<20250309-unerwartet-alufolie-96aae4d20e38@brauner>
-	<20250317165905.GN9311@nvidia.com>
-	<20250318-toppen-elfmal-968565e93e69@brauner>
-	<20250318145707.GX9311@nvidia.com> <mafs0a59i3ptk.fsf@amazon.de>
-	<20250318232727.GF9311@nvidia.com> <mafs05xk53zz0.fsf@amazon.de>
-	<20250320121459.GS9311@nvidia.com>
-Date: Wed, 26 Mar 2025 22:40:29 +0000
-Message-ID: <mafs05xjvs9eq.fsf@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 26 Mar 2025 22:46:59 +0000
+Received: from [10.17.64.132] (unknown [131.107.147.132])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0EFD4210235E;
+	Wed, 26 Mar 2025 15:46:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0EFD4210235E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743029217;
+	bh=WpQRiPMWre5w+oBe5t52C7npv5APr1INrJO/mypsiTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sKgV6M9wLQw9WiOTCQUm1nhq24BoZZcDn4uhQq9k6apxualjEFDdcPOgCFCoz572i
+	 ciFXzhFzDl/Cyy2JIVFr2Z9s8ffkrWtdsNDF/CSiODCu6HqGrq3dMBIDm8fz/T4P+j
+	 snRRve0tkABnzrVk+X1KBYQKlJSd7CM9tW3yEt/w=
+Message-ID: <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 15:46:55 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-7-chenste@linux.microsoft.com>
+ <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+ <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+ <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+ <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
+ <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250326_154041_768767_5B1A9FA0 
-X-CRM114-Status: GOOD (  39.54  )
+X-CRM114-CacheID: sfid-20250326_154658_901534_2FAAB548 
+X-CRM114-Status: GOOD (  14.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,88 +82,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Mar 20 2025, Jason Gunthorpe wrote:
-
-> On Wed, Mar 19, 2025 at 01:35:31PM +0000, Pratyush Yadav wrote:
->> On Tue, Mar 18 2025, Jason Gunthorpe wrote:
->> 
->> > On Tue, Mar 18, 2025 at 11:02:31PM +0000, Pratyush Yadav wrote:
->> >
->> >> I suppose we can serialize all FDs when the box is sealed and get rid of
->> >> the struct file. If kexec fails, userspace can unseal the box, and FDs
->> >> will be deserialized into a new struct file. This way, the behaviour
->> >> from userspace perspective also stays the same regardless of whether
->> >> kexec went through or not. This also helps tie FDBox closer to KHO.
->> >
->> > I don't think we can do a proper de-serialization without going
->> > through kexec. The new stuff Mike is posting for preserving memory
->> > will not work like that.
->> 
->> Why not? If the next kernel can restore the file from the serialized
->> content, so can the current kernel. What stops this from working with
->> the new memory preservation scheme (which I assume is the idea you
->> proposed in [0])? 
+On 3/25/2025 7:27 PM, Baoquan He wrote:
+> On 03/25/25 at 03:27pm, steven chen wrote:
+>> On 3/24/2025 4:00 AM, Baoquan He wrote:
+>>> On 03/21/25 at 09:23am, steven chen wrote:
+>>>> On 3/19/2025 7:06 PM, Baoquan He wrote:
+>>>>> On 03/17/25 at 06:04pm, steven chen wrote:
+>>>>> ...snip...
+>>>>>> ---
+>>>>>>     kernel/kexec_file.c                | 10 ++++++
+>>>>>>     security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
+>>>>>>     2 files changed, 40 insertions(+), 21 deletions(-)
+>>>>>>
+>>>>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>>>>>> index 606132253c79..ab449b43aaee 100644
+>>>>>> --- a/kernel/kexec_file.c
+>>>>>> +++ b/kernel/kexec_file.c
+>>>>>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
+>>>>>>     }
+>>>>>>     #endif
+>>>>>> +static void kimage_file_post_load(struct kimage *image)
+>>>>>> +{
+>>>>>> +#ifdef CONFIG_IMA_KEXEC
+>>>>>> +	ima_kexec_post_load(image);
+>>>>>> +#endif
+>>>>>> +}
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * In file mode list of segments is prepared by kernel. Copy relevant
+>>>>>>      * data from user space, do error checking, prepare segment list
+>>>>>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>>>>>>     	kimage_terminate(image);
+>>>>>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+>>>>>> +		kimage_file_post_load(image);
+>>>>> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
+>>>>> we should use it to do things post load, but not introducing another
+>>>>> kimage_file_post_load().
+>>>> Hi Baoquan,
+>>>>
+>>>> Could you give me more detail about this?
+>>> I mean machine_kexec_post_load() is the place where post load operations
+>>> are done, including kexec_load and kexec_file_load. There's no need to
+>>> specifically introduce a kimage_file_post_load() to do post load
+>>> operaton for kexec_file_load.
+>> Hi Baoquan,
+>>
+>> Updating the machine_kexec_post_load() API to carry flags would indeed
+>> require changes to multiple files. This approach involves the condition
+>> check if (!(flags & KEXEC_FILE_ON_CRASH)) and ensuring that the flags are
+>> properly passed and handled across the relevant file
+>>
+>> if just adding a API kimage_file_post_load() here, it is much easy and
+>> clean, right?
+> Hmm, it's easier, while maybe not good. We should not repeatedly
+> introduce similar things into codes. Here, it's similar as
+> what kexec_apply_relocations() and arch_kexec_apply_relocations() are
+> doing.
 >
-> It is because the current kernel does not destroy the struct page
-> before the kexec and the new kernel assumes a zero'd fresh struct page
-> at restore.
+> int machine_kexec_post_load(struct kimage *image)
+> {
+> #ifdef CONFIG_IMA_KEXEC
+>          ima_kexec_post_load(image);
+> #endif
+> 	return arch_machine_kexec_post_load();
+> }
 >
-> So it would be very easy to corrupt the struct page information if you
-> attempt to deserialize without going through the kexec step.
+> Then a generic arch_machine_kexec_post_load(struct kimage *image)
+> {return 0;} version, and a arm64 specific version.
 >
-> There would be a big risk of getting things like refcounts out of
-> sync.
+> Is it OK to you?
 
-Ideally, kho_preserve_folio() should be similar to freeing the folio,
-except that it doesn't go to buddy for re-allocation. In that case,
-re-using those pages should not be a problem as long as the driver made
-sure the page was properly "freed", and there are no stale references to
-it. They should be doing that anyway since they should make sure the
-file doesn't change after it has been serialized.
+Hi Baoquan,
 
-Doing that might be easier said than done though. On a quick look, most
-of the clearing of struct page seems to be happening in
-free_pages_prepare(). This is usually followed by free_one_page(), which
-gives the page back to buddy. Though I am not sure how much sense it
-would make to use free_pages_prepare() outside of page free path. I need
-to look deeper...
+Thanks for your suggestion. I will update in the next version.
 
->
-> Then you have the issue that I don't actually imagine shutting down
-> something like iommufd, I was intending to leave it frozen in place
-> with all its allocations and so on. If you try to de-serialize you
-> can't de-serialize into the thing that is frozen, you'd create a new
-> one from empty. Now you have two things pointing at the same stuff,
-> what a mess.
+Steven
 
-What do you mean by "frozen in place"? Isn't that the same as being
-serialized? Considering that we want to make sure a file is not opened
-by any process before we serialize it, what do we get by keeping the
-struct file around (assuming we can safely deserialize it without going
-through kexec)?
-
->
->> The seal operation does bulk serialize/deserialize for _one_ box. You
->> can have multiple boxes and distribute your FDs in the boxes based on
->> the serialize or deserialize order you want. Userspace decides when to
->> seal or unseal a particular box, which gives it full control over the
->> order in which things happen.
->
-> Why have more than one box? What is the point? I've been thinking we
-> should just have a KHO control char dev FD for serializing and you can
-> do all the operations people have been talking about in sysfs, as well
-> as record FDs for serializing.
-
-Main idea is for logical grouping and dependency management. If some FDs
-have a dependency between them, grouping them in different boxes makes
-it easy to let userspace choose the order of operations, but still have
-a way to make sure all dependencies are met when the FDs are serialized.
-Similarly, on the deserialize side, this ensures that all dependent FDs
-are deserialized together.
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
 
