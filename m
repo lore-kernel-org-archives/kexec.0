@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B20AC28B20
-	for <kexec@archiver.kernel.org>; Fri, 28 Mar 2025 23:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A793C3600C
+	for <kexec@archiver.kernel.org>; Fri, 28 Mar 2025 23:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DxvzDjgdW1o4dBNZi52PENfrafrfo59tEt6X22n2drg=; b=ssdK60uMhCWnBpXEr+Dobhxdxh
-	xbD8RnPBzChjZNLDO4pmL7fJ6zUJgj7gKCFrIH+A5KEi7dFy61jv31L/HRQHkJisENhCDxyLCZAlD
-	f9DgoH92gG8wRI8jaS2JPB/ox070Uo4UIp/oBO7VaXTmBdbqpLqyJnkRjFgCTViu4h5SN1BBkGK6O
-	xd0NLBJljsgBmoK73wcTFYOZ+Vmp0+UPSbp9nE0eEEA4QYQxgwCGMZkVHtTjmFBvbZcN8Bn0pWAX0
-	HqFhGvc9nw8JelFG1+UJHn7glhYKLXuMbCL9HAbo1INWGTMTtnJopyBVJf5VcvxeIDa6wHgEgYImH
-	pi1xFqog==;
+	bh=DKm6I3KDUfjRp2yGyQNITPNvyJw57L666olVWnEKwPI=; b=3jGk6uiA6ALFZkoLmUpWx/zKOG
+	heYv9HdFEkjjr4OfTbZbNpF7IY9eSRxv1uvMJSKYcqzcrRmnM9xWjayjhB/AS0CZQPFQNeKSKafxO
+	TlI8sApCKrrhIw6RFyLngtVrKl9U7sIv8rVb4vbS9rfSwXeMS880V1NTIfmDhtFxroqxxCdbJ0cTS
+	jQ2eQeQHEM/caclQTkw6FMMHNQRptbbLnbB09jp/cKlpwF1XgUUrojsBS049P1KrRjIFdCIo6Pock
+	r62JYhN/sZ0pWmwNfIQprCEvUxA2/FUOCB+DdHACmxwYpSCeaYsCO1XflQQ9M4p7OR6SxngYwZBAb
+	BmHKvdzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tyIty-0000000ET5f-3YkU;
-	Fri, 28 Mar 2025 23:14:14 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1tyIu7-0000000ETA4-13xH;
+	Fri, 28 Mar 2025 23:14:23 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tyItw-0000000ET49-0nKc
+	id 1tyIu5-0000000ET8z-15TJ
 	for kexec@lists.infradead.org;
-	Fri, 28 Mar 2025 23:14:13 +0000
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SKWKpr028282;
-	Fri, 28 Mar 2025 23:13:54 GMT
+	Fri, 28 Mar 2025 23:14:22 +0000
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SKWD5c015054;
+	Fri, 28 Mar 2025 23:14:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=DxvzD
-	jgdW1o4dBNZi52PENfrafrfo59tEt6X22n2drg=; b=Aa9PFREa8k7nE/ZJzBdN4
-	SqQ3SCD7AI4c1oZZwfImg8oPG/dw9z+/sphTk+AOROAZq2RltYSfChgveBzrUqZL
-	0mAXCXlOnrUB0auozWMLypPrfpwfXb3AHFnYUCPscmlnNCyt0FeTtgOO1UFUiEfg
-	gwiTjPeO0KF5zdkLDYItV71CaA6VbmUQlrOdUuxwpI7gb9qF1zMS3v470TRzZpS9
-	G1V5FTmsyyYsfGSo6nrYbwSZt3gKwdnfJui3/E/5LI5mVU2ym7+h9wp65rBOUwY5
-	kH0pOBBbX2IvbrPdIcgwv+u7LA3W/oJOzqMDtmY19X3iUt6hWpdi38yAD76X9zQ3
-	w==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45mqftdgk7-1
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=DKm6I
+	3KDUfjRp2yGyQNITPNvyJw57L666olVWnEKwPI=; b=Dl3n1L69Ap1BOClj0scRS
+	KieC1mQ30OYEIXpUOFteL9FU0osHScTWUd+vEa3FkZuxyAVOC4m2O3vMk43IofOd
+	cso0uglYQZDAUKbypgq5QazJFQnMb3N7o07id4se7/vHS09Xl8h6+0SmIfsYFGab
+	2/iQ3YgXUoD4sZY2Smrb6aA4Lrs+1RRVzlW10+RVgz1jCJMQwsIiRKqNg+tGf7YU
+	f3w7HiB4DgCXXxKZ49fL3gGcQsz4xM4cVtXhQapml26DuOM7oVIxCXEySNYrMuI0
+	bY4sCpm+UnUsG0v9wxZQrsTCNIvrkNAjxeynfhYJ9yFDo1n2vB/MxB/eC17qExXy
+	Q==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hn877n7k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Mar 2025 23:13:54 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52SKhKuL036833;
-	Fri, 28 Mar 2025 23:13:53 GMT
+	Fri, 28 Mar 2025 23:14:02 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52SM427G028766;
+	Fri, 28 Mar 2025 23:14:00 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jj5h9sex-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45jj6xd5y9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 23:13:53 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52SNDqSC033615;
-	Fri, 28 Mar 2025 23:13:52 GMT
+	Fri, 28 Mar 2025 23:14:00 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52SNDxsV033337;
+	Fri, 28 Mar 2025 23:13:59 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jj5h9sec-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45jj6xd5y3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 23:13:52 +0000
+	Fri, 28 Mar 2025 23:13:59 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v13 15/19] tpm, tpm_tis: Address positive localities in tpm_tis_request_locality()
-Date: Fri, 28 Mar 2025 16:08:10 -0700
-Message-Id: <20250328230814.2210230-16-ross.philipson@oracle.com>
+Subject: [PATCH v13 16/19] tpm, tpm_tis: Allow locality to be set to a different value
+Date: Fri, 28 Mar 2025 16:08:11 -0700
+Message-Id: <20250328230814.2210230-17-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250328230814.2210230-1-ross.philipson@oracle.com>
 References: <20250328230814.2210230-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-28_11,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2503280156
-X-Proofpoint-GUID: sVuhBoMtMU_CWMx0jpUN0ADqnIrBsYHc
-X-Proofpoint-ORIG-GUID: sVuhBoMtMU_CWMx0jpUN0ADqnIrBsYHc
+X-Proofpoint-GUID: ZserYLSCXyjN-7ktqF0zKu-OMu5o8GAK
+X-Proofpoint-ORIG-GUID: ZserYLSCXyjN-7ktqF0zKu-OMu5o8GAK
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250328_161412_344594_70AF62F7 
-X-CRM114-Status: GOOD (  13.33  )
+X-CRM114-CacheID: sfid-20250328_161421_296270_4934D8B0 
+X-CRM114-Status: GOOD (  17.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,41 +107,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+DRTM needs to be able to set the locality used by kernel. Provide
+a one-shot function tpm_chip_set_locality() for the purpose.
 
-Validate that the input locality is within the correct range, as specified
-by TCG standards, and increase the locality count also for the positive
-localities.
-
-Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- drivers/char/tpm/tpm_tis_core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm-chip.c     | 33 ++++++++++++++++++++++++++++++++-
+ drivers/char/tpm/tpm_tis_core.c |  2 ++
+ include/linux/tpm.h             |  4 ++++
+ 3 files changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 2edf0ac0f810..f9a3489313b4 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -234,10 +234,16 @@ static int tpm_tis_request_locality(struct tpm_chip *chip, int l)
- 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
- 	int ret = 0;
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 7df7abaf3e52..ac200514c4d7 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -44,7 +44,7 @@ static int tpm_request_locality(struct tpm_chip *chip)
+ 	if (!chip->ops->request_locality)
+ 		return 0;
  
-+	if (l < 0 || l > TPM_MAX_LOCALITY) {
-+		dev_warn(&chip->dev, "%s: failed to request unknown locality: %d\n",
-+			 __func__, l);
+-	rc = chip->ops->request_locality(chip, 0);
++	rc = chip->ops->request_locality(chip, chip->kernel_locality);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -374,6 +374,7 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
+ 	}
+ 
+ 	chip->locality = -1;
++	chip->kernel_locality = 0;
+ 	return chip;
+ 
+ out:
+@@ -689,3 +690,33 @@ void tpm_chip_unregister(struct tpm_chip *chip)
+ 	tpm_del_char_device(chip);
+ }
+ EXPORT_SYMBOL_GPL(tpm_chip_unregister);
++
++/**
++ * tpm_chip_set_locality() - Set the TPM locality kernel uses
++ * @chip:	&tpm_chip instance
++ * @locality:   new locality
++ *
++ * This a one-shot function. Returns zero or POSIX error on failure.
++ */
++int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality)
++{
++	int ret;
++
++	if (locality < 0 || locality >= TPM_MAX_LOCALITY)
++		return -EINVAL;
++
++	ret = tpm_try_get_ops(chip);
++	if (ret)
++		return ret;
++
++	if (!(chip->flags & TPM_CHIP_FLAG_SET_LOCALITY_ENABLED)) {
++		tpm_put_ops(chip);
 +		return -EINVAL;
 +	}
 +
- 	mutex_lock(&priv->locality_count_mutex);
- 	if (priv->locality_count == 0)
- 		ret = __tpm_tis_request_locality(chip, l);
--	if (!ret)
-+	if (ret >= 0)
- 		priv->locality_count++;
- 	mutex_unlock(&priv->locality_count_mutex);
- 	return ret;
++	chip->kernel_locality = locality;
++	chip->flags &= ~TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
++	tpm_put_ops(chip);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(tpm_chip_set_locality);
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index f9a3489313b4..fd17cccb8abf 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -1117,6 +1117,8 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 
++	chip->flags |= TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
++
+ #ifdef CONFIG_ACPI
+ 	chip->acpi_dev_handle = acpi_dev_handle;
+ #endif
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index c5a4a2d7dd15..9f910d3bc2e4 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -207,6 +207,8 @@ struct tpm_chip {
+ 
+ 	/* active locality */
+ 	int locality;
++	/* the locality used by kernel */
++	u8 kernel_locality;
+ 
+ #ifdef CONFIG_TCG_TPM2_HMAC
+ 	/* details for communication security via sessions */
+@@ -354,6 +356,7 @@ enum tpm_chip_flags {
+ 	TPM_CHIP_FLAG_SUSPENDED			= BIT(8),
+ 	TPM_CHIP_FLAG_HWRNG_DISABLED		= BIT(9),
+ 	TPM_CHIP_FLAG_DISABLE			= BIT(10),
++	TPM_CHIP_FLAG_SET_LOCALITY_ENABLED	= BIT(11),
+ };
+ 
+ #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
+@@ -447,6 +450,7 @@ static inline u32 tpm2_rc_value(u32 rc)
+ extern int tpm_is_tpm2(struct tpm_chip *chip);
+ extern __must_check int tpm_try_get_ops(struct tpm_chip *chip);
+ extern void tpm_put_ops(struct tpm_chip *chip);
++int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality);
+ extern ssize_t tpm_transmit_cmd(struct tpm_chip *chip, struct tpm_buf *buf,
+ 				size_t min_rsp_body_length, const char *desc);
+ extern int tpm_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
 -- 
 2.39.3
 
