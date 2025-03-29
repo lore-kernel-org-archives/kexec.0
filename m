@@ -4,67 +4,209 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5DD57C36008
-	for <kexec@archiver.kernel.org>; Sat, 29 Mar 2025 20:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2F52C36008
+	for <kexec@archiver.kernel.org>; Sat, 29 Mar 2025 20:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=waBDOum2KFYHQU4HEAqFQURKA6hlBTFPqh8uVcV7csc=; b=eNuvaLpjtgmSrxTT1o4abXeiEv
-	TuetGOOlYmI8t6DiZUKzo9uZWsjJZH5No/3B2DbXlPVRiZyUd5CS9Q7VN+uesQywxQpm4n18o+5PG
-	gwmGN9yBXelLTPl5GMC8WipuPsRI/gIP0XqIrwh4eYj2W5KVtIK57sn3Lm03Zh/0uk/4xjRvMbx7d
-	NJ+oh8NLh4Wsq6wWgRtXAeZLPWOkHY+UtFY7CDWJkN0SMCMSz4y2Q4z3tu7Mrw81xPi4ZnaKcBTW1
-	+Kl0CeHCLkeBqOGBrccNQJzYnfF+0O3JyMTuyUJjMm6jL7T/fSu+Fn0KAqivUA6H3JrIbQXYc4o9H
-	Q6P7LRkg==;
+	bh=h81XR3S/Tjc87b7Z3OZ2cumXjvuYsJ1+ShwVylmIXs4=; b=1CCyS3Fy3QMIbkgQHiSZRGTZ+B
+	ozorn5P5DC5i24u7MK7pN7IEbLz/BMHLwV2JMwvjFoPD5PAL83/H7Uha+QNTwe0VLVeROKpTDNktu
+	+tDTi8pnbUF9Ny49oNjjUJUqwUsf0BmmI6PpQ/zEOvsGD2ui3ktoVFqKKNwufh5DdlvwQi6kcDJIA
+	K2GwvlwCER/+/OFq2UR6n9tesl6Oi1pEU6WMV3AqKVASRnckDcwJyLUd83496nDgxl3lwvsFkBbEv
+	C0MCMFd2UE44N4RpiUvXVZ14ShM1jpjJABn9i4T4Aq2XoO0jgcFPRzMn9piB8qL/t0PzLJBGE+5IO
+	YYlVVsRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tycsW-0000000FV6x-07cL;
-	Sat, 29 Mar 2025 20:34:04 +0000
-Received: from out-174.mta1.migadu.com ([95.215.58.174])
+	id 1tyd5S-0000000FVhC-2k06;
+	Sat, 29 Mar 2025 20:47:26 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tycsT-0000000FV6Y-2n8Y
+	id 1tyd5P-0000000FVgm-2qcl
 	for kexec@lists.infradead.org;
-	Sat, 29 Mar 2025 20:34:03 +0000
-Date: Sat, 29 Mar 2025 21:33:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743280439;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=waBDOum2KFYHQU4HEAqFQURKA6hlBTFPqh8uVcV7csc=;
-	b=jPM8odLElJ1MnfPr9cFkWVAx0FEgTCgSyrAvn3Ufb9O+14uUsLjJwveePDyJbOBQ0fnsZs
-	DhDhP3+8bwCbHBMrsQ/aa84yAuXEX3mpfiYs52pDZvC+cl7U4r5ADpSNOqKiDnEgssbvHD
-	cBmeXGBKrHM1wQJKMciiVIhD/7J8LfVq6opMoig5cRBFYHfuCvO20YxkiM4M3AokHezRAc
-	swI6fDuIDJacNwimx9+4+fZo1OUtIIrOcbN3tPm9lIUZD30DAhnK/+p34LR3Wr/qqpmsVB
-	L2xJBgFJapyE4PQsyVF4Fiv5Ha/D4LnY1ZlkYq9AF34vMqR4HVBfNsPFirbJLg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z-hZNKszFmFJc0A5@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
- <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
- <Z-hYWc9LtBU1Yhtg@desktop0a>
+	Sat, 29 Mar 2025 20:47:25 +0000
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52TJwHtD013969;
+	Sat, 29 Mar 2025 20:46:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=h81XR3S/Tjc87b7Z3OZ2cumXjvuYsJ1+ShwVylmIXs4=; b=
+	UvG/YxoB9ad19E8RDzcRM4TlJkUBzkp3/b2CiEhFS8AoH0mu4qIZUIlShy42oUJy
+	j6oEMIFX4vXT4G4jzJbut2OZZW/xXNJquBnK3WU9ZatRRLVOeatZwz2NyWPHj81A
+	7GtnM2FjEigygOPBzmB2zKG2uB47Vmk8Js1hpW6qHPpYnp+BMD8WkeXZfdHC690H
+	KuGAzundpCfoAxo0lWm7UnqigmuFON+RW9qEvpfVoMZuOkHcBX4z5NM631vCl4u5
+	OzeCR7VIC/H9UFUlRaoNLcwqaWHG/DTe3Y0OxcuB1ixBRm3fx1xV2tKt5auPMm1Z
+	HXIw6uiEp4PQU7W5P28NSA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p79c0qtx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 29 Mar 2025 20:46:43 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52TJsMAP010698;
+	Sat, 29 Mar 2025 20:46:43 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45p7acjcwc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 29 Mar 2025 20:46:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fSEj/Su91R7rlzcqKuIpRYDUNjHJl+o2Gi6IpdHn4NxsC7MGQQ+SXTUXg8g4/P2N//kzmMWncUy7y7Qb2MG3xSYx2KOqkqcukn0avFaLV8WudVqt5T09try9WB6izt+ht4cFPvEBAPf5BqcInEwaCiN42xIl8XLtIePAlJRDFM1ZRP5FGT+L3COX5jhNReDXfFbK0+flhaxjtr+iUaC9F2IXtkCtBfCi4bB9gbvswF4hxd6qXgEWD2omxRrkiXmPL/ZffuIUkbU14zV+pUb0hT5WitXUEwbsoB7+g2ggd6HcDi6hJNpsn0QvymD/GX1nNa0ugbJlq5UH4IyqNtlWCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h81XR3S/Tjc87b7Z3OZ2cumXjvuYsJ1+ShwVylmIXs4=;
+ b=eoeEUy/Kkr/4PpBrsmro9ZIlmhnYC32DGhysbYT2/GApGoEixZY39hnLZ79C59weZrPdpiRtNLy8OniCiDKLlo1M8JoDkEkuWhLeOmKg0LTrFgP+Wmv1cXH98b/xSeIzOKF408jeKzw8rwmfO+HHbzEso8l//3PNFYcAvEDVRx0tR1Lt9WEu0L/QMWJ9vKCqUBkxe5wOIHpJqqBgz7IpykrI9QgAW7YhK759qAd7OYkz7vmWHwp7uhJpufMHhFAu69W4btVtlh7hkVkffikmRYwEseskaJE0yIUNXYVTT7o4OoVVUPV5/M9XpNBAcT1r+NgSys50IXuNF7xCjuMbIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h81XR3S/Tjc87b7Z3OZ2cumXjvuYsJ1+ShwVylmIXs4=;
+ b=c2U5hE5JaeScuNcDMqcJ4CJ1d0ZmE9nYP8sKe3z6m6OSkyy+5qUha/X62YYUSAdvIwIz4s5dXbQQATMXLUutyR4ktF4NzPLJ96T6PsUhFmNzBpZnKtY2vxY537EljA2WFk0kh5LbVMXtLf+9NMcoxkMKhhUgMo0nF+3732/lG+4=
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
+ IA1PR10MB7263.namprd10.prod.outlook.com (2603:10b6:208:3f5::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Sat, 29 Mar
+ 2025 20:46:40 +0000
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8%4]) with mapi id 15.20.8583.030; Sat, 29 Mar 2025
+ 20:46:39 +0000
+Message-ID: <1370ee6f-fe47-4789-9bae-d6031eab082d@oracle.com>
+Date: Sat, 29 Mar 2025 13:46:35 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux.dev,
+        dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        luto@amacapital.net, nivedita@alum.mit.edu,
+        herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+        ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com, ross.philipson@oracle.com
+References: <20250328230814.2210230-1-ross.philipson@oracle.com>
+ <Z-faPSIlZV91j_Z0@kernel.org>
+Content-Language: en-US
+From: ross.philipson@oracle.com
+In-Reply-To: <Z-faPSIlZV91j_Z0@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P220CA0029.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:326::21) To DS0PR10MB7224.namprd10.prod.outlook.com
+ (2603:10b6:8:f5::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-hYWc9LtBU1Yhtg@desktop0a>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|IA1PR10MB7263:EE_
+X-MS-Office365-Filtering-Correlation-Id: 007d81ab-fe40-490d-dea4-08dd6f02cddd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?c2E1V0lRRnVTVG5EbkJzeEJOaWU5b1NGZzJtZythTlZyOFVmUmlkYjZKMDBo?=
+ =?utf-8?B?Rjd1TW5ZRVVxUmJyZVFYRjVkWTJVY3I4aHZiemFkVmhrRUE4NzRvK1d0SVFZ?=
+ =?utf-8?B?QVg5Q0RsV2p5SjNUQmd5ZzVrSmxJanYzbkJOc0NHRHJnSnc0aERkMmYvTnJa?=
+ =?utf-8?B?ZWhqa0ppUkdxY1hWUFQxOVR4Q2M4emNnVGpaUytpZDk5SnZBK3B0UmsvWnJK?=
+ =?utf-8?B?NS9DSjBqRjJxS0ZsYS9UYnlOZG9yQUVHQ0tRalJzbFZzbFYrdnBqakNjaUVz?=
+ =?utf-8?B?U0xlSmpueUsxckhNVkUwVXJJc21oREtEQnNod0MyTWNVSWJpZyswcXFydTRU?=
+ =?utf-8?B?Mzc4eklIY2lEaDVHU0d0clFWWjNocHlWQ1JvSDhyTlZCWFh0UTMxclNGWklX?=
+ =?utf-8?B?VU9MODlTcUh2bnZZbUh6VWRkNExNSmQ4RWdweloyaFBDaTR2NXJadlFyYnI4?=
+ =?utf-8?B?UjdqSHNNWmo1T0xMRFRwRENsNk9OVlRCaTl6ejVvdXFWRFptaVhaYTBNSDFy?=
+ =?utf-8?B?azdjQUFkRndKbGk3UWUwZVJ2bm1nVVNKZERLUFJVNllZenoySi9WakV1cm5R?=
+ =?utf-8?B?djFKNHRkd3NUSWtqanZIVytTZjdlSW0yRXJTRGk5VjBiRE93TW1jTjBTUHlS?=
+ =?utf-8?B?N1dDTzl3OWFRSjZBb3QxNDVzeUVRQnVnYWZsK0RKa2NwYm1IWnZYcWgrR1Yr?=
+ =?utf-8?B?S0dscCszTEtCT0pmTGZHVkZzcFZnV2ZxTlpUT0hzbmpIa3F1YitSS2g1RHB1?=
+ =?utf-8?B?WWNaS3FXZnJ2WHQ2QXowQzZmNEhPcDRrdnh4RHNYMFdHT1plUVEwblp6RThm?=
+ =?utf-8?B?MEVSWDY0cEFMT1p2d0RUTTE2bHRDSkhSSWxZV0dkYktHWnZxcmFHUWVpV1FP?=
+ =?utf-8?B?M2cxSkJibzRIcERNSmhEYjhNVngrc2dxYlFESTJ5ODEzbHB2YjVXV3RIRC9L?=
+ =?utf-8?B?bHRSTkdNa3JzOVNaOGg4SFYzdGgrcVgvUTlCY2NNSW9HQmFvTzhaZ0JTSHdo?=
+ =?utf-8?B?aGNBeGJ6Q0t5ZzB1Y2NXS0F6bnBxaUNWUnJmeWZPWWcwekVvSjNHMWhOdW1T?=
+ =?utf-8?B?ZVFZc09RWlJha2VOVmR1MlRwbEt3bHRZaDlKUU01anN5b2ROZFYwQ3NadWU3?=
+ =?utf-8?B?bDJicE5CZHBwcVIwcnFXSUlOUmI4eXhqVlI1MTg0Y2prOWlvTmh3UUFad1pP?=
+ =?utf-8?B?emprVlI4YWRoME84Rm56emt5aUxraWI5N3Ztc1dxZWJCYXNoelZhYTJsdExm?=
+ =?utf-8?B?cm5ocnpNdWtkS1U4RGNqRUExS0cra3JTTUQ1REtZWVRDdlkyNFNYWGRSVjRt?=
+ =?utf-8?B?NmZ4VHplc1hiUFIzMkcyRFhDSzZFdXlad2t4eVRZcENGVGorN1YvMzJidDJ3?=
+ =?utf-8?B?YWd0ZkFwazFwa09VdnNqNTI4elpKR01kYWRzbXhYSnpEK0VXc2N0eW4zRTdG?=
+ =?utf-8?B?UUMzU0pqeUQweWE2ODJzcit6TXpvS291YU8vbUE5SDMxSkZhK04wajZvRXZn?=
+ =?utf-8?B?SitVMHA4NXduQ3ZQazVnZkhlaTlaS1A5WndMNFBpVXlhdzluOWRKa2FwTVN0?=
+ =?utf-8?B?cy9OaE9hdlZldkRqZFkzQ0xINGtsUXhmcXlmbEJQd0Z4b0hKVDZtYkxZdGlY?=
+ =?utf-8?B?ZHB2Yk9rRkcremEySGdtY2lGZlJ0aC9iNmoraUZSenBUZ3Z6WkxFcDZRYVZx?=
+ =?utf-8?B?QzJkcVBYNUgyb2ZidTYrVHNXMjg2QmlML1JlcU8ySGxDZHh5bXhITjFJU2xG?=
+ =?utf-8?B?WW5hYWMwVU5uaWlzSWVET3NnSDBjTGNlblRvU2JPYTF0NjJoTkhlWXdtbmEv?=
+ =?utf-8?B?ZmVPZ0NHYnNqZ1VERURRN2RqTFVybEx5SVZGck9SRjhVS0FzWnlUd3FueWR1?=
+ =?utf-8?Q?9rhUK8615AQ9G?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aTZiNnlIdTlVNkRna0xUU09JNm9adlY4OWFxeGd3bjk1Q2lIMXJqZDJMczM4?=
+ =?utf-8?B?L1A5akRDSVBXNjQwUWdJd01xeDNTTGhSZFZjSnQ4eDM2UCtKVFlYcS92ZjhN?=
+ =?utf-8?B?YWoxeXZWZGFxblZGYjlqWE1vcmFoOGN3T0QzS1I4dTJ3MXdmNThTOU82ajJF?=
+ =?utf-8?B?QzlvQ3VMOUE0SGtyb0kvOFNRWTZrZUNDelpKY0dsMXdtYWtMZW9Gc0JZVHh6?=
+ =?utf-8?B?RVl4STNyRHJ4dUJGQjlsZjVKS1FBWUpTbHlWSHo0bzJBWkE4NHlsY20wcitr?=
+ =?utf-8?B?Q3ZJVW1MTG1leEh0R25ENkZFK2JBNjV5OCtNN3U4eFlhWnduTjcwUDNzL2Yr?=
+ =?utf-8?B?VXVMcGwraWo0ZWp6alltcVpBVVdyViticHVyRXFReGM0dWRVVTRwelNFOENY?=
+ =?utf-8?B?SEVKR292M0ZyVXNxVHQ3SGtRenBEN2RETUFueE93MnJVR3RYY0FROU5NNTNO?=
+ =?utf-8?B?bFdXVnFqd096aFhxNk55SlR4TnhOSkFtNy83NHFlMFZNL1MrTFZ6QXR3Q2o0?=
+ =?utf-8?B?K1VITmI4VEJmZjVxOWI1ZzhEMWxrdEJ2MmtOSlhaWmtGMXF2UmtkckFWcTBR?=
+ =?utf-8?B?REFpbHlIK1Z5V25vdlNlMzhjbngvSmJlVFUrMVVzNlN2L3h5UzRnb09MaTBG?=
+ =?utf-8?B?NnFRQjExVmVKd2tOd2FETUJZVXR3dnVYWkFyY2xVYnMrR0lNc3oyRnVEbEg0?=
+ =?utf-8?B?UStJSU1wUGMvc2RMWGJoZXcyN2ZqTDI3UXQ2VGJ5Ly80bGZMNkpCRUlNNVRS?=
+ =?utf-8?B?aWxZbG0ycGxtaFRwcHBMTDJZS3JyalBEcTRpQXBFMDdXWUFsdnB2QjFROXFu?=
+ =?utf-8?B?azU3Q3RJOUdMUGVQc3hZRDdZb1NlME0vMk5sdjVhUEdTYmZvU0JIdWZpZ3By?=
+ =?utf-8?B?TWR2NDB6Z3hTcC9mTGZBb3pyOTArcDBUMFNvOUQ0eC9UcHMrOEo3RHVrQTJO?=
+ =?utf-8?B?cSs0QlJ4VTM5SHBSNTVEVEtRbHJvbzNLMklhN0tXdnFVV1ErOTJmOTJaZkF2?=
+ =?utf-8?B?N1pUcE1hNXAxNFBwdFo3TjZKQUt0K2VSeEcvdVNCZ2JMTUkrM3ZEV2FMcUtU?=
+ =?utf-8?B?Y1RoNzRWREtyOWlQZFpyTlR4MGNDY0pMTTFSeGt3MG1CL2lDZkRDZk9iOFd5?=
+ =?utf-8?B?VFk1aUJaTmhrUGhUT0ZTemk5dGtvVHNCbE5wbFh5WjV4WWdTTmdWUVF6TC9j?=
+ =?utf-8?B?cldtMno3aHprTDdnd2grUEFqZmkvQk5nblh1bFE0Y0w3cjBmQVRDYmNGTS9z?=
+ =?utf-8?B?VC9DMlViS2lrV3gydTJUTERGZ0pOTVFhajA1a0xuRnJTMC9NVmIxUmdYaHlP?=
+ =?utf-8?B?WWMySHZGaWs3ZzdDQmswaTYvTVNpbXJ1di8zNzAxVVROU0JSOGF3UHc1OHcz?=
+ =?utf-8?B?U3JXbjlJU01oUDd4QWRKVzhnRGpWQStQUlN1cm01bkorTU94bHgyVjh3M2RI?=
+ =?utf-8?B?QWxPYXNSM3F4VXlzc3V2dGIxalYxTnNDVHJTVzhnbm1FdnZqL3JGQXpoNmdG?=
+ =?utf-8?B?cUZtUThtVnh5ZzZTWDRka1hoUlBLNlZMdnFvOGdZYXB4bWw5andmNndvbTR6?=
+ =?utf-8?B?MlRjcGtqZFNydnMxOEZNQ0Z3enZPa3RSVmlJOVU5YVYrQ1RRZmVGSEg0MTlp?=
+ =?utf-8?B?WE5xSGVVSms1Znh6NVo4T0pXQlNWMzBwT1YxTzI0N3RFZ25ZY3JCQVJ4bDRK?=
+ =?utf-8?B?clpwaXdVNFBkZDdZZW5zVE9CZGhrczYrSE5iRFgxdGxDemt4R2Q1K21DSjV6?=
+ =?utf-8?B?bEdlL3UwekVnYzBHaXQ0MjB1aXZvQ1lGNld1WVJUWHdTV1d2cW1JR2dEM1hR?=
+ =?utf-8?B?NnVQZVFzNzlIV3hyVmMwSC9CVjc5L0taSm1QL012MnpRblRXdXhQZzNlSVdC?=
+ =?utf-8?B?Z1pqbFZzcjhGZ1pwdkpXVWdwNEt2QjZ6ZHZybmZ2Qk1Ma1B3ZmNjRmNCamUy?=
+ =?utf-8?B?dVdsaGpmL3FJTFl5RHlPemg0NTB5OWRRRmJaNFhuMHpsZ29WMi91WndraEJ4?=
+ =?utf-8?B?Wjg5dDJaT3FhVGJVS2QvUXlBMHBQa3g5My9SVEpzRWRtbUZXUDNUdlpWQ1Vx?=
+ =?utf-8?B?NGh4QTE4OUR2R21SYnAzdk9SYlBXTkNEckpBTDIwcjVIL2lHUUhISGdCeUFp?=
+ =?utf-8?B?V1FrM3FLVStRdEJEVGZkNHB0ejV6SzNjYng2b1YwZTcxWThSWmdLQWNPRTBW?=
+ =?utf-8?B?eGc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 9EdDVDhKJmzPrWTKgb1DjlozCKSlK37486TisqyDil3LvDAfRXhoI54gcrOmu18oygzp0PvYHbn+wm9Qbi4c6/RH2ft2/ryqEgZq1aGmtQL0en41B1nqjizlsEcH5SIChGs1tG4H9Cl33Owme2cBsnb2BmELgSYh9Wg461NB9OZEj+CT+mHCwJewKW+ZhO1Vvg1c+EDCS4nKWWPR0MW0PWfj0sfMmaK7ylcAipyB84iFKoRNCLT14x6swiJ+qWiy42NIyUTm0qeG1LUZ1BGJo+HuOy6sbL+AAkhMbm35iI8L47p6/Z0c74zPMlMrWP7c+i3Py7wOEei79dmS0VuSmRE1uSAChKqDJIhxaWAO9VUWbFy5lk96L7oVqtiGcz8aq2p0ScnVq5IJRXWw5yUHlqbVW67d0UUKdD4seu8deI4o2Vwp8QrFUcF0LhCxwjGBQmKPmkLcEuQhA5viZLJL14PJzuVU+/65wHqeqdYvPw9BxwtWL/cFMJ2fnXX+r9SqRoRYaAKFb7qNKzI+wmG3VDsaD5Ikhc65wvl+xj+Ly7DxBK/HQpsYuwjdJy3/9nIlA3MriePBdxYoj+QWqGVC5xCslAJ936cpxwCiabOy4Q0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 007d81ab-fe40-490d-dea4-08dd6f02cddd
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2025 20:46:39.3259
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OmWzTNLLL1cM2E0rCmnADl2HCB3szXLARljFLFXgMGXNMV81qkq1ib/CXnmQAky9iZiM+ICw0z4pMokcmxleot+pE9qIQdSRj9OcSUMS+1g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7263
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-29_03,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2503290151
+X-Proofpoint-GUID: rPGCCCfAw9CG2CzTyoHDZCYNHfKvajPY
+X-Proofpoint-ORIG-GUID: rPGCCCfAw9CG2CzTyoHDZCYNHfKvajPY
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250329_133401_995866_3BF03F5C 
-X-CRM114-Status: UNSURE (   3.35  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250329_134723_839746_9DC31853 
+X-CRM114-Status: GOOD (  19.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,491 +221,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Try gzip decompression.
-Try LZMA decompression.
-kernel: 0x7f5df32b5010 kernel_size: 0x8a9540
-MEMORY RANGES
-0000000000000400-000000000009fbff (0)
-000000000009fc00-000000000009ffff (1)
-00000000000f0000-00000000000fffff (1)
-0000000000100000-00000000bffdffff (0)
-00000000bffe0000-00000000bfffffff (1)
-00000000feffc000-00000000feffffff (1)
-00000000fffc0000-00000000ffffffff (1)
-0000000100000000-000000013fffffff (0)
-sym: sha256_starts info: 12 other: 00 shndx: 2 value: 1110 size: 48
-sym: sha256_starts value: 13fff8140 addr: 13fff7032
-R_X86_64_64
-sym: sha256_update info: 12 other: 00 shndx: 2 value: 3c70 size: 19
-sym: sha256_update value: 13fffaca0 addr: 13fff7043
-R_X86_64_64
-sym: sha256_regions info: 11 other: 00 shndx: 9 value: 40 size: 100
-sym: sha256_regions value: 13fffc040 addr: 13fff704e
-R_X86_64_64
-sym: sha256_regions info: 11 other: 00 shndx: 9 value: 40 size: 100
-sym: sha256_regions value: 13fffc140 addr: 13fff7078
-R_X86_64_64
-sym: sha256_digest info: 11 other: 00 shndx: 9 value: 20 size: 20
-sym: sha256_digest value: 13fffc020 addr: 13fff7087
-R_X86_64_64
-sym: sha256_finish info: 12 other: 00 shndx: 2 value: 3c90 size: 15c
-sym: sha256_finish value: 13fffacc0 addr: 13fff7099
-R_X86_64_64
-sym:     memcmp info: 12 other: 00 shndx: 2 value: 596 size: 21
-sym: memcmp value: 13fff75c6 addr: 13fff70b0
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf30 addr: 13fff70c4
-R_X86_64_64
-sym:     printf info: 12 other: 00 shndx: 2 value: 4b7 size: a0
-sym: printf value: 13fff74e7 addr: 13fff70d2
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf60 addr: 13fff70dc
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf50 addr: 13fff70ea
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf66 addr: 13fff710a
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf68 addr: 13fff711f
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf78 addr: 13fff715c
-R_X86_64_64
-sym:     printf info: 12 other: 00 shndx: 2 value: 4b7 size: a0
-sym: printf value: 13fff74e7 addr: 13fff7168
-R_X86_64_64
-sym: setup_arch info: 12 other: 00 shndx: 2 value: 762 size: 56
-sym: setup_arch value: 13fff7792 addr: 13fff7175
-R_X86_64_64
-sym: skip_checks info: 11 other: 00 shndx: 9 value: 0 size: 4
-sym: skip_checks value: 13fffc000 addr: 13fff7181
-R_X86_64_64
-sym: verify_sha256_digest info: 12 other: 00 shndx: 2 value: 0 size: 12a
-sym: verify_sha256_digest value: 13fff7030 addr: 13fff7190
-R_X86_64_64
-sym: post_verification_setup_arch info: 12 other: 00 shndx: 2 value: 7f0 size: 58
-sym: post_verification_setup_arch value: 13fff7820 addr: 13fff71a2
-R_X86_64_64
-sym:    putchar info: 12 other: 00 shndx: 2 value: d8e size: 119
-sym: putchar value: 13fff7dbe addr: 13fff71b5
-R_X86_64_64
-sym:    putchar info: 12 other: 00 shndx: 2 value: d8e size: 119
-sym: putchar value: 13fff7dbe addr: 13fff71f5
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf8a addr: 13fff7300
-R_X86_64_64
-sym:   vsprintf info: 12 other: 00 shndx: 2 value: 17d size: 2a4
-sym: vsprintf value: 13fff71ad addr: 13fff74cd
-R_X86_64_64
-sym:   vsprintf info: 12 other: 00 shndx: 2 value: 17d size: 2a4
-sym: vsprintf value: 13fff71ad addr: 13fff756d
-R_X86_64_64
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75ec addr: 13fff75fd
-R_X86_64_PC32
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75ec addr: 13fff7612
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc15c addr: 13fff762d
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc13c addr: 13fff7634
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae44 addr: 13fff763a
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc1ac addr: 13fff7640
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae1c addr: 13fff7646
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeb1 addr: 13fff7679
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaec0 addr: 13fff7680
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaecb addr: 13fff7687
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaed6 addr: 13fff768e
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee1 addr: 13fff7695
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeec addr: 13fff769c
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaef7 addr: 13fff76a3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee6 addr: 13fff76aa
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc271 addr: 13fff76b1
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaedc addr: 13fff76c3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf0c addr: 13fff76d9
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae4c addr: 13fff76ec
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae54 addr: 13fff76f3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae5c addr: 13fff76fa
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae64 addr: 13fff7701
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae6c addr: 13fff7708
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae74 addr: 13fff770f
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae7c addr: 13fff7716
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae84 addr: 13fff771d
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae8c addr: 13fff7724
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae94 addr: 13fff772b
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae9c addr: 13fff7732
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaea4 addr: 13fff7739
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeac addr: 13fff7740
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeb4 addr: 13fff7747
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaebc addr: 13fff774e
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaec4 addr: 13fff7755
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaecc addr: 13fff775b
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf0c addr: 13fff7763
-R_X86_64_PC32
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe004 addr: 13fff777d
-R_X86_64_PC32
-sym:       .bss info: 03 other: 00 shndx: b value: 0 size: 0
-sym: .bss value: 13ffffffc addr: 13fff7784
-R_X86_64_PC32
-sym:  purgatory info: 12 other: 00 shndx: 2 value: 12a size: 53
-sym: purgatory value: 13fff7156 addr: 13fff7789
-R_X86_64_PLT32
-sym:    entry64 info: 10 other: 00 shndx: 2 value: 690 size: 0
-sym: entry64 value: 13fff76bc addr: 13fff778e
-R_X86_64_PLT32
-sym:  reset_vga info: 11 other: 00 shndx: 9 value: 2012 size: 1
-sym: reset_vga value: 13fffe012 addr: 13fff7794
-R_X86_64_64
-sym: x86_reset_vga info: 12 other: 00 shndx: 2 value: ea7 size: 232
-sym: x86_reset_vga value: 13fff7ed7 addr: 13fff77a3
-R_X86_64_64
-sym: legacy_pic info: 11 other: 00 shndx: 9 value: 2011 size: 1
-sym: legacy_pic value: 13fffe011 addr: 13fff77b0
-R_X86_64_64
-sym: x86_setup_legacy_pic info: 12 other: 00 shndx: 2 value: 10d9 size: 35
-sym: x86_setup_legacy_pic value: 13fff8109 addr: 13fff77bf
-R_X86_64_64
-sym: legacy_pic info: 11 other: 00 shndx: 9 value: 2011 size: 1
-sym: legacy_pic value: 13fffe011 addr: 13fff77ce
-R_X86_64_64
-sym: x86_setup_legacy_pic info: 12 other: 00 shndx: 2 value: 10d9 size: 35
-sym: x86_setup_legacy_pic value: 13fff8109 addr: 13fff77dd
-R_X86_64_64
-sym: cmdline_end info: 11 other: 00 shndx: 9 value: 2000 size: 8
-sym: cmdline_end value: 13fffe000 addr: 13fff77ea
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff77fc
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf9b addr: 13fff780b
-R_X86_64_64
-sym:    sprintf info: 12 other: 00 shndx: 2 value: 421 size: 96
-sym: sprintf value: 13fff7451 addr: 13fff7815
-R_X86_64_64
-sym: panic_kernel info: 11 other: 00 shndx: 9 value: 2010 size: 1
-sym: panic_kernel value: 13fffe010 addr: 13fff7822
-R_X86_64_64
-sym: crashdump_backup_memory info: 12 other: 00 shndx: 2 value: cb3 size: 3e
-sym: crashdump_backup_memory value: 13fff7ce3 addr: 13fff7831
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff783e
-R_X86_64_64
-sym: x86_setup_jump_back_entry info: 12 other: 00 shndx: 2 value: 7b8 size: 38
-sym: x86_setup_jump_back_entry value: 13fff77e8 addr: 13fff784e
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff785d
-R_X86_64_64
-sym: x86_setup_jump_back_entry info: 12 other: 00 shndx: 2 value: 7b8 size: 38
-sym: x86_setup_jump_back_entry value: 13fff77e8 addr: 13fff786d
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe047 addr: 13fff7897
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe04f addr: 13fff789d
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe075 addr: 13fff78bd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe07f addr: 13fff78c3
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe089 addr: 13fff78c9
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe093 addr: 13fff78cf
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe076 addr: 13fff78d6
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe08d addr: 13fff78dd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe06d addr: 13fff79a7
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe075 addr: 13fff79ad
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe09b addr: 13fff79cd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0a5 addr: 13fff79d3
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0af addr: 13fff79d9
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0b9 addr: 13fff79df
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0e2 addr: 13fff7a22
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe12b addr: 13fff7a65
-R_X86_64_PC32
-sym: backup_src_size info: 11 other: 00 shndx: 9 value: 2070 size: 8
-sym: backup_src_size value: 13fffe070 addr: 13fff7ce5
-R_X86_64_64
-sym: backup_start info: 11 other: 00 shndx: 9 value: 2080 size: 8
-sym: backup_start value: 13fffe080 addr: 13fff7cf7
-R_X86_64_64
-sym: backup_src_start info: 11 other: 00 shndx: 9 value: 2078 size: 8
-sym: backup_src_start value: 13fffe078 addr: 13fff7d09
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fff7d16
-R_X86_64_64
-sym: serial_base info: 11 other: 00 shndx: 9 value: 2090 size: 2
-sym: serial_base value: 13fffe090 addr: 13fff7d23
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe088 addr: 13fff7d33
-R_X86_64_64
-sym: serial_baud info: 11 other: 00 shndx: 9 value: 208c size: 4
-sym: serial_baud value: 13fffe08c addr: 13fff7d6a
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe088 addr: 13fff7d98
-R_X86_64_64
-sym: console_vga info: 11 other: 00 shndx: 9 value: 2093 size: 1
-sym: console_vga value: 13fffe093 addr: 13fff7dc0
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe098 addr: 13fff7dd6
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe098 addr: 13fff7e38
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e4e
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e66
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e96
-R_X86_64_64
-sym: console_serial info: 11 other: 00 shndx: 9 value: 2092 size: 1
-sym: console_serial value: 13fffe092 addr: 13fff7ea8
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7d21 addr: 13fff7ebc
-R_X86_64_64
-sym: sha256_process info: 12 other: 00 shndx: 2 value: 1160 size: 29f2
-sym: sha256_process value: 13fff8190 addr: 13fffabe1
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fffac4c
-R_X86_64_64
-sym: sha256_process info: 12 other: 00 shndx: 2 value: 1160 size: 29f2
-sym: sha256_process value: 13fff8190 addr: 13fffac5e
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fffac8c
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffaca7
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffad08
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0a0 addr: 13fffad17
-R_X86_64_64
-sym:    entry16 info: 10 other: 00 shndx: 2 value: 850 size: 0
-sym: entry16 value: 13fff7880 addr: 13fffae48
-R_X86_64_64
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75f0 addr: 13fffaed0
-R_X86_64_64
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee0 addr: 13fffaee2
-R_X86_64_64
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf10 addr: 13fffaf12
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7030 addr: 13fffafd8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff715a addr: 13fffb01c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff71ad addr: 13fffb050
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7451 addr: 13fffb09c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff74e7 addr: 13fffb0b8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7587 addr: 13fffb0f0
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff759a addr: 13fffb104
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff75ae addr: 13fffb118
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff75c6 addr: 13fffb12c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7792 addr: 13fffb158
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff77e8 addr: 13fffb178
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7820 addr: 13fffb18c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7ce3 addr: 13fffb1c8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7d21 addr: 13fffb1f8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7dbe addr: 13fffb20c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7ed7 addr: 13fffb240
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8109 addr: 13fffb270
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8140 addr: 13fffb2a0
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8190 addr: 13fffb2b4
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffb2f8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffaca0 addr: 13fffb35c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffacc0 addr: 13fffb370
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc140 addr: 13fffc142
-R_X86_64_64
-Loaded purgatory at addr 0x13fff7000
-Loaded real_mode_data and command line at 0x13fff2000
-kernel init_size 0x1feb000
-Loaded 64bit kernel at 0x13e000000
-Loaded initrd at 0x13d855000 size 0x7aae28
-E820 memmap:
-0000000000000400-000000000009fbff (1)
-000000000009fc00-000000000009ffff (2)
-00000000000f0000-00000000000fffff (2)
-0000000000100000-00000000bffdffff (1)
-00000000bffe0000-00000000bfffffff (2)
-00000000feffc000-00000000feffffff (2)
-00000000fffc0000-00000000ffffffff (2)
-0000000100000000-000000013fffffff (1)
-/sys/firmware/edd does not exist.
-kexec_load: entry = 0x13fff7760 flags = 0x3e0000
-nr_segments = 5
-segment[0].buf   = 0x5610eaa51ab0
-segment[0].bufsz = 0x30
-segment[0].mem   = 0x100000
-segment[0].memsz = 0x1000
-segment[1].buf   = 0x7f5df2b0a010
-segment[1].bufsz = 0x7aae28
-segment[1].mem   = 0x13d855000
-segment[1].memsz = 0x7ab000
-segment[2].buf   = 0x7f5df32b9210
-segment[2].bufsz = 0x8a5340
-segment[2].mem   = 0x13e000000
-segment[2].memsz = 0x1feb000
-segment[3].buf   = 0x5610eaa4c730
-segment[3].bufsz = 0x4291
-segment[3].mem   = 0x13fff2000
-segment[3].memsz = 0x5000
-segment[4].buf   = 0x5610eaa45640
-segment[4].bufsz = 0x70e0
-segment[4].mem   = 0x13fff7000
-segment[4].memsz = 0x9000
+On 3/29/25 4:32 AM, Jarkko Sakkinen wrote:
+> On Fri, Mar 28, 2025 at 04:07:55PM -0700, Ross Philipson wrote:
+>> The larger focus of the TrenchBoot project (https://urldefense.com/v3/__https://github.com/TrenchBoot__;!!ACWV5N9M2RV99hQ!O3YD_Gg-b5rJB_LxeqAKq7YGMDlmbkk1dUS2khRWPxGpRgR36kf2jpRZPcmqJD83GOvjam2SUAJ1J5iy914$ ) is to
+>> enhance the boot security and integrity in a unified manner. The first area of
+>> focus has been on the Trusted Computing Group's Dynamic Launch for establishing
+>> a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
+>> Trust for Measurement). The project has been and continues to work on providing
+>> a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
+>> cross-architecture (x86 and Arm), with our recent involvment in the upcoming
+>> Arm DRTM specification. The order of introducing DRTM to the Linux kernel
+>> follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
+>> Technology (TXT) is present today and only requires a preamble loader, e.g. a
+>> boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
+>> been present since the introduction of AMD-V but requires an additional
+>> component that is AMD specific and referred to in the specification as the
+>> Secure Loader, which the TrenchBoot project has an active prototype in
+>> development. Finally Arm's implementation is in specification development stage
+>> and the project is looking to support it when it becomes available.
+>>
+>> This patchset provides detailed documentation of DRTM, the approach used for
+>> adding the capbility, and relevant API/ABI documentation. In addition to the
+>> documentation the patch set introduces Intel TXT support as the first platform
+>> for Linux Secure Launch.
+>>
+>> A quick note on terminology. The larger open source project itself is called
+>> TrenchBoot, which is hosted on Github (links below). The kernel feature enabling
+>> the use of Dynamic Launch technology is referred to as "Secure Launch" within
+>> the kernel code. As such the prefixes sl_/SL_ or slaunch/SLAUNCH will be seen
+>> in the code. The stub code discussed above is referred to as the SL stub.
+> 
+> I did a quick recap of TPM patches and still looks good as far as I'm
+> concerned. Not actively reviewing these anymore but I'll do a sanity
+> check per patch set version.
+
+Thank you Jarkko for all you feedback and help.
+
+Ross
+
+> 
+> BR, Jarkko
+
 
