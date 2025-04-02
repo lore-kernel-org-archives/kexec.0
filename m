@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19BF8C3601F
-	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 12:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 628ADC3601A
+	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 12:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vEw/LreqQOxRk2U8fSqzR4thwxp7A3QOtHmi4q7KOMw=; b=z1Djk4p3ARf7/dt8al0qv3c5bZ
-	9Ji4ZAfFJMUPUXfWza27GKJm+oH/kiFuJdkjn63BHEq3GfuJQNcZXe+tfApGimKuDC5pIvyBfUyrI
-	RZTBtSdF3v3Mi0hQHFPUXppbEmEPwcxs9VPk+F0nzToVfjetFuXgFQ6h/8QFY/RrGvXFoYTPmTlNj
-	jcleO7xw3HWF80Mu83NDDDOZdAfbcJAAUBKPHK14aRwp51GaoUSEvipV9SghFzr/kUBqGRw9ffJKU
-	wWOPLjiwcBTEEn/5X4EzI1aQnjReK7C5bFJ1PBn3gzWY+dUXghrvYQjnxQneXOw2+ysC0+p3ov4KH
-	3KpsPM1Q==;
+	bh=akIJhi5dOsbPwjFtHYsWPzeWZ2NiSa/DdRwiLCQ9Fbg=; b=pPRWRXCpnA6u8cTggf8/PaJ+ik
+	CdLwkvzQ3KwBVlMepuPM+YvrWroAJ25Z8RWQZ0JQhgmaZh678BYgXCieYtRoYFrV2ASw0kAmTmuNr
+	gN9D29lYm0uKMkI2Mk9sC3lVOeNfxYQb7gALe91wwNHdEWIeYvMuTTaLxcS3IYhzuqyiAIVjSfZJK
+	5gT/wAcriJHTbwAk8S0aS1yTo726PkeH5cTCvWNSsBBa71eeVhkoDUtYW/l2NCYaVCLGnpdv5PS5A
+	r3YNv1GV5uyhMHeBnlK8lryXBiB83FuVog4Bmq+nfgAiMEiarU12nOnOjSq0Jz8x9US4Ou82kM0+O
+	r9xfOT2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzxZG-0000000693h-21ou;
-	Wed, 02 Apr 2025 12:51:42 +0000
+	id 1tzxZH-0000000695k-2PYe;
+	Wed, 02 Apr 2025 12:51:43 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzxVY-000000068B2-03fd
+	id 1tzxVc-000000068C3-1xYD
 	for kexec@lists.infradead.org;
-	Wed, 02 Apr 2025 12:47:53 +0000
+	Wed, 02 Apr 2025 12:47:57 +0000
 Received: from DESKTOP-VOT081N.hsd1.ga.comcast.net (unknown [20.114.144.49])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D4A412041304;
-	Wed,  2 Apr 2025 05:47:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D4A412041304
+	by linux.microsoft.com (Postfix) with ESMTPSA id D3F0C2041310;
+	Wed,  2 Apr 2025 05:47:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3F0C2041310
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743598070;
-	bh=vEw/LreqQOxRk2U8fSqzR4thwxp7A3QOtHmi4q7KOMw=;
+	s=default; t=1743598075;
+	bh=akIJhi5dOsbPwjFtHYsWPzeWZ2NiSa/DdRwiLCQ9Fbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GtRTizlIYLiPu/gEQNWmihR/pySHx3nmYZ4ceLusbrt3hTu79kPiO3ZEhNoVY1l/F
-	 gwibjdMU9ojf1gSoope+Up2tNXS+wzmwkZl5KDK/RVzcVpxgFubtvGqdAj7uJUTlh5
-	 r+8O74/ReycP1R6AIAhUH6H4Y3XqLPWUrk+sJlck=
+	b=rNCzdP9dHIJ0owIlx8+IhWD9u+n9u7qJfksu7jR/sDVdDhlBaAj9YGY+qIKJu6qe+
+	 m0CV0LLATNeXBWXvKHF9nLIIdf6iyPRtCYZBOlSju/5NftIG59OdbEUSwNDpp6HgJ8
+	 UlGkVOlj4WuolTyrf5WwPtYeb5Db5uqM8DxwDrec=
 From: steven chen <chenste@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	stefanb@linux.ibm.com,
@@ -58,17 +58,17 @@ Cc: madvenka@linux.microsoft.com,
 	bhe@redhat.com,
 	vgoyal@redhat.com,
 	dyoung@redhat.com
-Subject: [PATCH v11 6/9] ima: kexec: move IMA log copy from kexec load to execute
-Date: Wed,  2 Apr 2025 05:47:19 -0700
-Message-ID: <20250402124725.5601-7-chenste@linux.microsoft.com>
+Subject: [PATCH v11 8/9] ima: make the kexec extra memory configurable
+Date: Wed,  2 Apr 2025 05:47:21 -0700
+Message-ID: <20250402124725.5601-9-chenste@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250402124725.5601-1-chenste@linux.microsoft.com>
 References: <20250402124725.5601-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250402_054752_284907_FC4709D8 
-X-CRM114-Status: GOOD (  19.53  )
+X-CRM114-CacheID: sfid-20250402_054756_562897_FDA9E736 
+X-CRM114-Status: GOOD (  15.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,163 +83,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-ima_dump_measurement_list() is called during kexec 'load', which may
-result in loss of IMA measurements during kexec soft reboot. Due to 
-missed measurements that only occurred after kexec 'load', this function 
-needs to be called during kexec 'execute'.
+The extra memory allocated for carrying the IMA measurement list across
+kexec is hard-coded as half a PAGE.  Make it configurable.
 
-Make the kexec_segment_size variable a local static variable within the 
-file, so it can be accessed during both kexec 'load' and 'execute'.
- 
-Implement the kexec_post_load() function to be invoked after the new kernel
-image has been loaded for kexec. Instead of calling machine_kexec_post_load()
-directly from the kexec_file_load() syscall, call kexec_post_load(), which in
-turn calls machine_kexec_post_load() to maintain the original image processing.
- 
-Invoke ima_kexec_post_load() within the kexec_post_load() API only for kexec 
-soft reboot scenarios, excluding KEXEC_FILE_ON_CRASH.
- 
-Register a reboot notifier for the ima_update_kexec_buffer() API within 
-ima_kexec_post_load() to ensure it is called upon receiving a reboot 
-notification.
- 
-Move the ima_dump_measurement_list() call from ima_add_kexec_buffer() to 
-ima_update_kexec_buffer() to copy the IMA log at the kexec 'execute' stage.
- 
-When there is insufficient memory to copy all the measurement logs, copy as
-much of the measurement list as possible.
+Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+extra memory (in kb) to be allocated for IMA measurements added during
+kexec soft reboot.  Ensure the default value of the option is set such
+that extra half a page of memory for additional measurements is allocated
+for the additional measurements.
 
+Update ima_add_kexec_buffer() function to allocate memory based on the
+Kconfig option value, rather than the currently hard-coded one.
+
+Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
 Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com> 
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
 Signed-off-by: steven chen <chenste@linux.microsoft.com>
 Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
- kernel/kexec_file.c                | 11 +++++++-
- security/integrity/ima/ima_kexec.c | 43 ++++++++++++++++++++----------
- 2 files changed, 39 insertions(+), 15 deletions(-)
+ security/integrity/ima/Kconfig     | 10 ++++++++++
+ security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 606132253c79..b3eb515ca051 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -201,6 +201,15 @@ kimage_validate_signature(struct kimage *image)
- }
- #endif
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index 475c32615006..d73c96c3c1c9 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+ 	help
+ 	   This option disables htable to allow measurement of duplicate records.
  
-+static int kexec_post_load(struct kimage *image, unsigned long flags)
-+{
-+#ifdef CONFIG_IMA_KEXEC
-+	if (!(flags & KEXEC_FILE_ON_CRASH))
-+		ima_kexec_post_load(image);
-+#endif
-+	return machine_kexec_post_load(image);
-+}
++config IMA_KEXEC_EXTRA_MEMORY_KB
++	int "Extra memory for IMA measurements added during kexec soft reboot"
++	depends on IMA_KEXEC
++	default 0
++	help
++	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
++	  allocated (in kb) for IMA measurements added during kexec soft reboot.
++	  If set to the default value of 0, an extra half page of memory for those
++	  additional measurements will be allocated.
 +
- /*
-  * In file mode list of segments is prepared by kernel. Copy relevant
-  * data from user space, do error checking, prepare segment list
-@@ -428,7 +437,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 
- 	kimage_terminate(image);
- 
--	ret = machine_kexec_post_load(image);
-+	ret = kexec_post_load(image, flags);
- 	if (ret)
- 		goto out;
- 
+ endif
 diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index e79f6caf895b..5c3b3e0b2186 100644
+index ed867734ee70..d1c9d369ba08 100644
 --- a/security/integrity/ima/ima_kexec.c
 +++ b/security/integrity/ima/ima_kexec.c
-@@ -19,6 +19,7 @@
- #ifdef CONFIG_IMA_KEXEC
- static bool ima_kexec_update_registered;
- static struct seq_file ima_kexec_file;
-+static size_t kexec_segment_size;
- static void *ima_kexec_buffer;
- 
- static void ima_free_kexec_file_buf(struct seq_file *sf)
-@@ -72,9 +73,6 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
- 		}
- 	}
- 
--	if (ret < 0)
--		goto out;
--
- 	/*
- 	 * fill in reserved space with some buffer details
- 	 * (eg. version, buffer size, number of measurements)
-@@ -94,7 +92,7 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
- 
- 	*buffer_size = ima_kexec_file.count;
- 	*buffer = ima_kexec_file.buf;
--out:
-+
- 	return ret;
- }
- 
-@@ -112,9 +110,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+@@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 				  .buf_min = 0, .buf_max = ULONG_MAX,
+ 				  .top_down = true };
  	unsigned long binary_runtime_size;
++	unsigned long extra_memory;
  
  	/* use more understandable variable names than defined in kbuf */
-+	size_t kexec_buffer_size = 0;
- 	void *kexec_buffer = NULL;
--	size_t kexec_buffer_size;
--	size_t kexec_segment_size;
+ 	size_t kexec_buffer_size = 0;
+@@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
  	int ret;
  
  	/*
-@@ -139,13 +136,6 @@ void ima_add_kexec_buffer(struct kimage *image)
- 		return;
- 	}
- 
--	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
--				  kexec_segment_size);
--	if (!kexec_buffer) {
--		pr_err("Not enough memory for the kexec measurement buffer.\n");
--		return;
--	}
--
- 	kbuf.buffer = kexec_buffer;
- 	kbuf.bufsz = kexec_buffer_size;
- 	kbuf.memsz = kexec_segment_size;
-@@ -173,7 +163,32 @@ void ima_add_kexec_buffer(struct kimage *image)
- static int ima_update_kexec_buffer(struct notifier_block *self,
- 				   unsigned long action, void *data)
- {
--	return NOTIFY_OK;
-+	size_t buf_size = 0;
-+	int ret = NOTIFY_OK;
-+	void *buf = NULL;
+-	 * Reserve an extra half page of memory for additional measurements
+-	 * added during the kexec load.
++	 * Reserve extra memory for measurements added during kexec.
+ 	 */
+-	binary_runtime_size = ima_get_binary_runtime_size();
++	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
++		extra_memory = PAGE_SIZE / 2;
++	else
++		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
 +
-+	if (!kexec_in_progress) {
-+		pr_info("No kexec in progress.\n");
-+		return ret;
-+	}
++	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
 +
-+	if (!ima_kexec_buffer) {
-+		pr_err("Kexec buffer not set.\n");
-+		return ret;
-+	}
+ 	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
+ 		kexec_segment_size = ULONG_MAX;
+ 	else
+-		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
+-					   PAGE_SIZE / 2, PAGE_SIZE);
++		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
 +
-+	ret = ima_dump_measurement_list(&buf_size, &buf, kexec_segment_size);
-+
-+	if (ret)
-+		pr_err("Dump measurements failed. Error:%d\n", ret);
-+
-+	if (buf_size != 0)
-+		memcpy(ima_kexec_buffer, buf, buf_size);
-+
-+	kimage_unmap_segment(ima_kexec_buffer);
-+	ima_kexec_buffer = NULL;
-+
-+	return ret;
- }
- 
- static struct notifier_block update_buffer_nb = {
+ 	if ((kexec_segment_size == ULONG_MAX) ||
+ 	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+ 		pr_err("Binary measurement list too large.\n");
 -- 
 2.25.1
 
