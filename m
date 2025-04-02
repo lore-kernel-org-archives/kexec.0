@@ -4,71 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E82F9C28B20
-	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 12:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 526F3C36017
+	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 16:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hVxQ6Kg9GsCvIcW+Huga3a+Zb9j2IJqZ3DFDTnkF5rI=; b=1NP4rMUOgBicrjoprCN7hxKYFX
-	3ce2gwZ6asUbYbRcDfecBGjvYDorNOfZb+KQyWnYm0Ipnd/qUKzcntKhdhyFiqGHSTe6+Uv4UkMLc
-	BWX0SAxARIpV7D4+560gui5bP0dUt99Avbg83hUVVgjct52r7a5+7cJ7JM19feXV3wpVsLE3pNF9b
-	rR81YuItgDYV3j/2DMCq7Jxk1culfHkDfkPUvkX7DtGviEOfvEIacyzU4F+JU1J5VeO7pX841hp1U
-	zO4sM2t4cEuyjffQuU8yKKpCx69KmHUbuY0uCfMm4ypYZWqKGWZbqlerRsED7won7OCHJ14O3nnkR
-	FA8jwqmA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:CC:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OOFyG8Kd6+HeZN8MQhF4S2SXZyJjo0p9QJnhgx3PboY=; b=pXPKEu1F4FhvEMu7Aj57SQG2tU
+	+F4ZlCZaVhQrH4xRnjso1Rbf7atQBSufQltUyTJ+UdQXQD65/P0cW9wLnkSkM4K7VeEltPULSciQg
+	C0eXz5OOOOZ54WThmaD0vLMRWLFxIygSJUoXM0zIz3p2pOYW2RdwifunKzzwoKnxGPxiaQ59XEb53
+	rvY5Fqs5YP7WTMlmkhnPGU6EIewVk2fcxey6MiNcZPE7VMZ/cfTUvpEUXU+HCCVA88Gsij2f8rCfq
+	kdTyc7QnbCAYZEvE2ASS7/+PvLHbg0njzunIJYaPKVOwRgb13qgkfkH/WWRPaTHIgNwDH7ti77yvR
+	ge3j9gpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzxZI-0000000696z-14Ta;
-	Wed, 02 Apr 2025 12:51:44 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzxVf-000000068Cf-0SAb
-	for kexec@lists.infradead.org;
-	Wed, 02 Apr 2025 12:48:00 +0000
-Received: from DESKTOP-VOT081N.hsd1.ga.comcast.net (unknown [20.114.144.49])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5EB142041317;
-	Wed,  2 Apr 2025 05:47:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5EB142041317
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743598078;
-	bh=hVxQ6Kg9GsCvIcW+Huga3a+Zb9j2IJqZ3DFDTnkF5rI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kxGfbjaHVRlu8UyhJav0auww1bCs3mcX4GvckI7MbbH+HB/yrsk9xwGHFlwmE7BMn
-	 EQTD5z6Y3wdStplhmXYJOK6kv+Lf0z1WRKOIMV4teDxu5omEXaxhuHCGQxS87xahCg
-	 woEjUMMFYYUlj70qdUpzo2FGiPfFkbo54ZbgFfAc=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v11 9/9] ima: measure kexec load and exec events as critical data
-Date: Wed,  2 Apr 2025 05:47:22 -0700
-Message-ID: <20250402124725.5601-10-chenste@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250402124725.5601-1-chenste@linux.microsoft.com>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+	id 1u01Fm-00000006gLS-1syV;
+	Wed, 02 Apr 2025 16:47:50 +0000
+Received: from smtp-fw-80006.amazon.com ([99.78.197.217])
+	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u01Fk-00000006gJi-0nVB;
+	Wed, 02 Apr 2025 16:47:49 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1743612469; x=1775148469;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=OOFyG8Kd6+HeZN8MQhF4S2SXZyJjo0p9QJnhgx3PboY=;
+  b=SOtL+glAt/3U0AWGefA+KcmsRmf8ihUbIzlSrp7AgJeY2jA5a01hgDg0
+   r3594ylFDr/Nsy+YA8vaOyTjxu/8mYNZuSYyR+iUywxW7sc+aoEKV4f4m
+   f81icTLXQfVtbnl8iQL9QSeZCa0+ttQi3C6rge8z+QfUSZ4gBWkGpuU+y
+   c=;
+X-IronPort-AV: E=Sophos;i="6.15,182,1739836800"; 
+   d="scan'208";a="37483382"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 16:47:43 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:63428]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.57.231:2525] with esmtp (Farcaster)
+ id fb8b30c2-4f1e-48a1-bd68-83c73817fafa; Wed, 2 Apr 2025 16:47:42 +0000 (UTC)
+X-Farcaster-Flow-ID: fb8b30c2-4f1e-48a1-bd68-83c73817fafa
+Received: from EX19D020UWA002.ant.amazon.com (10.13.138.222) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 16:47:39 +0000
+Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
+ EX19D020UWA002.ant.amazon.com (10.13.138.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 16:47:39 +0000
+Received: from email-imr-corp-prod-pdx-all-2c-785684ef.us-west-2.amazon.com
+ (10.43.8.2) by mail-relay.amazon.com (10.252.134.102) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 16:47:39 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-pdx-all-2c-785684ef.us-west-2.amazon.com (Postfix) with ESMTP id A4539A03AB;
+	Wed,  2 Apr 2025 16:47:38 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 3863F4F35; Wed,  2 Apr 2025 16:47:38 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Changyuan Lyu <changyuanl@google.com>
+CC: <akpm@linux-foundation.org>, <anthony.yznaga@oracle.com>, <arnd@arndb.de>,
+	<ashish.kalra@amd.com>, <benh@kernel.crashing.org>, <bp@alien8.de>,
+	<catalin.marinas@arm.com>, <corbet@lwn.net>, <dave.hansen@linux.intel.com>,
+	<devicetree@vger.kernel.org>, <dwmw2@infradead.org>, <ebiederm@xmission.com>,
+	<graf@amazon.com>, <hpa@zytor.com>, <jgg@nvidia.com>, <jgowans@amazon.com>,
+	<kexec@lists.infradead.org>, <krzk@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <luto@kernel.org>,
+	<mark.rutland@arm.com>, <mingo@redhat.com>, <pasha.tatashin@soleen.com>,
+	<pbonzini@redhat.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
+	<robh@kernel.org>, <rostedt@goodmis.org>, <rppt@kernel.org>,
+	<saravanak@google.com>, <skinsburskii@linux.microsoft.com>,
+	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <will@kernel.org>,
+	<x86@kernel.org>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+In-Reply-To: <20250402164453.2470750-1-changyuanl@google.com>
+References: <mafs0tt7eqt6f.fsf@amazon.de>
+	<20250402164453.2470750-1-changyuanl@google.com>
+Date: Wed, 2 Apr 2025 16:47:38 +0000
+Message-ID: <mafs0ecyaqzmd.fsf_-_@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250402_054759_189465_E9355EA7 
-X-CRM114-Status: GOOD (  16.79  )
+X-CRM114-CacheID: sfid-20250402_094748_285940_31E558F0 
+X-CRM114-Status: GOOD (  30.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,129 +103,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The amount of memory allocated at kexec load, even with the extra memory
-allocated, might not be large enough for the entire measurement list.  The
-indeterminate interval between kexec 'load' and 'execute' could exacerbate
-this problem.
+Hi,
 
-Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
-measured as critical data at kexec 'load' and 'execute' respectively.
-Report the allocated kexec segment size, IMA binary log size and the
-runtime measurements count as part of those events.
+On Wed, Apr 02 2025, Changyuan Lyu wrote:
 
-These events, and the values reported through them, serve as markers in
-the IMA log to verify the IMA events are captured during kexec soft
-reboot.  The presence of a 'kexec_load' event in between the last two
-'boot_aggregate' events in the IMA log implies this is a kexec soft
-reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-after kexec soft reboot implies missing events in that window which
-results in inconsistency with TPM PCR quotes, necessitating a cold boot
-for a successful remote attestation.
+> Hi Pratyush, Thanks for suggestions!
+>
+> On Thu, Mar 27, 2025 at 17:28:40 +0000, Pratyush Yadav <ptyadav@amazon.de> wrote:
+>> On Thu, Mar 27 2025, Jason Gunthorpe wrote:
+>>
+>> > On Thu, Mar 27, 2025 at 10:03:17AM +0000, Pratyush Yadav wrote:
+>> >
+>> >> Of course, with the current linked list structure, this cannot work. But
+>> >> I don't see why we need to have it. I think having a page-table like
+>> >> structure would be better -- only instead of having PTEs at the lowest
+>> >> levels, you have the bitmap.
+>> >
+>> > Yes, but there is a trade off here of what I could write in 30 mins
+>> > and what is maximally possible :) The xarray is providing a page table
+>> > implementation in a library form.
+>> >
+>> > I think this whole thing can be optimized, especially the
+>> > memblock_reserve side, but the idea here is to get started and once we
+>> > have some data on what the actual preservation workload is then
+>> > someone can optimize this.
+>> >
+>> > Otherwise we are going to be spending months just polishing this one
+>> > patch without any actual data on where the performance issues and hot
+>> > spots actually are.
+>>
+>> The memblock_reserve side we can optimize later, I agree. But the memory
+>> preservation format is ABI and I think that is worth spending a little
+>> more time on. And I don't think it should be that much more complex than
+>> the current format.
+>>
+>> I want to hack around with it, so I'll give it a try over the next few
+>> days and see what I can come up with.
+>
+> I agree with Jason that "nothing is ABI at this
+> point" and it will take some time for KHO to stabilize.
+>
+> On the other hand if you have already came up with something working and
+> simple, we can include it in the next version.
 
-These critical data events are displayed as hex encoded ascii in the
-ascii_runtime_measurement_list.  Verifying the critical data hash requires 
-calculating the hash of the decoded ascii string.  
+I already have something that works with zero-order pages. I am
+currently implementing support for other orders. It is almost done, but
+I need to test it and do a performance comparison with the current
+patch. Will post something soon!
 
-For example, to verify the 'kexec_load' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep  kexec_load | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-
-To verify the 'kexec_execute' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep kexec_execute | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: steven chen <chenste@linux.microsoft.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
----
- security/integrity/ima/ima.h       |  6 ++++++
- security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_queue.c |  5 +++++
- 3 files changed, 32 insertions(+)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 24d09ea91b87..34815baf5e21 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 				   unsigned long flags, bool create);
- #endif
- 
-+#ifdef CONFIG_IMA_KEXEC
-+void ima_measure_kexec_event(const char *event_name);
-+#else
-+static inline void ima_measure_kexec_event(const char *event_name) {}
-+#endif
-+
- /*
-  * The default binary_runtime_measurements list format is defined as the
-  * platform native format.  The canonical format is defined as little-endian.
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index d1c9d369ba08..38cb2500f4c3 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -17,6 +17,8 @@
- #include "ima.h"
- 
- #ifdef CONFIG_IMA_KEXEC
-+#define IMA_KEXEC_EVENT_LEN 256
-+
- static bool ima_kexec_update_registered;
- static struct seq_file ima_kexec_file;
- static size_t kexec_segment_size;
-@@ -31,6 +33,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
- 	sf->count = 0;
- }
- 
-+void ima_measure_kexec_event(const char *event_name)
-+{
-+	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-+	size_t buf_size = 0;
-+	long len;
-+	int n;
-+
-+	buf_size = ima_get_binary_runtime_size();
-+	len = atomic_long_read(&ima_htable.len);
-+
-+	n = scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-+		      "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
-+		      "ima_runtime_measurements_count=%ld;",
-+		      kexec_segment_size, buf_size, len);
-+
-+	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event, n, false, NULL, 0);
-+}
-+
- static int ima_alloc_kexec_file_buf(size_t segment_size)
- {
- 	/*
-@@ -53,6 +73,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
- out:
- 	ima_kexec_file.read_pos = 0;
- 	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-+	ima_measure_kexec_event("kexec_load");
- 
- 	return 0;
- }
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 83d53824aa98..590637e81ad1 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
- 			       unsigned long action,
- 			       void *data)
- {
-+#ifdef CONFIG_IMA_KEXEC
-+	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
-+		ima_measure_kexec_event("kexec_execute");
-+#endif
-+
- 	ima_measurements_suspend();
- 
- 	return NOTIFY_DONE;
 -- 
-2.25.1
-
+Regards,
+Pratyush Yadav
 
