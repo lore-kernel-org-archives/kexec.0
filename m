@@ -4,96 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F75BC36010
-	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 03:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2A8AC28B20
+	for <kexec@archiver.kernel.org>; Wed,  2 Apr 2025 07:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tS1OEXgG6dBoeONA1DljEz14zXLQwqcVtv3Vz/VIHqU=; b=grwzioINtrRNS0oJxkOfHr5A3i
-	HbRIwimuKPrl1lhqgitpEVnowWaN5373GBrtYdDb6tt3cHVf8tnz9UCUJetjp02IzO1NjE01kO7F6
-	i9rkYueC9CKJzoqssOSwC9uxuTc0Z6QzC+Va4sm8nWvHfGhbeGF00KtytgTs0CY3e677lx0Mw1do5
-	T5YuNIvuv1n83EfnR7fy8UXf5txYFHt/VLcqSocuXINfa/R/orUDgdXq5+ySrO0U8OISOSwPVUmYc
-	30wGwArBMscTWPJcXPezicYiTbszwR1UoDSZb+mUNSqg9PRoN9wovQFzHGmRr32YpxYnO/ammLXz+
-	lOuDH6Qw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=; b=lLp+MQOVRkMBL2MmFdZJNT5wQ8
+	zZ95lA9izbhJJTA73lvd42gLY4FQmju2PgmZJplxdMSIutxNqVuWk3hJVLYHs6/ZcmyvSHQKp3KCM
+	x/9/gLwCpUOG7GWmHI8qNgXhCBDIQVN2NtnmGYRZR6myk44VlP7qmrFYQ0wbYeGH+cBScTQ0g1GLT
+	V1oaE7/WL05/Z6uSC9YtsczD+DOu9j2SdvyB/108dDAUUZY+DFj9Mtg/aR8B3Bv6bobsI3J+psY+R
+	jIczIiRYlSlNkP7MXwnJzYtXZF7nPVGW66FHErgnk5xEtOwpzEB4o7aAy/BAoKZ2G+XgazITJsgoC
+	q27yW8rQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzonx-000000052Cz-3vsd;
-	Wed, 02 Apr 2025 03:30:17 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1tzsdY-00000005OoO-3GQa;
+	Wed, 02 Apr 2025 07:35:48 +0000
+Received: from mail.fintara.pl ([51.68.214.200])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzonu-000000052CU-1DyY
+	id 1tzsdU-00000005OnK-2JK2
 	for kexec@lists.infradead.org;
-	Wed, 02 Apr 2025 03:30:15 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531NDHuA017985;
-	Wed, 2 Apr 2025 03:30:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=tS1OEX
-	gG6dBoeONA1DljEz14zXLQwqcVtv3Vz/VIHqU=; b=Us28gNiVZ2/+QTYZsh0W/A
-	cnBcpaBYJnloblL/XBINj0jQDa2tORkvVJAFhy5ycztSWd2Wf+V/RfUC2ar8bWhf
-	w+S4kyMAkX0Ff4Wt/0I9e0PC1FjR5dXBNyWQ/Lz1Xkh3Icl+boC9+ilxXB2dd20c
-	c4vWZpItdi6H0QOycTxrOtNawdEfZnSRExZmDAr4TihE9ShL7GUJqwWNg/43vU5L
-	bH3srV67MDaLb9uMJ2z0F+Yij8UA/rE02jHNBIM25RuOQwgSwztJuMrHqTkBNw9S
-	ealxnpbofbnG0ZOOy7YvI620Vp/EjSrzeEtd0J9Q2eKDYtjXslsNipk6yp+h6m9Q
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45r8h9xf9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 03:30:12 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5320EfiV014555;
-	Wed, 2 Apr 2025 03:30:11 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pvpm5v8d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 03:30:11 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5323UASQ22479548
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 03:30:10 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BA31858056;
-	Wed,  2 Apr 2025 03:30:10 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5AC7E58052;
-	Wed,  2 Apr 2025 03:30:10 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.133.136])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Apr 2025 03:30:10 +0000 (GMT)
-Message-ID: <d14c72bbb377c6f8f0efdbf6d725c553b3ad741c.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: RuiRui Yang <ruyang@redhat.com>, Coiby Xu <coxu@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org
-Date: Tue, 01 Apr 2025 23:30:09 -0400
-In-Reply-To: <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
-References: <20250331061611.253919-1-bhe@redhat.com>
-	 <b1eba83a9f68ed9a19100f6c0dc5aca7aff437d5.camel@linux.ibm.com>
-	 <fv7h5jfb4r6d5j6jjpgyjbv75zyzqpy6tbqn3ahzuewghnvrgd@5yclg75kr3cq>
-	 <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
+	Wed, 02 Apr 2025 07:35:47 +0000
+Received: by mail.fintara.pl (Postfix, from userid 1002)
+	id 7DE2648766; Wed,  2 Apr 2025 09:35:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fintara.pl; s=mail;
+	t=1743579335; bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=;
+	h=Date:From:To:Subject:From;
+	b=Ji5VGPK8IaA7Fep5yv3CGUdD/W1gzW+CdAgj6KqbPJU9FW73XKZ3S+lRt/QuQxnrV
+	 sY3DKcR3f5+DTJAnPbltdwwWwNelyrDWZPoavVtWfS9pOekqFy/UCmkx3CU66FlDdJ
+	 +RSCW6R9aTdMN3ZKA7YZcoyeXr83Rnje6dyXUhoRuUSOjjPUULUGsR0YHwzz/wE96C
+	 RB8yP9XGe4CCLQpcsfqL3AjF0nysX/YjcGral+/3UCdgAA4d8FygLyj1sl6s8zHdhI
+	 gDn5xlx2yOlXFwcDvQdpecHUJzdoZnjsmUG27RlcI2Duq1l9ix9ELLVmtGIntHhPJs
+	 oM/2I5gM2MFHQ==
+Received: by mail.fintara.pl for <kexec@lists.infradead.org>; Wed,  2 Apr 2025 07:35:06 GMT
+Message-ID: <20250402084500-0.1.8q.1yof7.0.31ac1ki21j@fintara.pl>
+Date: Wed,  2 Apr 2025 07:35:06 GMT
+From: "Dominik Lotka" <dominik.lotka@fintara.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.fintara.pl
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XPhfhJA0wTBn6zLvzuiCL9zKe0rzqk73
-X-Proofpoint-GUID: XPhfhJA0wTBn6zLvzuiCL9zKe0rzqk73
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_01,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- mlxscore=0 clxscore=1011 phishscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020018
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250401_203014_341864_D7366AB5 
-X-CRM114-Status: GOOD (  34.45  )
+X-CRM114-CacheID: sfid-20250402_003545_262227_6130564B 
+X-CRM114-Status: UNSURE (   0.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,111 +66,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 2025-04-02 at 09:47 +0800, RuiRui Yang wrote:
-> On Wed, 2 Apr 2025 at 09:41, Coiby Xu <coxu@redhat.com> wrote:
-> >=20
-> > On Mon, Mar 31, 2025 at 08:15:08AM -0400, Mimi Zohar wrote:
-> > > On Mon, 2025-03-31 at 14:16 +0800, Baoquan He wrote:
-> > > > It doesn't make sense to run IMA functionality in kdump kernel, and=
- that
-> > > > will cost extra memory. It would be great to allow IMA to be disabl=
-ed on
-> > > > purpose, e.g for kdump kernel.
-> > > >=20
-> > > > Hence add a knob here to allow people to disable IMA if needed.
-> > > >=20
-> > > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > > > ---
-> > > >  security/integrity/ima/ima_main.c | 21 +++++++++++++++++++++
-> > > >  1 file changed, 21 insertions(+)
-> > > >=20
-> > > > diff --git a/security/integrity/ima/ima_main.c b/security/integrity=
-/ima/ima_main.c
-> > > > index 28b8b0db6f9b..5d677d1389fe 100644
-> > > > --- a/security/integrity/ima/ima_main.c
-> > > > +++ b/security/integrity/ima/ima_main.c
-> > > > @@ -38,11 +38,27 @@ int ima_appraise;
-> > > >=20
-> > > >  int __ro_after_init ima_hash_algo =3D HASH_ALGO_SHA1;
-> > > >  static int hash_setup_done;
-> > > > +static int ima_disabled =3D 0;
-> > > >=20
-> > > >  static struct notifier_block ima_lsm_policy_notifier =3D {
-> > > >      .notifier_call =3D ima_lsm_policy_change,
-> > > >  };
-> > > >=20
-> > > > +static int __init ima_setup(char *str)
-> > > > +{
-> > > > +    if (strncmp(str, "off", 3) =3D=3D 0)
-> > > > +                ima_disabled =3D 1;
-> > > > +        else if (strncmp(str, "on", 2) =3D=3D 0)
-> > > > +                ima_disabled =3D 0;
-> > > > +        else
-> > > > +                pr_err("invalid ima setup option: \"%s\" ", str);
-> > > > +
-> > > > +    return 1;
-> > > > +}
-> > > > +__setup("ima=3D", ima_setup);
-> > >=20
-> > > I understand your wanting to disable IMA for Kdump, but this goes way=
- beyond
-> > > that.  Please don't make it generic like this.
-> > >=20
-> > > Please refer to ima_appraise_parse_cmdline().
-> >=20
-> > Hi Mimi,
-> >=20
-> > To save memory for kdump, it seems init_ima has been to be skipped thus
-> > ima=3Doff is necessary (ima_appraise=3Doff won't serve the purpose). Or=
- do
-> > you have any specific concerns in mind?
->=20
-> I think as Mimi said see below logic enforces the IMA even with the
-> cmdline disabling, see ima_appraise_parse_cmdline:
-> if (sb_state) {
->                 if (!(appraisal_state & IMA_APPRAISE_ENFORCE))
->                         pr_info("Secure boot enabled: ignoring
-> ima_appraise=3D%s option",
->                                 str);
->         } else {
->                 ima_appraise =3D appraisal_state;
->         }
+Dzie=C5=84 dobry,
 
-Thanks, RuiRui.
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
 
-Coiby, would disabling just IMA-measurement, as opposed to IMA-appraisal, s=
-ave
-sufficient memory for kdump?
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
 
-> > >=20
-> > > > +
-> > > > +
-> > > > +
-> > > >  static int __init hash_setup(char *str)
-> > > >  {
-> > > >      struct ima_template_desc *template_desc =3D ima_template_desc_=
-current();
-> > > > @@ -1176,6 +1192,11 @@ static int __init init_ima(void)
-> > > >  {
-> > > >      int error;
-> > > >=20
-> > > > +    if (ima_disabled) {
-> > > > +            pr_info("IMA functionality is disabled on purpose!");
-> > > > +            return 0;
-> > > > +    }
-> > > > +
-> > > >      ima_appraise_parse_cmdline();
-> > > >      ima_init_template_list();
-> > > >      hash_setup(CONFIG_IMA_DEFAULT_HASH);
-> > >=20
-> > >=20
-> >=20
-> > --
-> > Best regards,
-> > Coiby
-> >=20
-> >=20
->=20
->=20
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
 
+Zapraszam do kontaktu.
+
+
+Pozdrawiam
+Dominik Lotka
 
