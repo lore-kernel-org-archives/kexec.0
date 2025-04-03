@@ -4,55 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 491D2C3600C
-	for <kexec@archiver.kernel.org>; Thu,  3 Apr 2025 07:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DAE19C3600C
+	for <kexec@archiver.kernel.org>; Thu,  3 Apr 2025 20:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=R/JFnieg8KT8MA1jdu6kYjc2I1/Qg8QJjqgxQn98x4M=; b=gYZpMpxb9Ll7s/NRO7EN6V1/Pd
-	3yI0Iqt/7ohVuQj9Xghp0WqmswQo1dUQ/oBsorVxP9a3AptwB5s4ZxVYRNrP/oJpoTP8fO4bsAInh
-	ql1daF9kqJiSO01sklTlsPDB1HLckXIC2pW2a6UoQNYA0As3JKEK+PL/AbGjvAndd73JR/rxRNXjh
-	Vp0jX19cpYQ50j9HH9VB4gObPgL0a+Ut+EkTTsjh/ipsAWxzDp3Vn1LpR7aZnuAEpq0Qij33iXFqG
-	0NcGDOj8pmyQTWBZdif8Vp+4APl3i9C1YVIfkXoWOqBIyAE8YAYoqpNbS5NXCclSx57pSSKcSPwvC
-	5AvJZe1w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lTs1WwONNvstTLbDB+gWMOQsHyhJxJMCwy6FbePxvzo=; b=tcd7RglEbVEBOlOKisfeGnCygX
+	RGIXxFPlgYmH+Z4byZegwMEAe20GRyCTnRbFx3Pn05XY7lo9+3Ui8sfB//aGQhS/w3gIHvJTsNQB8
+	N7Hw/9+aLArSqpe1fiK8Gzzpdp0uweb/D+MF4yh9Aior2r8ojUYvGMijUew+nBmnwu0bnZE3vpM/M
+	r54I/xGTdHfwqgxJW7HQ4nA5/kgIzsP2FAehgnBpve++DTWX4dkY5Vw2t6gDyHpXUq9nqzk5OVNeM
+	kIv9HSqPADcsZ9jUgtEAbRVhHfUWqVjLhu9fg/1gjIS86uCMn76hzbf8z1WYllGB6At5MO4jxOmHE
+	Ji3Vskrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0F7A-000000088G8-08Gm;
-	Thu, 03 Apr 2025 07:35:52 +0000
-Received: from mail.sparklesage.pl ([141.94.21.160])
+	id 1u0QrL-00000009tcs-3eCn;
+	Thu, 03 Apr 2025 20:08:19 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0F76-000000088Dn-2b0a
+	id 1u0Qn0-00000009saB-1tnx
 	for kexec@lists.infradead.org;
-	Thu, 03 Apr 2025 07:35:51 +0000
-Received: by mail.sparklesage.pl (Postfix, from userid 1002)
-	id 41D7549692; Thu,  3 Apr 2025 09:35:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sparklesage.pl;
-	s=mail; t=1743665745;
-	bh=R/JFnieg8KT8MA1jdu6kYjc2I1/Qg8QJjqgxQn98x4M=;
-	h=Date:From:To:Subject:From;
-	b=ellFtJkuDDxt5EPcDOS0bO6wlY3bcC7ocz4oxVxROnmE1QIwebqoChj44oFo99CmT
-	 m0te+5e/1SQGpACnxWNNISbCgEX9gbP7CZ+DcCg7YYTVd/dissyA1x6HN3XXPQSxNu
-	 Im6PWhidFwUYwehpKuHyJFJyYE3F1ttEg9Z1EDRluBZerdg9pJpiQnrWLF9owSmfAf
-	 380aYWVC5YvcAgV3Vyo69r/7mfIEpbaX2/lwvmFPBBi5Hte+gLOLWqCl5ZDP64hU2W
-	 EaY+oRF6qim9dAQioF42A575wpQAIS3Yts1jmBXsycpx4eBiHoA7eBFf+a2TpyhQF/
-	 MLhXkzbyfDDjQ==
-Received: by mail.sparklesage.pl for <kexec@lists.infradead.org>; Thu,  3 Apr 2025 07:35:26 GMT
-Message-ID: <20250403084500-0.1.d7.1ebyy.0.fwsr3i4h5f@sparklesage.pl>
-Date: Thu,  3 Apr 2025 07:35:26 GMT
-From: =?UTF-8?Q?"Katarzyna_Chowa=C5=84ska"?= <katarzyna.chowanska@sparklesage.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?Zobowi=C4=85zanie_?=
-X-Mailer: mail.sparklesage.pl
-MIME-Version: 1.0
+	Thu, 03 Apr 2025 20:03:51 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533FhT6j007564;
+	Thu, 3 Apr 2025 20:03:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=lTs1Ww
+	ONNvstTLbDB+gWMOQsHyhJxJMCwy6FbePxvzo=; b=BwU/KWELwmSVFpvqbEHyK9
+	cfHKK315UaHFYl4jnCL+nimFLNW6TWsmTIImLE7LwVQhOiZb442yrWcKB1a/PALB
+	OqdbpCkS+jH/z8N6ZWTJWaynQXXt1WG0KlAMXD0UPnxsbV5W/Bvfk5lC4WaADYBF
+	NiXCW9O98ftX36VYy8irB5dinfMnh2kpDUzktRxaubN+3amreKc7zlBehy44UXIg
+	kTTfagwYxxr/3IAMng6FKvujbUPOUKB7BMss/FUe1cl1nSsHt+ElVOE/C/Oj9wRt
+	G4YuvDT8144iLcN9MMV9XuNMYQuFPTUCQc/3tMAUIArBeeiZIl5f52TJgaoIqbkQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45surq9ucy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 20:03:48 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 533HQDSQ004757;
+	Thu, 3 Apr 2025 20:03:47 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45puk06qvp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 20:03:46 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 533K3kFl2687590
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Apr 2025 20:03:46 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0281D58045;
+	Thu,  3 Apr 2025 20:03:46 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 736F958054;
+	Thu,  3 Apr 2025 20:03:45 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Apr 2025 20:03:45 +0000 (GMT)
+Message-ID: <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>, Coiby Xu <coxu@redhat.com>
+Cc: RuiRui Yang <ruyang@redhat.com>, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org
+Date: Thu, 03 Apr 2025 16:03:45 -0400
+In-Reply-To: <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
+References: <20250331061611.253919-1-bhe@redhat.com>
+	 <b1eba83a9f68ed9a19100f6c0dc5aca7aff437d5.camel@linux.ibm.com>
+	 <fv7h5jfb4r6d5j6jjpgyjbv75zyzqpy6tbqn3ahzuewghnvrgd@5yclg75kr3cq>
+	 <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
+	 <d14c72bbb377c6f8f0efdbf6d725c553b3ad741c.camel@linux.ibm.com>
+	 <h3bjnvtded2hgbhya6ugb62mnlmkjpmifa6w6wwutfd3jq326r@lzpoun5pksev>
+	 <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BysYrzUsiqZo4DyzHP4moMvFZVdxU7jq
+X-Proofpoint-ORIG-GUID: BysYrzUsiqZo4DyzHP4moMvFZVdxU7jq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504030105
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250403_003549_363015_351019A8 
-X-CRM114-Status: UNSURE (   0.42  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250403_130350_500995_E8FE19D5 
+X-CRM114-Status: GOOD (  43.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,33 +111,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Szanowni Pa=C5=84stwo,
+On Wed, 2025-04-02 at 19:49 +0800, Baoquan He wrote:
+> On 04/02/25 at 04:43pm, Coiby Xu wrote:
+> > On Tue, Apr 01, 2025 at 11:30:09PM -0400, Mimi Zohar wrote:
+> > > On Wed, 2025-04-02 at 09:47 +0800, RuiRui Yang wrote:
+> > [...]
+> > > > > > that.  Please don't make it generic like this.
+> > > > > >=20
+> > > > > > Please refer to ima_appraise_parse_cmdline().
+> > > > >=20
+> > > > > Hi Mimi,
+> > > > >=20
+> > > > > To save memory for kdump, it seems init_ima has been to be skippe=
+d thus
+> > > > > ima=3Doff is necessary (ima_appraise=3Doff won't serve the purpos=
+e). Or do
+> > > > > you have any specific concerns in mind?
+> > > >=20
+> > > > I think as Mimi said see below logic enforces the IMA even with the
+> > > > cmdline disabling, see ima_appraise_parse_cmdline:
+> > > > if (sb_state) {
+> > > >                 if (!(appraisal_state & IMA_APPRAISE_ENFORCE))
+> > > >                         pr_info("Secure boot enabled: ignoring
+> > > > ima_appraise=3D%s option",
+> > > >                                 str);
+> > > >         } else {
+> > > >                 ima_appraise =3D appraisal_state;
+> > > >         }
+> >=20
+> > Thanks for pointing me to the above code! Note with the whole IMA
+> > disabled as done by this patch, the above code will not run so IMA
+> > (appraisal) won't be enforced.
+> >=20
+> > >=20
+> > > Thanks, RuiRui.
+> > >=20
+> >=20
+> > Mimi, so do I understand it correctly that your want IMA-appraisal to b=
+e
+> > always enabled as long as secure boot is enabled even if users choose t=
+o
+> > disable IMA?=C2=A0
 
-presja zobowi=C4=85za=C5=84 finansowych i trudne otoczenie biznesowe mog=C4=
-=85 szybko zachwia=C4=87 stabilno=C5=9Bci=C4=85 nawet dobrze prosperuj=C4=
-=85cej firmy.=20
+Secure boot is not the only reason.  Based on policy IMA-appraisal and EVM
+calculate and store file hashes and HMAC's in their respective security xat=
+trs.
+Normally the usage of file hashes and HMAC's is limited to mutable files.=
+=20
+Disabling IMA-appraisal could result in not properly updating the security
+xattrs, which would result in not being able to verify the file's integrity=
+ on
+reboot.
 
-Jako krajowy lider w dziedzinie restrukturyzacji pomagamy przedsi=C4=99bi=
-orcom nie tylko zachowa=C4=87 rentowno=C5=9B=C4=87, ale przede wszystkim =
-skutecznie chroni=C4=87 wypracowany maj=C4=85tek.
+On systems where the RPM includes file signatures, file signatures of immut=
+able
+files can be safely restored.  Although it is possible to walk the filesyst=
+em(s)
+"fixing" the xattrs of mutable files, it defeats the purpose.  "fix" mode s=
+hould
+only be enabled in a trusted environment.
 
-Ostatnie zmiany prawne otworzy=C5=82y nowe, niezwykle efektywne mo=C5=BCl=
-iwo=C5=9Bci ochrony firm.=20
+> > I wonder what security issue will it bring if this promise
+> > gets broken considering other LSMs can SELinux can be disabled when
+> > secure boot is enabled?
 
-Szczeg=C3=B3lnie warte uwagi jest post=C4=99powanie o zatwierdzenie uk=C5=
-=82adu (PZU), kt=C3=B3re zapewnia natychmiastow=C4=85 ochron=C4=99 maj=C4=
-=85tku i szereg dodatkowych korzy=C5=9Bci, o kt=C3=B3rych ma=C5=82o kt=C3=
-=B3ry przedsi=C4=99biorca wie.
+The builtin IMA policy rules are not defined in terms of SELinux labels.  I=
+f the
+initial IMA custom policy defines rules based on SELinux labels and SELinux=
+ is
+not enabled, the policy will fail to be loaded.
 
-Wczesna konsultacja pozwala nam wdro=C5=BCy=C4=87 najkorzystniejsze rozwi=
-=C4=85zania, w=C5=82=C4=85cznie z zaawansowanym post=C4=99powaniem sanacy=
-jnym, kt=C3=B3re daje firmom wyj=C4=85tkowo szerokie mo=C5=BCliwo=C5=9Bci=
- prawne przy jednoczesnym utrzymaniu bie=C5=BC=C4=85cej dzia=C5=82alno=C5=
-=9Bci.
+> > > Coiby, would disabling just IMA-measurement, as opposed to IMA-apprai=
+sal, save
+> > > sufficient memory for kdump?
+> >=20
+> > For disabling just IMA-measurement, do you mean not enabling any measur=
+e
+> > rules?  The more memory reserved for the kdump kernel, the less memory
+> > can be used by the 1st kernel. So from the perfective of kdump, we try
+> > to make the memory footprint as smaller as possible.
 
-Jaki termin na rozmow=C4=99 by=C5=82by dla Pa=C5=84stwa najdogodniejszy?
+Got it.
 
+> > Baoquan, do you have any statistics about the memory overhead of IMA?
+>=20
+> I am getting a system to check that. I think there are two aspects of
+> IMA functionality we want to disable. One is disable the IMA-measurement
+> copying from 1st kernel to 2nd kernel, this is only needed by kexec
+> reboot; the other is IMA is not needed at all in kdump kernel, means we
+> don't want to call ima_init() to initialize
+> ima_keyring/crypto/template/digests/fs etc.=20
+>=20
+> With my shallow knowledge about IMA, I don't know how to imitate
+> appraisal cmdline to disable IMA partially in kdump kernel case.
 
-Pozdrawiam
-Katarzyna Chowa=C5=84ska
+The IMA policy controls how much or how little IMA measures and appraises. =
+ Most
+of the memory usage is the IMA measurement list, itself, and the per file c=
+ache
+info.  (The per file cache info limits re-measuring or re-appraising files.=
+)
+
+Similarly my knowledge of kdump is very limited.  Is there a way for the ke=
+rnel
+to differentiate between kexec and kdump?  If we need a mechanism to disabl=
+e
+IMA-measurement, I'd *really* prefer it be limited to kdump.
+
+thanks,
+
+Mimi
+
+>=20
+> One exmaple is 'cgroup_disable=3Dmemory' we have been doing to add into
+> kdump cmdline because mem_cgroup is not needed at all for kdump kernel.
+> We want to achieve that effect.
 
