@@ -4,73 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E566C36014
-	for <kexec@archiver.kernel.org>; Thu,  3 Apr 2025 02:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 491D2C3600C
+	for <kexec@archiver.kernel.org>; Thu,  3 Apr 2025 07:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IB+ISU4Wjgqen/35fHtciQhc4tnSvmILc9sQEZbFbPw=; b=FRYfLDbc5sI0oG6t+vDksjZGae
-	mjygk7zmUTvmILuoDJKqX38cTG3xptXrppQX9hFxk1wi2KM55wOLua2cgVR3gv4gBoM93ABDTAIuz
-	D2suiwZBAsjd4SLKEShdTGvYaYez9PYXtNA3U1/bxOopqgb4WECSM729zNaR0A31xo+71o2odKwt4
-	VNiYjGR361YVkOk0U+sym4a3sF3YvQ/L4yjSQdV54HpZ1R88PA0eREaGDfCWzy7GyQmF5EkXxvC70
-	kjmlWYJZG03Y/JGCcmNDtadcYSfLtSchBu/qnea06CPM6G8TcuJcWJmunfz87zEUNpNSdCYuzcDdO
-	hc/J8zKw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=R/JFnieg8KT8MA1jdu6kYjc2I1/Qg8QJjqgxQn98x4M=; b=gYZpMpxb9Ll7s/NRO7EN6V1/Pd
+	3yI0Iqt/7ohVuQj9Xghp0WqmswQo1dUQ/oBsorVxP9a3AptwB5s4ZxVYRNrP/oJpoTP8fO4bsAInh
+	ql1daF9kqJiSO01sklTlsPDB1HLckXIC2pW2a6UoQNYA0As3JKEK+PL/AbGjvAndd73JR/rxRNXjh
+	Vp0jX19cpYQ50j9HH9VB4gObPgL0a+Ut+EkTTsjh/ipsAWxzDp3Vn1LpR7aZnuAEpq0Qij33iXFqG
+	0NcGDOj8pmyQTWBZdif8Vp+4APl3i9C1YVIfkXoWOqBIyAE8YAYoqpNbS5NXCclSx57pSSKcSPwvC
+	5AvJZe1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0Al8-00000007dhq-3mPF;
-	Thu, 03 Apr 2025 02:56:50 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1u0F7A-000000088G8-08Gm;
+	Thu, 03 Apr 2025 07:35:52 +0000
+Received: from mail.sparklesage.pl ([141.94.21.160])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0Al6-00000007dh7-03ta
+	id 1u0F76-000000088Dn-2b0a
 	for kexec@lists.infradead.org;
-	Thu, 03 Apr 2025 02:56:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743649006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IB+ISU4Wjgqen/35fHtciQhc4tnSvmILc9sQEZbFbPw=;
-	b=AP90ihRT70B0Q3I6BTCU/xn5Zm0cLaANh+YmHPA577Ty+DH6muEOQIZ5nMOd9pPqszYGjD
-	8PN16/BoAG1pTKmrZaYnw2/UVXH/agZzYDkPI2WLjU4tl+GBBM4sayZNOT8rSh7NJAyD40
-	c4mWUgem1xSsY68Dyn++2cOzDFi0T0s=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-101-hKNG8ImCMBGdb8O0EFN_-w-1; Wed,
- 02 Apr 2025 22:56:41 -0400
-X-MC-Unique: hKNG8ImCMBGdb8O0EFN_-w-1
-X-Mimecast-MFC-AGG-ID: hKNG8ImCMBGdb8O0EFN_-w_1743649000
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2C4A19560B8;
-	Thu,  3 Apr 2025 02:56:39 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2DC21809B68;
-	Thu,  3 Apr 2025 02:56:37 +0000 (UTC)
-Date: Thu, 3 Apr 2025 10:56:32 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Zhiquan Li <zhiquan1.li@intel.com>, k-hagio-ab@nec.com,
-	yamazaki-msmt@nec.com, lijiang@redhat.com, ltao@redhat.com
-Cc: akpm@linux-foundation.org, vgoyal@redhat.com, dyoung@redhat.com,
-	kirill.shutemov@linux.intel.com, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE
- to vmcoreinfo
-Message-ID: <Z+344FNhxiMonoZb@MiWiFi-R3L-srv>
-References: <20250403030801.758687-1-zhiquan1.li@intel.com>
+	Thu, 03 Apr 2025 07:35:51 +0000
+Received: by mail.sparklesage.pl (Postfix, from userid 1002)
+	id 41D7549692; Thu,  3 Apr 2025 09:35:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sparklesage.pl;
+	s=mail; t=1743665745;
+	bh=R/JFnieg8KT8MA1jdu6kYjc2I1/Qg8QJjqgxQn98x4M=;
+	h=Date:From:To:Subject:From;
+	b=ellFtJkuDDxt5EPcDOS0bO6wlY3bcC7ocz4oxVxROnmE1QIwebqoChj44oFo99CmT
+	 m0te+5e/1SQGpACnxWNNISbCgEX9gbP7CZ+DcCg7YYTVd/dissyA1x6HN3XXPQSxNu
+	 Im6PWhidFwUYwehpKuHyJFJyYE3F1ttEg9Z1EDRluBZerdg9pJpiQnrWLF9owSmfAf
+	 380aYWVC5YvcAgV3Vyo69r/7mfIEpbaX2/lwvmFPBBi5Hte+gLOLWqCl5ZDP64hU2W
+	 EaY+oRF6qim9dAQioF42A575wpQAIS3Yts1jmBXsycpx4eBiHoA7eBFf+a2TpyhQF/
+	 MLhXkzbyfDDjQ==
+Received: by mail.sparklesage.pl for <kexec@lists.infradead.org>; Thu,  3 Apr 2025 07:35:26 GMT
+Message-ID: <20250403084500-0.1.d7.1ebyy.0.fwsr3i4h5f@sparklesage.pl>
+Date: Thu,  3 Apr 2025 07:35:26 GMT
+From: =?UTF-8?Q?"Katarzyna_Chowa=C5=84ska"?= <katarzyna.chowanska@sparklesage.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Zobowi=C4=85zanie_?=
+X-Mailer: mail.sparklesage.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403030801.758687-1-zhiquan1.li@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250402_195648_173392_AB4E49B9 
-X-CRM114-Status: GOOD (  24.12  )
+X-CRM114-CacheID: sfid-20250403_003549_363015_351019A8 
+X-CRM114-Status: UNSURE (   0.42  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,96 +67,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add makedumpfile/Crash utilities maintainers to let them know.
+Szanowni Pa=C5=84stwo,
 
-On 04/03/25 at 11:08am, Zhiquan Li wrote:
-> On Intel TDX guest, unaccepted memory is unusable free memory which is
-> not managed by buddy, until it's accepted by guest.  Before that, it
-> cannot be accessed by the first kernel as well as the kexec'ed kernel.
-> The kexec'ed kernel will skip these pages and fill in zero data for the
-> reader of vmcore.
-> 
-> The dump tool like makedumpfile creates a page descriptor (size 24
-> bytes) for each non-free page, including zero data page, but it will not
-> create descriptor for free pages.  If it is not able to distinguish
-> these unaccepted pages with zero data pages, a certain amount of space
-> will be wasted in proportion (~1/170).  In fact, as a special kind of
-> free page the unaccepted pages should be excluded, like the real free
-> pages.
-> 
-> Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
-> that dump tool can identify whether a page is unaccepted.
-> 
-> Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
-> 
-> Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+presja zobowi=C4=85za=C5=84 finansowych i trudne otoczenie biznesowe mog=C4=
+=85 szybko zachwia=C4=87 stabilno=C5=9Bci=C4=85 nawet dobrze prosperuj=C4=
+=85cej firmy.=20
 
-Looks good to me.
+Jako krajowy lider w dziedzinie restrukturyzacji pomagamy przedsi=C4=99bi=
+orcom nie tylko zachowa=C4=87 rentowno=C5=9B=C4=87, ale przede wszystkim =
+skutecznie chroni=C4=87 wypracowany maj=C4=85tek.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Ostatnie zmiany prawne otworzy=C5=82y nowe, niezwykle efektywne mo=C5=BCl=
+iwo=C5=9Bci ochrony firm.=20
 
-> 
-> ---
-> Vmcore size statistic of a freshly booted TD VM with different memory
-> sizes:
-> 
->   VM.mem | Before  After
->   -------+----------------
->   512G   | ~4.9G   ~2.0G
->   256G   | ~2.0G   ~1.1G
-> 
-> Most of changes are done by makedumpfile, but the prerequisite is kernel
-> needs to export an indicator to identify unaccepted pages in vmcoreinfo.
-> 
-> V2 RESEND note:
-> - No changes on this, just rebasd to v6.14.
-> 
-> V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
-> 
-> Changes since V1:
-> - Rebase to v6.14-rc5.
-> - Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
->   suggestion.
-> - Add Kirill's Reviewed-by tag.
-> ---
->  Documentation/admin-guide/kdump/vmcoreinfo.rst | 2 +-
->  kernel/vmcore_info.c                           | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> index 0f714fc945ac..3b47916f1856 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -331,7 +331,7 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
->  Page attributes. These flags are used to filter various unnecessary for
->  dumping pages.
->  
-> -PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-> +PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
->  -----------------------------------------------------------------------------
->  
->  More page attributes. These flags are used to filter various unnecessary for
-> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-> index 1fec61603ef3..e066d31d08f8 100644
-> --- a/kernel/vmcore_info.c
-> +++ b/kernel/vmcore_info.c
-> @@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
->  #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
->  	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-> +#ifdef CONFIG_UNACCEPTED_MEMORY
-> +#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
-> +	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
-> +#endif
->  
->  #ifdef CONFIG_KALLSYMS
->  	VMCOREINFO_SYMBOL(kallsyms_names);
-> 
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> -- 
-> 2.25.1
-> 
-> 
+Szczeg=C3=B3lnie warte uwagi jest post=C4=99powanie o zatwierdzenie uk=C5=
+=82adu (PZU), kt=C3=B3re zapewnia natychmiastow=C4=85 ochron=C4=99 maj=C4=
+=85tku i szereg dodatkowych korzy=C5=9Bci, o kt=C3=B3rych ma=C5=82o kt=C3=
+=B3ry przedsi=C4=99biorca wie.
 
+Wczesna konsultacja pozwala nam wdro=C5=BCy=C4=87 najkorzystniejsze rozwi=
+=C4=85zania, w=C5=82=C4=85cznie z zaawansowanym post=C4=99powaniem sanacy=
+jnym, kt=C3=B3re daje firmom wyj=C4=85tkowo szerokie mo=C5=BCliwo=C5=9Bci=
+ prawne przy jednoczesnym utrzymaniu bie=C5=BC=C4=85cej dzia=C5=82alno=C5=
+=9Bci.
+
+Jaki termin na rozmow=C4=99 by=C5=82by dla Pa=C5=84stwa najdogodniejszy?
+
+
+Pozdrawiam
+Katarzyna Chowa=C5=84ska
 
