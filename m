@@ -4,160 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E9F6C369AA
-	for <kexec@archiver.kernel.org>; Fri,  4 Apr 2025 13:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 351F0C369AC
+	for <kexec@archiver.kernel.org>; Fri,  4 Apr 2025 13:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dy8Ws2qvwF9s55c8ff5LGR1nvZuXfJj+iEpUvr3iHP8=; b=RmX6FZUHg70hGDWRR+7Kw+v2FV
-	hcDertsn3S7UGGPqsFGctE0pa0b9hpoBIj7I8ZViz/yF7kHSg9hUSvRxKZv8czzroQ/BCBnUPptLq
-	3OPEFqnPY1uQoRFCxOyQKBBekZW19DkjBUntEc0xGC6PSVxWNyVPHALiYHzGxvWfjbHqW75kp9pGp
-	6H7gEkSleK7rikPNzglFkFzUYwF8FFkqiFAmHcSXlZlaxp46ybTNaF6z9eXUL0BLLAxgDTwoWTmEc
-	mJvCXpl90GT1+iOT30Ysw1kDs5Q4HFvwe3BgVWl/OYJCHZo0G4Y3ecXT/YcI2mw4jSVaK51V4sTjN
-	ojWgnqZA==;
+	bh=mrB1iO8WNCyw1FmbOcm5zEot0c6YpO468/MRGnmXPik=; b=RUz1K9gZtl67WW9vNeq9YXFnlv
+	mmWAbVRc0T2+GKpjbQXgdq1H7TuwCszDG4lK2QEYWB/5o6bJgM34RH9G/jz0q0E0KQfZsm86xQX4A
+	8PrzHwvNAasDV6OTAq9GeiIvLSkqMQNKI2wFpLjejesgbuSegjL+BJsgcKnqYOccJ2zvIXMKDo55h
+	Xb3OpdvdWb0HbQ7mgikl+mH+nPFgTEfHYW76BjvBWb2Px4axuFEJkGKfgPGgRh0pispvu0A0Ba22r
+	P18uhJd+0Cd2Aqf0+Y0SD2MUsNz8pyYr76SMd/dejywQhKdveRSrjRaf0DDP8DTaUY19cFg4dsG8F
+	+pIuAg8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0gl8-0000000BlIf-1uWM;
-	Fri, 04 Apr 2025 13:06:58 +0000
-Received: from mail-mw2nam04on2061a.outbound.protection.outlook.com ([2a01:111:f403:240a::61a] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
+	id 1u0gl9-0000000BlKj-20re;
+	Fri, 04 Apr 2025 13:06:59 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0N8s-00000009Jx3-1Tsn;
-	Thu, 03 Apr 2025 16:10:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BYLIpGboifHlJ4FUIOVaQemr5j/YhWeU8MBsBY7NM9BoXu/N3NCcyJZW4reXLsgc4G9GM8KmgypwF8pgITCySoGl7OsQ4hVDJPmNxdb1/s5/X5b7/wyuLVtVIPMXCYFcvt1AfI3q2LouR2/mRAAask2Je02M1059VJfp543UmdxDCjcI9qqEriES8+16IyxWvLrrliSOXGScW+J8QbGE+VY0xSXPZIGx0Cu+Nmg4NR0OsWkjkajxlyJCDXksATdhLHvL4JfJVLcfEmi7OHI0yYpccgA1xHNz3HFB2k2a42S3RJIZOFM0lh1RcduLhHJUylZ/9KD/JalIryahpEkgkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dy8Ws2qvwF9s55c8ff5LGR1nvZuXfJj+iEpUvr3iHP8=;
- b=OCMQS+B2YbCDEu6+awANYI0k7MSAiadpqmBAYH8xCLS5y4hZkLSg9D8el18dr2GKDXFGWQFspHwJQmsllXkP+zAjh6BAYJhFSKF8N3kJkrBAXbItilFsf4g88EA9i4uoLloIN5/bXlUUFf+Hs6+RI5Te28V764RdvbBwTCWuzYGn4HEy2cwL553d8Pnb/KdHHbB3W4DDpRFNjNmNzC5n4giWwqsISFkyel3BqXb0EsPX086jceVBKnXQIv2Dy7f2RQHHFUU87x96lOt+XhlwSZi4FGV3aIMvLeYU+1fOAdvPmswTPaIq6OFUOVGX6Pm2nuAgJ73Cr6nYQYzUj3qu3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dy8Ws2qvwF9s55c8ff5LGR1nvZuXfJj+iEpUvr3iHP8=;
- b=K+9U3XOxJQAtXib9UDfN3h9WU6WSBdjRQeu5p+LsPlPdqaKYaqoP1cRZKmChrwIW1Tlwpl5J18pdgL7xevx2FWAz4gZupsME09ey03WXfDRJZOKRHVlKqT1/hfNP1zSLIfBp0VJ1HDUeSVFyMbAJJwm4mCTeX9trhGqyysW7jv2G1D/uFsL0xGPv7A39mWh+2YZz5lrA975FYWvRMS/BS59ljbRfFY1j/UvPPgxWILW6ciqw2YwXCrU4L9zJPEm9TF8T6EmsSj5eZbXaVvJQnawnv8GqMTT5FHEGIk41g2BrhB9LR0jtii0FsZSaiBiPK2r/HW5qgzF8IwKS3kNbNQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by PH7PR12MB9253.namprd12.prod.outlook.com (2603:10b6:510:30d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Thu, 3 Apr
- 2025 16:10:04 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.043; Thu, 3 Apr 2025
- 16:10:04 +0000
-Date: Thu, 3 Apr 2025 13:10:01 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Pratyush Yadav <ptyadav@amazon.de>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	id 1u0dl5-0000000BL2w-2aOJ;
+	Fri, 04 Apr 2025 09:54:44 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 747C55C5EBA;
+	Fri,  4 Apr 2025 09:52:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D486BC4CEDD;
+	Fri,  4 Apr 2025 09:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743760482;
+	bh=cSrVbGxlpctlURfhSmALnKBVmteINKipAHsEvzkIzVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NqdZLC8PCMbwQmaPJjUq1AB8uqnD6azcUrHQUG7wlkgsJ5KZyLC3gWR8+5IQ8gdkH
+	 BipTaslXkHHOiwz6doB2JCUH5WpxGhWYjF6ywbQfHN0TpQDALMbrZQRGxKRdi/Mna1
+	 DrImE5oznfHcWyCtDYGehTiv4FdNZ3AgwLl+Pi4myqIj3yA8VUB8TtFzuY/hsgbk3V
+	 s+JisuKs89/jhocAXjeRatMHAtxEaG7IMWtsefPAlDHT4AGYaPA7lD9NRhHx33dXBn
+	 EjjpU4eQwu80NTHkXfft43c+DxySzS8KH3+L80qUYkfY8ownLn/BHE1NsKZaXz/ZwV
+	 WxjdoB7VzppCw==
+Date: Fri, 4 Apr 2025 12:54:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
 	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
 	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
 	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
 	dave.hansen@linux.intel.com, dwmw2@infradead.org,
 	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, rppt@kernel.org,
-	mark.rutland@arm.com, pbonzini@redhat.com,
-	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org,
-	robh+dt@kernel.org, robh@kernel.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, rostedt@goodmis.org,
-	tglx@linutronix.de, thomas.lendacky@amd.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
 	usama.arif@bytedance.com, will@kernel.org,
 	devicetree@vger.kernel.org, kexec@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
 	linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
  preservation
-Message-ID: <20250403161001.GG342109@nvidia.com>
+Message-ID: <Z--sUYCvP3Q8nT8e@kernel.org>
 References: <20250320015551.2157511-1-changyuanl@google.com>
  <20250320015551.2157511-10-changyuanl@google.com>
- <mafs01pu9qm6r.fsf@amazon.de>
+ <mafs05xjmqsqc.fsf@amazon.de>
+ <20250403114209.GE342109@nvidia.com>
+ <Z-6UA3C1TPeH_kGL@kernel.org>
+ <20250403142438.GF342109@nvidia.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mafs01pu9qm6r.fsf@amazon.de>
-X-ClientProxiedBy: MN2PR19CA0022.namprd19.prod.outlook.com
- (2603:10b6:208:178::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH7PR12MB9253:EE_
-X-MS-Office365-Filtering-Correlation-Id: c45ff6f4-1ee4-405c-40b0-08dd72c9fe05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?6xYbAqi6Aw8/7SB4Og7F26++lyFBodEmTy+7/tGEfbe/i7QTlNUB2LWNBT8o?=
- =?us-ascii?Q?TrK/wFTar7zwoyxAK7vhI1sbae4ib0kq/fPzWd/Cnwx4fdG1XVxxiuEJY5uo?=
- =?us-ascii?Q?N7kLjNPI9rXkWr8WoIqeBQV7OKKTBMtaV8Xr++kRPWfIAk91niaZPY8ky24T?=
- =?us-ascii?Q?3rDPbsZVrjlkbiYtSu/M0W1gwpvrjokTJRw9gVNIS6Huv/M0J8BvenuS4eE0?=
- =?us-ascii?Q?TpYLvOdxV1YnwqxlPpTlw4ItKaeHCWv3VMe/SwkgpNFGG5cfxWw472aFpuJL?=
- =?us-ascii?Q?rvG8UtEPmF30Bx3rV+jmqlWwm0jLIZJohyZay3DObJKYZkSqi8WV7Mv6tviS?=
- =?us-ascii?Q?dXuZKEoWt/giS01sAnUbDMgKn6kNM+vqrz5LH/p5xRZtH/nA4I5C0zDqGuoI?=
- =?us-ascii?Q?ol9HcWNjqKROlfgAz3wbHhUPdsd5GXr3YelKjrTVyJXcJB4/pDrhJChSuYBu?=
- =?us-ascii?Q?DLDZBOi63Vt7BZ6W5jrMIAOAT9/0XUN1Drbl7RtNuBegEurJOmHOzA3txXgR?=
- =?us-ascii?Q?BS4xUGD5C/i12CwB5mYUoYH/SI0lmVZUyzfvWLfXD3aqvYZ/RHy8oVNeddpZ?=
- =?us-ascii?Q?cSLSMgA9ZHz0X7CSWc8k7x8t2Qn2ux/Q3nmE4SOb7QJuIKlLeiYK0pJo7uU/?=
- =?us-ascii?Q?neGeA0gIDedJqyoUvzFhLAbefyNU80qT+KwvH6Ria7TMVY1QwbH9PeCQfmWV?=
- =?us-ascii?Q?g3Z2/BhoMVAI+n1qM1m2DW5kPPd/AC1OYxZZSumQZ8RjL3P/srtyS5N9G5cl?=
- =?us-ascii?Q?Gnx4BjKAqSnbiFZyzmygv+Zt/WB+d8ENf4uJzgodOCGcvf7MqPhSxo2J0y53?=
- =?us-ascii?Q?szHYxyg7P1jkg5uZFdrBHxGE4OQyJVnSAsXcJBXgjF+iFM4GTVIGBlKtdfJn?=
- =?us-ascii?Q?CPhEHo7lbd6NxoolJ3YbBmlDyv9vYTddfBigSBtjls/hmBcUca3p4wziRRaH?=
- =?us-ascii?Q?T8Ciy1yTsezMbYwxL/6cy4r3F19u8bTJPrWnAmuonFSNQ1ZDykZRjL/ZrID5?=
- =?us-ascii?Q?F6uszrNaJrwqALNJEfy5dNfLxOw7aLHzSbj2iONKmmWbW2g7c+6I2eyUmWDe?=
- =?us-ascii?Q?bvJyAVvoR4ejN1zULR9u6mVQ3Xr/TtVN7Zkmmp7x54UfbgZxKa3dcQvcBWvo?=
- =?us-ascii?Q?HPc5H74UIxnFTtxD5VUf2joGXhvls9CnaTyR5LAdyp1SHtgZlI6PakHmitfZ?=
- =?us-ascii?Q?QIsbK7eK/HpRaGh10G18SqBV7HX4Der1UUcsmyebM0tFldYJ/5MyhHHjaj7r?=
- =?us-ascii?Q?Q/l62VqSFHa7O1Uhza0PdKTpaMK5gceSrGOKZpN8WOSP/n497jFTPk3J14kA?=
- =?us-ascii?Q?onR8sfARLArUcGLNqG84gIP/AmwBkYYB5dpAZ+T7LOpvAJiN2cZcYIcTl2aq?=
- =?us-ascii?Q?NhMIo3OZrPn0JETeugZd+I10KHsV?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MhN+ZW5cu9F6EVNfOLuqD3jAKfHNAcEZens0RUrzBdSemNMUBTMryuVFnsoP?=
- =?us-ascii?Q?UDsQb2WvTXQs4HEoMXkJe6ORH/qtv9lr3BUba4FpCU6vKYNykVBORTw6cGS3?=
- =?us-ascii?Q?+DigSrxuLr48VnZdAoybPoBxjAHBfE732QUklL6xlBHAOdLvlphfGdiMQXc2?=
- =?us-ascii?Q?+eC430cgbiPBfxIzEDY0GT9F+rnFoW7qdaGta0UrC9n98sPekQWMBXGhwM0l?=
- =?us-ascii?Q?RLJ5a+2Ek50c/ZO22XmkfrSyLi3f4gQhCW/20ohpIcrcH5KhbRdSpEXhUdja?=
- =?us-ascii?Q?e3LjxUbJoJx8zFEWwUlCzIaox387x9+AwQcLurC+oMkiqrzQmKkmEClsclV1?=
- =?us-ascii?Q?scFiJ177+aLc9XVPTsnySVeCXoMuOEXM6dWC6HV/aXX9c2vlDpv/QmbnhYyi?=
- =?us-ascii?Q?uCwCbctyKNMaYcHkPytoqOeteOOcSV0wb5QXVxjvcRXc4o1ophOM6yNr4QTn?=
- =?us-ascii?Q?TtWEFU8cqaj+bNi707YqeMf0R6rkF84PSzXDV6uWUwfef/H+sd684Lq0QNRz?=
- =?us-ascii?Q?qJEoLgpeU8OpKb4r6X3JBqrDuvceaZowRBxQtshskNL+hyUFaDZHSkR096p/?=
- =?us-ascii?Q?i9S2/Y0/DdW0eezH4DZXbTG1b5wA+2EHnh/DTGmb5Dx/ag5CY4tgTNlKhsg+?=
- =?us-ascii?Q?t8nrS1hG9nAYSpKpuJ7tSxINyQTMVoUAez74rKgKXth+hqvJo55v41+gGj7j?=
- =?us-ascii?Q?hOkS8Os9BVM/7EStzeoqjtZ1nCJl9RXRrO9OvknFmxccnZRNyO5gP7jfVng/?=
- =?us-ascii?Q?xkkrMDZp8yTqOjlYBgnxOzzXXSI9iegVIN0t8lEfnIKBO6Z1NlnOxLKTliY5?=
- =?us-ascii?Q?oiPBPOzI9XaWfR38mwmrDzBFB+rBV6OSOnl/zyK7J+bvl5wvdKZC6ScuBBsn?=
- =?us-ascii?Q?+NHzDT55YP29V7057CBh4c7DCqsKefOM54LgitbrG+Y+0Gtkup8vrY3gLTCO?=
- =?us-ascii?Q?xbGnuOEVNlf+9367yWuCRg7YTSddwMiPav2O0wwG600UTyMkIP5aO/FuPm/C?=
- =?us-ascii?Q?aReb0OM8GTYfGlTM2FfZA5C0YXLgxntSDHzoCKAQlWOh2r6gotmEYvhq4ZKS?=
- =?us-ascii?Q?72h/ECt9o1zu4G5SQ9gqF7qMdfBroOm7H28Mi1kSdu/QTKi+LfKhmuzYqQ0z?=
- =?us-ascii?Q?hbnyTN1tZ39elgzt5wfil8Nh7bBODZlcUkV9cfN4tzFlS8gozTe/CRAgLqk0?=
- =?us-ascii?Q?ZYLNX42kZVh0hxwtB1PtL6IqG1XA6bxmpCLGE+rhffpF5dqjwXhCiW8G021k?=
- =?us-ascii?Q?c7O1vrnWjrZ3ENE3QFe/5+Ss1CCxYxVh1wvB75RE6+YLgXw7+RpKwsQ54JE8?=
- =?us-ascii?Q?plbs2yoeQgV6ymP+M8/QmHi44ERT7XgtZg+g/QKaGUeBTzVA46btHgoUmV+r?=
- =?us-ascii?Q?qNWldBYSeUZtc6s5GJDHAzAnhIgeA/K/mOAsuPXsUc+FTUdi7bb7E60ssi6t?=
- =?us-ascii?Q?LZtGGBLOM3UMaU35PZZBQm+g1OFV3A7YXANdLtOJ7JFdpfjB2y2lPKq+aYrp?=
- =?us-ascii?Q?kT9+nV6j5ihaz8UiC+GKptNnzH4ipWd8strHi8nSxS/XxrqAspfToThX73IB?=
- =?us-ascii?Q?URPxwK9X4TpenK1/zNYtGL3y/+16zKtbccJD6vR3?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c45ff6f4-1ee4-405c-40b0-08dd72c9fe05
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 16:10:03.4782
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kF0FzqNwgju18Mi95WatwKVID/UAXTW9yg765RHFZWEEAIvTbVZjMcODIfuHXaPJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9253
+In-Reply-To: <20250403142438.GF342109@nvidia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250403_091010_526147_C693EB76 
-X-CRM114-Status: GOOD (  21.10  )
-X-Mailman-Approved-At: Fri, 04 Apr 2025 06:06:48 -0700
+X-CRM114-CacheID: sfid-20250404_025443_765322_187EC0C5 
+X-CRM114-Status: GOOD (  37.88  )
+X-Mailman-Approved-At: Fri, 04 Apr 2025 06:06:49 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -172,97 +91,271 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 03, 2025 at 03:50:04PM +0000, Pratyush Yadav wrote:
+Hi Jason,
 
-> The patch currently has a limitation where it does not free any of the
-> empty tables after a unpreserve operation. But Changyuan's patch also
-> doesn't do it so at least it is not any worse off.
+On Thu, Apr 03, 2025 at 11:24:38AM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 03, 2025 at 04:58:27PM +0300, Mike Rapoport wrote:
+> > On Thu, Apr 03, 2025 at 08:42:09AM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Apr 02, 2025 at 07:16:27PM +0000, Pratyush Yadav wrote:
+> > > > > +int kho_preserve_phys(phys_addr_t phys, size_t size)
+> > > > > +{
+> > > > > +	unsigned long pfn = PHYS_PFN(phys), end_pfn = PHYS_PFN(phys + size);
+> > > > > +	unsigned int order = ilog2(end_pfn - pfn);
+> > > > 
+> > > > This caught my eye when playing around with the code. It does not put
+> > > > any limit on the order, so it can exceed NR_PAGE_ORDERS. Also, when
+> > > > initializing the page after KHO, we pass the order directly to
+> > > > prep_compound_page() without sanity checking it. The next kernel might
+> > > > not support all the orders the current one supports. Perhaps something
+> > > > to fix?
+> > > 
+> > > IMHO we should delete the phys functions until we get a user of them
+> > 
+> > The only user of memory tracker in this series uses kho_preserve_phys()
+> 
+> But it really shouldn't. The reserved memory is a completely different
+> mechanism than buddy allocator preservation. It doesn't even call
+> kho_restore_phys() those pages, it just feeds the ranges directly to:
+> 
+> +       reserved_mem_add(*p_start, size, name);
+> 
+> The bitmaps should be understood as preserving memory from the buddy
+> allocator only.
+> 
+> IMHO it should not call kho_preserve_phys() at all.
 
-We do we even have unpreserve? Just discard the entire KHO operation
-in a bulk.
+Do you mean that for preserving large physical ranges we need something
+entirely different? 
 
-> When working on this patch, I realized that kho_mem_deserialize() is
-> currently _very_ slow. It takes over 2 seconds to make memblock
-> reservations for 48 GiB of 0-order pages. I suppose this can later be
-> optimized by teaching memblock_free_all() to skip preserved pages
-> instead of making memblock reservations.
+Then we don't need the bitmaps at this point, as we don't have any users
+for kho_preserve_folio() and we should not worry ourself with orders and
+restoration of high order folios until then ;-)
 
-Yes, this was my prior point of not having actual data to know what
-the actual hot spots are.. This saves a few ms on an operation that
-takes over 2 seconds :)
+Now more seriously, I considered the bitmaps and sparse xarrays as good
+initial implementation of memory preservation that can do both physical
+ranges now and folios later when we'll need them. It might not be the
+optimal solution in the long run but we don't have enough data right now to
+do any optimizations for real. Preserving huge amounts of order-0 pages
+does not seem to me a representative test case at all. 
 
-> +typedef unsigned long khomem_desc_t;
+The xarrays + bitmaps do have the limitation that we cannot store any
+information about the folio except its order and if we are anyway need
+something else to preserve physical ranges, I suggest starting with
+preserving ranges and then adding optimizations for the folio case.
 
-This should be more like:
+As I've mentioned earlier, maple tree is perfect for tracking ranges, it
+simpler than other alternatives, and at allows storing information
+about a range and easy and efficient coalescing for adjacent ranges with
+matching properties. The maple tree based memory tracker is less memory
+efficient than bitmap if we count how many data is required to preserve
+gigabytes of distinct order-0 pages, but I don't think this is the right
+thing to measure at least until we have some real data about how KHO is
+used.
 
-union {
-      void *table;
-      phys_addr_t table_phys;
+Here's something that implements preservation of ranges (compile tested
+only) and adding folios with their orders and maybe other information would
+be quite easy.
+
+/*
+ * Keep track of memory that is to be preserved across KHO.
+ *
+ * For simplicity use a maple tree that conveniently stores ranges and
+ * allows adding BITS_PER_XA_VALUE of metadata to each range
+ */
+
+struct kho_mem_track
+{
+	struct maple_tree ranges;
 };
 
-Since we are not using the low bits right now and it is alot cheaper
-to convert from va to phys only once during the final step. __va is
-not exactly fast.
+static struct kho_mem_track kho_mem_track;
 
-> +#define PTRS_PER_LEVEL		(PAGE_SIZE / sizeof(unsigned long))
-> +#define KHOMEM_L1_BITS		(PAGE_SIZE * BITS_PER_BYTE)
-> +#define KHOMEM_L1_MASK		((1 << ilog2(KHOMEM_L1_BITS)) - 1)
-> +#define KHOMEM_L1_SHIFT		(PAGE_SHIFT)
-> +#define KHOMEM_L2_SHIFT		(KHOMEM_L1_SHIFT + ilog2(KHOMEM_L1_BITS))
-> +#define KHOMEM_L3_SHIFT		(KHOMEM_L2_SHIFT + ilog2(PTRS_PER_LEVEL))
-> +#define KHOMEM_L4_SHIFT		(KHOMEM_L3_SHIFT + ilog2(PTRS_PER_LEVEL))
-> +#define KHOMEM_PFN_MASK		PAGE_MASK
+typedef unsigned long kho_range_desc_t;
 
-This all works better if you just use GENMASK and FIELD_GET
+static int __kho_preserve(struct kho_mem_track *tracker, unsigned long addr,
+			  size_t size, kho_range_desc_t info)
+{
+	struct maple_tree *ranges = &tracker->ranges;
+	MA_STATE(mas, ranges, addr - 1, addr + size + 1);
+	unsigned long lower, upper;
 
-> +static int __khomem_table_alloc(khomem_desc_t *desc)
-> +{
-> +	if (khomem_desc_none(*desc)) {
+	void *area = NULL;
 
-Needs READ_ONCE
+	lower = addr;
+	upper = addr + size - 1;
 
-> +struct kho_mem_track {
-> +	/* Points to L4 KHOMEM descriptor, each order gets its own table. */
-> +	struct xarray orders;
-> +};
+	might_sleep();
 
-I think it would be easy to add a 5th level and just use bits 63:57 as
-a 6 bit order. Then you don't need all this stuff either.
+	area = mas_walk(&mas);
+	if (area && mas.last == addr - 1)
+		lower = mas.index;
 
-> +int kho_preserve_folio(struct folio *folio)
-> +{
-> +	unsigned long pfn = folio_pfn(folio);
-> +	unsigned int order = folio_order(folio);
-> +	int err;
-> +
-> +	if (!kho_enable)
-> +		return -EOPNOTSUPP;
-> +
-> +	down_read(&kho_out.tree_lock);
+	area = mas_next(&mas, ULONG_MAX);
+	if (area && mas.index == addr + size)
+		upper = mas.last;
 
-This lock still needs to go away
+	mas_set_range(&mas, lower, upper);
 
-> +static void kho_mem_serialize(void)
-> +{
-> +	struct kho_mem_track *tracker = &kho_mem_track;
-> +	khomem_desc_t *desc;
-> +	unsigned long order;
-> +
-> +	xa_for_each(&tracker->orders, order, desc) {
-> +		if (WARN_ON(order >= NR_PAGE_ORDERS))
-> +			break;
-> +		kho_out.mem_tables[order] = *desc;
+	return mas_store_gfp(&mas, xa_mk_value(info), GFP_KERNEL);
+}
 
-Missing the virt_to_phys?
+/**
+ * kho_preserve_phys - preserve a physcally contiguous range accross KHO.
+ * @phys: physical address of the range
+ * @phys: size of the range
+ *
+ * Records that the entire range from @phys to @phys + @size is preserved
+ * across KHO.
+ *
+ * Return: 0 on success, error code on failure
+ */
+int kho_preserve_phys(phys_addr_t phys, size_t size)
+{
+	return __kho_preserve(&kho_mem_track, phys, size, 0);
+}
+EXPORT_SYMBOL_GPL(kho_preserve_phys);
 
-> +	nr_tables = min_t(unsigned int, len / sizeof(*tables), NR_PAGE_ORDERS);
-> +	for (order = 0; order < nr_tables; order++)
-> +		khomem_walk_preserved((khomem_desc_t *)&tables[order], order,
+#define KHOSER_PTR(type)  union {phys_addr_t phys; type ptr;}
+#define KHOSER_STORE_PTR(dest, val)			\
+	({						\
+		(dest).phys = virt_to_phys(val);	\
+		typecheck(typeof((dest).ptr), val);	\
+	})
+#define KHOSER_LOAD_PTR(src) ((src).phys ? (typeof((src).ptr))(phys_to_virt((src).phys)): NULL)
 
-Missing phys_to_virt
+struct khoser_mem_range {
+	phys_addr_t start;
+	phys_addr_t size;
+	unsigned long data;
+};
 
-Please dont' remove the KHOSER stuff, and do use it with proper
-structs and types. It is part of keeping this stuff understandable.
+struct khoser_mem_chunk_hdr {
+	KHOSER_PTR(struct khoser_mem_chunk *) next;
+	unsigned long num_ranges;
+};
 
-Jason
+#define KHOSER_RANGES_SIZE					\
+	((PAGE_SIZE - sizeof(struct khoser_mem_chunk_hdr) /	\
+	  sizeof(struct khoser_mem_range)))
+
+struct khoser_mem_chunk {
+	struct khoser_mem_chunk_hdr hdr;
+	struct khoser_mem_range ranges[KHOSER_RANGES_SIZE];
+};
+
+static int new_chunk(struct khoser_mem_chunk **cur_chunk)
+{
+	struct khoser_mem_chunk *chunk;
+
+	chunk = kzalloc(sizeof(*chunk), GFP_KERNEL);
+	if (!chunk)
+		return -ENOMEM;
+	if (*cur_chunk)
+		KHOSER_STORE_PTR((*cur_chunk)->hdr.next, chunk);
+	*cur_chunk = chunk;
+	return 0;
+}
+
+/*
+ * Record all the ranges in a linked list of pages for the next kernel to
+ * process. Each chunk holds array of ragnes. The maple_tree is used to store
+ * them in a tree while building up the data structure, but the KHO successor
+ * kernel only needs to process them once in order.
+ *
+ * All of this memory is normal kmalloc() memory and is not marked for
+ * preservation. The successor kernel will remain isolated to the scratch space
+ * until it completes processing this list. Once processed all the memory
+ * storing these ranges will be marked as free.
+ */
+static int kho_mem_serialize(phys_addr_t *fdt_value)
+{
+	struct kho_mem_track *tracker = &kho_mem_track;
+	struct maple_tree *ranges = &tracker->ranges;
+	struct khoser_mem_chunk *first_chunk = NULL;
+	struct khoser_mem_chunk *chunk = NULL;
+	MA_STATE(mas, ranges, 0, ULONG_MAX);
+	void *entry;
+	int err;
+
+	mas_for_each(&mas, entry, ULONG_MAX) {
+		size_t size = mas.last - mas.index + 1;
+		struct khoser_mem_range *range;
+
+		err = new_chunk(&chunk);
+		if (err)
+			goto err_free;
+		if (!first_chunk)
+			first_chunk = chunk;
+
+		if (chunk->hdr.num_ranges == ARRAY_SIZE(chunk->ranges)) {
+			err = new_chunk(&chunk);
+			if (err)
+				goto err_free;
+		}
+
+		range = &chunk->ranges[chunk->hdr.num_ranges];
+		range->start = mas.index;
+		range->size = size;
+		range->data = xa_to_value(entry);
+		chunk->hdr.num_ranges++;
+	}
+
+	*fdt_value = virt_to_phys(first_chunk);
+
+	return 0;
+
+err_free:
+	chunk = first_chunk;
+	while (chunk) {
+		struct khoser_mem_chunk *tmp = chunk;
+		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+		kfree(tmp);
+	}
+	return err;
+}
+
+static void __init deserialize_range(struct khoser_mem_range *range)
+{
+	memblock_reserved_mark_noinit(range->start, range->size);
+	memblock_reserve(range->start, range->size);
+}
+
+static void __init kho_mem_deserialize(void)
+{
+	const void *fdt = kho_get_fdt();
+	struct khoser_mem_chunk *chunk;
+	const phys_addr_t *mem;
+	int len, node;
+
+	if (!fdt)
+		return;
+
+	node = fdt_path_offset(fdt, "/preserved-memory");
+	if (node < 0) {
+		pr_err("no preserved-memory node: %d\n", node);
+		return;
+	}
+
+	mem = fdt_getprop(fdt, node, "metadata", &len);
+	if (!mem || len != sizeof(*mem)) {
+		pr_err("failed to get preserved memory bitmaps\n");
+		return;
+	}
+
+	chunk = phys_to_virt(*mem);
+	while (chunk) {
+		unsigned int i;
+
+		memblock_reserve(virt_to_phys(chunk), sizeof(*chunk));
+
+		for (i = 0; i != chunk->hdr.num_ranges; i++)
+			deserialize_range(&chunk->ranges[i]);
+
+		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+	}
+}
+
+-- 
+Sincerely yours,
+Mike.
 
