@@ -4,77 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7BB0C3601E
-	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 05:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E73BC3DA4A
+	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 08:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:CC:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cZP9chJpPnIdDVNS2TKXrDys/VCOvlIPfDsKkgbXxcE=; b=RkgQFNHfdxqF4yVRLJgVAok5I0
-	QV5BpaNeU+oCZ1yoCrGRW1XY7G6jUYRAcOYwKhNmFNOvBOKcadtc2QPQKp215y5ewUoutUxu/9Ofn
-	BHF27+ENltHLeRz9vdJsJWqFaPvibmlSvuNdLys8W6iXGAqiQJVAeDyi1ZuwQ69VIigzpgcFrylHB
-	EqX7N8Cv+pSwpODdqHu6Zzj/pBHKs7il7X2lEsI2Eahw5y9m2UEDk4S+86lWu9N1rPkj5tAJrQ/BL
-	JBVqctQE+iSAf+Oy+XFEudcRSKFDxCXouPLzsIg4mM9VB86hhos3u6PYcCeS+abbqB27N1VzBRFx2
-	cye6ZoPQ==;
+	bh=dYSO4GIkP5mEnRMwoEieSemMGmNulVoN4UaB4qKT8KA=; b=RjKxXRX01JPRmNdmiLOgYhG4Ps
+	SyI177QrHY/8MqmczPtYc+THwfdJTU5C63/5PLu0d4iikpNnlSReJQuS2Qz6/58DfsAs7nWnmhdB2
+	l/1d5oRgcRXqAxAQ/0rm+u6C+a1vgAfSvKVhZllull2LaVNh7/yy1mZP0B7unkuqxfL4wpYA5+JGO
+	FCJ8zm5WDGf29M2TUyKCh3KQpMHceQssh0bLoFHSEBh40IbFURWNxTyHzWr9gH+5MeJTKqC02FSpu
+	S8Nm7H94M2gLf+QPBQMpXDkIzTuPmtpqVRzVVNcxRLMiO5v8keHrbe1EYgw7fFcm728ZKZBlurxTT
+	gAGSbvTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4Cdr-00000000jIW-0T0M;
-	Mon, 14 Apr 2025 05:45:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4Ccb-00000000j9K-2zYa
-	for kexec@lists.infradead.org;
-	Mon, 14 Apr 2025 05:44:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744609478;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cZP9chJpPnIdDVNS2TKXrDys/VCOvlIPfDsKkgbXxcE=;
-	b=EdTBPJiQSOkEQcifQbZkypG79fuH0nbPsXKpU4+csRdlHX+cu6mqC2RfX6RIGSgnTDLa71
-	ExPHvmKUQEb2du5e4DQmbp6r2judqKhEiXMRPSXsQiJYrzh+IuiT6vmxp3khS3dYvpLQlz
-	TOKEK5Zd5iJMxlfkSkl5Sj58xTigQD0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-iEhSOb4kNaaXaWqwlf9Bnw-1; Mon,
- 14 Apr 2025 01:44:34 -0400
-X-MC-Unique: iEhSOb4kNaaXaWqwlf9Bnw-1
-X-Mimecast-MFC-AGG-ID: iEhSOb4kNaaXaWqwlf9Bnw_1744609473
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A4AE01955BC6;
-	Mon, 14 Apr 2025 05:44:32 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.37])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A8B619560AD;
-	Mon, 14 Apr 2025 05:44:28 +0000 (UTC)
-Date: Mon, 14 Apr 2025 13:44:23 +0800
-From: Baoquan He <bhe@redhat.com>
-To: x86@kernel.org, akpm@linux-foundation.org, Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <Z/ygt1q27NF+/2BM@MiWiFi-R3L-srv>
-References: <20250207080818.129165-1-coxu@redhat.com>
+	id 1u4FJL-000000017Lm-3Ths;
+	Mon, 14 Apr 2025 08:36:59 +0000
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25])
+	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0j8h-0000000CBsY-0AvZ;
+	Fri, 04 Apr 2025 15:39:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1743781168; x=1775317168;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=dYSO4GIkP5mEnRMwoEieSemMGmNulVoN4UaB4qKT8KA=;
+  b=u1W1mVEeVAYKzwwm4mPWFrO3ZIiyLnqx9wTIwoGxbVfxTrXtMRNnqyb7
+   rs8ksq8krPma0rO8qmlBujYHBW+BfKZBlS/Ejiz641Tvh6ewikPg0zPTn
+   vNTxIJ11FXkY1BkODWguQTm58gBhxgIxv7s2N3ldsNLf7BUM07tBdIyPw
+   8=;
+X-IronPort-AV: E=Sophos;i="6.15,188,1739836800"; 
+   d="scan'208";a="480423186"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 15:39:20 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:13293]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.222:2525] with esmtp (Farcaster)
+ id 83d3bfe4-40f1-416b-8ad0-21163f094fcc; Fri, 4 Apr 2025 15:39:19 +0000 (UTC)
+X-Farcaster-Flow-ID: 83d3bfe4-40f1-416b-8ad0-21163f094fcc
+Received: from EX19D020UWA002.ant.amazon.com (10.13.138.222) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 4 Apr 2025 15:39:16 +0000
+Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
+ EX19D020UWA002.ant.amazon.com (10.13.138.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 4 Apr 2025 15:39:16 +0000
+Received: from email-imr-corp-prod-iad-all-1a-93a35fb4.us-east-1.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 15:39:16 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-iad-all-1a-93a35fb4.us-east-1.amazon.com (Postfix) with ESMTP id 8865A4034B;
+	Fri,  4 Apr 2025 15:39:15 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 454F452B6; Fri,  4 Apr 2025 15:39:15 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Changyuan Lyu <changyuanl@google.com>, <linux-kernel@vger.kernel.org>,
+	<graf@amazon.com>, <akpm@linux-foundation.org>, <luto@kernel.org>,
+	<anthony.yznaga@oracle.com>, <arnd@arndb.de>, <ashish.kalra@amd.com>,
+	<benh@kernel.crashing.org>, <bp@alien8.de>, <catalin.marinas@arm.com>,
+	<dave.hansen@linux.intel.com>, <dwmw2@infradead.org>,
+	<ebiederm@xmission.com>, <mingo@redhat.com>, <jgowans@amazon.com>,
+	<corbet@lwn.net>, <krzk@kernel.org>, <rppt@kernel.org>,
+	<mark.rutland@arm.com>, <pbonzini@redhat.com>, <pasha.tatashin@soleen.com>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
+	<robh@kernel.org>, <saravanak@google.com>,
+	<skinsburskii@linux.microsoft.com>, <rostedt@goodmis.org>,
+	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <usama.arif@bytedance.com>,
+	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+In-Reply-To: <20250404125421.GI342109@nvidia.com>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+	<20250320015551.2157511-10-changyuanl@google.com>
+	<mafs01pu9qm6r.fsf@amazon.de> <20250403161001.GG342109@nvidia.com>
+	<mafs0tt75p2nx.fsf@amazon.de> <20250404125421.GI342109@nvidia.com>
+Date: Fri, 4 Apr 2025 15:39:15 +0000
+Message-ID: <mafs0h634os0s.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250413_224441_831852_30E399B4 
-X-CRM114-Status: GOOD (  27.86  )
+X-CRM114-CacheID: sfid-20250404_083927_237958_D0E35F15 
+X-CRM114-Status: GOOD (  29.35  )
+X-Mailman-Approved-At: Mon, 14 Apr 2025 01:36:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,149 +107,84 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi X86 maintainers, Andrew,
+On Fri, Apr 04 2025, Jason Gunthorpe wrote:
 
-On 02/07/25 at 04:08pm, Coiby Xu wrote:
-......snip...
-> This patch set only supports x86. There will be patches to support other
-> architectures once this patch set gets merged.
+> On Thu, Apr 03, 2025 at 05:37:06PM +0000, Pratyush Yadav wrote:
+>
+[...]
+>> > This should be more like:
+>> >
+>> > union {
+>> >       void *table;
+>> >       phys_addr_t table_phys;
+>> > };
+>> >
+>> > Since we are not using the low bits right now and it is alot cheaper
+>> > to convert from va to phys only once during the final step. __va is
+>> > not exactly fast.
+>> 
+>> The descriptor is used on _every_ level of the table, not just the
+>> top.
+>
+> Yes
+>
+>> So if we use virtual addresses, at serialize time we would have to walk
+>> the whole table and covert all addresses to physical.
+>
+> Yes
+>
+>> And __va() does
+>> not seem to be doing too much. On x86, it expands to:
+>> 
+>>     #define __va(x)			((void *)((unsigned long)(x)+PAGE_OFFSET))
+>> 
+>> and on ARM64 to:
+>> 
+>>     #define __va(x)			((void *)__phys_to_virt((phys_addr_t)(x)))
+>>     #define __phys_to_virt(x)	((unsigned long)((x) - PHYS_OFFSET) | PAGE_OFFSET)
+>
+> Hmm, I was sure sparsemem added a bunch of stuff to this path, maybe
+> I'm thinking of page_to_phys
 
-who can help pick this patchset? It has been under many rounds of
-reviewing, now it's ready for merging from kdump reviewers' side.
-Or any comments or concern for further work?
+Yep, page_to_phys for sparsemem is somewhat expensive, but __va() seems
+to be fine.
 
-Thanks
-Baoquan
+    #define __page_to_pfn(pg)					\
+    ({	const struct page *__pg = (pg);				\
+            int __sec = page_to_section(__pg);			\
+            (unsigned long)(__pg - __section_mem_map_addr(__nr_to_section(__sec)));	\
+    })
 
-> 
-> v8
->  - improve documentation [Randy]
->  - rebase onto 6.14.0-rc1
-> 
-> v7
->  - Baoquan
->    - differentiate between failing to get dm crypt keys and no dm crypt keys
->    - add code comments, change function name and etc. to improve code readability
->  - add documentation for configfs API [Dave]
->  - fix building error found by kernel test robot
-> 
-> v6
->  - Baoquan
->    - support AMD SEV
->    - drop uncessary keys_header_size
->    - improve commit message of [PATCH 4/7]
->  
->  - Greg
->    - switch to configfs
->    - move ifdef from .c to .h files and rework kexec_random_start
->    - use tab instead of space for appended code comment
->  
->  - Process key description in a more flexible way to address problems
->    found by Ondrej
->  - improve cover letter
->  - fix an compilation error as found by kernel test robot 
-> 
-> v5
->  - Baoquan
->    - limit the feature of placing kexec_buf randomly to kdump (CONFIG_CRASH_DUMP)
->    - add documentation for added sysfs API 
->    - allow to re-send init command to support the case of user switching to
->      a different LUKS-encrypted target
->    - make CONFIG_CRASH_DM_CRYPT depends on CONFIG_DM_CRYPT
->    - check if the number of keys exceed KEY_NUM_MAX
->    - rename (struct keys_header).key_count as (struct keys_header).total_keys
->      to improve code readability
->    - improve commit message
->    - fix the failure of calling crash_exclude_mem_range (there is a split
->      of mem_range)
->    - use ret instead of r as return code
->  
->  - Greg
->    - add documentation for added sysfs API 
->    - avoid spamming kernel logs 
->    - fix a buffer overflow issue
->    - keep the state enums synced up with the string values
->    - use sysfs_emit other than sprintf
->    - explain KEY_NUM_MAX and KEY_SIZE_MAX
->    - s/EXPORT_SYMBOL_GPL/EXPORT_SYMBOL/g
->    - improve code readability
->  
->  - Rebase onto latest Linus tree
-> 
-> 
-> v4
-> - rebase onto latest Linus tree so Baoquan can apply the patches for
->   code review
-> - fix kernel test robot warnings
-> 
-> v3
->  - Support CPU/memory hot-plugging [Baoquan]
->  - Don't save the keys temporarily to simplify the implementation [Baoquan]
->  - Support multiple LUKS encrypted volumes
->  - Read logon key instead of user key to improve security [Ondrej]
->  - A kernel config option CRASH_DM_CRYPT for this feature (disabled by default)
->  - Fix warnings found by kernel test robot
->  - Rebase the code onto 6.9.0-rc5+
-> 
-> v2
->  - work together with libscryptsetup's --link-vk-to-keyring/--volume-key-keyring APIs [Milan and Ondrej]
->  - add the case where console virtual keyboard is untrusted for confidential VM
->  - use dm_crypt_key instead of LUKS volume key [Milan and Eric]
->  - fix some code format issues
->  - don't move "struct kexec_segment" declaration
->  - Rebase the code onto latest Linus tree (6.7.0)
-> 
-> v1
->  - "Put the luks key handling related to crash_dump out into a separate
->    file kernel/crash_dump_luks.c" [Baoquan]
->  - Put the generic luks handling code before the x86 specific code to
->    make it easier for other arches to follow suit [Baoquan]
->  - Use phys_to_virt instead of "pfn -> page -> vaddr" [Dave Hansen]
->  - Drop the RFC prefix [Dave Young]
->  - Rebase the code onto latest Linus tree (6.4.0-rc4)
-> 
-> RFC v2
->  - libcryptsetup interacts with the kernel via sysfs instead of "hacking"
->    dm-crypt
->    - to save a kdump copy of the LUKS volume key in 1st kernel
->    - to add a logon key using the copy for libcryptsetup in kdump kernel [Milan]
->    - to avoid the incorrect usage of LUKS master key in dm-crypt [Milan]
->  - save the kdump copy of LUKS volume key randomly [Jan]
->  - mark the kdump copy inaccessible [Pingfan]
->  - Miscellaneous
->    - explain when operations related to the LUKS volume key happen [Jan]
->    - s/master key/volume key/g
->    - use crash_ instead of kexec_ as function prefix
->    - fix commit subject prefixes e.g. "x86, kdump" to x86/crash
-> 
-> 
-> Coiby Xu (7):
->   kexec_file: allow to place kexec_buf randomly
->   crash_dump: make dm crypt keys persist for the kdump kernel
->   crash_dump: store dm crypt keys in kdump reserved memory
->   crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
->   crash_dump: retrieve dm crypt keys in kdump kernel
->   x86/crash: pass dm crypt keys to kdump kernel
->   x86/crash: make the page that stores the dm crypt keys inaccessible
-> 
->  Documentation/admin-guide/kdump/kdump.rst |  32 ++
->  arch/x86/kernel/crash.c                   |  26 +-
->  arch/x86/kernel/kexec-bzimage64.c         |  11 +
->  arch/x86/kernel/machine_kexec_64.c        |  22 ++
->  include/linux/crash_core.h                |   7 +-
->  include/linux/crash_dump.h                |   2 +
->  include/linux/kexec.h                     |  34 ++
->  kernel/Kconfig.kexec                      |  10 +
->  kernel/Makefile                           |   1 +
->  kernel/crash_dump_dm_crypt.c              | 459 ++++++++++++++++++++++
->  kernel/kexec_file.c                       |   3 +
->  11 files changed, 604 insertions(+), 3 deletions(-)
->  create mode 100644 kernel/crash_dump_dm_crypt.c
-> 
-> 
-> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-> -- 
-> 2.48.1
-> 
+>
+>> >> +struct kho_mem_track {
+>> >> +	/* Points to L4 KHOMEM descriptor, each order gets its own table. */
+>> >> +	struct xarray orders;
+>> >> +};
+>> >
+>> > I think it would be easy to add a 5th level and just use bits 63:57 as
+>> > a 6 bit order. Then you don't need all this stuff either.
+>> 
+>> I am guessing you mean to store the order in the table descriptor
+>> itself, instead of having a different table for each order.
+>
+> Not quite, I mean to index the per-order sub trees by using the high
+> order bits. You still end up with N seperate bitmap trees, but instead
+> of using an xarray to hold their top pointers you hold them in a 5th
+> level.
+>
+>> Though now that I think of it, it is probably much simpler to just use
+>> khomem_desc_t orders[NR_PAGE_ORDERS] instead of the xarray.
+>
+> Which is basically this, but encoding the index to orders in the address
 
+I think this is way easier to wrap your head around compared to trying
+to encode orders in address. That doesn't even work that well since
+address has pretty much no connection to order. So a page at address say
+0x100000 might be any order. So we would have to encode the order into
+the address, and then decode it when doing table operations. Just having
+a separate table indexed separately by orders is way simpler.
+
+-- 
+Regards,
+Pratyush Yadav
 
