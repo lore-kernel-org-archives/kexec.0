@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E689C36010
-	for <kexec@archiver.kernel.org>; Fri,  4 Apr 2025 20:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CBA1C36010
+	for <kexec@archiver.kernel.org>; Fri,  4 Apr 2025 23:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UwmZQcYi1EXxCwhNIY+HYLc1u5vQgnMlKARAIkaxeao=; b=c2p27qlq9JRn7ucsVir9QloTdL
-	Br/LKoPHeEyOXEu5DvDI7J3K0DA2t17yjqocRep67n1wg7EPRA7PVTOv6QSJkC4rYNilObEcrDxhF
-	vWCJx4uQ4RF7nWOadL5IvA+iJgqL6xeIy5VBMfcnEhjKpJ/P/KhGD09saphUNXcKMFMguOLebDZj1
-	cZvtA1GXlP+g97VCn297n1Nb3r6WmW5dlEzE3DQRAV+upHKQObfqCKfdVW95++/XLmCk54pZmLeMF
-	tnvZRNKi5g1ZPeKoHqp3ZtEYpZWAYG4BYwDjdqWLmVK2dKkfmFx+wy4/VtwnVLl8XFFAHCjElwK+A
-	+4aVIT0g==;
+	bh=GLVJtIoQpdVmEAUKr1dsLDOJiHfbCf/jS5iodZmlkgE=; b=b6cCW6PKNoQR1NzCFPi8SxRO7d
+	IpZQMckRhGwxE3qvqDEnTHSKkz/oiGBAkWb22vS1cuENHQeJT+oQPQIPvDUKsZW+vXYNSDnUtibPF
+	PKsF8wXHTnXbAWi6nhNczmM4HOnwTHwiMwDmHxFngOe2WVwnkQ/qfKKTnBa2BOPKNhjItF+lvvvJN
+	rfyk+OxuatMIRbXu8XHY7w9fr2n+0TLt+eqJM5ccDXnJPikr5O0Ai5xSfcr0x9Yg5PLRUcejSzdr7
+	XNKu/r9V6+CB1TKUjDO8W/dAlTVu4zXilhLPX+OhlTNGXqJ+kdrgRd98ctz7o53+Ow1VISRzKG7ru
+	j/JCHh9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0nox-0000000CoEZ-22cd;
-	Fri, 04 Apr 2025 20:39:23 +0000
-Received: from out-186.mta1.migadu.com ([2001:41d0:203:375::ba])
+	id 1u0qVc-0000000D5Tt-1BvZ;
+	Fri, 04 Apr 2025 23:31:36 +0000
+Received: from out-187.mta1.migadu.com ([2001:41d0:203:375::bb])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0nor-0000000CoE9-2Dfp
+	id 1u0qVY-0000000D5T4-2iiZ
 	for kexec@lists.infradead.org;
-	Fri, 04 Apr 2025 20:39:19 +0000
-Date: Fri, 4 Apr 2025 22:39:11 +0200
+	Fri, 04 Apr 2025 23:31:35 +0000
+Date: Sat, 5 Apr 2025 01:31:23 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743799154;
+	t=1743809488;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UwmZQcYi1EXxCwhNIY+HYLc1u5vQgnMlKARAIkaxeao=;
-	b=JHzHGY91ox3IAo0IRB+jqoMBGsT6uZCdh1MIkzseecBUO+zjOOjgj3XnVNPTa0P6HfMVBs
-	JVWGYnjNMviqmPTnPS9aQsB/8ViM+GaJCk6ZHq034qylvN2VvRPmFh9IN8PLD2rh6rBptK
-	d/lqxJzBsILZrY6D2kIv0yromlwIfA4Q5IsdRJTBAG812xqRbnCyV+xpKxUC5neQelP7uM
-	kYdAESpN7V1tq1TG0pNFtzsOICDFIyYoQts9factYnBi9AoEla2g2v5d4luFuSdyapo3Dp
-	xQE0wczRGHyGPb1vhybRrx9Gog9fDIr5QkpjiOjoiQhJ4QwghaTGPrQunFeHgA==
+	bh=GLVJtIoQpdVmEAUKr1dsLDOJiHfbCf/jS5iodZmlkgE=;
+	b=RmG31kDenvozuDOddYRWpflGvE3ElGPz3cik7+hh0dJCWN8CE0NucAjU1F4kUp68nl/u7E
+	0FQlN5Th6DK30djI0bA7G1UXgXsoMru0q5QE4LPklDV7Bva17wxz1wpCkAYuGWQNF2dFHh
+	DvV9TLJLh7AeYOTH55GQPvqzEH3jKa+cr8x/ouMYvAE33BV+SSVa0XZ5OmCPZMGPn5nzCn
+	zdmf2tphLjbW+OxNf1qxxurKkyrCTnZddgQFv+DQg8SDkw9i7y2ZlF3EhKe2Q6oaLAQQ4T
+	a0MaB0kSGbJiDPCZMcqpDiq5+aXHXaCgGk5Ln+qYjoxr25eAJBqul0jdrfD1RQ==
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Roberto Ricci <io@r-ricci.it>
-To: msizanoen <msizanoen@qtmlabs.xyz>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
-	ytcoode@gmail.com, kexec@lists.infradead.org,
-	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
+	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+	akpm@linux-foundation.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, msizanoen@qtmlabs.xyz,
+	rafael.j.wysocki@intel.com, yu.c.chen@intel.com
 Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
  hibernation
-Message-ID: <Z_BDbwmFV6wxDPV1@desktop0a>
+Message-ID: <Z_Bry0JcB1jqPztR@desktop0a>
 References: <Z4WFjBVHpndct7br@desktop0a>
- <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
- <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
- <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+ <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+ <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+ <Z-c7V2hptt9U9UCl@desktop0a>
+ <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+ <Z-hYWc9LtBU1Yhtg@desktop0a>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+In-Reply-To: <Z-hYWc9LtBU1Yhtg@desktop0a>
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250404_133917_931531_30BE65F2 
-X-CRM114-Status: GOOD (  17.44  )
+X-CRM114-CacheID: sfid-20250404_163133_571299_AC71695E 
+X-CRM114-Status: GOOD (  23.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,93 +79,191 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025-04-04 12:50 +0700, msizanoen wrote:
-> Here's an updated version of the patch that better handles pathological e820
-> tables.
-> 
-> On 4/4/25 11:56, msizanoen wrote:
-> > Also, can you reproduce this issue with a target kernel (the kernel
-> > being kexec-ed) that has one of the patches attached (select the correct
-> > one according to your kernel version) applied, with either kexec_load or
-> > kexec_file_load?
+On 2025-03-29 21:30 +0100, Roberto Ricci wrote:
+> On 2025-03-29 09:44 +0800, Baoquan He wrote:
 > > [snip]
->
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 4893d30ce438..5d963df63b7a 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -754,22 +754,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
->  void __init e820__register_nosave_regions(unsigned long limit_pfn)
->  {
->  	int i;
-> -	unsigned long pfn = 0;
-> +	u64 last_addr = 0;
->  
->  	for (i = 0; i < e820_table->nr_entries; i++) {
->  		struct e820_entry *entry = &e820_table->entries[i];
->  
-> -		if (pfn < PFN_UP(entry->addr))
-> -			register_nosave_region(pfn, PFN_UP(entry->addr));
-> -
-> -		pfn = PFN_DOWN(entry->addr + entry->size);
-> -
->  		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
-> -			register_nosave_region(PFN_UP(entry->addr), pfn);
-> +			continue;
->  
-> -		if (pfn >= limit_pfn)
-> -			break;
-> +		if (last_addr < entry->addr)
-> +			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
-> +
-> +		last_addr = entry->addr + entry->size;
->  	}
-> +
-> +	register_nosave_region(PFN_UP(last_addr), limit_pfn);
->  }
+> > 3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
+> > this because kexec_load interface defaults to put kexec kernel on top of
+> > system RAM which is equivalent to applying commit b3ba234171cd.
+> 
+> No, it doesn't. While hibernation alone works, kexec + hibernation
+> results in the system just rebooting without resuming the hibernation
+> image, but no crash or other weird behaviour occurs.
+> Initially I decided to focus on kexec_file_load in order to narrow
+> things down, but that was before noticing that the bug could manifest
+> itself in different forms.
+> It is possible, indeed, that both syscalls are affected by the same
+> problem, which is not caused by commit b3ba234171cd.
+> I tried to test kexec_load with some older kernels, but I got build
+> errors, so I tested longterm releases where such errors have been fixed.
+> With v4.9.337, kexec (via kexec_load) + hibernation works.
+> With v5.4.291 it doesn't.
+> I'm not sure how bisection could be done in this case.
+> [snip]
 
-Your patch applied to v6.14 fixes the issue with kexec_file_load, but
-kexec_load keeps not working.
+I've bisected this other bug with kexec_load. I found commit
+62a03defeabd PM / hibernate: Verify the consistent of e820 memory map by md5 digest
+Reverting it on v6.14 fixes kexec_load, but not kexec_file_load.
+Also applying the patch suggested by msizanoen fixes kexec_file_load, too:
+https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
 
->  #ifdef CONFIG_ACPI
->
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 57120f0749cc..656ed7abd28d 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -753,22 +753,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
->  void __init e820__register_nosave_regions(unsigned long limit_pfn)
->  {
->  	int i;
-> -	unsigned long pfn = 0;
-> +	u64 last_addr = 0;
->  
->  	for (i = 0; i < e820_table->nr_entries; i++) {
->  		struct e820_entry *entry = &e820_table->entries[i];
->  
-> -		if (pfn < PFN_UP(entry->addr))
-> -			register_nosave_region(pfn, PFN_UP(entry->addr));
-> -
-> -		pfn = PFN_DOWN(entry->addr + entry->size);
-> -
->  		if (entry->type != E820_TYPE_RAM)
-> -			register_nosave_region(PFN_UP(entry->addr), pfn);
-> +			continue;
->  
-> -		if (pfn >= limit_pfn)
-> -			break;
-> +		if (last_addr < entry->addr)
-> +			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
-> +
-> +		last_addr = entry->addr + entry->size;
->  	}
-> +
-> +	register_nosave_region(PFN_UP(last_addr), limit_pfn);
->  }
->  
->  #ifdef CONFIG_ACPI
+FYI, this is how I reverted that commit (I had to manually resolve
+conflicts):
 
-On master, kexec_file_load already worked due to the patch series you
-mentioned in earlier emails. The kexec_load issue isn't affected by your
-patch.
+diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+index 5b81d19cd114..f2021a515bad 100644
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -40,20 +40,6 @@ unsigned long restore_cr3 __visible;
+ unsigned long temp_pgt __visible;
+ unsigned long relocated_restore_code __visible;
+ 
+-/**
+- *	pfn_is_nosave - check if given pfn is in the 'nosave' section
+- */
+-int pfn_is_nosave(unsigned long pfn)
+-{
+-	unsigned long nosave_begin_pfn;
+-	unsigned long nosave_end_pfn;
+-
+-	nosave_begin_pfn = __pa_symbol(&__nosave_begin) >> PAGE_SHIFT;
+-	nosave_end_pfn = PAGE_ALIGN(__pa_symbol(&__nosave_end)) >> PAGE_SHIFT;
+-
+-	return pfn >= nosave_begin_pfn && pfn < nosave_end_pfn;
+-}
+-
+ struct restore_data_record {
+ 	unsigned long jump_address;
+ 	unsigned long jump_address_phys;
+@@ -83,69 +69,6 @@ static inline u32 compute_e820_crc32(struct e820_table *table)
+ #define RESTORE_MAGIC	0x12345679UL
+ #endif
+ 
+-/**
+- *	arch_hibernation_header_save - populate the architecture specific part
+- *		of a hibernation image header
+- *	@addr: address to save the data at
+- */
+-int arch_hibernation_header_save(void *addr, unsigned int max_size)
+-{
+-	struct restore_data_record *rdr = addr;
+-
+-	if (max_size < sizeof(struct restore_data_record))
+-		return -EOVERFLOW;
+-	rdr->magic = RESTORE_MAGIC;
+-	rdr->jump_address = (unsigned long)restore_registers;
+-	rdr->jump_address_phys = __pa_symbol(restore_registers);
+-
+-	/*
+-	 * The restore code fixes up CR3 and CR4 in the following sequence:
+-	 *
+-	 * [in hibernation asm]
+-	 * 1. CR3 <= temporary page tables
+-	 * 2. CR4 <= mmu_cr4_features (from the kernel that restores us)
+-	 * 3. CR3 <= rdr->cr3
+-	 * 4. CR4 <= mmu_cr4_features (from us, i.e. the image kernel)
+-	 * [in restore_processor_state()]
+-	 * 5. CR4 <= saved CR4
+-	 * 6. CR3 <= saved CR3
+-	 *
+-	 * Our mmu_cr4_features has CR4.PCIDE=0, and toggling
+-	 * CR4.PCIDE while CR3's PCID bits are nonzero is illegal, so
+-	 * rdr->cr3 needs to point to valid page tables but must not
+-	 * have any of the PCID bits set.
+-	 */
+-	rdr->cr3 = restore_cr3 & ~CR3_PCID_MASK;
+-
+-	rdr->e820_checksum = compute_e820_crc32(e820_table_firmware);
+-	return 0;
+-}
+-
+-/**
+- *	arch_hibernation_header_restore - read the architecture specific data
+- *		from the hibernation image header
+- *	@addr: address to read the data from
+- */
+-int arch_hibernation_header_restore(void *addr)
+-{
+-	struct restore_data_record *rdr = addr;
+-
+-	if (rdr->magic != RESTORE_MAGIC) {
+-		pr_crit("Unrecognized hibernate image header format!\n");
+-		return -EINVAL;
+-	}
+-
+-	restore_jump_address = rdr->jump_address;
+-	jump_address_phys = rdr->jump_address_phys;
+-	restore_cr3 = rdr->cr3;
+-
+-	if (rdr->e820_checksum != compute_e820_crc32(e820_table_firmware)) {
+-		pr_crit("Hibernate inconsistent memory map detected!\n");
+-		return -ENODEV;
+-	}
+-
+-	return 0;
+-}
+ 
+ int relocate_restore_code(void)
+ {
+diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
+index a595953f1d6d..924420fdaab4 100644
+--- a/arch/x86/power/hibernate_64.c
++++ b/arch/x86/power/hibernate_64.c
+@@ -140,3 +140,56 @@ asmlinkage int swsusp_arch_resume(void)
+ 	restore_image();
+ 	return 0;
+ }
++
++/*
++ *	pfn_is_nosave - check if given pfn is in the 'nosave' section
++ */
++
++int pfn_is_nosave(unsigned long pfn)
++{
++	unsigned long nosave_begin_pfn = __pa_symbol(&__nosave_begin) >> PAGE_SHIFT;
++	unsigned long nosave_end_pfn = PAGE_ALIGN(__pa_symbol(&__nosave_end)) >> PAGE_SHIFT;
++	return (pfn >= nosave_begin_pfn) && (pfn < nosave_end_pfn);
++}
++
++struct restore_data_record {
++	unsigned long jump_address;
++	unsigned long jump_address_phys;
++	unsigned long cr3;
++	unsigned long magic;
++};
++
++#define RESTORE_MAGIC	0x123456789ABCDEF0UL
++
++/**
++ *	arch_hibernation_header_save - populate the architecture specific part
++ *		of a hibernation image header
++ *	@addr: address to save the data at
++ */
++int arch_hibernation_header_save(void *addr, unsigned int max_size)
++{
++	struct restore_data_record *rdr = addr;
++
++	if (max_size < sizeof(struct restore_data_record))
++		return -EOVERFLOW;
++	rdr->jump_address = (unsigned long)&restore_registers;
++	rdr->jump_address_phys = __pa_symbol(&restore_registers);
++	rdr->cr3 = restore_cr3;
++	rdr->magic = RESTORE_MAGIC;
++	return 0;
++}
++
++/**
++ *	arch_hibernation_header_restore - read the architecture specific data
++ *		from the hibernation image header
++ *	@addr: address to read the data from
++ */
++int arch_hibernation_header_restore(void *addr)
++{
++	struct restore_data_record *rdr = addr;
++
++	restore_jump_address = rdr->jump_address;
++	jump_address_phys = rdr->jump_address_phys;
++	restore_cr3 = rdr->cr3;
++	return (rdr->magic == RESTORE_MAGIC) ? 0 : -EINVAL;
++}
 
