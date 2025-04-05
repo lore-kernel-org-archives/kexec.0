@@ -4,69 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CF0AC36010
-	for <kexec@archiver.kernel.org>; Sat,  5 Apr 2025 05:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DA24C36010
+	for <kexec@archiver.kernel.org>; Sat,  5 Apr 2025 05:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=; b=n5aYDUEYQBYQCaiZE63mfRYdT3
-	Qk7bnLelPADA9vdfG69soZrwN8rQmvLE2hteX2NloTSvZEsUg41QJG5yhCIHggwON+Re1n61VdJ2O
-	XNAllm3yO8ME632WxdXvVaR+t6eXaxSFhdEjtZLSDIgwUWljesGFGrg3g/CH9Q9o7nszIhLgCGrAm
-	zAbrJRJMj7xkCqH4mhECBeHdvwpswptBU4XU9a6kneUeiLvW0gW96BuVb+XJdFoB5s+xF6Cg/bhDJ
-	mvpAGfoSh1ihrfZP08mznqeQmfK645OK1AOGqbpOEyDPtrVrdZju3JEx9dXQG/ZvWrdXQQ3jCgORa
-	OzfzOWMg==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=tTQ17U6sjQuFMtMrMTRX45NJVSbACjFBFS0A1p5grqY=; b=CrTeJ5WMoW0poB4S+iPkAR2AIP
+	rO5DEFjjsRaOBl/QhIkpPhCQYaNXVdOphV/ceEDtUBdC5LO+ZqEqJ8o84QJkIpH0QBms34HdDFnbJ
+	CCGp4uFxuy5+5SUDqEeq20DUHf8VKRz0jFh4PRk/3+iznMAgyEFs38bAixRHRX52qQUsE0gq3QHCM
+	Gl6XPbZbJocU8RicQhl/4Qn455K+6w48pZNbaklaN1odn6Nt6FzjlJdvhPR3yuOzUBZy1PTv3eObX
+	Nms/Qj89Mspp6KzSK9CKXxAnF8Pi+tVc2urXKSOdL1lirgHDeNq54SnzhwGNlpp/HCe44ZobtHXyR
+	mqVjrt0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0vsW-0000000DV4a-1CNe;
-	Sat, 05 Apr 2025 05:15:36 +0000
-Received: from s1.g1.infrastructure.qtmlabs.xyz ([107.172.1.117])
+	id 1u0w6v-0000000DVfw-31mV;
+	Sat, 05 Apr 2025 05:30:29 +0000
+Received: from mgamail.intel.com ([192.198.163.11])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0vsT-0000000DV49-2hr1
+	id 1u0w6t-0000000DVfX-0MYa
 	for kexec@lists.infradead.org;
-	Sat, 05 Apr 2025 05:15:35 +0000
-Message-ID: <b09aab52-8fba-49c4-8dc7-9d5cca0f5b98@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743830128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=;
-	b=WC/Jj2uSSBgrctke8lvLcxJfUYYOWf5ktSNDeGd2JRF9/8K3BMadYBjX7si/0FkQpYEozs
-	TAT2hjGjSnQ99oP5s6oaIgNx0KhAMZ4PDoj+CoOczq6IQEdwBATSwrBt2GpxFDiMGYHfhE
-	eJW4rsq1R+xMMJaBoMo8Ro2uA9MHL7GidG3yZmW6mgZsydLvf3tQQEsr04495XHTC0B3I1
-	DLz5b8IEvjFYDnNrATl4uR546D6zy792Ub3hVgqXgs3BXqdqSfDAEb7woCbjelDFX6AcdZ
-	qFbWJROMbvUQle+DkdGsHLZLh5yYvKxLSjn9vIsSWkQR4d9mmQO3Qf4wCoj41Q==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Date: Sat, 5 Apr 2025 12:15:20 +0700
+	Sat, 05 Apr 2025 05:30:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743831027; x=1775367027;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zEsc7b6P2dS3SJaNmkZRSte+pyqL0ydAbw4F1IszLMU=;
+  b=fLniUP3VT0g72lhU3fFqmK33vWNqWm5d/ES3c//gzdAPFjWZmjM8Yrnt
+   jY8nTORVt4gU4lKhLFMZMUTR/P7lD2UIIscEhfywe5fJTvuaW9Q29h0Iv
+   qvDvdmEnfTE47KmzF5Jkz7jOEiQ7yrOzjyogQmmW1e2Fsxlwm1/IVfF1g
+   kGXWJH2sXBAAft/V0sKnicE0p+LIedywMFwovFcV5puRqF8NGu3BtzVHv
+   Vguw0E/N6FNVAOHNYMCRH5kdzum8ISaAaNnzfk+agQXQ8BgLkSYdfZznM
+   ggqED6WAisN14aJQTNCv0ay0wrjkq+8gbshSXhbOzB1uqCews9uVYxGpX
+   g==;
+X-CSE-ConnectionGUID: lll4LikvSYKqx6e4W47BnA==
+X-CSE-MsgGUID: vqjZWRAoQrisTF7rNdyogg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55942272"
+X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
+   d="scan'208";a="55942272"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 22:30:21 -0700
+X-CSE-ConnectionGUID: OyKeFk3YT56cuwkUVwSO5g==
+X-CSE-MsgGUID: H9DYO3P+SwiMemLl0bBCoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
+   d="scan'208";a="127474228"
+Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
+  by fmviesa007.fm.intel.com with ESMTP; 04 Apr 2025 22:30:17 -0700
+From: Zhiquan Li <zhiquan1.li@intel.com>
+To: bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com,
+	kirill.shutemov@linux.intel.com,
+	akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	k-hagio-ab@nec.com,
+	yamazaki-msmt@nec.com,
+	lijiang@redhat.com,
+	ltao@redhat.com,
+	zhiquan1.li@intel.com
+Subject: [PATCH v3] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
+Date: Sat,  5 Apr 2025 14:06:10 +0800
+Message-Id: <20250405060610.860465-1-zhiquan1.li@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-From: msizanoen <msizanoen@qtmlabs.xyz>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
- <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
- <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Content-Language: en-US
-In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250404_221533_854652_456520BA 
-X-CRM114-Status: UNSURE (   7.53  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250404_223027_164421_98010916 
+X-CRM114-Status: GOOD (  12.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,38 +90,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Submitted for review: 
-https://lore.kernel.org/stable/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
+On Intel TDX guest, unaccepted memory is unusable free memory which is
+not managed by buddy, until it's accepted by guest.  Before that, it
+cannot be accessed by the first kernel as well as the kexec'ed kernel.
+The kexec'ed kernel will skip these pages and fill in zero data for the
+reader of vmcore.
 
-On 4/4/25 12:50, msizanoen wrote:
-> Here's an updated version of the patch that better handles 
-> pathological e820 tables.
->
-> On 4/4/25 11:56, msizanoen wrote:
->> Also, can you reproduce this issue with a target kernel (the kernel 
->> being kexec-ed) that has one of the patches attached (select the 
->> correct one according to your kernel version) applied, with either 
->> kexec_load or kexec_file_load?
->>
->> On 4/4/25 09:54, msizanoen wrote:
->>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
->>> series backported as target kernel, using kexec_load)?
->>>
->>> On 4/4/25 05:00, Roberto Ricci wrote:
->>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
->>>>> [snip]
->>>>> It seems like `e820__register_nosave_regions` is erroneously 
->>>>> marking some
->>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
->>>>> In theory
->>>>> backporting
->>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
->>>>> should
->>>>> be sufficient to avoid this but a fix for the actual root cause is
->>>>> preferred.
->>>> When using kexec_file_load, this patch series fixes the issue not only
->>>> in theory but also in practice.
->>>> But the issue with kexec_load (see
->>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
->>>> ), which might be related, is not fixed.
+The dump tool like makedumpfile creates a page descriptor (size 24
+bytes) for each non-free page, including zero data page, but it will not
+create descriptor for free pages.  If it is not able to distinguish
+these unaccepted pages with zero data pages, a certain amount of space
+will be wasted in proportion (~1/170).  In fact, as a special kind of
+free page the unaccepted pages should be excluded, like the real free
+pages.
+
+Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
+that dump tool can identify whether a page is unaccepted.
+
+Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
+
+Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+
+---
+Vmcore size statistic of a freshly booted TD VM with different memory
+sizes:
+
+  VM.mem | Before  After
+  -------+----------------
+  512G   | ~4.9G   ~2.0G
+  256G   | ~2.0G   ~1.1G
+
+Most of changes are done by makedumpfile, but the prerequisite is kernel
+needs to export an indicator to identify unaccepted pages in vmcoreinfo.
+
+V2: https://lore.kernel.org/all/20250403030801.758687-1-zhiquan1.li@intel.com/
+
+Changes since V2:
+- Add Baoquan's Acked-by tag.
+- Fix docs: "Title underline too short" warning.
+
+V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
+
+Changes since V1:
+- Rebase to v6.14.
+- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
+  suggestion.
+- Add Kirill's Reviewed-by tag.
+---
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 4 ++--
+ kernel/vmcore_info.c                           | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 0f714fc945ac..8cf4614385b7 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -331,8 +331,8 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
+ Page attributes. These flags are used to filter various unnecessary for
+ dumping pages.
+ 
+-PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
+------------------------------------------------------------------------------
++PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
++-------------------------------------------------------------------------------------------------------------------------
+ 
+ More page attributes. These flags are used to filter various unnecessary for
+ dumping pages.
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 1fec61603ef3..e066d31d08f8 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
+ #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
+ 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
++#ifdef CONFIG_UNACCEPTED_MEMORY
++#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
++	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
++#endif
+ 
+ #ifdef CONFIG_KALLSYMS
+ 	VMCOREINFO_SYMBOL(kallsyms_names);
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+-- 
+2.25.1
+
 
