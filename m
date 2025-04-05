@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9666EC36010
-	for <kexec@archiver.kernel.org>; Fri,  4 Apr 2025 23:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CF0AC36010
+	for <kexec@archiver.kernel.org>; Sat,  5 Apr 2025 05:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=; b=v0JmVekB5B/m3vwwYhNDz6jM2W
-	2j75GmuemmO8mKmdfHrp+BeKOwWgayGaullXxHZBqL2xLH6WIcmBsgPU3XkWaAezBkkKkGFz03Lyy
-	7/JfpePDb/zUjVf5ZJ/Mq65qCrs+/X1dPGEdhUweVuAmWsWHtm5PbxFrY4XC14LaJZ0FlFRo7R5zn
-	TChu9quGVj4PFhu5uVtoY6g53HVbDphJn+vCD6qmuIpd0nx+I8vGaEXTHTrwTwO97UrtuvBueqHAN
-	zyD53Eyc6InVJMVTpADfs1h5NCreKrYpsREC3wl0EQzDb4vALkUGJ3C7OkuFQp4hb6Ca+/bUMJLPX
-	IkSetTdA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=; b=n5aYDUEYQBYQCaiZE63mfRYdT3
+	Qk7bnLelPADA9vdfG69soZrwN8rQmvLE2hteX2NloTSvZEsUg41QJG5yhCIHggwON+Re1n61VdJ2O
+	XNAllm3yO8ME632WxdXvVaR+t6eXaxSFhdEjtZLSDIgwUWljesGFGrg3g/CH9Q9o7nszIhLgCGrAm
+	zAbrJRJMj7xkCqH4mhECBeHdvwpswptBU4XU9a6kneUeiLvW0gW96BuVb+XJdFoB5s+xF6Cg/bhDJ
+	mvpAGfoSh1ihrfZP08mznqeQmfK645OK1AOGqbpOEyDPtrVrdZju3JEx9dXQG/ZvWrdXQQ3jCgORa
+	OzfzOWMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0qbD-0000000D69o-3GtK;
-	Fri, 04 Apr 2025 23:37:23 +0000
-Received: from out-171.mta0.migadu.com ([91.218.175.171])
+	id 1u0vsW-0000000DV4a-1CNe;
+	Sat, 05 Apr 2025 05:15:36 +0000
+Received: from s1.g1.infrastructure.qtmlabs.xyz ([107.172.1.117])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0qbA-0000000D690-2Mht
+	id 1u0vsT-0000000DV49-2hr1
 	for kexec@lists.infradead.org;
-	Fri, 04 Apr 2025 23:37:22 +0000
-Date: Sat, 5 Apr 2025 01:37:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743809837;
+	Sat, 05 Apr 2025 05:15:35 +0000
+Message-ID: <b09aab52-8fba-49c4-8dc7-9d5cca0f5b98@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743830128;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=;
-	b=uNXGvnNdzQlXu9Jvln8BKbLoHI2I6EhtvGmXw39XHygcZbI1Ph6xc8LOngN7VwUnmel0iK
-	198ALO/ZF31C4Cw2P6/mehcV3hvLRmeXxWyoiYVn952yt1IcKpqTi7oO2FEZjeV22nEjRB
-	8rsAbQvNzfdC48WScsCSgjKqAa0FfC0qDkldZTFvyBqKoCVVuNaunnck/GW28gwgr4sHGL
-	L3OcEDfyd07EY1cQxRKSNXSFwHupvyuojSVyDGuvxBevPjBuwvddjBr6bW+T1sxktlLIz+
-	VxvkkfCiFGEoC7wBBMf8uV6kJ3/cakERzlPY7xemL+/OCfmE45dXCpDMy7DJGg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, msizanoen@qtmlabs.xyz,
-	rafael.j.wysocki@intel.com, yu.c.chen@intel.com
+	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=;
+	b=WC/Jj2uSSBgrctke8lvLcxJfUYYOWf5ktSNDeGd2JRF9/8K3BMadYBjX7si/0FkQpYEozs
+	TAT2hjGjSnQ99oP5s6oaIgNx0KhAMZ4PDoj+CoOczq6IQEdwBATSwrBt2GpxFDiMGYHfhE
+	eJW4rsq1R+xMMJaBoMo8Ro2uA9MHL7GidG3yZmW6mgZsydLvf3tQQEsr04495XHTC0B3I1
+	DLz5b8IEvjFYDnNrATl4uR546D6zy792Ub3hVgqXgs3BXqdqSfDAEb7woCbjelDFX6AcdZ
+	qFbWJROMbvUQle+DkdGsHLZLh5yYvKxLSjn9vIsSWkQR4d9mmQO3Qf4wCoj41Q==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
+Date: Sat, 5 Apr 2025 12:15:20 +0700
+MIME-Version: 1.0
 Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
  hibernation
-Message-ID: <Z_BtK43rKhxw28l4@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
- <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
- <Z-hYWc9LtBU1Yhtg@desktop0a>
- <Z_Bry0JcB1jqPztR@desktop0a>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_Bry0JcB1jqPztR@desktop0a>
-X-Migadu-Flow: FLOW_OUT
+From: msizanoen <msizanoen@qtmlabs.xyz>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+ ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+ akpm@linux-foundation.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
+ <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
+ <Z-8E-LLs1dFWfn6J@desktop0a>
+ <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+ <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+ <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Language: en-US
+In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: /
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250404_163720_747705_58D611CB 
-X-CRM114-Status: UNSURE (   5.14  )
+X-CRM114-CacheID: sfid-20250404_221533_854652_456520BA 
+X-CRM114-Status: UNSURE (   7.53  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -81,13 +81,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025-04-05 01:31 +0200, Roberto Ricci wrote:
-> I've bisected this other bug with kexec_load. I found commit
-> 62a03defeabd PM / hibernate: Verify the consistent of e820 memory map by md5 digest
-> Reverting it on v6.14 fixes kexec_load, but not kexec_file_load.
-> Also applying the patch suggested by msizanoen fixes kexec_file_load, too:
-> https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
+Submitted for review: 
+https://lore.kernel.org/stable/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
 
-I mean, doing both things fixes both bugs. The second thing fixes
-kexec_file_load only.
+On 4/4/25 12:50, msizanoen wrote:
+> Here's an updated version of the patch that better handles 
+> pathological e820 tables.
+>
+> On 4/4/25 11:56, msizanoen wrote:
+>> Also, can you reproduce this issue with a target kernel (the kernel 
+>> being kexec-ed) that has one of the patches attached (select the 
+>> correct one according to your kernel version) applied, with either 
+>> kexec_load or kexec_file_load?
+>>
+>> On 4/4/25 09:54, msizanoen wrote:
+>>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
+>>> series backported as target kernel, using kexec_load)?
+>>>
+>>> On 4/4/25 05:00, Roberto Ricci wrote:
+>>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
+>>>>> [snip]
+>>>>> It seems like `e820__register_nosave_regions` is erroneously 
+>>>>> marking some
+>>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
+>>>>> In theory
+>>>>> backporting
+>>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
+>>>>> should
+>>>>> be sufficient to avoid this but a fix for the actual root cause is
+>>>>> preferred.
+>>>> When using kexec_file_load, this patch series fixes the issue not only
+>>>> in theory but also in practice.
+>>>> But the issue with kexec_load (see
+>>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+>>>> ), which might be related, is not fixed.
 
