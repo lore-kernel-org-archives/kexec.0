@@ -4,78 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DA24C36010
-	for <kexec@archiver.kernel.org>; Sat,  5 Apr 2025 05:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DA33C36002
+	for <kexec@archiver.kernel.org>; Mon,  7 Apr 2025 01:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=tTQ17U6sjQuFMtMrMTRX45NJVSbACjFBFS0A1p5grqY=; b=CrTeJ5WMoW0poB4S+iPkAR2AIP
-	rO5DEFjjsRaOBl/QhIkpPhCQYaNXVdOphV/ceEDtUBdC5LO+ZqEqJ8o84QJkIpH0QBms34HdDFnbJ
-	CCGp4uFxuy5+5SUDqEeq20DUHf8VKRz0jFh4PRk/3+iznMAgyEFs38bAixRHRX52qQUsE0gq3QHCM
-	Gl6XPbZbJocU8RicQhl/4Qn455K+6w48pZNbaklaN1odn6Nt6FzjlJdvhPR3yuOzUBZy1PTv3eObX
-	Nms/Qj89Mspp6KzSK9CKXxAnF8Pi+tVc2urXKSOdL1lirgHDeNq54SnzhwGNlpp/HCe44ZobtHXyR
-	mqVjrt0w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=uvy9TMt2iMUz/JiuHPEeTKpKgTrJBeMjozXjTZWahsw=; b=vV+EEvEZWpWVR51zmgORO8WGpJ
+	/XgW/b9hC5fLyZmzRWIUW6RBYEAM2Nrz5HrJQ4kBf35nqVRTHTk70ERcZ7vIG3sHcV+ijnjmg+Opw
+	g8p0OEOug9aoL9I2KOXydmG+Sl6ntN3FRWwIdSMdfH6MStg3wOVncJLnyrWSxxnMYuWAQ/gLXK8vM
+	rRgPfsCmanpk369NN37cTaaH2b7Af5v525aO3aHOAvjZlMOL8PyGGnqHwAdv8C/Z/kMVHDLuVQegv
+	Qe2tY6d2c6CCAPX/87op1MtYrv9otj+bYLiOYz5TTaHka3iaBUIiBft82tkf3gL2F03xKGYXVxVCQ
+	PCOpB5SQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0w6v-0000000DVfw-31mV;
-	Sat, 05 Apr 2025 05:30:29 +0000
-Received: from mgamail.intel.com ([192.198.163.11])
+	id 1u1bNx-0000000G89c-0a75;
+	Mon, 07 Apr 2025 01:34:49 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0w6t-0000000DVfX-0MYa
+	id 1u1bNq-0000000G89C-0bBJ
 	for kexec@lists.infradead.org;
-	Sat, 05 Apr 2025 05:30:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743831027; x=1775367027;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zEsc7b6P2dS3SJaNmkZRSte+pyqL0ydAbw4F1IszLMU=;
-  b=fLniUP3VT0g72lhU3fFqmK33vWNqWm5d/ES3c//gzdAPFjWZmjM8Yrnt
-   jY8nTORVt4gU4lKhLFMZMUTR/P7lD2UIIscEhfywe5fJTvuaW9Q29h0Iv
-   qvDvdmEnfTE47KmzF5Jkz7jOEiQ7yrOzjyogQmmW1e2Fsxlwm1/IVfF1g
-   kGXWJH2sXBAAft/V0sKnicE0p+LIedywMFwovFcV5puRqF8NGu3BtzVHv
-   Vguw0E/N6FNVAOHNYMCRH5kdzum8ISaAaNnzfk+agQXQ8BgLkSYdfZznM
-   ggqED6WAisN14aJQTNCv0ay0wrjkq+8gbshSXhbOzB1uqCews9uVYxGpX
-   g==;
-X-CSE-ConnectionGUID: lll4LikvSYKqx6e4W47BnA==
-X-CSE-MsgGUID: vqjZWRAoQrisTF7rNdyogg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55942272"
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="55942272"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 22:30:21 -0700
-X-CSE-ConnectionGUID: OyKeFk3YT56cuwkUVwSO5g==
-X-CSE-MsgGUID: H9DYO3P+SwiMemLl0bBCoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="127474228"
-Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Apr 2025 22:30:17 -0700
-From: Zhiquan Li <zhiquan1.li@intel.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kirill.shutemov@linux.intel.com,
-	akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	k-hagio-ab@nec.com,
-	yamazaki-msmt@nec.com,
-	lijiang@redhat.com,
-	ltao@redhat.com,
-	zhiquan1.li@intel.com
-Subject: [PATCH v3] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
-Date: Sat,  5 Apr 2025 14:06:10 +0800
-Message-Id: <20250405060610.860465-1-zhiquan1.li@intel.com>
-X-Mailer: git-send-email 2.25.1
+	Mon, 07 Apr 2025 01:34:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743989679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uvy9TMt2iMUz/JiuHPEeTKpKgTrJBeMjozXjTZWahsw=;
+	b=NmdN5hbcnSCJImJ10yxweL37PW2huBWg8ppD7KcQCnii78sNY76c/uYqSr+TOUAFnBzgQ2
+	8u6ECJyJQoeQvSozykE3OEVZNBQlWiINk8K57F7BQggIESQTf38LlV7nw2aoh0GRE6P22H
+	d3rkSLc5kClnxNhWmoseLk9HPX/LFXU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-qA-GdddjMC6XU4e3XoP8NA-1; Sun,
+ 06 Apr 2025 21:34:36 -0400
+X-MC-Unique: qA-GdddjMC6XU4e3XoP8NA-1
+X-Mimecast-MFC-AGG-ID: qA-GdddjMC6XU4e3XoP8NA_1743989675
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9323E19560B3;
+	Mon,  7 Apr 2025 01:34:35 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.15])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 83C2E192C7C3;
+	Mon,  7 Apr 2025 01:34:33 +0000 (UTC)
+Date: Mon, 7 Apr 2025 09:34:28 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Coiby Xu <coxu@redhat.com>, RuiRui Yang <ruyang@redhat.com>,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
+Message-ID: <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
+References: <20250331061611.253919-1-bhe@redhat.com>
+ <b1eba83a9f68ed9a19100f6c0dc5aca7aff437d5.camel@linux.ibm.com>
+ <fv7h5jfb4r6d5j6jjpgyjbv75zyzqpy6tbqn3ahzuewghnvrgd@5yclg75kr3cq>
+ <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
+ <d14c72bbb377c6f8f0efdbf6d725c553b3ad741c.camel@linux.ibm.com>
+ <h3bjnvtded2hgbhya6ugb62mnlmkjpmifa6w6wwutfd3jq326r@lzpoun5pksev>
+ <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
+ <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250404_223027_164421_98010916 
-X-CRM114-Status: GOOD (  12.00  )
+X-CRM114-CacheID: sfid-20250406_183442_345871_4B2DF5CD 
+X-CRM114-Status: GOOD (  47.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,92 +91,116 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Intel TDX guest, unaccepted memory is unusable free memory which is
-not managed by buddy, until it's accepted by guest.  Before that, it
-cannot be accessed by the first kernel as well as the kexec'ed kernel.
-The kexec'ed kernel will skip these pages and fill in zero data for the
-reader of vmcore.
+On 04/03/25 at 04:03pm, Mimi Zohar wrote:
+> On Wed, 2025-04-02 at 19:49 +0800, Baoquan He wrote:
+> > On 04/02/25 at 04:43pm, Coiby Xu wrote:
+> > > On Tue, Apr 01, 2025 at 11:30:09PM -0400, Mimi Zohar wrote:
+> > > > On Wed, 2025-04-02 at 09:47 +0800, RuiRui Yang wrote:
+> > > [...]
+> > > > > > > that.  Please don't make it generic like this.
+> > > > > > > 
+> > > > > > > Please refer to ima_appraise_parse_cmdline().
+> > > > > > 
+> > > > > > Hi Mimi,
+> > > > > > 
+> > > > > > To save memory for kdump, it seems init_ima has been to be skipped thus
+> > > > > > ima=off is necessary (ima_appraise=off won't serve the purpose). Or do
+> > > > > > you have any specific concerns in mind?
+> > > > > 
+> > > > > I think as Mimi said see below logic enforces the IMA even with the
+> > > > > cmdline disabling, see ima_appraise_parse_cmdline:
+> > > > > if (sb_state) {
+> > > > >                 if (!(appraisal_state & IMA_APPRAISE_ENFORCE))
+> > > > >                         pr_info("Secure boot enabled: ignoring
+> > > > > ima_appraise=%s option",
+> > > > >                                 str);
+> > > > >         } else {
+> > > > >                 ima_appraise = appraisal_state;
+> > > > >         }
+> > > 
+> > > Thanks for pointing me to the above code! Note with the whole IMA
+> > > disabled as done by this patch, the above code will not run so IMA
+> > > (appraisal) won't be enforced.
+> > > 
+> > > > 
+> > > > Thanks, RuiRui.
+> > > > 
+> > > 
+> > > Mimi, so do I understand it correctly that your want IMA-appraisal to be
+> > > always enabled as long as secure boot is enabled even if users choose to
+> > > disable IMA? 
+> 
+> Secure boot is not the only reason.  Based on policy IMA-appraisal and EVM
+> calculate and store file hashes and HMAC's in their respective security xattrs.
+> Normally the usage of file hashes and HMAC's is limited to mutable files. 
+> Disabling IMA-appraisal could result in not properly updating the security
+> xattrs, which would result in not being able to verify the file's integrity on
+> reboot.
+> 
+> On systems where the RPM includes file signatures, file signatures of immutable
+> files can be safely restored.  Although it is possible to walk the filesystem(s)
+> "fixing" the xattrs of mutable files, it defeats the purpose.  "fix" mode should
+> only be enabled in a trusted environment.
+> 
+> > > I wonder what security issue will it bring if this promise
+> > > gets broken considering other LSMs can SELinux can be disabled when
+> > > secure boot is enabled?
+> 
+> The builtin IMA policy rules are not defined in terms of SELinux labels.  If the
+> initial IMA custom policy defines rules based on SELinux labels and SELinux is
+> not enabled, the policy will fail to be loaded.
+> 
+> > > > Coiby, would disabling just IMA-measurement, as opposed to IMA-appraisal, save
+> > > > sufficient memory for kdump?
+> > > 
+> > > For disabling just IMA-measurement, do you mean not enabling any measure
+> > > rules?  The more memory reserved for the kdump kernel, the less memory
+> > > can be used by the 1st kernel. So from the perfective of kdump, we try
+> > > to make the memory footprint as smaller as possible.
+> 
+> Got it.
+> 
+> > > Baoquan, do you have any statistics about the memory overhead of IMA?
+> > 
+> > I am getting a system to check that. I think there are two aspects of
+> > IMA functionality we want to disable. One is disable the IMA-measurement
+> > copying from 1st kernel to 2nd kernel, this is only needed by kexec
+> > reboot; the other is IMA is not needed at all in kdump kernel, means we
+> > don't want to call ima_init() to initialize
+> > ima_keyring/crypto/template/digests/fs etc. 
+> > 
+> > With my shallow knowledge about IMA, I don't know how to imitate
+> > appraisal cmdline to disable IMA partially in kdump kernel case.
 
-The dump tool like makedumpfile creates a page descriptor (size 24
-bytes) for each non-free page, including zero data page, but it will not
-create descriptor for free pages.  If it is not able to distinguish
-these unaccepted pages with zero data pages, a certain amount of space
-will be wasted in proportion (~1/170).  In fact, as a special kind of
-free page the unaccepted pages should be excluded, like the real free
-pages.
+Thanks for detailed explanations. Just back from holiday, sorry for late
+reply.
 
-Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
-that dump tool can identify whether a page is unaccepted.
+> 
+> The IMA policy controls how much or how little IMA measures and appraises.  Most
+> of the memory usage is the IMA measurement list, itself, and the per file cache
+> info.  (The per file cache info limits re-measuring or re-appraising files.)
 
-Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
+In Steve Chen's kexec supporting ima patchset, kdump kernel loading
+should skip ima_kexec buffers allocating and storing via checking if
+(image->type == KEXEC_TYPE_CRASH).
+> 
+> Similarly my knowledge of kdump is very limited.  Is there a way for the kernel
+> to differentiate between kexec and kdump?  If we need a mechanism to disable
+> IMA-measurement, I'd *really* prefer it be limited to kdump.
 
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Baoquan He <bhe@redhat.com>
+Yes, function is_kdump_kernel() is provided for checking if the current
+kernel is in kdump kernel.
 
----
-Vmcore size statistic of a freshly booted TD VM with different memory
-sizes:
+As said in earlier reply, for kdump kernel, there are two things we
+should do:
+1) when loading 2nd kernel to prepare for switching, we should not
+allocate buffer and store IMA measurement list;
+2) when switched into kdump kernel, we should not call ima_init() to do
+kinds of init which is useless.
 
-  VM.mem | Before  After
-  -------+----------------
-  512G   | ~4.9G   ~2.0G
-  256G   | ~2.0G   ~1.1G
+My personnal opinion.
 
-Most of changes are done by makedumpfile, but the prerequisite is kernel
-needs to export an indicator to identify unaccepted pages in vmcoreinfo.
-
-V2: https://lore.kernel.org/all/20250403030801.758687-1-zhiquan1.li@intel.com/
-
-Changes since V2:
-- Add Baoquan's Acked-by tag.
-- Fix docs: "Title underline too short" warning.
-
-V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
-
-Changes since V1:
-- Rebase to v6.14.
-- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
-  suggestion.
-- Add Kirill's Reviewed-by tag.
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 4 ++--
- kernel/vmcore_info.c                           | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 0f714fc945ac..8cf4614385b7 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -331,8 +331,8 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
- Page attributes. These flags are used to filter various unnecessary for
- dumping pages.
- 
--PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-------------------------------------------------------------------------------
-+PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
-+-------------------------------------------------------------------------------------------------------------------------
- 
- More page attributes. These flags are used to filter various unnecessary for
- dumping pages.
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 1fec61603ef3..e066d31d08f8 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
- #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
- 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
-+	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
-+#endif
- 
- #ifdef CONFIG_KALLSYMS
- 	VMCOREINFO_SYMBOL(kallsyms_names);
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
--- 
-2.25.1
+Thanks
+Baoquan
 
 
