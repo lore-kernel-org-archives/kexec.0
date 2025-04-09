@@ -4,57 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26742C369B2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5502C369B6
 	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 08:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NqZQi4zjAjeDjbR1+b+lLyi4bjIMGJsLmPEIrDjDh9U=; b=NIGY4JVd/+eRKWLl/0RTjPCGa2
-	dtRBteCq8YwS5GpF8i7X7ysOA9YuVoJiCvAUlPxAwTz4PnewPiJViHQLvXm95GqNGTNTTVjpl/Re2
-	oF7CFGDj4O3nKWCcKItNNtvZ0gLiMYoPGCVNedqbUvvkqPoLq68cRO3XIoMZ/HLvBghcIp4fwNWFL
-	ClRD2zZQ4WVAQ8QV7edjZzyL9HSpQ90LdNd5mFiEeQv9PDUw9deJMRcssbvLoSKJpq88osvvYc/qR
-	g36iy4q8Q66kWzpGgfmaBc2i8jacuAGyRKZ2LHSPZcZV2fL4/S1Gs0+4DYoyOBoSaQ3p7nX9STyj+
-	dZWLsPRw==;
+	bh=Xh0jzWhIK2jUVVufVq9o55tcfWLrZrkAZaOHhOyKGPc=; b=rmZWkHm7JIjSkmr9AR07o47I3n
+	oB6OKrEU9P2Z6nj6U06MairQQycPo70G1f4s8+jmUz6fMzBTNPrmMWBTrwcB1+TBM64Eg91KELasr
+	iMVzqk6hggnKNrRS1tiqvZd+K0foeG4uJsca6d7AfOyrBzjUkUTjMfXzLwJBEvNCrIZ962EqscDsr
+	soB9zS2FztgWSP8aXnd2yVoAj145UrvPSgubog7ZQAkEpBUAklND5bd0HC6Tpvns0tpzGqlf2XWjy
+	wtJOpZEzxDGmaiPoFJGiquu8kYMjG5H1vwta4XdHpSfMAhIOGsCW0YJokRW9SbiE8JNwcvVgPZyK+
+	+I1ianKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4FJT-000000017XF-1enb;
-	Mon, 14 Apr 2025 08:37:07 +0000
-Received: from mail-bn1nam02on20622.outbound.protection.outlook.com ([2a01:111:f403:2407::622] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
+	id 1u4FJU-000000017ZF-2T6m;
+	Mon, 14 Apr 2025 08:37:08 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2Uyy-00000007DUD-1JeJ;
-	Wed, 09 Apr 2025 12:56:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b6lDo0doX9+kyNP84ZNQngZE/8oQq/jH4HNgAiBwX/+4XzzW4WLgvq14/Cqk7qkqUNubAE6V+eNgHHhASZiPuLtr/Y9+i6HcleumxXlxKkYmE+bJgWXMj/KQOW/2Pc5+ISR3BMIiI3DHQ+7+TBQDeVfTj1eskESF2XTTK1xvha08kko2M6bbDMFgACvQjc2ro0syKoUWrGAb4+sfp03l7UWTixGDTBYih1fOhKJhRsJy79GxV7gbGQUFvRZMuvtK/3IABZz/7DBvHPC9Mvu/5c43M3Xy5tc/6ztS6zN019BxvhdxeCpWm1Ntjp43FGatBMcHxVVnXDUwL7Wq3m9T+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NqZQi4zjAjeDjbR1+b+lLyi4bjIMGJsLmPEIrDjDh9U=;
- b=akljG02WZwdcI77J14tvkhK5IhyI1Aha4GLAeUB2en0mWG1hpucF921jlAIq8xIl3I+Z/LnvZnXhFeC2orqgsuVsQHg6kypbjDmYISyvFO34XYHRR61GzPUbgJKESUWIK45LVo8V22XzyAzxqcR2xT3yYAevWIovxEg2cE/MxeSn15FJhCC8TxrSEVQ/ss98jRBS8U3Uk4WYvnrRSDKJ4zbUV5dgsENGd2Rxm5sxDkh99laPhyf+PH36sCMyMIgZY8A7y74hR6UnlKBUG8JORzVw0+H+hq1BL3VCBZijelXLyX9hVd6dKNOx27B40PzEFokVIipV0AOdJcJpvBb89Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NqZQi4zjAjeDjbR1+b+lLyi4bjIMGJsLmPEIrDjDh9U=;
- b=Md6s7K9pNr4lMEmpm6i9opqCDT4MWKtrKHxwOqWm14olTJWjE28VO7hAAC1P2NIwwNKg84BZprKGcJgYY+PiaTndxuzdRPF6nnQ46xYoWTbobZht9kx3DOUNR0lhddsJ2sZQp+BXlmew2/2SgLSsvBTNBLeMgTt+e4H1ypghinKufsFPC0pN0+XWG7118WQUdlepkCYt4l8MdKizceFuLWyCT2CBmwFPzFA/yYGNfBYhcII3UPSyd2J0MaIVoGl+yyy/Lu/kSFuK9qdwuZdfJFcfvzyN7UtO3qzfEkUvhrsRGPBUomtVK7J4UCBpinNnB8AQzHo+BIIw+p3u+NzAmA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by IA1PR12MB6484.namprd12.prod.outlook.com (2603:10b6:208:3a7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Wed, 9 Apr
- 2025 12:56:32 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Wed, 9 Apr 2025
- 12:56:32 +0000
-Date: Wed, 9 Apr 2025 09:56:30 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
+	id 1u2Vwm-00000007N0f-2Ol2;
+	Wed, 09 Apr 2025 13:58:33 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 518EB43765;
+	Wed,  9 Apr 2025 13:58:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B3DC4CEE3;
+	Wed,  9 Apr 2025 13:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744207112;
+	bh=gIkLtXkAowaebWcKuGF3J/51U/7JSeR5c3yViLJLL4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T1VeRjHXhAndr2FEdfdTBw7zDINMDJBNTNJsqgRB/P4dNoIRMJkjhIpi+Ndt+VKbl
+	 5knulbs8t68ZJQHEp3hJv5wnnKxfXT2xpJgI4Y01LoSQ6J0O9ODJHFL+a6ZB2fD/7Y
+	 XyYJQLnlRpI4+S5i695i7kjZgppq3h65TarholFW8Mm48fbw7ydwLNF5J0ihqwKrUw
+	 MzbENnQOyp5QuEtSgrfp/kQGFSwq7IGGzquR7XDOt5FCpPnHUlRpXON38mlmlRyT5X
+	 UlXxUCxhI1fUM5v/ElnapHBZclh8oC1FD4nKTc/xqaush+YDOdYrH0o/nPxRtcfmEZ
+	 kywhG25Ha9vWQ==
+Date: Wed, 9 Apr 2025 16:58:16 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: Pratyush Yadav <ptyadav@amazon.de>,
 	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
 	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
@@ -73,9 +62,8 @@ Cc: Pratyush Yadav <ptyadav@amazon.de>,
 	linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
  preservation
-Message-ID: <20250409125630.GI1778492@nvidia.com>
-References: <20250403142438.GF342109@nvidia.com>
- <Z--sUYCvP3Q8nT8e@kernel.org>
+Message-ID: <Z_Z8-BLWMkiWpaDY@kernel.org>
+References: <Z--sUYCvP3Q8nT8e@kernel.org>
  <20250404124729.GH342109@nvidia.com>
  <Z-_kSXrHWU5Bf3sV@kernel.org>
  <20250404143031.GB1336818@nvidia.com>
@@ -84,87 +72,14 @@ References: <20250403142438.GF342109@nvidia.com>
  <Z_P92UCbNCV0TbiA@kernel.org>
  <20250407170305.GI1557073@nvidia.com>
  <Z_Y4k4rDO-BbMjqs@kernel.org>
+ <20250409125630.GI1778492@nvidia.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_Y4k4rDO-BbMjqs@kernel.org>
-X-ClientProxiedBy: BL1PR13CA0387.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::32) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB6484:EE_
-X-MS-Office365-Filtering-Correlation-Id: f25ecdc7-cb7a-4312-374f-08dd7765f3a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?AQ6ARALcPZzHKEopKML0MlKzoSGCiS7Ah3QQebv8Wdr66yfB+ICkEQcf/Tdi?=
- =?us-ascii?Q?PJ8n6dELFS8CXHvA57j5ojZpmTqIsj1xdAhDsUTFvm4Jn1oVJEnYTShYmIjb?=
- =?us-ascii?Q?zwm/uJDDXTCfsoDr5z0OcRcey8vtL1nw2Zt4I46PwfBvTsuzcvF/QcYlGQko?=
- =?us-ascii?Q?rMllwrY4iSSZTG27PIeV/7YuDwkzYVTStE01VpO+m62uallOaesH6TLI+ZsN?=
- =?us-ascii?Q?BRwSTREim8yakAdYu0I+G11x1Fd4j43YHnF23FgG23uHuQqk3XuGzA9+bDcR?=
- =?us-ascii?Q?BV8GuJiMajrCrsN4Qw6+mVm3PJVPkC+2kBovRyhj0W43/9QhzCbNVKicRK49?=
- =?us-ascii?Q?iQp3C6TD9mzpe5pEEWG59D+hMiiPXrhF8rmHS0X1yvIrD7INN3KL7rYz8470?=
- =?us-ascii?Q?kvoUSTonqvm/yPtsytrYUCN6fiKt7mBph5KJpDMf3yatjQ532/EUuJHTY1QX?=
- =?us-ascii?Q?8HHs+P7HS4ZdbTXIYXubz/0QNvenmjKjE/YeiBZnW4bVPBb4k2G3uH7Fqd60?=
- =?us-ascii?Q?OMXNHEcbv/r9UC5zhtuVeNns121oQTKCraHhFRmXdrkX2xSGMijDeuFXCvii?=
- =?us-ascii?Q?HSMZsSRg9PrZpqwLzrYpWuyX9X/9yM9p2XAWl9HKH4Yfth43J7i+a+RbmHGY?=
- =?us-ascii?Q?dYQsgzZFJ2HlhmR72e/L36eNQRmR3Az8HBOv9G9ICo7CdclILGFgUyMnCnDA?=
- =?us-ascii?Q?o8ndNwlLOZg3+X5Y3Ovyv13kH/bthwNb42EcSQlHq47R20xV6AZ6F/5TzcVL?=
- =?us-ascii?Q?/NQya6zjZzeKfp2BvGEy7QL8KHGPnHi2VcZnubxsOJTckX6bSTwTVnTdlOO/?=
- =?us-ascii?Q?JLb6rJjxA+zjS2s/XiIiPILRgQzdo7WcH5HX7RwQXxrW1I4+lhqEBE4rj6po?=
- =?us-ascii?Q?ypY3gsHvv1dRVaglmF4ss0Ml6lCgJRin79YE2LquQuUD4rq43KzhlWQI3Uec?=
- =?us-ascii?Q?7dVWBz8uq3MmAzXnWwNKkTD+qD/Gz/g7u8AA+bo8xVPPZkN3qksqQk6294aq?=
- =?us-ascii?Q?zzT9jHgekM7ZK37faVGwTVcNTlsxvrg1wNBh9phkZoCc37C9bj+wsjPs/e+N?=
- =?us-ascii?Q?Wb0DNXUgw11uxQMIc8LuHM5ouwOAH+qxCVeIVhwAeyWkfkT3BVwbjZ0jmaIm?=
- =?us-ascii?Q?2sQozStDbAmL7tKG86L5wBsMeEUcLSO0TuJ/S78e18AoIN90q3ecyjuqMdIO?=
- =?us-ascii?Q?gQMPAs9QjtrNIRs1MpTnLOzYeAN35WiSoZ6CYYXXsNS45OTF44ZHlgxUyAxV?=
- =?us-ascii?Q?9Vz8IrZdKLfX1VP5NvwGrMfTPu4Nq7FyaqvRGcUB3uDcpxDFWR3XoZbGEPU8?=
- =?us-ascii?Q?4rUEldsh5QkLoDx7ProBuw/ZDvsHaoP3I8y9qN7aNk+Hce1kfT1x4bB9hSdp?=
- =?us-ascii?Q?h1w3QwvVRsiTnAawLLDB6E69zII/9s4CwdNMznHCqc2yg12amJwn21nn4bFT?=
- =?us-ascii?Q?bdFJfhv6JHI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?32L52kGFBne3725fgGoyYWGJD9us64HSHHBCH9ST9WSgkLkRgJkY1cJk/ExX?=
- =?us-ascii?Q?svvRQ+atxrwnQr8ywVOMGYHMvCZU7sJjEBcexpLwHp6nLu3puHTh07aKHTiq?=
- =?us-ascii?Q?dHTeh5qRptKhuRa5+2LBC9VuMbn6uxnO0xKnn1/eZXs92R5Pxbo+cwRxLBaa?=
- =?us-ascii?Q?ETPhJnJZImcicACA0Zj7TLq5poZ7OEEljlpxuk2OUXHEdvR414psi9vT4cP9?=
- =?us-ascii?Q?i0T1jwbPtdnmZZAhRz6yJJ1BnZ1Zoiln7J9bbORqIoirC4BPcHSzHl8hCrXG?=
- =?us-ascii?Q?wgukTTJdpYr83g4fmrmPoCVJTMCXXJK/iBna2kf/vJ9imGYOghimc/mkuz6e?=
- =?us-ascii?Q?sL3MszwW3riJWvyIdtAvwGWwfD1NeEneH+9wMM7uVmZ50qgR1BzilaoW+TUV?=
- =?us-ascii?Q?aGrcsor2p+RYsfjK9jnMlaUd83sgW6nIk6s7wrau8+5TRS0VcsDR3VXthMjr?=
- =?us-ascii?Q?qFK1MTVV2flPlj0Lw6QbPuWiR+cTAv8TWXQm7vAxjwEUa543eEPq961NrFyi?=
- =?us-ascii?Q?KOH8zrVYUT3qY0T2GAjjy4WapXbEZ8YSwOpXv0KsqE+fPnc+szGKekIZTLhL?=
- =?us-ascii?Q?zlrcQYH71ps9Jj23GbJsxE1WYzgVi2879euGtF72nz8oMFlFjbN0rg8Osgvi?=
- =?us-ascii?Q?qcQ5F5A1r0XrFTd7q9igxaClVqK3zrHSjfdPiZf84TyotzEPCs2klt/QQ1Xz?=
- =?us-ascii?Q?rISHNZLnElofE/EzSOOPbC5C2sf/oBPZ77kzzjX0afsk1CujX1cOYCVUy6pu?=
- =?us-ascii?Q?5QmfQOGwkvLG1EzIvKzvfb51TM2bOJCr9822WZTUlyddMXPByp6sGyp7psqk?=
- =?us-ascii?Q?wLlhaZSln0L85Zv9jc6A7qt0cQvRbExZMLlQHjU1jeMhjQhVbxAig++03rcT?=
- =?us-ascii?Q?Qbym2xy7Yb1qhBaITQcODXrDehJLkc+ULS4zRboqZNDebdi1aq7qC8S/hH+p?=
- =?us-ascii?Q?ko15NbRTlSOorHXUT9zn0hrMqJQFQgN3Z2krMY7jG+Y6BfBvL3AV6oM/CWOU?=
- =?us-ascii?Q?TbD7N04gkcvXw14IvQ8k/DKgGZMX5QQnKuUVZd0QxSc/LY7U6r6c6lk2M4lN?=
- =?us-ascii?Q?eepXyN8QdNqCfGPXYvCubFCuSkNVvhg4sBWo4FHBNZCylmsX0M+LDnLz2/e+?=
- =?us-ascii?Q?NyLjmEfkF9op0HnDPM1YKfbZpp0012j3hTOHsT8pLDuZOI5ILhkSPxs91FaV?=
- =?us-ascii?Q?V5+pXKtArN/O9Kurh5foZCewU+4Bj4GCu/jQFStMru6i9FbRuMFLRMSdQYbr?=
- =?us-ascii?Q?+lCXuiY6Ved/ATId3Rf8s6wBY1P+QB7EM/iSqIQqtMmgWCaqvnET8ip/ohRr?=
- =?us-ascii?Q?MuR4ZMzYJp5quWOrs1DYzjgdC9wIIn35Pd3r+7Y1DjltFCPfLTxxAx05NnWr?=
- =?us-ascii?Q?u6kOXFGu60e7vO6iM3o6IBYy2LNDo0h4qpGaxPOWKIdMsMc4zfDlh8fb+E8a?=
- =?us-ascii?Q?2/C9NJFrTbV+IAlekfxPS6GIUYTYMkHBBgTPZ35ZLXYY8GC4SsB8O+V4Idfe?=
- =?us-ascii?Q?ZN0+gWX4c1YVDo95HWnH4EvDfnGFdPrUMj9KT9RhWzoK22cmOTCTAphsxrJH?=
- =?us-ascii?Q?MgUdwNDD6V7JRhyXMAoVhKwwG/IvuDtnhuTmxSrJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f25ecdc7-cb7a-4312-374f-08dd7765f3a1
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 12:56:32.2825
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ns8NgL+vzLxfXj/NonFUv2JXVbqk/whMMexzTsADjMXQHWovugM+j42CnrutHO4Y
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6484
+In-Reply-To: <20250409125630.GI1778492@nvidia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250409_055644_345125_C6499D1D 
-X-CRM114-Status: GOOD (  12.25  )
+X-CRM114-CacheID: sfid-20250409_065832_650440_03E65947 
+X-CRM114-Status: GOOD (  25.40  )
 X-Mailman-Approved-At: Mon, 14 Apr 2025 01:36:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -180,43 +95,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 09, 2025 at 12:06:27PM +0300, Mike Rapoport wrote:
+On Wed, Apr 09, 2025 at 09:56:30AM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 09, 2025 at 12:06:27PM +0300, Mike Rapoport wrote:
+> 
+> > Now we've settled with terminology, and given that currently memdesc ==
+> > struct page, I think we need kho_preserve_folio(struct *folio) for actual
+> > struct folios and, apparently other high order allocations, and
+> > kho_preserve_pages(struct page *, int nr) for memblock, vmalloc and
+> > alloc_pages_exact.
+> 
+> I'm not sure that is consistent with what Matthew is trying to build,
+> I think we are trying to remove 'struct page' usage, especially for
+> compound pages. Right now, though it is confusing, folio is the right
+> word to encompass both page cache memory and random memdescs from
+> other subsystems.
 
-> Now we've settled with terminology, and given that currently memdesc ==
-> struct page, I think we need kho_preserve_folio(struct *folio) for actual
-> struct folios and, apparently other high order allocations, and
-> kho_preserve_pages(struct page *, int nr) for memblock, vmalloc and
-> alloc_pages_exact.
+A disagree about random memdescs, just take a look at struct folio.
+ 
+> Maybe next year we will get a memdesc API that will clarify this
+> substantially.
+> 
+> > On the restore path kho_restore_folio() will recreate multi-order thingy by
+> > doing parts of what prep_new_page() does. And kho_restore_pages() will
+> > recreate order-0 pages as if they were allocated from buddy.
+> 
+> I don't see we need two functions, folio should handle 0 order pages
+> just fine, and callers should generally be either not using struct
+> page at all or using their own memdesc/folio.
 
-I'm not sure that is consistent with what Matthew is trying to build,
-I think we are trying to remove 'struct page' usage, especially for
-compound pages. Right now, though it is confusing, folio is the right
-word to encompass both page cache memory and random memdescs from
-other subsystems.
+struct folio is 4 struct pages. I don't see it suitable for order-0 pages
+at all. 
+ 
+> If we need a second function it would be a void * function that is for
+> things that need memory but have no interest in the memdesc. Arguably
+> this should be slab preservation. There is a corner case of preserving
+> slab allocations >= PAGE_SIZE that is much simpler than general slab
+> preservation, maybe that would be interesting..
+> 
+> I think we still don't really know what will be needed, so I'd stick
+> with folio only as that allows building the memfd and a potential slab
+> preservation system.
 
-Maybe next year we will get a memdesc API that will clarify this
-substantially.
+void * seems to me much more reasonable than folio one as the starting
+point because it allows preserving folios with the right order but it's not
+limited to it. 
 
-> On the restore path kho_restore_folio() will recreate multi-order thingy by
-> doing parts of what prep_new_page() does. And kho_restore_pages() will
-> recreate order-0 pages as if they were allocated from buddy.
+I don't mind having kho_preserve_folio() from day 1 and even stretching the
+use case we have right now to use it to preserve FDT memory.
 
-I don't see we need two functions, folio should handle 0 order pages
-just fine, and callers should generally be either not using struct
-page at all or using their own memdesc/folio.
+But kho_preserve_folio() does not make sense for reserve_mem and it won't
+make sense for vmalloc.
 
-If we need a second function it would be a void * function that is for
-things that need memory but have no interest in the memdesc. Arguably
-this should be slab preservation. There is a corner case of preserving
-slab allocations >= PAGE_SIZE that is much simpler than general slab
-preservation, maybe that would be interesting..
+The weird games slab does with casting back and forth to folio also seem to
+me like transitional and there won't be that folios in slab later.
+ 
+> Then we can see where we get to with further patches doing
+> serialization of actual things.
+> 
+> Jason
 
-I think we still don't really know what will be needed, so I'd stick
-with folio only as that allows building the memfd and a potential slab
-preservation system.
-
-Then we can see where we get to with further patches doing
-serialization of actual things.
-
-Jason
+-- 
+Sincerely yours,
+Mike.
 
