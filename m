@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91270C369B9
-	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 08:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E81FC369B5
+	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 08:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XD4NsjIFCyd8Ex529NDCunOYWuzACOtjmPfQb41hkJg=; b=nxRW0kqsRdKrnvxNFfx0E/fvLF
-	6GodbOl3UaEr3iJAcD3gXcdzRHIlPsTbIQ40TJ35Rb39mL/Sm9IV1khRd4IdZd+Y2PHlK7CbX/Y3l
-	3A0KLEHYSXMtSZ4FoRBL79jF0Ss9MvoBqLiuIEilpk4QPO4z/iVzZxuK8GpYZRc6VggJfCuqUs5M1
-	UFw4FrjXaMDVGsJ/VA/IlAJrO7nOToIUnI+yFIVL3OkNPdUoysRHL9SVHx2y7t23mTkK0TkCvioQC
-	Q3rDgJ1CjtPiDY7tpMQkyvo+Q8cjuW22K86BiEVHE8utDQwbNySxzrWl0qTVwSWroj3Tlu7ulgQg/
-	xVD8uJJg==;
+	bh=TS1J/iGjpOnhfesj1YKRHzCDJZQiACcT4LkCJhVJGx0=; b=odHeSRkiiH3VMGIhsVoAnwGNFP
+	DgqZUYcQ/XN9jKZ4CfDboNAO212vGXC+W0QEEDeiyks3BM2T6PpybwSPb/p4h49CjxxMlTooxayhJ
+	XhlwHHIOxofkvG/p0OHfbn4ns8YHumd52Ud5DYCcelFNCt2npv3co9zDw/ykkOn0hicALbpgrTuyf
+	97cxqSLku9ZUpHUhI+lWHylcHmVKDBwkpLBqKHCwRSEV6KLTMnRNAUGKEeSTtFgQyCrjG91p6Cr7q
+	T5vdrdU/khxvvc0n4LUm5RONNSD+Drf+DniJteVz1NrmkKk22fDS339qOVlH6kbFX5Si1fwTQ9Y3J
+	morBaa+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4FJS-000000017VO-1AAT;
+	id 1u4FJS-000000017WN-3Gv9;
 	Mon, 14 Apr 2025 08:37:06 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2Quq-00000006bUt-3X2t;
-	Wed, 09 Apr 2025 08:36:15 +0000
+	id 1u2RON-00000006fER-2Wul;
+	Wed, 09 Apr 2025 09:06:45 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id A2F36A49875;
-	Wed,  9 Apr 2025 08:30:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D8EC4CEE3;
-	Wed,  9 Apr 2025 08:35:59 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 41B9D43A63;
+	Wed,  9 Apr 2025 09:06:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20181C4CEE3;
+	Wed,  9 Apr 2025 09:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744187771;
-	bh=AjITk3Md+AG+a9nq5/1M/7k+M+xWBDNKTQp+Pam8Qec=;
+	s=k20201202; t=1744189602;
+	bh=/s+U51p2rme6ttKunG01nE4+T3pq5eYIYautG/ah3Wc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jxl4EkcTYBvpu02SHiv4NYKjhRHuI1QV1VXtqxPQ6xmZhA9y0GaGbXlIT3hyEO7S7
-	 5viRVWZH4JiIx/RIg+ayZEQEhaWtFgahx62A+n8kZ4DU/nRT9mIhBjmCPfoY4hZ+Yf
-	 +4RAFEBv3UpOO5m4cOfJTXaDBDL8ygyC6Du55rytLyi2dvoGXmwMRTZEir/CqwlA62
-	 IbcINznr+djTduj1Sy8XSTZEaHL6tM9ze/2nO6qrmacw1KrIyPMyWeKZ1S/vhd1ywP
-	 et0eFpvt+49XTr2LuywdEfwAr8kc3vv2m5q6Mxv+lnvokkoxZkglhy0D/BNkW0rWmR
-	 ZOpPouY0e55uQ==
-Date: Wed, 9 Apr 2025 11:35:55 +0300
+	b=eerjUQlvNJF+OcsvIsqmEbAp/QAZ/fvQAZPtZABd4PBsB7L/b4Q5V00nkAKW7iTGB
+	 fOWeKV/HJ/ib1NS32lxrfK674W4vSwxOS/yrVTY0c7xJyhbfGDcT9JWQU5S0ZYKolL
+	 bIKUumb/XfD+cSCkjS6jADB/RYMB7aQ2g7eLdflW7X+exTmDyUGTqcW+pVSPt4uoGZ
+	 oTqY7MD0cLXyIw8SnWTcPccndUqN9w/kWekQURRgNXJsL+uDtiwyA58zBUMHEEnuxs
+	 chk5n2/7cxnMmUCrsFmejaBdPXgvCnJLEGYHXd5nkJcUyqeHVzitwPYKYPg2Ps+4hN
+	 M2oTs57z8vEAg==
+Date: Wed, 9 Apr 2025 12:06:27 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: Pratyush Yadav <ptyadav@amazon.de>,
@@ -62,19 +62,24 @@ Cc: Pratyush Yadav <ptyadav@amazon.de>,
 	linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
  preservation
-Message-ID: <Z_Yxa7fTA70YEe84@kernel.org>
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-10-changyuanl@google.com>
- <mafs01pu9qm6r.fsf@amazon.de>
- <20250403161001.GG342109@nvidia.com>
+Message-ID: <Z_Y4k4rDO-BbMjqs@kernel.org>
+References: <Z-6UA3C1TPeH_kGL@kernel.org>
+ <20250403142438.GF342109@nvidia.com>
+ <Z--sUYCvP3Q8nT8e@kernel.org>
+ <20250404124729.GH342109@nvidia.com>
+ <Z-_kSXrHWU5Bf3sV@kernel.org>
+ <20250404143031.GB1336818@nvidia.com>
+ <Z_KnovvW7F2ZyzhX@kernel.org>
+ <20250407141626.GB1557073@nvidia.com>
+ <Z_P92UCbNCV0TbiA@kernel.org>
+ <20250407170305.GI1557073@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403161001.GG342109@nvidia.com>
+In-Reply-To: <20250407170305.GI1557073@nvidia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250409_013612_938614_910ECDE0 
-X-CRM114-Status: UNSURE (   9.63  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250409_020643_994319_D540697A 
+X-CRM114-Status: GOOD (  28.84  )
 X-Mailman-Approved-At: Mon, 14 Apr 2025 01:36:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -90,19 +95,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 03, 2025 at 01:10:01PM -0300, Jason Gunthorpe wrote:
-> On Thu, Apr 03, 2025 at 03:50:04PM +0000, Pratyush Yadav wrote:
+On Mon, Apr 07, 2025 at 02:03:05PM -0300, Jason Gunthorpe wrote:
+> On Mon, Apr 07, 2025 at 07:31:21PM +0300, Mike Rapoport wrote:
+> >
+> > Ok, let's stick with memdesc then. Put aside the name it looks like we do
+> > agree that KHO needs to provide a way to preserve memory allocated from
+> > buddy along with some of the metadata describing that memory, like order
+> > for multi-order allocations.
 > 
-> > +struct kho_mem_track {
-> > +	/* Points to L4 KHOMEM descriptor, each order gets its own table. */
-> > +	struct xarray orders;
-> > +};
+> +1
 > 
-> I think it would be easy to add a 5th level and just use bits 63:57 as
-> a 6 bit order. Then you don't need all this stuff either.
+> > The issue I see with bitmaps is that there's nothing except the order that
+> > we can save. And if sometime later we'd have to recreate memdesc for that
+> > memory, that would mean allocating a correct data structure, i.e. struct
+> > folio, struct slab, struct vmalloc maybe.
+> 
+> Yes. The caller would have to take care of this using a caller
+> specific serialization of any memdesc data. Like slab would have to
+> presumably record the object size and the object allocation bitmap.
+> 
+> > I'm not sure we are going to preserve slabs at least at the foreseeable
+> > future, but vmalloc seems like something that we'd have to address.
+> 
+> And I suspect vmalloc doesn't need to preserve any memdesc information?
+> It can all be recreated
 
-Even 4 levels won't work with 16K and 64K pages.
-To use tables we'd need to scale the number of levels based on PAGE_SIZE.
+vmalloc does not have anything in memdesc now, just plain order-0 pages
+from alloc_pages variants.
+
+Now we've settled with terminology, and given that currently memdesc ==
+struct page, I think we need kho_preserve_folio(struct *folio) for actual
+struct folios and, apparently other high order allocations, and
+kho_preserve_pages(struct page *, int nr) for memblock, vmalloc and
+alloc_pages_exact.
+
+On the restore path kho_restore_folio() will recreate multi-order thingy by
+doing parts of what prep_new_page() does. And kho_restore_pages() will
+recreate order-0 pages as if they were allocated from buddy.
+
+If the caller needs more in its memdesc, it is responsible to fill in the
+missing bits.
+ 
+> > > Also the bitmap scanning to optimize the memblock reserve isn't
+> > > implemented for xarray.. I don't think this is representative..
+> > 
+> > I believe that even with optimization of bitmap scanning maple tree would
+> > perform much better when the memory is not fragmented. 
+> 
+> Hard to guess, bitmap scanning is not free, especially if there are
+> lots of zeros, but memory allocating maple tree nodes and locking them
+> is not free either so who knows where things cross over..
+> 
+> > And when it is fragmented both will need to call memblock_reserve()
+> > similar number of times and there won't be real difference. Of
+> > course maple tree will consume much more memory in the worst case.
+> 
+> Yes.
+> 
+> bitmaps are bounded like the comment says, 512K for 16G of memory with
+> arbitary order 0 fragmentation.
+> 
+> Assuming absolute worst case fragmentation maple tree (@24 bytes per
+> range, alternating allocated/freed pattern) would require around
+> 50M. Then almost doubled since we have the maple tree and then the
+> serialized copy.
+> 
+> 100Mb vs 512k - I will pick the 512K :)
+
+Nah, memory is cheap nowadays :)
+
+Ok, let's start with bitmaps and then see what are the actual bottlenecks
+we have to optimize.
  
 > Jason
 
