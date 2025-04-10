@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A17EAC369AA
-	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 20:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95A48C369AE
+	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 20:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QtATiJ3ap4ihta4UCEGQfu74R6SmTiDRBNn1rLL5vXk=; b=CY0HS9nJ7k0FwOM5xsBgOqQRq5
-	jyUVgWnLkcAcv/qin6g+e8Nq9yNMrsg4yT8MmoPWdd4iv3M3pYQXMIDAMVlyHjfnSLaxer/bqQysO
-	OiRn6BjTvH3dQZHhTTsHs1pW4Dny9f9lb7VnFlIifzItwKFloMcpS6zdGFjKJ0Pu8ojWskbrqbfmM
-	P9ivH4aPlJlG4Bx5b/ANlNLZq3k9/Ta8APi35XBQBdQXlGVJ4Op+417gUfIyGz8wDFhsDoEw5J45r
-	a74+qWtm1gHsYwNpkJBA5+fF7DMeSqz3DJNgNk8izP83DcosPVNJLZAp5tx9swxCmtiSMmcypGe+k
-	ChqQsPmQ==;
+	bh=CowCrKkz6qMYC8ITtUUSe4qTq9Lm5ZaWaqeyPEIlDy0=; b=PYHUCC7lnPW6cc/bdYKvsCDp8T
+	Ynepsms8EYAne99haBZ4URAatPTaIJI3bRWHCjmE3Dd1djGfRiW60C1DnvUb4VOpEaPdfdC7tf/+Y
+	TRKUn5y0+RQ9ggurlJMwlpqUMvs7RopvuSz0rtkOlkVYTZRSZiVrd1keGPKUpnxmA1Z5zgXfpChsl
+	YKjwpDm36CN5glwoCE55+xAv6kHnu4XSOmWUV020Z/oJid9KOJhnsYA8LeZLfS8Tb8F2yMV4oXfgx
+	qvdC0QmIQoLG/bl8ZWo/wV9VuPw0FkvFv1rd3l3iQ2ytIYOKjlYF9WjO5h+ewIxv7tnhpvJyNeXBh
+	+0qg3O5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2yr9-0000000BpUJ-46u3;
-	Thu, 10 Apr 2025 20:50:39 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1u2yrB-0000000BpWo-3him;
+	Thu, 10 Apr 2025 20:50:41 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2yq5-0000000BpCK-2iWw
+	id 1u2yql-0000000BpNW-3vF6
 	for kexec@lists.infradead.org;
-	Thu, 10 Apr 2025 20:49:34 +0000
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKl185019556;
-	Thu, 10 Apr 2025 20:49:19 GMT
+	Thu, 10 Apr 2025 20:50:17 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKW4VM026463;
+	Thu, 10 Apr 2025 20:50:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=QtATi
-	J3ap4ihta4UCEGQfu74R6SmTiDRBNn1rLL5vXk=; b=NpUtte/pJ9SoQAjM86zs5
-	+Fk5BG9C8WVNUFknqjOSnV+FzP/dZnXJtalfKZ9r5G9CLBd7c9hLcPedtko8giSN
-	onnqMnygykcaWykQPBqTfSeIkZwK+ZNrNXvGyygJjiAAipS6pr9ZoFWJ+se4evWK
-	bGJESSX3Nt5xlazMwJIcxw4mqVy2/stLTE2QvB+kG8wjEfF57reE3pcRHJXbPl8N
-	xrjoAlHh4Cff479cHCmDkHFjjLwxxrlnxt43SWJ9wubXjBgdJicbovuSHynNg4qL
-	8b53B6qI6/b0iI4GzgcwTsfN5ahsZccyYg0MQ8616gYXmhh9Kprxe2QJAST2SZZd
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=CowCr
+	Kkz6qMYC8ITtUUSe4qTq9Lm5ZaWaqeyPEIlDy0=; b=H5pZlhEcZJuiVFpW4zPOs
+	H/3UPMqoT9H4irFxzlUAubbJCsfBKgYRspZ0AOWtbQ2JeDkskA7rQYdFtxNaOuD3
+	5scXPcECLRqW/yD8y1ZJbq1+Tn0jtdalO9SSqD5PizjIAj4Xb+rZn87wbWl41BgO
+	AZci9CBCxObJZA4e3b96Wvg16TWX5aYcM5f7NutC4gESxeXm489FwIVwaGd4nFiI
+	6EdkvRdSEOFp0t9hNzweRTdcHtfSV1O4V69INjwuYRqpIabmO0ZfbTpue/Tlea3M
+	k6mXE8Ex5wYpaLYfpX/AZvZI5km0OBhsGjBBrNuNpZz+NXqrokWRMnUZenGkqKJ3
 	w==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xnaw8062-1
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xn3t01su-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 20:49:18 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AJs9nd001376;
-	Thu, 10 Apr 2025 20:49:17 GMT
+	Thu, 10 Apr 2025 20:50:00 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKJIti022676;
+	Thu, 10 Apr 2025 20:49:59 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttycs949-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttydgx1e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 10 Apr 2025 20:49:17 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53AKnGDs000325;
-	Thu, 10 Apr 2025 20:49:16 GMT
+	Thu, 10 Apr 2025 20:49:59 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53AKnwTT039966;
+	Thu, 10 Apr 2025 20:49:58 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttycs91x-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttydgwxv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 10 Apr 2025 20:49:16 +0000
+	Thu, 10 Apr 2025 20:49:58 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v13 13/19] x86/reboot: Secure Launch SEXIT support on reboot paths
-Date: Thu, 10 Apr 2025 13:41:43 -0700
-Message-Id: <20250410204149.2576104-14-ross.philipson@oracle.com>
+Subject: [PATCH v13 17/19] tpm, sysfs: Show locality used by kernel
+Date: Thu, 10 Apr 2025 13:41:47 -0700
+Message-Id: <20250410204149.2576104-18-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250410204149.2576104-1-ross.philipson@oracle.com>
 References: <20250410204149.2576104-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504100151
-X-Proofpoint-GUID: 238R8OOG_V4hBsTHt1J0Sh3HKR69Jm73
-X-Proofpoint-ORIG-GUID: 238R8OOG_V4hBsTHt1J0Sh3HKR69Jm73
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
+ adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504100151
+X-Proofpoint-GUID: ON7qL0k2skePnGKrB5Lyhvp8hyrJE344
+X-Proofpoint-ORIG-GUID: ON7qL0k2skePnGKrB5Lyhvp8hyrJE344
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250410_134933_684389_040554CC 
-X-CRM114-Status: GOOD (  14.22  )
+X-CRM114-CacheID: sfid-20250410_135016_101610_5F526F11 
+X-CRM114-Status: GOOD (  10.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,69 +107,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the MLE kernel is being powered off, rebooted or halted,
-then SEXIT must be called. Note that the SEXIT GETSEC leaf
-can only be called after a machine_shutdown() has been done on
-these paths. The machine_shutdown() is not called on a few paths
-like when poweroff action does not have a poweroff callback (into
-ACPI code) or when an emergency reset is done. In these cases,
-just the TXT registers are finalized but SEXIT is skipped.
+Expose the locality used by the kernel to sysfs.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- arch/x86/kernel/reboot.c | 10 ++++++++++
+ drivers/char/tpm/tpm-sysfs.c | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 964f6b0a3d68..9069415e0788 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
- #include <linux/kexec.h>
-+#include <linux/slaunch.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -778,6 +779,7 @@ static void native_machine_restart(char *__unused)
- 
- 	if (!reboot_force)
- 		machine_shutdown();
-+	slaunch_finalize(!reboot_force);
- 	__machine_emergency_restart(0);
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index 94231f052ea7..2da5857e223b 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -309,6 +309,14 @@ static ssize_t tpm_version_major_show(struct device *dev,
  }
+ static DEVICE_ATTR_RO(tpm_version_major);
  
-@@ -788,6 +790,9 @@ static void native_machine_halt(void)
- 
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- 
-+	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-+	slaunch_finalize(1);
++static ssize_t locality_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct tpm_chip *chip = to_tpm_chip(dev);
 +
- 	stop_this_cpu(NULL);
- }
- 
-@@ -796,8 +801,12 @@ static void native_machine_power_off(void)
- 	if (kernel_can_power_off()) {
- 		if (!reboot_force)
- 			machine_shutdown();
-+		slaunch_finalize(!reboot_force);
- 		do_kernel_power_off();
-+	} else {
-+		slaunch_finalize(0);
- 	}
++	return sprintf(buf, "%u\n", chip->kernel_locality);
++}
++static DEVICE_ATTR_RO(locality);
 +
- 	/* A fallback in case there is no PM info available */
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- }
-@@ -825,6 +834,7 @@ void machine_shutdown(void)
+ #ifdef CONFIG_TCG_TPM2_HMAC
+ static ssize_t null_name_show(struct device *dev, struct device_attribute *attr,
+ 			      char *buf)
+@@ -336,6 +344,7 @@ static struct attribute *tpm1_dev_attrs[] = {
+ 	&dev_attr_durations.attr,
+ 	&dev_attr_timeouts.attr,
+ 	&dev_attr_tpm_version_major.attr,
++	&dev_attr_locality.attr,
+ 	NULL,
+ };
  
- void machine_emergency_restart(void)
- {
-+	slaunch_finalize(0);
- 	__machine_emergency_restart(1);
- }
+@@ -344,6 +353,7 @@ static struct attribute *tpm2_dev_attrs[] = {
+ #ifdef CONFIG_TCG_TPM2_HMAC
+ 	&dev_attr_null_name.attr,
+ #endif
++	&dev_attr_locality.attr,
+ 	NULL
+ };
  
 -- 
 2.39.3
