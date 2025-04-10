@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3860DC369AD
-	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 20:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EACA9C3601E
+	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 20:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WJjVafYIZlHHJRPlm3ITpxTluw6zdrQNa6/Xlw5cCjg=; b=wePvZuqpC7IJLUxmEF6L8s2Myh
-	+f9ObaMyjLShmqykiH/XvqHNVeUVfnjoPOwVhGVeg6fNSLI/pKedh+Bz2R8BPdcsYSNcg39oVGtor
-	LQUbzaw/BjZXCcNGCl/ELSL3fFZzd8EKNEeJ1JCC8y3pKS6w4XDOF8arfpkZ9ujrmINOeizKX1oPC
-	EtHEyKV9d9kW6Y7CJHzr+zKOR1BArzPrtM4duA77RdbT57Npee+RC/4RJ/tYvYqyfySz8kNv2wNRm
-	Yv6qtDxeGsSvBrQhEJ5z58VrqPPwbyhCRaIS/Xzd8iLNRSalOW4OH50PWzANLV5VSF0mPKgJem82F
-	bPLEGUyg==;
+	bh=/Z6TJkE9RSlBdRhpxCJWFQ5zw0I1GBa4X9W9GWRmlLk=; b=h07AD1ffj1tc46Dpcy6aGaEgbw
+	TAlBLe/3BeEfmHEeCCqR3tBjgDlMTl+/kP1Vb4BdOkef1iczBmUdvPl/j+0Pp6BnOJgzLYBb/+p2M
+	xx1hAkmRJQ82PRcD99x2yfCRn9BANWkt/dXz9c/01g5v4hHzM8JNk5wxOj6kRxFdr24RA/3+IRpOl
+	7cc1+tgG849as3jZ554VIhqYpDj2pJRdMQIFYzs2f/jnAo5lXnLyauATXkUYXbl3jq+2rn9TGiaRk
+	lnQ6jUdr2GKD0+lrx3HvmRzZRuQV02BiEs5BddRxECg2Ucsxba2eOJsygJOneVfuPC6dAA5L+oC88
+	I3QJ91cg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2yrC-0000000BpXo-1d6K;
-	Thu, 10 Apr 2025 20:50:42 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1u2yuN-0000000BqeE-2Wds;
+	Thu, 10 Apr 2025 20:53:59 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2yr3-0000000BpSK-3NTa
+	id 1u2yuK-0000000Bqd5-1BqQ
 	for kexec@lists.infradead.org;
-	Thu, 10 Apr 2025 20:50:35 +0000
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKkx5x019523;
-	Thu, 10 Apr 2025 20:50:13 GMT
+	Thu, 10 Apr 2025 20:53:57 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKg7gZ018842;
+	Thu, 10 Apr 2025 20:53:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=WJjVa
-	fYIZlHHJRPlm3ITpxTluw6zdrQNa6/Xlw5cCjg=; b=Sus5NFbeE7B/+NsnxUCza
-	Kr9NfqPW6Zf7gUzJBeE7sVG+n1AfZs3VHC3DHWIDdEJLH99Yiy7o8KmBeRk0DraX
-	/D524vRjvQv9JDjUaHW88cxTgmNzNatZuPj/wcpFWa7LN2HTvPQCy8vIz3ChID0E
-	s5TPnXRApK2uaqpZTnFnoh4uKy3rZ1JEaMCn3JVh2Fh0qx5RGSzYKczbggW+ixk1
-	S57BdWn+Aumzr6IPEDyEPO0QFZH4coftOfWJ9cOS1pghYT4Jitsi5eDjvLColEfc
-	PAL0VmLtkWbKNpojFd4AlcgtXZzeC3Q1aMQY6QxNSjr/Pc8hPkr+O/7Xt9sq0CEc
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=/Z6TJ
+	kE9RSlBdRhpxCJWFQ5zw0I1GBa4X9W9GWRmlLk=; b=KEYoPTsDsckzk7U546zSH
+	RztY4vo9MsHj9iWgEGPNLGPL2eino8ytf4/yY2S+sQWQyK3gPQFY2d8jqdPeYuO9
+	ogFPRl2BpexFQ5NzioK5zmrVOjhBuiSNBdOuWbn7jfETQdD+xhQBaGR2eiqjf0yU
+	CMybkjNJGR/FU68fHeW/OUKagxEIeFOQYv+DZdx6QKO7yVqZ5KRlw7d5DKlhydAU
+	lBbgb+oFKcoxbN87nBD6CfeA/YvCrubPrbsiIGVtcH/lbIsOTeDkHx1yydvF2lQO
+	V/N0S++XhZvAy5Tompph+p1ss8thgVmf4glf8y9kRZ8VSqGOMCdLcOjCSy1/vN2f
 	g==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xnaw807j-1
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xn8fg0yg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 20:50:12 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AJDnPl022133;
-	Thu, 10 Apr 2025 20:50:11 GMT
+	Thu, 10 Apr 2025 20:53:32 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AIsCXd013717;
+	Thu, 10 Apr 2025 20:47:26 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttydgxbb-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyk4pdf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 10 Apr 2025 20:50:11 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53AKoAmA040602;
-	Thu, 10 Apr 2025 20:50:10 GMT
+	Thu, 10 Apr 2025 20:47:26 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53AKlPeY028416;
+	Thu, 10 Apr 2025 20:47:25 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttydgx5p-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyk4pby-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 10 Apr 2025 20:50:10 +0000
+	Thu, 10 Apr 2025 20:47:25 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v13 18/19] x86: Secure Launch late initcall platform module
-Date: Thu, 10 Apr 2025 13:41:48 -0700
-Message-Id: <20250410204149.2576104-19-ross.philipson@oracle.com>
+Subject: [PATCH v13 05/19] x86: Add early SHA-1 support for Secure Launch early measurements
+Date: Thu, 10 Apr 2025 13:41:35 -0700
+Message-Id: <20250410204149.2576104-6-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250410204149.2576104-1-ross.philipson@oracle.com>
 References: <20250410204149.2576104-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504100151
-X-Proofpoint-GUID: qIcemdscSVMWdcYK-AZnSzH8AWGQkSgg
-X-Proofpoint-ORIG-GUID: qIcemdscSVMWdcYK-AZnSzH8AWGQkSgg
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504100150
+X-Proofpoint-GUID: i2zpjSI_Vih293_wXsltJtX7Ud5n90uE
+X-Proofpoint-ORIG-GUID: i2zpjSI_Vih293_wXsltJtX7Ud5n90uE
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250410_135033_842250_822D59CC 
-X-CRM114-Status: GOOD (  28.75  )
+X-CRM114-CacheID: sfid-20250410_135356_438606_3F731952 
+X-CRM114-Status: GOOD (  25.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,550 +109,165 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
-The Secure Launch platform module is a late init module. During the
-init call, the TPM event log is read and measurements taken in the
-early boot stub code are located. These measurements are extended
-into the TPM PCRs using the mainline TPM kernel driver.
+Secure Launch is written to be compliant with the Intel TXT Measured Launch
+Developer's Guide. The MLE Guide dictates that the system can be configured to
+use both the SHA-1 and SHA-2 hashing algorithms.
 
-The platform module also registers the securityfs nodes to allow
-access to TXT register fields on Intel along with the fetching of
-and writing events to the late launch TPM log.
+Regardless of the preference towards SHA-2, if the firmware elected to start
+with the SHA-1 and SHA-2 banks active and the dynamic launch was configured to
+include SHA-1, Secure Launch is obligated to record measurements for all
+algorithms requested in the launch configuration.
+
+The user environment or the integrity management does not desire to use SHA-1,
+it is free to just ignore the SHA-1 bank in any integrity operation with the
+TPM. If there is a larger concern about the SHA-1 bank being active, it is free
+to deliberately cap the SHA-1 PCRs, recording the event in the D-RTM log.
+
+The SHA-1 code here has its origins in the code from the main kernel:
+
+commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+
+A modified version of this code was introduced to the lib/crypto/sha1.c to bring
+it in line with the SHA-256 code and allow it to be pulled into the setup kernel
+in the same manner as SHA-256 is.
 
 Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/kernel/Makefile   |   1 +
- arch/x86/kernel/slmodule.c | 508 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 509 insertions(+)
- create mode 100644 arch/x86/kernel/slmodule.c
+ arch/x86/boot/compressed/Makefile |  2 +
+ arch/x86/boot/compressed/sha1.c   |  6 +++
+ include/crypto/sha1.h             |  1 +
+ lib/crypto/sha1.c                 | 81 +++++++++++++++++++++++++++++++
+ 4 files changed, 90 insertions(+)
+ create mode 100644 arch/x86/boot/compressed/sha1.c
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index a7ca7ca16174..bed87b1c49a2 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_IA32_EMULATION)	+= tls.o
- obj-y				+= step.o
- obj-$(CONFIG_INTEL_TXT)		+= tboot.o
- obj-$(CONFIG_SECURE_LAUNCH)	+= slaunch.o
-+obj-$(CONFIG_SECURE_LAUNCH)	+= slmodule.o
- obj-$(CONFIG_ISA_DMA_API)	+= i8237.o
- obj-y				+= stacktrace.o
- obj-y				+= cpu/
-diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 0e0b238e8363..4626e2f95254 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -109,6 +109,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
++vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/sha1.o
++
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+ 
+diff --git a/arch/x86/boot/compressed/sha1.c b/arch/x86/boot/compressed/sha1.c
 new file mode 100644
-index 000000000000..64010bac038c
+index 000000000000..f58ab7cadb46
 --- /dev/null
-+++ b/arch/x86/kernel/slmodule.c
-@@ -0,0 +1,508 @@
++++ b/arch/x86/boot/compressed/sha1.c
+@@ -0,0 +1,6 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Secure Launch late validation/setup, securityfs exposure and finalization.
-+ *
-+ * Copyright (c) 2025 Apertus Solutions, LLC
-+ * Copyright (c) 2025 Assured Information Security, Inc.
-+ * Copyright (c) 2025, Oracle and/or its affiliates.
++ * Copyright (c) 2025 Apertus Solutions, LLC.
 + */
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/fs.h>
-+#include <linux/init.h>
-+#include <linux/linkage.h>
-+#include <linux/mm.h>
-+#include <linux/io.h>
-+#include <linux/uaccess.h>
-+#include <linux/security.h>
-+#include <linux/memblock.h>
-+#include <linux/tpm.h>
-+#include <asm/segment.h>
-+#include <asm/sections.h>
-+#include <crypto/sha2.h>
-+#include <linux/slr_table.h>
-+#include <linux/slaunch.h>
-+
-+/*
-+ * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
-+ * public registers as unsigned values.
-+ */
-+#define DECLARE_TXT_PUB_READ_U(size, fmt, msg_size)			\
-+static ssize_t txt_pub_read_u##size(unsigned int offset,		\
-+		loff_t *read_offset,					\
-+		size_t read_len,					\
-+		char __user *buf)					\
-+{									\
-+	char msg_buffer[msg_size];					\
-+	u##size reg_value = 0;						\
-+	void __iomem *txt;						\
-+									\
-+	txt = ioremap(TXT_PUB_CONFIG_REGS_BASE,				\
-+			TXT_NR_CONFIG_PAGES * PAGE_SIZE);		\
-+	if (!txt)							\
-+		return -EFAULT;						\
-+	memcpy_fromio(&reg_value, txt + offset, sizeof(u##size));	\
-+	iounmap(txt);							\
-+	snprintf(msg_buffer, msg_size, fmt, reg_value);			\
-+	return simple_read_from_buffer(buf, read_len, read_offset,	\
-+			&msg_buffer, msg_size);				\
-+}
-+
-+DECLARE_TXT_PUB_READ_U(8, "%#04x\n", 6);
-+DECLARE_TXT_PUB_READ_U(32, "%#010x\n", 12);
-+DECLARE_TXT_PUB_READ_U(64, "%#018llx\n", 20);
-+
-+#define DECLARE_TXT_FOPS(reg_name, reg_offset, reg_size)		\
-+static ssize_t txt_##reg_name##_read(struct file *flip,			\
-+		char __user *buf, size_t read_len, loff_t *read_offset)	\
-+{									\
-+	return txt_pub_read_u##reg_size(reg_offset, read_offset,	\
-+			read_len, buf);					\
-+}									\
-+static const struct file_operations reg_name##_ops = {			\
-+	.read = txt_##reg_name##_read,					\
-+}
-+
-+DECLARE_TXT_FOPS(sts, TXT_CR_STS, 64);
-+DECLARE_TXT_FOPS(ests, TXT_CR_ESTS, 8);
-+DECLARE_TXT_FOPS(errorcode, TXT_CR_ERRORCODE, 32);
-+DECLARE_TXT_FOPS(didvid, TXT_CR_DIDVID, 64);
-+DECLARE_TXT_FOPS(e2sts, TXT_CR_E2STS, 64);
-+DECLARE_TXT_FOPS(ver_emif, TXT_CR_VER_EMIF, 32);
-+DECLARE_TXT_FOPS(scratchpad, TXT_CR_SCRATCHPAD, 64);
-+
-+/*
-+ * Securityfs exposure
-+ */
-+struct memfile {
-+	char *name;
-+	void *addr;
-+	size_t size;
-+};
-+
-+static struct memfile sl_evtlog = {"eventlog", NULL, 0};
-+static void *txt_heap;
-+static struct txt_heap_event_log_pointer2_1_element *evtlog21;
-+static DEFINE_MUTEX(sl_evt_log_mutex);
-+static struct tcg_efi_specid_event_head *efi_head;
-+
-+static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
-+			      size_t count, loff_t *pos)
++#include "../../../../lib/crypto/sha1.c"
+diff --git a/include/crypto/sha1.h b/include/crypto/sha1.h
+index 044ecea60ac8..d715dd5332e1 100644
+--- a/include/crypto/sha1.h
++++ b/include/crypto/sha1.h
+@@ -42,5 +42,6 @@ extern int crypto_sha1_finup(struct shash_desc *desc, const u8 *data,
+ #define SHA1_WORKSPACE_WORDS	16
+ void sha1_init(__u32 *buf);
+ void sha1_transform(__u32 *digest, const char *data, __u32 *W);
++void sha1(const u8 *data, unsigned int len, u8 *out);
+ 
+ #endif /* _CRYPTO_SHA1_H */
+diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
+index ebb60519ae93..0bd32df31743 100644
+--- a/lib/crypto/sha1.c
++++ b/lib/crypto/sha1.c
+@@ -137,5 +137,86 @@ void sha1_init(__u32 *buf)
+ }
+ EXPORT_SYMBOL(sha1_init);
+ 
++static void __sha1_transform(u32 *digest, const char *data)
 +{
-+	ssize_t size;
++	u32 ws[SHA1_WORKSPACE_WORDS];
 +
-+	if (!sl_evtlog.addr)
-+		return 0;
++	sha1_transform(digest, data, ws);
 +
-+	mutex_lock(&sl_evt_log_mutex);
-+	size = simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
-+				       sl_evtlog.size);
-+	mutex_unlock(&sl_evt_log_mutex);
-+
-+	return size;
++	/* Ensure local data for generating digest is cleared in all cases */
++	memzero_explicit(ws, sizeof(ws));
 +}
 +
-+static ssize_t sl_evtlog_write(struct file *file, const char __user *buf,
-+			       size_t datalen, loff_t *ppos)
++static void sha1_update(struct sha1_state *sctx, const u8 *data, unsigned int len)
 +{
-+	ssize_t result;
-+	char *data;
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++	int blocks;
 +
-+	if (!sl_evtlog.addr)
-+		return 0;
++	sctx->count += len;
 +
-+	/* No partial writes. */
-+	result = -EINVAL;
-+	if (*ppos != 0)
++	if (unlikely((partial + len) < SHA1_BLOCK_SIZE))
 +		goto out;
 +
-+	data = memdup_user(buf, datalen);
-+	if (IS_ERR(data)) {
-+		result = PTR_ERR(data);
-+		goto out;
++	if (partial) {
++		int p = SHA1_BLOCK_SIZE - partial;
++
++		memcpy(sctx->buffer + partial, data, p);
++		data += p;
++		len -= p;
++
++		__sha1_transform(sctx->state, sctx->buffer);
 +	}
 +
-+	mutex_lock(&sl_evt_log_mutex);
-+	if (evtlog21)
-+		result = tpm2_log_event(evtlog21, sl_evtlog.addr,
-+					sl_evtlog.size, datalen, data);
-+	else
-+		result = tpm_log_event(sl_evtlog.addr, sl_evtlog.size,
-+				       datalen, data);
-+	mutex_unlock(&sl_evt_log_mutex);
++	blocks = len / SHA1_BLOCK_SIZE;
++	len %= SHA1_BLOCK_SIZE;
 +
-+	kfree(data);
++	if (blocks) {
++		while (blocks--) {
++			__sha1_transform(sctx->state, data);
++			data += SHA1_BLOCK_SIZE;
++		}
++	}
++	partial = 0;
++
 +out:
-+	return result;
++	memcpy(sctx->buffer + partial, data, len);
 +}
 +
-+static const struct file_operations sl_evtlog_ops = {
-+	.read = sl_evtlog_read,
-+	.write = sl_evtlog_write,
-+	.llseek	= default_llseek,
-+};
-+
-+struct sfs_file {
-+	const char *name;
-+	const struct file_operations *fops;
-+};
-+
-+#define SL_TXT_ENTRY_COUNT	7
-+static const struct sfs_file sl_txt_files[] = {
-+	{ "sts", &sts_ops },
-+	{ "ests", &ests_ops },
-+	{ "errorcode", &errorcode_ops },
-+	{ "didvid", &didvid_ops },
-+	{ "ver_emif", &ver_emif_ops },
-+	{ "scratchpad", &scratchpad_ops },
-+	{ "e2sts", &e2sts_ops }
-+};
-+
-+/* sysfs file handles */
-+static struct dentry *slaunch_dir;
-+static struct dentry *event_file;
-+static struct dentry *txt_dir;
-+static struct dentry *txt_entries[SL_TXT_ENTRY_COUNT];
-+
-+static long slaunch_expose_securityfs(void)
++static void sha1_final(struct sha1_state *sctx, u8 *out)
 +{
-+	long ret = 0;
++	const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++	__be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
++	__be32 *digest = (__be32 *)out;
 +	int i;
 +
-+	slaunch_dir = securityfs_create_dir("slaunch", NULL);
-+	if (IS_ERR(slaunch_dir))
-+		return PTR_ERR(slaunch_dir);
++	sctx->buffer[partial++] = 0x80;
++	if (partial > bit_offset) {
++		memset(sctx->buffer + partial, 0x0, SHA1_BLOCK_SIZE - partial);
++		partial = 0;
 +
-+	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-+		txt_dir = securityfs_create_dir("txt", slaunch_dir);
-+		if (IS_ERR(txt_dir)) {
-+			ret = PTR_ERR(txt_dir);
-+			goto remove_slaunch;
-+		}
-+
-+		for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++) {
-+			txt_entries[i] = securityfs_create_file(
-+						sl_txt_files[i].name, 0440,
-+						txt_dir, NULL,
-+						sl_txt_files[i].fops);
-+			if (IS_ERR(txt_entries[i])) {
-+				ret = PTR_ERR(txt_entries[i]);
-+				goto remove_files;
-+			}
-+		}
++		__sha1_transform(sctx->state, sctx->buffer);
 +	}
 +
-+	if (sl_evtlog.addr) {
-+		event_file = securityfs_create_file(sl_evtlog.name, 0440,
-+						    slaunch_dir, NULL,
-+						    &sl_evtlog_ops);
-+		if (IS_ERR(event_file)) {
-+			ret = PTR_ERR(event_file);
-+			goto remove_files;
-+		}
-+	}
++	memset(sctx->buffer + partial, 0x0, bit_offset - partial);
++	*bits = cpu_to_be64(sctx->count << 3);
++	__sha1_transform(sctx->state, sctx->buffer);
 +
-+	return 0;
++	for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
++		put_unaligned_be32(sctx->state[i], digest++);
 +
-+remove_files:
-+	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-+		while (--i >= 0)
-+			securityfs_remove(txt_entries[i]);
-+		securityfs_remove(txt_dir);
-+	}
-+
-+remove_slaunch:
-+	securityfs_remove(slaunch_dir);
-+
-+	return ret;
++	*sctx = (struct sha1_state){};
 +}
 +
-+static void slaunch_teardown_securityfs(void)
++void sha1(const u8 *data, unsigned int len, u8 *out)
 +{
-+	int i;
++	struct sha1_state sctx = {0};
 +
-+	securityfs_remove(event_file);
-+	if (sl_evtlog.addr) {
-+		memunmap(sl_evtlog.addr);
-+		sl_evtlog.addr = NULL;
-+	}
-+	sl_evtlog.size = 0;
-+
-+	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-+		for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++)
-+			securityfs_remove(txt_entries[i]);
-+
-+		securityfs_remove(txt_dir);
-+
-+		if (txt_heap) {
-+			memunmap(txt_heap);
-+			txt_heap = NULL;
-+		}
-+	}
-+
-+	securityfs_remove(slaunch_dir);
++	sha1_init(sctx.state);
++	sha1_update(&sctx, data, len);
++	sha1_final(&sctx, out);
 +}
++EXPORT_SYMBOL(sha1);
 +
-+static void slaunch_intel_evtlog(void __iomem *txt)
-+{
-+	struct slr_entry_log_info *log_info;
-+	struct txt_os_mle_data *params;
-+	struct slr_table *slrt;
-+	void *os_sinit_data;
-+	u64 base, size;
-+
-+	memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
-+	memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
-+
-+	/* now map TXT heap */
-+	txt_heap = memremap(base, size, MEMREMAP_WB);
-+	if (!txt_heap)
-+		slaunch_txt_reset(txt, "Error failed to memremap TXT heap\n",
-+				  SL_ERROR_HEAP_MAP);
-+
-+	params = (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap);
-+
-+	/* Get the SLRT and remap it */
-+	slrt = memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
-+	if (!slrt)
-+		slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-+				  SL_ERROR_SLRT_MAP);
-+	size = slrt->size;
-+	memunmap(slrt);
-+
-+	slrt = memremap(params->slrt, size, MEMREMAP_WB);
-+	if (!slrt)
-+		slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-+				  SL_ERROR_SLRT_MAP);
-+
-+	log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
-+	if (!log_info)
-+		slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-+				  SL_ERROR_SLRT_MISSING_ENTRY);
-+
-+	sl_evtlog.size = log_info->size;
-+	sl_evtlog.addr = memremap(log_info->addr, log_info->size,
-+				  MEMREMAP_WB);
-+	if (!sl_evtlog.addr)
-+		slaunch_txt_reset(txt, "Error failed to memremap TPM event log\n",
-+				  SL_ERROR_EVENTLOG_MAP);
-+
-+	memunmap(slrt);
-+
-+	/* Determine if this is TPM 1.2 or 2.0 event log */
-+	if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
-+		    TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
-+		return; /* looks like it is not 2.0 */
-+
-+	/* For TPM 2.0 logs, the extended heap element must be located */
-+	os_sinit_data = txt_os_sinit_data_start(txt_heap);
-+
-+	evtlog21 = tpm2_find_log2_1_element(os_sinit_data);
-+
-+	/*
-+	 * If this fails, things are in really bad shape. Any attempt to write
-+	 * events to the log will fail.
-+	 */
-+	if (!evtlog21)
-+		slaunch_txt_reset(txt, "Error failed to find TPM20 event log element\n",
-+				  SL_ERROR_TPM_INVALID_LOG20);
-+
-+	/* Save pointer to the EFI SpecID log header */
-+	efi_head = (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + sizeof(struct tcg_pcr_event));
-+}
-+
-+static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
-+				      struct tcg_pcr_event2_head *event)
-+{
-+	u16 *alg_id_field = (u16 *)((u8 *)event + sizeof(*event));
-+	struct tpm_digest *digests;
-+	u8 *dptr;
-+	int ret;
-+	u32 i;
-+
-+	/*
-+	 * Early SL code ensured the TPM algorithm information passed via
-+	 * the log is valid. Small sanity check here.
-+	 */
-+	if (event->count != efi_head->num_algs)
-+		slaunch_txt_reset(txt, "Event digest count mismatch with event log\n",
-+				  SL_ERROR_TPM_EVENT_COUNT);
-+
-+	digests = kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNEL);
-+	if (!digests)
-+		slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
-+				  SL_ERROR_GENERIC);
-+
-+	for (i = 0; i < event->count; i++) {
-+		dptr = (u8 *)alg_id_field + sizeof(u16);
-+
-+		/* Setup each digest for the extend */
-+		digests[i].alg_id = efi_head->digest_sizes[i].alg_id;
-+		memcpy(&digests[i].digest[0], dptr,
-+			efi_head->digest_sizes[i].digest_size);
-+
-+		alg_id_field = (u16 *)((u8 *)alg_id_field + sizeof(u16) +
-+				efi_head->digest_sizes[i].digest_size);
-+	}
-+
-+	ret = tpm_pcr_extend(tpm, event->pcr_idx, digests);
-+	if (ret) {
-+		pr_err("Error extending TPM20 PCR, result: %d\n", ret);
-+		slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
-+				  SL_ERROR_TPM_EXTEND);
-+	}
-+
-+	kfree(digests);
-+}
-+
-+static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
-+{
-+	struct tcg_pcr_event *event_header;
-+	struct tcg_pcr_event2_head *event;
-+	int start = 0, end = 0, size;
-+
-+	event_header = (struct tcg_pcr_event *)(sl_evtlog.addr +
-+						evtlog21->first_record_offset);
-+
-+	/* Skip first TPM 1.2 event to get to first TPM 2.0 event */
-+	event = (struct tcg_pcr_event2_head *)((u8 *)event_header + sizeof(*event_header) +
-+					       event_header->event_size);
-+
-+	while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offset) {
-+		size = __calc_tpm2_event_size(event, event_header, false);
-+		if (!size)
-+			slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
-+					  SL_ERROR_TPM_INVALID_EVENT);
-+
-+		/*
-+		 * Marker events indicate where the Secure Launch early stub
-+		 * started and ended adding post launch events. As they are
-+		 * encountered, switch the event type to NO_ACTION so they
-+		 * ignored in when the event log is processed since they are
-+		 * not really measurements.
-+		 */
-+		if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
-+			event->event_type = NO_ACTION;
-+			end = 1;
-+			break;
-+		} else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
-+			event->event_type = NO_ACTION;
-+			start = 1;
-+			goto next;
-+		}
-+
-+		if (start)
-+			slaunch_tpm2_extend_event(tpm, txt, event);
-+
-+next:
-+		event = (struct tcg_pcr_event2_head *)((u8 *)event + size);
-+	}
-+
-+	if (!start || !end)
-+		slaunch_txt_reset(txt, "Missing start or end events for extending TPM20 PCRs\n",
-+				  SL_ERROR_TPM_EXTEND);
-+}
-+
-+static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
-+{
-+	struct tpm_event_log_header *event_header;
-+	struct tcg_pcr_event *event;
-+	struct tpm_digest digest;
-+	int start = 0, end = 0;
-+	int size, ret;
-+
-+	event_header = (struct tpm_event_log_header *)sl_evtlog.addr;
-+	event = (struct tcg_pcr_event *)((u8 *)event_header +
-+				sizeof(*event_header));
-+
-+	while ((void  *)event < sl_evtlog.addr + event_header->next_event_offset) {
-+		size = sizeof(*event) + event->event_size;
-+
-+		/*
-+		 * See comments in slaunch_tpm2_extend() concerning these special
-+		 * event types.
-+		 */
-+		if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
-+			event->event_type = NO_ACTION;
-+			end = 1;
-+			break;
-+		} else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
-+			event->event_type = NO_ACTION;
-+			start = 1;
-+			goto next;
-+		}
-+
-+		if (start) {
-+			memset(&digest.digest[0], 0, TPM_MAX_DIGEST_SIZE);
-+			digest.alg_id = TPM_ALG_SHA1;
-+			memcpy(&digest.digest[0], &event->digest[0],
-+			       SHA1_DIGEST_SIZE);
-+
-+			ret = tpm_pcr_extend(tpm, event->pcr_idx, &digest);
-+			if (ret) {
-+				pr_err("Error extending TPM12 PCR, result: %d\n", ret);
-+				slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
-+						  SL_ERROR_TPM_EXTEND);
-+			}
-+		}
-+
-+next:
-+		event = (struct tcg_pcr_event *)((u8 *)event + size);
-+	}
-+
-+	if (!start || !end)
-+		slaunch_txt_reset(txt, "Missing start or end events for extending TPM12 PCRs\n",
-+				  SL_ERROR_TPM_EXTEND);
-+}
-+
-+static void slaunch_pcr_extend(void __iomem *txt)
-+{
-+	struct tpm_chip *tpm;
-+	int rc;
-+
-+	tpm = tpm_default_chip();
-+	if (!tpm)
-+		slaunch_txt_reset(txt, "Could not get default TPM chip\n",
-+				  SL_ERROR_TPM_INIT);
-+
-+	rc = tpm_chip_set_locality(tpm, 2);
-+	if (rc)
-+		slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
-+				  SL_ERROR_TPM_INIT);
-+
-+	if (evtlog21)
-+		slaunch_tpm2_extend(tpm, txt);
-+	else
-+		slaunch_tpm_extend(tpm, txt);
-+}
-+
-+static int __init slaunch_module_init(void)
-+{
-+	void __iomem *txt;
-+
-+	/* Check to see if Secure Launch happened */
-+	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
-+	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
-+		return 0;
-+
-+	txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
-+		      PAGE_SIZE);
-+	if (!txt)
-+		panic("Error ioremap of TXT priv registers\n");
-+
-+	/* Only Intel TXT is supported at this point */
-+	slaunch_intel_evtlog(txt);
-+	slaunch_pcr_extend(txt);
-+	iounmap(txt);
-+
-+	return slaunch_expose_securityfs();
-+}
-+
-+static void __exit slaunch_module_exit(void)
-+{
-+	slaunch_teardown_securityfs();
-+}
-+
-+late_initcall(slaunch_module_init);
-+__exitcall(slaunch_module_exit);
+ MODULE_DESCRIPTION("SHA-1 Algorithm");
+ MODULE_LICENSE("GPL");
 -- 
 2.39.3
 
