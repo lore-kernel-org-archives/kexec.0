@@ -4,66 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBC1BC369A2
-	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 08:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1633C369A6
+	for <kexec@archiver.kernel.org>; Thu, 10 Apr 2025 11:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ikXpna6Wq9I0naSoBwdaKdMbQJYhH4jOYuXaHVnwYbk=; b=1H39wt3wz9SyvGEHbvjhTPRtfI
-	3WumeVx1oMQ2ANO5G/Olmn9Xpk/lil2Sjbw6R+7u8aoevHICU1Gq38Cwl21j+p/AcoYsTBRKa+OeO
-	pU2a7R8KCdkv/tcHfEIiJ3bJbep02L72WyOk5xhQHzlQBixuV/SH7tLAUBf951kv4ggYJMihVSHr1
-	w9koIN9WKPouumCUn5/Qm8r3GpkTo5rHncS0G7jDPQeSLLI4v9KTa4OFSAKH/Sl0ldFTuNzjw/e0s
-	7ygmx3im23NSI4XriEcFnWJn8YXTORlHManDmZ/hbEnoZ+gy+cw6upluLCfZ6382z7I62nYB3M+mZ
-	rs+EG/6w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FBjnDHe05jMrdyAmjlXqvilcIE/JjsVNiTKFB4wAT6A=; b=DdHRLzhGmh2kWEq9uQ0dxRYwNQ
+	AZE+rL//S7ZUS6A4fTM3I2EJJ1+nGoXZEMZ9Hep2CO3e9E4D5CuWIdudDvhz20ZkwRGyjdpkeEdJT
+	+GKdsXjGhg3Gtelypi5wtNZ+g3FHzZ+lfXluikX0Dt2PsBRMuS41A9/alDsSb/sRI/SlO/dFyyvK4
+	nfjptn24KaD6mLn82JUUX4Ma0QCVxO/LKIZED/oZO1BhxRbYhtVBF2VwBMuiKszNrlDCYJC+KMKb1
+	UJoLvm9UZNmeN3DLWB9yWN/0EgKGWjPJhbYSuQOjJSZdY0k/XyIfm9vHR8AYFIiFG8zQLS6/EXhrH
+	zSOD7kog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2mtX-00000009fFg-10FL;
-	Thu, 10 Apr 2025 08:04:19 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1u2puC-0000000ADZo-3fRT;
+	Thu, 10 Apr 2025 11:17:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2mJ4-00000009XyP-3vwl
-	for kexec@bombadil.infradead.org;
-	Thu, 10 Apr 2025 07:26:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ikXpna6Wq9I0naSoBwdaKdMbQJYhH4jOYuXaHVnwYbk=; b=lTx2/JHXJInUjHHCqZJavDL3kc
-	Zgf3CNBCcrm5L+rq9CPQjVw/I0DHg7ctNmB9uBeR7Hkz7C7hCCGi7TUVqz5/01bNUtejJSDnLo3wd
-	cC8UN+zNzIPT+YyRsaSCoWr/EYH2aar8gxcHJj6HN92Mx2zJMuOGekX1n/RZfXwSDYIFSJDB4LYkc
-	+yCwLYm3XviLFEd+4iy8IbhV+9wyb4e7vRnvty0FTCkBKJ9Irpd95jEbWARypLpVJRdn6oENN8lvq
-	mwEGXRU9WpTOT9JHUCBSgrWbE3aRTzcv+NUxfB/xb3MeQrYD34aUfAmBzw19LQn5Iymn3OUThIRFn
-	7/9sPELQ==;
-Received: from 144-178-94-38.static.ef-service.nl ([144.178.94.38] helo=[127.0.0.1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2mJ1-00000008lsT-1LAc;
-	Thu, 10 Apr 2025 07:26:35 +0000
-Date: Thu, 10 Apr 2025 09:26:35 +0200
-From: David Woodhouse <dwmw2@infradead.org>
-To: kexec@lists.infradead.org
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- David Woodhouse <dwmw@amazon.co.uk>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- jpoimboe@kernel.org, bsz@amazon.de
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v9_0/4=5D_x86/kexec=3A_Add_ex?=
- =?US-ASCII?Q?ception_handling_for_relocate=5Fkernel?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250326142404.256980-1-dwmw2@infradead.org>
-References: <20250326142404.256980-1-dwmw2@infradead.org>
-Message-ID: <652D1332-6C06-4F40-B72A-44B20EDC011D@infradead.org>
+	id 1u2ocU-0000000A0Md-3YDd
+	for kexec@lists.infradead.org;
+	Thu, 10 Apr 2025 09:54:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744278888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FBjnDHe05jMrdyAmjlXqvilcIE/JjsVNiTKFB4wAT6A=;
+	b=Bc4PqmzhV7LurycJBERoD1LgEGYY3/JIQyBNYEVC0SjYGV72MSuUaqk+eGf3hR/etju2+u
+	/9LJvDdWLe1Fo3/bd9Od4POqFq/k9ZaCSQvJePYifYNqdZ7SiHRw3rXO6t3kO/YZJ2n1i0
+	1ClkAq61kcmnXI7eT+kmgC6zLVFj5Oo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-IMCN5vjAMv-jci4TsADYlw-1; Thu,
+ 10 Apr 2025 05:54:44 -0400
+X-MC-Unique: IMCN5vjAMv-jci4TsADYlw-1
+X-Mimecast-MFC-AGG-ID: IMCN5vjAMv-jci4TsADYlw_1744278882
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C7A1180AF53;
+	Thu, 10 Apr 2025 09:54:41 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 848791828AA5;
+	Thu, 10 Apr 2025 09:54:38 +0000 (UTC)
+Date: Thu, 10 Apr 2025 17:54:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v11 8/9] ima: make the kexec extra memory configurable
+Message-ID: <Z/eVWQw3z7yyzyxb@MiWiFi-R3L-srv>
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+ <20250402124725.5601-9-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402124725.5601-9-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250410_025450_950744_728977A5 
+X-CRM114-Status: GOOD (  21.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,103 +90,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 26 March 2025 15:16:00 CET, David Woodhouse <dwmw2@infradead=2Eorg> wrot=
-e:
->Continuing the drip-feed of the exception handling support, on top of the
->current tip/x86/asm branch=2E This adds output to the serial port configu=
-red
->by earlyprintk, reduces the window during which exceptions can't be handl=
-ed
->during the transition from kernel to relocate_kernel environment, and add=
-s
->a kselftest for the kexec-jump and exception handling=2E
->
->v9:
-> =E2=80=A2 Rebase on top of partial merge into tip/x86/asm (commit 0717b1=
-392dc7)=2E
-> =E2=80=A2 Add kselftest=2E
-> =E2=80=A2 Update to cope with static_call() usage in earlyprintk=2E
-> =E2=80=A2 Drop the attempt at adding CFI support for relocate_kernel()=
-=2E
->
->v8: https://lore=2Ekernel=2Eorg/all/20250314173226=2E3062535-1-dwmw2@infr=
-adead=2Eorg/
-> =E2=80=A2 Fix UNRET objtool warning in exc_handler=2E
-> =E2=80=A2 Clean up magic numbers in stack frame for exc_handler=2E
-> =E2=80=A2 Fix i386 build error due to making the debug support unconditi=
-onal=2E
-> =E2=80=A2 The int3 is still a [DO NOT APPLY] hack for later, and I plan =
-to deal
->   with that with a userspace test case based on
->   http://david=2Ewoodhou=2Ese/loadret=2Ec which will exercise kexec-jump=
- at the
->   same time=2E
->
->v7: https://lore=2Ekernel=2Eorg/kexec/20250312144257=2E2348250-1-dwmw2@in=
-fradead=2Eorg/
-> =E2=80=A2 Drop CONFIG_KEXEC_DEBUG and make it all unconditional in order=
- to
->   "throw regressions back into the face of whoever manages to introduce
->   them" (Ingo, https://lore=2Ekernel=2Eorg/kexec/Z7rwA-qVauX7lY8G@gmail=
-=2Ecom/)
-> =E2=80=A2 Move IDT invalidation into relocate_kernel() itself=2E
->
->v6: https://lore=2Ekernel=2Eorg/kexec/20250115191423=2E587774-1-dwmw2@inf=
-radead=2Eorg/
-> =E2=80=A2 Rebase onto already-merged fixes in tip/x86/boot=2E
-> =E2=80=A2 Move CONFIG_KEXEC_DEBUG to generic kernel/Kconfig=2Ekexec as B=
-artosz is
->   working on an Arm64 version=2E
->
->v5: https://lore=2Ekernel=2Eorg/kexec/20241205153343=2E3275139-1-dwmw2@in=
-fradead=2Eorg/T/
-> =E2=80=A2 Drop [RFC]=2E
-> =E2=80=A2 Drop _PAGE_NOPTISHADOW fix, which Ingo already took into tip/x=
-86/urgent=2E
-> =E2=80=A2 Add memory-mapped serial port support (32-bit MMIO spacing onl=
-y)=2E
->
->v4 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241127190343=2E44916-1-dwmw=
-2@infradead=2Eorg/T/
-> =E2=80=A2 Add _PAGE_NOPTISHADOW fix for the identmap code=2E
-> =E2=80=A2 Drop explicit map of control page, which was masking the ident=
-map bug=2E
->
->v3 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241125100815=2E2512-1-dwmw2=
-@infradead=2Eorg/T/
-> =E2=80=A2 Add CONFIG_KEXEC_DEBUG option and use earlyprintk config=2E
-> =E2=80=A2 Allocate PGD separately from control page=2E
-> =E2=80=A2 Explicitly map control page into identmap=2E
->
->V2 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241122224715=2E171751-1-dwm=
-w2@infradead=2Eorg/T/
-> =E2=80=A2 Introduce linker script, start to clean up data access=2E
->
->V1 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241103054019=2E3795299-1-dw=
-mw2@infradead=2Eorg/T/
-> =E2=80=A2 Initial proof-of-concept hacks=2E
->
->
->David Woodhouse (4):
->      x86/kexec: Add 8250 serial port output
->      x86/kexec: Add 8250 MMIO serial port output
->      x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of ear=
-lier
->      selftests/kexec: Add x86_64 selftest for kexec-jump and exception h=
-andling
->
-> arch/x86/include/asm/kexec=2Eh                     |  2 +
-> arch/x86/kernel/early_printk=2Ec                   |  9 +++
-> arch/x86/kernel/machine_kexec_64=2Ec               | 27 ++++++---
-> arch/x86/kernel/relocate_kernel_64=2ES             | 70 ++++++++++++++++=
-++++---
-> tools/testing/selftests/kexec/Makefile           |  7 +++
-> tools/testing/selftests/kexec/test_kexec_jump=2Ec  | 72 ++++++++++++++++=
-++++++++
-> tools/testing/selftests/kexec/test_kexec_jump=2Esh | 42 ++++++++++++++
-> 7 files changed, 213 insertions(+), 16 deletions(-)
->
->
+On 04/02/25 at 05:47am, steven chen wrote:
+> The extra memory allocated for carrying the IMA measurement list across
+> kexec is hard-coded as half a PAGE.  Make it configurable.
+> 
+> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+> extra memory (in kb) to be allocated for IMA measurements added during
+> kexec soft reboot.  Ensure the default value of the option is set such
+> that extra half a page of memory for additional measurements is allocated
+> for the additional measurements.
+> 
+> Update ima_add_kexec_buffer() function to allocate memory based on the
+> Kconfig option value, rather than the currently hard-coded one.
+> 
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  security/integrity/ima/Kconfig     | 10 ++++++++++
+>  security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+>  2 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 475c32615006..d73c96c3c1c9 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+>  	help
+>  	   This option disables htable to allow measurement of duplicate records.
+>  
+> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+> +	depends on IMA_KEXEC
+> +	default 0
 
-Ping?
+Usually a new Kconfig item which accepts a range should define the range
+boundary, otherwise it's not clear to people how large or how small it
+can be set. For example, can I set it as value of 1<<40? We should at
+least estimate a possible upper limit for it for other people's
+reference. My personal opinion.
+
+The rest looks good to me.
+
+
+> +	help
+> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
+> +	  If set to the default value of 0, an extra half page of memory for those
+> +	  additional measurements will be allocated.
+> +
+>  endif
+...snip...
+
 
