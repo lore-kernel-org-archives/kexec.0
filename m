@@ -4,87 +4,211 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F149C36010
-	for <kexec@archiver.kernel.org>; Fri, 11 Apr 2025 06:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5AD91C36010
+	for <kexec@archiver.kernel.org>; Fri, 11 Apr 2025 08:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CqFmqYgU8jNG60wex9mXv1F8jl6vxfkkQY/br69m6a0=; b=Tj9Qx/o9QUNFITfn5Hjrij1otI
-	KMxZD58tXeAmUHcu5LacYAoYKrnFcOxPWH8mWAL/vNktDyaMIHcpXMlS0I/LKpvLWViKVAj/VSoqp
-	yFcQdZtbHfI8AAGVbFDCgeQAMyyUlqZMuTg/V+CO2x9EW5AeSjhktjt55MEdHdiEUzqENBFnUV2O2
-	UPd3+POZ1jg9LTtGEC89x56ImNgCH3CYr0tYMt4ENUF/WY7ugGU39qvD6nwvVvh6DNg2TG3l22Zab
-	y2EYWuQvNpOTT1d7u2ssADhFjIzW5TheXQVNKi4thk9tkwy5j1T7dgmq7SPGYekHAA9CPqcsApjPu
-	QlUHu7Wg==;
+	bh=svub96CR720UBUditmH6PDdyZJD6aGA+H6izbRiE32E=; b=bM1GA1RL6ALcDQg1+4MVOOFwQs
+	02qJW8WOLoZrifUe6q8qUj24lr5CbDjH8GjLwiOf/dtUjF8mPt3+ZsDs0WbZU2y4KpTaEc9iogALu
+	qHZaDsMNY6pM1Y0RZPUjH4hxsv+tGWcP2OZNSwRx4kOGil7JSVU2mOHQZiEiZrCd5E65UDkJJtzyW
+	Vg6mhCzKRi8ZrE6KrZt1IErVOE2WhixYo9ylY3aJ1nSfYq0V7hHXhAd2EgrWKWjhBHrAA7dmN8tMo
+	uGZ6YmMqspnCquxKdhcLMj+W31cy6pzF7+KiqVUNDJnn7CW0BxySkEJxx7AGsXMMx/lllrP32OVoS
+	J/JT1qZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u37Uy-0000000Cf57-15Wl;
-	Fri, 11 Apr 2025 06:04:20 +0000
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	id 1u39ym-0000000D3x7-3i5w;
+	Fri, 11 Apr 2025 08:43:16 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u376E-0000000CYho-0Hrk
+	id 1u37Iq-0000000CcNu-1Hgs
 	for kexec@lists.infradead.org;
-	Fri, 11 Apr 2025 05:38:47 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2254e500a73so12464635ad.0
-        for <kexec@lists.infradead.org>; Thu, 10 Apr 2025 22:38:45 -0700 (PDT)
+	Fri, 11 Apr 2025 05:51:50 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B3i1Uv001220;
+	Fri, 11 Apr 2025 05:51:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=svub96CR720UBUditmH6PDdyZJD6aGA+H6izbRiE32E=; b=
+	d8dGzarv9chzacuDudH3dg1LKjnpFIt5tzHnkfgiZWo52f8FBaWgq9Qg+vgZlDUC
+	i8Q+PLa5ldukK56pfFmpBY89sGikH/bUFpGrqmPxcQiXPvjPIOeGOb4+ClKfGlXG
+	GCAjQ+KgHezdB4BWy6gFCoQvLG6BDBi66sn2iGJ9SrIFbu6mIAgB9amC/yQGr9sB
+	daYaWmn/MOQtD1ybw9rq3TaisqnN+5RkyCkhxX1v3aiK3TGeSXTg68rLBPYX4gSW
+	rviScVBk0RF3OpYtV4RnrZqZQPB08ewKVZWW2yJP7pFvIQpW9aqOumamLBawka3B
+	mGuWyAddYP5yw9c7qq1a8g==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xuddg4dx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 05:51:14 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5f63P001522;
+	Fri, 11 Apr 2025 05:51:13 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyd87qq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 05:51:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WBdX7BcHE2eTgL1B+v/FIE4Td1EAXDs+Bw3OOpOCYIpO79HgrwG0CqRqKSY8T9fg8C1bhp8yD9MMlzpzNCPMG4NUMjZClp3f8nYAwUNNKFPSt2DCU6EWydx5a+V3TM1OfT4dSNBtEO9WjMGnSMRh1xRoKRJ1cFUQeAf9Xo/D/zrsyvc1Q3s+cHlkDduXaeFesc3u9s06rEdIs5dGJztG6zFQS5aElgfDP5HdMWpnMdXICKsZjrjuRUrIZZXq+QcSpYyHodj8X2WRRmBosZiYxsdIEu2fnxEMhwIQbbKuHFwC7lNxlGAjRZj7jhfogugfrznPCcaj7tQ/Ec5Ooh2ZZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=svub96CR720UBUditmH6PDdyZJD6aGA+H6izbRiE32E=;
+ b=X1KLz0P/T/W4gUBrgTIJ4b0ogCcyu8xBsEwQwXgU0TXMZRuBTmLN3Bl2vX/zOP+gakahDHpqQ8Zo4n4e15kIh4S5S1vA1rLV8ITDvrQO/OdjaD1+TUc/kC+6uYjLtHyhLqAcBpiTS/Ygm6EZZf/50l8bYFWhumhvcacC/SuNaqfnK1wOonygHFgPSqfuBTj3FbI9o0mvj/0AQwg3r+8OAs/ypWeDTapeOe4YPqiAN+6WV2msCiQ+o+MbGkOoCLaPUim+fnaBRlHrUYrl8Z+CsqvP8WGKMp9vWCc1/GcXu2C+xKejzUJL+TMIRbPNZ0QG6Dw3VYh6/GUzEHgG4yOv4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744349924; x=1744954724; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CqFmqYgU8jNG60wex9mXv1F8jl6vxfkkQY/br69m6a0=;
-        b=qhrXmC0B3nO6t6khrdarS54wySEzp2mlzuTFkq3wI4iA64x/JbL7kMoqDM3/JMVdTr
-         BlXYQmSdfcganYw3XiY8vN31/d7EXeN6UhJHIrYYnu81tU5ORcdRYePC7ZQUOCsCCM8X
-         DcRxN2QfdupPJubS4gOJvcEXizsA2uUw/7gLvF0KVrXGW7PI4iZJgJ6+XiUugslIbGVD
-         wBz55fF3yPupXVXeQaJnJtGefh9CRt89ruSsck6GFJB7581jDsu/4gfpJQpM3dENM64c
-         XZR5sZCNw2gO2N/GPbinFlPyj3edDO5j4SFaBgT1EO4DikUwnc6pz+i6S3FTCbHatabM
-         VWDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744349924; x=1744954724;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CqFmqYgU8jNG60wex9mXv1F8jl6vxfkkQY/br69m6a0=;
-        b=I6blhG5/UynYnZu705KHAzsq0OVNfO7HI/2B1guUo2ILrxV+QXq0v6db/N9sgfMGwk
-         Dhi5fGVbUD+ri6vE3u9JJd/OuSJNDBbbqcV1hLWgmviadtT8fxaQGLEQUI3n2A7moVdE
-         WNYOdcEe04tFg3q6/Fq7nc+uyk4iFtSDp+dVO3Cc4dQ/ss6rnGD16CJOkn9gz3QToWXt
-         maWgu56lbF39CRnHT4v2yoiE5wWmCtoTTi0oPOxr5SYGBjL5I3OCj0DMrAC9zkSuZbf5
-         6ZUyv29bK0UUeUeNz+Ji9kGmX2F286HFWIKnwfRE8KRq3i2PZF0UHeKbV1stJ7sw0AmE
-         64qA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSUo9bh9N6Q4r30T19UzoyjFfHxm/tJ7Xpd42y/hUXhQq63Hw3oJH4dY3BbaHGj8zyM1bfrA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwEUjSfTxuT3qCb9vFHjRMTrh7+hF9v52XRproMslIn5aSEUiqg
-	CAss/6LEzKDzsn4cZwmc0gGyBNXzY6G/TZphAbFhK/I7tDqgDiNsvwaIUUuW4nJINlvLS+bmZIJ
-	QWEokh3PYeGjxP1aFLg==
-X-Google-Smtp-Source: AGHT+IGHQRIqJTZd29fJK1GMwoJSYUl6e5/qw+kmGzdUeqmD1lQBT7+V1426ohon6WeDtCjL7G29+XAuWTl91y/q
-X-Received: from plblc7.prod.google.com ([2002:a17:902:fa87:b0:21f:40e5:a651])
- (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:d54f:b0:224:18b0:86a0 with SMTP id d9443c01a7336-22bea4efabemr21168435ad.37.1744349924575;
- Thu, 10 Apr 2025 22:38:44 -0700 (PDT)
-Date: Thu, 10 Apr 2025 22:37:44 -0700
-In-Reply-To: <20250411053745.1817356-1-changyuanl@google.com>
-Mime-Version: 1.0
-References: <20250411053745.1817356-1-changyuanl@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250411053745.1817356-14-changyuanl@google.com>
-Subject: [PATCH v6 13/14] Documentation: add documentation for KHO
-From: Changyuan Lyu <changyuanl@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
-	catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
-	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
-	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com, 
-	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org, 
-	rostedt@goodmis.org, rppt@kernel.org, saravanak@google.com, 
-	skinsburskii@linux.microsoft.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	will@kernel.org, x86@kernel.org, Changyuan Lyu <changyuanl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=svub96CR720UBUditmH6PDdyZJD6aGA+H6izbRiE32E=;
+ b=XEgIJu6q477q3AJgWPV3Nc0Jca0JhxvqBhvcoj8s4QRKnHLr0e7dzDJgAThHHzDeMZBOPDcKanedZaFfS8uniFli5h77F9TBHsOzFJ6eqLNaV0P/EIlZg5h7LPGYjVHKV3bg1T6fekWVu+Pd8HrFTNVPWkrw2oiOm6NXvF3pFkQ=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by IA3PR10MB8369.namprd10.prod.outlook.com (2603:10b6:208:582::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Fri, 11 Apr
+ 2025 05:51:11 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
+ 05:51:11 +0000
+Message-ID: <f816c36c-cb7e-4143-b58c-f96a40699f7a@oracle.com>
+Date: Fri, 11 Apr 2025 11:20:57 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 01/19] Documentation/x86: Secure Launch kernel
+ documentation
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-integrity@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+References: <20250410204149.2576104-1-ross.philipson@oracle.com>
+ <20250410204149.2576104-2-ross.philipson@oracle.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250410204149.2576104-2-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU1PR03CA0038.apcprd03.prod.outlook.com
+ (2603:1096:802:19::26) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|IA3PR10MB8369:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b09a9c8-3284-49ca-da49-08dd78bcdc86
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UE85V3lxOEtaR0FGenVpUU5UN0trQXFmL05TdGJpNVUyVHZKT3dZS1RCNkZT?=
+ =?utf-8?B?Vm1Hb0NjTkUvNWtLK2FqWGVjZDU3a0NRdExXeHNGT2txRVlqOTBDTU1Ibm9K?=
+ =?utf-8?B?WEFmeENiU3MxUk84clhrcnFkMXdhaVQ4NjFHbFNnd2hUS25tS2I2c1VsVDdY?=
+ =?utf-8?B?UVp4bEQvN1pUeHFOeXJGV1lwMU94OXovd1V5d3FBbEJpa2NDcGkyeVVqdWlD?=
+ =?utf-8?B?RnRDTk80ZkxkS1FvRmRRTjJCb0JKUysxcjBwNVFxWEJRdzJkczYrV2NGUVR5?=
+ =?utf-8?B?RjdkYTdXbVF2NnIyVGVwb2xqc2dnN1pLMkJVUDMxMHF3cDFFa0JZdlpsUnBE?=
+ =?utf-8?B?bVU4U0kxT29GZnNIcGJ2cjV0WFVwdllQbU5sZ2VYQVlxTlplcDBORlJKVEJJ?=
+ =?utf-8?B?SDRnODlTZ3ZJZDV4bVdTK3R4WGdVMmczWTFtRUR2SWRTZmN2ZDlsZVpGcGtu?=
+ =?utf-8?B?YWpCU3dFZ1J6RS9sY21VQ0p6Uy9VeVl5ZCsvZjJUNDlWQU9mRDhFdEpXeU83?=
+ =?utf-8?B?UXVtb2s0MThGaVRlQVBUbXZWK2NkRmNxYWVwWE9JR2VqTW91UlZGamUrSTkz?=
+ =?utf-8?B?TGprWEtFV0lrZEorR3NVTE00NWtJRDhJTDZSeWM0c1hMWU9Xa25MVFdLbzRJ?=
+ =?utf-8?B?eGJTTzNCSzdyOWl2elhFcE51TFF0RTFEbFRZampBblJtQ2hzL21wLzROcjRF?=
+ =?utf-8?B?TklSdzYwYmFtYlpRWXJHT1BkSk1ORkMzSHlIeDlrN1BhUHV0QkJMdWxIaEo2?=
+ =?utf-8?B?d0I5TmxTdHdxbU9KNUxzNVk4aCthMFJUWXZHTUQ4bUxpUXdCa0F1Q2FYK1Rv?=
+ =?utf-8?B?YjVyaW11VDN3MndRMW9uY0JkQ0tWcWpDdlJmMzJ2cTBqZ3hyVFhnQ0hpYW1t?=
+ =?utf-8?B?cWE2NU5WMFA2c05NOUdGRVdtRWRhRVFhbEFxUzZNS3hOc09yRVhJb0xncGNQ?=
+ =?utf-8?B?cGRVWDRPWmlkcmhlWnJCOGNLcjczazFoSmFMY1RpaU1pL2lIdS9acnJvc2kv?=
+ =?utf-8?B?Q0JhUWY4cXZkNGpjZGthcWhySk5HQ0kzaWpsdTQrMmFkaTBuRXhsa21kWmhF?=
+ =?utf-8?B?REpSOTF4ZlUrNFNXd0xIN3A5Y2tiNXZPdC9oT0JBdHFOYjk1V3hueFdHTlFV?=
+ =?utf-8?B?UDdQZ2RGMDc5VThPTjRLamppbmQyYkRpUHVVQVVHaUNHN281KzJocFBKZ0x3?=
+ =?utf-8?B?R0U5K2kyTVFnNEJFUEdNcWhLYW11SVdPVnBTQTF5bFdDWUN5WStqamhjUDlQ?=
+ =?utf-8?B?R3FIWEJrQTg1TmxnTFJ1RzJGS04xMzdjYkd2SHhpUFFYVkhTcTJoWkJrdzFI?=
+ =?utf-8?B?aGY0VCtPdExlTmx4SmxJSDBJRGF5aFFUTWZRS1QwNEI3NkdFTWFyUEI5a3cx?=
+ =?utf-8?B?ZSs1dXQwRXFuUUwyVFgveEtRQnAvZktnU0NCcU92RFpBZjFZVys1ZFVKcC9v?=
+ =?utf-8?B?NzlmOHFNRmM4YXhCVmFYNEJhR0xtblBqRE5GR2hnbkJoNmRiM0tqeE9aVHB4?=
+ =?utf-8?B?aS9nbzdCZkxwWVJzYmEvUFJZZGRPbzlibWlUSUxQNXhlc0w5V2o2YjhUbVUr?=
+ =?utf-8?B?QjBlU1ByY00rQVNBRTh6dEh0M0YwSkhaS2czOVhadzl6cEl4dW80NXRZYXgx?=
+ =?utf-8?B?Y3ZMaS9YNiszYXlJME1HTWtPYTdpVEJGaHFCdkEwTHgxQjk2Qk9UVm4rano4?=
+ =?utf-8?B?a1JxaEFETU54a0NBdUZHZ3FFQi9WcTFSUGdCOTRUMDI2REZBODFuSmRKQ1o5?=
+ =?utf-8?B?WUdPeDQ2VER4YzNBR3dBK0xFSTBhUWtYVHl2eHZhcmVPdklZS1JuZTROYUpw?=
+ =?utf-8?B?VjRxMzFRR2ZjNFdmbzIzWnEzNEdpRWd0WHY2TmRSMHhXeDJOVTRhelFudHR3?=
+ =?utf-8?B?L3B0N1FZQ004V2NLT2RhZEpSR2FxZGh2NTg0MlZ1N01mRkE9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZFdNU3RYNlpia3pqdDBvbzl1RWpZSGxjNFlTeXF2S21Ta2JUYThWL2ZZbUhh?=
+ =?utf-8?B?RDc1ZE1vWitIWEtaYnVyc0dWWmRERDg5Z21KSW9MNlRiNzY0ZkF6N1dkanJR?=
+ =?utf-8?B?cC8wMGMxVm5DcU8xckFrLzNjWkNxOWZoZGNtWW1DVlhZY2t3WlFib2JjSnc0?=
+ =?utf-8?B?a1JKZThYM2txdnBJaUswdnRFN0lieU9xaUNzTVY1bm9OUElWTmcwaUgraWJT?=
+ =?utf-8?B?SEVEMVp4d1g4RzEzbGtYS2RqR3FFbXRpdzA0T24zaG1JSlRFTW9NNTV3N0Zp?=
+ =?utf-8?B?OHVpdXJFK3lyZFAvblRoYVRBdXJuaC9DRnVDMklLVnBPKzlWN1A3SmdtWUNs?=
+ =?utf-8?B?VDFCalZ5b2gxZ0xMdVc4R3JkT09VS0FESDlIc3NnWnBodlBpY0M1RHhNQUE2?=
+ =?utf-8?B?Q0FqVmY4TnVESlA5Q2NtZ1VCVDNUOFNSM1puZitLQ1g2eW9JeThBZUxIcTBi?=
+ =?utf-8?B?MSt1ZEN0Ykk3dE5yZDdlSk00bTVXV0FOTm42VmlZbi95cXRvOUZZL3dWZk9O?=
+ =?utf-8?B?VXdUcjhweVphc2YvcGdHL0lURFA5aS9pTGJvZUFUMkJTWU5HYm1qdUxBTnhr?=
+ =?utf-8?B?UGpTRXhnWm03K1Z1MUliMDFlMEhib25JYUJlRDNiVGtwSTlRYlNPN3BTL2J6?=
+ =?utf-8?B?OWhyRDhNRm5tZkhieVZvU01VWUxVbUVHZjQrNU1nSzFxU1NlaW9UaTZqVEkv?=
+ =?utf-8?B?WmZiN1ZtRGU2eURPc1dlemJINXA0UkgwVXQ1TmkybXlqZ2RSbnlXcS82bVly?=
+ =?utf-8?B?SStINWpQQ1VaNW9VWkpSbXEvQzRJQmJldGVWWFNWT0JTOVlGL3VHZE9BbVhL?=
+ =?utf-8?B?ald4WndQTVlicWQ2TnhpdWxmQiswME9ZYTlINkhzRkpaNkxNNHdEcy9ZQU5z?=
+ =?utf-8?B?M0dadWtCMmtUczVTeS95U2ttMGlCd3E3VDFHT3oybFhMWlhwL2xheWw5N2tP?=
+ =?utf-8?B?WDZjZTZhSFlMMFd5ZFdmSjc0TS9GYlUyekIrdHEyWVBjcUtJMFRQU3Fsbzho?=
+ =?utf-8?B?NHBtWUtzMWNsT2ppTmdQTGpJTEszbU1XNXJCTVZoQ256SDVOQ3A4eUFJUWtZ?=
+ =?utf-8?B?djIyQTdBSXBhV3VZNWRKYUlJU0VGZWpCQjIycW0yRGZFUDJkMUJ3ZHJDM2VF?=
+ =?utf-8?B?RVhNVWs5M0J6UmJGUmRaM2RIRDlOby91Qk5RSXFDWWsxek4xd3pqUCt2cUl3?=
+ =?utf-8?B?N3orM3FkZkxRdmdSRnBsMmU5dUtjM1liTjBkZmxuaW45L0xrSzg5NTJaTDNF?=
+ =?utf-8?B?ZWV1OXpoWHNnWGVVaERQdHc2SkQrUC9kUEgvTW92TjNTaXJQVklhR3IzaEJr?=
+ =?utf-8?B?SHZUOE91TmNLK21wcmlMVld6d3dxd2FsUnplbU92M3cvcUdGL3BFbTVyaTZB?=
+ =?utf-8?B?ZlN2MlBLQkQ2ckxxTHV2RW54UHdOUmFXNDUvZjRKdzB6OVl3MitZcUFiMnZv?=
+ =?utf-8?B?Z2FKU0VLQkFUWXZrV3MwT0FYUEN5N3RTRm9hTUw0MElIbGlqUWYxYVNyTWlj?=
+ =?utf-8?B?RFVHL2xYeFh0alRwb21sU2RmeEpocjV3TXZjQldGTWNCTXo3cU55MHZrSC9R?=
+ =?utf-8?B?bDMvcndpang2Rk5rbVpnVkFXR0FPN2NEYjExT2hpY2pvbkh2Ym1rdFJpbnk5?=
+ =?utf-8?B?bC9oK0loY3I2ZWdMWlRKV2FCSVRuVkNEMmtLUk9SUTFXeC8wcTRFb3RGanF5?=
+ =?utf-8?B?NTFFY0lyR2xOV0FFaGU3NHM1YVZhTGdYTUErZUtaQ3FXeE9KUWtseUJkd0ly?=
+ =?utf-8?B?T01iR2VHd0ZRZ2k5MjNFVlNSdytFMHFGZ3g4VkF2TWxRQUY5bXpMWldxam9U?=
+ =?utf-8?B?YjNtcjdCb3JDcVZ2em9zcVMxUEhnSjVGU0NMK2F6K3dDZEowbGRiM05ubitx?=
+ =?utf-8?B?bmFkN0ExZjBibXRtalhWWGFHaGpHSmlUWXQybGU0Z2pUcFVBT1VuUXp0SWZm?=
+ =?utf-8?B?ajNBcDNNcWRVZlZJeThkOW56Tm5lNHhpNWFORk5DN0FuZjRDcTB0OUloTk5F?=
+ =?utf-8?B?UEpvbldac1NpNk5FYlE4bGFJb3k3U3c2WmdDRDRmenVjcHM4STR1c3hsYVM5?=
+ =?utf-8?B?eG9qMUxBMlB0cFFOd1JJalc5cEhrVGtnQU5RclVLeVowSnhDelpFa3dlOGNL?=
+ =?utf-8?B?endQbFAxYjlkRzNLMnRBbDV5VTF2eS94aWowK01QNUJNWnBkRU9JdFpBYnBn?=
+ =?utf-8?B?WkE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: tvibN7wi79XLyex02+caK+rAIctfXNeKXhvhYTT3Dn1yPim9fjspfkoYvpD5lR0OB/fPwZA7yJCqu79qS5hAoRI/E64MNLr+JLdDjBXUpsj4Jml36r/S/wXV6zi85RLHPt68w2+N7r3M9bjpOGbgC8iWSlULjuT9cOE3LpXF5QXC2CTHOvQYOlZEtkXaLXv5dq5XpuKFxIJEWn4JmqOZYHj050bHiJJhekUFdI0blL1S3+q4CBSO52uBcQ43CGJlFK4hjjBwKn9kj63DK4DJCfH1dyKHcs3DIEyGIijrF57Wep5323b1MP0ULkv/8G0TaWPk4gG8BW3rx2ZHByHN2lt/BYC4A9F+bboyBcFLjB7rJVFAe8MoajhkrxjIPr66BYZv9ppoxCXgWKoOuiLO8mvoyOP6ApFWwW7gIUq9eRKvd3Ntb7RCmjScxJ/t0KeHwbSNisYQFYyZwYqK6cqRDF68xzMycvajqG78eAfCkoHoiy+hmxJ9M9jZwHTcDO52OhuHB9QO/VVO9fjphvnM5pp1ZGZAniwYfnRkLrZZFXpOq9WeuSH/eiURavaVG882PtOF6LYkGHEsLQH+NiLXGFf1gUlp8x0cZXu2JhkvkwU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b09a9c8-3284-49ca-da49-08dd78bcdc86
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 05:51:10.9173
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VM904KY9f6Fkd00D3/D81o5k/Y5NvZWkWP/ypSP6WS+ZPlh03YANk7TI2CcmTu32s7teVH2uUQEgOYe0aHgZ03y3j30CA5pZ66v4pw4r4ck=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8369
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504110041
+X-Proofpoint-GUID: 7ZrCLLrRVwmVmMAbn1nYiCPdb8CbFSjz
+X-Proofpoint-ORIG-GUID: 7ZrCLLrRVwmVmMAbn1nYiCPdb8CbFSjz
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250410_223846_116001_046ED1DC 
-X-CRM114-Status: GOOD (  36.31  )
+X-CRM114-CacheID: sfid-20250410_225148_345697_C7196FA3 
+X-CRM114-Status: UNSURE (   9.25  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,499 +223,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Alexander Graf <graf@amazon.com>
 
-With KHO in place, let's add documentation that describes what it is and
-how to use it.
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Co-developed-by: Changyuan Lyu <changyuanl@google.com>
-Signed-off-by: Changyuan Lyu <changyuanl@google.com>
----
- .../admin-guide/kernel-parameters.txt         |  25 ++++
- Documentation/admin-guide/mm/index.rst        |   1 +
- Documentation/admin-guide/mm/kho.rst          | 120 ++++++++++++++++++
- Documentation/core-api/index.rst              |   1 +
- Documentation/core-api/kho/bindings/kho.yaml  |  43 +++++++
- .../core-api/kho/bindings/sub-fdt.yaml        |  27 ++++
- Documentation/core-api/kho/concepts.rst       |  74 +++++++++++
- Documentation/core-api/kho/fdt.rst            |  80 ++++++++++++
- Documentation/core-api/kho/index.rst          |  13 ++
- MAINTAINERS                                   |   2 +
- 10 files changed, 386 insertions(+)
- create mode 100644 Documentation/admin-guide/mm/kho.rst
- create mode 100644 Documentation/core-api/kho/bindings/kho.yaml
- create mode 100644 Documentation/core-api/kho/bindings/sub-fdt.yaml
- create mode 100644 Documentation/core-api/kho/concepts.rst
- create mode 100644 Documentation/core-api/kho/fdt.rst
- create mode 100644 Documentation/core-api/kho/index.rst
+On 11-04-2025 02:11, Ross Philipson wrote:
+> +
+> + - Entry from the dynamic launch jumps to the SL stub.
+> + - SL stub fixes up the world on the BSP.
+> + - For TXT, SL stub wakes the APs, fixes up their worlds.
+> + - For TXT, APs are left halted using MONITOR/MWAIT intructions.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 76e538c77e316..b7868ad3179d7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2728,6 +2728,31 @@
- 	kgdbwait	[KGDB,EARLY] Stop kernel execution and enter the
- 			kernel debugger at the earliest opportunity.
- 
-+	kho=		[KEXEC,EARLY]
-+			Format: { "0" | "1" | "off" | "on" | "y" | "n" }
-+			Enables or disables Kexec HandOver.
-+			"0" | "off" | "n" - kexec handover is disabled
-+			"1" | "on" | "y" - kexec handover is enabled
-+
-+	kho_scratch=	[KEXEC,EARLY]
-+			Format: ll[KMG],mm[KMG],nn[KMG] | nn%
-+			Defines the size of the KHO scratch region. The KHO
-+			scratch regions are physically contiguous memory
-+			ranges that can only be used for non-kernel
-+			allocations. That way, even when memory is heavily
-+			fragmented with handed over memory, the kexeced
-+			kernel will always have enough contiguous ranges to
-+			bootstrap itself.
-+
-+			It is possible to specify the exact amount of
-+			memory in the form of "ll[KMG],mm[KMG],nn[KMG]"
-+			where the first parameter defines the size of a low
-+			memory scratch area, the second parameter defines
-+			the size of a global scratch area and the third
-+			parameter defines the size of additional per-node
-+			scratch areas.  The form "nn%" defines scale factor
-+			(in percents) of memory that was used during boot.
-+
- 	kmac=		[MIPS] Korina ethernet MAC address.
- 			Configure the RouterBoard 532 series on-chip
- 			Ethernet adapter MAC address.
-diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-index 8b35795b664be..2d2f6c222308f 100644
---- a/Documentation/admin-guide/mm/index.rst
-+++ b/Documentation/admin-guide/mm/index.rst
-@@ -42,3 +42,4 @@ the Linux memory management.
-    transhuge
-    userfaultfd
-    zswap
-+   kho
-diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-new file mode 100644
-index 0000000000000..c64aa7aadb300
---- /dev/null
-+++ b/Documentation/admin-guide/mm/kho.rst
-@@ -0,0 +1,120 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+====================
-+Kexec Handover Usage
-+====================
-+
-+Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
-+regions, which could contain serialized system states, across kexec.
-+
-+This document expects that you are familiar with the base KHO
-+:ref:`concepts <concepts>`. If you have not read
-+them yet, please do so now.
-+
-+Prerequisites
-+=============
-+
-+KHO is available when the ``CONFIG_KEXEC_HANDOVER`` config option is set to y
-+at compile time. Every KHO producer may have its own config option that you
-+need to enable if you would like to preserve their respective state across
-+kexec.
-+
-+To use KHO, please boot the kernel with the ``kho=on`` command line
-+parameter. You may use ``kho_scratch`` parameter to define size of the
-+scratch regions. For example ``kho_scratch=16M,512M,256M`` will reserve a
-+16 MiB low memory scratch area, a 512 MiB global scratch region, and 256 MiB
-+per NUMA node scratch regions on boot.
-+
-+Perform a KHO kexec
-+===================
-+
-+First, before you perform a KHO kexec, you need to move the system into
-+the :ref:`KHO finalization phase <finalization_phase>` ::
-+
-+  $ echo 1 > /sys/kernel/debug/kho/out/finalize
-+
-+After this command, the KHO FDT is available in
-+``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
-+their own preserved sub FDTs under
-+``/sys/kernel/debug/kho/out/sub_fdts/``.
-+
-+Next, load the target payload and kexec into it. It is important that you
-+use the ``-s`` parameter to use the in-kernel kexec file loader, as user
-+space kexec tooling currently has no support for KHO with the user space
-+based file loader ::
-+
-+  # kexec -l Image --initrd=initrd -s
-+  # kexec -e
-+
-+The new kernel will boot up and contain some of the previous kernel's state.
-+
-+For example, if you used ``reserve_mem`` command line parameter to create
-+an early memory reservation, the new kernel will have that memory at the
-+same physical address as the old kernel.
-+
-+Abort a KHO exec
-+================
-+
-+You can move the system out of KHO finalization phase again by calling ::
-+
-+  $ echo 0 > /sys/kernel/debug/kho/out/active
-+
-+After this command, the KHO FDT is no longer available in
-+``/sys/kernel/debug/kho/out/fdt``.
-+
-+debugfs Interfaces
-+==================
-+
-+Currently KHO creates the following debugfs interfaces. Notice that these
-+interfaces may change in the future. They will be moved to sysfs once KHO is
-+stabilized.
-+
-+``/sys/kernel/debug/kho/out/finalize``
-+    Kexec HandOver (KHO) allows Linux to transition the state of
-+    compatible drivers into the next kexec'ed kernel. To do so,
-+    device drivers will instruct KHO to preserve memory regions,
-+    which could contain serialized kernel state.
-+    While the state is serialized, they are unable to perform
-+    any modifications to state that was serialized, such as
-+    handed over memory allocations.
-+
-+    When this file contains "1", the system is in the transition
-+    state. When contains "0", it is not. To switch between the
-+    two states, echo the respective number into this file.
-+
-+``/sys/kernel/debug/kho/out/fdt``
-+    When KHO state tree is finalized, the kernel exposes the
-+    flattened device tree blob that carries its current KHO
-+    state in this file. Kexec user space tooling can use this
-+    as input file for the KHO payload image.
-+
-+``/sys/kernel/debug/kho/out/scratch_len``
-+    To support continuous KHO kexecs, we need to reserve
-+    physically contiguous memory regions that will always stay
-+    available for future kexec allocations. This file describes
-+    the length of these memory regions. Kexec user space tooling
-+    can use this to determine where it should place its payload
-+    images.
-+
-+``/sys/kernel/debug/kho/out/scratch_phys``
-+    To support continuous KHO kexecs, we need to reserve
-+    physically contiguous memory regions that will always stay
-+    available for future kexec allocations. This file describes
-+    the physical location of these memory regions. Kexec user space
-+    tooling can use this to determine where it should place its
-+    payload images.
-+
-+``/sys/kernel/debug/kho/out/sub_fdts/``
-+    In the KHO finalization phase, KHO producers register their own
-+    FDT blob under this directory.
-+
-+``/sys/kernel/debug/kho/in/fdt``
-+    When the kernel was booted with Kexec HandOver (KHO),
-+    the state tree that carries metadata about the previous
-+    kernel's state is in this file in the format of flattened
-+    device tree. This file may disappear when all consumers of
-+    it finished to interpret their metadata.
-+
-+``/sys/kernel/debug/kho/in/sub_fdts/``
-+    Similar to ``kho/out/sub_fdts/``, but contains sub FDT blobs
-+    of KHO producers passed from the old kernel.
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index e9789bd381d80..7a4ca18ca6e2d 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -115,6 +115,7 @@ more memory-management documentation in Documentation/mm/index.rst.
-    pin_user_pages
-    boot-time-mm
-    gfp_mask-from-fs-io
-+   kho/index
- 
- Interfaces for kernel debugging
- ===============================
-diff --git a/Documentation/core-api/kho/bindings/kho.yaml b/Documentation/core-api/kho/bindings/kho.yaml
-new file mode 100644
-index 0000000000000..11e8ab7b219d9
---- /dev/null
-+++ b/Documentation/core-api/kho/bindings/kho.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+title: Kexec HandOver (KHO) root tree
-+
-+maintainers:
-+  - Mike Rapoport <rppt@kernel.org>
-+  - Changyuan Lyu <changyuanl@google.com>
-+
-+description: |
-+  System memory preserved by KHO across kexec.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kho-v1
-+
-+  preserved-memory-map:
-+    description: |
-+      physical address (u64) of an in-memory structure describing all preserved
-+      folios and memory ranges.
-+
-+patternProperties:
-+  "$[0-9a-f_]+^":
-+    $ref: sub-fdt.yaml#
-+    description: physical address of a KHO user's own FDT.
-+
-+required:
-+  - compatible
-+  - preserved-memory-map
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    kho {
-+        compatible = "kho-v1";
-+        preserved-memory-map = <0xf0be16 0x1000000>;
-+
-+        memblock {
-+                fdt = <0x80cc16 0x1000000>;
-+        };
-+    };
-diff --git a/Documentation/core-api/kho/bindings/sub-fdt.yaml b/Documentation/core-api/kho/bindings/sub-fdt.yaml
-new file mode 100644
-index 0000000000000..b9a3d2d248501
---- /dev/null
-+++ b/Documentation/core-api/kho/bindings/sub-fdt.yaml
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+title: KHO users' FDT address
-+
-+maintainers:
-+  - Mike Rapoport <rppt@kernel.org>
-+  - Changyuan Lyu <changyuanl@google.com>
-+
-+description: |
-+  Physical address of an FDT blob registered by a KHO user.
-+
-+properties:
-+  fdt:
-+    description: |
-+      physical address (u64) of an FDT blob.
-+
-+required:
-+  - fdt
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    memblock {
-+            fdt = <0x80cc16 0x1000000>;
-+    };
-diff --git a/Documentation/core-api/kho/concepts.rst b/Documentation/core-api/kho/concepts.rst
-new file mode 100644
-index 0000000000000..f1826ac10da75
---- /dev/null
-+++ b/Documentation/core-api/kho/concepts.rst
-@@ -0,0 +1,74 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+.. _concepts:
-+
-+=======================
-+Kexec Handover Concepts
-+=======================
-+
-+Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
-+regions, which could contain serialized system states, across kexec.
-+
-+It introduces multiple concepts:
-+
-+KHO FDT
-+=======
-+
-+Every KHO kexec carries a KHO specific flattened device tree (FDT) blob
-+that describes preserved memory regions. These regions contain either
-+serialized subsystem states, or in-memory data that shall not be touched
-+across kexec. After KHO, subsystems can retrieve and restore preserved
-+memory regions from KHO FDT.
-+
-+KHO only uses the FDT container format and libfdt library, but does not
-+adhere to the same property semantics that normal device trees do: Properties
-+are passed in native endianness and standardized properties like ``regs`` and
-+``ranges`` do not exist, hence there are no ``#...-cells`` properties.
-+
-+KHO is still under development. The FDT schema is unstable and would change
-+in the future.
-+
-+Scratch Regions
-+===============
-+
-+To boot into kexec, we need to have a physically contiguous memory range that
-+contains no handed over memory. Kexec then places the target kernel and initrd
-+into that region. The new kernel exclusively uses this region for memory
-+allocations before during boot up to the initialization of the page allocator.
-+
-+We guarantee that we always have such regions through the scratch regions: On
-+first boot KHO allocates several physically contiguous memory regions. Since
-+after kexec these regions will be used by early memory allocations, there is a
-+scratch region per NUMA node plus a scratch region to satisfy allocations
-+requests that do not require particular NUMA node assignment.
-+By default, size of the scratch region is calculated based on amount of memory
-+allocated during boot. The ``kho_scratch`` kernel command line option may be
-+used to explicitly define size of the scratch regions.
-+The scratch regions are declared as CMA when page allocator is initialized so
-+that their memory can be used during system lifetime. CMA gives us the
-+guarantee that no handover pages land in that region, because handover pages
-+must be at a static physical memory location and CMA enforces that only
-+movable pages can be located inside.
-+
-+After KHO kexec, we ignore the ``kho_scratch`` kernel command line option and
-+instead reuse the exact same region that was originally allocated. This allows
-+us to recursively execute any amount of KHO kexecs. Because we used this region
-+for boot memory allocations and as target memory for kexec blobs, some parts
-+of that memory region may be reserved. These reservations are irrelevant for
-+the next KHO, because kexec can overwrite even the original kernel.
-+
-+.. _finalization_phase:
-+
-+KHO finalization phase
-+======================
-+
-+To enable user space based kexec file loader, the kernel needs to be able to
-+provide the FDT that describes the current kernel's state before
-+performing the actual kexec. The process of generating that FDT is
-+called serialization. When the FDT is generated, some properties
-+of the system may become immutable because they are already written down
-+in the FDT. That state is called the KHO finalization phase.
-+
-+Public API
-+==========
-+.. kernel-doc:: kernel/kexec_handover.c
-+   :export:
-diff --git a/Documentation/core-api/kho/fdt.rst b/Documentation/core-api/kho/fdt.rst
-new file mode 100644
-index 0000000000000..4a5d53c670d4b
---- /dev/null
-+++ b/Documentation/core-api/kho/fdt.rst
-@@ -0,0 +1,80 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+=======
-+KHO FDT
-+=======
-+
-+KHO uses the flattened device tree (FDT) container format and libfdt
-+library to create and parse the data that is passed between the
-+kernels. The properties in KHO FDT are stored in native format.
-+It includes the physical address of an in-memory structure describing
-+all preserved memory regions, as well as physical addresses of KHO users'
-+own FDTs. Interpreting those sub FDTs is the responsibility of KHO users.
-+
-+KHO nodes and properties
-+========================
-+
-+Property ``preserved-memory-map``
-+---------------------------------
-+
-+KHO saves a special property named ``preserved-memory-map`` under the root node.
-+This node contains the physical address of an in-memory structure for KHO to
-+preserve memory regions across kexec.
-+
-+Property ``compatible``
-+-----------------------
-+
-+The ``compatible`` property determines compatibility between the kernel
-+that created the KHO FDT and the kernel that attempts to load it.
-+If the kernel that loads the KHO FDT is not compatible with it, the entire
-+KHO process will be bypassed.
-+
-+Property ``fdt``
-+----------------
-+
-+Generally, A KHO user serialize its state into its own FDT and instructs
-+KHO to preserve the underlying memory, such that after kexec, the new kernel
-+can recover its state from the preserved FDT.
-+
-+A KHO user thus can create a node in KHO root tree and save the physical address
-+of its own FDT in that node's property ``fdt`` .
-+
-+Examples
-+========
-+
-+The following example demonstrates KHO FDT that preserves two memory
-+regions created with ``reserve_mem`` kernel command line parameter::
-+
-+  /dts-v1/;
-+
-+  / {
-+  	compatible = "kho-v1";
-+
-+	preserved-memory-map = <0x40be16 0x1000000>;
-+
-+  	memblock {
-+		fdt = <0x1517 0x1000000>;
-+  	};
-+  };
-+
-+where the ``memblock`` node contains an FDT that is requested by the
-+subsystem memblock for preservation. The FDT contains the following
-+serialized data::
-+
-+  /dts-v1/;
-+
-+  / {
-+  	compatible = "memblock-v1";
-+
-+  	n1 {
-+  		compatible = "reserve-mem-v1";
-+  		start = <0xc06b 0x4000000>;
-+  		size = <0x04 0x00>;
-+  	};
-+
-+  	n2 {
-+  		compatible = "reserve-mem-v1";
-+  		start = <0xc067 0x4000000>;
-+  		size = <0x04 0x00>;
-+  	};
-+  };
-diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
-new file mode 100644
-index 0000000000000..0c63b0c5c1436
---- /dev/null
-+++ b/Documentation/core-api/kho/index.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+========================
-+Kexec Handover Subsystem
-+========================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   concepts
-+   fdt
-+
-+.. only::  subproject and html
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5f33e18385cbc..b3be800e5ea46 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13123,6 +13123,8 @@ M:	Mike Rapoport <rppt@kernel.org>
- M:	Changyuan Lyu <changyuanl@google.com>
- L:	kexec@lists.infradead.org
- S:	Maintained
-+F:	Documentation/admin-guide/mm/kho.rst
-+F:	Documentation/core-api/kho/*
- F:	include/linux/kexec_handover.h
- F:	kernel/kexec_handover.c
- 
--- 
-2.49.0.604.gff1f9ca942-goog
+typo intructions -> instruction
+> + - SL stub jumps to startup_32.
+> + - SL main does validation of buffers and memory locations. It sets
+> +   the boot parameter loadflag value SLAUNCH_FLAG to inform the main
+> +   kernel that a Secure Launch was done.
+> + - SL main locates the TPM event log and writes the measurements of
 
+Thanks,
+Alok
 
