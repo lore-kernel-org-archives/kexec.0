@@ -4,211 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78233C369AE
-	for <kexec@archiver.kernel.org>; Sat, 12 Apr 2025 19:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA36DC3601E
+	for <kexec@archiver.kernel.org>; Sun, 13 Apr 2025 08:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=; b=gSa46X60EK2Fj0ogPvFWP9n836
-	RAwenKr/VoA95xve+Sq2WHlhcb5PbMO73WJiKbDLiQCvS5De7t5wRChmCKMrq32cyPkGOHhVWof9y
-	Jl1QzFYpKOczFATRTNJG9KJoP1n0ug2Kvuvtc5Y6rbilyh9UMpiNlIffqe2v/fLczXYmu+UJXwOtI
-	AkX56iZBw4Hc/0i2v6xLB2LdI6M9O6mJpdr63a9zZPjsHdVgVYwCzmewPy72QN1PSHuC+dfvB9Ab5
-	usQCTx/CkuJiG8CDhYgeHsgyjzK6fD3VoPpcZhcxIrW30QlktloX13PzfGBDVkav2WV7+b9Nh+fd5
-	vIiPBQlw==;
+	bh=ZqFi7DTiIUrbGcISmc0jdmcPJMujJXlDGLlNJu8BBzQ=; b=CRn+j1ZyS+6LNKZjU80FvTZKNB
+	KzfNtVkYPODSs65i3le6sgSntj1qMCK53dsXCmdHHDvoLn7hZHxSXZonllfR++D/aIHLleNEUHYfQ
+	uHKx4bpK93ZhleXuv9QNoQ+4JfZc2WD/7z9oC/7uosaSB0tiFCxtnx3RwUfXUByy1tXngD1zznsq2
+	s/PobnOqI61jOxsc0a2hwPMYLv1mKzyi4mJVeAW26+iart/N4oJFRNxXSq8PhJJuybOr4Q/ZwIQOb
+	Eh5nEBe9XN8nBhUDkJQ3QrcjFwcOq4uYdASX6lSNRBAUyW8ihVlGRQ7erjNpXKazlbFjcf5M75fI7
+	2ZrUhLWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u3gLM-0000000GJzJ-3lgw;
-	Sat, 12 Apr 2025 19:16:44 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1u3t5H-0000000GyNU-0INq;
+	Sun, 13 Apr 2025 08:52:59 +0000
+Received: from mail-wr1-x42e.google.com ([2a00:1450:4864:20::42e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u3gLJ-0000000GJyZ-2lx0
-	for kexec@lists.infradead.org;
-	Sat, 12 Apr 2025 19:16:43 +0000
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CIX9c4015322;
-	Sat, 12 Apr 2025 19:16:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=; b=
-	KfbrJbYT7AD2PWbY5BInLfIRA9x6LeNdq30TmVlJKaRuA7tMtGpteTNk8u376zLL
-	NdBpf6LoFhrKSZsk8wTn94qZF1C2CaA2V4qbNC49SY6AhEQXAGVs9tFO47z5Uo+f
-	u8APinVGCjJRIM7BW2XQPWW5EVlakbGBplPJowXer2atUdn1gNbokUr4YIPI6f7V
-	GSKSLj7igk6WdXwUlBZ9upvXzp7+AUB+Gp3ngI3CMbhpRsHiUmUm2gFbA8wynaCE
-	V+MamSzH+G2BfvlIpIPeCDnkzMdX6OwMCDTX/GSuDIYQdY2KZgsICr0q2i92/JJM
-	c7oLchSwGDyvt354XdRJbg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45ywhg80px-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 19:16:10 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53CG4F5s020067;
-	Sat, 12 Apr 2025 19:16:09 GMT
-Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013074.outbound.protection.outlook.com [40.93.1.74])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45yem6he1t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 19:16:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i3S6M5CRL/ceFLlB/WTwCj5LYyt/n792wHW4efXQI6V5YsSi2cvo5WFK2Fz4rbRvKNl++XYF9yYSd8T7FddZIu65WYmfodQ/1IOEBACKu1QQYSTcWqY6qnv5wVbRFKlsxaRqgJhjO/w0EKB+viZ4HLYNUiTKJwtjeG15sA5RtGPl9+zfOJR6qMXKRicB+h8Ju3MHKGoJ7qgZPUTprG6iparaKVZS+YRdvtEYPRnKnV5RekkCqd54tC6RR5YaEm2uSk2Q1jiPeIG5HSPHAF+rbK9qemdEPhyQvaX4xqQQ7rNtp6PDfkwg/h+xFxfd+fK4iXWR1X04XALP1qABd6HfkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=;
- b=p9HmaBgUHy/FVznpX05vXuBack1aMZwG8p5Esr2cI/wjCoskjXlcTkh7WoL4XFBb0/FG9fpgRxq+Gq3xVJwKSivyfOR0IuofdW2PY1Yq3boAq/Zn96GGjpdJ0xOw7XYyV45Vxyq9BovgQNe60kyow+vgcVd4K7gt9RVxk8NJ53z3po2dFgON1AsE7hQ4zzgZY6IgPK++OToMlSi5sERwZ2DpiW2U+MSSbKyN+he9O7XjMbNycrMa4USh0YpMzcuqKMt7lLBiOo7vAyZ0m/pW5e9Jl9Ej1YcZSOJuy9LJWBy2fQ12md0LDc/UzGdXBuBA5tktVG3i5xhqfw4CwgVoUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	id 1u3t5E-0000000GyN5-2qyc;
+	Sun, 13 Apr 2025 08:52:57 +0000
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-3913958ebf2so2998922f8f.3;
+        Sun, 13 Apr 2025 01:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N+1JPrXrPAG9ZPjPk4sZ9kmJBay63GWkov2DC3gu4JY=;
- b=KZOsiOiiytdUer102aPM2o1o/EdAZtUxSmBbFADe38g6p280ZzBgQSahZxDgovZaD8nWRgBwqWDfFdriPJNuGJa41u8hVAKUGwdSezR6yxlU/4tMNqm9VqHMiRX//LlOYpoQsIMxpOB3S5Magl+0zzx0FaRKNAX2ScpQhzI2IPA=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by DM4PR10MB6253.namprd10.prod.outlook.com (2603:10b6:8:b7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.29; Sat, 12 Apr
- 2025 19:16:05 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.030; Sat, 12 Apr 2025
- 19:16:05 +0000
-Message-ID: <40d90268-272c-45b1-add5-220e9e162101@oracle.com>
-Date: Sun, 13 Apr 2025 00:45:52 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 16/19] tpm, tpm_tis: Allow locality to be set to a
- different value
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-References: <20250410204149.2576104-1-ross.philipson@oracle.com>
- <20250410204149.2576104-17-ross.philipson@oracle.com>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20250410204149.2576104-17-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0015.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::15) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+        d=gmail.com; s=20230601; t=1744534374; x=1745139174; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZqFi7DTiIUrbGcISmc0jdmcPJMujJXlDGLlNJu8BBzQ=;
+        b=J0sbjRBoCoCZ2zJ+ZhQnPg8XViP5WU+6IfNbflzzIGKqZjMhJa8Uu3j+YPw7Fifoo4
+         tJd2SV0LvN+JesbTfXsjRJn5U3wFdB4LB2Kp0aKmFLer9mvjU30bexAzmBgMRipVg7XF
+         pELaHyOF3U8xllROHBkTFiVAEJpZh6MuC1BU2Eam3Kq9l1F7SYeD2xGixlSMBf2idjn3
+         pG1MHyzXCJWgxQKu7eFzQI/c465RblgUAokGKvL77sm4Ljo8h7/xbkdHSrv2WrL3+Qea
+         VzL9lLrTn28zI8K6OzusFY9Ajxkm/CFmBNWqXUDHTpE6s92C6RsEPsAun01UTDgIk5GE
+         00iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744534374; x=1745139174;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqFi7DTiIUrbGcISmc0jdmcPJMujJXlDGLlNJu8BBzQ=;
+        b=ikRHuJuqd4tOosyANFheLowV3AeaVfpFluwbQQghnk7+hAuWObABUh4VXHA8Um6ecZ
+         giR5vLsntJN2NatjUMg84jsHeNBCIk3sVbAPEkC4fdT1mu/D+rzvsFOk9hKDL/3cbo9g
+         Ag76n4id+fKuhk6dgZr0EL+ULyhIApUqPA1s4g+r+0Yg4BU0bvJSR+JUmKmUtPNKFNUH
+         rNL6FHxj5Lji58xpzfsXgKAOUAi9v49o1P5X0WFkPnUo5dcXIeFCgCrlsajdfVibH+Jm
+         7q6vgAScvLXMa4pD06QIy5JYEO5CmS1MXnOhDIfB+d9bnPTthBAj3VN19NnboDmqQ1lv
+         bKvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnLlNmbrLE+LHvQw2gUlBY2GdSyLXtAFK0tzgqJpOA+vb6DpD7Xboi5VM2Gg2q01kSkv+36/T6YRx90gz5lCTn@lists.infradead.org
+X-Gm-Message-State: AOJu0YwMYIVEBj+h6Ll8KU2ITu0VxTKYDJRpjkdLNLvYmcybjB3eDRMW
+	UCWnTT4SKXZ8Vamjk5C0/AFh9fn36bYUD4RyXf3h/+p7X7XaTk1z
+X-Gm-Gg: ASbGncvwi4ZOk+hdvAxf6Kq++jBIaeS6DuviCv3MI+9tOjKNY8b+9uzJ9BMQOjFDyZH
+	sKM/ViDPnXzN5yYeV7q667GJ2oGyh+m/eAUW+hFBIebKiWRVJGfUozQSKwlsKUgfLbHbIO9w3je
+	9ARsfIdHE8/UAohUjk5qlL4Acc3wM8dRjODGhSGwN1ASTs1kcl7+mmt02XfwkJdvNy/rHYHGl+T
+	bWBdCPTMLu72Io4am7St4Uqbo6o7SFD5VNKfc66E5ISPHcYTsqpniwnsm4OilSVnjTk3sSMs1VZ
+	HW2DzfjRcSA/GGZCyiyhdbEc2ZqbIcmFPb/loAT8rw==
+X-Google-Smtp-Source: AGHT+IGknmarvcQPpRnWlyPOaX/s+TI0PihO9g8pQhbTqXGcRFvvo7r3+rVBtN5Uv5iXOVcsWC7aiQ==
+X-Received: by 2002:a05:6000:4007:b0:39c:1404:3748 with SMTP id ffacd0b85a97d-39ea51f45b1mr6770486f8f.16.1744534374229;
+        Sun, 13 Apr 2025 01:52:54 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39eae979615sm7499956f8f.54.2025.04.13.01.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 01:52:53 -0700 (PDT)
+Date: Sun, 13 Apr 2025 10:52:50 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	mripard@kernel.org, wens@csie.org, ebiederm@xmission.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <Z_t7YuzRS5p7_D7_@Red>
+References: <20200407113454.GA457@Red>
+ <20200407122243.GN25745@shell.armlinux.org.uk>
+ <20200407130559.GB457@Red>
+ <20200407132602.GO25745@shell.armlinux.org.uk>
+ <20200407134849.GC457@Red>
+ <20200407181740.GP25745@shell.armlinux.org.uk>
+ <20200408084029.GA1859@Red>
+ <20200408093320.GQ25745@shell.armlinux.org.uk>
+ <20200408152412.GA3621@Red>
+ <20200408161657.GT25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|DM4PR10MB6253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 384b53b7-6238-42db-6835-08dd79f67892
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VkRVU1ZFK3g4U05lSGIyWWF5a1hUSHhETXBncjJ0cFljYkJRMW5zZWZyVXJr?=
- =?utf-8?B?ZW5VRWNWSU5xbEdWN2gyRjBCQXZkdDg1aHBWUHhadEFBSEZzSUFLUDNydkll?=
- =?utf-8?B?WWd3RjFuT1l5Y3dFRVFnYys3NEgxRkMzdktOZ20wL1JCTnlNT1d3bXI2eFZY?=
- =?utf-8?B?VWlVelZucmVaM1BtaGtWNkgyRUYyUU9uZ1hXWU02cmxWVnA2YWN1N3p4NThX?=
- =?utf-8?B?Kzc3UzdkdmRwZVVsc0hyaEVEOGMwazExaE1IUndwMmZwNkhsK0gvaGdWbG1R?=
- =?utf-8?B?THpyM1ZNeFBSQ0gwTEtaYzIxd1BRM1BJekxVUW1nOWx5K3kweXlGS2JjTVM3?=
- =?utf-8?B?aEpRVGxwaTBkMTJTQndOZ2pnWDMzdS9aQ1k3Vjc4UVg4RmpDa1lCLzNBMkt5?=
- =?utf-8?B?T3BZeGRSUnhFNWo4eTRKdkd0djVIR0cwaDF4cWRvVzg1cTBzS2N4cHozZ05m?=
- =?utf-8?B?em9Ga01yR2gwT2tlMlM1NTBkTjZWdGhpeGc1WjdublV4TThac0JRNHBFS0c4?=
- =?utf-8?B?V0tmZVRYdGtoMjlDQm05QTcxVnk2a2ZjM1Fqd3ErendRVW1RQnNVYlhaeHh6?=
- =?utf-8?B?K2JaaUdrU2lFNTRzYzBWY3l5WFZoVDhqMDl4dUVxcjdya1dIUjIzeFk5cTE3?=
- =?utf-8?B?SlBMOXFCQ09taEwybVRSQ3owUXZNUWg1KytuSXkvZTVEN25ZT2tYT3E3QWtS?=
- =?utf-8?B?UGkwcHB5ejhDSUl1UXU4c1dVdTVsU2ErOXpMdy9nY1lpYk1iei84dUREamYy?=
- =?utf-8?B?ZndoeWhOVE5FMmJ3OTh1THdMb3VEVDZQM3JKeHlWV1JuTzZWMW5USWxucmo2?=
- =?utf-8?B?LzhIZkNpcnhNK0ViTTRKRHlRK2V0aDZWcXdIWU5lY0h1cW1XaG5KZFZZeEU4?=
- =?utf-8?B?Q1VlWHFRME9CVlB3M3lpN3hsY1lyK0s1QkJ4WnM4RVRNMkNhTGlwSHBERTNZ?=
- =?utf-8?B?and4bEI1bzBFUFBmbVhGMnZJWTVSSW9PSFhVc2pnRlpNSERYR1d5dlVhYVR4?=
- =?utf-8?B?VUx3T0MyeW9zMW02RnpPR2MzbkFVZkt4RVplL01lTGFrTndabEpXV1RidXo2?=
- =?utf-8?B?ZmptTDk0ZS9iMmdFbXlyWDFqMGNWd21wQWxyL0FTWmg5M0RLUThVWEgrL05B?=
- =?utf-8?B?Mmx0eWxuTGpRMWI0Q1ZYZnBORGVJaDdHMHgvU0l5ZHUwQlN3V1VZckhnSkZv?=
- =?utf-8?B?dnduUU94bFNpTStYNVg4SFFvcDlXb0dBMk82dmhVZzl6Y0tRR1RQUHVJWklo?=
- =?utf-8?B?aWVtYjZvcHVuSmZoUStWbThOTjdUNFBHaUNGaU9zTVFqaHVSYVNNZnJ3K1VB?=
- =?utf-8?B?YWd2bTlYZUpYWmNSQzZpdmhMamRFQThzK05hb0lrWUFoam9DdElSclloMTdM?=
- =?utf-8?B?UlkxdEFsNm16T2VncXBLTDhPNzFNMThOVmFsUDEwYXU1Z0R6WDlNcE9nRTdq?=
- =?utf-8?B?aXlTc3E1V0dtdER0OUREaDVHdDlQbHplT0JnVloxcDJGeUtFdlFHWEJwdlps?=
- =?utf-8?B?a1dmZ0phTzFEUVUwTldkWVVyMCtXLzZWREVsQmVxSllKaDJnajRhVGpiWFlO?=
- =?utf-8?B?OVNhQ2l4clJUL0hxbmNMYjN4NzRmUFNhbVA2aTJCd2phZ09ZU2pxcCtpZHN5?=
- =?utf-8?B?WUZuZjV1Q0NocTllbDBFbHgvMGlVekJEeTYyR1lGOXJTLzh5SE1HclB6TEdX?=
- =?utf-8?B?Y3NOVHlGVk9zWGZ3MW1vdzNMcThpSEZ1NDNldTBYejdGaFNhdm51YjF4S1lT?=
- =?utf-8?B?WW5hUjJiamEya0JnU2R3TU5jbVpGbVBQNWV0cDlndUhQUVZONElrRHE4OUt4?=
- =?utf-8?B?blRlTHZQWnFDbC84Q3ZUQTM2MFdsR0R3UzhpNmlYWjVtYkJtdXJYODgyUVBJ?=
- =?utf-8?B?bU9XN3pxVC9CN0Zub2Q3M2lET0QyVURnWm85dVRpV3hiZ0xETmtFeUx1OGNh?=
- =?utf-8?Q?GI2qTy9QFtg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UzFUTTNqMDhkSEkreUREcEVmZnFCUnVFQ1VNaGxnZkNpZGpaQ1kyNE5NNTUw?=
- =?utf-8?B?TDcrSkkxcUxqMFlZRlhneFgxVGZqM0F2Rk9NaURKcndBTVRNbXFFQWxUdGg0?=
- =?utf-8?B?cU5hYmVQMHI2UDllYytSTTF5anVBVnB2SVQ5cEx0WXl0QVhPTFN1LzFlVmRh?=
- =?utf-8?B?U0ZZc1RZTVFOKzBFdmpET25tMXFKMy9Va3JGalVyMlhXSnFQMFRnUzE3OCtm?=
- =?utf-8?B?YkZlbWZjYldzc3ZUVzJvSUhJMDMzMGRXUnJRVWM3Q2JuSjlVNUFZTjg5ZGNk?=
- =?utf-8?B?aDBXeWZSSjcxVkNaL2hIdXl6UVNCTmMxNFdRVmhmekdwOFk4VWRIZmpVNzNB?=
- =?utf-8?B?RzRsTFdMQzUyRHlUMTM0UjBxd2Q5Y3hkSS8rMGRTZW55SHNKVG1BRXB5WFNW?=
- =?utf-8?B?N2YxKy9MRjZMZjNBcWlkb2RPODFuM21HZE9EcVZQYUxqa1dBWXQ3YWwvTXRQ?=
- =?utf-8?B?YmE5RzF0R3VJMmhOWDdRZ3BDakwzNTRBWElXSExuYmdPMDhVUVdBakpsTmh5?=
- =?utf-8?B?Ynhad1I2R0xRRExLU2V1WEh3SE55akdBaFZFMmVLMkp4SFR4U0tPNmE4OGlz?=
- =?utf-8?B?OEQzOC8yUDJNZWNuWEs1ck1lOXRWYWxxNDdmeHRqUXFqWHBPbmZmTkxtZ1Jq?=
- =?utf-8?B?aGFsdnVmT0J2UlNZV3ovRWdMWnNKYUExbDRIdkZyVDFNMS91STZkZjE0MFlt?=
- =?utf-8?B?NHdkNGdKemNaeUNZNzhkdm5LSkNSQjVOSy9lSStYMTl6T2N6VjYvSWZ3N1hE?=
- =?utf-8?B?c0N0ZHBQSVUvdDNZNVdrYks0ZnRwKzY1TWdMNENlNzA3dHZmRG9ENzhhZGs0?=
- =?utf-8?B?SUNQOE9HdmdMNFhrdndNTERmRDNISE14Mm5iY2diL0hQZmMyOTVrTnNNSUc5?=
- =?utf-8?B?M2xsTFhXZS9wSldpYlh0SjlCb1JJbWJvUVdiQ2d6STZjZDdPaTBmMHNleG52?=
- =?utf-8?B?czd5dzVWRzlNLzVacC9ZZzVjZklBb3IwaWNYcnFNUHdXMjI2cHEyMFJkUmoy?=
- =?utf-8?B?ajNVcXFwMFJQaWRUOVAzdlFMU1dTS1hIUE5mWVU1NTFqOG5rVHlxaEFYZW84?=
- =?utf-8?B?NHRsY1JTU0tweGtVblN3a1o1UW50WHFmd2RCamRWMnBtdHBqQ1FSb0xvUW8w?=
- =?utf-8?B?V2lmaExTTmgyaG51SEluS2xuODlLbGYvSHprSktGSDg5TWR1SE9Ecy9nUFMr?=
- =?utf-8?B?T0ZSUFVHc1dmbEtjMURiSkl1ZnZYUjJBMmd2T0dDbittbFc0dkRiRGNYYXhX?=
- =?utf-8?B?Q0RwYXFsZVR6S1haZDVPZlh2K0tuK0JKcWFtdzBVbmlIVFp5Ly8xNEZ4cGtP?=
- =?utf-8?B?enNmQms2MG9Sc1NoYWtITjJKa3AwbU1WWmNzVU44MHJKUTk2TjJrYWFXMnZH?=
- =?utf-8?B?ZmFleTU0eW54aHJsNWpCejFoUjNOYklLUXIyTzcrNERlc28yR1Q4K1BrWkV2?=
- =?utf-8?B?QzZ2NWRSbkJkMWtOS09ZV0dVaHVIZVNlVVhZN0tHRmZkRFhVZEsvTVZXaHNY?=
- =?utf-8?B?dUdvWGVKMWxXSWQwUUNySWRqZ2ljcG9UUmZ3dnpwSmsrbTVJZjR6R05aQXFR?=
- =?utf-8?B?dTZSVmU5RGFHTTFYbVNiV0I3dUxLeDB0OG1EcWF1ZjZHVDJaQlpSell2M1dW?=
- =?utf-8?B?MlB3OWZVWGF6aE9iMlNVejh2U3BJRWNRcGNEcFVyS3loWFdPSDZvSTZhVmNr?=
- =?utf-8?B?aDhGZlhuS3hTcjJUcjJ6K2d0Rk9VamJZd25zc3M5NGkweThwa3RjSVpXUUdu?=
- =?utf-8?B?dVpQNUplb2JibkRrNUZXOE5GYzJ4cHpRb24zSUozMlpqemVDUnJxQ1VMVEJT?=
- =?utf-8?B?OEVWWU5XekxPc1BDaHlLVXQ2Mlg5bDFCaUhvV3BtSU1PL0pHbm9rbHNBNTBO?=
- =?utf-8?B?SEVYUEJ1RjQxSzBYdXppeEd0Nzg3NnUwSEVUOXErSTZvSXRqZFVnOE1vZDd6?=
- =?utf-8?B?YlN0c3FZa0ZLTmF4QTZOK3lBM3dEK3BodDV2TTJZdEJEVkhHMy9tSWg4MG9X?=
- =?utf-8?B?VTYrMnVWS3ZqSlQ4VXlFdUhFTWtvNUZuOTZoTGJVK3I5YS9HZjJvM2hmUmhI?=
- =?utf-8?B?SGd3bzZwdmlWS1JManRMam10bWNmYXFnM0VRbE1Jb2lzOUkraTUyRjY4bkFK?=
- =?utf-8?B?aXMzaFJ1U05PN1IwMGUyWXkwK1loSUpUOW9pb1FVOThzQklKaHVIUmRKMzZv?=
- =?utf-8?B?dEE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 1GwaBSCuibwXUOysUGbXk9uim/amsUNTt976B4P1R2Z+YBHZaf/RZzTWc5kz5IDOrH3RnOsSJxVD9GFZN4RqKYYcAH47YX5XBxi6jVug6pBqdDbM+VMrpDh7zai1qf/mu1tEBlrg2WMxGVygGhDzviqgu6AgKUkJg8vH8zUpadsCkHIkE0K5RPFc6XddyfAON1P8N65hwIkR40tETLvtoQ116BNp6e0Cw6MEmzrcWJCSv7VXvMW82892AEwNTE/HXQmXJrhXVh4+8zyDtZMt58BfXtUnyuU56wMaCL5GnZSbpFZPt8/gWZqKCjYwqmNpcUAyKK6hhxGv10PrksBcJnRwlZIudjj9whLDvddjrH7Z+oAyEcMS3NxQmLJ8k7rv96rmTEnSYicc0VUc+hSIm2Y1zqKk3bCBU4rIIGHsXOkxH4uYfIN5FMmNUrKZqDSf6OTdOEBrpRZrm6oCvXNNFIuFj/ScUnHNx+XB4XVOmF9IMVzYWlAO+r+Arr6nSuLnIjOaYvP3TmMJeEQ2/KkomyzA/mJVJWG45AjFnEA7DWKt8NsJDRC/z1Uc5p6sLU3d8cU4MIvVatdxjJT4RgaegB9XwutJmZf+8TN81A4FZF0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 384b53b7-6238-42db-6835-08dd79f67892
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 19:16:05.1711
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yj/AEc3MhRZGqFhMAvAW32x5Oo0HODlOOK5FUEXL+yl2quONAH0PLBFu1wT5yrKTOMYF3WvYm1gbd+0h97bF9ZpUIGEoS1OKl8tYqwzlLhw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6253
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_09,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504120148
-X-Proofpoint-GUID: RBumteSSxMD2r_fUf2ULNvRjf36AKoUI
-X-Proofpoint-ORIG-GUID: RBumteSSxMD2r_fUf2ULNvRjf36AKoUI
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200408161657.GT25745@shell.armlinux.org.uk>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250412_121641_817031_39EE022D 
-X-CRM114-Status: GOOD (  16.47  )
+X-CRM114-CacheID: sfid-20250413_015256_724543_C0F193D9 
+X-CRM114-Status: GOOD (  36.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -223,55 +107,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 11-04-2025 02:11, Ross Philipson wrote:
-> DRTM needs to be able to set the locality used by kernel. Provide
-> a one-shot function tpm_chip_set_locality() for the purpose.
+Le Wed, Apr 08, 2020 at 05:16:57PM +0100, Russell King - ARM Linux admin a écrit :
+> On Wed, Apr 08, 2020 at 05:24:12PM +0200, Corentin Labbe wrote:
+> > On Wed, Apr 08, 2020 at 10:33:20AM +0100, Russell King - ARM Linux admin wrote:
+> > > On Wed, Apr 08, 2020 at 10:40:29AM +0200, Corentin Labbe wrote:
+> > > > This is the last boot:
+> > > > ## Loading init Ramdisk from Legacy Image at 2a000000 ...
+> > > >    Image Name:   
+> > > >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
+> > > >    Data Size:    8031928 Bytes = 7.7 MiB
+> > > >    Load Address: 00000000
+> > > >    Entry Point:  00000000
+> > > >    Verifying Checksum ... OK
+> > > > ## Flattened Device Tree blob at 23000000
+> > > >    Booting using the fdt blob at 0x23000000
+> > > >    Loading Ramdisk to 29857000, end 29fffeb8 ... OK
+> > > >    Loading Device Tree to 2984e000, end 29856fd1 ... OK
+> > > > Starting kernel ...
+> > > > ID:0x00000000 DT:0x2984E000
+> > > > Uncompressing Linux... done, booting the kernel.
+> > > > [...]
+> > > > fake uboot stuff
+> > > > [...]
+> > > > DEBUG: bootz: run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 earlyprintk ip=dhcp'
+> > > > Set DEBUG!
+> > > > main:1417 OPT_KEXEC_SYSCALL
+> > > > main:1422 OPT_KEXEC_SYSCALL_AUTO
+> > > > arch_process_options:119
+> > > > main:1500
+> > > > main:1517 res=0 do_load=1
+> > > > main:1519 res=0 do_kexec_file_syscall=0
+> > > > my_load:713
+> > > > Try gzip decompression.
+> > > > kernel: 0xb6931008 kernel_size: 0x444fc8
+> > > > get_memory_ranges:36
+> > > > MEMORY RANGES
+> > > > 0000000020000000-000000009fffffff (0)
+> > > > zImage_arm_load:423
+> > > > zImage header: 0x016f2818 0x00000000 0x00444fc8
+> > > > zImage size 0x444fc8, file size 0x444fc8
+> > > > zImage requires 0x00455fc8 bytes
+> > > >   offset 0x00006738 tag 0x5a534c4b size 8
+> > > > Decompressed kernel sizes:
+> > > >  text+data 0x00b77958 bss 0x0003d428 total 0x00bb4d80
+> > > > Resulting kernel space: 0x00fcd920
+> > > > Kernel: address=0x20008000 size=0x00fcd920
+> > > > Initrd: address=0x20fd6000 size=0x016a6b97
+> > > > DT    : address=0x2267d000 size=0x00006043
+> > > > kexec_load: entry = 0x20008000 flags = 0x280000
+> > > > nr_segments = 3
+> > > > segment[0].buf   = 0xb6931008
+> > > > segment[0].bufsz = 0x444fcc
+> > > > segment[0].mem   = 0x20008000
+> > > > segment[0].memsz = 0x445000
+> > > > segment[1].buf   = 0xb528a008
+> > > > segment[1].bufsz = 0x16a6b97
+> > > > segment[1].mem   = 0x20fd6000
+> > > > segment[1].memsz = 0x16a7000
+> > > > segment[2].buf   = 0x4ef88
+> > > > segment[2].bufsz = 0x6043
+> > > > segment[2].mem   = 0x2267d000
+> > > > segment[2].memsz = 0x7000
+> > > > main:1568 res=0[   32.098439] sun7i-dwmac 830000.ethernet eth0: Link is Down
+> > > > main:1582 res=0 do_exec=1
+> > > > [   32.113191] kexec_core: Starting new kernel
+> > > > [   32.460412] Bye!
+> > > > ID:0xFFFFFFFF DT:0x2267D000
+> > > > C:0x200080C0-0x2044CFE0->0x20B80500-0x20FC5420
+> > > > ID:0xFFFFFFFF DT:0x2267D000
+> > > > Uncompressing Linux... done, booting the kernel.
+> > > 
+> > > Okay, that looks fine:
+> > > - the DT is out of the way, so shouldn't be corrupted by the
+> > >   decompression process.
+> > > - the decompressor writes the kernel image to 0x20008000 to 0x20b7f958
+> > >   which is clear of the decompressor itself (which relocated itself
+> > >   to 0x20b80500).
+> > > - the ID doesn't matter for DT booting purposes.
+> > > 
+> > > I see you've gone back to using your own dtb rather than one derived
+> > > from the booting kernel. I strongly recommend against giving your own
+> > > dtb to kexec as if the boot loader modifies the DTB when calling the
+> > > first kernel (such as adding memory region information, adding MAC
+> > > addresses, enabling or disabling various devices) those modifications
+> > > will be lost if you supply your own DTB to kexec.
+> > > 
+> > > Please drop "--dtb /tmp/dtb".
+> > > 
+> > 
+> > Thanks it works now.
+> > 
+> > With a working setup I diffed dtb and the one given by uboot and it seems the missing node for booting was /memory.
 > 
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
->   drivers/char/tpm/tpm-chip.c     | 33 ++++++++++++++++++++++++++++++++-
->   drivers/char/tpm/tpm_tis_core.c |  2 ++
->   include/linux/tpm.h             |  4 ++++
->   3 files changed, 38 insertions(+), 1 deletion(-)
+> That is more or less expected - it seems kexec never adds the /memory
+> nodes to the dtb.  I've no idea whether it should or should not be doing
+> so, and is for others to thrash out the arguments for and against what
+> should be modified and how.
 > 
-> +/**
-> + * tpm_chip_set_locality() - Set the TPM locality kernel uses
-> + * @chip:	&tpm_chip instance
-> + * @locality:   new locality
-> + *
-> + * This a one-shot function. Returns zero or POSIX error on failure.
-> + */
-> +int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality)
-> +{
-> +	int ret;
-> +
-> +	if (locality < 0 || locality >= TPM_MAX_LOCALITY)
-> +		return -EINVAL;
-> +
-> +	ret = tpm_try_get_ops(chip);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!(chip->flags & TPM_CHIP_FLAG_SET_LOCALITY_ENABLED)) {
-> +		tpm_put_ops(chip);
-> +		return -EINVAL;
-> +	}
-> +
-> +	chip->kernel_locality = locality;
-> +	chip->flags &= ~TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
-> +	tpm_put_ops(chip);
-> +	return 0;
+> The upshot of the existing kexec behaviour is you can't take a dtb from
+> the kernel build and use it with kexec.
+> 
+> > For booting a different kernel, I fdtput the dtb (for memory and bootargs), and it works until it try to mount the roofs which it find corrupt.
+> 
+> rootfs or initrd supplied to kexec?
+> 
+> > Since the rootfs I get by the fakeuboot is a "uboot legacy image" (rootfs.cpio.gz modified by mkimage), I drop the first 64bytes but it seems not sufficiant. (even if file say it is a good rootfs.cpio.gz)
+> > Or perhaps the kernel get an invalid initrd address.
+> 
+> Yep, the file given via --initrd or --ramdisk is loaded exactly as-is
+> into memory, no parsing of the file is done.  Neither the kernel, nor
+> kexec, does any u-boot parsing of the initrd/ramdisk file; they are
+> not u-boot.
+> 
+> If you want to try giving the kernel a bit more space, you can try
+> --image-size=$((0x01000000)) to see whether that affects the ramdisk
+> image problem - if it does, it means we're still not properly
+> calculating the space the kernel needs.
+> 
 
-a '\n' before return is customary
+Hello
 
-> +}
-> +EXPORT_SYMBOL_GPL(tpm_chip_set_locality);
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+Just to say that adding --image-size=128000000 lead to a working setup.
 
-
-Thanks,
-Alok
+Thanks
 
