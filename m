@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C50EC369B2
-	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 08:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 185FCC369B2
+	for <kexec@archiver.kernel.org>; Mon, 14 Apr 2025 11:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pFdJS1Ku9jpxjGSHmnlwzJMEcNPUTY8NF/s7bkpHAXw=; b=ARXpybQEvMypVIgbe32rL7dTES
-	pDzyea4zozvUn5Gn6raokU0E88u4p6ozEEgxM2oZp8gfP79C1meI7mSSw5GfNXAT4T79XzRB7ovj3
-	ZBe4166K3edz4nW/cIDdA4zBrARfcwAr458egXslfzLFY5hPubPQiHGYDJbZv3ynxpmjYMmSzoKIT
-	1ZDmm0qpEZuia6dwqRZQLbPTE+eC4nLJDhiStVgaKa/ncsDPokSslj+ocMQFVPBBlj6VLTZ3DxduT
-	790xLjuI0SF0S4Y8ESYgeeV3lqI0YeqehhRzmh68igEDxudDi/oT4NfobL1KvcTS0hT2NDATNW+P/
-	6ajBzh2A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=nkTx/KNaECJJfWhTzH27BIkNs5tfk4l/WmLtWpuv0j4=; b=35KslAamt9rDxiFDPBDtyybw0K
+	PEHe6TSltKEhoNdI7OvKs0S90EXgL9yN4C3CFq5lLBbKYZeGixTRhFatsaqRWmKv39WLEOnACa38u
+	zFygHtXY3kp97csTXL+FLClNLfGLGdTFPOisNRPgUOkID1uBtG8r/IDpprtOlTQhlwzYHb+wy4sDJ
+	WFJJjarz1Clcemr4wN1F/7tkhmw144DrZpIXuvn4tIN1323w5LxOZXDTZF8HhRAUc+OBAoghbi7hX
+	rMK5DJ3AwM7YwEwdFkrYDlSpLN2SU/sEgFuiznWe/opAb1SUGPEdxeL6TBuxNNjsGNQ6/IUfM9KgY
+	zrSrumZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4FMu-000000018h4-2qzX;
-	Mon, 14 Apr 2025 08:40:40 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1u4Hfo-00000001g0k-0ueZ;
+	Mon, 14 Apr 2025 11:08:20 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4FMs-000000018gU-3UH8;
-	Mon, 14 Apr 2025 08:40:39 +0000
+	id 1u4HWs-00000001dWj-2ofB
+	for kexec@lists.infradead.org;
+	Mon, 14 Apr 2025 10:59:06 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id AECBA61141;
-	Mon, 14 Apr 2025 08:40:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35A6C4CEE2;
-	Mon, 14 Apr 2025 08:40:35 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9701761148
+	for <kexec@lists.infradead.org>; Mon, 14 Apr 2025 10:58:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E46C4CEEB
+	for <kexec@lists.infradead.org>; Mon, 14 Apr 2025 10:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744620037;
-	bh=1WLjhU62qts6OOD8ye1YCi8KydIv3r4YnaWoDD7MFoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UvdiZUAmShJiXgi2JdweGIv+56B6MrRRZG6A7OFE2EfFOz2VNDI2oIeIU7RQaj5El
-	 4aA9h2FAcy13IpILJO5xVz84RKLEHpRXTTv73t4VsmG8sHAa4MBBfwEUa8w5BZoms4
-	 td7t3HWHPJbq00dUVI5Sg7hxtJO4ukSzXov1p0FVKkLTm9xgRi9URTpIBTv1Anf3wn
-	 YCfH5erg23joCti8uVBsTPMgSk4oO6IcIJ/93QnZfSWd25vJCY5pA7rrYSJI3BGPc0
-	 97+DGFJEHNtwY+ScWCw11OJaqbgfPAIIN7neb+8GtU8Haz30Wt1dij2uZtMB2c9cVf
-	 OteBHGjqj4iIw==
-Date: Mon, 14 Apr 2025 09:40:33 +0100
+	s=k20201202; t=1744628345;
+	bh=g1NUf1WCV+nJFn0rJwm6bCn+DojQizJTHs+Z8bJUQwk=;
+	h=Date:From:To:Subject:From;
+	b=WCa81ze42mhTAxQD78tMKh6atU7uh/amp6W4E3fZYsUa3VmzQhygEB8/9jr1yCLYY
+	 15p3rrBHZKsyhKWNPYPGgaj7VDiADDfO/PI4S6yrUoRa9/X7FhX/Jg0kMg8oZvsYLI
+	 yeGAfRMJbt3ddz4zHw1J19BKLW0XfxQXngZUgrDW/shn/XO/Ui81F9f2zDYBsTynov
+	 uo/n3LaYIYr7u0uKyjeQIQL5fPACvgWXPByNXblT2NKHpyswvYpdwgjoH7VrLx/pvL
+	 NmeNJ2nJiyyaD8NiVNRSoEVFmTMPC+xnm4fbqgmT3BTaE9FEAQfsd7qZxuj5spOtS9
+	 RNoYMPqORgC3A==
+Date: Mon, 14 Apr 2025 11:59:03 +0100
 From: Simon Horman <horms@kernel.org>
-To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Cc: Nick Kossifidis <mick@ics.forth.gr>,
-	Song Shuai <songshuaishuai@tinylab.org>,
-	Li Zhengyu <lizhengyu3@huawei.com>, kexec@lists.infradead.org,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
-	Dave Young <dyoung@redhat.com>, Yixun Lan <yixun.lan@gmail.com>,
-	Xianting Tian <xianting.tian@linux.alibaba.com>,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 0/4] kexec-tools RISC-V port
-Message-ID: <20250414084033.GA1480036@horms.kernel.org>
-References: <20250409201428.648717-1-bjorn@kernel.org>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools 2.0.31-rc1
+Message-ID: <20250414105903.GA1498567@horms.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409201428.648717-1-bjorn@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,80 +64,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 09, 2025 at 10:14:22PM +0200, Björn Töpel wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
-> 
-> Hi!
-> 
-> This is an attempt to finally get the RISC-V patches for kexec-tools
-> upstream.
-> 
-> Simon suggested in [1] that:
-> 
-> > In my mind the big question is how to move RISC-V support from that
-> > branch, to being merged into main.
-> >
-> > IIRC there were some issues that needed to be addressed. Perhaps they
-> > are all addressed by this series, and with some appropriate squashing
-> > we can move forwards with a series based on main?
-> 
-> I talked to Nick last week, and he suggested that we'd work the RISC-V
-> collab Github [2], but I think it's just easier to do it on the list.
-> 
-> I've been collecting a number of different trees out there, and tried
-> to group them in a series.
-> 
-> Given that there is not support for RISC-V upstream yet, I didn't see
-> the need to carry all the fixes/updates ("development history") as
-> separate commits -- it doesn't help bugtracking/bisectability.
+Hi all,
 
-Thanks Björn,
+I am happy to announce the release of kexec-tools 2.0.31-rc1.
 
-I haven't looked over the patches yet.
-But in principle I agree with this approach.
+This is an incremental feature pre-release.
 
-> 
-> Instead the first commit message is a big one, and tries to give
-> attribution to all involved parties. Input/thoughts are very much
-> welcome!
-> 
-> To properly test this on RISC-V, the upstream Linux kernel has most
-> things in 6.15-rc1, e.g.:
-> commit 28093cfef5dd ("riscv/kexec_file: Handle R_RISCV_64 in purgatory relocator")
-> commit 3f7023171df4 ("riscv/purgatory: 4B align purgatory_start")
-> 
-> To cross-build kexec-tools:
->   | ./bootstrap 
->   | ./configure --host=riscv64-linux-gnu
->   | make
-> 
-> For some tests, additional kernel patches are needed, that as of today
-> is not in 6.15-rc1:
->  * To test "kexec -s -l Image", kexec_file_load with Image support is
->    needed [3]
->  * To test "kexec -c -l vmlinux" with CONFIG_RELOCATABLE, a kbuild fix
->    is needed [4]
->  * Typically if you load initrd, or a large kernel [5] (since a bunch
->    of Reserved regions are not properly exposed).
-> 
-> I've tested combinations with crashkernel (-p), and regular (-c/-s + -e) for:
->  * ACPI/UEFI
->  * DT/UEFI
->  * DT
->  * w/ initrd
->  * w/o initrd
->  * ELF (userland loader + kexec_load, and kexec_file_load)
->  * Image (userland loader + kexec_load, and kexec_file_load)
-> 
-> I'm sure there are combinations I've missed, but at least from my POV
-> we're in a pretty good shape.
-> 
-> All authors: Please let me know if you prefer another split of the
-> patches. Or something else for that matter! ;-)
-> 
-> 
-> Let's get the ball rolling!
-> Björn
+So long as no serious problems arise I intend to release kexec-tools 2.0.31
+in a weeks time. Testing of 2.0.31-rc1 would be greatly appreciated.
 
-...
+I do not have any outstanding changes for 2.0.31 at this time.
+And I would like to only accept bug fixes at this time and take
+features patches once 2.0.31 has been released.
+
+The pre-release can be downloaded from kernel.org:
+
+	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.31-rc1.tar.xz
+	https://kernel.org/pub/linux/utils/kernel/kexec/
+
+I have also tagged it in git:
+
+	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
+
+
+For reference the changes since v2.0.30 are:
+
+f80553597da1 kexec-tools 2.0.31-rc1
+a7fcd424c4c8 kexec: Enable zstd in kexec decompression paths
+60ce9bdf0e5c zstd: Add zstd decompression logic
+aecc554e7ba8 Correct string specifiers
+6aecc32c6db8 pe-zboot: Truncate the trailing zero if Image is signed
+455f55c7c029 PE: Extract get_pehdr_offset() for reuse
+0475ec5d3246 x86_64: Support UKI image format
+c3a991a169e7 kexec: Create a temporary file to hold .linux section in uki_probe()
+99d32ffdf1ef UKI: Split out the routine to create temporary fd
+21361a91dedd kexec-tools 2.0.30.git
 
