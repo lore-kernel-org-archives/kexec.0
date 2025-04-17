@@ -4,103 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31E24C369BD
-	for <kexec@archiver.kernel.org>; Thu, 17 Apr 2025 01:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0F34C369B2
+	for <kexec@archiver.kernel.org>; Thu, 17 Apr 2025 08:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ah/lLzBmfOIHy5wOwIFiZy+sp117fbDDGICRD88/xh8=; b=Ksshs5nQ5Sb2VSLebWsWD0X09U
-	4CG7AmMKNImZHCwa4TQ8TbNyJQVkG+udQzox0F2CaMJ1AurwXN5ipta9AnnnNxIq28aUTUuHZPCtR
-	bI+XuzSLs2ODOxc4tXebf5uruTVkQBvnPTA4G/4IXVqkalwZi2rXaxb597kL7o5yQx807/z+WAT29
-	PDfmZRwqDGVqK3ajCH3UPYnxCtGz1jexyMlHCT9ytc1you5QALWm1PD08n8nkZiImeaX/mS76JeX2
-	nboyrMONenyfJ6Bodtk5P6ngU6IQWzVtttkg4Tdvh2mLT/1OSdUo5R98yfx6y/qsBtjULr1/hEmHI
-	2nhh1caQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=56/OsgBXyr2LuChdOyqkFpn2WPGuq6Zd2RCfcoiCNB8=; b=peFqiPSpFOpVKAINKfHR1/Uch7
+	zsDnI8vzEFV0yl/FWwPutfTVqvoZDqxrUFxBoniyBmMWYmX/U9/aXfk8dWZ9FZMObSgu9aa1zbH/E
+	QkNZCt1lDhTeYZ62Oe/qC+gTm7FHBOk6OCw6fRNzGlyi6+W3sNaO+C/DogqNtoxHG+FLVKAvp/EoO
+	LEsleB+Ws/tlAhVh1rCuj5DK0a+3jxBZwuj+RkIHVrMjlQg0ZoySCEs39wHJQENjCtP3lpG6yAbqc
+	zPlIzi4E7gkHTZhAL+teVOGMJSNDbVqcRDmsrLBNfSIiQ3JfHDsxB+T4RpQPRlly7EjSTl+CIJbO0
+	mRUbISTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u5Dys-0000000BQd0-3yBJ;
-	Thu, 17 Apr 2025 01:23:54 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1u5Kf0-0000000CHW5-2miU;
+	Thu, 17 Apr 2025 08:31:50 +0000
+Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u5DlI-0000000BOno-3JGh
+	id 1u5Key-0000000CHVg-2z6t
 	for kexec@lists.infradead.org;
-	Thu, 17 Apr 2025 01:09:57 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLW826019008;
-	Thu, 17 Apr 2025 01:09:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ah/lLz
-	BmfOIHy5wOwIFiZy+sp117fbDDGICRD88/xh8=; b=n86RXRgper66X0nQGr/SIC
-	rYc7HochvI/iHrEML50CySpLEsaptWcfK7HSgDf7O8qS6C/zNnQPxwfo4pgb6+eX
-	AkQxleDMoK8rlIxBFadOqGo2jcEr4rie3dbIIax0MMF++ZMn6pd0zad6QNsvFpZx
-	/0fSVrfPEJLBVnApDjCByVBoqWCvNyqec4O5LUGn4DvyKYCUyG7xKmK24f0qfszi
-	hQAonjj02jIGh2uAOBqZQy5tHmE96XC2phK+ohnOB0X9wmvLcUwp4SoheHCcLnKg
-	2b1tARm921vHxIxNAf0JizkFpHIPUNgWVtNyCYPGmfBx29Pn784UoflR7LhTwiSQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mhu0r9h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 01:09:28 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GNSmTf010392;
-	Thu, 17 Apr 2025 01:09:27 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkaym2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Apr 2025 01:09:27 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H19QBm24380138
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Apr 2025 01:09:27 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96C895805F;
-	Thu, 17 Apr 2025 01:09:26 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DADCF5805A;
-	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
-Message-ID: <4a2f7fde-99ee-4bcd-a97d-fe0db418fd5f@linux.ibm.com>
-Date: Wed, 16 Apr 2025 21:09:24 -0400
+	Thu, 17 Apr 2025 08:31:49 +0000
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso74034166b.1
+        for <kexec@lists.infradead.org>; Thu, 17 Apr 2025 01:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1744878706; x=1745483506; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=56/OsgBXyr2LuChdOyqkFpn2WPGuq6Zd2RCfcoiCNB8=;
+        b=ZOXx//IxFxYZn4UOX21Ceaon9WQelM/M4gJnOY7rvIsqFzQyFi11Kf5wpMqt0X/FTY
+         QySrGPI22xpEwLUHLHiMeWP4Pit9hg5fuWjZr4nhBlAP+4cjVxixA0P0cAc1UWHYCxmT
+         XnYTsM+orREDJuKfiseNfLiWP0yhZuzWtNufw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744878706; x=1745483506;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=56/OsgBXyr2LuChdOyqkFpn2WPGuq6Zd2RCfcoiCNB8=;
+        b=TLFR6YngoIso55IRcVn/GnKuU4QKW/s5ACu/QVJeAOCFwvuZ6Vzoym7nvUyajkEizJ
+         M/LNmNOFYBtkHCWhNgrOON0lTlXm9a+01CI0zw1V+PEl0On40Fhh2s/AFze2CH1bk1FQ
+         QYfUv1S44MUuPGhntQVqFAmSA/LUgR+livR7oqDF+FPmYejfe+MloXyJfnPtyDXFtdRT
+         u45ZCXC/WvB1vswC1Pr+Afh+54lbRIEfg2DA7mQwuSRrOG4QiNYL706wWDOZLLtm65QP
+         ps6NzpzpVBPT+ucD3tXLkG3a37rrhvgnx+M3BYTCBDTZFTtsI+cfHM2OObAOWt4zZpj1
+         4IRw==
+X-Gm-Message-State: AOJu0Yx3iGwGMER1abKKX+F+zx9qtA9bJ3GYEH2EdX9eRMI2LBEUdrqj
+	iuqxftWZ5ubDIz6xpR9ozNEYfwm5TaQJ8fGj0OPUezRZ9Z404R3zfUesXw/gaNEzLlVeGkQ2C0E
+	=
+X-Gm-Gg: ASbGncvl8z8xeolxgO6hbzjftknoq4tBdZ4rk6gJNJ5VYPX/Sx4c1E0qx4pjG8AFK2O
+	T0gvZkbe22dMKYK9uFtDlSzU0NNcUbAqttpvuCxlISnyBqwrg7bCV9ItiZPUt6qH6GKKmWaukGL
+	3p0sRDMRDN7AvzNQ/IVaSpq+mcJm1JjvC93MlR68USIZ1iOhU1wiXlhUto9w3qGqkv3ua9+JHRC
+	iYJK6HgzTDS3mkgKQcJHyuyEimX1Fn0/4Le3NOSTuR/2qpQ6kENkRdFZHPb6edsHFM8Z78jh9vE
+	PuNL0OiQFd99UiQkqFN98RPBYacdgLwBD84NCtxUOL7GaMQTJvw4ccn8SA2QrNHM
+X-Google-Smtp-Source: AGHT+IHRpF2Y4rSaoeAigNk8thDMcDVFicLgrLBulco7feZAPhW0ylGJqz0g1COizhlGoND4OWx8KA==
+X-Received: by 2002:a17:906:ee87:b0:ac2:9093:6856 with SMTP id a640c23a62f3a-acb42c51e78mr540521766b.54.1744878706173;
+        Thu, 17 Apr 2025 01:31:46 -0700 (PDT)
+Received: from rossla-pc.eng.citrite.net ([185.25.67.249])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef56de1sm10044770a12.21.2025.04.17.01.31.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 01:31:45 -0700 (PDT)
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au,
+	Ross Lagerwall <ross.lagerwall@citrix.com>
+Subject: [PATCH] x86_64: Use the x86-64 level for purgatory
+Date: Thu, 17 Apr 2025 09:31:40 +0100
+Message-ID: <20250417083140.697272-1-ross.lagerwall@citrix.com>
+X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 0/9] ima: kexec: measure events between kexec load and
- execute
-To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20250416021028.1403-1-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Hvd2G1TS c=1 sm=1 tr=0 ts=680054c8 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=VnNF1IyMAAAA:8 a=KXIcZCm0EDoHl9fo71cA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
-X-Proofpoint-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_09,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 bulkscore=0 clxscore=1015 impostorscore=0 mlxscore=0
- phishscore=0 priorityscore=1501 classifier=spam authscore=0 adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170006
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250416_180952_847367_C89B341C 
-X-CRM114-Status: GOOD (  13.23  )
+X-CRM114-CacheID: sfid-20250417_013148_747393_1BC50ECA 
+X-CRM114-Status: GOOD (  11.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,24 +91,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+The compiler may be configured by default to use a newer
+microarchitecture level such as x86-64-v3. Set purgatory to compile
+using the baseline x86-64 level since the environment isn't set up
+correctly to use SSE and AVX instructions.  At the same time, be a bit
+paranoid and add some additional flags to ensure that the compiler
+doesn't use any such instructions.
 
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+---
+ purgatory/arch/x86_64/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 4/15/25 10:10 PM, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
-> 
-> The current kernel behavior is IMA measurements snapshot is taken at
-> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
-> over to the new kernel after kexec 'execute'.
-> 
-> Currently, the kernel behavior during kexec load is to fetch the IMA
-> measurements log from TPM PCRs and store it in a buffer. When a kexec
-> reboot is triggered, this stored log buffer is carried over to the second
-> kernel. However, the time gap between kexec load and kexec reboot can be
-> very long. During this time window, new events extended into TPM PCRs miss
-> the chance to be carried over to the second kernel. This results in
-> mismatch between TPM PCR quotes and the actual IMA measurements list after
-> kexec soft reboot, which in turn results in remote attestation failure.
-
-Tested-by: Stefan Berger <stefanb@linux.ibm.com> # ppc64/kvm
+diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
+index b0e277a365b2..fd19229a2bf4 100644
+--- a/purgatory/arch/x86_64/Makefile
++++ b/purgatory/arch/x86_64/Makefile
+@@ -24,5 +24,5 @@ x86_64_PURGATORY_SRCS += purgatory/arch/i386/vga.c
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/pic.c
+ 
+ ifneq ($(SUBARCH),x32)
+-x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large
++x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large -march=x86-64 -mno-mmx -mno-sse -mno-sse2 -mno-avx
+ endif
+-- 
+2.49.0
 
 
