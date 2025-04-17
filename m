@@ -4,79 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6577EC369B1
-	for <kexec@archiver.kernel.org>; Wed, 16 Apr 2025 03:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31E24C369BD
+	for <kexec@archiver.kernel.org>; Thu, 17 Apr 2025 01:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DSUrpdlFst4zUoEQ0PmRqqZ4BUa3aoPhJxPxerV9mYM=; b=rzDTL/RAVlBx+MnV0h6dN3JGp2
-	MP/D7ixwEEtVPnd2o68JQKB3A6k3T6fJWAe7J/HZawZhtqBmu0Pyils4hvIwCxBhLBrayETKlmFU6
-	/+l3C5WCrcw+tnBcL6G9yZeCSkyGxLjtIqbSu0QSpvU3+W6iDYq6gHi1gujU1nLtZYUElSDMWxsuf
-	eoMnsGDv6gl1L6+W/0ZU9+lWDbF1Nj06PGJpJ9BhW3mEJxlm/CYvWL/xmS99kiO+SakbYINKyZw0e
-	7IaHutZSB2SXEROnr0cqvplTwxBKo1BkcegJiSrZ64Sn6c0bhqbANVtLNXpKVNiYuTaSAY8m9CkJo
-	nw2Lkr2Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ah/lLzBmfOIHy5wOwIFiZy+sp117fbDDGICRD88/xh8=; b=Ksshs5nQ5Sb2VSLebWsWD0X09U
+	4CG7AmMKNImZHCwa4TQ8TbNyJQVkG+udQzox0F2CaMJ1AurwXN5ipta9AnnnNxIq28aUTUuHZPCtR
+	bI+XuzSLs2ODOxc4tXebf5uruTVkQBvnPTA4G/4IXVqkalwZi2rXaxb597kL7o5yQx807/z+WAT29
+	PDfmZRwqDGVqK3ajCH3UPYnxCtGz1jexyMlHCT9ytc1you5QALWm1PD08n8nkZiImeaX/mS76JeX2
+	nboyrMONenyfJ6Bodtk5P6ngU6IQWzVtttkg4Tdvh2mLT/1OSdUo5R98yfx6y/qsBtjULr1/hEmHI
+	2nhh1caQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4tNX-000000082cz-3RdZ;
-	Wed, 16 Apr 2025 03:23:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1u5Dys-0000000BQd0-3yBJ;
+	Thu, 17 Apr 2025 01:23:54 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4tMe-000000082ZC-1Idf
+	id 1u5DlI-0000000BOno-3JGh
 	for kexec@lists.infradead.org;
-	Wed, 16 Apr 2025 03:23:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744773783;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSUrpdlFst4zUoEQ0PmRqqZ4BUa3aoPhJxPxerV9mYM=;
-	b=cGbuyvVkaYyZ26dt1gpY8Xkz9kekf4jGIL0Xo3xhXGJsPLp+EyvhOOKgjwAjQeNPbCpr6L
-	gIH7tRRhurpje4+1gAvvBuBXb3hC751QvzjyGQqG5jATvAOIxFJO9g/4ZmM5aVK87indgr
-	DPJtpa9Qa4CLlM0vFMQ8882OMQ9vVZU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-350-jZrM28liOaqoT1eK1lmHhg-1; Tue,
- 15 Apr 2025 23:22:59 -0400
-X-MC-Unique: jZrM28liOaqoT1eK1lmHhg-1
-X-Mimecast-MFC-AGG-ID: jZrM28liOaqoT1eK1lmHhg_1744773778
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 73A2E180035E;
-	Wed, 16 Apr 2025 03:22:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.38])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 084C4180176A;
-	Wed, 16 Apr 2025 03:22:56 +0000 (UTC)
-Date: Wed, 16 Apr 2025 11:22:52 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>, Coiby Xu <coxu@redhat.com>
-Cc: chenste@linux.microsoft.com, RuiRui Yang <ruyang@redhat.com>,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
-Message-ID: <Z/8ijFhIf1J6vbWM@MiWiFi-R3L-srv>
-References: <fv7h5jfb4r6d5j6jjpgyjbv75zyzqpy6tbqn3ahzuewghnvrgd@5yclg75kr3cq>
- <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
- <d14c72bbb377c6f8f0efdbf6d725c553b3ad741c.camel@linux.ibm.com>
- <h3bjnvtded2hgbhya6ugb62mnlmkjpmifa6w6wwutfd3jq326r@lzpoun5pksev>
- <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
- <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
- <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
- <02563b1e8b0000bedf94ded447a8372f21d4304a.camel@linux.ibm.com>
- <Z/Xero1B0OazLcHL@MiWiFi-R3L-srv>
- <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
+	Thu, 17 Apr 2025 01:09:57 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GLW826019008;
+	Thu, 17 Apr 2025 01:09:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ah/lLz
+	BmfOIHy5wOwIFiZy+sp117fbDDGICRD88/xh8=; b=n86RXRgper66X0nQGr/SIC
+	rYc7HochvI/iHrEML50CySpLEsaptWcfK7HSgDf7O8qS6C/zNnQPxwfo4pgb6+eX
+	AkQxleDMoK8rlIxBFadOqGo2jcEr4rie3dbIIax0MMF++ZMn6pd0zad6QNsvFpZx
+	/0fSVrfPEJLBVnApDjCByVBoqWCvNyqec4O5LUGn4DvyKYCUyG7xKmK24f0qfszi
+	hQAonjj02jIGh2uAOBqZQy5tHmE96XC2phK+ohnOB0X9wmvLcUwp4SoheHCcLnKg
+	2b1tARm921vHxIxNAf0JizkFpHIPUNgWVtNyCYPGmfBx29Pn784UoflR7LhTwiSQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462mhu0r9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 01:09:28 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GNSmTf010392;
+	Thu, 17 Apr 2025 01:09:27 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qkaym2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 01:09:27 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53H19QBm24380138
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 01:09:27 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 96C895805F;
+	Thu, 17 Apr 2025 01:09:26 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DADCF5805A;
+	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Apr 2025 01:09:24 +0000 (GMT)
+Message-ID: <4a2f7fde-99ee-4bcd-a97d-fe0db418fd5f@linux.ibm.com>
+Date: Wed, 16 Apr 2025 21:09:24 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 0/9] ima: kexec: measure events between kexec load and
+ execute
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250416021028.1403-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Hvd2G1TS c=1 sm=1 tr=0 ts=680054c8 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=VnNF1IyMAAAA:8 a=KXIcZCm0EDoHl9fo71cA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
+X-Proofpoint-GUID: j6fdTeznLc-rslj-Y7d3L1utxejtCVup
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_09,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 bulkscore=0 clxscore=1015 impostorscore=0 mlxscore=0
+ phishscore=0 priorityscore=1501 classifier=spam authscore=0 adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170006
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250415_202304_425975_138498A1 
-X-CRM114-Status: GOOD (  20.20  )
+X-CRM114-CacheID: sfid-20250416_180952_847367_C89B341C 
+X-CRM114-Status: GOOD (  13.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,54 +115,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04/09/25 at 11:40am, Mimi Zohar wrote:
-> On Wed, 2025-04-09 at 10:42 +0800, Baoquan He wrote:
-......snip.. 
-> > Thanks for confirming. I will consider how to fix it accordingly. Maybe
-> > after Steven's patches are merged. That would be great if the buffer
-> > allocating and storing can be skiped for kdump in Steven's patch. While
-> > I am worried that could disrupt the progress of Steven's patches.
-> 
-> Agreed, let's get Steven's patch set upstreamed and then make the kdump
-> exceptions.
-> 
-> - "ima: kexec: move IMA log copy from kexec load to execute" looks like it isn't
-> copying the IMA measurement list records (kexec_post_load), but the memory for
-> the IMA measurement list is being allocated (ima_alloc_kexec_file_buf).
-> 
-> - Do you really want to totally disable IMA for kdump or would disabling IMA-
-> measurement be sufficient?  Remember there's already an option to disable IMA-
-> appraisal.  Disabling just IMA-measurement would allow IMA-appraisal to continue
-> to work.  Meaning based on policy the integrity of files - executables, kernel
-> image, etc - could still be verified.
-> 
-> Without IMA-measurement:
-> - No adding records to the IMA measurement list
-> - No IMA measurement list pseudo securityfs files
-> - No extending the TPM
-> 
-> With IMA-appraisal:
-> - Integrity verification of files based on keys, keyrings
-> - Loading keys
 
-Currently, Kdump has no demand to do integrity verification based on
-keys, keyrings, except of Coiby's LUKS support in kdump:
 
-[PATCH v8 0/7] Support kdump with LUKS encryption by reusing LUKS volume keys
-https://lore.kernel.org/all/20250207080818.129165-1-coxu@redhat.com/T/#u
+On 4/15/25 10:10 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The current kernel behavior is IMA measurements snapshot is taken at
+> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
+> over to the new kernel after kexec 'execute'.
+> 
+> Currently, the kernel behavior during kexec load is to fetch the IMA
+> measurements log from TPM PCRs and store it in a buffer. When a kexec
+> reboot is triggered, this stored log buffer is carried over to the second
+> kernel. However, the time gap between kexec load and kexec reboot can be
+> very long. During this time window, new events extended into TPM PCRs miss
+> the chance to be carried over to the second kernel. This results in
+> mismatch between TPM PCR quotes and the actual IMA measurements list after
+> kexec soft reboot, which in turn results in remote attestation failure.
 
-I have talked to Coiby, he will do some investigations to see if loading
-keys related to IMA or IMA-appraisal functionality is related to LUKS
-support in kdump because the LUKS support in kdump also needs
-store/restore keys/keyrings between normal kernel and kdump kernel.
-
-> 
-> Obviously my preference would be to add support to disable IMA-measurement in a
-> kdump environment.
-> 
-> thanks,
-> 
-> Mimi
-> 
+Tested-by: Stefan Berger <stefanb@linux.ibm.com> # ppc64/kvm
 
 
