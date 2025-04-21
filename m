@@ -4,106 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2949C369AB
-	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 14:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 473E9C369D5
+	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 16:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FVXVAVBj9dt951RNAVxr15KnbP6+CzPRiqjlfAwfQ0U=; b=4dtiZNdwqvyZnG93pkrenIfHx7
-	Odu64G4rDGw1e4tU4/PiAK7ELUrePTClFNvbNBfeP5+iBB+O0kBWPMnVWc3zJkxBT8e7+EpaxgcI4
-	43XGB+fywqudTIKgzW9ow86ufs+QmbD9ZgENthnIc0eZG+NvFKMM5scftXY3/fI4vgxX3WRIexA0P
-	+U7G7Nc8BGiw4ryHiy3zvY00rLFNeyif+GbUC7gL/U3Fg/5udag3lpIwcVSvClgCIMNTFUQi1RXOk
-	4+UIC1aoW5NkJLt49XO7DKs/Zuu0plW5RFnpD6RylXx5ovWcjj4UzLcW4FvkpCairx4ROGlbn22R1
-	KdUBq3eg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=u5ey4vJDpRVzbTkE3cRhZJjYESgTxcv0pgJWtYVYxAw=; b=F4piyd3ZwEkGzH66gX9ChGTBlx
+	j2aGgfAvu0ImbS9hltZHhJPfCXLdrVZ1zSrp77VtPSXLa7iKpyefoQWqZnbMUqN7XcCihzNrxhN5u
+	/r3PB1EvORduOVlYgSNcnvrRor6/hh2n0RpLZY82jnngvkmZxCJxjNIm+7Y4WafRg1tVXY8TiLxyT
+	2V4z0fsHek4B64iqR1sIpCFGOGS55XOBzYimQhS0ztsf6k5vrnDz1NouepqE0zA5ZIKG0KOp3MIpq
+	EO/QoCrrAv1XrSCiTHcvB1PHNKvcpNR83pu3m+xu0IBbKoyonEQatT3ucHC775y1D8cr0lkd1ZjZH
+	reHAfCTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6ryy-00000004QuB-2Kzu;
-	Mon, 21 Apr 2025 14:18:48 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1u6u7Q-00000004h9S-3AJK;
+	Mon, 21 Apr 2025 16:35:40 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6ryw-00000004QtO-2ZLG
+	id 1u6u6J-00000004ghf-1evt
 	for kexec@lists.infradead.org;
-	Mon, 21 Apr 2025 14:18:47 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LA3wqL007572;
-	Mon, 21 Apr 2025 14:18:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FVXVAV
-	Bj9dt951RNAVxr15KnbP6+CzPRiqjlfAwfQ0U=; b=O80hEzTWZD+OojTOtaDHFb
-	kmnfSXPv7ucP6tFzwx5wt1hukvsPqkVjQH4F19oYqZBPsWJG7+lr9LzxzmZ/W22b
-	Jph91gyn4LfxFVoOFnp/h9fYYMVA7yNgs8hlN/usdM9mtYPzwTgaB133o0edN98e
-	CiKdPw4FA5xz6GoLtrbSo3dIHAc/18n9RfJDREM1PFFsZzKMNcNnFOQuy+JUuFNp
-	NQ/KR/vnCaK40smO2DUl9mkAgVdn5BRW+MkRKc41MxhiPJwsR9J7jpIxb6zFVKxu
-	uSCY2m/fbaBjKAakvfWPmMW2Tn69qTk09JOZYI1OxP0SP/7TXBJ7+M+rSA/puTEA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465kxj8ybc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 14:18:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAl6iR032526;
-	Mon, 21 Apr 2025 14:18:24 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464phyetsk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 14:18:24 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LEINNN17891846
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 14:18:24 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CEFF258063;
-	Mon, 21 Apr 2025 14:18:23 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 127A358059;
-	Mon, 21 Apr 2025 14:18:22 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.21.104])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 14:18:21 +0000 (GMT)
-Message-ID: <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
-Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap
- segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>, steven chen <chenste@linux.microsoft.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Mon, 21 Apr 2025 10:18:21 -0400
-In-Reply-To: <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
-	 <20250416021028.1403-4-chenste@linux.microsoft.com>
-	 <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
-	 <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	Mon, 21 Apr 2025 16:34:32 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCBUg2003424;
+	Mon, 21 Apr 2025 16:34:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=u5ey4
+	vJDpRVzbTkE3cRhZJjYESgTxcv0pgJWtYVYxAw=; b=ZTJUI5t2dsODxSUBSK5cS
+	ZuhRb5egJIQ5ll+Feko/qNU0cbcn1vStGvBm1Xp6FQhaeSIdRvcNk/1p0BZNOkEG
+	U19wyBZWvOskBYF+XTSz60NFE7GpCyUEAUatup2MjAcoRq2U9DL4mObfP4I4S/CR
+	0i8r8jDfZF0bD6mSr6AJ9AJbyq0L6qJCDVQFdxHTYIvjIsqARx8rKgDC6iXOcszV
+	rkKlDTGjjCFvZW/8Skk9CwrheUKoo+n9P8V0kHYdvIXb8ADRnGTKNJhpROcJLgzX
+	l0XNfvflN4mcChcY/T2voytATAH9jstdjIuKsRwhOVlNmUq7sQGMWMRkj+K0APuu
+	g==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4643esaut3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 16:34:03 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LEpafZ033565;
+	Mon, 21 Apr 2025 16:34:02 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4642987wc0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 21 Apr 2025 16:34:02 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53LGY1TO008937;
+	Mon, 21 Apr 2025 16:34:01 GMT
+Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4642987w8p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 21 Apr 2025 16:34:01 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v14 02/19] x86: Secure Launch Kconfig
+Date: Mon, 21 Apr 2025 09:26:55 -0700
+Message-Id: <20250421162712.77452-3-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250421162712.77452-1-ross.philipson@oracle.com>
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cikbJN6PF9hmHh0Nsj6AtPTZQGoZiaoI
-X-Proofpoint-ORIG-GUID: cikbJN6PF9hmHh0Nsj6AtPTZQGoZiaoI
-X-Authority-Analysis: v=2.4 cv=HLDDFptv c=1 sm=1 tr=0 ts=680653b2 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=bLk-5xynAAAA:8 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8
- a=As6bdjLyCJmV0PnI7e4A:9 a=QEXdDO2ut3YA:10 a=zSyb8xVVt2t83sZkrLMb:22 a=BpimnaHY1jUKGyF_4-AF:22
+Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210109
+ definitions=2025-04-21_08,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504210129
+X-Proofpoint-GUID: Pe-prZAdrlSpyQgpaMrDGjoriyVuV4Tx
+X-Proofpoint-ORIG-GUID: Pe-prZAdrlSpyQgpaMrDGjoriyVuV4Tx
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250421_071846_658089_C6C02CD2 
-X-CRM114-Status: GOOD (  20.81  )
+X-CRM114-CacheID: sfid-20250421_093431_552229_BF3BDE1F 
+X-CRM114-Status: UNSURE (   9.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,72 +108,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
-> On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
-> > On 04/15/25 at 07:10pm, steven chen wrote:
-> > > From: Steven Chen <chenste@linux.microsoft.com>
-> >  ^^^^^^
->=20
-> As James Bottomley previously explained[1], if you haven't made any chang=
-es to
-> Tushar's patch, then the very first line of the patch description would b=
-e
-> "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a blan=
-k line.
-> If there is a minor change, you would add "<your email address>: explanat=
-ion".
-> For example:
->=20
-> Steven Chen <chenste@linux.microsoft.com>: modified patch description
+Initial bits to bring in Secure Launch functionality. Add Kconfig
+options for compiling in/out the Secure Launch code.
 
-To clarify: This line would be included below with your Signed-off-by tag.
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
->=20
-> [1]
-> https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81.cam=
-el@HansenPartnership.com/
->=20
-> > >=20
-> > > Implement kimage_map_segment() to enable IMA to map the measurement l=
-og=20
-> > > list to the kimage structure during the kexec 'load' stage. This func=
-tion
-> > > gathers the source pages within the specified address range, and maps=
- them
-> > > to a contiguous virtual address range.
-> > >=20
-> > > This is a preparation for later usage.
-> > >=20
-> > > Implement kimage_unmap_segment() for unmapping segments using vunmap(=
-).
-> > >=20
-> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >   ^^^^^^
->=20
-> Neither "Author:" nor "From:" belong here.  Please remove.
->=20
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >   ^^^^^^^
->=20
-> Having Tushar's "Signed-off-by" tag and yours below indicate that you mod=
-ified
-> the original author's patch.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4b9f378e05f6..badde1e9742e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2001,6 +2001,17 @@ config EFI_RUNTIME_MAP
+ 
+ 	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
+ 
++config SECURE_LAUNCH
++	bool "Secure Launch support"
++	depends on X86_64 && X86_X2APIC && TCG_TIS && TCG_CRB && CRYPTO_LIB_SHA1 && CRYPTO_LIB_SHA256
++	help
++	   The Secure Launch feature allows a kernel to be loaded
++	   directly through an Intel TXT measured launch. Intel TXT
++	   establishes a Dynamic Root of Trust for Measurement (DRTM)
++	   where the CPU measures the kernel image. This feature then
++	   continues the measurement chain over kernel configuration
++	   information and init images.
++
+ source "kernel/Kconfig.hz"
+ 
+ config ARCH_SUPPORTS_KEXEC
+-- 
+2.39.3
 
-To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below indi=
-cate
-that you modified the original author's patch.
-
->=20
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: Baoquan He <bhe@redhat.com>=20
-> > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > Cc: Dave Young <dyoung@redhat.com>
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> >   ^^^^^
-> >=20
-> > The signing on this patch is a little confusing. I can't see who is the
-> > real author, who is the co-author, between you and Tushar. You may need
-> > to refer to Documentation/process/5.Posting.rst to make that clear.
-> >=20
-> > > Acked-by: Baoquan He <bhe@redhat.com>
 
