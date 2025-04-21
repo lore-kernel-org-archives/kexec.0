@@ -4,78 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26115C369D3
-	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 21:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9554CC369D5
+	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 21:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3QegChI5VmQxyAbe7RGBdtzGP8b1Xp50OSRQDsR75Vs=; b=OLeuYv1MYS/uipwwxNLf62N5aU
-	4fbH246DujenwlGvrmQC8diS0EUTtH/CflMfrsekT+BecKuJCkl9DMZYAz0lkWHHoMhf/pavprvJP
-	pdawtMNZt1P/1Xfk0NeRlVG/gSeRQbvOg+YbH4ovm2cYFqA+KNPyoybF2pNy7rvBjaYK/FchyQ6zO
-	YfQYMEoAOzKjOHTjnOjcq3quQaOPJhRDbB+tjrnA5adDoDBFWuCovAWSCfRpqh4wraw9XHzEcH8ho
-	ZXboimAgk5qLNby9h3vxIRcROCggRHRmt6R2oifWp29fYiYVHFhlIRK/PDo8ZU78mjENTsTbotxID
-	j90IeTpA==;
+	bh=I8hwgSKySN4oDCnUgrZWJ6YPpS5dJqH5If6DsGLP0L0=; b=XH52sO2j29hBdKFakE3FaDAAYp
+	wV5ySGt3VYAGWe7tqaALdrvwej9Ns8GeIdvFwtg/npJ8UumEdBRMN7rMMMq5ItRVCHrHDmvH6T3zJ
+	I7ABek5bCL9Ci6SUAbaik3ODjAQiFOE3cjkiGWceJ3fkVZRNP+hJUIaHrmw5Sox7aJbk4pe6hZkI8
+	yfIEPPw+1kErJU7Pi+/JZ3tXxODxR0wBLjnKOP4B8hMluxEzACTE2OYoJzbaUmDxWHOJUfGpVKz7B
+	Jwx4zIOm9DIwBg9CbhZA8WzHl9asF3tePh5+NbO3WixR8IgGCy/6mx+uya3oPRODedco5f8f9OAjz
+	weQnPrSw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6yde-00000005Aui-0q0P;
-	Mon, 21 Apr 2025 21:25:14 +0000
-Received: from mail.alien8.de ([65.109.113.108])
+	id 1u6yrd-00000005CM9-3b1l;
+	Mon, 21 Apr 2025 21:39:41 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6ybo-00000005AiL-3uSO
+	id 1u6ynf-00000005BrN-2U3Y
 	for kexec@lists.infradead.org;
-	Mon, 21 Apr 2025 21:23:22 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 61E4340E0173;
-	Mon, 21 Apr 2025 21:23:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kxbgOAo3Tz2X; Mon, 21 Apr 2025 21:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745270580; bh=3QegChI5VmQxyAbe7RGBdtzGP8b1Xp50OSRQDsR75Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OChlXyXS+nYdWunaV00LIgwgVb8U8MPJhVDf9UkoZ+cF7ZWd4v/T5xxJocZ93KUCe
-	 /FFryUHXiyGUxV/rcKkLhvN5TOhBwGu+yFfYTZfPKP7ScC+fUxLUg2SZ6aZIJkdJ1P
-	 T+P/EJHX1Q+FWQvoTmoczENMcc+j+pE0LJRiajmE3skNn+5LssvNiFqyJGgQiO6kUA
-	 VXWXtSEBz1fNlSQAdBnuiLqVJLmTNRYj4xNiYldkQYEK5EFGlHvSmenghl2fBwQKSr
-	 J0pvFzya1at0orsXSFs0dqing3uuAEqVSrhwmYVXCzgG5iRWUn3DvyHN7y/Ww9M0g1
-	 OloaHjNh8JbjdPHLJZQ/4mX/u0IfbLbTtJdQgGJK9AsujRM630n+CbNdRt3IoXWWmI
-	 IyzjAlvJxdVpPBLOYhd5kfwBWH63RVaHeTFId+vAXLo4eN1RpG9QRNmP4szpO6cfjT
-	 arejvAm/G8qF8J4A40Fws6kDzdK/zAhCy1nldoNjUZHCqZJhw5LU80mIO0RH54GWfW
-	 CdMs3TB8i++LlWsKU8H1vU1lj1xXMLQ6j2gJMKKWwsyJz7qSYwrht/4LtA130Atufb
-	 VkFkE28/N/DAfnbNViNTeRFmOrL382hmPGRIkVA+6clC9v7vvYSVMtJS/aQsnOl64X
-	 2NIXmb1/rR5hYCISMWE/WxnU=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id A6C6140E016E;
-	Mon, 21 Apr 2025 21:22:41 +0000 (UTC)
-Date: Mon, 21 Apr 2025 23:23:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
-	kees@kernel.org, michael.roth@amd.com, nikunj@amd.com,
-	seanjc@google.com, ardb@kernel.org, gustavoars@kernel.org,
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH] x86/sev: Fix SNP guest kdump hang/softlockup/panic
-Message-ID: <20250421212341.GBaAa3XbwU138aY-__@renoirsky.local>
-References: <20250421204453.318557-1-Ashish.Kalra@amd.com>
+	Mon, 21 Apr 2025 21:35:37 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LL3UF5012850;
+	Mon, 21 Apr 2025 21:35:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=I8hwgS
+	KySN4oDCnUgrZWJ6YPpS5dJqH5If6DsGLP0L0=; b=BBOZfSr3n0F1o3Taj88rDU
+	WUyPRAqj9kD8PDsMsxc0n380+3b4Ed95HJTASegikhJDyGg83VVzG4KccbhJD+/e
+	rRi5i4bB8U6N4PoqHpcbpUtUAy5k5VImNTT4jfAvXuq4RR/rvOQf4O395k4WAXJc
+	nHGylVKOGctUS9ktx+XLWTp5QtHhSObLF+ONCYazP0xV4TD00+n0B6sDgqdApqhU
+	TW8Il8IL/1bWbM2eRZUOlcF4FVf2GAAV9gCuv2goNKz/zK13ZfQ144ka9rE8jVSX
+	Dd2MiNG9tdxExbZZ2Y8FFYXuSEwhe8nUO3yHM91WnLN4Bd3BoGg1eowDFTjz8dzg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465wkkg2yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 21:35:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LJsn51032537;
+	Mon, 21 Apr 2025 21:35:14 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464phyg708-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 21:35:14 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LLZEnR32047824
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 21:35:14 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E6DE45803F;
+	Mon, 21 Apr 2025 21:35:13 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2312158055;
+	Mon, 21 Apr 2025 21:35:12 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.51.165])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Apr 2025 21:35:12 +0000 (GMT)
+Message-ID: <6c3aca6815edf25828bad6f0b4587a040ada03c5.camel@linux.ibm.com>
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap
+ segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Mon, 21 Apr 2025 17:35:11 -0400
+In-Reply-To: <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+	 <20250416021028.1403-4-chenste@linux.microsoft.com>
+	 <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+	 <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
+	 <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
+	 <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250421204453.318557-1-Ashish.Kalra@amd.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=DekXqutW c=1 sm=1 tr=0 ts=6806ba13 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=bLk-5xynAAAA:8 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8
+ a=Scrp5zbnQvEsE254UrAA:9 a=QEXdDO2ut3YA:10 a=zSyb8xVVt2t83sZkrLMb:22 a=BpimnaHY1jUKGyF_4-AF:22
+X-Proofpoint-ORIG-GUID: KnR4bJ9sLsQhWnMkD4xIv9UvzuVn2yjL
+X-Proofpoint-GUID: KnR4bJ9sLsQhWnMkD4xIv9UvzuVn2yjL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_10,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210169
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250421_142321_124785_7C9A2886 
-X-CRM114-Status: GOOD (  38.40  )
+X-CRM114-CacheID: sfid-20250421_143535_644481_8182B854 
+X-CRM114-Status: GOOD (  27.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,183 +120,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Apr 21, 2025 at 08:44:53PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> [  117.111097] watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [cp:318]
-> [  117.111115] Modules linked in:
-> [  117.111120] irq event stamp: 3066414
-> [  117.111122] hardirqs last  enabled at (3066413): [<ffffffffa04878d9>] irqentry_exit+0x39/0x90
-> [  117.111142] hardirqs last disabled at (3066414): [<ffffffffa0485c15>] sysvec_apic_timer_interrupt+0x15/0xb0
-> [  117.111146] softirqs last  enabled at (3066364): [<ffffffff9f245852>] __irq_exit_rcu+0xb2/0xe0
-> [  117.111157] softirqs last disabled at (3066355): [<ffffffff9f245852>] __irq_exit_rcu+0xb2/0xe0
-> [  117.111165] CPU: 0 UID: 0 PID: 318 Comm: cp Not tainted 6.14.0-next-20250328-snp-host-f2a41ff576cc-dirty #414 VOLUNTARY
-> [  117.111171] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [  117.111176] RIP: 0010:rep_movs_alternative+0x5b/0x70
-> [  117.111182] Code: 8b 06 48 89 07 48 83 c6 08 48 83 c7 08 83 e9 08 74 db 83 f9 08 73 e8 eb c5 eb 05 e9 2f 21 02 00 48 89 c8 48 c1 e9 03 83 e0 07 <f3> 48 a5 89 c1 85 c9 75 ab e9 17 21 02 00 48 8d 0c c8 eb a0 90 90
-> [  117.111184] RSP: 0018:ffffc061c16c7b50 EFLAGS: 00040246
-> [  117.111187] RAX: 0000000000000000 RBX: 0000000000001000 RCX: 0000000000000200
-> [  117.111188] RDX: 0000000000018000 RSI: ffffc061c3f53000 RDI: 00007f27a86a5000
-> [  117.111189] RBP: ffffc061c16c7be8 R08: 00007f27a86a6000 R09: 00000000ffffffff
-> [  117.111190] R10: 0000000000000001 R11: 0000000000000001 R12: ffffc061c16c7d30
-> [  117.111191] R13: ffffc061c3f53000 R14: 0000000000000000 R15: ffffc061c3f53000
-> [  117.111193] FS:  00007f27a86ae800(0000) GS:ffff9d420cf0d000(0000) knlGS:0000000000000000
-> [  117.111195] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  117.111196] CR2: 00007fd1278a3000 CR3: 0008000053e58000 CR4: 00000000003506f0
-> [  117.111200] Call Trace:
-> [  117.111204]  <TASK>
-> [  117.111206]  ? _copy_to_iter+0xc1/0x720
-> [  117.111216]  ? srso_return_thunk+0x5/0x5f
-> [  117.111220]  ? _raw_spin_unlock+0x27/0x40
-> [  117.111234]  ? srso_return_thunk+0x5/0x5f
-> [  117.111236]  ? find_vmap_area+0xd6/0xf0
-> [  117.111251]  ? srso_return_thunk+0x5/0x5f
-> [  117.111253]  ? __check_object_size+0x18d/0x2e0
-> [  117.111268]  __copy_oldmem_page.part.0+0x64/0xa0
-> [  117.111281]  copy_oldmem_page_encrypted+0x1d/0x30
-> [  117.111285]  read_from_oldmem.part.0+0xf4/0x200
-> [  117.111306]  read_vmcore+0x206/0x3c0
-> [  117.111309]  ? srso_return_thunk+0x5/0x5f
-> [  117.111325]  proc_reg_read_iter+0x59/0x90
-> [  117.111334]  vfs_read+0x26e/0x350
-> [  117.111362]  ksys_read+0x73/0xf0
-> [  117.111373]  __x64_sys_read+0x1d/0x30
-> [  117.111377]  x64_sys_call+0x1b90/0x2150
-> [  117.111386]  do_syscall_64+0x8b/0x140
-> [  117.111454] RIP: 0033:0x7f27a7510031
-> [  117.111462] Code: fe ff ff 48 8d 3d cf 9b 0a 00 48 83 ec 08 e8 56 4b 02 00 66 0f 1f 44 00 00 48 8d 05 b1 09 2e 00 8b 00 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f 1f 44 00 00 41 54 55 49 89 d4 53
-> [  117.111464] RSP: 002b:00007fff8f2d31c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> [  117.111466] RAX: ffffffffffffffda RBX: 0000000000001000 RCX: 00007f27a7510031
-> [  117.111467] RDX: 0000000000020000 RSI: 00007f27a868d000 RDI: 0000000000000003
-> [  117.111468] RBP: 0000000000000000 R08: 0000000000006000 R09: 0000000000000000
-> [  117.111469] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000000
-> [  117.111470] R13: 0000000000000000 R14: 00007f27a86ad000 R15: 0000000000000000
-> [  117.111499]  </TASK>
-> [  117.111502] Kernel panic - not syncing: softlockup: hung tasks
-> [  117.164421] CPU: 0 UID: 0 PID: 318 Comm: cp Tainted: G             L      6.14.0-next-20250328-snp-host-f2a41ff576cc-dirty #414 VOLUNTARY
-> [  117.166326] Tainted: [L]=SOFTLOCKUP
-> [  117.166878] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [  117.168116] Call Trace:
-> [  117.168514]  <IRQ>
-> [  117.168862]  dump_stack_lvl+0x2b/0xf0
-> [  117.169530]  dump_stack+0x14/0x20
-> [  117.170068]  panic+0x3a8/0x410
-> [  117.170592]  watchdog_timer_fn+0x293/0x300
-> [  117.171229]  ? __pfx_watchdog_timer_fn+0x10/0x10
-> [  117.171961]  __hrtimer_run_queues+0x1c7/0x3d0
-> [  117.172603]  hrtimer_interrupt+0x126/0x290
-> [  117.173261]  __sysvec_apic_timer_interrupt+0x72/0x1c0
-> [  117.174118]  sysvec_apic_timer_interrupt+0x80/0xb0
+On Mon, 2025-04-21 at 13:40 -0700, steven chen wrote:
+> On 4/21/2025 7:18 AM, Mimi Zohar wrote:
+> > On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
+> > > On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
+> > > > On 04/15/25 at 07:10pm, steven chen wrote:
+> > > > > From: Steven Chen <chenste@linux.microsoft.com>
+> > > >   ^^^^^^
+> > > As James Bottomley previously explained[1], if you haven't made any c=
+hanges to
+> > > Tushar's patch, then the very first line of the patch description wou=
+ld be
+> > > "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a =
+blank line.
+> > > If there is a minor change, you would add "<your email address>: expl=
+anation".
+> > > For example:
+> > >=20
+> > > Steven Chen <chenste@linux.microsoft.com>: modified patch description
+> > To clarify: This line would be included below with your Signed-off-by t=
+ag.
+> >=20
+> > > [1]
+> > > https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81=
+.camel@HansenPartnership.com/
+> > >=20
+> > > > > Implement kimage_map_segment() to enable IMA to map the measureme=
+nt log
+> > > > > list to the kimage structure during the kexec 'load' stage. This =
+function
+> > > > > gathers the source pages within the specified address range, and =
+maps them
+> > > > > to a contiguous virtual address range.
+> > > > >=20
+> > > > > This is a preparation for later usage.
+> > > > >=20
+> > > > > Implement kimage_unmap_segment() for unmapping segments using vun=
+map().
+> > > > >=20
+> > > > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > >    ^^^^^^
+> > > Neither "Author:" nor "From:" belong here.  Please remove.
+> > >=20
+> > > > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > >    ^^^^^^^
+> > > Having Tushar's "Signed-off-by" tag and yours below indicate that you=
+ modified
+> > > the original author's patch.
+> > To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below =
+indicate
+> > that you modified the original author's patch.
+>=20
+> Hi Mimi,
+>=20
+> I will update it in next version.
 
-Why is that untrimmed splat even here?
+Sigh, after reviewing your discussion with Baoquan, I'm not sure whether my
+comment this morning added more confusion.
 
-What is that supposed to say?
+Option 1: Include a single "From:" line at the very top to change the autho=
+r
+from yourself to someone else.  The following from line would make Tushar t=
+he
+patch author:  From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 
-> Kdump while doing vmcore generation will be walking through all the
-> guest pages and copying them to userspace, while walking through
-> these guest pages it dumps/reads the guest VMSA pages which are
-> marked in-use/busy (if the vCPU associated with that VMSA is
-> running then that VMSA page is marked in-use/busy in the RMP table)
-> and touching these in-use pages causes unrecoverable #NPF/RMP faults
-> which causes the guest to hang/softlockup/panic.
+In addition, any minor changes you made should be added before your Signed-=
+off-
+by tag.  For example: Steven Chen <chenste@linux.microsoft.com>: modified p=
+atch
+description
 
-This paragraph is one single sentence! I think you're the only one who
-understands it.
+Option 2: As mentioned previously and now discussed with Baoquan, adding "C=
+o-
+developed-by:"
 
-> If kdump kernel is running on BSP, then BSP's VMSA itself cannot
-> cause any issues, but other APs may be halted in guest, hence
-> they are still in VMRUN state and their VMSAs are busy/in-use
-> and touching those VMSAs will cause the #NPF.
-> 
-> The issue is that either the AP running the kdump kernel has a
-> conflict with it's VMSA page and additionally other APs halted
-> in guest mode have a conflict with their VMSA pages.
-> 
-> Note that even if kdump kernel is running with one vCPU, other APs
-> can still be halted in guest mode and they are in VMRUN state and
-> their VMSAs are busy and will cause #NPF when they are being
-> dumped during kdump.
-> 
-> Therefore, issue AP_DESTROY GHCB calls on all APs (to ensure they
-> are kicked out of guest mode) and then the VMSA bit is cleared on
-> their VMSA page. Additionally if the vCPU running kdump is an AP,
-> then it's VMSA bit can't be cleared (and that AP can't be shutdown
-> or destroyed as it is running kdump) so it's VMSA page is made offline
-> to ensure that makedumpfile excludes that page while dumping guest
-> memory. If the vCPU running kdump is a BSP then nothing else needs
-> to be done as far as BSP's VMSA is concerned.
-> 
-> This fix is for kdump when using makedumpfile command/utility to
-> generate vmcore.
-> 
-> For kexec, additional fix is required to mark the VMSA page of
-> currently running vCPU as reserved during kexec boot and that fix
-> will be depending on KHO/kstate patch-series which add the ability
-> to preserve memory pages across kexec.
+>=20
+> Just wandering are you done reviewing or still need more time?
 
-All that text is missing restraint, proper structure and makes me go:
-what is that thing even trying to fix?
+Yes, I just finished reviewing/testing.  The patch descriptions are looking=
+ much
+better.  As Baoquan reminded you, please remember to update the "ima: defin=
+e and
+call ima_alloc_kexec_file_buf()" patch description.
 
-How about you read this here first:
+thanks,
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+Mimi
 
-perhaps even use an AI to help you with the formulations and then send
-a version which is actually parseable by other humans?
-
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-
-I'd like to read in the next commit message why are you fixing your own
-patch and why isn't this one CC:stable?
-
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 105 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 105 insertions(+)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index dcfaa698d6cf..2c27d4b3985c 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -110,9 +110,12 @@ struct svsm_ca boot_svsm_ca_page __aligned(PAGE_SIZE);
->  
->  DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
->  DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
-> +DEFINE_PER_CPU(int, sev_vcpu_apic_id);
-
-Why? What for?
-
->  DEFINE_PER_CPU(struct svsm_ca *, svsm_caa);
->  DEFINE_PER_CPU(u64, svsm_caa_pa);
->  
-> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id);
-> +
->  static __always_inline bool on_vc_stack(struct pt_regs *regs)
->  {
->  	unsigned long sp = regs->sp;
-> @@ -973,6 +976,104 @@ void snp_kexec_begin(void)
->  		pr_warn("Failed to stop shared<->private conversions\n");
->  }
->  
-> +/*
-> + * kexec/kdump should be shutting down all APs except the one handling
-> + * kexec/kdump and clearing the VMSA tag on those AP's VMSA pages as they
-> + * are not being used as a VMSA page anymore, so that a random page in
-> + * the kexec'ed guest which remains a VMSA page cannot cause unrecoverable
-> + * RMP faults, kdump will anyway reboot afterwards while kexec will set new
-> + * VMSA pages for all the APs to come up. Kdump while doing vmcore generation
-> + * and page walking can cause unrecoverable #NPF/RMP faults when walking guest
-> + * memory for dumping when it touches the VMSA page of the currently running
-> + * vCPU while kexec can randomly use this pages when it is re-allocated after
-> + * kexec via the page-allocator.
-
-More gibberish text.
-
-I give up - this is a mess.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>=20
+> > > > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > > > Cc: Baoquan He <bhe@redhat.com>
+> > > > > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > > > > Cc: Dave Young <dyoung@redhat.com>
+> > > > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> > > >    ^^^^^
+> > > >=20
+> > > > The signing on this patch is a little confusing. I can't see who is=
+ the
+> > > > real author, who is the co-author, between you and Tushar. You may =
+need
+> > > > to refer to Documentation/process/5.Posting.rst to make that clear.
+> > > >=20
+> > > > > Acked-by: Baoquan He <bhe@redhat.com>
 
