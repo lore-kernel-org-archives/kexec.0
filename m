@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87863C369AB
-	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48B7CC369AB
+	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 16:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QtATiJ3ap4ihta4UCEGQfu74R6SmTiDRBNn1rLL5vXk=; b=c5HMgICBORAEBFMIZ7dOhQfrVI
-	zBavBEpPVQVZL2lAmzXS4Bq/ukDawNA9g8+DgxBOp/GBzfspS0mflTMXz/XNXD1UbyMUapb1OiO1N
-	CQsWpEv6nRrk9kPMYglIeQZcYoRq5wNkkOWie/Iz1GhDVZQOaAZjfsrzOUk2t6qcSONZxke2C6K15
-	7KSzYBNCgNnzdPiR+o3bFQ2CFF1y4z9tp/TL4dC7yerICSo9SO+Sn6xsZCrhnEzEkkg0bRvPqtKxe
-	NFDLt4uZiiIe+F/QiVt6fNehZ/ViSzXF54q8JdZ0TyvxGI1PyQeTFFsMBej8K7k/8MToimr6ARj7p
-	7agwae2g==;
+	bh=HGOB0rIsdQtfCrCqphCravAWJ/cte9DutwXo5krlzWk=; b=Hni6AQOydPIotXPoYCX2W6p51F
+	2qh3Q0ZyQz/h9bpUiP3wJdH+FsvVxFbsE9sSYApqhwvnviiMN9kZiBR7MS8bd9ustWXej7b8DWymW
+	BhRb8fA82SFgfXZlf+lFgkt+Uk68Wu/ZqsNc13eKGvLWfGcApFj1cn9kTREp3K/p8cNEE1ISMYZBG
+	qgs4pm8Y9GN1mQBdqiuBdW6mugQQnoYJ+/lyFY42ufeFsncouy7Otr7FGZz6M9SkBdaZk5HiMgDDV
+	7u+6iOc0e3aPLlqhTeYIcW0LleGYefy1SDYe0sn2G7M6RBNC8R0njU1IyKgk/h8PrkO2m+Gup3Fy9
+	SBiVbRDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6u7r-00000004hgi-19lm;
-	Mon, 21 Apr 2025 16:36:07 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1u6u7y-00000004ho8-4AFu;
+	Mon, 21 Apr 2025 16:36:14 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6u7o-00000004hcl-1FkF
+	id 1u6u7w-00000004hlm-1BLT
 	for kexec@lists.infradead.org;
-	Mon, 21 Apr 2025 16:36:05 +0000
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCAmxM015791;
-	Mon, 21 Apr 2025 16:35:44 GMT
+	Mon, 21 Apr 2025 16:36:13 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCAjlh016592;
+	Mon, 21 Apr 2025 16:35:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=QtATi
-	J3ap4ihta4UCEGQfu74R6SmTiDRBNn1rLL5vXk=; b=IfvjvsL62BX+DNMov1WX5
-	6d2/+SJyWzQTOZnMrzggHig5Zn78PBNZnrFhsR34ITAlFgP4fGJYJLeJw1qfluvC
-	RQDRqLAfj9XF56guSGAyTXZLY/Yd8fGZNNgK7dfjAkXlVCfnJU+RTlPez+n42TM0
-	flPe2z74m2wiHs9TOwfnEFZFQWka9BIeJYk1JYHXfODG2FW8vywQp+XRrj+e0MTS
-	oMwjo12Xp6Drrk0+Ihlt3BzrcA+UabrkKrsIt/Tj1CQzBt+bhlHyh2W5e+y96RP0
-	2tEpcJBXBA6bhmq+avF9ll5uZLrRZVi+RqrVAtd/kM/VuBA8yOayGpyoDFeZmq0D
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=HGOB0
+	rIsdQtfCrCqphCravAWJ/cte9DutwXo5krlzWk=; b=OxgpVQuvheZxDjxrYrxa9
+	Eq4hx9SUSpt1pXkJKs3l6JFFhfA7jMBVED6Gc0WRLxa+4HzmndQoq/OOSRtvsElh
+	3aQ7e1Yj1I3K2XxXGH55moEfMJnqZ/ExG2Fklw3zrfRlK8SyVl9YovVHl4my9TOn
+	3A+6QgwX+6lf1yqUTioj/2S3rhZNKQZfflhQfXfG8dTMyn6HaKPacPLb8+F7UeoH
+	Ja85F+jsj+Gjn2R4jU2+swsZy5AoDwT155Sm4NGHJ71DNgDWNd+32pMZahXpxtmC
+	YB38vrwFhkVJWeTIlXN4kdSBJO8yqp4mLeBRgaIsitdM4ZUJj1DRW7DjbcTMjnNf
 	Q==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4642e0av91-1
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4643vc2v1d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 16:35:44 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LG9A7b010130;
-	Mon, 21 Apr 2025 16:35:43 GMT
+	Mon, 21 Apr 2025 16:35:51 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LF1gfN005974;
+	Mon, 21 Apr 2025 16:35:50 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 464298rgx8-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 465dehem92-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 21 Apr 2025 16:35:43 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53LGZggK039912;
-	Mon, 21 Apr 2025 16:35:42 GMT
+	Mon, 21 Apr 2025 16:35:50 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53LGZn5t000373;
+	Mon, 21 Apr 2025 16:35:49 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 464298rgu2-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 465dehem7w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 21 Apr 2025 16:35:42 +0000
+	Mon, 21 Apr 2025 16:35:49 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v14 13/19] x86/reboot: Secure Launch SEXIT support on reboot paths
-Date: Mon, 21 Apr 2025 09:27:06 -0700
-Message-Id: <20250421162712.77452-14-ross.philipson@oracle.com>
+Subject: [PATCH v14 14/19] tpm, tpm_tis: Close all localities
+Date: Mon, 21 Apr 2025 09:27:07 -0700
+Message-Id: <20250421162712.77452-15-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250421162712.77452-1-ross.philipson@oracle.com>
 References: <20250421162712.77452-1-ross.philipson@oracle.com>
@@ -84,15 +84,15 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-21_08,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 phishscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2504210129
-X-Proofpoint-GUID: nnkV9Jg6O3HzxvASrG6Gag_PJ9GS15Qo
-X-Proofpoint-ORIG-GUID: nnkV9Jg6O3HzxvASrG6Gag_PJ9GS15Qo
+X-Proofpoint-GUID: 440mRjb4DP80zgrY_WbrzP4irAK28GX2
+X-Proofpoint-ORIG-GUID: 440mRjb4DP80zgrY_WbrzP4irAK28GX2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250421_093604_357102_F9A6F3EA 
-X-CRM114-Status: GOOD (  14.03  )
+X-CRM114-CacheID: sfid-20250421_093612_436424_392201BA 
+X-CRM114-Status: GOOD (  16.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,70 +107,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the MLE kernel is being powered off, rebooted or halted,
-then SEXIT must be called. Note that the SEXIT GETSEC leaf
-can only be called after a machine_shutdown() has been done on
-these paths. The machine_shutdown() is not called on a few paths
-like when poweroff action does not have a poweroff callback (into
-ACPI code) or when an emergency reset is done. In these cases,
-just the TXT registers are finalized but SEXIT is skipped.
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
+There are environments, for example, those that comply with the TCG D-RTM
+specification that requires the TPM to be left in locality 2. Prepare
+kernel for such environments by closing all the localities.
+
+Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- arch/x86/kernel/reboot.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/char/tpm/tpm_tis_core.c | 11 ++++++++++-
+ include/linux/tpm.h             |  6 ++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 964f6b0a3d68..9069415e0788 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
- #include <linux/kexec.h>
-+#include <linux/slaunch.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -778,6 +779,7 @@ static void native_machine_restart(char *__unused)
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index ed0d3d8449b3..d73b9ef3fd15 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -1111,7 +1111,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+ 	u32 intmask;
+ 	u32 clkrun_val;
+ 	u8 rid;
+-	int rc, probe;
++	int rc, probe, i;
+ 	struct tpm_chip *chip;
  
- 	if (!reboot_force)
- 		machine_shutdown();
-+	slaunch_finalize(!reboot_force);
- 	__machine_emergency_restart(0);
- }
- 
-@@ -788,6 +790,9 @@ static void native_machine_halt(void)
- 
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- 
-+	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-+	slaunch_finalize(1);
-+
- 	stop_this_cpu(NULL);
- }
- 
-@@ -796,8 +801,12 @@ static void native_machine_power_off(void)
- 	if (kernel_can_power_off()) {
- 		if (!reboot_force)
- 			machine_shutdown();
-+		slaunch_finalize(!reboot_force);
- 		do_kernel_power_off();
-+	} else {
-+		slaunch_finalize(0);
+ 	chip = tpmm_chip_alloc(dev, &tpm_tis);
+@@ -1176,6 +1176,15 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+ 		goto out_err;
  	}
+ 
++	/*
++	 * In order to comply with the TCG D-RTM specification, relinquish all
++	 * the localities.
++	 */
++	for (i = 0; i <= TPM_MAX_LOCALITY; i++) {
++		if (check_locality(chip, i))
++			tpm_tis_relinquish_locality(chip, i);
++	}
 +
- 	/* A fallback in case there is no PM info available */
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- }
-@@ -825,6 +834,7 @@ void machine_shutdown(void)
+ 	/* Take control of the TPM's interrupt hardware and shut it off */
+ 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+ 	if (rc < 0)
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..86fe8f6a2d52 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -147,6 +147,12 @@ struct tpm_chip_seqops {
+  */
+ #define TPM2_MAX_CONTEXT_SIZE 4096
  
- void machine_emergency_restart(void)
- {
-+	slaunch_finalize(0);
- 	__machine_emergency_restart(1);
- }
- 
++/*
++ * The maximum locality (0 - 4) for a TPM, as defined in section 3.2 of the
++ * Client Platform Profile Specification.
++ */
++#define TPM_MAX_LOCALITY		4
++
+ struct tpm_chip {
+ 	struct device dev;
+ 	struct device devs;
 -- 
 2.39.3
 
