@@ -4,107 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3B58C369C2
-	for <kexec@archiver.kernel.org>; Wed, 23 Apr 2025 00:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F6F0C369CB
+	for <kexec@archiver.kernel.org>; Wed, 23 Apr 2025 17:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zP0LfZGpwbqZDJ21fCd0eUwqSuBp9uFaHTWiXcNrQqM=; b=JwzSig+Cr/c6q1s1X1acey24uf
-	QhyT0hSN3Ce3eed5gVeczAOE5EIqmayBQv5K4v0Fy8DYaIwgC3HYMW7p9dbiIyDexxFi8UU4PZBdu
-	JQ4L5TTTADdecNjUSSgaqt7cPmLndJfmE+PJQDg06fvYfhjyeJZWcHDkUdrsk/L5wNOwSFISGGYQB
-	Dgc/4zIC14PxpdNcIhjNbg4xEcsQ6LW18lxEVmxKSCN+ZiEyLQATYMF9a+NP8arvgA8G3u0feXxWc
-	sWZN9ni3QV41ZLB09hkyMq05MxAF8HOn6pskYMLJyhheOA7EaFfoCNVNPfPoZiS5u0fvQnJc30tRM
-	RKod6Brg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zlz9+lXXXq5LpAp/4W0Y5/tE7ySOCvZsvAQ3hIS8LwM=; b=yvGxiHRu69B7ywhKkfygof7qNU
+	1b96tbA8DfSL3RC3XvWH6WrKU4OsnVS2tDlx7RLRYuyPr/9a4qkIBTP6zCkVD8NhM07jnWqv5ASF8
+	ganHd00rCZwKUDnG9dgfwckKxbA4kk+GWJ7gEnyU+ZR35d1RqANOK2jjYlTsl60Tu+ilywAL9mqeu
+	WuiIKVyNGOvhfDvt0Sa6ZQu7oqwdZeCKRVoVkTmXx/tzBYrcyNICBYwYGpJ+02lJDR3s4UH3uqLEp
+	tPLNw/fo+3oCbXeQrePkZejyhcr5qsxsoNjAt3Uf4cgUs1I9tBZSoj9iZKQvedwGVkYyWX9ROP6oh
+	FTpwu6OA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7O0F-00000008tPI-3uJ5;
-	Wed, 23 Apr 2025 00:30:15 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1u7e5G-0000000BILh-3iw2;
+	Wed, 23 Apr 2025 17:40:30 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7O0A-00000008tO9-3msZ
-	for kexec@lists.infradead.org;
-	Wed, 23 Apr 2025 00:30:14 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MLgJ5K030812;
-	Wed, 23 Apr 2025 00:29:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zP0LfZ
-	GpwbqZDJ21fCd0eUwqSuBp9uFaHTWiXcNrQqM=; b=ZT4O+dDMHd1ZWfMwEdhBWE
-	0vDM6AfI7jiC75PEg9d/FC5ygtCCLNFN9qKiDmmXhsCy78OhwUIIuQmSMvbTLeAv
-	AbOu0U0KSYvBvVwwcOqJGTEpC1uG2dZWOeyEYRA67F6rIkjatqBEJ4vntPA1qI1/
-	ItQlpknuYtGQxjPbMG568zdCPPjh5iboCeCRy7ZKxZDTrLGCFiq8S1NEfoqft6Qq
-	/LF8LrU7A6+8V6poerR5YHMFh+AkNcaVNIR6G/5YInWzLu4NrwDTXyXrJj2GRjKv
-	1kv8jQ2EU88zX5398hVsHXFF43alcf1rQDRz95dAZj3ibGFMB2HIayUKi+W+oCsQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466k8v0h97-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 00:29:48 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53MKmw46022293;
-	Wed, 23 Apr 2025 00:29:47 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfx8p1x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 00:29:47 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53N0Tl3331785616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 00:29:47 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2CC035803F;
-	Wed, 23 Apr 2025 00:29:47 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 44F2A58054;
-	Wed, 23 Apr 2025 00:29:45 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.45.91])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 23 Apr 2025 00:29:45 +0000 (GMT)
-Message-ID: <f2f4a873489b28d3baa4ac1f6073a49fe888d120.camel@linux.ibm.com>
-Subject: Re: [PATCH v13 3/9] kexec: define functions to map and unmap
- segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Tue, 22 Apr 2025 20:29:44 -0400
-In-Reply-To: <20250421222516.9830-4-chenste@linux.microsoft.com>
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
-	 <20250421222516.9830-4-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	id 1u7GOw-00000007tHA-1Qup;
+	Tue, 22 Apr 2025 16:23:16 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 8806D43C8D;
+	Tue, 22 Apr 2025 16:23:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44630C4CEE9;
+	Tue, 22 Apr 2025 16:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745338993;
+	bh=5SXVdgY6N49lH5/liRgjfb+Iad1OUbcV8YvCE7OJPxo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aWHx8aicB9liJT7yMTV96S9x9MRWP+DJAstSe+KRAODUCgEiLT7KNnH36FAkHDyBr
+	 Afqxm+kaTcZ+sN0Q4FEb30CFZ4A0E5ZL/rtSkVO4254LgJvklMkX9QYA6Djz3fF3z8
+	 oU2abAu40pVZj1vGctPuqjTQvj+SlUya03S5wr5T1SY0qeHC+YBk02znxx0Tm7hHPa
+	 g5MRfL0XUGtuI71jTBQ5dsLnVOx0kElTijmESnWw/vQzFoWk98YLOJUrzcwP2qRZvg
+	 J6LxH/IKNmkcnq+2csnoN4tD5FGTCIRfrVf/akE1+m0JDL+yEOa4DloW/y9y2vmUZ+
+	 xPJTmBWQkWkag==
+From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To: Simon Horman <horms@kernel.org>,
+	Simon Horman <horms@verge.net.au>,
+	Nick Kossifidis <mick@ics.forth.gr>,
+	Song Shuai <songshuaishuai@tinylab.org>,
+	Li Zhengyu <lizhengyu3@huawei.com>,
+	kexec@lists.infradead.org
+Cc: Dave Young <dyoung@redhat.com>,
+	Yixun Lan <yixun.lan@gmail.com>,
+	Xianting Tian <xianting.tian@linux.alibaba.com>,
+	linux-riscv@lists.infradead.org,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
+Subject: [PATCH v2 1/4] RISC-V: Add support for riscv kexec/kdump on kexec-tools
+Date: Tue, 22 Apr 2025 18:22:57 +0200
+Message-ID: <20250422162304.169431-2-bjorn@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250422162304.169431-1-bjorn@kernel.org>
+References: <20250422162304.169431-1-bjorn@kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: N-HPUPvuwLViIwRbrlcAKZKs3eZcNoLQ
-X-Proofpoint-ORIG-GUID: N-HPUPvuwLViIwRbrlcAKZKs3eZcNoLQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDE4MCBTYWx0ZWRfX3QGqsmNjo4PC rp7FroN/vz/OYr5qyk3DHKRYPgPxZlA4YmHnidgcnPxESyQnF0/pME8L/0Ca2YVdvWTQCGhtAgs OqFq1azKoM0k7Xoo56WqpQe5RLVljvvTgPR8mdBvPBiOHSoFNF29mvG3bE52HHYrVGmc0EQOPIM
- Q3Wi2G0zQRSJHKgySRS8t7rpJOA30Qm3n5/848hMD7YHso9NBwDGAEJ4+CjTEdcG+7WJst3Qzf7 FM45wkztP7bzJJWER/A/TsLakskZ5YNT9ubyyAbhcJorhBejGfbTi9qMg9fVfc8X762fHXoOeZK 5KMEfnzGWxEhEgG/okdBGZI6NVVY+gbwtWxhk039wVxo1q2Mao+980VqjztgI1ZBLrDJ2qEwrd0
- zsytEOj1VICqf11RAbyHu0HS307MzlVMWHaVIGCUDy4SLjHv2UA0hvW57G2xhrsRLUqksYf9
-X-Authority-Analysis: v=2.4 cv=TcuWtQQh c=1 sm=1 tr=0 ts=6808347c cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8 a=yVc3JbiMAKBsHqyCaYgA:9
- a=QEXdDO2ut3YA:10 a=BpimnaHY1jUKGyF_4-AF:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_11,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015 phishscore=0
- adultscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504220180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250422_173011_069304_1998B517 
-X-CRM114-Status: GOOD (  14.69  )
+X-CRM114-CacheID: sfid-20250422_092314_490498_C77D21DC 
+X-CRM114-Status: GOOD (  37.90  )
+X-Mailman-Approved-At: Wed, 23 Apr 2025 08:14:49 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,47 +80,1736 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 2025-04-21 at 15:25 -0700, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
->=20
-> Implement kimage_map_segment() to enable IMA to map the measurement log=
-=20
-> list to the kimage structure during the kexec 'load' stage. This function
-> gathers the source pages within the specified address range, and maps the=
-m
-> to a contiguous virtual address range.
->=20
-> This is a preparation for later usage.
->=20
-> Implement kimage_unmap_segment() for unmapping segments using vunmap().
->=20
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com>=20
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+From: Nick Kossifidis <mick@ics.forth.gr>
 
-Checkpatch.pl is complaining that the Signed-off-by tag does not matches th=
-e
-"From:" line only on this patch.  I've updated your Signed-off-by tag to ma=
-tch
-the "From:" line above.
+This patch adds support for loading the ELF kernel image. It parses
+the current/provided device tree to determine the system's memory
+layout, and /proc/iomem for the various kernel segments.
 
-> Acked-by: Baoquan He <bhe@redhat.com>
+Tested on Qemu's rv64 virt machine and SoC of T-Head RISC-V Xuantie
+910 CPU.
 
-Missing from v13 is Stefan's Tested-by tag.  As the code hasn't changed, I'=
-ve
-added it.  In the future, please don't forget to add the tags.
+Now, some history: The first stab at supporting kexec-tools on RISC-V
+was done by Nick Kossifidis. The initial patch has since then had a
+number of improvements/fixes by other authors. Given, this is the
+first commit for RISC-V, carrying the fixes/changes commits in the
+upstream tree does not really add anything (bisectability).
 
-Stefen Berger spent quite a bit of time reviewing this patch set, but with =
-v13
-most of his Reviewed-by tags are missing. Stefan?
+Instead all the fixes that were applied to Nick's first commit is
+outlined below:
 
-For now the patch set is staged in the next-integrity-testing branch.
+Yixun Lan, and Xianting Tian:
+  * Fixed a failure to fail to find free memory area for dtb load when
+    using initrd image [1].
+  * Fixed memory range size calculation in
+    kexec/arch/riscv/crashdump-riscv.c:85
 
-thanks,
+Simon Horman:
+  * workflow: Add riscv64
 
-Mimi
+    Add riscv64 to matrix of build architectures.
+  * RISC-V: distribute purgatory/riscv/Makefile
+
+    Include purgatory/riscv/Makefile in distribution tarball.
+
+    Local patch as it is planned to suggest this as a fix for the
+    patch that introduced this problem. [2]
+
+Song Shuai:
+  * RISC-V: Fix the undeclared ‘EM_RISCV’ build failure
+
+    Use local `elf.h` instead of `linux/elf.h` to fix this build
+    error:
+
+    ```
+    kexec/arch/riscv/crashdump-riscv.c:17:13: error: ‘EM_RISCV’ undeclared here (not in a function); did you mean ‘EM_CRIS’?
+      .machine = EM_RISCV,
+                 ^~~~~~~~
+                 EM_CRIS
+    ```
+
+  * RISC-V: Correct the usage of command line option
+
+    RISC-V process OPT_CMDLINE with the "command-line" partten, but
+    the riscv_opts_usage shows the "cmdline" option. So correct the
+    usage's output.
+
+  * RISC-V: Use linux,usable-memory-range for crash kernel
+
+    Now we use "memeory::linux,usable-memory" to indicate the
+    available memory for the crash kernel.
+
+    While booting with UEFI, the crash kernel would use efi.memmap to
+    re-populate memblock and then first kernel's memory would be
+    corrputed. Consequently, the /proc/vmcore file failed to create in
+    my local test.
+
+    And according to "chosen" dtschema [3], the available memory for
+    the crash kernel should be held via
+    "chosen::linux,usable-memory-range" property which will re-cap
+    memblock even after UEFI's re-population.
+
+  * RISC-V: Get memory ranges from iomem
+
+    When booting with UEFI, Linux marks the Runtime Code/Data memory
+    as no-map and then exports it to "Reserved" iomem_resource.
+
+    Kexc-tools uses dtb_get_memory_ranges() function to get memory
+    ranges via parsing dtb, but it can't see the Reserved EFI Runtime
+    memory. That would corrupt EFI Runtime memory and fail the kexeced
+    kernel to deal EFI stuff.
+
+    In my test, the kexeced kernel warned "efi: System table signature
+    incorrect!" and then paniced at efi_call_rts() due to the null
+    efi.runtime.
+
+    So we should use /proc/iomem to get memory ranges.
+
+Björn Töpel:
+  * Massaged this commit message!
+  * Fixed up the build, by adding missing RV stub.
+  * RISC-V: Only cap the upper/end usable memory window
+
+    When loading the initrd in the kexec_load flow, memory for the
+    segments are searched from end to start. Only the max_usable
+    should be capped, after a successful initrd addtion.
+
+    Currently min/max usable is set to the same value, making it
+    impossible from subsequent segment allocations to success.
+
+  * RISC-V: Make get_memory_ranges() properly exclude "Reserved"
+    regions
+
+    The get_memory_ranges() did not exclude "Reserved" regions from
+    "System RAM" regions. It simply added "Reserved" as IOMEM, and
+    IOMEM is not considered when looking for holes to place kexec
+    segments.
+
+    Instead, do a two pass of the /proc/iomem file. First pass, adds
+    all the "System RAM" memory, and the second pass removes all
+    intersecting "Reserved" regions.
+
+[1] https://lore.kernel.org/linux-riscv/CALecT5gQWn0PRO4Q24b6qkrfVE5OxsCp65TuhWTb30ceK_OJ0A@mail.gmail.com/
+[2] https://lore.kernel.org/kexec/20221020031548.47587-1-xianting.tian@linux.alibaba.com/
+[3] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/chosen.yaml
+
+Tested-by: Yixun Lan <yixun.lan@gmail.com>
+Co-developed-by: Xianting Tian <xianting.tian@linux.alibaba.com>
+Co-developed-by: Yixun Lan <yixun.lan@gmail.com>
+Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+Signed-off-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+---
+ .github/workflows/build.yml             |   1 +
+ configure.ac                            |   3 +
+ include/elf.h                           |   1 +
+ kexec/Makefile                          |   1 +
+ kexec/arch/mips/Makefile                |   2 +
+ kexec/arch/riscv/Makefile               |  36 ++
+ kexec/arch/riscv/crashdump-riscv.c      | 140 ++++++++
+ kexec/arch/riscv/include/arch/options.h |  43 +++
+ kexec/arch/riscv/iomem.h                |  10 +
+ kexec/arch/riscv/kexec-elf-riscv.c      | 255 ++++++++++++++
+ kexec/arch/riscv/kexec-riscv.c          | 431 +++++++++++++++++++++++
+ kexec/arch/riscv/kexec-riscv.h          |  32 ++
+ kexec/dt-ops.c                          | 442 +++++++++++++++++++++++-
+ kexec/dt-ops.h                          |   7 +
+ kexec/kexec-syscall.h                   |   4 +
+ purgatory/Makefile                      |   1 +
+ purgatory/arch/riscv/Makefile           |   7 +
+ 17 files changed, 1415 insertions(+), 1 deletion(-)
+ create mode 100644 kexec/arch/riscv/Makefile
+ create mode 100644 kexec/arch/riscv/crashdump-riscv.c
+ create mode 100644 kexec/arch/riscv/include/arch/options.h
+ create mode 100644 kexec/arch/riscv/iomem.h
+ create mode 100644 kexec/arch/riscv/kexec-elf-riscv.c
+ create mode 100644 kexec/arch/riscv/kexec-riscv.c
+ create mode 100644 kexec/arch/riscv/kexec-riscv.h
+ create mode 100644 purgatory/arch/riscv/Makefile
+
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+index 46edde66e384..ddb4bfa8b01d 100644
+--- a/.github/workflows/build.yml
++++ b/.github/workflows/build.yml
+@@ -19,6 +19,7 @@ jobs:
+         - powerpc
+         - powerpc64
+         - powerpc64le
++        - riscv64
+         - sh4
+         - s390x
+         - x86_64-x32
+diff --git a/configure.ac b/configure.ac
+index 8b79eef9afeb..cbd6edbd987d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -61,6 +61,9 @@ case $target_cpu in
+ 	loongarch*)
+ 		ARCH="loongarch"
+ 		;;
++	riscv32|riscv64)
++		ARCH="riscv"
++		;;
+ 	* )
+ 		AC_MSG_ERROR([unsupported architecture $target_cpu])
+ 		;;
+diff --git a/include/elf.h b/include/elf.h
+index 1c8d2ccf6d26..93a5ee5eeffa 100644
+--- a/include/elf.h
++++ b/include/elf.h
+@@ -259,6 +259,7 @@ typedef struct
+ #define EM_ARC_A5	93		/* ARC Cores Tangent-A5 */
+ #define EM_XTENSA	94		/* Tensilica Xtensa Architecture */
+ #define EM_AARCH64	183		/* ARM AARCH64 */
++#define EM_RISCV	243		/* RISC-V */
+ #define EM_LOONGARCH	258		/* Loongson Loongarch*/
+ #define EM_NUM		184
+ 
+diff --git a/kexec/Makefile b/kexec/Makefile
+index e969d1e18c5a..8b5851decaea 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -92,6 +92,7 @@ include $(srcdir)/kexec/arch/mips/Makefile
+ include $(srcdir)/kexec/arch/cris/Makefile
+ include $(srcdir)/kexec/arch/ppc/Makefile
+ include $(srcdir)/kexec/arch/ppc64/Makefile
++include $(srcdir)/kexec/arch/riscv/Makefile
+ include $(srcdir)/kexec/arch/s390/Makefile
+ include $(srcdir)/kexec/arch/sh/Makefile
+ include $(srcdir)/kexec/arch/x86_64/Makefile
+diff --git a/kexec/arch/mips/Makefile b/kexec/arch/mips/Makefile
+index 1fe788608fbe..0a5ce1926dc9 100644
+--- a/kexec/arch/mips/Makefile
++++ b/kexec/arch/mips/Makefile
+@@ -13,6 +13,8 @@ mips_FS2DT_INCLUDE = \
+ 
+ mips_DT_OPS += kexec/dt-ops.c
+ 
++mips_MEM_REGIONS = kexec/mem_regions.c
++
+ include $(srcdir)/kexec/libfdt/Makefile.libfdt
+ 
+ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
+diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
+new file mode 100644
+index 000000000000..9937fbb5724f
+--- /dev/null
++++ b/kexec/arch/riscv/Makefile
+@@ -0,0 +1,36 @@
++#
++# kexec riscv
++#
++riscv_KEXEC_SRCS = kexec/arch/riscv/crashdump-riscv.c
++riscv_KEXEC_SRCS += kexec/arch/riscv/kexec-elf-riscv.c
++riscv_KEXEC_SRCS += kexec/arch/riscv/kexec-riscv.c
++
++riscv_DT_OPS += kexec/dt-ops.c
++
++riscv_MEM_REGIONS = kexec/mem_regions.c
++
++riscv_ARCH_REUSE_INITRD =
++
++riscv_CPPFLAGS += -I $(srcdir)/kexec/
++
++dist += $(riscv_KEXEC_SRCS)				\
++	kexec/arch/riscv/include/arch/options.h		\
++	kexec/arch/riscv/iomem.h			\
++	kexec/arch/riscv/kexec-riscv.h			\
++	kexec/arch/riscv/Makefile
++
++ifdef HAVE_LIBFDT
++
++LIBS += -lfdt
++
++else
++
++include $(srcdir)/kexec/libfdt/Makefile.libfdt
++
++libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
++
++riscv_CPPFLAGS += -I$(srcdir)/kexec/libfdt
++
++riscv_KEXEC_SRCS += $(libfdt_SRCS)
++
++endif
+diff --git a/kexec/arch/riscv/crashdump-riscv.c b/kexec/arch/riscv/crashdump-riscv.c
+new file mode 100644
+index 000000000000..336d7a7f5646
+--- /dev/null
++++ b/kexec/arch/riscv/crashdump-riscv.c
+@@ -0,0 +1,140 @@
++#include <errno.h>
++#include <elf.h>
++#include <unistd.h>
++
++#include "kexec.h"
++#include "crashdump.h"
++#include "kexec-elf.h"
++#include "mem_regions.h"
++
++static struct crash_elf_info elf_info = {
++#if __riscv_xlen == 64
++	.class		= ELFCLASS64,
++#else
++	.class		= ELFCLASS32,
++#endif
++	.data		= ELFDATA2LSB,
++	.machine	= EM_RISCV,
++};
++
++static struct memory_ranges crash_mem_ranges = {0};
++struct memory_range elfcorehdr_mem = {0};
++
++static unsigned long long get_page_offset(struct kexec_info *info)
++{
++	unsigned long long vaddr_off = 0;
++	unsigned long long page_size = sysconf(_SC_PAGESIZE);
++	unsigned long long init_start = get_kernel_sym("_sinittext");
++
++	/*
++	 * Begining of init section is aligned to page size
++	 */
++	vaddr_off = init_start - page_size;
++
++	return vaddr_off;
++}
++
++int load_elfcorehdr(struct kexec_info *info)
++{
++	struct memory_range crashkern_range = {0};
++	struct memory_range *ranges = NULL;
++	unsigned long start = 0;
++	unsigned long end = 0;
++	unsigned long buf_size = 0;
++	unsigned long elfcorehdr_addr = 0;
++	void* buf = NULL;
++	int i = 0;
++	int ret = 0;
++
++	ret = parse_iomem_single("Kernel code\n", &start, NULL);
++	if (ret) {
++		fprintf(stderr, "Cannot determine kernel physical base addr\n");
++		return -EINVAL;
++	}
++	elf_info.kern_paddr_start = start;
++
++	ret = parse_iomem_single("Kernel bss\n", NULL, &end);
++	if (ret) {
++		fprintf(stderr, "Cannot determine kernel physical bss addr\n");
++		return -EINVAL;
++	}
++	elf_info.kern_paddr_start = start;
++	elf_info.kern_size = end - start;
++
++	elf_info.kern_vaddr_start = get_kernel_sym("_text");
++	if (!elf_info.kern_vaddr_start) {
++		elf_info.kern_vaddr_start = UINT64_MAX;
++	}
++
++	elf_info.page_offset = get_page_offset(info);
++	dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
++
++	ret = parse_iomem_single("Crash kernel\n", &start, &end);
++	if (ret) {
++		fprintf(stderr, "Cannot determine kernel physical bss addr\n");
++		return -EINVAL;
++	}
++	crashkern_range.start = start;
++	crashkern_range.end = end;
++	crashkern_range.type = RANGE_RESERVED;
++
++	ranges = info->memory_range;
++	for (i = 0; i < info->memory_ranges; i++) {
++		ret = mem_regions_alloc_and_add(&crash_mem_ranges,
++						ranges[i].start,
++						ranges[i].end - ranges[i].start + 1,
++						ranges[i].type);
++		if (ret ) {
++			fprintf(stderr, "Could not create crash_mem_ranges\n");
++			return ret;
++		}
++	}
++
++	ret = mem_regions_alloc_and_exclude(&crash_mem_ranges,
++					    &crashkern_range);
++	if (ret) {
++		fprintf(stderr, "Could not exclude crashkern_range\n");
++		return ret;
++	}
++
++#if __riscv_xlen == 64
++	crash_create_elf64_headers(info, &elf_info, crash_mem_ranges.ranges,
++				   crash_mem_ranges.size, &buf, &buf_size,
++				   ELF_CORE_HEADER_ALIGN);
++
++#else
++	crash_create_elf32_headers(info, &elf_info, crash_mem_ranges.ranges,
++				   crash_mem_ranges.size, &buf, &buf_size,
++				   ELF_CORE_HEADER_ALIGN);
++#endif
++
++
++	elfcorehdr_addr = add_buffer_phys_virt(info, buf, buf_size,
++					       buf_size, 0,
++					       crashkern_range.start,
++					       crashkern_range.end,
++					       -1, 0);
++
++	elfcorehdr_mem.start = elfcorehdr_addr;
++	elfcorehdr_mem.end = elfcorehdr_addr + buf_size - 1;
++
++	dbgprintf("%s: elfcorehdr 0x%llx-0x%llx\n", __func__,
++		  elfcorehdr_mem.start, elfcorehdr_mem.end);
++
++	return 0;
++}
++
++int is_crashkernel_mem_reserved(void)
++{
++	uint64_t start = 0;
++	uint64_t end = 0;
++
++	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
++	       (start != end) : 0;
++}
++
++int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
++{
++	return parse_iomem_single("Crash kernel\n", start, end);
++}
++
+diff --git a/kexec/arch/riscv/include/arch/options.h b/kexec/arch/riscv/include/arch/options.h
+new file mode 100644
+index 000000000000..7c24184b1f3e
+--- /dev/null
++++ b/kexec/arch/riscv/include/arch/options.h
+@@ -0,0 +1,43 @@
++#ifndef KEXEC_ARCH_RISCV_OPTIONS_H
++#define KEXEC_ARCH_RISCV_OPTIONS_H
++
++#define OPT_APPEND		((OPT_MAX)+0)
++#define OPT_DTB			((OPT_MAX)+1)
++#define OPT_INITRD		((OPT_MAX)+2)
++#define OPT_CMDLINE		((OPT_MAX)+3)
++#define OPT_REUSE_CMDLINE	((OPT_MAX)+4)
++#define OPT_ARCH_MAX		((OPT_MAX)+5)
++
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
++#define KEXEC_ARCH_OPTIONS \
++	KEXEC_OPTIONS \
++	{ "append",		1, 0, OPT_APPEND}, \
++	{ "dtb",		1, 0, OPT_DTB }, \
++	{ "initrd",		1, 0, OPT_INITRD }, \
++	{ "command-line",	1, 0, OPT_CMDLINE}, \
++	{ "reuse-cmdline",	0, NULL, OPT_REUSE_CMDLINE }, \
++
++
++#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
++
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
++#endif /* KEXEC_ARCH_RISCV_OPTIONS_H */
+diff --git a/kexec/arch/riscv/iomem.h b/kexec/arch/riscv/iomem.h
+new file mode 100644
+index 000000000000..7671e26a9594
+--- /dev/null
++++ b/kexec/arch/riscv/iomem.h
+@@ -0,0 +1,10 @@
++#ifndef IOMEM_H
++#define IOMEM_H
++
++#define SYSTEM_RAM		"System RAM\n"
++#define KERNEL_CODE		"Kernel code\n"
++#define KERNEL_DATA		"Kernel data\n"
++#define CRASH_KERNEL		"Crash kernel\n"
++#define IOMEM_RESERVED		"Reserved\n"
++
++#endif
+diff --git a/kexec/arch/riscv/kexec-elf-riscv.c b/kexec/arch/riscv/kexec-elf-riscv.c
+new file mode 100644
+index 000000000000..f3c011c4c1dc
+--- /dev/null
++++ b/kexec/arch/riscv/kexec-elf-riscv.c
+@@ -0,0 +1,255 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019 FORTH-ICS/CARV
++ *              Nick Kossifidis <mick@ics.forth.gr>
++ */
++
++#include "kexec.h"
++#include "dt-ops.h"		/* For dtb_set/clear_initrd() */
++#include <elf.h>		/* For ELF header handling */
++#include <errno.h>		/* For EFBIG/EINVAL */
++#include <unistd.h>		/* For getpagesize() */
++#include "kexec-syscall.h"	/* For KEXEC_ON_CRASH */
++#include "kexec-riscv.h"
++
++
++/*********\
++* HELPERS *
++\*********/
++
++/*
++ * Go through the available physical memory regions and
++ * find one that can hold an image of the specified size.
++ * Note: This is called after get_memory_ranges so
++ * info->memory_range[] should be populated. Also note that
++ * memory ranges are sorted, so we'll return the first region
++ * that's big enough for holding the image.
++ */
++static int elf_riscv_find_pbase(struct kexec_info *info, off_t *addr,
++				off_t size)
++{
++	int i = 0;
++	off_t start = 0;
++	off_t end = 0;
++	int ret = 0;
++
++	/*
++	 * If this image is for a crash kernel, use the region
++	 * the primary kernel has already reserved for us.
++	 */
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		ret = get_crash_kernel_load_range((uint64_t *) &start,
++						  (uint64_t *) &end);
++		if (!ret) {
++			/*
++			 * Kernel should be aligned to the nearest
++			 * hugepage (2MB for RV64, 4MB for RV32).
++			 */
++#if __riscv_xlen == 64
++			start = _ALIGN_UP(start, 0x200000);
++#else
++			start = _ALIGN_UP(start, 0x400000);
++#endif
++			if (end > start && ((end - start) >= size)) {
++				*addr = start;
++				return 0;
++			}
++
++			return -EFBIG;
++		} else
++			return ENOCRASHKERNEL;
++	}
++
++	for (i = 0; i < info->memory_ranges; i++) {
++		if (info->memory_range[i].type != RANGE_RAM)
++			continue;
++
++		start = info->memory_range[i].start;
++		end = info->memory_range[i].end;
++
++#if __riscv_xlen == 64
++		start = _ALIGN_UP(start, 0x200000);
++#else
++		start = _ALIGN_UP(start, 0x400000);
++#endif
++
++		if (end > start && ((end - start) >= size)) {
++			*addr = start;
++			return 0;
++		}
++	}
++
++	return -EFBIG;
++}
++
++/**************\
++* ENTRY POINTS *
++\**************/
++
++int elf_riscv_probe(const char *buf, off_t len)
++{
++	struct mem_ehdr ehdr = {0};
++	int ret = 0;
++
++	ret = build_elf_exec_info(buf, len, &ehdr, 0);
++	if (ret < 0)
++		goto cleanup;
++
++	if (ehdr.e_machine != EM_RISCV) {
++		fprintf(stderr, "Not for this architecture.\n");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = 0;
++
++ cleanup:
++	free_elf_info(&ehdr);
++	return ret;
++}
++
++void elf_riscv_usage(void)
++{
++}
++
++int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
++		   struct kexec_info *info)
++{
++	struct mem_ehdr ehdr = {0};
++	struct mem_phdr *phdr = NULL;
++	off_t new_base_addr = 0;
++	off_t kernel_size = 0;
++	off_t page_size = getpagesize();
++	off_t max_addr = 0;
++	off_t old_base_addr = 0;
++	off_t old_start_addr = 0;
++	int i = 0;
++	int ret = 0;
++
++	if (info->file_mode) {
++		fprintf(stderr, "kexec_file not supported on this "
++				"architecture\n");
++		return -EINVAL;
++	}
++
++	/* Parse the ELF file */
++	ret = build_elf_exec_info(buf, len, &ehdr, 0);
++	if (ret < 0) {
++		fprintf(stderr, "ELF exec parse failed\n");
++		return -EINVAL;
++	}
++
++	max_addr = elf_max_addr(&ehdr);
++	old_base_addr = max_addr;
++	old_start_addr = max_addr;
++
++	/*
++	 * Get the memory footprint, base physical
++	 * and start address of the ELF image
++	 */
++	for (i = 0; i < ehdr.e_phnum; i++) {
++		phdr = &ehdr.e_phdr[i];
++		if (phdr->p_type != PT_LOAD)
++			continue;
++
++		/*
++		 * Note: According to ELF spec the loadable regions
++		 * are sorted on p_vaddr, not p_paddr.
++		 */
++		if (old_base_addr > phdr->p_paddr)
++			old_base_addr = phdr->p_paddr;
++
++		if (phdr->p_vaddr == ehdr.e_entry ||
++		    phdr->p_paddr == ehdr.e_entry)
++			old_start_addr = phdr->p_paddr;
++
++		kernel_size += _ALIGN_UP(phdr->p_memsz, page_size);
++	}
++
++	if (old_base_addr == max_addr || kernel_size == 0) {
++		fprintf(stderr, "No loadable segments present on the "
++				"provided ELF image\n");
++		return -EINVAL;
++	}
++
++	if (old_start_addr == max_addr) {
++		fprintf(stderr, "Could not find the entry point address of "
++				"provided ELF image\n");
++		return -EINVAL;
++	}
++
++	dbgprintf("Got ELF with total memsz %luKB\n"
++		  "Base paddr: 0x%lX, start_addr: 0x%lX\n",
++		  kernel_size / 1024, old_base_addr, old_start_addr);
++
++	/* Get a continuous physical region that can hold the kernel */
++	ret = elf_riscv_find_pbase(info, &new_base_addr, kernel_size);
++	if (ret < 0) {
++		fprintf(stderr, "Could not find a memory region for the "
++				"provided ELF image\n");
++		return ret;
++	}
++
++	dbgprintf("New base paddr for the ELF: 0x%lX\n", new_base_addr);
++
++	/* Re-set the base physical address of the ELF */
++	for (i = 0; i < ehdr.e_phnum; i++) {
++		phdr = &ehdr.e_phdr[i];
++		if (phdr->p_type != PT_LOAD)
++			continue;
++
++		phdr->p_paddr -= old_base_addr;
++		phdr->p_paddr += new_base_addr;
++	}
++
++	/* Re-set the entry point address */
++	ehdr.e_entry = (old_start_addr - old_base_addr) + new_base_addr;
++	info->entry = (void *) ehdr.e_entry;
++	dbgprintf("New entry point for the ELF: 0x%llX\n", ehdr.e_entry);
++
++
++	/* Load the ELF executable */
++	ret = elf_exec_load(&ehdr, info);
++	if (ret < 0) {
++		fprintf(stderr, "ELF exec load failed\n");
++		return ret;
++	}
++
++	ret = load_extra_segments(info, new_base_addr,
++				  kernel_size, max_addr);
++	return ret;
++}
++
++
++/*******\
++* STUBS *
++\*******/
++
++int machine_verify_elf_rel(struct mem_ehdr *ehdr)
++{
++	if (ehdr->ei_data != ELFDATA2LSB)
++		return 0;
++#if __riscv_xlen == 64
++	if (ehdr->ei_class != ELFCLASS64)
++#else
++	if (ehdr->ei_class != ELFCLASS32)
++#endif
++		return 0;
++	if (ehdr->e_machine != EM_RISCV)
++		return 0;
++	return 1;
++}
++
++void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
++			   struct mem_sym *UNUSED(sym),
++			   unsigned long r_type,
++			   void *UNUSED(location),
++			   unsigned long UNUSED(address),
++			   unsigned long UNUSED(value))
++{
++	switch (r_type) {
++	default:
++		die("Unknown rela relocation: %lu\n", r_type);
++		break;
++	}
++}
+diff --git a/kexec/arch/riscv/kexec-riscv.c b/kexec/arch/riscv/kexec-riscv.c
+new file mode 100644
+index 000000000000..38d9a394aadd
+--- /dev/null
++++ b/kexec/arch/riscv/kexec-riscv.c
+@@ -0,0 +1,431 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019 FORTH-ICS/CARV
++ *              Nick Kossifidis <mick@ics.forth.gr>
++ */
++
++#include "kexec-syscall.h"	/* For KEXEC_ARCH_RISCV */
++#include "kexec.h"		/* For OPT_MAX and concat_cmdline() */
++#include "mem_regions.h"	/* For mem_regions_sort() */
++#include "dt-ops.h"		/* For dtb_set_bootargs() */
++#include <arch/options.h>	/* For KEXEC_ARCH_OPTIONS */
++#include <getopt.h>		/* For struct option */
++#include <sys/stat.h>		/* For stat() and struct stat */
++#include <stdlib.h>		/* For free() */
++#include <errno.h>		/* For EINVAL */
++#include <libfdt.h>		/* For DeviceTree handling */
++#include "kexec-riscv.h"
++#include "iomem.h"
++#include <stdbool.h>
++
++const struct arch_map_entry arches[] = {
++	{ "riscv32", KEXEC_ARCH_RISCV },
++	{ "riscv64", KEXEC_ARCH_RISCV },
++	{ NULL, 0 },
++};
++
++
++struct file_type file_type[] = {
++	{"elf-riscv", elf_riscv_probe, elf_riscv_load, elf_riscv_usage},
++};
++int file_types = sizeof(file_type) / sizeof(file_type[0]);
++
++static const char riscv_opts_usage[] =
++"	--append=STRING		Append STRING to the kernel command line.\n"
++"	--dtb=FILE		Use FILE as the device tree blob.\n"
++"	--initrd=FILE		Use FILE as the kernel initial ramdisk.\n"
++"	--command-line=STRING	Use STRING as the kernel's command line.\n"
++"	--reuse-cmdline		Use kernel command line from running system.\n";
++
++static struct riscv_opts arch_options = {0};
++static struct fdt_image provided_fdt = {0};
++
++/****************\
++* COMMON HELPERS *
++\****************/
++
++int load_extra_segments(struct kexec_info *info, uint64_t kernel_base,
++			uint64_t kernel_size, uint64_t max_addr)
++{
++	struct fdt_image *fdt = arch_options.fdt;
++	char *initrd_buf = NULL;
++	off_t initrd_size = 0;
++	uint64_t initrd_base = 0;
++	uint64_t start = 0;
++	uint64_t end = 0;
++	uint64_t min_usable = kernel_base + kernel_size;
++	uint64_t max_usable = max_addr;
++	int ret = 0;
++
++	/* Prepare the device tree */
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		ret = load_elfcorehdr(info);
++		if (ret) {
++			fprintf(stderr, "Couldn't create elfcorehdr\n");
++			return ret;
++		}
++
++		ret = dtb_add_range_property(&fdt->buf, &fdt->size,
++					     elfcorehdr_mem.start, elfcorehdr_mem.end,
++					     "chosen", "linux,elfcorehdr");
++		if (ret) {
++			fprintf(stderr, "Couldn't add elfcorehdr to fdt\n");
++			return ret;
++		}
++
++		ret = get_crash_kernel_load_range(&start, &end);
++		if (ret) {
++			fprintf(stderr, "Couldn't get crashkenel region\n");
++			return ret;
++		}
++
++		ret = dtb_add_range_property(&fdt->buf, &fdt->size, start, end,
++					     "chosen", "linux,usable-memory-range");
++		if (ret) {
++			fprintf(stderr, "Couldn't add usable-memory-range to fdt\n");
++			return ret;
++		}
++
++		max_usable = end;
++	} else {
++		/*
++		 * Make sure we remove elfcorehdr and usable-memory-range
++		 * when switching from crash kernel to a normal one.
++		 */
++		dtb_delete_property(fdt->buf, "chosen", "linux,elfcorehdr");
++		dtb_delete_property(fdt->buf, "chosen", "linux,usable-memory-range");
++	}
++
++	/* Do we need to include an initrd image ? */
++	if (!arch_options.initrd_path && !arch_options.initrd_end)
++		dtb_clear_initrd(&fdt->buf, &fdt->size);
++	else if (arch_options.initrd_path) {
++		if (arch_options.initrd_end)
++			fprintf(stderr, "Warning: An initrd image was provided"
++					", will ignore reuseinitrd\n");
++
++		initrd_buf = slurp_file(arch_options.initrd_path,
++					&initrd_size);
++		if (!initrd_buf) {
++			fprintf(stderr, "Couldn't read provided initrd\n");
++			return -EINVAL;
++		}
++
++		initrd_base = add_buffer_phys_virt(info, initrd_buf,
++						   initrd_size,
++						   initrd_size, 0,
++						   min_usable,
++						   max_usable, -1, 0);
++
++		dtb_set_initrd(&fdt->buf, &fdt->size, initrd_base,
++			       initrd_base + initrd_size);
++
++		dbgprintf("Base addr for initrd image: 0x%lX\n", initrd_base);
++		max_usable = initrd_base;
++	}
++
++	/* Add device tree */
++	add_buffer_phys_virt(info, fdt->buf, fdt->size, fdt->size, 0,
++			     min_usable, max_usable, -1, 0);
++
++	return 0;
++}
++
++
++/**************\
++* ENTRY POINTS *
++\**************/
++
++void arch_usage(void)
++{
++	printf(riscv_opts_usage);
++}
++
++int arch_process_options(int argc, char **argv)
++{
++	static const struct option options[] = {
++		KEXEC_ARCH_OPTIONS
++		{ 0 },
++	};
++	static const char short_options[] = KEXEC_ARCH_OPT_STR;
++	struct stat st = {0};
++	char *append = NULL;
++	char *cmdline = NULL;
++	void *tmp = NULL;
++	off_t tmp_size = 0;
++	int opt = 0;
++	int ret = 0;
++
++	while ((opt = getopt_long(argc, argv, short_options,
++				  options, 0)) != -1) {
++		switch (opt) {
++		case OPT_APPEND:
++			append = optarg;
++			break;
++		case OPT_CMDLINE:
++			if (cmdline)
++				fprintf(stderr,
++					"Warning: Kernel's cmdline "
++					"set twice !\n");
++			cmdline = optarg;
++			break;
++		case OPT_REUSE_CMDLINE:
++			if (cmdline)
++				fprintf(stderr,
++					"Warning: Kernel's cmdline "
++					"set twice !\n");
++			cmdline = get_command_line();
++			break;
++		case OPT_DTB:
++			ret = stat(optarg, &st);
++			if (ret) {
++				fprintf(stderr,
++					"Could not find the provided dtb !\n");
++				return -EINVAL;
++			}
++			arch_options.fdt_path = optarg;
++			break;
++		case OPT_INITRD:
++			ret = stat(optarg, &st);
++			if (ret) {
++				fprintf(stderr,
++					"Could not find the provided "
++					"initrd image !\n");
++				return -EINVAL;
++			}
++			arch_options.initrd_path = optarg;
++			break;
++		default:
++			break;
++		}
++	}
++
++	/* Handle Kernel's command line */
++	if (append && !cmdline)
++		fprintf(stderr, "Warning: No cmdline provided, "
++				"using append string as cmdline\n");
++	if (!append && !cmdline)
++		fprintf(stderr, "Warning: No cmdline or append string "
++				"provided\n");
++
++	if (append || cmdline)
++		/*
++		 * Note that this also handles the case where "cmdline"
++		 * or "append" is NULL.
++		 */
++		arch_options.cmdline = concat_cmdline(cmdline, append);
++
++	/* Handle FDT image */
++	if (!arch_options.fdt_path) {
++		ret = stat("/sys/firmware/fdt", &st);
++		if (ret) {
++			fprintf(stderr, "No dtb provided and "
++					"/sys/firmware/fdt is not present\n");
++			return -EINVAL;
++		}
++		fprintf(stderr, "Warning: No dtb provided, "
++				"using /sys/firmware/fdt\n");
++		arch_options.fdt_path = "/sys/firmware/fdt";
++	}
++
++	tmp = slurp_file(arch_options.fdt_path, &tmp_size);
++	if (!tmp) {
++		fprintf(stderr, "Couldn't read provided fdt\n");
++		return -EINVAL;
++	}
++
++	ret = fdt_check_header(tmp);
++	if (ret) {
++		fprintf(stderr, "Got an ivalid fdt image !\n");
++		free(tmp);
++		return -EINVAL;
++	}
++	provided_fdt.buf = tmp;
++	provided_fdt.size = tmp_size;
++
++	if (arch_options.cmdline) {
++		ret = dtb_set_bootargs(&provided_fdt.buf, &provided_fdt.size,
++				       arch_options.cmdline);
++		if (ret < 0) {
++			fprintf(stderr, "Could not set bootargs on "
++					"the fdt image\n");
++			return ret;
++		}
++	}
++
++	arch_options.fdt = &provided_fdt;
++
++	return 0;
++}
++
++/*
++ * This one is called after arch_process_options so we already
++ * have an fdt image in place.
++ */
++void arch_reuse_initrd(void)
++{
++	const uint32_t *prop32 = NULL;
++	uint32_t addr_cells = 0;
++	const void *prop = 0;
++	int prop_size = 0;
++	uint64_t initrd_start = 0;
++	uint64_t initrd_end = 0;
++	int chosen_offset = 0;
++	struct fdt_image *fdt = &provided_fdt;
++
++	chosen_offset = fdt_subnode_offset(fdt->buf, 0, "chosen");
++	if (chosen_offset < 0) {
++		fprintf(stderr, "No /chosen node found on fdt image "
++				"unable to reuse initrd\n");
++		return;
++	}
++
++	prop32 = fdt_getprop(fdt->buf, 0, "#address-cells", NULL);
++	if (!prop32) {
++		fprintf(stderr, "No #address-cells property on root node\n");
++		return;
++	}
++	addr_cells = be32_to_cpu(*prop32);
++
++	prop = fdt_getprop(fdt->buf, chosen_offset,
++			   "linux,initrd-start", &prop_size);
++	if (!prop) {
++		fprintf(stderr, "Could not get linux,initrd-start\n");
++		return;
++	}
++	dtb_extract_int_property(&initrd_start, prop, addr_cells);
++
++	prop = fdt_getprop(fdt->buf, chosen_offset,
++			   "linux,initrd-end", &prop_size);
++	if (!prop) {
++		fprintf(stderr, "Could not get linux,initrd-end\n");
++		return;
++	}
++	dtb_extract_int_property(&initrd_end, prop, addr_cells);
++
++	arch_options.initrd_start = initrd_start;
++	arch_options.initrd_end = initrd_end;
++	dbgprintf("initrd_start: 0x%lX, initrd_end: 0x%lX\n",
++		  initrd_start, initrd_end);
++
++}
++
++static bool to_be_excluded(char *str, unsigned long long start, unsigned long long end)
++{
++	if (!strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL))) {
++		uint64_t load_start, load_end;
++
++		if (!get_crash_kernel_load_range(&load_start, &load_end) &&
++		    (load_start == start) && (load_end == end))
++			return false;
++
++		return true;
++	}
++
++	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) ||
++	    !strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) ||
++	    !strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)))
++		return false;
++	else
++		return true;
++}
++
++int get_memory_ranges(struct memory_range **range, int *num_ranges,
++		      unsigned long kexec_flags)
++{
++	struct memory_ranges sysmem_ranges = {0};
++	const char *iomem = proc_iomem();
++	struct memory_range excl_range;
++	unsigned long long start, end;
++	int consumed, count, ret = 0;
++	FILE *fp = NULL, *sp = NULL;
++	char line[MAX_LINE], *str;
++
++	fp = fopen(iomem, "r");
++	if (!fp) {
++		fprintf(stderr, "Cannot open %s: %s\n", iomem, strerror(errno));
++		return -1;
++	}
++
++	sp = fopen(iomem, "r");
++	if (!sp) {
++		fprintf(stderr, "Cannot open %s: %s\n", iomem, strerror(errno));
++		ret = -1;
++		goto err;
++	}
++
++	/*
++	 * Perform two passes: First add all System RAM, and then
++	 * exclude the "Reserved" ranges"
++	 */
++	while (fgets(line, sizeof(line), fp) != 0) {
++		count = sscanf(line, "%llx-%llx : %n", &start, &end, &consumed);
++		if (count != 2)
++			continue;
++		str = line + consumed;
++
++		if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM))) {
++			ret = mem_regions_alloc_and_add(&sysmem_ranges,
++					start, end - start + 1, RANGE_RAM);
++			if (ret) {
++				fprintf(stderr,
++					"Cannot allocate memory for ranges\n");
++				ret = -ENOMEM;
++				goto err;
++			}
++
++		}
++	}
++
++	while (fgets(line, sizeof(line), sp) != 0) {
++		count = sscanf(line, "%llx-%llx : %n", &start, &end, &consumed);
++		if (count != 2)
++			continue;
++		str = line + consumed;
++
++		if (to_be_excluded(str, start, end)) {
++			excl_range.start = start;
++			excl_range.end = end;
++
++			ret = mem_regions_alloc_and_exclude(&sysmem_ranges, &excl_range);
++			if (ret) {
++				fprintf(stderr,
++					"Cannot allocate memory for ranges (exclude)\n");
++				ret = -ENOMEM;
++				goto err;
++			}
++		}
++	}
++
++	*range = sysmem_ranges.ranges;
++	*num_ranges = sysmem_ranges.size;
++
++	dbgprint_mem_range("System RAM ranges;",
++				sysmem_ranges.ranges, sysmem_ranges.size);
++
++	ret = 0;
++ err:
++	if (fp)
++		fclose(fp);
++	if (sp)
++		fclose(sp);
++	return ret;
++}
++
++/*******\
++* STUBS *
++\*******/
++
++int arch_compat_trampoline(struct kexec_info *UNUSED(info))
++{
++	return 0;
++}
++
++void arch_update_purgatory(struct kexec_info *UNUSED(info))
++{
++}
++
++int arch_do_exclude_segment(struct kexec_info *UNUSED(info), struct kexec_segment *UNUSED(segment))
++{
++	return 0;
++}
+diff --git a/kexec/arch/riscv/kexec-riscv.h b/kexec/arch/riscv/kexec-riscv.h
+new file mode 100644
+index 000000000000..c4323a65dacf
+--- /dev/null
++++ b/kexec/arch/riscv/kexec-riscv.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019 FORTH-ICS/CARV
++ *              Nick Kossifidis <mick@ics.forth.gr>
++ */
++
++struct fdt_image {
++	char	*buf;
++	off_t	size;
++};
++
++struct riscv_opts {
++	char *cmdline;
++	char *fdt_path;
++	char *initrd_path;
++	uint64_t initrd_start;
++	uint64_t initrd_end;
++	struct fdt_image *fdt;
++};
++
++/* crashdump-riscv.c */
++extern struct memory_range elfcorehdr_mem;
++int load_elfcorehdr(struct kexec_info *info);
++
++/* kexec-riscv.c */
++int load_extra_segments(struct kexec_info *info, uint64_t kernel_base,
++			uint64_t kernel_size, uint64_t max_addr);
++
++int elf_riscv_probe(const char *buf, off_t len);
++void elf_riscv_usage(void);
++int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
++		   struct kexec_info *info);
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+index 0a96b75f65aa..3e285ab2043b 100644
+--- a/kexec/dt-ops.c
++++ b/kexec/dt-ops.c
+@@ -4,9 +4,11 @@
+ #include <libfdt.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ 
+ #include "kexec.h"
+ #include "dt-ops.h"
++#include "mem_regions.h"
+ 
+ static const char n_chosen[] = "chosen";
+ 
+@@ -95,7 +97,7 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+ 
+ 	strcpy(new_node, "/");
+ 	strcat(new_node, node);
+-	
++
+ 	nodeoffset = fdt_path_offset(new_dtb, new_node);
+ 
+ 	if (nodeoffset == -FDT_ERR_NOTFOUND) {
+@@ -174,3 +176,441 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
+ 	free(new_node);
+ 	return result;
+ }
++
++static int dtb_get_num_cells(char *dtb, int nodeoffset, uint32_t *addr_cells,
++			     uint32_t *size_cells, bool recursive)
++{
++	const uint32_t *prop32 = NULL;
++	int curr_offset = nodeoffset;
++	int prop_len = 0;
++	*addr_cells = 0;
++	*size_cells = 0;
++
++	do {
++		prop32 = fdt_getprop(dtb, curr_offset, "#address-cells", &prop_len);
++		curr_offset = fdt_parent_offset(dtb, curr_offset);
++	} while (!prop32 && prop_len == -FDT_ERR_NOTFOUND && recursive);
++
++	if (!prop32) {
++		dbgprintf("Could not get #address-cells property for %s (%s)\n",
++			  fdt_get_name(dtb, nodeoffset, NULL), fdt_strerror(nodeoffset));
++		return -EINVAL;
++	}
++	*addr_cells = fdt32_to_cpu(*prop32);
++
++	curr_offset = nodeoffset;
++	do {
++		prop32 = fdt_getprop(dtb, curr_offset, "#size-cells", &prop_len);
++		curr_offset = fdt_parent_offset(dtb, curr_offset);
++	} while (!prop32 && prop_len == -FDT_ERR_NOTFOUND && recursive);
++
++	if (!prop32) {
++		dbgprintf("Could not get #size-cells property for %s (%s)\n",
++			  fdt_get_name(dtb, nodeoffset, NULL), fdt_strerror(nodeoffset));
++		return -EINVAL;
++	}
++	*size_cells = fdt32_to_cpu(*prop32);
++
++	dbgprintf("%s: #address-cells:%d #size-cells:%d\n",
++		 fdt_get_name(dtb, nodeoffset, NULL), *addr_cells, *size_cells);
++
++	return 0;
++}
++
++void dtb_extract_int_property(uint64_t *val, const void *buf, uint32_t cells)
++{
++	const uint32_t *prop32 = NULL;
++	const uint64_t *prop64 = NULL;
++
++	if (cells == 1) {
++		prop32 = (const uint32_t *) buf;
++		*val = (uint64_t) be32_to_cpu(*prop32);
++	} else {
++		/* Skip any leading cells */
++		prop64 = (const uint64_t *) (uint32_t *)buf + cells - 2;
++		*val = (uint64_t) be64_to_cpu(*prop64);
++	}
++}
++
++void dtb_fill_int_property(void *buf, uint64_t val, uint32_t cells)
++{
++	uint32_t prop32 = 0;
++	uint64_t prop64 = 0;
++
++	if (cells == 1) {
++		prop32 = cpu_to_fdt32((uint32_t) val);
++		memcpy(buf, &prop32, sizeof(uint32_t));
++	} else {
++		prop64 = cpu_to_fdt64(val);
++		/* Skip any leading cells */
++		memcpy((uint64_t *)(uint32_t *)buf + cells - 2,
++		       &prop64, sizeof(uint64_t));
++	}
++}
++
++int dtb_add_range_property(char **dtb, off_t *dtb_size, uint64_t start, uint64_t end,
++			   const char *parent, const char *name)
++{
++	uint32_t addr_cells = 0;
++	uint32_t size_cells = 0;
++	char *nodepath = NULL;
++	void *prop = NULL;
++	int nodeoffset = 0;
++	int prop_size = 0;
++	int ret = 0;
++
++	nodepath = malloc(strlen("/") + strlen(parent) + 1);
++	if (!nodepath) {
++		dbgprintf("%s: malloc failed\n", __func__);
++		return -ENOMEM;
++	}
++
++	strcpy(nodepath, "/");
++	strcat(nodepath, parent);
++
++	nodeoffset = fdt_path_offset(*dtb, nodepath);
++	if (nodeoffset < 0) {
++		dbgprintf("%s: fdt_path_offset(%s) failed: %s\n", __func__,
++			  nodepath, fdt_strerror(nodeoffset));
++		free(nodepath);
++		return nodeoffset;
++	}
++	free(nodepath);
++
++	ret = dtb_get_num_cells(*dtb, nodeoffset, &addr_cells, &size_cells, true);
++	if (ret < 0)
++		return ret;
++
++	/* Can the range fit with the given address/size cells ? */
++	if ((addr_cells == 1) && (start >= (1ULL << 32)))
++		return -EINVAL;
++
++	if ((size_cells == 1) && ((end - start + 1) >= (1ULL << 32)))
++		return -EINVAL;
++
++	prop_size = sizeof(uint32_t) * (addr_cells + size_cells);
++	prop = malloc(prop_size);
++
++	dtb_fill_int_property(prop, start, addr_cells);
++	dtb_fill_int_property((void *)((uint32_t *)prop + addr_cells),
++			      end - start + 1, size_cells);
++
++	/* Add by node path name */
++	return dtb_set_property(dtb, dtb_size, parent, name, prop, prop_size);
++}
++
++/************************\
++* MEMORY RANGES HANDLING *
++\************************/
++
++static int dtb_add_memory_range(struct memory_ranges *mem_ranges, uint64_t start,
++				uint64_t end, unsigned type)
++{
++	struct memory_range this_region = {0};
++	struct memory_range *ranges = mem_ranges->ranges;
++	int i = 0;
++	int ret = 0;
++
++	if (start == end) {
++		dbgprintf("Ignoring empty region\n");
++		return -EINVAL;
++	}
++
++	/* Check if we are adding an existing region */
++	for (i = 0; i < mem_ranges->size; i++) {
++		if (start == ranges[i].start && end == ranges[i].end) {
++			dbgprintf("Duplicate: 0x%lx - 0x%lx\n", start, end);
++
++			if (type == ranges[i].type)
++				return 0;
++			else if (type == RANGE_RESERVED) {
++				ranges[i].type = RANGE_RESERVED;
++				return 0;
++			}
++
++			dbgprintf("Conflicting types for region: 0x%lx - 0x%lx\n",
++				  start, end);
++			return -EINVAL;
++		}
++	}
++
++	/*
++	 * Reserved regions may be part of an existing /memory
++	 * region and shouldn't overlap according to spec, so
++	 * since we add /memory regions first, we can exclude
++	 * reserved regions here from the existing /memory regions
++	 * included in ranges[], so that we don't have the same
++	 * region twice.
++	 */
++	if (type == RANGE_RESERVED) {
++		this_region.start = start;
++		this_region.end = end - 1;
++		this_region.type = type;
++		ret = mem_regions_exclude(mem_ranges, &this_region);
++		if (ret)
++			return ret;
++	}
++
++	ret = mem_regions_alloc_and_add(mem_ranges, start,
++					end - start, type);
++
++	return ret;
++}
++
++static int dtb_add_memory_region(char *dtb, int nodeoffset,
++				 struct memory_ranges *mem_ranges, int type)
++{
++	uint32_t root_addr_cells = 0;
++	uint32_t root_size_cells = 0;
++	uint64_t addr = 0;
++	uint64_t size = 0;
++	const char *reg = NULL;
++	int prop_size = 0;
++	int offset = 0;
++	int entry_size = 0;
++	int num_entries = 0;
++	int ret = 0;
++
++	/*
++	 * Get address-cells and size-cells properties (according to
++	 * binding spec these are the same as in the root node)
++	 */
++	ret = dtb_get_num_cells(dtb, 0, &root_addr_cells, &root_size_cells, false);
++	if (ret < 0) {
++		dbgprintf("No address/size cells on root node !\n");
++		return ret;
++	}
++
++	/*
++	 * Parse the reg array, acording to device tree spec it includes
++	 * an arbitary number of <address><size> pairs
++	 */
++	entry_size = (root_addr_cells + root_size_cells) * sizeof(uint32_t);
++	reg = fdt_getprop(dtb, nodeoffset, "reg", &prop_size);
++	if (!reg) {
++		dbgprintf("Warning: Malformed memory region with no reg property (%s) !\n",
++			  fdt_get_name(dtb, nodeoffset, NULL));
++		return -EINVAL;
++	}
++
++	num_entries = prop_size / entry_size;
++	dbgprintf("Got region with %i entries: %s\n", num_entries,
++		  fdt_get_name(dtb, nodeoffset, NULL));
++
++	for (num_entries--; num_entries >= 0; num_entries--) {
++		offset = num_entries * entry_size;
++
++		dtb_extract_int_property(&addr, reg + offset,
++					 root_addr_cells);
++		offset += root_addr_cells * sizeof(uint32_t);
++
++		dtb_extract_int_property(&size, reg + offset,
++					 root_size_cells);
++
++		ret = dtb_add_memory_range(mem_ranges, addr,
++					   addr + size, type);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int dtb_parse_memory_reservations_table(char *dtb, struct memory_ranges *mem_ranges)
++{
++	int total_memrsrv = 0;
++	uint64_t addr = 0;
++	uint64_t size = 0;
++	int ret = 0;
++	int i = 0;
++
++	total_memrsrv = fdt_num_mem_rsv(dtb);
++	for (i = 0; i < total_memrsrv; i++) {
++		ret = fdt_get_mem_rsv(dtb, i, &addr, &size);
++		if (ret)
++			continue;
++		ret = dtb_add_memory_range(mem_ranges, addr, addr + size - 1,
++					   RANGE_RESERVED);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int dtb_get_reserved_memory_node(char *dtb)
++{
++	uint32_t root_addr_cells = 0;
++	uint32_t root_size_cells = 0;
++	uint32_t addr_cells = 0;
++	uint32_t size_cells = 0;
++	int prop_size = 0;
++	int nodeoffset = 0;
++	int ret = 0;
++
++	/* Get address / size cells from root node */
++	ret = dtb_get_num_cells(dtb, 0, &root_addr_cells, &root_size_cells, false);
++	if (ret < 0) {
++		dbgprintf("No address/size cells on root node !\n");
++		return ret;
++	}
++
++	/* This calls fdt_next_node internaly */
++	nodeoffset = fdt_subnode_offset(dtb, 0, "reserved-memory");
++	if (nodeoffset == -FDT_ERR_NOTFOUND) {
++		return nodeoffset;
++	} else if (nodeoffset < 0) {
++		dbgprintf("Error while looking for reserved-memory: %s\n",
++			fdt_strerror(nodeoffset));
++		return nodeoffset;
++	}
++
++	/* Look for the ranges property */
++	fdt_getprop(dtb, nodeoffset, "ranges", &prop_size);
++	if (prop_size < 0) {
++		fprintf(stderr, "Malformed reserved-memory node (no ranges property) !\n");
++		return -EINVAL;
++	}
++
++	/* Verify address-cells / size-cells */
++	ret = dtb_get_num_cells(dtb, nodeoffset, &addr_cells, &size_cells, false);
++	if (ret < 0) {
++		dbgprintf("No address/size cells property on reserved-memory node\n");
++		return ret;
++	}
++
++	if (addr_cells != root_addr_cells) {
++		fprintf(stderr, "Invalid #address-cells property on reserved-memory node\n");
++		return -EINVAL;
++	}
++
++	if (size_cells != root_size_cells) {
++		fprintf(stderr, "Invalid #size-cells property on reserved-memory node\n");
++		return -EINVAL;
++
++	}
++
++	return nodeoffset;
++}
++
++static int dtb_parse_reserved_memory_node(char *dtb, struct memory_ranges *mem_ranges)
++{
++	int nodeoffset = 0;
++	int node_depth = 0;
++	int parent_depth = 0;
++	int ret = 0;
++
++	nodeoffset = dtb_get_reserved_memory_node(dtb);
++	if (nodeoffset == -FDT_ERR_NOTFOUND)
++		return 0;
++	else if (nodeoffset < 0)
++		return nodeoffset;
++
++	/* Got the parent node, check for sub-nodes */
++
++	/* fdt_next_node() increases or decreases depth */
++	node_depth = parent_depth;
++	nodeoffset = fdt_next_node(dtb, nodeoffset, &node_depth);
++	if (ret < 0) {
++		dbgprintf("Unable to get next node: %s\n",
++			  fdt_strerror(ret));
++		return -EINVAL;
++	}
++
++	while (node_depth != parent_depth) {
++
++		ret = dtb_add_memory_region(dtb, nodeoffset,
++					    mem_ranges, RANGE_RESERVED);
++		if (ret)
++			return ret;
++
++		nodeoffset = fdt_next_node(dtb, nodeoffset, &node_depth);
++		if (ret < 0) {
++			dbgprintf("Unable to get next node: %s\n",
++				  fdt_strerror(ret));
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++static int dtb_parse_memory_nodes(char *dtb, struct memory_ranges *mem_ranges)
++{
++	int nodeoffset = 0;
++	int num_regions = 0;
++	const char* dev_type = 0;
++	int prop_size = 0;
++	int ret = 0;
++
++	for (; ; num_regions++) {
++		nodeoffset = fdt_subnode_offset(dtb, nodeoffset,
++						 "memory");
++		if (nodeoffset < 0)
++			break;
++
++		dbgprintf("Got memory node at depth: %i\n", fdt_node_depth(dtb, nodeoffset));
++
++		/* Look for the device_type  property */
++		dev_type = fdt_getprop(dtb, nodeoffset, "device_type", &prop_size);
++		if (prop_size < 0) {
++			fprintf(stderr, "Malformed /memory node (no device-type property) !\n");
++			return -EINVAL;
++		}
++
++		if (strncmp(dev_type, "memory", prop_size)) {
++			dbgprintf("Got unknown dev_type property: %s\n", dev_type);
++			continue;
++		}
++
++		ret = dtb_add_memory_region(dtb, nodeoffset, mem_ranges, RANGE_RAM);
++		if (ret)
++			return ret;
++	}
++
++	if (!num_regions) {
++		dbgprintf("Malformed dtb, no /memory nodes present !\n");
++		return -EINVAL;
++	}
++
++	dbgprintf("Got %i /memory nodes\n", num_regions);
++
++	return 0;
++}
++
++int dtb_get_memory_ranges(char *dtb, struct memory_ranges *mem_ranges, struct memory_ranges *extra_ranges)
++{
++	int i = 0;
++	int ret = 0;
++
++	/* Fill mem_ranges[] by parsing the device tree */
++	ret = dtb_parse_memory_nodes(dtb, mem_ranges);
++	if (ret)
++		return ret;
++
++	ret = dtb_parse_memory_reservations_table(dtb, mem_ranges);
++	if (ret)
++		return ret;
++
++	ret = dtb_parse_reserved_memory_node(dtb, mem_ranges);
++	if (ret)
++		return ret;
++
++	/* Append any extra ranges provided by the caller (e.g. initrd) */
++	for (i = 0; extra_ranges != NULL && i < extra_ranges->size; i++) {
++		dbgprintf("Adding extra range: 0x%llx - 0x%llx (%s)\n",
++			  extra_ranges->ranges[i].start,
++			  extra_ranges->ranges[i].end,
++			  extra_ranges->ranges[i].type == RANGE_RESERVED ?
++                          "RANGE_RESERVED" : "RANGE_RAM");
++
++		ret = dtb_add_memory_range(mem_ranges, extra_ranges->ranges[i].start,
++                                extra_ranges->ranges[i].end, extra_ranges->ranges[i].type);
++		if (ret)
++			return ret;
++	}
++
++	mem_regions_sort(mem_ranges);
++
++	return 0;
++}
+diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+index 03659ce283db..3014205d8e98 100644
+--- a/kexec/dt-ops.h
++++ b/kexec/dt-ops.h
+@@ -11,4 +11,11 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+ 
+ int dtb_delete_property(char *dtb, const char *node, const char *prop);
+ 
++void dtb_extract_int_property(uint64_t *val, const void *buf, uint32_t cells);
++void dtb_fill_int_property(void *buf, uint64_t val, uint32_t cells);
++int dtb_add_range_property(char **dtb, off_t *dtb_size, uint64_t start, uint64_t end,
++                           const char *node, const char* parent);
++int dtb_get_memory_ranges(char *dtb, struct memory_ranges *mem_ranges,
++			  struct memory_ranges *extra_ranges);
++
+ #endif
+diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+index cc32c0162aec..89591ad17e7d 100644
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
+@@ -140,6 +140,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+ #define KEXEC_ARCH_MIPS_LE (10 << 16)
+ #define KEXEC_ARCH_MIPS    ( 8 << 16)
+ #define KEXEC_ARCH_CRIS    (76 << 16)
++#define KEXEC_ARCH_RISCV   (243 << 16)
+ #define KEXEC_ARCH_LOONGARCH	(258 << 16)
+ 
+ #define KEXEC_MAX_SEGMENTS 16
+@@ -187,5 +188,8 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+ #if defined(__loongarch__)
+ #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_LOONGARCH
+ #endif
++#if defined(__riscv__) || defined(__riscv)
++#define KEXEC_ARCH_NATIVE	KEXEC_ARCH_RISCV
++#endif
+ 
+ #endif /* KEXEC_SYSCALL_H */
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 4d2d07134bd5..7d1175f2445c 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -25,6 +25,7 @@ include $(srcdir)/purgatory/arch/ia64/Makefile
+ include $(srcdir)/purgatory/arch/mips/Makefile
+ include $(srcdir)/purgatory/arch/ppc/Makefile
+ include $(srcdir)/purgatory/arch/ppc64/Makefile
++include $(srcdir)/purgatory/arch/riscv/Makefile
+ include $(srcdir)/purgatory/arch/s390/Makefile
+ include $(srcdir)/purgatory/arch/sh/Makefile
+ include $(srcdir)/purgatory/arch/x86_64/Makefile
+diff --git a/purgatory/arch/riscv/Makefile b/purgatory/arch/riscv/Makefile
+new file mode 100644
+index 000000000000..49a6fef4a904
+--- /dev/null
++++ b/purgatory/arch/riscv/Makefile
+@@ -0,0 +1,7 @@
++#
++# Purgatory riscv
++#
++
++riscv_PURGATORY_SRCS =
++
++dist += purgatory/arch/riscv/Makefile $(riscv_PURGATORY_SRCS)
+-- 
+2.48.1
+
 
