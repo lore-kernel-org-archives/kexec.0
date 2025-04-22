@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74905C369D5
-	for <kexec@archiver.kernel.org>; Mon, 21 Apr 2025 22:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F032BC369AB
+	for <kexec@archiver.kernel.org>; Tue, 22 Apr 2025 01:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=akFQkV/8/fTYGa7fqxSfS2fqQsFjN1Fv1/vAuGZWs0Y=; b=Us5okvajEJFoam84UgYAaEKmxB
-	/JUH/+THaOl5YlLdJfVJ9PN/1oGzM9xEFDEK8gdZbKXajY5jrudR47FiiNHSQJZf3qcnkbN+pNhMu
-	jyj1wH+rpF9gl3Dnr3XkujPblqZi21mFKRyGrgmYP4SN6ZayNCONAeOviZyrDGOLSanv0ZnwwbMEE
-	i0wk/TJneelmZEpHNAunM6wuNF6hpEA6otdc6bnwa6RMvNbiUUyFQNN62M6OwDvXmPYgSXZljZJDO
-	aT/POblYKXJ8XspvmD42K2AtLOj8skQ8PO7lEW7JssRq/fd9JCz1hahMZMOaccjT8JOrj9KJwBVLI
-	3uhcl/+Q==;
+	bh=fI6AFTw4c9sL3fcnVJSy2zyPQqrBnL2elPdCrST7cic=; b=lJg6vENImGDpafKMz2JpGdulQM
+	PjOB4mf7swg/JhlLdttEXdOXdnfGw+Nf0ujbhkcQTPramXjlgZUfb+Wcu90idXCmPhoUei1Q5skF1
+	r2UGMt+Hw6vTr6uEY2sGlVl1oSeDg8+ch0ovziy2upW79X+zS40tTDBXyaW458caY7xd16LWq8Ooi
+	TNbzGzLOtd+n0ZuYhSr5Cn2siezft+o8uX5QFGFXxx3fBiTTkQSLheAJ8A25AakxlKf0jZDpr78Zr
+	YEQBIKIydSLMf+LCzKcqcpS1skiA9UVHl+l28kxWrCLVOfH5ldeABS0Sr6g/BtGB/2XZHs29Ekd/W
+	WUa3o/TQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u705Y-00000005Ne3-04qA;
-	Mon, 21 Apr 2025 22:58:08 +0000
-Received: from mgamail.intel.com ([192.198.163.14])
+	id 1u72Hw-00000005VIt-1dAi;
+	Tue, 22 Apr 2025 01:19:04 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u705V-00000005Ncd-2Dsu
+	id 1u72Hq-00000005VFa-3ymA
 	for kexec@lists.infradead.org;
-	Mon, 21 Apr 2025 22:58:07 +0000
+	Tue, 22 Apr 2025 01:19:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745276286; x=1776812286;
+  t=1745284738; x=1776820738;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=9FzfySd8JcmYcJhA+RbTr4cgSyXJQBTIYaQ0EG+ywnI=;
-  b=E7rPYrPvIZNY9YHlx9RPxuPROjjZ5vZjQieqJGOADS3aDUbafpFvubm6
-   xcSmDqmQ7lP45sMNagU3XPvoYkzKcmWNy75Ts0gcvp0wwOC6cnOXQQ3Ms
-   w1OWnISo/z7kpfrocZcfYCdcP0yDBxKhtSU5B1FY2lJXZbdr35aPxIOPS
-   qx//WMIJZDWj0nRbUuVdIh8tn+oOcFGSoP1M6u+qC+MWPA+UxPaNxb7Wo
-   CsaIQN6jexhloVbjpWF4J3Ku95sz04fYPUYskm+Ulrd5hoFgKqS0wwcHC
-   5Y2qPlwFjgcjsV2nYCyj4JNssdV0nGnxUWm2y9DeJm7sG5Iazj+TxJi7k
-   Q==;
-X-CSE-ConnectionGUID: VYPYhHA+Qb+/zGLP0cIONg==
-X-CSE-MsgGUID: CadO78oJQYaSwnzERSH/CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46999047"
+  bh=0qrDinrGYYMpLHgQEt5+y0lxPzUYR186egeIjlsfTUs=;
+  b=nRDpieUn/fJjqPQAQcOmSAVZURVvwRu2vi6QZFcrMAchwXXG417PxCDE
+   uZPtAxgenkUb1mouo441IILz4TxU5ay6HmEoEG6Erqnb/+6H2amKs89io
+   6Jm8NvFLp2fg0gr3ZKNtRuVLQfZnd3RAlc77kC67fbe/ohHoiZPpo0xyR
+   gAwKnlAHozWD/xta5wlUcGCW5ztA02jYKSSI81l/HB3b/fH0PCZiynlbA
+   ObvYHDlGOxfK4Yreevshm1j/ZnazKeGJuaFohQqyj1YIvgcRgM2XCZ8L/
+   PJC39wSKoxiBhrzOtItKlDNuPbH3DmmT8FN7U37itqCkJVh50mU76BmMO
+   g==;
+X-CSE-ConnectionGUID: WjwbYXlCTnCqGBvVPazN/g==
+X-CSE-MsgGUID: Xs4QdiJ3SP6e/M/BQAkQRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="45949444"
 X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="46999047"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 15:58:02 -0700
-X-CSE-ConnectionGUID: egVHXNvjQWKwu19MNmVNzg==
-X-CSE-MsgGUID: KWGaevgqTj+G7k6IQqxz3g==
+   d="scan'208";a="45949444"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 18:18:50 -0700
+X-CSE-ConnectionGUID: vNHeqBcvQcynHRk+eJuWEA==
+X-CSE-MsgGUID: bROkwlhdSuShbpsam8FOpQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="131750970"
+   d="scan'208";a="131719748"
 Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.220.113]) ([10.124.220.113])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 15:57:58 -0700
-Message-ID: <26278368-cd3b-4bfb-9091-f3eec4cab35f@intel.com>
-Date: Mon, 21 Apr 2025 15:57:56 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 18:18:49 -0700
+Message-ID: <07132e5a-d334-43b6-8905-4e1ca991b3fa@intel.com>
+Date: Mon, 21 Apr 2025 18:18:47 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 13/19] x86/reboot: Secure Launch SEXIT support on
- reboot paths
+Subject: Re: [PATCH v14 09/19] x86: Secure Launch kernel early boot stub
 To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
  x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
@@ -73,7 +72,7 @@ Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
  baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
 References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-14-ross.philipson@oracle.com>
+ <20250421162712.77452-10-ross.philipson@oracle.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -119,12 +118,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250421162712.77452-14-ross.philipson@oracle.com>
+In-Reply-To: <20250421162712.77452-10-ross.philipson@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250421_155805_587438_6FE435D1 
-X-CRM114-Status: UNSURE (   8.05  )
+X-CRM114-CacheID: sfid-20250421_181858_990008_744FDC06 
+X-CRM114-Status: UNSURE (   5.48  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -141,18 +140,16 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 4/21/25 09:27, Ross Philipson wrote:
-> @@ -788,6 +790,9 @@ static void native_machine_halt(void)
->  
->  	tboot_shutdown(TB_SHUTDOWN_HALT);
->  
-> +	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-> +	slaunch_finalize(1);
+> +static u64 sl_rdmsr(u32 reg)
+> +{
+> +	u64 lo, hi;
+> +
+> +	asm volatile ("rdmsr" : "=a" (lo), "=d" (hi) : "c" (reg));
+> +
+> +	return (hi << 32) | lo;
+> +}
 
-This is the kind of stuff that needs to get fixed up before this series
-can go _anywhere_.
+Is there a reason this code doesn't just use boot_rdmsr()?
 
-"TXT requirements" is not useful to a maintainer. *WHAT* requirement?
-*WHY* must it be done this way?
 
-This code is unmaintainable as it stands.
 
