@@ -4,65 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E287C369D3
-	for <kexec@archiver.kernel.org>; Tue, 22 Apr 2025 13:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ABCC4C369C2
+	for <kexec@archiver.kernel.org>; Tue, 22 Apr 2025 15:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZreUjKlu/dQC9h92l6N8/f/933XzabBi9R6XSKXnT60=; b=ZVhAM+JCkWPTCIBGyYzj6BqQ9Y
-	gK+oVc4jz2Pt/AmwFfbswmQZrD8wI2O8bFY+b0BTXMosK6KsOSwmf+DG3SFB9b2KI+u0eQO8T0Q9M
-	tOSINolSebUbTeb+fdiySQUwYq+zr2bvDqsSurefTER4mGINcG540/y89r7ATenHG2qFmh192JsSp
-	a8IfzDZGDNzf/PiTSn1UmEfobMtVJS+5GzJU3aTiG3ihzWyXaCSmndo6/Pqeta1qu6cSXrugLHXJk
-	O1NMhYqE+6XgCyacZV1/lPf58UIKR42Pveha8q/BB9cx0G3ZZ5G3+NZab2iH86X5unSyWaKZKPO5v
-	sJ8/JvvQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ID22wjceRugB90WxLsuRXhNBWXnwisWQrSPXMdGR18k=; b=KSyDKqOX0CVwCXZqYMf4l0LQ5p
+	N9VgpvkUByAyn9sntyqH9y+Ar1PJJUMvY1JQjLnAjCfmKcI1sxlg81PIoIIinS+bkhWOn6xC0pzwd
+	rOin1cfb7tSBjHmfK+7uzX/HOenBs+CLH0GoQ4wX9ME8bqwT2/RGYVGVC4yTCKz+dkTBAnNc8EkAe
+	gVs494LOsF6ka/wnaULKAk7lcdhN0VkLoju/iYcAVYOt3DWy8BXKeoXqjlHNA38ANoejsWeXItE+Z
+	Rw7yra6QEukN6dLM4K/nJmtR32TJpxPliemanx4SS91NYvsch7n9Xc4KZ49PrRbNoQXuokQo04xR+
+	u136xP7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7DVb-00000007GNw-0G25;
-	Tue, 22 Apr 2025 13:17:55 +0000
-Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
+	id 1u7FEi-00000007dZ5-1PPr;
+	Tue, 22 Apr 2025 15:08:36 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7CPV-000000073V4-0Q1f;
-	Tue, 22 Apr 2025 12:07:34 +0000
+	id 1u7Dip-00000007JJF-21I0;
+	Tue, 22 Apr 2025 13:31:36 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 4BC5BA4B982;
-	Tue, 22 Apr 2025 12:02:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB08C4CEE9;
-	Tue, 22 Apr 2025 12:07:31 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 6EECE49B89;
+	Tue, 22 Apr 2025 13:31:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD85EC4CEE9;
+	Tue, 22 Apr 2025 13:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745323652;
-	bh=8WW9OB6zuGleMgSTpkSvsmydzrgJKFfSC7PR7tvoUhc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=n+QnN3QqdPlW9w6+THz//8BFiC/xzlKkG1GRTGM13ux+sysJWeOxftT3zB2O0Uq8K
-	 +MlQxQgWanKWQtZmcLDcsLWUOnnDYT3uxQDcv2QmZ9LXBt88dZs73z7LQzhMfAF4NC
-	 BDe59wLEhn37a0MKyOhpf4rBKLK3XIyLdpna36z/HqdURc/37QnTS4nV431DsVEwbx
-	 lXDPDzFBeYGw5eKxZ1L2+8BzG084kHvuNyGBOgPZPsu7ynTeG4RDmqeIRUbyXzK56y
-	 aoPFJSQZrX8OoU1OXHT06FqDD75L7YCqSMBTlZCJ3wmBDR40mmr9NpODuomymKD63Z
-	 oUU4+U9RdhaNw==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Simon Horman <horms@kernel.org>
-Cc: Nick Kossifidis <mick@ics.forth.gr>, Song Shuai
- <songshuaishuai@tinylab.org>, Li Zhengyu <lizhengyu3@huawei.com>,
- kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Yixun Lan
- <yixun.lan@gmail.com>, Xianting Tian <xianting.tian@linux.alibaba.com>,
- linux-riscv@lists.infradead.org, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>
-Subject: Re: [PATCH 1/4] RISC-V: Add support for riscv kexec/kdump on
- kexec-tools
-In-Reply-To: <20250422104825.GT2789685@horms.kernel.org>
-References: <20250409201428.648717-1-bjorn@kernel.org>
- <20250409201428.648717-2-bjorn@kernel.org>
- <20250422104825.GT2789685@horms.kernel.org>
-Date: Tue, 22 Apr 2025 14:07:28 +0200
-Message-ID: <87bjso5ri7.fsf@all.your.base.are.belong.to.us>
+	s=k20201202; t=1745328694;
+	bh=PUlxQyX8nREovK6k+GC9IgG9dVIjGRHmht1sosPSRZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lzsbSUe9yMIoIdAFuVtjuYbtKJXYnXH+/18lnSxmlyvJ3KAczwykQSh0ukO+g5UhR
+	 b9fKvjYZ4h43aGmf/RbCPrd1oGYcnY1Mrcf5caZIcHxEVTAbKDhBZCwUX/xHDukPQf
+	 eneYsZ6BCW2dUf2BBdziP1WjKygmCeL2+OdBTTdA7gK6RiN0DcOwrzOd9Qu1F3UyFi
+	 2oeG7VUlfx0elQ3L/kwDIu6Zy7W3318G0BIs8M9MOq110qg5tpNxoYsnjTwCkfb5d8
+	 iPQfR1G2Q83oKqJ/77Xc2dm00a6e3gsq56zipjt/LQbzPilfN8TfWRxWZJthoj/dTK
+	 M120fBrzWowgw==
+Date: Tue, 22 Apr 2025 16:31:19 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	corbet@lwn.net, dave.hansen@linux.intel.com,
+	devicetree@vger.kernel.org, dwmw2@infradead.org,
+	ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com,
+	jgowans@amazon.com, kexec@lists.infradead.org, krzk@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
+	mingo@redhat.com, pasha.tatashin@soleen.com, pbonzini@redhat.com,
+	peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org,
+	rostedt@goodmis.org, saravanak@google.com,
+	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 12/14] memblock: add KHO support for reserve_mem
+Message-ID: <aAeaJ2iqkrv_ffhT@kernel.org>
+References: <20250411053745.1817356-1-changyuanl@google.com>
+ <20250411053745.1817356-13-changyuanl@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411053745.1817356-13-changyuanl@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250422_050733_267124_1899104C 
-X-CRM114-Status: GOOD (  30.90  )
+X-CRM114-CacheID: sfid-20250422_063135_554843_5CB1DC5A 
+X-CRM114-Status: GOOD (  36.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,147 +83,305 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Simon!
-
-Simon Horman <horms@kernel.org> writes:
-
-> Thanks Bj=C3=B6rn,
->
-> Overall I am happy with this patchset. But there are a few minor points
-> I'd like addressed, which relate strictly to build coverage and the CI.
-> I can handle these myself if you prefer.
-
-It's really up to you! What do you prefer? I can spin a v2 if that's
-easier for you (and then I'll try to address all the things you pointed
-out below)!
-
-
-Bj=C3=B6rn
-
-> Firstly, it would be really great if the following could be included at t=
-he
-> end of the series, so there is some build coverage of RISC-V in the CI.
-> (Feel free to rewrite or attribute however you see fit - it is a trival o=
-ne
-> liner.)
->
-> From: Simon Horman <horms@kernel.org>
-> Subject: [PATCH] workflow: Add riscv64
->
-> Add riscv64 to matrix of build architectures.
->
-> Signed-off-by: Simon Horman <horms@kernel.org>
+On Thu, Apr 10, 2025 at 10:37:43PM -0700, Changyuan Lyu wrote:
+> From: Alexander Graf <graf@amazon.com>
+> 
+> Linux has recently gained support for "reserve_mem": A mechanism to
+> allocate a region of memory early enough in boot that we can cross our
+> fingers and hope it stays at the same location during most boots, so we
+> can store for example ftrace buffers into it.
+> 
+> Thanks to KASLR, we can never be really sure that "reserve_mem"
+> allocations are static across kexec. Let's teach it KHO awareness so
+> that it serializes its reservations on kexec exit and deserializes them
+> again on boot, preserving the exact same mapping across kexec.
+> 
+> This is an example user for KHO in the KHO patch set to ensure we have
+> at least one (not very controversial) user in the tree before extending
+> KHO's use to more subsystems.
+> 
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 > ---
->  .github/workflows/build.yml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
-> index fd9ea6c8eca7..d1b3e74391ff 100644
-> --- a/.github/workflows/build.yml
-> +++ b/.github/workflows/build.yml
-> @@ -19,6 +19,7 @@ jobs:
->          - powerpc
->          - powerpc64
->          - powerpc64le
-> +        - riscv64
->          - sh4
->          - s390x
->          - x86_64-x32
->
-> ...
->
->> diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
->> new file mode 100644
->> index 000000000000..f26cc9025e77
->> --- /dev/null
->> +++ b/kexec/arch/riscv/Makefile
->> @@ -0,0 +1,35 @@
->> +#
->> +# kexec riscv
->> +#
->> +riscv_KEXEC_SRCS =3D  kexec/arch/riscv/kexec-riscv.c
->> +riscv_KEXEC_SRCS +=3D kexec/arch/riscv/kexec-elf-riscv.c
->> +riscv_KEXEC_SRCS +=3D kexec/arch/riscv/crashdump-riscv.c
->> +
->> +riscv_MEM_REGIONS =3D kexec/mem_regions.c
->> +
->> +riscv_DT_OPS +=3D kexec/dt-ops.c
->> +
->> +riscv_ARCH_REUSE_INITRD =3D
->> +
->> +riscv_CPPFLAGS +=3D -I $(srcdir)/kexec/
->> +
->> +dist +=3D kexec/arch/riscv/Makefile $(riscv_KEXEC_SRCS)			\
->
-> kexec/arch/riscv/iomem.h also needs to be added to dist
-> so that it shows up in the distribution tarball.
->
->> +	kexec/arch/riscv/kexec-riscv.h					\
->> +	kexec/arch/riscv/include/arch/options.h
->
-> Also, it would be nice to sort these lines alphabetically.
->
->> +
->> +ifdef HAVE_LIBFDT
->> +
->> +LIBS +=3D -lfdt
->> +
->> +else
->> +
->> +include $(srcdir)/kexec/libfdt/Makefile.libfdt
->> +
->> +libfdt_SRCS +=3D $(LIBFDT_SRCS:%=3Dkexec/libfdt/%)
->> +
->> +riscv_CPPFLAGS +=3D -I$(srcdir)/kexec/libfdt
->> +
->> +riscv_KEXEC_SRCS +=3D $(libfdt_SRCS)
->> +
->> +endif
->> +
->
-> ...
->
->> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
->> index 0a96b75f65aa..3e285ab2043b 100644
->> --- a/kexec/dt-ops.c
->> +++ b/kexec/dt-ops.c
->> @@ -4,9 +4,11 @@
->>  #include <libfdt.h>
->>  #include <stdio.h>
->>  #include <stdlib.h>
->> +#include <stdbool.h>
->>=20=20
->>  #include "kexec.h"
->>  #include "dt-ops.h"
->> +#include "mem_regions.h"
->
-> As dt-ops.c will now use symbols that are implemented in mem_regions.c
-> when the former is compiled the latter now must be compiled too.
->
-> In practice it is only mips where that is not the case.
-> And I believe that can be addressed by squashing the following into
-> this patch.
->
-> diff --git a/kexec/arch/mips/Makefile b/kexec/arch/mips/Makefile
-> index 1fe788608fbe..fa87fbdb7897 100644
-> --- a/kexec/arch/mips/Makefile
-> +++ b/kexec/arch/mips/Makefile
-> @@ -11,6 +11,8 @@ mips_FS2DT_INCLUDE =3D \
->  	-include $(srcdir)/kexec/arch/mips/crashdump-mips.h \
->  	-include $(srcdir)/kexec/arch/mips/kexec-mips.h
->=20=20
-> +mips_MEM_REGIONS =3D kexec/mem_regions.c
+>  mm/memblock.c | 205 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 205 insertions(+)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 456689cb73e20..3571a859f2fe1 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -18,6 +18,11 @@
+>  #include <linux/memblock.h>
+>  #include <linux/mutex.h>
+>  
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +#include <linux/libfdt.h>
+> +#include <linux/kexec_handover.h>
+> +#endif /* CONFIG_KEXEC_HANDOVER */
 > +
->  mips_DT_OPS +=3D kexec/dt-ops.c
->=20=20
->  include $(srcdir)/kexec/libfdt/Makefile.libfdt
->
-> FTR, I believe this is the same mem_regions_alloc_and_add issue that
-> I flagged in the thread [2].
->
-> And at the link below you can see a build failure with this patch, but not
-> the fix above, applied:
->
-> https://github.com/horms/kexec-tools/actions/runs/14591381633/job/4092721=
-9243
+>  #include <asm/sections.h>
+>  #include <linux/io.h>
+>  
+> @@ -2475,6 +2480,201 @@ int reserve_mem_release_by_name(const char *name)
+>  	return 1;
+>  }
+>  
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +#define MEMBLOCK_KHO_FDT "memblock"
+> +#define MEMBLOCK_KHO_NODE_COMPATIBLE "memblock-v1"
+> +#define RESERVE_MEM_KHO_NODE_COMPATIBLE "reserve-mem-v1"
+> +static struct page *kho_fdt;
+> +
+> +static int reserve_mem_kho_finalize(struct kho_serialization *ser)
+> +{
+> +	int err = 0, i;
+> +
+> +	if (!reserved_mem_count)
+> +		return NOTIFY_DONE;
+> +
+> +	if (IS_ERR(kho_fdt)) {
+> +		err = PTR_ERR(kho_fdt);
+> +		pr_err("memblock FDT was not prepared successfully: %d\n", err);
+> +		return notifier_from_errno(err);
+> +	}
+> +
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		struct reserve_mem_table *map = &reserved_mem_table[i];
+> +
+> +		err |= kho_preserve_phys(ser, map->start, map->size);
+> +	}
+> +
+> +	err |= kho_preserve_folio(ser, page_folio(kho_fdt));
+> +	err |= kho_add_subtree(ser, MEMBLOCK_KHO_FDT, page_to_virt(kho_fdt));
+> +
+> +	return notifier_from_errno(err);
+> +}
+> +
+> +static int reserve_mem_kho_notifier(struct notifier_block *self,
+> +				    unsigned long cmd, void *v)
+> +{
+> +	switch (cmd) {
+> +	case KEXEC_KHO_FINALIZE:
+> +		return reserve_mem_kho_finalize((struct kho_serialization *)v);
+> +	case KEXEC_KHO_ABORT:
+> +		return NOTIFY_DONE;
+> +	default:
+> +		return NOTIFY_BAD;
+> +	}
+> +}
+> +
+> +static struct notifier_block reserve_mem_kho_nb = {
+> +	.notifier_call = reserve_mem_kho_notifier,
+> +};
+> +
+> +static void __init prepare_kho_fdt(void)
+> +{
+> +	int err = 0, i;
+> +	void *fdt;
+> +
+> +	if (!reserved_mem_count)
+> +		return;
+
+It's better to have this check in reserve_mem_init() before registering kho
+notifier.
+
+> +
+> +	kho_fdt = alloc_page(GFP_KERNEL);
+> +	if (!kho_fdt) {
+> +		kho_fdt = ERR_PTR(-ENOMEM);
+
+Do we really care about having errno in kho_fdt? I think NULL would work
+just fine.
+
+> +		return;
+
+And actually, it makes sense to me to return -ENOMEM here and let
+reserve_mem_init() bail out before registering notifier if fdt preparation
+failed.
+
+That will save the checks in reserve_mem_kho_finalize() because it would be
+called only if we have reserve_mem areas and fdt is ready.
+
+> +	}
+> +
+> +	fdt = page_to_virt(kho_fdt);
+> +
+> +	err |= fdt_create(fdt, PAGE_SIZE);
+> +	err |= fdt_finish_reservemap(fdt);
+> +
+> +	err |= fdt_begin_node(fdt, "");
+> +	err |= fdt_property_string(fdt, "compatible", MEMBLOCK_KHO_NODE_COMPATIBLE);
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		struct reserve_mem_table *map = &reserved_mem_table[i];
+> +
+> +		err |= fdt_begin_node(fdt, map->name);
+> +		err |= fdt_property_string(fdt, "compatible", RESERVE_MEM_KHO_NODE_COMPATIBLE);
+> +		err |= fdt_property(fdt, "start", &map->start, sizeof(map->start));
+> +		err |= fdt_property(fdt, "size", &map->size, sizeof(map->size));
+> +		err |= fdt_end_node(fdt);
+> +	}
+> +	err |= fdt_end_node(fdt);
+> +
+> +	err |= fdt_finish(fdt);
+> +
+> +	if (err) {
+> +		pr_err("failed to prepare memblock FDT for KHO: %d\n", err);
+> +		put_page(kho_fdt);
+> +		kho_fdt = ERR_PTR(-EINVAL);
+> +	}
+> +}
+> +
+> +static int __init reserve_mem_init(void)
+> +{
+> +	if (!kho_is_enabled())
+> +		return 0;
+> +
+> +	prepare_kho_fdt();
+> +
+> +	return register_kho_notifier(&reserve_mem_kho_nb);
+> +}
+> +late_initcall(reserve_mem_init);
+> +
+> +static void *kho_fdt_in __initdata;
+> +
+> +static void *__init reserve_mem_kho_retrieve_fdt(void)
+> +{
+> +	phys_addr_t fdt_phys;
+> +	struct folio *fdt_folio;
+> +	void *fdt;
+> +	int err;
+> +
+> +	err = kho_retrieve_subtree(MEMBLOCK_KHO_FDT, &fdt_phys);
+> +	if (err) {
+> +		if (err != -ENOENT)
+> +			pr_warn("failed to retrieve FDT '%s' from KHO: %d\n",
+> +				MEMBLOCK_KHO_FDT, err);
+> +		return ERR_PTR(err);
+
+Wouldn't just 'return NULL' work here?
+
+> +	}
+> +
+> +	fdt_folio = kho_restore_folio(fdt_phys);
+> +	if (!fdt_folio) {
+> +		pr_warn("failed to restore memblock KHO FDT (0x%llx)\n", fdt_phys);
+> +		return ERR_PTR(-EFAULT);
+> +	}
+> +
+> +	fdt = page_to_virt(folio_page(fdt_folio, 0));
+
+	fdt = folio_address(folio);
+> +
+> +	err = fdt_node_check_compatible(fdt, 0, MEMBLOCK_KHO_NODE_COMPATIBLE);
+> +	if (err) {
+> +		pr_warn("FDT '%s' is incompatible with '%s': %d\n",
+> +			MEMBLOCK_KHO_FDT, MEMBLOCK_KHO_NODE_COMPATIBLE, err);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return fdt;
+> +}
+> +
+> +static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
+> +					  phys_addr_t align)
+> +{
+> +	int err, len_start, len_size, offset;
+> +	const phys_addr_t *p_start, *p_size;
+> +	const void *fdt;
+> +
+> +	if (!kho_fdt_in)
+> +		kho_fdt_in = reserve_mem_kho_retrieve_fdt();
+
+I'd invert this and move to reserve_mem_kho_retrieve_fdt(), so there it
+would be 
+
+	if (kho_fdt_in)
+		return kho_fdt_in;
+
+	/* actually retrieve the fdt */
+	kho_fdt_in = fdt;
+
+	return fdt;
+
+and here 
+
+	fdt = reserve_mem_kho_retrieve_fdt();
+	if (!fdt)
+		return false;
+> +
+> +	if (IS_ERR(kho_fdt_in))
+> +		return false;
+> +
+> +	fdt = kho_fdt_in;
+> +
+> +	offset = fdt_subnode_offset(fdt, 0, name);
+> +	if (offset < 0) {
+> +		pr_warn("FDT '%s' has no child '%s': %d\n",
+> +			MEMBLOCK_KHO_FDT, name, offset);
+> +		return false;
+> +	}
+> +	err = fdt_node_check_compatible(fdt, offset, RESERVE_MEM_KHO_NODE_COMPATIBLE);
+> +	if (err) {
+> +		pr_warn("Node '%s' is incompatible with '%s': %d\n",
+> +			name, RESERVE_MEM_KHO_NODE_COMPATIBLE, err);
+> +		return false;
+> +	}
+> +
+> +	p_start = fdt_getprop(fdt, offset, "start", &len_start);
+> +	p_size = fdt_getprop(fdt, offset, "size", &len_size);
+> +	if (!p_start || len_start != sizeof(*p_start) || !p_size ||
+> +	    len_size != sizeof(*p_size)) {
+> +		return false;
+> +	}
+> +
+> +	if (*p_start & (align - 1)) {
+> +		pr_warn("KHO reserve-mem '%s' has wrong alignment (0x%lx, 0x%lx)\n",
+> +			name, (long)align, (long)*p_start);
+> +		return false;
+> +	}
+> +
+> +	if (*p_size != size) {
+> +		pr_warn("KHO reserve-mem '%s' has wrong size (0x%lx != 0x%lx)\n",
+> +			name, (long)*p_size, (long)size);
+> +		return false;
+> +	}
+> +
+> +	reserved_mem_add(*p_start, size, name);
+> +	pr_info("Revived memory reservation '%s' from KHO\n", name);
+> +
+> +	return true;
+> +}
+> +#else
+> +static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
+> +					  phys_addr_t align)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_KEXEC_HANDOVER */
+> +
+>  /*
+>   * Parse reserve_mem=nn:align:name
+>   */
+> @@ -2530,6 +2730,11 @@ static int __init reserve_mem(char *p)
+>  	if (reserve_mem_find_by_name(name, &start, &tmp))
+>  		return -EBUSY;
+>  
+> +	/* Pick previous allocations up from KHO if available */
+> +	if (reserve_mem_kho_revive(name, size, align))
+> +		return 1;
+> +
+> +	/* TODO: Allocation must be outside of scratch region */
+>  	start = memblock_phys_alloc(size, align);
+>  	if (!start)
+>  		return -ENOMEM;
+> -- 
+> 2.49.0.604.gff1f9ca942-goog
+> 
+
+-- 
+Sincerely yours,
+Mike.
 
