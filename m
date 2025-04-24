@@ -4,131 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDE06C369AB
-	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 16:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CEF7C369D5
+	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 16:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=NI2TP4b7jCGv0pXu/4D0efhfa3mQXG5h/nADUSBWVRw=; b=3FEpT86CajJIul9+aaRXn8LDV3
-	yNyaF+N7UTFh3U+eBKkuDhqaqoKpWU5xVAQ3o7/6tdCmPjARFPaH+ZIhb43S83J6bBngmcWOPUW9h
-	v+3RsGw7tIHiSE9T2jrVoWv/TlgaeSby2urGiUA5J/X78mBEZMYE6gmWO8s7AddvT2yx/Ew+bffX5
-	9dEga04882G96+whImIJByToPThIk1mdDqflNUXH5lHpo1+bXtoWnYUSbKhzyO/rfuchHjLHm8rmM
-	cEd2NrguqwmHEf7vPZ/jz5vVeX9Gn71jCDtM1l4D3N6WjgAuO5CfeXDCbexvKQWecQHf5HkU/Ke7E
-	2Hm2+Gtw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bYUUd0z6A0+ZkWdTi7S3yGhP4LTb46IOeiMEmdUvozc=; b=utNt5Ol1HBK7ASWrWFB56xApMb
+	bCquIwypPKjj8Qip78fX6fZbtHnYQFkqfRck2N6rqHpLpnzIs9R07Y0cERbk/R3ReD+JbyP5OYnH/
+	FlJeN7ZsOAfIH0gvY2Tg0R7LhqzAphNRltDsVrIdOhGbjpVBCeSbu3Msl56BZv7Sf2jl4//qfm+Vr
+	x/qlNj8zLo0jKFOqHONYlhisH9NE/qALZMt5Bvs5ZqCWjHnQtfSRY+l0hhy0vaoMyGvPLFjsoNSvI
+	GCFI6T6xZ33n7xNAWwMJPpKEMpGVjtbSNf42F/Ab72qNwApBFDDYMzgpE9WrcqrcNIYUi4rAAi39D
+	JriPvmfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7z6J-0000000Eejn-0nOn;
-	Thu, 24 Apr 2025 16:06:59 +0000
-Received: from mail-bn8nam12on20604.outbound.protection.outlook.com ([2a01:111:f403:2418::604] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
+	id 1u7z6M-0000000Eep6-2xh1;
+	Thu, 24 Apr 2025 16:07:02 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7xYV-0000000ENWg-37if
+	id 1u7xhh-0000000EPTA-49H0
 	for kexec@lists.infradead.org;
-	Thu, 24 Apr 2025 14:28:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I/WA7sX7Y/RQjcSU+PbxiQIySXaXa248pP3kzqPrW2Xh5SRxZyYDxt2otSETZqE3hBTpBkdvwgywkf65t8SP8b6xadurzW7RswhZsaOVLFw6MbEQs0mLKMmFEznnZM/QO/Ng9wUam47GUyj9XO5BUVqSbgiobqe8LMaBRxuWuZeZ+1a7hDZWYSUgciaOUmNuS3BRltObD2ns1e6vGJ6dGXOog8O6E4sIhHby8cLDY6sT17C1zKqusDtGH9OIogEr/WNgg7t58P3mBuu6P9vvdpA7uwCOlaQbuMPRXw4kzA8kFk3LCnvfeYQwi6EoOGYZ8n/lxmos0FhsUfvo+wpo1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NI2TP4b7jCGv0pXu/4D0efhfa3mQXG5h/nADUSBWVRw=;
- b=FxbkCLKH6SBxCb1SnUXi/oFJcJXG+xDFDufzAfJwnXevFYjYPTeXzKEf0t4zkv4LnlIJbLnfRh9IemTfObR9GIyn4GPdY0fDgBWdUasXj1kkDWheXtbU52KYcRC0o8GUgV0AJ/EJdn057azHcljEUZNqWFE5da9LlULtaVN0gGGGN5EYyF56qZPBU4/KK/5GfhVMuYL2lVX7e5U2aqFKXFVThONDv/JajHif4kk5JN3Mmb7Ra7Y/SMhlg7j26iU7J6Y6bUSzgqGLV7th3KfakZQmFMGNxMolf5Wb0w5DrY3Voe02lCArtGc5rYboAuWo5Kude7TNdtgcovuYsBHAZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NI2TP4b7jCGv0pXu/4D0efhfa3mQXG5h/nADUSBWVRw=;
- b=SElkqXRgroud62PZYc5q2DZ7GfmPQdrjc5/bJWk/bH0Vwo5EL0Td0RySapP0LAOSzQ06kbdmM6wRlIkR75VhnhEAIrKiwZCupOflCzHOal0sXiZXfMbtzg4fPiOBYLZOvDAekxISrw+7hbeSLcnspJg3EouemrOYJ1PD5f+7cV8=
-Received: from CY5P221CA0013.NAMP221.PROD.OUTLOOK.COM (2603:10b6:930:b::29) by
- CH3PR12MB9394.namprd12.prod.outlook.com (2603:10b6:610:1cf::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 24 Apr
- 2025 14:27:51 +0000
-Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:930:b:cafe::68) by CY5P221CA0013.outlook.office365.com
- (2603:10b6:930:b::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Thu,
- 24 Apr 2025 14:27:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 14:27:50 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 09:27:49 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <bp@alien8.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>
-CC: <michael.roth@amd.com>, <nikunj@amd.com>, <seanjc@google.com>,
-	<ardb@kernel.org>, <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH] x86/sev: Fix making shared pages private during kdump
-Date: Thu, 24 Apr 2025 14:27:39 +0000
-Message-ID: <20250424142739.673666-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	Thu, 24 Apr 2025 14:37:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745505448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bYUUd0z6A0+ZkWdTi7S3yGhP4LTb46IOeiMEmdUvozc=;
+	b=Tj+84V+iufvCAVMRunVjqZvsbgO0myxZwQF3b4IfwZgHtxq872B9SNPWCD9p5KaDo0HNQ4
+	Ce5qQDmPaKXZpdiH4SlFL87FUwpmbgEr3en08pFiixDQGgJqDzGVpKHwBPrM1spkjalvWb
+	z/0GBYB66Sd7hezgNjIDPltrv5VL0ZY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-145-pZpKcBiLNymKpzeyzdU94w-1; Thu,
+ 24 Apr 2025 10:37:26 -0400
+X-MC-Unique: pZpKcBiLNymKpzeyzdU94w-1
+X-Mimecast-MFC-AGG-ID: pZpKcBiLNymKpzeyzdU94w_1745505444
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2090718004A7;
+	Thu, 24 Apr 2025 14:37:23 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.62])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CAFAC18002AD;
+	Thu, 24 Apr 2025 14:37:20 +0000 (UTC)
+Date: Thu, 24 Apr 2025 22:37:16 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v13 0/9] ima: kexec: measure events between kexec load
+ and execute
+Message-ID: <aApMnEl1Xzarmimn@fedora>
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|CH3PR12MB9394:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5253a43-d4ed-4a81-afe8-08dd833c317b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?yQjTJogLvbc7CgAdND+h6RGAyYzoBkS01qm9tCPXF11AjUxCTe3OGv/zEWz/?=
- =?us-ascii?Q?s5CFJxPOPJar3FYy3Mf71M58w/kSxA444KNqQdR3MiT+p46hWnsYTA7V3JCr?=
- =?us-ascii?Q?uku74AoWuymSc7WIOAmHeBG5lNEhvN/Zu5HyBnVaeSZzZux0Gfa5Xk5KV9UM?=
- =?us-ascii?Q?tHN4rFIdQdeOnlUpKPoZfWHzjOkP1StMIMYNflePGndcRuYC3c8VmksEzh2b?=
- =?us-ascii?Q?Tz3QnicZBQJymc/a4bf90MWRn29UYMlId+vPPVLke945S27ji/2Nr8lQznWZ?=
- =?us-ascii?Q?shPyXREXEJCX4tMg3wHBMBO2QxOSEoFbWTFB00wSRGFGTHgVMOJGIAPSgG9K?=
- =?us-ascii?Q?nrMywaw4AdcNRIY7qxq7bU5zV9PHbmLYqXfdwusJ7DQmXhy/6+u5nPiX/Hpe?=
- =?us-ascii?Q?mUMpUUwoOpLywto77DviJctqNQ4dhGaygYwWZnpk0/VJFZsnRvum1mgG4Zr9?=
- =?us-ascii?Q?Ka4xnv5Sr34Mdrjm2UXh2tFM3nUiR7EmuUFHhyKCdXqa+ctjaN1HdB4UJGsG?=
- =?us-ascii?Q?kWzQq5QGtsGVWeCeSX1W4Dwxf4eAGco+szO8PV0BLzRiT7uIjwyvWriUTesj?=
- =?us-ascii?Q?btxBmqB3HMXNuW0OYEUnXxHVERRNfbQMPJvZxP6JVuoQZLF21BqnWdWkCUlo?=
- =?us-ascii?Q?kyMeIWGdhRklG+sa29ucBE3QJ7RuEcMUbmUicUMXMnKPoZ4kCAmBpRibx/0k?=
- =?us-ascii?Q?E2GmVqcXOcTgzf6eTtqFlvvhb2hi6JWWXC9NzX3z51ZfrEpjdcuNZ5DJaJUA?=
- =?us-ascii?Q?d+3tejBzKeDGfITC/NwJ1slII5D0IstAM1ylh/+eBVCG0jzgpVHnyw+3vMMJ?=
- =?us-ascii?Q?MG5nmRyDrowDGtqqFnEY5iE1ymN3Ls4tYxgqfnd0GpLcltSAKU2TUbbsto2G?=
- =?us-ascii?Q?QJIRKLajwwBWUUN3YGEWk1GMF48tBlhGh27msLsLzWQk9PPGvgF12dg75RhK?=
- =?us-ascii?Q?Glebyi/XE5A9Is1sU8LAhQhZ8Mqa/1WrpsTn3FgLPI8rz93W/cop9Qw8eUlc?=
- =?us-ascii?Q?z+Q91UfDXaHmll55jtKEIUW0gTbpQ/bDWkwRpsD9F+4fzkh/SM0WdWomknOh?=
- =?us-ascii?Q?2IrlPtb1PQWpM5ro0YVok4wQhw65KvQ5IcqkbjIswZRASPImoXyXWsh+V0t9?=
- =?us-ascii?Q?xsOYomg8rIIbQZ1rp9rfeRvxtyUWbYf9FboQdkaDaDFyDMch2ctASpPCWpO+?=
- =?us-ascii?Q?Z1/SKus8zjS1MJ8+qZqbHcdYHHAqrr8UUCN30uv6XjFgvLSBsyra5K7Vu9Xw?=
- =?us-ascii?Q?Vc+Ggo1K54rELVpagYyUHHBHkImVG6OPQsgUpBsHq9qrxfTCpoWxzh9B4AvJ?=
- =?us-ascii?Q?UYi1mch/crNV4JnZR/fWMuqe3iRp0fl94myHiz7fAtM/AIdotNAcfn5eXnOd?=
- =?us-ascii?Q?SdFOcUAI/xCE8L18NxNa9sc1V1YXivz88AfQxt3mqH6BGrLWNqnRZuZvNr+7?=
- =?us-ascii?Q?VLPFy4mZKCfZZABsX1NushRzEuJybESHo811qLioZsaDKX8oE50UiUgURtwe?=
- =?us-ascii?Q?xuHgTTVdJT9MU4M9pNom9rm/sCuWN07LbmbJ?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 14:27:50.6381
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5253a43-d4ed-4a81-afe8-08dd833c317b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE38.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9394
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421222516.9830-1-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250424_072759_777450_FAEB2C87 
-X-CRM114-Status: GOOD (  14.33  )
+X-CRM114-CacheID: sfid-20250424_073730_102953_FA66ECB2 
+X-CRM114-Status: GOOD (  11.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -143,61 +90,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+Hi Steven,
 
-When the shared pages are being made private during kdump preparation
-there are additional checks to handle shared GHCB pages.
+Could you test below code and post a formal patch to not copy
+measurement list buffer to kdump kernel? Below log is just for your
+reference, please feel free to modify or rephrase. 
 
-These additional checks include handling the case of GHCB page being
-contained within a 2MB page.
+===
+Kdump kernel doesn't need IMA to do integrity measurement.
+Hence the measurement list in 1st kernel doesn't need to be copied to
+kdump kenrel.
 
-There is a bug in this additional check for GHCB page contained
-within a 2MB page which causes any shared page just below the
-per-cpu GHCB getting skipped from being transitioned back to private
-before kdump preparation which subsequently causes a 0x404 #VC
-exception when this shared page is accessed later while dumping guest
-memory during vmcore generation via kdump. 
+Here skip allocating buffer for measurement list copying if loading
+kdump kernel. Then there won't be the later handling related to
+ima_kexec_buffer.
+===
 
-Correct the detection and handling of GHCB pages contained within
-a 2MB page.
-
-Cc: stable@vger.kernel.org
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 2c27d4b3985c..16d874f4dcd3 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -926,7 +926,13 @@ static void unshare_all_memory(void)
- 			data = per_cpu(runtime_data, cpu);
- 			ghcb = (unsigned long)&data->ghcb_page;
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 38cb2500f4c3..7362f68f2d8b 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	void *kexec_buffer = NULL;
+ 	int ret;
  
--			if (addr <= ghcb && ghcb <= addr + size) {
-+			/* Handle the case of 2MB page containing the GHCB page */
-+			if (level == PG_LEVEL_4K && addr == ghcb) {
-+				skipped_addr = true;
-+				break;
-+			}
-+			if (level > PG_LEVEL_4K && addr <= ghcb &&
-+			    ghcb < addr + size) {
- 				skipped_addr = true;
- 				break;
- 			}
-@@ -1106,6 +1112,9 @@ void snp_kexec_finish(void)
- 		ghcb = &data->ghcb_page;
- 		pte = lookup_address((unsigned long)ghcb, &level);
- 		size = page_level_size(level);
-+		/* Handle the case of 2MB page containing the GHCB page */
-+		if (level > PG_LEVEL_4K)
-+			ghcb = (struct ghcb *)((unsigned long)ghcb & PMD_MASK);
- 		set_pte_enc(pte, level, (void *)ghcb);
- 		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
- 	}
--- 
-2.34.1
++	if (image->type == KEXEC_TYPE_CRASH)
++		return;
++
+ 	/*
+ 	 * Reserve extra memory for measurements added during kexec.
+ 	 */
 
 
