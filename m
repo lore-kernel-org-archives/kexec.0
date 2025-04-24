@@ -4,168 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31387C369C2
-	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 18:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0EB3C369AB
+	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 19:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:Subject:From:References:Cc
-	:To:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JX9WP7klubA2PAvVmN92K7om+kNLzXnrxGVp3jBo07w=; b=a8iLbrjtQwoyWj5T42x//vVwHL
-	A1sZUs5PUqRv+0OyMoIUWz8nxTnf05+uRCUeGFHunC8ciHBpAXv0RCTOK+7qPFfFHdLXeAdtoyYxR
-	LIwQUVKB75SWPDKnhxaPX+RWpOjL0X04T/1Qa27BpjUsuG+6cBgxjMhlaKwzDArwAu4KevvYhYeYs
-	aCFgNio609GirYl9u/ufcusl8pZq1neHahvagNnZUNQbeqdoTWa/c/NQolhy7zc8FUrxrOeP/7IUU
-	PScc2btfxaIPjglpyqe+Atx363YXSWVx70hOtMtoGo4mKjwc7Dz7xPrrFWtffbOv1fFGEJpjYtdsc
-	VhH4AW8Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=PMkH9tiVvEAZA+Ba0XwL4M5RhgU0Mtg4gLxOcEPtcTY=; b=N/A6lChFoHnBgkE6ndeo8h/rHT
+	bxKX/OayUOqcVdnzGmlUh6Ml0D+k+qwqsrUIikfnGhG1HCDj4UJ9hhvlxQ4K8IL84wf8jDEyZ0J20
+	z56X3HbY/bN0g2WUzDz+WSNw0H4mmfUTJtInsVMAU8Rtv3RJa873PgfwMDIHhs0xKuYC80sUgoxd7
+	P7wQiLM6qZj4ZsBx/JYUIzNTZ7xydGi7kKcEdoy8kRXJKyyPk5A28QmfyvEYOjXBX887Cqh3FQJwD
+	SqbnmWle9bhLlEwojIJnROWxVITOkdUf+plPV8ZHgL1e0GzDZIwxyPJCS5mggFaB6NQDif8xk/MYB
+	HPgyNr2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u81Di-0000000F1IP-246Y;
-	Thu, 24 Apr 2025 18:22:46 +0000
-Received: from mail-bn8nam12on20622.outbound.protection.outlook.com ([2a01:111:f403:2418::622] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
+	id 1u81zh-0000000F8O8-3BDF;
+	Thu, 24 Apr 2025 19:12:21 +0000
+Received: from mgamail.intel.com ([192.198.163.11])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u81Df-0000000F1H9-3Q6Q
+	id 1u81ZN-0000000F4BF-1OoK
 	for kexec@lists.infradead.org;
-	Thu, 24 Apr 2025 18:22:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YP+PIjr/3eJA+UHPcR20lLQdYoQV0MSoRmWOqjN/LfpVGbTXI2SsAs9vXfrijVWY6Yj8wkAaic813SikM19RrvlU3j9Du+uuEeluYB9Yw8lyU5TAXX4pcFt02Ow8TEuZf6qaS2cNKP1s58CHKuGzW9xIB13gg+wirFzlYgSgvI0kUpgN7vtKAV3XaJKoasagcgj6QMZL3f+0BV5WQtAAvagCuveKylkLAeeXoz//vy0Yi7mwH9x9oef9jibBxXIVSZ5VAtbI+O/mClRZn1ijtTf70WV0kyQjpwj0ByB1QENJCvT36IWjtFimwPbhnNKdLkLPc/Skhj2gcf4l7ak40Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JX9WP7klubA2PAvVmN92K7om+kNLzXnrxGVp3jBo07w=;
- b=L8InH5z5hJis6vANUcDmOmvHF7rsyWnJ5gtT4DDIG5O5nf9TwW7hkeEGzSKr7oRY2LdS4NmiytDE/vpzfJW+ZHJoSIMghtHXwy0En1XlkCxUTFc5l88vVx9UrrwuOq/uoc9VsFPJDpMTLwWYLQ+NSm7WRp9RTSh3uDXeYgo+UUr+2cjZRlgE01Cgz3A4gO4IfATVRRr2NblWRtK/3vkv4ZB7aA8463bYND2xQ8tYWa1+yf850rVlEXD3IyV3pIHPnNQHkTb/Td5d/I3IqxFXnpw63pi1yc0U1TJhW4PV+7TMS0n+XnNdyLVi9QZ++1qF4s3D/sPJpZI2qnVckwSd8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JX9WP7klubA2PAvVmN92K7om+kNLzXnrxGVp3jBo07w=;
- b=2GYT18hfdM8lcQ2XEnhzPPYzHEk01w8bca3axTXti2EfqON5xIVnjuwBFXvGChWDqA671kjbCY5+LlMhPgaEAJ34AYCCYRN+FZSTf9x6kZA7HTA3xpJ01k+nR/woZVNHHGqzboHAqvp3ieZZeSbhqx3FBE5osrGai0khpMrYPHo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by LV8PR12MB9618.namprd12.prod.outlook.com (2603:10b6:408:2a0::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 24 Apr
- 2025 18:22:40 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8678.023; Thu, 24 Apr 2025
- 18:22:40 +0000
-Message-ID: <90a031fb-b0dd-b5af-7013-7483ebad49ab@amd.com>
-Date: Thu, 24 Apr 2025 13:22:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
+	Thu, 24 Apr 2025 18:45:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745520309; x=1777056309;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MlnQDLDnvGsoMGowqZqyaa07li7qR0AeAyDQ0M7KEkQ=;
+  b=a8C8otqsnzmxzttJR+72+HuzMKRZaLIkUEwmu7NjbG8fQsvscBsflsrc
+   998xl5ixb/4mDqEaR9H4eb2d/IA53WUv262ZcdQOXlP3bJkqnOiOv7Dtu
+   7tetWltAbLNsPZ+plBBMH/bST0hx4gRrA6KJu08h7VPQ35nmS9FKlAnmI
+   9B1Z20ylErqlz+wCboty6mI6tp1dov92yIJ3x1v+iPJkLkBr1Ic7Sa0IU
+   SVTchyiuwjmgZfBNsLF/kJ1pAaS7RTa8nL8lttw9ABOOhPNsPjcPtxXYm
+   FQULABBaWOjUtfGQBxQP7ls57EjIX0Ta7sKoPFY+X3pqDIcsbtLYmvIOM
+   g==;
+X-CSE-ConnectionGUID: f1wPynqgSFygaEYMCsfwUA==
+X-CSE-MsgGUID: HOtyNZ2WQoykyPRjRKATTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57819351"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="57819351"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 11:45:08 -0700
+X-CSE-ConnectionGUID: Cx1DU3/GQmSNl53dSmvHsw==
+X-CSE-MsgGUID: pAPaDeMxTamQ8RuGZ6jIlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="133226238"
+Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.222.0]) ([10.124.222.0])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 11:45:05 -0700
+Message-ID: <3a193231-82cd-4b42-96fc-ea1859b5a8b9@intel.com>
+Date: Thu, 24 Apr 2025 11:45:01 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
- hpa@zytor.com
-Cc: kees@kernel.org, michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
- ardb@kernel.org, gustavoars@kernel.org, sgarzare@redhat.com,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev
-References: <20250424141536.673522-1-Ashish.Kalra@amd.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v2] x86/sev: Fix SNP guest kdump hang/softlockup/panic
-In-Reply-To: <20250424141536.673522-1-Ashish.Kalra@amd.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+In-Reply-To: <20250421162712.77452-1-ross.philipson@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR12CA0019.namprd12.prod.outlook.com
- (2603:10b6:806:6f::24) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|LV8PR12MB9618:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ebb599b-e6d2-4799-18d6-08dd835cff1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SnlHTjBxS09PQXBzSzZZZGJVQWszcUZYM2lwMFNlL0VzSDhLdGpkYVZpQXJj?=
- =?utf-8?B?RE1JZGZsNERrWmZBQ1ZzSjlWSFpZTXFsNktCZFZBcVRTdmQzQklSUVJNa25a?=
- =?utf-8?B?c0VpbFUvcGkxQnduRUtDR3NPcXFOdFA1MXE1b3N2VEFhdGl2YkxGd1hpMEJs?=
- =?utf-8?B?eGJPRlJQNVVIVmZlWVZnS012djZ6dkhxVWxDTnAzUkFKdGpEazJ2NjZYM2V3?=
- =?utf-8?B?NytlVlU4YWFDRHFwKzNRWGIxZ2cwWUpHdUpjMU1NeFFlWE5iaXF4K01UaCs3?=
- =?utf-8?B?Umw3OFdEcmpDSEYxUkMrUHltZWZqMWZDS29PZFZ1a0EzUXU2RW5QY3UxcHBV?=
- =?utf-8?B?Y294bTV0NEs4NXhMRjgxTExQVGFJRXBxT28wM3VDcTZ1ZTgvdjBmbXRrLy9i?=
- =?utf-8?B?YWFJdDdkS0Z0djlDSUdvWmdBbXJmUGpFZUlGMjFJdzlDOWhuL2JmMlNEZmFv?=
- =?utf-8?B?Zmk0UmpZZWFDdlZZZ1VBbm8wMmhHNFg3VnlqT0pxTjlucHU5elpuVkRjNnRZ?=
- =?utf-8?B?RGJlK1NJK292THRXODZ0Tk4wWVF0cGdsUHFoV0JzMUFzWGxMZkZLM3lRT2VQ?=
- =?utf-8?B?VlpSTnhJbkNlOXdhY2FRS1ViN2szM1NFalozWmxtc2JzaS9CZDNQaFN5dmVi?=
- =?utf-8?B?Y0IrWldnblFnYjZRR3VZdU9nWFZaTzRVM2xMZU5pU2V2SUltVlFpcUQxZmxu?=
- =?utf-8?B?RWxBcHJIdEpXSWJKU2FCYyt2Wi9oWHo5cElhTDF3UkI3VEVnVFExSzdqWU5I?=
- =?utf-8?B?d0EzWHRXTHYxT3hvY3F0eVRjRCtkM0dvYmhFclZ0Vy9qTlBMaWtlMUlaelp2?=
- =?utf-8?B?eFBNMlZuWU02ZEg5OCtYUHowbk9WZXg2SWJrL2xYWVNaN3V3NTY3NnNnenlp?=
- =?utf-8?B?SEJnS3lCd0RldUUwU3hZRWVuMnBVM1UvUTczNElyZXFvOFd0VHpmYy9BNkxn?=
- =?utf-8?B?T0xUckJMdjVNMmpKbXpwK21KK1VtMDJjNDRmc09jdzQvei9VS2w5TldUdVRL?=
- =?utf-8?B?SGVBK3ludi9qZzk4ci9BWmF2cTcxczVKRWpPZU9Peml6aStiRWdKb21jUUZr?=
- =?utf-8?B?RzF1WlRjMUlreERVUGk3S3NaZ21CNmppeWg5VXBuYzRVQjBzaUtKQlpBYVJw?=
- =?utf-8?B?a3Nwd2cvdEdSL3NIN3V4b2lLOVVKdWcxbWZYbGM5R05yTjVuZlRqdnZQMGYr?=
- =?utf-8?B?VGJERS90bHZNeWZ3eWdPeCtJbEFGdEZRZDJmS2hqRUp3eW9ycFlsVzNPZ21I?=
- =?utf-8?B?OU9uQWx1clkyWDlsc0dES3pjejFoQ1ZGdVFzejhXSFY3aFRESzZUZWlIdzRk?=
- =?utf-8?B?LzZBVzVhUVNqTUF6Mk5jS3BLbW8wTXJyNzAweW9WbHptN0VnU1loOHZpM0tu?=
- =?utf-8?B?alJPQk93RUVKdUVrNDMxWmR6cTlRdS9YMzZXaU1BK0J5NmNNQ1J2RXBybDdT?=
- =?utf-8?B?MDZFTUZSWllRSUlnWVBMaGt2ajFKZzNWWU1leCs1bU52bkRORGNDQzRmV0kv?=
- =?utf-8?B?V1YwaGViRjRKWnJlbGJyYWRFTFlJak9RcGl3YnlCakJka21JNFBuaUdYUG1F?=
- =?utf-8?B?RVNTZFJ5N3BhbDNTOUo5aWo4RzVFTnp3VGhyZmJFcHRjUGtkTG8rbWZMZ2hH?=
- =?utf-8?B?OVNzYzdaalIzbUFsN254TWVpMFF3ZHlEa3NMRkR6UGNzQmhCRkZXZTBNbXNX?=
- =?utf-8?B?SEpSd1B5ZUhYS3d1SUhiYkFkRWJmQmdOU3h6Zm9lVjhsWnM5eDRNWGhYODh3?=
- =?utf-8?B?bkZVeVFqQ2dQWE5tK2sxenZoekJaUXlEQ2ZUanBSTDByTUZsSnl1anNVYlZ4?=
- =?utf-8?B?R0tibEc5cGZnaUpNR05EdkxpbXVpdkk4aHIxUTBnYlc4WWZFYXR1cHkzTVBC?=
- =?utf-8?B?eU5oT2NsREEyTlJ4T1dVdUtHcVpnUDN2VW5GTytlWWNUVHFrTW5RTlZKUHk5?=
- =?utf-8?Q?D3z3Rnyiy2U=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ckVGMy95bmRTSXdxc1JNUVpJMUNhOUtyV29FZ2JaZGRpWHJ4ejJ0L3pnVkdC?=
- =?utf-8?B?dUoxZWRSUUVKbjVDSHJpNEhLL00wZVRoMmNPcUlQUmxsUzhFQ3hrNE1BRzAw?=
- =?utf-8?B?TndGRXN6U2pRU2p4MHExcVU4M2NHT1RxM21uR1ZzOGh3UjlJd3R5Z0tnOTBy?=
- =?utf-8?B?SyswLzRWeGo5THRuMnZWKzRyelU0QzNlc2szVWd5SnpMT28wa09sUjE2VEJY?=
- =?utf-8?B?QlhsNHEvNEI4dFB2d3ljTTZaQnNEUTlhMlMzVVRVb2VNYmtRemlhUm9EVDA3?=
- =?utf-8?B?NGJibGYwTGkyYXFUekhHbEx2V1BsdGRWbStRbVFDT3pQcUl2c2tNZlRsVnhU?=
- =?utf-8?B?WFI0dTk0eVphbmNpKytqcGVFWENWbCt1cmNHYm9jNmtrNXlCRkV1MFlLbGhE?=
- =?utf-8?B?b1BwZ3ZXdGV4bEloWjlWRS9RaERTWXNPTWFCMjFscXRwakxLY3o2L1FPclc4?=
- =?utf-8?B?VXRpdHo5ZVJlc2xvUlhlUlNjVEhiZXROakNmdlVyREdKb1FOMUd2Wm9QbHRI?=
- =?utf-8?B?RVJXTWRpUUtzR05CK3BrZ0NiTkpXeHVkSkMzc3ZLY3BDWkF2R2VKa0tJNWZx?=
- =?utf-8?B?NzdSYmNtMVRTQkUrRzJuNU9KUnl3c3dVRHV6aEZJZG93NVg5V2krYk9FVGRa?=
- =?utf-8?B?TjNPNysvWFdUWlluWTZ4T0s4Z3IwVjhNc2xVd1NrVWNuamFUaXZ5eWJYNWRs?=
- =?utf-8?B?L0hoL1ZPZWRNZENlbXV1aXB2cUc4UlZadDQ1ZHZVNjJ5QWNINVNHUFd4bS95?=
- =?utf-8?B?S240bjVJTjlYQ0xTOGlERC9rbUxpZW85RXRXZlgwNVlTcDJDbHV2SlNnRlFx?=
- =?utf-8?B?Z2JlQ3RYeWUwSHdEUitUODRVNHU0VExBVURFZTJITTJQYjdqT0FYUWU3WnFX?=
- =?utf-8?B?cm1DMG1ZNDQvaGFLZFp2Z2xmTDBSRGw4cGtqcmh4aXZwdFFUSXJVRFpxbVhm?=
- =?utf-8?B?VTByZXVLOFVVbmU1NGJuOTRvSC82Y3crTzgvUWdBaTBFTys5anJBYXpTWGJk?=
- =?utf-8?B?WkxxUGpkZTFjbEpVUWs2RHo3R3JyM3VKZEtFbDgvUVBWOGdkODEyaGI4MmhZ?=
- =?utf-8?B?VXI3R3ZnZm9laEorQVJucm1lSkd0elZDNlpTSnRFS2VjYnF6N0VqaUc3MURK?=
- =?utf-8?B?di9JOUFKNGFnS0wzcXJsS3YyWTJGbmYrdUtreFJualp3ZEUwcW0rZzdENS9p?=
- =?utf-8?B?OUlCWnBsVkxRMStsSEltcVFEZEIrb3pJMWdVUVgrMXF5R0R4OVZLblF5TVVm?=
- =?utf-8?B?VzA2dDZvaXJkV3RHdFVKV3Y2VUNIS2JUdTZyNmJ0Y1RLSTZ3VnN6WXo1T0h6?=
- =?utf-8?B?NXRCUER0dDRWcmN1SHlkRDRtVXVNbFdkQUVWK0VZKy9pNWZKQmFNZFVodFZB?=
- =?utf-8?B?N3FqZVNaNlliSEFZS3FWRmpRdEU4MHdyMmVEbmNXS0NzWnFZdGVFLzNtTysv?=
- =?utf-8?B?V3RjaSthTUZ5eENPRENLOFdWM3BZQk4xV3RNbUMvd2J6MmNjZ3JKQ1ZaL0sw?=
- =?utf-8?B?Vnp5NEp6azlrc3ZvZVh6TVcrNzVUTjFtaFhaN08yb1V4WXpWd0owTG9lSjZh?=
- =?utf-8?B?akFlY2tibjBRcGZwT1hwOHltdExaWXBkNDh4bTVhemhScms3aTVUYjZTejVK?=
- =?utf-8?B?end4enNHVjRPbnBLM0MyQjJlRnA2aGxuY0V6RUpjM2xJY3pwQnE4aUIzMnJK?=
- =?utf-8?B?L2ZsRkJvbWVYT1VXd0ovYTdybTkwR0FiRXlyRXAzeEtnTVl5VVMvNnc0eW00?=
- =?utf-8?B?dUVQYjdOS251dmZLZEJJdThxeEo5TkdnYjkzeXFWeWlIcTFNMHNmaXo4YVdM?=
- =?utf-8?B?bjhxTnp2N0dnaE5UWUxwcDZyZkZuZTVtZWxlNWo0N0RGKzMxZno2ZmNqb00x?=
- =?utf-8?B?T0ZkaXJWV1RNOS9QSWc4UFp5NDJuM2ZZZHVNaVhSbjJ5cnhmTVhkcDNqamdI?=
- =?utf-8?B?UlBJSWVMS2FjbUp1djNkZnNPVU5pYWYwYThUZXhQUmgwNFg4eUtkU1JQdzIr?=
- =?utf-8?B?c0g5ajVvVWZNelI0eDlJZ0VRTHZ3bXhBMFJtSjRBWHI1NThKV0ROUEVmZmhW?=
- =?utf-8?B?Yjc2Vnh2WHJrR3JLOUJ1RnY0YWI5T2RJaW5kR1ZqL1Zza1VzQ1hKeXhLYWhC?=
- =?utf-8?Q?EDDpLf8IiQebJsyWgc+uNY01C?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ebb599b-e6d2-4799-18d6-08dd835cff1e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 18:22:39.9051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8vUnMyFR9YfRB3Lke6xFuzq3+nlwnZvhndlkwSu9i//B/pONf50IOS8d6ndCX+gsMmHRXAIPW5bmzcZkjqT8mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9618
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250424_112243_970800_6BC3C51E 
-X-CRM114-Status: GOOD (  32.71  )
+X-CRM114-CacheID: sfid-20250424_114509_413833_4D1F12A6 
+X-CRM114-Status: GOOD (  11.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -180,250 +138,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/24/25 09:15, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> When kdump is running makedumpfile to generate vmcore and dumping SNP
-> guest memory it touches the VMSA page of the vCPU executing kdump which
-> then results in unrecoverable #NPF/RMP faults as the VMSA page is
-> marked busy/in-use when the vCPU is running.
-> 
-> This leads to guest softlockup/hang:
-> 
-> [  117.111097] watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [cp:318]
-> [  117.111165] CPU: 0 UID: 0 PID: 318 Comm: cp Not tainted 6.14.0-next-20250328-snp-host-f2a41ff576cc-dirty #414 VOLUNTARY
-> [  117.111171] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [  117.111176] RIP: 0010:rep_movs_alternative+0x5b/0x70
-> [  117.111200] Call Trace:
-> [  117.111204]  <TASK>
-> [  117.111206]  ? _copy_to_iter+0xc1/0x720
-> [  117.111216]  ? srso_return_thunk+0x5/0x5f
-> [  117.111220]  ? _raw_spin_unlock+0x27/0x40
-> [  117.111234]  ? srso_return_thunk+0x5/0x5f
-> [  117.111236]  ? find_vmap_area+0xd6/0xf0
-> [  117.111251]  ? srso_return_thunk+0x5/0x5f
-> [  117.111253]  ? __check_object_size+0x18d/0x2e0
-> [  117.111268]  __copy_oldmem_page.part.0+0x64/0xa0
-> [  117.111281]  copy_oldmem_page_encrypted+0x1d/0x30
-> [  117.111285]  read_from_oldmem.part.0+0xf4/0x200
-> [  117.111306]  read_vmcore+0x206/0x3c0
-> [  117.111309]  ? srso_return_thunk+0x5/0x5f
-> [  117.111325]  proc_reg_read_iter+0x59/0x90
-> [  117.111334]  vfs_read+0x26e/0x350
-> 
-> Additionally other APs may be halted in guest mode and their VMSA pages
-> are marked busy and touching these VMSA pages during guest memory dump
-> will also cause #NPF.
-> 
-> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-> of guest mode and then clear the VMSA bit on their VMSA pages.
-> 
-> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-> ensure that makedumpfile excludes that page while dumping guest memory.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 129 ++++++++++++++++++++++++++++++---------
->  1 file changed, 101 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index dcfaa698d6cf..870f4994a13d 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -113,6 +113,8 @@ DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
->  DEFINE_PER_CPU(struct svsm_ca *, svsm_caa);
->  DEFINE_PER_CPU(u64, svsm_caa_pa);
->  
-> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id);
-> +
->  static __always_inline bool on_vc_stack(struct pt_regs *regs)
->  {
->  	unsigned long sp = regs->sp;
-> @@ -877,6 +879,42 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
->  	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
->  }
->  
-> +static int issue_vmgexit_ap_create_destroy(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
-> +{
-> +	struct ghcb_state state;
-> +	unsigned long flags;
-> +	struct ghcb *ghcb;
-> +	int ret = 0;
-> +
-> +	local_irq_save(flags);
-> +
-> +	ghcb = __sev_get_ghcb(&state);
-> +
-> +	vc_ghcb_invalidate(ghcb);
-> +	ghcb_set_rax(ghcb, vmsa->sev_features);
+On 4/21/25 09:26, Ross Philipson wrote:
+> This patchset provides detailed documentation of DRTM, the approach used for
+> adding the capbility, and relevant API/ABI documentation. In addition to the
+> documentation the patch set introduces Intel TXT support as the first platform
+> for Linux Secure Launch.
 
-RAX should only be set on a SVM_VMGEXIT_AP_CREATE event.
+So, I know some of the story here thanks to Andy Cooper. But the
+elephant in the room is:
 
-> +	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-> +	ghcb_set_sw_exit_info_1(ghcb,
-> +				((u64)apic_id << 32)	|
-> +				((u64)snp_vmpl << 16)	|
-> +				event);
-> +	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-> +
-> +	sev_es_wr_ghcb_msr(__pa(ghcb));
-> +	VMGEXIT();
-> +
-> +	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-> +	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-> +		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	__sev_put_ghcb(&state);
-> +
-> +	local_irq_restore(flags);
-> +
-> +	return ret;
-> +}
-> +
->  static void set_pte_enc(pte_t *kpte, int level, void *va)
->  {
->  	struct pte_enc_desc d = {
-> @@ -973,6 +1011,66 @@ void snp_kexec_begin(void)
->  		pr_warn("Failed to stop shared<->private conversions\n");
->  }
->  
-> +/*
-> + * Shutdown all APs except the one handling kexec/kdump and clearing
-> + * the VMSA tag on AP's VMSA pages as they are not being used as
-> + * VMSA page anymore.
-> + */
-> +static void snp_shutdown_all_aps(void)
-> +{
-> +	struct sev_es_save_area *vmsa;
-> +	int apic_id, cpu;
-> +
-> +	/*
-> +	 * APs are already in HLT loop when kexec_finish() is invoked.
-> +	 */
-> +	for_each_present_cpu(cpu) {
-> +		vmsa = per_cpu(sev_vmsa, cpu);
-> +
-> +		/*
-> +		 * BSP does not have guest allocated VMSA, so it's in-use/busy
-> +		 * VMSA cannot touch a guest page and there is no need to clear
-> +		 * the VMSA tag for this page.
-> +		 */
-> +		if (!vmsa)
-> +			continue;
-> +
-> +		/*
-> +		 * Cannot clear the VMSA tag for the currently running vCPU.
-> +		 */
-> +		if (get_cpu() == cpu) {
-> +			unsigned long pa;
-> +			struct page *p;
-> +
-> +			pa = __pa(vmsa);
-> +			p = pfn_to_online_page(pa >> PAGE_SHIFT);
-> +			/*
-> +			 * Mark the VMSA page of the running vCPU as Offline
-> +			 * so that is excluded and not touched by makedumpfile
-> +			 * while generating vmcore during kdump boot.
-> +			 */
-> +			if (p)
-> +				__SetPageOffline(p);
-> +			put_cpu();
-> +			continue;
-> +		}
-> +		put_cpu();
-> +
-> +		apic_id = cpuid_to_apicid[cpu];
-> +
-> +		/*
-> +		 * Issue AP destroy on all APs (to ensure they are kicked out
-> +		 * of guest mode) to allow using RMPADJUST to remove the VMSA
-> +		 * tag on VMSA pages especially for guests that allow HLT to
-> +		 * not be intercepted.
-> +		 */
-> +
+> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT)
+> M:      Ning Sun <ning.sun@intel.com>
+> L:      tboot-devel@lists.sourceforge.net
+> S:      Supported
+> W:      http://tboot.sourceforge.net
+> T:      hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
+> F:      Documentation/arch/x86/intel_txt.rst
+> F:      arch/x86/kernel/tboot.c
+> F:      include/linux/tboot.h
 
-Remove this blank line.
+Linux already supports TXT. Why do we need TrenchBoot?
 
-> +		issue_vmgexit_ap_create_destroy(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
-> +
+I think I know the answer, but it also needs to be a part of the
+documentation, changelogs and cover letter.
 
-And this one.
-
-> +		snp_cleanup_vmsa(vmsa, apic_id);
-> +	}
-> +}
-> +
->  void snp_kexec_finish(void)
->  {
->  	struct sev_es_runtime_data *data;
-> @@ -987,6 +1085,8 @@ void snp_kexec_finish(void)
->  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->  		return;
->  
-> +	snp_shutdown_all_aps();
-> +
->  	unshare_all_memory();
->  
->  	/*
-> @@ -1098,10 +1198,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
->  static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->  {
->  	struct sev_es_save_area *cur_vmsa, *vmsa;
-> -	struct ghcb_state state;
->  	struct svsm_ca *caa;
-> -	unsigned long flags;
-> -	struct ghcb *ghcb;
->  	u8 sipi_vector;
->  	int cpu, ret;
->  	u64 cr4;
-> @@ -1215,31 +1312,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->  	}
->  
->  	/* Issue VMGEXIT AP Creation NAE event */
-> -	local_irq_save(flags);
-> -
-> -	ghcb = __sev_get_ghcb(&state);
-> -
-> -	vc_ghcb_invalidate(ghcb);
-> -	ghcb_set_rax(ghcb, vmsa->sev_features);
-> -	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-> -	ghcb_set_sw_exit_info_1(ghcb,
-> -				((u64)apic_id << 32)	|
-> -				((u64)snp_vmpl << 16)	|
-> -				SVM_VMGEXIT_AP_CREATE);
-> -	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-> -
-> -	sev_es_wr_ghcb_msr(__pa(ghcb));
-> -	VMGEXIT();
-> -
-> -	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-> -	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-> -		pr_err("SNP AP Creation error\n");
-> -		ret = -EINVAL;
-> -	}
-> -
-> -	__sev_put_ghcb(&state);
-> -
-> -	local_irq_restore(flags);
-> +	ret = issue_vmgexit_ap_create_destroy(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
->  
->  	/* Perform cleanup if there was an error */
-
-You can remove the two lines above (the blank line and the comment) now
-that the setting of ret is not a few lines before. That way you have
-
-	/* Issue VMGEXIT AP Creation NAE event */
-	ret = issue_vmgexit_ap_create_destroy(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
-	if (ret) {
-
-and it's nicely grouped.
-
-Thanks,
-Tom
-
->  	if (ret) {
+Also, honestly, what do you think we should do with the Linux tboot
+code? Is everyone going to be moving over to Trenchboot so that Linux
+support for TXT/tboot can just go away?
 
