@@ -4,88 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39403C369CB
-	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 00:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB9FBC369D8
+	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 08:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=; b=LJI1fbfor3nLETnS8aNdMK+6dF
-	OoXKxsu5wF1J33aGpmmq9a5IJfKRt78UYWWptQrkx1qB+TeXrkABI7DvAh9nWc5bRy5lIENvdCXcE
-	Ml6WDOWYI1sgsV2UWMX0/q/h3s+VrNvi6BgMBVcxBXtgSKowrrLli9K3WU+JGlOHVvxNGR0h3pLs6
-	qIXz90GFmWToQdUMNkBmiXoe9+QtKzq2PexCTv4SZrgX814GauZ5QgTEtP//Iqs6oNCVy0CQvVjc4
-	S7NIgQsxS4cUBpiEJaJFWlIe0T93E/UuOi4vYgChix4p4Rl7DQfZXuJ99yB0lCsSYG69s1luNCHDb
-	+CYyFd1A==;
+	bh=l7VEVoe4uPheIEiVrtKTo6u/lqrEMNwyEPBA44TaHZQ=; b=2qsGtLbETe2WpK1Vawo+OTjK7z
+	3DdIKeu0P1WTyg0piDGyuBXM6ELzlB0fMGCaRj+A5qfs60zSCrE41lMN6/wzagthOvBAEDH52rgfd
+	x+9M2RYC2KDfEveEflP6Q21iU58bGyY7ZGsMAfbvWQyVHPv13wywu4oiKrVRP3xFIRhL/CyH1HlTY
+	ZYaupH8hSE51QCkO9f/uKWYcR2j8nqFjVLimSVaZHoN+EPQUDjlszGRS7VQoSnJCyvx+fY/LZRZYi
+	RSnIhuJ6vXIRr5gqRuyv7XuLC73LmJeDt5vZwYPMnoHebX6sd/HNGeDAfrlqlWei7xyyHC5tIF7Rc
+	SsK84xVw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7k9K-0000000CLj2-3lvA;
-	Thu, 24 Apr 2025 00:09:06 +0000
-Received: from mail-wr1-x42a.google.com ([2a00:1450:4864:20::42a])
+	id 1u7s54-0000000DLS6-1SGG;
+	Thu, 24 Apr 2025 08:37:14 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7k9I-0000000CLiL-0lbJ
+	id 1u7s1b-0000000DKoz-237E
+	for kexec@bombadil.infradead.org;
+	Thu, 24 Apr 2025 08:33:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
+	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l7VEVoe4uPheIEiVrtKTo6u/lqrEMNwyEPBA44TaHZQ=; b=QiD5BlmqCNwbz60IRSMKYz+BYT
+	H4Sw4Hi93TYQ1ClI2P9r05uxZl832VAmtMFILa4WA1hVzhRh73o4PhCTtay0D4QuPt8uBsTn7Pt88
+	+KZpxxs/18W0VJbV45qoNvsx+7OjkyT/ftKrp4AxXdQ0cFvX6emJW7WJzfhbdZTv9A/y9m0Y27f5h
+	txDR7daUtUhI8qELVq3BPRxBWJL8/ZYoQ7bO8keyILsqHyChbsV9bo3T+Smi8+P5z0MfqZ3zvzh2d
+	WW9VpOOAMFZXcTF6YGCAfkgxmEaMkK2LpbD3aVYpSAQgxB0boDZdlFS9YNB/plfqdA3nX4oOyWPuC
+	rLo8JnUg==;
+Received: from mail-pj1-x1049.google.com ([2607:f8b0:4864:20::1049])
+	by desiato.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u7s1X-0000000BcUy-0yn7
 	for kexec@lists.infradead.org;
-	Thu, 24 Apr 2025 00:09:05 +0000
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-39149bccb69so342040f8f.2
-        for <kexec@lists.infradead.org>; Wed, 23 Apr 2025 17:09:03 -0700 (PDT)
+	Thu, 24 Apr 2025 08:33:38 +0000
+Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-308677f7d8cso770916a91.1
+        for <kexec@lists.infradead.org>; Thu, 24 Apr 2025 01:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=clever-cloud.com; s=google; t=1745453339; x=1746058139; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=;
-        b=IjM6DVTm6PyX8sxSy48s/q3iIC40NhKZYNsu2ggv7iEzakMDv3nLHGAeA9+9pfBm4d
-         Jei35gUGuiRFzPJboy0uXj/xenQJopoohtZkantnUUQbydFEhtcVE5pJraiu0DvAGFyI
-         2JNcwUCnJq82fxMtpMX0y/QitPF/bb3/nIBZPQLYRJNU8EL2hsZiyfiZSTDxxwsY1vA4
-         0mLiJRJ4+OaVPmZbqsEC63PJbgUz16k57hxfrTxNxSDjsaRs7U27CtGiiWMqB7rFjd/1
-         ejS3eG8RZQo1b1V6GGVvoUSlexITpOslexYfp+yYG3yYAH4axkWSJeucbMrzPBMZJRuJ
-         LofQ==
+        d=google.com; s=20230601; t=1745483611; x=1746088411; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7VEVoe4uPheIEiVrtKTo6u/lqrEMNwyEPBA44TaHZQ=;
+        b=AeEpJmSi+Ari1yw8YSyaSquiQe+/FbckWOy9cEyPdylwDcwKfsiPLnVdobm3jXSB0g
+         d65ECpKziSjs3VfIVuKxj5sm7g2sfUQG0/ds9KwHKocMgD/MfVs0jSUKxsKTcsZA4D5C
+         C3B3IQIC6Zt8AN1CpeMKVh4+mhxj7E6ADxMlJ2R/9+OW9n4y4gk+JmO/Ol7d527PSzMx
+         dCJWUVtABfFCH44ZHQFRqE4tnts97+3tGZHcJfV3nbA7oew/BRZhklKlxCWqGvtG7y+4
+         44XQMoCoTJlcA42siOTtmPy6XAifqA1HzTfZTS0XS2sgxODZs1wufsQSC7AtbP6+emoS
+         vYDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745453339; x=1746058139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=;
-        b=vc6+7tDheAy45hYNVkezczNWZeZrZiJ00mo6hGUB0poGYt2f6OXtwwVEC+ED1YE7Kh
-         xlpRhx6TH2Qf/1vOlrqN0KHx6hyiVfA1AIeYS+dqEqgZlzRDFCR1+zvhpa5mD/3RDGDL
-         EPfNh8OaFO4BAHTBUG50DmasTPLD2Cvpa2XsMORuGhbLrJN9lgYmbLxucE2y/iicfwcA
-         8uFULpa4BNPV3xDR7xOo03LoJ9xXBTs2nkilp6MjGu2vUS5t3uowLtFLLr6Y19zR/k1r
-         ZMpHLvC17Lk/StL6l+Ks2pn1ARIw6gv3zAGU0ajkQyOa80S/ko3b1iflH6S/J1ejkBQO
-         nQZA==
-X-Gm-Message-State: AOJu0Yy/IkxZOwUvFlfenX3Bb9K2viaXQGLB0k09KB3m5uFFl+WvbJcS
-	4feNWgOsLG7Pz1C5RkdfcOE1TZMngF+rFWHMYhBuHoh51dcmgy+dxEBwoj4IEkY=
-X-Gm-Gg: ASbGncsZ//qhgF+muBZBBWCI4Q9Lsruz3gKNeq59DsgNZOHbrZXqEj8/263U+NaTAfP
-	r/5ZgYb8GwCUmEirY01VQBE0e29lI+HZ3yESxAlyxj9dg9a5pjiBsnhWkpMjXbACMB0rQNUzda7
-	Vukh9XpmQRR3/jucc56PFaOqgUo9F5uG5Z1+kahJOqBDmwacxlwgP8Z5V+pCQ44RFD3JMUDX6T1
-	KFgcSCHtqovk5zyLKHZEj0JZLmj6vrbjRLZtDBLWLrrVED4oO0Tg0vGtTAioidFHfrpOdt9j2f0
-	y/i+d7er86uJC+BebQZOcMyWF4l6lh7RNcsIkZ9rVWICvmEnxQvnU8g=
-X-Google-Smtp-Source: AGHT+IGEP4OVfwSClto6omn+Vzk65W04OakQPdiY+4YXHdbF3SfqwxWKM2BXi5TmYh5hMM3YAAj1gA==
-X-Received: by 2002:a05:6000:1a86:b0:391:20ef:6300 with SMTP id ffacd0b85a97d-3a06cfa5b56mr261089f8f.37.1745453337447;
-        Wed, 23 Apr 2025 17:08:57 -0700 (PDT)
-Received: from exherswag ([78.197.255.180])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c4945sm279703f8f.47.2025.04.23.17.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 17:08:56 -0700 (PDT)
-Date: Thu, 24 Apr 2025 02:08:55 +0200
-From: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <kofi6m743pg6hrahjx3vj7efairnpiq5pqmgql2cwg6lnz2cmw@ntdymi2egzro>
-References: <20250207080818.129165-1-coxu@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
+        d=1e100.net; s=20230601; t=1745483611; x=1746088411;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7VEVoe4uPheIEiVrtKTo6u/lqrEMNwyEPBA44TaHZQ=;
+        b=dfYBHy9ozgtfZB0AXqLDRAaWQvLLk7grHn1yKcIldMwt5lnARZEY+PKzJ+xFKsNffV
+         +RugJL9IBwQF6JpkLj3n7bIK45vngn5KMu09Eii2LjBVp5AzGp5jGr2KzVTozjZi49r7
+         uPyydDm0l7UjAWNxIFpbOujnx40aaO7fZykdxI78R39g0BjVBAP9dRnTCkcSYbYPz81v
+         E5NUDYRNjobFtDjeq5nbCy+9JZh6ynISVJ0+NrSDnQMyP7zd7lGn1XoEdKDCHkg95QRh
+         jcb0jG2Tp4xe7rexBwsTvhB8OSYl+zoClJeCKRnHa0sdQpLOUJNp1TNrCB+M6Vcmj+kp
+         nUow==
+X-Forwarded-Encrypted: i=1; AJvYcCU4l6ohdpyW2/KmMNuQ9afhkMxt6Vxbu3dDNsEJXmrUzzYLd13/4ZLl/Ns4vH50QSXA5Y+hRA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwEe9KxUnlZYJz9BWi8lDSvTHJhYEekxhxEKP2kL4yaWzkfgsQe
+	CW+NNL56646Mis2CNQPjQWINdSpdt5CYiDf/kjMgULVFl9oriFtg+sW3y8RZe2I9hLJoyLM0H9T
+	yn2+KGtFuCJp6y/iuAg==
+X-Google-Smtp-Source: AGHT+IGq6BVgM0IDW8HPijQuQX/f2OnqSI5HlIuEOLmb+TLuZj1I3Q9W3Aia7/3MIxDmrcexsVPCuLlX+IzwZqzj
+X-Received: from pjuw16.prod.google.com ([2002:a17:90a:d610:b0:2ff:6e58:8a03])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:584c:b0:305:5f28:2d5c with SMTP id 98e67ed59e1d1-309ed27d7b1mr3055392a91.15.1745483611167;
+ Thu, 24 Apr 2025 01:33:31 -0700 (PDT)
+Date: Thu, 24 Apr 2025 01:32:58 -0700
+In-Reply-To: <aAeaJ2iqkrv_ffhT@kernel.org>
+Mime-Version: 1.0
+References: <aAeaJ2iqkrv_ffhT@kernel.org>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250424083258.2228122-1-changyuanl@google.com>
+Subject: Re: [PATCH v6 12/14] memblock: add KHO support for reserve_mem
+From: Changyuan Lyu <changyuanl@google.com>
+To: rppt@kernel.org, akpm@linux-foundation.org
+Cc: anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
+	changyuanl@google.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
+	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250423_170904_229740_B91B2CD5 
-X-CRM114-Status: GOOD (  32.92  )
+X-CRM114-CacheID: sfid-20250424_093335_328726_F836501C 
+X-CRM114-Status: GOOD (  35.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,230 +114,356 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Feb 07, 2025 at 04:08:08PM +0800, Coiby Xu wrote:
->LUKS is the standard for Linux disk encryption, widely adopted by users,
->and in some cases, such as Confidential VMs, it is a requirement. With
->kdump enabled, when the first kernel crashes, the system can boot into
->the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
->to a specified target. However, there are two challenges when dumping
->vmcore to a LUKS-encrypted device:
+On Tue, Apr 22, 2025 at 16:31:19 +0300, Mike Rapoport <rppt@kernel.org> wrote:
+> On Thu, Apr 10, 2025 at 10:37:43PM -0700, Changyuan Lyu wrote:
+> > [...]
+> > +static struct notifier_block reserve_mem_kho_nb = {
+> > +	.notifier_call = reserve_mem_kho_notifier,
+> > +};
+> > +
+> > +static void __init prepare_kho_fdt(void)
+> > +{
+> > +	int err = 0, i;
+> > +	void *fdt;
+> > +
+> > +	if (!reserved_mem_count)
+> > +		return;
 >
-> - Kdump kernel may not be able to decrypt the LUKS partition. For some
->   machines, a system administrator may not have a chance to enter the
->   password to decrypt the device in kdump initramfs after the 1st kernel
->   crashes; For cloud confidential VMs, depending on the policy the
->   kdump kernel may not be able to unseal the keys with TPM and the
->   console virtual keyboard is untrusted.
+> It's better to have this check in reserve_mem_init() before registering kho
+> notifier.
+
+Sounds good!
+
+> > +
+> > +	kho_fdt = alloc_page(GFP_KERNEL);
+> > +	if (!kho_fdt) {
+> > +		kho_fdt = ERR_PTR(-ENOMEM);
 >
-> - LUKS2 by default use the memory-hard Argon2 key derivation function
->   which is quite memory-consuming compared to the limited memory reserved
->   for kdump. Take Fedora example, by default, only 256M is reserved for
->   systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->   to be reserved for kdump. Note if the memory reserved for kdump can't
->   be used by 1st kernel i.e. an user sees ~1300M memory missing in the
->   1st kernel.
+> Do we really care about having errno in kho_fdt? I think NULL would work
+> just fine.
+
+I was originally using ERR_PTR(-ENOMEM) and NULL to differentiate the following
+2 cases:
+
+1. prepare_kho_fdt() failed,
+2. reserved_mem_count == 0, so no memblock FDT was created.
+
+Based on the suggestion above, since now we only register the notifier when
+reserved_mem_count == 0, case 2 shall never happen. So NULL is enough.
+
+> > +		return;
 >
->Besides users (at least for Fedora) usually expect kdump to work out of
->the box i.e. no manual password input or custom crashkernel value is
->needed. And it doesn't make sense to derivate the keys again in kdump
->kernel which seems to be redundant work.
+> And actually, it makes sense to me to return -ENOMEM here and let
+> reserve_mem_init() bail out before registering notifier if fdt preparation
+> failed.
 >
->This patch set addresses the above issues by making the LUKS volume keys
->persistent for kdump kernel with the help of cryptsetup's new APIs
->(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
->the kdump copies of LUKS volume keys,
->
-> 1. After the 1st kernel loads the initramfs during boot, systemd
->    use an user-input passphrase to de-crypt the LUKS volume keys
->    or TPM-sealed key and then save the volume keys to specified keyring
->    (using the --link-vk-to-keyring API) and the key will expire within
->    specified time.
->
-> 2. A user space tool (kdump initramfs loader like kdump-utils) create
->    key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
->    the 1st kernel which keys are needed.
->
-> 3. When the kdump initramfs is loaded by the kexec_file_load
->    syscall, the 1st kernel will iterate created key items, save the
->    keys to kdump reserved memory.
->
-> 4. When the 1st kernel crashes and the kdump initramfs is booted, the
->    kdump initramfs asks the kdump kernel to create a user key using the
->    key stored in kdump reserved memory by writing yes to
->    /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
->    device is unlocked with libcryptsetup's --volume-key-keyring API.
->
-> 5. The system gets rebooted to the 1st kernel after dumping vmcore to
->    the LUKS encrypted device is finished
->
->After libcryptsetup saving the LUKS volume keys to specified keyring,
->whoever takes this should be responsible for the safety of these copies
->of keys. The keys will be saved in the memory area exclusively reserved
->for kdump where even the 1st kernel has no direct access. And further
->more, two additional protections are added,
-> - save the copy randomly in kdump reserved memory as suggested by Jan
-> - clear the _PAGE_PRESENT flag of the page that stores the copy as
->   suggested by Pingfan
->
->This patch set only supports x86. There will be patches to support other
->architectures once this patch set gets merged.
+> That will save the checks in reserve_mem_kho_finalize() because it would be
+> called only if we have reserve_mem areas and fdt is ready.
 >
 
-I'm not sure what's the problem here but I can reliably trigger a kernel
-panic on a qemu VM + custom kernel (compiled from
-bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b + your patches).
+Sounds good!
 
-When I configure the crash configfs and call kexec in a systemd service
-using ExecStart=, the panic occurs when I start the service:
+> > +	}
+> > +
+> > +	fdt = page_to_virt(kho_fdt);
+> > +
+> > +	err |= fdt_create(fdt, PAGE_SIZE);
+> > +	err |= fdt_finish_reservemap(fdt);
+> > +
+> > +	err |= fdt_begin_node(fdt, "");
+> > +	err |= fdt_property_string(fdt, "compatible", MEMBLOCK_KHO_NODE_COMPATIBLE);
+> > +	for (i = 0; i < reserved_mem_count; i++) {
+> > +		struct reserve_mem_table *map = &reserved_mem_table[i];
+> > +
+> > +		err |= fdt_begin_node(fdt, map->name);
+> > +		err |= fdt_property_string(fdt, "compatible", RESERVE_MEM_KHO_NODE_COMPATIBLE);
+> > +		err |= fdt_property(fdt, "start", &map->start, sizeof(map->start));
+> > +		err |= fdt_property(fdt, "size", &map->size, sizeof(map->size));
+> > +		err |= fdt_end_node(fdt);
+> > +	}
+> > +	err |= fdt_end_node(fdt);
+> > +
+> > +	err |= fdt_finish(fdt);
+> > +
+> > +	if (err) {
+> > +		pr_err("failed to prepare memblock FDT for KHO: %d\n", err);
+> > +		put_page(kho_fdt);
+> > +		kho_fdt = ERR_PTR(-EINVAL);
+> > +	}
+> > +}
+> > +
+> > +static int __init reserve_mem_init(void)
+> > +{
+> > +	if (!kho_is_enabled())
+> > +		return 0;
+> > +
+> > +	prepare_kho_fdt();
+> > +
+> > +	return register_kho_notifier(&reserve_mem_kho_nb);
+> > +}
+> > +late_initcall(reserve_mem_init);
+> > +
+> > +static void *kho_fdt_in __initdata;
+> > +
+> > +static void *__init reserve_mem_kho_retrieve_fdt(void)
+> > +{
+> > +	phys_addr_t fdt_phys;
+> > +	struct folio *fdt_folio;
+> > +	void *fdt;
+> > +	int err;
+> > +
+> > +	err = kho_retrieve_subtree(MEMBLOCK_KHO_FDT, &fdt_phys);
+> > +	if (err) {
+> > +		if (err != -ENOENT)
+> > +			pr_warn("failed to retrieve FDT '%s' from KHO: %d\n",
+> > +				MEMBLOCK_KHO_FDT, err);
+> > +		return ERR_PTR(err);
+>
+> Wouldn't just 'return NULL' work here?
 
-~ # cat /etc/systemd/system/my-kexec.service
-[Unit]
-Description=kexec loading for the crash capture kernel
+If we have multiple `reserve_mem` in the kernel command line,
+reserve_mem_kho_revive() will also be called multiple times. However
+reserve_mem_kho_retrieve_fdt() should only be called once.
 
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
-ExecStart=/usr/bin/echo cryptsetup:mykey >/sys/kernel/config/crash_dm_crypt_keys/mykey/description
-ExecStart=/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
-KeyringMode=shared
+Here I am returning the ERR_PTR(err) such that if the first
+reserve_mem_kho_retrieve_fdt() failed, subsequent reserve_mem_kho_revive()
+can tell that reserve_mem_kho_retrieve_fdt() has failed so no need to try it
+again. If we return NULL here, subsequent reserve_mem_kho_revive() would find
+kho_fdt_in == NULL, and it could not tell whether it was due to previously
+failed reserve_mem_kho_retrieve_fdt(), or it is the first
+reserve_mem_kho_revive().
 
-[Install]
-WantedBy=default.target
+> > +	}
+> > +
+> > +	fdt_folio = kho_restore_folio(fdt_phys);
+> > +	if (!fdt_folio) {
+> > +		pr_warn("failed to restore memblock KHO FDT (0x%llx)\n", fdt_phys);
+> > +		return ERR_PTR(-EFAULT);
+> > +	}
+> > +
+> > +	fdt = page_to_virt(folio_page(fdt_folio, 0));
+>
+> 	fdt = folio_address(folio);
 
+Fixed.
 
-Starting the service:
+> > +
+> > +	err = fdt_node_check_compatible(fdt, 0, MEMBLOCK_KHO_NODE_COMPATIBLE);
+> > +	if (err) {
+> > +		pr_warn("FDT '%s' is incompatible with '%s': %d\n",
+> > +			MEMBLOCK_KHO_FDT, MEMBLOCK_KHO_NODE_COMPATIBLE, err);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	return fdt;
+> > +}
+> > +
+> > +static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
+> > +					  phys_addr_t align)
+> > +{
+> > +	int err, len_start, len_size, offset;
+> > +	const phys_addr_t *p_start, *p_size;
+> > +	const void *fdt;
+> > +
+> > +	if (!kho_fdt_in)
+> > +		kho_fdt_in = reserve_mem_kho_retrieve_fdt();
+>
+> I'd invert this and move to reserve_mem_kho_retrieve_fdt(), so there it
+> would be
+>
+> 	if (kho_fdt_in)
+> 		return kho_fdt_in;
+>
+> 	/* actually retrieve the fdt */
+> 	kho_fdt_in = fdt;
+>
+> 	return fdt;
+>
+> and here
+>
+> 	fdt = reserve_mem_kho_retrieve_fdt();
+> 	if (!fdt)
+> 		return false;
 
-~ # systemctl start my-kexec.service
-kexec_file: kernel: 00000000ace85dcc kernel_size: 0x16e3000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000d08940fa
-vaddr=0xffff888000100000, paddr=0x100000, sz=0x700000 e_phnum=11
-p_offset=0x100000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000304ef570
-vaddr=0xffff888000808000, paddr=0x808000, sz=0x3000 e_phnum=12
-p_offset=0x808000
-crash_core: Crash PT_LOAD ELF header. phdr=000000000275e248
-vaddr=0xffff88800080c000, paddr=0x80c000, sz=0x5000 e_phnum=13
-p_offset=0x80c000
-crash_core: Crash PT_LOAD ELF header. phdr=000000004e47ca09
-vaddr=0xffff888000900000, paddr=0x900000, sz=0xa5700000 e_phnum=14
-p_offset=0x900000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000e56c8350
-vaddr=0xffff8880b6000000, paddr=0xb6000000, sz=0x7d51018 e_phnum=15
-p_offset=0xb6000000
-crash_core: Crash PT_LOAD ELF header. phdr=0000000099d67ff3
-vaddr=0xffff8880bdd51018, paddr=0xbdd51018, sz=0x27440 e_phnum=16
-p_offset=0xbdd51018
-crash_core: Crash PT_LOAD ELF header. phdr=00000000461a2f21
-vaddr=0xffff8880bdd78458, paddr=0xbdd78458, sz=0xbc0 e_phnum=17
-p_offset=0xbdd78458
-crash_core: Crash PT_LOAD ELF header. phdr=0000000058149b54
-vaddr=0xffff8880bdd79018, paddr=0xbdd79018, sz=0x9a40 e_phnum=18
-p_offset=0xbdd79018
-crash_core: Crash PT_LOAD ELF header. phdr=000000001e30ff2c
-vaddr=0xffff8880bdd82a58, paddr=0xbdd82a58, sz=0xdbc5a8 e_phnum=19
-p_offset=0xbdd82a58
-crash_core: Crash PT_LOAD ELF header. phdr=00000000e67a9768
-vaddr=0xffff8880bec00000, paddr=0xbec00000, sz=0xaed000 e_phnum=20
-p_offset=0xbec00000
-crash_core: Crash PT_LOAD ELF header. phdr=000000005909c4c6
-vaddr=0xffff8880bf9ff000, paddr=0xbf9ff000, sz=0x453000 e_phnum=21
-p_offset=0xbf9ff000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000473d74ef
-vaddr=0xffff8880bfe58000, paddr=0xbfe58000, sz=0x64000 e_phnum=22
-p_offset=0xbfe58000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000abde8123
-vaddr=0xffff888100000000, paddr=0x100000000, sz=0x23f000000 e_phnum=23
-p_offset=0x100000000
-crash_core: Crash PT_LOAD ELF header. phdr=00000000bda3e0bf
-vaddr=0xffff88843f000000, paddr=0x43f000000, sz=0x1000000 e_phnum=24
-p_offset=0x43f000000
-kexec: Loaded ELF headers at 0x33f000000 bufsz=0x1000 memsz=0xe1000
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0
-Oops: Oops: 0000 [#1] SMP NOPTI
-CPU: 5 UID: 0 PID: 3812 Comm: kexec Not tainted 6.14.0-rc1+ #20
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 2025.02-6
-04/08/2025
-RIP: 0010:sized_strscpy+0x71/0x150
-Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
-11
-48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e 49
-89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
-RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
-RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
-RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
-R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
-R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
-FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
-PKRU: 55555554
-Call Trace:
-  <TASK>
-  ? __die+0x23/0x60
-  ? page_fault_oops+0x177/0x510
-  ? _prb_read_valid+0x2e7/0x370
-  ? exc_page_fault+0x6f/0x130
-  ? asm_exc_page_fault+0x26/0x30
-  ? sized_strscpy+0x71/0x150
-  crash_load_dm_crypt_keys+0x1bc/0x370
-  bzImage64_load+0x41b/0xa30
-  __do_sys_kexec_file_load+0x2af/0x8a0
-  do_syscall_64+0x4b/0x110
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f09ea848d6d
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48
-89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
-c3 48 8b 0d 6b 70 0d 00 f7 d8 64 89 01 48
-RSP: 002b:00007fff8cf979e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000140
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f09ea848d6d
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000003
-RBP: 0000000000000003 R08: 000000000000000a R09: 00007fff8cf97a10
-R10: 000055de70eee9a0 R11: 0000000000000206 R12: 0000000000000003
-R13: 00007fff8cf97d08 R14: 000055de4c336448 R15: 0000000000000004
-  </TASK>
-CR2: 0000000000000000
----[ end trace 0000000000000000 ]---
-RIP: 0010:sized_strscpy+0x71/0x150
-Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
-11 48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e
-49 89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
-RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
-RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
-RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
-R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
-R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
-FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
-PKRU: 55555554
-Kernel panic - not syncing: Fatal exception
-Kernel Offset: disabled
+Ah Ok, this is more elegant!
 
+> > +
+> > +	if (IS_ERR(kho_fdt_in))
+> > +		return false;
+> > +
+> > +	fdt = kho_fdt_in;
+> > +
+> >[...]
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
+> >
+>
+> --
+> Sincerely yours,
+> Mike.
 
-Calling a script that does the same thing works fine and loads the keys
-correctly:
+Best,
+Changyuan
 
-[Service]
-ExecStart=/root/kexec.sh
+---- 8< ----
+From 7ad4379062aa9709d3702bfc53d237d0c1a4e326 Mon Sep 17 00:00:00 2001
+From: Changyuan Lyu <changyuanl@google.com>
+Date: Thu, 24 Apr 2025 01:10:24 -0700
+Subject: [PATCH] fixup! memblock: add KHO support for reserve_mem
 
-~ # cat /root/kexec.sh
-#!/bin/bash
+This patch includes the suggested changes from
+https://lore.kernel.org/lkml/aAeaJ2iqkrv_ffhT@kernel.org/ and can be
+squashed with "memblock: add KHO support for reserve_mem".
 
-mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
-echo cryptsetup:mykey > /sys/kernel/config/crash_dm_crypt_keys/mykey/description
-/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
+Fixes: 2e257a656639 ("memblock: add KHO support for reserve_mem")
+Suggested-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+---
+ mm/memblock.c | 69 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 34 insertions(+), 35 deletions(-)
 
-If that's any help, my crypttab:
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 3571a859f2fe1..d38a72f07ea0c 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -2490,15 +2490,6 @@ static int reserve_mem_kho_finalize(struct kho_serialization *ser)
+ {
+ 	int err = 0, i;
 
-~ # cat /etc/crypttab
-root UUID=8001fca4-2e54-48e9-9235-031c19fc6e36 none luks,link-volume-key=@u::%logon:cryptsetup:mykey
+-	if (!reserved_mem_count)
+-		return NOTIFY_DONE;
+-
+-	if (IS_ERR(kho_fdt)) {
+-		err = PTR_ERR(kho_fdt);
+-		pr_err("memblock FDT was not prepared successfully: %d\n", err);
+-		return notifier_from_errno(err);
+-	}
+-
+ 	for (i = 0; i < reserved_mem_count; i++) {
+ 		struct reserve_mem_table *map = &reserved_mem_table[i];
 
-If you can't reproduce, I can help track this. Just let me know if you need
-any help.
+@@ -2528,19 +2519,14 @@ static struct notifier_block reserve_mem_kho_nb = {
+ 	.notifier_call = reserve_mem_kho_notifier,
+ };
 
+-static void __init prepare_kho_fdt(void)
++static int __init prepare_kho_fdt(void)
+ {
+ 	int err = 0, i;
+ 	void *fdt;
+
+-	if (!reserved_mem_count)
+-		return;
+-
+ 	kho_fdt = alloc_page(GFP_KERNEL);
+-	if (!kho_fdt) {
+-		kho_fdt = ERR_PTR(-ENOMEM);
+-		return;
+-	}
++	if (!kho_fdt)
++		return -ENOMEM;
+
+ 	fdt = page_to_virt(kho_fdt);
+
+@@ -2565,18 +2551,30 @@ static void __init prepare_kho_fdt(void)
+ 	if (err) {
+ 		pr_err("failed to prepare memblock FDT for KHO: %d\n", err);
+ 		put_page(kho_fdt);
+-		kho_fdt = ERR_PTR(-EINVAL);
++		kho_fdt = NULL;
+ 	}
++
++	return err;
+ }
+
+ static int __init reserve_mem_init(void)
+ {
+-	if (!kho_is_enabled())
++	int err;
++
++	if (!kho_is_enabled() || !reserved_mem_count)
+ 		return 0;
+
+-	prepare_kho_fdt();
++	err = prepare_kho_fdt();
++	if (err)
++		return err;
++
++	err = register_kho_notifier(&reserve_mem_kho_nb);
++	if (err) {
++		put_page(kho_fdt);
++		kho_fdt = NULL;
++	}
+
+-	return register_kho_notifier(&reserve_mem_kho_nb);
++	return err;
+ }
+ late_initcall(reserve_mem_init);
+
+@@ -2586,33 +2584,38 @@ static void *__init reserve_mem_kho_retrieve_fdt(void)
+ {
+ 	phys_addr_t fdt_phys;
+ 	struct folio *fdt_folio;
+-	void *fdt;
+ 	int err;
+
++	if (kho_fdt_in)
++		return kho_fdt_in;
++
+ 	err = kho_retrieve_subtree(MEMBLOCK_KHO_FDT, &fdt_phys);
+ 	if (err) {
+ 		if (err != -ENOENT)
+ 			pr_warn("failed to retrieve FDT '%s' from KHO: %d\n",
+ 				MEMBLOCK_KHO_FDT, err);
+-		return ERR_PTR(err);
++		goto out;
+ 	}
+
+ 	fdt_folio = kho_restore_folio(fdt_phys);
+ 	if (!fdt_folio) {
+ 		pr_warn("failed to restore memblock KHO FDT (0x%llx)\n", fdt_phys);
+-		return ERR_PTR(-EFAULT);
++		err = -EFAULT;
++		goto out;
+ 	}
+
+-	fdt = page_to_virt(folio_page(fdt_folio, 0));
++	kho_fdt_in = folio_address(fdt_folio);
+
+-	err = fdt_node_check_compatible(fdt, 0, MEMBLOCK_KHO_NODE_COMPATIBLE);
++	err = fdt_node_check_compatible(kho_fdt_in, 0, MEMBLOCK_KHO_NODE_COMPATIBLE);
+ 	if (err) {
+ 		pr_warn("FDT '%s' is incompatible with '%s': %d\n",
+ 			MEMBLOCK_KHO_FDT, MEMBLOCK_KHO_NODE_COMPATIBLE, err);
+-		return ERR_PTR(-EINVAL);
++		err = -EFAULT;
+ 	}
+-
+-	return fdt;
++out:
++	if (err)
++		kho_fdt_in = ERR_PTR(err);
++	return kho_fdt_in;
+ }
+
+ static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
+@@ -2622,14 +2625,10 @@ static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
+ 	const phys_addr_t *p_start, *p_size;
+ 	const void *fdt;
+
+-	if (!kho_fdt_in)
+-		kho_fdt_in = reserve_mem_kho_retrieve_fdt();
+-
+-	if (IS_ERR(kho_fdt_in))
++	fdt = reserve_mem_kho_retrieve_fdt();
++	if (IS_ERR(fdt))
+ 		return false;
+
+-	fdt = kho_fdt_in;
+-
+ 	offset = fdt_subnode_offset(fdt, 0, name);
+ 	if (offset < 0) {
+ 		pr_warn("FDT '%s' has no child '%s': %d\n",
+--
+2.49.0.805.g082f7c87e0-goog
 
