@@ -4,213 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 837C1C369CB
-	for <kexec@archiver.kernel.org>; Wed, 23 Apr 2025 21:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39403C369CB
+	for <kexec@archiver.kernel.org>; Thu, 24 Apr 2025 00:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=; b=VmBrNRtqrjOqFbGQpR8ylQWOSU
-	0O+FJXnlpU9DqRv8/Ols/I8B9iNhgvTcqnC6+wwT/uwnnhT/K7Y63PIdHTZhK1GkUoGbsu5VvCdin
-	RLZbxwWEdG8o9LGo4Zkhhq4aPyvarJjWK6ULy1FYH49zHfv2/wPTW1g5og+vnr4GbHCxfAlIWHzYC
-	uLNFG7GL3d7j3KUnWU2+kUgfQzg463vymlRuLkcUkeH+IxGQgdvjDMC+GTGPFHRDSAUr3Cykjcku/
-	/C9oo19AJGSKX9hlj8g4HkxUFIhZfLETAaXYK5SEB1JooIjI5W3/iFK0JKbPLny6X2khPOnlUWNND
-	qZzimXTQ==;
+	bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=; b=LJI1fbfor3nLETnS8aNdMK+6dF
+	OoXKxsu5wF1J33aGpmmq9a5IJfKRt78UYWWptQrkx1qB+TeXrkABI7DvAh9nWc5bRy5lIENvdCXcE
+	Ml6WDOWYI1sgsV2UWMX0/q/h3s+VrNvi6BgMBVcxBXtgSKowrrLli9K3WU+JGlOHVvxNGR0h3pLs6
+	qIXz90GFmWToQdUMNkBmiXoe9+QtKzq2PexCTv4SZrgX814GauZ5QgTEtP//Iqs6oNCVy0CQvVjc4
+	S7NIgQsxS4cUBpiEJaJFWlIe0T93E/UuOi4vYgChix4p4Rl7DQfZXuJ99yB0lCsSYG69s1luNCHDb
+	+CYyFd1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7hKj-0000000C32P-0PTV;
-	Wed, 23 Apr 2025 21:08:41 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1u7k9K-0000000CLj2-3lvA;
+	Thu, 24 Apr 2025 00:09:06 +0000
+Received: from mail-wr1-x42a.google.com ([2a00:1450:4864:20::42a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7hKf-0000000C322-4B5x
+	id 1u7k9I-0000000CLiL-0lbJ
 	for kexec@lists.infradead.org;
-	Wed, 23 Apr 2025 21:08:39 +0000
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NKBsGa004669;
-	Wed, 23 Apr 2025 21:08:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=; b=
-	gyK04edqM2YbE6oH8b0t49JPvtOtyBkXsZHgWa1EjlK+uchRc5oyKpfThmumyd5L
-	HNpIt2MAnb8XSnkD5PdM/yObMHXMXgA2zKNB7WLx0N1ST2sydnHnkUbjexnv02P5
-	JYs4BJt5MHZmPrQZ4GtgTOi461AMMX6DAYPz1QXQ7rdkptqxJABlgn4YxY52bc+5
-	OtOOigDednQJLTT5diRw8ToFcrnJvefYtl88ZTaphZNgSmGRB4ImQBWgaT3P29qL
-	YxJNn6fzKj2S70kdg9xOP/gE8n4LUA1h0hzjKPicPM84ojxHK+HJjd3vwGlj2xb/
-	3PXluR3hgsSgJPBfzYcnoQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jha2bn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 21:08:08 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53NJhCUO017326;
-	Wed, 23 Apr 2025 21:08:07 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 466jvfnxc3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 21:08:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HhH6wrG3FOD6USGxgOxtR5HodiXfPz11uUgU2FkuOhKrYeBfT+rnL1turobIgZvQJ3UgNk7Whl5EPZVaz8HOIW4b/cFE/xUVX4sCnjP2qtsSHeCULMpIJnOKhnrzE2s/ItE1E6vB8Zd6s5Q4z8tafextepykka7ziRotC662CHiebFiLluS2nJXpX08X7maMfFgo5p/HQ8xi1a5E71jqnkzU+rHPXsuMY1/zTYAW76TcBlYnJQ5YS3+xDY8t6FfMcK7fzys32WVWN+TNGgbgJGCxvm2Zzp4w9qJEc06vyh8n6XBjzwQWQn+Xa0HU91sl68UuHPGDMXCfYy9WAWnKWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=;
- b=UG9PalBUT7G0wnLChMB5RGwzwPqEIqgkkt7b/0f8JPTlroUg74DV9QuWRifvDKhRO55YUE+UnpYXnSR55WDoZHqJvsIU4101VzoENIdqo8/e3kM6VSnXgpzikcZCTasvsHJZy+MM3wTZSDeQO/Net8AdNuMfPQmwtlB61lC4qBxDtlYdsBpx0AcBHlhkbYK8CFg9NiINrkH99u+ZYn6qZf+iq6e2w9yPAGTkEk0f+vmhVifMy2Pmo6VMIsnDWFrdjYjy+YE0vNsJo3wNGu4g0hjQ2ZFUw0N9xSYb7SKRDvbZkdUjqw0KyclsyRsGX0PZdi4Y13+XR+9CKqb2OYrDQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	Thu, 24 Apr 2025 00:09:05 +0000
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-39149bccb69so342040f8f.2
+        for <kexec@lists.infradead.org>; Wed, 23 Apr 2025 17:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=;
- b=JqOmUKvXgD2qkDSKxhefsou2PejPca4xuIq5bvdTPm9xWECJBYnbGJWU5l5ZgxaJsrUjaLgu/T0N3N1v6pIgtRW3Z13YzKCFopyWLv6BFM0tD93E2lB0dHNAFv7VNvsOrZqOTL3pkIAmiMXNSQHhQyOon97DVh/gMnCw2rbcPAE=
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
- SA1PR10MB6662.namprd10.prod.outlook.com (2603:10b6:806:2b6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Wed, 23 Apr
- 2025 21:08:02 +0000
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8%5]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 21:08:02 +0000
-Message-ID: <06d3a0ee-9f27-4f57-bd5e-5c493a9caa46@oracle.com>
-Date: Wed, 23 Apr 2025 14:07:58 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 09/19] x86: Secure Launch kernel early boot stub
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-10-ross.philipson@oracle.com>
- <d1f86aa1-2e37-4cfc-b62d-7529ac58c8ba@oracle.com>
-Content-Language: en-US
-From: ross.philipson@oracle.com
-In-Reply-To: <d1f86aa1-2e37-4cfc-b62d-7529ac58c8ba@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PH0PR07CA0095.namprd07.prod.outlook.com
- (2603:10b6:510:4::10) To DS0PR10MB7224.namprd10.prod.outlook.com
- (2603:10b6:8:f5::14)
+        d=clever-cloud.com; s=google; t=1745453339; x=1746058139; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=;
+        b=IjM6DVTm6PyX8sxSy48s/q3iIC40NhKZYNsu2ggv7iEzakMDv3nLHGAeA9+9pfBm4d
+         Jei35gUGuiRFzPJboy0uXj/xenQJopoohtZkantnUUQbydFEhtcVE5pJraiu0DvAGFyI
+         2JNcwUCnJq82fxMtpMX0y/QitPF/bb3/nIBZPQLYRJNU8EL2hsZiyfiZSTDxxwsY1vA4
+         0mLiJRJ4+OaVPmZbqsEC63PJbgUz16k57hxfrTxNxSDjsaRs7U27CtGiiWMqB7rFjd/1
+         ejS3eG8RZQo1b1V6GGVvoUSlexITpOslexYfp+yYG3yYAH4axkWSJeucbMrzPBMZJRuJ
+         LofQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745453339; x=1746058139;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ba1tcXeyh1/rskbOeGrVg5vaXUX2cx2N3RNbIfz4M8g=;
+        b=vc6+7tDheAy45hYNVkezczNWZeZrZiJ00mo6hGUB0poGYt2f6OXtwwVEC+ED1YE7Kh
+         xlpRhx6TH2Qf/1vOlrqN0KHx6hyiVfA1AIeYS+dqEqgZlzRDFCR1+zvhpa5mD/3RDGDL
+         EPfNh8OaFO4BAHTBUG50DmasTPLD2Cvpa2XsMORuGhbLrJN9lgYmbLxucE2y/iicfwcA
+         8uFULpa4BNPV3xDR7xOo03LoJ9xXBTs2nkilp6MjGu2vUS5t3uowLtFLLr6Y19zR/k1r
+         ZMpHLvC17Lk/StL6l+Ks2pn1ARIw6gv3zAGU0ajkQyOa80S/ko3b1iflH6S/J1ejkBQO
+         nQZA==
+X-Gm-Message-State: AOJu0Yy/IkxZOwUvFlfenX3Bb9K2viaXQGLB0k09KB3m5uFFl+WvbJcS
+	4feNWgOsLG7Pz1C5RkdfcOE1TZMngF+rFWHMYhBuHoh51dcmgy+dxEBwoj4IEkY=
+X-Gm-Gg: ASbGncsZ//qhgF+muBZBBWCI4Q9Lsruz3gKNeq59DsgNZOHbrZXqEj8/263U+NaTAfP
+	r/5ZgYb8GwCUmEirY01VQBE0e29lI+HZ3yESxAlyxj9dg9a5pjiBsnhWkpMjXbACMB0rQNUzda7
+	Vukh9XpmQRR3/jucc56PFaOqgUo9F5uG5Z1+kahJOqBDmwacxlwgP8Z5V+pCQ44RFD3JMUDX6T1
+	KFgcSCHtqovk5zyLKHZEj0JZLmj6vrbjRLZtDBLWLrrVED4oO0Tg0vGtTAioidFHfrpOdt9j2f0
+	y/i+d7er86uJC+BebQZOcMyWF4l6lh7RNcsIkZ9rVWICvmEnxQvnU8g=
+X-Google-Smtp-Source: AGHT+IGEP4OVfwSClto6omn+Vzk65W04OakQPdiY+4YXHdbF3SfqwxWKM2BXi5TmYh5hMM3YAAj1gA==
+X-Received: by 2002:a05:6000:1a86:b0:391:20ef:6300 with SMTP id ffacd0b85a97d-3a06cfa5b56mr261089f8f.37.1745453337447;
+        Wed, 23 Apr 2025 17:08:57 -0700 (PDT)
+Received: from exherswag ([78.197.255.180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c4945sm279703f8f.47.2025.04.23.17.08.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 17:08:56 -0700 (PDT)
+Date: Thu, 24 Apr 2025 02:08:55 +0200
+From: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <kofi6m743pg6hrahjx3vj7efairnpiq5pqmgql2cwg6lnz2cmw@ntdymi2egzro>
+References: <20250207080818.129165-1-coxu@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|SA1PR10MB6662:EE_
-X-MS-Office365-Filtering-Correlation-Id: e44a8957-9b54-4e50-24d6-08dd82aaef15
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZnVkdDFqK2hjSXRqaXB4d2lVNC9rMzNNaW5FcWRPcHgrdnZWd1VuRmc2aDFq?=
- =?utf-8?B?NmxKWW1aR3pyVklXK1pBMG1CcFZldGo4RzlZVEpGd3dLQldYUGZQTGJBWHZo?=
- =?utf-8?B?TGhlOHZBYUx3LzI5ZkFZdjJkYml0emhHUWs5WjAvRm11bU9BdWdoWS91ZDB0?=
- =?utf-8?B?Q1BlVmtNQ0w2SjgzRnM3WGxTVVN0Q0xwek1oTGtLTU1pZXY2Vk5PMUFiVk1x?=
- =?utf-8?B?MXFEaXE3YzdId09hWjNKNlhUR2tYTVJXcUI3U0l0MGwrcFkrTG5yNkhjbTZ1?=
- =?utf-8?B?SG5jZzNFaE1zbWIrS3M3OWdoZnlQNk5DdSt1cWdWZU1hcDBZSjEwWWFEWGVl?=
- =?utf-8?B?Q01GcmhrN1J0aEp0Nk9wN1djenk1YnRRKzVpNnRPNmNJd1Y5Mk9Vc3FQTytY?=
- =?utf-8?B?ZjRFSkdIQXNXRzk3anovajNrWGVaOEZlb3NydFJSR2U2WjhhWllpUDF5R1hs?=
- =?utf-8?B?LzB1Z3ppbVFCOXBuM05VL3NFMHBCaW1QaGY5bWZOOVV4cHhHaUR2VFVoeXM1?=
- =?utf-8?B?OWRYMmU2eFpQRXdDelV3WWlYTm9nOEFLTFQ2ZUFTMFNyV0JRODh6NEYzY3kv?=
- =?utf-8?B?RkxvTlluMndMamQ4UTVjQ1NHemN4cUhFZ3c0ME1EOVcycDNRcjIwOHFRd0k5?=
- =?utf-8?B?VkV4OS9LeWNkaCtmaEgzVnBwSmpBdkZJWDgxM3owM3JNVnBxUXhnbStRVDJU?=
- =?utf-8?B?dkxpWGcyTkJPQWtpMStmKzJVdzVqWkQyMW9haHdYZEtpTjRzTXpvYkFGSnZr?=
- =?utf-8?B?UEhnYXFGakZjMFhpamxobzRpRGZiZ2ljTEJKeVYvQXdPakxVSHBYY1NDQ0t2?=
- =?utf-8?B?R09MMk5HaXRlb2pHc0ZBZ1NrcDkxR1BNcW1QTHM5RWsrdkJpSFdIblhPRzNt?=
- =?utf-8?B?Q2lDd1RhMlZmRUl6Q3pTUFpkQm5VSlY5bFZkKzMzQTBJYnVxWWUvQmlRb0JB?=
- =?utf-8?B?UHYvdzMzNzFORlh3djFVNjc2ZjJNT1VNM0tFTXlGNm02YzJqSHFtWklNdHpE?=
- =?utf-8?B?SktpbjRKWWUvSWpDalNZTWs0OU4zMDl4Z3hOYVN1bm9Yd2UzMEdYRVJ0VnFq?=
- =?utf-8?B?bFZYVVowMnl6SEpQZWFsczBjaVl4M25XWEZZOXFnbzRzSnJhcGFMMmVQQXJU?=
- =?utf-8?B?b3B1Sy9FOUZNSFdPVUx0NWozdVRIdjE3a3lpZENPc3lSTXYwbnNVWkxOUU00?=
- =?utf-8?B?ZW81ZlhoRGNabVlldW5SdnlBaXo5dmJqblE4Q3RsbXBhWFExeVM2cFJ1bFBM?=
- =?utf-8?B?R1NML3Q0dWIxU284Z1VpN1NaZGZrdDQrUDdLVmp3aDdiRnpKcm9oekVSTkpr?=
- =?utf-8?B?eVl4aHNIZ1RTSUlVVjZGNUI3T1c1czVwdjlUOS9tUU4wSjdQem9HNWpWck5j?=
- =?utf-8?B?YlR5UkV5RjJhY2tnTHJWNnI3VUo4TzlteCtyZnN1Wk1rc1dBTTJsSTZObnhV?=
- =?utf-8?B?Vmx5ZGdiZkh1ajVHRWprNW1hNEx2QXkzU1YvUlRLQ09ZeFh4Q0NiZVh1MW1r?=
- =?utf-8?B?L2JQV1g0SUd1RlBKZkdSdmptUjJFVkc3S2NQSmhDa0ZpaFAwMEpQU3VxRWxp?=
- =?utf-8?B?N01YZXZycXVyenkwRURiMHd0bTF5VHNmS2tzcTBsSGlqb0tEWTFHS0s3UGIw?=
- =?utf-8?B?bXBoeDZkVGJ4MzNYRWQrWFoyUWF1Q2RyS1ZmSnQrNmdsM3ErTnJzdzJqU1My?=
- =?utf-8?B?Y2lwclZaMkRpUkxVaUN0bnJ2dmhCWDdsWmZsbmJUb0d0S1J4MktKSGhtNFBz?=
- =?utf-8?B?bmdpdnR4b2FiZWZnNXcrWWNVK0NKKzV2NmVtM2s1RmxPN2FKT2ozNkVwS0Z5?=
- =?utf-8?B?YWpGRHY3T2JrcDR5UUxEMEc4V09XWmNibzhTKy9PQVRiQ2JSbDd6TndiWWF0?=
- =?utf-8?B?ZGQxQTFwd0dpM3ZTWm1VMjdSVTY5dk5SWng5aDVmbUFWV0RZL1FuelA0aDBu?=
- =?utf-8?Q?H81JQaKkYns=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NmQrY1RCRGtmN0VwTmdSa21RY2QxK0x3WjAyNlFscWhpWTk2NHNDVmx0M2V5?=
- =?utf-8?B?UXBuSkxLTExPcFhPYWkvTkhjM2ZVb0MvajkyVTZaTG1pKytyZGkyUTVjTXdL?=
- =?utf-8?B?ZkVxOGNLbTk2N0kzRzV1MHdiNjNxQlFyQUpHN2tRSjFzVTJ2UC9SeThWdEUw?=
- =?utf-8?B?WVhUMDNIUTgxczM0b0FFaGVWQUlJQm1BSi9BMit3MURxTjZHZVFSZVhYck9l?=
- =?utf-8?B?WGM4SHNwRWRtVGU4akgzQjhEdG5DdlRnZmdXMEg3WW5tS2JLQWUrTjZtZ0Jh?=
- =?utf-8?B?VTJXc1NFTUFjUVFCRnBPazIvTEdqN2RXRW52bU16RnhLNUorWHJrdFVMOWZE?=
- =?utf-8?B?UE9aeTJFcUM3LzZKbVVHSlZVNWpudXpRYzdGM3lUR2dnaFRQVlZVWDlCR2Zx?=
- =?utf-8?B?ZG01Z2ZoLzdmY1M5MDF3c2pqT1RCUjZoRGtLY0NocTFzakVxVTQ1L1NyMSt1?=
- =?utf-8?B?d1FPT0hPYjdLZ0tsOUV3cy9kK3U5SW1GSEhDaElVc1VxdzI5aE5XZ0N1Y0V0?=
- =?utf-8?B?Q21HRWlHM3M2UHpmUnhmT2Jsd0FzVnVRUWMwMFRSOTQwQUFBWlR5S3JSSnNM?=
- =?utf-8?B?aUkxcHdHcjN3aGl2TFhRVDhkay8rYVdPZXR4SFVWcVhZNnoxUXlDRGd1b3A4?=
- =?utf-8?B?L3lPVTZtZXl2K2wzbS8xdk5qdWZBTFNqMXdkemlqekpLUDUwT2xta1MrTTNa?=
- =?utf-8?B?SDQrMDRndnJLT1BEM05EdGQ3QXNXNnR5SjQ0OUVYMTRDVkszQXYwNGJWem9o?=
- =?utf-8?B?NDl1THozL0EzRHlwU0plUnN2bFNJelhicVlCWXA1OFM1TUNCaStSa3AyTTdn?=
- =?utf-8?B?a1FuVEZTallaeUhTU01pd0NaZUF6ZWdnbDl5SUhZcGNyb292QnhRYVhPMVdw?=
- =?utf-8?B?V2NwandwZ3d2Q2U4d2Zqa3YxVmFUMHd2WE1kM0Nyck1MTHlPd0xvVjEzbVg1?=
- =?utf-8?B?d2tQd2hKM24xZnNkR1hkU0Vhb1pORktMQ0Jqd0ZaM3c4dDJzSUd0dEx2S29D?=
- =?utf-8?B?V0t5alhyQXFMN3I0UC9pdWxRODZBTWRVYlB3T0FwbkVwVVJlcTYvaEFac1J5?=
- =?utf-8?B?MThWVlFhNGpTU3NwcDBGRUFKU3NDTzVjQy9MbzgwQ2xLdlhaaGZDa0RIMGVT?=
- =?utf-8?B?VEhidUJzQ1JTWkltMGRJaGxyNmZtOERMUFRQMmp1aHo3VXhBTVZTc2NTdTNN?=
- =?utf-8?B?QVNadERYOW9mTDBJYW1lMkZIa200TXdvSHB5Ulp2TUlEWmNUb3hWeWlLQnVa?=
- =?utf-8?B?Z21NZHBiNnpGZVVFZXlNN0dML1VOTHFpUFhRalFNTVBWZFRvQit3Y2YvR1lG?=
- =?utf-8?B?a0FRMUlzU0ZTS0JldmxoZmRVUjQwS2grSFpnZmlIcTBTSU5DYzUwWU94Vk5P?=
- =?utf-8?B?VHVKQ0NXajYvOUxyMGhOUEJ1MTIzNGRkL2Q1YjZSdTZuaFBKbVN1a1hhT1hj?=
- =?utf-8?B?Z3NudVdvZ29iR2R0RDNUTHU1TW5UUGhCMENlNitqL1k5RUppUmFxdWVVZ3Uv?=
- =?utf-8?B?RE5seGRua2Ryb0JhbHJHaWZtamVVRU9Hd3VpZHlEZ3BDVzJSMnMyYWpiWVl6?=
- =?utf-8?B?Q0twWlZKT3BLYmtENSt3NkNVemhMbUEwbHlSV1pnMmk0S2RndDR3M3h1RXpJ?=
- =?utf-8?B?cHJDNDl4d3plM1JkRVVwMWhlZG8veWJKQ0VkU2srUnI4T01GS0RmUG15M0xN?=
- =?utf-8?B?NTNtRCtta2VWUDMybzJ1L2ZNQ2EyMWtsa09aTC9YUUdmeTFWVXJxYzcwSUdD?=
- =?utf-8?B?MHVPMFZoUmZTeFhKalFIWmdmVERLK1cvN1ZjVjErd29Ed1RpYTVWU1RQUDZR?=
- =?utf-8?B?c0YvZGVqMENLZy8yT0dvUGJ3K2FXak1DV0VVdmNSK1NxKzRYVjYrY3dlbFJs?=
- =?utf-8?B?RU9NUndoS2dUM2daeWdVcnZZaWVFRnlTN2dFQUpFSnJDTFVuT3M0aElQSmZ2?=
- =?utf-8?B?eG50V29QNkNFbWYvVGxBejMvUElJUkQ1TFVkWGp4MVFsTjFlclRjYlBCTGQ4?=
- =?utf-8?B?R0hGS282ZnJhY3RGTmdDVzZ1VjFjRHBtYVhpekMrQ1k4d293WWZMV09JSzFS?=
- =?utf-8?B?SEVSSU5jRUh3QjR2OU5qaEU4SEFFdURYN3hJNnhxWlNXWllObmJYTFkrK1Ny?=
- =?utf-8?B?VHAra0xoMTl2Qno1Rk9zNHltQTljSFVjYjZIbjE5anJJby9yWHl2c3Z1Vk12?=
- =?utf-8?B?Z2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: vP3gbrHPhN3vB87hp5/aMvj9/+YiDPSyJkm+qsmAOuU2ubRFS2MMpo44Q7lAoaQmO8VZiN+M/g3twVNg37scjHgpZyA01uRxAIaH0ry8+nOseS3UYw4JRTSqlh8gyFAERp/pf3iHwne7NTk22je1FGX6uhYFEXF+5S2w+QEfey1IaRjUQs3YaePZq/sikAM3IFY4eMiKM75JdQf/Oqf18CkhqfyuE5XGKcX3hFR2vEfuL0tULsWYFmBBVH0cN54evaB6qRNhQddADBIrr7xQy3WVnqKNNhgwHKKXkPRM0UDOpTyQlVqoZuF9pk4WArL7l6ndXr3fU4CLreVDedcSfanBZZK8WNmirnrf2LJvIWZwdgB5fnbOmAJ//xWLEyjtpW7+X0PxWlr7OG7PdUMxuS589IsEkGKLN3MHuY0gq3v+gVkzmPVt2mhBCm5LjqNjxoVg/oMHNv/UBVPbPo41DuGfwwd9L0g+csvsiHjQDzFo+4rKgM8Sg8ND6RzCiYgYPIDcrv6HrjpMHd8nlwhB/0RnwuywPDvO1UkEhxeEidI5leMewf1tl/sDfmeUr6jFw0Y1lVsldED4sORSqk+xUT30T+tb66RaZoON8t2meuY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e44a8957-9b54-4e50-24d6-08dd82aaef15
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 21:08:02.6421
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SyhUmeqSSiYrnn3NxqoCObJWMU9WL6RpVBHsBGW9PqPqkKP93H0WxeOCz4XuhRZj2OCmfML/D9Mnb9M59flteVJwM/zZCe3o8YYAvEzKNSU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6662
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2504230143
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0MyBTYWx0ZWRfX3AkSSXUf//fW HTcJ2W/xhkfGiqicBZ9pqQC3xXnNihikTj6rGct78gytg0biqQe/z4dDbDzSTjdxNetwDXKnyrA Rl5XpkaQCPctxKgy8yL5Ryk0QIShe4SE8OBEOZMVyjrsMqgBFGtZaEzudytJI6zasLWu98fj8Vh
- pvlc6ju0g6XES1MAksh/XMvAAVug32lW0Z05gTqUbjCMeXvuZfgbyf6z0M8BFeVHPPVdriXjBqZ XpxlPQF5B4hDMrxZpO7iStpunLcE96ai8P/y+0g0mTABJT0Nz8YgSq4jWTak0OxnDanggKehy9v uAdcXLNfPcWwkHpBAnjaysV0GvrricIkLaVqKn3S1svEfgh+mvrLIY8aw5DjqOcXFup5Ti/bbcw v1+LUN33
-X-Proofpoint-GUID: B34uLyDRhi5aoT88NKEsnoa_6h5uEnzn
-X-Proofpoint-ORIG-GUID: B34uLyDRhi5aoT88NKEsnoa_6h5uEnzn
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250423_140838_040336_83D1BDFB 
-X-CRM114-Status: GOOD (  17.97  )
+X-CRM114-CacheID: sfid-20250423_170904_229740_B91B2CD5 
+X-CRM114-Status: GOOD (  32.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -225,272 +100,230 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/23/25 1:38 PM, ALOK TIWARI wrote:
-> 
-> 
-> On 21-04-2025 21:57, Ross Philipson wrote:
->> The Secure Launch (SL) stub provides the entry point for Intel TXT to
->> jump to during the dynamic launch. The symbol sl_stub_entry is that entry
->> point and its offset into the kernel is conveyed to the launching code 
->> using
->> the Measured Launch Environment (MLE) header in the structure named 
->> mle_header.
->> The offset of the MLE header is set in the kernel_info.
->>
->> The routine sl_stub contains the very early dynamic launch setup code
->> responsible for setting up the basic operating environment to allow 
->> the normal
->> kernel startup_32 code to proceed. It is also responsible for properly 
->> waking
->> and handling the APs on Intel platforms.
->>
->> The routine sl_main which runs after entering 64b mode in the setup 
->> kernel. It
->> is responsible for measuring configuration and module information before
->> it is used. An example of entities measured on Intel x86 are the boot 
->> params,
->> the kernel command line, the TXT heap, any external initramfs, etc. In 
->> addition
->> this routine does some early setup and validation of the environment like
->> locating the TPM event log and validating the location of various 
->> buffers to
->> ensure they are protected and not overlapping.
->>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->>   Documentation/arch/x86/boot.rst       |  21 +
->>   arch/x86/boot/compressed/Makefile     |   3 +-
->>   arch/x86/boot/compressed/head_64.S    |  29 +
->>   arch/x86/boot/compressed/sl_main.c    | 597 +++++++++++++++++++++
->>   arch/x86/boot/compressed/sl_stub.S    | 731 ++++++++++++++++++++++++++
->>   arch/x86/include/uapi/asm/bootparam.h |   1 +
->>   arch/x86/kernel/asm-offsets.c         |  20 +
->>   7 files changed, 1401 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/x86/boot/compressed/sl_main.c
->>   create mode 100644 arch/x86/boot/compressed/sl_stub.S
->>
-> [clip]
->> index 000000000000..5e0fd0d7bd72
->> --- /dev/null
->> +++ b/arch/x86/boot/compressed/sl_main.c
->> @@ -0,0 +1,597 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Secure Launch early measurement and validation routines.
->> + *
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/string.h>
->> +#include <linux/linkage.h>
->> +#include <asm/segment.h>
->> +#include <asm/boot.h>
->> +#include <asm/msr.h>
->> +#include <asm/mtrr.h>
->> +#include <asm/processor-flags.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/bootparam.h>
->> +#include <asm/bootparam_utils.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
->> +#include <crypto/sha1.h>
->> +#include <crypto/sha2.h>
-> 
-> consider header reordering For clarity and consistency
+On Fri, Feb 07, 2025 at 04:08:08PM +0800, Coiby Xu wrote:
+>LUKS is the standard for Linux disk encryption, widely adopted by users,
+>and in some cases, such as Confidential VMs, it is a requirement. With
+>kdump enabled, when the first kernel crashes, the system can boot into
+>the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
+>to a specified target. However, there are two challenges when dumping
+>vmcore to a LUKS-encrypted device:
+>
+> - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>   machines, a system administrator may not have a chance to enter the
+>   password to decrypt the device in kdump initramfs after the 1st kernel
+>   crashes; For cloud confidential VMs, depending on the policy the
+>   kdump kernel may not be able to unseal the keys with TPM and the
+>   console virtual keyboard is untrusted.
+>
+> - LUKS2 by default use the memory-hard Argon2 key derivation function
+>   which is quite memory-consuming compared to the limited memory reserved
+>   for kdump. Take Fedora example, by default, only 256M is reserved for
+>   systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
+>   to be reserved for kdump. Note if the memory reserved for kdump can't
+>   be used by 1st kernel i.e. an user sees ~1300M memory missing in the
+>   1st kernel.
+>
+>Besides users (at least for Fedora) usually expect kdump to work out of
+>the box i.e. no manual password input or custom crashkernel value is
+>needed. And it doesn't make sense to derivate the keys again in kdump
+>kernel which seems to be redundant work.
+>
+>This patch set addresses the above issues by making the LUKS volume keys
+>persistent for kdump kernel with the help of cryptsetup's new APIs
+>(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+>the kdump copies of LUKS volume keys,
+>
+> 1. After the 1st kernel loads the initramfs during boot, systemd
+>    use an user-input passphrase to de-crypt the LUKS volume keys
+>    or TPM-sealed key and then save the volume keys to specified keyring
+>    (using the --link-vk-to-keyring API) and the key will expire within
+>    specified time.
+>
+> 2. A user space tool (kdump initramfs loader like kdump-utils) create
+>    key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
+>    the 1st kernel which keys are needed.
+>
+> 3. When the kdump initramfs is loaded by the kexec_file_load
+>    syscall, the 1st kernel will iterate created key items, save the
+>    keys to kdump reserved memory.
+>
+> 4. When the 1st kernel crashes and the kdump initramfs is booted, the
+>    kdump initramfs asks the kdump kernel to create a user key using the
+>    key stored in kdump reserved memory by writing yes to
+>    /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
+>    device is unlocked with libcryptsetup's --volume-key-keyring API.
+>
+> 5. The system gets rebooted to the 1st kernel after dumping vmcore to
+>    the LUKS encrypted device is finished
+>
+>After libcryptsetup saving the LUKS volume keys to specified keyring,
+>whoever takes this should be responsible for the safety of these copies
+>of keys. The keys will be saved in the memory area exclusively reserved
+>for kdump where even the 1st kernel has no direct access. And further
+>more, two additional protections are added,
+> - save the copy randomly in kdump reserved memory as suggested by Jan
+> - clear the _PAGE_PRESENT flag of the page that stores the copy as
+>   suggested by Pingfan
+>
+>This patch set only supports x86. There will be patches to support other
+>architectures once this patch set gets merged.
+>
 
-I don't mean this in a sarcastic way but what needs to be re-ordered? It 
-looks pretty well ordered to me already. Can you give me an example of 
-what you mean? Same for the other comment like this below.
+I'm not sure what's the problem here but I can reliably trigger a kernel
+panic on a qemu VM + custom kernel (compiled from
+bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b + your patches).
 
-As for the other things here, we will fix them.
+When I configure the crash configfs and call kexec in a systemd service
+using ExecStart=, the panic occurs when I start the service:
 
-Thanks
+~ # cat /etc/systemd/system/my-kexec.service
+[Unit]
+Description=kexec loading for the crash capture kernel
 
-> 
->> +
->> +#define CAPS_VARIABLE_MTRR_COUNT_MASK    0xff
->> +
->> +#define SL_TPM_LOG        1
->> +#define SL_TPM2_LOG        2
->> +
-> 
->> +static u64 sl_txt_read(u32 reg)
->> +{
->> +    return readq((void *)(u64)(TXT_PRIV_CONFIG_REGS_BASE + reg));
->> +}
->> +
-> [clip]
->> +/*
->> + * Process all EFI config entries and extend the measurements to the 
->> evtlog
->> + */
->> +static void sl_process_extend_uefi_config(struct slr_table *slrt)
->> +{
->> +    struct slr_entry_uefi_config *uefi_config;
->> +    u16 i;
->> +
->> +    uefi_config = slr_next_entry_by_tag(slrt, NULL, 
->> SLR_ENTRY_UEFI_CONFIG);
->> +
->> +    /* Optionally here depending on how SL kernel was booted */
->> +    if (!uefi_config)
->> +        return;
->> +
->> +    for (i = 0; i < uefi_config->nr_entries; i++) {
->> +        sl_tpm_extend_evtlog(uefi_config->uefi_cfg_entries[i].pcr, 
->> TXT_EVTYPE_SLAUNCH,
->> +                     (void *)uefi_config->uefi_cfg_entries[i].cfg,
->> +                     uefi_config->uefi_cfg_entries[i].size,
->> +                     uefi_config->uefi_cfg_entries[i].evt_info);
->> +    }
->> +}
->> +
->> +asmlinkage __visible void sl_check_region(void *base, u32 size)
->> +{
->> +    sl_check_pmr_coverage(base, size, false);
->> +}
->> +
->> +asmlinkage __visible void sl_main(void *bootparams)
->> +{
->> +    struct boot_params *bp  = (struct boot_params *)bootparams;
-> 
-> remove extra ' ' before =
-> 
->> +    struct txt_os_mle_data *os_mle_data;
->> +    struct slr_table *slrt;
->> +    void *txt_heap;
->> +
->> +    /*
->> +     * Ensure loadflags do not indicate a secure launch was done
->> +     * unless it really was.
->> +     */
->> +    bp->hdr.loadflags &= ~SLAUNCH_FLAG;
->> +
->> +    /*
->> +     * Currently only Intel TXT is supported for Secure Launch. Testing
->> +     * this value also indicates that the kernel was booted successfully
->> +     * through the Secure Launch entry point and is in SMX mode.
->> +     */
->> +    if (!(sl_cpu_type & SL_CPU_INTEL))
->> +        return;
->> +
->> +    slrt = sl_locate_and_validate_slrt();
->> +
->> +    /* Locate the TPM event log. */
->> +    sl_find_drtm_event_log(slrt);
->> +
->> +    /* Validate the location of the event log buffer before using it */
->> +    sl_validate_event_log_buffer();
->> +
->> +    /*
->> +     * Find the TPM hash algorithms used by the ACM and recorded in the
->> +     * event log.
->> +     */
->> +    if (tpm_log_ver == SL_TPM2_LOG)
->> +        sl_find_event_log_algorithms();
->> +
->> +    /*
->> +     * Sanitize them before measuring. Set the SLAUNCH_FLAG early 
->> since if
->> +     * anything fails, the system will reset anyway.
->> +     */
->> +    sanitize_boot_params(bp);
->> +    bp->hdr.loadflags |= SLAUNCH_FLAG;
->> +
->> +    sl_check_pmr_coverage(bootparams, PAGE_SIZE, false);
->> +
->> +    /* Place event log SL specific tags before and after measurements */
->> +    sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_START, NULL, 0, "");
->> +
->> +    sl_process_extend_policy(slrt);
->> +
->> +    sl_process_extend_uefi_config(slrt);
->> +
->> +    sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_END, NULL, 0, "");
->> +
->> +    /* No PMR check is needed, the TXT heap is covered by the DPR */
->> +    txt_heap = (void *)sl_txt_read(TXT_CR_HEAP_BASE);
->> +    os_mle_data = txt_os_mle_data_start(txt_heap);
->> +
->> +    /*
->> +     * Now that the OS-MLE data is measured, ensure the MTRR and
->> +     * misc enable MSRs are what we expect.
->> +     */
->> +    sl_txt_validate_msrs(os_mle_data);
->> +}
->> diff --git a/arch/x86/boot/compressed/sl_stub.S b/arch/x86/boot/ 
->> compressed/sl_stub.S
->> new file mode 100644
->> index 000000000000..6c0f0b2a062d
->> --- /dev/null
->> +++ b/arch/x86/boot/compressed/sl_stub.S
->> @@ -0,0 +1,731 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +/*
->> + * Secure Launch protected mode entry point.
->> + *
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +    .code32
->> +    .text
->> +#include <linux/linkage.h>
->> +#include <asm/segment.h>
->> +#include <asm/msr.h>
->> +#include <asm/apicdef.h>
->> +#include <asm/trapnr.h>
->> +#include <asm/processor-flags.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/bootparam.h>
->> +#include <asm/page_types.h>
->> +#include <asm/irq_vectors.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
-> 
-> consider header reordering For clarity and consistency
-> 
->> +
->> +/* CPUID: leaf 1, ECX, SMX feature bit */
->> +#define X86_FEATURE_BIT_SMX    (1 << 6)
->> +
->> +#define IDT_VECTOR_LO_BITS    0
->> +#define IDT_VECTOR_HI_BITS    6
->> +
-> [clip]
->> +    jz    .Lwake_getsec
->> +
->> +    /* Wake using MWAIT MONITOR */
->> +    movl    $1, (%edi)
->> +    jmp    .Laps_awake
->> +
->> +.Lwake_getsec:
->> +    /* Wake using GETSEC(WAKEUP) */
->> +    GETSEC    $(SMX_X86_GETSEC_WAKEUP)
->> +
->> +.Laps_awake:
->> +    /*
->> +     * All of the APs are woken up and rendesvous in the relocated wake
-> 
-> typo rendesvous -> rendezvous
-> 
->> +     * block starting at sl_txt_ap_wake_begin. Wait for all of them to
->> +     * halt.
->> +     */
->> +    pause
->> +    cmpl    rva(sl_txt_cpu_count)(%ebx), %edx
->> +    jne    .Laps_awake
->> +
->> +    popl    %esi
->> +    ret
->> +SYM_FUNC_END(sl_txt_wake_aps)
->> +
->> +/* This is the beginning of the relocated AP wake code block */
->> +    .global sl_txt_ap_wake_begin
->> +sl_txt_ap_wake_begin:
-> 
-> 
-> Thanks,
-> Alok
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
+ExecStart=/usr/bin/echo cryptsetup:mykey >/sys/kernel/config/crash_dm_crypt_keys/mykey/description
+ExecStart=/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
+KeyringMode=shared
+
+[Install]
+WantedBy=default.target
+
+
+Starting the service:
+
+~ # systemctl start my-kexec.service
+kexec_file: kernel: 00000000ace85dcc kernel_size: 0x16e3000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000d08940fa
+vaddr=0xffff888000100000, paddr=0x100000, sz=0x700000 e_phnum=11
+p_offset=0x100000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000304ef570
+vaddr=0xffff888000808000, paddr=0x808000, sz=0x3000 e_phnum=12
+p_offset=0x808000
+crash_core: Crash PT_LOAD ELF header. phdr=000000000275e248
+vaddr=0xffff88800080c000, paddr=0x80c000, sz=0x5000 e_phnum=13
+p_offset=0x80c000
+crash_core: Crash PT_LOAD ELF header. phdr=000000004e47ca09
+vaddr=0xffff888000900000, paddr=0x900000, sz=0xa5700000 e_phnum=14
+p_offset=0x900000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000e56c8350
+vaddr=0xffff8880b6000000, paddr=0xb6000000, sz=0x7d51018 e_phnum=15
+p_offset=0xb6000000
+crash_core: Crash PT_LOAD ELF header. phdr=0000000099d67ff3
+vaddr=0xffff8880bdd51018, paddr=0xbdd51018, sz=0x27440 e_phnum=16
+p_offset=0xbdd51018
+crash_core: Crash PT_LOAD ELF header. phdr=00000000461a2f21
+vaddr=0xffff8880bdd78458, paddr=0xbdd78458, sz=0xbc0 e_phnum=17
+p_offset=0xbdd78458
+crash_core: Crash PT_LOAD ELF header. phdr=0000000058149b54
+vaddr=0xffff8880bdd79018, paddr=0xbdd79018, sz=0x9a40 e_phnum=18
+p_offset=0xbdd79018
+crash_core: Crash PT_LOAD ELF header. phdr=000000001e30ff2c
+vaddr=0xffff8880bdd82a58, paddr=0xbdd82a58, sz=0xdbc5a8 e_phnum=19
+p_offset=0xbdd82a58
+crash_core: Crash PT_LOAD ELF header. phdr=00000000e67a9768
+vaddr=0xffff8880bec00000, paddr=0xbec00000, sz=0xaed000 e_phnum=20
+p_offset=0xbec00000
+crash_core: Crash PT_LOAD ELF header. phdr=000000005909c4c6
+vaddr=0xffff8880bf9ff000, paddr=0xbf9ff000, sz=0x453000 e_phnum=21
+p_offset=0xbf9ff000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000473d74ef
+vaddr=0xffff8880bfe58000, paddr=0xbfe58000, sz=0x64000 e_phnum=22
+p_offset=0xbfe58000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000abde8123
+vaddr=0xffff888100000000, paddr=0x100000000, sz=0x23f000000 e_phnum=23
+p_offset=0x100000000
+crash_core: Crash PT_LOAD ELF header. phdr=00000000bda3e0bf
+vaddr=0xffff88843f000000, paddr=0x43f000000, sz=0x1000000 e_phnum=24
+p_offset=0x43f000000
+kexec: Loaded ELF headers at 0x33f000000 bufsz=0x1000 memsz=0xe1000
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] SMP NOPTI
+CPU: 5 UID: 0 PID: 3812 Comm: kexec Not tainted 6.14.0-rc1+ #20
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 2025.02-6
+04/08/2025
+RIP: 0010:sized_strscpy+0x71/0x150
+Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
+11
+48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e 49
+89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
+RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
+RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
+RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
+R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
+R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
+FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
+PKRU: 55555554
+Call Trace:
+  <TASK>
+  ? __die+0x23/0x60
+  ? page_fault_oops+0x177/0x510
+  ? _prb_read_valid+0x2e7/0x370
+  ? exc_page_fault+0x6f/0x130
+  ? asm_exc_page_fault+0x26/0x30
+  ? sized_strscpy+0x71/0x150
+  crash_load_dm_crypt_keys+0x1bc/0x370
+  bzImage64_load+0x41b/0xa30
+  __do_sys_kexec_file_load+0x2af/0x8a0
+  do_syscall_64+0x4b/0x110
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f09ea848d6d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48
+89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
+c3 48 8b 0d 6b 70 0d 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff8cf979e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000140
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f09ea848d6d
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000003
+RBP: 0000000000000003 R08: 000000000000000a R09: 00007fff8cf97a10
+R10: 000055de70eee9a0 R11: 0000000000000206 R12: 0000000000000003
+R13: 00007fff8cf97d08 R14: 000055de4c336448 R15: 0000000000000004
+  </TASK>
+CR2: 0000000000000000
+---[ end trace 0000000000000000 ]---
+RIP: 0010:sized_strscpy+0x71/0x150
+Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
+11 48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e
+49 89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
+RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
+RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
+RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
+R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
+R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
+FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
+PKRU: 55555554
+Kernel panic - not syncing: Fatal exception
+Kernel Offset: disabled
+
+
+Calling a script that does the same thing works fine and loads the keys
+correctly:
+
+[Service]
+ExecStart=/root/kexec.sh
+
+~ # cat /root/kexec.sh
+#!/bin/bash
+
+mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
+echo cryptsetup:mykey > /sys/kernel/config/crash_dm_crypt_keys/mykey/description
+/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
+
+If that's any help, my crypttab:
+
+~ # cat /etc/crypttab
+root UUID=8001fca4-2e54-48e9-9235-031c19fc6e36 none luks,link-volume-key=@u::%logon:cryptsetup:mykey
+
+If you can't reproduce, I can help track this. Just let me know if you need
+any help.
 
 
