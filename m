@@ -4,81 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5C49C369D1
-	for <kexec@archiver.kernel.org>; Fri, 25 Apr 2025 11:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50556C369D7
+	for <kexec@archiver.kernel.org>; Fri, 25 Apr 2025 15:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:To:Cc:Date:Message-Id:
-	Subject:Mime-Version:From:Content-Transfer-Encoding:Content-Type:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=; b=oZM70Ho5Hl7+7Ls2GrJ8CCMajr
-	zc0rsvYNLVyVLLL8+xzCdGMd/UXw4zfLJmnCUEPq0qwf2oixjNmPTg9F3Jy4o1votxmF1x58WY+BU
-	U5dYpA5TNh3tOtwJwJJwqzcfxAJkBwZvg8VDyPr4ZXJOJeYfo2AX7x6iQ2MVeQbg76ytQjuND/8px
-	NMI+jmUpGs8CKLQvH6zXrsMgGtFe415cExZgJ99d4qZfMf+e+ueHc5VQMMBoFG0QlGwoRh2dJK1H4
-	VFXziLOFQLUCQmcTqnkPuIKzZXUX16V1CXJB+K9DsNxHnmpVRsG7ZHZRrjf/8hFoPGuqXJYHb6+ty
-	n41USu2A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1WK5M97kmcVveuPxnlmLySUh+FCGTw6qWfGRWWrgjH4=; b=UfD/SsdwrJGrjqQmhkiLgKPOMr
+	r1ORP0E+d2V/czzY9qSh84A1L92x8N0yKUXxYSbm+9JDDB6j5cY72M+16Zcd0HWphn0w7geuSMXjN
+	PhyFNWOt+/UzQbafyVgJ1iIyb6G7TWyuH3BntlSBx4ElvQlL+LQkFpi1aOubsQMUE4K78SDAIi4iK
+	izHhGwMQHVPP3+gG35GK7odfbKWWj7w1nfHxxr6HlLHLpVfCFbft6AfzASY9bTon2dPSnVFhd7tt5
+	nZmcLunN9sQ+ugSyFfbREiPwxGTlLO1tRrmLk+rJtpsrjNAeM+tTQuFkSMRzkk+xqYy8ZSYJ01KRC
+	A+Ty98Ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8HKn-0000000Gz3c-3hEq;
-	Fri, 25 Apr 2025 11:35:09 +0000
-Received: from mail-vk1-xa29.google.com ([2607:f8b0:4864:20::a29])
+	id 1u8L72-000000004PQ-25En;
+	Fri, 25 Apr 2025 15:37:12 +0000
+Received: from mgamail.intel.com ([192.198.163.7])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8G3J-0000000GgO0-2FPK
+	id 1u8JnU-0000000HOWb-07RU
 	for kexec@lists.infradead.org;
-	Fri, 25 Apr 2025 10:13:03 +0000
-Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-5259327a937so843334e0c.0
-        for <kexec@lists.infradead.org>; Fri, 25 Apr 2025 03:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745575980; x=1746180780; darn=lists.infradead.org;
-        h=to:cc:date:message-id:subject:mime-version:from
-         :content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
-        b=chVke30ayLixd1P4AqYAFiu7pPPBV+szHuFvI+2DTtSR2HivHoMCGQ3JqtEUB0vfen
-         3+Ebp8U78dUkywWhwG1xp82M5VqpcpI4jpGY7kURjMRU5Ftc7LzVLRSR6F6saaX3CeNO
-         HH7H2XY31t0AS9IESi1Ed4CUyQhuiZyWfLvhW2LgPMCJugqCTABdMWRRQELsXse7tT81
-         32Ov56mC+e4LrhvhdN1hHMy43iGODOylhL8BPJHXfIrxKYb2Zz1WkUK9RsefE8gqDeX8
-         MNU4G8lintYSgtP3LfXc7QPNAhgm2BHqYsTSZKXVrWG9GMoP9fWAotvjfwcuym6LQHOl
-         p8Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575980; x=1746180780;
-        h=to:cc:date:message-id:subject:mime-version:from
-         :content-transfer-encoding:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
-        b=szU9vDWFzQyJz3q1O0hoWUh9C+ci6f8AIwPmJAUy3Fx93Bgs3mCpi37eDw3empt3zM
-         S0dmnDTRWREzl9Vvv3uxm1VyABAbZu/4E3w02m4R7/JLR4l1vMa1CmyMCfbKB36Q+Owc
-         gchsRD+vPO6t7CLYyz6vVxdMKj5Tp/2J0P60pgv5KoEblArIgDtquZrwMH9TgmhgA7wE
-         CPvpWARS3nIOuHUPR44hmdIrO3Tzjw+oLSbtJUA9BY/NLp12IkRTFBySgyqdKYrmBKvi
-         jKXMUi5WyQyrDRTemXnA/pRhySFSzsNxyudK7IKsKQz2Sab2OWZd9/gQuUQ6pjkD95MN
-         rldQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyyhGfXPPT1WXApfFr+W7ciq2U9zQXz6FGaNCdEm+mAfnCjoDarXo05uwYzaxyeSGLPAT3FA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxSgaDydEFUTQU1gMNVZyLEbjmOQZd0diVTXXLcxgixojXC2PwX
-	+Yfj5VDVqSsMhhUhSab2Ou1f+AStsu5hbhx3DIvUxiy7VS3aInev
-X-Gm-Gg: ASbGncuer6YGeJMIsraw+zP2KZqOG6xfLpc4HnwDKWc8jg17zqlc0TqaFxjaacUzksG
-	+pz9+bLWX3ZA1TIrqLRhDtQseQGv7w8T9qMquoCv5nMaM501sX4MkpHVV0/ifRopzzmM07geEYD
-	D8jeEXbdl9RnOZ8EBq6pFqfGNGUVlgqn0f/fisGSBCWA7ujxR4QguiOuypOgV5I6wFyl+P8GMPw
-	9JbLRSs0auY2Q5oDxBaSC9uH9FFoeFxzDgO+yLPCf5bdHG1HtZi8hEr1M4+b9gFY5Lqj5FV65yN
-	wVJWN7I8dx/y2eXA3F58+FiE508OwzWeYA4Hhw0x94j0o+R5GB1UE1SMX6JJuUdBk2VzCocA1KY
-	gZENfSSzp7PnSrRD/
-X-Google-Smtp-Source: AGHT+IGiA/Yn603iCEcUZTepPAJSDOP4M4TDfO1zGDg1GjK6jBe0wK+uDj0rtvLjSeP4gVl0jlYXxQ==
-X-Received: by 2002:a05:6122:da5:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-52a89d3e399mr831693e0c.2.1745575980041;
-        Fri, 25 Apr 2025 03:13:00 -0700 (PDT)
-Received: from smtpclient.apple (216-131-82-239.nyc.as62651.net. [216.131.82.239])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a79f21b86sm605458e0c.9.2025.04.25.03.12.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 03:12:59 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Rich Persaud <persaur@gmail.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux kernel support
-Message-Id: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
-Date: Fri, 25 Apr 2025 06:12:46 -0400
-Cc: Ross Philipson <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	Fri, 25 Apr 2025 14:12:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745590376; x=1777126376;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kQZa9H88IRjq2r7TjcONEZD3Enz3AN+e7iK0VXsD/q8=;
+  b=MYCmwDSKkjNOrW00fDwUU+MlJg/UxLG9MaIBDP2JJkS+NuWMXKoB7btJ
+   dNHioxnEcngSZuGAEhr0PXd5gTIf+9KlJRMFLU2bO0CkyEdsFnDh0dH0R
+   PGhdcA6lUUcCIPtaEtgzgIPCPNveYE/SAbEo3/v0UrL9FSy+bJaERcRCe
+   GMs2QSGKTsjRchDaKcxbdtIs3OMXdUTeZGs2wGbgnCfo4siFrTq3d4qJL
+   z9A3qVpD451QIVBl54OdUuWXQlyYy/z+KdYDd9B4I2EIZi0oCPmJPt+Xa
+   45PtvWTL3Sp6hltL4etUOcSXTFyPK1DT8uirOVpADgeUGILxUFl5AX6pr
+   g==;
+X-CSE-ConnectionGUID: /ncsPtTUSY6hZhT73QyiFw==
+X-CSE-MsgGUID: BZpd1x0yRk2XZCZE0UQRjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="72628029"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="72628029"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 07:12:55 -0700
+X-CSE-ConnectionGUID: gze8PSdqR4uxfgHgShwE1A==
+X-CSE-MsgGUID: b9P0pObJRQ+SXKkVkYvCRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133421364"
+Received: from uaeoff-desk2.amr.corp.intel.com (HELO [10.124.222.49]) ([10.124.222.49])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 07:12:53 -0700
+Message-ID: <9b18e8e3-f3e2-48d4-839a-56e1d8f62657@intel.com>
+Date: Fri, 25 Apr 2025 07:12:51 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: Rich Persaud <persaur@gmail.com>
+Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
  linux-efi@vger.kernel.org, iommu@lists.linux.dev,
  dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
@@ -89,13 +73,61 @@ Cc: Ross Philipson <ross.philipson@oracle.com>,
  corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
  baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com,
- Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com
-To: Dave Hansen <dave.hansen@intel.com>
-X-Mailer: iPad Mail (22E252)
-X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
+ Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com,
+ "Mowka, Mateusz" <mateusz.mowka@intel.com>, Ning Sun <ning.sun@intel.com>,
+ tboot-devel@lists.sourceforge.net
+References: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250425_031301_567931_5606790A 
-X-CRM114-Status: GOOD (  17.20  )
+X-CRM114-CacheID: sfid-20250425_071256_100589_4C2B4158 
+X-CRM114-Status: GOOD (  18.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,106 +142,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-=EF=BB=BFOn Apr 24, 2025, at 2:45=E2=80=AFPM, Dave Hansen <dave.hansen@intel=
-.com> wrote:
-> =EF=BB=BFOn 4/21/25 09:26, Ross Philipson wrote:
->> This patchset provides detailed documentation of DRTM, the approach used f=
-or
->> adding the capbility, and relevant API/ABI documentation. In addition to t=
-he
->> documentation the patch set introduces Intel TXT support as the first pla=
-tform
->> for Linux Secure Launch.
->=20
-> So, I know some of the story here thanks to Andy Cooper. But the
-> elephant in the room is:
->=20
->> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT)
->> M:      Ning Sun <ning.sun@intel.com>
->> L:      tboot-devel@lists.sourceforge.net
->> S:      Supported
->> W:      http://tboot.sourceforge.net
->> T:      hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
->> F:      Documentation/arch/x86/intel_txt.rst
->> F:      arch/x86/kernel/tboot.c
->> F:      include/linux/tboot.h
->=20
-> Linux already supports TXT. Why do we need TrenchBoot?
+On 4/25/25 03:12, Rich Persaud wrote:
+> ﻿On Apr 24, 2025, at 2:45 PM, Dave Hansen <dave.hansen@intel.com> 
+> wrote:
+>> ﻿On 4/21/25 09:26, Ross Philipson wrote:
+>>> This patchset provides detailed documentation of DRTM, the 
+>>> approach used for adding the capbility, and relevant API/ABI 
+>>> documentation. In addition to the documentation the patch set 
+>>> introduces Intel TXT support as the first platform for Linux 
+>>> Secure Launch.
+>> 
+>> So, I know some of the story here thanks to Andy Cooper. But the 
+>> elephant in the room is:
+>> 
+>>> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT) M:      Ning Sun 
+>>> <ning.sun@intel.com> L:      tboot-devel@lists.sourceforge.net 
+>>> S:      Supported W:      http://tboot.sourceforge.net T: hg 
+>>> http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot F: 
+>>> Documentation/arch/x86/intel_txt.rst F:      arch/x86/ kernel/ 
+>>> tboot.c F:      include/linux/tboot.h
+>> 
+>> Linux already supports TXT. Why do we need TrenchBoot?
+> 
+> One reason is to generalize DRTM support to other platforms.
 
-One reason is to generalize DRTM support to other platforms.
+OK, but why do this in Linux as opposed to tboot? Right now, much of the
+TXT magic is done outside of the kernel. Why do it *IN* the kernel?
 
-RFC: Trenchboot Secure Launch DRTM for AMD SKINIT=20
-https://lore.kernel.org/lkml/cover.1734008878.git.sergii.dmytruk@3mdeb.com/
+>> Also, honestly, what do you think we should do with the Linux 
+>> tboot code? Is everyone going to be moving over to Trenchboot>
+> OpenXT will migrate development of measured launch from tboot to 
+> TrenchBoot Secure Launch, after upstream Linux and Xen have support 
+> for both Intel and AMD DRTM. Previously-deployed Intel devices using
+> tboot, derived from OpenXT, will need support until users upgrade
+> their hardware.
 
-OpenXT.org measured launch usage of tboot originated in 2012, when I was the=
- program manager for XenClient joint development [1][2] by Intel and Citrix.=
- TrenchBoot was proposed in 2018 at Platform Security Summit and evolved [3]=
- based on LKML and conference feedback. The tboot community was introduced [=
-4] to TrenchBoot in 2022.
+Say we axed tboot support from 6.16, but merged Trenchboot. A user on
+old hardware upgrades their kernel. What happens to them?
 
+>> so that Linux support for TXT/tboot can just go away?
+You didn't _really_ answer the question.
 
-> I think I know the answer, but it also needs to be a part of the
-> documentation, changelogs and cover letter.
->=20
-> Also, honestly, what do you think we should do with the Linux tboot
-> code? Is everyone going to be moving over to Trenchboot
+Summarizing, I think you're saying that TXT/tboot Linux support can just
+go away, but it will be help if its maintainers help its users transition.
 
-OpenXT will migrate development of measured launch from tboot to TrenchBoot S=
-ecure Launch, after upstream Linux and Xen have support for both Intel and A=
-MD DRTM. Previously-deployed Intel devices using tboot, derived from OpenXT,=
- will need support until users upgrade their hardware. Qubes is integrating [=
-5] TrenchBoot into AEM (Anti Evil Maid). Since Oracle has spent several year=
-s working on this TrenchBoot series, they might use it, hopefully they can c=
-omment.=20
+Does anybody disagree with that?
 
+> In that perfect world, Intel ACM and tboot developers would review
+> the TrenchBoot Linux series
 
-> so that Linux support for TXT/tboot can just go away?
+So, I was looking on the cc list and I didn't see them on there.
+Shouldn't they be cc'd if you want them to review the series? A little
+poking at lore makes me think that they were *NEVER* cc'd.
 
-[opinion]
-Which one will prevail? That may have less to do with tboot-trenchboot diffe=
-rences and more to do with AMD-Intel product marketing and OEM segmentation o=
-f DRTM features, some certified by Microsoft as "Secured Core" clients with S=
-MM attestation (Intel PPAM and AMD SMM Supervisor).
-
-Intel requires client vPro devices for TXT, but has slowly expanded the list=
- of eligible SKUs via "vPro Essentials" segmentation. AMD SKINIT is present o=
-n most processors, but DRTM currently requires a dTPM instead of the "mobile=
-" fTPM implementation in AMD PSP firmware, with dTPMs mostly present in AMD O=
-EM "PRO" or Embedded SKUs.
-
-If AMD included the full TPM 2.0 reference code in their PSP fTPM,  or if MS=
- Pluton implemented a full TPM 2.0 that was compatible with DRTM, then the n=
-umber of AMD DRTM-capable devices would be much higher than the number of In=
-tel vPro or AMD PRO devices, expanding the market for DRTM-capable software l=
-ike Linux (trenchboot) Secure Launch and Windows SystemGuard. That would inc=
-rease client adoption of trenchboot, as the only option for Linux DRTM on AM=
-D.
-
-On servers, both AMD and Intel hardware support DRTM with dTPM and other roo=
-ts of trust, but there are other launch considerations, including BMCs, SPDM=
- device attestation & vendor hypervisors.
-[/opinion]
-
-In a perfect world, Intel-signed ACM (used in TXT DRTM) binary blobs would b=
-e accompanied by public read-only source code, with reproducible builds that=
- generate those ACM blobs. In that perfect world, Intel ACM and tboot develo=
-pers would review the TrenchBoot Linux series, recommend improvements and gu=
-ide customers on migration from tboot to upstream-supported Linux DRTM. Neit=
-her has yet happened. Both would be welcome.
-
-Rich
-
-
-[1] https://www.intel.com/content/dam/www/public/us/en/documents/success-sto=
-ries/3rd-gen-core-vpro-citrix-vendor-spotlight.pdf
-
-[2] http://media12.connectedsocialmedia.com/intel/11/9510/Air_Force_Research=
-_Laboratory_Security_Collaboration_Government.pdf
-
-[3] https://trenchboot.org/events/
-
-[4] https://sourceforge.net/p/tboot/mailman/message/37631560/
-
-[5] https://blog.3mdeb.com/2023/2023-01-31-trenchboot-aem-for-qubesos/
+Is that right, or is my lore-foo weak?
 
 
