@@ -4,99 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE2E7C369D3
-	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 09:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 077ADC369D5
+	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 17:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=M8kUgbIokMiz9Jw7VxennqbcBBMTM/mo00S7MGV/Zj4=; b=FsQbJCMd00tCPPEKaMEbyEocl/
-	RDsi6506RDjCfKg/RDFvg/c017eUb17MlIyuodKSzzBKAS17rFOMc49q9lnDwhyOlkVRNgLbQ7C4/
-	JQdUyKIOiV2B+EMGtp+p8hZ4E2NzcZ035JLC7zTiTnXbQ91r8Bqr2Yhhrmf3pIAdzhJeNPJGe0G1s
-	tQrmhHWoM9iT4w3r6SUjan0xKNlZBuOLsxJxJDiHq2zckwnixYSj/XYr7GEiUI11Adzvk4/0DTgPX
-	eHKiN7+A0Mbt9St8DQbh4U/UlLB+OjqgWW5dG7PfrhI4mXpQnsO6OJ9WK8Bl+Q1xTlpc/PXNCZ1e2
-	anc5fyXw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=S3lY2EODpSWf7PbFeYDoT7dall85uxisFJtIG+o9gPU=; b=jPRM7sSXKpPSa0Y3pofO2a1Z/V
+	OX7w2Q4DEXFX+qS1a2q4RGe01SY372OVniWSH+B6FS6xlbB4TXXIhh2fJup8Kro4huUUUSeVOqdtU
+	rldd9vueYUENA7AX1BRpz8Hrp3U+zY5BHHkiIoXUGPEg5JHL/8RPLXRqHG49vxJIVpyy6jOr9eTvT
+	TSOqZT9JZrv6sFXGd40bpqFXf33fvqtMwjqwMhW+JFli+ZALyl8alrzvlvjZj/o8N8j57gVgJd/cv
+	h7AklQqEDWHDuP1as38G4SdqBbIH/ryq6bjBezJKGiN2IVwrGFdiEAoMpUFfrRdywjeDtZvEKFuAe
+	toWcgRqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9KoX-00000005cvO-23ow;
-	Mon, 28 Apr 2025 09:30:13 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1u9SUa-000000077lk-3hh5;
+	Mon, 28 Apr 2025 17:42:08 +0000
+Received: from mail-lf1-x12a.google.com ([2a00:1450:4864:20::12a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9KNz-00000005Xfv-2W2x
+	id 1u9SRP-000000077Dj-25EQ
 	for kexec@lists.infradead.org;
-	Mon, 28 Apr 2025 09:02:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745830966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M8kUgbIokMiz9Jw7VxennqbcBBMTM/mo00S7MGV/Zj4=;
-	b=f5vmKHWYT746a1aIJG640FnlTXTbHUwKL6a4/reBaDM71T+6XYwL1hA8Ozt5vUw48g7dZn
-	Qe95KWJgLfnt3Zlz3vuxN3IF7llXntBSj4u0K9o6Xpc0e2pEmWcDAbidGeCRJ4ZMLuu3Dp
-	wkQJDOHVAKLmdYD8Sw0BiQ187C3rshw=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-UBQArYdsPFWsWa_khGsMeA-1; Mon, 28 Apr 2025 05:02:44 -0400
-X-MC-Unique: UBQArYdsPFWsWa_khGsMeA-1
-X-Mimecast-MFC-AGG-ID: UBQArYdsPFWsWa_khGsMeA_1745830963
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-224347aef79so65649955ad.2
-        for <kexec@lists.infradead.org>; Mon, 28 Apr 2025 02:02:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745830963; x=1746435763;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	Mon, 28 Apr 2025 17:38:53 +0000
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-54b10956398so5786032e87.0
+        for <kexec@lists.infradead.org>; Mon, 28 Apr 2025 10:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20230601.gappssmtp.com; s=20230601; t=1745861929; x=1746466729; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M8kUgbIokMiz9Jw7VxennqbcBBMTM/mo00S7MGV/Zj4=;
-        b=fXAKpyF4Vf4SbWkYi/H42xZOSoArA369cqeXxxkTJcaaY3onWg0zhDNIyhNUSk8Hh0
-         otVgSQ5DIjJ7Hlj4vRkTx0xZ4969sGsnum+/DWxo87fng35YZiw79TCy5dkRvLpdEDQ+
-         J3Lw7qFmczVwhtWPt3mvzGv9m1doZxWyyLuT5hZKUbKeT5p140pQsNHPONAfogjdkNm7
-         QZ/1oX6veve7Qt/CPOFoa4WwGfaoTyI5G0rfcuLw8yTEWMwLXLkVJiLWsCi9KsBiziF9
-         FHuHqeRHwLJGrCJptGLtl7L1dHdyBbv6rjg9BKo+mhYgsJyheq3OCeYqrNfD2IoFlem4
-         DZHA==
-X-Gm-Message-State: AOJu0YziFhQ4zV+3AR9HnbBmvHT3h3xF2Oa4f7Z17i6YubU8IpWiIP8z
-	RFzh9ClxJdV+Q/sBYnbhb6i7yhgUVtyaytH5oXtotFfL75ixNGV7vVau6uxCBCmrtDe7/dghVYQ
-	drASOzVGbrA0az5UvPdozXY2cUR1BEraH256t4YuLYELtY1UaeqPYeInRcQ==
-X-Gm-Gg: ASbGncv6KWtMSISWoUVyhqrEirppyY56eMTHUy04uYZ42+ZowoOs/9jN6S2RBbiwULQ
-	anf7NkNUpV2RIJW6Nnf0ZszfUdsHNT1LMEbT62GQYzuSbymUbOVTfS8n0jxdtl5NDBb5/sv8/ID
-	v18IaoTxIFoAILx/SIZuSbpoE9SYov0lJyl2TjcZabc64aOddFEeXkhcEGFaCAyHffFd6TbV3T1
-	u57h7MBEvkuLdBmEYzmR+g61Ce+jPOp16rrHzZEgrbq04sYhL6EV7ti38VqgICJP9XDOz5ap46q
-	oJw=
-X-Received: by 2002:a17:903:2447:b0:22c:336f:cb54 with SMTP id d9443c01a7336-22dbf5f0ff2mr161824675ad.29.1745830963056;
-        Mon, 28 Apr 2025 02:02:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFea8a1UJvVL7aa7XKEssck5WpqU/UQnVQt7spwDMdFstWIX2pY78pl0ptewWOvrwuMoyK5Ug==
-X-Received: by 2002:a17:903:2447:b0:22c:336f:cb54 with SMTP id d9443c01a7336-22dbf5f0ff2mr161824305ad.29.1745830962625;
-        Mon, 28 Apr 2025 02:02:42 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7b2csm77203305ad.129.2025.04.28.02.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 02:02:42 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:02:23 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <ywhl4n5d4oa44a2nzu26sjdgs6k5xwdwidtmdfsik6v533rvuz@bnu3azjvzioa>
-References: <20250207080818.129165-1-coxu@redhat.com>
- <kofi6m743pg6hrahjx3vj7efairnpiq5pqmgql2cwg6lnz2cmw@ntdymi2egzro>
+        bh=S3lY2EODpSWf7PbFeYDoT7dall85uxisFJtIG+o9gPU=;
+        b=ymUf6eZWUpJjuiQapY7bF3sM2AHB/k3YugVjNBGWAw3wctQl6xILE4+I+6BzF7nDBX
+         2pMU44s0dNoZyWJO9+b3I+fDhbaOnLVc0nWL19C7IjrNB5rl/o0quvcEfq06/aniltVT
+         ugvZ2+/hLJ1G7ZPuDjdAdKZdD1GHU/4Q2TXpwXf02VQhfcDze/Dtu9moVY4nlak/H+S7
+         bXXhoesGsnqgx8eGRR0hVWFamfXiWShNXHMVNVLRahcrj7GLW9USMAz13cFj/60pMDMK
+         gXn++PR6kyXbsi1MEFYHg70tapClw4XaS7eOjKv5MzDCNUFxYzGFc4+MBFflRBegRVse
+         jnKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745861929; x=1746466729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S3lY2EODpSWf7PbFeYDoT7dall85uxisFJtIG+o9gPU=;
+        b=VJIl5wGDA3avlnAvTLczcv+E2yrqHBw7SnM4aYt+wfkfRKGiQpCH93pMWvxWD9Hc6u
+         JEF4qgD6FMo3gbF7hh+mSq6wO5hVH/pTLntB8NOegUQP2+NudEvNyhxqIw5tsmbxQ0Is
+         eNTkHBVK6vfUayGf9zGIbGmd0WiTRGGWs6ytfwUEsSlU6aWStEGHCB0Y/P3mAsvniS4J
+         rNe5Dc/dR4PxxfF+3PIhPiVmtj7zc6T4GYQ8LvjWseC33lUepHWFf+gFDMZkOyuMY5N8
+         3yzKCFiJel8Wv/o1A8C+Lox9YRTjo6cUCxivUoc2vCBWLL0EhR7/H8Kkn+vwwPYuOD6s
+         /Kag==
+X-Forwarded-Encrypted: i=1; AJvYcCXgRteKLUnwdu2dg3/i7FLk8ExPS4hCyraeBeQQ7X6GRcIFWfy/XhaTWHNT4z8UXIleZFaaXg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwJ5IRhGbpCahbiDHqqvf7n7Mwv7DENE7FdYC1ZZ4ZfS2Jqqdh/
+	gnn/XXN5Nf2TKLUX5gFK6XFIUspyb5YxkuPUprYuR7ZBUxqxAf6q4EDkyf2zFIJ6cDDPp5aNeK5
+	0t67vWkpKdyMGKmGnLZvVthsG+GPeer5uS6d/
+X-Gm-Gg: ASbGncv6Ac+pHvH35FclCiGMyCckTX1N3XWaFPZ2M3jDFf8+RHHM5Miuxa7ht24DU7V
+	wNoJFcAQvpxPjCgu4sAZ42Mbp/jbjjPei2/LWa5fPDlRNB7s/Oom2HtZDwHNk4+0mEw2FLDw5Cv
+	izllatoBJvUqm1n7U5ext0
+X-Google-Smtp-Source: AGHT+IFN43fQ9hbOpQBxgucI4grGKEwBuZUMjbsIm9KdgzOVZQUB596Q0XnHklWpWPJ5/jhcVObbJzWmVsLYy44QUGg=
+X-Received: by 2002:a05:6512:1111:b0:54a:fe25:43d1 with SMTP id
+ 2adb3069b0e04-54e9e16ac82mr14004e87.10.1745861928812; Mon, 28 Apr 2025
+ 10:38:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <kofi6m743pg6hrahjx3vj7efairnpiq5pqmgql2cwg6lnz2cmw@ntdymi2egzro>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: o1oqpjQiQFA979weFyQWm5zTccNsKsUo6oythOpkTak_1745830963
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+References: <20250421162712.77452-1-ross.philipson@oracle.com> <20250421162712.77452-19-ross.philipson@oracle.com>
+In-Reply-To: <20250421162712.77452-19-ross.philipson@oracle.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Date: Mon, 28 Apr 2025 10:38:37 -0700
+X-Gm-Features: ATxdqUEEZeo1CfYqdUjIC7TdnT0JrgIlsLJvYgh7ENhGmufQJu2KPSjPRY2cVks
+Message-ID: <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
+Subject: Re: [PATCH v14 18/19] x86: Secure Launch late initcall platform module
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org, 
+	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
+	jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
+	trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_020247_800121_02A68F16 
-X-CRM114-Status: GOOD (  32.28  )
+X-CRM114-CacheID: sfid-20250428_103851_744257_13308E5C 
+X-CRM114-Status: GOOD (  35.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,248 +104,595 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 24, 2025 at 02:08:55AM +0200, Arnaud Lefebvre wrote:
->On Fri, Feb 07, 2025 at 04:08:08PM +0800, Coiby Xu wrote:
->>LUKS is the standard for Linux disk encryption, widely adopted by users,
->>and in some cases, such as Confidential VMs, it is a requirement. With
->>kdump enabled, when the first kernel crashes, the system can boot into
->>the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
->>to a specified target. However, there are two challenges when dumping
->>vmcore to a LUKS-encrypted device:
->>
->>- Kdump kernel may not be able to decrypt the LUKS partition. For some
->>  machines, a system administrator may not have a chance to enter the
->>  password to decrypt the device in kdump initramfs after the 1st kernel
->>  crashes; For cloud confidential VMs, depending on the policy the
->>  kdump kernel may not be able to unseal the keys with TPM and the
->>  console virtual keyboard is untrusted.
->>
->>- LUKS2 by default use the memory-hard Argon2 key derivation function
->>  which is quite memory-consuming compared to the limited memory reserved
->>  for kdump. Take Fedora example, by default, only 256M is reserved for
->>  systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->>  to be reserved for kdump. Note if the memory reserved for kdump can't
->>  be used by 1st kernel i.e. an user sees ~1300M memory missing in the
->>  1st kernel.
->>
->>Besides users (at least for Fedora) usually expect kdump to work out of
->>the box i.e. no manual password input or custom crashkernel value is
->>needed. And it doesn't make sense to derivate the keys again in kdump
->>kernel which seems to be redundant work.
->>
->>This patch set addresses the above issues by making the LUKS volume keys
->>persistent for kdump kernel with the help of cryptsetup's new APIs
->>(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
->>the kdump copies of LUKS volume keys,
->>
->>1. After the 1st kernel loads the initramfs during boot, systemd
->>   use an user-input passphrase to de-crypt the LUKS volume keys
->>   or TPM-sealed key and then save the volume keys to specified keyring
->>   (using the --link-vk-to-keyring API) and the key will expire within
->>   specified time.
->>
->>2. A user space tool (kdump initramfs loader like kdump-utils) create
->>   key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
->>   the 1st kernel which keys are needed.
->>
->>3. When the kdump initramfs is loaded by the kexec_file_load
->>   syscall, the 1st kernel will iterate created key items, save the
->>   keys to kdump reserved memory.
->>
->>4. When the 1st kernel crashes and the kdump initramfs is booted, the
->>   kdump initramfs asks the kdump kernel to create a user key using the
->>   key stored in kdump reserved memory by writing yes to
->>   /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
->>   device is unlocked with libcryptsetup's --volume-key-keyring API.
->>
->>5. The system gets rebooted to the 1st kernel after dumping vmcore to
->>   the LUKS encrypted device is finished
->>
->>After libcryptsetup saving the LUKS volume keys to specified keyring,
->>whoever takes this should be responsible for the safety of these copies
->>of keys. The keys will be saved in the memory area exclusively reserved
->>for kdump where even the 1st kernel has no direct access. And further
->>more, two additional protections are added,
->>- save the copy randomly in kdump reserved memory as suggested by Jan
->>- clear the _PAGE_PRESENT flag of the page that stores the copy as
->>  suggested by Pingfan
->>
->>This patch set only supports x86. There will be patches to support other
->>architectures once this patch set gets merged.
->>
+> On Apr 21, 2025, at 9:36=E2=80=AFAM, Ross Philipson <ross.philipson@oracl=
+e.com> wrote:
 >
->I'm not sure what's the problem here but I can reliably trigger a kernel
->panic on a qemu VM + custom kernel (compiled from
->bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b + your patches).
+> =EF=BB=BFFrom: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>
+> The Secure Launch platform module is a late init module. During the
+> init call, the TPM event log is read and measurements taken in the
+> early boot stub code are located. These measurements are extended
+> into the TPM PCRs using the mainline TPM kernel driver.
 
-Hi Arnaud,
+I read through some of the TPM and TXT docs, and I haven=E2=80=99t found a
+clear explanation of exactly what gets hashed into which PCR.  (Mostly
+because the docs are full of TXT-specific terms.)
 
-Thanks for testing the patches, finding this issue and also sharing the
-details to reproduce it!
+But I=E2=80=99m really struggling to understand how the security model ends=
+ up
+being consistent with this late_initcall thing. We measure some state
+into the event log, and then we do a whole bunch of things (everything
+from the very beginning of loading the kernel proper to the whenever
+in the late_initcall stage this code runs), and then we actually
+extend the PCRs.  It seems to me that this may involve a whole lot of
+crossing fingers that an attacker can=E2=80=99t find a way to get the kerne=
+l
+to execute code that changes the event log in memory prior to
+extending PCRs such that attacker-controlled values get written.  Even
+if the design is, in principle, sound, the attack surface seems much,
+much larger than it deserves to be.
+
+Is there some reason for all this complexity instead of extending the
+PCRs at the early stage when the measurements are taken?
+
 
 >
->When I configure the crash configfs and call kexec in a systemd service
->using ExecStart=, the panic occurs when I start the service:
+> The platform module also registers the securityfs nodes to allow
+> access to TXT register fields on Intel along with the fetching of
+> and writing events to the late launch TPM log.
 >
->~ # cat /etc/systemd/system/my-kexec.service
->[Unit]
->Description=kexec loading for the crash capture kernel
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> ---
+> arch/x86/kernel/Makefile   |   1 +
+> arch/x86/kernel/slmodule.c | 508 +++++++++++++++++++++++++++++++++++++
+> 2 files changed, 509 insertions(+)
+> create mode 100644 arch/x86/kernel/slmodule.c
 >
->[Service]
->Type=oneshot
->ExecStart=/usr/bin/mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
->ExecStart=/usr/bin/echo cryptsetup:mykey >/sys/kernel/config/crash_dm_crypt_keys/mykey/description
->ExecStart=/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
->KeyringMode=shared
-
-Can you try putting the above commands into a script e.g.
-/usr/local/bin/my-kexec.sh and then using
-ExecStart=/usr/local/bin/my-kexec.sh
-so I can be more sure that I've reproduced your issue?
-
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index a7ca7ca16174..bed87b1c49a2 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -83,6 +83,7 @@ obj-$(CONFIG_IA32_EMULATION)    +=3D tls.o
+> obj-y                +=3D step.o
+> obj-$(CONFIG_INTEL_TXT)        +=3D tboot.o
+> obj-$(CONFIG_SECURE_LAUNCH)    +=3D slaunch.o
+> +obj-$(CONFIG_SECURE_LAUNCH)    +=3D slmodule.o
+> obj-$(CONFIG_ISA_DMA_API)    +=3D i8237.o
+> obj-y                +=3D stacktrace.o
+> obj-y                +=3D cpu/
+> diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
+> new file mode 100644
+> index 000000000000..64010bac038c
+> --- /dev/null
+> +++ b/arch/x86/kernel/slmodule.c
+> @@ -0,0 +1,508 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Secure Launch late validation/setup, securityfs exposure and finaliza=
+tion.
+> + *
+> + * Copyright (c) 2025 Apertus Solutions, LLC
+> + * Copyright (c) 2025 Assured Information Security, Inc.
+> + * Copyright (c) 2025, Oracle and/or its affiliates.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/fs.h>
+> +#include <linux/init.h>
+> +#include <linux/linkage.h>
+> +#include <linux/mm.h>
+> +#include <linux/io.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/security.h>
+> +#include <linux/memblock.h>
+> +#include <linux/tpm.h>
+> +#include <asm/segment.h>
+> +#include <asm/sections.h>
+> +#include <crypto/sha2.h>
+> +#include <linux/slr_table.h>
+> +#include <linux/slaunch.h>
+> +
+> +/*
+> + * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
+> + * public registers as unsigned values.
+> + */
+> +#define DECLARE_TXT_PUB_READ_U(size, fmt, msg_size)            \
+> +static ssize_t txt_pub_read_u##size(unsigned int offset,        \
+> +        loff_t *read_offset,                    \
+> +        size_t read_len,                    \
+> +        char __user *buf)                    \
+> +{                                    \
+> +    char msg_buffer[msg_size];                    \
+> +    u##size reg_value =3D 0;                        \
+> +    void __iomem *txt;                        \
+> +                                    \
+> +    txt =3D ioremap(TXT_PUB_CONFIG_REGS_BASE,                \
+> +            TXT_NR_CONFIG_PAGES * PAGE_SIZE);        \
+> +    if (!txt)                            \
+> +        return -EFAULT;                        \
+> +    memcpy_fromio(&reg_value, txt + offset, sizeof(u##size));    \
+> +    iounmap(txt);                            \
+> +    snprintf(msg_buffer, msg_size, fmt, reg_value);            \
+> +    return simple_read_from_buffer(buf, read_len, read_offset,    \
+> +            &msg_buffer, msg_size);                \
+> +}
+> +
+> +DECLARE_TXT_PUB_READ_U(8, "%#04x\n", 6);
+> +DECLARE_TXT_PUB_READ_U(32, "%#010x\n", 12);
+> +DECLARE_TXT_PUB_READ_U(64, "%#018llx\n", 20);
+> +
+> +#define DECLARE_TXT_FOPS(reg_name, reg_offset, reg_size)        \
+> +static ssize_t txt_##reg_name##_read(struct file *flip,            \
+> +        char __user *buf, size_t read_len, loff_t *read_offset)    \
+> +{                                    \
+> +    return txt_pub_read_u##reg_size(reg_offset, read_offset,    \
+> +            read_len, buf);                    \
+> +}                                    \
+> +static const struct file_operations reg_name##_ops =3D {            \
+> +    .read =3D txt_##reg_name##_read,                    \
+> +}
+> +
+> +DECLARE_TXT_FOPS(sts, TXT_CR_STS, 64);
+> +DECLARE_TXT_FOPS(ests, TXT_CR_ESTS, 8);
+> +DECLARE_TXT_FOPS(errorcode, TXT_CR_ERRORCODE, 32);
+> +DECLARE_TXT_FOPS(didvid, TXT_CR_DIDVID, 64);
+> +DECLARE_TXT_FOPS(e2sts, TXT_CR_E2STS, 64);
+> +DECLARE_TXT_FOPS(ver_emif, TXT_CR_VER_EMIF, 32);
+> +DECLARE_TXT_FOPS(scratchpad, TXT_CR_SCRATCHPAD, 64);
+> +
+> +/*
+> + * Securityfs exposure
+> + */
+> +struct memfile {
+> +    char *name;
+> +    void *addr;
+> +    size_t size;
+> +};
+> +
+> +static struct memfile sl_evtlog =3D {"eventlog", NULL, 0};
+> +static void *txt_heap;
+> +static struct txt_heap_event_log_pointer2_1_element *evtlog21;
+> +static DEFINE_MUTEX(sl_evt_log_mutex);
+> +static struct tcg_efi_specid_event_head *efi_head;
+> +
+> +static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
+> +                  size_t count, loff_t *pos)
+> +{
+> +    ssize_t size;
+> +
+> +    if (!sl_evtlog.addr)
+> +        return 0;
+> +
+> +    mutex_lock(&sl_evt_log_mutex);
+> +    size =3D simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
+> +                       sl_evtlog.size);
+> +    mutex_unlock(&sl_evt_log_mutex);
+> +
+> +    return size;
+> +}
+> +
+> +static ssize_t sl_evtlog_write(struct file *file, const char __user *buf=
+,
+> +                   size_t datalen, loff_t *ppos)
+> +{
+> +    ssize_t result;
+> +    char *data;
+> +
+> +    if (!sl_evtlog.addr)
+> +        return 0;
+> +
+> +    /* No partial writes. */
+> +    result =3D -EINVAL;
+> +    if (*ppos !=3D 0)
+> +        goto out;
+> +
+> +    data =3D memdup_user(buf, datalen);
+> +    if (IS_ERR(data)) {
+> +        result =3D PTR_ERR(data);
+> +        goto out;
+> +    }
+> +
+> +    mutex_lock(&sl_evt_log_mutex);
+> +    if (evtlog21)
+> +        result =3D tpm2_log_event(evtlog21, sl_evtlog.addr,
+> +                    sl_evtlog.size, datalen, data);
+> +    else
+> +        result =3D tpm_log_event(sl_evtlog.addr, sl_evtlog.size,
+> +                       datalen, data);
+> +    mutex_unlock(&sl_evt_log_mutex);
+> +
+> +    kfree(data);
+> +out:
+> +    return result;
+> +}
+> +
+> +static const struct file_operations sl_evtlog_ops =3D {
+> +    .read =3D sl_evtlog_read,
+> +    .write =3D sl_evtlog_write,
+> +    .llseek    =3D default_llseek,
+> +};
+> +
+> +struct sfs_file {
+> +    const char *name;
+> +    const struct file_operations *fops;
+> +};
+> +
+> +#define SL_TXT_ENTRY_COUNT    7
+> +static const struct sfs_file sl_txt_files[] =3D {
+> +    { "sts", &sts_ops },
+> +    { "ests", &ests_ops },
+> +    { "errorcode", &errorcode_ops },
+> +    { "didvid", &didvid_ops },
+> +    { "ver_emif", &ver_emif_ops },
+> +    { "scratchpad", &scratchpad_ops },
+> +    { "e2sts", &e2sts_ops }
+> +};
+> +
+> +/* sysfs file handles */
+> +static struct dentry *slaunch_dir;
+> +static struct dentry *event_file;
+> +static struct dentry *txt_dir;
+> +static struct dentry *txt_entries[SL_TXT_ENTRY_COUNT];
+> +
+> +static long slaunch_expose_securityfs(void)
+> +{
+> +    long ret =3D 0;
+> +    int i;
+> +
+> +    slaunch_dir =3D securityfs_create_dir("slaunch", NULL);
+> +    if (IS_ERR(slaunch_dir))
+> +        return PTR_ERR(slaunch_dir);
+> +
+> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
+> +        txt_dir =3D securityfs_create_dir("txt", slaunch_dir);
+> +        if (IS_ERR(txt_dir)) {
+> +            ret =3D PTR_ERR(txt_dir);
+> +            goto remove_slaunch;
+> +        }
+> +
+> +        for (i =3D 0; i < ARRAY_SIZE(sl_txt_files); i++) {
+> +            txt_entries[i] =3D securityfs_create_file(
+> +                        sl_txt_files[i].name, 0440,
+> +                        txt_dir, NULL,
+> +                        sl_txt_files[i].fops);
+> +            if (IS_ERR(txt_entries[i])) {
+> +                ret =3D PTR_ERR(txt_entries[i]);
+> +                goto remove_files;
+> +            }
+> +        }
+> +    }
+> +
+> +    if (sl_evtlog.addr) {
+> +        event_file =3D securityfs_create_file(sl_evtlog.name, 0440,
+> +                            slaunch_dir, NULL,
+> +                            &sl_evtlog_ops);
+> +        if (IS_ERR(event_file)) {
+> +            ret =3D PTR_ERR(event_file);
+> +            goto remove_files;
+> +        }
+> +    }
+> +
+> +    return 0;
+> +
+> +remove_files:
+> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
+> +        while (--i >=3D 0)
+> +            securityfs_remove(txt_entries[i]);
+> +        securityfs_remove(txt_dir);
+> +    }
+> +
+> +remove_slaunch:
+> +    securityfs_remove(slaunch_dir);
+> +
+> +    return ret;
+> +}
+> +
+> +static void slaunch_teardown_securityfs(void)
+> +{
+> +    int i;
+> +
+> +    securityfs_remove(event_file);
+> +    if (sl_evtlog.addr) {
+> +        memunmap(sl_evtlog.addr);
+> +        sl_evtlog.addr =3D NULL;
+> +    }
+> +    sl_evtlog.size =3D 0;
+> +
+> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
+> +        for (i =3D 0; i < ARRAY_SIZE(sl_txt_files); i++)
+> +            securityfs_remove(txt_entries[i]);
+> +
+> +        securityfs_remove(txt_dir);
+> +
+> +        if (txt_heap) {
+> +            memunmap(txt_heap);
+> +            txt_heap =3D NULL;
+> +        }
+> +    }
+> +
+> +    securityfs_remove(slaunch_dir);
+> +}
+> +
+> +static void slaunch_intel_evtlog(void __iomem *txt)
+> +{
+> +    struct slr_entry_log_info *log_info;
+> +    struct txt_os_mle_data *params;
+> +    struct slr_table *slrt;
+> +    void *os_sinit_data;
+> +    u64 base, size;
+> +
+> +    memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
+> +    memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
+> +
+> +    /* now map TXT heap */
+> +    txt_heap =3D memremap(base, size, MEMREMAP_WB);
+> +    if (!txt_heap)
+> +        slaunch_txt_reset(txt, "Error failed to memremap TXT heap\n",
+> +                  SL_ERROR_HEAP_MAP);
+> +
+> +    params =3D (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap)=
+;
+> +
+> +    /* Get the SLRT and remap it */
+> +    slrt =3D memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
+> +    if (!slrt)
+> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
+> +                  SL_ERROR_SLRT_MAP);
+> +    size =3D slrt->size;
+> +    memunmap(slrt);
+> +
+> +    slrt =3D memremap(params->slrt, size, MEMREMAP_WB);
+> +    if (!slrt)
+> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
+> +                  SL_ERROR_SLRT_MAP);
+> +
+> +    log_info =3D slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
+> +    if (!log_info)
+> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
+> +                  SL_ERROR_SLRT_MISSING_ENTRY);
+> +
+> +    sl_evtlog.size =3D log_info->size;
+> +    sl_evtlog.addr =3D memremap(log_info->addr, log_info->size,
+> +                  MEMREMAP_WB);
+> +    if (!sl_evtlog.addr)
+> +        slaunch_txt_reset(txt, "Error failed to memremap TPM event log\n=
+",
+> +                  SL_ERROR_EVENTLOG_MAP);
+> +
+> +    memunmap(slrt);
+> +
+> +    /* Determine if this is TPM 1.2 or 2.0 event log */
+> +    if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
+> +            TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
+> +        return; /* looks like it is not 2.0 */
+> +
+> +    /* For TPM 2.0 logs, the extended heap element must be located */
+> +    os_sinit_data =3D txt_os_sinit_data_start(txt_heap);
+> +
+> +    evtlog21 =3D tpm2_find_log2_1_element(os_sinit_data);
+> +
+> +    /*
+> +     * If this fails, things are in really bad shape. Any attempt to wri=
+te
+> +     * events to the log will fail.
+> +     */
+> +    if (!evtlog21)
+> +        slaunch_txt_reset(txt, "Error failed to find TPM20 event log ele=
+ment\n",
+> +                  SL_ERROR_TPM_INVALID_LOG20);
+> +
+> +    /* Save pointer to the EFI SpecID log header */
+> +    efi_head =3D (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + s=
+izeof(struct tcg_pcr_event));
+> +}
+> +
+> +static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem=
+ *txt,
+> +                      struct tcg_pcr_event2_head *event)
+> +{
+> +    u16 *alg_id_field =3D (u16 *)((u8 *)event + sizeof(*event));
+> +    struct tpm_digest *digests;
+> +    u8 *dptr;
+> +    int ret;
+> +    u32 i;
+> +
+> +    /*
+> +     * Early SL code ensured the TPM algorithm information passed via
+> +     * the log is valid. Small sanity check here.
+> +     */
+> +    if (event->count !=3D efi_head->num_algs)
+> +        slaunch_txt_reset(txt, "Event digest count mismatch with event l=
+og\n",
+> +                  SL_ERROR_TPM_EVENT_COUNT);
+> +
+> +    digests =3D kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNE=
+L);
+> +    if (!digests)
+> +        slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
+> +                  SL_ERROR_GENERIC);
+> +
+> +    for (i =3D 0; i < event->count; i++) {
+> +        dptr =3D (u8 *)alg_id_field + sizeof(u16);
+> +
+> +        /* Setup each digest for the extend */
+> +        digests[i].alg_id =3D efi_head->digest_sizes[i].alg_id;
+> +        memcpy(&digests[i].digest[0], dptr,
+> +            efi_head->digest_sizes[i].digest_size);
+> +
+> +        alg_id_field =3D (u16 *)((u8 *)alg_id_field + sizeof(u16) +
+> +                efi_head->digest_sizes[i].digest_size);
+> +    }
+> +
+> +    ret =3D tpm_pcr_extend(tpm, event->pcr_idx, digests);
+> +    if (ret) {
+> +        pr_err("Error extending TPM20 PCR, result: %d\n", ret);
+> +        slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
+> +                  SL_ERROR_TPM_EXTEND);
+> +    }
+> +
+> +    kfree(digests);
+> +}
+> +
+> +static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
+> +{
+> +    struct tcg_pcr_event *event_header;
+> +    struct tcg_pcr_event2_head *event;
+> +    int start =3D 0, end =3D 0, size;
+> +
+> +    event_header =3D (struct tcg_pcr_event *)(sl_evtlog.addr +
+> +                        evtlog21->first_record_offset);
+> +
+> +    /* Skip first TPM 1.2 event to get to first TPM 2.0 event */
+> +    event =3D (struct tcg_pcr_event2_head *)((u8 *)event_header + sizeof=
+(*event_header) +
+> +                           event_header->event_size);
+> +
+> +    while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offse=
+t) {
+> +        size =3D __calc_tpm2_event_size(event, event_header, false);
+> +        if (!size)
+> +            slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
+> +                      SL_ERROR_TPM_INVALID_EVENT);
+> +
+> +        /*
+> +         * Marker events indicate where the Secure Launch early stub
+> +         * started and ended adding post launch events. As they are
+> +         * encountered, switch the event type to NO_ACTION so they
+> +         * ignored in when the event log is processed since they are
+> +         * not really measurements.
+> +         */
+> +        if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_END) {
+> +            event->event_type =3D NO_ACTION;
+> +            end =3D 1;
+> +            break;
+> +        } else if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_START) {
+> +            event->event_type =3D NO_ACTION;
+> +            start =3D 1;
+> +            goto next;
+> +        }
+> +
+> +        if (start)
+> +            slaunch_tpm2_extend_event(tpm, txt, event);
+> +
+> +next:
+> +        event =3D (struct tcg_pcr_event2_head *)((u8 *)event + size);
+> +    }
+> +
+> +    if (!start || !end)
+> +        slaunch_txt_reset(txt, "Missing start or end events for extendin=
+g TPM20 PCRs\n",
+> +                  SL_ERROR_TPM_EXTEND);
+> +}
+> +
+> +static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
+> +{
+> +    struct tpm_event_log_header *event_header;
+> +    struct tcg_pcr_event *event;
+> +    struct tpm_digest digest;
+> +    int start =3D 0, end =3D 0;
+> +    int size, ret;
+> +
+> +    event_header =3D (struct tpm_event_log_header *)sl_evtlog.addr;
+> +    event =3D (struct tcg_pcr_event *)((u8 *)event_header +
+> +                sizeof(*event_header));
+> +
+> +    while ((void  *)event < sl_evtlog.addr + event_header->next_event_of=
+fset) {
+> +        size =3D sizeof(*event) + event->event_size;
+> +
+> +        /*
+> +         * See comments in slaunch_tpm2_extend() concerning these specia=
+l
+> +         * event types.
+> +         */
+> +        if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_END) {
+> +            event->event_type =3D NO_ACTION;
+> +            end =3D 1;
+> +            break;
+> +        } else if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_START) {
+> +            event->event_type =3D NO_ACTION;
+> +            start =3D 1;
+> +            goto next;
+> +        }
+> +
+> +        if (start) {
+> +            memset(&digest.digest[0], 0, TPM_MAX_DIGEST_SIZE);
+> +            digest.alg_id =3D TPM_ALG_SHA1;
+> +            memcpy(&digest.digest[0], &event->digest[0],
+> +                   SHA1_DIGEST_SIZE);
+> +
+> +            ret =3D tpm_pcr_extend(tpm, event->pcr_idx, &digest);
+> +            if (ret) {
+> +                pr_err("Error extending TPM12 PCR, result: %d\n", ret);
+> +                slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
+> +                          SL_ERROR_TPM_EXTEND);
+> +            }
+> +        }
+> +
+> +next:
+> +        event =3D (struct tcg_pcr_event *)((u8 *)event + size);
+> +    }
+> +
+> +    if (!start || !end)
+> +        slaunch_txt_reset(txt, "Missing start or end events for extendin=
+g TPM12 PCRs\n",
+> +                  SL_ERROR_TPM_EXTEND);
+> +}
+> +
+> +static void slaunch_pcr_extend(void __iomem *txt)
+> +{
+> +    struct tpm_chip *tpm;
+> +    int rc;
+> +
+> +    tpm =3D tpm_default_chip();
+> +    if (!tpm)
+> +        slaunch_txt_reset(txt, "Could not get default TPM chip\n",
+> +                  SL_ERROR_TPM_INIT);
+> +
+> +    rc =3D tpm_chip_set_locality(tpm, 2);
+> +    if (rc)
+> +        slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
+> +                  SL_ERROR_TPM_INIT);
+> +
+> +    if (evtlog21)
+> +        slaunch_tpm2_extend(tpm, txt);
+> +    else
+> +        slaunch_tpm_extend(tpm, txt);
+> +}
+> +
+> +static int __init slaunch_module_init(void)
+> +{
+> +    void __iomem *txt;
+> +
+> +    /* Check to see if Secure Launch happened */
+> +    if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=3D
+> +        (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
+> +        return 0;
+> +
+> +    txt =3D ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
+> +              PAGE_SIZE);
+> +    if (!txt)
+> +        panic("Error ioremap of TXT priv registers\n");
+> +
+> +    /* Only Intel TXT is supported at this point */
+> +    slaunch_intel_evtlog(txt);
+> +    slaunch_pcr_extend(txt);
+> +    iounmap(txt);
+> +
+> +    return slaunch_expose_securityfs();
+> +}
+> +
+> +static void __exit slaunch_module_exit(void)
+> +{
+> +    slaunch_teardown_securityfs();
+> +}
+> +
+> +late_initcall(slaunch_module_init);
+> +__exitcall(slaunch_module_exit);
+> --
+> 2.39.3
 >
->[Install]
->WantedBy=default.target
->
->
->Starting the service:
->
->~ # systemctl start my-kexec.service
->kexec_file: kernel: 00000000ace85dcc kernel_size: 0x16e3000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000d08940fa
->vaddr=0xffff888000100000, paddr=0x100000, sz=0x700000 e_phnum=11
->p_offset=0x100000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000304ef570
->vaddr=0xffff888000808000, paddr=0x808000, sz=0x3000 e_phnum=12
->p_offset=0x808000
->crash_core: Crash PT_LOAD ELF header. phdr=000000000275e248
->vaddr=0xffff88800080c000, paddr=0x80c000, sz=0x5000 e_phnum=13
->p_offset=0x80c000
->crash_core: Crash PT_LOAD ELF header. phdr=000000004e47ca09
->vaddr=0xffff888000900000, paddr=0x900000, sz=0xa5700000 e_phnum=14
->p_offset=0x900000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000e56c8350
->vaddr=0xffff8880b6000000, paddr=0xb6000000, sz=0x7d51018 e_phnum=15
->p_offset=0xb6000000
->crash_core: Crash PT_LOAD ELF header. phdr=0000000099d67ff3
->vaddr=0xffff8880bdd51018, paddr=0xbdd51018, sz=0x27440 e_phnum=16
->p_offset=0xbdd51018
->crash_core: Crash PT_LOAD ELF header. phdr=00000000461a2f21
->vaddr=0xffff8880bdd78458, paddr=0xbdd78458, sz=0xbc0 e_phnum=17
->p_offset=0xbdd78458
->crash_core: Crash PT_LOAD ELF header. phdr=0000000058149b54
->vaddr=0xffff8880bdd79018, paddr=0xbdd79018, sz=0x9a40 e_phnum=18
->p_offset=0xbdd79018
->crash_core: Crash PT_LOAD ELF header. phdr=000000001e30ff2c
->vaddr=0xffff8880bdd82a58, paddr=0xbdd82a58, sz=0xdbc5a8 e_phnum=19
->p_offset=0xbdd82a58
->crash_core: Crash PT_LOAD ELF header. phdr=00000000e67a9768
->vaddr=0xffff8880bec00000, paddr=0xbec00000, sz=0xaed000 e_phnum=20
->p_offset=0xbec00000
->crash_core: Crash PT_LOAD ELF header. phdr=000000005909c4c6
->vaddr=0xffff8880bf9ff000, paddr=0xbf9ff000, sz=0x453000 e_phnum=21
->p_offset=0xbf9ff000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000473d74ef
->vaddr=0xffff8880bfe58000, paddr=0xbfe58000, sz=0x64000 e_phnum=22
->p_offset=0xbfe58000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000abde8123
->vaddr=0xffff888100000000, paddr=0x100000000, sz=0x23f000000 e_phnum=23
->p_offset=0x100000000
->crash_core: Crash PT_LOAD ELF header. phdr=00000000bda3e0bf
->vaddr=0xffff88843f000000, paddr=0x43f000000, sz=0x1000000 e_phnum=24
->p_offset=0x43f000000
->kexec: Loaded ELF headers at 0x33f000000 bufsz=0x1000 memsz=0xe1000
->BUG: kernel NULL pointer dereference, address: 0000000000000000
->#PF: supervisor read access in kernel mode
->#PF: error_code(0x0000) - not-present page
->PGD 0 P4D 0
->Oops: Oops: 0000 [#1] SMP NOPTI
->CPU: 5 UID: 0 PID: 3812 Comm: kexec Not tainted 6.14.0-rc1+ #20
->Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 2025.02-6
->04/08/2025
->RIP: 0010:sized_strscpy+0x71/0x150
->Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
->11
->48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e 49
->89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
->RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
->RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
->RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
->RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
->R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
->R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
->FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
->CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
->PKRU: 55555554
->Call Trace:
-> <TASK>
-> ? __die+0x23/0x60
-> ? page_fault_oops+0x177/0x510
-> ? _prb_read_valid+0x2e7/0x370
-> ? exc_page_fault+0x6f/0x130
-> ? asm_exc_page_fault+0x26/0x30
-> ? sized_strscpy+0x71/0x150
-> crash_load_dm_crypt_keys+0x1bc/0x370
-> bzImage64_load+0x41b/0xa30
-> __do_sys_kexec_file_load+0x2af/0x8a0
-> do_syscall_64+0x4b/0x110
-> entry_SYSCALL_64_after_hwframe+0x76/0x7e
->RIP: 0033:0x7f09ea848d6d
->Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48
->89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
->c3 48 8b 0d 6b 70 0d 00 f7 d8 64 89 01 48
->RSP: 002b:00007fff8cf979e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000140
->RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f09ea848d6d
->RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000003
->RBP: 0000000000000003 R08: 000000000000000a R09: 00007fff8cf97a10
->R10: 000055de70eee9a0 R11: 0000000000000206 R12: 0000000000000003
->R13: 00007fff8cf97d08 R14: 000055de4c336448 R15: 0000000000000004
-> </TASK>
->CR2: 0000000000000000
->---[ end trace 0000000000000000 ]---
->RIP: 0010:sized_strscpy+0x71/0x150
->Code: b9 80 80 80 80 80 80 80 80 48 c1 e8 03 48 8d 1c c5 08 00 00 00 31 c0 eb
->11 48 89 34 07 48 83 c0 08 48 39 d8 0f 84 83 00 00 00 <49> 8b 34 00 4a 8d 14 1e
->49 89 f2 49 f7 d2 4c 21 d2 4c 8d 14 07 4c
->RSP: 0018:ffffc9000420fc68 EFLAGS: 00010246
->RAX: 0000000000000000 RBX: 0000000000000080 RCX: 0000000000000080
->RDX: 0000000000000080 RSI: 0000000000000000 RDI: ffff8881030ec808
->RBP: ffff888109724000 R08: 0000000000000000 R09: 8080808080808080
->R10: ffffc9000420fc78 R11: fefefefefefefeff R12: ffffc90004219000
->R13: ffff888104a80000 R14: 0000000000000008 R15: 0000000000000000
->FS:  00007f09ea73f740(0000) GS:ffff88843fc80000(0000) knlGS:0000000000000000
->CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->CR2: 0000000000000000 CR3: 0000000120760002 CR4: 0000000000772ef0
->PKRU: 55555554
->Kernel panic - not syncing: Fatal exception
->Kernel Offset: disabled
->
->
->Calling a script that does the same thing works fine and loads the keys
->correctly:
->
->[Service]
->ExecStart=/root/kexec.sh
->
->~ # cat /root/kexec.sh
->#!/bin/bash
->
->mkdir /sys/kernel/config/crash_dm_crypt_keys/mykey
->echo cryptsetup:mykey > /sys/kernel/config/crash_dm_crypt_keys/mykey/description
->/usr/host/bin/kexec --debug --load-panic /linux-hv --initrd /crash-initrd
->
->If that's any help, my crypttab:
->
->~ # cat /etc/crypttab
->root UUID=8001fca4-2e54-48e9-9235-031c19fc6e36 none luks,link-volume-key=@u::%logon:cryptsetup:mykey
->
->If you can't reproduce, I can help track this. Just let me know if you need
->any help.
->
-
--- 
-Best regards,
-Coiby
-
 
