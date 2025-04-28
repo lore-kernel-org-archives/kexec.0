@@ -4,133 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7ADBC369D5
-	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 21:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 887A6C3ABA3
+	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 22:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=WGaDKsU76PUZQdKN9pEr4car2ehPDnzIQ5pZ5crExJk=; b=FHu2zyW7EzW6iP0OooTkJrodVZ
-	XXP4y1PtZKBuKJX860CeQSNXiX2a8i7NedDqQ4v64okFVzyZx8Gqd6k8rbji/Co9QbpkiPHgAbxnc
-	eaNElTm4btbyoxm6oW3bHF0rSgbNLLAYpdYXv0JKQXYBTeiWaPYRSl/QuWUuIl0cQnz3glWaPOrO1
-	lsKV3FKjML37IbbFZf1e1Msja7VJXKbVkgwWLCykkGJV90DC85fVc0VyDOBYC29aLhWVSD6ljtW1y
-	HP+F6xw+9AoTIdjnDom80W14ZZwOcjUXiZKRQDqQTzWgYD3c00VGQ8Yo4vHVd1CtR9mjbTFcHPgxw
-	+cwnXVcA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RXH9DwsAsR8lJoV4mjG778m4PavbB3r9xWoTN8o49lw=; b=JWFrOEkKzBgyJjntVbHLMYv9ii
+	ufI635tE7TGGkStpljc4DUGdBxxzFfTZcPw6AoLU3Z5D+yKNnAb0AXlKM1PiOTeDHQQEyu+eFCfA+
+	ilGHh3rXCR0YvAF9yJKmLV3AJKI3Mzv7KkdscuxDzDIlifr3+4QwQjgIZWiO99gRMrCPqAa9Jzh5p
+	1Z+8uSk0WwV7z4dY5LFUigt5Tt65ALYffhBmnsOkcke9OtYRcGvq+NG6FRt+ydPYpkwmg4YJmvuxG
+	LAud42R3oenB2pK44MpKJur2ji6OppUAmzfZx3PTG4iZMoLV8McTjSpNVCMJUqmY+X+P0SHR77erK
+	QsDamaag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9WFi-00000007eAx-14MM;
-	Mon, 28 Apr 2025 21:43:02 +0000
-Received: from mail-mw2nam12on20602.outbound.protection.outlook.com ([2a01:111:f403:200a::602] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	id 1u9Wc4-00000007gN9-3I1i;
+	Mon, 28 Apr 2025 22:06:08 +0000
+Received: from mgamail.intel.com ([198.175.65.10])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9WF1-00000007e5N-0ZUV
-	for kexec@lists.infradead.org;
-	Mon, 28 Apr 2025 21:42:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uF6fVgcd+AcxQvmgXnY9XrCT1Gfm3ae3ex55mPMS34UIx7uU6kVs/ffSSMmWxJH0YxCTYEmHXxrx+zejvLsha/Dp4zg7lSgzav0nNjy3RX/IFyeWqchMq3JGm1QMiT8PpWx/rPNyCOu+JYrAxZsHptNfdT0LQBRf42d/g3E6LkbY1gBFSmBO9tbEQtWBldcfvW2VJ19JYKyPB3A53qZBvUWyXlYXblSH8/T79L5BrLdywAwy/FrBCrkYEYgJC6ajEP8Ni5Cxfi4etJcLyfuxLAhefjxsmQWjUmBQuOiq098hwPYvCV80Bfl/95rTmpT4m3mo/U1dTOhZy/w1qoz4Pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WGaDKsU76PUZQdKN9pEr4car2ehPDnzIQ5pZ5crExJk=;
- b=xJA5g5GD/pfKPgATRCadwMkCoP4BHasgfy/LhFFQJqf6a0l/9eJ0KiVOZVX0QGd29UtNYzR/6aKYRbWjogIFpOJI3ZhbWbA+P1u6tnlO7BFd1qD89dLuFUEzamYYpIzrvlIOH60jEZBEk7Aebs1Q8JEinGzSlJS5v9iCeZWIpNAz4TI2HfRGqrlv9f4PBkOk+zZ983ZoVIxHSKtSk7ogCdDAms9zlC+ig4Zg1gBXOyty/ZBs+2D3M16U04YSxfYGGXoqv8FZX5TZztCi2JgyVGr5LJA56DBR/ge92XmWXS7+NPJWXTo/0O5SueivbQ1WkhJe4DPzZWGz57bwKXBHJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WGaDKsU76PUZQdKN9pEr4car2ehPDnzIQ5pZ5crExJk=;
- b=TKKccxUdWEpWAkHXX7mQdFqg5ghMk1expmKWJ4nzEgRo7rv4E8Id8xeKX9JrdngMInHSQChzZLYW7eHtD9thOBFTvQHnuEjPAbt2yLJ2cuv8b9gcXyprNnoG1l+d7e+WuJWZUC7lSZGBciwC1IXbeSInzybdVK39xlVDVNSzqyA=
-Received: from BN9PR03CA0895.namprd03.prod.outlook.com (2603:10b6:408:13c::30)
- by PH8PR12MB6844.namprd12.prod.outlook.com (2603:10b6:510:1cb::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 21:42:06 +0000
-Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
- (2603:10b6:408:13c:cafe::3d) by BN9PR03CA0895.outlook.office365.com
- (2603:10b6:408:13c::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Mon,
- 28 Apr 2025 21:42:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.2 via Frontend Transport; Mon, 28 Apr 2025 21:42:05 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 16:42:04 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <bp@alien8.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>
-CC: <kees@kernel.org>, <michael.roth@amd.com>, <nikunj@amd.com>,
-	<seanjc@google.com>, <ardb@kernel.org>, <gustavoars@kernel.org>,
-	<sgarzare@redhat.com>, <stable@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH v3] x86/sev: Do not touch VMSA pages during kdump of SNP guest memory
-Date: Mon, 28 Apr 2025 21:41:51 +0000
-Message-ID: <20250428214151.155464-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	id 1u9Wc0-00000007gLk-0pNV;
+	Mon, 28 Apr 2025 22:06:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745877964; x=1777413964;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rh0mXKcXTapzeEarbYwt4U6w174nT0PhAR8s8IiTQAk=;
+  b=S3o5gUabf5TQHlMackd7QN7W4cm0s6F4kWKZ+9eUvIGPcL/qKGJldNZQ
+   GqezHSD+Olz+xEvjuWpglbs8KMjVHfplMpoRb2FmXVqGIFnMgaa8zEwT4
+   Rs/WFa6DpFzWebTJoRSgtWlAx6HCOvJhEU3zjGtvczuKc8nMi4KG2qQKl
+   Pi8KvZdrb8txFqfLJpq2VrDLATQmSXb/WYkkYKm32hMu1l6h0t76Y0mh0
+   R0R7Edw7wJcK8Yzy9MXl6howGKp2mEEgm3Gyq9AQxz6tlgAtbTTNtOBig
+   6NbUSXLN1yDQuQS6yjJeFB2q5Nd//Mj+68zLdz1SGzmUSPJiU1z0ZAOdX
+   Q==;
+X-CSE-ConnectionGUID: rtLv3d9WRgKHG3mYBNU5ww==
+X-CSE-MsgGUID: ffSw/gaHRtqUHUi5o8BVQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64905749"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="64905749"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:06:01 -0700
+X-CSE-ConnectionGUID: gJCBoSoISICnp5j5zJezcw==
+X-CSE-MsgGUID: p8G+22QSS0SpqII0tBJYkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="133366791"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.222.199]) ([10.124.222.199])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:05:58 -0700
+Message-ID: <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
+Date: Mon, 28 Apr 2025 15:05:55 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|PH8PR12MB6844:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ac92e29-721b-4a4c-7fdc-08dd869d8512
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|36860700013|7416014|82310400026;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?zKza91aqYfloM5yY6pPuevkCd2MD/nwAovfeQ7gbuOll0mqTdSb2YFRS8ugL?=
- =?us-ascii?Q?GrzYVkux4eaJQRqHhPT0BoNEgLINZMXYvnmjtsR3M+Cu9s7gwSkyheI+yFU5?=
- =?us-ascii?Q?vcUIfIabBddD1ebx+58oSuLqe4PTOa355ktckBD89UxkadWutSjnvMTS6O7R?=
- =?us-ascii?Q?wZkiMQquzC/8wnSFtXnHzc3C2P160QZOELASVZG8VM8HLKXXzCizT00SjD+q?=
- =?us-ascii?Q?X8yL5frMVFWNnQlix7GPOb7z/8Tq5VUJmPoJFtoyy5gvm6JqA8oqknesKxw7?=
- =?us-ascii?Q?GA2c51d/Ps+m/hV7YuEUUZ3FAFdGHx92QhngGM1B/2pe0fQ533zRnc638FFn?=
- =?us-ascii?Q?VxC+v+hA+KmF6k9+oyYR+OlDlZ90ENWQ2JpDuSyI5k5z2Ofm1sD20lA/5kfW?=
- =?us-ascii?Q?yY40JiQjZHyJVdaTp3RecLhsQI1+5CN2qYLsOQYQvzGHNkKHqdVIZo4AtStA?=
- =?us-ascii?Q?bJ21kn1IGFGw0GYKdY3cNV8PZAOIcac94+ABJ7ktO589/ARcJZYkH/PFQk4w?=
- =?us-ascii?Q?5vByGRp4TNbVLlpeBAfZ915pQsC9QNykg2Ytemu9cVisfWtjJUGHCJVZaycw?=
- =?us-ascii?Q?rRtA+v6hzs3r+vVJzW1OMLayMoN/E+fYMtS7WI29jMt48MkEsrAf6yUVAsAp?=
- =?us-ascii?Q?9F/jCug2KG8Dk1qa7lOnyVicpIO0X588HHSHizxiB89zJMK8Q9njxDk1Ae4v?=
- =?us-ascii?Q?EG88hhScItOcyE+Yt9Dysf6AEpAEmE1LJn0Nw6OTs12cuvbeOK8wTR+ERIcn?=
- =?us-ascii?Q?UUsauZJRau1GrLlXVnZetLPnzrQT6sgfRAuDh1EHRDUl2Wq15x5puvsjgDX7?=
- =?us-ascii?Q?uWJ56k6C2oKj1j3zhzb0QASyDhkp6eQTgVmtjMNzwjAm+NEzXhpWL0czyQcP?=
- =?us-ascii?Q?k3dh4AfShWgRnnyRJGr9HMf1+FU3zAsi/d//Mu/XvkUhsMGEHMahfmehePOR?=
- =?us-ascii?Q?q2HqHV3Y1aP7/WVyL+Gfl74gwT+ZhueOMtlMrUZaiZU+25IpkPrD5qOdnP6V?=
- =?us-ascii?Q?xLQj0OBSO3PfJI3Fw++vlbv9iAFecD+JzJBnxWdyjt13F5Ejj4Ouu76woU/n?=
- =?us-ascii?Q?75t0I/iLfWOd2dzfEe1AKVjzrtBuUbMXVKNtK5wB76UEpWF8qUqvHz8Yph+c?=
- =?us-ascii?Q?/wyycufkpiTX76+8u8Li1IGoz76Z41eJGGOtnNlaVUU+EJfuI79rPEtCTsI+?=
- =?us-ascii?Q?ollAcg/vxWvhzleqzsEwcOlbzfWzO5jpmlYn6Ir5NEfrWsVZMuRZVSa88NN2?=
- =?us-ascii?Q?exfpunRDCq8CvXos59YBG0my3bLEG9rDE2lVf1TocP6QJb9lTTJFfgN5JAsh?=
- =?us-ascii?Q?RQzych55cGtzXOVP1Ap+ugBuTWc03TrfeFBCANXDmSRESe0b22DRrsu94zr0?=
- =?us-ascii?Q?a5jPbe11RGApnWb5gjZ0QwaH9O1iqh67biyZvNkwU8hSxGLEv5Qu/9cFz2EU?=
- =?us-ascii?Q?1sDcrw7NLH3NrGgCFDv82miSCMNPiAZTaH9741ZhH9EWmZ3vnbepI5pHghxU?=
- =?us-ascii?Q?QrmFuHNIXet9XC4=3D?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(7416014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 21:42:05.6625
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ac92e29-721b-4a4c-7fdc-08dd869d8512
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN3PEPF0000B36D.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6844
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/14] x86: add KHO support
+To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
+ ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
+ devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com,
+ graf@amazon.com, hpa@zytor.com, jgowans@amazon.com,
+ kexec@lists.infradead.org, krzk@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+ pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org,
+ ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org,
+ saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+ thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+References: <20250411053745.1817356-1-changyuanl@google.com>
+ <20250411053745.1817356-12-changyuanl@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250411053745.1817356-12-changyuanl@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_144219_198168_5771B1AD 
-X-CRM114-Status: GOOD (  23.29  )
+X-CRM114-CacheID: sfid-20250428_150604_342166_6B82E83A 
+X-CRM114-Status: GOOD (  38.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -145,323 +138,317 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 4/10/25 22:37, Changyuan Lyu wrote:
+> From: Alexander Graf <graf@amazon.com>
+> 
+> We now have all bits in place to support KHO kexecs. This patch adds
 
-When kdump is running makedumpfile to generate vmcore and dumping SNP
-guest memory it touches the VMSA page of the vCPU executing kdump which
-then results in unrecoverable #NPF/RMP faults as the VMSA page is
-marked busy/in-use when the vCPU is running and subsequently causes
-guest softlockup/hang.
+Please use imperative voice and also avoid the "this patch" stuff.
 
-Additionally other APs may be halted in guest mode and their VMSA pages
-are marked busy and touching these VMSA pages during guest memory dump
-will also cause #NPF.
+...
+> +/*
+> + * If KHO is active, only process its scratch areas to ensure we are not
+> + * stepping onto preserved memory.
+> + */
 
-Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-of guest mode and then clear the VMSA bit on their VMSA pages.
+Same thing on the imperative voice here.
 
-If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-ensure that makedumpfile excludes that page while dumping guest memory.
+I'm also not fully understanding the comment. Do these "scratch" regions
+basically represent all the memory that's not being handed over? It's
+not obvious.
 
-Cc: stable@vger.kernel.org
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c | 241 +++++++++++++++++++++++++--------------
- 1 file changed, 155 insertions(+), 86 deletions(-)
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+> +{
+> +	struct kho_scratch *kho_scratch;
+> +	struct setup_data *ptr;
+> +	int i, nr_areas = 0;
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index dcfaa698d6cf..f4eb5b645239 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -877,6 +877,99 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
- }
- 
-+static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
-+{
-+	struct ghcb_state state;
-+	unsigned long flags;
-+	struct ghcb *ghcb;
-+	int ret = 0;
-+
-+	local_irq_save(flags);
-+
-+	ghcb = __sev_get_ghcb(&state);
-+
-+	vc_ghcb_invalidate(ghcb);
-+	if (event == SVM_VMGEXIT_AP_CREATE)
-+		ghcb_set_rax(ghcb, vmsa->sev_features);
-+	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-+	ghcb_set_sw_exit_info_1(ghcb,
-+				((u64)apic_id << 32)	|
-+				((u64)snp_vmpl << 16)	|
-+				event);
-+	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-+
-+	sev_es_wr_ghcb_msr(__pa(ghcb));
-+	VMGEXIT();
-+
-+	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-+	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-+		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
-+		ret = -EINVAL;
-+	}
-+
-+	__sev_put_ghcb(&state);
-+
-+	local_irq_restore(flags);
-+
-+	return ret;
-+}
-+
-+static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
-+{
-+	int ret;
-+
-+	if (snp_vmpl) {
-+		struct svsm_call call = {};
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+
-+		call.caa = this_cpu_read(svsm_caa);
-+		call.rcx = __pa(va);
-+
-+		if (make_vmsa) {
-+			/* Protocol 0, Call ID 2 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
-+			call.rdx = __pa(caa);
-+			call.r8  = apic_id;
-+		} else {
-+			/* Protocol 0, Call ID 3 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
-+		}
-+
-+		ret = svsm_perform_call_protocol(&call);
-+
-+		local_irq_restore(flags);
-+	} else {
-+		/*
-+		 * If the kernel runs at VMPL0, it can change the VMSA
-+		 * bit for a page using the RMPADJUST instruction.
-+		 * However, for the instruction to succeed it must
-+		 * target the permissions of a lesser privileged (higher
-+		 * numbered) VMPL level, so use VMPL1.
-+		 */
-+		u64 attrs = 1;
-+
-+		if (make_vmsa)
-+			attrs |= RMPADJUST_VMSA_PAGE_BIT;
-+
-+		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-+	}
-+
-+	return ret;
-+}
-+
-+static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
-+{
-+	int err;
-+
-+	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
-+	if (err)
-+		pr_err("clear VMSA page failed (%u), leaking page\n", err);
-+	else
-+		free_page((unsigned long)vmsa);
-+}
-+
- static void set_pte_enc(pte_t *kpte, int level, void *va)
- {
- 	struct pte_enc_desc d = {
-@@ -973,6 +1066,65 @@ void snp_kexec_begin(void)
- 		pr_warn("Failed to stop shared<->private conversions\n");
- }
- 
-+/*
-+ * Shutdown all APs except the one handling kexec/kdump and clearing
-+ * the VMSA tag on AP's VMSA pages as they are not being used as
-+ * VMSA page anymore.
-+ */
-+static void shutdown_all_aps(void)
-+{
-+	struct sev_es_save_area *vmsa;
-+	int apic_id, this_cpu, cpu;
-+
-+	this_cpu = get_cpu();
-+
-+	/*
-+	 * APs are already in HLT loop when enc_kexec_finish() callback
-+	 * is invoked.
-+	 */
-+	for_each_present_cpu(cpu) {
-+		vmsa = per_cpu(sev_vmsa, cpu);
-+
-+		/*
-+		 * BSP does not have guest allocated VMSA and there is no need
-+		 * to clear the VMSA tag for this page.
-+		 */
-+		if (!vmsa)
-+			continue;
-+
-+		/*
-+		 * Cannot clear the VMSA tag for the currently running vCPU.
-+		 */
-+		if (this_cpu == cpu) {
-+			unsigned long pa;
-+			struct page *p;
-+
-+			pa = __pa(vmsa);
-+			/*
-+			 * Mark the VMSA page of the running vCPU as offline
-+			 * so that is excluded and not touched by makedumpfile
-+			 * while generating vmcore during kdump.
-+			 */
-+			p = pfn_to_online_page(pa >> PAGE_SHIFT);
-+			if (p)
-+				__SetPageOffline(p);
-+			continue;
-+		}
-+
-+		apic_id = cpuid_to_apicid[cpu];
-+
-+		/*
-+		 * Issue AP destroy to ensure AP gets kicked out of guest mode
-+		 * to allow using RMPADJUST to remove the VMSA tag on it's
-+		 * VMSA page.
-+		 */
-+		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
-+		snp_cleanup_vmsa(vmsa, apic_id);
-+	}
-+
-+	put_cpu();
-+}
-+
- void snp_kexec_finish(void)
- {
- 	struct sev_es_runtime_data *data;
-@@ -987,6 +1139,8 @@ void snp_kexec_finish(void)
- 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
- 		return;
- 
-+	shutdown_all_aps();
-+
- 	unshare_all_memory();
- 
- 	/*
-@@ -1008,51 +1162,6 @@ void snp_kexec_finish(void)
- 	}
- }
- 
--static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
--{
--	int ret;
--
--	if (snp_vmpl) {
--		struct svsm_call call = {};
--		unsigned long flags;
--
--		local_irq_save(flags);
--
--		call.caa = this_cpu_read(svsm_caa);
--		call.rcx = __pa(va);
--
--		if (make_vmsa) {
--			/* Protocol 0, Call ID 2 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
--			call.rdx = __pa(caa);
--			call.r8  = apic_id;
--		} else {
--			/* Protocol 0, Call ID 3 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
--		}
--
--		ret = svsm_perform_call_protocol(&call);
--
--		local_irq_restore(flags);
--	} else {
--		/*
--		 * If the kernel runs at VMPL0, it can change the VMSA
--		 * bit for a page using the RMPADJUST instruction.
--		 * However, for the instruction to succeed it must
--		 * target the permissions of a lesser privileged (higher
--		 * numbered) VMPL level, so use VMPL1.
--		 */
--		u64 attrs = 1;
--
--		if (make_vmsa)
--			attrs |= RMPADJUST_VMSA_PAGE_BIT;
--
--		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
--	}
--
--	return ret;
--}
--
- #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
- #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
- #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
-@@ -1084,24 +1193,10 @@ static void *snp_alloc_vmsa_page(int cpu)
- 	return page_address(p + 1);
- }
- 
--static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
--{
--	int err;
--
--	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
--	if (err)
--		pr_err("clear VMSA page failed (%u), leaking page\n", err);
--	else
--		free_page((unsigned long)vmsa);
--}
--
- static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- {
- 	struct sev_es_save_area *cur_vmsa, *vmsa;
--	struct ghcb_state state;
- 	struct svsm_ca *caa;
--	unsigned long flags;
--	struct ghcb *ghcb;
- 	u8 sipi_vector;
- 	int cpu, ret;
- 	u64 cr4;
-@@ -1215,33 +1310,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	}
- 
- 	/* Issue VMGEXIT AP Creation NAE event */
--	local_irq_save(flags);
--
--	ghcb = __sev_get_ghcb(&state);
--
--	vc_ghcb_invalidate(ghcb);
--	ghcb_set_rax(ghcb, vmsa->sev_features);
--	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
--	ghcb_set_sw_exit_info_1(ghcb,
--				((u64)apic_id << 32)	|
--				((u64)snp_vmpl << 16)	|
--				SVM_VMGEXIT_AP_CREATE);
--	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
--
--	sev_es_wr_ghcb_msr(__pa(ghcb));
--	VMGEXIT();
--
--	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
--	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
--		pr_err("SNP AP Creation error\n");
--		ret = -EINVAL;
--	}
--
--	__sev_put_ghcb(&state);
--
--	local_irq_restore(flags);
--
--	/* Perform cleanup if there was an error */
-+	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
- 	if (ret) {
- 		snp_cleanup_vmsa(vmsa, apic_id);
- 		vmsa = NULL;
--- 
-2.34.1
+Do these really need actual #ifdefs or will a nice IS_ENABLED() check
+work instead?
 
+> +	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
+
+What's with the double cast?
+
+> +	while (ptr) {
+> +		if (ptr->type == SETUP_KEXEC_KHO) {
+> +			struct kho_data *kho = (struct kho_data *)ptr->data;
+> +
+> +			kho_scratch = (void *)kho->scratch_addr;
+> +			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
+> +
+> +			break;
+> +		}
+> +
+> +		ptr = (struct setup_data *)(unsigned long)ptr->next;
+> +	}
+
+Wow, there are a solid number of these loops, each with similarly fun
+casting.
+
+> +	if (!nr_areas)
+> +		return false;
+> +
+> +	for (i = 0; i < nr_areas; i++) {
+> +		struct kho_scratch *area = &kho_scratch[i];
+> +		struct mem_vector region = {
+> +			.start = area->addr,
+> +			.size = area->size,
+> +		};
+> +
+> +		if (process_mem_region(&region, minimum, image_size))
+> +			break;
+> +	}
+> +
+> +	return true;
+> +}
+> +#else
+> +static inline bool process_kho_entries(unsigned long minimum,
+> +				       unsigned long image_size)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  static unsigned long find_random_phys_addr(unsigned long minimum,
+>  					   unsigned long image_size)
+>  {
+> @@ -775,7 +824,8 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+>  		return 0;
+>  	}
+>  
+> -	if (!process_efi_entries(minimum, image_size))
+> +	if (!process_kho_entries(minimum, image_size) &&
+> +	    !process_efi_entries(minimum, image_size))
+>  		process_e820_entries(minimum, image_size);
+
+Oh, so KHO really does replace the other memory maps here. That seems
+important to call out.
+
+>  	phys_addr = slots_fetch_random();
+> diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+> index ad9212df0ec0c..906ab5e6d25fe 100644
+> --- a/arch/x86/include/asm/setup.h
+> +++ b/arch/x86/include/asm/setup.h
+> @@ -67,6 +67,10 @@ extern void x86_ce4100_early_setup(void);
+>  static inline void x86_ce4100_early_setup(void) { }
+>  #endif
+>  
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +#include <linux/kexec_handover.h>
+> +#endif
+
+Please do this #ifdef'ing inside the kexec_handover.h header if at all
+possible.
+
+> diff --git a/arch/x86/include/uapi/asm/setup_data.h b/arch/x86/include/uapi/asm/setup_data.h
+> index 50c45ead4e7c9..2671c4e1b3a0b 100644
+> --- a/arch/x86/include/uapi/asm/setup_data.h
+> +++ b/arch/x86/include/uapi/asm/setup_data.h
+> @@ -13,7 +13,8 @@
+>  #define SETUP_CC_BLOB			7
+>  #define SETUP_IMA			8
+>  #define SETUP_RNG_SEED			9
+> -#define SETUP_ENUM_MAX			SETUP_RNG_SEED
+> +#define SETUP_KEXEC_KHO			10
+> +#define SETUP_ENUM_MAX			SETUP_KEXEC_KHO
+>  
+>  #define SETUP_INDIRECT			(1<<31)
+>  #define SETUP_TYPE_MAX			(SETUP_ENUM_MAX | SETUP_INDIRECT)
+> @@ -78,6 +79,16 @@ struct ima_setup_data {
+>  	__u64 size;
+>  } __attribute__((packed));
+>  
+> +/*
+> + * Locations of kexec handover metadata
+> + */
+> +struct kho_data {
+> +	__u64 fdt_addr;
+> +	__u64 fdt_size;
+> +	__u64 scratch_addr;
+> +	__u64 scratch_size;
+> +} __attribute__((packed));
+> +
+>  #endif /* __ASSEMBLER__ */
+>  
+>  #endif /* _UAPI_ASM_X86_SETUP_DATA_H */
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 57120f0749cc3..c314212a5ecd5 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -1300,6 +1300,24 @@ void __init e820__memblock_setup(void)
+>  		memblock_add(entry->addr, entry->size);
+>  	}
+>  
+> +	/*
+> +	 * At this point with KHO we only allocate from scratch memory.
+> +	 * At the same time, we configure memblock to only allow
+> +	 * allocations from memory below ISA_END_ADDRESS which is not
+> +	 * a natural scratch region, because Linux ignores memory below
+> +	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+> +	 * allocations, we must allocate real-mode trapoline below
+
+						trampoline ^
+
+> +	 * ISA_END_ADDRESS.
+> +	 *
+> +	 * To make sure that we can actually perform allocations during
+> +	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+> +	 * so we can allocate from there in a scratch-only world.
+> +	 *
+> +	 * After real mode trampoline is allocated, we clear scratch
+> +	 * marking from the memory below ISA_END_ADDRESS
+> +	 */
+> +	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+
+This isn't making a whole ton of sense to me.
+
+Is this *only* to facilitate possible users that need <ISA_END_ADDRESS
+allocations? If so, please say that.
+
+I _think_ this is trying to say that KHO kernels are special and are
+trying to only allocate from scratch areas. But <ISA_END_ADDRESS
+allocations are both necessary and not marked by KHO _as_ a scratch area
+which causes a problem.
+
+Also, it's a bit goofy that this code does the "mark" with
+ISA_END_ADDRESS and the clear with SZ_1M:
+
+	memblock_clear_kho_scratch(0, SZ_1M);
+
+That seems unnecessarily oblique.
+
+>  	/* Throw away partial pages: */
+>  	memblock_trim_memory(PAGE_SIZE);
+>  
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 68530fad05f74..518635cc0876c 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
+>  #endif /* CONFIG_IMA_KEXEC */
+>  }
+>  
+> +static void setup_kho(const struct kimage *image, struct boot_params *params,
+> +		      unsigned long params_load_addr,
+> +		      unsigned int setup_data_offset)
+> +{
+> +#ifdef CONFIG_KEXEC_HANDOVER
+
+Can this #ifdef be replaced with IS_ENABLED()?
+
+> +	struct setup_data *sd = (void *)params + setup_data_offset;
+> +	struct kho_data *kho = (void *)sd + sizeof(*sd);
+> +
+> +	sd->type = SETUP_KEXEC_KHO;
+> +	sd->len = sizeof(struct kho_data);
+> +
+> +	/* Only add if we have all KHO images in place */
+> +	if (!image->kho.fdt || !image->kho.scratch)
+> +		return;
+> +
+> +	/* Add setup data */
+> +	kho->fdt_addr = image->kho.fdt;
+> +	kho->fdt_size = PAGE_SIZE;
+> +	kho->scratch_addr = image->kho.scratch->mem;
+> +	kho->scratch_size = image->kho.scratch->bufsz;
+> +	sd->next = params->hdr.setup_data;
+> +	params->hdr.setup_data = params_load_addr + setup_data_offset;
+> +#endif /* CONFIG_KEXEC_HANDOVER */
+> +}
+> +
+>  static int
+>  setup_boot_parameters(struct kimage *image, struct boot_params *params,
+>  		      unsigned long params_load_addr,
+> @@ -312,6 +337,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+>  				     sizeof(struct ima_setup_data);
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER)) {
+> +		/* Setup space to store preservation metadata */
+> +		setup_kho(image, params, params_load_addr, setup_data_offset);
+> +		setup_data_offset += sizeof(struct setup_data) +
+> +				     sizeof(struct kho_data);
+> +	}
+
+This is a bit weird that it needs this IS_ENABLED() check and the
+earlier #ifdef. But I guess  it's following the IMA_KEXEC code's pattern
+at least.
+
+>  	/* Setup RNG seed */
+>  	setup_rng_seed(params, params_load_addr, setup_data_offset);
+>  
+> @@ -479,6 +511,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  		kbuf.bufsz += sizeof(struct setup_data) +
+>  			      sizeof(struct ima_setup_data);
+>  
+> +	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER))
+> +		kbuf.bufsz += sizeof(struct setup_data) +
+> +			      sizeof(struct kho_data);
+> +
+>  	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+>  	if (!params)
+>  		return ERR_PTR(-ENOMEM);
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 766176c4f5ee8..496dae89cf95d 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -451,6 +451,28 @@ int __init ima_get_kexec_buffer(void **addr, size_t *size)
+>  }
+>  #endif
+>  
+> +static void __init add_kho(u64 phys_addr, u32 data_len)
+> +{
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +	struct kho_data *kho;
+> +	u64 addr = phys_addr + sizeof(struct setup_data);
+> +	u64 size = data_len - sizeof(struct setup_data);
+> +
+> +	kho = early_memremap(addr, size);
+> +	if (!kho) {
+> +		pr_warn("setup: failed to memremap kho data (0x%llx, 0x%llx)\n",
+> +			addr, size);
+> +		return;
+> +	}
+> +
+> +	kho_populate(kho->fdt_addr, kho->fdt_size, kho->scratch_addr, kho->scratch_size);
+> +
+> +	early_memunmap(kho, size);
+> +#else
+> +	pr_warn("Passed KHO data, but CONFIG_KEXEC_HANDOVER not set. Ignoring.\n");
+> +#endif
+> +}
+
+Please axe the #ifdef in the .c file if at all possible, just like the
+others.
+
+>  static void __init parse_setup_data(void)
+>  {
+>  	struct setup_data *data;
+> @@ -479,6 +501,9 @@ static void __init parse_setup_data(void)
+>  		case SETUP_IMA:
+>  			add_early_ima_buffer(pa_data);
+>  			break;
+> +		case SETUP_KEXEC_KHO:
+> +			add_kho(pa_data, data_len);
+> +			break;
+>  		case SETUP_RNG_SEED:
+>  			data = early_memremap(pa_data, data_len);
+>  			add_bootloader_randomness(data->data, data->len);
+> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+> index f9bc444a3064d..9b9f4534086d2 100644
+> --- a/arch/x86/realmode/init.c
+> +++ b/arch/x86/realmode/init.c
+> @@ -65,6 +65,8 @@ void __init reserve_real_mode(void)
+>  	 * setup_arch().
+>  	 */
+>  	memblock_reserve(0, SZ_1M);
+> +
+> +	memblock_clear_kho_scratch(0, SZ_1M);
+
+Eek. Needs a comment, badly.
+
+Overall this doesn't look bad. It might be useful to break it up into a
+couple of patches, but it's not horrific as-is.
 
