@@ -4,61 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA411C369D5
-	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 22:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A786C369DC
+	for <kexec@archiver.kernel.org>; Mon, 28 Apr 2025 22:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tNZfmGdRize68QcdtycM+mNX0Tlh94VBcnUGvMPKVCM=; b=KEZQ47OJuSr6JKmtmyhDAB5BSe
-	tVkbx0BSVgddXVGenAIgeQ4D783sy/33Vld16I7eOjVKrqcBEhxp9km94u8nitXzvMg5TYWjvl5dL
-	h3zHMG4K+zwY0LoefVyeSQYFM/zoIfMy+Hy0wrcrkyf6xJWYdDzAjxFrhX1G4oYGULY9HzHL/UgD8
-	VBX1NVI3A1b0hCRoNWhp1tg/IdMsrrO26Fu3Yik7w293CRScI+3NTvXUEX96SwvPzbhIKcAohgi9+
-	crArg5eo95TztnOzTkH7MJk7pKOhLOxAwh8lwk3STcUZADJnNe30/9pGvyCTPxA0VsoQMdK1F+pUr
-	CLcspEpw==;
+	bh=CssV9zairUF18OLD6RWakOudqgJXTDau5RqQqfCpniw=; b=NAL49siUy+y0MeQ0Bj5TkOmZ7U
+	O8JwXB7DdpzCZJZPkMkfHKfGXNw61tHbaofjFS3E8BG63B4U6sXMDxrrWTvXt3ek8XjgLm0l44iJX
+	jJlyK3EHqAERireb6PWQzJJyMSu6WpUSSFsuQSm5QnVFlv1xVIPh7L8tgTQQ8JIKs1PprTTpBzKF5
+	4lee/oMUhANvxwkbJMhHLxN6ghgl6TuE8rxm+QUB47QylAz0LkAVDKwdmfE91rJdKJroJnealcMQo
+	BktEiQpYZ1pJ9guKbBO5DKJi0GLSBtw1YkOaxG1K+WvId+txg3NdH/8WPdk3OeZZhR9pbX0NJqOFH
+	VMF4/q4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9Wld-00000007hWX-0PaR;
-	Mon, 28 Apr 2025 22:16:01 +0000
-Received: from mgamail.intel.com ([192.198.163.12])
+	id 1u9WpM-00000007hwE-1zhk;
+	Mon, 28 Apr 2025 22:19:52 +0000
+Received: from mgamail.intel.com ([198.175.65.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9Wla-00000007hVQ-1gMM;
-	Mon, 28 Apr 2025 22:15:59 +0000
+	id 1u9WpJ-00000007huq-2WGz;
+	Mon, 28 Apr 2025 22:19:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745878558; x=1777414558;
+  t=1745878789; x=1777414789;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=AJbVV2b+hhV87wPBExgKh5cwk+z9R4N3LH3bns//T94=;
-  b=lGZQCaEf3tAX2436JZ91n1nfwmlywHecADBndYjqKkBysHfJhqp3NtgV
-   wX63GAAM5PHl2C8mLLBFy7lUp2RHR0UNyYPgr3csgFnrGed4IqtDJpkbi
-   6MKkH8sI8yaZHqd7zv6bfKP95QQ/pniyDlZmduEP8UyUBnuR46OzlylXV
-   HcuFbTmSOxVSSyWH3C6qPMdxXCPNrcOOpX8/wRjzoCcTRgVCbhw1YG/RL
-   uK0NUs5SGVDpoZaWxl7gCtwZarYIKMLeN36kF2Ir2aRkVN59NAizSX1FG
-   /ztHFOyNl+dmkgcWcsh/PltPHeZ0c9IrwlMziZvN8ZRG9MSFBBi5/Kdzp
+  bh=B+OAahSSvipgS9YGKI73K8Z4suU+4xf8hOo1D79WhHI=;
+  b=LyaiQCKSutGalSJSKRWvV3/V+8oW0+w97sk5xe2/Qkq4xASj8+GgdC4B
+   QSTXg2CrqAoZQ5tyPFxV2iWZfIIABcxnLEa/Z+dUaHP0T0EZuAJx2ITtN
+   oAPbmj+ZRwh/wshTM7U6Tab7u3p27p3c6A6R4bXZ11torokj2JEZBkCv5
+   WvkEqX7LDpMJGTAMxOqP+6uhDjzOMoP4EU4r3s68Veul7y428t0GWKTD5
+   gFmoVTMtrFRKqcxkbIdCwjwmymEWKoOJkRJvyGXFG3MwBYfKGISgzu8TZ
+   06sbSIQArwmBvcjH6wGDRTQdkGuUMmhT/LYwYPdRfqUemkOkrMYqpo3By
    w==;
-X-CSE-ConnectionGUID: Byk2Z6ABQ1C0SEz5ptCngw==
-X-CSE-MsgGUID: ldnHXoS0QAS1B2QWBKfJSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51303477"
+X-CSE-ConnectionGUID: cJP/Oa5VQCOEmAb//ky4Ew==
+X-CSE-MsgGUID: VuWM87BsSe2Qs0LxGhL+Gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47579129"
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="51303477"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:15:57 -0700
-X-CSE-ConnectionGUID: IJcYOcWXQGKSxuIqK0rleQ==
-X-CSE-MsgGUID: k1xN9f34SciF31fm7NEgKg==
+   d="scan'208";a="47579129"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:19:48 -0700
+X-CSE-ConnectionGUID: 6Z9gUdOPStqreZv11VO1qA==
+X-CSE-MsgGUID: ENdl0VpvQLumY0kFhj6Q4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="170871463"
+   d="scan'208";a="138440705"
 Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.222.199]) ([10.124.222.199])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:15:54 -0700
-Message-ID: <1ccfa9a9-f7fb-4481-ab6b-12866c1e1577@intel.com>
-Date: Mon, 28 Apr 2025 15:15:52 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:19:45 -0700
+Message-ID: <8a57310a-dc4c-4ba2-9bc3-a16bc88ee4c5@intel.com>
+Date: Mon, 28 Apr 2025 15:19:43 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 10/14] x86/setup: use memblock_reserve_kern for memory
- used by kernel
+Subject: Re: [PATCH v6 00/14] kexec: introduce Kexec HandOver (KHO)
 To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
@@ -73,7 +72,6 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
  thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 References: <20250411053745.1817356-1-changyuanl@google.com>
- <20250411053745.1817356-11-changyuanl@google.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -119,13 +117,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250411053745.1817356-11-changyuanl@google.com>
+In-Reply-To: <20250411053745.1817356-1-changyuanl@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_151558_455082_09F27EAC 
-X-CRM114-Status: UNSURE (   7.82  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250428_151949_687104_5C0415BC 
+X-CRM114-Status: GOOD (  10.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,17 +138,17 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 4/10/25 22:37, Changyuan Lyu wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> memblock_reserve() does not distinguish memory used by firmware from memory
-> used by kernel.
-> 
-> The distinction is nice to have for accounting of early memory allocations
-> and reservations, but it is essential for kexec handover (kho) to know how
-> much memory kernel consumes during boot.
-> 
-> Use memblock_reserve_kern() to reserve kernel memory, such as kernel image,
-> initrd and setup data.
+> When the actual kexec happens, the fdt is part of the image
+> set that we boot into. In addition, we keep "scratch regions" available
+> for kexec: physically contiguous memory regions that are guaranteed to
+> not have any memory that KHO would preserve.  The new kernel bootstraps
+> itself using the scratch regions and sets all handed over memory as in use.
+> When drivers initialize that support KHO, they introspect the fdt, restore
+> preserved memory regions, and retrieve their states stored in the preserved
+> memory.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+It would be nice to have some bit of this blurb in the per-arch
+changelogs. It's not clear what the scratch regions are and how they are
+being used in the early boot code. Even a pointer over to the
+Documentation/ would be appreciated.
 
