@@ -4,72 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15106C369CB
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 08:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 516EAC369DC
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 09:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=97/XTbBVa/VhLqAzcVmPdfXdxwWdIcyYHBaxl2j9mtY=; b=Ge0iwEx7uGGu0uibrlJCl319GA
-	Xv1U08eax+uDdgjHG6nZmLT3nbL7qYa45v2bdnwBu8rRC7eZkQADI56gInM0+V8BxI67w/Wx/s/xd
-	qG6XyJ0yK5k42eM562axV4MB/orjRKyD3n02rpWauEw3YgH6I1BMbRYMm+EKBCdHQfXybofMIBjUp
-	iY0fkiYuXdjY/GkdSkvzXNe683OPpmMvW0jRvL32z6EXPomeyaeguFsUsSiuRIo4douFm3nYkMgub
-	XNL+xoViNjtvkl13C87Ncgae3Ad1TO5NmUdcWDV0jXu60gKANDeeJXmOxc8cS5pt6HtRWexumfK/S
-	OC/RwDsw==;
+	bh=OlWJ5SOttcQupos3aVHbzKCM3KJZPFw+aL6yodCqXTg=; b=mxRyF6F7wZYF5DekvwmVyBOEdT
+	tFUgRCTBaEqhYKuGCsM04GcvFqY72DlDjwylDOSULj3KFkY/AoUZv7BFU05ulqcLC9pB8FwBVcTPI
+	HvHe9XczS1hP8HvMoh9EVwH1U4N6YjXUrwvZKrgs6pL1Aj6FyAxJG/8T5e9mzQRAohyPRpelo1hff
+	pof8vMtSw5VgtsQDvvHwo/ycf4sNPpUokW26p5AXGL++lYSGLjHJcxuFlqGmf6yOuX0Ma1GtAxadU
+	g+YbsrfG7XbyQQjlWIX9DR9fF9vTmusLuQ332rv8iKyBsE3A048/cUAy56LLBesTj3yv8/6fG6TJJ
+	sQt9yEEw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9g1o-00000008rty-2jPp;
-	Tue, 29 Apr 2025 08:09:20 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1u9hVA-00000009BRU-3L97;
+	Tue, 29 Apr 2025 09:43:44 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9fzI-00000008rPN-4C25;
-	Tue, 29 Apr 2025 08:06:46 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id C797F5C4D8E;
-	Tue, 29 Apr 2025 08:04:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D988C4CEE3;
-	Tue, 29 Apr 2025 08:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745914003;
-	bh=T+OFZKl+3KvYwlqOnSAJknFTlFAGkXBm4R7faZdxC7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g4MP1qWhXsNl/uB3rPYca9oL1jVE0ekWEV6gfciWYbB1+dqLQ9mMLhKCeQ4kEML3r
-	 bJyb0LeyWTmqcsUmRVfFDi6VMDW5WBeVc88je0PluGWeRS97AYRHNXEXRaWe2ZBNUR
-	 h2P24d0Nb3ya3adWViA9y0dL9GADK0WkUOludE9eaO59e5mCjZo+20Kkb33rkTCZ3T
-	 joUB021ZBtmCwCwJ8IZUTlrvA217Wsdkv6riqQodhqkESfxv93/qyLqVSaXCE995Qd
-	 adxuArH/4q+RMu7lWE/6XP1SpcSbdgr9HJnDqYvJZCKjQED2Lf6yl72MdWWvLKHiTL
-	 2/8qg6TYlg6Ig==
-Date: Tue, 29 Apr 2025 11:06:29 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
-	catalin.marinas@arm.com, corbet@lwn.net,
-	dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
-	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
-	hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com,
-	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de,
-	robh@kernel.org, rostedt@goodmis.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v6 11/14] x86: add KHO support
-Message-ID: <aBCIhQjKKyaAuvC9@kernel.org>
-References: <20250411053745.1817356-1-changyuanl@google.com>
- <20250411053745.1817356-12-changyuanl@google.com>
- <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
+	id 1u9hTW-00000009BHw-00xI
+	for kexec@lists.infradead.org;
+	Tue, 29 Apr 2025 09:42:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745919720;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OlWJ5SOttcQupos3aVHbzKCM3KJZPFw+aL6yodCqXTg=;
+	b=XIsyv9nvX3lP+aunZDGxWbSXj+ZBOUcnUq9V16qDLa3MILh9wfIaoC8xjIwHa2/51DwAv6
+	0JsX5wqhoLefyZuh3SFfZLLQp6ejbJiSCNO6GZjzBFOADxqEAeT0ehIr7YBpJcYwG5i2ZX
+	TYjyJ0+lT4p0IkbRVX0prGJHU2C0guI=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-10-EbusawQiN6CHr_a5KqlcPQ-1; Tue, 29 Apr 2025 05:40:37 -0400
+X-MC-Unique: EbusawQiN6CHr_a5KqlcPQ-1
+X-Mimecast-MFC-AGG-ID: EbusawQiN6CHr_a5KqlcPQ_1745919636
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b00ce246e38so6063975a12.2
+        for <kexec@lists.infradead.org>; Tue, 29 Apr 2025 02:40:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745919636; x=1746524436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OlWJ5SOttcQupos3aVHbzKCM3KJZPFw+aL6yodCqXTg=;
+        b=Epi4yKlrF4ps0R1MgqzqH0Z2FGoAwHfkDBtBG4gMkpU13AbqHayLa9BQTnTAAOD9hE
+         rk+UoPfPvLYQDSUwI/4sF0vegbvsCZRMdBiEezToDU11V/3bwQ6DktYDERvP1uPEZd1G
+         r+TWGM1zA7OhNGWmD38CnZPbxaLaVO6Cs2X8GSbPlEEFLikDd4t2RVvJyewXq+haZFJH
+         CRg8y0b3n8rT0EkilxuuE+LzAj1gJoXDdAuS8TDzoBhoJXgcbxuEcoVXa8bumkcQluov
+         v3SdXNx9g5ZjPxOz4chzLaCykkqaD+/2opY2Y/4ySeTnVHR3ETd3YZWSVB0y12AV+/Aa
+         gfng==
+X-Gm-Message-State: AOJu0Yx/944ExKoIsASIfG8bYQrFOZKjGKIr29a6wj4Wa7rWkp0oT9CA
+	3ETfoELU9+E5b3ombQvc3XsBpejZFrWR6/J/Hujprl9Hhf+KrKz+GEfjux2NSWJT4ZlSY7WpChU
+	UysFuhfa1UtU0rP/ODud6kulnBV0WiDQZimwI1AAaxDAAhyRMFebuGw145g==
+X-Gm-Gg: ASbGnctD/Rpb4Nxforl61URVgf+NUQzAVC69JF/ivTgQ+zOR+S7xqjVIHLBJ9JYFRxm
+	GcYH5UdD5HvcO1sqF5p0S5Ks5DMV2kdVUB2RBbW/3HKkvDcg1mCHVVyCxtDjAKrqsoOOb35tiid
+	neWjPXpSfdAMeLK5fIAxPFpYhIuxOgkcnnflQEUlQowT0hoqHv7zWai0wZITinKKXkfazbgTB1+
+	BjXHtBoHwexd++d9pdisnfPO2Aznwf+aJtRbhWtr7Na3IfJWJuXao1QsOMYDqdt9z7tQ3a8cKjU
+	BOI=
+X-Received: by 2002:a05:6a20:d48b:b0:1f5:8678:183d with SMTP id adf61e73a8af0-2046a4664c2mr16009533637.14.1745919636490;
+        Tue, 29 Apr 2025 02:40:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF7gEjku+ZpVt/qDtNHhW6HIJZl8Z51nAZpzs1vZoq3o460vaQWQG9eqlKMDsZkZdnRqTXCEg==
+X-Received: by 2002:a05:6a20:d48b:b0:1f5:8678:183d with SMTP id adf61e73a8af0-2046a4664c2mr16009502637.14.1745919636084;
+        Tue, 29 Apr 2025 02:40:36 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca38fsm9778532b3a.171.2025.04.29.02.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:40:35 -0700 (PDT)
+Date: Tue, 29 Apr 2025 17:40:21 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v8 6/7] x86/crash: pass dm crypt keys to kdump kernel
+Message-ID: <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+References: <20250207080818.129165-1-coxu@redhat.com>
+ <20250207080818.129165-7-coxu@redhat.com>
+ <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: CjGQRV04p-xpoASIGP-ERXDaHiFdN5EqVQTQiGwVzdg_1745919636
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250429_010645_136956_794CBF6A 
-X-CRM114-Status: GOOD (  24.01  )
+X-CRM114-CacheID: sfid-20250429_024202_114845_ED1FDBFB 
+X-CRM114-Status: GOOD (  18.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,67 +115,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Apr 28, 2025 at 03:05:55PM -0700, Dave Hansen wrote:
-> On 4/10/25 22:37, Changyuan Lyu wrote:
-> > From: Alexander Graf <graf@amazon.com>
-> > 
-> > +/*
-> > + * If KHO is active, only process its scratch areas to ensure we are not
-> > + * stepping onto preserved memory.
-> > + */
-> 
-> Same thing on the imperative voice here.
-> 
-> I'm also not fully understanding the comment. Do these "scratch" regions
-> basically represent all the memory that's not being handed over? It's
-> not obvious.
+On Wed, Apr 23, 2025 at 10:59:06PM +0200, Arnaud Lefebvre wrote:
+>>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+>>index 68530fad05f7..5604a5109858 100644
+>>--- a/arch/x86/kernel/kexec-bzimage64.c
+>>+++ b/arch/x86/kernel/kexec-bzimage64.c
+>>@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+>>	if (image->type == KEXEC_TYPE_CRASH) {
+>>		len = sprintf(cmdline_ptr,
+>>			"elfcorehdr=0x%lx ", image->elf_load_addr);
+>>+
+>>+		if (image->dm_crypt_keys_addr != 0)
+>>+			len += sprintf(cmdline_ptr + len,
+>>+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
 
-Scratch memory represents areas created at the boot of the first kernel and
-it's known that scratch areas won't contain any memory that's being handed
-over.
- 
-> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > index 57120f0749cc3..c314212a5ecd5 100644
-> > --- a/arch/x86/kernel/e820.c
-> > +++ b/arch/x86/kernel/e820.c
-> > @@ -1300,6 +1300,24 @@ void __init e820__memblock_setup(void)
-> >  		memblock_add(entry->addr, entry->size);
-> >  	}
-> >  
-> > +	/*
-> > +	 * At this point with KHO we only allocate from scratch memory.
-> > +	 * At the same time, we configure memblock to only allow
-> > +	 * allocations from memory below ISA_END_ADDRESS which is not
-> > +	 * a natural scratch region, because Linux ignores memory below
-> > +	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
-> > +	 * allocations, we must allocate real-mode trapoline below
-> 
-> 						trampoline ^
-> 
-> > +	 * ISA_END_ADDRESS.
-> > +	 *
-> > +	 * To make sure that we can actually perform allocations during
-> > +	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
-> > +	 * so we can allocate from there in a scratch-only world.
-> > +	 *
-> > +	 * After real mode trampoline is allocated, we clear scratch
-> > +	 * marking from the memory below ISA_END_ADDRESS
-> > +	 */
-> > +	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
-> 
-> This isn't making a whole ton of sense to me.
-> 
-> Is this *only* to facilitate possible users that need <ISA_END_ADDRESS
-> allocations? If so, please say that.
-> 
-> I _think_ this is trying to say that KHO kernels are special and are
-> trying to only allocate from scratch areas. But <ISA_END_ADDRESS
-> allocations are both necessary and not marked by KHO _as_ a scratch area
-> which causes a problem.
+sprintf will return the length of dmcryptkey=xxx which will be added to
+len.
 
-Yes :)
+>>	}
+>>	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+>>	cmdline_len += len;
+
+Then cmdline_len will included the new len.
+
+>
+>You are adding another kernel parameter but I believe without taking its
+>length into account. See the MAX_ELFCOREHDR_STR_LEN constant which is added to the
+>params_cmdline_sz variable for the elfcorehdr= parameter.
+
+Thanks for raising the concern! I believe this issue has already been
+took care of. Please check the above two inline comments:)
+
+
+>
+>This will (at least during my tests) truncate the cmdline given to the crash kernel because
+>the next section (efi_map_offset) will have an offset starting inside the cmdline section
+>and it might overwrite the end of it:
+>
+>kexec-bzimage64.c:480:
+>params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>			MAX_ELFCOREHDR_STR_LEN; <<< Should have + 31 here for "dmcryptkeys=0x<ptr> "
+>params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+>kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+>			sizeof(struct setup_data) +
+>			sizeof(struct efi_setup_data) +
+>			sizeof(struct setup_data) +
+>			RNG_SEED_LENGTH;
+>
+>And I believe the buffer might be too small.
+>
+>Also, there is another check a few lines above that needs to take the size into account:
+>
+>/*
+> * In case of crash dump, we will append elfcorehdr=<addr> to
+> * command line. Make sure it does not overflow
+> */
+>if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+>	pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+>	return ERR_PTR(-EINVAL);
+>}
+>
 
 -- 
-Sincerely yours,
-Mike.
+Best regards,
+Coiby
+
 
