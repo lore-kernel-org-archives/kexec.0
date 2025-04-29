@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C718DC3ABA8
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 04:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31487C3ABA9
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 04:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=; b=kKcm2RWYfiGvDeu3lQU17AZ3Sz
-	43YcWqvBXC/wXfEA+SPQ3swn88oxx6FF9h3Vkkma6UZSEqTw/YZ59o4zauc/DVbDO8OLKxkpbWYrR
-	pS4ga3XixA5h90UJgNW56aK2PTPoZNiK8oGxsjU67MI3TiwZ0hfuw5ivhiEIi8o8xxa4N/EGWtjtO
-	3KO1YcXM8aJU69+gK0cfn+uhF/4elLwUKqIG41fH1y9+N/c4KJbIoRdBm3HrPmn6X8PhmOFwlfucZ
-	jy3YN7yBnavfzgF8bmnw3DIni4ny+veqSWvPWZHrhM0oJBf+1T/7TOkPiOcAmmiyEneF8Ovg8kuQu
-	6jkhLcNA==;
+	bh=bvfTDw7WFGQFZCuai1UFLFcXSBfdhaz2G1qzNhhRZTE=; b=l6/Vg/W3wXtnxuUzXVhGkRMyKG
+	kSeYmUdhEMJ31rTB2ba25evj8Fs6vbfS3uCAB5XghXfpEXrp9sBsCKn4G6TCihzRcgB+1MUm+9AHO
+	N3GbZuTK5+81Jj/xCg+teBQICC73pK2hSf/UW+g/X3Nr/VrHR3hbfOpYqwAk5ObhuQijsaea3bZ/T
+	THhmiBZXYkMpSM0CAqAtSNHHCOuJcUhT6Dh4Murpoe9mwe5DO5NEKDcNKCUMZa2dxYl1EgSDMpajT
+	hVsJAznhUUBmtYnKJcMjasnr5NZJ+KqcJyjL0ELv09uVm2oWH4galQgxxq61420mVpsDSxsROdBjx
+	LOyka8RA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9cYf-00000008IgL-1lrU;
+	id 1u9cYf-00000008Ih1-3lug;
 	Tue, 29 Apr 2025 04:27:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9cN4-00000008HZU-2DWp
+	id 1u9cN4-00000008HZV-2YhA
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 04:15:03 +0000
+	Tue, 29 Apr 2025 04:15:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1745900101;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=;
-	b=Ip1u/UKUPZLrhy2fYrxGvomAZJ8vxvbYY/FzW1ijtkijQ2ANsVmx9v6A/eHZyhFRFTpWFM
-	N4yHjQ6S9tQrG2vhzC1HtZTUjfdjP2XEk32J7+GAqMOtzSwbxHlDfZQFzmNA60NI+eDNQI
-	ZX2zdlur3PaJWqXrq8i/RmnWZO3cEvU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=bvfTDw7WFGQFZCuai1UFLFcXSBfdhaz2G1qzNhhRZTE=;
+	b=RFmQdRzt+mNkWfSvJcHHeDWNggLGHx2vfN4AZOB/RA5UEe6QJp9a5HuDdMMJYFe22gqWYP
+	aYUPrrqcNygN3fvSpYGX0LjVh/mKecsKH8T5vvQdhai1zM7Iht1ZA7nxaTpRYE9QQiXybB
+	nobD5/f9xJCNKbzrdIgGjpou2VDguAk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-70-sKX23-etOymv-b4HYtgyAA-1; Tue,
- 29 Apr 2025 00:13:23 -0400
-X-MC-Unique: sKX23-etOymv-b4HYtgyAA-1
-X-Mimecast-MFC-AGG-ID: sKX23-etOymv-b4HYtgyAA_1745900000
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-609-SAR_GK3BPfeZARmAM19J-g-1; Tue,
+ 29 Apr 2025 00:12:55 -0400
+X-MC-Unique: SAR_GK3BPfeZARmAM19J-g-1
+X-Mimecast-MFC-AGG-ID: SAR_GK3BPfeZARmAM19J-g_1745899973
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25B87195608C;
-	Tue, 29 Apr 2025 04:13:20 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A30A41800360;
+	Tue, 29 Apr 2025 04:12:52 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.64])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 181EE1800352;
-	Tue, 29 Apr 2025 04:13:05 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 70C3D180045B;
+	Tue, 29 Apr 2025 04:12:41 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
-To: linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -78,11 +78,10 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Dave Young <dyoung@redhat.com>,
 	Eric Biederman <ebiederm@xmission.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org,
 	bpf@vger.kernel.org
-Subject: [RFCv2 3/7] lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
-Date: Tue, 29 Apr 2025 12:12:10 +0800
-Message-ID: <20250429041214.13291-4-piliu@redhat.com>
+Subject: [RFCv2 1/7] kexec_file: Make kexec_image_load_default global visible
+Date: Tue, 29 Apr 2025 12:12:08 +0800
+Message-ID: <20250429041214.13291-2-piliu@redhat.com>
 In-Reply-To: <20250429041214.13291-1-piliu@redhat.com>
 References: <20250429041214.13291-1-piliu@redhat.com>
 MIME-Version: 1.0
@@ -90,8 +89,8 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_211502_680848_A60AF9F3 
-X-CRM114-Status: GOOD (  12.50  )
+X-CRM114-CacheID: sfid-20250428_211502_779041_19A05991 
+X-CRM114-Status: GOOD (  11.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,68 +105,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The KEXE PE format parser needs the kernel built-in decompressor to
-decompress the kernel image. So moving the decompressor out of __init
-sections.
+In latter patches, PE format parser will extract the linux kernel inside
+and try its real format parser. So making kexec_image_load_default
+global.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-To: linux-kernel@vger.kernel.org
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+To: kexec@lists.infradead.org
 ---
- include/linux/decompress/mm.h | 7 +++++++
- lib/decompress.c              | 6 +++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ include/linux/kexec.h | 1 +
+ kernel/kexec_file.c   | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
-index ac862422df158..e8948260e2bbe 100644
---- a/include/linux/decompress/mm.h
-+++ b/include/linux/decompress/mm.h
-@@ -92,7 +92,14 @@ MALLOC_VISIBLE void free(void *where)
- #define large_malloc(a) vmalloc(a)
- #define large_free(a) vfree(a)
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a5..26398b269ac29 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -148,6 +148,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
  
-+#ifdef CONFIG_KEXEC_PE_IMAGE
-+#define INIT
-+#define INITCONST
-+#else
- #define INIT __init
-+#define INITCONST __initconst
-+#endif
-+
- #define STATIC
+ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len);
++void *kexec_image_load_default(struct kimage *image);
+ int kexec_image_post_load_cleanup_default(struct kimage *image);
  
- #include <linux/init.h>
-diff --git a/lib/decompress.c b/lib/decompress.c
-index ab3fc90ffc646..3d5b6304bb0f1 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -6,7 +6,7 @@
-  */
+ /*
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b5..6a72bdfab5f5c 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -65,7 +65,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 	return ret;
+ }
  
- #include <linux/decompress/generic.h>
--
-+#include <linux/decompress/mm.h>
- #include <linux/decompress/bunzip2.h>
- #include <linux/decompress/unlzma.h>
- #include <linux/decompress/unxz.h>
-@@ -48,7 +48,7 @@ struct compress_format {
- 	decompress_fn decompressor;
- };
- 
--static const struct compress_format compressed_formats[] __initconst = {
-+static const struct compress_format compressed_formats[] INITCONST = {
- 	{ {0x1f, 0x8b}, "gzip", gunzip },
- 	{ {0x1f, 0x9e}, "gzip", gunzip },
- 	{ {0x42, 0x5a}, "bzip2", bunzip2 },
-@@ -60,7 +60,7 @@ static const struct compress_format compressed_formats[] __initconst = {
- 	{ {0, 0}, NULL, NULL }
- };
- 
--decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
-+decompress_fn INIT decompress_method(const unsigned char *inbuf, long len,
- 				const char **name)
+-static void *kexec_image_load_default(struct kimage *image)
++void *kexec_image_load_default(struct kimage *image)
  {
- 	const struct compress_format *cf;
+ 	if (!image->fops || !image->fops->load)
+ 		return ERR_PTR(-ENOEXEC);
 -- 
 2.49.0
 
