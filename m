@@ -4,101 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 863ABC369DC
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 10:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9EB93C3ABAA
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 11:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5ya1y/PIPsUcPJdbK+tBdJ/PntQDR0r5QpbF6nQFyMU=; b=eBR/L64o2SgE1vZ3X6mtRNpOy/
-	cQZj30KPPZXIF+OHh3zB0j/XpxEFIRg6+EShfkGcuOXOkPgxQUcpt20kGKNHTlVuFRB6smxMH3g5x
-	q9I/5+HJRB1/+ErfEZdRBOnBZ1r3Sf2iGITnf1CQ2TMDPGDRCswCoJosscFe1aXvsmrVvANjaUSWt
-	14Alzg/dLgcogAQQT3eqIGnhxRAv8i26TLWxYgA0dhHi+KvoQlHXhyuXkqb5TEqVO/7vFsGTu2eXx
-	Y4/j5GoX5E+uNMi3lC125Twi7UMTu+jXxLy0nh9a/hSYEy6dTgm97ni8h2Il9u65FbQY52YN0Iv3m
-	HBkuepxQ==;
+	bh=A374Ia2eihIBArGg3av+KovsTBYAujbuPpUovFjTXlk=; b=O6VSqrxpJIrelzBTy6BvJ3GaJ9
+	K9dTmJWeAzQtp3DYwGXEkyENoygHgKTVXQ2jgZhV0bmyFIGLqUhcCE8AF0cKHIcHEFWg1v+7zO/+d
+	k4wrTgKqqSWMIgS6eSLj2FqRGGYRN+ihLHuMv3gRIjDY3TLL7DGRcV+3u5xW9cZVcy/7Cag2wNv6b
+	g8eaAezIHJdYWBC/O3VjdnkJfA6jDE1LM9XgTszl/EiWaU89PaXFmhQembP4mT3y9AimgMAXUthF1
+	MNf2Ygo5QuECsfMNx3tMUO8hYwQpnBZ2hojIvhIxjRsA1CC2ruJPfUsKJSt/BLiiNqRrjy3aOLFqM
+	oU7HNlvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9iTb-00000009LsR-3fju;
-	Tue, 29 Apr 2025 10:46:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1u9jLH-00000009VnJ-2onu;
+	Tue, 29 Apr 2025 11:41:39 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9hNX-00000009ASe-0ek1
+	id 1u9jJ6-00000009Uu0-24D5
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 09:35:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745919348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5ya1y/PIPsUcPJdbK+tBdJ/PntQDR0r5QpbF6nQFyMU=;
-	b=Amj03N3C4gm8z7mKzVq7VgtrW7Dc8UsSERm5xrdKvmCyl0qu9lRjd6LlwBSQm/eSpwXNQ9
-	RoBoIO4x0DymxU3bY9z0zDWCvMyn6SYEq61hUYxSFocwJxh1gKC/vBVAdx0DxYfDKpdSYf
-	McnxdQXdwyaRY6ZNW0DTaWc9qO+pM2A=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-438-U1zS0ODMOJS0aa6lRIZYgg-1; Tue, 29 Apr 2025 05:35:47 -0400
-X-MC-Unique: U1zS0ODMOJS0aa6lRIZYgg-1
-X-Mimecast-MFC-AGG-ID: U1zS0ODMOJS0aa6lRIZYgg_1745919346
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-739764217ecso5030727b3a.0
-        for <kexec@lists.infradead.org>; Tue, 29 Apr 2025 02:35:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745919346; x=1746524146;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ya1y/PIPsUcPJdbK+tBdJ/PntQDR0r5QpbF6nQFyMU=;
-        b=WIAPnc/xZgJq+0LXXFsy402qFakdLXYc46yCo8i+SsGHpz7EvBMhsuvBI/bXDYwG7k
-         VpXI76RFON5KvkQSqFsNutKEy0eJyh10EgK5jwmGGuV9jbLLQQ0fH52W5oerFtIYOMbR
-         6qyPdS4ssuRoZhbMfhurWnUaNVVAaeSb0Eabf7CDUV+FyA1H0VP3nAFtmoVDxeSKtBBB
-         5rTtSd84FkUqzzDCSUuADVshpyBALUZ+MEuNHLctXSXJHFvXzrrcNuZLOimM2eDknR9R
-         p6uXHFLKMZTMH2diBKYBqnaAPjHchI5yyy/a3Tg6sJ6pU9hIDzz6Y2s/lZhq6IwbIRhX
-         KjBQ==
-X-Gm-Message-State: AOJu0YyZo01IM1NFfX9H9oY2vegqCjP2duQEFRhQePgTP7u+hHW31SRi
-	KrysC9SRETkxLQbtQlPDrHwy9UO+JQ4YaZGJQnBTUf9tg1Yyfkfzqj1dPE9QgN8dugl5tn8RUyH
-	p5I7ZaL4RtNxjsngtZBeTodTQyIzknScxqB7X3jrzc1ayESglGVFFHdhogQ==
-X-Gm-Gg: ASbGncvegf86g3Roj1yZ/kvqj29zd2jjK3T06+rHuYG47VUl4iC/wiUajYgoBH849Bc
-	k9sU81UcGMCqgMTrh3CrjamL6Ztew7ioQJkZuugxn1LZQ1W8mkypfIGZR42O1iCOdEiwRBQmMwp
-	7dH6rT2ZVtdW8k53mjBirnFQLKfnWItI+2jzfBUqeaKqNGCdcZdJ49XdrAUKJYa+M8njQwXlrJH
-	2qshNqqZejyFilWHaV8wUefCEQiiLUdgOfyr6dEBfVajz0VXVmZ7i1UgIAsA4Mxu7vAJp9IXC1g
-	SLQ=
-X-Received: by 2002:a05:6a00:39a2:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-74028a64220mr3881929b3a.8.1745919346341;
-        Tue, 29 Apr 2025 02:35:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcRRRYCT0Ey5PUAul1cem5LsfGawyLhW7VHOQTRyfJoa6t9dY828zqrHeMujEDVJTxyYQbsw==
-X-Received: by 2002:a05:6a00:39a2:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-74028a64220mr3881906b3a.8.1745919345989;
-        Tue, 29 Apr 2025 02:35:45 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a99a9esm9731097b3a.140.2025.04.29.02.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 02:35:45 -0700 (PDT)
-Date: Tue, 29 Apr 2025 17:34:57 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v8 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <mrvtghwiry77qwiakyjft3mt2po5rdntjrl7btlkmgnvgjrlru@lnkoytr3ozzh>
-References: <20250207080818.129165-1-coxu@redhat.com>
- <20250207080818.129165-3-coxu@redhat.com>
- <q3l724gslm3kzljjdo42l5murdw4pclpnmmtzu5jvqv4gwyxma@ek4jucbut32i>
+	Tue, 29 Apr 2025 11:39:25 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T4EMol006317;
+	Tue, 29 Apr 2025 11:39:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=A374Ia
+	2eihIBArGg3av+KovsTBYAujbuPpUovFjTXlk=; b=LadRgvewpxqiXvDxJIhdRm
+	t+ewj2K8QW0XQw2p4tY7vLpjfMzQA6fgWRkd83uVPp9XVFO+RvfwvuFEXkTLlIiR
+	FlpHkfoh/ORmDXg5XNj4BDMcvPYb24f5AWMpta8+/x17602mdxb44P7NjPFmPzQT
+	Hv2vU3Tm0xoNWVYu9AmXKGRqqomcFFQcqTPLBCLjCqcniiYbKK1hpxwGLu5TZ4K2
+	HSETToHLc+FQbMN0fwwbLPSHG++OUjerNYV+Hx9X/CUy+gTjswbsp6JjUaTVCi6j
+	Ox0vMIui9lvGlAncmWwWlAIeSgwDmP7Mj5X4fZSQz2BIBgh7GXc2OXJfqMbeOURw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ahs9as1q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 11:39:20 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T8pXkn016119;
+	Tue, 29 Apr 2025 11:39:19 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70b3k7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 11:39:19 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53TBdIVN66257290
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 11:39:18 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7E22F58054;
+	Tue, 29 Apr 2025 11:39:18 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA87D58045;
+	Tue, 29 Apr 2025 11:39:17 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.23.164])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Apr 2025 11:39:17 +0000 (GMT)
+Message-ID: <80766b04cafd24a1d7171b8da03c822d86272f3c.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Coiby Xu <coxu@redhat.com>, Baoquan He <bhe@redhat.com>
+Cc: chenste@linux.microsoft.com, RuiRui Yang <ruyang@redhat.com>,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Date: Tue, 29 Apr 2025 07:39:17 -0400
+In-Reply-To: <f75tvrcc6xhfwz5rbwh2ps34wt2odz4wq32vez7dsct732x4ik@sv6nyjqr2ykr>
+References: <CALu+AoQrKunS5RjikkcZD7=J9vwhv1_Dw96fmO0EtyKi0MHHJg@mail.gmail.com>
+	 <d14c72bbb377c6f8f0efdbf6d725c553b3ad741c.camel@linux.ibm.com>
+	 <h3bjnvtded2hgbhya6ugb62mnlmkjpmifa6w6wwutfd3jq326r@lzpoun5pksev>
+	 <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
+	 <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
+	 <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
+	 <02563b1e8b0000bedf94ded447a8372f21d4304a.camel@linux.ibm.com>
+	 <Z/Xero1B0OazLcHL@MiWiFi-R3L-srv>
+	 <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
+	 <Z/8ijFhIf1J6vbWM@MiWiFi-R3L-srv>
+	 <f75tvrcc6xhfwz5rbwh2ps34wt2odz4wq32vez7dsct732x4ik@sv6nyjqr2ykr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-In-Reply-To: <q3l724gslm3kzljjdo42l5murdw4pclpnmmtzu5jvqv4gwyxma@ek4jucbut32i>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Qeu8WxtSR3dA4Kb1AeFhLN7hX5TScLfUSuBlzoJIqqY_1745919346
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=LuKSymdc c=1 sm=1 tr=0 ts=6810ba68 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=IEkr5_qL8TULfPe6LFIA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: l8EajplDRmdXjHixE9JkogN50rW0u7rP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA4NiBTYWx0ZWRfX3Fj/ea1s26a5 I78qyPkSEDoGEkGs0f6f68WWhuq1zy/OY48w5mh3Z0MKR2cSAlUVo8M88oD3o5vn1jOn4wI2KTZ h8HsvSj2mi+/W56ofs8jEAXIUfbDonBeELGtp7+NzFXUPO/Bj5+hpj/3Yxd5TJknghkDPLmmjjT
+ 53Z1lOu6wQvFY5wxI066qW5p/+GwwIatN9Gp5FGpNgHF3KNUTzgLoZvvDITqrS1EFuZ3P8jnTvn jzdUgJotBzhWQNI06VtpVqa2Xsmv/KnlTuo1/NW6Lqv9RPz/5EGi9SuFboRWZ7bTwxBU3n69xti T3iAA2oLjJXtnmMQo1qNjEwsd8QMSS2BQeEq8AKzI5UpzD96weR8l6Qk+JsbRGo6f4GQBrhPsyr
+ FiWfFWuFLb424f0QifMYsTD60oXrkikWiLZrDtwenwzUYAQ62yuiV/4w1hTPHXm/nbHOwNqV
+X-Proofpoint-GUID: l8EajplDRmdXjHixE9JkogN50rW0u7rP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290086
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250429_023551_394046_D0B05781 
-X-CRM114-Status: GOOD (  10.84  )
+X-CRM114-CacheID: sfid-20250429_043924_542973_A2FC7855 
+X-CRM114-Status: GOOD (  37.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,48 +121,133 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 23, 2025 at 10:44:22PM +0200, Arnaud Lefebvre wrote:
->On Fri, Feb 07, 2025 at 04:08:10PM +0800, Coiby Xu wrote:
->>+config CRASH_DM_CRYPT
->>+	bool "Support saving crash dump to dm-crypt encrypted volume"
->>+	depends on KEXEC_FILE
->>+	depends on CRASH_DUMP
->>+	depends on DM_CRYPT
->>+	help
->>+	  With this option enabled, user space can intereact with
->>+	  /sys/kernel/config/crash_dm_crypt_keys to make the dm crypt keys
->>+	  persistent for the dump-capture kernel.
->>+
->
->Maybe also add CONFIG_CONFIGFS_FS option? Without it this series code doesn't compile:
+On Mon, 2025-04-28 at 11:48 +0800, Coiby Xu wrote:
+> On Wed, Apr 16, 2025 at 11:22:52AM +0800, Baoquan He wrote:
+> > On 04/09/25 at 11:40am, Mimi Zohar wrote:
+> > > On Wed, 2025-04-09 at 10:42 +0800, Baoquan He wrote:
+> > ......snip..
+> > > > Thanks for confirming. I will consider how to fix it accordingly. M=
+aybe
+> > > > after Steven's patches are merged. That would be great if the buffe=
+r
+> > > > allocating and storing can be skiped for kdump in Steven's patch. W=
+hile
+> > > > I am worried that could disrupt the progress of Steven's patches.
+> > >=20
+> > > Agreed, let's get Steven's patch set upstreamed and then make the kdu=
+mp
+> > > exceptions.
+> > >=20
+> > > - "ima: kexec: move IMA log copy from kexec load to execute" looks li=
+ke it
+> > > isn't
+> > > copying the IMA measurement list records (kexec_post_load), but the m=
+emory for
+> > > the IMA measurement list is being allocated (ima_alloc_kexec_file_buf=
+).
+> > >=20
+> > > - Do you really want to totally disable IMA for kdump or would disabl=
+ing IMA-
+> > > measurement be sufficient?=C2=A0 Remember there's already an option t=
+o disable IMA-
+> > > appraisal.=C2=A0 Disabling just IMA-measurement would allow IMA-appra=
+isal to
+> > > continue
+> > > to work.=C2=A0 Meaning based on policy the integrity of files - execu=
+tables, kernel
+> > > image, etc - could still be verified.
+> > >=20
+> > > Without IMA-measurement:
+> > > - No adding records to the IMA measurement list
+> > > - No IMA measurement list pseudo securityfs files
+> > > - No extending the TPM
+> > >=20
+> > > With IMA-appraisal:
+> > > - Integrity verification of files based on keys, keyrings
+> > > - Loading keys
+>=20
+> Thanks for listing the impacts of disabling IMA measurement or
+> appraisal!=20
+>=20
+> kdump builds and loads its own initramfs as a cpio archive. After a
+> kernel crashes, the loaded initramfs will save the crashed kernel's
+> memory (vmcore) to specified location and then it will reboot the system
+> immediately. Since kdump merely copy files from existing fs into its
+> initramfs, I think at least majority of users don't need IMA for kdump.
 
-I'll add the dependency on CONFIG_CONFIGFS_FS, thanks for your
-suggestion!
+That's fine.
 
->
->Last build lines:
->
->   GEN     modules.builtin
->   MODPOST vmlinux.symvers
->   UPD     include/generated/utsversion.h
->   CC      init/version-timestamp.o
->   KSYMS   .tmp_vmlinux0.kallsyms.S
->   AS      .tmp_vmlinux0.kallsyms.o
->   LD      .tmp_vmlinux1
-> ld: vmlinux.o: in function `config_keys_make_item':
-> /usr/src/linux/kernel/crash_dump_dm_crypt.c:250:(.text+0x228028): undefined reference to `config_item_init_type_name'
-> ld: vmlinux.o: in function `configfs_dmcrypt_keys_init':
-> /usr/src/linux/kernel/crash_dump_dm_crypt.c:442:(.init.text+0x71e5c): undefined reference to `config_group_init'
-> ld: /usr/src/linux/kernel/crash_dump_dm_crypt.c:444:(.init.text+0x71e82): undefined reference to `configfs_register_subsystem'
-> ld: /usr/src/linux/kernel/crash_dump_dm_crypt.c:454:(.init.text+0x71ef7): undefined reference to `configfs_unregister_subsystem'
-> make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
-> make[1]: *** [/usr/src/linux/Makefile:1226: vmlinux] Error 2
-> make: *** [Makefile:251: __sub-make] Error 2
+> In fact, currently IMA-appraisal doesn't work for kdump because cpio
+> doesn't support xattr.
 
+Although CPIO doesn't support xattrs, tmpfs supports xattrs.  I'm aware tha=
+t some
+store the security xattr information in a file and write it out as xattrs.
 
+> As for the issue of not properly updating the
+> security xattrs, I think in most of cases disabling IMA-appraisal in
+> kdump won't cause the trouble. If the vmcore is saved to a remote fs, the
+> local fs won't even be touched. If the vmcore is saved to local fs and
+> the appraisal rules cover the saved vmcore and the created logs files,
+> we only need to update the xattr file of three files. So from the
+> perspective of kdump, it's good to disable IMA for kdump to save memory.
 
--- 
-Best regards,
-Coiby
+Remember my original concerns weren't about disabling IMA for kdump, but ab=
+out not
+limiting disabling IMA to just kdump.
+
+> Of course we can't rule out the possibility some users may want to need
+> IMA in kdump. So a flexible solution like providing a knob to allow
+> users to enable IMA in kdump will be the ideal solution.
+
+Agreed
+
+>=20
+> Btw, recently, a colleague reminds me of an issue that the system hangs
+> because systemd fails to load incorrect /etc/ima/ima-policy. Of course,
+> we should ask users to verify the policy beforehand. But it's still
+> possible the booting process may be stopped by a strict, albeit
+> syntax-correct policy and users can't log into the system to fix the
+> policy. Do you think a knob to disable IMA is needed to address these
+> cases or is there a better solution?
+
+Agreed a new policy should always be tested, before attempting to load it o=
+n boot.=20
+However there are situations when even a tested policy fails.  Commonly thi=
+s occurs
+when attempting to load an IMA policy based on IMA features that don't exis=
+t in an
+older kernel.  This can normally be resolved by booting into the newer kern=
+el and
+"fixing" the policy.  Instead of disabling IMA, I would allow specifying on=
+ the boot
+command line an alternate IMA policy (e.g. ima-policy.backup-version) to be=
+ loaded
+as fallback.
+
+>=20
+> >=20
+> > Currently, Kdump has no demand to do integrity verification based on
+> > keys, keyrings, except of Coiby's LUKS support in kdump:
+> >=20
+> > [PATCH v8 0/7] Support kdump with LUKS encryption by reusing LUKS volum=
+e keys
+> > https://lore.kernel.org/all/20250207080818.129165-1-coxu@redhat.com/T/#=
+u
+> >=20
+> > I have talked to Coiby, he will do some investigations to see if loadin=
+g
+> > keys related to IMA or IMA-appraisal functionality is related to LUKS
+> > support in kdump because the LUKS support in kdump also needs
+> > store/restore keys/keyrings between normal kernel and kdump kernel.
+>=20
+> Thanks for reminding me about kdump LUKS support. IMA will create
+> keyring like .ima for loading keys and other components can still create
+> their own keyrings or use existing keyrings. And I can confirm kdump
+> LUKS support won't be affected.=20
+
+thanks,
+
+Mimi
 
 
