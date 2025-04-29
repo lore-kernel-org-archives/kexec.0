@@ -4,166 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F271C369DC
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 18:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B575C369DC
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 19:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vBoF8pXhc49pEKPTC9uiXg4n4A1y53O4A1Xt0FP9HrE=; b=qY0WvrEDCxJWxUNPj1epIkV0QF
-	2WuF2BvsFHqica0CZyvqGpeIcAu93WQ9//kHYA6obq0ObRxjRYtt6rROCFROVwS9jtnE4ERRf76Rp
-	6+N8ULtTgnHjMhW7cfGKshuhtnQzePG8tDSarpCdHDJe6XqWbrEI7e3MEa06mogizclczywq5bqLK
-	Rxc+wZv9bFKo/gBgxwsQlmKVNoo/ANTQqsya1j8Ge7e3g+kqrp3MGRJUcIc9skxxV6Rt/blYPDKan
-	bBoNC3RoWFQP3JVwmvr0jkOnfVpN2m+iMMjlr/DlpjQqNH3ziidgsjwyjg1d+6/Re2SWaPmMptRQn
-	w6dtrAfA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=BcdvBrLiMDKoqa0VIJPRb3jP4UHmfILg+1l8AjaUNbs=; b=XG8dDr5+ja4MFMAB1Zk+umkbzu
+	eA0ZO9IBMDqWuM9e04k81JfmMmAMy6xKCItKO7U0G6D1V3EbfWXGj3QZ5gD+wx9p/iCo1VGwHdnzA
+	gBe0jl0fdLD20SbZ3i9iDSrUi8fAOOSD4k++Qvl24BjPtlgNyxSaJsVy8ovSboa6HSFBgNog94vFt
+	hPfEpCvRCXxRUf21f9mJLtjJVPyPdrBJAn44g11+2aDIrkT95mf83fxktzQtmUinXb0QktlnByKu4
+	bLy4QVUxdXe2cd1GVpJQ0Z/pPgf9MNG6xx3pyb9VdFvylCg3qBvyp3BRJGN5vICVuQb/EreT02gHa
+	8c0SvD3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9pyH-0000000AaiT-49Xl;
-	Tue, 29 Apr 2025 18:46:21 +0000
-Received: from mail-dm6nam12on20612.outbound.protection.outlook.com ([2a01:111:f403:2417::612] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1u9qIK-0000000AcwZ-3x4W;
+	Tue, 29 Apr 2025 19:07:04 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9pwj-0000000AaU0-2PFe
+	id 1u9qII-0000000AcwB-2Anf
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 18:44:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c3piPV8MFoLuWzGjnXXfQrKUofuQ8PNBk22r3sjXl3bTb2t225NGCEuj+OXXzOBieXvoQCmI8GbmbcA7Sc5Wx19hHpyirgy4EjnPsa6ShqUUQgYVytOmbSqaoXNS91puVpHkNAbOrcZ4GpSV04AY1m0cbsM80wIJWJGhe4dywzPC3zRYCT7KpsSEiaui6/+K1o2ccURITGGVt2p9mieVJ6hnlFxMDiLOen1chYIkN0AjNoEa2COyPYBV9xr7LBl6qq3zICgpWyR5KOOedoH6dmsOwwdQBR1khD2pzFEgB81NyTKxdm5r5Loy70jQdOLt+yWszm9K/YvwBHrKwB/ylw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vBoF8pXhc49pEKPTC9uiXg4n4A1y53O4A1Xt0FP9HrE=;
- b=be6LyU4AL7P0E4QTiRWim09o+FlOhrBi0meBRKzZCgn3zPhBzZ7Qk00oyQ93/SaWNeLUhIQLZKwhQqMXHROTICRU9EeG8kSumq17IXa1Vcd5ddM3geOpIP5EIxeBz1WQuuI5iLcihLfIOvUmyYrhsHVF7HvDuIw12VaTF44vbWw/n6ENY2FefsRB52RBN/Q/iZ0+x4wbKlzHUH14GwH2uprzBlm73MSDaya1UU9Ytb2cCL1c62km9DJRjTwDzKpr7PVpL80LbDIjTNkazTZue25iZrNf/nqFLDpBEm8n2kSFuJ5kBEBl6zMVK/JpBoHFgsBq5y+YJRFyoImiwP540Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBoF8pXhc49pEKPTC9uiXg4n4A1y53O4A1Xt0FP9HrE=;
- b=nDkvVFqrpL+0nk3cljAwOwCWmmGOXx3G6kuz1OitUfQ4Po92+HjdVwwW4Ed4WcbojzNbk7YSdeTafAN/ccRu0nYgU+Jhv3l+Mxm+2/LRJ4cj0Sarza0+qKN8cjDflLqWnyc4JwGA8hSG5+nwKHB7OL6AfUsUttIUXdABV06Rpxo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by DM6PR12MB4329.namprd12.prod.outlook.com (2603:10b6:5:211::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Tue, 29 Apr
- 2025 18:44:42 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8699.012; Tue, 29 Apr 2025
- 18:44:42 +0000
-Message-ID: <b7a8dce0-96b6-295b-d2c2-3d4439181488@amd.com>
-Date: Tue, 29 Apr 2025 13:44:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2] x86/sev: Fix making shared pages private during kdump
-Content-Language: en-US
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
- hpa@zytor.com
-Cc: michael.roth@amd.com, nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev
-References: <20250428192657.76072-1-Ashish.Kalra@amd.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250428192657.76072-1-Ashish.Kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR04CA0006.namprd04.prod.outlook.com
- (2603:10b6:806:2ce::6) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	Tue, 29 Apr 2025 19:07:03 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TAenNe009168;
+	Tue, 29 Apr 2025 19:06:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BcdvBr
+	LiMDKoqa0VIJPRb3jP4UHmfILg+1l8AjaUNbs=; b=HvtvWtKcFJJNZw014msRTq
+	MkAdjBfB/y4F4t+e/3JgIOqeqbof4mKM1Vw8QtrAEPACu4muXcda9gL4QFCpQcjz
+	/x6YrHsRHmCnpVH0MzY7rRLXDwV4YLuTTvk1Zq+Tlzf8BDUX2IV9xBCrC8Ws0J9v
+	puX6jmOt2T329Fn4a20Mrw8L1Q49+bDRKwsD/4wT6da0lhMV4YDo/SzbPQS97xEM
+	BBTAoeNJ/ZmpcRyxk9ZZmLccRfvp3vpSHMJq/KNozzq1oxGPCf021a1l7bO/4O/K
+	zd2GmLZnDKePv4U1DlhBlXBkYRZZU6HRG5GPHewkEmnqi+xrKggGIS2bImj6ucGA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46aw7t2b90-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 19:06:45 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53THkVd8000644;
+	Tue, 29 Apr 2025 19:06:44 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469atpcpcq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 19:06:44 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53TJ6hND33686132
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 19:06:43 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3EC9A5806A;
+	Tue, 29 Apr 2025 19:06:43 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1636D58054;
+	Tue, 29 Apr 2025 19:06:41 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Apr 2025 19:06:40 +0000 (GMT)
+Message-ID: <f9652da1-78a5-443c-9893-41d76007a974@linux.ibm.com>
+Date: Tue, 29 Apr 2025 15:06:40 -0400
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|DM6PR12MB4329:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a4d5644-30a1-4c46-26fb-08dd874de74f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QW0zdVZWSnpGUnV5RDUvcngxNERuY280RXZEYkNFYkVZTjhWcEx5OGFnUFc1?=
- =?utf-8?B?elVmaEUzYjZPL0UrNnBUMGFweDRnR3c2VGdjWG5Qa3RyVUdmTUc4TmRnQ0k4?=
- =?utf-8?B?RDd6bnBCVFFXUEkvdFp6dTByYlUwVjZDeUF3bVo3aHRMYXRvaUMwTnl4Y2Jw?=
- =?utf-8?B?TldyendVMW5JWUh5NDVkWk9YbklkNDhLVXZYT0l6TVRDTlNXZE51c25EcjZk?=
- =?utf-8?B?YXJMRWxlaE80eUxwUnU5WnNRVFJ3ZEJjM09JVkZHZENodThUcHlwTTlSOXdP?=
- =?utf-8?B?K05XRGM4alVpMSt6S2RaeWdOR0NaalVMT2JrU25qak5iaXM3aUtTWm85Vnds?=
- =?utf-8?B?UFNocTBiUTIwT3FZNVlzYm0zbXBiZURmMzhyUDFNVkdzdTUxMkZVUFFNN25I?=
- =?utf-8?B?bE5HN09hVkRyWXZQZDVTRjZScFcwOXJxa2k3blUzanJyZlUxdDJFcVhpaHE5?=
- =?utf-8?B?b0t6ZGRZdTJGUkR5b0E4clNuWmJSU0lHeHYzc05SZCtXU0ZVUUdaQnlnOE9P?=
- =?utf-8?B?WGs3RElJWXBQWjRIK1paN2dXbUw1Mm84dHp0MnVvbGptNUJTeGVGRjExdDNW?=
- =?utf-8?B?OEtGTTRXeGVoc3d2eGVEZkJQMEdmK01abE9FL3dSS24xaWNMUzJCbmpXemhY?=
- =?utf-8?B?RS83ZUNKejBGcElDbktEMHIwWWJ4T1hXK2V4ZTJTcHdzaHFGWEQ4cmhIVDVp?=
- =?utf-8?B?NHZHTDRHU2dBYkhiQUxUV01RaWhnbFBoTjhzVHJpWnZaWHNrMmNTNGFrMmg1?=
- =?utf-8?B?Mjh1ejhEREpNMzRock8rWlgySGt2R202SzErU2IvOHppUXRtNERtRndmMzhB?=
- =?utf-8?B?TW1rbzFNY3JWeUZkcnNzTE8rQ3E0YktHNG1WaUZtVnM2aFRNZ3NBZVEyOWFH?=
- =?utf-8?B?MUNLOWlMS1pELzVFMmxHSFN0NlpmbW45TmorRUYwZWYyOEY2a0RVcXBlY3hJ?=
- =?utf-8?B?UVp3QW1KZnk3cFo1TmlnOVUxT2pSVloxYi9QZDBjem01ekw0VUxmSm5mRG1j?=
- =?utf-8?B?U0tRcFczaHd1UkRxcGY3Sm1JUWhLNkRtNkU0ZlJaNTZwNko1YkpYc2N0R3E5?=
- =?utf-8?B?cTN1QzRCWTJ4V2ZhdEVtMGxFRS9vaENoaVhhWVZ0ZFRPR0M3L3RZSVZpUzUz?=
- =?utf-8?B?RGVkM0lmVGVTNFpleXk2cjdMTjlQb0J2RGlSR21aS3dYeThHS2svdUZsUnVD?=
- =?utf-8?B?eWQ2MEFmR2RoRVQ2M0s2L1hDQk8vNDNKUyt0QlQ0Tm9SYXQ5OFlEWllaSmVY?=
- =?utf-8?B?YmxKdStycTRVSGNseC9lZ1NlYWVRMUVIb1ByMDd6UzVLaitNMHcxNGNZM0o0?=
- =?utf-8?B?amJjRUJBOVQ3dGVlRlBSUmZ0VzBSdEg3THhoREsrSzhwVzZIbmhBYzUrQ2Vv?=
- =?utf-8?B?WUFzVEk2TGw5dStRSmRtek9SOUxmNFp2bjI3MzZPL1VEQldIbXZMUWJIYzhR?=
- =?utf-8?B?RFV5c0NCaXZPTjZXbEF0QnFqWERhdFE3ZEgzWXpoL0VQdUwyeDhGSDBMQnlP?=
- =?utf-8?B?YVZPR2t2ZE5DTThyTGhiRUdiWnpyNHJNUXJmRzh3Q1RlL08wamNtQW1ndHBh?=
- =?utf-8?B?YVpPc0FWckFZT2YzcDJmTTA0Nk1yRlAwTWVtN0tvaktIMlZQM0g3eEVpVlNn?=
- =?utf-8?B?bGw1eEFhcDhRU2lxbnBGQ1NEdG9XUWZseENCUk51TmRjYnZtbTN4NUdaMEg1?=
- =?utf-8?B?alVRbjljVW9WS3hYcEY3MTFOOGxoMTMzcFNyeVZZdUtjRmQ0aHpvQ1V3d0Jl?=
- =?utf-8?B?d0JmTkJ6RzJ4NUlXZWxZd3VzNmk2TDFQMmdyUUJaNmw4em0vYmRCUHdPMUdw?=
- =?utf-8?B?c1h0VS9hL3VwM2k5UDJnSFhDbExhSmtFYUJYNEpYZUdEMHIvdThWejVZK1Bo?=
- =?utf-8?B?UTVSU0pCUXpGenZvZWUrdkkwT3RHUXJQcXRmNWxoSGtYU3ZDSTRZZ3BaU1Ro?=
- =?utf-8?Q?fQEkIIsmcn8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SXNuL2NORm5Xd1hYckdKR29pSGtrNWFHamRoek1mYUxwbXgwVnI4RHA4WFhL?=
- =?utf-8?B?c2ZLdWZ0REtncnBTd0tYYjVsUVB3THIxSEVIUkJLaVBKaEVTTGZKTk1IZmp6?=
- =?utf-8?B?U3RhN3dNaXBNN2ZBTFJiSHQwRzdLUE5jcTdtMWp6ZkI2VFdsdGR3NDFJRm9s?=
- =?utf-8?B?R1F1ekpZTXhoNEtZdHpUUysvdElONExCM2F5SHhlMmhkWk83VWJuTWptcEFG?=
- =?utf-8?B?VE5iM0U2WnpDZ21IcTV1dnlSc2UyaEdxM2FHVFN6dEUrUUY4VXFNcmR2U2d3?=
- =?utf-8?B?RUk4dUExOElHcjNTWTlPa0xhUHZhakNabFk5d1VkdlJGcGpsL0gxTWliWXFK?=
- =?utf-8?B?YTJlTlRpeWt4aGpOT2VBc1hkU3VJYU1Tbzh1dk9JVFdyZEF6bEp1UHV4UXVW?=
- =?utf-8?B?WTdxdnFlRlhEUzRBenVJT2JOdFA5Y3ZnZ2ZSQ1M2bE4vQUczNzJ2Tk9LbjJh?=
- =?utf-8?B?Mzhrd29hZkhwaTdsbUpuRWFJeFhJclF2RGo3aUpvS2RDNnM3ODlLOVJzeE9z?=
- =?utf-8?B?Mk5iVUNML2crbWRoaUNOVHlieVYxZ1ZLSzY1UUZoTU9YVDRvNGYycmpQYjdC?=
- =?utf-8?B?SGpNK0hPWnVUVTI3N2FaZXRhR0tSeVE2QU5mSks0WjdTUUpQanlQOUZCSjZK?=
- =?utf-8?B?T0pmczYySk1QUkFITW1mZDNLaUIwUjBCVjVVUU5qNGhJYzMwUGJ5STk5SjJH?=
- =?utf-8?B?Y0MrZytDcmVPb01kZEZCNUhlbmRQYzE1dFBrbTh3Zy9NQzF0cDdEeHJCRFJY?=
- =?utf-8?B?NmgxVW9TTjhYYlNyTjY1WWpldFNDZUJheGR5M3pDVGtJK3MyRTd0Q2lvYzRG?=
- =?utf-8?B?eGk5S2xPRC9DZ3RDdmFDM1J1a3dBUE8zeklYT3VnbXFCR0xWSko3RDVCaGZo?=
- =?utf-8?B?eENXY01IK0JxV0ducGVxdStsaDFxQWFvaWZsb2hDUUtwaUJTOTFmTm0xNHFY?=
- =?utf-8?B?VHo0TWFTMjc3STRieUpBUy9wVmhIamt6UUI0c2dacVZpWXlRNFhEV0RsVnpp?=
- =?utf-8?B?L0NUenZYelZ5N3lBdjRxbUIxOUpoS3RyYXZ6K1lIKzJpWjRRemUrTmxFbloz?=
- =?utf-8?B?cjI5S0hGZlZCbTEyTGpuZ2IxTm9WNXJRM1VLT0xPNG5LMlVPang3Wno2Vkg2?=
- =?utf-8?B?WUM5UUdGaWh0OWhHZTRoQy9uWTZsb0JFUmRabjBjN1VtODJxVXBCMkgxQmg3?=
- =?utf-8?B?NEttbkNhUFpyR1dWUXcxTFRTS3ZVazZIVXAwdHhsZ3poQnVSSWsvQXAvaThY?=
- =?utf-8?B?SC9leitnbmNJT0kvYTVaSG40SUYzZmRKWkl1NjZyTUZXZGpZMVhHWmYxUjZr?=
- =?utf-8?B?N3ZSQ0FJdUdtc2ZiQUk4OGgxUmIyL0Q5Zm1DWUJIS0tReGorYzY1UXpJV1Mz?=
- =?utf-8?B?SGg1TlJrZ1F1emVaUzZabHNHbjJ2SU5GVE5DSDdhbEdmeDBoOGozUVQwVm9B?=
- =?utf-8?B?UFRsK2xxMzFEL1I5cU1vT2dpa1BGamFYQmFFVm1aMDJTSGt5WTJUQXl1L01r?=
- =?utf-8?B?YWFWU0psUm5uRFltUTRzbGRHUkVzb2RPNGhpMnZmeGMxUThNSzJIY3MrNUgx?=
- =?utf-8?B?S1ZTSjJCMkJEK2NodHhrVmdnZXFXbXNJQUtBS3M4TWY0RnA5SWJSdlN4QWx5?=
- =?utf-8?B?WkEyZ2I4WGYzVHZyUTh3MWtKTlF0Z0NSTWYyT2lFNVM0NkdVaUZjQXFyazE0?=
- =?utf-8?B?dzFOUVc0UWNtdUdsRnV1Mk1OZVN3YWErQlpBWExlaFNIMWtPQTZScnZrbHRM?=
- =?utf-8?B?MldzVU5DMGg1dTA2bVVEWGYxQTFTMTc5dnJmQUZNUllIV2VmNW9PQjlDaTBP?=
- =?utf-8?B?cGxDRkszV0EzTjNEOVpQcTAvSVpLdHlTU2pxTmZidDM2ZHU0YzJEOHpaME1N?=
- =?utf-8?B?K2xYQkRucURZUWhTakNxei8vOEJGbFJFVFZmU1BwdUhFUjYxUkNDSTBuTFkr?=
- =?utf-8?B?ZVJvTHBnK2hDV1RzODBGUEZLQWFBVC9sN0ZZZjY4L0d4WnV3SzJweFFRR3o4?=
- =?utf-8?B?ZVBjZ1JBc2NIdWlXcXVqamdGdnpJeS9DMHUwU0dUUFJ3L2VEREt0ZUdRVEF2?=
- =?utf-8?B?RVNxbmpaNXFmcWp2RXIxdTErb214akVnQ3pkMnVPQ0NMb3E4cE05KzBsZFpv?=
- =?utf-8?Q?Hr+VLpzsK+gV6xEjWm5AjpHl5?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a4d5644-30a1-4c46-26fb-08dd874de74f
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:44:42.1299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IyBtbcgkC4tRhV3U6Yu0vZSEhyzxXN5oXdqdXWa5v7c+LHx20vQ3sfpo7XvNxJRTGVUxM6PPubEdFtbi1MKMBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4329
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 8/9] ima: make the kexec extra memory configurable
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
+ <20250421222516.9830-9-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250421222516.9830-9-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDE0MSBTYWx0ZWRfXyad5O9YWwMKl pUFSHK2yC1IOa/JgQKLEdsmOsR+BNqvkBpH01TeKIUaE7Bkuk4AGHpaLb9PMlvWn8BhT8otYRnc E4lr0zQDqFqGomUv5o/1w0XhzSFM2c9pcCpqAvwFnHSfbjiugCiCOgL151is4jM/3dubNr6m6bt
+ u1Aow/jJhXp3ZMJxUVsvJZUPXEw2+JBG+w2Avjz6/Fne7WoYpXuc5cv6gPlRBLcnqBDpXYTccAE AK0xMZUdULeNcLUiaCTXx83VXRLykgvAGY/559WQeFwOvXi7NeMqe7vv2a3Ki+jVtRijGURpC04 TNtfgD5QtJfIxE0ajrHiTeHifdT9vwS2IbWfdR69HRZ8+nEyucVKWijWEURl2kMHEd7lolWM8Fu
+ LFl1nw3R0jvB4IyR1ld2BN6NekvwAOtTyCPuL0IXZoIrVL5xJmFdfKYfMMOZ6C2IG6787kO2
+X-Proofpoint-GUID: V9bKG-VWG5fqWmJX5LxLxIWb4oltzlFi
+X-Authority-Analysis: v=2.4 cv=MJRgmNZl c=1 sm=1 tr=0 ts=68112345 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=d6lEWhlZ57pmn9SoDCoA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: V9bKG-VWG5fqWmJX5LxLxIWb4oltzlFi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290141
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250429_114445_625410_02052F93 
-X-CRM114-Status: GOOD (  12.37  )
+X-CRM114-CacheID: sfid-20250429_120702_692715_BD86B40D 
+X-CRM114-Status: GOOD (  29.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -178,33 +119,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/28/25 14:26, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> When the shared pages are being made private during kdump preparation
-> there are additional checks to handle shared GHCB pages.
-> 
-> These additional checks include handling the case of GHCB page being
-> contained within a huge page.
-> 
-> There is a bug in this additional check for GHCB page contained
-> within a huge page which causes any shared page just below the
-> per-cpu GHCB getting skipped from being transitioned back to private
-> before kdump preparation which subsequently causes a 0x404 #VC
-> exception when this shared page is accessed later while dumping guest
-> memory during vmcore generation via kdump.
-> 
-> Correct the detection and handling of GHCB pages contained within
-> a huge page.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
+On 4/21/25 6:25 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The extra memory allocated for carrying the IMA measurement list across
+> kexec is hard-coded as half a PAGE.  Make it configurable.
+> 
+> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+> extra memory (in kb) to be allocated for IMA measurements added during
+> kexec soft reboot.  Ensure the default value of the option is set such
+> that extra half a page of memory for additional measurements is allocated
+> for the additional measurements.
+> 
+> Update ima_add_kexec_buffer() function to allocate memory based on the
+> Kconfig option value, rather than the currently hard-coded one.
+> 
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
 > ---
->  arch/x86/coco/sev/core.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>   security/integrity/ima/Kconfig     | 11 +++++++++++
+>   security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+>   2 files changed, 22 insertions(+), 5 deletions(-)
 > 
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 475c32615006..976e75f9b9ba 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -321,4 +321,15 @@ config IMA_DISABLE_HTABLE
+>   	help
+>   	   This option disables htable to allow measurement of duplicate records.
+>   
+> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+> +	range 0 40
+> +	depends on IMA_KEXEC
+> +	default 0
+> +	help
+> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
+> +	  If set to the default value of 0, an extra half page of memory for those
+> +	  additional measurements will be allocated.
+
+If you have an IMA policy taking quite a few measurements and you are 
+fast after reboot to log in to initiate the 'kexec load' (While system 
+is still starting up), the system may end up with loss of measurements 
+very easily if the default is 0 and pages are small. -> Set the default 
+to the max? Also, would we expect distros to all go through the new 
+config option and choose 40 or will they likely leave it at 0?
+
+> +
+>   endif
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index ed867734ee70..d1c9d369ba08 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   				  .buf_min = 0, .buf_max = ULONG_MAX,
+>   				  .top_down = true };
+>   	unsigned long binary_runtime_size;
+> +	unsigned long extra_memory;
+>   
+>   	/* use more understandable variable names than defined in kbuf */
+>   	size_t kexec_buffer_size = 0;
+> @@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	int ret;
+>   
+>   	/*
+> -	 * Reserve an extra half page of memory for additional measurements
+> -	 * added during the kexec load.
+> +	 * Reserve extra memory for measurements added during kexec.
+>   	 */
+> -	binary_runtime_size = ima_get_binary_runtime_size();
+> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
+> +		extra_memory = PAGE_SIZE / 2;
+> +	else
+> +		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
+> +
+> +	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
+> +
+>   	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
+>   		kexec_segment_size = ULONG_MAX;
+>   	else
+> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
+> -					   PAGE_SIZE / 2, PAGE_SIZE);
+> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
+> +
+>   	if ((kexec_segment_size == ULONG_MAX) ||
+>   	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+>   		pr_err("Binary measurement list too large.\n");
+
 
