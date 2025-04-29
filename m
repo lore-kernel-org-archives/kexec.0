@@ -4,71 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6955EC3ABA5
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 17:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D8E8C369DC
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 18:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DOAoClMcBjLU+CqkVXLT7D9MbeyBuOnbKGqbxUcqpgQ=; b=fsysFLRBRJH35viF+6MjSlFr1v
-	+GOX32xqy2B5856a5svzdVkfJjzItI1V0uXiBr0ZQ3L96kuJ6AFZml9Vy3S5ElYG3SnzZK/vtxJfv
-	b3zCEbXQk5Fb8T+GEpy+0oqNtlRQxwMmklNPPK1XbK6URwaR+bPbbQ7FPEOWI2nknEUmxpRO1JYns
-	oPNIj4dju8qr6FzRTWVHzqYoDJ93CxZCC+rs4hC8QLNn65Leu3GFSZHmWzIe25GZYqyEmwRoB8je/
-	xbla2Bk7U6fYkKhFl75RZJbyR7ZdZVBEbj3QAVv2GqMzc7gr7yK6nPMLvmfVoVKCtTuDjV32T9wuO
-	D5OqTQqw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=u1ij4KyVPbarzVqmgQlnjtxugvQt3lIho1CryqH85Vk=; b=qpWNxyA2O6QIo4RCG4TN38MnPm
+	lOc5ukEEnnXFNiu5SLm3zyShpm+NdERBrOvBDap5BbptujaRZgoEuae8g7xEJX+rcoSNI/h/NRSsq
+	39o+uOAbmEhGU28o/fco+btoy6IMbDWWZdKyXjtNjAR6FwAsNtsh0cqLxT/+6RD0MC3hoZ1nr3on+
+	AdSPeJqVD5yOeEtmnnVgdr8dpbH0pzRs6TpklY665hKPLCg3TjzKFSZW+FAF0L3YjJXS3MV6elnEB
+	MtQ9hoOM3FASsCpIghSP2CAv5PwGGKgEnDnRC9sEx+7HNO+AizdQfA0VJvkxTIkop/iXWb2BX8e5v
+	I9CmFGzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9p28-0000000ARhU-2lhj;
-	Tue, 29 Apr 2025 17:46:16 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1u9pGe-0000000ATGO-2ZsA;
+	Tue, 29 Apr 2025 18:01:16 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9nvH-0000000AGsx-3GVX;
-	Tue, 29 Apr 2025 16:35:07 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B2A1A615CC;
-	Tue, 29 Apr 2025 16:34:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C094CC4CEE3;
-	Tue, 29 Apr 2025 16:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745944506;
-	bh=+UGyRtEyWANVYEtyHHifh4EloDW/BOB+dVBrXx8R5aE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hv4+V9oEHFFoqPKi4JJC4Rggve0BsZAvaDzvh4SEQuECW785vJ5yPZ4AatV4KqWu6
-	 wuF2qFRqPfjjSeYHDw7enNzhmN+iUgUUbapSZvr+Dz1qVv8qFyUfXoil/gPujvw11w
-	 qoFYOIY78wNSefF32YipQjxSwHAcW3XOmHqgg1S2VM0PWb8PBDGDdDJRkMRAooSKa4
-	 dtKpsbh7N+d9YIvzbEGIi3+RyayqE2xFI+WA5HeWOtGFHWzSkmRs90NjfbDCTTecMx
-	 dcRb1imHHNN+d2crW1PnDFXSnrtBlXapjqWlicbZjIMRypxWwu/J1ycGlUtEr3CMqd
-	 0B2+9D5ZaXxeQ==
-Date: Tue, 29 Apr 2025 19:34:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
-	catalin.marinas@arm.com, corbet@lwn.net,
-	dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
-	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
-	hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com,
-	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de,
-	robh@kernel.org, rostedt@goodmis.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v6 11/14] x86: add KHO support
-Message-ID: <aBD_rOvMPk5_iT9J@kernel.org>
-References: <20250411053745.1817356-1-changyuanl@google.com>
- <20250411053745.1817356-12-changyuanl@google.com>
- <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
- <aBD165pVhOIl3_by@kernel.org>
- <e90b81a4-a912-4174-b6e9-46a6ddd92ee3@intel.com>
+	id 1u9oAn-0000000AJvx-0WGj
+	for kexec@lists.infradead.org;
+	Tue, 29 Apr 2025 16:51:10 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA4YE0000608;
+	Tue, 29 Apr 2025 16:50:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=u1ij4K
+	yVPbarzVqmgQlnjtxugvQt3lIho1CryqH85Vk=; b=Evw07ja/zDnJdiqlVfmq/n
+	GZxKHvXimq5oIgGz0AMFRlGy520ZMI6AQDQO51+8RRj6YdAFhmLFdtz77/Ix1iUK
+	4M/u3CqvMSq68nK7Ujzr2+uSvYuTMikk3UEQKumEKsUd95wj0UgODniZq2BUwqSG
+	sA2B9U5FDQNOuS24SpEe/CMDZSvOTj6yXQ+qGtJmUZWaP7IYZm6oVfN844v25JlS
+	cy+8c6TIRuyCXp1G3rDRpQPnqCiCtI+6dRYZBvtFnRN/8LQYcYq2ZIJaqPUeFX1R
+	DG5VX2vJDNwgr9r7q7EJ9njJa9gAXowctcBJ1vz03Lj8A07NVW6o2YrXo5hnP51g
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46avpk9x5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 16:50:46 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53TEj3Nk024644;
+	Tue, 29 Apr 2025 16:50:45 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1m3wdp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 16:50:45 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53TGoi7L34013810
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 16:50:44 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 765FA58054;
+	Tue, 29 Apr 2025 16:50:44 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E11095805A;
+	Tue, 29 Apr 2025 16:50:42 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Apr 2025 16:50:42 +0000 (GMT)
+Message-ID: <e1bd032b-8433-4e07-a940-7e020d7cecd0@linux.ibm.com>
+Date: Tue, 29 Apr 2025 12:50:42 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e90b81a4-a912-4174-b6e9-46a6ddd92ee3@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 5/9] ima: kexec: define functions to copy IMA log at
+ soft boot
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
+ <20250421222516.9830-6-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250421222516.9830-6-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=68110366 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8
+ a=gp-jI7jXbnyn_jZY2ukA:9 a=QEXdDO2ut3YA:10 a=BpimnaHY1jUKGyF_4-AF:22
+X-Proofpoint-ORIG-GUID: yItTAUl1fOti25qude2z2zRcfwXrUXCL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDEyMyBTYWx0ZWRfXygCIbTNTdcDM TXWRIkPvCV12OmAzMsLFXfRIWiV4Ml9P5OqfDTj3aeI6QFobKvXZeIemd8PNZPBl/iLDNElAk4r xcl703AHCRr9/8ZIhRtS7bA3GeeCLgnUvEpJ/CpdiyjtloBADb2K+ZJtgFKrvAUBffttFDk1pn/
+ +6DBYWZebKiHeJQTn8TyEdZgmGqG3Bcx/5Xp5CJjsrm3pN5DR1ZNjRq9mk5ZFF/WzYkggE2G/l+ Dqhq/R7Jr+vpIIjqg+51rkzbugMTt4cJOsNLB07RZup45GWvu1I8sXpDLXLknYrNnIsWfUO6CrB rBhdnmWIifPaDI255WxMD8y3xBN+vsDC/54qIxydl1Vx12uwFkOCX6z5GI3A0lsqhPrcejry+q/
+ l+rO0IqtAy/W6ueH/J1uVW6mAqVXY4fMKtmROiZ1B4F06sUh7C9DGg2Wfg9U34CfD2JQQ7st
+X-Proofpoint-GUID: yItTAUl1fOti25qude2z2zRcfwXrUXCL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290123
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250429_095109_181297_C7BF718E 
+X-CRM114-Status: GOOD (  29.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,67 +120,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 29, 2025 at 09:05:02AM -0700, Dave Hansen wrote:
-> On 4/29/25 08:53, Mike Rapoport wrote:
-> > On Mon, Apr 28, 2025 at 03:05:55PM -0700, Dave Hansen wrote:
-> >> On 4/10/25 22:37, Changyuan Lyu wrote:
-> >>> From: Alexander Graf <graf@amazon.com>
-> >>>
-> >>> +#ifdef CONFIG_KEXEC_HANDOVER
-> >>> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
-> >>> +{
-> >>> +	struct kho_scratch *kho_scratch;
-> >>> +	struct setup_data *ptr;
-> >>> +	int i, nr_areas = 0;
-> >>
-> >> Do these really need actual #ifdefs or will a nice IS_ENABLED() check
-> >> work instead?
-> >>
-> >>> +	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
-> >>
-> >> What's with the double cast?
-> > 
-> > The double cast is required for this to be compiled on 32 bits (just like
-> > in mem_avoid_overlap). The setup_data is all u64 and to cast it to a
-> > pointer on 32 bit it has to go via unsigned long.
-> 
-> Let's just make KHO depend on 64BIT, at least on x86.
- 
-Ok, so we are keeping #ifdef and dropping double cast here.
 
-> >>> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> >>> index 68530fad05f74..518635cc0876c 100644
-> >>> --- a/arch/x86/kernel/kexec-bzimage64.c
-> >>> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> >>> @@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
-> >>>  #endif /* CONFIG_IMA_KEXEC */
-> >>>  }
-> >>>  
-> >>> +static void setup_kho(const struct kimage *image, struct boot_params *params,
-> >>> +		      unsigned long params_load_addr,
-> >>> +		      unsigned int setup_data_offset)
-> >>> +{
-> >>> +#ifdef CONFIG_KEXEC_HANDOVER
-> >>
-> >> Can this #ifdef be replaced with IS_ENABLED()?
-> > 
-> > The KHO structures in kexec image are under #ifdef, so it won't compile
-> > with IS_ENABLED().
-> 
-> They shouldn't be. Define them unconditionally, please.
-> 
-> ...
-> >> Please axe the #ifdef in the .c file if at all possible, just like the
-> >> others.
-> > 
-> > This one follows IMA, but it's easy to make it IS_ENABLED(). It's really up
-> > to x86 folks preference.
-> 
-> Last I checked, I'm listed under the big M: for "X86 ARCHITECTURE". ;)
 
-I remember :)
+On 4/21/25 6:25 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The IMA log is currently copied to the new kernel during kexec 'load'
+> using ima_dump_measurement_list(). However, the log copied at kexec
+> 'load' may result in loss of IMA measurements that only occurred after
+> kexec "load'. Setup the needed infrastructure to move the IMA log copy
+> from kexec 'load' to 'execute'.
+> 
+> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
+> It will be used to call ima_dump_measurement_list() during kexec 'execute'.
+> 
+> Implement ima_kexec_post_load() function to be invoked after the new
+> Kernel image has been loaded for kexec. ima_kexec_post_load() maps the
+> IMA buffer to a segment in the newly loaded Kernel.  It also registers
+> the reboot notifier_block to trigger ima_update_kexec_buffer() at
+> kexec 'execute'.
+> 
+> Set the priority of register_reboot_notifier to INT_MIN to ensure that the
+> IMA log copy operation will happen at the end of the operation chain, so
+> that all the IMA measurement records extended into the TPM are copied
+> 
+> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
 
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+> ---
+>   include/linux/ima.h                |  3 ++
+>   security/integrity/ima/ima_kexec.c | 47 ++++++++++++++++++++++++++++++
+>   2 files changed, 50 insertions(+)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 0bae61a15b60..8e29cb4e6a01 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -32,6 +32,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
+>   
+>   #ifdef CONFIG_IMA_KEXEC
+>   extern void ima_add_kexec_buffer(struct kimage *image);
+> +extern void ima_kexec_post_load(struct kimage *image);
+> +#else
+> +static inline void ima_kexec_post_load(struct kimage *image) {}
+>   #endif
+>   
+>   #else
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 7e0a19c3483f..e79f6caf895b 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -12,10 +12,14 @@
+>   #include <linux/kexec.h>
+>   #include <linux/of.h>
+>   #include <linux/ima.h>
+> +#include <linux/reboot.h>
+> +#include <asm/page.h>
+>   #include "ima.h"
+>   
+>   #ifdef CONFIG_IMA_KEXEC
+> +static bool ima_kexec_update_registered;
+>   static struct seq_file ima_kexec_file;
+> +static void *ima_kexec_buffer;
+>   
+>   static void ima_free_kexec_file_buf(struct seq_file *sf)
+>   {
+> @@ -162,6 +166,49 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+>   		      kbuf.mem);
+>   }
+> +
+> +/*
+> + * Called during kexec execute so that IMA can update the measurement list.
+> + */
+> +static int ima_update_kexec_buffer(struct notifier_block *self,
+> +				   unsigned long action, void *data)
+> +{
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block update_buffer_nb = {
+> +	.notifier_call = ima_update_kexec_buffer,
+> +	.priority = INT_MIN
+> +};
+> +
+> +/*
+> + * Create a mapping for the source pages that contain the IMA buffer
+> + * so we can update it later.
+> + */
+> +void ima_kexec_post_load(struct kimage *image)
+> +{
+> +	if (ima_kexec_buffer) {
+> +		kimage_unmap_segment(ima_kexec_buffer);
+> +		ima_kexec_buffer = NULL;
+> +	}
+> +
+> +	if (!image->ima_buffer_addr)
+> +		return;
+> +
+> +	ima_kexec_buffer = kimage_map_segment(image,
+> +					      image->ima_buffer_addr,
+> +					      image->ima_buffer_size);
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("Could not map measurements buffer.\n");
+> +		return;
+> +	}
+> +
+> +	if (!ima_kexec_update_registered) {
+> +		register_reboot_notifier(&update_buffer_nb);
+> +		ima_kexec_update_registered = true;
+> +	}
+> +}
+> +
+>   #endif /* IMA_KEXEC */
+>   
+>   /*
+
 
