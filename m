@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 480A6C369CB
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C718DC3ABA8
 	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 04:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=PP3UZCRXo5SRQBH/gKG6K8b23DsH47+kPesgSOGR+84=; b=iImYBVrBJMUtXP7gq3/3Zyozx8
-	sHhlSlX1TQz9QsIPSPDsOyoOwrJjYO0XN1pRdhUs1TYt8wjSqbSzdlCQk3g3norE5skEg+IorTObK
-	5a54NsNsDY8uz+/2dAD9LzK6nd6YwDYl6n8STI4yiavej1a63vrJ9lYEi386BO06Jb/a6pWvxH80y
-	+GvRi7wVU32hENelGMIXB2l4V7JSXG1Y3aLneY7Dlsxp8zE3Nr+ceQ0bTcmd1RurVEO4nmNV350y2
-	0W2vRwGQNlgdA3f0q+JHcbBMq13/y5Uv/O9H2Hi+9UmtRVcPsjra5wGay/DrpgiNQwaZSHI0SxrCN
-	T/PvBR8w==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=; b=kKcm2RWYfiGvDeu3lQU17AZ3Sz
+	43YcWqvBXC/wXfEA+SPQ3swn88oxx6FF9h3Vkkma6UZSEqTw/YZ59o4zauc/DVbDO8OLKxkpbWYrR
+	pS4ga3XixA5h90UJgNW56aK2PTPoZNiK8oGxsjU67MI3TiwZ0hfuw5ivhiEIi8o8xxa4N/EGWtjtO
+	3KO1YcXM8aJU69+gK0cfn+uhF/4elLwUKqIG41fH1y9+N/c4KJbIoRdBm3HrPmn6X8PhmOFwlfucZ
+	jy3YN7yBnavfzgF8bmnw3DIni4ny+veqSWvPWZHrhM0oJBf+1T/7TOkPiOcAmmiyEneF8Ovg8kuQu
+	6jkhLcNA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9cYf-00000008Ifw-021I;
+	id 1u9cYf-00000008IgL-1lrU;
 	Tue, 29 Apr 2025 04:27:01 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9cN4-00000008HZ3-0A4A
+	id 1u9cN4-00000008HZU-2DWp
 	for kexec@lists.infradead.org;
 	Tue, 29 Apr 2025 04:15:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1745900101;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PP3UZCRXo5SRQBH/gKG6K8b23DsH47+kPesgSOGR+84=;
-	b=S3dZ9y/9SDNSDgU4o276sLACU8hI6S0fS3kwVpMrE+uxqvh0oTpcm1bbn8Fvlh0KysTeoF
-	gOntaAUXKi57UGuXHhNfkdoyZzpTQ4PhgXM+F3gMPY0XD9oBSjq95w90v7rH8LwyvLL1fO
-	qFXiSei8A4pkgCZjnCWyOKhUGnxVXrc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=;
+	b=Ip1u/UKUPZLrhy2fYrxGvomAZJ8vxvbYY/FzW1ijtkijQ2ANsVmx9v6A/eHZyhFRFTpWFM
+	N4yHjQ6S9tQrG2vhzC1HtZTUjfdjP2XEk32J7+GAqMOtzSwbxHlDfZQFzmNA60NI+eDNQI
+	ZX2zdlur3PaJWqXrq8i/RmnWZO3cEvU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-2UFOZHtXPTevcHI0_Vi3XA-1; Tue,
- 29 Apr 2025 00:12:44 -0400
-X-MC-Unique: 2UFOZHtXPTevcHI0_Vi3XA-1
-X-Mimecast-MFC-AGG-ID: 2UFOZHtXPTevcHI0_Vi3XA_1745899962
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-70-sKX23-etOymv-b4HYtgyAA-1; Tue,
+ 29 Apr 2025 00:13:23 -0400
+X-MC-Unique: sKX23-etOymv-b4HYtgyAA-1
+X-Mimecast-MFC-AGG-ID: sKX23-etOymv-b4HYtgyAA_1745900000
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B19C81800264;
-	Tue, 29 Apr 2025 04:12:40 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25B87195608C;
+	Tue, 29 Apr 2025 04:13:20 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.64])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C4851800352;
-	Tue, 29 Apr 2025 04:12:27 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 181EE1800352;
+	Tue, 29 Apr 2025 04:13:05 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
-To: 
+To: linux-kernel@vger.kernel.org
 Cc: Pingfan Liu <piliu@redhat.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -79,15 +80,18 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org,
 	bpf@vger.kernel.org
-Subject: [RFCv2 0/7] kexec: Use BPF lskel to enable kexec to load PE format boot image
-Date: Tue, 29 Apr 2025 12:12:07 +0800
-Message-ID: <20250429041214.13291-1-piliu@redhat.com>
+Subject: [RFCv2 3/7] lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
+Date: Tue, 29 Apr 2025 12:12:10 +0800
+Message-ID: <20250429041214.13291-4-piliu@redhat.com>
+In-Reply-To: <20250429041214.13291-1-piliu@redhat.com>
+References: <20250429041214.13291-1-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_211502_197195_500784EF 
-X-CRM114-Status: GOOD (  17.32  )
+X-CRM114-CacheID: sfid-20250428_211502_680848_A60AF9F3 
+X-CRM114-Status: GOOD (  12.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,101 +106,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-*** Review the history ***
+The KEXE PE format parser needs the kernel built-in decompressor to
+decompress the kernel image. So moving the decompressor out of __init
+sections.
 
-Nowadays UEFI PE bootable image is more and more popular on the distribution.
-But it is still an open issue to load that kind of image by kexec with IMA enabled
-
-There are several approaches to reslove this issue, but none of them are
-accepted in upstream till now.
-
-The summary of those approaches:
-  -1. UEFI service emulator for UEFI stub
-  -2. PE format parser in kernel
-
-For the first one, I have tried a purgatory-style emulator [1]. But it
-confronts the hardware scaling trouble.  For the second one, there are two
-choices, one is to implement it inside the kernel, the other is inside the user
-space.  Both zboot-format [2] and UKI-format [3] parsers are rejected due to
-the concern that the variant format parsers will inflate the kernel code.  And
-finally, we have these kinds of parsers in the user space 'kexec-tools'.
-
-
-*** The approach in this series ***
-
-This approach allows the various PE boot image to be parsed in the bpf-prog,
-as a result, the kexec kernel code to remain relatively stable.
-
-To protect against malicious attacks on the BPF loader in user space, it
-employs BPF lskel to load and execute BPF programs from within the
-kernel.
-
-Each type of PE image contains a dedicated section '.bpf', which stores
-the bpf-prog designed to parse the format.  This ensures that the PE's
-signature also protects the integrity of the '.bpf' section.
-
-
-The parsing process operates as a pipeline. The current BPF program
-parser attaches to bpf_handle_pefile() and detaches at the end of the
-current stage via disarm_bpf_prog(). The results parsed by the current
-BPF program are buffered in the kernel through prepare_nested_pe() and
-then delivered to the next stage. For each stage of the pipeline, the
-BPF bytecode is stored in the '.bpf' section of the PE file. That means
-a vmlinuz.efi embeded in UKI format can be handled.
-
-
-Special thanks to Philipp Rudo, who spent significant time evaluating
-the practicality of my solution, and to Viktor Malik, who guided me
-toward using BPF light skeleton to prevent malicious attacks from user
-space.
-
-
-*** To do ***
-For Poc, this series uses BPF fentry to call the parsing function.
-Later, it should implement a dedicated BPF_PROG_TYPE and confine the use
-of the newly introduced three kfuncs to the kexec_file_load context
-
-
-
-[1]: https://lore.kernel.org/lkml/20240819145417.23367-1-piliu@redhat.com/T/
-[2]: https://lore.kernel.org/kexec/20230306030305.15595-1-kernelfans@gmail.com/
-[3]: https://lore.kernel.org/lkml/20230911052535.335770-1-kernel@jfarr.cc/
-[4]: https://lore.kernel.org/linux-arm-kernel/20230921133703.39042-2-kernelfans@gmail.com/T/
-
-
-RFCv1 -> RFCv2
-  - Use bpf kfunc instead of helper
-  - Use C source code to generate the light skeleton file
-
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+To: linux-kernel@vger.kernel.org
 ---
-Pingfan Liu (7):
-  kexec_file: Make kexec_image_load_default global visible
-  kexec: Introduce kexec_pe_image to parse and load PE file
-  lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
-  bpf/kexec: Introduce two bpf kfunc for kexec
-  kexec: Introduce a bpf-prog lskel
-  kexec: Integrate bpf light skeleton to load zboot image
-  arm64/kexec: Add PE image format support
+ include/linux/decompress/mm.h | 7 +++++++
+ lib/decompress.c              | 6 +++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
- arch/arm64/Kconfig                           |   1 +
- arch/arm64/include/asm/kexec.h               |   1 +
- arch/arm64/kernel/machine_kexec_file.c       |   3 +
- include/linux/decompress/mm.h                |   7 +
- include/linux/kexec.h                        |   2 +
- kernel/Kconfig.kexec                         |   8 +
- kernel/Makefile                              |   2 +
- kernel/kexec_bpf/Makefile                    |  65 ++
- kernel/kexec_bpf/kexec_pe_parser_bpf.c       |  66 ++
- kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 147 +++++
- kernel/kexec_file.c                          |   2 +-
- kernel/kexec_pe_image.c                      | 611 +++++++++++++++++++
- lib/decompress.c                             |   6 +-
- 13 files changed, 917 insertions(+), 4 deletions(-)
- create mode 100644 kernel/kexec_bpf/Makefile
- create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.c
- create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
- create mode 100644 kernel/kexec_pe_image.c
-
+diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
+index ac862422df158..e8948260e2bbe 100644
+--- a/include/linux/decompress/mm.h
++++ b/include/linux/decompress/mm.h
+@@ -92,7 +92,14 @@ MALLOC_VISIBLE void free(void *where)
+ #define large_malloc(a) vmalloc(a)
+ #define large_free(a) vfree(a)
+ 
++#ifdef CONFIG_KEXEC_PE_IMAGE
++#define INIT
++#define INITCONST
++#else
+ #define INIT __init
++#define INITCONST __initconst
++#endif
++
+ #define STATIC
+ 
+ #include <linux/init.h>
+diff --git a/lib/decompress.c b/lib/decompress.c
+index ab3fc90ffc646..3d5b6304bb0f1 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -6,7 +6,7 @@
+  */
+ 
+ #include <linux/decompress/generic.h>
+-
++#include <linux/decompress/mm.h>
+ #include <linux/decompress/bunzip2.h>
+ #include <linux/decompress/unlzma.h>
+ #include <linux/decompress/unxz.h>
+@@ -48,7 +48,7 @@ struct compress_format {
+ 	decompress_fn decompressor;
+ };
+ 
+-static const struct compress_format compressed_formats[] __initconst = {
++static const struct compress_format compressed_formats[] INITCONST = {
+ 	{ {0x1f, 0x8b}, "gzip", gunzip },
+ 	{ {0x1f, 0x9e}, "gzip", gunzip },
+ 	{ {0x42, 0x5a}, "bzip2", bunzip2 },
+@@ -60,7 +60,7 @@ static const struct compress_format compressed_formats[] __initconst = {
+ 	{ {0, 0}, NULL, NULL }
+ };
+ 
+-decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
++decompress_fn INIT decompress_method(const unsigned char *inbuf, long len,
+ 				const char **name)
+ {
+ 	const struct compress_format *cf;
 -- 
 2.49.0
 
