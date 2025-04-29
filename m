@@ -4,132 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8A8BC369D5
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 00:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AF0CC3ABA5
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 04:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ug186SnWva4BxkeaecvT2cLo3EWMtLJzRh6gthbIA8I=; b=OxP8GYu/7xOcObqmzfiqyTNcKu
-	+RjaF8LW+QTP1kSbCnqfcY/TsiEqSeGseKulSs+RIcde2c1ZZm9vuJ9cA14658UsQ5iTgjBl7cxmC
-	zXMTXoVMqrzFTWZ7MRRj3glK91FIwIdbvypjP6kWBGGB0Huv7IO8rMUR5fAamUHbpe9AEvlpdGMnl
-	9bV9uixAfVuYdZHjhKh6FKZkFWnBLZkcDhaO/Xu6iHO0Y/SdD2G4dUtuE2qb0aMWWDeu9coKmkpXg
-	EwKhXFwsUH5OxyANuPSgg2Fl/6SGhRrL1rtkv/YTY9aSRAuQylDefc83nnb8gAiuzcRtc8eB5F8h1
-	tRj3+lBw==;
+	bh=wb/FusGG5NNtIFDtlHyD4eCxcyvq2vFAQrJi4YAbolY=; b=eiSugQMF51FzydwSKA/M4Z9aaB
+	/IqVzoRmF5ku2vBDq0252SlArmA49Mk6BQZt+ly3xyJQXioCzc6Ra0YJ50mXDpu94p3u8S1mqHnsg
+	jvDX/yScXZ4f58hoSIG5aW4va7tN3yqBSAawHbqZByLVYNyydwmtVhTz018rZUyUOAp7zhFU3bs0v
+	A3AkV7vygVZZr1o6PsFp0PA+cmlVPwIpXN/hrsiM+FY3pvkrirZb377fORZH4owmE+xb4fFbLxg3u
+	r9B/J+Xi7ulD5p5680lUl/UNd/i2bHOsTA8PcmniPgs7Zw0pVPu73GhB4gDtwAnjtY8d5jF5OMAX7
+	Yc4KYcIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9ZHB-00000007wuQ-0XPY;
-	Tue, 29 Apr 2025 00:56:45 +0000
-Received: from mgamail.intel.com ([192.198.163.8])
+	id 1u9cYO-00000008IVs-1aWF;
+	Tue, 29 Apr 2025 04:26:44 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9ZH8-00000007wtR-1pCP
+	id 1u9cME-00000008HTY-1vnq
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 00:56:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745888202; x=1777424202;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BwErcrUVT5FMYq5kvaleY8ubULHmM0h7cgHWh+9nRh4=;
-  b=l8oxe2bFj0ATITjhBxNYS2sRo3XCi04rXiHBihkWKkiqCzXWu78zAQez
-   /BzJT6p1U3NoNMN7wa3dnNOiljnv6p4fzxHBbCKNkWQG4Mq5Do8OPUeRa
-   X4Yuu2LC36q6ZDn6C3Ky5TYCkSjVRgexBh/p/nSBk/aANMW+Up3fAB/Uv
-   StidUMI9MldwqsT0fi9XYk3DC5wQkgIGkek6W699i6l6bGwcYkktg9A6m
-   hmuGrwLxWoHNY4Wm+79oUEV+sGKW0rfdYTqD8XatNKks/yemvtOPwLmHg
-   rk9lhnPPmeSQNH3YgcHZvRxETlZ97CBhJ5TJj9jSv0GYJJpNXo+hUM5Wn
-   Q==;
-X-CSE-ConnectionGUID: OgeqvjogSPCPLZ/4IASkEw==
-X-CSE-MsgGUID: YjV5yOSkS3O4cLyZPfnUcQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="65031989"
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="65031989"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:56:40 -0700
-X-CSE-ConnectionGUID: NsIFn/EMRPuSNGP1biZbdw==
-X-CSE-MsgGUID: LNOqP8N1RTON31J+6EQWTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="134189495"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:56:38 -0700
-Message-ID: <fbb23ee0-c0b4-4b0e-8861-940f8ceaf161@intel.com>
-Date: Mon, 28 Apr 2025 17:56:36 -0700
+	Tue, 29 Apr 2025 04:14:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745900048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wb/FusGG5NNtIFDtlHyD4eCxcyvq2vFAQrJi4YAbolY=;
+	b=e4RJkTErrJp0DzUwWXDmGzargy4dSVtsozsOR7gP+qZOlg1HIrU97CmdrjOKQPnEHqfD0e
+	Ry8pwqoHyfqgtGzJz0c56/fKSamHYDxMU2p6dxD8ILbTVZhPIzP4jEbFFFSXglCBpty2n+
+	3qQPuI36VJPQapTZofipQ4oM3MUUy7I=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-166-UizpoMweMk-AxZBvGOsd0w-1; Tue,
+ 29 Apr 2025 00:14:03 -0400
+X-MC-Unique: UizpoMweMk-AxZBvGOsd0w-1
+X-Mimecast-MFC-AGG-ID: UizpoMweMk-AxZBvGOsd0w_1745900038
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 608EF1800374;
+	Tue, 29 Apr 2025 04:13:58 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.64])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 595AA180045B;
+	Tue, 29 Apr 2025 04:13:46 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	bpf@vger.kernel.org
+Subject: [RFCv2 6/7] kexec: Integrate bpf light skeleton to load zboot image
+Date: Tue, 29 Apr 2025 12:12:13 +0800
+Message-ID: <20250429041214.13291-7-piliu@redhat.com>
+In-Reply-To: <20250429041214.13291-1-piliu@redhat.com>
+References: <20250429041214.13291-1-piliu@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
- Rich Persaud <persaur@gmail.com>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com,
- Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com,
- "Mowka, Mateusz" <mateusz.mowka@intel.com>, Ning Sun <ning.sun@intel.com>,
- tboot-devel@lists.sourceforge.net
-References: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
- <9b18e8e3-f3e2-48d4-839a-56e1d8f62657@intel.com>
- <03d0db6b-628e-4a5e-8e71-852233b83f60@apertussolutions.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <03d0db6b-628e-4a5e-8e71-852233b83f60@apertussolutions.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_175642_492560_8678F162 
-X-CRM114-Status: GOOD (  33.22  )
+X-CRM114-CacheID: sfid-20250428_211410_647700_819C883E 
+X-CRM114-Status: GOOD (  12.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -144,98 +105,492 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/28/25 17:04, Daniel P. Smith wrote:
->> OK, but why do this in Linux as opposed to tboot? Right now, much of the
->> TXT magic is done outside of the kernel. Why do it *IN* the kernel?
-> 
-> There was a patch set submitted to tboot to add AMD support. It was
-> rejected as tboot is solely focused on Intel TXT implementation.
-> 
-> This meant I either had to go the route of yet another standalone loader
-> kernel or do it in the kernel. Doing it as an external loader would have
-> required a new set of touchpoints, like the one you are highlighting. At
-> which point, I am sure I would have gotten the question of why I didn't
-> do it in the kernel.
-> 
-> But the real motivation for doing it in the kernel is due to Linux's
-> flexibility, allowing for it to be used in a variety of use-cases. For
-> instance, Linux is used as a bootloader kernel (see LinuxBoot) allowing
-> for the starting of the target OS kernel from the hardware D-RTM trust
-> chain. It can be used in the kexec path to again root the follow-on
-> kernel in the hardware D-RTM instead of an elongated S-RTM trust chain.
-> I gave a presentation at LPC 2020[1] covering several use cases if you
-> are interested.
-> 
-> [1] https://lpc.events/event/7/contributions/739/
+All kexec PE bpf prog should align with the interface exposed by the
+light skeleton
+    four maps:
+                    struct bpf_map_desc ringbuf_1;
+                    struct bpf_map_desc ringbuf_2;
+                    struct bpf_map_desc ringbuf_3;
+                    struct bpf_map_desc ringbuf_4;
+    four sections:
+                    struct bpf_map_desc rodata;
+                    struct bpf_map_desc data;
+                    struct bpf_map_desc bss;
+                    struct bpf_map_desc rodata_str1_1;
+    two progs:
+            SEC("fentry/bpf_handle_pefile")
+            SEC("fentry/bpf_post_handle_pefile")
 
-Could we please get a condensed version of that into the cover letter
-and documentation?
+With the above presumption, the integration consists of two parts:
+  -1. Call API exposed by light skeleton from kexec
+  -2. The opts_insn[] and opts_data[] are bpf-prog dependent and
+      can be extracted and passed in from the user space. In the
+      kexec_file_load design, a PE file has a .bpf section, which data
+      content is a ELF, and the ELF contains opts_insn[] opts_data[].
+      As a bonus, BPF bytecode can be placed under the protection of the
+      entire PE signature
 
-But, in the end, this is a change in direction. I don't think what you
-have here sufficiently justifies the move from an exokernel to the
-in-kernel approach.
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: bpf@vger.kernel.org
+To: kexec@lists.infradead.org
+---
+ kernel/Makefile                              |   1 +
+ kernel/kexec_bpf/Makefile                    |   8 +
+ kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 290 +------------------
+ kernel/kexec_pe_image.c                      |  71 +++++
+ 4 files changed, 84 insertions(+), 286 deletions(-)
 
-I'm open to hearing more, but the justification just isn't here.
+diff --git a/kernel/Makefile b/kernel/Makefile
+index ab82d73d8ce81..7c384bf62535a 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -139,6 +139,7 @@ obj-$(CONFIG_RESOURCE_KUNIT_TEST) += resource_kunit.o
+ obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+ 
+ CFLAGS_stackleak.o += $(DISABLE_STACKLEAK_PLUGIN)
++CFLAGS_kexec_pe_image.o += -I$(srctree)/tools/lib
+ obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+ KASAN_SANITIZE_stackleak.o := n
+ KCSAN_SANITIZE_stackleak.o := n
+diff --git a/kernel/kexec_bpf/Makefile b/kernel/kexec_bpf/Makefile
+index b772e78464f48..91d3fb8b4caf7 100644
+--- a/kernel/kexec_bpf/Makefile
++++ b/kernel/kexec_bpf/Makefile
+@@ -36,6 +36,14 @@ clean:
+ kexec_pe_parser_bpf.lskel.h: $(OUTPUT)/kexec_pe_parser_bpf.o | $(BPFTOOL)
+ 	$(call msg,GEN-SKEL,$@)
+ 	$(Q)$(BPFTOOL) gen skeleton -L $< > $@
++	@# The following sed commands make opts_data[] and opts_insn[] visible in a file instead of only in a function.
++	@# And it removes the bytecode
++	$(Q) sed -i '/static const char opts_data\[\].*=/,/";$$/d' $@
++	$(Q) sed -i '/static const char opts_insn\[\].*=/,/";$$/d' $@
++	$(Q) sed -i \
++		-e 's/opts\.data_sz = sizeof(opts_data) - 1;/opts.data_sz = opts_data_sz;/' \
++		-e 's/opts\.insns_sz = sizeof(opts_insn) - 1;/opts.insns_sz = opts_insn_sz;/' $@
++	$(Q) sed -i '7i static char *opts_data, *opts_insn;\nstatic unsigned int opts_data_sz, opts_insn_sz;' $@
+ 
+ 
+ $(OUTPUT)/kexec_pe_parser_bpf.o: kexec_pe_parser_bpf.c $(BPFOBJ) | $(OUTPUT)
+diff --git a/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h b/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+index d8a181609c32e..88a3aa90d5e04 100644
+--- a/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
++++ b/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+@@ -4,6 +4,8 @@
+ #define __KEXEC_PE_PARSER_BPF_SKEL_H__
+ 
+ #include <bpf/skel_internal.h>
++static char *opts_data, *opts_insn;
++static unsigned int opts_data_sz, opts_insn_sz;
+ 
+ struct kexec_pe_parser_bpf {
+ 	struct bpf_loader_ctx ctx;
+@@ -103,295 +105,11 @@ kexec_pe_parser_bpf__load(struct kexec_pe_parser_bpf *skel)
+ {
+ 	struct bpf_load_and_run_opts opts = {};
+ 	int err;
+-	static const char opts_data[] __attribute__((__aligned__(8))) = "\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x9f\xeb\x01\0\
+-\x18\0\0\0\0\0\0\0\x04\x03\0\0\x04\x03\0\0\x79\x02\0\0\0\0\0\0\0\0\0\x02\x03\0\
+-\0\0\x01\0\0\0\0\0\0\x01\x04\0\0\0\x20\0\0\x01\0\0\0\0\0\0\0\x03\0\0\0\0\x02\0\
+-\0\0\x04\0\0\0\x1b\0\0\0\x05\0\0\0\0\0\0\x01\x04\0\0\0\x20\0\0\0\0\0\0\0\0\0\0\
+-\x02\x06\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x02\0\0\0\x04\0\0\0\0\0\0\x10\0\0\0\0\
+-\x02\0\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\
+-\0\x2a\0\0\0\0\0\0\x0e\x07\0\0\0\x01\0\0\0\0\0\0\0\x02\0\0\x04\x10\0\0\0\x19\0\
+-\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\0\x34\0\0\0\0\0\0\x0e\x09\0\
+-\0\0\x01\0\0\0\0\0\0\0\x02\0\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\
+-\0\0\x05\0\0\0\x40\0\0\0\x3e\0\0\0\0\0\0\x0e\x0b\0\0\0\x01\0\0\0\0\0\0\0\x02\0\
+-\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\0\x48\
+-\0\0\0\0\0\0\x0e\x0d\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\x0d\x02\0\0\0\x52\0\0\0\0\0\
+-\0\x0c\x0f\0\0\0\0\0\0\0\0\0\0\x02\x12\0\0\0\0\x01\0\0\0\0\0\x01\x08\0\0\0\x40\
+-\0\0\0\0\0\0\0\x01\0\0\x0d\x02\0\0\0\x13\x01\0\0\x11\0\0\0\x17\x01\0\0\x01\0\0\
+-\x0c\x13\0\0\0\0\0\0\0\x01\0\0\x0d\x02\0\0\0\x13\x01\0\0\x11\0\0\0\x9c\x01\0\0\
+-\x01\0\0\x0c\x15\0\0\0\x17\x02\0\0\0\0\0\x01\x01\0\0\0\x08\0\0\x01\0\0\0\0\0\0\
+-\0\x03\0\0\0\0\x17\0\0\0\x04\0\0\0\x04\0\0\0\x1c\x02\0\0\0\0\0\x0e\x18\0\0\0\
+-\x01\0\0\0\0\0\0\0\0\0\0\x0a\x17\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x1a\0\0\0\x04\
+-\0\0\0\x10\0\0\0\x24\x02\0\0\0\0\0\x0e\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\0\0\
+-\0\0\x17\0\0\0\x04\0\0\0\x10\0\0\0\x35\x02\0\0\0\0\0\x0e\x1d\0\0\0\0\0\0\0\x46\
+-\x02\0\0\0\0\0\x0e\x1d\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x17\0\0\0\x04\0\
+-\0\0\x07\0\0\0\x58\x02\0\0\x01\0\0\x0f\x10\0\0\0\x1f\0\0\0\0\0\0\0\x10\0\0\0\
+-\x5d\x02\0\0\x01\0\0\x0f\x10\0\0\0\x1e\0\0\0\0\0\0\0\x10\0\0\0\x63\x02\0\0\x04\
+-\0\0\x0f\x40\0\0\0\x08\0\0\0\0\0\0\0\x10\0\0\0\x0a\0\0\0\x10\0\0\0\x10\0\0\0\
+-\x0c\0\0\0\x20\0\0\0\x10\0\0\0\x0e\0\0\0\x30\0\0\0\x10\0\0\0\x69\x02\0\0\x01\0\
+-\0\x0f\x10\0\0\0\x1c\0\0\0\0\0\0\0\x10\0\0\0\x71\x02\0\0\x01\0\0\x0f\x04\0\0\0\
+-\x19\0\0\0\0\0\0\0\x04\0\0\0\0\x69\x6e\x74\0\x5f\x5f\x41\x52\x52\x41\x59\x5f\
+-\x53\x49\x5a\x45\x5f\x54\x59\x50\x45\x5f\x5f\0\x74\x79\x70\x65\0\x6d\x61\x78\
+-\x5f\x65\x6e\x74\x72\x69\x65\x73\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x31\0\x72\
+-\x69\x6e\x67\x62\x75\x66\x5f\x32\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x33\0\x72\
+-\x69\x6e\x67\x62\x75\x66\x5f\x34\0\x64\x75\x6d\x6d\x79\0\x2e\x74\x65\x78\x74\0\
+-\x2f\x68\x6f\x6d\x65\x2f\x6c\x69\x6e\x75\x78\x2f\x6b\x65\x72\x6e\x65\x6c\x2f\
+-\x6b\x65\x78\x65\x63\x5f\x62\x70\x66\x2f\x6b\x65\x78\x65\x63\x5f\x70\x65\x5f\
+-\x70\x61\x72\x73\x65\x72\x5f\x62\x70\x66\x2e\x63\0\x09\x5f\x5f\x62\x75\x69\x6c\
+-\x74\x69\x6e\x5f\x6d\x65\x6d\x63\x70\x79\x28\x6c\x6f\x63\x61\x6c\x5f\x6e\x61\
+-\x6d\x65\x2c\x20\x4b\x45\x58\x45\x43\x5f\x52\x45\x53\x5f\x49\x4e\x49\x54\x52\
+-\x44\x5f\x4e\x41\x4d\x45\x2c\x20\x31\x36\x29\x3b\0\x09\x72\x65\x74\x75\x72\x6e\
+-\x20\x5f\x5f\x62\x75\x69\x6c\x74\x69\x6e\x5f\x6d\x65\x6d\x63\x6d\x70\x28\x6c\
+-\x6f\x63\x61\x6c\x5f\x6e\x61\x6d\x65\x2c\x20\x72\x65\x73\x5f\x6b\x65\x72\x6e\
+-\x65\x6c\x2c\x20\x34\x29\x3b\0\x75\x6e\x73\x69\x67\x6e\x65\x64\x20\x6c\x6f\x6e\
+-\x67\x20\x6c\x6f\x6e\x67\0\x63\x74\x78\0\x70\x61\x72\x73\x65\x5f\x70\x65\0\x66\
+-\x65\x6e\x74\x72\x79\x2f\x62\x70\x66\x5f\x68\x61\x6e\x64\x6c\x65\x5f\x70\x65\
+-\x66\x69\x6c\x65\0\x5f\x5f\x61\x74\x74\x72\x69\x62\x75\x74\x65\x5f\x5f\x28\x28\
+-\x75\x73\x65\x64\x29\x29\x20\x69\x6e\x74\x20\x42\x50\x46\x5f\x50\x52\x4f\x47\
+-\x28\x70\x61\x72\x73\x65\x5f\x70\x65\x2c\x20\x63\x68\x61\x72\x20\x2a\x69\x6d\
+-\x61\x67\x65\x5f\x62\x75\x66\x2c\x20\x75\x6e\x73\x69\x67\x6e\x65\x64\x20\x69\
+-\x6e\x74\x20\x69\x6d\x61\x67\x65\x5f\x73\x7a\x2c\x20\x63\x68\x61\x72\x20\x2a\
+-\x69\x6e\x69\x74\x72\x64\x2c\0\x70\x6f\x73\x74\x5f\x70\x61\x72\x73\x65\x5f\x70\
+-\x65\0\x66\x65\x6e\x74\x72\x79\x2f\x62\x70\x66\x5f\x70\x6f\x73\x74\x5f\x68\x61\
+-\x6e\x64\x6c\x65\x5f\x70\x65\x66\x69\x6c\x65\0\x5f\x5f\x61\x74\x74\x72\x69\x62\
+-\x75\x74\x65\x5f\x5f\x28\x28\x75\x73\x65\x64\x29\x29\x20\x69\x6e\x74\x20\x42\
+-\x50\x46\x5f\x50\x52\x4f\x47\x28\x70\x6f\x73\x74\x5f\x70\x61\x72\x73\x65\x5f\
+-\x70\x65\x2c\x20\x63\x68\x61\x72\x20\x2a\x69\x6d\x61\x67\x65\x5f\x62\x75\x66\
+-\x2c\x20\x69\x6e\x74\x20\x62\x75\x66\x5f\x73\x7a\x29\0\x63\x68\x61\x72\0\x4c\
+-\x49\x43\x45\x4e\x53\x45\0\x64\x75\x6d\x6d\x79\x2e\x72\x65\x73\x5f\x6b\x65\x72\
+-\x6e\x65\x6c\0\x64\x75\x6d\x6d\x79\x2e\x6c\x6f\x63\x61\x6c\x5f\x6e\x61\x6d\x65\
+-\0\x64\x75\x6d\x6d\x79\x2e\x72\x65\x73\x5f\x63\x6d\x64\x6c\x69\x6e\x65\0\x2e\
+-\x62\x73\x73\0\x2e\x64\x61\x74\x61\0\x2e\x6d\x61\x70\x73\0\x2e\x72\x6f\x64\x61\
+-\x74\x61\0\x6c\x69\x63\x65\x6e\x73\x65\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\x95\x05\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\
+-\0\0\0\0\0\0\0\0\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x31\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\x10\0\0\0\0\0\0\0\0\0\0\0\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x32\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x33\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\x72\x69\x6e\x67\x62\x75\x66\
+-\x5f\x34\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\x02\0\0\0\x04\0\0\0\x10\0\0\0\x01\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\x6b\x65\x78\
+-\x65\x63\x5f\x70\x65\x2e\x72\x6f\x64\x61\x74\x61\0\0\0\0\0\0\0\0\0\0\0\0\0\x24\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6b\x65\x72\x6e\x65\x6c\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\x02\0\0\0\x04\0\0\0\x10\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\x6b\x65\x78\x65\x63\x5f\x70\x65\x2e\x64\x61\x74\x61\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\x22\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x63\x6d\x64\x6c\x69\x6e\x65\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\x02\0\0\0\x04\0\0\0\x10\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6b\
+-\x65\x78\x65\x63\x5f\x70\x65\x2e\x62\x73\x73\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\x21\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\
+-\x04\0\0\0\x07\0\0\0\x01\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\x2e\x72\x6f\x64\x61\
+-\x74\x61\x2e\x73\x74\x72\x31\x2e\x31\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\x69\x6e\x69\x74\x72\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x47\x50\x4c\0\
+-\0\0\0\0\xb7\0\0\0\0\0\0\0\x95\0\0\0\0\0\0\0\0\0\0\0\x14\0\0\0\0\0\0\0\x5e\0\0\
+-\0\x39\x01\0\0\x1b\xe0\0\0\x1a\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x70\x61\x72\x73\x65\x5f\x70\
+-\x65\0\0\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\0\0\0\0\x08\0\0\0\0\0\0\0\0\0\0\0\x01\0\
+-\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\x62\x70\x66\x5f\x68\x61\x6e\x64\x6c\x65\
+-\x5f\x70\x65\x66\x69\x6c\x65\0\0\0\0\0\0\0\x47\x50\x4c\0\0\0\0\0\xb7\0\0\0\0\0\
+-\0\0\x95\0\0\0\0\0\0\0\0\0\0\0\x16\0\0\0\0\0\0\0\x5e\0\0\0\xc8\x01\0\0\x1b\xfc\
+-\0\0\x1a\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\0\0\x70\x6f\x73\x74\x5f\x70\x61\x72\x73\x65\x5f\x70\x65\
+-\0\0\0\0\0\0\0\x18\0\0\0\0\0\0\0\x08\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x10\0\0\0\
+-\0\0\0\0\0\0\0\0\x01\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
+-\0\0\0\x10\0\0\0\0\0\0\0\x62\x70\x66\x5f\x70\x6f\x73\x74\x5f\x68\x61\x6e\x64\
+-\x6c\x65\x5f\x70\x65\x66\x69\x6c\x65\0\0";
+-	static const char opts_insn[] __attribute__((__aligned__(8))) = "\
+-\xbf\x16\0\0\0\0\0\0\xbf\xa1\0\0\0\0\0\0\x07\x01\0\0\x78\xff\xff\xff\xb7\x02\0\
+-\0\x88\0\0\0\xb7\x03\0\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x05\0\x41\0\0\0\0\0\x61\
+-\xa1\x78\xff\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x7c\xff\
+-\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x80\xff\0\0\0\0\xd5\
+-\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x84\xff\0\0\0\0\xd5\x01\x01\0\0\
+-\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x88\xff\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\
+-\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\
+-\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\
+-\0\0\x04\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\
+-\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x08\0\0\0\x61\x01\0\0\0\0\0\0\
+-\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\
+-\0\0\0\0\0\0\x0c\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\
+-\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x01\0\0\0\
+-\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\
+-\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\
+-\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x01\
+-\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\
+-\x60\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\
+-\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xbf\x70\0\0\0\0\0\0\x95\0\0\0\0\0\0\0\
+-\x61\x60\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xb0\x0a\0\0\x63\x01\0\0\0\0\
+-\0\0\x61\x60\x0c\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xac\x0a\0\0\x63\x01\0\0\
+-\0\0\0\0\x79\x60\x10\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xa0\x0a\0\0\x7b\x01\
+-\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\x05\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x98\x0a\0\0\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x12\0\0\0\x18\x62\0\0\0\0\0\0\0\0\
+-\0\0\x98\x0a\0\0\xb7\x03\0\0\x1c\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\
+-\xc5\x07\xa7\xff\0\0\0\0\x63\x7a\x78\xff\0\0\0\0\x61\x60\x1c\0\0\0\0\0\x15\0\
+-\x03\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc4\x0a\0\0\x63\x01\0\0\0\0\0\0\xb7\
+-\x01\0\0\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xb8\x0a\0\0\xb7\x03\0\0\x48\0\0\0\
+-\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x9a\xff\0\0\0\0\x18\x61\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x2c\0\0\0\0\0\x15\0\x03\0\0\
+-\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x0c\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\
+-\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\0\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\
+-\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x8b\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\
+-\0\0\x04\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x3c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\
+-\x18\x61\0\0\0\0\0\0\0\0\0\0\x54\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\
+-\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x48\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\
+-\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x7c\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x08\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x4c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x9c\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\
+-\x18\x62\0\0\0\0\0\0\0\0\0\0\x90\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\
+-\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x6d\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x0c\0\0\0\x63\x71\0\0\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\
+-\0\0\x08\x0c\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x5c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\
+-\x18\x61\0\0\0\0\0\0\0\0\0\0\xe4\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\
+-\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xd8\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\
+-\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x5a\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x10\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x60\0\0\0\0\0\x15\x03\x08\0\0\0\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x20\x0c\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\0\0\0\
+-\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\
+-\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\
+-\0\0\0\0\0\0\0\x38\x0c\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x30\
+-\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x40\x0c\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\
+-\0\0\0\0\0\0\0\0\0\x20\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x48\x0c\0\0\x7b\x01\
+-\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x38\x0c\0\0\xb7\
+-\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x36\xff\0\0\
+-\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\
+-\0\0\0\0\0\0\x58\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\x16\0\0\0\x18\x62\0\0\
+-\0\0\0\0\0\0\0\0\x58\x0c\0\0\xb7\x03\0\0\x04\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\
+-\0\0\0\0\0\0\xc5\x07\x29\xff\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\
+-\0\0\0\0\0\x90\x0c\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x6c\0\0\0\0\0\x15\0\x03\0\0\
+-\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x6c\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\
+-\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x60\x0c\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\
+-\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x19\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\
+-\0\0\0\x14\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x70\0\0\0\0\0\x15\x03\x08\0\0\0\0\
+-\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xa8\x0c\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\
+-\0\0\0\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\
+-\0\x71\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\
+-\0\0\0\0\0\0\0\0\0\0\xc0\x0c\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\
+-\0\xb8\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc8\x0c\0\0\x7b\x01\0\0\0\0\0\0\x18\
+-\x60\0\0\0\0\0\0\0\0\0\0\xa8\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xd0\x0c\0\0\
+-\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xc0\x0c\
+-\0\0\xb7\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xf5\
+-\xfe\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x10\x0d\0\0\
+-\x63\x01\0\0\0\0\0\0\x61\x60\x7c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\x61\0\0\0\0\
+-\0\0\0\0\0\0\xec\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\x18\x62\0\0\0\
+-\0\0\0\0\0\0\0\xe0\x0c\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\
+-\0\0\0\0\0\xc5\x07\xe5\xfe\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x63\
+-\x71\0\0\0\0\0\0\x79\x63\x80\0\0\0\0\0\x15\x03\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\
+-\0\0\0\0\0\x28\x0d\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\0\0\0\0\x45\0\x02\0\
+-\x01\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x18\x62\
+-\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x40\x0d\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x38\x0d\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x48\x0d\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\
+-\0\0\0\x28\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x50\x0d\0\0\x7b\x01\0\0\0\0\0\0\
+-\xb7\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x40\x0d\0\0\xb7\x03\0\0\x20\
+-\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xc1\xfe\0\0\0\0\x61\x60\
+-\x8c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x6c\x0d\0\0\x63\
+-\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x60\x0d\0\0\
+-\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xb5\xfe\
+-\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x90\
+-\0\0\0\0\0\x15\x03\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xa8\x0d\0\0\xb7\
+-\x02\0\0\x07\0\0\0\x61\x60\x04\0\0\0\0\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\
+-\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x1c\0\
+-\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xb8\x0d\0\0\x63\x01\0\0\0\
+-\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xb0\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc0\
+-\x0d\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xa8\x0d\0\0\x18\x61\0\
+-\0\0\0\0\0\0\0\0\0\xc8\x0d\0\0\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\
+-\x62\0\0\0\0\0\0\0\0\0\0\xb8\x0d\0\0\xb7\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\
+-\xbf\x07\0\0\0\0\0\0\xc5\x07\x91\xfe\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x1c\0\
+-\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xd8\x0d\0\0\x63\x01\0\0\0\
+-\0\0\0\xb7\x01\0\0\x16\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xd8\x0d\0\0\xb7\x03\0\
+-\0\x04\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x84\xfe\0\0\0\0\
+-\x18\x60\0\0\0\0\0\0\0\0\0\0\xe0\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x20\x0e\0\
+-\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xe8\x0d\0\0\x18\x61\0\0\0\0\
+-\0\0\0\0\0\0\x18\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xf8\
+-\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x60\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\
+-\0\0\0\0\0\0\0\0\0\0\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x70\x0e\0\0\x7b\x01\0\
+-\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x10\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x90\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x18\x61\0\
+-\0\0\0\0\0\0\0\0\0\x88\x0e\0\0\x7b\x01\0\0\0\0\0\0\x61\x60\x08\0\0\0\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x28\x0e\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x0c\0\0\0\0\0\
+-\x18\x61\0\0\0\0\0\0\0\0\0\0\x2c\x0e\0\0\x63\x01\0\0\0\0\0\0\x79\x60\x10\0\0\0\
+-\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x30\x0e\0\0\x7b\x01\0\0\0\0\0\0\x61\xa0\x78\
+-\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x58\x0e\0\0\x63\x01\0\0\0\0\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\xa0\x0e\0\0\xb7\x02\0\0\x12\0\0\0\xb7\x03\0\0\x0c\0\0\
+-\0\xb7\x04\0\0\0\0\0\0\x85\0\0\0\xa7\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x4e\xfe\
+-\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x10\x0e\0\0\x63\x70\x6c\0\0\0\0\0\x77\x07\
+-\0\0\x20\0\0\0\x63\x70\x70\0\0\0\0\0\xb7\x01\0\0\x05\0\0\0\x18\x62\0\0\0\0\0\0\
+-\0\0\0\0\x10\x0e\0\0\xb7\x03\0\0\x8c\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\
+-\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x80\x0e\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\
+-\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xc5\x07\x3c\xfe\0\0\0\0\x63\
+-\x7a\x80\xff\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xb8\x0e\0\0\x18\x61\0\0\0\0\0\
+-\0\0\0\0\0\xf8\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xc0\x0e\
+-\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xf0\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\
+-\0\0\0\0\0\0\0\xd0\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x38\x0f\0\0\x7b\x01\0\0\
+-\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xd8\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
+-\x48\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xe8\x0e\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x68\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\
+-\0\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x60\x0f\0\0\x7b\x01\0\0\0\0\0\0\x61\
+-\x60\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\0\x0f\0\0\x63\x01\0\0\0\0\0\0\
+-\x61\x60\x0c\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x04\x0f\0\0\x63\x01\0\0\0\0\
+-\0\0\x79\x60\x10\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x08\x0f\0\0\x7b\x01\0\0\
+-\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x30\x0f\0\0\x63\
+-\x01\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x78\x0f\0\0\xb7\x02\0\0\x17\0\0\0\
+-\xb7\x03\0\0\x0c\0\0\0\xb7\x04\0\0\0\0\0\0\x85\0\0\0\xa7\0\0\0\xbf\x07\0\0\0\0\
+-\0\0\xc5\x07\x05\xfe\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xe8\x0e\0\0\x63\x70\
+-\x6c\0\0\0\0\0\x77\x07\0\0\x20\0\0\0\x63\x70\x70\0\0\0\0\0\xb7\x01\0\0\x05\0\0\
+-\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xe8\x0e\0\0\xb7\x03\0\0\x8c\0\0\0\x85\0\0\0\xa6\
+-\0\0\0\xbf\x07\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x58\x0f\0\0\x61\x01\0\0\
+-\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xc5\x07\
+-\xf3\xfd\0\0\0\0\x63\x7a\x84\xff\0\0\0\0\x61\xa1\x78\xff\0\0\0\0\xd5\x01\x02\0\
+-\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa0\x80\xff\0\0\0\0\x63\
+-\x06\x98\0\0\0\0\0\x61\xa0\x84\xff\0\0\0\0\x63\x06\x9c\0\0\0\0\0\x18\x61\0\0\0\
+-\0\0\0\0\0\0\0\0\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x18\0\0\0\0\0\x18\x61\0\0\0\
+-\0\0\0\0\0\0\0\x04\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x28\0\0\0\0\0\x18\x61\0\0\
+-\0\0\0\0\0\0\0\0\x08\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x38\0\0\0\0\0\x18\x61\0\
+-\0\0\0\0\0\0\0\0\0\x0c\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x48\0\0\0\0\0\x18\x61\
+-\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x58\0\0\0\0\0\x18\
+-\x61\0\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x68\0\0\0\0\0\
+-\x18\x61\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x78\0\0\0\0\
+-\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x88\0\0\0\
+-\0\0\xb7\0\0\0\0\0\0\0\x95\0\0\0\0\0\0\0";
+ 
+ 	opts.ctx = (struct bpf_loader_ctx *)skel;
+-	opts.data_sz = sizeof(opts_data) - 1;
++	opts.data_sz = opts_data_sz;
+ 	opts.data = (void *)opts_data;
+-	opts.insns_sz = sizeof(opts_insn) - 1;
++	opts.insns_sz = opts_insn_sz;
+ 	opts.insns = (void *)opts_insn;
+ 
+ 	err = bpf_load_and_run(&opts);
+diff --git a/kernel/kexec_pe_image.c b/kernel/kexec_pe_image.c
+index 610bb134f5e34..a6e299c657475 100644
+--- a/kernel/kexec_pe_image.c
++++ b/kernel/kexec_pe_image.c
+@@ -13,6 +13,7 @@
+ #include <linux/kernel.h>
+ #include <linux/vmalloc.h>
+ #include <linux/kexec.h>
++#include <linux/elf.h>
+ #include <linux/pe.h>
+ #include <linux/string.h>
+ #include <linux/bpf.h>
+@@ -23,6 +24,7 @@
+ #include <asm/image.h>
+ #include <asm/memory.h>
+ 
++#include "kexec_bpf/kexec_pe_parser_bpf.lskel.h"
+ 
+ static LIST_HEAD(phase_head);
+ 
+@@ -309,14 +311,83 @@ static bool pe_has_bpf_section(char *file_buf, unsigned long pe_sz)
+ 	return true;
+ }
+ 
++static struct kexec_pe_parser_bpf *pe_parser;
++
++static void *get_symbol_from_elf(const char *elf_data, size_t elf_size,
++		const char *symbol_name, unsigned int *symbol_size)
++{
++	Elf_Ehdr *ehdr = (Elf_Ehdr *)elf_data;
++	Elf_Shdr *shdr, *symtab_shdr, *strtab_shdr, *dst_shdr;
++	Elf64_Sym *sym, *symtab = NULL;
++	char *strtab = NULL;
++	void *symbol_data = NULL;
++	int i;
++
++	symtab_shdr = strtab_shdr = NULL;
++	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
++		pr_err("Not a valid ELF file\n");
++		goto out;
++	}
++
++	shdr = (struct elf_shdr *)(elf_data + ehdr->e_shoff);
++	for (i = 0; i < ehdr->e_shnum; i++) {
++		if (shdr[i].sh_type == SHT_SYMTAB) {
++			symtab_shdr = &shdr[i];
++		} else if (shdr[i].sh_type == SHT_STRTAB && i != ehdr->e_shstrndx) {
++			strtab_shdr = &shdr[i];
++		}
++	}
++
++	if (!symtab_shdr || !strtab_shdr) {
++		pr_err("Symbol table or string table not found\n");
++		goto out;
++	}
++	symtab = (Elf64_Sym *)(elf_data + symtab_shdr->sh_offset);
++	strtab = (char *)(elf_data + strtab_shdr->sh_offset);
++	for (i = 0; i < symtab_shdr->sh_size / sizeof(Elf64_Sym); i++) {
++		sym = &symtab[i];
++		if (strcmp(&strtab[sym->st_name], symbol_name) == 0) {
++			if (sym->st_shndx >= SHN_LORESERVE)
++			    return NULL; // No section data for these
++			dst_shdr = &shdr[sym->st_shndx];
++			symbol_data = (void *)(elf_data + dst_shdr->sh_offset + sym->st_value);
++			*symbol_size = symtab[i].st_size;
++			break;
++		}
++	}
++
++out:
++    return symbol_data;
++}
++
+ /* Load a ELF */
+ static int arm_bpf_prog(char *bpf_elf, unsigned long sz)
+ {
++	opts_data = get_symbol_from_elf(bpf_elf, sz, "opts_data", &opts_data_sz);
++	opts_insn = get_symbol_from_elf(bpf_elf, sz, "opts_insn", &opts_insn_sz);
++	if (!opts_data || !opts_insn)
++		return -1;
++	/*
++	 * When light skeleton generates opts_data[] and opts_insn[], it appends a
++	 * NULL terminator at the end of string
++	 */
++	opts_data_sz = opts_data_sz - 1;
++	opts_insn_sz = opts_insn_sz - 1;
++
++	pe_parser = kexec_pe_parser_bpf__open_and_load();
++	if (!pe_parser)
++		return -1;
++	kexec_pe_parser_bpf__attach(pe_parser);
++
+ 	return 0;
+ }
+ 
+ static void disarm_bpf_prog(void)
+ {
++	kexec_pe_parser_bpf__destroy(pe_parser);
++	pe_parser = NULL;
++	opts_data = NULL;
++	opts_insn = NULL;
+ }
+ 
+ /*
+-- 
+2.49.0
 
->> Say we axed tboot support from 6.16, but merged Trenchboot. A user on
->> old hardware upgrades their kernel. What happens to them?
-> 
-> I would not advocate for the remove of tboot support.
-
-Humor me, please.
-
-What has to happen for Trenchboot to replace tboot if a user is already
-using tboot?
-
-You might not thing it's reasonable and so don't want to answer my
-question. But I'm not the expert here. I don't know why it's not feasible.
-
->>>> so that Linux support for TXT/tboot can just go away?
->> You didn't _really_ answer the question.
->>
->> Summarizing, I think you're saying that TXT/tboot Linux support can just
->> go away, but it will be help if its maintainers help its users
->> transition.
->>
->> Does anybody disagree with that?
-> 
-> As the lead of the TrenchBoot project, I would not call for the removal
-> of tboot. We did a lot of collaboration with the previous tboot
-> maintainer, assisting each other with our solutions. Some may want to
-> use TXT under the Exo-kernel model that tboot provides. This is one use
-> case where Linux could work in that fashion but would be extremely less-
-> than-ideal. Likewise, it would not be ideal to try to add a bunch of
-> drivers to tboot in order to support the advanced policy-based
-> environment measurement system that can be achieved with a Linux
-> configuration.
-
-This is a bit hand-wavy for my taste.
-
-Can you give one concrete example of something that's hard or impossible
-with tboot but is easy with Trenchboot?
-
->>> In that perfect world, Intel ACM and tboot developers would review
->>> the TrenchBoot Linux series
->>
->> So, I was looking on the cc list and I didn't see them on there.
->> Shouldn't they be cc'd if you want them to review the series? A little
->> poking at lore makes me think that they were *NEVER* cc'd.
->>
->> Is that right, or is my lore-foo weak?
-> 
-> As I mentioned, we did a significant amount of collaboration with Lukasz
-> Hawrylko when he was the sole tboot maintainer for Intel. By the time he
-> moved on, TB was fairly well complete, and at that point the goal was to
-> get it to an acceptable state for the maintainers. We would be more than
-> glad to have the current tboot maintainers review it if they would like.
-Here's the deal: I want *an* ack from the tboot MAINTAINER on at least
-one patch in this patch set. There's not a chance that we merge
-duplicate, parallel in-kernel functionality without them saying that
-this is a reasonable approach.
-
-Let me know if I can help facilitate that in any way.
-
-I kinda wish that someone would have told me a few years ago that if
-tboot didn't take your patches that a 5,000-line series was going to
-plop into my inbox a dozen or more times.
 
