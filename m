@@ -4,73 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FD86C369D5
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 00:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8A8BC369D5
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 00:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iXxZdufuaivyOI4bNTIkIVu6dbnoCu73wQSOYtNj8ZY=; b=TWHR172kIq/DiqUKPRAQrrUV+p
-	0/XhyliFv4Yja/VWr20X9g9fZvuGCmYy7/zow8ai7mY5K6vra/9gQmuF2pvGpXCGtjk46WhXb0Fyg
-	y9Q98wSwK4mU2q9HuAa/Qt+CtsF1zg+fhGkn/rPqTC90HnqXwhSoFn86LFwVJ3Y23+wGLfBrUMBoO
-	n6B4YEPx0yl34LPgVcYdBJN0ddhc2XT14731ObXkdzPAzc/u2lycj4ZXDPSQm9Gf8JkCChE+Fub5S
-	4ZEvetw8Pbvz9Oq7XkL0oQUjStkpjXvJhanWOQPEXvgvHRJa3/Pxs3hulHm7E2ahrOLXNwFtu/Htr
-	oHZMsdRg==;
+	bh=Ug186SnWva4BxkeaecvT2cLo3EWMtLJzRh6gthbIA8I=; b=OxP8GYu/7xOcObqmzfiqyTNcKu
+	+RjaF8LW+QTP1kSbCnqfcY/TsiEqSeGseKulSs+RIcde2c1ZZm9vuJ9cA14658UsQ5iTgjBl7cxmC
+	zXMTXoVMqrzFTWZ7MRRj3glK91FIwIdbvypjP6kWBGGB0Huv7IO8rMUR5fAamUHbpe9AEvlpdGMnl
+	9bV9uixAfVuYdZHjhKh6FKZkFWnBLZkcDhaO/Xu6iHO0Y/SdD2G4dUtuE2qb0aMWWDeu9coKmkpXg
+	EwKhXFwsUH5OxyANuPSgg2Fl/6SGhRrL1rtkv/YTY9aSRAuQylDefc83nnb8gAiuzcRtc8eB5F8h1
+	tRj3+lBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9YwL-00000007uSo-2gcu;
-	Tue, 29 Apr 2025 00:35:13 +0000
-Received: from mgamail.intel.com ([198.175.65.13])
+	id 1u9ZHB-00000007wuQ-0XPY;
+	Tue, 29 Apr 2025 00:56:45 +0000
+Received: from mgamail.intel.com ([192.198.163.8])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9YwJ-00000007uRe-2nFj
+	id 1u9ZH8-00000007wtR-1pCP
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 00:35:13 +0000
+	Tue, 29 Apr 2025 00:56:43 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745886912; x=1777422912;
+  t=1745888202; x=1777424202;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=StYXEG4CAHsf+ETKhOlMs3f40kHlzQtz6J0V/i4DdGw=;
-  b=GrlXZx/opu3pFJKE86G2fIQaH/qgjFtaCE6xhEH4ibHMiVmunwhEDAhT
-   r02NerPV7yrkl94hkzeqKuSk6+amEh+x4k8dTTY08jY2PNURjUI65vde+
-   uKTNkFe3Z/sYu/4IEFpw+ZCW7Gu8iuESmIw0D/Gfd/LFTnBCaADi60cHf
-   UixLKwtJ9QvqGIQAYKDwPLYDNq2KpzryOu5UgP31XwlxBpV7HNqjgDluC
-   NF/SewiCtsz1eTLDb3pv3bEiFqlGKsS9E9o+IpoY188vuCdnlAhSuzazP
-   +ZOnLbk5LIYvFyIqJOTjzk0mYJ0GGZ00SqP3nHvGcQzb6ykbKnZH4IzdJ
-   w==;
-X-CSE-ConnectionGUID: V7weu2NkQFuXbYkCL5W1Rg==
-X-CSE-MsgGUID: gi+8c653Sa+4QECc2MYwQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58485597"
+  bh=BwErcrUVT5FMYq5kvaleY8ubULHmM0h7cgHWh+9nRh4=;
+  b=l8oxe2bFj0ATITjhBxNYS2sRo3XCi04rXiHBihkWKkiqCzXWu78zAQez
+   /BzJT6p1U3NoNMN7wa3dnNOiljnv6p4fzxHBbCKNkWQG4Mq5Do8OPUeRa
+   X4Yuu2LC36q6ZDn6C3Ky5TYCkSjVRgexBh/p/nSBk/aANMW+Up3fAB/Uv
+   StidUMI9MldwqsT0fi9XYk3DC5wQkgIGkek6W699i6l6bGwcYkktg9A6m
+   hmuGrwLxWoHNY4Wm+79oUEV+sGKW0rfdYTqD8XatNKks/yemvtOPwLmHg
+   rk9lhnPPmeSQNH3YgcHZvRxETlZ97CBhJ5TJj9jSv0GYJJpNXo+hUM5Wn
+   Q==;
+X-CSE-ConnectionGUID: OgeqvjogSPCPLZ/4IASkEw==
+X-CSE-MsgGUID: YjV5yOSkS3O4cLyZPfnUcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="65031989"
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="58485597"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:35:11 -0700
-X-CSE-ConnectionGUID: F9TQlqGmQ0qFU97qnMJfwg==
-X-CSE-MsgGUID: ew7CwDcjTj2F1kDJJWGljQ==
+   d="scan'208";a="65031989"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:56:40 -0700
+X-CSE-ConnectionGUID: NsIFn/EMRPuSNGP1biZbdw==
+X-CSE-MsgGUID: LNOqP8N1RTON31J+6EQWTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="133620882"
+   d="scan'208";a="134189495"
 Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:35:09 -0700
-Message-ID: <087a7b3b-a2d4-4596-af53-d0f850ea6aa2@intel.com>
-Date: Mon, 28 Apr 2025 17:35:07 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:56:38 -0700
+Message-ID: <fbb23ee0-c0b4-4b0e-8861-940f8ceaf161@intel.com>
+Date: Mon, 28 Apr 2025 17:56:36 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Hypervisor Live Update] Notes from April 21, 2025
-To: David Rientjes <rientjes@google.com>, Alexander Graf <graf@amazon.com>,
- Anthony Yznaga <anthony.yznaga@oracle.com>,
- David Hildenbrand <david@redhat.com>, Frank van der Linden
- <fvdl@google.com>, James Gowans <jgowans@amazon.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>,
- Mike Rapoport <rppt@kernel.org>, Pankaj Gupta
- <pankaj.gupta.linux@gmail.com>, Pasha Tatashin <tatashin@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Vipin Sharma <vipinsh@google.com>,
- Vishal Annapurve <vannapurve@google.com>,
- "Woodhouse, David" <dwmw@amazon.co.uk>
-Cc: linux-mm@kvack.org, kexec@lists.infradead.org
-References: <e03d2bdb-29b2-a0ba-1b7f-1f924dc47285@google.com>
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+ Rich Persaud <persaur@gmail.com>
+Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+ ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com,
+ Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com,
+ "Mowka, Mateusz" <mateusz.mowka@intel.com>, Ning Sun <ning.sun@intel.com>,
+ tboot-devel@lists.sourceforge.net
+References: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
+ <9b18e8e3-f3e2-48d4-839a-56e1d8f62657@intel.com>
+ <03d0db6b-628e-4a5e-8e71-852233b83f60@apertussolutions.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -116,13 +124,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <e03d2bdb-29b2-a0ba-1b7f-1f924dc47285@google.com>
+In-Reply-To: <03d0db6b-628e-4a5e-8e71-852233b83f60@apertussolutions.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250428_173511_760888_733FC4A0 
-X-CRM114-Status: UNSURE (   9.41  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250428_175642_492560_8678F162 
+X-CRM114-Status: GOOD (  33.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -137,18 +144,98 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/27/25 23:20, David Rientjes wrote:
-> KHO v6 is now staged in Andrew's mm-new tree.  We discussed what it will
-> take for this series to be pushed to Linus, specifically around
-> Reviewed-by tags.  There is not a ton of x86 specific code, but it would
-> likely be useful to have Reviewed-bys from some x86 maintainers.  Dave
-> Hansen, would you be the right person to take a look at this from an x86
-> perspective?
+On 4/28/25 17:04, Daniel P. Smith wrote:
+>> OK, but why do this in Linux as opposed to tboot? Right now, much of the
+>> TXT magic is done outside of the kernel. Why do it *IN* the kernel?
+> 
+> There was a patch set submitted to tboot to add AMD support. It was
+> rejected as tboot is solely focused on Intel TXT implementation.
+> 
+> This meant I either had to go the route of yet another standalone loader
+> kernel or do it in the kernel. Doing it as an external loader would have
+> required a new set of touchpoints, like the one you are highlighting. At
+> which point, I am sure I would have gotten the question of why I didn't
+> do it in the kernel.
+> 
+> But the real motivation for doing it in the kernel is due to Linux's
+> flexibility, allowing for it to be used in a variety of use-cases. For
+> instance, Linux is used as a bootloader kernel (see LinuxBoot) allowing
+> for the starting of the target OS kernel from the hardware D-RTM trust
+> chain. It can be used in the kexec path to again root the follow-on
+> kernel in the hardware D-RTM instead of an elongated S-RTM trust chain.
+> I gave a presentation at LPC 2020[1] covering several use cases if you
+> are interested.
+> 
+> [1] https://lpc.events/event/7/contributions/739/
 
-It looks mostly OK.
+Could we please get a condensed version of that into the cover letter
+and documentation?
 
-The one worry is the scratch reservation sizing, how folks will get that
-right, and the implications if they get it wrong. If it's undersized
-because newer kernels need more space, what ends up happening? Is it
-just an OOM during boot?
+But, in the end, this is a change in direction. I don't think what you
+have here sufficiently justifies the move from an exokernel to the
+in-kernel approach.
+
+I'm open to hearing more, but the justification just isn't here.
+
+>> Say we axed tboot support from 6.16, but merged Trenchboot. A user on
+>> old hardware upgrades their kernel. What happens to them?
+> 
+> I would not advocate for the remove of tboot support.
+
+Humor me, please.
+
+What has to happen for Trenchboot to replace tboot if a user is already
+using tboot?
+
+You might not thing it's reasonable and so don't want to answer my
+question. But I'm not the expert here. I don't know why it's not feasible.
+
+>>>> so that Linux support for TXT/tboot can just go away?
+>> You didn't _really_ answer the question.
+>>
+>> Summarizing, I think you're saying that TXT/tboot Linux support can just
+>> go away, but it will be help if its maintainers help its users
+>> transition.
+>>
+>> Does anybody disagree with that?
+> 
+> As the lead of the TrenchBoot project, I would not call for the removal
+> of tboot. We did a lot of collaboration with the previous tboot
+> maintainer, assisting each other with our solutions. Some may want to
+> use TXT under the Exo-kernel model that tboot provides. This is one use
+> case where Linux could work in that fashion but would be extremely less-
+> than-ideal. Likewise, it would not be ideal to try to add a bunch of
+> drivers to tboot in order to support the advanced policy-based
+> environment measurement system that can be achieved with a Linux
+> configuration.
+
+This is a bit hand-wavy for my taste.
+
+Can you give one concrete example of something that's hard or impossible
+with tboot but is easy with Trenchboot?
+
+>>> In that perfect world, Intel ACM and tboot developers would review
+>>> the TrenchBoot Linux series
+>>
+>> So, I was looking on the cc list and I didn't see them on there.
+>> Shouldn't they be cc'd if you want them to review the series? A little
+>> poking at lore makes me think that they were *NEVER* cc'd.
+>>
+>> Is that right, or is my lore-foo weak?
+> 
+> As I mentioned, we did a significant amount of collaboration with Lukasz
+> Hawrylko when he was the sole tboot maintainer for Intel. By the time he
+> moved on, TB was fairly well complete, and at that point the goal was to
+> get it to an acceptable state for the maintainers. We would be more than
+> glad to have the current tboot maintainers review it if they would like.
+Here's the deal: I want *an* ack from the tboot MAINTAINER on at least
+one patch in this patch set. There's not a chance that we merge
+duplicate, parallel in-kernel functionality without them saying that
+this is a reasonable approach.
+
+Let me know if I can help facilitate that in any way.
+
+I kinda wish that someone would have told me a few years ago that if
+tboot didn't take your patches that a 5,000-line series was going to
+plop into my inbox a dozen or more times.
 
