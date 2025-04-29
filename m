@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 832B0C369DC
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 16:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEAA9C3ABA5
+	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 16:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+QzDaNGo5NB7iQMYVe4vJtK6G+OOCC2HWSYEH+vC8Ic=; b=TLo06PbIJ1/hRktrjwSGrAV8Vp
-	soFkUT0NqC4fsJacwErbbUfwF+vGtRwe30Ww+dm05pp/hPrsSgyURO2fD1xuo8DIT6pbJin8tZu8n
-	H9bSCGmVg6LY2cN2vniL5UzbrGOwpJYfgclvkN/qo5LwC/FzXUepIPtTZoBmdlbjF9Y4DNccd0CYW
-	OVkuGd0rNaQv7wqRRLgLZIKsywO6/Gs/GoxUdQw/CNDK3I/R1iNIUecWQ8wJd4dZqmSK8PEjhtXmZ
-	gawa91XNr0fqDO7SkZTDwL9Quhv6Irnv6/eSeaXApxezKBL+G6HEEGfRzSUNQUTTsLDhwQTPuZjnI
-	XxSL9Urw==;
+	bh=eZo61+eEgTcVCv0fnGtdIxIWd9KmIQ33ES/RWrkQ7PY=; b=WwLqXD7bOYfDGeOPMK8FtRtpMz
+	o1c4OvVh11j96Pp3fKec2HguY0US44lpGufk1yANpM6g80zc3H+Q01ycRSFGLwkr4bwu/npmR8Dnh
+	8o4VZ9oRmBgh4m7DmXSl6vEARj+wvg0ScFrfC1Ke4ZHJSJg0b6pj4QAGf5N0Te3FeOxdjvsQYi0KT
+	BPmJ6lcf9k9mW4C5yKdC9QOyzvv+w1Y75i8Zh0ZrXutZwrhp279MmAOwGHv6vY/Rm+4ja+xzaDHBv
+	RkMRaIQhrsNQtoq1YwbUVM4OIJh2NbVg57llgQlctxA86mbwi0I0B2dswrlEXsecQcGi2Zp+6d67M
+	IxxcFwlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9ngT-0000000AEeU-42AQ;
-	Tue, 29 Apr 2025 16:19:50 +0000
+	id 1u9nge-0000000AEgs-2iMx;
+	Tue, 29 Apr 2025 16:20:00 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9nST-0000000AChW-40Ji;
-	Tue, 29 Apr 2025 16:05:22 +0000
+	id 1u9nTc-0000000ACow-0iV1;
+	Tue, 29 Apr 2025 16:06:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
 	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
 	Sender:Reply-To:Content-ID:Content-Description;
-	bh=+QzDaNGo5NB7iQMYVe4vJtK6G+OOCC2HWSYEH+vC8Ic=; b=mPI3azslQsLlIkrcg9DT2D1ogn
-	XlkvdW+phhCaZCj5wV34VJyGpkh+PPn0OPJhk6A0rpafdIhJPiAfUoeeYlGFyJERswPhbN4hktMSC
-	yw6v3gX9VnS9ENKP/ddN3TeSt6IdYre4tX9QkCX6QMcJaGeB+/8+F29DWqR7el1tCMbsueo0qSPyT
-	CoMqLnkPS6UCuIWgmSZfOuLTsxZTpraBzV+YSs/QXJINXNrwJTbbEQq8YOhhVvCOdc6aMjeYygqk+
-	fm2lE1MUvW5h5oRF+5K2dpyOtASy9RIG7RuHCXiCLsHUgWR7VbH0svOlKHZqUINfQ309FLvfPo1Oi
-	ua62/h7w==;
+	bh=eZo61+eEgTcVCv0fnGtdIxIWd9KmIQ33ES/RWrkQ7PY=; b=CCphn17JYcuXSuEnvuvqmWbD7A
+	Nq4L509ZFZkXeYJXiUXJClRV91J4+MqMnhYVly8r4qVptl+XUXadxDmlO4U/2tZ7wuYrJfUxWr950
+	9KV59vgqtotUmoEAkWI7KOtIFrdIXdcp4q+IVvYe+ROMNI0PQrKkFSmatxHn7DYsVTS2A/HxKDWiF
+	+i9pinV55NpliHzCaAg4K3lJYtDpU26q2a+YtrkdneuJ+HE2+mKk0htdDFp7FU9QahgYQGDSm9cWb
+	6+hWp12iOzQWq3MU6+pXo7nVr/0QhaAtk/+N+RQswRAldrTpDRncEK5MBWFR49/N0UOKuzgx10rdt
+	D0izakww==;
 Received: from mgamail.intel.com ([198.175.65.17])
 	by desiato.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u9nSO-0000000DSwZ-2CNT;
-	Tue, 29 Apr 2025 16:05:20 +0000
+	id 1u9nTX-0000000DSym-1nHU;
+	Tue, 29 Apr 2025 16:06:30 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745942716; x=1777478716;
+  t=1745942787; x=1777478787;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=kc4wP+JTOQYbzdxScoLeIhj26yfCcr1KXX5njmFEzCM=;
-  b=TZOdz7mwjLb90W4Uf4nGaSpZTjtmRFD4dBRtH/cGDbjg7rBRQCNODS9U
-   BU81LpLTYzuAn2Q88dCszherLXf6/WGSmSNjFfIf1m4A3wQueTBaWShs/
-   IAhy0FACRpoiU06i5ND8+J9TVVkH4EgnDhGhWLtQPRYaSnkmOJltQ7RhZ
-   Z4NhXYVxTaamGi9174QG6wTz7Ny49LmHdeY3BQOf0FA6l8S5rl5HUcQIa
-   6nKAIe6gweozoKHxm8aOU6qMqtkgPDlarHXK5MWtvmxlhMQVAYdV61lFI
-   wDflQVtNxzTnJUEDoiAUulH88VoCpX8OHZl2IkVvHyOCEjOgtHx2NZKBq
+  bh=2+za/Wd7mqbVhiX4qWwpSAKjWmTdOR4nplZwpcx+ko8=;
+  b=G5V5VMx4RxUcXTFcW480DLszm7bQ3I7eRXdX8tcZuEmcowJwZhHegOKW
+   JHq+OTFMX3hFsMA5GIzK+HAWhwtWcEALyhepMB7u0PhumVXa+pQzYCOez
+   I8oJSUyEVbOEJ7rZxWWRFP4VwwKp+/13dcAtqsWu8eWXR+GwSBw6VyyJl
+   IcONKSm4V86b2aWjIeqeFpXP5kQb99gkia2NigvEcoTaIEEXzl4yvvSIw
+   XPuTJfz/u0d40jltz2WMAKijJ59nBVmwQTSIyRCJfGCa7TZwIUyCUYT3A
+   XCOHMdWS+p1JPdhUcx6YjlVYdHiRnIPmOAbl9JayqhDkmv3x9hrSY7Q0L
    Q==;
-X-CSE-ConnectionGUID: YvnxJXbVTGejUjD0Q54HDw==
-X-CSE-MsgGUID: c41zWuGSS3e5zizGp2wboQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47585026"
+X-CSE-ConnectionGUID: jL965zCeRpikrM1oVFGM9Q==
+X-CSE-MsgGUID: V6/uyNX2SJyWmq5OM4bggw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47585241"
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="47585026"
+   d="scan'208";a="47585241"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:05:07 -0700
-X-CSE-ConnectionGUID: 4V1xIgNkRNqS84as7fjsbQ==
-X-CSE-MsgGUID: qtvKug+WQZ2IK/ghsaacoA==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:06:23 -0700
+X-CSE-ConnectionGUID: jprk9LZTRiGvaEpFCgNi7g==
+X-CSE-MsgGUID: 4izxWN+ZSo2csuyrRFsyNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="139055434"
+   d="scan'208";a="139055788"
 Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.107]) ([10.124.223.107])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:05:05 -0700
-Message-ID: <e90b81a4-a912-4174-b6e9-46a6ddd92ee3@intel.com>
-Date: Tue, 29 Apr 2025 09:05:02 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:06:21 -0700
+Message-ID: <d64a4593-c9bd-42c7-81f6-137a22ff5caa@intel.com>
+Date: Tue, 29 Apr 2025 09:06:19 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 11/14] x86: add KHO support
@@ -89,7 +89,7 @@ Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
 References: <20250411053745.1817356-1-changyuanl@google.com>
  <20250411053745.1817356-12-changyuanl@google.com>
  <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
- <aBD165pVhOIl3_by@kernel.org>
+ <aBCIhQjKKyaAuvC9@kernel.org>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -135,12 +135,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <aBD165pVhOIl3_by@kernel.org>
+In-Reply-To: <aBCIhQjKKyaAuvC9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250429_170517_016772_DB129390 
-X-CRM114-Status: GOOD (  16.22  )
+X-CRM114-CacheID: sfid-20250429_170628_147036_5576DB0A 
+X-CRM114-Status: GOOD (  17.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -155,58 +155,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/29/25 08:53, Mike Rapoport wrote:
+On 4/29/25 01:06, Mike Rapoport wrote:
 > On Mon, Apr 28, 2025 at 03:05:55PM -0700, Dave Hansen wrote:
 >> On 4/10/25 22:37, Changyuan Lyu wrote:
 >>> From: Alexander Graf <graf@amazon.com>
 >>>
->>> +#ifdef CONFIG_KEXEC_HANDOVER
->>> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
->>> +{
->>> +	struct kho_scratch *kho_scratch;
->>> +	struct setup_data *ptr;
->>> +	int i, nr_areas = 0;
+>>> +/*
+>>> + * If KHO is active, only process its scratch areas to ensure we are not
+>>> + * stepping onto preserved memory.
+>>> + */
 >>
->> Do these really need actual #ifdefs or will a nice IS_ENABLED() check
->> work instead?
+>> Same thing on the imperative voice here.
 >>
->>> +	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
->>
->> What's with the double cast?
+>> I'm also not fully understanding the comment. Do these "scratch" regions
+>> basically represent all the memory that's not being handed over? It's
+>> not obvious.
 > 
-> The double cast is required for this to be compiled on 32 bits (just like
-> in mem_avoid_overlap). The setup_data is all u64 and to cast it to a
-> pointer on 32 bit it has to go via unsigned long.
-
-Let's just make KHO depend on 64BIT, at least on x86.
-
->>> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->>> index 68530fad05f74..518635cc0876c 100644
->>> --- a/arch/x86/kernel/kexec-bzimage64.c
->>> +++ b/arch/x86/kernel/kexec-bzimage64.c
->>> @@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
->>>  #endif /* CONFIG_IMA_KEXEC */
->>>  }
+> Scratch memory represents areas created at the boot of the first kernel and
+> it's known that scratch areas won't contain any memory that's being handed
+> over.
+>  
+>>> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>>> index 57120f0749cc3..c314212a5ecd5 100644
+>>> --- a/arch/x86/kernel/e820.c
+>>> +++ b/arch/x86/kernel/e820.c
+>>> @@ -1300,6 +1300,24 @@ void __init e820__memblock_setup(void)
+>>>  		memblock_add(entry->addr, entry->size);
+>>>  	}
 >>>  
->>> +static void setup_kho(const struct kimage *image, struct boot_params *params,
->>> +		      unsigned long params_load_addr,
->>> +		      unsigned int setup_data_offset)
->>> +{
->>> +#ifdef CONFIG_KEXEC_HANDOVER
+>>> +	/*
+>>> +	 * At this point with KHO we only allocate from scratch memory.
+>>> +	 * At the same time, we configure memblock to only allow
+>>> +	 * allocations from memory below ISA_END_ADDRESS which is not
+>>> +	 * a natural scratch region, because Linux ignores memory below
+>>> +	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+>>> +	 * allocations, we must allocate real-mode trapoline below
 >>
->> Can this #ifdef be replaced with IS_ENABLED()?
+>> 						trampoline ^
+>>
+>>> +	 * ISA_END_ADDRESS.
+>>> +	 *
+>>> +	 * To make sure that we can actually perform allocations during
+>>> +	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+>>> +	 * so we can allocate from there in a scratch-only world.
+>>> +	 *
+>>> +	 * After real mode trampoline is allocated, we clear scratch
+>>> +	 * marking from the memory below ISA_END_ADDRESS
+>>> +	 */
+>>> +	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+>>
+>> This isn't making a whole ton of sense to me.
+>>
+>> Is this *only* to facilitate possible users that need <ISA_END_ADDRESS
+>> allocations? If so, please say that.
+>>
+>> I _think_ this is trying to say that KHO kernels are special and are
+>> trying to only allocate from scratch areas. But <ISA_END_ADDRESS
+>> allocations are both necessary and not marked by KHO _as_ a scratch area
+>> which causes a problem.
 > 
-> The KHO structures in kexec image are under #ifdef, so it won't compile
-> with IS_ENABLED().
+> Yes :)
 
-They shouldn't be. Define them unconditionally, please.
-
-...
->> Please axe the #ifdef in the .c file if at all possible, just like the
->> others.
-> 
-> This one follows IMA, but it's easy to make it IS_ENABLED(). It's really up
-> to x86 folks preference.
-
-Last I checked, I'm listed under the big M: for "X86 ARCHITECTURE". ;)
+So, on both of these, could the submitters please add or revise the
+comments to make it more clear?
 
