@@ -4,95 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAE83C3ABA9
-	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 14:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB18AC369D9
+	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 16:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=; b=m6BqRBv8pp4BFyNjYjU5TG6PWA
-	+PWSjmfyECcqI+Ke57NW7t1X2FHoeymCoKx9P9y2ektRikQBfduhKK4RPKkqqs4wO7C2JZDvIz4rF
-	MWz1TsQWjWRBpTQ+BM/3EBEG1R4ue0gyaI+xd/rGlsohfiXNMJEk2xJyOVLJ8bBLvxXSJgJBR0k1w
-	+OlbjZeN6q3h64cz97OYz0yOlOA3nhNZbzuXiwHY3W3qI4ycIIx/visMosHN/iEM/Sy2iHKehbCZ9
-	Qb58PTNAt5ayvdXvdWzYRCh0f+Qa6SlQY8VBwLdDnFQk3/2LUkBbCRVPKrlSZknLRzeVSjXxSl5Gj
-	g3EYs7rg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3590ZTEs1KQBIn7/bUpltm0Rsj0OLuG8mGosQsAgt0M=; b=sfLXk7rRmdEb9T5wX6wopfB0Qp
+	71eQR/wkGOIaolkSW3w8rU5gNnz8H7KtUA3jSlpnx2Uh4b/GaFkBc8c5SNZ1ySwPBbk96Jxoy55qL
+	BuZQRNiQya3RP1Cg3Zae3+asZLBp9DLHrbuwF2Qd+2fkgOmzYlEF/b9NcUOJoah5kTpJyk2mNH5TL
+	J7SHoHqVMF5S6qz7XRYZ7utpnwvzIcbJciyEWP7PNXMOjOLlFXNQC72MnkMp4VxBbdxGuHgrcmljA
+	gR+q0NbI7tsD5qzscARnRp+kVrnCkudii2iV9iysALUP8NP3GHNBNfwEHfL3kZcJSBATt5cPpEkjh
+	tW31W7PA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA8kf-0000000DAtL-3KQZ;
-	Wed, 30 Apr 2025 14:49:33 +0000
-Received: from mail-wm1-x334.google.com ([2a00:1450:4864:20::334])
+	id 1uAA8h-0000000DPTi-2Wp0;
+	Wed, 30 Apr 2025 16:18:27 +0000
+Received: from mail-wr1-x42d.google.com ([2a00:1450:4864:20::42d])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA8je-0000000DAg2-1Jii
+	id 1uAA74-0000000DPDG-0uRc
 	for kexec@lists.infradead.org;
-	Wed, 30 Apr 2025 14:48:31 +0000
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-43cf848528aso53033835e9.2
-        for <kexec@lists.infradead.org>; Wed, 30 Apr 2025 07:48:29 -0700 (PDT)
+	Wed, 30 Apr 2025 16:16:47 +0000
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5736696f8f.2
+        for <kexec@lists.infradead.org>; Wed, 30 Apr 2025 09:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=clever-cloud.com; s=google; t=1746024508; x=1746629308; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
-        b=UEmwraRHN1qomE2N1//Y9CroN/H925ThpniUbr321qxgq6vX5jyOxqaiXJOpSDaNHa
-         xj1ULiJWIHr0uD6Zk+JmWCM/Nub6UV88bXlQTHccFBC+HG/HHqNQowYnLngVvSjsbGHT
-         /Bb4+MK1peZhNbAzQqdaYdmpvB15kUKidsLpS/Fet+z5XIydecng2hMSRaMF4FmD2wBq
-         84egQoZ/rWfRCrmZhWGxpP9ivFOCb3fYI9wFjJ++kwfrzyxz9577dOQi4vqi6WWq7oVY
-         NcTvpU5GWzb2TagSJQjDeRi4Oz7adacbrNkAUAzPONEqCwJKUfrTNC6rLbz71ZrfHcb+
-         0J3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746024508; x=1746629308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746029804; x=1746634604; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
-        b=HoeWlufSbcBQN7tbvLTr4G2zz58qLGAYtjTaTJZSGIRwINlxgXoh+6bFHZtMklTQIr
-         HRYnXCYv1J13oefdiTHGcyY4CGPLf7tBrIr18G64mQipzIIWx8vV7gQnD+Q6UNByjubJ
-         idJxWRGpwP3OTQg3wk1b+c21gP6YPgc12iZ5EATC6cbsSX9Ep4qYvgeDzIMyHX17k5wD
-         stCK1wpSRr/14l/9bYMh0z8jHuXqfFJQozW7NXG5seUiPmzoH7MtIH12SgG7r3JpF27r
-         1T4H1XcslL0zOwYdZBWXta7P5uxSJNLJgsE50MdTvDACkMA8EWokCb3SuCCZuhxchgEe
-         ZWdA==
-X-Gm-Message-State: AOJu0YztbxmF/+f5gQYPIhJ8/EQMX2j4SI8caqtzbBSzHjIsreZt46hc
-	m+X7ZPx6i2O0rHAUtNNm5C02OghjWl6LMeZuYfWVaLdZ1SdeBQ0pxmZW4eEVNU0=
-X-Gm-Gg: ASbGncvpJi3Ayo9PVD+XAtzIngdgCqRm1EUJLVhOo+D52GLRJf/e8yumpzghhaNXf0G
-	cIXgTL3fjDIQtLXwvbQh6RKPIGHJFiapSmb02BLyWCfYAd0XOWCDthCCKQBfli/qxLEitqjKuBf
-	y/4n1qY2cOMBp/GX3BJsn0nYSgBzehhXv/+NeYz4iVrJN1RuLKLQP7URB3d0e42mfrctWHg8fRD
-	Ir2v+IwEJ9x/QAq82OosdHYHJvDKkPNbE3VSpbylCwaFK5N5jPq873c7CzrirJXRXzKVoY9f52/
-	bn7/YknoMWf7ZSQNaV5qxHM8VJ8vx/Rx0r/KrBI/4uiiEFxEffZ5FDwlNrlxICg9gEJ99rIVdbV
-	flSzvCccJaRhnNb+4s1ihPXniwC/HDJk8UHW6xJxtiGjf
-X-Google-Smtp-Source: AGHT+IFM1f/VQjEUzanLgfNlKL8+eZe9frOBhk8fG9VNEkHSwxq81/XTCkO1SajflF9iftLCBa6EiA==
-X-Received: by 2002:a05:600c:4e4d:b0:43b:c284:5bc2 with SMTP id 5b1f17b1804b1-441b1dfb252mr36438585e9.0.1746024508186;
-        Wed, 30 Apr 2025 07:48:28 -0700 (PDT)
-Received: from exherswag (2a01cb059441a4004633a140b8a72842.ipv6.abo.wanadoo.fr. [2a01:cb05:9441:a400:4633:a140:b8a7:2842])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ba4a5fsm27740485e9.12.2025.04.30.07.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 07:48:27 -0700 (PDT)
-Date: Wed, 30 Apr 2025 16:48:25 +0200
-From: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v8 6/7] x86/crash: pass dm crypt keys to kdump kernel
-Message-ID: <c2mqpzhtyrd5qzove5pa44ob2iiwdcrtnj655sozy2a4pprln7@mql5bjuwjbxs>
-References: <20250207080818.129165-1-coxu@redhat.com>
- <20250207080818.129165-7-coxu@redhat.com>
- <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
- <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+        bh=3590ZTEs1KQBIn7/bUpltm0Rsj0OLuG8mGosQsAgt0M=;
+        b=jvbNrqKJVIN/TPweNbRBYsJKr+ZtOYNKziIapreR7aaJwFLUJOwLhYqV0VKBhBuSiY
+         N3z3OfgWJOSA9wZ6D7xVzzD8CT8eWDGGfT+3D/okNrmoPIFfS+P1nvJFEcGOmpBl4WuT
+         llTU5i6YKBngrTut7Z55DliOFLyS9i4Uk8H46s3kK1MDNJKfF/NQWudW+NF4PxfGe3WF
+         5sm9ZUcBomEx78l5zaKxNkAudRR+/capeyxR++pKhCuvS4vz+GdFp8+CAr9TDKBArELe
+         mvhv1MRkg1j2pOa4bTmcm1azVDhlMIRDhLeeEW5v61EEEtf4vtX4Ryph7SeiO3dGkq0i
+         jn/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746029804; x=1746634604;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3590ZTEs1KQBIn7/bUpltm0Rsj0OLuG8mGosQsAgt0M=;
+        b=Bh/X6YkSXor2tpf8ucFf5NEo1U0RRlLmH/7ahHcTf9YVtO7hKDnaKPbRFUOQwPZiTt
+         vlDV7zXyEgaucNGgdV7vqZR2ymEKbYo+eh8GxEMupRA6Ad6ZOM6SHcpdU3CVh/GfwSGe
+         2CbHc1pnvXjjOKWd+L3bn+MzmSIdcrFe2hBxU9w3UKUbWq4XANqv2qbd0Cble3suGhVE
+         xgpR0qVHDO4MFBYQDa6mSgcq+AK08dqgaYfdEYxV25rCsWP5AX+U0UQiIYdU90/cD24Z
+         b9jEciplkLJxB61tCGzqGqb6xTYrjPk5k2+8KnR7uDcEYUV5D5FCKbGwew1AGxDMzYEt
+         S6Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwlHeQ8j/RfS6galPdUM7zbXVGrORVoZJVwVQj3vFNPU+e9hoszrmcKoIFnqhhS8IX0GodCg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwM15YDSLJCqUsTSBQi/UregmiaLdewcxZMtWIZAazLrCYFlFqP
+	ZMW8sE5izhfW2artpQ8DYjJHXpbAFLY3IP5y+DC0qWd9274UthIXTmqf021Ax4QF5ZJWrB1LsZ8
+	JsRIEF0bNXosmF6lUc3uRvRtuIZM3cNxW
+X-Gm-Gg: ASbGncsQsaOHczSDrUUauPiwBhc39DeMdXqm8WaWVoX2+RD4zYobwg7tsdvBnnCBcau
+	qBkoMOftDwoa02QvzwmqRJfukgkcLP+IhIE+RQuNjbeXHmZqt/7vHjGLFSXiu6NdE39Qbb2r67U
+	Isr61QaEqavZh1sI7WbdCC65ovuo3eUaZVBtqPLw==
+X-Google-Smtp-Source: AGHT+IFa3hD6lwquR+V15y8m8bVYpmDiRkw0CRecmk957X0nkqCeaL9RjOVg6KsxGxdhNb7J8rf28XKNzRHVMnQoRmM=
+X-Received: by 2002:a05:6000:184b:b0:39c:2688:612b with SMTP id
+ ffacd0b85a97d-3a08f75379fmr3711555f8f.7.1746029804276; Wed, 30 Apr 2025
+ 09:16:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+References: <20250429041214.13291-1-piliu@redhat.com> <20250429041214.13291-5-piliu@redhat.com>
+ <CAADnVQKTSubuisSBap_J=tgO15fCdtwF-NDY_1HLP_m6o28mhw@mail.gmail.com> <CAF+s44QM55AtGyquKvj0XAzZAjOii7VJYWsGD50iK3+r6GZSmg@mail.gmail.com>
+In-Reply-To: <CAF+s44QM55AtGyquKvj0XAzZAjOii7VJYWsGD50iK3+r6GZSmg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 30 Apr 2025 09:16:32 -0700
+X-Gm-Features: ATxdqUGB48vHpPeEdU_NX4frkjCUrtyGmy_6ByixlEaL_MFEjQG9XKezXmBp5zs
+Message-ID: <CAADnVQKKr7C+eRin=efg5umLumghGfYJst2MwDwpB5bEtt4rSA@mail.gmail.com>
+Subject: Re: [RFCv2 4/7] bpf/kexec: Introduce three bpf kfunc for kexec
+To: Pingfan Liu <piliu@redhat.com>
+Cc: bpf <bpf@vger.kernel.org>, kexec@lists.infradead.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250430_074830_369916_DDFEC8B4 
-X-CRM114-Status: GOOD (  26.89  )
+X-CRM114-CacheID: sfid-20250430_091646_255877_7D577200 
+X-CRM114-Status: GOOD (  24.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,167 +105,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 29, 2025 at 05:40:21PM +0800, Coiby Xu wrote:
->On Wed, Apr 23, 2025 at 10:59:06PM +0200, Arnaud Lefebvre wrote:
->>>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->>>index 68530fad05f7..5604a5109858 100644
->>>--- a/arch/x86/kernel/kexec-bzimage64.c
->>>+++ b/arch/x86/kernel/kexec-bzimage64.c
->>>@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
->>>	if (image->type == KEXEC_TYPE_CRASH) {
->>>		len = sprintf(cmdline_ptr,
->>>			"elfcorehdr=0x%lx ", image->elf_load_addr);
->>>+
->>>+		if (image->dm_crypt_keys_addr != 0)
->>>+			len += sprintf(cmdline_ptr + len,
->>>+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
+On Wed, Apr 30, 2025 at 3:47=E2=80=AFAM Pingfan Liu <piliu@redhat.com> wrot=
+e:
 >
->sprintf will return the length of dmcryptkey=xxx which will be added to
->len.
+> On Wed, Apr 30, 2025 at 8:04=E2=80=AFAM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Mon, Apr 28, 2025 at 9:13=E2=80=AFPM Pingfan Liu <piliu@redhat.com> =
+wrote:
+> >  +__bpf_kfunc struct mem_range_result *bpf_kexec_decompress(char
+> > *image_gz_payload, int image_gz_sz,
+> > > +                       unsigned int expected_decompressed_sz)
+> > > +{
+> > > +       decompress_fn decompressor;
+> > > +       //todo, use flush to cap the memory size used by decompressio=
+n
+> > > +       long (*flush)(void*, unsigned long) =3D NULL;
+> > > +       struct mem_range_result *range;
+> > > +       const char *name;
+> > > +       void *output_buf;
+> > > +       char *input_buf;
+> > > +       int ret;
+> > > +
+> > > +       range =3D kmalloc(sizeof(struct mem_range_result), GFP_KERNEL=
+);
+> > > +       if (!range) {
+> > > +               pr_err("fail to allocate mem_range_result\n");
+> > > +               return NULL;
+> > > +       }
+> > > +       refcount_set(&range->usage, 1);
+> > > +
+> > > +       input_buf =3D vmalloc(image_gz_sz);
+> > > +       if (!input_buf) {
+> > > +               pr_err("fail to allocate input buffer\n");
+> > > +               kfree(range);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       ret =3D copy_from_kernel_nofault(input_buf, image_gz_payload,=
+ image_gz_sz);
+> > > +       if (ret < 0) {
+> > > +               pr_err("Error when copying from 0x%px, size:0x%x\n",
+> > > +                               image_gz_payload, image_gz_sz);
+> > > +               kfree(range);
+> > > +               vfree(input_buf);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       output_buf =3D vmalloc(expected_decompressed_sz);
+> > > +       if (!output_buf) {
+> > > +               pr_err("fail to allocate output buffer\n");
+> > > +               kfree(range);
+> > > +               vfree(input_buf);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       decompressor =3D decompress_method(input_buf, image_gz_sz, &n=
+ame);
+> > > +       if (!decompressor) {
+> > > +               pr_err("Can not find decompress method\n");
+> > > +               kfree(range);
+> > > +               vfree(input_buf);
+> > > +               vfree(output_buf);
+> > > +               return NULL;
+> > > +       }
+> > > +       //to do, use flush
+> > > +       ret =3D decompressor(image_gz_payload, image_gz_sz, NULL, NUL=
+L,
+> > > +                               output_buf, NULL, NULL);
+> > > +
+> > > +       /* Update the range map */
+> > > +       if (ret =3D=3D 0) {
+> > > +               range->buf =3D output_buf;
+> > > +               range->size =3D expected_decompressed_sz;
+> > > +               range->status =3D 0;
+> > > +       } else {
+> > > +               pr_err("Decompress error\n");
+> > > +               vfree(output_buf);
+> > > +               kfree(range);
+> > > +               return NULL;
+> > > +       }
+> > > +       pr_info("%s, return range 0x%lx\n", __func__, range);
+> > > +       return range;
+> > > +}
+> >
+> > These kfuncs look like generic decompress routines.
+> > They're not related to kexec and probably should be in kernel/bpf/helpe=
+rs.c
+> > or kernel/bpf/compression.c instead of kernel/kexec_pe_image.c.
+> >
 >
->>>	}
->>>	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
->>>	cmdline_len += len;
+> Thanks for your suggestion. I originally considered using these kfuncs
+> only in kexec context (Later, introducing a dedicated BPF_PROG_TYPE
+> for kexec).
+
+We do not add new prog types anymore.
+They're frozen just like the list of helpers.
+
+> They are placed under a lock so that a malice attack can
+> not exhaust the memory through repeatedly calling to the decompress
+> kfunc.
+
+attack? This is all root only anyway and all memory is counted
+towards memcg.
+Make sure to use GFP_KERNEL_ACCOUNT and something similar
+to bpf_map_get_memcg.
+
+> To generalize these kfunc, I think I can add some boundary control of
+> the memory usage to prevent such attacks.
+
+Don't reinvent the wheel. memcg is the mechanism.
+
+> > They also must be KF_SLEEPABLE.
+> > Please test your patches with all kernel debugs enabled.
+> > Otherwise you would have seen all these "sleeping while atomic"
+> > issues yourself.
+> >
 >
->Then cmdline_len will included the new len.
-
-Yes, the cmdline_len is correct. No issue there.
-
+> See, I will have all these debug options for the V3 test.
 >
->>
->>You are adding another kernel parameter but I believe without taking its
->>length into account. See the MAX_ELFCOREHDR_STR_LEN constant which is added to the
->>params_cmdline_sz variable for the elfcorehdr= parameter.
+> Appreciate your insight.
 >
->Thanks for raising the concern! I believe this issue has already been
->took care of. Please check the above two inline comments:)
+> Regards,
 >
-
-I'm sorry but I don't think it is. If you look at my comments below:
-
+> Pingfan
 >
->>
->>This will (at least during my tests) truncate the cmdline given to the crash kernel because
->>the next section (efi_map_offset) will have an offset starting inside the cmdline section
->>and it might overwrite the end of it:
->>
->>kexec-bzimage64.c:480:
->>params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
->>			MAX_ELFCOREHDR_STR_LEN; <<< Should have + 31 here for "dmcryptkeys=0x<ptr> "
->>params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
->>kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
->>			sizeof(struct setup_data) +
->>			sizeof(struct efi_setup_data) +
->>			sizeof(struct setup_data) +
->>			RNG_SEED_LENGTH;
->>
->>And I believe the buffer might be too small.
->>
->>Also, there is another check a few lines above that needs to take the size into account:
->>
->>/*
->>* In case of crash dump, we will append elfcorehdr=<addr> to
->>* command line. Make sure it does not overflow
->>*/
->>if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
->>	pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
->>	return ERR_PTR(-EINVAL);
->>}
->>
->
-
-To try to explain a bit more, we pass a lot of arguments to the crash kernel so
-the initrd (dracut) can mount the encrypted disk. When I run kexec using
-the following:
-
-/usr/host/bin/kexec --debug --load-panic /linux-hv '--append=maxcpus=1
-reset_devices rd.info rd.cc.kdump root=UUID=d039277c-2ee
-3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10 rd.shell=1
-rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447' --initrd
-/crash-initrd
-
-kexec debug print those logs:
-
-<snip>
-[   53.642483] kexec-bzImage64: Loaded purgatory at 0xb6ffb000
-[   53.642828] kexec-bzImage64: Loaded boot_param, command line and misc at
-0xb6ff9000 bufsz=0x12f0 memsz=0x2000
-[   53.643366] kexec-bzImage64: Loaded 64bit kernel at 0xb1000000
-bufsz=0x16a5000 memsz=0x550d000
-[   53.643918] kexec-bzImage64: Loaded initrd at 0xaeb90000 bufsz=0x246f2a1
-memsz=0x246f2a1
-[   53.644363] kexec-bzImage64: Final command line is: elfcorehdr=0x77000000
-dmcryptkeys=0xa81fc000 maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135  console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
-<snip>
-
-Here, we see the full command line, as expected. But when I trigger a panic
-using `echo c > /proc/sysrq-trigger`, the first two lines of the crash kernel
-loading are:
-
-[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
-(GNU Binutils) 2.44) #4 SMP Wed Apr 30 16:11:39 CEST 2025
-[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0x9ec14000
-maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c26090
-
-You can see some of it is truncated at the end. It's missing `7a2447`. This is
-because I guess it gets overridden.
-
-My comment above explains where and why it might happen. If I add the size of
-the dmcryptkeys string length to the params_cmdline_sz variable, we should
-allocate enough space to have it all. With the patch below, it works fine and I
-get the full cmdline when my crash kernel boots:
-
-[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
-(GNU Binutils) 2.44) #3 SMP Thu Apr 24 16:42:18 CEST 2025
-[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0xa81fc000
-maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
-
-
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 5604a5109858..06fc1f412af4 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -27,6 +27,7 @@
-  #include <asm/kexec-bzimage64.h>
-  
-  #define MAX_ELFCOREHDR_STR_LEN	30	/* elfcorehdr=0x<64bit-value> */
-+#define MAX_DMCRYPTKEYS_STR_LEN 31
-  
-  /*
-   * Defines lowest physical address for various segments. Not sure where
-@@ -434,7 +435,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
-  	 * In case of crash dump, we will append elfcorehdr=<addr> to
-  	 * command line. Make sure it does not overflow
-  	 */
--	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
-+	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN > header->cmdline_size) {
-  		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
-  		return ERR_PTR(-EINVAL);
-  	}
-@@ -478,7 +479,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
-  	 */
-  	efi_map_sz = efi_get_runtime_map_size();
-  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
--				MAX_ELFCOREHDR_STR_LEN;
-+				MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN;
-  	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
-  	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
-  				sizeof(struct setup_data) +
-
-
-Let me know if it makes more sense!
 
