@@ -4,77 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9428DC369D9
-	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAE83C3ABA9
+	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 14:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=A1CXwSD/7j6NwMGG4ZTzid19BC6+JXchxfFkihst34w=; b=TR0IhzENDW3sjoJmfAhGjqN2/J
-	WEczTfxb/bddHsDqZvTBlPFkzRTyUTA8bWdABbuFt2YFJqFYYx6P8HdOnFY3rmTzgL36rhc+DXuj9
-	frOu6oF4rL5VVS/kia+j/YctfaGsTNA0pHUH+ycZiBtNanHFGcvXo3b3brq6LStW2+bdq83dQbIat
-	s4azJG9w/hPOyd8Ger/XHW2oEku1J/9XwFmlJtCWdZDQcHrpyiHOz/FJK/VnIJCsuiL+506GOs5dF
-	nYBFmv9g/nSurrIZ5PA5Vd3FwhQg4o6lDeUd8qgej7DhIo+cvTxzj38S/kwPCss9f/M9RHhY+hxVR
-	bnX8rYZw==;
+	bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=; b=m6BqRBv8pp4BFyNjYjU5TG6PWA
+	+PWSjmfyECcqI+Ke57NW7t1X2FHoeymCoKx9P9y2ektRikQBfduhKK4RPKkqqs4wO7C2JZDvIz4rF
+	MWz1TsQWjWRBpTQ+BM/3EBEG1R4ue0gyaI+xd/rGlsohfiXNMJEk2xJyOVLJ8bBLvxXSJgJBR0k1w
+	+OlbjZeN6q3h64cz97OYz0yOlOA3nhNZbzuXiwHY3W3qI4ycIIx/visMosHN/iEM/Sy2iHKehbCZ9
+	Qb58PTNAt5ayvdXvdWzYRCh0f+Qa6SlQY8VBwLdDnFQk3/2LUkBbCRVPKrlSZknLRzeVSjXxSl5Gj
+	g3EYs7rg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA7ZX-0000000D0oI-356I;
-	Wed, 30 Apr 2025 13:33:59 +0000
-Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
+	id 1uA8kf-0000000DAtL-3KQZ;
+	Wed, 30 Apr 2025 14:49:33 +0000
+Received: from mail-wm1-x334.google.com ([2a00:1450:4864:20::334])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA7Y2-0000000D0g1-0gYe
+	id 1uA8je-0000000DAg2-1Jii
 	for kexec@lists.infradead.org;
-	Wed, 30 Apr 2025 13:32:27 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1791B40E0214;
-	Wed, 30 Apr 2025 13:32:24 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lVgQPf0OlpAX; Wed, 30 Apr 2025 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746019940; bh=A1CXwSD/7j6NwMGG4ZTzid19BC6+JXchxfFkihst34w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iso/t97O4sCD8JcHCssOB0D0XRGWmX32iIraGerTh5NEBTbcs9T0GbdMp/U7DtPcO
-	 cAf0Q5p4itQrHWSEfAWlGXf50qMHkYQxHStiweP0v472YuXJAEXBFPXCNT6rtmBf8d
-	 Oj9dm1uCyFPyUCSxKMhaUPjvyld6xQojCDXT5NYpP2keKQB+Gk3N8LgMi8/sRQXWrw
-	 euoxensXE7TpEjb7FxHADeGlv9IHRIPcZBp4r/iOBDyj86+SVt400ZH9kI71J484yf
-	 tblDIS7SROL9YHhmxlwwcMZROkkqOZhEtFuSv5ytd/nLyvv8aMg6EwoMGF60tn6aGw
-	 YZCtAHnP5br9OgoMBczGWjs+qYwS4Iz/XgwN62PWvy7PvJmr9NDm/GKg8n7f+idGLT
-	 7S37pJGf0ZGQH0XA1N2M+Z3GqNHo8+CPFIXHtZPqzjfI9U0SdZKtVEdkS4BMES6Vb0
-	 Mn2YuggWaaagSV8ZyizN/BN5p35zSatsYlVe77GX/3EWxUTZ6ZuCb21x2X6ubP4fBa
-	 3kntCATbaCrCJIfuIPm3fg+1ALzbW7gQ6bGLIVH8aQUjtP8suWlu62bcpvgNFBtZbM
-	 X85uW67/bgi6YSTa70xhyqFwXmmUuFg7fp+KymNW8QcEwBWrk/XIdC/YmH2Ewa6jCt
-	 fsbxkEmKrqDzcNil5LeUHB4M=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1EA7740E016E;
-	Wed, 30 Apr 2025 13:32:05 +0000 (UTC)
-Date: Wed, 30 Apr 2025 15:31:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
-	michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
-	ardb@kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH v2] x86/sev: Fix making shared pages private during kdump
-Message-ID: <20250430133159.GEaBImTw8E1cqU3k5C@fat_crate.local>
-References: <20250428192657.76072-1-Ashish.Kalra@amd.com>
+	Wed, 30 Apr 2025 14:48:31 +0000
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-43cf848528aso53033835e9.2
+        for <kexec@lists.infradead.org>; Wed, 30 Apr 2025 07:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=clever-cloud.com; s=google; t=1746024508; x=1746629308; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
+        b=UEmwraRHN1qomE2N1//Y9CroN/H925ThpniUbr321qxgq6vX5jyOxqaiXJOpSDaNHa
+         xj1ULiJWIHr0uD6Zk+JmWCM/Nub6UV88bXlQTHccFBC+HG/HHqNQowYnLngVvSjsbGHT
+         /Bb4+MK1peZhNbAzQqdaYdmpvB15kUKidsLpS/Fet+z5XIydecng2hMSRaMF4FmD2wBq
+         84egQoZ/rWfRCrmZhWGxpP9ivFOCb3fYI9wFjJ++kwfrzyxz9577dOQi4vqi6WWq7oVY
+         NcTvpU5GWzb2TagSJQjDeRi4Oz7adacbrNkAUAzPONEqCwJKUfrTNC6rLbz71ZrfHcb+
+         0J3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746024508; x=1746629308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
+        b=HoeWlufSbcBQN7tbvLTr4G2zz58qLGAYtjTaTJZSGIRwINlxgXoh+6bFHZtMklTQIr
+         HRYnXCYv1J13oefdiTHGcyY4CGPLf7tBrIr18G64mQipzIIWx8vV7gQnD+Q6UNByjubJ
+         idJxWRGpwP3OTQg3wk1b+c21gP6YPgc12iZ5EATC6cbsSX9Ep4qYvgeDzIMyHX17k5wD
+         stCK1wpSRr/14l/9bYMh0z8jHuXqfFJQozW7NXG5seUiPmzoH7MtIH12SgG7r3JpF27r
+         1T4H1XcslL0zOwYdZBWXta7P5uxSJNLJgsE50MdTvDACkMA8EWokCb3SuCCZuhxchgEe
+         ZWdA==
+X-Gm-Message-State: AOJu0YztbxmF/+f5gQYPIhJ8/EQMX2j4SI8caqtzbBSzHjIsreZt46hc
+	m+X7ZPx6i2O0rHAUtNNm5C02OghjWl6LMeZuYfWVaLdZ1SdeBQ0pxmZW4eEVNU0=
+X-Gm-Gg: ASbGncvpJi3Ayo9PVD+XAtzIngdgCqRm1EUJLVhOo+D52GLRJf/e8yumpzghhaNXf0G
+	cIXgTL3fjDIQtLXwvbQh6RKPIGHJFiapSmb02BLyWCfYAd0XOWCDthCCKQBfli/qxLEitqjKuBf
+	y/4n1qY2cOMBp/GX3BJsn0nYSgBzehhXv/+NeYz4iVrJN1RuLKLQP7URB3d0e42mfrctWHg8fRD
+	Ir2v+IwEJ9x/QAq82OosdHYHJvDKkPNbE3VSpbylCwaFK5N5jPq873c7CzrirJXRXzKVoY9f52/
+	bn7/YknoMWf7ZSQNaV5qxHM8VJ8vx/Rx0r/KrBI/4uiiEFxEffZ5FDwlNrlxICg9gEJ99rIVdbV
+	flSzvCccJaRhnNb+4s1ihPXniwC/HDJk8UHW6xJxtiGjf
+X-Google-Smtp-Source: AGHT+IFM1f/VQjEUzanLgfNlKL8+eZe9frOBhk8fG9VNEkHSwxq81/XTCkO1SajflF9iftLCBa6EiA==
+X-Received: by 2002:a05:600c:4e4d:b0:43b:c284:5bc2 with SMTP id 5b1f17b1804b1-441b1dfb252mr36438585e9.0.1746024508186;
+        Wed, 30 Apr 2025 07:48:28 -0700 (PDT)
+Received: from exherswag (2a01cb059441a4004633a140b8a72842.ipv6.abo.wanadoo.fr. [2a01:cb05:9441:a400:4633:a140:b8a7:2842])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ba4a5fsm27740485e9.12.2025.04.30.07.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 07:48:27 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:48:25 +0200
+From: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v8 6/7] x86/crash: pass dm crypt keys to kdump kernel
+Message-ID: <c2mqpzhtyrd5qzove5pa44ob2iiwdcrtnj655sozy2a4pprln7@mql5bjuwjbxs>
+References: <20250207080818.129165-1-coxu@redhat.com>
+ <20250207080818.129165-7-coxu@redhat.com>
+ <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
+ <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250428192657.76072-1-Ashish.Kalra@amd.com>
+In-Reply-To: <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250430_063226_352278_92710C89 
-X-CRM114-Status: GOOD (  11.50  )
+X-CRM114-CacheID: sfid-20250430_074830_369916_DDFEC8B4 
+X-CRM114-Status: GOOD (  26.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,33 +107,167 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Apr 28, 2025 at 07:26:57PM +0000, Ashish Kalra wrote:
-> There is a bug in this additional check for GHCB page contained
+On Tue, Apr 29, 2025 at 05:40:21PM +0800, Coiby Xu wrote:
+>On Wed, Apr 23, 2025 at 10:59:06PM +0200, Arnaud Lefebvre wrote:
+>>>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+>>>index 68530fad05f7..5604a5109858 100644
+>>>--- a/arch/x86/kernel/kexec-bzimage64.c
+>>>+++ b/arch/x86/kernel/kexec-bzimage64.c
+>>>@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+>>>	if (image->type == KEXEC_TYPE_CRASH) {
+>>>		len = sprintf(cmdline_ptr,
+>>>			"elfcorehdr=0x%lx ", image->elf_load_addr);
+>>>+
+>>>+		if (image->dm_crypt_keys_addr != 0)
+>>>+			len += sprintf(cmdline_ptr + len,
+>>>+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
+>
+>sprintf will return the length of dmcryptkey=xxx which will be added to
+>len.
+>
+>>>	}
+>>>	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+>>>	cmdline_len += len;
+>
+>Then cmdline_len will included the new len.
 
-You don't write in the commit message that there is a bug - you explain what
-the bug is.
+Yes, the cmdline_len is correct. No issue there.
 
-> within a huge page which causes any shared page just below the
-> per-cpu GHCB getting skipped from being transitioned back to private
-> before kdump preparation which subsequently causes a 0x404 #VC
-> exception when this shared page is accessed later while dumping guest
-> memory during vmcore generation via kdump.
+>
+>>
+>>You are adding another kernel parameter but I believe without taking its
+>>length into account. See the MAX_ELFCOREHDR_STR_LEN constant which is added to the
+>>params_cmdline_sz variable for the elfcorehdr= parameter.
+>
+>Thanks for raising the concern! I believe this issue has already been
+>took care of. Please check the above two inline comments:)
+>
 
-And you explain that *not* in a single, never-ending sentence but in simpler,
-smaller, more palatable sentences. Imagine you're trying to explain this to
-your colleagues who are not in your head.
+I'm sorry but I don't think it is. If you look at my comments below:
 
-I've been staring at the diff and trying to reverse-engineer what you're
-trying to tell me in the commit message and I have an idea but I'm not sure.
-And when I'm not sure, it often means the commit message needs more work.
+>
+>>
+>>This will (at least during my tests) truncate the cmdline given to the crash kernel because
+>>the next section (efi_map_offset) will have an offset starting inside the cmdline section
+>>and it might overwrite the end of it:
+>>
+>>kexec-bzimage64.c:480:
+>>params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>>			MAX_ELFCOREHDR_STR_LEN; <<< Should have + 31 here for "dmcryptkeys=0x<ptr> "
+>>params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+>>kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+>>			sizeof(struct setup_data) +
+>>			sizeof(struct efi_setup_data) +
+>>			sizeof(struct setup_data) +
+>>			RNG_SEED_LENGTH;
+>>
+>>And I believe the buffer might be too small.
+>>
+>>Also, there is another check a few lines above that needs to take the size into account:
+>>
+>>/*
+>>* In case of crash dump, we will append elfcorehdr=<addr> to
+>>* command line. Make sure it does not overflow
+>>*/
+>>if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+>>	pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+>>	return ERR_PTR(-EINVAL);
+>>}
+>>
+>
 
-So try again pls.
+To try to explain a bit more, we pass a lot of arguments to the crash kernel so
+the initrd (dracut) can mount the encrypted disk. When I run kexec using
+the following:
 
-Thx.
+/usr/host/bin/kexec --debug --load-panic /linux-hv '--append=maxcpus=1
+reset_devices rd.info rd.cc.kdump root=UUID=d039277c-2ee
+3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10 rd.shell=1
+rd.cc.kdump.encrypted
+rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447' --initrd
+/crash-initrd
 
--- 
-Regards/Gruss,
-    Boris.
+kexec debug print those logs:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+<snip>
+[   53.642483] kexec-bzImage64: Loaded purgatory at 0xb6ffb000
+[   53.642828] kexec-bzImage64: Loaded boot_param, command line and misc at
+0xb6ff9000 bufsz=0x12f0 memsz=0x2000
+[   53.643366] kexec-bzImage64: Loaded 64bit kernel at 0xb1000000
+bufsz=0x16a5000 memsz=0x550d000
+[   53.643918] kexec-bzImage64: Loaded initrd at 0xaeb90000 bufsz=0x246f2a1
+memsz=0x246f2a1
+[   53.644363] kexec-bzImage64: Final command line is: elfcorehdr=0x77000000
+dmcryptkeys=0xa81fc000 maxcpus=1 reset_devices rd.info rd.cc.kdump
+root=UUID=d039277c-2ee3-466a-85eb-db9524398135  console=ttyS0 rd.timeout=10
+rd.shell=1 rd.cc.kdump.encrypted
+rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
+<snip>
+
+Here, we see the full command line, as expected. But when I trigger a panic
+using `echo c > /proc/sysrq-trigger`, the first two lines of the crash kernel
+loading are:
+
+[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
+(GNU Binutils) 2.44) #4 SMP Wed Apr 30 16:11:39 CEST 2025
+[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0x9ec14000
+maxcpus=1 reset_devices rd.info rd.cc.kdump
+root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
+rd.shell=1 rd.cc.kdump.encrypted
+rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c26090
+
+You can see some of it is truncated at the end. It's missing `7a2447`. This is
+because I guess it gets overridden.
+
+My comment above explains where and why it might happen. If I add the size of
+the dmcryptkeys string length to the params_cmdline_sz variable, we should
+allocate enough space to have it all. With the patch below, it works fine and I
+get the full cmdline when my crash kernel boots:
+
+[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
+(GNU Binutils) 2.44) #3 SMP Thu Apr 24 16:42:18 CEST 2025
+[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0xa81fc000
+maxcpus=1 reset_devices rd.info rd.cc.kdump
+root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
+rd.shell=1 rd.cc.kdump.encrypted
+rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
+
+
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 5604a5109858..06fc1f412af4 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -27,6 +27,7 @@
+  #include <asm/kexec-bzimage64.h>
+  
+  #define MAX_ELFCOREHDR_STR_LEN	30	/* elfcorehdr=0x<64bit-value> */
++#define MAX_DMCRYPTKEYS_STR_LEN 31
+  
+  /*
+   * Defines lowest physical address for various segments. Not sure where
+@@ -434,7 +435,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+  	 * In case of crash dump, we will append elfcorehdr=<addr> to
+  	 * command line. Make sure it does not overflow
+  	 */
+-	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
++	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN > header->cmdline_size) {
+  		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+  		return ERR_PTR(-EINVAL);
+  	}
+@@ -478,7 +479,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+  	 */
+  	efi_map_sz = efi_get_runtime_map_size();
+  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+-				MAX_ELFCOREHDR_STR_LEN;
++				MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN;
+  	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+  	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+  				sizeof(struct setup_data) +
+
+
+Let me know if it makes more sense!
 
