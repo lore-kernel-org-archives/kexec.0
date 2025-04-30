@@ -4,168 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A346C369DC
-	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 09:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9746C369D9
+	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 11:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=; b=qf+QWXnNB6g7WOqZ3cu9e+wWge
-	qdvduWTZttwBX8BDh2m+34QpjeDlivemeZWv8oH6oOlAr4eoHWY21YM7AAwp4WQ45RNjJBuwTaPId
-	E0/bOZNagXR3H2TNePJIqgU98GtO2X+Wgij2BrbnJS3GiPystT+lz7NEgREtO0QyOABayP5Le4wIB
-	6STMm3puH/8Zey5Mx1L/Rq5cs87tBYfzwZLFhWa4LsV1+GirYfvs5EPCo7gHmmO//WZoWE7Of0JEj
-	nSoRWm+mW9S9xCAUnk36z+zCcPmiVouRKCYduVpNl7rB+KF8apWYLLAkTzCDCM7VqZxs5DOfZLa4o
-	J/KgA2BQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=cWnivOs9W4+XLyEImwujBJd1shwdicbALn9+s1Jc+yg=; b=1eVKSsEnOyD2F4lDixEPrk3toy
+	5azhmgT4/3PAjb4Q0xlfo0SgJoJcBebArIzDBgks+4aghLfoYZQQN2Nl0GRJJZUtDK76Hv4YzUeZD
+	yI2619pF1sWDXgKbiFUFgapfgSOLSf+hFvmqNUy+BUdqtZc6idLFYszp1T+cI1hmrrFf0rVmyag//
+	o19f7UBaxzwc7WKSzSrGNsgCEpBCjN34PK7FcMCWj/O+aXBqMX9AMnGU3YExZGQfCmaNQlZxyqp4+
+	WPRocMM6bPUvFrjUEyXglf4LsiUQwFYd16xYZV8hZB+N9GZKlgTD/U4yfWVVQsS7hce47/+bAuCP3
+	MrUF8Jcg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA3pN-0000000CNhE-2bmh;
-	Wed, 30 Apr 2025 09:34:05 +0000
-Received: from mail-mw2nam04on20605.outbound.protection.outlook.com ([2a01:111:f403:240a::605] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
+	id 1uA5gl-0000000ChUR-1f43;
+	Wed, 30 Apr 2025 11:33:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA3dI-0000000CLLX-0aGg
+	id 1uA4yI-0000000CaTU-2NJf
 	for kexec@lists.infradead.org;
-	Wed, 30 Apr 2025 09:21:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IgQJKs1S1h01q0fMdC7lSnm8TEbomJIHYT18k5QnX0/IMYDKjIWOlaYUy8KuKyAHvMYnIk2luGzkU3N58riYHXHk7RFRLJg7Xx19nr4AvZU3cxIhDvisRBqIdq3lT5R4QuzvYrZELOhjRUPU5HmYgNAnSHVRs6e8Mr3l+M6d0sOnsG1d2sQB3AiR+wZ3TPn80cesOlCeMRbpgSbejukf/7B+r4lKwq2qPHjb5QKa2q4VzZdcTooXGFNvQ0qx15mjkQoAg5lJ/JgmWE6eLHZsH/QfsxVkB4F2l4BQv9P7nq2cMbWt+5USugrT8i8I8FG4B5Ssrm3SwtFbBTu72Jp4dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
- b=O3HBUK0ac3tCsZnOfKxBsJ8DHKt73kaLnOaxYzvTB/9i/eLETKRawDvbBqnpgme3tX5COTH+ZlhpAxwycxGGnadrM8hqhybhPoDPLgNSUXlHbKoRNbjIw5ZdbQTgdZ1L5P1T0KNMudJYPNRJP+aaNK3onpA6tkLpJSz584KysK8tE7Qevh26ddtClbm8XOQuMet5Bn6obFtSrPwoMMeY4KNdCgpg7Ie6bC6YmpHQJocbKjU4OEyKi3BiAy/44selKp1ygHYDJ+aKB3LMFWeB5InPlgY3C401PnN97roAYEU3O3ware02G5dlSMPACrHxf3UnU+DoRfwI/nM0fVA0Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
- b=okEkWw8ews/aQE2/ifYcrAEgqH2BNU3eUMZmOzOP6MQBfJn8xptyn/RsVfpM6+WY6bL2v2Rgr/8DqwdBT+Azm3xjqKDCUdr8HvBMT9jvx7qsPddJ2nTTS6TXFghlK5eNo33+dQcf1dAT3vdeKc/BVu6gE1Q7+e4i2/A3FKZrcvY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
- by DS5PPFEC0C6BDA1.namprd12.prod.outlook.com (2603:10b6:f:fc00::668) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Wed, 30 Apr
- 2025 09:21:32 +0000
-Received: from IA1PR12MB8189.namprd12.prod.outlook.com
- ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
- ([fe80::193b:bbfd:9894:dc48%5]) with mapi id 15.20.8699.019; Wed, 30 Apr 2025
- 09:21:31 +0000
-Message-ID: <a7856b43-a198-477b-9a3b-d32b1730b76c@amd.com>
-Date: Wed, 30 Apr 2025 11:21:25 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] x86/sev: Do not touch VMSA pages during kdump of SNP
- guest memory
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
- thomas.lendacky@amd.com, hpa@zytor.com
-Cc: kees@kernel.org, michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
- ardb@kernel.org, gustavoars@kernel.org, sgarzare@redhat.com,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev
-References: <20250428214151.155464-1-Ashish.Kalra@amd.com>
-Content-Language: en-US
-From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20250428214151.155464-1-Ashish.Kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0184.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ca::19) To IA1PR12MB8189.namprd12.prod.outlook.com
- (2603:10b6:208:3f0::13)
+	Wed, 30 Apr 2025 10:47:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746010039;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cWnivOs9W4+XLyEImwujBJd1shwdicbALn9+s1Jc+yg=;
+	b=RekcL09BJB5ldj8D/V1cU+Dj6HOUBqi3Y17l3bT1StDz2SGw8e+CvW+0IJdCESvfNcOuBw
+	DQRzpZIy4CCRuyTtFNODdiSTVfYPJf6lbH3EmjiYHDfwwvgIzAmd7jtdonu2pSYaBGRtQD
+	BFxVpwZVlqFjDskXuvOclDgbNzuQV/I=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-66-XAILIWrROYKogY0kqAxVhw-1; Wed, 30 Apr 2025 06:47:18 -0400
+X-MC-Unique: XAILIWrROYKogY0kqAxVhw-1
+X-Mimecast-MFC-AGG-ID: XAILIWrROYKogY0kqAxVhw_1746010037
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b0e0c573531so4329562a12.3
+        for <kexec@lists.infradead.org>; Wed, 30 Apr 2025 03:47:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746010037; x=1746614837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cWnivOs9W4+XLyEImwujBJd1shwdicbALn9+s1Jc+yg=;
+        b=TrDehc/up6/754ouXVkc515OTJz6YQL+vzNRUdIY/Oz9vwPQ5NggqFyqQSB2jfMP9o
+         ZWFvbDp4lODEgrAkwasKcn0d5N7UeHOyAw0HnayV+JanZv5sfZRuKrAlVV0gUhWU0exV
+         f6xqtqdDD9XZ/u1i25hlH2bw+EehGd2oJ207ylir7zXp1QVp/pV1G9WCNT6ASmAbf9rQ
+         gRic/7EFaumGdFy8jUgIlStWaWdNmV0ZQ4URBOwHaV9V/0BAQGvWnVGP4RlHoXLVjaBr
+         Dwaakj9eJ8lVv92aucl+OKt2V/0EOl+n5zevXIbSVxj+xI6fEDPLcj3cBKZ/vdmUrpcO
+         Qm6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXefBp/3nwKWAKUm9vJOyAEh+jxyVllIQWIiW54EyPXcL0T8pzLkSKVBU7l4B4mfCLCCvZZ6A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxZW+Nfa9lYHoVtf73lZpYKd04N++J6bDPrdenzQpxABFkSzipT
+	xQ7S/IHa/jKFr87NasWqN+qiPfxlXYrlWXwki9wI2KlSPcHfQyVVyNvUB452FnprhlEFkzEl2I9
+	NmXKRJVNHdWmwIyKDwTDLg9aEr7iNtuNysaEkX1yfXJhKHS4Xz7+KBJlZGQZoChDYPyhOSVHaEv
+	la9Ep0QO1hoqG3lnfDtKHtEYwFcYxj0Ozw
+X-Gm-Gg: ASbGncv7GoXQ9RDslFJfe35Z3sOc75KRZUU2dvl5XItXr+ZKhOzuiPixleSnJlO7ixb
+	AW/1B0jvSBOoivnm7RY4i5x02m6OvYAPv7+xV0zqGWkXVKuvtJhfozJswihlX2yFC+gpXxw==
+X-Received: by 2002:a17:90b:1cc8:b0:30a:fe:140f with SMTP id 98e67ed59e1d1-30a3335f481mr3880084a91.28.1746010037366;
+        Wed, 30 Apr 2025 03:47:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5jQrm0WkaSuZ2pViWj2b9YtpHy88CCKCiVNRceMWGHYFLhtTmS/1fHotBLW4tYXZnPDikg1DTTIqp4/y5PJk=
+X-Received: by 2002:a17:90b:1cc8:b0:30a:fe:140f with SMTP id
+ 98e67ed59e1d1-30a3335f481mr3880048a91.28.1746010036979; Wed, 30 Apr 2025
+ 03:47:16 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|DS5PPFEC0C6BDA1:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?dDdpZUFLQ29YbGJ6THZOaTNWRkxodnB1MlIwb3RjNzlseVA2OUdDVEhxWlJF?=
- =?utf-8?B?dFh6VFFJUkVuaTd0M0ZVK0FTUHRaUE94OUZoczZEb0pyaTVLOWFvS2FpSlEw?=
- =?utf-8?B?S2M2ZzlySmxPTFBac0lyc0VTbkMxY0RML1krSzVld0tOUDFPWmxsUWZRZHhZ?=
- =?utf-8?B?R2szZUpyQkRkc08wajhSS01EcXk1TThnRU9UNlF1cWQ3RTRYcFZ2Qk1sbFU3?=
- =?utf-8?B?ZDVVTTJXRGNXWWpXNWI1UkdNYkVFTzhyWDVjL3F4eElWcDA1QU5Jd3Nqa3k2?=
- =?utf-8?B?Q1B3UmJ2MHJPb204M2syU0kyZGhIUXR1Q1F5aFpjNzNGQlhOWm9rM3dud25P?=
- =?utf-8?B?SDFWZUhjMm9qVEdyY1pyZnNJd2h0YlhjdTl4RFNZcytSeFBDbGF1NHQza2h6?=
- =?utf-8?B?MDJaT3VkV215TzdzSWRxRmg5WWoxM3g5Q3hxd2tESVBwbDRrWUpCRDFqV2Ev?=
- =?utf-8?B?LzFRVVZVTnYvSVgyeWhrSVJwOTVsNDlNWng3S2VHQWZKdGF4ZlpEMmRQcVQr?=
- =?utf-8?B?QmNoM0FmRVFXd3JzWGRoVWdlZ2ovck91UkRCU3loaDFOSndveWRRcHRzZ0xL?=
- =?utf-8?B?OFNDOHlNWTE3OFFHSk5KM2pId0loeEJOL21FZkJ3WWlBbWlQVDcrU1VTN1BU?=
- =?utf-8?B?a2ZkMmcvUEVyQU1DVU5xSVEwb1FLMzMzYS9BMzBrNUpTaEV3eS9lVnV4eSta?=
- =?utf-8?B?ZXZVamlRTFlTWUR3VFR1TmxUaGdRWHZoL00wbGphL2pBSC9HQVN5MGpXWE9a?=
- =?utf-8?B?dk45WHRseU5wQ29YMGpMd2FRRzkvclBZVXZydEVYYXE0WHlIdG83RkFmWWV6?=
- =?utf-8?B?dElrSEFZZVAwcXFTZ3VVMDJsaHBEcnJUamN2MXVmZ3l3dE53SGJpQkJld2ZC?=
- =?utf-8?B?Y0dlY25EVnVpL1dSN01DQnBwUS9WY05HbFNZa01YdlJNemxTQS9UcTJGclZ0?=
- =?utf-8?B?bUtxN2RuQnJyM0lGb2hlR0svbURhcFBtTXBRaDdTcDZzdmhUcUJZL1FlSzk2?=
- =?utf-8?B?bnZ3Q01vcEh5U3hyenFtUnhzZ2o1VmNPdGVqT21kYWcrd2hMbTBuK1ZPRmFl?=
- =?utf-8?B?cXA0TnhxbkZMeHppeFh3aEpKaVhKc0dLZnVUZUZiY21KeXkwQXZDZlVHbTRE?=
- =?utf-8?B?aW5XUWpxOVUzNW01bG1JeGlxdW91aE90VDZiYUlscUp0V2xqWkN2UVpYUkhO?=
- =?utf-8?B?dzM0bkU0WEdBdmxKL2RpcTRFVDgyRjBoMTlvK3lIT1U3MlNMbzZJc0ZqN0Ex?=
- =?utf-8?B?eTd1WTZpOU1ldnBVSjExd1JwMmFJSmhaRnhXSlNhdFFUOHJiaklHYmJoRFZj?=
- =?utf-8?B?UFBQbFBvSllrcjB5ZHJiSU96WmdNYlkrREFvZUoyQkFuaWZ1VklaZHBsdVJs?=
- =?utf-8?B?YTN5TVRldW5vNE1LOWszaVJJMDZNYmZ2VXVDRHU4aGZ3M0VCelNRMWJJSC9v?=
- =?utf-8?B?VEdSTkxGMGlCRWRzYWlaWHFFd2lzKyt6b2ZMcVNBVmc3Wnh2VWkrcDd5aENa?=
- =?utf-8?B?WHM4b3NFLzFZdmg1WXVXRWg0bnV4RXpuZTZINkFMc1RWc3RqU1BPTER6VGxG?=
- =?utf-8?B?clNEYVA1UExXS3F1US9VVTRPazNTNFFkM1hwZHFWbFJQRTRiQzFWSXRKcGMv?=
- =?utf-8?B?VnVERmZJL3dnOHplamp1YU9ZcnQ4U0p0MXBHQVB2TERIbndSVC9XbzhUMHNt?=
- =?utf-8?B?WEFyVFMzajRXeGFuOFB5Wnlub1FGL24wVUxQd0plMzF3ZzZmNS8xL0dua2ty?=
- =?utf-8?B?VkJ1d2crdFVOcllxY20zZVo1VHVLYTZteXFuN2l0RWllN0NibkFkSU9Mc3FG?=
- =?utf-8?B?TnRUYTdxS2NyRXMrc2QrTGx6N0VwM3JmR3VCOEpDUmZnS1FyY1lNN3FpTHlU?=
- =?utf-8?B?Ukp1SmY4SldHZ1JLOUhBajltcHpSNFFaM3RTcWNMQ0x2TVk3NkdtV1Y0eWRq?=
- =?utf-8?Q?mF/ieuMjQjE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?anJyU1FOc3BkNVZPeUMxTDFmR1Ura3ZpOHV1QU1rMGoxQ2RPOWpqZmo2cFVC?=
- =?utf-8?B?ZTQ5OUd5WW01dnZEcHZzMkc0aHBuY1IxWUVWU0hZVTQ4cGJ4MXhHSnIrdkF4?=
- =?utf-8?B?RmlnRmNaRnA0Z0ZZbkpFOWdscmxMSUFWTDA2KzUvSlJybEFGTzN0NUhIdTZv?=
- =?utf-8?B?NUJFeEtaa05zRjRLSTFyTjVWTVZFZS8zeXdpTVpISHNCcnVGN1kyK0g2bHJp?=
- =?utf-8?B?L3hXL21nM2FyOUlBYlVLelc5Vkt0RUorM2phbytxTTIrY3l4SERtazc5bXZR?=
- =?utf-8?B?b0d3SUNPZ0N2b084WkE1bXRySEM5ekRTT0NSVlgwQTRMd2ZZM1dHbEkwNGJp?=
- =?utf-8?B?OHhFY2RHNHp5SFBoS3NiS2l0NFQyN1p4K1dvdWRVR1YzdzZwbUYvWVU1czFC?=
- =?utf-8?B?TzZiSGNGWVh0SzZ6eldpSDFTZGQ4TEczbUtZUnVsc2VoVStpbGFIMWdocUFO?=
- =?utf-8?B?NWdtL3h0VHpiTGFCU0dpMEFacUV5VFEzRFB1bytJQ1EyVEdLaUhRMTkrU0NQ?=
- =?utf-8?B?SVBBamZSN2V0c1o3SXcyWFJPSnF5aytpWHlrZVIyRnRmaDIvVEtJRkQ5WU1q?=
- =?utf-8?B?Q21BSXBWZ25FM1BWRERVVER3dTlkMVl4Ni8vRnQ3eTdseW9CMFdZMHhkcVdt?=
- =?utf-8?B?NnliMi9NV2Q0MHZ6aDg2UFB4aGY2WGZKMmRjUkxOSmU1dWs5MzB3S05MK1FM?=
- =?utf-8?B?bzRzcE43ZnBLd0VBQ2g3U3RwaGpVcjRhd1Q4OTBSWGxsNUR1b0IvUU9RQkZW?=
- =?utf-8?B?dnBLZGZJVmpoQnNNVE5wLzRWMDJtZWk3T1NJeUtjdTNmY1F2YzVYc0Jpdnhh?=
- =?utf-8?B?Nzc0M2tUQTdSbUNjTjdFSnRQWWptOUs4T0JGWVY0YXQwMUpuTTQzU0hYcEJa?=
- =?utf-8?B?djd0OEE4YXBpM1FKQjUrU2pNcmtMV3BQdWk1U1NaUjN6ckRvVWRJQ2pRK1ZK?=
- =?utf-8?B?OUZ0ZjdYcDNhaWdpVkhHaElPUjRXejVERnp6OUUvN2xDQ3VxbW5uYnhrTkJj?=
- =?utf-8?B?RkhuNy9YQTBqVDBjbHpha25kNUYwSDN2TktEcTlleHJsTzAwTmk2VXpIS24v?=
- =?utf-8?B?L2VlYXJkRXVkVFpacDFEeUtzcWxwU0lvUUlva0Rsbm95NFFBYjl0a0duNEYx?=
- =?utf-8?B?WVdkd29wSXNyYlh3aml0cUJzMFZac0FDRDJIcUdheW9SRk40OTlXbEYwZFdu?=
- =?utf-8?B?QWNTSUV3dWJPVmY3b3pJQ2s5dlNIRVduYW9OTWRZZ3c3TVA5M0VqTWFTbVBk?=
- =?utf-8?B?a0t4UWl2K0RYdmt6L0cvUXJ1dUlpM0JMbmNadkExT0dLZ0Z4dGJ3aUN1YkFq?=
- =?utf-8?B?aEhJc2VSNkxvZ2lENmFETXBEMmhRTlpkR0FXMDBiVllOVHluZGZ4RGhZSDA4?=
- =?utf-8?B?bUZ5ckRrU2hZQk5XQ3ArRjNHYjEwTkxBNS9PdTB5T0pES25DazNZcjJkNjFC?=
- =?utf-8?B?T1F6RUtycWVYTTErYnFMR09PSjA4YjJCZ05BVmQ3NjJpbXNyZERsc0dsSjFN?=
- =?utf-8?B?YmNGUXpJRnFiSVE5K1p6cTBXS1VzaHFmVEpERzZoa2hrM0xva1dMdVEyb1hD?=
- =?utf-8?B?dmE3U0tiMEtWS2o2MUhxUm5Td1J4UDFKZ05MZE9lVkthNXhCUVI4MlQwZVlt?=
- =?utf-8?B?dlZsZHNVdzdDcTlPcnJPaHVWY3IrNTNBZ2tmbFlZOElTRnBoKytRb2pGc2Yv?=
- =?utf-8?B?akl5bDh0Ly9iUDNoZUI3dzQzZndsM3VFWSsrV21ZQ0JxT21lMU9Od05XbTg4?=
- =?utf-8?B?dUhTTDA3bXlKWGdvMG9JazlidDN4M3paSlFHSHZWd3BqWk4vVWFRZjJJTEdw?=
- =?utf-8?B?cVlSL1cxUGo1OGFWVkZqQytreTQ3TW5xSzBMMGN3QWJhRkl0cE9zVnVYZmNT?=
- =?utf-8?B?dm0wQ2gvaWhoSE9CQ1V2L1BFZVNtVGorRTBlRHB4aWVieTBhb2dWNC9ZbjU4?=
- =?utf-8?B?ajB4UHRHN05nb1pobE9BZERuQk85ck5WS3VXV1dTaWhkSkV3SFU4MU1qMWMy?=
- =?utf-8?B?UnB3eSszaWdHd2dmbkRGcjR6dEJTcG5jNG9JeU1kYXJlT3VZTHZsMndEdEhT?=
- =?utf-8?B?OUQwcU1UQ2l1WmVGbFBJV25BUW5pVFJDazdGN3padndvMEZPL3JHbTU1dUcw?=
- =?utf-8?Q?URAa3W1FyhePIS5voB79WBHqO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 09:21:31.4327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VV2yjzelBDaVAXHR15q2qD2ZcEBo7TjZ8GTO9wSwbyEqTkIrS+aqIRBstyZYV8A0qVzrLCNArpXlA/JnwY4GmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFEC0C6BDA1
+References: <20250429041214.13291-1-piliu@redhat.com> <20250429041214.13291-5-piliu@redhat.com>
+ <CAADnVQKTSubuisSBap_J=tgO15fCdtwF-NDY_1HLP_m6o28mhw@mail.gmail.com>
+In-Reply-To: <CAADnVQKTSubuisSBap_J=tgO15fCdtwF-NDY_1HLP_m6o28mhw@mail.gmail.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Wed, 30 Apr 2025 18:47:05 +0800
+X-Gm-Features: ATxdqUHf-cFpaHNGaQnpHjY7Ol3gt6Pz5b1rkhWQt0CgtYPAvEmCJ_bnsVUsKMQ
+Message-ID: <CAF+s44QM55AtGyquKvj0XAzZAjOii7VJYWsGD50iK3+r6GZSmg@mail.gmail.com>
+Subject: Re: [RFCv2 4/7] bpf/kexec: Introduce three bpf kfunc for kexec
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, kexec@lists.infradead.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: aU7ZBQsx8F-R9KV6EsBzQTkMv9wdmT-elBnL-ulD2-M_1746010037
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250430_022136_222126_1F34449F 
-X-CRM114-Status: GOOD (  31.08  )
+X-CRM114-CacheID: sfid-20250430_034722_691983_D45D185C 
+X-CRM114-Status: GOOD (  19.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -180,323 +114,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Wed, Apr 30, 2025 at 8:04=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Mon, Apr 28, 2025 at 9:13=E2=80=AFPM Pingfan Liu <piliu@redhat.com> wr=
+ote:
+>  +__bpf_kfunc struct mem_range_result *bpf_kexec_decompress(char
+> *image_gz_payload, int image_gz_sz,
+> > +                       unsigned int expected_decompressed_sz)
+> > +{
+> > +       decompress_fn decompressor;
+> > +       //todo, use flush to cap the memory size used by decompression
+> > +       long (*flush)(void*, unsigned long) =3D NULL;
+> > +       struct mem_range_result *range;
+> > +       const char *name;
+> > +       void *output_buf;
+> > +       char *input_buf;
+> > +       int ret;
+> > +
+> > +       range =3D kmalloc(sizeof(struct mem_range_result), GFP_KERNEL);
+> > +       if (!range) {
+> > +               pr_err("fail to allocate mem_range_result\n");
+> > +               return NULL;
+> > +       }
+> > +       refcount_set(&range->usage, 1);
+> > +
+> > +       input_buf =3D vmalloc(image_gz_sz);
+> > +       if (!input_buf) {
+> > +               pr_err("fail to allocate input buffer\n");
+> > +               kfree(range);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       ret =3D copy_from_kernel_nofault(input_buf, image_gz_payload, i=
+mage_gz_sz);
+> > +       if (ret < 0) {
+> > +               pr_err("Error when copying from 0x%px, size:0x%x\n",
+> > +                               image_gz_payload, image_gz_sz);
+> > +               kfree(range);
+> > +               vfree(input_buf);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       output_buf =3D vmalloc(expected_decompressed_sz);
+> > +       if (!output_buf) {
+> > +               pr_err("fail to allocate output buffer\n");
+> > +               kfree(range);
+> > +               vfree(input_buf);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       decompressor =3D decompress_method(input_buf, image_gz_sz, &nam=
+e);
+> > +       if (!decompressor) {
+> > +               pr_err("Can not find decompress method\n");
+> > +               kfree(range);
+> > +               vfree(input_buf);
+> > +               vfree(output_buf);
+> > +               return NULL;
+> > +       }
+> > +       //to do, use flush
+> > +       ret =3D decompressor(image_gz_payload, image_gz_sz, NULL, NULL,
+> > +                               output_buf, NULL, NULL);
+> > +
+> > +       /* Update the range map */
+> > +       if (ret =3D=3D 0) {
+> > +               range->buf =3D output_buf;
+> > +               range->size =3D expected_decompressed_sz;
+> > +               range->status =3D 0;
+> > +       } else {
+> > +               pr_err("Decompress error\n");
+> > +               vfree(output_buf);
+> > +               kfree(range);
+> > +               return NULL;
+> > +       }
+> > +       pr_info("%s, return range 0x%lx\n", __func__, range);
+> > +       return range;
+> > +}
+>
+> These kfuncs look like generic decompress routines.
+> They're not related to kexec and probably should be in kernel/bpf/helpers=
+.c
+> or kernel/bpf/compression.c instead of kernel/kexec_pe_image.c.
+>
 
-> When kdump is running makedumpfile to generate vmcore and dumping SNP
-> guest memory it touches the VMSA page of the vCPU executing kdump which
-> then results in unrecoverable #NPF/RMP faults as the VMSA page is
-> marked busy/in-use when the vCPU is running and subsequently causes
-> guest softlockup/hang.
-> 
-> Additionally other APs may be halted in guest mode and their VMSA pages
-> are marked busy and touching these VMSA pages during guest memory dump
-> will also cause #NPF.
-> 
-> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-> of guest mode and then clear the VMSA bit on their VMSA pages.
-> 
-> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-> ensure that makedumpfile excludes that page while dumping guest memory.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Thanks for your suggestion. I originally considered using these kfuncs
+only in kexec context (Later, introducing a dedicated BPF_PROG_TYPE
+for kexec). They are placed under a lock so that a malice attack can
+not exhaust the memory through repeatedly calling to the decompress
+kfunc.
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+To generalize these kfunc, I think I can add some boundary control of
+the memory usage to prevent such attacks.
 
-> ---
->   arch/x86/coco/sev/core.c | 241 +++++++++++++++++++++++++--------------
->   1 file changed, 155 insertions(+), 86 deletions(-)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index dcfaa698d6cf..f4eb5b645239 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -877,6 +877,99 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
->   	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
->   }
->   
-> +static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
-> +{
-> +	struct ghcb_state state;
-> +	unsigned long flags;
-> +	struct ghcb *ghcb;
-> +	int ret = 0;
-> +
-> +	local_irq_save(flags);
-> +
-> +	ghcb = __sev_get_ghcb(&state);
-> +
-> +	vc_ghcb_invalidate(ghcb);
-> +	if (event == SVM_VMGEXIT_AP_CREATE)
-> +		ghcb_set_rax(ghcb, vmsa->sev_features);
-> +	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-> +	ghcb_set_sw_exit_info_1(ghcb,
-> +				((u64)apic_id << 32)	|
-> +				((u64)snp_vmpl << 16)	|
-> +				event);
-> +	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-> +
-> +	sev_es_wr_ghcb_msr(__pa(ghcb));
-> +	VMGEXIT();
-> +
-> +	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-> +	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-> +		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	__sev_put_ghcb(&state);
-> +
-> +	local_irq_restore(flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
-> +{
-> +	int ret;
-> +
-> +	if (snp_vmpl) {
-> +		struct svsm_call call = {};
-> +		unsigned long flags;
-> +
-> +		local_irq_save(flags);
-> +
-> +		call.caa = this_cpu_read(svsm_caa);
-> +		call.rcx = __pa(va);
-> +
-> +		if (make_vmsa) {
-> +			/* Protocol 0, Call ID 2 */
-> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
-> +			call.rdx = __pa(caa);
-> +			call.r8  = apic_id;
-> +		} else {
-> +			/* Protocol 0, Call ID 3 */
-> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
-> +		}
-> +
-> +		ret = svsm_perform_call_protocol(&call);
-> +
-> +		local_irq_restore(flags);
-> +	} else {
-> +		/*
-> +		 * If the kernel runs at VMPL0, it can change the VMSA
-> +		 * bit for a page using the RMPADJUST instruction.
-> +		 * However, for the instruction to succeed it must
-> +		 * target the permissions of a lesser privileged (higher
-> +		 * numbered) VMPL level, so use VMPL1.
-> +		 */
-> +		u64 attrs = 1;
-> +
-> +		if (make_vmsa)
-> +			attrs |= RMPADJUST_VMSA_PAGE_BIT;
-> +
-> +		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
-> +{
-> +	int err;
-> +
-> +	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
-> +	if (err)
-> +		pr_err("clear VMSA page failed (%u), leaking page\n", err);
-> +	else
-> +		free_page((unsigned long)vmsa);
-> +}
-> +
->   static void set_pte_enc(pte_t *kpte, int level, void *va)
->   {
->   	struct pte_enc_desc d = {
-> @@ -973,6 +1066,65 @@ void snp_kexec_begin(void)
->   		pr_warn("Failed to stop shared<->private conversions\n");
->   }
->   
-> +/*
-> + * Shutdown all APs except the one handling kexec/kdump and clearing
-> + * the VMSA tag on AP's VMSA pages as they are not being used as
-> + * VMSA page anymore.
-> + */
-> +static void shutdown_all_aps(void)
-> +{
-> +	struct sev_es_save_area *vmsa;
-> +	int apic_id, this_cpu, cpu;
-> +
-> +	this_cpu = get_cpu();
-> +
-> +	/*
-> +	 * APs are already in HLT loop when enc_kexec_finish() callback
-> +	 * is invoked.
-> +	 */
-> +	for_each_present_cpu(cpu) {
-> +		vmsa = per_cpu(sev_vmsa, cpu);
-> +
-> +		/*
-> +		 * BSP does not have guest allocated VMSA and there is no need
-> +		 * to clear the VMSA tag for this page.
-> +		 */
-> +		if (!vmsa)
-> +			continue;
-> +
-> +		/*
-> +		 * Cannot clear the VMSA tag for the currently running vCPU.
-> +		 */
-> +		if (this_cpu == cpu) {
-> +			unsigned long pa;
-> +			struct page *p;
-> +
-> +			pa = __pa(vmsa);
-> +			/*
-> +			 * Mark the VMSA page of the running vCPU as offline
-> +			 * so that is excluded and not touched by makedumpfile
-> +			 * while generating vmcore during kdump.
-> +			 */
-> +			p = pfn_to_online_page(pa >> PAGE_SHIFT);
-> +			if (p)
-> +				__SetPageOffline(p);
-> +			continue;
-> +		}
-> +
-> +		apic_id = cpuid_to_apicid[cpu];
-> +
-> +		/*
-> +		 * Issue AP destroy to ensure AP gets kicked out of guest mode
-> +		 * to allow using RMPADJUST to remove the VMSA tag on it's
-> +		 * VMSA page.
-> +		 */
-> +		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
-> +		snp_cleanup_vmsa(vmsa, apic_id);
-> +	}
-> +
-> +	put_cpu();
-> +}
-> +
->   void snp_kexec_finish(void)
->   {
->   	struct sev_es_runtime_data *data;
-> @@ -987,6 +1139,8 @@ void snp_kexec_finish(void)
->   	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->   		return;
->   
-> +	shutdown_all_aps();
-> +
->   	unshare_all_memory();
->   
->   	/*
-> @@ -1008,51 +1162,6 @@ void snp_kexec_finish(void)
->   	}
->   }
->   
-> -static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
-> -{
-> -	int ret;
-> -
-> -	if (snp_vmpl) {
-> -		struct svsm_call call = {};
-> -		unsigned long flags;
-> -
-> -		local_irq_save(flags);
-> -
-> -		call.caa = this_cpu_read(svsm_caa);
-> -		call.rcx = __pa(va);
-> -
-> -		if (make_vmsa) {
-> -			/* Protocol 0, Call ID 2 */
-> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
-> -			call.rdx = __pa(caa);
-> -			call.r8  = apic_id;
-> -		} else {
-> -			/* Protocol 0, Call ID 3 */
-> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
-> -		}
-> -
-> -		ret = svsm_perform_call_protocol(&call);
-> -
-> -		local_irq_restore(flags);
-> -	} else {
-> -		/*
-> -		 * If the kernel runs at VMPL0, it can change the VMSA
-> -		 * bit for a page using the RMPADJUST instruction.
-> -		 * However, for the instruction to succeed it must
-> -		 * target the permissions of a lesser privileged (higher
-> -		 * numbered) VMPL level, so use VMPL1.
-> -		 */
-> -		u64 attrs = 1;
-> -
-> -		if (make_vmsa)
-> -			attrs |= RMPADJUST_VMSA_PAGE_BIT;
-> -
-> -		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-> -	}
-> -
-> -	return ret;
-> -}
-> -
->   #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
->   #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
->   #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
-> @@ -1084,24 +1193,10 @@ static void *snp_alloc_vmsa_page(int cpu)
->   	return page_address(p + 1);
->   }
->   
-> -static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
-> -{
-> -	int err;
-> -
-> -	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
-> -	if (err)
-> -		pr_err("clear VMSA page failed (%u), leaking page\n", err);
-> -	else
-> -		free_page((unsigned long)vmsa);
-> -}
-> -
->   static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->   {
->   	struct sev_es_save_area *cur_vmsa, *vmsa;
-> -	struct ghcb_state state;
->   	struct svsm_ca *caa;
-> -	unsigned long flags;
-> -	struct ghcb *ghcb;
->   	u8 sipi_vector;
->   	int cpu, ret;
->   	u64 cr4;
-> @@ -1215,33 +1310,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->   	}
->   
->   	/* Issue VMGEXIT AP Creation NAE event */
-> -	local_irq_save(flags);
-> -
-> -	ghcb = __sev_get_ghcb(&state);
-> -
-> -	vc_ghcb_invalidate(ghcb);
-> -	ghcb_set_rax(ghcb, vmsa->sev_features);
-> -	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-> -	ghcb_set_sw_exit_info_1(ghcb,
-> -				((u64)apic_id << 32)	|
-> -				((u64)snp_vmpl << 16)	|
-> -				SVM_VMGEXIT_AP_CREATE);
-> -	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-> -
-> -	sev_es_wr_ghcb_msr(__pa(ghcb));
-> -	VMGEXIT();
-> -
-> -	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-> -	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-> -		pr_err("SNP AP Creation error\n");
-> -		ret = -EINVAL;
-> -	}
-> -
-> -	__sev_put_ghcb(&state);
-> -
-> -	local_irq_restore(flags);
-> -
-> -	/* Perform cleanup if there was an error */
-> +	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
->   	if (ret) {
->   		snp_cleanup_vmsa(vmsa, apic_id);
->   		vmsa = NULL;
+> They also must be KF_SLEEPABLE.
+> Please test your patches with all kernel debugs enabled.
+> Otherwise you would have seen all these "sleeping while atomic"
+> issues yourself.
+>
+
+See, I will have all these debug options for the V3 test.
+
+Appreciate your insight.
+
+Regards,
+
+Pingfan
 
 
