@@ -4,65 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99039C369DC
-	for <kexec@archiver.kernel.org>; Tue, 29 Apr 2025 22:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B53BC3ABA5
+	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 00:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GabYpzt6hKuuPORocEKZwZwL8u9mqEx7Hx0RkHPtTMs=; b=28arV4C85HR9IR1//DjBtQtLsv
-	TNJ14HVIe9R93S08uVFMOG5cvYqhktGQzGl7WzQWmb+8L4Ac+kAgZe6NC8Qt9g+6xbw9MfLDDG5CM
-	Hc3IghuhhLVIqOCPid4segh7+R1YYFUN4ShnBYr3jo7QE42th9bgcTYfIP+grcTPVb+zXSDXgZcQw
-	OkNfQQ6Rv49sZWUU606izZBm8Jb0D4DJZnDs4Y9owlfqLEwZGfHOktGiZ8xlcAsyiQTYLUKkm8l4f
-	C88tMl0Pzd3CgbHluazTLIpte+i95VTp7LnyNZHjLvvgkM9N7FMiMF/Yon7dv3enPGgJmLcylvlvL
-	GYyQwW1g==;
+	bh=U1KeXJR1hOzBjZTqW+K21z7sqJwFRtjxFIgXNhmbOqs=; b=wwLtXqt4Ban4PHWft15i0ry7O9
+	qK7W+vCYikvbT97cTBVEinsnaw/qZJ44e064cFIiChabKsJvCqy6CFoiqYBmdQbBlnCc5X7v37vbB
+	Mu2Bl5EOeqEt1upAkO6Mby56hZlQWJy7sZ6eAI6hQGAH0WYg7hDwFJ+M/fAh6o4/4ux7+H3TnvVoW
+	dkb4Z6pJ/+jLIivrqXrtsLD9aeXi6SrIS9A/2T0+0L6Us5kbaS3P4pHL8B0VD/al9K4+ZkdYIcWfT
+	PouPL8NwO6XH0rP8bbNNzuWocXDu+Llkm6GoNUKkgATHQifyC88CzFIkKszgyiyeZ0YiTu7bODBsc
+	woEk1BJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9t1h-0000000Avi7-19al;
-	Tue, 29 Apr 2025 22:02:05 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9t05-0000000AvUk-0tXx
+	id 1u9uvv-0000000BD1F-2SLy;
+	Wed, 30 Apr 2025 00:04:15 +0000
+Received: from mail-wr1-x436.google.com ([2a00:1450:4864:20::436])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9uvt-0000000BCzv-2GBl
 	for kexec@lists.infradead.org;
-	Tue, 29 Apr 2025 22:00:26 +0000
-Received: from [100.70.192.100] (unknown [172.172.34.115])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A055E21130A6;
-	Tue, 29 Apr 2025 15:00:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A055E21130A6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745964023;
-	bh=GabYpzt6hKuuPORocEKZwZwL8u9mqEx7Hx0RkHPtTMs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=svT14qQvKRJ+l9WXAAjQjViQEabtZkIL7a6+9A2SiWIcaEE6oG3llA8Tle9Zg52/h
-	 mHL3oJsLKd+sYJYbDmLs/UAIfZO8ZSMyLetId+kOWFvupS0DrO0gferMEeKH4bCI7+
-	 4yLD9JSgsZHeObJHz6NRTySun/KqlZUUftz9U0cs=
-Message-ID: <2b352e35-5795-40da-bba6-c03347cfc5be@linux.microsoft.com>
-Date: Tue, 29 Apr 2025 15:00:20 -0700
+	Wed, 30 Apr 2025 00:04:14 +0000
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-39c14016868so6879269f8f.1
+        for <kexec@lists.infradead.org>; Tue, 29 Apr 2025 17:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745971451; x=1746576251; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U1KeXJR1hOzBjZTqW+K21z7sqJwFRtjxFIgXNhmbOqs=;
+        b=inmr85DE4tZDTIlweeuen1BVQYUU75eWrThfAN6mxGgjDPebEmGtElJG68BjfJZ3Ya
+         nzMVJ8qddjz3h60MeizY/DnBcGnsPPkrvNfDjcYsBPhpXZMz0+eb9QD5Tg6BnnNBHtN6
+         0SJChZoWPUGIjCwGykT3gQ7AxAH/dlpBsQgxpZH0qkd1shbrV+JN2B6xp4lMAzg//3q4
+         pjeEGD/gzlgtQulgUUj0t7ZpJRYlLSFp7ld/IBrXUJx1VScNEllsoJEWIj00yid1iV6+
+         ze2GRHlWJZL1wt7UMsShqmNuflgaysmjF7zJFxKhG7g9hRvu7RhAfRjdHdtBcH5nYASv
+         n3bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745971451; x=1746576251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U1KeXJR1hOzBjZTqW+K21z7sqJwFRtjxFIgXNhmbOqs=;
+        b=E2qje7RuPATipRNyAnDpX4syW9k/FCqvWE65h6BtmQsZcxZ/dBc1+TWC6zJc/aN0BM
+         7oBbhbcNXaweKz2Y+Acn62hesRWVWOWRVWQ6d2j7oRZvMQPB9vEtwtKBatg3lBNI/CBa
+         LG1aF20rgKLGfpnc8/2cTjYoOOM6aqZexUVspiYI1i+q8smQFR/uy/EAcf0FdXFNBvfv
+         PKm+p8YK0wSkoliMfojMnmuNjQIE+NWTQOMWN9fBG7xPVN9XxcBZCXC3SdeJQ92jY0k6
+         mkDxFCn1v0C5eIR6JpozsU4kozDk633ww172xsy3w9xj99SbReyP1BIp8hYrqRadG1iO
+         +deg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqZ83vdPfTHUaE+31VsJ66CMH9FecvJq/cm4XLaE8LBrUtKRsVgsBX4ZeDaTWL3eDSSb8c+w==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz6K1PjZYUZ9QOBmFXXTpsTOjKF0fm6rhSE4ktUvqVIlWHLRLfm
+	B1VrLDFkjpV6uoXTqCQBkh/4i7b9UO9UC1JJUe7ly8foyyNMN0pXDBx1nnJXZcS4+g3QlKZhUc0
+	5K4tl5+fWWdkq4OZCYNG58lsCUk8=
+X-Gm-Gg: ASbGncvtGdfWriZuI8G1/fa391CGn2qQZT5PERviC0lY3o0JhdFJOhxIBH5FWhhlzcc
+	7m9o40aPDqxXFPs2VktHRuyO+/ob/sNV0vxP2Mbi13sgD6Wpz43kq37H6+7XMIz97rXwAifMpEI
+	nAYTREOBIGqLrYY25v2QXuRRfhUnxSJJsS0Hhtew==
+X-Google-Smtp-Source: AGHT+IEp4MiLtY0qKxS6UrNJvJKT1oFoIU9/fZqZHU+KWT51EHruQ+vwvp7Oizo6pEuXIEHqkQtR0PijT/tOG5eXN8o=
+X-Received: by 2002:a05:6000:2282:b0:39e:f9e8:d07d with SMTP id
+ ffacd0b85a97d-3a08f764d93mr924789f8f.20.1745971451027; Tue, 29 Apr 2025
+ 17:04:11 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 8/9] ima: make the kexec extra memory configurable
-To: Stefan Berger <stefanb@linux.ibm.com>, zohar@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
- <20250421222516.9830-9-chenste@linux.microsoft.com>
- <f9652da1-78a5-443c-9893-41d76007a974@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <f9652da1-78a5-443c-9893-41d76007a974@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250429041214.13291-1-piliu@redhat.com> <20250429041214.13291-5-piliu@redhat.com>
+In-Reply-To: <20250429041214.13291-5-piliu@redhat.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 29 Apr 2025 17:03:59 -0700
+X-Gm-Features: ATxdqUFdIYrUp0QWhy9gP5VNKqfBVnewOUvIA7LbeFFyzs8budADNuJnnCReKHU
+Message-ID: <CAADnVQKTSubuisSBap_J=tgO15fCdtwF-NDY_1HLP_m6o28mhw@mail.gmail.com>
+Subject: Re: [RFCv2 4/7] bpf/kexec: Introduce three bpf kfunc for kexec
+To: Pingfan Liu <piliu@redhat.com>
+Cc: bpf <bpf@vger.kernel.org>, kexec@lists.infradead.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250429_150025_302148_A2D9A51B 
-X-CRM114-Status: GOOD (  24.46  )
+X-CRM114-CacheID: sfid-20250429_170413_575100_BB260E4A 
+X-CRM114-Status: GOOD (  13.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,117 +104,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/29/2025 12:06 PM, Stefan Berger wrote:
->
->
-> On 4/21/25 6:25 PM, steven chen wrote:
->> From: Steven Chen <chenste@linux.microsoft.com>
->>
->> The extra memory allocated for carrying the IMA measurement list across
->> kexec is hard-coded as half a PAGE.  Make it configurable.
->>
->> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
->> extra memory (in kb) to be allocated for IMA measurements added during
->> kexec soft reboot.  Ensure the default value of the option is set such
->> that extra half a page of memory for additional measurements is 
->> allocated
->> for the additional measurements.
->>
->> Update ima_add_kexec_buffer() function to allocate memory based on the
->> Kconfig option value, rather than the currently hard-coded one.
->>
->> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
->> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> Acked-by: Baoquan He <bhe@redhat.com>
->> ---
->>   security/integrity/ima/Kconfig     | 11 +++++++++++
->>   security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
->>   2 files changed, 22 insertions(+), 5 deletions(-)
->>
->> diff --git a/security/integrity/ima/Kconfig 
->> b/security/integrity/ima/Kconfig
->> index 475c32615006..976e75f9b9ba 100644
->> --- a/security/integrity/ima/Kconfig
->> +++ b/security/integrity/ima/Kconfig
->> @@ -321,4 +321,15 @@ config IMA_DISABLE_HTABLE
->>       help
->>          This option disables htable to allow measurement of 
->> duplicate records.
->>   +config IMA_KEXEC_EXTRA_MEMORY_KB
->> +    int "Extra memory for IMA measurements added during kexec soft 
->> reboot"
->> +    range 0 40
->> +    depends on IMA_KEXEC
->> +    default 0
->> +    help
->> +      IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
->> +      allocated (in kb) for IMA measurements added during kexec soft 
->> reboot.
->> +      If set to the default value of 0, an extra half page of memory 
->> for those
->> +      additional measurements will be allocated.
->
-> If you have an IMA policy taking quite a few measurements and you are 
-> fast after reboot to log in to initiate the 'kexec load' (While system 
-> is still starting up), the system may end up with loss of measurements 
-> very easily if the default is 0 and pages are small. -> Set the 
-> default to the max? Also, would we expect distros to all go through 
-> the new config option and choose 40 or will they likely leave it at 0?
->
-Hi Stefan,
+On Mon, Apr 28, 2025 at 9:13=E2=80=AFPM Pingfan Liu <piliu@redhat.com> wrot=
+e:
+ +__bpf_kfunc struct mem_range_result *bpf_kexec_decompress(char
+*image_gz_payload, int image_gz_sz,
+> +                       unsigned int expected_decompressed_sz)
+> +{
+> +       decompress_fn decompressor;
+> +       //todo, use flush to cap the memory size used by decompression
+> +       long (*flush)(void*, unsigned long) =3D NULL;
+> +       struct mem_range_result *range;
+> +       const char *name;
+> +       void *output_buf;
+> +       char *input_buf;
+> +       int ret;
+> +
+> +       range =3D kmalloc(sizeof(struct mem_range_result), GFP_KERNEL);
+> +       if (!range) {
+> +               pr_err("fail to allocate mem_range_result\n");
+> +               return NULL;
+> +       }
+> +       refcount_set(&range->usage, 1);
+> +
+> +       input_buf =3D vmalloc(image_gz_sz);
+> +       if (!input_buf) {
+> +               pr_err("fail to allocate input buffer\n");
+> +               kfree(range);
+> +               return NULL;
+> +       }
+> +
+> +       ret =3D copy_from_kernel_nofault(input_buf, image_gz_payload, ima=
+ge_gz_sz);
+> +       if (ret < 0) {
+> +               pr_err("Error when copying from 0x%px, size:0x%x\n",
+> +                               image_gz_payload, image_gz_sz);
+> +               kfree(range);
+> +               vfree(input_buf);
+> +               return NULL;
+> +       }
+> +
+> +       output_buf =3D vmalloc(expected_decompressed_sz);
+> +       if (!output_buf) {
+> +               pr_err("fail to allocate output buffer\n");
+> +               kfree(range);
+> +               vfree(input_buf);
+> +               return NULL;
+> +       }
+> +
+> +       decompressor =3D decompress_method(input_buf, image_gz_sz, &name)=
+;
+> +       if (!decompressor) {
+> +               pr_err("Can not find decompress method\n");
+> +               kfree(range);
+> +               vfree(input_buf);
+> +               vfree(output_buf);
+> +               return NULL;
+> +       }
+> +       //to do, use flush
+> +       ret =3D decompressor(image_gz_payload, image_gz_sz, NULL, NULL,
+> +                               output_buf, NULL, NULL);
+> +
+> +       /* Update the range map */
+> +       if (ret =3D=3D 0) {
+> +               range->buf =3D output_buf;
+> +               range->size =3D expected_decompressed_sz;
+> +               range->status =3D 0;
+> +       } else {
+> +               pr_err("Decompress error\n");
+> +               vfree(output_buf);
+> +               kfree(range);
+> +               return NULL;
+> +       }
+> +       pr_info("%s, return range 0x%lx\n", __func__, range);
+> +       return range;
+> +}
 
-Could you please check the comments of version V11 on this default value?
+These kfuncs look like generic decompress routines.
+They're not related to kexec and probably should be in kernel/bpf/helpers.c
+or kernel/bpf/compression.c instead of kernel/kexec_pe_image.c.
 
-https://lore.kernel.org/all/20250402124725.5601-1-chenste@linux.microsoft.com/
-
-Thanks,
-
-Steven
-
->> +
->>   endif
->> diff --git a/security/integrity/ima/ima_kexec.c 
->> b/security/integrity/ima/ima_kexec.c
->> index ed867734ee70..d1c9d369ba08 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>                     .buf_min = 0, .buf_max = ULONG_MAX,
->>                     .top_down = true };
->>       unsigned long binary_runtime_size;
->> +    unsigned long extra_memory;
->>         /* use more understandable variable names than defined in 
->> kbuf */
->>       size_t kexec_buffer_size = 0;
->> @@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
->>       int ret;
->>         /*
->> -     * Reserve an extra half page of memory for additional measurements
->> -     * added during the kexec load.
->> +     * Reserve extra memory for measurements added during kexec.
->>        */
->> -    binary_runtime_size = ima_get_binary_runtime_size();
->> +    if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
->> +        extra_memory = PAGE_SIZE / 2;
->> +    else
->> +        extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
->> +
->> +    binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
->> +
->>       if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
->>           kexec_segment_size = ULONG_MAX;
->>       else
->> -        kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
->> -                       PAGE_SIZE / 2, PAGE_SIZE);
->> +        kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
->> +
->>       if ((kexec_segment_size == ULONG_MAX) ||
->>           ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->>           pr_err("Binary measurement list too large.\n");
-
-
+They also must be KF_SLEEPABLE.
+Please test your patches with all kernel debugs enabled.
+Otherwise you would have seen all these "sleeping while atomic"
+issues yourself.
 
