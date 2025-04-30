@@ -4,126 +4,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28F4BC369D9
-	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 05:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A346C369DC
+	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 09:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=; b=DN/Jk7oK2dPpx6g6Bi/l/QuRXd
-	tzMSQoDqPI6STFZsGJcjmzjiYLQAw10KlyZWAyOkCP9nAeM5Ntkz8MN7W/qrhM2L9D5lpdYXoohO5
-	SxzxFlSFQF3MlhgdU9uxvM522NaCGtNfeUYd95eKUXYd2HEFYRtDiQJ6U47iVKdfgp5J4Jg3oY5wD
-	fdAJ9MmI3zx+NR+oh/oVJvudps6TG+3F9fk9O2/IoGyMiuMv0rVM1qnDOIM9VvhG49LeVFkpuXmDH
-	9LYUMG0EWROfn5BuOzvFxDmd8EhomIHpWJs5J5127jR6N7fZENpA0wKWha/htW18qHlBgpIVCoFHK
-	BqdEK6CA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=; b=qf+QWXnNB6g7WOqZ3cu9e+wWge
+	qdvduWTZttwBX8BDh2m+34QpjeDlivemeZWv8oH6oOlAr4eoHWY21YM7AAwp4WQ45RNjJBuwTaPId
+	E0/bOZNagXR3H2TNePJIqgU98GtO2X+Wgij2BrbnJS3GiPystT+lz7NEgREtO0QyOABayP5Le4wIB
+	6STMm3puH/8Zey5Mx1L/Rq5cs87tBYfzwZLFhWa4LsV1+GirYfvs5EPCo7gHmmO//WZoWE7Of0JEj
+	nSoRWm+mW9S9xCAUnk36z+zCcPmiVouRKCYduVpNl7rB+KF8apWYLLAkTzCDCM7VqZxs5DOfZLa4o
+	J/KgA2BQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9zo4-0000000Bj7B-28ym;
-	Wed, 30 Apr 2025 05:16:28 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1uA3pN-0000000CNhE-2bmh;
+	Wed, 30 Apr 2025 09:34:05 +0000
+Received: from mail-mw2nam04on20605.outbound.protection.outlook.com ([2a01:111:f403:240a::605] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9wSN-0000000BSke-3Huw
-	for kexec@bombadil.infradead.org;
-	Wed, 30 Apr 2025 01:41:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=; b=AxJyHovt1LjK4kwv2yJV+8MVVZ
-	98Iy9HyZ4D4bdNJ/P9d7Nevae6K1kgzt+HIDB00AqCR+9lRiYM8x+fVl1MeqlSJ9EKYDlLzJUng4Q
-	Y85/SqWQpy8/TmEhJ4cvuLKbeeqPCXApzHMtAbaBXkMZVMLD/8RS55vlMGqN3Dd4Pta8SQrTyimdL
-	WFGcz4FNPjoapsv/2rZlkVU4cJJDlZawrFcMn7SW5vFWqR4a8cXATshPk9Q4sy8mn6Mf+jaYIKQUP
-	CbBT5juAhlB4q7jQJ0Q6ViU7lbXah52qlsohIfDiPQ4KtnmEpknZeLreVN2FOhGDMD1YDhMcMWFnd
-	7p2zzaQA==;
-Received: from sender4-of-o50.zoho.com ([136.143.188.50])
-	by desiato.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u9wSH-0000000Dd3A-37IA
+	id 1uA3dI-0000000CLLX-0aGg
 	for kexec@lists.infradead.org;
-	Wed, 30 Apr 2025 01:41:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1745977259; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cEmMBxndzSVd7OvztmbdX2jTVoT0khc84/CQ1s40YnxLgj7UU/k4K01oAFiHgCyUQnSc5WjzJ4j9t+F+qeicLcCP0FtbfEGMsCMc9XxvpICtI7i9+eEx1jZCn55RA3S0J4kgpPZGucsahl6rXyn1NGDbvwQ2vcGLGHiNGActRh8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745977259; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=; 
-	b=OZynF2npinIsNyog/tusiKLBgLFWkBnOaDEMXuOnNAlgdcwRrV0qlxq1Z8zpQri/jHzleSxG/OVmHw1d7LSeSeHkRrvpy9jW+QbZBYd0pHUTnr7vaPgto4FvH4s5b4R+Qpadt8yUmcJO6oAltXGT7kBCzmtX9C91uj+OUN/OfSc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745977259;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=;
-	b=fx82opzQpA21QiQmLU4q/kLJFWcygEgQWdUvve2Q+0jdTPvVEJHnsvkXvpD8EwGJ
-	SNixJcvxKAUt2o4YzFkkSG4auJENrnZaNGlVXFPAKD8qCJcZ3+sQMTMGEvkSBqHCHpJ
-	wpkZWgeSVqN8o8iEW2EOn96k25y6HmlXzYWVa+Kg=
-Received: by mx.zohomail.com with SMTPS id 1745977255108733.3900332082078;
-	Tue, 29 Apr 2025 18:40:55 -0700 (PDT)
-Message-ID: <077163e1-b7e1-4bc9-8294-e557cc7bd78d@apertussolutions.com>
-Date: Tue, 29 Apr 2025 21:40:51 -0400
-MIME-Version: 1.0
+	Wed, 30 Apr 2025 09:21:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IgQJKs1S1h01q0fMdC7lSnm8TEbomJIHYT18k5QnX0/IMYDKjIWOlaYUy8KuKyAHvMYnIk2luGzkU3N58riYHXHk7RFRLJg7Xx19nr4AvZU3cxIhDvisRBqIdq3lT5R4QuzvYrZELOhjRUPU5HmYgNAnSHVRs6e8Mr3l+M6d0sOnsG1d2sQB3AiR+wZ3TPn80cesOlCeMRbpgSbejukf/7B+r4lKwq2qPHjb5QKa2q4VzZdcTooXGFNvQ0qx15mjkQoAg5lJ/JgmWE6eLHZsH/QfsxVkB4F2l4BQv9P7nq2cMbWt+5USugrT8i8I8FG4B5Ssrm3SwtFbBTu72Jp4dQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
+ b=O3HBUK0ac3tCsZnOfKxBsJ8DHKt73kaLnOaxYzvTB/9i/eLETKRawDvbBqnpgme3tX5COTH+ZlhpAxwycxGGnadrM8hqhybhPoDPLgNSUXlHbKoRNbjIw5ZdbQTgdZ1L5P1T0KNMudJYPNRJP+aaNK3onpA6tkLpJSz584KysK8tE7Qevh26ddtClbm8XOQuMet5Bn6obFtSrPwoMMeY4KNdCgpg7Ie6bC6YmpHQJocbKjU4OEyKi3BiAy/44selKp1ygHYDJ+aKB3LMFWeB5InPlgY3C401PnN97roAYEU3O3ware02G5dlSMPACrHxf3UnU+DoRfwI/nM0fVA0Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
+ b=okEkWw8ews/aQE2/ifYcrAEgqH2BNU3eUMZmOzOP6MQBfJn8xptyn/RsVfpM6+WY6bL2v2Rgr/8DqwdBT+Azm3xjqKDCUdr8HvBMT9jvx7qsPddJ2nTTS6TXFghlK5eNo33+dQcf1dAT3vdeKc/BVu6gE1Q7+e4i2/A3FKZrcvY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
+ by DS5PPFEC0C6BDA1.namprd12.prod.outlook.com (2603:10b6:f:fc00::668) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Wed, 30 Apr
+ 2025 09:21:32 +0000
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48%5]) with mapi id 15.20.8699.019; Wed, 30 Apr 2025
+ 09:21:31 +0000
+Message-ID: <a7856b43-a198-477b-9a3b-d32b1730b76c@amd.com>
+Date: Wed, 30 Apr 2025 11:21:25 +0200
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 18/19] x86: Secure Launch late initcall platform
- module
+Subject: Re: [PATCH v3] x86/sev: Do not touch VMSA pages during kdump of SNP
+ guest memory
+To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
+ thomas.lendacky@amd.com, hpa@zytor.com
+Cc: kees@kernel.org, michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
+ ardb@kernel.org, gustavoars@kernel.org, sgarzare@redhat.com,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
+ linux-coco@lists.linux.dev
+References: <20250428214151.155464-1-Ashish.Kalra@amd.com>
 Content-Language: en-US
-To: Andy Lutomirski <luto@amacapital.net>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu,
- herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
- ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
- trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-19-ross.philipson@oracle.com>
- <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- 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
-In-Reply-To: <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <20250428214151.155464-1-Ashish.Kalra@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0184.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ca::19) To IA1PR12MB8189.namprd12.prod.outlook.com
+ (2603:10b6:208:3f0::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|DS5PPFEC0C6BDA1:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dDdpZUFLQ29YbGJ6THZOaTNWRkxodnB1MlIwb3RjNzlseVA2OUdDVEhxWlJF?=
+ =?utf-8?B?dFh6VFFJUkVuaTd0M0ZVK0FTUHRaUE94OUZoczZEb0pyaTVLOWFvS2FpSlEw?=
+ =?utf-8?B?S2M2ZzlySmxPTFBac0lyc0VTbkMxY0RML1krSzVld0tOUDFPWmxsUWZRZHhZ?=
+ =?utf-8?B?R2szZUpyQkRkc08wajhSS01EcXk1TThnRU9UNlF1cWQ3RTRYcFZ2Qk1sbFU3?=
+ =?utf-8?B?ZDVVTTJXRGNXWWpXNWI1UkdNYkVFTzhyWDVjL3F4eElWcDA1QU5Jd3Nqa3k2?=
+ =?utf-8?B?Q1B3UmJ2MHJPb204M2syU0kyZGhIUXR1Q1F5aFpjNzNGQlhOWm9rM3dud25P?=
+ =?utf-8?B?SDFWZUhjMm9qVEdyY1pyZnNJd2h0YlhjdTl4RFNZcytSeFBDbGF1NHQza2h6?=
+ =?utf-8?B?MDJaT3VkV215TzdzSWRxRmg5WWoxM3g5Q3hxd2tESVBwbDRrWUpCRDFqV2Ev?=
+ =?utf-8?B?LzFRVVZVTnYvSVgyeWhrSVJwOTVsNDlNWng3S2VHQWZKdGF4ZlpEMmRQcVQr?=
+ =?utf-8?B?QmNoM0FmRVFXd3JzWGRoVWdlZ2ovck91UkRCU3loaDFOSndveWRRcHRzZ0xL?=
+ =?utf-8?B?OFNDOHlNWTE3OFFHSk5KM2pId0loeEJOL21FZkJ3WWlBbWlQVDcrU1VTN1BU?=
+ =?utf-8?B?a2ZkMmcvUEVyQU1DVU5xSVEwb1FLMzMzYS9BMzBrNUpTaEV3eS9lVnV4eSta?=
+ =?utf-8?B?ZXZVamlRTFlTWUR3VFR1TmxUaGdRWHZoL00wbGphL2pBSC9HQVN5MGpXWE9a?=
+ =?utf-8?B?dk45WHRseU5wQ29YMGpMd2FRRzkvclBZVXZydEVYYXE0WHlIdG83RkFmWWV6?=
+ =?utf-8?B?dElrSEFZZVAwcXFTZ3VVMDJsaHBEcnJUamN2MXVmZ3l3dE53SGJpQkJld2ZC?=
+ =?utf-8?B?Y0dlY25EVnVpL1dSN01DQnBwUS9WY05HbFNZa01YdlJNemxTQS9UcTJGclZ0?=
+ =?utf-8?B?bUtxN2RuQnJyM0lGb2hlR0svbURhcFBtTXBRaDdTcDZzdmhUcUJZL1FlSzk2?=
+ =?utf-8?B?bnZ3Q01vcEh5U3hyenFtUnhzZ2o1VmNPdGVqT21kYWcrd2hMbTBuK1ZPRmFl?=
+ =?utf-8?B?cXA0TnhxbkZMeHppeFh3aEpKaVhKc0dLZnVUZUZiY21KeXkwQXZDZlVHbTRE?=
+ =?utf-8?B?aW5XUWpxOVUzNW01bG1JeGlxdW91aE90VDZiYUlscUp0V2xqWkN2UVpYUkhO?=
+ =?utf-8?B?dzM0bkU0WEdBdmxKL2RpcTRFVDgyRjBoMTlvK3lIT1U3MlNMbzZJc0ZqN0Ex?=
+ =?utf-8?B?eTd1WTZpOU1ldnBVSjExd1JwMmFJSmhaRnhXSlNhdFFUOHJiaklHYmJoRFZj?=
+ =?utf-8?B?UFBQbFBvSllrcjB5ZHJiSU96WmdNYlkrREFvZUoyQkFuaWZ1VklaZHBsdVJs?=
+ =?utf-8?B?YTN5TVRldW5vNE1LOWszaVJJMDZNYmZ2VXVDRHU4aGZ3M0VCelNRMWJJSC9v?=
+ =?utf-8?B?VEdSTkxGMGlCRWRzYWlaWHFFd2lzKyt6b2ZMcVNBVmc3Wnh2VWkrcDd5aENa?=
+ =?utf-8?B?WHM4b3NFLzFZdmg1WXVXRWg0bnV4RXpuZTZINkFMc1RWc3RqU1BPTER6VGxG?=
+ =?utf-8?B?clNEYVA1UExXS3F1US9VVTRPazNTNFFkM1hwZHFWbFJQRTRiQzFWSXRKcGMv?=
+ =?utf-8?B?VnVERmZJL3dnOHplamp1YU9ZcnQ4U0p0MXBHQVB2TERIbndSVC9XbzhUMHNt?=
+ =?utf-8?B?WEFyVFMzajRXeGFuOFB5Wnlub1FGL24wVUxQd0plMzF3ZzZmNS8xL0dua2ty?=
+ =?utf-8?B?VkJ1d2crdFVOcllxY20zZVo1VHVLYTZteXFuN2l0RWllN0NibkFkSU9Mc3FG?=
+ =?utf-8?B?TnRUYTdxS2NyRXMrc2QrTGx6N0VwM3JmR3VCOEpDUmZnS1FyY1lNN3FpTHlU?=
+ =?utf-8?B?Ukp1SmY4SldHZ1JLOUhBajltcHpSNFFaM3RTcWNMQ0x2TVk3NkdtV1Y0eWRq?=
+ =?utf-8?Q?mF/ieuMjQjE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?anJyU1FOc3BkNVZPeUMxTDFmR1Ura3ZpOHV1QU1rMGoxQ2RPOWpqZmo2cFVC?=
+ =?utf-8?B?ZTQ5OUd5WW01dnZEcHZzMkc0aHBuY1IxWUVWU0hZVTQ4cGJ4MXhHSnIrdkF4?=
+ =?utf-8?B?RmlnRmNaRnA0Z0ZZbkpFOWdscmxMSUFWTDA2KzUvSlJybEFGTzN0NUhIdTZv?=
+ =?utf-8?B?NUJFeEtaa05zRjRLSTFyTjVWTVZFZS8zeXdpTVpISHNCcnVGN1kyK0g2bHJp?=
+ =?utf-8?B?L3hXL21nM2FyOUlBYlVLelc5Vkt0RUorM2phbytxTTIrY3l4SERtazc5bXZR?=
+ =?utf-8?B?b0d3SUNPZ0N2b084WkE1bXRySEM5ekRTT0NSVlgwQTRMd2ZZM1dHbEkwNGJp?=
+ =?utf-8?B?OHhFY2RHNHp5SFBoS3NiS2l0NFQyN1p4K1dvdWRVR1YzdzZwbUYvWVU1czFC?=
+ =?utf-8?B?TzZiSGNGWVh0SzZ6eldpSDFTZGQ4TEczbUtZUnVsc2VoVStpbGFIMWdocUFO?=
+ =?utf-8?B?NWdtL3h0VHpiTGFCU0dpMEFacUV5VFEzRFB1bytJQ1EyVEdLaUhRMTkrU0NQ?=
+ =?utf-8?B?SVBBamZSN2V0c1o3SXcyWFJPSnF5aytpWHlrZVIyRnRmaDIvVEtJRkQ5WU1q?=
+ =?utf-8?B?Q21BSXBWZ25FM1BWRERVVER3dTlkMVl4Ni8vRnQ3eTdseW9CMFdZMHhkcVdt?=
+ =?utf-8?B?NnliMi9NV2Q0MHZ6aDg2UFB4aGY2WGZKMmRjUkxOSmU1dWs5MzB3S05MK1FM?=
+ =?utf-8?B?bzRzcE43ZnBLd0VBQ2g3U3RwaGpVcjRhd1Q4OTBSWGxsNUR1b0IvUU9RQkZW?=
+ =?utf-8?B?dnBLZGZJVmpoQnNNVE5wLzRWMDJtZWk3T1NJeUtjdTNmY1F2YzVYc0Jpdnhh?=
+ =?utf-8?B?Nzc0M2tUQTdSbUNjTjdFSnRQWWptOUs4T0JGWVY0YXQwMUpuTTQzU0hYcEJa?=
+ =?utf-8?B?djd0OEE4YXBpM1FKQjUrU2pNcmtMV3BQdWk1U1NaUjN6ckRvVWRJQ2pRK1ZK?=
+ =?utf-8?B?OUZ0ZjdYcDNhaWdpVkhHaElPUjRXejVERnp6OUUvN2xDQ3VxbW5uYnhrTkJj?=
+ =?utf-8?B?RkhuNy9YQTBqVDBjbHpha25kNUYwSDN2TktEcTlleHJsTzAwTmk2VXpIS24v?=
+ =?utf-8?B?L2VlYXJkRXVkVFpacDFEeUtzcWxwU0lvUUlva0Rsbm95NFFBYjl0a0duNEYx?=
+ =?utf-8?B?WVdkd29wSXNyYlh3aml0cUJzMFZac0FDRDJIcUdheW9SRk40OTlXbEYwZFdu?=
+ =?utf-8?B?QWNTSUV3dWJPVmY3b3pJQ2s5dlNIRVduYW9OTWRZZ3c3TVA5M0VqTWFTbVBk?=
+ =?utf-8?B?a0t4UWl2K0RYdmt6L0cvUXJ1dUlpM0JMbmNadkExT0dLZ0Z4dGJ3aUN1YkFq?=
+ =?utf-8?B?aEhJc2VSNkxvZ2lENmFETXBEMmhRTlpkR0FXMDBiVllOVHluZGZ4RGhZSDA4?=
+ =?utf-8?B?bUZ5ckRrU2hZQk5XQ3ArRjNHYjEwTkxBNS9PdTB5T0pES25DazNZcjJkNjFC?=
+ =?utf-8?B?T1F6RUtycWVYTTErYnFMR09PSjA4YjJCZ05BVmQ3NjJpbXNyZERsc0dsSjFN?=
+ =?utf-8?B?YmNGUXpJRnFiSVE5K1p6cTBXS1VzaHFmVEpERzZoa2hrM0xva1dMdVEyb1hD?=
+ =?utf-8?B?dmE3U0tiMEtWS2o2MUhxUm5Td1J4UDFKZ05MZE9lVkthNXhCUVI4MlQwZVlt?=
+ =?utf-8?B?dlZsZHNVdzdDcTlPcnJPaHVWY3IrNTNBZ2tmbFlZOElTRnBoKytRb2pGc2Yv?=
+ =?utf-8?B?akl5bDh0Ly9iUDNoZUI3dzQzZndsM3VFWSsrV21ZQ0JxT21lMU9Od05XbTg4?=
+ =?utf-8?B?dUhTTDA3bXlKWGdvMG9JazlidDN4M3paSlFHSHZWd3BqWk4vVWFRZjJJTEdw?=
+ =?utf-8?B?cVlSL1cxUGo1OGFWVkZqQytreTQ3TW5xSzBMMGN3QWJhRkl0cE9zVnVYZmNT?=
+ =?utf-8?B?dm0wQ2gvaWhoSE9CQ1V2L1BFZVNtVGorRTBlRHB4aWVieTBhb2dWNC9ZbjU4?=
+ =?utf-8?B?ajB4UHRHN05nb1pobE9BZERuQk85ck5WS3VXV1dTaWhkSkV3SFU4MU1qMWMy?=
+ =?utf-8?B?UnB3eSszaWdHd2dmbkRGcjR6dEJTcG5jNG9JeU1kYXJlT3VZTHZsMndEdEhT?=
+ =?utf-8?B?OUQwcU1UQ2l1WmVGbFBJV25BUW5pVFJDazdGN3padndvMEZPL3JHbTU1dUcw?=
+ =?utf-8?Q?URAa3W1FyhePIS5voB79WBHqO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 09:21:31.4327
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VV2yjzelBDaVAXHR15q2qD2ZcEBo7TjZ8GTO9wSwbyEqTkIrS+aqIRBstyZYV8A0qVzrLCNArpXlA/JnwY4GmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFEC0C6BDA1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250430_024148_482232_D0293A5F 
-X-CRM114-Status: GOOD (  41.06  )
+X-CRM114-CacheID: sfid-20250430_022136_222126_1F34449F 
+X-CRM114-Status: GOOD (  31.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,642 +180,323 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/28/25 13:38, Andy Lutomirski wrote:
->> On Apr 21, 2025, at 9:36 AM, Ross Philipson <ross.philipson@oracle.com> wrote:
->>
->> ﻿From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
->>
->> The Secure Launch platform module is a late init module. During the
->> init call, the TPM event log is read and measurements taken in the
->> early boot stub code are located. These measurements are extended
->> into the TPM PCRs using the mainline TPM kernel driver.
+
+> When kdump is running makedumpfile to generate vmcore and dumping SNP
+> guest memory it touches the VMSA page of the vCPU executing kdump which
+> then results in unrecoverable #NPF/RMP faults as the VMSA page is
+> marked busy/in-use when the vCPU is running and subsequently causes
+> guest softlockup/hang.
 > 
-> I read through some of the TPM and TXT docs, and I haven’t found a
-> clear explanation of exactly what gets hashed into which PCR.  (Mostly
-> because the docs are full of TXT-specific terms.)
+> Additionally other APs may be halted in guest mode and their VMSA pages
+> are marked busy and touching these VMSA pages during guest memory dump
+> will also cause #NPF.
+> 
+> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
+> of guest mode and then clear the VMSA bit on their VMSA pages.
+> 
+> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
+> ensure that makedumpfile excludes that page while dumping guest memory.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-For Intel TXT, the general approach is detailed in section 1.10.2 of the 
-TXT Software Development Guide[1]. I point you at the Detail and 
-Authorities Usage section because the ability to do Legacy Usage has 
-been unavailable for some time.
-
-In section 1.10.2.1, the dialogue explains how and what the initial 
-measurement is into PCR17. After that is Table 1, which provides a 
-listing of all the measurements the ACM could make before starting the 
-MLE. Just as an FYI, on Gen 9 and later, the STM measurement will be 
-present and will be the hash of the PPAM module.[2]
-
-Section 1.10.2.2 gives a similar treatment to PCR18.
-
-[1] 
-https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
-[2] 
-https://www.intel.com/content/dam/www/central-libraries/us/en/documents/drtm-based-computing-whitepaper.pdf
-
-
-> But I’m really struggling to understand how the security model ends up
-> being consistent with this late_initcall thing. We measure some state
-> into the event log, and then we do a whole bunch of things (everything
-> from the very beginning of loading the kernel proper to the whenever
-> in the late_initcall stage this code runs), and then we actually
-> extend the PCRs.  It seems to me that this may involve a whole lot of
-> crossing fingers that an attacker can’t find a way to get the kernel
-> to execute code that changes the event log in memory prior to
-> extending PCRs such that attacker-controlled values get written.  Even
-> if the design is, in principle, sound, the attack surface seems much,
-> much larger than it deserves to be.
-
-
-There is a more fundemental flaw to your scenario, but before covering 
-that, consider what measurements could be tampered with that are made by 
-the setup kernel:
-
-  - Kernel Setup Data
-  - TrenchBoot's SLRT
-  - Boot Params
-  - Command line
-  - EFI Memory Map
-  - EFI configuration items, populated by efi-stub (currently unused)
-  - External Ramdisk
-
-Outside of the case of an external ramdisk, the attacker can only 
-pretend valid configuration data was passed to it.
-
-Correct me if I am wrong, but I don't think that is what is bothering 
-you. You are either concerned with one of two cases here. Either you are 
-concerned that the attacker may be able to hide the loading of a corrupt 
-kernel or that the attacker can corrupt the kernel after loading. In the 
-first case, the answer is no; the attacker cannot. The kernel and the 
-initrd if it was packed in the kernel are measured and sent to the TPM 
-by the ACM running in cache-as-ram before execution begins.
-
-The second case is the flawed scenario, a strawman, if you will. This is 
-a runtime-integrity problem that is outside the scope/protections of 
-load-time-integrity solutions such as SRTM and DRTM. If the correct 
-kernel was loaded and measured, but an attacker already has a position 
-in the system that they can corrupt the kernel before the user-space 
-init process can be run, then they already won. The attacker is in fact 
-already in a more superior position in the system that would not be 
-detected or exposed by when config data measurements are sent to the TPM.
-
-
-> Is there some reason for all this complexity instead of extending the
-> PCRs at the early stage when the measurements are taken?
-
-
-We did have TPM logic in the setup kernel at one point. Within their 
-rights, the TPM maintainers took the position that the only TPM 
-interface logic should be the existing driver. If we wanted to interface 
-with the TPM, we must #include the existing code into the setup kernel. 
-The problem is that the mainline TPM driver uses mainline kernel 
-features not present in the setup kernel.
-
-v/r,
-dps
-
->>
->> The platform module also registers the securityfs nodes to allow
->> access to TXT register fields on Intel along with the fetching of
->> and writing events to the late launch TPM log.
->>
->> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
->> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->> arch/x86/kernel/Makefile   |   1 +
->> arch/x86/kernel/slmodule.c | 508 +++++++++++++++++++++++++++++++++++++
->> 2 files changed, 509 insertions(+)
->> create mode 100644 arch/x86/kernel/slmodule.c
->>
->> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
->> index a7ca7ca16174..bed87b1c49a2 100644
->> --- a/arch/x86/kernel/Makefile
->> +++ b/arch/x86/kernel/Makefile
->> @@ -83,6 +83,7 @@ obj-$(CONFIG_IA32_EMULATION)    += tls.o
->> obj-y                += step.o
->> obj-$(CONFIG_INTEL_TXT)        += tboot.o
->> obj-$(CONFIG_SECURE_LAUNCH)    += slaunch.o
->> +obj-$(CONFIG_SECURE_LAUNCH)    += slmodule.o
->> obj-$(CONFIG_ISA_DMA_API)    += i8237.o
->> obj-y                += stacktrace.o
->> obj-y                += cpu/
->> diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
->> new file mode 100644
->> index 000000000000..64010bac038c
->> --- /dev/null
->> +++ b/arch/x86/kernel/slmodule.c
->> @@ -0,0 +1,508 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Secure Launch late validation/setup, securityfs exposure and finalization.
->> + *
->> + * Copyright (c) 2025 Apertus Solutions, LLC
->> + * Copyright (c) 2025 Assured Information Security, Inc.
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/fs.h>
->> +#include <linux/init.h>
->> +#include <linux/linkage.h>
->> +#include <linux/mm.h>
->> +#include <linux/io.h>
->> +#include <linux/uaccess.h>
->> +#include <linux/security.h>
->> +#include <linux/memblock.h>
->> +#include <linux/tpm.h>
->> +#include <asm/segment.h>
->> +#include <asm/sections.h>
->> +#include <crypto/sha2.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
->> +
->> +/*
->> + * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
->> + * public registers as unsigned values.
->> + */
->> +#define DECLARE_TXT_PUB_READ_U(size, fmt, msg_size)            \
->> +static ssize_t txt_pub_read_u##size(unsigned int offset,        \
->> +        loff_t *read_offset,                    \
->> +        size_t read_len,                    \
->> +        char __user *buf)                    \
->> +{                                    \
->> +    char msg_buffer[msg_size];                    \
->> +    u##size reg_value = 0;                        \
->> +    void __iomem *txt;                        \
->> +                                    \
->> +    txt = ioremap(TXT_PUB_CONFIG_REGS_BASE,                \
->> +            TXT_NR_CONFIG_PAGES * PAGE_SIZE);        \
->> +    if (!txt)                            \
->> +        return -EFAULT;                        \
->> +    memcpy_fromio(&reg_value, txt + offset, sizeof(u##size));    \
->> +    iounmap(txt);                            \
->> +    snprintf(msg_buffer, msg_size, fmt, reg_value);            \
->> +    return simple_read_from_buffer(buf, read_len, read_offset,    \
->> +            &msg_buffer, msg_size);                \
->> +}
->> +
->> +DECLARE_TXT_PUB_READ_U(8, "%#04x\n", 6);
->> +DECLARE_TXT_PUB_READ_U(32, "%#010x\n", 12);
->> +DECLARE_TXT_PUB_READ_U(64, "%#018llx\n", 20);
->> +
->> +#define DECLARE_TXT_FOPS(reg_name, reg_offset, reg_size)        \
->> +static ssize_t txt_##reg_name##_read(struct file *flip,            \
->> +        char __user *buf, size_t read_len, loff_t *read_offset)    \
->> +{                                    \
->> +    return txt_pub_read_u##reg_size(reg_offset, read_offset,    \
->> +            read_len, buf);                    \
->> +}                                    \
->> +static const struct file_operations reg_name##_ops = {            \
->> +    .read = txt_##reg_name##_read,                    \
->> +}
->> +
->> +DECLARE_TXT_FOPS(sts, TXT_CR_STS, 64);
->> +DECLARE_TXT_FOPS(ests, TXT_CR_ESTS, 8);
->> +DECLARE_TXT_FOPS(errorcode, TXT_CR_ERRORCODE, 32);
->> +DECLARE_TXT_FOPS(didvid, TXT_CR_DIDVID, 64);
->> +DECLARE_TXT_FOPS(e2sts, TXT_CR_E2STS, 64);
->> +DECLARE_TXT_FOPS(ver_emif, TXT_CR_VER_EMIF, 32);
->> +DECLARE_TXT_FOPS(scratchpad, TXT_CR_SCRATCHPAD, 64);
->> +
->> +/*
->> + * Securityfs exposure
->> + */
->> +struct memfile {
->> +    char *name;
->> +    void *addr;
->> +    size_t size;
->> +};
->> +
->> +static struct memfile sl_evtlog = {"eventlog", NULL, 0};
->> +static void *txt_heap;
->> +static struct txt_heap_event_log_pointer2_1_element *evtlog21;
->> +static DEFINE_MUTEX(sl_evt_log_mutex);
->> +static struct tcg_efi_specid_event_head *efi_head;
->> +
->> +static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
->> +                  size_t count, loff_t *pos)
->> +{
->> +    ssize_t size;
->> +
->> +    if (!sl_evtlog.addr)
->> +        return 0;
->> +
->> +    mutex_lock(&sl_evt_log_mutex);
->> +    size = simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
->> +                       sl_evtlog.size);
->> +    mutex_unlock(&sl_evt_log_mutex);
->> +
->> +    return size;
->> +}
->> +
->> +static ssize_t sl_evtlog_write(struct file *file, const char __user *buf,
->> +                   size_t datalen, loff_t *ppos)
->> +{
->> +    ssize_t result;
->> +    char *data;
->> +
->> +    if (!sl_evtlog.addr)
->> +        return 0;
->> +
->> +    /* No partial writes. */
->> +    result = -EINVAL;
->> +    if (*ppos != 0)
->> +        goto out;
->> +
->> +    data = memdup_user(buf, datalen);
->> +    if (IS_ERR(data)) {
->> +        result = PTR_ERR(data);
->> +        goto out;
->> +    }
->> +
->> +    mutex_lock(&sl_evt_log_mutex);
->> +    if (evtlog21)
->> +        result = tpm2_log_event(evtlog21, sl_evtlog.addr,
->> +                    sl_evtlog.size, datalen, data);
->> +    else
->> +        result = tpm_log_event(sl_evtlog.addr, sl_evtlog.size,
->> +                       datalen, data);
->> +    mutex_unlock(&sl_evt_log_mutex);
->> +
->> +    kfree(data);
->> +out:
->> +    return result;
->> +}
->> +
->> +static const struct file_operations sl_evtlog_ops = {
->> +    .read = sl_evtlog_read,
->> +    .write = sl_evtlog_write,
->> +    .llseek    = default_llseek,
->> +};
->> +
->> +struct sfs_file {
->> +    const char *name;
->> +    const struct file_operations *fops;
->> +};
->> +
->> +#define SL_TXT_ENTRY_COUNT    7
->> +static const struct sfs_file sl_txt_files[] = {
->> +    { "sts", &sts_ops },
->> +    { "ests", &ests_ops },
->> +    { "errorcode", &errorcode_ops },
->> +    { "didvid", &didvid_ops },
->> +    { "ver_emif", &ver_emif_ops },
->> +    { "scratchpad", &scratchpad_ops },
->> +    { "e2sts", &e2sts_ops }
->> +};
->> +
->> +/* sysfs file handles */
->> +static struct dentry *slaunch_dir;
->> +static struct dentry *event_file;
->> +static struct dentry *txt_dir;
->> +static struct dentry *txt_entries[SL_TXT_ENTRY_COUNT];
->> +
->> +static long slaunch_expose_securityfs(void)
->> +{
->> +    long ret = 0;
->> +    int i;
->> +
->> +    slaunch_dir = securityfs_create_dir("slaunch", NULL);
->> +    if (IS_ERR(slaunch_dir))
->> +        return PTR_ERR(slaunch_dir);
->> +
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        txt_dir = securityfs_create_dir("txt", slaunch_dir);
->> +        if (IS_ERR(txt_dir)) {
->> +            ret = PTR_ERR(txt_dir);
->> +            goto remove_slaunch;
->> +        }
->> +
->> +        for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++) {
->> +            txt_entries[i] = securityfs_create_file(
->> +                        sl_txt_files[i].name, 0440,
->> +                        txt_dir, NULL,
->> +                        sl_txt_files[i].fops);
->> +            if (IS_ERR(txt_entries[i])) {
->> +                ret = PTR_ERR(txt_entries[i]);
->> +                goto remove_files;
->> +            }
->> +        }
->> +    }
->> +
->> +    if (sl_evtlog.addr) {
->> +        event_file = securityfs_create_file(sl_evtlog.name, 0440,
->> +                            slaunch_dir, NULL,
->> +                            &sl_evtlog_ops);
->> +        if (IS_ERR(event_file)) {
->> +            ret = PTR_ERR(event_file);
->> +            goto remove_files;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +
->> +remove_files:
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        while (--i >= 0)
->> +            securityfs_remove(txt_entries[i]);
->> +        securityfs_remove(txt_dir);
->> +    }
->> +
->> +remove_slaunch:
->> +    securityfs_remove(slaunch_dir);
->> +
->> +    return ret;
->> +}
->> +
->> +static void slaunch_teardown_securityfs(void)
->> +{
->> +    int i;
->> +
->> +    securityfs_remove(event_file);
->> +    if (sl_evtlog.addr) {
->> +        memunmap(sl_evtlog.addr);
->> +        sl_evtlog.addr = NULL;
->> +    }
->> +    sl_evtlog.size = 0;
->> +
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++)
->> +            securityfs_remove(txt_entries[i]);
->> +
->> +        securityfs_remove(txt_dir);
->> +
->> +        if (txt_heap) {
->> +            memunmap(txt_heap);
->> +            txt_heap = NULL;
->> +        }
->> +    }
->> +
->> +    securityfs_remove(slaunch_dir);
->> +}
->> +
->> +static void slaunch_intel_evtlog(void __iomem *txt)
->> +{
->> +    struct slr_entry_log_info *log_info;
->> +    struct txt_os_mle_data *params;
->> +    struct slr_table *slrt;
->> +    void *os_sinit_data;
->> +    u64 base, size;
->> +
->> +    memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
->> +    memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
->> +
->> +    /* now map TXT heap */
->> +    txt_heap = memremap(base, size, MEMREMAP_WB);
->> +    if (!txt_heap)
->> +        slaunch_txt_reset(txt, "Error failed to memremap TXT heap\n",
->> +                  SL_ERROR_HEAP_MAP);
->> +
->> +    params = (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap);
->> +
->> +    /* Get the SLRT and remap it */
->> +    slrt = memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
->> +    if (!slrt)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MAP);
->> +    size = slrt->size;
->> +    memunmap(slrt);
->> +
->> +    slrt = memremap(params->slrt, size, MEMREMAP_WB);
->> +    if (!slrt)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MAP);
->> +
->> +    log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
->> +    if (!log_info)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MISSING_ENTRY);
->> +
->> +    sl_evtlog.size = log_info->size;
->> +    sl_evtlog.addr = memremap(log_info->addr, log_info->size,
->> +                  MEMREMAP_WB);
->> +    if (!sl_evtlog.addr)
->> +        slaunch_txt_reset(txt, "Error failed to memremap TPM event log\n",
->> +                  SL_ERROR_EVENTLOG_MAP);
->> +
->> +    memunmap(slrt);
->> +
->> +    /* Determine if this is TPM 1.2 or 2.0 event log */
->> +    if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
->> +            TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
->> +        return; /* looks like it is not 2.0 */
->> +
->> +    /* For TPM 2.0 logs, the extended heap element must be located */
->> +    os_sinit_data = txt_os_sinit_data_start(txt_heap);
->> +
->> +    evtlog21 = tpm2_find_log2_1_element(os_sinit_data);
->> +
->> +    /*
->> +     * If this fails, things are in really bad shape. Any attempt to write
->> +     * events to the log will fail.
->> +     */
->> +    if (!evtlog21)
->> +        slaunch_txt_reset(txt, "Error failed to find TPM20 event log element\n",
->> +                  SL_ERROR_TPM_INVALID_LOG20);
->> +
->> +    /* Save pointer to the EFI SpecID log header */
->> +    efi_head = (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + sizeof(struct tcg_pcr_event));
->> +}
->> +
->> +static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
->> +                      struct tcg_pcr_event2_head *event)
->> +{
->> +    u16 *alg_id_field = (u16 *)((u8 *)event + sizeof(*event));
->> +    struct tpm_digest *digests;
->> +    u8 *dptr;
->> +    int ret;
->> +    u32 i;
->> +
->> +    /*
->> +     * Early SL code ensured the TPM algorithm information passed via
->> +     * the log is valid. Small sanity check here.
->> +     */
->> +    if (event->count != efi_head->num_algs)
->> +        slaunch_txt_reset(txt, "Event digest count mismatch with event log\n",
->> +                  SL_ERROR_TPM_EVENT_COUNT);
->> +
->> +    digests = kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNEL);
->> +    if (!digests)
->> +        slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
->> +                  SL_ERROR_GENERIC);
->> +
->> +    for (i = 0; i < event->count; i++) {
->> +        dptr = (u8 *)alg_id_field + sizeof(u16);
->> +
->> +        /* Setup each digest for the extend */
->> +        digests[i].alg_id = efi_head->digest_sizes[i].alg_id;
->> +        memcpy(&digests[i].digest[0], dptr,
->> +            efi_head->digest_sizes[i].digest_size);
->> +
->> +        alg_id_field = (u16 *)((u8 *)alg_id_field + sizeof(u16) +
->> +                efi_head->digest_sizes[i].digest_size);
->> +    }
->> +
->> +    ret = tpm_pcr_extend(tpm, event->pcr_idx, digests);
->> +    if (ret) {
->> +        pr_err("Error extending TPM20 PCR, result: %d\n", ret);
->> +        slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +    }
->> +
->> +    kfree(digests);
->> +}
->> +
->> +static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
->> +{
->> +    struct tcg_pcr_event *event_header;
->> +    struct tcg_pcr_event2_head *event;
->> +    int start = 0, end = 0, size;
->> +
->> +    event_header = (struct tcg_pcr_event *)(sl_evtlog.addr +
->> +                        evtlog21->first_record_offset);
->> +
->> +    /* Skip first TPM 1.2 event to get to first TPM 2.0 event */
->> +    event = (struct tcg_pcr_event2_head *)((u8 *)event_header + sizeof(*event_header) +
->> +                           event_header->event_size);
->> +
->> +    while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offset) {
->> +        size = __calc_tpm2_event_size(event, event_header, false);
->> +        if (!size)
->> +            slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
->> +                      SL_ERROR_TPM_INVALID_EVENT);
->> +
->> +        /*
->> +         * Marker events indicate where the Secure Launch early stub
->> +         * started and ended adding post launch events. As they are
->> +         * encountered, switch the event type to NO_ACTION so they
->> +         * ignored in when the event log is processed since they are
->> +         * not really measurements.
->> +         */
->> +        if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
->> +            event->event_type = NO_ACTION;
->> +            end = 1;
->> +            break;
->> +        } else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
->> +            event->event_type = NO_ACTION;
->> +            start = 1;
->> +            goto next;
->> +        }
->> +
->> +        if (start)
->> +            slaunch_tpm2_extend_event(tpm, txt, event);
->> +
->> +next:
->> +        event = (struct tcg_pcr_event2_head *)((u8 *)event + size);
->> +    }
->> +
->> +    if (!start || !end)
->> +        slaunch_txt_reset(txt, "Missing start or end events for extending TPM20 PCRs\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +}
->> +
->> +static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
->> +{
->> +    struct tpm_event_log_header *event_header;
->> +    struct tcg_pcr_event *event;
->> +    struct tpm_digest digest;
->> +    int start = 0, end = 0;
->> +    int size, ret;
->> +
->> +    event_header = (struct tpm_event_log_header *)sl_evtlog.addr;
->> +    event = (struct tcg_pcr_event *)((u8 *)event_header +
->> +                sizeof(*event_header));
->> +
->> +    while ((void  *)event < sl_evtlog.addr + event_header->next_event_offset) {
->> +        size = sizeof(*event) + event->event_size;
->> +
->> +        /*
->> +         * See comments in slaunch_tpm2_extend() concerning these special
->> +         * event types.
->> +         */
->> +        if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
->> +            event->event_type = NO_ACTION;
->> +            end = 1;
->> +            break;
->> +        } else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
->> +            event->event_type = NO_ACTION;
->> +            start = 1;
->> +            goto next;
->> +        }
->> +
->> +        if (start) {
->> +            memset(&digest.digest[0], 0, TPM_MAX_DIGEST_SIZE);
->> +            digest.alg_id = TPM_ALG_SHA1;
->> +            memcpy(&digest.digest[0], &event->digest[0],
->> +                   SHA1_DIGEST_SIZE);
->> +
->> +            ret = tpm_pcr_extend(tpm, event->pcr_idx, &digest);
->> +            if (ret) {
->> +                pr_err("Error extending TPM12 PCR, result: %d\n", ret);
->> +                slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
->> +                          SL_ERROR_TPM_EXTEND);
->> +            }
->> +        }
->> +
->> +next:
->> +        event = (struct tcg_pcr_event *)((u8 *)event + size);
->> +    }
->> +
->> +    if (!start || !end)
->> +        slaunch_txt_reset(txt, "Missing start or end events for extending TPM12 PCRs\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +}
->> +
->> +static void slaunch_pcr_extend(void __iomem *txt)
->> +{
->> +    struct tpm_chip *tpm;
->> +    int rc;
->> +
->> +    tpm = tpm_default_chip();
->> +    if (!tpm)
->> +        slaunch_txt_reset(txt, "Could not get default TPM chip\n",
->> +                  SL_ERROR_TPM_INIT);
->> +
->> +    rc = tpm_chip_set_locality(tpm, 2);
->> +    if (rc)
->> +        slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
->> +                  SL_ERROR_TPM_INIT);
->> +
->> +    if (evtlog21)
->> +        slaunch_tpm2_extend(tpm, txt);
->> +    else
->> +        slaunch_tpm_extend(tpm, txt);
->> +}
->> +
->> +static int __init slaunch_module_init(void)
->> +{
->> +    void __iomem *txt;
->> +
->> +    /* Check to see if Secure Launch happened */
->> +    if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
->> +        (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
->> +        return 0;
->> +
->> +    txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
->> +              PAGE_SIZE);
->> +    if (!txt)
->> +        panic("Error ioremap of TXT priv registers\n");
->> +
->> +    /* Only Intel TXT is supported at this point */
->> +    slaunch_intel_evtlog(txt);
->> +    slaunch_pcr_extend(txt);
->> +    iounmap(txt);
->> +
->> +    return slaunch_expose_securityfs();
->> +}
->> +
->> +static void __exit slaunch_module_exit(void)
->> +{
->> +    slaunch_teardown_securityfs();
->> +}
->> +
->> +late_initcall(slaunch_module_init);
->> +__exitcall(slaunch_module_exit);
->> --
->> 2.39.3
->>
+> ---
+>   arch/x86/coco/sev/core.c | 241 +++++++++++++++++++++++++--------------
+>   1 file changed, 155 insertions(+), 86 deletions(-)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index dcfaa698d6cf..f4eb5b645239 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -877,6 +877,99 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+>   	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
+>   }
+>   
+> +static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
+> +{
+> +	struct ghcb_state state;
+> +	unsigned long flags;
+> +	struct ghcb *ghcb;
+> +	int ret = 0;
+> +
+> +	local_irq_save(flags);
+> +
+> +	ghcb = __sev_get_ghcb(&state);
+> +
+> +	vc_ghcb_invalidate(ghcb);
+> +	if (event == SVM_VMGEXIT_AP_CREATE)
+> +		ghcb_set_rax(ghcb, vmsa->sev_features);
+> +	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
+> +	ghcb_set_sw_exit_info_1(ghcb,
+> +				((u64)apic_id << 32)	|
+> +				((u64)snp_vmpl << 16)	|
+> +				event);
+> +	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
+> +
+> +	sev_es_wr_ghcb_msr(__pa(ghcb));
+> +	VMGEXIT();
+> +
+> +	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
+> +	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
+> +		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	__sev_put_ghcb(&state);
+> +
+> +	local_irq_restore(flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
+> +{
+> +	int ret;
+> +
+> +	if (snp_vmpl) {
+> +		struct svsm_call call = {};
+> +		unsigned long flags;
+> +
+> +		local_irq_save(flags);
+> +
+> +		call.caa = this_cpu_read(svsm_caa);
+> +		call.rcx = __pa(va);
+> +
+> +		if (make_vmsa) {
+> +			/* Protocol 0, Call ID 2 */
+> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
+> +			call.rdx = __pa(caa);
+> +			call.r8  = apic_id;
+> +		} else {
+> +			/* Protocol 0, Call ID 3 */
+> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
+> +		}
+> +
+> +		ret = svsm_perform_call_protocol(&call);
+> +
+> +		local_irq_restore(flags);
+> +	} else {
+> +		/*
+> +		 * If the kernel runs at VMPL0, it can change the VMSA
+> +		 * bit for a page using the RMPADJUST instruction.
+> +		 * However, for the instruction to succeed it must
+> +		 * target the permissions of a lesser privileged (higher
+> +		 * numbered) VMPL level, so use VMPL1.
+> +		 */
+> +		u64 attrs = 1;
+> +
+> +		if (make_vmsa)
+> +			attrs |= RMPADJUST_VMSA_PAGE_BIT;
+> +
+> +		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+> +{
+> +	int err;
+> +
+> +	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
+> +	if (err)
+> +		pr_err("clear VMSA page failed (%u), leaking page\n", err);
+> +	else
+> +		free_page((unsigned long)vmsa);
+> +}
+> +
+>   static void set_pte_enc(pte_t *kpte, int level, void *va)
+>   {
+>   	struct pte_enc_desc d = {
+> @@ -973,6 +1066,65 @@ void snp_kexec_begin(void)
+>   		pr_warn("Failed to stop shared<->private conversions\n");
+>   }
+>   
+> +/*
+> + * Shutdown all APs except the one handling kexec/kdump and clearing
+> + * the VMSA tag on AP's VMSA pages as they are not being used as
+> + * VMSA page anymore.
+> + */
+> +static void shutdown_all_aps(void)
+> +{
+> +	struct sev_es_save_area *vmsa;
+> +	int apic_id, this_cpu, cpu;
+> +
+> +	this_cpu = get_cpu();
+> +
+> +	/*
+> +	 * APs are already in HLT loop when enc_kexec_finish() callback
+> +	 * is invoked.
+> +	 */
+> +	for_each_present_cpu(cpu) {
+> +		vmsa = per_cpu(sev_vmsa, cpu);
+> +
+> +		/*
+> +		 * BSP does not have guest allocated VMSA and there is no need
+> +		 * to clear the VMSA tag for this page.
+> +		 */
+> +		if (!vmsa)
+> +			continue;
+> +
+> +		/*
+> +		 * Cannot clear the VMSA tag for the currently running vCPU.
+> +		 */
+> +		if (this_cpu == cpu) {
+> +			unsigned long pa;
+> +			struct page *p;
+> +
+> +			pa = __pa(vmsa);
+> +			/*
+> +			 * Mark the VMSA page of the running vCPU as offline
+> +			 * so that is excluded and not touched by makedumpfile
+> +			 * while generating vmcore during kdump.
+> +			 */
+> +			p = pfn_to_online_page(pa >> PAGE_SHIFT);
+> +			if (p)
+> +				__SetPageOffline(p);
+> +			continue;
+> +		}
+> +
+> +		apic_id = cpuid_to_apicid[cpu];
+> +
+> +		/*
+> +		 * Issue AP destroy to ensure AP gets kicked out of guest mode
+> +		 * to allow using RMPADJUST to remove the VMSA tag on it's
+> +		 * VMSA page.
+> +		 */
+> +		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
+> +		snp_cleanup_vmsa(vmsa, apic_id);
+> +	}
+> +
+> +	put_cpu();
+> +}
+> +
+>   void snp_kexec_finish(void)
+>   {
+>   	struct sev_es_runtime_data *data;
+> @@ -987,6 +1139,8 @@ void snp_kexec_finish(void)
+>   	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>   		return;
+>   
+> +	shutdown_all_aps();
+> +
+>   	unshare_all_memory();
+>   
+>   	/*
+> @@ -1008,51 +1162,6 @@ void snp_kexec_finish(void)
+>   	}
+>   }
+>   
+> -static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
+> -{
+> -	int ret;
+> -
+> -	if (snp_vmpl) {
+> -		struct svsm_call call = {};
+> -		unsigned long flags;
+> -
+> -		local_irq_save(flags);
+> -
+> -		call.caa = this_cpu_read(svsm_caa);
+> -		call.rcx = __pa(va);
+> -
+> -		if (make_vmsa) {
+> -			/* Protocol 0, Call ID 2 */
+> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
+> -			call.rdx = __pa(caa);
+> -			call.r8  = apic_id;
+> -		} else {
+> -			/* Protocol 0, Call ID 3 */
+> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
+> -		}
+> -
+> -		ret = svsm_perform_call_protocol(&call);
+> -
+> -		local_irq_restore(flags);
+> -	} else {
+> -		/*
+> -		 * If the kernel runs at VMPL0, it can change the VMSA
+> -		 * bit for a page using the RMPADJUST instruction.
+> -		 * However, for the instruction to succeed it must
+> -		 * target the permissions of a lesser privileged (higher
+> -		 * numbered) VMPL level, so use VMPL1.
+> -		 */
+> -		u64 attrs = 1;
+> -
+> -		if (make_vmsa)
+> -			attrs |= RMPADJUST_VMSA_PAGE_BIT;
+> -
+> -		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+>   #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
+>   #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
+>   #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
+> @@ -1084,24 +1193,10 @@ static void *snp_alloc_vmsa_page(int cpu)
+>   	return page_address(p + 1);
+>   }
+>   
+> -static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+> -{
+> -	int err;
+> -
+> -	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
+> -	if (err)
+> -		pr_err("clear VMSA page failed (%u), leaking page\n", err);
+> -	else
+> -		free_page((unsigned long)vmsa);
+> -}
+> -
+>   static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>   {
+>   	struct sev_es_save_area *cur_vmsa, *vmsa;
+> -	struct ghcb_state state;
+>   	struct svsm_ca *caa;
+> -	unsigned long flags;
+> -	struct ghcb *ghcb;
+>   	u8 sipi_vector;
+>   	int cpu, ret;
+>   	u64 cr4;
+> @@ -1215,33 +1310,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>   	}
+>   
+>   	/* Issue VMGEXIT AP Creation NAE event */
+> -	local_irq_save(flags);
+> -
+> -	ghcb = __sev_get_ghcb(&state);
+> -
+> -	vc_ghcb_invalidate(ghcb);
+> -	ghcb_set_rax(ghcb, vmsa->sev_features);
+> -	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
+> -	ghcb_set_sw_exit_info_1(ghcb,
+> -				((u64)apic_id << 32)	|
+> -				((u64)snp_vmpl << 16)	|
+> -				SVM_VMGEXIT_AP_CREATE);
+> -	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
+> -
+> -	sev_es_wr_ghcb_msr(__pa(ghcb));
+> -	VMGEXIT();
+> -
+> -	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
+> -	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
+> -		pr_err("SNP AP Creation error\n");
+> -		ret = -EINVAL;
+> -	}
+> -
+> -	__sev_put_ghcb(&state);
+> -
+> -	local_irq_restore(flags);
+> -
+> -	/* Perform cleanup if there was an error */
+> +	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
+>   	if (ret) {
+>   		snp_cleanup_vmsa(vmsa, apic_id);
+>   		vmsa = NULL;
 
 
