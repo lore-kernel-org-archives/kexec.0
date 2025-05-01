@@ -4,166 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AB94C369DC
-	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 13:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39B02C3ABA9
+	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 22:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8AKR4gVPDHOjpQuuTxzsoFzfI99o54TMi+RtCbmbPWY=; b=r2QRZznPB49FX9gcwvcexAxT+D
-	aXq14f1kcT1b/oMw1ltpckI/8PZarA9WjZHGDXz570oA0zVzbHUMbLMVC8baDUwKAKy6Cd41n0xgQ
-	+4dUqSwHT+lHrGYYBNfQgT8OHSRwYeX9TcuoCQLSpVmxjqWNSptD9IZcNViBdwC0rFXzIs6AydXRZ
-	NqGymZ5xHNCGBj4/w8rvAlFP5grbnOfMwjp2fxM+13b2J8BtDfWs6XefXXVqkHVjnsBhY250+P0eV
-	owKLt6lhfgOCUvdMgjWCU6s0yaaZ7i6FnOAZnneM4wP8EGCC4YzZoUk3vg6cnp+MJzysozcZ3+R0n
-	iTpUbEag==;
+	bh=IBXx3gMWZ4e1/486vCXXB36Jvx0Iv06j/aSQbPFzpYQ=; b=2G1iXk+eCfoByACjjGyNmPpcyr
+	k1QcJBlL7d4Nrwutcb6P4p7rhiNNzJIBeVFAxbL5VrP/Bi1uUiNnHb6I6mlvQam090xijqOl+NRTb
+	ieDjV8nPrH4apSK2/nUZnYKR7kftxwbDRHYw/N8QBGpEaf6UBtBTQKsm5XZsTEgPkqx++S2K6taJs
+	2EHDCjRjo+YSohhIk+ZEHL93Z9/GlDMuSej7lAml7kpmV9o+UYTHYQ6F/HjaUjqc8mJ8G7F552i90
+	FsLYbcLTI393XGUOG1WjzYGty6aSWQGZR8XEDxqLNe/IMA73HQ5WZBsTBy4gMg9G9Saf2uPdAs+Wr
+	IC5rUS8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAUPY-0000000FtW2-0ies;
-	Thu, 01 May 2025 13:57:12 +0000
-Received: from mail-mw2nam12on20627.outbound.protection.outlook.com ([2a01:111:f403:200a::627] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	id 1uAcqC-000000008CM-0amZ;
+	Thu, 01 May 2025 22:57:16 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAUOe-0000000FtNo-3gmm
+	id 1uAcoC-0000000070h-07qP
 	for kexec@lists.infradead.org;
-	Thu, 01 May 2025 13:56:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jhjP+FnF0NEMGmQRP7p1uG7zSJaPJdVmsWKMMeAguSvA7im6+jgZYkdbyqc1fvWchsBSOVumJn9KI3t/+++pLhc1nmglU53mM6tgRiXi8khV60STrJoy38kMk5CqXIr+I5pc2kRbkRZUMVMpuPPSRTxrNGCChp0CdKH3FoEm4//xOGvwkfnLkQjvLYeX50FsjK4yhT6MOc2g9Ki8TcMwzNaXuqI3BeK9+/R7ODkrh1trOwHdt20LYvFGyIuRvLJFgOC2pNYP6AhYSxiQ3XtAzvq9o8LO3rXqMqDeQTSY33/n4dQzuemLrsAuqUnUtuCg189duClyLlKYRjZ7HaHusQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8AKR4gVPDHOjpQuuTxzsoFzfI99o54TMi+RtCbmbPWY=;
- b=AI8PYk5LE7Pt84wL0U9Mh+kk9WXHBIfBmAJUcJEh58xMXHanfFj7Y1ih5OtrN0rvIpbTNec4sYCLZlPhYB0ak7doNZ9d1Qr5x3H6ApciB/PYUIaHGZcuNWNX0+NsKjafPTFu+FW1f3Ja8WbA7V0Vg1T8HG6AeQj1tUKnkqJ9rzplXN8n2BLvQmTb9r7tLSuKs2yI8LBF4sfmwy5ftZY4jA2iJcGCGoW8qEKz9gQzFyieBOCksJyVpQY3LR7enDR4QBQQ60Ydo+VIGLLnogVu0R8Vl1eIjOIz4bNUasgFMY6PcNJU2h0sNyymhmN/zZvDfnEAfr+/aqUsUHOJoYSrxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8AKR4gVPDHOjpQuuTxzsoFzfI99o54TMi+RtCbmbPWY=;
- b=BP6ALAZrGrqcT26+bL1Rf0r+Vs/LuwrIqEhpA8X54FKW3JO/HjiwDmBEpWa3nwBrIcphD74jkOSk6DQahA25xMzuU011WGWJ2ig/8K8k7rd6ul6QGnHI1tPkKFRu3pf1YS7xT4J99qtLEf2c8ZoPRc9PeJYDoXUWRXMUJpMTatw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Thu, 1 May
- 2025 13:56:10 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8699.022; Thu, 1 May 2025
- 13:56:10 +0000
-Message-ID: <633b73ac-8983-fe38-dcdc-0b6a08388f5d@amd.com>
-Date: Thu, 1 May 2025 08:56:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3] x86/sev: Fix making shared pages private during kdump
-Content-Language: en-US
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
- hpa@zytor.com
-Cc: michael.roth@amd.com, nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev
-References: <20250430231738.370328-1-Ashish.Kalra@amd.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250430231738.370328-1-Ashish.Kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P123CA0013.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:ba::18) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|BL3PR12MB9049:EE_
-X-MS-Office365-Filtering-Correlation-Id: 245ae2e0-fe6f-4b05-00bf-08dd88b7edcb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VjVIRnpDenFUcUZhRFUyRDU4Zldiak41SUdqQ3NCdDVKbCtuWFR6Q2dkVDJy?=
- =?utf-8?B?RG9mSUxNY3FFTmtlc0NpYSs2S0ZKMFVrc1UvTHk2UzMvaHFhV0s2Nk9JaGxT?=
- =?utf-8?B?WnBHWGFFcW5YTmNXT0dQKytzdzlqaFpuSGk1ODhBTnBLNDhBRnI5L2FXMHgr?=
- =?utf-8?B?U3VKUDRBSXliSVQ3cm54Um9NZW84UkhSU2x6dUxaSGZtYTZ3S0NpN1NyZWM1?=
- =?utf-8?B?QVBnc2xSd1FZY3gxLzVucEliQnp0QUJlN1grNHB5RkE0aGtDRkxFKzVlUmEz?=
- =?utf-8?B?Zko2R1lpUlBKSXVWQ0t6ZXpYU2h1M3pneWhpYldPWkwvVHE5WFBlcDBiMFl2?=
- =?utf-8?B?b3F4RUJ5NlMrL1M2SFovUngrNW9xSTZLNXBPZFhkMTlqWXJhWTc0cWFTSWls?=
- =?utf-8?B?VldEbHFXK0ExL245ZkNuUmhmTGsrTGxEMzBuQVZURk9xbFhYWllLdlZhMVpt?=
- =?utf-8?B?MGxhbS82Wm5OWmpUK2JMSXp1a3NySWEyRXVkRWNrd1BRM290VnJsY3dCV2J0?=
- =?utf-8?B?UXV0ZU5WUm9xM2ZpSTB3YlpwYnNNbk9adStvZG04SmNQcmJwZzJ0OGMxeTh3?=
- =?utf-8?B?WVpPT3pBWjRldHRzcTVZeHVERVpwdlU4WlJFT1FveS85eVRXK2ZUcHZPekVM?=
- =?utf-8?B?c2tzS1ZaUk9lQnB1MEcrbnJNVCtiSTRCZ0RJYUQ0aEFLanYwMWNVZFZZNmlz?=
- =?utf-8?B?bEtnS2kzV2ZFVTZ0ajBwRkxMYmxDV1h3a1h1QjFxREQwUStlaGFLamt4WHhk?=
- =?utf-8?B?SEN1UU15SXRpZVVFSWZtYndvK1lmQVYzMDlrTk1xWktWdHZMSFRPKzh4RFBZ?=
- =?utf-8?B?YkNOZkRrYWs2UzJnbmVMOTU5Um8zZDF0VWRrV3VsL3h5R1p2Z216NWhvcjhx?=
- =?utf-8?B?d2Z2QkdjRUN2N2JqMHB2Z3VIVy9nMU1rWFVKY213YWFXenU0YUlNN1Z2TzE1?=
- =?utf-8?B?VFhLTzNkMkg1ZW13R01FajZZRk9wQkZNUkRaQ0M1T05VNzZPR3B6VnN1YnVX?=
- =?utf-8?B?bXhwelU3SXRKR0EwcGlBZC9tSGFWUVUrQ0NhRnF1SGE4K3orYlFKWUlCUFEv?=
- =?utf-8?B?QTFvTytrQ3lPUjAwL2l3UGdvN29hb20wT0lWUGNZWDFVaklKOFladHdkZGgw?=
- =?utf-8?B?VXVLV2xmYmc5SDZnSWo1TlBYY2ZkRUZhUG9mazVnK1dhVFNSM29VREZFMWpW?=
- =?utf-8?B?ZnljcjIvc2lhQXF2ZDE5TWxKQTNKOEVNOEUxK2tVcjk2ei9HR0xpRENmV3px?=
- =?utf-8?B?ZVBET0tOUkNibXZYVEdXc2dmOSswbDJVUE0ydzcxMTh0bEpqdEM1RzNKdldz?=
- =?utf-8?B?QlRlcUhyT3AwanpTN0MvNERHOGdta0I4TUFSR1VVMVphTm9BK0lSTmV0dURl?=
- =?utf-8?B?Q0FEUkt6ZEtQSGhTb25iZVFJMWNUTXRJOEJWMjZqRDdzeUhRam1ZY01tY1JG?=
- =?utf-8?B?TWpIeXJ4c0EvME0zWlQ4N3dBc1JxVCsvZHRsZzdZbk1vWmJXcThkQzZkZFFI?=
- =?utf-8?B?MUFJaEVQbnk0d0d0YU1Gb29ZM3RqVXNYZWowaUluZTFRaUF0TThubGtpSUpJ?=
- =?utf-8?B?TjJRNDNYN2pmYmhuVHZ0MlZ1MUpXUisrSDhKMmNWVjVmOTlYNFo4U3VWVTRE?=
- =?utf-8?B?R3JjVVhQT3hoTjE3NG53SEU4bk1QYVR6cS82dGEwaGdUL3BMZHkzWkJGNThj?=
- =?utf-8?B?M20vSVNjQVlEcFVVQmNWLzlEMWpYSjhyUEpjWHEvMTVzeFg5Z1czMk93SEtG?=
- =?utf-8?B?YjhDVlZ0K09ibzNSOVFYOTJnS0hWRGgzbGJyeHRCV3BUREVoLzBvYnJmcml4?=
- =?utf-8?B?OC9lckI0a1JWaHpRRElURG1IVFlIS3BMdFRkeDlKcTJUejVGTGNxWU8vaDRN?=
- =?utf-8?B?eU5KL1RQbkJ2bFVDeHdnMzRpSVd2Nk51aFg3eFUrV1hIckdEeXRUNnVpYnNk?=
- =?utf-8?Q?b/jG1iT3G+Y=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bjQ1blo4M0ZySklVSGl5cy9ZM1JKU2dyUWUweUNTdGluZ3VQUUplSU53d3Zk?=
- =?utf-8?B?QzlTSER4cnBHaVkwaFJBcjEvTW9WYXpjTU1uRGR4cDNNZVFZYXN2TWtWLzhu?=
- =?utf-8?B?YlpucmNvV1hJZmVMWmVJNGowSzkzcllpSDZhREcwVHc3dldqcnd6czRIeUVk?=
- =?utf-8?B?MWROc0psN2o2cnprRlYrSlNaYnByRzhBWENpKzRNOFUyYTVQSTJVaEVwanRv?=
- =?utf-8?B?QXpzUGpzR1gwU1hDaUlWNGk2ZytMcUZ4b0w1K00reGdhQTBwblIwQUc5dG8z?=
- =?utf-8?B?L2RtcjJWajM4YmppcjkyTVpUbDFadysrdG5mazBsWCtDbmRnQUlPNTVLVStF?=
- =?utf-8?B?Y2ttRGFPN2lFSmxNR29LZ29WMEpVTTJCeVAyRWJnTnVSeVJQcG1jOXIxTFZ3?=
- =?utf-8?B?VXQyVk5YNzFNYXZxMWVzZ1ZYRDI3SWFhVmFaOGpvZkVPM3duak9CV3llVlFN?=
- =?utf-8?B?UmRZcGhiR0JFd0xVankrcm9OYTk5ZlBva3NzYW9WWUtraXphb1ZOTW5iWVp6?=
- =?utf-8?B?U0xYS0FrRUJwbXgzaUtzVGN6ajREdVhMcnFKekJ5eU9yOVh5UFFWWEtta1VC?=
- =?utf-8?B?NzFlSkdmSlN1aVJncHNZTW54a0pMMXk1dkphTUt3eHExVzJFcGlubnRIRm5m?=
- =?utf-8?B?NlBVV0xFOVNSNjYrcXk0TFZnemNVdjJmZE93WVN5VlJ2di8vUHRRVGFTeUdo?=
- =?utf-8?B?Mk94WjhLMTRFWktZVFZRNjZYR29QdGVBcEI4ak9uZVY3bjJERE14NXpyMFNS?=
- =?utf-8?B?aXM0dEhxcmlTVEY2Q0tnak1FQ3Y5d2MzTE9rM041UktOM1BaYVRXaHBxald3?=
- =?utf-8?B?aDBOcHk0MG5IY280bHVyVi9hNVRjUUZPbDRtNHBTVC9RUWFGdXp6cTF5ZUdj?=
- =?utf-8?B?T3E3UzFuWFREQlZPY2ZkN2ZlZjgwY0IwbGxuYjg4T3VVRU9vK2Ftc2ZZT1Y3?=
- =?utf-8?B?dWgrQmZEb0t1aXY1TThERkJrU3JrdjBlWWFVUDNvOHJ0dmZmOFNtKzVyY3Zu?=
- =?utf-8?B?SE8vMVBaenhtYndSZ2lpQ3ZqazVQQ0l2TkdDbjd5YVlpK0pOekc3YVRyNm5E?=
- =?utf-8?B?bmxQRmZnU1R5cVJUZVNvY1VvYlhQdm1FRnZhRlNwOFpVc2d1VHBhYnlJckJX?=
- =?utf-8?B?TENUMjRpd3RFckRsRGpGbW1ncmN6OXRLaTQrNy95UitiWkNFTzRxRS9rVVR5?=
- =?utf-8?B?aEVxY0N3dCtpcExnUHBmN0hhc2poT0NFTkFnYlkvOTIvWVlvaGNhNGhlZTZF?=
- =?utf-8?B?bzBOTThhUU1sUFI0UElyR2ZEN2M0RU9GK0NSMFVRNzg3ZE53ajlXeGswa0Z3?=
- =?utf-8?B?RnNudS9xT1Zmb2xCcU9TMXozSGZNTjRxV1JmeVJPNmtjMkhXbXpPM3V0aWFs?=
- =?utf-8?B?a1l0K0dWMnlYSEdPeEVhNzRxVFF5Z1FhWk51QUJzY2RIeHJvR1FXNXM1czR1?=
- =?utf-8?B?SGttM0lwN290ZVBrakdhWmVPc1R2YnZOUlZUVGhhMEJpRk5EQmVLaklia1pO?=
- =?utf-8?B?R1A3aFZGNk9BVytnQ0kwRlBZaHpTTzVCdHkvcDlyaWVhS2ROZit1RHgwRlEw?=
- =?utf-8?B?K1c4SWZuQkZ6VmhLVjdSdmNSR1hvTWlTRTdrU2VBbUdqaEVtOWZ0YWZMUGRL?=
- =?utf-8?B?MFNPL3BsZGpqVjQrYkFhekUxRFlyWlg5UURUeTkxcERaMnVJUHZWRWpnZmYx?=
- =?utf-8?B?Z0RXT2hONDJZNDNqdlU2enBwb1FsUEZmbE10SlI0U3lPellCR1FsNWp2UFNG?=
- =?utf-8?B?bWp3dmFzU2FxV2VpTkkwZ3BaaHZ1WU9HN2lMR3R4bnJBOHo4UGs2WGJYRTYr?=
- =?utf-8?B?VWU1aWo2T05zdDVUekZlaWhreUdvbjlxQ2ZwSmtwVXVocU5sZFZlMGF1VHNn?=
- =?utf-8?B?RFdmNzd3UVkrN0l6YUg3NHJncmZSMXNjTWpyczJqb0dSOTBSdmZ6eXpnNEU3?=
- =?utf-8?B?ZnhEc0dGOXR5VGduY29reTdGNjRuK25CSmczVXRmbmVyK0lXTy9TdWRMZ2Fn?=
- =?utf-8?B?TU5JMVRLeWRqRnJGUk1Mb2t0all5V1hMRWwyTFF3dmRMQjQ2OFk2UFc3NnZW?=
- =?utf-8?B?ZWpBRnRVc2VTN0t2emh3U0NlSE9FVDN5b04wUHVUV1dlSFY2SjlPczZoZktp?=
- =?utf-8?Q?6F3x3GpL0vnDmqvXby+FKvgXI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 245ae2e0-fe6f-4b05-00bf-08dd88b7edcb
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 13:56:10.7699
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xXcxBdLsWaREDaeMxAV8v/TTzr49jQENdZXWABduo6chJvzDYY3hnVQeNCLAiYoNwQTa4UW1qiJGCNnYrFfXoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB9049
+	Thu, 01 May 2025 22:55:13 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so2174417a91.3
+        for <kexec@lists.infradead.org>; Thu, 01 May 2025 15:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746140110; x=1746744910; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IBXx3gMWZ4e1/486vCXXB36Jvx0Iv06j/aSQbPFzpYQ=;
+        b=MAWipH1yzZbH9rl022a5iBPTtop+lPPZjDTMuRUulAg/o22/1J9V2GHqNXDJKjcUTi
+         Bye7E4pFAcpcUJF2UZmM78h5AC5kNfBdlT7JTNmpfRj4BrGXpeenJBmv6SmWEsY1VqQv
+         NmgTDpbFUanjtqctHDkZNKXL1LQfKlDYN1yVBHU3NJqCHzp5m/LHZDTx418hoQUy/gqk
+         lrjNDEEMFI7/ONjE5Vxw6RTv2ZiwyyVgAcwvFvVsF6W+X9CfLvbrnK9IzJLX0AzHURi0
+         t2c5XftrzHXmBremaga9OnnBeCmwqIuqYhoiEljwoWGU5fTW4PqLu/Yd+VXqxJAI7UF8
+         HOjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746140110; x=1746744910;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IBXx3gMWZ4e1/486vCXXB36Jvx0Iv06j/aSQbPFzpYQ=;
+        b=hDLIAmn19zyeTXZ6Fh1nrSqnJowZhhmGofZ1BLiBg+9TrSDnDPQEC8VunTcNSc+G4e
+         Wy+pKX+HhJqmeV6RkWmmpgSP185n7LgWnJsBEwnbCL1Q0/AJDQpGgbUQ6kFg7XG2d+KO
+         9VdVEv+GcebpkHVEfEBOUSBwSuk7mJpkXlolRXJbAAafQacRfvxRpeTUC3/maXm2B79u
+         gaZaQXYVSRlxRo9cB7baJh6Ihk8dm5rJpoH81m5p+ka47ehgI5/cZuNQz1pxb00Iprnt
+         PeKeJzjUZqBo4XiKXJZpZQnONVV12Lt/KuX9ZGqPgCiA2AYrcsZ/Z2f8zMRpgSm2pdbd
+         shnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYlJ7eOUfyMoAYgZQ+BO/9jNSKJreHG1+d0ZgokgbTR91ihkoWoaGV5kSITE/7Nj03hF+RxA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyk0Mlpst+k2i1mEkuZcpCZbhN5RolppxeunDnMPckeAZajyvgY
+	7WLCVzdm1xYJwNBLiGtMezoAHbNwYgzwlGAkUSCYfb4n78V6SNLTdR7hGiiTgUPjPO7O3RRe+rD
+	E2vRWUSayfayjKWZf2A==
+X-Google-Smtp-Source: AGHT+IF6wVLtGXo1h2D9rxsxB3YBB2fff/f8/QAEMXAEMlSh64adupjEsddmCTy7JT42/bhVOMWpHxt5OhuYLHRn
+X-Received: from pjbnc3.prod.google.com ([2002:a17:90b:37c3:b0:301:a339:b558])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:58ee:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-30a4e6971ebmr1189853a91.31.1746140110497;
+ Thu, 01 May 2025 15:55:10 -0700 (PDT)
+Date: Thu,  1 May 2025 15:54:08 -0700
+In-Reply-To: <20250501225425.635167-1-changyuanl@google.com>
+Mime-Version: 1.0
+References: <20250501225425.635167-1-changyuanl@google.com>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <20250501225425.635167-2-changyuanl@google.com>
+Subject: [PATCH v7 01/18] memblock: add MEMBLOCK_RSRV_KERN flag
+From: Changyuan Lyu <changyuanl@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: changyuanl@google.com, akpm@linux-foundation.org, 
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, devicetree@vger.kernel.org, 
+	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com, 
+	jgowans@amazon.com, kexec@lists.infradead.org, krzk@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org, 
+	saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250501_065616_925503_C47AAFF3 
-X-CRM114-Status: GOOD (  30.00  )
+X-CRM114-CacheID: sfid-20250501_155512_092096_5487E1A1 
+X-CRM114-Status: GOOD (  17.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -178,102 +99,340 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/30/25 18:17, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> When the shared pages are being made private during kdump preparation
-> there are additional checks to handle shared GHCB pages.
-> 
-> These additional checks include handling the case of GHCB page being
-> contained within a huge page.
-> 
-> While handling the case of GHCB page contained within a huge page
-> any shared page just below the GHCB page gets skipped from being
-> transitioned back to private during kdump preparation.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Why this was occurring is because the original check was incorrect. The
-check for
+to denote areas that were reserved for kernel use either directly with
+memblock_reserve_kern() or via memblock allocations.
 
- ghcb <= addr + size
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+---
+ include/linux/memblock.h                      | 19 ++++++++-
+ mm/memblock.c                                 | 40 +++++++++++++++----
+ tools/testing/memblock/tests/alloc_api.c      | 22 +++++-----
+ .../memblock/tests/alloc_helpers_api.c        |  4 +-
+ tools/testing/memblock/tests/alloc_nid_api.c  | 20 +++++-----
+ 5 files changed, 73 insertions(+), 32 deletions(-)
 
-can result in skipping a range that should not have been skipped because
-the "addr + size" is actually the start of a page/range after the end of
-the range being checked. If the ghcb address was equal to addr + size,
-then it was mistakenly considered part of the range when it really wasn't.
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index ef5a1ecc6e595..6c00fbc085132 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -42,6 +42,9 @@ extern unsigned long long max_possible_pfn;
+  * kernel resource tree.
+  * @MEMBLOCK_RSRV_NOINIT: memory region for which struct pages are
+  * not initialized (only for reserved regions).
++ * @MEMBLOCK_RSRV_KERN: memory region that is reserved for kernel use,
++ * either explictitly with memblock_reserve_kern() or via memblock
++ * allocation APIs. All memblock allocations set this flag.
+  */
+ enum memblock_flags {
+ 	MEMBLOCK_NONE		= 0x0,	/* No special request */
+@@ -50,6 +53,7 @@ enum memblock_flags {
+ 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+ 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+ 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
++	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+ };
+ 
+ /**
+@@ -116,7 +120,19 @@ int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
+ int memblock_add(phys_addr_t base, phys_addr_t size);
+ int memblock_remove(phys_addr_t base, phys_addr_t size);
+ int memblock_phys_free(phys_addr_t base, phys_addr_t size);
+-int memblock_reserve(phys_addr_t base, phys_addr_t size);
++int __memblock_reserve(phys_addr_t base, phys_addr_t size, int nid,
++		       enum memblock_flags flags);
++
++static __always_inline int memblock_reserve(phys_addr_t base, phys_addr_t size)
++{
++	return __memblock_reserve(base, size, NUMA_NO_NODE, 0);
++}
++
++static __always_inline int memblock_reserve_kern(phys_addr_t base, phys_addr_t size)
++{
++	return __memblock_reserve(base, size, NUMA_NO_NODE, MEMBLOCK_RSRV_KERN);
++}
++
+ #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+ #endif
+@@ -476,6 +492,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+ 
+ phys_addr_t memblock_phys_mem_size(void);
+ phys_addr_t memblock_reserved_size(void);
++phys_addr_t memblock_reserved_kern_size(phys_addr_t limit, int nid);
+ unsigned long memblock_estimated_nr_free_pages(void);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 0a53db4d9f7be..2dc95ecdee5ce 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -492,7 +492,7 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
+ 	 * needn't do it
+ 	 */
+ 	if (!use_slab)
+-		BUG_ON(memblock_reserve(addr, new_alloc_size));
++		BUG_ON(memblock_reserve_kern(addr, new_alloc_size));
+ 
+ 	/* Update slab flag */
+ 	*in_slab = use_slab;
+@@ -642,7 +642,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+ #ifdef CONFIG_NUMA
+ 			WARN_ON(nid != memblock_get_region_node(rgn));
+ #endif
+-			WARN_ON(flags != rgn->flags);
++			WARN_ON(flags != MEMBLOCK_NONE && flags != rgn->flags);
+ 			nr_new++;
+ 			if (insert) {
+ 				if (start_rgn == -1)
+@@ -902,14 +902,15 @@ int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
+ 	return memblock_remove_range(&memblock.reserved, base, size);
+ }
+ 
+-int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
++int __init_memblock __memblock_reserve(phys_addr_t base, phys_addr_t size,
++				       int nid, enum memblock_flags flags)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+-		     &base, &end, (void *)_RET_IP_);
++	memblock_dbg("%s: [%pa-%pa] nid=%d flags=%x %pS\n", __func__,
++		     &base, &end, nid, flags, (void *)_RET_IP_);
+ 
+-	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
++	return memblock_add_range(&memblock.reserved, base, size, nid, flags);
+ }
+ 
+ #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+@@ -1460,14 +1461,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ again:
+ 	found = memblock_find_in_range_node(size, align, start, end, nid,
+ 					    flags);
+-	if (found && !memblock_reserve(found, size))
++	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
+ 		goto done;
+ 
+ 	if (numa_valid_node(nid) && !exact_nid) {
+ 		found = memblock_find_in_range_node(size, align, start,
+ 						    end, NUMA_NO_NODE,
+ 						    flags);
+-		if (found && !memblock_reserve(found, size))
++		if (found && !memblock_reserve_kern(found, size))
+ 			goto done;
+ 	}
+ 
+@@ -1752,6 +1753,28 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+ 	return memblock.reserved.total_size;
+ }
+ 
++phys_addr_t __init_memblock memblock_reserved_kern_size(phys_addr_t limit, int nid)
++{
++	struct memblock_region *r;
++	phys_addr_t total = 0;
++
++	for_each_reserved_mem_region(r) {
++		phys_addr_t size = r->size;
++
++		if (r->base > limit)
++			break;
++
++		if (r->base + r->size > limit)
++			size = limit - r->base;
++
++		if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
++			if (r->flags & MEMBLOCK_RSRV_KERN)
++				total += size;
++	}
++
++	return total;
++}
++
+ /**
+  * memblock_estimated_nr_free_pages - return estimated number of free pages
+  * from memblock point of view
+@@ -2441,6 +2464,7 @@ static const char * const flagname[] = {
+ 	[ilog2(MEMBLOCK_NOMAP)] = "NOMAP",
+ 	[ilog2(MEMBLOCK_DRIVER_MANAGED)] = "DRV_MNG",
+ 	[ilog2(MEMBLOCK_RSRV_NOINIT)] = "RSV_NIT",
++	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
+ };
+ 
+ static int memblock_debug_show(struct seq_file *m, void *private)
+diff --git a/tools/testing/memblock/tests/alloc_api.c b/tools/testing/memblock/tests/alloc_api.c
+index 68f1a75cd72c4..c55f67dd367d0 100644
+--- a/tools/testing/memblock/tests/alloc_api.c
++++ b/tools/testing/memblock/tests/alloc_api.c
+@@ -134,7 +134,7 @@ static int alloc_top_down_before_check(void)
+ 	PREFIX_PUSH();
+ 	setup_memblock();
+ 
+-	memblock_reserve(memblock_end_of_DRAM() - total_size, r1_size);
++	memblock_reserve_kern(memblock_end_of_DRAM() - total_size, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -182,7 +182,7 @@ static int alloc_top_down_after_check(void)
+ 
+ 	total_size = r1.size + r2_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
++	memblock_reserve_kern(r1.base, r1.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -231,8 +231,8 @@ static int alloc_top_down_second_fit_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+@@ -285,8 +285,8 @@ static int alloc_in_between_generic_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+@@ -422,7 +422,7 @@ static int alloc_limited_space_generic_check(void)
+ 	setup_memblock();
+ 
+ 	/* Simulate almost-full memory */
+-	memblock_reserve(memblock_start_of_DRAM(), reserved_size);
++	memblock_reserve_kern(memblock_start_of_DRAM(), reserved_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(available_size, SMP_CACHE_BYTES);
+ 
+@@ -608,7 +608,7 @@ static int alloc_bottom_up_before_check(void)
+ 	PREFIX_PUSH();
+ 	setup_memblock();
+ 
+-	memblock_reserve(memblock_start_of_DRAM() + r1_size, r2_size);
++	memblock_reserve_kern(memblock_start_of_DRAM() + r1_size, r2_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r1_size, SMP_CACHE_BYTES);
+ 
+@@ -655,7 +655,7 @@ static int alloc_bottom_up_after_check(void)
+ 
+ 	total_size = r1.size + r2_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
++	memblock_reserve_kern(r1.base, r1.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -705,8 +705,8 @@ static int alloc_bottom_up_second_fit_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+diff --git a/tools/testing/memblock/tests/alloc_helpers_api.c b/tools/testing/memblock/tests/alloc_helpers_api.c
+index 3ef9486da8a09..e5362cfd2ff30 100644
+--- a/tools/testing/memblock/tests/alloc_helpers_api.c
++++ b/tools/testing/memblock/tests/alloc_helpers_api.c
+@@ -163,7 +163,7 @@ static int alloc_from_top_down_no_space_above_check(void)
+ 	min_addr = memblock_end_of_DRAM() - SMP_CACHE_BYTES * 2;
+ 
+ 	/* No space above this address */
+-	memblock_reserve(min_addr, r2_size);
++	memblock_reserve_kern(min_addr, r2_size);
+ 
+ 	allocated_ptr = memblock_alloc_from(r1_size, SMP_CACHE_BYTES, min_addr);
+ 
+@@ -199,7 +199,7 @@ static int alloc_from_top_down_min_addr_cap_check(void)
+ 	start_addr = (phys_addr_t)memblock_start_of_DRAM();
+ 	min_addr = start_addr - SMP_CACHE_BYTES * 3;
+ 
+-	memblock_reserve(start_addr + r1_size, MEM_SIZE - r1_size);
++	memblock_reserve_kern(start_addr + r1_size, MEM_SIZE - r1_size);
+ 
+ 	allocated_ptr = memblock_alloc_from(r1_size, SMP_CACHE_BYTES, min_addr);
+ 
+diff --git a/tools/testing/memblock/tests/alloc_nid_api.c b/tools/testing/memblock/tests/alloc_nid_api.c
+index 49bb416d34ffc..562e4701b0e02 100644
+--- a/tools/testing/memblock/tests/alloc_nid_api.c
++++ b/tools/testing/memblock/tests/alloc_nid_api.c
+@@ -324,7 +324,7 @@ static int alloc_nid_min_reserved_generic_check(void)
+ 	min_addr = max_addr - r2_size;
+ 	reserved_base = min_addr - r1_size;
+ 
+-	memblock_reserve(reserved_base, r1_size);
++	memblock_reserve_kern(reserved_base, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -374,7 +374,7 @@ static int alloc_nid_max_reserved_generic_check(void)
+ 	max_addr = memblock_end_of_DRAM() - r1_size;
+ 	min_addr = max_addr - r2_size;
+ 
+-	memblock_reserve(max_addr, r1_size);
++	memblock_reserve_kern(max_addr, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -436,8 +436,8 @@ static int alloc_nid_top_down_reserved_with_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -499,8 +499,8 @@ static int alloc_nid_reserved_full_merge_generic_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -563,8 +563,8 @@ static int alloc_nid_top_down_reserved_no_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -909,8 +909,8 @@ static int alloc_nid_bottom_up_reserved_with_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+-- 
+2.49.0.906.g1f30a19c02-goog
 
-I think the check could have just been changed to:
-
-  if (addr <= ghcb && ghcb < addr + size) {
-
-The new checks are a bit clearer in showing normal pages vs huge pages,
-though, but you can clearly see the "ghcb < addr + size" change to do the
-right thing in the huge page case.
-
-While it is likely that a GHCB page hasn't been part of a huge page during
-all the testing, the change in snp_kexec_finish() to mask the address is
-the proper thing to do. It probably doesn't even need the if check as the
-mask can just be applied no matter what.
-
-Thanks,
-Tom
-
-> 
-> This subsequently causes a 0x404 #VC exception when this skipped
-> shared page is accessed later while dumping guest memory during
-> vmcore generation via kdump.
-> 
-> Split the initial check for skipping the GHCB page into the page
-> being skipped fully containing the GHCB and GHCB being contained 
-> within a huge page. Also ensure that the skipped huge page
-> containing the GHCB page is transitioned back to private later
-> when changing GHCBs to private at end of kdump preparation.
-> 
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index d35fec7b164a..1f53383bd1fa 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -1019,7 +1019,13 @@ static void unshare_all_memory(void)
->  			data = per_cpu(runtime_data, cpu);
->  			ghcb = (unsigned long)&data->ghcb_page;
->  
-> -			if (addr <= ghcb && ghcb <= addr + size) {
-> +			/* Handle the case of a huge page containing the GHCB page */
-> +			if (level == PG_LEVEL_4K && addr == ghcb) {
-> +				skipped_addr = true;
-> +				break;
-> +			}
-> +			if (level > PG_LEVEL_4K && addr <= ghcb &&
-> +			    ghcb < addr + size) {
->  				skipped_addr = true;
->  				break;
->  			}
-> @@ -1131,8 +1137,8 @@ static void shutdown_all_aps(void)
->  void snp_kexec_finish(void)
->  {
->  	struct sev_es_runtime_data *data;
-> +	unsigned long size, mask;
->  	unsigned int level, cpu;
-> -	unsigned long size;
->  	struct ghcb *ghcb;
->  	pte_t *pte;
->  
-> @@ -1160,6 +1166,10 @@ void snp_kexec_finish(void)
->  		ghcb = &data->ghcb_page;
->  		pte = lookup_address((unsigned long)ghcb, &level);
->  		size = page_level_size(level);
-> +		mask = page_level_mask(level);
-> +		/* Handle the case of a huge page containing the GHCB page */
-> +		if (level > PG_LEVEL_4K)
-> +			ghcb = (struct ghcb *)((unsigned long)ghcb & mask);
->  		set_pte_enc(pte, level, (void *)ghcb);
->  		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
->  	}
 
