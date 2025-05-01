@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89D87C369DC
-	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 23:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEE2FC369DC
+	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 23:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GSc0DjNXNSWGM8cWPjOGT+i1eIlnQ4B8yOa6xUDz31c=; b=CQLzHA4X+z18GLm3MIBHl3fjo7
-	ehq7LHZUvF3hNzNfE+H4Je7aW0vU5Uy156aTqpeK28Zu7ej1aO3nWTgms0TC6vZtEVEt1HUF4ykR/
-	x9Xzg8k2B7X6J5gNTz/EvKFWC0A0TxG3zkUAN4xexxOY4WGWE1JYMUNy/JNphI+k6PVvvoG/2w6cT
-	SZN0nVxOok8doFJ+QUaOGIiakPI2PDyooVEHxwBADH80JV4O+hhPeZWiI/+Qs8c+02ncyOwXLzo8O
-	aXPKOxUtFTKlNjtZC2YN3AwuU2lNPdGOZCDKC75bYLklDQTzltVDJhA0sIGp+hzg3VMJ76AcVHGWA
-	7F31e+AA==;
+	bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=; b=TyWQnmr9IkTE8TToCn6+5MseWZ
+	k9lpNsDBd02xMI8PTg55qbTdC4+749vLsNK6+Tdvd75uSKVUQNdNfcb5okv5WzDYCqbjm9n4rnZkM
+	rqi4S60EUbDRdcuhjZXbjVM+uN+xXgwASmxu3wANbDwdkRbl5z3rF6NRRdHNtK6d1bNz4owK7HIN9
+	9g6xYYFlC6u4S0BPeKYpybNvxGN3aP4OgXQePV7NGA0uN6xzGmIFK6R5awT5ZLY2dIlhla3R9/mrY
+	+TzolqNIbNvsuS1K60R2Sg+r+mGq7ehV+adUBMga6gw7P2saxtDdJh4gw0Eo4dAqotGT4QwsoJnYH
+	SmxBbrtA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAcvs-00000000AZR-0UXL;
-	Thu, 01 May 2025 23:03:08 +0000
-Received: from mail-ot1-x349.google.com ([2607:f8b0:4864:20::349])
+	id 1uAcxl-00000000BSx-1RHt;
+	Thu, 01 May 2025 23:05:05 +0000
+Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAcoK-0000000079v-1AEw
+	id 1uAcoL-000000007BF-3swQ
 	for kexec@lists.infradead.org;
-	Thu, 01 May 2025 22:55:21 +0000
-Received: by mail-ot1-x349.google.com with SMTP id 46e09a7af769-72bbb1899b4so498556a34.1
-        for <kexec@lists.infradead.org>; Thu, 01 May 2025 15:55:19 -0700 (PDT)
+	Thu, 01 May 2025 22:55:23 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-736b5f9279cso1280189b3a.2
+        for <kexec@lists.infradead.org>; Thu, 01 May 2025 15:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746140118; x=1746744918; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1746140120; x=1746744920; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GSc0DjNXNSWGM8cWPjOGT+i1eIlnQ4B8yOa6xUDz31c=;
-        b=PUWiQPar35B9fyKHdDDZchB6Y1Ef8s+6OkskQY/ysDhD7ngVNoKkUTVjBIggbKrDAQ
-         AMJI5LKgDl4wF4NqjLAlZT2T0lpptx7hV647ol0Zu5uKa2jhWnZC14A2p8a+NvlV0ZvA
-         lis72TkarusMnkBWbqTyiKuuaAsnYMwilkpXByhlolU73ijfvL+0SMTkVCwymOhpH0rZ
-         wL6AvSUNyVPKVnjJ3cSEzr8VSBaoCTzrdD0IBcjTxVO/Bq1jAy9iHh9QWjXWwB2klBpY
-         KSeICJHkflUBJH/lOng/1Tpgaz7vcnxUIEIy/W8lhTVGdfeR9XCgitQwgTxzkntXJFP/
-         +kAg==
+        bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=;
+        b=FaruDjQN5FX5n8oejQ02iXosjRFtTh5WSOZd7wTN+HvTu1aLLxfwCQOkrz1sGy2vrv
+         xvfsNa1Cz1LYh0O+PQd93KbQNyyb5FL7A15GAJGst2+WXXaKp8momnGiiepezDt4F7jM
+         VDuEFWnd7M1PYFTTF+tipzpT6d0TR4pCHpVPWS8l39l/cDJWQadEP8QpZc+L05XbY/l7
+         xLtcyBPXoqvA70wlbJiI99AOv6LP9Zad1BzFYOKKK8nZBhgFMo1eI/OJNLaitY3eVLRD
+         nLsW1XLuX8g7qly3KTtO62tS2za3srUnTf5PULugulRg46/R2/fLgqlRxtEm1d74wWln
+         sFFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746140118; x=1746744918;
+        d=1e100.net; s=20230601; t=1746140120; x=1746744920;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GSc0DjNXNSWGM8cWPjOGT+i1eIlnQ4B8yOa6xUDz31c=;
-        b=aihUy/AomJWsX6f8gA1LjMx6sTW1wkflnCVMpe8CoqFDQF39BZhTZ+aK+oMJSRwhOx
-         VQh+qKahg8tPaljKUl7fH5MQNd5qm6AVPb2Dgg+nkKvvmdc2/6LlakFynz/qAOxGOND0
-         ZRVexaWbiHtxg0f00NHEQTqEcaJlv1sTGvV7448tg6uXy3wcOL2ZDU/f/FZgK6YEEtUk
-         G+SAJvjAjK3X6ITDBw/DfYPT9itsrASxc2i1sqEjtEidoCEe+cSmPnGhaww3rbLxdbRr
-         qygIykRLBW8wQdtHsyvQsTdpmqmKFmNpc7NyCherBmgyYT4g53Hiedsshmr5Gr8IMiPa
-         VruQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWx5rSemV4PrFvjFX6Tib1s9rccTMiKDNeKwb9vx4QBQCZSBHibU+c4qcD6CcJpgEt+s1zJcQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyFR3Enw6a8xzI5jR3LY+5CxHUyPP2jpMmiqvwVn8dYWn+1ZXlw
-	s15OBelEIJm2nMwooJh88tH29JHwhvQfDrtU6aTlBj4sMK7tb0bu/lqAzZeUZR6R+Jy+Ga3d0vD
-	tWSYemr/Pzij7h8y2dg==
-X-Google-Smtp-Source: AGHT+IExF9DAAKQjsvHvTCiEm2VF3plT7Xixt5+IVVVVLIC6lTaqsbMG19zwDD1ZcKRfvhYhG7JMvRaV9RtVqAZf
-X-Received: from oabsa9.prod.google.com ([2002:a05:6871:2109:b0:2bc:6db5:8c7d])
+        bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=;
+        b=aRcg/zQdRkjpYE8LY5LKYfk2fT+8QK7IIcsUSCzlCkHMtMa1lbZx/b467IPPYsFYXV
+         ylaLFzWOd5iC29qcrg7q6bM1hX5Z0pKHjp9iiewarLKdMBX7DLgInXgBM1V/xX3ZK5CD
+         fuvBx6l7qQmpDIQnV4x7ORqftG4KPcV++U32+eF4wp6+1H3z/O2WCeO7CjK5jGxc9hhX
+         jIPgSRK3WkCVBYUbT+l3NGDM35aAPFbBttyAlOcWtumA9g/81ZMtDh+fA3a/WRld2dq3
+         XASe22i9LOKFlMuazGzexV5mtyChZh0KvOguE6I7dvn3U7L/tPsetkxUqCeDU/9LeEy8
+         95vA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/vKy/BwKcAFIE8+NfuPrxf4+voidqABBrXS9IRLZR/9mdkUXbySoYf1Zh+9Vw0YEZDlBq0w==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx57J0p2wmNWouLBm0VOtkkdFrfzoT3l/znaO0bZwon+tjPyxq/
+	SDbz7VvOV+qh1BvpHrbwkprimZRMe4clHpLXC1YNg6zfoiAVZUvxDAlNWSl6wK9ClIKLRzsjHGz
+	I0GzcSq+hI7+ssoBJeA==
+X-Google-Smtp-Source: AGHT+IGmpHhKcBDrERp6231eQ29+jikWpthUas+M8P/VxY8mf6RZUuVX69nZyHTF3KiG68E/Ho9kug3/UNXn0GYw
+X-Received: from pfbfe8.prod.google.com ([2002:a05:6a00:2f08:b0:736:4ad6:1803])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6871:7a2:b0:2d5:b2ae:2ebd with SMTP id 586e51a60fabf-2dab341346bmr337221fac.34.1746140118593;
- Thu, 01 May 2025 15:55:18 -0700 (PDT)
-Date: Thu,  1 May 2025 15:54:12 -0700
+ 2002:a05:6a21:9cca:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-20cde371e9emr787243637.5.1746140120540;
+ Thu, 01 May 2025 15:55:20 -0700 (PDT)
+Date: Thu,  1 May 2025 15:54:13 -0700
 In-Reply-To: <20250501225425.635167-1-changyuanl@google.com>
 Mime-Version: 1.0
 References: <20250501225425.635167-1-changyuanl@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250501225425.635167-6-changyuanl@google.com>
-Subject: [PATCH v7 05/18] kexec: add KHO parsing support
+Message-ID: <20250501225425.635167-7-changyuanl@google.com>
+Subject: [PATCH v7 06/18] kexec: include asm/early_ioremap.h
 From: Changyuan Lyu <changyuanl@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: changyuanl@google.com, akpm@linux-foundation.org, 
@@ -83,8 +83,9 @@ Cc: changyuanl@google.com, akpm@linux-foundation.org,
 	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250501_155520_369657_39D6CB9B 
-X-CRM114-Status: GOOD (  28.39  )
+X-CRM114-CacheID: sfid-20250501_155521_971511_04B4F914 
+X-CRM114-Status: UNSURE (   9.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,339 +100,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Alexander Graf <graf@amazon.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-When we have a KHO kexec, we get an FDT blob and scratch region to
-populate the state of the system. Provide helper functions that allow
-architecture code to easily handle memory reservations based on them and
-give device drivers visibility into the KHO FDT and memory reservations
-so they can recover their own state.
+The early_memremap() function is decleared in a header that is only indirectly
+included here:
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+kernel/kexec_handover.c:1116:8: error: call to undeclared function 'early_memremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+ 1116 |         fdt = early_memremap(fdt_phys, fdt_len);
+      |               ^
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Co-developed-by: Changyuan Lyu <changyuanl@google.com>
 Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 ---
- include/linux/kexec_handover.h |  14 ++
- kernel/kexec_handover.c        | 230 ++++++++++++++++++++++++++++++++-
- mm/memblock.c                  |   1 +
- 3 files changed, 244 insertions(+), 1 deletion(-)
+ kernel/kexec_handover.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 2e19004776f6b..02dcfc8c427e3 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -24,11 +24,15 @@ struct kho_serialization;
- bool kho_is_enabled(void);
- 
- int kho_add_subtree(struct kho_serialization *ser, const char *name, void *fdt);
-+int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
- 
- int register_kho_notifier(struct notifier_block *nb);
- int unregister_kho_notifier(struct notifier_block *nb);
- 
- void kho_memory_init(void);
-+
-+void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
-+		  u64 scratch_len);
- #else
- static inline bool kho_is_enabled(void)
- {
-@@ -41,6 +45,11 @@ static inline int kho_add_subtree(struct kho_serialization *ser,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int register_kho_notifier(struct notifier_block *nb)
- {
- 	return -EOPNOTSUPP;
-@@ -54,6 +63,11 @@ static inline int unregister_kho_notifier(struct notifier_block *nb)
- static inline void kho_memory_init(void)
- {
- }
-+
-+static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-+				phys_addr_t scratch_phys, u64 scratch_len)
-+{
-+}
- #endif /* CONFIG_KEXEC_HANDOVER */
- 
- #endif /* LINUX_KEXEC_HANDOVER_H */
 diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index e541d3d5003d1..a1e1cd0330143 100644
+index a1e1cd0330143..59f3cf9557f50 100644
 --- a/kernel/kexec_handover.c
 +++ b/kernel/kexec_handover.c
-@@ -501,9 +501,112 @@ static __init int kho_out_debugfs_init(void)
- 	return -ENOENT;
- }
- 
-+struct kho_in {
-+	struct dentry *dir;
-+	phys_addr_t fdt_phys;
-+	phys_addr_t scratch_phys;
-+	struct list_head fdt_list;
-+};
+@@ -17,6 +17,9 @@
+ #include <linux/memblock.h>
+ #include <linux/notifier.h>
+ #include <linux/page-isolation.h>
 +
-+static struct kho_in kho_in = {
-+	.fdt_list = LIST_HEAD_INIT(kho_in.fdt_list),
-+};
++#include <asm/early_ioremap.h>
 +
-+static const void *kho_get_fdt(void)
-+{
-+	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
-+}
-+
-+/**
-+ * kho_retrieve_subtree - retrieve a preserved sub FDT by its name.
-+ * @name: the name of the sub FDT passed to kho_add_subtree().
-+ * @phys: if found, the physical address of the sub FDT is stored in @phys.
-+ *
-+ * Retrieve a preserved sub FDT named @name and store its physical
-+ * address in @phys.
-+ *
-+ * Return: 0 on success, error code on failure
-+ */
-+int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
-+{
-+	const void *fdt = kho_get_fdt();
-+	const u64 *val;
-+	int offset, len;
-+
-+	if (!fdt)
-+		return -ENOENT;
-+
-+	if (!phys)
-+		return -EINVAL;
-+
-+	offset = fdt_subnode_offset(fdt, 0, name);
-+	if (offset < 0)
-+		return -ENOENT;
-+
-+	val = fdt_getprop(fdt, offset, PROP_SUB_FDT, &len);
-+	if (!val || len != sizeof(*val))
-+		return -EINVAL;
-+
-+	*phys = (phys_addr_t)*val;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
-+
-+/* Handling for debugfs/kho/in */
-+
-+static __init int kho_in_debugfs_init(const void *fdt)
-+{
-+	struct dentry *sub_fdt_dir;
-+	int err, child;
-+
-+	kho_in.dir = debugfs_create_dir("in", debugfs_root);
-+	if (IS_ERR(kho_in.dir))
-+		return PTR_ERR(kho_in.dir);
-+
-+	sub_fdt_dir = debugfs_create_dir("sub_fdts", kho_in.dir);
-+	if (IS_ERR(sub_fdt_dir)) {
-+		err = PTR_ERR(sub_fdt_dir);
-+		goto err_rmdir;
-+	}
-+
-+	err = kho_debugfs_fdt_add(&kho_in.fdt_list, kho_in.dir, "fdt", fdt);
-+	if (err)
-+		goto err_rmdir;
-+
-+	fdt_for_each_subnode(child, fdt, 0) {
-+		int len = 0;
-+		const char *name = fdt_get_name(fdt, child, NULL);
-+		const u64 *fdt_phys;
-+
-+		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
-+		if (!fdt_phys)
-+			continue;
-+		if (len != sizeof(*fdt_phys)) {
-+			pr_warn("node `%s`'s prop `fdt` has invalid length: %d\n",
-+				name, len);
-+			continue;
-+		}
-+		err = kho_debugfs_fdt_add(&kho_in.fdt_list, sub_fdt_dir, name,
-+					  phys_to_virt(*fdt_phys));
-+		if (err) {
-+			pr_warn("failed to add fdt `%s` to debugfs: %d\n", name,
-+				err);
-+			continue;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_rmdir:
-+	debugfs_remove_recursive(kho_in.dir);
-+	return err;
-+}
-+
- static __init int kho_init(void)
- {
- 	int err = 0;
-+	const void *fdt = kho_get_fdt();
- 
- 	if (!kho_enable)
- 		return 0;
-@@ -524,6 +627,20 @@ static __init int kho_init(void)
- 	if (err)
- 		goto err_free_fdt;
- 
-+	if (fdt) {
-+		err = kho_in_debugfs_init(fdt);
-+		/*
-+		 * Failure to create /sys/kernel/debug/kho/in does not prevent
-+		 * reviving state from KHO and setting up KHO for the next
-+		 * kexec.
-+		 */
-+		if (err)
-+			pr_err("failed exposing handover FDT in debugfs: %d\n",
-+			       err);
-+
-+		return 0;
-+	}
-+
- 	for (int i = 0; i < kho_scratch_cnt; i++) {
- 		unsigned long base_pfn = PHYS_PFN(kho_scratch[i].addr);
- 		unsigned long count = kho_scratch[i].size >> PAGE_SHIFT;
-@@ -551,7 +668,118 @@ static __init int kho_init(void)
- }
- late_initcall(kho_init);
- 
-+static void __init kho_release_scratch(void)
-+{
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	memmap_init_kho_scratch_pages();
-+
-+	/*
-+	 * Mark scratch mem as CMA before we return it. That way we
-+	 * ensure that no kernel allocations happen on it. That means
-+	 * we can reuse it as scratch memory again later.
-+	 */
-+	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
-+		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
-+		ulong end_pfn = pageblock_align(PFN_UP(end));
-+		ulong pfn;
-+
-+		for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages)
-+			set_pageblock_migratetype(pfn_to_page(pfn),
-+						  MIGRATE_CMA);
-+	}
-+}
-+
- void __init kho_memory_init(void)
- {
--	kho_reserve_scratch();
-+	if (kho_in.scratch_phys) {
-+		kho_scratch = phys_to_virt(kho_in.scratch_phys);
-+		kho_release_scratch();
-+	} else {
-+		kho_reserve_scratch();
-+	}
-+}
-+
-+void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-+			 phys_addr_t scratch_phys, u64 scratch_len)
-+{
-+	void *fdt = NULL;
-+	struct kho_scratch *scratch = NULL;
-+	int err = 0;
-+	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
-+
-+	/* Validate the input FDT */
-+	fdt = early_memremap(fdt_phys, fdt_len);
-+	if (!fdt) {
-+		pr_warn("setup: failed to memremap FDT (0x%llx)\n", fdt_phys);
-+		err = -EFAULT;
-+		goto out;
-+	}
-+	err = fdt_check_header(fdt);
-+	if (err) {
-+		pr_warn("setup: handover FDT (0x%llx) is invalid: %d\n",
-+			fdt_phys, err);
-+		err = -EINVAL;
-+		goto out;
-+	}
-+	err = fdt_node_check_compatible(fdt, 0, KHO_FDT_COMPATIBLE);
-+	if (err) {
-+		pr_warn("setup: handover FDT (0x%llx) is incompatible with '%s': %d\n",
-+			fdt_phys, KHO_FDT_COMPATIBLE, err);
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	scratch = early_memremap(scratch_phys, scratch_len);
-+	if (!scratch) {
-+		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
-+			scratch_phys, scratch_len);
-+		err = -EFAULT;
-+		goto out;
-+	}
-+
-+	/*
-+	 * We pass a safe contiguous blocks of memory to use for early boot
-+	 * purporses from the previous kernel so that we can resize the
-+	 * memblock array as needed.
-+	 */
-+	for (int i = 0; i < scratch_cnt; i++) {
-+		struct kho_scratch *area = &scratch[i];
-+		u64 size = area->size;
-+
-+		memblock_add(area->addr, size);
-+		err = memblock_mark_kho_scratch(area->addr, size);
-+		if (WARN_ON(err)) {
-+			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %d",
-+				&area->addr, &size, err);
-+			goto out;
-+		}
-+		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
-+	}
-+
-+	memblock_reserve(scratch_phys, scratch_len);
-+
-+	/*
-+	 * Now that we have a viable region of scratch memory, let's tell
-+	 * the memblocks allocator to only use that for any allocations.
-+	 * That way we ensure that nothing scribbles over in use data while
-+	 * we initialize the page tables which we will need to ingest all
-+	 * memory reservations from the previous kernel.
-+	 */
-+	memblock_set_kho_scratch_only();
-+
-+	kho_in.fdt_phys = fdt_phys;
-+	kho_in.scratch_phys = scratch_phys;
-+	kho_scratch_cnt = scratch_cnt;
-+	pr_info("found kexec handover data. Will skip init for some devices\n");
-+
-+out:
-+	if (fdt)
-+		early_memunmap(fdt, fdt_len);
-+	if (scratch)
-+		early_memunmap(scratch, scratch_len);
-+	if (err)
-+		pr_warn("disabling KHO revival: %d\n", err);
- }
-diff --git a/mm/memblock.c b/mm/memblock.c
-index b9148822db7aa..9202c3412bb19 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2377,6 +2377,7 @@ void __init memblock_free_all(void)
- 	free_unused_memmap();
- 	reset_all_zones_managed_pages();
- 
-+	memblock_clear_kho_scratch_only();
- 	pages = free_low_memory_core_early();
- 	totalram_pages_add(pages);
- }
+ /*
+  * KHO is tightly coupled with mm init and needs access to some of mm
+  * internal APIs.
 -- 
 2.49.0.906.g1f30a19c02-goog
 
