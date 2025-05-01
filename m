@@ -4,130 +4,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A057BC369DC
-	for <kexec@archiver.kernel.org>; Wed, 30 Apr 2025 23:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7256DC3ABA9
+	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 13:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=kelfFKDop0PpNl47F+xPin6yc14dyK6qkvxJB7sy5hQ=; b=ZD61bJCtKo/9WiuiXhEcvFLrJ4
-	w7tVbh7C/NtTIQelcS9qon+FqmEQCKbIla1qjW/y9e3KFaI4cdjERZfBGT2d2tAIMhWOQJ6OMXFgj
-	AtD1F2NZff8XjpW2MtS7HW/m6cfyn8JoJM8RJmbuLmQrD9mSpK9+zY56gMTEib8cYoPURSvEefE51
-	BNoCQfwKuPoSZNFldIxTNMnBFZs8av3AIbktzVyuhv/c7dH/uPnB3CY7KbsI0Jk8DkDzN0FTe1v/B
-	bgpu6JBDXcbWjUTb3GTUkCIccUXaeJVv7w2kbUqz4il7Z6NMcCeGPMm6myf/jpBWjRyvncsJXz7yS
-	kis/zj3A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1NseGMW6YHZumRsu/ROE0vbLOHt7tZNwPE0voLa45rY=; b=vbuYGLy+z9JMcwuxZce3Qxlqia
+	V7QtLZx3IG1+aZX9sF4HmuOIuv6njxqVUP0G+LP3cUfIYsjddHuep1DXkeileDDAsmJgzPv1mWlFn
+	Ys1Ee04arDFfBP2oTqM04XJOazsMQQapwG8Ltqydw3++hlSKnGVaKdG9m6/UBCiqsGx2d5g7+RUGH
+	sZxoW95+q3irGI7cuazAkWszNBgfm/ZrB48G9tWCbwAOu89egXrTLpmlScUGIh2CVZ5T0wx4aQ+w/
+	qeUJrGoeSeVSK12/soU++eLU37GShzmmrKax8J/VNulU3ALfJlZ0WzqJdskIZehKAUH2roiglWnce
+	S6OeCAxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAGiU-0000000EF2F-0Z2A;
-	Wed, 30 Apr 2025 23:19:50 +0000
-Received: from mail-mw2nam12on20602.outbound.protection.outlook.com ([2a01:111:f403:200a::602] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	id 1uAU4O-0000000Fq12-3dWn;
+	Thu, 01 May 2025 13:35:20 +0000
+Received: from mail-mw2nam10on20612.outbound.protection.outlook.com ([2a01:111:f403:2412::612] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAGgn-0000000EEt4-3FfK
+	id 1uATzQ-0000000FpIn-2LKg
 	for kexec@lists.infradead.org;
-	Wed, 30 Apr 2025 23:18:07 +0000
+	Thu, 01 May 2025 13:30:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e7rLuZtfR9YewY6GToK+OB0aX+16HuT3nTpGQxTsLWBfM3Ed47j5v/zoWP8PAbTtUOsD3UlBsjZXFmcHZZxoMkItiliIYee/8w5EqzTbEmmEZ8tomJ+qUrPCUnxiLMij5zJEV0LU+Av5zN+c0qBsKV2H35EdqF1SrAZI3Sxcj0LlCFWS8hk6dzmJvgP7nAZWudSmeKQNfLfM1o1Voa5ihRsGz3UJkvaQGXOgJy0oCLJJU7I1o2Oc0dQEsU1aAHDdmKEx24+8nUFMzXkqMAZDPWokJYbtnGpHNLT7xrv1DBTTuCgTdAi8QCdLcD8vPYsbJh/KmODxMkrHiTXcgloJYA==
+ b=rNFCDoCieCRExs1KY/3B8LAL0TDZL6Zl7ROxe5jPeKNQy/lt9z8sW8ylCfrbiZpua724ZrTzjbyFSVhadnpMR2GGZssEGfQcd3KaUCw2lGzyfqDTCM0BqOF0zIaJ8VyoTwQFGVYOUq/1QJSzoHhsIAEMb9N0MP7CCY/ZAU/ohzcVTqM/7GpAQKtxBkzNInBUdi63Y2vXh1WCIG68HMcSpqmgC+JKK1EBmgzo3VelUxYaUoIiwWliUla9jHxd+HmRnXzghPsE+j96/RGWhP9oKz6sngZdE6ziTK2DhYW9/od115oeaojhvd3S2lxCM6LEAi3y2F9IXOKNinYnoVWjdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kelfFKDop0PpNl47F+xPin6yc14dyK6qkvxJB7sy5hQ=;
- b=aFLM8OJTUdgyeW2jaLx2XxuGxHkrqI1qK9yAeUXPdQcgPD1Ng2wLI9dbZ3Xor/r0lnwrxLKKVBfbHR9fI+pC0B/fIVr7yHbHcEcWUEhwFcGd3VZO+t+rnNKbjfi6D9MJG4lvjx50ZIe9KnKvKGt0yORlbgzoJTeUJv6rmaYTLV/AnmKBW/RZG1ofwJ70B4QqVylluuZK410tZ+0A8Xaq78NHc1alJmIiSHPcSVopKwWrbwwi07yDU82V0m3g90BSDh7uD38ZpyRZhdzxaiQJoVjS8YqJXtWdAKs5nAYf5CGdi1XsBDxt8QdoIVMAJWUdhMnbOfhPZs/z7cZkOQCXNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=1NseGMW6YHZumRsu/ROE0vbLOHt7tZNwPE0voLa45rY=;
+ b=bY9mEK0SpzqiwYrRP1lZwPsMDsrhS86qND1ZYp80THzczF86xKAgwk+gVH9jHNat+rIIAGK8jFVD4OQrnLcSi4TxkHW7kBk2fdVRJnb6Fml1fR6vOd9ZS5tgNtrN5PNI0t0pkh1Ro4hIHGVzs326ciLX0leiX+NDC1jgxYwlte6Igi1YP9YvCzW3C6qPq2hLt2ndl65GEVOzNBJz7tJq1NEGU7yFtbJy+RAymjZWyoTeskaqSPhAMd2FfO4VEPIHIYNgixqaGg76U6BaYe/pHoLamxiwIuof/nEU+jMMuyLeswb8U/YTTqh5MbVrLULSIYrNMC5AiMxsRFNjcSEvEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kelfFKDop0PpNl47F+xPin6yc14dyK6qkvxJB7sy5hQ=;
- b=nL4YzCktOCaLxs1VUgYf15+qIVDNUQuozG39fc5VDGa1zmFYQ1m4/+l4u3xjw3Y9/Hk3Sthgb8X/3EK5EZW6oA5yKufqWjB7P5ehTYUF5favbb1Vxo9Y4YrRxCdBxXC/zRQ3IqG9Qo175smuVGl2hl2Kz+vk3Vc0MLcF0Aokrek=
-Received: from CH0P220CA0024.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:ef::16)
- by DM4PR12MB5724.namprd12.prod.outlook.com (2603:10b6:8:5f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.34; Wed, 30 Apr 2025 23:17:51 +0000
-Received: from CH3PEPF0000000F.namprd04.prod.outlook.com
- (2603:10b6:610:ef:cafe::4b) by CH0P220CA0024.outlook.office365.com
- (2603:10b6:610:ef::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.40 via Frontend Transport; Wed,
- 30 Apr 2025 23:17:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF0000000F.mail.protection.outlook.com (10.167.244.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 23:17:50 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 18:17:49 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <bp@alien8.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>
-CC: <michael.roth@amd.com>, <nikunj@amd.com>, <seanjc@google.com>,
-	<ardb@kernel.org>, <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH v3] x86/sev: Fix making shared pages private during kdump
-Date: Wed, 30 Apr 2025 23:17:38 +0000
-Message-ID: <20250430231738.370328-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+ bh=1NseGMW6YHZumRsu/ROE0vbLOHt7tZNwPE0voLa45rY=;
+ b=ra2twYCWrb6VvbSIkgAboZFd+wvr8o2J8N6HT8SKq3s+5YuyXqa3ML5z3E+ChUiT5wBiGEX1S1K9WQLEDoQDYaui3aLMUZNFFgZpL0bCvNpw8dKUA8aptj4jy6DBlnrUWrJq9SJ8RNKxLca9yiXnHLpvthZMLhVDzkS4uoOiv9w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by MW4PR12MB5627.namprd12.prod.outlook.com (2603:10b6:303:16a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 1 May
+ 2025 13:30:06 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8699.022; Thu, 1 May 2025
+ 13:30:05 +0000
+Message-ID: <e7a0cc72-388a-7fa4-601f-371aea369204@amd.com>
+Date: Thu, 1 May 2025 08:29:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4] x86/sev: Don't touch VMSA pages during kdump of SNP
+ guest memory
+To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
+ hpa@zytor.com
+Cc: kees@kernel.org, michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
+ ardb@kernel.org, gustavoars@kernel.org, sgarzare@redhat.com,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
+ linux-coco@lists.linux.dev
+References: <20250430215730.369777-1-Ashish.Kalra@amd.com>
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <20250430215730.369777-1-Ashish.Kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0109.namprd05.prod.outlook.com
+ (2603:10b6:803:42::26) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000F:EE_|DM4PR12MB5724:EE_
-X-MS-Office365-Filtering-Correlation-Id: aed5e39a-7c78-4849-7c08-08dd883d3a42
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|MW4PR12MB5627:EE_
+X-MS-Office365-Filtering-Correlation-Id: a6600eb7-e72a-4596-716c-08dd88b44868
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|36860700013|7416014|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?upjaPhgbdvlkpuSXUT/eEk8KRZDjOw/KIrJ0fs/cf0rlUxgoJ1pC8DdH//WI?=
- =?us-ascii?Q?NoxZaJepyNXrS1Jdx7eF1Tuchbs/RaYLZBuJodZ3/DOSQX2W5R4ZzZaj54t4?=
- =?us-ascii?Q?vSItcKnewRN3+tYsJAIcX8pQdosBLRLLruEFT4SLtkpKjHrkayV/w7i95Ht9?=
- =?us-ascii?Q?sQVR1Wr2oEHkz7KHhfUODHrguNf4VZEGR2AKGXe5Wx0v/YvG+IO43tqrTJFn?=
- =?us-ascii?Q?OwF0s5M7D0SrIgYBchrTmOyn9403exiIBApWBTeEcvIx2PamiUmv7+sSsY8c?=
- =?us-ascii?Q?rW/8q9n9ufciyEY/DfaVJjq2bNpWX4X0YCxT//G0cLsPX+gj2a9IjVNOP5df?=
- =?us-ascii?Q?mKjd8FL7h+x10EIFN1IfIwvFCtqOEs7MDEQKNqsqjr18q0cYeoeGEI4pk9JU?=
- =?us-ascii?Q?8WMSY6CDWUkxmrL1N59lJGimAqenh3dURVtQHmbHCpFH4sDfdMs5lp3dEhoa?=
- =?us-ascii?Q?7OSwIKye1X0ss+5kY8kMUKETRAAun8M4sqqitzmMn+fRsWdjo5zibHB8vHN7?=
- =?us-ascii?Q?IdekjxYLWUfDdDIffFerp10YHeD6YTmKvt0LEZb4/nF/+mYwGOATdTafb/BK?=
- =?us-ascii?Q?88v9n1Rkg73Ra3kpEPDXHgA9M4fZFcxNZcc2qoVszYFwFEtAckqHYxMDkFS7?=
- =?us-ascii?Q?oMH9fdYg0cMfmcXPGK/TDObVKRZCFX58wDpK7cZVfZdM3s1dTytzvcvyB4O9?=
- =?us-ascii?Q?PK08DrJjDUszxuMM6y3RxuMlgHjVbPsTmHYiheffRebPRRqa7imU0Y8KmYMU?=
- =?us-ascii?Q?ZmPx/giHPaFDm0LvFWkJy2c9Oe/ZVlgNWJk7Z5Mqs7H2s69O6BmRlgx1J2uY?=
- =?us-ascii?Q?Afcw8xkSEQ/g8YgobIbAT/DVyKYJYusjDiHUwLiZWN5MLEAaBAoFcK1e9nU2?=
- =?us-ascii?Q?DVXQolFt5HADPlQbBc5QuLBdYmTywqTq6lAASgxcT/bu3yyJOOPqF0pVYAKT?=
- =?us-ascii?Q?NzT57z1fbVXkGbzNuymUPDgVD8lpIJn8+Zbnvh0JYjIEttDQYrAMxYSP/PkK?=
- =?us-ascii?Q?+7aIaX4egTrJbLGHDK46FCpxyTGQXvb5S3VrwKcwMFFLxg984Z/DUO2Wrdpl?=
- =?us-ascii?Q?XKr5jBprpHX3CfJWsuDfGSgQUPrKmB4vgGvZP9wsi6V/sL1O5xx+TwRFhrIp?=
- =?us-ascii?Q?5bZh1szjRjjs2tqCLHDaiW4zeG2RveIwsS4REofhEplBDlYkqu47uy/rNiXk?=
- =?us-ascii?Q?2dNQREjKbVwyN5S+Uuf9Bg3CxrNtymwJw/t7ySPRS5EYkDGJ58waDaVyUto+?=
- =?us-ascii?Q?0T9V6LnKh4DFfldTLfRKuAIC5t4CZvEQnJpwhZI3c9OM0q87t6wJ6rMZdsCp?=
- =?us-ascii?Q?9s+ccss5zqStMKlw+9a0ntTiEL1VCnijajM5FIADY5RfcD8jGqwTXeHx8dE2?=
- =?us-ascii?Q?Myl+ZT5Ov/67iIdwHVGnweEFBtEBSWzTnmCFPh1AF55oD1Eq9hm2NHMM239R?=
- =?us-ascii?Q?FQ9q9iWFH/Wo9V465gZWb6UpEJvVomqUq95RCz2fJP3AgS2pMAwxRc92h21z?=
- =?us-ascii?Q?mttXyTYcHGBH6fdNBG4qom8LTVBv6C7qlMUg?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZlRKMy9iNGtncU55U3JpM20wVVBnTmtycm1LZTMwNCtWN3hFUWliWjZNeUxt?=
+ =?utf-8?B?QUFnUVUwVy9EcjRXRXA1TjNXNUtPRnpnQ3pQWnpHY1BBUmlvb2IyNVNDVWZT?=
+ =?utf-8?B?UjhMQkhLWHlMMGNtYU8ramhjd05zcmF2aWlSeVQzTEQ4cU0wRitPMm9kd0tJ?=
+ =?utf-8?B?M3pLVzhlcmlHRmhRSzBPY0NTOU8ydGFHZUdRTC9pTXpiejBKR3JLMG0wSTJo?=
+ =?utf-8?B?cmlHZ1VoOEpwUSsxa2UxQVUzYm52WXA1QUhGcmU5ek94RkNyOEVYTGc0YldL?=
+ =?utf-8?B?UjNzNWtKTEtwdGtEMVA4WnhJaEVod1hlUVl4TlpCNWd3L0dTRTA3cWFOSm5l?=
+ =?utf-8?B?a0haMmVsbmJ1MGVQc3REZUROQkdqT3lBQ0ZmVjZZYlNBMDlLRzVZL3hoRlho?=
+ =?utf-8?B?SDhLalFKZzRvVXQ5eGR6V1dCUTgxdEJpS01Tbm5jc1FyU1ZDQzFwb0FVSFhM?=
+ =?utf-8?B?dkwxMUIwKzJMV1BEeUZBeWIrNkt0ZUU3OTJTdHdXYTJkUzlZSTk1dWJNVjZ5?=
+ =?utf-8?B?Mkl5VU1Vb1ZMRTFBaGVzbStpSkQ1K0ZoMytiYWptYTdUcGRWMEtra214QXNJ?=
+ =?utf-8?B?NUFXaVovYkc4UG5kbVVjaG9CbE5SYXBlYUdYTE1vNEVFNzNCQ0ROeTdRMm9W?=
+ =?utf-8?B?ZExIN01nbXlmajFQTVo2bE9uUzJHU0xFMkZLZU9nQjVIU2pWSEFjK1Fjck5C?=
+ =?utf-8?B?QVFOOThvT29YdGc0VDI5R01TbXpCOExVb09heHhxRFRlUUxEcHpqVk1KaGFk?=
+ =?utf-8?B?djRGQUJTZlNIRkppNGN2dnB3emZEVW5FSXVTUk1leU8vWVFGK01qQlRXT0NJ?=
+ =?utf-8?B?RXpkOHVZajdRSkxnZUduVlUyUkxlS3E3OGprR3gvTWhWOHczcmd2Vnp2bm5X?=
+ =?utf-8?B?bHJxN05lWjRVT0ZSUGQrMVpNUWg3bFFZNFdyZDU5Y1YycXBQRlVIRTlkYzJX?=
+ =?utf-8?B?bnZvRUdGQUk1ZXNJbVY4U0FnV2JDNVo1cXRCdUNmN3N0LzViZExHZjR2M2E3?=
+ =?utf-8?B?VVdpVE1kSE5wTmpxd0NaY2E3b0JMS2o5MGVhK3o3b1dKMnZmUzhTWGRreTBE?=
+ =?utf-8?B?UWEvTnAzbWFkRVRrZ0NhY1lUOXRjRlhDUllSUVFoMU9jbVFmKzVuK21NaGpU?=
+ =?utf-8?B?c3YzMitMLzltbE41eGVmQnFoTjRoL2d4VXRFYTltdEV6b0FoWXR0RjVsUFJU?=
+ =?utf-8?B?eTRqL1lJZFVQWWI1Vm5Ibm9NRHVlNzlFRVNXa0t5aWxDYTZTS2xvNkF6ckpT?=
+ =?utf-8?B?SnVYWnpmNnFyZEF6UUVTeUJnYzIxemRIN0pNd0tGQ0I2RHUzRFp4aGdkaVB2?=
+ =?utf-8?B?bmR3TzdRdUlBelhqeDlFUlhNVDFJUjJsUkhqQzIwdWszWnBpOGhxYnVJZVlX?=
+ =?utf-8?B?Zzh4NExvTkZQVXpkU1FsMElEazZuK0t5emlZbEt1ekFDRmR1ejFKVjFuK1Bi?=
+ =?utf-8?B?SzRKNWRzVm9uQ1BMeCsrSVZ4enNmSXJEMUljbzd2VzB5UExOajZycUFycXZi?=
+ =?utf-8?B?OVpMclRkU2NreEkybTdpY1ZFZ0hicUNwZFhjeWhLZld5a2JSUjNTUWthOSs2?=
+ =?utf-8?B?UHBCM1llNGgzZjFlazZ5MkE1RG8yZlNwc1FnaWdOMVRTR3FQbFpXRmMwZkZI?=
+ =?utf-8?B?TklZSHg0NHNkRmM2ZnpUeTBWMWU5QTJmL1hXcFZsTVN5RVgyUmJHc05pVUNY?=
+ =?utf-8?B?TTgzMVA2cmwxdXhVSXEzK3k4bWs2Z284b2N3cytTZkcyRzdxUWx6R3RSV1hL?=
+ =?utf-8?B?SnBPZkFFL3ZKUmZhWXN6eUxxcUQ4bHRZaklOZjFkQ0NrNGgzWU1IYWIzcGFO?=
+ =?utf-8?B?RXEvRzAzMVpBY1ZEK3c1R3JHVXhZWHFMM29aNXQzL0F0L3NZR2NOTzNzNVFr?=
+ =?utf-8?B?bWJVeFFuRVlFRnhyOVRybzhLOHA1QUhhU3BFWmpmZzE0OGJnS0QwbFp1MlNz?=
+ =?utf-8?Q?txrJCAp6JZw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z3BVM2hsV1crczBQY2pIMEh3UFFVdGg1TDF4LzJVbWw5WXBFTm1ncGE1NWxx?=
+ =?utf-8?B?K2R3K1dSSFZMZW9GWlR2VVZOT1VIYzl5STJZY2htK1dhaWVTb2Z4Nk1veUJB?=
+ =?utf-8?B?WWRTS2NXb3JiVVFFTjFKZHM5aXgxMmY0Y0xrZTVnd3gwQlAxU0t3SnlIWG45?=
+ =?utf-8?B?eXRPVklPZGJsWDY3QzJRQk8vU0FKcGgxakpyRUpnWHQzTVJIMVIxU1RPVmR4?=
+ =?utf-8?B?TVF5ZkhTRWdzTW8yUmkxV0hpd0RlSWhSK0FRV2Q5amk5MXh5MnZ0L1ZNcks0?=
+ =?utf-8?B?OTBCZ3ZIeld5QVg2MXBwNE1mTldJWWg3Z1l0d1h2TWcvVTBIUUttaEVQNjNO?=
+ =?utf-8?B?OU5WY1Nxd3BhVVgzRDhjV05kZUxOT3JDWjdCMndoTmhkcjVwTjlnWW55MXNw?=
+ =?utf-8?B?UE9yaW04SGRQcHR5RFNlWmI1ekRHMHJjS3FDbXVYZUJCcXJwbmRMUTNKbmRs?=
+ =?utf-8?B?dVNtaGYrdGxRY1dMRW8xRjRjejFvN0VvenF1Y0w4RUdCdGd1K3A1eXlwRGkv?=
+ =?utf-8?B?WmpVVEpMbldDWjFRVVZnYVVvVnhHYUx6bml5MENUazU3ejhiVW00WE9UUGVR?=
+ =?utf-8?B?ZlZMTG5rRWM5Mm93RFVzQ3BwSHdTWGFpZWo0dnpYR0dXanR1WkxvTFpoWm5y?=
+ =?utf-8?B?dmpjN0x1czdnNlBPdUNIWVQ3NDYrdWF5TTdlMVF1YkFQLytFdEsrQzRRU2lP?=
+ =?utf-8?B?Qk00TDREUllHNW56bFk3SVlWRW8rNVJDeGtHcWJXY2dhck9FdnhGWm5OYk1Q?=
+ =?utf-8?B?OFlFZUYyaFlxaTV3MW5TdTlUQVRYSW8yWU4vdHJNZHVMU3Y4Y3d0dlo1QVBF?=
+ =?utf-8?B?N2VwYWlGZTdDeXlNMVpsb3BDR3JYWnpqODRMWmZSM1ZuQWRqeFI5QVZqRXpQ?=
+ =?utf-8?B?MDFkSG5iR013UVBCYWZva2pHc0dITFdodFhSdlB2eElmT3RBOFZrcTByb2JP?=
+ =?utf-8?B?SEV5VExaa0FMQlJoTUxrNm54d1hVNktQWXVFT05KMC91a3NBR3ZUM2MxZWNi?=
+ =?utf-8?B?OVU3UXJEY0xXWVQ2MXpXemJGbHBIWCtrbDExd0o1UmxvbTNYOHJoZkJyZlJZ?=
+ =?utf-8?B?VFIzY3g3enNEVUZ3WGY1eE8yNWgvTEFreGlzMHh3Qi9Gb1JBd05ZSlVFMnlN?=
+ =?utf-8?B?ZXRPWkV4dVYrNzZEMDI5bmhtOXJXOUZtL0ROdmQxRzAyNTNTN2ZVVStGWk5T?=
+ =?utf-8?B?V0pCTmVWUlRvK0ozeityUmU5TVlFS0FmWnc2STUvdnhrNkF3QzJYT3VpRVhX?=
+ =?utf-8?B?bkZ4S09DdmNlZHdWSU9aS1VQQ3ZhSEpwczZOWUV6ZW5jWWJoZjFpWWhvQ21k?=
+ =?utf-8?B?M3VBMU43NkZwUG5SbzNXQXFHdDFaQ3hteFpzelkvUm9wNVJMalJvelRPU1l1?=
+ =?utf-8?B?NjVRMWh5OWRueE5VVkM3NG5aYnowTmtSYXJjOHl2azh0eENjSlNNSXVRS2Ft?=
+ =?utf-8?B?MnBQd1M4ZWl0b2dZV1ZSOXloU0I2RnJ1MCtXbkZ0NU55M25zeXBkR3lCckxH?=
+ =?utf-8?B?eVlOa0NtL0paWTVTTXBBbURhTlplYzJvdHRIdEtET0NETkZINFh4KzBxTVRx?=
+ =?utf-8?B?V21jMWJRelRRSnZGQVpyazNmWVVUeitjVEZXeU9hNnM0aGVoZmxJY2tkRVEx?=
+ =?utf-8?B?RG8vVGhyVDVDMitNWVpQSkNWYlY5cHFmZmxDZnhvMjF5dkxPMVhUSWUxYjcy?=
+ =?utf-8?B?eDVSK09CL3JyUWt6Q2lNUFgreGM4M2Z6ZVp0dENlb29JdGtmZE1KS3pYMkdo?=
+ =?utf-8?B?MmVHZWRQSzBSeU5GT3hCRGhXdEZ3d3FnVjdnNzExNWtDWW1QZzhSN1VFTXlF?=
+ =?utf-8?B?M1cvUSsrSVR1aTF1L3Foa1hoTFhpUVFBTytySDZnM3hlTm1hVnFySkRzc0RU?=
+ =?utf-8?B?bDNtejB5OVYrbVp0bkJMekFzOVJIWUtRZFJIQUZNZmVHRFJLWEVzaGZhSExh?=
+ =?utf-8?B?VTRSRnJ0QXdNOFV2Q3NJS213c2VKVlJaSmhLU0oxeXJLL0VrVFV0eUFyci83?=
+ =?utf-8?B?UTdxK2Y4UHdaRW5XZW9iK2RWQWZYYVo2aGo2NVJnNUxJbk5OUnBWRFovQnAx?=
+ =?utf-8?B?WGlzMktrN2JEV0wranVUV1ptdTZMZ1YxM2E5WmtEWm9BQThzdUhQUTlEeWtW?=
+ =?utf-8?Q?laWRf0HLQIXxHwnxxIYNWNZrv?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 23:17:50.7585
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6600eb7-e72a-4596-716c-08dd88b44868
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 13:30:04.9289
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aed5e39a-7c78-4849-7c08-08dd883d3a42
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CH3PEPF0000000F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5724
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vUVVM3uBq7YsSCWr1wcAVjYoJ8un8ZHzM5uwlHTRqIzeSk2m19qewkBDH5jC6XYCC8pZyUq/+OhjWwy2ZXaruQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5627
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250430_161805_808358_0B8C2867 
-X-CRM114-Status: GOOD (  16.30  )
+X-CRM114-CacheID: sfid-20250501_063012_755287_18A08305 
+X-CRM114-Status: GOOD (  18.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,77 +181,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 4/30/25 16:57, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> When kdump is running makedumpfile to generate vmcore and dumping SNP
+> guest memory it touches the VMSA page of the vCPU executing kdump which
+> then results in unrecoverable #NPF/RMP faults as the VMSA page is
+> marked busy/in-use when the vCPU is running and subsequently causes
+> guest softlockup/hang.
+> 
+> Additionally other APs may be halted in guest mode and their VMSA pages
+> are marked busy and touching these VMSA pages during guest memory dump
+> will also cause #NPF.
+> 
+> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
+> of guest mode and then clear the VMSA bit on their VMSA pages.
+> 
+> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
+> ensure that makedumpfile excludes that page while dumping guest memory.
+> 
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  arch/x86/coco/sev/core.c | 244 +++++++++++++++++++++++++--------------
+>  1 file changed, 158 insertions(+), 86 deletions(-)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index dcfaa698d6cf..d35fec7b164a 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -877,6 +877,102 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+>  	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
+>  }
+>  
+> +static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
+> +{
+> +	bool create = event == SVM_VMGEXIT_AP_CREATE;
 
-When the shared pages are being made private during kdump preparation
-there are additional checks to handle shared GHCB pages.
+Just occurred to me that, while we don't use it, there is another create
+event, SVM_VMGEXIT_AP_CREATE_ON_INIT. So maybe change this to
 
-These additional checks include handling the case of GHCB page being
-contained within a huge page.
+  bool create = event != SVM_VMGEXIT_AP_DESTROY;
 
-While handling the case of GHCB page contained within a huge page
-any shared page just below the GHCB page gets skipped from being
-transitioned back to private during kdump preparation.
-
-This subsequently causes a 0x404 #VC exception when this skipped
-shared page is accessed later while dumping guest memory during
-vmcore generation via kdump.
-
-Split the initial check for skipping the GHCB page into the page
-being skipped fully containing the GHCB and GHCB being contained 
-within a huge page. Also ensure that the skipped huge page
-containing the GHCB page is transitioned back to private later
-when changing GHCBs to private at end of kdump preparation.
-
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: stable@vger.kernel.org
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index d35fec7b164a..1f53383bd1fa 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1019,7 +1019,13 @@ static void unshare_all_memory(void)
- 			data = per_cpu(runtime_data, cpu);
- 			ghcb = (unsigned long)&data->ghcb_page;
- 
--			if (addr <= ghcb && ghcb <= addr + size) {
-+			/* Handle the case of a huge page containing the GHCB page */
-+			if (level == PG_LEVEL_4K && addr == ghcb) {
-+				skipped_addr = true;
-+				break;
-+			}
-+			if (level > PG_LEVEL_4K && addr <= ghcb &&
-+			    ghcb < addr + size) {
- 				skipped_addr = true;
- 				break;
- 			}
-@@ -1131,8 +1137,8 @@ static void shutdown_all_aps(void)
- void snp_kexec_finish(void)
- {
- 	struct sev_es_runtime_data *data;
-+	unsigned long size, mask;
- 	unsigned int level, cpu;
--	unsigned long size;
- 	struct ghcb *ghcb;
- 	pte_t *pte;
- 
-@@ -1160,6 +1166,10 @@ void snp_kexec_finish(void)
- 		ghcb = &data->ghcb_page;
- 		pte = lookup_address((unsigned long)ghcb, &level);
- 		size = page_level_size(level);
-+		mask = page_level_mask(level);
-+		/* Handle the case of a huge page containing the GHCB page */
-+		if (level > PG_LEVEL_4K)
-+			ghcb = (struct ghcb *)((unsigned long)ghcb & mask);
- 		set_pte_enc(pte, level, (void *)ghcb);
- 		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
- 	}
--- 
-2.34.1
+Thanks,
+Tom
 
 
