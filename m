@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEE2FC369DC
-	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 23:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E863C3ABA9
+	for <kexec@archiver.kernel.org>; Thu,  1 May 2025 23:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=; b=TyWQnmr9IkTE8TToCn6+5MseWZ
-	k9lpNsDBd02xMI8PTg55qbTdC4+749vLsNK6+Tdvd75uSKVUQNdNfcb5okv5WzDYCqbjm9n4rnZkM
-	rqi4S60EUbDRdcuhjZXbjVM+uN+xXgwASmxu3wANbDwdkRbl5z3rF6NRRdHNtK6d1bNz4owK7HIN9
-	9g6xYYFlC6u4S0BPeKYpybNvxGN3aP4OgXQePV7NGA0uN6xzGmIFK6R5awT5ZLY2dIlhla3R9/mrY
-	+TzolqNIbNvsuS1K60R2Sg+r+mGq7ehV+adUBMga6gw7P2saxtDdJh4gw0Eo4dAqotGT4QwsoJnYH
-	SmxBbrtA==;
+	bh=KCC7bKa/se6mYg+6T9wGzMiASCuQ0cecrMrt+P8VCow=; b=tZcVqHnUQ6eIlzjG5Yx3GsVl7x
+	bvw8l3VoumnfJOXlyRujzkKpsvHKdeScAqpy5KZsphLmXUY3WD3QBgwHdU4+abRWxYOXNWxpWSEO6
+	/SCXSeOicILnFaAZDBJegcTsTtGeXPLf6O7o/4bSY7mPPOpyG3a+bgcS9MSYRuQrAp4DvvUtLxTQl
+	dROaaQRO24v7ZKjF59hDS4eopcWB43qkXsjEkJJdkQyexJLwp/9VIJ5/0fXk0AFnd2CM7vnkCNBfA
+	Alirdv3h6qgSjZZqIEdv7cjMf8RLM/Q27MV8Wpr8cxEbguyEQLNLRH1IkkzUD+AkJ0SGiIGvfUZ+I
+	pDh+qjgg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAcxl-00000000BSx-1RHt;
-	Thu, 01 May 2025 23:05:05 +0000
+	id 1uAd1X-00000000CrM-0xTi;
+	Thu, 01 May 2025 23:08:59 +0000
 Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAcoL-000000007BF-3swQ
+	id 1uAcoP-000000007FF-2QfP
 	for kexec@lists.infradead.org;
-	Thu, 01 May 2025 22:55:23 +0000
-Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-736b5f9279cso1280189b3a.2
-        for <kexec@lists.infradead.org>; Thu, 01 May 2025 15:55:21 -0700 (PDT)
+	Thu, 01 May 2025 22:55:27 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-7401179b06fso1305390b3a.1
+        for <kexec@lists.infradead.org>; Thu, 01 May 2025 15:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746140120; x=1746744920; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1746140124; x=1746744924; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=;
-        b=FaruDjQN5FX5n8oejQ02iXosjRFtTh5WSOZd7wTN+HvTu1aLLxfwCQOkrz1sGy2vrv
-         xvfsNa1Cz1LYh0O+PQd93KbQNyyb5FL7A15GAJGst2+WXXaKp8momnGiiepezDt4F7jM
-         VDuEFWnd7M1PYFTTF+tipzpT6d0TR4pCHpVPWS8l39l/cDJWQadEP8QpZc+L05XbY/l7
-         xLtcyBPXoqvA70wlbJiI99AOv6LP9Zad1BzFYOKKK8nZBhgFMo1eI/OJNLaitY3eVLRD
-         nLsW1XLuX8g7qly3KTtO62tS2za3srUnTf5PULugulRg46/R2/fLgqlRxtEm1d74wWln
-         sFFA==
+        bh=KCC7bKa/se6mYg+6T9wGzMiASCuQ0cecrMrt+P8VCow=;
+        b=N1kbpx8vkwsHGBjhGbOcZz0EukLCv2+tviajXQGhca2w1Q3yl4qhyvIGsohxKZl8uS
+         RljXlNAWj+0Uq7coLw2tSyvIqzK7bHQb8OZ9ksTVfSWPqzvzXm1yhx8M1tKhl7eucxfE
+         mzV8Iwq0zuQQFsLlwjQ/DwhQTetjDSLtpmSahJ53RIYir/XjNdnbXACpGcze5Y8CiJ1b
+         LR2Kn07Saf2KK1Yhj1Ch9H0iDn9m8HCDDc5PpH+8FAooAJ4eM99AgOUIKZVPsdqylVEi
+         dmS0IngJDvJz6HDNP7ikjMAlhG7CyalNelU7oYaX7V7kwi+cITYV6OMnDnxwsyATOwNG
+         ATaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746140120; x=1746744920;
+        d=1e100.net; s=20230601; t=1746140124; x=1746744924;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yI2HlkyQFbJOtIn7U2Rd16qUG9dEmKYGc2pG99S8bb4=;
-        b=aRcg/zQdRkjpYE8LY5LKYfk2fT+8QK7IIcsUSCzlCkHMtMa1lbZx/b467IPPYsFYXV
-         ylaLFzWOd5iC29qcrg7q6bM1hX5Z0pKHjp9iiewarLKdMBX7DLgInXgBM1V/xX3ZK5CD
-         fuvBx6l7qQmpDIQnV4x7ORqftG4KPcV++U32+eF4wp6+1H3z/O2WCeO7CjK5jGxc9hhX
-         jIPgSRK3WkCVBYUbT+l3NGDM35aAPFbBttyAlOcWtumA9g/81ZMtDh+fA3a/WRld2dq3
-         XASe22i9LOKFlMuazGzexV5mtyChZh0KvOguE6I7dvn3U7L/tPsetkxUqCeDU/9LeEy8
-         95vA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/vKy/BwKcAFIE8+NfuPrxf4+voidqABBrXS9IRLZR/9mdkUXbySoYf1Zh+9Vw0YEZDlBq0w==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx57J0p2wmNWouLBm0VOtkkdFrfzoT3l/znaO0bZwon+tjPyxq/
-	SDbz7VvOV+qh1BvpHrbwkprimZRMe4clHpLXC1YNg6zfoiAVZUvxDAlNWSl6wK9ClIKLRzsjHGz
-	I0GzcSq+hI7+ssoBJeA==
-X-Google-Smtp-Source: AGHT+IGmpHhKcBDrERp6231eQ29+jikWpthUas+M8P/VxY8mf6RZUuVX69nZyHTF3KiG68E/Ho9kug3/UNXn0GYw
-X-Received: from pfbfe8.prod.google.com ([2002:a05:6a00:2f08:b0:736:4ad6:1803])
+        bh=KCC7bKa/se6mYg+6T9wGzMiASCuQ0cecrMrt+P8VCow=;
+        b=Dmhdv3tTqyBTLTecZCScv6PctKhijlEnWyz01jQY22n5TQo+5f5Zdvo1oHUfSJQg0f
+         ekgbxLNK8Q0AJ93drfGp3bz+OLCYo7tNXK4IyTD1U7n2aUdL0XOckZ6yaBOsqVYy7KCD
+         1pqygj4xlFAwQE53lI31ctG6ONifUf5gGNFE61zTn3n8nM5IB5WR8FzVAq77iG6pyP8F
+         KUJNSoxPk2mD7Bbzxg6igDUQiHwYkM8nxmbhh+eMmfR6QZ7D1obZmvI/VI0JED3hwNpu
+         7uw49xpnK+hedJBroa6HrPDXjSuQ5/1QoPBiuSfIYqZKIY1lwZd95HgsP+xNyWC5xS76
+         V41Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXD/k+dMOnu1GA9uu6Mof3xu88EOo3ewaP5xc+meA3dVHishWHcBBcpqrxKzSlfnnreL273nA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YykLPN4ydgfP82FLzo//YEuHzvGVORZ1HoTBI4kL1eg6Czf/cJs
+	+wWUXLnEdZPpPcyYwnvSMAurltDtmUowCPugeANGjP25SDX7K0QfILp+ph1HLmAOJ+pZp1MT709
+	8Ond9KKhwiC3sWQUy7A==
+X-Google-Smtp-Source: AGHT+IG+w15ETdCoK+fHMVjjNvznubiYgRmkIOBeTduHj1HNG9YRODcurbY+TyPTJCH95DRqbicgO/a5HkcDFdV/
+X-Received: from pgbd25.prod.google.com ([2002:a63:4f19:0:b0:b15:84fa:ff1f])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:9cca:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-20cde371e9emr787243637.5.1746140120540;
- Thu, 01 May 2025 15:55:20 -0700 (PDT)
-Date: Thu,  1 May 2025 15:54:13 -0700
+ 2002:a05:6a20:d527:b0:1f5:82ae:69d1 with SMTP id adf61e73a8af0-20cded43612mr889605637.20.1746140124601;
+ Thu, 01 May 2025 15:55:24 -0700 (PDT)
+Date: Thu,  1 May 2025 15:54:15 -0700
 In-Reply-To: <20250501225425.635167-1-changyuanl@google.com>
 Mime-Version: 1.0
 References: <20250501225425.635167-1-changyuanl@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250501225425.635167-7-changyuanl@google.com>
-Subject: [PATCH v7 06/18] kexec: include asm/early_ioremap.h
+Message-ID: <20250501225425.635167-9-changyuanl@google.com>
+Subject: [PATCH v7 08/18] kexec: add KHO support to kexec file loads
 From: Changyuan Lyu <changyuanl@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: changyuanl@google.com, akpm@linux-foundation.org, 
@@ -83,9 +83,8 @@ Cc: changyuanl@google.com, akpm@linux-foundation.org,
 	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250501_155521_971511_04B4F914 
-X-CRM114-Status: UNSURE (   9.88  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250501_155525_646772_A591D1FC 
+X-CRM114-Status: GOOD (  23.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,36 +99,184 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Alexander Graf <graf@amazon.com>
 
-The early_memremap() function is decleared in a header that is only indirectly
-included here:
+Kexec has 2 modes: A user space driven mode and a kernel driven mode.
+For the kernel driven mode, kernel code determines the physical
+addresses of all target buffers that the payload gets copied into.
 
-kernel/kexec_handover.c:1116:8: error: call to undeclared function 'early_memremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
- 1116 |         fdt = early_memremap(fdt_phys, fdt_len);
-      |               ^
+With KHO, we can only safely copy payloads into the "scratch area".
+Teach the kexec file loader about it, so it only allocates for that
+area. In addition, enlighten it with support to ask the KHO subsystem
+for its respective payloads to copy into target memory. Also teach the
+KHO subsystem how to fill the images for file loads.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Alexander Graf <graf@amazon.com>
+Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Co-developed-by: Changyuan Lyu <changyuanl@google.com>
 Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 ---
- kernel/kexec_handover.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kexec.h   |  5 +++
+ kernel/kexec_file.c     | 13 ++++++++
+ kernel/kexec_handover.c | 67 +++++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_internal.h | 16 ++++++++++
+ 4 files changed, 101 insertions(+)
 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a5..075255de81543 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -371,6 +371,11 @@ struct kimage {
+ 	size_t ima_buffer_size;
+ #endif
+ 
++	struct {
++		struct kexec_segment *scratch;
++		phys_addr_t fdt;
++	} kho;
++
+ 	/* Core ELF header buffer */
+ 	void *elf_headers;
+ 	unsigned long elf_headers_sz;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b5..77758c5331229 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -253,6 +253,11 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* IMA needs to pass the measurement list to the next kernel. */
+ 	ima_add_kexec_buffer(image);
+ 
++	/* If KHO is active, add its images to the list */
++	ret = kho_fill_kimage(image);
++	if (ret)
++		goto out;
++
+ 	/* Call image load handler */
+ 	ldata = kexec_image_load_default(image);
+ 
+@@ -648,6 +653,14 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+ 		return 0;
+ 
++	/*
++	 * If KHO is active, only use KHO scratch memory. All other memory
++	 * could potentially be handed over.
++	 */
++	ret = kho_locate_mem_hole(kbuf, locate_mem_hole_callback);
++	if (ret <= 0)
++		return ret;
++
+ 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+ 	else
 diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index a1e1cd0330143..59f3cf9557f50 100644
+index 3bf74b4960f84..ef21db6c59d51 100644
 --- a/kernel/kexec_handover.c
 +++ b/kernel/kexec_handover.c
-@@ -17,6 +17,9 @@
- #include <linux/memblock.h>
- #include <linux/notifier.h>
- #include <linux/page-isolation.h>
-+
-+#include <asm/early_ioremap.h>
-+
- /*
-  * KHO is tightly coupled with mm init and needs access to some of mm
+@@ -26,6 +26,7 @@
   * internal APIs.
+  */
+ #include "../mm/internal.h"
++#include "kexec_internal.h"
+ 
+ #define KHO_FDT_COMPATIBLE "kho-v1"
+ #define PROP_PRESERVED_MEMORY_MAP "preserved-memory-map"
+@@ -1192,3 +1193,69 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	if (err)
+ 		pr_warn("disabling KHO revival: %d\n", err);
+ }
++
++/* Helper functions for kexec_file_load */
++
++int kho_fill_kimage(struct kimage *image)
++{
++	ssize_t scratch_size;
++	int err = 0;
++	struct kexec_buf scratch;
++
++	if (!kho_enable)
++		return 0;
++
++	image->kho.fdt = page_to_phys(kho_out.ser.fdt);
++
++	scratch_size = sizeof(*kho_scratch) * kho_scratch_cnt;
++	scratch = (struct kexec_buf){
++		.image = image,
++		.buffer = kho_scratch,
++		.bufsz = scratch_size,
++		.mem = KEXEC_BUF_MEM_UNKNOWN,
++		.memsz = scratch_size,
++		.buf_align = SZ_64K, /* Makes it easier to map */
++		.buf_max = ULONG_MAX,
++		.top_down = true,
++	};
++	err = kexec_add_buffer(&scratch);
++	if (err)
++		return err;
++	image->kho.scratch = &image->segment[image->nr_segments - 1];
++
++	return 0;
++}
++
++static int kho_walk_scratch(struct kexec_buf *kbuf,
++			    int (*func)(struct resource *, void *))
++{
++	int ret = 0;
++	int i;
++
++	for (i = 0; i < kho_scratch_cnt; i++) {
++		struct resource res = {
++			.start = kho_scratch[i].addr,
++			.end = kho_scratch[i].addr + kho_scratch[i].size - 1,
++		};
++
++		/* Try to fit the kimage into our KHO scratch region */
++		ret = func(&res, kbuf);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++int kho_locate_mem_hole(struct kexec_buf *kbuf,
++			int (*func)(struct resource *, void *))
++{
++	int ret;
++
++	if (!kho_enable || kbuf->image->type == KEXEC_TYPE_CRASH)
++		return 1;
++
++	ret = kho_walk_scratch(kbuf, func);
++
++	return ret == 1 ? 0 : -EADDRNOTAVAIL;
++}
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index d35d9792402d1..30a733a55a67b 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -39,4 +39,20 @@ extern size_t kexec_purgatory_size;
+ #else /* CONFIG_KEXEC_FILE */
+ static inline void kimage_file_post_load_cleanup(struct kimage *image) { }
+ #endif /* CONFIG_KEXEC_FILE */
++
++struct kexec_buf;
++
++#ifdef CONFIG_KEXEC_HANDOVER
++int kho_locate_mem_hole(struct kexec_buf *kbuf,
++			int (*func)(struct resource *, void *));
++int kho_fill_kimage(struct kimage *image);
++#else
++static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
++				      int (*func)(struct resource *, void *))
++{
++	return 1;
++}
++
++static inline int kho_fill_kimage(struct kimage *image) { return 0; }
++#endif /* CONFIG_KEXEC_HANDOVER */
+ #endif /* LINUX_KEXEC_INTERNAL_H */
 -- 
 2.49.0.906.g1f30a19c02-goog
 
