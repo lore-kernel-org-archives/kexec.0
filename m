@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9998C3ABB5
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 146FEC3ABB0
 	for <kexec@archiver.kernel.org>; Fri,  2 May 2025 01:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,69 +12,69 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3Pn26aT5bRv7h7/lzXPUF6z8FjJ6lnc7HN2JWKay0EY=; b=0E+jvqYm20luggqn5A9nhejfYe
-	4ckyZowo6fYrWBH3rzqkJypXAL/1w/RgEhmNCHyV2W5Bhog23U+7yT8uzN1gfTzx60WdbU8fVsb9K
-	omRdZXaN9GTWST1m7J5Q9M/6jZaSrlWpppXh453++YKNh+WfQ03jpdXgUl2XxPRKHk7XqEQzrQUSj
-	drQIbJC7bSPxabsMxccQhXJGIZP/RigLYM11ITSFlbd5OvPXQRUeTYd39FixojzNre/WCRRWu3/pc
-	WgeYDhr80148LbMyv0irisaJPGeoCzXbbActFouZt/Z11fV7rpTaM72f7xiCnSO9xjOp8MD4Y7I0W
-	xnTxiRKA==;
+	bh=FI+GXrx5MXDfidTwssNH3+yBW/jsE3sUkCXkCFCf894=; b=JNMECFJaYZapEijFYUH+R10gKt
+	xaPpfEX7brOgTWxz1KpDwppuJDFEZDzoVb2VLPTRQGX2EQiqQnxuT0EcTaJeXQLca8SQGUui2lmQS
+	s6bg5YgTH03IwwxmYOLlM8C+X7my/D03FUIX9hyv1rlLVCHQL7hE6bOK0Nk9XjeSamcjH9eMRuVE4
+	d9AyiXIuvfLfAs+VX1+/VBnZpGhFXztHz0Z+pktoUaoaE3jWk1loT4flJNXeGK87rAhnjfgkV6f8R
+	RGrnH16Kd5/Nrc5oFUuFtMoPqAnEirzgOOjRVzEudzkGbzPs9KJsD6te6OwLnf+5kNLz//c0jDCWO
+	2BdRI0Dg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAf0O-00000000UIf-2jcl;
-	Fri, 02 May 2025 01:15:56 +0000
+	id 1uAf0N-00000000UGy-3O9U;
+	Fri, 02 May 2025 01:15:55 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAexu-00000000Tgv-1gfZ
+	id 1uAexm-00000000Tee-2rmx
 	for kexec@lists.infradead.org;
-	Fri, 02 May 2025 01:13:25 +0000
+	Fri, 02 May 2025 01:13:19 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746148401;
+	s=mimecast20190719; t=1746148393;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3Pn26aT5bRv7h7/lzXPUF6z8FjJ6lnc7HN2JWKay0EY=;
-	b=LpVQZ+CEvDXqJrpP1u5k8WZqy7mgrFsh2ycEh8OGkV/RT+QuNZE95amJkB6U5vc4cMFJBt
-	ZIzDvWL5y3FysN1FOHyF18unBiF62/Cq5y9SG+8Kos22S+SlgJrGUOJj0gS2wm/T3PeSB2
-	+ve4+kxan4CtDcBHTxrCSIR5PaXA2Cg=
+	bh=FI+GXrx5MXDfidTwssNH3+yBW/jsE3sUkCXkCFCf894=;
+	b=eFeEBhfWwUcJsxCCYBkVA97mUz5kS0RWzBskQrod8bjlMzJhUsMUzTAdiCO1Ft3k2Knpzy
+	2CT+2oiqQ4socj5zHrKa+hL3jb3oQ2T1WT+iZHbkMRbSeRk4Q4wceG+tzFIwDmVQR6dIn9
+	A3A8pIDt2u143Tdr3U1D2Fae9bt/olI=
 Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
  [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-320-ZBaInkCmMRa2pzABZSQnyA-1; Thu, 01 May 2025 21:13:20 -0400
-X-MC-Unique: ZBaInkCmMRa2pzABZSQnyA-1
-X-Mimecast-MFC-AGG-ID: ZBaInkCmMRa2pzABZSQnyA_1746148400
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-af5310c1ac1so954141a12.2
-        for <kexec@lists.infradead.org>; Thu, 01 May 2025 18:13:20 -0700 (PDT)
+ us-mta-204-up4I0OJSMOe3KkyBq8rSgg-1; Thu, 01 May 2025 21:13:12 -0400
+X-MC-Unique: up4I0OJSMOe3KkyBq8rSgg-1
+X-Mimecast-MFC-AGG-ID: up4I0OJSMOe3KkyBq8rSgg_1746148392
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b16f5365310so971163a12.1
+        for <kexec@lists.infradead.org>; Thu, 01 May 2025 18:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746148399; x=1746753199;
+        d=1e100.net; s=20230601; t=1746148391; x=1746753191;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3Pn26aT5bRv7h7/lzXPUF6z8FjJ6lnc7HN2JWKay0EY=;
-        b=Rw3o82b7C50ZLZjGh1XFhSqMV1QvvGF423SlKhUJfSIjtYaWAI+huEJIqIPI2HSwVf
-         r1D0cM7UEqOC1jdNcY6JBX+8kH+L3mBqeFVCNiJqvwWd9Bw3PMwqwZKTggIj1w6twPWI
-         9G8ztu3BzWAob6E+BVfSu457A3GKhCChQnIHpgiJweZj3+d3np6JFlIlUSYAgoOxfL0o
-         gqAmg+OHIk5d0Otc5lmyFUiEn9Yl5goBhNzez+DDtGijzYgGU6oOKcCV3X9pSmyKILpb
-         3+BGCEXEamtEI28dUl3a9hkrwVLgbjeY7dm+snD2gEQaEK3qQWz8qqdEl/hxoyN61rar
-         wgxw==
-X-Gm-Message-State: AOJu0YzE9kVp4MZhDcHz6XrvVCDSHOncKBHsLgG58ywzykByEldJZieP
-	grSpn4XV+DZ7qZ3ol8DySAfxiA90EMjyjYWN0K90divQVJQAkeQ8d8H0oL8BPcMfHvBFFswRips
-	/CLgv9iokQ1oOPtFcLTQQp4LiO7gTjDCYUFjDQ6dvhGg35NEb8ofHwQl+0CVHV9wAVOp2MMCTSv
-	yRdWW+XC/hLFl00AGVbhlNHlWfBGE3OQQiXbzCyPlYqw==
-X-Gm-Gg: ASbGnct68HWEmjrWfN2qTFZ07o7EAVa1exQEFftBPva3GZO+FI5mrlWptUHMmDYZBp5
-	M6qJUqylHgSaRm154sBgV46VwXnIt97cM3DtqDqQvZc/X99oCfN5XvkG1Xyi1S5yWnedPzLJk2B
-	89QFMGpdysGnsHuDlhciMEoCmsQaGw6TFFOVugX9ZPBY9dBvzsb7r1CEgunlZPUbyPV+tGpw1q1
-	lM8ElttsRly6Fy55FAjaB4FmGxr7SgKINjJnxxv2p/MJsF4RHS5MWOXjYj5Syt909tXRSO8lrAp
-	Ds8=
-X-Received: by 2002:a05:6a20:9f90:b0:1f5:7c6f:6c8a with SMTP id adf61e73a8af0-20ce03eda59mr1482263637.35.1746148399546;
-        Thu, 01 May 2025 18:13:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG5/p3+2eDOQ1WtTewaJNj1PvUOiUHyS/8lpdnWABtDfZb0/NmxZiqOwhxRTW3nf4iHj2YNpQ==
-X-Received: by 2002:a05:6a20:9f90:b0:1f5:7c6f:6c8a with SMTP id adf61e73a8af0-20ce03eda59mr1482208637.35.1746148399137;
-        Thu, 01 May 2025 18:13:19 -0700 (PDT)
+        bh=FI+GXrx5MXDfidTwssNH3+yBW/jsE3sUkCXkCFCf894=;
+        b=E12L/Quqq7HmHT/9C8vhi72PuJKKpSUkGvgCKhVEvcUw9upYMYTfS5saQIr0uQ0UgD
+         AS60x3wC8tuQXKjWALmCTF3AHiv0sql/l/rre3BNEqQcMd7kSsO9ju8pwxaGqkZKkwA4
+         Rs54J/C0OHjb6WNVQOwQ0PJ/sSv74aDcgQmPrK3/Rwgp5VNxqpMGG76RuS/Rq9Y3c6fa
+         UDLy8k2qZZAi7eeQPD6tqT9iBDQwgHvbwi47JZqPmZIrCtjwxBDWusi6Omc1f1RKS7LH
+         uBbEea6TNpm8OIG31sRsuTobiDTwLr14sl7LNyiNSZe2igpkZcVczbcEFBBKQTOjLqsz
+         o/9Q==
+X-Gm-Message-State: AOJu0Ywesi6m4eOst1eAsu/ewjXL1mhb/R236mg0lK8HpK8brmsa1xOk
+	89eVgaPYB/OFuydwaEVlrGODMe0Pv2hZRwBoUlzthZ7NP1YKQe184nDc+mxvXGbLPzEpOvJEgQp
+	20EtBK8Vk9ax3dSN8AE/KAlhwNqTM0RH37auBBsosGq2wJNs5GJcxDdlLHrMx5x0TCHaL2LtERu
+	AgIijWMopn0gsneYcOFPA3AWzouCsVGQvJNUzWhB8KCQ==
+X-Gm-Gg: ASbGncvquVKSpurFxvIj0/kA/R+uoF3+5c/fUFgaFqeRBU3dYn6+4byqmkPlPfwK/H/
+	ICHgNOykdgB7rqLxaWb6njJZicfdKKpNAQNQ1ssyHCFHyVZhZ9w1/b5KNBiyKhFrXwBkEtJBk4s
+	n0htMtknr5jGBXrf0QnkCvezLt++3MsZgSEeqR31EFP3s2uiPeckDdfefhbM6OuiQJnLIQZpp6l
+	JEerDEbwEV3jQRxIGOq5h8goyuTYRmQAK7g0kNnx+75JvIChoWi9q3lmzcatsy3THyHvJOmUcmN
+	auM=
+X-Received: by 2002:a05:6a20:d485:b0:1f5:72eb:8b3f with SMTP id adf61e73a8af0-20cdef3dd0bmr1473408637.24.1746148391520;
+        Thu, 01 May 2025 18:13:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFedydzy7eFeNpzLzqKKw1fQGI2Jm/XlzKlKPwhgkEdBGZDZTrtlVKsxZROLBUauHe6nb4G+w==
+X-Received: by 2002:a05:6a20:d485:b0:1f5:72eb:8b3f with SMTP id adf61e73a8af0-20cdef3dd0bmr1473355637.24.1746148391066;
+        Thu, 01 May 2025 18:13:11 -0700 (PDT)
 Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa82422ebsm309280a12.10.2025.05.01.18.13.17
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa82b68c1sm222557a12.37.2025.05.01.18.13.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 18:13:18 -0700 (PDT)
+        Thu, 01 May 2025 18:13:10 -0700 (PDT)
 From: Coiby Xu <coxu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Ondrej Kozina <okozina@redhat.com>,
@@ -90,28 +90,25 @@ Cc: Ondrej Kozina <okozina@redhat.com>,
 	Dave Hansen <dave.hansen@intel.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
 	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v9 6/8] Revert "x86/mm: Remove unused __set_memory_prot()"
-Date: Fri,  2 May 2025 09:12:40 +0800
-Message-ID: <20250502011246.99238-7-coxu@redhat.com>
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION)
+Subject: [PATCH v9 4/8] crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
+Date: Fri,  2 May 2025 09:12:38 +0800
+Message-ID: <20250502011246.99238-5-coxu@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250502011246.99238-1-coxu@redhat.com>
 References: <20250502011246.99238-1-coxu@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9y4Hp_R4Sq47oegMyO_c6-veU-uJfrUVNc1k-QUWyRg_1746148400
+X-Mimecast-MFC-PROC-ID: re0WkYMfraYj3tDPN67VT2e3G133b-85KpkIVK26tpU_1746148392
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250501_181322_507711_63386E43 
-X-CRM114-Status: GOOD (  11.20  )
+X-CRM114-CacheID: sfid-20250501_181314_792681_87AA503E 
+X-CRM114-Status: GOOD (  16.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,51 +123,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This reverts commit 693bbf2a50447353c6a47961e6a7240a823ace02 as kdump
-LUKS support (CONFIG_CRASH_DM_CRYPT) depends on __set_memory_prot.
+When there are CPU and memory hot un/plugs, the dm crypt keys may need
+to be reloaded again depending on the solution for crash hotplug
+support. Currently, there are two solutions. One is to utilizes udev to
+instruct user space to reload the kdump kernel image and initrd,
+elfcorehdr and etc again. The other is to only update the elfcorehdr
+segment introduced in commit 247262756121 ("crash:
+add generic infrastructure for crash hotplug support").
+
+For the 1st solution, the dm crypt keys need to be reloaded again. The
+user space can write true to
+/sys/kernel/config/crash_dm_crypt_key/reuse so the stored keys can be
+re-used.
+
+For the 2nd solution, the dm crypt keys don't need to be reloaded.
+Currently, only x86 supports the 2nd solution. If the 2nd solution
+gets extended to all arches, this patch can be dropped.
 
 Signed-off-by: Coiby Xu <coxu@redhat.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/include/asm/set_memory.h |  1 +
- arch/x86/mm/pat/set_memory.c      | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
+ Documentation/admin-guide/kdump/kdump.rst |  4 ++
+ kernel/crash_dump_dm_crypt.c              | 52 +++++++++++++++++++++--
+ 2 files changed, 52 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 8d9f1c9aaa4c..023994fe6115 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -37,6 +37,7 @@ int set_memory_rox(unsigned long addr, int numpages);
-  * The caller is required to take care of these.
-  */
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index b74d3bed8fff..e25edaa8e533 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -570,6 +570,10 @@ encrypted disk volume. User space can interact with
+     cat /sys/kernel/config/crash_dm_crypt_keys/count
+     2
  
-+int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
- int _set_memory_uc(unsigned long addr, int numpages);
- int _set_memory_wc(unsigned long addr, int numpages);
- int _set_memory_wt(unsigned long addr, int numpages);
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index def3d9284254..df7502ad165c 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2148,6 +2148,19 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
- 		CPA_PAGES_ARRAY, pages);
++    # To support CPU/memory hot-plugging, re-use keys already saved to reserved
++    # memory
++    echo true > /sys/kernel/config/crash_dm_crypt_key/reuse
++
+ 2. Load the dump-capture kernel
+ 
+ 3. After the dump-capture kerne get booted, restore the keys to user keyring
+diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+index fb25f55f1512..5f4a62389150 100644
+--- a/kernel/crash_dump_dm_crypt.c
++++ b/kernel/crash_dump_dm_crypt.c
+@@ -28,6 +28,20 @@ static size_t get_keys_header_size(size_t total_keys)
+ 	return struct_size(keys_header, keys, total_keys);
  }
  
-+/*
-+ * __set_memory_prot is an internal helper for callers that have been passed
-+ * a pgprot_t value from upper layers and a reservation has already been taken.
-+ * If you want to set the pgprot to a specific page protocol, use the
-+ * set_memory_xx() functions.
-+ */
-+int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
++static void get_keys_from_kdump_reserved_memory(void)
 +{
-+	return change_page_attr_set_clr(&addr, numpages, prot,
-+					__pgprot(~pgprot_val(prot)), 0, 0,
-+					NULL);
++	struct keys_header *keys_header_loaded;
++
++	arch_kexec_unprotect_crashkres();
++
++	keys_header_loaded = kmap_local_page(pfn_to_page(
++		kexec_crash_image->dm_crypt_keys_addr >> PAGE_SHIFT));
++
++	memcpy(keys_header, keys_header_loaded, get_keys_header_size(key_count));
++	kunmap_local(keys_header_loaded);
++	arch_kexec_protect_crashkres();
 +}
 +
- int _set_memory_uc(unsigned long addr, int numpages)
+ static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
  {
- 	/*
+ 	const struct user_key_payload *ukp;
+@@ -150,8 +164,36 @@ static ssize_t config_keys_count_show(struct config_item *item, char *page)
+ 
+ CONFIGFS_ATTR_RO(config_keys_, count);
+ 
++static bool is_dm_key_reused;
++
++static ssize_t config_keys_reuse_show(struct config_item *item, char *page)
++{
++	return sprintf(page, "%d\n", is_dm_key_reused);
++}
++
++static ssize_t config_keys_reuse_store(struct config_item *item,
++					   const char *page, size_t count)
++{
++	if (!kexec_crash_image || !kexec_crash_image->dm_crypt_keys_addr) {
++		kexec_dprintk(
++			"dm-crypt keys haven't be saved to crash-reserved memory\n");
++		return -EINVAL;
++	}
++
++	if (kstrtobool(page, &is_dm_key_reused))
++		return -EINVAL;
++
++	if (is_dm_key_reused)
++		get_keys_from_kdump_reserved_memory();
++
++	return count;
++}
++
++CONFIGFS_ATTR(config_keys_, reuse);
++
+ static struct configfs_attribute *config_keys_attrs[] = {
+ 	&config_keys_attr_count,
++	&config_keys_attr_reuse,
+ 	NULL,
+ };
+ 
+@@ -238,10 +280,12 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 		return -ENOENT;
+ 	}
+ 
+-	image->dm_crypt_keys_addr = 0;
+-	r = build_keys_header();
+-	if (r)
+-		return r;
++	if (!is_dm_key_reused) {
++		image->dm_crypt_keys_addr = 0;
++		r = build_keys_header();
++		if (r)
++			return r;
++	}
+ 
+ 	kbuf.buffer = keys_header;
+ 	kbuf.bufsz = get_keys_header_size(key_count);
 -- 
 2.49.0
 
