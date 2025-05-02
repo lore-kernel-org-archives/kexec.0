@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6142EC3ABAA
-	for <kexec@archiver.kernel.org>; Fri,  2 May 2025 18:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BE35C3ABAA
+	for <kexec@archiver.kernel.org>; Fri,  2 May 2025 18:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IgMN5xcNZEglmKIF+1uzv/Wal3ttltUyIImID3D1L3Q=; b=OGbP6BIn/nrLP4OrvZO8080qN2
-	s/+a73Z4MPbitY0CIdl0HJ+HbboXrFvUQMfKMTrAtm4NlKy1z+HfQ2Go4AkREV3Ac5TMVPP9NPQpY
-	kAgjpfRzbldMNSaZFy1ibD+IW9dP5hfT79jKISUK3SQBk/EzNakJRAkFA++eiw4T+4llLL6uDX+uq
-	zxW8ZA+tT+5hkm30sX93/nPGRuUqm0YiB0KuqPeETPoM8bRKupObvdnLysDRIjweO31Ll1Vdo0JBA
-	6YfMuFV9Bj/hf7wBN6lKhafl+fhb3moV/FmzpxZLnE+owXLVFHe087kZSlrr4eufA2EHr2VWiF127
-	D9NbAfng==;
+	bh=YVXuaDGm9mFQcnaXKwAZwy5TIlR8MpYIKkP7qYRxe0Y=; b=MzoyJl1AkPQRnhKo72nTkDR1b4
+	PLy68Kp7YdlU7a0Pc4r1YKa4ghEwGBY7egmoudngHGs6ipa5TdYElEKh+GDwpjBYgOfAxLlDynZQa
+	7nTBeQHW12wmJyAdMbEgBjN/IzeB2veMiZ+phKomGNLkir5+N4J5UKw4NkcMN7BzKo1P9pPRrh9g1
+	MAhTc7xrJzgj0INoW+5XsTT6zhsKOafl13qYB2IPm9aarVMvzoxgXsJB0w10ZbHkUhC3kbo7hDlAt
+	5cxPUm9JWs1m/dy/fbyau1N7zLL8XDInxKggidwCnxXL72NK68CPcOxHArLE5hayBRo/5si32FK6H
+	KUw6Kb6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAvKl-00000002mnq-08UR;
-	Fri, 02 May 2025 18:42:03 +0000
+	id 1uAvRV-00000002nZm-3k5Z;
+	Fri, 02 May 2025 18:49:01 +0000
 Received: from mgamail.intel.com ([192.198.163.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAvIL-00000002mUN-2KeM;
-	Fri, 02 May 2025 18:39:34 +0000
+	id 1uAvRS-00000002nZ2-4BRl;
+	Fri, 02 May 2025 18:49:00 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746211173; x=1777747173;
+  t=1746211739; x=1777747739;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=rH0hTL/ovF1cYLOsrCSmIfftUclU8Y+oSWIs4cAcA3M=;
-  b=ZKv3qHhaHZF/RskMa1v99Lhm7SdO3bmAC+0YohP1LKwoOx+GrqplBUmr
-   eOQrJyyLh0OVx2AtCJX5F9qWxmwdOc6wpyPlmiTj1gDBGnN02BVGpvOkP
-   xwYsfop/EzPPCT7hA1ZH3xuEmwoVZ5B//6KmN6aDFdGxxAMGH5HhZMtxw
-   G7nFU0FZ3nkzsc2zqxX5x8CXCP5eAbSejSKkmT9tJYx135R6dPEY+t9KX
-   wyLbEJ1bGsA5FVUr32tiNZl4l3Us2px7R6lizI+tq6a4aPRSrLKXfX2Fa
-   otNvDQpG+o9X/sJfuZkwY+OCuQUEQk9iEm8IOCC/s67eDHJCKzSTDAIof
-   g==;
-X-CSE-ConnectionGUID: VDT5B75JSPCL8ntQBsjR5g==
-X-CSE-MsgGUID: JM4ClCUQTsWETJsO1NYVzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35518300"
+  bh=WMD/ZpJXQOOvEeURoC3nrQkO/gBhJRC+agPAI49lcNk=;
+  b=YoH20NMqL8UKmMQCNswzeZzJvjsE8mkKmptUZtLcTrzmRSy79cZ2DUqR
+   cqYe5Qxe3/TVXzp9CsftzlkbPGTK92Yn3TY097A7YQ1p3T7aBAM040eBa
+   t+72KRHgSzoJy9cmmUfZhOY/UKnIYBDKZDoFdF1FxxdrG2LyhBw4w3Nox
+   74wB42HkasMe4dEAm2Ve1nSjBlgcJVsj/SgTEU6fs+OGFRclVcsCg5cvL
+   LOTu8wOoW6L07WRLYjg5FdkxSr5Foxcu7AbexSPPizvktbTQySuwyB/tx
+   VpE5LjDIQ/ddne2CFh+pqfGS+R/R7NkkA6JCN0ngFa9qcvrssRsdHZk9C
+   w==;
+X-CSE-ConnectionGUID: 8E6vGGXYTdiurAG9JV4sEw==
+X-CSE-MsgGUID: JiyzGtpxRbOY1mvslo60jA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35519042"
 X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="35518300"
+   d="scan'208";a="35519042"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:33 -0700
-X-CSE-ConnectionGUID: q0hFwjtbQLOO4bDICzglEA==
-X-CSE-MsgGUID: j7CeDysPRziSOaNh1q4L1w==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:48:58 -0700
+X-CSE-ConnectionGUID: mLsB7Ke5S/m3fnkWp6UCEw==
+X-CSE-MsgGUID: pwkXt0gzRcWUAVnMnw+7cg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="134663550"
+   d="scan'208";a="134664791"
 Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:32 -0700
-Message-ID: <425b4cbc-d36c-42b6-9071-3e0afab91441@intel.com>
-Date: Fri, 2 May 2025 11:39:29 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:48:57 -0700
+Message-ID: <c348c507-c06b-4611-87f4-c498e144fa45@intel.com>
+Date: Fri, 2 May 2025 11:48:54 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 13/18] x86/e820: temporarily enable KHO scratch for
- memory below 1M
+Subject: Re: [PATCH v7 14/18] x86/boot: make sure KASLR does not step over KHO
+ preserved memory
 To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
@@ -73,7 +73,7 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
  thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 References: <20250501225425.635167-1-changyuanl@google.com>
- <20250501225425.635167-14-changyuanl@google.com>
+ <20250501225425.635167-15-changyuanl@google.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -119,13 +119,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250501225425.635167-14-changyuanl@google.com>
+In-Reply-To: <20250501225425.635167-15-changyuanl@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250502_113933_612471_57B7F0BA 
-X-CRM114-Status: UNSURE (   7.31  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250502_114859_055242_11C6FE5F 
+X-CRM114-Status: GOOD (  22.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,19 +140,100 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 5/1/25 15:54, Changyuan Lyu wrote:
-> From: Alexander Graf <graf@amazon.com>
-> 
-> KHO kernels are special and use only scratch memory for memblock
-> allocations, but memory below 1M is ignored by kernel after early boot
-> and cannot be naturally marked as scratch.
-> 
-> To allow allocation of the real-mode trampoline and a few (if any) other
-> very early allocations from below 1M forcibly mark the memory below 1M
-> as scratch.
-> 
-> After real mode trampoline is allocated, clear that scratch marking.
+> KHO uses "scratch regions" to bootstrap a kexec'ed kernel. These regions are
+> guaranteed to not have any memory that KHO would preserve.
 
-It's much more clear now, thanks!
+I understand how these changelogs got written. They were written by
+someone thinking *only* about KHO and hacking it into the existing code.
+That's fine and understandable.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+But everyone else is coming at this from the perspective of not knowing
+what scratch memory is.
+
+"Scratch memory" in the KHO world is basically "normal kernel memory" to
+anybody else. So I think it's a disservice to everyone else reading
+these changelogs to act like it's something special.
+
+The thing that *is* special is that KHO kernels don't have a lot of
+"normal kernel memory". At least they're designed to tolerate lots of
+handed-off memory and little "scratch memory"
+
+When you run through these again, could you please try to write these
+changelogs and comments for folks that are not familiar with KHO?
+
+> +/*
+> + * If KHO is active, only process its scratch areas to ensure we are not
+> + * stepping onto preserved memory.
+> + */
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+> +{
+
+I thought we agreed to rework this to unconditionally define the
+kho_scratch structures so the #ifdef can go away?
+
+> +	struct kho_scratch *kho_scratch;
+> +	struct setup_data *ptr;
+> +	int i, nr_areas = 0;
+> +
+> +	ptr = (struct setup_data *)boot_params_ptr->hdr.setup_data;
+> +	while (ptr) {
+> +		if (ptr->type == SETUP_KEXEC_KHO) {
+> +			struct kho_data *kho = (struct kho_data *)ptr->data;
+> +
+> +			kho_scratch = (void *)kho->scratch_addr;
+> +			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
+> +
+> +			break;
+> +		}
+> +
+> +		ptr = (struct setup_data *)ptr->next;
+> +	}
+> +
+> +	if (!nr_areas)
+> +		return false;
+> +
+> +	for (i = 0; i < nr_areas; i++) {
+> +		struct kho_scratch *area = &kho_scratch[i];
+> +		struct mem_vector region = {
+> +			.start = area->addr,
+> +			.size = area->size,
+> +		};
+> +
+> +		if (process_mem_region(&region, minimum, image_size))
+> +			break;
+> +	}
+> +
+> +	return true;
+> +}
+> +#else
+> +static inline bool process_kho_entries(unsigned long minimum,
+> +				       unsigned long image_size)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  static unsigned long find_random_phys_addr(unsigned long minimum,
+>  					   unsigned long image_size)
+>  {
+> @@ -775,7 +824,8 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+>  		return 0;
+>  	}
+>  
+> -	if (!process_efi_entries(minimum, image_size))
+> +	if (!process_kho_entries(minimum, image_size) &&
+> +	    !process_efi_entries(minimum, image_size))
+>  		process_e820_entries(minimum, image_size);
+>  
+>  	phys_addr = slots_fetch_random();
+
+I made a comment about this in the last round, making this the second
+thing that I've noticed that was not addressed.
+
+Could you please go back through the last round of comments before you
+repost these?
+
+Just to be clear: these are making progress, but they're not OK from the
+x86 side yet.
 
