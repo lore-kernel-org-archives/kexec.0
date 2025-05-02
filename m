@@ -4,112 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2067C3ABAA
-	for <kexec@archiver.kernel.org>; Fri,  2 May 2025 01:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FA95C3ABAC
+	for <kexec@archiver.kernel.org>; Fri,  2 May 2025 13:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1fPDWAlkRpZFD9IGtL8ncnibi+0RTZDXokax1ZHMC4M=; b=Kz1CnPC1V2LB46t+E+HrqPL3Y7
-	83uyyHwmm+FSoI4K++eSrfdr0YdP6KjakWUVKVbD2BFV4aGfUyckZpxjc4Pmru0JU0G87+YAg5HhC
-	zkIit+BgTfUp2Z9xuN7ccyL5c6gZvJAJjH20XDkf4+eu5po6sY2XfYFPC5CVyKJzsjzuz4uJ14ZoB
-	UrKgwB6ISBA1XtTySIg3KCpuS6cEP6DchVBs5cyuddc21RMKnyx9ZIKd7G+DjSR4lPlJZwtIR3P22
-	SAkEuRB+y61UZuPngNWfCYia0o0zdY93v4Dkjkl6me5QuIXJ2efihCKpgPBqr6aTkG6TBHFTDeKd4
-	lgjEWXxw==;
+	bh=yUaue560YkltyOlDG0wH62GcwgC5OBuxzVya6sKvsug=; b=hEOAMH9omLoRDeX+Ls8NOc2Yu5
+	Bm3dKyQF7bHVF5ciKcS+KLukVd9RUBgjwccRaOy1EmdFq8KgCqvyG8gBsFYbYfc7nNofanDKCd+TV
+	gbzSznh445KsitPbYcuR83WE+GhRTegV32cWclFr0Kv5QnbqemwQEPfC2ACScaUBymDgLlVd6HuTM
+	/BxufXhK3+6uaKi4m1TzKkmPT/Ak3V1DUe0751Z/IxBMYWDCUXbJ5rXJqSBiPUE+0/VA/ymTst+Ei
+	KeCyfGK+m1fJ8jjjXyVMhmpJ7HbUGwa24n9bhLdQCupB2c0PL9PyDoTRFx6hA64xB6Tty1mm3915X
+	eQMvu4yQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAf0P-00000000UJs-2Vll;
-	Fri, 02 May 2025 01:15:57 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uAqUA-000000023oi-1ErQ;
+	Fri, 02 May 2025 13:31:26 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAey2-00000000TkA-16SD
+	id 1uAqU5-000000023kX-3mGS
 	for kexec@lists.infradead.org;
-	Fri, 02 May 2025 01:13:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746148409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1fPDWAlkRpZFD9IGtL8ncnibi+0RTZDXokax1ZHMC4M=;
-	b=c/Akr2Xyq+9D1Mdt5jPfPHX3uqDo571JGUZoW+W7VC3Jr4FqgiOwRQUSpfZrfMo4eA3rWK
-	NkBEUqGJ0HAgnxdhRUai+EGjC+tXRbP3CpwrqR3BqIPgbZBjQi+gqEuWwQJnz6BleDfVs7
-	3vz92a2ynKIJus9LRI42u/FIBKs7ySU=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-3wEjnM-2Nq2bKTaDyCN3kw-1; Thu, 01 May 2025 21:13:28 -0400
-X-MC-Unique: 3wEjnM-2Nq2bKTaDyCN3kw-1
-X-Mimecast-MFC-AGG-ID: 3wEjnM-2Nq2bKTaDyCN3kw_1746148408
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-227ed471999so13439755ad.3
-        for <kexec@lists.infradead.org>; Thu, 01 May 2025 18:13:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746148407; x=1746753207;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1fPDWAlkRpZFD9IGtL8ncnibi+0RTZDXokax1ZHMC4M=;
-        b=DArKRsG5qjNR7/PlUdQ5biLBYfR1qPMQFUwUYv8rxAxds4RBeH5UVfkZDjJeLojtEx
-         nZ83Wuv2Gby35ohqaIaNWMmHNjM8MZkHoQuxK+ywk7B0Uajr8fIhVTkW/dheJaa8AdNm
-         lGEwWmiB+puwk+otF5wkblch2VpepJUfM1rqh+KO5aPa9iCIfG5dAv1VsTSNVUkuMpah
-         VePPi2Svr7UzGgzLG7x+rzd4nekphcpljBDX8xSf7n7jyO+L3qBnys0WqkthSjLB2zsE
-         yCMsArBtAfLOwL284JjK0gWjWfXhEDOWeMY2Ad9OGMuCln8T5h6kLsyYrS5NmXxLvjOL
-         adjQ==
-X-Gm-Message-State: AOJu0Ywxo4G+6OGhp+mfa6wFjDoCMt9UB3yYzAPQZE7HTqwrioKVwubi
-	Qe114zZ946vtsnRGBnkRhJ2TbougZqlwwZExTfde/iN/ih1aRJIZktF4+203dHnFsOlU6HXVggj
-	msLfDSVa1TZaEQpIC0Xl0BMfsc544/iIzIxRcu0mofx8db6YrTW1kMRUg/YCRfixM84IQCbAFeH
-	u+4zQnTdrrIFrVufxR/CjUEeOJdRjVDTOgvZDF9k3XTg==
-X-Gm-Gg: ASbGncuKK3LQaBKMN3ZaRYzJSPsxXroWk6vQ79EUt7q8XO2eenv+Mjb0H8YW0kGr5fq
-	DVScD38Bqgd2XaaJJX+VT+Sli3/4ec9efyHdfzCGWfPtbauLxNYNZhsFdDqgZMaX2qME3famPDa
-	V7PGIFg7GG3BG4dEOEbtN7b8AGpEhGCs5D5ZpyZBLEaDepqoZofdYFmugyoxK4NRqi8dV/wdCgF
-	kjg5pd9LwS+c25cmsHn9gJ4Ozg9TdnctsCg3XQgjNw+JR/iZxoMIytEl5x4dUHePLuY/PcGEHO6
-	UTc=
-X-Received: by 2002:a17:903:1aa3:b0:224:76f:9e4a with SMTP id d9443c01a7336-22e102d01ebmr17984595ad.14.1746148407501;
-        Thu, 01 May 2025 18:13:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvqxKF7gk97Lr8Vh32QR8SR5Scmsb6rcwbgFjb7HlkZaRVa8Vb6z2gCQMwaiziz7TBRlXfgw==
-X-Received: by 2002:a17:903:1aa3:b0:224:76f:9e4a with SMTP id d9443c01a7336-22e102d01ebmr17984105ad.14.1746148407121;
-        Thu, 01 May 2025 18:13:27 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a476267e0sm1603716a91.39.2025.05.01.18.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 18:13:26 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v9 8/8] x86/crash: make the page that stores the dm crypt keys inaccessible
-Date: Fri,  2 May 2025 09:12:42 +0800
-Message-ID: <20250502011246.99238-9-coxu@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502011246.99238-1-coxu@redhat.com>
-References: <20250502011246.99238-1-coxu@redhat.com>
+	Fri, 02 May 2025 13:31:24 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 779D940E01CF;
+	Fri,  2 May 2025 13:31:06 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id bSZneCzSyNAU; Fri,  2 May 2025 13:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746192658; bh=yUaue560YkltyOlDG0wH62GcwgC5OBuxzVya6sKvsug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oqamq4qlI7br9n5Wd3igLSUN52Oqi154+I/XEpufXyQzY89hKLUPg0BVnjkQXft7l
+	 UZo4Pya0eF+nHC5QI3AEidSN4ivSJbilDTAjd5H9zPx9sXR5KqGM+/9A1AlHCMia1w
+	 8wsiqbkIgZxoZDE5PHOm0YkgotZ+YBQVCw+bqNEzuYuBjW90jWBjZsxzLuO1+7s70n
+	 qQZ0Xc7Kbsu1FD+MMzGBmBpQAwP6iweMZu0nLZ1RM9uV5FOfkPOqseONVHej5WM+db
+	 rw3jIh1HGCJ8UCGbpFjdeIswVFefh6KHfczz3fgWs4iAH/TIadtANJDwlDnPYVKjH0
+	 UlZ/ibOIq+/khKozqesbiuZ6Rj8E54KvYOWfDQoLimYvm3+fg7Tx24F6G/cyJVOG0g
+	 Fjxn53yGtx/yA7X6atX57UuXLrrQbyse39OuUoOtWSCJY1OwFgvbmTzC6l8B3CcKwa
+	 r6RZL5/bLtc5a8M484Hqm88kEoXTtSd/Q3czfvtzM3byaTrfjuCahH/LRxB8nwjcs9
+	 GS+jZAs0TkGRjMa+WtyW1CYLmM+f+L/56wJojZCu/ePjN+lRXy3dYQoeFjyj7WsLWP
+	 NRIfuuh0RQb111hd3SFtfcBMhj82LCQeKKyNBdyvcSyax/pmEJYKYo9+toO8V7ZXOK
+	 pdmGk/nNVdi4Ir5g7G+OLe14=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4775940E0206;
+	Fri,  2 May 2025 13:30:43 +0000 (UTC)
+Date: Fri, 2 May 2025 15:30:32 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, michael.roth@amd.com, nikunj@amd.com,
+	seanjc@google.com, ardb@kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH v3] x86/sev: Fix making shared pages private during kdump
+Message-ID: <20250502133032.GAaBTI-AsaIVn4hOS8@fat_crate.local>
+References: <20250430231738.370328-1-Ashish.Kalra@amd.com>
+ <633b73ac-8983-fe38-dcdc-0b6a08388f5d@amd.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: t3yiBh5Y7IM0vFs_pmFfGJtVjz89VwVq5QkNZ74y2JU_1746148408
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <633b73ac-8983-fe38-dcdc-0b6a08388f5d@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250501_181330_372185_1484BED1 
-X-CRM114-Status: GOOD (  12.26  )
+X-CRM114-CacheID: sfid-20250502_063122_314610_B6E98DC1 
+X-CRM114-Status: GOOD (  23.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,57 +90,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This adds an addition layer of protection for the saved copy of dm
-crypt key. Trying to access the saved copy will cause page fault.
+On Thu, May 01, 2025 at 08:56:00AM -0500, Tom Lendacky wrote:
+> On 4/30/25 18:17, Ashish Kalra wrote:
+> > From: Ashish Kalra <ashish.kalra@amd.com>
+> > 
+> > When the shared pages are being made private during kdump preparation
+> > there are additional checks to handle shared GHCB pages.
+> > 
+> > These additional checks include handling the case of GHCB page being
+> > contained within a huge page.
+> > 
+> > While handling the case of GHCB page contained within a huge page
+> > any shared page just below the GHCB page gets skipped from being
+> > transitioned back to private during kdump preparation.
+> 
+> Why this was occurring is because the original check was incorrect. The
+> check for
+> 
+>  ghcb <= addr + size
+> 
+> can result in skipping a range that should not have been skipped because
+> the "addr + size" is actually the start of a page/range after the end of
+> the range being checked. If the ghcb address was equal to addr + size,
+> then it was mistakenly considered part of the range when it really wasn't.
+> 
+> I think the check could have just been changed to:
+> 
+>   if (addr <= ghcb && ghcb < addr + size) {
+> 
+> The new checks are a bit clearer in showing normal pages vs huge pages,
+> though, but you can clearly see the "ghcb < addr + size" change to do the
+> right thing in the huge page case.
+> 
+> While it is likely that a GHCB page hasn't been part of a huge page during
+> all the testing, the change in snp_kexec_finish() to mask the address is
+> the proper thing to do. It probably doesn't even need the if check as the
+> mask can just be applied no matter what.
 
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Sounds like I'll be getting a v3.1 with Tom's suggestions?
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index a68f5a0a9f37..f615fcb6d35d 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -598,13 +598,35 @@ static void kexec_mark_crashkres(bool protect)
- 	kexec_mark_range(control, crashk_res.end, protect);
- }
- 
-+/* make the memory storing dm crypt keys in/accessible */
-+static void kexec_mark_dm_crypt_keys(bool protect)
-+{
-+	unsigned long start_paddr, end_paddr;
-+	unsigned int nr_pages;
-+
-+	if (kexec_crash_image->dm_crypt_keys_addr) {
-+		start_paddr = kexec_crash_image->dm_crypt_keys_addr;
-+		end_paddr = start_paddr + kexec_crash_image->dm_crypt_keys_sz - 1;
-+		nr_pages = (PAGE_ALIGN(end_paddr) - PAGE_ALIGN_DOWN(start_paddr))/PAGE_SIZE;
-+		if (protect)
-+			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
-+		else
-+			__set_memory_prot(
-+				(unsigned long)phys_to_virt(start_paddr),
-+				nr_pages,
-+				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
-+	}
-+}
-+
- void arch_kexec_protect_crashkres(void)
- {
- 	kexec_mark_crashkres(true);
-+	kexec_mark_dm_crypt_keys(true);
- }
- 
- void arch_kexec_unprotect_crashkres(void)
- {
-+	kexec_mark_dm_crypt_keys(false);
- 	kexec_mark_crashkres(false);
- }
- #endif
+Thx.
+
 -- 
-2.49.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
