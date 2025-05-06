@@ -4,166 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE93FC3ABB6
-	for <kexec@archiver.kernel.org>; Mon,  5 May 2025 21:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1D72C3ABBC
+	for <kexec@archiver.kernel.org>; Tue,  6 May 2025 05:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1T6bvdwBzB9dQHo/km7bg+7vmMl38k1A4ETYSd7aVE8=; b=gRQffBRLP0QiL76OVyP+1W/Ata
-	6Ux6EPePth72cf+YckucSfnV9zOfGe9xDyniSQTXm6rGQvumitABo9OoJDPPKdMDrpwSHgOImwtdW
-	czNkZ1LNe79tZYq7eg7V98r393czRGcBwRXymiraZ2ANB9XLy4ZnfbuV8wRlB5XhtlJd9o6B2KA7o
-	OTGsjANSA3QCL9LBtQiv+L2TPZT+7hXiBypMYtTI2GFZ/GvyQh9HaayT4x/tttcXRhvoX+D4DmGZc
-	t25BGNm8LoHQA3TVadfa5GBPbCKC+3deuMwh5TBc3r+YGkkYK+ShkhzkTE91JwOBA13nJ4SFIb3T4
-	BUKO3FQg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3Thda7S7fTrK58T1VG3G41HE8TXjtD6eOvBZWs1UCRo=; b=gytjXjxW1ke9nbZHl7+HpqAkcf
+	ljLBCM2SlTYKpLVnk7AvFsK1yotSOxwuLraV1qdqVP17HDGTRhy4BS8N5HOgH6h3/9ZPbNoZ+hPZc
+	P6ij2stXgCNgAIfZ7vN7xX0RGkOfIA0LNTo/evs8QM+HrrI4JWr1goNcLlgo9pPNBWVl/qFysu+uH
+	gWJJTAFMYlZZF+JvSZFKin+nIczRv0JdKpYgsQ9r1v+dMgybu0KtnDFRk3ooAjvPTpM7WUDfuVMuk
+	qkHjgjwK6STnt7QVQy4o8gIC6YzaCoJNUm7/gxiL6O2toVc9ZGBRS4A2cGFew2Co5FIB8ovQPIvaL
+	4TOyYbaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uC3gw-00000008fGg-3nTd;
-	Mon, 05 May 2025 21:49:38 +0000
-Received: from mail-co1nam11on20604.outbound.protection.outlook.com ([2a01:111:f403:2416::604] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+	id 1uCAco-0000000ANyZ-1atv;
+	Tue, 06 May 2025 05:13:50 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uC3gu-00000008fG5-0vJg
+	id 1uC6K0-00000009KLM-1yq4
 	for kexec@lists.infradead.org;
-	Mon, 05 May 2025 21:49:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c5s8fmqOv0GH1GENaMRw07XUA71pAWuDV1YWDLOsREfxjSLog6kF8fFN41Wle1+97UK9WTg8KA79pgZZjv0gTfgPuMxs22jxWlfu07J7A+dBJc5xAuulZdr0uw/JT6G+YAetRDb0R018Gx9fv+MLDLFDW+mKETFRQobnb4NCSmO3Fu12XXgLbzk6ToqOLyxb1Um3uNIvFgXVn8pv5LmbOKL8RpPuVQjR+YMyTBzDkk1LFfgFituBFozO1Qbwv5Ny7B1OVqg4/IQae3iC6BThu0hR4fA5kzpe7vzZuDUsRqU5xDzztLdjzoaJvo+5yogQj5ZYbkhLAfMXvY996yYXsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1T6bvdwBzB9dQHo/km7bg+7vmMl38k1A4ETYSd7aVE8=;
- b=l2fT6IPGRfnE8lM39irIQi58NSiTITwkt2Ihin+5faLHuTmIxqpRShfQ4sVtGXqgmi7OsD0NCTq2pWqOr4EtKYC3i2+P+7wuG9VuEVnoXfTpvHQUrNJ0yNuV9G0hslL4YpCF+w5YgYtwpFPvJUo0tIRhyo0KOgBTJ6jm7D5x/88haqZtDv5hbDX3+UQ/f9Of8ubPCGEA1CGmjIaMYo5F8tvogjlfKTLtTIAhwW5F9MLpC+6EpXxxqBmgM3Ns82ineRnDBTxKdPhp7uumxOoRuULWHd3rxrcecE0IXKc6rnUNQN7A/z0xAiZw3q7GLL6/xe/IUMlQ1vf/o1HaFf/TUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1T6bvdwBzB9dQHo/km7bg+7vmMl38k1A4ETYSd7aVE8=;
- b=XOcZVJ1b33v/9+yzVW+lVC9eal8V+P8Dn80yv4IgNdz3ro5fP6OnXPE2t/cIus+3+fBY1pHFmXk5P22mszlFQYpa93iw6Zl8eF9dN0ZfhwlY5BA1nfg3bhJsm/2eEnLzjh4bRZSGif7YHdEQmLU21N8AWVwv+ltpzfJ+KFQHz10=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
- by PH7PR12MB5903.namprd12.prod.outlook.com (2603:10b6:510:1d7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Mon, 5 May
- 2025 21:49:30 +0000
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8699.022; Mon, 5 May 2025
- 21:49:29 +0000
-Message-ID: <d980dc29-9a75-459b-a194-cb225b3fae7b@amd.com>
-Date: Mon, 5 May 2025 16:49:26 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] x86/sev: Fix making shared pages private during kdump
-To: Ingo Molnar <mingo@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, bp@alien8.de, thomas.lendacky@amd.com, hpa@zytor.com,
- michael.roth@amd.com, nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev
-References: <20250502212143.578866-1-Ashish.Kalra@amd.com>
- <aBcxjsdC4tsIgIf2@gmail.com>
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <aBcxjsdC4tsIgIf2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0321.namprd03.prod.outlook.com
- (2603:10b6:408:112::26) To BL3PR12MB9049.namprd12.prod.outlook.com
- (2603:10b6:208:3b8::21)
+	Tue, 06 May 2025 00:38:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746491885;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Thda7S7fTrK58T1VG3G41HE8TXjtD6eOvBZWs1UCRo=;
+	b=WkhlNU5QVndDC7El/Halqpyc7S7sarii0ef2MKnioZEEv7iMyHaPrxEV1FgE7qUiF8tSrv
+	XNuJ4aGVRQUKnxCOiSKcru5msu3dDTIgPw6fh4zyPyCgbj7HJTkVlmF8UIKvGMVaiBd3S/
+	d402YGahYQ6J6VcdufpRgmjdAGeKwEQ=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-3xRPMHnwNT20hHUMG5wNsw-1; Mon, 05 May 2025 20:38:02 -0400
+X-MC-Unique: 3xRPMHnwNT20hHUMG5wNsw-1
+X-Mimecast-MFC-AGG-ID: 3xRPMHnwNT20hHUMG5wNsw_1746491882
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso4467000a91.2
+        for <kexec@lists.infradead.org>; Mon, 05 May 2025 17:38:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746491881; x=1747096681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Thda7S7fTrK58T1VG3G41HE8TXjtD6eOvBZWs1UCRo=;
+        b=jY+oAPMxEI9RwItmOreuZsMTXwXpwfux61SJW6ObHg0b7BfaW1iyZEk66egyYnl8z8
+         qFvZKdJf61W0xIA9luHSFVIUCqYNJajWMkrKhrylocE/uOcVLtgK63/KL+T/v4qyMlP4
+         o5CN7NaCfDfZhJtqEqQHMcUUG4OtAYF4MyEHKBayWhCglPtAUOYKaeo4dpqRQp3bMGtN
+         ZY2nGg52QYPTwuq6wPd7ZrrpXXADYQPsuqO5HfdDOdalvXKzzH290Ps1Mo/nXuYs66j6
+         DsRGjDfmxvOjNfZEGtZ/YyJQWXyl4/yvG+zpo0gfKfS8hj0pw0Ecoy2K+Y7tcap+IGYY
+         Hucw==
+X-Forwarded-Encrypted: i=1; AJvYcCURRhKm+Ex9VLo470k8jk1co9xXjADiI49LYizHdP/WJCG5Ow+PkG479fdG5qRpaZnBvRPACw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwEEmODxnyg9BPNONLN/IevAGisKffWMV0Ub4GgxipTw92RXhqy
+	A+oPZYCIi/ufkwGYcEKeAID+N24RSUtqh8bQMh+EQDuTCoi78s3v65Uh+2IXpVD3t8e5zIrFKD7
+	9Dy+fUcg4VQF6nkl4nM+NX/MV/7IO6OfhGqpref8MAMxlUH5mlxwcrV9AOR0ovgrdbgamFtXZz9
+	FUG0W0CGzE2Rj2SKxrJjwzgZyEgYrgLtSI
+X-Gm-Gg: ASbGncvU7O46cIWJz/IAWyOAweDQ3fEkIW2SsMRaxsp5v4+j8QZvCvRjfW1ufgWjk0J
+	H0/Y0Tz5YW30bHtb2L61GBx+G8if3/7fbqfV6099uT0Q8sstzR0sv6UrYd9lQNMAqcfV/ug==
+X-Received: by 2002:a17:90a:e706:b0:306:b78a:e22d with SMTP id 98e67ed59e1d1-30a619a1979mr13444689a91.20.1746491881638;
+        Mon, 05 May 2025 17:38:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFq92lKdPDOjXTASCfCpZmgjp6GAkt6aAzy0xoeRkNlGPRkJ1vsPpEtKqMuRudM0xPVKmHs5+Hmx/dzYXboDxY=
+X-Received: by 2002:a17:90a:e706:b0:306:b78a:e22d with SMTP id
+ 98e67ed59e1d1-30a619a1979mr13444646a91.20.1746491881257; Mon, 05 May 2025
+ 17:38:01 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|PH7PR12MB5903:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28aaf0fb-8774-4daf-66d6-08dd8c1eb685
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?UUtIajBITElXZWhYd0l4UDc4VVZWSmJDMlRtL0s2VURvRTBoUFhvM0lKOVNs?=
- =?utf-8?B?OVpIckJFVis0bHRoR0V4OWNHeUorZzVISFcrNVhvMHlHbGNHWlpTSXZkanZk?=
- =?utf-8?B?OGFxaU8yc2ZQa3hBcVN2RGM2cTBXalFoQzhCeGF6VW5TaWxwOFd3ajFvOS9Q?=
- =?utf-8?B?VllZQTI2MndoU3oyVHVCaE51b2l4cEdmdUsyR0ZHM1I5TjEwS21UM3FFazRu?=
- =?utf-8?B?SkJSSFBDV3VZV01OT2gvR2hqcEloa0ZDUnlMMmU3UnViRzVrREg2bStzcTVu?=
- =?utf-8?B?MjU1MjZ1d1lLbE1FZEZIa2hXd0JCSk4wbFovK1FFYnBFZFM3cW9GOGoxRmNh?=
- =?utf-8?B?SGdkenVQb1lwVTBOcUNCYWVuZDBDU1N6OUJCR2thM1drelJwemZkZkVLRDU3?=
- =?utf-8?B?QXNIeW96eWo1b3YwSVRxNjNmNzZHbU5ENnVkN1dwcGNtUXNqbXpVYTllVFZa?=
- =?utf-8?B?cFJNQWZZbzlYVTE3VVIxakFyb1k0MW1HaXBQRDVwUkQrNklaUndXRjB5citB?=
- =?utf-8?B?WVdnNmtSb1BCSXZiRUcvbXMySGFUYm13aEJYbmxIZTY5MHFTK1Q1Z0dzMGtS?=
- =?utf-8?B?ODFKZkpSUG5aL29mTFlrZENPQmsrbDZMcktvUXVtWmtwSG4wazdNd3VwVWtX?=
- =?utf-8?B?WUgrWkE2d1RqWUp3eitkR2diaHYzblYveGRKNC9XUHBLZ1FBa2dsaDVXM0gv?=
- =?utf-8?B?SEQ1N3VrMWU5UHIvanh4RjNXeGd4TnE5bkJNMlhoZ0V4Q2JvL0t0eTV1MGMr?=
- =?utf-8?B?KzJNT3NOd1krMC9nZGFvWnBqdjEyQTJSU3JjT1kxcnJFWml0bVNDN1cxVkxr?=
- =?utf-8?B?eVpKK1VSK2JDRi9oOGZxZmdJRFJLYTNyUFZWeUFTVWwyMmRsNzJMYW1PM1V6?=
- =?utf-8?B?NjhhUFJOaHRNUXVINnFISUZ5Vk1BbTFwOFVJNWVkdUltNnpCM2ltcmJ3dUIy?=
- =?utf-8?B?SkdNZTAzVnhHSUttTlBKVjJCaHRhR2ZQYjZCeTZTRTVZcTVvcDNXWTA0Q0tp?=
- =?utf-8?B?b2wrRlY2b21QN3ZOSktHSWU2NVNqeXNxdUhhbzZhbVAxZUQvTmh2MVRKeS9F?=
- =?utf-8?B?UjlJOS9NYXJSZjE0c1dkZ0pzU2YwWmhHTE5qMit1STFWeDY4TnlYWVI4bS80?=
- =?utf-8?B?Vi9uT3M5dWo5ZGxXb05EZXFrTzBTZ2NHb3lXRnE5aFVBalNWbS82QzZoNjQz?=
- =?utf-8?B?NUw0N05MUklYWldhTU1HREdQL00wek9MNDNWeloreE9HYnFHVWFXSCthNUNk?=
- =?utf-8?B?bm9ycEhucEhIZGlKM3VFSEl5ejlyZWR4TUs4a1JoNmdyWjYyTVNVc25wanZB?=
- =?utf-8?B?d1lpQi9kVFhPb2JqR3VQN0NGeWgxeXZlYVI5SmVZY0psdW5qdUZKa1FhOXZW?=
- =?utf-8?B?T1Jla1dNd0k3bkdhV0VJV21XR25IZExOL09RV3dUM3o0YkV6V0pBODZTb1dU?=
- =?utf-8?B?dDlGTmIvRHV4QUVHbDRkUkQ2SUl1QXh0bEhwWUVNd1JUNEZRbXJuaHB4U2xt?=
- =?utf-8?B?N1lyak9RbGVqeEJ2QTZLVkd3QzVNK29EVDhNbDJGRnVQTGlrS1BDS0xCdmZU?=
- =?utf-8?B?OUo2a1B1WWt6djZUWGo2RjBSczdlQjEwUEtVOXpQVXpIR0FiRVZHK3RnN1BN?=
- =?utf-8?B?RkE1RTA4SThWdmxsWWk3aG5NRXpibWdmbGV5cllWMmF3Zk9oRzFyV3o0ME1K?=
- =?utf-8?B?QkRJR1JlaHBxeFpZYWpSVklUUndlTWpUQ0RTZjl1WThGL1U2Z1U1REJzNjZ0?=
- =?utf-8?B?ODFRUEhaM0pIZ0U1aVRaWlZjaTAwM2o4Vnh4RkRhT2JiNFkva3psaXlPN0Fk?=
- =?utf-8?B?Q3BNZUx3UktVcDkxUmdLVEVDYkZpV1hwTElldkMxQlk4TDh3S2lVSFhQLzRo?=
- =?utf-8?B?Z3p1aEh1OWw4M2phcm5PakR3K0s1VFNhSFRScTNINmptdDJSaHJ6SmlBMFZT?=
- =?utf-8?Q?AXYf1iiL250=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZERxY1QvV1EzQjNkN045Q1ZSZ2E0Qkcxcyt3SUx3aWM4SEJVNUtyT1NBdG13?=
- =?utf-8?B?akEwZHBYT2JaSVRYdzJjN2tCRWlvWlpJY2EyVlg2ZW5EZ1R1UGhIcUlmTEow?=
- =?utf-8?B?c0J5d2ZRWS9NNytMTXpYeStDamtxYlozRlo0RUN6WFRodytGblJycUsrV1hr?=
- =?utf-8?B?emN0YVNVdGdnbEVVMlNNVzlOcTQySktkS2poSWY2S2NiNllSc3FLSld4RGEz?=
- =?utf-8?B?dy9BV1hCSDB6SzV2RjdWeE5kbkJqWmJoelZINWg3UEpLZUtHL1Ixb0dIL1ZM?=
- =?utf-8?B?bEJ1dkwvTVQ1ckdsaFh2YmlxZFpEWjZZcnpDakgxblJ3b2h0RmhzUFhxYStY?=
- =?utf-8?B?SklHMVVSUkIybDhZb2VUc3BOSDk3eWNmRXRmZUFjOU5YRE0wZjJrMDI1cFdU?=
- =?utf-8?B?QWNlbVBieGhXOUNsS0lQU0hmV0I2MnNndTdOOGU3cUlPTjBZU0QyNUd4SFpv?=
- =?utf-8?B?NDk5anE5SkdKd2xQQ2ZPZFRXSU0rejVKMkpCN2VNZXRzNWpOTTJ6VXVqZHFK?=
- =?utf-8?B?bkpFK3ZUSXdCUy9TdjZEcjBHMWpLUS8xMGFYMlVNTytONFZIZ3NhUkxnNnJZ?=
- =?utf-8?B?Nm1GejNEeFlyVjlINzBRK3c0SkVCS2hzVTZ3ZDlmdk1sVHhPTzlkWHVjR1V4?=
- =?utf-8?B?a2xCTVgxQllOclFhZ2VObFF3cnlTOUpXOHlDY2RoYWNvOW5vVmt1WDUzd3NV?=
- =?utf-8?B?dnlsM3gwTllJRW9JTUUrVXYvaDlPZVNXRU5QcW13Q3B5d3ordVNMMWltYVE1?=
- =?utf-8?B?Yi9UUW8ybUwzQmRxN3hyb2tCYno5YlhnSnNKVnNHYTkzTHJIanRIVEVZdTU3?=
- =?utf-8?B?SC9ma0lPbm8zdVZRMG1JdG5RNjdSYXlld1N6NW1QdjJ4VjFCUGx0QTNabDdF?=
- =?utf-8?B?SWNrK0hIR0k1VVZ4WHRmaUkwZEdVQ3JYZGU2TFBoemRrUWM3bW5xWnpWNnkz?=
- =?utf-8?B?d0ZubFoyZXhzby8zZmp4OUdlclk1MVlDL3A5OWEyWTJUVkFGdFZJam5jVEZI?=
- =?utf-8?B?N1hjSUpRWXhuWUNnWVJGd1BvRVNqRWIwNG5HckFOeFh0WUt1UUZHVnd5NFdk?=
- =?utf-8?B?bnVRWVkvVENxR0tXZUprNkQ2VGVvc0NXRFY2R3dmMHV5RTcyeFB1OW94L3dl?=
- =?utf-8?B?ejhMK1JqeTdyTFpPZTQ5T2dMaWdGY3lhNmRzdkk4L25xbE5MZkxmSzNGOS9Y?=
- =?utf-8?B?R3k5djRYeGp5LzBoUGpKNm9kTkRPeHpqUzg4OE5tSWJXcGJlKzZzWVozRTNk?=
- =?utf-8?B?K3YwSCtQaFVNdE53WWlYbGprZGp4ZWFVZzlpMDZpZnlRbHRWWFh2dUdWNTdY?=
- =?utf-8?B?R0VDbENpOTZmV2JiK2lFS2M0dW04dzdTVEdIQ3daSHYxbUFUQjF6MFpFTzc3?=
- =?utf-8?B?VVBBZnJEbzZudFlsNDY4YXVVdGEyWUl3VWtVTUxwWTdBZEVjTHZySWx6WUR2?=
- =?utf-8?B?U3EvYnNJV3VoWVZUNU9NYk9BQ25HRFVsN1FCSUxMVktQd001UXZ6b2NHbGM4?=
- =?utf-8?B?STcrSmVXYWZ4TDJqTzJZT09XZnEzRmI0Wjh4enFYVWs2TlJ1YmR2WjJkM0VQ?=
- =?utf-8?B?NTBLY2NSNTY0RmI5ZFRyaDF3V3lSNXN3SXNtOGM0VVpPUDNUditONmdYVVZ1?=
- =?utf-8?B?bW03MGliL2pqNlVINjB5VnIvOGw5bTl0VGxKQmFDOUFzY3pxMHh1TDJla0po?=
- =?utf-8?B?WHdmeERQenBacVhMbGwrT0FOWDlBbGJ2QlRhK3NWc2xxUjFGbUpDaTdjc3Zp?=
- =?utf-8?B?L1QvSTNzVTdZQjFJQUVidFFmTndCZythZkJIQjNZRHFLYXdOaU9VZDN1bmJw?=
- =?utf-8?B?T2ErQW5tZEVIUm8xOW1MQTZhYzk3bXVsc3EvRGNMVzNZSGRMRUVqcTgyT2Fq?=
- =?utf-8?B?c1VqOEhOZWRCWCtjY0pOZU1uazF5aE9yc3RwSkg2VjVENWplUHk3WG0xbm1K?=
- =?utf-8?B?a3Axa0R4V1RBbWMyZ1VpN09RUndDYXJmVWRzUE55c0tWd08wbW5BT0RHUUpr?=
- =?utf-8?B?S0tWTk0wRWYxTWZ4OWx2V2ZBSWw0QWpMM1NraEwvaUlwTVJlbkd4V3liRk5L?=
- =?utf-8?B?RENYNkFQU2xPTXl3aVFxUFFCckRscjNTTU5lS2VmVkZHMlNQSkM1eWt1RG5y?=
- =?utf-8?Q?5N4IMCmmzeXBbCBE28cRNvlyQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28aaf0fb-8774-4daf-66d6-08dd8c1eb685
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 21:49:29.7272
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aedsa4LQ9nQEryokAPFHawaOd/YzB/o86edAIDoD5K5zWSiw5bU4wXczQy7kstsXsttKUDQ8plDCb8j7QpVRiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5903
+References: <20250429041214.13291-1-piliu@redhat.com> <20250429041214.13291-5-piliu@redhat.com>
+ <CAADnVQKTSubuisSBap_J=tgO15fCdtwF-NDY_1HLP_m6o28mhw@mail.gmail.com>
+ <CAF+s44QM55AtGyquKvj0XAzZAjOii7VJYWsGD50iK3+r6GZSmg@mail.gmail.com> <CAADnVQKKr7C+eRin=efg5umLumghGfYJst2MwDwpB5bEtt4rSA@mail.gmail.com>
+In-Reply-To: <CAADnVQKKr7C+eRin=efg5umLumghGfYJst2MwDwpB5bEtt4rSA@mail.gmail.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Tue, 6 May 2025 08:37:50 +0800
+X-Gm-Features: ATxdqUFuTVAhoinefB-V1imhTA7ZCVA5NjxlNSYorcyBkyCWXUw-XhLHlUTVcvc
+Message-ID: <CAF+s44RC4UfSwckLR6tHJo=Owv8jvaBp-wN3PRGbYC3G3EoHYg@mail.gmail.com>
+Subject: Re: [RFCv2 4/7] bpf/kexec: Introduce three bpf kfunc for kexec
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, kexec@lists.infradead.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Lvp8kI8Oj--Y3ZbSOByWylG6VF8YgK4_1B0SiVXRIWc_1746491882
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250505_144936_317747_7DE4C6C2 
-X-CRM114-Status: GOOD (  21.12  )
+X-CRM114-CacheID: sfid-20250505_173808_583436_3A539CCF 
+X-CRM114-Status: GOOD (  20.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -178,91 +115,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Alexei,
 
-On 5/4/2025 4:21 AM, Ingo Molnar wrote:
-> 
-> * Ashish Kalra <Ashish.Kalra@amd.com> wrote:
-> 
->>  
->> -			if (addr <= ghcb && ghcb <= addr + size) {
->> +			/* Handle the case of a huge page containing the GHCB page */
->> +			if (addr <= ghcb && ghcb < addr + size) {
->>  				skipped_addr = true;
->>  				break;
->>  			}
->> @@ -1131,9 +1132,8 @@ static void shutdown_all_aps(void)
->>  void snp_kexec_finish(void)
->>  {
->>  	struct sev_es_runtime_data *data;
->> +	unsigned long size, mask, ghcb;
->>  	unsigned int level, cpu;
->> -	unsigned long size;
->> -	struct ghcb *ghcb;
-> 
-> So this patch just morphs the type of 'ghcb' from a typed pointer to 
-> unsigned long, while most 'ghcb' uses in coco/ are typed pointers?
-> 
-> That's just sloppy and fragile. Please just keep 'ghcb' a typed 
-> pointer, and introduce *another* variable for the virtual address to 
-> the hugepage.
-> 
->>  	pte_t *pte;
->>  
->>  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
->> @@ -1157,11 +1157,14 @@ void snp_kexec_finish(void)
->>  
->>  	for_each_possible_cpu(cpu) {
->>  		data = per_cpu(runtime_data, cpu);
->> -		ghcb = &data->ghcb_page;
->> -		pte = lookup_address((unsigned long)ghcb, &level);
->> +		ghcb = (unsigned long)&data->ghcb_page;
-> 
-> If 'ghcb' has the proper type then this ugly forced type-cast goes 
-> away.
-> 
->> +		pte = lookup_address(ghcb, &level);
->>  		size = page_level_size(level);
->> +		mask = page_level_mask(level);
->> +		/* Handle the case of a huge page containing the GHCB page */
->> +		ghcb &= mask;
-> 
-> This too calls for using a separate variable for this, because after 
-> this masking 'ghcb' is very much *not* the location of a GHCB page 
-> anymore...
+Sorry to reply late since I just got back from holiday.
+
+On Thu, May 1, 2025 at 12:16=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Apr 30, 2025 at 3:47=E2=80=AFAM Pingfan Liu <piliu@redhat.com> wr=
+ote:
+> >
+> > On Wed, Apr 30, 2025 at 8:04=E2=80=AFAM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+[...]
+
+> >
+> > Thanks for your suggestion. I originally considered using these kfuncs
+> > only in kexec context (Later, introducing a dedicated BPF_PROG_TYPE
+> > for kexec).
+>
+> We do not add new prog types anymore.
+> They're frozen just like the list of helpers.
 >
 
-Sure, i will use a separate variable for this and keep ghcb as a typed pointer.
- 
->>  		set_pte_enc(pte, level, (void *)ghcb);
->> -		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
->> +		snp_set_memory_private(ghcb, (size / PAGE_SIZE));
-> 
-> Do we know whether this is safe? Could the huge page around the GHCB 
-> page contain anything else? What is the structure of this memory area, 
-> is it all dedicated to the GHCB, or could it contain random other data?
-> 
+Got it.
 
-There will be an issue if the huge page containing the GHCB 
-has both private and shared memory contents in it.
+> > They are placed under a lock so that a malice attack can
+> > not exhaust the memory through repeatedly calling to the decompress
+> > kfunc.
+>
+> attack? This is all root only anyway and all memory is counted
+> towards memcg.
+> Make sure to use GFP_KERNEL_ACCOUNT and something similar
+> to bpf_map_get_memcg.
+>
 
-When we skip a huge page containing the ghcb in unshare_all_memory()
-then that huge page should have been containing all shared memory,
-because if it had other private memory contents then there would be a
-mismatch between NPT entry and RMP entry (as RMP would have 4K sub-entries
-for private and shared mappings and then there would have been size type
-mismatch between NPT and RMP tables) causing an RMP fault and then correspondingly
-NPT would have been smashed/split into 4K private and shared mappings.
+Your clarification makes sense. I will follow that guide.
 
-So at end of snp_kexec_finish(), when will be revisiting this huge page
-again which contains the ghcb, it should be containing other shared memory
-along with the ghcb as this whole range was skipped earlier and now
-we should be able to convert this huge page back to private.
+> > To generalize these kfunc, I think I can add some boundary control of
+> > the memory usage to prevent such attacks.
+>
+> Don't reinvent the wheel. memcg is the mechanism.
+>
 
-Thanks,
-Ashish
+Sure. Thanks for your insight. It is helpful.
 
-> Thanks,
-> 
-> 	Ingo
+Best Regards,
+
+Pingfan
+
+> > > They also must be KF_SLEEPABLE.
+> > > Please test your patches with all kernel debugs enabled.
+> > > Otherwise you would have seen all these "sleeping while atomic"
+> > > issues yourself.
+> > >
+> >
+> > See, I will have all these debug options for the V3 test.
+> >
+> > Appreciate your insight.
+> >
+> > Regards,
+> >
+> > Pingfan
+> >
+>
 
 
