@@ -4,80 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D66F5C3ABBE
-	for <kexec@archiver.kernel.org>; Tue,  6 May 2025 06:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E5D4C3ABBC
+	for <kexec@archiver.kernel.org>; Tue,  6 May 2025 07:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ef8W+vMYwBS9RnWnXRE7fKcNBov/mCBwOP6v8SZB5sY=; b=lqmrn3PlVjMElLKZXhd3Gjeu6n
-	k1GdfTy+G70ITPj2UfiVPZSIRGeGoHmduo8Ajmpp7cACzSDmPw//JsgtKXwph5QYQYnifW9J3tIjo
-	9QLBbLTADzwwM0uGq1E0JTzCao4b+kythboQRZcMcVnVoTDV33h96eyCG6b/Mo3xlKid2VzRWAzQ4
-	TIQ0S7KkloqgiRakFSv5/3iqqf886oDRe7IOcwVyvnQ/89PGssJRI2yCESM95oer4NYV4AEdgK7E0
-	TkJbdwDRJYE20jmzJutCoteVrZBntJykk7Y2jkj6xPeAgitKuoATjoVMazQ0VoH5+oCVIs9uHi45u
-	W15ySeXA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=OF7lSyu4ohHl48KZgXXK4SGwvHPfTbkHjZaGwymcmuQ=; b=0cup5XHHN9RlO/t79U+ZeJWPr6
+	KJgcotPFKiCXp0bUrVNrJRSUjwvRGruIFuF6wy667CT/pepNEVCWMXz+AdVfQhTr2Zsbsh7z4yfYc
+	4AAZJ3xl7hDAkb6Axla4gCozEu39fOtKA0CGR9WJT/RgPuyBUfdm3xAVz/exWu6IUBCp4FFDTrNjo
+	htef8S8ez4ejifQYGaiGjkZp/KgCx+LygjqHoHTZ9lJ4auByjfUWRLCUqaivOx/cs5cf5s8HI8WMv
+	FFr8TBEPSSsT8styblluW/9GyUHhDSvqb8zfMhS0JPZ+B60G1lBmLtqbBT344o+v+m7UJ7mn/1M5j
+	9YwRRwHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCBqK-0000000AhAk-1dwc;
-	Tue, 06 May 2025 06:31:52 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uCD0u-0000000B0Lg-0MV1;
+	Tue, 06 May 2025 07:46:52 +0000
+Received: from mail.bizboard24.com ([141.95.54.37])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCBB7-0000000AWdx-0MzQ
+	id 1uCD0r-0000000B0JJ-3Vvs
 	for kexec@lists.infradead.org;
-	Tue, 06 May 2025 05:49:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746510554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ef8W+vMYwBS9RnWnXRE7fKcNBov/mCBwOP6v8SZB5sY=;
-	b=bmRnuryrH9CKMbt4tT/1ePWneXjRUPGHgN+/jHX9JS+VQneGi431PyQ89dYWGlxedRhIPe
-	Nc8/v8ZeFTKWJGluVVYkKKvvMJv4f85oqMfANF5QoMuaE82WmxSA7qqFydiv11bTfb0qN6
-	S/l17PkvDZkYMxK15Gkamg42JR6a3e4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-63-KDeYyDfQNRafeLfXFymNcw-1; Tue,
- 06 May 2025 01:49:13 -0400
-X-MC-Unique: KDeYyDfQNRafeLfXFymNcw-1
-X-Mimecast-MFC-AGG-ID: KDeYyDfQNRafeLfXFymNcw_1746510549
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ADDE31800EC9;
-	Tue,  6 May 2025 05:49:08 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 729071956094;
-	Tue,  6 May 2025 05:49:05 +0000 (UTC)
-Date: Tue, 6 May 2025 13:49:01 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v13 0/9] ima: kexec: measure events between kexec load
- and execute
-Message-ID: <aBmizZATrxhXbWyE@MiWiFi-R3L-srv>
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
- <aApMnEl1Xzarmimn@fedora>
- <7337e27f-cc54-4c51-91d8-11d875baee49@linux.microsoft.com>
+	Tue, 06 May 2025 07:46:51 +0000
+Received: by mail.bizboard24.com (Postfix, from userid 1002)
+	id A12352399C; Tue,  6 May 2025 07:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizboard24.com;
+	s=mail; t=1746517580;
+	bh=OF7lSyu4ohHl48KZgXXK4SGwvHPfTbkHjZaGwymcmuQ=;
+	h=Date:From:To:Subject:From;
+	b=BMrDe9CyJ+f4uwxKxeYuAbsLma1HRDDb0u6guLWFliMu9tN/gxvRJXRX5KCgYiEm6
+	 VSNHWqA4I80JBTObIFAnzuyaU0PQoFyEXnvRqOZI6PeWVwmE7yxHzIsER2fWf+CHee
+	 fIG+krUB+OxIgnBBikdijQaPvS3m9ojnq/gzHYESqSKvisKP22npve/lVZR+nR4CK/
+	 UUYTu8o4bBtB+a0eKNfH4L1JvNyfpIfbPb//cJ/QetqV3OLqXD5Qep4VQFyG/h7J1v
+	 GtNBx/vaUqdOR8rwg/9h0P1ShzSPE4bA6M+Nr0h+koFL9u3rpiAu8bR+fIPLSwOnmZ
+	 wtduwgbyw1E3g==
+Received: by mail.bizboard24.com for <kexec@lists.infradead.org>; Tue,  6 May 2025 07:45:50 GMT
+Message-ID: <20250506064500-0.1.24.8zyi.0.sbw9oxlq4l@bizboard24.com>
+Date: Tue,  6 May 2025 07:45:50 GMT
+From: "Bruno Volf" <bruno.volf@bizboard24.com>
+To: <kexec@lists.infradead.org>
+Subject: Bakery Machines
+X-Mailer: mail.bizboard24.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7337e27f-cc54-4c51-91d8-11d875baee49@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250505_224917_206037_8A80CF67 
-X-CRM114-Status: GOOD (  23.83  )
+X-CRM114-CacheID: sfid-20250506_004650_021769_8CB24960 
+X-CRM114-Status: UNSURE (   1.27  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,46 +67,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/02/25 at 09:25am, steven chen wrote:
-> On 4/24/2025 7:37 AM, Baoquan He wrote:
-> > Hi Steven,
-> > 
-> > Could you test below code and post a formal patch to not copy
-> > measurement list buffer to kdump kernel? Below log is just for your
-> > reference, please feel free to modify or rephrase.
-> > 
-> > ===
-> > Kdump kernel doesn't need IMA to do integrity measurement.
-> > Hence the measurement list in 1st kernel doesn't need to be copied to
-> > kdump kenrel.
-> > 
-> > Here skip allocating buffer for measurement list copying if loading
-> > kdump kernel. Then there won't be the later handling related to
-> > ima_kexec_buffer.
-> > ===
-> > 
-> > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> > index 38cb2500f4c3..7362f68f2d8b 100644
-> > --- a/security/integrity/ima/ima_kexec.c
-> > +++ b/security/integrity/ima/ima_kexec.c
-> > @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
-> >   	void *kexec_buffer = NULL;
-> >   	int ret;
-> > +	if (image->type == KEXEC_TYPE_CRASH)
-> > +		return;
-> > +
-> >   	/*
-> >   	 * Reserve extra memory for measurements added during kexec.
-> >   	 */
-> > 
-> Hi Baoquan,
-> 
-> I tested the kernel with above change. Normal soft reboot works fine.
-> 
-> I will post the patch for review.
+Dear Sir/Madam,
 
-Just come back from Labor Day public holiday. I went through the code
-flow, the code should be fine. I will test it by checking the setup_data
-if IMA data is excluded in kdump case.
+How close are you to the idea of precise, flawless bread production, wher=
+e every process runs automatically, and quality remains consistent?
 
+With this vision in mind, we have been manufacturing bakery equipment for=
+ over 30 years, including sourdough machines, fermenters, leavening tanks=
+, and starter cultures.
+
+We meticulously combine robust construction and hygienic designs that mee=
+t ATEX and FDA standards. Through automation, we eliminate the risk of hu=
+man error, lighten staff workloads, and shorten production times. The unp=
+aralleled consistency of fermentation processes allows you to achieve sta=
+ble product quality and higher profitability.
+
+We offer technologies tailored to small and medium-sized businesses, as w=
+ell as advanced systems for industrial bakeries. Our solutions enable "cl=
+ean label" production, which is increasingly valued by consumers.
+
+Would you like to see how our machines work in practice? We would be happ=
+y to arrange a meeting and provide further details.
+
+
+Best regards
+Bruno Volf
 
