@@ -4,102 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D72B4C3ABBE
-	for <kexec@archiver.kernel.org>; Wed,  7 May 2025 03:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B86EBC369DC
+	for <kexec@archiver.kernel.org>; Wed,  7 May 2025 06:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=; b=sDOsz0QWaBqlefZxliuSShflHP
-	ZrbLLZXOlEBwUvlRn+2OGkYXCTJi/JN2BSrUuOCEV6JtTAb8lHFenFO6yYYaC/S5cy2ntriW3/Xc/
-	wrv6mYi3fPOk5bacAD8jmb/pH2+TNHsQl0DlDPgWB8Aa/t971uSm+KEBzHBA8tzcrEaODtxDi7v1H
-	G3hZ3RGs4G2/96xF4qhHxJXF9hehDk8Ee+hL1dOgV7f0ixTogpRVuwkCxofEMpLU8UXEwOeKAq2jc
-	uy5U1076fpalcLorpZLAfUuNYRCyvUXgZ2qjatoxvDf6VY5KTkYxThr9HA9Q0WvhutNLADNdL5as8
-	V3/Iw8KQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=atN51cLBXeN+9mmQDhab707obTEJW2lB6PjvasxrU9I=; b=d+ZoKZK43zKDsvY67GhbtwRBIl
+	akNAs0lWR54CVgWdNTHArV/4hY/M/Y+A6Or6fvMsTLVh7zkjfcAbLfDgr45BM0HsrAJhrwGCF2W/h
+	xzuMPt3LJAe5tVH6DMTnFiKOTPK1mU721sTietto1o12de1eDVxu7sNlrngmIn6p9+c0Oq2/ZJXSL
+	N/LwyD0FDa8JaRlJJ5BMzlEPP+G7uo0DmTUQZqeW3XeM+6wl1hmVx73Y7EnwnNxt2PujKQI2e0XEB
+	1uQQo6UJgrGyRdDv69URHZaqjcjEmwDpcSzDMhYnUT0LCcwq2sAnvCBhb2M646ZZJQF8gT/klR25O
+	pk9OawaQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCVBI-0000000E2oQ-2HAP;
-	Wed, 07 May 2025 03:10:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uCY0I-0000000EL8B-3Wkk;
+	Wed, 07 May 2025 06:11:38 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCVBF-0000000E2mC-3SXP
+	id 1uCY0H-0000000EL7t-3079
 	for kexec@lists.infradead.org;
-	Wed, 07 May 2025 03:10:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746587445;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
-	b=OY0lCZNqH4gFdgWxhwePg1l3Il4NuSu9znjaUFUDW3BMv3sA918PVVT9eJjbOeNCNMvmQC
-	L2HThMvpI/8cHu/p8yo9DWMOajlMkrg4zqBe22t2wzukl7dhz4QtJeS8JOEMDu3Rfn9MqQ
-	Xhxs+TlEBY1zxrca0ery+K4dAqdKFN4=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-YoGIpXawOtagT12cJ3B6EQ-1; Tue, 06 May 2025 23:10:40 -0400
-X-MC-Unique: YoGIpXawOtagT12cJ3B6EQ-1
-X-Mimecast-MFC-AGG-ID: YoGIpXawOtagT12cJ3B6EQ_1746587440
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22e3abea7e8so14698205ad.2
-        for <kexec@lists.infradead.org>; Tue, 06 May 2025 20:10:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746587440; x=1747192240;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
-        b=ILW5PXCFzrThzvn7tOGPxoaYxw6ELicImkidMf00/CHSiNLg0bZgibtwpJnqCMC7rr
-         LXPLglfhYd9IWhkmTjBJmmhzZrLQA6qTt/JVMiwESJku2nOUw3EjGvCScTRGWVrU1deC
-         vvYxWgi7XN5JW1YCwYAMe0tgzQqAzS9J4h4vTqiwryCCTxB6GAGabsdmfpSOzjr2tLEj
-         Sc3VzyGXW+dpDdCAdpMvxkr5BdIJBICV2oJEG7EZn8K3pzYA0qXb/cjPBARD1tloNxP9
-         BFH67h5iZorEwFG0pkrGqbbVYoJ6ZuhsN4hK3/pwSsTNyLqQvU+93RW/ED0MCLJvvsY6
-         texA==
-X-Gm-Message-State: AOJu0Yxmb1miIMUelhUOAvqxfqVuCN4uWFuMwtljNfgWhJ74YgIGAGWf
-	5HOJie761aKTc2MbnJ6P0sdSWGVeVkfGlwuH/FRM7HFV0jc0Nxxuxh69OlX9mO5m+tn5sY4L1Hx
-	9Mz0ZRg8UE8GZiiS+P/TveP6oXw3vewRN+b3FuCQ2q9R4Thndf9qDHVQ6HA==
-X-Gm-Gg: ASbGncvZ5ODgsQXODTVDhOgPTYu7gZlZda9THj1y07HDFqNa8ooB3F0LdiFqSujtvpB
-	+iorUXYJLH3SujgYWaP7N53kHXR2HoogLD7cpQlyvJcxmztyD2YmRKwxLNT5QknCxiQfXxrKrkt
-	IU5GbSQ3Jt8NtYZMhFrHfDB/CwQoh4iT+oYb3S5c5k/2AbAGwp2RvYwb+BO9dWx+xB1jOWSr+nb
-	MppZTkU8pE1B0bC0jP7yH3og07gQzlLVW8jTqtAuXTyGj9l/9LLPjtSpepOOSW0mIW5N4BA1xD4
-	M9g=
-X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846825ad.4.1746587439734;
-        Tue, 06 May 2025 20:10:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0UfEi+55Sr/HmVL17k/pyRle1Z4csFmmJpk2KYXZvLlD0HVZ1oUcDI55EPbEuyt069E4aHg==
-X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846475ad.4.1746587439348;
-        Tue, 06 May 2025 20:10:39 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e98d0sm82766195ad.80.2025.05.06.20.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 20:10:39 -0700 (PDT)
-Date: Wed, 7 May 2025 11:05:27 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v9 6/8] Revert "x86/mm: Remove unused __set_memory_prot()"
-Message-ID: <idxxt5vwxx65n73rau2pr72bnw4nopyxi67otivqdzrlnt6tnn@7uygzqael66u>
-References: <20250502011246.99238-1-coxu@redhat.com>
- <20250502011246.99238-7-coxu@redhat.com>
- <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
+	Wed, 07 May 2025 06:11:37 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id A3BC46116E
+	for <kexec@lists.infradead.org>; Wed,  7 May 2025 06:11:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2FFC4CEE7
+	for <kexec@lists.infradead.org>; Wed,  7 May 2025 06:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746598296;
+	bh=TmZaYt6N+jQjFBUkpjvxfJb2Urr5u1YG/iICGM8bSeg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cQQ3TVhOMyCuip9wp+PeV6gdgsjMpA5a9UudTbbC7YAaqqk5COt1mSQKO9swkO+Me
+	 NdPGyDbaNo4MkIko7TsRhYWfWbAwMSXn1eGq3Zfdvk/r1P48bxerBhf2bvxkLyB4vl
+	 5KQ5mqO+FDe35HnIQzKSX29Dn2mouzYi/qeCON55KSfNu/CDi0ftLxDo7Z4XM+xcyg
+	 X08vFJfzetJ87iF7fAsPM0MUTFDsd+sIFyY1hEJ3H5T1GqUqW+uTXmhdyEUTwSgTt9
+	 47iJiPMCixNG9uGT0iZqEr4xgaAuB2qj5GhesRE8eA3RC9/a1zJdaFm0qaAoiAHwE+
+	 RCknl7b0xjm5A==
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso23485e9.1
+        for <kexec@lists.infradead.org>; Tue, 06 May 2025 23:11:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUtrcAzOB36yST5CJ3NFa1y5B0teyITVkk2vqC3Vn6yyRaT79FirsLPICm7et7BO7yWSFPhzg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywu0WRPJ796E9r66oEYMBz4QigWnyKes6UUmh2GMeusuoET7IAR
+	imRGqM9cZcvviJ9KHZ2aX6PQBj7uaWxP6sDfthD+TtYtreGi+FbVEyJp9o7yP6vN+GVmDLsi2db
+	lD78k3FaNhb3R+PO9/ffYtWNM7FW5ov1l7HaY
+X-Google-Smtp-Source: AGHT+IF8WOZ7R4lfzOFolBubziTTMk14HYqFdnQSsTJDa5AeHUpZ2inrzsI5KtX66c7AeAT/7L5iiKY80KbMBLVjxDk=
+X-Received: by 2002:a05:600c:210:b0:439:9434:1b6c with SMTP id
+ 5b1f17b1804b1-441d4d43128mr457005e9.3.1746598294794; Tue, 06 May 2025
+ 23:11:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: EbBNrcVzuOGKNfMOipMtBMSqOC0CaltKTHBAvuAl10M_1746587440
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250506_201045_933962_FB3EE737 
-X-CRM114-Status: GOOD (  13.59  )
+References: <20250310120318.2124-1-arbn@yandex-team.com> <CAF8kJuMmiBEoaAL=XYcj6Y1qfAVd=Q_s9iT0wi70LJYn6ht42w@mail.gmail.com>
+ <b9a80cff-8315-4be9-9a01-3c618b00d3e9@gmail.com>
+In-Reply-To: <b9a80cff-8315-4be9-9a01-3c618b00d3e9@gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Tue, 6 May 2025 23:11:23 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuNq1TNr=VTNN+8LQukAduZ7sMf0f+kFNApWtgax5cqxEQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHSCbePAn9M4EZSswnG4Ge7-TOAV2vuCQEavTGSq0CquAEPYwYvURTpbtY
+Message-ID: <CAF8kJuNq1TNr=VTNN+8LQukAduZ7sMf0f+kFNApWtgax5cqxEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] KSTATE: a mechanism to migrate some part of the
+ kernel state across kexec
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
+	James Gowans <jgowans@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, 
+	Pratyush Yadav <ptyadav@amazon.de>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,64 +88,265 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, May 03, 2025 at 11:46:05PM -0700, Andrew Morton wrote:
->On Fri,  2 May 2025 09:12:40 +0800 Coiby Xu <coxu@redhat.com> wrote:
+On Mon, May 5, 2025 at 7:37=E2=80=AFAM Andrey Ryabinin <ryabinin.a.a@gmail.=
+com> wrote:
+> >
+> > With that, it would be great to see a KSTATE build on top of the
+> > current version of KHO. The V6 version of KHO uses a recursive FDT
+> > object. I see recursive FDT can map to the C struct description
+> > similar to the KSTATE field description nicely. However, that will
+> > require KSTATE to make some considerable changes to embrace the KHO
+> > v6. For example, the KSTATE uses one contiguous stream buffer and KHO
+> > V6 uses many recursive physical address object pointers for different
+> > objects.  Maybe a KSTATE V3?
+> >
 >
->> This reverts commit 693bbf2a50447353c6a47961e6a7240a823ace02 as kdump
->> LUKS support (CONFIG_CRASH_DM_CRYPT) depends on __set_memory_prot.
->>
->
->x86_64 allmodconfig:
->
->In file included from drivers/gpu/drm/i915/gt/intel_ggtt.c:6:
->./arch/x86/include/asm/set_memory.h:40:57: error: unknown type name 'pgprot_t'
->   40 | int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
->      |                                                         ^~~~~~~~
->
->I did this:
->
->
->From: Andrew Morton <akpm@linux-foundation.org>
->Subject: revert-x86-mm-remove-unused-__set_memory_prot-fix
->Date: Sat May  3 11:38:32 PM PDT 2025
->
->x86 set_memory.h needs pgtable_types.h for pgprot_t.  Obtain it via the
->higher-level pgtable.h.
->
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Coiby Xu <coxu@redhat.com>
->Cc: "Daniel P. Berrange" <berrange@redhat.com>
->Cc: Dave Hansen <dave.hansen@intel.com>
->Cc: Dave Young <dyoung@redhat.com>
->Cc: Jan Pazdziora <jpazdziora@redhat.com>
->Cc: Liu Pingfan <kernelfans@gmail.com>
->Cc: Milan Broz <gmazyland@gmail.com>
->Cc: Ondrej Kozina <okozina@redhat.com>
->Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
->Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->---
->
-> arch/x86/include/asm/set_memory.h |    1 +
-> 1 file changed, 1 insertion(+)
->
->--- a/arch/x86/include/asm/set_memory.h~revert-x86-mm-remove-unused-__set_memory_prot-fix
->+++ a/arch/x86/include/asm/set_memory.h
->@@ -4,6 +4,7 @@
->
-> #include <asm/page.h>
-> #include <asm-generic/set_memory.h>
->+#include <asm/pgtable.h>
->
-> #define set_memory_rox set_memory_rox
-> int set_memory_rox(unsigned long addr, int numpages);
->_
+> Yep, I'll take a look into combinig KSTATE with KHO.
 
-Thanks for catching this issue and providing a clean fix! I'll make sure
-future patches pass allmodconfig. And also thanks for pulling the patch
-set into -mm tree!
+Wonderful. KHO use kho_preserve_folio() to mark a folio to be preserved.
+After kexec, it use kho_restore_folio/page() to restore a folio.
+There is also kho_preserve_phys(), you should only use it for memory
+that does not have a page struct, e.g. CMA.
 
--- 
-Best regards,
-Coiby
+You can take a look at the current version of luo and replace the libFDT
+usage with KSTATE, that would be a good starting point.
 
+> > debugging purposes. It is a very useful feature of FDT to dump the
+> > current saving state into a human readable form. KSTATE can have the
+> > same feature added.
+> >
+>
+> kstate_field already have string with name of the field:
+>
+> #define KSTATE_BASE_TYPE(_f, _state, _type) {           \
+>         .name =3D (__stringify(_f)),                      \
+>
+> Currently it's not used in code, but it's there for debug purposes
+
+That is good to know.
+We need to have something like fdt debugfs node for kstate.
+>
+>
+> >>    While with KSTATE solves the same problem in more elegant way, with=
+ this:
+> >>         struct kstate_description a_state =3D {
+> >>                 .name =3D "a_struct",
+> >>                 .version_id =3D 1,
+> >>                 .id =3D KSTATE_TEST_ID,
+> >>                 .state_list =3D LIST_HEAD_INIT(test_state.state_list),
+> >>                 .fields =3D (const struct kstate_field[]) {
+> >>                         KSTATE_BASE_TYPE(i, struct a, int),
+> >>                         KSTATE_BASE_TYPE(s, struct a, char [10]),
+> >>                         KSTATE_POINTER(p_ulong, struct a),
+> >>                         KSTATE_PAGE(page, struct a),
+> >>                         KSTATE_END_OF_LIST()
+> >>                 },
+> >>         };
+> >>
+> >>
+> >>         {
+> >>                 static unsigned long ulong
+> >>                 static struct a a_data =3D { .p_ulong =3D &ulong };
+> >>
+> >>                 kstate_register(&test_state, &a_data);
+> >>         }
+> >>
+> >>        The driver needs only to have a proper 'kstate_description' and=
+ call kstate_register()
+> >>        to save/restore a_data.
+> >>        Basically 'struct kstate_description' provides instructions how=
+ to save/restore 'struct a'.
+> >>        And kstate_register() does all this save/restore stuff under th=
+e hood.
+> >
+> > It seems the KSTATE uses one contiguous stream and the object has to
+> > be loaded in the order it was saved. For the PCI code, the PCI device
+> > scanning and probing might cause the device load out of the order of
+> > saving. (The PCI probing is actually the reverse order of saving).
+> > This kstate_register() might pose restrictions on the restore order.
+> > PCI will need to look up and find the device state based on the PCI
+> > device ID. Other subsystems will likely have the requirement to look
+> > up their own saved state as well.
+> > I also see KSTATE can be extended to support that.
+> >
+>
+> Absolutely agreed. I think we need to decouple restore and register, ie r=
+emove
+>  restore_misgrate_state() from kstate_register(). Add instance_id argumen=
+t to kstate_register(),
+> so the PCI code could do:
+>             kstate_register(&pci_state, pdev, PCI_DEVID(pdev->bus->number=
+, pdev->devfn));
+Need to have the domain number with PCI_DEVID as well.
+
+I am expect to call some thing like kstate_save() in the LUO prepare call b=
+ack.
+LUO has a few stage. "Prepare" is where you save most of the stuff and
+VM is still running.
+"Reboot" is where VM is already paused. The last chance to save any
+thing before kexec.
+
+> And on probing stage (probably in pci_device_add()) call
+>         kstate_restore(&pci_state, dev, PCI_DEVID(bus->number, dev->devfn=
+))
+
+It needs to happen before that, in pci_setup_device() it already need
+to know if the device is keepalive or not. If device is keep alive,
+the PCI core will need to re-create the device state from an already
+running device rather than initialize the device fresh. It needs to
+avoid perform PCI config space write to keepalive PCI devices.
+
+>
+> which would locate state for the device if any and restore it.
+>
+>
+> >>   - KS_CUSTOM - Some non-trivial field that requires custom kstate_fie=
+ld->save()
+> >>                ->restore() callbacks to save/restore data.
+> >>
+> >>   - KS_ARRAY_OF_POINTER - array of pointers, the size of array determi=
+ned by the
+> >>                          field->count() callback
+> >>   - KS_ADDRESS - field is a pointer to either vmemmap area (struct pag=
+e) or
+> >>      linear address. Store offset
+> >
+> > I think we want to describe different stream types.
+> > For example the most simple stream container is just a contiguous
+> > buffer with start address and size.
+> > The more complex one might be and size then an array of page pointers,
+> > all those pointers add to up the new buffer which describe an saved
+> > KSTATE that is larger than 4K and spread into an array of pages. Those
+> > pages don't need to be contiguous. Such a page array buffer stores the
+> > KSTATE entry described by a separate description table.
+>
+> Agreed, I had similar thoughts. But this complicates code, so I started w=
+ith
+> something simple.
+>
+Yes we can start simple. Right now the KSTATE only follow pointer in
+the Kernel C struct rather than the saved state objects. We will need
+to support pointer following in the saved state object as well. That
+is some thing very different from typical message serialization. In
+the kernel it is easier to spread the state buffer in to recursive C
+struct that store in different pages. The kstate stream will be more
+or less like a tree of objects.
+
+> >>
+> >> The 'kstate_entry' contains information like ID of kstate_description,=
+ version
+> >> of it, size of migration data and the data itself. The ->data is forme=
+d in
+> >> accordance to the kstate_field's of the corresponding kstate_descripti=
+on.
+> >
+> > The version for the kstate_description might not be enough. The
+> > version works if there is a linear history. Here we are likely to have
+> > different vendors add their own extension to the device state saving.
+>
+> I think vendors can just declare separate kstate_description with differe=
+nt ID.
+> The only problem with this, is that kstate_description.id is integer, so =
+it would be
+> a problem to allocate those without conflicts.
+> Perhaps change the id to string? So vendors can just add vendor prefix to=
+ ID.
+
+In my mind, the ID is a number, it is unique to a struct type. Once
+the number is assign to member field, it will not able to reuse that
+number for other field in that struct, it will stay with that field
+member for live. If the field get deleted, that number will still not
+be able to re-use by other member in that struct. Each field will also
+have a string name for debug purpose.
+
+Different struct can have same ID number, but it will have different
+meaning. Just like (struct a*)->foo have different meaning than
+(struct b*)->foo, it is on different name space.
+
+If the vendor want to make sure never conflict with upstream, they
+should allocate the ID in a vendor specific struct. That way it will
+make sure the vendor get their own struct name space. The struct has a
+texted name so it will not conflict with vendors. The field ID will
+remain as number.
+
+> > I suggest instead we save the old kernel's kstate_description table
+> > (once per description table as a recursive object)  alongside the
+> > object physical address as well. The new kernel has their new version
+> > of the description table. It can compare between the old and new
+> > description tables and find out what fields need to be upgraded or
+> > downgraded. The new kernel will use the old kstate_description table
+> > to decode the previous kernel's saved object.
+>
+> Hmm.. I'm not sure, there is a lot to think about.
+>  This might make changes in kstate_description painful,
+
+Let me clarify. I don't mean to save the V2.1 kstate_description as it
+is. The current kstate_description have type system and a run time
+portion as well. The run time portion does not save. Only the type
+system and possible value description. (min, max, enum etc).
+> e.g. if I want to rearrange some ->flags for whatever reason.
+If possible, would be best not save those flags. However, if the flag
+is used to describe how the wire format object is layouted, those will
+have to be save and part of the ABI as well. There is no way to get
+around that even without saving the descriptor table.
+
+> So how to deal with changes in kstate_description itself?
+The member in the kstate_description itself will have a description
+table to describe it as well. The will be a minimal set of
+kstate_description feature to describe other capabilities.
+The kstate_descrition can have a capability array (inspired by the PCI
+capabilities) declare what it supports.
+
+For example, the basic version only support two buffer container type.
+1) pointer with size. 2) <array counter n> + linear array layout in
+memory of n elements.
+The new kernel add a container type 3) single link list ptr pointer
+array. It points to page contain {<next list page pfn> + <array
+counter n> + 510<page pfn array>}. The ptr list array can describe a
+kvmalloc buffer without recursive allocate page pointer array . The
+new kernel can detect the old kernel does not have this capability.
+When roll back to old kernel.  It do not use ptr link list array to
+write out saved state object.
+
+The description table will have a version number as well as last
+defense If we have to introduce change that break the description
+table compatibility. We can bump that version. That is the only place
+need to have a version number. Other capability should always describe
+using capability feature set.
+
+>
+> How do we save links to methods in kstate_field (->restore/->save/->count=
+),
+> and what if we'll need to change function prototypes of these methods ?
+
+Those I consider as run time behavior. I hope we don't need to save
+the function pointers.
+
+Chris
+
+> > I think that way it is> more flexible to support adding one or more fea=
+tures and not tight to
+> > which version has what feature. It can also make sure the new kernel
+> > can always dump the old KSTATE into YAML.
+> >
+> > That way we might be able to simplify the subsection and the
+> > depreciation flags. The new kernel doesn't need to carry the history
+> > of changes made to the old description table.
+> >
+> >> After the reboot, when the kstate_register() called it parses migratio=
+n
+> >> stream, finds the appropriate 'kstate_entry' and restores the contents=
+ of
+> >> the object in accordance with kstate_description and ->fields.
+> >
+> > Again this restoring can happen in a different order when the PCI
+> > device scanning and probing order. The restoration might not happen in
+> > one single call chain. Material for V3?
+>
+> Agreed.
+>
+> > I am happy to work with you to get KSTATE working with the existing KHO=
+ effort.
+> >
+> Thanks for useful feedback, appreciated.
 
