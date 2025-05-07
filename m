@@ -4,131 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60012C3ABBE
-	for <kexec@archiver.kernel.org>; Tue,  6 May 2025 23:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D72B4C3ABBE
+	for <kexec@archiver.kernel.org>; Wed,  7 May 2025 03:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=UXddQDdVlGciWdiiwOnbHGOIY8x3+yd9guWVk5D8r/g=; b=iNyo+OWMRcXmIEwkJwnHMXXjPh
-	TAsh1lXwoyr4fSkkTzKAO1yEiHNmKbbuh0LV0ZqUgzhv4uGWQRvKTHb5nKCIJS2kYuSU1ruQSDo1s
-	BFWftkXPVuxPNWoPVe6qnHswaadpmIoPwieQY2PLZkDF9cmmz0kg/g6bbyH/6HR1IkHA/aoAkn9t5
-	psUdi2z1zNjVEUBfZe21swseSAeJLzrj3moZRU4tH1+nQOrZ5ljG4l7y9o5gec4XF6B31F1fOS7Jj
-	BIJLP0KHXOcYG98hB6oEZaEDI010kBxq9vw9nQWri4QcCp4+V05QZbc+XorE8i4RvkxS3iHuJgBAk
-	7Vx0AUug==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=; b=sDOsz0QWaBqlefZxliuSShflHP
+	ZrbLLZXOlEBwUvlRn+2OGkYXCTJi/JN2BSrUuOCEV6JtTAb8lHFenFO6yYYaC/S5cy2ntriW3/Xc/
+	wrv6mYi3fPOk5bacAD8jmb/pH2+TNHsQl0DlDPgWB8Aa/t971uSm+KEBzHBA8tzcrEaODtxDi7v1H
+	G3hZ3RGs4G2/96xF4qhHxJXF9hehDk8Ee+hL1dOgV7f0ixTogpRVuwkCxofEMpLU8UXEwOeKAq2jc
+	uy5U1076fpalcLorpZLAfUuNYRCyvUXgZ2qjatoxvDf6VY5KTkYxThr9HA9Q0WvhutNLADNdL5as8
+	V3/Iw8KQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCRq7-0000000Dh0A-3huK;
-	Tue, 06 May 2025 23:36:43 +0000
-Received: from mail-mw2nam10on2061a.outbound.protection.outlook.com ([2a01:111:f403:2412::61a] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
+	id 1uCVBI-0000000E2oQ-2HAP;
+	Wed, 07 May 2025 03:10:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCN8z-0000000D7d7-3aRf
+	id 1uCVBF-0000000E2mC-3SXP
 	for kexec@lists.infradead.org;
-	Tue, 06 May 2025 18:35:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FM7D3fwo8/rimdTeJL5Ir6BoQPu+V7qj9kM7ZAq8T9Ivq3D4ch3aY/vTypKrB7wcqxqWiVMmcZeeGZr9S9tgNd5ynaqhzpfDYhj0+DDg0no8oZMX3a2U1y8E8oNyK1kGPKlBwzH2h/l+wKO5AzPqWMZu+rnWfComRkMraYYwPfCvhCyPbaOTHN7WutoSS3IlqFrg9r+3jsTFxCPTcugn5lhINsZFinvDsP6M0r9gCT8gI2OH5j/WdR4gmgz2dzWMh1/gq1Bw6JSDDC/dgMfJ8UG5+lbrepXMt8OcnS5ieWJs3dL3d5A7VoLgP7sOfTPssxGS5HZcIghIOYCdNtkImw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UXddQDdVlGciWdiiwOnbHGOIY8x3+yd9guWVk5D8r/g=;
- b=KZc2rZaP0MVqFneg7YD+wJvyTL78cVRTB0fnlCy8NQa8rYz4J9LDWC4BM/lyltozqoRX89P6MMuv50znp9yVPGxIrMtntyAP9EDiEUibqWjQv++IwoZUfRvoWID+jeCtQ2qLCfdeOG9V95L/i6qduhIXhiJrcyPzOIULd/lVBT8ube+c/nbMJSDiehaOhjXkMTGAHJy860vzvh8zCaK3uTWUB5o4JFWZDrmmbXZF2ko8+RB/yuyp7bmlaUA9QjVCxo9KlVNxmlsScSnBciVpJD0Add1w5QnU56h2kH2vfYhnz7bzB9TnKtb1rY7lhXOT9uXuyXlFLVzEhUjVKvQJ+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UXddQDdVlGciWdiiwOnbHGOIY8x3+yd9guWVk5D8r/g=;
- b=uU/fU75xna5AYGwd8BI3u9jjzZ3HJoRDxFpm0xhHj2+40DOF/JHyVJqszKiDTcFNE2TSnmYLHGbFcKeEaSLIWGbyy8WiO2biE8mVMbc66lOf+bny9sHcPsj6lGSWzDZe7qZd8A+QGc+69o6g+Eb8UzHovHx43Kb27sroAPWTtrM=
-Received: from MW3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:303:2b::22)
- by BN7PPF0D2C72F0D.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6c6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Tue, 6 May
- 2025 18:35:41 +0000
-Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
- (2603:10b6:303:2b:cafe::81) by MW3PR05CA0017.outlook.office365.com
- (2603:10b6:303:2b::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Tue,
- 6 May 2025 18:35:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 18:35:40 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 13:35:39 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <bp@alien8.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>
-CC: <michael.roth@amd.com>, <nikunj@amd.com>, <seanjc@google.com>,
-	<ardb@kernel.org>, <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH v5] x86/sev: Fix making shared pages private during kdump
-Date: Tue, 6 May 2025 18:35:29 +0000
-Message-ID: <20250506183529.289549-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	Wed, 07 May 2025 03:10:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746587445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
+	b=OY0lCZNqH4gFdgWxhwePg1l3Il4NuSu9znjaUFUDW3BMv3sA918PVVT9eJjbOeNCNMvmQC
+	L2HThMvpI/8cHu/p8yo9DWMOajlMkrg4zqBe22t2wzukl7dhz4QtJeS8JOEMDu3Rfn9MqQ
+	Xhxs+TlEBY1zxrca0ery+K4dAqdKFN4=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-99-YoGIpXawOtagT12cJ3B6EQ-1; Tue, 06 May 2025 23:10:40 -0400
+X-MC-Unique: YoGIpXawOtagT12cJ3B6EQ-1
+X-Mimecast-MFC-AGG-ID: YoGIpXawOtagT12cJ3B6EQ_1746587440
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22e3abea7e8so14698205ad.2
+        for <kexec@lists.infradead.org>; Tue, 06 May 2025 20:10:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746587440; x=1747192240;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
+        b=ILW5PXCFzrThzvn7tOGPxoaYxw6ELicImkidMf00/CHSiNLg0bZgibtwpJnqCMC7rr
+         LXPLglfhYd9IWhkmTjBJmmhzZrLQA6qTt/JVMiwESJku2nOUw3EjGvCScTRGWVrU1deC
+         vvYxWgi7XN5JW1YCwYAMe0tgzQqAzS9J4h4vTqiwryCCTxB6GAGabsdmfpSOzjr2tLEj
+         Sc3VzyGXW+dpDdCAdpMvxkr5BdIJBICV2oJEG7EZn8K3pzYA0qXb/cjPBARD1tloNxP9
+         BFH67h5iZorEwFG0pkrGqbbVYoJ6ZuhsN4hK3/pwSsTNyLqQvU+93RW/ED0MCLJvvsY6
+         texA==
+X-Gm-Message-State: AOJu0Yxmb1miIMUelhUOAvqxfqVuCN4uWFuMwtljNfgWhJ74YgIGAGWf
+	5HOJie761aKTc2MbnJ6P0sdSWGVeVkfGlwuH/FRM7HFV0jc0Nxxuxh69OlX9mO5m+tn5sY4L1Hx
+	9Mz0ZRg8UE8GZiiS+P/TveP6oXw3vewRN+b3FuCQ2q9R4Thndf9qDHVQ6HA==
+X-Gm-Gg: ASbGncvZ5ODgsQXODTVDhOgPTYu7gZlZda9THj1y07HDFqNa8ooB3F0LdiFqSujtvpB
+	+iorUXYJLH3SujgYWaP7N53kHXR2HoogLD7cpQlyvJcxmztyD2YmRKwxLNT5QknCxiQfXxrKrkt
+	IU5GbSQ3Jt8NtYZMhFrHfDB/CwQoh4iT+oYb3S5c5k/2AbAGwp2RvYwb+BO9dWx+xB1jOWSr+nb
+	MppZTkU8pE1B0bC0jP7yH3og07gQzlLVW8jTqtAuXTyGj9l/9LLPjtSpepOOSW0mIW5N4BA1xD4
+	M9g=
+X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846825ad.4.1746587439734;
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0UfEi+55Sr/HmVL17k/pyRle1Z4csFmmJpk2KYXZvLlD0HVZ1oUcDI55EPbEuyt069E4aHg==
+X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846475ad.4.1746587439348;
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e98d0sm82766195ad.80.2025.05.06.20.10.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+Date: Wed, 7 May 2025 11:05:27 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v9 6/8] Revert "x86/mm: Remove unused __set_memory_prot()"
+Message-ID: <idxxt5vwxx65n73rau2pr72bnw4nopyxi67otivqdzrlnt6tnn@7uygzqael66u>
+References: <20250502011246.99238-1-coxu@redhat.com>
+ <20250502011246.99238-7-coxu@redhat.com>
+ <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|BN7PPF0D2C72F0D:EE_
-X-MS-Office365-Filtering-Correlation-Id: 881ed428-9ebf-41eb-4341-08dd8ccccd91
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8m4w/DyIfbR0nVHiLDP4xdeOhPABcxtkXZxORdRmgtr9fqhe4Dn0iHPE4Ug0?=
- =?us-ascii?Q?FJL8NMGSM3ZM/O+lqNP8s7X/87p8OvWVi72ijMNjMFLZIxi1h4dm+4jMhbq2?=
- =?us-ascii?Q?tM7AoFikNJSF6a5AJjR+grfgBQnr0XQ0b9vgEJz1mi3FJ9Pa655pdeW9WASd?=
- =?us-ascii?Q?UyCP8IgUiMuazrGWP0pUT+LuC9gegcdG+O4hYVLWPrhiEDhLS6yjhVlLyWae?=
- =?us-ascii?Q?pSHpAw+upf8X+yzBSNFTa15lbHbANRFORqWRI2gM6anGf0/lVV3CHtKFhHaK?=
- =?us-ascii?Q?xcvBcOYva+dqalxjvNktGoznYV6II9S1zOR6xRtzzoxCJiTvgPlRoNMIAxU/?=
- =?us-ascii?Q?dRlJK6XNutt3uOVVuCJ/GGdKH8V9j15seK99tmXQ1vU5TCryTkPvYLPTiiXn?=
- =?us-ascii?Q?k97wTLgY86wnCLvshpaib5qDSd9zor5kWx2QwoJmpgrwcs0DGLnSlNrXafTs?=
- =?us-ascii?Q?+EFcUB3lNpj5lPPh2wh53Pcw8wqt7q5gDIiOJT1VSyO03ylacQF9As90gnEK?=
- =?us-ascii?Q?xoba+sPafurFkZOipDCJG1imHKAV3d5KdAcr9nPpl+JZhTN8kSKvRnhaGlBn?=
- =?us-ascii?Q?HOuvoPkbnSp3/L0J6CxlYs5y+F4lbsE+d+QaTjrGXISkws9Yg4Uc3DQzZtv2?=
- =?us-ascii?Q?OjHJTwmH/+QIOoanJGcclcC9Eerux6mRWYMw0KnJ3imA8QJLWPs+PQ+bZruf?=
- =?us-ascii?Q?ABgLVI3+cAbLkfaofxLAC4L1OAUjuDe57CzZJcW01lsiXfpw6w9wN88k//zY?=
- =?us-ascii?Q?zZEITJCRrfVDwtAfcFpnnlLVCvduOvOezBYH1Vn6fGT1W5I9gyt+y5qzfoRt?=
- =?us-ascii?Q?mLdiu9jIq/bklIMFLIuvjtqNG6KS969noHPDgGiFiUy0pHWUWHJQEUhmI5UY?=
- =?us-ascii?Q?HJv7ogS61lN3sadVJevzzVxAdSzic8+vQN8xGEHSeljPN6nFQ3DSjWJSKOFG?=
- =?us-ascii?Q?/ekOlWO8Ez7aV5RgFhedJyYy0Elx5GXmSpFgRKZsLJJzcHDSZYiTXAO/tp98?=
- =?us-ascii?Q?E/Y0BQ4gnSNQjT29u3ClHYRGFV5iFQ55w768hJHUKvODWu+60vSl2eVG3q5H?=
- =?us-ascii?Q?9PiFKAtLHdhWFTeGso3SgBLdwuWm7D87ZU1/KcbhHSHDeWm/cXrP+HqDo5n/?=
- =?us-ascii?Q?92PhCvJcD5n1OuNS0QiHpy3xrHC3HpYlpmu9ziIUJzmkQJ7yFkhR75RP3Ltk?=
- =?us-ascii?Q?TWTfLhjjiZtgqcAgD+GZ2/wKSKvitU3z4o9MuqU+IeF2FowwMieAKHnsLhk7?=
- =?us-ascii?Q?Sr968pDDWTR0Ua4mMIW7GFVk7LrhZKnfb2O+xeOH99Z+bfkUGy/edc+8wf4S?=
- =?us-ascii?Q?avZ21aKtflPxv+aCe0WqJtZNvCzAAgkh4PDHmAb8Inrz5FSe85g+F2x6f936?=
- =?us-ascii?Q?i5atmeXGQWkp/5soDP6TBlMkN9AorTPGFfG+248AKVXgdTWigeYlJ0hBHHkg?=
- =?us-ascii?Q?s3SSuDX/zGI1vc+/TIbn1pAuYbzjPHd53OHiOa8Bddybtj0KBwHqoP1+pAMD?=
- =?us-ascii?Q?xzzoO18EIgdSY8QaaHk5DsfYUSlWjy0R9qc9?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 18:35:40.5091
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 881ed428-9ebf-41eb-4341-08dd8ccccd91
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PEPF000001D5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF0D2C72F0D
+In-Reply-To: <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: EbBNrcVzuOGKNfMOipMtBMSqOC0CaltKTHBAvuAl10M_1746587440
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250506_113553_887911_9D279E9F 
-X-CRM114-Status: GOOD (  14.04  )
+X-CRM114-CacheID: sfid-20250506_201045_933962_FB3EE737 
+X-CRM114-Status: GOOD (  13.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -143,71 +114,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Sat, May 03, 2025 at 11:46:05PM -0700, Andrew Morton wrote:
+>On Fri,  2 May 2025 09:12:40 +0800 Coiby Xu <coxu@redhat.com> wrote:
+>
+>> This reverts commit 693bbf2a50447353c6a47961e6a7240a823ace02 as kdump
+>> LUKS support (CONFIG_CRASH_DM_CRYPT) depends on __set_memory_prot.
+>>
+>
+>x86_64 allmodconfig:
+>
+>In file included from drivers/gpu/drm/i915/gt/intel_ggtt.c:6:
+>./arch/x86/include/asm/set_memory.h:40:57: error: unknown type name 'pgprot_t'
+>   40 | int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+>      |                                                         ^~~~~~~~
+>
+>I did this:
+>
+>
+>From: Andrew Morton <akpm@linux-foundation.org>
+>Subject: revert-x86-mm-remove-unused-__set_memory_prot-fix
+>Date: Sat May  3 11:38:32 PM PDT 2025
+>
+>x86 set_memory.h needs pgtable_types.h for pgprot_t.  Obtain it via the
+>higher-level pgtable.h.
+>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Coiby Xu <coxu@redhat.com>
+>Cc: "Daniel P. Berrange" <berrange@redhat.com>
+>Cc: Dave Hansen <dave.hansen@intel.com>
+>Cc: Dave Young <dyoung@redhat.com>
+>Cc: Jan Pazdziora <jpazdziora@redhat.com>
+>Cc: Liu Pingfan <kernelfans@gmail.com>
+>Cc: Milan Broz <gmazyland@gmail.com>
+>Cc: Ondrej Kozina <okozina@redhat.com>
+>Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>---
+>
+> arch/x86/include/asm/set_memory.h |    1 +
+> 1 file changed, 1 insertion(+)
+>
+>--- a/arch/x86/include/asm/set_memory.h~revert-x86-mm-remove-unused-__set_memory_prot-fix
+>+++ a/arch/x86/include/asm/set_memory.h
+>@@ -4,6 +4,7 @@
+>
+> #include <asm/page.h>
+> #include <asm-generic/set_memory.h>
+>+#include <asm/pgtable.h>
+>
+> #define set_memory_rox set_memory_rox
+> int set_memory_rox(unsigned long addr, int numpages);
+>_
 
-When the shared pages are being made private during kdump preparation
-there are additional checks to handle shared GHCB pages.
+Thanks for catching this issue and providing a clean fix! I'll make sure
+future patches pass allmodconfig. And also thanks for pulling the patch
+set into -mm tree!
 
-These additional checks include handling the case of GHCB page being
-contained within a huge page.
-
-The check for handling the case of GHCB contained within a huge
-page incorrectly skips a page just below the GHCB page from being
-transitioned back to private during kdump preparation.
-
-This skipped page causes a 0x404 #VC exception when it is accessed
-later while dumping guest memory during vmcore generation via kdump.
-
-Correct the range to be checked for GHCB contained in a huge page.
-Also ensure that the skipped huge page containing the GHCB page is
-transitioned back to private by applying the correct address mask
-later when changing GHCBs to private at end of kdump preparation.
-
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index d35fec7b164a..30b74e4e4e88 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1019,7 +1019,8 @@ static void unshare_all_memory(void)
- 			data = per_cpu(runtime_data, cpu);
- 			ghcb = (unsigned long)&data->ghcb_page;
- 
--			if (addr <= ghcb && ghcb <= addr + size) {
-+			/* Handle the case of a huge page containing the GHCB page */
-+			if (addr <= ghcb && ghcb < addr + size) {
- 				skipped_addr = true;
- 				break;
- 			}
-@@ -1131,8 +1132,8 @@ static void shutdown_all_aps(void)
- void snp_kexec_finish(void)
- {
- 	struct sev_es_runtime_data *data;
-+	unsigned long size, addr;
- 	unsigned int level, cpu;
--	unsigned long size;
- 	struct ghcb *ghcb;
- 	pte_t *pte;
- 
-@@ -1160,8 +1161,10 @@ void snp_kexec_finish(void)
- 		ghcb = &data->ghcb_page;
- 		pte = lookup_address((unsigned long)ghcb, &level);
- 		size = page_level_size(level);
--		set_pte_enc(pte, level, (void *)ghcb);
--		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
-+		/* Handle the case of a huge page containing the GHCB page */
-+		addr = (unsigned long)ghcb & page_level_mask(level);
-+		set_pte_enc(pte, level, (void *)addr);
-+		snp_set_memory_private(addr, (size / PAGE_SIZE));
- 	}
- }
- 
 -- 
-2.34.1
+Best regards,
+Coiby
 
 
