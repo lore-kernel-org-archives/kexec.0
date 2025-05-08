@@ -4,71 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E99EFC3ABC5
-	for <kexec@archiver.kernel.org>; Thu,  8 May 2025 07:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 607A2C3ABC0
+	for <kexec@archiver.kernel.org>; Thu,  8 May 2025 08:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9Ym5IsgJPELXlmxVUiqqeE5x95LD2/wvG6YGV47RIG4=; b=MANrng3NYJGizgCwWO0PrsQXtr
-	vRpwZ0dNgOACBh4M7XYt7aXcD+nsqDkwsLJdIfxu7e/3QIMxvvF+5QXbzR53gg6874XYeYcvb/am8
-	zypt4QEsGOx1tvt6BEokXq4Dvz7w2ApPmFCFMoqyKNLqGCwGr+DR52442/Fot7rDRy/VDGDedmLo7
-	R9gmC+m7vfv1UArZ00OxOZxM2iIfZlry4b5sXitZr1zFCG0eWQRQ+RsBbU+2b81WsBqzisSWqNVKS
-	ATACfbEjjwPB2ruF0pa5XZd2jQNz12vtgIq3GsYTCcrBXyXTUWwj40fgX32mwNUE8FyOPOQiRRi4F
-	Dg//b63A==;
+	bh=21q884QM7jphvwOnC1ZSy6BXRi57/hdOD7otR8XXP24=; b=gwFmb4MeWRuDs7oax479ZO5dAZ
+	JI9hnrsC2D4wfmvnxsI+1PlbIQ0A7SB33iWtICHmvuFsNBpfXVuucNLhQBSpYpW8xfo1a2lQeXT8a
+	jp4fldYKfBX7nhkLhLquL7SLk8A/6fB/ypP2UVjA8HHqqLlt1wWybniQPAjp9RkCUumQzPiUxeFLO
+	ryH7xk+GLQREPU/t6B3Aay7w26+hld7A7RJmFempq8EzKxgdgBnibD3ItK6qpG1lAXDt4bepepMhO
+	ffGvmVp5pSe2W/+COkg5BN8CDkvRXMGsq0GgkN4D4ItQp08vWTSPIdehe5y54EWbVDPLht6yOI+tH
+	VDHuzVKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCw49-000000002qd-1SJs;
-	Thu, 08 May 2025 07:53:13 +0000
+	id 1uCwtm-00000000A3B-2ibI;
+	Thu, 08 May 2025 08:46:34 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCw39-000000002hT-3JEO
+	id 1uCvku-000000000fw-2ZDs
 	for kexec@lists.infradead.org;
-	Thu, 08 May 2025 07:52:13 +0000
+	Thu, 08 May 2025 07:33:22 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746690730;
+	s=mimecast20190719; t=1746689599;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9Ym5IsgJPELXlmxVUiqqeE5x95LD2/wvG6YGV47RIG4=;
-	b=NITlekQHLdBqlk+4AO8S+QnpF+B5kl5KVxT2INqH/LxlkRNSLdnrsLNSwE8NWjaE9SI6Zo
-	Qo397yRjRr0MNES9UZ9s5lWoQcenfRlR1Lp/SXNcctfq119ZSMR2MZZtNsZAdaayfj7+py
-	zfc60PoxrsdCzH4hEs3T0UJc6Mu5JOg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=21q884QM7jphvwOnC1ZSy6BXRi57/hdOD7otR8XXP24=;
+	b=PAbZPLHj7902KIlFQlQ2GAkfubCxfgeCpi1DsXI0IDU8D7Ds306hWaTZybJY+gIgW4+L4O
+	pjHr5iGfq7GmAfkVxSl6lsRT1Mi3At16N80wLnOBL7AV2QDfhO5LJbW1HcyzpQvW4K5OV9
+	+z/hwanmIPrunbfKhUPknJh/CZSgD2E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-221-uoOCdMg9OBicCzW3qE3Qrw-1; Thu,
- 08 May 2025 03:52:09 -0400
-X-MC-Unique: uoOCdMg9OBicCzW3qE3Qrw-1
-X-Mimecast-MFC-AGG-ID: uoOCdMg9OBicCzW3qE3Qrw_1746690728
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-199-lM2PEPpmNw2n3E8l_1MeuA-1; Thu,
+ 08 May 2025 03:33:16 -0400
+X-MC-Unique: lM2PEPpmNw2n3E8l_1MeuA-1
+X-Mimecast-MFC-AGG-ID: lM2PEPpmNw2n3E8l_1MeuA_1746689595
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 396331956089;
-	Thu,  8 May 2025 07:52:08 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15DAB1800360;
+	Thu,  8 May 2025 07:33:15 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A9551955F24;
-	Thu,  8 May 2025 07:52:06 +0000 (UTC)
-Date: Thu, 8 May 2025 15:52:01 +0800
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72EE319560B3;
+	Thu,  8 May 2025 07:33:12 +0000 (UTC)
+Date: Thu, 8 May 2025 15:33:08 +0800
 From: Baoquan He <bhe@redhat.com>
-To: fuqiang wang <fuqiang.wang@easystack.cn>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <aBxiod8BG9gR49Hl@MiWiFi-R3L-srv>
+To: Andrew Morton <akpm@linux-foundation.org>, Coiby Xu <coxu@redhat.com>
+Cc: fuqiang wang <fuqiang.wang@easystack.cn>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <aBxeNLVvpnpR5FIa@MiWiFi-R3L-srv>
 References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
- <aBxfflkkQXTetmbq@MiWiFi-R3L-srv>
+ <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
+ <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
+ <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBxfflkkQXTetmbq@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250508_005211_909202_195D870A 
-X-CRM114-Status: GOOD (  27.48  )
+X-CRM114-CacheID: sfid-20250508_003320_723508_6A13CCD9 
+X-CRM114-Status: GOOD (  28.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,47 +87,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/08/25 at 03:38pm, Baoquan He wrote:
-> In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
-> In the current x86 architecture code, the elfheader is always allocated
-> at crashk_res.start. It seems that there won't be a new split range.
-> But it depends on the allocation position of elfheader in crashk_res. To
-> avoid potential out of bounds in future, add a extra slot. And using
-> random kexec_buf for passing dm crypt keys may cause a range split too,
-> add another extra slot here.
+On 05/07/25 at 10:59pm, Andrew Morton wrote:
+> On Thu, 8 May 2025 12:25:15 +0800 Coiby Xu <coxu@redhat.com> wrote:
+> 
+> > >
+> > >Acked-by: Baoquan He <bhe@redhat.com>
+> > 
+> > Hi Andrew,
+> > 
+> > It seems this patch was missed.
+> 
+> January 2024.  Yes, it's fair to assume that it was missed ;)
+> 
+> > Will you pick it up?
+> 
+> Sure.
+> 
+> > Without this patch,
+> > kdump kernel will fail to be loaded by the kexec_file_load,
+> > 
+> >   [  139.736948] UBSAN: array-index-out-of-bounds in arch/x86/kernel/crash.c:350:25
+> >   [  139.742360] index 0 is out of range for type 'range [*]'
+> >   [  139.745695] CPU: 0 UID: 0 PID: 5778 Comm: kexec Not tainted 6.15.0-0.rc3.20250425git02ddfb981de8.32.fc43.x86_64 #1 PREEMPT(lazy) 
+> >   [  139.745698] Hardware name: Amazon EC2 c5.large/, BIOS 1.0 10/16/2017
+> >   [  139.745699] Call Trace:
+> >   [  139.745700]  <TASK>
+> >   [  139.745701]  dump_stack_lvl+0x5d/0x80
+> >   [  139.745706]  ubsan_epilogue+0x5/0x2b
+> >   [  139.745709]  __ubsan_handle_out_of_bounds.cold+0x54/0x59
+> >   [  139.745711]  crash_setup_memmap_entries+0x2d9/0x330
+> >   [  139.745716]  setup_boot_parameters+0xf8/0x6a0
+> >   [  139.745720]  bzImage64_load+0x41b/0x4e0
+> >   [  139.745722]  ? find_next_iomem_res+0x109/0x140
+> >   [  139.745727]  ? locate_mem_hole_callback+0x109/0x170
+> >   [  139.745737]  kimage_file_alloc_init+0x1ef/0x3e0
+> >   [  139.745740]  __do_sys_kexec_file_load+0x180/0x2f0
+> >   [  139.745742]  do_syscall_64+0x7b/0x160
+> >   [  139.745745]  ? do_user_addr_fault+0x21a/0x690
+> >   [  139.745747]  ? exc_page_fault+0x7e/0x1a0
+> >   [  139.745749]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> >   [  139.745751] RIP: 0033:0x7f7712c84e4d
+> > 
+> 
+> Do we know why this has appeared at such a late date?  The reporter
+> must be doing something rare.
+> 
+> Baoquan, please re-review this?
+> 
+> A -stable backport is clearly required.  A Fixes: would be nice, but I
+> assume this goes back a long time so it isn't worth spending a lot of
+> time working out when this was introduced.
+> 
+> The patch needed a bit of work to apply to current code.  I did the
+> below.  It compiles.
 
-Sorry, this should be from fuqiang wang, when I edited the patch to
-reply to his patch, I forgot that. Please help makes change to set
-Fuqiang as the patch author, I just adapted the content based on Coiby's
-patches.
+The 2nd hunk is not so good, it discard one slot adding. I made a new
+version and will reply to Fuqiang's patch, please help check.
 
 > 
-> The similar issue also exists in fill_up_crash_elf_data(). The range to
-> be excluded is [0, 1M], start (0) is special and will not appear in the
-> middle of existing cmem->ranges[]. But in cast the low 1M could be
-> changed in the future, add a extra slot too.
-> 
-> Previously discussed link:
-> [1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-> [2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-> [3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
-> 
-> Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
-> v4->v5:
-> - This is on top of Coiby's LUKS patchset in branch mm-nonmm-unstable of
->   akpm/mm.git. I did some adaption based on Coiby's patches.
-> - [PATCH v9 0/8] Support kdump with LUKS encryption by reusing LUKS volume keys
-> 
->  arch/x86/kernel/crash.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index bcb534688dfe..749a60ce8b7f 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+> --- a/arch/x86/kernel/crash.c~x86-kexec-fix-potential-cmem-ranges-out-of-bounds
+> +++ a/arch/x86/kernel/crash.c
+> @@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_e
 >  	/*
 >  	 * Exclusion of crash region and/or crashk_low_res may cause
 >  	 * another range split. So add extra two slots here.
@@ -143,27 +167,25 @@ patches.
 >  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
 >  	if (!cmem)
 >  		return NULL;
-> @@ -313,10 +323,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->  	struct crash_mem *cmem;
->  
->  	/*
-> -	 * Using random kexec_buf for passing dm crypt keys may cause a range
-> -	 * split. So use two slots here.
+> @@ -317,9 +327,16 @@ int crash_setup_memmap_entries(struct ki
+>  	 * split. So use two slots here.
+>  	 */
+>  	nr_ranges = 2;
+> -	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+> +	/*
 > +	 * In the current x86 architecture code, the elfheader is always
 > +	 * allocated at crashk_res.start. But it depends on the allocation
 > +	 * position of elfheader in crashk_res. To avoid potential out of
-> +	 * bounds in future, add an extra slot.
-> +	 *
-> +	 * And using random kexec_buf for passing dm crypt keys may cause a
-> +	 * range split too, add another extra slot here.
->  	 */
-> -	nr_ranges = 2;
-> +	nr_ranges = 3;
->  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+> +	 * bounds in future, add a extra slot.
+> +	 */
+> +	cmem = vzalloc(struct_size(cmem, ranges, 2));
 >  	if (!cmem)
 >  		return -ENOMEM;
-> -- 
-> 2.41.0
+> +	cmem->max_nr_ranges = 2;
+>  
+>  	cmem->max_nr_ranges = nr_ranges;
+>  	cmem->nr_ranges = 0;
+> _
 > 
 
 
