@@ -4,98 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6ABB5C3ABC3
-	for <kexec@archiver.kernel.org>; Fri,  9 May 2025 04:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0984BC3ABBC
+	for <kexec@archiver.kernel.org>; Fri,  9 May 2025 06:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=J+SYrIQbnbnk5O/f1zspa8NoKFzZ95VWEpF6PHlNOTo=; b=0tlXSFEV011oQLuI8lOWa4S7ia
-	pzU5gNAkRwwdyiKjEB4i/LOm/Xa+knYHK8VXM/7OvJGw15KBOKH4o6eqat+bdC2bnZy2NP4b3j7s7
-	FZeva9SjABrP9Nfvpsrs9rYWi9oeTDY3up71+LfZDDtmckGz7d3kXnie/6lPHJy9x0widIr6uCKfw
-	PS5gg0NoOp7364F5oBVlVFiyG6eCzgCtlL577CudXpl28hdxcaANVucFZsfX6Brp648mMMZsSdWp7
-	DHnqAdKNnQzqZgQMUW4/744rlwRlQXxnA8b8fELiHHF/FT7pcupmA1iBm5iKKty9FGtFOaJWU3OZC
-	NiteH4vg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2+to1I211iC3afEaRgF5+2vQotsbE1LgjowPA3s1xo8=; b=d6mASj4zq2OG3Ur/XAS/7fbJTB
+	Iy4bqOyTp4Vwm8lLeeB9SnAwkD0Oo1/GKxflyXQGs3tX31sD0TgEyOal1fTIpYBYeDXy1CpkRXWQf
+	2xStLPOg2sL6PkMHEy0QK2iIod2jiiIgOtZaqO9hrpjwkX0hI1YuqVfPvHykK7CyINegmLC6MFIpF
+	RAw+W1+elkDOXspFsucR4EEwK5aiEEc6wjCE/nYfjUI8VP1m/Pw0ytT+HOpMN4vOWRb/4BlfpUTqv
+	245JjmVhggg4lOa4ULCNz1irgrRtoUqUCeJWNyoqhI1Xu14TWEiocTQ2cU2z4WMGoCPEJmyZ5v4W9
+	XSiPH5Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uDEzT-00000002QCX-0nvI;
-	Fri, 09 May 2025 04:05:39 +0000
+	id 1uDGmi-00000002ZIo-1mCp;
+	Fri, 09 May 2025 06:00:36 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uDEzM-00000002QCA-2B8D
+	id 1uDGmg-00000002ZHg-03vK
 	for kexec@lists.infradead.org;
-	Fri, 09 May 2025 04:05:34 +0000
+	Fri, 09 May 2025 06:00:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746763531;
+	s=mimecast20190719; t=1746770431;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J+SYrIQbnbnk5O/f1zspa8NoKFzZ95VWEpF6PHlNOTo=;
-	b=dZUMEKFENZaaSwenXLb9MGRLqHYTLfh5U0lVc+NgxmD7+a5AlNsTz0dA8OjMROFBnl93Gh
-	mBUj00OWbR59YRRYgoq3Dg23HE/6atuITZZnI3wy3SxICdPZvQ6kfyJKLjvhbriBkVOXwB
-	5TiX+xo02SmiWlL/hETeRvcESjOMfg0=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=2+to1I211iC3afEaRgF5+2vQotsbE1LgjowPA3s1xo8=;
+	b=MAutdXiTsQYjbJKAYWY0EeouRkff2pgKfPhC+yRPJOtkZMlDCIQPllL7EOlogrF8Qp7pbl
+	RMO7dBSI3nrm8pEJC3xgdGmbWB3b9aJ6VVPc02PbNV2m72ttUb470+PA2okBk8cEbh0xCO
+	t2wTGTue8ewIiIkn/U1lcs+Cl+4f5pM=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-247-BzG_mhKYN8myh9h1rCaPEA-1; Fri, 09 May 2025 00:05:29 -0400
-X-MC-Unique: BzG_mhKYN8myh9h1rCaPEA-1
-X-Mimecast-MFC-AGG-ID: BzG_mhKYN8myh9h1rCaPEA_1746763528
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7398d70abbfso2493433b3a.2
-        for <kexec@lists.infradead.org>; Thu, 08 May 2025 21:05:29 -0700 (PDT)
+ us-mta-655-q8ugbGJtOoWFkEIEBZdspQ-1; Fri, 09 May 2025 02:00:29 -0400
+X-MC-Unique: q8ugbGJtOoWFkEIEBZdspQ-1
+X-Mimecast-MFC-AGG-ID: q8ugbGJtOoWFkEIEBZdspQ_1746770429
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b19226b5f7dso1411271a12.0
+        for <kexec@lists.infradead.org>; Thu, 08 May 2025 23:00:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746763528; x=1747368328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J+SYrIQbnbnk5O/f1zspa8NoKFzZ95VWEpF6PHlNOTo=;
-        b=Da2TnXspvRMCXm0KA2zF044S8pBBBc+Yg+fARkxXxGBoZXI/QFf/RWZvgZIpc+sjwM
-         af4Yi+M3gpUa+RNfN9IkAUYpGfaxWioZg/yxzYLkp6hG4ckI6OL9mnDVmUdTa52tyrsJ
-         b3x4Z9KYesB2J0v0klFxAJIUd6b9GjIlkytYGNLOswjvz9Zc2HEYIAvYtIZ5VzQMVUS9
-         Clgkd5sGtk/evpFcfJyJiEisEjIs6rlRa3Qw4Pjyb97cmLuluwbyqQrf6ZpC35PWRLlC
-         14qLA/6glFyM8C+TaT+kg8ri4oOIe0yAnuJVeEVCFTbIKoBertwt5YXJaihymasChvgm
-         KFrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpIGpsC45UaLzD0M7MCFvzFkf3lOevQo0P3aIdoc+DLIsWJgMT7tCG4t/roI6cZ5wkUFeV2w==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw/QJ5GlVLhata/iHUFtRbhgc1nLJZQ4JspDgeIGybIKE2dZ2l0
-	wxEbK96J8zVNojrzq/o9OC03snQG32QbtYU0WmUqlLqxtaWhvPaubpkuS5HrRGscuGpB74LHSfD
-	OQD/rVjhA+uX8AUfHoEXtVEvMXdMFZYHh6rjsfwxvFPEDwLtgtsrDt8EGlQ==
-X-Gm-Gg: ASbGncv6gpH4URWCH4g1BFRpyWR8oCf7yYLhuoUbJA+xqDeHA+/+k/glrz8gMChvA2v
-	knySGqpy56f0veAEZw9yqb8MoVz0KZp4BPql85UZJpS5GOUbBSC3DYB7vjxIxa90vZiuFdBRdKR
-	4XEwQ6IWPE6IrxW6F8mu2Fve4qkj46HBz5eXAbPRQ1DsGi8ueaGEiGOuZw19kWqpz3HudttnvsZ
-	ttbisTkKJSQ68/HCWgnfG+Vi1tU8dQdSxWgdsJ6kAlEfNUk/uwYMeJCY51uVWf9roGGTZ5LEpFw
-	wHQ=
-X-Received: by 2002:a05:6a00:2e24:b0:73e:30dc:bb9b with SMTP id d2e1a72fcca58-7423ba88b38mr2682907b3a.2.1746763528165;
-        Thu, 08 May 2025 21:05:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE77As/UwDFJ+dP/ELWVq0LFZcNGkVTWSBLh/OwCUft42xY+m4lFdYftfZTKsV2tbDZ8ZSfVg==
-X-Received: by 2002:a05:6a00:2e24:b0:73e:30dc:bb9b with SMTP id d2e1a72fcca58-7423ba88b38mr2682870b3a.2.1746763527716;
-        Thu, 08 May 2025 21:05:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746770429; x=1747375229;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2+to1I211iC3afEaRgF5+2vQotsbE1LgjowPA3s1xo8=;
+        b=Et09Vr6xS9Bh+sYcs7E5CUXBA2+0tD+YrOakx3p+SqQOAkzgm0Vyw40w1CQLtqcQ50
+         U/KB8OggBKchfNnEJdviCpyZbtNrz5N/hVpJuCP1IdoHdroR3OWCKoRQKM20KhH5R5zv
+         22TtzvdHKb6FErYQChqMIId9bI89HGG7uxhE3lEH3+tsLxwLe4z/xNPlLs9VvPDNV/At
+         4ZPtp8dOI6utY1SOO0YYmoXNcttH+s4OhhR9SgPytKx9ygB9cIyzCDXW4KJKjo6DSKe6
+         naK1/jD2y2rwJMfLgkNK8LAtJ9+Cuk/1IDGsd4qJZJhc7+WWSwx+o/Jpk654bYiA8dvZ
+         fFFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUV9QoAVSkLK/iQCkSIJ32bQv500YZ8F/+d9mNZtTFDSE0rbXappWOD3Ls4cF1jjm1UcSCbvA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwmoeIlZFQPlmWOXk4DMZ9KTVwUdKjjICap7AXP3PG+K21NnNIU
+	tQtKtIFcnvGsY6j65YSnUiPqXl+WBqU4w225jwGJGute5sDf8UJVB9C78eIQhe7kG9w++tqzaOM
+	9ypjMZkjR91JSDC0DH2WMPbDtLnbd4eyvZhgpL1j+zFSz33wVGBfxO4dDyw==
+X-Gm-Gg: ASbGncu0NOEAgAapCs8Rw3FcknWZ4vV0D2bLntFTIViU2O5uqy4B7veN+9aKFEeK+ti
+	d58bc79ZNnPK2ftrPGLaXXZvOMljRK0jYYLY55DPaEqLYPAre7osVVobLSEwVNFy+iOYoYRt7CR
+	6bwwbXQdqfGGY5hFny4U/K1Ou/BDCrhk6Sv1JX2fkbCr9+h+VvGpBx2OnARAORkZzgj8SU7umF1
+	SWmVYvOIAgKYcPYYWtw4TrchPD7mMPQ7y3CJ5xQMv3Yfxo0UoMq/8zrNzvQFbX83oE3Gc6KTVWr
+	GN8=
+X-Received: by 2002:a05:6a21:b8b:b0:1f3:1ba1:266a with SMTP id adf61e73a8af0-215ab2e72b6mr2947516637.0.1746770428680;
+        Thu, 08 May 2025 23:00:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUdYKYbaeIT7SaXV2OeE2x2TbifmrjM8mSWIwSJL/AtvMzlyxWFF0/of7HSQd5+A1u/6HKyg==
+X-Received: by 2002:a05:6a21:b8b:b0:1f3:1ba1:266a with SMTP id adf61e73a8af0-215ab2e72b6mr2947477637.0.1746770428239;
+        Thu, 08 May 2025 23:00:28 -0700 (PDT)
 Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237705123sm882603b3a.16.2025.05.08.21.05.26
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7423770447asm1008438b3a.32.2025.05.08.23.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 21:05:27 -0700 (PDT)
-Date: Fri, 9 May 2025 12:04:36 +0800
+        Thu, 08 May 2025 23:00:27 -0700 (PDT)
+Date: Fri, 9 May 2025 13:59:44 +0800
 From: Coiby Xu <coxu@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>, fuqiang wang <fuqiang.wang@easystack.cn>, 
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
-References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
- <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
- <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Baoquan He <bhe@redhat.com>, chenste@linux.microsoft.com, 
+	RuiRui Yang <ruyang@redhat.com>, linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
+Message-ID: <qvv3tniawgb3rvqeuxzckj25xxkcr2tqbwnji5gmdg4x3ahdha@52hwfd36ttf7>
+References: <h3bjnvtded2hgbhya6ugb62mnlmkjpmifa6w6wwutfd3jq326r@lzpoun5pksev>
+ <Z+0kRhCfsjdZ53rZ@MiWiFi-R3L-srv>
+ <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
+ <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
+ <02563b1e8b0000bedf94ded447a8372f21d4304a.camel@linux.ibm.com>
+ <Z/Xero1B0OazLcHL@MiWiFi-R3L-srv>
+ <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
+ <Z/8ijFhIf1J6vbWM@MiWiFi-R3L-srv>
+ <f75tvrcc6xhfwz5rbwh2ps34wt2odz4wq32vez7dsct732x4ik@sv6nyjqr2ykr>
+ <80766b04cafd24a1d7171b8da03c822d86272f3c.camel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+In-Reply-To: <80766b04cafd24a1d7171b8da03c822d86272f3c.camel@linux.ibm.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NbXuEWmBVJHyf2OQQtMW1np5E7mzaj_t-z5nyL-PkyQ_1746763528
+X-Mimecast-MFC-PROC-ID: diksX7WewRa75JVhTNts3AZgI4zcflRJH_PSWe2Gw4k_1746770429
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250508_210532_649316_AEF56257 
-X-CRM114-Status: GOOD (  27.31  )
+X-CRM114-CacheID: sfid-20250508_230034_143708_9B335693 
+X-CRM114-Status: GOOD (  40.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,138 +117,123 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, May 07, 2025 at 10:59:59PM -0700, Andrew Morton wrote:
->On Thu, 8 May 2025 12:25:15 +0800 Coiby Xu <coxu@redhat.com> wrote:
->
->> >
->> >Acked-by: Baoquan He <bhe@redhat.com>
+On Tue, Apr 29, 2025 at 07:39:17AM -0400, Mimi Zohar wrote:
+>On Mon, 2025-04-28 at 11:48 +0800, Coiby Xu wrote:
+>> On Wed, Apr 16, 2025 at 11:22:52AM +0800, Baoquan He wrote:
+>> > On 04/09/25 at 11:40am, Mimi Zohar wrote:
+>> > > On Wed, 2025-04-09 at 10:42 +0800, Baoquan He wrote:
+>> > ......snip..
+>> > > > Thanks for confirming. I will consider how to fix it accordingly. Maybe
+>> > > > after Steven's patches are merged. That would be great if the buffer
+>> > > > allocating and storing can be skiped for kdump in Steven's patch. While
+>> > > > I am worried that could disrupt the progress of Steven's patches.
+>> > >
+>> > > Agreed, let's get Steven's patch set upstreamed and then make the kdump
+>> > > exceptions.
+>> > >
+>> > > - "ima: kexec: move IMA log copy from kexec load to execute" looks like it
+>> > > isn't
+>> > > copying the IMA measurement list records (kexec_post_load), but the memory for
+>> > > the IMA measurement list is being allocated (ima_alloc_kexec_file_buf).
+>> > >
+>> > > - Do you really want to totally disable IMA for kdump or would disabling IMA-
+>> > > measurement be sufficient?  Remember there's already an option to disable IMA-
+>> > > appraisal.  Disabling just IMA-measurement would allow IMA-appraisal to
+>> > > continue
+>> > > to work.  Meaning based on policy the integrity of files - executables, kernel
+>> > > image, etc - could still be verified.
+>> > >
+>> > > Without IMA-measurement:
+>> > > - No adding records to the IMA measurement list
+>> > > - No IMA measurement list pseudo securityfs files
+>> > > - No extending the TPM
+>> > >
+>> > > With IMA-appraisal:
+>> > > - Integrity verification of files based on keys, keyrings
+>> > > - Loading keys
 >>
->> Hi Andrew,
+>> Thanks for listing the impacts of disabling IMA measurement or
+>> appraisal!
 >>
->> It seems this patch was missed.
+>> kdump builds and loads its own initramfs as a cpio archive. After a
+>> kernel crashes, the loaded initramfs will save the crashed kernel's
+>> memory (vmcore) to specified location and then it will reboot the system
+>> immediately. Since kdump merely copy files from existing fs into its
+>> initramfs, I think at least majority of users don't need IMA for kdump.
 >
->January 2024.  Yes, it's fair to assume that it was missed ;)
+>That's fine.
 >
->> Will you pick it up?
+>> In fact, currently IMA-appraisal doesn't work for kdump because cpio
+>> doesn't support xattr.
 >
->Sure.
+>Although CPIO doesn't support xattrs, tmpfs supports xattrs.
 
-Thanks for quickly processing this patch! Sorry I didn't reply yesterday
-as I was trying to reproduce the UBSAN warning and truly understand the
-it.
+Thanks for pointing it out! I thought tmpfs doesn't support xattrs
+because ima_policy=tcb excludes TMPFS_MAGIC. There are still many
+interesting questions for me to explore. For example, I don't understand
+how 1st kernel's initramfs is shown as ramfs (which doesn't support
+xattrs) but kdump intiramfs without the squashfs module is shown as
+tmpfs.
+
+>I'm aware that some
+>store the security xattr information in a file and write it out as xattrs.
+
+If the built initramfs as a CPIO file doesn't carry xattrs, the loaded
+initramfs still doesn't have xattrs. I just found the initramfs could
+opt to use squashfs or erofs which supports xattrs but currently it's
+hardcoded to disable xattrs. For example, recently the dracut erorfs
+module also follows squashfs to disable xattrs [1]. So in the near
+future, I don't expect xattrs to be supported in kdump.
+
+[1] https://github.com/dracut-ng/dracut-ng/pull
 
 >
->> Without this patch,
->> kdump kernel will fail to be loaded by the kexec_file_load,
+>> As for the issue of not properly updating the
+>> security xattrs, I think in most of cases disabling IMA-appraisal in
+>> kdump won't cause the trouble. If the vmcore is saved to a remote fs, the
+>> local fs won't even be touched. If the vmcore is saved to local fs and
+>> the appraisal rules cover the saved vmcore and the created logs files,
+>> we only need to update the xattr file of three files. So from the
+>> perspective of kdump, it's good to disable IMA for kdump to save memory.
+>
+>Remember my original concerns weren't about disabling IMA for kdump, but about not
+>limiting disabling IMA to just kdump.
 
-As already pointed out by Baoquan, a manual test shows kexec_file_load
-actually works despite the UBSAN warning. Sorry I misinterpreted the
-UBSAN warning and the automated test result failure (somehow sysrq
-wasn't be triggered and vmcore wasn't saved either).
+Thanks for reminding me about that! Baoquan will post a patch to only
+disable IMA for kdump so we won't need to worry about these concerns:)
 
-
+>
+>> Of course we can't rule out the possibility some users may want to need
+>> IMA in kdump. So a flexible solution like providing a knob to allow
+>> users to enable IMA in kdump will be the ideal solution.
+>
+>Agreed
+>
 >>
->>   [  139.736948] UBSAN: array-index-out-of-bounds in arch/x86/kernel/crash.c:350:25
->>   [  139.742360] index 0 is out of range for type 'range [*]'
-[...]
->>
+>> Btw, recently, a colleague reminds me of an issue that the system hangs
+>> because systemd fails to load incorrect /etc/ima/ima-policy. Of course,
+>> we should ask users to verify the policy beforehand. But it's still
+>> possible the booting process may be stopped by a strict, albeit
+>> syntax-correct policy and users can't log into the system to fix the
+>> policy. Do you think a knob to disable IMA is needed to address these
+>> cases or is there a better solution?
 >
->Do we know why this has appeared at such a late date?  The reporter
->must be doing something rare.
+>Agreed a new policy should always be tested, before attempting to load it on boot.
+>However there are situations when even a tested policy fails.  Commonly this occurs
+>when attempting to load an IMA policy based on IMA features that don't exist in an
+>older kernel.  This can normally be resolved by booting into the newer kernel and
+>"fixing" the policy.  Instead of disabling IMA, I would allow specifying on the boot
+>command line an alternate IMA policy (e.g. ima-policy.backup-version) to be loaded
+>as fallback.
 
-The UBSAN warning happens because flexible array members annotated with
-__counted_by are accessed without assigning an array element count i.e.
-crash_mem->ranges[0] is accessed without setting max_nr_ranges after
-vzalloc,
-
-     // include/linux/crash_core.h
-     struct crash_mem {
-     	unsigned int max_nr_ranges;
-     	unsigned int nr_ranges;
-     	struct range ranges[] __counted_by(max_nr_ranges);
-     };
-
-The bad commit was introduced in 2021 but only recent gcc-15 supports
-__counted_by. That's why we don't see this UBSAN warning until this
-year. And although this UBSAN warning is scary enough, fortunately it
-doesn't cause a real problem. 
-
->
->Baoquan, please re-review this?
->
->A -stable backport is clearly required.  A Fixes: would be nice, but I
->assume this goes back a long time so it isn't worth spending a lot of
->time working out when this was introduced.
-
-So I believe the correct fix should be as follows,
-
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -301,6 +301,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
-         cmem = vzalloc(struct_size(cmem, ranges, 1));
-         if (!cmem)
-                 return -ENOMEM;
-+       cmem->max_nr_ranges = 1;
-  
-         memset(&cmd, 0, sizeof(struct crash_memmap_data));
-         cmd.params = params;
-
-
-And a Fixes tag should be dedicated to commit
-5849cdf8c120 ("x86/crash: Fix crash_setup_memmap_entries() out-of-bounds access")
-which forgot to set cmem->max_nr_ranges=1.
-
->
->The patch needed a bit of work to apply to current code.  I did the
->below.  It compiles.
->
->--- a/arch/x86/kernel/crash.c~x86-kexec-fix-potential-cmem-ranges-out-of-bounds
->+++ a/arch/x86/kernel/crash.c
->@@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_e
-> 	/*
-> 	 * Exclusion of crash region and/or crashk_low_res may cause
-> 	 * another range split. So add extra two slots here.
->+	 *
->+	 * Exclusion of low 1M may not cause another range split, because the
->+	 * range of exclude is [0, 1M] and the condition for splitting a new
->+	 * region is that the start, end parameters are both in a certain
->+	 * existing region in cmem and cannot be equal to existing region's
->+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
->+	 * condition.
->+	 *
->+	 * But in order to lest the low 1M could be changed in the future,
->+	 * (e.g. [stare, 1M]), add a extra slot.
-> 	 */
->-	nr_ranges += 2;
->+	nr_ranges += 3;
-> 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-> 	if (!cmem)
-> 		return NULL;
->@@ -317,9 +327,16 @@ int crash_setup_memmap_entries(struct ki
-> 	 * split. So use two slots here.
-> 	 */
-> 	nr_ranges = 2;
->-	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
->+	/*
->+	 * In the current x86 architecture code, the elfheader is always
->+	 * allocated at crashk_res.start. But it depends on the allocation
->+	 * position of elfheader in crashk_res. To avoid potential out of
->+	 * bounds in future, add a extra slot.
->+	 */
->+	cmem = vzalloc(struct_size(cmem, ranges, 2));
-> 	if (!cmem)
-> 		return -ENOMEM;
->+	cmem->max_nr_ranges = 2;
-
-Thanks for coming up with the above patch! I think the goal of this
-patch is addressing a different issue but it also fixes the UBSAN
-warning because cmem->max_nr_ranges is now set.
-
->
-> 	cmem->max_nr_ranges = nr_ranges;
-> 	cmem->nr_ranges = 0;
->_
-
+Thanks for letting me know the case where an IMA policy may fails
+because of an older kernel. I'll start a new thread to discuss how to
+fix an booting failure issue since it can be decoupled from this patch.
+Previously you reminded me that re-enabling IMA will require re-fixing
+security.ima. Then I realize that changing IMA policy will also require
+such re-fixing otherwise booting failure may also occur if it involves a
+critical component. So I'll also ask your advice for this matter in the
+new thread as well.
 
 -- 
 Best regards,
