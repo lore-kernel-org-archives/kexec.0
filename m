@@ -4,77 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B7D6C3ABBC
-	for <kexec@archiver.kernel.org>; Mon, 12 May 2025 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5758C3ABC3
+	for <kexec@archiver.kernel.org>; Mon, 12 May 2025 14:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=; b=ZGzufstkqxjVwZTp0yqfXlFQfS
-	UyX9i3pyN4CCgP01kZ3AC5AD2r+Ik6fpq/xltnmroGuGU0cGBaBPePQ7KMSj2gVOyhFrgT3senhI3
-	Gw0zmnv21BWypLB+IU/vsWWcb2mexbrGtJIsdPME9NfY/9IFiHKNx6Oec7RHEnOM16rbbP9SMoDM9
-	3myn3KVihVt21T3tejLPWZGhnbTsRtMSAkgl4OS5cKK8H84QX+Eu8Zz4UFxhMYPy/wIOafvJtNcnG
-	1ABsKqnC8Y15kMULOpc59COvS/FW9IWhC+SByNMbxTJPpwJ8f/IcpyNLJ5t2x5IGs3aDQGzoaD6jE
-	K9J58HGw==;
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bsRyGKaV8sRJpQq5Zc/i6T71Ud1O1WM0d3J8aE2ryTI=; b=E0Vad/SWO76BRnz42L8tiyS8fH
+	/1rhOc2u6sru89Crf1iCMqgpmXOMLcjQC0TJjmceZyIWqeDF1u6fj5t6+z4T7eHd6nXOX/5UPMTKm
+	x++OfW3qR3/nlUeiIovAJCNUV7itVphh/WfH6qsNxYwYioNOHufQsikPdgr3yKq2YrVnqknM2i76o
+	wLf3ySbF+H8TQKJ6hInrqLEaXgmyjO0f+xDUVNJQjbN3l03L6EQwGcgeccStnbZbGreRahB8wIUpA
+	K2HNfOcIdnzcKGnaMQ8x6LhQSPMLEn/6ovjUKVlGDJZj+dyBvgD9ahOa1pyKGZHlShUfqTQr2KTfw
+	Auikkn9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEO6y-00000008gZH-2Hf9;
-	Mon, 12 May 2025 08:02:08 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEO6t-00000008gYh-1dZr
-	for kexec@bombadil.infradead.org;
-	Mon, 12 May 2025 08:02:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Subject:To:From:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=; b=ZSm3IaLMVncD3AXlqYbq38UrJi
-	32nydCwZFQsdzXDgGNhFauOPzJBk74lDI4Lpl8GTRlrEhp0eXynImvmjP7jFd4S5KQ/4So7hDp51y
-	nzZs1uU+QFPlUZf5FT723lxGK+Oyes1fHTGFx3bhevtny7HCTKxTLZ1EjUB3IVijepc9ZJIGPMAHb
-	SQzweh6iuKpLPk0iDYfULmM8JlNmnJV/boedSCTPqV/UzNeUiJifEzRe0wEuLzkSV23kdFtFKE+B4
-	b6PYKV8ANkfXMhmzfB7DxlTx7MIgOSvLr/HhvpRdStKKVrnx1Ob2yRuRhruhQy8ztxYCkLBFXj2Ne
-	QVSq50Pw==;
-Received: from mail.ventrixio.pl ([57.129.137.141])
-	by desiato.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uEO6o-0000000GjNK-3y7S
+	id 1uEUXN-00000009nxW-3s8u;
+	Mon, 12 May 2025 14:53:49 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEU3z-00000009ht9-4533
 	for kexec@lists.infradead.org;
-	Mon, 12 May 2025 08:02:02 +0000
-Authentication-Results: ventrixio.pl; arc=none smtp.remote-ip=127.0.0.1
-ARC-Seal: i=1; d=ventrixio.pl; s=default; a=rsa-sha256; cv=none; t=1747036907;
-	b=FBnDnc3cRda/IJGSB8oXMchirGvXCwqjFficV2ZQSb4EQqTgIi3WAc6X/twS2bbnRZHw
-	 ZNFbT1jdOWepFUs/89+KYstAOOIx5rO6fCDlx20CC3jroWHBXbKkZKzgZIGsaiPwRJPUV
-	 IquVUgVP1q/7dgKb/IXCT+EwlYwJNDdb+y640Zhdf21Vtbw/Fs4pSFH/HQbNTRZDbpi9I
-	 hfVMk/DlK3okgdD22JdzerEzDR1n1cTveuyzRpFsQgyOrm7XfO09LTPELMCOYc66GJC44
-	 6RemFr+/ZQj+5+S2SdxnZf29JJlgqcdhquw/vHR3Z2E+aDdIWiHjBk+rj4ERRAZxnVg==
-ARC-Message-Signature: i=1; d=ventrixio.pl; s=default; a=rsa-sha256;
-	c=relaxed/simple; t=1747036907;
-	h=Message-ID:Date:From:Subject:From;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=;
-	b=d6prtI9x4ojsx0zc2+2tb5L9EvuW9HbBmJRIs4De5Yt6PvqEWTEA9/WhxqxjEDx4iooO
-	 Dsk7uy+Ly1ld1D0ilYkPSa+On0YpD8vQergVrTVLT6I7+DZgXLslGu13VX995Tec6Xdi0
-	 n7nSyvI2i/B2N8u3dk0G+pwbdhnZhCs8JgL0bKwX5oVdqsTdwGcsEF0aO/nTfCFSJjWMH
-	 gwBCXUlhOLXKL3Ob02wmIV2T7j/Wi7zJEtY3JVrJVPXSmY1C5YBMHqgO3aiubmgA/3QXC
-	 dANTJs72lJOCZjadrCE3n7R4VLVMd3Q1K5JSnHej7BB1ZZkk6FtJgBc4d+Qz0xMAR2w==
-ARC-Authentication-Results: i=1; ventrixio.pl; arc=none smtp.remote-ip=127.0.0.1
-Received: by mail.ventrixio.pl (Postfix, from userid 1002)
-	id A9FE524317; Mon, 12 May 2025 08:01:40 +0000 (UTC)
-Received: by mail.ventrixio.pl for <kexec@lists.infradead.org>; Mon, 12 May 2025 08:01:21 GMT
-Message-ID: <20250512064500-0.1.26.lxpw.0.k6dbozilct@ventrixio.pl>
-Date: Mon, 12 May 2025 08:01:21 GMT
-From: "Karol Bednaszewski" <karol.bednaszewski@ventrixio.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?Mniejsze_wydatki_na_samoch=C3=B3d?=
-X-Mailer: mail.ventrixio.pl
+	Mon, 12 May 2025 14:23:29 +0000
+Received: from [100.70.33.9] (unknown [172.200.70.35])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 10728211D8CE;
+	Mon, 12 May 2025 07:23:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 10728211D8CE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747059806;
+	bh=bsRyGKaV8sRJpQq5Zc/i6T71Ud1O1WM0d3J8aE2ryTI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=bxaNLGZnaWOn4pztP7LAHZSNR6oUEN7p2ff6LADZBG2eyd8ca5OtAL4bBgiy7h0zV
+	 o0LSARw9BkeXDHj54jQFDmAFSN++gqBUtXl0OyphrZ2NCOPZFaa8xaxWamWb7kAK6y
+	 SgS/N+JEflqT9Sb9poZ36Zz2ugSIGn+JBFtvNyEM=
+Message-ID: <c0dcf292-4c43-4e87-8016-34194f2bddb4@linux.microsoft.com>
+Date: Mon, 12 May 2025 07:23:23 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
+ measurement
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com, bhe@redhat.com
+References: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250512_090159_577758_3D25D581 
-X-CRM114-Status: UNSURE (   1.06  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250512_072328_037053_4BDB126A 
+X-CRM114-Status: GOOD (  15.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,25 +75,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Dzie=C5=84 dobry!
+On 5/2/2025 1:03 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+>
+> Kdump kernel doesn't need IMA to do integrity measurement.
+> Hence the measurement list in 1st kernel doesn't need to be copied to
+> kdump kenrel.
+>
+> Here skip allocating buffer for measurement list copying if loading
+> kdump kernel. Then there won't be the later handling related to
+> ima_kexec_buffer.
+>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> ---
+>   security/integrity/ima/ima_kexec.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 38cb2500f4c3..7362f68f2d8b 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	void *kexec_buffer = NULL;
+>   	int ret;
+>   
+> +	if (image->type == KEXEC_TYPE_CRASH)
+> +		return;
+> +
+>   	/*
+>   	 * Reserve extra memory for measurements added during kexec.
+>   	 */
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+Hi Baoquan,
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe umo=C5=BCliwia tworzenie =
-planu tras czy dostaw.
+Could you tell me when will you have time to validate kdump scenario 
+using this patch?
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+This patch is based on the next-integrity branch of 
+https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
+Thanks,
 
+Steven
 
-Pozdrawiam
-Karol Bednaszewski
 
