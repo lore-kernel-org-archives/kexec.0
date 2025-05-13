@@ -4,77 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31092C3ABC3
-	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 02:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C696C3ABC3
+	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 03:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9dgrXsZWA0vbbTnvHkNfRPIocb/HknSgCRHsF+qYBSQ=; b=Cj7ATMDh5iubx0L7bwd1M1ghY3
-	BkLyU2Jb+fkz6GBY295aXKKVZ2wcQ/S69DSB+0kJYqThbJBAo+v/czMGD1mOT9uQM459ZLu3u4KgE
-	7DHUwss8c/A3Q/sqsrPcIzjMQebTslWcKfrNFQrenUH1RaLc6H3DRblq8D+w3qtLqCL3mQgTZyV57
-	gJV+ayTL4bynDO2TNhqEh7/J94RSsyVt7Is3aOP16tkVGM/4Y5dOMohW5U8k7EPVkkmFAF8qWopTn
-	nz7uJith6Ie9BlkZwTNeVXLq08c3UWHDp3vaEFOGM/N1cNBWKQjQ1YzZZ6sPJxJ8ox9QbJeW0QHnH
-	PqBoLMEg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gzecB5JF2WCaVL4U1mFSN1RE6OGoHu2bmVNsGCvVbk4=; b=Iyt0X5yIbkDzOmzIDa0P/cKqZO
+	sskLV/CgDKE/993LyyPNXR6eLpqo4RV7aKRYPFZD55iJajgNgOnRHDg316XG0DdL8xZL+lzMxVHx2
+	B71jFWQ4l03hQI0xkiWRKxSCTsDkLOiGNj/X8pJB34Tt5yfz7tqNRkwSkQJBKBKe/SPATTPUUrhgY
+	FPxtwd70JfvtvXaKY9gKbLMl7fdbtD/IsiZz7Nso5C6hm+8mY3GsCFvZT3L9KjgYghtfku3eucteU
+	dB3mx1ES7eVOkCuF5ukUCKDmZrRzWcSvSYhEaQXdcW59dv/Qr5ZJ6VzgzeTQ9vKBLzpNjzhJX4ULv
+	Qi5m4GPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEfL2-0000000B9aI-2TJu;
-	Tue, 13 May 2025 02:25:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uEgAq-0000000BEvb-1iE9;
+	Tue, 13 May 2025 03:19:20 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEfKz-0000000B9ZW-0mac
+	id 1uEg5s-0000000BEHP-1Beq
 	for kexec@lists.infradead.org;
-	Tue, 13 May 2025 02:25:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747103143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9dgrXsZWA0vbbTnvHkNfRPIocb/HknSgCRHsF+qYBSQ=;
-	b=MJ4Kpht8j2vfOBJjnDRUW34kYOe0Azis9xD+cycBQDHRptjj/OWt+jlmLAHfdYB9IjamCZ
-	8zYtn0/UCWSVmb+n7r4MYmt4Zn3EJgIs43KiNRvQyoDi7Majd8sxyTGAwzuTnjDn5Pqs/p
-	hFJsQFo/016NL+/Q++CN1oxNcyWgo0Q=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-206-8D2PfANRNYa9xv62jUJf4g-1; Mon,
- 12 May 2025 22:25:39 -0400
-X-MC-Unique: 8D2PfANRNYa9xv62jUJf4g-1
-X-Mimecast-MFC-AGG-ID: 8D2PfANRNYa9xv62jUJf4g_1747103136
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F27E71800258;
-	Tue, 13 May 2025 02:25:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 972F01953B82;
-	Tue, 13 May 2025 02:25:33 +0000 (UTC)
-Date: Tue, 13 May 2025 10:25:26 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com
-Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
- measurement
-Message-ID: <aCKtlthQWnq+xyat@MiWiFi-R3L-srv>
-References: <20250502200337.6293-1-chenste@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250512_192545_301617_AB579795 
-X-CRM114-Status: GOOD (  20.16  )
+	Tue, 13 May 2025 03:14:12 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id AE92C629F8;
+	Tue, 13 May 2025 03:14:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3342BC4CEE7;
+	Tue, 13 May 2025 03:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747106049;
+	bh=jeFqy7zKESSjHISNy8tS/rhzHwYLUa6cEV201i7Nzks=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MLSvsplGVO8OHx8goaLdPzja4JBmyQk/Mq62gXJ+ixRyRJFDZ+XPANipvuuoULo5h
+	 gN7v7dzD4DvcO5WrwxdFAU+T5NJI2bqfSGXD81I0ml294lc9HM570dpp1uW4VWEf/z
+	 FePhgHLFdOHtgAudqq+5FWAtUhYXlTM12YMLgYbA=
+Date: Mon, 12 May 2025 20:14:08 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, nh-open-source@amazon.com
+Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
+Message-Id: <20250512201408.81acaf861581f6fb98e8a3b0@linux-foundation.org>
+In-Reply-To: <35f818e2cf3f15b7dc7028f543e0eea94c799efd.camel@infradead.org>
+References: <20250512225752.11687-1-graf@amazon.com>
+	<20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
+	<35f818e2cf3f15b7dc7028f543e0eea94c799efd.camel@infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,73 +69,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/02/25 at 01:03pm, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
-> 
-> Kdump kernel doesn't need IMA to do integrity measurement.
-> Hence the measurement list in 1st kernel doesn't need to be copied to
-> kdump kenrel.
-> 
-> Here skip allocating buffer for measurement list copying if loading
-> kdump kernel. Then there won't be the later handling related to
-> ima_kexec_buffer.
-> 
-> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_kexec.c | 3 +++
->  1 file changed, 3 insertions(+)
+On Mon, 12 May 2025 19:02:20 -0700 David Woodhouse <dwmw2@infradead.org> wr=
+ote:
 
-I applied this patch on top of below IMA patchset, and did a test.
-[PATCH v13 0/9] ima: kexec: measure events between kexec load and execute
+> > > =A0 2) More robust. Even if by accident some page is still in use for=
+ DMA,
+> > > =A0=A0=A0=A0 the new kernel image will be safe from that access becau=
+se it resides
+> > > =A0=A0=A0=A0 in a memory region that is considered allocated in the o=
+ld kernel and
+> > > =A0=A0=A0=A0 has a chance to reinitialize that component.
+> >=20
+> >=20
+>  > https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/>
+>
+> >Is this known to be a problem in current code?
+>=20
+> Oh $DEITY yes. The Arm Generic Interrupt Controller is, to quote a dear
+> friend, "a cautionary tale of how not to approach a hardware design".
+>=20
+> It does a whole bunch of arbitrary DMA all over the place, and doesn't
+> even live behind an IOMMU. And doesn't *stop* doing DMA unless you ask
+> it *really* nicely; merely shutting down the offending high-level
+> components isn't always enough, because they might still to write back
+> some caches.
+>=20
+> Here's one of the latest examples (not actually the one which has been
+> breaking kexec for us, as far as we know, but an example of the genre):
+> https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/
+>=20
+> So putting the new kernel into a physical memory region which was
+> considered 'free' by the previous kernel, as Alex explains, is actually
+> a very good defence-in-depth mechanism to protect against such issues.
 
-When I loaded kdump kernel as below with '-d' specified:
+Lol, it sounds like you're having fun over there.
 
-/sbin/kexec -s -d -p --command-line=BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.0-rc6+ ro console=ttyS0,115200N81 irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 acpi_no_memhotplug transparent_hugepage=never nokaslr hest_disable novmcoredd cma=0 hugetlb_cma=0 pcie_ports=compat disable_cpu_apicid=0 --initrd=/boot/initramfs-6.15.0-rc6+kdump.img /boot/vmlinuz-6.15.0-rc6+
-
-I can see that this patch works to skip copying measurement list to kdump
-kernel as expected..
-
-=====Without this patch===
-[48522.060422] kexec_file: kernel: 000000006fbcb87f kernel_size: 0xe99200
-[48522.067742] PEFILE: Unsigned PE binary
-[48522.094849] ima: kexec measurement buffer for the loaded kernel at 0x6efff000.
-[48522.102982] crash_core: Crash PT_LOAD ELF header. phdr=00000000cae5d7e6 vaddr=0xffff8da640100000, paddr=0x100000, sz=0x5af00000 e_phnum=67 p_offset=0x100000
-......snip...
-=====
-
-=====With this patch applied====
-[ 2101.704125] kexec_file: kernel: 0000000046d8985c kernel_size: 0xeab200
-[ 2101.711436] PEFILE: Unsigned PE binary
-[ 2101.734752] crash_core: Crash PT_LOAD ELF header. phdr=000000006fc83a51 vaddr=0xffff899480100000, paddr=0x100000, sz=0x5af00000 e_phnum=67 p_offset=0x100000
-......snip...
-=====> 
-
-My only concern is the patch subject is not very sepcific, it better
-relfect the exact action taken in this patch, like:
-
-ima: do not copy measurement list to kdump kernel
-
-Other than above concern, please feel free to add my:
-
-Tested-by: Baoquan He <bhe@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 38cb2500f4c3..7362f68f2d8b 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	void *kexec_buffer = NULL;
->  	int ret;
->  
-> +	if (image->type == KEXEC_TYPE_CRASH)
-> +		return;
-> +
->  	/*
->  	 * Reserve extra memory for measurements added during kexec.
->  	 */
-> -- 
-> 2.43.0
-> 
+Alexander, can you please repackage David's info to your taste and
+include it in the changelog?  Escalating the value of the patch from
+"might speed it up, don't know how much" to "addresses grievous
+real-world issues" is helpful to the patch's case!
 
 
