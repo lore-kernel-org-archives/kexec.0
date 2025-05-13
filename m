@@ -4,80 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38BDBC3ABC9
-	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 08:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 864E5C3ABC9
+	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 09:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zPhw9+jYaaVCsT9M7rcD3AwNUmvjwvwAOAmA20lLQQs=; b=cpwVKwXdAbiNJNNjT1IFSxuNIB
-	jgEB0Y2SJU1snF0GaNd3mCm+7Qif4lpxGi6ejvxgJ8O2pAomRQacdSGFyF+XSZVLy+PE25xkK3WWx
-	N6DYu7Wp+JKmhuj8edceEAinEgd//NETs70abAg3vKkFYVVm4YraSK1u6LdBZGD13+ZhdNUN32Ldb
-	rUy3SQCCjB1wzH7TY5gNN1TAyNSJ8PVJaOZQOyhuq5Q+h4jLpw60bGBDlcBCojV3ycKKqll1Kdm2L
-	h2qnsMkZ/AqAs4McLpy52+0J7QLygr/vsFplKpxD3n8/udKoWI+xk5IrmSk13Lj1ObLsQrK9LhCWx
-	FfaLPvkw==;
+	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=QEMTVLJc2YbssmMmEtBalZl8SYIHmittWHWmEOmY9a8=; b=b0gsIUz6eIteYH6ctGZ9zLpNbd
+	Yo/3GP4ekB6wUfBN4+UAFvoqciXvv9FyttXNHmpsQFFCQUAv/Hko0pmHU5MmSYZAkZ4i1qh6Jo3x/
+	HAppg118go6LB1Ch+5xNygLFCA2Xzo6aikle3Oo68RkP+A/I+pY8KyrsdU1XmikOv6qCQs+zPmgBN
+	U90FB78oh2kxTUVnyBZliJUgmHCNpQcG8FGygJCjhEZ9fOx4OaKvhoyKNkFsBhQAVsfYNtbLYmkCR
+	bxnyOr9S602nfZwqpfzgZTdHKdYO8TyMvaPpRP40skOOFJo+ZLFBpcQHNlpftmJwmWIcJS+ov3I+U
+	rv18ptcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEksI-0000000Bki4-461u;
-	Tue, 13 May 2025 08:20:30 +0000
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90])
+	id 1uElbo-0000000BqXf-0A3m;
+	Tue, 13 May 2025 09:07:32 +0000
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEksE-0000000BkhA-0NsC
+	id 1uElRd-0000000Bp2q-0FAO
 	for kexec@lists.infradead.org;
-	Tue, 13 May 2025 08:20:27 +0000
+	Tue, 13 May 2025 08:57:02 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747124427; x=1778660427;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zPhw9+jYaaVCsT9M7rcD3AwNUmvjwvwAOAmA20lLQQs=;
-  b=Tq8ll7NmCqamm2XlN893eZtQsE/gWJUvCpBuxUysYcNDhlaqcRyqkGPo
-   /SfeqgMk1dzmdDxjRl+lDlxCTMpBW/iU4OLiC6vp75T32huiukiG1dX8u
-   FdYn/rEKnn6PzS8ljRNG4GG9qa34tLFKByXjZX9s0AROVVH6xfaosUvzL
-   dNrl3guDOg0vsJZxuuhDafbSOwpHtmInAypyRbosW5OwETqlkP/1UwrAJ
-   r6n3adUaAc/PTjwKhQmWVU2W/inGe5bo7aoQO/kFNdqZ6s7aaMghCcpaS
-   a5mv9fPm+m8CGb4A6cmbquASeuZF4kzBUHw2JjDm59fDIaJXxalXGL6T7
+  t=1747126622; x=1778662622;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QEMTVLJc2YbssmMmEtBalZl8SYIHmittWHWmEOmY9a8=;
+  b=Ufs8kANrrW+ge9sGLX+q08mbD+5B5CK2QndLiz+P502YBItlF9O9ytrQ
+   tLNzwEaRHMvdoADtZjkHaCuRYZV+YpYNKEF0kcdqNiVS3cvz5b3h7HMkk
+   ObQo0Zu9TjXbTc0kp8d7A0bgeLemB+3eNhGvPHjYlGNtdZfgT6p/e2DI2
+   fEs4Q6YQ4nM50tnbyQG8Gj6skWryeM+1WsfmKHZsFzdS2jneQ62eSVuu9
+   7v7uCygtJDNkEQpOolS7CtlgS88t21Yw1Jdg9JHyIeuNxsUiytaKH2VcC
+   FfF98BpnLDSzonwBgZDzounNx1/FVFrI0ROUH3J3nPIWLcFigPQDfeipl
    w==;
 X-IronPort-AV: E=Sophos;i="6.15,284,1739836800"; 
-   d="scan'208";a="497979372"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:20:21 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:36680]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.127:2525] with esmtp (Farcaster)
- id a0b54a77-02c8-49e6-8587-3c442df32eec; Tue, 13 May 2025 08:20:19 +0000 (UTC)
-X-Farcaster-Flow-ID: a0b54a77-02c8-49e6-8587-3c442df32eec
+   d="scan'208";a="489313881"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:56:58 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:20357]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.244:2525] with esmtp (Farcaster)
+ id 85a38705-87d7-44ac-9c36-5cd3229ab0a3; Tue, 13 May 2025 08:56:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 85a38705-87d7-44ac-9c36-5cd3229ab0a3
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 13 May 2025 08:20:19 +0000
-Received: from [0.0.0.0] (172.19.99.218) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Tue, 13 May 2025
- 08:20:17 +0000
-Message-ID: <ecfd2a34-662a-4288-bb0d-44dda982ae7f@amazon.com>
-Date: Tue, 13 May 2025 10:20:15 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Baoquan He
-	<bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	<nh-open-source@amazon.com>
-References: <20250512225752.11687-1-graf@amazon.com>
- <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
-Content-Language: en-US
+ Tue, 13 May 2025 08:56:56 +0000
+Received: from dev-dsk-graf-1a-90d01eec.eu-west-1.amazon.com (172.19.99.218)
+ by EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 13 May 2025 08:56:54 +0000
 From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
+To: <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH v2] kexec: Enable CMA based contiguous allocation
+Date: Tue, 13 May 2025 08:56:52 +0000
+Message-ID: <20250513085652.65903-1-graf@amazon.com>
+X-Mailer: git-send-email 2.47.1
+MIME-Version: 1.0
 X-Originating-IP: [172.19.99.218]
-X-ClientProxiedBy: EX19D038UWC002.ant.amazon.com (10.13.139.238) To
+X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250513_012026_380872_D7B89AC0 
-X-CRM114-Status: GOOD (  37.10  )
+X-CRM114-CacheID: sfid-20250513_015701_412387_C43F3D42 
+X-CRM114-Status: GOOD (  41.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,127 +88,460 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgQW5kcmV3LAoKT24gMTMuMDUuMjUgMDE6NTksIEFuZHJldyBNb3J0b24gd3JvdGU6Cj4gT24g
-TW9uLCAxMiBNYXkgMjAyNSAyMjo1Nzo1MiArMDAwMCBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6
-b24uY29tPiB3cm90ZToKPgo+PiBXaGVuIGJvb3RpbmcgYSBuZXcga2VybmVsIHdpdGgga2V4ZWNf
-ZmlsZSwgdGhlIGtlcm5lbCBwaWNrcyBhIHRhcmdldAo+PiBsb2NhdGlvbiB0aGF0IHRoZSBrZXJu
-ZWwgc2hvdWxkIGxpdmUgYXQsIHRoZW4gYWxsb2NhdGVzIHJhbmRvbSBwYWdlcywKPj4gY2hlY2tz
-IHdoZXRoZXIgYW55IG9mIHRob3NlIHBhdGNoZXMgbWFnaWNhbGx5IGhhcHBlbnMgdG8gY29pbmNp
-ZGUgd2l0aAo+PiBhIHRhcmdldCBhZGRyZXNzIHJhbmdlIGFuZCBpZiBzbywgdXNlcyB0aGVtIGZv
-ciB0aGF0IHJhbmdlLgo+Pgo+PiBGb3IgZXZlcnkgcGFnZSBhbGxvY2F0ZWQgdGhpcyB3YXksIGl0
-IHRoZW4gY3JlYXRlcyBhIHBhZ2UgbGlzdCB0aGF0IHRoZQo+PiByZWxvY2F0aW9uIGNvZGUgLSBj
-b2RlIHRoYXQgZXhlY3V0ZXMgd2hpbGUgYWxsIENQVXMgYXJlIG9mZiBhbmQgd2UgYXJlCj4+IGp1
-c3QgYWJvdXQgdG8ganVtcCBpbnRvIHRoZSBuZXcga2VybmVsIC0gY29waWVzIHRvIHRoZWlyIGZp
-bmFsIG1lbW9yeQo+PiBsb2NhdGlvbi4gV2UgY2FuIG5vdCBwdXQgdGhlbSB0aGVyZSBiZWZvcmUs
-IGJlY2F1c2UgY2hhbmNlcyBhcmUgcHJldHR5Cj4+IGdvb2QgdGhhdCBhdCBsZWFzdCBzb21lIHBh
-Z2UgaW4gdGhlIHRhcmdldCByYW5nZSBpcyBhbHJlYWR5IGluIHVzZSBieQo+PiB0aGUgY3VycmVu
-dGx5IHJ1bm5pbmcgTGludXggZW52aXJvbm1lbnQuCj4+Cj4+IEFsbCBvZiB0aGlzIGlzIGluZWZm
-aWNpZW50Lgo+Pgo+PiBTaW5jZSBrZXhlYyBnb3QgaW50cm9kdWNlZCwgTGludXggaGFzIGdhaW5l
-ZCB0aGUgQ01BIGZyYW1ld29yayB3aGljaAo+PiBjYW4gcGVyZm9ybSBwaHlzaWNhbGx5IGNvbnRp
-Z3VvdXMgbWVtb3J5IG1hcHBpbmdzLCB3aGlsZSBrZWVwaW5nIHRoYXQKPj4gbWVtb3J5IGF2YWls
-YWJsZSBmb3IgbW92YWJsZSBtZW1vcnkgd2hlbiBpdCBpcyBub3QgbmVlZGVkIGZvciBjb250aWd1
-b3VzCj4+IGFsbG9jYXRpb25zLiBUaGUgZGVmYXVsdCBDTUEgYWxsb2NhdG9yIGlzIGZvciBETUEg
-YWxsb2NhdGlvbnMuCj4+Cj4+IFRoaXMgcGF0Y2ggYWRkcyBsb2dpYyB0byB0aGUga2V4ZWMgZmls
-ZSBsb2FkZXIgdG8gYXR0ZW1wdCB0byBwbGFjZSB0aGUKPj4gdGFyZ2V0IHBheWxvYWQgYXQgYSBs
-b2NhdGlvbiBhbGxvY2F0ZWQgZnJvbSBDTUEuIElmIHN1Y2Nlc3NmdWwsIGl0IHVzZXMKPj4gdGhh
-dCBtZW1vcnkgcmFuZ2UgZGlyZWN0bHkgaW5zdGVhZCBvZiBjcmVhdGluZyBjb3B5IGluc3RydWN0
-aW9ucyBkdXJpbmcKPj4gdGhlIGhvdCBwaGFzZS4gVG8gZW5zdXJlIHRoYXQgdGhlcmUgaXMgYSBz
-YWZldHkgbmV0IGluIGNhc2UgYW55dGhpbmcgZ29lcwo+PiB3cm9uZyB3aXRoIHRoZSBDTUEgYWxs
-b2NhdGlvbiwgaXQgYWxzbyBhZGRzIGEgZmxhZyBmb3IgdXNlciBzcGFjZSB0byBmb3JjZQo+PiBk
-aXNhYmxlIENNQSBhbGxvY2F0aW9ucy4KPj4KPj4gVXNpbmcgQ01BIGFsbG9jYXRpb25zIGhhcyB0
-d28gYWR2YW50YWdlczoKPj4KPj4gICAgMSkgRmFzdGVyLiBUaGVyZSBpcyBubyBtb3JlIG5lZWQg
-dG8gY29weSBpbiB0aGUgaG90IHBoYXNlLgo+IEhvdyBtdWNoIGZhc3Rlcj8gIEtpbmRhIG1hdHRl
-cnMgYXMgImZhc3QiIGlzIHRoZSB3aG9sZSBwb2ludCBvZiB0aGUgcGF0Y2ghCgoKSXQgbW9zdGx5
-IGRlcGVuZHMgb24geW91ciBtZW1vcnkgYmFuZHdpZHRoLCBjYWNoZSBzaXplIGFuZCB0aGUgYW1v
-dW50IG9mIApwYXlsb2FkIHlvdSBrZXhlYyBpbnRvLiBUb2RheSwgd2UgY29weSBrZXJuZWwsIGlu
-aXRyZCBhbmQgZHRiIGR1cmluZyB0aGUgCmtleGVjIGhvdCBwaGFzZS4gV2l0aCB0aGlzIHBhdGNo
-LCB3ZSBjb3B5IG5vbmUuCgpBdCBhIGh5cG90aGV0aWNhbCBwYXlsb2FkIHNpemUgb2YgMTAwTWlC
-IGFuZCBhbiBBTUxvZ2ljIFM5MDUgd2UncmUgCmxvb2tpbmcgYXQgNTBtcy4gT24gYW4gSWNlIExh
-a2Ugc3lzdGVtIGF0IGFib3V0IDRtcy4KCkFzIGZvciByZWFsIGxpZmUgYmVuY2htYXJrcywgb24g
-YW4gQXBwbGUgTTEgVk0gd2l0aCA1M01pQiBwYXlsb2FkIEkgCm1lYXN1cmUgYSAyLjJtcyBzcGVl
-ZHVwLgoKVGhhdCBzYWlkLCB0byBtZSByb2J1c3RuZXNzIGlzIGF0IGxlYXN0IGFzIGltcG9ydGFu
-dCBhcyBzcGVlZCBoZXJlLiBUaGUgCmN1cnJlbnQgc2NoZW1lIGNyZWF0ZXMgbWVtb3J5IGFsbG9j
-YXRpb24gY29uZmxpY3RzIGFsbW9zdCBieSBkZXNpZ24sIAp3aGljaCBpbmNyZWFzZSB0aGUgb2Rk
-cyBvZiBzb21ldGhpbmcgZ29pbmcgd3JvbmcuCgoKPj4gICAgMikgTW9yZSByb2J1c3QuIEV2ZW4g
-aWYgYnkgYWNjaWRlbnQgc29tZSBwYWdlIGlzIHN0aWxsIGluIHVzZSBmb3IgRE1BLAo+PiAgICAg
-ICB0aGUgbmV3IGtlcm5lbCBpbWFnZSB3aWxsIGJlIHNhZmUgZnJvbSB0aGF0IGFjY2VzcyBiZWNh
-dXNlIGl0IHJlc2lkZXMKPj4gICAgICAgaW4gYSBtZW1vcnkgcmVnaW9uIHRoYXQgaXMgY29uc2lk
-ZXJlZCBhbGxvY2F0ZWQgaW4gdGhlIG9sZCBrZXJuZWwgYW5kCj4+ICAgICAgIGhhcyBhIGNoYW5j
-ZSB0byByZWluaXRpYWxpemUgdGhhdCBjb21wb25lbnQuCj4gSXMgdGhpcyBrbm93biB0byBiZSBh
-IHByb2JsZW0gaW4gY3VycmVudCBjb2RlPwoKClllcywgc2VlIERhdmlkJ3MgZW1haWwuIEknbGwg
-Y2xhcmlmeSBpbiB0aGUgcGF0Y2ggZGVzY3JpcHRpb24uCgoKPgo+IFNvbWUgbWlub3Igb2JzZXJ2
-YXRpb25zOgo+Cj4+IC0tLSBhL2luY2x1ZGUvbGludXgva2V4ZWMuaAo+PiArKysgYi9pbmNsdWRl
-L2xpbnV4L2tleGVjLmgKPj4KPj4gLi4uCj4+Cj4+IEBAIC0zMzEsNiArMzM2LDcgQEAgc3RydWN0
-IGtpbWFnZSB7Cj4+ICAgICAgICAgKi8KPj4gICAgICAgIHVuc2lnbmVkIGludCBob3RwbHVnX3N1
-cHBvcnQ6MTsKPj4gICAjZW5kaWYKPj4gKyAgICAgdW5zaWduZWQgaW50IG5vX2NtYSA6IDE7Cj4g
-Im5vX2NtYToxIiBpcyBtb3JlIGNvbnZlbnRpb25hbC4KCgpGaXhlZC4KCgo+Cj4+ICAgI2lmZGVm
-IEFSQ0hfSEFTX0tJTUFHRV9BUkNICj4+ICAgICAgICBzdHJ1Y3Qga2ltYWdlX2FyY2ggYXJjaDsK
-Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC9rZXhlYy5oIGIvaW5jbHVkZS91YXBp
-L2xpbnV4L2tleGVjLmgKPj4gaW5kZXggNWFlMTc0MWVhOGVhLi44OTU4ZWJmY2ZmOTQgMTAwNjQ0
-Cj4+IC0tLSBhL2luY2x1ZGUvdWFwaS9saW51eC9rZXhlYy5oCj4+ICsrKyBiL2luY2x1ZGUvdWFw
-aS9saW51eC9rZXhlYy5oCj4+Cj4+IC4uLgo+Pgo+PiArc3RhdGljIGludCBraW1hZ2VfbG9hZF9j
-bWFfc2VnbWVudChzdHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0IGtleGVjX3NlZ21lbnQgKnNl
-Z21lbnQpCj4+ICt7Cj4+ICsgICAgIHVuc2lnbmVkIGxvbmcgbWFkZHI7Cj4+ICsgICAgIHNpemVf
-dCB1Ynl0ZXMsIG1ieXRlczsKPj4gKyAgICAgaW50IHJlc3VsdCA9IDA7Cj4+ICsgICAgIHVuc2ln
-bmVkIGNoYXIgX191c2VyICpidWYgPSBOVUxMOwo+PiArICAgICB1bnNpZ25lZCBjaGFyICprYnVm
-ID0gTlVMTDsKPj4gKyAgICAgY2hhciAqcHRyID0gcGFnZV9hZGRyZXNzKHNlZ21lbnQtPmNtYSk7
-Cj4+ICsKPj4gKyAgICAgaWYgKGltYWdlLT5maWxlX21vZGUpCj4+ICsgICAgICAgICAgICAga2J1
-ZiA9IHNlZ21lbnQtPmtidWY7Cj4+ICsgICAgIGVsc2UKPj4gKyAgICAgICAgICAgICBidWYgPSBz
-ZWdtZW50LT5idWY7Cj4+ICsgICAgIHVieXRlcyA9IHNlZ21lbnQtPmJ1ZnN6Owo+PiArICAgICBt
-Ynl0ZXMgPSBzZWdtZW50LT5tZW1zejsKPj4gKyAgICAgbWFkZHIgPSBzZWdtZW50LT5tZW07Cj4+
-ICsKPj4gKyAgICAgLyogSW5pdGlhbGl6ZSB0aGUgYnVmZmVyIHdpdGggemVyb3MgdG8gYWxsb3cg
-Zm9yIHNtYWxsZXIgaW5wdXQgYnVmZmVycyAqLwo+PiArICAgICBtZW1zZXQocHRyLCAwLCBtYnl0
-ZXMpOwo+IFdvdWxkIGl0IGJlIG1vcmUgZWZmaWNpZW50IHRvIHplcm8gdGhlIHJlbWFpbmRlciBh
-ZnRlciBwZXJmb3JtaW5nIHRoZSBjb3B5PwoKCll1cC4gQ2hhbmdlZCA6KS4KCgo+Cj4+ICsgICAg
-IC8qIFRoZW4gY29weSBmcm9tIHNvdXJjZSBidWZmZXIgdG8gdGhlIENNQSBvbmUgKi8KPj4gKyAg
-ICAgd2hpbGUgKG1ieXRlcykgewo+PiArICAgICAgICAgICAgIHNpemVfdCB1Y2h1bmssIG1jaHVu
-azsKPj4gKwo+PiArICAgICAgICAgICAgIHB0ciArPSBtYWRkciAmIH5QQUdFX01BU0s7Cj4+ICsg
-ICAgICAgICAgICAgbWNodW5rID0gbWluX3Qoc2l6ZV90LCBtYnl0ZXMsCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIFBBR0VfU0laRSAtIChtYWRkciAmIH5QQUdFX01BU0spKTsKPj4g
-KyAgICAgICAgICAgICB1Y2h1bmsgPSBtaW4odWJ5dGVzLCBtY2h1bmspOwo+PiArCj4+ICsgICAg
-ICAgICAgICAgaWYgKHVjaHVuaykgewo+PiArICAgICAgICAgICAgICAgICAgICAgLyogRm9yIGZp
-bGUgYmFzZWQga2V4ZWMsIHNvdXJjZSBwYWdlcyBhcmUgaW4ga2VybmVsIG1lbW9yeSAqLwo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgaWYgKGltYWdlLT5maWxlX21vZGUpCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIG1lbWNweShwdHIsIGtidWYsIHVjaHVuayk7Cj4+ICsgICAgICAg
-ICAgICAgICAgICAgICBlbHNlCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc3Vs
-dCA9IGNvcHlfZnJvbV91c2VyKHB0ciwgYnVmLCB1Y2h1bmspOwo+PiArICAgICAgICAgICAgICAg
-ICAgICAgdWJ5dGVzIC09IHVjaHVuazsKPj4gKyAgICAgICAgICAgICAgICAgICAgIGlmIChpbWFn
-ZS0+ZmlsZV9tb2RlKQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrYnVmICs9IHVj
-aHVuazsKPj4gKyAgICAgICAgICAgICAgICAgICAgIGVsc2UKPj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgYnVmICs9IHVjaHVuazsKPj4gKyAgICAgICAgICAgICB9Cj4+ICsKPj4gKyAg
-ICAgICAgICAgICBpZiAocmVzdWx0KSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICByZXN1bHQg
-PSAtRUZBVUxUOwo+PiArICAgICAgICAgICAgICAgICAgICAgZ290byBvdXQ7Cj4+ICsgICAgICAg
-ICAgICAgfQo+PiArCj4+ICsgICAgICAgICAgICAgcHRyICAgICs9IG1jaHVuazsKPj4gKyAgICAg
-ICAgICAgICBtYWRkciAgKz0gbWNodW5rOwo+PiArICAgICAgICAgICAgIG1ieXRlcyAtPSBtY2h1
-bms7Cj4+ICsKPj4gKyAgICAgICAgICAgICBjb25kX3Jlc2NoZWQoKTsKPj4gKyAgICAgfQo+PiAr
-b3V0Ogo+PiArICAgICByZXR1cm4gcmVzdWx0Owo+PiArfQo+PiArCj4+Cj4+IC4uLgo+Pgo+PiAt
-LS0gYS9rZXJuZWwva2V4ZWNfZmlsZS5jCj4+ICsrKyBiL2tlcm5lbC9rZXhlY19maWxlLmMKPj4K
-Pj4gLi4uCj4+Cj4+IEBAIC02MzIsNiArNjM1LDM4IEBAIHN0YXRpYyBpbnQga2V4ZWNfd2Fsa19y
-ZXNvdXJjZXMoc3RydWN0IGtleGVjX2J1ZiAqa2J1ZiwKPj4gICAgICAgICAgICAgICAgcmV0dXJu
-IHdhbGtfc3lzdGVtX3JhbV9yZXMoMCwgVUxPTkdfTUFYLCBrYnVmLCBmdW5jKTsKPj4gICB9Cj4+
-Cj4+ICtzdGF0aWMgaW50IGtleGVjX2FsbG9jX2NvbnRpZyhzdHJ1Y3Qga2V4ZWNfYnVmICprYnVm
-KQo+PiArewo+PiArICAgICB1MzIgcGFnZXMgPSAodTMyKShrYnVmLT5tZW1zeiA+PiBQQUdFX1NI
-SUZUKTsKPiBJIGRvbid0IHRoaW5rIHRoZSBjYXN0IGlzIG5lZWRlZD8KCgpJIGFkZGVkIGl0IHRv
-IG1ha2UgaXQgbW9yZSBleHBsaWNpdCB3ZSdyZSBjYXN0aW5nIChhbmQgaGVuY2UgcG90ZW50aWFs
-bHkgCmxvc2UgYSBmZXcgYml0cykuIEF0IHNpemVfdCwgdGhhdCBpcyBubyBsb25nZXIgbmVjZXNz
-YXJ5LgoKCj4KPj4gKyAgICAgdW5zaWduZWQgbG9uZyBtZW07Cj4+ICsgICAgIHN0cnVjdCBwYWdl
-ICpwOwo+PiArCj4+ICsgICAgIGlmIChrYnVmLT5pbWFnZS0+bm9fY21hKQo+PiArICAgICAgICAg
-ICAgIHJldHVybiAtRVBFUk07Cj4+ICsKPj4gKyAgICAgcCA9IGRtYV9hbGxvY19mcm9tX2NvbnRp
-Z3VvdXMoTlVMTCwgcGFnZXMsIGdldF9vcmRlcihrYnVmLT5idWZfYWxpZ24pLCB0cnVlKTsKPiBk
-bWFfYWxsb2NfZnJvbV9jb250aWd1b3VzKCkncyBgY291bnQnIGFyZyBpcyBzaXplX3QuICBNYWtp
-bmcgYHBhZ2VzJwo+IHNpemVfdCBzZWVtcyBiZXN0IGhlcmUuICAoQW5kIG5yX3BhZ2VzIHdvdWxk
-IGJlIGEgYmV0dGVyIGlkZW50aWZpZXIhKQo+Cj4KPj4gKyAgICAgaWYgKCFwKQo+PiArICAgICAg
-ICAgICAgIHJldHVybiAtRUFERFJOT1RBVkFJTDsKPiBFQUREUk5PVEFWQUlMIGlzIGEgbmV0d29y
-a2luZyB0aGluZy4gIFBlb3BsZSB3aWxsIGJlIHN1cnByaXNlZCB0byBzZWUKPiBrZXhlYyByZXR1
-cm5pbmcgbmV0d29ya2luZyBlcnJvcnMuICBQZXJoYXBzIGNob29zZSBzb21ldGhpbmcgbW9yZQo+
-IGFwcHJvcHJpYXRlPwoKCkkgd2FzIHN1cnByaXNlZCB0b28gd2hlbiBJIHNhdyBpdCBpbiB0aGUg
-c3Vycm91bmRpbmcgY29kZS4gSXQncyB0aGUgCmVycm9yIGNvZGUgdGhhdCBsb2NhdGVfbWVtX2hv
-bGUoKSByZXR1cm5zLCBzbyBJIGNvcGllZCBpdC4gTGV0IG1lIGNoYW5nZSAKaXQgYXQgbGVhc3Qg
-aW4gdGhpcyBmdW5jdGlvbiB0byBzb21ldGhpbmcgc2Vuc2libGUuCgoKQWxleAoKCgoKCkFtYXpv
-biBXZWIgU2VydmljZXMgRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApUYW1hcmEtRGFu
-ei1TdHIuIDEzCjEwMjQzIEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hs
-YWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0
-ZW5idXJnIHVudGVyIEhSQiAyNTc3NjQgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAzNjUgNTM4
-IDU5Nwo=
+When booting a new kernel with kexec_file, the kernel picks a target
+location that the kernel should live at, then allocates random pages,
+checks whether any of those patches magically happens to coincide with
+a target address range and if so, uses them for that range.
+
+For every page allocated this way, it then creates a page list that the
+relocation code - code that executes while all CPUs are off and we are
+just about to jump into the new kernel - copies to their final memory
+location. We can not put them there before, because chances are pretty
+good that at least some page in the target range is already in use by
+the currently running Linux environment. Copying is happening from a
+single CPU at RAM rate, which takes around 4-50 ms per 100 MiB.
+
+All of this is inefficient and error prone.
+
+To successfully kexec, we need to quiesce all devices of the outgoing
+kernel so they don't scribble over the new kernel's memory. We have seen
+cases where that does not happen properly (*cough* GIC *cough*) and hence
+the new kernel was corrupted. This started a month long journey to root
+cause failing kexecs to eventually see memory corruption, because the new
+kernel was corrupted severely enough that it could not emit output to
+tell us about the fact that it was corrupted. By allocating memory for the
+next kernel from a memory range that is guaranteed scribbling free, we can
+boot the next kernel up to a point where it is at least able to detect
+corruption and maybe even stop it before it becomes severe. This increases
+the chance for successful kexecs.
+
+Since kexec got introduced, Linux has gained the CMA framework which
+can perform physically contiguous memory mappings, while keeping that
+memory available for movable memory when it is not needed for contiguous
+allocations. The default CMA allocator is for DMA allocations.
+
+This patch adds logic to the kexec file loader to attempt to place the
+target payload at a location allocated from CMA. If successful, it uses
+that memory range directly instead of creating copy instructions during
+the hot phase. To ensure that there is a safety net in case anything goes
+wrong with the CMA allocation, it also adds a flag for user space to force
+disable CMA allocations.
+
+Using CMA allocations has two advantages:
+
+  1) Faster by 4-50 ms per 100 MiB. There is no more need to copy in the
+     hot phase.
+  2) More robust. Even if by accident some page is still in use for DMA,
+     the new kernel image will be safe from that access because it resides
+     in a memory region that is considered allocated in the old kernel and
+     has a chance to reinitialize that component.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
+
+---
+
+v1 -> v2:
+
+  - Clarify patch description
+  - Move cma pointer out of kexec_segment. That is a sneaky UAPI struct we
+    can not modify. Fixes non kexec_file path
+  - Coding style
+  - Move memset(0) to only clear remainder
+  - Move kexec_alloc_contig() into kexec_locate_mem_hole(). Makes the code
+    flow easier to read.
+  - Sanitize return values
+---
+ arch/riscv/kernel/elf_kexec.c |   1 +
+ include/linux/kexec.h         |  10 ++++
+ include/uapi/linux/kexec.h    |   1 +
+ kernel/kexec.c                |   2 +-
+ kernel/kexec_core.c           | 100 +++++++++++++++++++++++++++++++---
+ kernel/kexec_file.c           |  51 ++++++++++++++++-
+ kernel/kexec_internal.h       |   2 +-
+ 7 files changed, 156 insertions(+), 11 deletions(-)
+
+diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+index e783a72d051f..d81647c98c92 100644
+--- a/arch/riscv/kernel/elf_kexec.c
++++ b/arch/riscv/kernel/elf_kexec.c
+@@ -109,6 +109,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
+ 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
+ 	kbuf.top_down = false;
++	kbuf.cma = NULL;
+ 	ret = arch_kexec_locate_mem_hole(&kbuf);
+ 	if (!ret) {
+ 		*old_pbase = lowest_paddr;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a..7821b23bd1e9 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -75,6 +75,12 @@ extern note_buf_t __percpu *crash_notes;
+ 
+ typedef unsigned long kimage_entry_t;
+ 
++/*
++ * This is a copy of the UAPI struct kexec_segment and must be identical
++ * to it because it gets copied straight from user space into kernel
++ * memory. Do not modify this structure unless you change the way segments
++ * get ingested from user space.
++ */
+ struct kexec_segment {
+ 	/*
+ 	 * This pointer can point to user memory if kexec_load() system
+@@ -169,6 +175,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+  * @buf_min:	The buffer can't be placed below this address.
+  * @buf_max:	The buffer can't be placed above this address.
+  * @top_down:	Allocate from top of memory.
++ * @cma:	CMA page if the buffer is backed by CMA.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -180,6 +187,7 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++	struct page *cma;
+ };
+ 
+ int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+@@ -310,6 +318,7 @@ struct kimage {
+ 
+ 	unsigned long nr_segments;
+ 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
++	struct page *segment_cma[KEXEC_SEGMENT_MAX];
+ 
+ 	struct list_head control_pages;
+ 	struct list_head dest_pages;
+@@ -331,6 +340,7 @@ struct kimage {
+ 	 */
+ 	unsigned int hotplug_support:1;
+ #endif
++	unsigned int no_cma:1;
+ 
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+ 	struct kimage_arch arch;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 5ae1741ea8ea..8958ebfcff94 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -27,6 +27,7 @@
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
++#define KEXEC_FILE_NO_CMA	0x00000010
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a6b3f96bb50c..28008e3d462e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -152,7 +152,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 		goto out;
+ 
+ 	for (i = 0; i < nr_segments; i++) {
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 3e62b944c883..b5b680dd1796 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/dma-map-ops.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
+ 	kimage_free_pages(page);
+ }
+ 
++static void kimage_free_cma(struct kimage *image)
++{
++	unsigned long i;
++
++	for (i = 0; i < image->nr_segments; i++) {
++		struct page *cma = image->segment_cma[i];
++		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
++
++		if (!cma)
++			continue;
++
++		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
++		dma_release_from_contiguous(NULL, cma, nr_pages);
++		image->segment_cma[i] = NULL;
++	}
++
++}
++
+ void kimage_free(struct kimage *image)
+ {
+ 	kimage_entry_t *ptr, entry;
+@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
+ 
++	/* Free CMA allocations */
++	kimage_free_cma(image);
++
+ 	/*
+ 	 * Free up any temporary buffers allocated. This might hit if
+ 	 * error occurred much later after buffer allocation.
+@@ -716,9 +738,69 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
+ 
+-static int kimage_load_normal_segment(struct kimage *image,
+-					 struct kexec_segment *segment)
++static int kimage_load_cma_segment(struct kimage *image, int idx)
++{
++	struct kexec_segment *segment = &image->segment[idx];
++	struct page *cma = image->segment_cma[idx];
++	char *ptr = page_address(cma);
++	unsigned long maddr;
++	size_t ubytes, mbytes;
++	int result = 0;
++	unsigned char __user *buf = NULL;
++	unsigned char *kbuf = NULL;
++
++	if (image->file_mode)
++		kbuf = segment->kbuf;
++	else
++		buf = segment->buf;
++	ubytes = segment->bufsz;
++	mbytes = segment->memsz;
++	maddr = segment->mem;
++
++	/* Then copy from source buffer to the CMA one */
++	while (mbytes) {
++		size_t uchunk, mchunk;
++
++		ptr += maddr & ~PAGE_MASK;
++		mchunk = min_t(size_t, mbytes,
++				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min(ubytes, mchunk);
++
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
++		}
++
++		if (result) {
++			result = -EFAULT;
++			goto out;
++		}
++
++		ptr    += mchunk;
++		maddr  += mchunk;
++		mbytes -= mchunk;
++
++		cond_resched();
++	}
++
++	/* Clear any remainder */
++	memset(ptr, 0, mbytes);
++
++out:
++	return result;
++}
++
++static int kimage_load_normal_segment(struct kimage *image, int idx)
+ {
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -733,6 +815,9 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	mbytes = segment->memsz;
+ 	maddr = segment->mem;
+ 
++	if (image->segment_cma[idx])
++		return kimage_load_cma_segment(image, idx);
++
+ 	result = kimage_set_destination(image, maddr);
+ 	if (result < 0)
+ 		goto out;
+@@ -787,13 +872,13 @@ static int kimage_load_normal_segment(struct kimage *image,
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-static int kimage_load_crash_segment(struct kimage *image,
+-					struct kexec_segment *segment)
++static int kimage_load_crash_segment(struct kimage *image, int idx)
+ {
+ 	/* For crash dumps kernels we simply copy the data from
+ 	 * user space to it's destination.
+ 	 * We do things a page at a time for the sake of kmap.
+ 	 */
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -858,18 +943,17 @@ static int kimage_load_crash_segment(struct kimage *image,
+ }
+ #endif
+ 
+-int kimage_load_segment(struct kimage *image,
+-				struct kexec_segment *segment)
++int kimage_load_segment(struct kimage *image, int idx)
+ {
+ 	int result = -ENOMEM;
+ 
+ 	switch (image->type) {
+ 	case KEXEC_TYPE_DEFAULT:
+-		result = kimage_load_normal_segment(image, segment);
++		result = kimage_load_normal_segment(image, idx);
+ 		break;
+ #ifdef CONFIG_CRASH_DUMP
+ 	case KEXEC_TYPE_CRASH:
+-		result = kimage_load_crash_segment(image, segment);
++		result = kimage_load_crash_segment(image, idx);
+ 		break;
+ #endif
+ 	}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b..c4fa956f247e 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel_read_file.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
++#include <linux/dma-map-ops.h>
+ #include "kexec_internal.h"
+ 
+ #ifdef CONFIG_KEXEC_SIG
+@@ -230,6 +231,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		ret = 0;
+ 	}
+ 
++	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
++
+ 	if (cmdline_len) {
+ 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+ 		if (IS_ERR(image->cmdline_buf)) {
+@@ -406,7 +409,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+ 			      ksegment->memsz);
+ 
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -632,6 +635,43 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+ 
++static int kexec_alloc_contig(struct kexec_buf *kbuf)
++{
++	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
++	unsigned long mem;
++	struct page *p;
++
++	/* User space disabled CMA allocations, bail out. */
++	if (kbuf->image->no_cma)
++		return -EPERM;
++
++	/* The buffer needs to be at a specific address, bail out. */
++	if (kbuf->mem == KEXEC_BUF_MEM_UNKNOWN)
++		return -EINVAL;
++
++	p = dma_alloc_from_contiguous(NULL, nr_pages, get_order(kbuf->buf_align), true);
++	if (!p)
++		return -ENOMEM;
++
++	pr_debug("allocated %zu DMA pages at 0x%lx", nr_pages, page_to_boot_pfn(p));
++
++	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++
++	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
++		/* Our region is already in use by a statically defined one. Bail out. */
++		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
++		dma_release_from_contiguous(NULL, p, nr_pages);
++		return -EBUSY;
++	}
++
++	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++	kbuf->cma = p;
++
++	arch_kexec_post_alloc_pages(page_address(p), (int)nr_pages, 0);
++
++	return 0;
++}
++
+ /**
+  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
+  * @kbuf:	Parameters for the memory search.
+@@ -648,6 +688,13 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+ 		return 0;
+ 
++	/*
++	 * Try to find a free physically contiguous block of memory first. With that, we
++	 * can avoid any copying at kexec time.
++	 */
++	if (!kexec_alloc_contig(kbuf))
++		return 0;
++
+ 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+ 	else
+@@ -693,6 +740,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	/* Ensure minimum alignment needed for segments. */
+ 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
++	kbuf->cma = NULL;
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	ret = arch_kexec_locate_mem_hole(kbuf);
+@@ -705,6 +753,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index d35d9792402d..29e6cebe0c43 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -10,7 +10,7 @@ struct kimage *do_kimage_alloc_init(void);
+ int sanity_check_segment_list(struct kimage *image);
+ void kimage_free_page_list(struct list_head *list);
+ void kimage_free(struct kimage *image);
+-int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
++int kimage_load_segment(struct kimage *image, int idx);
+ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
+-- 
+2.34.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
 
