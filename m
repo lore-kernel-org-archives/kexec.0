@@ -4,71 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42F35C3ABC3
-	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 10:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2240C3ABCC
+	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 11:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=ezEgbeLEMuSHR1q8FCSFIVQjHrFYFsK4QfsJ4BnHsWk=; b=oiEYgyLiwanJ6OQAVICYGn4bnR
-	tf5pFg0+UMoJ6OexQAGFNXHI6deaLDKOcyyRnXwyeQLA2ZRmASiPwXQxchhrYW7iA5KZsoYMkgzg6
-	zryTycYs9t7qQZuKJSLK/KZsnelQubehb1CHK3TxKaR+nzfUJIT42mM+D/r0nktbjqXVEJWxHoc3B
-	+19CnALhURQwAoNiDtLXvuHQnTvSKy/BK0iszNjz3WuR0REZJd2OPiq1NzlCAz5ZKoJf+Vap5PUR5
-	xiLX7D2ipdZ020Nkkj9kZu/v0/9jInaYNYQIMkKR4HdI568hyOPK85lt3D2HnJdzOLZoxLsDAeoJ8
-	nMeu+u0Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=BXZoTSb4aQ9Wtu3tuWW0AsAZj/p2yFulUCCm1/NKIK4=; b=NTwvJTNgyFpy3R5G9pl4PMfGtO
+	0Aa+E8vUy3ewarSTLY08/5ZAQQcKEOZihZZ6PKnvVcu3CPnZuD0pLcV2zwN+ytLGl/AlwNcX21cnE
+	4urmgmr2fC2uWSF2JncIqcvEEchQUu67FibcXHO60DKIa+lylaG2mQ3sBYMbTgQ8kKJpu7ZMEgvLC
+	0el+stVLSeTsYBfdnxvyD7o6hJ7p8nXFB64SYdVw1EVcCly/WhjYlI1wELGlO709qew8RuLwvd9sJ
+	Ayv/WLc6ONi8WzSeVuuM0foecHf2rQDnvP3IqTaEw0zyic9/Q7H2audTMbhy3Hpmtd4aIP1a8rvc/
+	AIkTrbFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEmzy-0000000C8d6-0lBm;
-	Tue, 13 May 2025 10:36:34 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uEo2A-0000000CHm1-0SCR;
+	Tue, 13 May 2025 11:42:54 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEmwX-0000000C7xA-06KF
+	id 1uEo27-0000000CHlR-05Rz
 	for kexec@lists.infradead.org;
-	Tue, 13 May 2025 10:33:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747132378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ezEgbeLEMuSHR1q8FCSFIVQjHrFYFsK4QfsJ4BnHsWk=;
-	b=HhTmrAi+USupfK91zVl6yt8JFs9ih61d5V3ulvgYJXNeFsuy1oHm0jxUJJXKUdqGV1fRFb
-	/zslWtotq4OXYTdsLTxaMRiZG1wHjcEt6uhIiiFobpE0Oq0iL8cCoFdrJmhhF+tTmKsjl1
-	Omps2Rp7O4xZ/zbH9dfFu6VkLLSDETk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-423--dPyDqwtMwC2yQrg4mppxA-1; Tue,
- 13 May 2025 06:32:57 -0400
-X-MC-Unique: -dPyDqwtMwC2yQrg4mppxA-1
-X-Mimecast-MFC-AGG-ID: -dPyDqwtMwC2yQrg4mppxA_1747132376
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE2F119560BF;
-	Tue, 13 May 2025 10:32:55 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.112.55])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8AFB71800879;
-	Tue, 13 May 2025 10:32:52 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org,
-	horms@verge.net.au
-Cc: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH] kexec/zboot: Add boundary check on PE header offset
-Date: Tue, 13 May 2025 18:32:40 +0800
-Message-ID: <20250513103240.16803-1-piliu@redhat.com>
+	Tue, 13 May 2025 11:42:52 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D9F3c3029908;
+	Tue, 13 May 2025 11:41:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BXZoTS
+	b4aQ9Wtu3tuWW0AsAZj/p2yFulUCCm1/NKIK4=; b=PRDZ1dTHxB+wW2IKskFaxF
+	9/KI6Bcgo61Y730i4lx2NzKw2qlWv3aSEFkpm9tI9z9Nu8d/2AhbmheqILG8fXmZ
+	asUSCcajOoU4Lh5mMAc5yq+35Lk9ndTj4o79bTPyizG52bUuWfKodnsJ9bqzZZWH
+	xiWkUwbrfwjc7YR/a1vONRV8C86OIPQl8DBYOTOnSOZGUXSigrQbT7hqf8eDNrdb
+	U7x7MbT67jo0opM81yuwc2rl0QJvZxNQHADWutzBL1DoDzoptUTImzdP0sDxMED5
+	JFuvA0NSoqIBfwmu/BO7nqMxj/5BmqO90BxlQbYwoBVGb0m14X5QRC2PlgCoajsA
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m39j8pba-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 11:41:30 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DB5Tv8024478;
+	Tue, 13 May 2025 11:41:29 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jjmm2sdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 11:41:29 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DBfTMp29033212
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 11:41:29 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45F2858056;
+	Tue, 13 May 2025 11:41:29 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 454AF58052;
+	Tue, 13 May 2025 11:41:28 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.130.167])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 May 2025 11:41:28 +0000 (GMT)
+Message-ID: <71973027bb0fbc436a95e8bb7fbd2b7d2eab95b4.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
+ measurement
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com
+Date: Tue, 13 May 2025 07:41:27 -0400
+In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
+References: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cF3-mIO0_gtXMw6M5UrNvVzAPN51SHGX2-xNH7Kfb8o_1747132376
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: iOEulkBYl26x9Ilz2fprraGsqD1yO4zT
+X-Proofpoint-ORIG-GUID: iOEulkBYl26x9Ilz2fprraGsqD1yO4zT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDExMCBTYWx0ZWRfXx4Can8PSvMlx vUnHo5sK6RKQqOBsktYUfIOrlvFLhTo0GVAWEmx49wj6RQzhzdH27Nhp61/bXy1XXjWUG1KRDxb HtzJag6Q6I2wdLeL/qKd1sKBSvtY/Z5TUyPwI03klxn8Ofs7rVQblrSRLizGrCGE0rXmCg/LFSB
+ A+1JZeQ/9u0uQD7xzHUphUeoM0Q3zidn21ttZTszqsd7qJ5mJL898Ipw2vUgGLjEjpJaElmwlFr mjAyeiKlH82/ixFANG4qGOpW3BhP7XaS2dEfDW6FwSz1fgV5BfmdTRAnlUMar1h1gPJO+YyeRny 35a1VF+qvOXRY60pgVF6rNpAE8sC3lcSf6oBH2rWl4+2tSTqzvIRMqTI4mQqJfg2RHUxd17pv+/
+ oviUApI6smnWpZ9l4I2WM2gT5F4s6bhSGEpe8p9uTHfSy14+ivwSRqwLhxJtiVLkogVSQoNP
+X-Authority-Analysis: v=2.4 cv=Sfb3duRu c=1 sm=1 tr=0 ts=68232fea cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=yMhMjlubAAAA:8 a=1v2mA-L8tnUgDz3cNWsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130110
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250513_033301_145149_4DF2F5F7 
-X-CRM114-Status: GOOD (  14.13  )
+X-CRM114-CacheID: sfid-20250513_044251_193365_5E1DD896 
+X-CRM114-Status: GOOD (  11.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,57 +116,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If a buildroot enviorment does not provide libzstd and kexec_file_load a
-zstd compressed kernel, it will suffer from coredump.
+Hi Steven,
 
-The following is observed from the coredump
+On Fri, 2025-05-02 at 13:03 -0700, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+>=20
+> Kdump kernel doesn't need IMA to do integrity measurement.
+> Hence the measurement list in 1st kernel doesn't need to be copied to
+> kdump kenrel.
 
-Core was generated by `/sbin/kexec -s -p --command-line=BOOT_IMAGE=\(hd0,gpt2\)/vmlinuz-6.15.0-0.rc5.250509g9c69f8884904.47.fc43.aarch64\ ro\ rootflags=subvol=root\ irqpoll\ nr_cpus=1\ reset_devices\ cgroup_disable=memory\ udev.children-max=2\ panic=10\ swiotlb=noforce\ novmcoredd\ cma=0\ hugetlb_cma=0\ sbsa_gwdt.pretimeout=0 --initrd=/boot/initramfs-6.15.0-0.rc5.250509g9c69f8884904.47.fc43.aarch64kdump.img /boot/vmlinuz-6.15.0-0.rc5.250509g9c69f8884904.47.fc43.aarch64'.
-Program terminated with signal SIGSEGV, Segmentation fault.
-143		if (!!memcmp(buf, "PE\0\0", 4)) {
-(gdb)
+^kernel
 
-Instead of coredump, it is better to exit elegantly by adding checkout
-on the PE header offset.
+Please use "scripts/checkpatch.pl --codespell" to check for typos.
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
----
- include/pe.h           | 4 ++++
- kexec/kexec-pe-zboot.c | 5 ++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+Mimi
 
-diff --git a/include/pe.h b/include/pe.h
-index a1aa91e..9ab3e79 100644
---- a/include/pe.h
-+++ b/include/pe.h
-@@ -139,6 +139,10 @@ static int get_pehdr_offset(const char *buf)
- 	int pe_hdr_offset;
- 
- 	pe_hdr_offset = *((int *)(buf + 0x3c));
-+	if (pe_hdr_offset < 0 || pe_hdr_offset > 4096) {
-+		printf("PE header offset is not a reasonable value\n");
-+		return -1;
-+	}
- 	buf += pe_hdr_offset;
- 	if (!!memcmp(buf, "PE\0\0", 4)) {
- 		printf("Not a PE file\n");
-diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
-index 8e17b4e..c09f2ae 100644
---- a/kexec/kexec-pe-zboot.c
-+++ b/kexec/kexec-pe-zboot.c
-@@ -100,7 +100,10 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
- 	dbgprintf("%s: decompressed size %ld\n", __func__, decompressed_size);
- 
- 	/* Makefile.zboot pads Image with zero, but the trailing zero is not part of PE file */
--	parse = kernel_uncompressed_buf + get_pehdr_offset(kernel_uncompressed_buf);
-+	ret = get_pehdr_offset(kernel_uncompressed_buf);
-+	if (ret < 0)
-+		goto fail_bad_header;
-+	parse = kernel_uncompressed_buf + ret;
- 	parse += sizeof(struct pe_hdr);
- 	opt_hdr = (struct pe32plus_opt_hdr*)parse;
- 	parse += sizeof(struct pe32plus_opt_hdr);
--- 
-2.49.0
+>=20
+> Here skip allocating buffer for measurement list copying if loading
+> kdump kernel. Then there won't be the later handling related to
+> ima_kexec_buffer.
+>=20
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+
 
 
