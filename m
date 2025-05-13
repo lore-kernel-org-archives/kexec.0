@@ -4,58 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DDC8C3ABCB
-	for <kexec@archiver.kernel.org>; Mon, 12 May 2025 23:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26A1EC3ABCB
+	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 00:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
 	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sqqKqN6+7vi7vcWHctM/OInU5vKYzOI7NzCsmciNe6I=; b=E5KO9fgLyO5WX+ezX84APu8HxG
-	jhn0lzljizv5t5jrH49gxmd0eZan1KoZ7qiB9xXPnnAyGnErybXu8F3JSGSl0jPh6ZQHTZCYkNILZ
-	FOXNrWtwoy5FEyT1zZhXNkGNP8LJCjTiZeUj1ibFUGK2lmlxgqnCj6jJNamB9tJrmAv+8nLzjgecM
-	vwgd7GO6VC2UhRVZdfn/H+OF2hy4T8Fy8GAIgL9c/8fZaBEOpNuirQLayu2XNV3XyLvcE+bfF31p6
-	onikTLBvzZwo5GHXULOxieUbSpmBSc7mOZBerhb0zP3ny+UI5s1uuKW7mRRxKRp+SAuAjJCWXtYQK
-	EYjuuRaw==;
+	bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=; b=Ukj1VWxwddGg4Y6eFm8KcqpOch
+	jzLjgjuygQbDDp9hQBDcL68sBnRbE1jJbXchnJQEu66Qyvx6Xok63u20IkKt/+WwCT9Vp3kXEG/BT
+	65fZ53LGnsCoGdfn0LPfs5rwjBmqZZkSnr604s0suscknKha5DTXP+1lW6FqS+xeqvUB069dsilj/
+	D6tfubO+D60tqa257mszno9kZ57Li00MubV0antqkd7pMnc7hnxbcqsIR+6CCSYrForkJ759vtJW+
+	go38kC4Wzycc+FXfdgzmN84YWZBhc2zI1hqwE7I0Jdiefw9j1bJnBTkAD0QxxCOLendJhZaNQnPK0
+	n37JDCew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEd3Z-0000000AxIT-37OF;
-	Mon, 12 May 2025 23:59:37 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1uEdJ2-0000000AyfD-11zC;
+	Tue, 13 May 2025 00:15:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEd3W-0000000AxI3-40q1
+	id 1uEdIz-0000000Ayer-0SLS
 	for kexec@lists.infradead.org;
-	Mon, 12 May 2025 23:59:36 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id BAD3B5C5C85;
-	Mon, 12 May 2025 23:57:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BA1C4CEE7;
-	Mon, 12 May 2025 23:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747094373;
-	bh=EFW4kplBfp5PvCKelCjas54b0BRGDoqSeS+17LKB2Lk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PSPrKBy3xmNCETWcIRwwkoB0DJMRCdkgYS6KLO8QCc2oJChgW5ML7IuRokpMXlpDB
-	 U11BcEaeO9ee6VZpH2t7py4lgyxxFnQIV8TICmD4X/ol9xyHAeJAGFb7crRmhDMp/q
-	 u42NLNgIIIctcauWWPVLVMYC1HHghvnbZ75mSDfk=
-Date: Mon, 12 May 2025 16:59:33 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Baoquan He
- <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- <nh-open-source@amazon.com>
-Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
-Message-Id: <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
-In-Reply-To: <20250512225752.11687-1-graf@amazon.com>
-References: <20250512225752.11687-1-graf@amazon.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+	Tue, 13 May 2025 00:15:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747095330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=;
+	b=dOtg7blPsOAxWbWyyG+vL1JI0nJSkjYsVatHjq/tOJXrX1P2NV6ehl9cSkHz1HUGoUb3e4
+	wIYo1FKT0U9QFBSGHQXaHi0L37QZSJO5nDicZqYk+XoNubFpFFvP1ctPAdHsc9/w035do1
+	FzYtYOTqLvlBsHm6BloXfBTiEPctF0Y=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-tDumk8cxOEyDADr-O0HiEw-1; Mon, 12 May 2025 20:15:29 -0400
+X-MC-Unique: tDumk8cxOEyDADr-O0HiEw-1
+X-Mimecast-MFC-AGG-ID: tDumk8cxOEyDADr-O0HiEw_1747095328
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30c1a269a12so7165601a91.0
+        for <kexec@lists.infradead.org>; Mon, 12 May 2025 17:15:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747095328; x=1747700128;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=;
+        b=d6h55H/n3kdm7WR8A/FM+Lgmml1wfECtZ9mt7rC2KH3dTTQbqfh8NrAkcp17e99YVT
+         oWiK/iB5GB99XcY5nriMqD75n6VH9ESdFCA7c0tkuhBXNTWKjTUMscHe6boEus/95wI1
+         WoJSiGCxGPKn8LRup2GiPi+8si8osYmqurS2Z8UX1xzc9WfYuIWtYeCLUxfOeb/NJ/pY
+         TOUZa1VwuyQcD2mjtN5MW8cqEdOYL2rlcXH/xd/XDWQ2milwwWZVanfFB3ucHK6iGvJd
+         PXXcSyfD3m142WYGd0miB/AFmvc8V3PfbMhViHjhOrOLDVoXG+j1u9XoEW3X2aXTRdCD
+         T92g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFOLKtl7GuOJfxEHDtJ2DSMgyrTZDbT4qadqQw5SZlpEiwkp2jI2uLea+1660BMFtlvoK9MQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxPIYpmaivEfFycdS4J5Ul+SM5w2h+A8qZY/3TE74jWx1lttG+5
+	hEu871SJouP1eFmgPCV/wmJi6raZDmwuMzrYMhbho7luRiKiP66HfD9bKM1QbqLTaOprMigZdWO
+	1UQH0Vy+WQ8daym6gXWztzEEx8FHBOEIWrbkJDIxICAV42Uwlpgi9r4DE8A==
+X-Gm-Gg: ASbGncte0H5/aB6sO5sqy9T/OJ9wsbzE2BIjej1LrG5v44wYmR8cVH9qPjN74jnpw8a
+	tyNZqLpG7qfD0xSDhOu+dckaS1FSsgt8G52LjedHUF2AIOKWZ+fpLxwjleIv2jxroGvOP1i85ew
+	mrSlXu/9YgNoWof+MgudidbBJq2Bc/bw7Bj0MCBIlzekgJsYEvvl/SU0+EwWBgOwjGsgiGiWPMf
+	ojvZGiPJmJsv74ywO5oF4AjFk4xEsWwWgWq0f6D9NcU8O5jZ4DKLnVI82BQGBX9Vu5GU1gG6npa
+	nhk=
+X-Received: by 2002:a17:90b:4ecd:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30c3cefb9f7mr23828363a91.8.1747095328095;
+        Mon, 12 May 2025 17:15:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFgE3g0PPo1j1o8bvsk61ZcmWZ5XqEMc4KrEKTJX4oJNqWAAOyuTc+O4Fr7Hx4Xjy+6nxPOw==
+X-Received: by 2002:a17:90b:4ecd:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30c3cefb9f7mr23828319a91.8.1747095327642;
+        Mon, 12 May 2025 17:15:27 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c394a2467sm7395698a91.0.2025.05.12.17.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 17:15:27 -0700 (PDT)
+Date: Tue, 13 May 2025 08:14:00 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Roberto Sassu <roberto.sassu@huawei.com>, Baoquan He <bhe@redhat.com>, 
+	chenste@linux.microsoft.com, RuiRui Yang <ruyang@redhat.com>, linux-integrity@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
+Message-ID: <s56ljuvqmrcy5gzjbrfbowq6gel7u4jjqtgyitvcbjgoiaahex@5kezecpurctk>
+References: <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
+ <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
+ <02563b1e8b0000bedf94ded447a8372f21d4304a.camel@linux.ibm.com>
+ <Z/Xero1B0OazLcHL@MiWiFi-R3L-srv>
+ <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
+ <Z/8ijFhIf1J6vbWM@MiWiFi-R3L-srv>
+ <f75tvrcc6xhfwz5rbwh2ps34wt2odz4wq32vez7dsct732x4ik@sv6nyjqr2ykr>
+ <80766b04cafd24a1d7171b8da03c822d86272f3c.camel@linux.ibm.com>
+ <qvv3tniawgb3rvqeuxzckj25xxkcr2tqbwnji5gmdg4x3ahdha@52hwfd36ttf7>
+ <00d282d0cf06c3ac208ab9edfddedda1c9a5a77b.camel@linux.ibm.com>
+MIME-Version: 1.0
+In-Reply-To: <00d282d0cf06c3ac208ab9edfddedda1c9a5a77b.camel@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: AThZGLP-5BMgIitar3GcMuee0BRxxdHk82L7IhKufO8_1747095328
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250512_165935_112669_44CC4CF6 
-X-CRM114-Status: GOOD (  41.48  )
+X-CRM114-CacheID: sfid-20250512_171533_222714_2E048F09 
+X-CRM114-Status: GOOD (  36.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,187 +118,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 12 May 2025 22:57:52 +0000 Alexander Graf <graf@amazon.com> wrote:
-
-> When booting a new kernel with kexec_file, the kernel picks a target
-> location that the kernel should live at, then allocates random pages,
-> checks whether any of those patches magically happens to coincide with
-> a target address range and if so, uses them for that range.
-> 
-> For every page allocated this way, it then creates a page list that the
-> relocation code - code that executes while all CPUs are off and we are
-> just about to jump into the new kernel - copies to their final memory
-> location. We can not put them there before, because chances are pretty
-> good that at least some page in the target range is already in use by
-> the currently running Linux environment.
-> 
-> All of this is inefficient.
-> 
-> Since kexec got introduced, Linux has gained the CMA framework which
-> can perform physically contiguous memory mappings, while keeping that
-> memory available for movable memory when it is not needed for contiguous
-> allocations. The default CMA allocator is for DMA allocations.
-> 
-> This patch adds logic to the kexec file loader to attempt to place the
-> target payload at a location allocated from CMA. If successful, it uses
-> that memory range directly instead of creating copy instructions during
-> the hot phase. To ensure that there is a safety net in case anything goes
-> wrong with the CMA allocation, it also adds a flag for user space to force
-> disable CMA allocations.
-> 
-> Using CMA allocations has two advantages:
-> 
->   1) Faster. There is no more need to copy in the hot phase.
-
-How much faster?  Kinda matters as "fast" is the whole point of the patch!
-
->   2) More robust. Even if by accident some page is still in use for DMA,
->      the new kernel image will be safe from that access because it resides
->      in a memory region that is considered allocated in the old kernel and
->      has a chance to reinitialize that component.
-
-Is this known to be a problem in current code?
-
-Some minor observations:
-
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
+On Fri, May 09, 2025 at 09:03:11AM -0400, Mimi Zohar wrote:
+>[Cc'ing Roberto]
 >
-> ...
+>On Fri, 2025-05-09 at 13:59 +0800, Coiby Xu wrote:
+>> On Tue, Apr 29, 2025 at 07:39:17AM -0400, Mimi Zohar wrote:
+>> > On Mon, 2025-04-28 at 11:48 +0800, Coiby Xu wrote:
+>> > > On Wed, Apr 16, 2025 at 11:22:52AM +0800, Baoquan He wrote:
+>> > > > On 04/09/25 at 11:40am, Mimi Zohar wrote:
+>> > > > > On Wed, 2025-04-09 at 10:42 +0800, Baoquan He wrote:
+>> > > > ......snip..
+>> > > > > > Thanks for confirming. I will consider how to fix it accordingly. Maybe
+>> > > > > > after Steven's patches are merged. That would be great if the buffer
+>> > > > > > allocating and storing can be skiped for kdump in Steven's patch. While
+>> > > > > > I am worried that could disrupt the progress of Steven's patches.
+>> > > > >
+>> > > > > Agreed, let's get Steven's patch set upstreamed and then make the kdump
+>> > > > > exceptions.
+>> > > > >
+>> > > > > - "ima: kexec: move IMA log copy from kexec load to execute" looks like it
+>> > > > > isn't
+>> > > > > copying the IMA measurement list records (kexec_post_load), but the memory
+>> > > > > for
+>> > > > > the IMA measurement list is being allocated (ima_alloc_kexec_file_buf).
+>> > > > >
+>> > > > > - Do you really want to totally disable IMA for kdump or would disabling
+>> > > > > IMA-
+>> > > > > measurement be sufficient?  Remember there's already an option to disable
+>> > > > > IMA-
+>> > > > > appraisal.  Disabling just IMA-measurement would allow IMA-appraisal to
+>> > > > > continue
+>> > > > > to work.  Meaning based on policy the integrity of files - executables,
+>> > > > > kernel
+>> > > > > image, etc - could still be verified.
+>> > > > >
+>> > > > > Without IMA-measurement:
+>> > > > > - No adding records to the IMA measurement list
+>> > > > > - No IMA measurement list pseudo securityfs files
+>> > > > > - No extending the TPM
+>> > > > >
+>> > > > > With IMA-appraisal:
+>> > > > > - Integrity verification of files based on keys, keyrings
+>> > > > > - Loading keys
+>> > >
+>> > > Thanks for listing the impacts of disabling IMA measurement or
+>> > > appraisal!
+>> > >
+>> > > kdump builds and loads its own initramfs as a cpio archive. After a
+>> > > kernel crashes, the loaded initramfs will save the crashed kernel's
+>> > > memory (vmcore) to specified location and then it will reboot the system
+>> > > immediately. Since kdump merely copy files from existing fs into its
+>> > > initramfs, I think at least majority of users don't need IMA for kdump.
+>> >
+>> > That's fine.
+>> >
+>> > > In fact, currently IMA-appraisal doesn't work for kdump because cpio
+>> > > doesn't support xattr.
+>> >
+>> > Although CPIO doesn't support xattrs, tmpfs supports xattrs.
+>>
+>> Thanks for pointing it out! I thought tmpfs doesn't support xattrs
+>> because ima_policy=tcb excludes TMPFS_MAGIC. There are still many
+>> interesting questions for me to explore. For example, I don't understand
+>> how 1st kernel's initramfs is shown as ramfs (which doesn't support
+>> xattrs) but kdump intiramfs without the squashfs module is shown as
+>> tmpfs.
 >
-> @@ -331,6 +336,7 @@ struct kimage {
->  	 */
->  	unsigned int hotplug_support:1;
->  #endif
-> +	unsigned int no_cma : 1;
+>Try adding "rootfstype=tmpfs" to the boot command line.  For a detailed explanation,
+>take a look at commit 21528c69a0d8 ("rootfs: Fix support for rootfstype= when root=
+>is given").
 
-"no_cma:1" is more conventional.
+Thanks for pointing me to the above commit! I'll check it.
 
->  #ifdef ARCH_HAS_KIMAGE_ARCH
->  	struct kimage_arch arch;
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index 5ae1741ea8ea..8958ebfcff94 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
 >
-> ...
+>>
+>> > I'm aware that some
+>> > store the security xattr information in a file and write it out as xattrs.
+>>
+>> If the built initramfs as a CPIO file doesn't carry xattrs, the loaded
+>> initramfs still doesn't have xattrs. I just found the initramfs could
+>> opt to use squashfs or erofs which supports xattrs but currently it's
+>> hardcoded to disable xattrs. For example, recently the dracut erorfs
+>> module also follows squashfs to disable xattrs [1]. So in the near
+>> future, I don't expect xattrs to be supported in kdump.
+>>
+>> [1] https://github.com/dracut-ng/dracut-ng/pull
+
+Sorry, I didn't notice the link is incomplete. It should be
+
+[1] https://github.com/dracut-ng/dracut-ng/pull/1296
+
 >
-> +static int kimage_load_cma_segment(struct kimage *image, struct kexec_segment *segment)
-> +{
-> +	unsigned long maddr;
-> +	size_t ubytes, mbytes;
-> +	int result = 0;
-> +	unsigned char __user *buf = NULL;
-> +	unsigned char *kbuf = NULL;
-> +	char *ptr = page_address(segment->cma);
-> +
-> +	if (image->file_mode)
-> +		kbuf = segment->kbuf;
-> +	else
-> +		buf = segment->buf;
-> +	ubytes = segment->bufsz;
-> +	mbytes = segment->memsz;
-> +	maddr = segment->mem;
-> +
-> +	/* Initialize the buffer with zeros to allow for smaller input buffers */
-> +	memset(ptr, 0, mbytes);
-
-Would it be more efficient to zero the remainder after performing the copy?
-
-> +	/* Then copy from source buffer to the CMA one */
-> +	while (mbytes) {
-> +		size_t uchunk, mchunk;
-> +
-> +		ptr += maddr & ~PAGE_MASK;
-> +		mchunk = min_t(size_t, mbytes,
-> +				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		uchunk = min(ubytes, mchunk);
-> +
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
-> +
-> +		if (result) {
-> +			result = -EFAULT;
-> +			goto out;
-> +		}
-> +
-> +		ptr    += mchunk;
-> +		maddr  += mchunk;
-> +		mbytes -= mchunk;
-> +
-> +		cond_resched();
-> +	}
-> +out:
-> +	return result;
-> +}
-> +
+>Right, so the issue isn't the initramfs root filesystem, but CPIO.  Either CPIO
+>would need to be extended, which multiple people have attempted to do, or the xattrs
+>could be stored in a file and written out to the initramfs root filesystem.  In fact
+>Roberto's last attempts at adding CPIO xattr support did something like that.
 >
-> ...
+>https://lore.kernel.org/linux-integrity/20190523121803.21638-1-roberto.sassu@huawei.com/
+
+Thanks for introducing Roberto's work to me!
+
 >
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
+>Mimi
 >
-> ...
->
-> @@ -632,6 +635,38 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
->  		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
->  }
->  
-> +static int kexec_alloc_contig(struct kexec_buf *kbuf)
-> +{
-> +	u32 pages = (u32)(kbuf->memsz >> PAGE_SHIFT);
 
-I don't think the cast is needed?
+-- 
+Best regards,
+Coiby
 
-> +	unsigned long mem;
-> +	struct page *p;
-> +
-> +	if (kbuf->image->no_cma)
-> +		return -EPERM;
-> +
-> +	p = dma_alloc_from_contiguous(NULL, pages, get_order(kbuf->buf_align), true);
-
-dma_alloc_from_contiguous()'s `count' arg is size_t.  Making `pages'
-size_t seems best here.  (And nr_pages would be a better identifier!)
-
-
-> +	if (!p)
-> +		return -EADDRNOTAVAIL;
-
-EADDRNOTAVAIL is a networking thing.  People will be surprised to see
-kexec returning networking errors.  Perhaps choose something more
-appropriate?
-
-> +	pr_debug("allocated %d DMA pages at 0x%lx", pages, page_to_boot_pfn(p));
-> +
-> +	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-> +
-> +	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
-> +		/* Our region is already in use by a statically defined one. Bail out. */
-> +		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
-> +		dma_release_from_contiguous(NULL, p, pages);
-> +		return -EADDRNOTAVAIL;
-> +	}
-> +
-> +	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-> +	kbuf->cma = p;
-> +
-> +	arch_kexec_post_alloc_pages(page_address(p), pages, 0);
-> +
-> +	return 0;
-> +}
-> +
->
-> ...
->
 
