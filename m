@@ -4,106 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26A1EC3ABCB
-	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 00:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90E70C3ABC3
+	for <kexec@archiver.kernel.org>; Tue, 13 May 2025 02:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=; b=Ukj1VWxwddGg4Y6eFm8KcqpOch
-	jzLjgjuygQbDDp9hQBDcL68sBnRbE1jJbXchnJQEu66Qyvx6Xok63u20IkKt/+WwCT9Vp3kXEG/BT
-	65fZ53LGnsCoGdfn0LPfs5rwjBmqZZkSnr604s0suscknKha5DTXP+1lW6FqS+xeqvUB069dsilj/
-	D6tfubO+D60tqa257mszno9kZ57Li00MubV0antqkd7pMnc7hnxbcqsIR+6CCSYrForkJ759vtJW+
-	go38kC4Wzycc+FXfdgzmN84YWZBhc2zI1hqwE7I0Jdiefw9j1bJnBTkAD0QxxCOLendJhZaNQnPK0
-	n37JDCew==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2TmfNFs04Ogur8mrq/ZrjevwQaQZjMnQRw0yERFTJCA=; b=ysydY/ev4FEPrNbL0iL0Qrt3tg
+	5iG66ktBplFtARIvkfEZhJegGis0ZoWOleqBplZX7u61Z6WJQPajdmD4PtBLHEuVqUQeaPOSBEcwJ
+	NoMmismP9jeuQvi4fVdkYD8SZdk3VED+QxqKw1WDFv4kbsaknhuHlmu2UIXbG83wTYi/zfaDNR73Y
+	Wjqheguh40EmaA2+KBUiYvACB/7BhflYcESbF1rmVaLkYK/V1SNYV+2A6h5feGmh0d59GXA3nzuIz
+	hXmaY/741zmJFDPcHHJ2RHXENQTI1y8kprooqyyN4Nbjsde3a87k7Opr6pjixXgZnMqr0WL4Ti9Eo
+	NTGQ4k/A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEdJ2-0000000AyfD-11zC;
-	Tue, 13 May 2025 00:15:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uEeyS-0000000B6SL-1Ijt;
+	Tue, 13 May 2025 02:02:28 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEdIz-0000000Ayer-0SLS
-	for kexec@lists.infradead.org;
-	Tue, 13 May 2025 00:15:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747095330;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=;
-	b=dOtg7blPsOAxWbWyyG+vL1JI0nJSkjYsVatHjq/tOJXrX1P2NV6ehl9cSkHz1HUGoUb3e4
-	wIYo1FKT0U9QFBSGHQXaHi0L37QZSJO5nDicZqYk+XoNubFpFFvP1ctPAdHsc9/w035do1
-	FzYtYOTqLvlBsHm6BloXfBTiEPctF0Y=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-tDumk8cxOEyDADr-O0HiEw-1; Mon, 12 May 2025 20:15:29 -0400
-X-MC-Unique: tDumk8cxOEyDADr-O0HiEw-1
-X-Mimecast-MFC-AGG-ID: tDumk8cxOEyDADr-O0HiEw_1747095328
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30c1a269a12so7165601a91.0
-        for <kexec@lists.infradead.org>; Mon, 12 May 2025 17:15:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747095328; x=1747700128;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c3AmHeJBYgl39ErgKXbHLkXnjMZ6a1n74+nQIVaSb1g=;
-        b=d6h55H/n3kdm7WR8A/FM+Lgmml1wfECtZ9mt7rC2KH3dTTQbqfh8NrAkcp17e99YVT
-         oWiK/iB5GB99XcY5nriMqD75n6VH9ESdFCA7c0tkuhBXNTWKjTUMscHe6boEus/95wI1
-         WoJSiGCxGPKn8LRup2GiPi+8si8osYmqurS2Z8UX1xzc9WfYuIWtYeCLUxfOeb/NJ/pY
-         TOUZa1VwuyQcD2mjtN5MW8cqEdOYL2rlcXH/xd/XDWQ2milwwWZVanfFB3ucHK6iGvJd
-         PXXcSyfD3m142WYGd0miB/AFmvc8V3PfbMhViHjhOrOLDVoXG+j1u9XoEW3X2aXTRdCD
-         T92g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFOLKtl7GuOJfxEHDtJ2DSMgyrTZDbT4qadqQw5SZlpEiwkp2jI2uLea+1660BMFtlvoK9MQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxPIYpmaivEfFycdS4J5Ul+SM5w2h+A8qZY/3TE74jWx1lttG+5
-	hEu871SJouP1eFmgPCV/wmJi6raZDmwuMzrYMhbho7luRiKiP66HfD9bKM1QbqLTaOprMigZdWO
-	1UQH0Vy+WQ8daym6gXWztzEEx8FHBOEIWrbkJDIxICAV42Uwlpgi9r4DE8A==
-X-Gm-Gg: ASbGncte0H5/aB6sO5sqy9T/OJ9wsbzE2BIjej1LrG5v44wYmR8cVH9qPjN74jnpw8a
-	tyNZqLpG7qfD0xSDhOu+dckaS1FSsgt8G52LjedHUF2AIOKWZ+fpLxwjleIv2jxroGvOP1i85ew
-	mrSlXu/9YgNoWof+MgudidbBJq2Bc/bw7Bj0MCBIlzekgJsYEvvl/SU0+EwWBgOwjGsgiGiWPMf
-	ojvZGiPJmJsv74ywO5oF4AjFk4xEsWwWgWq0f6D9NcU8O5jZ4DKLnVI82BQGBX9Vu5GU1gG6npa
-	nhk=
-X-Received: by 2002:a17:90b:4ecd:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30c3cefb9f7mr23828363a91.8.1747095328095;
-        Mon, 12 May 2025 17:15:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFgE3g0PPo1j1o8bvsk61ZcmWZ5XqEMc4KrEKTJX4oJNqWAAOyuTc+O4Fr7Hx4Xjy+6nxPOw==
-X-Received: by 2002:a17:90b:4ecd:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30c3cefb9f7mr23828319a91.8.1747095327642;
-        Mon, 12 May 2025 17:15:27 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c394a2467sm7395698a91.0.2025.05.12.17.15.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 17:15:27 -0700 (PDT)
-Date: Tue, 13 May 2025 08:14:00 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Roberto Sassu <roberto.sassu@huawei.com>, Baoquan He <bhe@redhat.com>, 
-	chenste@linux.microsoft.com, RuiRui Yang <ruyang@redhat.com>, linux-integrity@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [RFC PATCH] ima: add a knob to make IMA be able to be disabled
-Message-ID: <s56ljuvqmrcy5gzjbrfbowq6gel7u4jjqtgyitvcbjgoiaahex@5kezecpurctk>
-References: <65057b5256a28c3416e6b90a143d741801e68b03.camel@linux.ibm.com>
- <Z/MrpIv9EWftPhbD@MiWiFi-R3L-srv>
- <02563b1e8b0000bedf94ded447a8372f21d4304a.camel@linux.ibm.com>
- <Z/Xero1B0OazLcHL@MiWiFi-R3L-srv>
- <db0f463cbf4ad9b9cf9f9a23c5869a751ad12bba.camel@linux.ibm.com>
- <Z/8ijFhIf1J6vbWM@MiWiFi-R3L-srv>
- <f75tvrcc6xhfwz5rbwh2ps34wt2odz4wq32vez7dsct732x4ik@sv6nyjqr2ykr>
- <80766b04cafd24a1d7171b8da03c822d86272f3c.camel@linux.ibm.com>
- <qvv3tniawgb3rvqeuxzckj25xxkcr2tqbwnji5gmdg4x3ahdha@52hwfd36ttf7>
- <00d282d0cf06c3ac208ab9edfddedda1c9a5a77b.camel@linux.ibm.com>
+	id 1uEeyR-0000000B6S4-02gV
+	for kexec@bombadil.infradead.org;
+	Tue, 13 May 2025 02:02:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2TmfNFs04Ogur8mrq/ZrjevwQaQZjMnQRw0yERFTJCA=; b=aWIgb3w2oekMYsag+jcwETow8b
+	ec0wJEZEz04nKXBBrSSfdgM8Y4R1HJVt6NDEu0piFqW4M6ZTeKzYWVF5TlgQZdMcepk/S/s94oxwZ
+	lTl5HSA41EuizkM6yZmsMEUDeiF8pgfcsi9G4WSjH0d27BJlX7pNOZ2VrPS/GCoYsEOokGEOlCsF/
+	CwiaCafQXqr98crMAqUsooKrHVDPR8+DLu/+t2xYaIQSIuvCx3fkIYMSGEoI0SP8woscwRFqh06GU
+	q6+KkcWLoSgkeGlT6DocXvUplg6gDeqb8mpY8bZmHs6cyufS/O8W4/BTeiX4R1ltMYj0T/LPX0mw4
+	7r1ULfOA==;
+Received: from [15.248.7.68] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uEeyN-0000000Grok-0Heh;
+	Tue, 13 May 2025 02:02:24 +0000
+Message-ID: <35f818e2cf3f15b7dc7028f543e0eea94c799efd.camel@infradead.org>
+Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
+From: David Woodhouse <dwmw2@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf
+ <graf@amazon.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He
+	 <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	nh-open-source@amazon.com
+Date: Mon, 12 May 2025 19:02:20 -0700
+In-Reply-To: <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
+References: <20250512225752.11687-1-graf@amazon.com>
+	 <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-DYmg+yixTeFbvwsoR1H8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <00d282d0cf06c3ac208ab9edfddedda1c9a5a77b.camel@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: AThZGLP-5BMgIitar3GcMuee0BRxxdHk82L7IhKufO8_1747095328
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250512_171533_222714_2E048F09 
-X-CRM114-Status: GOOD (  36.93  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,112 +72,176 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 09, 2025 at 09:03:11AM -0400, Mimi Zohar wrote:
->[Cc'ing Roberto]
->
->On Fri, 2025-05-09 at 13:59 +0800, Coiby Xu wrote:
->> On Tue, Apr 29, 2025 at 07:39:17AM -0400, Mimi Zohar wrote:
->> > On Mon, 2025-04-28 at 11:48 +0800, Coiby Xu wrote:
->> > > On Wed, Apr 16, 2025 at 11:22:52AM +0800, Baoquan He wrote:
->> > > > On 04/09/25 at 11:40am, Mimi Zohar wrote:
->> > > > > On Wed, 2025-04-09 at 10:42 +0800, Baoquan He wrote:
->> > > > ......snip..
->> > > > > > Thanks for confirming. I will consider how to fix it accordingly. Maybe
->> > > > > > after Steven's patches are merged. That would be great if the buffer
->> > > > > > allocating and storing can be skiped for kdump in Steven's patch. While
->> > > > > > I am worried that could disrupt the progress of Steven's patches.
->> > > > >
->> > > > > Agreed, let's get Steven's patch set upstreamed and then make the kdump
->> > > > > exceptions.
->> > > > >
->> > > > > - "ima: kexec: move IMA log copy from kexec load to execute" looks like it
->> > > > > isn't
->> > > > > copying the IMA measurement list records (kexec_post_load), but the memory
->> > > > > for
->> > > > > the IMA measurement list is being allocated (ima_alloc_kexec_file_buf).
->> > > > >
->> > > > > - Do you really want to totally disable IMA for kdump or would disabling
->> > > > > IMA-
->> > > > > measurement be sufficient?  Remember there's already an option to disable
->> > > > > IMA-
->> > > > > appraisal.  Disabling just IMA-measurement would allow IMA-appraisal to
->> > > > > continue
->> > > > > to work.  Meaning based on policy the integrity of files - executables,
->> > > > > kernel
->> > > > > image, etc - could still be verified.
->> > > > >
->> > > > > Without IMA-measurement:
->> > > > > - No adding records to the IMA measurement list
->> > > > > - No IMA measurement list pseudo securityfs files
->> > > > > - No extending the TPM
->> > > > >
->> > > > > With IMA-appraisal:
->> > > > > - Integrity verification of files based on keys, keyrings
->> > > > > - Loading keys
->> > >
->> > > Thanks for listing the impacts of disabling IMA measurement or
->> > > appraisal!
->> > >
->> > > kdump builds and loads its own initramfs as a cpio archive. After a
->> > > kernel crashes, the loaded initramfs will save the crashed kernel's
->> > > memory (vmcore) to specified location and then it will reboot the system
->> > > immediately. Since kdump merely copy files from existing fs into its
->> > > initramfs, I think at least majority of users don't need IMA for kdump.
->> >
->> > That's fine.
->> >
->> > > In fact, currently IMA-appraisal doesn't work for kdump because cpio
->> > > doesn't support xattr.
->> >
->> > Although CPIO doesn't support xattrs, tmpfs supports xattrs.
->>
->> Thanks for pointing it out! I thought tmpfs doesn't support xattrs
->> because ima_policy=tcb excludes TMPFS_MAGIC. There are still many
->> interesting questions for me to explore. For example, I don't understand
->> how 1st kernel's initramfs is shown as ramfs (which doesn't support
->> xattrs) but kdump intiramfs without the squashfs module is shown as
->> tmpfs.
->
->Try adding "rootfstype=tmpfs" to the boot command line.  For a detailed explanation,
->take a look at commit 21528c69a0d8 ("rootfs: Fix support for rootfstype= when root=
->is given").
 
-Thanks for pointing me to the above commit! I'll check it.
+--=-DYmg+yixTeFbvwsoR1H8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
->>
->> > I'm aware that some
->> > store the security xattr information in a file and write it out as xattrs.
->>
->> If the built initramfs as a CPIO file doesn't carry xattrs, the loaded
->> initramfs still doesn't have xattrs. I just found the initramfs could
->> opt to use squashfs or erofs which supports xattrs but currently it's
->> hardcoded to disable xattrs. For example, recently the dracut erorfs
->> module also follows squashfs to disable xattrs [1]. So in the near
->> future, I don't expect xattrs to be supported in kdump.
->>
->> [1] https://github.com/dracut-ng/dracut-ng/pull
+On Mon, 2025-05-12 at 16:59 -0700, Andrew Morton wrote:
+> On Mon, 12 May 2025 22:57:52 +0000 Alexander Graf <graf@amazon.com> wrote=
+:
+>=20
+> > When booting a new kernel with kexec_file, the kernel picks a target
+> > location that the kernel should live at, then allocates random pages,
+> > checks whether any of those patches magically happens to coincide with
+> > a target address range and if so, uses them for that range.
+> >=20
+> > For every page allocated this way, it then creates a page list that the
+> > relocation code - code that executes while all CPUs are off and we are
+> > just about to jump into the new kernel - copies to their final memory
+> > location. We can not put them there before, because chances are pretty
+> > good that at least some page in the target range is already in use by
+> > the currently running Linux environment.
+> >=20
+> > All of this is inefficient.
+> >=20
+> > Since kexec got introduced, Linux has gained the CMA framework which
+> > can perform physically contiguous memory mappings, while keeping that
+> > memory available for movable memory when it is not needed for contiguou=
+s
+> > allocations. The default CMA allocator is for DMA allocations.
+> >=20
+> > This patch adds logic to the kexec file loader to attempt to place the
+> > target payload at a location allocated from CMA. If successful, it uses
+> > that memory range directly instead of creating copy instructions during
+> > the hot phase. To ensure that there is a safety net in case anything go=
+es
+> > wrong with the CMA allocation, it also adds a flag for user space to fo=
+rce
+> > disable CMA allocations.
+> >=20
+> > Using CMA allocations has two advantages:
+> >=20
+> > =C2=A0 1) Faster. There is no more need to copy in the hot phase.
+>=20
+> How much faster?=C2=A0 Kinda matters as "fast" is the whole point of the =
+patch!
+>=20
+> > =C2=A0 2) More robust. Even if by accident some page is still in use fo=
+r DMA,
+> > =C2=A0=C2=A0=C2=A0=C2=A0 the new kernel image will be safe from that ac=
+cess because it resides
+> > =C2=A0=C2=A0=C2=A0=C2=A0 in a memory region that is considered allocate=
+d in the old kernel and
+> > =C2=A0=C2=A0=C2=A0=C2=A0 has a chance to reinitialize that component.
+>=20
+>=20
+https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/> Is t=
+his known to be a problem in current code?
 
-Sorry, I didn't notice the link is incomplete. It should be
+Oh $DEITY yes. The Arm Generic Interrupt Controller is, to quote a dear
+friend, "a cautionary tale of how not to approach a hardware design".
 
-[1] https://github.com/dracut-ng/dracut-ng/pull/1296
+It does a whole bunch of arbitrary DMA all over the place, and doesn't
+even live behind an IOMMU. And doesn't *stop* doing DMA unless you ask
+it *really* nicely; merely shutting down the offending high-level
+components isn't always enough, because they might still to write back
+some caches.
 
->
->Right, so the issue isn't the initramfs root filesystem, but CPIO.  Either CPIO
->would need to be extended, which multiple people have attempted to do, or the xattrs
->could be stored in a file and written out to the initramfs root filesystem.  In fact
->Roberto's last attempts at adding CPIO xattr support did something like that.
->
->https://lore.kernel.org/linux-integrity/20190523121803.21638-1-roberto.sassu@huawei.com/
+Here's one of the latest examples (not actually the one which has been
+breaking kexec for us, as far as we know, but an example of the genre):
+https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/
 
-Thanks for introducing Roberto's work to me!
+So putting the new kernel into a physical memory region which was
+considered 'free' by the previous kernel, as Alex explains, is actually
+a very good defence-in-depth mechanism to protect against such issues.
 
->
->Mimi
->
 
--- 
-Best regards,
-Coiby
+--=-DYmg+yixTeFbvwsoR1H8
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUxMzAyMDIy
+MFowLwYJKoZIhvcNAQkEMSIEIA0kx49HEWJra7gY3HPrKISt2JQnnhCxMtPKAym9EeEuMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAA+BpSxf1tcTT
+uTD8CxX9vxLTxQzqbNt1Z7ag3kQpN3ZyyVogqCH7xWGU/PimDoH/YHj6uEYk7NxldWkd1mFo5k/z
+Ujk7xhfHvsp2j7prKPTIyoOeRAfht+OkN+c0/Ef+D4gXlJNbWVA4NBNHBspauKzRtPOCG6xrCFqm
+C7CZ0vOJ2V/1F9Cf/orLGTr49RWFdwYzfSYNQo8Hqsu/oLGFXwMeH7Js7FR0dtK4usAEu3IZenM6
+PnK6xJbaVZSibPn2MaNUOPit17sKRGlkQwr+byYWDgn0Jtyi0ser7pka1OOfQm+LvIgctOvuZY9Y
+kx08IN62DExW9drvcNnUk/pmnYnFjt7eMJ4M4lKAOJ3VQn6P40xU8mC8ailaT7iWZV2SRTco0NvK
+TZrIIvDH4jqRITWQooYJdHqvesBiK+ESjsz5RdTsAduhvLkKMnB0ZXbe4bkTsz36YfouivVofEJ6
+iAdH+QravFRwYxh0LfMz2WJDkP/wqEBADVjCJFm5pyVCkkwak/FgvtI+q2MBtOMnwkrgeqDQxyXY
+Gmt+7VLHjFLm6tccHqgYhOuSKRchZIoqM3eJO4ni31YWsUdk2qYpJvlxg9mc8hnxpnPAi2vzvsxY
+K3TrH6JLyOEaZSi1Lpuc76ajoLlIOxtWSpuT9ii9jfVRxkaMblV0/7vOchA8X6YAAAAAAAA=
+
+
+--=-DYmg+yixTeFbvwsoR1H8--
 
