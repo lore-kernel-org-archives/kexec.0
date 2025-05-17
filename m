@@ -4,67 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29657C3ABD8
-	for <kexec@archiver.kernel.org>; Fri, 16 May 2025 23:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4704AC2D0CD
+	for <kexec@archiver.kernel.org>; Sat, 17 May 2025 14:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AtJd0Na/jGo4Ig2cY/tKGeLlFLwRRNtkt9lGQ8btlZo=; b=umM0IaZQf5FHwDpUZ/gzGsUDOG
-	/5PV2DnsXbagZ+Hw5nWXMNMFOnWhFpSUFxqXduy7ntnETkG2tUj9qrPgKVidbRAUn8rAO89FmhY+/
-	Ks6G7KslCgYg+9IMZ02poUkrQRFaRgFQcIa4PFwTLqsxHGwe22wbjwB2D1Up8gFujcINv6NRyXXVL
-	lW2LIXF0YfALiN5FmnWxFi5DmH1WTcyg1KIPlFL8GJR+r120sR+kvYSbKr7VLbGz0jlRPanvRiw7T
-	UEwykjBJZ/QrUlxkB+uS+IuBbQ7Z62w2UxXCsPx1Xk58LtZgoHEJDqhObsvM42PvySp3wbrTxEGuR
-	umDD/aWg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=XP98VUjPlVFdkM5YIwU/G78ZibDz0+CgSoPoHCaILcQ=; b=IdNe+P/L2trC4kxQfiL3OpI6by
+	PCVU15tW6Zw7ZABXL5M/SeRaxCliq8lkWkaZIKtORzuFslyhgr5w0dyf520IPYLPYhXdePDq3MOZK
+	uWqfzFLeEXQ2j2BWBJPqjDJr8gT9fMvLLKOar3DcyO34r23cjk2mlRHokLGI0l1RNjY+Bg6fnWTey
+	1okMlXCnd6fViP2McgxAAwuOuj4mDZ+uwFoF5kFu/bh+0rGUnnBSPXhFVqMUnF1ND3DBLbwbCvnqm
+	xnwdN24WVLJjDsSdrV9NTFStsMP7efU57fJGHop5mlp8bndNpZCLII6So6rXzA2pMCXM5rlo1h7WR
+	dD6lEd2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG4Lk-00000004q1g-0LtH;
-	Fri, 16 May 2025 23:20:20 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1uGJ0O-00000005ru3-28qC;
+	Sat, 17 May 2025 14:59:16 +0000
+Received: from mail-pf1-x434.google.com ([2607:f8b0:4864:20::434])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG4Li-00000004q1U-1JIe
+	id 1uGJ0J-00000005rtf-3lsk
 	for kexec@lists.infradead.org;
-	Fri, 16 May 2025 23:20:18 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B486760EDF;
-	Fri, 16 May 2025 23:20:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C0DC4CEE4;
-	Fri, 16 May 2025 23:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747437617;
-	bh=GMJAExymKlyzpKcXEpE4D10c3rl+qsRVgQASHsL38Os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SANjnk6Vb+BV6/eaioMfhryZ33AY8VS2FmqNMrzTFR8ZTUNHsHHzgjFwy7FLyh9Q9
-	 w9mmRCZbD3O7pVuMFz2cIDTgHudJEP/u3r1yH/DKpQrDx1xbOuOysg/hnlUTLDo9yx
-	 7bL/ud3bRhN9+U/2mxdtBknOrMvmFJORsxTLzKuQcXEon+ez+ZAQ9lYW5c3SLFreAF
-	 bk2C0N4ViNAg5kUXMt6mEdZPXmHogrFcJXOdpsp7erOY3+a+tMUUfcJNvoaA7q9Gj8
-	 EXt9SL6LEItndZ3iT0s/ozN9ye1yEuPRnjOnBY2DPf31QGNZuChnvwPc+GQ3W+VDc1
-	 A0DmVYAR4sulg==
-Date: Fri, 16 May 2025 16:20:13 -0700
-From: Kees Cook <kees@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Coiby Xu <coxu@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	fuqiang wang <fuqiang.wang@easystack.cn>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <202505161616.F4C1BCCF6A@keescook>
-References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
- <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
- <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
- <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
- <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
- <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
- <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
- <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+	Sat, 17 May 2025 14:59:13 +0000
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-742af84818cso1233194b3a.1
+        for <kexec@lists.infradead.org>; Sat, 17 May 2025 07:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747493950; x=1748098750; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XP98VUjPlVFdkM5YIwU/G78ZibDz0+CgSoPoHCaILcQ=;
+        b=QWTjQg0tGyvTMD6JwacSfPXP1472Hh2UYqM2rroufBm1aAw1qfKYQBdvjeQr9XxHvt
+         OeY2nFpL43+r22/M8HAWY5oRJ0RrHJ9v2/6njWGO1D5MnddGbcvUBQJ78aWYkbAbr3XM
+         llFi9VDmFY1AA2ZlFSaBM8c+tbWmCsN9L5vPlFRYtvnckDgttplqxKgidN+4O+9DWsOa
+         fFJnsiT+gyfyGmJI/EVAK8DeZpfjDbGtx6HQCVr9hKwN7hpKQqfip/GQNztifc6CJnZ7
+         u3hphYWu9/dwpQot1YoQJuHmVcuJy4amOOrp2t+unD6s684PepGodsniS2qrUQfzVQQ6
+         jWTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747493950; x=1748098750;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XP98VUjPlVFdkM5YIwU/G78ZibDz0+CgSoPoHCaILcQ=;
+        b=c48v4v4ats0PC69TljGXZHFgariRiRDoC4iVKKeyBuGal4lgGGcoYg7vJvJt2R6p77
+         pv5hO+n61aKKJaSmW218MR/Z9RE/bJPNCmGTc0B0jF/t8te7o3ho0kJdmIGXK25RBCz0
+         PvsR0506Fww6jOBANOBKmaz6NxsW7Ezwfrwz2itrxY0NBdKfWPe+87gj87TqDm70bNBH
+         fSb5wDvdGvpAj9PqeJTlIMx0xKllCoHbom0aXwGblBfrCRsFmUBebGWENpOZtkI/jb/T
+         Lg+UOEbBLnY5Vf8vcjM9whLBTtA2NqGndVAsoYxfYl0zNJwKMiFakA1/nucIf7zNP8Dx
+         Rmig==
+X-Gm-Message-State: AOJu0YzkZz0UjM5EmD5lvIAYSJrQAIbcexpGDc3FHOImE2W7q05/G+kE
+	XkgOPkZg6vc7K28HdZZiKp9tCESaYJ/TWD4mvmqI4db/KI35BNc6hBAJ8b4hIBmg
+X-Gm-Gg: ASbGncvOBVdNS3jdb2HfTRLunT0TF/+PJ+sgXPioKA9G9hMg/JpWF73BRhESNhetxUs
+	0Xcfvs27NpgeF4yci8LqS8HQTxQfil8uEINBFBy4w6OGgeAT378L1UTMs4j0Eu7x86Qxjwtbd3y
+	Im5DhuS9j6gQfGD6ObOsUoEA68aOF2a0kb/WWeV6h0InHXRXX06sHmCDyvsIVHZvk7Rt/0NdzEm
+	hbSo3nlZT9NPSHcYWJZodidtTaDTcKTDFVCQY73IJeUZOwB/qkiwjZrTjkMI72+Y5nslQtCr/av
+	5qDL7IrciXZrCA+dW9EDljmAfCbkSxHH6ROGoaV2dxA=
+X-Google-Smtp-Source: AGHT+IGsJjkE5oOY2KfQmSYLymKp3bV0IXDrJORItWzeMqvdYSlmNwc6MFdhSFpXLJGfRm8elcO66g==
+X-Received: by 2002:a05:6a00:91e0:b0:740:b394:3ebd with SMTP id d2e1a72fcca58-742a97ad507mr10415674b3a.7.1747493950276;
+        Sat, 17 May 2025 07:59:10 -0700 (PDT)
+Received: from apollo.localdomain ([2601:646:8201:fd20::5209])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96de11csm3264692b3a.31.2025.05.17.07.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 May 2025 07:59:09 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
+To: kexec@lists.infradead.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] ppc/fs2dt: Match function signatures
+Date: Sat, 17 May 2025 07:58:52 -0700
+Message-ID: <20250517145852.2488183-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250517_075911_938276_2117D674 
+X-CRM114-Status: GOOD (  10.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,75 +92,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 16, 2025 at 11:35:12AM +0800, Baoquan He wrote:
-> On 05/11/25 at 10:19am, Coiby Xu wrote:
-> > On Fri, May 09, 2025 at 06:35:18PM -0700, Andrew Morton wrote:
-> > > On Fri, 9 May 2025 17:58:01 +0800 Baoquan He <bhe@redhat.com> wrote:
-> > > 
-> > > > > The bad commit was introduced in 2021 but only recent gcc-15 supports
-> > > > > __counted_by. That's why we don't see this UBSAN warning until this
-> > > > > year. And although this UBSAN warning is scary enough, fortunately it
-> > > > > doesn't cause a real problem.
-> > > > >
-> > > > > >
-> > > > > > Baoquan, please re-review this?
-> > > > > >
-> > > > > > A -stable backport is clearly required.  A Fixes: would be nice, but I
-> > > > > > assume this goes back a long time so it isn't worth spending a lot of
-> > > > > > time working out when this was introduced.
-> > > > >
-> > > > > So I believe the correct fix should be as follows,
-> > > > 
-> > > > Thanks for testing and investigation into these. Could you arrange this
-> > > > into formal patches based on your testing and analysis?
-> > > > 
-> > > > It would be great if you can include Fuqiang's patch since it has
-> > > > conflict with your LUKS patch. This can facilitate patch merging for
-> > > > Andrew. Thanks in advance.
-> > > 
-> > > Yes please, I'm a bit lost here.
-> > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch is not
-> > > presently in mm.git and I'd appreciate clarity on how to resolve the
-> > > conflicts which a new version of
-> > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch will produce.
-> > 
-> > I'll resolve any conflict between these patches. Before that, I'm not sure
-> > if a separate patch to fix the UBSAN warnings alone is needed to Cc
-> > stable@vger.kernel.org because 1) the UBSAN warnings don't mean there is a
-> > real problem;
-> > 2) both Fuqiang's patch and my kdump LUKS support patches fix the UBSAN
-> > warnings as a by-product.
-> > 
-> > It seems the answer largely depends on if the stable tree or longterm
-> > trees need it. Currently, only longterm tree 6.12.28 and the stable tree
-> > 6.14.6 have the UBSAN warnings if they are compiled with gcc-15 or
-> > clang-18. Any advice will be appreciated! Thanks!
-> 
-> I personally think UBSAN warning fix is not necessary for stable kernel.
-> 
-> Hi Kees, Andrew,
-> 
-> Could you help answer Coiby's question about whether we need post a
-> standalone patch to fix the UBSAN warning fix so that it can be back
-> ported to stable kernel?
+The prototypes of function pointers is analysed and
+compiler finds the signature mismatches and complain about it.
 
-I went back through the thread and the referenced threads and I can't
-find any details on the USBAN splat. Can that please get reproduced in a
-commit log? That would help understand if it's a false positive or not.
+../kexec-tools-2.0.31/kexec/arch/ppc/fs2dt.c:338:44: error: incompatible function pointer types passing 'int (const void *, const void *)' to parameter of type 'int (*)(const struct dirent **, const struct dirent **)' [-Wincompatible-function-pointer-types]
+  338 |         numlist = scandir(pathname, &namelist, 0, comparefunc);
+      |                                                   ^~~~~~~~~~~
 
-Also, referencing the commit would be good. I assume this is discussing
-commit 15fcedd43a08 ("kexec: Annotate struct crash_mem with __counted_by")?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ kexec/arch/ppc/fs2dt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> In the case exposed during reviewing this patch, the code UBSAN warned
-> is not risky.
-
-Given that this makes things work correctly with newer compilers, I
-would say it should be backported to whatever -stable kernels have the
-"counted_by" annotation. (Hence the request to add a "Fixes" line so
-that it will happen automatically.)
-
--Kees
-
--- 
-Kees Cook
+diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+index fed499b..4952bfc 100644
+--- a/kexec/arch/ppc/fs2dt.c
++++ b/kexec/arch/ppc/fs2dt.c
+@@ -292,7 +292,7 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+  * Compare function used to sort the device-tree directories
+  * This function will be passed to scandir.
+  */
+-static int comparefunc(const void *dentry1, const void *dentry2)
++static int comparefunc(const struct dirent ** dentry1, const struct dirent **dentry2)
+ {
+ 	char *str1 = (*(struct dirent **)dentry1)->d_name;
+ 	char *str2 = (*(struct dirent **)dentry2)->d_name;
 
