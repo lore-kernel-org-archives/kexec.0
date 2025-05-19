@@ -4,82 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01976C2D0CD
-	for <kexec@archiver.kernel.org>; Mon, 19 May 2025 15:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07A96C2D0CD
+	for <kexec@archiver.kernel.org>; Mon, 19 May 2025 15:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lXzggVegcJaYU/PKMAlnm0SQ33yoeyXYBHu/n8B9S8s=; b=nvsVXJxwrncz17XcM8HQXuCiFP
-	zVXNuFLpqx3egBiQz1zBKeYf74YRa53C5rx3UlguDPiVhZ9ETUkIoysghEOsJlzNt55uMeQAd5v4N
-	yIBc2YeGJNF9DDoc1F5z8A5LaZor8LFxH14x/rXsT1+VcbDA8WWtKQRVPFEAt6mJkoaa46UB2D1ut
-	ccRAlaA93GQ5qOQGjJBZpHWlQmaj7zkVsT4rofQpmYQL1favJlPNIvf06SEMe67LGXZf1OfaZK2Rk
-	s55Wf9v9HVVOhXk6r2MbhrcEPg94IceKJxKKDU6xZi2793yV0+19mbr1fWMLhaGZ+QYdt+SgEL/60
-	wO/JnRvQ==;
+	bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=; b=UuZdjJuQXw4026EP/MbtyQ89Jn
+	koTNKI1RVtK2Ts3EWtoUG9wN1vXekkeTxa2GPV3POq07JdwUlpACMPYS0s6r4AdRocfxEAgxM7nvM
+	6FoR1A9XYtf5QFY2sG/6tLOf70shCS5nbJPqcd+jopwSkstmcDFkOWE3MdXMXzKZsOMl4b8ZTTYIn
+	uQStLIDB7/m7WgCsQRK3G/zl3JKElS6dd2o+1hnwndP3n91ro8I9D/29F9gyPJN4FTndh4CYXo5hS
+	nkw3Ed0nN9aWiKN1DsIu042V9lsNUaNa+tLfU5Uz6E/PE+wTms/fpeNOPsXvxU3rPjxICtDw0fhl4
+	t2TB2V9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH2NV-00000009boM-1rxw;
-	Mon, 19 May 2025 15:26:09 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uH2k3-00000009fj6-0P5H;
+	Mon, 19 May 2025 15:49:27 +0000
+Received: from mail-oa1-x30.google.com ([2001:4860:4864:20::30])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH1Zt-00000009SYk-2uFU
+	id 1uH1t4-00000009VPU-2xO9
 	for kexec@lists.infradead.org;
-	Mon, 19 May 2025 14:34:55 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747665292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lXzggVegcJaYU/PKMAlnm0SQ33yoeyXYBHu/n8B9S8s=;
-	b=cPyfI/TT8A/fXzjvKLFn6dANEqPiixzZSjDr/obVfLcr5/g6m+RRdpRpE53tM+mkxUeqt9
-	5uRqS/3qd/4EpL4fhFXsC8gfdMFYigncNdQpGAizSWsEH/SS4Qz6Nb3I5Va2lqTgJa41aH
-	q7TwmZJYCncthbAnyL5INKTzbFco9VU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-132-SM5ICl_JOaSxmooY_RCiZg-1; Mon,
- 19 May 2025 10:34:49 -0400
-X-MC-Unique: SM5ICl_JOaSxmooY_RCiZg-1
-X-Mimecast-MFC-AGG-ID: SM5ICl_JOaSxmooY_RCiZg_1747665288
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0060D195609E;
-	Mon, 19 May 2025 14:34:47 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.83])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E16E11956096;
-	Mon, 19 May 2025 14:34:44 +0000 (UTC)
-Date: Mon, 19 May 2025 22:34:39 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Coiby Xu <coxu@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	fuqiang wang <fuqiang.wang@easystack.cn>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <aCtBf2LqRqlWXaUp@MiWiFi-R3L-srv>
-References: <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
- <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
- <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
- <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
- <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
- <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
- <202505161616.F4C1BCCF6A@keescook>
- <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
- <202505190716.B21F11984@keescook>
+	Mon, 19 May 2025 14:54:44 +0000
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-2da3c5729fcso2115896fac.0
+        for <kexec@lists.infradead.org>; Mon, 19 May 2025 07:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747666481; x=1748271281; darn=lists.infradead.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=;
+        b=fUtzmNXLnm2z5dVMw6jZ6sX8mwG9AIie51R7efMSZ1xv0D5+OiOQWtemDgf7Mp1ULr
+         sKEg6XcAw2jKu6WRBP5P3GHly0cWPvGIR9BGGCC37o/whxLFQE5QjFbgXFLIWps53r7r
+         iCeiAJKUJy1JhjGqWrxIQm+xeRiuJOTxcMEZnOAx9Ty3Lr5yuDh1poZAKhM8ahKLpPCo
+         kSt8ZyLhM7M7OVQ5LUTac2anVHnT6LIGG9+SQK0Fi0TWFxQVGTYrizW3GghuJtQC84l6
+         Zg584A88A8LViD5VRKWYw1mzhS+zTB6Ca+j3yynEZDm8f1SoNMe0xgjXqH9slBNb46cx
+         GJyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747666481; x=1748271281;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=;
+        b=M6KGhbvRrZOaXEugciut6Pp1GtUhwhZrJ8KRplt+Hk70gHSRJpubMHzPqqNmy1Xiks
+         kjuun+ekngUNFcOC4qSEdkvvTngMT7ol7n3E5lwPRzl/LySudy6Gid1Qg9M/jXg41tqb
+         523ivKBb1WgepsepzwWdcCZd/B9Pvyvrs7rYQsKTWJ1Z41PK5sJrbBGs/SHK73n6HSWC
+         /ZscDGzAaxfB4PgP6RCBo/F12yzI1duse3mdX/NBsHKI5qIfM9X0CdhFiPa08qEY+90x
+         IzQ+hN1dzsdvObsq2aDlfC9WYaK6Fc4kdBsn4chpZFWay9VMsg24MGQOnFwgqssIKEOb
+         pPBg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6H+H8DsugFLPlIY9DrgtM9HMpkUh/JC9UvRiN9XHcEUBr+cgRiM3TbJ+yKojSQLDTukqBvQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxRc27d+t7Dj9OcKL2bY1lASnqT6AQs09xT+4xu9hanT11pKBRt
+	wIXcMqHH4YuL0NZZRoJFDIFFQPt17XKuxzIRIpBK7b/WCh2+FmWM9cfetwZEV0ShAgK6RDj4DLt
+	Gql55AC0Ygbe9sRUVwDwWS3/VeqC12uYSTauBTe94EwNaZa8fGyyGMCM=
+X-Gm-Gg: ASbGnctj2G6Gug0YIdiy7CUbca11i6NkxoJxgfjV8+85GA1WF2mL0EutPCRyalCntPu
+	bWMmr+n+IiSBX69ocgbalww4wu1C4uIM4Yvlk/rbDh8xU2E43yPVXLZBbejMZM5543rg2ofOh5q
+	12IbkD3Zz/pPdaiZKFu3NImED2IKZQ4Q==
+X-Google-Smtp-Source: AGHT+IHY+s/pxl8Wm0AmPNexcqZxRL/7O/b0czr1GbqEi1R3W+gT9DWsS7sJnhkHzK0YqxtH8uY+NRsB2bc9oEpw9Fo=
+X-Received: by 2002:a05:622a:1f9b:b0:494:a01d:a912 with SMTP id
+ d75a77b69052e-494ae358549mr285354061cf.13.1747666471020; Mon, 19 May 2025
+ 07:54:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505190716.B21F11984@keescook>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <f35359d5-63e1-8390-619f-67961443bfe1@google.com>
+In-Reply-To: <f35359d5-63e1-8390-619f-67961443bfe1@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 19 May 2025 10:53:52 -0400
+X-Gm-Features: AX0GCFuK1Uf-sIumFIAPWvO-DRou6DMnk0ysddb-8DdagbG7QKODtYAZqvQIRxA
+Message-ID: <CA+CK2bAZEgTg4qGy9j3Tm1nerJP0M-30EKUxOuS5Us81XXtGag@mail.gmail.com>
+Subject: Re: [Hypervisor Live Update] Notes from May 5, 2025
+To: David Rientjes <rientjes@google.com>
+Cc: Alexander Graf <graf@amazon.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
+	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
+	David Matlack <dmatlack@google.com>, Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Pasha Tatashin <tatashin@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Vipin Sharma <vipinsh@google.com>, 
+	Vishal Annapurve <vannapurve@google.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, linux-mm@kvack.org, 
+	kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250519_073453_797791_91C781C5 
-X-CRM114-Status: GOOD (  47.80  )
+X-CRM114-CacheID: sfid-20250519_075442_938723_222ADE59 
+X-CRM114-Status: GOOD (  13.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,91 +98,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/19/25 at 07:19am, Kees Cook wrote:
-> On Mon, May 19, 2025 at 09:22:30AM +0800, Baoquan He wrote:
-> > On 05/16/25 at 04:20pm, Kees Cook wrote:
-> > > On Fri, May 16, 2025 at 11:35:12AM +0800, Baoquan He wrote:
-> > > > On 05/11/25 at 10:19am, Coiby Xu wrote:
-> > > > > On Fri, May 09, 2025 at 06:35:18PM -0700, Andrew Morton wrote:
-> > > > > > On Fri, 9 May 2025 17:58:01 +0800 Baoquan He <bhe@redhat.com> wrote:
-> > > > > > 
-> > > > > > > > The bad commit was introduced in 2021 but only recent gcc-15 supports
-> > > > > > > > __counted_by. That's why we don't see this UBSAN warning until this
-> > > > > > > > year. And although this UBSAN warning is scary enough, fortunately it
-> > > > > > > > doesn't cause a real problem.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > Baoquan, please re-review this?
-> > > > > > > > >
-> > > > > > > > > A -stable backport is clearly required.  A Fixes: would be nice, but I
-> > > > > > > > > assume this goes back a long time so it isn't worth spending a lot of
-> > > > > > > > > time working out when this was introduced.
-> > > > > > > >
-> > > > > > > > So I believe the correct fix should be as follows,
-> > > > > > > 
-> > > > > > > Thanks for testing and investigation into these. Could you arrange this
-> > > > > > > into formal patches based on your testing and analysis?
-> > > > > > > 
-> > > > > > > It would be great if you can include Fuqiang's patch since it has
-> > > > > > > conflict with your LUKS patch. This can facilitate patch merging for
-> > > > > > > Andrew. Thanks in advance.
-> > > > > > 
-> > > > > > Yes please, I'm a bit lost here.
-> > > > > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch is not
-> > > > > > presently in mm.git and I'd appreciate clarity on how to resolve the
-> > > > > > conflicts which a new version of
-> > > > > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch will produce.
-> > > > > 
-> > > > > I'll resolve any conflict between these patches. Before that, I'm not sure
-> > > > > if a separate patch to fix the UBSAN warnings alone is needed to Cc
-> > > > > stable@vger.kernel.org because 1) the UBSAN warnings don't mean there is a
-> > > > > real problem;
-> > > > > 2) both Fuqiang's patch and my kdump LUKS support patches fix the UBSAN
-> > > > > warnings as a by-product.
-> > > > > 
-> > > > > It seems the answer largely depends on if the stable tree or longterm
-> > > > > trees need it. Currently, only longterm tree 6.12.28 and the stable tree
-> > > > > 6.14.6 have the UBSAN warnings if they are compiled with gcc-15 or
-> > > > > clang-18. Any advice will be appreciated! Thanks!
-> > > > 
-> > > > I personally think UBSAN warning fix is not necessary for stable kernel.
-> > > > 
-> > > > Hi Kees, Andrew,
-> > > > 
-> > > > Could you help answer Coiby's question about whether we need post a
-> > > > standalone patch to fix the UBSAN warning fix so that it can be back
-> > > > ported to stable kernel?
-> > > 
-> > > I went back through the thread and the referenced threads and I can't
-> > > find any details on the USBAN splat. Can that please get reproduced in a
-> > > commit log? That would help understand if it's a false positive or not.
-> > 
-> > 
-> > The original patch is trying to fix a potential issue in which a memory
-> > range is split, while the sub-range split out is always on top of the
-> > entire memory range, hence no risk.
-> > 
-> > Later, we encountered a UBSAN warning around the above memory range
-> > splitting code several times. We found this patch can mute the warning.
-> > 
-> > Please see below UBSAN splat trace report from Coiby:
-> > https://lore.kernel.org/all/4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at/T/#u
-> 
-> Ah-ha! Thanks for the link.
-> 
-> > Later, Coiby got the root cause from investigation, please see:
-> > https://lore.kernel.org/all/2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei/T/#u
-> 
-> Looking at https://lore.kernel.org/all/aBxfflkkQXTetmbq@MiWiFi-R3L-srv/
-> it seems like this actually turned out to be a legitimate overflow
-> detection? I.e. the fix isn't silencing a false positive, but rather
-> allocating enough space?
+> Topics for the next meeting:
+>
+>  - 20 min: presentation of LUO v2 design
+Slides:
+https://docs.google.com/presentation/d/17uYuw_KkD-gOiA6a6vDgHGzj-gDbmj7mjAb7ENlkZ5o/edit?slide=id.p#slide=id.p
 
-This v5 is on top of below patch which Andrew has picked to his mm tree.
-In there, it happened to get the ubsan warning fixed. But the hunk
-doesn't reflect it in the v5 patch.
-
-[PATCH v9 7/8] x86/crash: pass dm crypt keys to kdump kernel
-https://lore.kernel.org/all/20250502011246.99238-8-coxu@redhat.com/T/#u
-
+>  - check back on latest status of KHO series in mm staging trees and any
+>    pending concerns
+>    + including possible refcount issues for compound folios across KHO
+>  - possibility of a Live Update Microconference for LPC this year
+>  - discuss support for sharding of dax devices into arbitrary lengths
+>  - discuss support for defaulting to fsdax and with optional devdax as
+>    needed, provisioned by the kernel, on the command line without
+>    additional tooling (ndctl)
+>  - update on physical pool allocator that can be used to provide pages
+>    for hugetlb, guest_memfd, and memfds
+>  - SEV-SNP support for preserving guest memory and what foundational
+>    components AMD can depend on, building on top of KHO v6 or KSTATE
+>  - later: testing methodology to allow downstream consumers to qualify
+>    that live update works from one version to another
+>  - later: reducing blackout window during live update
+>
+> Please let me know if you'd like to propose additional topics for
+> discussion, thank you!
+>
+> [1] https://marc.info/?l=linux-doc&m=174645437711873&q=mbox
+>
 
