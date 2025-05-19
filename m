@@ -4,60 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23078C3ABC9
-	for <kexec@archiver.kernel.org>; Sun, 18 May 2025 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B11AC3ABD8
+	for <kexec@archiver.kernel.org>; Mon, 19 May 2025 01:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GxKtHkJ4HoCvdvNY8Qla+KPYhqSSRiK5GHNOxyygpaE=; b=25WbVlb9wy8meR+1Olx2njJb6T
-	FNjm6afTyDjE1xHgr13sw7okFKY42mnHOjNpcgIq/3N+vi+z/q3l99IBpVsJ5ICnXmovToT/RL6iw
-	6mLlRIPCXeeJIdr1C0vId+9buOKnWs+3bvX6MQLkpQYpXM07GYyevieNAxLBBEKXq2h1IQlRV1hkV
-	vmjtpMubl98My6rI/aMpQq9a2o2p4IX+UhYyVcA7RnJhyJ8K9iVYHG1a985/us3Aqy4CZn5g6TrC9
-	egiLIXr8QuPNxjHOiEXmjCLdmCB14bU1S44xgZhDGasCoci5Ib/F5RWiJY7vM/SEdanUleVUggI7G
-	WnOYN7xg==;
+	bh=qk+lwn+KJ86iaLt4lDb0E4E7jAtMtcGrh+SpnKraUCI=; b=mQTqFcId1FePasVebm8gTjYm9O
+	0+lXeyKMTO/92I8VTucG35rwxwIz418ZtmY5BZRx2ptUg9niNvd39ewchxo2YoDBo/edKastUej/Q
+	tnVJH8k6FW9tAYEsWbcCsL3jKv5qRc/vTQ8Rs4RGO9wji2IRv/3bEbhL01HvqBcCSJdWyBTPPPXzj
+	gWUcZlcMNJz3RoMsEN33AyHQfvGrVxxl4butXTETPRzHbzThYkEMh4/F6eMfWMX6bKX4RB2wstYyh
+	AEpLRb8EtIr/ik4wM/+1cC+Y9QqnxbPUfo4RPcCo9I31qWsYPT4J4FwznPjswX4ePntredpi1Y4Vx
+	mJWlJhIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uGgXh-00000007Gfv-2YWw;
-	Sun, 18 May 2025 16:07:13 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uGpDM-00000007lo5-2AEa;
+	Mon, 19 May 2025 01:22:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uGgXf-00000007Gfn-3fBC
+	id 1uGpDI-00000007lnF-1wGm
 	for kexec@lists.infradead.org;
-	Sun, 18 May 2025 16:07:11 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id A66BA60007;
-	Sun, 18 May 2025 16:07:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 045DEC4CEE7;
-	Sun, 18 May 2025 16:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747584429;
-	bh=8K7Z8/yRBpx8ywMbBxpZ+kSz2JhWxBrGfTWkotiCl4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UCZIBrwPt5e5KyIa4ikoH6lFHF77tZrJq9Ug0TgWq+aO62WbpoLkvCpHvmOhy4M1G
-	 SOsp4jKKSyFycj7PbdTkqbJUGUOa0iXyIR4yjge3NSYgTYVn+ywkgtxNd8uOOrkg0K
-	 IBSCzHooJ5z3oiM6kynKKda4SqlvEOhzopKMC7uGx5pBZ2zxwxblXmTUvofjtVemX7
-	 7Ag9+8E7rlCw+vr7Yw5Ti0YQAZoyp1hQ0pXw/0BY7Rz3aU4HFZahCSolAZicY4STM2
-	 GeJLDY7JutM3ZcHaWE0xV34BkoEpqRvISb+xkSp42IQBh58PSliNaetcah7rglsZgV
-	 gaK7WCA2z5HRA==
-Date: Sun, 18 May 2025 19:07:02 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Changyuan Lyu <changyuanl@google.com>
-Cc: akpm@linux-foundation.org, graf@amazon.com, bhe@redhat.com,
+	Mon, 19 May 2025 01:22:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747617762;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qk+lwn+KJ86iaLt4lDb0E4E7jAtMtcGrh+SpnKraUCI=;
+	b=NjDZtvhnimAxOeAJhMrLOT8RplZUZ2aFiAt4A+Xn/BGyyotS82JDxV65oFAwm4RhJJ76wg
+	lJv+72WJsQKnP4ZWRyzmjikDbpGdYLtWJZ+AbyHLlzVeAv9LXgiljnWSYh+Vo9Yxj7/YN8
+	KZf4cJ8Rcep6IS4EZ2YborLhVDRLSms=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-136-ke4XrhnVPzWE_Hv-0JQKcA-1; Sun,
+ 18 May 2025 21:22:38 -0400
+X-MC-Unique: ke4XrhnVPzWE_Hv-0JQKcA-1
+X-Mimecast-MFC-AGG-ID: ke4XrhnVPzWE_Hv-0JQKcA_1747617757
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8BEF0195608B;
+	Mon, 19 May 2025 01:22:36 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.83])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8439D180035C;
+	Mon, 19 May 2025 01:22:34 +0000 (UTC)
+Date: Mon, 19 May 2025 09:22:30 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Coiby Xu <coxu@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+	fuqiang wang <fuqiang.wang@easystack.cn>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, chrisl@kernel.org, pasha.tatashin@soleen.com,
-	jasonmiu@google.com
-Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
- scratch fails
-Message-ID: <aCoFphqeZAMkhq51@kernel.org>
-References: <20250518142315.241670-1-changyuanl@google.com>
- <20250518142315.241670-2-changyuanl@google.com>
+	x86@kernel.org
+Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
+References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
+ <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
+ <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
+ <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+ <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
+ <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
+ <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
+ <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
+ <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+ <202505161616.F4C1BCCF6A@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250518142315.241670-2-changyuanl@google.com>
+In-Reply-To: <202505161616.F4C1BCCF6A@keescook>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250518_182244_581786_37314FD2 
+X-CRM114-Status: GOOD (  47.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,138 +94,96 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, May 18, 2025 at 07:23:14AM -0700, Changyuan Lyu wrote:
-> When we kexec into a new kernel from an old kernel with KHO
-> enabled, the new kernel allocates vmemmap in the scratch area.
-> If the KHO scratch size is too small, vmemmap allocation would
-> fail and cause kernel panic, like the following,
+On 05/16/25 at 04:20pm, Kees Cook wrote:
+> On Fri, May 16, 2025 at 11:35:12AM +0800, Baoquan He wrote:
+> > On 05/11/25 at 10:19am, Coiby Xu wrote:
+> > > On Fri, May 09, 2025 at 06:35:18PM -0700, Andrew Morton wrote:
+> > > > On Fri, 9 May 2025 17:58:01 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > > > 
+> > > > > > The bad commit was introduced in 2021 but only recent gcc-15 supports
+> > > > > > __counted_by. That's why we don't see this UBSAN warning until this
+> > > > > > year. And although this UBSAN warning is scary enough, fortunately it
+> > > > > > doesn't cause a real problem.
+> > > > > >
+> > > > > > >
+> > > > > > > Baoquan, please re-review this?
+> > > > > > >
+> > > > > > > A -stable backport is clearly required.  A Fixes: would be nice, but I
+> > > > > > > assume this goes back a long time so it isn't worth spending a lot of
+> > > > > > > time working out when this was introduced.
+> > > > > >
+> > > > > > So I believe the correct fix should be as follows,
+> > > > > 
+> > > > > Thanks for testing and investigation into these. Could you arrange this
+> > > > > into formal patches based on your testing and analysis?
+> > > > > 
+> > > > > It would be great if you can include Fuqiang's patch since it has
+> > > > > conflict with your LUKS patch. This can facilitate patch merging for
+> > > > > Andrew. Thanks in advance.
+> > > > 
+> > > > Yes please, I'm a bit lost here.
+> > > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch is not
+> > > > presently in mm.git and I'd appreciate clarity on how to resolve the
+> > > > conflicts which a new version of
+> > > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch will produce.
+> > > 
+> > > I'll resolve any conflict between these patches. Before that, I'm not sure
+> > > if a separate patch to fix the UBSAN warnings alone is needed to Cc
+> > > stable@vger.kernel.org because 1) the UBSAN warnings don't mean there is a
+> > > real problem;
+> > > 2) both Fuqiang's patch and my kdump LUKS support patches fix the UBSAN
+> > > warnings as a by-product.
+> > > 
+> > > It seems the answer largely depends on if the stable tree or longterm
+> > > trees need it. Currently, only longterm tree 6.12.28 and the stable tree
+> > > 6.14.6 have the UBSAN warnings if they are compiled with gcc-15 or
+> > > clang-18. Any advice will be appreciated! Thanks!
+> > 
+> > I personally think UBSAN warning fix is not necessary for stable kernel.
+> > 
+> > Hi Kees, Andrew,
+> > 
+> > Could you help answer Coiby's question about whether we need post a
+> > standalone patch to fix the UBSAN warning fix so that it can be back
+> > ported to stable kernel?
 > 
-> [    0.027133] Faking a node at [mem 0x0000000000000000-0x00000004ffffffff]
-> [    0.027877] NODE_DATA(0) allocated [mem 0x4e4bd5a00-0x4e4bfffff]
-> [    0.029696] sparse_init_nid: node[0] memory map backing failed. Some memory will not be available.
-> [    0.029698] Zone ranges:
-> [    0.030974]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-> [    0.031627]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
-> [    0.032281]   Normal   [mem 0x0000000100000000-0x00000004ffffffff]
-> [    0.032930]   Device   empty
-> [    0.033251] Movable zone start for each node
-> [    0.033710] Early memory node ranges
-> [    0.034108]   node   0: [mem 0x0000000000001000-0x000000000007ffff]
-> [    0.034801]   node   0: [mem 0x0000000000100000-0x00000000773fffff]
-> [    0.035461]   node   0: [mem 0x0000000077400000-0x00000000775fffff]
-> [    0.036116]   node   0: [mem 0x0000000077600000-0x000000007fffffff]
-> [    0.036768]   node   0: [mem 0x0000000100000000-0x00000004ccbfffff]
-> [    0.037423]   node   0: [mem 0x00000004ccc00000-0x00000004e4bfffff]
-> [    0.038111] BUG: kernel NULL pointer dereference, address: 0000000000000010
-> [    0.038880] #PF: supervisor write access in kernel mode
-> [    0.039474] #PF: error_code(0x0002) - not-present page
-> [    0.040056] PGD 0 P4D 0
-> [    0.040335] Oops: Oops: 0002 [#1] SMP
-> [    0.040745] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc4+ #275 NONE
-> [    0.041541] RIP: 0010:__bitmap_set+0x2b/0x80
-> [    0.041992] Code: 0f 1e fa 55 48 89 e5 89 f1 89 f0 c1 e8 06 48 8d 04 c7 48 c7 c7 ff ff ff ff 48 d3 e7 41 89 f0 41 83 c8 c0 44 89 c6 01 d6 78 43 <48> 09 38 48 83 c0 08 83 fe 40 72 1a 41 8d 3c 10 83 c7 40 48 c7 00
-> [    0.043986] RSP: 0000:ffffffff96203df0 EFLAGS: 00010047
-> [    0.044546] RAX: 0000000000000010 RBX: 000000000000cc00 RCX: 0000000000000000
-> [    0.045311] RDX: 0000000000000040 RSI: 0000000000000000 RDI: ffffffffffffffff
-> [    0.046075] RBP: ffffffff96203df0 R08: 00000000ffffffc0 R09: ffffffff9626c950
-> [    0.046830] R10: 000000000002fffd R11: 0000000000000004 R12: 0000000000008000
-> [    0.047574] R13: 0000000000000000 R14: 000000000000003f R15: 000000000000009b
-> [    0.048313] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> [    0.049151] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.049751] CR2: 0000000000000010 CR3: 00000004d123e000 CR4: 00000000000200b0
-> [    0.050494] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [    0.051238] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [    0.051978] Call Trace:
-> [    0.052235]  <TASK>
-> [    0.052455]  subsection_map_init+0xe4/0x130
-> [    0.052891]  free_area_init+0x217/0x3d0
-> [    0.053290]  zone_sizes_init+0x5e/0x80
-> [    0.053682]  paging_init+0x27/0x30
-> [    0.054046]  setup_arch+0x307/0x3e0
-> [    0.054422]  start_kernel+0x59/0x390
-> [    0.054820]  x86_64_start_reservations+0x28/0x30
-> [    0.055307]  x86_64_start_kernel+0x70/0x80
-> [    0.055736]  common_startup_64+0x13b/0x140
-> [    0.056165]  </TASK>
-> [    0.056392] CR2: 0000000000000010
-> [    0.056737] ---[ end trace 0000000000000000 ]---
-> [    0.057218] RIP: 0010:__bitmap_set+0x2b/0x80
-> [    0.057667] Code: 0f 1e fa 55 48 89 e5 89 f1 89 f0 c1 e8 06 48 8d 04 c7 48 c7 c7 ff ff ff ff 48 d3 e7 41 89 f0 41 83 c8 c0 44 89 c6 01 d6 78 43 <48> 09 38 48 83 c0 08 83 fe 40 72 1a 41 8d 3c 10 83 c7 40 48 c7 00
-> [    0.059650] RSP: 0000:ffffffff96203df0 EFLAGS: 00010047
-> [    0.060218] RAX: 0000000000000010 RBX: 000000000000cc00 RCX: 0000000000000000
-> [    0.060985] RDX: 0000000000000040 RSI: 0000000000000000 RDI: ffffffffffffffff
-> [    0.061728] RBP: ffffffff96203df0 R08: 00000000ffffffc0 R09: ffffffff9626c950
-> [    0.062486] R10: 000000000002fffd R11: 0000000000000004 R12: 0000000000008000
-> [    0.063228] R13: 0000000000000000 R14: 000000000000003f R15: 000000000000009b
-> [    0.063968] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> [    0.064812] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.065423] CR2: 0000000000000010 CR3: 00000004d123e000 CR4: 00000000000200b0
-> [    0.066175] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [    0.066926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [    0.067678] Kernel panic - not syncing: Attempted to kill the idle task!
-> [    0.068403] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
-> 
-> The panic above can be easily reproduced by the following steps,
-> 
-> 1.  boot a VM with 20GiB physical memory (or larger) and kernel command
->     line "kho=on kho_scratch=2m,256m,128m"
-> 2.  echo 1 > /sys/kernel/debug/kho/out/finalize
-> 3.  kexec to a new kernel
+> I went back through the thread and the referenced threads and I can't
+> find any details on the USBAN splat. Can that please get reproduced in a
+> commit log? That would help understand if it's a false positive or not.
 
-This can be reproduced without KHO, just squeeze the RAM size, boot with a huge
-kernel and initrd and you'll get the same panic.
 
-The issue is that sparse_init_nid() does not treat allocation failures as
-fatal and just continues with some sections being unpopulated and then
-subsection_map_init() presumes all the sections are valid.
+The original patch is trying to fix a potential issue in which a memory
+range is split, while the sub-range split out is always on top of the
+entire memory range, hence no risk.
 
-This should be fixed in mm/sparse.c regardless of KHO, maybe as simple as 
+Later, we encountered a UBSAN warning around the above memory range
+splitting code several times. We found this patch can mute the warning.
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 3c012cf83cc2..64d071f9f037 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -197,6 +197,10 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
- 		pfns = min(nr_pages, PAGES_PER_SECTION
- 				- (pfn & ~PAGE_SECTION_MASK));
- 		ms = __nr_to_section(nr);
-+
-+		if (!ms->section_mem_map)
-+			continue;
-+
- 		subsection_mask_set(ms->usage->subsection_map, pfn, pfns);
- 
- 		pr_debug("%s: sec: %lu pfns: %lu set(%d, %d)\n", __func__, nr,
- 
-> The current panic log above is confusing and it's hard to find the
-> root cause.
-> 
-> Add an error log to make it easier to debug such kind of panics.
-> 
-> Fixes: d59f43b57480 ("memblock: add support for scratch memory")
-> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-> ---
->  mm/memblock.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 154f1d73b61f..ed886bfd3de7 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1573,6 +1573,9 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->  		goto again;
->  	}
-> 
-> +	if (flags & MEMBLOCK_KHO_SCRATCH)
-> +		pr_err_once("Could not allocate %pap bytes in KHO scratch\n", &size);
-> +
->  	return 0;
-> 
->  done:
-> --
-> 2.49.0.1101.gccaa498523-goog
+Please see below UBSAN splat trace report from Coiby:
+https://lore.kernel.org/all/4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at/T/#u
 
--- 
-Sincerely yours,
-Mike.
+Later, Coiby got the root cause from investigation, please see:
+https://lore.kernel.org/all/2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei/T/#u
+
+> 
+> Also, referencing the commit would be good. I assume this is discussing
+> commit 15fcedd43a08 ("kexec: Annotate struct crash_mem with __counted_by")?
+
+Right.
+
+> 
+> > In the case exposed during reviewing this patch, the code UBSAN warned
+> > is not risky.
+> 
+> Given that this makes things work correctly with newer compilers, I
+> would say it should be backported to whatever -stable kernels have the
+> "counted_by" annotation. (Hence the request to add a "Fixes" line so
+> that it will happen automatically.)
+
+Got it, then Coiby can post a standalone patch to fix commit 15fcedd43a08
+("kexec: Annotate struct crash_mem with __counted_by") and CC stable, then
+post a new version of this patch on top.
+
+Thanks a lot for confirming.
+
 
