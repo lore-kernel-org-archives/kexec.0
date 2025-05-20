@@ -4,86 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07A96C2D0CD
-	for <kexec@archiver.kernel.org>; Mon, 19 May 2025 15:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 367A1C3ABDD
+	for <kexec@archiver.kernel.org>; Tue, 20 May 2025 09:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=; b=UuZdjJuQXw4026EP/MbtyQ89Jn
-	koTNKI1RVtK2Ts3EWtoUG9wN1vXekkeTxa2GPV3POq07JdwUlpACMPYS0s6r4AdRocfxEAgxM7nvM
-	6FoR1A9XYtf5QFY2sG/6tLOf70shCS5nbJPqcd+jopwSkstmcDFkOWE3MdXMXzKZsOMl4b8ZTTYIn
-	uQStLIDB7/m7WgCsQRK3G/zl3JKElS6dd2o+1hnwndP3n91ro8I9D/29F9gyPJN4FTndh4CYXo5hS
-	nkw3Ed0nN9aWiKN1DsIu042V9lsNUaNa+tLfU5Uz6E/PE+wTms/fpeNOPsXvxU3rPjxICtDw0fhl4
-	t2TB2V9A==;
+	bh=KhESp3G/SIa6HPbqoYw8chTa3J1tACi3fMTgeUE9g64=; b=Meh8evbzsMwAOUc7z5UIOb4nuJ
+	2KusaloOmgobYA6gRb/gYdBi6N04W56/Jbc59mOeb11aCBY0/M94I9xsU0TA8FJFqy72Hfi2ZsgrY
+	98BBljriX/VHV2NjODeSbC1jQPpKSUojYY7UVf5XFVNY8n7H8ucg8jFtDtBIw+rCUzCcxTcLrFl2y
+	AXpDUCNANJpSjiJTVgDxStpUUtDgoXlqj+zwvXxkGn2o9O90c4+G5lHANSt0OJfCMfTZwyhb8bdP6
+	a+WCPFIrfszTGuZMbmghmhUNn9poifj2BbMFOO0P7D/wEdyZqN/c0JCxl1eT0tyzr1pTP+s5Oy0wu
+	mCv3Tmww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH2k3-00000009fj6-0P5H;
-	Mon, 19 May 2025 15:49:27 +0000
-Received: from mail-oa1-x30.google.com ([2001:4860:4864:20::30])
+	id 1uHJK0-0000000CCUB-0wYJ;
+	Tue, 20 May 2025 09:31:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH1t4-00000009VPU-2xO9
+	id 1uHJ4l-0000000C9sS-0feU
 	for kexec@lists.infradead.org;
-	Mon, 19 May 2025 14:54:44 +0000
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-2da3c5729fcso2115896fac.0
-        for <kexec@lists.infradead.org>; Mon, 19 May 2025 07:54:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747666481; x=1748271281; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=;
-        b=fUtzmNXLnm2z5dVMw6jZ6sX8mwG9AIie51R7efMSZ1xv0D5+OiOQWtemDgf7Mp1ULr
-         sKEg6XcAw2jKu6WRBP5P3GHly0cWPvGIR9BGGCC37o/whxLFQE5QjFbgXFLIWps53r7r
-         iCeiAJKUJy1JhjGqWrxIQm+xeRiuJOTxcMEZnOAx9Ty3Lr5yuDh1poZAKhM8ahKLpPCo
-         kSt8ZyLhM7M7OVQ5LUTac2anVHnT6LIGG9+SQK0Fi0TWFxQVGTYrizW3GghuJtQC84l6
-         Zg584A88A8LViD5VRKWYw1mzhS+zTB6Ca+j3yynEZDm8f1SoNMe0xgjXqH9slBNb46cx
-         GJyg==
+	Tue, 20 May 2025 09:15:56 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747732553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KhESp3G/SIa6HPbqoYw8chTa3J1tACi3fMTgeUE9g64=;
+	b=dEOO6kLmog3cOGGEzvzUv4vwwziKBHMXHSPK8wSZKIyKv/ECQGCGiIf7mE5SV4glwiD1gx
+	507P2R16T8z0LkwD6yQ7aB+NFjKJsJWyaOJxjVawhgixIWaRz2bK43AcMJbGtSYDVjb//d
+	YHN41SpxrBAh8DLd1NkkGVX1qGCB6h4=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-14-YRJj7qeMP4GP3LMuVwHySA-1; Tue, 20 May 2025 05:15:49 -0400
+X-MC-Unique: YRJj7qeMP4GP3LMuVwHySA-1
+X-Mimecast-MFC-AGG-ID: YRJj7qeMP4GP3LMuVwHySA_1747732549
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30ec5cc994eso2188907a91.2
+        for <kexec@lists.infradead.org>; Tue, 20 May 2025 02:15:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747666481; x=1748271281;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C5RY0yee8AXlczdySDXd4xrCiHllv9TM3XPXAEo3M/Q=;
-        b=M6KGhbvRrZOaXEugciut6Pp1GtUhwhZrJ8KRplt+Hk70gHSRJpubMHzPqqNmy1Xiks
-         kjuun+ekngUNFcOC4qSEdkvvTngMT7ol7n3E5lwPRzl/LySudy6Gid1Qg9M/jXg41tqb
-         523ivKBb1WgepsepzwWdcCZd/B9Pvyvrs7rYQsKTWJ1Z41PK5sJrbBGs/SHK73n6HSWC
-         /ZscDGzAaxfB4PgP6RCBo/F12yzI1duse3mdX/NBsHKI5qIfM9X0CdhFiPa08qEY+90x
-         IzQ+hN1dzsdvObsq2aDlfC9WYaK6Fc4kdBsn4chpZFWay9VMsg24MGQOnFwgqssIKEOb
-         pPBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6H+H8DsugFLPlIY9DrgtM9HMpkUh/JC9UvRiN9XHcEUBr+cgRiM3TbJ+yKojSQLDTukqBvQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxRc27d+t7Dj9OcKL2bY1lASnqT6AQs09xT+4xu9hanT11pKBRt
-	wIXcMqHH4YuL0NZZRoJFDIFFQPt17XKuxzIRIpBK7b/WCh2+FmWM9cfetwZEV0ShAgK6RDj4DLt
-	Gql55AC0Ygbe9sRUVwDwWS3/VeqC12uYSTauBTe94EwNaZa8fGyyGMCM=
-X-Gm-Gg: ASbGnctj2G6Gug0YIdiy7CUbca11i6NkxoJxgfjV8+85GA1WF2mL0EutPCRyalCntPu
-	bWMmr+n+IiSBX69ocgbalww4wu1C4uIM4Yvlk/rbDh8xU2E43yPVXLZBbejMZM5543rg2ofOh5q
-	12IbkD3Zz/pPdaiZKFu3NImED2IKZQ4Q==
-X-Google-Smtp-Source: AGHT+IHY+s/pxl8Wm0AmPNexcqZxRL/7O/b0czr1GbqEi1R3W+gT9DWsS7sJnhkHzK0YqxtH8uY+NRsB2bc9oEpw9Fo=
-X-Received: by 2002:a05:622a:1f9b:b0:494:a01d:a912 with SMTP id
- d75a77b69052e-494ae358549mr285354061cf.13.1747666471020; Mon, 19 May 2025
- 07:54:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747732549; x=1748337349;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KhESp3G/SIa6HPbqoYw8chTa3J1tACi3fMTgeUE9g64=;
+        b=UrP9vxwkcQvvR9lesRU0adlCRVvv6VCjGISc+0eGJoLbDePZSdbjXfhVChhcbNexUz
+         7QqayJb9tW6kmhmEfsw3E0NDBVWQ7h7YFrXKICUCxEyud085UGPWlnDV3+u5HpXAVyst
+         SPVPtzb0jjkZJT7kQ+lO/WXqY1ELcbCm5QfI3ZjDPmJOzFnKnc848718dyuw8gGFG0WN
+         KnIlvcU310TpPhEhzcGRDWFrebgSRlaqjgNAJDfgcChqgNBMNpsva1ZPLMASA9s3O9eq
+         tSdQuW70KPrqGbr2ciSjgrrdl0On72XYP8t7ipgpJrKTEsuK0lA8/pRkMxVUzu+vYVab
+         VbFw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+PUCuy5uOnOJ5AQC83/ZeXA75bPk/x9mwYMfundVISrY2kQgAJDjyt3wx7YBuEf7ybZgA+w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzvztYjC7asM2OVxefA6xvR8DWg3FqIzQiSZ34MHlCSRPjSRp3X
+	3JHq9OzUv2vmNS+4RBPEwMqp5+45rvfux4bI/X9PAgrOfGJkH1vi1yZvVrCKDxZiK668LyJWtbt
+	cckRK1viVI3sE0ZkWDJNt4roMA36JOy5qc1e4M2AedQ5saXsNkCkfb6D2BL0+JA==
+X-Gm-Gg: ASbGncttgd78+wE/SCeCR9bnFMRYHHRKW5iTHFNANOZ+XjrY2hhLiCyF8nBx7YdjU1p
+	xtRi6bIdHJpxOh93ShR8TDYJKrO5iI01fewt9U2jhvc+zPtVSHBHY9MVT6mOz9vTC8tta43Tben
+	p4viveRHgMoY/tRG+aVK4nAYgKWkG6KndLpuPYoV+A/zhUsRZH5hywLRQiqH/kpDpSpAZw9NCFL
+	p6SIzWFsZ5eBw/vE13yjfW4u0e2tA8U20ugDrHxqTEoTDq8tt3c7efnMrcrEU5DlpFkGWPdgS4O
+	znw=
+X-Received: by 2002:a17:90b:2e42:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-30e7d5aca5cmr21330344a91.22.1747732548829;
+        Tue, 20 May 2025 02:15:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxay4p7pv52Vodnk4Tfn2ozXI0HmKtyE04pWaZsFVCaSe4/2BLoC7rn0Est1OtxnsGuBJXMg==
+X-Received: by 2002:a17:90b:2e42:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-30e7d5aca5cmr21330307a91.22.1747732548461;
+        Tue, 20 May 2025 02:15:48 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36368bb0sm1213053a91.10.2025.05.20.02.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 02:15:48 -0700 (PDT)
+Date: Tue, 20 May 2025 17:13:28 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Kees Cook <kees@kernel.org>, Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	fuqiang wang <fuqiang.wang@easystack.cn>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <gxysezp2tc6qtb3o3wpdsk7k4aijxontf3ozfnhn76giobkefe@v2vkfov2tcck>
+References: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+ <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
+ <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
+ <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
+ <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
+ <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+ <202505161616.F4C1BCCF6A@keescook>
+ <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
+ <202505190716.B21F11984@keescook>
+ <aCtBf2LqRqlWXaUp@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-References: <f35359d5-63e1-8390-619f-67961443bfe1@google.com>
-In-Reply-To: <f35359d5-63e1-8390-619f-67961443bfe1@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 19 May 2025 10:53:52 -0400
-X-Gm-Features: AX0GCFuK1Uf-sIumFIAPWvO-DRou6DMnk0ysddb-8DdagbG7QKODtYAZqvQIRxA
-Message-ID: <CA+CK2bAZEgTg4qGy9j3Tm1nerJP0M-30EKUxOuS5Us81XXtGag@mail.gmail.com>
-Subject: Re: [Hypervisor Live Update] Notes from May 5, 2025
-To: David Rientjes <rientjes@google.com>
-Cc: Alexander Graf <graf@amazon.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	David Matlack <dmatlack@google.com>, Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Pasha Tatashin <tatashin@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Vipin Sharma <vipinsh@google.com>, 
-	Vishal Annapurve <vannapurve@google.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, linux-mm@kvack.org, 
-	kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <aCtBf2LqRqlWXaUp@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: t60XZIM7AgEW9S0OLZHfswgZURMnN6pTZlrVngQMsS8_1747732549
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250519_075442_938723_222ADE59 
-X-CRM114-Status: GOOD (  13.86  )
+X-CRM114-CacheID: sfid-20250520_021555_270056_0BEBAF81 
+X-CRM114-Status: GOOD (  24.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,31 +116,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> Topics for the next meeting:
->
->  - 20 min: presentation of LUO v2 design
-Slides:
-https://docs.google.com/presentation/d/17uYuw_KkD-gOiA6a6vDgHGzj-gDbmj7mjAb7ENlkZ5o/edit?slide=id.p#slide=id.p
+On Mon, May 19, 2025 at 10:34:39PM +0800, Baoquan He wrote:
+>On 05/19/25 at 07:19am, Kees Cook wrote:
+>> On Mon, May 19, 2025 at 09:22:30AM +0800, Baoquan He wrote:
+[...]
+>> > > I went back through the thread and the referenced threads and I can't
+>> > > find any details on the USBAN splat. Can that please get reproduced in a
+>> > > commit log? That would help understand if it's a false positive or not.
+>> >
+>> >
+>> > The original patch is trying to fix a potential issue in which a memory
+>> > range is split, while the sub-range split out is always on top of the
+>> > entire memory range, hence no risk.
+>> >
+>> > Later, we encountered a UBSAN warning around the above memory range
+>> > splitting code several times. We found this patch can mute the warning.
+>> >
+>> > Please see below UBSAN splat trace report from Coiby:
+>> > https://lore.kernel.org/all/4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at/T/#u
+>>
+>> Ah-ha! Thanks for the link.
+>>
+>> > Later, Coiby got the root cause from investigation, please see:
+>> > https://lore.kernel.org/all/2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei/T/#u
+>>
+>> Looking at https://lore.kernel.org/all/aBxfflkkQXTetmbq@MiWiFi-R3L-srv/
+>> it seems like this actually turned out to be a legitimate overflow
+>> detection? I.e. the fix isn't silencing a false positive, but rather
+>> allocating enough space?
 
->  - check back on latest status of KHO series in mm staging trees and any
->    pending concerns
->    + including possible refcount issues for compound folios across KHO
->  - possibility of a Live Update Microconference for LPC this year
->  - discuss support for sharding of dax devices into arbitrary lengths
->  - discuss support for defaulting to fsdax and with optional devdax as
->    needed, provisioned by the kernel, on the command line without
->    additional tooling (ndctl)
->  - update on physical pool allocator that can be used to provide pages
->    for hugetlb, guest_memfd, and memfds
->  - SEV-SNP support for preserving guest memory and what foundational
->    components AMD can depend on, building on top of KHO v6 or KSTATE
->  - later: testing methodology to allow downstream consumers to qualify
->    that live update works from one version to another
->  - later: reducing blackout window during live update
+The words "out of bounds" in the patch subject are kind of misleading
+because the patch is outdated. A later merged commit 6dff31597264
+("crash_core: fix and simplify the logic of crash_exclude_mem_range()")
+has actually fixed out-of-bound access issue as illustrated in
+https://lore.kernel.org/kexec/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/ 
+Current crash_exclude_mem_range simply returns -ENOMEM when there is no
+enough space to hold split ranges (I'll post a patch to prove the
+correctness of crash_exclude_mem_range by reasoning about the code and
+including a thorough unit tests). So I'll change the subject to "fix
+potential cmem->ranges out of memory" in the upcoming patch.
+
 >
-> Please let me know if you'd like to propose additional topics for
-> discussion, thank you!
+>This v5 is on top of below patch which Andrew has picked to his mm tree.
+>In there, it happened to get the ubsan warning fixed. But the hunk
+>doesn't reflect it in the v5 patch.
 >
-> [1] https://marc.info/?l=linux-doc&m=174645437711873&q=mbox
+>[PATCH v9 7/8] x86/crash: pass dm crypt keys to kdump kernel
+>https://lore.kernel.org/all/20250502011246.99238-8-coxu@redhat.com/T/#u
 >
+
+-- 
+Best regards,
+Coiby
+
 
