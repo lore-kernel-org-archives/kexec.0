@@ -4,81 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4D05C2D0CD
-	for <kexec@archiver.kernel.org>; Wed, 21 May 2025 15:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D661BC54E65
+	for <kexec@archiver.kernel.org>; Thu, 22 May 2025 03:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nk8z5Gs5eLoZgW+Hc5Wq/7fT0NKPPcI5LGcc9H4Q4dE=; b=NpjNEF3gmVBKsq8zvu6vTX4fws
-	8EP491NDpWq4zpBF1uFpEKyIzMD2BePsImBc7O/DNn/i/WXx1pyirVfKUmUVH9NZ8S8FdOFJLDvt7
-	BsUlq58cUq02TaRBYcl73t5BWyoexOvH1xHUUBm7NASR2P/KDUFar/Jfk0MbD3lqjBtarCzIXLMD6
-	unMd+fbwogvLv/1cR3TKe2WRtNDJIxxbJBKqPt4fm+xzrBug+er9qnkwqS5OZY7Pzj6A2gVjM5hLF
-	iCdoBQDAZ002FuhiuZDIcWwrRLIpiqLNbOfgz8wtCDKxlAYaMD3O9A8VLoj1cwEH6f8JQbjJP55LQ
-	N5YtU40g==;
+	bh=4hDDPXNPVUX4wJWjO3RS6faGJDUQmnN1Tk6BjYHPjDw=; b=YpIw67A30NE3I4q56+wlCiyKJc
+	DYNV03B2ViTT35YTyCpU+vkPFq2xVUErisMw93s+zJiwdRZRIFmfzSe3NW5HkHXyRA/EYm8AlKJ56
+	7DpKRTLSEgIDyuRDJIqvshy8nsakFMbB2Zi6iArJsNP0Wb4+9Q3TH8NISJylANmUCk8jflJTOH4zm
+	asLn0sGok8iwsKIrCUlt+Um0ZV4n4GfhXVFwD/x23ouKAddeuE0YP/1eRLa6XzqlD9vbabadDRDIM
+	MFONPaI2qCH9KzoNBoKowm3fON9RoRC+lck5neY5RqUbax2d1U7M3a+IldS17HebjEghJbEsBRB8W
+	8czrn8Vw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHlQy-0000000GHze-1gIu;
-	Wed, 21 May 2025 15:32:44 +0000
-Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
+	id 1uHwPW-0000000HJjU-3SIW;
+	Thu, 22 May 2025 03:15:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHlOy-0000000GHlC-3DWG
+	id 1uHwPS-0000000HJhs-3zWp
 	for kexec@lists.infradead.org;
-	Wed, 21 May 2025 15:30:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747841440; x=1779377440;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nk8z5Gs5eLoZgW+Hc5Wq/7fT0NKPPcI5LGcc9H4Q4dE=;
-  b=T6XWa/BwlgtlvRvclMZ2qauGh/LUXoP4Q/fswOwUCIdID6bQ1crWBm84
-   GoNomQqWR89aJgSsZVEAuVAKozU3nPGY4fVlhrRSJ4vdM8CFQBqYu4Nxj
-   f7wEJJfkhrwtQjcFApvKIpZf8ZDsN9vhaW0aZIlzb4Dz4OeX4Br49nEHH
-   3ppp3t9FEcKAMx9aRXFRcugh/QVCENPbsLBYh4kwkPY60s5XMxTGxBdwN
-   +9yB0Q1JR37pgRarT1N8mT/Op/L6JFsoLXhAJuAxa02pnOzu0Gl6vlN1A
-   1JbMCyPSJ7cdlEMOArOx3gVNXG3ZAdosIRbwRk6f6KWJ7etoCZM7rR6EF
-   g==;
-X-IronPort-AV: E=Sophos;i="6.15,303,1739836800"; 
-   d="scan'208";a="199384302"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:30:38 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:50565]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.96:2525] with esmtp (Farcaster)
- id 20b6510f-c251-4956-8061-047d8f31a265; Wed, 21 May 2025 15:30:38 +0000 (UTC)
-X-Farcaster-Flow-ID: 20b6510f-c251-4956-8061-047d8f31a265
-Received: from EX19D020UWC003.ant.amazon.com (10.13.138.187) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 21 May 2025 15:30:36 +0000
-Received: from [0.0.0.0] (172.19.99.218) by EX19D020UWC003.ant.amazon.com
- (10.13.138.187) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Wed, 21 May 2025
- 15:30:34 +0000
-Message-ID: <3e1ffd2e-b002-48b5-b41c-24787aa652e3@amazon.com>
-Date: Wed, 21 May 2025 17:30:32 +0200
+	Thu, 22 May 2025 03:15:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747883751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4hDDPXNPVUX4wJWjO3RS6faGJDUQmnN1Tk6BjYHPjDw=;
+	b=fUjrZJr+LvVoOokr7s904hGm7DhWL1V9fRPvFl6xuaiJ7zfC3eyoWipW0w5QEKmB7TUUAQ
+	pW88Gduwv5BzYbHkEldYjaEI4GngBVrP0OVkMvJ5pR6Zlw8vWVb21FllpqnFQ3dB+0VDUm
+	W05rPVesIQR9cpQmr/upUP0qTwSuoaM=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-509-mgo64aIDOASQDNeAwOstNQ-1; Wed, 21 May 2025 23:15:49 -0400
+X-MC-Unique: mgo64aIDOASQDNeAwOstNQ-1
+X-Mimecast-MFC-AGG-ID: mgo64aIDOASQDNeAwOstNQ_1747883749
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-232054aa634so44036825ad.3
+        for <kexec@lists.infradead.org>; Wed, 21 May 2025 20:15:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747883749; x=1748488549;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4hDDPXNPVUX4wJWjO3RS6faGJDUQmnN1Tk6BjYHPjDw=;
+        b=dfJdPiTyKHbpq/vXbEaU/UHbfWhHwYjJsZn1PBhZegqWETen0i3DY/J2KgrjV0UeUd
+         V3kcWwDol1s0JHWTN0gXpmHQoq700KRZQp2CDkqWMhsamJodJ6pUXcTsMPSshZxF4qOi
+         KB6d1+7kEiBGPNtxM0tpxK8a9XQin9ZPLBZz0l9CJ8tINyjRREJvPLLW09yViM6236PD
+         Jwidtw0r/zVZt7fyTPKW6IXemXzDAWGMqLjeqhwS+hp2WBAu6RTM6UvemBk9HzT5jjnf
+         k3P57EkbXHAVoZTcCI6oWzcTKuvtK5lsosNG3ZizfKy3oUEdJh30yC5ndBe+Drcwi7IE
+         A3OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzegK6g6Upfl5S34MyD2yYhHpkL5LEMjYK+lehz0sI/LSd/AwyfPbJyUVjXJazza5pds091A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxDuZc8451cf1HCped8cpOmjYb+k48b1poeLZ2D6tss4PKjAVVn
+	PTCfbct3jM//ImytHiZFgHTwoyeZT6ak6uHjcCHv2H6igoujABTRP+pOea5WpJjlfH5vxNZ54po
+	n/3p4aw0tHmNWnMX7EyKeWBDCIyzVIYILqkOg8wIIHkOOewzR77vXXbxv0oKYpw==
+X-Gm-Gg: ASbGnct4gPyJ063ZNAkdR/FH0P9JUs+uXdAasQ3awmZ1YcZ7bOrnzV2+baeEPgDNJDA
+	OyCF2NLvwYoNH++bzMn/mkaPgxaUdktHH1j3FXromrd0ZVPbjWZgnK2Ka0AM8zbrmnc4F7fobKF
+	rhq6y5ouDFp3ebzMUpOrHhKkclq49uiCPCFeuQtdaZ3Sxv9fL+IpQ3YLs00IG8ePLtFq6BXMqHl
+	KoPE3I3QtYFBXkRt6cjwvbpP+JJtdlp8/FEHNq/GnKhPgiSKtGYAuAAahTGcudKn3RhVX7lhdBK
+	Cx8=
+X-Received: by 2002:a17:902:ecd2:b0:224:2384:5b40 with SMTP id d9443c01a7336-231de31b3dbmr363597675ad.24.1747883748862;
+        Wed, 21 May 2025 20:15:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEcfftTSP/k2nGycwqU2/FTMkDY/jJeqv6xU/mivJ+VvdxVqymTYQF+F0wBnxQg3D8g55fOLw==
+X-Received: by 2002:a17:902:ecd2:b0:224:2384:5b40 with SMTP id d9443c01a7336-231de31b3dbmr363597425ad.24.1747883748476;
+        Wed, 21 May 2025 20:15:48 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed195csm99296115ad.212.2025.05.21.20.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 20:15:48 -0700 (PDT)
+Date: Thu, 22 May 2025 11:14:35 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, ruyang@redhat.com, 
+	chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <f4qj7ql2g2yhp44f6quq2ighboq57vilzepnltxgje5gg2cymv@vi5i2krnk7zf>
+References: <20250515233953.14685-1-bhe@redhat.com>
+ <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] kexec: Enable CMA based contiguous allocation
-To: Baoquan He <bhe@redhat.com>, Zhongkun He <hezhongkun.hzk@bytedance.com>
-CC: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	<nh-open-source@amazon.com>
-References: <20250513180229.7494-1-graf@amazon.com>
- <CACSyD1OU1zjvc2YdQpi-F_qZ0EWyb6jLNODJkRDPQa6m1eObJg@mail.gmail.com>
- <aC2rNv49pzy1Wh3D@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <aC2rNv49pzy1Wh3D@MiWiFi-R3L-srv>
-X-Originating-IP: [172.19.99.218]
-X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
- EX19D020UWC003.ant.amazon.com (10.13.138.187)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+In-Reply-To: <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 5h5NCE300j6ea1K-X53zzyidvjjvovtjuXt6nCpBgO0_1747883749
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250521_083040_850559_7D9F5914 
-X-CRM114-Status: GOOD (  11.99  )
+X-CRM114-CacheID: sfid-20250521_201555_079062_01BFE24D 
+X-CRM114-Status: GOOD (  37.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,30 +111,175 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ck9uIDIxLjA1LjI1IDEyOjMwLCBCYW9xdWFuIEhlIHdyb3RlOgo+Cj4gT24gMDUvMjEvMjUgYXQg
-MDM6NDdwbSwgWmhvbmdrdW4gSGUgd3JvdGU6Cj4+IE9uIFdlZCwgTWF5IDE0LCAyMDI1IGF0IDI6
-NDDigK9BTSBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPiB3cm90ZToKPiAuLi4uLi4K
-Pj4+ICAgLyoqCj4+PiAgICAqIGtleGVjX2xvY2F0ZV9tZW1faG9sZSAtIGZpbmQgZnJlZSBtZW1v
-cnkgZm9yIHRoZSBwdXJnYXRvcnkgb3IgdGhlIG5leHQga2VybmVsCj4+PiAgICAqIEBrYnVmOiAg
-ICAgIFBhcmFtZXRlcnMgZm9yIHRoZSBtZW1vcnkgc2VhcmNoLgo+Pj4gQEAgLTY0OCw2ICs2ODQs
-MTMgQEAgaW50IGtleGVjX2xvY2F0ZV9tZW1faG9sZShzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmKQo+
-Pj4gICAgICAgICAgaWYgKGtidWYtPm1lbSAhPSBLRVhFQ19CVUZfTUVNX1VOS05PV04pCj4+PiAg
-ICAgICAgICAgICAgICAgIHJldHVybiAwOwo+Pj4KPj4+ICsgICAgICAgLyoKPj4+ICsgICAgICAg
-ICogVHJ5IHRvIGZpbmQgYSBmcmVlIHBoeXNpY2FsbHkgY29udGlndW91cyBibG9jayBvZiBtZW1v
-cnkgZmlyc3QuIFdpdGggdGhhdCwgd2UKPj4+ICsgICAgICAgICogY2FuIGF2b2lkIGFueSBjb3B5
-aW5nIGF0IGtleGVjIHRpbWUuCj4+PiArICAgICAgICAqLwo+Pj4gKyAgICAgICBpZiAoIWtleGVj
-X2FsbG9jX2NvbnRpZyhrYnVmKSkKPj4+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4gSUlV
-QywgVGhlIGtleGVjX2xvY2F0ZV9tZW1faG9sZSgpIGZ1bmN0aW9uIGlzIGFsc28gdXNlZCBpbgo+
-PiB0aGUgS0VYRUNfVFlQRV9DUkFTSCBraW1hZ2UsIGJ1dCBrZXhlY19hbGxvY19jb250aWcoKSBk
-b2VzIG5vdCBza2lwIGl0Lgo+PiBUaGlzIGNhbiBjYXVzZSBrZHVtcCB0byBmYWlsIGFuZCBsZWFk
-IHRvIENNQSBtZW1vcnkgbGVha2FnZS4KPiBUaGF0IGlzIHRydWUgYW5kIGdvb2QgY2F0Y2gsIGFu
-ZCBmaXggaXMgbmVlZGVkIHRvIHNraXAgY21hIGFsbG9jIGZvcgo+IGtkdW1wLgoKClRoYW5rcyBm
-b3IgY2F0Y2hpbmcgdGhpcyEgSSBhZGRlZCBhIGNoZWNrIHRvIGVuc3VyZSB3ZSBkb24ndCB1c2Ug
-dGhlIENNQSAKbG9naWMgd2l0aCBjcmFzaCBrZXJuZWxzIGluIHY0IGFuZCBwb3N0ZWQgaXQuCgoK
-QWxleAoKCgoKCkFtYXpvbiBXZWIgU2VydmljZXMgRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkg
-R21iSApUYW1hcmEtRGFuei1TdHIuIDEzCjEwMjQzIEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6
-IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNn
-ZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAyNTc3NjQgQgpTaXR6OiBCZXJsaW4KVXN0
-LUlEOiBERSAzNjUgNTM4IDU5Nwo=
+On Wed, May 21, 2025 at 08:54:10AM -0400, Mimi Zohar wrote:
+>On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+>> CC kexec list.
+>>
+>> On 05/16/25 at 07:39am, Baoquan He wrote:
+>> > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+>> > extra memory. It would be very helpful to allow IMA to be disabled for
+>> > kdump kernel.
+>
+>The real question is not whether kdump needs "IMA", but whether not enabling
+>IMA in the kdump kernel could be abused.  The comments below don't address
+>that question but limit/emphasize, as much as possible, turning IMA off is
+>limited to the kdump kernel.
+>
+>> >
+>> > And Coiby also mentioned that for kdump kernel incorrect ima-policy loaded
+>> > by systemd could cause kdump kernel hang, and it's possible the booting
+>> > process may be stopped by a strict, albeit syntax-correct policy and users
+>> > can't log into the system to fix the policy. In these cases, allowing to
+>> > disable IMA is very helpful too for kdump kernel.
+
+To clarify, what I mentioned early is that the system hangs because
+systemd freezes after trying to load an incorrect policy or the booting
+process may be stopped by a strict, albeit syntax-correct policy. kdump
+won't be affected in these cases because the IMA policy file
+(/etc/ima/ima-policy) won't be installed into the kdump initramfs by
+default so there is no chance for this IMA policy file to affect kdump.
+Besides, if the normal/1st system does hang because of the IMA policy,
+the kdump kernel and initramfs simply won't be loaded thus no chance to
+to be booted or to load an IMA policy file.
+
+But kdump can be affected if the kernel cmdline parameter
+ima_policy=appraise_tcb is configured. Because currently files in kdump
+initramfs don't have security.ima. Without the reference value stored in
+security.ima to prove a file's integrity, IMA will prevent accessing
+this file. So in this case, IMA can also stop systemd from running.
+
+>> >
+>> > Hence add a knob ima=on|off here to allow people to disable IMA in kdump
+>> > kenrel if needed.
+>
+>^kernel
+>
+>> >
+>> > Signed-off-by: Baoquan He <bhe@redhat.com>
+>> > ---
+>> >  .../admin-guide/kernel-parameters.txt         |  5 +++++
+>> >  security/integrity/ima/ima_main.c             | 22 +++++++++++++++++++
+>> >  2 files changed, 27 insertions(+)
+>> >
+>> > diff --git a/Documentation/admin-guide/kernel-parameters.txt
+>> > b/Documentation/admin-guide/kernel-parameters.txt
+>> > index d9fd26b95b34..762fb6ddcc24 100644
+>> > --- a/Documentation/admin-guide/kernel-parameters.txt
+>> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> > @@ -2202,6 +2202,11 @@
+>> >  			different crypto accelerators. This option can be
+>> > used
+>> >  			to achieve best performance for particular HW.
+>> >  
+>> > +	ima=		[IMA] Enable or disable IMA
+>> > +			Format: { "off" | "on" }
+>> > +			Default: "on"
+>> > +			Note that this is only useful for kdump kernel.
+>
+>Instead of "useful" I would prefer something clearer like "limited".
+>
+>> > +
+>> >  	init=		[KNL]
+>> >  			Format: <full_path>
+>> >  			Run specified binary instead of /sbin/init as
+>> > init
+>> > diff --git a/security/integrity/ima/ima_main.c
+>> > b/security/integrity/ima/ima_main.c
+>> > index f3e7ac513db3..07af5c6af138 100644
+>> > --- a/security/integrity/ima/ima_main.c
+>> > +++ b/security/integrity/ima/ima_main.c
+>> > @@ -27,6 +27,7 @@
+>> >  #include <linux/fs.h>
+>> >  #include <linux/iversion.h>
+>> >  #include <linux/evm.h>
+>> > +#include <linux/crash_dump.h>
+>> >  
+>> >  #include "ima.h"
+>> >  
+>> > @@ -38,11 +39,27 @@ int ima_appraise;
+>> >  
+>> >  int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
+>> >  static int hash_setup_done;
+>> > +static int ima_disabled;
+>
+>Like the ima_hash_algo variable definition above, ima_disabled should be
+>defined as __ro_after_init.
+>
+>> >  
+>> >  static struct notifier_block ima_lsm_policy_notifier = {
+>> >  	.notifier_call = ima_lsm_policy_change,
+>> >  };
+>> >  
+>> > +static int __init ima_setup(char *str)
+>> > +{
+>
+>is_kdump_kernel() should also be called here, before the tests below.
+>Something like:
+>
+>+       if (!is_kdump_kernel()) {
+>+               pr_info("Warning ima setup option only permitted in kdump");
+>+               return 1;
+>+       }
+
+Yes, this kind of info will be helpful to avoid users misusing
+ima=off. I already saw a case where a user tried to use ima=0 to skip
+loading an invalid IMA policy file in order to resolve booting failure
+"systemd Freezing execution" and even filed a bug saying ima=0 doesn't
+work.
+
+>
+>> > +	if (strncmp(str, "off", 3) == 0)
+>> > +		ima_disabled = 1;
+>> > +	else if (strncmp(str, "on", 2) == 0)
+>> > +		ima_disabled = 0;
+>> > +	else
+>> > +		pr_err("Invalid ima setup option: \"%s\" , please specify
+>> > ima=on|off.", str);
+>> > +
+>> > +	return 1;
+>> > +}
+>> > +__setup("ima=", ima_setup);
+>> > +
+>> > +
+>> > +
+>
+>Remove the extraneous blank line.
+>
+>> >  static int __init hash_setup(char *str)
+>> >  {
+>> >  	struct ima_template_desc *template_desc =
+>> > ima_template_desc_current();
+>> > @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
+>> >  {
+>> >  	int error;
+>> >  
+>> > +	if (ima_disabled && is_kdump_kernel()) {
+>> > +		pr_info("IMA functionality is disabled");
+>> > +		return 0;
+>> > +	}
+>> > +
+>
+>Even with the additional call to is_kdump_kernel() in ima_setup, please keep
+>the is_kdump_kernel() test here as well.  Even though the code is self
+>describing, please add a one line comment emphasizing disabling IMA is limited
+>to kdump.
+>
+>> >  	ima_appraise_parse_cmdline();
+>> >  	ima_init_template_list();
+>> >  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+>> > --
+>> > 2.41.0
+>> >
+>>
+>>
+>
+>thanks,
+>
+>Mimi
+
+
+-- 
+Best regards,
+Coiby
 
 
