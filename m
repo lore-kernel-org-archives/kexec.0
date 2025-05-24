@@ -4,77 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 234EAC54E90
-	for <kexec@archiver.kernel.org>; Thu, 22 May 2025 15:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC18AC54F30
+	for <kexec@archiver.kernel.org>; Sat, 24 May 2025 10:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pRqvAWIG+gW89awdSOcbpmSa/4HXlHRyH1DkS4kHixo=; b=hQTiczp97xR5fcnRvaLo65QFJW
-	ovHzZtUApa8FoXDqPt44LNttwPgqkd3bZadxjNP6ZHuQdBzll54wpxGz86FyoXueU+jWo7rYsBQkH
-	E5gJWoTRkAOstThSfW2+MjOlV8jVPPE0Vqx5uyU7cFJ198KohtfxN3iEuFwpRl0IpZugh8Zo0NCQV
-	vAV/CB1Gs+qL1vTrJSIy0AEh1QO1FHAgm8ZTlks3ifmz0WMr6sPFa1uKeHPUaOo6FDq4fZaOH3VQr
-	4Cq1xxsVEMEJplc8x0t0uB81KPpum9Qnxx8MLxDHn49gV+Fi/pTPIzRL8oQl0urrbiD9q626swcGI
-	ORAq7XUA==;
+	bh=Nr/9cyP3AAAIOM+yjMOJAkiHx7hEWeAmLRQYGDbGOew=; b=khgTctsPiHlmyoFy+D2d4FwD7s
+	np9rtGOjkk4MZ9szFuKAT5Hxc9f6doOcLtA5sf7Zmfas2XSrzOtHVmhQX/2zIt5m0K+W8DDxzMBaE
+	0OMhtZnNmRyfaLfPUJJi6SGfpRaNNcrTX52ipZOpIoKmbE2UybXR4fBtNujJbuLpX7NoejyWPFbP4
+	ngdUZLC+hH8VdVB7MfpcWclCT69kjPDQMRWtMzT/Wesut7kWvwWaTRNKgBPgrldgJ4CyapCpMpys/
+	F9ZtUvQhUBypucnoZjWO0d6neZcfd9xSNZ7QihDSPo4qy6y1c+jHqcS2Rn3wg/9AcfPcAHSEVY2rO
+	tD/jBkEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uI7ju-00000001QWy-3Odq;
-	Thu, 22 May 2025 15:21:46 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uIlvJ-00000005jCG-29Tk;
+	Sat, 24 May 2025 10:16:13 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uI7Hu-00000001KVU-3JFm
-	for kexec@lists.infradead.org;
-	Thu, 22 May 2025 14:52:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747925568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pRqvAWIG+gW89awdSOcbpmSa/4HXlHRyH1DkS4kHixo=;
-	b=aUabyZfBJYbrnKftZNPaanLk9VKxMd14nNvNDiRP2NKt33fB81nyBQxWnHZKJTmzlpU1p3
-	ni0lrQrYWL0P9WJDhgNNgg0A0GqkKtXto1bgN7vr/99UhSubSfWc/8jPaJFLREXrIqMIdo
-	bH4fh6JO5CkRVpo+SPmPsRONYUYrnXc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-CcOIsM9IPI2ikLnRdLq8jw-1; Thu,
- 22 May 2025 10:52:44 -0400
-X-MC-Unique: CcOIsM9IPI2ikLnRdLq8jw-1
-X-Mimecast-MFC-AGG-ID: CcOIsM9IPI2ikLnRdLq8jw_1747925563
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D92619560AA;
-	Thu, 22 May 2025 14:52:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.172])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60F0218001D8;
-	Thu, 22 May 2025 14:52:40 +0000 (UTC)
-Date: Thu, 22 May 2025 22:52:37 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>, piliu@redhat.com, prudo@redhat.com
-Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de,
-	coxu@redhat.com, ruyang@redhat.com, chenste@linux.microsoft.com
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-Message-ID: <aC86NSypHlER2C3L@MiWiFi-R3L-srv>
-References: <20250515233953.14685-1-bhe@redhat.com>
- <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
- <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
- <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
- <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+	id 1uIlvF-00000005jBl-0zxE
+	for kexec@bombadil.infradead.org;
+	Sat, 24 May 2025 10:16:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Nr/9cyP3AAAIOM+yjMOJAkiHx7hEWeAmLRQYGDbGOew=; b=bhm/XRsq1dAt0EWsgF/mz3aLTV
+	IhRsZsTfCa/3vel3pdfBGmJCYqFX06ZECNBqum+5D72ZTLNeqQ5anj0yMAcOYA1jmyq19lL+1iT3D
+	uChm7yxzmmriW25IQL/uUPWmiPTHMiOfPOEeX3EZqjK7NO4AZO5wrFsKFduiCGINOZvf4YRHuPUpT
+	bpQr6Vj8BkNwxv75/6UGVHOsVJ5c0ZzIWxzFu37nyTwOBu7awUoJlVolJL2vVRYiCPgSLpkxd87iD
+	7rjhvXYuIGtug6O2Gheo5/jzbUtNrfU+U8tLESJqNrYdXhRnOC/E2SMPaTZ18DRhaP6AiDiUOqNTP
+	37t643NA==;
+Received: from [172.31.31.140] (helo=u09cd745991455d.lumleys.internal)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uIlvA-00000001RVK-3vms;
+	Sat, 24 May 2025 10:16:06 +0000
+Message-ID: <0fac5973d5588ee441ae95384d2edda69989ac10.camel@infradead.org>
+Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
+From: David Woodhouse <dwmw2@infradead.org>
+To: Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ nh-open-source@amazon.com
+Date: Sat, 24 May 2025 11:16:03 +0100
+In-Reply-To: <20250512225752.11687-1-graf@amazon.com>
+References: <20250512225752.11687-1-graf@amazon.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-fj1w5lea6+G9XhUWzavE"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250522_075250_894717_8454D4E8 
-X-CRM114-Status: GOOD (  21.49  )
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,49 +70,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/22/25 at 07:08am, Mimi Zohar wrote:
-> On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
-> > On 05/21/25 at 08:54am, Mimi Zohar wrote:
-> > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
-> > > > CC kexec list.
-> > > > 
-> > > > On 05/16/25 at 07:39am, Baoquan He wrote:
-> > > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-> > > > > extra memory. It would be very helpful to allow IMA to be disabled for
-> > > > > kdump kernel.
-> > 
-> > Thanks a lot for careufl reviewing and great suggestions.
-> > 
-> > > 
-> > > The real question is not whether kdump needs "IMA", but whether not enabling
-> > > IMA in the kdump kernel could be abused.  The comments below don't address
-> > > that question but limit/emphasize, as much as possible, turning IMA off is
-> > > limited to the kdump kernel.
-> > 
-> > Are you suggesting removing below paragraph from patch log because they
-> > are redundant? I can remove it in v2 if yes.
-> 
-> "The comments below" was referring to my comments on the patch, not the next
-> paragraph.  "don't address that question" refers to whether the kdump kernel
-> could be abused.
-> 
-> We're trying to close integrity gaps, not add new ones.  Verifying the UKI's
-> signature addresses the integrity of the initramfs.  What about the integrity of
-> the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
-> initramfs was signed, IMA would be able to verify it before the kexec.
 
-Kdump initramfs could be generated each time when loading once change is
-detected, e.g newer kernel, kdump config tuning. It's different than
-UNI's normal initramfs. We don't need verify it as far as I know
-according to discussion with UNI dev, so ima=off can be set by default
-in kdump kernel. Even though one day that's really needed, ima=on|off is
-a switch, not a hard code.
+--=-fj1w5lea6+G9XhUWzavE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add people woiking on kdump UKI to CC.
+On Mon, 2025-05-12 at 22:57 +0000, Alexander Graf wrote:
+>=20
+> --- a/include/uapi/linux/kexec.h
+> +++ b/include/uapi/linux/kexec.h
+> @@ -27,6 +27,7 @@
+> =C2=A0#define KEXEC_FILE_ON_CRASH	0x00000002
+> =C2=A0#define KEXEC_FILE_NO_INITRAMFS	0x00000004
+> =C2=A0#define KEXEC_FILE_DEBUG	0x00000008
+> +#define KEXEC_FILE_NO_CMA	0x00000010
+> =C2=A0
 
-> 
-> As for the next paragraph, based on Coiby's response, please remove it.
+Gives me EINVAL when I try to use it. This helps (but should it be
+permitted only on architectures which implement it?):
 
-Got it, thanks.
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -385,7 +385,7 @@ extern int kexec_load_disabled;
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS       (KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | =
+\
+                                 KEXEC_FILE_NO_INITRAMFS | \
+-                                KEXEC_FILE_COOPERATIVE)
++                                KEXEC_FILE_COOPERATIVE | KEXEC_FILE_NO_CMA=
+)
+=20
+ /* Location of a reserved region to hold the crash kernel.
+  */
 
+
+--=-fj1w5lea6+G9XhUWzavE
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUyNDEwMTYw
+M1owLwYJKoZIhvcNAQkEMSIEIDhZjqxwfKl1a4ZLYBBo6bTDgyOu5T1R0lNj4G9AbuvCMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAFA8O0/XNasmB
+UCywkP+PO85NaPg4LrZwCmmOoHzV+J5YF7CYYIAhWE/p4C8daqwH59vI/A4sE8gGafQ/JD1T7Dd5
+cZj83UzJZjt4E2g26R4kObuSwjPfj6HYOXlv7pKUSobr/lqpp6fR1v+pmm/MystuASeCpBfpuuS2
+5N4CBCfA7zVxWO2u8ZxMWdWt5X1X3fcw/9I2H/kPF9rHm2CBbdpV4tfjlpqE35NjeFRhkroDBOMm
+7Sum/xkwb1TD8BB3eyA3bRZYmIPEYp8jEV1b2jj4FWjjgcueks9FxZwLMypTRSyR9vv/Xrd1TDgt
+Q4pARGMcCpFUP3sKacE0mYIiU7nZRohjzR8f3/YQ+TfoxXxoffbjQGyfv+89aikhN1X5TmGAJOqm
+irhj/LLiGFCfJciTHcCgooeQUDXDnhbYCi5o+adXkpFHNYeXCgxO7/TGDn6XPDYLe6TWYCblqSxT
+Ya3MdK8z1c3OwI1GN3zb7n6N7R/soEsCnY8gmuQ3jWzDOWZUVnGKlSDABJmnvMe40aQAie62YgSf
+jvgg6MPRR/so5GNBta7HzIIg0HC7g7UMHj/nLumKl/X5ctSH6YdkhcBB/JgYXeyCG/vNGoidN2cE
+M71Y0abitGMc8+ZNJi4vwPXuoVODdUHnQfOGy8wOJJo6JB34ribOjjSMDTQshnwAAAAAAAA=
+
+
+--=-fj1w5lea6+G9XhUWzavE--
 
