@@ -4,106 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 508DCC54ED1
-	for <kexec@archiver.kernel.org>; Tue, 27 May 2025 14:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45203C3ABB2
+	for <kexec@archiver.kernel.org>; Wed, 28 May 2025 07:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Date:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:From:
-	Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gdCpPJgY2BBY5QHOA9MLQEpeCzq2THP0NuLmeUUStW8=; b=JpJfbQ/nZOKKVdxZBrsg7HWmKI
-	hBWtBbb286f2mhAgjwvK679wejr1zK8tIIauY2b2kPOclrDuSAd1jFDHpN2U4hHK4OAGkNGTl3+FJ
-	3cBTZ1bbR+hoRbKJAasNPM8HCd0wTyvXsCywUckMhyud/Uq3GjlpckCSGnRGG94bMknhqfD05HZ+n
-	phvR4c5/7g6uUUNzCsjxG9x67q8Nkn2ltqED76x6n+EXbeRFQ7ZKLL7iQinxjToz/owSOBXJH/FPu
-	vxqYmHlIKCmUGQMmSwPj5ygCpcLntgZutvo5BYkEzVER2EkNNHqHdDEdJelyHe9Vgxc6AV21c3mxi
-	muufbJ5A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=C6L3HHo29AD7EhEgKSzsEghpyqJqAdv8Rupc8YaUwX0=; b=qbxGmMONA4sE29qaJEePvefJMz
+	jiGptJLUC97Ug01emiwqnBUsLwpT5lGx6HtiOSrt9nc3TCVe0NeYyTX0aIAsB5bZVuytvb3jNSX1v
+	OurWJ7Bdvb4TtrJZBWGljGQOwJ+7+hqo6xf8c+S6ByOyu8sMR+8HAsfS7j+7V4Yu26wNbuOjme7tz
+	Vd8dcY9LAcCyRXbiY83G91TETCdxWe6N3TY5urToFYGI6/ROfaxp2TzXTt6ygh2cXMAqa3lllBuGV
+	EZtTJ7wBP8pl68aLCA3adpZlvuMvPvnTEIQDMnZACg3gq5tz1owEy5b0DpuU+Qj/5eZ3AMfDwjjDo
+	nltjtTZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJv80-0000000AunR-1QR4;
-	Tue, 27 May 2025 14:18:04 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1uKBFj-0000000CR9Z-07KQ;
+	Wed, 28 May 2025 07:31:07 +0000
+Received: from mail.ventrazo.pl ([162.19.155.125])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJv7x-0000000AumU-2zvk
+	id 1uKBFe-0000000CR9B-1yQI
 	for kexec@lists.infradead.org;
-	Tue, 27 May 2025 14:18:03 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RE32vG011956;
-	Tue, 27 May 2025 14:17:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gdCpPJ
-	gY2BBY5QHOA9MLQEpeCzq2THP0NuLmeUUStW8=; b=oZJzEvrt2evzEEMucZ0kBX
-	7XGTiedUi0Tc2jixr+Hy24P83PGEXrWoEc41FGuQMzZj2TpyPFwhdmArZGA1eme+
-	eKX+aULptDG5LkkQogqiTlmYhxy33xKLaCkiXuR7Si1Jg9uJZcni/Nv87xRIlcwc
-	WrskWGdxxYNQTaLlw821AZdoZ5EA5Ctg6rcJaUR+7/ut9ClKucNEoEDI1DQrb9RI
-	Iymy1/iC2ghGDxtyTFKvRQa2hxxuuf20DKOc4K76vuPZUf23VwjApZcggRktPRtf
-	XRHoRAh3jHAgtV0UtcMWPKR64eUA/5MlJ6KBiy6cH382yfHkcC9kD/hgXveAL26A
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u4hnevyx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 14:17:57 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RDJFtu028925;
-	Tue, 27 May 2025 14:17:56 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46useptxuc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 14:17:56 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54REHtMo24773338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 14:17:56 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C49EE58053;
-	Tue, 27 May 2025 14:17:55 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A297B5805D;
-	Tue, 27 May 2025 14:17:54 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.137.101])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 May 2025 14:17:54 +0000 (GMT)
-Message-ID: <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Pingfan Liu <piliu@redhat.com>, Baoquan He <bhe@redhat.com>
-Cc: prudo@redhat.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pmenzel@molgen.mpg.de, coxu@redhat.com, ruyang@redhat.com,
-        chenste@linux.microsoft.com
-In-Reply-To: <CAF+s44QHJs8J27TEy0AW1m2wT=LRSz59nHf-8AuqL8px_zKGUg@mail.gmail.com>
-References: <20250515233953.14685-1-bhe@redhat.com>
-	 <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
-	 <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
-	 <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
-	 <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
-	 <aC86NSypHlER2C3L@MiWiFi-R3L-srv>
-	 <CAF+s44QHJs8J27TEy0AW1m2wT=LRSz59nHf-8AuqL8px_zKGUg@mail.gmail.com>
+	Wed, 28 May 2025 07:31:06 +0000
+Received: by mail.ventrazo.pl (Postfix, from userid 1002)
+	id 4151422929; Wed, 28 May 2025 09:30:56 +0200 (CEST)
+Received: by mail.ventrazo.pl for <kexec@lists.infradead.org>; Wed, 28 May 2025 07:30:40 GMT
+Message-ID: <20250528084500-0.1.iu.4brpo.0.kic8ef1lln@OriginatePro.pl>
+Date: Wed, 28 May 2025 07:30:40 GMT
+From: "Marcin Wojciechowski" <marcin.wojciechowski@ventrazo.pl>
+To: <kexec@lists.infradead.org>
+Subject: Zapytanie ofertowe 
+X-Mailer: mail.OriginatePro.pl
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 May 2025 10:17:54 -0400
-MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=HvB2G1TS c=1 sm=1 tr=0 ts=6835c995 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=20KFwNOVAAAA:8 a=IVwv8Uz7kQULgHmu4x4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: vkp5hxhSLJ7zdSMRQ-chaKB_rRihN71G
-X-Proofpoint-ORIG-GUID: vkp5hxhSLJ7zdSMRQ-chaKB_rRihN71G
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDExNSBTYWx0ZWRfX09z5M1jtFHoP I/3VEGR33cRH6XswNGrgzAfviqpa4uzihkKguUioEeLZnNaivMyni0MLwBIbp3MJ4MI/i9eCnL1 nXd/sUwBDtmFqPax6qBZNDBtAdAjD3nazrGzhXeYpLoEyvLR5C/3UYAVQ4pJvOHcwr8D/mntKXR
- br7C4QMfiiYPfgkWNcxRkSZWSZjvjbA/tYvM4fmyLMqsVNJVv2bE8iJbBTkho/rpIYOVeR/rj02 IKQcONvHxAO04BphJ0Rt2jOu6R1Plpu8yPpBZLCxsFAA3eAUe44wp/OPwmf2ofWVQcR6aKAFeFh geKhdMQKBLewU8TL855aRiNOp+vGbsF1atEjyNHfwe3ZniNSJY3tUNhL1Em8VTszFSiQPXo27Nk
- Ku6V6h7ZIUkVvOnZEE+5kp5VVfYkdO6hZspjXDMAEiN/kRZG2E+L4CDS4RyHQAcafOniOwoW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_07,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1011 malwarescore=0 mlxlogscore=999 impostorscore=0 spamscore=0
- mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270115
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250527_071801_874269_8E40E66E 
-X-CRM114-Status: GOOD (  28.80  )
+X-CRM114-CacheID: sfid-20250528_003102_665347_523CCE52 
+X-CRM114-Status: UNSURE (   0.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,90 +57,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 2025-05-27 at 11:25 +0800, Pingfan Liu wrote
+Dzie=C5=84 dobry,
 
-When responding to kernel mailing lists, please use plain text not Mime enc=
-oded.
+Pozwoli=C5=82em sobie na kontakt, poniewa=C5=BC jestem zainteresowany wer=
+yfikacj=C4=85 mo=C5=BCliwo=C5=9Bci nawi=C4=85zania wsp=C3=B3=C5=82pracy.
 
-> On Thu, May 22, 2025 at 10:52=E2=80=AFPM Baoquan He <bhe@redhat.com> wrot=
-e:
-> > On 05/22/25 at 07:08am, Mimi Zohar wrote:
-> > > On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
-> > > > On 05/21/25 at 08:54am, Mimi Zohar wrote:
-> > > > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
-> > > > > > CC kexec list.
-> > > > > >=20
-> > > > > > On 05/16/25 at 07:39am, Baoquan He wrote:
-> > > > > > > Kdump kernel doesn't need IMA functionality, and enabling IMA=
- will
-> > > > > > > cost
-> > > > > > > extra memory. It would be very helpful to allow IMA to be dis=
-abled
-> > > > > > > for
-> > > > > > > kdump kernel.
-> > > >=20
-> > > > Thanks a lot for careufl reviewing and great suggestions.
-> > > >=20
-> > > > >=20
-> > > > > The real question is not whether kdump needs "IMA", but whether n=
-ot
-> > > > > enabling
-> > > > > IMA in the kdump kernel could be abused.=C2=A0 The comments below=
- don't
-> > > > > address
-> > > > > that question but limit/emphasize, as much as possible, turning I=
-MA
-> > > > > off is
-> > > > > limited to the kdump kernel.
-> > > >=20
-> > > > Are you suggesting removing below paragraph from patch log because =
-they
-> > > > are redundant? I can remove it in v2 if yes.
-> > >=20
-> > > "The comments below" was referring to my comments on the patch, not t=
-he
-> > > next
-> > > paragraph.=C2=A0 "don't address that question" refers to whether the =
-kdump
-> > > kernel
-> > > could be abused.
-> > >=20
-> > > We're trying to close integrity gaps, not add new ones.=C2=A0 Verifyi=
-ng the
-> > > UKI's
-> > > signature addresses the integrity of the initramfs.=C2=A0 What about =
-the
-> > > integrity of
-> > > the kdump initramfs (or for that matter the kexec initramfs)?=C2=A0 I=
-f the
-> > > kdump
-> > > initramfs was signed, IMA would be able to verify it before the kexec=
-.
->=20
-> IMHO, from the higher level, if there is a requirement on the integrity o=
-f the
-> initramfs, it should take a similar approach as UKI. And the system admin=
- can
-> choose whether to disable the unsafe format loader or not.
+Wspieramy firmy w pozyskiwaniu nowych klient=C3=B3w biznesowych.
 
-Yes, that is a possibility, probably a good aim, but in the case of kexec/k=
-dump
-that isn't really necessary.  As filesystem(s) support xattrs, IMA policies
-could be written in terms of "func=3DKEXEC_INITRAMFS_CHECK" to include the
-initramfs.
+Czy mo=C5=BCemy porozmawia=C4=87 w celu przedstawienia szczeg=C3=B3=C5=82=
+owych informacji?=20
+=20
 
->=20
-> This other thing is how to make a handy signature on initramfs? It is nei=
-ther
-> PE nor ELF.
-
-IMA supports signatures stored in the security.ima xattr or as an appended
-signatures.
-
-Mimi
-
-
-
-
-
+Pozdrawiam serdecznie
+Marcin Wojciechowski
 
