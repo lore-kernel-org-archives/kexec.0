@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46B61C54FB3
-	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B46BC54FB3
+	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=sSl/heG3ufjgsborJhX+SF5WLI1daNohNqz1kbS1LE0=; b=qJoCjCPMx2ANUyTrcPPXw0DmHu
-	gzlpxhcoNLcFAqfWMXfe0Emdt4wC/Q616zZZzRyh5CjEv8FvjbrJauBRd6yuNcFBsBXMNcXxYbyMS
-	WT6qc3Qx1nLBt/IKi0pV/VM0DzH9iOb1OhN2leehJk6pLaLS46K7U69VS07+6byQDvKT4ZYQ562xF
-	7xi+R0L4j/sPsZlF2x5+Nq1+msZcCuEDAApK2ppxvGdacwMczasWm68mtOcyDAf7aVfm0TVSNDS6S
-	YETbqjhq2ubkfcUz4d+gLX8o8NNrzpNjbE7yEoInwYKfQ40UXE/tH/PvY/D5E7ewL1q/hqjd1Ejoz
-	+7PtGxNg==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=r4Ki9z0ShHf2vySh7hI3sELvA68yXo/Rw604jsSCFYw=; b=KOJzaUVi9rFO/pDSyNFmrQYBaL
+	z2+8wwiz3vgZWbbEhwPmDJlTYnQV1v64P7DB8ZdblFAPKz5w8cNwMDrB0mw/gxHoCZv8NvphCwBg/
+	shfiFL+APol1Dd5Ai0ZCgb1q5mxZKHzi6TJJf8VY1g/QLO9tw/J0f1XJdwPxjZQYPScSxcLuOHj24
+	RKidfH4xrkY8MOQYNQDmDiX+veWO00g/1v2lEf5ziBArS4mEmseHCt0cdDm609gQ+Hi8ofigHaOtA
+	MxvfoVozQZSuZkGhu2tKqZSzTVkPEsqn180VOglq49x2qfjvmpOGQgG7BMjvcq3wCv8HXmEiSRxCE
+	LVdnjEpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUj8-0000000EtJB-2yrh;
-	Thu, 29 May 2025 04:18:46 +0000
+	id 1uKUjP-0000000EtLk-0TZf;
+	Thu, 29 May 2025 04:19:03 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUj6-0000000EtIp-2aVa
+	id 1uKUjK-0000000EtKy-0asz
 	for kexec@lists.infradead.org;
-	Thu, 29 May 2025 04:18:45 +0000
+	Thu, 29 May 2025 04:19:01 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748492323;
+	s=mimecast20190719; t=1748492337;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sSl/heG3ufjgsborJhX+SF5WLI1daNohNqz1kbS1LE0=;
-	b=WXAsQ+4TcWbgvfCKh7MHiZqkL8fRYWTpXkNJ4OcX4OjC9ILq1FEfU4UyikVH+FRrjkQMsw
-	U13sMWz+zhUT4Wjx+UGfQHF/FGEA76L0ZUq3Ou/jDAav4wNp3IBQxPyzzqFX5VuYKIs1Yc
-	Uz+aIe+6kqUbTmjXAc9TH+707nGs7Ho=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r4Ki9z0ShHf2vySh7hI3sELvA68yXo/Rw604jsSCFYw=;
+	b=gu5sv/i992FURVtYLIhzeaUDSLuP3n7i3Ciq2LYML19pJIGcLQXhR2EfJ+3FsntCnaLvif
+	lb7XEm7hRTprUMUBbEO1SeCT/aWKv8MMV9rZQ36LtUF/fvd8APr0xp4N0/9K2e3yabow4k
+	4Z2ABOiH0XbqillKFpUvFVtQW0SBlIs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-M4jiSS7UMd2KNPJnKaXhrQ-1; Thu,
- 29 May 2025 00:18:40 -0400
-X-MC-Unique: M4jiSS7UMd2KNPJnKaXhrQ-1
-X-Mimecast-MFC-AGG-ID: M4jiSS7UMd2KNPJnKaXhrQ_1748492317
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-158-4lVwXHmcNwS6Hn_h41fmww-1; Thu,
+ 29 May 2025 00:18:51 -0400
+X-MC-Unique: 4lVwXHmcNwS6Hn_h41fmww-1
+X-Mimecast-MFC-AGG-ID: 4lVwXHmcNwS6Hn_h41fmww_1748492329
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 428FE180045B;
-	Thu, 29 May 2025 04:18:36 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47F331956086;
+	Thu, 29 May 2025 04:18:48 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.18])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 057CB180047F;
-	Thu, 29 May 2025 04:18:23 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1AEEC18003FC;
+	Thu, 29 May 2025 04:18:36 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
-To: 
+To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -76,17 +77,18 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Baoquan He <bhe@redhat.com>,
 	Dave Young <dyoung@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org,
 	bpf@vger.kernel.org
-Subject: [PATCHv3 0/9] kexec: Use BPF lskel to enable kexec to load PE format boot image
-Date: Thu, 29 May 2025 12:17:35 +0800
-Message-ID: <20250529041744.16458-1-piliu@redhat.com>
+Subject: [PATCHv3 1/9] kexec_file: Make kexec_image_load_default global visible
+Date: Thu, 29 May 2025 12:17:36 +0800
+Message-ID: <20250529041744.16458-2-piliu@redhat.com>
+In-Reply-To: <20250529041744.16458-1-piliu@redhat.com>
+References: <20250529041744.16458-1-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250528_211844_730959_C9BCD38A 
-X-CRM114-Status: GOOD (  17.56  )
+X-CRM114-CacheID: sfid-20250528_211858_252150_61FF9F0D 
+X-CRM114-Status: GOOD (  11.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,113 +103,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+In latter patches, PE format parser will extract the linux kernel inside
+and try its real format parser. So making kexec_image_load_default
+global.
 
-*** Review the history ***
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
+---
+ include/linux/kexec.h | 1 +
+ kernel/kexec_file.c   | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Nowadays UEFI PE bootable image is more and more popular on the distribution.
-But it is still an open issue to load that kind of image by kexec with IMA enabled
-
-There are several approaches to reslove this issue, but none of them are
-accepted in upstream till now.
-
-The summary of those approaches:
-  -1. UEFI service emulator for UEFI stub
-  -2. PE format parser in kernel
-
-For the first one, I have tried a purgatory-style emulator [1]. But it
-confronts the hardware scaling trouble.  For the second one, there are two
-choices, one is to implement it inside the kernel, the other is inside the user
-space.  Both zboot-format [2] and UKI-format [3] parsers are rejected due to
-the concern that the variant format parsers will inflate the kernel code.  And
-finally, we have these kinds of parsers in the user space 'kexec-tools'.
-
-
-*** The approach in this series ***
-
-This approach allows the various PE boot image to be parsed in the bpf-prog,
-as a result, the kexec kernel code to remain relatively stable.
-
-Benefits
-And it abstracts architecture independent part and 
-the API is limitted 
-
-To protect against malicious attacks on the BPF loader in user space, it
-employs BPF lskel to load and execute BPF programs from within the
-kernel.
-
-Each type of PE image contains a dedicated section '.bpf', which stores
-the bpf-prog designed to parse the format.  This ensures that the PE's
-signature also protects the integrity of the '.bpf' section.
-
-
-The parsing process operates as a pipeline. The current BPF program
-parser attaches to bpf_handle_pefile() and detaches at the end of the
-current stage via disarm_bpf_prog(). The results parsed by the current
-BPF program are buffered in the kernel through prepare_nested_pe() and
-then delivered to the next stage. For each stage of the pipeline, the
-BPF bytecode is stored in the '.bpf' section of the PE file. That means
-a vmlinuz.efi embeded in UKI format can be handled.
-
-
-Special thanks to Philipp Rudo, who spent significant time evaluating
-the practicality of my solution, and to Viktor Malik, who guided me
-toward using BPF light skeleton to prevent malicious attacks from user
-space.
-
-
-
-[1]: https://lore.kernel.org/lkml/20240819145417.23367-1-piliu@redhat.com/T/
-[2]: https://lore.kernel.org/kexec/20230306030305.15595-1-kernelfans@gmail.com/
-[3]: https://lore.kernel.org/lkml/20230911052535.335770-1-kernel@jfarr.cc/
-[4]: https://lore.kernel.org/linux-arm-kernel/20230921133703.39042-2-kernelfans@gmail.com/T/
-
-
-RFCv2 -> v3
-  - move the introduced bpf kfuncs to kernel/bpf/* and mark them sleepable
-  - use listener and publisher model to implement bpf_copy_to_kernel()
-  - keep each introduced kfunc under the control of memcg
-
-RFCv1 -> RFCv2
-  - Use bpf kfunc instead of helper
-  - Use C source code to generate the light skeleton file
-
-
-Pingfan Liu (9):
-  kexec_file: Make kexec_image_load_default global visible
-  lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
-  bpf: Introduce bpf_copy_to_kernel() to buffer the content from
-    bpf-prog
-  bpf: Introduce decompressor kfunc
-  kexec: Introduce kexec_pe_image to parse and load PE file
-  kexec: Integrate with the introduced bpf kfuncs
-  kexec: Introduce a bpf-prog lskel to parse PE file
-  kexec: Integrate bpf light skeleton to load zboot image
-  arm64/kexec: Add PE image format support
-
- arch/arm64/Kconfig                           |   1 +
- arch/arm64/include/asm/kexec.h               |   1 +
- arch/arm64/kernel/machine_kexec_file.c       |   3 +
- include/linux/bpf.h                          |  23 +
- include/linux/decompress/mm.h                |   7 +
- include/linux/kexec.h                        |   2 +
- kernel/Kconfig.kexec                         |   8 +
- kernel/Makefile                              |   2 +
- kernel/bpf/Makefile                          |   2 +-
- kernel/bpf/helpers.c                         | 112 +++++
- kernel/bpf/helpers_carrier.c                 | 194 ++++++++
- kernel/kexec_bpf/Makefile                    |  65 +++
- kernel/kexec_bpf/kexec_pe_parser_bpf.c       |  65 +++
- kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 147 ++++++
- kernel/kexec_file.c                          |   2 +-
- kernel/kexec_pe_image.c                      | 487 +++++++++++++++++++
- lib/decompress.c                             |   6 +-
- 17 files changed, 1122 insertions(+), 5 deletions(-)
- create mode 100644 kernel/bpf/helpers_carrier.c
- create mode 100644 kernel/kexec_bpf/Makefile
- create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.c
- create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
- create mode 100644 kernel/kexec_pe_image.c
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a5..26398b269ac29 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -148,6 +148,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
+ 
+ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len);
++void *kexec_image_load_default(struct kimage *image);
+ int kexec_image_post_load_cleanup_default(struct kimage *image);
+ 
+ /*
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b5..6a72bdfab5f5c 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -65,7 +65,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 	return ret;
+ }
+ 
+-static void *kexec_image_load_default(struct kimage *image)
++void *kexec_image_load_default(struct kimage *image)
+ {
+ 	if (!image->fops || !image->fops->load)
+ 		return ERR_PTR(-ENOEXEC);
 -- 
 2.49.0
 
