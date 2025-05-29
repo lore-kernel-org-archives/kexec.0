@@ -4,97 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4350C54FB3
-	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46B61C54FB3
+	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FTuUac/kp25gU0dpv6T903TN/Brxa98Rb4iI8HbABdo=; b=VZLdFxINIIrxK1+5dj7M2LzTC1
-	P9hZkkptB/Jo9Q75Qlm1C+L/8ux6oa3iIcL5x2jFofi0PczgH8AFkG1tdtdz1PbfMzO3xt6+MW/G2
-	N7v7gl+phuNfs2f71V8Gm4GNAJelBvF4Ig8M6cPrOkhRNBhm57mHcsI/B40DNAvW7jylYjNyDdwcE
-	GwD0LrA83qSB9jpr7thY+Thmyx5kSqdbacLvcPE4I4Wz2SAx+6DG9R0Zs8oMdQpmcMfODC4ugN6/D
-	UJI+CwYSnC4GAmdq4rQNpA484F8mBB21Le5tO9DUQ7hJ97poY3EZi0q4VOGWlSS2i2HBbHncPCrMI
-	HEp7yMag==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=sSl/heG3ufjgsborJhX+SF5WLI1daNohNqz1kbS1LE0=; b=qJoCjCPMx2ANUyTrcPPXw0DmHu
+	gzlpxhcoNLcFAqfWMXfe0Emdt4wC/Q616zZZzRyh5CjEv8FvjbrJauBRd6yuNcFBsBXMNcXxYbyMS
+	WT6qc3Qx1nLBt/IKi0pV/VM0DzH9iOb1OhN2leehJk6pLaLS46K7U69VS07+6byQDvKT4ZYQ562xF
+	7xi+R0L4j/sPsZlF2x5+Nq1+msZcCuEDAApK2ppxvGdacwMczasWm68mtOcyDAf7aVfm0TVSNDS6S
+	YETbqjhq2ubkfcUz4d+gLX8o8NNrzpNjbE7yEoInwYKfQ40UXE/tH/PvY/D5E7ewL1q/hqjd1Ejoz
+	+7PtGxNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUep-0000000Et8L-2tdA;
-	Thu, 29 May 2025 04:14:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uKUj8-0000000EtJB-2yrh;
+	Thu, 29 May 2025 04:18:46 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUel-0000000Et7y-0o25
+	id 1uKUj6-0000000EtIp-2aVa
 	for kexec@lists.infradead.org;
-	Thu, 29 May 2025 04:14:17 +0000
+	Thu, 29 May 2025 04:18:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748492053;
+	s=mimecast20190719; t=1748492323;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTuUac/kp25gU0dpv6T903TN/Brxa98Rb4iI8HbABdo=;
-	b=Enx9ZoXmRCGAwfJORtjracSGSq13SuxSI7kiFYHfgv3NAxDz0Ov9+K8xsWC2lZHVqELxul
-	dar8T44UZ2yfZ7QhguZjGeQex8tscMQsu//fm2Q0clngLxDGePgLFfsqwV8U2Q+IOJfZk7
-	IRuaDX1Qc/EK0drG+Grkk2vT5XrqxAE=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-671-UHvdi62-M3qP_bK4XibxcA-1; Thu, 29 May 2025 00:14:09 -0400
-X-MC-Unique: UHvdi62-M3qP_bK4XibxcA-1
-X-Mimecast-MFC-AGG-ID: UHvdi62-M3qP_bK4XibxcA_1748492048
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3110ee88316so483270a91.1
-        for <kexec@lists.infradead.org>; Wed, 28 May 2025 21:14:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748492048; x=1749096848;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FTuUac/kp25gU0dpv6T903TN/Brxa98Rb4iI8HbABdo=;
-        b=qlD1EYxQkCb+UE9KCMEAbMOtviJvsBrH9ThF2LX3DNEl5gc96kLKXu0XQbyU72Hewc
-         XSlRM3k30SK4SB/JiS6D83bZEGF6tYNFkyerXfyIFaVSdOHUFix1K+59aCdzzYnDE45v
-         /I7ksrgYvqB4+RIveOkwEXRyeLqe+3buF0BviOzSLJWpyIHGHBp7uksgNe8PRO7iIF9S
-         RjUBTFVSjSBZzNqoRJlCiPUSgxvOs8iqeWU09oD7LhMY5OpVeAuGxGWRLO76X+YjEe3J
-         xO7D6+T3evr0+nLpGluWBveNW84Pmk2ccMFz+/RpGgU4NbFJABl9IAIK+a0iYAJ5MHbZ
-         kLoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzD9l1X6rgDH5PGDZ8Ez9Xl58vXZyI6Q6/MUtROyvyIPFXG+i+Em5ywINB/AXTlTJCh3BWPw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzpyeOyHZa5FmnFCELse0KCIjrHvuETJPA8Is11QrGniPNJKSl/
-	6dFZfP7NXMqlWYXBvWNhbAipJRrmygt3N8OlhYZvuvFrdU7vv+nleNU90HHhK1Aa/KdUUt6N983
-	dSr4u2dQ0zW1ofsjmnsKugXMQEzelhVT01ci+DaYa9Yn2yYb4qlEJxTB3o5NTFexZrpzSRPHMQG
-	SmWdSSKauI8M54YHl4fLHTXL9yCfqW/Ue4Ev+k
-X-Gm-Gg: ASbGncv/DS3Z5KzXNQiU0Dq26sZS1nZpin3eYAiFmS1+tPH+jGk6EpiHtd97HNfXxa2
-	m2vJi7AiEEEI/r9ia4aCDAOwtcgWG24DwKuIhhhUxX+QW72ejO45Cjw4ix2TSOMRV1ffm1w==
-X-Received: by 2002:a17:90b:350f:b0:311:b3e7:fb3c with SMTP id 98e67ed59e1d1-311e7470ad2mr6043685a91.31.1748492047897;
-        Wed, 28 May 2025 21:14:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJlBab55b5zw2yF/0qOrDv/7rcdItifY9mMu1pnfIqfsxVzRej8fOLqwH/iIyya4HFe28Cu7wYMPHCD64nqOo=
-X-Received: by 2002:a17:90b:350f:b0:311:b3e7:fb3c with SMTP id
- 98e67ed59e1d1-311e7470ad2mr6043655a91.31.1748492047430; Wed, 28 May 2025
- 21:14:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250515233953.14685-1-bhe@redhat.com> <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
- <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
- <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv> <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
- <aC86NSypHlER2C3L@MiWiFi-R3L-srv> <CAF+s44QHJs8J27TEy0AW1m2wT=LRSz59nHf-8AuqL8px_zKGUg@mail.gmail.com>
- <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
-In-Reply-To: <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sSl/heG3ufjgsborJhX+SF5WLI1daNohNqz1kbS1LE0=;
+	b=WXAsQ+4TcWbgvfCKh7MHiZqkL8fRYWTpXkNJ4OcX4OjC9ILq1FEfU4UyikVH+FRrjkQMsw
+	U13sMWz+zhUT4Wjx+UGfQHF/FGEA76L0ZUq3Ou/jDAav4wNp3IBQxPyzzqFX5VuYKIs1Yc
+	Uz+aIe+6kqUbTmjXAc9TH+707nGs7Ho=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-M4jiSS7UMd2KNPJnKaXhrQ-1; Thu,
+ 29 May 2025 00:18:40 -0400
+X-MC-Unique: M4jiSS7UMd2KNPJnKaXhrQ-1
+X-Mimecast-MFC-AGG-ID: M4jiSS7UMd2KNPJnKaXhrQ_1748492317
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 428FE180045B;
+	Thu, 29 May 2025 04:18:36 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.18])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 057CB180047F;
+	Thu, 29 May 2025 04:18:23 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 29 May 2025 12:13:56 +0800
-X-Gm-Features: AX0GCFsd4RqYWFQIJl58p55SOSnLlBoBDcDzdR7DF_r9JTI4jvZQrXBHdfSkduk
-Message-ID: <CAF+s44Q6ZJ8rdi1VG40JVJmxX-1hmss5eNaKvGhJSOS6xYLx-g@mail.gmail.com>
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Baoquan He <bhe@redhat.com>, prudo@redhat.com, linux-integrity@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	pmenzel@molgen.mpg.de, coxu@redhat.com, ruyang@redhat.com, 
-	chenste@linux.microsoft.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2lRMIZhwrwlc6Sr-5nxTzeDXxk8ng8eD2h2pvrK5bgQ_1748492048
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: 
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	bpf@vger.kernel.org
+Subject: [PATCHv3 0/9] kexec: Use BPF lskel to enable kexec to load PE format boot image
+Date: Thu, 29 May 2025 12:17:35 +0800
+Message-ID: <20250529041744.16458-1-piliu@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250528_211415_306168_C6429888 
-X-CRM114-Status: GOOD (  33.95  )
+X-CRM114-CacheID: sfid-20250528_211844_730959_C9BCD38A 
+X-CRM114-Status: GOOD (  17.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,110 +101,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, May 27, 2025 at 10:18=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com> w=
-rote:
->
-> On Tue, 2025-05-27 at 11:25 +0800, Pingfan Liu wrote
->
-> When responding to kernel mailing lists, please use plain text not Mime e=
-ncoded.
->
-> > On Thu, May 22, 2025 at 10:52=E2=80=AFPM Baoquan He <bhe@redhat.com> wr=
-ote:
-> > > On 05/22/25 at 07:08am, Mimi Zohar wrote:
-> > > > On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
-> > > > > On 05/21/25 at 08:54am, Mimi Zohar wrote:
-> > > > > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
-> > > > > > > CC kexec list.
-> > > > > > >
-> > > > > > > On 05/16/25 at 07:39am, Baoquan He wrote:
-> > > > > > > > Kdump kernel doesn't need IMA functionality, and enabling I=
-MA will
-> > > > > > > > cost
-> > > > > > > > extra memory. It would be very helpful to allow IMA to be d=
-isabled
-> > > > > > > > for
-> > > > > > > > kdump kernel.
-> > > > >
-> > > > > Thanks a lot for careufl reviewing and great suggestions.
-> > > > >
-> > > > > >
-> > > > > > The real question is not whether kdump needs "IMA", but whether=
- not
-> > > > > > enabling
-> > > > > > IMA in the kdump kernel could be abused.  The comments below do=
-n't
-> > > > > > address
-> > > > > > that question but limit/emphasize, as much as possible, turning=
- IMA
-> > > > > > off is
-> > > > > > limited to the kdump kernel.
-> > > > >
-> > > > > Are you suggesting removing below paragraph from patch log becaus=
-e they
-> > > > > are redundant? I can remove it in v2 if yes.
-> > > >
-> > > > "The comments below" was referring to my comments on the patch, not=
- the
-> > > > next
-> > > > paragraph.  "don't address that question" refers to whether the kdu=
-mp
-> > > > kernel
-> > > > could be abused.
-> > > >
-> > > > We're trying to close integrity gaps, not add new ones.  Verifying =
-the
-> > > > UKI's
-> > > > signature addresses the integrity of the initramfs.  What about the
-> > > > integrity of
-> > > > the kdump initramfs (or for that matter the kexec initramfs)?  If t=
-he
-> > > > kdump
-> > > > initramfs was signed, IMA would be able to verify it before the kex=
-ec.
-> >
-> > IMHO, from the higher level, if there is a requirement on the integrity=
- of the
-> > initramfs, it should take a similar approach as UKI. And the system adm=
-in can
-> > choose whether to disable the unsafe format loader or not.
->
-> Yes, that is a possibility, probably a good aim, but in the case of kexec=
-/kdump
-> that isn't really necessary.  As filesystem(s) support xattrs, IMA polici=
-es
-> could be written in terms of "func=3DKEXEC_INITRAMFS_CHECK" to include th=
-e
-> initramfs.
->
 
-Just aware that we have such a cool feature. Thanks!
+*** Review the history ***
 
-I checked the code. IIUC, the relevant code has already been in the
-kernel. And the thing left to do is to install an IMA policy, right?
+Nowadays UEFI PE bootable image is more and more popular on the distribution.
+But it is still an open issue to load that kind of image by kexec with IMA enabled
 
-But there are still two things to be considered.
--1.The UEFI partition is FAT format, which can not support xattr
--2. Just like in the UKI case, the kernel fd content is not necessary
-for the kernel image itself. The initramfs fd can be used to pass some
-extra data if we use a temp file as a package. So checking the
-signatures at the initramfs level will block this usage
+There are several approaches to reslove this issue, but none of them are
+accepted in upstream till now.
+
+The summary of those approaches:
+  -1. UEFI service emulator for UEFI stub
+  -2. PE format parser in kernel
+
+For the first one, I have tried a purgatory-style emulator [1]. But it
+confronts the hardware scaling trouble.  For the second one, there are two
+choices, one is to implement it inside the kernel, the other is inside the user
+space.  Both zboot-format [2] and UKI-format [3] parsers are rejected due to
+the concern that the variant format parsers will inflate the kernel code.  And
+finally, we have these kinds of parsers in the user space 'kexec-tools'.
 
 
-> >
-> > This other thing is how to make a handy signature on initramfs? It is n=
-either
-> > PE nor ELF.
->
-> IMA supports signatures stored in the security.ima xattr or as an appende=
-d
-> signatures.
->
+*** The approach in this series ***
 
-Good to know it.
+This approach allows the various PE boot image to be parsed in the bpf-prog,
+as a result, the kexec kernel code to remain relatively stable.
 
-Best Regards,
+Benefits
+And it abstracts architecture independent part and 
+the API is limitted 
 
-Pingfan
+To protect against malicious attacks on the BPF loader in user space, it
+employs BPF lskel to load and execute BPF programs from within the
+kernel.
+
+Each type of PE image contains a dedicated section '.bpf', which stores
+the bpf-prog designed to parse the format.  This ensures that the PE's
+signature also protects the integrity of the '.bpf' section.
+
+
+The parsing process operates as a pipeline. The current BPF program
+parser attaches to bpf_handle_pefile() and detaches at the end of the
+current stage via disarm_bpf_prog(). The results parsed by the current
+BPF program are buffered in the kernel through prepare_nested_pe() and
+then delivered to the next stage. For each stage of the pipeline, the
+BPF bytecode is stored in the '.bpf' section of the PE file. That means
+a vmlinuz.efi embeded in UKI format can be handled.
+
+
+Special thanks to Philipp Rudo, who spent significant time evaluating
+the practicality of my solution, and to Viktor Malik, who guided me
+toward using BPF light skeleton to prevent malicious attacks from user
+space.
+
+
+
+[1]: https://lore.kernel.org/lkml/20240819145417.23367-1-piliu@redhat.com/T/
+[2]: https://lore.kernel.org/kexec/20230306030305.15595-1-kernelfans@gmail.com/
+[3]: https://lore.kernel.org/lkml/20230911052535.335770-1-kernel@jfarr.cc/
+[4]: https://lore.kernel.org/linux-arm-kernel/20230921133703.39042-2-kernelfans@gmail.com/T/
+
+
+RFCv2 -> v3
+  - move the introduced bpf kfuncs to kernel/bpf/* and mark them sleepable
+  - use listener and publisher model to implement bpf_copy_to_kernel()
+  - keep each introduced kfunc under the control of memcg
+
+RFCv1 -> RFCv2
+  - Use bpf kfunc instead of helper
+  - Use C source code to generate the light skeleton file
+
+
+Pingfan Liu (9):
+  kexec_file: Make kexec_image_load_default global visible
+  lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
+  bpf: Introduce bpf_copy_to_kernel() to buffer the content from
+    bpf-prog
+  bpf: Introduce decompressor kfunc
+  kexec: Introduce kexec_pe_image to parse and load PE file
+  kexec: Integrate with the introduced bpf kfuncs
+  kexec: Introduce a bpf-prog lskel to parse PE file
+  kexec: Integrate bpf light skeleton to load zboot image
+  arm64/kexec: Add PE image format support
+
+ arch/arm64/Kconfig                           |   1 +
+ arch/arm64/include/asm/kexec.h               |   1 +
+ arch/arm64/kernel/machine_kexec_file.c       |   3 +
+ include/linux/bpf.h                          |  23 +
+ include/linux/decompress/mm.h                |   7 +
+ include/linux/kexec.h                        |   2 +
+ kernel/Kconfig.kexec                         |   8 +
+ kernel/Makefile                              |   2 +
+ kernel/bpf/Makefile                          |   2 +-
+ kernel/bpf/helpers.c                         | 112 +++++
+ kernel/bpf/helpers_carrier.c                 | 194 ++++++++
+ kernel/kexec_bpf/Makefile                    |  65 +++
+ kernel/kexec_bpf/kexec_pe_parser_bpf.c       |  65 +++
+ kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 147 ++++++
+ kernel/kexec_file.c                          |   2 +-
+ kernel/kexec_pe_image.c                      | 487 +++++++++++++++++++
+ lib/decompress.c                             |   6 +-
+ 17 files changed, 1122 insertions(+), 5 deletions(-)
+ create mode 100644 kernel/bpf/helpers_carrier.c
+ create mode 100644 kernel/kexec_bpf/Makefile
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.c
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+ create mode 100644 kernel/kexec_pe_image.c
+
+-- 
+2.49.0
 
 
