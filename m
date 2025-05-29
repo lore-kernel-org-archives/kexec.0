@@ -4,91 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8E9EC5AD49
-	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D64BC54FB3
+	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 16:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=914ioYTBrQrx2PypTshl4Y0e5nj206dcoNXuwOvgkyg=; b=gVS8QfuRF2ZiD7kq/69UZ2sdNQ
-	f9yshIlCxjsJPbaKn63NvJh3gmNA1upfRjUyTQnPso/A027p6T3f2BWMNy0UIR+y/jNavS/M5VJad
-	sx4uaNzUNk4CxsPZLqXdhhaKh/tqSxKhKH4FP9S7vgX1EDA4Qb8NqUYXVXzuFP1SUQ2NDS7VsE5He
-	hLDAWMxBjuJ1w6Xg7eaBZw8ldQMa5WE4wMXBgwgo5gjn0ITviSJqsRUkyQOnvEsUEyh8Ul6GCgoHm
-	MDRwB16CE55aRQPnIVHRnVcrZpfSCNYMQbJvn6dldi5IOXOpMRMZqpXnloXtVGzHFGDV89iPbpwzE
-	wIlh9azg==;
+	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=; b=C2fVvcvMFNPG+rmjIvTtxIys8q
+	f/2Lh4b9ZxoS/WBK4OWjPL+MTEAa8D7t8c5tWYYjQQ9/sXaWHoo82qe8KTvQL56obshU+YupoDWiW
+	L8/vHciMhzPW9ridOjQ5LLpoYATSP/Xl0tR7tXYHqXdF395xgIJi5lsTaoA0HygfvlGCgWTjHPKMB
+	wAYOpjXu8UXg7zbnTFLzP8fsTeVM9UhR3HGH5hTXkyYLNf9egrFplDiD9bz0dGm8PBS9EyiRcKhD7
+	tzcnwDF14Tgj5Cm4oPfAO4cMhw4T0+RK75qW74WY4CebaxWeclTrhg0m113CJ1LKAqpmjyWUkPD9T
+	zMPwLwtw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKfKU-0000000G5yW-0zNa;
-	Thu, 29 May 2025 15:38:02 +0000
-Received: from mgamail.intel.com ([198.175.65.20])
+	id 1uKg3H-0000000GAxq-1uA5;
+	Thu, 29 May 2025 16:24:19 +0000
+Received: from smtp-out2.suse.de ([195.135.223.131])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKfIG-0000000G5ea-1zEV;
-	Thu, 29 May 2025 15:35:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748532945; x=1780068945;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GPdqafqU2tPrO3Kwr1heLn8rpZD1wUwbKicBkAIdz60=;
-  b=OGc0FvTY9ShVbHD44XIAyC0V/Qsmq57bwilebHX/U+PyNASwnjjKkAvD
-   zqsuEGR9itlIUjOZ98gXM0BIjHHf7hg4pR+MiquKBoyoaqK6hFCaBgmcw
-   njatS5ye09FyDQNV7L8ZkRNIPs1wUPLoN0VTlbmRQ2xJwrEaYf26QbQgG
-   AkXSXX7JwVjkBNYBMOHQHsh2vJ3fQYCdvYEHMbRbVK8zSwvToM22CwwrX
-   VbGv0IhA7eNGJdYDfIsw4154etEpFy49uqR0i1vR/Ij/1ll5Y+skKmXlO
-   5jJHhJ6fYV2zi9BGGxObqxZVHl1CZJn2kM4mDd5bytltXQeQr/KNnEszA
-   A==;
-X-CSE-ConnectionGUID: GurwNw5eTGe/vieQfFt8dg==
-X-CSE-MsgGUID: FeoDSDM8RTKiFiW4eor3Xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50302770"
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="50302770"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:35:32 -0700
-X-CSE-ConnectionGUID: W1hnYaAwS2CKSIOXxah0vw==
-X-CSE-MsgGUID: Hz/Y3PS0ShSJB8EDBEqtNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="148887384"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 29 May 2025 08:35:26 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKfHv-000WpE-2L;
-	Thu, 29 May 2025 15:35:23 +0000
-Date: Thu, 29 May 2025 23:34:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, linux-arm-kernel@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Pingfan Liu <piliu@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	kexec@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCHv3 9/9] arm64/kexec: Add PE image format support
-Message-ID: <202505292305.zHTx5StD-lkp@intel.com>
-References: <20250529041744.16458-10-piliu@redhat.com>
+	id 1uKg1N-0000000GAm1-1g7M
+	for kexec@lists.infradead.org;
+	Thu, 29 May 2025 16:22:22 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 2056C1F7FD;
+	Thu, 29 May 2025 16:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748535738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
+	b=sBDJfhX3Y7hxNm73MjTCy8cOUZFBO+1H9PTsiBSdpFJbvGnD8LFqdERh6FjHkdqd1Rs5+T
+	94/LAbVkiXR5w5vCbvSWqeSGsLBgEWh6Ut6GX3G7WMbwd8TiCQinATZq0iMU3xKOUQo9+o
+	kuFdhsMgCU36SIazL7tY/sjsFflFWyw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748535738;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
+	b=ZmNkjHj8bAxMuM1k4d/PmVCTnKfzz6qvhVHLsy6MLqqENbRKhcU2ORVV1nXb8/FAfFlyqb
+	EWtHjc725TZj4eBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748535737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
+	b=HyWeMu9YcwqeeQzYwEs/utEANntZukEq9sj6D/Er8T6xoOt0q6sI7wcXlLZW/qQDM/zwSU
+	sojF3uIngONwwW9RV9D1QWO9GD2nXfn6eu0KjDCSEdJhL3Lc0GvwmO/fD5u+IAN3+f+iPm
+	fMolCFWCMc1igv3XPjs0rNAVaeKchG0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748535737;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
+	b=RwxxuEJcN2NYA+yEGgTFL/der/+nYn3XpTYQ7nqgc53g3AYM+pu0xBiv+at96XSN3r2MTl
+	D8QVTDTICyJhFOAg==
+Date: Thu, 29 May 2025 18:22:17 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <aDiJuZgUC2CYtdxi@dwarf.suse.cz>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
+ <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
+ <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
+ <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250529041744.16458-10-piliu@redhat.com>
+In-Reply-To: <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email,dwarf.suse.cz:mid]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250529_083544_553033_4CCA1295 
-X-CRM114-Status: GOOD (  13.09  )
+X-CRM114-CacheID: sfid-20250529_092221_588433_C2497701 
+X-CRM114-Status: GOOD (  14.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,71 +120,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+On Wed, May 28, 2025 at 11:01:04PM +0200, David Hildenbrand wrote:
+> I think we just have to be careful to document it properly -- especially the
+> shortcomings and that this feature might become a problem in the future.
+> Movable user-space page tables getting placed on CMA memory would probably
+> not be a problem if we don't care about ... user-space data either way.
 
-kernel test robot noticed the following build errors:
+Agreed; in the v3 series [1] I amended the documentation part [2] to
+explicitly mention that kernel movable allocations could be
+missing from the vmcore.
 
-[auto build test ERROR on bpf-next/net]
-[also build test ERROR on bpf/master arm64/for-next/core v6.15]
-[cannot apply to bpf-next/master linus/master next-20250529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The risks associated with pending DMA are also mentioned.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/kexec_file-Make-kexec_image_load_default-global-visible/20250529-122124
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
-patch link:    https://lore.kernel.org/r/20250529041744.16458-10-piliu%40redhat.com
-patch subject: [PATCHv3 9/9] arm64/kexec: Add PE image format support
-config: arm64-randconfig-004-20250529 (https://download.01.org/0day-ci/archive/20250529/202505292305.zHTx5StD-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505292305.zHTx5StD-lkp@intel.com/reproduce)
+Is there anything you're still missing from the v3 documentation?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505292305.zHTx5StD-lkp@intel.com/
+> The whole "Direct I/O takes max 1s" part is a bit shaky. Maybe it could be
+> configurable how long to wait? 10s is certainly "safer".
 
-All errors (new ones prefixed by >>):
+I have nothing against making this configurable, or just setting
+the fixed/default delay to 10s. Which would you prefer?
+Would you prefer a command-line option, config option or a sysfs
+file?
 
-   In file included from kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h:6,
-                    from kernel/kexec_pe_image.c:25:
-   tools/lib/bpf/skel_internal.h: In function 'skel_finalize_map_data':
-   tools/lib/bpf/skel_internal.h:155:15: error: implicit declaration of function 'bpf_map_get'; did you mean 'bpf_map_put'? [-Werror=implicit-function-declaration]
-     155 |         map = bpf_map_get(fd);
-         |               ^~~~~~~~~~~
-         |               bpf_map_put
-   tools/lib/bpf/skel_internal.h:155:13: warning: assignment to 'struct bpf_map *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     155 |         map = bpf_map_get(fd);
-         |             ^
-   kernel/kexec_pe_image.c: In function 'kexec_bpf_prog_run_init':
->> kernel/kexec_pe_image.c:283:16: error: implicit declaration of function 'register_btf_fmodret_id_set'; did you mean 'register_btf_kfunc_id_set'? [-Werror=implicit-function-declaration]
-     283 |         return register_btf_fmodret_id_set(&kexec_modify_return_set);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                register_btf_kfunc_id_set
-   kernel/kexec_pe_image.c: In function 'pe_image_load':
-   kernel/kexec_pe_image.c:325:44: warning: variable 'cmdline_sz' set but not used [-Wunused-but-set-variable]
-     325 |         unsigned long linux_sz, initrd_sz, cmdline_sz, bpf_sz;
-         |                                            ^~~~~~~~~~
-   cc1: some warnings being treated as errors
+Thanks!
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for KEXEC_PE_IMAGE
-   Depends on [n]: KEXEC_FILE [=y] && DEBUG_INFO_BTF [=n] && BPF_SYSCALL [=n]
-   Selected by [y]:
-   - ARCH_SELECTS_KEXEC_FILE [=y] && KEXEC_FILE [=y]
-
-
-vim +283 kernel/kexec_pe_image.c
-
-536de0ba3b982c Pingfan Liu 2025-05-29  280  
-536de0ba3b982c Pingfan Liu 2025-05-29  281  static int __init kexec_bpf_prog_run_init(void)
-536de0ba3b982c Pingfan Liu 2025-05-29  282  {
-536de0ba3b982c Pingfan Liu 2025-05-29 @283  	return register_btf_fmodret_id_set(&kexec_modify_return_set);
-536de0ba3b982c Pingfan Liu 2025-05-29  284  }
-536de0ba3b982c Pingfan Liu 2025-05-29  285  late_initcall(kexec_bpf_prog_run_init);
-536de0ba3b982c Pingfan Liu 2025-05-29  286  
+[1] https://lore.kernel.org/lkml/Z9H10pYIFLBHNKpr@dwarf.suse.cz/
+[2] https://lore.kernel.org/lkml/Z9H4E82EslkGR7pV@dwarf.suse.cz/
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
 
