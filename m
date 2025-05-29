@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E155C54FB3
-	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9313C54FB3
+	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 04:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=u/ykuzUNlnG+gXezyEE+wMJKp6YscsHmpoCNBbPLXnA=; b=zCPw05tdlSh9xdCwAUJzEZam92
-	sRQ83BYMgkc8S/cC2M1cbq98V4Hs/KVYN4m6sQr8xVpPxPS/mJxC27hMN9p6BitnoXIj8KE5KEdJm
-	OQjbTKR29beeANKdx3/+1Bk9imyTM4ia6FPYX02P15+Ppc0LZpeidlTiBRw8J8DRp7AIaDsV00zzt
-	2VLysiok0uQkR8VR2h0EuI3zM/zFEP7ZgtIaZ4TblOTVnZ7gGzUW8tE5QyzXwRBHbt9MPTrPqAEUy
-	ByMxSB2ZWfAMEAHWPoN3Qf5QsCKAj8Agf0lv16G+OvUuCZShpwXf9G3IGdOq4i/DFhEOqqN9sD/hO
-	SLNQhd1g==;
+	bh=o01mCaWwHM/y8xT3IMVLUrSVxAs8uhG2GK992cWJkus=; b=LcJv+R01/Eqwe9UMOTU3HRtOTQ
+	t+YcNYd6zEmjp/ZguNk9kyn/nLFoMc0xHEZtoBTJa9aRfvBqcALo7Tngikqv9B45LUpv75iKNHxf+
+	Y4ObqvbnVV248LWBHDTP/STfW6kFDWYuyBDieE3bTXyfjW4PFn/qm7TZBpWzkmMx4n4hF4YqBTCVH
+	NcvYgh78GSvI9AB/I1aqXjbirMo6v49dfy3EA2f4ABZyOvAMOV42KGKrLVYXm84edWUrbTv4rxUnH
+	LPBle3BJqjk3cuiIT5vtsw8jjg/chA529NJpRNLcf9hK/TQNf4DIvfaz7FDDOEePOLHTU8J990oTH
+	b99DCjdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUkK-0000000EtcE-0BDS;
-	Thu, 29 May 2025 04:20:00 +0000
+	id 1uKUkZ-0000000Etfa-1wii;
+	Thu, 29 May 2025 04:20:15 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKUkH-0000000EtbM-3DNS
+	id 1uKUkW-0000000Etf7-3o4B
 	for kexec@lists.infradead.org;
-	Thu, 29 May 2025 04:19:58 +0000
+	Thu, 29 May 2025 04:20:15 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748492396;
+	s=mimecast20190719; t=1748492411;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u/ykuzUNlnG+gXezyEE+wMJKp6YscsHmpoCNBbPLXnA=;
-	b=hy1k1BVSbX6ItDRJaaTuIwBHg+yLWTnxSB6M/jzMq+nzO7B/d1jlh1f1wbuG/9ea5p2+Tg
-	PW2W5Aj8M8jnz0ksIf1SlwtwULNwBLV4BeS1OMHa8W0FQF4cyPid80HajtqKEM8N5t4kpp
-	ss2sudbGuR1kndfbAws2UizyorSSXa4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=o01mCaWwHM/y8xT3IMVLUrSVxAs8uhG2GK992cWJkus=;
+	b=QmSnap1bI804Slr6+3WUm81PPs9WCsKxOKi/xvvxYnkLLnRsL3RQ/TCskdkDhJ2CWGo+B4
+	vFAP+nHl80yKKbTgPPDoy/yxkS/xEmaSc9SQ45hZonuvYiMXRh3U8SjMpk1QdseQnzP57N
+	7y+Np/yqhvO9QlB5dWuVaDl6RXVsIUQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-621-lo6DfNe-OdGdbVJDIpPbfQ-1; Thu,
- 29 May 2025 00:19:53 -0400
-X-MC-Unique: lo6DfNe-OdGdbVJDIpPbfQ-1
-X-Mimecast-MFC-AGG-ID: lo6DfNe-OdGdbVJDIpPbfQ_1748492391
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-wxmbN7hHNIGACD9N3Ekr3A-1; Thu,
+ 29 May 2025 00:20:05 -0400
+X-MC-Unique: wxmbN7hHNIGACD9N3Ekr3A-1
+X-Mimecast-MFC-AGG-ID: wxmbN7hHNIGACD9N3Ekr3A_1748492403
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E10FE1800366;
-	Thu, 29 May 2025 04:19:50 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE474195608B;
+	Thu, 29 May 2025 04:20:02 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.72.112.18])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 77DB0180047F;
-	Thu, 29 May 2025 04:19:40 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A5FBF18003FC;
+	Thu, 29 May 2025 04:19:51 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
@@ -78,17 +78,17 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Dave Young <dyoung@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	bpf@vger.kernel.org
-Subject: [PATCHv3 6/9] kexec: Integrate with the introduced bpf kfuncs
-Date: Thu, 29 May 2025 12:17:41 +0800
-Message-ID: <20250529041744.16458-7-piliu@redhat.com>
+Subject: [PATCHv3 7/9] kexec: Introduce a bpf-prog lskel to parse PE file
+Date: Thu, 29 May 2025 12:17:42 +0800
+Message-ID: <20250529041744.16458-8-piliu@redhat.com>
 In-Reply-To: <20250529041744.16458-1-piliu@redhat.com>
 References: <20250529041744.16458-1-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250528_211957_878556_D3D870A3 
-X-CRM114-Status: GOOD (  15.55  )
+X-CRM114-CacheID: sfid-20250528_212013_166904_A54BAB0D 
+X-CRM114-Status: GOOD (  21.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,114 +103,627 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-First, register as a listener on bpf_copy_to_kernel() Second, in order
-that the hooked bpf-prog can call the sleepable kfuncs,
-bpf_handle_pefile and bpf_post_handle_pefile should also be marked as
-KF_SLEEPABLE to allow that behavior.
+Analague to kernel/bpf/preload/iterators/Makefile,
+this Makefile is not invoked by the Kbuild system. It needs to be
+invoked manually when kexec_pe_parser_bpf.c is changed so that
+kexec_pe_parser_bpf.lskel.h can be re-generated by the command "bpftool
+gen skeleton -L kexec_pe_parser_bpf.o".
+
+kexec_pe_parser_bpf.lskel.h is used directly by the kernel kexec code in
+later patch. For this patch, there are bpf bytecode contained in
+opts_data[] and opts_insn[] in kexec_pe_parser_bpf.lskel.h, but in the
+following patch, they will be removed and only the function API in
+kexec_pe_parser_bpf.lskel.h left.
+
+As exposed in kexec_pe_parser_bpf.lskel.h, the interface between
+bpf-prog and the kernel are constituted by:
+
+four maps:
+                struct bpf_map_desc ringbuf_1;
+                struct bpf_map_desc ringbuf_2;
+                struct bpf_map_desc ringbuf_3;
+                struct bpf_map_desc ringbuf_4;
+four sections:
+                struct bpf_map_desc rodata;
+                struct bpf_map_desc data;
+                struct bpf_map_desc bss;
+                struct bpf_map_desc rodata_str1_1;
+
+two progs:
+        SEC("fentry.s/bpf_handle_pefile")
+        SEC("fentry.s/bpf_post_handle_pefile")
+
+They are fixed and provided for all kinds of bpf-prog which interacts
+with the kexec kernel component.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Philipp Rudo <prudo@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: Dave Young <dyoung@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Philipp Rudo <prudo@redhat.com>
 Cc: bpf@vger.kernel.org
 To: kexec@lists.infradead.org
 ---
- kernel/kexec_pe_image.c | 59 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ kernel/kexec_bpf/Makefile                    |  57 +++
+ kernel/kexec_bpf/kexec_pe_parser_bpf.c       |  65 +++
+ kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 431 +++++++++++++++++++
+ 3 files changed, 553 insertions(+)
+ create mode 100644 kernel/kexec_bpf/Makefile
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.c
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
 
-diff --git a/kernel/kexec_pe_image.c b/kernel/kexec_pe_image.c
-index 3097efccb8502..e49d6db3c329d 100644
---- a/kernel/kexec_pe_image.c
-+++ b/kernel/kexec_pe_image.c
-@@ -52,6 +52,43 @@ static struct parsed_phase *alloc_new_phase(void)
- 	return phase;
- }
- 
+diff --git a/kernel/kexec_bpf/Makefile b/kernel/kexec_bpf/Makefile
+new file mode 100644
+index 0000000000000..b772e78464f48
+--- /dev/null
++++ b/kernel/kexec_bpf/Makefile
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: GPL-2.0
++OUTPUT := .output
++CLANG ?= clang
++LLC ?= llc
++LLVM_STRIP ?= llvm-strip
++DEFAULT_BPFTOOL := $(OUTPUT)/sbin/bpftool
++BPFTOOL ?= $(DEFAULT_BPFTOOL)
++LIBBPF_SRC := $(abspath ../../tools/lib/bpf)
++BPFOBJ := $(OUTPUT)/libbpf.a
++BPF_INCLUDE := $(OUTPUT)
++INCLUDES := -I$(OUTPUT) -I$(BPF_INCLUDE) -I$(abspath ../../tools/lib)        \
++       -I$(abspath ../../tools/include/uapi)
++CFLAGS := -g -Wall
++
++abs_out := $(abspath $(OUTPUT))
++ifeq ($(V),1)
++Q =
++msg =
++else
++Q = @
++msg = @printf '  %-8s %s%s\n' "$(1)" "$(notdir $(2))" "$(if $(3), $(3))";
++MAKEFLAGS += --no-print-directory
++submake_extras := feature_display=0
++endif
++
++.DELETE_ON_ERROR:
++
++.PHONY: all clean
++
++all: kexec_pe_parser_bpf.lskel.h
++
++clean:
++	$(call msg,CLEAN)
++	$(Q)rm -rf $(OUTPUT) kexec_pe_parser_bpf.lskel.h
++
++kexec_pe_parser_bpf.lskel.h: $(OUTPUT)/kexec_pe_parser_bpf.o | $(BPFTOOL)
++	$(call msg,GEN-SKEL,$@)
++	$(Q)$(BPFTOOL) gen skeleton -L $< > $@
++
++
++$(OUTPUT)/kexec_pe_parser_bpf.o: kexec_pe_parser_bpf.c $(BPFOBJ) | $(OUTPUT)
++	$(call msg,BPF,$@)
++	$(Q)$(CLANG) -g -O2 -target bpf $(INCLUDES)			      \
++		 -c $(filter %.c,$^) -o $@ &&				      \
++	$(LLVM_STRIP) -g $@
++
++$(OUTPUT):
++	$(call msg,MKDIR,$@)
++	$(Q)mkdir -p $(OUTPUT)
++
++$(BPFOBJ): $(wildcard $(LIBBPF_SRC)/*.[ch] $(LIBBPF_SRC)/Makefile) | $(OUTPUT)
++	$(Q)$(MAKE) $(submake_extras) -C $(LIBBPF_SRC)			       \
++		    OUTPUT=$(abspath $(dir $@))/ $(abspath $@)
++
++$(DEFAULT_BPFTOOL):
++	$(Q)$(MAKE) $(submake_extras) -C ../../tools/bpf/bpftool			      \
++		    prefix= OUTPUT=$(abs_out)/ DESTDIR=$(abs_out) install
+diff --git a/kernel/kexec_bpf/kexec_pe_parser_bpf.c b/kernel/kexec_bpf/kexec_pe_parser_bpf.c
+new file mode 100644
+index 0000000000000..ef2608c932aa5
+--- /dev/null
++++ b/kernel/kexec_bpf/kexec_pe_parser_bpf.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_core_read.h>
++#include <bpf/bpf_endian.h>
++#include <bpf/bpf_tracing.h>
++
++
++/* 1GB =  1^28 * sizeof(__uint) */
++#define MAX_BUF_SIZE	(1 << 30)
++/* 512MB is big enough to hold either kernel or initramfs */
++#define MAX_RECORD_SIZE	(1 << 28)
++
++#define KEXEC_RES_KERNEL_NAME "kernel"
++#define KEXEC_RES_INITRD_NAME "initrd"
++#define KEXEC_RES_CMDLINE_NAME "cmdline"
++
++/* ringbuf is safe since the user space has no write access to them */
++struct {
++	__uint(type, BPF_MAP_TYPE_RINGBUF);
++	__uint(max_entries, MAX_BUF_SIZE >> 2);
++} ringbuf_1 SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_RINGBUF);
++	__uint(max_entries, MAX_BUF_SIZE >> 2);
++} ringbuf_2 SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_RINGBUF);
++	__uint(max_entries, MAX_BUF_SIZE >> 2);
++} ringbuf_3 SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_RINGBUF);
++	__uint(max_entries, MAX_BUF_SIZE >> 2);
++} ringbuf_4 SEC(".maps");
++
++char LICENSE[] SEC("license") = "GPL";
++
 +/*
-+ * @name should be one of : kernel, initrd, cmdline
++ * This function ensures that the sections .rodata, .data .bss and .rodata.str1.1
++ * are created for a bpf prog.
 + */
-+static int bpf_kexec_carrier(const char *name, struct mem_range_result *r)
++__attribute__((used)) static int dummy(void)
 +{
-+	struct kexec_res *res;
++	static const char res_kernel[16] __attribute__((used, section(".rodata"))) = KEXEC_RES_KERNEL_NAME;
++	static char local_name[16] __attribute__((used, section(".data"))) = KEXEC_RES_CMDLINE_NAME;
++	static char res_cmdline[16] __attribute__((used, section(".bss")));
 +
-+	if (!r || !name)
-+		return -EINVAL;
++	__builtin_memcpy(local_name, KEXEC_RES_INITRD_NAME, 16);
++	return __builtin_memcmp(local_name, res_kernel, 4);
++}
 +
-+	res = kzalloc(sizeof(struct kexec_res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+	res->name = kstrdup(name, GFP_KERNEL);
-+	kref_get(&r->ref);
-+	res->r = r;
-+
-+	INIT_LIST_HEAD(&res->node);
-+	list_add_tail(&res->node, &cur_phase->res_head);
++SEC("fentry.s/bpf_handle_pefile")
++__attribute__((used)) int BPF_PROG(parse_pe, struct kexec_context *context)
++{
 +	return 0;
 +}
 +
-+static struct carrier_listener kexec_res_listener[3] = {
-+	{ .name = "kernel",
-+	  .kmalloc = false,
-+	  .handler = bpf_kexec_carrier,
-+	},
-+	{ .name = "initrd",
-+	  .kmalloc = false,
-+	  .handler = bpf_kexec_carrier,
-+	},
-+	{ .name = "cmdline",
-+	  .kmalloc = true,
-+	  .handler = bpf_kexec_carrier,
-+	},
-+};
-+
- static bool is_valid_pe(const char *kernel_buf, unsigned long kernel_len)
- {
- 	struct mz_hdr *mz;
-@@ -161,6 +198,22 @@ __attribute__((used, optimize("O0"))) void bpf_post_handle_pefile(struct kexec_c
- {
- }
- 
-+BTF_KFUNCS_START(kexec_modify_return_ids)
-+BTF_ID_FLAGS(func, bpf_handle_pefile, KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, bpf_post_handle_pefile, KF_SLEEPABLE)
-+BTF_KFUNCS_END(kexec_modify_return_ids)
-+
-+static const struct btf_kfunc_id_set kexec_modify_return_set = {
-+	.owner = THIS_MODULE,
-+	.set = &kexec_modify_return_ids,
-+};
-+
-+static int __init kexec_bpf_prog_run_init(void)
++SEC("fentry.s/bpf_post_handle_pefile")
++__attribute__((used)) int BPF_PROG(post_parse_pe, struct kexec_context *context)
 +{
-+	return register_btf_fmodret_id_set(&kexec_modify_return_set);
++	return 0;
 +}
-+late_initcall(kexec_bpf_prog_run_init);
+diff --git a/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h b/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+new file mode 100644
+index 0000000000000..5fc3609d3ad50
+--- /dev/null
++++ b/kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+@@ -0,0 +1,431 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++/* THIS FILE IS AUTOGENERATED BY BPFTOOL! */
++#ifndef __KEXEC_PE_PARSER_BPF_SKEL_H__
++#define __KEXEC_PE_PARSER_BPF_SKEL_H__
 +
- /*
-  * PE file may be nested and should be unfold one by one.
-  * Query 'kernel', 'initrd', 'cmdline' in cur_phase, as they are inputs for the
-@@ -212,6 +265,9 @@ static void *pe_image_load(struct kimage *image,
- 	cmdline_start = cmdline;
- 	cmdline_sz = cmdline_len;
- 
-+	for (int i = 0; i < ARRAY_SIZE(kexec_res_listener); i++)
-+		register_carrier_listener(&kexec_res_listener[i]);
++#include <bpf/skel_internal.h>
 +
- 	while (is_valid_format(linux_start, linux_sz) &&
- 	       pe_has_bpf_section(linux_start, linux_sz)) {
- 		struct kexec_context context;
-@@ -252,6 +308,9 @@ static void *pe_image_load(struct kimage *image,
- 		disarm_bpf_prog();
- 	}
- 
-+	for (int i = 0; i < ARRAY_SIZE(kexec_res_listener); i++)
-+		unregister_carrier_listener(kexec_res_listener[i].name);
++struct kexec_pe_parser_bpf {
++	struct bpf_loader_ctx ctx;
++	struct {
++		struct bpf_map_desc ringbuf_1;
++		struct bpf_map_desc ringbuf_2;
++		struct bpf_map_desc ringbuf_3;
++		struct bpf_map_desc ringbuf_4;
++		struct bpf_map_desc rodata;
++		struct bpf_map_desc data;
++		struct bpf_map_desc bss;
++		struct bpf_map_desc rodata_str1_1;
++	} maps;
++	struct {
++		struct bpf_prog_desc parse_pe;
++		struct bpf_prog_desc post_parse_pe;
++	} progs;
++	struct {
++		int parse_pe_fd;
++		int post_parse_pe_fd;
++	} links;
++};
 +
- 	/* the rear of parsed phase contains the result */
- 	list_for_each_entry_reverse(phase, &phase_head, head) {
- 		if (initrd != NULL && cmdline != NULL && parsed_kernel != NULL)
++static inline int
++kexec_pe_parser_bpf__parse_pe__attach(struct kexec_pe_parser_bpf *skel)
++{
++	int prog_fd = skel->progs.parse_pe.prog_fd;
++	int fd = skel_raw_tracepoint_open(NULL, prog_fd);
++
++	if (fd > 0)
++		skel->links.parse_pe_fd = fd;
++	return fd;
++}
++
++static inline int
++kexec_pe_parser_bpf__post_parse_pe__attach(struct kexec_pe_parser_bpf *skel)
++{
++	int prog_fd = skel->progs.post_parse_pe.prog_fd;
++	int fd = skel_raw_tracepoint_open(NULL, prog_fd);
++
++	if (fd > 0)
++		skel->links.post_parse_pe_fd = fd;
++	return fd;
++}
++
++static inline int
++kexec_pe_parser_bpf__attach(struct kexec_pe_parser_bpf *skel)
++{
++	int ret = 0;
++
++	ret = ret < 0 ? ret : kexec_pe_parser_bpf__parse_pe__attach(skel);
++	ret = ret < 0 ? ret : kexec_pe_parser_bpf__post_parse_pe__attach(skel);
++	return ret < 0 ? ret : 0;
++}
++
++static inline void
++kexec_pe_parser_bpf__detach(struct kexec_pe_parser_bpf *skel)
++{
++	skel_closenz(skel->links.parse_pe_fd);
++	skel_closenz(skel->links.post_parse_pe_fd);
++}
++static void
++kexec_pe_parser_bpf__destroy(struct kexec_pe_parser_bpf *skel)
++{
++	if (!skel)
++		return;
++	kexec_pe_parser_bpf__detach(skel);
++	skel_closenz(skel->progs.parse_pe.prog_fd);
++	skel_closenz(skel->progs.post_parse_pe.prog_fd);
++	skel_closenz(skel->maps.ringbuf_1.map_fd);
++	skel_closenz(skel->maps.ringbuf_2.map_fd);
++	skel_closenz(skel->maps.ringbuf_3.map_fd);
++	skel_closenz(skel->maps.ringbuf_4.map_fd);
++	skel_closenz(skel->maps.rodata.map_fd);
++	skel_closenz(skel->maps.data.map_fd);
++	skel_closenz(skel->maps.bss.map_fd);
++	skel_closenz(skel->maps.rodata_str1_1.map_fd);
++	skel_free(skel);
++}
++static inline struct kexec_pe_parser_bpf *
++kexec_pe_parser_bpf__open(void)
++{
++	struct kexec_pe_parser_bpf *skel;
++
++	skel = skel_alloc(sizeof(*skel));
++	if (!skel)
++		goto cleanup;
++	skel->ctx.sz = (void *)&skel->links - (void *)skel;
++	return skel;
++cleanup:
++	kexec_pe_parser_bpf__destroy(skel);
++	return NULL;
++}
++
++static inline int
++kexec_pe_parser_bpf__load(struct kexec_pe_parser_bpf *skel)
++{
++	struct bpf_load_and_run_opts opts = {};
++	int err;
++	static const char opts_data[] __attribute__((__aligned__(8))) = "\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x9f\xeb\x01\0\
++\x18\0\0\0\0\0\0\0\x04\x03\0\0\x04\x03\0\0\x95\x02\0\0\0\0\0\0\0\0\0\x02\x03\0\
++\0\0\x01\0\0\0\0\0\0\x01\x04\0\0\0\x20\0\0\x01\0\0\0\0\0\0\0\x03\0\0\0\0\x02\0\
++\0\0\x04\0\0\0\x1b\0\0\0\x05\0\0\0\0\0\0\x01\x04\0\0\0\x20\0\0\0\0\0\0\0\0\0\0\
++\x02\x06\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x02\0\0\0\x04\0\0\0\0\0\0\x10\0\0\0\0\
++\x02\0\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\
++\0\x2a\0\0\0\0\0\0\x0e\x07\0\0\0\x01\0\0\0\0\0\0\0\x02\0\0\x04\x10\0\0\0\x19\0\
++\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\0\x34\0\0\0\0\0\0\x0e\x09\0\
++\0\0\x01\0\0\0\0\0\0\0\x02\0\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\
++\0\0\x05\0\0\0\x40\0\0\0\x3e\0\0\0\0\0\0\x0e\x0b\0\0\0\x01\0\0\0\0\0\0\0\x02\0\
++\0\x04\x10\0\0\0\x19\0\0\0\x01\0\0\0\0\0\0\0\x1e\0\0\0\x05\0\0\0\x40\0\0\0\x48\
++\0\0\0\0\0\0\x0e\x0d\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\x0d\x02\0\0\0\x52\0\0\0\0\0\
++\0\x0c\x0f\0\0\0\0\0\0\0\0\0\0\x02\x12\0\0\0\x2d\x01\0\0\0\0\0\x01\x08\0\0\0\
++\x40\0\0\0\0\0\0\0\x01\0\0\x0d\x02\0\0\0\x40\x01\0\0\x11\0\0\0\x44\x01\0\0\x01\
++\0\0\x0c\x13\0\0\0\0\0\0\0\x01\0\0\x0d\x02\0\0\0\x40\x01\0\0\x11\0\0\0\xb4\x01\
++\0\0\x01\0\0\x0c\x15\0\0\0\x33\x02\0\0\0\0\0\x01\x01\0\0\0\x08\0\0\x01\0\0\0\0\
++\0\0\0\x03\0\0\0\0\x17\0\0\0\x04\0\0\0\x04\0\0\0\x38\x02\0\0\0\0\0\x0e\x18\0\0\
++\0\x01\0\0\0\0\0\0\0\0\0\0\x0a\x17\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x1a\0\0\0\
++\x04\0\0\0\x10\0\0\0\x40\x02\0\0\0\0\0\x0e\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\
++\0\0\0\0\x17\0\0\0\x04\0\0\0\x10\0\0\0\x51\x02\0\0\0\0\0\x0e\x1d\0\0\0\0\0\0\0\
++\x62\x02\0\0\0\0\0\x0e\x1d\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0\x17\0\0\0\
++\x04\0\0\0\x07\0\0\0\x74\x02\0\0\x01\0\0\x0f\x10\0\0\0\x1f\0\0\0\0\0\0\0\x10\0\
++\0\0\x79\x02\0\0\x01\0\0\x0f\x10\0\0\0\x1e\0\0\0\0\0\0\0\x10\0\0\0\x7f\x02\0\0\
++\x04\0\0\x0f\x40\0\0\0\x08\0\0\0\0\0\0\0\x10\0\0\0\x0a\0\0\0\x10\0\0\0\x10\0\0\
++\0\x0c\0\0\0\x20\0\0\0\x10\0\0\0\x0e\0\0\0\x30\0\0\0\x10\0\0\0\x85\x02\0\0\x01\
++\0\0\x0f\x10\0\0\0\x1c\0\0\0\0\0\0\0\x10\0\0\0\x8d\x02\0\0\x01\0\0\x0f\x04\0\0\
++\0\x19\0\0\0\0\0\0\0\x04\0\0\0\0\x69\x6e\x74\0\x5f\x5f\x41\x52\x52\x41\x59\x5f\
++\x53\x49\x5a\x45\x5f\x54\x59\x50\x45\x5f\x5f\0\x74\x79\x70\x65\0\x6d\x61\x78\
++\x5f\x65\x6e\x74\x72\x69\x65\x73\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x31\0\x72\
++\x69\x6e\x67\x62\x75\x66\x5f\x32\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x33\0\x72\
++\x69\x6e\x67\x62\x75\x66\x5f\x34\0\x64\x75\x6d\x6d\x79\0\x2e\x74\x65\x78\x74\0\
++\x2f\x68\x6f\x6d\x65\x2f\x6c\x69\x6e\x75\x78\x2f\x6b\x65\x72\x6e\x65\x6c\x2f\
++\x6b\x65\x78\x65\x63\x5f\x62\x70\x66\x2f\x6b\x65\x78\x65\x63\x5f\x70\x65\x5f\
++\x70\x61\x72\x73\x65\x72\x5f\x62\x70\x66\x2e\x63\0\x5f\x5f\x61\x74\x74\x72\x69\
++\x62\x75\x74\x65\x5f\x5f\x28\x28\x75\x73\x65\x64\x29\x29\x20\x73\x74\x61\x74\
++\x69\x63\x20\x69\x6e\x74\x20\x64\x75\x6d\x6d\x79\x28\x76\x6f\x69\x64\x29\0\x09\
++\x5f\x5f\x62\x75\x69\x6c\x74\x69\x6e\x5f\x6d\x65\x6d\x63\x70\x79\x28\x6c\x6f\
++\x63\x61\x6c\x5f\x6e\x61\x6d\x65\x2c\x20\x4b\x45\x58\x45\x43\x5f\x52\x45\x53\
++\x5f\x49\x4e\x49\x54\x52\x44\x5f\x4e\x41\x4d\x45\x2c\x20\x31\x36\x29\x3b\0\x09\
++\x72\x65\x74\x75\x72\x6e\x20\x5f\x5f\x62\x75\x69\x6c\x74\x69\x6e\x5f\x6d\x65\
++\x6d\x63\x6d\x70\x28\x6c\x6f\x63\x61\x6c\x5f\x6e\x61\x6d\x65\x2c\x20\x72\x65\
++\x73\x5f\x6b\x65\x72\x6e\x65\x6c\x2c\x20\x34\x29\x3b\0\x75\x6e\x73\x69\x67\x6e\
++\x65\x64\x20\x6c\x6f\x6e\x67\x20\x6c\x6f\x6e\x67\0\x63\x74\x78\0\x70\x61\x72\
++\x73\x65\x5f\x70\x65\0\x66\x65\x6e\x74\x72\x79\x2e\x73\x2f\x62\x70\x66\x5f\x68\
++\x61\x6e\x64\x6c\x65\x5f\x70\x65\x66\x69\x6c\x65\0\x5f\x5f\x61\x74\x74\x72\x69\
++\x62\x75\x74\x65\x5f\x5f\x28\x28\x75\x73\x65\x64\x29\x29\x20\x69\x6e\x74\x20\
++\x42\x50\x46\x5f\x50\x52\x4f\x47\x28\x70\x61\x72\x73\x65\x5f\x70\x65\x2c\x20\
++\x73\x74\x72\x75\x63\x74\x20\x6b\x65\x78\x65\x63\x5f\x63\x6f\x6e\x74\x65\x78\
++\x74\x20\x2a\x63\x6f\x6e\x74\x65\x78\x74\x29\0\x70\x6f\x73\x74\x5f\x70\x61\x72\
++\x73\x65\x5f\x70\x65\0\x66\x65\x6e\x74\x72\x79\x2e\x73\x2f\x62\x70\x66\x5f\x70\
++\x6f\x73\x74\x5f\x68\x61\x6e\x64\x6c\x65\x5f\x70\x65\x66\x69\x6c\x65\0\x5f\x5f\
++\x61\x74\x74\x72\x69\x62\x75\x74\x65\x5f\x5f\x28\x28\x75\x73\x65\x64\x29\x29\
++\x20\x69\x6e\x74\x20\x42\x50\x46\x5f\x50\x52\x4f\x47\x28\x70\x6f\x73\x74\x5f\
++\x70\x61\x72\x73\x65\x5f\x70\x65\x2c\x20\x73\x74\x72\x75\x63\x74\x20\x6b\x65\
++\x78\x65\x63\x5f\x63\x6f\x6e\x74\x65\x78\x74\x20\x2a\x63\x6f\x6e\x74\x65\x78\
++\x74\x29\0\x63\x68\x61\x72\0\x4c\x49\x43\x45\x4e\x53\x45\0\x64\x75\x6d\x6d\x79\
++\x2e\x72\x65\x73\x5f\x6b\x65\x72\x6e\x65\x6c\0\x64\x75\x6d\x6d\x79\x2e\x6c\x6f\
++\x63\x61\x6c\x5f\x6e\x61\x6d\x65\0\x64\x75\x6d\x6d\x79\x2e\x72\x65\x73\x5f\x63\
++\x6d\x64\x6c\x69\x6e\x65\0\x2e\x62\x73\x73\0\x2e\x64\x61\x74\x61\0\x2e\x6d\x61\
++\x70\x73\0\x2e\x72\x6f\x64\x61\x74\x61\0\x6c\x69\x63\x65\x6e\x73\x65\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xb1\x05\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\x72\x69\x6e\x67\x62\
++\x75\x66\x5f\x31\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\x72\x69\
++\x6e\x67\x62\x75\x66\x5f\x32\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\
++\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x33\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\
++\0\0\0\0\0\0\x72\x69\x6e\x67\x62\x75\x66\x5f\x34\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\x04\0\0\0\x10\0\0\0\x01\0\0\
++\0\x80\0\0\0\0\0\0\0\0\0\0\0\x6b\x65\x78\x65\x63\x5f\x70\x65\x2e\x72\x6f\x64\
++\x61\x74\x61\0\0\0\0\0\0\0\0\0\0\0\0\0\x24\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6b\
++\x65\x72\x6e\x65\x6c\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\x04\0\0\0\
++\x10\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6b\x65\x78\x65\x63\x5f\x70\x65\
++\x2e\x64\x61\x74\x61\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x22\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\x63\x6d\x64\x6c\x69\x6e\x65\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\x04\0\0\0\x10\
++\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6b\x65\x78\x65\x63\x5f\x70\x65\x2e\
++\x62\x73\x73\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x21\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\x04\0\0\0\x07\0\0\0\x01\0\0\0\x80\
++\0\0\0\0\0\0\0\0\0\0\0\x2e\x72\x6f\x64\x61\x74\x61\x2e\x73\x74\x72\x31\x2e\x31\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x69\x6e\x69\x74\
++\x72\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x47\x50\x4c\0\0\0\0\0\xb4\0\0\0\0\0\0\0\x95\0\0\
++\0\0\0\0\0\0\0\0\0\x14\0\0\0\0\0\0\0\x5e\0\0\0\x68\x01\0\0\x1b\xe0\0\0\x1a\0\0\
++\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\x10\0\0\0\x70\x61\x72\x73\x65\x5f\x70\x65\0\0\0\0\0\0\0\0\0\0\0\0\x18\0\
++\0\0\0\0\0\0\x08\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\x01\
++\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\
++\0\0\x62\x70\x66\x5f\x68\x61\x6e\x64\x6c\x65\x5f\x70\x65\x66\x69\x6c\x65\0\0\0\
++\0\0\0\0\x47\x50\x4c\0\0\0\0\0\xb4\0\0\0\0\0\0\0\x95\0\0\0\0\0\0\0\0\0\0\0\x16\
++\0\0\0\0\0\0\0\x5e\0\0\0\xe2\x01\0\0\x1b\xf8\0\0\x1a\0\0\0\x02\0\0\0\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x70\
++\x6f\x73\x74\x5f\x70\x61\x72\x73\x65\x5f\x70\x65\0\0\0\0\0\0\0\x18\0\0\0\0\0\0\
++\0\x08\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x01\
++\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\x62\
++\x70\x66\x5f\x70\x6f\x73\x74\x5f\x68\x61\x6e\x64\x6c\x65\x5f\x70\x65\x66\x69\
++\x6c\x65\0\0";
++	static const char opts_insn[] __attribute__((__aligned__(8))) = "\
++\xbf\x16\0\0\0\0\0\0\xbf\xa1\0\0\0\0\0\0\x07\x01\0\0\x78\xff\xff\xff\xb7\x02\0\
++\0\x88\0\0\0\xb7\x03\0\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x05\0\x41\0\0\0\0\0\x61\
++\xa1\x78\xff\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x7c\xff\
++\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x80\xff\0\0\0\0\xd5\
++\x01\x01\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x84\xff\0\0\0\0\xd5\x01\x01\0\0\
++\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa1\x88\xff\0\0\0\0\xd5\x01\x01\0\0\0\0\0\x85\0\
++\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\
++\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\
++\0\0\x04\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\
++\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x08\0\0\0\x61\x01\0\0\0\0\0\0\
++\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\
++\0\0\0\0\0\0\x0c\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\
++\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x01\0\0\0\
++\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\
++\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\
++\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x01\
++\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x18\
++\x60\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\0\0\
++\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xbf\x70\0\0\0\0\0\0\x95\0\0\0\0\0\0\0\
++\x61\x60\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xd0\x0a\0\0\x63\x01\0\0\0\0\
++\0\0\x61\x60\x0c\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xcc\x0a\0\0\x63\x01\0\0\
++\0\0\0\0\x79\x60\x10\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc0\x0a\0\0\x7b\x01\
++\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\x05\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
++\xb8\x0a\0\0\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x12\0\0\0\x18\x62\0\0\0\0\0\0\0\0\
++\0\0\xb8\x0a\0\0\xb7\x03\0\0\x1c\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\
++\xc5\x07\xa7\xff\0\0\0\0\x63\x7a\x78\xff\0\0\0\0\x61\x60\x1c\0\0\0\0\0\x15\0\
++\x03\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xe4\x0a\0\0\x63\x01\0\0\0\0\0\0\xb7\
++\x01\0\0\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xd8\x0a\0\0\xb7\x03\0\0\x48\0\0\0\
++\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x9a\xff\0\0\0\0\x18\x61\0\0\0\
++\0\0\0\0\0\0\0\0\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x2c\0\0\0\0\0\x15\0\x03\0\0\
++\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x2c\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\
++\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x20\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\
++\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x8b\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\
++\0\0\0\x04\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x3c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\
++\x18\x61\0\0\0\0\0\0\0\0\0\0\x74\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\
++\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x68\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\
++\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x7c\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
++\x08\0\0\0\x63\x71\0\0\0\0\0\0\x61\x60\x4c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\
++\x61\0\0\0\0\0\0\0\0\0\0\xbc\x0b\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\
++\x18\x62\0\0\0\0\0\0\0\0\0\0\xb0\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\
++\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x6d\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
++\x0c\0\0\0\x63\x71\0\0\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\
++\0\0\x28\x0c\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x5c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\
++\x18\x61\0\0\0\0\0\0\0\0\0\0\x04\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\
++\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xf8\x0b\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\
++\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x5a\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\
++\x10\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x60\0\0\0\0\0\x15\x03\x08\0\0\0\0\0\x18\
++\x61\0\0\0\0\0\0\0\0\0\0\x40\x0c\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\0\0\0\
++\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\
++\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\
++\0\0\0\0\0\0\0\x58\x0c\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x50\
++\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x60\x0c\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\
++\0\0\0\0\0\0\0\0\0\x40\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x68\x0c\0\0\x7b\x01\
++\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x58\x0c\0\0\xb7\
++\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x36\xff\0\0\
++\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\
++\0\0\0\0\0\0\x78\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\x16\0\0\0\x18\x62\0\0\
++\0\0\0\0\0\0\0\0\x78\x0c\0\0\xb7\x03\0\0\x04\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\
++\0\0\0\0\0\0\xc5\x07\x29\xff\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\
++\0\0\0\0\0\xb0\x0c\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x6c\0\0\0\0\0\x15\0\x03\0\0\
++\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x8c\x0c\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\
++\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x80\x0c\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\
++\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x19\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\
++\0\0\0\x14\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x70\0\0\0\0\0\x15\x03\x08\0\0\0\0\
++\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc8\x0c\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\
++\0\0\0\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\
++\0\x71\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\
++\0\0\0\0\0\0\0\0\0\0\xe0\x0c\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\
++\0\xd8\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xe8\x0c\0\0\x7b\x01\0\0\0\0\0\0\x18\
++\x60\0\0\0\0\0\0\0\0\0\0\xc8\x0c\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xf0\x0c\0\0\
++\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xe0\x0c\
++\0\0\xb7\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xf5\
++\xfe\0\0\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x30\x0d\0\0\
++\x63\x01\0\0\0\0\0\0\x61\x60\x7c\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\x61\0\0\0\0\
++\0\0\0\0\0\0\x0c\x0d\0\0\x63\x01\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\x18\x62\0\0\0\
++\0\0\0\0\0\0\0\0\x0d\0\0\xb7\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\
++\0\0\0\0\xc5\x07\xe5\xfe\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x63\x71\
++\0\0\0\0\0\0\x79\x63\x80\0\0\0\0\0\x15\x03\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\
++\0\0\0\x48\x0d\0\0\xb7\x02\0\0\x10\0\0\0\x61\x60\x04\0\0\0\0\0\x45\0\x02\0\x01\
++\0\0\0\x85\0\0\0\x94\0\0\0\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x18\x62\0\0\
++\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x60\
++\x0d\0\0\x63\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x58\x0d\0\0\x18\x61\0\
++\0\0\0\0\0\0\0\0\0\x68\x0d\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\
++\x48\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x70\x0d\0\0\x7b\x01\0\0\0\0\0\0\xb7\
++\x01\0\0\x02\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x60\x0d\0\0\xb7\x03\0\0\x20\0\0\
++\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xc1\xfe\0\0\0\0\x61\x60\x8c\
++\0\0\0\0\0\x15\0\x03\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x8c\x0d\0\0\x63\x01\
++\0\0\0\0\0\0\xb7\x01\0\0\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x80\x0d\0\0\xb7\
++\x03\0\0\x48\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\xb5\xfe\0\0\
++\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x63\x71\0\0\0\0\0\0\x79\x63\x90\0\0\
++\0\0\0\x15\x03\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xc8\x0d\0\0\xb7\x02\0\
++\0\x07\0\0\0\x61\x60\x04\0\0\0\0\0\x45\0\x02\0\x01\0\0\0\x85\0\0\0\x94\0\0\0\
++\x05\0\x01\0\0\0\0\0\x85\0\0\0\x71\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\
++\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xd8\x0d\0\0\x63\x01\0\0\0\0\0\
++\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xd0\x0d\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xe0\x0d\
++\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xc8\x0d\0\0\x18\x61\0\0\0\
++\0\0\0\0\0\0\0\xe8\x0d\0\0\x7b\x01\0\0\0\0\0\0\xb7\x01\0\0\x02\0\0\0\x18\x62\0\
++\0\0\0\0\0\0\0\0\0\xd8\x0d\0\0\xb7\x03\0\0\x20\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\
++\x07\0\0\0\0\0\0\xc5\x07\x91\xfe\0\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\
++\x61\x20\0\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xf8\x0d\0\0\x63\x01\0\0\0\0\0\
++\0\xb7\x01\0\0\x16\0\0\0\x18\x62\0\0\0\0\0\0\0\0\0\0\xf8\x0d\0\0\xb7\x03\0\0\
++\x04\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x84\xfe\0\0\0\0\x18\
++\x60\0\0\0\0\0\0\0\0\0\0\0\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x40\x0e\0\0\x7b\
++\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x08\x0e\0\0\x18\x61\0\0\0\0\0\0\0\
++\0\0\0\x38\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x18\x0e\0\0\
++\x18\x61\0\0\0\0\0\0\0\0\0\0\x80\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\
++\0\0\0\0\0\x20\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x90\x0e\0\0\x7b\x01\0\0\0\0\
++\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x30\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\xb0\
++\x0e\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x18\x61\0\0\0\
++\0\0\0\0\0\0\0\xa8\x0e\0\0\x7b\x01\0\0\0\0\0\0\x61\x60\x08\0\0\0\0\0\x18\x61\0\
++\0\0\0\0\0\0\0\0\0\x48\x0e\0\0\x63\x01\0\0\0\0\0\0\x61\x60\x0c\0\0\0\0\0\x18\
++\x61\0\0\0\0\0\0\0\0\0\0\x4c\x0e\0\0\x63\x01\0\0\0\0\0\0\x79\x60\x10\0\0\0\0\0\
++\x18\x61\0\0\0\0\0\0\0\0\0\0\x50\x0e\0\0\x7b\x01\0\0\0\0\0\0\x61\xa0\x78\xff\0\
++\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x78\x0e\0\0\x63\x01\0\0\0\0\0\0\x18\x61\0\0\
++\0\0\0\0\0\0\0\0\xc0\x0e\0\0\xb7\x02\0\0\x12\0\0\0\xb7\x03\0\0\x0c\0\0\0\xb7\
++\x04\0\0\0\0\0\0\x85\0\0\0\xa7\0\0\0\xbf\x07\0\0\0\0\0\0\xc5\x07\x4e\xfe\0\0\0\
++\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x30\x0e\0\0\x63\x70\x6c\0\0\0\0\0\x77\x07\0\0\
++\x20\0\0\0\x63\x70\x70\0\0\0\0\0\xb7\x01\0\0\x05\0\0\0\x18\x62\0\0\0\0\0\0\0\0\
++\0\0\x30\x0e\0\0\xb7\x03\0\0\x8c\0\0\0\x85\0\0\0\xa6\0\0\0\xbf\x07\0\0\0\0\0\0\
++\x18\x60\0\0\0\0\0\0\0\0\0\0\xa0\x0e\0\0\x61\x01\0\0\0\0\0\0\xd5\x01\x02\0\0\0\
++\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xc5\x07\x3c\xfe\0\0\0\0\x63\x7a\
++\x80\xff\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xd8\x0e\0\0\x18\x61\0\0\0\0\0\0\0\
++\0\0\0\x18\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xe0\x0e\0\0\
++\x18\x61\0\0\0\0\0\0\0\0\0\0\x10\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\
++\0\0\0\0\0\xf0\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x58\x0f\0\0\x7b\x01\0\0\0\0\
++\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\xf8\x0e\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x68\
++\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x08\x0f\0\0\x18\x61\0\
++\0\0\0\0\0\0\0\0\0\x88\x0f\0\0\x7b\x01\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\
++\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x80\x0f\0\0\x7b\x01\0\0\0\0\0\0\x61\x60\
++\x08\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x20\x0f\0\0\x63\x01\0\0\0\0\0\0\x61\
++\x60\x0c\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x24\x0f\0\0\x63\x01\0\0\0\0\0\0\
++\x79\x60\x10\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x28\x0f\0\0\x7b\x01\0\0\0\0\
++\0\0\x61\xa0\x78\xff\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x50\x0f\0\0\x63\x01\0\
++\0\0\0\0\0\x18\x61\0\0\0\0\0\0\0\0\0\0\x98\x0f\0\0\xb7\x02\0\0\x17\0\0\0\xb7\
++\x03\0\0\x0c\0\0\0\xb7\x04\0\0\0\0\0\0\x85\0\0\0\xa7\0\0\0\xbf\x07\0\0\0\0\0\0\
++\xc5\x07\x05\xfe\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x08\x0f\0\0\x63\x70\x6c\0\
++\0\0\0\0\x77\x07\0\0\x20\0\0\0\x63\x70\x70\0\0\0\0\0\xb7\x01\0\0\x05\0\0\0\x18\
++\x62\0\0\0\0\0\0\0\0\0\0\x08\x0f\0\0\xb7\x03\0\0\x8c\0\0\0\x85\0\0\0\xa6\0\0\0\
++\xbf\x07\0\0\0\0\0\0\x18\x60\0\0\0\0\0\0\0\0\0\0\x78\x0f\0\0\x61\x01\0\0\0\0\0\
++\0\xd5\x01\x02\0\0\0\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\xc5\x07\xf3\
++\xfd\0\0\0\0\x63\x7a\x84\xff\0\0\0\0\x61\xa1\x78\xff\0\0\0\0\xd5\x01\x02\0\0\0\
++\0\0\xbf\x19\0\0\0\0\0\0\x85\0\0\0\xa8\0\0\0\x61\xa0\x80\xff\0\0\0\0\x63\x06\
++\x98\0\0\0\0\0\x61\xa0\x84\xff\0\0\0\0\x63\x06\x9c\0\0\0\0\0\x18\x61\0\0\0\0\0\
++\0\0\0\0\0\0\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x18\0\0\0\0\0\x18\x61\0\0\0\0\0\
++\0\0\0\0\0\x04\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x28\0\0\0\0\0\x18\x61\0\0\0\0\
++\0\0\0\0\0\0\x08\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x38\0\0\0\0\0\x18\x61\0\0\0\
++\0\0\0\0\0\0\0\x0c\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x48\0\0\0\0\0\x18\x61\0\0\
++\0\0\0\0\0\0\0\0\x10\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x58\0\0\0\0\0\x18\x61\0\
++\0\0\0\0\0\0\0\0\0\x14\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x68\0\0\0\0\0\x18\x61\
++\0\0\0\0\0\0\0\0\0\0\x18\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x78\0\0\0\0\0\x18\
++\x61\0\0\0\0\0\0\0\0\0\0\x1c\0\0\0\x61\x10\0\0\0\0\0\0\x63\x06\x88\0\0\0\0\0\
++\xb7\0\0\0\0\0\0\0\x95\0\0\0\0\0\0\0";
++
++	opts.ctx = (struct bpf_loader_ctx *)skel;
++	opts.data_sz = sizeof(opts_data) - 1;
++	opts.data = (void *)opts_data;
++	opts.insns_sz = sizeof(opts_insn) - 1;
++	opts.insns = (void *)opts_insn;
++
++	err = bpf_load_and_run(&opts);
++	if (err < 0)
++		return err;
++	return 0;
++}
++
++static inline struct kexec_pe_parser_bpf *
++kexec_pe_parser_bpf__open_and_load(void)
++{
++	struct kexec_pe_parser_bpf *skel;
++
++	skel = kexec_pe_parser_bpf__open();
++	if (!skel)
++		return NULL;
++	if (kexec_pe_parser_bpf__load(skel)) {
++		kexec_pe_parser_bpf__destroy(skel);
++		return NULL;
++	}
++	return skel;
++}
++
++__attribute__((unused)) static void
++kexec_pe_parser_bpf__assert(struct kexec_pe_parser_bpf *s __attribute__((unused)))
++{
++#ifdef __cplusplus
++#define _Static_assert static_assert
++#endif
++#ifdef __cplusplus
++#undef _Static_assert
++#endif
++}
++
++#endif /* __KEXEC_PE_PARSER_BPF_SKEL_H__ */
 -- 
 2.49.0
 
