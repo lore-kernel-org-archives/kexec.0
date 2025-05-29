@@ -4,94 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1216C5B549
-	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 13:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE717C5AD49
+	for <kexec@archiver.kernel.org>; Thu, 29 May 2025 15:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Date:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Cc:To:From:
+	Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AUjkhu3+yN/wubdzqZgJlzUByhVL3tldr6sR8fCw7Xw=; b=Z5M3DogRuYloe0RvdrSQcgqgrX
-	zOqABerA8J5u5O8o4IeSO2tW3oXccl6rQlnBFlRZVYIyvQI/TDSDTp+McMLU+UIT61kKtX7O6NvaD
-	s3LpGIv3AahOYyLkNvv/BRsgA7jK9qasGZTFvL7/e/7Ns46yKUI/HMvpJYzj03UzJVgyGyTnGFcga
-	msEE20Ho2Fy/ixjwIAD2UvSVYX95oa/xKpsRO+1fD3ko7a7NFBrAE5/dZcJX2ZI6nvwg6Dny7UQuf
-	Wz2ixAmm9dhmkD39Amx8nIdZ9rz8ft9bXY1pjZ0QDfldNKn4d4khTNnqLgPA6bfD8GlCpEYjj5mn8
-	jYisk3Bg==;
+	bh=sBs1I6xHilGGQRussSPtkrqmDw9YqjU5AiWB9gav/i8=; b=UIUqyA2ftsW32UZcYEfMiLCDeI
+	/0nbDS2IfZdRTgFNPGXfQpodkPPfemdseArouPtW7lH0tnOrrO9QBtcT+YyazJqC+iUcQF7jQ0X4H
+	fsDVsDV5CgvA9TIJ2ygjn4mp3x2QoMmXzQ6SuEJ+fIOMzBNxWawBOMY9w/fh7lAU57A9Bp8ZYoMbM
+	AO59tQWxY1bTEIwG0aUAjYkP/piHnv04t9XoJXarX5BYckirCFCa5vZko27KezAAfEs7Eim8K0qYy
+	lyePU2VGuwL0Jn4OY9h1bBmvnxRelLwp5a1/bHuUQTCuWhoU14INyXKvhuK72T+88FTTYMnQOe5E4
+	Y7EGSByQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKcrq-0000000Fo8S-11JK;
-	Thu, 29 May 2025 13:00:18 +0000
-Received: from mgamail.intel.com ([192.198.163.7])
+	id 1uKf3h-0000000G37A-2mVz;
+	Thu, 29 May 2025 15:20:41 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKcQl-0000000Fjqd-3ElH
+	id 1uKeIb-0000000FycE-02JP
 	for kexec@lists.infradead.org;
-	Thu, 29 May 2025 12:32:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748521939; x=1780057939;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5tczT80Nk/8Jz8ap+tBGVsKedTDSvW5dC/vIjC8PZ00=;
-  b=ipIyWenhoJgByabIMmJv/ZbpHOY3H8vrWKsN6CGzWJwgp2eTXer3Pw3/
-   jn7yUGaNcHnpJCC/l6DzCf1TrThxU6I6OVW3yVjx3KNThfm0RLi3gWzzH
-   mufDCo1N85s+hHCGDKFxRfyRBUU5gYm//aBX5Y1u3XMa0+qL1mGeZZwjJ
-   1/SCtPH4CzUirMX0dwQ7fjuQYKLTZmqsu335encRfbKgTzTFxi/Cov7wB
-   /Dw5N+o2AbKDL8cQoJSd+k8V12UFVRnYyrs/k6u8qZiAc4+Yg9xzLxLNP
-   +urNBG9vNflHAYnNsb9zU9MAVig38kZ1u8Ty/7uEN05Z6aU29rHaLXzo2
-   g==;
-X-CSE-ConnectionGUID: QGP8iT4gRpyc1/s8nUs7IA==
-X-CSE-MsgGUID: YBp0mEesR4qgf8qPJ8teKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="75970818"
-X-IronPort-AV: E=Sophos;i="6.16,192,1744095600"; 
-   d="scan'208";a="75970818"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 05:32:14 -0700
-X-CSE-ConnectionGUID: WkcTx/cnS2OQsxC2aU7ELg==
-X-CSE-MsgGUID: fo1jR2L4RsWuDT0fS/uhww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,192,1744095600"; 
-   d="scan'208";a="143526206"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 29 May 2025 05:32:09 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKcQY-000Wfy-1Y;
-	Thu, 29 May 2025 12:32:06 +0000
-Date: Thu, 29 May 2025 20:31:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, bpf@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Pingfan Liu <piliu@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	kexec@lists.infradead.org, KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCHv3 4/9] bpf: Introduce decompressor kfunc
-Message-ID: <202505292046.qJy6UU9z-lkp@intel.com>
-References: <20250529041744.16458-5-piliu@redhat.com>
+	Thu, 29 May 2025 14:32:02 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TDeFxD002030;
+	Thu, 29 May 2025 14:31:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=sBs1I6
+	xHilGGQRussSPtkrqmDw9YqjU5AiWB9gav/i8=; b=Qhni8r+axcLKxqOJZEKHXq
+	nzIHIlyjmEUl5vyzG2RoX4o4JdstdKtqOFr+nAu0ub7DkY49dL61k9EYEq1Qjapa
+	WAep9qL0c39oICdmU6xFBYFqxE8uryMm+FtV/umpuBLFbtQ7AnPpTQwVrb3RI2OP
+	kmV2XgS5fOIVcmIPZOby85ZvHqCIOJT0I972C+44fqlMUWbYZFfqcOhKO/IcFLPq
+	hAD+wEAblg+AoAYb2WGNVROXsCTEntKQoghmuaiRYDukvtLxq/R+nHVnuf83eBpe
+	Gr8CR6Yen/AjUjw9mKfpafz4FQvecPm0CHtmH5H/Y+c4aIHXFWpw0QY7JBUEJUsA
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40gp0k3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 14:31:56 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54TCLibc006563;
+	Thu, 29 May 2025 14:31:56 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0vw32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 14:31:56 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54TEVtFu30867996
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 May 2025 14:31:55 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5297458069;
+	Thu, 29 May 2025 14:31:55 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9BCC65805E;
+	Thu, 29 May 2025 14:31:54 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.84.67])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 29 May 2025 14:31:54 +0000 (GMT)
+Message-ID: <91a9aa935b3a194c57a166133c9c1a537a9ca802.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, prudo@redhat.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, coxu@redhat.com,
+        ruyang@redhat.com, chenste@linux.microsoft.com
+In-Reply-To: <CAF+s44Q6ZJ8rdi1VG40JVJmxX-1hmss5eNaKvGhJSOS6xYLx-g@mail.gmail.com>
+References: <20250515233953.14685-1-bhe@redhat.com>
+	 <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+	 <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+	 <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
+	 <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+	 <aC86NSypHlER2C3L@MiWiFi-R3L-srv>
+	 <CAF+s44QHJs8J27TEy0AW1m2wT=LRSz59nHf-8AuqL8px_zKGUg@mail.gmail.com>
+	 <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
+	 <CAF+s44Q6ZJ8rdi1VG40JVJmxX-1hmss5eNaKvGhJSOS6xYLx-g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 May 2025 10:31:54 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529041744.16458-5-piliu@redhat.com>
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=avmyCTZV c=1 sm=1 tr=0 ts=68386fdc cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=8hGtjK_r-kYd2dVNGJkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDEzNiBTYWx0ZWRfXyEOtK7ZpFg9J lnVAWyCWxQPTKJBa8ZT/cCP1HrMSfQQaIrlmYGHALh/v0EGzBTIJXG5rSOMHBnTMj+5stW9M4KT RSY7jIfIy2sSiHZe+KYSZaG1DNVH5lcACtpb4liJduD+je1J+cKcFDnvNyGKR/h4jjcfQojnCRl
+ 4uH9BoqOz0UioUjz1Tw72jRsNKh9+UPPBr+3bHhv2ChAVW8KWWt8Ter3jZaGHqkM8D/VjSq4q10 C7zoc+giTl0qw6fm+KZuLpIESXiC50r/PLlaOIKVNInirl5KEOMmwNNv5VRIhQV12yyEA0CNYd1 +l1gpAQZqBChIZllDXoiKI5HrCqlKRyJititoepxeQymgQlRtWNUtHgTR6ffnx2NnTACf5RH+GR
+ /IcHHDMfD+2QHlgmF+hzhtd87UMDc1BNJ3HVQJSbbKOYZVVsB5k8OfVjdeXC9KtoCdp/0F9R
+X-Proofpoint-GUID: BXRwChCTEhrOCaz1qDFBrbZHmYfL-olt
+X-Proofpoint-ORIG-GUID: BXRwChCTEhrOCaz1qDFBrbZHmYfL-olt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_07,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290136
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250529_053219_821583_BB11EEC9 
-X-CRM114-Status: GOOD (  10.55  )
+X-CRM114-CacheID: sfid-20250529_073201_506462_46DFB236 
+X-CRM114-Status: GOOD (  27.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,35 +120,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+On Thu, 2025-05-29 at 12:13 +0800, Pingfan Liu wrote:
+> On Tue, May 27, 2025 at 10:18=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com>=
+ wrote:
+> >=20
+> > On Tue, 2025-05-27 at 11:25 +0800, Pingfan Liu wrote
+> > > > >=20
+> > > > >=20
+> > > > > We're trying to close integrity gaps, not add new ones.=C2=A0 Ver=
+ifying the
+> > > > > UKI's
+> > > > > signature addresses the integrity of the initramfs.=C2=A0 What ab=
+out the
+> > > > > integrity of
+> > > > > the kdump initramfs (or for that matter the kexec initramfs)?=C2=
+=A0 If the
+> > > > > kdump
+> > > > > initramfs was signed, IMA would be able to verify it before the k=
+exec.
+> > >=20
+> > > IMHO, from the higher level, if there is a requirement on the integri=
+ty of
+> > > the
+> > > initramfs, it should take a similar approach as UKI. And the system a=
+dmin
+> > > can
+> > > choose whether to disable the unsafe format loader or not.
+> >=20
+> > Yes, that is a possibility, probably a good aim, but in the case of
+> > kexec/kdump
+> > that isn't really necessary.=C2=A0 As filesystem(s) support xattrs, IMA=
+ policies
+> > could be written in terms of "func=3DKEXEC_INITRAMFS_CHECK" to include =
+the
+> > initramfs.
+> >=20
+>=20
+> Just aware that we have such a cool feature. Thanks!
 
-kernel test robot noticed the following build warnings:
+> I checked the code. IIUC, the relevant code has already been in the
+> kernel. And the thing left to do is to install an IMA policy, right?
 
-[auto build test WARNING on bpf-next/net]
-[also build test WARNING on bpf/master arm64/for-next/core v6.15]
-[cannot apply to bpf-next/master linus/master next-20250529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Correct.  The problem up to now has been that the initramfs was created on =
+the
+fly on the target system, so it was impossible to remotely sign it by the
+distro.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/kexec_file-Make-kexec_image_load_default-global-visible/20250529-122124
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
-patch link:    https://lore.kernel.org/r/20250529041744.16458-5-piliu%40redhat.com
-patch subject: [PATCHv3 4/9] bpf: Introduce decompressor kfunc
-config: s390-randconfig-002-20250529 (https://download.01.org/0day-ci/archive/20250529/202505292046.qJy6UU9z-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505292046.qJy6UU9z-lkp@intel.com/reproduce)
+>=20
+> But there are still two things to be considered.
+> -1.The UEFI partition is FAT format, which can not support xattr
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505292046.qJy6UU9z-lkp@intel.com/
+The normal kexec/kdump kernel image and initramfs are stored in /boot, not =
+the
+UEFI partition.  Is that changing?
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+e.g. kexec -s -l /boot/vmlinuz-`uname -r` --initrd=3D/boot/initramfs-`uname=
+ -
+r`.img --reuse-cmdline
 
->> WARNING: modpost: vmlinux: section mismatch in reference: bpf_decompress+0x36e (section: .text) -> decompress_method (section: .init.text)
+> -2. Just like in the UKI case, the kernel fd content is not necessary
+> for the kernel image itself. The initramfs fd can be used to pass some
+> extra data if we use a temp file as a package. So checking the
+> signatures at the initramfs level will block this usage
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sorry I lost you here.  What exactly is included in the UKI signature?  Wha=
+t is
+this initramfs fd extra data?  Is it included in the UKI signature?  Can yo=
+u
+point me to some documentation?
+
+thanks,
+
+Mimi
+> >=20
 
