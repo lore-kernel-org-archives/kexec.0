@@ -4,103 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BAF3C5AD49
-	for <kexec@archiver.kernel.org>; Fri, 30 May 2025 20:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C52B8C5AE59
+	for <kexec@archiver.kernel.org>; Sun,  1 Jun 2025 03:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=; b=gXa7O9ZGGifaTXQUQ2dnayu3V5
-	v916dpQlY7gdtKH8tOF5ZcSzBetIPD9lbrZejeg7WAoDFyESgE7IhfGMJllXTal016QbFMdIdgbEv
-	c4JHFQZFRawMiy2k4D5NTaDwZLKGr0IngCJ3/Rky01+MHLQ1oDTwmdsBGrsOcqrt/So5pXWmAzGmG
-	LBGqPHSo1tdPCNGgJOrvLF1pnsq9mCNDj0Z/yjvOPrjp9oVXZdcpmhKiOJz7cTV0QMtzM8ql73Ss5
-	l9UF7e/Bs48oUL9uO82EspJcfWboT/6hO6xwVrLDc6SyYktYqfiuuA7jAs8+ZJBZZ6uY9vmhRQEoA
-	yqKA6qFA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=uJ3qtgIDfEsN49rId0uuuPNM2vOn1Oqk2Kq6F9+907Y=; b=3i2Qqq1RoPf7dKPkDku1AEfcDl
+	ZwNvNPbKfxcp6XnQbtFoqL4njce8wmpnjJJ9lZRe+E7aq30HrPkKwk/R1NeELqBDX9LHv1tAcReXO
+	hRANkuJyPTPfQfb342SUZEBaL9saTKp7XiVhiLjKoQnsjhmIIaNkX6reTgpEFtS3HFCfwnzh2/wgQ
+	yLj0eK4Mo1qgI4z5S6z+1piYJz6fAsTslp1LWQOeJSPt+3sK/kfVNOzG7TQsLBD/txNGB7nkXVeVQ
+	Vz0cUFfhiHozd5aC0FpHaEkgUtnQP4GbRCMvQ4U10G+0RSSQY3hfgvBisabzUs9uJcrHRIuN0ykQ3
+	YECKGDfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uL6Nc-00000001nqb-3Z5N;
-	Fri, 30 May 2025 20:31:04 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1uLZBR-00000004vRl-0MZz;
+	Sun, 01 Jun 2025 03:16:25 +0000
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uL6NZ-00000001nq4-39nj
+	id 1uLZBK-00000004vR9-46wL
 	for kexec@lists.infradead.org;
-	Fri, 30 May 2025 20:31:03 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 44E9C1F7CB;
-	Fri, 30 May 2025 20:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748637060; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=ePfUupjwTN7LL0VVuBpKf4c0zfX99Za1aknzt3Qjr4+Cov5fta6IAHsAXBsdroVFGkSMqC
-	fnWYCCN0s4VGUdtH2kaeF6FkYaXhPTrWk/f9FQFvwF9HfYrooQbtL4jVZi9NQIYP3CWhaZ
-	tjBS93Y4ZwUpgFk7Io94H8cNUZE/GOk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748637060;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=cfCQ3PEstVarIP2TXGuAumWOibgzrj8BspXQwC032aUp0QnIWuQQg/fleBnoMT+SokMdNH
-	8KupftJkFqbu4RBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748637060; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=ePfUupjwTN7LL0VVuBpKf4c0zfX99Za1aknzt3Qjr4+Cov5fta6IAHsAXBsdroVFGkSMqC
-	fnWYCCN0s4VGUdtH2kaeF6FkYaXhPTrWk/f9FQFvwF9HfYrooQbtL4jVZi9NQIYP3CWhaZ
-	tjBS93Y4ZwUpgFk7Io94H8cNUZE/GOk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748637060;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=cfCQ3PEstVarIP2TXGuAumWOibgzrj8BspXQwC032aUp0QnIWuQQg/fleBnoMT+SokMdNH
-	8KupftJkFqbu4RBg==
-Date: Fri, 30 May 2025 22:31:00 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v4 5/5] x86: implement crashkernel cma reservation
-Message-ID: <aDoVhDc11ZcJyHm2@dwarf.suse.cz>
-References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+	Sun, 01 Jun 2025 03:16:20 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2357c61cda7so52735ad.1
+        for <kexec@lists.infradead.org>; Sat, 31 May 2025 20:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748747777; x=1749352577; darn=lists.infradead.org;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uJ3qtgIDfEsN49rId0uuuPNM2vOn1Oqk2Kq6F9+907Y=;
+        b=S/Cwa11023PrCH5FZH3DpcbJ91ZDMQPruKA9cWjnCRufm+jlyJUGjQNLSJgkcUPNyb
+         3MXSPT74jIQepIavS+umdk0orE8lwpF+8Zvla4s+D/x1k1i7siL/U2M8whrJ2zB6FK54
+         WAEGxB5cmp4tM/YIp9CHBcwJ7kC+BxZYBjGXVrYvm4ECG9sxkLJLWACKIXig0Mk44R25
+         pwQ0IpuibWgVTbkjACVSvIyaS74bJKi+43JNzVhIGfG9p98HZSpiPO+xeoa3pF1QsEGi
+         RgLlUYhakmTVBJ4C3Qba8f2SS4HzEIujVGysAHeupj9e9LdodXVL413VbdAefoS8v9pk
+         yb9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748747777; x=1749352577;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uJ3qtgIDfEsN49rId0uuuPNM2vOn1Oqk2Kq6F9+907Y=;
+        b=rb/CW/qR7B8yHQxYy+TTgNwOtI2mtO9wXbN1gZIt7FzEVbNvIF5FOIeYMOVrZJdWi+
+         Ug7sLHSrO+Fpr9wf434WLxKtpU7HBawbXeseOJt+MCXaGGm/v5JFLRkGL8YvSykIzErs
+         3dEn+7mRkZJgYkDwlUhn60JT704T1USIV60vz/sR/Va+9blw4VLVSGXQ0+pAPXEyCgzq
+         V76p+6lSJTkCzHv6RJtNobZPDGY/n24Pq4/eQQS8PhUGG7xTYzwq9Xd0Ln8JAeCnVCHO
+         xu3VC03npBSO8fibBn7YswnpCWL214LF16j3ejFAiFHxPKKcCYnZShDAS7MP8jLgicrI
+         S2TA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9jF1zRkhijDl43PQS7NLg98PvOuF86xamdiDrmPwDsQlLEgyr4AzzXivSr1eP9t3kBQlDOQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzGkFMlrJjB4jWF3U9HzN9CQW7SU+HrLrHyYdTkLb9lRRhEo/eo
+	fZs884S9g9m5ADju3E0R2gr/HVk9fJhOoYen3U5DZ4L0GsSjkXcdztLLH6SGDOpQLw==
+X-Gm-Gg: ASbGncstOGViCqPymRIlFKRz07rNoFBla9QZltynY5y+R0mf8e7oMSXKDJMZVqNr7W/
+	RFcYOT9hMdvjXc7xMCpinzMvw0bZR2hIH+L15cUcDULgU+3ZK63MaRSeWjkeMtFKTt4yJJAtCeD
+	g9zZgmE+CF9k8B3ZyPYhlD/UJmWhukZbzmCBCEjmmg0Nt8nACwCCM0CvZ/XTqbGPO5XNCu5K40N
+	oUmzen0EOk1m7jE7GfTr57092gvnrVF24hoFM+ovsQhnZKJEoEK9dmgfwHcpAeQvoFoSAmOwtr+
+	1on9WTM25sDc6MomhbpkQC1bzT5UarwXd2cQq5T/VHk98Ia3GTnjUWwUeTtiUj8xH0aHLS42l+q
+	mqj3ZokF0QWFFjfjig7s0zi2fhHtjxTVEUtibKAfUtc5c4L6PcL2x2A==
+X-Google-Smtp-Source: AGHT+IFINazidOPXFvZzJSusmwSLp67gD06pkPD86JcvYRE6vud46JnjJj1MJxd67mXame/J2tMMVA==
+X-Received: by 2002:a17:902:fc43:b0:234:c37:85a with SMTP id d9443c01a7336-235568f2be5mr2272235ad.24.1748747776551;
+        Sat, 31 May 2025 20:16:16 -0700 (PDT)
+Received: from [2a00:79e0:2eb0:8:1d6:160a:64d1:5d06] ([2a00:79e0:2eb0:8:1d6:160a:64d1:5d06])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc85fcsm49274755ad.38.2025.05.31.20.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 20:16:15 -0700 (PDT)
+Date: Sat, 31 May 2025 20:16:14 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Alexander Graf <graf@amazon.com>, 
+    Anthony Yznaga <anthony.yznaga@oracle.com>, 
+    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
+    David Matlack <dmatlack@google.com>, 
+    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
+    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
+    Mike Rapoport <rppt@kernel.org>, 
+    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
+    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+    Vipin Sharma <vipinsh@google.com>, 
+    Vishal Annapurve <vannapurve@google.com>, 
+    "Woodhouse, David" <dwmw@amazon.co.uk>
+cc: linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: [Hypervisor Live Update] Notes from May 19, 2025
+Message-ID: <958b2ec3-f5f1-b714-1256-1b06dcf7470f@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo,dwarf.suse.cz:mid]
+Content-Type: text/plain; charset=US-ASCII
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250530_133101_939799_96C2C637 
-X-CRM114-Status: GOOD (  17.91  )
+X-CRM114-CacheID: sfid-20250531_201619_044004_4504DA59 
+X-CRM114-Status: GOOD (  30.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,112 +103,140 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Implement the crashkernel CMA reservation for x86:
-- enable parsing of the cma suffix by parse_crashkernel()
-- reserve memory with reserve_crashkernel_cma()
-- add the CMA-reserved ranges to the e820 map for the crash kernel
-- exclude the CMA-reserved ranges from vmcore
+Hi everybody,
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++----
- arch/x86/kernel/setup.c |  5 +++--
- 2 files changed, 25 insertions(+), 6 deletions(-)
+Here are the notes from the last Hypervisor Live Update call that happened 
+on Monday, May 19.  Thanks to everybody who was involved!
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 0be61c45400c..670aa9b8b0f8 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -163,10 +163,10 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 		return NULL;
- 
- 	/*
--	 * Exclusion of crash region and/or crashk_low_res may cause
--	 * another range split. So add extra two slots here.
-+	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
-+	 * may cause range splits. So add extra slots here.
- 	 */
--	nr_ranges += 2;
-+	nr_ranges += 2 + crashk_cma_cnt;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -184,6 +184,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- static int elf_header_exclude_ranges(struct crash_mem *cmem)
- {
- 	int ret = 0;
-+	int i;
- 
- 	/* Exclude the low 1M because it is always reserved */
- 	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
-@@ -198,8 +199,17 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- 	if (crashk_low_res.end)
- 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
- 					      crashk_low_res.end);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
-+					      crashk_cma_ranges[i].end);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-@@ -352,6 +362,14 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 		add_e820_entry(params, &ei);
- 	}
- 
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ei.addr = crashk_cma_ranges[i].start;
-+		ei.size = crashk_cma_ranges[i].end -
-+			  crashk_cma_ranges[i].start + 1;
-+		ei.type = E820_TYPE_RAM;
-+		add_e820_entry(params, &ei);
-+	}
-+
- out:
- 	vfree(cmem);
- 	return ret;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 870b06571b2e..dcbeba344825 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -573,7 +573,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- 
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long crash_base, crash_size, low_size = 0;
-+	unsigned long long crash_base, crash_size, low_size = 0, cma_size = 0;
- 	bool high = false;
- 	int ret;
- 
-@@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
-@@ -592,6 +592,7 @@ static void __init arch_reserve_crashkernel(void)
- 	}
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- static struct resource standard_io_resources[] = {
+These notes are intended to bring people up to speed who could not attend 
+the call as well as keep the conversation going in between meetings.
 
+----->o-----
+Pasha started off by presenting material on the LUO v2 design[1].  He
+noted that while we want to eventually preserve devices, the current
+proposal only preserves file descriptors.  He also made a comment that
+future use cases may allow for extensions for preserving containers
+across kexec.
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+Pasha went through the state machine for LUO: normal, prepared (VMs still
+running but devices are serialized), frozen (VM is suspended), and
+updated (have updated into the next kernel but are not yet in the normal
+cycle on the other side of the kexec).
 
+There are four LUO event stages: prepare (before blackout), freeze (done
+normally through reboot syscall), finish (transition from updated state to
+normal state), and cancel (for prepare or freeze).
+
+The UAPI includes /dev/liveupdate character device to add participants,
+sned events, and query state, as well as /sys/kernel/liveupdate/state that
+describes the current state of the system per the above.  The latter can
+be used by systemd to optimize for boot or live update; live updates
+always want very fast boot.
+
+LUO will register subsystem and can allow for querying of subsystem data.
+Each struct liveupdate_subsystem has the callbacks for the event stages
+and pass in a u64 pointer.  David Matlack asked if the u64 is normally
+used to store the address in memory of saved state; Pasha confirmed this
+would normally be the case but LUO doesn't put any restrictions on its 
+usage.  Mike Rapoport noted the lower 12 bits could be used for other
+purposes if used for an address.
+
+Filesystems can also register with LUO to preserve their fds.  The
+struct liveupdate_filesystem includes callbacks for the event stages as
+well as a ->retrieve() and ->can_preserve() boolean.  The latter will
+allow us to determine if a file can be preserved or not.  These callbacks
+all operate on pointers to struct file.
+
+Pratyush asked about the relationship between KHO and LUO.  Pasha noted
+that KHO provides a state machine and in RFC v2 of LUO, LUO can drive KHO
+which makes the KHO debugfs interface optional.  KHO activate will cause
+LUO to switch to the prepared phase, for example.  /dev/liveupdate
+continues to be the preferred mechanism.  Think of KHO as preserving state
+across kexec whereas LUO provides the state machine.
+
+----->o-----
+I asked about the next steps for LUO.  Pasha noted v2 was very recent and
+there would be discussion over the next few weeks.  Memfd preservation is
+currently under development and Chris Li is working on device
+preservation.
+
+Pratyush is working on tests for memfd as well as libluo which is a
+userspace library to making interacting with LUO simpler.
+
+Mike had a thought about more tightly coupling KHO and LUO in the kernel
+tree.  Pasha suggested waiting for later to do a clean up of the code, at
+least waiting for KHO to land (not necessarily LUO landing).  In the
+future, it may be better to store under kernel/ instead of drivers/misc/.
+
+No additional work is being planned on KHO until it initially lands.
+
+----->o-----
+David Matlack brought up the idea of a live update microconference for LPC
+this year.  Once submitted and accepted, then the microconference will
+proposed its own CFP per Mike Rapoport and then people can submit for
+that.  Pasha noted that this could even include people working on boot
+time optimizations that may not be aware that their work is useful for
+live update.
+
+----->o-----
+I asked about current status of work to split pmem regions into smaller
+shards.
+
+We briefly chatted about defaulting dax regions per a specification on
+the kernel command line.  Mike had a similar approach in the past for
+pmem on top of e820 with namespaces but it was not sent upstream.  Pasha
+said the current approach being worked on is that the kernel command line
+would specify what should be fsdax and what should be devdax.  The big
+change, however, is to eliminate the first 2MB of data for the superblock.
+Mike's approach was to move labels to the very end of the device in the
+last 128KB.
+
+Pasha said it was likely best to not have the pmem label at all.  Mike
+said it was needed to resize namespaces on the pmem devices itself.  Mike
+asked to be cc'd on the patches when they go upstream.
+
+----->o-----
+David Matlack noted that he was almost finished with VFIO selftests for
+6.15 and that it would be sent out.  This was planned to be used for
+testing device preservation in an automated way.
+
+Pasha noted there was no good way to create qemu instances in selftests
+today, so we need infrastructure for KHO and LUO in selftests.  This will
+likely require a significant amount of work.
+
+Mike noted that it may be possible to borrow the infrastructure that BPF 
+uses for this.
+
+----->o-----
+Next meeting will be on Monday, June 2 at 8am PDT (UTC-7), everybody is
+welcome: https://meet.google.com/rjn-dmzu-hgq
+
+Topics for the next meeting:
+
+ - discuss current feedback on LUO v2 and its next steps
+ - check on status of memfd preservation using LUO
+ - check on status of libluo development from Pratyush
+ - check on status of sharding dax devices and eliminating the labels in
+   the first 2MB
+ - determine timeline for new kernel parameters to specify devdax and
+   fsdax directly on the command line itself without ndctl
+ - check on status of VFIO selftests that will be useful for automated
+   testing of device preservation
+ - determine timelines for selftest framework for live updates, which
+   could be a significant amount of work
+ - update on physical pool allocator that can be used to provide pages
+   for hugetlb, guest_memfd, and memfds
+ - later: testing methodology to allow downstream consumers to qualify
+   that live update works from one version to another
+ - later: reducing blackout window during live update
+
+Please let me know if you'd like to propose additional topics for
+discussion, thank you!
+
+[1]
+https://docs.google.com/presentation/d/1F-lcl4vSGDX72vhcdmlgKTSe8-GAlwqP46G37SDJP0Q/edit?usp=drive_link&resourcekey=0-jrQSQ7Catn-A7EimsR475A
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=ramdax
+[3] https://github.com/groeck/linux-build-test.git
+[4] http://kerneltests.org
 
