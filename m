@@ -4,101 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48861C5B543
-	for <kexec@archiver.kernel.org>; Wed,  4 Jun 2025 04:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B37B8C5B543
+	for <kexec@archiver.kernel.org>; Wed,  4 Jun 2025 07:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PO4T1rnPlmKykDehCYP0m1kIchCQnr8l4c6LLtP6l80=; b=cWU7XIsLfygN4RKhrQbZcNrEVS
-	0/HEA4aA/7DujpC8MPACsHd8mUaMBE9n+lpzKCkGfq1D8MXr7pHaztA5n9WZVrqxFTgRayOMphOGY
-	a6fABipXUpzD3Gydlk5ljxNX+YuTMaogOYsiUTvyBv8+qIDhNmHykhY6EyUcFoQqCEjY7zaEqgoQ6
-	ZWv5k/Nk9YoSoR6INofdm0VFPLax0cpuATI0DOrDw/XWD9fFpt/M1dHohmg/VUPDkT3bXP3/7bDVM
-	cSFUNd01jMNzVLm6HzX5CJM7omv27sHRFg7F5BeXsuefoH1HfNtkgiKiQEgeRM9nzSgDHJcG3E5w+
-	p4kvWTFA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=; b=wEoqbPbIeHOqI1cFjYWxYR0rgf
+	9PGU3yNpCYz48CXZG+eFGT6wuftO83sPnUrpZtKDlT0Ih/Mb18nA3RN+AOXDwk9aF0FubX10s2l0N
+	Qrt9FG7hDpJQEvGmck7FsXZn5IhB4WvMBFudLLP2YtdBDI+E+AfuMmKMaiPYTUH2M534kmoZPNxNL
+	jBQtT6IlCHsY5x7++wMsJcTuzlNRqyvdIKJQXolzHI9RyS8vIGIGt8mv72+mzaVg28eYpW0Zmm75o
+	MvdtnXNQWVAEd2djBBkcSNBGTFW9gFpBV75g5hhUz7itJkwN+3oNYMeaQ2K0OPkNisxdpE8VGCUIT
+	Pi67/hEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMfhT-0000000CYXU-1H41;
-	Wed, 04 Jun 2025 04:26:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uMijj-0000000CmjJ-31YP;
+	Wed, 04 Jun 2025 07:40:35 +0000
+Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMeuV-0000000CSSO-1nHl
+	id 1uMijg-0000000Cmic-1sLA
 	for kexec@lists.infradead.org;
-	Wed, 04 Jun 2025 03:35:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749008124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	Wed, 04 Jun 2025 07:40:33 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id C0D1E203E5;
+	Wed,  4 Jun 2025 07:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749022829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PO4T1rnPlmKykDehCYP0m1kIchCQnr8l4c6LLtP6l80=;
-	b=fxg71/Rk1ou5SUMA+ubzGEPYfxhlIpv6Cb2DqYKQuKiVZWhJ01MxXu3ISxjFn0ZVi3Vu6+
-	iV+CFIVUTHMIyoDSLDDCraQDJFu+Bn2K9AiGTQs1jOHV40t6VvP7czXn+95/KBggm4RS5h
-	WXb+y/YI0OgE69/HuhKsDSPijd095pM=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-253-t-qK7SloPLKBohUHITsjSA-1; Tue, 03 Jun 2025 23:35:21 -0400
-X-MC-Unique: t-qK7SloPLKBohUHITsjSA-1
-X-Mimecast-MFC-AGG-ID: t-qK7SloPLKBohUHITsjSA_1749008121
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2350804a43eso89462635ad.0
-        for <kexec@lists.infradead.org>; Tue, 03 Jun 2025 20:35:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749008120; x=1749612920;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PO4T1rnPlmKykDehCYP0m1kIchCQnr8l4c6LLtP6l80=;
-        b=hyOdyJ+KzuvHhU4mygTOlMY3kEAlRS3rkwqCqImZpqiDhwjYEW0TnIbCjRl9+BAXpd
-         HPgawoUFyiYxpd6ZfCEx8OkKOhlERDwSYrpwQHFmYMVPWwVSx65weJmE/mlvEPs45Zvp
-         X/XyNMA9cflzpdr2p6wwPCRE9BMgrBkb4SE+/U4WCpVgMHoDMx9fUT9l23bbdLY/zeb+
-         JB2t/dnqVO/yOfxn2n71kL0TZVBq8+QwbBQXqRTVV88dVuiQcOCJaw26SXCG9duEE3Je
-         PRSerZQRSgKrhSmwt06R1rU6H7QFl2ZrgLstlaA1cY9RSYFYinU4ChV9VFcGSmWgURly
-         53tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXN4QpftoX5a++w6orKUW+5AF8rWllUsGpOAWDeWAQmFunAUT+RV4gMPzxvQrktt3wtveRlOA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyCh42r6PGdZ11o9dPuJGM3QMT2PLTnLsU7gDmp3LbjWlSy3DMR
-	o1E9P2jPs9xQVrELO9isP0lS4Efxg92g2UlZQKVsmp/p+8ZLk9Fa71NWCeTsNWi3L13TOZhhV/j
-	eQW9e64H/IVlshdV9yJgz+osiMj3MtCfKK/pWaADY3r39pns+L84m9eZNDJT7Mg==
-X-Gm-Gg: ASbGncuNedYYiXYJZvVbjnMt4s2UvogE/ePiB17Gf5Q0YqP+YgMXmHFQHv4Io3DqWRp
-	rSPwJFRInhdBUyqYPOQJno6UKSuFneD/UC9C9HRrv7PdQKQm6V9KYPRbifmZVxIQ2QAVycrJIG1
-	EL0Qup6DVYI42sEODaBnH/xreUFNtxHXb4jkghsFE3Jzv511VcI5cNsLMojdv4IYQVyu6dXgx3e
-	nJAjwT/l99oV7NWdtq5opfHDDTLCSm8t9sv8e8/YGqtPzyp/OuXoUqx43nmY4u45WNOQK2+zS2p
-	0lDrCe2s3JiuUQ==
-X-Received: by 2002:a17:902:c944:b0:234:ade3:dde7 with SMTP id d9443c01a7336-235e1129185mr15703615ad.13.1749008120630;
-        Tue, 03 Jun 2025 20:35:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGR2MuyzmZwUzZOpzOGpfnKsGH/Q7AqQUA7K47C8uCXumRKpRcoVETmeg7zWutgFqvbeD0vDw==
-X-Received: by 2002:a17:902:c944:b0:234:ade3:dde7 with SMTP id d9443c01a7336-235e1129185mr15703375ad.13.1749008120217;
-        Tue, 03 Jun 2025 20:35:20 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3130690562fsm743828a91.17.2025.06.03.20.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 20:35:19 -0700 (PDT)
-Date: Wed, 4 Jun 2025 11:34:34 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-integrity@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, 
-	ruyang@redhat.com, chenste@linux.microsoft.com
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-Message-ID: <hn455nyrp65bb23ltub4tet6ixfcggshgerxm2bhun4ubv2iau@eanh3ka67irf>
-References: <20250515233953.14685-1-bhe@redhat.com>
- <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
- <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
- <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
- <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=OxVEDYUsfzYZ8xLXAyKnAep5+KO8k1PveIDBEEmCWHTQ4eS8oThZT0+ho+B5Wb1NmHnGW/
+	MH6K6tJXSf730OJJUAsmL1esZW6+iYIjlDSn1Gb0NBGikfEClqbPI8KDiECcHXFoLYIeGN
+	RenGbSrvnINQqRQdV9GAd3eCOvFhYEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749022829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=UZIaHJ3RHQIdgYLYuU4/PIRCCWguUqwjEreL+bp2SSgkwji2YmH80JvHeYeKO8HT6ILLiv
+	wndEVd0nFMHoSfDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749022829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=OxVEDYUsfzYZ8xLXAyKnAep5+KO8k1PveIDBEEmCWHTQ4eS8oThZT0+ho+B5Wb1NmHnGW/
+	MH6K6tJXSf730OJJUAsmL1esZW6+iYIjlDSn1Gb0NBGikfEClqbPI8KDiECcHXFoLYIeGN
+	RenGbSrvnINQqRQdV9GAd3eCOvFhYEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749022829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=UZIaHJ3RHQIdgYLYuU4/PIRCCWguUqwjEreL+bp2SSgkwji2YmH80JvHeYeKO8HT6ILLiv
+	wndEVd0nFMHoSfDg==
+Date: Wed, 4 Jun 2025 09:40:29 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v4 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <aD_4bT1AJv7aKhxy@dwarf.suse.cz>
+References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+ <aDoVO4H4CpXPjAdI@dwarf.suse.cz>
+ <da52a835-6a4b-4f11-acac-f4ef995da7e1@redhat.com>
+ <aD8b7Q8Z9sC8meGU@dwarf.suse.cz>
+ <d7cbbab2-8fe0-4a10-8b06-e47da955865e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: w9PqnQCnZf0FEBAT6oxfvBBDfYP-ZxNrOP57Fw6PXzo_1749008121
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d7cbbab2-8fe0-4a10-8b06-e47da955865e@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250603_203527_543840_0CC9D881 
-X-CRM114-Status: GOOD (  26.58  )
+X-CRM114-CacheID: sfid-20250604_004032_916162_E39892B7 
+X-CRM114-Status: GOOD (  24.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,68 +120,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 22, 2025 at 07:08:04AM -0400, Mimi Zohar wrote:
->On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
->> On 05/21/25 at 08:54am, Mimi Zohar wrote:
->> > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
->> > > CC kexec list.
->> > >
->> > > On 05/16/25 at 07:39am, Baoquan He wrote:
->> > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
->> > > > extra memory. It would be very helpful to allow IMA to be disabled for
->> > > > kdump kernel.
->>
->> Thanks a lot for careufl reviewing and great suggestions.
->>
->> >
->> > The real question is not whether kdump needs "IMA", but whether not enabling
->> > IMA in the kdump kernel could be abused.  The comments below don't address
->> > that question but limit/emphasize, as much as possible, turning IMA off is
->> > limited to the kdump kernel.
->>
->> Are you suggesting removing below paragraph from patch log because they
->> are redundant? I can remove it in v2 if yes.
->
->"The comments below" was referring to my comments on the patch, not the next
->paragraph.  "don't address that question" refers to whether the kdump kernel
->could be abused.
->
->We're trying to close integrity gaps, not add new ones.  Verifying the UKI's
->signature addresses the integrity of the initramfs.  What about the integrity of
->the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
->initramfs was signed, IMA would be able to verify it before the kexec.
+On Tue, Jun 03, 2025 at 06:25:57PM +0200, David Hildenbrand wrote:
+> On 03.06.25 17:59, Jiri Bohac wrote:
+> I'd phrase it more like "Pages residing in CMA areas can usually not get
+> long-term pinned, so long-term pinning is typically not a concern. BUGs in
+> the kernel might still lead to long-term pinning of such pages if everything
+> goes wrong."
 
-Hi Mimi,
+...
 
-I thought you were asking that the commit message should address the
-question why disabling IMA should be limited to the kdump kernel. It
-turns out I misunderstood your concern.
+> > If you want, I have no problem changing this to:
+> > +	mdelay(cma_dma_timeout_sec * 1000);
+> 
+> Probably good enough. Or just hard-code 10s and call it a day. :)
 
-Currently there is no way provided to verify the kdump initramfs as a
-whole file or to verify individual files in the kdump initramfs.
+Thanks for your comments, David. This would be the v5 of this
+patch:
 
-As you have already known, the kdump initramfs is always generated on
-the fly and will be re-generated when the dumping target changes or
-some important files change. We try to generate a minimal initramfs in
-order to save memory. So yes, it's impossible to sign it as a whole file
-beforehand. 
+Subject: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
 
-And since xattrs like security.ima are not supported in the kdump
-initramfs, we have no way to use IMA to verify individual file's
-integrity.  In fact, we have to stop IMA from working otherwise it's
-very likely kdump will break.
+When re-using the CMA area for kdump there is a risk of pending DMA
+into pinned user pages in the CMA area.
 
-So far, I'm not aware of any bug report that complains kdump stops
-working because of IMA. So it indicates very few users are trying to use
-IMA in kdump.
+Pages residing in CMA areas can usually not get long-term pinned and
+are instead migrated away from the CMA area, so long-term pinning is
+typically not a concern. (BUGs in the kernel might still lead to
+long-term pinning of such pages if everything goes wrong.)
 
-If users do have concerns on the integrity of kdump initramfs, I think
-we can advice users to make sure the deployed IMA policy will verify the
-integrity of the files while they are being collected and copied into
-the kdump initramfs by tools like dracut.
+Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
+be the source or destination of a pending DMA transfer.
+
+Although there is no clear specification how long a page may be pinned
+without FOLL_LONGTERM, pinning without the flag shows an intent of the
+caller to only use the memory for short-lived DMA transfers, not a transfer
+initiated by a device asynchronously at a random time in the future.
+
+Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
+kernel, giving such short-lived DMA transfers time to finish before
+the CMA memory is re-used by the kdump kernel.
+
+Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
+a huge margin for a DMA transfer, yet not increasing the kdump time
+too significantly.
+
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+
+---
+Changes since v4:
+- reworded the paragraph about long-term pinning
+- simplified crash_cma_clear_pending_dma()
+
+---
+Changes since v3:
+- renamed CMA_DMA_TIMEOUT_SEC to CMA_DMA_TIMEOUT_MSEC, change delay to 10 seconds
+- introduce a cma_dma_timeout_sec initialized to CMA_DMA_TIMEOUT_SEC
+  to make the timeout trivially tunable if needed in the future
+
+---
+ include/linux/crash_core.h |  3 +++
+ kernel/crash_core.c        | 15 +++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 44305336314e..805a07042c96 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -56,6 +56,9 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ /* Alignment required for elf header segment */
+ #define ELF_CORE_HEADER_ALIGN   4096
+ 
++/* Default value for cma_dma_timeout_sec */
++#define CMA_DMA_TIMEOUT_SEC 10
++
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mstart,
+ 				   unsigned long long mend);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 335b8425dd4b..540fd75a4a0d 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -21,6 +21,7 @@
+ #include <linux/reboot.h>
+ #include <linux/btf.h>
+ #include <linux/objtool.h>
++#include <linux/delay.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -33,6 +34,11 @@
+ /* Per cpu memory for storing cpu states in case of system crash. */
+ note_buf_t __percpu *crash_notes;
+ 
++/* time to wait for possible DMA to finish before starting the kdump kernel
++ * when a CMA reservation is used
++ */
++unsigned int cma_dma_timeout_sec = CMA_DMA_TIMEOUT_SEC;
++
+ #ifdef CONFIG_CRASH_DUMP
+ 
+ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
+@@ -97,6 +103,14 @@ int kexec_crash_loaded(void)
+ }
+ EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+ 
++static void crash_cma_clear_pending_dma(void)
++{
++	if (!crashk_cma_cnt)
++		return;
++
++	mdelay(cma_dma_timeout_sec * 1000);
++}
++
+ /*
+  * No panic_cpu check version of crash_kexec().  This function is called
+  * only when panic_cpu holds the current CPU number; this is the only CPU
+@@ -119,6 +133,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
+ 			machine_crash_shutdown(&fixed_regs);
++			crash_cma_clear_pending_dma();
+ 			machine_kexec(kexec_crash_image);
+ 		}
+ 		kexec_unlock();
 
 -- 
-Best regards,
-Coiby
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
 
