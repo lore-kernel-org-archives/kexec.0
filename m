@@ -4,70 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F06D5C61DB2
-	for <kexec@archiver.kernel.org>; Tue, 10 Jun 2025 20:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DC87C677C4
+	for <kexec@archiver.kernel.org>; Tue, 10 Jun 2025 23:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l1i8H/gKC/oQ3qAYchklHr1EYmsfN/BYNqkPNHyoIWY=; b=FhZ55VFrO0QVe09Szyw2BBII1N
-	IiDarjdIZ9HkpTjAstJuiTKGCZDMNJ8OI+LZFAE+Jl9U/NV6pw7G8TAh68hdqSoxRTOuBahnMIekE
-	3KuKTJ8asArtQ2rcUuLX8pbfK66PrEsh6ZHnqCx5Yi+GuFPf4LExfmiCdibFv+fQdU9pCgIhe8IyY
-	y20QYY+/fGJNPzK2aNPrYwnKEmJiMIsYAK8JFku8W0ryzHYofpJZ/GWMMa3JOWXCfSIK7iNw21eYq
-	X8AKkhC8cNTr3BwjncngEh2uYFe32IPiT74Ot9rqTmWr0YJHhC+QlWGuTqSGP2DjdmJiuIaTqjeMP
-	df1opofA==;
+	bh=g8Bytf44g5ahAkLfve403jgiYb+uxN9HvR9Tj8YMufg=; b=hQVlDWHyC3i5gtCRKnrh9SJ/S8
+	Jb7QOcYt5++0DTuBWynYB6KNsd+38pwbWWM6CZ1V5ALycoi/dtZ5SpjNx18uRiszUNmVkH6IqUZ2w
+	gmuD0KKtvldMsi5g4O0eboy0AfS6LehBVo68472dbjgK54sS0eoZo5EIhoeypFIfqh75ozdbhP3x3
+	+7FnaQsHxPbDdSVNEfj+GN223JA5to7E4vdtdiySPMSYVzE2JMhbsqetum23cpiimL9dmvkblNrWe
+	iAETWgRRD08hw0Sj2lN53OX7hs4bajuUmxEN2FiPNRmd0JmByaj8jdGovUkw7Gi7gL1f633eSPa/H
+	PJqz3Vqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uP5Hm-000000080RN-3f0T;
-	Tue, 10 Jun 2025 20:09:30 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1uP8n4-00000008QYV-2o2L;
+	Tue, 10 Jun 2025 23:54:02 +0000
+Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uP22W-00000007VSv-3umw
+	id 1uP7Xs-00000008DTN-1Va5
 	for kexec@lists.infradead.org;
-	Tue, 10 Jun 2025 16:41:34 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 54A40439AA;
-	Tue, 10 Jun 2025 16:41:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 145CAC4CEED;
-	Tue, 10 Jun 2025 16:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749573692;
-	bh=08Tu33HS43YPREV9dKmb5e6r7DxszomFLxukqEtLKf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IdDVu89IR3IdEcEWe6/IvKaF7o5LSpl246RsGJ6PnsyEtdcTN4MRqXzKvbf2pAC+L
-	 Js7czcTLYihX65/4n5DfhNZ/7Av+Gw2+l4m3hyp26Zz8q5jGJ4q41LY2MAhMS44SVy
-	 s4iMDv2EA30q4UgZ3myzo6Oj+Hci3/58dDeLcukivysCI/HavQ0nEmltshuJHfaYe7
-	 lIMdHLaOMY5OXv+iyUzYa4c7fyfqsiZjp9yyAVQjCLVrDMlqMeBk1av8mKfq8MQ1UR
-	 HESTnkU13SHTt0TNkiHP2iUyPTTKSwiN6gUHzw9JNr4T1Fzk016KxwKva0tLRM/b7c
-	 3jt+dIAuHtVdA==
-Date: Tue, 10 Jun 2025 19:41:25 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
- properly
-Message-ID: <aEhgNU80Dr9iRwoD@kernel.org>
-References: <20250605171143.76963-1-pratyush@kernel.org>
- <aEKhF3HcrvG77Ogb@kernel.org>
- <mafs0jz5osutx.fsf@kernel.org>
- <aEc30BoLE9HRxiZm@kernel.org>
- <CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
- <aEfGTXrsEL5-DuF1@kernel.org>
- <CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+	Tue, 10 Jun 2025 22:34:17 +0000
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-4a58e0b26c4so97532161cf.3
+        for <kexec@lists.infradead.org>; Tue, 10 Jun 2025 15:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749594855; x=1750199655; darn=lists.infradead.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=g8Bytf44g5ahAkLfve403jgiYb+uxN9HvR9Tj8YMufg=;
+        b=W60S24UkwDuMvLRZRzWLxavUUuaWDlrftY8BTlUzAiBCVf5ODAb9M/o7XQSTfwfZn6
+         TvKOGmubY4qEPtmn0gZi9qkJCRNuS8MX2TG3UgPqp9Fp2F+yEOAvDhE7GIMLzwRN4Y8q
+         cpxCTjg2pGyPhRuPSeINpwaunr8iGbXSxRsjrpt5i7hzWRDwoMXnnDjm5g+gByHpF48g
+         NfkNoCxDQzImigXjHLgdbAAe+aqNMIPtL+pRU4Owcu6fE8w225T8hSE79u6+RPACQzzr
+         PvjqwUXffTj4Ay7gK1VpCY2P3hAu2j8790D6lhFxkEFBinZfZ5G/hA8db6DgF/TaDv6x
+         GwPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749594855; x=1750199655;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g8Bytf44g5ahAkLfve403jgiYb+uxN9HvR9Tj8YMufg=;
+        b=WdKXIy6gvNJYCVpxHXyAR5EoBeEiiw35T49FmhJYHsYEwX9nKeXfnP5q/o0PPHZHFB
+         VbWYnGP3QJvvvyJmN819B9eP6Qy0zd4lh2Ccza+Knx8BwzQtsCcqan1URY+Omyka13a1
+         Tr6yOTv3558Ruof5i1GcZ+chE0tREyB6Ysb4pQhDeUdqSSs9FRzznoTt7KUhk8No8pzy
+         BuEBM0LlnxMBfPaEUvLUTnvLXI2NB61vnOdzivHVV7B3VP5mCcIYxEw9lhX6J9LM2qRX
+         FSgPAsMAu+aRaa//xHxKPbw2FK5kHkRwfYRp7zt46W+5tyB2aETBrkVTwzPeKdx2sp9D
+         bZWw==
+X-Forwarded-Encrypted: i=1; AJvYcCURyqhlEipK13UCQ+II3xZy88JsaGf2MmsL94mmpwpyha5hdw87igyuJ87hHYjHNmaLYfrO1Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwXaOFaneAEh7ONKyZ8swqm1eab5oeKcxHrAlAr1DAhFrcZDme5
+	dwRKiw+LQPAg0xjeenS699ts4t0OFyrEHYULA0PfOnDUSPGttmvfsmrUg08NzV/r7mTvvcgB3M7
+	gOemfYWte0bi4TeJ1ekCb2ZweDEYyOE6MS6MHdmyHgg==
+X-Gm-Gg: ASbGnctOupMbYIP9wXU5UuE86shZGYRKHRhKOT6m/UkqGjf4RzrDvETgwtJPf7K8yNn
+	dJeW627VKIHCyT8QSTegPO156jyu1jBV1RPvFN4iUXdpFmFUseyOTBD4+0WUuoOT8cuHi9fntUB
+	YnPoOy9dRZKBp0NFiNcM81zXKHN67YNRyCzsbMAC1YppFDVc2tomU=
+X-Google-Smtp-Source: AGHT+IHSkj9Ox3qM4oxVyr5va+0+HoSbN/LLwfuLeFvYTxchuXt69sOnDinqF5sKYnwKgdPq/ii5HJ6fe9Jm7X41Znc=
+X-Received: by 2002:a05:622a:579a:b0:4a4:3be3:6d69 with SMTP id
+ d75a77b69052e-4a714c8d948mr10914881cf.41.1749594855242; Tue, 10 Jun 2025
+ 15:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+References: <20250605171143.76963-1-pratyush@kernel.org> <aEKhF3HcrvG77Ogb@kernel.org>
+ <mafs0jz5osutx.fsf@kernel.org> <aEc30BoLE9HRxiZm@kernel.org>
+ <CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+ <aEfGTXrsEL5-DuF1@kernel.org> <CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+ <aEhgNU80Dr9iRwoD@kernel.org>
+In-Reply-To: <aEhgNU80Dr9iRwoD@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 10 Jun 2025 18:33:38 -0400
+X-Gm-Features: AX0GCFtJcS6mAcxYKHzkPfp4Zf1aggcovv204XYP6gR6eeACW9WTRiEaZ4dYXr8
+Message-ID: <CA+CK2bD3n=JDuSsMGvsyMnVbPhGdhdf6zWFDa3KpzRGEXygdgQ@mail.gmail.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios properly
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Changyuan Lyu <changyuanl@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250610_094133_019772_176C61B6 
-X-CRM114-Status: GOOD (  47.41  )
+X-CRM114-CacheID: sfid-20250610_153416_510391_C94731CB 
+X-CRM114-Status: GOOD (  22.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,124 +98,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 10, 2025 at 07:20:23AM -0400, Pasha Tatashin wrote:
-> On Tue, Jun 10, 2025 at 1:44 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > > I think it should be the other way around, KHO should depend on
+> > > !DEFERRED_STRUCT_PAGE_INIT.
 > >
-> > On Mon, Jun 09, 2025 at 04:07:50PM -0400, Pasha Tatashin wrote:
-> > > On Mon, Jun 9, 2025 at 3:36 PM Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > Hi Pratyush,
-> > > >
-> > > > On Fri, Jun 06, 2025 at 06:23:06PM +0200, Pratyush Yadav wrote:
-> > > > > Hi Mike,
-> > > > >
-> > > > > On Fri, Jun 06 2025, Mike Rapoport wrote:
-> > > > >
-> > > > > > On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
-> > > > > >> From: Pratyush Yadav <ptyadav@amazon.de>
-> > > > > >>
-> > > > > >> --- a/kernel/kexec_handover.c
-> > > > > >> +++ b/kernel/kexec_handover.c
-> > > > > >> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
-> > > > > >>  }
-> > > > > >>
-> > > > > >>  /* almost as free_reserved_page(), just don't free the page */
-> > > > > >> -static void kho_restore_page(struct page *page)
-> > > > > >> +static void kho_restore_page(struct page *page, unsigned int order)
-> > > > > >>  {
-> > > > > >> -  ClearPageReserved(page);
-> > > > > >
-> > > > > > So now we don't clear PG_Reserved even on order-0 pages? ;-)
-> > > > >
-> > > > > We don't need to. As I mentioned in the commit message as well,
-> > > > > PG_Reserved is never set for KHO pages since they are reserved with
-> > > > > MEMBLOCK_RSRV_NOINIT, so memmap_init_reserved_pages() skips over them.
-> > > >
-> > > > You are right, I missed it.
-> > > >
-> > > > > That said, while reading through some of the code, I noticed another
-> > > > > bug: because KHO reserves the preserved pages as NOINIT, with
-> > > > > CONFIG_DEFERRED_STRUCT_PAGE_INIT == n, all the pages get initialized
-> > > > > when memmap_init_range() is called from setup_arch (paging_init() on
-> > > > > x86). This happens before kho_memory_init(), so the KHO-preserved pages
-> > > > > are not marked as reserved to memblock yet.
-> > > > >
-> > > > > With deferred page init, some pages might not get initialized early, and
-> > > > > get initialized after kho_memory_init(), by which time the KHO-preserved
-> > > > > pages are marked as reserved. So, deferred_init_maxorder() will skip
-> > > > > over those pages and leave them uninitialized.
-> > > > >
-> > > > > So we need to either also call init_deferred_page(), or remove the
-> > > > > memblock_reserved_mark_noinit() call in deserialize_bitmap(). And TBH, I
-> > > > > am not sure why KHO pages even need to be marked noinit in the first
-> > > > > place. Probably the only benefit would be if a large chunk of memory is
-> > > > > KHO-preserved, the pages can be initialized later on-demand, reducing
-> > > > > bootup time a bit.
-> > > >
-> > > > One benefit is performance indeed, because in not deferred case the
-> > > > initialization of reserved pages in memmap_init_reserved_pages() is really
-> > > > excessive.
-> > > >
-> > > > But more importantly, if we remove memblock_reserved_mark_noinit(), with
-> > > > CONFIG_DEFERRED_STRUCT_PAGE_INIT we'd loose page->private because the
-> > > > struct page will be cleared after kho_mem_deserialize().
-> > > >
-> > > > > What do you think? Should we drop noinit or call init_deferred_page()?
-> > > > > FWIW, my preference is to drop noinit, since init_deferred_page() is
-> > > > > __meminit and we would have to make sure it doesn't go away after boot.
-> > > >
-> > > > We can't drop noinit and calling init_deferred_page() after boot just won't
-> > > > work because it uses memblock to find the page's node and memblock is gone
-> > > > after init.
-> > > >
-> > > > The simplest short-term solution is to disable KHO when
-> > > > CONFIG_DEFERRED_STRUCT_PAGE_INIT is set and then find an efficient way to
-> > > > make it all work together.
+> > Agreed, and this is what I first tried, but that does not work, there
+> > is some circular dependency breaking the build. If you feel
+> > adventurous you can try that :-)
+>
+> Hmm, weird, worked for me :/
+
+I am super confused, it did not work for me over weekend, and now it
+is working. Even `make menuconfig` would not work. Anyways, I will put
+it in the appropriate place.
+
+>
+> > > > We will need to teah KHO to work with deferred struct page init. I
+> > > > suspect, we could init preserved struct pages and then skip over them
+> > > > during deferred init.
 > > >
-> > > This is what I've done in LUOv3 WIP:
-> > > https://github.com/soleen/linux/commit/3059f38ac0a39a397873759fb429bd5d1f8ea681
+> > > We could, but with that would mean we'll run this before SMP and it's not
+> > > desirable. Also, init_deferred_page() for a random page requires
 > >
-> > I think it should be the other way around, KHO should depend on
-> > !DEFERRED_STRUCT_PAGE_INIT.
-> 
-> Agreed, and this is what I first tried, but that does not work, there
-> is some circular dependency breaking the build. If you feel
-> adventurous you can try that :-)
-
-Hmm, weird, worked for me :/
- 
-> > > We will need to teah KHO to work with deferred struct page init. I
-> > > suspect, we could init preserved struct pages and then skip over them
-> > > during deferred init.
+> > We already run KHO init before smp_init:
+> > start_kernel() -> mm_core_init() -> kho_memory_init() ->
+> > kho_restore_folio() -> struct pages must be already initialized here!
 > >
-> > We could, but with that would mean we'll run this before SMP and it's not
-> > desirable. Also, init_deferred_page() for a random page requires
-> 
-> We already run KHO init before smp_init:
-> start_kernel() -> mm_core_init() -> kho_memory_init() ->
-> kho_restore_folio() -> struct pages must be already initialized here!
-> 
-> While deferred struct pages are initialized:
-> start_kernel() -> rest_init() -> kernel_init() ->
-> kernel_init_freeable() -> page_alloc_init_late() ->
-> deferred_init_memmap()
-> 
-> If the number of preserved pages that is needed during early boot is
-> relatively small, that it should not be an issue to pre-initialize
-> struct pages for them before deferred struct pages are initialized. We
-> already pre-initialize some  "struct pages" that are needed during
-> early boot before the reset are initialized, see deferred_grow_zone()
+> > While deferred struct pages are initialized:
+> > start_kernel() -> rest_init() -> kernel_init() ->
+> > kernel_init_freeable() -> page_alloc_init_late() ->
+> > deferred_init_memmap()
+> >
+> > If the number of preserved pages that is needed during early boot is
+> > relatively small, that it should not be an issue to pre-initialize
+> > struct pages for them before deferred struct pages are initialized. We
+> > already pre-initialize some  "struct pages" that are needed during
+> > early boot before the reset are initialized, see deferred_grow_zone()
+>
+> deferred_grow_zone() takes a chunk in the beginning of uninitialized range,
+> with kho we are talking about some random pages. If we preinit them early,
+> deferred_init_memmap() will overwrite them.
 
-deferred_grow_zone() takes a chunk in the beginning of uninitialized range,
-with kho we are talking about some random pages. If we preinit them early,
-deferred_init_memmap() will overwrite them.
+Yes, this is why I am saying that we would need to skip the KHO
+initialized "struct pages" somehow during deferred initialization. If
+we create an ordered by PFN list of early-initialized KHO struct
+pages, skipping during deferred initialization could be done
+efficiently.
 
-Anyway, I'm going to look into it, hopefully I'll have something Really
-Soon (tm).
- 
-> Pasha
+> Anyway, I'm going to look into it, hopefully I'll have something Really
+> Soon (tm).
 
--- 
-Sincerely yours,
-Mike.
+CC:  Michal Clapinski, who was also planning to look into this problem.
+
+Pasha
 
