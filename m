@@ -4,75 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5534DC61CE8
-	for <kexec@archiver.kernel.org>; Mon,  9 Jun 2025 23:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3323C61DB2
+	for <kexec@archiver.kernel.org>; Tue, 10 Jun 2025 05:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BnfgY8Lio4OyWqKw4IAPziI6D8RP7lSOS1s9gQfTpbE=; b=VweFp5R9wsnshdptpJuTvkaSX4
-	eSrAvXBTdCu1lR/VWa894ObzLBjrGaPjK7Zkto4IZc4mee54W99wtxGjE/KiM+zuMu3Evl1h88mP5
-	gruwqtEIqAFLIJIZTtvNIGK705qm4HbKhzaYzekl1r83mPy+8Y9kD9WUMlWd5TdghLsQxhT/X8TDK
-	sS169wZFhDaccdcUNiMHMY8Vox5Jhyb74j7O1RdwY+lPukYhWJmGX6K3DqsNQDCWOllfsZ3FYnxVC
-	TsJjSQzi4l/C9rE+h0UFI+8P3BJVyUxFYYvwn0xv1abVcWAJXCp3Qk81UE5fdj0BCovBvaOMgR12x
-	mIRap/Fw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YuKLGx6o286cAEpkNpnYdZ8aIdxAVC37hih+/xzulMg=; b=RG+VMLhv6ZHiOK80WG05mWBlOr
+	IOx+fZFtFcKLi9D4i36SBjbD3aId+htfuQTBicUXUbHsf4SHGXz3bEv03xWXeopy2wA6regHNl3pu
+	CNtG07Pv3QksUWo+YRvmYgnWEBlIwZi9/wCdhNaFyBok2fQj7oq0lDlKBb0mnnsv75TrmrJO9+IHm
+	h/qncfvBrP+HLSS00kOg/hgPpsPnuFI2pYFumFdJGRoaMoL7j3BFCOCobFO9i5IR6rrhdYsmkClHY
+	pIX60SjMpVNX/is3xwnAorJ2D9zYD4wfWWYrOSvA6E/kyfyHHBTpVFSUuGvrZwEb+wEE93QkdDOx3
+	/ywb54nA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOmMc-00000005TkY-3Jwa;
-	Mon, 09 Jun 2025 23:57:14 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1uOrn8-00000005rZD-1zpz;
+	Tue, 10 Jun 2025 05:44:58 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOmHt-00000005TPK-0Jaz
-	for kexec@bombadil.infradead.org;
-	Mon, 09 Jun 2025 23:52:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=BnfgY8Lio4OyWqKw4IAPziI6D8RP7lSOS1s9gQfTpbE=; b=dbU/rvgW/kD7K0fBwCQ0vUj67/
-	mN4i5wIPRaAeTL76XkbK+RLEf56Kqg1/KihvzKmmjSQkWLxeJ/E0MCJ8hOiV5PhzSRiDj+IIC89la
-	AX8P6aX00x05mzzO06ddFg142sQjVbGTvIcJKuCpQSxhVr3aHR3vVgMP7OwzlcFJiykmIGsrqOJbx
-	slbbSrtZ0w4+q67e/f4MMtwOR8mrJcF/bzuZOlD5fryftM4IMfl0/hAkZytmk7wHzzspF77aRLUwR
-	glSirzJd4SVz6lvqkoQ96GI5LL0Pz1BFiGfQhMkxsVQs+R/NQzLJhgPFHkJbGnGg9llAahLd53f4X
-	BVisVr7w==;
-Received: from nyc.source.kernel.org ([147.75.193.91])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOmHq-00000001hnQ-3DFj
+	id 1uOrn3-00000005rXy-1suq
 	for kexec@lists.infradead.org;
-	Mon, 09 Jun 2025 23:52:20 +0000
+	Tue, 10 Jun 2025 05:44:54 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 57148A5074D;
-	Mon,  9 Jun 2025 23:52:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE900C4CEEB;
-	Mon,  9 Jun 2025 23:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749513135;
-	bh=mEQDo6j5H8oPDQlg77ExKhoywTKS+C3u5qkNoQL4GOw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Vm0YQP52BaTmcI7ScfKdnqnVriGiQ0Tuq2wIsqkE1WHaVP9BS8jzZJ1hwlqptBDxA
-	 ElAnZJT4po+DqwkuZLvzwe+QP6oV+GQ9fHMrFA1Sdagsa6yxXmUWdaCYaA9wyC9FSL
-	 aJZGme5/MVAa14X4MQ8BeBM3N5EdavQzOJLRJCqs=
-Date: Mon, 9 Jun 2025 16:52:14 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Pasha
- Tatashin <pasha.tatashin@soleen.com>, <nh-open-source@amazon.com>, Baoquan
- He <bhe@redhat.com>, Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: Re: [PATCH v4] kexec: Enable CMA based contiguous allocation
-Message-Id: <20250609165214.784b399237d37b3e6fd97f4c@linux-foundation.org>
-In-Reply-To: <f609d5a0-99d5-4328-8a18-00f6a9e1a48c@amazon.com>
-References: <20250521152934.48841-1-graf@amazon.com>
-	<f609d5a0-99d5-4328-8a18-00f6a9e1a48c@amazon.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+	by nyc.source.kernel.org (Postfix) with ESMTP id 9471EA50C11;
+	Tue, 10 Jun 2025 05:44:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528DEC4CEEF;
+	Tue, 10 Jun 2025 05:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749534292;
+	bh=W+Gg4WOhK9awSlR/caQgQ38dLinN024eBtGS/ksxClw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kxupDTQ06zfuopf4OU2zbSpo9JenUV3xucU30QvDP3xxaPrjvCDxrwJACEPiTBqtu
+	 je6iLXmTkqxL0PPqW/aPIJeGMzq1pdHN15ydbQsMxFvyIghPwMjbK9yy6ONVJK68ju
+	 blTglhxSnHf106jy9zd85Ffu+pkKFbLe35sO/zJDrVA3Kn6PH0i9LMhAGid9BIQzbp
+	 NNN5MUja6ouaXVXwQsA8bUVd8iAGM2m90R3VxBWXpx2hpqLZ7F3uugzjvJ+EIO6aH/
+	 xrkkT9fqv+6ka/RsRcFUZ20yOpd82LoHW+0ShrA2xtbwobV+9Ahc74WlnmyNsg7YXh
+	 uvufsTllM9Y6w==
+Date: Tue, 10 Jun 2025 08:44:45 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+Message-ID: <aEfGTXrsEL5-DuF1@kernel.org>
+References: <20250605171143.76963-1-pratyush@kernel.org>
+ <aEKhF3HcrvG77Ogb@kernel.org>
+ <mafs0jz5osutx.fsf@kernel.org>
+ <aEc30BoLE9HRxiZm@kernel.org>
+ <CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250610_005218_970536_3E6984CC 
-X-CRM114-Status: UNSURE (   9.32  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250609_224453_623256_1EA49988 
+X-CRM114-Status: GOOD (  39.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,18 +80,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 9 Jun 2025 09:03:10 +0200 Alexander Graf <graf@amazon.com> wrote:
-
-> > Signed-off-by: Alexander Graf <graf@amazon.com>
+On Mon, Jun 09, 2025 at 04:07:50PM -0400, Pasha Tatashin wrote:
+> On Mon, Jun 9, 2025 at 3:36 PM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > Hi Pratyush,
+> >
+> > On Fri, Jun 06, 2025 at 06:23:06PM +0200, Pratyush Yadav wrote:
+> > > Hi Mike,
+> > >
+> > > On Fri, Jun 06 2025, Mike Rapoport wrote:
+> > >
+> > > > On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
+> > > >> From: Pratyush Yadav <ptyadav@amazon.de>
+> > > >>
+> > > >> --- a/kernel/kexec_handover.c
+> > > >> +++ b/kernel/kexec_handover.c
+> > > >> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+> > > >>  }
+> > > >>
+> > > >>  /* almost as free_reserved_page(), just don't free the page */
+> > > >> -static void kho_restore_page(struct page *page)
+> > > >> +static void kho_restore_page(struct page *page, unsigned int order)
+> > > >>  {
+> > > >> -  ClearPageReserved(page);
+> > > >
+> > > > So now we don't clear PG_Reserved even on order-0 pages? ;-)
+> > >
+> > > We don't need to. As I mentioned in the commit message as well,
+> > > PG_Reserved is never set for KHO pages since they are reserved with
+> > > MEMBLOCK_RSRV_NOINIT, so memmap_init_reserved_pages() skips over them.
+> >
+> > You are right, I missed it.
+> >
+> > > That said, while reading through some of the code, I noticed another
+> > > bug: because KHO reserves the preserved pages as NOINIT, with
+> > > CONFIG_DEFERRED_STRUCT_PAGE_INIT == n, all the pages get initialized
+> > > when memmap_init_range() is called from setup_arch (paging_init() on
+> > > x86). This happens before kho_memory_init(), so the KHO-preserved pages
+> > > are not marked as reserved to memblock yet.
+> > >
+> > > With deferred page init, some pages might not get initialized early, and
+> > > get initialized after kho_memory_init(), by which time the KHO-preserved
+> > > pages are marked as reserved. So, deferred_init_maxorder() will skip
+> > > over those pages and leave them uninitialized.
+> > >
+> > > So we need to either also call init_deferred_page(), or remove the
+> > > memblock_reserved_mark_noinit() call in deserialize_bitmap(). And TBH, I
+> > > am not sure why KHO pages even need to be marked noinit in the first
+> > > place. Probably the only benefit would be if a large chunk of memory is
+> > > KHO-preserved, the pages can be initialized later on-demand, reducing
+> > > bootup time a bit.
+> >
+> > One benefit is performance indeed, because in not deferred case the
+> > initialization of reserved pages in memmap_init_reserved_pages() is really
+> > excessive.
+> >
+> > But more importantly, if we remove memblock_reserved_mark_noinit(), with
+> > CONFIG_DEFERRED_STRUCT_PAGE_INIT we'd loose page->private because the
+> > struct page will be cleared after kho_mem_deserialize().
+> >
+> > > What do you think? Should we drop noinit or call init_deferred_page()?
+> > > FWIW, my preference is to drop noinit, since init_deferred_page() is
+> > > __meminit and we would have to make sure it doesn't go away after boot.
+> >
+> > We can't drop noinit and calling init_deferred_page() after boot just won't
+> > work because it uses memblock to find the page's node and memblock is gone
+> > after init.
+> >
+> > The simplest short-term solution is to disable KHO when
+> > CONFIG_DEFERRED_STRUCT_PAGE_INIT is set and then find an efficient way to
+> > make it all work together.
 > 
-> 
-> Ping? Not seeing this patch in Linus' master tree :)
-> 
+> This is what I've done in LUOv3 WIP:
+> https://github.com/soleen/linux/commit/3059f38ac0a39a397873759fb429bd5d1f8ea681
 
-Sorry, I parked this because of messy cross-tree dependencies and by
-the time I could bring it back, it was too late to get decent -next
-testing.
+I think it should be the other way around, KHO should depend on
+!DEFERRED_STRUCT_PAGE_INIT.
+ 
+> We will need to teah KHO to work with deferred struct page init. I
+> suspect, we could init preserved struct pages and then skip over them
+> during deferred init.
 
-And now arch/riscv/kernel/elf_kexec.c has disappeared.  So can you
-please redo and resend?
+We could, but with that would mean we'll run this before SMP and it's not
+desirable. Also, init_deferred_page() for a random page requires
+finding its node with early_pfn_to_nid() that's also suboptimal. 
+ 
+> Pasha
+> 
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+
+-- 
+Sincerely yours,
+Mike.
 
