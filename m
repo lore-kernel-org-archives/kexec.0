@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E465C71136
-	for <kexec@archiver.kernel.org>; Tue, 10 Jun 2025 10:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59005C61DB2
+	for <kexec@archiver.kernel.org>; Tue, 10 Jun 2025 10:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aNPj02dVY1xB+zciNiRCIU1FWBg//bUySFYFRA2kMAo=; b=02f5/S1qrxES7w3aUH+HdAmosn
-	HAJHpBvIe3mbEVfDUCcBWONotZZDko43fkSnVgtyCHOJda18z1oXKVfOZmjrstmkFgBtFCeu1BPyv
-	vij66AoEEwZVj2kHIC/lukeMXhbGajaiYP68Cpk5mPHnwX/h34dLDvq6g17HI2yqilphVU1S6Pn0V
-	dwqfmBU9VYuHKJy2KKqQNsX+Jjrx1qVN4jerkNsEtjg7LHT/f9ODmK5FbnnuiDbtmTwRMpLX6v6bP
-	85s5EHhWqltXs8e8S+Ekk1ygs8TuFbX0EY4KSUdMDDwV9KXaEIBWsdLyetChTf1nDmCC0SxzLRhYK
-	11xy8vbg==;
+	bh=GeWmpAQa4/VfpxBdOZWIGC6T6F5NP0NhtqiaRrxp2YE=; b=D9OKwyXx+ovPq24nxGsEtwd/4a
+	FRTd6HbHWWVeCKfx7wV/BCYAozgtIPqlNW4zkuDMKw/bHMi+x1o4TbvxQnq7Is5GP6eZ85hDhmuFA
+	VXfcV0Et0Vvd8Kc8lcJttQoOCulY2ybOcr+uW49KP7iYrZq0HlaQo3cH9cZgQkA2ZrDIYtr3MD5s/
+	XMpqcXlSQGEYlEkDsrQYFlsbeJtE/oIPMpH4DwWysZ2z6rONurMg5E7WhstcAC3xmGbW6ZPSEAGjX
+	PtSjcXAK1z7bFCn+qJuHJfytYCSiAK5ERH6QrpEXSwbM5/NUHis4o3iMUKD2Th0eGflc/ZZw1LrQK
+	qzuJNv+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOwf0-00000006Y9N-2xnu;
-	Tue, 10 Jun 2025 10:56:54 +0000
+	id 1uOwf2-00000006YDL-3PNZ;
+	Tue, 10 Jun 2025 10:56:56 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOvlc-00000006QdC-19ji
+	id 1uOvll-00000006Qhw-2Nlr
 	for kexec@lists.infradead.org;
-	Tue, 10 Jun 2025 09:59:41 +0000
+	Tue, 10 Jun 2025 09:59:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749549579;
+	s=mimecast20190719; t=1749549588;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aNPj02dVY1xB+zciNiRCIU1FWBg//bUySFYFRA2kMAo=;
-	b=dC+X6Pbf29A7oHw/43julu1Vic4j2XA2hdNjis2KEUtc1gLQlymdiD0I70pNlk+0PlO73Z
-	McZFFp1GRT8aJOKmdk38jlyi0OxGMP9nNBRT+aLPbqSL2keN4gI6AMC256SrekKjv0C2YV
-	SI/OQ2hbiUaV8uGhJ7b5P+Ftna9mDtQ=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=GeWmpAQa4/VfpxBdOZWIGC6T6F5NP0NhtqiaRrxp2YE=;
+	b=P6hzzeuCk4XKfZd/xE6LP05FBwfRG0EnuKMRH5IfuarjeuMlxkpB95jAFN4S4nB6HZ/BR6
+	JupC+MSEgVm+eI51FbFZorLrBchC/8rwn9oLowf511Fzyk3IEqxhOx03xEyo83oC+E9fH2
+	4oT9vDCwou3LgqjAYGETIl4cNEDsAN8=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-620-ZSLG7znEMT-DVGJQeQyjDA-1; Tue, 10 Jun 2025 05:58:13 -0400
-X-MC-Unique: ZSLG7znEMT-DVGJQeQyjDA-1
-X-Mimecast-MFC-AGG-ID: ZSLG7znEMT-DVGJQeQyjDA_1749549492
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b26eec6da92so4967994a12.1
-        for <kexec@lists.infradead.org>; Tue, 10 Jun 2025 02:58:13 -0700 (PDT)
+ us-mta-643-0YhqNqaIPlKXjRi8ACyGig-1; Tue, 10 Jun 2025 05:58:24 -0400
+X-MC-Unique: 0YhqNqaIPlKXjRi8ACyGig-1
+X-Mimecast-MFC-AGG-ID: 0YhqNqaIPlKXjRi8ACyGig_1749549504
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235e7550f7bso50969415ad.3
+        for <kexec@lists.infradead.org>; Tue, 10 Jun 2025 02:58:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749549492; x=1750154292;
+        d=1e100.net; s=20230601; t=1749549504; x=1750154304;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aNPj02dVY1xB+zciNiRCIU1FWBg//bUySFYFRA2kMAo=;
-        b=GvUdn3FTCxNcbD8/HU3XwFRopNWxjzA39vKQ4mBd7xBepeglg9gINesjo0wjf7E3NA
-         iwR1ZU/qitVl55MFVGptTlnXahYI5O3x55CJ+7P1YsfG78GOfcVsm2DnxE5NuIs53t1M
-         5XZSpHzeB4MJweov3cvOYBXKLlw5HFQ+JlxLd3xWNM7FW4tc9RjLi3G08974dAWHXD2N
-         75gGDis4dLg65CCUVb3BmbrsMSL3pRBAL+CI/leJdhNDO61D6p09+F5jX7AN3vSqUQxf
-         CXgC+nrRAPFxnUkq/quG2jcEPfJdv2RQTcmzVvFEDXMJzKYUj/ogVNgPw4AwPrJKwabW
-         GkUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVq2hKQIBGrAW25eIT2otrVMS/s1a8Mtt91ZAkb0nKcOhmh+B4wF5zLtVQJWLsLfF7jmP+NaQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzhBvs0BNbRTgWlX+WfiHI9IkLFcEDUWRhvrv74ErfbOpCZWUrY
-	0CRq+2+MgSlngcyRDOO5HCmcShYjzsuldHuFDn5QX0qwleqPkR1xeObEWwbWuqFD6ru0zF/eJFN
-	WToJwRl22AvQbmiFyq9wngydefwqo55uQMuzkHocTuO6EH7Atskm+4DwIdHXRQw==
-X-Gm-Gg: ASbGncsX3U57ZF89SQesDS5ZkTux3ofnX4Q1AJWuHqFSRNSGk56tBqHW+2sR3SQcufl
-	7k299M7QnGde3Fg/MHID5v9yatVdofo9K28TCp2qvS7bRxSbbWUN4RlCc45vWnmFpND7T73gISh
-	05xPYYq6ibE4HcMnSvBME+JIaCTmxNplcFPraEmdFxuhc1YeXwk45QizYcQRQBJO4uFuRk5Z3lK
-	QS74Z/PIae07VcUOeOy+/Ypiz99F2pYWu5fXhFPaRRd8iQYEgMicghXz1aAtWC4AUjmrAGN4M3L
-	3sLD7XdIifRGiSs2GBDg/tltWKMBz3g=
-X-Received: by 2002:a17:902:f54e:b0:234:7837:91de with SMTP id d9443c01a7336-23635c9d9abmr37337255ad.26.1749549492274;
-        Tue, 10 Jun 2025 02:58:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsNci/01TruAXRHV4E+9mlTlhmEapO7UMAGJwnohjb8LbIDfR7gZ3ssNcC6uS+/c2sJu2AeA==
-X-Received: by 2002:a17:902:f54e:b0:234:7837:91de with SMTP id d9443c01a7336-23635c9d9abmr37337055ad.26.1749549491911;
-        Tue, 10 Jun 2025 02:58:11 -0700 (PDT)
+        bh=GeWmpAQa4/VfpxBdOZWIGC6T6F5NP0NhtqiaRrxp2YE=;
+        b=izxpd+0ahRDIPccoNtCfZM5z73iKtCanOdsZMZvUMRYVKwfOLUEQzDtdUNCrTtv2H2
+         yQd90QKcW0gOZBaPEHPz8gM+eHWe3VQ5FxXJ23Ddiv3Qj6tOSTzW7GqtbBpcr9cnbfSP
+         HT/a7OjYqIN39k0d/mC4KPKca8zg+ZEvAyWtW8JyGLo073Hj5WrccVOZAwulyICC8Hux
+         t1ibQd1i3w3J7Gvq8k6bB7tp6rvNIZz/zQQtceZI37eZHniNjkuUesULDo+3R6Eiolh5
+         LJ58Oi+fhi1RjnsDqoQ0XudwO2m755ZELLKE+EWu3VmBEn0nZZylg8FNgO9Y2I4Ky5Ud
+         mQpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPImK9prRKV4JRZ8zYPNaetPwFi3H6PKX+w/dX790yQBurxSGAFyWFss+9mTZR1zYAbO/++g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxkTzeVoGkvABECXPSRwVqJAo6K0hO7u5q6FYcVY7s8fK4aFA63
+	pjA5WL/LAuCngAk48OUckizoWxwnJQl3DyaVH8SStr48H4yB/Gs1RyrUpEhi1r8oT9AhNfKqDRO
+	0E92CqGHMCgyFbbTjIYAqvgAWzbOF5+mKVwo7bhDpXXg24Z1bbRQ3QziUWiYbNw==
+X-Gm-Gg: ASbGnctuiV7B758Fzcr3E7vrzC8ijy5Ac9UsEXylTH4//FrnriDaKNNZfjalpheL4QP
+	CXKa3xy//74AWcmfRLeAWotLu2WkiOaLrhg1bIWEh6gPYkm2zei0B6nRiMKR79wc4JLLn8RNMEG
+	Bl3h9Z5bImeubJ9zdBHdAHkIcL030o7Y3cWqI1O4Y/ZPp4LsY8ACv3n15jcXFh31jkbtURjyH7U
+	AilhUCZoWDsSB5BHcgGQy63OvwP/umuZg+5dACnJVw0NUjWKFIsNqYzaJbVmAbCXqKnLYtstGsn
+	BuNftrqkR9EfDuqRqun4DGiuvP/faek=
+X-Received: by 2002:a17:903:1a0b:b0:234:ef42:5d75 with SMTP id d9443c01a7336-23601d24704mr213033495ad.20.1749549503908;
+        Tue, 10 Jun 2025 02:58:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRmQzZJUKClSIb9BG7S1rj038u41m4kOFMJwb7zY4oh1IHcVX1nLmYOvP2Yjo21IiqsDloFw==
+X-Received: by 2002:a17:903:1a0b:b0:234:ef42:5d75 with SMTP id d9443c01a7336-23601d24704mr213033245ad.20.1749549503563;
+        Tue, 10 Jun 2025 02:58:23 -0700 (PDT)
 Received: from localhost.localdomain ([118.148.112.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603405f5fsm68189085ad.172.2025.06.10.02.58.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603405f5fsm68189085ad.172.2025.06.10.02.58.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:58:11 -0700 (PDT)
+        Tue, 10 Jun 2025 02:58:23 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
 To: yamazaki-msmt@nec.com,
 	k-hagio-ab@nec.com,
@@ -82,21 +82,21 @@ To: yamazaki-msmt@nec.com,
 Cc: aravinda@linux.vnet.ibm.com,
 	devel@lists.crash-utility.osci.io,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCH RFC][makedumpfile 05/10] Export necessary btf/kallsyms functions to eppic extension
-Date: Tue, 10 Jun 2025 21:57:38 +1200
-Message-ID: <20250610095743.18073-6-ltao@redhat.com>
+Subject: [PATCH RFC][makedumpfile 08/10] Enable page filtering for dwarf eppic
+Date: Tue, 10 Jun 2025 21:57:41 +1200
+Message-ID: <20250610095743.18073-9-ltao@redhat.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250610095743.18073-1-ltao@redhat.com>
 References: <20250610095743.18073-1-ltao@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rUgN0_0kdrluVVWAtBNBhnnd6K_Mq0ixTLjKLG5FE9I_1749549492
+X-Mimecast-MFC-PROC-ID: UDVw-uRUCwFaAOfZjE6xCP-ojIiF-t2NZ46-Obj-oJw_1749549504
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250610_025940_380674_8B0739E3 
-X-CRM114-Status: GOOD (  11.71  )
+X-CRM114-CacheID: sfid-20250610_025949_702051_2EA08B9F 
+X-CRM114-Status: GOOD (  16.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,78 +111,151 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Since dwarf and btf have different apiops, so making it as parameter to
+eppic_init, and initialized respectively.
+
 Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
- erase_info.c | 16 +++++++++++++++-
- erase_info.h | 14 ++++++++++++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ erase_info.c      |  8 +++++---
+ extension_eppic.c | 34 +++++++++++++++++++++++++++++++---
+ extension_eppic.h |  6 ++++--
+ 3 files changed, 40 insertions(+), 8 deletions(-)
 
 diff --git a/erase_info.c b/erase_info.c
-index d68e1a2..9ec1813 100644
+index 9ec1813..eeb2c3b 100644
 --- a/erase_info.c
 +++ b/erase_info.c
-@@ -20,6 +20,8 @@
- #include "print_info.h"
- #include "dwarf_info.h"
- #include "erase_info.h"
-+#include "kallsyms.h"
-+#include "btf.h"
+@@ -2202,7 +2202,7 @@ get_die_member_all(unsigned long long die_off, int index, long *offset,
  
- #include <dlfcn.h>
+ /* Process the eppic macro using eppic library */
+ static int
+-process_eppic_file(char *name_config)
++process_eppic_file(char *name_config, bool is_btf)
+ {
+ 	void *handle;
+ 	void (*eppic_load)(char *), (*eppic_unload)(char *);
+@@ -2221,7 +2221,9 @@ process_eppic_file(char *name_config)
+ 	 * Support specifying eppic macros in makedumpfile.conf file
+ 	 */
  
-@@ -36,7 +38,19 @@ struct call_back eppic_cb = {
- 	&get_die_member_all,
- 	&get_die_nfields_all,
- 	&get_symbol_addr_all,
--	&update_filter_info_raw
-+	&update_filter_info_raw,
-+	&get_structure_size,
-+	&get_member_offset,
-+	/**********************/
-+	&update_filter_pages_info,
-+	&get_kallsyms_value_by_name,
-+	&get_struct_member_by_name,
-+	&get_type_member_by_index,
-+	&get_type_size_by_name,
-+	&get_en_by_uniq_id,
-+	&resolve_typedef,
-+	&get_btf_type_by_type_id,
-+	&id_to_uniq_id,
- };
+-	eppic_init = dlsym(handle, "eppic_init");
++	if (!is_btf) {
++		eppic_init = dlsym(handle, "eppic_dwarf_init");
++	}
+ 	if (!eppic_init) {
+ 		ERRMSG("Could not find eppic_init function\n");
+ 		return FALSE;
+@@ -2368,7 +2370,7 @@ gather_filter_info(void)
+ 		ret = process_config_file(info->name_filterconfig);
  
+ 	if (info->name_eppic_config)
+-		ret &= process_eppic_file(info->name_eppic_config);
++		ret &= process_eppic_file(info->name_eppic_config, false);
  
-diff --git a/erase_info.h b/erase_info.h
-index 4552dfc..6797ed1 100644
---- a/erase_info.h
-+++ b/erase_info.h
-@@ -19,6 +19,7 @@
- #ifndef _ERASE_INFO_H
- #define _ERASE_INFO_H
+ 	/*
+ 	 * Remove modules symbol information, we dont need now.
+diff --git a/extension_eppic.c b/extension_eppic.c
+index c4a13b9..59178e5 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -23,8 +23,10 @@
  
-+#include "btf.h"
- #define MAX_SIZE_STR_LEN (26)
+ #include "makedumpfile.h"
+ #include "extension_eppic.h"
++#include "eppic_maple.h"
+ 
+ static int apigetctype(int, char *, type_t *);
++struct call_back *cb;
  
  /*
-@@ -52,6 +53,19 @@ struct call_back {
- 	int (*get_die_nfields_all)(unsigned long long die_off);
- 	unsigned long long (*get_symbol_addr_all)(char *symname);
- 	int (*update_filter_info_raw)(unsigned long long, int, int);
-+	long (*get_structure_size)(char *, int);
-+	long (*get_member_offset)(char *, char *, int);
-+	/********************************/
-+	int (*update_filter_pages_info)(unsigned long, unsigned long);
-+	uint64_t (*get_kallsyms_value_by_name)(char *);
-+	uint32_t (*get_struct_member_by_name)(char *, char *, struct member_info *);
-+	bool (*get_type_member_by_index)(uint64_t, int, struct member_info *);
-+	uint32_t (*get_type_size_by_name)(char *, int, uint32_t *);
-+	struct name_entry *(*get_en_by_uniq_id)(uint32_t, struct btf_type *);
-+	void (*resolve_typedef)(struct name_entry *, struct name_entry **, struct btf_type *);
-+	int (*get_btf_type_by_type_id)(struct btf_file *, uint32_t,
-+				   struct btf_type *, struct name_entry **);
-+	uint32_t (*id_to_uniq_id)(uint32_t, struct btf_file *);
- };
+  * Most of the functions included in this file performs similar
+@@ -416,7 +418,7 @@ apifindsym(char *p)
+ 	return NULL;
+ }
  
- extern struct erase_info	*erase_info;
+-apiops icops = {
++apiops dwarf_icops = {
+ 	apigetmem,
+ 	apiputmem,
+ 	apimember,
+@@ -449,17 +451,27 @@ eppic_memset(VALUE_S *vaddr, VALUE_S *vch, VALUE_S *vlen)
+ 	return eppic_makebtype(1);
+ }
+ 
++VALUE_S *
++eppic_filter_pages(VALUE_S *p, VALUE_S *n)
++{
++	unsigned long pfn = eppic_getval(p);
++	unsigned long num = eppic_getval(n);
++
++	UPDATE_FILTER_PAGE_INFO(pfn, num);
++	return eppic_makebtype(1);
++}
++
+ 
+ /* Initialize eppic */
+ int
+-eppic_init(void *fun_ptr)
++eppic_init(void *fun_ptr, apiops *ops, bool is_btf)
+ {
+ 	cb = (struct call_back *)fun_ptr;
+ 
+ 	if (eppic_open() >= 0) {
+ 
+ 		/* Register call back functions */
+-		eppic_apiset(&icops, 3, sizeof(long), 0);
++		eppic_apiset(ops, 3, sizeof(long), 0);
+ 
+ 		/* set the new function callback */
+ 		eppic_setcallback(reg_callback);
+@@ -468,8 +480,24 @@ eppic_init(void *fun_ptr)
+ 		eppic_builtin("int memset(char *, int, int)",
+ 				(bf_t *)eppic_memset);
+ 
++		if (maple_init(is_btf) == FALSE)
++			return 1;
++
++		eppic_builtin("int maple_count(char *)",
++				(bf_t *)maple_count);
++
++		eppic_builtin("unsigned long maple_elem(char *, int)",
++				(bf_t *)maple_elem);
++
++		eppic_builtin("unsigned long filter_pages(unsigned long, unsigned long)",
++				(bf_t *)eppic_filter_pages);
++
+ 		return 0;
+ 	}
+ 	return 1;
+ }
+ 
++int eppic_dwarf_init(void *fun_ptr)
++{
++	return eppic_init(fun_ptr, &dwarf_icops, false);
++}
+diff --git a/extension_eppic.h b/extension_eppic.h
+index 08f1db0..ff92f01 100644
+--- a/extension_eppic.h
++++ b/extension_eppic.h
+@@ -79,8 +79,7 @@ do { \
+ 		fprintf(stderr, x); \
+ } while (0)
+ 
+-
+-struct call_back *cb;
++extern struct call_back *cb;
+ 
+ #define GET_DOMAIN_ALL cb->get_domain_all
+ #define READMEM cb->readmem
+@@ -92,5 +91,8 @@ struct call_back *cb;
+ #define GET_DIE_NFIELDS_ALL cb->get_die_nfields_all
+ #define GET_SYMBOL_ADDR_ALL cb->get_symbol_addr_all
+ #define UPDATE_FILTER_INFO_RAW cb->update_filter_info_raw
++#define UPDATE_FILTER_PAGE_INFO cb->update_filter_pages_info
++
++int eppic_init(void *, apiops *, bool);
+ 
+ #endif /* _EXTENSION_EPPIC_H */
 -- 
 2.47.0
 
