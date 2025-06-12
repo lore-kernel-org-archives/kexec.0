@@ -4,63 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7592C71136
-	for <kexec@archiver.kernel.org>; Thu, 12 Jun 2025 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 587FEC71143
+	for <kexec@archiver.kernel.org>; Thu, 12 Jun 2025 13:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=; b=OPoO4v8wtljN3fuM1hXmkzK0zu
-	+N1Vq/m+QCs1x2gfqU8Za7U/wYqs56J5cdJiqb/MWeqQo8cSif8tR1QMuMWEE0yNEWoigXPgvkJwW
-	Zug7K5TXyckvTlBRJXPAdWHxjHX9AQJVktTs3tif6zRhfXcBkeRCxW4JcAVzjjXpK9KsytggeD10L
-	bkH2f0g+ZlP8RziCqflQnRaB5ttplLDsYJ9RzY7OYBd9pmOT5UqSloyHjapF+BlXKMHhC+NBqGLvQ
-	R0aUSR126A29uvImefvxeyNj6kH7tGzlJ5JqOoMINhdheqSJWsASwmo3Keo9v5DbhdXekM1UzIK79
-	wRl8Inog==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=; b=hVLApTcARIf/93F7zo4bePH0gf
+	3jlpFlpUuQoqTA2+aMyn0yU8ea1Q85/MQ/9JRG96JoUoK8AAgqR2ch7sEjQhbUm3JzO6a0VyKp/ZM
+	JWiVij8DlNBbc76wJu1Aq7IYh69z3fjHhbgj/VCl+FUtpwVYcLyFrDKK9WxBkFThFuUtUcbVO/Xv5
+	PLMY8l1JvO5exx7vDUQetbRLEGNDtM/fZFXsgkggwJxpjiepuvbXk9pbtenRPYUs/wvCv1Z2eijI1
+	Wavgw8lg89S9k72MBKo1j4OM03O7m8i3ml9e9DL4Ry9NsJk8G7KvhUoTd5A2eh3/Mf54iGkBnR0Sw
+	MGHFfHGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPhpO-0000000DMGN-1J4J;
-	Thu, 12 Jun 2025 13:18:46 +0000
+	id 1uPhpQ-0000000DMJK-3wvg;
+	Thu, 12 Jun 2025 13:18:48 +0000
 Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPeu2-0000000Cw4b-23dt
+	id 1uPezA-0000000CwtY-2tCb
 	for kexec@lists.infradead.org;
-	Thu, 12 Jun 2025 10:11:23 +0000
+	Thu, 12 Jun 2025 10:16:41 +0000
 Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 9C90C211AD;
-	Thu, 12 Jun 2025 10:11:19 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTP id 1FCB321990;
+	Thu, 12 Jun 2025 10:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
-	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
-	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
+	t=1749723399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
+	b=k6p/ALhF5HRPSo+BcrFp3uGnBwVOQK7ikDwiJCs9fJ6QLnPgPGwsIGgJOCygS1WHUtzSsn
+	HbcEUdE26M3PQ3h+J5bo+9gF1BAJ+4np9zpgpLYkajpQ/xfesYeDeIH+UUzF1Dq5qmcVIL
+	gNdiWmw234+hB0LDhI6NoZes9fKapmA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723079;
+	s=susede2_ed25519; t=1749723399;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
-	6dBVtoQziFKimwCw==
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
+	b=6dZSZLY2h3uqjIRKqk+K6mMc//YiUkR8WcZADFOETmuSblqTy7TT4X3EuAjxrxpMhtKkCs
+	GyUdnKVG37ywPGCQ==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
-	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
-	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
+	t=1749723399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
+	b=k6p/ALhF5HRPSo+BcrFp3uGnBwVOQK7ikDwiJCs9fJ6QLnPgPGwsIGgJOCygS1WHUtzSsn
+	HbcEUdE26M3PQ3h+J5bo+9gF1BAJ+4np9zpgpLYkajpQ/xfesYeDeIH+UUzF1Dq5qmcVIL
+	gNdiWmw234+hB0LDhI6NoZes9fKapmA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723079;
+	s=susede2_ed25519; t=1749723399;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
-	6dBVtoQziFKimwCw==
-Date: Thu, 12 Jun 2025 12:11:19 +0200
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
+	b=6dZSZLY2h3uqjIRKqk+K6mMc//YiUkR8WcZADFOETmuSblqTy7TT4X3EuAjxrxpMhtKkCs
+	GyUdnKVG37ywPGCQ==
+Date: Thu, 12 Jun 2025 12:16:39 +0200
 From: Jiri Bohac <jbohac@suse.cz>
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
@@ -70,32 +74,34 @@ Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	David Hildenbrand <dhildenb@redhat.com>,
 	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+Subject: [PATCH v5 2/5] kdump: implement reserve_crashkernel_cma
+Message-ID: <aEqpBwOy_ekm0gw9@dwarf.suse.cz>
+References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
 X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
 	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[12];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dwarf.suse.cz:mid,localhost:helo]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250612_031122_677451_C8408974 
-X-CRM114-Status: GOOD (  26.07  )
+X-CRM114-CacheID: sfid-20250612_031640_875939_09498B7E 
+X-CRM114-Status: GOOD (  12.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,164 +116,128 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+reserve_crashkernel_cma() reserves CMA ranges for the
+crash kernel. If allocating the requested size fails,
+try to reserve in smaller blocks.
 
-this series implements a way to reserve additional crash kernel
-memory using CMA.
+Store the reserved ranges in the crashk_cma_ranges array
+and the number of ranges in crashk_cma_cnt.
 
-Link to the v1 discussion:
-https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
-See below for the changes since v1 and how concerns from the 
-discussion have been addressed.
-
-Currently, all the memory for the crash kernel is not usable by
-the 1st (production) kernel. It is also unmapped so that it can't
-be corrupted by the fault that will eventually trigger the crash.
-This makes sense for the memory actually used by the kexec-loaded
-crash kernel image and initrd and the data prepared during the
-load (vmcoreinfo, ...). However, the reserved space needs to be
-much larger than that to provide enough run-time memory for the
-crash kernel and the kdump userspace. Estimating the amount of
-memory to reserve is difficult. Being too careful makes kdump
-likely to end in OOM, being too generous takes even more memory
-from the production system. Also, the reservation only allows
-reserving a single contiguous block (or two with the "low"
-suffix). I've seen systems where this fails because the physical
-memory is fragmented.
-
-By reserving additional crashkernel memory from CMA, the main
-crashkernel reservation can be just large enough to fit the
-kernel and initrd image, minimizing the memory taken away from
-the production system. Most of the run-time memory for the crash
-kernel will be memory previously available to userspace in the
-production system. As this memory is no longer wasted, the
-reservation can be done with a generous margin, making kdump more
-reliable. Kernel memory that we need to preserve for dumping is
-normally not allocated from CMA, unless it is explicitly
-allocated as movable. Currently this is only the case for memory
-ballooning and zswap. Such movable memory will be missing from
-the vmcore. User data is typically not dumped by makedumpfile.
-When dumping of user data is intended this new CMA reservation
-cannot be used.
-
-There are five patches in this series:
-
-The first adds a new ",cma" suffix to the recenly introduced generic
-crashkernel parsing code. parse_crashkernel() takes one more
-argument to store the cma reservation size.
-
-The second patch implements reserve_crashkernel_cma() which
-performs the reservation. If the requested size is not available
-in a single range, multiple smaller ranges will be reserved.
-
-The third patch updates Documentation/, explicitly mentioning the
-potential DMA corruption of the CMA-reserved memory.
-
-The fourth patch adds a short delay before booting the kdump
-kernel, allowing pending DMA transfers to finish.
-
-The fifth patch enables the functionality for x86 as a proof of
-concept. There are just three things every arch needs to do:
-- call reserve_crashkernel_cma()
-- include the CMA-reserved ranges in the physical memory map
-- exclude the CMA-reserved ranges from the memory available
-  through /proc/vmcore by excluding them from the vmcoreinfo
-  PT_LOAD ranges.
-
-Adding other architectures is easy and I can do that as soon as
-this series is merged.
-
-With this series applied, specifying
-	crashkernel=100M craskhernel=1G,cma
-on the command line will make a standard crashkernel reservation
-of 100M, where kexec will load the kernel and initrd.
-
-An additional 1G will be reserved from CMA, still usable by the
-production system. The crash kernel will have 1.1G memory
-available. The 100M can be reliably predicted based on the size
-of the kernel and initrd.
-
-The new cma suffix is completely optional. When no
-crashkernel=size,cma is specified, everything works as before.
-
----
-Changes since v4:
-
-- v5 is identical to v4 for all patches except patch 4/5,
-  where v5 incorporates feedback from David Hildenbrand
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 
 ---
 Changes since v3:
-
-- updated for 6.15
-- reworked the delay patch:
-  - delay changed to 10 s based on David Hildenbrand's comments
-  - constant changed to variable so that the delay can be easily made
-    configurable in the future
-- made reserve_crashkernel_cma() return early when cma_size == 0
-  to avoid printing out the 0-sized cma allocation
+- make reserve_crashkernel_cma() return early when cma_size == 0
+  to avoid printing out the 0 cma-allocated size
 
 ---
-Changes since v2:
+ include/linux/crash_reserve.h | 12 ++++++++
+ kernel/crash_reserve.c        | 52 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
-based on feedback from Baoquan He and David Hildenbrand:
-- kept original formatting of suffix_tbl[]
-- updated documentation to mention movable pages missing from vmcore
-- fixed whitespace in documentation
-- moved the call crash_cma_clear_pending_dma() after
-  machine_crash_shutdown() so that non-crash CPUs and timers are
-  shut down before the delay
-
----
-Changes since v1:
-
-The key concern raised in the v1 discussion was that pages in the
-CMA region may be pinned and used for a DMA transfer, potentially
-corrupting the new kernel's memory. When the cma suffix is used, kdump
-may be less reliable and the corruption hard to debug
-
-This v2 series addresses this concern in two ways:
-
-1) Clearly stating the potential problem in the updated
-Documentation and setting the expectation (patch 3/5)
-
-Documentation now explicitly states that:
-- the risk of kdump failure is increased
-- the CMA reservation is intended for users who can not or don't
-  want to sacrifice enough memory for a standard crashkernel reservation
-  and who prefer less reliable kdump to no kdump at all
-
-This is consistent with the documentation of the
-crash_kexec_post_notifiers option, which can also increase the
-risk of kdump failure, yet may be the only way to use kdump on
-some systems. And just like the crash_kexec_post_notifiers
-option, the cma crashkernel suffix is completely optional:
-the series has zero effect when the suffix is not used.
-
-2) Giving DMA time to finish before booting the kdump kernel
-   (patch 4/5)
-
-Pages can be pinned for long term use using the FOLL_LONGTERM
-flag. Then they are migrated outside the CMA region. Pinning
-without this flag shows that the intent of their user is to only
-use them for short-lived DMA transfers. 
-
-Delay the boot of the kdump kernel when the CMA reservation is
-used, giving potential pending DMA transfers time to finish.
-
-Other minor changes since v1:
-- updated for 6.14-rc2
-- moved #ifdefs and #defines to header files
-- added __always_unused in parse_crashkernel() to silence a false
-  unused variable warning
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index e784aaff2f5a..7b44b41d0a20 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -13,12 +13,24 @@
+  */
+ extern struct resource crashk_res;
+ extern struct resource crashk_low_res;
++extern struct range crashk_cma_ranges[];
++#if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
++#define CRASHKERNEL_CMA
++#define CRASHKERNEL_CMA_RANGES_MAX 4
++extern int crashk_cma_cnt;
++#else
++#define crashk_cma_cnt 0
++#define CRASHKERNEL_CMA_RANGES_MAX 0
++#endif
++
  
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base,
+ 		unsigned long long *low_size, unsigned long long *cma_size,
+ 		bool *high);
+ 
++void __init reserve_crashkernel_cma(unsigned long long cma_size);
++
+ #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
+ #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index a8861f3f64fe..ae32ea707678 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -14,6 +14,8 @@
+ #include <linux/cpuhotplug.h>
+ #include <linux/memblock.h>
+ #include <linux/kmemleak.h>
++#include <linux/cma.h>
++#include <linux/crash_reserve.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -469,6 +471,56 @@ void __init reserve_crashkernel_generic(unsigned long long crash_size,
+ #endif
+ }
+ 
++struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
++#ifdef CRASHKERNEL_CMA
++int crashk_cma_cnt;
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
++	unsigned long long reserved_size = 0;
++
++	if (!cma_size)
++		return;
++
++	while (cma_size > reserved_size &&
++	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
++
++		struct cma *res;
++
++		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
++				       "crashkernel", &res)) {
++			/* reservation failed, try half-sized blocks */
++			if (request_size <= PAGE_SIZE)
++				break;
++
++			request_size = roundup(request_size / 2, PAGE_SIZE);
++			continue;
++		}
++
++		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
++		crashk_cma_ranges[crashk_cma_cnt].end =
++			crashk_cma_ranges[crashk_cma_cnt].start +
++			cma_get_size(res) - 1;
++		++crashk_cma_cnt;
++		reserved_size += request_size;
++	}
++
++	if (cma_size > reserved_size)
++		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
++			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
++	else
++		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
++			reserved_size >> 20, crashk_cma_cnt);
++}
++
++#else /* CRASHKERNEL_CMA */
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	if (cma_size)
++		pr_warn("crashkernel CMA reservation not supported\n");
++}
++#endif
++
+ #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
+ static __init int insert_crashkernel_resources(void)
+ {
 
 -- 
 Jiri Bohac <jbohac@suse.cz>
 SUSE Labs, Prague, Czechia
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
 
 
