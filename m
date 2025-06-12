@@ -4,104 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C65B9C71136
-	for <kexec@archiver.kernel.org>; Thu, 12 Jun 2025 13:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27008C71136
+	for <kexec@archiver.kernel.org>; Thu, 12 Jun 2025 23:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=; b=ZkrdIX3OlUVnebxO1uXqHvx4NE
-	0uwIYWVCp8VjwV6bmSQ9kFZjXbfJP1qJXWLfZi/X325ITGvbqkP63oPnC+EpEbo/DWWdrHdBHtJtH
-	5zvejcnSQbRB+k4ushlQXbaX47EDp29obynCsicDstb/42G57iKN+5/yVCIdEdBr7S+Y3zr9H49Xz
-	L6eIVGH3qxs1V8s7aizsyUSOlM2RS6d5oQR4yWD5Vu8oANKMge1Xh9JgrmZgVjZZvS4d26S2qdqCi
-	rBghaJ0l8pCHwzY4kmkziXraPZA4AfSUaXb7Gi29hJa/muDyVLXPvaiLes7/QjTdjihPoipzGFQ3e
-	KXXLThQQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Xk3dVLP87+nqYviJZ2ctEM/qLzksImDb/80f5aGQTOk=; b=Uvwg/SfnzpiuB2Pc29DJ7RGiDG
+	/eDooDoTfFpxP1mT/QafUyPyxAs7lehiK8yDoTEd6GAEfSijCKHtUhhK+ybJBNGGOXIwGBOdnlylQ
+	vYqMQubP6Eurs5PmesEYCIcHEJcOBXT1172cstVa3/AGVq5rVBZKVBa9JIJlP4ObQ9OuzFCT8aKKP
+	BSAdfQFAEeIFQ6k1U3i7Czw2HcDVFAeFphmIxEwX8yEAh2AGi0FG6x1tUgdBpEwEIokAkw18WZS9b
+	azWTTI0flN6TJxszaVeIZxEjiBaM2r2QRigPpBKZXrxv0VpZOO2516dzcfYYMI7HXK/EseVoivW55
+	+wg56leQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPhpU-0000000DMN0-1ly4;
-	Thu, 12 Jun 2025 13:18:53 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1uPreL-0000000Eu24-35dt;
+	Thu, 12 Jun 2025 23:48:01 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPf2T-0000000CxSs-38w1
+	id 1uPrdx-0000000Eu1o-2QLd
 	for kexec@lists.infradead.org;
-	Thu, 12 Jun 2025 10:20:06 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 5410C1F78E;
-	Thu, 12 Jun 2025 10:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=OHifcYbm0bLg2w+WykvPSR9/xw6unhorPdiyUHwzmx1wn3JzITSLQgFVv8CJFJ/S2oScjP
-	rUkpArApgGmaOJW0ZyOQUbMdG60IsIO3XHWzI71UxfYA57d0I2HM2Hl0C2inlWKiDQBbRJ
-	hqHMiJSwgYHCCdE642kwDM8hkAidYfQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723604;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=TZXEjjGqFo78YvVUZ6WXaMpGHKfR5HyuvP2DA2RrscuL2EeKeYKjD6SwZ5FzXu8ClweqQb
-	Ca8DsGHbboXyltBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=OHifcYbm0bLg2w+WykvPSR9/xw6unhorPdiyUHwzmx1wn3JzITSLQgFVv8CJFJ/S2oScjP
-	rUkpArApgGmaOJW0ZyOQUbMdG60IsIO3XHWzI71UxfYA57d0I2HM2Hl0C2inlWKiDQBbRJ
-	hqHMiJSwgYHCCdE642kwDM8hkAidYfQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723604;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uMbqOq33x3vOJ68EATwmEk6cpgBWsvmpKngMdwH5CO0=;
-	b=TZXEjjGqFo78YvVUZ6WXaMpGHKfR5HyuvP2DA2RrscuL2EeKeYKjD6SwZ5FzXu8ClweqQb
-	Ca8DsGHbboXyltBw==
-Date: Thu, 12 Jun 2025 12:20:04 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 5/5] x86: implement crashkernel cma reservation
-Message-ID: <aEqp1LD2og4QeBw9@dwarf.suse.cz>
+	Thu, 12 Jun 2025 23:47:37 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 50D4B629D7;
+	Thu, 12 Jun 2025 23:47:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D951C4CEEA;
+	Thu, 12 Jun 2025 23:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749772056;
+	bh=YUChF49bAYlJOpP0WqVyLSRATHcO/9CPEgcMbqtKARw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XR4I488AZIuD5wUchz+ZxH9y0yZjE8wvKVuscwaBAauVpw9jrrXNa73Dyj71GKWvV
+	 r9ouV0lLueOOIN9f4uYhzrbLLIwkhRBFWpUPSFE0vP2uldYj4e0JWrbEr7HPOoVW2C
+	 4n9FTeAs6nvAA0MghkEuEce3eKDI/r1nKw6kYmxs=
+Date: Thu, 12 Jun 2025 16:47:35 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jiri Bohac <jbohac@suse.cz>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young
+ <dyoung@redhat.com>, kexec@lists.infradead.org, Philipp Rudo
+ <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>, Pingfan Liu
+ <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+ linux-kernel@vger.kernel.org, David Hildenbrand <dhildenb@redhat.com>,
+ Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
+Message-Id: <20250612164735.76a1ea9a156cd254331ffdc4@linux-foundation.org>
+In-Reply-To: <aEqpgDIBndZ5LXSo@dwarf.suse.cz>
 References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,dwarf.suse.cz:mid]
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250612_032005_939057_36293196 
-X-CRM114-Status: GOOD (  17.68  )
+	<aEqpgDIBndZ5LXSo@dwarf.suse.cz>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,113 +71,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Implement the crashkernel CMA reservation for x86:
-- enable parsing of the cma suffix by parse_crashkernel()
-- reserve memory with reserve_crashkernel_cma()
-- add the CMA-reserved ranges to the e820 map for the crash kernel
-- exclude the CMA-reserved ranges from vmcore
+On Thu, 12 Jun 2025 12:18:40 +0200 Jiri Bohac <jbohac@suse.cz> wrote:
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++----
- arch/x86/kernel/setup.c |  5 +++--
- 2 files changed, 25 insertions(+), 6 deletions(-)
+> When re-using the CMA area for kdump there is a risk of pending DMA
+> into pinned user pages in the CMA area.
+> 
+> Pages residing in CMA areas can usually not get long-term pinned and
+> are instead migrated away from the CMA area, so long-term pinning is
+> typically not a concern. (BUGs in the kernel might still lead to
+> long-term pinning of such pages if everything goes wrong.)
+> 
+> Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
+> be the source or destination of a pending DMA transfer.
+> 
+> Although there is no clear specification how long a page may be pinned
+> without FOLL_LONGTERM, pinning without the flag shows an intent of the
+> caller to only use the memory for short-lived DMA transfers, not a transfer
+> initiated by a device asynchronously at a random time in the future.
+> 
+> Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
+> kernel, giving such short-lived DMA transfers time to finish before
+> the CMA memory is re-used by the kdump kernel.
+> 
+> Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
+> a huge margin for a DMA transfer, yet not increasing the kdump time
+> too significantly.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 0be61c45400c..670aa9b8b0f8 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -163,10 +163,10 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 		return NULL;
- 
- 	/*
--	 * Exclusion of crash region and/or crashk_low_res may cause
--	 * another range split. So add extra two slots here.
-+	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
-+	 * may cause range splits. So add extra slots here.
- 	 */
--	nr_ranges += 2;
-+	nr_ranges += 2 + crashk_cma_cnt;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -184,6 +184,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- static int elf_header_exclude_ranges(struct crash_mem *cmem)
- {
- 	int ret = 0;
-+	int i;
- 
- 	/* Exclude the low 1M because it is always reserved */
- 	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
-@@ -198,8 +199,17 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- 	if (crashk_low_res.end)
- 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
- 					      crashk_low_res.end);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
-+					      crashk_cma_ranges[i].end);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-@@ -352,6 +362,14 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 		add_e820_entry(params, &ei);
- 	}
- 
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		ei.addr = crashk_cma_ranges[i].start;
-+		ei.size = crashk_cma_ranges[i].end -
-+			  crashk_cma_ranges[i].start + 1;
-+		ei.type = E820_TYPE_RAM;
-+		add_e820_entry(params, &ei);
-+	}
-+
- out:
- 	vfree(cmem);
- 	return ret;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 870b06571b2e..dcbeba344825 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -573,7 +573,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- 
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long crash_base, crash_size, low_size = 0;
-+	unsigned long long crash_base, crash_size, low_size = 0, cma_size = 0;
- 	bool high = false;
- 	int ret;
- 
-@@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
-@@ -592,6 +592,7 @@ static void __init arch_reserve_crashkernel(void)
- 	}
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- static struct resource standard_io_resources[] = {
+Oh.  10s sounds a lot.  How long does this process typically take?
 
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+It's sad to add a 10s delay for something which some systems will never
+do.  I wonder if there's some simple hack we can add.  Like having a
+global flag which gets set the first time someone pins a CMA page for
+DMA and, if that flag is later found to be unset, skip the delay?  Or
+something else along these lines?
 
 
