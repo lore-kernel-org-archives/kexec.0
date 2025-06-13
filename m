@@ -4,84 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0443FC71136
-	for <kexec@archiver.kernel.org>; Fri, 13 Jun 2025 15:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6B0FC71148
+	for <kexec@archiver.kernel.org>; Fri, 13 Jun 2025 15:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jfez9m8g9eXcV1XbFnxKvEJ2+SXiyTgBGjYdJ4K2MFU=; b=pS6dLyjpsR54Zaw266fHu7R4wr
-	VAGr5wXMzSW0C303v2fqtUD3/VIKzSKB+maElO+dR2c6CMAQora4WKj3HSFURuLycTrvE4YoK8mlu
-	utgWmM4muVBKiWdLm7vqZrFZVRqXTUJ/3zvQRwGJyZNNGOLxQjOJ2a5Zc7f46gTf7DEPwr0zj2qGO
-	QTzRDXuQqu5uNeUpt8IW1M7alA/jQj1mFaOAesqBpoq/0x04xnMVxi074Rf+Ce4z53IfUH60uNEep
-	tGTI1llef/4uIyTqAXesy4mQniers7/LCadtSTI/xvSAEstwSc9JVA3xmkBJ4GBKVSfAcJezTPMir
-	B1N1Yjbg==;
+	bh=F40l49kROy//bCHAH9EyoBv8EvpOtzaWqX+WT7SDDYg=; b=0UX8oTNAF0mFQ/W58o3K31ixJj
+	+o4iVd3Jtr1xrsv4OGEMpz5cFh6xWyGVFHiGlmZp49GkPEsJ6HL5RVguMHkfbVCHqVYCkmpvmhHSh
+	PTz9jwY3S3QdvUgEFEVGGEZyEC2iiwqLBVWcXlhyWdBhDABin68umYcPBitZnIw+lWxi5paS4kdj3
+	euH3bEfV8k4puNEUIHG3152Wa7VoO+QkaaOvflF05PeXCr8c+WrGXA/msFV6gJyGLieNT9SWqoAyU
+	wvmh1cjXjhEH9wNQSd6YkNxWtcxPO9KxpKWLilAtq4CMa0j3vUDnFHH2Qc1vjft6M45x8y+CT6yws
+	OuaWdAlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQ6DK-0000000GqvN-2EcU;
-	Fri, 13 Jun 2025 15:21:06 +0000
-Received: from mail-qk1-x736.google.com ([2607:f8b0:4864:20::736])
+	id 1uQ6KB-0000000GsfL-13mw;
+	Fri, 13 Jun 2025 15:28:11 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQ50L-0000000Gc0y-0RZB
+	id 1uQ5Ii-0000000GgHl-0InI
 	for kexec@lists.infradead.org;
-	Fri, 13 Jun 2025 14:03:38 +0000
-Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-7c5b8d13f73so244235285a.0
-        for <kexec@lists.infradead.org>; Fri, 13 Jun 2025 07:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749823415; x=1750428215; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jfez9m8g9eXcV1XbFnxKvEJ2+SXiyTgBGjYdJ4K2MFU=;
-        b=hZrrxz3eL1L5c6c3J6FlqqyJrRFcXvZDIYpoIYQ3CoUvws35PBkNoLOgr1kwmGoTvq
-         afuMW6CiPCTVGCt0e6GJFBmkoHDBC0voC2m+LoqNaWkZp6R65iOYlccU0DiuF457SQJN
-         JWOt3p/Rg93DmVSKabM4Eth+yDEuddTmHkHbrosgMRCyNfGmcoZ2jVb0pn/IfWc4bga6
-         0fKSmQTatDk6UoBXFF4dBGvLHpUSW/OU91gTze/NIZmksPifC/jzRQ62STgkv9v/DMpW
-         7qCleJi5OulQt5V427ZAdFwxPJWjdMJzMfvmc1zFDLQmF0qrTLnPnRYlnMk8q1VK0YOt
-         aE0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749823415; x=1750428215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jfez9m8g9eXcV1XbFnxKvEJ2+SXiyTgBGjYdJ4K2MFU=;
-        b=NIdkFDTp2w3GPwYmPDC100uFOeiYvgCcP3088xJ2izl5Visz2Z5llD0WkgaA+ovjfH
-         QpfdVSZ7fYTsMLbEiM1rbCS1f/1SB1Bw+t825xgpzFqILLgbJHaXGfHdffIHfXO+MPjf
-         2rCkE4TovyLpkhcB91jEEnmkYLG5e2O7ryBoTk4xNYA1UW7RJBFx5jS4dYrzFg0BD0Ko
-         3jFp7368jKaVB/UwqCTLWbgtxEbxiTmCX33WhgKjzb0GXjA3p6BhPLrLG3YV7S6Eqfg0
-         DqpTLZW3ZJGypMHLdQCIfOy/RaJmMfM6Lzs68SclVyptdKcNosGCmMHomNXS7qN6Y1AA
-         bvZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKkrY3AStsWOKAao00nBTh/RNKOgKVjHEN86gW7k5LPWDBqp6caKggmpKlBbfL39pZBerqug==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyMwzk9YlPlHVfastNmqwGMnn6frmN6nXKNMHyDYxHt/7o9cF5X
-	H9qB6s1ZIXOG4i6BuliFOaKUJ1UjF4cTuEZ9a7BQT213S94kL76CqhYvmXRr/9LYeacbv1Hi7Up
-	1UZT4bNwGYobBU8hEhNzqgFVkjWLWuwByb70KUaH4IQ==
-X-Gm-Gg: ASbGncvWr0hIylPsm6AW3isQ7FrSv8++nZ3GrVKOg6CCmVLVG1RPuNzh4cBMdhU0i3m
-	a6tRKITrosOszGI/JTP+dS8nk7+V0+AuDpSxwfFxLyjDPE4LDZBOyWX2tsndAeSvd1WtueiPSrB
-	q05biCw8GlXY6Nk0wqwC5WF4KIxhGp+fkQt0HgPQka
-X-Google-Smtp-Source: AGHT+IEYtrF3JeWGspY0IB/x4ptpkv6RjcW9iWzE02RebZefIVkzcRcfsOf0K/L+k0JZSqJS9wd1O9/eT89BbTYNJmI=
-X-Received: by 2002:a05:620a:390a:b0:7cd:31ca:d81 with SMTP id
- af79cd13be357-7d3bc47669dmr499779585a.27.1749823414616; Fri, 13 Jun 2025
- 07:03:34 -0700 (PDT)
+	Fri, 13 Jun 2025 14:22:37 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id BAF0A5C6AC5;
+	Fri, 13 Jun 2025 14:20:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FF2C4CEF1;
+	Fri, 13 Jun 2025 14:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749824555;
+	bh=mFrrGfLemhIJ3f/aDQPvUYUk++CNfebL5xpQeoqtlTo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=J9dzXAFEnZgd4nf1M5o7aWGcV/gX9j/9MDOyEwxli67WfOelfJk0qeCctddCBj6Bj
+	 hGgEfzIZVVzzJukrthsoZZQoRGrvdse7kXhvO4BcjdqRyoYT2/GQq1XoFkbpJ8jycx
+	 MAhYZ+Q8XLztkCx2EP0kJ3ii0ZIHICr7KAFcExYM24G8f8gY4BIALSggI6X85EDwED
+	 LCSuyA9la02D+RsIX1PRMMLN2s6AsUR4gDRjjiG196yP4HZWJM/bhC5Zb6V/+MzF07
+	 JenuoVPQL6pTTm5mRI4GV5y11lqDMOMVFCxUYdorgZFftJxWZHbz9DSwSTL4LaoLA1
+	 dtEewPyS5Wz8w==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Changyuan
+ Lyu <changyuanl@google.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <bhe@redhat.com>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Michal Clapinski
+ <mclapinski@google.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+In-Reply-To: <aEmUU4L3eStEsYQM@kernel.org>
+References: <aEc30BoLE9HRxiZm@kernel.org>
+	<CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+	<aEfGTXrsEL5-DuF1@kernel.org>
+	<CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+	<aEhgNU80Dr9iRwoD@kernel.org>
+	<CA+CK2bD3n=JDuSsMGvsyMnVbPhGdhdf6zWFDa3KpzRGEXygdgQ@mail.gmail.com>
+	<mafs0qzzqo2bg.fsf@kernel.org>
+	<CA+CK2bBoMfJuUCV6sL80kwzYPnENnt7fDk2jRMPV0iPn1jCJdw@mail.gmail.com>
+	<aEmGMNL9v9djgrGz@kernel.org> <mafs0ikl2nzqn.fsf@kernel.org>
+	<aEmUU4L3eStEsYQM@kernel.org>
+Date: Fri, 13 Jun 2025 16:22:32 +0200
+Message-ID: <mafs0wm9fn2l3.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-References: <20250613125916.39272-1-pratyush@kernel.org>
-In-Reply-To: <20250613125916.39272-1-pratyush@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 13 Jun 2025 10:02:57 -0400
-X-Gm-Features: AX0GCFtynq6uZkJCevICxm6uo_i_e5E0E4kzTiNB65e-YQ2MVftwAmOZ1grw1MI
-Message-ID: <CA+CK2bCyTi+C+JaOjbaMhX=vnD7NTW-T4VDb9xJcTZTjwTJr6A@mail.gmail.com>
-Subject: Re: [PATCH v2] kho: initialize tail pages for higher order folios properly
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Changyuan Lyu <changyuanl@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Pratyush Yadav <ptyadav@amazon.de>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250613_070337_146544_771F3D05 
-X-CRM114-Status: GOOD (  12.75  )
+X-CRM114-CacheID: sfid-20250613_072236_199730_F0772FED 
+X-CRM114-Status: GOOD (  40.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,49 +86,163 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 13, 2025 at 8:59=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> From: Pratyush Yadav <ptyadav@amazon.de>
->
-> Currently, when restoring higher order folios, kho_restore_folio() only
-> calls prep_compound_page() on all the pages. That is not enough to
-> properly initialize the folios. The managed page count does not
-> get updated, the reserved flag does not get dropped, and page count does
-> not get initialized properly.
->
-> Restoring a higher order folio with it results in the following BUG with
-> CONFIG_DEBUG_VM when attempting to free the folio:
->
->     BUG: Bad page state in process test  pfn:104e2b
->     page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffff=
-ffffffff pfn:0x104e2b
->     flags: 0x2fffff80000000(node=3D0|zone=3D2|lastcpupid=3D0x1fffff)
->     raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000=
-000
->     raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000=
-000
->     page dumped because: nonzero _refcount
->     [...]
->     Call Trace:
->     <TASK>
->     dump_stack_lvl+0x4b/0x70
->     bad_page.cold+0x97/0xb2
->     __free_frozen_pages+0x616/0x850
->     [...]
->
-> Combine the path for 0-order and higher order folios, initialize the
-> tail pages with a count of zero, and call adjust_managed_page_count() to
-> account for all the pages instead of just missing them.
->
-> In addition, since all the KHO-preserved pages get marked with
-> MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
-> actually set (as can also be seen from the flags of the dumped page in
-> the logs above). So drop the ClearPageReserved() calls.
->
-> Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation"=
-)
-> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+On Wed, Jun 11 2025, Mike Rapoport wrote:
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> On Wed, Jun 11, 2025 at 04:01:52PM +0200, Pratyush Yadav wrote:
+>> On Wed, Jun 11 2025, Mike Rapoport wrote:
+>>=20
+>> > On Wed, Jun 11, 2025 at 09:14:55AM -0400, Pasha Tatashin wrote:
+>> >> On Wed, Jun 11, 2025 at 9:06=E2=80=AFAM Pratyush Yadav <pratyush@kern=
+el.org> wrote:
+>> >> >
+>> >> > On Tue, Jun 10 2025, Pasha Tatashin wrote:
+>> >> >
+>> >> > >> > > I think it should be the other way around, KHO should depend=
+ on
+>> >> > >> > > !DEFERRED_STRUCT_PAGE_INIT.
+>> >> > >> >
+>> >> > >> > Agreed, and this is what I first tried, but that does not work=
+, there
+>> >> > >> > is some circular dependency breaking the build. If you feel
+>> >> > >> > adventurous you can try that :-)
+>> >> > >>
+>> >> > >> Hmm, weird, worked for me :/
+>> >> >
+>> >> > Worked for me as well.
+>> >> >
+>> >> > >
+>> >> > > I am super confused, it did not work for me over weekend, and now=
+ it
+>> >> > > is working. Even `make menuconfig` would not work. Anyways, I wil=
+l put
+>> >> > > it in the appropriate place.
+>> >> > >
+>> >> > >>
+>> >> > >> > > > We will need to teah KHO to work with deferred struct page=
+ init. I
+>> >> > >> > > > suspect, we could init preserved struct pages and then ski=
+p over them
+>> >> > >> > > > during deferred init.
+>> >> > >> > >
+>> >> > >> > > We could, but with that would mean we'll run this before SMP=
+ and it's not
+>> >> > >> > > desirable. Also, init_deferred_page() for a random page requ=
+ires
+>> >> > >> >
+>> >> > >> > We already run KHO init before smp_init:
+>> >> > >> > start_kernel() -> mm_core_init() -> kho_memory_init() ->
+>> >> > >> > kho_restore_folio() -> struct pages must be already initialize=
+d here!
+>> >> > >> >
+>> >> > >> > While deferred struct pages are initialized:
+>> >> > >> > start_kernel() -> rest_init() -> kernel_init() ->
+>> >> > >> > kernel_init_freeable() -> page_alloc_init_late() ->
+>> >> > >> > deferred_init_memmap()
+>> >> > >> >
+>> >> > >> > If the number of preserved pages that is needed during early b=
+oot is
+>> >> > >> > relatively small, that it should not be an issue to pre-initia=
+lize
+>> >> > >> > struct pages for them before deferred struct pages are initial=
+ized. We
+>> >> > >> > already pre-initialize some  "struct pages" that are needed du=
+ring
+>> >> > >> > early boot before the reset are initialized, see deferred_grow=
+_zone()
+>> >> > >>
+>> >> > >> deferred_grow_zone() takes a chunk in the beginning of uninitial=
+ized range,
+>> >> > >> with kho we are talking about some random pages. If we preinit t=
+hem early,
+>> >> > >> deferred_init_memmap() will overwrite them.
+>> >> > >
+>> >> > > Yes, this is why I am saying that we would need to skip the KHO
+>> >> > > initialized "struct pages" somehow during deferred initialization=
+. If
+>> >> > > we create an ordered by PFN list of early-initialized KHO struct
+>> >> > > pages, skipping during deferred initialization could be done
+>> >> > > efficiently.
+>> >> >
+>> >> > Or keep things simple and don't use any KHO struct pages during ear=
+ly
+>> >> > init. You can access the page itself, just don't use its struct pag=
+e.
+>> >> >
+>> >> > Currently the only user of kho_restore_folio() during init is
+>> >> > kho_memory_init(). The FDT is accessed by doing
+>> >> > phys_to_virt(kho_in.fdt_phys) anyway, so there is really no need for
+>> >> > restoring the folio so early. It can be done later, for example whe=
+n LUO
+>> >> > does the finish event, to clean up and free the folio.
+>> >>=20
+>> >> Good suggestion, however, KHO does not have any sophisticated users
+>> >> that we are going to be adding as part of the live update work in the
+>> >> future: IR, KVM, early VCPU threads, and so on. So, while today, this
+>> >> might work, in the future, I am not sure if we should expect struct
+>> >> pages are not accessed until after deferred initialization or simply
+>> >> fix it once and for all.
+>> >
+>> > KHO already accesses stuct page early and uses page->private for order.
+>> > Since preserved memory is reserved in memblock, deferred init of struct
+>> > pages won't touch those pages, we just need to make sure they are prop=
+erly=20
+>>=20
+>> Not strictly true. Some of them might have been initialized from
+>> free_area_init() -> memmap_init() (the ones not eligible for deferred
+>> init), which happens before KHO makes its memblock reservations.
+>>=20
+>> > initialized at some point. If we don't expect many kho_restore_folio()
+>> > before page_alloc_init_late() we can use init_deferred_page() for early
+>> > accesses.
+>>=20
+>> I tried doing this when looking into this initially, but it doesn't work
+>> for some reason.
+>>=20
+>>     static void kho_restore_page(struct page *page, unsigned int order)
+>>     {
+>>     	unsigned int i, nr_pages =3D (1 << order);
+>>=20=20=20=20=20
+>>     	/* Head page gets refcount of 1. */
+>>     	init_deferred_page(page_to_pfn(page), NUMA_NO_NODE);
+>
+>
+> This would do
+>
+> 	if (early_page_initialised(pfn, nid))
+> 		return;
+>
+> 	__init_page_from_nid(pfn, nid);
+>
+> and I'm really surprised it didn't crash in early_page_initialised()
+> because of NUMA_NO_NODE :)
+
+Oh, right. Using the wrong node completely throws
+early_page_initialised() off.
+
+>
+> What might work here is=20
+>
+> 	pfn =3D page_to_pfn(page);
+> 	__init_page_from_nid(pfn, early_pfn_to_nid(pfn));
+
+Yep, that works. Although this would do early_pfn_to_nid() for each page
+so it isn't very efficient. And we also need to make sure memblock does
+not go away.
+
+>
+>>     	set_page_count(page, 1);
+>>=20=20=20=20=20
+>>     	/* For higher order folios, tail pages get a page count of zero. */
+>>     	for (i =3D 1; i < nr_pages; i++) {
+>>     		init_deferred_page(page_to_pfn(page + i), NUMA_NO_NODE);
+>>     		set_page_count(page + i, 0);
+>>     	}
+>>=20=20=20=20=20
+>>     [...]
+>>=20
+[...]
+
+--=20
+Regards,
+Pratyush Yadav
 
