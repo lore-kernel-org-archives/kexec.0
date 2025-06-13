@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33D40C71135
-	for <kexec@archiver.kernel.org>; Fri, 13 Jun 2025 13:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0B43C71136
+	for <kexec@archiver.kernel.org>; Fri, 13 Jun 2025 13:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=94nRbAN20NMDZLSU3le4z+Q2m9XrSDjy4TnOkrXiMjk=; b=rStphjZllFYG+c6ZPKej+VazvY
-	LOiPL+HXFA1fE+x7hPSw3L0rVVi+o5RvI5Wv2g3f4SVuNDi1JHxVaklOPMg2X97wyfblGOyRjgcfg
-	+TsIfvtl07S4iGT1mmzX+Vld3o2gKMt6S6+pQcBWlqQAkT7AdMYTS7lChw6UwThzcBZsV93YzXzl5
-	bv61F68Z5sxO6CuIzjvQvVg/9/tiRR9ePfzyidDobqCTkFWfvXuZ9S2OJJp6i0SER07asCpERgX0T
-	X8qNSNngPyp3YXpPZbzXZP+oUGW3zHFnI0yjpcRi5NlkwzOuNmAREXvB8sb62O1B/T/nAdBxPLE+j
-	eNCudGlA==;
+	bh=d0qqknzGjb4g9HbuHxIrhCrYPP4CQh8vMt2dY0VjZak=; b=PdwVrQCTthoJDIK0bXn/oMe1OE
+	4G7feaU28Px2w3MrYwhya+quxF/gbWphGjNkIJ/nA09Alm9ee9PDfH1gRsp3ASKaS/wKNPrlIL/IF
+	OJHV9vIMJhSwNQn1+1CO2lyLdE4xa+7CMrPmaph9udohN1HorStshNZN1/D8uLNXGkr74FAhMJnhM
+	0U5S/RQLM0VMGoCBCrBNPvoEMyhM0w9k7/yQZcAPUM2mcqj4/T5n7w+Q6wi/XMwBN7MrytkavuNdT
+	1xSMiHFYoPcTQwm08WIGEprG1ArZq/RzMFgOb8FkhHmopU/T8j6raIZOPOs89KpPCA0FCxXKF13V9
+	cmvq0VfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQ41O-0000000GRK4-3kkB;
-	Fri, 13 Jun 2025 13:00:38 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1uQ4KZ-0000000GTgB-1fbz;
+	Fri, 13 Jun 2025 13:20:27 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQ40M-0000000GRDH-28CV
+	id 1uQ4Jz-0000000GTZM-3tSS
 	for kexec@lists.infradead.org;
-	Fri, 13 Jun 2025 12:59:35 +0000
+	Fri, 13 Jun 2025 13:19:51 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id B7D1F5C67B6;
-	Fri, 13 Jun 2025 12:57:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A6CC4CEE3;
-	Fri, 13 Jun 2025 12:59:30 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0E3A1629DD;
+	Fri, 13 Jun 2025 13:19:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52659C4CEE3;
+	Fri, 13 Jun 2025 13:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749819572;
-	bh=1GoZAGAypiB2oHd3pN/5VWptPj76Frs4MFiz1/rzIR4=;
+	s=k20201202; t=1749820790;
+	bh=QL2aWl2xPGVWIPtgmBn1Yjy9CR98m5Xhk0v5CSpRdcQ=;
 	h=From:To:Cc:Subject:Date:From;
-	b=DjqlRkjSqS4mtvE0BoZP79f0E6u+3WNmszFR8VjFFD2aCwZ15xjkAhJ8fpbOt43CR
-	 MZFOeHBWYZ5EqEVRW6wy741J9UBA4AP5Q4hauneLWNANRSRCwZW9AN/P6REch1et8Z
-	 tGjDseMijrNPgamzq06NS61zhF9jkoobMe5tnJzmp8MHU4p4ERROPUh/tD+618lRQp
-	 USno98Hg8mmJN46I+37znExqRzf8hDsLHZ/q32KhFx+CdmFp1550mf0ChHgJ3hk2JF
-	 OfN4cBW1kafDhd53rvo/d0elwoZsWm33lttAxxqYMDBV4/k9f/g4ITmzSl/rKGe+hf
-	 ez9rJQYWOaUmw==
+	b=LCzD0KgYLwTP5iR/0RIE1JgR1qHs/q9lINdhEffI3GAwMfcuWsVi6NLmMfSWTacfG
+	 hkXXvVsq6tze++Pctn5wGOQuYi2AjOn395ZNBy3gFS6fAOx2+FH4ZHbaIRhJzNskOh
+	 lwxwOqcSdNksRe/etPrUD4NGrvtxfKAW4qoojdWUzQzrAqYQYc6FemnbYYe/UUGQiJ
+	 m0EjEUB80KiFR3zznNaQ4h7OiNYlDUyhGdj+hQBlCrjBV6xjlA+Yt+arN68m82k5Gj
+	 v1t1AQ+ka8g0S5rB1VBCQThasqAiJjf42ruCrKRNCFzkllkMldxQlGubS4WdbxkvcW
+	 34czo/Cdv4+KQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Alexander Graf <graf@amazon.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -53,15 +53,12 @@ Cc: Pratyush Yadav <ptyadav@amazon.de>,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH v2] kho: initialize tail pages for higher order folios properly
-Date: Fri, 13 Jun 2025 14:59:06 +0200
-Message-ID: <20250613125916.39272-1-pratyush@kernel.org>
+Subject: [PATCH] MAINTAINERS: add linux-mm@ list to Kexec Handover
+Date: Fri, 13 Jun 2025 15:19:14 +0200
+Message-ID: <20250613131917.4488-1-pratyush@kernel.org>
 X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250613_055934_637620_38E598DB 
-X-CRM114-Status: GOOD (  14.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,98 +75,29 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Pratyush Yadav <ptyadav@amazon.de>
 
-Currently, when restoring higher order folios, kho_restore_folio() only
-calls prep_compound_page() on all the pages. That is not enough to
-properly initialize the folios. The managed page count does not
-get updated, the reserved flag does not get dropped, and page count does
-not get initialized properly.
+Along with kexec, KHO also has parts dealing with memory management,
+like page/folio initialization, memblock, and preserving/unpreserving
+memory for next kernel. Copy linux-mm@ to KHO patches so the right set
+of eyes can look at changes to those parts.
 
-Restoring a higher order folio with it results in the following BUG with
-CONFIG_DEBUG_VM when attempting to free the folio:
-
-    BUG: Bad page state in process test  pfn:104e2b
-    page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
-    flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
-    raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
-    raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
-    page dumped because: nonzero _refcount
-    [...]
-    Call Trace:
-    <TASK>
-    dump_stack_lvl+0x4b/0x70
-    bad_page.cold+0x97/0xb2
-    __free_frozen_pages+0x616/0x850
-    [...]
-
-Combine the path for 0-order and higher order folios, initialize the
-tail pages with a count of zero, and call adjust_managed_page_count() to
-account for all the pages instead of just missing them.
-
-In addition, since all the KHO-preserved pages get marked with
-MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
-actually set (as can also be seen from the flags of the dumped page in
-the logs above). So drop the ClearPageReserved() calls.
-
-Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
 Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
 ---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-- Declare i in the loop instead of at the top.
-
- kernel/kexec_handover.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index eb305e7e61296..ca525f794f6be 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
- }
-
- /* almost as free_reserved_page(), just don't free the page */
--static void kho_restore_page(struct page *page)
-+static void kho_restore_page(struct page *page, unsigned int order)
- {
--	ClearPageReserved(page);
--	init_page_count(page);
--	adjust_managed_page_count(page, 1);
-+	unsigned int nr_pages = (1 << order);
-+
-+	/* Head page gets refcount of 1. */
-+	set_page_count(page, 1);
-+
-+	/* For higher order folios, tail pages get a page count of zero. */
-+	for (unsigned int i = 1; i < nr_pages; i++)
-+		set_page_count(page + i, 0);
-+
-+	if (order > 0)
-+		prep_compound_page(page, order);
-+
-+	adjust_managed_page_count(page, nr_pages);
- }
-
- /**
-@@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
- 		return NULL;
-
- 	order = page->private;
--	if (order) {
--		if (order > MAX_PAGE_ORDER)
--			return NULL;
--
--		prep_compound_page(page, order);
--	} else {
--		kho_restore_page(page);
--	}
-+	if (order > MAX_PAGE_ORDER)
-+		return NULL;
-
-+	kho_restore_page(page, order);
- 	return page_folio(page);
- }
- EXPORT_SYMBOL_GPL(kho_restore_folio);
---
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 99fbde0077927..7a0bc21d906bd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13346,6 +13346,7 @@ M:	Alexander Graf <graf@amazon.com>
+ M:	Mike Rapoport <rppt@kernel.org>
+ M:	Changyuan Lyu <changyuanl@google.com>
+ L:	kexec@lists.infradead.org
++L:	linux-mm@kvack.org
+ S:	Maintained
+ F:	Documentation/admin-guide/mm/kho.rst
+ F:	Documentation/core-api/kho/*
+-- 
 2.47.1
 
 
