@@ -4,65 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02B37C71136
-	for <kexec@archiver.kernel.org>; Fri, 13 Jun 2025 21:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 906DCC71136
+	for <kexec@archiver.kernel.org>; Sat, 14 Jun 2025 02:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=ToUwqQz3UL7tOfGhP1to15m5/LHNnBP7uU1ip6Qp53c=; b=3CuXo45qrfcPEsOzOVMPggNEmb
-	wJDD9tHn2zztt0r3V9pMvc0BWe18o48Hu7wJiInwJHTf+TCEEewsxnJwtJu/0qxznIkFUtK/zY0tH
-	G5WS+PnbJmMEggG7EAdf6tcCQ3ZX7lEjRFuFCRyckJDau2eOJFAul/1crCwmR+PwNvjrxf38QiZKN
-	SQPSF8BLumfq5FsAmnZ2aOV9VevaswpfqZ4eTegxZPXQZ4xAh9cAxvuZve7OnZ7RGdB52YwaRIvoz
-	oeT6U/FqxHnvoSZ2sSUuuz7+60vAlQtos8lbFOiR8ZRNUZHRVlHkLOIzbRsGLiVD+bJ0VP0OIPyM7
-	0RvMpK4g==;
+	bh=OUz9I+i5wHyxyyAJTk0830GJubFnv9VDf+gVBkAFDtY=; b=iVLTfqTLrqGukDmBnzlpQaBTZ+
+	v7bcwGBz9/TJQFLp6I55wmpp7k2/hJh3v5I2lD7OidCxpr4muY+dUD+oGkjEQK8R5jKDyWK+NzyzK
+	ceP8BAjSKL0xETrlTr2tzosLbDlZLishe7eVAi1oK1TPKZVDzUjthInPwtacsSgSemuPItXfzTDVd
+	3ifgpjr2TPEVcPlc4gpzEYe1csEcZJBdl5sDiE+L6gZMhFJ64GkSILNR/egqk1XL7zdiJnj+YTnzI
+	UL84PGVz0q5gxO1Wi7K+dWISdPY6DWEMxA5HthEd7TOf9uYjraMQkg5Y5Up+EQH+fIFVytWDINOLx
+	hn6XV7pg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQCCH-000000008wK-38O0;
-	Fri, 13 Jun 2025 21:44:25 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1uQGYt-00000000XD8-2rbl;
+	Sat, 14 Jun 2025 02:24:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQCCF-000000008vn-0DEJ
+	id 1uQGYo-00000000XCH-1SBi
 	for kexec@lists.infradead.org;
-	Fri, 13 Jun 2025 21:44:24 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 7C5DA5C56F8;
-	Fri, 13 Jun 2025 21:42:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA943C4CEE3;
-	Fri, 13 Jun 2025 21:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749851061;
-	bh=GJfPbPeu9q+2/ctADOJkntAal4bqSrgg30/06dFHPVs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=c1Pb5svEJPW7BnMQIy4dzAlbioiM0wMC/G4nwO9W9mNyKXb2rT9TjkekI6YIaGTW0
-	 xnEbRTHR/WOtDFM4lDyHaltqg4Te/uz7fCSz+Z5h2/vWGqzpUizBOLJoLOgy80pfcu
-	 JANhKPQ+BU740VbNPauEHmGg5Prq7wenNqJgQLT8JICChYNHkR4TRuUmLp+nO8pfc9
-	 JMGsSo+Zc6A9s5vPlQ34Mb07KL72uUAFFQAzmkGKNQIAzvkYJmL9FUUW+gff79y2UB
-	 3cOBMjxtsB0d6LfvGMIhOEBs9ZucL2m/4hO1YJQYASiIutIrDVi/VLen6IfWDprq8S
-	 hXTtGoc5Z70Cg==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	gregkh@linuxfoundation.org,
-	dakr@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	bhe@redhat.com
-Cc: christian.koenig@amd.com,
-	linux-pm@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH] PM: Restrict swap use to later in the suspend sequence
-Date: Fri, 13 Jun 2025 16:43:44 -0500
-Message-ID: <20250613214413.4127087-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	Sat, 14 Jun 2025 02:23:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749867835;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OUz9I+i5wHyxyyAJTk0830GJubFnv9VDf+gVBkAFDtY=;
+	b=YG48rx4vBdnKFNYGh1LoN4J4fEjziKa88BJusfk/CXpO3reDe+KI47EwQTa1nZLMHgXraw
+	82WOKbbb1GsJfOoyFZNicJcki67Zew3e83VSrSmQv/VTf+7zChhq31wJPAvFFrTWXUf9ru
+	Moka7YjZtmNcU3nkxO2cKqOZlthiN5E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-9-DI_vibO8PzKwdhke3B1xbA-1; Fri,
+ 13 Jun 2025 22:23:54 -0400
+X-MC-Unique: DI_vibO8PzKwdhke3B1xbA-1
+X-Mimecast-MFC-AGG-ID: DI_vibO8PzKwdhke3B1xbA_1749867833
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 58A311956080;
+	Sat, 14 Jun 2025 02:23:52 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.42])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B34A418003FC;
+	Sat, 14 Jun 2025 02:23:46 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-integrity@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	zohar@linux.ibm.com,
+	coxu@redhat.com,
+	piliu@redhat.com,
+	pmenzel@molgen.mpg.de,
+	chenste@linux.microsoft.com,
+	kexec@lists.infradead.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3] ima: add a knob ima= to allow disabling IMA in kdump kernel
+Date: Sat, 14 Jun 2025 10:23:42 +0800
+Message-ID: <20250614022342.5988-1-bhe@redhat.com>
 MIME-Version: 1.0
+Content-type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250613_144423_170964_62B9A952 
-X-CRM114-Status: GOOD (  15.58  )
+X-CRM114-CacheID: sfid-20250613_192358_461020_2EDFE68F 
+X-CRM114-Status: GOOD (  15.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,159 +86,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+extra memory. It would be very helpful to allow IMA to be disabled for
+kdump kernel.
 
-Currently swap is restricted before drivers have had a chance to do their
-prepare() PM callbacks. Restricting swap this early means that if a driver
-needs to evict some content from memory into sawp in it's prepare callback
-it won't be able to.
+Hence add a knob ima=on|off here to allow turning IMA off in kdump
+kernel if needed.
 
-On AMD dGPUs this can lead to failed suspends under memory pressure
-situations as all VRAM must be evicted to system memory or swap.
+Note that this IMA disabling is limited to kdump kernel, please don't
+abuse it in other kernel and thus serious consequences are caused.
 
-Move the swap restriction to right after all devices have had a chance to
-do the prepare() callback.  If there is any problem with the sequence,
-restore swap in the appropriate dpm resume callbacks or error handling
-paths.
-
-Closes: https://github.com/ROCm/ROCK-Kernel-Driver/issues/174
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2362
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/base/power/main.c | 5 ++++-
- include/linux/suspend.h   | 5 +++++
- kernel/kexec_core.c       | 1 +
- kernel/power/hibernate.c  | 3 ---
- kernel/power/power.h      | 5 -----
- kernel/power/suspend.c    | 3 +--
- 6 files changed, 11 insertions(+), 11 deletions(-)
+v2->v3:
+- Remove rdundant word 'only' and rephrase sentences in patch log code
+  comment, and rephrase patch subject, thanks to Mimi's comments.
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 0215b20c5e2c8..4970a804afb6d 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1241,6 +1241,7 @@ void dpm_complete(pm_message_t state)
-  */
- void dpm_resume_end(pm_message_t state)
- {
-+	pm_restore_gfp_mask();
- 	dpm_resume(state);
- 	dpm_complete(state);
- }
-@@ -2183,8 +2184,10 @@ int dpm_suspend_start(pm_message_t state)
- 	error = dpm_prepare(state);
- 	if (error)
- 		dpm_save_failed_step(SUSPEND_PREPARE);
--	else
-+	else {
-+		pm_restrict_gfp_mask();
- 		error = dpm_suspend(state);
-+	}
+ .../admin-guide/kernel-parameters.txt         |  5 ++++
+ security/integrity/ima/ima_main.c             | 26 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b3d62f4c370a..93357fb5c03e 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2214,6 +2214,11 @@
+ 			different crypto accelerators. This option can be used
+ 			to achieve best performance for particular HW.
  
- 	dpm_show_time(starttime, state, error, "start");
- 	return error;
-diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-index b1c76c8f2c822..6a3f920988720 100644
---- a/include/linux/suspend.h
-+++ b/include/linux/suspend.h
-@@ -446,6 +446,8 @@ extern int unregister_pm_notifier(struct notifier_block *nb);
- extern void ksys_sync_helper(void);
- extern void pm_report_hw_sleep_time(u64 t);
- extern void pm_report_max_hw_sleep(u64 t);
-+void pm_restrict_gfp_mask(void);
-+void pm_restore_gfp_mask(void);
- 
- #define pm_notifier(fn, pri) {				\
- 	static struct notifier_block fn##_nb =			\
-@@ -492,6 +494,9 @@ static inline int unregister_pm_notifier(struct notifier_block *nb)
- static inline void pm_report_hw_sleep_time(u64 t) {};
- static inline void pm_report_max_hw_sleep(u64 t) {};
- 
-+static inline void pm_restrict_gfp_mask(void) {}
-+static inline void pm_restore_gfp_mask(void) {}
++	ima=		[IMA] Enable or disable IMA
++			Format: { "off" | "on" }
++			Default: "on"
++			Note that disabling IMA is limited to kdump kernel.
 +
- static inline void ksys_sync_helper(void) {}
+ 	indirect_target_selection= [X86,Intel] Mitigation control for Indirect
+ 			Target Selection(ITS) bug in Intel CPUs. Updated
+ 			microcode is also required for a fix in IBPB.
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index f99ab1a3b0f0..cdd225f65a62 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -27,6 +27,7 @@
+ #include <linux/fs.h>
+ #include <linux/iversion.h>
+ #include <linux/evm.h>
++#include <linux/crash_dump.h>
  
- #define pm_notifier(fn, pri)	do { (void)(fn); } while (0)
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 9c59fa480b0b6..3a9a9f240dbc9 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1136,6 +1136,7 @@ int kernel_kexec(void)
-  Resume_devices:
- 		dpm_resume_end(PMSG_RESTORE);
-  Resume_console:
-+		pm_restore_gfp_mask();
- 		console_resume_all();
- 		thaw_processes();
-  Restore_console:
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 519fb09de5e0c..9216e3b91d3b3 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -423,7 +423,6 @@ int hibernation_snapshot(int platform_mode)
- 	}
+ #include "ima.h"
  
- 	console_suspend_all();
--	pm_restrict_gfp_mask();
+@@ -38,11 +39,30 @@ int ima_appraise;
  
- 	error = dpm_suspend(PMSG_FREEZE);
+ int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
+ static int hash_setup_done;
++static int ima_disabled __ro_after_init;
  
-@@ -559,7 +558,6 @@ int hibernation_restore(int platform_mode)
+ static struct notifier_block ima_lsm_policy_notifier = {
+ 	.notifier_call = ima_lsm_policy_change,
+ };
  
- 	pm_prepare_console();
- 	console_suspend_all();
--	pm_restrict_gfp_mask();
- 	error = dpm_suspend_start(PMSG_QUIESCE);
- 	if (!error) {
- 		error = resume_target_kernel(platform_mode);
-@@ -571,7 +569,6 @@ int hibernation_restore(int platform_mode)
- 		BUG_ON(!error);
- 	}
- 	dpm_resume_end(PMSG_RECOVER);
--	pm_restore_gfp_mask();
- 	console_resume_all();
- 	pm_restore_console();
- 	return error;
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index cb1d715620020..7ccd709af93f5 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -239,11 +239,6 @@ static inline void suspend_test_finish(const char *label) {}
- /* kernel/power/main.c */
- extern int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down);
- extern int pm_notifier_call_chain(unsigned long val);
--void pm_restrict_gfp_mask(void);
--void pm_restore_gfp_mask(void);
--#else
--static inline void pm_restrict_gfp_mask(void) {}
--static inline void pm_restore_gfp_mask(void) {}
- #endif
++static int __init ima_setup(char *str)
++{
++	if (!is_kdump_kernel()) {
++		pr_info("Warning: ima setup option only permitted in kdump");
++		return 1;
++	}
++
++	if (strncmp(str, "off", 3) == 0)
++		ima_disabled = 1;
++	else if (strncmp(str, "on", 2) == 0)
++		ima_disabled = 0;
++	else
++		pr_err("Invalid ima setup option: \"%s\" , please specify ima=on|off.", str);
++
++	return 1;
++}
++__setup("ima=", ima_setup);
++
+ static int __init hash_setup(char *str)
+ {
+ 	struct ima_template_desc *template_desc = ima_template_desc_current();
+@@ -1186,6 +1206,12 @@ static int __init init_ima(void)
+ {
+ 	int error;
  
- #ifdef CONFIG_HIGHMEM
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 76b141b9aac01..bb608b68fb301 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -540,6 +540,7 @@ int suspend_devices_and_enter(suspend_state_t state)
- 	return error;
- 
-  Recover_platform:
-+	pm_restore_gfp_mask();
- 	platform_recover(state);
- 	goto Resume_devices;
- }
-@@ -606,9 +607,7 @@ static int enter_state(suspend_state_t state)
- 
- 	trace_suspend_resume(TPS("suspend_enter"), state, false);
- 	pm_pr_dbg("Suspending system (%s)\n", mem_sleep_labels[state]);
--	pm_restrict_gfp_mask();
- 	error = suspend_devices_and_enter(state);
--	pm_restore_gfp_mask();
- 
-  Finish:
- 	events_check_enabled = false;
++	/*Note that turning IMA off is intentionally limited to kdump kernel.*/
++	if (ima_disabled && is_kdump_kernel()) {
++		pr_info("IMA functionality is disabled");
++		return 0;
++	}
++
+ 	ima_appraise_parse_cmdline();
+ 	ima_init_template_list();
+ 	hash_setup(CONFIG_IMA_DEFAULT_HASH);
 -- 
-2.43.0
+2.41.0
 
 
