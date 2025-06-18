@@ -4,73 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADFD8C7115F
-	for <kexec@archiver.kernel.org>; Tue, 17 Jun 2025 08:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB227C7115E
+	for <kexec@archiver.kernel.org>; Wed, 18 Jun 2025 07:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tuESWdgQF0sreM50+xMhPqu+zRbHva+ThYdTCQTTky8=; b=HFzkgIgOHMaVqplZWce3HW17tp
-	RB9GqODsCpgVnfZXau+to+YUWgBJ4S4tgm0avegI1ODOWDOvqMh+r1Hwn+R2RP8rXAkwFgzxdx6RX
-	aB8+gQhCf1AS70j1sAfK+vX+AAH7GQeG/sjMr1htxXqwO+V86jR/sFfrFuqBY8mIWf/urUZQqNWq2
-	yv4i0wD6QkjvHcXtQnCdF7mVWx0sT1Ff2NosIxD7XTCR68cNlNKjzM5jrbjtIUfdpJd7ixiPccQCt
-	QevEezUpa/wrFXzT9j94ae/dATPq3/kz7i/YqL6JhGB/nC1qKudnqVWqIvS1yg8Xsl86SNuFdKgAx
-	7w0m3wiA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=C6L3HHo29AD7EhEgKSzsEghpyqJqAdv8Rupc8YaUwX0=; b=HrimSTbWzAcO4N1VG51Nd/OkXB
+	NYK7QbTWAlSHHawBY2+VQwA6Ky11TR2TvqSYofcdNm89F6I32iF5cwh4toW600REcTNUmqaL03Tby
+	38as2YEo3XR5LBu9vJjWg8y5Ys5yxO252dXLoG3+od1NXsPmbUJ6zYkCZbcnFHHoOCd0v6zUnOIah
+	+G4mW1fifqrBqOgITCCG7dNH/TMg62R9IXN5FgZVQZ+gwyPWUKCFhpgXkX8+aoNQflBPn8CLmTEZs
+	QzMQ+nodaaJVEkHvkpRxvRSC+oYq4sjuore5ejm3fEYuG7p3iai+K85e33uFWSpGXCgkCQGGWV2Gw
+	TY2Il4VA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRRsp-00000006ctH-26Ej;
-	Tue, 17 Jun 2025 08:41:31 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uRnGa-00000009IOb-1ZHR;
+	Wed, 18 Jun 2025 07:31:28 +0000
+Received: from mail.ventrazo.pl ([162.19.155.125])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRRdt-00000006b1v-4B2A
+	id 1uRnGV-00000009IMy-1zlR
 	for kexec@lists.infradead.org;
-	Tue, 17 Jun 2025 08:26:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750148763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tuESWdgQF0sreM50+xMhPqu+zRbHva+ThYdTCQTTky8=;
-	b=B7YeHmWFWJDxd921vDcV0iOtYoi3Y5b9tJRLnzJWuIRQlc3CdrsVcLhhzyVMTeCOGMbmWw
-	fjd2AJO1pNW9l1sy3LGPDLptJYkt9iE7pL0Kkwlr2T8gbaz+q56D90fkod5oEhldAaDeln
-	IqibQ2qLM+IWyi5gVn4wyihBikU5rRo=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-pQNieNqsM8eGs0Z9CKa3gg-1; Tue,
- 17 Jun 2025 04:26:00 -0400
-X-MC-Unique: pQNieNqsM8eGs0Z9CKa3gg-1
-X-Mimecast-MFC-AGG-ID: pQNieNqsM8eGs0Z9CKa3gg_1750148759
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B6FD91809C8F;
-	Tue, 17 Jun 2025 08:25:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.135])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C95B819560A3;
-	Tue, 17 Jun 2025 08:25:56 +0000 (UTC)
-Date: Tue, 17 Jun 2025 16:25:51 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	coxu@redhat.com, piliu@redhat.com, pmenzel@molgen.mpg.de,
-	chenste@linux.microsoft.com, kexec@lists.infradead.org
-Subject: Re: [PATCH v3] ima: add a knob ima= to allow disabling IMA in kdump
- kernel
-Message-ID: <aFEmj7ZuuMgOplZK@MiWiFi-R3L-srv>
-References: <20250614022342.5988-1-bhe@redhat.com>
- <ca82fa443365217535aedacbcdf823370f387995.camel@linux.ibm.com>
+	Wed, 18 Jun 2025 07:31:25 +0000
+Received: by mail.ventrazo.pl (Postfix, from userid 1002)
+	id DA77022E28; Wed, 18 Jun 2025 09:31:07 +0200 (CEST)
+Received: by mail.ventrazo.pl for <kexec@lists.infradead.org>; Wed, 18 Jun 2025 07:30:22 GMT
+Message-ID: <20250618084501-0.1.j9.4i6ud.0.pw7dcqd251@OriginatePro.pl>
+Date: Wed, 18 Jun 2025 07:30:22 GMT
+From: "Marcin Wojciechowski" <marcin.wojciechowski@ventrazo.pl>
+To: <kexec@lists.infradead.org>
+Subject: Zapytanie ofertowe 
+X-Mailer: mail.OriginatePro.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca82fa443365217535aedacbcdf823370f387995.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250617_012606_107145_2B589877 
-X-CRM114-Status: GOOD (  15.73  )
+X-CRM114-CacheID: sfid-20250618_003123_665705_E5243DAC 
+X-CRM114-Status: UNSURE (   0.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,26 +57,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/16/25 at 10:04am, Mimi Zohar wrote:
-> On Sat, 2025-06-14 at 10:23 +0800, Baoquan He wrote:
-> > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-> > extra memory. It would be very helpful to allow IMA to be disabled for
-> > kdump kernel.
-> > 
-> > Hence add a knob ima=on|off here to allow turning IMA off in kdump
-> > kernel if needed.
-> > 
-> > Note that this IMA disabling is limited to kdump kernel, please don't
-> > abuse it in other kernel and thus serious consequences are caused.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> > v2->v3:
-> > - Remove rdundant word 'only' and rephrase sentences in patch log code
-> >   comment, and rephrase patch subject, thanks to Mimi's comments.
-> 
-> Thanks, Baoquan.  The patch is now queued.
+Dzie=C5=84 dobry,
 
-Thanks a lot for your patience, careful reviewing and great suggestions.
+Pozwoli=C5=82em sobie na kontakt, poniewa=C5=BC jestem zainteresowany wer=
+yfikacj=C4=85 mo=C5=BCliwo=C5=9Bci nawi=C4=85zania wsp=C3=B3=C5=82pracy.
 
+Wspieramy firmy w pozyskiwaniu nowych klient=C3=B3w biznesowych.
+
+Czy mo=C5=BCemy porozmawia=C4=87 w celu przedstawienia szczeg=C3=B3=C5=82=
+owych informacji?=20
+=20
+
+Pozdrawiam serdecznie
+Marcin Wojciechowski
 
