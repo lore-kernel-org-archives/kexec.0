@@ -4,95 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A451C71157
-	for <kexec@archiver.kernel.org>; Wed, 18 Jun 2025 23:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9006CC7115A
+	for <kexec@archiver.kernel.org>; Wed, 18 Jun 2025 23:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
 	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
 	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=x9qjMJUsurH/IxVcO0jFdI9JhX/uu0M1NvVuua8q1OI=; b=KKb3W9dHaZDRB8ZMk1h08ejW/3
-	nwehA+98DrJsViXmG+M3b1OtnspmfAOopX2sIxPdwms8qtk21B4CIhrrpISNUhBBnt5Zu5n0/cpK/
-	fO6kqCcm5TPXWUScXpKRW25z1St5ZM1edW7TwAoSDvEz7Pk7MCesquiYf+p10nGo5yaJ6QvhaEjBq
-	WMNR4hsVfpVeSrnGWViLp4awRtqCoD4Qef88taYS1uVkKJUGU2doPLDKUik/kks/DPeCroe85KV5S
-	POhtkucSYqY8SHfTCXotk/dTLcY5fzc+86qjxuW4IKLxPrXqGnds4c/iyOrfKZ2CbFcAiVx/Tewj+
-	YOx19G5A==;
+	bh=x9qjMJUsurH/IxVcO0jFdI9JhX/uu0M1NvVuua8q1OI=; b=gits8WPtGhhKotNXRIgeG2DaI5
+	CL7LjCibx+7YIUyzj9s+eHWTpbJNcNQOXdz5gzRBLB3GQvInYvIgGyRxqU26zSQ+zh/ss6QIUL+XD
+	sCAxjUuGFcHzhxNMrkKRqhx0uQ6U9yruH0PT/dsz9PB3ydpA4M5uNg4bTqHx15aOGkS9LSsmmjpBi
+	uqk6OyahbkMcrxgWi2sGrHrXaL6cmT+53QCHNjpKDKzfzrn1/2Vk7KLc6lo7depff+LgUk9KTZHWg
+	LaXofhlKUceruzklUxlA9+fnpmEEYYkdI61HoVIWOOnKlxdQTRec2OiEZAH7GCovMD9R132B1ez7d
+	XjNA/mbA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uS2dH-0000000Bbqx-3O68;
-	Wed, 18 Jun 2025 23:55:55 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uS2er-0000000BbxD-1CGf;
+	Wed, 18 Jun 2025 23:57:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uS2dF-0000000Bbpv-08oH
+	id 1uS2ep-0000000Bbwr-1M37
 	for kexec@lists.infradead.org;
-	Wed, 18 Jun 2025 23:55:54 +0000
+	Wed, 18 Jun 2025 23:57:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750290951;
+	s=mimecast20190719; t=1750291050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
 	bh=x9qjMJUsurH/IxVcO0jFdI9JhX/uu0M1NvVuua8q1OI=;
-	b=gzRyLfbJgic20ZfjVewUaJ417PKpEzA9xXDrih9NUB0cT0+nNJ3F65o7oQzZhq1dT4AqJu
-	eAkV+nsXCrvPUSpUFC8y6FBMEaRiC/YQDDVLM0ziX88dN2lUb7lUdk8Nzmp1B9k1jY13rC
-	MsTwyEMFahGmdRYltABTf5sE8NHcc/c=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	b=ZERc7qtNoLmHnpGlRhREkwkV+eIbKFY/qamrDQhYsEitNwmuq48D5tKpshw/kXDt+hQaB5
+	WIsyx+2DhmcVu4CfDFTyMGjEH/t+bLZaoULsGdKwGHBlZUOgrxnceSW8fVua6SSQubI84r
+	SGVzdnTZNmENGbB6MVmAug5ayA9dhhM=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-ZG3wzafAM8q6zAqUo0iiww-1; Wed, 18 Jun 2025 19:55:49 -0400
-X-MC-Unique: ZG3wzafAM8q6zAqUo0iiww-1
-X-Mimecast-MFC-AGG-ID: ZG3wzafAM8q6zAqUo0iiww_1750290949
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so231936a12.1
-        for <kexec@lists.infradead.org>; Wed, 18 Jun 2025 16:55:49 -0700 (PDT)
+ us-mta-557-Uf5Xc4lHN7SrXf0_L6qjLQ-1; Wed, 18 Jun 2025 19:57:29 -0400
+X-MC-Unique: Uf5Xc4lHN7SrXf0_L6qjLQ-1
+X-Mimecast-MFC-AGG-ID: Uf5Xc4lHN7SrXf0_L6qjLQ_1750291048
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b31c38d4063so142232a12.3
+        for <kexec@lists.infradead.org>; Wed, 18 Jun 2025 16:57:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750290948; x=1750895748;
+        d=1e100.net; s=20230601; t=1750291048; x=1750895848;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=x9qjMJUsurH/IxVcO0jFdI9JhX/uu0M1NvVuua8q1OI=;
-        b=UNUzwczY4dnHNKdrHugqodos0/Otf7Kcuy3+srUNo2niJnZRb0V1Id/igtN+EfULUw
-         LjjyqtHLgkVfJb3zIF/sfXQRp8kzmOKhntIzYNYH8Pljok3l/CkWEp0woUWr6fnuLUI4
-         GNlq+uAex+Z2Otddlud7PCg9rsz6S58yCL/vbyWu+0qA8/1FFw4XUsZ2GVEWQ7j+4Usd
-         oue+btxmlW7+emN7YVdprxMGh8/EgB3tFUISql0zGesFeIXcztYV8jolo/pRRMjKy9+v
-         FGl3ZyeHpRU2ZLfTwna+NefBlrEJwmRP6OX5QNM3eWYzATiBeICvbUbrwhjHChkUb7tx
-         zvUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcS5QRweoFJBlv9ClLdYaR7xJ52FcXLdIJ6S+WndEGblr9GTif8UxW0Fk/SxKP9RfXP1TCsQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy0Y0YYV589BO8LymBcaKclscbxNsdBCUY8qL9YjefZmwQbXipx
-	8BJidWnyVHITTJNel1e5/5ACR+9JIipEwST5mgAzHs2aP6St/aMa75p8vHQ6EKxGAwbYttdfPw6
-	ZTRW7XDhEyzEyBEatPEEuphBR+S87NNBoA1YOoLHf6OhseUXS26muW0M4+NLvIw==
-X-Gm-Gg: ASbGncsRDJjELdfdYsZClg5XfTI1jAHGXoUuYbzX+N08MNdmGjThMZJk7jwGx/0+8Vt
-	ohlx6pPCmz8YY0JgWacTPj0uHlFO5DSs/RUfIp5CB9imzOe+aASxKRkdSNxt3/liHal/xDc1B1O
-	pWR4ONPWA74Qja/B92keGe9So2VvkEe541LXZ5zLk6D89Er8ViS600NiU5p9mnO/pKjAahXSyko
-	LFefDYX1L3Y2iw5nV0voWqxuiV4uMm3meD/z4E9g7FEGocgsPzfTHc2MVMkLpQ1iNlyJc5KPrpU
-	fOAQADNbPxTaa2lwgXSgQYJzA//N9Io=
-X-Received: by 2002:a05:6a21:3388:b0:203:bb65:995a with SMTP id adf61e73a8af0-21fbd57d314mr34761712637.30.1750290948477;
-        Wed, 18 Jun 2025 16:55:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKmwP2MLka+qPDacqOUeOXRxyX6ig7hRGf4JaCDFYf5G8uX0t1iXXsgkJajJOBV3JK71NDRQ==
-X-Received: by 2002:a05:6a21:3388:b0:203:bb65:995a with SMTP id adf61e73a8af0-21fbd57d314mr34761688637.30.1750290948103;
-        Wed, 18 Jun 2025 16:55:48 -0700 (PDT)
+        b=wn7bELJ5NhZW/gKHu6Iwxq3tck7h2dNJqOI812HEQRT3ypZxaascmeiMmwrh+oBhwP
+         04AaXQ1PkZrNKtkKrM8ehg/hTLIPhLw0+la232K1U217VnyDFKItEPqDgLtTHPuaMo4M
+         qqABZqM1vo5yjNbvJinplmW1+nH/bKqjkf0hSvAakqDSaDBwVfyCQHoWj8XXcTqTI8dg
+         E6MiLdr1hWqbLSWx3kh61yOms1GSNx1hR36AlcNeVJzcSTvY95IfgsmdBg9fqTnWJ1bn
+         7PGRY/bAcdjmY7rM5FXtL2/eFwjg0KEa1c3Yagxxrdv4Tma9yP/q7E+NBA9IoRx2GY/5
+         y70Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU7x3PNh0RoF+n1866j6vbDErvshMcTKrWnidoKEjpRNYLLWrXxQE3sjXoXkGKS6IAJORfK1Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxf0qpzaelAxDGjbe4kYtyKPeSvgdIHaL2cc2xlTh7spCO8HWjd
+	u/lF6Vsk1gHasyZ51+bH3u99iqjGT/qf4yVdC1XUG0ekwm6lWcDqyVhTsR30hFrH54kddmk1TXk
+	K4XIw5DKZE0kcqViSjLATWvSImmdkfKjspYN6pA29ZS/jYGkoC2d9202hVQx10Q==
+X-Gm-Gg: ASbGncuFURbDgGqb4hC437bplkAuAAzuscxiGA1KjWG67f5381MK+MV2r2HtXRL3D9C
+	pCckA990W47brNS37MAVambizzJNG2fj8qMLENVGk6WPMmBGg4oahQj662LGwQtLnRiMmOXHHpR
+	AguCV5G09LV6W1tlQXJy9xFVPF0AIzydQWnwF72gNP9yHm0q9o64aeAQYY4cuo6AtDsg7DLVDtm
+	MtX2LuIPclarC0nTYZK8sHmgtuTochJQCvMBpGMWqa/WFmvY12Ss7ue9O2ZNcfhDVHL32xoSyO+
+	MSgQ1r0CanDupG3AtFJ2gSMBo0BK9ms=
+X-Received: by 2002:a05:6a20:5491:b0:1f5:8cdb:2777 with SMTP id adf61e73a8af0-21fbd48c508mr28309676637.3.1750291048092;
+        Wed, 18 Jun 2025 16:57:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGz9YUy/A1O4GX/ZZ3nwN/csV4529BNDPXcH+XWYux4ro+962zUoWXjTuyKcvGVe3UK6425w==
+X-Received: by 2002:a05:6a20:5491:b0:1f5:8cdb:2777 with SMTP id adf61e73a8af0-21fbd48c508mr28309652637.3.1750291047571;
+        Wed, 18 Jun 2025 16:57:27 -0700 (PDT)
 Received: from localhost.localdomain ([118.148.112.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900ad2absm11754487b3a.110.2025.06.18.16.55.45
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffecfbasm12209422b3a.15.2025.06.18.16.57.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 16:55:47 -0700 (PDT)
+        Wed, 18 Jun 2025 16:57:27 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
 To: yamazaki-msmt@nec.com,
 	k-hagio-ab@nec.com,
 	kexec@lists.infradead.org,
 	sourabhjain@linux.ibm.com
 Cc: Tao Liu <ltao@redhat.com>
-Subject: [PATCH] Fix a data race in multi-threading mode (--num-threads=N)
-Date: Thu, 19 Jun 2025 11:55:23 +1200
-Message-ID: <20250618235523.22557-1-ltao@redhat.com>
+Subject: [PATCH][makedumpfile] Fix a data race in multi-threading mode (--num-threads=N)
+Date: Thu, 19 Jun 2025 11:56:45 +1200
+Message-ID: <20250618235644.22589-2-ltao@redhat.com>
 X-Mailer: git-send-email 2.47.0
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: tAqj8AGmOgAMNYpegCPCN2_tQUQdVpap31cCCjKvjCI_1750290949
+X-Mimecast-MFC-PROC-ID: sFjLTPqTl4NHZuV_WD_3ShGLUHO9YX6hGk5q-gljxSM_1750291048
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250618_165553_142047_56E4E581 
-X-CRM114-Status: GOOD (  18.01  )
+X-CRM114-CacheID: sfid-20250618_165731_431891_47D8C74D 
+X-CRM114-Status: GOOD (  17.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
