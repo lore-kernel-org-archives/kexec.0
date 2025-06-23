@@ -4,75 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FD23C7115B
-	for <kexec@archiver.kernel.org>; Mon, 23 Jun 2025 06:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 781F8C7EE2A
+	for <kexec@archiver.kernel.org>; Mon, 23 Jun 2025 12:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=amTgSERN3utDvqCGxTJd0cMQf/6LQr4T4DXQKPu/7OE=; b=BX97YQ6QGR/K1wfR3KtDt7UKI3
-	9p2LD1NM1cQNxobJRp172UKLcQ5LOhlsUDALDdCmhWpOEN2EvFquNGAHkcdAjw4eqdFp46mfiO97u
-	XEK1ZMb9+RKs3hT+/CX1MnKssfS3WUMqsc+5u3Eo2yQuDBiO78/9iHIEvWMXxWTFeIi9PhDmdO0LP
-	1CjZDuE2bpnvX7S9IbLgrNAe4h913Z0E5zN5J3GezRY4UNQzQMD571sSnM310As5gyrQaULzJcMVZ
-	IEyGwTBdcu/UA3Ps5I7ggUxAxqH0Npbg48XRwWV3PHMTDWXvPKFoTzhFkJBZPoQFtfA4NvRpPVAyK
-	5y2FCLRg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=NoS4uS0WjT8s4quR+livwyFWK5OcaT64RQX23AsJyig=; b=N+qgAEIYNGuBy/C+v4PSmVTbqg
+	yfQoaZt4jfuGjeeDdq007K7/z8bRncHi1w+AG4uKEcGtaFl9MQgwSFljYZ7RsWiQLUd8wNwJY6WMe
+	GfNHMrl4O2zyVW6/Cbh6ENoLyNrDWf9lDDgMcBvTtEQxiqbyQ4cW1PtRlkA5+OElg5DosN6WpG5Y2
+	aHYGQ+wcdSemGN30RDCio/FJgsEqGuPYAIKfJlMP7w0b4eYpCYl03DTa2aIO8RFsOSkm5OLXV/jUi
+	J1a3uV3MrkbWA4aXdri9pvDUzYRzX29DXN04qPfTtarcb83tGwb+CNeRWmjeKX3RxwnMZdhDwn9ex
+	zhzdItbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTaqE-00000001kaA-2CxS;
-	Mon, 23 Jun 2025 06:39:42 +0000
-Received: from gnome.eu.org ([95.216.32.17] helo=lalande.gnome.eu.org)
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTacj-00000001jG2-2sA8
+	id 1uTgQa-00000002idO-1e4H;
+	Mon, 23 Jun 2025 12:37:36 +0000
+Received: from [42.101.60.213] (helo=mail.nfschina.com)
+	by bombadil.infradead.org with smtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTeiA-00000002Pxx-2pi4
 	for kexec@lists.infradead.org;
-	Mon, 23 Jun 2025 06:25:49 +0000
-ARC-Seal: i=1; d=gnome.eu.org; s=myselector; a=rsa-sha256; cv=none;
-	t=1750659937;
-	b=laZklOtGP/l2nhKfW4eZG6Fc0fJGYsQEFKDWKHPAZep0wzBcbE07QaQ5b2xt7Gg6mfch
-	 PqUap797j+KgzlCdz0q6MNhvMp+7vNF5HegvYXizCvG7OzbZtttdXda5OltHM18oq/d+O
-	 D6bhSnsxzIKGz/gBuW+RKkfRjYbsu2IfG8=
-ARC-Message-Signature: i=1; d=gnome.eu.org; s=myselector; a=rsa-sha256;
-	c=relaxed/simple; t=1750659937;
-	h=DKIM-Signature:Date:From:To:Subject:Message-ID:MIME-Version;
-	bh=3i2Uv1Y3z2papHvCGhrL9ZVJnsIV+y1RWJFgcWMXDSA=;
-	b=wIAo7W20GpTREiHQS0WZTW4qMamZf2zlkwhBDem9RVtxn3nMSrVEl2SnR56XwulwHEjN
-	 y7PaoZn0Q5WntnazsvwHjFBqVtfK7vai/+iJETJwsquoV7sEarbgigYwBlzQ+ZOBl1m60
-	 tknxlibJRnocxsIE/Ci0BEzYTs3EZd6n+E=
-ARC-Authentication-Results: i=1; gnome.eu.org; arc=none smtp.remote-ip=82.65.226.101
-Received: from leto.ms.local (val50.gnome.eu.org [82.65.226.101])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lalande.gnome.eu.org (Postfix) with ESMTPSA id 50D007B2565F;
-	Mon, 23 Jun 2025 08:25:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=7pot.org; s=mail;
-	t=1750659937; bh=amTgSERN3utDvqCGxTJd0cMQf/6LQr4T4DXQKPu/7OE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=utSAW2vtalgYTldcp+4+rJEGp3n0SaHJAHpZzIh6pHZZVvV4VKRl0C9XlL3aBq/ga
-	 zv4uyJYMTlpfw1k4O76P/VfE3DHphMpHieOz0BeumQx3hsnvAtan3H/LSg/hPmB4w2
-	 DTZzovfMYa06QuIK6t8V6WL1s8dXq7l6wwM4PQr2p3jhDNU6y4ohJV/U238dKF6lkO
-	 cvTgydSRQudOOU+75KYM2ceKGVKbhskJj/Ww5HNaW5IPcDYJma3y9ElQjqfXbl/tfi
-	 cI7IS+I5+LMRC46+CIJi6Jl4zmqjEhmetUp7mr1U4qATcobLK4nIIWQa5Z5EHF9bxa
-	 myQRu+5ayU6rA==
-Date: Mon, 23 Jun 2025 08:25:23 +0200
-From: Lucian Langa <lucilanga@7pot.org>
-To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com, 
-	rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
-	gregkh@linuxfoundation.org, dakr@kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	bhe@redhat.com
-Cc: christian.koenig@amd.com, linux-pm@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [PATCH] PM: Restrict swap use to later in the suspend sequence
-Message-ID: <dn6yc4swdyek4gz3bv7g4y5e6xzmo6vm5gkqqhmhbdhomnglbt@nsepw42i6hwz>
-References: <20250613214413.4127087-1-superm1@kernel.org>
+	Mon, 23 Jun 2025 10:47:40 +0000
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 75C08602FE8D8;
+	Mon, 23 Jun 2025 18:47:29 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Cc: Su Hui <suhui@nfschina.com>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] fs/proc/vmcore: a few cleanups for vmcore_add_device_dump
+Date: Mon, 23 Jun 2025 18:47:05 +0800
+Message-Id: <20250623104704.3489471-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613214413.4127087-1-superm1@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250622_232546_192426_2D155398 
-X-CRM114-Status: GOOD (  11.35  )
+X-CRM114-CacheID: sfid-20250623_034738_881157_4E5727EC 
+X-CRM114-Status: GOOD (  10.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,29 +65,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 13.06.2025 16:43, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Currently swap is restricted before drivers have had a chance to do their
-> prepare() PM callbacks. Restricting swap this early means that if a driver
-> needs to evict some content from memory into sawp in it's prepare callback
-> it won't be able to.
-> 
-> On AMD dGPUs this can lead to failed suspends under memory pressure
-> situations as all VRAM must be evicted to system memory or swap.
-> 
-> Move the swap restriction to right after all devices have had a chance to
-> do the prepare() callback.  If there is any problem with the sequence,
-> restore swap in the appropriate dpm resume callbacks or error handling
-> paths.
-> 
-> Closes: https://github.com/ROCm/ROCK-Kernel-Driver/issues/174
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2362
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+There are three cleanups for vmcore_add_device_dump(). Adjust data_size's
+type from 'size_t' to 'unsigned int' for the consistency of data->size.
+Return -ENOMEM directly rather than goto the label to simplify the code.
+Using scoped_guard() to simplify the lock/unlock code.
 
-Tested this against 6.15.3 and 6.16-rc3.
-Adding my tag.
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ fs/proc/vmcore.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-Tested-by: Lucian Langa <lucilanga@7pot.org>
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 10d01eb09c43..9ac2863c68d8 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1477,7 +1477,7 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ {
+ 	struct vmcoredd_node *dump;
+ 	void *buf = NULL;
+-	size_t data_size;
++	unsigned int data_size;
+ 	int ret;
+ 
+ 	if (vmcoredd_disabled) {
+@@ -1490,10 +1490,8 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 		return -EINVAL;
+ 
+ 	dump = vzalloc(sizeof(*dump));
+-	if (!dump) {
+-		ret = -ENOMEM;
+-		goto out_err;
+-	}
++	if (!dump)
++		return -ENOMEM;
+ 
+ 	/* Keep size of the buffer page aligned so that it can be mmaped */
+ 	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+@@ -1519,21 +1517,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 	dump->size = data_size;
+ 
+ 	/* Add the dump to driver sysfs list and update the elfcore hdr */
+-	mutex_lock(&vmcore_mutex);
+-	if (vmcore_opened)
+-		pr_warn_once("Unexpected adding of device dump\n");
+-	if (vmcore_open) {
+-		ret = -EBUSY;
+-		goto unlock;
+-	}
+-
+-	list_add_tail(&dump->list, &vmcoredd_list);
+-	vmcoredd_update_size(data_size);
+-	mutex_unlock(&vmcore_mutex);
+-	return 0;
++	scoped_guard(mutex, &vmcore_mutex) {
++		if (vmcore_opened)
++			pr_warn_once("Unexpected adding of device dump\n");
++		if (vmcore_open) {
++			ret = -EBUSY;
++			goto out_err;
++		}
+ 
+-unlock:
+-	mutex_unlock(&vmcore_mutex);
++		list_add_tail(&dump->list, &vmcoredd_list);
++		vmcoredd_update_size(data_size);
++		return 0;
++	}
+ 
+ out_err:
+ 	vfree(buf);
+-- 
+2.30.2
 
 
