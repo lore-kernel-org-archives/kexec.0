@@ -4,83 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6840C77B7C
-	for <kexec@archiver.kernel.org>; Tue, 24 Jun 2025 01:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4ABBEC7115B
+	for <kexec@archiver.kernel.org>; Tue, 24 Jun 2025 02:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=5kQvwr4znaeekKGqGYywHoRh23O0X8q6/s8R+gkVfv0=; b=19uvG8uVT46kzaZpF565oD70d9
-	ynyJQp7dErXR2yV3zCqIB1vGI+8voLkfPPpFmYMZjQwvdDGmW4Mlsa4yUHFgBKmUAm7LTPEZtp9AA
-	QSNuuVEauzvfI2Rh7XASaQXbom+HBFgpMTIcz5faFCFPgvLmYGPxnEJoh1pun2ibJpCLqRZiAw1U+
-	sDrLBDrvi3k0vro0mV3wJYCqV6qDLFb75jxndBHSvscikV47VXAr40Qp/T9SHk4jgOZ2C2uXqawhP
-	YfWuqDouI60+IHkJmeH5X5lxN0YQwQS4Uku7Y8eoK4H9apZRuZWuBdF03GRb1ARVTUobDBFUlUWoI
-	os3pp9WA==;
+	Content-Type:In-Reply-To:From:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
+	bh=XHef5Y5QUHyzQgQvSVIof0rO683+pe4CW4OipTCxGQ4=; b=iau+l+QolYvEJOclNNiySHo03Q
+	4HDsVkhWDx09Y90+epqjYUzPSI7D84BSvbpaL1ttiG9fOTPsNx/P2thY7XpVW7I4eabAUGmeRWY4S
+	Ar44MTtZAn+ObJx7ba1JLcIpmchmRU8X1AbLvs/NggztqhA0wn/4/SHnkRyyTIXKq289NVMbYXUHF
+	yUXtdLmTQfq1ROLz5tttxku2IWfKp3jB8yRW2LTFUpS2VpldOGPuUkgbanCsjN5tAM2KkUcE1x3WR
+	Virft8JGW8BvJGPIK2xu7uhXyjmiHmAQmMZZwv1diJWeXz8zF6tQJCXiVmpAflVkkIIYpXFqkLaaH
+	iSkmmwvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTscn-00000004OUN-37cQ;
-	Tue, 24 Jun 2025 01:39:01 +0000
-Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTqYP-00000004Ad3-02uH
+	id 1uTtBq-00000004Sa2-1k0R;
+	Tue, 24 Jun 2025 02:15:14 +0000
+Received: from [42.101.60.213] (helo=mail.nfschina.com)
+	by bombadil.infradead.org with smtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uTtBn-00000004SZH-1fD2
 	for kexec@lists.infradead.org;
-	Mon, 23 Jun 2025 23:26:22 +0000
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so17309f8f.2
-        for <kexec@lists.infradead.org>; Mon, 23 Jun 2025 16:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750721179; x=1751325979; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5kQvwr4znaeekKGqGYywHoRh23O0X8q6/s8R+gkVfv0=;
-        b=HsyXKJggrDuujS6pakBh90/ZdZL2qv0aax7X4WztMd56t+lAlm9OQDsJ12yK9Gy2O8
-         n6Qe4GGc3HewDw+RTk7puyUWnz+td3/apsRY2RsNKuJ2Mm3HaoaUwvJ5Z9zss/jMVEci
-         SSqu1ECAMO72Qh8qRRMvv2f3iy/UeARLxXiLyjegxCyNTXwA+L/Hc6Uk2BbDpuG8yUxk
-         OtEuyWxaRJpx4oOUra6jbekDGMN1N7PvwsKXdLgXYZvrI7gi5uABvdpbtD3Rzbwg0pV6
-         DCiA3+3L6hgJ1KTvgBF+YCM6HWZ+tKNOqhl1DssQyH040cJk9PZ3CR0bWAnPCO3gFAbk
-         X+mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750721179; x=1751325979;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5kQvwr4znaeekKGqGYywHoRh23O0X8q6/s8R+gkVfv0=;
-        b=B5DVQGn1Ck4lI7R9gKp3QV6Pdk+ZQq2t7K2PHAbDY0yNUBPgrR6vNyIGpFZI+sIq5M
-         w7fjtDJwpM1/IBj0/EvLKbPfi5ftVkp9/lJHHHmgUqlFqrmlI65+3nz8M9oiAPyAzJLj
-         kYTgltlgdXHv31fzqQWH/CUeR3WZDL/frKyZKQu6UduZZ79auB/EzZcIEA8DTpnpEskV
-         aMLTdzw13WkFHCNvgd1F35g8t4WTS2nhg3cHWc2Y+Xfup6Wpvjjvb0Rya45LY5/gk5Yo
-         h0EbrjyaVGl93hdJhaK7yFuIyfflCo8anEAqpzQ4ZC8DbHw483cXHfWm9YIMtntRSEvk
-         Lbpw==
-X-Gm-Message-State: AOJu0YyhUnLwvGm0uFPjbm1vhjEwGYzA0/PO7WjjpmSsqiy93inxcKdq
-	GqSwKjyuMkMm1bGnMviglgND8wFc6qZQ87v2+d6tQ6CBXHiz3d86q+K8cHZokKAw
-X-Gm-Gg: ASbGncv+dnhA1qeYUWS4Vny+E1LguvQaycXE/zpURGMmihyp7qEZhEBNWeQ1J8Jw59m
-	iR57Zzfnp9g0sx3qsOvvj+jF28h0BDUrskAr5BaConqcv0YDvpzrl+2u/OdexBiHSExIi7CqLKu
-	Epc9J1hMvaFUzrf+3hKhdy2OmjviwB7FVP+yzL46FHUUfj8eWzsjND6zMjONwVf56PB3wkmLGUE
-	YLHPGp7i5nTxrqf2uQJunwU3J0dmx5danObJUlG9L7KD36mHmlDuS3UDxZ/pn97rQHf6zx8IauG
-	dG3GM8LmzVmgRDuj4ZonYAZL9JInRYMNKH8647ghEEHi95LcAc7RpGk1UMzh5yUdT+Agv968BYI
-	RytF0REsqvEpLcFkJ/Gv3/OQbmkdPJQfkGR3tA7tDPQ==
-X-Google-Smtp-Source: AGHT+IGHE8/XYXDoWv1edDBgdZXp7khQRu3HaEVJ14KJWrycHHoziA88Dx83XySgUoVmVMLW4aUYDw==
-X-Received: by 2002:a05:6000:280d:b0:3a5:51a3:2ef5 with SMTP id ffacd0b85a97d-3a6d132ca1emr7782200f8f.58.1750721178663;
-        Mon, 23 Jun 2025 16:26:18 -0700 (PDT)
-Received: from puck.. (watf-12-b2-v4wan-169542-cust1006.vm45.cable.virginm.net. [81.98.219.239])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810b140sm342384f8f.80.2025.06.23.16.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 16:26:17 -0700 (PDT)
-From: Dylan Yudaken <dyudaken@gmail.com>
-To: kexec@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Cc: shuah@kernel.org,
-	Dylan Yudaken <dyudaken@gmail.com>
-Subject: [PATCH] selftests/kexec: ignore selftest binary
-Date: Tue, 24 Jun 2025 00:25:49 +0100
-Message-ID: <20250623232549.3263273-1-dyudaken@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	Tue, 24 Jun 2025 02:15:13 +0000
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 88D7860107F46;
+	Tue, 24 Jun 2025 10:14:56 +0800 (CST)
+Message-ID: <a90315db-e2d9-4a86-9be5-6ea88f5c94a2@nfschina.com>
+Date: Tue, 24 Jun 2025 10:14:55 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs/proc/vmcore: a few cleanups for vmcore_add_device_dump
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>, Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, vgoyal@redhat.com, dyoung@redhat.com,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Su Hui <suhui@nfschina.com>
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <d60db71a-0b4f-4e7d-8c06-7493934aa507@suswa.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250623_162621_055224_2C6A1856 
-X-CRM114-Status: GOOD (  10.81  )
+X-CRM114-CacheID: sfid-20250623_191511_639131_94152A86 
+X-CRM114-Status: UNSURE (   8.95  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,34 +65,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a .gitignore for the test case build object.
 
-Signed-off-by: Dylan Yudaken <dyudaken@gmail.com>
----
+On 2025/6/23 23:22, Dan Carpenter wrote:
+> On Mon, Jun 23, 2025 at 10:36:45PM +0800, Baoquan He wrote:
+>> On 06/23/25 at 06:47pm, Su Hui wrote:
+>>> There are three cleanups for vmcore_add_device_dump(). Adjust data_size's
+>>> type from 'size_t' to 'unsigned int' for the consistency of data->size.
+>> It's unclear to me why size_t is not suggested here. Isn't it assigned
+>> a 'sizeof() + data->size' in which size_t should be used?
 
-Hi,
+Oh, sorry for this, I missed some things.
 
-I noticed this was causing some noise in my git checkout, but perhaps I was
-doing something odd that it has not been noticed before?
+1497         data_size = roundup(sizeof(struct vmcoredd_header) + 
+data->size,
+1498                             PAGE_SIZE);
+1499
+1500         /* Allocate buffer for driver's to write their dumps */
+1501         buf = vmcore_alloc_buf(data_size);
+             [...]
+1515
+1516         dump->buf = buf;
+1517         dump->size = data_size;
+                  ^^^^^^^^^^^^^^^^^^^^^
+If data_size is 64 bit and assume data_size is bigger than 32bit, 
+dump->size will overflow.
+Should we adjust dump->size's type to size_t? Or maybe it's impossible 
+for data_size bigger
+than 32bit?
+> Yeah...  That's a good point.  People should generally default to size_t
+> for sizes.  It really does prevent a lot of integer overflow bugs.  In
+> this case data->size is not controlled by the user, but if it were
+> then that would be an integer overflow on 32bit systems and not on
+> 64bit systems, until we start declaring sizes as unsigned int and
+> then all the 32bit bugs start affecting everyone.
+Agreed, sorry for my fault again.
+I will remove the 'unsigned int' in v2 patch.
+Thanks for your suggestions!
 
-Regards,
-Dylan
-
- tools/testing/selftests/kexec/.gitignore | 2 ++
- 1 file changed, 2 insertions(+)
- create mode 100644 tools/testing/selftests/kexec/.gitignore
-
-diff --git a/tools/testing/selftests/kexec/.gitignore b/tools/testing/selftests/kexec/.gitignore
-new file mode 100644
-index 000000000000..5f3d9e089ae8
---- /dev/null
-+++ b/tools/testing/selftests/kexec/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+test_kexec_jump
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
--- 
-2.49.0
+regards,
+Su Hui
 
 
