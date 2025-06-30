@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73406C8302D
-	for <kexec@archiver.kernel.org>; Mon, 30 Jun 2025 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B405C83029
+	for <kexec@archiver.kernel.org>; Mon, 30 Jun 2025 13:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RSER/kKr09Fwp9Z6FAD98av39gXaDcNtylfht9QBtAY=; b=aMk/Zj4bSbS45/kG4VMCq4UqIZ
-	mrswR1srO9jhwL4rN3rER0CRs3Xk4iEVmoanHxW/b21eAiZB9mrAV/G/C5o/j27fYufudP6kTFsUU
-	zvmEDDhWCKmMJyb8xTOJ4LsEwjt1sE2j4T1GbGIb5/rx4wOEwhcLzYIHaauVyPbvPdKArNUo5rdEN
-	0jV1W+jLENQ4e0RB9SgQvlpttWPaM7hu8sL3N3KAxNPKxWL36GhwMWc1mpDpjWQHImaPEr0eulmOB
-	yiZf+BbQdmThoHnn6SLi2LdhxcWYV8KwZJOXBtRFWrTTad482Rq6tggFK/FRoIAl0VPDzT4UnXunD
-	VDwH74nQ==;
+	bh=2KPnmjtPSLEOXDcZfGnghOTJ33PZXhctQKe8xW5XYUA=; b=jQJqgcRRNGKDx5dUu9D11y407W
+	1dHX4KfdYhOcrEilGyhU8vbDFj/BioVcq7M5KOMhnmFS6O6JyFIMBckLSvMTPvX3oT7QLFLGd3UX/
+	blJsd10UhghGxEoBOi3g/jWPodtwfZY/lZIMpYbaNsosCgbpT1OChL4dxltseJR4h0UJ8G5nYDzcO
+	L0rb9Ra/a1R0tGdfiLrkVVNFt0yet9MVn9HswN84gZvsfR2hpL6Zx0MUfA3m6tkv0kyoBo+P6J4ZV
+	J1n2e4GAtBNl+mPLbsX3XRYTi19vpHM64gyPo36fILx433spFIrOn08q8/seeGdZs3KZRtOn5jqqr
+	oOYZSKqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWDrK-00000002E8e-1vsc;
-	Mon, 30 Jun 2025 12:43:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uWEw4-00000002Rmg-29Cn;
+	Mon, 30 Jun 2025 13:52:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWDoO-00000002DWp-2HhS
+	id 1uWEov-00000002QAa-3xNd
 	for kexec@lists.infradead.org;
-	Mon, 30 Jun 2025 12:40:42 +0000
+	Mon, 30 Jun 2025 13:45:19 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751287238;
+	s=mimecast20190719; t=1751291117;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RSER/kKr09Fwp9Z6FAD98av39gXaDcNtylfht9QBtAY=;
-	b=I2As0GlwQTTJ62PAq5upml/P3KB/vYEq1lA5nUCZJL9611498Jr4MRY7jUeGuZbr7hAbb2
-	lpkfFJ3V1uR+nOUN7xMZTB9TQEASqkvzTc/G6Q2kvfL3Z9GWcNijLcLsX+2OFzUTEuwV2T
-	zFk9POCl8hkeiq2RoXiOQF+xF5p+gjs=
+	bh=2KPnmjtPSLEOXDcZfGnghOTJ33PZXhctQKe8xW5XYUA=;
+	b=EQ+ghtiASZtCmce8wCBow8u8NJHScUHfQuCsB7iw2QKl6C9dtWl/Tok9SJwp9SopfncuF7
+	lofajEGm8MkUwQ85ogQVaJc5kcubwf1XzxHmPeInj4R669ZAOSuA8Z0EYY7BA2G/6dUDhs
+	38uAMo4s8Opvxz8Cr/j9a7XyfH2YLaM=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-oTGT0iEhMlqriOp8T1-kGQ-1; Mon,
- 30 Jun 2025 08:40:34 -0400
-X-MC-Unique: oTGT0iEhMlqriOp8T1-kGQ-1
-X-Mimecast-MFC-AGG-ID: oTGT0iEhMlqriOp8T1-kGQ_1751287232
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-79-OjFRNymnOJ2Ja8P7cjx-Zg-1; Mon,
+ 30 Jun 2025 09:45:13 -0400
+X-MC-Unique: OjFRNymnOJ2Ja8P7cjx-Zg-1
+X-Mimecast-MFC-AGG-ID: OjFRNymnOJ2Ja8P7cjx-Zg_1751291111
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B0681809CBD;
-	Mon, 30 Jun 2025 12:40:31 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5361D1809C87;
+	Mon, 30 Jun 2025 13:45:10 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.34])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 71DC91956095;
-	Mon, 30 Jun 2025 12:40:28 +0000 (UTC)
-Date: Mon, 30 Jun 2025 20:40:25 +0800
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C5E2019560A7;
+	Mon, 30 Jun 2025 13:45:07 +0000 (UTC)
+Date: Mon, 30 Jun 2025 21:45:05 +0800
 From: Pingfan Liu <piliu@redhat.com>
 To: Philipp Rudo <prudo@redhat.com>
 Cc: kexec@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
@@ -71,20 +71,20 @@ Cc: kexec@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
 	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
 	Dave Young <dyoung@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>, bpf@vger.kernel.org
-Subject: Re: [PATCHv3 8/9] kexec: Integrate bpf light skeleton to load zboot
- image
-Message-ID: <aGKFuTAS-mBpYngE@fedora>
+Subject: Re: [PATCHv3 5/9] kexec: Introduce kexec_pe_image to parse and load
+ PE file
+Message-ID: <aGKU4ZoPwLXbQGVu@fedora>
 References: <20250529041744.16458-1-piliu@redhat.com>
- <20250529041744.16458-9-piliu@redhat.com>
- <20250625201011.1eab16a5@rotkaeppchen>
+ <20250529041744.16458-6-piliu@redhat.com>
+ <20250625200950.16d7a09c@rotkaeppchen>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625201011.1eab16a5@rotkaeppchen>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250625200950.16d7a09c@rotkaeppchen>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250630_054040_663185_9076F9BB 
-X-CRM114-Status: GOOD (  36.35  )
+X-CRM114-CacheID: sfid-20250630_064518_139854_D613B1A4 
+X-CRM114-Status: GOOD (  55.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,177 +99,467 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 25, 2025 at 08:10:11PM +0200, Philipp Rudo wrote:
+On Wed, Jun 25, 2025 at 08:09:50PM +0200, Philipp Rudo wrote:
 > Hi Pingfan,
 > 
-> On Thu, 29 May 2025 12:17:43 +0800
+> On Thu, 29 May 2025 12:17:40 +0800
 > Pingfan Liu <piliu@redhat.com> wrote:
 > 
-> > All kexec PE bpf prog should align with the interface exposed by the
-> > light skeleton
-> >     four maps:
-> >                     struct bpf_map_desc ringbuf_1;
-> >                     struct bpf_map_desc ringbuf_2;
-> >                     struct bpf_map_desc ringbuf_3;
-> >                     struct bpf_map_desc ringbuf_4;
-> >     four sections:
-> >                     struct bpf_map_desc rodata;
-> >                     struct bpf_map_desc data;
-> >                     struct bpf_map_desc bss;
-> >                     struct bpf_map_desc rodata_str1_1;
-> >     two progs:
-> >             SEC("fentry.s/bpf_handle_pefile")
-> >             SEC("fentry.s/bpf_post_handle_pefile")
+> > As UEFI becomes popular, a few architectures support to boot a PE format
+> > kernel image directly. But the internal of PE format varies, which means
+> > each parser for each format.
 > > 
-> > With the above presumption, the integration consists of two parts:
-> >   -1. Call API exposed by light skeleton from kexec
-> >   -2. The opts_insn[] and opts_data[] are bpf-prog dependent and
-> >       can be extracted and passed in from the user space. In the
-> >       kexec_file_load design, a PE file has a .bpf section, which data
-> >       content is a ELF, and the ELF contains opts_insn[] opts_data[].
-> >       As a bonus, BPF bytecode can be placed under the protection of the
-> >       entire PE signature.
-> >       (Note, since opts_insn[] contains the information of the ringbuf
-> >        size, the bpf-prog writer can change its proper size according to
-> >        the kernel image size without modifying the kernel code)
+> > This patch (with the rest in this series) introduces a common skeleton
+> > to all parsers, and leave the format parsing in
+> > bpf-prog, so the kernel code can keep relative stable.
+> > 
+> > A new kexec_file_ops is implementation, named pe_image_ops.
+> > 
+> > There are some place holder function in this patch. (They will take
+> > effect after the introduction of kexec bpf light skeleton and bpf
+> > helpers). Overall the parsing progress is a pipeline, the current
+> > bpf-prog parser is attached to bpf_handle_pefile(), and detatched at the
+> > end of the current stage 'disarm_bpf_prog()' the current parsed result
+> > by the current bpf-prog will be buffered in kernel 'prepare_nested_pe()'
+> > , and deliver to the next stage.  For each stage, the bpf bytecode is
+> > extracted from the '.bpf' section in the PE file.
 > > 
 > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
 > > Cc: Baoquan He <bhe@redhat.com>
 > > Cc: Dave Young <dyoung@redhat.com>
 > > Cc: Andrew Morton <akpm@linux-foundation.org>
 > > Cc: Philipp Rudo <prudo@redhat.com>
-> > Cc: bpf@vger.kernel.org
 > > To: kexec@lists.infradead.org
 > > ---
-> >  kernel/Makefile                              |   1 +
-> >  kernel/kexec_bpf/Makefile                    |   8 +
-> >  kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 292 +------------------
-> >  kernel/kexec_pe_image.c                      |  70 +++++
-> >  4 files changed, 83 insertions(+), 288 deletions(-)
+> >  include/linux/kexec.h   |   1 +
+> >  kernel/Kconfig.kexec    |   8 +
+> >  kernel/Makefile         |   1 +
+> >  kernel/kexec_pe_image.c | 356 ++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 366 insertions(+)
+> >  create mode 100644 kernel/kexec_pe_image.c
 > > 
 > [...]
 > 
 > > diff --git a/kernel/kexec_pe_image.c b/kernel/kexec_pe_image.c
-> > index e49d6db3c329d..f47c1e46dba97 100644
-> > --- a/kernel/kexec_pe_image.c
+> > new file mode 100644
+> > index 0000000000000..3097efccb8502
+> > --- /dev/null
 > > +++ b/kernel/kexec_pe_image.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/vmalloc.h>
-> >  #include <linux/kexec.h>
-> > +#include <linux/elf.h>
-> >  #include <linux/pe.h>
-> >  #include <linux/string.h>
-> >  #include <linux/bpf.h>
-> > @@ -21,6 +22,7 @@
-> >  #include <asm/image.h>
-> >  #include <asm/memory.h>
-> >  
-> > +#include "kexec_bpf/kexec_pe_parser_bpf.lskel.h"
-> >  
-> >  static LIST_HEAD(phase_head);
-> >  
-> > @@ -163,14 +165,82 @@ static bool pe_has_bpf_section(char *file_buf, unsigned long pe_sz)
-> >  	return true;
-> >  }
-> >  
-> > +static struct kexec_pe_parser_bpf *pe_parser;
+> > @@ -0,0 +1,356 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Kexec PE image loader
 > > +
-> > +static void *get_symbol_from_elf(const char *elf_data, size_t elf_size,
-> > +		const char *symbol_name, unsigned int *symbol_size)
+> > + * Copyright (C) 2025 Red Hat, Inc
+> > + */
+> > +
+> > +#define pr_fmt(fmt)	"kexec_file(Image): " fmt
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/list.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/vmalloc.h>
+> > +#include <linux/kexec.h>
+> > +#include <linux/pe.h>
+> > +#include <linux/string.h>
+> > +#include <linux/bpf.h>
+> > +#include <linux/filter.h>
+> > +#include <asm/byteorder.h>
+> > +#include <asm/image.h>
+> > +#include <asm/memory.h>
+> > +
+> > +
+> > +static LIST_HEAD(phase_head);
+> > +
+> > +struct parsed_phase {
+> > +	struct list_head head;
+> > +	struct list_head res_head;
+> > +};
+> > +
+> > +static struct parsed_phase *cur_phase;
+> > +
+> > +static char *kexec_res_names[3] = {"kernel", "initrd", "cmdline"};
+> 
+> Wouldn't it be better to use a enum rather than strings for the
+> different resources? Especially as in prepare_nested_pe you are
+
+I plan to make bpf_copy_to_kernel() fit for more cases besides kexec. So
+string may be better choice, and I think it is better to have a
+subsystem prefix, like "kexec:kernel"
+
+> comparing two strings using == instead of strcmp(). So IIUC it should
+> always return false.
+> 
+
+Oops, I will fix that. In fact, I meaned to assign the pointer
+kexec_res_names[i] to kexec_res.name in bpf_kexec_carrier(). Later in
+prepare_nested_pe() can compare two pointers.
+
+
+> > +struct kexec_res {
+> > +	struct list_head node;
+> > +	char *name;
+> > +	/* The free of buffer is deferred to kimage_file_post_load_cleanup */
+> > +	bool deferred_free;
+> > +	struct mem_range_result *r;
+> > +};
+> > +
+> > +static struct parsed_phase *alloc_new_phase(void)
 > > +{
-> > +	Elf_Ehdr *ehdr = (Elf_Ehdr *)elf_data;
-> > +	Elf_Shdr *shdr, *symtab_shdr, *strtab_shdr, *dst_shdr;
-> > +	Elf64_Sym *sym, *symtab = NULL;
-> > +	char *strtab = NULL;
-> > +	void *symbol_data = NULL;
-> > +	int i;
+> > +	struct parsed_phase *phase = kzalloc(sizeof(struct parsed_phase), GFP_KERNEL);
 > > +
-> > +	symtab_shdr = strtab_shdr = NULL;
-> > +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
-> > +		pr_err("Not a valid ELF file\n");
-> > +		goto out;
-> > +	}
+> > +	INIT_LIST_HEAD(&phase->head);
+> > +	INIT_LIST_HEAD(&phase->res_head);
+> > +	list_add_tail(&phase->head, &phase_head);
 > > +
-> > +	shdr = (struct elf_shdr *)(elf_data + ehdr->e_shoff);
-> > +	for (i = 0; i < ehdr->e_shnum; i++) {
-> > +		if (shdr[i].sh_type == SHT_SYMTAB)
-> > +			symtab_shdr = &shdr[i];
-> > +		else if (shdr[i].sh_type == SHT_STRTAB && i != ehdr->e_shstrndx)
-> > +			strtab_shdr = &shdr[i];
-> > +	}
-> > +
-> > +	if (!symtab_shdr || !strtab_shdr) {
-> > +		pr_err("Symbol table or string table not found\n");
-> > +		goto out;
-> > +	}
-> > +	symtab = (Elf64_Sym *)(elf_data + symtab_shdr->sh_offset);
-> > +	strtab = (char *)(elf_data + strtab_shdr->sh_offset);
-> > +	for (i = 0; i < symtab_shdr->sh_size / sizeof(Elf64_Sym); i++) {
-> > +		sym = &symtab[i];
-> > +		if (strcmp(&strtab[sym->st_name], symbol_name) == 0) {
-> > +			if (sym->st_shndx >= SHN_LORESERVE)
-> > +				return NULL; // No section data for these
-> > +			dst_shdr = &shdr[sym->st_shndx];
-> > +			symbol_data = (void *)(elf_data + dst_shdr->sh_offset + sym->st_value);
-> > +			*symbol_size = symtab[i].st_size;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +out:
-> > +	return symbol_data;
+> > +	return phase;
 > > +}
 > 
-> In kernel/kexec_file.c there is kexec_purgatory_find_symbol which is
-> basically identical to this function. With a little bit of refractoring
-> it should work for both cases. I prefer using
-> kexec_purgatory_find_symbol as your implementation cannot handle elf
-> files with multiple symtab and strtab sections.
+> I must admit I don't fully understand how you are handling the
+> different phases. In particular I don't understand why you are keeping
+> all the resources a phase returned once it is finished. The way I see
+> it those resources are only needed once as input for the next phase. So
+> it should be sufficient to only keep a single kexec_context and update
+> it when a phase returns a new resource. The way I see it this should
+> simplify pe_image_load quite a bit. Or am I missing something?
 > 
 
-Thanks for your suggestion. I will refractor the code in next version.
+Let us say an aarch64 zboot image embeded in UKI's .linux section.
+The UKI parser takes apart the image into kernel, initrd, cmdline.
+And the kernel part contains the zboot PE, including zboot parser.
+The zboot parser needn't to handle either initrd or cmdline.
+So I use the phases, and the leaf node is the final parsed result.
 
-Regards,
+> > +static bool is_valid_pe(const char *kernel_buf, unsigned long kernel_len)
+> > +{
+> > +	struct mz_hdr *mz;
+> > +	struct pe_hdr *pe;
+> > +
+> > +	if (!kernel_buf)
+> > +		return false;
+> > +	mz = (struct mz_hdr *)kernel_buf;
+> > +	if (mz->magic != MZ_MAGIC)
+> > +		return false;
+> > +	pe = (struct pe_hdr *)(kernel_buf + mz->peaddr);
+> > +	if (pe->magic != PE_MAGIC)
+> > +		return false;
+> > +	if (pe->opt_hdr_size == 0) {
+> > +		pr_err("optional header is missing\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static bool is_valid_format(const char *kernel_buf, unsigned long kernel_len)
+> > +{
+> > +	return is_valid_pe(kernel_buf, kernel_len);
+> > +}
+> > +
+> > +/*
+> > + * The UEFI Terse Executable (TE) image has MZ header.
+> > + */
+> > +static int pe_image_probe(const char *kernel_buf, unsigned long kernel_len)
+> > +{
+> > +	return is_valid_pe(kernel_buf, kernel_len) ? 0 : -1;
+> 
+> Every image, at least on x86, is a valid pe file. So we should check
+> for the .bpf section rather than the header.
+> 
 
-Pingfan 
+You are right that it should include the check on the existence of .bpf
+section. On the other hand, the check on PE header in kernel can ensure 
+the kexec-tools passes the right candidate for this parser.
 
+> > +}
+> > +
+> > +static int get_pe_section(char *file_buf, const char *sect_name,
+> 
+> s/get_pe_section/pe_get_section/ ?
+> that would make it more consistent with the other functions.
+
+Sure. I will fix it.
+
+
+Thanks for your careful review.
+
+
+Best Regards,
+
+Pingfan
+
+> 
 > Thanks
 > Philipp
 > 
+> > +		char **sect_start, unsigned long *sect_sz)
+> > +{
+> > +	struct pe_hdr *pe_hdr;
+> > +	struct pe32plus_opt_hdr *opt_hdr;
+> > +	struct section_header *sect_hdr;
+> > +	int section_nr, i;
+> > +	struct mz_hdr *mz = (struct mz_hdr *)file_buf;
 > > +
-> >  /* Load a ELF */
-> >  static int arm_bpf_prog(char *bpf_elf, unsigned long sz)
-> >  {
-> > +	opts_data = get_symbol_from_elf(bpf_elf, sz, "opts_data", &opts_data_sz);
-> > +	opts_insn = get_symbol_from_elf(bpf_elf, sz, "opts_insn", &opts_insn_sz);
-> > +	if (!opts_data || !opts_insn)
-> > +		return -1;
+> > +	*sect_start = NULL;
+> > +	*sect_sz = 0;
+> > +	pe_hdr = (struct pe_hdr *)(file_buf + mz->peaddr);
+> > +	section_nr = pe_hdr->sections;
+> > +	opt_hdr = (struct pe32plus_opt_hdr *)(file_buf + mz->peaddr + sizeof(struct pe_hdr));
+> > +	sect_hdr = (struct section_header *)((char *)opt_hdr + pe_hdr->opt_hdr_size);
+> > +
+> > +	for (i = 0; i < section_nr; i++) {
+> > +		if (strcmp(sect_hdr->name, sect_name) == 0) {
+> > +			*sect_start = file_buf + sect_hdr->data_addr;
+> > +			*sect_sz = sect_hdr->raw_data_size;
+> > +			return 0;
+> > +		}
+> > +		sect_hdr++;
+> > +	}
+> > +
+> > +	return -1;
+> > +}
+> > +
+> > +static bool pe_has_bpf_section(char *file_buf, unsigned long pe_sz)
+> > +{
+> > +	char *sect_start = NULL;
+> > +	unsigned long sect_sz = 0;
+> > +	int ret;
+> > +
+> > +	ret = get_pe_section(file_buf, ".bpf", &sect_start, &sect_sz);
+> > +	if (ret < 0)
+> > +		return false;
+> > +	return true;
+> > +}
+> > +
+> > +/* Load a ELF */
+> > +static int arm_bpf_prog(char *bpf_elf, unsigned long sz)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static void disarm_bpf_prog(void)
+> > +{
+> > +}
+> > +
+> > +struct kexec_context {
+> > +	bool kdump;
+> > +	char *image;
+> > +	int image_sz;
+> > +	char *initrd;
+> > +	int initrd_sz;
+> > +	char *cmdline;
+> > +	int cmdline_sz;
+> > +};
+> > +
+> > +void bpf_handle_pefile(struct kexec_context *context);
+> > +void bpf_post_handle_pefile(struct kexec_context *context);
+> > +
+> > +
+> > +/*
+> > + * optimize("O0") prevents inline, compiler constant propagation
+> > + */
+> > +__attribute__((used, optimize("O0"))) void bpf_handle_pefile(struct kexec_context *context)
+> > +{
+> > +}
+> > +
+> > +__attribute__((used, optimize("O0"))) void bpf_post_handle_pefile(struct kexec_context *context)
+> > +{
+> > +}
+> > +
+> > +/*
+> > + * PE file may be nested and should be unfold one by one.
+> > + * Query 'kernel', 'initrd', 'cmdline' in cur_phase, as they are inputs for the
+> > + * next phase.
+> > + */
+> > +static int prepare_nested_pe(char **kernel, unsigned long *kernel_len, char **initrd,
+> > +		unsigned long *initrd_len, char **cmdline)
+> > +{
+> > +	struct kexec_res *res;
+> > +	int ret = -1;
+> > +
+> > +	*kernel = NULL;
+> > +	*kernel_len = 0;
+> > +
+> > +	list_for_each_entry(res, &cur_phase->res_head, node) {
+> > +		if (res->name == kexec_res_names[0]) {
+> > +			*kernel = res->r->buf;
+> > +			*kernel_len = res->r->data_sz;
+> > +			ret = 0;
+> > +		} else if (res->name == kexec_res_names[1]) {
+> > +			*initrd = res->r->buf;
+> > +			*initrd_len = res->r->data_sz;
+> > +		} else if (res->name == kexec_res_names[2]) {
+> > +			*cmdline = res->r->buf;
+> > +		}
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void *pe_image_load(struct kimage *image,
+> > +				char *kernel, unsigned long kernel_len,
+> > +				char *initrd, unsigned long initrd_len,
+> > +				char *cmdline, unsigned long cmdline_len)
+> > +{
+> > +	char *parsed_kernel = NULL;
+> > +	unsigned long parsed_len;
+> > +	char *linux_start, *initrd_start, *cmdline_start, *bpf_start;
+> > +	unsigned long linux_sz, initrd_sz, cmdline_sz, bpf_sz;
+> > +	struct parsed_phase *phase, *phase_tmp;
+> > +	struct kexec_res *res, *res_tmp;
+> > +	void *ldata;
+> > +	int ret;
+> > +
+> > +	linux_start = kernel;
+> > +	linux_sz = kernel_len;
+> > +	initrd_start = initrd;
+> > +	initrd_sz = initrd_len;
+> > +	cmdline_start = cmdline;
+> > +	cmdline_sz = cmdline_len;
+> > +
+> > +	while (is_valid_format(linux_start, linux_sz) &&
+> > +	       pe_has_bpf_section(linux_start, linux_sz)) {
+> > +		struct kexec_context context;
+> > +
+> > +		get_pe_section(linux_start, ".bpf", &bpf_start, &bpf_sz);
+> > +		if (!!bpf_sz) {
+> > +			/* load and attach bpf-prog */
+> > +			ret = arm_bpf_prog(bpf_start, bpf_sz);
+> > +			if (ret) {
+> > +				pr_err("Fail to load .bpf section\n");
+> > +				ldata = ERR_PTR(ret);
+> > +				goto err;
+> > +			}
+> > +		}
+> > +		cur_phase = alloc_new_phase();
+> > +		if (image->type != KEXEC_TYPE_CRASH)
+> > +			context.kdump = false;
+> > +		else
+> > +			context.kdump = true;
+> > +		context.image = linux_start;
+> > +		context.image_sz = linux_sz;
+> > +		context.initrd = initrd_start;
+> > +		context.initrd_sz = initrd_sz;
+> > +		context.cmdline = cmdline_start;
+> > +		context.cmdline_sz = strlen(cmdline_start);
+> > +		/* bpf-prog fentry, which handle above buffers. */
+> > +		bpf_handle_pefile(&context);
+> > +
+> > +		prepare_nested_pe(&linux_start, &linux_sz, &initrd_start,
+> > +					&initrd_sz, &cmdline_start);
+> > +		/* bpf-prog fentry */
+> > +		bpf_post_handle_pefile(&context);
+> > +		/*
+> > +		 * detach the current bpf-prog from their attachment points.
+> > +		 * It also a point to free any registered interim resource.
+> > +		 * Any resource except attached to phase is interim.
+> > +		 */
+> > +		disarm_bpf_prog();
+> > +	}
+> > +
+> > +	/* the rear of parsed phase contains the result */
+> > +	list_for_each_entry_reverse(phase, &phase_head, head) {
+> > +		if (initrd != NULL && cmdline != NULL && parsed_kernel != NULL)
+> > +			break;
+> > +		list_for_each_entry(res, &phase->res_head, node) {
+> > +			if (!strcmp(res->name, "kernel") && !parsed_kernel) {
+> > +				parsed_kernel = res->r->buf;
+> > +				parsed_len = res->r->data_sz;
+> > +				res->deferred_free = true;
+> > +			} else if (!strcmp(res->name, "initrd") && !initrd) {
+> > +				initrd = res->r->buf;
+> > +				initrd_len = res->r->data_sz;
+> > +				res->deferred_free = true;
+> > +			} else if (!strcmp(res->name, "cmdline") && !cmdline) {
+> > +				cmdline = res->r->buf;
+> > +				cmdline_len = res->r->data_sz;
+> > +				res->deferred_free = true;
+> > +			}
+> > +		}
+> > +
+> > +	}
+> > +
+> > +	if (initrd == NULL || cmdline == NULL || parsed_kernel == NULL) {
+> > +		char *c, buf[64];
+> > +
+> > +		c = buf;
+> > +		if (parsed_kernel == NULL) {
+> > +			strcpy(c, "kernel ");
+> > +			c += strlen("kernel ");
+> > +		}
+> > +		if (initrd == NULL) {
+> > +			strcpy(c, "initrd ");
+> > +			c += strlen("initrd ");
+> > +		}
+> > +		if (cmdline == NULL) {
+> > +			strcpy(c, "cmdline ");
+> > +			c += strlen("cmdline ");
+> > +		}
+> > +		c = '\0';
+> > +		pr_err("Can not extract data for %s", buf);
+> > +		ldata = ERR_PTR(-EINVAL);
+> > +		goto err;
+> > +	}
 > > +	/*
-> > +	 * When light skeleton generates opts_data[] and opts_insn[], it appends a
-> > +	 * NULL terminator at the end of string
+> > +	 * image's kernel_buf, initrd_buf, cmdline_buf are set. Now they should
+> > +	 * be updated to the new content.
 > > +	 */
-> > +	opts_data_sz = opts_data_sz - 1;
-> > +	opts_insn_sz = opts_insn_sz - 1;
+> > +	if (image->kernel_buf != parsed_kernel) {
+> > +		vfree(image->kernel_buf);
+> > +		image->kernel_buf = parsed_kernel;
+> > +		image->kernel_buf_len = parsed_len;
+> > +	}
+> > +	if (image->initrd_buf != initrd) {
+> > +		vfree(image->initrd_buf);
+> > +		image->initrd_buf = initrd;
+> > +		image->initrd_buf_len = initrd_len;
+> > +	}
+> > +	if (image->cmdline_buf != cmdline) {
+> > +		kfree(image->cmdline_buf);
+> > +		image->cmdline_buf = cmdline;
+> > +		image->cmdline_buf_len = cmdline_len;
+> > +	}
+> > +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> > +					    image->kernel_buf_len);
+> > +	if (ret) {
+> > +		pr_err("Fail to find suitable image loader\n");
+> > +		ldata = ERR_PTR(ret);
+> > +		goto err;
+> > +	}
+> > +	ldata = kexec_image_load_default(image);
+> > +	if (IS_ERR(ldata)) {
+> > +		pr_err("architecture code fails to load image\n");
+> > +		goto err;
+> > +	}
+> > +	image->image_loader_data = ldata;
 > > +
-> > +	pe_parser = kexec_pe_parser_bpf__open_and_load();
-> > +	if (!pe_parser)
-> > +		return -1;
-> > +	kexec_pe_parser_bpf__attach(pe_parser);
+> > +err:
+> > +	list_for_each_entry_safe(phase, phase_tmp, &phase_head, head) {
+> > +		list_for_each_entry_safe(res, res_tmp, &phase->res_head, node) {
+> > +			list_del(&res->node);
+> > +			/* defer to kimage_file_post_load_cleanup() */
+> > +			if (res->deferred_free) {
+> > +				res->r->buf = NULL;
+> > +				res->r->buf_sz = 0;
+> > +			}
+> > +			mem_range_result_put(res->r);
+> > +			kfree(res);
+> > +		}
+> > +		list_del(&phase->head);
+> > +		kfree(phase);
+> > +	}
 > > +
-> >  	return 0;
-> >  }
-> >  
-> >  static void disarm_bpf_prog(void)
-> >  {
-> > +	kexec_pe_parser_bpf__destroy(pe_parser);
-> > +	pe_parser = NULL;
-> > +	opts_data = NULL;
-> > +	opts_insn = NULL;
-> >  }
-> >  
-> >  struct kexec_context {
+> > +	return ldata;
+> > +}
+> > +
+> > +const struct kexec_file_ops kexec_pe_image_ops = {
+> > +	.probe = pe_image_probe,
+> > +	.load = pe_image_load,
+> > +#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
+> > +	.verify_sig = kexec_kernel_verify_pe_sig,
+> > +#endif
+> > +};
 > 
 
 
