@@ -4,176 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1DFFC83013
-	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 06:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FC6FC7EE30
+	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 09:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=; b=Pn8vBLfcEMoEMrkxQeb+ocK663
-	oAzcrQDe3MoE/rujMb2nTc8xe5udiCFQGGH4o7JgNhW0s75BIgt2VKnbStGrPPnRzpwsV+g5ZGiE2
-	yjc/OGZyqweK5GzfMaORC6gEWoZTXlCRzPEO4TykDT8vStTAaeuD7IKtHGE+T3I74mY1Qdunnt0uV
-	+LT8+z7VadKX28xM8ZyR+vkS0/ReOLSY8Cn/8OlTeDnj+lsEC4hap/5hhoI0bjibKkHQh+1R9iieD
-	5ZEPcP5PRVUDwdQkvWG07A0+wo9cqq8anyuUurx4ZVzxOEjmhmYDFJC/WV9NG1thjazk+zs66FvHw
-	gq3P58lg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=JKclxFgKVXi+vC8NUwygEIBCeoHKMAxvB1FD+mdZZBQ=; b=hIEjygcg5gDvtoG6iqrXRUIhV1
+	x+ra0EMHKeLHtUzTLzZgEVpB+eTzMh2TMZTcu85uLyP62MpbmJ/TWzr0cLtrllludEtkgIVD/3KT5
+	GpVNdei0rKgNEe98gJ4UbhjIkIhhIJaX+qh1Dqu3DIqWJgrWdAW7yzxE0V+NqqQJbKM6w93LRGS7Y
+	4KQ72G4jXVArQLwqVSdy1vaW9Jfr4RHGfAxOysTYg7C5DpxtMJsjzISWi5WsPD3EathiHwZv1ZjlM
+	5DOWpXYnJ/eFcS//oxebFMUR5vkDpWHsKMAHbEFFArspmsvbTw3P+uW9yBm7bYWQnVuIg95PEbG/m
+	11Fw8zsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWqYq-00000007Lzn-3EbJ;
-	Wed, 02 Jul 2025 06:03:12 +0000
-Received: from mail-japaneastazlp170110002.outbound.protection.outlook.com ([2a01:111:f403:c405::2] helo=TYVP286CU001.outbound.protection.outlook.com)
+	id 1uWtqj-00000007mNh-11Tu;
+	Wed, 02 Jul 2025 09:33:53 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWqYo-00000007Lxf-08VF
+	id 1uWtbc-00000007jtG-0LWc
 	for kexec@lists.infradead.org;
-	Wed, 02 Jul 2025 06:03:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n4ZoH1Vzr4z7uSmHy979p8u7QnrrWQUjCPKg+4qY4DKMqW1NdVy7nhKIFfn5rxjMU0xBqM5cBz6/OEt+Mn7SBDGoU3bqGd9M26kppcSB3UpwBisnAj5rhF5drBKJafp4oQWiIIh80R126oKNlJX7cy4XAAqM/J4QcqPizzJRqynjEXT5jak5Wer5wuEwDSinEu5eUCNONOolkvh7oCg4SXojcnYnll9c2KQlt85HfA2SHeLUjyKAuBLaaBUC9fZwold7OfpYpsQUR2fzog6WepyeRLLytWV8OUWM0HwwZInatB86DKDJpRvnuU3Itoa++Rn0tSwytoMClT1Utjx1cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=;
- b=IECJyerhLoRa9PPmqDrdMaqfjRcdyhDVBKgnhCIuWMUeKuozciJxeQPYl142GyJ821mO6Tf6zovkosIGwwQbK/AhzERU0B6VgUTjou+SCoisUWmbBRzuQe7JAFrJ7p0bN11n2upn+c5h2ypS4/WKw4jNLRCXatP3o3MKW33krgV+1S/HndZQjyoo86duNiucVpqqZWZtdcVDjyWT8c8+4u+MMDTh6vFoLBsM0oM5RehzZvESa2XjtncuvvoLSQmuA+NEt5HmJ0Sog6Q99szLJKh5pc8+AZnZStvqRMKECBiRHpzyF51xyb1ZyMQLduBJpq75+nxSHOM/0NK3ODQvUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=;
- b=PWHaDK6DAIzCd2W0XytKeMF0aG05cQZEi02QPwK9KmnL14xi83mOkPavQ6ltyfveBovtIB0gogFozwVKY4eD0Q4krI8YkZSt0kQFT02wlb66WXaNwtC5Ep4w+8RlvRvVyNyiv3kMincmtujGlCk11vrcvL3vXZycto/hCAJ5pbQp5ROTy503TiUyeoEVvHZ7WyWQkjFhA89K8oPUDeuN0bIMrfviCpXtfP9f59n65upQwvIb4nka+P4ZBwNP5m4BUkW1+QjDacsK+ACWl+r2CkpKJwTMlSOFUJVVuoP0Ya412zCaGNgqphf3+VVnTpfBAwfB8km5IgahPt9OeHe5/g==
-Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com (2603:1096:604:1de::11)
- by OS9PR01MB16295.jpnprd01.prod.outlook.com (2603:1096:604:3f3::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Wed, 2 Jul
- 2025 06:02:56 +0000
-Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com
- ([fe80::d0f6:b978:1865:3d66]) by OS3PR01MB9993.jpnprd01.prod.outlook.com
- ([fe80::d0f6:b978:1865:3d66%4]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 06:02:56 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Tao Liu <ltao@redhat.com>, "sourabhjain@linux.ibm.com"
-	<sourabhjain@linux.ibm.com>
-CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH v2][makedumpfile] Fix a data race in multi-threading mode
- (--num-threads=N)
-Thread-Topic: [PATCH v2][makedumpfile] Fix a data race in multi-threading mode
- (--num-threads=N)
-Thread-Index: AQHb5XiBHM/FX67D1ky3gbRMCQy+FbQc6x0AgAAGMoCAAQ/0AIAASZSAgAAEXwCAAAMEgIAAEL0A
-Date: Wed, 2 Jul 2025 06:02:56 +0000
-Message-ID: <29488c31-41a4-4dee-b768-9f8c49deeea6@nec.com>
-References: <20250625022343.57529-2-ltao@redhat.com>
- <7c13a968-4a3a-4d0d-8977-3ba0a4a845b1@nec.com>
- <CAO7dBbXpkshxguPbHDA2YFZeYsDAbyswBCQ7x0UKY__4H1K2jQ@mail.gmail.com>
- <5c425f4e-4e89-4500-993e-e4dfec50a4fb@nec.com>
- <CAO7dBbXweDPUpsEDYhFZqf-eAALGrFOBJh-=bQAYMUsj2ioNpw@mail.gmail.com>
- <e78c8c33-5718-4218-89a3-ea4d7e3a6c64@nec.com>
- <CAO7dBbW=zX15-LDE71qYMJKmm=EF-VANJ3YtK+8n92yrSOS3pA@mail.gmail.com>
-In-Reply-To: <CAO7dBbW=zX15-LDE71qYMJKmm=EF-VANJ3YtK+8n92yrSOS3pA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS3PR01MB9993:EE_|OS9PR01MB16295:EE_
-x-ms-office365-filtering-correlation-id: ca697cbd-c750-4357-8f7b-08ddb92e175b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?TDJuS1d5L0hMNUpBMWZwMldzWkxhTWNkSFRudWxobGZEeWxaZ1pRSzdnSXJz?=
- =?utf-8?B?a1c0NzZRVStnUFdFbVhBMnZkM3JUZVJGajRzZUV4a3VFWEpxVGozLzlMNS9n?=
- =?utf-8?B?R084dHJJeDcrQ3NBVGc2T09odTJmcC9RdTlEdk5MalQxVmp1RDRuTW10QWtJ?=
- =?utf-8?B?bHpINzJuelFBenljQ3JCaFdBekZ0eVRsaUhRU0pXbUsrdERCb2FCUVU3QjBG?=
- =?utf-8?B?RWppeWJWSjgzTXFLVURVaCtDT3VGT1JxdCs1M1NIQ3hwVmpRYjVBR1FqQ3Bu?=
- =?utf-8?B?dzdlV25ETzNIVC9wTVlselpIanhsRU9WWml4YTh1Q2IvUXhLeWNoenBqdHdv?=
- =?utf-8?B?THpueXBKWW1XenpNbW9EOXNGd3g4L2J4VU5xTmxDekZXcEJGQnhncXNkNW5x?=
- =?utf-8?B?QTFybjA5bWZkMlgvK3JsVllXZ3BqMXl3c1JwQTh5LzRFY3pjblBFRXpVclY1?=
- =?utf-8?B?ZHo5a3RORko5YVgzQmxiRFBwTGkyQ0luSUZleXpKOWZhMk1jQXVSSFRiOVNV?=
- =?utf-8?B?UVhNZzRVeW15OWc0eXZjYjNITHFqMzdGRjBxUEpXQ1BKTEVlNSsrTFUwR2FN?=
- =?utf-8?B?T3VJSXVXVXgrbGJkLzNYbnh0NVJzOGR5eVlCZ1BpYnVTOWRoMjZTWGNQeDdV?=
- =?utf-8?B?dVNrc1R6MWdsNTNObmZSY3c5YXBaRy9uM0xDWUdJNEVDcnhRdlhZMk41RFFu?=
- =?utf-8?B?STkzbFZrMVcrMmtQdWJBMXIwMjdHeFl5RXVyN09VU2xxaGJxZlBJbnVJQ0hN?=
- =?utf-8?B?WXlXMCt3NlBOd3Jyc1BFS21iUWFVTmxhVzBaSE1QZStYcm42N001aFpydFZt?=
- =?utf-8?B?U3prMjJVOXlCUGhzQUd6Z2gwbG14UUV3eUVLTUhHUlFJbzJNSktUSVppN0pU?=
- =?utf-8?B?OWxCVHMwRGtkWW5iV1NneGlFWXlIaHd2NkpCTVFzYjFVSm1ubFlFRHZjRFE5?=
- =?utf-8?B?d0EvYWxvMTZJbkMzQUhieDB2QnFhMDcwb2VSWDd4TFQ0c08wVFpGL0UvN0N3?=
- =?utf-8?B?dUhMREdQaFVTbzhvcStQOEV3QmJvcEpvMXE1RXVVdjNlODgzQ2NDRTIrK0U0?=
- =?utf-8?B?RlM1K2pJOU9qWVlTbDFYYllLUXRTT01RL2dDalpCclBkSTVqeFUyS3k2cEtk?=
- =?utf-8?B?SzkyN0RPeGFTdTlQZUI4Y0wvT2tLbm5EaklwaWRHbFZQSzh1eEhKTXVNY1Fp?=
- =?utf-8?B?Q3FqMmxRdWVOeWUrWFR0eVlPdFd1UTNNdzgwRDVVOXhMLzFGU2VZOHAyOVE1?=
- =?utf-8?B?cjlUWW01VFl2TWdCKzVjMEphZTY2VDd2Zk5BK0NUSnQyUmNDaFE2OFFlQWhq?=
- =?utf-8?B?Qk9CZ1hKUDdLcUVPY0c5VlhGZ1JsbVBkNFhqVTFkeVZ4L0pNeDlNRC91aHdG?=
- =?utf-8?B?RU5lbG1wSDZrQ0NzQ0NUYlNEdFFjNzBYNEVHWEgzOG5iaFBvQU9hZ2phejdV?=
- =?utf-8?B?OG1oTGdxR1lCV2RBSjQrcUNkd1BVOGlsUEhkc3dyeGpuVzI0U1NzN2lSdTVN?=
- =?utf-8?B?VUdEVklXcUQ1Y25CWHpBaFFWcGRuZkFJVldXWEtPRTZ5ZUF1cnk1UUpsY25x?=
- =?utf-8?B?dTB2Mk1aclpkZk9sSzRZdk50VEVUeVY2Sk01UjB6RjdqVnBBNCtZTmRKSzFu?=
- =?utf-8?B?ajZML2U4S1czTFI5QjJLUTduMjdaUzQ1S1hpNHVPZzN6SFdMc2JuR0hLVXJx?=
- =?utf-8?B?UG9tbzk3TmJ1VzAzRWNIL09qTFBMc1JsUEI3YWVKNXI1VElUTzdmdzYwR1Zu?=
- =?utf-8?B?S0RkWjFYRnl0YUN4dDVlSmQwT2N4S3phODNUWGxZOTk4TjAySXFKY3owd3Br?=
- =?utf-8?B?b1pobDNPT1N3WmN3S1RFdW9zYnJQVy9pZGp1QXlJTHFyVDJzRlZOcm53Sk5k?=
- =?utf-8?B?WEM5VjRwWTBjRUZyYm1US3p4QmZ2YVg0KzdmRFhMdGwyNXMzRStwbHNzNkpJ?=
- =?utf-8?B?c2hRQWtZZXRzbTBTd0Rkc3NYU1pJUk5QQVB5Ry9ZdTBoWk52YnVaOWs1QTR1?=
- =?utf-8?Q?kq/CIAg0HC8w6KnM/i1BBdXdJtBeTs=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB9993.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YklhcXZ5clVmTUh2L1YxYjl4SHdsWngxanZva2tnM0xsWU9iRlkzSUN3NVR3?=
- =?utf-8?B?Y1VMYTRYY1N2Rno4U09KcGhmVy93ams3L250RjFWdWw2MW1NUTRNMzdLOCtQ?=
- =?utf-8?B?RzZYTVNFOUcvbndxWEo1UTRBd0h2WUZBYng3M2RCWm96aW5WeWVONUJiL3l6?=
- =?utf-8?B?alFpTnJtZDY2ci9PNkxZWndSeXpyUHZxSGZ6R2dmUUljOExKMXpVMUg1dmlC?=
- =?utf-8?B?STNkYStsL1hYMllYVE1nc2lDQ1NxMnFHYk5Na2NwSWlOb3lLWE9NbGVLamdF?=
- =?utf-8?B?TytBUU80N2V3bHQvMjdJdWxsSG5FaWFaZ1FUTWMyekYvVWtySi9lMStybFJJ?=
- =?utf-8?B?Y1dpTDNBV3U0Sm1YVEdTR3V0QVA4U204b1FmOU5vZ0xGTlVqNEs3b21zNzF4?=
- =?utf-8?B?VHAvVjREcmdpdU1kcmhIOGlVcWxPNjJ0ZkxHQ1MrVzdEbis0K2lxNk4yRW1h?=
- =?utf-8?B?QUhlSmFveDhQdlBETHJvUGJ4THNjUzFVUW1wenFxY3NaRXhZWm1YYWM1ZHFG?=
- =?utf-8?B?REtiVUhzWGlRbjd1U0pJdHdjNExsQnp0ZGsvZHFmbDd4T2lMNUFjTklyTStO?=
- =?utf-8?B?VjdFSDhVcFRKaEYzTHRWZ2t3bVAxK1FpOEZKWUJwNHJsVGZjQ3VyemY0Qlhu?=
- =?utf-8?B?VFpqRk50R3AyZVRzc3VyeVF6OVljOGFxdFd5MUYzdmdrbW1va295UlBSRHZy?=
- =?utf-8?B?a2JyQVhGL0FOWHZRbFRYVThuS1BRUkJLU0lDc3l5TC9oQ3F2YjRoT3BDV1Zs?=
- =?utf-8?B?R1Bra20yVDZwM3R6U2ZoNm1sNWl4eGlDSDhJY3F0YzJoY1JlaDVJekhhVXZr?=
- =?utf-8?B?Z0ptblI4REUyU2NyZDRjTlgvSUxMSStDNkI1UXB1aktueUJMdXNERVh5dDlS?=
- =?utf-8?B?aHhRd2puL2tObHBQdmxKM2wyTUlqZ1pHZWNNR3hIMTlEa3lKL0hNQ0VGLzYw?=
- =?utf-8?B?YzRWUUxpdE1QRlNZNjExRUJIaThwRTgxL2xVVVB0ZFVjc1VQUUphSEdkT3Ba?=
- =?utf-8?B?MS9tb3JUQkpBWStSMU9GeWQ4STcyeGtoQnF1djdqR2Rmc2xWODI0THpsSnR0?=
- =?utf-8?B?V3hacU1qUDlxWkhuZE80VWxSaXF0emtJSGt0RUYrSGpKTTU3cFhaUXBLSG12?=
- =?utf-8?B?MWZQUnlYaDNQV1pwQ2NCNDBjSG1pWGlwaE5NNHIwY0NQT2RmMXpwUUZhYkp4?=
- =?utf-8?B?czJ3cGZPSGNsVWpVT1hpcmZrNHRVK2syTGUxcm4rcXNZMUxEeHV6bkVhU3R0?=
- =?utf-8?B?OE1MWXVNcW8xSUNVOEJtMVFweHZRZVRzb1dMUTdMSzZVYUdwSGk3VlZqSEJV?=
- =?utf-8?B?MG54TUxWSDN5REhYWjdzSC83c2hOMWttTzB4cDNwcitKNXdFQUxVNVpkUUZN?=
- =?utf-8?B?M1lGVVh3OG5ITFhRUUxFaldNMC9IcThZcjZtUkRKdHBIWi9scWRWZ3U3NVNu?=
- =?utf-8?B?V2NIdlFDakZJU0ttamFXQU9teXNNWTFZNDdvUlFyTW53d1V5NkRwV1hGL1Jt?=
- =?utf-8?B?OTREZGJyUDBiWllIYTNFdE5Kb1E2TDJUdnVLM2gvZnA2NUJIYnVHRWlqbUxH?=
- =?utf-8?B?aGlwK1M2aXhZTC9tZ3NieEQrc3BBeThkYlFlTnAxTG45Y01SZ2hISGZWVVc4?=
- =?utf-8?B?dzFMZ3pSbXZIUTFpZUVUT1c0eU03K1kwcjh2N3pBUlI3aSt4aXdicDBtbFpY?=
- =?utf-8?B?TWR4TUVXWEpTdU05amlUR2wvaGt3ZXc2L1ptNmMvSDRVeTRIZjcwNVRtL3NF?=
- =?utf-8?B?TDBSWnZPTldlRTFMMldLSGdqOHhvZDR6ajI3NzArS1BuOUZ5dHFTTi9xdmMr?=
- =?utf-8?B?UFpvMFQzbUUwRUZUd2hvd1krY0FYc2d1SUpXVCtDVklRRDltYVVpR2dMNTN1?=
- =?utf-8?B?WmlzRnoxOXVvUUdNRUkrcFN3b2gzMkVmL2RrTlUxYkNGQzVreDNidzVlY0Y1?=
- =?utf-8?B?aTZqK1JMZFNwZVZNQVpTQm1zMm9iY2RxR1JoN3g0WGZLNVhYTkRkRU5vZEtp?=
- =?utf-8?B?Wi9mQ1FIVXI0TkNNNGJuRjRNYzdRZFJ5dEVZMFRxMUdpRCtCQnNnWjhLcVR3?=
- =?utf-8?B?WkYwZXl4RVV5aXR5OGY5dGRoMXNrYlhaQmc3WCtGUk9tNWQ0VEJlNUZzRkhW?=
- =?utf-8?Q?mjSIrX8RI7Hh2/eyfHOtrDqLc?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5F6513596A8C9745B8E70FF6E16A41D6@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	Wed, 02 Jul 2025 09:18:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751447893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JKclxFgKVXi+vC8NUwygEIBCeoHKMAxvB1FD+mdZZBQ=;
+	b=LKNAlr0LVTw1kFXQe2hwaCzLPXF1/oXFJYcSmBiVOHDKlxEGRITjW8wLGqtzlOQ5aY9j+U
+	DWAwglrQ3+u+cFjK4NzdjMdJHLQHT5gM2sUM1jbk6OV28TYeFYxcHsLESqVE9FqmGQkHZp
+	MFTwFOgeyXagw4KV0MuVPEqrZE7N3Yk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-VMOEDDGyPyeUqz-jBnW1uQ-1; Wed,
+ 02 Jul 2025 05:18:09 -0400
+X-MC-Unique: VMOEDDGyPyeUqz-jBnW1uQ-1
+X-Mimecast-MFC-AGG-ID: VMOEDDGyPyeUqz-jBnW1uQ_1751447887
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9AEFD1944A82;
+	Wed,  2 Jul 2025 09:18:05 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.45.224.183])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 93E2B19560AB;
+	Wed,  2 Jul 2025 09:17:55 +0000 (UTC)
+Date: Wed, 2 Jul 2025 11:17:51 +0200
+From: Philipp Rudo <prudo@redhat.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: kexec@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton
+ <jeremy.linton@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Simon Horman
+ <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Vitaly Kuznetsov
+ <vkuznets@redhat.com>, Viktor Malik <vmalik@redhat.com>, Jan Hendrik Farr
+ <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young
+ <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ bpf@vger.kernel.org
+Subject: Re: [PATCHv3 5/9] kexec: Introduce kexec_pe_image to parse and load
+ PE file
+Message-ID: <20250702111751.2b43aea2@rotkaeppchen>
+In-Reply-To: <aGKU4ZoPwLXbQGVu@fedora>
+References: <20250529041744.16458-1-piliu@redhat.com>
+	<20250529041744.16458-6-piliu@redhat.com>
+	<20250625200950.16d7a09c@rotkaeppchen>
+	<aGKU4ZoPwLXbQGVu@fedora>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB9993.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca697cbd-c750-4357-8f7b-08ddb92e175b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 06:02:56.7734
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1jqaspU7KYQ95YYEI4hhND76mwjjG466VNBv+iTZnTIw2zCkd3Lpzjd4Qat0zCN68W5+EzjeUS5/meeGuXK3rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9PR01MB16295
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250701_230310_230830_BE0584F6 
-X-CRM114-Status: GOOD (  11.71  )
+X-CRM114-CacheID: sfid-20250702_021816_277453_EEC2B93B 
+X-CRM114-Status: GOOD (  64.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -188,25 +98,488 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgVGFvLCBTb3VyYWJoLA0KDQo+PiB0aGFuayB5b3UgZm9yIHRlc3RpbmchICBzb3JyeSBvbmUg
-bW9yZSB0aGluZywNCj4+IGRvZXMgLS1udW0tdGhyZWFkcz0xIGJyZWFrIHRoZSB2bWNvcmU/DQo+
-IA0KPiBZZXM6DQoNClRoYW5rIHlvdSBmb3IgdGVzdGluZyBhbmQgaW5mb3JtYXRpb24sIGNlcnRh
-aW5seSB0aGUgcmFjZSBvY2N1cnMgYmV0d2VlbiANCnRoZSBtYWluIGFuZCBzdWItdGhyZWFkLCBJ
-IHdpbGwgY2hlY2sgdGhlIGNvZGUgYWdhaW4uICBJZiB5b3UgY291bGQgDQpkZXRlcm1pbmUgaG93
-IGl0IGJyZWFrcyB0aGUgdm1jb3JlLCBwbGVhc2UgbGV0IG1lIGtub3cuICBJdCB3aWxsIGJlIA0K
-YmV0dGVyIHRvIGFkZCB0aGUgc2NlbmFyaW8gdG8gdGhlIGNvbW1pdCBsb2cuDQoNClRoYW5rcywN
-CkthenUNCg0KPiANCj4gW3Jvb3RAaWJtLXAxMC0wMS1scDQ1IG1ha2VkdW1wZmlsZV0jIC4vbWFr
-ZWR1bXBmaWxlIC1kIDMxIC1sIH4vdm1jb3JlIC90bXAvb3V0Nw0KPiBDb3B5aW5nIGRhdGEgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogWzEwMC4wICVdIC8NCj4gICAgIGV0
-YTogMHMNCj4gDQo+IFRoZSBkdW1wZmlsZSBpcyBzYXZlZCB0byAvdG1wL291dDcuDQo+IA0KPiBt
-YWtlZHVtcGZpbGUgQ29tcGxldGVkLg0KPiBbcm9vdEBpYm0tcDEwLTAxLWxwNDUgbWFrZWR1bXBm
-aWxlXSMgLi9tYWtlZHVtcGZpbGUgLS1udW0tdGhyZWFkcz0xIC1kDQo+IDMxIC1sIH4vdm1jb3Jl
-IC90bXAvb3V0OA0KPiBDb3B5aW5nIGRhdGEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDogWzEwMC4wICVdIC0NCj4gICAgIGV0YTogMHMNCj4gQ29weWluZyBkYXRhICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSAvDQo+ICAgICBldGE6
-IDBzDQo+IA0KPiBUaGUgZHVtcGZpbGUgaXMgc2F2ZWQgdG8gL3RtcC9vdXQ4Lg0KPiANCj4gbWFr
-ZWR1bXBmaWxlIENvbXBsZXRlZC4NCj4gW3Jvb3RAaWJtLXAxMC0wMS1scDQ1IG1ha2VkdW1wZmls
-ZV0jIGNtcCAvdG1wL291dDcgL3RtcC9vdXQ4DQo+IC90bXAvb3V0NyAvdG1wL291dDggZGlmZmVy
-OiBieXRlIDExMTE5MDE5LCBsaW5lIDQ5NDE4DQo+IA0KPj4NCj4+IFRoYW5rcywNCj4+IEthenUN
-Cj4g
+Hi Pingfan,
+
+On Mon, 30 Jun 2025 21:45:05 +0800
+Pingfan Liu <piliu@redhat.com> wrote:
+
+> On Wed, Jun 25, 2025 at 08:09:50PM +0200, Philipp Rudo wrote:
+> > Hi Pingfan,
+> > 
+> > On Thu, 29 May 2025 12:17:40 +0800
+> > Pingfan Liu <piliu@redhat.com> wrote:
+> >   
+> > > As UEFI becomes popular, a few architectures support to boot a PE format
+> > > kernel image directly. But the internal of PE format varies, which means
+> > > each parser for each format.
+> > > 
+> > > This patch (with the rest in this series) introduces a common skeleton
+> > > to all parsers, and leave the format parsing in
+> > > bpf-prog, so the kernel code can keep relative stable.
+> > > 
+> > > A new kexec_file_ops is implementation, named pe_image_ops.
+> > > 
+> > > There are some place holder function in this patch. (They will take
+> > > effect after the introduction of kexec bpf light skeleton and bpf
+> > > helpers). Overall the parsing progress is a pipeline, the current
+> > > bpf-prog parser is attached to bpf_handle_pefile(), and detatched at the
+> > > end of the current stage 'disarm_bpf_prog()' the current parsed result
+> > > by the current bpf-prog will be buffered in kernel 'prepare_nested_pe()'
+> > > , and deliver to the next stage.  For each stage, the bpf bytecode is
+> > > extracted from the '.bpf' section in the PE file.
+> > > 
+> > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > > Cc: Baoquan He <bhe@redhat.com>
+> > > Cc: Dave Young <dyoung@redhat.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Philipp Rudo <prudo@redhat.com>
+> > > To: kexec@lists.infradead.org
+> > > ---
+> > >  include/linux/kexec.h   |   1 +
+> > >  kernel/Kconfig.kexec    |   8 +
+> > >  kernel/Makefile         |   1 +
+> > >  kernel/kexec_pe_image.c | 356 ++++++++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 366 insertions(+)
+> > >  create mode 100644 kernel/kexec_pe_image.c
+> > >   
+> > [...]
+> >   
+> > > diff --git a/kernel/kexec_pe_image.c b/kernel/kexec_pe_image.c
+> > > new file mode 100644
+> > > index 0000000000000..3097efccb8502
+> > > --- /dev/null
+> > > +++ b/kernel/kexec_pe_image.c
+> > > @@ -0,0 +1,356 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Kexec PE image loader
+> > > +
+> > > + * Copyright (C) 2025 Red Hat, Inc
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt)	"kexec_file(Image): " fmt
+> > > +
+> > > +#include <linux/err.h>
+> > > +#include <linux/errno.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/vmalloc.h>
+> > > +#include <linux/kexec.h>
+> > > +#include <linux/pe.h>
+> > > +#include <linux/string.h>
+> > > +#include <linux/bpf.h>
+> > > +#include <linux/filter.h>
+> > > +#include <asm/byteorder.h>
+> > > +#include <asm/image.h>
+> > > +#include <asm/memory.h>
+> > > +
+> > > +
+> > > +static LIST_HEAD(phase_head);
+> > > +
+> > > +struct parsed_phase {
+> > > +	struct list_head head;
+> > > +	struct list_head res_head;
+> > > +};
+> > > +
+> > > +static struct parsed_phase *cur_phase;
+> > > +
+> > > +static char *kexec_res_names[3] = {"kernel", "initrd", "cmdline"};  
+> > 
+> > Wouldn't it be better to use a enum rather than strings for the
+> > different resources? Especially as in prepare_nested_pe you are  
+> 
+> I plan to make bpf_copy_to_kernel() fit for more cases besides kexec. So
+> string may be better choice, and I think it is better to have a
+> subsystem prefix, like "kexec:kernel"
+
+True, although an enum could be utilized directly as, e.g. an index for
+an array directly. Anyway, I don't think there is a single 'best'
+solution here. So feel free to use strings.
+
+> > comparing two strings using == instead of strcmp(). So IIUC it should
+> > always return false.
+> >   
+> 
+> Oops, I will fix that. In fact, I meaned to assign the pointer
+> kexec_res_names[i] to kexec_res.name in bpf_kexec_carrier(). Later in
+> prepare_nested_pe() can compare two pointers.
+> 
+> 
+> > > +struct kexec_res {
+> > > +	struct list_head node;
+> > > +	char *name;
+> > > +	/* The free of buffer is deferred to kimage_file_post_load_cleanup */
+> > > +	bool deferred_free;
+> > > +	struct mem_range_result *r;
+> > > +};
+> > > +
+> > > +static struct parsed_phase *alloc_new_phase(void)
+> > > +{
+> > > +	struct parsed_phase *phase = kzalloc(sizeof(struct parsed_phase), GFP_KERNEL);
+> > > +
+> > > +	INIT_LIST_HEAD(&phase->head);
+> > > +	INIT_LIST_HEAD(&phase->res_head);
+> > > +	list_add_tail(&phase->head, &phase_head);
+> > > +
+> > > +	return phase;
+> > > +}  
+> > 
+> > I must admit I don't fully understand how you are handling the
+> > different phases. In particular I don't understand why you are keeping
+> > all the resources a phase returned once it is finished. The way I see
+> > it those resources are only needed once as input for the next phase. So
+> > it should be sufficient to only keep a single kexec_context and update
+> > it when a phase returns a new resource. The way I see it this should
+> > simplify pe_image_load quite a bit. Or am I missing something?
+> >   
+> 
+> Let us say an aarch64 zboot image embeded in UKI's .linux section.
+> The UKI parser takes apart the image into kernel, initrd, cmdline.
+> And the kernel part contains the zboot PE, including zboot parser.
+> The zboot parser needn't to handle either initrd or cmdline.
+> So I use the phases, and the leaf node is the final parsed result.
+
+Right, that's how the code is working. My point was that when you have
+multiple phases working on the same component, e.g. the kernel image,
+then you still keep all the intermediate kernel images in memory until
+the end. Even though the intermediate images are only used as an input
+for the next phase(s). So my suggestion is to remove them immediately
+once a phase returns a new image. My expectation is that this not only
+reduces the memory usage but also simplifies the code.
+
+Thanks
+Philipp
+
+> > > +static bool is_valid_pe(const char *kernel_buf, unsigned long kernel_len)
+> > > +{
+> > > +	struct mz_hdr *mz;
+> > > +	struct pe_hdr *pe;
+> > > +
+> > > +	if (!kernel_buf)
+> > > +		return false;
+> > > +	mz = (struct mz_hdr *)kernel_buf;
+> > > +	if (mz->magic != MZ_MAGIC)
+> > > +		return false;
+> > > +	pe = (struct pe_hdr *)(kernel_buf + mz->peaddr);
+> > > +	if (pe->magic != PE_MAGIC)
+> > > +		return false;
+> > > +	if (pe->opt_hdr_size == 0) {
+> > > +		pr_err("optional header is missing\n");
+> > > +		return false;
+> > > +	}
+> > > +
+> > > +	return true;
+> > > +}
+> > > +
+> > > +static bool is_valid_format(const char *kernel_buf, unsigned long kernel_len)
+> > > +{
+> > > +	return is_valid_pe(kernel_buf, kernel_len);
+> > > +}
+> > > +
+> > > +/*
+> > > + * The UEFI Terse Executable (TE) image has MZ header.
+> > > + */
+> > > +static int pe_image_probe(const char *kernel_buf, unsigned long kernel_len)
+> > > +{
+> > > +	return is_valid_pe(kernel_buf, kernel_len) ? 0 : -1;  
+> > 
+> > Every image, at least on x86, is a valid pe file. So we should check
+> > for the .bpf section rather than the header.
+> >   
+> 
+> You are right that it should include the check on the existence of .bpf
+> section. On the other hand, the check on PE header in kernel can ensure 
+> the kexec-tools passes the right candidate for this parser.
+> 
+> > > +}
+> > > +
+> > > +static int get_pe_section(char *file_buf, const char *sect_name,  
+> > 
+> > s/get_pe_section/pe_get_section/ ?
+> > that would make it more consistent with the other functions.  
+> 
+> Sure. I will fix it.
+> 
+> 
+> Thanks for your careful review.
+> 
+> 
+> Best Regards,
+> 
+> Pingfan
+> 
+> > 
+> > Thanks
+> > Philipp
+> >   
+> > > +		char **sect_start, unsigned long *sect_sz)
+> > > +{
+> > > +	struct pe_hdr *pe_hdr;
+> > > +	struct pe32plus_opt_hdr *opt_hdr;
+> > > +	struct section_header *sect_hdr;
+> > > +	int section_nr, i;
+> > > +	struct mz_hdr *mz = (struct mz_hdr *)file_buf;
+> > > +
+> > > +	*sect_start = NULL;
+> > > +	*sect_sz = 0;
+> > > +	pe_hdr = (struct pe_hdr *)(file_buf + mz->peaddr);
+> > > +	section_nr = pe_hdr->sections;
+> > > +	opt_hdr = (struct pe32plus_opt_hdr *)(file_buf + mz->peaddr + sizeof(struct pe_hdr));
+> > > +	sect_hdr = (struct section_header *)((char *)opt_hdr + pe_hdr->opt_hdr_size);
+> > > +
+> > > +	for (i = 0; i < section_nr; i++) {
+> > > +		if (strcmp(sect_hdr->name, sect_name) == 0) {
+> > > +			*sect_start = file_buf + sect_hdr->data_addr;
+> > > +			*sect_sz = sect_hdr->raw_data_size;
+> > > +			return 0;
+> > > +		}
+> > > +		sect_hdr++;
+> > > +	}
+> > > +
+> > > +	return -1;
+> > > +}
+> > > +
+> > > +static bool pe_has_bpf_section(char *file_buf, unsigned long pe_sz)
+> > > +{
+> > > +	char *sect_start = NULL;
+> > > +	unsigned long sect_sz = 0;
+> > > +	int ret;
+> > > +
+> > > +	ret = get_pe_section(file_buf, ".bpf", &sect_start, &sect_sz);
+> > > +	if (ret < 0)
+> > > +		return false;
+> > > +	return true;
+> > > +}
+> > > +
+> > > +/* Load a ELF */
+> > > +static int arm_bpf_prog(char *bpf_elf, unsigned long sz)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void disarm_bpf_prog(void)
+> > > +{
+> > > +}
+> > > +
+> > > +struct kexec_context {
+> > > +	bool kdump;
+> > > +	char *image;
+> > > +	int image_sz;
+> > > +	char *initrd;
+> > > +	int initrd_sz;
+> > > +	char *cmdline;
+> > > +	int cmdline_sz;
+> > > +};
+> > > +
+> > > +void bpf_handle_pefile(struct kexec_context *context);
+> > > +void bpf_post_handle_pefile(struct kexec_context *context);
+> > > +
+> > > +
+> > > +/*
+> > > + * optimize("O0") prevents inline, compiler constant propagation
+> > > + */
+> > > +__attribute__((used, optimize("O0"))) void bpf_handle_pefile(struct kexec_context *context)
+> > > +{
+> > > +}
+> > > +
+> > > +__attribute__((used, optimize("O0"))) void bpf_post_handle_pefile(struct kexec_context *context)
+> > > +{
+> > > +}
+> > > +
+> > > +/*
+> > > + * PE file may be nested and should be unfold one by one.
+> > > + * Query 'kernel', 'initrd', 'cmdline' in cur_phase, as they are inputs for the
+> > > + * next phase.
+> > > + */
+> > > +static int prepare_nested_pe(char **kernel, unsigned long *kernel_len, char **initrd,
+> > > +		unsigned long *initrd_len, char **cmdline)
+> > > +{
+> > > +	struct kexec_res *res;
+> > > +	int ret = -1;
+> > > +
+> > > +	*kernel = NULL;
+> > > +	*kernel_len = 0;
+> > > +
+> > > +	list_for_each_entry(res, &cur_phase->res_head, node) {
+> > > +		if (res->name == kexec_res_names[0]) {
+> > > +			*kernel = res->r->buf;
+> > > +			*kernel_len = res->r->data_sz;
+> > > +			ret = 0;
+> > > +		} else if (res->name == kexec_res_names[1]) {
+> > > +			*initrd = res->r->buf;
+> > > +			*initrd_len = res->r->data_sz;
+> > > +		} else if (res->name == kexec_res_names[2]) {
+> > > +			*cmdline = res->r->buf;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static void *pe_image_load(struct kimage *image,
+> > > +				char *kernel, unsigned long kernel_len,
+> > > +				char *initrd, unsigned long initrd_len,
+> > > +				char *cmdline, unsigned long cmdline_len)
+> > > +{
+> > > +	char *parsed_kernel = NULL;
+> > > +	unsigned long parsed_len;
+> > > +	char *linux_start, *initrd_start, *cmdline_start, *bpf_start;
+> > > +	unsigned long linux_sz, initrd_sz, cmdline_sz, bpf_sz;
+> > > +	struct parsed_phase *phase, *phase_tmp;
+> > > +	struct kexec_res *res, *res_tmp;
+> > > +	void *ldata;
+> > > +	int ret;
+> > > +
+> > > +	linux_start = kernel;
+> > > +	linux_sz = kernel_len;
+> > > +	initrd_start = initrd;
+> > > +	initrd_sz = initrd_len;
+> > > +	cmdline_start = cmdline;
+> > > +	cmdline_sz = cmdline_len;
+> > > +
+> > > +	while (is_valid_format(linux_start, linux_sz) &&
+> > > +	       pe_has_bpf_section(linux_start, linux_sz)) {
+> > > +		struct kexec_context context;
+> > > +
+> > > +		get_pe_section(linux_start, ".bpf", &bpf_start, &bpf_sz);
+> > > +		if (!!bpf_sz) {
+> > > +			/* load and attach bpf-prog */
+> > > +			ret = arm_bpf_prog(bpf_start, bpf_sz);
+> > > +			if (ret) {
+> > > +				pr_err("Fail to load .bpf section\n");
+> > > +				ldata = ERR_PTR(ret);
+> > > +				goto err;
+> > > +			}
+> > > +		}
+> > > +		cur_phase = alloc_new_phase();
+> > > +		if (image->type != KEXEC_TYPE_CRASH)
+> > > +			context.kdump = false;
+> > > +		else
+> > > +			context.kdump = true;
+> > > +		context.image = linux_start;
+> > > +		context.image_sz = linux_sz;
+> > > +		context.initrd = initrd_start;
+> > > +		context.initrd_sz = initrd_sz;
+> > > +		context.cmdline = cmdline_start;
+> > > +		context.cmdline_sz = strlen(cmdline_start);
+> > > +		/* bpf-prog fentry, which handle above buffers. */
+> > > +		bpf_handle_pefile(&context);
+> > > +
+> > > +		prepare_nested_pe(&linux_start, &linux_sz, &initrd_start,
+> > > +					&initrd_sz, &cmdline_start);
+> > > +		/* bpf-prog fentry */
+> > > +		bpf_post_handle_pefile(&context);
+> > > +		/*
+> > > +		 * detach the current bpf-prog from their attachment points.
+> > > +		 * It also a point to free any registered interim resource.
+> > > +		 * Any resource except attached to phase is interim.
+> > > +		 */
+> > > +		disarm_bpf_prog();
+> > > +	}
+> > > +
+> > > +	/* the rear of parsed phase contains the result */
+> > > +	list_for_each_entry_reverse(phase, &phase_head, head) {
+> > > +		if (initrd != NULL && cmdline != NULL && parsed_kernel != NULL)
+> > > +			break;
+> > > +		list_for_each_entry(res, &phase->res_head, node) {
+> > > +			if (!strcmp(res->name, "kernel") && !parsed_kernel) {
+> > > +				parsed_kernel = res->r->buf;
+> > > +				parsed_len = res->r->data_sz;
+> > > +				res->deferred_free = true;
+> > > +			} else if (!strcmp(res->name, "initrd") && !initrd) {
+> > > +				initrd = res->r->buf;
+> > > +				initrd_len = res->r->data_sz;
+> > > +				res->deferred_free = true;
+> > > +			} else if (!strcmp(res->name, "cmdline") && !cmdline) {
+> > > +				cmdline = res->r->buf;
+> > > +				cmdline_len = res->r->data_sz;
+> > > +				res->deferred_free = true;
+> > > +			}
+> > > +		}
+> > > +
+> > > +	}
+> > > +
+> > > +	if (initrd == NULL || cmdline == NULL || parsed_kernel == NULL) {
+> > > +		char *c, buf[64];
+> > > +
+> > > +		c = buf;
+> > > +		if (parsed_kernel == NULL) {
+> > > +			strcpy(c, "kernel ");
+> > > +			c += strlen("kernel ");
+> > > +		}
+> > > +		if (initrd == NULL) {
+> > > +			strcpy(c, "initrd ");
+> > > +			c += strlen("initrd ");
+> > > +		}
+> > > +		if (cmdline == NULL) {
+> > > +			strcpy(c, "cmdline ");
+> > > +			c += strlen("cmdline ");
+> > > +		}
+> > > +		c = '\0';
+> > > +		pr_err("Can not extract data for %s", buf);
+> > > +		ldata = ERR_PTR(-EINVAL);
+> > > +		goto err;
+> > > +	}
+> > > +	/*
+> > > +	 * image's kernel_buf, initrd_buf, cmdline_buf are set. Now they should
+> > > +	 * be updated to the new content.
+> > > +	 */
+> > > +	if (image->kernel_buf != parsed_kernel) {
+> > > +		vfree(image->kernel_buf);
+> > > +		image->kernel_buf = parsed_kernel;
+> > > +		image->kernel_buf_len = parsed_len;
+> > > +	}
+> > > +	if (image->initrd_buf != initrd) {
+> > > +		vfree(image->initrd_buf);
+> > > +		image->initrd_buf = initrd;
+> > > +		image->initrd_buf_len = initrd_len;
+> > > +	}
+> > > +	if (image->cmdline_buf != cmdline) {
+> > > +		kfree(image->cmdline_buf);
+> > > +		image->cmdline_buf = cmdline;
+> > > +		image->cmdline_buf_len = cmdline_len;
+> > > +	}
+> > > +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> > > +					    image->kernel_buf_len);
+> > > +	if (ret) {
+> > > +		pr_err("Fail to find suitable image loader\n");
+> > > +		ldata = ERR_PTR(ret);
+> > > +		goto err;
+> > > +	}
+> > > +	ldata = kexec_image_load_default(image);
+> > > +	if (IS_ERR(ldata)) {
+> > > +		pr_err("architecture code fails to load image\n");
+> > > +		goto err;
+> > > +	}
+> > > +	image->image_loader_data = ldata;
+> > > +
+> > > +err:
+> > > +	list_for_each_entry_safe(phase, phase_tmp, &phase_head, head) {
+> > > +		list_for_each_entry_safe(res, res_tmp, &phase->res_head, node) {
+> > > +			list_del(&res->node);
+> > > +			/* defer to kimage_file_post_load_cleanup() */
+> > > +			if (res->deferred_free) {
+> > > +				res->r->buf = NULL;
+> > > +				res->r->buf_sz = 0;
+> > > +			}
+> > > +			mem_range_result_put(res->r);
+> > > +			kfree(res);
+> > > +		}
+> > > +		list_del(&phase->head);
+> > > +		kfree(phase);
+> > > +	}
+> > > +
+> > > +	return ldata;
+> > > +}
+> > > +
+> > > +const struct kexec_file_ops kexec_pe_image_ops = {
+> > > +	.probe = pe_image_probe,
+> > > +	.load = pe_image_load,
+> > > +#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
+> > > +	.verify_sig = kexec_kernel_verify_pe_sig,
+> > > +#endif
+> > > +};  
+> >   
+> 
+
 
