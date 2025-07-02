@@ -4,84 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E46E5C83F04
-	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 16:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17400C83F03
+	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 17:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=; b=hXne1tzeTyPk1sbieygETkSzoT
-	6LH5Yzb+94ENm1cUOELYZIyHM7bNnl/dj1r4nCFkNj039Vtc2/GPBImX4PGeSwJK5nXNc5oEJ2UYt
-	0Hd31apoUws7bq2HM45qZ45Qk5gMWlfqWngdRfuiAMvVqQdQhW9Iny0hqtVrwIh0OQI+vEdDtEv+j
-	keEG/NWFCvIZgayLFNPNtezG2LkQNmdVAYjovt1vU9dejkXB040K8o3bDmpt2je08Tea0fP90yPhS
-	lYYa1u5VNTlLGbb3wlXmfjOoJc+JxeWd0h6Z9eVIdFSWVfC48x/jZ0fw9VXu3HIXO8IdW63M1qaPu
-	cD+JnLWQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=wcCtm9f7p6jwuZ0do6mGaH16Y08BotVqwa8c/wAtMks=; b=34oGkJApJYdFapCQuWqCoqA8yp
+	mfB46h0BHgGG4mtTRwsPDqs6N3hk1N/+3hNZEj3Tlv9bTOjgLWWDrI+zXa1ZzLXhI6DaAdkq+z085
+	u/0lrGWt11IO1MZ4Oftt0Cbcepy3QT3bJNkCCpOBi+ht8BQO2jOAMdowCT8CsftccNpomNXDthewL
+	yZ+YkHiXQNhSQJ14YHBXg2lc2lOkNvc8JarwICQgXJXmb5wQ3ZBnHKjTYUZYRRVxp8RwW+Z/WPwEo
+	5GsAByfYB5hPo/oKFWzjebOu27dH4rw/PWN/iD7xN4f8Tf6QwlgbxtKuyIONSQD5zmfl93HUspRpc
+	gh7+HHnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uX0Zs-000000090I4-3zD1;
-	Wed, 02 Jul 2025 16:44:56 +0000
-Received: from mail-yb1-xb31.google.com ([2607:f8b0:4864:20::b31])
+	id 1uX1ZN-00000009ATb-0KGa;
+	Wed, 02 Jul 2025 17:48:29 +0000
+Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWzzv-00000008toq-4B9v
+	id 1uX15A-000000096mr-1fFr
 	for kexec@lists.infradead.org;
-	Wed, 02 Jul 2025 16:07:49 +0000
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-e8259b783f6so3955739276.3
-        for <kexec@lists.infradead.org>; Wed, 02 Jul 2025 09:07:47 -0700 (PDT)
+	Wed, 02 Jul 2025 17:17:17 +0000
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-23602481460so74152685ad.0
+        for <kexec@lists.infradead.org>; Wed, 02 Jul 2025 10:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751472466; x=1752077266; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=;
-        b=UhJqldsTfRtncyQHjxjCp9ZO4mkdiXXP+sMeZhcSxZn/h7kSHWv4tf+k0hY2qE+DWZ
-         GuEN8GySZWI72YUhMVQnPf32YCQ+tkYOb/12LG/X5tk2MFedupmAQUnN9mFJaYQSyDER
-         D4iidJ+WjXrzakKQU/QCCh+BQxU8nsIbWK8NXhJcFfgpeqpy1oiht07hxdToxIR8KTkM
-         cipXEBqAWwUF67sZNwqUGQPW64w+gEoJGOYn5qjNyasQzrZ28Kgt5jsH657SjO5v1M95
-         nFBBaO84kRlNUeBNLMAojsRKdDlXp1AYn2aUj482kTgdunLfXdI3U60GTexS2tBYO62b
-         /fvg==
+        d=gmail.com; s=20230601; t=1751476636; x=1752081436; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wcCtm9f7p6jwuZ0do6mGaH16Y08BotVqwa8c/wAtMks=;
+        b=cOgEGraQckBrtUzC0jxqT6zazE4p54+KiMCTT4smEpUEbSMZkihqyxqNyIZlPQMa0D
+         c4rViHBY7XCzy+4P0SBzUPYs3ilcqaZorOWH35Z9VHyhQ5QqavnT9N9tT19mzxBdP72L
+         e0jeQpHCsgCv4pcQ8N67uo3EXz7u+BDpnB/9ExIKHlCI9knM9pCIOQlhRoSzx3NOn3vZ
+         Id4abt47OkpX4dN2AQuyxr94hy67szH4+d/tGbMq0K5+xbkQdMSyjXyFWMTh0ATnKEjL
+         46oZLudFdL+zOZXmkhIqvOHqBk4+U1scIf0KRA7ce+GXtYti9hZiaaOfKXtr4neXkg/n
+         pxYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751472466; x=1752077266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=;
-        b=KTD/bYo1E55yGKWvRmamxsI+R4722aMhs8Al37h+MnEhqHwbP8+vjQ3Nbu3tW0Mij4
-         /EXM98rAxTXrtXG0XEm1sFgzfxrfuLzvhJ70Ixikgy+KoHFVNQ7/RLKFcqs3LpNGltwU
-         DSyEHeJcKq4ucDnNByEvH0x8FbJPZboU8pTJFRKs0bbEB6YeZQiFYIci/BYrPB8JzWFI
-         h7HkfipaJqHvqspSBoqeKPLjz0LN+g4VdzoSXeaD5grLBIr0jq89OWt8M68yrGFAiSmu
-         VfKMoGHpgXp7jgJ9MCkn7GR6urSJ7HVFTCPajaxlc1fvOyljte+R6EypGXrGg1kEt06T
-         HxGw==
-X-Gm-Message-State: AOJu0YyGDP8kbidozd3n7rBVRJ6Z8PbLs9Jl1CxRl1sLIYetbBmzvl89
-	qKvATrzbgPZGqG+TT67EXr7m3JjR7DmHvoaLfSWe/7H86jpgcprWEXwLAB/xUXAkxcJekLl8Zrk
-	N2T0J9AHfBoLHEIrY4VlwgewaJ+AOVXk=
-X-Gm-Gg: ASbGncunX4vGJana+zw7R4gyERiw8Ty5iPNDswo6Cid/7XKQAFh0VEIljg6oM0NEd5e
-	8amT/Iqa72T99gmhHoLGmOXJWYxHgBzsjTrxObp0BxQNW/0PWq4vbEc5q9q2yq1ujx5Sx0s66O+
-	v1V7JgnDGPyRJHbHix+qS1dPDa6OM2RZJrH+3IA60JxXafrWm7d2WydhUQvUqeQ1MlT4CEElueR
-	r3gXJp+QGb1/Ks=
-X-Google-Smtp-Source: AGHT+IGJlgMebHeafPhpvXNEnuwrkCWG7XoVPlNbjrpQZw1BfOjYrG9vvzbLo5wAqGetaoboXNjnvUJBf0NJewO55f8=
-X-Received: by 2002:a05:690c:fcc:b0:709:197d:5d3c with SMTP id
- 00721157ae682-7164d2c7e12mr49580597b3.11.1751472466302; Wed, 02 Jul 2025
- 09:07:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751476636; x=1752081436;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wcCtm9f7p6jwuZ0do6mGaH16Y08BotVqwa8c/wAtMks=;
+        b=VQFxA4jNw5aEZ3mRV4h2ztzZZcUrFgtFT47BGAOI23W66MQkhlEmKb67dKBrmpuSu/
+         fGRw31FOC799dEgwZjfMj5VNeisKfnWtF9KgHaPVmIx2CjCucdxDnNoAofYzLOHy6Q4H
+         zJEBI/psnRV97FsiTkwBjAL9tJnwQI35AHOxfl0JxjYB5vmFgUHoWm9JrxDsaglpncM/
+         NHS4Innrp9QEOKy7WTe56wTo9G5IJ6R2GHK+OlrofuIAWrcxKpj6VOIgMv1gcTtFO3yo
+         MTnSUE81hbuuei9z32bobfzfDl/ycpbSOLHrHbrPOJkmRBW4xjM1pA9kWFMLEZ4awUoW
+         IChQ==
+X-Gm-Message-State: AOJu0YyFb4VfizndAOk9FkfzBYTJ/3gmeH0tt5RCaYSdNsRySJSdVT9B
+	vaI9snjYZDVKLxQLYQxPC4pymW/Ej3KI0ui9eYSo7D3xUfcaTOa1rBWI
+X-Gm-Gg: ASbGncsy8ymvmopo7Y0sgoCt6YgWSlr/9Gfzq0eicrzkxDHFUgMTtejKkscfQrvWRxI
+	+3ssgVDpsqNy865B0n/DXLuTEjzx1XfrQr+aCA7Gkd3Y7yKkHPqtB0gRUzaT68mw6ZJIsGVXguE
+	dennJmQbIm6xQXNWYdOf4av+F+Fanrlv6Q3ecKCHoNvS4mPeKVdSixyJnofn+bLS1nWd/vP91w+
+	IlEksuslZ5rTyJdCtVBlQ/vl4rM1oGLL6sNO47nnygAMD6eWyH29RF14QwxC7smsXz1oXX7tN2N
+	gy3GcxX4VfB067Es4ak3BIeF0z5GOwnXC01B2Kl3rZu2saDghFgHFtbVPq5B7Jp2
+X-Google-Smtp-Source: AGHT+IGoqFyrVCn6Y1nY8V1kqw3Ktn3Uz+x2Fn28RGNMIDJoOM2Rf1r7mTP7AxkaWXBBJ0Gt2fEGnw==
+X-Received: by 2002:a17:903:1b67:b0:236:15b7:62e4 with SMTP id d9443c01a7336-23c6e511dc5mr70706755ad.38.1751476635539;
+        Wed, 02 Jul 2025 10:17:15 -0700 (PDT)
+Received: from p920.. ([2001:569:799a:1600:a36d:9d50:6dc7:23e0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7a47sm138699745ad.166.2025.07.02.10.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 10:17:15 -0700 (PDT)
+From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+To: khan@linuxfoundation.org
+Cc: kexec@lists.infradead.org,
+	dwmw@amazon.co.uk,
+	mingo@kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	Moon Hee Lee <moonhee.lee.ca@gmail.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2] selftests/kexec: fix test_kexec_jump build
+Date: Wed,  2 Jul 2025 10:17:05 -0700
+Message-ID: <20250702171704.22559-2-moonhee.lee.ca@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <20250624201438.89391-1-moonhee.lee.ca@gmail.com> <744bd439-2613-45d7-8724-5959d25100aa@linuxfoundation.org>
-In-Reply-To: <744bd439-2613-45d7-8724-5959d25100aa@linuxfoundation.org>
-From: Moonhee Lee <moonhee.lee.ca@gmail.com>
-Date: Wed, 2 Jul 2025 09:07:35 -0700
-X-Gm-Features: Ac12FXwoDxTwwqAXE8JcpNRXiozFERVYFVPE9rjvlkt3rV15dPoHwueD88FdyYo
-Message-ID: <CAF3JpA72DWF8=2HF+_HMsH4DuOg5aVYZdgyhmJisDG-WxL=uYw@mail.gmail.com>
-Subject: Re: [PATCH] selftests/kexec: fix test_kexec_jump build and ignore
- generated binary
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: kexec@lists.infradead.org, dwmw@amazon.co.uk, mingo@kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250702_090748_036149_B26556ED 
-X-CRM114-Status: GOOD (  10.85  )
+X-CRM114-CacheID: sfid-20250702_101716_434081_C2C9D543 
+X-CRM114-Status: GOOD (  11.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,39 +100,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Shuah,
+The test_kexec_jump program builds correctly when invoked from the top-level
+selftests/Makefile, which explicitly sets the OUTPUT variable. However,
+building directly in tools/testing/selftests/kexec fails with:
 
-On Tue, Jul 1, 2025 at 12:53=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.o=
-rg> wrote:
-> The change looks good to me.
->
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+  make: *** No rule to make target '/test_kexec_jump', needed by 'test_kexec_jump.sh'.  Stop.
 
-Thank you, Shuah. I'll carry your Acked-by tag in v2.
+This failure occurs because the Makefile rule relies on $(OUTPUT), which is
+undefined in direct builds.
 
-> There is another patch that adds the executable to .gitignore
-> https://lore.kernel.org/r/20250623232549.3263273-1-dyudaken@gmail.com
->
+Fix this by listing test_kexec_jump in TEST_GEN_PROGS, the standard way to
+declare generated test binaries in the kselftest framework. This ensures the
+binary is built regardless of invocation context and properly removed by
+make clean.
 
-I missed that patch. Thank you for pointing it out.
-I'll drop this change in v2.
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+---
+Changes in v2:
+- Dropped the .gitignore addition, as it is already handled in [1]
 
-> I think you are missing kexec@lists.infradead.org - added it
+[1] https://lore.kernel.org/r/20250623232549.3263273-1-dyudaken@gmail.com
 
-Thanks, I=E2=80=99ll add kexec@lists.infradead.org manually in future patch=
-es since
-get_maintainer.pl didn=E2=80=99t include it.
 
-$ ./scripts/get_maintainer.pl --scm tools/testing/selftests/kexec
-Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
-David Woodhouse <dwmw@amazon.co.uk> (commit_signer:1/1=3D100%,authored:1/1=
-=3D100%)
-Ingo Molnar <mingo@kernel.org> (commit_signer:1/1=3D100%)
-linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-linux-kernel@vger.kernel.org (open list)
-git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
-git git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ tools/testing/selftests/kexec/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Moonhee
+diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
+index e3000ccb9a5d..874cfdd3b75b 100644
+--- a/tools/testing/selftests/kexec/Makefile
++++ b/tools/testing/selftests/kexec/Makefile
+@@ -12,7 +12,7 @@ include ../../../scripts/Makefile.arch
+ 
+ ifeq ($(IS_64_BIT)$(ARCH_PROCESSED),1x86)
+ TEST_PROGS += test_kexec_jump.sh
+-test_kexec_jump.sh: $(OUTPUT)/test_kexec_jump
++TEST_GEN_PROGS := test_kexec_jump
+ endif
+ 
+ include ../lib.mk
+-- 
+2.43.0
+
 
