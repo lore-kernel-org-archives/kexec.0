@@ -4,108 +4,176 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 255F4C83013
-	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 05:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1DFFC83013
+	for <kexec@archiver.kernel.org>; Wed,  2 Jul 2025 06:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6UcbTwK4257SwHHBAuXRQcRjKDb/vf2EzrtIm5ni9jc=; b=bluvEnv+eiY+ZYo0javlxDMN4j
-	jpH1RFeqsBnPKFi6MvkzNCTSIyBLpUxCrYaF4wiaTwwfv2HGAiEPP+TUJo7EjKiaggFBgcCOcQIPD
-	swK2mSUJUGBv+Vpo7wDXXB42ThPf2cABjS55Tb7/J6Fv4HuLuGNTmjGpXjhFOE0OjE/xA1hNmvb31
-	Eyb3HdPMrxb4ox0LZYk7T2s1gashnG6rEC2TjXcSBElrtlw5RAo0SF7cEvb+fGA4SrWGa2h7jYNBn
-	kFEUztQ3b20Wz2Aou+o4fC6umcYiVm/b6So2bPbdQJ1Y8R3bPzS7cRYzw8iWUs5nYWVr25yxKedh+
-	mQI0aPsA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=; b=Pn8vBLfcEMoEMrkxQeb+ocK663
+	oAzcrQDe3MoE/rujMb2nTc8xe5udiCFQGGH4o7JgNhW0s75BIgt2VKnbStGrPPnRzpwsV+g5ZGiE2
+	yjc/OGZyqweK5GzfMaORC6gEWoZTXlCRzPEO4TykDT8vStTAaeuD7IKtHGE+T3I74mY1Qdunnt0uV
+	+LT8+z7VadKX28xM8ZyR+vkS0/ReOLSY8Cn/8OlTeDnj+lsEC4hap/5hhoI0bjibKkHQh+1R9iieD
+	5ZEPcP5PRVUDwdQkvWG07A0+wo9cqq8anyuUurx4ZVzxOEjmhmYDFJC/WV9NG1thjazk+zs66FvHw
+	gq3P58lg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWpdg-00000007EMi-3kQ0;
-	Wed, 02 Jul 2025 05:04:08 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1uWqYq-00000007Lzn-3EbJ;
+	Wed, 02 Jul 2025 06:03:12 +0000
+Received: from mail-japaneastazlp170110002.outbound.protection.outlook.com ([2a01:111:f403:c405::2] helo=TYVP286CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWpde-00000007EM1-1G28
+	id 1uWqYo-00000007Lxf-08VF
 	for kexec@lists.infradead.org;
-	Wed, 02 Jul 2025 05:04:07 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561MvMVX031002;
-	Wed, 2 Jul 2025 05:04:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6UcbTw
-	K4257SwHHBAuXRQcRjKDb/vf2EzrtIm5ni9jc=; b=hjFpsOy50zM5QP8jbkp7Eq
-	HtwJGX2HbC7/3V/ig4fvrgNbZiXY9wZeAGf5mscsV8Uc7vgJTwp8dpJu0vD5kdpu
-	tl+NSr+k8TNkE6+NlJ453O+t1sf2Spmbezdqe5+QIIwLt3TGEkovzA5luMnfbRE8
-	TVqdInVCfMQIYFHJF3TtbsOiBEQe9bB0x83EIxuackxOpJULGLWd9/noj0x6pyhn
-	u8qstFmJHCZV7H1et0v4OzRDKYWOl0ycM8qWLbUStuR9QIyrhhWZZfBBeJ4gqVqg
-	sWxNbIdCo0uCwi79K21f3jspGd+cZDqeDKN9uKIbkjZi9St7mN0jUC5TMpvuspyA
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1u673-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 05:04:04 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5620xwuW011802;
-	Wed, 2 Jul 2025 05:04:03 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7mwvvw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 05:04:03 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5625414p50069926
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 05:04:01 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 933D320049;
-	Wed,  2 Jul 2025 05:04:01 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8177D20040;
-	Wed,  2 Jul 2025 05:04:00 +0000 (GMT)
-Received: from [9.87.141.64] (unknown [9.87.141.64])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Jul 2025 05:04:00 +0000 (GMT)
-Message-ID: <32246350-8a68-4d46-9103-9a633d3cfa97@linux.ibm.com>
-Date: Wed, 2 Jul 2025 10:33:59 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Wed, 02 Jul 2025 06:03:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n4ZoH1Vzr4z7uSmHy979p8u7QnrrWQUjCPKg+4qY4DKMqW1NdVy7nhKIFfn5rxjMU0xBqM5cBz6/OEt+Mn7SBDGoU3bqGd9M26kppcSB3UpwBisnAj5rhF5drBKJafp4oQWiIIh80R126oKNlJX7cy4XAAqM/J4QcqPizzJRqynjEXT5jak5Wer5wuEwDSinEu5eUCNONOolkvh7oCg4SXojcnYnll9c2KQlt85HfA2SHeLUjyKAuBLaaBUC9fZwold7OfpYpsQUR2fzog6WepyeRLLytWV8OUWM0HwwZInatB86DKDJpRvnuU3Itoa++Rn0tSwytoMClT1Utjx1cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=;
+ b=IECJyerhLoRa9PPmqDrdMaqfjRcdyhDVBKgnhCIuWMUeKuozciJxeQPYl142GyJ821mO6Tf6zovkosIGwwQbK/AhzERU0B6VgUTjou+SCoisUWmbBRzuQe7JAFrJ7p0bN11n2upn+c5h2ypS4/WKw4jNLRCXatP3o3MKW33krgV+1S/HndZQjyoo86duNiucVpqqZWZtdcVDjyWT8c8+4u+MMDTh6vFoLBsM0oM5RehzZvESa2XjtncuvvoLSQmuA+NEt5HmJ0Sog6Q99szLJKh5pc8+AZnZStvqRMKECBiRHpzyF51xyb1ZyMQLduBJpq75+nxSHOM/0NK3ODQvUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n1ymcUdB7S11CZobpT2p+i0WMsX8tnAhx5EZ/AaIgZM=;
+ b=PWHaDK6DAIzCd2W0XytKeMF0aG05cQZEi02QPwK9KmnL14xi83mOkPavQ6ltyfveBovtIB0gogFozwVKY4eD0Q4krI8YkZSt0kQFT02wlb66WXaNwtC5Ep4w+8RlvRvVyNyiv3kMincmtujGlCk11vrcvL3vXZycto/hCAJ5pbQp5ROTy503TiUyeoEVvHZ7WyWQkjFhA89K8oPUDeuN0bIMrfviCpXtfP9f59n65upQwvIb4nka+P4ZBwNP5m4BUkW1+QjDacsK+ACWl+r2CkpKJwTMlSOFUJVVuoP0Ya412zCaGNgqphf3+VVnTpfBAwfB8km5IgahPt9OeHe5/g==
+Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com (2603:1096:604:1de::11)
+ by OS9PR01MB16295.jpnprd01.prod.outlook.com (2603:1096:604:3f3::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Wed, 2 Jul
+ 2025 06:02:56 +0000
+Received: from OS3PR01MB9993.jpnprd01.prod.outlook.com
+ ([fe80::d0f6:b978:1865:3d66]) by OS3PR01MB9993.jpnprd01.prod.outlook.com
+ ([fe80::d0f6:b978:1865:3d66%4]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 06:02:56 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+	<k-hagio-ab@nec.com>
+To: Tao Liu <ltao@redhat.com>, "sourabhjain@linux.ibm.com"
+	<sourabhjain@linux.ibm.com>
+CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
+	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
 Subject: Re: [PATCH v2][makedumpfile] Fix a data race in multi-threading mode
  (--num-threads=N)
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?=
- <k-hagio-ab@nec.com>,
-        Tao Liu <ltao@redhat.com>
-Cc: =?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?=
- <yamazaki-msmt@nec.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Thread-Topic: [PATCH v2][makedumpfile] Fix a data race in multi-threading mode
+ (--num-threads=N)
+Thread-Index: AQHb5XiBHM/FX67D1ky3gbRMCQy+FbQc6x0AgAAGMoCAAQ/0AIAASZSAgAAEXwCAAAMEgIAAEL0A
+Date: Wed, 2 Jul 2025 06:02:56 +0000
+Message-ID: <29488c31-41a4-4dee-b768-9f8c49deeea6@nec.com>
 References: <20250625022343.57529-2-ltao@redhat.com>
  <7c13a968-4a3a-4d0d-8977-3ba0a4a845b1@nec.com>
  <CAO7dBbXpkshxguPbHDA2YFZeYsDAbyswBCQ7x0UKY__4H1K2jQ@mail.gmail.com>
  <5c425f4e-4e89-4500-993e-e4dfec50a4fb@nec.com>
  <CAO7dBbXweDPUpsEDYhFZqf-eAALGrFOBJh-=bQAYMUsj2ioNpw@mail.gmail.com>
  <e78c8c33-5718-4218-89a3-ea4d7e3a6c64@nec.com>
+ <CAO7dBbW=zX15-LDE71qYMJKmm=EF-VANJ3YtK+8n92yrSOS3pA@mail.gmail.com>
+In-Reply-To: <CAO7dBbW=zX15-LDE71qYMJKmm=EF-VANJ3YtK+8n92yrSOS3pA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
 Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <e78c8c33-5718-4218-89a3-ea4d7e3a6c64@nec.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wx8EiRb9skPcWsUGvUSISXKae0OFRlC6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDAzNSBTYWx0ZWRfXxpSd1fFHEBKK IqHbz4ARrfPYX19RnrC6PDPBbrmNP6xwe3+ma3tbi5V9y+YcDhCv3PTftOej7ITQR10oHG1iQAy EMfq+7811RO5qKKdgnAKBrT+NPWICjfcO7guhA2nAJNUTm5PoL2rhI09BE0T52EIsUshQB6eEhZ
- sN3EH7EoHlcNfDZGKuCMOksWdN99ZvNidO2t1i1tIHFq+V3pZr3rXEgNPi64TmqU6YktUJpGrbH DZrWVZNQ6LO/p6V//RFMN6z7cLoxoaPfhm+htD0Dv7KOtR14dwEjO/4dtTSnl2VXS0cq6S77/Se 6mH1vAibaY44SaLl87RXtOfOtB7f3GAaNnNqCCj44XGnnK2ncazbP/O3gA2nme9oCF4bvdUR3GP
- cJADYTpNIT9SDWjjnxqtcsmIo2fXr0V5hK5nwvSOiPS1EijhFFMWVlQ0DrYRNpVWkyTdWfIP
-X-Proofpoint-GUID: wx8EiRb9skPcWsUGvUSISXKae0OFRlC6
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6864bdc4 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=nrACCIEEAAAA:8 a=Ihltw4Q5nZl3D2hFa3wA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020035
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS3PR01MB9993:EE_|OS9PR01MB16295:EE_
+x-ms-office365-filtering-correlation-id: ca697cbd-c750-4357-8f7b-08ddb92e175b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?TDJuS1d5L0hMNUpBMWZwMldzWkxhTWNkSFRudWxobGZEeWxaZ1pRSzdnSXJz?=
+ =?utf-8?B?a1c0NzZRVStnUFdFbVhBMnZkM3JUZVJGajRzZUV4a3VFWEpxVGozLzlMNS9n?=
+ =?utf-8?B?R084dHJJeDcrQ3NBVGc2T09odTJmcC9RdTlEdk5MalQxVmp1RDRuTW10QWtJ?=
+ =?utf-8?B?bHpINzJuelFBenljQ3JCaFdBekZ0eVRsaUhRU0pXbUsrdERCb2FCUVU3QjBG?=
+ =?utf-8?B?RWppeWJWSjgzTXFLVURVaCtDT3VGT1JxdCs1M1NIQ3hwVmpRYjVBR1FqQ3Bu?=
+ =?utf-8?B?dzdlV25ETzNIVC9wTVlselpIanhsRU9WWml4YTh1Q2IvUXhLeWNoenBqdHdv?=
+ =?utf-8?B?THpueXBKWW1XenpNbW9EOXNGd3g4L2J4VU5xTmxDekZXcEJGQnhncXNkNW5x?=
+ =?utf-8?B?QTFybjA5bWZkMlgvK3JsVllXZ3BqMXl3c1JwQTh5LzRFY3pjblBFRXpVclY1?=
+ =?utf-8?B?ZHo5a3RORko5YVgzQmxiRFBwTGkyQ0luSUZleXpKOWZhMk1jQXVSSFRiOVNV?=
+ =?utf-8?B?UVhNZzRVeW15OWc0eXZjYjNITHFqMzdGRjBxUEpXQ1BKTEVlNSsrTFUwR2FN?=
+ =?utf-8?B?T3VJSXVXVXgrbGJkLzNYbnh0NVJzOGR5eVlCZ1BpYnVTOWRoMjZTWGNQeDdV?=
+ =?utf-8?B?dVNrc1R6MWdsNTNObmZSY3c5YXBaRy9uM0xDWUdJNEVDcnhRdlhZMk41RFFu?=
+ =?utf-8?B?STkzbFZrMVcrMmtQdWJBMXIwMjdHeFl5RXVyN09VU2xxaGJxZlBJbnVJQ0hN?=
+ =?utf-8?B?WXlXMCt3NlBOd3Jyc1BFS21iUWFVTmxhVzBaSE1QZStYcm42N001aFpydFZt?=
+ =?utf-8?B?U3prMjJVOXlCUGhzQUd6Z2gwbG14UUV3eUVLTUhHUlFJbzJNSktUSVppN0pU?=
+ =?utf-8?B?OWxCVHMwRGtkWW5iV1NneGlFWXlIaHd2NkpCTVFzYjFVSm1ubFlFRHZjRFE5?=
+ =?utf-8?B?d0EvYWxvMTZJbkMzQUhieDB2QnFhMDcwb2VSWDd4TFQ0c08wVFpGL0UvN0N3?=
+ =?utf-8?B?dUhMREdQaFVTbzhvcStQOEV3QmJvcEpvMXE1RXVVdjNlODgzQ2NDRTIrK0U0?=
+ =?utf-8?B?RlM1K2pJOU9qWVlTbDFYYllLUXRTT01RL2dDalpCclBkSTVqeFUyS3k2cEtk?=
+ =?utf-8?B?SzkyN0RPeGFTdTlQZUI4Y0wvT2tLbm5EaklwaWRHbFZQSzh1eEhKTXVNY1Fp?=
+ =?utf-8?B?Q3FqMmxRdWVOeWUrWFR0eVlPdFd1UTNNdzgwRDVVOXhMLzFGU2VZOHAyOVE1?=
+ =?utf-8?B?cjlUWW01VFl2TWdCKzVjMEphZTY2VDd2Zk5BK0NUSnQyUmNDaFE2OFFlQWhq?=
+ =?utf-8?B?Qk9CZ1hKUDdLcUVPY0c5VlhGZ1JsbVBkNFhqVTFkeVZ4L0pNeDlNRC91aHdG?=
+ =?utf-8?B?RU5lbG1wSDZrQ0NzQ0NUYlNEdFFjNzBYNEVHWEgzOG5iaFBvQU9hZ2phejdV?=
+ =?utf-8?B?OG1oTGdxR1lCV2RBSjQrcUNkd1BVOGlsUEhkc3dyeGpuVzI0U1NzN2lSdTVN?=
+ =?utf-8?B?VUdEVklXcUQ1Y25CWHpBaFFWcGRuZkFJVldXWEtPRTZ5ZUF1cnk1UUpsY25x?=
+ =?utf-8?B?dTB2Mk1aclpkZk9sSzRZdk50VEVUeVY2Sk01UjB6RjdqVnBBNCtZTmRKSzFu?=
+ =?utf-8?B?ajZML2U4S1czTFI5QjJLUTduMjdaUzQ1S1hpNHVPZzN6SFdMc2JuR0hLVXJx?=
+ =?utf-8?B?UG9tbzk3TmJ1VzAzRWNIL09qTFBMc1JsUEI3YWVKNXI1VElUTzdmdzYwR1Zu?=
+ =?utf-8?B?S0RkWjFYRnl0YUN4dDVlSmQwT2N4S3phODNUWGxZOTk4TjAySXFKY3owd3Br?=
+ =?utf-8?B?b1pobDNPT1N3WmN3S1RFdW9zYnJQVy9pZGp1QXlJTHFyVDJzRlZOcm53Sk5k?=
+ =?utf-8?B?WEM5VjRwWTBjRUZyYm1US3p4QmZ2YVg0KzdmRFhMdGwyNXMzRStwbHNzNkpJ?=
+ =?utf-8?B?c2hRQWtZZXRzbTBTd0Rkc3NYU1pJUk5QQVB5Ry9ZdTBoWk52YnVaOWs1QTR1?=
+ =?utf-8?Q?kq/CIAg0HC8w6KnM/i1BBdXdJtBeTs=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB9993.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YklhcXZ5clVmTUh2L1YxYjl4SHdsWngxanZva2tnM0xsWU9iRlkzSUN3NVR3?=
+ =?utf-8?B?Y1VMYTRYY1N2Rno4U09KcGhmVy93ams3L250RjFWdWw2MW1NUTRNMzdLOCtQ?=
+ =?utf-8?B?RzZYTVNFOUcvbndxWEo1UTRBd0h2WUZBYng3M2RCWm96aW5WeWVONUJiL3l6?=
+ =?utf-8?B?alFpTnJtZDY2ci9PNkxZWndSeXpyUHZxSGZ6R2dmUUljOExKMXpVMUg1dmlC?=
+ =?utf-8?B?STNkYStsL1hYMllYVE1nc2lDQ1NxMnFHYk5Na2NwSWlOb3lLWE9NbGVLamdF?=
+ =?utf-8?B?TytBUU80N2V3bHQvMjdJdWxsSG5FaWFaZ1FUTWMyekYvVWtySi9lMStybFJJ?=
+ =?utf-8?B?Y1dpTDNBV3U0Sm1YVEdTR3V0QVA4U204b1FmOU5vZ0xGTlVqNEs3b21zNzF4?=
+ =?utf-8?B?VHAvVjREcmdpdU1kcmhIOGlVcWxPNjJ0ZkxHQ1MrVzdEbis0K2lxNk4yRW1h?=
+ =?utf-8?B?QUhlSmFveDhQdlBETHJvUGJ4THNjUzFVUW1wenFxY3NaRXhZWm1YYWM1ZHFG?=
+ =?utf-8?B?REtiVUhzWGlRbjd1U0pJdHdjNExsQnp0ZGsvZHFmbDd4T2lMNUFjTklyTStO?=
+ =?utf-8?B?VjdFSDhVcFRKaEYzTHRWZ2t3bVAxK1FpOEZKWUJwNHJsVGZjQ3VyemY0Qlhu?=
+ =?utf-8?B?VFpqRk50R3AyZVRzc3VyeVF6OVljOGFxdFd5MUYzdmdrbW1va295UlBSRHZy?=
+ =?utf-8?B?a2JyQVhGL0FOWHZRbFRYVThuS1BRUkJLU0lDc3l5TC9oQ3F2YjRoT3BDV1Zs?=
+ =?utf-8?B?R1Bra20yVDZwM3R6U2ZoNm1sNWl4eGlDSDhJY3F0YzJoY1JlaDVJekhhVXZr?=
+ =?utf-8?B?Z0ptblI4REUyU2NyZDRjTlgvSUxMSStDNkI1UXB1aktueUJMdXNERVh5dDlS?=
+ =?utf-8?B?aHhRd2puL2tObHBQdmxKM2wyTUlqZ1pHZWNNR3hIMTlEa3lKL0hNQ0VGLzYw?=
+ =?utf-8?B?YzRWUUxpdE1QRlNZNjExRUJIaThwRTgxL2xVVVB0ZFVjc1VQUUphSEdkT3Ba?=
+ =?utf-8?B?MS9tb3JUQkpBWStSMU9GeWQ4STcyeGtoQnF1djdqR2Rmc2xWODI0THpsSnR0?=
+ =?utf-8?B?V3hacU1qUDlxWkhuZE80VWxSaXF0emtJSGt0RUYrSGpKTTU3cFhaUXBLSG12?=
+ =?utf-8?B?MWZQUnlYaDNQV1pwQ2NCNDBjSG1pWGlwaE5NNHIwY0NQT2RmMXpwUUZhYkp4?=
+ =?utf-8?B?czJ3cGZPSGNsVWpVT1hpcmZrNHRVK2syTGUxcm4rcXNZMUxEeHV6bkVhU3R0?=
+ =?utf-8?B?OE1MWXVNcW8xSUNVOEJtMVFweHZRZVRzb1dMUTdMSzZVYUdwSGk3VlZqSEJV?=
+ =?utf-8?B?MG54TUxWSDN5REhYWjdzSC83c2hOMWttTzB4cDNwcitKNXdFQUxVNVpkUUZN?=
+ =?utf-8?B?M1lGVVh3OG5ITFhRUUxFaldNMC9IcThZcjZtUkRKdHBIWi9scWRWZ3U3NVNu?=
+ =?utf-8?B?V2NIdlFDakZJU0ttamFXQU9teXNNWTFZNDdvUlFyTW53d1V5NkRwV1hGL1Jt?=
+ =?utf-8?B?OTREZGJyUDBiWllIYTNFdE5Kb1E2TDJUdnVLM2gvZnA2NUJIYnVHRWlqbUxH?=
+ =?utf-8?B?aGlwK1M2aXhZTC9tZ3NieEQrc3BBeThkYlFlTnAxTG45Y01SZ2hISGZWVVc4?=
+ =?utf-8?B?dzFMZ3pSbXZIUTFpZUVUT1c0eU03K1kwcjh2N3pBUlI3aSt4aXdicDBtbFpY?=
+ =?utf-8?B?TWR4TUVXWEpTdU05amlUR2wvaGt3ZXc2L1ptNmMvSDRVeTRIZjcwNVRtL3NF?=
+ =?utf-8?B?TDBSWnZPTldlRTFMMldLSGdqOHhvZDR6ajI3NzArS1BuOUZ5dHFTTi9xdmMr?=
+ =?utf-8?B?UFpvMFQzbUUwRUZUd2hvd1krY0FYc2d1SUpXVCtDVklRRDltYVVpR2dMNTN1?=
+ =?utf-8?B?WmlzRnoxOXVvUUdNRUkrcFN3b2gzMkVmL2RrTlUxYkNGQzVreDNidzVlY0Y1?=
+ =?utf-8?B?aTZqK1JMZFNwZVZNQVpTQm1zMm9iY2RxR1JoN3g0WGZLNVhYTkRkRU5vZEtp?=
+ =?utf-8?B?Wi9mQ1FIVXI0TkNNNGJuRjRNYzdRZFJ5dEVZMFRxMUdpRCtCQnNnWjhLcVR3?=
+ =?utf-8?B?WkYwZXl4RVV5aXR5OGY5dGRoMXNrYlhaQmc3WCtGUk9tNWQ0VEJlNUZzRkhW?=
+ =?utf-8?Q?mjSIrX8RI7Hh2/eyfHOtrDqLc?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5F6513596A8C9745B8E70FF6E16A41D6@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB9993.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca697cbd-c750-4357-8f7b-08ddb92e175b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 06:02:56.7734
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1jqaspU7KYQ95YYEI4hhND76mwjjG466VNBv+iTZnTIw2zCkd3Lpzjd4Qat0zCN68W5+EzjeUS5/meeGuXK3rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9PR01MB16295
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250701_220406_464570_F9B63ACC 
-X-CRM114-Status: GOOD (  26.97  )
+X-CRM114-CacheID: sfid-20250701_230310_230830_BE0584F6 
+X-CRM114-Status: GOOD (  11.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,164 +188,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Kazu,
-
-On 02/07/25 10:22, HAGIO KAZUHITO(萩尾 一仁) wrote:
-> Hi Tao,
->
-> On 2025/07/02 13:36, Tao Liu wrote:
->> Hi Kazu,
->>
->> On Wed, Jul 2, 2025 at 12:13 PM HAGIO KAZUHITO(萩尾　一仁)
->> <k-hagio-ab@nec.com> wrote:
->>> On 2025/07/01 16:59, Tao Liu wrote:
->>>> Hi Kazu,
->>>>
->>>> Thanks for your comments!
->>>>
->>>> On Tue, Jul 1, 2025 at 7:38 PM HAGIO KAZUHITO(萩尾　一仁) <k-hagio-ab@nec.com> wrote:
->>>>> Hi Tao,
->>>>>
->>>>> thank you for the patch.
->>>>>
->>>>> On 2025/06/25 11:23, Tao Liu wrote:
->>>>>> A vmcore corrupt issue has been noticed in powerpc arch [1]. It can be
->>>>>> reproduced with upstream makedumpfile.
->>>>>>
->>>>>> When analyzing the corrupt vmcore using crash, the following error
->>>>>> message will output:
->>>>>>
->>>>>>         crash: compressed kdump: uncompress failed: 0
->>>>>>         crash: read error: kernel virtual address: c0001e2d2fe48000  type:
->>>>>>         "hardirq thread_union"
->>>>>>         crash: cannot read hardirq_ctx[930] at c0001e2d2fe48000
->>>>>>         crash: compressed kdump: uncompress failed: 0
->>>>>>
->>>>>> If the vmcore is generated without num-threads option, then no such
->>>>>> errors are noticed.
->>>>>>
->>>>>> With --num-threads=N enabled, there will be N sub-threads created. All
->>>>>> sub-threads are producers which responsible for mm page processing, e.g.
->>>>>> compression. The main thread is the consumer which responsible for
->>>>>> writing the compressed data into file. page_flag_buf->ready is used to
->>>>>> sync main and sub-threads. When a sub-thread finishes page processing,
->>>>>> it will set ready flag to be FLAG_READY. In the meantime, main thread
->>>>>> looply check all threads of the ready flags, and break the loop when
->>>>>> find FLAG_READY.
->>>>> I've tried to reproduce the issue, but I couldn't on x86_64.
->>>> Yes, I cannot reproduce it on x86_64 either, but the issue is very
->>>> easily reproduced on ppc64 arch, which is where our QE reported.
->>>> Recently we have enabled --num-threads=N in rhel by default. N ==
->>>> nr_cpus in 2nd kernel, so QE noticed the issue.
->>> I see, thank you for the information.
->>>
->>>>> Do you have any possible scenario that breaks a vmcore?  I could not
->>>>> think of it only by looking at the code.
->>>> I guess the issue only been observed on ppc might be due to ppc's
->>>> memory model, multi-thread scheduling algorithm etc. I'm not an expert
->>>> on those. So I cannot give a clear explanation, sorry...
->>> ok, I also don't think of how to debug this well..
->>>
->>>> The page_flag_buf->ready is an integer that r/w by main and sub
->>>> threads simultaneously. And the assignment operation, like
->>>> page_flag_buf->ready = 1, might be composed of several assembly
->>>> instructions. Without atomic r/w (memory) protection, there might be
->>>> racing r/w just within the few instructions, which caused the data
->>>> inconsistency. Frankly the ppc assembly consists of more instructions
->>>> than x86_64 for the same c code, which enlarged the possibility of
->>>> data racing.
->>>>
->>>> We can observe the issue without the help of crash, just compare the
->>>> binary output of vmcore generated from the same core file, and
->>>> compress it with or without --num-threads option. Then compare it with
->>>> "cmp vmcore1 vmcore2" cmdline, and cmp will output bytes differ for
->>>> the 2 vmcores, and this is unexpected.
->>>>
->>>>> and this is just out of curiosity, is the issue reproduced with
->>>>> makedumpfile compiled with -O0 too?
->>>> Sorry, I haven't done the -O0 experiment, I can do it tomorrow and
->>>> share my findings...
->>> Thanks, we have to fix this anyway, I want a clue to think about a
->>> possible scenario..
->> 1) Compiled with -O2 flag:
->>
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile -d 31 -l ~/vmcore /tmp/out1
->> Copying data                                      : [100.0 %] /
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out1.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile --num-threads=2 -d
->> 31 -l ~/vmcore /tmp/out2
->> Copying data                                      : [100.0 %] |
->>      eta: 0s
->> Copying data                                      : [100.0 %] \
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out2.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# cd /tmp
->> [root@ibm-p10-01-lp45 tmp]# cmp out1 out2
->> out1 out2 differ: byte 20786414, line 108064
->>
->> 2) Compiled with -O0 flag:
->>
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile -d 31 -l ~/vmcore /tmp/out3
->> Copying data                                      : [100.0 %] /
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out3.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile --num-threads=2 -d
->> 31 -l ~/vmcore /tmp/out4
->> Copying data                                      : [100.0 %] |
->>      eta: 0s
->> Copying data                                      : [100.0 %] \
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out4.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# cd /tmp
->> [root@ibm-p10-01-lp45 tmp]# cmp out3 out4
->> out3 out4 differ: byte 23948282, line 151739
->>
->> Looks to me the O0/O2 have no difference for this case. If no problem,
->> the /tmp/outX generated from both single/multi thread should be
->> exactly the same, however the cmp reports there are differences. With
->> the v2 patch applied, there is no such difference:
->>
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile -d 31 -l ~/vmcore /tmp/out5
->> Copying data                                      : [100.0 %] /
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out5.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# ./makedumpfile --num-threads=2 -d
->> 31 -l ~/vmcore /tmp/out6
->> Copying data                                      : [100.0 %] |
->>      eta: 0s
->> Copying data                                      : [100.0 %] \
->>      eta: 0s
->>
->> The dumpfile is saved to /tmp/out6.
->>
->> makedumpfile Completed.
->> [root@ibm-p10-01-lp45 makedumpfile]# cmp /tmp/out5 /tmp/out6
->> [root@ibm-p10-01-lp45 makedumpfile]#
-> thank you for testing!  sorry one more thing,
-> does --num-threads=1 break the vmcore?
-
-I was able to reproduce this issue with --num-threads=1. The reason is 
-that when --num-threads is specified,
-makedumpfile uses one producer and one consumer thread. So even with 
---num-threads=1, multithreading
-is still in effect.
-
-Thanks,
-Sourabh Jain
+SGkgVGFvLCBTb3VyYWJoLA0KDQo+PiB0aGFuayB5b3UgZm9yIHRlc3RpbmchICBzb3JyeSBvbmUg
+bW9yZSB0aGluZywNCj4+IGRvZXMgLS1udW0tdGhyZWFkcz0xIGJyZWFrIHRoZSB2bWNvcmU/DQo+
+IA0KPiBZZXM6DQoNClRoYW5rIHlvdSBmb3IgdGVzdGluZyBhbmQgaW5mb3JtYXRpb24sIGNlcnRh
+aW5seSB0aGUgcmFjZSBvY2N1cnMgYmV0d2VlbiANCnRoZSBtYWluIGFuZCBzdWItdGhyZWFkLCBJ
+IHdpbGwgY2hlY2sgdGhlIGNvZGUgYWdhaW4uICBJZiB5b3UgY291bGQgDQpkZXRlcm1pbmUgaG93
+IGl0IGJyZWFrcyB0aGUgdm1jb3JlLCBwbGVhc2UgbGV0IG1lIGtub3cuICBJdCB3aWxsIGJlIA0K
+YmV0dGVyIHRvIGFkZCB0aGUgc2NlbmFyaW8gdG8gdGhlIGNvbW1pdCBsb2cuDQoNClRoYW5rcywN
+CkthenUNCg0KPiANCj4gW3Jvb3RAaWJtLXAxMC0wMS1scDQ1IG1ha2VkdW1wZmlsZV0jIC4vbWFr
+ZWR1bXBmaWxlIC1kIDMxIC1sIH4vdm1jb3JlIC90bXAvb3V0Nw0KPiBDb3B5aW5nIGRhdGEgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogWzEwMC4wICVdIC8NCj4gICAgIGV0
+YTogMHMNCj4gDQo+IFRoZSBkdW1wZmlsZSBpcyBzYXZlZCB0byAvdG1wL291dDcuDQo+IA0KPiBt
+YWtlZHVtcGZpbGUgQ29tcGxldGVkLg0KPiBbcm9vdEBpYm0tcDEwLTAxLWxwNDUgbWFrZWR1bXBm
+aWxlXSMgLi9tYWtlZHVtcGZpbGUgLS1udW0tdGhyZWFkcz0xIC1kDQo+IDMxIC1sIH4vdm1jb3Jl
+IC90bXAvb3V0OA0KPiBDb3B5aW5nIGRhdGEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDogWzEwMC4wICVdIC0NCj4gICAgIGV0YTogMHMNCj4gQ29weWluZyBkYXRhICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSAvDQo+ICAgICBldGE6
+IDBzDQo+IA0KPiBUaGUgZHVtcGZpbGUgaXMgc2F2ZWQgdG8gL3RtcC9vdXQ4Lg0KPiANCj4gbWFr
+ZWR1bXBmaWxlIENvbXBsZXRlZC4NCj4gW3Jvb3RAaWJtLXAxMC0wMS1scDQ1IG1ha2VkdW1wZmls
+ZV0jIGNtcCAvdG1wL291dDcgL3RtcC9vdXQ4DQo+IC90bXAvb3V0NyAvdG1wL291dDggZGlmZmVy
+OiBieXRlIDExMTE5MDE5LCBsaW5lIDQ5NDE4DQo+IA0KPj4NCj4+IFRoYW5rcywNCj4+IEthenUN
+Cj4g
 
