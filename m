@@ -4,79 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF4B1C83030
-	for <kexec@archiver.kernel.org>; Fri,  4 Jul 2025 09:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D83BCC8303D
+	for <kexec@archiver.kernel.org>; Fri,  4 Jul 2025 20:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Subject:References:In-Reply-To:Message-ID:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NCVNH7hz5RSsRDZMa7z3ejbwEvflo2xh4Ed+wc5EHyo=; b=bB3taEtD2nckuCX+PZf77e2C+g
-	DHiaZ9wCvFHi8QJLMJbCtpk8brFoeMGU0MVSQCl+v1rKazFRt28sSHQogSgBCFAibL4NBZZP3PLhs
-	7wNqawAi3KqEFWPVngYVImpcS9AcgYcy/lZyaErnSMuKl1KdVe2suPbAF7nCrlD9HST0aRohs2Tos
-	pZhbWNt6COCstBdHZB00IxsMmj6U1ZHstXmhxgfDDagyFn6iyxQi+9k/9Jtgf3yX5M5r1UL7A3Uru
-	qI3aNvAQhOluchPLor3pajqvQapTrmedbonLz014CEu5FAH6uhguKK2v09W871bxyZEMrGihPQGsA
-	8TCYh4Kg==;
+	bh=TS8ZTkfMUMynjI4o3xDUHXwFY9c3gzxNKeP+4/m0WhY=; b=OxL99nsH3jT96uSvZLYwR2oK6F
+	pSWISAq3nJKwujwYAY2vanuh1gKyEwxccSqN0uYVLbO245euJQf4/JRwXwdC/hTy3T9XrcEYrTODs
+	uGxT2aVy95SiJuanDiETaDEqo3zB97313ELKV5uWxkI/JGl/wMDq+yA/GYtPMJ1FO8K02GWFlP99p
+	ppuep0XYi4TFA0STRGJeJ3A2eKnQd57SsK3KCzdaZbyPKDpd3zJN/m5Kd/AkTI3xjJegn7DUfwIZm
+	woRCyCIFIm33ykQjhlRC+uzvSNwB7QxBlLWUH5OlZGLrLrIewZ4wNF/a6g60GDOSuoG3njPLb+PYk
+	w/ilGtug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXcIT-0000000Dr0H-2iIN;
-	Fri, 04 Jul 2025 09:01:29 +0000
-Received: from mgamail.intel.com ([192.198.163.17])
+	id 1uXml0-0000000FQOV-1v1B;
+	Fri, 04 Jul 2025 20:11:38 +0000
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uXbnA-0000000Dk4M-2pS0
+	id 1uXmkv-0000000FQNC-2pYY
 	for kexec@lists.infradead.org;
-	Fri, 04 Jul 2025 08:29:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751617749; x=1783153749;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=gG26AaTUPpVFlo+hmvLaEPOw27iCEk6y9MznH6i3r6Y=;
-  b=iPS3kRfFySw3EtZoHIcCUq6YkPYeoansIvR6L19P+oVsvM3g9aMPXrhs
-   88PRlpMCzT0qoXEirxyd+XdaSMjLgCjbGMSM65bM+JcM+bK+mFGG5xCm0
-   GNRcWW40uc+5Fm3lxz/rPnW9By3FH/x+hmV9Y1Jegy9tOzycLOYiauQP9
-   D4d6F9H98f2k/zkqPjtOtCajYYKtZoN6iGIjgHExiMYgRyz8MXvEZW2+I
-   m6lzSj81FRJRvBFENqlHt32tDGtIwNS9ABPGxbfeSDY14opDPa3SEjLhz
-   xodK/O3yiLAnbSNZ11OXioLAnvO+t0hZI+/RSAuOInioyOcG0HBh5lQUz
-   Q==;
-X-CSE-ConnectionGUID: JD6yTwR6SHyRq063uW9nqg==
-X-CSE-MsgGUID: Sp+pA5yvS1SHfdhmCDW8OQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53875386"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="53875386"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:29:08 -0700
-X-CSE-ConnectionGUID: UK+Tic1oRWivQ7E1XxZcgA==
-X-CSE-MsgGUID: SokHSIpkSIWzveBJV5HGOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="155164725"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.102])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 01:29:04 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Askar Safin <safinaskar@zohomail.com>, regressions
- <regressions@lists.linux.dev>, intel-gfx
- <intel-gfx@lists.freedesktop.org>, kexec <kexec@lists.infradead.org>,
- dri-devel <dri-devel@lists.freedesktop.org>, iommu
- <iommu@lists.linux.dev>, Ben Hutchings <benh@debian.org>
-Cc: anushasrivatsa <anusha.srivatsa@intel.com>, joonaslahtinen
- <joonas.lahtinen@linux.intel.com>, tvrtkoursulin
- <tvrtko.ursulin@linux.intel.com>, josesouza <jose.souza@intel.com>,
- davehansen <dave.hansen@linux.intel.com>
+	Fri, 04 Jul 2025 20:11:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1751659886; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=CiuPrGCxm9Vh++d47K22nTz4RfdB3w4mCpeU8bSaxyNusDFL0hMRh5VnFRpreAe12ISo2f0s2bJX1bl1NBIdVZ6ehaoYyNNMqaWIPee7p0kmYknlPC3spUVzGDDBjppTicBTIXBuEXipVZ5O70GRKX/Y0gmSRX+hDDSvPyiMTBI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751659886; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=TS8ZTkfMUMynjI4o3xDUHXwFY9c3gzxNKeP+4/m0WhY=; 
+	b=GhkZzEojlPUustFtaNRrZzmw0Nm3gWf4iNKZFYdiRkc4SM+DpwH0kDkFKCOwK6P5NyXjSlft1gIXmBuf2wWicyEbqPI5u2myyGaQYFA3wrNAre8kKM2loR7FY7M+/oNm7zv0AB/Ye5/Clur/OTi5NRczt+5SXzKXK6OzNK8ivq4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751659886;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=TS8ZTkfMUMynjI4o3xDUHXwFY9c3gzxNKeP+4/m0WhY=;
+	b=aA1Tf5hE9yIqTf+z8pF0tuqMt27dbViTC9CVHAM3LmqTufEGbjcqDiKBKvwt5PfI
+	kPTDGPYdlMxsofuIIofLH02E9VzvYP0/MaOeRwGfJxGHUtWYGrPemldovjbqCqz2mPb
+	AXdtU5VmmDkeTG6byxbWF5M92WHbOvX+e3hWvbBk=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1751659883598268.00403358374285; Fri, 4 Jul 2025 13:11:23 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Fri, 4 Jul 2025 13:11:23 -0700 (PDT)
+Date: Sat, 05 Jul 2025 00:11:23 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "Jani Nikula" <jani.nikula@linux.intel.com>
+Cc: "regressions" <regressions@lists.linux.dev>,
+	"intel-gfx" <intel-gfx@lists.freedesktop.org>,
+	"kexec" <kexec@lists.infradead.org>,
+	"dri-devel" <dri-devel@lists.freedesktop.org>,
+	"iommu" <iommu@lists.linux.dev>, "Ben Hutchings" <benh@debian.org>,
+	"joonaslahtinen" <joonas.lahtinen@linux.intel.com>,
+	"josesouza" <jose.souza@intel.com>,
+	"davehansen" <dave.hansen@linux.intel.com>
+Message-ID: <197d710ac39.10e2c241536088.2706332519040181850@zohomail.com>
+In-Reply-To: <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
+References: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com> <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
 Subject: Re: Second kexec_file_load (but not kexec_load) fails on i915 if
  CONFIG_INTEL_IOMMU_DEFAULT_ON=n
-In-Reply-To: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
-Date: Fri, 04 Jul 2025 11:29:01 +0300
-Message-ID: <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr080112272253fe969a23595c85f91a500000523677c6bdb1982768f926de5e850d1de0b95032a6f4e2403a:zu080112275608904759347c1a8aa6344e00004b892033285efa420125ce24acd53f46b26bce7a66f1b1c3af:rf0801122bdab4c8b6ba9c8fd2fda7bf3c000084e058e1ee92c3f3e119dc5a80b99351bae666e7813a8f88542aa41c26:ZohoMail
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250704_012908_733835_8771AAED 
-X-CRM114-Status: GOOD (  33.78  )
+X-CRM114-CacheID: sfid-20250704_131133_779616_60034B9F 
+X-CRM114-Status: GOOD (  13.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,243 +89,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 03 Jul 2025, Askar Safin <safinaskar@zohomail.com> wrote:
-> TL;DR: I found a bug in strange interaction in kexec_file_load (but not k=
-exec_load) and i915
-> TL;DR#2: Second (sometimes third or forth) kexec (using kexec_file_load) =
-fails on my particular hardware
-> TL;DR#3: I did 55 expirements, each of them required a lot of boots, in t=
-otal I did 1908 boots
+ ---- On Fri, 04 Jul 2025 12:29:01 +0400  Jani Nikula <jani.nikula@linux.intel.com> wrote --- 
+ > Thanks for the detailed debug info. I'm afraid all I can say at this
+ > point is, please file all of this in a bug report as described in
+ > [1]. Please add the drm.debug related options, and attach the dmesgs and
+ > configs in the bug instead of pointing at external sites.
 
-Thanks for the detailed debug info. I'm afraid all I can say at this
-point is, please file all of this in a bug report as described in
-[1]. Please add the drm.debug related options, and attach the dmesgs and
-configs in the bug instead of pointing at external sites.
+Okay, now let me speculate how to fix this bug. :) I think someone with moderate kexec understanding
+and with Intel GPU should do this: reproduce the bug and then slowly modify kexec_file_load code until it
+becomes kexec_load code. (Or vice versa.) In the middle of this modification the bug stops to reproduce,
+and so we will know what exactly causes it.
 
-BR,
-Jani.
+kexec_file_load and kexec_load should behave the same. If they do not, then we should
+understand, why. We should closely review their code.
 
+Also, in case of kexec_load kernel uncompressing and parsing performed by "kexec" userspace
+tool, and in case of kexec_file_load by kernel. So we should closely review this two uncompressing/parsing code fragments.
+I think that this bug is related to kexec, not to i915. And thus it should be fixed by kexec people, not by i915 people. (But I may be wrong.)
 
-[1] https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
+But okay, I reported it to that bug tracker anyway: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/14598
 
+Maybe there is separate kexec bug tracker?
 
->
-> Okay, so I found a bug. Steps to reproduce:
-> - I have Dell Precision 7780
-> - I have recent Debian x86_64 sid installed (bug reproducible with both D=
-ebian kernels and mainline ones)
-> - Bug is reproducible on many kernels, including very recent ones, for ex=
-ample 6.15.4
-> - Boot system, then do kexec into the same system using kexec_file_load. =
-I. e. pass --kexec-file-syscall to "kexec" command
-> - Then kexec from this kexec'ed system again (i. e. you should do two kex=
-ec's in a row)
-> - Then do 3rd kexec, etc
-> - Repeat kexec's until you do 100 kexec's or your system start to misbeha=
-ve
->
-> On my computer the system starts to misbehave after some number of kexec'=
-s. This always happens after 2nd kexec attempt.
-> I. e. the first kexec is always successful. But second sometimes is not.
-> I never was able to perform 100 kexec's in a row.
-> After some kexec attempt the system starts to misbehave: oopses, panics, =
-locked system, etc.
->
-> Notes:
->
-> - I tried to bisect "kexec-tools" package, but bisect merely gave me comm=
-it, which switched to kexec_file_load as a default.
-> Bug is reproducible if we use kexec_file_load, but doesn't reproduce if w=
-e use kexec_load
->
-> - Bug is reproducible even if we boot via init=3D/bin/bash (note: this me=
-ans that initramfs is still part of the boot process). (If we boot to norma=
-l GUI, bug is reproducible, too)
->
-> - When I reproduce I use this command line: "root=3DUUID=3D... rootflags=
-=3Dsubvol=3D... ro init=3D..."
->
-> - Debian package "plymouth" is required for reproducing. (It reproduces w=
-ith plymouth, but doesn't reproduce without plymouth.) But note that I neve=
-r see actual plymouth screen! I. e. presence of
-> "plymouth" on the system somehow affects bug reproduciblity despite plymo=
-uth animation never actually shown. I don't know why this happens, but I su=
-spect that I don't pass "splash" to kernel command line, and thus don't see=
- plymouth screen. But I suspect that plymouth is still included to initramf=
-s and from there somehow affects boot process
->
-> - Bug reproduces in Debian, but doesn't reproduce in Ubuntu. After a lot =
-of expirementing I finally understood why: Ubuntu kernel has CONFIG_INTEL_I=
-OMMU_DEFAULT_ON=3Dy, and Debian kernel has not. Additional expirements foun=
-d that it is culpit. I. e. the bug is reproducible with CONFIG_INTEL_IOMMU_=
-DEFAULT_ON=3Dn and not reproducbile with CONFIG_INTEL_IOMMU_DEFAULT_ON=3Dy =
-. (So advice for distributions: do what Ubuntu does, i. e. set CONFIG_INTEL=
-_IOMMU_DEFAULT_ON=3Dy to hide this bug)
->
-> - Bug is not reproducible in old enough kernels, so I did bisect on Linux=
-. Bisect showed me these commits: d4a2393049..4a75f32fc7. I. e. bug is repr=
-oducible in 4a75f32fc7, but doesn't reproduce in d4a2393049. Between them t=
-here is a middle commit 52407c220c44c8dcc6a, which is not testable. Here ar=
-e these commits:
->
-> commit 4a75f32fc783128d0c42ef73fa62a20379a66828
-> Author: Anusha Srivatsa <anusha.srivatsa@intel.com>
->
-> =C2=A0 =C2=A0drm/i915/rpl-s: Add PCH Support for Raptor Lake S
->
-> commit 52407c220c44c8dcc6aa8aa35ffc8a2db3c849a9
-> Author: Anusha Srivatsa <anusha.srivatsa@intel.com>
->
-> =C2=A0 =C2=A0drm/i915/rpl-s: Add PCI IDS for Raptor Lake S
->
-> It seems these commits merely added support for my Intel GPU model. So th=
-is is fake regression. I'm not sure this should be treated as proper regres=
-sion and whether regzbot should be notified. (What do you think?)
->
-> Still formally this is regression: I did expirements and they show that b=
-ug present in 4a75f32fc783128d0c42 and not present before. (Side note: in l=
-atest kernels both wayland and x11 work, in d4a2393049 x11 works and waylan=
-d doesn't.)
->
-> I tried to reproduce the bug in Qemu, but I was unable to do so. It seems=
- Intel GPU is required, maybe even my particular model.
->
-> Here is "lspci -vnn -d :*:0300" for my GPU:
->
-> 00:02.0 VGA compatible controller [0300]: Intel Corporation Raptor Lake-S=
- UHD Graphics [8086:a788] (rev 04) (prog-if 00 [VGA controller])
->         Subsystem: Dell Raptor Lake-S UHD Graphics [1028:0c42]
->         Flags: bus master, fast devsel, latency 0, IRQ 202, IOMMU group 0
->         Memory at 604b000000 (64-bit, non-prefetchable) [size=3D16M]
->         Memory at 4000000000 (64-bit, prefetchable) [size=3D256M]
->         I/O ports at 3000 [size=3D64]
->         Expansion ROM at 000c0000 [virtual] [disabled] [size=3D128K]
->         Capabilities: [40] Vendor Specific Information: Len=3D0c <?>
->         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI =
-00
->         Capabilities: [ac] MSI: Enable+ Count=3D1/1 Maskable+ 64bit-
->         Capabilities: [d0] Power Management version 2
->         Capabilities: [100] Process Address Space ID (PASID)
->         Capabilities: [200] Address Translation Service (ATS)
->         Capabilities: [300] Page Request Interface (PRI)
->         Capabilities: [320] Single Root I/O Virtualization (SR-IOV)
->         Kernel driver in use: i915
->         Kernel modules: i915
->
-> dmidecode:
-> https://zerobin.net/?aebea072b93d8122#z4W9URnV+k9ZZErhP4etQkxlfpyRKf++uKM=
-NoO5PGjs=3D
->
-> - I use "root=3DUUID=3D... rootflags=3Dsubvol=3D... ro init=3D..." as a c=
-ommand line for reproducing. If I add "recovery nomodeset dis_ucode_ldr" (t=
-his is options used by Ubuntu in recovery mode), the bug stops to reproduce
->
-> Again, in short, full list of things required for successful reproducing:
-> - Intel GPU, possibly my particular model
-> - Kernel with support for my model (4a75f32fc783128d0c42 and later up to =
-6.15.4)
-> - Kexec at least two times. (One kexec never fails, 100 kexec's in a row =
-never succeed)
-> - kexec_file_load as opposed to kexec_load
-> - Initramfs
-> - Lack of parameters "recovery nomodeset dis_ucode_ldr" (i. e. one of the=
-m stops reproducing)
-> - plymouth
-> - CONFIG_INTEL_IOMMU_DEFAULT_ON=3Dn
->
-> Removing of ANY of them stops the bug, and I proved this by lots of expir=
-ements.
->
-> In total I did 55+ expirements, each of them required up to 100 boots. In=
- total I did 1908 (!!!!!!) boots on my physical laptop (I mean kexec boots =
-here). No, I'm not faking this number, here is my actual directories with r=
-esults:
->
-> user@subvolume:~$ ls /rbt/kx-results/
-> @rec-2025-06-29T201723Z-bad-4    @rec-2025-06-29T214650Z-good-60  @rec-20=
-25-07-03T050626Z-bad-41    @rec-2025-07-03T104125Z-bad-28    @rec-2025-07-0=
-3T133705Z-bad-3
-> @rec-2025-06-29T203429Z-good-60  @rec-2025-06-29T215558Z-bad-8    @rec-20=
-25-07-03T060107Z-good-100  @rec-2025-07-03T111727Z-bad-13    @rec-2025-07-0=
-3T141647Z-good-100
-> @rec-2025-06-29T205626Z-good-60  @rec-2025-07-01T042949Z-bad-12   @rec-20=
-25-07-03T074810Z-good-100  @rec-2025-07-03T122242Z-good-100  @rec-2025-07-0=
-3T145705Z-good-100
-> @rec-2025-06-29T211612Z-bad-6    @rec-2025-07-02T120101Z-good-60  @rec-20=
-25-07-03T082914Z-good-100  @rec-2025-07-03T123958Z-bad-12    @rec-2025-07-0=
-3T152406Z-bad-50
-> @rec-2025-06-29T212932Z-good-60  @rec-2025-07-03T031038Z-good-60  @rec-20=
-25-07-03T100615Z-good-100  @rec-2025-07-03T132116Z-good-100  @rec-2025-07-0=
-3T154204Z-bad-15
-> user@subvolume:~$ ls /rbt/kx-manual-testing/
-> 2025-07-01-03-19-good-6  2025-07-01-03-56-good-4  2025-07-01-05-28-bad-3 =
- 2025-07-01-06-35-bad-2  2025-07-01-09-46-good-8
-> 2025-07-01-03-44-good-3  2025-07-01-04-47-good-3  2025-07-01-06-19-bad-2 =
- 2025-07-01-09-21-bad-2  2025-07-02-13-09-good
-> user@subvolume:~$ ls /rbt/kx-vanilla-results/
-> 2025-06-30T005219Z_5.16.0-kx-df0cc57e057f18e4-3e17eec5ff024b63_1626_good_=
-60      2025-06-30T023542Z_5.16.0-rc2-kx-87bb2a410dcfb617-9f30253daecd39e5_=
-1663_bad_4
-> 2025-06-30T012313Z_5.17.0-kx-f443e374ae131c16-91b07dce12a83fab_1674_bad_1=
-        2025-06-30T032312Z_5.16.0-rc2-kx-c9ee950a2ca55ea0-854a1f40ce042801_=
-1662_bad_6
-> 2025-06-30T013555Z_5.16.0-kx-22ef12195e13c5ec-9aaf880b25942f2a_1668_bad_7=
-        2025-06-30T033528Z_5.16.0-rc2-kx-ba884a411700dc56-854a1f40ce042801_=
-1662_good_60
-> 2025-06-30T014106Z_5.16.0-kx-9bcbf894b6872216-b828905f3cf12050_1664_bad_2=
-        2025-06-30T034645Z_5.16.0-rc2-kx-d4a23930490df39f-854a1f40ce042801_=
-1662_good_60
-> 2025-06-30T014634Z_5.16.0-rc5-kx-cb6846fbb83b574c-83e7c6cf2ede57b4_1663_b=
-ad_6    2025-06-30T035232Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_=
-1662_bad_5
-> 2025-06-30T015713Z_5.16.0-rc2-kx-15bb79910fe734ad-9f30253daecd39e5_1663_g=
-ood_60  2025-06-30T042058Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_=
-1662_bad_1
-> 2025-06-30T020235Z_5.16.0-rc5-kx-b06103b5325364e0-26176b9b704a5c24_1664_b=
-ad_6    2025-06-30T050000Z_6.15.4-kx-e60eb441596d1c70-2378f4efc5e956e5_2366=
-_bad_2
-> 2025-06-30T020717Z_5.16.0-rc5-kx-eacef9fd61dcf5ea-26176b9b704a5c24_1664_b=
-ad_1    2025-06-30T053011Z_6.15.4-kx-e60eb441596d1c70-2378f4efc5e956e5_2366=
-_good_60
-> 2025-06-30T021738Z_5.16.0-rc2-kx-67b858dd89932086-8d2f1d17f1e1933c_1662_g=
-ood_60  2025-06-30T060619Z_5.16.0-rc2-kx-d4a23930490df39f-854a1f40ce042801_=
-1662_good_60
-> 2025-06-30T022759Z_5.16.0-rc2-kx-17815f624a90579a-854a1f40ce042801_1662_g=
-ood_60  2025-06-30T061448Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_=
-1662_bad_1
->
-> Each number in the end of file/directory name is number of boots. In tota=
-l we have 1908 boots. Testing was mostly automatical, using my script.
->
-> Here is one example dmesg from mainline commit e60eb441596d1c70 (somewher=
-e around 6.15.4):
->
-> https://zerobin.net/?119ff118fd47b363#BpziYs6dNz5PaT7H8w2hlveoEYa4DDtITGk=
-yd9o57LE=3D
->
-> This is was dmesg from 2nd (and in the same time last) boot. The next boo=
-t (i. e. kexec) was unsuccessful. Corresponding config:
->
-> https://zerobin.net/?009c807e1df41af8#gnmrswlbaFbdPTuzNq6NFkQd/Jhb3Ds0ZlL=
-iwNanXnc=3D
->
-> If you want results from all expirements, here is a link: https://filebin=
-.net/45g2757b2iwaeen7 (1 Mb, expires after 7 days). Usually expirements com=
-e with full reproducer script.
->
-> But what I described above is already enough, I think this link is not ne=
-eded.
->
-> I will be available for testing in coming days, then I will switch to oth=
-er things, and so will not be available for testing.
-> If you want more time, then, please, ask for it, i. e. say me something l=
-ike "Please, be available for testing in more 10 days".
->
-> --
-> Askar Safin
-> https://types.pl/@safinaskar
->
+Also, your bug tracker is cool. One can attach files in the middle of report. Why not whole kernel uses it? :)
 
---=20
-Jani Nikula, Intel
+--
+Askar Safin
+https://types.pl/@safinaskar
+
 
