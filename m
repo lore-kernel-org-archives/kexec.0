@@ -4,79 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 377E6C8303C
-	for <kexec@archiver.kernel.org>; Mon,  7 Jul 2025 04:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26A59C71130
+	for <kexec@archiver.kernel.org>; Tue,  8 Jul 2025 00:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=b7NYJmsiSSyFYzFMtw7fkGx1JMolDzXOUBR2sLYUJX8=; b=cWreaiQsz7pkv8ZqAhFdjS1gub
-	1iipjj1xXdZflid4fLFGFc94ZmDCX0L3OoyeZv0KKs4tm881It1RVbuW5WN25JvArPg37NylMwRYj
-	zHVe2GCLGfM1IFATp5gEvIm/Sxrv80WvofoT3W/afF0lRiQ4EGdTAsUurTlxYgKjq3vMvFKOUA9wJ
-	f6ifIcYuBRmf8cCTjm7D4SMUk1tx6JGytGP75E+C6tbwfNBK/2ln0U82sO7dQdKRL35t5Za2SxpNi
-	ZDezXF8nM/UfeeuD/subsUE1vVXKnpjmNt8JQnCVl7lEw4CSc9gLCXf5XQVjSVxqXwA5yWKlrkK4u
-	rMOyWorw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LZKlcff4Z3Y8BiL5BF4Vx6w418mstSp581KQiDFvHa8=; b=j3GXagyl7BMFRmP5KtcuQYTmo0
+	BzCmjLpJpr651zrQu0EPz32p/sMk7iFYp08lcAvg2yj02NhAoueKjpil4PHS+TEMUcRk0HKJUq9UH
+	dXtP6HjTku4Fw0ktl25IUMoK2VnQUB8i4YSL0mYBdS9AtFQkMXMK6eYsU9eWK89JxabTEMXewvpn6
+	N8CEMVH0nlkbuZEcaVaV72wjbJpNK/lp0OEjlz5Exo/Z+DxpcdZdomOK/ypK/qWQlaE6H8/d7DPHD
+	LpIK1axfYk5wlKxWNCFDZEtLd8U67orwGP6GTeAfOhAvFc1kDugBtLbn9z/2bYUVPy3ECZhCAUc5U
+	PhPSSMdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYdsY-00000001Oyh-3mZ1;
-	Mon, 07 Jul 2025 04:54:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uYvno-00000003pRj-2fcJ;
+	Tue, 08 Jul 2025 00:03:16 +0000
+Received: from nyc.source.kernel.org ([2604:1380:45d1:ec00::3])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYdsT-00000001OxO-0KVq
+	id 1uYvn1-00000003pJN-3o7W
 	for kexec@lists.infradead.org;
-	Mon, 07 Jul 2025 04:54:55 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751864085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7NYJmsiSSyFYzFMtw7fkGx1JMolDzXOUBR2sLYUJX8=;
-	b=eGM2zrKf5FTJqfLlAEW2PAZ7MUHNlqxVL6/Q4aD9h6xiybVu9i2beC8Y8fRgJwzDbZvjJQ
-	inpSERltiEII0Q6KWkfSobfnwItP9U8jYZG+z/RVy2bqcmqlW998bHWOWNIjOFnILstNvj
-	Sz98uR783M9qZ874DCMe9digYe5hVnE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-1-_4s55OO7-7V2PJq8BOdw-1; Mon,
- 07 Jul 2025 00:54:42 -0400
-X-MC-Unique: 1-_4s55OO7-7V2PJq8BOdw-1
-X-Mimecast-MFC-AGG-ID: 1-_4s55OO7-7V2PJq8BOdw_1751864081
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD2541800343;
-	Mon,  7 Jul 2025 04:54:40 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.60])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA2F230001BC;
-	Mon,  7 Jul 2025 04:54:38 +0000 (UTC)
-Date: Mon, 7 Jul 2025 12:54:34 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, David Hildenbrand <dhildenb@redhat.com>,
-	akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v3 3/5] kdump, documentation: describe craskernel CMA
- reservation
-Message-ID: <aGtTCqT0piPDFHE0@MiWiFi-R3L-srv>
-References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
- <Z9H4E82EslkGR7pV@dwarf.suse.cz>
- <Z9Of+RYjpcDN7+ji@MiWiFi-R3L-srv>
- <053f8c6d-0acd-465b-8d9f-a46d50ccce71@redhat.com>
- <c5495dd1-8085-4721-af1e-93f34f36d97b@redhat.com>
+	Tue, 08 Jul 2025 00:02:29 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 4225AA5327F;
+	Tue,  8 Jul 2025 00:02:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA71C4CEF1;
+	Tue,  8 Jul 2025 00:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751932946;
+	bh=oGRHJS2/KFYufyAFNRjiMUXXFkY1yNLM85w2UfIQEKU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AjG1QNfQf3FT/h0ejv99XMCmWXmVrd1ql24PFZDB7obobXuObqH2AOHpIIUlH3bEx
+	 rMNU8jlATYumj0aZKtmNbSpQNBjg1GwjYUBcEjA8LM9KgL24rgoOBv4HBwUakAY9ED
+	 YTgc0jMLucUZ/89FTyKE4Y8VhClZeDY+q73P2ZsixGXdVy6ad9v4yWBzPlNAOFfVIQ
+	 9bIZI+L2NJb/DjMm0rqJKO5OeXHq0xQXgdHcE8+YvDveGL1nOPJDfyr4R3FpZnwA4P
+	 Z9uMpOjDify00f4Fg+XVc8zX61Gcz8/8YXLBwbK7ElLy1jc46C/1gql8FRaJPTuAE1
+	 y7D8FCU+zfrzg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Nat Wittstock <nat@fardog.io>,
+	Lucian Langa <lucilanga@7pot.org>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	rafael@kernel.org,
+	pavel@ucw.cz,
+	len.brown@intel.com,
+	ebiederm@xmission.com,
+	linux-pm@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the suspend sequence
+Date: Mon,  7 Jul 2025 20:02:13 -0400
+Message-Id: <20250708000215.793090-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250708000215.793090-1-sashal@kernel.org>
+References: <20250708000215.793090-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5495dd1-8085-4721-af1e-93f34f36d97b@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15.5
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250706_215453_540374_3B40590D 
-X-CRM114-Status: GOOD (  34.43  )
+X-CRM114-CacheID: sfid-20250707_170228_078488_4DF49D87 
+X-CRM114-Status: GOOD (  23.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,62 +84,229 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/27/25 at 02:18pm, David Hildenbrand wrote:
-> On 27.06.25 14:16, David Hildenbrand wrote:
-> > On 14.03.25 04:18, Baoquan He wrote:
-> > > Hi Jiri,
-> > > 
-> > > On 03/12/25 at 10:09pm, Jiri Bohac wrote:
-> > > ......
-> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > > index fb8752b42ec8..895b974dc3bb 100644
-> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > > @@ -987,6 +987,28 @@
-> > > >    			0: to disable low allocation.
-> > > >    			It will be ignored when crashkernel=X,high is not used
-> > > >    			or memory reserved is below 4G.
-> > > > +	crashkernel=size[KMG],cma
-> > > > +			[KNL, X86] Reserve additional crash kernel memory from
-> > > > +			CMA. This reservation is usable by the first system's
-> > > > +			userspace memory and kernel movable allocations (memory
-> > > > +			balloon, zswap). Pages allocated from this memory range
-> > > > +			will not be included in the vmcore so this should not
-> > > > +			be used if dumping of userspace memory is intended and
-> > > > +			it has to be expected that some movable kernel pages
-> > > > +			may be missing from the dump.
-> > > 
-> > > Since David and Don expressed concern about the missing kernel pages
-> > > allocated from CMA area in v2, and you argued this is still useful for
-> > > VM system, I would like to invite David to help evaluate the whole
-> > > series if it's worth from the VM and MM point of view.
-> > 
-> > Balloon pages will not be dumped either way (PageOffline), so that is
-> > not a convern.
-> > 
-> > Zsmalloc pages ... are probably fine right now. They should likely only
-> > be storing compressed user data. (not sure if they also store some other
-> > datastructures, I think no, but might be wrong)
-> > 
-> > My comment was rather forward-looking: that CMA memory only contains
-> > user space memory is already not the case (but the existing cases might
-> > be okay). In the future, as we support other movable allocations (as
-> > raised, leaf page tables at some point, and there were discussions about
-> > movable slab pages, although that might be challenging) this can change
-> > (unless we find ways of not placing these allocations on CMA memory).
-> > 
-> > So as is, this should be fine, but it's certainly something to be aware
-> > of in the future.
-> > 
-> 
-> BTW, I realize this was a late reply, and that the series already proceeded.
-> Just stumbled over that un-replied mail an thought I'd clarify my point
-> here.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Thanks a lot for deliberating on this and providing these helpful
-details. As you said, this feature is fine for the time being, we can
-remember this and consider how to adapt in the future once those movable
-allocations could happen in CMA. And the risk has been told clearly in
-doc.
+[ Upstream commit 12ffc3b1513ebc1f11ae77d053948504a94a68a6 ]
+
+Currently swap is restricted before drivers have had a chance to do
+their prepare() PM callbacks. Restricting swap this early means that if
+a driver needs to evict some content from memory into sawp in it's
+prepare callback, it won't be able to.
+
+On AMD dGPUs this can lead to failed suspends under memory pressure
+situations as all VRAM must be evicted to system memory or swap.
+
+Move the swap restriction to right after all devices have had a chance
+to do the prepare() callback.  If there is any problem with the sequence,
+restore swap in the appropriate dpm resume callbacks or error handling
+paths.
+
+Closes: https://github.com/ROCm/ROCK-Kernel-Driver/issues/174
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2362
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Tested-by: Nat Wittstock <nat@fardog.io>
+Tested-by: Lucian Langa <lucilanga@7pot.org>
+Link: https://patch.msgid.link/20250613214413.4127087-1-superm1@kernel.org
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+**YES**
+
+This commit should be backported to stable kernel trees for the
+following reasons:
+
+## Critical Bug Fix for Real User Issues
+
+1. **Fixes Actual Suspend Failures**: The commit addresses real-world
+   suspend failures under memory pressure on systems with AMD discrete
+   GPUs. The linked issues (ROCm/ROCK-Kernel-Driver#174 and
+   freedesktop.org/drm/amd#2362) indicate this affects actual users.
+
+2. **Regression Fix**: This is effectively a regression fix. The PM
+   subsystem's early swap restriction prevents AMD GPU drivers from
+   properly evicting VRAM during their prepare() callbacks, which is a
+   requirement that has become more critical as GPU VRAM sizes have
+   increased.
+
+## Small, Contained Change
+
+3. **Minimal Code Changes**: The fix is remarkably simple - it just
+   moves the `pm_restrict_gfp_mask()` call from early in the suspend
+   sequence to after `dpm_prepare()` completes. The changes are:
+   - Move `pm_restrict_gfp_mask()` from multiple early locations to
+     inside `dpm_suspend_start()` after `dpm_prepare()` succeeds
+   - Add corresponding `pm_restore_gfp_mask()` calls in error paths and
+     resume paths
+   - Remove the now-redundant calls from hibernate.c and suspend.c
+
+4. **Low Risk of Regression**: The change maintains the original intent
+   of preventing I/O during the critical suspend phase while allowing it
+   during device preparation. The swap restriction still happens before
+   `dpm_suspend()`, just after `dpm_prepare()`.
+
+## Follows Stable Rules
+
+5. **Meets Stable Criteria**:
+   - Fixes a real bug that bothers people (suspend failures)
+   - Small change (moves function calls, doesn't introduce new logic)
+   - Obviously correct (allows drivers to use swap during their
+     designated preparation phase)
+   - Already tested by users (Tested-by tags from affected users)
+
+## Similar to Other Backported Commits
+
+6. **Pattern Matches**: Looking at the similar commits provided, this
+   follows the same pattern as the AMD GPU eviction commits that were
+   backported. Those commits also addressed the same fundamental issue -
+   ensuring GPU VRAM can be properly evicted during suspend/hibernation.
+
+## Critical Timing
+
+7. **Error Path Handling**: The commit properly handles error paths by
+   adding `pm_restore_gfp_mask()` calls in:
+   - `dpm_resume_end()` for normal resume
+   - `platform_recover()` error path in suspend.c
+   - `pm_restore_gfp_mask()` in kexec_core.c for kexec flows
+
+The commit is well-tested, addresses a real problem affecting users, and
+makes a minimal, obviously correct change to fix suspend failures on
+systems with discrete GPUs under memory pressure.
+
+ drivers/base/power/main.c | 5 ++++-
+ include/linux/suspend.h   | 5 +++++
+ kernel/kexec_core.c       | 1 +
+ kernel/power/hibernate.c  | 3 ---
+ kernel/power/power.h      | 5 -----
+ kernel/power/suspend.c    | 3 +--
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 1926454c7a7e8..dd1efa95bcf15 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1182,6 +1182,7 @@ void dpm_complete(pm_message_t state)
+  */
+ void dpm_resume_end(pm_message_t state)
+ {
++	pm_restore_gfp_mask();
+ 	dpm_resume(state);
+ 	dpm_complete(state);
+ }
+@@ -2015,8 +2016,10 @@ int dpm_suspend_start(pm_message_t state)
+ 	error = dpm_prepare(state);
+ 	if (error)
+ 		dpm_save_failed_step(SUSPEND_PREPARE);
+-	else
++	else {
++		pm_restrict_gfp_mask();
+ 		error = dpm_suspend(state);
++	}
+ 
+ 	dpm_show_time(starttime, state, error, "start");
+ 	return error;
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index da6ebca3ff774..d638f31dc32cd 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -441,6 +441,8 @@ extern int unregister_pm_notifier(struct notifier_block *nb);
+ extern void ksys_sync_helper(void);
+ extern void pm_report_hw_sleep_time(u64 t);
+ extern void pm_report_max_hw_sleep(u64 t);
++void pm_restrict_gfp_mask(void);
++void pm_restore_gfp_mask(void);
+ 
+ #define pm_notifier(fn, pri) {				\
+ 	static struct notifier_block fn##_nb =			\
+@@ -485,6 +487,9 @@ static inline int unregister_pm_notifier(struct notifier_block *nb)
+ static inline void pm_report_hw_sleep_time(u64 t) {};
+ static inline void pm_report_max_hw_sleep(u64 t) {};
+ 
++static inline void pm_restrict_gfp_mask(void) {}
++static inline void pm_restore_gfp_mask(void) {}
++
+ static inline void ksys_sync_helper(void) {}
+ 
+ #define pm_notifier(fn, pri)	do { (void)(fn); } while (0)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 3e62b944c8833..2972278497b0b 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1082,6 +1082,7 @@ int kernel_kexec(void)
+  Resume_devices:
+ 		dpm_resume_end(PMSG_RESTORE);
+  Resume_console:
++		pm_restore_gfp_mask();
+ 		console_resume_all();
+ 		thaw_processes();
+  Restore_console:
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index 5af9c7ee98cd4..0bb5a7befe944 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -418,7 +418,6 @@ int hibernation_snapshot(int platform_mode)
+ 	}
+ 
+ 	console_suspend_all();
+-	pm_restrict_gfp_mask();
+ 
+ 	error = dpm_suspend(PMSG_FREEZE);
+ 
+@@ -554,7 +553,6 @@ int hibernation_restore(int platform_mode)
+ 
+ 	pm_prepare_console();
+ 	console_suspend_all();
+-	pm_restrict_gfp_mask();
+ 	error = dpm_suspend_start(PMSG_QUIESCE);
+ 	if (!error) {
+ 		error = resume_target_kernel(platform_mode);
+@@ -566,7 +564,6 @@ int hibernation_restore(int platform_mode)
+ 		BUG_ON(!error);
+ 	}
+ 	dpm_resume_end(PMSG_RECOVER);
+-	pm_restore_gfp_mask();
+ 	console_resume_all();
+ 	pm_restore_console();
+ 	return error;
+diff --git a/kernel/power/power.h b/kernel/power/power.h
+index f8496f40b54fa..6037090578b71 100644
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -235,11 +235,6 @@ static inline void suspend_test_finish(const char *label) {}
+ /* kernel/power/main.c */
+ extern int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down);
+ extern int pm_notifier_call_chain(unsigned long val);
+-void pm_restrict_gfp_mask(void);
+-void pm_restore_gfp_mask(void);
+-#else
+-static inline void pm_restrict_gfp_mask(void) {}
+-static inline void pm_restore_gfp_mask(void) {}
+ #endif
+ 
+ #ifdef CONFIG_HIGHMEM
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 8eaec4ab121d4..d22edf9678872 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -537,6 +537,7 @@ int suspend_devices_and_enter(suspend_state_t state)
+ 	return error;
+ 
+  Recover_platform:
++	pm_restore_gfp_mask();
+ 	platform_recover(state);
+ 	goto Resume_devices;
+ }
+@@ -600,9 +601,7 @@ static int enter_state(suspend_state_t state)
+ 
+ 	trace_suspend_resume(TPS("suspend_enter"), state, false);
+ 	pm_pr_dbg("Suspending system (%s)\n", mem_sleep_labels[state]);
+-	pm_restrict_gfp_mask();
+ 	error = suspend_devices_and_enter(state);
+-	pm_restore_gfp_mask();
+ 
+  Finish:
+ 	events_check_enabled = false;
+-- 
+2.39.5
 
 
