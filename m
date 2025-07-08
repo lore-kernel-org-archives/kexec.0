@@ -4,91 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30426C8303C
-	for <kexec@archiver.kernel.org>; Tue,  8 Jul 2025 08:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15794C8303C
+	for <kexec@archiver.kernel.org>; Tue,  8 Jul 2025 19:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	References:Message-ID:Date:CC:To:From:Content-Type:Subject:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Subject:Content-Type:
+	MIME-Version:Message-ID:In-Reply-To:Date:References:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=huWWIkXtngan4CPCRL9Yck07u9MyGWmAkIp5g9FEddM=; b=tpLEZdGcMn7nLCVZXSu8AuduaS
-	ksHQgZVMY5oZTlK/OKchFvc1n4od/v4upIjKKCuPVDllaqG5GAQBrCz1t3lv3Np3vFtNKEEZ1fn+y
-	gNAKAOqU1n7XHkvWWSUzgNnX32PkTT5CaHKbzhpC//WPJcvl0J8yKvn+AJu5aXy1qK2/IVesHnL/f
-	CxvvoMB9/QyGcPzsIAtbajGMhku51+ZCf5fshJ7iD0CC5I/2tnhYiTq6x72SkB67nLvUQRA5sLCLO
-	OEEVVRWSyZNJ0hcYdJNjoRc+1XgiUbie1WoZcVftx2SN2kEM+UWCBK4lJeYPWyx5283bt1qcFDpvh
-	0hZD4y7Q==;
+	bh=u+UdQVATKpynu6Se/2hwAPkISfyKdcXbbPHKp8LodwE=; b=SCkwa9er5M/oKQ8PJiwuhEuaZ8
+	Gjt13GDkZQvfzHmHl7CSbl2LBfDlxt99cd/OIBKKtvBNlf5iteeDsXposdSMb6cOD5vJKl8sw9ZLh
+	df5Xt4Np1/yPG6GKD4J0X06dKsr27XvQTsn52bObEVajHnl3nfHIct/yIBYyUx0ZRMqubDB67hONA
+	Vdf46np0mrgRhIZ2iqCBHDF7unZPe9GKhUsXozcKwqS9By+Gn9JWbtiooFUSdhepz6Uge2oszRIcu
+	e+oHjPzccipiHqlnJpYhhVOrvNdgmy6kaonqB4Cok+Cjl6m2D1dGF30ztFyO/LPF4DGe1lBzZwCjA
+	8dSIKh6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZ3Ne-00000004hVf-0Pto;
-	Tue, 08 Jul 2025 08:08:46 +0000
-Received: from smtp-fw-52004.amazon.com ([52.119.213.154])
+	id 1uZESm-00000006RZa-1T3f;
+	Tue, 08 Jul 2025 19:58:48 +0000
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZ3Na-00000004hUq-33gu
+	id 1uZDlx-00000006KgB-3ksr
 	for kexec@lists.infradead.org;
-	Tue, 08 Jul 2025 08:08:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1751962123; x=1783498123;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   subject;
-  bh=y7ay/zpUOJKAEmSnovC/kDgtrtSXsIKlTGWYwmSpfxU=;
-  b=UDXhT+t48dDIH1Jk+sn+WQdbWMXkT8GBWAarE6r9tfTG9yVHoglVQi2I
-   bQmhfrnvU7jlkJ1Dzd6gnNspSAtz6r/AMx2LCV9yTs0XdmDy7AqqtgFRf
-   Dl/FnkMUMpw2IOZP1Tr2LEE0RMVFvVPzPyZ2GE1I2PWO6WGOxD8SQrkMo
-   z+BFusobZLlI1TfhDUTcTLvpvsxCZBnnWb+CR2Pv/BDkNJl1Fo0xhC0Xq
-   4/waaSxkCI4fbRbpUj5PZg3a+eoZCUjZJksyxbKFb5q+TsYvncR29PNjs
-   USk3WT8PT5qhhRjlyYmqbFM5+UG+4gP7WOqcUTAu6qMkD3tvJ8J5aGXVR
-   w==;
-X-Amazon-filename: smime.p7s
-X-IronPort-AV: E=Sophos;i="6.16,296,1744070400"; 
-   d="p7s'346?scan'346,208,346";a="315585636"
-Subject: Re: [PATCH v2] selftests/kexec: fix test_kexec_jump build
-Thread-Topic: [PATCH v2] selftests/kexec: fix test_kexec_jump build
-Content-Type: multipart/mixed; boundary="===============1995965109367093102=="
+	Tue, 08 Jul 2025 19:14:35 +0000
+Received: from in02.mta.xmission.com ([166.70.13.52]:47190)
+	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uZDld-0087r7-EQ; Tue, 08 Jul 2025 13:14:13 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:57294 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uZDlb-00EWoI-M0; Tue, 08 Jul 2025 13:14:13 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: patches@lists.linux.dev,  stable@vger.kernel.org,  Mario Limonciello
+ <mario.limonciello@amd.com>,  Nat Wittstock <nat@fardog.io>,  Lucian Langa
+ <lucilanga@7pot.org>,  "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+  rafael@kernel.org,  pavel@ucw.cz,  len.brown@intel.com,
+  linux-pm@vger.kernel.org,  kexec@lists.infradead.org
+References: <20250708000215.793090-1-sashal@kernel.org>
+	<20250708000215.793090-6-sashal@kernel.org>
+Date: Tue, 08 Jul 2025 14:13:42 -0500
+In-Reply-To: <20250708000215.793090-6-sashal@kernel.org> (Sasha Levin's
+	message of "Mon, 7 Jul 2025 20:02:13 -0400")
+Message-ID: <87ikk2wl5l.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2025 08:08:37 +0000
-Received: from EX19MTAUEA001.ant.amazon.com [10.0.0.204:26320]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.56.22:2525] with esmtp (Farcaster)
- id d28a9477-1200-49ff-9e27-42b3df5e4ff0; Tue, 8 Jul 2025 08:08:37 +0000 (UTC)
-X-Farcaster-Flow-ID: d28a9477-1200-49ff-9e27-42b3df5e4ff0
-Received: from EX19D008UEC002.ant.amazon.com (10.252.135.242) by
- EX19MTAUEA001.ant.amazon.com (10.252.134.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Jul 2025 07:18:37 +0000
-Received: from EX19D008UEC001.ant.amazon.com (10.252.135.232) by
- EX19D008UEC002.ant.amazon.com (10.252.135.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Jul 2025 07:18:37 +0000
-Received: from EX19D008UEC001.ant.amazon.com ([fe80::4702:5d1a:c556:797]) by
- EX19D008UEC001.ant.amazon.com ([fe80::4702:5d1a:c556:797%3]) with mapi id
- 15.02.1544.014; Tue, 8 Jul 2025 07:18:36 +0000
-From: "Woodhouse, David" <dwmw@amazon.co.uk>
-To: "moonhee.lee.ca@gmail.com" <moonhee.lee.ca@gmail.com>, "bhe@redhat.com"
-	<bhe@redhat.com>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"mingo@kernel.org" <mingo@kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "khan@linuxfoundation.org"
-	<khan@linuxfoundation.org>, "linux-kernel-mentees@lists.linux.dev"
-	<linux-kernel-mentees@lists.linux.dev>, "shuah@kernel.org"
-	<shuah@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "skhan@linuxfoundation.org"
-	<skhan@linuxfoundation.org>
-Thread-Index: AQHb63U4SXjltZSNekimGD12UH17V7Qf9PcAgAflIQA=
-Date: Tue, 8 Jul 2025 07:18:36 +0000
-Message-ID: <d89f3d4ca5a938a93e1f1b761f7749c88f051dfb.camel@amazon.co.uk>
-References: <20250702171704.22559-2-moonhee.lee.ca@gmail.com>
-	 <aGYm1BARlztCoCLT@MiWiFi-R3L-srv>
-In-Reply-To: <aGYm1BARlztCoCLT@MiWiFi-R3L-srv>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.106.83.9]
-MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1uZDlb-00EWoI-M0;;;mid=<87ikk2wl5l.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18eWuTXhpEEG+cAz+KqRLkQHqIlLXpyYLk=
+Subject: Re: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the
+ suspend sequence
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: kexec@lists.infradead.org, linux-pm@vger.kernel.org, len.brown@intel.com, pavel@ucw.cz, rafael@kernel.org, rafael.j.wysocki@intel.com, lucilanga@7pot.org, nat@fardog.io, mario.limonciello@amd.com, stable@vger.kernel.org, patches@lists.linux.dev, sashal@kernel.org
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out02.mta.xmission.com); SAEximRunCond expanded to false
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250708_010842_988169_68F55764 
-X-CRM114-Status: GOOD (  32.92  )
+X-CRM114-CacheID: sfid-20250708_121433_960831_54E441A4 
+X-CRM114-Status: GOOD (  28.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,177 +78,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============1995965109367093102==
-Content-Language: en-US
-Content-Type: multipart/signed; micalg=sha-256;
-	protocol="application/pkcs7-signature"; boundary="=-AVEB1z3UnmfLXQH4Arb/"
 
---=-AVEB1z3UnmfLXQH4Arb/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Wow!
 
-On Thu, 2025-07-03 at 14:44 +0800, Baoquan He wrote:
-> On 07/02/25 at 10:17am, Moon Hee Lee wrote:
-> > The test_kexec_jump program builds correctly when invoked from the
-> > top-level
-> > selftests/Makefile, which explicitly sets the OUTPUT variable.
-> > However,
-> > building directly in tools/testing/selftests/kexec fails with:
-> >=20
-> > =C2=A0 make: *** No rule to make target '/test_kexec_jump', needed by
-> > 'test_kexec_jump.sh'.=C2=A0 Stop.
->=20
-> I can reproduce this, and this patch fixes it. Thanks.
->=20
-> Acked-by: Baoquan He <bhe@redhat.com>
+Sasha I think an impersonator has gotten into your account, and is
+just making nonsense up.
 
-Acked-by: David Woodhouse <dwmw@amazon.co.uk>
+This reads like an impassioned plea to backport this change, from
+someone who has actually dealt with it.
 
-Thanks.
+However reading the justification in detail is an exercise in reading
+falehoods.
 
---=-AVEB1z3UnmfLXQH4Arb/
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+If this does not come from an impersonator then if this comes
+from a human being, I recommend you have a talk with them.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkYw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhUwggT9oAMCAQICEFQru/eJkU7BxeS7T6sWKmYwDQYJKoZIhvcN
-AQELBQAwgZYxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
-BAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMjQxMjE1MDAw
-MDAwWhcNMjYxMjE1MjM1OTU5WjAiMSAwHgYJKoZIhvcNAQkBFhFkd213QGFtYXpvbi5jby51azCC
-AiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBANhjs6T4tJ0lcw4+6sawEn2FowmhunUBsnSV
-ccB+aA7s3Zd9PZV46CU6phAlCWpKk1yFVcD1Rnc4ux17o4LbUgFXiKrORS0jiF/5Oa0rXG3FISG1
-Xdjt8oPKIq+9Z1s2e7Ipi5WWj4AG/xlkH/YMMctL9O8CCRHSrhiChbE/gR57x9PAnt5aeZZ2YWza
-GOOeceaZe+u6vHCHITRmknSAnAX/aNoNJNsQCGcfrE83y9iHmP8BFrSRZqajBKlKq8tyJd5FnSwP
-H3kSUcQlHOwiIfCRFXP4rpXSZ7nKOEZr3SXH06ADY9gZtrSpwBbuzKWDPGWMRuRnz8ogj/Y6DeU4
-2zB/ZAIi5b0BzWf4u0rBEQD5xtpOCxYHc2nXQaFSWu36kP1JaNqElE51OQ92EyVKfW3N6qZcKiBr
-VijXY2EtR+/5W9ixRFnEs4nIeb94Sf92UMEeG9ew2yVvcYXXNPaicGnrkESNC19/a8YXxQEZfrmB
-eAPT9viQJhn3O+sD4pP0Ss3SjVZc6EO7vfoP07bt2n9YE08XSPkxcyb1J/4t/+AskkKeYFBGdpjg
-xd+iLFxjSwBytZuh3+7DuHUfg876WA44ieQDrhHSjuvuAZ1Wb8WUsrpzrcLoYjqFmb/bf6/yyoxl
-t31mdgPC+FLc+Yu1BQwXC3JMbrvbFBVTtn5X2EKDAgMBAAGjggHQMIIBzDAfBgNVHSMEGDAWgBQJ
-wPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUWvtA1XsSV8xjgfFQL/DUTNIbJu4wDgYDVR0P
-AQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwEwYDVR0lBAwwCgYIKwYBBQUHAwQwUAYDVR0gBEkwRzA6
-BgwrBgEEAbIxAQIBCgIwKjAoBggrBgEFBQcCARYcaHR0cHM6Ly9zZWN0aWdvLmNvbS9TTUlNRUNQ
-UzAJBgdngQwBBQEDMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2Vj
-dGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUF
-BwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xp
-ZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDov
-L29jc3Auc2VjdGlnby5jb20wHAYDVR0RBBUwE4ERZHdtd0BhbWF6b24uY28udWswDQYJKoZIhvcN
-AQELBQADggEBAED6T+rfP2XPdLfHoCd5n1iGIcYauWfPHRdZN2Tw7a7NEXIkm2yZNizOSpp3NrMi
-WOBN13XgqnYLsqdpxJhbjwKczKX50/qfhhkOHtrQ0GRkucybK447Aaul80cZT8T3WG9U9dhl3Ct/
-MuyKBWQg3MYlbUT6u4kC9Pk8rd+cR14ttYRUWDKTS2BrL7e8jpNmtCoEakDkMY4MrpoMwM1f4ANV
-qZ8cnDntwXq5ormZIksN2DqxsKLmrFyVAONhqSST72ImBfIVWhFRTCF9tTcI5wE/0Skl25FZmSsB
-B2LUgecgK7MZyw9Do/b0sYS+8YmA/ujUCqNb0fPJBE/B9vBomhswggYVMIIE/aADAgECAhBUK7v3
-iZFOwcXku0+rFipmMA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTI0MTIxNTAwMDAwMFoXDTI2MTIxNTIzNTk1OVowIjEgMB4GCSqGSIb3DQEJ
-ARYRZHdtd0BhbWF6b24uY28udWswggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYY7Ok
-+LSdJXMOPurGsBJ9haMJobp1AbJ0lXHAfmgO7N2XfT2VeOglOqYQJQlqSpNchVXA9UZ3OLsde6OC
-21IBV4iqzkUtI4hf+TmtK1xtxSEhtV3Y7fKDyiKvvWdbNnuyKYuVlo+ABv8ZZB/2DDHLS/TvAgkR
-0q4YgoWxP4Eee8fTwJ7eWnmWdmFs2hjjnnHmmXvrurxwhyE0ZpJ0gJwF/2jaDSTbEAhnH6xPN8vY
-h5j/ARa0kWamowSpSqvLciXeRZ0sDx95ElHEJRzsIiHwkRVz+K6V0me5yjhGa90lx9OgA2PYGba0
-qcAW7sylgzxljEbkZ8/KII/2Og3lONswf2QCIuW9Ac1n+LtKwREA+cbaTgsWB3Np10GhUlrt+pD9
-SWjahJROdTkPdhMlSn1tzeqmXCoga1Yo12NhLUfv+VvYsURZxLOJyHm/eEn/dlDBHhvXsNslb3GF
-1zT2onBp65BEjQtff2vGF8UBGX65gXgD0/b4kCYZ9zvrA+KT9ErN0o1WXOhDu736D9O27dp/WBNP
-F0j5MXMm9Sf+Lf/gLJJCnmBQRnaY4MXfoixcY0sAcrWbod/uw7h1H4PO+lgOOInkA64R0o7r7gGd
-Vm/FlLK6c63C6GI6hZm/23+v8sqMZbd9ZnYDwvhS3PmLtQUMFwtyTG672xQVU7Z+V9hCgwIDAQAB
-o4IB0DCCAcwwHwYDVR0jBBgwFoAUCcDy/AvalNtf/ivfqJlCz8ngrQAwHQYDVR0OBBYEFFr7QNV7
-ElfMY4HxUC/w1EzSGybuMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMBMGA1UdJQQMMAoG
-CCsGAQUFBwMEMFAGA1UdIARJMEcwOgYMKwYBBAGyMQECAQoCMCowKAYIKwYBBQUHAgEWHGh0dHBz
-Oi8vc2VjdGlnby5jb20vU01JTUVDUFMwCQYHZ4EMAQUBAzBaBgNVHR8EUzBRME+gTaBLhklodHRw
-Oi8vY3JsLnNlY3RpZ28uY29tL1NlY3RpZ29SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3Vy
-ZUVtYWlsQ0EuY3JsMIGKBggrBgEFBQcBAQR+MHwwVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuc2Vj
-dGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5j
-cnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNlY3RpZ28uY29tMBwGA1UdEQQVMBOBEWR3bXdA
-YW1hem9uLmNvLnVrMA0GCSqGSIb3DQEBCwUAA4IBAQBA+k/q3z9lz3S3x6AneZ9YhiHGGrlnzx0X
-WTdk8O2uzRFyJJtsmTYszkqadzazIljgTdd14Kp2C7KnacSYW48CnMyl+dP6n4YZDh7a0NBkZLnM
-myuOOwGrpfNHGU/E91hvVPXYZdwrfzLsigVkINzGJW1E+ruJAvT5PK3fnEdeLbWEVFgyk0tgay+3
-vI6TZrQqBGpA5DGODK6aDMDNX+ADVamfHJw57cF6uaK5mSJLDdg6sbCi5qxclQDjYakkk+9iJgXy
-FVoRUUwhfbU3COcBP9EpJduRWZkrAQdi1IHnICuzGcsPQ6P29LGEvvGJgP7o1AqjW9HzyQRPwfbw
-aJobMYIExDCCBMACAQEwgaswgZYxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNo
-ZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UE
-AxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
-EFQru/eJkU7BxeS7T6sWKmYwDQYJYIZIAWUDBAIBBQCgggHpMBgGCSqGSIb3DQEJAzELBgkqhkiG
-9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDcwODA3MTgzMFowLwYJKoZIhvcNAQkEMSIEIGAaGKcC
-AHV69KxTvIiyPnA1LRXwVKfz4kQlLi92YirBMIG8BgkrBgEEAYI3EAQxga4wgaswgZYxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAW
-BgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEFQru/eJkU7BxeS7T6sWKmYwgb4GCyqGSIb3
-DQEJEAILMYGuoIGrMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhBUK7v3
-iZFOwcXku0+rFipmMA0GCSqGSIb3DQEBAQUABIICACv6wwGy+PfBeO8fYmcH/Vh6m5rZBCxCXceN
-K8ygs3yLQk+kY9iptdogQIAfJYBZWmoL1pZNkfjro7e1m1bF3pRUKR18wjFQeXh6N9V88TGVgwm7
-qtxFrl5jJjbYWiKY7QzUYVcjhiiQf7aF6N+GqDc6zUpvonQiy7sQMgNkBvad48ZZzapSOmstXeSY
-/JilB7SI/ywPzCsPZYWv/NH9cbQ9JPQsQxi9UyN2PYfdliMP5PorVx6QTMUkaNBHiVArdDzQdDQt
-flM8I6lKeTt2tYIBeZCyyC4wI6HY/QdHYSZjq3Lx6MHhhhW/91pHYWEwRqF0nc8sot22Txe60hCb
-l2ibWNIyIMIAFr0ZC157czojof6r4YiE7IM3FCvRgZNgGnRju1X8Q4st/OCwfLuhnk0+W4mxyke8
-osxWJH1MeyGKSyV8loSrhDIrQNmtC5rbTAMH+k3bxo0SH4ptkTOEH3oh1HNngXVlvERKF0jqHeIN
-fqRm1bEsneacF2xCdJaRAnaXUV1f5oosQ4AyC3yVCcIGxbBjn2OAlyaaTWhkEyzw89o/Qwo0Qmpf
-6r8R2+PjsSKtIVEUMzH5vMjJV8Omoa3Ph2aWIeOmVaIf8OSrPI64zvuzvlUQAYn1bHnQY4f/uHcc
-Cd2njtYTqttDaGVrd2nixiDKdhC68e7sMHANQrhiAAAAAAAA
+If this comes from a machine I recommend take it out of commission
+and rework it.
+
+If I see this kind of baloney again I expect I will just auto-nack
+it instead of reading it, as reading it appears to be a waste of
+time.  It is a complete waste reading fiction in what little time I have
+for kernel development.
+
+Eric
 
 
---=-AVEB1z3UnmfLXQH4Arb/--
+Sasha Levin <sashal@kernel.org> writes:
 
---===============1995965109367093102==
-Content-Type: multipart/alternative; boundary="===============8187833562819341360=="
-MIME-Version: 1.0
-Content-Disposition: inline
+> **YES**
+>
+> This commit should be backported to stable kernel trees for the
+> following reasons:
+>
+> ## Critical Bug Fix for Real User Issues
+>
+> 1. **Fixes Actual Suspend Failures**: The commit addresses real-world
+>    suspend failures under memory pressure on systems with AMD discrete
+>    GPUs. The linked issues (ROCm/ROCK-Kernel-Driver#174 and
+>    freedesktop.org/drm/amd#2362) indicate this affects actual users.
 
---===============8187833562819341360==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+The links in the first paragraph are very distorted.  The links
+from the actual change are:
+
+ https://github.com/ROCm/ROCK-Kernel-Driver/issues/174
+ https://gitlab.freedesktop.org/drm/amd/-/issues/2362
+
+Those completely distorted links make understanding this justification
+much harder then necessary.
 
 
+> 2. **Regression Fix**: This is effectively a regression fix. The PM
+>    subsystem's early swap restriction prevents AMD GPU drivers from
+>    properly evicting VRAM during their prepare() callbacks, which is a
+>    requirement that has become more critical as GPU VRAM sizes have
+>    increased.
+
+That is a justification.   There is no evidence that a kernel change
+made this worse.  Thus there is no evidence this is a regression fix.
 
 
-Amazon Development Centre (London) Ltd. Registered in England and Wales wit=
-h registration number 04543232 with its registered office at 1 Principal Pl=
-ace, Worship Street, London EC2A 2FA, United Kingdom.
+> ## Small, Contained Change
+>
+> 3. **Minimal Code Changes**: The fix is remarkably simple - it just
+>    moves the `pm_restrict_gfp_mask()` call from early in the suspend
+>    sequence to after `dpm_prepare()` completes. The changes are:
+>    - Move `pm_restrict_gfp_mask()` from multiple early locations to
+>      inside `dpm_suspend_start()` after `dpm_prepare()` succeeds
+>    - Add corresponding `pm_restore_gfp_mask()` calls in error paths and
+>      resume paths
+>    - Remove the now-redundant calls from hibernate.c and suspend.c
+
+Completely wrong.  
+
+> 4. **Low Risk of Regression**: The change maintains the original intent
+>    of preventing I/O during the critical suspend phase while allowing it
+>    during device preparation. The swap restriction still happens before
+>    `dpm_suspend()`, just after `dpm_prepare()`.
+
+This is a fundamental change to a susbsystem that the subsystem
+maintainer does not say is low risk.
+
+> ## Follows Stable Rules
+>
+> 5. **Meets Stable Criteria**:
+>    - Fixes a real bug that bothers people (suspend failures)
+Addresses a real bug.
+
+>    - Small change (moves function calls, doesn't introduce new logic)
+
+The change is a large change in the logic.
+
+>    - Obviously correct (allows drivers to use swap during their
+>      designated preparation phase)
+
+It obviously changes the behavior.  It is not at all obvious
+the change is behavior is desirable for all callbacks, and in all
+other scenarios.
 
 
+>    - Already tested by users (Tested-by tags from affected users)
+Yes it has Tested-by tags.
 
---===============8187833562819341360==
-Content-Type: text/html; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+> ## Similar to Other Backported Commits
+>
+> 6. **Pattern Matches**: Looking at the similar commits provided, this
+>    follows the same pattern as the AMD GPU eviction commits that were
+>    backported. Those commits also addressed the same fundamental issue -
+>    ensuring GPU VRAM can be properly evicted during suspend/hibernation.
 
-<br><br><br>Amazon Development Centre (London) Ltd.Registered in England an=
-d Wales with registration number 04543232 with its registered office at 1 P=
-rincipal Place, Worship Street, London EC2A 2FA, United Kingdom.<br><br><br>
+Which commits that were backported?
 
---===============8187833562819341360==--
+> ## Critical Timing
 
---===============1995965109367093102==--
+Timing???  There is no race condition.
+
+> 7. **Error Path Handling**: The commit properly handles error paths by
+>    adding `pm_restore_gfp_mask()` calls in:
+>    - `dpm_resume_end()` for normal resume
+>    - `platform_recover()` error path in suspend.c
+>    - `pm_restore_gfp_mask()` in kexec_core.c for kexec flows
+>
+> The commit is well-tested, addresses a real problem affecting users, and
+> makes a minimal, obviously correct change to fix suspend failures on
+> systems with discrete GPUs under memory pressure.
+
+What evidence is there that this commit has been tested let alone
+well-tested.
+
+The entire line of reasoning is completely suspect.
+
+Eric
 
