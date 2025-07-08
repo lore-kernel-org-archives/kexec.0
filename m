@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75201C8303C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6092CC83F09
 	for <kexec@archiver.kernel.org>; Tue,  8 Jul 2025 21:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,59 +12,56 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dE21b34H64m1Rx5Bjk/kqJGCqXfxO2jKo8Req6Ph21o=; b=VK9dLGDkyfGpbLoGjqHFCePjRX
-	a5/Qk961e/2BnMEkmfSkYZtTkKijYzzHY4coSoHIbE+0r8IgF4M6JpQqbuCD+Dd8QKD98ZwR3NNEW
-	BmffjdpMkyHMwonjYTpwIDFRoMf1iCLYkc1hv+TpQa7DHHpmJL2dlMewFa4ztoAOv7w5QK7llToFt
-	aB5x0hDVFmVMurGAKoRAHbkYFYxBjnZM7zYywztONGTSqm8V1gnu6BmHZCiaBxGNHsIqiLXjhHKy5
-	yz6bHWXeRGOMA3qk2zAvjcJETfGkBU4CapikUlTgTHjfKO/ELIEbKXmvs4CbaCIUKkpjgNVmSUdqV
-	p8ohuMVQ==;
+	bh=eo6RLYnfDwilrvMsNkS6FuRCCx3qPpmVDAwaxfXrbHM=; b=zQLCkM30HAYoLsq3Nr1kX0xFjl
+	am8/SNrlpvDwtsfXwLdaUPedX7s7tS2DBbLYiywf0DRWEjRW4YzVXGdOI/DTseu4erG6+FJTVKVlK
+	ZrFvadwcJHn615rM6ukGZdmvn6XW6qf08v9XaHtsVIB5Ezut5eOvIeWDgE3IQw//i9vqroRhv1K6P
+	vUUAHG25n4OHbSO9utBL77Qius0T0DOEVgmcCpRfALFonSnfRtLqvyfeX6SXKx7igSKXvyu+jg6MB
+	BXYoCjv3SkLOQLlFRR8N6rGtBmH+pF+YUnZnfuPes3THYtdMwnAakj9nN3/JdUf8M77Yx0V8nLFwj
+	qfpVFTUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZFm9-00000006eCm-2wLG;
-	Tue, 08 Jul 2025 21:22:53 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1uZFmA-00000006eDB-2gZR;
+	Tue, 08 Jul 2025 21:22:54 +0000
+Received: from jabberwock.ucw.cz ([46.255.230.98])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZEzo-00000006Wer-39Po
+	id 1uZF5Z-00000006XWu-32TZ
 	for kexec@lists.infradead.org;
-	Tue, 08 Jul 2025 20:32:58 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id B32D15C570A;
-	Tue,  8 Jul 2025 20:32:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23896C4CEED;
-	Tue,  8 Jul 2025 20:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752006775;
-	bh=v6IjWxZZvdKzFozdZoIQf7kco0spsknEBjNgMIsauWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n3oYQMAJbbtIRjSqTkO2jJFyn19sEQMBMiez2bhii/DjTk9DNmJ8QEIWDBp5gILUn
-	 RIuKSomvRIsESpQ8ktgMTK/Z+y/UsYPBI9jmn5vgGMJrPrmUDHjGnj4jbM1kAJJvEk
-	 Uh8R8AamuVT3jmDDovVkwZqDzk1tzmks4kwJDlfOXKubD/mZvneiMOt6FJz/r7E1qf
-	 hkEgLj3zWdxdnnYDE1LpKxayPBMLMOaNbV1RqIHEAbN2aXGfT9qMWBo5nJCAWIlhvD
-	 PG+ehluhiZ5K9BNdyboVdP2PNr7DKDb8oAaXonAaT1omgpXDxs11DOY10q2WcIl75b
-	 9PLKYDNjC7pnQ==
-Date: Tue, 8 Jul 2025 16:32:49 -0400
-From: Sasha Levin <sashal@kernel.org>
+	Tue, 08 Jul 2025 20:38:54 +0000
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 7AFFF1C008E; Tue,  8 Jul 2025 22:38:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1752007132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eo6RLYnfDwilrvMsNkS6FuRCCx3qPpmVDAwaxfXrbHM=;
+	b=RCtuY5pt6EofRPXHAagFGKHELeg6upWbmkojqAswlpCA9UP4sIMf3oc9I5ssIKPXGsMV15
+	2VoLCpFlAejpZzresIVvMAWAZV5rdQ3Q3jKsyaAKBwguMyEeaPo8ZMwwOEZC0+4Ba9Hxop
+	JfSmbBao6709cOZnUikFu40vKL6ST20=
+Date: Tue, 8 Jul 2025 22:38:52 +0200
+From: Pavel Machek <pavel@ucw.cz>
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org,
+Cc: Sasha Levin <sashal@kernel.org>, patches@lists.linux.dev,
+	stable@vger.kernel.org,
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Nat Wittstock <nat@fardog.io>, Lucian Langa <lucilanga@7pot.org>,
 	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com,
-	linux-pm@vger.kernel.org, kexec@lists.infradead.org
+	rafael@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
+	kexec@lists.infradead.org
 Subject: Re: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the
  suspend sequence
-Message-ID: <aG2AcbhWmFwaHT6C@lappy>
+Message-ID: <aG2B3PvCNmI51bqI@duo.ucw.cz>
 References: <20250708000215.793090-1-sashal@kernel.org>
  <20250708000215.793090-6-sashal@kernel.org>
  <87ms9esclp.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AJONLeuTvitsawye"
 Content-Disposition: inline
 In-Reply-To: <87ms9esclp.fsf@email.froward.int.ebiederm.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250708_133256_863750_832ECA25 
-X-CRM114-Status: UNSURE (   8.15  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250708_133853_908522_ECDC7A36 
+X-CRM114-Status: GOOD (  14.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,24 +76,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 08, 2025 at 02:32:02PM -0500, Eric W. Biederman wrote:
->
->Wow!
->
->Sasha I think an impersonator has gotten into your account, and
->is just making nonsense up.
 
-https://lore.kernel.org/all/aDXQaq-bq5BMMlce@lappy/
+--AJONLeuTvitsawye
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->At best all of this appears to be an effort to get someone else to
->do necessary thinking for you.  As my time for kernel work is very
->limited I expect I will auto-nack any such future attempts to outsource
->someone else's thinking on me.
+Hi!
+>=20
+> Sasha I think an impersonator has gotten into your account, and
+> is just making nonsense up.
+>=20
+> At first glance this reads like an impassioned plea to backport this
+> change, from someone who has actually dealt with it.
+>=20
+> Unfortunately reading the justification in detail is an exercise
+> in reading falsehoods.
+>=20
+> If this does not come from an impersonator then:
+> - If this comes from a human being, I recommend you have a talk with
+>   them.
+> - If this comes from a machine I recommend you take it out of commission
+>   and rework it.
+>=20
+> At best all of this appears to be an effort to get someone else to
+> do necessary thinking for you.  As my time for kernel work is very
+> limited I expect I will auto-nack any such future attempts to outsource
+> someone else's thinking on me.
 
-I've gone ahead and added you to the list of people who AUTOSEL will
-skip, so no need to worry about wasting your time here.
+I'm glad I'm not the only one who finds "lets use LLM to try to waste
+other people's time" insulting :-(.
+								Pavel
+							=09
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
 
--- 
-Thanks,
-Sasha
+--AJONLeuTvitsawye
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaG2B3AAKCRAw5/Bqldv6
+8jHUAKCBRM9dpSXf/a3kW2TLJphvmrhL2ACffbxa0/7En8c+6ZvpDgJvwb2nW78=
+=gVSQ
+-----END PGP SIGNATURE-----
+
+--AJONLeuTvitsawye--
 
