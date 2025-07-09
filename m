@@ -4,67 +4,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EFD0C83F1A
-	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 21:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63276C83F17
+	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 22:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Y9bMpUuQtQeeQH+QiKzkr3wMeLvk6l4d4iV8OOHq5bE=; b=b04FE+BGwJ7l3laY6Deq+7Lq8s
-	mqtaeYrovE57wJCVsvrZJcXSj2YFSd6uevHRJSRrSsdU6IhcivtuTknm1IW5LgckQdO/65LNLjwIg
-	eQxg+1DVaucQa7DcAlJB/qW3MBoaddw7W271ax2dAAhYoh+Xlx3WeyhyI8ZBNde5oHWyB31091r4W
-	j+xTezv+BfSOIdkpqTqcbyrfzi9BWRwXz49l5++24iO1fQJ5cB14S7pFxMcuL+e/l7oIQfMpERe7u
-	L4mThjH0UT46pWpy1FY86mprFztuLqUgs8hGb9oz9GbRAV9wbVOjWitudt7/cljEBgkpJVvbFyUrR
-	nDG5QQ3Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=; b=ryknG4OFj3FaWUBuAmqwL7AjkA
+	No57Nf7o+cD2i4hA0j1wRae1n4YfJNyna7GZIrNK4RDF1dAregdOo34ak6z+dSWaRIvl+onNQaJuj
+	qV8VZ33T06ahzG2ARMbQ/EkldexVviiD8cQFH/L9cK1Dcnv2R9Afv744uc38gXDFD0murhDox5XP4
+	VC188d3XGwLIT4HvtjXUBT4jvF4x9ER1GtcyQscesvkEg4vC0u63onOXhroxCctYQTMM+abzSgtjh
+	HRbkb79OMySreV9tjs1pSq5ctMqJ2RfZwYyFkqTbTf0Dc5KHwUAx7QlDoRMtr0/eCInj7j/J4lL53
+	epfIXiAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZcoL-00000009xfg-3Qav;
-	Wed, 09 Jul 2025 21:58:41 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uZdiA-0000000A7tE-2q8J;
+	Wed, 09 Jul 2025 22:56:22 +0000
+Received: from mx0b-00273201.pphosted.com ([67.231.152.164])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZYjq-00000009Rky-0LfN
+	id 1uZaQZ-00000009iK8-2Z4s
 	for kexec@lists.infradead.org;
-	Wed, 09 Jul 2025 17:37:46 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 60F0761154;
-	Wed,  9 Jul 2025 17:37:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC82AC4CEF4;
-	Wed,  9 Jul 2025 17:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752082665;
-	bh=UrMsQCIJDhTzvXs4RqAiNo8Cvl8Hxt1Ziw4xZzCivP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QLHtwoBRBDQXByIwztN3KSGJHjSq3oNBskn8+BqLMMhqdtnTR0UyUptamUZIYxGzS
-	 05rD14LKHLKqTeimzJ2y929jnGWklGIhtvQp6ocTIgZI3vagwr61joiQn1TPHnUZ89
-	 ycdYhIM+lzyzlbzjyDSkxSyKQ6uYEu5lkXBMrDbs3vtdGAMwESE30BKXvvCDPaVQUt
-	 W7dT2TuhGDf9YXB8WzyeFU2zclFXHgGlkoBe4ce2jqo0L70OLsP/cbUwRrE/xtKpDK
-	 byWECBlTs4hfYQ4Le26gLoYuh+ujVmaP2G9fkzWyxgJrH2kUpRW7Z/X8wfGAOFJC6w
-	 5tyz4QMbmlGCg==
-Date: Wed, 9 Jul 2025 13:37:40 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Nat Wittstock <nat@fardog.io>, Lucian Langa <lucilanga@7pot.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com,
-	linux-pm@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the
- suspend sequence
-Message-ID: <aG6o5BYqwe1RmSqb@lappy>
-References: <20250708000215.793090-1-sashal@kernel.org>
- <20250708000215.793090-6-sashal@kernel.org>
- <87ms9esclp.fsf@email.froward.int.ebiederm.org>
- <aG2AcbhWmFwaHT6C@lappy>
- <87tt3mqrtg.fsf@email.froward.int.ebiederm.org>
- <aG2bAMGrDDSvOhbl@lappy>
- <87ms9dpc3b.fsf@email.froward.int.ebiederm.org>
+	Wed, 09 Jul 2025 19:26:01 +0000
+Received: from pps.filterd (m0108163.ppops.net [127.0.0.1])
+	by mx0b-00273201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 569J6m7r025731;
+	Wed, 9 Jul 2025 12:25:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PPS1017; bh=2yUDeV39xzy8BlITii4kNhu3
+	rpEwWyfVcL/NG8iE5p4=; b=0vnAWCQdjHFi6wjWcxbFjDdUMyrsnosJVqyNG4+N
+	LTkow17jiYTpkcP69120s7jCFVuGWW5Nh4nMlwwoh8mfuZyLluYulBVyxRM+X2km
+	DEA7Lor0Vy2n+RrctIZJY/vQMcnwj7hl33P0K3tnwJHawAsJ7bM5IVCJbFbJpP5b
+	TPvtuTPe5JBU1udSYCd/mU3w+9E6xC9JI8UEjIdiObGGR7yiANmoJCTasb8xhbai
+	CQUoD2p86YAhgfUde7IesYCopiXOCEnHzI2AoYN8oPh9le5k5IHxLMHTF1vNH3XN
+	/rTY8XPE6BluqfwMDF42l5fhMs1jnooeE8qnFCpDiuK+qA==
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11020115.outbound.protection.outlook.com [52.101.56.115])
+	by mx0b-00273201.pphosted.com (PPS) with ESMTPS id 47s612bw6r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Jul 2025 12:25:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vdVqUr5gNiLb/rsV6ZlwpDEC4uwS/9epjewqk5Pc9QYDoXU4hnad1uwi1YKTHUvxSbitldsg+VxFBzYSizpS5DQEq9Li29zhxoZZYvWOebMo86iwhfNB5vLdSteLgrAbc1kwgadKxU3V1L70raoAiSUintym+Q/+4KDl0q+3jR3JK+XX0So/iB31U5rb0qIDIaHho1Sr7kJZAE4a6Ym1Tyl1bBqYtc15/zNPJbLZ68vpl3EVrY+Wsu9+GJ2klYYu+W08l6YG+zcBG8KKfICTQi9dzFVkYOW25lD0fC8FfABFteC/8wN+2yOKSReVRkRXKTAnn6o0lfOFHSKzaOphmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=;
+ b=Wk42RIKYbR5jNHO1SLEWBB/u3v96adC98Dx1BJcJq8qoB2bo5fFxO7WcOgJqEftdPXADzkNXU4TloQkwmOa+iRGLuk+/TMZVL0XyZkLYJ7JumZ3iRcNQVCAIfQPark30IowzdkuIDmssDbdevA7Y4hgM7D4pxvbJ6Sgf34eudLHGfI7s2ZHBUKg/7VbNpkpOAeSonABejEbUCpkEy/Z4Sv4/Nz6wCO4N7afRywgNuvdfukEV5SmFr2yhi5/G8UoRaE12+MtyjdddMLn2BLDLN7XrFwKEyN2+A/noPcZasDb6qAUiBUdykjTgBKPC4yK09OApcSOT4DYnFR9xl33vGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 66.129.239.15) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=juniper.net; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=juniper.net; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=;
+ b=KnvsyZ29bkZYhg8bHyIdOwQMxu3CFAxRfjvYPAvK7ht7tWvlqC/4VOKgYv5H/UUoyxiIflhjpgUp4vXtcnct6YhANkXWeIa/4JJI/HJ/w+jaxNzri0jeuTQdGeor0FXdtZWNgSvgZtVhX2PHO3aTJxbv6qn78wxwbleKWsa7zfI=
+Received: from SJ0PR13CA0132.namprd13.prod.outlook.com (2603:10b6:a03:2c6::17)
+ by MN6PR05MB10971.namprd05.prod.outlook.com (2603:10b6:208:4f9::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.26; Wed, 9 Jul
+ 2025 19:25:22 +0000
+Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c6:cafe::4f) by SJ0PR13CA0132.outlook.office365.com
+ (2603:10b6:a03:2c6::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.21 via Frontend Transport; Wed,
+ 9 Jul 2025 19:25:21 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 66.129.239.15) smtp.mailfrom=juniper.net; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=juniper.net;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ juniper.net discourages use of 66.129.239.15 as permitted sender)
+Received: from p-exchfe-eqx-02.jnpr.net (66.129.239.15) by
+ CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8922.22 via Frontend Transport; Wed, 9 Jul 2025 19:25:21 +0000
+Received: from p-exchbe-eqx-02.jnpr.net (10.104.9.15) by
+ p-exchfe-eqx-02.jnpr.net (10.104.9.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 9 Jul 2025 14:25:21 -0500
+Received: from p-mailhub01.juniper.net (10.104.20.6) by
+ p-exchbe-eqx-02.jnpr.net (10.104.9.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 9 Jul 2025 14:25:21 -0500
+Received: from buildcontainer.juniper.net (qnc-bas-srv120c.juniper.net [10.46.0.14])
+	by p-mailhub01.juniper.net (8.14.4/8.11.3) with ESMTP id 569JPI1t004067;
+	Wed, 9 Jul 2025 12:25:19 -0700
+	(envelope-from makb@juniper.net)
+From: Brian Mak <makb@juniper.net>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Rob Herring <robh@kernel.org>, Saravana Kannan
+	<saravanak@google.com>,
+        <x86@kernel.org>, <kexec@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Brian Mak <makb@juniper.net>
+Subject: [PATCH] x86/kexec: Carry forward the boot DTB on kexec
+Date: Wed, 9 Jul 2025 12:20:35 -0700
+Message-ID: <20250709192035.271687-1-makb@juniper.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87ms9dpc3b.fsf@email.froward.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|MN6PR05MB10971:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26374f2f-45de-4f5b-0b3e-08ddbf1e58ee
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?St3/YkUifaIm1IdpT5skuLARBy1qA96/cNou8CDDV0k9c8cWTTwHP14eDDdH?=
+ =?us-ascii?Q?nQisORnwRj/DcipX2jYxnbmiN1MaNGWrPE/2OO6G2NBgcNh3v6YBV/PyRtce?=
+ =?us-ascii?Q?VOh2hmink2gdVA3hyR2xvYsIY6Dn9FZOuefI6kG7W6bx7HUFdYJK46ELLLfj?=
+ =?us-ascii?Q?GziSZ8Vs2nq+OYuDeYEdcttvfT9ge/YLYC/uDOKrfMYD2+lPmAVsuG82gNPN?=
+ =?us-ascii?Q?lkau7xzKVh1HB+0/F8PYTEik+6tnrtmtt9SCRmRw7XdFJftpig/FAtebYgcO?=
+ =?us-ascii?Q?XyrH5eGerinbEm4IcwYH9JTp6+1agLcuYnt6zo2a5y41qT44wAnFxdgGYgdS?=
+ =?us-ascii?Q?JcZI4SG7NamI8bt3zSG+80oBBTNHwoHjV26I97zpLjcImC3bQZMFuxddwuO6?=
+ =?us-ascii?Q?5MgJJc0yfBgt7vkOHF9ZxN3MUpMaK7v+R/2aqrnFvGkh8R5cBD66nXmOok1g?=
+ =?us-ascii?Q?EnGQ4Gb9RhTaKUyKShDv44AVmm7l4jutuYHGPoOR9vu6KwhleArwJf+JyY5Z?=
+ =?us-ascii?Q?IIggzPDG4fZ3HjrEYj0f6lzy6NNet2Etwtws1C1FASIVZYfsR7h6oGlR+SWM?=
+ =?us-ascii?Q?6FylsLuMVPsdqeSvA+qEUbCJa0/4o36zwAjvf1yGp69OE7ZyKJ7lL8MM7TZ8?=
+ =?us-ascii?Q?dv3y62wsh5P5x4rzpEh+DjirUZ+cC8rq5pkWQJpZzxyH0eipfHVgDzBdTr3O?=
+ =?us-ascii?Q?ffTQLnRPUm+XK9uf9ADZHiF2Z8NJY6C9vh2kUChjFiPVqU93KgV0Ke2vbMGo?=
+ =?us-ascii?Q?rrH5ETjhGEzdfYiIc34rq3YgsCe6eCq8COKQkrh0lvbjbPE8jMNr5zNf+HkZ?=
+ =?us-ascii?Q?WRwYfHvpqY+kJf8jV5x16Ubk3QJAKdSZ7hfmprKUcjociwZnKUfHONFWQ2Ys?=
+ =?us-ascii?Q?wHM+Q4eBG3LBDryTyp41qg8jPHFBXqawSCcauwGYNEC2Q42e86l4sMcTxw+Y?=
+ =?us-ascii?Q?qGTIyAZGVFTR2ZT1ytSzeIUo1esGAXMy0bMQ2tcr12uwIWJ0wWpxEgf2XxYp?=
+ =?us-ascii?Q?rtLESDt4KO058j2hRQbEx2lDxFhm2UP3keIPT7AlYw77jx8P73FJJuWTZLA6?=
+ =?us-ascii?Q?hPp8jUF2ZxZ36tVxaQdVRv5M6/90SLkXG5gyR23AymVtuYxUz+mg8iZFPNL0?=
+ =?us-ascii?Q?3mgaVFiGRGd+d5j5RZ4RlAMAYfXHIZyaDpjatkpGKrmgOLhJJ3pwc6ir7P4h?=
+ =?us-ascii?Q?leZEKq5mKLTjIP48MCBaYwfY+ErgSEzTcky7egwq1/Kl3iaPOTEXCfKB4qos?=
+ =?us-ascii?Q?wtvBK6jdkolrDAT9BIAEbFCOLr6jpZccHNB+6gpvTC8S+DH1CZN0IGO/XyXd?=
+ =?us-ascii?Q?PiM4ExEsmnVTYxu1q5+aCIFx8UKn8BgKJ3oXw+xS4oOuxdU90UEAxhcSI5tA?=
+ =?us-ascii?Q?EAreM3XNhmgiv+GIKvDMSEgosc/QU4FQsscg91CkMJBrZBvmHKehRZ3ASCFm?=
+ =?us-ascii?Q?tuOnJFwWDBjaTya91NmtHU2tz/aMOM15adNgdbG9AnHfPXKQNhFOwuxTdq3/?=
+ =?us-ascii?Q?rVgyRM7ZmeG2eHVqiY3sYXRqd0To03rtQfISC/XiilrGnYlhcGdUs7IXGw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report: CIP:66.129.239.15;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:p-exchfe-eqx-02.jnpr.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(921020);DIR:OUT;SFP:1102;
+X-OriginatorOrg: juniper.net
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2025 19:25:21.7823
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26374f2f-45de-4f5b-0b3e-08ddbf1e58ee
+X-MS-Exchange-CrossTenant-Id: bea78b3c-4cdb-4130-854a-1d193232e5f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bea78b3c-4cdb-4130-854a-1d193232e5f4;Ip=[66.129.239.15];Helo=[p-exchfe-eqx-02.jnpr.net]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR05MB10971
+X-Authority-Analysis: v=2.4 cv=LsuSymdc c=1 sm=1 tr=0 ts=686ec224 cx=c_pps
+ a=Oahh2kgEN5ymB8sO0SiNEQ==:117 a=YQU41r7WENJiSYrYYNJVsQ==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=h8e1o3o8w34MuCiiGQrqVE4VwXA=:19
+ a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=Wb1JkmetP80A:10 a=s63m1ICgrNkA:10 a=rhJc5-LppCAA:10 a=OUXY8nFuAAAA:8
+ a=7_5vobUxZMcRO-ldgD8A:9 a=cAcMbU7R10T-QSRYIcO_:22
+X-Proofpoint-ORIG-GUID: xU9BpbEoZ35rbkM36kt3GynB8qioRzDg
+X-Proofpoint-GUID: xU9BpbEoZ35rbkM36kt3GynB8qioRzDg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA5MDE3NCBTYWx0ZWRfX79MMF/saEIpV
+ GbwU2Qi51ynzxoGslFuQQWoaVJ5VVxa/uFTBGXyM3T1R/Z1dtV13tQ0coJhyZri9LlaKEcy4zEQ
+ 8SUovek37CXqxPDYb2jOYK4mCNsV1eQIFcFlVNSkXiu0rHPW9OuFwrreWbPPBnOIjiEnkoFtG+0
+ 0dEzUXJVKVcbBglnMhFWi2KcIQt9T/mkYB0NNA91UGdumuBZIFFAL+EK0nYn3mzIhTg5dWHxzuR
+ DQmDGH/X5ct8wfxhe8yi/IDzSGNn8V/zHvOOwrMCcrRAVNtLUI0IE7NP390pfrbSt5jqcrcq+L6
+ pgCXkEf+PmiLw/GfqjjS9rfb8LpAujU7HoKaj1rkdrMwGa+JmsIq3mnv4LrUC+exNlXupU/viNE
+ aYXq/8rBw8TZVUP+rzYxi8YLlqvxcYMiq3CYohcSeGWDQ1d1e+rQ9dGvw2qNIYnt32DRd8IW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-09_05,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
+ score=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ suspectscore=0 impostorscore=0 spamscore=0 bulkscore=0 adultscore=0
+ mlxscore=0 phishscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507090174
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250709_122559_764644_5D9A164B 
+X-CRM114-Status: GOOD (  20.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,35 +195,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 09, 2025 at 11:23:36AM -0500, Eric W. Biederman wrote:
->There is no indication that the kexec code path has ever been exercised.
->
->So this appears to be one of those changes that was merged under
->the banner of "Let's see if this causes a regression".
->
->To the original authors.  I would have appreciated it being a little
->more clearly called out in the change description that this came in
->under "Let's see if this causes a regression".
->
->Such changes should not be backported automatically.  They should be
->backported with care after the have seen much more usage/testing of
->the kernel they were merged into.  Probably after a kernel release or
->so.  This is something that can take some actual judgment to decide,
->when a backport is reasonable.
+The kexec_file_load syscall on x86 currently does not support passing
+a device tree blob to the new kernel.
 
-I'm assuming that you also refer to stable tagged patches that get
-"automatically" picked up, right?
+To add support for this, we copy the behavior of ARM64 and PowerPC and
+copy the current boot's device tree blob for use in the new kernel. We
+do this on x86 by passing the device tree blob as a setup_data entry in
+accordance with the x86 boot protocol.
 
-We already have a way to do what you suggest: maintainers can choose
-not to tag their patches for stable, and have both their subsystem
-and/or individual contributions ignored by AUTOSEL. This way they can
-send us commits at their convenience.
+Signed-off-by: Brian Mak <makb@juniper.net>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 46 +++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
-There is one subsystem that is mostly doing that (XFS).
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 24a41f0e0cf1..c24536c25f98 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -16,6 +16,8 @@
+ #include <linux/kexec.h>
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
++#include <linux/libfdt.h>
++#include <linux/of_fdt.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
+ 
+@@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ }
+ #endif /* CONFIG_EFI */
+ 
++#ifdef CONFIG_OF_FLATTREE
++static void setup_dtb(struct boot_params *params,
++		      unsigned long params_load_addr,
++		      unsigned int dtb_setup_data_offset)
++{
++	struct setup_data *sd = (void *)params + dtb_setup_data_offset;
++	unsigned long setup_data_phys, dtb_len;
++
++	dtb_len = fdt_totalsize(initial_boot_params);
++	sd->type = SETUP_DTB;
++	sd->len = dtb_len;
++
++	/* Carry over current boot DTB with setup_data */
++	memcpy(sd->data, initial_boot_params, dtb_len);
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + dtb_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++}
++#endif /* CONFIG_OF_FLATTREE */
++
+ static void
+ setup_ima_state(const struct kimage *image, struct boot_params *params,
+ 		unsigned long params_load_addr,
+@@ -336,6 +360,16 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 			sizeof(struct efi_setup_data);
+ #endif
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (initial_boot_params) {
++		setup_dtb(params, params_load_addr, setup_data_offset);
++		setup_data_offset += sizeof(struct setup_data) +
++				     fdt_totalsize(initial_boot_params);
++	} else {
++		pr_info("No DTB\n");
++	}
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
+ 		/* Setup IMA log buffer state */
+ 		setup_ima_state(image, params, params_load_addr,
+@@ -529,6 +563,12 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 				sizeof(struct setup_data) +
+ 				RNG_SEED_LENGTH;
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (initial_boot_params)
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      fdt_totalsize(initial_boot_params);
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC))
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct ima_setup_data);
+@@ -537,7 +577,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct kho_data);
+ 
+-	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
++	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+ 	efi_map_offset = params_cmdline_sz;
+@@ -647,7 +687,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	return ldata;
+ 
+ out_free_params:
+-	kfree(params);
++	kvfree(params);
+ 	return ERR_PTR(ret);
+ }
+ 
+@@ -659,7 +699,7 @@ static int bzImage64_cleanup(void *loader_data)
+ 	if (!ldata)
+ 		return 0;
+ 
+-	kfree(ldata->bootparams_buf);
++	kvfree(ldata->bootparams_buf);
+ 	ldata->bootparams_buf = NULL;
+ 
+ 	return 0;
 
-The other ones are *choosing* not to do that.
-
+base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
 -- 
-Thanks,
-Sasha
+2.25.1
+
 
