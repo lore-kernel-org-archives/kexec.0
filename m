@@ -4,67 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CAD2AC83F09
-	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 05:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D285C83F12
+	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 09:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AgGo0D6w/UsINXs2Wle7uc8mU/aFWH/QOKQE3QW+Hgk=; b=G3aLJ9dF4pHTv7ALUNXJ4lrueM
-	DoWtsxVzbalc8vWFdYFhcmJq0+m2DVQvN/4Iv78V3Ke5qE2Q+/I5I/h5SM8qPDWq2lOfWW7eFJ+6p
-	OWOWCGKkxg8pGf0+OmToOeIHEK1qlTioMYbn/+jzvpxJAQI2qyhCWHYhknSNTglnZBP3b3Ddgqn3E
-	pR/whlBZ3bJJhwAgeR0U4aABFGkR+yTZ+wYocoL7Yvzl1ZMP8DIO7C7VL5DOx8yezMawGR/68yCgf
-	jG8k4nluL1wNrAti1TpgsqMDro5zbPnjrN/9lSQ5QOt98gqj8tlvgBJpRHeXAYpiqcFJ1Ukq3Hv5y
-	QjtvUgHA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=; b=ZtLwW6iu9dlsTxEYE8CTv1c8gk
+	/Ct0rHOWO/kYCw+G5EdJflMjb4qHkNQTc3TMppcnnTHYI4CioBZrGFIxFCJZXQzVsm6LJ7FR68aHV
+	SheCs5C6dDK9nciWzx+yfAHdQ9ywIa6PYlixKbyt4wcsOLJq8nEouVEWQW17dQQJzq/6Rm1+BCHGR
+	o53Fuqb0ZMxPm4q/1ulz5jwxBfJSEMzDkvQpKNx/N3VDreGzLoY2CokifxfqCCwtloZ1ViXE8rPB3
+	q42VB2Q145x/bFRXpqreIJPtQpUndGXgLPtoeN7mmzNoqUT8oyjSrV6+JsO8IbM6zoTnbZJH0cG3X
+	+ET07Lqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZNWh-00000007bYx-3JgI;
-	Wed, 09 Jul 2025 05:39:27 +0000
-Received: from jabberwock.ucw.cz ([46.255.230.98])
+	id 1uZR2O-000000087fb-3SbI;
+	Wed, 09 Jul 2025 09:24:24 +0000
+Received: from mail.fintara.pl ([51.68.214.200])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZNWe-00000007bYH-1T6J
+	id 1uZPMy-00000007pgU-37NK
 	for kexec@lists.infradead.org;
-	Wed, 09 Jul 2025 05:39:25 +0000
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id DE9F61C00B2; Wed,  9 Jul 2025 07:39:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1752039562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AgGo0D6w/UsINXs2Wle7uc8mU/aFWH/QOKQE3QW+Hgk=;
-	b=Iod5xTBHZgdsUmi51ar9v5dLDyhumMRHF8uBR4dIFbZ+ES0dYu7ki4ZhoaDGPmY90IP/DA
-	CkV1368WIXJKNOOIzFy0W16xRNktUAbJ2ZruolHwgA7Fy4N4W54g35tmUf3VIcYjnsrHVD
-	R5W7pldd1tuedKl6w6PruHRYq4chheE=
-Date: Wed, 9 Jul 2025 07:39:22 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Sasha Levin <sashal@kernel.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, patches@lists.linux.dev,
-	stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Nat Wittstock <nat@fardog.io>, Lucian Langa <lucilanga@7pot.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	rafael@kernel.org, len.brown@intel.com, linux-pm@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the
- suspend sequence
-Message-ID: <aG4AilDpnqrqHXaS@duo.ucw.cz>
-References: <20250708000215.793090-1-sashal@kernel.org>
- <20250708000215.793090-6-sashal@kernel.org>
- <87ms9esclp.fsf@email.froward.int.ebiederm.org>
- <aG2AcbhWmFwaHT6C@lappy>
- <87tt3mqrtg.fsf@email.froward.int.ebiederm.org>
- <aG2bAMGrDDSvOhbl@lappy>
+	Wed, 09 Jul 2025 07:37:34 +0000
+Received: by mail.fintara.pl (Postfix, from userid 1002)
+	id 422004A1B0; Wed,  9 Jul 2025 09:36:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fintara.pl; s=mail;
+	t=1752046647; bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=;
+	h=Date:From:To:Subject:From;
+	b=VNtPpodymxu23UT7wuUwX73Rqkgp1U3Ij/20gJ2cvUjLps1jp/QOuqGAonuvgQC64
+	 tKNs8I5cB2dPwg771CeJx9Ab35Cf9UgZeOq3pu7/PPuiSkabYpYy18l4OjChl1Mcs8
+	 NoKe0VexSXirnira94KkveKYGQnrqi2x2XgYVYhrCxNE5/8JCiR7VXihqGXo6BPvHR
+	 iuCY/yEv++EZLl3u/XdOlOHZHggCwrmyOYy1uFCPiKSAAti6Jbo2lIAScvctKyTZV5
+	 /J9KFnp2GtT2V0IvyVJ9mq6iZcPHKts87Yew61Z/bek+0zVvVaiYAi+Cn52nNOwM1Y
+	 DcJN5GTpSNNnQ==
+Received: by mail.fintara.pl for <kexec@lists.infradead.org>; Wed,  9 Jul 2025 07:35:50 GMT
+Message-ID: <20250709084500-0.1.ak.2rpel.0.pkdl79camp@fintara.pl>
+Date: Wed,  9 Jul 2025 07:35:50 GMT
+From: "Dominik Lotka" <dominik.lotka@fintara.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.fintara.pl
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WlasF0qNpP9A3mRg"
-Content-Disposition: inline
-In-Reply-To: <aG2bAMGrDDSvOhbl@lappy>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250708_223924_710597_2962F29D 
-X-CRM114-Status: GOOD (  15.26  )
+X-CRM114-CacheID: sfid-20250709_003733_611565_CAD89814 
+X-CRM114-Status: UNSURE (   0.71  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,54 +66,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Dzie=C5=84 dobry,
 
---WlasF0qNpP9A3mRg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
 
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
 
-> In this instance I honestly haven't read the LLM explanation. I agree
-> with you that the explanation is flawed, but the patch clearly fixes a
-> problem:
->=20
-> 	"On AMD dGPUs this can lead to failed suspends under memory
-> 	pressure situations as all VRAM must be evicted to system memory
-> 	or swap."
->=20
-> So it was included in the AUTOSEL patchset.
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
 
-Is "may fix a problem" the only criteria for -stable inclusion? You
-have been acting as if so. Please update the rules, if so.
-
-> > I assume going forward that AUTOSEL will not consider any patches
-> > involving the core kernel and the user/kernel ABI going forward.  The
-> > areas I have been involved with over the years, and for which my review
-> > might be interesting.
->=20
-> The filter is based on authorship and SoBs. Individual maintainers of a
-> subsystem can elect to have their entire subsystem added to the ignore
-> list.
-
-Then the filter is misdesigned.
-
-BR,
-								Pavel
+Zapraszam do kontaktu.
 
 
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
-
---WlasF0qNpP9A3mRg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaG4AigAKCRAw5/Bqldv6
-8gTIAKC/zQyWgLHgvPMd65NHV3TkdPwjRgCeIAbYyb9XFecAJ4qXIm2LIa7gI/o=
-=taVt
------END PGP SIGNATURE-----
-
---WlasF0qNpP9A3mRg--
+Pozdrawiam
+Dominik Lotka
 
