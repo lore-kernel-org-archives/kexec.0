@@ -4,170 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25DAAC83F03
-	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 16:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2743EC83F12
+	for <kexec@archiver.kernel.org>; Wed,  9 Jul 2025 19:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
 	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
 	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XLE8NtYm4NLVgl055MqbNJouH65MXjU2mTWEElAMvCY=; b=QhHrouJdPwa9TFlBE7OW8zJD7k
-	LyT5P1aJsKrKezgLn+K6RuEgykSdKnnkiRk2iUpmnM3UOqEkeDAQ2euILUUp1Xsm5Fi5ADDg1CkNu
-	JhEmdtmYcq59DJn/xd1YPGeuGDBorVGqu9vjw1wPY1dLQposNkLsCTq5dJkj2WIwhplDD+NJoSQ40
-	+F5VthJBhb527MYlpundwpt7u6oL56877qt8eaT3v2XkdfO/AmGDUkHnTjFhJk5Id0Q2wayfsr3k+
-	bHYdtBldtKbyDOyZIb16DnhfwF5vcfc4zL9bIQJqjF3hhSsaXP8XD/J1jyFBWU64JvcMG6syAqgHN
-	dWcR7G6w==;
+	bh=YIsxSlUk6Ji3SJKMWyPEL/6aK8OVowyKGxXQNJirpig=; b=yJsYxbWeqHf/sTBrM9WirDbig9
+	SJFnujQqPbve3B/QKd7C3DmD5zvzXJJp3YUilmRMeWU8qgOyJP2Rk+9PlLVacuH0ESHXjntYw6Eqh
+	mjvvvc2v/zkyuUJUuXQiCmsDpeR1uhtOdEiJUTfQqOYQYeILKDvyDxSvlHLclJ9RxWv2NOj7McCkI
+	KdrbpAF/3TOKdKeEjNWlqjE3A4vMsYZHW8JkxcQBT43RzrGLoHAllfnm1EZRHFjUbKxOEbt6MOKuJ
+	apVUsvYL+WsjbHflU3KNNsgTqzBjujOO2dBmJJy1JWGlCXvH4Oegm+gMitbDqaZ8GxGcEPOmg36As
+	o/WGJCEw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZXjN-00000009K11-3ejZ;
-	Wed, 09 Jul 2025 16:33:13 +0000
-Received: from mail-bn7nam10on2061f.outbound.protection.outlook.com ([2a01:111:f403:2009::61f] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
+	id 1uZaFe-00000009g3Q-2Gy2;
+	Wed, 09 Jul 2025 19:14:42 +0000
+Received: from mail-mw2nam10on20602.outbound.protection.outlook.com ([2a01:111:f403:2412::602] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZVtj-00000009091-41Dr
+	id 1uZXm0-00000009KFL-243U
 	for kexec@lists.infradead.org;
-	Wed, 09 Jul 2025 14:35:49 +0000
+	Wed, 09 Jul 2025 16:35:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CGN2q//H0HF+Ow41RVlHCYfUXYIvWvIvagvjDBcuQv1gZrfcYeNQ+WgWNtC1+SLcVh7jiOAZMp/M0Ov7fKVY132Z4MFAg9JVBRCYqVP3dPUoffw17mP48lcgxjqj6lqeZxeuCICzYOvP2QcopmedQSIlOI36ABIGWsrCbfLQYH8znUHpCz7uxjfGMTHSUUNTakQHgm7hN5X8NNnhepS0cn/lnYNNdeK0d57BTur0IN2R8KapSKWhDINNznZFW2osbIhIrrspl/+NBDX99P6M7+d4RFRoUj1h9zxq+ES2Ih/wFdGXwvxY0K/NJwZuZyaT2x9oryX581aEcdA+e+Mo8A==
+ b=pu/NB30F0sa5eZ9Sj8fMYZvsn41DFzm4REZFU/rIAOfPwfl23vCcazOGLhVR4fSI1PcX97zyYZ1R2XcJSO0mCIi+S00xoNGHehM5j00r/3XLTw4gKm7JSiH3xjFr31wcF6nWKIhrTqeVzvTv3JqS+H80U4ptv7tu8V95tUYl3wGusOTxu/SYzNzVeBUyrr6hPKAtvvnMA96FJRDKj9bC6+yXbHV+pBCAFcUPlO4qQuwa5TZpMsrUNae3LWMoRZoDhXY1NNJEU3wyOo0PhjAcGPvtnoUBjj1WoTHhXVugCehbiCt99Evxfn0HHm6gBl3DegPgoD9EZWXB3jQwo5kR1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XLE8NtYm4NLVgl055MqbNJouH65MXjU2mTWEElAMvCY=;
- b=r5HDMqiFhZP1tFNxrjdMv8q7KRPsSVPLuknSZ0bf6/QabKr7e5iQwbJTcC77m4VteEKXSKFrJIKs5O10guDLlq0cQiNFpajejYTBk3OJfX5V4l1Qsa/JHJLSxpWZpqFWL02sCEGrmj9dzb/soiIWUaE3bo8AjC6tWpBueVYP/t7N1o9VkFsO9yTQVWbfQHS+NhTIfaU6DQt4lc1JbORbErj6mLgcZMyFKPLdy45zGKwaLYOu2NtapjWefOHvJGgGiLgRxBlFEo6wXsY8slFUwfy1yeJth/gwGgMoyNMmQ6lsbgJ4hc4tkII61xdXDXaPkdP7kknrv5d4adh/1BrsXQ==
+ bh=YIsxSlUk6Ji3SJKMWyPEL/6aK8OVowyKGxXQNJirpig=;
+ b=EVQ/PWH1mteNXOCm99RbFFhcKL8V2DesjIho39BSxLuJOoT2A81/sEdTcshM/dd6ovaV+oUUiEeYCtGDmFi4JigAeo6shhDLva0LHP0bsfHURZ2ou+I5ILgmy+JPsd9qpJr5+1KtpVHA074Q+XH81dglrUHjEWNU/mLQMUB2qUUBJvmnFt4tkJds9OfWL3v20HVzmGogvr5L0OzR0itkD8Ube0Vv4BHqbO5VbtSbKdWM2PTstdoxqJsxL1Zhgjo29hF/dYXhI8325FbsjOH8Ujc28eJs6+cGGCQPUNWkm/ecmGHAawEk3jbshmY3QqzEqasYC4rjnj9FCksMgpzxrw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XLE8NtYm4NLVgl055MqbNJouH65MXjU2mTWEElAMvCY=;
- b=z5Lt8yB8lKe7q8YdYF3PQzM4rNNxjUv+Kj8U9Ghj+7cZWoTB9BnnPyGhP25QYf4ROeGn8VTEjfh9YVoNfJCdlXHkzQxKAUWW7rdC08R2vns/hVxxsbw4Hqx9V3/epkuyxizXYTRUNPPF5GqijpYxo4Hie7hfB41Hb575xVAEtGI=
+ bh=YIsxSlUk6Ji3SJKMWyPEL/6aK8OVowyKGxXQNJirpig=;
+ b=WF7QMTxclI0P77l12pIAniPFj9ELvnPjHZznfnEpz3b/9Z/iZWgh/k0duyZ5CyZdWDM83MESbIoHdiR0/7mSvA0BGUoTaeQ1qaNclFA0cdaWDkCziyN2MJTvygypJDj6DGeuky+Bn1CZEMuiN8NpELP164dCVOS70hQpvGTl7yM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB6688.namprd12.prod.outlook.com (2603:10b6:a03:47d::19) with
+ by SA0PR12MB4431.namprd12.prod.outlook.com (2603:10b6:806:95::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.26; Wed, 9 Jul
- 2025 14:35:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.29; Wed, 9 Jul
+ 2025 16:35:51 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%3]) with mapi id 15.20.8901.024; Wed, 9 Jul 2025
- 14:35:42 +0000
-Message-ID: <24c245be-1ae6-4931-a0ac-375cae18e937@amd.com>
-Date: Wed, 9 Jul 2025 10:35:40 -0400
+ 16:35:51 +0000
+Message-ID: <29441021-5758-4565-b120-e9713c58f6d8@amd.com>
+Date: Wed, 9 Jul 2025 12:35:47 -0400
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH AUTOSEL 6.15 6/8] PM: Restrict swap use to later in the
  suspend sequence
-To: Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, patches@lists.linux.dev,
- stable@vger.kernel.org, Nat Wittstock <nat@fardog.io>,
- Lucian Langa <lucilanga@7pot.org>,
+To: "Eric W. Biederman" <ebiederm@xmission.com>,
+ Sasha Levin <sashal@kernel.org>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org,
+ Nat Wittstock <nat@fardog.io>, Lucian Langa <lucilanga@7pot.org>,
  "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, rafael@kernel.org,
- len.brown@intel.com, linux-pm@vger.kernel.org, kexec@lists.infradead.org
+ pavel@ucw.cz, len.brown@intel.com, linux-pm@vger.kernel.org,
+ kexec@lists.infradead.org
 References: <20250708000215.793090-1-sashal@kernel.org>
  <20250708000215.793090-6-sashal@kernel.org>
  <87ms9esclp.fsf@email.froward.int.ebiederm.org> <aG2AcbhWmFwaHT6C@lappy>
  <87tt3mqrtg.fsf@email.froward.int.ebiederm.org> <aG2bAMGrDDSvOhbl@lappy>
- <aG4AilDpnqrqHXaS@duo.ucw.cz>
+ <87ms9dpc3b.fsf@email.froward.int.ebiederm.org>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <aG4AilDpnqrqHXaS@duo.ucw.cz>
+In-Reply-To: <87ms9dpc3b.fsf@email.froward.int.ebiederm.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0487.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10c::14) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: YT3PR01CA0003.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:86::23) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB6688:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8854723-51c6-4c4d-1154-08ddbef5e19c
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA0PR12MB4431:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a9c8c57-6d44-40ac-d892-08ddbf06aa9d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?WXdFSzZacGdaUEtnWGlDNXQ4T0pFMkJXTERLSGpWeWw2OEtHUWFsSW9YNnJ5?=
- =?utf-8?B?WGp2dVFtM2xjaGY0bGNxV3hIUi9nWXArZFUyREluRVk0RTZsNUZ0Y0VSVU5o?=
- =?utf-8?B?VnRpVTJlZUNvRVcvYkV2Z29SZitqaHRPUU80eWp5WGhTNkI2b1ZpWm9NN0lT?=
- =?utf-8?B?K0JmejgwanRKQm5oWWpySnhRZ2JwNjJ3V0xmSXRmNS9NOWZ1Nkx0MXFmQ3NG?=
- =?utf-8?B?NnVGUWdOVlpwenNSUllURFkzbnFNRXUzN0dDd2NXMUZRdlVDTVRZODFiNHZa?=
- =?utf-8?B?MCtscUthdXNscWNFV1dGTlM5YVZVUjZ1QklnMFBENk1QZ2F6cG5pbVdJUis3?=
- =?utf-8?B?REpkSmF5RWQ3MnBqUW5ZV2cxQWlUTDFjY09tMkhmZEVPOGtJbmM5cERmcG5V?=
- =?utf-8?B?NEtFcWt1bEtTalMwOUFpQklIY291NVQ0RjVIRUlrMnA3ZWtpTmdSVjJIcEpO?=
- =?utf-8?B?bTVpVlYxOVloSWphVlJBK0dsLzk1ZFlHTUFOOU9zTDVSTTFiR09WaWJXRWNC?=
- =?utf-8?B?dWp3Mm1rcmNBR3NBUlBsUnZQWnVrNXMwOGFzUk1ORmo4L3ZhV3U5cytQRmhU?=
- =?utf-8?B?M1QxRFVndmU4bFJmZy9mS3lkeFZsMWFWSTUzbHEzcmNCQ1pKMVVNRlJSdUdU?=
- =?utf-8?B?M01PS0ZwN1ZDei9JamMrZVJrdkhSZmo3NmVvdkJneGFla0xlWWQ5WWdqd2pD?=
- =?utf-8?B?ZTdiUFVhWWk0YTRJRUZubi9Ua3NBMXdSb0lhVW5CcHpzMW9GeFRyTlhhU3FJ?=
- =?utf-8?B?N3BrNmJhKy9qU3ExeldyUG1MR05ia3dwUHlVVDNlZlZOM3ZqSUtFMlV0QWhM?=
- =?utf-8?B?NUkrejBoM25mWFFGemRxaWV3VnJxU1ozbG12R2d1eHJ2akhTd3IxUTZyNTdw?=
- =?utf-8?B?MFJINnlrZkVWbXpaU3VpaXJNS3VRWkV2dmJGWGNKSHNDdkVZWVVWTEFVODR3?=
- =?utf-8?B?YkgyK01Jb0NxUjZpNGdudGp5cjBWNlk5QXNvZXBMVXZxamdNUml6bFZmKzFT?=
- =?utf-8?B?T2NtMkswNGVOTXAwU2J0dWVjeXBCeWU3WmIxMXV4aFFhYUJXZGFidlF5R0xM?=
- =?utf-8?B?T1UybXhUc3pDdE4wQnNDL3ZLMFpaaW5OZjFLSWN0cW14K2dHeSticlpyYnNw?=
- =?utf-8?B?K3lIYW9hc29BaWRuQlpPdTYvK0t6b21uSkJkKzZubEFILzQ5K25vQTdzRDR5?=
- =?utf-8?B?WHgzSmJxaTV5aDFWQTg2ZjRuek0zZ0lEZThRby83SCtmUUpJUW1hWDJFU0VY?=
- =?utf-8?B?WFpYRHRQdlkvUDBJWU9EZ1hueXRJM0lqT2t1alhpanZFWjZHOTY4dyt3Qmhl?=
- =?utf-8?B?cE5sem1OK0Z1UGJOd3M2N0tLMnlzVUNGS2hPL2JQc2RuRENvanJUWVAxUmxk?=
- =?utf-8?B?VkMzeXF4b0xzaW40RS9UNHhXdDlUZ2RweGZlL1N1OFgrY29qQkJmdHpLRUlk?=
- =?utf-8?B?OEtWajNWby96WUxQSzZDbTNCdG1kNUlvSE0rdTVmOG1hdHVaaFEvWG9QTHhy?=
- =?utf-8?B?RWFHLzF1Qk5LZUE1UG8xTzZtTlg1YmxPRkQ1ZncxVTQ3WkIwaHdWbkdVUDVj?=
- =?utf-8?B?SkVpY1dQRHR2elpWd1ZrUVJKV3pZelh1MVh3NmpTVEFYZHAwckYzd29STFZU?=
- =?utf-8?B?emNrZTlraGM0RjJaWktxQ2xxZEcyTjhWbnZraDF0VFpvYUlCVGUxNHVLRklT?=
- =?utf-8?B?enE5b3Qzbzc1ckJ0dW93M05NekhmZWdrMUpoMXRWN3pva3Q1QnFQMFIzanZk?=
- =?utf-8?B?bXorSXBUa0NpQnJHbnp1aGFUNEhRd1BsejY2RE5sNVVOWUk5cEFmcVJGSnZt?=
- =?utf-8?B?d1ptWE91TmFSby9lc2RxUTlqRzFiQVhlZHFVcVN6QU54WGlFWU1oTVh2WmZW?=
- =?utf-8?B?QlA0QnhaNVMxc3NncHpoMW9CUTVVY21FeVJuZjE1NGI5ckJETzNBR0F0VVBH?=
- =?utf-8?Q?4MnhvGHG1To=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RXRUWXl5SU1HRkVuYzk0VlpiOHpobm91SHg2eXR3L2VaMG1jMVdrRFd0YUhU?=
+ =?utf-8?B?cGY1dFRpQ1c1VXJLb3pQeVRXK0IraTkvUXB4SXliamJMT1V5OTZaL2xHNnhk?=
+ =?utf-8?B?cHlUVVU0Skh2c3pvVnZYMVhjUGxWemV1SENpRDlmZU5RcGRzcnlGa0JBSG5i?=
+ =?utf-8?B?ZVhHYlhTaW1rRCthTy9SOWFBeUVYaFZ2TExsTGZvbzBDb09aSktYMVpQNmpU?=
+ =?utf-8?B?K09Md2VBM1ExTGx4VVV2YmJaNThhRVY0TFRoOUZxMlJ0U0FRRENiN040Vmxl?=
+ =?utf-8?B?MlVrNjRrWkR6Z1hML094K2JZVE9MWDNyam9RZ2xqOVRmSWJsSlBwNi9ucDhF?=
+ =?utf-8?B?cGxmMk5Oa3FSTWpYM25LSTR6RW9KWXJkdWJrTEVnY2h6WmM5SDVOUklnbk5o?=
+ =?utf-8?B?RmNIeTY1ejVTYU5kNHpmcmtic3hrVHJva0svM0p4MzBnSXhMVGdWMTNKYU5j?=
+ =?utf-8?B?RkpRcXk0UzF0UGUva09INXVaY1FKY0phL0J3eUQzSWhZSHdFSTJTSTd0d3F3?=
+ =?utf-8?B?enpNM0tYaEsyazk2STczeTZ6UVNGdnhwTWxwVXlBcGw3ZDZadEhud3FMN25H?=
+ =?utf-8?B?UkVDd0ZIYkdCdklBTHVQT3V5VU4vSUN0TlJtRWw4WXpMVHhibGY0VUdnK0lL?=
+ =?utf-8?B?WHdUbzdQUmF0ZWJwdnE0UHRxSElrWkJVajJzazdJczY3TDArUXRydGhpTm1L?=
+ =?utf-8?B?OHhQbElLTzBNb3VXc3BGalpOcW5MWGRnOUpyYnRxWTFYN3VUTVRJN1lPd2xJ?=
+ =?utf-8?B?Vk1KSXUxbUxJWVdLZDJKNVAydEk4WldwcDVnOHRsNlF3ek5hQXk0T296KzJZ?=
+ =?utf-8?B?Rm9GUWRhVTlDei85MUc1anZsZHVoNVJsY1psci9ra1VYSlRHUHN3OTZxZ1Jx?=
+ =?utf-8?B?dFVBL0lWSW83aXR2ZmF6ZFU4VVh3MzhkK3UrRFZQS2hlNnNPeXo3OUVyU0RL?=
+ =?utf-8?B?MzlyMzZaeVp2Z1E4KytJc2tqbml5bGNYdEh1UDNMdXpPWDhvMVZNNm9YRDR3?=
+ =?utf-8?B?YWVkL0xVc0RyTkFuVUhZbnkrckVob1lzSXZqaHZ1REd1U3pjVFZUZ0pXYjlB?=
+ =?utf-8?B?c3B4aWsyWFhtNHp0VVlFZzdqaDNSdUxvc2NXTkJmT2dGaU8vaTlkaldEMW1H?=
+ =?utf-8?B?clJRN2crR2Y3b3l3Ymt4T2ZmOVFlZUVHQ3kzTXptQjFaNmlWTmdUZXNXQUov?=
+ =?utf-8?B?WEFrUlRBQkhZcWRxNmZMdDJxSGFYbnBNK1psa0l6NElXOE1nYVk0bFA3eU9q?=
+ =?utf-8?B?MmVWT1hIcklLVk51eGw3aFFjVkEzOGlwY3hMVjgyelplb0c1WVBpTGVZS3VC?=
+ =?utf-8?B?NUF0elpFWkN4c2k5RVNWVVpVVFIyQUQ4SWg4aEtLc3o3QVFTbDFzYU5FR24w?=
+ =?utf-8?B?ZUk4clpEQS83ZzdRS3pLQlc1U2wzZTFTdWFFNnZUZ2Y3S04wN3VTWW11Y0J5?=
+ =?utf-8?B?d1ZFZVNIU3RKNU9JYmw4R3o5aWtXU0hWbmVtemVYcG9wNmM4aTc2MnliR0pZ?=
+ =?utf-8?B?Qm4zdHdOWXQyTDFUbVZGcVBGdjNwS01HS2lPOEZlY1hwRXNDa1BORGxKOUxS?=
+ =?utf-8?B?K3g2MGh6QkRDUm5BWEorcU15RXZhSE9OL2VWblJ6Yy9GcUEyU3JzdkxxZnJ4?=
+ =?utf-8?B?U3VLWTdLNHhtbkJ3UXJleW5XY2xyV2pCRmU0dEduMDVIZ0RFQkhuMVl4Tzdv?=
+ =?utf-8?B?WHc4TlhnNGZrcFlVWlBiWG9Ca1BpM2ZsbzhBTEoyNis4WCs2TG4xYWlySG5P?=
+ =?utf-8?B?LzBRQ251Sm1WcUpTOHQwQzNOWmtDVkZ1cGVLcy95eU5WbG1DK0ZiNm9LSFR1?=
+ =?utf-8?B?a0dtaXlGL2VwWEEvdjhxMjBoNkcrRWE3VTBRKzJQNysxaldaY0EwRGVxS3Vl?=
+ =?utf-8?Q?xAe7gQgm/zLGR?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N3NBbXJWaU5kbG1acGNiTWc4Z2lCSzFITmlncnlaVFY1amdZRGs0OUZYRy9Z?=
- =?utf-8?B?VmNnaUM5akZVck1OVEIzMHpiMy9tVVoyb1JtZloyc24rMUpieVdsUURYUVZ3?=
- =?utf-8?B?QmhRSFR1ZllLRWRDdWZOZHJzaEtSQmVTd1RYUkkwMmtteFludWI0dFVLVTN3?=
- =?utf-8?B?OTlMaE5tcDNVNkYzSm5HTVpTVU9JN1hNL0s5blg0ZFk3QmVUbzJDQXErTE95?=
- =?utf-8?B?UHlXRWVkalZaL2pZZnVvVDNXb29KUkJFQi9NZVpMUFdocjZJK2NGRnZxY1Ro?=
- =?utf-8?B?YUhmeU90b0ZQNS9RUmFGMU96eWVjUjJFUXFONko4SXBnd0NDLzdBaHhtazAw?=
- =?utf-8?B?aTdIckJZNWl1alJYaEU5T0JoVWpsazNSQUZmN0Rwb2psbG1NYmc0MTFYTCtx?=
- =?utf-8?B?VHRXTDY4NU95MyszV1JTeTEzUFNVKzBxQ21NK2swa2dkVVUySS9VTEpWenRS?=
- =?utf-8?B?RURXdWZVeUZVbGNuV2J2NXBhd3lZRm1rbFBWK1ZMNlRLQ3IrQXFXMkNPc3RY?=
- =?utf-8?B?cUg4ZHZxUFk0UFBLcTlwTFd6QzA2bW5La3pKYUN5NFBrdHRJaElhM04wR29V?=
- =?utf-8?B?UFJUK3pnemtYZFNZYWlvR3FNS2orWGZQVlFTYUNrNW8rMmdleU92VmNyT0JH?=
- =?utf-8?B?cko3QnFTZldNUDJHT0t1cTM2eGJiM3gyYitaTVBiN1NYeDNDS0tiT0llTlAv?=
- =?utf-8?B?aFFjZmE5K3pXdDM0RDU1dkcxdlVXYlZpbWhORlZVdzRENnZYbTRvNDVOQ0Zt?=
- =?utf-8?B?RklBMjFqcDBlNXNpRzV5enVjRzA1cVRrajUvbnpsUytTSm51cFZjaEt5YXlI?=
- =?utf-8?B?SmZWMmZJbzhuN2wrQ0thRTFWMlNVeFBWVC9YR3MwTFRTalFxQ0tYaXQ0RGQ5?=
- =?utf-8?B?VGtoakhnSmRzVGJwTkltWWVaaERnU3kzamQ4VmJvcHQ0Z1FWWWgyWStBRXhz?=
- =?utf-8?B?WURBUXFoTG03R3BaZXhqZjRnVmxSOFVXUjZuUzltVnR6RkxsK1ZtMDBFMS9I?=
- =?utf-8?B?RnNZdEpzU0xYb0lGWmlRS25PZFcyb3JaRzlLMURxajhha0U1UjgxZEd2OXJp?=
- =?utf-8?B?T3lCcmhFMkl4c2l1ZzVhT1o1T1N5ZHdzd3lLQklCVXF3OXZiT2ZrbWJZa3Zt?=
- =?utf-8?B?T3huaUdhcWFKRmNFaDBwRkVONE1xblMvSmx1emROY0JKRFBjUm5DcTFLdzEv?=
- =?utf-8?B?d0c4R0MvV2ZWT2QvNlB5bzM0MTE1cFRQQnI2Zk5XOERja3o3OVZrOVRqcWw1?=
- =?utf-8?B?bXNLWkw1aHBmUzBmaTRsWGF0RXUxNnpQSHVnRENNTUhEaDhoQkloamRlc0VZ?=
- =?utf-8?B?WjRRQnVKVEpadk5UUTRLUEJSMmlFM1MwaUFmSkhkK3lzSWYwZU1HZ1ZXVTNE?=
- =?utf-8?B?bzR0WXcxYWxtUXEzazVkZFMxR1FKZ1BJYUxvWXR3enlXY1ptY0V1UmdwWm1m?=
- =?utf-8?B?by9xRGxNN0xyYW5BM3VnTURBVDJ2UmpSU2R3bFRwTkpkVlVLYlV6ME1zeCtO?=
- =?utf-8?B?TmxGa1pHbjJ6bWl2aGVmVmVGUlk3d3RFR2JBb1NXVFRNdERBZUdpZkoxdzNh?=
- =?utf-8?B?c1dlZmhRakJaeGlNbk03Q3YybDR3OVEyRmFBSE92M2tFOXA3enRENitsWEpv?=
- =?utf-8?B?MkVTNzEzNTlVOElBeEhhYVI2eVlJQ1lPLytGRm5lUjVNZW1OVGJnb3hUWXVN?=
- =?utf-8?B?VVZJWkhjcFdGald5Qng3VE9CcU5zbUxPOHNJNzdnOTVDQkFLaDJqNlJ3c0lr?=
- =?utf-8?B?Zi9rdVIvZkRXck01RVNFZ09KVE9vRFgzcVVrdndYS3k1RXJvKzZ2KzlOck9O?=
- =?utf-8?B?amwydURKR2RONHRqdTBSbVg4eXZtbzFuOU43eEJCa0VpUCtNR0dpajA5UmVn?=
- =?utf-8?B?WHpMNEpEeE8vdjNqVVNKU3YwYlBNWm5xZ2xJbXdRQytlejFSa0MzeEg1OFFY?=
- =?utf-8?B?MWNCbjB3SUNObGJVR0NVcnRVd2xNQnV3YWtyd1hXRGRyc1JmNTFYMGNWUGdZ?=
- =?utf-8?B?YkxuTDEzMi9RVUkrUFFGUkI2ZXpoTUxJQzZhaUI5MjVOU1lBaGpJMjA5K2ht?=
- =?utf-8?B?dFdzSDYwLzNZMkRHbGh6TWg2S1VhQ0hHSjAvbVhvbEoxSjlIaXpuVmk0VjJE?=
- =?utf-8?Q?d+fRURme9/AO4Jgclngmbjvcd?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHNub0VrUFBrTlZBUUxPUXlSK3VCVkxROXY2RnM5ank2N2tTNW5rS1FFZUc1?=
+ =?utf-8?B?a0ZhWUFzZmRHM2EwV3kwaTcxdlFWR3VaSEVUT1JTV0tmcXR2NWtDYld2R3BN?=
+ =?utf-8?B?ek9xMlVXYnNIOTBZeno1VG1pQTkzOVhPbkQraTZNTmhTMGhqSGF6alE2Wk9t?=
+ =?utf-8?B?dnpOMUE1U0dIWjZvRGcwUG9wTUN3S1NvbDVFejF1ZWZKa0tRSmg5Q1llNHF2?=
+ =?utf-8?B?bTVTOTN2WWtRbkQxdkI2QjhMY1hHL2RnMHI2MkJJUElETC83bUFFd1g5Y2Ri?=
+ =?utf-8?B?RDZxdjBQWDZMMUJJUTFNYnBISjZUOFo0UHI1Vjc1TVhvcUhsbWw0aFhudDFS?=
+ =?utf-8?B?cW1nWFY5eWV6UHRTYSsva0xmb3pZQXI5VzFScGZVbDZtL3R5ems3clZ4VkxS?=
+ =?utf-8?B?UEVlVkF6TkNsTXY3OUxHazgvZW5vWmd6c25nUHU5TUp1Tkt3K2ViT1Yrd3JT?=
+ =?utf-8?B?VHc3ckpGNGlkZFE2NzRWK2w4aDVDVVNlSE5rVlR1cDY3dldZRktJY0hTSXVZ?=
+ =?utf-8?B?YWhXNk1EZWNzRngwVE9SQXhsa1NKU09wdTB2SlAxczdGUmdKUnlQMG4wanFW?=
+ =?utf-8?B?MDJWaytmaHNncXltSzdHeWNvNjhmKzlJYXJmMDl1VEZvTVAvMFFNV1ozcEZJ?=
+ =?utf-8?B?bWtHSUw4V2V3dE5tdFJPQjBhZ1hwNUdrcWFiZWJ3bnRocCtFU2xqRnRHMFpG?=
+ =?utf-8?B?SFBqbENFaXJuc3hIdTBwWG01UTJiZ0NHZUxhY2cvTnRwU1VaVWtZa3lYQXhJ?=
+ =?utf-8?B?Y2lha0taTmhEVDBmc1lHYkVEKzNFWGJxYmpDaitFZzY2Um9YTDI4bkVzRS8w?=
+ =?utf-8?B?UjEvZFgrb2hseVpkOWlNV0Z1a2s4a0FhSHFPcm8rcWhVUTV2aGVEYjhXWEhW?=
+ =?utf-8?B?ZjN4WWdtdTJUN1BkeEt4L2NXUlcyMkNhNGwrdk9XTG9rWE0weDQyYmN0eFFy?=
+ =?utf-8?B?SDZhT1ZLRFFFelBzQlJ6NHJwUlVISTg4V1lKMEs3WXcxdjV1NW9OR1pWTC8z?=
+ =?utf-8?B?WTl6MHZnd0pRcEFZeXUvWTlqUkZhSm1IZ0loQjJVbW1GYUw4V21MMFBFbmdt?=
+ =?utf-8?B?QlpxMmc3Vmg0NWFRdnFkcjdDMERIcTljeDhwVHZyRFgybzFCMURLaFN3cXpi?=
+ =?utf-8?B?ZEFtMzRuNEpydStOb3ovRU5ud0xMM09DZGlVMTdsbDZ0U0xQSjIvSDROQS9t?=
+ =?utf-8?B?VkM0SWs0T3ljYjVNUkcyR0sycjVVTmhGMVJVeEZRYm90RE1pdHVyZ1RESnNw?=
+ =?utf-8?B?cUZNaGVIZnZza2ljejhxQnczQUhmNVUveG9GakozRjE4UmhPMmhTWmFpaDYz?=
+ =?utf-8?B?SDIreHNrMFZKL3BKYUl5ckRZRzVzQ1ZxWDYrb09xMXNhbVZDWFpMYXF6M1FM?=
+ =?utf-8?B?N202bUFYT0hPU0FZcHYzb2RRYkJKUTVTUmxKQmMwN3VZTVFzRW9COVJmeEg5?=
+ =?utf-8?B?WC81bEJHallWQlhsalNRUkJ2Zm83UnJWSHZ6OGxwc0c3WXAzejBIV2g3ZTJW?=
+ =?utf-8?B?YlY1TGN5ZjB1Q3YveTBJdWd6L0RscWpkR1JhMlpNZGpZRy9waXpvVXFPOW5E?=
+ =?utf-8?B?TWR6bnkyNER6d0t4TE9rUzZhWTA1Z2xzZml4a1Z0dXJEcmZrNEczVHVzanVO?=
+ =?utf-8?B?L0NKUGZUdGhkQjFJZ0R1VXdVdG5RUnNuTy9WQzVoSTNHMStPc09qQzhFSXFx?=
+ =?utf-8?B?ZnNjUGVERyt2WVR0d1JSR245SFBtY2w4WEV2b1pnMmVoS0JLd0xpeHFQRWc2?=
+ =?utf-8?B?VDBKTGo5VGgwMkorVlR5SmlHL2gvZjduS1lkdGNXczQySEllNEUxVUxibWd6?=
+ =?utf-8?B?YzZRSllSbWl6RFV3eVlWWWNlOTd0Y09Rc2lCUDRGMFNpcTFYdzVxUGdLSmt2?=
+ =?utf-8?B?KzRhQXZCdUVMMThnZUEwZXBic0I3M0xkMjVqamlWamgydC94MHNrLzBsQzVm?=
+ =?utf-8?B?NFVOem1jSDV1dmdRMnJsVGpGWTBvNnVBNG52Z01xYVFGcnVIazJZYkt3SDFK?=
+ =?utf-8?B?MXZGUFNHUE1nS3NwaHpaY0tWbkIzZ2NBMkxFK3VEazEzMUNnSTVGOUVoaGdl?=
+ =?utf-8?B?SWxHOVJYQ09RNU5maU4wN1Z3Rm1pNVBnOGV0WTU5UjkyMXdSMHU5RnluVlJq?=
+ =?utf-8?Q?4aapRdyc4Zv3jd7THiS+0FiZk?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8854723-51c6-4c4d-1154-08ddbef5e19c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a9c8c57-6d44-40ac-d892-08ddbf06aa9d
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2025 14:35:41.9202
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2025 16:35:51.0633
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ndjo6isAEOa51ifNZgiPk0p0SgUP3ulkmoCGs65vKfEUZAxvlcvbljbShxta6Q7h/uSPziwYfgiyTkVh4lNPtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6688
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2pib0onzSGNBBt1Schd9XaX+ZV59q2k+y1O81aA+5edmmV6WFuvFB6xFNxNNyVFQQ/ECeTA/4/1Jw6ptvGISYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4431
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250709_073548_151632_0D3339EB 
-X-CRM114-Status: GOOD (  15.52  )
+X-CRM114-CacheID: sfid-20250709_093556_588512_3B792C6E 
+X-CRM114-Status: GOOD (  48.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -182,8 +182,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 7/9/2025 1:39 AM, Pavel Machek wrote:
+On 7/9/2025 12:23 PM, Eric W. Biederman wrote:
+> Sasha Levin <sashal@kernel.org> writes:
 > 
+>> On Tue, Jul 08, 2025 at 04:46:19PM -0500, Eric W. Biederman wrote:
+>>> Sasha Levin <sashal@kernel.org> writes:
+>>>
+>>>> On Tue, Jul 08, 2025 at 02:32:02PM -0500, Eric W. Biederman wrote:
+>>>>>
+>>>>> Wow!
+>>>>>
+>>>>> Sasha I think an impersonator has gotten into your account, and
+>>>>> is just making nonsense up.
+>>>>
+>>>> https://lore.kernel.org/all/aDXQaq-bq5BMMlce@lappy/
+>>>
+>>> It is nice it is giving explanations for it's backporting decisions.
+>>>
+>>> It would be nicer if those explanations were clearly marked as
+>>> coming from a non-human agent, and did not read like a human being
+>>> impatient for a patch to be backported.
+>>
+>> Thats a fair point. I'll add "LLM Analysis:" before the explanation to
+>> future patches.
+>>
+>>> Further the machine given explanations were clearly wrong.  Do you have
+>>> plans to do anything about that?  Using very incorrect justifications
+>>> for backporting patches is scary.
+>>
+>> Just like in the past 8 years where AUTOSEL ran without any explanation
+>> whatsoever, the patches are manually reviewed and tested prior to being
+>> included in the stable tree.
+> 
+> I believe there is some testing done.  However for a lot of what I see
+> go by I would be strongly surprised if there is actually much manual
+> review.
+> 
+> I expect there is a lot of the changes are simply ignored after a quick
+> glance because people don't know what is going on, or they are of too
+> little consequence to spend time on.
+> 
+>> I don't make a point to go back and correct the justification, it's
+>> there more to give some idea as to why this patch was marked for
+>> review and may be completely bogus (in which case I'll drop the patch).
+>>
+>> For that matter, I'd often look at the explanation only if I don't fully
+>> understand why a certain patch was selected. Most often I just use it as
+>> a "Yes/No" signal.
+>>
 >> In this instance I honestly haven't read the LLM explanation. I agree
 >> with you that the explanation is flawed, but the patch clearly fixes a
 >> problem:
@@ -194,20 +240,83 @@ On 7/9/2025 1:39 AM, Pavel Machek wrote:
 >>
 >> So it was included in the AUTOSEL patchset.
 > 
-> Is "may fix a problem" the only criteria for -stable inclusion? You
-> have been acting as if so. Please update the rules, if so.
+> 
+>> Do you have an objection to this patch being included in -stable? So far
+>> your concerns were about the LLM explanation rather than actual patch.
+> 
+> Several objections.
+> - The explanation was clearly bogus.
+> - The maintainer takes alarm.
+> - The patch while small, is not simple and not obviously correct.
+> - The patch has not been thoroughly tested.
+> 
+> I object because the code does not appear to have been well tested
+> outside of the realm of fixing the issue.
+> 
+> There is no indication that the kexec code path has ever been exercised.
+> 
+> So this appears to be one of those changes that was merged under
+> the banner of "Let's see if this causes a regression".>
+> To the original authors.  I would have appreciated it being a little
+> more clearly called out in the change description that this came in
+> under "Let's see if this causes a regression".
+> 
 
-I would say that it most definitely does fix a problem.  There are 
-multiple testers who have confirmed it.
+As the original author of this patch I don't feel this patch is any 
+different than any other patch in that regard.
+I don't write in a commit message the expected risk of a patch.
 
-But as it's rightfully pointed out the environment that drivers have 
-during the initial pmops callbacks is different (swap is still available).
+There are always people that find interesting ways to exercise it and 
+they could find problems that I didn't envision.
 
-I don't expect regressions from this; but wider testing is the only way 
-that we will find out.  Either we find out in 6.15.y or we find out in 
-6.16.y.  Either way if there are regressions we either revert or fix them.
+> Such changes should not be backported automatically.  They should be
+> backported with care after the have seen much more usage/testing of
+> the kernel they were merged into.  Probably after a kernel release or
+> so.  This is something that can take some actual judgment to decide,
+> when a backport is reasonable.
+
+TBH - I didn't include stable in the commit message with the intent that 
+after this baked a cycle or so that we could bring it back later if 
+AUTOSEL hadn't picked it up by then.
+
+It's a real issue people have complained about for years that is 
+non-obvious where the root cause is.
+
+Once we're all confident on this I'd love to discuss bringing it back 
+even further to LTS kernels if it's viable.
 
 > 
+>>> I still highly recommend that you get your tool to not randomly
+>>> cut out bits from links it references, making them unfollowable.
+>>
+>> Good point. I'm not really sure what messes up the line wraps. I'll take
+>> a look.
+> 
+> It was a bit more than line wraps.  At first glance I thought
+> it was just removing a prefix from the links.  On second glance
+> it appears it is completely making a hash of links:
+> 
+> The links in question:
+> https://github.com/ROCm/ROCK-Kernel-Driver/issues/174
+> https://gitlab.freedesktop.org/drm/amd/-/issues/2362
+> 
+> The unusable restatement of those links:
+> ROCm/ROCK-Kernel-Driver#174
+> freedesktop.org/drm/amd#2362
+> 
+> Short of knowing to look up into the patch to find the links,
+> those references are completely junk.
+> 
+>>>>> At best all of this appears to be an effort to get someone else to
+>>>>> do necessary thinking for you.  As my time for kernel work is very
+>>>>> limited I expect I will auto-nack any such future attempts to outsource
+>>>>> someone else's thinking on me.
+>>>>
+>>>> I've gone ahead and added you to the list of people who AUTOSEL will
+>>>> skip, so no need to worry about wasting your time here.
+>>>
+>>> Thank you for that.
+>>>
 >>> I assume going forward that AUTOSEL will not consider any patches
 >>> involving the core kernel and the user/kernel ABI going forward.  The
 >>> areas I have been involved with over the years, and for which my review
@@ -217,11 +326,16 @@ that we will find out.  Either we find out in 6.15.y or we find out in
 >> subsystem can elect to have their entire subsystem added to the ignore
 >> list.
 > 
-> Then the filter is misdesigned.
+> As I said.  I expect that the process looking at the output of
+> get_maintainers.pl and ignoring a change when my name is returned
+> will result in effectively the entire core kernel and the user/kernel
+> ABI not being eligible for backport.
 > 
-> BR,
-> 								Pavel
+> I bring this up because I was not an author and I did not have any
+> signed-off-by's on the change in question, and yet I was still selected
+> for the review.
 > 
+> Eric
 > 
 
 
