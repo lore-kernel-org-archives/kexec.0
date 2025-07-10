@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D730C83F22
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 954AFC83F1D
 	for <kexec@archiver.kernel.org>; Thu, 10 Jul 2025 14:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8IOiBhpE7k0MjzUA/INlxWVgVc3fXasZWv3rNx0TaJs=; b=e0QBqSVd+m4ZUbv37GPwiAQ75Q
-	zASu9I9mQxKq8Jz/z1QdqCtqLPtmEtlvui+lAW4jeIF3zcqymXuoMMpJDIVleART8fAb3H+SpMCqn
-	GxxQeG5s2gAClMKxMGxcB+cBBJQEQ+vFMrCFiBWGMBFwoYRsQ+5veEmCZeZX/Rt6q36iUC/NX8WBg
-	5POVJHT8GwOdHYXzX3jUrXPZGG3RmwCPzOp9zd/d/aH35jF8AACcTtdnJjDfGPL0FrSqY5Jmxfvk2
-	4Sh8Fa/v7SIh0ugOg/6jguYZM8+UDoVg0/mz+5m3mBwLAIaVgWBbGSDNa9LlZzzkob2riIsdQOX42
-	ftsT2zzQ==;
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=G7DcbmMqL58QSRYvjU6ux4tXv5N0M2pspqDuxfXvmwI=; b=oqsTSEDWsIOaVIizjs4kvRMDHh
+	IPRYqyGtvfYSXiYmRH75w2RfuxG5J1jEDNSgqO2HfFdfd3tX/gthGqVPuSN+1qjo56yN2+lfmrKSS
+	xTXf5WcjgS71DafdYm2nFXpWY+MXKr2NLsQWZYdg8Bc4UKMMnViZJSKVg8Sf9KHuNJd5F9rxbka5H
+	E9aCJEvrjeHLOd1IQfB7G4simq9PKqNS9Fp/jsPxP7piZrnKWxoaB6+bb8MsonBvBI8tlyLbX8pWO
+	2HLk24E/Ko32tlfBGHq+eJWC6QLzYReZaHyWV0baSmQWUXJjk2xPVtnmogaBM8zIAaahLkAIFmvGm
+	EXC7w4Dw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZsZv-0000000CASI-1eiz;
-	Thu, 10 Jul 2025 14:48:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uZsZw-0000000CAUE-0uVi;
+	Thu, 10 Jul 2025 14:48:52 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZr4s-0000000Bt4z-42FD
+	id 1uZr5C-0000000BtAE-0pHB
 	for kexec@lists.infradead.org;
-	Thu, 10 Jul 2025 13:12:43 +0000
+	Thu, 10 Jul 2025 13:13:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 04E5D6146C;
-	Thu, 10 Jul 2025 13:12:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C85D4C4CEED;
-	Thu, 10 Jul 2025 13:12:39 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A45BF6146C;
+	Thu, 10 Jul 2025 13:13:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EABC4CEED;
+	Thu, 10 Jul 2025 13:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752153161;
-	bh=a6txXrLzW35b1zGTDyVpZzhGd+F09XjuI6q5NT4EVMQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YRc1SjZNgXXpjmpXsaw4eDEyvO/ho/becbOhM5LEAjK2Z7tINUTXv9DUrzR/6m3fz
-	 iu13CBOdgvgemyk9mcBYKjiqLxp2fgBaGvduQZep3H0BCGdWIz2bJFuEG9hlAVvh4o
-	 HPoqcqg5X8mXVsv3Vwz9KijDymRgtlQfi+MRWjw/G/72nZZ3Iul1u6M/jd8yhY7moZ
-	 6t0Q+FnGF+UyIR+hKlaHmdhaUg54XNRErqDUrGkeJ5NSoAWCoslCE86VBsYYt8JNGz
-	 BNiXlka9GW/XAbEA5IQnGfD/cMBGlj2yOmOx2tUfgXm4VxfVe7XvfFGLZr9HA/u270
-	 TUMhkIqHYAbrA==
+	s=k20201202; t=1752153181;
+	bh=G7DcbmMqL58QSRYvjU6ux4tXv5N0M2pspqDuxfXvmwI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SeKNo4PnRUeD1IItr4pG0/AKI2v46qPG5UEB0UWIikDIyYgIjSSn6wB0nrpxB7UVp
+	 CLqTZahoWQ32TjMjoaTaPzL9mPvsUj053OB3u8GnYFcHqWlh6KavJRs2VlDGMg0EjD
+	 fqvag2hAkjGHtUWceQHTuiSJJwX0syKisP3CFCy9oPr2+S+i67zheIwi6sk1AryxaV
+	 g9flzqa+nsX4u+HT9Ljbf/rH3M1aMlYl0VbytabwmsOTsBjXeQryFbOacPqti2eX1d
+	 ZclD4LEXw5H02FGEwezHxKZRIg7sIOVVccaLO4f1ntUIMDv9GKCL+I3DHgtDi8ohTK
+	 3dK9Q0eVyPrFQ==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: kexec@lists.infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
  Mario Limonciello <mario.limonciello@amd.com>,
  David Woodhouse <dwmw2@infradead.org>
-Subject: [PATCH v1 2/2] kexec_core: Drop redundant pm_restore_gfp_mask() call
-Date: Thu, 10 Jul 2025 15:12:20 +0200
-Message-ID: <1949230.tdWV9SEqCh@rjwysocki.net>
+Subject: [PATCH v1 0/2] kexec_core: Fix and cleanup for the KEXEC_JUMP flow
+Date: Thu, 10 Jul 2025 15:08:58 +0200
+Message-ID: <5046396.31r3eYUQgx@rjwysocki.net>
 Organization: Linux Kernel Development
-In-Reply-To: <5046396.31r3eYUQgx@rjwysocki.net>
-References: <5046396.31r3eYUQgx@rjwysocki.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
@@ -71,28 +69,14 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Everyone,
 
-Drop the direct pm_restore_gfp_mask() call from the KEXEC_JUMP flow in
-kernel_kexec() because it is redundant.  Namely, dpm_resume_end()
-called beforehand in the same code path invokes that function and
-it is sufficient to invoke it once.
+These two patches fix an error code path issue in the KEXEC_JUMP flow (patch
+[1/2]) and clean it up a bit afterward (patch [2/2]).
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- kernel/kexec_core.c |    1 -
- 1 file changed, 1 deletion(-)
+Please see patch changelogs for details.
 
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1136,7 +1136,6 @@
-  Resume_devices:
- 		dpm_resume_end(PMSG_RESTORE);
-  Resume_console:
--		pm_restore_gfp_mask();
- 		console_resume_all();
- 		thaw_processes();
-  Restore_console:
+Thanks!
 
 
 
