@@ -4,55 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0DDC1C83F1A
-	for <kexec@archiver.kernel.org>; Thu, 10 Jul 2025 08:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D6E4C83F1B
+	for <kexec@archiver.kernel.org>; Thu, 10 Jul 2025 14:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=KDRQi4pCoVVuRyGkn9jX/8tJgyEhGA8Bz0yDnVVeEfs=; b=u3GYM3qZXJ4Si7flIQYq7l+uh1
-	S3Ou1gX2GfGgZiepBreEUug0nnMBjjCmHTEiUy13HpP5b4zeP0oWB9mK+rb5quKxwhSD2sFEFYCRh
-	V8etmehTQlwOhwG6/J4OH7GW7p4Nl7Q1hY0xfEjUXzDLRhyRfe/dfQeNlVTjmIjGZolbGMIhweWOq
-	QmPVrXcYmNebp6tihBIC0BJtxPGyt/zUBSL/qnHu6pH40GUbkcO4qBPFxArtzC7zTaywTFTI2E27s
-	0ARE1YDLe3WDYXI1GJOgU6JFWm580qt5H3rnlAfZ+INc1OeazsVOALOg+wdUvT0Yx0Goi/FUm0XsZ
-	IhlO2XZw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=O2TAL88Wkty1Y1yqbOfq0NaXUR5A1pT3ULgs9nfzh+M=; b=Fo59AuRxcf2dWNq/YIqVCc3MYL
+	Jar0ZAXIPC1iwY10mr2bCGRnCiT8BZXf5WKz0F+Ay56+dg94vNzT9lukj8kNaxqh8ylMIN69jPPZ4
+	IKFOESIi2ae09S+3RZLntvfJQ+MDg38A8TifyUu5e5oWKdUpbvwITNliEs4Q3KNMl0tukhdr8yipx
+	FQiVUnLEoPYvrfTRgI1Ttwqy3rxtG0g1g7wUY/H9ZUuHdCBtIDOt9m3JZjiySpm1VukJVuvKHAtDV
+	OHmVadGSBkkdnc+H+m3C4LsJuKDC3h4zSSvEbEgLvjq658WJ8lDTfXuo6y2hoqQkW4BtHKNS2ufr9
+	nX+7P1OA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZn1N-0000000BEla-2NHq;
-	Thu, 10 Jul 2025 08:52:49 +0000
-Received: from mail.tasknomic.com ([141.95.16.86])
+	id 1uZsZv-0000000CATt-3OKH;
+	Thu, 10 Jul 2025 14:48:51 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZlrd-0000000B2Rt-1MQ6
+	id 1uZr53-0000000Bt86-0Ueu
 	for kexec@lists.infradead.org;
-	Thu, 10 Jul 2025 07:38:43 +0000
-Received: by mail.tasknomic.com (Postfix, from userid 1002)
-	id 82732A4ED9; Thu, 10 Jul 2025 09:37:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tasknomic.com;
-	s=mail; t=1752133117;
-	bh=KDRQi4pCoVVuRyGkn9jX/8tJgyEhGA8Bz0yDnVVeEfs=;
-	h=Date:From:To:Subject:From;
-	b=fA0H5JWoLIcUZz77oWdPwZ1gXol+rqTIaQKyckE/VmjjrtFOHrzc9xWGwEj9uqCrF
-	 AOHgL5FEITPVZj/rY5Y8yzvrNsOc3dK9yxIY1vjsmn5yOI9h1d6I1Jb4B3Ay56QCEb
-	 ZYpg1HjxUoPKA7oe5DOfFdzei2Aio7wHcS7O1XVaHI03huE3gLra94P13SljvnIBi2
-	 OM3KKT66wAXDgGnoqdjmTRuup9Bc85ABijpve1QcI4WJ0Rlc62U1M/X4aP1yod8937
-	 ESQ/X6iNjpnMA8cBGAH7DPJEPMjFN5XQ/UpUmDN45iaz6L14zjwaVHjr4Sg3Z+Ofr4
-	 r9I5rfmCVlD4Q==
-Received: by mail.tasknomic.com for <kexec@lists.infradead.org>; Thu, 10 Jul 2025 07:36:14 GMT
-Message-ID: <20250710084500-0.1.jy.13c1b.0.4gk1n4u28f@tasknomic.com>
-Date: Thu, 10 Jul 2025 07:36:14 GMT
-From: "Jon Brennan" <jon.brennan@tasknomic.com>
-To: <kexec@lists.infradead.org>
-Subject: Equipment - chairs
-X-Mailer: mail.tasknomic.com
+	Thu, 10 Jul 2025 13:12:54 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id A49A45C6AC4;
+	Thu, 10 Jul 2025 13:12:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2B7C4CEE3;
+	Thu, 10 Jul 2025 13:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752153172;
+	bh=q9abc7oDZLcrtsMuNt1PO9GtWY5Cpp2InagfHvwx58A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t4eB/E96oPfoYrzKEEkI+GgqjVDfIsE8xFcwhS0OUm/BBiiSk2RYf2RUf0N9rFBqa
+	 cyeWTdcEiHkGjmWnAQ4+PqdIss7v/rC5faUUdtvgrSBKIfUzFHlXD/BLb1Y5P+Iwtn
+	 Dm+9JdtsGuzG2cBgU5Sx+UJ2YyTLfwDlmE+nYHCVknsIVXg+YOR4SdyywciLOShV6j
+	 FsqIzluUatlkHPWYrfk6D/MsKAn65jl9ezdWI1S9csY1M6VB/f/Tnsa24lSdojVjJX
+	 5kG38VgKR0AoFKfy6Z0dsL6F03PhwxR3jgNJd/BI/HEus9uKShLrl6AkZ93Smo2OkV
+	 SzYf97dkstYHA==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: kexec@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ David Woodhouse <dwmw2@infradead.org>
+Subject: [PATCH v1 1/2] kexec_core: Fix error code path in the KEXEC_JUMP flow
+Date: Thu, 10 Jul 2025 15:10:41 +0200
+Message-ID: <2396879.ElGaqSPkdT@rjwysocki.net>
+Organization: Linux Kernel Development
+In-Reply-To: <5046396.31r3eYUQgx@rjwysocki.net>
+References: <5046396.31r3eYUQgx@rjwysocki.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250710_003842_044433_42948955 
-X-CRM114-Status: UNSURE (   1.48  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250710_061253_201101_46432CA1 
+X-CRM114-Status: GOOD (  10.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,20 +74,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Do you offer a seat for corridors or waiting rooms?
+If dpm_suspend_start() fails, dpm_resume_end() must be called to
+recover devices whose suspend callbacks have been called, but this
+does not happen in the KEXEC_JUMP flow's error path due to a confused
+goto target label.
 
-The shortest possible length is about 12 cm, with a wide range of practic=
-al dimensions, with a little over a centimeter of space - with a small, l=
-arge, large roof.
+Address this by using the correct target label in the goto statement in
+question.
 
-This is a solid and convenient solution that can be selected by furniture=
- distributors, for use in public matters throughout Europe.
+Fixes: 2965faa5e03d ("kexec: split kexec_load syscall from kexec core code")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ kernel/kexec_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I will send you the specification or photos - can our product be used?
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1080,7 +1080,7 @@
+ 		console_suspend_all();
+ 		error = dpm_suspend_start(PMSG_FREEZE);
+ 		if (error)
+-			goto Resume_console;
++			goto Resume_devices;
+ 		/*
+ 		 * dpm_suspend_end() must be called after dpm_suspend_start()
+ 		 * to complete the transition, like in the hibernation flows
 
 
-Sincerely,
-Jon Brennan
+
 
