@@ -4,84 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00A9DC83F27
-	for <kexec@archiver.kernel.org>; Tue, 15 Jul 2025 06:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60BFBC83F1D
+	for <kexec@archiver.kernel.org>; Tue, 15 Jul 2025 07:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PJNrGnddCS+K+I/ghI3UvfktypplC8pV6M7MGR0tlpY=; b=SvLqNeyrgovxxYNHKTffYiRMMi
-	YZiT2GG8AxThaln2NuAzTQq/Fr7h4hjgW/UOK+IYPHb1YLHhmO+Yky82yhRCd7IrpwELQ/lYpjXLT
-	4yxvkTNoIdrPQvhnL9Phhta1NLP9Uejg0/wMuNNq/Wnl2Ke63RqUzo3/WhTYT1SoSJyrHvwDdmdHa
-	KHeJ+2u7bxfkn4hPUzwiFZqeehFUunkb/p/z2lnAR3/+d5m4AGoLTauqMqKG+XkWczhFCbUNKT8XV
-	cZVlE+dMXxnxzMYKNjV3vPrj6YoHXBNjLFI+lZ8rperbYlbTrOR4wC2NFR+2roESuDizqDKEF+wZC
-	inJhFndA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=; b=NOAzfWvbpTPGH/cN5E7WqNqSJ5
+	KqTBXFbEcDXbzCDTf/BH6j2mlMNiJzNU0bQ+RfnM0b1SRvZnjlnlHn93hZ9/FwunQnA1sP2ObgCCg
+	L/X+nyzE7mw0jwqnVj89ENpkpQT2JZiRi3vTJLN2GBbMDWJ7j9d7mMSwZUWWE75k1E2sZMiwVmxOY
+	/llv4Pmz9PwqfbRHikZJ/p2kpZ33te9iI3WURKxZJwRtQXISIjD2a7UWV9V1hBtGjucPukIYDw6Iu
+	pkTU+9d0skBBgtJDXI5sqf6ISd0t1IKsnuafqG2q1E8rfxl9Kyka17JxN0VpHVYDH+WWB0FgtOKTq
+	+aHog34Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubZLX-00000004Eg0-3sZa;
-	Tue, 15 Jul 2025 06:40:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1ubaJf-00000004Nqx-3jCh;
+	Tue, 15 Jul 2025 07:43:07 +0000
+Received: from mail.fintara.pl ([51.68.214.200])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubZI5-00000004EBw-2I8G
+	id 1ubaID-00000004NbB-2zHY
 	for kexec@lists.infradead.org;
-	Tue, 15 Jul 2025 06:37:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752561443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PJNrGnddCS+K+I/ghI3UvfktypplC8pV6M7MGR0tlpY=;
-	b=dZ4xaHNYWHNTYGYvUbIOiZWKKiRqjEFseBX1lAcJbqX/9XmYQeox2Gga2pkezlIPuVn6mJ
-	OhegEzZp4LnYgWklDD1pEsCIT5dh4KDf35NEOzzha/V5TIHWm47KgxoOPPzuYTUZrSIDkg
-	9U15Yeab6oBGc3rT7NC3T4NayOwmFmg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-Y2ABCGivMxinmS1AsXatdQ-1; Tue,
- 15 Jul 2025 02:37:19 -0400
-X-MC-Unique: Y2ABCGivMxinmS1AsXatdQ-1
-X-Mimecast-MFC-AGG-ID: Y2ABCGivMxinmS1AsXatdQ_1752561437
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D71671801233;
-	Tue, 15 Jul 2025 06:37:16 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.210])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62AE2180174E;
-	Tue, 15 Jul 2025 06:37:13 +0000 (UTC)
-Date: Tue, 15 Jul 2025 14:37:09 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Askar Safin <safinaskar@zohomail.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>
-Cc: regressions <regressions@lists.linux.dev>,
-	intel-gfx <intel-gfx@lists.freedesktop.org>,
-	kexec <kexec@lists.infradead.org>,
-	dri-devel <dri-devel@lists.freedesktop.org>,
-	iommu <iommu@lists.linux.dev>, Ben Hutchings <benh@debian.org>,
-	anushasrivatsa <anusha.srivatsa@intel.com>,
-	joonaslahtinen <joonas.lahtinen@linux.intel.com>,
-	tvrtkoursulin <tvrtko.ursulin@linux.intel.com>,
-	josesouza <jose.souza@intel.com>,
-	davehansen <dave.hansen@linux.intel.com>
-Subject: Re: Second kexec_file_load (but not kexec_load) fails on i915 if
- CONFIG_INTEL_IOMMU_DEFAULT_ON=n
-Message-ID: <aHX3FSMif/LDmTtq@MiWiFi-R3L-srv>
-References: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
- <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
+	Tue, 15 Jul 2025 07:41:40 +0000
+Received: by mail.fintara.pl (Postfix, from userid 1002)
+	id 67D05409A3; Tue, 15 Jul 2025 09:41:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fintara.pl; s=mail;
+	t=1752565290; bh=0Yjr6NsrKkaYb/LNYm1mPKHuxqkR0iWhkNkzH9QSzrg=;
+	h=Date:From:To:Subject:From;
+	b=aaz/cOzsdJ3T032wNshMZ279oeq5RmpSKQGHhuHxa65y4xEtA5wIPAhEyLlu5m/Cm
+	 I7gDLj83mzxaV0bgSLtAeIoYimSao8VFwY9D3Qjj28Y6skcrSB2dn88+Cayx1D/RP7
+	 GcShPv+Eld/u275wyep6sznM+PHhZz4TFwP/3lWmDgoyXBePo37Iw124y9jxwYiFtd
+	 wb/Lhnn4yobEvV7xsD8rQ9UjOKdI9Fs1hEfHdNOf/sRiG3VUOGZL0T3h3Cg3wQIB62
+	 tWy/My0TS2fbiJHU9ahslPDrSyIJexZoOcNKmbmtvTn+SDT/slMfhLgaA/cdGQNkUj
+	 krBLyl32VhEJw==
+Received: by mail.fintara.pl for <kexec@lists.infradead.org>; Tue, 15 Jul 2025 07:40:33 GMT
+Message-ID: <20250715084500-0.1.ao.2rpel.0.7mcjf6pn4l@fintara.pl>
+Date: Tue, 15 Jul 2025 07:40:33 GMT
+From: "Dominik Lotka" <dominik.lotka@fintara.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.fintara.pl
 MIME-Version: 1.0
-In-Reply-To: <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: x5wApntfM29U2gDwRGLedYYu-dRc7JfyEqttes2_lYA_1752561437
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250714_233725_721160_3289E8F8 
-X-CRM114-Status: GOOD (  16.06  )
+X-CRM114-CacheID: sfid-20250715_004138_451463_77EED0F9 
+X-CRM114-Status: UNSURE (   1.03  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,38 +66,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/04/25 at 11:29am, Jani Nikula wrote:
-> On Thu, 03 Jul 2025, Askar Safin <safinaskar@zohomail.com> wrote:
-> > TL;DR: I found a bug in strange interaction in kexec_file_load (but not kexec_load) and i915
-> > TL;DR#2: Second (sometimes third or forth) kexec (using kexec_file_load) fails on my particular hardware
-> > TL;DR#3: I did 55 expirements, each of them required a lot of boots, in total I did 1908 boots
-> 
-> Thanks for the detailed debug info. I'm afraid all I can say at this
-> point is, please file all of this in a bug report as described in
-> [1]. Please add the drm.debug related options, and attach the dmesgs and
-> configs in the bug instead of pointing at external sites.
+Dzie=C5=84 dobry,
 
-Yeah, that's very great example people can refer to when reporting
-issues to upstream, thanks for the details.
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
 
-For the bug itself, I would hope Intel GPU people can have a look, see
-what's happened and how to fix. For kexec reboot, we have got problems
-on Nvidia GPU and amdgpu which makes kexec reboot hard to do continuous
-switching to 2nd kernel. In Redhat, we have met this several years ago,
-and we tried to contact GPU dev, while there's no way to fix it. Finaly
-we have to declare not supporting kexec reboot formally. This Intel GPU
-issue could be a different one, I still hope GPU dev can have a look.
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
 
-Currently, many people are investing much effort on KHO, K-state, etc
-in upstream to make kexec reboot versatile and flexible. I am very glad
-to see that. And I guess people possiblly have met the same GPU issues on
-Nvidia and AMD gpu as I mentioned, and trying to solve them. Otherwise,
-no matter how wonderful KHO, K-state or K-anything are, they are just sky
-scraper on sand.
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
 
-Personal opinion.
+Zapraszam do kontaktu.
 
-Thanks
-Baoquan
 
+Pozdrawiam
+Dominik Lotka
 
