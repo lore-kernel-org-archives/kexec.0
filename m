@@ -4,80 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6EFA6C83F27
-	for <kexec@archiver.kernel.org>; Tue, 22 Jul 2025 17:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C631C83F1A
+	for <kexec@archiver.kernel.org>; Wed, 23 Jul 2025 00:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gLbXCw0F2QvZ7bBY7GP88H5v/+ABMtOq6lHh/3EqNic=; b=Dyp3/Ge3HPSnztJsYowUkVE2B/
-	tFc/gj9MVyxiMkBpxbDj6RYR3Fh9pHeHoYVyGNfLIoL1G4sycLUnMlFsACjYMtPuEtnPtvpjfWlsx
-	D9w4fvxhVfN7yiSEWuptl0GzSBF3998s2wEAZM0E4MY3ywALNx+bOgxwwPAVRRwBr/Sf+j6Lx38B4
-	zSbJ/jvNAmv3ZANixLfVqfpZgw3VjY1PUlEfaTCv1+cjXxJhJLXmDuBSsSUyXSaEDlTXoXpQHho+U
-	StJvOM5WXGDFCYYE64ewSGZ7Cqx9kqSoh6mn1yFccRsuNo5m1Vyc+K14VCxIWJ1+Ob6dOFhT36eSK
-	aug4csFg==;
+	bh=H/yVOebopCKz7Q2ng99Hh4CSN57XYcgYqrFuQZ+lEa4=; b=WOa3kSZi7Bnl8BcfPcdu29AJPV
+	hSYvcoPJwnUDgD4FN5BqZWlDERYhNKEvGFc9TbEuMqt3eAGhvftBxhXXSzUGw6mquYTh31VzfbKRz
+	0vMv1roHtR2tsjIW9Lgqvcu4dG6R5ghkqke63MqWd4hwLP/YgIDw19E0aAn3ubNshHUIOyHUUpLxs
+	3WNAd1yOphH543SVX7gDC3x6KDkzHHbAreTY5+nRfPoNhnDr+JN7Rwt9pPts2iwBOoqgiXh+NKR5j
+	9V3f/bXYnP2m6J07oSI9JLtQtS1VRLfUgdKfsPrbTla0rkbZf7pON+J00kTOIj50FZPYIIQlDG9FF
+	L3ND9tjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueGiG-0000000382S-3rA6;
-	Tue, 22 Jul 2025 17:23:36 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1ueNbh-00000003jtf-3jTO;
+	Wed, 23 Jul 2025 00:45:17 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueGiF-0000000381f-3Ya4
-	for kexec@bombadil.infradead.org;
-	Tue, 22 Jul 2025 17:23:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gLbXCw0F2QvZ7bBY7GP88H5v/+ABMtOq6lHh/3EqNic=; b=cyFYZUD85FVFz0142Rx1r6wc2L
-	6QruZ2PBcrmmSQl+XFGHmLYDmGrpdP8WfONlBNHI5QsQCDLsNP0jnb27jmFQwnVUBNv3ZmbfiD+BB
-	D7LdXpiyf1CBO9Z6aE79N2CIfoESoKu0zu7OLxtpAFxORQ+hF490lSfxGLUyFE+P4i5a7Zi/Im7dE
-	3S3cpiX+5iIDhniH21ucG9/hnOZa68vRrq2b8/xFK8rDzrhvKim5u9ua59zzt6pWzPVieNiX25BVA
-	8FMuEpPvb38QazAzszdcnyt+Ap8+ZoDbWZuKkjSXuLzHX8ZHvLw/i+NWyD8BItkA1Q16c4690EfMw
-	KhWDOzww==;
-Received: from mgamail.intel.com ([192.198.163.15])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueGiC-0000000BK5F-0T11
+	id 1ueNbe-00000003jsp-3HOV
 	for kexec@lists.infradead.org;
-	Tue, 22 Jul 2025 17:23:34 +0000
+	Wed, 23 Jul 2025 00:45:16 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753205012; x=1784741012;
+  t=1753231515; x=1784767515;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8tLBsgDMoKYn/cmEEtG36C5Re6c2A8hBzfa0rJS9qf8=;
-  b=a/J4TcnEDdNRiosxpUTEhKzHF9x43e3LuhOxTBROsDH3Ji3CW1Ig5TuP
-   kw+Dt16horXr1jwpwiDE279NyV/qcc5aH1xn0b3GE8E7mDK+L81+8aX3m
-   nogKye0s+3L+mXfH2WCZE5/2w5hEYmpPepLkzi5gQYeST5nvH6fy9wm8L
-   oVgvuiuM+0tk2WmpKZVd+iE/IoikxMXbc29TVR0ezVFtN8pc5kVaheoVj
-   rmZlPfcOyr7k92Oqjbxnc3JC8DzHFB8dNV1Tz207cVXb3E60nuxWoNNny
-   bYcNsXyW/SaKymEQe/r8t9RtVc2ZPBYrWO2m3vwg8ciHPuBfzWT5waLJe
-   A==;
-X-CSE-ConnectionGUID: tmLQdlLsR7GmgKJDvxw6dg==
-X-CSE-MsgGUID: IL0w0HS2Rk2NnXThGtMzsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55617281"
-X-IronPort-AV: E=Sophos;i="6.16,332,1744095600"; 
-   d="scan'208";a="55617281"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 10:23:23 -0700
-X-CSE-ConnectionGUID: T62YgRhbStu03UHmIKqpvQ==
-X-CSE-MsgGUID: vlVplxbJSAyI/3mxscLURw==
+  bh=m426WV1lDKEaPLng1dxGfobPDwFUytLJjSu785UlQ7E=;
+  b=G5wgyuDqSaiUGMCwmYw6o7r+N16pyi6ipH4l1vo/zrQlIVc3VfvcgiMT
+   L2CNE60FEFeHw1+A4EzDff0f2pTM1+5WCpcFDGC/tF6ZpRIw5Q3+fKY+K
+   +1Fk8yVIO4Y/jiUMZLCmHE6ggSIcs329fEIdGTTv3JEAqRkRGHW5pY/aE
+   d30zx9c/7PYCWSGgJr16ZiqlxziAhmih59MwrIFQNcruOiaL1oGvzx3b2
+   4zDIyvubOTZM3j8ymd0z4mY0BGPYHLotY2wMHdk8knRYnemXp/vGi9hW+
+   fcH0U1uQzZCmQkZP0mIcoqHaoHNYQ3SgUYf8xq7kkkBcrp5ACNC/AUyC8
+   Q==;
+X-CSE-ConnectionGUID: Q5yTTSYoS4G5i39bzNzdig==
+X-CSE-MsgGUID: QlQbY23NTamdVLKDrofL/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55348825"
+X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
+   d="scan'208";a="55348825"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 17:45:11 -0700
+X-CSE-ConnectionGUID: 706r2HHuRv625sILRACQ3Q==
+X-CSE-MsgGUID: Uv2GzgKdTpedaycps3ofeQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,332,1744095600"; 
-   d="scan'208";a="158503142"
+X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
+   d="scan'208";a="159038253"
 Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 22 Jul 2025 10:23:17 -0700
+  by orviesa009.jf.intel.com with ESMTP; 22 Jul 2025 17:45:04 -0700
 Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ueGhv-000IaD-1j;
-	Tue, 22 Jul 2025 17:23:15 +0000
-Date: Wed, 23 Jul 2025 01:22:56 +0800
+	id 1ueNbR-000IpT-1V;
+	Wed, 23 Jul 2025 00:45:01 +0000
+Date: Wed, 23 Jul 2025 08:44:58 +0800
 From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Pingfan Liu <piliu@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+To: Pingfan Liu <piliu@redhat.com>, bpf@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Pingfan Liu <piliu@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	John Fastabend <john.fastabend@gmail.com>,
 	Andrii Nakryiko <andrii@kernel.org>,
@@ -94,17 +79,19 @@ Cc: oe-kbuild-all@lists.linux.dev, Pingfan Liu <piliu@redhat.com>,
 	Dave Young <dyoung@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Linux Memory Management List <linux-mm@kvack.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCHv4 08/12] kexec: Factor out routine to find a symbol in ELF
-Message-ID: <202507230016.NQ1WXqwG-lkp@intel.com>
-References: <20250722020319.5837-9-piliu@redhat.com>
+	kexec@lists.infradead.org, KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCHv4 04/12] bpf: Introduce decompressor kfunc
+Message-ID: <202507230813.M1tmyREU-lkp@intel.com>
+References: <20250722020319.5837-5-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250722020319.5837-9-piliu@redhat.com>
+In-Reply-To: <20250722020319.5837-5-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250722_182332_659415_4ACFB963 
-X-CRM114-Status: GOOD (  10.55  )
+X-CRM114-CacheID: sfid-20250722_174514_895250_89D741C3 
+X-CRM114-Status: GOOD (  10.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,10 +108,10 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hi Pingfan,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on bpf-next/net]
-[also build test ERROR on bpf/master arm64/for-next/core linus/master v6.16-rc7]
+[auto build test WARNING on bpf-next/net]
+[also build test WARNING on bpf/master arm64/for-next/core linus/master v6.16-rc7]
 [cannot apply to bpf-next/master next-20250722]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -132,36 +119,20 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/kexec_file-Make-kexec_image_load_default-global-visible/20250722-100843
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
-patch link:    https://lore.kernel.org/r/20250722020319.5837-9-piliu%40redhat.com
-patch subject: [PATCHv4 08/12] kexec: Factor out routine to find a symbol in ELF
-config: x86_64-buildonly-randconfig-006-20250722 (https://download.01.org/0day-ci/archive/20250723/202507230016.NQ1WXqwG-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250723/202507230016.NQ1WXqwG-lkp@intel.com/reproduce)
+patch link:    https://lore.kernel.org/r/20250722020319.5837-5-piliu%40redhat.com
+patch subject: [PATCHv4 04/12] bpf: Introduce decompressor kfunc
+config: arm-randconfig-004-20250723 (https://download.01.org/0day-ci/archive/20250723/202507230813.M1tmyREU-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 853c343b45b3e83cc5eeef5a52fc8cc9d8a09252)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250723/202507230813.M1tmyREU-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507230016.NQ1WXqwG-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507230813.M1tmyREU-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-   In file included from include/linux/crash_dump.h:5,
-                    from drivers/of/fdt.c:11:
->> include/linux/kexec.h:544:7: error: unknown type name 'Elf_Sym'
-     544 | const Elf_Sym *elf_find_symbol(const Elf_Ehdr *ehdr, const char *name);
-         |       ^~~~~~~
->> include/linux/kexec.h:544:38: error: unknown type name 'Elf_Ehdr'
-     544 | const Elf_Sym *elf_find_symbol(const Elf_Ehdr *ehdr, const char *name);
-         |                                      ^~~~~~~~
-
-
-vim +/Elf_Sym +544 include/linux/kexec.h
-
-   542	
-   543	#if defined(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY) || defined(CONFIG_KEXEC_PE_IMAGE)
- > 544	const Elf_Sym *elf_find_symbol(const Elf_Ehdr *ehdr, const char *name);
-   545	#endif
-   546	
+>> WARNING: modpost: vmlinux: section mismatch in reference: bpf_decompress+0xbc (section: .text.bpf_decompress) -> decompress_method (section: .init.text)
 
 -- 
 0-DAY CI Kernel Test Service
