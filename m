@@ -4,94 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C631C83F1A
-	for <kexec@archiver.kernel.org>; Wed, 23 Jul 2025 00:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95AB4C83F1A
+	for <kexec@archiver.kernel.org>; Thu, 24 Jul 2025 07:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=H/yVOebopCKz7Q2ng99Hh4CSN57XYcgYqrFuQZ+lEa4=; b=WOa3kSZi7Bnl8BcfPcdu29AJPV
-	hSYvcoPJwnUDgD4FN5BqZWlDERYhNKEvGFc9TbEuMqt3eAGhvftBxhXXSzUGw6mquYTh31VzfbKRz
-	0vMv1roHtR2tsjIW9Lgqvcu4dG6R5ghkqke63MqWd4hwLP/YgIDw19E0aAn3ubNshHUIOyHUUpLxs
-	3WNAd1yOphH543SVX7gDC3x6KDkzHHbAreTY5+nRfPoNhnDr+JN7Rwt9pPts2iwBOoqgiXh+NKR5j
-	9V3f/bXYnP2m6J07oSI9JLtQtS1VRLfUgdKfsPrbTla0rkbZf7pON+J00kTOIj50FZPYIIQlDG9FF
-	L3ND9tjw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=xlF8v6g+lJYY3msB+pknoZp2oNymxfRacCLdaKO7rFQ=; b=0Zc4gbdQ00iTg1vAR6uLcftzUR
+	d58HwN8lwI7KmhttO8ipJxNBpsgkE+LTEe8MkuUeWKL4lYHzlEUPQY2g2v8Wc4QayKLE0R5Zm2Cci
+	KGZLwIAf2F3zVVUz9NKeUPxGvzjuBCLbnmOp/nK5o84hhf68xz2/RsjobrOKYCnm6VRRxgs8HMoUN
+	y9w9xCP6OhRSfVxDJQPFfIsCXZVM7O6iUoaWdrOaNhpHYfABZqtfrrVHjxWbHCij6D8bfMxHNx7kt
+	YY/Cp2pbee/PhRl3BMK4z5ARsn7OCq6clX2I4AbpPmap0XEUj/1eHF7kTR++0mfQt7mOcceZO9brm
+	BflBTt5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueNbh-00000003jtf-3jTO;
-	Wed, 23 Jul 2025 00:45:17 +0000
-Received: from mgamail.intel.com ([198.175.65.19])
+	id 1ueqon-00000006lbh-0guK;
+	Thu, 24 Jul 2025 07:56:45 +0000
+Received: from mail.sellerix.pl ([217.61.97.239])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueNbe-00000003jsp-3HOV
+	id 1ueqVS-00000006j5o-0iRn
 	for kexec@lists.infradead.org;
-	Wed, 23 Jul 2025 00:45:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753231515; x=1784767515;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m426WV1lDKEaPLng1dxGfobPDwFUytLJjSu785UlQ7E=;
-  b=G5wgyuDqSaiUGMCwmYw6o7r+N16pyi6ipH4l1vo/zrQlIVc3VfvcgiMT
-   L2CNE60FEFeHw1+A4EzDff0f2pTM1+5WCpcFDGC/tF6ZpRIw5Q3+fKY+K
-   +1Fk8yVIO4Y/jiUMZLCmHE6ggSIcs329fEIdGTTv3JEAqRkRGHW5pY/aE
-   d30zx9c/7PYCWSGgJr16ZiqlxziAhmih59MwrIFQNcruOiaL1oGvzx3b2
-   4zDIyvubOTZM3j8ymd0z4mY0BGPYHLotY2wMHdk8knRYnemXp/vGi9hW+
-   fcH0U1uQzZCmQkZP0mIcoqHaoHNYQ3SgUYf8xq7kkkBcrp5ACNC/AUyC8
-   Q==;
-X-CSE-ConnectionGUID: Q5yTTSYoS4G5i39bzNzdig==
-X-CSE-MsgGUID: QlQbY23NTamdVLKDrofL/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55348825"
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="55348825"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 17:45:11 -0700
-X-CSE-ConnectionGUID: 706r2HHuRv625sILRACQ3Q==
-X-CSE-MsgGUID: Uv2GzgKdTpedaycps3ofeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="159038253"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 22 Jul 2025 17:45:04 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ueNbR-000IpT-1V;
-	Wed, 23 Jul 2025 00:45:01 +0000
-Date: Wed, 23 Jul 2025 08:44:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, bpf@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Pingfan Liu <piliu@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	kexec@lists.infradead.org, KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCHv4 04/12] bpf: Introduce decompressor kfunc
-Message-ID: <202507230813.M1tmyREU-lkp@intel.com>
-References: <20250722020319.5837-5-piliu@redhat.com>
+	Thu, 24 Jul 2025 07:36:47 +0000
+Received: by mail.sellerix.pl (Postfix, from userid 1002)
+	id 5D55D82F64; Thu, 24 Jul 2025 09:36:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sellerix.pl; s=mail;
+	t=1753342603; bh=xlF8v6g+lJYY3msB+pknoZp2oNymxfRacCLdaKO7rFQ=;
+	h=Date:From:To:Subject:From;
+	b=bPX9hiCIYMPL7mgQhVKYaekHCxL6MK29EVbzJMKZOv7E8uajHd5v8B4F7EshLu0Fm
+	 6a0DpiXivIfwuELRSs7+ybXO0WO3vO1J8ok5OSHw8EwQFNrRl96+PZEVxgSKLtjSsp
+	 WnEQ3Hjkw2VvJmExcn6+tGpQKv5kCxNH/wEGJK188aGQS4DooQw5IEEtX2fuOc+91T
+	 0yBcc66JHrTcWtsp+B9+wb3vrgX68R9SNm36RNC86t80Hw3NmfeupBKo05ZOsxOfKh
+	 RCJfv/3iz6DDlIRVc4Kruzzus29IYDbdgWU1G1O0D5ONPJ39S5T1VbTftnjm6wHDWp
+	 UsDHXVwf5eung==
+Received: by mail.sellerix.pl for <kexec@lists.infradead.org>; Thu, 24 Jul 2025 07:35:36 GMT
+Message-ID: <20250724084500-0.1.2x.h225.0.p3k9oasq6s@sellerix.pl>
+Date: Thu, 24 Jul 2025 07:35:36 GMT
+From: =?UTF-8?Q?"Rados=C5=82aw_Grabowski"?= <radoslaw.grabowski@sellerix.pl>
+To: <kexec@lists.infradead.org>
+Subject: Prezentacja 
+X-Mailer: mail.sellerix.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250722020319.5837-5-piliu@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250722_174514_895250_89D741C3 
-X-CRM114-Status: GOOD (  10.21  )
+X-CRM114-CacheID: sfid-20250724_003646_464885_800E790C 
+X-CRM114-Status: UNSURE (   0.53  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,35 +66,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+Dzie=C5=84 dobry!
 
-kernel test robot noticed the following build warnings:
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-[auto build test WARNING on bpf-next/net]
-[also build test WARNING on bpf/master arm64/for-next/core linus/master v6.16-rc7]
-[cannot apply to bpf-next/master next-20250722]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe umo=C5=BCliwia tworzenie =
+planu tras czy dostaw.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/kexec_file-Make-kexec_image_load_default-global-visible/20250722-100843
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
-patch link:    https://lore.kernel.org/r/20250722020319.5837-5-piliu%40redhat.com
-patch subject: [PATCHv4 04/12] bpf: Introduce decompressor kfunc
-config: arm-randconfig-004-20250723 (https://download.01.org/0day-ci/archive/20250723/202507230813.M1tmyREU-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 853c343b45b3e83cc5eeef5a52fc8cc9d8a09252)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250723/202507230813.M1tmyREU-lkp@intel.com/reproduce)
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507230813.M1tmyREU-lkp@intel.com/
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
->> WARNING: modpost: vmlinux: section mismatch in reference: bpf_decompress+0xbc (section: .text.bpf_decompress) -> decompress_method (section: .init.text)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Pozdrawiam
+Rados=C5=82aw Grabowski
 
