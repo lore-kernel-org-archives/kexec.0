@@ -4,57 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD729C87FD1
-	for <kexec@archiver.kernel.org>; Sat, 26 Jul 2025 08:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BE01C87FCC
+	for <kexec@archiver.kernel.org>; Sun, 27 Jul 2025 05:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
-	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1sAzsEOvW+OhZvMm5Zu/ODZB3aFKVogO7ESRBoesTkU=; b=TUVWt+LC3/zK8Ip+TO7t9F+vV9
-	TWKClumglZTi2dZFqBgfCmZ6qtJoIhqBIB1/o7A/gUfst03YfIgW9rv09NEwWTmyD3cLS7OEddLWC
-	i26WwERm48QVLruIy6P7fvcRVz8wJ3QPLBu8bpdN0Q//xuM9VJPgGSjsdSHCjuKSuA5kxqc1i6KZN
-	H3kPK8C3sppnNd1nVPvQ3RD7YYGXkXULnlViXQFWEG1I9wxuOfSUyDkbdOAS83SNNjxqn7PRa/QY7
-	SKj/Mgcf5lTjXuPrjoLOTfrfAq2Q0hkfuWLH3nA58HKYz6z5esLmYPjc2ukZzIZpAfiEdFvgNT7lY
-	zWtKslJQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Y4fzyMbg9b9tChn/1fYJ7NRuUNWKz/X0SkndoLYJL0g=; b=ibJs6J9K1Xcu96sANotAwXWIvR
+	xudaUksEw32DbuLUZRr6C/c9GUGz4V6CU/jxMxVf8WF3b7Zz8MYsblvOTwwNFGEIrl81iIfN5th+Y
+	IynxdR91vSZDOYXCjCX61IT8LRNtVjhaf+nYuB3ekkWfxb+UFNmm28/10x+7D3h42Fv5m/vBgt5Wb
+	pCh3rL12KAuIPPlwpAsCfXW5wCUnYyvEybOfLWAQlIpV8ULxREPh8FLLpJatcjwVptxnDLZWRU1DU
+	r6xynzspZNqUhvDgE1OIbsUiFu0QJ44U3fPL/eJ3/8JS+zkNzJnWwAH0Py9paWf6N7DhHQtUVCmVk
+	t6Fww4rA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ufabL-0000000BHYR-1Zx8;
-	Sat, 26 Jul 2025 08:49:55 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
+	id 1uftwE-0000000CLn1-1jcK;
+	Sun, 27 Jul 2025 05:28:46 +0000
+Received: from mail-pl1-x62a.google.com ([2607:f8b0:4864:20::62a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ufT0e-0000000Aygn-1pql;
-	Sat, 26 Jul 2025 00:43:33 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 31FE3A567D6;
-	Sat, 26 Jul 2025 00:43:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1170C4CEE7;
-	Sat, 26 Jul 2025 00:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753490610;
-	bh=FRa9xY4x5DiJRX0obptGEWaAk44wN8I8KzUTZYrUCjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kBaBfcy8cvOEOsPzmxHVilPiLtCGr+TDf8X/qOm2ye9g94waAiMThV6LQwkD5mGES
-	 PDjLL+F1jsLeU64wJNGH2USu78DXOVIauVdSn5Za3ug6EyGqMkDWY68qx6CO1Gpj84
-	 N2fKc/oxH+okv+yKP2JrlydnIbTVzpb6w9fxjXPvPbNQT1zbh2x+enrj7WanGNqURj
-	 oluIdS5LRKkHy5qC/5rWJa6TJsIQMsqWbSs6k1imrXOBgatcUYq26mfwhTEKJwXKN7
-	 wK8GX+boueI26+UPx4/MDOH6NBVBpUuOSwVrQlpds5FDuUw13v4g1+lMsu+qwH3eh6
-	 5w2Rudv02W7cA==
-Date: Fri, 25 Jul 2025 17:43:13 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v4 0/4] stackleak: Support Clang stack depth tracking
-Message-ID: <20250726004313.GA3650901@ax162>
-References: <20250724054419.it.405-kees@kernel.org>
+	id 1uftw9-0000000CLma-23BK
+	for kexec@lists.infradead.org;
+	Sun, 27 Jul 2025 05:28:42 +0000
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-235e389599fso157985ad.0
+        for <kexec@lists.infradead.org>; Sat, 26 Jul 2025 22:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753594120; x=1754198920; darn=lists.infradead.org;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y4fzyMbg9b9tChn/1fYJ7NRuUNWKz/X0SkndoLYJL0g=;
+        b=FKQVW3fXW/aX72PodgY/3QNfyGfVt2jqh6LqayQJXlzRf0iCyZXhxoXd6gDeTcg0wp
+         +1o36pP1UcpCHwrldvS8qZ/JP6x0JEOWg59YssRTQ7fUkLpe8lpQBBoi0wElPdLjCxU5
+         3RqgltYjo7kkTmLJ6buG2MqeL9Z29iLNEWIyHZrD3+OD3juE/UCw2ZiHEaglE1uceN+2
+         +Hgk/e0CSbz3w2xGcv4TOGCmOp0leiCSKY23PGaAQlIuqpO5H4QNvEDlpZmScX/Qvwtj
+         nr2lzYqoMqn94CdMIjBV9Gf2tgmO94ubhhE5XeyNk5khX1qT1YOogDl/9bROh1uiQdP9
+         3ieQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753594120; x=1754198920;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4fzyMbg9b9tChn/1fYJ7NRuUNWKz/X0SkndoLYJL0g=;
+        b=LWIwkstMNoijmupcunBST9Ii36MlM0bc5WBf92aTckDysmsInIdJaCxy+YjZ7WiNfd
+         X9p2PPeTjwsBDIJoDUIsh3A6gK4bzaQPDS2+EWUkBrG1nbxpA3jlZ65vZPWPUA6ard98
+         69SVw3cL6ae4H8ls1DVWjWIZHQ6QL72SWRVVMHnM0syxgH8ijiTIZe/O69g7qikX9EgD
+         zs3wfIf8AkYQG/T9WFfu1CHSCfqAkOLmPl2bY7cdEU1nKs3Sbq4RuF+kDJfJLHrflm5r
+         ZlgKDfe+JfJMWXvIJyPX1IHsi/AmxSKg8MIiI8mq0ZIvKZwyf22lWTCLgD993xTxz7bK
+         cnmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNxqwMkmg/Wkrikw3MgVIapdQY7xtVtkwlERmh10WnvN3TgId6t57Vco+/PwKwzdps9QOFvw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxfIfNJ7ueJH4mm6lzQ7loIglL+dor4inCgJLPYWbIgn7p1YTr6
+	vfE5WExPzRZsL/VBooyL5N45NpaoK7E1gRXrG7c/6UXZ4D4BZkhuhmdVg/PsiQCGig==
+X-Gm-Gg: ASbGncvThoosaFBK0v2ZG3/ifdnlEyNAAkgEyp+aj6FNWoet/Xbd7hb7C8wbeQ/60Zx
+	JGcYcYdnHzAMvNMo71dKbplkHm9S1EABuUaWCEtdmlV2+RdQ565DQWIIs7PKlMHHv7qWYG4zdgz
+	WcuJH4jF8RIHU4iRfeb9lhRN5jyvVBVvYiS1NtA88p+l8kwCfzMGTVmDAWD0GY04jFSQ4uVGTIS
+	ixadDT2TfRyN7tiqDM1k9qr2YToHukVBoX9/FA8v8O8pOwxfO3bnncLcfmrv4vi85EelOTvXCwX
+	WgRffpZCj94aCDSnICemrJS8NfdqjLms0DnJj/iKAumRSG7epbaFQDRT2SgHYIExzUQhnsjSDPv
+	Iq+eCIce+9cj2nJpy716XJSFkeNTv5MKu0V2utMEuYEQpV7fyI2Yg8hZv/D/AGmD2eF4gqKrVKl
+	52fIw1PbU0D9YJ/pwDEatzem96y0yfhefqfXE3DQ==
+X-Google-Smtp-Source: AGHT+IHnc6cUG06f6cNWo4opD7IJz7IhkPswhlCALVJIFBdHGdAJXNrJvZAaR9NFudPqT1pwJuP30g==
+X-Received: by 2002:a17:903:2441:b0:23f:f6f4:246 with SMTP id d9443c01a7336-23ff6f40326mr596465ad.19.1753594119390;
+        Sat, 26 Jul 2025 22:28:39 -0700 (PDT)
+Received: from [2a00:79e0:2eb0:8:364f:4373:b756:1458] ([2a00:79e0:2eb0:8:364f:4373:b756:1458])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7640b1e0318sm2827904b3a.93.2025.07.26.22.28.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Jul 2025 22:28:38 -0700 (PDT)
+Date: Sat, 26 Jul 2025 22:28:37 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Alexander Graf <graf@amazon.com>, 
+    Anthony Yznaga <anthony.yznaga@oracle.com>, 
+    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
+    David Matlack <dmatlack@google.com>, 
+    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
+    Jason Gunthorpe <jgg@nvidia.com>, Jork Loeser <jork.loeser@microsoft.com>, 
+    Junaid Shahid <junaids@google.com>, Mike Rapoport <rppt@kernel.org>, 
+    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
+    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+    Vishal Annapurve <vannapurve@google.com>, 
+    "Woodhouse, David" <dwmw@amazon.co.uk>
+cc: linux-mm@kvack.org, kexec@lists.infradead.org
+Subject: [Hypervisor Live Update] Notes from July 14, 2025
+Message-ID: <ff87b623-2e8f-2fd8-3db0-d592804e1466@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250724054419.it.405-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250725_174332_608105_7294EC02 
-X-CRM114-Status: GOOD (  16.68  )
-X-Mailman-Approved-At: Sat, 26 Jul 2025 01:49:53 -0700
+X-CRM114-CacheID: sfid-20250726_222841_549845_FDFBF531 
+X-CRM114-Status: GOOD (  28.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,136 +101,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: "Kirill A. Shutemov" <kas@kernel.org>, linux-efi@vger.kernel.org, Gavin Shan <gshan@redhat.com>, Jan Beulich <jbeulich@suse.com>, kvm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra \(Intel\)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, llvm@lists.linux.dev, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Usama Arif <usama.arif@bytedance.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Bill Wendling <morbo@google.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Oza Pawandeep <quic_poza@quicinc.com>, kasan-dev@googlegroups.com, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, linux-security-module@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Michal Wilczynski <michal.wilczynski@intel.com>, Baoquan He <bhe@redhat.com>, linux-trace-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org, James Morris <jmorris@namei.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Sami Tolvanen <samitolvanen@google.com>, Changyuan Lyu <changyuanl@google.com>, Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Len Brown <lenb@kernel.org>, platform-driver-x86@vger.kernel.org, Thomas Huth <thuth@redhat.com>, Alexander Graf <graf@amazon.com>, Arnd Bergmann <arnd@arndb.de>, Anshuman Khandual <anshuman.khandual@arm.com>, Brian Gerst <brgerst@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Bibo Mao <maobibo@loongson.cn>, Paul Moore <paul@paul-moore.com>, "Russell King \(Oracle\)" <rmk+kernel@armlinux.org.uk>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Andrey Konovalov <andreyknvl@gmail.com>, Juergen Gross <jgross@suse.com>, Nicolas Schier <nicolas.schier@linux.dev>, ibm-acpi-devel@lists.sourceforge.net, kexec@lists.infradead.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kbuild@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, James Morse <james.morse@arm.com>, Mike Rapoport <rppt@kernel.org>, Justin Stitt <justinstitt@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, "Serge E. Hallyn" <serge@hallyn.com>, linux-hardening@vger.kernel.org, David Woodhouse <dwmw@amazon.co.uk>, Hans de Goede <hansg@kernel.org>, Roger Pau Monne <roger.pau@citrix.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kees,
+Hi everybody,
 
-On Wed, Jul 23, 2025 at 10:50:24PM -0700, Kees Cook wrote:
->  v4:
->   - rebase on for-next/hardening tree (took subset of v3 patches)
->   - improve commit logs for x86 and arm64 changes (Mike, Will, Ard)
->  v3: https://lore.kernel.org/lkml/20250717231756.make.423-kees@kernel.org/
->  v2: https://lore.kernel.org/lkml/20250523043251.it.550-kees@kernel.org/
->  v1: https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
-> 
-> Hi,
-> 
-> These are the remaining changes needed to support Clang stack depth
-> tracking for kstack_erase (nee stackleak).
+Here are the notes from the last Hypervisor Live Update call that happened 
+on Monday, July 14.  Thanks to everybody who was involved!
 
-A few build issues that I see when building next-20250725, which seem
-related to this series.
+These notes are intended to bring people up to speed who could not attend 
+the call as well as keep the conversation going in between meetings.
 
-1. I see
+----->o-----
+Mike Rapoport discussed a proposal about sticky preservation with KHO.  A
+colleague had been working on integration with Microsoft Hyper-V (MSHV).
+They want to mark memory that is persistent forever so it is not necessary
+to mark pages as persistent for every kexec; this would continue until
+there was a request to stop persisting that memory.  An example is memfd
+to back guest memory where the layout of memory doesn't change much;
+another example might be PCI configuration.  This may be used for memory
+that is obtained from the HV but then not tracked anymore anywhere.
 
-  ld.lld: error: undefined symbol: __sanitizer_cov_stack_depth
-  >>> referenced by atags_to_fdt.c
-  >>>               arch/arm/boot/compressed/atags_to_fdt.o:(atags_to_fdt)
-  make[5]: *** [arch/arm/boot/compressed/Makefile:152: arch/arm/boot/compressed/vmlinux] Error 1
+Pasha Tatashin suggested that this would be another user for KHO and not
+part of LUO.  Mike suggested there may be states involved with this memory
+since you could eventually mark it as not sticky anymore.  Until this is
+marked as no longer sticky, it would be a permanently included fd.
 
-when building ARCH=arm allmodconfig on next-20250725. The following diff appears to cure that one.
+Jason Gunthorpe asked what we would get back on the other side of the
+kexec.  Pratyush Yadav noted that we can't change the size of this memory
+without more effort.  Jason suggested that MSHV would just use a KHO
+provider and preserve with LUO as normal because you need to track the
+memory.  We might schedule additional time to discuss this in a follow-up
+when joined by MSHV developers.
 
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index f9075edfd773..f6142946b162 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -9,7 +9,6 @@ OBJS		=
- 
- HEAD	= head.o
- OBJS	+= misc.o decompress.o
--CFLAGS_decompress.o += $(DISABLE_KSTACK_ERASE)
- ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
- OBJS	+= debug.o
- AFLAGS_head.o += -DDEBUG
-@@ -96,7 +95,7 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- 
- ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
- 	     -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
--	     -I$(obj)
-+	     -I$(obj) $(DISABLE_KSTACK_ERASE)
- ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
- asflags-y := -DZIMAGE
- 
---
+----->o-----
+We discussed current status of LUO.  Pasha at the time had sent out v1 of
+of the patch series (non RFC) and received some comments.  Current version
+should address any concerns from the RFC version and also includes memfd
+preservation from Pratyush.  There is an on-going discussion about using
+kexec fs instead of using tokens.  Jason suggested against using
+filesystems if at all possible.  Pasha noted this could be a future
+extension and does not need to be part of the core LUO.
 
-2. I see
+Mike noted there were two opinions being expressed: ioctls shouldn't be
+used and how much dev tmpfs differs from kernel filesystems.  Jason noted
+this is just a regular character device like hudnreds of other devices in
+the kernel.
 
-  kernel/kstack_erase.c:168:2: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    168 |         BUILD_BUG_ON(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE > KSTACK_ERASE_SEARCH_DEPTH);
-        |         ^
-  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-        |         ^
-  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-        |                                     ^
-  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
-    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-        |         ^
-  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
-    556 |         __compiletime_assert(condition, msg, prefix, suffix)
-        |         ^
-  include/linux/compiler_types.h:549:4: note: expanded from macro '__compiletime_assert'
-    549 |                         prefix ## suffix();                             \
-        |                         ^
-  <scratch space>:97:1: note: expanded from here
-     97 | __compiletime_assert_521
-        | ^
-  kernel/kstack_erase.c:168:2: note: '__compiletime_assert_521' declared here
-  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-        |         ^
-  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-        |                                     ^
-  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
-    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-        |         ^
-  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
-    556 |         __compiletime_assert(condition, msg, prefix, suffix)
-        |         ^
-  include/linux/compiler_types.h:546:26: note: expanded from macro '__compiletime_assert'
-    546 |                 __noreturn extern void prefix ## suffix(void)           \
-        |                                        ^
-  <scratch space>:96:1: note: expanded from here
-     96 | __compiletime_assert_521
-        | ^
-  kernel/kstack_erase.c:172:11: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    172 |         if (sp < current->lowest_stack &&
-        |                  ^
-  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
-     28 | #define current get_current()
-        |                 ^
-  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
-     20 | static __always_inline struct task_struct *get_current(void)
-        |                                            ^
-  kernel/kstack_erase.c:173:37: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    173 |             sp >= stackleak_task_low_bound(current)) {
-        |                                            ^
-  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
-     28 | #define current get_current()
-        |                 ^
-  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
-     20 | static __always_inline struct task_struct *get_current(void)
-        |                                            ^
+Pratyush brought up the previous conversation about handing out sessions
+so when serialization is done it is done per session.  The agent decides
+who gets access to these sessions.  David Matlack asked if the agent could
+hand out sessions to unprivileged processes and, if so, this would address
+concerns about all saved fds being sent to the agent and context stored in
+the agent's process before being sent out again.  There was general
+agreement on session fds; an open question remained about whether the fd
+passing would be done with sockets or bind mounts.
 
-when building ARCH=i386 allmodconfig.
+An example Jason provided would be to create a session through a file in
+a filesystem and then give that to qemu; qemu would then open it and do an
+ioctl on it and provide the kvmfd.  Pasha believed that it was very clean
+to do the policy through a userspace agent rather than in the kernel.
 
-3. I see
+----->o-----
+We transitioned to discussing the agent, liveupdated, which the group
+thought was going to be needed.  There was a desire to have both Christian
+and systemd people join the call, so I took the AI to reach out and see
+if they would be available.  I asked about where liveupdated would live,
+if this is something that would be shipped along with the kernel itself or
+whether this would be perhaps its own open source entity.
 
-  In file included from kernel/fork.c:96:
-  include/linux/kstack_erase.h:29:37: error: passing 'const struct task_struct *' to parameter of type 'struct task_struct *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-     29 |         return (unsigned long)end_of_stack(tsk) + sizeof(unsigned long);
-        |                                            ^~~
-  include/linux/sched/task_stack.h:56:63: note: passing argument to parameter 'p' here
-     56 | static inline unsigned long *end_of_stack(struct task_struct *p)
-        |                                                               ^
+Pratyush experimented with fdstore and was looking into whether a process
+could survive through the reboot call, or at least an fd survive through
+that call in systemd.  Pasha suggested there should be a way for the agent
+to survive until the reboot call if you modify the target to not kill the
+agent process.  He also suggested that while it may be attractive to have
+this as part of the systemd tree, it would be separated from that
+entirely.
 
-when building ARCH=loongarch allmodconfig, which does not support
-CONFIG_THREAD_INFO_IN_TASK it seems.
+----->o-----
+Chris Li gave a quick update on PCI preservation.  He said the current
+support allows for the PCI device to preserve its state across the kexec
+and allows for supporting DMA during reboot.  He suggested the inital
+patch series to modify the PCI interfaces to allow registration will be
+straightforward.  However, feedback and discussion will be needed for
+changing PCI initialization for device that already have state; these
+changes could be invasive.
 
-Cheers,
-Nathan
+----->o-----
+David Matlack shared that the live update microconference was accepted for
+LPC!  It now shows up for the CFP so people can submit talks for this[1].
+
+----->o-----
+Next meeting will be on Monday, July 28 at 8am PDT (UTC-7), everybody is
+welcome: https://meet.google.com/rjn-dmzu-hgq
+
+Topics for the next meeting:
+
+ - follow-up on sticky preservations with KHO, any additional insight
+   provided for MSHV use cases
+ - discuss any on-going pushback against character devices and suggestions
+   for using a filesystem instead of ioctls
+ - status update on the liveupdated agent, design, and timelines, as well
+   as open sourcing it and libluo in its own repository
+ - Frank van der Linden: physical pool allocator, used to provide memory
+   for hugetlb, guest_memfd, etc
+ - Chris Li: update on PCI preservation, registration, and initialization,
+   and the RFC patch series discussed in last meeting
+ - later: testing methodology to allow downstream consumers to qualify
+   that live update works from one version to another
+ - later: reducing blackout window during live update
+
+Please let me know if you'd like to propose additional topics for
+discussion, thank you!
+
+[1] https://lpc.events/event/19/contributions/2004/
 
