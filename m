@@ -4,102 +4,187 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8C15C87FD2
-	for <kexec@archiver.kernel.org>; Tue, 29 Jul 2025 13:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1411CC83F26
+	for <kexec@archiver.kernel.org>; Tue, 29 Jul 2025 18:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	Content-Transfer-Encoding:Content-Type:Subject:References:In-Reply-To:
-	Message-Id:To:From:Date:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=X+wUd71IzXC8c1
-	RWaveKQyucXHXwS439rXNSyOFppHXYv5o8mn5SRDqDAxnVpSYrlbJtnPLJ+SkC0LucNqkSdkT0QME
-	AeyuoKK1uQMRzlwzUYHuF2CbCmw6kgB5GUsmZchuKb/ZeYpNqajDAJr07Ih0OrdUG+ta8hdtPwcYZ
-	3V9ksWYv8MYGLFMX6XU2fvnIAF6dwSGXOoh++m2SverKWoO5GQPtygjWygoisEVfE6qA2wZUX78Ni
-	OxNHpCxWnwHisAnzBL/LB967g1xaHobGo1679yHEQxIs5qtqnO9VJSujxSotHdKcxpkZHDzLjLobG
-	cL/jpxfmUE36UnjKeBXQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=; b=lGgUrn5yp97pCru13meX0Yc354
+	QmWGucRk6+fI4suxfhSCSpz6oxxucqY4OinPHNAeaKrhvehGYcTkVkG8iLZCuKVtOtcP2uNwc2wmx
+	GwKSbzbLgHoawSmHOvYfHZYU+qLQcmwrY/bGvJH26Q6NVuXkyIFG1J3CIorRzNNdcmRBgelAWDw0j
+	WCjjspnC/mKUI2bWdIgp4ijdFb4kK5vc3QqO9O7MP1PVTtIYYxhIS6yVmGagFbvx+/hLQ2/kjzFCh
+	Xye3tG9nALCN6hJpA7wk2XKvr4kN5Vh47y929QEeIH7BAaPlEbucDYWSkXsEOOQ5OEMNNT3Ut9mCn
+	O1bm0SjA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ugjz3-0000000Gm7L-2Ceq;
-	Tue, 29 Jul 2025 13:03:09 +0000
-Received: from flow-b5-smtp.messagingengine.com ([202.12.124.140])
+	id 1ugoyt-0000000HRKB-0oZh;
+	Tue, 29 Jul 2025 18:23:19 +0000
+Received: from mx0a-00273201.pphosted.com ([208.84.65.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uggkR-0000000GPJW-3Cq8;
-	Tue, 29 Jul 2025 09:35:53 +0000
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 83C331302001;
-	Tue, 29 Jul 2025 05:35:49 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 29 Jul 2025 05:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1753781749;
-	 x=1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=
-	T0M0CDw90VbSLjna7vCcfe6mTMKCQ5endMYTmbm5F+kZuNuH4nc4BQuqm9/kFxYO
-	cQELYjIMlvNKw4lJ6TCvYDOi6/GwbiFcq8V1FL9vON4SMrAYZBHEMyr3TapvJ32Q
-	EuCcZwakLVvoMKIuhtNhw9MpoU1pIRLsrJBuKfw0mFvSH27q/GYmQZrzLEpJzswO
-	GdKXjvNgbHsWZp/zE+Lg+mEXxE3fEhCRBZiE76eszktahyeCSVZQu6/kPCC3i4ZU
-	uXu4AJQyuOJ4LmQeRHhGFlF5/SpiTMdgAiOzotcaAGdLwfh/H5w+q56btZTRpbJ7
-	8OFkhBqJ4bK5fdS1U8Lbrg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1753781749; x=
-	1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=b
-	uJJFSqRDP45vHQljpA7Vz5hxUd4Ye4pvXCFm5P+xUL3+GeSv2Jf9TQHBok2h5/y2
-	8/PZ9GxYgAgtcQpNwox5EnnRktB7wG3sB0/j0KvR/u0lZ+CnNXcE0cmlrZO+y5ZV
-	9yem6aXNjbvR7nkneYRaElOeon59Ocxqje2qLUNlkME5Sa7zPk4kjPv9pZqHNKNh
-	lJV3swLKBE9qqltK0HfW4aTL83MPWE1v/JKK8VeT/xPzY6Nnm7iNFa/W7BubAO9J
-	3ffb5NBK06Z9dokUuQl2fLD6FS2cFL30C4YYZiw2Iduv5cvgWcUOa8OL1iybrgXJ
-	mUVNSzzn8C2I/WoIb3d+g==
-X-ME-Sender: <xms:85WIaMyhieSSZlSTT0yHTn72mdFb2rWSE8kDBFOTHT75_XQsqr_aHQ>
-    <xme:85WIaARI_U36niK6nz84PWzTnfAtsvJXL8KAZzHI9PFLHL4DmUN20-ne2_bXTcjrC
-    kpOt2tuPjxukqMBaus>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdelgeejudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeftddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomh
-    dprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgt
-    ohhmpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnth
-    gvlhdrtghomhdprhgtphhtthhopehkvgigvggtsehlihhsthhsrdhinhhfrhgruggvrggu
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhn
-    uhigrdguvghvpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrd
-    hsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepmhgrohgsihgsoheslhhoohhn
-    ghhsohhnrdgtnhdprhgtphhtthhopehjmhhorhhrihhssehnrghmvghirdhorhhg
-X-ME-Proxy: <xmx:85WIaPnIcgaIATKBhxVWwK2-m2EfS8PuHbx7ehTzbZYYwEyhpGDr_A>
-    <xmx:85WIaBEA4xy-CXl_decDoAPBk3bbcRqPT4EvT8P_Ytm06SHygu9mPg>
-    <xmx:85WIaCzO8e92MmMJKlNqjd5utHh39rP5DKbEOnMvLMHZjHXDsuvHGQ>
-    <xmx:85WIaKabnqwzN2tmkaM4lt9r0XopNiElVkycoMHYr9aBhvYdocxU-w>
-    <xmx:9ZWIaNYEQ0icn8P3P-aCu5BQdrX6XDYXkrqNxknDiXSDJWuFBQyFgcIe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9F298700065; Tue, 29 Jul 2025 05:35:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	id 1ugoyq-0000000HRJH-03Ae
+	for kexec@lists.infradead.org;
+	Tue, 29 Jul 2025 18:23:17 +0000
+Received: from pps.filterd (m0108156.ppops.net [127.0.0.1])
+	by mx0a-00273201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56TGeea7029128;
+	Tue, 29 Jul 2025 11:22:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PPS1017; bh=2yUDeV39xzy8BlITii4kNhu3
+	rpEwWyfVcL/NG8iE5p4=; b=Scip9x+rvvZGc7qEd5QD6+Mu1faFKcetvfk3NJHo
+	FHnpte3Mo9481kv8PCGDxZocjL//zz5pMIXJFPQhE6z2Ot27sGdP0V7+meE0zdxI
+	gV7ue8IIsJKxzDCw2UWzM0fNixZlD2aI06imgBiYRQok78sODA1NYQDo6yBjdKdQ
+	IY0TG5Te6obj6Pr4sHddDJ0mbn5gezXgNbbE53sHw7RUE/evT9lAlZhaj14Eu3lX
+	KbN/ybXd26V3aSq6uteoPfmqb3geurMZd17hSaBL0HpLW61eomcfQYamMulpfbq1
+	/U5uibyESt97Wo0SJ9+AAmW0dAsp5EEK7CnSdPYSN9Ub9g==
+Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazon11023138.outbound.protection.outlook.com [40.93.196.138])
+	by mx0a-00273201.pphosted.com (PPS) with ESMTPS id 486vyvh39q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Jul 2025 11:22:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X3mNSnLGMkcIkYRctGfSVdA5g0mVYCcrMnYwDF7ukY+zpneiq2EWlYxCyvc9d//Nb9G5ymzzK9wKbAiZQ1UpAdTBchxDPIF4q38W1It3GirxIjiWfmDUgPA1iYNlXWPqME31ebD/FNMhDqDizSWypUhdC5ImUtOHuHMYUAFAB8x0+LGjxng1L4o5cmTUmlnTe7IukHf9X3BMbljhrdloPj7SS3kgfGhc6yGdGocaBblNzkBkixAPAhBT+0Il9riJrzJmsr0iROs0qmCqgzOzBylIYM6EREcuWY5X1Pj7s2F7kT8HTzXZqkSNIFi6c6ZwaCO1GHatm+DDNj4w7k7pkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=;
+ b=vqP5lfzC42RUwk80L45kZeR4FZK2g+yO0CXAg+0L09sAQEKYW74f9x02kP2r3dGu0dlYuIPe5VK511idoqzLFNb0C2Hl7a/bEm0g96a6Xm0VkKLrUJt3qCLtUjOj2EOrSqTK2tRyI4jQ6s+11/L7tOU5mgjMoA0lHmOztnzSp54H4ZH4bTh+2UuKukCqS+qJ35MpQ0E0GMraTATnEPBgIepUOZjHrewBn9SY6P23shatvWW1RGnJYVt2Tp4FS/mtiMqULeghqNK0sV2mKsvAtoTVBOd7SKFgGfgK1wMm56FSpHl+wgy8EfiPJHzbpLThzeWh7jPmo77+h09LznHbng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 66.129.239.15) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=juniper.net; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=juniper.net; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2yUDeV39xzy8BlITii4kNhu3rpEwWyfVcL/NG8iE5p4=;
+ b=Vua43W9Qoxw0HwKhlc8xEo7ASRa5t8HEpX1Pqr0nMdqcjFoN7ezuSxsSPZoY68zBsmM1WEzbWXxZvkBSvOeaI5+sSCVnCByZ9he0U/I0HUchFTwFVsPUK8knHf9pTtWKqP53ci4wWvUNX62Eaf854RPP81TzItxng71oYfMwQfw=
+Received: from SJ0PR03CA0363.namprd03.prod.outlook.com (2603:10b6:a03:3a1::8)
+ by CYXPR05MB10532.namprd05.prod.outlook.com (2603:10b6:930:d6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Tue, 29 Jul
+ 2025 18:22:27 +0000
+Received: from SJ1PEPF000026C9.namprd04.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::f1) by SJ0PR03CA0363.outlook.office365.com
+ (2603:10b6:a03:3a1::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.11 via Frontend Transport; Tue,
+ 29 Jul 2025 18:22:27 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 66.129.239.15) smtp.mailfrom=juniper.net; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=juniper.net;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ juniper.net discourages use of 66.129.239.15 as permitted sender)
+Received: from p-exchfe-eqx-02.jnpr.net (66.129.239.15) by
+ SJ1PEPF000026C9.mail.protection.outlook.com (10.167.244.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8989.10 via Frontend Transport; Tue, 29 Jul 2025 18:22:27 +0000
+Received: from p-exchbe-eqx-01.jnpr.net (10.104.9.14) by
+ p-exchfe-eqx-02.jnpr.net (10.104.9.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 29 Jul 2025 13:22:26 -0500
+Received: from p-exchbe-eqx-02.jnpr.net (10.104.9.15) by
+ p-exchbe-eqx-01.jnpr.net (10.104.9.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 29 Jul 2025 13:22:26 -0500
+Received: from p-mailhub01.juniper.net (10.104.20.6) by
+ p-exchbe-eqx-02.jnpr.net (10.104.9.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 29 Jul 2025 13:22:26 -0500
+Received: from buildcontainer.juniper.net (qnc-bas-srv120c.juniper.net [10.46.0.14])
+	by p-mailhub01.juniper.net (8.14.4/8.11.3) with ESMTP id 56TIMLsZ003853;
+	Tue, 29 Jul 2025 11:22:22 -0700
+	(envelope-from makb@juniper.net)
+From: Brian Mak <makb@juniper.net>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Rob Herring <robh@kernel.org>, Saravana Kannan
+	<saravanak@google.com>,
+        <x86@kernel.org>, <kexec@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Brian Mak <makb@juniper.net>
+Subject: [PATCH RESEND] x86/kexec: Carry forward the boot DTB on kexec
+Date: Tue, 29 Jul 2025 11:21:42 -0700
+Message-ID: <20250729182142.4875-1-makb@juniper.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-ThreadId: Tf1c1d2456aa020de
-Date: Tue, 29 Jul 2025 11:34:57 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>
-Message-Id: <f8bcf5ce-8b8b-4555-a210-14e1974eac92@app.fastmail.com>
-In-Reply-To: <20250724055029.3623499-2-kees@kernel.org>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250724055029.3623499-2-kees@kernel.org>
-Subject: Re: [PATCH v4 2/4] x86: Handle KCOV __init vs inline mismatches
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C9:EE_|CYXPR05MB10532:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a4dc903-6684-47e7-c559-08ddceccdf4d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vvlJZGRa3USub/X6v9Cx+w9zgvpMRKvvn3XmmWu9xLP6hs+E6NCVQetrMtlS?=
+ =?us-ascii?Q?pJiCR4EdwjXcyJYwId9vlePaYOJ+Z/p9fROH5CXbzD1cFjmomzLmkU/3dtut?=
+ =?us-ascii?Q?NKpuHDwZFUDpE7LN0u2Hq1VOa5KYFi+LGSXapHYT4f1A2Sv3y7MYHbsTGGNu?=
+ =?us-ascii?Q?imwioWYIPLEr7BDkbKTlY8pkeq2sEcPuJ8k04i8zs9YsGm9B6+7Mgs7Rujhd?=
+ =?us-ascii?Q?wYquFCeKrfWyxlLVmRhK+rP8/xQXB/LfOk+YqYg227z9jhTdZHHgsjYSy3qY?=
+ =?us-ascii?Q?EGybw9UXB4WLgKC0Aj/amGNdHaT6jiWZ7qTWGMZlidJs4VrnAG02zOWJYSYZ?=
+ =?us-ascii?Q?UykaPGDwlvTA9Ofkv4apsbuW0LUi2Dwr4KERJMVbcektSDlMln1pTNinqGn3?=
+ =?us-ascii?Q?xgyjtSshwWGVI0l1gL7XzOKpwsvtJpAOifQ8klGp5fFelQjgltSHkkPt7NaO?=
+ =?us-ascii?Q?AG3tQgpGPZr5OzIsMyk0pWotd6BBk8+P0KDhf9xWrBQBVJR8rzaSnGOnfX19?=
+ =?us-ascii?Q?DQPaCMsB8KyaKpubjTkzmfNt8WdE/BAnILQn1EzCnUahqJgkdXJY8htaGanh?=
+ =?us-ascii?Q?S603HzUKVZtjGpFqI7yh3e707J5SQeY5WvWWw7w1osQPUeoMt7XYvG2j1jDZ?=
+ =?us-ascii?Q?XWwRbIGnqdXOTcrifZQbM8tjCOE65ObxaLtPrf4IsQHunjS63bFPYouGySGb?=
+ =?us-ascii?Q?//FZ9Azg2O0YfjrLBjFFpUFZNS8GxFECnh04xbduFQUhy6zlgnPe+bJHbSMu?=
+ =?us-ascii?Q?qJtgySTSO9DuCSNfH4Lomi2dNkipgWj8HSe53r7aOy9naemcjpMj9/mqxlNL?=
+ =?us-ascii?Q?FnybjXBEg9u+5Ew/P2bl1mS8vfWUwlU+ao1SmnBZJGsd0HrwCup1rCCt+oOT?=
+ =?us-ascii?Q?VZ3Xp5d4TJaF2qzF6qqo8xKenghtv6UWpOByV7vrTJfXFSf9slb0MpUymAP0?=
+ =?us-ascii?Q?2tJTFX6PRXF/Hf4Q03BZN2AwLbmYnJqgCyMRopcahWXY4AH2jRIslOqVxTqn?=
+ =?us-ascii?Q?E6vgHlAWcO+Kx2AESsCQ8m+1QqZs694uH6M5Pl000+LNq3J9FON4qFbYM7pI?=
+ =?us-ascii?Q?hk6/U8AyMbG95vsQAJdgFFCECKORA01VFdO2oxa/H7pn++8H3oAKD90imlNK?=
+ =?us-ascii?Q?/IhzFFsBp0owsp/iXarQNK7MowaDls71fNQI4f3NBR+PdbQfVANckRTejjDc?=
+ =?us-ascii?Q?5r7gMDvt++zowlJdRWjXpWLF159oK4uucYhfboUlOceyf0JBeZJ6Qe1MpT3m?=
+ =?us-ascii?Q?fkTc/bl6elT9py/bpML8g4n/2pEBNGIHNiGVPqKA+bwVZ0aMYSCN+0kQNrOU?=
+ =?us-ascii?Q?CMBfsyxO63ldMZtp/seWRtUeVO2y6wCqX//ctW/tJ1UCb9Mwpf+UBr9Kukvn?=
+ =?us-ascii?Q?ui/KdbYgItzguBFg4/uRcN39MpUw5tJRXJwYB+76BW2CsgfkdqBFx+32Ae+a?=
+ =?us-ascii?Q?yJiO9INPz0XC3mVuaFkxEstC2n/wVJLPpX6bYVe18h96jrNGQm/YbErc20hw?=
+ =?us-ascii?Q?XX8zrhdUTYLhpLvshf/d24pEqUUbhNIf0aEBhhdOx+jf+DsKDSpM1nMpSw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report: CIP:66.129.239.15;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:p-exchfe-eqx-02.jnpr.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1102;
+X-OriginatorOrg: juniper.net
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 18:22:27.1397
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a4dc903-6684-47e7-c559-08ddceccdf4d
+X-MS-Exchange-CrossTenant-Id: bea78b3c-4cdb-4130-854a-1d193232e5f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bea78b3c-4cdb-4130-854a-1d193232e5f4;Ip=[66.129.239.15];Helo=[p-exchfe-eqx-02.jnpr.net]
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PEPF000026C9.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR05MB10532
+X-Proofpoint-GUID: wWjZcQLTSaE3WjeNO8xer8ViXoWOxIY8
+X-Authority-Analysis: v=2.4 cv=MPNgmNZl c=1 sm=1 tr=0 ts=68891165 cx=c_pps
+ a=LTDvKTvnmzKa6KpkIGqB2A==:117 a=YQU41r7WENJiSYrYYNJVsQ==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=h8e1o3o8w34MuCiiGQrqVE4VwXA=:19
+ a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=Wb1JkmetP80A:10 a=s63m1ICgrNkA:10 a=rhJc5-LppCAA:10 a=OUXY8nFuAAAA:8
+ a=7_5vobUxZMcRO-ldgD8A:9 a=cAcMbU7R10T-QSRYIcO_:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDE0MCBTYWx0ZWRfX00eF6R8z2OAR
+ K2CadauXV9VN4xffsvGIeObhnKh9muS6MfrGj2DeEbfcCrwVmCU92AZ2EYyrHaVPle9dxugX0mu
+ 7S5rSUgJhSw5vzmzv25NLfs9Pct63LWLiofYRduW424y+y4mXL2A/L4To4c0MtyBW+UTKZj8fqX
+ U75kG8yUzSUlTQyP/DuTB6nE58VC6daQKWIA3l7RNFm2dhJ/SKZeKGsO8bu94PqVAhNthipLbgm
+ KuA2D5LtpjskGOHjA1BCilt0ak8nv7VKKq1TpeNmTL4nW286FvMuJKKF4ch41i6T244sEEK+HxU
+ JJiFz77ZI/yQMwCXTkR8fCGBo1hV3nmQC0+3PUsFVYYB0/XaGry/d2I3OzD9ja5PN+E5L1khfYc
+ I6OL2aT3ZbN0L0v3socWFtn/Lo7RBCLfemQRWRXvcjMEMM6s/sEDQsYY+RnXZAlsxOYBgD2g
+X-Proofpoint-ORIG-GUID: wWjZcQLTSaE3WjeNO8xer8ViXoWOxIY8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-29_03,2025-07-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
+ score=0 impostorscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
+ mlxscore=0 phishscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507290140
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250729_023552_471178_C8197E3C 
-X-CRM114-Status: GOOD (  20.27  )
-X-Mailman-Approved-At: Tue, 29 Jul 2025 06:03:04 -0700
+X-CRM114-CacheID: sfid-20250729_112316_060550_214357EC 
+X-CRM114-Status: GOOD (  20.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,110 +196,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: "Kirill A. Shutemov" <kas@kernel.org>, linux-efi@vger.kernel.org, Gavin Shan <gshan@redhat.com>, Jan Beulich <jbeulich@suse.com>, kvm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, llvm@lists.linux.dev, linux-trace-kernel@vger.kernel.org, Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Usama Arif <usama.arif@bytedance.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Bill Wendling <morbo@google.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "H. Peter Anvin" <hpa@zytor.com>, kasan-dev@googlegroups.com, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, linux-security-module@vger.kernel.org, Michal Wilczynski <michal.wilczynski@intel.com>, Baoquan He <bhe@redhat.com>, Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org, James Morris <jmorris@namei.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Oza Pawandeep <quic_poza@quicinc.com>, Sami Tolvanen <samitolvanen@google.com>, Changyuan Lyu <changyuanl@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Thomas Huth <thuth@redhat.com>, Alexander Graf <graf@amazon.com>, "Paul E. McKenney" <paulmck@kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, linux-kbuild@vger.kernel.org, Brian Gerst <brgerst@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Marco Elver <elver@google.com>, Bibo Mao <maobibo@loongson.cn>, Nathan Chancellor <nathan@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Russell King <rmk+kernel@armlinux.org.uk>, Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, Andy Lutomirski <luto@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Andrey Konovalov <andreyknvl@gmail.com>, Juergen Gross <jgross@suse.com>, "Serge E. Hallyn" <serge@hallyn.com>, Nicolas Schier <nicolas.schier@linux.dev>, Paul Moore <paul@paul-moore.com>, ibm-acpi-devel@lists.sourceforge.net, kexec@lists.infradead.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, James Morse <james.morse@arm.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Justin Stitt <justinstitt@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Len Brown <lenb@kernel.org>, linux-hardening@vger.kernel.org, David Woodhouse <dwmw@amazon.co.uk>, Roger Pau Monne <roger.pau@citrix.com>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 24, 2025, at 07:50, Kees Cook wrote:
-> GCC appears to have kind of fragile inlining heuristics, in the
-> sense that it can change whether or not it inlines something based on
-> optimizations. It looks like the kcov instrumentation being added (or in
-> this case, removed) from a function changes the optimization results,
-> and some functions marked "inline" are _not_ inlined. In that case,
-> we end up with __init code calling a function not marked __init, and we
-> get the build warnings I'm trying to eliminate in the coming patch that
-> adds __no_sanitize_coverage to __init functions:
->
-> WARNING: modpost: vmlinux: section mismatch in reference: xbc_exit+0x8 
-> (section: .text.unlikely) -> _xbc_exit (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> real_mode_size_needed+0x15 (section: .text.unlikely) -> 
-> real_mode_blob_end (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> __set_percpu_decrypted+0x16 (section: .text.unlikely) -> 
-> early_set_memory_decrypted (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> memblock_alloc_from+0x26 (section: .text.unlikely) -> 
-> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_set_root_pointer+0xc (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_get_root_pointer+0x8 (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> efi_config_table_is_usable+0x16 (section: .text.unlikely) -> 
-> xen_efi_config_table_is_usable (section: .init.text)
->
-> This problem is somewhat fragile (though using either __always_inline
-> or __init will deterministically solve it), but we've tripped over
-> this before with GCC and the solution has usually been to just use
-> __always_inline and move on.
->
-> For x86 this means forcing several functions to be inline with
-> __always_inline.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+The kexec_file_load syscall on x86 currently does not support passing
+a device tree blob to the new kernel.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+To add support for this, we copy the behavior of ARM64 and PowerPC and
+copy the current boot's device tree blob for use in the new kernel. We
+do this on x86 by passing the device tree blob as a setup_data entry in
+accordance with the x86 boot protocol.
 
-In my randconfig tests, I got these ones as well:
+Signed-off-by: Brian Mak <makb@juniper.net>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 46 +++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
-WARNING: modpost: vmlinux: section mismatch in reference: early_page_ext_enabled+0x14 (section: .text.unlikely) -> early_
-page_ext (section: .init.data)
-x86_64-linux-ld: lm75.c:(.text+0xd25): undefined reference to `i3c_device_do_priv_xfers'
-
-And one more with a private patch of mine.
-
-These are the fixups that make it build for arm/arm64/x86
-randconfigs for me, so you could fold them as well in
-as well. I have already sent the i3c patch for upstream
-but not the page_ext.h patch.
-
---- a/include/linux/page_ext.h
-+++ b/include/linux/page_ext.h
-@@ -57,7 +57,7 @@ extern bool early_page_ext;
- extern unsigned long page_ext_size;
- extern void pgdat_page_ext_init(struct pglist_data *pgdat);
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 24a41f0e0cf1..c24536c25f98 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -16,6 +16,8 @@
+ #include <linux/kexec.h>
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
++#include <linux/libfdt.h>
++#include <linux/of_fdt.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
  
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return early_page_ext;
+@@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
  }
-@@ -189,7 +189,7 @@ static inline struct page_ext *page_ext_iter_get(const struct page_ext_iter *ite
- #else /* !CONFIG_PAGE_EXTENSION */
- struct page_ext;
+ #endif /* CONFIG_EFI */
  
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return false;
++#ifdef CONFIG_OF_FLATTREE
++static void setup_dtb(struct boot_params *params,
++		      unsigned long params_load_addr,
++		      unsigned int dtb_setup_data_offset)
++{
++	struct setup_data *sd = (void *)params + dtb_setup_data_offset;
++	unsigned long setup_data_phys, dtb_len;
++
++	dtb_len = fdt_totalsize(initial_boot_params);
++	sd->type = SETUP_DTB;
++	sd->len = dtb_len;
++
++	/* Carry over current boot DTB with setup_data */
++	memcpy(sd->data, initial_boot_params, dtb_len);
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + dtb_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++}
++#endif /* CONFIG_OF_FLATTREE */
++
+ static void
+ setup_ima_state(const struct kimage *image, struct boot_params *params,
+ 		unsigned long params_load_addr,
+@@ -336,6 +360,16 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 			sizeof(struct efi_setup_data);
+ #endif
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (initial_boot_params) {
++		setup_dtb(params, params_load_addr, setup_data_offset);
++		setup_data_offset += sizeof(struct setup_data) +
++				     fdt_totalsize(initial_boot_params);
++	} else {
++		pr_info("No DTB\n");
++	}
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
+ 		/* Setup IMA log buffer state */
+ 		setup_ima_state(image, params, params_load_addr,
+@@ -529,6 +563,12 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 				sizeof(struct setup_data) +
+ 				RNG_SEED_LENGTH;
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (initial_boot_params)
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      fdt_totalsize(initial_boot_params);
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC))
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct ima_setup_data);
+@@ -537,7 +577,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct kho_data);
+ 
+-	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
++	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+ 	efi_map_offset = params_cmdline_sz;
+@@ -647,7 +687,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	return ldata;
+ 
+ out_free_params:
+-	kfree(params);
++	kvfree(params);
+ 	return ERR_PTR(ret);
  }
---- a/include/linux/i3c/device.h
-+++ b/include/linux/i3c/device.h
-@@ -245,7 +245,7 @@ void i3c_driver_unregister(struct i3c_driver *drv);
-  *
-  * Return: 0 if both registrations succeeds, a negative error code otherwise.
-  */
--static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-+static __always_inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-                                          struct i2c_driver *i2cdrv)
- {
-        int ret;
-@@ -270,7 +270,7 @@ static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-  * Note that when CONFIG_I3C is not enabled, this function only unregisters the
-  * @i2cdrv.
-  */
--static inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-+static __always_inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-                                             struct i2c_driver *i2cdrv)
- {
-        if (IS_ENABLED(CONFIG_I3C))
+ 
+@@ -659,7 +699,7 @@ static int bzImage64_cleanup(void *loader_data)
+ 	if (!ldata)
+ 		return 0;
+ 
+-	kfree(ldata->bootparams_buf);
++	kvfree(ldata->bootparams_buf);
+ 	ldata->bootparams_buf = NULL;
+ 
+ 	return 0;
 
-As I understand, the underlying problem is less gcc inlining
-being fragile, but more that gcc does not inline functions
-when they have different __no_sanitize_coverage attributes.
+base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
+-- 
+2.25.1
 
-      Arnd
 
