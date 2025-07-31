@@ -4,197 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5AB9C83F26
-	for <kexec@archiver.kernel.org>; Wed, 30 Jul 2025 17:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 328B1C87FD8
+	for <kexec@archiver.kernel.org>; Thu, 31 Jul 2025 09:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vGSbp1RAaiUTW5E3xBI2HKkhmUN1VrB/8UZoYfEGmOw=; b=3Z+0gNxCVkJvSOsbcf5qItN1OS
-	iWp44nim+/RHWZcYpeEqEhCkYmIBCSw0Rjs+85hVFq3ugcqznlkQ2s+UHRbVjaumL2HcOq9isuMvn
-	p0tU5AcDPgs1hiw6XtfSGT6BhG+QDJVGeccP0CnYfs2C3nzkuyWvavtOmnLzYRggw22LBtTaLnKvs
-	853Qm0QtT9BdmuPCvtTfVSCDHOC0T0ku+kapiTwzrNmhG6AHwuBbAUuB3Yvhx3Nbt7/Gc3DweDIYE
-	zTLfAbQPSG+Nt57D0Lo6eVoy41O3kZ8EkAwpt5oStBt18CCeQHgZ6sbJ7yR+RTBjF2CiOKnVCn9a/
-	vpb90aWQ==;
+	bh=ibTg+SRgN11l3CBDii5Rlz1jYBOrGbR0x6FnQRT7AjU=; b=vbTztcfwfa/sW6d0hT7cStuDcA
+	3OUzVrvcVvJG7l1dlzPfQEQC63G1ZVjlTIFbrDKS8/d4aig1WAbCWk1IF3zV5pClmEsP8mT16b7IH
+	spQitUTkkiHFuWkubsVA4gp9RjuQWBE3rXv3sZOB3uD59uM5ctWHyADau/BRpoSJT822lrTgHJWPN
+	eIABwWytKnm0kxIQQolYBkbcl0anIbEqow+O2TgJeq1ovbDnw3EsnmQz2r9mxUN0AA7yrI6K9HUM2
+	hbU2pHplypmtw27cFaZ5rbXe6Vskv2zZbbto4+vDjmfidUDkFESm0Pf4T3Dp6k/qhourrDZFVLbJA
+	coWcuaKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uhAD2-000000023ca-11Yf;
-	Wed, 30 Jul 2025 17:03:20 +0000
-Received: from mx0a-00273201.pphosted.com ([208.84.65.16])
+	id 1uhPdK-00000003HRf-1gds;
+	Thu, 31 Jul 2025 09:31:30 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uhACI-000000023UC-0LId
+	id 1uhPb3-00000003H48-0TPt
 	for kexec@lists.infradead.org;
-	Wed, 30 Jul 2025 17:02:35 +0000
-Received: from pps.filterd (m0108156.ppops.net [127.0.0.1])
-	by mx0a-00273201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56UEK5BH025278;
-	Wed, 30 Jul 2025 10:02:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
-	cc:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS1017; bh=vGSbp1RAaiUTW5E3xBI2HKkhmUN1VrB/8UZoYfEGmOw=; b=HGcN
-	DAY+5RFEBqWnye/yJOggPmmI3cgEeG8p9mbdBf89pc70LMAOomerCKxkV669N0vd
-	EBTykKdykehTKvK7GbCGtS735LyDaWzGRtOsuugPKHm8CgNuE7XH9/56K7Gt0zq+
-	a1/H3pyzjF111wB0MbQRiN5bAm/uZvRbVh1plkFNzawpOcJzMVYqm0/pINhjpDDF
-	7RaO0Rd/nvyc2jq/YadI+noeoyuEZ3XSfyyraSZF+gnBeSpXBcYW+RA6tJ4lfKER
-	Us2qXroi5/a11jdJtPTJm5aBVE3HMfnxVmdNr14WH9+5olGESwCj+LKnPWKH/r0b
-	Ml1aZ+DnYNUlLI8eog==
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11020117.outbound.protection.outlook.com [52.101.56.117])
-	by mx0a-00273201.pphosted.com (PPS) with ESMTPS id 487jreguk2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Jul 2025 10:02:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LpCQFQYeGjra97EnFXWt2EK1Y1AnZBHE1ZkfNdEt0uWp9gWJYODVdAbGaiFRImqZa+i+2JWgHGYRfe7oMUfJ7yG71ldXglk3KEvFWKV6+o1Neo+EFA5ODGguEyLEWCoZ2QwRlwSqcLVO/4spYCHDGvawSgQE3KCMgFa+EVSgNOfua/7SfWda1dW4ir8ye92OedJb9QVLHUA9gLnVLPImVxi2vau+FxC3i7O8meiQ39SAkXpsubpcREpq59WoeuQ4aG3YGSpKKoMMC9OX6KgOdXBaLTteDyHUNFtRt/+q0T45fpGI5SbIFhXaGsj3eiEhfZw4BDNOaikUHwdrnP7B4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vGSbp1RAaiUTW5E3xBI2HKkhmUN1VrB/8UZoYfEGmOw=;
- b=a0VBbZdcrlpSjqdFhvQ4XWo0TIqivLEoX+09ISEXuErFLUky9wGEz3Y/QEQFJvgzxFnk7w2F5CdpbJhB4LanB/rjQ2A6/qDBI/zBuXhv+qhFALkvUCviD2Eiwgn4wtMNCm06Z7jUFdcnW/wamfhN04J+usvB1RIxmS41DQT2/NKhIceZa/YzHNDh8hexsLh20mZrcMagfbP5u35gAN5i4RVogXObtH7BVFQcssXirsRGZGWNccccZaKqIvOcAb6lOFUDTBnszT83j5rSEhUpPJIWpFtxM7y/lyEM7aNT94mbkiHNDQyFJDKfLAaNVSdfgFYIGyTzEEbSGtDKToQRNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=juniper.net; dmarc=pass action=none header.from=juniper.net;
- dkim=pass header.d=juniper.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vGSbp1RAaiUTW5E3xBI2HKkhmUN1VrB/8UZoYfEGmOw=;
- b=MomZ1WM5GSoLOrfjmvtN0EWrSvQknIxpThuh9yQtU20ydx3q/Oa2SZewPU/fzErCI/LVgKPm03jtxMeAcUaI6oFw25OAElL3hCkpEUUZdXXBA+s9MuvlNZshJHUGyQ+LnJXBSHbAruWgnMOUMQx2yrGh/q/Y1MC485Q8vrT5sY0=
-Received: from DS7PR05MB7288.namprd05.prod.outlook.com (2603:10b6:5:2cf::10)
- by PH0PR05MB8105.namprd05.prod.outlook.com (2603:10b6:510:95::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.12; Wed, 30 Jul
- 2025 17:02:08 +0000
-Received: from DS7PR05MB7288.namprd05.prod.outlook.com
- ([fe80::d1a4:ed92:eb4d:8b24]) by DS7PR05MB7288.namprd05.prod.outlook.com
- ([fe80::d1a4:ed92:eb4d:8b24%4]) with mapi id 15.20.8989.010; Wed, 30 Jul 2025
- 17:02:08 +0000
-From: Brian Mak <makb@juniper.net>
-To: Dave Young <dyoung@redhat.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Rob Herring <robh@kernel.org>, Saravana Kannan
-	<saravanak@google.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND] x86/kexec: Carry forward the boot DTB on kexec
-Thread-Topic: [PATCH RESEND] x86/kexec: Carry forward the boot DTB on kexec
-Thread-Index: AQHcALW+ZQjjgT9X7kW+00L4/dZ7pbRKRqWAgACfQIA=
-Date: Wed, 30 Jul 2025 17:02:08 +0000
-Message-ID: <14D2606C-3492-4A32-A55D-428F1ADA9327@juniper.net>
-References: <20250729182142.4875-1-makb@juniper.net>
- <aInKb8qr689ytM41@darkstar.users.ipa.redhat.com>
-In-Reply-To: <aInKb8qr689ytM41@darkstar.users.ipa.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR05MB7288:EE_|PH0PR05MB8105:EE_
-x-ms-office365-filtering-correlation-id: 9998f622-426d-458e-6383-08ddcf8ad15b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?UkBrQB9daz+08avJ1Nqhbe0fyHxM8UYknX+ttlga9VoZJcq+jYwHKgLamdeR?=
- =?us-ascii?Q?fVYM0P0OdlYbBryCNz46jRSNR1QDihMEROgKaGpOrfOJAjuQv3ZasmUQCEAp?=
- =?us-ascii?Q?yKrIIy0S+wgaCdx0rrjvobR5MZisvGpXQxToF34c94G6efKIMOfQ8zTzdBTG?=
- =?us-ascii?Q?F8C53zhplV1a23cy8b/FUKjyT7kzlS1yAz2X9ThtnB8lulNRyffLSdPFFkxL?=
- =?us-ascii?Q?tOKJwRAe17ITpfwpV4+JzzbrLKszNA0Ubj9dAZrhuE4PiF9yuFuysS9hr43X?=
- =?us-ascii?Q?PO03F7gkKWvz4pxUirZn4xR+FpsDqVMEP49q8DunV7kV7uzqXlLsq/+9vkVm?=
- =?us-ascii?Q?Imxt+mRW83ijwQqdECeqQT8Zx3Ijm9hP/tmj3vonekMnmx8FNwLCCVSXvRKU?=
- =?us-ascii?Q?sJZ3FbFEZvp2KPlDrRXBxdOBA8Y41l1fvMaEwLePZ4ilRE7CaH7raxI6Wwka?=
- =?us-ascii?Q?T58OzmArALM7hPMWy6zy0RC8lc6n9WAir1Hu7lvIf/rpGexzzeHs5pGNqGcn?=
- =?us-ascii?Q?SfahT83YdOMlFbcG7lCI/uIbhw562s/sFurXSxnDpb0fqJz5pqcCvwCgkwO0?=
- =?us-ascii?Q?DN3L4zFV1RcEPhJRH96wguH0cni47e++MkxNs16PzQG4rZNRKbZo9/TMGINt?=
- =?us-ascii?Q?pDAnpPSfs0F3GFvwOGIOD82Xn5w4HaNn86EDJGd+vIMc3aL703Bx7zCR7Qh6?=
- =?us-ascii?Q?NW6TaKKaiTmbvQTQjIyuvyksh7IydTPVmYufyZKlH1k3xc3LZ0mJbRMQDaD5?=
- =?us-ascii?Q?SJwbMtDaQXfYHWmGvHIrTzCP9l73HQf9Cjy4Q1eJA04N04VBcqZNncARf5ku?=
- =?us-ascii?Q?yowVFR1+UHjRniWXTgIkUq+pk9aSJeAcONiaHUN7OJwf8jy6z77bDlBubG2x?=
- =?us-ascii?Q?/61D56MBCXSqCDoq4/MUm1zs+bCFKy7CLDMWHHi105SxBEUfBxYjHA6lc9o/?=
- =?us-ascii?Q?bYxZI/Hc/5itCoCcEKPHIlHFHk09VM99oK8HKN/tRtQBDNcoOFv3XYKKCn9r?=
- =?us-ascii?Q?ngvCJhxI7QLPyF2iiFSf6/EoOAVkXdYXgiUiU2u4KB57pV8GIKxz86gZPQP+?=
- =?us-ascii?Q?H1I4Pfjc9JCQXvxhYPtAf0nQBIxe0KWr6RR1eo6lxLdrQeRsf4VxwdmkF9CZ?=
- =?us-ascii?Q?rt8/P4beDMachbz1UkSzsfDxSdIji3XFDy0VK9qzQzJbUjJuTVg0czacg4vI?=
- =?us-ascii?Q?l8f9Q8V+s6FZ9V+asKHtvNWONedOa/e8PbFcobqzc5/skzxUP5bp3tEobnVM?=
- =?us-ascii?Q?ZUfDHvlUFHnE13HB7ykNx2sV9j2csSiYl3zZ92XL7ezRGaOaHzZ2t4dKEgok?=
- =?us-ascii?Q?1QDTnGtWCTElEQeJcSbnoLhfQDR4e9OcrNAOG+4RmtFJ+VqNoVoJz8gHoT9s?=
- =?us-ascii?Q?WkBK8+kymeIdrhxJWpXU8X6L9yx/6F1fIGxn2Pzzazhx85FEjgYkOenzM2Xm?=
- =?us-ascii?Q?WIelyHn0wTMS6r5lz2vUQxUB7d6YCiMW4UVTB+dMlUYy2FkgQpwgEg=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR05MB7288.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/vtA6cC+fXmFlOdFjEEhUFNfzLt7gAwDhZ68HogRKdIfYBKKxT8w8npZoR+v?=
- =?us-ascii?Q?IIjEoLV9jKZJUBz2di8Gbve8ueY+z12Lks/bHfELxa5Cyi0uQF2vNGy5CHgh?=
- =?us-ascii?Q?kbNqFyLLkrzrSd7dJfKmGk3StEeqblcxTsnFj9gu3iLRYCaTtuz5yqyCPW4S?=
- =?us-ascii?Q?vOLvfUXtDAJx5BbeHDpsh3pxiB2ADilkBK/ivGUPuI9MaAx4c3xms/rHF91s?=
- =?us-ascii?Q?MR3mlGHMCE68xxxTcPa/B6F91SAEk5qDVx86HD96FIfvyq2a7aS7TVKg8Tku?=
- =?us-ascii?Q?nTdjb/5b84KLbyq6jurIhky8YFH7kQY/Zeiez5GEepuqZ+nE+RBxn3U2iz+V?=
- =?us-ascii?Q?ni2A4JSRMOPikpPq/ynWZFqrKCG/Jhtx9bdbIcdSNAdEVp8zMUqBc41rKwCj?=
- =?us-ascii?Q?TdB8L8Bu7ptsfUjdTq7LXOmc8xFcj5RxsdSZ//YL4fNNsuC0vtdPRUKzewaW?=
- =?us-ascii?Q?aFJuaAaMlHOpboLmmw1bw88pe0vTLMxhT4JHABtgsVCrq7PuvLXKbl/T+wCR?=
- =?us-ascii?Q?H8ewob44lLIrjBitSzOwLQD07iNSYPwzj5GJXzexiXsZ3V9UcnjwRNxHwCCz?=
- =?us-ascii?Q?YVTmJ7e7VfeH/ndtFQ1dWM0GuA7V47PrGz1nmaQivj0969/4S80FNmkw5Spz?=
- =?us-ascii?Q?6LBSYqF8JOOXsxoexmLqrh6L3++ON//LxfHydJGlH+bgY3xHXZbUmtMj3lmh?=
- =?us-ascii?Q?dTepVVYfLe6ijeMv+iG54US28o9vGMQ+hmGBYxY+8t/FD1ZcqSPH6djLNhMZ?=
- =?us-ascii?Q?jdtL0bHM9IkFyAbx7vAenYg9YnzYoPeMkOf+q8nkIm1G0jiVzUtb7z/KO07Q?=
- =?us-ascii?Q?JqV+YrIQRhk1MTwDFV6Ov9kosYXgJPtZuGQLS+gE2J/JYaGXdTM1NuyibOJR?=
- =?us-ascii?Q?baUXRI4L+dHS2iN1SRBqfL9F3povaiWaoCOPz4x3nGFoX7BGg32z01SNaQWI?=
- =?us-ascii?Q?FxGCuLRWubnaeE/Xk04tcIfqphrpjQaS1jWdf9H3yOd4Uyb/WlZbQhNYjxN4?=
- =?us-ascii?Q?w1/c7D753iWHDtfBJjvgFoTQB6FFnVe5g0tPmJXXgVQCCRbIlj69Ns1RPOaj?=
- =?us-ascii?Q?9pVZirLRVpCsL3SSla9rEq3GkLEyLRdNHX6YTPqGYxB97orZm0M2z/qra07y?=
- =?us-ascii?Q?bHWnNLk7bsSNvGodpc+wvSQbBgFtPt9i5i5M+/VW3kWDn82r0z7s3IF9yWLV?=
- =?us-ascii?Q?lvJQ3MDwUoSqoai1BrSQBewBfQ0C45Lf97yZyoLbu1CXGoDdTA8iLNRM3VIh?=
- =?us-ascii?Q?/Z+m9HxaECdvTVXeZxodYKUwlAqDv+Xb1b03BD8jhEtzzB8147up7zcnKf52?=
- =?us-ascii?Q?mplB99ktoDHGA+yI7n01YbnGad9tbqJHIMuwbjYCtG9pvcrIebWlR0T6JsWZ?=
- =?us-ascii?Q?EcghMNCfGOLlM46nzws2Ul2RMoVmNMAIXIusqr+3awlTVEk/TmpxslrmZXKq?=
- =?us-ascii?Q?yYCf72c0u/1kOHP5MweRCNhXYYQ6ZJ8rQuWVO7M/4ycHFTYSFA6kqh4xr71A?=
- =?us-ascii?Q?musTAmMEJx+IV9M9T6ylWOfzZZnqB6xk06sW44LOpZAxYLZeeJgoQLUFc007?=
- =?us-ascii?Q?4RaVvBSwzQvs9018kgWoVETauHelEeaVXua1Eb+z?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2366D0867B401F4D82472B7AA69A2427@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	Thu, 31 Jul 2025 09:29:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753954147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ibTg+SRgN11l3CBDii5Rlz1jYBOrGbR0x6FnQRT7AjU=;
+	b=IzRe6BVjsgxI45O6aooE9TjP9rkXtZHR9mWl7YHYmUcAwhPZH3dIu+ueRdMahiY9VEBGyq
+	neku4qT2G21BcoCWy8RjlZSzZzAlTvwciva2HaUTbU430KS6cI8U1gPTJ8bQLOxkIzH2Ps
+	//skuGK1jenx9IM8aN3Lya3kmOlsUno=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-690-dlbSNCjSNhCMqPKlNPsAYg-1; Thu, 31 Jul 2025 05:26:49 -0400
+X-MC-Unique: dlbSNCjSNhCMqPKlNPsAYg-1
+X-Mimecast-MFC-AGG-ID: dlbSNCjSNhCMqPKlNPsAYg_1753954008
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5551b49f3c6so434652e87.1
+        for <kexec@lists.infradead.org>; Thu, 31 Jul 2025 02:26:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753954008; x=1754558808;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ibTg+SRgN11l3CBDii5Rlz1jYBOrGbR0x6FnQRT7AjU=;
+        b=NsBMijPEZ7zOolhRD57nWDhEmY/4QIbo9KGBCnE9z8CjRzSiZ18uZAdhcaNs0fRj8k
+         DM6/iXWUlp3/eqDuRcd9o2KNaNuRy9cjr3Alf8WoyZRDKggtpWfOri2aR4vxq4GUhU6N
+         OkcuoNFn2hHeSxd2bomeVLaJ78YjqTWiXk7b7CZtjFd9dzhftAJTzXgzV9Wp7m0X3bwg
+         wbZrITRdami0qHiYYOxTLhQ3yqX3kEdCmNcL8PgK2PI/gWAV90FvYK4Dcfrx0tbPrQFs
+         N7BtNxvPKP/bTk2+zfa5S1Qdaa/wHNhoDBxOMgdlKIk+mXbMNEDPcXHKlvxwoUjarnJf
+         jgzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDoQtt0+WXGPidihShouLOEFWZVBuNO4m8p87iH8fhKvhT0ud2kb4QMuyYMS69Qqe7yZ52Tw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwRc2qWyTn+opo29XiKeG3fyHmsLbioM/P615MECraBbZxKvwDA
+	U6WmfJBoP6lMRjEXCsr2BnWM7xM7zye4m7pK/iT89tWH1SzWNsIb3seSteWJmg35OO61T6j0BrD
+	fuk0rDfQpA5eq3UUUV1JXr7U6JzhJjENRXPo3Of3xhBD2nrKdpDYmnQJjGRrCgrCIcs9VWyvXvb
+	EJNMlO8Eeq0Pt+Lt0kNx43JPXIeQdYmo+l0N5Q
+X-Gm-Gg: ASbGncuKB/23cZs7CUwTGLWdas8O70fWeMeJar5cXtaWQ9PzWkWnYoNAp8G+AWXVEJ8
+	C3DkMCRIhRTcl+d/6YLIedXWhSECrim+il6XMuLfEUMxSwBv62Dypo9dP5NKoh/XmibRfIfxSpy
+	O3upFQbRSu6wUBPjFsl814zQ==
+X-Received: by 2002:a05:6512:ac6:b0:553:34b7:5731 with SMTP id 2adb3069b0e04-55b7c01c215mr2392889e87.3.1753954008193;
+        Thu, 31 Jul 2025 02:26:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHE6w2XDOCOmK9k6ZYQLq7cJeDiihFurFL/7bI1T0/78yuOQamPsKrbCnQYFIzjpGMXgWrAJFuIIpVjZd5I+aM=
+X-Received: by 2002:a05:6512:ac6:b0:553:34b7:5731 with SMTP id
+ 2adb3069b0e04-55b7c01c215mr2392869e87.3.1753954007682; Thu, 31 Jul 2025
+ 02:26:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: juniper.net
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR05MB7288.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9998f622-426d-458e-6383-08ddcf8ad15b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2025 17:02:08.0922
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bea78b3c-4cdb-4130-854a-1d193232e5f4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y4JS6hxoYKEsdJRlSG08m5TibEMrTTf9/oH3oUBUV5BNVAlE3kvC6U4cI+muKFnrFl+EKSg+WusqeqjNAqJI5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR05MB8105
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMwMDEyMyBTYWx0ZWRfXyUpXT12J+mcB
- luKkDWnfILgMIgFmKAtGK8Dzb+QOMAi2J1YnFWkF8NXoZgy3Rg4GkvXsKINx7YZuCZTbF3rGFIj
- /1rmtRzsD0slDZ0IkT9YkugtWN9jZKbnPZWjZz4G0obX5VfnxoV3zR5YMg0G2gLl0hkTgRmAglA
- b1OckLp9Yf27lOFlvo/+z+HrJMfnFn0NOwmHuFNKYDP6AlVpteA7vQg6Nw/1qoCnoE3D8cnVtJF
- 19za+jb4/UWnpW/yesq3EmxU36nCgUVIVSBIkkI5HM+lPahgoVlUoQoLUiWfr4Px+ujJSwTvYQo
- YsR7XhTi0BG4jj+xuxihJNiBqpTwwI5QAHCU0jbvMBrJUlP+zyH7x9YVkQH1MYX2kEMAormjBu3
- CbOETA+K9Ea/Rh4v2s6k3kC0eyuyQRbI/gYVxoDUbxksVethy04yfzaDHCkOnzILTmKcZDvm
-X-Proofpoint-GUID: BJNTHgxhXOzzz5JzTJzFUeMNlrDO4erF
-X-Authority-Analysis: v=2.4 cv=S9/ZwJsP c=1 sm=1 tr=0 ts=688a5014 cx=c_pps
- a=v6Z6meDQFn3ji2zknzBGMg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=rhJc5-LppCAA:10 a=20KFwNOVAAAA:8 a=mM2tsFSK8PyXpeH1PXAA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: BJNTHgxhXOzzz5JzTJzFUeMNlrDO4erF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-30_05,2025-07-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
- score=0 bulkscore=0 clxscore=1011 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507300123
+References: <20250729182142.4875-1-makb@juniper.net> <aInKb8qr689ytM41@darkstar.users.ipa.redhat.com>
+ <14D2606C-3492-4A32-A55D-428F1ADA9327@juniper.net>
+In-Reply-To: <14D2606C-3492-4A32-A55D-428F1ADA9327@juniper.net>
+From: Dave Young <dyoung@redhat.com>
+Date: Thu, 31 Jul 2025 17:27:27 +0800
+X-Gm-Features: Ac12FXwS3FbJHa6wq7k1KIlDvA_sJjQJcjFuKheLdux5xeNdmmqeCSyBgT_ih2o
+Message-ID: <CALu+AoQzQGypYRWXLiu1zfipL+H++x2H3pnL1uZgXPCFvumDiw@mail.gmail.com>
+Subject: Re: [PATCH RESEND] x86/kexec: Carry forward the boot DTB on kexec
+To: Brian Mak <makb@juniper.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: bvxaaq5lDCqZaV-quty8rKgSzhczRoOOihEPybQww-Q_1753954008
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250730_100234_129019_B73F4464 
-X-CRM114-Status: GOOD (  17.18  )
+X-CRM114-CacheID: sfid-20250731_022909_217112_4D764131 
+X-CRM114-Status: GOOD (  25.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -209,39 +108,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Jul 30, 2025, at 12:31 AM, Dave Young <dyoung@redhat.com> wrote
+Hi Brian,
 
->> +#ifdef CONFIG_OF_FLATTREE
->> +     if (initial_boot_params) {
->> +             setup_dtb(params, params_load_addr, setup_data_offset);
->> +             setup_data_offset +=3D sizeof(struct setup_data) +
->> +                                  fdt_totalsize(initial_boot_params);
->=20
-> I suppose current boot dtb should be valid for the current runnning
-> kernel, if you use kexec to load another kernel the next kexec reboot
-> could fail due to unmatching dtb.
->=20
-> Make this unconditionally could break the previous working kexec?
+On Thu, 31 Jul 2025 at 01:02, Brian Mak <makb@juniper.net> wrote:
+>
+> On Jul 30, 2025, at 12:31 AM, Dave Young <dyoung@redhat.com> wrote
+>
+> >> +#ifdef CONFIG_OF_FLATTREE
+> >> +     if (initial_boot_params) {
+> >> +             setup_dtb(params, params_load_addr, setup_data_offset);
+> >> +             setup_data_offset += sizeof(struct setup_data) +
+> >> +                                  fdt_totalsize(initial_boot_params);
+> >
+> > I suppose current boot dtb should be valid for the current runnning
+> > kernel, if you use kexec to load another kernel the next kexec reboot
+> > could fail due to unmatching dtb.
+> >
+> > Make this unconditionally could break the previous working kexec?
+>
+> Hi Dave,
+>
+> Thanks for taking the time to look at this change!
+>
+> The behavior on ARM64 for carrying over the current boot DTB is
+> unconditional, which is why I've made it unconditional here as well. I'm
+> open to suggestions on this though. Realistically, would there be a case
+> where having no DTB wouldn't break, but carrying over the current DTB
+> would?
 
-Hi Dave,
+I worry about it since dtb is for providing boot related information,
+weird things could happen if the kernel versions are different.
 
-Thanks for taking the time to look at this change!
+About arm64 and powerpc I think maybe just nobody noticed this
+problem.  IMO it is wrong as kexec is designed to load different
+kernels not limited to current running kernels.
 
-The behavior on ARM64 for carrying over the current boot DTB is
-unconditional, which is why I've made it unconditional here as well. I'm
-open to suggestions on this though. Realistically, would there be a case
-where having no DTB wouldn't break, but carrying over the current DTB
-would?
+Otherwise the current kexec_file_load syscall only supports passing
+kernel_fd, initrd_fd and cmdline,  no extra param designed for dtb,  I
+don't know if there are other ways via attaching dtb to kernel or
+initrd.
 
->=20
->> +     } else {
->> +             pr_info("No DTB\n");
->=20
-> pr_debug sounds better.
+Probably you can try to add a new flag to the kexec_file_load syscall,
+ when this flag is set 1 then use the current dtb, otherwise do
+nothing.  For arm64 and power,  ideally doing the same is better,  but
+I'm not sure if we should change the old behavior, maybe they can go
+with  default to load the dtb, but users can choose not to do that.
 
-Agreed. I'll raise it in a v2 in a few days if there's no other
-comments.
 
-Thanks,
-Brian
+Thanks
+Dave
+
 
