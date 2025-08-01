@@ -4,129 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FDF1CA1004
-	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48A27CA0EFF
+	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zFHAHU/+z+yhl9VER8s4Wp+oPk3FiOJt9Cdy6eMoyvc=; b=JZuxaH6uIJzDCnP0JA6SgTy6FH
-	9z5Psbrpo+fk+BjF8CkPTBBywtcfeWbU18ei89GiTVrOnxziITCL3vDS5jtNpnUEjiZCGK7fnhtWs
-	lbNXlaV+owQ4x5XxTABkqYrZ8KIZ62EyzWj86AWsqF23L3mOGjHgjtXnu70+YyKSY/nUhSwq3rL2L
-	T6yS4+qln6Y605ozReOv4s4H3251CQod+QNiezbHBNJh5sOtFj2KVSYXPUoU1oKnw0/ViT1FqyQ52
-	ehcMblXeyRsrt4PvMP6KGHHXXsr5JMsgCK/1z28ng3tl/1T1RFrEajnOQP2bE5eNdPJWKMcXt+Q/s
-	DaGfYDOg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:MIME-Version:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=8l68DoeiceI3IKbSzGhlcOAyQDPZ9AokScWPeUJfCvI=; b=EkMYBoF3EN3PoOedM9BJjv14JV
+	h7TfrbhFZXb3hBG2Cr4zk0lq+vAfxOV0MJqjXB6Y/XY0P5FbesmONQqxfn5oD0H4ZpQNknd34CnSb
+	V8oKWegEIi9b57pif8tHxkrVrSO46KyT6UcBVAQmfJWD5RoGr4xNzhZhNhyLgqO63iVZmxE+FUFHR
+	UVTd0Vxk8Qr5NqTywGv6f9o8aApPlSrmZkAoT+x8vOYXs35AdJpzkN0kAtnj+L9Rn/YmKO3NqMxe0
+	iv9TbShSi0HI0cEQUJSSbXjA8yq0VaCX7zQ0dt7zlCHzPrt0dMIWiIvNj3YWmqmsprCXZCpvlpV0q
+	vb0QHBtA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1usPg7-00000008G3a-1a0Z;
-	Sat, 30 Aug 2025 17:47:51 +0000
-Received: from mail-pg1-x530.google.com ([2607:f8b0:4864:20::530])
+	id 1usPg4-00000008G1m-3VK1;
+	Sat, 30 Aug 2025 17:47:48 +0000
+Received: from mail-lj1-x234.google.com ([2a00:1450:4864:20::234])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqMyp-00000006k1a-0iG9
+	id 1uhrkp-00000006MTP-35Gf
 	for kexec@lists.infradead.org;
-	Mon, 25 Aug 2025 02:30:44 +0000
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso3438624a12.3
-        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:30:43 -0700 (PDT)
+	Fri, 01 Aug 2025 15:33:09 +0000
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-3322d1dded6so20054691fa.2
+        for <kexec@lists.infradead.org>; Fri, 01 Aug 2025 08:33:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756089042; x=1756693842; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zFHAHU/+z+yhl9VER8s4Wp+oPk3FiOJt9Cdy6eMoyvc=;
-        b=FUhmC1hMvvypDCD611l9oj/arlzI/txZV3R1c7AxwZNk/tudCEyEIxWqpK2t7OSalg
-         Ey/HsHsQD40Jx7s06EgJUw0sveS7uDwpgTv3vzutpLIa7mbmPRS5PQdCvaODuWS2nApa
-         dRBMomcxdnMvL8ihU8x/fnixfeyxpQ+IZMH4y5wu7shWg4ZAqmVux8W1CLrPyytZrBbu
-         da8Chp3dwswu3V97YaisS38sQbVqbO1hlb6p3UWACUYHPUmVfHh7okK4HmWMK8VQlqLu
-         V77QcFAzi0eFlJKvaZJQt+65PlfgQq15/9u16xAEWcf3Gbp+UM6k9DDZ2Q0oD1yLiFAY
-         K+iw==
+        d=google.com; s=20230601; t=1754062385; x=1754667185; darn=lists.infradead.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8l68DoeiceI3IKbSzGhlcOAyQDPZ9AokScWPeUJfCvI=;
+        b=vQmnIgrhHwRULnNZYkhYMyeIp2YFvlwGr024trz2rQ9jJkxLsTuwbq+oqEb5S6eijD
+         w5sFRRd4Rom4qpI10UnPoGOHRC35AfBLC1oxlyPbFWLSdYOEUA1lUHgVWjTIe6sJXkP0
+         UJnKNE76KskcpCS9G34GzX0585Wn8YA6U94xlbzYynjm3S7IDy1CRle465EgUyVspujc
+         b5NU6uzKvWxNq/IbuoMCoiNpbGpuraljmBT0Hqcrf6CkYvGdomf+jQZC+st0FtpZ6K2n
+         gubzBISzNlwxQr8IF2XnXtOC0TK/3YOtay5vd973M6REt3+AdFxxwx1e4DMLqEG6K02L
+         3Mcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756089042; x=1756693842;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zFHAHU/+z+yhl9VER8s4Wp+oPk3FiOJt9Cdy6eMoyvc=;
-        b=MVDqPrlq+/BnsDgWalk0lE6ws8EkJpsHKzkulKQUCjle++/sJomAmu0xs3bEZMpo54
-         UoOyyeOfklEHjNAXZYPoarVW/Hfr29RELGFumcG5xuYBdNQSv/uQLZFtpohuLzRdN2/s
-         8WnL99uzQVW2M0PWp0SwtivKqNgIAHcALpAhsYy1ef4ZOG6AQpeyha+ELlZAuRH/9pVl
-         g40jPWywgA+qquiv3spzeV4RcQ/w4meeH1lAQUApA7PtQP4J1ifwLRpOV7OUX8I3JFjs
-         QT1WuFbtrFLFNQFptZyJTzqBcNED4o02O8RoMVBKvD9C+vOhwRlPMf7BSzt8h+/kuH5+
-         WrLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXliLeTATw3LX10KTCOFxm8v1c6Y6TejycM5OONvsSjztranNwbTNzfEh030DG/gDxNWx4URw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxnTm2pNmr6Cn4X10MX9GPzqGtgmUWv2goRm4/6TMgYehR9jBIO
-	mNg+3+BeGDRX1L4R30o7/PO6bZqODAPAqmMkVLQxyVS06XLtY8LBtNV8
-X-Gm-Gg: ASbGncvPfEcyOS/YR5K/tOOYaKAugsTo+/nOeufK5N/eqqbOy2XZULbjquEa4aps9TB
-	L3Zb7f+WyHD3e5kULsYtKLQ+pT5ErkMFWAjqF6u2hZSdDnVkhkRrHp2DVPe0GlZ0UWQvR8Fhmty
-	QCbF2V7/hyIqdmqw0fT29305oV1AIBNnzhKLESWG3y3Ol8qlJGO2KMeVfcrljahH/9njGWcn79R
-	FFRMv9V0q1u7IZev5VLWxhazuB7luTTiwjQJhXFDINPrAAM1tr8UTc4WGOGj9iZo7wsgwhTWEGY
-	KhFs7IcPFfV5yzt3+psVoGl3k8kdZVzAGUHfaSnaNI/Nm7y9/5mclA1JJxYNZm7rYDEIfumml7n
-	LJ8aH0m/ZZIgbw/4xWMM8K6tCNggqng35+0cTHVOtP+jovvRW9fgMu7h6p+o5Tb+Qdvd32Xurc1
-	c=
-X-Google-Smtp-Source: AGHT+IHERO/1eHRkEF6AC+dBVfTjpOtqq/Unp7jmksVhNk83icoLby3erE1Gst+iT6A6gassubAXtA==
-X-Received: by 2002:a17:903:41cc:b0:246:b58b:8b86 with SMTP id d9443c01a7336-246b58b8f44mr31066895ad.32.1756089042108;
-        Sun, 24 Aug 2025 19:30:42 -0700 (PDT)
-Received: from localhost.localdomain ([114.242.33.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 19:30:41 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Qianqiang Liu <qianqiang.liu@163.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Helge Deller <deller@gmx.de>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Shixiong Ou <oushixiong@kylinos.cn>,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Zsolt Kajtar <soci@c64.rulez.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Nam Cao <namcao@linutronix.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Tejun Heo <tj@kernel.org>,
-	Luo Gengkun <luogengkun@huaweicloud.com>,
-	Li Huafei <lihuafei1@huawei.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/9] fbdev: Use panic_in_progress() helper
-Date: Mon, 25 Aug 2025 10:29:30 +0800
-Message-ID: <20250825022947.1596226-3-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250825022947.1596226-1-wangjinchao600@gmail.com>
-References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+        d=1e100.net; s=20230601; t=1754062385; x=1754667185;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8l68DoeiceI3IKbSzGhlcOAyQDPZ9AokScWPeUJfCvI=;
+        b=H1yzcEZM0CBXbDDdk/EnsSF9UGLLpMdw0Z/e70NMbnDYJAlCUqFOXdLesEdfgFj9By
+         GJbPe7VCzfqoSrXptykmjXg1UiIy+Lr+gguqK22UUXGGbIbtchn5FPH7ZiCz271qN69d
+         g7cZ0l1AZCbMGNqxtwRCW2rIqsShLWecJ5nWUOUzhVHd3oSXCvdM2wzbadAsIThokFAp
+         R4QcqJPDCnRhOHcp5igML3EYi7eEP9zLBgJsvz5XPAsNikkR57ex5Z41FYqrUyVflRdO
+         YsZ/7GrEQ66wasWd9X3RJ07VS6nF9v/zuoKamSRa5F3lbNPF2FM3uChMfpoanAuJZaF7
+         9d2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWECQh6EbwnH78yO6ZtETKV/qwSZTyZ/PwVgvJq/VdlUeDWFCQwL3TXZ8Z1Cq0U5UHZFS/4jw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzV9dHPFjOoyItwZsnXS2K5R2sutQbNRPu4N3SZI8MDfAsVgWAy
+	INgHPW5juKbWLOOBHu3mS4snxYs4DsaoXPqO5U1Yi/a/Y96REcnu/Bx6WqnbIECMHhZ7Wb5QQ7g
+	+jz0GH4PoPBQzy+Hk6bonPQuBWoCPyTsdAyxBMjbo
+X-Gm-Gg: ASbGncvgqJxp2si6JAWFDJJXaYNPx0plT7c2DO3BQbdLl6+KFceVfugRXsSFhzoXOQo
+	y/lET11EhOU95HT+u2LApqjmiaICdJt7pt3u1DOTDKEllatrw7oQjBLiKlrekdvaZGboWEQKw1M
+	+cYmZku0MasbcK9Codwc4wXI3KgYyFe+Rq8pPZuUlgF9B76yY5XIQrpy791m3PFXXpXMsgo+xvf
+	TfXIteiGHCzmW2ybQ==
+X-Google-Smtp-Source: AGHT+IElqGqJCtZOhO3R6EOALjhIxAosCdG4c6JAw0Ii5GIvvlZsjTd7NWmVyt9CTRdEgA600P6iKWvTGZcKiA6jmn0=
+X-Received: by 2002:a05:651c:4117:b0:32e:aaa0:b06a with SMTP id
+ 38308e7fff4ca-33224a5e95emr27853181fa.8.1754062384765; Fri, 01 Aug 2025
+ 08:33:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 1 Aug 2025 08:32:37 -0700
+X-Gm-Features: Ac12FXzLKnSwpLBskXSaJfx0o2ePwkZV7fNIT0lZA44HGFkBJgr6jkivWR4r114
+Message-ID: <CALzav=d_Bjfy=6if+rPmxgGJfUV8ijnQ5hf40HoH6Yozg_H6Ew@mail.gmail.com>
+Subject: Live Update MC (LPC): Call for Presentations
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, kexec@lists.infradead.org, 
+	Linux MM Mailing List <linux-mm@kvack.org>, linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Cc: "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>, David Rientjes <rientjes@google.com>, 
+	Chris Li <chriscli@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Josh Hilke <jrhilke@google.com>, Changyuan Lyu <changyuanl@google.com>, 
+	"graf@amazon.com" <graf@amazon.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, 
+	"jgowans@amazon.com" <jgowans@amazon.com>, "ptyadav@amazon.de" <ptyadav@amazon.de>, 
+	"jgg@nvidia.com" <jgg@nvidia.com>, "rppt@kernel.org" <rppt@kernel.org>, 
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, William Tu US <witu@nvidia.com>, 
+	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, dave.hansen@intel.com, 
+	David Hildenbrand <david@redhat.com>, Frank van der Linden <fvdl@google.com>, jork.loeser@microsoft.com, 
+	Junaid Shahid <junaids@google.com>, pankaj.gupta.linux@gmail.com, 
+	Pratyush Yadav <pratyush@kernel.org>, kpraveen.lkml@gmail.com, 
+	Vishal Annapurve <vannapurve@google.com>, Steve Sistare <steven.sistare@oracle.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250824_193043_205862_82A4E5D2 
-X-CRM114-Status: GOOD (  11.71  )
+X-CRM114-CacheID: sfid-20250801_083307_774545_36301C24 
+X-CRM114-Status: GOOD (  12.19  )
 X-Mailman-Approved-At: Sat, 30 Aug 2025 10:29:56 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -142,42 +108,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch updates the fbcon_skip_panic() function to use the
-panic_in_progress() helper.
+We are pleased to announce that there will be a Live Update Microconference at
+Linux Plumbers 2025: https://lpc.events/event/19/contributions/2004/
 
-The previous direct access to panic_cpu is less readable and is being
-replaced by a dedicated function that more clearly expresses the intent.
+This microconference aims to bring together developers from across the kernel
+to discuss topics related to Live Update support in Linux. Live Update is a
+specialized reboot process where selected devices are kept operational and
+kernel state is preserved and recreated across a kexec. For devices, DMA and
+interrupts may continue during the reboot.
 
-This change is part of a series to refactor the kernel's panic handling
-logic for better clarity and robustness.
+The primary use-case of Live Update is to enable hypervisor updates in cloud
+environments with minimal disruption to running virtual machines. During a Live
+Update, a VM can pause and its state is stored to memory while the hypervisor
+reboots. PCIe devices attached to those VMs (such as GPUs, NICs, and SSDs), are
+kept running during the Live Update. After the reboot, VMs are recreated and
+restored from memory, reattached to devices, and resumed. The disruption is
+limited to the time it takes to complete this entire process.
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-Acked-by Qianqiang Liu <qianqiang.liu@163.com>
----
- drivers/video/fbdev/core/fbcon.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+With Live Update infrastructure in place, other use-cases may emerge, like for
+example preserving the state of GPU doing LLM, freezing running containers with
+CRIU, and preserving large in-memory databases.
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 55f5731e94c3..b062b05f4128 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -279,14 +279,7 @@ static int fbcon_get_rotate(struct fb_info *info)
- 
- static bool fbcon_skip_panic(struct fb_info *info)
- {
--/* panic_cpu is not exported, and can't be used if built as module. Use
-- * oops_in_progress instead, but non-fatal oops won't be printed.
-- */
--#if defined(MODULE)
--	return (info->skip_panic && unlikely(oops_in_progress));
--#else
--	return (info->skip_panic && unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID));
--#endif
-+	return (info->skip_panic && unlikely(panic_in_progress()));
- }
- 
- static inline bool fbcon_is_active(struct vc_data *vc, struct fb_info *info)
--- 
-2.43.0
+Topics to be discussed at the microconference include:
+  - Live Update Orchestrator (state machine, userspace API, implementation)
+  - Generic infrastructure for preserving file descriptors across Live Updates
+  - Live Update support for specific files (memfd, iommufd, VFIO cdev, etc.)
+  - Integration of Live Update with the PCI subsystem and Linux device model
+  - Integration of Live Update with IOMMU and Interrupt Remapping drivers
+  - Serializing, deserializing, and versioning kernel state that is passed
+    across Live Update
+  - Persistence of movable memory
+  - Leveraging suspend/resume functionality for device state preservation
+  - Optimizing kernel shutdown and boot times
+  - Support for Confidential VMs
+  - Automated testing
 
+Please submit your proposals at https://lpc.events/event/19/abstracts/ and
+select "Live Update MC" as the track. Submissions are due on or before 11:59PM
+UTC on Wednesday, September 10, 2025.
+
+We look forward to seeing you at LPC!
 
