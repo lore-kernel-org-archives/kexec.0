@@ -4,79 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92EABC87FDA
-	for <kexec@archiver.kernel.org>; Tue,  5 Aug 2025 06:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 471DCC87FCB
+	for <kexec@archiver.kernel.org>; Tue,  5 Aug 2025 12:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c+hY2uT3rtX0jxqTDwr4o0wnNu5PQr3WJ9i3CgsATwQ=; b=MFDNKamtG1b0NUnCT7ZcZcZfuE
-	Rk/Eodrumpvr2LBPUAmRAY+qE+iBkDoh4K/0LrhJI8ze82UEHxW0RGKePJovTOqJiFnG/urYXdt0I
-	UsJktn6MLQnP4kyU9xhhE9ZoZAlLaeIEB/VF8d1TakC2crKPV/9zYRBnlV9h1GKevcyjgxnPMkhUL
-	SZKU3Um6PHe6nhUVm3hC2ATbipsibHKT0yBIWIXpYftHHwNuRnMmTjs5aKS2MlVte2bvCmWS9hsgT
-	CBkC5b9q3kzX/zfvFmhaSW15KzfrVuCjqH4HzhBtV5HMfE4WlAkIw7JhQ88gH+ZzsqLB36Phy62ye
-	uJ2umBWQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=XYQC0tIQmZ2K81MPMQ9fLTZs4TeD4tJc4sFcL0sR2FY=; b=5EKKzxmMKHwmgCtwoK8GF6ijP8
+	n53QeqpUMWZ2M6rxzxTTUnIuNyIuZI1HLv8KMaR68AiXnipXuxLdFQgJH7Z5kQlg5jDMvC1jYTC+m
+	VyyQRn9OszMyFMq6qtcxc7CIjZ3eZWXISD2veu2Tfvz3C91hBCBfq9bEP4+1FNh2gZMtGJ+wu+SGM
+	uAktHKQrOPh8IMPv1vJKkf6CXM6QOXPyz11BeWRZJISIHdOvcx2fVBCdgxneodFSQ7JR2DipD588B
+	lx5LKviLGB5Unk6ellhd7AICvdrVeDvgMKMAzzqSjtnAblF2fGPC//B1WABYW5H3HfXTXfLWDW+q7
+	GqamhY8A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujB8L-0000000Bt0t-140d;
-	Tue, 05 Aug 2025 06:26:49 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ujH5F-0000000CktS-3Ayu;
+	Tue, 05 Aug 2025 12:48:01 +0000
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujB5h-0000000Bse3-3SaG
+	id 1ujH52-0000000CkqI-2QtT
 	for kexec@lists.infradead.org;
-	Tue, 05 Aug 2025 06:24:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754375044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c+hY2uT3rtX0jxqTDwr4o0wnNu5PQr3WJ9i3CgsATwQ=;
-	b=enNDBdJrJFAouRrO3fGJBDMq6SUD6ky8+fIlMLQZDpKClDcW1uf2weM1kxOHp1WjS6r00s
-	ehammj12iBszFs1jqo6JNs/AfQ6bpXWzV86IPiYFBnBWVtDpQJwZ46ab2gFNdi4faNwC6T
-	9x8c+RSKndk4U9pVQeooqtMFmt5HCYc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-zuByUt8SMlOb-KzlFOuhUA-1; Tue,
- 05 Aug 2025 02:24:03 -0400
-X-MC-Unique: zuByUt8SMlOb-KzlFOuhUA-1
-X-Mimecast-MFC-AGG-ID: zuByUt8SMlOb-KzlFOuhUA_1754375041
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C4B71800366;
-	Tue,  5 Aug 2025 06:24:01 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.136])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55DDF1956094;
-	Tue,  5 Aug 2025 06:23:55 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: ryabinin.a.a@gmail.com,
-	glider@google.com,
-	andreyknvl@gmail.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 3/4] mm/kasan: don't initialize kasan if it's disabled
-Date: Tue,  5 Aug 2025 14:23:32 +0800
-Message-ID: <20250805062333.121553-4-bhe@redhat.com>
-In-Reply-To: <20250805062333.121553-1-bhe@redhat.com>
-References: <20250805062333.121553-1-bhe@redhat.com>
+	Tue, 05 Aug 2025 12:47:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1754398063; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NeRynp4nLLvN1+b5I4hPHAhf6noIIcXaIDeE95O8JWQ2ECeNO9/OL7Uqi/d87PDYjETsjWHVv6vxBT29DPPvKK8JEFJmNvND+tq5R+MdA5HYbwy1XD57p6UQqKypvdXyK++Jk0IfQT9RrVBPFryK6b0i13H/nRr1ECsdvij16nU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1754398063; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XYQC0tIQmZ2K81MPMQ9fLTZs4TeD4tJc4sFcL0sR2FY=; 
+	b=IjXw/tLBtvTcKAkqgeBaDFtUN7HmqRSkYhMxWZWbob2z2m5EGD012zKOcSpjwuKVTqnlOaC9tpg9vxiMh1BtlC9iw/KO3WBsZ1etbTJ1BCtVO9gmFqro2oOfAPIOv1f7wYvFG0fz5+T0NccbbOpA5SvmQyKAVzO+DTG5qoVSm+g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754398063;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=XYQC0tIQmZ2K81MPMQ9fLTZs4TeD4tJc4sFcL0sR2FY=;
+	b=SUh+gMH0V79oj+YElxdfaRongZcxV+6/tMxkCYnZosutenfnhsfVNCRLttKG8S9H
+	l/5oGntGvydB/h8RLXkCL9+VsBrf+tf7WZbhQvi9t0K0Y8BD2vYNX8HIUJ4/9iImwCt
+	k7KclC3lyMRZFkcYifY+f8EwwvlCPnrdRqSyBS1I=
+Received: by mx.zohomail.com with SMTPS id 1754398060725861.2997188922598;
+	Tue, 5 Aug 2025 05:47:40 -0700 (PDT)
+From: Askar Safin <safinaskar@zohomail.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	kexec@lists.infradead.org
+Subject: [PATCH] fix printf string specifiers, otherwise kexec doesn't work on my laptop
+Date: Tue,  5 Aug 2025 12:25:28 +0000
+Message-ID: <20250805124722.11193-1-safinaskar@zohomail.com>
+X-Mailer: git-send-email 2.47.2
 MIME-Version: 1.0
-Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Feedback-ID: rr08011227b098aae1d5de5c62d9eea37500006ddca112eadb0920e4f9f82c7a1da2bb5428e074ae7b2fe5a3:zu08011227589ede468c63cf235e22b556000031425bb630bdfdd6101709935f667f8c0424f12c63fb32e652:rf0801122cace98b88fabe34c42204302900004cdebc361c07a1a333a67cd900be389900e34655ca79cddfe2292c1e1ad6:ZohoMail
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250804_232405_940568_DD2665CD 
-X-CRM114-Status: GOOD (  18.00  )
+X-CRM114-CacheID: sfid-20250805_054748_663122_0D75DD25 
+X-CRM114-Status: GOOD (  20.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,305 +77,196 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is mainly done in all architectures which support kasan, and also
-need be done in sw_tags init funciton kasan_init_sw_tags().
+TL;DR: this patch fixes regression, introduced by aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 .
+This patch should be backported to all distributions, which packaged v2.0.31, otherwise
+kexec doesn't work at all at my laptop with pretty common setup with v2.0.31.
+v2.0.31 is broken without this patch.
 
-And also add code to enable kasan_flag_enabled, this is for later usage.
+Recently I found a bug: kexec doesn't work at my laptop.
+Here is my setup:
+* Laptop Dell Precision 7780
+* CPU Intel Raptor Lake-S
+* i915 GPU
+* x86_64
+* UEFI
+* Linux d632ab86aff2cef21f794e337a8e7f2320ac3973 (this is current mainline)
+* linux-firmware 37b63dc35d98e1fc5c2be95ab7468bf470c20dfd (this is current main)
+* I do kexec from this kernel to the same kernel
+* Kernel is UEFI PE image
+* Secure boot is disabled
+* Kernel config is minimized Debian config
+* I use command 'kexec --debug --kexec-syscall -l /disk/vmlinuz --initrd=/disk/initramfs.cpio.gz --append="..."', then I execute 'kexec --debug -e'
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+When I execute "kexec --debug -e", nothing happens.
+
+Bug reproduces on kexec-tools daa29443819d3045338792b5ba950ed90e79d7a5 (i. e. current main).
+
+Also it reproduces on kexec-tools aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 , but
+doesn't reproduce on kexec-tools 6aecc32c6db895b1c0b1f522d82c8810ece65542 .
+
+I. e. it is regression, introduced by aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 .
+
+Okay, why the bug happens? I suspect this is because aecc554e7b introduced "%lux"
+string specifiers, which are totally wrong. The author meant "print in hexademical"
+here, but this specifier prints number in decimal, followed by literal "x". Oops.
+And this seems to break kexec.
+
+Okay, how to fix this? Well, this is not easy. In 07821da7cf and d2f4297166 Andy Shevchenko
+observed compilation warnings, when %lx is used with uint64_t, so he replaced %lx with %llx.
+
+Then in aecc554e7b Jeremy Linton observed warnings with %llx and replaced it with %lux.
+(Yes, C is nightmare.)
+
+So, uint64_t is sometimes defined as long unsigned, and thus needs %lx, and sometimes as
+long long unsigned and thus needs %llx.
+
+How to fix this once and for all?
+
+I see three ways.
+
+1. uint64_t a; printf ("%llx", (unsigned long long)a);
+2. uint64_t a; printf ("%" PRIx64, a);
+3. uint64_t a; printf ("%w64x", a);
+
+%w64x is most clean and beautiful of all, but it causes compilation warnings on clang. (Facepalm.)
+PRIx64 is ugly, and other people will probably fail to understand it.
+So I chose explicit conversion to unsigned long long.
+
+Also this patch does these things:
+* Remove extra whitespace in kexec/arch/arm64/crashdump-arm64.c introduced in aecc554e7b
+* Remove duplicate <stdio.h> in kexec/arch/i386/kexec-x86-common.c
+* Fix "prink" typo in util_lib/elf_info.c
+* Fix %lux in kexec/kexec-elf-exec.c , introduced long before aecc554e7b
+
+I tested this patch on my laptop.
+
+Fixes: aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4
+Signed-off-by: Askar Safin <safinaskar@zohomail.com>
 ---
- arch/arm/mm/kasan_init.c               | 6 ++++++
- arch/arm64/mm/kasan_init.c             | 7 +++++++
- arch/loongarch/mm/kasan_init.c         | 5 +++++
- arch/powerpc/mm/kasan/init_32.c        | 8 +++++++-
- arch/powerpc/mm/kasan/init_book3e_64.c | 6 ++++++
- arch/powerpc/mm/kasan/init_book3s_64.c | 6 ++++++
- arch/riscv/mm/kasan_init.c             | 6 ++++++
- arch/um/kernel/mem.c                   | 6 ++++++
- arch/x86/mm/kasan_init_64.c            | 6 ++++++
- arch/xtensa/mm/kasan_init.c            | 6 ++++++
- mm/kasan/sw_tags.c                     | 6 ++++++
- 11 files changed, 67 insertions(+), 1 deletion(-)
+ kexec/arch/arm64/crashdump-arm64.c |  2 +-
+ kexec/arch/i386/crashdump-x86.c    |  2 +-
+ kexec/arch/i386/kexec-x86-common.c |  5 ++---
+ kexec/arch/i386/x86-linux-setup.c  |  6 +++---
+ kexec/kexec-elf-exec.c             |  2 +-
+ util_lib/elf_info.c                | 12 ++++++------
+ 6 files changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/mm/kasan_init.c b/arch/arm/mm/kasan_init.c
-index 111d4f703136..c764e1b9c9c5 100644
---- a/arch/arm/mm/kasan_init.c
-+++ b/arch/arm/mm/kasan_init.c
-@@ -212,6 +212,8 @@ void __init kasan_init(void)
- 	phys_addr_t pa_start, pa_end;
- 	u64 i;
- 
-+	if (kasan_arg_disabled)
-+		return;
- 	/*
- 	 * We are going to perform proper setup of shadow memory.
- 	 *
-@@ -300,6 +302,10 @@ void __init kasan_init(void)
- 	local_flush_tlb_all();
- 
- 	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-+
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	pr_info("Kernel address sanitizer initialized\n");
- 	init_task.kasan_depth = 0;
- }
-diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-index d541ce45daeb..0e4ffe3f5d0e 100644
---- a/arch/arm64/mm/kasan_init.c
-+++ b/arch/arm64/mm/kasan_init.c
-@@ -384,6 +384,9 @@ void __init kasan_populate_early_vm_area_shadow(void *start, unsigned long size)
- {
- 	unsigned long shadow_start, shadow_end;
- 
-+	if (!kasan_enabled())
-+		return;
-+
- 	if (!is_vmalloc_or_module_addr(start))
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 73cb611..050dd72 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -1,6 +1,6 @@
+ /*
+  * ARM64 crashdump.
+- *     partly derived from                                    arm implementation
++ *     partly derived from arm implementation
+  *
+  * Copyright (c) 2014-2017 Linaro Limited
+  * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 770e3f1..08e03fe 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -784,7 +784,7 @@ static void cmdline_add_efi(char *cmdline)
+ 	if (!acpi_rsdp)
  		return;
  
-@@ -397,6 +400,9 @@ void __init kasan_populate_early_vm_area_shadow(void *start, unsigned long size)
+-	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%lux", acpi_rsdp);
++	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%llx", (unsigned long long)acpi_rsdp);
+ 	if (strlen(cmdline) + strlen(acpi_rsdp_buf) > (COMMAND_LINE_SIZE - 1))
+ 		die("Command line overflow\n");
  
- void __init kasan_init(void)
- {
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	kasan_init_shadow();
- 	kasan_init_depth();
- #if defined(CONFIG_KASAN_GENERIC)
-@@ -405,6 +411,7 @@ void __init kasan_init(void)
- 	 * Software and Hardware Tag-Based modes still require
- 	 * kasan_init_sw_tags() and kasan_init_hw_tags() correspondingly.
- 	 */
-+	static_branch_enable(&kasan_flag_enabled);
- 	pr_info("KernelAddressSanitizer initialized (generic)\n");
- #endif
- }
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index d2681272d8f0..0c32eee6910f 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -267,6 +267,8 @@ void __init kasan_init(void)
- 	u64 i;
- 	phys_addr_t pa_start, pa_end;
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index acacb45..395f88b 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -29,7 +29,6 @@
+ #include <string.h>
+ #include <limits.h>
+ #include <stdlib.h>
+-#include <stdio.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+@@ -412,7 +411,7 @@ static uint64_t bootparam_get_acpi_rsdp(void) {
+ static uint64_t efi_get_acpi_rsdp(void) {
+ 	FILE *fp;
+ 	char line[MAX_LINE], *s;
+-	uint64_t acpi_rsdp = 0;
++	unsigned long long acpi_rsdp = 0;
  
-+	if (kasan_arg_disabled)
-+		return;
- 	/*
- 	 * If PGDIR_SIZE is too large for cpu_vabits, KASAN_SHADOW_END will
- 	 * overflow UINTPTR_MAX and then looks like a user space address.
-@@ -327,6 +329,9 @@ void __init kasan_init(void)
- 	csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_PGDH);
- 	local_flush_tlb_all();
+ 	fp = fopen("/sys/firmware/efi/systab", "r");
+ 	if (!fp)
+@@ -422,7 +421,7 @@ static uint64_t efi_get_acpi_rsdp(void) {
+ 		/* ACPI20= always goes before ACPI= */
+ 		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+ 			s = strchr(line, '=') + 1;
+-			sscanf(s, "0x%lux", &acpi_rsdp);
++			sscanf(s, "0x%llx", &acpi_rsdp);
+ 			break;
+ 		}
+ 	}
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 70656e3..0932087 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -760,9 +760,9 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+ 				e820[i].type = E820_RESERVED;
+ 				break;
+ 		}
+-		dbgprintf("%016lux-%016lux (%d)\n",
+-				e820[i].addr,
+-				e820[i].addr + e820[i].size - 1,
++		dbgprintf("%016llx-%016llx (%u)\n",
++				(unsigned long long)e820[i].addr,
++				(unsigned long long)(e820[i].addr + e820[i].size - 1),
+ 				e820[i].type);
  
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* At this point kasan is fully initialized. Enable error messages */
- 	init_task.kasan_depth = 0;
- 	pr_info("KernelAddressSanitizer initialized.\n");
-diff --git a/arch/powerpc/mm/kasan/init_32.c b/arch/powerpc/mm/kasan/init_32.c
-index 03666d790a53..b0c465f3fbf5 100644
---- a/arch/powerpc/mm/kasan/init_32.c
-+++ b/arch/powerpc/mm/kasan/init_32.c
-@@ -141,6 +141,9 @@ void __init kasan_init(void)
- 	u64 i;
- 	int ret;
+ 		if (range[i].type != RANGE_RAM)
+diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+index b337642..644af8a 100644
+--- a/kexec/kexec-elf-exec.c
++++ b/kexec/kexec-elf-exec.c
+@@ -167,7 +167,7 @@ int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 	int result;
  
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	for_each_mem_range(i, &base, &end) {
- 		phys_addr_t top = min(end, total_lowmem);
- 
-@@ -163,6 +166,9 @@ void __init kasan_init(void)
- 
- 	clear_page(kasan_early_shadow_page);
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* At this point kasan is fully initialized. Enable error messages */
- 	init_task.kasan_depth = 0;
- 	pr_info("KASAN init done\n");
-@@ -170,7 +176,7 @@ void __init kasan_init(void)
- 
- void __init kasan_late_init(void)
- {
--	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
-+	if (IS_ENABLED(CONFIG_KASAN_VMALLOC) && kasan_enabled())
- 		kasan_unmap_early_shadow_vmalloc();
- }
- 
-diff --git a/arch/powerpc/mm/kasan/init_book3e_64.c b/arch/powerpc/mm/kasan/init_book3e_64.c
-index 60c78aac0f63..1e1c10467a2b 100644
---- a/arch/powerpc/mm/kasan/init_book3e_64.c
-+++ b/arch/powerpc/mm/kasan/init_book3e_64.c
-@@ -111,6 +111,9 @@ void __init kasan_init(void)
- 	u64 i;
- 	pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page), PAGE_KERNEL_RO);
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	for_each_mem_range(i, &start, &end)
- 		kasan_init_phys_region(phys_to_virt(start), phys_to_virt(end));
- 
-@@ -125,6 +128,9 @@ void __init kasan_init(void)
- 
- 	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* Enable error messages */
- 	init_task.kasan_depth = 0;
- 	pr_info("KASAN init done\n");
-diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
-index 7d959544c077..9c5cf2354c8b 100644
---- a/arch/powerpc/mm/kasan/init_book3s_64.c
-+++ b/arch/powerpc/mm/kasan/init_book3s_64.c
-@@ -56,6 +56,9 @@ void __init kasan_init(void)
- 	u64 i;
- 	pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page), PAGE_KERNEL);
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	if (!early_radix_enabled()) {
- 		pr_warn("KASAN not enabled as it requires radix!");
- 		return;
-@@ -94,6 +97,9 @@ void __init kasan_init(void)
- 
- 	static_branch_inc(&powerpc_kasan_enabled_key);
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* Enable error messages */
- 	init_task.kasan_depth = 0;
- 	pr_info("KASAN init done\n");
-diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
-index 41c635d6aca4..ac3ac227c765 100644
---- a/arch/riscv/mm/kasan_init.c
-+++ b/arch/riscv/mm/kasan_init.c
-@@ -485,6 +485,9 @@ void __init kasan_init(void)
- 	phys_addr_t p_start, p_end;
- 	u64 i;
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	create_tmp_mapping();
- 	csr_write(CSR_SATP, PFN_DOWN(__pa(tmp_pg_dir)) | satp_mode);
- 
-@@ -531,6 +534,9 @@ void __init kasan_init(void)
- 	memset(kasan_early_shadow_page, KASAN_SHADOW_INIT, PAGE_SIZE);
- 	init_task.kasan_depth = 0;
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | satp_mode);
- 	local_flush_tlb_all();
- }
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index 76bec7de81b5..6961841daa12 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -26,6 +26,9 @@
- int kasan_um_is_ready;
- void kasan_init(void)
- {
-+
-+	if (kasan_arg_disabled)
-+		return;
- 	/*
- 	 * kasan_map_memory will map all of the required address space and
- 	 * the host machine will allocate physical memory as necessary.
-@@ -33,6 +36,9 @@ void kasan_init(void)
- 	kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
- 	init_task.kasan_depth = 0;
- 	kasan_um_is_ready = true;
-+
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
- }
- 
- static void (*kasan_init_ptr)(void)
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index 0539efd0d216..d7e8c59da435 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -343,6 +343,9 @@ void __init kasan_init(void)
- 	unsigned long shadow_cea_begin, shadow_cea_per_cpu_begin, shadow_cea_end;
- 	int i;
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
- 
- 	/*
-@@ -450,6 +453,9 @@ void __init kasan_init(void)
- 	/* Flush TLBs again to be sure that write protection applied. */
- 	__flush_tlb_all();
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	init_task.kasan_depth = 0;
- 	pr_info("KernelAddressSanitizer initialized\n");
- }
-diff --git a/arch/xtensa/mm/kasan_init.c b/arch/xtensa/mm/kasan_init.c
-index f39c4d83173a..4a7b77f47225 100644
---- a/arch/xtensa/mm/kasan_init.c
-+++ b/arch/xtensa/mm/kasan_init.c
-@@ -70,6 +70,9 @@ void __init kasan_init(void)
- {
- 	int i;
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	BUILD_BUG_ON(KASAN_SHADOW_OFFSET != KASAN_SHADOW_START -
- 		     (KASAN_START_VADDR >> KASAN_SHADOW_SCALE_SHIFT));
- 	BUILD_BUG_ON(VMALLOC_START < KASAN_START_VADDR);
-@@ -92,6 +95,9 @@ void __init kasan_init(void)
- 	local_flush_tlb_all();
- 	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* At this point kasan is fully initialized. Enable error messages. */
- 	current->kasan_depth = 0;
- 	pr_info("KernelAddressSanitizer initialized\n");
-diff --git a/mm/kasan/sw_tags.c b/mm/kasan/sw_tags.c
-index 01f19bc4a326..dd963ba4d143 100644
---- a/mm/kasan/sw_tags.c
-+++ b/mm/kasan/sw_tags.c
-@@ -40,11 +40,17 @@ void __init kasan_init_sw_tags(void)
- {
- 	int cpu;
- 
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	for_each_possible_cpu(cpu)
- 		per_cpu(prng_state, cpu) = (u32)get_cycles();
- 
- 	kasan_init_tags();
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	pr_info("KernelAddressSanitizer initialized (sw-tags, stacktrace=%s)\n",
- 		str_on_off(kasan_stack_collection_enabled()));
- }
+ 	if (reloc_min > reloc_max) {
+-		fprintf(stderr, "Bad relocation range, start=%lux > end=%lux.\n", reloc_min, reloc_max);
++		fprintf(stderr, "Bad relocation range, start=%lx > end=%lx.\n", reloc_min, reloc_max);
+ 		result = -1;
+ 		goto out;
+ 	}
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 5cf438c..1662612 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -889,9 +889,9 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 				if (len && handler)
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Cycle when parsing dmesg detected.\n");
+-				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+-					log_buf, current_idx);
++				fprintf(stderr, "The printk log_buf is most likely corrupted.\n");
++				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++					(unsigned long long)log_buf, current_idx);
+ 				exit(68);
+ 			}
+ 			current_idx = 0;
+@@ -903,9 +903,9 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 				if (len && handler)
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Index outside log_buf detected.\n");
+-				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+-					log_buf, current_idx);
++				fprintf(stderr, "The printk log_buf is most likely corrupted.\n");
++				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++					(unsigned long long)log_buf, current_idx);
+ 				exit(69);
+ 			}
+ 		}
 -- 
-2.41.0
+2.47.2
 
 
