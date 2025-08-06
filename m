@@ -4,65 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 443FEC87FD3
-	for <kexec@archiver.kernel.org>; Wed,  6 Aug 2025 09:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18B5BC87FD1
+	for <kexec@archiver.kernel.org>; Wed,  6 Aug 2025 09:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PTXZ12hDGDcdzT4dTRf8gTd7m5ASw2z0AO9vV96Yq7Q=; b=ssSV1E1rqHDLtywtySBcjqDnnZ
-	HdXBJzI3cajL28EiysAtGMiV42JMABTTt1WtJtK3KHz7yYZo17J20wEIqkF3h7GjXgMRZvhCLJGJJ
-	7xGLrpAhlXOJvrLlAx/wWEnlyVkfuDixRuRn2mVj9oOESTH6eBj5AlCYdJqO+/8IelW6Z9oRT/A6e
-	E1r8PuQrfN+6azORdiOorzdq25hzsRQOgohgDF5ZQEchrb6JnggstyF9KBO3YFMqFUeCGimzWLd1F
-	XT+h0YR+gg88w2gWWqyvDcTAGMxsaiy2MHXFToB/VsT5+VPu/XH/ILyhTNQ/n0gZUsXoktgKuQHWE
-	iVGl+WOw==;
+	bh=9lYYsLzSzPrboBgIaB2CsUlJcp8uiiPFpeJB8b2vvMg=; b=tBC3XDztN6obKIBK8HrUDu2eD5
+	RreC/rBgii12amTvST4PRMFV/BPZ+VDk7F+O7OreEzrf+o12qBiCO4Q9jE9CcAisg4sQ+Sg+JBhZ9
+	4Gdao38CdX+ZEi1JVbDJpXWy6xwg6D2Affu+kPuXO1nmOPXrOJ6Ub8//CxAwu0o2iHEZhrgBrvL/o
+	7UoNaN2YMsPGlmFKuZ7TWmEQa085OpNEcxXw8jboEX2C3kqtM19Zu36bY+dWdH0HVzwhGsF8PlEsw
+	f/FNFvyUadnfTTpKoE8OJ079BxIA33u6+GjQwJuuHaJ9y0p+iefjqXFh5iih7461Mo2Iqu4pPWoDc
+	LL0X4KIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujaTA-0000000Em7v-0LFT;
-	Wed, 06 Aug 2025 09:30:00 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1ujafH-0000000Eo3x-28Er;
+	Wed, 06 Aug 2025 09:42:31 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujaEi-0000000EjzW-1gFj
+	id 1ujaZH-0000000Emua-16Y8
 	for kexec@lists.infradead.org;
-	Wed, 06 Aug 2025 09:15:05 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 16F6341AAC;
-	Wed,  6 Aug 2025 09:15:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CCAC4CEE7;
-	Wed,  6 Aug 2025 09:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754471704;
-	bh=d+HSvp78wIdEYoYgYEAgVxFykEJx5QIk0fRNJs0VDuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WgQTiKoQyYEpSd3VK6sTRKnWGn+Ofp/7Yklj6IzdBy8gjp0HbNWDgPbrDsZKApPuT
-	 RwCQ3hjkeJEToaZweUyahjhlVCFeked+lKhNi8qwmBhX49P+R8u+ItZVG10BDdoX4z
-	 eCy1SMKB44S1AicRLMVpxBHLIuqxRHvE56AEbPw9n5wLqYyasmb9pTDuduPFHj57Xk
-	 UniqALaSZlZfXXhtZQFP0wtFuI/FNSdG8fjUe97NocBk4mNAQsO9rZi7xAIbSbJ88s
-	 NC2WaKglZ6j8EqzV18LG/QJDBcWq68PSuhE8LM1eFOlVrgQXx++kHJlbZmGSoZCclR
-	 47O3G53gzy75A==
-Date: Wed, 6 Aug 2025 10:15:00 +0100
-From: Simon Horman <horms@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Askar Safin <safinaskar@zohomail.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	kexec <kexec@lists.infradead.org>
-Subject: Re: [PATCH] fix printf string specifiers, otherwise kexec doesn't
- work on my laptop
-Message-ID: <aJMdFFs8MVzTpYZ3@horms.kernel.org>
-References: <20250805124722.11193-1-safinaskar@zohomail.com>
- <CAHp75VcUmOrfp21gij_-Ysrk5P=smTpfxmZHWgHU+z_VFZzc+w@mail.gmail.com>
- <1987a776a08.d9fe55e19764.4211219700074090609@zohomail.com>
- <CAHp75VfYP+QDzXGq5_8FQapUF26DZCyVHFPmr9+0ymRNQipyGQ@mail.gmail.com>
+	Wed, 06 Aug 2025 09:36:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754472977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lYYsLzSzPrboBgIaB2CsUlJcp8uiiPFpeJB8b2vvMg=;
+	b=fVjS002P7i3yGq1sBqrZwA1FRHjJEWvK0FYX52PWgW/FrPHPm2ny8B5n1AfBprN6hlbbps
+	G7CU/E7ObUMmO3Qp4HxGe/U0nqGwWqRUWQ4TKrbbLPTDBpY8gu+0Myu2PqMYG2WZih5ceN
+	B8lI5ENHPcrWHMGtlwGuJPs9oryYIME=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-UFCNoUSGPC6BIOrNHzU-2A-1; Wed,
+ 06 Aug 2025 05:36:11 -0400
+X-MC-Unique: UFCNoUSGPC6BIOrNHzU-2A-1
+X-Mimecast-MFC-AGG-ID: UFCNoUSGPC6BIOrNHzU-2A_1754472970
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1772619560AE;
+	Wed,  6 Aug 2025 09:36:09 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.218])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 791923000199;
+	Wed,  6 Aug 2025 09:36:07 +0000 (UTC)
+Date: Wed, 6 Aug 2025 17:36:03 +0800
+From: Baoquan He <bhe@redhat.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com,
+	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH 4/4] mm/kasan: make kasan=on|off take effect for all
+ three modes
+Message-ID: <aJMiA2hh3S9JCqOu@MiWiFi-R3L-srv>
+References: <20250805062333.121553-5-bhe@redhat.com>
+ <20250806052231.619715-1-sj@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VfYP+QDzXGq5_8FQapUF26DZCyVHFPmr9+0ymRNQipyGQ@mail.gmail.com>
+In-Reply-To: <20250806052231.619715-1-sj@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250806_021504_466744_AF9B4549 
-X-CRM114-Status: GOOD (  18.15  )
+X-CRM114-CacheID: sfid-20250806_023619_376465_65B0B8B5 
+X-CRM114-Status: GOOD (  23.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,41 +86,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 05, 2025 at 10:10:10PM +0200, Andy Shevchenko wrote:
-> On Tue, Aug 5, 2025 at 3:41 PM Askar Safin <safinaskar@zohomail.com> wrote:
-> >  ---- On Tue, 05 Aug 2025 17:00:45 +0400  Andy Shevchenko <andy.shevchenko@gmail.com> wrote ---
-> >  > Thanks for your report and the fix! My comments below.
-> > Andy, thank you for answer! I will write second version of my patch soon.
+On 08/05/25 at 10:22pm, SeongJae Park wrote:
+> Hello Baoqua,
 > 
-> Just to be clear, if you want all changes you listed, it should be a
-> patch series and not a single patch.
+> On Tue,  5 Aug 2025 14:23:33 +0800 Baoquan He <bhe@redhat.com> wrote:
 > 
-> > Also, please look at another my report: https://lore.kernel.org/regressions/9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org/ .
-> > Mario Limonciello said that we need you specially to proceed.
+> > Now everything is ready, set kasan=off can disable kasan for all
+> > three modes.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  include/linux/kasan-enabled.h | 11 +----------
+> >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > 
+> > diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+> > index 32f2d19f599f..b5857e15ef14 100644
+> > --- a/include/linux/kasan-enabled.h
+> > +++ b/include/linux/kasan-enabled.h
+> > @@ -8,30 +8,21 @@ extern bool kasan_arg_disabled;
+> >  
+> >  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+> >  
+> > -#ifdef CONFIG_KASAN_HW_TAGS
+> > -
+> >  static __always_inline bool kasan_enabled(void)
+> >  {
+> >  	return static_branch_likely(&kasan_flag_enabled);
+> >  }
 > 
-> Thanks for heads up.
+> I found mm-new build fails when CONFIG_KASAN is unset as below, and 'git
+> bisect' points this patch.
 > 
-> >  > > 3. uint64_t a; printf ("%w64x", a);
-> >  >
-> >  > Haven't heard about it. Which C/POSIX/etc standard is this?
-> > Introduced in C23. https://www.c-language.org/ .
-> > https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf , 7.23.6.1
+>       LD      .tmp_vmlinux1
+>     ld: lib/stackdepot.o:(__jump_table+0x8): undefined reference to `kasan_flag_enabled'
 > 
-> A-ha, then it's definitely no, even if it compiles with all used
-> compilers. Too young a standard to follow.
+> Since kasna_flag_enabled is defined in mm/kasan/common.c, I confirmed diff like
+> below fixes this.  I think it may not be a correct fix though, since I didn't
+> read this patchset thoroughly.
 
-It is a shame, as IMHO it's the nicest solution.
-But I agree that we need to support somewhat older standards.
+Thanks a lot for the reporting and fix. The below code is great to fix
+the error. I reproduced it and tested with below fix, it works.
+
+Since there's other reviewing comments, I will merge this into v2 post.
 
 > 
-> >  > > * Laptop Dell Precision 7780
-> > Side note: I bought this laptop, because it seems to be the only laptop in the world,
-> > which has ECC memory and in the same time doesn't have nvidia.
+> diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+> index b5857e15ef14..a53d112b1020 100644
+> --- a/include/linux/kasan-enabled.h
+> +++ b/include/linux/kasan-enabled.h
+> @@ -8,11 +8,22 @@ extern bool kasan_arg_disabled;
+>  
+>  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+>  
+> +#ifdef CONFIG_KASAN
+> +
+>  static __always_inline bool kasan_enabled(void)
+>  {
+>  	return static_branch_likely(&kasan_flag_enabled);
+>  }
+>  
+> +#else /* CONFIG_KASAN */
+> +
+> +static inline bool kasan_enabled(void)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif
+> +
+>  #ifdef CONFIG_KASAN_HW_TAGS
+>  static inline bool kasan_hw_tags_enabled(void)
+>  {
 > 
-> Hmm... okay.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> [...]
 > 
+> Thanks,
+> SJ
+> 
+
 
