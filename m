@@ -4,83 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2ED5C87FD1
-	for <kexec@archiver.kernel.org>; Wed,  6 Aug 2025 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 443FEC87FD3
+	for <kexec@archiver.kernel.org>; Wed,  6 Aug 2025 09:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wXLDPCGDjNvdOeR7jZ736CzN/nAMcYgqmwaHMi4ddf4=; b=wR7ree+U4zGXjMw0WLv0eGBjBJ
-	mv9SCTNjyiK1W4uARyShY581NY3NIWKOF7IpYWtHCyBBHKbZCXNV3E5eAqgqKBPUw12qHWRGBTEdP
-	w0DaL2Xed91XTeqAepEBN6fFwzQ1OeP5TYyHZFwFdsnY3TL1wxqhCJk1VeqBgH+EhMxB4km0mVdrE
-	NzSCrxLuYPtNexaLv/V1hSpawxV3yhxmzmY7u4aZuDSfG0829R8aJNjbP9BjQOkjUY7njYZeVTJxW
-	6xc1hh6+F0PxnvqISX9XYFAVr/ss99fJo70Wz1FllFBAfjwjilFrAGi+qPwx8FLcMD32WgvL+dr8p
-	bx6Yqg0g==;
+	bh=PTXZ12hDGDcdzT4dTRf8gTd7m5ASw2z0AO9vV96Yq7Q=; b=ssSV1E1rqHDLtywtySBcjqDnnZ
+	HdXBJzI3cajL28EiysAtGMiV42JMABTTt1WtJtK3KHz7yYZo17J20wEIqkF3h7GjXgMRZvhCLJGJJ
+	7xGLrpAhlXOJvrLlAx/wWEnlyVkfuDixRuRn2mVj9oOESTH6eBj5AlCYdJqO+/8IelW6Z9oRT/A6e
+	E1r8PuQrfN+6azORdiOorzdq25hzsRQOgohgDF5ZQEchrb6JnggstyF9KBO3YFMqFUeCGimzWLd1F
+	XT+h0YR+gg88w2gWWqyvDcTAGMxsaiy2MHXFToB/VsT5+VPu/XH/ILyhTNQ/n0gZUsXoktgKuQHWE
+	iVGl+WOw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujYa2-0000000EVuS-1Frg;
-	Wed, 06 Aug 2025 07:28:58 +0000
-Received: from mail-pg1-x530.google.com ([2607:f8b0:4864:20::530])
+	id 1ujaTA-0000000Em7v-0LFT;
+	Wed, 06 Aug 2025 09:30:00 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujYOe-0000000EUeV-1dei
+	id 1ujaEi-0000000EjzW-1gFj
 	for kexec@lists.infradead.org;
-	Wed, 06 Aug 2025 07:17:14 +0000
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-b424d2eb139so492089a12.1
-        for <kexec@lists.infradead.org>; Wed, 06 Aug 2025 00:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754464632; x=1755069432; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wXLDPCGDjNvdOeR7jZ736CzN/nAMcYgqmwaHMi4ddf4=;
-        b=UwctywOQ/IoqrSG+6sVfXaTmtnC2+E5ng0OrZMKyrq5Vskghas8Xd1PvNBt9Tt5SuU
-         Y042P6gI8YRzt5tRr6IBgZN9VIHAlNoXmJtZZukxjB8bmXBYU8JlEdybPNdF41Cj5fcW
-         BFdySH+NUJIX4vJm0ZgDNS7gjX/yqI3bgQTdCSxQXy8ZtMVZcHYepbe1R7cqD0FBZolK
-         GMm+I4Jpe7cEMr+yX/cYf2ny5CtEqPt+pThgN/PzqP4Q1BG0jphfgo3QiSpshTsuVHUI
-         3dTCELQXtzeIhQYYFy6WKbSxx7EtQwfEsm+ncNnzkG0uGjb2ZErfBtBdFS4pic4eE3nP
-         hP+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754464632; x=1755069432;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wXLDPCGDjNvdOeR7jZ736CzN/nAMcYgqmwaHMi4ddf4=;
-        b=FJEQeCECEC+PjOHZxjau5WVgd6+FiVTm3gVRrcLYpxauac4wAl9A2Sx99c8pwvNIqU
-         38HdLyooy4B3hu0N6NoudgBijdiuuZVYIS2xOMVWKHffrK3CIeNm1bwvpbOxhAq+mxBE
-         8vrwNLWYCdixWdy1juj36P9EwViu8gDCLr79etuF1rM2m7RvCh0mS51TKdX0qTCq4V8W
-         0lvDOYnjKvUQhvsuM2c7nWjyrvoH5R0Re4Pc51cMREKHB/5+0xCcteo91oxXT2ilIQnx
-         +bnGgTX97Q9byoREzCQ8nSqRKGjTj/PIznxJIZLD8VJO7nPHY2Z4RcCEVfS4sTEJg29K
-         6Pdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVo5k53iN7R/cAQwEuIgbDcyH2CzHNigOBFvN9/Ns5/3AU4j+bOjzsFgdnwfgBqZ+sy8vUTng==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxKOdF+EMiWUCPXjuOIeZhzdkndpU+YjbVgCUeYq8wM7aUfmWCA
-	ohadHYcgR15cI431mIRvzi9yHbdLHkt1YbbtUT6actMLY7jPxUS8nLwo9wgzc0OmO4Kmm5n97eB
-	eESx+XNBXm8hCHqrNYB1zj2GEQmhkjjaC6Of8Vl3k
-X-Gm-Gg: ASbGncvuDnHxVvgMMlRmVWcMw7yavfgDXZdfbZ7iq2Dj3qrzhHetpv+0BdqIBhu26Uj
-	m8gFT5tApmuYV7FiEMKiEoG21LFAqs72JNi5pFZfvEH6X6qyYNUJxYi9gkE8sswpR+sam6yF5jk
-	lOFwgsdDRC/MyQQstpL/UYyvp0kWmjsCxVlihT+1uhX8Gnn8gvSQrcOPHy9n/kx9pQ/beg/vQBG
-	yhI/NyCrR6jTEL5fjKJDWBPCJr3YoUqhIpi04o=
-X-Google-Smtp-Source: AGHT+IGfHgl2Mg+qBoCrK1ngL7bmW44UgruqWF91vJSpnlAVaiAXHK2sy4pm6D5yit5Nm36Buca8JPYmaeowROChcNw=
-X-Received: by 2002:a17:902:f691:b0:23f:75d1:3691 with SMTP id
- d9443c01a7336-2429f959eacmr24836285ad.15.1754464631438; Wed, 06 Aug 2025
- 00:17:11 -0700 (PDT)
+	Wed, 06 Aug 2025 09:15:05 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 16F6341AAC;
+	Wed,  6 Aug 2025 09:15:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CCAC4CEE7;
+	Wed,  6 Aug 2025 09:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754471704;
+	bh=d+HSvp78wIdEYoYgYEAgVxFykEJx5QIk0fRNJs0VDuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WgQTiKoQyYEpSd3VK6sTRKnWGn+Ofp/7Yklj6IzdBy8gjp0HbNWDgPbrDsZKApPuT
+	 RwCQ3hjkeJEToaZweUyahjhlVCFeked+lKhNi8qwmBhX49P+R8u+ItZVG10BDdoX4z
+	 eCy1SMKB44S1AicRLMVpxBHLIuqxRHvE56AEbPw9n5wLqYyasmb9pTDuduPFHj57Xk
+	 UniqALaSZlZfXXhtZQFP0wtFuI/FNSdG8fjUe97NocBk4mNAQsO9rZi7xAIbSbJ88s
+	 NC2WaKglZ6j8EqzV18LG/QJDBcWq68PSuhE8LM1eFOlVrgQXx++kHJlbZmGSoZCclR
+	 47O3G53gzy75A==
+Date: Wed, 6 Aug 2025 10:15:00 +0100
+From: Simon Horman <horms@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Askar Safin <safinaskar@zohomail.com>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	kexec <kexec@lists.infradead.org>
+Subject: Re: [PATCH] fix printf string specifiers, otherwise kexec doesn't
+ work on my laptop
+Message-ID: <aJMdFFs8MVzTpYZ3@horms.kernel.org>
+References: <20250805124722.11193-1-safinaskar@zohomail.com>
+ <CAHp75VcUmOrfp21gij_-Ysrk5P=smTpfxmZHWgHU+z_VFZzc+w@mail.gmail.com>
+ <1987a776a08.d9fe55e19764.4211219700074090609@zohomail.com>
+ <CAHp75VfYP+QDzXGq5_8FQapUF26DZCyVHFPmr9+0ymRNQipyGQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20250805062333.121553-1-bhe@redhat.com>
-In-Reply-To: <20250805062333.121553-1-bhe@redhat.com>
-From: Marco Elver <elver@google.com>
-Date: Wed, 6 Aug 2025 09:16:34 +0200
-X-Gm-Features: Ac12FXwlK-cs-vH-SavIGCKnyqqqvtGaUUbmDgA0yfosyX6KUMYZkchuphMeuWE
-Message-ID: <CANpmjNP-29cuk+MY0w9rvLNizO02yY_ZxP+T0cmCZBi+b5tDTQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] mm/kasan: make kasan=on|off work for all three modes
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com, 
-	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com, 
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VfYP+QDzXGq5_8FQapUF26DZCyVHFPmr9+0ymRNQipyGQ@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250806_001712_428924_75E78502 
-X-CRM114-Status: GOOD (  24.00  )
+X-CRM114-CacheID: sfid-20250806_021504_466744_AF9B4549 
+X-CRM114-Status: GOOD (  18.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,76 +77,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 5 Aug 2025 at 08:23, 'Baoquan He' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> Currently only hw_tags mode of kasan can be enabled or disabled with
-> kernel parameter kasan=on|off for built kernel. For kasan generic and
-> sw_tags mode, there's no way to disable them once kernel is built.
-> This is not convenient sometime, e.g in system kdump is configured.
-> When the 1st kernel has KASAN enabled and crash triggered to switch to
-> kdump kernel, the generic or sw_tags mode will cost much extra memory
-> for kasan shadow while in fact it's meaningless to have kasan in kdump
-> kernel.
+On Tue, Aug 05, 2025 at 10:10:10PM +0200, Andy Shevchenko wrote:
+> On Tue, Aug 5, 2025 at 3:41 PM Askar Safin <safinaskar@zohomail.com> wrote:
+> >  ---- On Tue, 05 Aug 2025 17:00:45 +0400  Andy Shevchenko <andy.shevchenko@gmail.com> wrote ---
+> >  > Thanks for your report and the fix! My comments below.
+> > Andy, thank you for answer! I will write second version of my patch soon.
+> 
+> Just to be clear, if you want all changes you listed, it should be a
+> patch series and not a single patch.
+> 
+> > Also, please look at another my report: https://lore.kernel.org/regressions/9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org/ .
+> > Mario Limonciello said that we need you specially to proceed.
+> 
+> Thanks for heads up.
+> 
+> >  > > 3. uint64_t a; printf ("%w64x", a);
+> >  >
+> >  > Haven't heard about it. Which C/POSIX/etc standard is this?
+> > Introduced in C23. https://www.c-language.org/ .
+> > https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf , 7.23.6.1
+> 
+> A-ha, then it's definitely no, even if it compiles with all used
+> compilers. Too young a standard to follow.
 
-Are you using KASAN generic or SW-tags is production?
-If in a test environment, is the overhead of the kdump kernel really
-unacceptable?
+It is a shame, as IMHO it's the nicest solution.
+But I agree that we need to support somewhat older standards.
 
-> So this patchset moves the kasan=on|off out of hw_tags scope and into
-> common code to make it visible in generic and sw_tags mode too. Then we
-> can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
-> kasan.
->
-> Test:
-> =====
-> I only took test on x86_64 for generic mode, and on arm64 for
-> generic, sw_tags and hw_tags mode. All of them works well.
-
-Does it also work for CONFIG_KASAN_INLINE?
-
-> However when I tested sw_tags on a HPE apollo arm64 machine, it always
-> breaks kernel with a KASAN bug. Even w/o this patchset applied, the bug
-> can always be seen too.
->
-> "BUG: KASAN: invalid-access in pcpu_alloc_noprof+0x42c/0x9a8"
->
-> I haven't got root cause of the bug, will report the bug later in
-> another thread.
-> ====
->
-> Baoquan He (4):
->   mm/kasan: add conditional checks in functions to return directly if
->     kasan is disabled
->   mm/kasan: move kasan= code to common place
->   mm/kasan: don't initialize kasan if it's disabled
->   mm/kasan: make kasan=on|off take effect for all three modes
->
->  arch/arm/mm/kasan_init.c               |  6 +++++
->  arch/arm64/mm/kasan_init.c             |  7 ++++++
->  arch/loongarch/mm/kasan_init.c         |  5 ++++
->  arch/powerpc/mm/kasan/init_32.c        |  8 +++++-
->  arch/powerpc/mm/kasan/init_book3e_64.c |  6 +++++
->  arch/powerpc/mm/kasan/init_book3s_64.c |  6 +++++
->  arch/riscv/mm/kasan_init.c             |  6 +++++
->  arch/um/kernel/mem.c                   |  6 +++++
->  arch/x86/mm/kasan_init_64.c            |  6 +++++
->  arch/xtensa/mm/kasan_init.c            |  6 +++++
->  include/linux/kasan-enabled.h          | 11 ++------
->  mm/kasan/common.c                      | 27 ++++++++++++++++++++
->  mm/kasan/generic.c                     | 20 +++++++++++++--
->  mm/kasan/hw_tags.c                     | 35 ++------------------------
->  mm/kasan/init.c                        |  6 +++++
->  mm/kasan/quarantine.c                  |  3 +++
->  mm/kasan/shadow.c                      | 23 ++++++++++++++++-
->  mm/kasan/sw_tags.c                     |  9 +++++++
->  18 files changed, 150 insertions(+), 46 deletions(-)
->
-> --
-> 2.41.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/kasan-dev/20250805062333.121553-1-bhe%40redhat.com.
+> 
+> >  > > * Laptop Dell Precision 7780
+> > Side note: I bought this laptop, because it seems to be the only laptop in the world,
+> > which has ECC memory and in the same time doesn't have nvidia.
+> 
+> Hmm... okay.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
 
