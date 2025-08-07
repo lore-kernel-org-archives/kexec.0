@@ -4,85 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41CA5C87FD3
-	for <kexec@archiver.kernel.org>; Wed,  6 Aug 2025 18:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C277C87FCF
+	for <kexec@archiver.kernel.org>; Thu,  7 Aug 2025 03:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Jzfnt4fl4r2JAvr3EQAhX7jF93WfuTFzsNkMkN0wipE=; b=FPMdl/OT/myLV4GeVREL85S7Wa
-	HKvWa2nK2DId6CP8eygpLBG1I49KJbLWtHlyWDIJxIvHCpwg52I19jkgbqZR5xf2XbOKKWitxR8I1
-	zXLmgQ65uvlGrE9o+H+iGzH4CT+mT9e7QeKb37DHD90JgPG4lLU2XV375ocLk2uTbWqs2lVBA4nUC
-	B9lRST1PZzuyqLIoUQZ2WCOHrtu0pNMqtGfDqKXK2Uq4Pnpz+6LIVzggkHJtnmShvMmDamC0L/oVt
-	ta/8iZJtluQ4jZ5lWg4XFMXGPda5CeAQs59sbYuenBV7De4YGQfOQlcLpUJUdtFof5i9PodVK1fYt
-	sWdDbEAA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mSygjng1TOk1yZB0KUnQdgok3wmV1NBIapOYBWbC1Wk=; b=HpZmuhnvXTmP8Bu7xynEvy+aO5
+	uQeTCacB6XrsPAPVLpGF6KmBmRBDjOHHTOFTQtlmKxAdp/s2hpE02xAXv6tBm+UGPUeuGX9Hwf0uJ
+	XwVGAFOTkiublsvnU07363SA+pu9E9DXOz46nvUjtuUgiqEDOZkNZ4QCJCZnoin9SLypcS9GCVcEN
+	HYLGKn1/bjJqtTbZ+m08lBVE+1OKyzGsBdVZN40xJW+Sqx62Zyt8yKlw8IvcSwU4z8FJ32BpQSNVw
+	7/ZA3UMxpRUHeb/aN8omkaw6pwzDe86xm6wio4UXRiEMMpIRqQtKW6B2eBLYonNgl3fJeeQ41eZO2
+	xkCZzZNA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujj0o-0000000G5eP-1mFK;
-	Wed, 06 Aug 2025 18:37:18 +0000
-Received: from mail-lf1-x130.google.com ([2a00:1450:4864:20::130])
+	id 1ujrJr-0000000HClj-3AYx;
+	Thu, 07 Aug 2025 03:29:31 +0000
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ujioi-0000000G3o7-1H4S
+	id 1ujrJo-0000000HClJ-30GH
 	for kexec@lists.infradead.org;
-	Wed, 06 Aug 2025 18:24:49 +0000
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-55b93104888so208302e87.1
-        for <kexec@lists.infradead.org>; Wed, 06 Aug 2025 11:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754504686; x=1755109486; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jzfnt4fl4r2JAvr3EQAhX7jF93WfuTFzsNkMkN0wipE=;
-        b=JyPw0rT5P5wEaEZrYdIJE+5BJnv3VxQFLRNIOdsI+eScdDXi2v8bado42v4O5dlAFe
-         fNyiQTmsGj0uqOE4PEYdx5uiliL9aN9a49NAJKd7GVcdaVPM8msnszzWQ2v5mwZrRgdX
-         wEIC97jgjNiVx2fw7Z1yZlLDGGBSeFx57wW28vnqTIwy7nQz6KTbNu7actiYvLAC/bUy
-         aKsQdZKZcCVMV5tUoBCWFdT1yScGCbJTz5RNJpEm4aFVZVIiSBS1K3eAJN3KSqldk7Ne
-         jaut81tIteMgN/BmNbEIyn6G5nhMlzcv5YIAzFYIRfNWudQR4m4LO7Z5R12Fb7D5GyTp
-         a9/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754504686; x=1755109486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jzfnt4fl4r2JAvr3EQAhX7jF93WfuTFzsNkMkN0wipE=;
-        b=iJCx6gq8sZaLXcKQDL4V+rDL54x9tVLhXkE09ZDYm4guejGhAyEBANE18enDbkvACL
-         oyn+abyZOWsJM01eLKCsahfeuA7ALkQ775uwygYP2cVmNfo/a3z847hPdd/psMXRy0oB
-         oSXQuZYnzEa0eUJH3TY1rvYLScThBuxydRh/CvLep1Jqkkk0grtdxF3ARdgHvU5jjHoW
-         NU9sxsSK5QJMOc/VeEzr98qbdxD5AKe1NKslZyIULKZ3LTu5jkgDFF137sJaCbIuBzrT
-         l6FmZcsVQT+ScTfbUkCyHb4xqP9wOPd8c0dRgj4/d/Njrv4z1Qz8ZtCJXme+fxkO3r7q
-         5yXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVI0fEfdBOZWMCKTwkZJKkXuIzRMp3EXTJnAOlVF2M59LDiXCgIlcKPi/zrfHdKnqf9AiXrow==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwKcmoUjCFgkNAm+a9g1UCQPawS9/MHfkK93m58aumtPf2S1jol
-	DDRoRPeVUhUoXNbF3Xnl972L4i44/hnfm1VX3wn3feI9ds1Yl3AC2roM+fk6IUExmTgKEsjly0R
-	Zez5UpdkQ1kqEUIV7ODafLBqwXuCq0cA=
-X-Gm-Gg: ASbGncvj5SdtuochhWrw+50p2bmKdehktfRTUzqsKq0aY2w7UHtATDjYdgKyOlSTl3m
-	hHvi+8UaNI3x3hAWkjOBCYi8Tqz9DnY5JSRrqZxlY6pEg5r114iYT2B43WC+g44C7YX0G9DxVJI
-	R33ZjOxAVZjz2+/yO7bW+toJqTlYmRZE3vRIJI6pQ9AOi2vrV7VjrhbwdB2VmPy8wWj8P/2DtTk
-	+Achs0=
-X-Google-Smtp-Source: AGHT+IF0PXQZi9vqVnGtQAW+0IZx7w81vI5Y5ZNTHdf+iKVApDbJ4sFRSLR1PHAs1LlJtYMmoHssgB5z97iQcbR/02I=
-X-Received: by 2002:a05:6512:224d:b0:55b:7cb7:f57c with SMTP id
- 2adb3069b0e04-55cb69c0452mr37793e87.57.1754504685766; Wed, 06 Aug 2025
- 11:24:45 -0700 (PDT)
+	Thu, 07 Aug 2025 03:29:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1754537363; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ESuWNlBNJG5B6MH9HgRE6phnL7aOgdvjV9UZoeS62nXRlhZKxyEPtvTQR9SqOBDiH2A7G/SyZK0ByTZeBTrMepzuSFfXOqWzxOtC++CCe3U6R0WZltIx+khO8T+lfT9YCjaAQbntq9fh67FE1jaU5p4rcYmLDQ+iUHAF/0s1TLU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1754537363; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mSygjng1TOk1yZB0KUnQdgok3wmV1NBIapOYBWbC1Wk=; 
+	b=YBa23vS7h6WQFm14/0IiQSpa0OCP3oMad9E1G4WgBfQZKzjTT8chabL+uwApmGjJvLYF3WMKfDRLffzMLoWo7+drB3HrvwDTe8l7mrIvJ1o5MFOITEZbuOLtd6Rco7ZphULT6ywj0thPH0xFQudMlEY0P5aIddlLtudRUBvwipI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754537363;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=mSygjng1TOk1yZB0KUnQdgok3wmV1NBIapOYBWbC1Wk=;
+	b=faTelusY2/Kti28QdazgABC1B9nTToEXafKIFxl+9EBrhjSvtYmUjGflDUtPAN58
+	5nM5c8fsv6DsxvjtU58bhJUAZYm+BeHpBtpKE1sC5PUp3+/bMLc1vaDx8SIoWmRkTLe
+	ITeatvYi2Qe8IDDtOtYP8MH18SexXhDJO1ZlJqBk=
+Received: by mx.zohomail.com with SMTPS id 1754537361581314.19430554469363;
+	Wed, 6 Aug 2025 20:29:21 -0700 (PDT)
+From: Askar Safin <safinaskar@zohomail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	kexec@lists.infradead.org
+Subject: [PATCH v2 0/6] Fix printf string specifiers, otherwise kexec doesn't work on my laptop
+Date: Thu,  7 Aug 2025 03:25:04 +0000
+Message-ID: <20250807032510.4211-1-safinaskar@zohomail.com>
+X-Mailer: git-send-email 2.47.2
 MIME-Version: 1.0
-References: <20250805062333.121553-1-bhe@redhat.com> <20250805062333.121553-5-bhe@redhat.com>
-In-Reply-To: <20250805062333.121553-5-bhe@redhat.com>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Wed, 6 Aug 2025 23:24:28 +0500
-X-Gm-Features: Ac12FXwvECclFxV4j0m2efvjg_nqG0wG27nQYV0fVI0B5ZHzOZg6GczwOHM9vRs
-Message-ID: <CACzwLxivXFYXuF1OkqcP9THar7UGQ3VVAQgQm=PU9Tohb8hnRQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm/kasan: make kasan=on|off take effect for all three modes
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com, 
-	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com, 
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227956cae979ebd14366abe5d210000d0fb0b8bbcadf4de825b7bf728bf82859b4f7ce8ea1b89e161:zu08011227669d6bc099000bd4757c84930000fde5ee265bb53d9a78a1b5ce11d1ff33e10eb9df12297ef7f7:rf0801122c1de3c0ca3e44379e79538d82000075672f7bc7c75f0f8ee9772864803d66319862872b9f57b34d19ee039f77:ZohoMail
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250806_112448_345975_46436B33 
-X-CRM114-Status: GOOD (  16.50  )
+X-CRM114-CacheID: sfid-20250806_202929_162991_0ECF2C5C 
+X-CRM114-Status: GOOD (  11.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,74 +77,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 5, 2025 at 11:34=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
->
-> Now everything is ready, set kasan=3Doff can disable kasan for all
-> three modes.
->
+TL;DR: this patchset fixes regression, introduced in aecc554e7b.
+This patchset should be backported to all distributions, which packaged v2.0.31, otherwise
+kexec doesn't work at all at my laptop with pretty common setup with v2.0.31.
+v2.0.31 is broken without this patchset.
 
-Hello,
+See details of this bug on my laptop in first commit message.
 
-I've been working on this already and a different approach
-with the Kconfig ARCH_DEFER_KASAN has been proposed.
+Okay, why the bug happens? I suspect this is because of "%lux"
+string specifiers, which are totally wrong. The author meant "print (and scan) in hexademical"
+here, but this specifier prints (and scans) number in decimal, followed by literal "x". Oops.
+And this seems to break kexec.
 
-Please see v4 thread.
-https://lore.kernel.org/all/20250805142622.560992-1-snovitoll@gmail.com/
+The bug reproduces on kexec-tools aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 , but
+doesn't reproduce on kexec-tools 6aecc32c6db895b1c0b1f522d82c8810ece65542 .
 
-It also covers the printing in a single KASAN codebase, instead of
-printing "KASAN intiilaized" in arch/* code.
-Also covers the enabling KASAN via kasan_enable() for all 3 modes.
+(This is cover letter, so I think using scary SHA1 sums is okay here.)
 
-It's up to KASAN maintainers to choose either version.
-I just need the confirmation now if I should proceed with v5,
-or your version if it covers all arch and cases should be picked up.
+I. e. it is regression, introduced by aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 .
 
-Thanks
+Okay, how to fix this? Well, this is not easy. In 07821da7cf and d2f4297166 Andy Shevchenko
+observed compilation warnings, when %lx is used with uint64_t, so he replaced %lx with %llx.
 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/linux/kasan-enabled.h | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.=
-h
-> index 32f2d19f599f..b5857e15ef14 100644
-> --- a/include/linux/kasan-enabled.h
-> +++ b/include/linux/kasan-enabled.h
-> @@ -8,30 +8,21 @@ extern bool kasan_arg_disabled;
->
->  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
->
-> -#ifdef CONFIG_KASAN_HW_TAGS
-> -
->  static __always_inline bool kasan_enabled(void)
->  {
->         return static_branch_likely(&kasan_flag_enabled);
->  }
->
-> +#ifdef CONFIG_KASAN_HW_TAGS
->  static inline bool kasan_hw_tags_enabled(void)
->  {
->         return kasan_enabled();
->  }
-> -
->  #else /* CONFIG_KASAN_HW_TAGS */
-> -
-> -static inline bool kasan_enabled(void)
-> -{
-> -       return IS_ENABLED(CONFIG_KASAN);
-> -}
-> -
->  static inline bool kasan_hw_tags_enabled(void)
->  {
->         return false;
->  }
-> -
->  #endif /* CONFIG_KASAN_HW_TAGS */
->
->  #endif /* LINUX_KASAN_ENABLED_H */
-> --
-> 2.41.0
->
->
+Then in aecc554e7b Jeremy Linton observed warnings with %llx and replaced it with %lux.
+(Yes, C is nightmare.)
+
+So, uint64_t is sometimes defined as long unsigned, and thus needs %lx, and sometimes as
+long long unsigned and thus needs %llx.
+
+How to fix this once and for all?
+
+I see three ways.
+
+1. uint64_t a; printf ("%llx", (unsigned long long)a);
+2. uint64_t a; printf ("%" PRIx64, a);
+3. uint64_t a; printf ("%w64x", a);
+
+I think that %w64x is beautiful, but it causes compilation warnings on clang. (Facepalm.)
+Also it was introduced in C23, which is too young.
+
+"(unsigned long long)a" is the best in my opinion. This is what I used in v1.
+But Andy said to me that POD conversions are evil.
+
+PRIx64 is ugly, but this is the only option left. So this is what I used in this (v2) version.
+
+Also this patchset fixes other misc things. See commit messages for details.
+
+I tested on my laptop that this patchset actually fixes the bug.
+
+v1: https://lore.kernel.org/kexec/20250805124722.11193-1-safinaskar@zohomail.com/
+
+Changes since v1:
+* Addressed Andy's comments
+* I reproduced the bug (and tested the fix) on slightly different versions of Linux
+  and linux-firmware (see first commit message)
+
+Askar Safin (6):
+  Fix printf string specifiers, otherwise kexec doesn't work on my
+    laptop
+  kexec/kexec-elf-exec.c: Replace %lux with %lx, this is what the author
+    meant
+  kexec/arch/i386/x86-linux-setup.c: replace %d with %u, because
+    e820[i].type is unsigned
+  util_lib/elf_info.c: fix typo: prink -> printk
+  kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
+  kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace,
+    ocasionally introduced in aecc554e7ba8
+
+ kexec/arch/arm64/crashdump-arm64.c | 2 +-
+ kexec/arch/i386/crashdump-x86.c    | 3 ++-
+ kexec/arch/i386/kexec-x86-common.c | 4 ++--
+ kexec/arch/i386/x86-linux-setup.c  | 3 ++-
+ kexec/kexec-elf-exec.c             | 2 +-
+ util_lib/elf_info.c                | 9 +++++----
+ 6 files changed, 13 insertions(+), 10 deletions(-)
+
+-- 
+2.47.2
+
 
