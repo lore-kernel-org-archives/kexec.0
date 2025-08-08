@@ -4,77 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B61F1CA0EC0
-	for <kexec@archiver.kernel.org>; Fri,  8 Aug 2025 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72A88C87FCB
+	for <kexec@archiver.kernel.org>; Fri,  8 Aug 2025 16:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YGK9n6dq7VxCb/OM51wQ3RDMD15RnRtHlU5OclWuDJs=; b=MkLz5TxooyYw1P+0R7MTqW/LlB
-	JrEr5ssu6+tOxOcCoZNh6G48izuOjhhP5MLNsCXRS7R69RK8kgLpVinzyJo0MCoXkU7L+l7lh89B7
-	rbyYYLDh27YkQu4oWXrWy+942Af1ZxGBr/jHcaQeXcpkmOFWuxN0a2hjjXMbIRCp80xGxEeAFTzU5
-	7X7wdneL9YK6wj1gs8/VAYzO56nWa2OhtFLYq1X8J0pqNaKonXrlpHx+pPyYVA9SnTEK56Q524Ubs
-	gQdleGW54IZL8SPJ+ed0MwX/6djphpcI9sb8SyUtHwk7M7QOJMd8ftQfzprNOIWrePMEnLfbHj5kp
-	LKTCBjUQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=VQqGKx8yCcMPM3OfBvB/9sDgA5FM7b1V6O0IxKuT2Ng=; b=0AQIiRX7J4b6JqRqkS6aoUOgTN
+	TWeRwlHL7wkM7hkTimneoef/VlB6QBoGzoRRqv+SImT6KRtj9Eo3Q8keftKduHflDTpt0DhBeyNaj
+	/jnu3UAtDZajZ+EInbWvZeq4ec3g/aOkwbm2ETr/hNfteOwTfGreNNAPro7lSzGP3dFPtgtmYNwQX
+	gWJoG0ubMMh73CA4NP/RfWho1tRzvExH51UiIHsGxqaTo18MqF98DRuKQ4ewmj45GPO0eR10AqlWT
+	1p5Fg7zmB24Jrlc99PNUsjnQd18YaBS5r3Q0gbvQvgLoiDxGf8EALzWNDsjC5Nkku5/syp+hAMMYj
+	KrWcRCVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ukPWh-00000003GC8-2zdT;
-	Fri, 08 Aug 2025 16:01:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ukQ5l-00000003KOG-2ZD0;
+	Fri, 08 Aug 2025 16:37:17 +0000
+Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ukPVf-00000003G16-36bo
+	id 1ukQ5i-00000003KNq-2WyM
 	for kexec@lists.infradead.org;
-	Fri, 08 Aug 2025 16:00:01 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754668798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YGK9n6dq7VxCb/OM51wQ3RDMD15RnRtHlU5OclWuDJs=;
-	b=HcrWyGT70KbUzpfdijTruk1GcT1uiCtkfmAQhjegxP9HPgpqvCoX52fvxI7722+TsnmdV/
-	WWJBi+2YfE8Z2sDsKIjSXbmWCNm8BeOog1E4n02vm+Emu+IxIa4F3AwYXraIVTKZzcLWjw
-	bx1xd7+jgH587u/ywJELLkHY0C6BbXc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-203-wt4H8Zk0P262tjW9FjN_lw-1; Fri,
- 08 Aug 2025 11:59:56 -0400
-X-MC-Unique: wt4H8Zk0P262tjW9FjN_lw-1
-X-Mimecast-MFC-AGG-ID: wt4H8Zk0P262tjW9FjN_lw_1754668794
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E6256195608B;
-	Fri,  8 Aug 2025 15:59:53 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.126])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54FE0300145A;
-	Fri,  8 Aug 2025 15:59:51 +0000 (UTC)
-Date: Fri, 8 Aug 2025 23:59:46 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com,
-	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 4/4] mm/kasan: make kasan=on|off take effect for all
- three modes
-Message-ID: <aJYe8rAa3lIe4Nat@MiWiFi-R3L-srv>
-References: <20250805062333.121553-1-bhe@redhat.com>
- <20250805062333.121553-5-bhe@redhat.com>
- <CACzwLxivXFYXuF1OkqcP9THar7UGQ3VVAQgQm=PU9Tohb8hnRQ@mail.gmail.com>
+	Fri, 08 Aug 2025 16:37:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1754671035; x=1786207035;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VQqGKx8yCcMPM3OfBvB/9sDgA5FM7b1V6O0IxKuT2Ng=;
+  b=Wrhhi+i/rQBiKxNVj5YNxs3FPR2pxHmAauZa16hC/LSz/h1nyJtEe0Vf
+   ttx85TlL0vrX8MJ4YCB6kbyVT09H8HLAWj1Ady21pqWE8IhPoNuXnlNAI
+   8KFgh9ROzTh/woJ0cwAq+ZPgPwrqeTsOnyy8WVL/7AC+gueBvxMm2unvP
+   Eyni47I+id9sIm6c20KDZHFsT+ZoaSkTEkLie3iYcdkCQFCzz14z/nG1t
+   IKPQi2vSeW9x362G/gWak6rHN7Q4+g1yu7oUoerFfsdq/vsynW2c76uD+
+   FdumUhwEtxWpCWD35VHDkyNgm0Wpy8uyltAlcZX2TxtFWI2UUjUD0T6fn
+   w==;
+X-IronPort-AV: E=Sophos;i="6.17,274,1747699200"; 
+   d="scan'208";a="746124479"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 16:37:10 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:41049]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.2.11:2525] with esmtp (Farcaster)
+ id d1a47885-9ae3-49af-a06a-0b2fb4acfb5c; Fri, 8 Aug 2025 16:37:09 +0000 (UTC)
+X-Farcaster-Flow-ID: d1a47885-9ae3-49af-a06a-0b2fb4acfb5c
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 8 Aug 2025 16:37:08 +0000
+Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
+ (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17; Fri, 8 Aug 2025
+ 16:37:06 +0000
+From: Evangelos Petrongonas <epetron@amazon.de>
+To: <ardb@kernel.org>
+CC: Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf
+	<graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Changyuan Lyu
+	<changyuanl@google.com>, <kexec@lists.infradead.org>,
+	<nh-open-source@amazon.com>, <linux-efi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] efi: Support booting with kexec handover (KHO)
+Date: Fri, 8 Aug 2025 16:36:51 +0000
+Message-ID: <20250808163651.25279-1-epetron@amazon.de>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACzwLxivXFYXuF1OkqcP9THar7UGQ3VVAQgQm=PU9Tohb8hnRQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Originating-IP: [10.253.109.105]
+X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250808_085959_858670_B5FC4345 
-X-CRM114-Status: GOOD (  24.62  )
+X-CRM114-CacheID: sfid-20250808_093714_800801_492CAC38 
+X-CRM114-Status: GOOD (  15.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,88 +91,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/06/25 at 11:24pm, Sabyrzhan Tasbolatov wrote:
-> On Tue, Aug 5, 2025 at 11:34 AM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > Now everything is ready, set kasan=off can disable kasan for all
-> > three modes.
-> >
-> 
-> Hello,
-> 
-> I've been working on this already and a different approach
-> with the Kconfig ARCH_DEFER_KASAN has been proposed.
+When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
+early during device tree scanning. After kexec, the new kernel
+exclusively uses this region for memory allocations during boot up to
+the initialization of the page allocator
 
-Thanks for telling, I don't always watch MM mailing list, so missed your
-earlier posting. 
+However, when booting with EFI, EFI's reserve_regions() uses
+memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
+rebuilding them from EFI data. This destroys KHO scratch regions and
+their flags, thus causing a kernel panic, as there are no scratch
+memory regions.
 
-I went through your v5 series, we are doing different work. I am adding
-kasan=on|off to generic/sw_tags, and have added kasan_enabled() to needed
-places. In fact, based on this patchset, we can remove
-kasan_arch_is_ready() more easily since in all places kasan_enabled() has
-been added there. Before seeing your patches, this is what I planned to
-do to remove kasan_arch_is_ready(). I will see what can be done better.
-Maybe I can carry your patch in v2. I will try tomorrow.
+Instead of wholesale removal, iterate through memory regions and only
+remove non-KHO ones. This preserves KHO scratch regions while still
+allowing EFI to rebuild its memory map.
 
-> 
-> Please see v4 thread.
-> https://lore.kernel.org/all/20250805142622.560992-1-snovitoll@gmail.com/
-> 
-> It also covers the printing in a single KASAN codebase, instead of
-> printing "KASAN intiilaized" in arch/* code.
-> Also covers the enabling KASAN via kasan_enable() for all 3 modes.
-> 
-> It's up to KASAN maintainers to choose either version.
-> I just need the confirmation now if I should proceed with v5,
-> or your version if it covers all arch and cases should be picked up.
-> 
-> Thanks
-> 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  include/linux/kasan-enabled.h | 11 +----------
-> >  1 file changed, 1 insertion(+), 10 deletions(-)
-> >
-> > diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
-> > index 32f2d19f599f..b5857e15ef14 100644
-> > --- a/include/linux/kasan-enabled.h
-> > +++ b/include/linux/kasan-enabled.h
-> > @@ -8,30 +8,21 @@ extern bool kasan_arg_disabled;
-> >
-> >  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
-> >
-> > -#ifdef CONFIG_KASAN_HW_TAGS
-> > -
-> >  static __always_inline bool kasan_enabled(void)
-> >  {
-> >         return static_branch_likely(&kasan_flag_enabled);
-> >  }
-> >
-> > +#ifdef CONFIG_KASAN_HW_TAGS
-> >  static inline bool kasan_hw_tags_enabled(void)
-> >  {
-> >         return kasan_enabled();
-> >  }
-> > -
-> >  #else /* CONFIG_KASAN_HW_TAGS */
-> > -
-> > -static inline bool kasan_enabled(void)
-> > -{
-> > -       return IS_ENABLED(CONFIG_KASAN);
-> > -}
-> > -
-> >  static inline bool kasan_hw_tags_enabled(void)
-> >  {
-> >         return false;
-> >  }
-> > -
-> >  #endif /* CONFIG_KASAN_HW_TAGS */
-> >
-> >  #endif /* LINUX_KASAN_ENABLED_H */
-> > --
-> > 2.41.0
-> >
-> >
-> 
+Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
+---
+
+Reproduction/Verification Steps
+The issue and the fix can be reproduced/verified by booting a VM with
+EFI and attempting to perform a KHO enabled kexec. The fix
+was developed/tested on arm64.
+
+ drivers/firmware/efi/efi-init.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+index a00e07b853f22..2f08b1ab764f6 100644
+--- a/drivers/firmware/efi/efi-init.c
++++ b/drivers/firmware/efi/efi-init.c
+@@ -164,12 +164,35 @@ static __init void reserve_regions(void)
+ 		pr_info("Processing EFI memory map:\n");
+ 
+ 	/*
+-	 * Discard memblocks discovered so far: if there are any at this
+-	 * point, they originate from memory nodes in the DT, and UEFI
+-	 * uses its own memory map instead.
++	 * Discard memblocks discovered so far except for KHO scratch regions.
++	 * Most memblocks at this point originate from memory nodes in the DT,
++	 * and UEFI uses its own memory map instead. However, if KHO is enabled,
++	 * scratch regions must be preserved.
+ 	 */
+ 	memblock_dump_all();
+-	memblock_remove(0, PHYS_ADDR_MAX);
++
++	if (IS_ENABLED(CONFIG_MEMBLOCK_KHO_SCRATCH)) {
++		struct memblock_region *reg;
++		phys_addr_t start, size;
++		int i;
++
++		/* Remove all non-KHO regions */
++		for (i = memblock.memory.cnt - 1; i >= 0; i--) {
++			reg = &memblock.memory.regions[i];
++			if (!memblock_is_kho_scratch(reg)) {
++				start = reg->base;
++				size = reg->size;
++				memblock_remove(start, size);
++			}
++		}
++	} else {
++	/*
++	 * KHO is disabled. Discard memblocks discovered so far: if there
++	 * are any at this point, they originate from memory nodes in the
++	 * DT, and UEFI uses its own memory map instead.
++	 */
++		memblock_remove(0, PHYS_ADDR_MAX);
++	}
+ 
+ 	for_each_efi_memory_desc(md) {
+ 		paddr = md->phys_addr;
+-- 
+2.43.0
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
 
