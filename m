@@ -4,79 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72A88C87FCB
-	for <kexec@archiver.kernel.org>; Fri,  8 Aug 2025 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B189C87FCB
+	for <kexec@archiver.kernel.org>; Fri,  8 Aug 2025 18:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=VQqGKx8yCcMPM3OfBvB/9sDgA5FM7b1V6O0IxKuT2Ng=; b=0AQIiRX7J4b6JqRqkS6aoUOgTN
-	TWeRwlHL7wkM7hkTimneoef/VlB6QBoGzoRRqv+SImT6KRtj9Eo3Q8keftKduHflDTpt0DhBeyNaj
-	/jnu3UAtDZajZ+EInbWvZeq4ec3g/aOkwbm2ETr/hNfteOwTfGreNNAPro7lSzGP3dFPtgtmYNwQX
-	gWJoG0ubMMh73CA4NP/RfWho1tRzvExH51UiIHsGxqaTo18MqF98DRuKQ4ewmj45GPO0eR10AqlWT
-	1p5Fg7zmB24Jrlc99PNUsjnQd18YaBS5r3Q0gbvQvgLoiDxGf8EALzWNDsjC5Nkku5/syp+hAMMYj
-	KrWcRCVA==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gGL73zxk4OzSU6R7waRddlbQJnqfpbstTWZ96TI8eLw=; b=oNb2lxpx1wMZyGWu4BDxn2nqvZ
+	4rnB8swa4gOmHO3GNVw0xiy/TNHYWzl7ZXMwe/tTHT+CEhJSzT/Ul7QWXhFKSdyK8OU/Fxpp9lyxz
+	XUC4Nup0TJlyb2rbu4vH5dzCgRzglfmd2RP70Km/pIK9eavVvGzMbM/bVfcqAwjamnlp2HuVt1S5Y
+	TPq9UxdX+x4Pq/IKDs4rU60m+dMiBs7TiU/x+il7w4ewQdPFpKYhqNqx8JqwHNBUJUCa/261eizSu
+	v7s0iopyDPTeIMOxYU+L8M+2oW2/Y4Un9hzh4TYfNykjQ2fGdMJeWpHzD+2mdYJ9RCrqeWTimU+/7
+	UkGzUeMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ukQ5l-00000003KOG-2ZD0;
-	Fri, 08 Aug 2025 16:37:17 +0000
-Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
+	id 1ukRQ4-00000003RnN-43zg;
+	Fri, 08 Aug 2025 18:02:20 +0000
+Received: from cow.ash.relay.mailchannels.net ([23.83.222.41])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ukQ5i-00000003KNq-2WyM
+	id 1ukRNb-00000003RZb-00LI
 	for kexec@lists.infradead.org;
-	Fri, 08 Aug 2025 16:37:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1754671035; x=1786207035;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VQqGKx8yCcMPM3OfBvB/9sDgA5FM7b1V6O0IxKuT2Ng=;
-  b=Wrhhi+i/rQBiKxNVj5YNxs3FPR2pxHmAauZa16hC/LSz/h1nyJtEe0Vf
-   ttx85TlL0vrX8MJ4YCB6kbyVT09H8HLAWj1Ady21pqWE8IhPoNuXnlNAI
-   8KFgh9ROzTh/woJ0cwAq+ZPgPwrqeTsOnyy8WVL/7AC+gueBvxMm2unvP
-   Eyni47I+id9sIm6c20KDZHFsT+ZoaSkTEkLie3iYcdkCQFCzz14z/nG1t
-   IKPQi2vSeW9x362G/gWak6rHN7Q4+g1yu7oUoerFfsdq/vsynW2c76uD+
-   FdumUhwEtxWpCWD35VHDkyNgm0Wpy8uyltAlcZX2TxtFWI2UUjUD0T6fn
-   w==;
-X-IronPort-AV: E=Sophos;i="6.17,274,1747699200"; 
-   d="scan'208";a="746124479"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 16:37:10 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:41049]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.2.11:2525] with esmtp (Farcaster)
- id d1a47885-9ae3-49af-a06a-0b2fb4acfb5c; Fri, 8 Aug 2025 16:37:09 +0000 (UTC)
-X-Farcaster-Flow-ID: d1a47885-9ae3-49af-a06a-0b2fb4acfb5c
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 8 Aug 2025 16:37:08 +0000
-Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
- (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17; Fri, 8 Aug 2025
- 16:37:06 +0000
-From: Evangelos Petrongonas <epetron@amazon.de>
-To: <ardb@kernel.org>
-CC: Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf
-	<graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Changyuan Lyu
-	<changyuanl@google.com>, <kexec@lists.infradead.org>,
-	<nh-open-source@amazon.com>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] efi: Support booting with kexec handover (KHO)
-Date: Fri, 8 Aug 2025 16:36:51 +0000
-Message-ID: <20250808163651.25279-1-epetron@amazon.de>
-X-Mailer: git-send-email 2.47.3
+	Fri, 08 Aug 2025 17:59:48 +0000
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 462D9183BEF;
+	Fri,  8 Aug 2025 17:59:44 +0000 (UTC)
+Received: from pdx1-sub0-mail-a232.dreamhost.com (100-126-76-136.trex-nlb.outbound.svc.cluster.local [100.126.76.136])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id F0B21182671;
+	Fri,  8 Aug 2025 17:59:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1754675982; a=rsa-sha256;
+	cv=none;
+	b=Kn1PGI0SwwJBgRsbSRyUkXVr7tkG13jhonxIUg/kzIsI5RFpc+CGNs6zaR/lYG/abeF8QG
+	gScGYOOytgvHMeBB9F/aUM9CZo2eiElzYZHVz2KWvz6BFqT0qD1+ygvXu5MxAV4xmZiJ8p
+	hxHS6KdYOh07wAGYD+1OEGBLTtYP56V23+Q6ARiIsNFLQGbsOI8V/0u+532YXW5eP9czXl
+	831AOzL6NxU/eUJPUahvTyaKzMVZvvBwKjfbRqFwBmsQRH1sYIfLn0v5o+bl3VK9eggFQa
+	g+PgBcbAlbmMAhLb+TOit5R1QO9hMqUySo2Ez6GMooiLDDPioJmC5rf3KxFBBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1754675982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=gGL73zxk4OzSU6R7waRddlbQJnqfpbstTWZ96TI8eLw=;
+	b=LjhUxrpiiHqPyRcq9619O8FYiPVoiK17xgROgFfppq2cAmE6wZuKPhXuMqZgTmnmkFfhP6
+	OiJdFfdJOueHZSnlc0GCutEEOqgwWkxIMIjuNEd1zG9E/f4ZEeb2+CoKKs6ziQwxJSlwZe
+	HvvbstdD0yxhIj0JEinQSaI3QTTX456CZPpmiUcydfmJJOJULRBtEaf5wrPZNP1ojeN0JY
+	Hf/KMS1bKkW9jAUHBpFLa6ZASpZBhxCVhn/pDDb4qs/xrttY401kXNFmms5EKSPKQUT2Du
+	+xOX8E+2iVJcGoQjI4obrc7oRzXd8uFTHByOl4wby6vFSyaqxZmNFVnzMoYjhw==
+ARC-Authentication-Results: i=1;
+	rspamd-698857ffff-gbb7k;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abortive-Inform: 1d2b724a1f000a16_1754675984156_2734134785
+X-MC-Loop-Signature: 1754675984156:3909658373
+X-MC-Ingress-Time: 1754675984155
+Received: from pdx1-sub0-mail-a232.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.126.76.136 (trex/7.1.3);
+	Fri, 08 Aug 2025 17:59:44 +0000
+Received: from [IPV6:2607:fb90:9ab5:e54:f364:62fc:1576:4c11] (unknown [172.56.13.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rob@landley.net)
+	by pdx1-sub0-mail-a232.dreamhost.com (Postfix) with ESMTPSA id 4bzBcr4BhnzPc;
+	Fri,  8 Aug 2025 10:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
+	s=dreamhost; t=1754675981;
+	bh=gGL73zxk4OzSU6R7waRddlbQJnqfpbstTWZ96TI8eLw=;
+	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+	b=T3HOqMy4sraRh5Rub7ldx7z6WvxFcEAZOFc+ZvDCouaXFkCqeotx762bT/Uy5AYLX
+	 xq7FG697n7CkDJRaCYPfzbBv8zIG1099WYyuqwEbUgGGHOJV+f9FZWPiYby3TS62/k
+	 HOMQgwYW5rVs08w/X8O17/dPuGaemHmPqQFaIyUrIysDJB8TSQkjEDFK01hTp3y2Xc
+	 BHMOkzmQTaK+IkUlNZDpJwf/28i6u4L2tJdN87q5BhaloBcReksG8gpp0OzrzgticT
+	 yXD7BlYCBNlUH85uH1Gsxp7ukiHXsE9ghVcKnED3Z745VPiLln3utkmPE5il3Vy4+5
+	 F30edp2eyuruQ==
+Message-ID: <68c086ce-64a0-41e7-8c95-5252dceba0b4@landley.net>
+Date: Fri, 8 Aug 2025 12:59:39 -0500
 MIME-Version: 1.0
-X-Originating-IP: [10.253.109.105]
-X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: Add 'rootfsflags' to set rootfs mount options
+To: Dave Young <dyoung@redhat.com>, Lichen Liu <lichliu@redhat.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, weilongchen@huawei.com
+References: <20250808015134.2875430-2-lichliu@redhat.com>
+ <CALu+AoTGwZqB28Z+sJ4KW7esNHx8=5kJ6nrMpoQ_rogzSDGwxA@mail.gmail.com>
+ <CALu+AoTGY0wKubVgR_EF5BZmYvh180fjP1AsLvp8cJ447WFGaA@mail.gmail.com>
+Content-Language: en-US
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <CALu+AoTGY0wKubVgR_EF5BZmYvh180fjP1AsLvp8cJ447WFGaA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250808_093714_800801_492CAC38 
-X-CRM114-Status: GOOD (  15.24  )
+X-CRM114-CacheID: sfid-20250808_105947_348257_3C7F2BB1 
+X-CRM114-Status: GOOD (  42.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,88 +120,197 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
-early during device tree scanning. After kexec, the new kernel
-exclusively uses this region for memory allocations during boot up to
-the initialization of the page allocator
+On 8/7/25 21:47, Dave Young wrote:
+> Another question, may need fs people to clarify.  If the mount is
+> tmpfs and it is also rootfs,  could it use 100% of the memory by
+> default,
 
-However, when booting with EFI, EFI's reserve_regions() uses
-memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
-rebuilding them from EFI data. This destroys KHO scratch regions and
-their flags, thus causing a kernel panic, as there are no scratch
-memory regions.
+If you want to softlock the system when rootfs fills up with log files 
+or something, sure.
 
-Instead of wholesale removal, iterate through memory regions and only
-remove non-KHO ones. This preserves KHO scratch regions while still
-allowing EFI to rebuild its memory map.
+That was one of the original motivating reasons for using tmpfs instead 
+of ramfs for a persistent initramfs you don't pivot off of. Plus things 
+like ramfs always reporting zero free space (it doesn't rack) so you 
+can't use things like "rpm install" to add more packages at runtime, and 
+so on... I had a list of reasons I added initmpfs support back in 
+2013.... looks like 
+https://lkml.iu.edu/hypermail/linux/kernel/1306.3/04204.html
 
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
----
+(Ok, the REAL reason I did it is A) I'd documented that was how it 
+worked when I wrote ramfs-rootfs-initramfs back in 2005 because it 
+seemed deeply silly NOT to support that, and when nobody had made the 
+obvious fix 7 years later I got guilted into it by an employer who I'd 
+explained initramfs to and they asked "how do we do the tmpfs version" 
+so I whipped up a quick patch and they went "you need to upstream this 
+before we'll use it" so I went through The Process...)
 
-Reproduction/Verification Steps
-The issue and the fix can be reproduced/verified by booting a VM with
-EFI and attempting to perform a KHO enabled kexec. The fix
-was developed/tested on arm64.
+Note that right now initmpfs isn't _specifying_ 50%, it's inheriting the 
+default value from tmpfs when no arguments are specified. If you're 
+special casing 100% for rootfs you'd still be passing in an argument to 
+the mount call to override the 50% default, just as a hardwired string 
+instead of a user-provided one (and again it would be a terrible idea).
 
- drivers/firmware/efi/efi-init.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+And if you DO change tmpfs itself to globally default to 100% then 'yes 
+ > /dev/shm/blah.txt' could lock your system as a normal user if they 
+don't change their mount script to specify an explicit constraint. Which 
+seems a bit of a regression for existing systems.
 
-diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
-index a00e07b853f22..2f08b1ab764f6 100644
---- a/drivers/firmware/efi/efi-init.c
-+++ b/drivers/firmware/efi/efi-init.c
-@@ -164,12 +164,35 @@ static __init void reserve_regions(void)
- 		pr_info("Processing EFI memory map:\n");
- 
- 	/*
--	 * Discard memblocks discovered so far: if there are any at this
--	 * point, they originate from memory nodes in the DT, and UEFI
--	 * uses its own memory map instead.
-+	 * Discard memblocks discovered so far except for KHO scratch regions.
-+	 * Most memblocks at this point originate from memory nodes in the DT,
-+	 * and UEFI uses its own memory map instead. However, if KHO is enabled,
-+	 * scratch regions must be preserved.
- 	 */
- 	memblock_dump_all();
--	memblock_remove(0, PHYS_ADDR_MAX);
-+
-+	if (IS_ENABLED(CONFIG_MEMBLOCK_KHO_SCRATCH)) {
-+		struct memblock_region *reg;
-+		phys_addr_t start, size;
-+		int i;
-+
-+		/* Remove all non-KHO regions */
-+		for (i = memblock.memory.cnt - 1; i >= 0; i--) {
-+			reg = &memblock.memory.regions[i];
-+			if (!memblock_is_kho_scratch(reg)) {
-+				start = reg->base;
-+				size = reg->size;
-+				memblock_remove(start, size);
-+			}
-+		}
-+	} else {
-+	/*
-+	 * KHO is disabled. Discard memblocks discovered so far: if there
-+	 * are any at this point, they originate from memory nodes in the
-+	 * DT, and UEFI uses its own memory map instead.
-+	 */
-+		memblock_remove(0, PHYS_ADDR_MAX);
-+	}
- 
- 	for_each_efi_memory_desc(md) {
- 		paddr = md->phys_addr;
--- 
-2.43.0
+This new patch is because sometimes people making embedded systems want 
+to devote more than 50% of memory to rootfs while still having the other 
+benefits of tmpfs. One of those benefits is not soft-locking the kernel 
+if something writes too much data to the filesystem.
 
+History time! (It's a hobby of mine. Plus I was here for this part.)
 
+Tmpfs was originally called "swapfs" (because ramfs couldn't use swap as 
+backing store):
 
+https://lkml.iu.edu/0102.0/0203.html
 
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+It was submitted to linux-kernel in 2001 (Peter Anvin was "?!" aghast):
 
+https://lkml.iu.edu/0102.0/0239.html
+
+Tmpfs got added in 2.4.3.3 ala 
+https://github.com/mpe/linux-fullhistory/commit/ca56c8ee6fa0
+
+And almost immediately people noticed the softlock issue hadn't been fixed:
+
+https://lkml.iu.edu/0103.3/0053.html
+
+So the 50% default limit for tmpfs was introduced in 2001 (release 
+2.4.7.5) with the description "saner tmpfs mount-time limits", ala:
+
+https://github.com/mpe/linux-fullhistory/commit/80fa70c0ea28
+
+Jeff Garzik wired it up as an alternative to initrd in November 2002:
+
+https://lwn.net/Articles/14448/
+
+Alas, the result was completely undocumented. I thought it sounded like 
+a cool idea (it resizes automatically!) and reverse engineered how to 
+use it (ok, mostly a lot of pestering people with questions in email) 
+and wrote documentation encouraging people to use it in 2005:
+
+https://lwn.net/Articles/157676/
+
+When I converted rootfs to be able to use tmpfs in 2013 (link above) 
+there was a rootflags= but not a rootfsflags= (ramfs was intentionally a 
+simple demonstration of libfs that took no arguments) and I didn't add 
+one because I didn't personally need it: the 50% default was fine for me 
+and you can mount -o remount to change flags after the fact. (Although I 
+dunno if you can change this limit after the fact or what would happen 
+if you reduced it below what the filesystem currently contained, 
+probably doesn't work.)
+
+Although looking back at my blog entries from the time, it seems I 
+mostly didn't want to deal with bikeshedding about the name 
+https://landley.net/notes-2013.html#29-04-2013
+
+A year later somebody asked me why rootflags= wasn't working for 
+initmpfs (http://www.lightofdawn.org/blog/?viewDetailed=00128) and I 
+basically went "fixing it's easy, getting a patch into linux-kernel 
+requires far too much proctology for anyone on the inside to even see 
+it", and here we are 10 years later with the issue still unaddressed. 
+(Open source! Fixes everything right up immediately. So responsive. No 
+problems left to tackle, hard to find stuff worth doing...)
+
+> and then no need for an extra param?    I feel that there is
+> no point to reserve memory if it is a fully memory based file system.
+
+You're confusing ramdisk with ramfs (initrd vs initramfs). The 50% isn't 
+a reservation, it's a constraint. Both ramfs and tmpfs are dynamic ram 
+backed filesystems.
+
+I wrote documentation about the four types of filesystem 
+(block/pipe/ram/function backed) 20 years ago back on livejournal, I 
+still have a copy somewhere...
+
+https://landley.net/toybox/doc/mount.html
+
+Linus invented ramfs by basically just mounting the page cache as a 
+filesystem with no backing store, so when memory pressure does flush 
+requests it goes "nope". When you write files it allocates memory, when 
+you truncate/delete files it frees memory. That's why ramfs was just a 
+couple hundred lines (at the time he was factoring out libfs so /proc 
+could stop being only synthetic filesystem everybody dumped every 
+control knob into, and I recall he mostly did ramfs as an example of how 
+minimal you could get with the new plumbing). Then tmpfs added some 
+basic guardrails and the ability to use swap space as backing store in 
+case of memory pressure (if you have swap, which a lot of embedded 
+systems don't; note that mmap()ed files have backing store, and 
+executables are basically mmap(MAP_PRIVATE) with some bells and 
+whistles, so you can still swap thrash under memory pressure even 
+without swap by evicting and faulting back in executable pages).
+
+The old ramdisk mechanism from the 1990s created a virtual block device 
+(/dev/ram0 and friends I think) which you would then format and mount 
+using a block backed filesystem driver like ext2. This was terrible for 
+a bunch of reasons, unnecessarily copying all the data to use it and 
+regularly having two copies of the data in RAM (the one faulted into the 
+page cache and the one in the ram block device backing store). Heck, 
+when you had a system running from initramfs, you could configure out 
+the whole block layer and all the block backed filesystem drivers, which 
+made the kernel way smaller both in flash and at runtime. Even before 
+initramfs, ramdisks largely receded into the mists of history (except 
+for initrd) when loopback mounting became a thing, because you can just 
+dd if=/dev/zero of=blah.img bs=1m count=16 and then format that and 
+loopback mount it, and you control the size naturally (no rebooting 
+needed to change it) and it's got its own built-in backing store 
+allowing memory usage of the virtual image to be dynamic (ok, you can 
+mlock() it if you really want to but you could _also_ loopback a file 
+out of ramfs or tmpfs to accomplish that)...
+
+The point of the 50% constraint in tmpfs is to tell the system "when I 
+ask how much free space there is, here's what the maximum should be". 
+Since ramfs doesn't enforce any such constraint, it always reports both 
+total and free space as 0, which tools like "df" use to indicate 
+"synthetic filesystem" and thus not show by default when you ask about 
+"disk free" space. Ramfs will let you keep writing as long as the 
+kernel's internal malloc() doesn't fail to find the next page, and THAT 
+is a problem because writes will fill up every last scrap of kernel 
+memory and then the rest of the kernel loses its lunch when its 
+allocations fail. (They added the OOM killer to try to cope with the 
+fact that recognizing you've run out of memory comes not when you mmap() 
+a range but when you asynchronously fault in pages by reading or 
+dirtying them, which is at memory access time not a syscall with a 
+return value. That's a WHOLE SAGA! There really _isn't_ a good answer 
+but people will happily argue about least bad FOREVER. The younger 
+generation seems to believe that Rust will do something other than add 
+abstraction layers and transition boundaries to make this worse.)
+
+Anyway, the perennial complaint about the 50% initmpfs limit was that if 
+you have a small system that needs 16 gigs of ram to run, but you have a 
+cpio.gz that expands to 48 megabytes, then 64 megs SHOULD be enough for 
+the system... but it won't let you. You have to give it 96 megabytes of 
+ram in order to be able to use 48 megs of root filesystem, or else 
+extracting the cpio.gz will fail with an out of space error before 
+launching init. (This was especially common since you're about to free 
+the cpio.gz after extracting it, so by the time it launches PID 1 the 
+kernel has MORE memory available. There's a high water mark of memory 
+usage while he system is basically idle, but once you're past that extra 
+memory is just adding expense, draining your battery, producing heat...)
+
+The embedded developers have been familiar with the problem for decades, 
+and (as usual) have repeatedly fixed it locally ignoring linux-kernel 
+politics. I first got asked to fix it over 10 years ago, I just find the 
+kernel community unpleasant to interact with these days so mostly only 
+wander in when cc'd.
+
+The author of this patch asked me off list if I had a current version of 
+the patch I'd given other people, which I hadn't updated in _years_. 
+It's been fixed a bunch of times, https://lkml.org/lkml/2021/6/29/783 
+was the most recent we could find, but the fixes stay out of tree 
+because Linux dev is aggressively insular ever since the linux 
+foundation drove away the last of the hobbyists back around 
+https://lwn.net/Articles/563578/ and became corporate "certificate of 
+authenticity" signed-off-by-in-triplicate land with a thousand line 
+patch submission procedure document 
+https://kernel.org/doc/Documentation/process/submitting-patches.rst and 
+a 27 step checklist 
+https://kernel.org/doc/Documentation/process/submit-checklist.rst
+
+(Which will usually still get ignored even when you do that.)
+
+Rob
 
