@@ -4,92 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78DB2C87FDA
-	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 01:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31139C87FDA
+	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 03:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=v5bTWm3eMcCJNfPpUdXPCtKCOZ+9rn+pWDFsHecLhfg=; b=MLs2N+FDdAw/mKVruDxfoeTGNt
-	Q6I7acqxCVPcMkmuuHbCPV18e1CXWByz/EVHjHzJCA/ZZP22HTKQS30SkvfLfLIQmBWMxUrUnRexx
-	PVj6A7VixfdzBF962dpyFixuJc/KqVRn8l4jStYFyXpD3Prl6SzILTgkJx8H5WYxyVqYBhmY5OiRO
-	KyW6lpxCg/m9p5RQzapk+cez7PCNNWrJWBPNOrVwLW1G3RjRxqLrkN48J0b4itoSnFLicDRlVHthB
-	S32U8ql4uvjwVE+E5bNSLewNnGrxWMh8Hfk6r/2FiXys3F8cAH2MHni/8Hl98KcIo79p0/UyO1kpg
-	C1Ant4+Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=MyI6bQ4VKi6kzEU6MGPeSA2rT56TE5vaJOVAfdMj034=; b=dc/u0sXIPWwYxSLZWmV+l0kiFx
+	HIdrCEbT9DZAeZkCfUEWOVKFLwp/WBSYO6uIUo2/m9CV557UIwFxe5q+3bLnQsqotGHx1ka54KQnu
+	ooxTScjhAN554kx9rQhZ1S0rbDu+2jeQTk/zkmQ//xLAO7w8m+q5e2dTyTDFGuErE1/L40jtzoyRd
+	pAfScTy0Wqwv7ZgppMPVtzwoZpyn7B68iVvOXytFZrlCerNvf1MKzYpMoDrdtnFgPtjl4nacr77SR
+	HLnRrFQ9xMcqFKtFFm1HbZuLEfiGiIh6O3uyELoNJDUour2VTSatzy0lAr+UBwAzrOpN8WZJfDx2q
+	QrWQ9esg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulHne-00000006J6c-3yfZ;
-	Mon, 11 Aug 2025 01:58:10 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ulJXb-00000006Rh2-2Jhz;
+	Mon, 11 Aug 2025 03:49:43 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulHnc-00000006J6E-2qtb
+	id 1ulJBz-00000006Pm9-3mpD
 	for kexec@lists.infradead.org;
-	Mon, 11 Aug 2025 01:58:10 +0000
+	Mon, 11 Aug 2025 03:27:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754877486;
+	s=mimecast20190719; t=1754882841;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v5bTWm3eMcCJNfPpUdXPCtKCOZ+9rn+pWDFsHecLhfg=;
-	b=WZOUiN5S9QxyGm/oRxWKNugox7DqerSfRw0Ay3vDU3K9nRHhVXMGemfYEa1Z+CC/NStTPt
-	ca30UFSe2BxG5gqc8jOfduOgJSAvJaSvSI+a0PMjCp52PCaqDiwWHa4UkvU9ErC0aHlue8
-	xC5rpGI8uMy0j7v9gu8wsobV0QezUc4=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=MyI6bQ4VKi6kzEU6MGPeSA2rT56TE5vaJOVAfdMj034=;
+	b=N98C2TSFtN91dW1oU7CzirJAkJIDuwmPCmhoCep1fcn8mkbL2ZPXn7Ijgm9UIJXBdjZt/e
+	qjLgGajyALv5Yp87rz9HUJyPuDyfMpS3+xp3Eirh2iJ99b32e5WDiasDQVfSk7wOVM0PE0
+	tESQtu6okFAMvFyWJU0GHk9p8iEC/1Q=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-nmuNTeHhPviWEzqMkDq1tg-1; Sun, 10 Aug 2025 21:58:04 -0400
-X-MC-Unique: nmuNTeHhPviWEzqMkDq1tg-1
-X-Mimecast-MFC-AGG-ID: nmuNTeHhPviWEzqMkDq1tg_1754877484
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b0791a8e8dso114246921cf.2
-        for <kexec@lists.infradead.org>; Sun, 10 Aug 2025 18:58:04 -0700 (PDT)
+ us-mta-92-cJM1f6W-OqG3v9WB2WJDTw-1; Sun, 10 Aug 2025 23:25:52 -0400
+X-MC-Unique: cJM1f6W-OqG3v9WB2WJDTw-1
+X-Mimecast-MFC-AGG-ID: cJM1f6W-OqG3v9WB2WJDTw_1754882751
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23fe28867b7so54258085ad.2
+        for <kexec@lists.infradead.org>; Sun, 10 Aug 2025 20:25:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754877484; x=1755482284;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v5bTWm3eMcCJNfPpUdXPCtKCOZ+9rn+pWDFsHecLhfg=;
-        b=RXtjc6sYSd3bDyf+V8xWNTFzKI2H/4gU8Kn1LTLnmxCvan17zKV2KS/AZKypb3cH3y
-         BE48OcP06+CXMp1i1gDEUeMlaS4x7WMEsi0eijJAGwPp45Do9MRGboEXpdkfGxAZJ62T
-         xnd9l5wJC6E3NAceM6TmvWDTPtlqzHbEF8ofJpiXugsargygel/wzVNaDUbfK/TI9fRJ
-         Czkm8Tn/jdfMlBnXNPV8tdzlfqB6lvPfOO5wgfIVTBTtTq7FX0etgyFN9cw3fVqmi4KX
-         DNk7+F88iLjI5fhyjW6qZT/DkcFmzhV360GGbIoKNf5U8cpY7asLMSSR+4VkHsRJEsH2
-         imNA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2Lz1pVrWjzIubTZOyJycPavusLb7hqHAT+e7g+QlSzzOs8VJJqXmtc87CMqPAAzlJyQpmwA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx7X2dWVzDlp0ffPgblujjP/kZTFaTe316VylsU6pXX/IE6kbb4
-	7bKCjBquxPCEZBkLP6A6m1h731VszOABZgWT9tjaK6T62EWYS0Lc+rI5QNhrSyGOrLzMEjqNdca
-	1YM4Jof6kMkzWiZtWqPS9upSbqWg2tr6aXO8jXp9YAqTOamZrhD9cnW7Y6zKBW/yjTzpcfMJzEe
-	GmtAISBZ22w00ZDvxX+VVfqG1eoUfcku6nQeP7
-X-Gm-Gg: ASbGncug1bo7lU4P4rLjDKwLInkrQZlDFA3mdxP3PWF0FUhZClT6uI6nvZezLWLR47d
-	vjEEfGgAKzoVhzJvchvVBtYPzxqzd0wU1YN2HSUqVtkQDRTxNGCGwgDmifamRpaVA5LNTZ3tij1
-	zxXHEt7V0yycIhruJ7WeN88HBBgb1xfbmj2kaYAJIKTmBkfFXsaQ6D
-X-Received: by 2002:ac8:5988:0:b0:4b0:7738:6496 with SMTP id d75a77b69052e-4b0aed86229mr173763711cf.60.1754877483918;
-        Sun, 10 Aug 2025 18:58:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLQpsjqmqq6RuxtLSN64JW130ilpQcc55dHUjLQGR+sxe3gWBYutbI5uLidVi8iaaKE3hpUxvaupQrb5R7qPQ=
-X-Received: by 2002:ac8:5988:0:b0:4b0:7738:6496 with SMTP id
- d75a77b69052e-4b0aed86229mr173763581cf.60.1754877483586; Sun, 10 Aug 2025
- 18:58:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754882751; x=1755487551;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MyI6bQ4VKi6kzEU6MGPeSA2rT56TE5vaJOVAfdMj034=;
+        b=gaeCssGEnUyyh7LmDeo/68c2ZieC0VwMweUvNihG3H+afZ6YWcI6XufqxW1oCZFlHq
+         0y+cq5+Ryb/wNWdWklPx8rTA/Zxp3fKMzfBmS83X1nhCx+EgRuGoHeQ8RXjmfKRw96Q6
+         Bo1UU65qOHiK7pZq9vJO6KT3cWK7ZoUirUnAeWMX6IM5m6eJupDVlAHMAEr/gQ5cCwSX
+         6cT2T8kVTogjLqTc/hWO0ZINqmHGZPrfcMYdtw1pVPZGXFoU08TAA7X7XmaNMoDCXWMY
+         rkxdVBuXD96VNZMsFBr8hgYsztiDlYXft/3v0ungrCFvV2qRKEDvYNQ1n9oxbYqyYE4c
+         8LIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKh0S6lNgqU9ixD1kWu0C8kkzg9VGHM5sMybgEBJhkqiQQMPms5Zm9QQ0eSWC+Byb7x/c+RA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxKC4QAY9wfpEkl1cZzRmwhKLNcT55JasAwgDJ5RfeD2qnXJUx/
+	eEgOqwsWlSGc//M2MRYeJ60OJOhnZgZsNU1xS0iwGj4l8W0CRmainP8W51zCyfUgwNgrGcGdIdH
+	vLjMPIllyhrRwBKqrfSEOkieMSNrHbqy83UjAJB2vZMKyJcVYZSlJKZeOuDW0Tg==
+X-Gm-Gg: ASbGncs0DneNW0aWwMn1gba29FO2QZGY92FtCogNXqITpFnCk0udR+bAQgxc8awNZnK
+	bm75xtHHoB8Z5/O6u0ahS2xnGW1VGj3/X5FSk6PgJ5wWOEJantaiG2VA10H8AKtU9S+g5mGBAmn
+	9+qLKuJ5f+bv2HqZfNgylFTzWEhj5K/g/fcz7vWUW6cNhYpMHEEWDnaiD3UGSOUWWyA+lpHfJ5M
+	Gwfd0LdX0+M6VmKl1Gl92j2Yc8+ZH0jPuauuUTXuDu9zQopnINqgsVs3JecMxRnD6CxudjHkMEp
+	qcttIwUMDAm9t8qnltbo26JJSuMzj3o=
+X-Received: by 2002:a17:902:f641:b0:240:7c39:9e25 with SMTP id d9443c01a7336-242c220019amr145851325ad.27.1754882750974;
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGij+iLLH1kTC74+yPsc/frGl3BwTOOImoH7zdGTiZxVFriyBsG7HIux9tyLkoa+5Pjls7KUw==
+X-Received: by 2002:a17:902:f641:b0:240:7c39:9e25 with SMTP id d9443c01a7336-242c220019amr145851095ad.27.1754882750559;
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1ef6a8fsm258509715ad.23.2025.08.10.20.25.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+Date: Mon, 11 Aug 2025 11:23:49 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: [Regression] kdump fails to get DHCP address unless booting with
+ pci=nomsi or without nr_cpus=1
+Message-ID: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
 MIME-Version: 1.0
-References: <20250808015134.2875430-2-lichliu@redhat.com> <CALu+AoTGwZqB28Z+sJ4KW7esNHx8=5kJ6nrMpoQ_rogzSDGwxA@mail.gmail.com>
- <CALu+AoTGY0wKubVgR_EF5BZmYvh180fjP1AsLvp8cJ447WFGaA@mail.gmail.com> <68c086ce-64a0-41e7-8c95-5252dceba0b4@landley.net>
-In-Reply-To: <68c086ce-64a0-41e7-8c95-5252dceba0b4@landley.net>
-From: Lichen Liu <lichliu@redhat.com>
-Date: Mon, 11 Aug 2025 09:57:52 +0800
-X-Gm-Features: Ac12FXzAUfAnBIAIIk6KaLMx7WY-GkMs_s30M6F6RbdwVvRQPl3gAlbci-uLHB8
-Message-ID: <CAPmSd0M2A7NNODWvsvu5sU85mbRVjPYam1v7pbj3tSx073w+XQ@mail.gmail.com>
-Subject: Re: [PATCH] fs: Add 'rootfsflags' to set rootfs mount options
-To: Rob Landley <rob@landley.net>
-Cc: Dave Young <dyoung@redhat.com>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	weilongchen@huawei.com
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ubnx_fAEURXv1B_Uw07IUsBThSF1MIje1PpI7QCWwXg_1754877484
+X-Mimecast-MFC-PROC-ID: -WZ4kkZtbW614AcwOaQpHuoFShdQe_BRNdTMqI7IvPc_1754882751
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250810_185808_799918_05443EC4 
-X-CRM114-Status: UNSURE (   7.26  )
+X-CRM114-CacheID: sfid-20250810_202724_003359_DF88ED59 
+X-CRM114-Status: UNSURE (   9.70  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -105,18 +104,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Rob,
+Hi Thomas,
 
-Thanks for your help with testing and for answering Dave's question in detail!
+Recently I met an issue that on certain virtual machines, the kdump
+kernel fails to get DHCP IP address most of times starting from
+6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
+Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
 
-Your "history time" here is fantastic and explains the reasoning
-perfectly, it is very interesting and I believe it could be part of a
-publication.
+     # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
+     # MSI_FLAG_PCI_MSI_MASK_PARENT
+     git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
+     # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
+     # Provide MSI parent infrastructure
+     git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
+     # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
+     # Prepare for PCI MSI/MSIX
+     git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
+     # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
+     # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
 
-Based on this discussion, it seems the patch is heading in the right
-direction. Please let me know if there are any other concerns.
 
-Thanks!
-Lichen
+I'll appreciate it you can provide any suggestion on fixing this issue.
+And I'd be glad to verify any idea as this issue can seem to be reliably
+reproduced only on certain machines.
+
+The aarch64 kdump kernel on Fedora is booted wit "irqpoll nr_cpus=1
+reset_devices cgroup_disable=memory udev.children-max=2 panic=10
+swiotlb=noforce novmcoredd cma=0 hugetlb_cma=0". Removing "nr_cpus=1" or
+"adding pci=nomsi" can make this issue disappear. 
+
+Note I've also reported this issue to
+https://bugzilla.kernel.org/show_bug.cgi?id=220328
+
+-- 
+Best regards,
+Coiby
 
 
