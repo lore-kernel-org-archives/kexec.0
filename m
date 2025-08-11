@@ -4,63 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC7CCCA0EC4
-	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 19:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CE45CA0ED1
+	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 22:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FGcpL4XArIt7yLfG+gYB1MiWLPOxQ4ZNemVVA5X7j/Q=; b=1ufMlfd1AKIBy10U5LofSRMul/
-	aK0UxoysaQkLlOyfwXMYN2yMtHiZuTNEt9asIY/TDi6ei8ztDonaGlLLiPtNb0G26MnKoJqWUMfdZ
-	1rBzfCB+AwbmGoriAO4mf/pM7BsLz5oHTqsWp9z+h46VUJ0U77XX/RvCSb7U7O9fK9y10ADQ/tfpv
-	XxPGBi7EbmEXHHu+93aSbVLckzbWWDeHGx6Q8SL0zjIeAwOI8H9fyIPANqdwJi5J+615jIrHbOBcK
-	meMRQMEfTQVhqaIlE2kiGQO6eJhrm6T0DjCYLYI/W1LWGMtg1k8rqMnJe0AA//UWG8dOebpDJOZov
-	T+iuT1tA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=awL0JISook8hWw9o6aqgJ55OTTrQ762wx6oz1JCvYrA=; b=SAOKSshS+/JZucV78gnWZZovdD
+	TdZIUl34HRfNm3L+cSR19RDfECc7/Qo6qlol8CxPu7z5f+450ZIDuPu/UDIPw8P/4FyrZAjWFeqIx
+	UrLzA8oh9SnpN1nAJTlqWnLaFkCZ6NMorhXdQthJkdSDYSVxalKZi59VxS9ermnPjhbsuoA/1eWgJ
+	wvT282E+quybZeXHdwxmu7FHUzmfWEy2dK+isX4JcWUxXXOtsjJq8FtjV7KSPX45d7dpoUvMNoRpI
+	TDajJOQGFuOcdcpl7G8SL+zYt/4BAZSugqwJtlbNuWEF3fJOIuU8YOVtsuqUMfKpNcyQHXVB92DES
+	cc0RaHIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulYJC-00000008wGk-1GJ5;
-	Mon, 11 Aug 2025 19:35:50 +0000
-Received: from layka.disroot.org ([178.21.23.139])
+	id 1ulaav-000000099oK-1e9z;
+	Mon, 11 Aug 2025 22:02:17 +0000
+Received: from mail-qt1-x836.google.com ([2607:f8b0:4864:20::836])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulWnZ-00000008cEA-3k6Z
+	id 1ulVGz-00000008Nqk-2kSK
 	for kexec@lists.infradead.org;
-	Mon, 11 Aug 2025 17:59:07 +0000
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 0426C21B02;
-	Mon, 11 Aug 2025 19:59:04 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id EjxmdH4iwM9G; Mon, 11 Aug 2025 19:59:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754935102; bh=5IrkZTtsgWCXjSHQu/naac3Uo1zbNi01U44yoOk6NqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LX3nddLIxM6PFJvSRQwrny2CdEJXN70Bi1TI3F5riMwPM4v4mM/cYzmS/oBqxMhyw
-	 l8CN3KYcQc2LyMq/Ee+gtYNLfk8QO1fiKndHRDLeq5XKhDPGCdcEimI+CCAGdQzdXA
-	 WvYv4onIzhBgoGmExJoichZyRQeotnBmmtgMWf23N2GRMFiYTwguqjeKo2+0ERs39h
-	 7xiva9IG1nGTD5ekb0b3w3c9beqmcQPpJ9LilI/sFikmCIZvWAyN4znEd/iJvFWCDt
-	 3btP5O61ERiKG5zucJB1IiIDN2igm2IS3G+yhzTwPjiv1qQ+MjnwR5WgES9VFBn9Kr
-	 Ubl8hG4lXGp+g==
-Date: Mon, 11 Aug 2025 17:58:00 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
-Message-ID: <aJovKIKFqX6xi9ra@pie>
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-4-youling.tang@linux.dev>
+	Mon, 11 Aug 2025 16:21:23 +0000
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-4af1c1b5b38so54219421cf.1
+        for <kexec@lists.infradead.org>; Mon, 11 Aug 2025 09:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754929280; x=1755534080; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=awL0JISook8hWw9o6aqgJ55OTTrQ762wx6oz1JCvYrA=;
+        b=eclJ0K0o1Rt2g6Rqq1gFWRguutLTFkqiun9dnCbhFTCMuG4koyngIW/m0UwGrUn3Uv
+         z2uf7nyT66lcRnrorITKEW04Rxotn6xSg56uAVXZ+Kh5Mbzz+xhr0GxqY2kFEbPhShkl
+         yLAowYZnKsur8jQj5FogN5m7IdWQWJ3pVCVbbUJcov4fAmlWLXpLNFrAuDD0qfwSx73b
+         T1PmRMdLR/l2xhF9o8AjYAgKnfUnXaflB4o/aDuXW0k2X1dc9oJTxuPm4aWo53jUs2Ac
+         n0sLrOzS+W12g8Al+t+6GijIwB1e5CpvjGuS2m7WUZ96Gl6AVhgcpXh2J85yGxzsglMH
+         pLzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754929280; x=1755534080;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=awL0JISook8hWw9o6aqgJ55OTTrQ762wx6oz1JCvYrA=;
+        b=KKzAZTLnpEVpiQac/pvDFxyfqpmfqg0RUeb4z920nYPhNRnl23Fy3KTZcADkfyYXIp
+         exbfDvf9pzJj8HXkMZok+mmh3xHeo58ZCwGzWry286AwHTk50ZaycqcQ9mOHIshM5E7X
+         RurADHMbjbSlwa8CKIpARv5qJRnKWpxQorv09fUyZ1H2Bj6YWYjWSyekZtQL3wX9Mo7/
+         3zkIAKItl38Bi9HdpIftcaYqFKQBS1CvhoYJZfpOxqqIqQEu46ZTDaUbQJWquoNDFJq+
+         CZ2cF27Mbh3tBKA15/Bag/o1xbrlzyIQz53CQ7LkGXxuq9lDYpUSZp1h7lVooK3Hc428
+         AEuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVL/nFzw9uUWqyqqE+Z6mJq3FPOGjXUub+dHT9x95d1XlSIJe1yyyoqlKZQLHTJtGJFnnPP7g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxVbWZ44UpEsj7xfLYcAnTjLHizXgZFVtU5UxMxG6PfpwDybF+K
+	sviSrafRImrrvY95gqytEtdx0hzfkR5DgVKZJMixappgHkXDr3H7hNMnukfYSgnczoxo1FTmmaL
+	Oelt8EoZYJVc3XZcQJ69x5xIrFw3qnL0=
+X-Gm-Gg: ASbGncvz9XA26/bDqnnPidLfsKmg+yWfO6KktXvluP7Vw8Pu+c8H9RtJte247ZuV/Nn
+	hd5tIoTCHmeGXavDLnj5GYfkJie2F9Iafpn5rcN8DPP150xO+BtMatVaEZEYFin0Pep6yRb8TFw
+	AP8GWvi7NK/TRYfnLlRCH3H6RKUZYMbPqOFVH8DebHqW4lMcjgK185aawGhkDwwT+bJiTW8+ynE
+	ly1oc4=
+X-Google-Smtp-Source: AGHT+IEDpLTv7rwI0cAD28QFliIQ+yhsQyc/LNmqJsRa+8ZnXDomS0x3dmlWYN6EUAqJkku1zV2hhhFk3Xiacn8G2Ic=
+X-Received: by 2002:a05:622a:246:b0:4b0:6d53:a0fc with SMTP id
+ d75a77b69052e-4b0ecba90cdmr1727651cf.7.1754929260980; Mon, 11 Aug 2025
+ 09:21:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811092659.14903-4-youling.tang@linux.dev>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+In-Reply-To: <20250811092659.14903-1-youling.tang@linux.dev>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Mon, 11 Aug 2025 09:20:49 -0700
+X-Gm-Features: Ac12FXzUld0iGaUsswbNzvqcYCLYuSpImt4hSWuMJKJTIUip4EMBCi_zM0pJ_tc
+Message-ID: <CAK3+h2zXBcAgtWJLXhAzzTZQ6_7Epqc6HuOassm_o5JAftK+Gw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add kexec_file support for LoongArch
+To: Youling Tang <youling.tang@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250811_105906_369190_84B77393 
-X-CRM114-Status: GOOD (  25.89  )
+X-CRM114-CacheID: sfid-20250811_092121_698699_A815BB39 
+X-CRM114-Status: GOOD (  18.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,129 +96,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 11, 2025 at 05:26:56PM +0800, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
-> 
-> Add inird loading support and pass it to the second kernel via the
-> cmdline 'initrd=start,size'.
+Hi Youling,
 
-I think This won't work if the exec'ed kernel enables
-CONFIG_CMDLINE_FORCE. Is it possible to mimic libstub's behavior of
-installing a configuration table LINUX_EFI_INITRD_MEDIA_GUID?
-
+On Mon, Aug 11, 2025 at 2:28=E2=80=AFAM Youling Tang <youling.tang@linux.de=
+v> wrote:
 >
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->  arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
-> 
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-> index bc91ae0afa4c..e1240644f529 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
->  	return kexec_image_post_load_cleanup_default(image);
->  }
->  
-> +/* Adds the "initrd=start,size" command line parameter to command line. */
-> +static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
-> +				char *modified_cmdline, unsigned long initrd)
-> +{
-> +	int initrd_strlen;
-> +
-> +	initrd_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "initrd=0x%lx,0x%lx ",
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> This patchset implement kexec_file_load() support on LoongArch.
+>
+> This patch series enables us to load the LoongArch vmlinuz.efi or
+> vmlinux.efi by specifying its file decriptor, instead of user-filled
+> buffer via kexec_load() syscall.
+>
+> To use kexec_file_load() system call, instead of kexec_load(), at kexec
+> command, '-s' options must be specified. kexec-tools needs to apply the
+> corresponding patches. These patches can be found in repository [1] and
+> will be submitted to the kexec-tools community later.
+>
+> The basic usage of kexec_file is:
+> 1) Load second kernel image:
+>  # kexec -s -l vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
+>
+> 2) Startup second kernel:
+>  # kexec -e
+>
+> For kdump:
+> 1) Load capture kernel image:
+>  # kexec -s -p vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
+>
+> 2) Do something to crash, like:
+>  # echo c > /proc/sysrq-trigger
+>
 
-modified_cmdline is allocated as COMMAND_LINE_SIZE bytes, thus I think
-it's possible to overflow the buffer.
+I am new to this feature but I am interested to test this feature, How
+do I get the second kernel or capture image vmlinux.efi and
+initrd.img, do I need to build them separately and how?
 
-> +		initrd, image->initrd_buf_len);
-> +	*cmdline_tmplen += initrd_strlen;
-> +}
-> +
-> +/*
-> + * Tries to add the initrd to the image. If it is not possible to find
-> + * valid locations, this function will undo changes to the image and return non
-> + * zero.
-> + */
->  int load_other_segments(struct kimage *image,
->  			unsigned long kernel_load_addr,
->  			unsigned long kernel_size,
->  			char *initrd, unsigned long initrd_len,
->  			char *cmdline, unsigned long cmdline_len)
->  {
-> +	struct kexec_buf kbuf;
-> +	unsigned long orig_segments = image->nr_segments;
-> +	char *modified_cmdline = NULL;
-> +	unsigned long cmdline_tmplen = 0;
-> +	unsigned long initrd_load_addr = 0;
-> +	int ret = 0;
-> +
-> +
-> +	kbuf.image = image;
-> +	/* not allocate anything below the kernel */
-> +	kbuf.buf_min = kernel_load_addr + kernel_size;
-> +
-> +	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
-> +	if (!modified_cmdline)
-> +		return -EINVAL;
-> +
-> +	/* Ensure it's nul terminated */
-> +	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
-> +
-> +	/* load initrd */
-> +	if (initrd) {
-> +		kbuf.buffer = initrd;
-> +		kbuf.bufsz = initrd_len;
-> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> +		kbuf.memsz = initrd_len;
-> +		kbuf.buf_align = 0;
-> +		/* within 1GB-aligned window of up to 32GB in size */
-> +		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
-> +						+ (unsigned long)SZ_1G * 32;
-> +		kbuf.top_down = false;
-> +
-> +		ret = kexec_add_buffer(&kbuf);
-> +		if (ret)
-> +			goto out_err;
-> +		initrd_load_addr = kbuf.mem;
-> +
-> +		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> +			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
-> +
-> +		/* Add the initrd=start,size parameter to the command line */
-> +		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
-> +	}
-> +
-> +	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
-
-It's too later to check for overflowing here, where the data after
-modified_cmdline may already be overwritten.
-
-> +		pr_err("Appending kdump cmdline exceeds cmdline size\n");
-
-I think load_other_segments could be invoked without kdump involved. If
-that's correct, this message is inaccurate.
-
-> +		ret = -EINVAL;
-> +		goto out_err;
-> +	}
-
-Regards,
-Yao Zi
-
-> +	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
-> +	cmdline = modified_cmdline;
->  	image->arch.cmdline_ptr = (unsigned long)cmdline;
->  
->  	return 0;
-> +
-> +out_err:
-> +	image->nr_segments = orig_segments;
-> +	kfree(modified_cmdline);
-> +	return ret;
->  }
-> -- 
+> Link:
+> [1] https://github.com/tangyouling/kexec-tools/commits/main/
+>
+> Youling Tang (6):
+>   LoongArch: Add struct loongarch_image_header for kernel image
+>   LoongArch: Add kexec_file support
+>   LoongArch/kexec_file: Add initrd loading
+>   LoongArch/kexec_file: Add crash dump support
+>   LoongArch/kexec_file: Add "mem" parameter to limit memory usage of
+>     kdump kernel
+>   LoongArch: Enable CONFIG_KEXEC_FILE
+>
+>  arch/loongarch/Kconfig                     |   8 +
+>  arch/loongarch/configs/loongson3_defconfig |   1 +
+>  arch/loongarch/include/asm/image.h         |  58 +++++
+>  arch/loongarch/include/asm/kexec.h         |  12 ++
+>  arch/loongarch/kernel/Makefile             |   1 +
+>  arch/loongarch/kernel/kexec_image.c        | 112 ++++++++++
+>  arch/loongarch/kernel/machine_kexec.c      |  33 ++-
+>  arch/loongarch/kernel/machine_kexec_file.c | 234 +++++++++++++++++++++
+>  8 files changed, 448 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/image.h
+>  create mode 100644 arch/loongarch/kernel/kexec_image.c
+>  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+>
+> --
 > 2.34.1
-> 
-> 
+>
+>
 
