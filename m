@@ -4,40 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4A2FCA0EC1
-	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21F3EC87FD2
+	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 09:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bptUG6+6W2TjiSNT88rR5MzDy6r8MtSXxrLcyKgaTpk=; b=mi7zBARQIAfFbGWdFV3ZI1OlM/
-	gbQlGQX4Sp+2JLH80fqJ+LO6rKoPWupLmmBpRf9SbvSE0oMhdCAgZPVCacSu6V0RZOGTe9WjoUoJm
-	jJjk3OYPyb47Un2k0bLc5MVpluRiZtjZV4FH0BIx0/T15vav341m7rpeV8+d127bT6A9vGrv6o++4
-	8DNu6ZALSh+ZSEGmQshsyte4UOp8ri61nEm8eT1owvb7UWIUwNKkPPTQQ9F6vLaZz5K4kbQ/8zHwr
-	SvtN3oomSeb8U0COC87nc9cibCCg91jULhgojkv5Oyf1EOYed7A1B+XxhXDcghVSo2fhfjquH0Vzn
-	7XH2sjiA==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mn6yGCgIfkqUqRIzMPkZRCyDdMUzEhApvE49oVqcvo0=; b=piRBhwQMW2GapuCU7dD2gRpUyH
+	rUTq3jxbfAKMCQr6kpC7fZvRETSU3wKn6YidbSVXRu6kgPIg7rn/ObTnwiCTv0rPtFF/NY5clxaBk
+	A6shRvPGw1FAh7034MhJ0QCl5rHpVIkQzW3MdT/wdvjEZlreLVK855yQ3gxsPjIcdWM5JZ6MzrRAC
+	7BBb/EF9wc3LqeD/lY67ziQ2sMUJooAEJzn/G5M/YuPw0MDtfNoGN7KGzWrwOTntO11jPA+dd0Ogl
+	kR7ehIMZQ6ejkIR7FwBT2AH6s9cySjaZxFCFaJqyqRFn4J3EH36PyBCDYtTQn0uuj/O7g8ErHnIkD
+	GOdhqlTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulOpO-000000076t8-1lUQ;
-	Mon, 11 Aug 2025 09:28:26 +0000
-Received: from out-182.mta1.migadu.com ([2001:41d0:203:375::b6])
+	id 1ulOpQ-000000076wa-3jkL;
+	Mon, 11 Aug 2025 09:28:28 +0000
+Received: from out-183.mta1.migadu.com ([95.215.58.183])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulOpL-000000076qo-2xOn
+	id 1ulOpO-000000076lZ-11F5
 	for kexec@lists.infradead.org;
-	Mon, 11 Aug 2025 09:28:24 +0000
+	Mon, 11 Aug 2025 09:28:27 +0000
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754904502;
+	t=1754904491;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bptUG6+6W2TjiSNT88rR5MzDy6r8MtSXxrLcyKgaTpk=;
-	b=BGP3zFfNqnFS8+fpFseO1BHiuuPXajlLtT/byV8ZH/dAlGG12DovvVEOyLyVFPBzOLr4he
-	ZRiw+HgQ5QfS5E9OfmDEtHKiLwpOFWruToeC6/vvh2sr+A7INlnAyj415vCp8/J6baigZb
-	MEbSrUnG6tPvCIGJb3um4O7MI749nfY=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mn6yGCgIfkqUqRIzMPkZRCyDdMUzEhApvE49oVqcvo0=;
+	b=FBkchM+oKFunptI/GonLa8A971t0vOUJRpSTuUu1uo3GD5p/4CJaRBj3DOaSI+upBgQjI1
+	0kRrxqpEG1a1PyQwR3GxtXFAroLuvQyOAsNJUexLT72W2BwtQL3kb3raTMXH8nWm8/btDR
+	OeW3oQyHT9ieBvmxlunj/quxeNvbQVw=
 From: Youling Tang <youling.tang@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>,
@@ -47,17 +46,16 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-kernel@vger.kernel.org,
 	youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH 4/6] LoongArch/kexec_file: Add crash dump support
-Date: Mon, 11 Aug 2025 17:26:57 +0800
-Message-Id: <20250811092659.14903-5-youling.tang@linux.dev>
-In-Reply-To: <20250811092659.14903-1-youling.tang@linux.dev>
-References: <20250811092659.14903-1-youling.tang@linux.dev>
+Subject: [PATCH 0/6] Add kexec_file support for LoongArch
+Date: Mon, 11 Aug 2025 17:26:53 +0800
+Message-Id: <20250811092659.14903-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250811_022823_883753_05E5E584 
-X-CRM114-Status: GOOD (  12.58  )
+X-CRM114-CacheID: sfid-20250811_022826_468581_346012DF 
+X-CRM114-Status: UNSURE (   9.67  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,127 +72,56 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-Enabling crash dump (kdump) includes:
-- prepare contents of ELF header of a core dump file, /proc/vmcore,
-  using crash_prepare_elf64_headers().
-- add "elfcorehdr=size@start" to command line.
+This patchset implement kexec_file_load() support on LoongArch.
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
----
- arch/loongarch/kernel/machine_kexec_file.c | 93 ++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+This patch series enables us to load the LoongArch vmlinuz.efi or
+vmlinux.efi by specifying its file decriptor, instead of user-filled
+buffer via kexec_load() syscall.
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index e1240644f529..06def654cc09 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -34,6 +34,63 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
-+#ifdef CONFIG_CRASH_DUMP
-+
-+static int prepare_elf_headers(void **addr, unsigned long *sz)
-+{
-+	struct crash_mem *cmem;
-+	unsigned int nr_ranges;
-+	int ret;
-+	u64 i;
-+	phys_addr_t start, end;
-+
-+	nr_ranges = 2; /* for exclusion of crashkernel region */
-+	for_each_mem_range(i, &start, &end)
-+		nr_ranges++;
-+
-+	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
-+	if (!cmem)
-+		return -ENOMEM;
-+
-+	cmem->max_nr_ranges = nr_ranges;
-+	cmem->nr_ranges = 0;
-+	for_each_mem_range(i, &start, &end) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+
-+	/* Exclude crashkernel region */
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+	if (ret)
-+		goto out;
-+
-+	if (crashk_low_res.end) {
-+		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
-+
-+out:
-+	kfree(cmem);
-+	return ret;
-+}
-+
-+/* Adds the "elfcorehdr=size@start" command line parameter to command line. */
-+static void cmdline_add_elfcorehdr(struct kimage *image, unsigned long *cmdline_tmplen,
-+				char *modified_cmdline, unsigned long elfcorehdr_sz)
-+{
-+	int elfcorehdr_strlen = 0;
-+
-+	elfcorehdr_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "elfcorehdr=0x%lx@0x%lx ",
-+		elfcorehdr_sz, image->elf_load_addr);
-+	*cmdline_tmplen += elfcorehdr_strlen;
-+}
-+
-+#endif
-+
- /* Adds the "initrd=start,size" command line parameter to command line. */
- static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
- 				char *modified_cmdline, unsigned long initrd)
-@@ -75,6 +132,42 @@ int load_other_segments(struct kimage *image,
- 	/* Ensure it's nul terminated */
- 	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
- 
-+#ifdef CONFIG_CRASH_DUMP
-+	/* load elf core header */
-+	void *headers;
-+	unsigned long headers_sz;
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		ret = prepare_elf_headers(&headers, &headers_sz);
-+		if (ret) {
-+			pr_err("Preparing elf core header failed\n");
-+			goto out_err;
-+		}
-+
-+		kbuf.buffer = headers;
-+		kbuf.bufsz = headers_sz;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+		kbuf.memsz = headers_sz;
-+		kbuf.buf_align = SZ_64K; /* largest supported page size */
-+		kbuf.buf_max = ULONG_MAX;
-+		kbuf.top_down = true;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			vfree(headers);
-+			goto out_err;
-+		}
-+		image->elf_headers = headers;
-+		image->elf_load_addr = kbuf.mem;
-+		image->elf_headers_sz = headers_sz;
-+
-+		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
-+
-+		/* Add the elfcorehdr=size@start parameter to the command line */
-+		cmdline_add_elfcorehdr(image, &cmdline_tmplen, modified_cmdline, headers_sz);
-+	}
-+#endif
-+
- 	/* load initrd */
- 	if (initrd) {
- 		kbuf.buffer = initrd;
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. kexec-tools needs to apply the
+corresponding patches. These patches can be found in repository [1] and
+will be submitted to the kexec-tools community later.
+
+The basic usage of kexec_file is:
+1) Load second kernel image:
+ # kexec -s -l vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Startup second kernel:
+ # kexec -e
+
+For kdump:
+1) Load capture kernel image:
+ # kexec -s -p vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Do something to crash, like:
+ # echo c > /proc/sysrq-trigger
+
+Link:
+[1] https://github.com/tangyouling/kexec-tools/commits/main/
+
+Youling Tang (6):
+  LoongArch: Add struct loongarch_image_header for kernel image
+  LoongArch: Add kexec_file support
+  LoongArch/kexec_file: Add initrd loading
+  LoongArch/kexec_file: Add crash dump support
+  LoongArch/kexec_file: Add "mem" parameter to limit memory usage of
+    kdump kernel
+  LoongArch: Enable CONFIG_KEXEC_FILE
+
+ arch/loongarch/Kconfig                     |   8 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/image.h         |  58 +++++
+ arch/loongarch/include/asm/kexec.h         |  12 ++
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/kexec_image.c        | 112 ++++++++++
+ arch/loongarch/kernel/machine_kexec.c      |  33 ++-
+ arch/loongarch/kernel/machine_kexec_file.c | 234 +++++++++++++++++++++
+ 8 files changed, 448 insertions(+), 11 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/image.h
+ create mode 100644 arch/loongarch/kernel/kexec_image.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+
 -- 
 2.34.1
 
