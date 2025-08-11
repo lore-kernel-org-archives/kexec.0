@@ -4,85 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4B1FCA0ED1
-	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 18:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC7CCCA0EC4
+	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 19:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=a7BVlmfeLs6ULRwadvx15tKMoMO9CIoW/Sg46vdX1wQ=; b=zAJ+OneAzL6pvYVnZrqYyRQvB2
-	x787jTq4pMFcwi7hOJBxYcxwHYT2C6FVTDn7SlSuOYcE/QmxXkWPNveOQDMO9gGFnC2SGylydwBlL
-	OzUjlLiiBq9k9ND2louU0VrPX6ceKaj4cyynDazGKXh7wbVpA3jgZqnTZVi9AGWk7iDImQusGPjhr
-	vgdyz3UPDse0eQTt0afMpVa9cfj111VonysGh2nhgKkIFKpNSNLLtQQIM0FfWezFPH68469qzcaLg
-	uBMZyzrgwqkqITK9Hf4uFr/6k4Ygjh2DISeucPgt1BeDvFrjVU3YUGx6M4kL6dHOqnJUTUzt3RnV9
-	/eUf5wHw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FGcpL4XArIt7yLfG+gYB1MiWLPOxQ4ZNemVVA5X7j/Q=; b=1ufMlfd1AKIBy10U5LofSRMul/
+	aK0UxoysaQkLlOyfwXMYN2yMtHiZuTNEt9asIY/TDi6ei8ztDonaGlLLiPtNb0G26MnKoJqWUMfdZ
+	1rBzfCB+AwbmGoriAO4mf/pM7BsLz5oHTqsWp9z+h46VUJ0U77XX/RvCSb7U7O9fK9y10ADQ/tfpv
+	XxPGBi7EbmEXHHu+93aSbVLckzbWWDeHGx6Q8SL0zjIeAwOI8H9fyIPANqdwJi5J+615jIrHbOBcK
+	meMRQMEfTQVhqaIlE2kiGQO6eJhrm6T0DjCYLYI/W1LWGMtg1k8rqMnJe0AA//UWG8dOebpDJOZov
+	T+iuT1tA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulXNT-00000008nou-2vKS;
-	Mon, 11 Aug 2025 18:36:11 +0000
-Received: from mail-qk1-x72d.google.com ([2607:f8b0:4864:20::72d])
+	id 1ulYJC-00000008wGk-1GJ5;
+	Mon, 11 Aug 2025 19:35:50 +0000
+Received: from layka.disroot.org ([178.21.23.139])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulUaz-00000008Dyj-21d4
+	id 1ulWnZ-00000008cEA-3k6Z
 	for kexec@lists.infradead.org;
-	Mon, 11 Aug 2025 15:37:58 +0000
-Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-7e699d1179cso606566785a.2
-        for <kexec@lists.infradead.org>; Mon, 11 Aug 2025 08:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754926676; x=1755531476; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7BVlmfeLs6ULRwadvx15tKMoMO9CIoW/Sg46vdX1wQ=;
-        b=Qzov5QsjntpsPKbxp9RiB+1MhPNQoONa6k3yS7+VT8I4Kzf5w4H3SHYob4e8mBDCxT
-         O8WTcJPJ5rWxrLBVeh4oFeIcpWtYMK0f2cDtOhIKWHfrK8GHPMN17mOusAOKBGgEzi+z
-         Js6GGHZTVpILEJVKSoAzhJYA/07pvh2LBVsO0ypNb+f6FBeSXy/DmnNzuIU8U1f+Z+k/
-         rgxKKRg6hD4KIldyoCqkXg/TX7gR5rdoW8GtE/bImvXguBxNyROUaHymqI76U/GumnOq
-         ml/nlsK8uxcOgsRW40JxP7JLdeRw2e4MZEUmh15wJKa/0lxss8lPQJ73NgtmOr6m6vcn
-         bFcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754926676; x=1755531476;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a7BVlmfeLs6ULRwadvx15tKMoMO9CIoW/Sg46vdX1wQ=;
-        b=CnvexSPxcKFN9t8KFDdx/f9AMwXTL51JExGXP/A6B0wFIpcL9meE06PFxhYXjn9AjA
-         ZNsaf+2rTmtghZkibNpp6pyABO2raCr2xdkXmvqEfahHcpbir4u0qRLOV0swq2fOcU0W
-         3oU030Zn3vyjv4J1lwC+rdLDWTRJWSSH8G6kqzE5nV54Eaw8sInoKfJ3h5NOr+x2EXEf
-         OL8RcdSkpd4zO+OV6K8L+11JWoIxHYuJ6lI87LQT0P393VH+zDRaaKekEuvM0Cd2MaWe
-         KmEnxJoPW7x280iRB+T0i4m709uKNqnF952EgM+CzMwsYdWo5KaRepyTSly7IjrSkSxw
-         4HSQ==
-X-Gm-Message-State: AOJu0YzTSyuw8XyfXdlqnYdFooGYpYElifS9Y+gZb0BW52M4Dd8xjkzq
-	UC84JXZ91ekZME0p7AY19J9Q4mHLIEq0DXWvtUSQ9zfJuCk8ZWGUYiMqR5Q05+KS
-X-Gm-Gg: ASbGncvISeTpd76hlnxqIxPzaMZVaHwIqlI4KxE3KTy7S4egNMuED0y3JeRdEkM3K+g
-	vAmqTsaWRNUu+slgQhbG1ZlkrmyGvOCnMHeZQRZMiQho0wdGqErhjXZMFpSrtactUr/eQMHPPKd
-	BaLBtBH+4fmkTtq0LH9fI57RtashlGp22FWTCGwpvRwYqk9+o0Qp0ExZto1jwleoc7STuppPGSq
-	AXikK9nmaE0QhrfLAa3U7DbE5SatCvZrBXc4T10G8DJm12w4v42VAm1YjLViBAl1UKNi6ympE0P
-	cd/vyhl5+jHMPQAAlH+4HrFqG140ZxW+2tHtXDA3oMxHswZOlsnf1PsPoSE462gzTvwV8T/uJeS
-	jaH664QJrqF4gy9WdjpgEtQSLsSlYxhY=
-X-Google-Smtp-Source: AGHT+IGlXNxjc9NsUORI5uPug/HBzzyBRtKTarWlFgh1BxUDqVt8jTsl63xiGCkvHHDGP0I9vkndOQ==
-X-Received: by 2002:a05:620a:6289:b0:7e8:2608:b8d4 with SMTP id af79cd13be357-7e8587fb726mr46427785a.4.1754926675765;
-        Mon, 11 Aug 2025 08:37:55 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:74::])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e818bd06c9sm803431785a.34.2025.08.11.08.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 08:37:55 -0700 (PDT)
-From: Usama Arif <usamaarif642@gmail.com>
-To: kexec@lists.infradead.org,
-	horms@verge.net.au
-Cc: paulmck@kernel.org,
-	leitao@debian.org,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [RFC] kexec: Add bootconfig support to get_command_line
-Date: Mon, 11 Aug 2025 16:37:36 +0100
-Message-ID: <20250811153736.3865487-1-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.47.3
+	Mon, 11 Aug 2025 17:59:07 +0000
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0426C21B02;
+	Mon, 11 Aug 2025 19:59:04 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id EjxmdH4iwM9G; Mon, 11 Aug 2025 19:59:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1754935102; bh=5IrkZTtsgWCXjSHQu/naac3Uo1zbNi01U44yoOk6NqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LX3nddLIxM6PFJvSRQwrny2CdEJXN70Bi1TI3F5riMwPM4v4mM/cYzmS/oBqxMhyw
+	 l8CN3KYcQc2LyMq/Ee+gtYNLfk8QO1fiKndHRDLeq5XKhDPGCdcEimI+CCAGdQzdXA
+	 WvYv4onIzhBgoGmExJoichZyRQeotnBmmtgMWf23N2GRMFiYTwguqjeKo2+0ERs39h
+	 7xiva9IG1nGTD5ekb0b3w3c9beqmcQPpJ9LilI/sFikmCIZvWAyN4znEd/iJvFWCDt
+	 3btP5O61ERiKG5zucJB1IiIDN2igm2IS3G+yhzTwPjiv1qQ+MjnwR5WgES9VFBn9Kr
+	 Ubl8hG4lXGp+g==
+Date: Mon, 11 Aug 2025 17:58:00 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Youling Tang <youling.tang@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
+Message-ID: <aJovKIKFqX6xi9ra@pie>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+ <20250811092659.14903-4-youling.tang@linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811092659.14903-4-youling.tang@linux.dev>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250811_083757_524880_D2A4698B 
-X-CRM114-Status: GOOD (  22.36  )
+X-CRM114-CacheID: sfid-20250811_105906_369190_84B77393 
+X-CRM114-Status: GOOD (  25.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,98 +75,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the kernel is enabled with CONFIG_BOOT_CONFIG_FORCE, it will
-always append the bootconfig at the start of the kernel commandline.
-If reuse-cmdline option is used in kexec, the bootconfig will be
-repeatedly appended at the start of the commandline on every kexec.
-As there is a limit on the size of kernel commandline that can be
-used, --reuse-cmdline option will break kexec depending on the
-size of bootconfig on repeated kexec.
+On Mon, Aug 11, 2025 at 05:26:56PM +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+> 
+> Add inird loading support and pass it to the second kernel via the
+> cmdline 'initrd=start,size'.
 
-Bootconfig is embedded in the kernel, so it should not be considered
-when reusing kernel command line.
-Modify get_command_line() to first attempt reading kernel parameters
-from /proc/bootconfig before falling back to /proc/cmdline. This allows
-kexec to use the original boot parameters without bootconfig which
-is embedded in the kernel.
+I think This won't work if the exec'ed kernel enables
+CONFIG_CMDLINE_FORCE. Is it possible to mimic libstub's behavior of
+installing a configuration table LINUX_EFI_INITRD_MEDIA_GUID?
 
-The function will fallback to /proc/cmdline behavior when:
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>  arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+> 
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index bc91ae0afa4c..e1240644f529 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
+>  }
+>  
+> +/* Adds the "initrd=start,size" command line parameter to command line. */
+> +static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
+> +				char *modified_cmdline, unsigned long initrd)
+> +{
+> +	int initrd_strlen;
+> +
+> +	initrd_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "initrd=0x%lx,0x%lx ",
 
-- /proc/bootconfig doesn't exist
-- /proc/bootconfig is empty
-- /proc/bootconfig doesn't contain the expected marker format
-- The extracted parameter line is empty
+modified_cmdline is allocated as COMMAND_LINE_SIZE bytes, thus I think
+it's possible to overflow the buffer.
 
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- kexec/kexec.c | 50 ++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 44 insertions(+), 6 deletions(-)
+> +		initrd, image->initrd_buf_len);
+> +	*cmdline_tmplen += initrd_strlen;
+> +}
+> +
+> +/*
+> + * Tries to add the initrd to the image. If it is not possible to find
+> + * valid locations, this function will undo changes to the image and return non
+> + * zero.
+> + */
+>  int load_other_segments(struct kimage *image,
+>  			unsigned long kernel_load_addr,
+>  			unsigned long kernel_size,
+>  			char *initrd, unsigned long initrd_len,
+>  			char *cmdline, unsigned long cmdline_len)
+>  {
+> +	struct kexec_buf kbuf;
+> +	unsigned long orig_segments = image->nr_segments;
+> +	char *modified_cmdline = NULL;
+> +	unsigned long cmdline_tmplen = 0;
+> +	unsigned long initrd_load_addr = 0;
+> +	int ret = 0;
+> +
+> +
+> +	kbuf.image = image;
+> +	/* not allocate anything below the kernel */
+> +	kbuf.buf_min = kernel_load_addr + kernel_size;
+> +
+> +	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
+> +	if (!modified_cmdline)
+> +		return -EINVAL;
+> +
+> +	/* Ensure it's nul terminated */
+> +	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
+> +
+> +	/* load initrd */
+> +	if (initrd) {
+> +		kbuf.buffer = initrd;
+> +		kbuf.bufsz = initrd_len;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +		kbuf.memsz = initrd_len;
+> +		kbuf.buf_align = 0;
+> +		/* within 1GB-aligned window of up to 32GB in size */
+> +		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
+> +						+ (unsigned long)SZ_1G * 32;
+> +		kbuf.top_down = false;
+> +
+> +		ret = kexec_add_buffer(&kbuf);
+> +		if (ret)
+> +			goto out_err;
+> +		initrd_load_addr = kbuf.mem;
+> +
+> +		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+> +
+> +		/* Add the initrd=start,size parameter to the command line */
+> +		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
+> +	}
+> +
+> +	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 6bf12d7..b31cb1f 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1235,15 +1235,53 @@ static char *slurp_proc_file(const char *filename, size_t *len)
-  */
- char *get_command_line(void)
- {
--	char *p, *line;
-+	char *p, *line = NULL;
- 	size_t size;
-+	char *bootconfig_line;
-+	size_t bootconfig_size;
-+
-+	/* First try to get command line parameters from /proc/bootconfig */
-+	bootconfig_line = slurp_proc_file("/proc/bootconfig", &bootconfig_size);
-+	if (bootconfig_line && bootconfig_size > 0) {
-+		/* Look for "# Parameters from bootloader:" */
-+		char *params_marker = strstr(bootconfig_line, "# Parameters from bootloader:");
-+		if (params_marker) {
-+			/* Find the next line after the marker */
-+			char *params_start = strchr(params_marker, '\n');
-+			if (params_start) {
-+				params_start++; /* Move past the newline */
-+
-+				/* Check if this line starts with "# " */
-+				if (strncmp(params_start, "# ", 2) == 0) {
-+					/* Skip the "# " prefix */
-+					params_start += 2;
-+
-+					/* Find the end of the line */
-+					char *params_end = strchr(params_start, '\n');
-+					if (params_end) {
-+						*params_end = '\0';
-+					}
-+
-+					/* Check if the extracted line is not empty */
-+					if (strlen(params_start) > 0) {
-+						/* Allocate and copy the parameters */
-+						line = xstrdup(params_start);
-+					}
-+				}
-+			}
-+		}
-+		free(bootconfig_line);
-+	}
- 
--	line = slurp_proc_file("/proc/cmdline", &size);
--	if (!line || !size)
--		die("Failed to read /proc/cmdline\n");
-+	/* Fall back to reading /proc/cmdline if we didn't get a line from bootconfig */
-+	if (!line) {
-+		line = slurp_proc_file("/proc/cmdline", &size);
-+		if (!line || !size)
-+			die("Failed to read /proc/cmdline\n");
- 
--	/* strip newline */
--	line[size-1] = '\0';
-+		/* strip newline */
-+		line[size-1] = '\0';
-+	}
- 
- 	p = strpbrk(line, "\r\n");
- 	if (p)
--- 
-2.47.3
+It's too later to check for overflowing here, where the data after
+modified_cmdline may already be overwritten.
 
+> +		pr_err("Appending kdump cmdline exceeds cmdline size\n");
+
+I think load_other_segments could be invoked without kdump involved. If
+that's correct, this message is inaccurate.
+
+> +		ret = -EINVAL;
+> +		goto out_err;
+> +	}
+
+Regards,
+Yao Zi
+
+> +	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
+> +	cmdline = modified_cmdline;
+>  	image->arch.cmdline_ptr = (unsigned long)cmdline;
+>  
+>  	return 0;
+> +
+> +out_err:
+> +	image->nr_segments = orig_segments;
+> +	kfree(modified_cmdline);
+> +	return ret;
+>  }
+> -- 
+> 2.34.1
+> 
+> 
 
