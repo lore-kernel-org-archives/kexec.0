@@ -4,69 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C70BC87FD2
-	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 08:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7CDFACA0EC0
+	for <kexec@archiver.kernel.org>; Mon, 11 Aug 2025 09:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=D6mDOZNO2M8bgcPUt67qcFUpkk7LTdWtsD73Aun5+3g=; b=XYTA+JpbQodj/W+Tgo8MEnBID8
-	07FCpBeR96YSAm0GwDGdFkawgfBDotJgXQXdt5Pz9yfH1khW/zOqucO2uPX3VOwQfpiLSCOBbDXUM
-	AVzPMdaOmi4Uywe9pcy2ElG/CR32C22M8OhFhtXopClP+so1sGZd1rJGHmfIY/WrURMfcSF6X/WbU
-	I3jn7a/Js10D/fgpJpIryOYY2Bad77lfh8aCIFrYuGhKoXToNWAD3phsz+PfYquYkXcDmjq3+U7Dt
-	dDN/4+l+HVltEuF0yAhV5RI0j5rHaISWzUuq8adOTuT36XEjUz6knyc3X2piUO2Yp4eyZdUskC5wn
-	n2t4DPMQ==;
+	bh=/OGdEPpBUhj7h+P7gI7AN/cn/c6kSjD1T1RA7M9+TKc=; b=Yb6E1IuFkrnTT4Gx/KGUFqNj/9
+	V/CAcocj+vxZNNdyX7c9LVEszNZfI4LcB00iTryRqVNwTQvu0+gGpUYIs/BQCHFWvwqGVKDykbE99
+	KJFkwfVenAT0piYZU84kzy357QSGxc4V/RAkSUm7IHBoSa++3jYxQnYC7GPbN11+bBu+HgdOKf11Q
+	ajiUcc44gX4j/1W3i4ZF5cg8SKzHoZ38GeH+rv+RMqsL76g4QJob2mR5vKIF1qHY8FVI024xbUGdp
+	VXFBlwDxK4Mgnp5zz6Fm6lKFyUv7HgfWrQv0cEO6v7BAYVaWKUjJRLwmgANJ+vGV5eOT3ly8FfoSX
+	O3REbIkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulOHO-00000006utY-47IP;
-	Mon, 11 Aug 2025 08:53:18 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1ulOpK-000000076qJ-1EiE;
+	Mon, 11 Aug 2025 09:28:22 +0000
+Received: from out-182.mta1.migadu.com ([2001:41d0:203:375::b6])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulNqY-00000006qVb-0Ghq
+	id 1ulOpH-000000076ml-4BUm
 	for kexec@lists.infradead.org;
-	Mon, 11 Aug 2025 08:25:35 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 8BF7F5C5E4B;
-	Mon, 11 Aug 2025 08:25:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E4DC4CEED;
-	Mon, 11 Aug 2025 08:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754900733;
-	bh=AX4qbF1XwwQU81rpLwIDoyjLFeF3rSGWbifPTbjdHrg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BBu0tV7SisZJigpGLwfJlV2DUdG+zG1xMTy9xi/TIyeMR5QWWzL0vrHVWTDRyETLf
-	 9wif8JusDG/lncKaw75hHOvcdqYqn/hmr+fqPbslLarR0lND4TxrjqOXleCy0VgHww
-	 GueKwq1d+VQbbVudmODDZr+IKPx3dEjguWd30pfO49xBo595IUSrVNKUlqaptMEDm9
-	 KP31uI9G5AP37tXrvaMBfcsjXU1W0CCSlWIXI4CgqU7P5fOOJ/Xo7AU7E4ynb4fCqu
-	 n34r44Dg10BdzEJjqjj3L+enf9CPz3opBOem/pEGx2qDAobHWQmPbtyV9jD4PbU+67
-	 7mhcCWzujOfug==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Graf <graf@amazon.com>,
+	Mon, 11 Aug 2025 09:28:21 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754904496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/OGdEPpBUhj7h+P7gI7AN/cn/c6kSjD1T1RA7M9+TKc=;
+	b=gZvEZYbDwNfEHgTALwzWVqLWcoB0NLvOAWdYQodiEA5lGNODD0kwbO1cMffi17+D9hf6MH
+	jFOJk8exjf263bohWMQwNU/3KW/TYRVHyYARFeJj0sCU6UVSNePfEPscw4QXNG5Ho6O2Y4
+	WILibzRKykahmiLa/CABSqALtyanJWk=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
 	Baoquan He <bhe@redhat.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=DFschuh?= <linux@weissschuh.net>,
 	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 2/3] lib/test_kho: fixes for error handling
-Date: Mon, 11 Aug 2025 11:25:09 +0300
-Message-ID: <20250811082510.4154080-3-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250811082510.4154080-1-rppt@kernel.org>
-References: <20250811082510.4154080-1-rppt@kernel.org>
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH 2/6] LoongArch: Add kexec_file support
+Date: Mon, 11 Aug 2025 17:26:55 +0800
+Message-Id: <20250811092659.14903-3-youling.tang@linux.dev>
+In-Reply-To: <20250811092659.14903-1-youling.tang@linux.dev>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250811_012534_188092_6A04E14C 
-X-CRM114-Status: GOOD (  15.78  )
+X-CRM114-CacheID: sfid-20250811_022820_316000_414F5DAF 
+X-CRM114-Status: GOOD (  29.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,134 +72,336 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+From: Youling Tang <tangyouling@kylinos.cn>
 
-* Update kho_test_save() so that folios array won't be freed when
-  returning from the function and the fdt will be freed on error
-* Reset state->nr_folios to 0 in  kho_test_generate_data() on error
-* Simplify allocation of folios info in fdt.
+This patch adds support for kexec_file on LoongArch.
 
-Reported-by: Pratyush Yadav <pratyush@kernel.org>
-Closes: https://lore.kernel.org/all/mafs0zfcjcepf.fsf@kernel.org
-Fixes: b753522bed0b ("kho: add test for kexec handover")
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The image_load() as two parts:
+- the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+- the second part loads other segments (eg: initrd, cmdline)
+
+Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+but ELF format is not supported.
+
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- lib/test_kho.c | 52 ++++++++++++++++++++++++++++++++------------------
- 1 file changed, 33 insertions(+), 19 deletions(-)
+ arch/loongarch/Kconfig                     |   8 ++
+ arch/loongarch/include/asm/image.h         |  18 ++++
+ arch/loongarch/include/asm/kexec.h         |  12 +++
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/kexec_image.c        | 112 +++++++++++++++++++++
+ arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+ arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
+ 7 files changed, 219 insertions(+), 11 deletions(-)
+ create mode 100644 arch/loongarch/kernel/kexec_image.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
 
-diff --git a/lib/test_kho.c b/lib/test_kho.c
-index c2eb899c3b45..fe8504e3407b 100644
---- a/lib/test_kho.c
-+++ b/lib/test_kho.c
-@@ -67,13 +67,20 @@ static struct notifier_block kho_test_nb = {
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index f0abc38c40ac..fd50c83f7827 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -625,6 +625,14 @@ config CPU_HAS_PREFETCH
+ config ARCH_SUPPORTS_KEXEC
+ 	def_bool y
  
- static int kho_test_save_data(struct kho_test_state *state, void *fdt)
- {
--	phys_addr_t *folios_info __free(kvfree) = NULL;
-+	phys_addr_t *folios_info;
- 	int err = 0;
- 
--	folios_info = kvmalloc_array(state->nr_folios, sizeof(*folios_info),
--				     GFP_KERNEL);
--	if (!folios_info)
--		return -ENOMEM;
-+	err |= fdt_begin_node(fdt, "data");
-+	err |= fdt_property(fdt, "nr_folios", &state->nr_folios,
-+			    sizeof(state->nr_folios));
-+	err |= fdt_property_placeholder(fdt, "folios_info",
-+					state->nr_folios * sizeof(*folios_info),
-+					(void **)&folios_info);
-+	err |= fdt_property(fdt, "csum", &state->csum, sizeof(state->csum));
-+	err |= fdt_end_node(fdt);
++config ARCH_SUPPORTS_KEXEC_FILE
++	def_bool 64BIT
 +
-+	if (err)
-+		return err;
++config ARCH_SELECTS_KEXEC_FILE
++	def_bool y
++	depends on KEXEC_FILE
++	select HAVE_IMA_KEXEC if IMA
++
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
  
- 	for (int i = 0; i < state->nr_folios; i++) {
- 		struct folio *folio = state->folios[i];
-@@ -83,17 +90,9 @@ static int kho_test_save_data(struct kho_test_state *state, void *fdt)
+diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+index 1f090736e71d..829e1ecb1f5d 100644
+--- a/arch/loongarch/include/asm/image.h
++++ b/arch/loongarch/include/asm/image.h
+@@ -36,5 +36,23 @@ struct loongarch_image_header {
+ 	uint32_t pe_header;
+ };
  
- 		err = kho_preserve_folio(folio);
- 		if (err)
--			return err;
-+			break;
- 	}
++static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
++static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
++
++/**
++ * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
++ *
++ * Returns non-zero if 'MZ' signature is found.
++ */
++
++static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
++{
++	if (!h)
++		return 0;
++
++	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
++		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
++}
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* __ASM_IMAGE_H */
+diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
+index cf95cd3eb2de..3ef8517a3670 100644
+--- a/arch/loongarch/include/asm/kexec.h
++++ b/arch/loongarch/include/asm/kexec.h
+@@ -41,6 +41,18 @@ struct kimage_arch {
+ 	unsigned long systable_ptr;
+ };
  
--	err |= fdt_begin_node(fdt, "data");
--	err |= fdt_property(fdt, "nr_folios", &state->nr_folios,
--			    sizeof(state->nr_folios));
--	err |= fdt_property(fdt, "folios_info", folios_info,
--			    state->nr_folios * sizeof(*folios_info));
--	err |= fdt_property(fdt, "csum", &state->csum, sizeof(state->csum));
--	err |= fdt_end_node(fdt);
--
- 	return err;
- }
++#ifdef CONFIG_KEXEC_FILE
++extern const struct kexec_file_ops kexec_image_ops;
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
++
++extern int load_other_segments(struct kimage *image,
++		unsigned long kernel_load_addr, unsigned long kernel_size,
++		char *initrd, unsigned long initrd_len,
++		char *cmdline, unsigned long cmdline_len);
++#endif
++
+ typedef void (*do_kexec_t)(unsigned long efi_boot,
+ 			   unsigned long cmdline_ptr,
+ 			   unsigned long systable_ptr,
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 6f5a4574a911..bd9405ee3888 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -62,6 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
+ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
  
-@@ -140,7 +139,10 @@ static int kho_test_generate_data(struct kho_test_state *state)
- 		unsigned int size;
- 		void *addr;
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_image.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
  
--		/* cap allocation so that we won't exceed max_mem */
-+		/*
-+		 * Since get_order() rounds up, make sure that actual
-+		 * allocation is smaller so that we won't exceed max_mem
-+		 */
- 		if (alloc_size + (PAGE_SIZE << order) > max_mem) {
- 			order = get_order(max_mem - alloc_size);
- 			if (order)
-@@ -165,13 +167,14 @@ static int kho_test_generate_data(struct kho_test_state *state)
- err_free_folios:
- 	for (int i = 0; i < state->nr_folios; i++)
- 		folio_put(state->folios[i]);
-+	state->nr_folios = 0;
- 	return -ENOMEM;
- }
- 
- static int kho_test_save(void)
- {
- 	struct kho_test_state *state = &kho_test_state;
--	struct folio **folios __free(kvfree) = NULL;
-+	struct folio **folios;
- 	unsigned long max_nr;
- 	int err;
- 
-@@ -185,13 +188,23 @@ static int kho_test_save(void)
- 
- 	err = kho_test_generate_data(state);
- 	if (err)
--		return err;
-+		goto err_free_folios;
- 
- 	err = kho_test_prepare_fdt(state);
- 	if (err)
--		return err;
-+		goto err_free_folios;
- 
--	return register_kho_notifier(&kho_test_nb);
-+	err = register_kho_notifier(&kho_test_nb);
-+	if (err)
-+		goto err_free_fdt;
+ obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+diff --git a/arch/loongarch/kernel/kexec_image.c b/arch/loongarch/kernel/kexec_image.c
+new file mode 100644
+index 000000000000..fdd1845b4e2e
+--- /dev/null
++++ b/arch/loongarch/kernel/kexec_image.c
+@@ -0,0 +1,112 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Kexec image loader for LoongArch
++
++ * Author: Youling Tang <tangyouling@kylinos.cn>
++ * Copyright (C) 2025 KylinSoft Corporation.
++ */
++
++#define pr_fmt(fmt)	"kexec_file(Image): " fmt
++
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <linux/pe.h>
++#include <linux/string.h>
++#include <asm/byteorder.h>
++#include <asm/cpufeature.h>
++#include <asm/image.h>
++
++static int image_probe(const char *kernel_buf, unsigned long kernel_len)
++{
++	const struct loongarch_image_header *h =
++		(const struct loongarch_image_header *)(kernel_buf);
++
++	if (!h || (kernel_len < sizeof(*h))) {
++		pr_err("No loongarch image header.\n");
++		return -EINVAL;
++	}
++
++	if (!loongarch_header_check_pe_sig(h)) {
++		pr_err("Bad loongarch PE image header.\n");
++		return -EINVAL;
++	}
 +
 +	return 0;
++}
 +
-+err_free_fdt:
-+	folio_put(state->fdt);
-+err_free_folios:
-+	kvfree(folios);
-+	return err;
- }
++static void *image_load(struct kimage *image,
++				char *kernel, unsigned long kernel_len,
++				char *initrd, unsigned long initrd_len,
++				char *cmdline, unsigned long cmdline_len)
++{
++	struct loongarch_image_header *h;
++	struct kexec_buf kbuf;
++	unsigned long text_offset, kernel_segment_number;
++	struct kexec_segment *kernel_segment;
++	int ret;
++
++	h = (struct loongarch_image_header *)kernel;
++	if (!h->image_size)
++		return ERR_PTR(-EINVAL);
++
++	/* Load the kernel */
++	kbuf.image = image;
++	kbuf.buf_min = 0;
++	kbuf.buf_max = ULONG_MAX;
++	kbuf.top_down = false;
++
++	kbuf.buffer = kernel;
++	kbuf.bufsz = kernel_len;
++	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
++	kbuf.memsz = le64_to_cpu(h->image_size);
++	text_offset = le64_to_cpu(h->text_offset);
++	kbuf.buf_align = SZ_2M;
++
++	kernel_segment_number = image->nr_segments;
++
++	/*
++	 * The location of the kernel segment may make it impossible to satisfy
++	 * the other segment requirements, so we try repeatedly to find a
++	 * location that will work.
++	 */
++	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
++		/* Try to load additional data */
++		kernel_segment = &image->segment[kernel_segment_number];
++		ret = load_other_segments(image, kernel_segment->mem,
++					  kernel_segment->memsz, initrd,
++					  initrd_len, cmdline, cmdline_len);
++		if (!ret)
++			break;
++
++		/*
++		 * We couldn't find space for the other segments; erase the
++		 * kernel segment and try the next available hole.
++		 */
++		image->nr_segments -= 1;
++		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
++		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
++	}
++
++	if (ret) {
++		pr_err("Could not find any suitable kernel location!");
++		return ERR_PTR(ret);
++	}
++
++	kernel_segment = &image->segment[kernel_segment_number];
++
++	/* Make sure the second kernel jumps to the correct "kernel_entry". */
++	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
++
++	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		      kernel_segment->mem, kbuf.bufsz,
++		      kernel_segment->memsz);
++
++	return NULL;
++}
++
++const struct kexec_file_ops kexec_image_ops = {
++	.probe = image_probe,
++	.load = image_load,
++};
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index f9381800e291..008f43e26120 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -70,18 +70,28 @@ int machine_kexec_prepare(struct kimage *kimage)
+ 	kimage->arch.efi_boot = fw_arg0;
+ 	kimage->arch.systable_ptr = fw_arg2;
  
- static int kho_test_restore_data(const void *fdt, int node)
-@@ -291,6 +304,7 @@ static void kho_test_cleanup(void)
- 		folio_put(kho_test_state.folios[i]);
+-	/* Find the command line */
+-	for (i = 0; i < kimage->nr_segments; i++) {
+-		if (!strncmp(bootloader, (char __user *)kimage->segment[i].buf, strlen(bootloader))) {
+-			if (!copy_from_user(cmdline_ptr, kimage->segment[i].buf, COMMAND_LINE_SIZE))
+-				kimage->arch.cmdline_ptr = (unsigned long)cmdline_ptr;
+-			break;
++	if (kimage->file_mode == 1) {
++		/*
++		 * kimage->cmdline_buf will be released in kexec_file_load, so copy to
++		 * the KEXEC_CMDLINE_ADDR safe area.
++		 */
++		memcpy((void *)KEXEC_CMDLINE_ADDR, (void *)kimage->arch.cmdline_ptr,
++					strlen((char *)kimage->arch.cmdline_ptr) + 1);
++		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
++	} else {
++		/* Find the command line */
++		for (i = 0; i < kimage->nr_segments; i++) {
++			if (!strncmp(bootloader, (char __user *)kimage->segment[i].buf, strlen(bootloader))) {
++				if (!copy_from_user(cmdline_ptr, kimage->segment[i].buf, COMMAND_LINE_SIZE))
++					kimage->arch.cmdline_ptr = (unsigned long)cmdline_ptr;
++				break;
++			}
+ 		}
+-	}
  
- 	kvfree(kho_test_state.folios);
-+	folio_put(kho_test_state.fdt);
- }
+-	if (!kimage->arch.cmdline_ptr) {
+-		pr_err("Command line not included in the provided image\n");
+-		return -EINVAL;
++		if (!kimage->arch.cmdline_ptr) {
++			pr_err("Command line not included in the provided image\n");
++			return -EINVAL;
++		}
+ 	}
  
- static void __exit kho_test_exit(void)
+ 	/* kexec/kdump need a safe page to save reboot_code_buffer */
+@@ -288,7 +298,8 @@ void machine_kexec(struct kimage *image)
+ 	local_irq_disable();
+ 
+ 	pr_notice("EFI boot flag 0x%lx\n", efi_boot);
+-	pr_notice("Command line at 0x%lx\n", cmdline_ptr);
++	pr_notice("Command line addr at 0x%lx\n", cmdline_ptr);
++	pr_notice("Command line at %s\n", (char *)cmdline_ptr);
+ 	pr_notice("System table at 0x%lx\n", systable_ptr);
+ 	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
+ 	pr_notice("Bye ...\n");
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+new file mode 100644
+index 000000000000..bc91ae0afa4c
+--- /dev/null
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * kexec_file for LoongArch
++ *
++ * Author: Youling Tang <tangyouling@kylinos.cn>
++ * Copyright (C) 2025 KylinSoft Corporation.
++ *
++ * Most code is derived from LoongArch port of kexec-tools
++ */
++
++#define pr_fmt(fmt) "kexec_file: " fmt
++
++#include <linux/ioport.h>
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <linux/memblock.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/types.h>
++#include <linux/vmalloc.h>
++#include <asm/bootinfo.h>
++
++const struct kexec_file_ops * const kexec_file_loaders[] = {
++	&kexec_image_ops,
++	NULL
++};
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	vfree(image->elf_headers);
++	image->elf_headers = NULL;
++	image->elf_headers_sz = 0;
++
++	return kexec_image_post_load_cleanup_default(image);
++}
++
++int load_other_segments(struct kimage *image,
++			unsigned long kernel_load_addr,
++			unsigned long kernel_size,
++			char *initrd, unsigned long initrd_len,
++			char *cmdline, unsigned long cmdline_len)
++{
++	image->arch.cmdline_ptr = (unsigned long)cmdline;
++
++	return 0;
++}
 -- 
-2.47.2
+2.34.1
 
 
