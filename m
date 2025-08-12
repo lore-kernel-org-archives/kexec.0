@@ -4,74 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 011C7CA0EC4
-	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 03:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B120CA0ED1
+	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 03:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BoNxp0lL3Xlz3kqIP4P8JEYxy9uh3tnFCj/pIJSd04E=; b=i4g6nG04S2+EwF5jnyUsQLTu1+
-	T9xt7EMmEonnBIxpMZzvkSttWatM4u1mKjXyxWDVxQtdYC0IERIgLH2BkD/4hLCGbKNROQtFk/pS5
-	jcaHlAWM755R1i3dSjGI75jUV8jklVjv19LuOjVgu7WvgIual4RHV8BHldtyY34gz3Wdpwy/lnr+W
-	U1S0RPdA16k7FOwxxT77PqDXlzTiVZSarOf8kqxzRlU+oZtcvOA/Bc7IgZKsueosJRlZwrL0HDDpT
-	JTj53v9CaIIhLejKmizxgrOGwAFj1b3JqN0mmMNW9cadnRTDo9e+hZFsry8U+vtR6fNY3lXMl+sHL
-	7b2Yn/4A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XCkvxp64xxUOSuPCfrC7oiW0+5JFJ8BJc57BUtN/nPg=; b=3zmQvEQZLYf3FJF5l/TfysM92y
+	piTP/pg7TAUB7j53cMidEj13MIAfq57G8bGyL+y9/JQBS1iKiyjLIsFdrK0VfIV21n0PM3iXFFFR+
+	M+snHmwRb6J3O7ynpHfCkA8tJddwLsOmXjIrlN6AupaIT/QWaNV97RQl0CLZA8lp85/n9VkZARLKR
+	hv48jWOcKI5cChZIhtmPrbOGPNfMbiOeAS5V/OWUTIMFs4RQWEoSKy9ZRoCGF8mb+7XRHrmu1N1EC
+	N3Lga59qd7p+c3488S1uVB67ysRz7mbqoSJfhwD7IDYqXJGQgmNkKBPVunSQTv7sAO3XNSb0PGckL
+	Za97H0Ng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulfK9-00000009fka-24Pr;
-	Tue, 12 Aug 2025 03:05:17 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1ulfj1-00000009ibw-2sfH;
+	Tue, 12 Aug 2025 03:30:59 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulfJ4-00000009faP-0YbD
+	id 1ulfiz-00000009ibE-004e
 	for kexec@lists.infradead.org;
-	Tue, 12 Aug 2025 03:04:11 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id ABFC445E38
-	for <kexec@lists.infradead.org>; Tue, 12 Aug 2025 03:04:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F9C8C4AF09
-	for <kexec@lists.infradead.org>; Tue, 12 Aug 2025 03:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754967849;
-	bh=JZcssSDwXvkq47K2QFU0GKFjCEkGDp3/xk6/4k4s/jU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bcc+nNl/qbetm1EZdjaM2ELnQC1FlhvVLukQYTaHhMzeA7lc2qmxtKaxwXW4KEMVP
-	 qjQaSSkwMxNH2iDhAGFlaali1B8cJIJXPRwHmKlwE/XFLnIVokJzfN4TLlQo2vo802
-	 St1R9EbdDkYrYRvJrn75iUn7WFtOrU8cXuoVqhyiu/1HC7nCk8JVbfjB1h70A8HAEe
-	 SBXiagSWNU+ZVPCPGXyj/dMTIE0BvoILlA1/WileNZmO/6mdapuGEniaRIU4q28hSp
-	 ZJWVDGhViLRz7y+gQRaRAcU7ZmYlXo9Aj+gkcqjFdOBRe7hDlCyKaBQCqE3tzjH+Rp
-	 lq4I9xFcJet+w==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-61592ff5df8so6302989a12.1
-        for <kexec@lists.infradead.org>; Mon, 11 Aug 2025 20:04:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVt+ieF5oZFojoCowD4FJMowr3eR/T9dUCZ9k2V2NPgQafWgjeHbsaFrX5t6qmhrm5kOtoFJA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyzD0Xtg5KiaVWzEqWrldlZys4rPspjJal41Y2Fk1N9DXWihn5h
-	CWJ5Nlh16qIy/zse9Yu6jeejPP/ePz2AiRruSoOyraymUeLXAnhNFjyR+UKJwKq458X3pLkuEmm
-	COoUjt9Er4QKKYnbVB5OSHaZkBIyg068=
-X-Google-Smtp-Source: AGHT+IEpJwbYH7nvlbwIEAKaW6ujz8pkWtW42xhS+xF8oiKPPlaUkSCWoy63SJWAR2gGIT1pakCRMbPUvsHqGJRiLT0=
-X-Received: by 2002:a50:8ad8:0:b0:618:1250:ac54 with SMTP id
- 4fb4d7f45d1cf-6184ecc363amr837963a12.21.1754967848164; Mon, 11 Aug 2025
- 20:04:08 -0700 (PDT)
+	Tue, 12 Aug 2025 03:30:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754969454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XCkvxp64xxUOSuPCfrC7oiW0+5JFJ8BJc57BUtN/nPg=;
+	b=Yntf1LEcgIK+pPuWQmuihuwSsj/FfKcXoF6HaCKoG9P6hC8xcvF5CacdyzQHNeV3Fpa9Pc
+	iTW7mGjVceIuKJQAtaw64L0xwTBcjxeOvzrdCZQ/yxuNXcHkV5Y4BlInwAloTCL10N2J/y
+	AKBPF6pgFkLynTxy5eXvCeChK8xuoxo=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-311-ynMDL59WN2m8M6HwHorzAg-1; Mon, 11 Aug 2025 23:30:52 -0400
+X-MC-Unique: ynMDL59WN2m8M6HwHorzAg-1
+X-Mimecast-MFC-AGG-ID: ynMDL59WN2m8M6HwHorzAg_1754969452
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2400a932e59so82370325ad.1
+        for <kexec@lists.infradead.org>; Mon, 11 Aug 2025 20:30:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754969452; x=1755574252;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XCkvxp64xxUOSuPCfrC7oiW0+5JFJ8BJc57BUtN/nPg=;
+        b=l8SBxWuNI1KA4wit8zBpbt5qXsrrpBg58kW8tGAUj9LGLYbB5igUtZ/oMeGSN0xItc
+         Hgah52X+yYLO8JfaYyFi2sM7yahhcp7Gq4vfTzpdb5LQNtMrllaznX5LMmXj/BpX2ZTa
+         YtGBbxifee6ou4RcTj52qbuOsDIHlNfxpwwvZK0NYYl6uwHHTIML5EAEYV+vApW24C1v
+         oEQsy7DU4VZEvpHWrtTryNVS0z4Akc6ndaRdvNacObVEGHTsTE0sTq/560CLQL3fSImB
+         LU4Xy19xUxgp0ei6yuaYNpZDa6+1PL/PcfHT/T0lPxsHg9tiC60mvlc6yngtkwwI/IAP
+         2Khw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/GGlwPmDQxtj33/3bwQGxH7QfSInhDob0US0xoL8OGztaQ7IhqZ73RhNZer2bvwMBufiJsw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzCtcPxMQzbDzODuA/LKslabza2apZFHTjg7Iscll0rWAnBX6EF
+	+AgJOBG8yradlaW+0BgC+oYHYoN2NkEYcXSj63IJSTRnYxBkFR4F7FGzbcdMF0LxBZ5BtKOHBhH
+	qfsKk4rz+Mx9D49U38JTQDQUAdLPlROnGYZEAPnYrtShp8aKJtZ4nEdvN1XXGLw==
+X-Gm-Gg: ASbGnct9tzPCN2CWV+wv72mTdDtTUk9cobWPtLNMvT6ea+wnXVo7mfYqcmrvT4Yi5SV
+	5GBRWmKRzVnWvMVekjAAmg/YFdiJs5W1n9Qvp+SKdpPXfiRAORlSJqaMtB8Yj59jWQTcygYihoo
+	6ZNi2ecyXqBg7c9MjB5gVgnfslqubtXkTYwSYiQfAWQ+w7Lv3NlCsUeblgtXRWy7FHGznMeziIH
+	4GLzoRHDGt9TcCEkse6ZJQjdVCAWY34KpMR7I42Grc8w6Vy8odKxBonTcJQ6H0aatmUdnXvEq1k
+	OzPlsutguC3QmcjOQNzLgOFVooYq+B4=
+X-Received: by 2002:a17:902:f70f:b0:240:640a:b2e4 with SMTP id d9443c01a7336-242fc3683a8mr27219655ad.49.1754969451802;
+        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFsNcl0XLPCCner9/NUZ+yEfhqQUGBX8BpPGrFeFAmrdynsST1rXFBZLTyWU5C4N4/jD4ci1Q==
+X-Received: by 2002:a17:902:f70f:b0:240:640a:b2e4 with SMTP id d9443c01a7336-242fc3683a8mr27219305ad.49.1754969451410;
+        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3216129c8cfsm16030963a91.34.2025.08.11.20.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
+Date: Tue, 12 Aug 2025 11:29:54 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: Re: [Regression] kdump fails to get DHCP address unless booting with
+ pci=nomsi or without nr_cpus=1
+Message-ID: <ovyxlf7aw4y4bsxlkvjaxd5zs7jw5rnta3gyfmroazesm4m7mi@ebgu3frfd2bb>
+References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
+ <87bjom8106.ffs@tglx>
 MIME-Version: 1.0
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-4-youling.tang@linux.dev> <CAAhV-H4Sf=74-ni=qUkg3doC4iLrVt=m2bCYCgfmVC0WLNhiDQ@mail.gmail.com>
- <15fdef37-f380-4b5c-85bb-24482e883dcc@linux.dev>
-In-Reply-To: <15fdef37-f380-4b5c-85bb-24482e883dcc@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 12 Aug 2025 11:03:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4_9r=dG=mDU-s2thbv8agoso51U0kHXtx15gxt_wZwVw@mail.gmail.com>
-X-Gm-Features: Ac12FXzivR9jQD2OLx7jwFn4TBUMS53K4UxBkvWIv0r6F9WVP2OGUGDgDn1X83E
-Message-ID: <CAAhV-H4_9r=dG=mDU-s2thbv8agoso51U0kHXtx15gxt_wZwVw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
-To: Youling Tang <youling.tang@linux.dev>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87bjom8106.ffs@tglx>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 61k6zRdwd3wkYnA1L0UifJ-6vHFHvbNOy4fbitGg4JM_1754969452
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250811_200410_215493_1920B796 
-X-CRM114-Status: GOOD (  28.24  )
+X-CRM114-CacheID: sfid-20250811_203057_306022_63A86B88 
+X-CRM114-Status: GOOD (  13.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,149 +108,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 12, 2025 at 10:38=E2=80=AFAM Youling Tang <youling.tang@linux.d=
-ev> wrote:
+On Mon, Aug 11, 2025 at 03:02:33PM +0200, Thomas Gleixner wrote:
+>On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
+>> Recently I met an issue that on certain virtual machines, the kdump
+>> kernel fails to get DHCP IP address most of times starting from
+>> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
+>> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
+>>
+>>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
+>>      # MSI_FLAG_PCI_MSI_MASK_PARENT
+>>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
+>>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
+>>      # Provide MSI parent infrastructure
+>>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
+>>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
+>>      # Prepare for PCI MSI/MSIX
+>>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
+>>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
+>>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
 >
-> Hi, Huacai
-> On 2025/8/11 22:12, Huacai Chen wrote:
-> > Hi, Youling,
-> >
-> > On Mon, Aug 11, 2025 at 5:28=E2=80=AFPM Youling Tang <youling.tang@linu=
-x.dev> wrote:
-> >> From: Youling Tang <tangyouling@kylinos.cn>
-> >>
-> >> Add inird loading support and pass it to the second kernel via the
-> >> cmdline 'initrd=3Dstart,size'.
-> > I think Patch-3 and Patch-5 should be merged into Patch-2.
-> Not all cases require loading initrd, so Patch-2 is a runnable basic patc=
-h.
-> Separating it into different patches makes it easier to understand and
-> review the code.
-Unnecessary, without separating the code is clear enough.
+>There were follow up fixes on this, so isolating this one is not really
+>conclusive.
+>
+>Is the problem still there on v6.16 and v6.17-rc1?
+
+Thanks for the reply! Yes, I can confirm it still happens to
+6.16.0-200.fc42.aarch64 and 6.17.0-0.rc1.17.fc43.aarch64.
 
 >
-> Patch-5 coming out separately can better illustrate the role of "mem"
-> parameters in capturing the kernel.
-Emm, Patch-5 should be squashed to Patch-4, not Patch-2.
-
-Huacai
-
+>Thanks,
 >
-> Youling.
-> >
-> > Huacai
-> >
-> >> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> >> ---
-> >>   arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++=
-++
-> >>   1 file changed, 71 insertions(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongar=
-ch/kernel/machine_kexec_file.c
-> >> index bc91ae0afa4c..e1240644f529 100644
-> >> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> >> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> >> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kima=
-ge *image)
-> >>          return kexec_image_post_load_cleanup_default(image);
-> >>   }
-> >>
-> >> +/* Adds the "initrd=3Dstart,size" command line parameter to command l=
-ine. */
-> >> +static void cmdline_add_initrd(struct kimage *image, unsigned long *c=
-mdline_tmplen,
-> >> +                               char *modified_cmdline, unsigned long =
-initrd)
-> >> +{
-> >> +       int initrd_strlen;
-> >> +
-> >> +       initrd_strlen =3D sprintf(modified_cmdline + (*cmdline_tmplen)=
-, "initrd=3D0x%lx,0x%lx ",
-> >> +               initrd, image->initrd_buf_len);
-> >> +       *cmdline_tmplen +=3D initrd_strlen;
-> >> +}
-> >> +
-> >> +/*
-> >> + * Tries to add the initrd to the image. If it is not possible to fin=
-d
-> >> + * valid locations, this function will undo changes to the image and =
-return non
-> >> + * zero.
-> >> + */
-> >>   int load_other_segments(struct kimage *image,
-> >>                          unsigned long kernel_load_addr,
-> >>                          unsigned long kernel_size,
-> >>                          char *initrd, unsigned long initrd_len,
-> >>                          char *cmdline, unsigned long cmdline_len)
-> >>   {
-> >> +       struct kexec_buf kbuf;
-> >> +       unsigned long orig_segments =3D image->nr_segments;
-> >> +       char *modified_cmdline =3D NULL;
-> >> +       unsigned long cmdline_tmplen =3D 0;
-> >> +       unsigned long initrd_load_addr =3D 0;
-> >> +       int ret =3D 0;
-> >> +
-> >> +
-> >> +       kbuf.image =3D image;
-> >> +       /* not allocate anything below the kernel */
-> >> +       kbuf.buf_min =3D kernel_load_addr + kernel_size;
-> >> +
-> >> +       modified_cmdline =3D kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
-> >> +       if (!modified_cmdline)
-> >> +               return -EINVAL;
-> >> +
-> >> +       /* Ensure it's nul terminated */
-> >> +       modified_cmdline[COMMAND_LINE_SIZE - 1] =3D '\0';
-> >> +
-> >> +       /* load initrd */
-> >> +       if (initrd) {
-> >> +               kbuf.buffer =3D initrd;
-> >> +               kbuf.bufsz =3D initrd_len;
-> >> +               kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
-> >> +               kbuf.memsz =3D initrd_len;
-> >> +               kbuf.buf_align =3D 0;
-> >> +               /* within 1GB-aligned window of up to 32GB in size */
-> >> +               kbuf.buf_max =3D round_down(kernel_load_addr, SZ_1G)
-> >> +                                               + (unsigned long)SZ_1G=
- * 32;
-> >> +               kbuf.top_down =3D false;
-> >> +
-> >> +               ret =3D kexec_add_buffer(&kbuf);
-> >> +               if (ret)
-> >> +                       goto out_err;
-> >> +               initrd_load_addr =3D kbuf.mem;
-> >> +
-> >> +               kexec_dprintk("Loaded initrd at 0x%lx bufsz=3D0x%lx me=
-msz=3D0x%lx\n",
-> >> +                             initrd_load_addr, kbuf.bufsz, kbuf.memsz=
-);
-> >> +
-> >> +               /* Add the initrd=3Dstart,size parameter to the comman=
-d line */
-> >> +               cmdline_add_initrd(image, &cmdline_tmplen, modified_cm=
-dline, initrd_load_addr);
-> >> +       }
-> >> +
-> >> +       if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
-> >> +               pr_err("Appending kdump cmdline exceeds cmdline size\n=
-");
-> >> +               ret =3D -EINVAL;
-> >> +               goto out_err;
-> >> +       }
-> >> +       memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len=
-);
-> >> +       cmdline =3D modified_cmdline;
-> >>          image->arch.cmdline_ptr =3D (unsigned long)cmdline;
-> >>
-> >>          return 0;
-> >> +
-> >> +out_err:
-> >> +       image->nr_segments =3D orig_segments;
-> >> +       kfree(modified_cmdline);
-> >> +       return ret;
-> >>   }
-> >> --
-> >> 2.34.1
-> >>
+>        tglx
+>
+
+-- 
+Best regards,
+Coiby
+
 
