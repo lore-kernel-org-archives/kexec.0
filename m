@@ -4,75 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01DD6CA0EE1
-	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 19:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 422B5CA0EC4
+	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 19:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PrBFm9KN1k8udVr7PX4kpGMG0V0UIL0fa5o6pxCVKL0=; b=dSLMWmxP/VV8ClQwRP1Sy5uHQJ
-	8Chj7fLzMhB4ir4Dgp2XSefmvbfa5lqWVqNW6xT0AVEt++98dSKwQ+jslSJ1t5rWKUNIj4+VivmKn
-	AxR/uAqLgIbmMZLY33aSXVKQVFPZt50JWrFMciGS3kJhcmriT68UYMw38vH0sZttf1UUjiXSJiMnA
-	n+nDFwoig+y/EJ+SrGVycuB+IAn9Ojxcactgfpat0NjxdYG/9qM/E38qPA42nKr1NlMh2WnrvzVcf
-	zvT5PxP9oNa+vbdSBiEoiF+lWGML+tdbG9tZYYpw+EEA7Giso4BxGuUm1WB90XGWAz0PFh5GBfS97
-	pRM5Bgbg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=THi5EeRjYjU12pg786HqRQnWCXSwecn27iJQLPTdTuM=; b=kimwUKJZ4K/RZ7VbDbBVa+HWeU
+	Ka+3ah9PkMqla/vgCqea4cPe7X73hKJifYCfjfr/z/+JBtPKOrDXmEDC1V3G8U054v8glJPa5ffAR
+	efBEVQgcGRGVUSB5/Ny6FzlOIp0/uONoSGUjc9hYa6mM0C5rDahB2RZMvvKjvu3NWvz6L73GnOx1u
+	sfHCFLhNZIqiAJlw8YQ6Vg9PstyrwmLRP98SMwVfaaYvLrb37hIUAVN0Y5FzBH4GqdgiAx5C/12Xl
+	bgf/MnuAArEbCd8r2WcITg15eiAFYF+bHzHB2unOT2JZ3W4w/XLe2kezfSD542j22f+c955Z7NF1p
+	MHQWVL0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uluaj-0000000BmxO-3D32;
-	Tue, 12 Aug 2025 19:23:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ulucH-0000000BpQs-2erS;
+	Tue, 12 Aug 2025 19:25:01 +0000
+Received: from mail-wm1-x32e.google.com ([2a00:1450:4864:20::32e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulqds-0000000B9JR-3twE
+	id 1ulsJr-0000000BUPT-05gE
 	for kexec@lists.infradead.org;
-	Tue, 12 Aug 2025 15:10:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755011423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PrBFm9KN1k8udVr7PX4kpGMG0V0UIL0fa5o6pxCVKL0=;
-	b=XsjQuubwmsiih146NSqb8faSruTHHTdth834QoQJ0hZC/tIsc2i3qV465hDdgVZfsafMZN
-	ND/g/GgCB3OTxm96VX6dnHwAxI9eQYvVuWfBFC9BA0ujefHcli+7Buh3ayrBGj9IezmIqK
-	9wgLqPiZTR9l6OuWeS3YeV8YrUCTlsI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-693-SghTwAjnNS-be_4HqIcxxA-1; Tue,
- 12 Aug 2025 11:10:22 -0400
-X-MC-Unique: SghTwAjnNS-be_4HqIcxxA-1
-X-Mimecast-MFC-AGG-ID: SghTwAjnNS-be_4HqIcxxA_1755011419
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0E1D1808966;
-	Tue, 12 Aug 2025 15:10:11 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.156])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E3871800290;
-	Tue, 12 Aug 2025 15:10:09 +0000 (UTC)
-Date: Tue, 12 Aug 2025 23:10:04 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
-	dvyukov@google.com, vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	sj@kernel.org, lorenzo.stoakes@oracle.com, elver@google.com,
-	snovitoll@gmail.com
-Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three
- modes
-Message-ID: <aJtZTLPtHUfUsiuQ@MiWiFi-R3L-srv>
-References: <20250812124941.69508-1-bhe@redhat.com>
+	Tue, 12 Aug 2025 16:57:52 +0000
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-45a11f20e03so7555065e9.2
+        for <kexec@lists.infradead.org>; Tue, 12 Aug 2025 09:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755017869; x=1755622669; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=THi5EeRjYjU12pg786HqRQnWCXSwecn27iJQLPTdTuM=;
+        b=RQopFEjRKhvuQZSBEvXeRhe638YuOGm9y/FP1D/7yq+wWJnwHWoW14V6wA1CCnG4OM
+         +3UTObatmp9w56hHcLj0KwUoajz647XKGILK8gmacoYETghNdn7Oat+gyVy+AZkKAX3m
+         t1uATfrUdcSAqgyteSvJj91teOhIYSpkBNvtIkmO83FXbGTk/Q2h8QmhE1thNtLJ6wUc
+         sg5Xm+esBHP2GeG3t9v3Fzr7QT0jpH2HBI2uZebHNKAtQmoEH7ITkzmEd+i1qDBHm/JD
+         fRquuUh+nmqecsM9q+wicwoT1UKBbCzvwirMKQt7FTIbIGkI9fFN5tt+QHz8eeDogGxW
+         xCbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755017869; x=1755622669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=THi5EeRjYjU12pg786HqRQnWCXSwecn27iJQLPTdTuM=;
+        b=fRncMBCc0Ew0tJD9lM4NtiFRz4AZ7oopxXNPHhuvCn0yu7YTBf1Pf+Chz5cEjUnD7L
+         gBAKOs7Y1mveeyXBCDeGXrwnagLyC7utiMbT7XhACSWLZ/6pbpp0Q0PzqlnFL9+MxLbB
+         YrtTevTrUv37e69lTQkPiT1JvMoW1eDKXEJtD57hTazrqVPNjwZynSyatHMXs9UKFMpr
+         kgafM8z8IwPg6dTv1ikyg+E9y0dzHs7eLFKAiW3T9gkCv2f26tv0du1loiFwl7TuZYcL
+         rZgkZG6T1vaAd0LDvWvaxGNglbN5HC9Qkk0srVs8Guvxq2BeQNoPIFSksdvx8eyk5TC4
+         5yjw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5NwOw11hLvZUF1GNEs8O6cJYYZVdj0Mq+h8V0ReYC1LMBw/qAOwBqCUMdzcLZNkykUnzEJQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxHa5OdbIvXhRjJs79I5jAHLxVSP8rrdm1BRUWzRxncQJo2A/K5
+	svHGfB147NXJ8xU7P0fd+o7q5Di3GJ1f9BBxtDOaZTR7IAFIwG1mMWUPSHI8D+WaZwCfbuxAr4d
+	Xiz7yGTHgZfm027jarPc1Ijoj7qxrC3I=
+X-Gm-Gg: ASbGncvg09g+aWJZYnnPnZDGEoyTSqoY3TRlXoP5Qk0o5yXw+/ZeNkEjTunUhgbaaas
+	DLpIb5ondSjsDN8uXu2z9HoKnqhu9hNZF6T2rlrXjy7J7PkZE6w/aC4rpFgj/jwoEgGCRbW3R94
+	3odG0RYHGmHkZ6+9f8HCgf43VgLKxfv+kgdc9ETEJxKoGD7lE75/vOQroZYPU9N67aUmSXXb/Wc
+	d32Ty+E4A==
+X-Google-Smtp-Source: AGHT+IEsQlhEeOC6eiZ93gGJ4m8uomE3V15azZrYXmJyDSkXZ3M01xCGgAXrwPBIlc9YO4MZyr7dBEomuI8DNX20blc=
+X-Received: by 2002:a05:600c:548b:b0:456:1c4a:82ca with SMTP id
+ 5b1f17b1804b1-45a15b8ff7cmr4280275e9.32.1755017869451; Tue, 12 Aug 2025
+ 09:57:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250812124941.69508-1-bhe@redhat.com>
 In-Reply-To: <20250812124941.69508-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Tue, 12 Aug 2025 18:57:37 +0200
+X-Gm-Features: Ac12FXxO7VtFtbvMzrNpRmaaDrUzWKgNXXMRGHfAEt4lFzHjRoU7D-oGMR2kngk
+Message-ID: <CA+fCnZcAa62uXqnUwxFmDYh1xPqKBOQqOT55kU8iY_pgQg2+NA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
+	elver@google.com, snovitoll@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250812_081025_042170_069288AF 
-X-CRM114-Status: GOOD (  13.69  )
+X-CRM114-CacheID: sfid-20250812_095751_060045_E173556C 
+X-CRM114-Status: GOOD (  15.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,27 +98,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/12/25 at 08:49pm, Baoquan He wrote:
+On Tue, Aug 12, 2025 at 2:49=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
+>
 > Currently only hw_tags mode of kasan can be enabled or disabled with
-> kernel parameter kasan=on|off for built kernel. For kasan generic and
+> kernel parameter kasan=3Don|off for built kernel. For kasan generic and
 > sw_tags mode, there's no way to disable them once kernel is built.
 > This is not convenient sometime, e.g in system kdump is configured.
 > When the 1st kernel has KASAN enabled and crash triggered to switch to
 > kdump kernel, the generic or sw_tags mode will cost much extra memory
 > for kasan shadow while in fact it's meaningless to have kasan in kdump
 > kernel.
-> 
-> So this patchset moves the kasan=on|off out of hw_tags scope and into
+>
+> So this patchset moves the kasan=3Don|off out of hw_tags scope and into
 > common code to make it visible in generic and sw_tags mode too. Then we
-> can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
+> can add kasan=3Doff in kdump kernel to reduce the unneeded meomry cost fo=
+r
 > kasan.
-> 
-> Changelog:
-> ====
-> v1->v2:
-> - Add __ro_after_init for __ro_after_init, and remove redundant blank
-                            ~~~~~~~~~~~~~ s/__ro_after_init/kasan_arg_disabled/
-                            Sorry for typo here.
->   lines in mm/kasan/common.c. Thanks to Marco.
 
+Hi Baoquan,
+
+Could you clarify what are you trying to achieve by disabling
+Generic/SW_TAGS KASAN via command-line? Do you want not to see any
+KASAN reports produced? Or gain back the performance?
+
+Because for the no reports goal, it would be much easier to add a
+command-line parameter to silent the reports.
+
+And the performance goal can only be partially achieved, as you cannot
+remove the compiler instrumentation without rebuilding the kernel.
+(What are the boot times for KASAN_GENERIC=3Dn vs KASAN_GENERIC=3Dy +
+kasan=3Doff vs KASAN_GENERIC=3Dy btw?)
+
+Thank you!
 
