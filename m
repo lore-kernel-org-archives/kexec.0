@@ -4,84 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08B3DCA0EDC
-	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 16:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00F80C87FCB
+	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 16:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rmch9LxILHmDSZgEKLxWACfFjV5jmswbcfLkcrWwQo8=; b=VuqQ+pgHlLmfyZ0Jio+l8blekD
-	BI4WShrSZguSnJDYyGY27jZPx/bz1NHbHqmUs3ntbhtWPlTEHmLoxw5KkPHGmGxuqdBsLwN6i9cRO
-	2kr+Jm7I7lLUpQVQI8qheTCrU6DlVIy/nDTRe21lmc6TcjA+2x+I0mcnX+kK+LDNKF3L3AGneGrMj
-	upamxg3raSfceZulbsfr8iTEGX/U9aJARS4fKcW5ccZtqvSGSlEydzkkUQpye8136dxkri9uVa/qU
-	0+6oftHevsdxzKjPr+wxvQNeXXMyerWwTYmtEmnJKC3fW7BJ8X1HeEOjFsx7f5q03MC1kXLGTuVMQ
-	gDfxzbMg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=A05cKNMzRYhBI6ulx0aKEKqHG+wpJ5H4d7xcAsFDnQ0=; b=oz32pEhdeGkVME2Fo6bl7QJuIZ
+	M7FAZ2SkQMp3vDtxzfpJBgyqGjDkAOVkz4PuZYEKFHBaS+4iJTis6wVUecXWYZ6YxEOthczK9LK9V
+	7ulTMZs6SY1l3FCGp0OzTWOg64uccrCmt+xmazSaFy706+Vh8DPp8CriZqsOODpEjncTCDRJKS87B
+	3FHhGjk/691HwT9qrArKCTKqsLGz0q6VqKHwPEOl6WSl6I2tu6zYn4fp6ZAXn0K2qluwiA7pQAZM7
+	mqEPzvShTqqHHV9t9q0siQHURGfdTUfQhm2gYfxJy+Ny3M1OZdMUOgCnDfmTU2ihilWPw/9ivmkhT
+	8LnCPwCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulrmK-0000000BO10-2nbI;
-	Tue, 12 Aug 2025 16:23:12 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ulrti-0000000BQ6d-16G1;
+	Tue, 12 Aug 2025 16:30:50 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uloSc-0000000Aq3j-1qEP
-	for kexec@lists.infradead.org;
-	Tue, 12 Aug 2025 12:50:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755003037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rmch9LxILHmDSZgEKLxWACfFjV5jmswbcfLkcrWwQo8=;
-	b=jPQXWaKlsYJ73r/IaUWGLo05glYiekfRv3CKFh5TwkXxA8PzsCS21J+Lq6tAYGjRjoJm3q
-	QWL2jQ6A0aPt/RQ0mjAS4rNiMDpvfe6tQDun1l9qLJtoFC2oMv9RENlVtRUFExkSJl4ZgV
-	1OIJfuQqBHcPtSZHBJ+IswBzuO/YgyI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-v2GUSWdCNJ2cbTTT3izsjQ-1; Tue,
- 12 Aug 2025 08:50:34 -0400
-X-MC-Unique: v2GUSWdCNJ2cbTTT3izsjQ-1
-X-Mimecast-MFC-AGG-ID: v2GUSWdCNJ2cbTTT3izsjQ_1755003030
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D25E19560B5;
-	Tue, 12 Aug 2025 12:50:30 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.156])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D92EC3001458;
-	Tue, 12 Aug 2025 12:50:22 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: ryabinin.a.a@gmail.com,
-	glider@google.com,
-	andreyknvl@gmail.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	sj@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	elver@google.com,
-	snovitoll@gmail.com,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 05/12] arch/arm64: don't initialize kasan if it's disabled
-Date: Tue, 12 Aug 2025 20:49:34 +0800
-Message-ID: <20250812124941.69508-6-bhe@redhat.com>
-In-Reply-To: <20250812124941.69508-1-bhe@redhat.com>
-References: <20250812124941.69508-1-bhe@redhat.com>
-MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+	id 1ulopt-0000000AtEW-0oU5;
+	Tue, 12 Aug 2025 13:14:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=A05cKNMzRYhBI6ulx0aKEKqHG+wpJ5H4d7xcAsFDnQ0=; b=FAEhxy06gCiuMHaj908xWGGaxI
+	fxJuHk9fsIlcuMVijewNwrKZTL6eQLyxoj2c/SFp0vJHUIg7wOBHpyX/lK5bbu9VAcfQTHb1OCWAM
+	SzlxEXxzvSak2LBM7cba+AQF/2IXW7bth1ouE0QhwnGt2PhV5mNu649DWB5RFxLZwg5OUGTySiL33
+	PvV0ZuXGzHgTNR8aBPdRJrAAU6yWhMnbv/OjfCQqk9JfuyAHqSomr9HHUQwM16RD2k8nQWUCKvj5c
+	mhTrE0ote+w1RYpuOcYc7EbdB+BO28FQgkc5ZZIkWDa1fvlvq1iiC+C60FaaRIARwMjpacv+eyRfB
+	Lcv4xhnA==;
+Received: from nyc.source.kernel.org ([147.75.193.91])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ulopp-0000000Fof2-47mo;
+	Tue, 12 Aug 2025 13:14:40 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id BA2D3A5683D;
+	Tue, 12 Aug 2025 13:14:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672C2C4CEF5;
+	Tue, 12 Aug 2025 13:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755004474;
+	bh=N31Jk7sk2wXqUWlbJqfBRZI21Hu0ZuXuWWLfYwq5Akw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qAYzFzJpb3+GWjgjuiff8vRWHltE0MgI/+D0MvqHcg/E1fJs4QZopkMhyCS7HaxGn
+	 Tj4yzWtlKEYCepLwpucu+QKKbxfRC6wLiL6S3fJTcYFZsn9tr4BmiTpaUleocDfcf0
+	 S3jJ201CYCcMLcVeBe968r5kcxlrewbjbmSllG6wL8MqvQaGXG7OsbznGCi8QVH6Ny
+	 /ZOxgeKakz/XJgtWLdWt8nR7w7jfUmR4lColyUe4x8YVmeWz1KReHFt0ozjwFlGUmS
+	 UEYyYgWvRS/JL5e0kg4PZaEqKyWazZ4WRWFhpUj06dJft9qlkoNAgNZ09YRR+8X+h1
+	 qH2EUD6DHPqew==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1ulope-006gas-Mr;
+	Tue, 12 Aug 2025 14:14:26 +0100
+Date: Tue, 12 Aug 2025 14:14:25 +0100
+Message-ID: <86ldno8yxa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
+In-Reply-To: <gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
+References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
+	<87bjom8106.ffs@tglx>
+	<878qjq80yu.ffs@tglx>
+	<86v7mt9ai3.wl-maz@kernel.org>
+	<i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
+	<86ms84974v.wl-maz@kernel.org>
+	<gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: coxu@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250812_055038_552306_DDCB327D 
-X-CRM114-Status: UNSURE (   9.33  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250812_141438_280046_CCE2D508 
+X-CRM114-Status: GOOD (  47.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,50 +104,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-And also add code to enable kasan_flag_enabled, this is for later
-usage.
+On Tue, 12 Aug 2025 12:07:56 +0100,
+Coiby Xu <coxu@redhat.com> wrote:
+> 
+> On Tue, Aug 12, 2025 at 11:17:04AM +0100, Marc Zyngier wrote:
+> > On Tue, 12 Aug 2025 11:09:12 +0100,
+> > Coiby Xu <coxu@redhat.com> wrote:
+> >> 
+> >> On Mon, Aug 11, 2025 at 03:52:04PM +0100, Marc Zyngier wrote:
+> >> > On Mon, 11 Aug 2025 14:03:21 +0100,
+> >> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> >>
+> >> >> On Mon, Aug 11 2025 at 15:02, Thomas Gleixner wrote:
+> >> >>
+> >> >> CC+ Marc
+> >> >>
+> >> >> > On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
+> >> >> >> Recently I met an issue that on certain virtual machines, the kdump
+> >> >> >> kernel fails to get DHCP IP address most of times starting from
+> >> >> >> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
+> >> >> >> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
+> >> >> >>
+> >> >> >>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
+> >> >> >>      # MSI_FLAG_PCI_MSI_MASK_PARENT
+> >> >> >>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
+> >> >> >>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
+> >> >> >>      # Provide MSI parent infrastructure
+> >> >> >>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
+> >> >> >>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
+> >> >> >>      # Prepare for PCI MSI/MSIX
+> >> >> >>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
+> >> >> >>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
+> >> >> >>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
+> >> >> >
+> >> >> > There were follow up fixes on this, so isolating this one is not really
+> >> >> > conclusive.
+> >> >> >
+> >> >> > Is the problem still there on v6.16 and v6.17-rc1?
+> >> >
+> >> > Yeah, there are way too many things that have been addressed since.
+> >> > kdump is also a particularly nasty case, as it tends to rely on the
+> >> > redistributor tables programmed by the previous kernel.
+> >> 
+> >> Thanks for providing a clue. This may also explain explain why I fails
+> >> to reproduce this issue against 1st kernel even with the same cmdline of
+> >> the kdump kernel.
+> > 
+> > I'm not sure that's a clue. It's only an indication that things are
+> > not necessarily easy to spot.
+> > 
+> > Has it ever been reproduced on bare metal? Have you tried v6.16 as
+> > instructed?
+> 
+> Thanks for replying so quickly!
+> 
+> No, I haven't reproduced it on a bare metal machine and our QE engineers
+> haven't noticed this issue on any bare metal machine either. 
+> And I can confirm this issue still happens to 6.16.0-200.fc42.aarch64
+> and 6.17.0-0.rc1.17.fc43.aarch64 on the type of KVM VMS (QEMU PnP device
+> PNP0c02) where the issue was found.
 
-And also need skip kasan_populate_early_vm_area_shadow() if kasan
-is disabled.
+What is that device? Is that the emulated PCI bridge?
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/arm64/mm/kasan_init.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> >> > Also, this says "virtual machines". What's the hypervisor?
+> >> 
+> >> I'll contact the lab administrator. What kinds of info I should collect
+> >> to help you narrow down the issue?
+> > 
+> > Surely you know what hypervisor you're running on, right?
+> 
+> Yes, the hypervisor is KVM. Sorry, I thought merely providing the
+> hypervisor info isn't sufficient and also misunderstood your request as
+> providing more details on the host machine.
 
-diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-index d541ce45daeb..0e4ffe3f5d0e 100644
---- a/arch/arm64/mm/kasan_init.c
-+++ b/arch/arm64/mm/kasan_init.c
-@@ -384,6 +384,9 @@ void __init kasan_populate_early_vm_area_shadow(void *start, unsigned long size)
- {
- 	unsigned long shadow_start, shadow_end;
- 
-+	if (!kasan_enabled())
-+		return;
-+
- 	if (!is_vmalloc_or_module_addr(start))
- 		return;
- 
-@@ -397,6 +400,9 @@ void __init kasan_populate_early_vm_area_shadow(void *start, unsigned long size)
- 
- void __init kasan_init(void)
- {
-+	if (kasan_arg_disabled)
-+		return;
-+
- 	kasan_init_shadow();
- 	kasan_init_depth();
- #if defined(CONFIG_KASAN_GENERIC)
-@@ -405,6 +411,7 @@ void __init kasan_init(void)
- 	 * Software and Hardware Tag-Based modes still require
- 	 * kasan_init_sw_tags() and kasan_init_hw_tags() correspondingly.
- 	 */
-+	static_branch_enable(&kasan_flag_enabled);
- 	pr_info("KernelAddressSanitizer initialized (generic)\n");
- #endif
- }
+Well, knowing that it is KVM is definitely relevant, given that this
+is my own turf.
+
+> >> > How hard is it to reproduce?
+> >> 
+> >> It can be reproduced reliably on certain machines. But as of writing I
+> >> haven't reproduced it on other KVM virtual machines on three different
+> >> host machines.
+> > 
+> > Which machines? I'm sorry, but if you want help on this, you'll have
+> > to provide actual information.
+> 
+> Sorry, I didn't mean to be vague. I thought you question is on how
+> reproducible this issue is and there is no need to provide the details
+> on the machines where I can't reproduce this issue. Since you explicitly
+> request it, I'll be glad to share the details.
+> 
+> I just grabbed three arbitrary bare metal machines having Fedora-42
+> installed and launched some KVM VMs to see if this issue can be
+> reproduced easily. Two host machines are as follows (sorry I can't find
+> the info of the 3rd one)
+> - GIGABYTE PnP device PNP0c02, ARMv8 (M128-30)
+> - LTHPCSR112 (01234567890123456789AB), ARMv8 (Q80-30)
+
+Are these both Ampere Altra boxes?
+
+> The virtual machine image is downloaded from
+> https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-42-1.1.aarch64.qcow2.
+> I tried different vCPUs (2, 4), different RAM (4G, 35G) and also two
+> different UEFI firmware (the default one and one from edk2-experimental
+> package) but haven't reproduced this issue so far.
+
+Hold on. Above, you say that you have reproduced it with
+6.16.0-200.fc42.aarch64. So have you, or have you not reproduced it?
+
+Can you at the very least share:
+
+- the boot log of the guest on its first kernel
+
+- the boot log of the guest running kdump
+
+- the content of /sys/kernel/debug/kvm/$PID-xx/vgic*state* when
+  running both kernels
+
+- the QEMU command-line to get to run the whole thing
+
+Thanks,
+
+	M.
+
 -- 
-2.41.0
-
+Without deviation from the norm, progress is not possible.
 
