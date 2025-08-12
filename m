@@ -4,62 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B472DCA0EE0
-	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 14:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ECAD4CA0EC4
+	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 16:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UB0EMZuXYKOyyxldrdbQ63aHyFJ+9vuYs0ibMI6aTWo=; b=Piv9mXhBK/94t4ohQvNZQFTOus
-	Xnvnly3dNa4PUffuztusLLyVx6jRkKEVyQDWqk6yOxxkjMawqYLsRcexKXimHoOonlWt9djgLJtg+
-	WNLJRcG7iv8/0adKB8K+dQ9t56Xsthd56h+9QrkAUy+eN8YnSMoVNdFe0LH+QiTqr3anStlkTLBK5
-	gFn0Aim1wXNs42bpY1FU/K5SiUzFPEeMzq7Vs35VUx0Q/yDiCw/K7gcQCk4yXm7HF+xcZkJsw5OeJ
-	8eM6udrPHOcItti+4RkpN1BE/C9dcdS8zbVjtnvZmn7t7prz2EQBqcUAHOTbHuVFgwT20MRGPmFdy
-	Gga1iNbQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WopR+H6mOmaY1vvDAfBZSsaG6bftAoF7LrvzU6V3dJY=; b=OYKgY9aeIYmFFJuXSlMBQ2GSN6
+	GR6YFarJmsxp3YejOJnRCx4qfKmTQrss2Qq4c/yRsarT8XwhWMMAUAaAPS7t01KZOO7tWNGibzAN2
+	k2PyoAgsQ3lj/SQaLjKYTh+C873bPndBr1NXPn142EU1D+JAopvqG3+TppeChr6KBoug2gsGkM0Ve
+	Nfm6uyRH6HqPBQebeWKL2i4QsP2f7UJgT+38A7WetF635vdJ7ETrU0thpkoeMpD+3nRDP1TQxxmiw
+	1f1q1d0MY+eDhMYRDzihEowhH1EoByzax1T1YJ/3H9pX9qhbCv0E5LILmstXNO6CXB9R+ycflfJNO
+	+gTHTJzw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulqMr-0000000B72t-0VgB;
-	Tue, 12 Aug 2025 14:52:49 +0000
-Received: from out-171.mta1.migadu.com ([2001:41d0:203:375::ab])
+	id 1ulrhg-0000000BHGJ-0mfz;
+	Tue, 12 Aug 2025 16:18:24 +0000
+Received: from layka.disroot.org ([178.21.23.139])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ullPJ-0000000AOS1-38zH
+	id 1ullXV-0000000AQ3m-0L63
 	for kexec@lists.infradead.org;
-	Tue, 12 Aug 2025 09:35:03 +0000
-Message-ID: <ef249b61-f37e-4b72-9610-7f114564988a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754991175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UB0EMZuXYKOyyxldrdbQ63aHyFJ+9vuYs0ibMI6aTWo=;
-	b=E/7GW/RORpntKNSzjue4zCvcXnS3P+iV9m+YlyMAyxJYVmthvQH5CSENyWcj+IciXmG/d8
-	Fl2CnYA7F7MrOurBihPqvmoUaPJbWhXzUKEDAoRKFDxHOAP8piIvc5AHVNfPuQlEQPHA7G
-	9ZfTya60lIenlfgcBWsgcrnQzAHsqlo=
-Date: Tue, 12 Aug 2025 17:32:15 +0800
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
-To: Yanteng Si <si.yanteng@linux.dev>, Huacai Chen <chenhuacai@kernel.org>
+	Tue, 12 Aug 2025 09:43:31 +0000
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 31DAF2588F;
+	Tue, 12 Aug 2025 11:43:26 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id JUhdKEmfHZPA; Tue, 12 Aug 2025 11:43:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1754991805; bh=VoQtnN8TVNFZ35OF82gYJyQyCQWCWSyi54UG/5Pr244=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=c2tx00vQAKJGnzvzuLEMjpjeoaNpI1Lx0c3Y8cYCtqN4lEKdCwFGNrqXbwho96cDr
+	 De1FkMyLuefVDZ+EHP+/XKNmUy4XwSfPWGEiUj93BWfM8qh+seZfrg7OLRBKdPtyho
+	 4xOzvuxmCq4q8r348zHFgM9DXNb1lhhU+ALeaggJj6kTqFkH06UOrLRRFxk6VbWsCj
+	 DUqEitM07Olvng7ttQyjj6AkbsX8m+F+Oc/nN0EuOqWpP+mKScI++CAojssp9JPQli
+	 bbNjTsLkTOQd6peyhyYtg9f+LfX6Uczqd3MoJV8BVGu3raF2pAoBrESbufbZwQR9ey
+	 qHp4TQ/TBwk3g==
+Date: Tue, 12 Aug 2025 09:43:13 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Youling Tang <youling.tang@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+	kexec@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
+Message-ID: <aJsGg8__ppyBrkfL@pie>
 References: <20250811092659.14903-1-youling.tang@linux.dev>
  <20250811092659.14903-3-youling.tang@linux.dev>
- <CAAhV-H55n=v+ztBc8UgK339kuhg3LKvcOQu+jhpVrbvO3zf3=g@mail.gmail.com>
- <9760e574-3eb0-46b2-bccd-916f73b9c39e@linux.dev>
- <ce63aa14-11a5-4b2c-bfbc-8465b7065197@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <ce63aa14-11a5-4b2c-bfbc-8465b7065197@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <aJojDiHWi8cgvA2W@pie>
+ <6de97571-7ef0-4bbd-b55f-5ad41898a6ec@linux.dev>
+ <af866071-81c1-44d5-ae02-273d6e9c04d4@linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <af866071-81c1-44d5-ae02-273d6e9c04d4@linux.dev>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250812_023501_934291_9862CEC0 
-X-CRM114-Status: GOOD (  20.34  )
+X-CRM114-CacheID: sfid-20250812_024329_669181_35254882 
+X-CRM114-Status: GOOD (  42.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,154 +79,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Yanteng
-On 2025/8/12 09:53, Yanteng Si wrote:
-> åœ¨ 8/12/25 9:21 AM, Youling Tang å†™é“:
->> Hi, Huacai
->> On 2025/8/11 22:07, Huacai Chen wrote:
->>> Hi, Youling,
->>>
->>> On Mon, Aug 11, 2025 at 5:28â€¯PM Youling Tang 
->>> <youling.tang@linux.dev> wrote:
->>>> From: Youling Tang <tangyouling@kylinos.cn>
->>>>
->>>> This patch adds support for kexec_file on LoongArch.
->>>>
->>>> The image_load() as two parts:
->>>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
->>>> - the second part loads other segments (eg: initrd, cmdline)
->>>>
->>>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are 
->>>> supported,
->>>> but ELF format is not supported.
->>>>
->>>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
->>>> ---
->>>> Â  arch/loongarch/KconfigÂ Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  |Â Â  8 ++
->>>> Â  arch/loongarch/include/asm/image.hÂ Â Â Â Â Â Â Â  |Â  18 ++++
->>>> Â  arch/loongarch/include/asm/kexec.hÂ Â Â Â Â Â Â Â  |Â  12 +++
->>>> Â  arch/loongarch/kernel/MakefileÂ Â Â Â Â Â Â Â Â Â Â Â  |Â Â  1 +
->>>> Â  arch/loongarch/kernel/kexec_image.cÂ Â Â Â Â Â Â  | 112 
->>>> +++++++++++++++++++++
->>>> Â  arch/loongarch/kernel/machine_kexec.cÂ Â Â Â Â  |Â  33 ++++--
->>>> Â  arch/loongarch/kernel/machine_kexec_file.c |Â  46 +++++++++
->>>> Â  7 files changed, 219 insertions(+), 11 deletions(-)
->>>> Â  create mode 100644 arch/loongarch/kernel/kexec_image.c
->>>> Â  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
->>>>
->>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>>> index f0abc38c40ac..fd50c83f7827 100644
->>>> --- a/arch/loongarch/Kconfig
->>>> +++ b/arch/loongarch/Kconfig
->>>> @@ -625,6 +625,14 @@ config CPU_HAS_PREFETCH
->>>> Â  config ARCH_SUPPORTS_KEXEC
->>>> Â Â Â Â Â Â Â Â  def_bool y
->>>>
->>>> +config ARCH_SUPPORTS_KEXEC_FILE
->>>> +Â Â Â Â Â Â  def_bool 64BIT
->>>> +
->>>> +config ARCH_SELECTS_KEXEC_FILE
->>>> +Â Â Â Â Â Â  def_bool y
->>>> +Â Â Â Â Â Â  depends on KEXEC_FILE
->>>> +Â Â Â Â Â Â  select HAVE_IMA_KEXEC if IMA
->>>> +
->>>> Â  config ARCH_SUPPORTS_CRASH_DUMP
->>>> Â Â Â Â Â Â Â Â  def_bool y
->>>>
->>>> diff --git a/arch/loongarch/include/asm/image.h 
->>>> b/arch/loongarch/include/asm/image.h
->>>> index 1f090736e71d..829e1ecb1f5d 100644
->>>> --- a/arch/loongarch/include/asm/image.h
->>>> +++ b/arch/loongarch/include/asm/image.h
->>>> @@ -36,5 +36,23 @@ struct loongarch_image_header {
->>>> Â Â Â Â Â Â Â Â  uint32_t pe_header;
->>>> Â  };
->>>>
->>>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
->>>> +static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 
->>>> 0x0, 0x64, 0x62};
->>>> +
->>>> +/**
->>>> + * loongarch_header_check_pe_sig - Helper to check the loongarch 
->>>> image header.
->>>> + *
->>>> + * Returns non-zero if 'MZ' signature is found.
->>>> + */
->>>> +
->>>> +static inline int loongarch_header_check_pe_sig(const struct 
->>>> loongarch_image_header *h)
->>>> +{
->>>> +Â Â Â Â Â Â  if (!h)
->>>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  return 0;
->>>> +
->>>> +Â Â Â Â Â Â  return (h->pe_sig[0] == loongarch_image_pe_sig[0]
->>>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  && h->pe_sig[1] == loongarch_image_pe_sig[1]);
->>>> +}
->>>> +
->>>> Â  #endif /* __ASSEMBLY__ */
->>>> Â  #endif /* __ASM_IMAGE_H */
->>>> diff --git a/arch/loongarch/include/asm/kexec.h 
->>>> b/arch/loongarch/include/asm/kexec.h
->>>> index cf95cd3eb2de..3ef8517a3670 100644
->>>> --- a/arch/loongarch/include/asm/kexec.h
->>>> +++ b/arch/loongarch/include/asm/kexec.h
->>>> @@ -41,6 +41,18 @@ struct kimage_arch {
->>>> Â Â Â Â Â Â Â Â  unsigned long systable_ptr;
->>>> Â  };
->>>>
->>>> +#ifdef CONFIG_KEXEC_FILE
->>>> +extern const struct kexec_file_ops kexec_image_ops;
->>>> +
->>>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
->>>> +#define arch_kimage_file_post_load_cleanup 
->>>> arch_kimage_file_post_load_cleanup
->>>> +
->>>> +extern int load_other_segments(struct kimage *image,
->>>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  unsigned long kernel_load_addr, unsigned long 
->>>> kernel_size,
->>>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  char *initrd, unsigned long initrd_len,
->>>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  char *cmdline, unsigned long cmdline_len);
->>> I think the RISC-V naming "load_extra_segments" is better.
->> This name is also fine, but I prefer it to be consistent with
->> that in kexec-tools.
-> I have looked at the code of kexec-tools, and it seems that you 
-> referenced a great deal of ARM code when implementing the LoongArch part.
->
->
->>>
->>>> +#endif
->>>> +
->>>> Â  typedef void (*do_kexec_t)(unsigned long efi_boot,
->>>> Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  unsigned long cmdline_ptr,
->>>> Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  unsigned long systable_ptr,
->>>> diff --git a/arch/loongarch/kernel/Makefile 
->>>> b/arch/loongarch/kernel/Makefile
->>>> index 6f5a4574a911..bd9405ee3888 100644
->>>> --- a/arch/loongarch/kernel/Makefile
->>>> +++ b/arch/loongarch/kernel/Makefile
->>>> @@ -62,6 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)Â Â Â Â  += sysrq.o
->>>> Â  obj-$(CONFIG_RELOCATABLE)Â Â Â Â Â  += relocate.o
->>>>
->>>> Â  obj-$(CONFIG_KEXEC_CORE)Â Â Â Â Â Â  += machine_kexec.o relocate_kernel.o
->>>> +obj-$(CONFIG_KEXEC_FILE)Â Â Â Â Â Â  += machine_kexec_file.o kexec_image.o
->>> We only support the efi format, so we don't need to split a
->>> kexec_image.c like RISC-V, just put everything into
->>> machine_kexec_file.c is OK.
->> I hope it is separated and consistent with other architectures.
->> For instance, arm64 only supports one type.
-> The ARM64 architecture has a long history, and we shouldn't be 
-> constrained by it.
-Support for kexec_elf.c in ELF format may be considered for
-addition in the future.
+On Tue, Aug 12, 2025 at 03:06:23PM +0800, Youling Tang wrote:
+> On 2025/8/12 14:15, Youling Tang wrote:
+> > Hi, Yao
+> > On 2025/8/12 01:06, Yao Zi wrote:
+> > > On Mon, Aug 11, 2025 at 05:26:55PM +0800, Youling Tang wrote:
+> > > > From: Youling Tang <tangyouling@kylinos.cn>
+> > > > 
+> > > > This patch adds support for kexec_file on LoongArch.
+> > > > 
+> > > > The image_load() as two parts:
+> > > > - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+> > > > - the second part loads other segments (eg: initrd, cmdline)
+> > > > 
+> > > > Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images
+> > > > are supported,
+> > > > but ELF format is not supported.
+> > > > 
+> > > > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> > > > ---
+> > > >   arch/loongarch/Kconfig                     |   8 ++
+> > > >   arch/loongarch/include/asm/image.h         |  18 ++++
+> > > >   arch/loongarch/include/asm/kexec.h         |  12 +++
+> > > >   arch/loongarch/kernel/Makefile             |   1 +
+> > > >   arch/loongarch/kernel/kexec_image.c        | 112
+> > > > +++++++++++++++++++++
+> > > >   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+> > > >   arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
+> > > >   7 files changed, 219 insertions(+), 11 deletions(-)
+> > > >   create mode 100644 arch/loongarch/kernel/kexec_image.c
+> > > >   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
 
-Thanks,
-Youling.
->
->
-> Thanks,
-> Yanteng
->>
->> Youling.
->>>
->>> Huacai
+...
+
+> > > > diff --git a/arch/loongarch/kernel/kexec_image.c
+> > > > b/arch/loongarch/kernel/kexec_image.c
+> > > > new file mode 100644
+> > > > index 000000000000..fdd1845b4e2e
+> > > > --- /dev/null
+> > > > +++ b/arch/loongarch/kernel/kexec_image.c
+
+...
+
+> > > > +    /*
+> > > > +     * The location of the kernel segment may make it
+> > > > impossible to satisfy
+> > > > +     * the other segment requirements, so we try repeatedly to find a
+> > > > +     * location that will work.
+> > > > +     */
+> > > > +    while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+> > > > +        /* Try to load additional data */
+> > > > +        kernel_segment = &image->segment[kernel_segment_number];
+> > > > +        ret = load_other_segments(image, kernel_segment->mem,
+> > > > +                      kernel_segment->memsz, initrd,
+> > > > +                      initrd_len, cmdline, cmdline_len);
+> > > > +        if (!ret)
+> > > > +            break;
+> > > > +
+> > > > +        /*
+> > > > +         * We couldn't find space for the other segments; erase the
+> > > > +         * kernel segment and try the next available hole.
+> > > > +         */
+> > > > +        image->nr_segments -= 1;
+> > > > +        kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+> > > > +        kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> > > > +    }
+> > > > +
+> > > > +    if (ret) {
+> > > > +        pr_err("Could not find any suitable kernel location!");
+> > > > +        return ERR_PTR(ret);
+> > > > +    }
+> > > > +
+> > > > +    kernel_segment = &image->segment[kernel_segment_number];
+> > > > +
+> > > > +    /* Make sure the second kernel jumps to the correct
+> > > > "kernel_entry". */
+> > > > +    image->start = kernel_segment->mem + h->kernel_entry -
+> > > > text_offset;
+> > > A non-relocatable loongarch kernel cannot be loaded to arbitrary
+> > > address. Thus this loading function seems to only work for relocatable
+> > > kernels, maybe it's better to leave a comment indicating the limitation.
+> > > 
+> > > For now, we don't seem to have a way to find out whether the kernel is
+> > > relocatable (for example, a flag in kernel image header), so it's
+> > > impossible to point out whether the loaded kernel boots fine with
+> > > arbitrary loading address...
+> > LoongArch enables the relocation of the kernel when the kdump
+> > feature is enabled.
+> > 
+> > config ARCH_SELECTS_CRASH_DUMP
+> >         def_bool y
+> >         depends on CRASH_DUMP
+> >         select RELOCATABLE
+> > 
+
+This only means the currently-running kernel is relocatable, not the one
+being exec'ed, right?
+
+> When enabling KEXEC_FILE, the RELOCATABLE configuration should
+> also be enabled. Both kexec and kdump require this.
+
+I'm not sure whether you're talking about the running kernel or the one
+that is going to be exec'ed. This method of kernel loading requires the
+exec'ed kernel being relocatable, not the currently running one.
+
+And I think it's totally reasonable to use KEXEC_FILE for non-crash-dump
+purpose, for example, linuxboot. It'll be confusing to the user if the
+system just hangs after booting a non-relocatable kernel, which is hard
+to debug.
+
+Thus IMHO we should ideally refuse to load non-relocatable kernels, or
+add a FIXME comment to indicate the situation that it's impossible to
+determine whether the exec'ed image is relocatable.
+
+> Youling.
+> > After enabling the relocation, LoongArch is the PIE kernel. For
+> > more details, please refer to commit d8da19fbdedd ("LoongArch:
+> > Add support for kernel relocation")
+
+Best regards.
+Yao Zi
 
