@@ -4,100 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE677CA0EC4
-	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 16:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07C7BCA0EDF
+	for <kexec@archiver.kernel.org>; Tue, 12 Aug 2025 16:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uPJ8Lxt3BleEOvsSUBjkL40gEZfMUtcuZAKrb/YcBdY=; b=ivQ8fs9l8TKL4PXqQYdEu66rBR
-	Sfnxzzk61iX5+aSsk8pnZtrzH4ISzugVP78pgWY/+0GACyRcHKlLyhOuCOZ2QFh5Cy6sz6Fkvq5v0
-	JuVpqfLVss2nc2T+RuE1WWcNEZvVCdVmml/VHSzHVslkS1zFOIAJ3OyVzlczdtnoxQvd+xaQ2slNF
-	VqC3JLo9Zc94PoIu1uoez+gLfvoL/U0qOJ7fkeGgEEcQSlMpE+ONXvZtdB2Ta6t1OjRFKALAlxGje
-	AiQu0VpoW8wcfE05wNED6OhCZ4QDbRBjPyibVqB7J6qQ+65Pq/NA8VPGA/7ZPawBG/RgWpLT0qns9
-	VWlLGJog==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=3ZE38hmpc99A2k7OXVLbkRVM4tCEFDqNHUDB9CwwXLA=; b=r8k5AkfCyqCiMIDC/O/hlpZYKK
+	5iHkN0Z24nwWRRR3JOi8Dr3vmZdQPRF2rz19D1N75fc1J0aHcI7OSjgtpTASGjh9W8oLKWh6+TNSS
+	45Pj0BOYxUDDP52tcKNV3V+yXBnmMO+dJqNcF9RfVjAbPUuvh4SHC0aXhPaXdQloUu2Q7qY+fF3CP
+	byPFaCFL34Toywg43xcG5C1ZCUPyCvcvjl+WPePw+qF5iM//kif8dgQxzjyuvS1VlaL4Kwhu+ljAb
+	edOtxeH7ZKDIS/qywpuEOi1TPP+VC1CMz4EG6QPU5TX2W/Rl0eSoJwq1cd2FS/bHyti72rspvlFlE
+	YpXjVwow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulrje-0000000BJr8-0P6P;
-	Tue, 12 Aug 2025 16:20:26 +0000
+	id 1ulrmD-0000000BNpQ-14g1;
+	Tue, 12 Aug 2025 16:23:05 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulmu8-0000000AZjj-2L84
+	id 1uloS1-0000000ApvV-0xTe
 	for kexec@lists.infradead.org;
-	Tue, 12 Aug 2025 11:10:58 +0000
+	Tue, 12 Aug 2025 12:50:02 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754997055;
+	s=mimecast20190719; t=1755002998;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPJ8Lxt3BleEOvsSUBjkL40gEZfMUtcuZAKrb/YcBdY=;
-	b=FRlpH8lA5XAzhDwSF67Vc42LzBSrEm4Kp/PTNCZ3NWRK08mav0bEgpzAu5ByStdo4iTQ2M
-	DQygcjXFd3N06fLT/pWUL/zzALic+icoAp311ADbRA9NAnFFW1odZvMFmkljJyNdWKmZLn
-	nDISKdOYysf1SMmV80x0Rp/LCdoe6x0=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-41-_hdY1YM5P7KqOdocA7SANA-1; Tue, 12 Aug 2025 07:10:52 -0400
-X-MC-Unique: _hdY1YM5P7KqOdocA7SANA-1
-X-Mimecast-MFC-AGG-ID: _hdY1YM5P7KqOdocA7SANA_1754997051
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2400b28296fso81322315ad.1
-        for <kexec@lists.infradead.org>; Tue, 12 Aug 2025 04:10:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754997051; x=1755601851;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uPJ8Lxt3BleEOvsSUBjkL40gEZfMUtcuZAKrb/YcBdY=;
-        b=Ke/TmyVyq8w28nFjvwfeMd836A8rBiXvMdE+CBoC9Fw2NYYCbxhMDMd+wQPzlm7ArM
-         5PZfHnvhK9+sxwaHvxRR8s2cG1Rng/qKRAcVhYo01nxyCMrTUhZ+kQkjcFgLs8Tr+ldA
-         x24uYBckJ1YTgGrjwT0/K/z5pl1ihCnmXBM0CqaZP5Xy6Btsc1mDuyXc/nfwA+AxJcbE
-         O5rLDARq0lHUmmZy94x+yY0lPldlfzG+d/jL++Bd1CSQQhoA22pD6q4wykqZlZ3E0Ss0
-         W7zds6tk8iAxRj3f/aO4KPJmmfz5cE2zzSa4K/ecThvX1hRP1GI8u6OF7r3V8F2ceDMF
-         ajgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgnwlcjuoaIo2yEY1XhoQe7eXkZd/i45AVlEctxRDUh9tECMOFhc/HgdnZXR0I1Vgx/Ga4JA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxu/qYQJJ49euxVS6uEM6bV4xj0N6Xdlkh7UGoTP02EFlEcT+zE
-	EhxM1btU6OBDU3Lt12eIyLrdrGzx4yTYNeuE+b1Jgnf+WZQ68IxlIB5dOE67ZWS2s5dSMseF0H+
-	2ZT524C6qLe25tWT3As8l7XWhDgkTyjF/6tdn0JsxGLEj+KRyXYP7GxjQ4e9QzQ==
-X-Gm-Gg: ASbGncs3ZzjVDFCwREPeEQ4GRrUwmcew5HSHfCy6H6snpgL0cJZq2L6itpVZKFN1y6y
-	7ZPZuDOLbmQ/JtI5DVg5vAuP4jtceHaWDIIiCTYqJnz+yekmIANemholl9nLsmsqrVq1TpiRFEf
-	FzMF5osLsfvo8bY3VAILz2VVWyOIy23Xhdac57608HOuF2CPk0z3fEkvWBc65ADuvdpZtwS7kpI
-	Iaho6Ruy8naEvzGC8QkZJKYi5PtzoRXn+wUwrAoOfCfp3s1OH/olZHSNOm3GqpVBWlEEZR6DK0L
-	TItIF1x15OA8l5VlBgJIrMeVclzh9Bw=
-X-Received: by 2002:a17:902:d58c:b0:242:9bbc:6017 with SMTP id d9443c01a7336-242fc372b34mr41461375ad.55.1754997050797;
-        Tue, 12 Aug 2025 04:10:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJVKxxP3qAclSLG5krLKovafdMdrQyd8bvZiT7pPhzWqWVFBiBgJYCXhmR+aHa6BbxpO2Hew==
-X-Received: by 2002:a17:902:d58c:b0:242:9bbc:6017 with SMTP id d9443c01a7336-242fc372b34mr41461085ad.55.1754997050394;
-        Tue, 12 Aug 2025 04:10:50 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-24309a18411sm2476495ad.146.2025.08.12.04.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 04:10:50 -0700 (PDT)
-Date: Tue, 12 Aug 2025 19:07:56 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [Regression] kdump fails to get DHCP address unless booting with
- pci=nomsi or without nr_cpus=1
-Message-ID: <gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
-References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
- <87bjom8106.ffs@tglx>
- <878qjq80yu.ffs@tglx>
- <86v7mt9ai3.wl-maz@kernel.org>
- <i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
- <86ms84974v.wl-maz@kernel.org>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3ZE38hmpc99A2k7OXVLbkRVM4tCEFDqNHUDB9CwwXLA=;
+	b=Aj4cGhxE/tt1ZU/OInmkiEEcafnQVLvt4r4jehTweFXaFbLdX7/+Tff0WkmnLsCtEU6rcx
+	FZZO3SUeJA4YfKscjycW9FpPBDsuKpzOw5fobPuenLU3alkz5HXTQ2FW87SaF+2Gt+Wcnq
+	DQvy+movEiaazCnox0r6/OgM9/v69tY=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-o8yLrza-Pk6ODkq5WeTjFQ-1; Tue,
+ 12 Aug 2025 08:49:55 -0400
+X-MC-Unique: o8yLrza-Pk6ODkq5WeTjFQ-1
+X-Mimecast-MFC-AGG-ID: o8yLrza-Pk6ODkq5WeTjFQ_1755002993
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3BB119560AF;
+	Tue, 12 Aug 2025 12:49:51 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.156])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCF6730001A1;
+	Tue, 12 Aug 2025 12:49:44 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-mm@kvack.org
+Cc: ryabinin.a.a@gmail.com,
+	glider@google.com,
+	andreyknvl@gmail.com,
+	dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	sj@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	elver@google.com,
+	snovitoll@gmail.com,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three modes
+Date: Tue, 12 Aug 2025 20:49:29 +0800
+Message-ID: <20250812124941.69508-1-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <86ms84974v.wl-maz@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hfmqEufSEtwenumItA7HUcfA1XTp9AYgyXyqLVpswXo_1754997051
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250812_041056_670499_35BD8C06 
-X-CRM114-Status: GOOD (  32.76  )
+X-CRM114-CacheID: sfid-20250812_055001_350340_766DD417 
+X-CRM114-Status: GOOD (  16.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,118 +92,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 12, 2025 at 11:17:04AM +0100, Marc Zyngier wrote:
->On Tue, 12 Aug 2025 11:09:12 +0100,
->Coiby Xu <coxu@redhat.com> wrote:
->>
->> On Mon, Aug 11, 2025 at 03:52:04PM +0100, Marc Zyngier wrote:
->> > On Mon, 11 Aug 2025 14:03:21 +0100,
->> > Thomas Gleixner <tglx@linutronix.de> wrote:
->> >>
->> >> On Mon, Aug 11 2025 at 15:02, Thomas Gleixner wrote:
->> >>
->> >> CC+ Marc
->> >>
->> >> > On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
->> >> >> Recently I met an issue that on certain virtual machines, the kdump
->> >> >> kernel fails to get DHCP IP address most of times starting from
->> >> >> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
->> >> >> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
->> >> >>
->> >> >>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
->> >> >>      # MSI_FLAG_PCI_MSI_MASK_PARENT
->> >> >>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
->> >> >>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
->> >> >>      # Provide MSI parent infrastructure
->> >> >>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
->> >> >>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
->> >> >>      # Prepare for PCI MSI/MSIX
->> >> >>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
->> >> >>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
->> >> >>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
->> >> >
->> >> > There were follow up fixes on this, so isolating this one is not really
->> >> > conclusive.
->> >> >
->> >> > Is the problem still there on v6.16 and v6.17-rc1?
->> >
->> > Yeah, there are way too many things that have been addressed since.
->> > kdump is also a particularly nasty case, as it tends to rely on the
->> > redistributor tables programmed by the previous kernel.
->>
->> Thanks for providing a clue. This may also explain explain why I fails
->> to reproduce this issue against 1st kernel even with the same cmdline of
->> the kdump kernel.
->
->I'm not sure that's a clue. It's only an indication that things are
->not necessarily easy to spot.
->
->Has it ever been reproduced on bare metal? Have you tried v6.16 as
->instructed?
+Currently only hw_tags mode of kasan can be enabled or disabled with
+kernel parameter kasan=on|off for built kernel. For kasan generic and
+sw_tags mode, there's no way to disable them once kernel is built.
+This is not convenient sometime, e.g in system kdump is configured.
+When the 1st kernel has KASAN enabled and crash triggered to switch to
+kdump kernel, the generic or sw_tags mode will cost much extra memory
+for kasan shadow while in fact it's meaningless to have kasan in kdump
+kernel.
 
-Thanks for replying so quickly!
+So this patchset moves the kasan=on|off out of hw_tags scope and into
+common code to make it visible in generic and sw_tags mode too. Then we
+can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
+kasan.
 
-No, I haven't reproduced it on a bare metal machine and our QE engineers
-haven't noticed this issue on any bare metal machine either. 
+Changelog:
+====
+v1->v2:
+- Add __ro_after_init for __ro_after_init, and remove redundant blank
+  lines in mm/kasan/common.c. Thanks to Marco.
+- Fix a code bug in <linux/kasan-enabled.h> when CONFIG_KASAN is unset,
+  this is found out by SeongJae and Lorenzo, and also reported by LKP
+  report, thanks to them.
+- Add a missing kasan_enabled() checking in kasan_report(). This will
+  cause below KASAN report info even though kasan=off is set:
+     ==================================================================
+     BUG: KASAN: stack-out-of-bounds in tick_program_event+0x130/0x150
+     Read of size 4 at addr ffff00005f747778 by task swapper/0/1
+     
+     CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0+ #8 PREEMPT(voluntary) 
+     Hardware name: GIGABYTE R272-P30-JG/MP32-AR0-JG, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
+     Call trace:
+      show_stack+0x30/0x90 (C)
+      dump_stack_lvl+0x7c/0xa0
+      print_address_description.constprop.0+0x90/0x310
+      print_report+0x104/0x1f0
+      kasan_report+0xc8/0x110
+      __asan_report_load4_noabort+0x20/0x30
+      tick_program_event+0x130/0x150
+      ......snip...
+     ==================================================================
 
-And I can confirm this issue still happens to 6.16.0-200.fc42.aarch64
-and 6.17.0-0.rc1.17.fc43.aarch64 on the type of KVM VMS (QEMU PnP device
-PNP0c02) where the issue was found.
+- Add jump_label_init() calling before kasan_init() in setup_arch() in these
+  architectures: xtensa, arm. Because they currenly rely on
+  jump_label_init() in main() which is a little late. Then the early static
+  key kasan_flag_enabled in kasan_init() won't work.
 
->
->>
->> >
->> > Also, this says "virtual machines". What's the hypervisor?
->>
->> I'll contact the lab administrator. What kinds of info I should collect
->> to help you narrow down the issue?
->
->Surely you know what hypervisor you're running on, right?
+- In UML architecture, change to enable kasan_flag_enabled in arch_mm_preinit()
+  because kasan_init() is enabled before main(), there's no chance to operate
+  on static key in kasan_init().
 
-Yes, the hypervisor is KVM. Sorry, I thought merely providing the
-hypervisor info isn't sufficient and also misunderstood your request as
-providing more details on the host machine.
+Test:
+=====
+In v1, I took test on x86_64 for generic mode, and on arm64 for
+generic, sw_tags and hw_tags mode. All of them works well.
 
->
->>
->> > How hard is it to reproduce?
->>
->> It can be reproduced reliably on certain machines. But as of writing I
->> haven't reproduced it on other KVM virtual machines on three different
->> host machines.
->
->Which machines? I'm sorry, but if you want help on this, you'll have
->to provide actual information.
+In v2, I only tested on arm64 for generic, sw_tags and hw_tags mode, it
+works. For powerpc, I got a BOOK3S/64 machine, while it says
+'KASAN not enabled as it requires radix' and KASAN is disabled. Will
+look for other POWER machine to test this.
+====
 
-Sorry, I didn't mean to be vague. I thought you question is on how
-reproducible this issue is and there is no need to provide the details
-on the machines where I can't reproduce this issue. Since you explicitly
-request it, I'll be glad to share the details.
+Baoquan He (12):
+  mm/kasan: add conditional checks in functions to return directly if
+    kasan is disabled
+  mm/kasan: move kasan= code to common place
+  mm/kasan/sw_tags: don't initialize kasan if it's disabled
+  arch/arm: don't initialize kasan if it's disabled
+  arch/arm64: don't initialize kasan if it's disabled
+  arch/loongarch: don't initialize kasan if it's disabled
+  arch/powerpc: don't initialize kasan if it's disabled
+  arch/riscv: don't initialize kasan if it's disabled
+  arch/x86: don't initialize kasan if it's disabled
+  arch/xtensa: don't initialize kasan if it's disabled
+  arch/um: don't initialize kasan if it's disabled
+  mm/kasan: make kasan=on|off take effect for all three modes
 
-I just grabbed three arbitrary bare metal machines having Fedora-42
-installed and launched some KVM VMs to see if this issue can be
-reproduced easily. Two host machines are as follows (sorry I can't find
-the info of the 3rd one)
-- GIGABYTE PnP device PNP0c02, ARMv8 (M128-30)
-- LTHPCSR112 (01234567890123456789AB), ARMv8 (Q80-30)
-
-The virtual machine image is downloaded from
-https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-42-1.1.aarch64.qcow2.
-I tried different vCPUs (2, 4), different RAM (4G, 35G) and also two
-different UEFI firmware (the default one and one from edk2-experimental
-package) but haven't reproduced this issue so far.
-
->
->Thanks,
->
->	M.
->
->-- 
->Without deviation from the norm, progress is not possible.
->
+ arch/arm/kernel/setup.c                |  6 +++++
+ arch/arm/mm/kasan_init.c               |  6 +++++
+ arch/arm64/mm/kasan_init.c             |  7 ++++++
+ arch/loongarch/mm/kasan_init.c         |  5 ++++
+ arch/powerpc/mm/kasan/init_32.c        |  8 +++++-
+ arch/powerpc/mm/kasan/init_book3e_64.c |  6 +++++
+ arch/powerpc/mm/kasan/init_book3s_64.c |  6 +++++
+ arch/riscv/mm/kasan_init.c             |  6 +++++
+ arch/um/kernel/mem.c                   |  6 +++++
+ arch/x86/mm/kasan_init_64.c            |  6 +++++
+ arch/xtensa/kernel/setup.c             |  1 +
+ arch/xtensa/mm/kasan_init.c            |  6 +++++
+ include/linux/kasan-enabled.h          | 18 ++++++-------
+ mm/kasan/common.c                      | 25 ++++++++++++++++++
+ mm/kasan/generic.c                     | 20 +++++++++++++--
+ mm/kasan/hw_tags.c                     | 35 ++------------------------
+ mm/kasan/init.c                        |  6 +++++
+ mm/kasan/quarantine.c                  |  3 +++
+ mm/kasan/report.c                      |  4 ++-
+ mm/kasan/shadow.c                      | 23 ++++++++++++++++-
+ mm/kasan/sw_tags.c                     |  9 +++++++
+ 21 files changed, 165 insertions(+), 47 deletions(-)
 
 -- 
-Best regards,
-Coiby
+2.41.0
 
 
