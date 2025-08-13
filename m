@@ -4,79 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADA52C87FCF
-	for <kexec@archiver.kernel.org>; Wed, 13 Aug 2025 12:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A6DACA0EE0
+	for <kexec@archiver.kernel.org>; Wed, 13 Aug 2025 14:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yNVE6wsMC8x7hacYqMkArJqlP3u73DUjInfZebo80YI=; b=XN2sZ3ITYAgTxH/hw3NK+Do8Yd
-	4v/xoDg8wnejJHuEXMwcOylv3GqvCSbEYqqgUfP+5rp1B3dBcjIRo2Z6/HINeD4gdECLTg9nhYQeo
-	+Avu3t0JnTD3VX+1/Ii0HZSlNsRnkbCJtPWR2BPJbmxhAaWvbkVOtCOD2M4pRUkHzdXPkWzt85kcf
-	6r0+lpocDwvJ8RfwOT+uYOg0PtEF+ELCT7TVXhB7BV0cBx1+JDvm0MBT2xJWtD3AogP4k4gwG6PrU
-	LcZ+Dxnw09nIYtIePdRDAJMUYqLioWxa5LVBMi96F589h8VDz0or+6odmqUI94GBhIzYu2jYY5qYt
-	juA7xfAA==;
+	bh=c3py2ZGxnW1KzTtPwlJixqrQVe2NX7ix/wKknq0CD5E=; b=X7OdPTLtGylVeBjmSnwTDBu8U9
+	ibDKL7lNwhtgfnd1/udVAsee+GQZDHZze8bd/qAqkB3D0rsL/jZnFNCiJXWseHBTlbVpkIX2esY3K
+	TwQEkJIrdxkMx7QCb2itJt024rosFLZc3vRPykBdcrezMBRW4jPw4rCRKXBJEBFG/EiK+PGcXmVrD
+	YNXatN9GJ8w4P8bHOLgPbX/tqgTD8exuIgSXcBarq9tbUb4nB0mbayrXw6MOS/Mfmxy8IZ6HgYDIi
+	0XrR3OvrAdnw6ayBpcWexUbDtFfqsMPvjS5cuPZ7wVMTwB3e28dilenDJEdukUdbL+3eqgVsHriXs
+	6pYXlqFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umAJG-0000000DbfS-2XuP;
-	Wed, 13 Aug 2025 12:10:26 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1umCMN-0000000DtZ7-0iz7;
+	Wed, 13 Aug 2025 14:21:47 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1um9Qv-0000000DUZw-17ua
+	id 1umBs4-0000000DoxL-1GHN
 	for kexec@lists.infradead.org;
-	Wed, 13 Aug 2025 11:14:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755083656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yNVE6wsMC8x7hacYqMkArJqlP3u73DUjInfZebo80YI=;
-	b=SFWjPF+Tjlp3BINEsgMlxN2V49RstL6FMutoHuMcB9O4JkVCQCLGQHAbN52vUiCA4g1xI2
-	M8Veq1wZKtfyCw6GjZ9Ot6XStzq0rPB7TVGiJPFDazo02yzzj/q+f+ZrDDgiz7UNcQeRAj
-	Ibrf4xydlDek42i5O1UlI0VEe+iE3kc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-205-4Pp8IIsdO9WiKTWHKKqYIA-1; Wed,
- 13 Aug 2025 07:14:12 -0400
-X-MC-Unique: 4Pp8IIsdO9WiKTWHKKqYIA-1
-X-Mimecast-MFC-AGG-ID: 4Pp8IIsdO9WiKTWHKKqYIA_1755083650
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1FC61800291;
-	Wed, 13 Aug 2025 11:14:09 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.177])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0043630001A1;
-	Wed, 13 Aug 2025 11:14:07 +0000 (UTC)
-Date: Wed, 13 Aug 2025 19:14:02 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com,
-	dvyukov@google.com, vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	sj@kernel.org, lorenzo.stoakes@oracle.com, elver@google.com,
-	snovitoll@gmail.com
-Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three
- modes
-Message-ID: <aJxzehJYKez5Q1v2@MiWiFi-R3L-srv>
-References: <20250812124941.69508-1-bhe@redhat.com>
- <CA+fCnZcAa62uXqnUwxFmDYh1xPqKBOQqOT55kU8iY_pgQg2+NA@mail.gmail.com>
- <CA+fCnZdKy-AQr+L3w=gfaw9EnFvKd0Gz4LtAZciYDP_SiWrL2A@mail.gmail.com>
+	Wed, 13 Aug 2025 13:50:28 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id B5311601F6;
+	Wed, 13 Aug 2025 13:50:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55C5C4CEEB;
+	Wed, 13 Aug 2025 13:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755093027;
+	bh=kgmkNi4FyNWpSQEulVVTL5fLq/GrDqNglBvivi4oPyI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Q1jN/zVuEQN2ad0P6Qcr4DZUk0jFORaWGUNrolSM5KKUqK63TaPvDhJVtIVYe0D1w
+	 qCq8wEOB4s/uDY+53Pfn1RZrIx6V9QRLiidfV5Px7squI22fCWtmzueIZq2oUVcrOC
+	 tsFHaGFK//++3BHNyUpKyw11Q6V7kGH4aywuYJ+2Ytw70Dn7Jbb99ItrBO5uRekayL
+	 J7WqRF5gUpjt0Fq2NaoTWwLEFETn46ES66Gv39ippaXcz04SyOd4+YyAaFGjlIz/xk
+	 MBthNFb0RZcrhkNGJOHtCF40JG5hew93XfGeXYK58xszMcQaefiEgTpiYUqc5Vsa2d
+	 RijdHjK4FLGuA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
+ <graf@amazon.com>,  Baoquan He <bhe@redhat.com>,  Changyuan Lyu
+ <changyuanl@google.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Shuah Khan <shuah@kernel.org>,
+  Thomas Weischuh <linux@weissschuh.net>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,
+  linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] lib/test_kho: fixes for error handling
+In-Reply-To: <20250811082510.4154080-3-rppt@kernel.org>
+References: <20250811082510.4154080-1-rppt@kernel.org>
+	<20250811082510.4154080-3-rppt@kernel.org>
+Date: Wed, 13 Aug 2025 15:50:24 +0200
+Message-ID: <mafs0y0rnuy8v.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+fCnZdKy-AQr+L3w=gfaw9EnFvKd0Gz4LtAZciYDP_SiWrL2A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250813_041417_388801_7B137CE4 
-X-CRM114-Status: GOOD (  29.35  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,62 +74,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/12/25 at 07:14pm, Andrey Konovalov wrote:
-> On Tue, Aug 12, 2025 at 6:57 PM Andrey Konovalov <andreyknvl@gmail.com> wrote:
-> >
-> > On Tue, Aug 12, 2025 at 2:49 PM Baoquan He <bhe@redhat.com> wrote:
-> > >
-> > > Currently only hw_tags mode of kasan can be enabled or disabled with
-> > > kernel parameter kasan=on|off for built kernel. For kasan generic and
-> > > sw_tags mode, there's no way to disable them once kernel is built.
-> > > This is not convenient sometime, e.g in system kdump is configured.
-> > > When the 1st kernel has KASAN enabled and crash triggered to switch to
-> > > kdump kernel, the generic or sw_tags mode will cost much extra memory
-> > > for kasan shadow while in fact it's meaningless to have kasan in kdump
-> > > kernel.
-> > >
-> > > So this patchset moves the kasan=on|off out of hw_tags scope and into
-> > > common code to make it visible in generic and sw_tags mode too. Then we
-> > > can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
-> > > kasan.
-> >
-> > Hi Baoquan,
-> >
-> > Could you clarify what are you trying to achieve by disabling
-> > Generic/SW_TAGS KASAN via command-line? Do you want not to see any
-> > KASAN reports produced? Or gain back the performance?
-> >
-> > Because for the no reports goal, it would be much easier to add a
-> > command-line parameter to silent the reports.
-> >
-> > And the performance goal can only be partially achieved, as you cannot
-> > remove the compiler instrumentation without rebuilding the kernel.
-> > (What are the boot times for KASAN_GENERIC=n vs KASAN_GENERIC=y +
-> > kasan=off vs KASAN_GENERIC=y btw?)
-> >
+On Mon, Aug 11 2025, Mike Rapoport wrote:
 
-Thanks a lot for checking this.
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> * Update kho_test_save() so that folios array won't be freed when
+>   returning from the function and the fdt will be freed on error
+> * Reset state->nr_folios to 0 in  kho_test_generate_data() on error
+> * Simplify allocation of folios info in fdt.
+>
+> Reported-by: Pratyush Yadav <pratyush@kernel.org>
+> Closes: https://lore.kernel.org/all/mafs0zfcjcepf.fsf@kernel.org
+> Fixes: b753522bed0b ("kho: add test for kexec handover")
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-> 
-> Ah, you don't want the shadow memory for kdump, sorry, I somehow missed that.
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-Yeah, for kdump kernel, the shadow is a heavy burden, and most
-importantly kasan is useless for kdump. We don't want to capture a
-kernel memory bug through kdump kernel running becuase kdump is a
-debugging mechanism.
-
-> 
-> I'm not familiar with the internals of kdump, but would it be
-> possible/reasonable to teach kdump to ignore the KASAN shadow region?
-
-Yes, we can teach kdump to do that. Then people may hate those conditional
-check "if (is_kdump_kernel())" being added in kasan code. E.g even
-though we skip kasan_init(), we still need to check is_kdump_kernel()
-in kasan_populate_vmalloc(), right? 
-
-Combined with the existing kasan_arch_is_ready(), it will make kasan code
-ugly. I planned to add kasan_enabled() via static key
-kasan_flag_enabled, then it can also easily remove kasan_arch_is_ready()
-cleanly.
-
+-- 
+Regards,
+Pratyush Yadav
 
