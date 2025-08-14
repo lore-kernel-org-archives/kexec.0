@@ -4,59 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EECA2CA0EDC
-	for <kexec@archiver.kernel.org>; Thu, 14 Aug 2025 09:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A371CA0EE9
+	for <kexec@archiver.kernel.org>; Thu, 14 Aug 2025 09:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yXkoyONonPTcaofQQC2DNOrJIpmcyFuEnxXSxBGAfdw=; b=SaD04xtjCFUnfiMF5mDF+VIVOf
-	xSG3C4etJM8aWPDduvoTFqKZjIvclBSmEEjcdSw4YYr2M6KrN5AuVN6R1hFLo2jWe4OvEPKHKe0mk
-	QEPjQ79V1do0YWz0fxHPWmQA4JicWWmzX/X3xmQ2nBxCY8ASwXcETwTrF+/H59EQN186phs/x2JDr
-	wSPgPtJeYON1Zo8nJEZJBI9kIJHbHTpVyjp7ZPixvKPkGAv+A1jlkrpoK159/ac3B26BNL6SrqBQS
-	kiBBDWo9GlDp1r1bFg5wAzhj+hp66vRZXLc1WtZkQiebP9U9pNHWKdH+eRtzBQVeU0S8+jI7rnELM
-	lQ3PPf2w==;
+	bh=e46B2FI/PagtxjUFemCdMQXhTSnu4yC2Ildyjyftxdo=; b=CExNjtbuAvXCbQNHeuJ4QXdS7B
+	1dXbGCtwfEHTjyvlQJ/fnl4oQnTo5jyR7prInvCF5OikfY1uA53FWejN0+GxtLhlYSFUPATDfDg2o
+	vAE2Tm0vayLkrX20NeS0QV9Q5MgLnu8d79hm5hTSEqzLULCPLzCKPhcyAN2bSPyKBh1FVyHMDbsuE
+	k+YQKIbOKO5hRmzMQtoKalUiVnqcMuvnXi5zgrxYSyzRmJMElLygPAi1T5O0L3G/qPt5P6H2CP5Rl
+	yA+QZ+E9epg6K/EzbOaRjM4B91VDBn/qBgG8DYCqUIkHSYaoFuCMXiN/X4KZ+UNrYqlJbwUxO8BQI
+	vVF7+RZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umUUO-0000000GRNQ-1slq;
-	Thu, 14 Aug 2025 09:43:16 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1umUUR-0000000GRQf-3gGE;
+	Thu, 14 Aug 2025 09:43:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umTgH-0000000GJ0w-1Yme
+	id 1umTkx-0000000GJcb-3UVG
 	for kexec@lists.infradead.org;
-	Thu, 14 Aug 2025 08:51:29 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8EB44601F9;
-	Thu, 14 Aug 2025 08:51:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5853DC4CEED;
-	Thu, 14 Aug 2025 08:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755161488;
-	bh=3K2+utYOWI1/tS8F/jA495zSK9Pd3/hWjmP0VT6O5MA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PPiy8FDnRHK2nENk+5i60ybFMnMxvDCGtWRu3Lwv0Oa09L5OYsd0KdMIqQ1okTAAk
-	 mmDk+8QQYQod+SoyUkEECNbnDh4T8949CmI6NPffOxlxOHCEYWFW8y0ZZUI431mAYV
-	 LZN77dV6uEtaJ1RvJkkc7d4P0UM9VlWuLcVCQRQWshH8iXwI48ne91jPME20Su7nMZ
-	 UTCZotDp4Sy33WzGu/f8OYw6tSPbinNPLKWBmYRmL1Ef3sZLwapJlCxTEr+xIEP7lG
-	 gXUmqqSZYf6Fwit0r2I5cHruJgp6GE/OXPF94U2WdF7NYfBiuE9GbVtwfPYGcqY9kD
-	 8aSIZSnnVKvrA==
-Date: Thu, 14 Aug 2025 11:51:21 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Evangelos Petrongonas <epetron@amazon.de>
-Cc: ardb@kernel.org, changyuanl@google.com, graf@amazon.com,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nh-open-source@amazon.com
-Subject: Re: [PATCH] efi: Support booting with kexec handover (KHO)
-Message-ID: <aJ2jiZ8MPGGALfGH@kernel.org>
-References: <aJmQNuQxLLtXjq2r@kernel.org>
- <20250814005321.31705-1-epetron@amazon.de>
+	Thu, 14 Aug 2025 08:56:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755161778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e46B2FI/PagtxjUFemCdMQXhTSnu4yC2Ildyjyftxdo=;
+	b=TIGQNDNhiEkeQLSjQkA1iXb6ZfO1w/Te5oFDCpL4V160bKnf52vu45rglzNwPDqQuGTpRo
+	PGhz8SEPYypyP3KDVtIR+Rh2qPEviAe00c5iw9TXJJTcPTTfY7PuxUMivVYvWtKNONgiqv
+	H0yYrEhqxkTE666ZBK7pVj5X7pnEG/M=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-422-3SOjFLgDMcqA9Xa_jao8Yg-1; Thu,
+ 14 Aug 2025 04:56:13 -0400
+X-MC-Unique: 3SOjFLgDMcqA9Xa_jao8Yg-1
+X-Mimecast-MFC-AGG-ID: 3SOjFLgDMcqA9Xa_jao8Yg_1755161771
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EEB141956060;
+	Thu, 14 Aug 2025 08:56:10 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.89])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B73811800446;
+	Thu, 14 Aug 2025 08:56:08 +0000 (UTC)
+Date: Thu, 14 Aug 2025 16:56:04 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com,
+	dvyukov@google.com, vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	sj@kernel.org, lorenzo.stoakes@oracle.com, elver@google.com,
+	snovitoll@gmail.com
+Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+Message-ID: <aJ2kpEVB4Anyyo/K@MiWiFi-R3L-srv>
+References: <20250812124941.69508-1-bhe@redhat.com>
+ <CA+fCnZcAa62uXqnUwxFmDYh1xPqKBOQqOT55kU8iY_pgQg2+NA@mail.gmail.com>
+ <CA+fCnZdKy-AQr+L3w=gfaw9EnFvKd0Gz4LtAZciYDP_SiWrL2A@mail.gmail.com>
+ <aJxzehJYKez5Q1v2@MiWiFi-R3L-srv>
+ <CA+fCnZfv9sbHuRVy8G9QdbKaaeO-Vguf7b2Atc5WXEs+uJx0YQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250814005321.31705-1-epetron@amazon.de>
+In-Reply-To: <CA+fCnZfv9sbHuRVy8G9QdbKaaeO-Vguf7b2Atc5WXEs+uJx0YQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250814_015619_938946_E2185AC8 
+X-CRM114-Status: GOOD (  23.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,90 +93,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Aug 14, 2025 at 12:53:15AM +0000, Evangelos Petrongonas wrote:
-> Hey Mike, thanks for your review,
-> 
-> On Mon, 11 Aug 2025 09:39:50 +0300, Mike Rapoport <rppt@kernel.org> wrote:
-> > On Fri, Aug 08, 2025 at 04:36:51PM +0000, Evangelos Petrongonas wrote:
-> > > When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
-> > > early during device tree scanning. After kexec, the new kernel
-> > > exclusively uses this region for memory allocations during boot up to
-> > > the initialization of the page allocator
-> > >
-> > > However, when booting with EFI, EFI's reserve_regions() uses
-> > > memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
-> > > rebuilding them from EFI data. This destroys KHO scratch regions and
-> > > their flags, thus causing a kernel panic, as there are no scratch
-> > > memory regions.
-> > >
-> > > Instead of wholesale removal, iterate through memory regions and only
-> > > remove non-KHO ones. This preserves KHO scratch regions while still
-> > > allowing EFI to rebuild its memory map.
+On 08/14/25 at 07:23am, Andrey Konovalov wrote:
+> On Wed, Aug 13, 2025 at 1:14 PM 'Baoquan He' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
 > >
-> > It's worth mentioning that scratch areas are "good known memory" :)
+> > > I'm not familiar with the internals of kdump, but would it be
+> > > possible/reasonable to teach kdump to ignore the KASAN shadow region?
 > >
-> 
-> I Will do so on Rev2.
-> 
-> > > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> > > ---
-> > >
-> > >  	 */
-> > >  	memblock_dump_all();
-> > > -	memblock_remove(0, PHYS_ADDR_MAX);
-> > > +
-> > > +	if (IS_ENABLED(CONFIG_MEMBLOCK_KHO_SCRATCH)) {
+> > Yes, we can teach kdump to do that. Then people may hate those conditional
+> > check "if (is_kdump_kernel())" being added in kasan code. E.g even
+> > though we skip kasan_init(), we still need to check is_kdump_kernel()
+> > in kasan_populate_vmalloc(), right?
 > >
-> > It's better to condition this on kho_get_fdt() that means that we are
-> > actually doing a handover.
-> >
+> > Combined with the existing kasan_arch_is_ready(), it will make kasan code
+> > ugly. I planned to add kasan_enabled() via static key
+> > kasan_flag_enabled, then it can also easily remove kasan_arch_is_ready()
+> > cleanly.
 > 
-> Hmm, I see that `kho_get_fdt()` is static. My first instinct was to use
-> kho_enable() instead. Diving a bit more into the initialisation flow,
-> during the `setup_arch()`->`efi_init()`, `kho_enable()` will return
-> true if kho is enabled in the cmdline, but not if we are actually doing
-> a KHO enabled kexec. However, in this case, the parsing of memory
-> regions is going to be a noop in terms of functionality, but will
-> contribute, negatively —though the overhead would likely be
-> unmeasurable to the (cold) boot time. If we  want to avoid that, we
-> might consider adding another function to the KHO API, like
-> `is_booting_with_kho()`, that practically wraps the `kho_get_fdt()`.
-> IMO, it feels a bit cleaner this way, as other components  don't
-> necessarily (need to) know the internal FDT based implementation of
-> KHO. That being said, I am definitely not the most experienced person
-> when it comes to API design, so there is a high chance that I am way
-> off :)
-> 
-> So to sum it up, I see three paths forward:
-> 1. Condition with `kho_is_enabled()` instead of the CONFIG (accepting
->    the minor cold boot overhead)
-> 2. Post another patch that extends the KHO API, adding a wrapper for
->    the `kho_get_fdt()`, like `is_booting_with_kho()` indicating that we
->    are booting with KHO enabled
-> 3. Post another patch that exports the `kho_get_fdt()` directly.
+> What I had in mind was something different: into the kdump code, we
+> add a check whether the region of memory it's trying to dump is the
+> KASAN shadow, and make kdump not to dump this region.
 
-My preference is for the second option, I'd just name it is_kho_boot()
- 
-> I am happy to implement any of the three, or any other suggestion you
-> might have.
-> 
-> > > +		struct memblock_region *reg;
-> > > +		phys_addr_t start, size;
-> > > +		int i;
-> > > +
-> > > +		/* Remove all non-KHO regions */
-> > > +		for (i = memblock.memory.cnt - 1; i >= 0; i--) {
-> >
-> > Please use for_each_mem_region()
-> >
-> 
-> Todo in Rev2.
-> 
-> --
-> Kind Regards,
-> Evangelos.
+Ah, I got what you mean. We probably are saying different things.
 
--- 
-Sincerely yours,
-Mike.
+In order to record memory content of a corrupted kernel, we need reserve
+a memory region during bootup of a normal kernel (usually called 1st
+kernel) via kernel parameter crashkernel=nMB in advance. Then load
+kernel into the crashkernel memory region, that means the region is not
+usable for 1st kernel. When 1st kernel collapsed, we stop the 1st kernel
+cpu/irq and warmly switch to the loaded kernel in the crashkernel memory
+region (usually called kdump kernel). In kdump kernel, it boots up and
+enable necessary features to read out the 1st kernel's memory content,
+we usually use user space tool like makeudmpfile to filter out unwanted
+memory content.
+
+So this patchset intends to disable KASAN to decrease the crashkernel
+meomry value because crashkernel is not usable for 1st kernel. As for
+shadow memory of 1st kernel, we need recognize it and filter it away
+in makedumpfile. 
+
+> 
+> Would this work? Would this help with the issue you have?
+> 
+> (I assume the problem is with the virtual region that is the shadow
+> memory, as kdump would dump all RAM either way? If not, please clarify
+> what how does the "heavy burden" that the shadow memory causes
+> manifests.)
+> 
+> Thank you!
+> 
+
 
