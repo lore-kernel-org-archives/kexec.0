@@ -4,83 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33CCCCA0EE0
-	for <kexec@archiver.kernel.org>; Thu, 14 Aug 2025 02:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B23ACA0EDC
+	for <kexec@archiver.kernel.org>; Thu, 14 Aug 2025 05:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8lmfqcZ52puICOqfYpqD3N/QRVedlIIDloCFgvva9KY=; b=t5N4QLYTPS9kX5dJ60xQrUEil1
-	PFpatmDhO3CTTaqbC7KJEOzwoOa3wjPQiSfYVtvxM9ns5MTFqau1PqGIjmDn+61zbUOc3MJVbPxGP
-	uNbodTmumz33VnMDetlBMHnZNt/olDJSTJhKfuRGJK6vNsPzy2/BzfCZYPAAK86fvt4ugmhJGk/yY
-	4KAH2ddw6EEryCH/wr1GgkVWd0MN0spdeezwnWz4jKX8ur8uhGW5KGkw6BcaORibeAeGof5yDYmAE
-	56k8BfD7PXiCFp1t87WHoGvcFMYOiYQDlnoJfev3+B/6x7U09C0k7H3mcyYqche7eAhYDAcYkLxpZ
-	cL9SxuVw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3LSoCl56fyWME0v8PiSkctUuL3gtGDTjl3bz0icHfT8=; b=goj+I6ITrmwSkShtJZxUifApO4
+	Znl/721meSXCtJ7kWBrmR5eAAlp05xLJQYrhXFNcY6EctQXHQiYwHh32C4nilzsWphVMINYPSnfgS
+	4qsG7K539Ag8HzdRmA+l14xsKiezra9lC+gSa4TFkYOJWuYtqzu7GlWy3TfMY3gQ0FPEQFoep1oPr
+	7GakbcUt6FQz14gLABPBnwO0zKfxEaKSuWppL8w36/TlBUiuLN+a3gmMU/jOD0JMx3YXOZBp1vMCq
+	W66SIFk4CMGMY+ioZDXD6BM6hq3es8od1ys+nvJYHv0mM0qGZaHrKg/vnh4s5sHlwDSUiLr+FbVmt
+	rZ3FbSLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umNsl-0000000FbBl-0V2q;
-	Thu, 14 Aug 2025 02:39:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1umQQm-0000000FooH-0tCA;
+	Thu, 14 Aug 2025 05:23:16 +0000
+Received: from mail-wr1-x435.google.com ([2a00:1450:4864:20::435])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umNsf-0000000FbBJ-2KrL
+	id 1umQQj-0000000FonU-40Yv
 	for kexec@lists.infradead.org;
-	Thu, 14 Aug 2025 02:39:55 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755139191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8lmfqcZ52puICOqfYpqD3N/QRVedlIIDloCFgvva9KY=;
-	b=Gmfnu4b3o5dMTsYJ8EvkNSzJrdBK7mT3E//5mGn7zUzVlTz8xrMbCb31X/n82Vpgs0+V0j
-	lVil2wudzNln1lP6WS/VUNpnhm/MOhmplA5eVFOIlKNRygYDerNngp6bk45gL2t7iGwTpk
-	oZauKflhiEPzqi3sHiys2BtVsmRoSVc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-158-8oGBpyq0OiSQ-YizA1p2zA-1; Wed,
- 13 Aug 2025 22:39:47 -0400
-X-MC-Unique: 8oGBpyq0OiSQ-YizA1p2zA-1
-X-Mimecast-MFC-AGG-ID: 8oGBpyq0OiSQ-YizA1p2zA_1755139184
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A590618003FD;
-	Thu, 14 Aug 2025 02:39:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.89])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67FF71800446;
-	Thu, 14 Aug 2025 02:39:41 +0000 (UTC)
-Date: Thu, 14 Aug 2025 10:39:36 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Brian Mak <makb@juniper.net>
-Cc: Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Graf <graf@amazon.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] x86/kexec: Carry forward the boot DTB on kexec
-Message-ID: <aJ1MaPVWZCp0qpU2@MiWiFi-R3L-srv>
-References: <20250805211527.122367-1-makb@juniper.net>
- <9B71EC74-D1F4-4F7D-837A-A43E53CEBB89@juniper.net>
- <CALu+AoQnXfYtuKQxVKK32sC4D98Y+Yn30TjTr2xmXhZcHe0x=A@mail.gmail.com>
- <A402BEF1-EB1A-48F0-997F-502429AAD92E@juniper.net>
+	Thu, 14 Aug 2025 05:23:15 +0000
+Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-3b9edf4cf6cso334794f8f.3
+        for <kexec@lists.infradead.org>; Wed, 13 Aug 2025 22:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755148992; x=1755753792; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3LSoCl56fyWME0v8PiSkctUuL3gtGDTjl3bz0icHfT8=;
+        b=RX5ox/vHtZIKXgIdfVLaIe+Zd+tSbQ89tqlVxtLsWu6Ef043ygy5R6oJAygLllVcT7
+         vFKeyVlnf1r4N3YaH2cJhiavuwnFSQz8DEvL6ixtqIF/sQwsFEeonDbxHxXRgZDrvarI
+         R41ssH8RJs+v73dcYX3d0oQTR4QKS+yLFrO5ZIVSjA4uC610m1+LxwdYVgjQKqQi9zOH
+         Nmxc7BkpPFvX+g/zY8bs+0joP7w4wOWt4Qf9eJKDdpKUVCAwtVaseqEnSxXsSt/GX0sI
+         WmoyZbXJcwpJL9T7Hlq/3YNlLq2S9O/3yqAZQCvQ02Q+ugCZNgxkHU3w7mllSqy+O/KK
+         Mq+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755148992; x=1755753792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3LSoCl56fyWME0v8PiSkctUuL3gtGDTjl3bz0icHfT8=;
+        b=Gx5t4BPsyDd7X+W/5bnjd4FtCnAKrg1Qm04nQB1+WfIMUq2ku5Gx4iQtlUpiLWRdDS
+         waI7PjvZdPChH7QaFXmqw+MJ32AsK1+blO5ppPv7JMeHVCdYE+Yh7hVC+F/79tyIMS95
+         9HGNY8gulVV4giqq8jTETMwN/8Glh4exDBYgf1w2GiglqGc6QaWizJwApL4P54syUU3Y
+         hWORbFehpOZ4NbUbXqWoNb+zj0J7foFmIdy0yzO6X7p1uoAxhfZlHFuErWhKT4sRVE8C
+         GpXkMHluGrulvUYG4Pv8hvEjiBhRY2eoqBsZaSS2aVHOVNerS6ZpwsNy7U2pFm3KdTZK
+         zPDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzbWZQVSltCMBPEqr8kNUZL6op8JSVO4g7QxDZq44YV45AFHAks3V6Qow4JcXeVL8mZ0KMug==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywhchxo7aGgl9udWFL0smUEDaiSNBuu0TGhpTOq68iFgABqqxdD
+	4OpNy+HGmEnO4BSB1twglDp5DxBUPCgk+iYOy29PayQgRANBrB5kRkRAe45sZrCA+d8Bm//jRFa
+	wKfLl1+nxHno8zOXabm2ftEDMZOe75oA=
+X-Gm-Gg: ASbGnctxxFh6pwaOEcxfjt/sI/k1R85Ou6EzW0jZYuDOv4i4nwHHxV3xp2vAlL7txeP
+	0F38p6XDZXandoTqL+Qb8w2R7xNASmBZi8HEMpxZifmDsfdO9GB4s5ykKVfze+HE0Fl2F6kTf6v
+	rWfFcLW3pCI0M1E7LVhGC3gyG1QpazKwVJ/EO33yWWmhiUPUpEXjs4v7+OhhcKNKLrI4EgOO+LP
+	sTRF6gRlg==
+X-Google-Smtp-Source: AGHT+IG3JLfHafFtVhrpyJJQVLI+yi2yjJjHCa2aqw39VKsfuinwVVPCl+kdFo32hMLPEgR8b1e3VmqLD+4/eg8BBs4=
+X-Received: by 2002:a5d:5d88:0:b0:3b6:8acb:a9d2 with SMTP id
+ ffacd0b85a97d-3b9edfcd141mr1235453f8f.7.1755148992352; Wed, 13 Aug 2025
+ 22:23:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A402BEF1-EB1A-48F0-997F-502429AAD92E@juniper.net>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250812124941.69508-1-bhe@redhat.com> <CA+fCnZcAa62uXqnUwxFmDYh1xPqKBOQqOT55kU8iY_pgQg2+NA@mail.gmail.com>
+ <CA+fCnZdKy-AQr+L3w=gfaw9EnFvKd0Gz4LtAZciYDP_SiWrL2A@mail.gmail.com> <aJxzehJYKez5Q1v2@MiWiFi-R3L-srv>
+In-Reply-To: <aJxzehJYKez5Q1v2@MiWiFi-R3L-srv>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Thu, 14 Aug 2025 07:23:01 +0200
+X-Gm-Features: Ac12FXxjjLGYLRyCaqd7TSTNKQmFZtITu9sph-q46cifbE2W4uXByRYl8-gsmGA
+Message-ID: <CA+fCnZfv9sbHuRVy8G9QdbKaaeO-Vguf7b2Atc5WXEs+uJx0YQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
+	elver@google.com, snovitoll@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250813_193953_668937_A223528B 
-X-CRM114-Status: GOOD (  30.00  )
+X-CRM114-CacheID: sfid-20250813_222313_993640_39437D68 
+X-CRM114-Status: GOOD (  14.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,95 +99,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/13/25 at 07:24pm, Brian Mak wrote:
-> On Aug 12, 2025, at 8:54 PM, Dave Young <dyoung@redhat.com> wrote:
-> 
-> > Hi, The #ifdef CONFIG_* which can be replaced by #if defined(), but I
-> > do not have a strong opinion.  other than that do you have kexec-tools
-> > patch ready? It would be better to provide a link so that people can
-> > try and test it.
-> 
-> Hi Dave,
-> 
-> Thanks for looking at this! The #ifdef CONFIG_* is used, as it matches
-> the style of other ifdefs in this file. I'd like to keep it as-is for
-> consistency.
-> 
-> I do have a prototype kexec-tools patch ready for testing. The changes
-> can be found at this repo:
-> 
-> https://github.com/makb-juniper/kexec-tools.git
-> 
-> I've also placed the diff below.
+On Wed, Aug 13, 2025 at 1:14=E2=80=AFPM 'Baoquan He' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> > I'm not familiar with the internals of kdump, but would it be
+> > possible/reasonable to teach kdump to ignore the KASAN shadow region?
+>
+> Yes, we can teach kdump to do that. Then people may hate those conditiona=
+l
+> check "if (is_kdump_kernel())" being added in kasan code. E.g even
+> though we skip kasan_init(), we still need to check is_kdump_kernel()
+> in kasan_populate_vmalloc(), right?
+>
+> Combined with the existing kasan_arch_is_ready(), it will make kasan code
+> ugly. I planned to add kasan_enabled() via static key
+> kasan_flag_enabled, then it can also easily remove kasan_arch_is_ready()
+> cleanly.
 
-Thanks, I will apply your patch and take a test.
+What I had in mind was something different: into the kdump code, we
+add a check whether the region of memory it's trying to dump is the
+KASAN shadow, and make kdump not to dump this region.
 
-Usually, Andrew will merge kexec/kdump patch if the patch is OK to him.
-I will add comment if I have concern. Otherwise, I don't want Andrew to
-bother to add my ACK.
+Would this work? Would this help with the issue you have?
 
-> 
-> diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-> index 9b17578..8419b23 100644
-> --- a/kexec/kexec-syscall.h
-> +++ b/kexec/kexec-syscall.h
-> @@ -124,6 +124,8 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
->  #define KEXEC_FILE_ON_CRASH	0x00000002
->  #define KEXEC_FILE_NO_INITRAMFS	0x00000004
->  #define KEXEC_FILE_DEBUG	0x00000008
-> +#define KEXEC_FILE_NO_CMA	0x00000010
-> +#define KEXEC_FILE_FORCE_DTB	0x00000020
->  
->  /* These values match the ELF architecture values. 
->   * Unless there is a good reason that should continue to be the case.
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index 6bf12d7..0e13b6b 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -1102,6 +1102,7 @@ void usage(void)
->  	       " --hotplug            Do in-kernel update of kexec segments on CPU/Memory\n"
->  	       "                      hot add/remove events, avoiding the need to reload\n"
->  	       "                      kdump kernel on online/offline events.\n"
-> +	       " --force-dtb          Carry over the current boot's device tree blob (x86 only).\n"
->  	       " -d, --debug          Enable debugging to help spot a failure.\n"
->  	       " -S, --status         Return 1 if the type (by default crash) is loaded,\n"
->  	       "                      0 if not.\n"
-> @@ -1640,6 +1641,9 @@ int main(int argc, char *argv[])
->  		case OPT_HOTPLUG:
->  			do_hotplug = 1;
->  			break;
-> +		case OPT_FORCE_DTB:
-> +			kexec_file_flags |= KEXEC_FILE_FORCE_DTB;
-> +			break;
->  		default:
->  			break;
->  		}
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index a2e19c4..2235aa2 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -235,7 +235,8 @@ extern int file_types;
->  #define OPT_LOAD_LIVE_UPDATE	263
->  #define OPT_EXEC_LIVE_UPDATE	264
->  #define OPT_HOTPLUG		        265
-> -#define OPT_MAX		266
-> +#define OPT_FORCE_DTB		266
-> +#define OPT_MAX		267
->  #define KEXEC_OPTIONS \
->  	{ "help",		0, 0, OPT_HELP }, \
->  	{ "version",		0, 0, OPT_VERSION }, \
-> @@ -263,6 +264,7 @@ extern int file_types;
->  	{ "status",		0, 0, OPT_STATUS }, \
->  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
->  	{ "hotplug",		    0, 0, OPT_HOTPLUG }, \
-> +	{ "force-dtb",          0, 0, OPT_FORCE_DTB }, \
->  
->  #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
->  
-> 
-> base-commit: daa29443819d3045338792b5ba950ed90e79d7a5
-> -- 
-> 2.25.1
-> 
+(I assume the problem is with the virtual region that is the shadow
+memory, as kdump would dump all RAM either way? If not, please clarify
+what how does the "heavy burden" that the shadow memory causes
+manifests.)
 
+Thank you!
 
