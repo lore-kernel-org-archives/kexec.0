@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33555CA0EEB
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86146CA0EFB
 	for <kexec@archiver.kernel.org>; Tue, 19 Aug 2025 23:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,60 +12,60 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=; b=IsE1vrvNPXaKxI23bXo0oERo85
-	ypsDXNCLPyrgkoL6eyOJMy9vywZrlPRUxsvaaxq9xu+2KuCzg9jOWUStMz5dW3UYu8Oijtg7x5nNm
-	Q3CNy7DdiYFkh9J8c3aGu/eXPv4EjwG8Sk+J1kgJ/ImIirdt8cPKQenDaaeouaD3XkVQMt0a0d272
-	Tvat9aFXEToS9fzGARrDRemhxqcjWdFmvBvrGKTl1suTAQopJAog7GOwlRfRPl9vnV6dDWmJsZ+L4
-	OxDiIwlYVzbjpRdQtzVyqXcteDaGJk/xBKCglyA27AFRDv/4BQZnO15Z+0Ab6nWnDYy6Its5ibX/4
-	jHyWWLwQ==;
+	bh=eYKRiFlOu8EF9M+TMQv/SvRIppyvVm96jRE8hmTT5eQ=; b=aJyn4+gMKoJfjgLypKYTrLHgEY
+	715J0oKZtjCsanttp+m+71yY0MzXta45Ih74axb93gx3d0dW90a+uisGmk6f/IS+flSePCjvYSZYZ
+	JkLq2mS+LOvr/HP+pfmnv7ZztR0XPaw7lsElp2P7y82t/icOynUUB3L102RQd72eT4LePNP3KQ/IA
+	zmZ7CeBRyeaq5qE7BAohCNOVNTLQsDSgpqA35tvysJvY1YeuH94Q0COtXgi5ztQZYj/APVXjbirSd
+	rPZ1XdlYwNj/Jj5VRJOq/X5gqN1avEvQ8rQ2YXcCS71nJ2vr8nwClEP9LkozxoC7/LO6IeRwA+NFc
+	q5s2+6wQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoVK7-0000000Bo7i-0JBD;
+	id 1uoVK7-0000000Bo83-1sqX;
 	Tue, 19 Aug 2025 23:00:59 +0000
 Received: from sender4-pp-o94.zoho.com ([136.143.188.94])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoTuu-0000000Bdod-1sMs
+	id 1uoTv2-0000000Bdp4-1lrA
 	for kexec@lists.infradead.org;
-	Tue, 19 Aug 2025 21:30:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1755639034; cv=none; 
+	Tue, 19 Aug 2025 21:31:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1755639036; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=nep60vAKYLyu108TIzda6odEbtr8V1mYPwFOWXUEkE1I8yrgU2d7PFQJKuRwCOL65zmaitgVExd4c0p0lIH+1dVrfYEnOC27pBISWsLYKYqaEifXTDGkCx+nWL5Qg5FCA8g5mZGAmNWffq/Isbmgr+7nnXDM+M9X4v5qyEduWg4=
+	b=Ccj1jZ2PAQPAioUMpppEmhYVNIDX5ctFwd59hYS2ldS/YodtrjI8aoWj8hUcJSQyTAMG8jHwET5MC0sRN+ZOifKG/ztzYxSqgS0Op6rgrxB43EGuOqtOH2M1izX5RY47M1JTFSafwmPrQKaou9r6f7Bls9QV+3Fs/jv4BcqUt7s=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1755639034; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=; 
-	b=CAMxYZ8QL3iMvWEPjDOlUDbh/PFanHFEveUOwPGJOzfcDXDIVjGnBBAkaBjV9pcmJ4/rlWoV7rzKbKPnvnYkUGf7faEO+TmaZbMZJwscYo5VCK8EnTBsBFmZGgYTB5lgPGq3CnxNqfgXzvrvUFoR+bvuR8FVNOXynZGUX+QR0tw=
+	t=1755639036; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=eYKRiFlOu8EF9M+TMQv/SvRIppyvVm96jRE8hmTT5eQ=; 
+	b=IKh689/qsXIyXpHMPjR4tAneor9GtT9iZf6OBfTfeC4szPQC2dctY09+xaUQt07pPqT+vx5EP1jFo7DKv3Xt8ljEIrtlI65+Nvl0e6NSWo7JY+Am9htlQGjnBJNdUKOU7u5m1NaqbrFf1k7WdfqiZW7u1dduNmPPkI3OT9yXuL4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
 	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755639034;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755639036;
 	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=;
-	b=WjValCQw1pt+JPiJoxOCXUUnw0X2d844vjsW36sn7JK44ac5ZpEKyPByP7Zsdnl1
-	4FbAj4N+bkcSGfmclF1LDdgrZpyBEnQwf5/8KOpl0y8Tb8L67IDDpzpDr6RZ8eQEXFS
-	/hxRnPJ89Jd1CadQLSNnVvNzbLgVRQ3NS3mYsvjg=
-Received: by mx.zohomail.com with SMTPS id 1755639032571201.76242736701897;
-	Tue, 19 Aug 2025 14:30:32 -0700 (PDT)
+	bh=eYKRiFlOu8EF9M+TMQv/SvRIppyvVm96jRE8hmTT5eQ=;
+	b=ZhdPFfwWWM6U6GtRXcIzhYmpp4hONNMlsXPGBJNMK/oAxiiPibujzTXE01Ec22aA
+	DZUFV2jr26r3stePYpI1d3LOTpI92oY1E+HH0pz3mDFnA9BLUOKkJq6LN4qb0C8i8wA
+	/BqA5nG0g74XDs0xhFqcV4LBlFdC2AONUgD+9f+0=
+Received: by mx.zohomail.com with SMTPS id 1755639034718423.9148109588093;
+	Tue, 19 Aug 2025 14:30:34 -0700 (PDT)
 From: Askar Safin <safinaskar@zohomail.com>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Simon Horman <horms@kernel.org>
 Cc: Jeremy Linton <jeremy.linton@arm.com>,
 	kexec@lists.infradead.org,
 	Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v4 2/6] kexec/kexec-elf-exec.c: Replace %lux with %lx
-Date: Tue, 19 Aug 2025 21:30:10 +0000
-Message-ID: <20250819213014.908757-3-safinaskar@zohomail.com>
+Subject: [PATCH v4 3/6] kexec/arch/i386/x86-linux-setup.c: replace %d with %u
+Date: Tue, 19 Aug 2025 21:30:11 +0000
+Message-ID: <20250819213014.908757-4-safinaskar@zohomail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250819213014.908757-1-safinaskar@zohomail.com>
 References: <20250819213014.908757-1-safinaskar@zohomail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112274dd0e981b9e777053889babd000073c0986d093220f528ea8ee2a7432eb7a195c548839ad7e227:zu08011227327620d3f07039b0e76ce7c20000e8035ada2002e7a856ff40686c07d963f56d793fc3998fcbfe:rf0801122c5c0752f6a72f868bccfccd10000075c2b508dd13f48c7fb06a38d8bc3e424b2d94df7bc831eae347fd1d312c:ZohoMail
+Feedback-ID: rr08011227187ff1e67c0c4abd035f1ebd0000ed4428c0ff5b6c6d0da0c771c160c30866e7fadf3bb76035f3:zu080112275f2f49a706d83885fa5e50750000f264d21b645ec18169e1b19c3d3a9dde684b2c27a08697ebb5:rf0801122c2b9fb0615467a0ad212d20910000a523d8de4e00da3b2d6e4eb2b9303fe62166199978af249c5a6366e04780:ZohoMail
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_143052_552974_4BE9C3EA 
-X-CRM114-Status: UNSURE (   8.88  )
+X-CRM114-CacheID: sfid-20250819_143100_491077_B065F025 
+X-CRM114-Status: UNSURE (   8.36  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -81,30 +81,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Replace %lux, which prints a decimal number followed by literal 'x',
-with %lx, which prints the hexadecimal one. The latter is more useful
-for the (address) ranges.
+...because e820[i].type is unsigned.
 
-Fixes: d6bc88c0696 ("elf: Support ELF loading with relocation")
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Askar Safin <safinaskar@zohomail.com>
 ---
- kexec/kexec-elf-exec.c | 2 +-
+ kexec/arch/i386/x86-linux-setup.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
-index b337642..644af8a 100644
---- a/kexec/kexec-elf-exec.c
-+++ b/kexec/kexec-elf-exec.c
-@@ -167,7 +167,7 @@ int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
- 	int result;
- 
- 	if (reloc_min > reloc_max) {
--		fprintf(stderr, "Bad relocation range, start=%lux > end=%lux.\n", reloc_min, reloc_max);
-+		fprintf(stderr, "Bad relocation range, start=%lx > end=%lx.\n", reloc_min, reloc_max);
- 		result = -1;
- 		goto out;
- 	}
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index c716e1b..94d9dd2 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -761,7 +761,7 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+ 				e820[i].type = E820_RESERVED;
+ 				break;
+ 		}
+-		dbgprintf("%016" PRIx64 "-%016" PRIx64 " (%d)\n",
++		dbgprintf("%016" PRIx64 "-%016" PRIx64 " (%u)\n",
+ 				e820[i].addr,
+ 				e820[i].addr + e820[i].size - 1,
+ 				e820[i].type);
 -- 
 2.47.2
 
