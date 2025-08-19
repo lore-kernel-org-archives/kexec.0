@@ -4,95 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 868DACA0EFB
-	for <kexec@archiver.kernel.org>; Tue, 19 Aug 2025 20:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 362ACCA0EED
+	for <kexec@archiver.kernel.org>; Tue, 19 Aug 2025 23:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9SydW5uDyMxt+461cvb6vXKm2D0LcZRub0lHp9a7wk0=; b=drVkO0AKr5T3MqH9MR7Wtdbth/
-	Se8X8N6E/T2FpzGvGnTg796beSLI2dOp3DH63a0UJmwtlaPdVg8cjlm7FZ9lKFrBGCUzwdbp8tQ7g
-	QYwH0gaDk+1d+ZFWP2hI3EmsMlF8lulb2IJ1V6xPekTmBfWaabBzZpKubJyyIP6yWWLQszvqtyUd+
-	ll25GPrNw4CYzbIglJFW+FOs+Ff2vhf4/E9/yaFPqAukT69M6rAtaYl1xKVshEBuHhHz087pOenV2
-	dUpTM+C8f0aK2zCMm0Ec9FWt78qFF5XzlMWmUjfpqoNqiTt95x4y9QdK0btJ9UCJR+xMQ9iXYKPYn
-	ZFkp4d9A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=; b=B5/hZZOVUB2Z1+VyX95W7jsjZI
+	4RnMFEz+tC0419vGRQhTZMIrSorvVRUemjjO6aeHwShvK8wGIe7b5xfPrcKOVEEwsAguImTe6GZIc
+	FN108I1ey6pIE8gxfxDxKlDXzj8kq5dab9oYguN7lK368xojTVsZciAuwRMTi+bykjix7MZdjzWqr
+	gzFhp4UqkGjiBd9cx/GkWS3SCxOhafHtD0//BSJO7ntxLdDuaGcSBEJpxb97GAXyfREkScpLf1oHN
+	22O20FSgEX3LH82UIm+M0bLSJ7xQgwcuhEOL7uUodMomaDN9FkjI8FWXzG2XSK5mrxQmUY11f5wu1
+	i6y+/NXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoTAa-0000000BZ7Z-36Oe;
-	Tue, 19 Aug 2025 20:43:00 +0000
-Received: from mgamail.intel.com ([192.198.163.7])
+	id 1uoVK6-0000000Bo7O-1MJd;
+	Tue, 19 Aug 2025 23:00:58 +0000
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoRUE-0000000BLka-2noM;
-	Tue, 19 Aug 2025 18:55:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755629710; x=1787165710;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N0364bt9jMRC3C6+N0XTj3sLdDMekTNts+hQ0L3+ZhA=;
-  b=N/wh35VFgxdhr6vC25Ta76dv1DNN3ihy4FSdCsT7Hwxa031Gwr08OQrY
-   lnvl62TunSf3AWv5Av2nvSJtgifOFgJec1/Io/gFop0+hrXpWk/YhPiHx
-   9BPsoZcQmvZjjkzTUw6Y05oWuEl9T7oAsu6HZkN3qP5esKegLUD1cRP7j
-   /Y7ItgQZeA2oxtN8JYJn44OiqB28t9kCOBIR+EuvMPhMyK4lNt6lV2CFE
-   Yucp9yjEJSOXAc/oCHW5MKSKR+1pXqOZ4wjFcdyAZ1TLDH/EuOhI3Ke2Y
-   1ZYATbtUPiz+LK9x17bRjXCGgSZoOmIq8AP7U7YtyosXiZ2el0nT6k4pT
-   w==;
-X-CSE-ConnectionGUID: hAakasCwSu+3zcYMhxaZdQ==
-X-CSE-MsgGUID: tXlpd2C0QUy0NKLaRyIOHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="83313116"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="83313116"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 11:55:10 -0700
-X-CSE-ConnectionGUID: 0/ig0LXNStKG9JH+moRfMg==
-X-CSE-MsgGUID: fmte1CfuQNaazIakoZsu7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="198785908"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 19 Aug 2025 11:55:04 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uoRU5-000HIT-06;
-	Tue, 19 Aug 2025 18:55:01 +0000
-Date: Wed, 20 Aug 2025 02:54:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, linux-arm-kernel@lists.infradead.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Pingfan Liu <piliu@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	kexec@lists.infradead.org, bpf@vger.kernel.org,
-	systemd-devel@lists.freedesktop.org
-Subject: Re: [PATCHv5 10/12] arm64/kexec: Add PE image format support
-Message-ID: <202508200238.hckz21nw-lkp@intel.com>
-References: <20250819012428.6217-11-piliu@redhat.com>
+	id 1uoTub-0000000BdmL-1ZmV
+	for kexec@lists.infradead.org;
+	Tue, 19 Aug 2025 21:30:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1755639030; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=T6LepJm5PYyvU5RHN2eKnFPtCNgCn0JLiy1XSafAPipwxBj9Ay9X+CPMUBLHbHSqQidhqQijxV0Cejb/8yyoGCjQxZwjM67xFmQaHAa8QMTYSBWUZIoYnETKrFpWOpKJf81m5YwC/BMfxsSgsRxoBaTWojvy/gHf77/yRwccosM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1755639030; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=; 
+	b=QyWKO9ZUjJzMcsZVhjfbSoNdmYALQGJry7/zK+ZsKVwLL9XpmK0i95nOfEaEetpR+jk6bxdBoYA1cVGbp0cax3AyLmhcQNRiwftSNlWD1Cf8RpBkMDGiayPdsoMoUHGlG4PSyi3GOMHnsvof5ZQ3kKvyMUQPyql8WEk+V1OlXSA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755639030;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=;
+	b=a8IUBvP7Ol2eE80h3Tst8F9LnSSiACgbKQhXVQmrvYbxEBT0VxLgfr73jj77v6BV
+	x/Jm8dge0qYHA/vb2s+ABFglVV2vyp2WM279VioIc2WNjQEJYPEPvyZXUAECFGbol9M
+	zprcpu28kzFgeJxocrr2DrhglnXqv8nnFOPVyJLk=
+Received: by mx.zohomail.com with SMTPS id 17556390274441001.6454028072117;
+	Tue, 19 Aug 2025 14:30:27 -0700 (PDT)
+From: Askar Safin <safinaskar@zohomail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	kexec@lists.infradead.org
+Subject: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec doesn't work on my laptop
+Date: Tue, 19 Aug 2025 21:30:08 +0000
+Message-ID: <20250819213014.908757-1-safinaskar@zohomail.com>
+X-Mailer: git-send-email 2.47.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250819012428.6217-11-piliu@redhat.com>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227be39bdc3d4ab3caef4fd4b000000cb3686c173d12cd61db18c858a95569a83551a98adb8762b10:zu08011227eba27c4de07a8cfdee6452150000bab52d29c9076d4e225a5e3a47cff86cf0a9373ef6847e676d:rf0801122c564b56d872fa9c4e88fea19900004eeb3f7e94c172099deb256073bf7d24f2131ec90b8a4079ee0873558f32:ZohoMail
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_115510_719455_4B5CBAC8 
-X-CRM114-Status: UNSURE (   8.42  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250819_143033_819629_997622EE 
+X-CRM114-Status: GOOD (  11.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,32 +77,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+TL;DR: this patchset fixes regression, introduced in aecc554e7b.
+This patchset should be backported to all distributions, which packaged v2.0.31, otherwise
+kexec doesn't work at all at my laptop with pretty common setup with v2.0.31.
+v2.0.31 is broken without this patchset.
 
-kernel test robot noticed the following build warnings:
+See details of this bug on my laptop in first commit message.
 
-[auto build test WARNING on c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9]
+Okay, why the bug happens? I suspect this is because of "%lux"
+string specifiers, which are totally wrong. The author meant "print (and scan) in hexademical"
+here, but this specifier prints (and scans) number in decimal, followed by literal "x". Oops.
+And this seems to break kexec.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/kexec_file-Make-kexec_image_load_default-global-visible/20250819-093420
-base:   c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-patch link:    https://lore.kernel.org/r/20250819012428.6217-11-piliu%40redhat.com
-patch subject: [PATCHv5 10/12] arm64/kexec: Add PE image format support
-config: arm64-kismet-CONFIG_KEXEC_PE_IMAGE-CONFIG_ARCH_SELECTS_KEXEC_FILE-0-0 (https://download.01.org/0day-ci/archive/20250820/202508200238.hckz21nw-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250820/202508200238.hckz21nw-lkp@intel.com/reproduce)
+The bug reproduces on kexec-tools aecc554e7ba , but
+doesn't reproduce on kexec-tools 6aecc32c6db .
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508200238.hckz21nw-lkp@intel.com/
+I. e. it is regression, introduced by aecc554e7ba .
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for KEXEC_PE_IMAGE when selected by ARCH_SELECTS_KEXEC_FILE
-   WARNING: unmet direct dependencies detected for KEXEC_PE_IMAGE
-     Depends on [n]: KEXEC_FILE [=y] && DEBUG_INFO_BTF [=n] && BPF_SYSCALL [=y]
-     Selected by [y]:
-     - ARCH_SELECTS_KEXEC_FILE [=y] && KEXEC_FILE [=y]
+Okay, how to fix this? Well, this is not easy. In 07821da7cf and d2f4297166 Andy Shevchenko
+observed compilation warnings, when %lx is used with uint64_t, so he replaced %lx with %llx.
+
+Then in aecc554e7b Jeremy Linton observed warnings with %llx and replaced it with %lux.
+(Yes, C is nightmare.)
+
+So, uint64_t is sometimes defined as long unsigned, and thus needs %lx, and sometimes as
+long long unsigned and thus needs %llx.
+
+How to fix this once and for all?
+
+I see three ways.
+
+1. uint64_t a; printf ("%llx", (unsigned long long)a);
+2. uint64_t a; printf ("%" PRIx64, a);
+3. uint64_t a; printf ("%w64x", a);
+
+I think that %w64x is beautiful, but it causes compilation warnings on clang. (Facepalm.)
+Also it was introduced in C23, which is too young.
+
+"(unsigned long long)a" is the best in my opinion. This is what I used in v1.
+But Andy said to me that POD conversions are evil.
+
+PRIx64 is ugly, but this is the only option left. So this is what I used in this version.
+
+Also this patchset fixes other misc things. See commit messages for details.
+
+I tested on my laptop that this patchset actually fixes the bug.
+
+v1: https://lore.kernel.org/kexec/20250805124722.11193-1-safinaskar@zohomail.com/
+v2: https://lore.kernel.org/kexec/20250807032510.4211-1-safinaskar@zohomail.com/
+v3: https://lore.kernel.org/kexec/20250819090505.647690-1-safinaskar@zohomail.com/
+
+Changes since v1:
+* Addressed Andy's comments
+* I reproduced the bug (and tested the fix) on slightly different versions of Linux
+  and linux-firmware (see first commit message)
+
+Changes since v2:
+* Commit messages only
+
+Changes since v3:
+* Commit messages only
+
+Askar Safin (6):
+  Fix printf string specifiers, otherwise kexec doesn't work on my
+    laptop
+  kexec/kexec-elf-exec.c: Replace %lux with %lx
+  kexec/arch/i386/x86-linux-setup.c: replace %d with %u
+  util_lib/elf_info.c: fix typo: prink -> printk
+  kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
+  kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
+
+ kexec/arch/arm64/crashdump-arm64.c | 2 +-
+ kexec/arch/i386/crashdump-x86.c    | 3 ++-
+ kexec/arch/i386/kexec-x86-common.c | 4 ++--
+ kexec/arch/i386/x86-linux-setup.c  | 3 ++-
+ kexec/kexec-elf-exec.c             | 2 +-
+ util_lib/elf_info.c                | 9 +++++----
+ 6 files changed, 13 insertions(+), 10 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.2
+
 
