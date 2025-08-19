@@ -4,77 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4308ECA0EF2
-	for <kexec@archiver.kernel.org>; Mon, 18 Aug 2025 13:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87DDFCA0EF8
+	for <kexec@archiver.kernel.org>; Tue, 19 Aug 2025 01:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=; b=gXbj4ZtvEBXATMufEG93wWqOc9
-	glGBE9pOyPxI+iNgTSxonhlxzM69u5Lfk5K9LekodbJNatJG3/xV0UqDBA1ow1kd0eVGfmG50aR9S
-	jbQJcdjWKtrPtGsn8hiQClVByMAMNHWuOy7iB1dWK7XNAVGn+/C99iI20xMNwqdbYmio5VOQ+nIMe
-	666IYNPXoQ4REJtVMd+3gbbDi0yaoGHJcDWrchVSP2KRSouj+pYfQS7ISfKOYaPCdOfVAqExxCuAp
-	+OOi3MgxZRZiAhIQfanSlGZ+eStGrLFurNeWU7gSAI6gxr93XMLUrsXWr4Yum+4DP3J01rPH4mb6l
-	9LyY1jbQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=To+XQ2ONtZTSYENZTGXdVesU6BPlLZ0Diu5MXvTKFs0=; b=dUXI6eUYFIntbeLcyZtjTjVIqi
+	EpJBp7qp1ADDFAdTWDB0Q4qjY4Wvmso3UlkLKKZaH+K/k2xBBjqxsZdXl/CwWZ2jHLVEw8xP0gV2A
+	FJmrXHqyhepxiNTx8RoDDCIq0uf0UqoNqlW+/IL0u+J0HnY2TBwoakmjrFMylk6mXUfC+wFwwREWZ
+	GuwylsOYqP13L6VrhComYfddrDzWRdBxAwjnUQCMnWN8mIIeywDEhbCarJUwkYnAHUoA+Wm6jYuIU
+	103NClSpY71jTNoPOsmhZjRX5Hf/VFV10rQe30TUm2v4YnVEDAytOTI2aK2sguk1FdJKKprSRnm/e
+	DuYhWCkA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uo03C-00000007Tqo-20ff;
-	Mon, 18 Aug 2025 13:37:26 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1uoB8B-000000095RR-02jK;
+	Tue, 19 Aug 2025 01:27:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1unupg-00000006u3m-0Q4a
-	for kexec@bombadil.infradead.org;
-	Mon, 18 Aug 2025 08:03:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Subject:To:From:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=; b=P+m/c2HmEiZ44FfEaz4eCU6jBf
-	exsxAJ5qwwsxhUv3nO1d4KMc1Vj70y6D2qsPFqBaYAF62+TYk8oycgaJnPcL/oy/tCXzNjKfHXzbH
-	Rvta/eG9b5vfGj1hn+nWmkqWbJ7JPux24zY0UQSqK96AlJkULCjqQ+CEvKKrgVW3VTq+IwnjVBO5V
-	jH2OD2D3nCtBW7gepQ20YAnc96fP5EmdpyuNOkvtVto7u02uWPLlkJFwDdQmlLFplQNVgk6jMRCHf
-	xhUPPTmupnQtoHIFlf4nfH+m0e2DS4AulXQYxrPhF9AuMc+Ksh4CGVGFRfu/gK36TbB8Ys70UrgKr
-	tU8uUPEg==;
-Received: from mail.ventrixio.pl ([57.129.137.141])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1unupa-0000000HJNj-1AHz
+	id 1uoB6J-0000000950A-1Q27
 	for kexec@lists.infradead.org;
-	Mon, 18 Aug 2025 08:03:05 +0000
-Authentication-Results: ventrixio.pl; arc=none smtp.remote-ip=127.0.0.1
-ARC-Seal: i=1; d=ventrixio.pl; s=default; a=rsa-sha256; cv=none; t=1755504178;
-	b=OZWnzXslui2Gj/051vbbkbDfZKaeq1WoY7aym6XISZb4Blpfvpp70oiQmHcgckN7klUY
-	 RyvgFQOLSWQUC8yMrbuxBLanaEQmywzA4LKXE0L5VIuaW4hxtC4WHaowFkd/IBZvio+gj
-	 Rv+g9xeCXJx9iMgBVfpEQ26nZQr/eXIHvRtDtjWZ6OBxcZV7j0rLmXhAR8GsSUtxnBu7H
-	 upmTvJGCnF1XILmD9u+SwLWsrlaJgHwdCzdV1U5rI9Sw8WmYeDfVkTEHx1rkxZUF0rNe+
-	 3/edtGfK/3bIzDcvta2JeauQRfrikQU03Cd8Io/KU74UQeIYaBr85XLSOVwXc9DMC6Q==
-ARC-Message-Signature: i=1; d=ventrixio.pl; s=default; a=rsa-sha256;
-	c=relaxed/simple; t=1755504178;
-	h=Message-ID:Date:From:Subject:From;
-	bh=g/ZnFTuVYued68oe7XL8RDnKQ+ZMKy0qE+LfBacqvSc=;
-	b=2cPkRk7ra/tYJ9mhMI5gokKBVNLSvVC7AlFNUPYfsKEMGamGRoARFsHTQqvtHQiePbX4
-	 Y10kJrLCWNTNOdPsSYOVdCHi8Jdv4GdGmAwxhjg3JAQk4nFEbT5RH42BQZOspKesPk5XR
-	 HT20AAA6TXPu35fsm18jEnGN4y8pkMLFGhSVdxbhiBwEyM2Y14UWa/hkxu6s2oM02Crk3
-	 fqXFqR414eSSG/QA7OPmvcE6bG3Ht4kE5YHXmkcnj5TU/lun5OJvimAAe91rB5PGXt3F+
-	 aogjYP+TH/+vrtWhDJ2X1IPzJF2TXKGXsNp2uo5xs+bQ7s0eVDdUH/XOuScw/T17urw==
-ARC-Authentication-Results: i=1; ventrixio.pl; arc=none smtp.remote-ip=127.0.0.1
-Received: by mail.ventrixio.pl (Postfix, from userid 1002)
-	id E0FA223EBA; Mon, 18 Aug 2025 08:02:10 +0000 (UTC)
-Received: by mail.ventrixio.pl for <kexec@lists.infradead.org>; Mon, 18 Aug 2025 08:01:04 GMT
-Message-ID: <20250818064500-0.1.42.1n0lq.0.a6fr71mmxn@ventrixio.pl>
-Date: Mon, 18 Aug 2025 08:01:04 GMT
-From: "Karol Bednaszewski" <karol.bednaszewski@ventrixio.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?Mniejsze_wydatki_na_samoch=C3=B3d?=
-X-Mailer: mail.ventrixio.pl
+	Tue, 19 Aug 2025 01:25:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755566722;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=To+XQ2ONtZTSYENZTGXdVesU6BPlLZ0Diu5MXvTKFs0=;
+	b=YlNM1jQ1wGFvdGXbjQNJrUfAvPbaS8GngheMuj4ieI11qbEARtl7RyW4dJ/w9asz2InlcL
+	Z082+trHQ9yow1mt5LjtTWa1b6DWiK6JOlehHugTVkXyK/E7g4c2PJEWXMy+MUVogNWlJL
+	BP9thm8/3rBCs/YFk3OOOZDlOEHg6Qc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-rN8gDTs7Plqv-WJ3A2Yn9Q-1; Mon,
+ 18 Aug 2025 21:25:18 -0400
+X-MC-Unique: rN8gDTs7Plqv-WJ3A2Yn9Q-1
+X-Mimecast-MFC-AGG-ID: rN8gDTs7Plqv-WJ3A2Yn9Q_1755566716
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0B1B180048E;
+	Tue, 19 Aug 2025 01:25:15 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.36])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3B6C3180028A;
+	Tue, 19 Aug 2025 01:25:02 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org
+Subject: [PATCHv5 01/12] kexec_file: Make kexec_image_load_default global visible
+Date: Tue, 19 Aug 2025 09:24:17 +0800
+Message-ID: <20250819012428.6217-2-piliu@redhat.com>
+In-Reply-To: <20250819012428.6217-1-piliu@redhat.com>
+References: <20250819012428.6217-1-piliu@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250818_090302_843367_3A96C22E 
-X-CRM114-Status: UNSURE (   1.12  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250818_182523_443587_A4B54372 
+X-CRM114-Status: GOOD (  11.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,25 +104,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Dzie=C5=84 dobry!
+In latter patches, PE format parser will extract the linux kernel inside
+and try its real format parser. So making kexec_image_load_default
+global.
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
+---
+ include/linux/kexec.h | 1 +
+ kernel/kexec_file.c   | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe umo=C5=BCliwia tworzenie =
-planu tras czy dostaw.
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1b10a5d84b68c..7bd7f8a25dd59 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -158,6 +158,7 @@ extern const struct kexec_file_ops * const kexec_file_loaders[];
+ 
+ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len);
++void *kexec_image_load_default(struct kimage *image);
+ int kexec_image_post_load_cleanup_default(struct kimage *image);
+ 
+ /*
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 91d46502a8174..4780d8aae24e7 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -80,7 +80,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 	return ret;
+ }
+ 
+-static void *kexec_image_load_default(struct kimage *image)
++void *kexec_image_load_default(struct kimage *image)
+ {
+ 	if (!image->fops || !image->fops->load)
+ 		return ERR_PTR(-ENOEXEC);
+-- 
+2.49.0
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
-
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
-
-
-Pozdrawiam
-Karol Bednaszewski
 
