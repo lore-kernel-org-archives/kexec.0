@@ -4,65 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 362ACCA0EED
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33555CA0EEB
 	for <kexec@archiver.kernel.org>; Tue, 19 Aug 2025 23:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=; b=B5/hZZOVUB2Z1+VyX95W7jsjZI
-	4RnMFEz+tC0419vGRQhTZMIrSorvVRUemjjO6aeHwShvK8wGIe7b5xfPrcKOVEEwsAguImTe6GZIc
-	FN108I1ey6pIE8gxfxDxKlDXzj8kq5dab9oYguN7lK368xojTVsZciAuwRMTi+bykjix7MZdjzWqr
-	gzFhp4UqkGjiBd9cx/GkWS3SCxOhafHtD0//BSJO7ntxLdDuaGcSBEJpxb97GAXyfREkScpLf1oHN
-	22O20FSgEX3LH82UIm+M0bLSJ7xQgwcuhEOL7uUodMomaDN9FkjI8FWXzG2XSK5mrxQmUY11f5wu1
-	i6y+/NXg==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=; b=IsE1vrvNPXaKxI23bXo0oERo85
+	ypsDXNCLPyrgkoL6eyOJMy9vywZrlPRUxsvaaxq9xu+2KuCzg9jOWUStMz5dW3UYu8Oijtg7x5nNm
+	Q3CNy7DdiYFkh9J8c3aGu/eXPv4EjwG8Sk+J1kgJ/ImIirdt8cPKQenDaaeouaD3XkVQMt0a0d272
+	Tvat9aFXEToS9fzGARrDRemhxqcjWdFmvBvrGKTl1suTAQopJAog7GOwlRfRPl9vnV6dDWmJsZ+L4
+	OxDiIwlYVzbjpRdQtzVyqXcteDaGJk/xBKCglyA27AFRDv/4BQZnO15Z+0Ab6nWnDYy6Its5ibX/4
+	jHyWWLwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoVK6-0000000Bo7O-1MJd;
-	Tue, 19 Aug 2025 23:00:58 +0000
+	id 1uoVK7-0000000Bo7i-0JBD;
+	Tue, 19 Aug 2025 23:00:59 +0000
 Received: from sender4-pp-o94.zoho.com ([136.143.188.94])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoTub-0000000BdmL-1ZmV
+	id 1uoTuu-0000000Bdod-1sMs
 	for kexec@lists.infradead.org;
-	Tue, 19 Aug 2025 21:30:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1755639030; cv=none; 
+	Tue, 19 Aug 2025 21:30:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1755639034; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=T6LepJm5PYyvU5RHN2eKnFPtCNgCn0JLiy1XSafAPipwxBj9Ay9X+CPMUBLHbHSqQidhqQijxV0Cejb/8yyoGCjQxZwjM67xFmQaHAa8QMTYSBWUZIoYnETKrFpWOpKJf81m5YwC/BMfxsSgsRxoBaTWojvy/gHf77/yRwccosM=
+	b=nep60vAKYLyu108TIzda6odEbtr8V1mYPwFOWXUEkE1I8yrgU2d7PFQJKuRwCOL65zmaitgVExd4c0p0lIH+1dVrfYEnOC27pBISWsLYKYqaEifXTDGkCx+nWL5Qg5FCA8g5mZGAmNWffq/Isbmgr+7nnXDM+M9X4v5qyEduWg4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1755639030; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=; 
-	b=QyWKO9ZUjJzMcsZVhjfbSoNdmYALQGJry7/zK+ZsKVwLL9XpmK0i95nOfEaEetpR+jk6bxdBoYA1cVGbp0cax3AyLmhcQNRiwftSNlWD1Cf8RpBkMDGiayPdsoMoUHGlG4PSyi3GOMHnsvof5ZQ3kKvyMUQPyql8WEk+V1OlXSA=
+	t=1755639034; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=; 
+	b=CAMxYZ8QL3iMvWEPjDOlUDbh/PFanHFEveUOwPGJOzfcDXDIVjGnBBAkaBjV9pcmJ4/rlWoV7rzKbKPnvnYkUGf7faEO+TmaZbMZJwscYo5VCK8EnTBsBFmZGgYTB5lgPGq3CnxNqfgXzvrvUFoR+bvuR8FVNOXynZGUX+QR0tw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
 	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755639030;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755639034;
 	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=YZk3MHN7Y5ux2w7u0IVnW+loHW+YbzG/PCGJareQVOc=;
-	b=a8IUBvP7Ol2eE80h3Tst8F9LnSSiACgbKQhXVQmrvYbxEBT0VxLgfr73jj77v6BV
-	x/Jm8dge0qYHA/vb2s+ABFglVV2vyp2WM279VioIc2WNjQEJYPEPvyZXUAECFGbol9M
-	zprcpu28kzFgeJxocrr2DrhglnXqv8nnFOPVyJLk=
-Received: by mx.zohomail.com with SMTPS id 17556390274441001.6454028072117;
-	Tue, 19 Aug 2025 14:30:27 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=RUu2UyZO7smbuUkwSuBOVe9R/GFhlIp8p2MWUBw0Ggk=;
+	b=WjValCQw1pt+JPiJoxOCXUUnw0X2d844vjsW36sn7JK44ac5ZpEKyPByP7Zsdnl1
+	4FbAj4N+bkcSGfmclF1LDdgrZpyBEnQwf5/8KOpl0y8Tb8L67IDDpzpDr6RZ8eQEXFS
+	/hxRnPJ89Jd1CadQLSNnVvNzbLgVRQ3NS3mYsvjg=
+Received: by mx.zohomail.com with SMTPS id 1755639032571201.76242736701897;
+	Tue, 19 Aug 2025 14:30:32 -0700 (PDT)
 From: Askar Safin <safinaskar@zohomail.com>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Simon Horman <horms@kernel.org>
 Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	kexec@lists.infradead.org
-Subject: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec doesn't work on my laptop
-Date: Tue, 19 Aug 2025 21:30:08 +0000
-Message-ID: <20250819213014.908757-1-safinaskar@zohomail.com>
+	kexec@lists.infradead.org,
+	Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH v4 2/6] kexec/kexec-elf-exec.c: Replace %lux with %lx
+Date: Tue, 19 Aug 2025 21:30:10 +0000
+Message-ID: <20250819213014.908757-3-safinaskar@zohomail.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250819213014.908757-1-safinaskar@zohomail.com>
+References: <20250819213014.908757-1-safinaskar@zohomail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227be39bdc3d4ab3caef4fd4b000000cb3686c173d12cd61db18c858a95569a83551a98adb8762b10:zu08011227eba27c4de07a8cfdee6452150000bab52d29c9076d4e225a5e3a47cff86cf0a9373ef6847e676d:rf0801122c564b56d872fa9c4e88fea19900004eeb3f7e94c172099deb256073bf7d24f2131ec90b8a4079ee0873558f32:ZohoMail
+Feedback-ID: rr080112274dd0e981b9e777053889babd000073c0986d093220f528ea8ee2a7432eb7a195c548839ad7e227:zu08011227327620d3f07039b0e76ce7c20000e8035ada2002e7a856ff40686c07d963f56d793fc3998fcbfe:rf0801122c5c0752f6a72f868bccfccd10000075c2b508dd13f48c7fb06a38d8bc3e424b2d94df7bc831eae347fd1d312c:ZohoMail
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_143033_819629_997622EE 
-X-CRM114-Status: GOOD (  11.72  )
+X-CRM114-CacheID: sfid-20250819_143052_552974_4BE9C3EA 
+X-CRM114-Status: UNSURE (   8.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,84 +81,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-TL;DR: this patchset fixes regression, introduced in aecc554e7b.
-This patchset should be backported to all distributions, which packaged v2.0.31, otherwise
-kexec doesn't work at all at my laptop with pretty common setup with v2.0.31.
-v2.0.31 is broken without this patchset.
+Replace %lux, which prints a decimal number followed by literal 'x',
+with %lx, which prints the hexadecimal one. The latter is more useful
+for the (address) ranges.
 
-See details of this bug on my laptop in first commit message.
+Fixes: d6bc88c0696 ("elf: Support ELF loading with relocation")
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Askar Safin <safinaskar@zohomail.com>
+---
+ kexec/kexec-elf-exec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Okay, why the bug happens? I suspect this is because of "%lux"
-string specifiers, which are totally wrong. The author meant "print (and scan) in hexademical"
-here, but this specifier prints (and scans) number in decimal, followed by literal "x". Oops.
-And this seems to break kexec.
-
-The bug reproduces on kexec-tools aecc554e7ba , but
-doesn't reproduce on kexec-tools 6aecc32c6db .
-
-I. e. it is regression, introduced by aecc554e7ba .
-
-Okay, how to fix this? Well, this is not easy. In 07821da7cf and d2f4297166 Andy Shevchenko
-observed compilation warnings, when %lx is used with uint64_t, so he replaced %lx with %llx.
-
-Then in aecc554e7b Jeremy Linton observed warnings with %llx and replaced it with %lux.
-(Yes, C is nightmare.)
-
-So, uint64_t is sometimes defined as long unsigned, and thus needs %lx, and sometimes as
-long long unsigned and thus needs %llx.
-
-How to fix this once and for all?
-
-I see three ways.
-
-1. uint64_t a; printf ("%llx", (unsigned long long)a);
-2. uint64_t a; printf ("%" PRIx64, a);
-3. uint64_t a; printf ("%w64x", a);
-
-I think that %w64x is beautiful, but it causes compilation warnings on clang. (Facepalm.)
-Also it was introduced in C23, which is too young.
-
-"(unsigned long long)a" is the best in my opinion. This is what I used in v1.
-But Andy said to me that POD conversions are evil.
-
-PRIx64 is ugly, but this is the only option left. So this is what I used in this version.
-
-Also this patchset fixes other misc things. See commit messages for details.
-
-I tested on my laptop that this patchset actually fixes the bug.
-
-v1: https://lore.kernel.org/kexec/20250805124722.11193-1-safinaskar@zohomail.com/
-v2: https://lore.kernel.org/kexec/20250807032510.4211-1-safinaskar@zohomail.com/
-v3: https://lore.kernel.org/kexec/20250819090505.647690-1-safinaskar@zohomail.com/
-
-Changes since v1:
-* Addressed Andy's comments
-* I reproduced the bug (and tested the fix) on slightly different versions of Linux
-  and linux-firmware (see first commit message)
-
-Changes since v2:
-* Commit messages only
-
-Changes since v3:
-* Commit messages only
-
-Askar Safin (6):
-  Fix printf string specifiers, otherwise kexec doesn't work on my
-    laptop
-  kexec/kexec-elf-exec.c: Replace %lux with %lx
-  kexec/arch/i386/x86-linux-setup.c: replace %d with %u
-  util_lib/elf_info.c: fix typo: prink -> printk
-  kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
-  kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
-
- kexec/arch/arm64/crashdump-arm64.c | 2 +-
- kexec/arch/i386/crashdump-x86.c    | 3 ++-
- kexec/arch/i386/kexec-x86-common.c | 4 ++--
- kexec/arch/i386/x86-linux-setup.c  | 3 ++-
- kexec/kexec-elf-exec.c             | 2 +-
- util_lib/elf_info.c                | 9 +++++----
- 6 files changed, 13 insertions(+), 10 deletions(-)
-
+diff --git a/kexec/kexec-elf-exec.c b/kexec/kexec-elf-exec.c
+index b337642..644af8a 100644
+--- a/kexec/kexec-elf-exec.c
++++ b/kexec/kexec-elf-exec.c
+@@ -167,7 +167,7 @@ int elf_exec_load_relocatable(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 	int result;
+ 
+ 	if (reloc_min > reloc_max) {
+-		fprintf(stderr, "Bad relocation range, start=%lux > end=%lux.\n", reloc_min, reloc_max);
++		fprintf(stderr, "Bad relocation range, start=%lx > end=%lx.\n", reloc_min, reloc_max);
+ 		result = -1;
+ 		goto out;
+ 	}
 -- 
 2.47.2
 
