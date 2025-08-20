@@ -4,77 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78C5CCA0EDC
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4CB5ECA0EDC
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 18:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Su/OHazANarelKIlAJ/fg6d4xixyDxFKScYwQAQvY7I=; b=HKzumB2jf6I/Z7RxHRlu9lIlj+
-	XAjybNsOyUjhXylpCf1lUcrMKtzKwp0kVGClh8ALj4amUYHWcbH0kHszYlMDcvxOMYn+Z+mJc0FXW
-	p30YScjCcRBjn/BbfW0gq6MlbRkdDJffcFBoyazcCYiqIECWAXujMkaCkM/jY70c3NaxgHRLfZCVR
-	kp5hVXwQazkunJE/fZVhQciyq05jmntickn3CBnRgy3S6+qI/Z6Ei2ShzwDxt0QpmAfiHe1USAFrI
-	Hg8wZZSDVVoKL+fk08wEJOTA1lYdX2WKScYXiSRdpckB6ljwM1amZ7xZpsUptZq4jCH4LT33BBBab
-	Dfc8rnUA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lwfU+IsVElt3h1n12yQUuhxkyKNo90VrK/DGR70vyVI=; b=F5m4PLAGasTSJntW0eCfhajLca
+	xBWp3vjb4po5GYufHZbPsbFThZj51ymdFzZIKvLZt9oMLglcGyYGpfpYJZg73/3052vB2iG5Vy8M4
+	ldrA+AQZ2NDaSL1BA0s5Wyjg61SiN4eYCP6VydrSD9fCD4jhwCAAQ83aG3uB1MsZgweg3Ix09BS3T
+	UJ+F4GI95V8gp2aKntSlBl7U0orjlC6xGvnGqpJr4j8FdbQNqE+7i5mv+aavISCSC6vus+JTbyzsc
+	EBoqSGQBCPmOedcAlG2epRL06tsQtFR5MGvP0MuxH1sYtfwdPNDwMb18vrvEZivsmPRC5Z5RkgL8K
+	sZ+sa/mA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uojtW-0000000E5u8-0gbD;
-	Wed, 20 Aug 2025 14:34:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uonvG-0000000EiNd-2lV2;
+	Wed, 20 Aug 2025 18:52:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoiz6-0000000DpdC-08QT
+	id 1uokZE-0000000EDzA-1MaF
 	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 13:36:14 +0000
+	Wed, 20 Aug 2025 15:17:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755696971;
+	s=mimecast20190719; t=1755703054;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Su/OHazANarelKIlAJ/fg6d4xixyDxFKScYwQAQvY7I=;
-	b=iI7gEdaAXDh5yqpg+qNc1chwx8K7FOp+NjdBIuOhjALPPH49STi2xXEnsAXFubMTF3/L2s
-	/1Z8afUWNSEuvAAtimAngwklbV56/Sub7eDKMYBxSoyyszQSadkluubNR+VKn4Lzqtc0R7
-	jvoUU7ztJ1QaicWKK4wgOHbcK6RfiJA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-cerMHnjiOS2Tes0Va8V6QQ-1; Wed,
- 20 Aug 2025 09:36:07 -0400
-X-MC-Unique: cerMHnjiOS2Tes0Va8V6QQ-1
-X-Mimecast-MFC-AGG-ID: cerMHnjiOS2Tes0Va8V6QQ_1755696966
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5749D18004A7;
-	Wed, 20 Aug 2025 13:36:05 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.99])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8F8419A4C9C;
-	Wed, 20 Aug 2025 13:36:02 +0000 (UTC)
-Date: Wed, 20 Aug 2025 21:35:57 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: pmladek@suse.com, akpm@linux-foundation.org,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, feng.tang@linux.alibaba.com,
-	joel.granados@kernel.org, john.ogness@linutronix.de,
-	namcao@linutronix.de, sravankumarlpu@gmail.com,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH 3/9] crash_core: use panic_try_start() in crash_kexec()
-Message-ID: <aKXPPQ93H/KkxgZh@MiWiFi-R3L-srv>
-References: <20250820091702.512524-1-wangjinchao600@gmail.com>
- <20250820091702.512524-2-wangjinchao600@gmail.com>
- <20250820091702.512524-3-wangjinchao600@gmail.com>
- <20250820091702.512524-4-wangjinchao600@gmail.com>
+	bh=lwfU+IsVElt3h1n12yQUuhxkyKNo90VrK/DGR70vyVI=;
+	b=XPnjKtZACGjNqU2LY+VCKreoDDF6wSndHvqXVaBNUco1cSqLuhAF44oScNKH6ehZ3UHI8f
+	fDb0sKziN9t3UqSJsK4QWRYkzKnzqQpwmRafUTlE/ElSOgkVtgb0ie3QvMu1pHJBhWpbD7
+	LymjE4/RftnBue+nAE/7iSPsOdWRr4g=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-616-ibedCRRSNzGyqZY3Ju9slg-1; Wed, 20 Aug 2025 11:17:32 -0400
+X-MC-Unique: ibedCRRSNzGyqZY3Ju9slg-1
+X-Mimecast-MFC-AGG-ID: ibedCRRSNzGyqZY3Ju9slg_1755703052
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b2955f64b1so302751cf.1
+        for <kexec@lists.infradead.org>; Wed, 20 Aug 2025 08:17:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755703052; x=1756307852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lwfU+IsVElt3h1n12yQUuhxkyKNo90VrK/DGR70vyVI=;
+        b=hL49kijQlIk2V63tYDiQpKvOT/o0lg229a6qgyUcWxv0LPfKJKpLIPcwo7E/e5SxA8
+         hvLAbqWn140ajzB2J19j+uyaPu6rwmzthJUsJ9KWrmtGPD7JUxmBXT0NwZPcry6iNGOj
+         Hy9NREMp6o/y4IpxIGzV2q3QkJnUno+MzKOatrnVlRJFvPDCbY1NAoBFgZgelKtNas1e
+         6MryciF9JLr3ezNIpzuUTD2+Cc9g9SSXy+cO+mPkNajs89dID3lWPSbql5tjG+HsBeBz
+         2cGdvMJpRRVqlwlfZS9VjITq1BtVydvsQtyQfXF7J4LcCIsAEMlNfUacoe1jvEbBfOI0
+         2Uog==
+X-Forwarded-Encrypted: i=1; AJvYcCUlJ1KPYuMkIi1GX5YfV1/bHyBrD+71P9XbVwbKPyjlgZJrdfB9Fi/91acfAob77oigGtPWSw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyiNoHvHuSZ61PUnSbQ7joYPgLRq9Ez2FszR+X+HrlixxpU09wP
+	CzEm0oiMSQO+2oS4xCgHUsE1K0g6sYBDeejU+bTnG+Lg/RFcstZpXi1bgduf8doX1N/O7w2aqwS
+	c/fO7UtzI3XSD0PIBbfXSfMmj4NW2RYkRFuzgZ7F+2FQTDhvp8QkGKrYvrjo4H8iIqEKHgZ3POb
+	yQNUw7YQhMyqPCprOm8LyPuuaG9LX58V+07ad/
+X-Gm-Gg: ASbGncviGatvqf/bR/sPb9rtxuOmoWYFPa86FUfWbUW+Xp+/LzhM25A/UY6YOHN50dN
+	XQAyBbjIczBi79F8OObPV6Y7JB5c5dmWXKgvG5nb4brHIS4BO+ShXBMJe96PlI2usl8e2rNOewU
+	AoPFrsvc3BQDzLuBrfjWz5rcMeRaBZdOWuY99Cz2nAB7Ak5/v4uDeI
+X-Received: by 2002:a05:622a:5c93:b0:4af:203f:73e9 with SMTP id d75a77b69052e-4b291a45948mr38268781cf.3.1755703051777;
+        Wed, 20 Aug 2025 08:17:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgNNXQPsAlJCg5PdYpqbUQjKk2La90rXTiB/Xg+AFCp6PDdl0eXQ9VodkzneYLfMLO6npPB65IGBnQ/QO7tyQ=
+X-Received: by 2002:a05:622a:5c93:b0:4af:203f:73e9 with SMTP id
+ d75a77b69052e-4b291a45948mr38268261cf.3.1755703051224; Wed, 20 Aug 2025
+ 08:17:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250820091702.512524-4-wangjinchao600@gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20250815121459.3391223-1-lichliu@redhat.com>
+In-Reply-To: <20250815121459.3391223-1-lichliu@redhat.com>
+From: Lichen Liu <lichliu@redhat.com>
+Date: Wed, 20 Aug 2025 23:17:20 +0800
+X-Gm-Features: Ac12FXz5J-qsSNe_dCy4Is9oFh6XR_1xsHJhV6_kkHN0LaUVbdz8uoGPSmN-wtU
+Message-ID: <CAPmSd0OHB3orya=3V1icz4ZzOoAwHuWTqON_Dk+EaEcACtVtbg@mail.gmail.com>
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	safinaskar@zohomail.com, kexec@lists.infradead.org, rob@landley.net, 
+	weilongchen@huawei.com, cyphar@cyphar.com, linux-api@vger.kernel.org, 
+	zohar@linux.ibm.com, stefanb@linux.ibm.com, initramfs@vger.kernel.org, 
+	corbet@lwn.net, linux-doc@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: aolDiLffAX_gvfc92oPlMIq0CGahdCa1OaMFgXo11ro_1755703052
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250820_063612_143691_2744B14E 
-X-CRM114-Status: GOOD (  20.31  )
+X-CRM114-CacheID: sfid-20250820_081736_439044_1957C8A8 
+X-CRM114-Status: GOOD (  33.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,65 +107,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/20/25 at 05:14pm, Jinchao Wang wrote:
-> crash_kexec() had its own code to exclude
-> parallel execution by setting panic_cpu.
-> This is already handled by panic_try_start().
-> 
-> Switch to panic_try_start() to remove the
-> duplication and keep the logic consistent.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Hi all, do you have any comments for this v2 patch?
+
+Thanks,
+Lichen
+
+On Fri, Aug 15, 2025 at 8:15=E2=80=AFPM Lichen Liu <lichliu@redhat.com> wro=
+te:
+>
+> When CONFIG_TMPFS is enabled, the initial root filesystem is a tmpfs.
+> By default, a tmpfs mount is limited to using 50% of the available RAM
+> for its content. This can be problematic in memory-constrained
+> environments, particularly during a kdump capture.
+>
+> In a kdump scenario, the capture kernel boots with a limited amount of
+> memory specified by the 'crashkernel' parameter. If the initramfs is
+> large, it may fail to unpack into the tmpfs rootfs due to insufficient
+> space. This is because to get X MB of usable space in tmpfs, 2*X MB of
+> memory must be available for the mount. This leads to an OOM failure
+> during the early boot process, preventing a successful crash dump.
+>
+> This patch introduces a new kernel command-line parameter, rootfsflags,
+> which allows passing specific mount options directly to the rootfs when
+> it is first mounted. This gives users control over the rootfs behavior.
+>
+> For example, a user can now specify rootfsflags=3Dsize=3D75% to allow the
+> tmpfs to use up to 75% of the available memory. This can significantly
+> reduce the memory pressure for kdump.
+>
+> Consider a practical example:
+>
+> To unpack a 48MB initramfs, the tmpfs needs 48MB of usable space. With
+> the default 50% limit, this requires a memory pool of 96MB to be
+> available for the tmpfs mount. The total memory requirement is therefore
+> approximately: 16MB (vmlinuz) + 48MB (loaded initramfs) + 48MB (unpacked
+> kernel) + 96MB (for tmpfs) + 12MB (runtime overhead) =E2=89=88 220MB.
+>
+> By using rootfsflags=3Dsize=3D75%, the memory pool required for the 48MB
+> tmpfs is reduced to 48MB / 0.75 =3D 64MB. This reduces the total memory
+> requirement by 32MB (96MB - 64MB), allowing the kdump to succeed with a
+> smaller crashkernel size, such as 192MB.
+>
+> An alternative approach of reusing the existing rootflags parameter was
+> considered. However, a new, dedicated rootfsflags parameter was chosen
+> to avoid altering the current behavior of rootflags (which applies to
+> the final root filesystem) and to prevent any potential regressions.
+>
+> Also add documentation for the new kernel parameter "rootfsflags"
+>
+> This approach is inspired by prior discussions and patches on the topic.
+> Ref: https://www.lightofdawn.org/blog/?viewDetailed=3D00128
+> Ref: https://landley.net/notes-2015.html#01-01-2015
+> Ref: https://lkml.org/lkml/2021/6/29/783
+> Ref: https://www.kernel.org/doc/html/latest/filesystems/ramfs-rootfs-init=
+ramfs.html#what-is-rootfs
+>
+> Signed-off-by: Lichen Liu <lichliu@redhat.com>
+> Tested-by: Rob Landley <rob@landley.net>
 > ---
->  kernel/crash_core.c | 15 +++------------
->  1 file changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index a4ef79591eb2..bb38bbaf3a26 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -4,6 +4,7 @@
->   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
->   */
->  
-> +#include "linux/panic.h"
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/buildid.h>
-> @@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
->  
->  __bpf_kfunc void crash_kexec(struct pt_regs *regs)
->  {
-> -	int old_cpu, this_cpu;
-> -
-> -	/*
-> -	 * Only one CPU is allowed to execute the crash_kexec() code as with
-> -	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
-> -	 * may stop each other.  To exclude them, we use panic_cpu here too.
-> -	 */
-> -	old_cpu = PANIC_CPU_INVALID;
-> -	this_cpu = raw_smp_processor_id();
-> -
-> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
-> +	if (panic_try_start()) {
-
-Seriously, where can I find this panic_try_start() and the
-panic_reset()? 
-
->  		/* This is the 1st CPU which comes here, so go ahead. */
->  		__crash_kexec(regs);
->  
-> @@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
->  		 * Reset panic_cpu to allow another panic()/crash_kexec()
->  		 * call.
->  		 */
-> -		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
-> +		panic_reset();
->  	}
+> Changes in v2:
+>   - Add documentation for the new kernel parameter.
+>
+>  Documentation/admin-guide/kernel-parameters.txt |  3 +++
+>  fs/namespace.c                                  | 11 ++++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index fb8752b42ec8..0c00f651d431 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6220,6 +6220,9 @@
+>
+>         rootflags=3D      [KNL] Set root filesystem mount option string
+>
+> +       rootfsflags=3D    [KNL] Set initial root filesystem mount option =
+string
+> +                       (e.g. tmpfs for initramfs)
+> +
+>         rootfstype=3D     [KNL] Set root filesystem type
+>
+>         rootwait        [KNL] Wait (indefinitely) for root device to show=
+ up.
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 8f1000f9f3df..e484c26d5e3f 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -65,6 +65,15 @@ static int __init set_mphash_entries(char *str)
 >  }
->  
-> -- 
-> 2.43.0
-> 
+>  __setup("mphash_entries=3D", set_mphash_entries);
+>
+> +static char * __initdata rootfs_flags;
+> +static int __init rootfs_flags_setup(char *str)
+> +{
+> +       rootfs_flags =3D str;
+> +       return 1;
+> +}
+> +
+> +__setup("rootfsflags=3D", rootfs_flags_setup);
+> +
+>  static u64 event;
+>  static DEFINE_XARRAY_FLAGS(mnt_id_xa, XA_FLAGS_ALLOC);
+>  static DEFINE_IDA(mnt_group_ida);
+> @@ -5677,7 +5686,7 @@ static void __init init_mount_tree(void)
+>         struct mnt_namespace *ns;
+>         struct path root;
+>
+> -       mnt =3D vfs_kern_mount(&rootfs_fs_type, 0, "rootfs", NULL);
+> +       mnt =3D vfs_kern_mount(&rootfs_fs_type, 0, "rootfs", rootfs_flags=
+);
+>         if (IS_ERR(mnt))
+>                 panic("Can't create rootfs");
+>
+> --
+> 2.47.0
+>
 
 
