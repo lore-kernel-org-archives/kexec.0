@@ -4,78 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BE21CA0EDC
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 11:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68F56CA0EDC
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 11:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BSAo2GzDndt91/rib0KUjUJ111dm3GwAZeCzOHuNrIQ=; b=l3ARkiVdCUqS0bVCu9kPY7rpeP
-	0vi5vPYLppc0IQ58RGuaTOs76LA4AYYuC7J5+58GizxjxXzguanYfrlBAxjWZ+0n/1w6orEi9h3Bo
-	OdxCKfVa5KDKsNZGXmjPKWrPhmL0SPU6LJUvyW4WRdaHPDnxDdy/6gzRLhTLlTudl6B40ROdNONMg
-	tB8hh6cIiC+Gs81vSopPvq/9CqwvO3j7PfUL9j2yYqaEXktosNl+oItfcNEHOIEbN0/Mml67y8+M9
-	7Z084OCQHLHMr1oWbUjUYvG7XjCS6ZVnsXoUiZdUr+ZY8Mdte3XKJv6gPDIaHGWw81eLqV6NgFEtt
-	LHqiYy2g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qET9NVoC8Ivw6LjkGN1aM+rtYCdDUjxDAQ3QE6geFrw=; b=4zxROVA+SKSp2YVPlIAVAGdZ9b
+	j6YY1EqwuJJVWxwwcJu7WsZ0kU8pIB7fpyMs8688F2Kuxd4UxPgDRPCtffcUoRFMnxYyGbYcV69yx
+	iCizM/+d1/4mU+/gxB1oEEdheXe7CUhFU/2lFXM1EJ43/wRegeMHNqSDu5BY5DYZ2bBhG9+phlQhV
+	dcGpJ4mID2vHR0kpbgRngStoo116X2v/UsgkAakT2wU1hPOxINA3CMNExXi+akp1cITW84AjvoAIM
+	GBXbERxNKgcXnAKPqEiOKGmI2eidm0C0rx7ROgFnvanfwG0QEPsb/8kgyVfI9PsmEa9pWpwaXeze+
+	6M4qL5bQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uogbm-0000000DHOF-08Ue;
-	Wed, 20 Aug 2025 11:03:58 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uogbz-0000000DHlU-2wcK;
+	Wed, 20 Aug 2025 11:04:11 +0000
+Received: from out-182.mta1.migadu.com ([95.215.58.182])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoecw-0000000Coko-277W;
-	Wed, 20 Aug 2025 08:57:02 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id C680B61415;
-	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC50C4CEEB;
-	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755680221;
-	bh=BHwPoKTEj91/GJKNcfj8Dutl5ARN4HeFYrbIABszgyQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pmkTE9jJU5lk0aBrpb6xdBQ7V52EGOI29RmwuHE5yHKLH0xwOCUQaQKWx9/0GdZ/l
-	 tFk0G1SBDkN5s5yzpqY3VRLBIB+pVY5RmTRk8OOQSRzb2phI6twM3XkwlqrHHW2WQV
-	 C00qSxkC/Yrf2nNmAI/bvRlhOJsrf/EmT1PgBWBk+Spb6yRE63tzcezinWzYPrC89h
-	 /GjRy669yXDIWKNKM5eCBxk63FGSO6RTV2HB4Ij2p+lFdXQUQeZdwFRnCW0jKrj8Dc
-	 u5PscMpxtfG4SG0wQCN4sCneBYdRiZZG9RDKXg0SM5/DDd6LUquXN2/brmRI9s5a/j
-	 ckawFDNrAy/xw==
-Received: from host86-149-246-145.range86-149.btcentralplus.com ([86.149.246.145] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uoecl-009Gtj-19;
-	Wed, 20 Aug 2025 09:56:51 +0100
-Date: Wed, 20 Aug 2025 09:56:50 +0100
-Message-ID: <87qzx6jrql.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
-In-Reply-To: <j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
-References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
-	<87bjom8106.ffs@tglx>
-	<878qjq80yu.ffs@tglx>
-	<86v7mt9ai3.wl-maz@kernel.org>
-	<i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
-	<86ms84974v.wl-maz@kernel.org>
-	<gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
-	<86ldno8yxa.wl-maz@kernel.org>
-	<yweverlt7onyse3rbm7phxzwrwfk4pq2dipzdjenrx4onrak6r@dsm4ra3x3gv6>
-	<j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 86.149.246.145
-X-SA-Exim-Rcpt-To: coxu@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+	id 1uoeti-0000000Cs9T-3kjC
+	for kexec@lists.infradead.org;
+	Wed, 20 Aug 2025 09:14:25 +0000
+Message-ID: <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755681259;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qET9NVoC8Ivw6LjkGN1aM+rtYCdDUjxDAQ3QE6geFrw=;
+	b=DXSH0R6iC5c75evVqUs/LLCUqop9cqZE6HCKgH5lrP+cdLg52YmjXCgr3xqGL9Ku4hSh9t
+	gG2Gac0eQZnVfAWcxcTqRUfv46R2hxvo9b4NMVrCErMCg36motPm9mmy1tox2chEPAOXYo
+	GJFzhapmcqr6zhoQZTWomq8INKUEquI=
+Date: Wed, 20 Aug 2025 17:13:27 +0800
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
+ <20250820055700.24344-3-youling.tang@linux.dev> <aKVwHOM9KNEpUZF4@pie>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <aKVwHOM9KNEpUZF4@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250820_021423_146659_A23C075A 
+X-CRM114-Status: GOOD (  36.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,71 +71,204 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 20 Aug 2025 00:30:12 +0100,
-Coiby Xu <coxu@redhat.com> wrote:
-> 
-> On Wed, Aug 13, 2025 at 08:08:28PM +0800, Coiby Xu wrote:
-> > On Tue, Aug 12, 2025 at 02:14:25PM +0100, Marc Zyngier wrote:
-> [...]
-> >> 
-> >> Can you at the very least share:
-> 
-> Thanks for your patience! I've attached a zip file with the info you
-> need. Additionally I've included the dmidecode of guest
-> (dmidecode_guest), host machine (dmidecode_host) and the domain info
-> of guest (libvirt.xml) in case they may be helpful. If you need further
-> info or any experiment I need to do, feel free to let me know! Now I
-> have access to the host machine so I can respond much faster.
-> 
-> >> 
-> >> - the boot log of the guest on its first kernel
-> 
-> Please check file boot_log_1st_kernel
+Hi, Yao
 
-Old kernel. It would have been better to use a vanilla v6.16, so that
-we know exactly what you are running. I have zero interest in finding
-out what 6.15.9-201.fc42.aarch64 corresponds to in real life.
+On 2025/8/20 14:50, Yao Zi wrote:
 
-> >> - the boot log of the guest running kdump
-> 
-> boot_log_2nd_kernel
+> On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
+>> From: Youling Tang <tangyouling@kylinos.cn>
+>>
+>> This patch adds support for kexec_file on LoongArch.
+>>
+>> The efi_kexec_load() as two parts:
+>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+>> - the second part loads other segments (eg: initrd, cmdline)
+>>
+>> This initrd will be passed to the second kernel via the command line
+>> 'initrd=start,size'.
+>>
+>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+>> but ELF format is not supported.
+>>
+>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>> ---
+>>   arch/loongarch/Kconfig                     |   9 ++
+>>   arch/loongarch/include/asm/image.h         |  17 +++
+>>   arch/loongarch/include/asm/kexec.h         |  12 +++
+>>   arch/loongarch/kernel/Makefile             |   1 +
+>>   arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
+>>   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>>   arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
+>>   7 files changed, 289 insertions(+), 11 deletions(-)
+>>   create mode 100644 arch/loongarch/kernel/kexec_efi.c
+>>   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+> ...
+>
+>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+>> index 1f090736e71d..655d5836c4e8 100644
+>> --- a/arch/loongarch/include/asm/image.h
+>> +++ b/arch/loongarch/include/asm/image.h
+>> @@ -36,5 +36,22 @@ struct loongarch_image_header {
+>>   	uint32_t pe_header;
+>>   };
+>>   
+>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
+>> +
+>> +/**
+>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+>> + *
+>> + * Returns non-zero if 'MZ' signature is found.
+>> + */
+>> +
+>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
+>> +{
+>> +	if (!h)
+>> +		return 0;
+>> +
+>> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
+>> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
+>> +}
+> This check is still too weak and doesn't improve comparing to v1.
+>
+>> This could be simplified with a memcmp(). Also, this check isn't
+>> strict enough: PE files for any architectures, and even legacy MS-DOS
+>> COM executables all start with "MZ".
+> I've pointed this out in my previous reply[1].
+Previously, I had considered adding a specific LoongArch magic
+number (such as "Loongson") in the loongarch_image_header, but
+this is incompatible with older versions of the kernel, so it
+remains the same without further checks.
+>
+>>   #endif /* __ASSEMBLY__ */
+>>   #endif /* __ASM_IMAGE_H */
+> ...
+>
+>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+>> new file mode 100644
+>> index 000000000000..7741f1139a12
+>> --- /dev/null
+>> +++ b/arch/loongarch/kernel/kexec_efi.c
+> ...
+>
+>> +static void *efi_kexec_load(struct kimage *image,
+>> +				char *kernel, unsigned long kernel_len,
+>> +				char *initrd, unsigned long initrd_len,
+>> +				char *cmdline, unsigned long cmdline_len)
+>> +{
+>> +	struct loongarch_image_header *h;
+>> +	struct kexec_buf kbuf;
+>> +	unsigned long text_offset, kernel_segment_number;
+>> +	struct kexec_segment *kernel_segment;
+>> +	int ret;
+>> +
+>> +	h = (struct loongarch_image_header *)kernel;
+>> +	if (!h->image_size)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	/* Load the kernel */
+>> +	kbuf.image = image;
+>> +	kbuf.buf_max = ULONG_MAX;
+>> +	kbuf.top_down = false;
+>> +
+>> +	kbuf.buffer = kernel;
+>> +	kbuf.bufsz = kernel_len;
+>> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +	kbuf.memsz = le64_to_cpu(h->image_size);
+>> +	text_offset = le64_to_cpu(h->text_offset);
+>> +	kbuf.buf_min = text_offset;
+>> +	kbuf.buf_align = SZ_2M;
+>> +
+>> +	kernel_segment_number = image->nr_segments;
+>> +
+>> +	/*
+>> +	 * The location of the kernel segment may make it impossible to satisfy
+>> +	 * the other segment requirements, so we try repeatedly to find a
+>> +	 * location that will work.
+>> +	 */
+>> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+>> +		/* Try to load additional data */
+>> +		kernel_segment = &image->segment[kernel_segment_number];
+>> +		ret = load_other_segments(image, kernel_segment->mem,
+>> +					  kernel_segment->memsz, initrd,
+>> +					  initrd_len, cmdline, cmdline_len);
+>> +		if (!ret)
+>> +			break;
+>> +
+>> +		/*
+>> +		 * We couldn't find space for the other segments; erase the
+>> +		 * kernel segment and try the next available hole.
+>> +		 */
+>> +		image->nr_segments -= 1;
+>> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +	}
+>> +
+>> +	if (ret) {
+>> +		pr_err("Could not find any suitable kernel location!");
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	kernel_segment = &image->segment[kernel_segment_number];
+>> +
+>> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+>> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
+> And this still assumes the loaded, secondary kernel is relocatable,
+> with neither extra check nor comment explaining its limitation.
+>
+> Please see my previous reply[2] that explains why loading a
+> non-relocatble kernel with kexec_file API is reasonable.
+LoongArch is a non-position independent (non-PIE) kernel when
+the RELOCATABLE option is not enabled, the kernel contains certain
+instructions such as la.abs, which prevent it from being relocated to
+arbitrary memory addresses for execution. As a result, limitations
+exist that make features like kdump or kexec_file dependent on
+the RELOCATABLE option.
 
-Same thing.
+Strictly speaking, we need to add additional checks: if the kernel is
+non-relocatable, the loading operation should fail directly. For a
+running kernel, we can easily determine this by calling
+kallsyms_lookup_name("relocate_kernel"). However, for a kernel
+that is being loaded but has not yet started execution, it is difficult
+to easily determine whether the currently loaded kernel has the
+RELOCATABLE configuration option enabled.
 
-> 
-> >> 
-> >> - the content of /sys/kernel/debug/kvm/$PID-xx/vgic*state* when
-> >> running both kernels
-> 
-> vgic-state_{1st,2nd}_kernel
+For ELF format images, we can determine whether the loaded image
+contains the ".la_abs" section in the following way:
+static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
+{
+         struct mem_shdr *shdr, *shdr_end;
+         unsigned char *strtab;
 
-What is the host running? It also looks like a pre-6.16 kernel, which
-lacks important information.
+         strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
+         shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
+         for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
+                 if (shdr->sh_size &&
+                         strcmp((char *)&strtab[shdr->sh_name], 
+".la_abs") == 0) {
+                         return shdr;
+                 }
+         }
 
-> 
-> >> 
-> >> - the QEMU command-line to get to run the whole thing
-> 
-> qemu_cmdline
-
-I'm sorry, but that doesn't look like a command line as I know it. I
-certainly cannot feed this to QEMU and reproduce your findings.
-
-Now, there is *one* thing that is interesting:
-
-The second vgic_state dump indicates that LPI 8225 is routed to
-vcpu-3. Given that your guest boots into the second kernel on vcpu-0,
-and that this is the only online vcpu at this stage, the LPI will
-never be presented to the CPU (and the vgic has it as pending, which
-is what I'd expect).
-
-I'd suggest you instrument the second kernel to try and see why this
-affinity is not changed.
+         return NULL;
+}
 
 Thanks,
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+Youling.
+>
+>> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +		      kernel_segment->mem, kbuf.bufsz,
+>> +		      kernel_segment->memsz);
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +const struct kexec_file_ops kexec_efi_ops = {
+>> +	.probe = efi_kexec_probe,
+>> +	.load = efi_kexec_load,
+>> +};
+> Thanks,
+> Yao Zi
+>
+> [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
+> [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
 
