@@ -4,86 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E370CA0EE4
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BE21CA0EDC
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 11:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=temw3kCS478jTBh6LFkp0yZVJm+ZhpDMjZ356JRAFac=; b=YElxXLkVajh9wyjRwR0NEEm0lG
-	V0n6guPe9uB8YRW8yeInsIxcF2Uzw41q0+YW/tLaobEjrGs6s8Lhtw2GcVQG1UQfn0CYajRNccgcY
-	vusx/W6Dk4lNjmslhP7B5jo03LVqQgGcHFStxHih1JP75Q28+Wkv5aPf2zHu8Gkr59rMcOlBY4AWG
-	6yAAuDZ9beSxq5FjTY0m+UcNtCNil558xdPEBflXthNI136uSqsICo6nEza3HA5GstATY0q9hK0LV
-	lrnEjCzT9WCRPzQPMts/91vuN4aePOrlbgEWudeSuNxDuwTCNfTQHEEovgyZWZJQTypoggRoMfHDr
-	cZXFMhUw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=BSAo2GzDndt91/rib0KUjUJ111dm3GwAZeCzOHuNrIQ=; b=l3ARkiVdCUqS0bVCu9kPY7rpeP
+	0vi5vPYLppc0IQ58RGuaTOs76LA4AYYuC7J5+58GizxjxXzguanYfrlBAxjWZ+0n/1w6orEi9h3Bo
+	OdxCKfVa5KDKsNZGXmjPKWrPhmL0SPU6LJUvyW4WRdaHPDnxDdy/6gzRLhTLlTudl6B40ROdNONMg
+	tB8hh6cIiC+Gs81vSopPvq/9CqwvO3j7PfUL9j2yYqaEXktosNl+oItfcNEHOIEbN0/Mml67y8+M9
+	7Z084OCQHLHMr1oWbUjUYvG7XjCS6ZVnsXoUiZdUr+ZY8Mdte3XKJv6gPDIaHGWw81eLqV6NgFEtt
+	LHqiYy2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uogPQ-0000000DFCr-3DmE;
-	Wed, 20 Aug 2025 10:51:12 +0000
-Received: from mail-ej1-x630.google.com ([2a00:1450:4864:20::630])
+	id 1uogbm-0000000DHOF-08Ue;
+	Wed, 20 Aug 2025 11:03:58 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uofXX-0000000D30u-35t8
-	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 09:55:33 +0000
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-afcb7322da8so1015543966b.0
-        for <kexec@lists.infradead.org>; Wed, 20 Aug 2025 02:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755683730; x=1756288530; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=temw3kCS478jTBh6LFkp0yZVJm+ZhpDMjZ356JRAFac=;
-        b=jxc0qgepNUWkYuZJ2uejXTiyrGd4piRTyGM9INeQ9as4pRMyY9BH7Ejk0yHRlr9DmU
-         f8oxk9RfgA4ilgqbu4Szr5wbOecxvRO2K50tyRMdxV5dREQnnuiiSIHbabj8dzRHj076
-         uOsL5NCXQV3UZgK5RbOQPIJh4ZIajfbcrqFw2bpTXXMz8jWhphEKHHP6e1qyldXKf+1K
-         tmjpEl271R6SzmGaeKT6oWaYGcmB7p90dKPNHLwziT7CAr7dQ7ZVvVDrfcwp8+SbxPV9
-         bJ7qBWm5R43JZo9GACxLxCLCfDMnITPU/5l9GsGk7ljsJSy8wGIQZNPIEk/M0bzIJA09
-         bDhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755683730; x=1756288530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=temw3kCS478jTBh6LFkp0yZVJm+ZhpDMjZ356JRAFac=;
-        b=ABgMgtECzwnEGbd6/TnCfxXi876gegqUQjqWJ1ziMeV6/mgAfwcDnZYlBERwqb63hr
-         R7gL8Jsq/Az3krnXm60XeIDNb+2/6z7qk7+Iofi+4Wtpmi4nVHOymAxJjmGUDg1QCUSj
-         5KbuZbCnqNGrsaHhrfgJZ8CJuBmkIZpAjAhl9NrGOSGatm5noVAEkecgSFIJzqe2+Y4Z
-         yGe7BWKcsuwmbu6AZn/AL1f22J0wmfPE1nEBMKVu0VrCGa4K2Rj1CY+J5drsrZ2X/Ctv
-         bZgllyUK6v5xBJtpOYVbw6DMSbD3cUZuMBjZo5qhaATkEWtQVv2wjXskt1LuwPVOIol7
-         v0bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPxECX4b/e89R0zE1pNAM004b7sYVlf84wD7zG1R5isJRXL0hfA/84DfGbwkXCGGXVvKSuAw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwUJaOFXdPFbeGPfrZJmT4EhKQparfFGI842qrULq3ydVXSsTj2
-	1Sn29e8SH/1wmg9eef36BKDLPWfQPDeZlrLexTomHRdHCIhoWr5b6R/TdbFqh0bxgpIifZe1Skr
-	h7nCpWYkPR/vxf9lCVpg5lXoNJV9NVedsImuTyMQ=
-X-Gm-Gg: ASbGncvaLVWMwZCRd9n7SSgriuVsMI9hiRJGhazP8WLzAOKxXUUd0Fxbsdoi4zTbg86
-	IRRbbNEHM+yhkOkltquNRMYgl/1uO2q7r8AhFQCnD8Jg9T2VxdPV4haWUXM3VwpT9xA8W95dqNc
-	93PG1XeAhO9q9uCnC3sTP+RvukslDxlkAzoRc2/AGS9JFH2KpHjdHJEcPV3/8xL9zDr1Qze0naV
-	XgixztyZA==
-X-Google-Smtp-Source: AGHT+IEwpCLOlkt9VJI3CGsBHnulQ7xNaY4Lb/cd1fl3MMcoTyJyum0qYLJSTyxhkY+zthd67jObUeR19Tkq8pTEFJc=
-X-Received: by 2002:a17:907:7f27:b0:ad5:d597:561e with SMTP id
- a640c23a62f3a-afdf023b574mr194486266b.56.1755683729853; Wed, 20 Aug 2025
- 02:55:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250819090505.647690-1-safinaskar@zohomail.com>
- <CAHp75VdY6YtaVER6QZ9K=iJfMEYvQ4=63KfEWEnthA1QQVFQ2Q@mail.gmail.com> <198c4453d48.d8db0bc668814.5123977046275098050@zohomail.com>
-In-Reply-To: <198c4453d48.d8db0bc668814.5123977046275098050@zohomail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 20 Aug 2025 12:54:53 +0300
-X-Gm-Features: Ac12FXzDkmBP7nPYHjeBgLxb8ldfOcVF7mPeynRTobcjpaDZpyR-xWaSN0Gxtvo
-Message-ID: <CAHp75VdsdE4L84svY=JLZWRFJxvO0SPbuX5XoKPs7Gea1jr+0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Fix printf string specifiers, otherwise kexec
- doesn't work on my laptop
-To: Askar Safin <safinaskar@zohomail.com>
-Cc: Simon Horman <horms@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, 
-	kexec <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250820_025531_772720_C41AB085 
-X-CRM114-Status: UNSURE (   9.57  )
-X-CRM114-Notice: Please train this message.
+	id 1uoecw-0000000Coko-277W;
+	Wed, 20 Aug 2025 08:57:02 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id C680B61415;
+	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC50C4CEEB;
+	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755680221;
+	bh=BHwPoKTEj91/GJKNcfj8Dutl5ARN4HeFYrbIABszgyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pmkTE9jJU5lk0aBrpb6xdBQ7V52EGOI29RmwuHE5yHKLH0xwOCUQaQKWx9/0GdZ/l
+	 tFk0G1SBDkN5s5yzpqY3VRLBIB+pVY5RmTRk8OOQSRzb2phI6twM3XkwlqrHHW2WQV
+	 C00qSxkC/Yrf2nNmAI/bvRlhOJsrf/EmT1PgBWBk+Spb6yRE63tzcezinWzYPrC89h
+	 /GjRy669yXDIWKNKM5eCBxk63FGSO6RTV2HB4Ij2p+lFdXQUQeZdwFRnCW0jKrj8Dc
+	 u5PscMpxtfG4SG0wQCN4sCneBYdRiZZG9RDKXg0SM5/DDd6LUquXN2/brmRI9s5a/j
+	 ckawFDNrAy/xw==
+Received: from host86-149-246-145.range86-149.btcentralplus.com ([86.149.246.145] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uoecl-009Gtj-19;
+	Wed, 20 Aug 2025 09:56:51 +0100
+Date: Wed, 20 Aug 2025 09:56:50 +0100
+Message-ID: <87qzx6jrql.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
+In-Reply-To: <j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
+References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
+	<87bjom8106.ffs@tglx>
+	<878qjq80yu.ffs@tglx>
+	<86v7mt9ai3.wl-maz@kernel.org>
+	<i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
+	<86ms84974v.wl-maz@kernel.org>
+	<gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
+	<86ldno8yxa.wl-maz@kernel.org>
+	<yweverlt7onyse3rbm7phxzwrwfk4pq2dipzdjenrx4onrak6r@dsm4ra3x3gv6>
+	<j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 86.149.246.145
+X-SA-Exim-Rcpt-To: coxu@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,30 +90,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 20, 2025 at 12:38=E2=80=AFAM Askar Safin <safinaskar@zohomail.c=
-om> wrote:
->
->  ---- On Tue, 19 Aug 2025 22:49:56 +0400  Andy Shevchenko <andy.shevchenk=
-o@gmail.com> wrote ---
->  > After addressing them, feel free to add
-> Thank you!
->
-> I again ask you to look into another my report:
-> https://lore.kernel.org/regressions/197ae95ffd8.dc819e60457077.7692120488=
-609091556@zohomail.com/T/#u
-> (Ideally, read whole thread, please)
->
-> We wait for you since 30 Jun.
-> We merely want to know what command I should type on my laptop to proceed=
-, i. e. to debug
-> futher this problem with weird wake ups. Because we want to understand ho=
-w final upstreamable patch
-> should look like.
+On Wed, 20 Aug 2025 00:30:12 +0100,
+Coiby Xu <coxu@redhat.com> wrote:
+> 
+> On Wed, Aug 13, 2025 at 08:08:28PM +0800, Coiby Xu wrote:
+> > On Tue, Aug 12, 2025 at 02:14:25PM +0100, Marc Zyngier wrote:
+> [...]
+> >> 
+> >> Can you at the very least share:
+> 
+> Thanks for your patience! I've attached a zip file with the info you
+> need. Additionally I've included the dmidecode of guest
+> (dmidecode_guest), host machine (dmidecode_host) and the domain info
+> of guest (libvirt.xml) in case they may be helpful. If you need further
+> info or any experiment I need to do, feel free to let me know! Now I
+> have access to the host machine so I can respond much faster.
+> 
+> >> 
+> >> - the boot log of the guest on its first kernel
+> 
+> Please check file boot_log_1st_kernel
 
-I just returned from long leave, but I will prioritize that. Sorry for
-the delay.
+Old kernel. It would have been better to use a vanilla v6.16, so that
+we know exactly what you are running. I have zero interest in finding
+out what 6.15.9-201.fc42.aarch64 corresponds to in real life.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> >> - the boot log of the guest running kdump
+> 
+> boot_log_2nd_kernel
+
+Same thing.
+
+> 
+> >> 
+> >> - the content of /sys/kernel/debug/kvm/$PID-xx/vgic*state* when
+> >> running both kernels
+> 
+> vgic-state_{1st,2nd}_kernel
+
+What is the host running? It also looks like a pre-6.16 kernel, which
+lacks important information.
+
+> 
+> >> 
+> >> - the QEMU command-line to get to run the whole thing
+> 
+> qemu_cmdline
+
+I'm sorry, but that doesn't look like a command line as I know it. I
+certainly cannot feed this to QEMU and reproduce your findings.
+
+Now, there is *one* thing that is interesting:
+
+The second vgic_state dump indicates that LPI 8225 is routed to
+vcpu-3. Given that your guest boots into the second kernel on vcpu-0,
+and that this is the only online vcpu at this stage, the LPI will
+never be presented to the CPU (and the vgic has it as pending, which
+is what I'd expect).
+
+I'd suggest you instrument the second kernel to try and see why this
+affinity is not changed.
+
+Thanks,
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
 
