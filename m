@@ -4,84 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADDCBCA0EFB
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 00:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06F90CA0EEB
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 03:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tF++dyX6f56vFwu3NGpYE/r8N67nbsIdg66sRFyfopY=; b=cm5AdtOX2zaOsSB+GMzUqKDB4N
-	elskz3PaeoTlbOYOmGGUbbvZeQsW88rJw+eIbC96iv0reUTavLkHrsfoMpTT+isVWzD3tS8Aie2oy
-	VVNEk9aZTFDLH1zrUrP0D9yMUfw0grUmWIT/smZocaITEy8QczGgzsAcgSZ1LOG76V9WKdddR2mEL
-	hSSxn3K3+mNLer8e6pvx8E5DGB81vheZYnZvYJPualLxQ/OpRoUwlmyKYbTlT7QBQbM6XTi98ZE54
-	IOtoD0evLWHSRlV8LhYEN7p+qCGkz7kME93jVQIyYiPKh650iUImx+hFAj9J0IMr6fyXGeccFSE33
-	2zv/gd7g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=wI3J5CQvGDPM9MDcFPBYlPpxyIDbUJTJvO8poXdYAMY=; b=SGyyRo3XXMIlLNPcUnYru9mTAv
+	2rWOcV7vm6EhvrK58j9ZpiS2KA3HR/rQzD5PqRmNtXxWsivGcHBWjRwN5iNIdcYwYRytACCsRyBm9
+	yi04MheCA72Up2Ze3hN2xvCQ6dJbrlNpDg6mU2jgGihBIQprvgjmxLVNP71IGNh3MnqFrIVt8mcKb
+	kB0vo/W06ppUnJZcbhX8BZ247ftYrFmtdh0NwSFbv5UOrpg1jok6TchqKt9AsKx1aHo4LnYu2q7Oh
+	vQXCr7royxyPK58ZZv2F3mXEtsFZoL7jQ24hM6jaUhIAuQwo5PuKf72PrQlZi7oDfSW1hzPTfHNzT
+	oueT4Pyw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoX4R-0000000Bzyd-31pE;
-	Wed, 20 Aug 2025 00:52:55 +0000
-Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.155.198.111])
+	id 1uoZCm-0000000CEvI-2wxB;
+	Wed, 20 Aug 2025 03:09:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoVhE-0000000BqeZ-10t9
+	id 1uoZCj-0000000CEtM-1RZ6
 	for kexec@lists.infradead.org;
-	Tue, 19 Aug 2025 23:24:53 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1755645892; x=1787181892;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tF++dyX6f56vFwu3NGpYE/r8N67nbsIdg66sRFyfopY=;
-  b=dYWvyR+iqQma+PDjGg//ScfOXP5HegC3YsykpCIb7gDgap1Ysnr0KNeH
-   CeM8eHmndi2l2Oa9QC3FyEOygYtPjyAOZF0vzQOPiA3dVDQ9DOfG4ts/8
-   WXaMDyutmJ2mlKzPN5M1gSUXwFRPJIT5SeHEgyyM6G+4RDQbvNQ1I2zTT
-   reHcbdImPCaeZFUOPQNxT5KvTzb+LeWBaLnilaV3xzGMlrZRRDctM7s5u
-   V7OIL6mIHmi6YkOpfMYw50EiKtXYM3ev65wnBYnK79NGsmyrTtz9KJfo6
-   h1bDXXVJHl23AuC3hjTbxhLoCxWDyxabeyMVZ4TcUcJ53+px9mO4hnnht
-   A==;
-X-CSE-ConnectionGUID: HB4nEjqHQxipsnhSvM8fbw==
-X-CSE-MsgGUID: 8RszvGG1R/2We4GiosIQLg==
-X-IronPort-AV: E=Sophos;i="6.17,302,1747699200"; 
-   d="scan'208";a="1284831"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 23:24:48 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:36246]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.152:2525] with esmtp (Farcaster)
- id 54c19edc-accf-4bc3-a6cd-bccc3df96575; Tue, 19 Aug 2025 23:24:48 +0000 (UTC)
-X-Farcaster-Flow-ID: 54c19edc-accf-4bc3-a6cd-bccc3df96575
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17;
- Tue, 19 Aug 2025 23:24:48 +0000
-Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
- (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17; Tue, 19 Aug 2025
- 23:24:46 +0000
-From: Evangelos Petrongonas <epetron@amazon.de>
-To: Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
-CC: Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf
-	<graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nh-open-source@amazon.com>
-Subject: [PATCH v2 1/2] kexec: introduce is_kho_boot()
-Date: Tue, 19 Aug 2025 23:22:45 +0000
-Message-ID: <7043f4da31390c58bb7721a3774c30998997df44.1755643201.git.epetron@amazon.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1755643201.git.epetron@amazon.de>
-References: <cover.1755643201.git.epetron@amazon.de>
+	Wed, 20 Aug 2025 03:09:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755659375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wI3J5CQvGDPM9MDcFPBYlPpxyIDbUJTJvO8poXdYAMY=;
+	b=EUNJ9h05OYHW9OChFGj/0BltKXDWKef4Dr8iJfANE7oY2xJbXJHghettQ3b4FhSuONbVld
+	+In4N/hhMrouAhkWtwTHy7kKQ3WcTUYu06hoWtpIhOzckSIT7IJTOoKE7VsKZvHPbh3cp/
+	GnhFyJA+8Hbd8g3+NneoDsVOfpLXt7w=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-65-0NjdYgtVO9a9N3OTmI1r_A-1; Tue,
+ 19 Aug 2025 23:09:30 -0400
+X-MC-Unique: 0NjdYgtVO9a9N3OTmI1r_A-1
+X-Mimecast-MFC-AGG-ID: 0NjdYgtVO9a9N3OTmI1r_A_1755659367
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 438F518004A7;
+	Wed, 20 Aug 2025 03:09:21 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.115])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF05C19560B0;
+	Wed, 20 Aug 2025 03:09:17 +0000 (UTC)
+Date: Wed, 20 Aug 2025 11:09:15 +0800
+From: Pingfan Liu <piliu@redhat.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org, bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org
+Subject: Re: [PATCHv5 10/12] arm64/kexec: Add PE image format support
+Message-ID: <aKU8WwF77ZTixxPn@fedora>
+References: <20250819012428.6217-1-piliu@redhat.com>
+ <20250819012428.6217-11-piliu@redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.253.109.105]
-X-ClientProxiedBy: EX19D038UWC003.ant.amazon.com (10.13.139.209) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250819012428.6217-11-piliu@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_162452_340046_34ADC08E 
-X-CRM114-Status: GOOD (  12.56  )
+X-CRM114-CacheID: sfid-20250819_200937_448732_F069FEF8 
+X-CRM114-Status: GOOD (  21.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,87 +99,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-During early initialisation, after a kexec, other components, like EFI
-need to know if a KHO enabled kexec is performed. The `kho_is_enabled`
-function is not enough as in the early stages, it only reflects
-whether the cmdline has KHO enabled, not if an actual KHO FDT exists.
+On Tue, Aug 19, 2025 at 09:24:26AM +0800, Pingfan Liu wrote:
+> Now everything is ready for kexec PE image parser. Select it on arm64
+> for zboot and UKI image support.
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> To: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm64/Kconfig                     | 1 +
+>  arch/arm64/include/asm/kexec.h         | 1 +
+>  arch/arm64/kernel/machine_kexec_file.c | 3 +++
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e9bbfacc35a64..97d9595a5ee86 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1608,6 +1608,7 @@ config ARCH_SELECTS_KEXEC_FILE
+>  	def_bool y
+>  	depends on KEXEC_FILE
+>  	select HAVE_IMA_KEXEC if IMA
+> +	select KEXEC_PE_IMAGE
 
-Extend the KHO API with `is_kho_boot()` to provide a way for components
-to check if a KHO enabled kexec is performed.
+According to the kernel test robot's report, this may fail due to a dependency issue. 
+I will fix it in the next version as:
+        select KEXEC_PE_IMAGE if DEBUG_INFO_BTF && BPF_SYSCALL
+This dependency is introduced in patch [5/12].
 
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
----
- include/linux/kexec_handover.h |  6 ++++++
- kernel/kexec_handover.c        | 20 ++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+Cc Catalin, since I'm making changes to address this issue, I'll drop your ack 
+in the next version and would appreciate if you could review it again.
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 348844cffb13..559d13a3bc44 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -40,6 +40,7 @@ struct kho_serialization;
- 
- #ifdef CONFIG_KEXEC_HANDOVER
- bool kho_is_enabled(void);
-+bool is_kho_boot(void);
- 
- int kho_preserve_folio(struct folio *folio);
- int kho_preserve_phys(phys_addr_t phys, size_t size);
-@@ -60,6 +61,11 @@ static inline bool kho_is_enabled(void)
- 	return false;
- }
- 
-+static inline bool is_kho_boot(void)
-+{
-+	return false;
-+}
-+
- static inline int kho_preserve_folio(struct folio *folio)
- {
- 	return -EOPNOTSUPP;
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index 69b953551677..a1a4e76e0ff1 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -925,6 +925,26 @@ static const void *kho_get_fdt(void)
- 	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
- }
- 
-+/**
-+ * is_kho_boot - check if current kernel was booted via KHO-enabled
-+ * kexec
-+ *
-+ * This function checks if the current kernel was loaded through a kexec
-+ * operation with KHO enabled, by verifying both that KHO is enabled via
-+ * cmdline AND that a valid KHO FDT was passed.
-+ *
-+ * Note: This function returns reliable results only after
-+ * kho_populate() has been called during early boot. Before that,
-+ * it may return false even if KHO data is present.
-+ *
-+ * Return: true if booted via KHO-enabled kexec, false otherwise
-+ */
-+bool is_kho_boot(void)
-+{
-+	return !!kho_get_fdt() && kho_enable;
-+}
-+EXPORT_SYMBOL_GPL(is_kho_boot);
-+
- /**
-  * kho_retrieve_subtree - retrieve a preserved sub FDT by its name.
-  * @name: the name of the sub FDT passed to kho_add_subtree().
--- 
-2.47.3
+Thanks,
 
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+Pingfan
+>  
+>  config ARCH_SUPPORTS_KEXEC_SIG
+>  	def_bool y
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 4d9cc7a76d9ca..d50796bd2f1e6 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -120,6 +120,7 @@ struct kimage_arch {
+>  
+>  #ifdef CONFIG_KEXEC_FILE
+>  extern const struct kexec_file_ops kexec_image_ops;
+> +extern const struct kexec_file_ops kexec_pe_image_ops;
+>  
+>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>  #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index af1ca875c52ce..7c544c385a9ab 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -24,6 +24,9 @@
+>  
+>  const struct kexec_file_ops * const kexec_file_loaders[] = {
+>  	&kexec_image_ops,
+> +#ifdef CONFIG_KEXEC_PE_IMAGE
+> +	&kexec_pe_image_ops,
+> +#endif
+>  	NULL
+>  };
+>  
+> -- 
+> 2.49.0
+> 
 
 
