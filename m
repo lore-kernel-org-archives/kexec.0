@@ -4,73 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D776CA0EE4
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 13:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B492CA0EE4
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 14:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tpWXO5t8TRctE6PkvlEVZk1OrPpiYqLVKC87IJoSseI=; b=oYb01DN6b+k7RiRdGFXbQfePib
-	uZU+gBNdFeyGWI6OuK9TbMRrEcpfXkZx2i/VgOule0/UgvVAtqGXXrP49VnSHpgft8yFln2KcJMlo
-	quLe8ujkvlvCtpQPgllnJ1d2c4qPBbQudt5nEsJpjpk+/R9Sk/ovxTHDugMSo6nmV1OwF/nijGvOe
-	h7JFDS5zJncsoonjSv7Y7pI3hV/rckcADsItiqMUFqjThM4ZQHdp9CkUsUlpMHwEQQG9nFHXxs6M2
-	Kn3XG5aJ9cBg9jMQUP1ve04hShpVIjrUuo/fpP9UWlyqTNMj/r2NYUSDYmqeUHAVrKEmYCppY97nK
-	+BXsbpkA==;
+	bh=VcUvGNuA3d7yrOnkNCw6tvQdIAkf+02/D+Y78DFw/Ck=; b=0jDk0bssuKxlTjm+N4eiBACb/f
+	GDiITHUz5bzCYCYp/k2hFCSjMccXR2IGGQCSb/GVF+gd/dS6VVHgk9zfSbpXCV2qRMqYm0BCAMdI+
+	G6rkWmfUGvTR3i09qdqBJkbiM5x9h5/inXLyAnKS3USYLdiMc+SHIk9R9E4kTktg7JUHOKJnkYv1u
+	mLvqWr3NVnAAK7DTw2cJbNi/4YWRAPOGuUXauA3uomdGAI+E+EH5ZGlvRiWLE4xlvczvGD+dxHWNl
+	SS1N8EqXIT2ClJm7eFj1y3w7qWhzDQadVioNairlbSujRwoMJKnz71Q+PwlopDEpzzhTBtDLfsLXt
+	SAc/Sq7g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoiyo-0000000DpOd-2DVp;
-	Wed, 20 Aug 2025 13:35:54 +0000
-Received: from mail-ej1-f52.google.com ([209.85.218.52])
+	id 1uojtW-0000000E5uU-2JiM;
+	Wed, 20 Aug 2025 14:34:30 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoiRf-0000000Dhc2-2DYZ
+	id 1uoj6G-0000000DrzZ-4AC5
 	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 13:01:40 +0000
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afcb72d51dcso900962466b.0
-        for <kexec@lists.infradead.org>; Wed, 20 Aug 2025 06:01:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755694898; x=1756299698;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tpWXO5t8TRctE6PkvlEVZk1OrPpiYqLVKC87IJoSseI=;
-        b=NIPpxAJVFe0GJLefRMccdbzea6rZeIpvXmalRklQuc10fAJuLzhTXT6tXcqhdKFaem
-         G/jIjMe6+eEjWEin/cyPWd8Em6HoMZAOCqVhynl5dhljOcvE08Crsh9NU8kn4z9Jm0Qs
-         9kdTYxGuUtj2lG5U//ELVUejo/MFYMSlNdOY6o5zAA6w/Sx56wMdk15Uls6KmpSohbiZ
-         kdHEfmkbeFx40FmrLHBHLs1YnC8RR6aXvjJBaN3a+/jkZbhhDQyFibiTeY0BOdmqFN0c
-         CbmH+oLsi87LBGW84yA/yWN4xpZcsVMyoHBMc/C0Myy33uFPLJslCANTmkXBU1hbFMbx
-         4Zmg==
-X-Gm-Message-State: AOJu0YyoXTp6aGs4EKgsxVD4GAD410EnBK6jROXFOUeHg1FRwOAWfS4e
-	qqW1cu3iYoDZyWvUIkgPYsLwMTInsgruPL8vm1oZ6FbgpFaSf2Uf5VjQ
-X-Gm-Gg: ASbGncsi83eOBaN/SIucjsKgJgYahXJq1gvcSh2Un/bY8W+2Dkdojdo+Sl2acAjy8qk
-	hh8wZCQM2JDJzqd4E2tHo6r3v04oJq2Tlcz+XXk9bJybCbZkEpThsZSC8ot+ZKLhr5uefUe8LDV
-	wsAxv1yv1u3FFUtF8apY15X6O1iDopapL4wsahbqINg6iTNJZpGYsVSOQ2VfNREH2pjCOuf0OCi
-	IaSCTSPJ5R746MdjasWQwFGM1zLjnLZ1HNpMMzK3kEoIpm0hyvD7ilgfFTOzhevza/hhwgK5t3j
-	9FmrfOu34EOf8keQgnarFwFI8TaWxchAzeLLxmvOgEUoj0u3SuuusSXzpWf5UsSGvTrwcJ17+Gi
-	eBV0Bu0I5If8f
-X-Google-Smtp-Source: AGHT+IH4Tq+3tk8JR0PALP9p3ZgVebhtn30Eq0QEKaBQiNYoxxHsXYQA5Zh+9VYp93VhYO+ysWQiKg==
-X-Received: by 2002:a17:907:c5c8:b0:afa:1be7:3136 with SMTP id a640c23a62f3a-afdf029eb24mr230692366b.51.1755694896852;
-        Wed, 20 Aug 2025 06:01:36 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded47933dsm175723166b.65.2025.08.20.06.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Aug 2025 06:01:36 -0700 (PDT)
-Date: Wed, 20 Aug 2025 06:01:34 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, paulmck@kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [RFC] kexec: Add bootconfig support to get_command_line
-Message-ID: <unnfym5chpdhprujg5bayallgoxdbrxf4huibccjxymgkw6xfj@4hokigung3uw>
-References: <20250811153736.3865487-1-usamaarif642@gmail.com>
+	Wed, 20 Aug 2025 13:43:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755697415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VcUvGNuA3d7yrOnkNCw6tvQdIAkf+02/D+Y78DFw/Ck=;
+	b=cwK5AnMW5xmWgPyZBlnI1e9tcV/9VCxevSGUInSbLUrNx/oC5+/o/20O9YlP1dwxqsuP4q
+	geQdMbem4zgtsntB5RHj+4MZVypjsjXOqKlehRp58Rj96j4MHdnzYK4z6U3elxEqHKpgdI
+	qKzJ/KHSFAG/se76FFcnvegnfMqlQNk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-VHmAvDi2N2eBWQWFQX-ffg-1; Wed,
+ 20 Aug 2025 09:43:30 -0400
+X-MC-Unique: VHmAvDi2N2eBWQWFQX-ffg-1
+X-Mimecast-MFC-AGG-ID: VHmAvDi2N2eBWQWFQX-ffg_1755697408
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F32D19775B0;
+	Wed, 20 Aug 2025 13:43:27 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.99])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72B6019560B4;
+	Wed, 20 Aug 2025 13:43:25 +0000 (UTC)
+Date: Wed, 20 Aug 2025 21:43:19 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: pmladek@suse.com, akpm@linux-foundation.org,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, feng.tang@linux.alibaba.com,
+	joel.granados@kernel.org, john.ogness@linutronix.de,
+	namcao@linutronix.de, sravankumarlpu@gmail.com,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH 3/9] crash_core: use panic_try_start() in crash_kexec()
+Message-ID: <aKXQ96ZE6yyfUuYq@MiWiFi-R3L-srv>
+References: <20250820091702.512524-1-wangjinchao600@gmail.com>
+ <20250820091702.512524-2-wangjinchao600@gmail.com>
+ <20250820091702.512524-3-wangjinchao600@gmail.com>
+ <20250820091702.512524-4-wangjinchao600@gmail.com>
+ <aKXPPQ93H/KkxgZh@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250811153736.3865487-1-usamaarif642@gmail.com>
+In-Reply-To: <aKXPPQ93H/KkxgZh@MiWiFi-R3L-srv>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250820_060139_565080_52C0FDFA 
-X-CRM114-Status: GOOD (  17.56  )
+X-CRM114-CacheID: sfid-20250820_064337_101455_CBB2A3DF 
+X-CRM114-Status: GOOD (  23.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,30 +90,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 11, 2025 at 04:37:36PM +0100, Usama Arif wrote:
-> If the kernel is enabled with CONFIG_BOOT_CONFIG_FORCE, it will
-> always append the bootconfig at the start of the kernel commandline.
-> If reuse-cmdline option is used in kexec, the bootconfig will be
-> repeatedly appended at the start of the commandline on every kexec.
-> As there is a limit on the size of kernel commandline that can be
-> used, --reuse-cmdline option will break kexec depending on the
-> size of bootconfig on repeated kexec.
+On 08/20/25 at 09:35pm, Baoquan He wrote:
+> On 08/20/25 at 05:14pm, Jinchao Wang wrote:
+> > crash_kexec() had its own code to exclude
+> > parallel execution by setting panic_cpu.
+> > This is already handled by panic_try_start().
+> > 
+> > Switch to panic_try_start() to remove the
+> > duplication and keep the logic consistent.
+> > 
+> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > ---
+> >  kernel/crash_core.c | 15 +++------------
+> >  1 file changed, 3 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > index a4ef79591eb2..bb38bbaf3a26 100644
+> > --- a/kernel/crash_core.c
+> > +++ b/kernel/crash_core.c
+> > @@ -4,6 +4,7 @@
+> >   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
+> >   */
+> >  
+> > +#include "linux/panic.h"
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >  
+> >  #include <linux/buildid.h>
+> > @@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
+> >  
+> >  __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+> >  {
+> > -	int old_cpu, this_cpu;
+> > -
+> > -	/*
+> > -	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> > -	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> > -	 * may stop each other.  To exclude them, we use panic_cpu here too.
+> > -	 */
+> > -	old_cpu = PANIC_CPU_INVALID;
+> > -	this_cpu = raw_smp_processor_id();
+> > -
+> > -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+> > +	if (panic_try_start()) {
 > 
-> Bootconfig is embedded in the kernel, so it should not be considered
-> when reusing kernel command line.
-> Modify get_command_line() to first attempt reading kernel parameters
-> from /proc/bootconfig before falling back to /proc/cmdline. This allows
-> kexec to use the original boot parameters without bootconfig which
-> is embedded in the kernel.
-> 
-> The function will fallback to /proc/cmdline behavior when:
-> 
-> - /proc/bootconfig doesn't exist
-> - /proc/bootconfig is empty
-> - /proc/bootconfig doesn't contain the expected marker format
-> - The extracted parameter line is empty
-> 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> Seriously, where can I find this panic_try_start() and the
+> panic_reset()? 
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+Ok, just found it's in a patch series. Grabbed the patchset and will
+have a look.
+
+> 
+> >  		/* This is the 1st CPU which comes here, so go ahead. */
+> >  		__crash_kexec(regs);
+> >  
+> > @@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+> >  		 * Reset panic_cpu to allow another panic()/crash_kexec()
+> >  		 * call.
+> >  		 */
+> > -		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> > +		panic_reset();
+> >  	}
+> >  }
+> >  
+> > -- 
+> > 2.43.0
+> > 
+> 
+
 
