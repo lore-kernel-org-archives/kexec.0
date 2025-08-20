@@ -4,85 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C89EECA0EDC
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 05:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F870CA0EED
+	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 05:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n2YWNQ1R3q2yuyqJw9ejU5xCE0/f1sakMXwMmNRUMe4=; b=C4/kEoNQX7UPwiKRoesB9BkCX0
-	x0Gv7wGltZnEM423KK9rf8bNPUAuaWhxU9PkQoOzW9fwkxLgjK2t2ySve0io4tDxjam5ZcQaCe7sh
-	yav3fgBixTwIZ9BRXoFn/t5c9YxCyLntTdWlRHMq4FnfFrvARhZ9wRvYf6tE7HXG9UMErGW3vzG2T
-	Rwt6TsUphb1iDG7eNYC8MIYpH7ZtO8i3Q0P6+0if9KkqQNgbKixofdPviWubAiB0ujLbI6Bo47isa
-	g5iOKBC3f71joqIvOepWI4306/ap+UUnH5qOqY/oEtTrHTEMr3weoegBO1gIMmMy9om3k/RXEBThu
-	EnoeQ9yQ==;
+	bh=BC7L55YtALYXWh7kK1DKLN5HZDHjt9lPYAHgNVecOSU=; b=N/lOhEXFFYAIzyjh9/4RN9/uTR
+	IxwpbfHtZdaLuXZmipfEpCoROHSVwW7Yp1zz6xJ4OSziXUtL1SOiGToQMP6IWeXfJCFbVRNw/L+KQ
+	EnBPjOCEffLRCgYlYesH8/wR81TFfPvDaLFqFJn3V3VT6JSlya6dmIAZb1uw79usnKBzLxRHYvoxT
+	LLZpsLnV3wiMGy3gz05YmMU3lcvnST8uZ/s911HnL3pj/5L0j2pNWws0jtQXtONd6w6OvUeNU1b0E
+	H69h6dbg28p+8MG/tBxaywkt3eOOZSfi0c7chScLRLp+7oOQDPwq7bwxkK+uPfSOuFDO8r/zzJ7A/
+	G2isW3wQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uobdg-0000000CRin-1OgI;
-	Wed, 20 Aug 2025 05:45:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uobqA-0000000CSe1-1s0P;
+	Wed, 20 Aug 2025 05:58:30 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uobVY-0000000CQSC-1SMk
+	id 1uobpW-0000000CSXz-3fNQ
+	for kexec@bombadil.infradead.org;
+	Wed, 20 Aug 2025 05:57:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=BC7L55YtALYXWh7kK1DKLN5HZDHjt9lPYAHgNVecOSU=; b=E0pvLbRTrn9BdbSvMnf9XAL1UT
+	i19WlG0v5EF0hbMXDunIWes+1i8WKAptxLpYEQxHppnsC2KqYOJpv2m+2g2nRxXwhRUTmNDrRsz5B
+	trKshBh5eFQDGxMJ/50umxmyzRq/PwymLldiH0+BH5YGyQpnM8K/6QLS3Cao8DDQQeea0UbnR8ePz
+	dT9Rs9VVaePcM9Dzc+WP/uIKoxiL84oh/o4LsaElL4u8UAAp06p+Ulltijcj/mLXrda9b6u+1B+2b
+	llpjJywLKc5GojrbFH5FJdblBTRBhPBHZ81Db7mkNf/wCjbsGoG8E/7rfdt+iBs78YOHhZ2zRSb0X
+	9kkqEsRQ==;
+Received: from out-188.mta1.migadu.com ([95.215.58.188])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uobpS-00000000Blf-1eYx
 	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 05:37:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755668231;
+	Wed, 20 Aug 2025 05:57:49 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755669458;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n2YWNQ1R3q2yuyqJw9ejU5xCE0/f1sakMXwMmNRUMe4=;
-	b=TKK0OPfst2+1TLjb5cpZ9EuSd4Jpu/6Ikx8dEik6L94dLkE9z8CFSZTqc29Q5yA5N6uvP2
-	RlvKJgRHs/TG16HEG60MXTnZybGkoZxlbxiEwedJbsh2AHRWo7WR7aLA2AiTqjAVNgmHnC
-	zJ2TIbRCfCPv7axSfEce1hkWgDCy47I=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-SD3MvwL6PoWLgsvGYJ6o_w-1; Wed,
- 20 Aug 2025 01:37:05 -0400
-X-MC-Unique: SD3MvwL6PoWLgsvGYJ6o_w-1
-X-Mimecast-MFC-AGG-ID: SD3MvwL6PoWLgsvGYJ6o_w_1755668223
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54F0C1956079;
-	Wed, 20 Aug 2025 05:37:03 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.99])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2ED4819560B0;
-	Wed, 20 Aug 2025 05:36:54 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: ryabinin.a.a@gmail.com,
-	andreyknvl@gmail.com,
-	glider@google.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
+	bh=BC7L55YtALYXWh7kK1DKLN5HZDHjt9lPYAHgNVecOSU=;
+	b=HQ4MeK3jFv/WjRdqaVKNZXe5Qtn5cM1yAAOwNOYoa3cs7gn6A5n2JAl7Big2pAvy64FpPq
+	pJMLE2Wo0xLrJScoX2oQNTDXoehwg67BMTl9KHFWYT8I3QQqHWj9NmMmnZ273y6WkQK2uQ
+	5cRKdeM2MbLw+un8+5YLEb7Bsh2HQJc=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Baoquan He <bhe@redhat.com>,
+	Yao Zi <ziyao@disroot.org>,
 	kexec@lists.infradead.org,
-	sj@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	elver@google.com,
-	snovitoll@gmail.com,
-	christophe.leroy@csgroup.eu,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 12/12] mm/kasan: make kasan=on|off take effect for all three modes
-Date: Wed, 20 Aug 2025 13:34:59 +0800
-Message-ID: <20250820053459.164825-13-bhe@redhat.com>
-In-Reply-To: <20250820053459.164825-1-bhe@redhat.com>
-References: <20250820053459.164825-1-bhe@redhat.com>
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH v2 4/5] LoongArch/kexec_file: Add crash dump support
+Date: Wed, 20 Aug 2025 13:56:59 +0800
+Message-Id: <20250820055700.24344-5-youling.tang@linux.dev>
+In-Reply-To: <20250820055700.24344-1-youling.tang@linux.dev>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
 MIME-Version: 1.0
-Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_223712_448606_600705CE 
-X-CRM114-Status: UNSURE (   8.48  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250820_065747_282860_80A9B611 
+X-CRM114-Status: GOOD (  14.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,62 +88,157 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Now everything is ready, set kasan=off can disable kasan for all
-three modes.
+From: Youling Tang <tangyouling@kylinos.cn>
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+Enabling crash dump (kdump) includes:
+- Prepare contents of ELF header of a core dump file, /proc/vmcore,
+  using crash_prepare_elf64_headers().
+- Add "elfcorehdr=size@start" to cmdline.
+- Add the "mem=size@start" parameter to the command line and pass it to
+  the capture kernel.  Limit the runtime memory area of the captured
+  kernel to avoid disrupting the production kernel's runtime state.
+
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- include/linux/kasan-enabled.h | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
 
-diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
-index 32f2d19f599f..21b6233f829c 100644
---- a/include/linux/kasan-enabled.h
-+++ b/include/linux/kasan-enabled.h
-@@ -4,34 +4,32 @@
- 
- #include <linux/static_key.h>
- 
-+#ifdef CONFIG_KASAN
- extern bool kasan_arg_disabled;
- 
- DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
- 
--#ifdef CONFIG_KASAN_HW_TAGS
--
- static __always_inline bool kasan_enabled(void)
- {
- 	return static_branch_likely(&kasan_flag_enabled);
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index dc6e37457559..1d47be06549e 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -35,6 +35,83 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
  }
-+#else /* CONFIG_KASAN */
-+static inline bool kasan_enabled(void)
+ 
++#ifdef CONFIG_CRASH_DUMP
++
++static int prepare_elf_headers(void **addr, unsigned long *sz)
 +{
-+	return false;
++	struct crash_mem *cmem;
++	unsigned int nr_ranges;
++	int ret;
++	u64 i;
++	phys_addr_t start, end;
++
++	nr_ranges = 2; /* for exclusion of crashkernel region */
++	for_each_mem_range(i, &start, &end)
++		nr_ranges++;
++
++	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
++	if (!cmem)
++		return -ENOMEM;
++
++	cmem->max_nr_ranges = nr_ranges;
++	cmem->nr_ranges = 0;
++	for_each_mem_range(i, &start, &end) {
++		cmem->ranges[cmem->nr_ranges].start = start;
++		cmem->ranges[cmem->nr_ranges].end = end - 1;
++		cmem->nr_ranges++;
++	}
++
++	/* Exclude crashkernel region */
++	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
++	if (ret)
++		goto out;
++
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			goto out;
++	}
++
++	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++
++out:
++	kfree(cmem);
++	return ret;
 +}
++
++/* Adds the "elfcorehdr=size@start" command line parameter to command line. */
++static void cmdline_add_elfcorehdr(struct kimage *image, unsigned long *cmdline_tmplen,
++				char *modified_cmdline, unsigned long elfcorehdr_sz)
++{
++	int elfcorehdr_strlen = 0;
++
++	elfcorehdr_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "elfcorehdr=0x%lx@0x%lx ",
++		elfcorehdr_sz, image->elf_load_addr);
++	*cmdline_tmplen += elfcorehdr_strlen;
++}
++
++/*
++ * Adds the "mem=size@start" command line parameter to command line, indicating the
++ * memory region the new kernel can use to boot into.
++ */
++static void cmdline_add_mem(struct kimage *image, unsigned long *cmdline_tmplen,
++				char *modified_cmdline)
++{
++	int mem_strlen = 0;
++
++	mem_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "mem=0x%llx@0x%llx ",
++		crashk_res.end - crashk_res.start + 1, crashk_res.start);
++	*cmdline_tmplen += mem_strlen;
++
++	if (crashk_low_res.end) {
++		mem_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "mem=0x%llx@0x%llx ",
++			crashk_low_res.end - crashk_low_res.start + 1, crashk_low_res.start);
++		*cmdline_tmplen += mem_strlen;
++	}
++}
++
 +#endif
++
+ /* Adds the "initrd=start,size" command line parameter to command line. */
+ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
+ 				char *modified_cmdline, unsigned long initrd)
+@@ -76,6 +153,46 @@ int load_other_segments(struct kimage *image,
+ 	/* Ensure it's nul terminated */
+ 	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
  
-+#ifdef CONFIG_KASAN_HW_TAGS
- static inline bool kasan_hw_tags_enabled(void)
- {
- 	return kasan_enabled();
- }
--
- #else /* CONFIG_KASAN_HW_TAGS */
--
--static inline bool kasan_enabled(void)
--{
--	return IS_ENABLED(CONFIG_KASAN);
--}
--
- static inline bool kasan_hw_tags_enabled(void)
- {
- 	return false;
- }
--
- #endif /* CONFIG_KASAN_HW_TAGS */
- 
- #endif /* LINUX_KASAN_ENABLED_H */
++#ifdef CONFIG_CRASH_DUMP
++	/* load elf core header */
++	void *headers;
++	unsigned long headers_sz;
++
++	if (image->type == KEXEC_TYPE_CRASH) {
++		ret = prepare_elf_headers(&headers, &headers_sz);
++		if (ret) {
++			pr_err("Preparing elf core header failed\n");
++			goto out_err;
++		}
++
++		kbuf.buffer = headers;
++		kbuf.bufsz = headers_sz;
++		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
++		kbuf.memsz = headers_sz;
++		kbuf.buf_align = SZ_64K; /* largest supported page size */
++		kbuf.buf_max = ULONG_MAX;
++		kbuf.top_down = true;
++
++		ret = kexec_add_buffer(&kbuf);
++		if (ret) {
++			vfree(headers);
++			goto out_err;
++		}
++		image->elf_headers = headers;
++		image->elf_load_addr = kbuf.mem;
++		image->elf_headers_sz = headers_sz;
++
++		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
++
++		/* Add the elfcorehdr=size@start parameter to the command line */
++		cmdline_add_elfcorehdr(image, &cmdline_tmplen, modified_cmdline, headers_sz);
++
++		/* Add the mem=size@start parameter to the command line */
++		cmdline_add_mem(image, &cmdline_tmplen, modified_cmdline);
++	}
++#endif
++
+ 	/* load initrd */
+ 	if (initrd) {
+ 		kbuf.buffer = initrd;
 -- 
-2.41.0
+2.43.0
 
 
