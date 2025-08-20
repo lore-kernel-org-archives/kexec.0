@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49BEFCA0EED
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C89EECA0EDC
 	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 05:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,47 +12,47 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Z1K+NrhffiuczGQxxvXLPTT8safjMr4ane+44BSMgbw=; b=xq6+EYZSHeOGNY+AlNtbqmYQB6
-	gBPg0Xh49NHtws4HGgKWMOJnVdmpWPVpWs2inzavfjjRjnDa5TpNVLw9uhD6zrjdPBkQ64uJHAn/t
-	y+KwhcAJ0ZFJp+pDV8/x/pbgArUYNnxEdPYxPDcZjZ01fD8lvJ98iB4ZOrMTIqFDuIhC6AXP5+hKy
-	mtbZ/06aVyJZbGX2ec1wTuaul3T66aEPCv55dbk3JA6tIZAUJU48e4i8qxOoJwM53y0cqrqm1ZaG2
-	uR48ZjA+9Q1Q86j2E9zCTUhAYOF4sHkx1bIu5flRNtpYivnxvBL3Klr3Tv6q1S02qZLt/dbhy3Uxt
-	aE0L/D2A==;
+	bh=n2YWNQ1R3q2yuyqJw9ejU5xCE0/f1sakMXwMmNRUMe4=; b=C4/kEoNQX7UPwiKRoesB9BkCX0
+	x0Gv7wGltZnEM423KK9rf8bNPUAuaWhxU9PkQoOzW9fwkxLgjK2t2ySve0io4tDxjam5ZcQaCe7sh
+	yav3fgBixTwIZ9BRXoFn/t5c9YxCyLntTdWlRHMq4FnfFrvARhZ9wRvYf6tE7HXG9UMErGW3vzG2T
+	Rwt6TsUphb1iDG7eNYC8MIYpH7ZtO8i3Q0P6+0if9KkqQNgbKixofdPviWubAiB0ujLbI6Bo47isa
+	g5iOKBC3f71joqIvOepWI4306/ap+UUnH5qOqY/oEtTrHTEMr3weoegBO1gIMmMy9om3k/RXEBThu
+	EnoeQ9yQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uobdf-0000000CRi8-3s1D;
-	Wed, 20 Aug 2025 05:45:35 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uobdg-0000000CRin-1OgI;
+	Wed, 20 Aug 2025 05:45:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uobVO-0000000CQPU-4AkJ
+	id 1uobVY-0000000CQSC-1SMk
 	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 05:37:04 +0000
+	Wed, 20 Aug 2025 05:37:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755668222;
+	s=mimecast20190719; t=1755668231;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z1K+NrhffiuczGQxxvXLPTT8safjMr4ane+44BSMgbw=;
-	b=HpK785ZZmq2Mrz3w7d/Mxv83QERb2lCw2NlMsmXESuwq6ZhhLebTSsW2lgzTa7eP+XjfzK
-	fDYjQYnu/4oTRJCsx/wTHkHagHFX1iN47H8X+6IDfDuAUEoyDQB/j2OYGC9KE+YGcVYR/n
-	MNXj1gVlSRcapkMnw5lLuEjloL5GceQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=n2YWNQ1R3q2yuyqJw9ejU5xCE0/f1sakMXwMmNRUMe4=;
+	b=TKK0OPfst2+1TLjb5cpZ9EuSd4Jpu/6Ikx8dEik6L94dLkE9z8CFSZTqc29Q5yA5N6uvP2
+	RlvKJgRHs/TG16HEG60MXTnZybGkoZxlbxiEwedJbsh2AHRWo7WR7aLA2AiTqjAVNgmHnC
+	zJ2TIbRCfCPv7axSfEce1hkWgDCy47I=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-FM4T_kMAMBejUgJcViqkcg-1; Wed,
- 20 Aug 2025 01:36:56 -0400
-X-MC-Unique: FM4T_kMAMBejUgJcViqkcg-1
-X-Mimecast-MFC-AGG-ID: FM4T_kMAMBejUgJcViqkcg_1755668214
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-SD3MvwL6PoWLgsvGYJ6o_w-1; Wed,
+ 20 Aug 2025 01:37:05 -0400
+X-MC-Unique: SD3MvwL6PoWLgsvGYJ6o_w-1
+X-Mimecast-MFC-AGG-ID: SD3MvwL6PoWLgsvGYJ6o_w_1755668223
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62A951800366;
-	Wed, 20 Aug 2025 05:36:54 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54F0C1956079;
+	Wed, 20 Aug 2025 05:37:03 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.99])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1826D19560B0;
-	Wed, 20 Aug 2025 05:36:45 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2ED4819560B0;
+	Wed, 20 Aug 2025 05:36:54 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-mm@kvack.org
 Cc: ryabinin.a.a@gmail.com,
@@ -69,11 +69,10 @@ Cc: ryabinin.a.a@gmail.com,
 	elver@google.com,
 	snovitoll@gmail.com,
 	christophe.leroy@csgroup.eu,
-	Baoquan He <bhe@redhat.com>,
-	linux-um@lists.infradead.org
-Subject: [PATCH v3 11/12] arch/um: don't initialize kasan if it's disabled
-Date: Wed, 20 Aug 2025 13:34:58 +0800
-Message-ID: <20250820053459.164825-12-bhe@redhat.com>
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 12/12] mm/kasan: make kasan=on|off take effect for all three modes
+Date: Wed, 20 Aug 2025 13:34:59 +0800
+Message-ID: <20250820053459.164825-13-bhe@redhat.com>
 In-Reply-To: <20250820053459.164825-1-bhe@redhat.com>
 References: <20250820053459.164825-1-bhe@redhat.com>
 MIME-Version: 1.0
@@ -81,8 +80,8 @@ Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250819_223703_098034_DC08B594 
-X-CRM114-Status: UNSURE (   9.47  )
+X-CRM114-CacheID: sfid-20250819_223712_448606_600705CE 
+X-CRM114-Status: UNSURE (   8.48  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,38 +97,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-And also add code to enable kasan_flag_enabled, this is for later
-usage. Since kasan_init() is called before main(), enabling
-kasan_flag_enabled is done in arch_mm_preinit() which is after
-jump_label_init() invocation.
-
-And also do the kasan_arg_disabled chekcing before kasan_flag_enabled
-enabling to make sure kernel parameter kasan=on|off has been parsed.
+Now everything is ready, set kasan=off can disable kasan for all
+three modes.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: linux-um@lists.infradead.org
 ---
- arch/um/kernel/mem.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/kasan-enabled.h | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index 76bec7de81b5..7b7f838274b5 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -58,6 +58,13 @@ static unsigned long brk_end;
+diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+index 32f2d19f599f..21b6233f829c 100644
+--- a/include/linux/kasan-enabled.h
++++ b/include/linux/kasan-enabled.h
+@@ -4,34 +4,32 @@
  
- void __init arch_mm_preinit(void)
- {
-+
+ #include <linux/static_key.h>
+ 
 +#ifdef CONFIG_KASAN
-+	/* Safe to call after jump_label_init(). Enables KASAN. */
-+	if (!kasan_arg_disabled)
-+		static_branch_enable(&kasan_flag_enabled);
-+#endif
-+
- 	/* clear the zero-page */
- 	memset(empty_zero_page, 0, PAGE_SIZE);
+ extern bool kasan_arg_disabled;
  
+ DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+ 
+-#ifdef CONFIG_KASAN_HW_TAGS
+-
+ static __always_inline bool kasan_enabled(void)
+ {
+ 	return static_branch_likely(&kasan_flag_enabled);
+ }
++#else /* CONFIG_KASAN */
++static inline bool kasan_enabled(void)
++{
++	return false;
++}
++#endif
+ 
++#ifdef CONFIG_KASAN_HW_TAGS
+ static inline bool kasan_hw_tags_enabled(void)
+ {
+ 	return kasan_enabled();
+ }
+-
+ #else /* CONFIG_KASAN_HW_TAGS */
+-
+-static inline bool kasan_enabled(void)
+-{
+-	return IS_ENABLED(CONFIG_KASAN);
+-}
+-
+ static inline bool kasan_hw_tags_enabled(void)
+ {
+ 	return false;
+ }
+-
+ #endif /* CONFIG_KASAN_HW_TAGS */
+ 
+ #endif /* LINUX_KASAN_ENABLED_H */
 -- 
 2.41.0
 
