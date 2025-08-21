@@ -4,78 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3058ACA0EFC
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 16:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE64ACA0EEB
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 19:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:References:In-Reply-To:Message-ID:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=; b=RI/+sKuZQbvGnE8J5QtwIpNRjP
-	AJwpfvaV+bzW8i0UOR+tfLHj786jmNoqgtKtglu30qV/f/5igR6aRm9SwyzOfyiN5zLOTXm+/bE5Q
-	wIn7tgdfiHoyMWUgxWckCxNh+OboEpi+82ZM9tdLXum9pkofnTIoPRGQJdOgfaNSuzVwrrDFqifcF
-	atPP7HY4y9TLXH/ZwjtRxmAQkbOKKDho8DXGURztmDIKwWODy1q1VJfxkE2Fbpzlcei7HqlorgI6t
-	ZnwlfgAmrc/5cepY2vQ0uZ0ekhxJcXtGBTriPcH3PFaRNhKHlFe4tey/NcYEIGirfAcKATLb6Bm5Z
-	khoO58Eg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:
+	To:From:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=E2sh7PkU99v95gXhyMFBk9zs8wQA9SBmo0ZEWgF1/ao=; b=xKVWxxkGZqJe/o
+	JKga05RlhkKQyly2+XS479riApb/gE8TBYOVJmlglQOPRSz2Tv7jrU7+b4kDT++qNhtaUFE9VQT9Q
+	a+KElAoPv1Y5qk031ew1jaThiU6NlopI3vUFJbqS01hj4VUbWws6qFegDUWSfR3bdNuJfG6YWzMf2
+	3I+G0urYAr9GJUOh/JvmiH90n++sg19FVzTfdoZcVs3ohyWnUom7O77wNS4pEkxgc3gkUVt3cTERY
+	SWSMPr3fZjrbINbgy0hdNqjs0wAoQ8JLoQFKG5gXB79yx5/48RT1JwRKh58ecxQ1ExgLryCuwKJEK
+	NHZpJAWSMzzOQhVQBImg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up8a5-0000000Hb4U-2bzR;
-	Thu, 21 Aug 2025 16:56:05 +0000
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95])
+	id 1upAhj-00000000EKG-08ks;
+	Thu, 21 Aug 2025 19:12:07 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up4yA-0000000GzBb-3Mqq
+	id 1up5VF-0000000H5FT-1vPs
+	for kexec@bombadil.infradead.org;
+	Thu, 21 Aug 2025 13:38:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=E2sh7PkU99v95gXhyMFBk9zs8wQA9SBmo0ZEWgF1/ao=; b=KJ+T9LQw2sdOXrA6FbmvURUQcs
+	3Tdx5NUPieyir8+RhzEz/AePoQ97UNGjBvX0cQjyfMHv8mmTFqpAxypk4ufjR+QSehZQaRJd7Bsnn
+	DdIYtwg6ZyBbutQKTwutaM/APr+FvWIDs7XvlX2qYDrkJmqlJlCHEHe2DAMEgvXw4YtnMVjiBzaDx
+	uVj8lPEGUhS3OcJcxhyIt+16ZN+6j4nJp8TXaLGYPXQhkM2nqvA6oz0Mm1OX6lueSNHOmc7GCFupB
+	cYCV0DWeptlbzArG0umErXuEey33pn7pBLF4xPQaKaLbCPvEn6tiYnEC332eOckQV3xggM5VEpk2P
+	ti/5N1qQ==;
+Received: from securitygw1.exwire.com ([216.171.192.25])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1up5VC-00000000Zdv-16De
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 13:04:44 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1755781475; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=i7Wggr5HBYWBGUd1xe6bh1Ol5XBy0xuiYXMGjM/ux/SsG7ULhZMJeq6sOPDK8+C3fImCCbM5Vv8f5XXDM8RcTe0KKF8ROT2alww190aXSohBq9IUNOKu22MshDdjGtaHfq1SpLT9MMeR/qDICFaA7pSaw396lyLv0bfGQVo/RhI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1755781475; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=; 
-	b=La0rFyDmhqKUYNKXoHgy/2RIceLK9RCjNqIdMCFI7uRY8LX9RPJ2eGtKytCGNuhKlyQZ7iSvyO/eL/vE/GEvtKq61b1Nl/YZMP/0tiYalzN+cwnMJaJjCVc04Q831rwtyyKUVZmGH4ZSNtCxx2d4PVlLf7wodS7gumlZs07q+tk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755781475;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=;
-	b=AXQ7SPKxUUopWeIvF7qQBZ7U4g0taKulTETxsoQoPfyom1vx/YMhl6nP5YCcK/zj
-	b74nczifLvROCOVksSFURwJTZ3ZGTInNUeJDjCipy7k9oHM2h3DDmi9gQ5QHA1GIQ/4
-	If6GaO7AjDGG5/1MAVWnSjteaxHi7J92Pi6jJ8vY=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1755781473954167.9696619074616; Thu, 21 Aug 2025 06:04:33 -0700 (PDT)
-Received: from  [212.73.77.104] by mail.zoho.com
-	with HTTP;Thu, 21 Aug 2025 06:04:33 -0700 (PDT)
-Date: Thu, 21 Aug 2025 17:04:33 +0400
-From: Askar Safin <safinaskar@zohomail.com>
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Lichen Liu" <lichliu@redhat.com>,
-	"linux-fsdevel" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"kexec" <kexec@lists.infradead.org>, "rob" <rob@landley.net>,
-	"weilongchen" <weilongchen@huawei.com>, "cyphar" <cyphar@cyphar.com>,
-	"linux-api" <linux-api@vger.kernel.org>,
-	"zohar" <zohar@linux.ibm.com>, "stefanb" <stefanb@linux.ibm.com>,
-	"initramfs" <initramfs@vger.kernel.org>, "corbet" <corbet@lwn.net>,
-	"linux-doc" <linux-doc@vger.kernel.org>,
-	"viro" <viro@zeniv.linux.org.uk>, "jack" <jack@suse.cz>
-Message-ID: <198ccbb2694.d3fad31887413.1131652624698180933@zohomail.com>
-In-Reply-To: <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
-References: <20250815121459.3391223-1-lichliu@redhat.com> <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
-Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+	Thu, 21 Aug 2025 13:38:52 +0000
+X-exwire-MailScanner-EFA-Watermark: 1756383954.88947@7JCls6AsY+gy44nAKDu1iw
+X-exwire-MailScanner-EFA-To: kexec@lists.infradead.org
+X-exwire-MailScanner-EFA-From: nancymc@exwire.com
+X-exwire-MailScanner-EFA-SpamScore: sssssss
+X-exwire-MailScanner-EFA: Found to be clean
+X-exwire-MailScanner-EFA-ID: 5F3B51CFE9D.A6B78
+X-exwire-MailScanner-EFA-Information: Please contact jdeverse@exwire.com for more information
+Received: from smtp01.exwire.com (smtp01.exwire.com [216.171.192.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by securitygw1.exwire.com (Postfix) with ESMTPS id 5F3B51CFE9D
+	for <kexec@lists.infradead.org>; Thu, 21 Aug 2025 04:52:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 securitygw1.exwire.com 5F3B51CFE9D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=exwire.com;
+	s=default; t=1755777125;
+	bh=HV6ngFc0kAPeZqm3RhmqrUX5EZoxx49VvdfM3cgWoeI=;
+	h=Reply-To:From:To:Subject:Date:From;
+	b=fBPtFzc+rWhWykQHMOvGO+6UiTvhFAMbJuK90OXHBsU67MsTgQSjXyCXNfz4yOwBl
+	 UZIfY9qp7Glp1Hf8SvSmNpEOkB0OD2WsbY70Spa/FLKi7JAXgyMD/gWzx5Sm7ygTdb
+	 jroJBteLJ66QLrQGyshCleD8tEE8vFANXtDep4HU=
+Received: from localhost (localhost [127.0.0.1])
+	by smtp01.exwire.com (Postfix) with ESMTP id 7F36858891D
+	for <kexec@lists.infradead.org>; Thu, 21 Aug 2025 01:16:27 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at smtp01.exwire.com
+Received: from smtp01.exwire.com ([127.0.0.1])
+	by localhost (smtp01.exwire.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id TjR75akJrJaR for <kexec@lists.infradead.org>;
+	Thu, 21 Aug 2025 01:16:27 -0700 (PDT)
+Received: from [45.138.16.152] (unknown [45.138.16.152])
+	by smtp01.exwire.com (Postfix) with ESMTPSA id 0F8A846C900
+	for <kexec@lists.infradead.org>; Wed, 20 Aug 2025 23:09:38 -0700 (PDT)
+From: nancymc@exwire.com
+To: kexec@lists.infradead.org
+Subject: xl
+Date: 20 Aug 2025 23:09:38 -0700
+Message-ID: <20250820230938.A09BEED2A66A890B@exwire.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-Feedback-ID: rr080112273e22f1786581338e49b7e07e000001104afa9c15ad2a122830cf688da2c59c8afe72e8c650ac99:zu080112272dfa6be1a67c778365ab64e5000011cfac17ec895c53b99647dbd1d7d4ef18c9ec956b108d8a70:rf0801122b9f962294dd4be519c8bf7647000010f904f79ddee4b424b1c5dbfae154f5453192b76d9278235c9b24def2:ZohoMail
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_060442_912913_5A964C9E 
-X-CRM114-Status: UNSURE (   8.54  )
+X-CRM114-CacheID: sfid-20250821_143850_582142_54E40965 
+X-CRM114-Status: UNSURE (   2.62  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -88,20 +97,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: info.superenalotto@gmail.com
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
- ---- On Thu, 21 Aug 2025 12:24:11 +0400  Christian Brauner <brauner@kernel.org> wrote --- 
- > Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
- > Patches in the vfs-6.18.misc branch should appear in linux-next soon.
+Wir freuen uns, Ihnen mitteilen zu k=C3=B6nnen, dass Sie zu den=20
+Gewinnern der j=C3=BCngsten SuperEnalotto-Ziehung in Zusammenarbeit=20
+mit Lotto24, EuroMillions und Powerball geh=C3=B6ren. Sie haben einen=20
+einmaligen Gewinn von =E2=82=AC3.850.000  in der zweiten Gewinnklasse=20
+gewonnen. Um Ihren Gewinn abzuwickeln, senden Sie uns bitte=20
+folgende Informationen per E-Mail:
 
-Applied version contains this:
-> Specify mount options for for the initramfs mount
+Vollst=C3=A4ndiger Name: Land: Wohnadresse: Alter: Geschlecht: Beruf:=20
+Handynummer: WhatsApp-Nummer.
 
-I. e. "for" two times.
+Im Namen der Online-Lotterieabteilungen SuperEnalotto,=20
+EuroMillions und Powerball gratulieren wir Ihnen herzlich zu=20
+Ihrem Gewinn.
 
---
-Askar Safin
-https://types.pl/@safinaskar
+Mit freundlichen Gr=C3=BC=C3=9Fen
 
+Frau Katherine Federico
+Leiterin Online-Zahlungen / Validierungsmanagerin
+Code-Nachricht: 737GHS98
 
