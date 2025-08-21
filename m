@@ -4,111 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ACF7ACA0EDC
-	for <kexec@archiver.kernel.org>; Wed, 20 Aug 2025 20:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB65ACA0EFA
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 03:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=of0EpYZMc60tijt952hk19vL2Z+k8maUSxNdRLvEe+I=; b=F2D6TvIHjWbNB7+JR848cUUJ9y
-	V3DvB5CqJH6auv9SW0AvZxsEdOIO7B0xID9ah2r984DQFqBT2LJJzfDH3iOxvS+L/cjzEMhYBEAVB
-	OZTualDgFB5Dc8tf6xL15HLy/gcoqkpa3sNfljuTg6Ma79XXz3/zj2GCBCu6cEGBDypl7FPBpTkcf
-	Ai5vIkoC6PdyD9cMOl4TBbaFOGczd+jVh0r2AyRpv36y9rhxSuskBK6DAhOHR0YqO1NXB5smnVar0
-	yzITIqZLnViZByqJvBqvWAFvIAdFzc6DxPCRSgxly0R6IOz64VtRIenKFkYyo1+a89b0LXy/sYg0I
-	q1/9XsgQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=B1BwYAqmbIpfEsknqfyliOokHoXYWfDAgiKkk9hfZ3Y=; b=ou+gbcv7UpW0fNA62IEXDriqSE
+	xcmeCff2rQRaj2i6wX8DQwtSkyzYNXmOpaZVMkh2sSBYY2bt3HQSpOR7AgQdzA/Hff+xtko4vmhdV
+	IqXjWcv02CO3ozH/OslR70J4mUNERGfx5BBATT3+UU9iURVSpXAUlRSWczY9fDesiRP36DhMYVMy/
+	ZISRQz8OogCnr7VdFf4fma+PfMjXScyNDowxQ0JPJgpd0Ez2CRAkddo1B7jmxsPIb0HRa3qRFX9IL
+	ccdS06pCnYM3BHMY/YYnRajM/6gVYSmQ/sB6+nyW++gyBL1kn1dP8nRMl0QCM8Vd9kTrfOIwKUJOI
+	EprBXoeQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoplN-0000000EtNU-3xw1;
-	Wed, 20 Aug 2025 20:50:30 +0000
-Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
+	id 1uow8A-0000000FeXm-1CEQ;
+	Thu, 21 Aug 2025 03:38:26 +0000
+Received: from out-181.mta0.migadu.com ([2001:41d0:1004:224b::b5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uolXs-0000000ENSw-3Xwv
+	id 1uotyE-0000000FQmK-2vhE
 	for kexec@lists.infradead.org;
-	Wed, 20 Aug 2025 16:20:18 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id C1D7B1F83B;
-	Wed, 20 Aug 2025 16:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1755706813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	Thu, 21 Aug 2025 01:20:04 +0000
+Message-ID: <00a013bd-f30f-4b13-8019-f97a4d2eabb2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755739199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=of0EpYZMc60tijt952hk19vL2Z+k8maUSxNdRLvEe+I=;
-	b=sXKhSfF60sU0oyczH2gIBe1RzsaWIYhAMs8FqjfzZB1781Z0mUmc3VTrLtBHyCQXhpIQbT
-	dcYqBqdyktFou9LdN2fUP8+U7paXKyzkqKBLDU0cqU90JnlKAX+GOtOIRQWGpFMWONhV1U
-	PTM2zJ6XBSO0FolyZTcXpMRT3C1KyEg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1755706813;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of0EpYZMc60tijt952hk19vL2Z+k8maUSxNdRLvEe+I=;
-	b=Fq4P9uoNy2MFtajWD5ryUxhCby68I3EkKpRKY0/jKmM3TEQ/6Znt+jZnyg2YdAhKRjHKiS
-	ik6VcvZ6yBAHYTCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1755706813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of0EpYZMc60tijt952hk19vL2Z+k8maUSxNdRLvEe+I=;
-	b=sXKhSfF60sU0oyczH2gIBe1RzsaWIYhAMs8FqjfzZB1781Z0mUmc3VTrLtBHyCQXhpIQbT
-	dcYqBqdyktFou9LdN2fUP8+U7paXKyzkqKBLDU0cqU90JnlKAX+GOtOIRQWGpFMWONhV1U
-	PTM2zJ6XBSO0FolyZTcXpMRT3C1KyEg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1755706813;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of0EpYZMc60tijt952hk19vL2Z+k8maUSxNdRLvEe+I=;
-	b=Fq4P9uoNy2MFtajWD5ryUxhCby68I3EkKpRKY0/jKmM3TEQ/6Znt+jZnyg2YdAhKRjHKiS
-	ik6VcvZ6yBAHYTCw==
-Date: Wed, 20 Aug 2025 18:20:13 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Breno Leitao <leitao@debian.org>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aKX1vbE5jWVUr298@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
- <airxp44zdyxskfwrhhveis7gd2vsz5m4f3ipidsghi2x55h64c@s37v5rkuoega>
+	bh=B1BwYAqmbIpfEsknqfyliOokHoXYWfDAgiKkk9hfZ3Y=;
+	b=HGb41qSovPGgohfPkGNYwp2m7O/CRz4mpKLjsIIrD3nI92y3dTGuTVfokht0kSj5pVtoZW
+	8MgTPqOeUIMVakn6iGFe5YIizsykpLZU2GKG0kTzL9is03AJdt8LNknyAACZAbrZd/vNHN
+	Yggh/5i1PH8nKC8/K4wgfnpNul6stbU=
+Date: Thu, 21 Aug 2025 09:19:19 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
+ <20250820055700.24344-3-youling.tang@linux.dev> <aKVwHOM9KNEpUZF4@pie>
+ <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev> <aKWt63S_wD3zeMYU@pie>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <aKWt63S_wD3zeMYU@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <airxp44zdyxskfwrhhveis7gd2vsz5m4f3ipidsghi2x55h64c@s37v5rkuoega>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.982];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250820_092017_182345_78747478 
-X-CRM114-Status: UNSURE (   7.63  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250820_182003_164952_EB4A7950 
+X-CRM114-Status: GOOD (  36.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,22 +72,226 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Breno,
+On 2025/8/20 19:13, Yao Zi wrote:
 
-On Wed, Aug 20, 2025 at 08:46:54AM -0700, Breno Leitao wrote:
-> Hello Jiri,
-> 
-> First, thank you for making this change; it’s very helpful.
-> I haven’t come across anything regarding arm64 support. Is this on
-> anyone’s to-do list?
+> On Wed, Aug 20, 2025 at 05:13:27PM +0800, Youling Tang wrote:
+>> Hi, Yao
+>>
+>> On 2025/8/20 14:50, Yao Zi wrote:
+>>
+>>> On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
+>>>> From: Youling Tang <tangyouling@kylinos.cn>
+>>>>
+>>>> This patch adds support for kexec_file on LoongArch.
+>>>>
+>>>> The efi_kexec_load() as two parts:
+>>>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+>>>> - the second part loads other segments (eg: initrd, cmdline)
+>>>>
+>>>> This initrd will be passed to the second kernel via the command line
+>>>> 'initrd=start,size'.
+>>>>
+>>>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+>>>> but ELF format is not supported.
+>>>>
+>>>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>>>> ---
+>>>>    arch/loongarch/Kconfig                     |   9 ++
+>>>>    arch/loongarch/include/asm/image.h         |  17 +++
+>>>>    arch/loongarch/include/asm/kexec.h         |  12 +++
+>>>>    arch/loongarch/kernel/Makefile             |   1 +
+>>>>    arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
+>>>>    arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>>>>    arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
+>>>>    7 files changed, 289 insertions(+), 11 deletions(-)
+>>>>    create mode 100644 arch/loongarch/kernel/kexec_efi.c
+>>>>    create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+>>> ...
+>>>
+>>>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+>>>> index 1f090736e71d..655d5836c4e8 100644
+>>>> --- a/arch/loongarch/include/asm/image.h
+>>>> +++ b/arch/loongarch/include/asm/image.h
+>>>> @@ -36,5 +36,22 @@ struct loongarch_image_header {
+>>>>    	uint32_t pe_header;
+>>>>    };
+>>>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
+>>>> +
+>>>> +/**
+>>>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+>>>> + *
+>>>> + * Returns non-zero if 'MZ' signature is found.
+>>>> + */
+>>>> +
+>>>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
+>>>> +{
+>>>> +	if (!h)
+>>>> +		return 0;
+>>>> +
+>>>> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
+>>>> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
+>>>> +}
+>>> This check is still too weak and doesn't improve comparing to v1.
+>>>
+>>>> This could be simplified with a memcmp(). Also, this check isn't
+>>>> strict enough: PE files for any architectures, and even legacy MS-DOS
+>>>> COM executables all start with "MZ".
+>>> I've pointed this out in my previous reply[1].
+>> Previously, I had considered adding a specific LoongArch magic
+>> number (such as "Loongson") in the loongarch_image_header, but
+>> this is incompatible with older versions of the kernel, so it
+>> remains the same without further checks.
+> All PE images ship a PE signature with offset 0x3c[1] and you could
+> locate the PE header[2] by the offset provided by
+> loongarch_image_header.pe_header and check its machine field[3], which
+> should be 0x6264 for 64-bit LoongArch executables and 0x6232 for 32-bit
+> ones. At least this ensures it's a LoongArch kernel image.
+I mentioned this judgment to Huacai before. Huacai, what do you think?
+If necessary, I will add this judgment.
 
-Yes, I plan to implement this at least for ppc64, arm64 and s390x,
-hopefully in time for 6.18.
-
-Regards,
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Thanks,
+Youling.
+>
+>>>>    #endif /* __ASSEMBLY__ */
+>>>>    #endif /* __ASM_IMAGE_H */
+>>> ...
+>>>
+>>>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+>>>> new file mode 100644
+>>>> index 000000000000..7741f1139a12
+>>>> --- /dev/null
+>>>> +++ b/arch/loongarch/kernel/kexec_efi.c
+>>> ...
+>>>
+>>>> +static void *efi_kexec_load(struct kimage *image,
+>>>> +				char *kernel, unsigned long kernel_len,
+>>>> +				char *initrd, unsigned long initrd_len,
+>>>> +				char *cmdline, unsigned long cmdline_len)
+>>>> +{
+>>>> +	struct loongarch_image_header *h;
+>>>> +	struct kexec_buf kbuf;
+>>>> +	unsigned long text_offset, kernel_segment_number;
+>>>> +	struct kexec_segment *kernel_segment;
+>>>> +	int ret;
+>>>> +
+>>>> +	h = (struct loongarch_image_header *)kernel;
+>>>> +	if (!h->image_size)
+>>>> +		return ERR_PTR(-EINVAL);
+>>>> +
+>>>> +	/* Load the kernel */
+>>>> +	kbuf.image = image;
+>>>> +	kbuf.buf_max = ULONG_MAX;
+>>>> +	kbuf.top_down = false;
+>>>> +
+>>>> +	kbuf.buffer = kernel;
+>>>> +	kbuf.bufsz = kernel_len;
+>>>> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>>> +	kbuf.memsz = le64_to_cpu(h->image_size);
+>>>> +	text_offset = le64_to_cpu(h->text_offset);
+>>>> +	kbuf.buf_min = text_offset;
+>>>> +	kbuf.buf_align = SZ_2M;
+>>>> +
+>>>> +	kernel_segment_number = image->nr_segments;
+>>>> +
+>>>> +	/*
+>>>> +	 * The location of the kernel segment may make it impossible to satisfy
+>>>> +	 * the other segment requirements, so we try repeatedly to find a
+>>>> +	 * location that will work.
+>>>> +	 */
+>>>> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+>>>> +		/* Try to load additional data */
+>>>> +		kernel_segment = &image->segment[kernel_segment_number];
+>>>> +		ret = load_other_segments(image, kernel_segment->mem,
+>>>> +					  kernel_segment->memsz, initrd,
+>>>> +					  initrd_len, cmdline, cmdline_len);
+>>>> +		if (!ret)
+>>>> +			break;
+>>>> +
+>>>> +		/*
+>>>> +		 * We couldn't find space for the other segments; erase the
+>>>> +		 * kernel segment and try the next available hole.
+>>>> +		 */
+>>>> +		image->nr_segments -= 1;
+>>>> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>>>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>>> +	}
+>>>> +
+>>>> +	if (ret) {
+>>>> +		pr_err("Could not find any suitable kernel location!");
+>>>> +		return ERR_PTR(ret);
+>>>> +	}
+>>>> +
+>>>> +	kernel_segment = &image->segment[kernel_segment_number];
+>>>> +
+>>>> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+>>>> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
+>>> And this still assumes the loaded, secondary kernel is relocatable,
+>>> with neither extra check nor comment explaining its limitation.
+>>>
+>>> Please see my previous reply[2] that explains why loading a
+>>> non-relocatble kernel with kexec_file API is reasonable.
+>> LoongArch is a non-position independent (non-PIE) kernel when
+>> the RELOCATABLE option is not enabled, the kernel contains certain
+>> instructions such as la.abs, which prevent it from being relocated to
+>> arbitrary memory addresses for execution. As a result, limitations
+>> exist that make features like kdump or kexec_file dependent on
+>> the RELOCATABLE option.
+>>
+>> Strictly speaking, we need to add additional checks: if the kernel is
+>> non-relocatable, the loading operation should fail directly.
+> Agree.
+>
+>> For a
+>> running kernel, we can easily determine this by calling
+>> kallsyms_lookup_name("relocate_kernel"). However, for a kernel
+>> that is being loaded but has not yet started execution, it is difficult
+>> to easily determine whether the currently loaded kernel has the
+>> RELOCATABLE configuration option enabled.
+> I understand the difficulty, thus IMHO a comment is helpful here to
+> remind the reader of lack of relocatability checks.
+>
+> Best regards,
+> Yao Zi
+>
+>> For ELF format images, we can determine whether the loaded image
+>> contains the ".la_abs" section in the following way:
+>> static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
+>> {
+>>          struct mem_shdr *shdr, *shdr_end;
+>>          unsigned char *strtab;
+>>
+>>          strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
+>>          shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
+>>          for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
+>>                  if (shdr->sh_size &&
+>>                          strcmp((char *)&strtab[shdr->sh_name], ".la_abs") ==
+>> 0) {
+>>                          return shdr;
+>>                  }
+>>          }
+>>
+>>          return NULL;
+>> }
+>>
+>> Thanks,
+>> Youling.
+>>>> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>>>> +		      kernel_segment->mem, kbuf.bufsz,
+>>>> +		      kernel_segment->memsz);
+>>>> +
+>>>> +	return NULL;
+>>>> +}
+>>>> +
+>>>> +const struct kexec_file_ops kexec_efi_ops = {
+>>>> +	.probe = efi_kexec_probe,
+>>>> +	.load = efi_kexec_load,
+>>>> +};
+>>> Thanks,
+>>> Yao Zi
+>>>
+>>> [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
+>>> [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
+> [1]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#signature-image-only
+> [2]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
+> [3]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#machine-types
 
