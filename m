@@ -4,89 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFC3BCA0EFC
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 15:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C5E2CA0EEB
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 15:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=; b=yrUQyKYqqgKQ2+RZ6p864WkGMM
-	clMUmXL3zMBk0OavCkwY2ybqAqRishbERAFBe8+X4O9QUqaayc/sNHL/gGvvB4c1JbdBfBnLiqy4h
-	8trHdrhY/3e4l3oVlHK8GnWLqef5TxTJzw0j6B2wQATdAyUgwh0kn5Oy53ezUg5F3m70Q4MIUKzjp
-	/TQF72894tBk89qZNQ5wNsGjUlqyEGkCLT0/62i3P1Rn58p1LU5ZA8iKfRzRQvZMSvA+nyIfoRuT6
-	4zb0X689boG//EzOUk3UkBodaRDibT4qdKkyUdaSMIO+cVI6tojADXFFCwhwDGADYKcctAWzd8V3e
-	vD8iDk/g==;
+	bh=q1E3cCPX/S/TiaUrGuYFhgpTIXfMRDRXjzybGtCVK8I=; b=CwsYLUpO7lyS/S5B0fuvoD0t3k
+	oKIWJSBj8W64eZ/o0gWvuo2j+PuB1VrAfNy6/u+nehyH+WBtalYAGt5YicC4NJltZbKH5HrNR7I8T
+	x2PknORl3VPAcXpoAg9mHlzxq54+dEkhG6EJddJRD88OaGOrjgx8AJ9NxQOAw6y+2NB1UPMDI/9/w
+	c26oYoBPmvp4vEHwOf6x+86tscfrknLv8l+kUFSjfJvgGTh1SCTy4hndAe3wzBrRqmXpPo2WFzuLC
+	QPHdjCCrOrURe/tMWj6KqzACLtfhnhcyCYAxGQuQpeqV74T1IW8Mp1y0V3avPk0yb9g9EVq0QflXn
+	cFzdb1cA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up7FJ-0000000HN17-2X6h;
-	Thu, 21 Aug 2025 15:30:33 +0000
-Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
+	id 1up7G1-0000000HO0L-3mhJ;
+	Thu, 21 Aug 2025 15:31:17 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up3Wx-0000000Glk2-3HBy
+	id 1up3r7-0000000GohD-1ofF
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 11:32:33 +0000
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3c4368ab352so467722f8f.1
-        for <kexec@lists.infradead.org>; Thu, 21 Aug 2025 04:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755775950; x=1756380750; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=;
-        b=KRBu9/YOSIsRx6F43LPeQ7+edKUBzaOKaGDrN/sLP/H+S4n5iOPpHsuX3SBi165Wru
-         i0PeHvMqrkE7vjV14yNwkOAh1OLU4TvfBHN1He+6lBeHIE8ok5HYQBYwKBnVyprV+06z
-         F8tf/v0m25FPTBFUPqn+HPrmsXH5ILAk7AbWN2aPOU+09G7qC0wiFaoiJwc10B6tbuQO
-         XUzl0jCqesYsZ73qkwHon0S7b6jAc4wMd2NFBbx5Kt/PbU6PDzr+1Fy59rx2FjRwsC+l
-         mziG93m4/4Y9pck+nVXAn0zvbxBy+b32EwSgRS/xGLvpIL/8zk3XubU9noD+Hb2v33kF
-         tJhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755775950; x=1756380750;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=;
-        b=Ftdxsc2CMNoN9ylMI+soSevNGqEoO3jqT6trfBX7o9MPyoHzSOgh6tLFtap09tGRsw
-         1eXMwOvyPc6Y/rTFFVZJxXjQCDQITjIDzmU93jSLixW7YJNc/xJvYvBqoB9pnFOu/6Tg
-         OKuluEOjyTc0LpRpv9wk96Q/Zcd9E9x4vG85g9SQgcW9AwpFoYCdDS9vao0Tu0cQ/e4t
-         8w1slrmqq8OPDQOLgJCN88GqGOkHgEE4ylb7EiCKk/f7ldlO08kkpEDons5hP15VnBAR
-         UXWA+KXTBdOqwkdhjhhevK/CoVdq5WxQyprI27SY0X9XHmApFCLjEgLObVCRNM/RwVjW
-         B11w==
-X-Gm-Message-State: AOJu0YySLU5CJp2lS5JNM0Fv3DVKu/FJ+oC0qUaoM8igmSpcZE0gYM89
-	RBbSBI0P1LdTb+xaWhPe/Fpuwe8k1i/3jhcbzClT/hCV9vTwGOCx2ic4
-X-Gm-Gg: ASbGncsXF6qJ/nkeZjZT6gzz+Bs7AEZ0i8jQ9+7vWC2VM90dIKJXlTMkvoQsoOdcbdp
-	FEhuYiWoLCohNCRcSHwDKIQ7BGNmZ98RzrExXY1qc3aqr1zyzGx8YoDYMAbOZNA/3u6nrQbae8F
-	FtMNt3W2hMZoPn8oS/baMYEnmZf/D02Wncx8AvJkpkaKbFAnGWeKAYqqQbQY9d1ZdLJcQ4gne8w
-	E8fBmg4yxsN7HPJBY+/vCEP2BkPAGrY7aeNS8M3RZFcW8Iy17SjrzVBvkzKBAqPg+UqQRODr6b2
-	s7KoTFxMiRZKgZl/rKYB6zb/xLNmrTIKBDo4vRB+sM9nrK3GqmRGBrXIhZH+X9kch8zDhbZg/GH
-	yn5gmhJ8TLZ9Zh1xCGrCufz3R1mltGKo3nH6A/vNz2WB3fDsn7sHXdOVwa+CeaZAvhRNYTHZla1
-	axhhtMNf5nGlZ6JaY0NDCWR9Y=
-X-Google-Smtp-Source: AGHT+IG31km4egDBIbCZPj3uFPYlxDAPBf7hOXDxcQhEbdReldcE0MHDXAHFaSvpiMv/6w6IG7kv+w==
-X-Received: by 2002:a5d:5f4b:0:b0:3a0:b84d:60cc with SMTP id ffacd0b85a97d-3c494fc6fcemr1823209f8f.2.1755775949704;
-        Thu, 21 Aug 2025 04:32:29 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6f:e759:7e00:1047:5c2a:74d8:1f23? ([2a02:6b6f:e759:7e00:1047:5c2a:74d8:1f23])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c074d43ba5sm11417290f8f.22.2025.08.21.04.32.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Aug 2025 04:32:28 -0700 (PDT)
-Message-ID: <f24af1e6-509a-4a36-8b7d-0188b3a2e9e2@gmail.com>
-Date: Thu, 21 Aug 2025 12:32:28 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] kexec: Add bootconfig support to get_command_line
+	Thu, 21 Aug 2025 11:53:23 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id C39E841A16;
+	Thu, 21 Aug 2025 11:53:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E753C4CEEB;
+	Thu, 21 Aug 2025 11:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1755777200;
+	bh=x5kxTzWqBCYssiMEo0DTtYkVmAm8zy4FuX0Mfb7pLLs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mRGZom4XfgUeNcPZgDAJrnyc+nZ4bDcz+SEVzpBuaT0i002GKaJIlXBpatKnve3jn
+	 jHi83YMjRE9qCoGfJ98VlDb6FqqVxrhBc+bxDPVx4VXpQHIqkNN1dX2mRDxDKx2v/e
+	 BU+byz05zLIbem8rll6p1jhhHsXoKRZ6bhThPNaY=
+Date: Thu, 21 Aug 2025 04:53:19 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, paulmck@kernel.org,
- leitao@debian.org, kernel-team@meta.com
-References: <20250811153736.3865487-1-usamaarif642@gmail.com>
- <aKaSRJ9HGNR07Svl@MiWiFi-R3L-srv>
-Content-Language: en-GB
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <aKaSRJ9HGNR07Svl@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8
+Cc: Brian Mak <makb@juniper.net>, Dave Young <dyoung@redhat.com>, Alexander
+ Graf <graf@amazon.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Rob
+ Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ x86@kernel.org, kexec@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
+Message-Id: <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
+In-Reply-To: <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
+References: <20250805211527.122367-1-makb@juniper.net>
+	<20250805211527.122367-2-makb@juniper.net>
+	<20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
+	<aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_043231_844464_B9ED3A7F 
-X-CRM114-Status: GOOD (  23.40  )
+X-CRM114-CacheID: sfid-20250821_045321_859779_7F7880DE 
+X-CRM114-Status: GOOD (  45.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,69 +77,268 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Thu, 21 Aug 2025 16:33:26 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-
-On 21/08/2025 04:28, Baoquan He wrote:
-> Hi,
+> On 08/20/25 at 09:47pm, Andrew Morton wrote:
+> > On Tue, 5 Aug 2025 14:15:26 -0700 Brian Mak <makb@juniper.net> wrote:
+> > 
+> > > Commit 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> > > introduces logic to use CMA-based allocation in kexec by default. As
+> > > part of the changes, it introduces a kexec_file_load flag to disable the
+> > > use of CMA allocations from userspace. However, this flag is broken
+> > > since it is missing from the list of legal flags for kexec_file_load.
+> > > kexec_file_load returns EINVAL when attempting to use the flag.
+> > > 
+> > > Fix this by adding the KEXEC_FILE_NO_CMA flag to the list of legal flags
+> > > for kexec_file_load.
+> > > 
+> > > Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> > 
+> > A description of the userspace-visible runtime effects of this bug
+> > would be very helpful, please.  A lot more than "is broken"!
+> > 
+> > Also, could we please have some reviewer input on this change?
 > 
-> On 08/11/25 at 04:37pm, Usama Arif wrote:
->> If the kernel is enabled with CONFIG_BOOT_CONFIG_FORCE, it will
->> always append the bootconfig at the start of the kernel commandline.
->> If reuse-cmdline option is used in kexec, the bootconfig will be
->> repeatedly appended at the start of the commandline on every kexec.
->> As there is a limit on the size of kernel commandline that can be
->> used, --reuse-cmdline option will break kexec depending on the
->> size of bootconfig on repeated kexec.
->>
->> Bootconfig is embedded in the kernel, so it should not be considered
->> when reusing kernel command line.
->> Modify get_command_line() to first attempt reading kernel parameters
->> from /proc/bootconfig before falling back to /proc/cmdline. This allows
->> kexec to use the original boot parameters without bootconfig which
->> is embedded in the kernel.
-> 
-> Thanks for the great fix. While I have some questions about the change.
-> 
-> 1, if we can read kernel parameters from /proc/bootconfig, does it mean
->    we will skip other kernel parameters, e.g I set some parameters in
->    grub, meanwhile set bootconfg? Is this allowed?
+> I didn't receive this patchset, and kexec mailing list is not in CC.
+> I don't know what happened.
 
-Hi Baoquan,
+Well that's annoying.  kexec@ and linux-kernel were on the cc line.
 
-Thanks for the questions.
+Here's what's in mm.git's mm-hotfixes branch:
 
-/proc/bootconfig treats the parameters from bootconfig separate from the rest.
-i.e. parameters from grub will be coming after "# Parameters from bootloader:"
-in /proc/bootconfig. It shouldn't skip grub parameters. For e.g. on my machine
+From: Brian Mak <makb@juniper.net>
+Subject: kexec: add KEXEC_FILE_NO_CMA as a legal flag
+Date: Tue, 5 Aug 2025 14:15:26 -0700
 
-cat /proc/bootconfig 
-kernel.csdlock_debug = "1"
-kernel.mitigations = "off"
-# Parameters from bootloader:
-# crashkernel=.....
+Commit 07d24902977e ("kexec: enable CMA based contiguous allocation")
+introduces logic to use CMA-based allocation in kexec by default.  As part
+of the changes, it introduces a kexec_file_load flag to disable the use of
+CMA allocations from userspace.  However, this flag is broken since it is
+missing from the list of legal flags for kexec_file_load.  kexec_file_load
+returns EINVAL when attempting to use the flag.
+
+Fix this by adding the KEXEC_FILE_NO_CMA flag to the list of legal flags
+for kexec_file_load.
+
+Link: https://lkml.kernel.org/r/20250805211527.122367-2-makb@juniper.net
+Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+Signed-off-by: Brian Mak <makb@juniper.net>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Betkov <bp@alien8.de>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Thomas Gleinxer <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ include/linux/kexec.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/include/linux/kexec.h~kexec-add-kexec_file_no_cma-as-a-legal-flag
++++ a/include/linux/kexec.h
+@@ -460,7 +460,8 @@ bool kexec_load_permitted(int kexec_imag
+ 
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+-				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
++				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
++				 KEXEC_FILE_NO_CMA)
+ 
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
+_
 
 
-kernel.csdlock_debug = "1"
-kernel.mitigations = "off"
-comes from bootconfig, while the crashkernel and the rest come from bootloader [1]
+and the second patch I placed in mm-unstable:
 
-[1] https://elixir.bootlin.com/linux/v6.16.1/source/Documentation/filesystems/proc.rst#L739
+From: Brian Mak <makb@juniper.net>
+Subject: x86/kexec: carry forward the boot DTB on kexec
+Date: Tue, 5 Aug 2025 14:15:27 -0700
 
-> 
-> 2. If /proc/bootconfig includes the whole kernel parameters of the
->    runnign kernel, setup_boot_config() will parse and append bootconfig
->    to kernel cmdline again, right? But it doesn't matter.
+Currently, the kexec_file_load syscall on x86 does not support passing a
+device tree blob to the new kernel.  Some embedded x86 systems use device
+trees.  On these systems, failing to pass a device tree to the new kernel
+causes a boot failure.
 
-/proc/bootconfig contains the whole parameters, but the bootconfig is seperated by "# Parameters from bootloader:".
-If we repeatedly kexec using /proc/cmdline, we will continuously append bootconfig,
-and wont be able to kexec anymore once the commandline gets too big..
+To add support for this, we copy the behavior of ARM64 and PowerPC and
+copy the current boot's device tree blob for use in the new kernel.  We do
+this on x86 by passing the device tree blob as a setup_data entry in
+accordance with the x86 boot protocol.
 
-> 
-> Sorry, I am not familiar with bootconfig.
-> 
-> Thanks
-> Baoquan
-> 
+This behavior is gated behind the KEXEC_FILE_FORCE_DTB flag.
 
+Link: https://lkml.kernel.org/r/20250805211527.122367-3-makb@juniper.net
+Signed-off-by: Brian Mak <makb@juniper.net>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Betkov <bp@alien8.de>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Thomas Gleinxer <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ arch/x86/kernel/kexec-bzimage64.c |   47 ++++++++++++++++++++++++++--
+ include/linux/kexec.h             |    5 ++
+ include/uapi/linux/kexec.h        |    4 ++
+ kernel/kexec_file.c               |    1 
+ 4 files changed, 53 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/kernel/kexec-bzimage64.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
++++ a/arch/x86/kernel/kexec-bzimage64.c
+@@ -16,6 +16,8 @@
+ #include <linux/kexec.h>
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
++#include <linux/libfdt.h>
++#include <linux/of_fdt.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
+ 
+@@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *para
+ }
+ #endif /* CONFIG_EFI */
+ 
++#ifdef CONFIG_OF_FLATTREE
++static void setup_dtb(struct boot_params *params,
++		      unsigned long params_load_addr,
++		      unsigned int dtb_setup_data_offset)
++{
++	struct setup_data *sd = (void *)params + dtb_setup_data_offset;
++	unsigned long setup_data_phys, dtb_len;
++
++	dtb_len = fdt_totalsize(initial_boot_params);
++	sd->type = SETUP_DTB;
++	sd->len = dtb_len;
++
++	/* Carry over current boot DTB with setup_data */
++	memcpy(sd->data, initial_boot_params, dtb_len);
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + dtb_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++}
++#endif /* CONFIG_OF_FLATTREE */
++
+ static void
+ setup_ima_state(const struct kimage *image, struct boot_params *params,
+ 		unsigned long params_load_addr,
+@@ -336,6 +360,17 @@ setup_boot_parameters(struct kimage *ima
+ 			sizeof(struct efi_setup_data);
+ #endif
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (image->force_dtb && initial_boot_params) {
++		setup_dtb(params, params_load_addr, setup_data_offset);
++		setup_data_offset += sizeof(struct setup_data) +
++				     fdt_totalsize(initial_boot_params);
++	} else {
++		pr_debug("Not carrying over DTB, force_dtb = %d\n",
++			 image->force_dtb);
++	}
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
+ 		/* Setup IMA log buffer state */
+ 		setup_ima_state(image, params, params_load_addr,
+@@ -529,6 +564,12 @@ static void *bzImage64_load(struct kimag
+ 				sizeof(struct setup_data) +
+ 				RNG_SEED_LENGTH;
+ 
++#ifdef CONFIG_OF_FLATTREE
++	if (image->force_dtb && initial_boot_params)
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      fdt_totalsize(initial_boot_params);
++#endif
++
+ 	if (IS_ENABLED(CONFIG_IMA_KEXEC))
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct ima_setup_data);
+@@ -537,7 +578,7 @@ static void *bzImage64_load(struct kimag
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct kho_data);
+ 
+-	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
++	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+ 	efi_map_offset = params_cmdline_sz;
+@@ -647,7 +688,7 @@ static void *bzImage64_load(struct kimag
+ 	return ldata;
+ 
+ out_free_params:
+-	kfree(params);
++	kvfree(params);
+ 	return ERR_PTR(ret);
+ }
+ 
+@@ -659,7 +700,7 @@ static int bzImage64_cleanup(void *loade
+ 	if (!ldata)
+ 		return 0;
+ 
+-	kfree(ldata->bootparams_buf);
++	kvfree(ldata->bootparams_buf);
+ 	ldata->bootparams_buf = NULL;
+ 
+ 	return 0;
+--- a/include/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
++++ a/include/linux/kexec.h
+@@ -395,6 +395,9 @@ struct kimage {
+ 
+ 	/* Information for loading purgatory */
+ 	struct purgatory_info purgatory_info;
++
++	/* Force carrying over the DTB from the current boot */
++	bool force_dtb;
+ #endif
+ 
+ #ifdef CONFIG_CRASH_HOTPLUG
+@@ -461,7 +464,7 @@ bool kexec_load_permitted(int kexec_imag
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+ 				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
+-				 KEXEC_FILE_NO_CMA)
++				 KEXEC_FILE_NO_CMA | KEXEC_FILE_FORCE_DTB)
+ 
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
+--- a/include/uapi/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
++++ a/include/uapi/linux/kexec.h
+@@ -22,12 +22,16 @@
+  * KEXEC_FILE_ON_CRASH : Load/unload operation belongs to kdump image.
+  * KEXEC_FILE_NO_INITRAMFS : No initramfs is being loaded. Ignore the initrd
+  *                           fd field.
++ * KEXEC_FILE_FORCE_DTB : Force carrying over the current boot's DTB to the new
++ *                        kernel on x86. This is already the default behavior on
++ *                        some other architectures, like ARM64 and PowerPC.
+  */
+ #define KEXEC_FILE_UNLOAD	0x00000001
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
+ #define KEXEC_FILE_NO_CMA	0x00000010
++#define KEXEC_FILE_FORCE_DTB	0x00000020
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+--- a/kernel/kexec_file.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
++++ a/kernel/kexec_file.c
+@@ -255,6 +255,7 @@ kimage_file_prepare_segments(struct kima
+ 	}
+ 
+ 	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
++	image->force_dtb = flags & KEXEC_FILE_FORCE_DTB;
+ 
+ 	if (cmdline_len) {
+ 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+_
 
 
