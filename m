@@ -4,76 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1681CA0EFA
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 10:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3E8CECA0EEB
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 10:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VpHM1uBa4sOEGG7WK0F1Lv/uHtgOoqOPQTT0Bq1COOw=; b=yJlTkXqE5O3KiPv844SxbmnwQK
-	mM9WQ0XEfI7195+Z2SGETS3EX84EWwBmzMQxM7r6KrYQyUrJkUbUiVTp5Mj6N+sLXT8dgQtViRbme
-	LzxdpDnqCCiX9vKBjKC9V6dwTpqduzlJtXE8vMBWdj5xbIQ+UBG0MnCawJAaT9kJwjGwgkz2TPOy1
-	S5c/TrDMAw+fEubmRzBvTV7ER3sYQcr+jDheopiYcSaQG46M3hUtDANyNIlV+Fk7xzZgNgAA49MT9
-	TJRWbyONORBQMOkqXUtvhzuiEIRlZZlnhtknHd2zqelS14DRwKlpNFweAiOJa/hJrKoSxuHZMyuwm
-	f+xaAXkQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=iHkbj41Kh3yJaLj8nTXZWWFLEJs9EarVkmAtxTUg4F8=; b=m3S19NTQLCK9N3HYfjxzea3O84
+	DoXK/Vi/Q83yD6uYh2QANQ14VnKX8r73nZZfuQ2rwoYEhRVQ6OjnSy57VHEKmXbA1/gdeG7p5HR+e
+	ZerKtx04y12lkWpPf3RdGZ8/0GnfVcDt4NxL6SrsahdykjIGFGf7cAfvdl9B/x2LSGOA3fzSywM/n
+	bPdAgljssIbuTXy1/qpf8P/onVEx0D/LOi7e61JLPunKTxXnrzlZfyQUtA+5RefILX/zVIiS+S16t
+	QvyHNgiejtS4n/lD6S7GbXxlH3DlHoevVjYhPd4Cp4liKZ6+4KizgYlvC5vIlLWo0z/3XiIDcY47K
+	BIitlbOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up2Uv-0000000GbMG-3I0W;
-	Thu, 21 Aug 2025 10:26:21 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1up2Xg-0000000Gc6B-1x9k;
+	Thu, 21 Aug 2025 10:29:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up0ch-0000000GFGf-0MUh
+	id 1up0jy-0000000GGVB-2gpB
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 08:26:16 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 83AB05C575D;
-	Thu, 21 Aug 2025 08:26:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD01C4CEEB;
-	Thu, 21 Aug 2025 08:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755764774;
-	bh=cLUbOqUr6cTb/vKgSfC31FXfcobLn5rCi7Usx5zRpc0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KB/twgsA/CTVnp586RP3GyuIdvA0EyWAAu+91jwzNtpbYbFOXHSU+jhu4roGlyYaB
-	 BxV+AOwx9I0X+6uSH1kDHGrWRCz5VW4AjFllgPvHKsWA5GjEhBoTsBtmc2sQ09hzK5
-	 jQuxubCyXuxk/Fe2zDo0iQi/7yW6zxEmdnetP1tMY7f7jUGykW5edx68Zmf5wRLqM1
-	 AaGdKlxJfMGHLS7Dw6iFgcgxUCI0acFJ+cmRXj/ME/nXBKoswdmAChcBH49jSUT7AT
-	 nNClgUYNQbD/ibAssVpOs7cjGiJbe9NxlKJR5WwEypQ96O8gqU8pcz1UxbhkZGpIi3
-	 Vsg9b0HqcCtvA==
-From: Christian Brauner <brauner@kernel.org>
-To: Lichen Liu <lichliu@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	safinaskar@zohomail.com,
-	kexec@lists.infradead.org,
-	rob@landley.net,
-	weilongchen@huawei.com,
-	cyphar@cyphar.com,
-	linux-api@vger.kernel.org,
-	zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	initramfs@vger.kernel.org,
-	corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz
-Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
-Date: Thu, 21 Aug 2025 10:24:11 +0200
-Message-ID: <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250815121459.3391223-1-lichliu@redhat.com>
-References: <20250815121459.3391223-1-lichliu@redhat.com>
+	Thu, 21 Aug 2025 08:33:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755765221;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iHkbj41Kh3yJaLj8nTXZWWFLEJs9EarVkmAtxTUg4F8=;
+	b=enVuY8+7GWHqah6VuIrStl6NIETfJNgJg6lk1WLO8mj1BMAS/crPRoOcrd69+QSXHbmbd3
+	C3sS1cREc7LI9jS3tf799zrrbMt8as4B5muwmD3a2Lr3RrkYQzG26cnUyNwZAC3CwJpR/F
+	JkgEEqGrWn1mGkTa/iIiGSgrlPttd7s=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-W112auD0NF6QiV5OPsKlWA-1; Thu,
+ 21 Aug 2025 04:33:37 -0400
+X-MC-Unique: W112auD0NF6QiV5OPsKlWA-1
+X-Mimecast-MFC-AGG-ID: W112auD0NF6QiV5OPsKlWA_1755765215
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A25D019560B2;
+	Thu, 21 Aug 2025 08:33:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.99])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E6BE180029D;
+	Thu, 21 Aug 2025 08:33:32 +0000 (UTC)
+Date: Thu, 21 Aug 2025 16:33:26 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Brian Mak <makb@juniper.net>
+Cc: Dave Young <dyoung@redhat.com>, Alexander Graf <graf@amazon.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>, x86@kernel.org,
+	kexec@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
+Message-ID: <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
+References: <20250805211527.122367-1-makb@juniper.net>
+ <20250805211527.122367-2-makb@juniper.net>
+ <20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1905; i=brauner@kernel.org; h=from:subject:message-id; bh=cLUbOqUr6cTb/vKgSfC31FXfcobLn5rCi7Usx5zRpc0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQsuyF9J8I8+ZPI912RyxZ9nXK0nUlMZilruGDJHpOm7 9cirH4HdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzE5BbDX+kbB6buCWFhtarJ sWE8wewxpUXp9twbsTPVd/5ZsXix9k9GhvNr7pbsmytTaOiSs/k6/9MrFlk+jBf5/2xw5Z0eo9v QwAcA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_012615_205977_2BF57879 
-X-CRM114-Status: GOOD (  16.66  )
+X-CRM114-CacheID: sfid-20250821_013346_749052_4755723E 
+X-CRM114-Status: GOOD (  23.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,46 +90,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 15 Aug 2025 20:14:59 +0800, Lichen Liu wrote:
-> When CONFIG_TMPFS is enabled, the initial root filesystem is a tmpfs.
-> By default, a tmpfs mount is limited to using 50% of the available RAM
-> for its content. This can be problematic in memory-constrained
-> environments, particularly during a kdump capture.
+On 08/20/25 at 09:47pm, Andrew Morton wrote:
+> On Tue, 5 Aug 2025 14:15:26 -0700 Brian Mak <makb@juniper.net> wrote:
 > 
-> In a kdump scenario, the capture kernel boots with a limited amount of
-> memory specified by the 'crashkernel' parameter. If the initramfs is
-> large, it may fail to unpack into the tmpfs rootfs due to insufficient
-> space. This is because to get X MB of usable space in tmpfs, 2*X MB of
-> memory must be available for the mount. This leads to an OOM failure
-> during the early boot process, preventing a successful crash dump.
+> > Commit 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> > introduces logic to use CMA-based allocation in kexec by default. As
+> > part of the changes, it introduces a kexec_file_load flag to disable the
+> > use of CMA allocations from userspace. However, this flag is broken
+> > since it is missing from the list of legal flags for kexec_file_load.
+> > kexec_file_load returns EINVAL when attempting to use the flag.
+> > 
+> > Fix this by adding the KEXEC_FILE_NO_CMA flag to the list of legal flags
+> > for kexec_file_load.
+> > 
+> > Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 > 
-> [...]
+> A description of the userspace-visible runtime effects of this bug
+> would be very helpful, please.  A lot more than "is broken"!
+> 
+> Also, could we please have some reviewer input on this change?
 
-This seems rather useful but I've renamed "rootfsflags" to
-"initramfs_options" because "rootfsflags" is ambiguous and it's not
-really just about flags.
+I didn't receive this patchset, and kexec mailing list is not in CC.
+I don't know what happened.
 
-Other than that I think it would make sense to just raise the limit to
-90% for the root_fs_type mount. I'm not sure why this super privileged
-code would only be allowed 50% by default.
+> 
+> 
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -460,7 +460,8 @@ bool kexec_load_permitted(int kexec_image_type);
+> >  
+> >  /* List of defined/legal kexec file flags */
+> >  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+> > -				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
+> > +				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
+> > +				 KEXEC_FILE_NO_CMA)
+> >  
+> >  /* flag to track if kexec reboot is in progress */
+> >  extern bool kexec_in_progress;
+> > -- 
+> > 2.25.1
+> > 
+> 
 
----
-
-Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.18.misc branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.18.misc
-
-[1/1] fs: Add 'rootfsflags' to set rootfs mount options
-      https://git.kernel.org/vfs/vfs/c/278033a225e1
 
