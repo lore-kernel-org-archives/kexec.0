@@ -4,65 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C5E2CA0EEB
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 15:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3058ACA0EFC
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 16:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	Content-Type:MIME-Version:Subject:References:In-Reply-To:Message-ID:Cc:To:
 	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=q1E3cCPX/S/TiaUrGuYFhgpTIXfMRDRXjzybGtCVK8I=; b=CwsYLUpO7lyS/S5B0fuvoD0t3k
-	oKIWJSBj8W64eZ/o0gWvuo2j+PuB1VrAfNy6/u+nehyH+WBtalYAGt5YicC4NJltZbKH5HrNR7I8T
-	x2PknORl3VPAcXpoAg9mHlzxq54+dEkhG6EJddJRD88OaGOrjgx8AJ9NxQOAw6y+2NB1UPMDI/9/w
-	c26oYoBPmvp4vEHwOf6x+86tscfrknLv8l+kUFSjfJvgGTh1SCTy4hndAe3wzBrRqmXpPo2WFzuLC
-	QPHdjCCrOrURe/tMWj6KqzACLtfhnhcyCYAxGQuQpeqV74T1IW8Mp1y0V3avPk0yb9g9EVq0QflXn
-	cFzdb1cA==;
+	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=; b=RI/+sKuZQbvGnE8J5QtwIpNRjP
+	AJwpfvaV+bzW8i0UOR+tfLHj786jmNoqgtKtglu30qV/f/5igR6aRm9SwyzOfyiN5zLOTXm+/bE5Q
+	wIn7tgdfiHoyMWUgxWckCxNh+OboEpi+82ZM9tdLXum9pkofnTIoPRGQJdOgfaNSuzVwrrDFqifcF
+	atPP7HY4y9TLXH/ZwjtRxmAQkbOKKDho8DXGURztmDIKwWODy1q1VJfxkE2Fbpzlcei7HqlorgI6t
+	ZnwlfgAmrc/5cepY2vQ0uZ0ekhxJcXtGBTriPcH3PFaRNhKHlFe4tey/NcYEIGirfAcKATLb6Bm5Z
+	khoO58Eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up7G1-0000000HO0L-3mhJ;
-	Thu, 21 Aug 2025 15:31:17 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1up8a5-0000000Hb4U-2bzR;
+	Thu, 21 Aug 2025 16:56:05 +0000
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up3r7-0000000GohD-1ofF
+	id 1up4yA-0000000GzBb-3Mqq
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 11:53:23 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id C39E841A16;
-	Thu, 21 Aug 2025 11:53:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E753C4CEEB;
-	Thu, 21 Aug 2025 11:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1755777200;
-	bh=x5kxTzWqBCYssiMEo0DTtYkVmAm8zy4FuX0Mfb7pLLs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mRGZom4XfgUeNcPZgDAJrnyc+nZ4bDcz+SEVzpBuaT0i002GKaJIlXBpatKnve3jn
-	 jHi83YMjRE9qCoGfJ98VlDb6FqqVxrhBc+bxDPVx4VXpQHIqkNN1dX2mRDxDKx2v/e
-	 BU+byz05zLIbem8rll6p1jhhHsXoKRZ6bhThPNaY=
-Date: Thu, 21 Aug 2025 04:53:19 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Brian Mak <makb@juniper.net>, Dave Young <dyoung@redhat.com>, Alexander
- Graf <graf@amazon.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Rob
- Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- x86@kernel.org, kexec@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
-Message-Id: <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
-In-Reply-To: <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
-References: <20250805211527.122367-1-makb@juniper.net>
-	<20250805211527.122367-2-makb@juniper.net>
-	<20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
-	<aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+	Thu, 21 Aug 2025 13:04:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1755781475; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=i7Wggr5HBYWBGUd1xe6bh1Ol5XBy0xuiYXMGjM/ux/SsG7ULhZMJeq6sOPDK8+C3fImCCbM5Vv8f5XXDM8RcTe0KKF8ROT2alww190aXSohBq9IUNOKu22MshDdjGtaHfq1SpLT9MMeR/qDICFaA7pSaw396lyLv0bfGQVo/RhI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1755781475; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=; 
+	b=La0rFyDmhqKUYNKXoHgy/2RIceLK9RCjNqIdMCFI7uRY8LX9RPJ2eGtKytCGNuhKlyQZ7iSvyO/eL/vE/GEvtKq61b1Nl/YZMP/0tiYalzN+cwnMJaJjCVc04Q831rwtyyKUVZmGH4ZSNtCxx2d4PVlLf7wodS7gumlZs07q+tk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755781475;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=SYHuj7Wjx5qXUTPgXJD1D8Eca4emv02OFlDqdIAxWXg=;
+	b=AXQ7SPKxUUopWeIvF7qQBZ7U4g0taKulTETxsoQoPfyom1vx/YMhl6nP5YCcK/zj
+	b74nczifLvROCOVksSFURwJTZ3ZGTInNUeJDjCipy7k9oHM2h3DDmi9gQ5QHA1GIQ/4
+	If6GaO7AjDGG5/1MAVWnSjteaxHi7J92Pi6jJ8vY=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1755781473954167.9696619074616; Thu, 21 Aug 2025 06:04:33 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Thu, 21 Aug 2025 06:04:33 -0700 (PDT)
+Date: Thu, 21 Aug 2025 17:04:33 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Lichen Liu" <lichliu@redhat.com>,
+	"linux-fsdevel" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"kexec" <kexec@lists.infradead.org>, "rob" <rob@landley.net>,
+	"weilongchen" <weilongchen@huawei.com>, "cyphar" <cyphar@cyphar.com>,
+	"linux-api" <linux-api@vger.kernel.org>,
+	"zohar" <zohar@linux.ibm.com>, "stefanb" <stefanb@linux.ibm.com>,
+	"initramfs" <initramfs@vger.kernel.org>, "corbet" <corbet@lwn.net>,
+	"linux-doc" <linux-doc@vger.kernel.org>,
+	"viro" <viro@zeniv.linux.org.uk>, "jack" <jack@suse.cz>
+Message-ID: <198ccbb2694.d3fad31887413.1131652624698180933@zohomail.com>
+In-Reply-To: <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
+References: <20250815121459.3391223-1-lichliu@redhat.com> <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr080112273e22f1786581338e49b7e07e000001104afa9c15ad2a122830cf688da2c59c8afe72e8c650ac99:zu080112272dfa6be1a67c778365ab64e5000011cfac17ec895c53b99647dbd1d7d4ef18c9ec956b108d8a70:rf0801122b9f962294dd4be519c8bf7647000010f904f79ddee4b424b1c5dbfae154f5453192b76d9278235c9b24def2:ZohoMail
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_045321_859779_7F7880DE 
-X-CRM114-Status: GOOD (  45.67  )
+X-CRM114-CacheID: sfid-20250821_060442_912913_5A964C9E 
+X-CRM114-Status: UNSURE (   8.54  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,268 +91,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 21 Aug 2025 16:33:26 +0800 Baoquan He <bhe@redhat.com> wrote:
+ ---- On Thu, 21 Aug 2025 12:24:11 +0400  Christian Brauner <brauner@kernel.org> wrote --- 
+ > Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
+ > Patches in the vfs-6.18.misc branch should appear in linux-next soon.
 
-> On 08/20/25 at 09:47pm, Andrew Morton wrote:
-> > On Tue, 5 Aug 2025 14:15:26 -0700 Brian Mak <makb@juniper.net> wrote:
-> > 
-> > > Commit 07d24902977e ("kexec: enable CMA based contiguous allocation")
-> > > introduces logic to use CMA-based allocation in kexec by default. As
-> > > part of the changes, it introduces a kexec_file_load flag to disable the
-> > > use of CMA allocations from userspace. However, this flag is broken
-> > > since it is missing from the list of legal flags for kexec_file_load.
-> > > kexec_file_load returns EINVAL when attempting to use the flag.
-> > > 
-> > > Fix this by adding the KEXEC_FILE_NO_CMA flag to the list of legal flags
-> > > for kexec_file_load.
-> > > 
-> > > Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
-> > 
-> > A description of the userspace-visible runtime effects of this bug
-> > would be very helpful, please.  A lot more than "is broken"!
-> > 
-> > Also, could we please have some reviewer input on this change?
-> 
-> I didn't receive this patchset, and kexec mailing list is not in CC.
-> I don't know what happened.
+Applied version contains this:
+> Specify mount options for for the initramfs mount
 
-Well that's annoying.  kexec@ and linux-kernel were on the cc line.
+I. e. "for" two times.
 
-Here's what's in mm.git's mm-hotfixes branch:
-
-From: Brian Mak <makb@juniper.net>
-Subject: kexec: add KEXEC_FILE_NO_CMA as a legal flag
-Date: Tue, 5 Aug 2025 14:15:26 -0700
-
-Commit 07d24902977e ("kexec: enable CMA based contiguous allocation")
-introduces logic to use CMA-based allocation in kexec by default.  As part
-of the changes, it introduces a kexec_file_load flag to disable the use of
-CMA allocations from userspace.  However, this flag is broken since it is
-missing from the list of legal flags for kexec_file_load.  kexec_file_load
-returns EINVAL when attempting to use the flag.
-
-Fix this by adding the KEXEC_FILE_NO_CMA flag to the list of legal flags
-for kexec_file_load.
-
-Link: https://lkml.kernel.org/r/20250805211527.122367-2-makb@juniper.net
-Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
-Signed-off-by: Brian Mak <makb@juniper.net>
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Borislav Betkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Thomas Gleinxer <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- include/linux/kexec.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/include/linux/kexec.h~kexec-add-kexec_file_no_cma-as-a-legal-flag
-+++ a/include/linux/kexec.h
-@@ -460,7 +460,8 @@ bool kexec_load_permitted(int kexec_imag
- 
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
--				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
-+				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
-+				 KEXEC_FILE_NO_CMA)
- 
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
-_
-
-
-and the second patch I placed in mm-unstable:
-
-From: Brian Mak <makb@juniper.net>
-Subject: x86/kexec: carry forward the boot DTB on kexec
-Date: Tue, 5 Aug 2025 14:15:27 -0700
-
-Currently, the kexec_file_load syscall on x86 does not support passing a
-device tree blob to the new kernel.  Some embedded x86 systems use device
-trees.  On these systems, failing to pass a device tree to the new kernel
-causes a boot failure.
-
-To add support for this, we copy the behavior of ARM64 and PowerPC and
-copy the current boot's device tree blob for use in the new kernel.  We do
-this on x86 by passing the device tree blob as a setup_data entry in
-accordance with the x86 boot protocol.
-
-This behavior is gated behind the KEXEC_FILE_FORCE_DTB flag.
-
-Link: https://lkml.kernel.org/r/20250805211527.122367-3-makb@juniper.net
-Signed-off-by: Brian Mak <makb@juniper.net>
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Borislav Betkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Thomas Gleinxer <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/x86/kernel/kexec-bzimage64.c |   47 ++++++++++++++++++++++++++--
- include/linux/kexec.h             |    5 ++
- include/uapi/linux/kexec.h        |    4 ++
- kernel/kexec_file.c               |    1 
- 4 files changed, 53 insertions(+), 4 deletions(-)
-
---- a/arch/x86/kernel/kexec-bzimage64.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
-+++ a/arch/x86/kernel/kexec-bzimage64.c
-@@ -16,6 +16,8 @@
- #include <linux/kexec.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
- #include <linux/efi.h>
- #include <linux/random.h>
- 
-@@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *para
- }
- #endif /* CONFIG_EFI */
- 
-+#ifdef CONFIG_OF_FLATTREE
-+static void setup_dtb(struct boot_params *params,
-+		      unsigned long params_load_addr,
-+		      unsigned int dtb_setup_data_offset)
-+{
-+	struct setup_data *sd = (void *)params + dtb_setup_data_offset;
-+	unsigned long setup_data_phys, dtb_len;
-+
-+	dtb_len = fdt_totalsize(initial_boot_params);
-+	sd->type = SETUP_DTB;
-+	sd->len = dtb_len;
-+
-+	/* Carry over current boot DTB with setup_data */
-+	memcpy(sd->data, initial_boot_params, dtb_len);
-+
-+	/* Add setup data */
-+	setup_data_phys = params_load_addr + dtb_setup_data_offset;
-+	sd->next = params->hdr.setup_data;
-+	params->hdr.setup_data = setup_data_phys;
-+}
-+#endif /* CONFIG_OF_FLATTREE */
-+
- static void
- setup_ima_state(const struct kimage *image, struct boot_params *params,
- 		unsigned long params_load_addr,
-@@ -336,6 +360,17 @@ setup_boot_parameters(struct kimage *ima
- 			sizeof(struct efi_setup_data);
- #endif
- 
-+#ifdef CONFIG_OF_FLATTREE
-+	if (image->force_dtb && initial_boot_params) {
-+		setup_dtb(params, params_load_addr, setup_data_offset);
-+		setup_data_offset += sizeof(struct setup_data) +
-+				     fdt_totalsize(initial_boot_params);
-+	} else {
-+		pr_debug("Not carrying over DTB, force_dtb = %d\n",
-+			 image->force_dtb);
-+	}
-+#endif
-+
- 	if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
- 		/* Setup IMA log buffer state */
- 		setup_ima_state(image, params, params_load_addr,
-@@ -529,6 +564,12 @@ static void *bzImage64_load(struct kimag
- 				sizeof(struct setup_data) +
- 				RNG_SEED_LENGTH;
- 
-+#ifdef CONFIG_OF_FLATTREE
-+	if (image->force_dtb && initial_boot_params)
-+		kbuf.bufsz += sizeof(struct setup_data) +
-+			      fdt_totalsize(initial_boot_params);
-+#endif
-+
- 	if (IS_ENABLED(CONFIG_IMA_KEXEC))
- 		kbuf.bufsz += sizeof(struct setup_data) +
- 			      sizeof(struct ima_setup_data);
-@@ -537,7 +578,7 @@ static void *bzImage64_load(struct kimag
- 		kbuf.bufsz += sizeof(struct setup_data) +
- 			      sizeof(struct kho_data);
- 
--	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
-+	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
- 	efi_map_offset = params_cmdline_sz;
-@@ -647,7 +688,7 @@ static void *bzImage64_load(struct kimag
- 	return ldata;
- 
- out_free_params:
--	kfree(params);
-+	kvfree(params);
- 	return ERR_PTR(ret);
- }
- 
-@@ -659,7 +700,7 @@ static int bzImage64_cleanup(void *loade
- 	if (!ldata)
- 		return 0;
- 
--	kfree(ldata->bootparams_buf);
-+	kvfree(ldata->bootparams_buf);
- 	ldata->bootparams_buf = NULL;
- 
- 	return 0;
---- a/include/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
-+++ a/include/linux/kexec.h
-@@ -395,6 +395,9 @@ struct kimage {
- 
- 	/* Information for loading purgatory */
- 	struct purgatory_info purgatory_info;
-+
-+	/* Force carrying over the DTB from the current boot */
-+	bool force_dtb;
- #endif
- 
- #ifdef CONFIG_CRASH_HOTPLUG
-@@ -461,7 +464,7 @@ bool kexec_load_permitted(int kexec_imag
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
- 				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
--				 KEXEC_FILE_NO_CMA)
-+				 KEXEC_FILE_NO_CMA | KEXEC_FILE_FORCE_DTB)
- 
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
---- a/include/uapi/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
-+++ a/include/uapi/linux/kexec.h
-@@ -22,12 +22,16 @@
-  * KEXEC_FILE_ON_CRASH : Load/unload operation belongs to kdump image.
-  * KEXEC_FILE_NO_INITRAMFS : No initramfs is being loaded. Ignore the initrd
-  *                           fd field.
-+ * KEXEC_FILE_FORCE_DTB : Force carrying over the current boot's DTB to the new
-+ *                        kernel on x86. This is already the default behavior on
-+ *                        some other architectures, like ARM64 and PowerPC.
-  */
- #define KEXEC_FILE_UNLOAD	0x00000001
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
- #define KEXEC_FILE_DEBUG	0x00000008
- #define KEXEC_FILE_NO_CMA	0x00000010
-+#define KEXEC_FILE_FORCE_DTB	0x00000020
- 
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
---- a/kernel/kexec_file.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
-+++ a/kernel/kexec_file.c
-@@ -255,6 +255,7 @@ kimage_file_prepare_segments(struct kima
- 	}
- 
- 	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
-+	image->force_dtb = flags & KEXEC_FILE_FORCE_DTB;
- 
- 	if (cmdline_len) {
- 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
-_
+--
+Askar Safin
+https://types.pl/@safinaskar
 
 
