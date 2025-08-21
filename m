@@ -4,61 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80086CA0EEB
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 09:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1681CA0EFA
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 10:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hAJlHDvRqPXZP6gjpMtCItfPezDjP3bZ9+iZXylcguQ=; b=OCQefbHGd2l/M52nxfz1DnhIAl
-	yluq8Pcvo5THpMnXa4UUwSnNUQixL59XTB1UoNDyC06y+q5x2/q9f/YeUy9u3hfdwf50C+UhsNZcI
-	C6POBDjAsttqhTSAlQduizbgAULS/DynrFRfKAspyPD8+W+mEcFZqtTiFC0+YELRcbhWUimt/QB9h
-	OCzl8aaKd2AgHvuzJ5h6hsl7bqgcM0cFjs1GNbyr7XIkR4ZLzSj50wujptbzMU7/FmnlTPxMOIpvM
-	YhIgIml734OwXMnAshPsDM2AGKZ19xhAPIHxsSBXUX9HBjhXdCuCyu4nGISda8Key/pSlngrNzGBP
-	RZAyKufw==;
+	bh=VpHM1uBa4sOEGG7WK0F1Lv/uHtgOoqOPQTT0Bq1COOw=; b=yJlTkXqE5O3KiPv844SxbmnwQK
+	mM9WQ0XEfI7195+Z2SGETS3EX84EWwBmzMQxM7r6KrYQyUrJkUbUiVTp5Mj6N+sLXT8dgQtViRbme
+	LzxdpDnqCCiX9vKBjKC9V6dwTpqduzlJtXE8vMBWdj5xbIQ+UBG0MnCawJAaT9kJwjGwgkz2TPOy1
+	S5c/TrDMAw+fEubmRzBvTV7ER3sYQcr+jDheopiYcSaQG46M3hUtDANyNIlV+Fk7xzZgNgAA49MT9
+	TJRWbyONORBQMOkqXUtvhzuiEIRlZZlnhtknHd2zqelS14DRwKlpNFweAiOJa/hJrKoSxuHZMyuwm
+	f+xaAXkQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up1ln-0000000GQCj-11Mo;
-	Thu, 21 Aug 2025 09:39:43 +0000
-Received: from out-186.mta0.migadu.com ([2001:41d0:1004:224b::ba])
+	id 1up2Uv-0000000GbMG-3I0W;
+	Thu, 21 Aug 2025 10:26:21 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uozWG-0000000G4ZA-2oWI
+	id 1up0ch-0000000GFGf-0MUh
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 07:15:35 +0000
-Message-ID: <284a663f-3bdd-4dcc-b017-b1b3fe6d9eb1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755760526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hAJlHDvRqPXZP6gjpMtCItfPezDjP3bZ9+iZXylcguQ=;
-	b=knxq+tVimd9IbWYeagAu12XA+IPT9X5xTur4GrkRgf067Tk/mT3o5S0OPrDr0B1l9PKhga
-	52EcIZ52FIgtIwgx/QZTcynLtOlcpA+PLTsRbTdL4qA9kjrvZFC9x1RW5a3riqeJWzp5Qz
-	OKJI161XwmCJRjhiLChhKQj4WusaqA4=
-Date: Thu, 21 Aug 2025 15:14:46 +0800
+	Thu, 21 Aug 2025 08:26:16 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 83AB05C575D;
+	Thu, 21 Aug 2025 08:26:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD01C4CEEB;
+	Thu, 21 Aug 2025 08:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755764774;
+	bh=cLUbOqUr6cTb/vKgSfC31FXfcobLn5rCi7Usx5zRpc0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KB/twgsA/CTVnp586RP3GyuIdvA0EyWAAu+91jwzNtpbYbFOXHSU+jhu4roGlyYaB
+	 BxV+AOwx9I0X+6uSH1kDHGrWRCz5VW4AjFllgPvHKsWA5GjEhBoTsBtmc2sQ09hzK5
+	 jQuxubCyXuxk/Fe2zDo0iQi/7yW6zxEmdnetP1tMY7f7jUGykW5edx68Zmf5wRLqM1
+	 AaGdKlxJfMGHLS7Dw6iFgcgxUCI0acFJ+cmRXj/ME/nXBKoswdmAChcBH49jSUT7AT
+	 nNClgUYNQbD/ibAssVpOs7cjGiJbe9NxlKJR5WwEypQ96O8gqU8pcz1UxbhkZGpIi3
+	 Vsg9b0HqcCtvA==
+From: Christian Brauner <brauner@kernel.org>
+To: Lichen Liu <lichliu@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	safinaskar@zohomail.com,
+	kexec@lists.infradead.org,
+	rob@landley.net,
+	weilongchen@huawei.com,
+	cyphar@cyphar.com,
+	linux-api@vger.kernel.org,
+	zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	initramfs@vger.kernel.org,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+Date: Thu, 21 Aug 2025 10:24:11 +0200
+Message-ID: <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250815121459.3391223-1-lichliu@redhat.com>
+References: <20250815121459.3391223-1-lichliu@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/5] LoongArch/kexec_file: Support loading ELF binary
- file
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- Yao Zi <ziyao@disroot.org>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Youling Tang <tangyouling@kylinos.cn>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-4-youling.tang@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <20250820055700.24344-4-youling.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1905; i=brauner@kernel.org; h=from:subject:message-id; bh=cLUbOqUr6cTb/vKgSfC31FXfcobLn5rCi7Usx5zRpc0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQsuyF9J8I8+ZPI912RyxZ9nXK0nUlMZilruGDJHpOm7 9cirH4HdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzE5BbDX+kbB6buCWFhtarJ sWE8wewxpUXp9twbsTPVd/5ZsXix9k9GhvNr7pbsmytTaOiSs/k6/9MrFlk+jBf5/2xw5Z0eo9v QwAcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_001533_450145_C706CEF2 
-X-CRM114-Status: GOOD (  33.45  )
+X-CRM114-CacheID: sfid-20250821_012615_205977_2BF57879 
+X-CRM114-Status: GOOD (  16.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,250 +88,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025/8/20 13:56, Youling Tang wrote:
+On Fri, 15 Aug 2025 20:14:59 +0800, Lichen Liu wrote:
+> When CONFIG_TMPFS is enabled, the initial root filesystem is a tmpfs.
+> By default, a tmpfs mount is limited to using 50% of the available RAM
+> for its content. This can be problematic in memory-constrained
+> environments, particularly during a kdump capture.
+> 
+> In a kdump scenario, the capture kernel boots with a limited amount of
+> memory specified by the 'crashkernel' parameter. If the initramfs is
+> large, it may fail to unpack into the tmpfs rootfs due to insufficient
+> space. This is because to get X MB of usable space in tmpfs, 2*X MB of
+> memory must be available for the mount. This leads to an OOM failure
+> during the early boot process, preventing a successful crash dump.
+> 
+> [...]
 
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> This patch creates kexec_elf_ops to load ELF binary file
-> for kexec_file_load() syscall.
->
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->   arch/loongarch/Kconfig                     |   1 +
->   arch/loongarch/include/asm/kexec.h         |   1 +
->   arch/loongarch/kernel/Makefile             |   2 +-
->   arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++++++++++++++
->   arch/loongarch/kernel/machine_kexec_file.c |   1 +
->   5 files changed, 109 insertions(+), 1 deletion(-)
->   create mode 100644 arch/loongarch/kernel/kexec_elf.c
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 490dc6eed749..bf2664ed7ce3 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -632,6 +632,7 @@ config ARCH_SELECTS_KEXEC_FILE
->   	def_bool y
->   	depends on KEXEC_FILE
->   	select HAVE_IMA_KEXEC if IMA
-> +	select KEXEC_ELF
->   	select RELOCATABLE
->   
->   config ARCH_SUPPORTS_CRASH_DUMP
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> index 34799db933fb..fecfb3015abc 100644
-> --- a/arch/loongarch/include/asm/kexec.h
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -43,6 +43,7 @@ struct kimage_arch {
->   
->   #ifdef CONFIG_KEXEC_FILE
->   extern const struct kexec_file_ops kexec_efi_ops;
-> +extern const struct kexec_file_ops kexec_elf_ops;
->   
->   int arch_kimage_file_post_load_cleanup(struct kimage *image);
->   #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index dd6183f353e6..001924877772 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -62,7 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
->   obj-$(CONFIG_RELOCATABLE)	+= relocate.o
->   
->   obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
-> -obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o
-> +obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
->   obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
->   
->   obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
-> diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
-> new file mode 100644
-> index 000000000000..d41ee5fd7cef
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/kexec_elf.c
-> @@ -0,0 +1,105 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Load ELF vmlinux file for the kexec_file_load syscall.
-> + *
-> + * Author: Youling Tang <tangyouling@kylinos.cn>
-> + * Copyright (C) 2025 KylinSoft Corporation.
-> + */
-> +
-> +#define pr_fmt(fmt)	"kexec_file(ELF): " fmt
-> +
-> +#include <linux/elf.h>
-> +#include <linux/kexec.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/memblock.h>
-> +#include <asm/image.h>
-> +#include <asm/setup.h>
-> +
-> +static int loongarch_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> +			 struct kexec_elf_info *elf_info,
-> +			 struct kexec_buf *kbuf,
-> +			 unsigned long *text_offset)
-> +{
-> +	int ret = -1;
-> +	size_t i;
-> +
-> +	/* Read in the PT_LOAD segments. */
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		size_t size;
-> +		const struct elf_phdr *phdr;
-> +		struct loongarch_image_header *header;
-> +
-> +		phdr = &elf_info->proghdrs[i];
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		size = phdr->p_filesz;
-> +		if (size > phdr->p_memsz)
-> +			size = phdr->p_memsz;
-> +
-> +		kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
-> +		kbuf->bufsz = size;
-> +		kbuf->buf_align = phdr->p_align;
-> +		header = (struct loongarch_image_header *)kbuf->buffer;
-> +		*text_offset = le64_to_cpu(header->text_offset);
-> +		kbuf->buf_min = *text_offset;
-> +		kbuf->memsz = le64_to_cpu(header->image_size);
-Elf kernel resolution should not be used to struct loongarch_image_header,
-members of the content contained in the inner world of CONFIG_EFI_STUB in
-the arch/loongarch/kernel/head.S, should use the content inside the elf
-header information, The kexec-tools tool should also be fixed.
+This seems rather useful but I've renamed "rootfsflags" to
+"initramfs_options" because "rootfsflags" is ambiguous and it's not
+really just about flags.
 
-However, there is certain content in the elf header information, and the
-general kexec_elf_load() function cannot be used. Special processing of
-kbuf->memsz and kbuf->memsz is required.
+Other than that I think it would make sense to just raise the limit to
+90% for the root_fs_type mount. I'm not sure why this super privileged
+code would only be allowed 50% by default.
 
-$ readelf -l vmlinux
-...
-   Type           Offset             VirtAddr           PhysAddr
-                  FileSiz            MemSiz              Flags Align
-   LOAD           0x0000000000010000 0x9000000000200000 0x9000000000200000
-                  0x0000000002747a00 0x000000000287a0d8  RWE 0x10000
-   NOTE           0x0000000000000000 0x0000000000000000 0x0000000000000000
-                  0x0000000000000000 0x0000000000000000  R      0x8
+---
 
-phdr->p_paddr should have been a physical address, but it is a virtual
-address on the current LoongArch. This will cause kexec_file to fail
-when loading the kernel and need to be converted to a physical address.
-Another patch is working to fix this issue[1].
+Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.18.misc branch should appear in linux-next soon.
 
- From the above MemSiz, it can be seen that 0x287a0d8 has not been aligned.
-Although kexec_add_buffer() will perform PAGE_SIZE alignment on kbuf->memsz,
-there is still a stampeding in the loaded kernel space and initrd space.
-The initrd resolution failed when starting the second kernel.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-It can be known from the link script vmlinux.lds.S that,
-    BSS_SECTION(0, SZ_64K, 8)
-    . = ALIGN(PECOFF_SEGMENT_ALIGN);
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-It needs to be aligned according to the SZ_64K size, so that after 
-alignment,
-its size is consistent with _kernel_asize 
-(loongarch_image_header->image_size).
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-The following modifications will be used in the next version to fix it，
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.18.misc
 
---- a/arch/loongarch/kernel/kexec_elf.c
-+++ b/arch/loongarch/kernel/kexec_elf.c
-@@ -28,7 +28,6 @@ static int loongarch_kexec_elf_load(struct kimage 
-*image, struct elfhdr *ehdr,
-         for (i = 0; i < ehdr->e_phnum; i++) {
-                 size_t size;
-                 const struct elf_phdr *phdr;
--               struct loongarch_image_header *header;
-
-                 phdr = &elf_info->proghdrs[i];
-                 if (phdr->p_type != PT_LOAD)
-@@ -41,10 +40,9 @@ static int loongarch_kexec_elf_load(struct kimage 
-*image, struct elfhdr *ehdr,
-                 kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
-                 kbuf->bufsz = size;
-                 kbuf->buf_align = phdr->p_align;
--               header = (struct loongarch_image_header *)kbuf->buffer;
--               *text_offset = le64_to_cpu(header->text_offset);
--               kbuf->buf_min = *text_offset;
--               kbuf->memsz = le64_to_cpu(header->image_size);
-+               *text_offset = __pa(phdr->p_paddr);
-+               kbuf->buf_min = _*text_offset;
-+               kbuf->memsz = ALIGN(phdr->p_memsz, SZ_64K);
-                 kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-
-[1]: 
-https://lore.kernel.org/loongarch/00651F3A-6649-4C69-B365-352C8D323902@flygoat.com/T/#t
-
-Thanks,
-Youling.
-> +		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-> +		ret = kexec_add_buffer(kbuf);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> +			    unsigned long kernel_len, char *initrd,
-> +			    unsigned long initrd_len, char *cmdline,
-> +			    unsigned long cmdline_len)
-> +{
-> +	int ret;
-> +	unsigned long text_offset = 0, kernel_segment_number;
-> +	struct elfhdr ehdr;
-> +	struct kexec_elf_info elf_info;
-> +	struct kexec_segment *kernel_segment;
-> +	struct kexec_buf kbuf;
-> +
-> +	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	/* Load the kernel */
-> +	kbuf.image = image;
-> +	kbuf.buf_max = ULONG_MAX;
-> +	kbuf.top_down = false;
-> +
-> +	kernel_segment_number = image->nr_segments;
-> +
-> +	ret = loongarch_kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &text_offset);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Load additional data */
-> +	kernel_segment = &image->segment[kernel_segment_number];
-> +	ret = load_other_segments(image, kernel_segment->mem, kernel_segment->memsz,
-> +				  initrd, initrd_len, cmdline, cmdline_len);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
-> +	image->start = kernel_segment->mem + __pa(ehdr.e_entry) - text_offset;
-> +
-> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> +		      kernel_segment->mem, kbuf.bufsz, kernel_segment->memsz);
-> +
-> +out:
-> +	kexec_free_elf_info(&elf_info);
-> +	return ret ? ERR_PTR(ret) : NULL;
-> +}
-> +
-> +const struct kexec_file_ops kexec_elf_ops = {
-> +	.probe = kexec_elf_probe,
-> +	.load  = elf_kexec_load,
-> +};
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-> index a713acf32db8..dc6e37457559 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -22,6 +22,7 @@
->   
->   const struct kexec_file_ops * const kexec_file_loaders[] = {
->   	&kexec_efi_ops,
-> +	&kexec_elf_ops,
->   	NULL
->   };
->   
+[1/1] fs: Add 'rootfsflags' to set rootfs mount options
+      https://git.kernel.org/vfs/vfs/c/278033a225e1
 
