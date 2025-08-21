@@ -4,80 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29287CA0EEB
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 15:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFC3BCA0EFC
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 15:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=axTNOUTQVZZZxxYvV2Ucn/Ve6zfD/t7Lm0soOa7g4cs=; b=BIZknkPAQEt9jePr5Kb1jyLYMi
-	Y2iYqbVBfHxDgVVUOf665fmaF038TPEjHUUhAMy1RZlkJxowVY0Wi1uIg+A0toSr6t8sMr7gmwlnL
-	Q0WzG1njHPCxouxK4pIZApBRSA3rPYGIqXfl5Z5n/rDg/CDq1quZySo8YCtMMJPPmWTPbRx1LmRn3
-	U+MSPL8/VAB1lUxgxocXZxqpL5pFgQpc7Q1TxKkC0/6n5Pn0gWaQHqx5WbDDtHInqoYuMC3Z/V+5O
-	HHvXpTg+eeP2i90MqHzXAOvwodKIyZCrSE9e1IOaps1GfvJa0uBk3Ry41VqLD9YahxLMZUZ45OVjw
-	hs38v3wA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=; b=yrUQyKYqqgKQ2+RZ6p864WkGMM
+	clMUmXL3zMBk0OavCkwY2ybqAqRishbERAFBe8+X4O9QUqaayc/sNHL/gGvvB4c1JbdBfBnLiqy4h
+	8trHdrhY/3e4l3oVlHK8GnWLqef5TxTJzw0j6B2wQATdAyUgwh0kn5Oy53ezUg5F3m70Q4MIUKzjp
+	/TQF72894tBk89qZNQ5wNsGjUlqyEGkCLT0/62i3P1Rn58p1LU5ZA8iKfRzRQvZMSvA+nyIfoRuT6
+	4zb0X689boG//EzOUk3UkBodaRDibT4qdKkyUdaSMIO+cVI6tojADXFFCwhwDGADYKcctAWzd8V3e
+	vD8iDk/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up7Ew-0000000HMNE-3c6Q;
-	Thu, 21 Aug 2025 15:30:10 +0000
-Received: from mail-ej1-f50.google.com ([209.85.218.50])
+	id 1up7FJ-0000000HN17-2X6h;
+	Thu, 21 Aug 2025 15:30:33 +0000
+Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up3Gw-0000000Gj3l-16LP;
-	Thu, 21 Aug 2025 11:15:59 +0000
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-afcb7ae31caso165829766b.3;
-        Thu, 21 Aug 2025 04:15:58 -0700 (PDT)
+	id 1up3Wx-0000000Glk2-3HBy
+	for kexec@lists.infradead.org;
+	Thu, 21 Aug 2025 11:32:33 +0000
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3c4368ab352so467722f8f.1
+        for <kexec@lists.infradead.org>; Thu, 21 Aug 2025 04:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755775950; x=1756380750; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=;
+        b=KRBu9/YOSIsRx6F43LPeQ7+edKUBzaOKaGDrN/sLP/H+S4n5iOPpHsuX3SBi165Wru
+         i0PeHvMqrkE7vjV14yNwkOAh1OLU4TvfBHN1He+6lBeHIE8ok5HYQBYwKBnVyprV+06z
+         F8tf/v0m25FPTBFUPqn+HPrmsXH5ILAk7AbWN2aPOU+09G7qC0wiFaoiJwc10B6tbuQO
+         XUzl0jCqesYsZ73qkwHon0S7b6jAc4wMd2NFBbx5Kt/PbU6PDzr+1Fy59rx2FjRwsC+l
+         mziG93m4/4Y9pck+nVXAn0zvbxBy+b32EwSgRS/xGLvpIL/8zk3XubU9noD+Hb2v33kF
+         tJhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755774957; x=1756379757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=axTNOUTQVZZZxxYvV2Ucn/Ve6zfD/t7Lm0soOa7g4cs=;
-        b=s4Gx8aGfUU/QnBFVtQA5vmJopJtiwIwASqucpWmlh0allFQb53nbAejrVVrCzAEby1
-         cpV83j6hT8Y8KYWS4P9qnsCiESHh+UMNCz+hPubItINMe6wLuef1h8xJPqtBRG0PIQ+0
-         O4v7R1nPKg0WUOFmpg/rXrg6BR3cmA++z9ZTdXYIOhcTbkucNbExWOT3rtkkaQJ9EtN9
-         HUGacJVXLUwCy9OCpTDCE+t339QqsF3+z9tpBT9q85HHvXYS8HLAcrMPdNCz4jxvTrxg
-         rwsms6g0Kbq1fjt/Ry7qGNAnf9WAGLLYR5Bkk1rGQvSe+quzE9melPRnPLuWaem+JU7c
-         NLIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVopoVBS6idsdyxJBJVPQy5preWrrGwTtuod5yMVsPTqQeQZYrc4BGuCi0qIGJ3jHHpI9D/u/Ka07fxqRJ54zV0@lists.infradead.org
-X-Gm-Message-State: AOJu0YzIPrPAWzxcJAt5ShkEhVi+HMETY7Vafthoz7nJttsuw4UyXCjv
-	VVpH3HXbeElThA0E+dzRkjrHZ/T7iWabq7qU6400QpN3tWIvVjRXYPhU
-X-Gm-Gg: ASbGncvbyGfUkWgZLMxli2LPuCz2Xr/3o3ykclGkYHyq4kpT+uf3NeBIMdjZQGERACr
-	C5FaDiMZAsW2+TZ8RTHOIdwkdbKYzzeL0rekr90FZL+LcqAMkO6bLup4M7cRbP2IlkKldxDh/i3
-	N40KSfoZyf9XVKQThkCGfizV0W75dEYLC/LMlJv5mB7dK1998dkEH+v8fX9BZjYEGXe2zFCt+w4
-	8kPywIvcHMtm5iy6t6t2CDGlfkiDKBqlm4Yhyrmx61x5umyCZu3KeYXSERbXzxz0oyYD55WyRBU
-	/Oxdky2XxK9ZVMP8ei8IBYk9e2wtDrgMBN1Dfq9qU4jqDav7ZE+b5ILtukXayvJFTdlLbFBkZUl
-	XqIeUrsMn5fdJVGkvIueEnZM=
-X-Google-Smtp-Source: AGHT+IH7uKkB4TPA3GI29kWft+2WfvQbVTEYpnr53DPMR4wVW9z+xmrLVH5anbUFBjplHLTY2Uec5A==
-X-Received: by 2002:a17:906:fe44:b0:ae0:35fb:5c83 with SMTP id a640c23a62f3a-afe079f445bmr205983166b.28.1755774956383;
-        Thu, 21 Aug 2025 04:15:56 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded2ba366sm369932366b.19.2025.08.21.04.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 04:15:55 -0700 (PDT)
-Date: Thu, 21 Aug 2025 04:15:53 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v9 1/8] kexec_file: allow to place kexec_buf randomly
-Message-ID: <oninomspajhxp4omtdapxnckxydbk2nzmrix7rggmpukpnzadw@c67o7njgdgm3>
-References: <20250502011246.99238-1-coxu@redhat.com>
- <20250502011246.99238-2-coxu@redhat.com>
+        d=1e100.net; s=20230601; t=1755775950; x=1756380750;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=grUxT1GprFt3EryXoM3a2x8+gD6ansHK/9PFX4wkYnw=;
+        b=Ftdxsc2CMNoN9ylMI+soSevNGqEoO3jqT6trfBX7o9MPyoHzSOgh6tLFtap09tGRsw
+         1eXMwOvyPc6Y/rTFFVZJxXjQCDQITjIDzmU93jSLixW7YJNc/xJvYvBqoB9pnFOu/6Tg
+         OKuluEOjyTc0LpRpv9wk96Q/Zcd9E9x4vG85g9SQgcW9AwpFoYCdDS9vao0Tu0cQ/e4t
+         8w1slrmqq8OPDQOLgJCN88GqGOkHgEE4ylb7EiCKk/f7ldlO08kkpEDons5hP15VnBAR
+         UXWA+KXTBdOqwkdhjhhevK/CoVdq5WxQyprI27SY0X9XHmApFCLjEgLObVCRNM/RwVjW
+         B11w==
+X-Gm-Message-State: AOJu0YySLU5CJp2lS5JNM0Fv3DVKu/FJ+oC0qUaoM8igmSpcZE0gYM89
+	RBbSBI0P1LdTb+xaWhPe/Fpuwe8k1i/3jhcbzClT/hCV9vTwGOCx2ic4
+X-Gm-Gg: ASbGncsXF6qJ/nkeZjZT6gzz+Bs7AEZ0i8jQ9+7vWC2VM90dIKJXlTMkvoQsoOdcbdp
+	FEhuYiWoLCohNCRcSHwDKIQ7BGNmZ98RzrExXY1qc3aqr1zyzGx8YoDYMAbOZNA/3u6nrQbae8F
+	FtMNt3W2hMZoPn8oS/baMYEnmZf/D02Wncx8AvJkpkaKbFAnGWeKAYqqQbQY9d1ZdLJcQ4gne8w
+	E8fBmg4yxsN7HPJBY+/vCEP2BkPAGrY7aeNS8M3RZFcW8Iy17SjrzVBvkzKBAqPg+UqQRODr6b2
+	s7KoTFxMiRZKgZl/rKYB6zb/xLNmrTIKBDo4vRB+sM9nrK3GqmRGBrXIhZH+X9kch8zDhbZg/GH
+	yn5gmhJ8TLZ9Zh1xCGrCufz3R1mltGKo3nH6A/vNz2WB3fDsn7sHXdOVwa+CeaZAvhRNYTHZla1
+	axhhtMNf5nGlZ6JaY0NDCWR9Y=
+X-Google-Smtp-Source: AGHT+IG31km4egDBIbCZPj3uFPYlxDAPBf7hOXDxcQhEbdReldcE0MHDXAHFaSvpiMv/6w6IG7kv+w==
+X-Received: by 2002:a5d:5f4b:0:b0:3a0:b84d:60cc with SMTP id ffacd0b85a97d-3c494fc6fcemr1823209f8f.2.1755775949704;
+        Thu, 21 Aug 2025 04:32:29 -0700 (PDT)
+Received: from ?IPV6:2a02:6b6f:e759:7e00:1047:5c2a:74d8:1f23? ([2a02:6b6f:e759:7e00:1047:5c2a:74d8:1f23])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c074d43ba5sm11417290f8f.22.2025.08.21.04.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Aug 2025 04:32:28 -0700 (PDT)
+Message-ID: <f24af1e6-509a-4a36-8b7d-0188b3a2e9e2@gmail.com>
+Date: Thu, 21 Aug 2025 12:32:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502011246.99238-2-coxu@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] kexec: Add bootconfig support to get_command_line
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, paulmck@kernel.org,
+ leitao@debian.org, kernel-team@meta.com
+References: <20250811153736.3865487-1-usamaarif642@gmail.com>
+ <aKaSRJ9HGNR07Svl@MiWiFi-R3L-srv>
+Content-Language: en-GB
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <aKaSRJ9HGNR07Svl@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_041558_300087_B9058AAB 
-X-CRM114-Status: GOOD (  16.15  )
+X-CRM114-CacheID: sfid-20250821_043231_844464_B9ED3A7F 
+X-CRM114-Status: GOOD (  23.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,67 +101,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Coiby,
 
-On Fri, May 02, 2025 at 09:12:35AM +0800, Coiby Xu wrote:
-> +static inline void kexec_random_range_start(unsigned long start,
-> +					    unsigned long end,
-> +					    struct kexec_buf *kbuf,
-> +					    unsigned long *temp_start)
-> +{
-> +	unsigned short i;
-> +
-> +	if (kbuf->random) {
-> +		get_random_bytes(&i, sizeof(unsigned short));
-> +		*temp_start = start + (end - start) / USHRT_MAX * i;
-> +	}
-> +}
 
-On arm64, I am getting the following UBSAN warning when accessing
-kbuf->random:
+On 21/08/2025 04:28, Baoquan He wrote:
+> Hi,
+> 
+> On 08/11/25 at 04:37pm, Usama Arif wrote:
+>> If the kernel is enabled with CONFIG_BOOT_CONFIG_FORCE, it will
+>> always append the bootconfig at the start of the kernel commandline.
+>> If reuse-cmdline option is used in kexec, the bootconfig will be
+>> repeatedly appended at the start of the commandline on every kexec.
+>> As there is a limit on the size of kernel commandline that can be
+>> used, --reuse-cmdline option will break kexec depending on the
+>> size of bootconfig on repeated kexec.
+>>
+>> Bootconfig is embedded in the kernel, so it should not be considered
+>> when reusing kernel command line.
+>> Modify get_command_line() to first attempt reading kernel parameters
+>> from /proc/bootconfig before falling back to /proc/cmdline. This allows
+>> kexec to use the original boot parameters without bootconfig which
+>> is embedded in the kernel.
+> 
+> Thanks for the great fix. While I have some questions about the change.
+> 
+> 1, if we can read kernel parameters from /proc/bootconfig, does it mean
+>    we will skip other kernel parameters, e.g I set some parameters in
+>    grub, meanwhile set bootconfg? Is this allowed?
 
-[   32.362428] ------------[ cut here ]------------
-[   32.362488] UBSAN: invalid-load in ./include/linux/kexec.h:210:10
-[   32.362649] load of value 252 is not a valid value for type '_Bool'
+Hi Baoquan,
 
-and line 210 is your `if (kbuf->random)`.
+Thanks for the questions.
 
-Basically kbuf was not initialized in arm hosts, and probably has
-garbage.
+/proc/bootconfig treats the parameters from bootconfig separate from the rest.
+i.e. parameters from grub will be coming after "# Parameters from bootloader:"
+in /proc/bootconfig. It shouldn't skip grub parameters. For e.g. on my machine
 
-I am wondering if we should have something like , while the support for arm64 is
-not done:
+cat /proc/bootconfig 
+kernel.csdlock_debug = "1"
+kernel.mitigations = "off"
+# Parameters from bootloader:
+# crashkernel=.....
 
-commit 2608bd8c26b62a9a7cc50106e93d3a1ffb1e1188
-Author: Breno Leitao <leitao@debian.org>
-Date:   Thu Aug 21 04:11:21 2025 -0700
 
-    Initialize the random field of kbuf to zero in the ARM64 kexec image loader
+kernel.csdlock_debug = "1"
+kernel.mitigations = "off"
+comes from bootconfig, while the crashkernel and the rest come from bootloader [1]
 
-    Ads an explicit initialization for the random member of the kbuf
-    structure within the image_load function in
-    arch/arm64/kernel/kexec_image.c. Setting kbuf.random to zero ensures
-    a deterministic and clean starting state for the buffer used during
-    kernel image loading, avoiding this UBSAN issue later, when kbuf.random
-    is read.
+[1] https://elixir.bootlin.com/linux/v6.16.1/source/Documentation/filesystems/proc.rst#L739
 
-            [   32.362488] UBSAN: invalid-load in ./include/linux/kexec.h:210:10
-            [   32.362649] load of value 252 is not a valid value for type '_Bool'
+> 
+> 2. If /proc/bootconfig includes the whole kernel parameters of the
+>    runnign kernel, setup_boot_config() will parse and append bootconfig
+>    to kernel cmdline again, right? But it doesn't matter.
 
-    Signed-off-by: Breno Leitao <leitao@debian.org>
+/proc/bootconfig contains the whole parameters, but the bootconfig is seperated by "# Parameters from bootloader:".
+If we repeatedly kexec using /proc/cmdline, we will continuously append bootconfig,
+and wont be able to kexec anymore once the commandline gets too big..
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 532d72ea42ee8..287b25e674d76 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -76,6 +76,7 @@ static void *image_load(struct kimage *image,
- 	kbuf.buf_min = 0;
- 	kbuf.buf_max = ULONG_MAX;
- 	kbuf.top_down = false;
-+	kbuf.random = 0;
-
- 	kbuf.buffer = kernel;
- 	kbuf.bufsz = kernel_len;
+> 
+> Sorry, I am not familiar with bootconfig.
+> 
+> Thanks
+> Baoquan
+> 
 
 
 
