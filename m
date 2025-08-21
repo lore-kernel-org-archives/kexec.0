@@ -4,60 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB65ACA0EFA
-	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 03:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6EC47CA0EFA
+	for <kexec@archiver.kernel.org>; Thu, 21 Aug 2025 03:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=B1BwYAqmbIpfEsknqfyliOokHoXYWfDAgiKkk9hfZ3Y=; b=ou+gbcv7UpW0fNA62IEXDriqSE
-	xcmeCff2rQRaj2i6wX8DQwtSkyzYNXmOpaZVMkh2sSBYY2bt3HQSpOR7AgQdzA/Hff+xtko4vmhdV
-	IqXjWcv02CO3ozH/OslR70J4mUNERGfx5BBATT3+UU9iURVSpXAUlRSWczY9fDesiRP36DhMYVMy/
-	ZISRQz8OogCnr7VdFf4fma+PfMjXScyNDowxQ0JPJgpd0Ez2CRAkddo1B7jmxsPIb0HRa3qRFX9IL
-	ccdS06pCnYM3BHMY/YYnRajM/6gVYSmQ/sB6+nyW++gyBL1kn1dP8nRMl0QCM8Vd9kTrfOIwKUJOI
-	EprBXoeQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=b8qT54c0ZICxodssvZk0IEbO+CpWQT3Dngc++Z4hkSY=; b=Zk+oZjW9IBTn7rfdqCdKgCiC1c
+	P1A9B1IWjD9cYuYyu7cCTeBg6r3Yeno5yIa9SwHhBM1DHmVeVe5i4az5c63mUMAppyDmFQViaCFs5
+	cKINsg/uec0xpbwjkbyf4OY9RjSEjRzpIB2FGseHxzd1xxbKSYeuS7gPoUdFDkNplw3MIk+LwNt4p
+	kINCAihgHRZXZBx+UOYL/8PlOgdQij8xUjGY0PWvJ5MQneFb0hkPvonosNa4gJPlDp+ac0MgC5r/t
+	pSaNJdM714yWcp/W7Dvh8iERUgy9OD14r9XRx+X9WqWP9GUOCEKd1N8RHZbTEAd85Ooz3CmSoACGr
+	g7DPQZ0g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uow8A-0000000FeXm-1CEQ;
-	Thu, 21 Aug 2025 03:38:26 +0000
-Received: from out-181.mta0.migadu.com ([2001:41d0:1004:224b::b5])
+	id 1uow8c-0000000FfLd-1JwU;
+	Thu, 21 Aug 2025 03:38:54 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uotyE-0000000FQmK-2vhE
+	id 1uovH0-0000000FZAk-1gCh
 	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 01:20:04 +0000
-Message-ID: <00a013bd-f30f-4b13-8019-f97a4d2eabb2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755739199;
+	Thu, 21 Aug 2025 02:43:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755744209;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B1BwYAqmbIpfEsknqfyliOokHoXYWfDAgiKkk9hfZ3Y=;
-	b=HGb41qSovPGgohfPkGNYwp2m7O/CRz4mpKLjsIIrD3nI92y3dTGuTVfokht0kSj5pVtoZW
-	8MgTPqOeUIMVakn6iGFe5YIizsykpLZU2GKG0kTzL9is03AJdt8LNknyAACZAbrZd/vNHN
-	Yggh/5i1PH8nKC8/K4wgfnpNul6stbU=
-Date: Thu, 21 Aug 2025 09:19:19 +0800
+	bh=b8qT54c0ZICxodssvZk0IEbO+CpWQT3Dngc++Z4hkSY=;
+	b=jF+k3mcXyY4jGZ4A3tqJSmLDULAmKUgbOYD241/cAt+nVqI5TfA4cn85zi6mEv2iVrDxg3
+	fmWy+YjlfzMZlsyiOVJ+kiG8Fdcrp6xyZr3tzfdQVRh78GczvaOFcEfCMj3zN40gLEq+E6
+	BK5AWVGjNR7tS8NOprQhPC4UP2SV9Og=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-169-KsQQNM9wOAel1kmqlx-owA-1; Wed,
+ 20 Aug 2025 22:43:21 -0400
+X-MC-Unique: KsQQNM9wOAel1kmqlx-owA-1
+X-Mimecast-MFC-AGG-ID: KsQQNM9wOAel1kmqlx-owA_1755744200
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DAE9B1800366;
+	Thu, 21 Aug 2025 02:43:19 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.99])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9024A19560B0;
+	Thu, 21 Aug 2025 02:43:16 +0000 (UTC)
+Date: Thu, 21 Aug 2025 10:43:10 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: pmladek@suse.com, akpm@linux-foundation.org,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, feng.tang@linux.alibaba.com,
+	joel.granados@kernel.org, john.ogness@linutronix.de,
+	namcao@linutronix.de, sravankumarlpu@gmail.com,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH 3/9] crash_core: use panic_try_start() in crash_kexec()
+Message-ID: <aKaHvnxEaXF/fLnW@MiWiFi-R3L-srv>
+References: <20250820091702.512524-1-wangjinchao600@gmail.com>
+ <20250820091702.512524-2-wangjinchao600@gmail.com>
+ <20250820091702.512524-3-wangjinchao600@gmail.com>
+ <20250820091702.512524-4-wangjinchao600@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
-To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-3-youling.tang@linux.dev> <aKVwHOM9KNEpUZF4@pie>
- <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev> <aKWt63S_wD3zeMYU@pie>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <aKWt63S_wD3zeMYU@pie>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250820091702.512524-4-wangjinchao600@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250820_182003_164952_EB4A7950 
-X-CRM114-Status: GOOD (  36.39  )
+X-CRM114-CacheID: sfid-20250820_194330_510160_C3779675 
+X-CRM114-Status: GOOD (  24.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,226 +89,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025/8/20 19:13, Yao Zi wrote:
+On 08/20/25 at 05:14pm, Jinchao Wang wrote:
+> crash_kexec() had its own code to exclude
+> parallel execution by setting panic_cpu.
+> This is already handled by panic_try_start().
+> 
+> Switch to panic_try_start() to remove the
+> duplication and keep the logic consistent.
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 
-> On Wed, Aug 20, 2025 at 05:13:27PM +0800, Youling Tang wrote:
->> Hi, Yao
->>
->> On 2025/8/20 14:50, Yao Zi wrote:
->>
->>> On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
->>>> From: Youling Tang <tangyouling@kylinos.cn>
->>>>
->>>> This patch adds support for kexec_file on LoongArch.
->>>>
->>>> The efi_kexec_load() as two parts:
->>>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
->>>> - the second part loads other segments (eg: initrd, cmdline)
->>>>
->>>> This initrd will be passed to the second kernel via the command line
->>>> 'initrd=start,size'.
->>>>
->>>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
->>>> but ELF format is not supported.
->>>>
->>>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
->>>> ---
->>>>    arch/loongarch/Kconfig                     |   9 ++
->>>>    arch/loongarch/include/asm/image.h         |  17 +++
->>>>    arch/loongarch/include/asm/kexec.h         |  12 +++
->>>>    arch/loongarch/kernel/Makefile             |   1 +
->>>>    arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
->>>>    arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
->>>>    arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
->>>>    7 files changed, 289 insertions(+), 11 deletions(-)
->>>>    create mode 100644 arch/loongarch/kernel/kexec_efi.c
->>>>    create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
->>> ...
->>>
->>>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
->>>> index 1f090736e71d..655d5836c4e8 100644
->>>> --- a/arch/loongarch/include/asm/image.h
->>>> +++ b/arch/loongarch/include/asm/image.h
->>>> @@ -36,5 +36,22 @@ struct loongarch_image_header {
->>>>    	uint32_t pe_header;
->>>>    };
->>>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
->>>> +
->>>> +/**
->>>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
->>>> + *
->>>> + * Returns non-zero if 'MZ' signature is found.
->>>> + */
->>>> +
->>>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
->>>> +{
->>>> +	if (!h)
->>>> +		return 0;
->>>> +
->>>> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
->>>> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
->>>> +}
->>> This check is still too weak and doesn't improve comparing to v1.
->>>
->>>> This could be simplified with a memcmp(). Also, this check isn't
->>>> strict enough: PE files for any architectures, and even legacy MS-DOS
->>>> COM executables all start with "MZ".
->>> I've pointed this out in my previous reply[1].
->> Previously, I had considered adding a specific LoongArch magic
->> number (such as "Loongson") in the loongarch_image_header, but
->> this is incompatible with older versions of the kernel, so it
->> remains the same without further checks.
-> All PE images ship a PE signature with offset 0x3c[1] and you could
-> locate the PE header[2] by the offset provided by
-> loongarch_image_header.pe_header and check its machine field[3], which
-> should be 0x6264 for 64-bit LoongArch executables and 0x6232 for 32-bit
-> ones. At least this ensures it's a LoongArch kernel image.
-I mentioned this judgment to Huacai before. Huacai, what do you think?
-If necessary, I will add this judgment.
+I had to use b4 to grab back the whole patchset, but I can't comment on
+other patches, especially the patch 1. 
 
-Thanks,
-Youling.
->
->>>>    #endif /* __ASSEMBLY__ */
->>>>    #endif /* __ASM_IMAGE_H */
->>> ...
->>>
->>>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
->>>> new file mode 100644
->>>> index 000000000000..7741f1139a12
->>>> --- /dev/null
->>>> +++ b/arch/loongarch/kernel/kexec_efi.c
->>> ...
->>>
->>>> +static void *efi_kexec_load(struct kimage *image,
->>>> +				char *kernel, unsigned long kernel_len,
->>>> +				char *initrd, unsigned long initrd_len,
->>>> +				char *cmdline, unsigned long cmdline_len)
->>>> +{
->>>> +	struct loongarch_image_header *h;
->>>> +	struct kexec_buf kbuf;
->>>> +	unsigned long text_offset, kernel_segment_number;
->>>> +	struct kexec_segment *kernel_segment;
->>>> +	int ret;
->>>> +
->>>> +	h = (struct loongarch_image_header *)kernel;
->>>> +	if (!h->image_size)
->>>> +		return ERR_PTR(-EINVAL);
->>>> +
->>>> +	/* Load the kernel */
->>>> +	kbuf.image = image;
->>>> +	kbuf.buf_max = ULONG_MAX;
->>>> +	kbuf.top_down = false;
->>>> +
->>>> +	kbuf.buffer = kernel;
->>>> +	kbuf.bufsz = kernel_len;
->>>> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>>> +	kbuf.memsz = le64_to_cpu(h->image_size);
->>>> +	text_offset = le64_to_cpu(h->text_offset);
->>>> +	kbuf.buf_min = text_offset;
->>>> +	kbuf.buf_align = SZ_2M;
->>>> +
->>>> +	kernel_segment_number = image->nr_segments;
->>>> +
->>>> +	/*
->>>> +	 * The location of the kernel segment may make it impossible to satisfy
->>>> +	 * the other segment requirements, so we try repeatedly to find a
->>>> +	 * location that will work.
->>>> +	 */
->>>> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
->>>> +		/* Try to load additional data */
->>>> +		kernel_segment = &image->segment[kernel_segment_number];
->>>> +		ret = load_other_segments(image, kernel_segment->mem,
->>>> +					  kernel_segment->memsz, initrd,
->>>> +					  initrd_len, cmdline, cmdline_len);
->>>> +		if (!ret)
->>>> +			break;
->>>> +
->>>> +		/*
->>>> +		 * We couldn't find space for the other segments; erase the
->>>> +		 * kernel segment and try the next available hole.
->>>> +		 */
->>>> +		image->nr_segments -= 1;
->>>> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
->>>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>>> +	}
->>>> +
->>>> +	if (ret) {
->>>> +		pr_err("Could not find any suitable kernel location!");
->>>> +		return ERR_PTR(ret);
->>>> +	}
->>>> +
->>>> +	kernel_segment = &image->segment[kernel_segment_number];
->>>> +
->>>> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
->>>> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
->>> And this still assumes the loaded, secondary kernel is relocatable,
->>> with neither extra check nor comment explaining its limitation.
->>>
->>> Please see my previous reply[2] that explains why loading a
->>> non-relocatble kernel with kexec_file API is reasonable.
->> LoongArch is a non-position independent (non-PIE) kernel when
->> the RELOCATABLE option is not enabled, the kernel contains certain
->> instructions such as la.abs, which prevent it from being relocated to
->> arbitrary memory addresses for execution. As a result, limitations
->> exist that make features like kdump or kexec_file dependent on
->> the RELOCATABLE option.
->>
->> Strictly speaking, we need to add additional checks: if the kernel is
->> non-relocatable, the loading operation should fail directly.
-> Agree.
->
->> For a
->> running kernel, we can easily determine this by calling
->> kallsyms_lookup_name("relocate_kernel"). However, for a kernel
->> that is being loaded but has not yet started execution, it is difficult
->> to easily determine whether the currently loaded kernel has the
->> RELOCATABLE configuration option enabled.
-> I understand the difficulty, thus IMHO a comment is helpful here to
-> remind the reader of lack of relocatability checks.
->
-> Best regards,
-> Yao Zi
->
->> For ELF format images, we can determine whether the loaded image
->> contains the ".la_abs" section in the following way:
->> static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
->> {
->>          struct mem_shdr *shdr, *shdr_end;
->>          unsigned char *strtab;
->>
->>          strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
->>          shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
->>          for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
->>                  if (shdr->sh_size &&
->>                          strcmp((char *)&strtab[shdr->sh_name], ".la_abs") ==
->> 0) {
->>                          return shdr;
->>                  }
->>          }
->>
->>          return NULL;
->> }
->>
->> Thanks,
->> Youling.
->>>> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
->>>> +		      kernel_segment->mem, kbuf.bufsz,
->>>> +		      kernel_segment->memsz);
->>>> +
->>>> +	return NULL;
->>>> +}
->>>> +
->>>> +const struct kexec_file_ops kexec_efi_ops = {
->>>> +	.probe = efi_kexec_probe,
->>>> +	.load = efi_kexec_load,
->>>> +};
->>> Thanks,
->>> Yao Zi
->>>
->>> [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
->>> [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
-> [1]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#signature-image-only
-> [2]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
-> [3]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#machine-types
+Firstly, this series looks interesting. It does enhance code
+readibility. But I am a vim user, I like open code on this one line of
+code wrapping. So leave this to other reviewers to decide if this should
+be accepted.
+
+Secondly, the lines of your patch log are too short, it's not convenient
+for reading. Can you set your mail writer to change this.
+
+Thirdly, please add people to CC in all patches. I don't know why you
+only CC me in patch 3 if the whole patchset is related to crash and
+panic.
+
+Thanks
+Baoquan
+
+> ---
+>  kernel/crash_core.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index a4ef79591eb2..bb38bbaf3a26 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
+>   */
+>  
+> +#include "linux/panic.h"
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/buildid.h>
+> @@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
+>  
+>  __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  {
+> -	int old_cpu, this_cpu;
+> -
+> -	/*
+> -	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> -	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> -	 * may stop each other.  To exclude them, we use panic_cpu here too.
+> -	 */
+> -	old_cpu = PANIC_CPU_INVALID;
+> -	this_cpu = raw_smp_processor_id();
+> -
+> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+> +	if (panic_try_start()) {
+>  		/* This is the 1st CPU which comes here, so go ahead. */
+>  		__crash_kexec(regs);
+>  
+> @@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  		 * Reset panic_cpu to allow another panic()/crash_kexec()
+>  		 * call.
+>  		 */
+> -		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> +		panic_reset();
+>  	}
+>  }
+>  
+> -- 
+> 2.43.0
+> 
+
 
