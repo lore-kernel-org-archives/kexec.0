@@ -4,112 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9EE3CA0FE8
-	for <kexec@archiver.kernel.org>; Sat, 23 Aug 2025 08:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00F46CA0EE4
+	for <kexec@archiver.kernel.org>; Sat, 23 Aug 2025 09:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=M5BMf9ITNHHswVF8PEaR4ndhiHkQMiVdrHDz6mV2kqc=; b=oVyJhBCktTKul2oWM4H09pScwk
-	reBY13lFAdufanGREJXW0jYWJQ/01w91enF1HTmDyNnZPe/L8NWyMm0OXH2SpkxS7DL6p5lMf/pEi
-	Y+w3i8hnYmnTJRwwGjKC3y4KvGIAEs9aeNB3yatFAY5GhEC9luxUKcjZwHgF0iIlaBT2bT18NARip
-	cqJr9uWqcz56ZQ7ma65a7W2FyEhTWlxomGTSFlY/W6ZyjITxmygt+jzj5GJFZrOOACahWXtWXnd+u
-	Id5nI8p2+s4Rb52IwsC4MeBV4J5yeuXcf/sSX+NksAdhmx3upukMWXv3AjwBshbJwjCapTCuD/lcR
-	UX7IFUMA==;
+	bh=4PITLW052mM/0cTmEK1pA04kvx4snzr0G0rUt4eAAeA=; b=S4XDbdSX+Cpenoon5XXnQ/pmil
+	ZrEhBHyfs7WbajOJ2WEoKudc/Ld/fkGnm/G88QHvz7PPZmIlymDp2Z/71ehirdciErE67ARslsE98
+	nQefFdKHa3WYCfL5pWMvyL/pReWecM/4NVoCta3mOecdRZeusr7ySXoRTunF8bLgA7//NfJmvBnzA
+	hYEvIqZGT/jtS3VHZ0TRAH6qqmARgGOIOwxJtBMHhs9niocQL3Isq/UL7ErLkGZ6XiSZUPbHFyJuH
+	Cu3IEMmLiEEySOPQW2KDk+Lr+7JLUJiOsXsuntn9VxowIDlUV/bp9TvUYSV+OajzHhFIqMijNh4ce
+	WrTXEIdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upjTR-00000004KiG-3uyo;
-	Sat, 23 Aug 2025 08:19:41 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1upkdr-00000004SEg-0tif;
+	Sat, 23 Aug 2025 09:34:31 +0000
+Received: from mout-p-201.mailbox.org ([2001:67c:2050:0:465::201])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upXhX-00000003Ol4-2eKj
+	id 1upRlx-00000002cOq-3rvi
 	for kexec@lists.infradead.org;
-	Fri, 22 Aug 2025 19:45:28 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 3DB4D1F385;
-	Fri, 22 Aug 2025 19:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1755891924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	Fri, 22 Aug 2025 13:25:39 +0000
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4c7gsy4jskz9tWT;
+	Fri, 22 Aug 2025 15:25:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1755869126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M5BMf9ITNHHswVF8PEaR4ndhiHkQMiVdrHDz6mV2kqc=;
-	b=ykmiMHXHLywLlKWjovo3wMuBcC9OjXvHVvce6gInHppO160d3pLS8/SrRRVF2S7uBCIXZN
-	/TDKK3Q3LH4qHUP/InW/qwRBfjzf10szxomjSTez2KQEBXU/yRASH8URciJUpoWKqvaIU9
-	hZh3j9+o9t62Cqm/Oy7tkjVudO1R490=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1755891924;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M5BMf9ITNHHswVF8PEaR4ndhiHkQMiVdrHDz6mV2kqc=;
-	b=8ObR4LnmFAY8qgrZNVVRXc4AEdVPIGwSTKlkycqJmnmTzBuvxefddvHRRHQOmQ2eY9lApm
-	nVuNuXMXx5Ks2kCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1755891923; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M5BMf9ITNHHswVF8PEaR4ndhiHkQMiVdrHDz6mV2kqc=;
-	b=HSCqIWowAoEW7W7H1kg1QIz7YOTX/lPZC25EHLFYieanmwvbLgcy6AszKq9p7q/T6Yzsat
-	2JYYFEDJ8T0Q/6lh62t5zPQC+RQ1qoZLTJWBeLDnERceL+gq+TFb7QbASvEaLm91a+PuvR
-	ba6H09xtFcOLml5bcZqCaCtDkatCw/s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1755891923;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M5BMf9ITNHHswVF8PEaR4ndhiHkQMiVdrHDz6mV2kqc=;
-	b=5IvjwtjPKRJF0QEu+8kUY7OpVwMJF+lH0M7tM2br3TvUvgU/iAMHD58k5fjc0nxbJtDw2g
-	r/YyEoscsNhZcLBQ==
-Date: Fri, 22 Aug 2025 21:45:23 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Breno Leitao <leitao@debian.org>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aKjI0wcPDXH5mYcL@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
- <airxp44zdyxskfwrhhveis7gd2vsz5m4f3ipidsghi2x55h64c@s37v5rkuoega>
- <aKX1vbE5jWVUr298@dwarf.suse.cz>
- <lofhq3bgtl2bcbrbkgctyyg2gl7ef2naqdrplyb37jyde2xoeh@twcwhwthnzxd>
+	bh=4PITLW052mM/0cTmEK1pA04kvx4snzr0G0rUt4eAAeA=;
+	b=I3zETg6dE36v3QvGTZ3phKvzINWZlRKxEzPAs7CFP1An8HwSYV2kTCd8itbvhNqikX7vEk
+	3KtKU9dg7Uf9E4qUJN14JMgWtxAdZfccmQzvbnO3DTXFKaFAlCkAG9qg1u9kdLmIXjkJ28
+	tSz/v97+0NM5GNQldHJwrCVCj70wqkbXzDcHxfAq767C9uPAznFr0uiSjU2dGAZPAtfZBC
+	bKyjtANVWfFvJzM/Nc+5IwK8gpHBlYC4H0/XxLePVeIF+JOvaOZ+FlIYF8i18KE8xDVziT
+	OEyAs7UzBoXMSajx60azDdDu2qU83QWM/iAaxLIVVgLrKdjWsFsUu3ChEJEBeA==
+Date: Fri, 22 Aug 2025 23:25:11 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Rob Landley <rob@landley.net>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Lichen Liu <lichliu@redhat.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	safinaskar@zohomail.com, kexec@lists.infradead.org, weilongchen@huawei.com, 
+	linux-api@vger.kernel.org, zohar@linux.ibm.com, stefanb@linux.ibm.com, 
+	initramfs@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, 
+	viro@zeniv.linux.org.uk, jack@suse.cz
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+Message-ID: <2025-08-22-witty-worthy-wink-sitcom-T5L8wA@cyphar.com>
+References: <20250815121459.3391223-1-lichliu@redhat.com>
+ <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
+ <da1b1926-ba18-4a81-93e0-56cb2f85e4dd@landley.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6rvitifl7wogvg7j"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <lofhq3bgtl2bcbrbkgctyyg2gl7ef2naqdrplyb37jyde2xoeh@twcwhwthnzxd>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.983];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email,dwarf.suse.cz:mid]
+In-Reply-To: <da1b1926-ba18-4a81-93e0-56cb2f85e4dd@landley.net>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250822_124527_813328_5232EA75 
-X-CRM114-Status: GOOD (  16.40  )
+X-CRM114-CacheID: sfid-20250822_062538_107969_3B2387C2 
+X-CRM114-Status: GOOD (  13.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,35 +80,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Aug 21, 2025 at 01:35:35AM -0700, Breno Leitao wrote:
-> I have another question. I assume it’s not possible to allocate only the
-> CMA crashkernel area for the kdump kernel, since we need to keep the
-> loaded kernel in the crashkernel area while the system is running.
-> Therefore, specifying crashkernel=X (without ',cma') is necessary.
 
-exactly
+--6rvitifl7wogvg7j
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+MIME-Version: 1.0
 
-> At the same time, since the crashdump environment will use CMA, the
-> crashkernel area itself doesn’t need to be very large, as the CMA space
-> will be allocated later.
-> 
-> With that in mind, how do I find what is the recommended size for the
-> crashkernel area, assuming the CMA area will be more than sufficient at
-> runtime?
->
-> Does it need ot be much higher than the size of kdump kernel and initrd?
+On 2025-08-21, Rob Landley <rob@landley.net> wrote:
+> P.S. It's a pity lkml.iu.edu and spinics.net are both down right now, but
+> after vger.kernel.org deleted all reference to them I can't say I'm
+> surprised. Neither lkml.org nor lore.kernel.org have an obvious threaded
+> interface allowing you to find stuff without a keyword search, and
 
-I don't have a good answer now - I have this on my to-do list
-and I need to investigate this more to come up with a formula to
-calculate the required size to include this in the kdump tool I
-maintain for SUSE. 
+I'm not sure what issue you're gesturing to exactly, but if you have the
+Message-ID you can link to it directly with
+<https://lore.kernel.org/lkml/$MESSAGE_ID>. For instance, this email
+will be available at
+<https://lore.kernel.org/lkml/2025-08-22-witty-worthy-wink-sitcom-T5L8wA@cy=
+phar.com>.
 
-When testing the kernel part I used 
-crashkernel=100M crashkernel=XXX,cma on a machine that would
-normally require something like crashkernel=430M.
+To be honest, I much prefer that to lkml.org's completely opaque
+mappings based on arrival order and date (and in my experience it seems
+to miss messages). The same goes for lkml.iu.edu, spinics and gmane.
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+One of the biggest losses when gmane disappeared was that all of the
+URLs that referenced it were rendered unusable because the mapping from
+their numbering to Message-IDs was not maintained. If lkml.org goes down
+10 years from now, every reference to it will also be unusable, but
+lore.kernel.org addresses will still be usable even if it goes down (you
+can even search your local archives for the mails).
 
+(It would be nice if more people spent a bit of time configuring their
+Message-ID generation to be more friendly for this usecase -- mutt
+changed their default Message-ID generation to be completely random
+characters a few years ago, which made Message-IDs less recognisable
+until folks adjusted their configs. Gmail is even worse, obviously.)
+
+Also, lore.kernel.org has threading on the main page and on individual
+thread pages? Maybe I don't understand what you're referring to?
+
+> lore.kernel.org somehow manages not to list "linux-kernel" in its top lev=
+el
+> list of "inboxes" at all. The wagons are circled pretty tightly...
+
+No it's definitely there, it's just labeled as "lkml" (they're sorted by
+latest message timestamp so LKML will usually be near the top).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+https://www.cyphar.com/
+
+--6rvitifl7wogvg7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCaKhvtxsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQKJf60rfpRG+QSwD7BO+PtnsXEDae0r97BHM6
+PkIHOEXbXJqq1URgT+54x98A+wSeZX6FvxMSF0Ghiw07nuOnRO3d0pW2Lpww9iVW
+T0UE
+=YHVJ
+-----END PGP SIGNATURE-----
+
+--6rvitifl7wogvg7j--
 
