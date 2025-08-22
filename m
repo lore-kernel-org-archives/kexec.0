@@ -4,60 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66F8FCA0FE1
-	for <kexec@archiver.kernel.org>; Fri, 22 Aug 2025 11:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45043CA0FE1
+	for <kexec@archiver.kernel.org>; Fri, 22 Aug 2025 11:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=r8RMr52Vx027eFgdwve0pRlzAd7K1nsGWklGu/IVtsk=; b=1k/x51PpHjJTapLUhntOrJ+x9a
-	6UoEMzU4okPsDAidgdOLhYeuSyi430o2GXwKRdkPLdPrnm8GTuwf2wTJuRoZZZJovMnOXNSVFiJnI
-	SU5ssekX0JKmYijJDFBiUUS/tmS7oiDQ2SZ2Bt5txV63gCD//r9Kh5gwFu7Oy6Yk+IslBiYnmUuu/
-	z7hcggUGPMqKXqw6whx9SoWN5ABIrdvi35jX2uOATImvmpxq4Mw9LQSXTvnjPU41Xx2ARVfHB7Hdy
-	DktFUXQIe7llyBdCO1xkYfRqs6Q9JNTuIUUcUUsn0DbpuBgOUPlNqprOdSji0S7RKWzzYIFYMsdRr
-	btOi5rQA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vED3sHUD/eaxwLo5XUmcXYQAR0YhiuGg9wbVZx1Y6yI=; b=JZASCwdK/KooSafu9Zq2LVZJvY
+	plNpMO8FK+huod/HpUEUvV7ekArnuvxGBK0LkX0gbHx+anq2Ye1xuJih6tvqLOvnn/pfHR8yB5kzq
+	dIlZ4n5GMEO09WFJd7A5dcj4r5WjrLRpy/M7dsJ06/k+rkscIWy/XSoYz9ILYw3y9myBjM+nMxac7
+	Ql0LOUhZQ53iLd9AbJvttimiYkV1Vu6+qmg5Ud2oA1yZBCK17wivV3MT15n8hu4fZpnH8xunto6aL
+	cXJVlIyZ/weTLPCsewWhM9vsuh2k7zpXtPMO5QcrQq6DM2/m0ip8q3QfFDoQkuWMp/2q237d48HMq
+	p3F7J9Xw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upPqp-00000002I6E-1Upf;
-	Fri, 22 Aug 2025 11:22:31 +0000
-Received: from out-177.mta0.migadu.com ([2001:41d0:1004:224b::b1])
+	id 1upPrR-00000002JBr-3pXl;
+	Fri, 22 Aug 2025 11:23:09 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upHxd-00000001K9q-3ZpQ
+	id 1upIX0-00000001Orj-1dDT
 	for kexec@lists.infradead.org;
-	Fri, 22 Aug 2025 02:57:03 +0000
-Message-ID: <a15ad5bd-f54d-466c-8bdd-6f5b5936abee@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755831418;
+	Fri, 22 Aug 2025 03:33:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755833613;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r8RMr52Vx027eFgdwve0pRlzAd7K1nsGWklGu/IVtsk=;
-	b=MNfbA6DWXbs61EwGbWFtyZfJMPBnQOE+3euszT51Gn/emRWME8MMlW5rWbIX2WR8qW1XdF
-	60WmRN7Wje94WbdMMfQXt2rg9OS+JzHMDC2qw2+TwfKfFaePNWZ8zoMHwhSxTjn0bI6dsU
-	Tq3jm69lTNBDMyGe4A6P9C7wKFxM56A=
-Date: Fri, 22 Aug 2025 10:56:18 +0800
+	bh=vED3sHUD/eaxwLo5XUmcXYQAR0YhiuGg9wbVZx1Y6yI=;
+	b=dovFSYqk/MdEV4PzLZdTXxMg0MgHeFQOYJZrdiKUicgK6IMGTNFtNb0hzdHveRX1Pb0zSY
+	PCJn0Oga536fzRgcwCP1S7ppncZSoS8Hp8ZP+opW/+0hhz7qFhLXvGqJ8+peitU1xNwpTs
+	Wds/XsOh8UVS2T3srOp0/03t8VG+NAA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-AuXN_JCMMFm-2Msz8Mk6JQ-1; Thu,
+ 21 Aug 2025 23:33:31 -0400
+X-MC-Unique: AuXN_JCMMFm-2Msz8Mk6JQ-1
+X-Mimecast-MFC-AGG-ID: AuXN_JCMMFm-2Msz8Mk6JQ_1755833609
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 999AD195608B;
+	Fri, 22 Aug 2025 03:33:28 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.99])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6CE29180029E;
+	Fri, 22 Aug 2025 03:33:25 +0000 (UTC)
+Date: Fri, 22 Aug 2025 11:33:21 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Graf <graf@amazon.com>, Brian Mak <makb@juniper.net>
+Cc: Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>, x86@kernel.org,
+	kexec@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
+Message-ID: <aKflAV8XNjqeu1Dj@MiWiFi-R3L-srv>
+References: <20250805211527.122367-1-makb@juniper.net>
+ <20250805211527.122367-2-makb@juniper.net>
+ <20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
+ <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
+ <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-3-youling.tang@linux.dev> <aKVwHOM9KNEpUZF4@pie>
- <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev>
-Content-Language: en-US
-In-Reply-To: <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_195702_040339_EBEE2EDF 
-X-CRM114-Status: GOOD (  38.67  )
+X-CRM114-CacheID: sfid-20250821_203334_521992_11B94C88 
+X-CRM114-Status: GOOD (  44.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,224 +92,265 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2025/8/20 17:13, Youling Tang wrote:
+On 08/21/25 at 04:53am, Andrew Morton wrote:
+> On Thu, 21 Aug 2025 16:33:26 +0800 Baoquan He <bhe@redhat.com> wrote:
+> 
+> > On 08/20/25 at 09:47pm, Andrew Morton wrote:
+> > > On Tue, 5 Aug 2025 14:15:26 -0700 Brian Mak <makb@juniper.net> wrote:
+......snip.....
+> ---
+> 
+>  include/linux/kexec.h |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> --- a/include/linux/kexec.h~kexec-add-kexec_file_no_cma-as-a-legal-flag
+> +++ a/include/linux/kexec.h
+> @@ -460,7 +460,8 @@ bool kexec_load_permitted(int kexec_imag
+>  
+>  /* List of defined/legal kexec file flags */
+>  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+> -				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
+> +				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
+> +				 KEXEC_FILE_NO_CMA)
+>  
+>  /* flag to track if kexec reboot is in progress */
+>  extern bool kexec_in_progress;
 
-> Hi, Yao
->
-> On 2025/8/20 14:50, Yao Zi wrote:
->
->> On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
->>> From: Youling Tang <tangyouling@kylinos.cn>
->>>
->>> This patch adds support for kexec_file on LoongArch.
->>>
->>> The efi_kexec_load() as two parts:
->>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
->>> - the second part loads other segments (eg: initrd, cmdline)
->>>
->>> This initrd will be passed to the second kernel via the command line
->>> 'initrd=start,size'.
->>>
->>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are 
->>> supported,
->>> but ELF format is not supported.
->>>
->>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
->>> ---
->>>   arch/loongarch/Kconfig                     |   9 ++
->>>   arch/loongarch/include/asm/image.h         |  17 +++
->>>   arch/loongarch/include/asm/kexec.h         |  12 +++
->>>   arch/loongarch/kernel/Makefile             |   1 +
->>>   arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
->>>   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
->>>   arch/loongarch/kernel/machine_kexec_file.c | 117 
->>> +++++++++++++++++++++
->>>   7 files changed, 289 insertions(+), 11 deletions(-)
->>>   create mode 100644 arch/loongarch/kernel/kexec_efi.c
->>>   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
->> ...
->>
->>> diff --git a/arch/loongarch/include/asm/image.h 
->>> b/arch/loongarch/include/asm/image.h
->>> index 1f090736e71d..655d5836c4e8 100644
->>> --- a/arch/loongarch/include/asm/image.h
->>> +++ b/arch/loongarch/include/asm/image.h
->>> @@ -36,5 +36,22 @@ struct loongarch_image_header {
->>>       uint32_t pe_header;
->>>   };
->>>   +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
->>> +
->>> +/**
->>> + * loongarch_header_check_pe_sig - Helper to check the loongarch 
->>> image header.
->>> + *
->>> + * Returns non-zero if 'MZ' signature is found.
->>> + */
->>> +
->>> +static inline int loongarch_header_check_pe_sig(const struct 
->>> loongarch_image_header *h)
->>> +{
->>> +    if (!h)
->>> +        return 0;
->>> +
->>> +    return (h->pe_sig[0] == loongarch_image_pe_sig[0]
->>> +        && h->pe_sig[1] == loongarch_image_pe_sig[1]);
->>> +}
->> This check is still too weak and doesn't improve comparing to v1.
->>
->>> This could be simplified with a memcmp(). Also, this check isn't
->>> strict enough: PE files for any architectures, and even legacy MS-DOS
->>> COM executables all start with "MZ".
->> I've pointed this out in my previous reply[1].
-> Previously, I had considered adding a specific LoongArch magic
-> number (such as "Loongson") in the loongarch_image_header, but
-> this is incompatible with older versions of the kernel, so it
-> remains the same without further checks.
->>
->>>   #endif /* __ASSEMBLY__ */
->>>   #endif /* __ASM_IMAGE_H */
->> ...
->>
->>> diff --git a/arch/loongarch/kernel/kexec_efi.c 
->>> b/arch/loongarch/kernel/kexec_efi.c
->>> new file mode 100644
->>> index 000000000000..7741f1139a12
->>> --- /dev/null
->>> +++ b/arch/loongarch/kernel/kexec_efi.c
->> ...
->>
->>> +static void *efi_kexec_load(struct kimage *image,
->>> +                char *kernel, unsigned long kernel_len,
->>> +                char *initrd, unsigned long initrd_len,
->>> +                char *cmdline, unsigned long cmdline_len)
->>> +{
->>> +    struct loongarch_image_header *h;
->>> +    struct kexec_buf kbuf;
->>> +    unsigned long text_offset, kernel_segment_number;
->>> +    struct kexec_segment *kernel_segment;
->>> +    int ret;
->>> +
->>> +    h = (struct loongarch_image_header *)kernel;
->>> +    if (!h->image_size)
->>> +        return ERR_PTR(-EINVAL);
->>> +
->>> +    /* Load the kernel */
->>> +    kbuf.image = image;
->>> +    kbuf.buf_max = ULONG_MAX;
->>> +    kbuf.top_down = false;
->>> +
->>> +    kbuf.buffer = kernel;
->>> +    kbuf.bufsz = kernel_len;
->>> +    kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>> +    kbuf.memsz = le64_to_cpu(h->image_size);
->>> +    text_offset = le64_to_cpu(h->text_offset);
->>> +    kbuf.buf_min = text_offset;
->>> +    kbuf.buf_align = SZ_2M;
->>> +
->>> +    kernel_segment_number = image->nr_segments;
->>> +
->>> +    /*
->>> +     * The location of the kernel segment may make it impossible to 
->>> satisfy
->>> +     * the other segment requirements, so we try repeatedly to find a
->>> +     * location that will work.
->>> +     */
->>> +    while ((ret = kexec_add_buffer(&kbuf)) == 0) {
->>> +        /* Try to load additional data */
->>> +        kernel_segment = &image->segment[kernel_segment_number];
->>> +        ret = load_other_segments(image, kernel_segment->mem,
->>> +                      kernel_segment->memsz, initrd,
->>> +                      initrd_len, cmdline, cmdline_len);
->>> +        if (!ret)
->>> +            break;
->>> +
->>> +        /*
->>> +         * We couldn't find space for the other segments; erase the
->>> +         * kernel segment and try the next available hole.
->>> +         */
->>> +        image->nr_segments -= 1;
->>> +        kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
->>> +        kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>> +    }
->>> +
->>> +    if (ret) {
->>> +        pr_err("Could not find any suitable kernel location!");
->>> +        return ERR_PTR(ret);
->>> +    }
->>> +
->>> +    kernel_segment = &image->segment[kernel_segment_number];
->>> +
->>> +    /* Make sure the second kernel jumps to the correct 
->>> "kernel_entry". */
->>> +    image->start = kernel_segment->mem + h->kernel_entry - 
->>> text_offset;
->> And this still assumes the loaded, secondary kernel is relocatable,
->> with neither extra check nor comment explaining its limitation.
->>
->> Please see my previous reply[2] that explains why loading a
->> non-relocatble kernel with kexec_file API is reasonable.
-> LoongArch is a non-position independent (non-PIE) kernel when
-> the RELOCATABLE option is not enabled, the kernel contains certain
-> instructions such as la.abs, which prevent it from being relocated to
-> arbitrary memory addresses for execution. As a result, limitations
-> exist that make features like kdump or kexec_file dependent on
-> the RELOCATABLE option.
->
-> Strictly speaking, we need to add additional checks: if the kernel is
-> non-relocatable, the loading operation should fail directly. For a
-> running kernel, we can easily determine this by calling
-> kallsyms_lookup_name("relocate_kernel"). However, for a kernel
-> that is being loaded but has not yet started execution, it is difficult
-> to easily determine whether the currently loaded kernel has the
-> RELOCATABLE configuration option enabled.
->
-> For ELF format images, we can determine whether the loaded image
-> contains the ".la_abs" section in the following way:
-> static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
-> {
->         struct mem_shdr *shdr, *shdr_end;
->         unsigned char *strtab;
->
->         strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
->         shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
->         for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
->                 if (shdr->sh_size &&
->                         strcmp((char *)&strtab[shdr->sh_name], 
-> ".la_abs") == 0) {
->                         return shdr;
->                 }
->         }
->
->         return NULL;
-> }
-I attempted to parse the pe header to obtain the sections information
-and found that there were only two sections, '.text' and '.data'. We
-cannot parse whether there is a '.la_abs' section like in the ELF format.
+Yeah, this is a good catch and great fix. Without this fix,
+kexec_file_load syscall will failed and return '-EINVAL' when
+KEXEC_FILE_NO_CMA is specified just as below code shows. So, for this
+patch, 
 
-The reason is that when generating vmlinux.efi, when the ELF vmlinux
-is converted to the original binary file through the 'objdump -O binary'
-operation (arch/loongarch/boot/Makefile), the remaining sections are
-merged into the '.text' and '.data' sections.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Youling.
->
-> Thanks,
-> Youling.
->>
->>> +    kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
->>> +              kernel_segment->mem, kbuf.bufsz,
->>> +              kernel_segment->memsz);
->>> +
->>> +    return NULL;
->>> +}
->>> +
->>> +const struct kexec_file_ops kexec_efi_ops = {
->>> +    .probe = efi_kexec_probe,
->>> +    .load = efi_kexec_load,
->>> +};
->> Thanks,
->> Yao Zi
->>
->> [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
->> [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
+
+And, by the way, has the user space kexec-tools got the change merged
+to allow KEXEC_FILE_NO_CMA specified?
+
+And, Alexander, I am wondering why this is not captured when you test
+specifying KEXEC_FILE_NO_CMA case. Or you just skip the no_cma case
+testing?
+
+===================================================================
+SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd, 
+                unsigned long, cmdline_len, const char __user *, cmdline_ptr,
+                unsigned long, flags)
+{               
+        int image_type = (flags & KEXEC_FILE_ON_CRASH) ?
+                         KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
+        struct kimage **dest_image, *image;
+        int ret = 0, i;
+
+        /* We only trust the superuser with rebooting the system. */
+        if (!kexec_load_permitted(image_type))
+                return -EPERM;
+
+        /* Make sure we have a legal set of flags */
+        if (flags != (flags & KEXEC_FILE_FLAGS))
+                return -EINVAL;
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	......
+}
+=====================================================
+
+> _
+> 
+> 
+> and the second patch I placed in mm-unstable:
+> 
+> From: Brian Mak <makb@juniper.net>
+> Subject: x86/kexec: carry forward the boot DTB on kexec
+> Date: Tue, 5 Aug 2025 14:15:27 -0700
+> 
+> Currently, the kexec_file_load syscall on x86 does not support passing a
+> device tree blob to the new kernel.  Some embedded x86 systems use device
+> trees.  On these systems, failing to pass a device tree to the new kernel
+> causes a boot failure.
+> 
+> To add support for this, we copy the behavior of ARM64 and PowerPC and
+> copy the current boot's device tree blob for use in the new kernel.  We do
+> this on x86 by passing the device tree blob as a setup_data entry in
+> accordance with the x86 boot protocol.
+> 
+> This behavior is gated behind the KEXEC_FILE_FORCE_DTB flag.
+> 
+> Link: https://lkml.kernel.org/r/20250805211527.122367-3-makb@juniper.net
+> Signed-off-by: Brian Mak <makb@juniper.net>
+> Cc: Alexander Graf <graf@amazon.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Borislav Betkov <bp@alien8.de>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Thomas Gleinxer <tglx@linutronix.de>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> 
+>  arch/x86/kernel/kexec-bzimage64.c |   47 ++++++++++++++++++++++++++--
+>  include/linux/kexec.h             |    5 ++
+>  include/uapi/linux/kexec.h        |    4 ++
+>  kernel/kexec_file.c               |    1 
+>  4 files changed, 53 insertions(+), 4 deletions(-)
+> 
+> --- a/arch/x86/kernel/kexec-bzimage64.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
+> +++ a/arch/x86/kernel/kexec-bzimage64.c
+> @@ -16,6 +16,8 @@
+>  #include <linux/kexec.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/of_fdt.h>
+>  #include <linux/efi.h>
+>  #include <linux/random.h>
+>  
+> @@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *para
+>  }
+>  #endif /* CONFIG_EFI */
+>  
+> +#ifdef CONFIG_OF_FLATTREE
+> +static void setup_dtb(struct boot_params *params,
+> +		      unsigned long params_load_addr,
+> +		      unsigned int dtb_setup_data_offset)
+> +{
+> +	struct setup_data *sd = (void *)params + dtb_setup_data_offset;
+> +	unsigned long setup_data_phys, dtb_len;
+> +
+> +	dtb_len = fdt_totalsize(initial_boot_params);
+> +	sd->type = SETUP_DTB;
+> +	sd->len = dtb_len;
+> +
+> +	/* Carry over current boot DTB with setup_data */
+> +	memcpy(sd->data, initial_boot_params, dtb_len);
+> +
+> +	/* Add setup data */
+> +	setup_data_phys = params_load_addr + dtb_setup_data_offset;
+> +	sd->next = params->hdr.setup_data;
+> +	params->hdr.setup_data = setup_data_phys;
+> +}
+> +#endif /* CONFIG_OF_FLATTREE */
+> +
+>  static void
+>  setup_ima_state(const struct kimage *image, struct boot_params *params,
+>  		unsigned long params_load_addr,
+> @@ -336,6 +360,17 @@ setup_boot_parameters(struct kimage *ima
+>  			sizeof(struct efi_setup_data);
+>  #endif
+>  
+> +#ifdef CONFIG_OF_FLATTREE
+> +	if (image->force_dtb && initial_boot_params) {
+> +		setup_dtb(params, params_load_addr, setup_data_offset);
+> +		setup_data_offset += sizeof(struct setup_data) +
+> +				     fdt_totalsize(initial_boot_params);
+> +	} else {
+> +		pr_debug("Not carrying over DTB, force_dtb = %d\n",
+> +			 image->force_dtb);
+> +	}
+> +#endif
+> +
+>  	if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
+>  		/* Setup IMA log buffer state */
+>  		setup_ima_state(image, params, params_load_addr,
+> @@ -529,6 +564,12 @@ static void *bzImage64_load(struct kimag
+>  				sizeof(struct setup_data) +
+>  				RNG_SEED_LENGTH;
+>  
+> +#ifdef CONFIG_OF_FLATTREE
+> +	if (image->force_dtb && initial_boot_params)
+> +		kbuf.bufsz += sizeof(struct setup_data) +
+> +			      fdt_totalsize(initial_boot_params);
+> +#endif
+> +
+>  	if (IS_ENABLED(CONFIG_IMA_KEXEC))
+>  		kbuf.bufsz += sizeof(struct setup_data) +
+>  			      sizeof(struct ima_setup_data);
+> @@ -537,7 +578,7 @@ static void *bzImage64_load(struct kimag
+>  		kbuf.bufsz += sizeof(struct setup_data) +
+>  			      sizeof(struct kho_data);
+>  
+> -	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+> +	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
+
+Wondering how big the dtb blob is, can you explain a little bit about
+the kvzalloc usage here?
+
+Except of this, I have no other concern about this patch.
+
+And what's your plan about the user space kexec-tool change?
+
+>  	if (!params)
+>  		return ERR_PTR(-ENOMEM);
+>  	efi_map_offset = params_cmdline_sz;
+> @@ -647,7 +688,7 @@ static void *bzImage64_load(struct kimag
+>  	return ldata;
+>  
+>  out_free_params:
+> -	kfree(params);
+> +	kvfree(params);
+>  	return ERR_PTR(ret);
+>  }
+>  
+> @@ -659,7 +700,7 @@ static int bzImage64_cleanup(void *loade
+>  	if (!ldata)
+>  		return 0;
+>  
+> -	kfree(ldata->bootparams_buf);
+> +	kvfree(ldata->bootparams_buf);
+>  	ldata->bootparams_buf = NULL;
+>  
+>  	return 0;
+> --- a/include/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
+> +++ a/include/linux/kexec.h
+> @@ -395,6 +395,9 @@ struct kimage {
+>  
+>  	/* Information for loading purgatory */
+>  	struct purgatory_info purgatory_info;
+> +
+> +	/* Force carrying over the DTB from the current boot */
+> +	bool force_dtb;
+>  #endif
+>  
+>  #ifdef CONFIG_CRASH_HOTPLUG
+> @@ -461,7 +464,7 @@ bool kexec_load_permitted(int kexec_imag
+>  /* List of defined/legal kexec file flags */
+>  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+>  				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | \
+> -				 KEXEC_FILE_NO_CMA)
+> +				 KEXEC_FILE_NO_CMA | KEXEC_FILE_FORCE_DTB)
+>  
+>  /* flag to track if kexec reboot is in progress */
+>  extern bool kexec_in_progress;
+> --- a/include/uapi/linux/kexec.h~x86-kexec-carry-forward-the-boot-dtb-on-kexec
+> +++ a/include/uapi/linux/kexec.h
+> @@ -22,12 +22,16 @@
+>   * KEXEC_FILE_ON_CRASH : Load/unload operation belongs to kdump image.
+>   * KEXEC_FILE_NO_INITRAMFS : No initramfs is being loaded. Ignore the initrd
+>   *                           fd field.
+> + * KEXEC_FILE_FORCE_DTB : Force carrying over the current boot's DTB to the new
+> + *                        kernel on x86. This is already the default behavior on
+> + *                        some other architectures, like ARM64 and PowerPC.
+>   */
+>  #define KEXEC_FILE_UNLOAD	0x00000001
+>  #define KEXEC_FILE_ON_CRASH	0x00000002
+>  #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+>  #define KEXEC_FILE_DEBUG	0x00000008
+>  #define KEXEC_FILE_NO_CMA	0x00000010
+> +#define KEXEC_FILE_FORCE_DTB	0x00000020
+>  
+>  /* These values match the ELF architecture values.
+>   * Unless there is a good reason that should continue to be the case.
+> --- a/kernel/kexec_file.c~x86-kexec-carry-forward-the-boot-dtb-on-kexec
+> +++ a/kernel/kexec_file.c
+> @@ -255,6 +255,7 @@ kimage_file_prepare_segments(struct kima
+>  	}
+>  
+>  	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
+> +	image->force_dtb = flags & KEXEC_FILE_FORCE_DTB;
+>  
+>  	if (cmdline_len) {
+>  		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+> _
+> 
+
 
