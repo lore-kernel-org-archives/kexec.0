@@ -4,60 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB382CA0EEB
-	for <kexec@archiver.kernel.org>; Fri, 22 Aug 2025 02:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01CD8CA0EEB
+	for <kexec@archiver.kernel.org>; Fri, 22 Aug 2025 06:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LivtmMeCeZWwwQJpwzuEIu6S0LvxpimnjmIL4YU/XCo=; b=3GzxAQmK9yoc99kOvnes9r71lz
-	QJ/HzFu8hDz1w9V5tHnDnvP1m8Kxcg14Ql8oBBGtE8MZxVJtzWYjrfyGRD6cCQiPd47NwNrqYgkR0
-	PIrRcO8NrHNUSAz+cHVyock7vnU844YIqQEcgg0H/UX9t+3vWMoGZ15KJOOpwC7rmuacP3UVb8sHv
-	0Gh3MOXsk3yJDRDZh/KgsiZjcmmv2rg3lnBDpsZmygi6gMgWEhuZI3U7RZ6M7bI4rnXsUnmLgUYba
-	L3rJePOcyyQdC1coVdUgDkuWy5zPcIEQ8fh8Wx3/jOspNwlqtzO7L4dgnL/oKrOhT0vPtwN7V3cb9
-	Ym1wTejA==;
+	bh=IZGbXBIKVnEINSWfL77Ztazh/k5cgk5rloyUoDalXc4=; b=IFPqwQAgMfQfMUWjiN0iNSvshk
+	j+bQX4cLhyOEQko9akj4ELsnXDx/yge1SLQu4Pl2E2U8S9pN7E4EvM2Q+o91JbCL4ZqsAc98tx0af
+	IqVnyzohJN5DIe5/xQqZ++hIsx2Iz7ePc7JNM3XpU+nrTONkIjrhdE8ce+elLlxryJ0AtEfowoYiT
+	j4hiRhV7AMJe4MDydHrToB5dbnWl3RIiBMtAAsJeB/AZDxYJ84ItvhhOvVe6zpYIB1NqaK9BQLrSJ
+	eKbm9h9XDD/Xf8jCR6tDSShUBl1NDh181DZCFVocPbo7IRcHUGqqQT96JwZYgTdO605kFPR15b01g
+	K8PebudA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upHSX-00000001Gw7-0cwC;
-	Fri, 22 Aug 2025 02:24:53 +0000
-Received: from nyc.source.kernel.org ([147.75.193.91])
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1upCMN-00000000ajU-2cGf
-	for kexec@lists.infradead.org;
-	Thu, 21 Aug 2025 20:58:13 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id BC507A581E1;
-	Thu, 21 Aug 2025 20:58:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EC3C4CEEB;
-	Thu, 21 Aug 2025 20:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1755809890;
-	bh=AFBLWJOwJ4b7vAnIXPiDRB7zDnfWhOvar1ez+tAVaCk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=umNePAT7FP/nR5oaHv1H9T/yjVUYXR+nZuOVPtkysLQ9NhRZuyTdMBoFbF/ziX8K2
-	 eV5xKGtgX5CjNLxozP7au3YTYdCUCJ3PXw/HZnwGKHApRpXMIwg+OmbWf3g+D8B0Tb
-	 B4ACvmCB5X6wuzLlzZyLIBvwg69IU3jtKrzwqnqE=
-Date: Thu, 21 Aug 2025 13:58:09 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Evangelos Petrongonas <epetron@amazon.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
- Baoquan He <bhe@redhat.com>, <kexec@lists.infradead.org>,
- <linux-mm@kvack.org>, <linux-efi@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
-Subject: Re: [PATCH v3 0/2] efi: Fix EFI boot with kexec handover (KHO)
-Message-Id: <20250821135809.c12105ca2a246a9fcb905af1@linux-foundation.org>
-In-Reply-To: <cover.1755721529.git.epetron@amazon.de>
-References: <cover.1755721529.git.epetron@amazon.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+	id 1upKs9-00000001e3c-1s8w;
+	Fri, 22 Aug 2025 06:03:33 +0000
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1upFtP-0000000143i-1nwQ;
+	Fri, 22 Aug 2025 00:44:31 +0000
+Message-ID: <23072476-627c-4d2a-a8b4-e337dfca7853@infradead.org>
+Date: Thu, 21 Aug 2025 17:44:29 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options
+To: Rob Landley <rob@landley.net>, Christian Brauner <brauner@kernel.org>,
+ Lichen Liu <lichliu@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ safinaskar@zohomail.com, kexec@lists.infradead.org, weilongchen@huawei.com,
+ cyphar@cyphar.com, linux-api@vger.kernel.org, zohar@linux.ibm.com,
+ stefanb@linux.ibm.com, initramfs@vger.kernel.org, corbet@lwn.net,
+ linux-doc@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz
+References: <20250815121459.3391223-1-lichliu@redhat.com>
+ <20250821-zirkel-leitkultur-2653cba2cd5b@brauner>
+ <da1b1926-ba18-4a81-93e0-56cb2f85e4dd@landley.net>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <da1b1926-ba18-4a81-93e0-56cb2f85e4dd@landley.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250821_135811_772323_01B497D5 
-X-CRM114-Status: GOOD (  11.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,17 +60,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 21 Aug 2025 17:58:58 +0000 Evangelos Petrongonas <epetron@amazon.de> wrote:
+Hi Rob,
 
-> This patch series fixes a kernel panic that occurs when booting with
-> both EFI and KHO (Kexec HandOver) enabled.
+
+On 8/21/25 12:02 PM, Rob Landley wrote:
+> On 8/21/25 03:24, Christian Brauner wrote:
+>> This seems rather useful but I've renamed "rootfsflags" to
 > 
-> The issue arises because EFI's `reserve_regions()` clears all memory
-> regions with `memblock_remove(0, PHYS_ADDR_MAX)` before rebuilding them
-> from EFI data. This destroys KHO scratch regions that were set up early
-> during device tree scanning, causing a panic as the kernel has no valid
-> memory regions for early allocations.
+> I remember when bikeshedding came in the form of a question.
+> 
+>> "initramfs_options" because "rootfsflags" is ambiguous and it's not
+>> really just about flags.
+> 
+> The existing config option (applying to the fallback root=/dev/blah filesystem overmounting rootfs) is called "rootflags", the new name differs for the same reason init= and rdinit= differ.
+> 
+> The name "rootfs" has been around for over 20 years, as evidenced in https://kernel.org/doc/Documentation/filesystems/ramfs-rootfs-initramfs.txt and so on. Over the past decade least three independently authored patches have come up with the same name for this option. Nobody ever suggested a name where people have to remember whether it has _ or - in it.
 
-Do you think we should backport this into 6.16.x kernels?  If so, is
-there a suitable Fixes: target we can include?
+Either is accepted. From Documentation/admin-guide/kernel-parameters.rst:
+
+Special handling
+----------------
+
+Hyphens (dashes) and underscores are equivalent in parameter names, so::
+
+	log_buf_len=1M print-fatal-signals=1
+
+can also be entered as::
+
+	log-buf-len=1M print_fatal_signals=1
+
+
+> Technically initramfs is the name of the cpio extractor and related plumbing, the filesystem instance identifies itself as "rootfs" in
+> /proc/mounts:
+> 
+> $ head -n 1 /proc/mounts
+> rootfs / rootfs rw,size=29444k,nr_inodes=7361 0 0
+> 
+> I.E. rootfs is an instance of ramfs (or tmpfs) populated by initramfs.
+> 
+> Given that rdinit= is two letters added to init= it made sense for rootfsflags= to be two letters added to rootflags= to distinguish them.
+> 
+> (The "rd" was because it's legacy shared infrastructure with the old 1990s initial ramdisk mechanism ala /dev/ram0. The same reason bootloaders like grub have an "initrd" command to load the external cpio.gz for initramfs when it's not statically linked into the kernel image: the delivery mechanism is the same, the kernel inspects the file type to determine how to handle it. This new option _isn't_ legacy, and "rootfs" is already common parlance, so it seemed obvious to everyone with even moderate domain familiarity what to call it.)
+> 
+>> Other than that I think it would make sense to just raise the limit to
+>> 90% for the root_fs_type mount. I'm not sure why this super privileged
+>> code would only be allowed 50% by default.
+> 
+> Because when a ram based filesystem pins all available memory the kernel deadlocks (ramfs always doing this was one of the motivations to use tmpfs, but tmpfs doesn't mean you have swap), because the existing use cases for this come from low memory systems that already micromanage this sort of thing so a different default wouldn't help, because it isn't a domain-specific decision but was inheriting the tmpfs default value so you'd need extra code _to_ specify a different default, because you didn't read the answer to the previous guy who asked this question earlier in this patch's discussion...
+> 
+> https://lkml.org/lkml/2025/8/8/1050
+> 
+> Rob
+
+Thanks for the explanations.
+
+> P.S. It's a pity lkml.iu.edu and spinics.net are both down right now, but after vger.kernel.org deleted all reference to them I can't say I'm surprised. Neither lkml.org nor lore.kernel.org have an obvious threaded interface allowing you to find stuff without a keyword search, and lore.kernel.org somehow manages not to list "linux-kernel" in its top level list of "inboxes" at all. The wagons are circled pretty tightly...
+Yep, they down for me also. :(
+linux-kernel is called lkml of lore. It would be nice if they were synonyms.
+If you go to https://lore.kernel.org/lkml/, you can use the search box to look for
+"s:rootfsflags" or just use a browser's Search (usually Ctrl-F) to search for
+"rootflags". Then the email thread is visible.
+Or just do a huge $search_engine search for something close to
+the $Subject -- or some text from the body of the message. But you probably
+know all of this.
+
+
+If you go to lkml.org and click on "Last 100 messages", then scroll down to
+	Re: [PATCH v2] fs: Add 'rootfsflags' to set rootfs mount options	Rob Landley
+you can read the email thread for this message (see left side panel).
+Or you can find it by date (if you have any idea what the date was).
+
+cheers.
+
+-- 
+~Randy
+
 
