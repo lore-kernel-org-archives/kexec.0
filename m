@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0F8BCA1006
-	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8E08CA1008
+	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IH8YhLChJO+46PfNNdyjwrwQJKBLxU7b8IaUufHISe4=; b=HddnBUJr/XcHTGXnhkR3mdBUkO
-	eO0sawgBmsGWD2NkLcf/+zy2mq+i5nEiBrg+bN2JPKHpa9fq9TXVLDruhD7N7QdLDIVc6NNeYKUUj
-	7zWcoeV4boJNFvio/9/+gBig6XCX2uHiX5kL55oKwgyFxSCsFxyk4i3t2Nfazv3w3m4JFzbJnS0v4
-	9ztORHOmL5ivch3NxjYd+8soJdRg0cVM4Qr16xtt+SsfejLgytaRGDUfJzWbvA7yKA4p7xxITQvMR
-	L/FrmoeETffl7RyKBltVlhUnXoU7xnXJRJvOwwzoX9UXyNn9dI4+VhmcT2kdm26mMIDJHpvD/MgQe
-	MjgjV8Rg==;
+	bh=QVC8azoXPoxosuCvm1eCBz9SCYhPLAwxnPZ8goaQCGw=; b=g7ynreci1D+r+YxrpvYR5zNwnw
+	sgQfzgHlWgxOzhZnDKOpjSsUhKQHwvOEVs2o1uJp5GPeOyFGz7f7C1vinndYkXesp0DEv2paN/P8m
+	k1x9aqzNQcYlpL7bXeppjbGelx2TpZ4HCaeLuGSBBFBPXB0G2HrxkUNmfKz1SqcA20FGTh+0PZ3Jn
+	D2rAVFmJoL1Eqnau3aWARrHIMQxihjKKF4Ng44NLw2heq2JZq8SGcypqA57ZzDreAnuZTDETrMBJ3
+	CkvI2/4nrUud7Db3++O5VCoa0S4ac99orhfRXEFjM/Irzn3mDMe9TCkWJ3sLPLKnARPo4jxQJMESL
+	eloVPEtg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1usPg7-00000008G42-3RNb;
-	Sat, 30 Aug 2025 17:47:51 +0000
-Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
+	id 1usPg9-00000008G6B-1T24;
+	Sat, 30 Aug 2025 17:47:53 +0000
+Received: from mail-pg1-x52e.google.com ([2607:f8b0:4864:20::52e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqMz1-00000006k4G-1YZA
+	id 1uqMzb-00000006kAH-01qt
 	for kexec@lists.infradead.org;
-	Mon, 25 Aug 2025 02:30:56 +0000
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso3438726a12.3
-        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:30:55 -0700 (PDT)
+	Mon, 25 Aug 2025 02:31:32 +0000
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-b47175d02dcso3252325a12.3
+        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756089054; x=1756693854; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1756089090; x=1756693890; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IH8YhLChJO+46PfNNdyjwrwQJKBLxU7b8IaUufHISe4=;
-        b=nMYuvVkvhcJf2aa0IHbVF6BiiqzuSAjQ6pCnYPs7IG/+vyqPLNFi6NyhjQ8IoY1Xx5
-         QiuWe0lngToEC3MwLursAUXzT/S4jAcD5AxIQBaVVn3lBMXm96O/zSOL1pYC0KH4LBgl
-         04CDvrV9wMEitlfSJI6c3zIQv4JWe9K+e2y6ynE2q7Oodl3ZfZYaKfx3B9EpTaTyIS3Z
-         cy4PO8XXYJPVm9+h9bvzDviFBrQVQOwiKt0EnfmjyxXm7UbE5Z9L5aFsMBjk89GWRUCC
-         it56T7hKRZTlkvpcQJ0WEcpOiUwp8q1DD/s1W2wrNVD/ELtYjOeRslA4BQquxP3uN/XD
-         MXyg==
+        bh=QVC8azoXPoxosuCvm1eCBz9SCYhPLAwxnPZ8goaQCGw=;
+        b=i5Pdo8gVhOJD6cS+SabQS3aWkEZ/DiMvR63jc9eR8Ovbyme9m288c4Xi65kDeXh+ZX
+         keYkdM8VmJuHXSofk7qh0ujY3OWQJOuk7+oQOoP0YZJyGYOqclxB6wHxjBkGJeE23ZSa
+         RO1jiTNsq6UNsw3kuxOcYJyGh9N7DV/beDg7QWNcoI6G6OWEfgDNGLpaNiQrsAwBhpzi
+         yl03uQgUq7qy18d6Yw+fgwdmBF2Tt/eCsLIwqQl6qAr0TdDuKsqo9/SJNfPkkpCa1VjT
+         rpNQIfL80K/ROvKcqBcITiil7P+DgtrFmobJ8Gu+XcTcwKn6XZhkBMDheq2K3FTQ/Rbr
+         P/5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756089054; x=1756693854;
+        d=1e100.net; s=20230601; t=1756089090; x=1756693890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IH8YhLChJO+46PfNNdyjwrwQJKBLxU7b8IaUufHISe4=;
-        b=BudDPeRYei56tedbrwC0g0H/JiS+V12659e3eGkJ7akHwW0QcY0tAlh741MlfmXCQT
-         X1lJGWHQS8I0r9wp6Jx+z2yemCCNVJAVYXxsvSj4EbsRN3C2wvA29ZpjzujKP2T8geg7
-         2qaStntYukk6pD5cBTrfv6fMYvkJNSpjL1cwRn3/va/2WCU7QVZ8dwonnTYvxdRetp3X
-         maTlCE0MOoNGfGaa7EiX891xGC+2upbTEi7iPhHBt+H1bdRF3fm4CntaLtIZameq67Ja
-         GSArKN6PMaUnJu37Kfx5wxlPm/8re4FZ+oAd4UPHTEgo7HPVtfXRJihK6hQDXO4CYd1e
-         TpMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdopGLkUBbDY8o61s0GHCB4XUtZkeuj2+QKZysw5Zhi7oSDcmANuSOFKUDtSkZnXumMKz12g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwAMAzf+TbhrHHXEEs5h7UBs7JB3O7VuoiELFZfP4HA8lpMvwdk
-	Jeb3GMMiI1Q04gfpXT70KaOqmOs5irPVroIwV2d8lFaA1tbwIypWiT6S
-X-Gm-Gg: ASbGncv+s4H3PWDnko+ROZ71tprrM8U3im5YJZ0Meao4tqNDdD77/tl15FpJPnhp0s/
-	2w4mT3ThVtHzAoQzdgLpjaTn+rSADcHaMgjHm4X+GScnoaJYDjRBQA2b+ksFZUwJNHEyIX07XYf
-	SoIoHTvPfd4qK+nnMyUbpT2i8TT9HTLmeYysVGFVoJiKH04SRrzcxpGj3/bCM679i2esEmLeRQy
-	brvcYXjG+xTlW1s14eIOYnTdrmgBbarN4UdIdAQ2TU9TFR2+ir2Hcwnn5C8lnF512XYJfozsQgj
-	3tw5AFSYqGyk780fDlLXNhOL6i3ykuZ8L0R71NfO86tSRyLjLvYdi0r1HAFXDVfp1pWOqH2M+FA
-	P9xI93zQ2AmVMG4cPEWZXuJ+eUjlIKUKjZcA1qs5oiHXSlC28Lqi9TO7Q1rD6B1mmdhThGi7gVg
-	g=
-X-Google-Smtp-Source: AGHT+IH6pBx05EUggFYxitz83mZVXTIxwPpm1bcXy5QtfKJU32rVyZCwSo5s5hfxiY5yh80orLgZOQ==
-X-Received: by 2002:a17:902:dad1:b0:240:8262:1a46 with SMTP id d9443c01a7336-2462ee54512mr139147305ad.25.1756089054419;
-        Sun, 24 Aug 2025 19:30:54 -0700 (PDT)
+        bh=QVC8azoXPoxosuCvm1eCBz9SCYhPLAwxnPZ8goaQCGw=;
+        b=fWyZ7iOrP05Pqf0sYuiGYHAQeGsTjtdekum2bD+cdKkcZHKCUz/N/CQDQrAXeEcbxm
+         1lu7mSqCg6te48cHW0xAdzreaFscnBgNLFO6jsVpBFUB3Oq45bXYyUsbu//bwWEA0OyV
+         SHRhnFyX5476T9KQAgszij5xH6QAWyNJ7lGNxcuG5eH3wnX+7A1YGi5W7A2MGJkVKOq3
+         PdIyR4wMUIjOZvD9gYJWfSyF3M4g8mDO3lOqK4jrXUIHR1p3H33f0HqotIrm3wTbXqO6
+         tYP0gb015vk8ReEQmUbacumdAwIM6lECK36Ag8ciB9DFqxJcxfQ1bX17GZmAOXamBnC6
+         tRSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAQC7ejpYBK/wNBr03j7yxHEf4ztIu6/doOilP8O2mw5h3789MI359CO6RMUKfbASiBcwKNA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyro81DcPLItExxyG6mVQw98l7HG54fF42xjqdrLZCTCiUiOD59
+	zTd0J6pZqiZgCaxhaDmDQ0phWeWBR3r3Nl4DWyGWbEWk/xoLaAw+P7q9
+X-Gm-Gg: ASbGnctw+Zb5Cz95sat6nXfellEFILvyiAU+ThskOPpRW33FDWtdTM2xnO1eDJSWaoA
+	g/8zuaDbBXTmR4qETvCo25CC0ETcOoxNZ2ehofUiB60H2rDG6407uIgyMtGo3A+q5shEtt/iHIS
+	aaRdvDrmFtaz51b47upPCo24jFFljoMdmHMTD93kVXUrymucykoaFmTVMoCn2C9frLZ3sqA2pGT
+	p7iZ5Mfv62N1ZKySRyBzM1ilZrb9y8cFHShGMIYKaENv+IW3MpC9nC/fo2xZCoqet7POS/d54pm
+	uXgrmbGcPsR+Jk+HsWd5E1K/TsW0nSMTE1h5Du8fIlDCR6tY6GnqyWITkM918yHfbjv4vi0FLbf
+	dE5Rf+YPxPjQ2TnA0m40A1SakxG+YJrpcWzi6Qhok35uzkmZnLPNgmaN+Q/Azgx/f6R3quI0voI
+	w=
+X-Google-Smtp-Source: AGHT+IEJ/RxmV9vk0nXMb491fT4XTeycZujwgAzjS69NOeWahllc9+DZTfyHZl2PP7ynSHAO+OZuag==
+X-Received: by 2002:a17:903:1ae4:b0:240:a889:554d with SMTP id d9443c01a7336-2462ef8e723mr143141775ad.45.1756089090224;
+        Sun, 24 Aug 2025 19:31:30 -0700 (PDT)
 Received: from localhost.localdomain ([114.242.33.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.30.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.31.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 19:30:54 -0700 (PDT)
+        Sun, 24 Aug 2025 19:31:29 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>,
@@ -116,17 +116,17 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/9] crash_core: use panic_try_start() in crash_kexec()
-Date: Mon, 25 Aug 2025 10:29:31 +0800
-Message-ID: <20250825022947.1596226-4-wangjinchao600@gmail.com>
+Subject: [PATCH v2 6/9] printk/nbcon: use panic_on_this_cpu() helper
+Date: Mon, 25 Aug 2025 10:29:34 +0800
+Message-ID: <20250825022947.1596226-7-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250825022947.1596226-1-wangjinchao600@gmail.com>
 References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250824_193055_408055_107D801B 
-X-CRM114-Status: GOOD (  14.05  )
+X-CRM114-CacheID: sfid-20250824_193131_048997_C2188202 
+X-CRM114-Status: GOOD (  14.66  )
 X-Mailman-Approved-At: Sat, 30 Aug 2025 10:29:56 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -142,55 +142,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-crash_kexec() had its own code to exclude parallel execution by setting
-panic_cpu. This is already handled by panic_try_start(). Switch to
-panic_try_start() to remove the duplication and keep the logic consistent.
+nbcon_context_try_acquire() compared panic_cpu directly with
+smp_processor_id().  This open-coded check is now provided by
+panic_on_this_cpu().
+
+Switch to panic_on_this_cpu() to simplify the code and improve readability.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- kernel/crash_core.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ kernel/printk/nbcon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index a4ef79591eb2..bb38bbaf3a26 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-  */
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 646801813415..7490865e2f44 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -2,6 +2,7 @@
+ // Copyright (C) 2022 Linutronix GmbH, John Ogness
+ // Copyright (C) 2022 Intel, Thomas Gleixner
  
 +#include "linux/panic.h"
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/buildid.h>
-@@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
- 
- __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+ #include <linux/atomic.h>
+ #include <linux/bug.h>
+ #include <linux/console.h>
+@@ -589,7 +590,6 @@ static struct printk_buffers panic_nbcon_pbufs;
+  */
+ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt, bool is_reacquire)
  {
--	int old_cpu, this_cpu;
--
--	/*
--	 * Only one CPU is allowed to execute the crash_kexec() code as with
--	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
--	 * may stop each other.  To exclude them, we use panic_cpu here too.
--	 */
--	old_cpu = PANIC_CPU_INVALID;
--	this_cpu = raw_smp_processor_id();
--
--	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
-+	if (panic_try_start()) {
- 		/* This is the 1st CPU which comes here, so go ahead. */
- 		__crash_kexec(regs);
+-	unsigned int cpu = smp_processor_id();
+ 	struct console *con = ctxt->console;
+ 	struct nbcon_state cur;
+ 	int err;
+@@ -614,7 +614,7 @@ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt, bool is_reacqu
+ 	/* Acquire succeeded. */
  
-@@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
- 		 * Reset panic_cpu to allow another panic()/crash_kexec()
- 		 * call.
- 		 */
--		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
-+		panic_reset();
- 	}
- }
- 
+ 	/* Assign the appropriate buffer for this context. */
+-	if (atomic_read(&panic_cpu) == cpu)
++	if (panic_on_this_cpu())
+ 		ctxt->pbufs = &panic_nbcon_pbufs;
+ 	else
+ 		ctxt->pbufs = con->pbufs;
 -- 
 2.43.0
 
