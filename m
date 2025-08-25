@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2E15CA0FFF
-	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11C71CA1007
+	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=F7yKzJNb2rx6SiyelcSe/xXvw8ffKUxo6CoK3itAFgM=; b=JGwR1P9hREQhDOvHLN/+ULwrzl
-	uxB5cFdq7PmkBr81GCyE/P8qjiIbHnaEM+Dam3WcCKksLLiKZfdOS7NqXUr66iCiBWJBLHzb6r7It
-	GdZotHN2jQWXopS2p9TYKDVuDYokTk9EM9WH3m3zCj87NLcfkAYpbxW3m+eD82HMLA8JD9khbKniy
-	0W+kGrKoIuJNZmY++MpvMJx+VhY8NWeJBJRb1e5wL2IXUWL1CAEaj4yCjOBE/whjKJeK01ztUFGod
-	ngFW0VXe35uXNAR6pvdIZgxScWWjlZuJI7qHJc5yaY+ID0iy33T3YZi1Fd/IE4QjF719yMTRDpYQy
-	rTmPUdRQ==;
+	bh=hEDXk3YI1ppq8XrZvysREbE40c1EqMSzH1Ycau0V0x0=; b=eVd4nLmfqHkBCLuMyigLBFvKct
+	ZUK4AB2qsUWkx4dS5Y1wuSv+SEqMELuHo4NIBiQcMtoAkeYkRXxc45btmgfynhYDDgcEJuOhZAM6n
+	D42NcGiEqnMypCj8bTUtreoJP5JNa4mHflwK1mhx+ezu2DaCYyQX8Vd4MpoJMqodhLLB2wclq0XxG
+	iU/VYU4gtLUf99rv/6SYsLK5Pn1Py3Q4RQp0pWYuZauNTspkjtYpIuPC4HnklfqhE3HDh/TIch9Mj
+	iMx8AInZL9f2/yuyPD+8ntKaqJOdgAzulKRA9fjuHkz1dqkWpHKkmi/enbLldi4r1m+BpstHG5xjU
+	iYWwAMtQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1usPg8-00000008G4s-2rzn;
-	Sat, 30 Aug 2025 17:47:52 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1usPgA-00000008G7q-1cKL;
+	Sat, 30 Aug 2025 17:47:54 +0000
+Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqMzO-00000006k8r-46bQ
+	id 1uqMzx-00000006kEa-1RfY
 	for kexec@lists.infradead.org;
-	Mon, 25 Aug 2025 02:31:20 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2445824dc27so36346355ad.3
-        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:31:18 -0700 (PDT)
+	Mon, 25 Aug 2025 02:31:54 +0000
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-24458272c00so44575705ad.3
+        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756089078; x=1756693878; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1756089112; x=1756693912; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=F7yKzJNb2rx6SiyelcSe/xXvw8ffKUxo6CoK3itAFgM=;
-        b=lOUyKj0px2HG6Zpq2tub9xl20HH7Wrcj+39C7dcFDyeK16RB+IZaBKomFVuN0nPgw8
-         BChB19rwEM9yDh1RSFBmAuBiFNSr0SlT5q1hu258Sw9JgjRXQQ0MMB4a7zVaHjvtlNi7
-         vAYZGcOauVDF3UYDO34Ia5+KB0naiwCV5ZfZWQF72oc00fseXTZsGkZcK9qLQfU0rFGm
-         DWa8hCuBS0/fCMKqYkiUTA7ixtJoREccaAYXKKvuMI9YPgckEIk9sJNR23SMUGuv0Ug8
-         AuyJ6RlnntpYFqrcr/jApdII/8OrONd8SpkUQVBcdVkoTXS9A8jOZsdogjzmdcABMgUk
-         XGQQ==
+        bh=hEDXk3YI1ppq8XrZvysREbE40c1EqMSzH1Ycau0V0x0=;
+        b=CHDiFh3Q/j09sEQa9sf270Ua9lyhw8LICOLjyNLcHPfTcerbu1IzhXmOCnW1DxXE/o
+         0QbKoHCSMEnp4Xot4+Qkj3N8A/u60OWpAGDO5+nceJbHox3MfT3YTZAm0O9JbrpetQKA
+         GCBnX6XI6+mYqrO1ezBlRJwrzqx5RMXjBBPueUaCPsEgP72zV3i4G+Xp6I16THE+CaDu
+         8XRzOqvxOvhhED1HvN141WFtOShTh1uxmWA9PZPPNqmkq/85Wjv7TL94rad2EnXcZd+c
+         B5u3rJ/+xrs1kmoTYzSMgZSMp295rCY0b4yO39Xs1baqySOSDGP30ZwrwF4SYkA9JX2a
+         88ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756089078; x=1756693878;
+        d=1e100.net; s=20230601; t=1756089112; x=1756693912;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F7yKzJNb2rx6SiyelcSe/xXvw8ffKUxo6CoK3itAFgM=;
-        b=OdGJo0UqsenmzgXsiG1vh4AVPc6rITE5l821Y70a1MUn4wMIOePwxJAe31nfc03+YA
-         ZLXdNO+xtkgmeJjT5+iiaJHQxS4HKRAPFFqNVS/DYi9ep35N/2AGI5vyI0qFpRX7/4U5
-         w8rnvhyZaVvyjEr4GNLNqHcxb1N30Aw3ztNZrdb1J670JwXa6dON2gOJN7/nrkQsgTuc
-         dr2IDNIyLmzA2ZyflBsWte/gGfAgO7zPKPUvVosc/sBHF6NBNgWL/RZINShmTjcjAQmu
-         azJSsUYgQgSzyH5TnQ4RRIOJ70BmR8PL11C7RFcqq5g2TXenTYBWQb8rwEwlUiXMh3/g
-         Iqnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMso0e79G2CHZWW2KoFmPgH4l0qgaGsuTWPvpGz8UHqlyaU3uRRynEKKqDoNQQtT9tH11l3g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwGFWXCTCFUPr2RRcwEyCJllJWG96IhncoPyegkTQ8Pzqga0+6c
-	g59xeSa95g9E6Wyln1y98u31B4Aaop2jrzu6vrYFBuxAKZW9frJOiN57
-X-Gm-Gg: ASbGncv+gp3PPbB8YVYkSbS/ByMBzywhgMIvncaupnpbxoN5Yv26eotCTlfBBvjutYC
-	Ngr/wadZq4FI/bS2leOr4fbHTCnC4hdfGN0yHkqF200c6E0eTrEfsbAV/GZ4dXy7Y4u/vB2t0xc
-	b97lCBRM3ZUre7SrCsAjkT2K1HF3itjFc7EDXJaCln81fwVW2e6WcZwAn9Xlyc0Ftd8bumXopbE
-	D8NWS960pMkNkHXw+hlhf9qz3OhMNX9WxzED+9k1k9TvfyqGyM3yMavkcAveTHgkfHx4paXOu/L
-	51IfT25WLe13XK0HvMUNK/V9zva6B/Wk+mn2Y1zeQDu+MVXmzfSCDWsPVBD7f2jCOsEUbEaOg0v
-	1ik7YCL4Ee3c8tjwVCGG/pUz8Kp+C3FSKUmYdFtX4JbFxmKF4PUzqg7dOqL2kD8921BAGYGwNt1
-	EEogIjq++xkg==
-X-Google-Smtp-Source: AGHT+IGGk8nOO00I8QY6Ycp9jgs1ZyfKkaugn7N1DZdz8CRfy99hpUtZQbqKZx4/jp/Z5JOoCix/CQ==
-X-Received: by 2002:a17:903:40ca:b0:246:ece3:de0b with SMTP id d9443c01a7336-246ed0267f5mr4431665ad.16.1756089078131;
-        Sun, 24 Aug 2025 19:31:18 -0700 (PDT)
+        bh=hEDXk3YI1ppq8XrZvysREbE40c1EqMSzH1Ycau0V0x0=;
+        b=lRKHB1p/zibf/lhU/fc/j4p5v0Dy/oWOymhbL2drKkQTbrkRbvaf+njF39agZVleqb
+         58nyuOMZjMA4KxAcVjkbAXnI3Px2OXroo3yYgaA/iINNVr5Q+rRusoLcCQppAuaUaLbu
+         Ubq4Ev23ReSJtsDrZv5wbgtFaOwBOCXvcqQg8bZEM/fX19doYlDCReFtDP81MBZmvwGE
+         URVng4zedvkgPIRnqO9KVsUstD5EAzY7nubIYy3a4jwUc8nEdV45wS+CmvO16Swx0OtS
+         z1e/sk+/8rcKX9SNLszD6x5Q9SXJOyiUu28do6VNTlT03l+++OJYt0m8P/uRLkJ81d0u
+         3X/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVwhKJ956eAfofbnK1nJtbqLk5SnnMnXD+gzurQQLueUMz1CnAaOzRWrpW+TtgYPge3tYmctg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwFEDn/7uvdI49lV17Lllmjf6rZP011FJgmGZnQrd6POkCoruOY
+	cquJTGw8HNpDg0nxzvm+wDRHzPL6BXHdQwh/y3Jnzv884Bw65xxM4FXM
+X-Gm-Gg: ASbGncv1KsfgGtAfipWWKhVF6qbLmCYjktrI90rW5J7SP8kjL66YCThGk2sYQwTgCSD
+	p5jvjxT+n2Jqbt82x5yaFF7T6l69sD6e0NKDZCfhD2qFA1ShAqHt6PRV6mhMUxPr2gi9SnauyQ2
+	6mP7p00g9/e5UnDprVHJSZyBlfL4F9cio0h/u4WMEY8vQQP8dkv2pEK+OCnF+CDfWiDYfmguw1j
+	9t4vKuJLZSa/WyF193BWIXP7HxMTeMAmMn8r4Ku9wfV4e9SyD8BIKFwepsd/fDVLz/WHjyUbFE7
+	9uZasHvfmEyg9UnzcK8yJrGOk7c7wPXv9dMNpWxLi4bBuc/NBbwC3BbM9j4M8PoQqcBEmph4tmU
+	ILYBtbGSkFzXqGUCH5wmR+4cR5IyiS+SrBiJ5eCumqq5ASQQ7/gLPocFpY61B59/jr89AkE8ws5
+	o=
+X-Google-Smtp-Source: AGHT+IGvyPlqdqig4mXFsHmtjBV9YF8gxzZSDkAdZlQGY1e3N0SakBpd1QLytsyfS5huP+/UcwJ3nw==
+X-Received: by 2002:a17:903:238e:b0:240:50ef:2f00 with SMTP id d9443c01a7336-2462eea80fbmr165661135ad.26.1756089112460;
+        Sun, 24 Aug 2025 19:31:52 -0700 (PDT)
 Received: from localhost.localdomain ([114.242.33.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.31.06
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.31.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 19:31:17 -0700 (PDT)
+        Sun, 24 Aug 2025 19:31:51 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>,
@@ -116,17 +116,17 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/9] panic: use panic_try_start() in vpanic()
-Date: Mon, 25 Aug 2025 10:29:33 +0800
-Message-ID: <20250825022947.1596226-6-wangjinchao600@gmail.com>
+Subject: [PATCH v2 8/9] panic/printk: replace other_cpu_in_panic() with panic_on_other_cpu()
+Date: Mon, 25 Aug 2025 10:29:36 +0800
+Message-ID: <20250825022947.1596226-9-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250825022947.1596226-1-wangjinchao600@gmail.com>
 References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250824_193119_200674_2781BF62 
-X-CRM114-Status: GOOD (  13.49  )
+X-CRM114-CacheID: sfid-20250824_193153_383257_8FDBF94E 
+X-CRM114-Status: GOOD (  19.79  )
 X-Mailman-Approved-At: Sat, 30 Aug 2025 10:29:56 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -142,48 +142,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-vpanic() had open-coded logic to claim panic_cpu with atomic_try_cmpxchg.
-This is already handled by panic_try_start().
+The helper other_cpu_in_panic() duplicated logic already provided by
+panic_on_other_cpu().
 
-Switch to panic_try_start() and use panic_on_other_cpu() for the fallback
-path.
+Remove other_cpu_in_panic() and update all users to call
+panic_on_other_cpu() instead.
 
-This removes duplicate code and makes panic handling consistent across
-functions.
+This removes redundant code and makes panic handling consistent.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- kernel/panic.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ kernel/printk/internal.h |  1 -
+ kernel/printk/nbcon.c    |  8 ++++----
+ kernel/printk/printk.c   | 19 ++++---------------
+ 3 files changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index cd86d37d124c..5266e195f5ac 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -415,7 +415,6 @@ void vpanic(const char *fmt, va_list args)
- 	static char buf[1024];
- 	long i, i_next = 0, len;
- 	int state = 0;
--	int old_cpu, this_cpu;
- 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index ef282001f200..f72bbfa266d6 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -332,7 +332,6 @@ struct printk_message {
+ 	unsigned long		dropped;
+ };
  
- 	if (panic_on_warn) {
-@@ -452,13 +451,10 @@ void vpanic(const char *fmt, va_list args)
- 	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
- 	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
+-bool other_cpu_in_panic(void);
+ bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
+ 			     bool is_extended, bool may_supress);
+ 
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index c6d1a4a747e9..171480135830 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -255,7 +255,7 @@ static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
+ 		 * opportunity to perform any necessary cleanup if they were
+ 		 * interrupted by the panic CPU while printing.
+ 		 */
+-		if (other_cpu_in_panic() &&
++		if (panic_on_other_cpu() &&
+ 		    (!is_reacquire || cur->unsafe_takeover)) {
+ 			return -EPERM;
+ 		}
+@@ -310,7 +310,7 @@ static bool nbcon_waiter_matches(struct nbcon_state *cur, int expected_prio)
+ 	 * Event #2 implies the new context is PANIC.
+ 	 * Event #3 occurs when panic() has flushed the console.
+ 	 * Event #4 occurs when a non-panic CPU reacquires.
+-	 * Event #5 is not possible due to the other_cpu_in_panic() check
++	 * Event #5 is not possible due to the panic_on_other_cpu() check
+ 	 *          in nbcon_context_try_acquire_handover().
  	 */
--	old_cpu = PANIC_CPU_INVALID;
--	this_cpu = raw_smp_processor_id();
--
- 	/* atomic_try_cmpxchg updates old_cpu on failure */
--	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
-+	if (panic_try_start()) {
- 		/* go ahead */
--	} else if (old_cpu != this_cpu)
-+	} else if (panic_on_other_cpu())
- 		panic_smp_self_stop();
  
- 	console_verbose();
+@@ -349,7 +349,7 @@ static int nbcon_context_try_acquire_requested(struct nbcon_context *ctxt,
+ 	struct nbcon_state new;
+ 
+ 	/* Note that the caller must still remove the request! */
+-	if (other_cpu_in_panic())
++	if (panic_on_other_cpu())
+ 		return -EPERM;
+ 
+ 	/*
+@@ -447,7 +447,7 @@ static int nbcon_context_try_acquire_handover(struct nbcon_context *ctxt,
+ 	 * nbcon_waiter_matches(). In particular, the assumption that
+ 	 * lower priorities are ignored during panic.
+ 	 */
+-	if (other_cpu_in_panic())
++	if (panic_on_other_cpu())
+ 		return -EPERM;
+ 
+ 	/* Handover is not possible on the same CPU. */
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index faa8b1f0585b..236f03937107 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -346,17 +346,6 @@ static void __up_console_sem(unsigned long ip)
+ }
+ #define up_console_sem() __up_console_sem(_RET_IP_)
+ 
+-/*
+- * Return true if a panic is in progress on a remote CPU.
+- *
+- * On true, the local CPU should immediately release any printing resources
+- * that may be needed by the panic CPU.
+- */
+-bool other_cpu_in_panic(void)
+-{
+-	return (panic_in_progress() && !panic_on_this_cpu());
+-}
+-
+ /*
+  * This is used for debugging the mess that is the VT code by
+  * keeping track if we have the console semaphore held. It's
+@@ -2391,7 +2380,7 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 	 * non-panic CPUs are generating any messages, they will be
+ 	 * silently dropped.
+ 	 */
+-	if (other_cpu_in_panic() &&
++	if (panic_on_other_cpu() &&
+ 	    !debug_non_panic_cpus &&
+ 	    !panic_triggering_all_cpu_backtrace)
+ 		return 0;
+@@ -2827,7 +2816,7 @@ void console_lock(void)
+ 	might_sleep();
+ 
+ 	/* On panic, the console_lock must be left to the panic cpu. */
+-	while (other_cpu_in_panic())
++	while (panic_on_other_cpu())
+ 		msleep(1000);
+ 
+ 	down_console_sem();
+@@ -2847,7 +2836,7 @@ EXPORT_SYMBOL(console_lock);
+ int console_trylock(void)
+ {
+ 	/* On panic, the console_lock must be left to the panic cpu. */
+-	if (other_cpu_in_panic())
++	if (panic_on_other_cpu())
+ 		return 0;
+ 	if (down_trylock_console_sem())
+ 		return 0;
+@@ -3227,7 +3216,7 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
+ 			any_progress = true;
+ 
+ 			/* Allow panic_cpu to take over the consoles safely. */
+-			if (other_cpu_in_panic())
++			if (panic_on_other_cpu())
+ 				goto abandon;
+ 
+ 			if (do_cond_resched)
 -- 
 2.43.0
 
