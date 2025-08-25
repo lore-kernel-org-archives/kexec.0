@@ -4,92 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88FF8CA0EFC
-	for <kexec@archiver.kernel.org>; Sun, 24 Aug 2025 20:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCCC7CA0EED
+	for <kexec@archiver.kernel.org>; Mon, 25 Aug 2025 01:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=HGeJdxflg+OSNnP7CbO1iIoz8WJ7W0qhiGLDCSBW4vo=; b=2Y5h7rBVdCDY3jcJXANvYr2F53
-	LzE8Yg9icKjm9Iw9nKN2FxL+GfA8pgbBSNCmx08JtCQAxJqzh3Q8o0ExlPvYJ7hhyZZ7+9o0nDqUe
-	MBa4Z4ufMD+b+kq68cbf1pYY0yyUnTX0ofeqGHiJ2u4dFxZkKjPgiuJ1gaaOa6xBQAnnwwLgB1LQe
-	sLNt9V0jsaQRex4VAjsMtXNseQrn4RUPn5m/AxlflEO60KDmPAEma/t+3dHWJU5tNkAgKj9BNCPQT
-	KBEvYb7F3CGRQpm22CWq77iyhsRgOsPEOwzBMuToQlptM2QGxX5mgP+kDGhHLBN0GAXphX7R1T3DR
-	n68UfI7g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=EN6ZzdP3i0zcjEggG2p78XDuwapKqNbwvZSSMTRqchw=; b=1vP73ykRVPc0Fkisgr8BjhJWUC
+	V4myo6X+dX7xHpdqNVs4TZYAPh3dkIL6tqvVeBwfIBfUotZqgf6f6E1XDU75lfxVedtEPRS7+ZWSz
+	tZhfyTMq+kp8Wblx3mqSOLkswGBluSDTOKpwemIgf+XNK4nH2Q53b58zBrKkz0BYIfzk5IVCfBQYQ
+	Had9TY+xSsiVoM89XVClsTWOmD5FOEhGoxSk7lJdZDUStPvqO2EbYg1zk6Q0SnS8tN/P19syiZ3vz
+	AarbJedEP1Wmj0J7d6UZdf8JEKjcYe4naXljuQ6CCZGXm5gUIojkA6orJ8+rLWc+8hUAV8qWVfMDt
+	qnbk2tIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqGwI-00000006WKM-00Jm;
-	Sun, 24 Aug 2025 20:03:42 +0000
-Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
+	id 1uqLtV-00000006g7a-3jSA;
+	Mon, 25 Aug 2025 01:21:09 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqGwD-00000006WJ0-1MRV
+	id 1uqLtQ-00000006g6j-2qNQ
 	for kexec@lists.infradead.org;
-	Sun, 24 Aug 2025 20:03:38 +0000
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-24611734e50so199525ad.1
-        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 13:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756065816; x=1756670616; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HGeJdxflg+OSNnP7CbO1iIoz8WJ7W0qhiGLDCSBW4vo=;
-        b=SdZVVdzqTJjZHSXZKXGMPMC5CDwmVD1BNHVohgWHtqpNUgMNNpa3wbY0XTQ5rC6LEG
-         26E6xmk7mo3RdXldTg0xuiI7Eraq8Xu0kKUB0m0vFt0aifP3FfklDUp7tRYdQNF0VB5r
-         LEAzPAkJkQ3rIqOd37G1esdVKV/9SZJC/DmOMwmY/vBXeqLooR0aPimLDaymb0pNqZNq
-         12sDQ9fFIMAPgFJA6gzllc1yFe0zOFq/WFe6y2FyW4Nc5KJzoZJ0pNzOIeizI3b+NBEX
-         amXqNlOo5J2A3MQihRvixG4VLsz514dMGTDugQWveAUELR0mV9pRA6TOh6UDhxSQc7wb
-         +IDw==
+	Mon, 25 Aug 2025 01:21:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756084861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EN6ZzdP3i0zcjEggG2p78XDuwapKqNbwvZSSMTRqchw=;
+	b=fv8poAOP09ePEOam6WkJGJ4hNWiI150mce3H47cnYXSugmppI2tFBUBrp5qKWsIwiHEKoC
+	9BorRQ0ro6RjTIVBDvdBAh3CzjIrOWItGyVmYYWMeGJ9cM3JKiFNKTFNtjDQ9Dl3rLNVZC
+	0wi4iMJZaNfJHBM7VIWPRwTUUh/mMeQ=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-342-JPYJJhLIMwWAMeSLnV6KJQ-1; Sun, 24 Aug 2025 21:20:59 -0400
+X-MC-Unique: JPYJJhLIMwWAMeSLnV6KJQ-1
+X-Mimecast-MFC-AGG-ID: JPYJJhLIMwWAMeSLnV6KJQ_1756084858
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b474d5ff588so2963316a12.2
+        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 18:20:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756065816; x=1756670616;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HGeJdxflg+OSNnP7CbO1iIoz8WJ7W0qhiGLDCSBW4vo=;
-        b=n/kNmqH8m6ti/pUa4PoGaOPtLTp0zXot2trgQiSKCQXKIcqbKwqkzHhjLbobsRgA1F
-         MlTsmbG71VOPYty7K6UyePVSuaBhJjDzWhVymfTzJCB/ryZAE6X+NWbqQbVsbDIdH3/0
-         y36/SmN7ulFAIgRdAeSl6nw/wNM2HiN7V4dQmT0aV6dK8VM/mVGCQHVeUbSYYCz/a5zo
-         /vP0SEqEm7m4UGGGtp0x2HA8605sscmHkF7D4MHG56K9bcmaDq40iuN2M37AzNv/4wRh
-         iVYqTF9MoqCM/+ebJShQ+kleqEwp4QE7uXNhhcQk+8LZ6QZMDi03zLbAF57nkqy1A2ch
-         gvWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfsK8Izcs2YrQczbDVE67i1ZX8qgLIjlT/LuF6JohJXu4aF/g95hRdRMUaQbkUdEHgTL+Y3Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyXk00NO1kndEt+j02mXDLXPO7/YJCQ51dsoVpaRqsi2/tO16FW
-	VlU2iID0hpkH0LZL3/0//aaHC/lIaQ971/kPNAjTdK8ie+UttEEZd2yqrRexuentqg==
-X-Gm-Gg: ASbGncu6rnUzx5TlHwHsWtRkcyBn1naG1jA3FFvYGobjQRQyybEmOjf0qWGZdF8etDz
-	DSz1jZITvFF1JC70+rbCbWzAFezfX9WZDQDU0TeVjCDN3bR7u+LZdyRo+lthfYWc+XZWA9Wisf3
-	qzq31Hhu0FgLcdlrNo5d8/wAK/kpIYn6i+vt1DuwdV7KId7n0m2zQ1PGVtZitlkAv+G+wdUqSUg
-	JqogtoLApDzkG5WRHTLJAo1s9Dl5XH0ezy3WiSIqfW4PrOxk3YXbrvztQVTbABni0H8RkBypoBb
-	YgrxmYNkgCASsXjSzw9ACMmEUYigj2kkXcrO6blsASMB+K+yLxu3U6oHQHpBdYb0Qwlpog1uuya
-	IEiXV+8pbjffV4qxp3uZFiYWjyQKzUGhP2sWsRQ0x1/lzpWTgQL9iTk7C1Sj9zOzpHd4Gk1asX2
-	/654jCEsfpGGFKEeRyruKKo/4I2cUmjhpO+cp38b75wfTFUu8itA5W
-X-Google-Smtp-Source: AGHT+IEBkizRb5AOm4HmomONRCZ5EWlBY1x2iOyj6Q7u5nfkDELjRtZxkwo4LPzKn2rRVqy+vuxTOA==
-X-Received: by 2002:a17:902:cecc:b0:236:7079:fb10 with SMTP id d9443c01a7336-2467a21e4c1mr3270305ad.3.1756065815516;
-        Sun, 24 Aug 2025 13:03:35 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:da63:34a:a93c:1b0a] ([2a00:79e0:2eb0:8:da63:34a:a93c:1b0a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3254ad9321bsm4998298a91.0.2025.08.24.13.03.34
+        d=1e100.net; s=20230601; t=1756084858; x=1756689658;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EN6ZzdP3i0zcjEggG2p78XDuwapKqNbwvZSSMTRqchw=;
+        b=e/bDG0aS1nGZrfMmmxIoJFYea8CT+MrpjXdV49AW57Icu4yDGhRZcdZLghJDu9uh/o
+         56EgUnwRTpVFkJ0zndF16Hf3ugoQRfG53mB5Pu2+AYBLT0l2Wn2qsZC+RBb5tYWTq45j
+         dnV6B9Q+7UYVfzNZXFZMqAUY/yumHBelqtLEBDvEDpxzMp8v8dVAx17WYIPB84X1stx2
+         +7U/9+2jVYUTVllDxQrTZHw+zIABVL0uvwpw1rdExu8ZLjC2SJtGCozz+1yPlgb4P7OP
+         3kwmlc+8w5BEyoTaUIMCWu26SC8YYvivTVJCcm/7M9tblP12E3o7g3ZgNWYeYHt5lbf9
+         GsPw==
+X-Gm-Message-State: AOJu0YxtXWew9WuS83Bu/A2NCXfTiJ4C5dC6FkmooPX4LBj1IYCOTeQi
+	/BuqZKCdOWC39Y77PByYTeUQgsrRq4InIIO7r38VJqoDuPMwWD5/AEFQq+3V8HA1VWLbjTdb8rM
+	kn1OXV9BArLXUpCX9dh4CA4aRjXAdGclN6Bh4yWaoQKchmY6vDOSdMoXVho+1xA==
+X-Gm-Gg: ASbGncuMXFeSSw+16vHav4pOuGD7462/lJKCG1OPj9J7i7TuUwif3mmtE847GJ064Yc
+	OlGxo79M75kc7wONlTD1Yc1oZIDBhB8e1vyRfElAymN6C9uxpW0gYw9nNpxrCvf1815+GEQ+aJt
+	Imdg6NJsHtD1eIVhybkidPEbT/Bi9oGnANquNe++3T0SbLyjIJiHs3Em0sVMAWPg0h3PtP2C8Nr
+	BEeTLp3OjnYyjVszuyL0YMPBDnLp97gxHmJQ5/CxE5h58WgA2dS+VFEIM3ygJ3b95hemLhCd8m4
+	y0YK75xEyjHGu3hHYrIT8xaS8m8uK90=
+X-Received: by 2002:a05:6a20:7d9d:b0:240:387:cee with SMTP id adf61e73a8af0-2434081ccd3mr14767780637.0.1756084858449;
+        Sun, 24 Aug 2025 18:20:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZ52vj5/0XeOFHIZn6b33Fi9CgvtFLe7y13b+QMfcBUf40D3kWJXZtVu67hRZNEFoDn1nUGA==
+X-Received: by 2002:a05:6a20:7d9d:b0:240:387:cee with SMTP id adf61e73a8af0-2434081ccd3mr14767754637.0.1756084858035;
+        Sun, 24 Aug 2025 18:20:58 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cbb98e8asm5143369a12.38.2025.08.24.18.20.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 13:03:34 -0700 (PDT)
-Date: Sun, 24 Aug 2025 13:03:34 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-    David Matlack <dmatlack@google.com>, 
-    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
-    Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from August 11, 2025
-Message-ID: <365d38fe-50d7-4a1d-ba13-942af26297b2@google.com>
+        Sun, 24 Aug 2025 18:20:57 -0700 (PDT)
+Date: Mon, 25 Aug 2025 09:18:53 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v9 1/8] kexec_file: allow to place kexec_buf randomly
+Message-ID: <yng55a2z25m5upehczerzhi6zawe3j4ka7amfu4vw4cu27bbg2@x2lgbuk3iqyf>
+References: <20250502011246.99238-1-coxu@redhat.com>
+ <20250502011246.99238-2-coxu@redhat.com>
+ <oninomspajhxp4omtdapxnckxydbk2nzmrix7rggmpukpnzadw@c67o7njgdgm3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <oninomspajhxp4omtdapxnckxydbk2nzmrix7rggmpukpnzadw@c67o7njgdgm3>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4-0e_NL2KCCJRmbkRuK-DHijUBu0wynJOcZ28jOyirk_1756084858
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250824_130337_386149_EDE71D68 
-X-CRM114-Status: GOOD (  34.09  )
+X-CRM114-CacheID: sfid-20250824_182105_132231_7EADCE14 
+X-CRM114-Status: GOOD (  20.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,141 +113,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+On Thu, Aug 21, 2025 at 04:15:53AM -0700, Breno Leitao wrote:
+>Hello Coiby,
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, August 11.  Thanks to everybody who was involved!
+Hi Breno,
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+>
+>On Fri, May 02, 2025 at 09:12:35AM +0800, Coiby Xu wrote:
+>> +static inline void kexec_random_range_start(unsigned long start,
+>> +					    unsigned long end,
+>> +					    struct kexec_buf *kbuf,
+>> +					    unsigned long *temp_start)
+>> +{
+>> +	unsigned short i;
+>> +
+>> +	if (kbuf->random) {
+>> +		get_random_bytes(&i, sizeof(unsigned short));
+>> +		*temp_start = start + (end - start) / USHRT_MAX * i;
+>> +	}
+>> +}
+>
+>On arm64, I am getting the following UBSAN warning when accessing
+>kbuf->random:
+>
+>[   32.362428] ------------[ cut here ]------------
+>[   32.362488] UBSAN: invalid-load in ./include/linux/kexec.h:210:10
+>[   32.362649] load of value 252 is not a valid value for type '_Bool'
+>
+>and line 210 is your `if (kbuf->random)`.
+>
+>Basically kbuf was not initialized in arm hosts, and probably has
+>garbage.
 
------>o-----
-We discussed the current status of LUO v3 which was out for review.  Pasha
-had pinged akpm about merging this into mm-unstable.  There were several
-changes from v2 -> v3 as a result from discussion upstream.  Specifically
-there was discussion about how file descriptors could be orchesrated
-independently from each other; individual fds could be moved into a
-prepare state before the global state changed to prepare.
+Thank for explaining the problem to me!
 
-There were also changes so that only one userspace agent could control LUO
-at at time.  There were also design changes around IOMMU API based on
-feedback from Jason (making it more similar to iommufd for extensibility
-in the future).
+>
+>I am wondering if we should have something like , while the support for arm64 is
+>not done:
+>
+>commit 2608bd8c26b62a9a7cc50106e93d3a1ffb1e1188
+>Author: Breno Leitao <leitao@debian.org>
+>Date:   Thu Aug 21 04:11:21 2025 -0700
+>
+>    Initialize the random field of kbuf to zero in the ARM64 kexec image loader
+>
+>    Ads an explicit initialization for the random member of the kbuf
+>    structure within the image_load function in
+>    arch/arm64/kernel/kexec_image.c. Setting kbuf.random to zero ensures
+>    a deterministic and clean starting state for the buffer used during
+>    kernel image loading, avoiding this UBSAN issue later, when kbuf.random
+>    is read.
+>
+>            [   32.362488] UBSAN: invalid-load in ./include/linux/kexec.h:210:10
+>            [   32.362649] load of value 252 is not a valid value for type '_Bool'
+>
+>    Signed-off-by: Breno Leitao <leitao@debian.org>
+>
+>diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+>index 532d72ea42ee8..287b25e674d76 100644
+>--- a/arch/arm64/kernel/kexec_image.c
+>+++ b/arch/arm64/kernel/kexec_image.c
+>@@ -76,6 +76,7 @@ static void *image_load(struct kimage *image,
+> 	kbuf.buf_min = 0;
+> 	kbuf.buf_max = ULONG_MAX;
+> 	kbuf.top_down = false;
+>+	kbuf.random = 0;
+>
+> 	kbuf.buffer = kernel;
+> 	kbuf.bufsz = kernel_len;
+>
 
------>o-----
-We discussed Live Update Orchestrator Daemon (luod) and the external
-design doc[1] that was shared upstream; this includes a description of the
-luod lifecycle (started early, cannot be killed by systemd, and continues
-after the reboot phase).
+And also thanks for posing a fix! The patch LGTM. Can you add a Fixes
+tag 'Fixes: bf454ec31add ("kexec_file: allow to place kexec_buf
+randomly")' and then send it to kexec@lists.infradead.org? Thanks!
 
-We discussed sessions in luod.  Previous discussions suggested that this
-should be managed in the kernel in LUO but there was a realization that
-they could be fully managed in userspace through luod itself.  This is
-intuitive since there is only one agent that can control LUO at any given
-time.  Any user that wants to preserve state with LUO would then create a
-session through luod (its UUID is a 128 bit value).  This is required on
-the other side of the live update to identify the session.
+-- 
+Best regards,
+Coiby
 
-Imagine VMM establishing a session and then luod monitoing that connection
-so that when the connection dies, everything is removed from that session.
-If the VMM quits but still wants to preserve across LUO, it can commit
-everything to a session so that everything associated with the VMM can be
-preserved (after entering the prepare phase).  This also ensures that on
-the other side of the live update that the client has to provide the
-session ID to ensure it is connected to the right data.
-
-Non-privileged processes can also preserve state if the admin process
-makes the sock accessible to non-privileged processes such as the VMM.
-
-luoctl was described as the CLI for interacting with luod.  This allowed
-dumping the state in json format including for debugging purposes.
-
-Pasha expressed a general concern about security including for a
-compromised host; he did not believe that LUO should enforce that security
-boundary but rather wanted to have a security review that would help to
-establish luod's role for security.
-
-There was no implementation to go with this at this point, it was only in
-the design phase and people were highly encouraged to provide feedback for
-its design.
-
------>o-----
-Chris Li discussed PCI preservation and the latest RFC patch series that
-was posted.  He received great feedback on the mailing list for RFC v1
-especially from Jason, including for how to handle config registers.
-Jason suggested starting from preserving as minimal state as possible 
-rather than preserving everything from the start (MSI config registers
-should likely be recreated on the other side of the live update).  His
-suggestion was to minimize the preservation state as much as possible.
-
-Jason said one of the biggest open blockers was how the kernel would
-resynchronize with all the stuff that wasn't reinitialized.  For example,
-for MSI, we save the registers but there was a question about what happens
-next time someone allocates an interrupt and what happens then.  Jason
-suggested that the interrupts should be reset by the new kernel on the
-other side of the live update (interrupt preservation was never the plan
-so far).
-
-Vipin Sharma asked about how MSI preservation was never the plan; he
-suggested that KVM be able to check that some interrupt happened.  Jason
-said the plan to date has been that interrupts are lost during KHO.  David
-Matlack echoed this, that the plan for now is that any interrupts during
-live update are lost.  In the future, posted interrupt preservation may be
-possible but this could be very complex.
-
-There was general feedback given to avoid leaving behind placeholders in
-the series that would have to be addressed later and potentially by other
-developers.
-
-Chris asked for feedback on the scope of v2 and the minimal viable patch
-series to make progress.  Jason suggested preserving the bus master bit.
-However, he suggested the very first series of patches should likely focus
-on allowing DMA to continue to system memory.  Chris agreed with this.
-
-Chris asked about which PCI devices would be good to start with.  There
-was general feedback to start with a network device that does interrupts
-and basic DMA (like e1000).  Jason suggested after that, that we shift
-toward PCI DMA with an IOMMU present and start talking about how to
-preserve the IOMMU configuration.
-
------>o-----
-Pasha brought up the point that in the context of Chris's RFC series that
-we have not yet discussed how to pass old data to the new kernel.  He
-suggested spending time to design this.  Chris said this was out of scope
-for the original patch series but now that the minimal viable approach has
-been discussed, it would be possible to discuss this in a future call.
-This was not predicted to use the device tree, but likely something closer
-to KSTATE.
-
------>o-----
-David Matlack noted that the deadline for proposals for the live update
-microconference was September 10[2].
-
------>o-----
-Next meeting will be on Monday, August 25 at 8am PDT (UTC-7), everybody is
-welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - discussion on whether these recorded sessions should appear on YouTube
-   to share rather than only on the shared drive
- - discussion on latest status of LUO for the upstream kernel after rebase
-   on top of 6.17-rc1
- - update on feedback received for luod and the next steps as we head into
-   implementation
- - update on the latest status of PCI preservation, registration, and
-   initialization
- - [15 min] KSerial serialization protocol designed for exchanging data
-   between live update kernels (BTF to extract or deposit data into the
-   kernel native C struct with unique member id)
-   + overlap with KSTATE and next steps for implementation
- - later: testing methodology to allow downstream consumers to qualify
-   that live update works from one version to another
- - later: reducing blackout window during live update
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://tinyurl.com/luoddesign
-[2] https://lpc.events/event/19/contributions/2004/
 
