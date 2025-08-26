@@ -4,79 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9DF5CA0FE7
-	for <kexec@archiver.kernel.org>; Tue, 26 Aug 2025 01:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19A22CA0EFA
+	for <kexec@archiver.kernel.org>; Tue, 26 Aug 2025 12:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6LzBm17CJA/inAQl3OaTuXX9bkDclgfUFnowLXnRJC0=; b=lEz9LxoKOMJdqlJNUzSLx2eWb8
-	JgIwLdpu97qdQ+bPT7QJ4OXyGI2cZ9tj6Gl0hb5xjPF2hOQmsVAelbmkl/vBMhP6g6yZDJ1hRpN9f
-	SpQ4Vzn4DZyRe5q5+qttZjuTmDIPpQJA4zin2VINvJdVGZ7wHp4UmgRGA+0/pUmFe6lOL2tSSpKSb
-	5TN5A2LtKWXARQAysuSzjk6wu+IN0UXrxQaO2yhSLIVe9UHBrNH3lJWZQNXzoJKXZLTDGkiA9x4pi
-	IgY2uGxBaP5vjfVu9HsKacsFaOo3tNNxzNkJQnPXN9YrUicF8sQO65GcIB/IUv6DTlUMO3Dsu0ztR
-	v2MGB5WQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=fnZPQ9i52dF3KFBSw6s2UAOkbaudTyEedBQwR5Zwpl8=; b=AMFxt1Bj/v0mRVcK0fWpoiGBMS
+	qhIbrVZxzqYHa3zh4ae5nEtiql9E4BqBVNTrQogJCxLqAWOjgwJ10n3siEos0pFw0AInGrCn0D4ic
+	BgTY18viJ5zmdC/YAAWZ6IsrAo7dhU23uRLw8q4uL8omtxRoXUyNAkdk8NsMm4zKO6RCXpmkA4Bh0
+	8G9O931HVbJ8Vn8E99GyNKhhCLPYoqGaZpY9NxFHnG5sV+KmKM3cBWyafEE/qiCQgv9Vh6JIfT6ou
+	MKkR02MoosPsVRZx76s//Hgc8GA4DdVlvjpd7SMkLL8YFueFpF3ffZ6mk2+rUZxRo4j3KYxeSEHQ8
+	IPBVde+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqiuR-0000000AJVw-3Aze;
-	Tue, 26 Aug 2025 01:55:39 +0000
-Received: from mgamail.intel.com ([198.175.65.12])
+	id 1uqsZT-0000000BujP-28Ko;
+	Tue, 26 Aug 2025 12:14:39 +0000
+Received: from mail-ej1-f45.google.com ([209.85.218.45])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqiuO-0000000AJVW-3kdG
-	for kexec@lists.infradead.org;
-	Tue, 26 Aug 2025 01:55:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756173337; x=1787709337;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4hB1Ohdsu3e3OwOT9KZUcuu3uI7kLzVe0w65yF8+ZXY=;
-  b=KQVHgb1Pw4zchhR7/r59uCTWch8ml0AF3jcYPh48WMGKens4tzUav1Qs
-   NnJryiHVrc2lUhbSZFgxbzDG868wxBBwqWxeMvlX01kFTcWM+J/gfSMy0
-   PWYJIoopwxSfpN9ZTTt7yDn58NLqhG6FFPxLj4pevMBSP4s4u0qbzko/B
-   21Y7WvtXEIHUzJGejk1dEEBbK1D7Ac3hcrnpHJKOpmjV03gdGWWoS31N5
-   3xedYFd594JNzxJ7xlF56jFO+ujX1ZUBZHTa22l8A4TMi0xAivEVKG8dr
-   ecIL4Tj3nUrLq1ZFVxPT1asxD/i3N80DkjyT0zTJbIgmgY1oYJEUpRilZ
-   A==;
-X-CSE-ConnectionGUID: zhrf387EQdidiFPnof8xbQ==
-X-CSE-MsgGUID: RH74YVp2RyWHYso6+EgnmQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="69832649"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="69832649"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 18:55:36 -0700
-X-CSE-ConnectionGUID: I8sPxLP7SFOCw2ef/84AXw==
-X-CSE-MsgGUID: /LdffSHCTy2Cb9DFe9vTrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="200396304"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 25 Aug 2025 18:55:33 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uqiuJ-000O9f-0S;
-	Tue, 26 Aug 2025 01:55:31 +0000
-Date: Tue, 26 Aug 2025 09:55:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
-	Baoquan He <bhe@redhat.com>, Yao Zi <ziyao@disroot.org>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
-Message-ID: <202508260914.Bjz2YQwS-lkp@intel.com>
-References: <20250820055700.24344-3-youling.tang@linux.dev>
+	id 1uqsUC-0000000BtvF-23MB;
+	Tue, 26 Aug 2025 12:09:13 +0000
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-afcb7ace3baso993491866b.3;
+        Tue, 26 Aug 2025 05:09:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756210151; x=1756814951;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fnZPQ9i52dF3KFBSw6s2UAOkbaudTyEedBQwR5Zwpl8=;
+        b=NDziAA4ATMpit32xe/J4czQIUxa/46UTrI6q7gsXIJ3y8LyuWSeQa55o2gQvVaws6u
+         zRET9xY55QEhnsVftCm1dU+w9fffOHQcpC6DCmPLEzv3t9SgxLtYoq4Ll33CufK5u1/3
+         bsz8/DjxdwD+nJimoRL4XrhIX2QGnCX96k6DatDeJuC5Yr2iGuOyITy7eg3pvdYVtXd+
+         pDNhxvnIbry6hJccuooaryB9EHImjh3psaKgpGP9LNvinATJTuRO4FLFkqrvXbWaEgYv
+         UXh/hHdrJbZ5EQrFwMuQm/d3CJCnCIZHglIT2E/IwnXT5sHCoH0XSeQ8B5x3Ukegj9qQ
+         GflA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX4D7P4+Llwi9Jl0u24o+saSrxGGfPEPVyBsnC9SKGR7fUA+KRN/Zpny3IDpmN0DiLCyaGEg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YznY+aMsB/fjCZ0OdbTN8hGFUAOFHTB9e1GQUT9n72wUrNKCusH
+	XE3Q96aILa5T6fyxIgiXSnReSGvh/YR7wzQChZK8eUFlJhSjYBKCA34h
+X-Gm-Gg: ASbGncuQr8jlLzaQzTaFY9RQM1GXEsDqeNiJjSy6YuROk6bGjlksNkX8HG1EJWwV+PM
+	cpQZ0XnDK6SIBfzbma22cAscN8EImWomo2ra2Fo+8lU2SwiR/vpB6gW/3GPQU37zZYy4HiFQd8G
+	FBOZAk2ceLEJYegbv5Y3fKBEvTxTiQV22x4a1H2KBbbMuFMQTTv3Y1Nn3N0IcdbGTz1tsAP5dQT
+	gijTup4GHFa0rcdwG80/ASV8JFcOM34Njiro2NVV8GX3ri2fJyXuoNP98QTx6S4trWGxbV4REvQ
+	a1CXpI2ZM+uTyAkdhNdmt98duEX5sS9QfiNeAWQgMrYToV9H5PlWhduXCk6I0EgFoo/l+QNXZsq
+	e4+sSjOGT84DaesHPtlxReLv3
+X-Google-Smtp-Source: AGHT+IFXfwKdwQy9L/iDhxQV4Dtj+nleX6usHo1EXmx4Rg1qgQ+BIVTWUPx0QHTGWZ24uy02cSt7dg==
+X-Received: by 2002:a17:906:7308:b0:ae6:c23f:3cf with SMTP id a640c23a62f3a-afe28fc55e7mr1412861966b.16.1756210150317;
+        Tue, 26 Aug 2025 05:09:10 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe48e853b3sm788943466b.12.2025.08.26.05.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 05:09:09 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 26 Aug 2025 05:08:51 -0700
+Subject: [PATCH] arm64: kexec: Initialize kexec_buf struct in image_load()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250820055700.24344-3-youling.tang@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250826-akpm-v1-1-3c831f0e3799@debian.org>
+X-B4-Tracking: v=1; b=H4sIANKjrWgC/6tWKk4tykwtVrJSqFYqSi3LLM7Mz1OyUjDUUVBKz
+ kjMS0/VzUxRslJQMjIwMjWwMDLTTcwuyNU1tEg0NU81TjS2TEtR0lFQKihKTcusABsTHVtbCwC
+ VQhH7VgAAAA==
+X-Change-ID: 20250826-akpm-18a57e3a39fd
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, kexec@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ bhe@redhat.com, linux-arm-kernel@lists.infradead.org, oxu@redhat.com, 
+ berrange@redhat.com, kernel-team@meta.com, 
+ Andrew Morton <akpm@linux-foundation.org>, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-dd21f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1539; i=leitao@debian.org;
+ h=from:subject:message-id; bh=4v6c1/SuN2XBwZ50PJG6PxSplQuP+IBULqjkSZZ05mg=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoraPkzCMlrgJoVHjTxY6CWYJ4qnKJpiFt+KrRe
+ Cxb9YW04tmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaK2j5AAKCRA1o5Of/Hh3
+ ba6SD/wOd+iTOQspDn1FBn49r47VwUIch7D1WIFJN9Kbms5RLwJOT9Dj2U+ASaiz5A9miWo5sl0
+ m960HatusN+DH2CMfzLArTbTAJL56rWacWrmT46wROXC1JnlyyxJ4IJf3BpXPok5mCiSlS7pA7s
+ NtnbjVI/Zi01sYoQvEMfKolgB3EJPCP+J1maGWpvzKJX8aM0DnNcwXnMZwYMKMQcv9cjnEHytdO
+ bbifs3IznmEWtBsa5g8GpIdyBXN87X9BUfQXRET3eWo7iSUv2rwdnQTwkAKhD0e9mCJk3t5U9Sd
+ pV/b/PeH6PVhtGR+TKg1188qa/l/Nj2ytRyj35Ruz1KiD47USfFBJZfmQf/3JPNYFveB0XWtiAo
+ MCVki0oFa9cCLq5+wfX1i3PxZlt1lDsK0/6mgbHHbYV9HIqOrFlo0adex1fOI9zite9HWVS8Q2p
+ sKhcAkzzoBH2EtcEwAYB5S+e8aCZHWdhM3O7tIOG15dZFEN7WZbvdIZXmpfKgzMQFsRPAYqE4go
+ /+uZRLDVuJuYODHoiqG0u6WvPQZzNA7rMI1yY8JeJ8n3j6/Vx63Yey39t9W6t+/KV/Ybg7lrEgv
+ Jrt++eUrd802b5ogkawLHDGVTrRUYZTpO+ZaQvChhq9EiYnJnegG2M+n43XgsI8gyyt7BRxpnok
+ 5w04Hln/DSpiuFw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250825_185537_018974_328FA8B8 
-X-CRM114-Status: GOOD (  14.13  )
+X-CRM114-CacheID: sfid-20250826_050912_538329_7399C6F9 
+X-CRM114-Status: GOOD (  11.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,108 +107,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Youling,
+The kexec_buf structure was previously declared without initialization
+in image_load(). This led to a UBSAN warning when the structure was
+expanded and uninitialized fields were accessed [1].
 
-kernel test robot noticed the following build warnings:
+Zero-initializing kexec_buf at declaration ensures all fields are
+cleanly set, preventing future instances of uninitialized memory being
+used.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.17-rc3 next-20250825]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Andrew Morton suggested that this function is only called 3x a week[2],
+thus, the memset() cost is inexpressive.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Youling-Tang/LoongArch-Add-struct-loongarch_image_header-for-kernel-image/20250820-140025
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250820055700.24344-3-youling.tang%40linux.dev
-patch subject: [PATCH v2 2/5] LoongArch: Add kexec_file support
-config: loongarch-randconfig-r121-20250826 (https://download.01.org/0day-ci/archive/20250826/202508260914.Bjz2YQwS-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce: (https://download.01.org/0day-ci/archive/20250826/202508260914.Bjz2YQwS-lkp@intel.com/reproduce)
+Link: https://lore.kernel.org/all/oninomspajhxp4omtdapxnckxydbk2nzmrix7rggmpukpnzadw@c67o7njgdgm3/ [1]
+Link: https://lore.kernel.org/all/20250825180531.94bfb86a26a43127c0a1296f@linux-foundation.org/ [2]
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ arch/arm64/kernel/kexec_image.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508260914.Bjz2YQwS-lkp@intel.com/
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index 532d72ea42ee8..b70f4df15a1ae 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -41,7 +41,7 @@ static void *image_load(struct kimage *image,
+ 	struct arm64_image_header *h;
+ 	u64 flags, value;
+ 	bool be_image, be_kernel;
+-	struct kexec_buf kbuf;
++	struct kexec_buf kbuf = {};
+ 	unsigned long text_offset, kernel_segment_number;
+ 	struct kexec_segment *kernel_segment;
+ 	int ret;
 
-sparse warnings: (new ones prefixed by >>)
->> arch/loongarch/kernel/kexec_efi.c:61:22: sparse: sparse: cast to restricted __le64
-   arch/loongarch/kernel/kexec_efi.c:62:23: sparse: sparse: cast to restricted __le64
+---
+base-commit: 7a77c6b5ce68a71b9102760a988a4564ff6d4106
+change-id: 20250826-akpm-18a57e3a39fd
 
-vim +61 arch/loongarch/kernel/kexec_efi.c
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
-    37	
-    38	static void *efi_kexec_load(struct kimage *image,
-    39					char *kernel, unsigned long kernel_len,
-    40					char *initrd, unsigned long initrd_len,
-    41					char *cmdline, unsigned long cmdline_len)
-    42	{
-    43		struct loongarch_image_header *h;
-    44		struct kexec_buf kbuf;
-    45		unsigned long text_offset, kernel_segment_number;
-    46		struct kexec_segment *kernel_segment;
-    47		int ret;
-    48	
-    49		h = (struct loongarch_image_header *)kernel;
-    50		if (!h->image_size)
-    51			return ERR_PTR(-EINVAL);
-    52	
-    53		/* Load the kernel */
-    54		kbuf.image = image;
-    55		kbuf.buf_max = ULONG_MAX;
-    56		kbuf.top_down = false;
-    57	
-    58		kbuf.buffer = kernel;
-    59		kbuf.bufsz = kernel_len;
-    60		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-  > 61		kbuf.memsz = le64_to_cpu(h->image_size);
-    62		text_offset = le64_to_cpu(h->text_offset);
-    63		kbuf.buf_min = text_offset;
-    64		kbuf.buf_align = SZ_2M;
-    65	
-    66		kernel_segment_number = image->nr_segments;
-    67	
-    68		/*
-    69		 * The location of the kernel segment may make it impossible to satisfy
-    70		 * the other segment requirements, so we try repeatedly to find a
-    71		 * location that will work.
-    72		 */
-    73		while ((ret = kexec_add_buffer(&kbuf)) == 0) {
-    74			/* Try to load additional data */
-    75			kernel_segment = &image->segment[kernel_segment_number];
-    76			ret = load_other_segments(image, kernel_segment->mem,
-    77						  kernel_segment->memsz, initrd,
-    78						  initrd_len, cmdline, cmdline_len);
-    79			if (!ret)
-    80				break;
-    81	
-    82			/*
-    83			 * We couldn't find space for the other segments; erase the
-    84			 * kernel segment and try the next available hole.
-    85			 */
-    86			image->nr_segments -= 1;
-    87			kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-    88			kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-    89		}
-    90	
-    91		if (ret) {
-    92			pr_err("Could not find any suitable kernel location!");
-    93			return ERR_PTR(ret);
-    94		}
-    95	
-    96		kernel_segment = &image->segment[kernel_segment_number];
-    97	
-    98		/* Make sure the second kernel jumps to the correct "kernel_entry". */
-    99		image->start = kernel_segment->mem + h->kernel_entry - text_offset;
-   100	
-   101		kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-   102			      kernel_segment->mem, kbuf.bufsz,
-   103			      kernel_segment->memsz);
-   104	
-   105		return NULL;
-   106	}
-   107	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
