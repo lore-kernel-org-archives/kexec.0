@@ -4,57 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39E13CA0FF6
-	for <kexec@archiver.kernel.org>; Wed, 27 Aug 2025 01:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A384CA0EFF
+	for <kexec@archiver.kernel.org>; Wed, 27 Aug 2025 05:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2UnMuGasmVuP4gCxURIWl1J6XW6MlBewwbuLMN9pEkc=; b=W4iaa5sf/rSMFke4ZX8RR+h3F4
-	ixy9QwjQ/SocJEME58y1J66qVSCLGUDwmEOQwDcAghwWGhuuqjfkyWIB9JCFRs8OI0CrWbCtnlKys
-	GoTE+8C41B8PnvyQSovDLkhwaI/GBhWvWJsC0h2PLbJNrZjNdS0pB0ErnA7uupD+N4ljuGNn1aB1A
-	LcK7WesKhpNyphKKDMdcc8xU1sGCArfqMjLlIP26T9+VczBc9QcjKb45oWyiY/OQyWKJVKJ4abgyn
-	4NMzDHOg1+QnyaYhJD/hTutt8mSeIKWMwDnoZhoi6KwjiEHmkk9Ks/PznZq9Cnj5eKkGVJGPki7nG
-	URILjQdg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qlpP7YE/MqKuwxg9uA1aHnZFSu1mBt3hrTsCE0200RU=; b=MHGNRKoe945dsWooA5dStuGn/S
+	3P4Rb8nWHMwXbRibdJY2KyD/RlJ9fb2TXDo5IkqhX/MaNWA1/zF41aQ3ZXbAh7xvx7Qscc6Z8S2yu
+	HO8/+9pAildDVGOU50pCgucwmgUSxZFqXmSxWEZSQgQrpgiT1OwxE4FzGe31S1XlSPWuasfN5YZ53
+	zzBF8UGsGyxcRKQZU2pRr/XUP3HRoOQxpx5XWVdtJOmjMq1wYsYs5xPP2hBkI4/jm77H6upunKhdG
+	zbOo2AIXj/Ea9W50tHaftRWEaoRAey2SN45FcxllSyWDC09weD9iIuM348S6dMAVwwI4C4QKzT11h
+	XiPBe2bA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ur4dg-0000000DUkg-2UYq;
-	Wed, 27 Aug 2025 01:07:48 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1ur904-0000000EAXj-3xDe;
+	Wed, 27 Aug 2025 05:47:12 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ur4dc-0000000DUkA-39Va;
-	Wed, 27 Aug 2025 01:07:44 +0000
+	id 1ur903-0000000EAXD-1f1m
+	for kexec@lists.infradead.org;
+	Wed, 27 Aug 2025 05:47:12 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 287206022A;
-	Wed, 27 Aug 2025 01:07:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B4DC113CF;
-	Wed, 27 Aug 2025 01:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1756256863;
-	bh=2bj+qTAYnr7Hk8Btw7x0K9XP+Ek85nue9lNeuKCH1HY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iBJB/cjGU37/tTE692qCZ8U05f2lTBZW0U8RP6oJvMzb76cCO85ohsYB6JsggiF8H
-	 5hInQqxJuvLhIarrbtnM4qEXrqJf6z4ux2lOsdbTXch6dyP2cezFlxztXBW9VwOa4P
-	 l540ZXGp5MSsXXaP3IG1fdjk1GmxiY0ymsnNA5uc=
-Date: Tue, 26 Aug 2025 18:07:42 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, kexec@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- bhe@redhat.com, oxu@redhat.com, berrange@redhat.com, kernel-team@meta.com,
- Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: kexec: Initialize kexec_buf struct in
- image_load()
-Message-Id: <20250826180742.f2471131255ec1c43683ea07@linux-foundation.org>
-In-Reply-To: <20250826-akpm-v1-1-3c831f0e3799@debian.org>
-References: <20250826-akpm-v1-1-3c831f0e3799@debian.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+	by sea.source.kernel.org (Postfix) with ESMTP id 592AC444BB;
+	Wed, 27 Aug 2025 05:47:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DC3C4CEEB;
+	Wed, 27 Aug 2025 05:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756273630;
+	bh=hoEQy2EMzAl/DWp425B78q++EJxcTbj/XEoxlK1JLgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pU97S1+EbF20aHx2YwKsA40Iv6lKwnnEYv+9jrBZ3Ds2AT7wiueBxdNvavyadX7PG
+	 NqOX38GyyIcM+7jag8bTwO+v8zGWSfTmfWy4GOT5+Q0HqUK66pgh/Z3CAkehQRHD7N
+	 0ETaa8miJK4GCSLLvZRuiEEkdn4L290ff5ndhE52We0JAUtC25nkt4IfII7MYVg3Db
+	 7h8q2pq1N2QJqeoxQSWSmFrXJhWJi/398wMTZ/dtQUwQ5y/jUq/EGhkfGVX2zBfc+v
+	 2As3XfN8VV+9K8vxBscut4Nez2H1HBDSZeISIhs/HzLz1Belx0dTrYFTX0XeA5Xtec
+	 uABcGPypXjQ8g==
+Date: Wed, 27 Aug 2025 08:47:03 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kho: make sure kho_scratch argument is fully consumed
+Message-ID: <aK6b1_UI-xw2rtlZ@kernel.org>
+References: <20250826123817.64681-1-pratyush@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250826123817.64681-1-pratyush@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250826_224711_456652_70D91AEE 
+X-CRM114-Status: GOOD (  21.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,80 +73,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 26 Aug 2025 05:08:51 -0700 Breno Leitao <leitao@debian.org> wrote:
-
-> The kexec_buf structure was previously declared without initialization
-> in image_load(). This led to a UBSAN warning when the structure was
-> expanded and uninitialized fields were accessed [1].
+On Tue, Aug 26, 2025 at 02:38:16PM +0200, Pratyush Yadav wrote:
+> When specifying fixed sized scratch areas, the parser only parses the
+> three scratch sizes and ignores the rest of the argument. This means the
+> argument can have any bogus trailing characters.
 > 
-> Zero-initializing kexec_buf at declaration ensures all fields are
-> cleanly set, preventing future instances of uninitialized memory being
-> used.
+> For example, "kho_scratch=256M,512M,512Mfoobar" results in successful
+> parsing:
 > 
-> Andrew Morton suggested that this function is only called 3x a week[2],
-> thus, the memset() cost is inexpressive.
+>     [    0.000000] KHO: scratch areas: lowmem: 256MiB global: 512MiB pernode: 512MiB
+> 
+> It is generally a good idea to parse arguments as strictly as possible.
+> In addition, if bogus trailing characters are allowed in the kho_scratch
+> argument, it is possible that some people might end up using them and
+> later extensions to the argument format will cause unexpected breakages.
+> 
+> Make sure the argument is fully consumed after all three scratch sizes
+> are parsed. With this change, the bogus argument
+> "kho_scratch=256M,512M,512Mfoobar" results in:
+> 
+>     [    0.000000] Malformed early option 'kho_scratch'
+> 
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
+> ---
+>  kernel/kexec_handover.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> index ecd1ac210dbd7..a90d55121a7a0 100644
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -446,6 +446,10 @@ static int __init kho_parse_scratch_size(char *p)
+>  		p = endp;
+>  	}
+>  
+> +	/* The string should be fully consumed by now. */
+> +	if (*p)
+> +		return -EINVAL;
+> +
+>  	scratch_size_lowmem = sizes[0];
+>  	scratch_size_global = sizes[1];
+>  	scratch_size_pernode = sizes[2];
+> -- 
+> 2.47.3
 > 
 
-Thanks, I queued this as a replacement for your eralier "kexec/arm64:
-initialize the random field of kbuf to zero in the image loader".  I
-added cc:stable, a mention of the UBSAN failure and I added thie Fixes:
-
-
-
-From: Breno Leitao <leitao@debian.org>
-Subject: arm64: kexec: Initialize kexec_buf struct in image_load()
-Date: Tue, 26 Aug 2025 05:08:51 -0700
-
-The kexec_buf structure was previously declared without initialization in
-image_load().  This led to a UBSAN warning when the structure was expanded
-and uninitialized fields were accessed [1].
-
-Zero-initializing kexec_buf at declaration ensures all fields are cleanly
-set, preventing future instances of uninitialized memory being used.
-
-Fixes this UBSAN warning:
-
-  [   32.362488] UBSAN: invalid-load in ./include/linux/kexec.h:210:10
-  [   32.362649] load of value 252 is not a valid value for type '_Bool'
-
-Andrew Morton suggested that this function is only called 3x a week[2],
-thus, the memset() cost is inexpensive.
-
-Link: https://lore.kernel.org/all/oninomspajhxp4omtdapxnckxydbk2nzmrix7rggmpukpnzadw@c67o7njgdgm3/ [1]
-Link: https://lore.kernel.org/all/20250825180531.94bfb86a26a43127c0a1296f@linux-foundation.org/ [2]
-Link: https://lkml.kernel.org/r/20250826-akpm-v1-1-3c831f0e3799@debian.org
-Fixes: bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Coiby Xu <coxu@redhat.com>
-Cc: "Daniel P. Berrange" <berrange@redhat.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Kairui Song <ryncsn@gmail.com>
-Cc: Liu Pingfan <kernelfans@gmail.com>
-Cc: Milan Broz <gmazyland@gmail.com>
-Cc: Ondrej Kozina <okozina@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/arm64/kernel/kexec_image.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/arm64/kernel/kexec_image.c~arm64-kexec-initialize-kexec_buf-struct-in-image_load
-+++ a/arch/arm64/kernel/kexec_image.c
-@@ -41,7 +41,7 @@ static void *image_load(struct kimage *i
- 	struct arm64_image_header *h;
- 	u64 flags, value;
- 	bool be_image, be_kernel;
--	struct kexec_buf kbuf;
-+	struct kexec_buf kbuf = {};
- 	unsigned long text_offset, kernel_segment_number;
- 	struct kexec_segment *kernel_segment;
- 	int ret;
-_
-
+-- 
+Sincerely yours,
+Mike.
 
