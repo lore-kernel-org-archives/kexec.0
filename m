@@ -4,129 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4AF7CA1001
-	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80079CA1004
+	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 17:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WUEa4tYSS0p5DNjOCVeWcyYJH7ruf9/pefat3lfo8dQ=; b=b89JFnjgcr7Qf9g2IvHXgJsFrY
-	wCPPkrSpXgtN13uKQnFH3DkdnAX+omJhRJg0lPXNym9JhaObZ7VRrLlqwioniYcIIXXmSlZSmRIRm
-	vBT9p9uiI7hDsdy1NuSdLbrEr731zDSuT2Qr8hAtUnBC7q6KCC2mlVAKVdCEfFJ4RDlWQVO0NWaRX
-	YU2umKoe5MhOHMyMc+Shy6jFiQUaj7tB6o7c+KCfZNBYSRsCb1X5SgMz9cotu/CX3LXTdu2MaSWjO
-	UDCX9o8NhElcMoHsEoAmfOyhhr6schiUVRyU4oEvrQpop2QxyttePxeKbUj7tFyjAVfSeRhSIc9Bd
-	1AOEN/OQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
+	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/NSh9exXaV3mbXvMj+1kS4uqG4EyWHM1miHRNzuQSLM=; b=IJenqm+UMZMWCTTpLb9VwLsDYX
+	20ise/FoGars71D8+SryermKTKWFX6BdeRBe3kayE3jqWgbirbl1Q3jHyGzJaPNFPHqTnooa6YduN
+	3GEFtmfqW0STyAa/lZOEfpBTHauTP+bC2ekMNRcNJHqzNLyZIsb7RNnVSJZPz0MyzE48Omqxo0XeZ
+	qOSiAuRHaIwYBItrGwBzl3L/uIaZHvszfeERz6dVAKrEqXxFDdIlaBuv9DmgWlEYtBBgFwNZLSR01
+	5ygby/cnZkggys7N4HvNd0gZ8O6iG6O3/vWObhljg0E2wO9diFG5KyeS0WaODrbs9DgWiA99EnAi1
+	G4PWIILw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1usPg9-00000008G74-3dGk;
-	Sat, 30 Aug 2025 17:47:53 +0000
-Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
+	id 1usPgB-00000008G9Z-3CXD;
+	Sat, 30 Aug 2025 17:47:55 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqMzm-00000006kBo-08J2
+	id 1urovB-0000000484g-1U3r
+	for kexec@bombadil.infradead.org;
+	Fri, 29 Aug 2025 02:32:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/NSh9exXaV3mbXvMj+1kS4uqG4EyWHM1miHRNzuQSLM=; b=Me6vF+bixpnnRMyDysrLUsLcF+
+	H6XPhhmQTy1BhdDtIwEWMolncXgXeg3AswJ/FwtGkiTmMDRrB6ZxYI1c47sW36sUbVQwu6FPAZqRl
+	8E6HtZoEirySLilBtAmBMjHu9pCZ4cp3KZaLVxpxvfnjiZb8hUtgdlls8E8ZFbWdBAkwFFNKxSDEH
+	FyVLhal/LFmiSAcBoNyNH7df1gBuO1GgN7gKrVI7qi64h06WrXLqORpfXh/komrzmsjWSZ8bgmQNS
+	Mq1oun4gFXzJ6q3yIoKhbctsoTHlqm2bP9bKZKHErsRm6kvAHIqzQ7TsXAs2lUaPLzDY91UgAlySG
+	10ID71Mw==;
+Received: from m16.mail.163.com ([117.135.210.4])
+	by desiato.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1urov4-00000003282-1m6a
 	for kexec@lists.infradead.org;
-	Mon, 25 Aug 2025 02:31:43 +0000
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-24458272c00so44574755ad.3
-        for <kexec@lists.infradead.org>; Sun, 24 Aug 2025 19:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756089101; x=1756693901; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WUEa4tYSS0p5DNjOCVeWcyYJH7ruf9/pefat3lfo8dQ=;
-        b=BUEeDmnZosJIc9/rnrcXvOYIb1eeb45F55Qp2NVS84Fe0vXptXP1Hrk9PLzT3QJcCH
-         OVINnJyWkPOy1EPQ9plz6xW8idqJ3pH0sbZFgBb2t8AaPF/f7BxdZW40T/zkknvv/EVI
-         ZwWrfg3usat4b1f7I9F7dxEATU7s5BPrN5oLHTUkgb0Sguvc3ydlPC8jmuSS04/RkLuZ
-         2pdrI6Z06LwGiowZ/VtOz2XIDcRDT/ptjBIkaADY3Hjsqsk8FIEuuvhxYjCH21H/7L2S
-         qH/m43/IzFiGn4u85mN3ldyCDWcrePZ8Z53neESQzPUI+8QDuo9ysVKlC5+wTvj2V0Ke
-         q2iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756089101; x=1756693901;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WUEa4tYSS0p5DNjOCVeWcyYJH7ruf9/pefat3lfo8dQ=;
-        b=HIax99fP0Aoc6+gGLXVjv0cHorglq8bW5yeSkufcljvgB+xPaD0wYR1EnlX4WvJ7FM
-         CX02yGD69Xsab7wo+tqqQuOQeynv73nq5L2Ti5YKjxQGMS6VvXizROMe6aclw75M0WfB
-         s/xP5zjbcyJqzbSvc7njM/Mdpci0GSf3vgzK37i48jlDVQEISSF4FIhOnCW0u6nzDwnF
-         NiOY7oy3r55MtXLXswUsrGcWG6fNY1b52tWXFTL63OhVQCrtkBgzWIn0Axgj0XBTNoN5
-         B+HpQB/F+Ms27dXGNklSS8xPGJhUvia74K9YSqCupXeQCWALbApZoCC1xIG2bTW5ezKl
-         8hIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYEQkKndM77aiXfXOLGKgv7XGZv5X2zjZllBiQZrL1zC3CCvh9yblMRFwNAn3Bp/mH1wwCGg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwHrXE3KaDeSXZfhN/bMTJ+PzGu4LZMMysWiPweKHjLNmJ1vdJC
-	7r7U+cQxYlZDg13GVP2SpUemQ+MRnFJvsUUcwEKuEpOWrK3ndZBtmvnD
-X-Gm-Gg: ASbGncs5foNDn2+xE5vP3OnTLcOMOQCrs+AMwyL8/+LQOKQ5rdYUAyp0WyrD2+U01Zg
-	D2tgUL6Jmu4D7hrFsJZa9ahQzl5uO+lBom4LNTSS00j3XmZ/DyWQuC+6cz1NDT285iHJFJrz1QF
-	97XMcDwxjIhmnh+QlKgTyP7zgfCSbNXhjGsg8c6V5IPJr+WoUe2V22WFvgQM/b4Emu/9mrs4lIe
-	8WcD8IvS/xKcMPyz/q8zDuklGJJ8Tv385J8xfAhTwLHdzWYbfVHtMHx0P4OLp7Aw+SIxxr2N1xl
-	vaDZn+ooJSDWlXgRmzm9W6pdFRhR6ubQDczHrQcStnaM8IDL8r36sQy436HczvbtW0FuZaskCpJ
-	QQeLTs/h/gyOxVg06+raFRF549GHRQiJbXmj+H8sYpN2Tv8VIUw27hboX6sh6qtwIhIJgTVQmVo
-	Y=
-X-Google-Smtp-Source: AGHT+IEsHHne9AMztJo7a8IjD1y4loI/AihrgL9BB/L9e0AetCJaQuYxWX/l7xlWh7T6OVyIoYtcqA==
-X-Received: by 2002:a17:903:283:b0:246:61c:a67e with SMTP id d9443c01a7336-2462efdd639mr124786615ad.61.1756089101128;
-        Sun, 24 Aug 2025 19:31:41 -0700 (PDT)
-Received: from localhost.localdomain ([114.242.33.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 19:31:40 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Qianqiang Liu <qianqiang.liu@163.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Helge Deller <deller@gmx.de>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Shixiong Ou <oushixiong@kylinos.cn>,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Zsolt Kajtar <soci@c64.rulez.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Nam Cao <namcao@linutronix.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Tejun Heo <tj@kernel.org>,
-	Luo Gengkun <luogengkun@huaweicloud.com>,
-	Li Huafei <lihuafei1@huawei.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/9] panic/printk: replace this_cpu_in_panic() with panic_on_this_cpu()
-Date: Mon, 25 Aug 2025 10:29:35 +0800
-Message-ID: <20250825022947.1596226-8-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+	Fri, 29 Aug 2025 02:32:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=/NSh9exXaV3mbXvMj+1kS4uqG4EyWHM1miHRNzuQSLM=;
+	b=hjl7ZbxXK4eydWkCtecrgKvGYg5I86g18ky3ymLIRDCGQEiXg+YpeQk0mtqz3u
+	TcsOAAYx83eG5JvkPjFVOLp5AFw6PBUrL2gzr/x40bkZGxFU6kYtbPjchN3nB0Ac
+	ERsjwcm3G0RyaJqqVB/3imrXd2wNw65O98jPpSFE3UYcI=
+Received: from localhost (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3HznMELFo1sYnEw--.1949S2;
+	Fri, 29 Aug 2025 10:30:37 +0800 (CST)
+Date: Fri, 29 Aug 2025 10:30:35 +0800
+From: Qianqiang Liu <qianqiang.liu@163.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Subject: Re: [PATCH v2 3/9] crash_core: use panic_try_start() in crash_kexec()
+Message-ID: <aLEQy-srX89Rndch@debian.debian.local>
 References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+ <20250825022947.1596226-4-wangjinchao600@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250825022947.1596226-4-wangjinchao600@gmail.com>
+X-CM-TRANSID: _____wD3HznMELFo1sYnEw--.1949S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF47JFy8JFyUCw18tr1rCrg_yoW8AFW7pF
+	1ayay7Kw4kuFn5Kwn7JrsrtF4Fvw48JayxJa4vvF1fAasxJr15Jryv934xtFWjg343Kw1r
+	AF12g3Zag398XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziuT5PUUUUU=
+X-Originating-IP: [60.166.106.45]
+X-CM-SenderInfo: xtld01pldqwhxolxqiywtou0bp/1tbiYhq3amiwW6b1mwABsv
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250824_193142_070415_7942AD4A 
-X-CRM114-Status: GOOD (  17.71  )
+X-CRM114-CacheID: sfid-20250829_033251_489111_C3650AEF 
+X-CRM114-Status: GOOD (  21.11  )
 X-Mailman-Approved-At: Sat, 30 Aug 2025 10:29:56 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -139,132 +84,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Sravan Kumar Gundu <sravankumarlpu@gmail.com>, linux-fbdev@vger.kernel.org, Kees Cook <kees@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, Yicong Yang <yangyicong@hisilicon.com>, linux-hardening@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Simona Vetter <simona@ffwll.ch>, Max Kellermann <max.kellermann@ionos.com>, John Ogness <john.ogness@linutronix.de>, Baoquan He <bhe@redhat.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Helge Deller <deller@gmx.de>, Joel Granados <joel.granados@kernel.org>, Thorsten Blum <thorsten.blum@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Petr Mladek <pmladek@suse.com>, Zsolt Kajtar <soci@c64.rulez.org>, Yury Norov <yury.norov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, dri-devel@lists.freedesktop.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sohil Mehta <sohil.mehta@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Luo Gengkun <luogengkun@huaweicloud.com>, Feng Tang <feng.tang@linux.alibaba.com>, Shixiong Ou <oushixiong@kylinos.cn>, Anna Schumaker <anna.schumaker@oracle.com>, Tony Luck <tony.luck@intel.com>, Joel Fernandes <joelagnelf@nvidia.com>, kexec@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Li Huafei <lihuafei1@huawei.com>, linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The helper this_cpu_in_panic() duplicated logic already provided by
-panic_on_this_cpu().
+On Mon, Aug 25, 2025 at 10:29:31AM +0800, Jinchao Wang wrote:
+> crash_kexec() had its own code to exclude parallel execution by setting
+> panic_cpu. This is already handled by panic_try_start(). Switch to
+> panic_try_start() to remove the duplication and keep the logic consistent.
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  kernel/crash_core.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index a4ef79591eb2..bb38bbaf3a26 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
+>   */
+>  
+> +#include "linux/panic.h"
 
-Remove this_cpu_in_panic() and switch all users to panic_on_this_cpu().
+Can you change this line of code to #include <linux/panic.h>?
 
-This simplifies the code and avoids having two helpers for the same check.
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/buildid.h>
+> @@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
+>  
+>  __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  {
+> -	int old_cpu, this_cpu;
+> -
+> -	/*
+> -	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> -	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> -	 * may stop each other.  To exclude them, we use panic_cpu here too.
+> -	 */
+> -	old_cpu = PANIC_CPU_INVALID;
+> -	this_cpu = raw_smp_processor_id();
+> -
+> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+> +	if (panic_try_start()) {
+>  		/* This is the 1st CPU which comes here, so go ahead. */
+>  		__crash_kexec(regs);
+>  
+> @@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  		 * Reset panic_cpu to allow another panic()/crash_kexec()
+>  		 * call.
+>  		 */
+> -		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> +		panic_reset();
+>  	}
+>  }
+>  
+> -- 
+> 2.43.0
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
----
- include/linux/printk.h            |  2 --
- kernel/panic.c                    |  2 +-
- kernel/printk/nbcon.c             |  2 +-
- kernel/printk/printk.c            | 15 ++-------------
- kernel/printk/printk_ringbuffer.c |  2 +-
- lib/dump_stack.c                  |  2 +-
- 6 files changed, 6 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 5d22b803f51e..45c663124c9b 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -330,8 +330,6 @@ static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
- 
- #endif
- 
--bool this_cpu_in_panic(void);
--
- #ifdef CONFIG_SMP
- extern int __printk_cpu_sync_try_get(void);
- extern void __printk_cpu_sync_wait(void);
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 5266e195f5ac..8415e4073da1 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -343,7 +343,7 @@ EXPORT_SYMBOL(panic_on_this_cpu);
-  */
- bool panic_on_other_cpu(void)
- {
--	return (panic_in_progress() && !this_cpu_in_panic());
-+	return (panic_in_progress() && !panic_on_this_cpu());
- }
- EXPORT_SYMBOL(panic_on_other_cpu);
- 
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 7490865e2f44..c6d1a4a747e9 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -1394,7 +1394,7 @@ enum nbcon_prio nbcon_get_default_prio(void)
- {
- 	unsigned int *cpu_emergency_nesting;
- 
--	if (this_cpu_in_panic())
-+	if (panic_on_this_cpu())
- 		return NBCON_PRIO_PANIC;
- 
- 	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 5fe35f377b79..faa8b1f0585b 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -17,6 +17,7 @@
-  *	01Mar01 Andrew Morton
-  */
- 
-+#include "linux/panic.h"
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/kernel.h>
-@@ -345,18 +346,6 @@ static void __up_console_sem(unsigned long ip)
- }
- #define up_console_sem() __up_console_sem(_RET_IP_)
- 
--/* Return true if a panic is in progress on the current CPU. */
--bool this_cpu_in_panic(void)
--{
--	/*
--	 * We can use raw_smp_processor_id() here because it is impossible for
--	 * the task to be migrated to the panic_cpu, or away from it. If
--	 * panic_cpu has already been set, and we're not currently executing on
--	 * that CPU, then we never will be.
--	 */
--	return unlikely(atomic_read(&panic_cpu) == raw_smp_processor_id());
--}
--
- /*
-  * Return true if a panic is in progress on a remote CPU.
-  *
-@@ -365,7 +354,7 @@ bool this_cpu_in_panic(void)
-  */
- bool other_cpu_in_panic(void)
- {
--	return (panic_in_progress() && !this_cpu_in_panic());
-+	return (panic_in_progress() && !panic_on_this_cpu());
- }
- 
- /*
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index d9fb053cff67..e2a1b2d34d2b 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2143,7 +2143,7 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			 * But it would have the sequence number returned
- 			 * by "prb_next_reserve_seq() - 1".
- 			 */
--			if (this_cpu_in_panic() &&
-+			if (panic_on_this_cpu() &&
- 			    (!debug_non_panic_cpus || legacy_allow_panic_sync) &&
- 			    ((*seq + 1) < prb_next_reserve_seq(rb))) {
- 				(*seq)++;
-diff --git a/lib/dump_stack.c b/lib/dump_stack.c
-index b3a85fe8b673..f0c78b5b5324 100644
---- a/lib/dump_stack.c
-+++ b/lib/dump_stack.c
-@@ -102,7 +102,7 @@ static void __dump_stack(const char *log_lvl)
-  */
- asmlinkage __visible void dump_stack_lvl(const char *log_lvl)
- {
--	bool in_panic = this_cpu_in_panic();
-+	bool in_panic = panic_on_this_cpu();
- 	unsigned long flags;
- 
- 	/*
 -- 
-2.43.0
+Best,
+Qianqiang Liu
 
 
