@@ -4,57 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C46DCA0FF7
-	for <kexec@archiver.kernel.org>; Fri, 29 Aug 2025 10:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2ABF6CA0FF0
+	for <kexec@archiver.kernel.org>; Sat, 30 Aug 2025 00:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=upbX44d9Fr3vPRtUxzaYuwm6+HZIDckiervymNsWWoY=; b=AcLtVFOo8Y6CmNzXKHdJo/LMBv
-	jileysds5pD0eFGZV+km3YbLzENrJT3loU/EwCu/ooTQZY8yduwuzdRErud0McW9bv1lEzNo+uXel
-	Ve2411x73J/IWRUk72gqigLvulzrSj8BKwWzkB16aPvNBXkKfgsbeIdIp/r/RCtkUWMa4AF9aEMyF
-	K0+Oafc78WBwS6H0ONlzIHDB8Ud96CoOFNQMTviMvKu8Ou1mgt0BBK+54MAxSE10AqdM9awf3C9DV
-	K1dt/7ujqSIqnbMmtR1wuG6mJN1if7xyyqjIAYQGMdd8il55s2PClo/ln0GhW8E8LugYhNtzjAEug
-	jcyf3+sQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:
+	To:From:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=IZxtw3z/9CaxWzHuOMx6eYG39iga0noJxPVFtMhYG7k=; b=pM8PepJnU0+8U3
+	FRL0IM4BV6V+PlfqhRk2VxJlx7dnsC8ZvGtipXFYoKl/jwcYmwGUIrcdOuLdi+vb9qHL84drxvZ1i
+	Wz9YFNt0qGbFeoVmmhX+DX6KzzulMDU5N7bRCBPMqoloYgZfqbRFg11dUggcCGjpZybf+UTzrtMC2
+	SkVv3npSnsKoAPVsBlnGkUEYKuyh7Y7PLV3wC9bLp7i63/Apl9CWhVZh3elzjghpBs+K2YS4efHhr
+	BBE9x8BH9MitQ9wHxr8F8xR0RBV2KLuN7jYTllmcGXc50gGN2GIHwMRU9naduWdIvgbz45pgUUg+D
+	fNKXtqxut+z/9WF4p7VQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1urwJT-00000005Jh0-3N5t;
-	Fri, 29 Aug 2025 10:26:31 +0000
-Received: from out-171.mta1.migadu.com ([2001:41d0:203:375::ab])
+	id 1us9ll-00000007AhA-3oEC;
+	Sat, 30 Aug 2025 00:48:37 +0000
+Received: from mail.notificacionesdecoperu.com ([190.116.59.194])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1urvHN-000000057Vk-2N2m
+	id 1us34c-00000006Yls-0rZ8
 	for kexec@lists.infradead.org;
-	Fri, 29 Aug 2025 09:20:18 +0000
-Message-ID: <7afb2722-e818-4e20-86f0-f6f126edd814@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1756459213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=upbX44d9Fr3vPRtUxzaYuwm6+HZIDckiervymNsWWoY=;
-	b=JDQRWNDSCSPghe77uDRx0QLQqwV70kaWrSLoizx+qEkpGdFtXrosc5j/i9MekSG4r1HaQj
-	vEMtD2C2bXzN/IAgQE/fzUBXp/IF1evoB4PVfUPbnvpQ/QoxaEkvTI2SczHTYnWDK5EQ7y
-	AltPtI9tfysZDkTZhADaP1fAP63kwAo=
-Date: Fri, 29 Aug 2025 17:19:54 +0800
+	Fri, 29 Aug 2025 17:39:39 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by mail.notificacionesdecoperu.com (Postfix) with ESMTP id C764E1CC5A99
+	for <kexec@lists.infradead.org>; Fri, 29 Aug 2025 12:27:23 -0500 (-05)
+Received: from mail.notificacionesdecoperu.com ([127.0.0.1])
+ by localhost (mail.notificacionesdecoperu.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id DHPN9HZyagDG for <kexec@lists.infradead.org>;
+ Fri, 29 Aug 2025 12:27:23 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.notificacionesdecoperu.com (Postfix) with ESMTP id 9C4AF1CCEFBC
+	for <kexec@lists.infradead.org>; Fri, 29 Aug 2025 12:27:23 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.notificacionesdecoperu.com 9C4AF1CCEFBC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=notificacionesbys.com; s=804FB474-00E8-11EF-9D29-D8BF0EF47FA2;
+	t=1756488443; bh=IZxtw3z/9CaxWzHuOMx6eYG39iga0noJxPVFtMhYG7k=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=MdYSVG0q1xSnB5Zygk29tBXswlDktr41G98azYjVqgRcT1Pf/AxEnkVGk4VIBVfkD
+	 fPy9aBBeF+kBqpvM0k212kUTPBOgL1OaTF+BHPLcko0XBlbvfCgVBI+XAHsXvpm3kn
+	 IkfYQpQVG0pr9A+BEN6YzpBqi1l0s1OxFcN31L8S1t65ZF8h1SPH6UIvv0E8x9SvHP
+	 U+lS7FgD6zMssTw1hVUou1V7X4hAiZsJ+6y758f3OX9WC51hnjtVorY+46H+18s8bn
+	 QPCjVcBHiTUUnD+LwVwxsXfvXo8jz0pdLXEbPiVor9B4AeQJZpeEdPKLsZNgmohcmM
+	 mfW2vuU5jP5ZA==
+X-Virus-Scanned: amavis at notificacionesdecoperu.com
+Received: from mail.notificacionesdecoperu.com ([127.0.0.1])
+ by localhost (mail.notificacionesdecoperu.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id Hydy0cUdnfVi for <kexec@lists.infradead.org>;
+ Fri, 29 Aug 2025 12:27:23 -0500 (-05)
+Received: from [45.250.255.20] (unknown [45.250.255.30])
+	by mail.notificacionesdecoperu.com (Postfix) with ESMTPSA id 084ED1CC5A99
+	for <kexec@lists.infradead.org>; Fri, 29 Aug 2025 12:27:21 -0500 (-05)
+From: Luis Fernandez Consultant <test@notificacionesbys.com>
+To: kexec@lists.infradead.org
+Subject: Re:Investment Invitation
+Date: 29 Aug 2025 19:28:10 +0200
+Message-ID: <20250829192807.EE71D34F29D103DC@notificacionesbys.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/7] Fix and improve the LoongArch implementation
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>,
- Youling Tang <tangyouling@kylinos.cn>
-References: <20250829091040.35827-1-youling.tang@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <20250829091040.35827-1-youling.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250829_022017_758830_B4E4DB97 
-X-CRM114-Status: UNSURE (   8.48  )
+X-CRM114-CacheID: sfid-20250829_103938_382879_18E451D8 
+X-CRM114-Status: UNSURE (  -3.47  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -67,33 +81,20 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: luisfernandezconsultant@gmail.com
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-My oversight, email and Singed-off-by error will be updated to
-"Youling Tang <tangyouling@kylinos.cn>" in the next version.
+Good Day, 
 
-Youling.
-On 2025/8/29 17:10, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> - Fix and improve the LoongArch implementation.
-> - Fixed the handling of crashkernel parameters when using --reuse-cmdline.
->
-> Youling Tang (7):
->    kexec: Handle removal of multiple 'crashkernel' parameters
->    LoongArch: Fix comments
->    LoongArch: Terminate the cmdline string using '\0'
->    LoongArch: Enforce relocatable kernel check for crash dump
->    LoongArch: Change initrd allocation to top-down
->    LoongArch: Fix the use of loongarch_image_header in ELF format
->    LoongArch: Add pe_hdr->machine check for pei format images
->
->   kexec/arch/loongarch/image-header.h        |  5 ++-
->   kexec/arch/loongarch/kexec-elf-loongarch.c | 44 ++++++++++++++++++----
->   kexec/arch/loongarch/kexec-loongarch.c     |  4 +-
->   kexec/arch/loongarch/kexec-pei-loongarch.c | 24 +++++++++++-
->   kexec/kexec.c                              |  6 +++
->   5 files changed, 70 insertions(+), 13 deletions(-)
->
+
+My name is Luis Fernandez, I am contacting you because we have investors th=
+at have the capacity to invest in any massive project in your country or in=
+vest in your existing project that requires funding. Kindly get back to me =
+for more details. 
+
+
+Best Regards,=20
+
+Luis Fernandez
 
