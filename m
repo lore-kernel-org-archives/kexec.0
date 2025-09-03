@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D976CA0FED
-	for <kexec@archiver.kernel.org>; Wed,  3 Sep 2025 03:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B8FFCA1007
+	for <kexec@archiver.kernel.org>; Wed,  3 Sep 2025 06:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cRynx6jaHBNziqdWwYMx6lpx2wd+0zdA8DgB67CZ52I=; b=VZ9RfVBI+fI0x5rbIq4iDKewuA
-	GsKhV8vpNMotBScUSRqndnrWhdQlaZcDN7gdUvh7QUxeDI31B/AujnkW63RWAITk+p97MkSGqTI3K
-	yKTOVU5Gl4esma4iVn3EoF+xUpISaq2T6BDDCMK6C6vLT5E6DA9pstmENzkOl2a35NhyzAewFKP1b
-	EQ/9Yr6LwBAJf20mwCT1aboPIQaIq3O5+uX7UaMGCcPjhE01vEG3lWP19rk4MWfLMNH1x1kIKe2tl
-	cqDk//BS6hd6iVL0CCfEb9EkIoriOfll8kgeIF4CmM6Wb/r/PscO9+Rm9RFVXqi89N7hirqkoXXYd
-	7rWpFTGw==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=x9VALCUu5PPY2af6wI6+9K/vJZQgbiXo+WV/pWMB534=; b=H65yx2WkgCcF4q7WFuyen2PKsJ
+	9rF9eWfSVkgnCyj+SsfE5GBvE1p/RdrUm7sWzYuZctt2DY5XS/zvWuyJn0h/G4Y8BMUNzp+VhmfHS
+	6WxPhkmR/hET+iNB0uJ2EvnYiyhFhsWsDYgQD9iVpl6u6sE9kPvA1SK4/5EKteg8BZyFyse3ZZaUo
+	RVUfMl9y+o0aPve88vzCAnW1TygFEMCEnY2HB4PgIfhFNey1Goen/bsLZSj1x9YQm3KCNsUhm33UZ
+	d+2TTdIXa5Lo5kHs4Z6ehUMSu4mr0LuW0f0uM3gxNn4pyqlErAS1lq4cXstDJO5V/CVb+awR4YE+t
+	FksXjhuw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utdle-00000003RC6-0ExO;
-	Wed, 03 Sep 2025 03:02:38 +0000
-Received: from out-185.mta0.migadu.com ([2001:41d0:1004:224b::b9])
+	id 1uth6C-00000004h8z-03cv;
+	Wed, 03 Sep 2025 06:36:04 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utdlb-00000003R9K-3B7O
+	id 1uth0k-00000004ecm-2ja2
 	for kexec@lists.infradead.org;
-	Wed, 03 Sep 2025 03:02:37 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1756868554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cRynx6jaHBNziqdWwYMx6lpx2wd+0zdA8DgB67CZ52I=;
-	b=mF4aqh+1V/7wCkaLaALq3wIS5h4V21NQrY/AN44J2nbOiurpql+JHY/6ILtCAnCC4aZxNi
-	wwtqekrTRGXl1XrPjM8A1pQoESrS4M7YiC0YcXnvvoAMAefcCR/iUDDqd2atZR6mgfpGKk
-	R6w0RZRIzYjiS4fpFUg6seR/coxRNmU=
-From: Youling Tang <youling.tang@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
+	Wed, 03 Sep 2025 06:30:26 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id CCC1660239;
+	Wed,  3 Sep 2025 06:30:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FC5C4CEF0;
+	Wed,  3 Sep 2025 06:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756881025;
+	bh=0BP7MTU7WtClcd5jUvnxmjOIUJ5oBGFWJ9RXidmD/b0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=r8L5J+UpwsZFc6vxvw/oeG2L7/kI3GOXOPF1wkLa53P0zXa/EWSrxgEzwd7YgKQE9
+	 ydDjrfNusiUWQwYgKKVHO0PosNWMB/PZmMN9tLVni5+5hRx8udYAnSqB6SYqDNV4pd
+	 /FfuvmrZuh9EtDb3aev9j3WRR/o2+RmZNeZKMA+S6uw4+BXkw2F961clb3kXyG/v4A
+	 oF/fqFlwj7ciQc6VI2sP/soaMg/0ReJ4Ymze8kKhGy0nwNoECivEoI4pjBNmzw1cck
+	 zQoKoyfddujrP8rjmcowiXA3gThpuJZskxVpkE3NEMVdEryDcPKcclpQ52m1PZKsE7
+	 Ie5WO9SfESaBw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Graf <graf@amazon.com>,
 	Baoquan He <bhe@redhat.com>,
-	Yao Zi <ziyao@disroot.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
 	kexec@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v4 7/7] LoongArch: Enable CONFIG_KEXEC_FILE
-Date: Wed,  3 Sep 2025 11:01:00 +0800
-Message-Id: <20250903030100.196744-8-youling.tang@linux.dev>
-In-Reply-To: <20250903030100.196744-1-youling.tang@linux.dev>
-References: <20250903030100.196744-1-youling.tang@linux.dev>
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] kho: add support for preserving vmalloc allocations
+Date: Wed,  3 Sep 2025 09:30:16 +0300
+Message-ID: <20250903063018.3346652-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250902_200235_940088_54215DC3 
-X-CRM114-Status: UNSURE (   7.28  )
-X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,31 +75,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Youling Tang <tangyouling@kylinos.cn>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-This patch enables config KEXEC_FILE by default in the
-loongson3_defconfig, so that user-space tools like kexec-tools
-can use the same as the default interface for kexec/kdump
-on LoongArch.
+Hi,
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Following the discussion about preservation of memfd with LUO [1] these
+patches add support for preserving vmalloc allocations.
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 34eaee0384c9..6cfea2f37cc0 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -45,6 +45,7 @@ CONFIG_EXPERT=y
- CONFIG_KALLSYMS_ALL=y
- CONFIG_PERF_EVENTS=y
- CONFIG_KEXEC=y
-+CONFIG_KEXEC_FILE=y
- CONFIG_CRASH_DUMP=y
- CONFIG_LOONGARCH=y
- CONFIG_64BIT=y
--- 
-2.43.0
+Any KHO uses case presumes that there's a data structure that lists
+physical addresses of preserved folios (and potentially some additional
+metadata). Allowing vmalloc preservations with KHO allows scalable
+preservation of such data structures.
 
+For instance, instead of allocating array describing preserved folios in
+the fdt, memfd preservation can use vmalloc:
+
+        preserved_folios = vmalloc_array(nr_folios, sizeof(*preserved_folios));
+        memfd_luo_preserve_folios(preserved_folios, folios, nr_folios);
+        kho_preserve_vmalloc(preserved_folios, &folios_info);
+
+[1] https://lore.kernel.org/all/20250807014442.3829950-30-pasha.tatashin@soleen.com
+
+Mike Rapoport (Microsoft) (2):
+  kho: add support for preserving vmalloc allocations
+  lib/test_kho: use kho_preserve_vmalloc instead of storing addresses in fdt
+
+ include/linux/kexec_handover.h |  12 +++
+ kernel/kexec_handover.c        | 140 +++++++++++++++++++++++++++++++++
+ lib/test_kho.c                 |  30 +++++--
+ 3 files changed, 175 insertions(+), 7 deletions(-)
+
+
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+--
+2.50.1
 
