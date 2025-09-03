@@ -4,82 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A64CCA1010
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 02:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21EBDCA1016
+	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 02:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-Type:MIME-Version:Date:Subject:To:From:Message-ID:Reply-To:Cc:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=Lrj5WyDJlM3QjEB4CLjU92Xa44MZNaI8IfgP6RBOMAw=; b=PPA8ZGST1KeT1DaN4cX5fwQyvq
-	M5NV3MX7smDV72+ypTYcTv6+zJaS/HS67G6q9tFqwAZppb70LwDBwgYE5mPa0ULaT8Vnmmzx7+ONs
-	IYmBKFSmcqHinnTV4ZUOiYlLQR8O7VhdPitii9WfYqOgFa7d/XKK93q3dtEK7nACuYYeiL6eZhpF8
-	90rZPJnLcFhK9wNymdnFNS+mFFDjmGDkDO8ua0UFc7VYAA5dtQJRVe4urSjExMCMMjTxlefKdgJny
-	cXTXMhBXyEg4IY9q0ad6PDKajjXfpKfCYDjQE9vLaVBIRp4t0g/oH4o/Ww2TDGvO9qrn1RTX9rbDH
-	5bY0fpLA==;
+	bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=; b=amUBHJm0NX6VJm+Zjea5x1o3OW
+	j9woU1aLlZ3K9SHKX0IxP5CA5IUoAGsjB5Agr89c2tMK/bU7Jr9B2+VoAEI4i3x0ypMSVWG6Zfwqt
+	Uems22R4EtWpIPBSamEg3cskyEzVbpxgRUEi0J4HeEzmPRYb8yhrgpEJM5eKlZ971MrLvMeD3JENk
+	hA0iaPuRV9/5m6Mzr6S0Af9aLUBNJQPX0e/ZBhr9cvgKdjvZ8n61r8UNO5Y2xmM0bLcG5kjYUmAbw
+	4Dx4kUu6f7mBjcc0OgLF7Q9CRXzU4smvhBv/LS74oODLP98/umR9FqWSUcV5fEOmzzoR7bSVmmLdv
+	abcgFmKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utzQx-00000008EyF-0ith;
-	Thu, 04 Sep 2025 02:10:43 +0000
-Received: from mail-pf1-x436.google.com ([2607:f8b0:4864:20::436])
+	id 1utzSY-00000008IOn-2Tmt;
+	Thu, 04 Sep 2025 02:12:22 +0000
+Received: from mail-yw1-x1143.google.com ([2607:f8b0:4864:20::1143])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utuCp-00000007aHl-1knV
+	id 1utyth-00000008513-2QvA
 	for kexec@lists.infradead.org;
-	Wed, 03 Sep 2025 20:35:48 +0000
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-7726c7ff7e5so331994b3a.3
-        for <kexec@lists.infradead.org>; Wed, 03 Sep 2025 13:35:46 -0700 (PDT)
+	Thu, 04 Sep 2025 01:36:23 +0000
+Received: by mail-yw1-x1143.google.com with SMTP id 00721157ae682-71d5fb5e34cso5603847b3.0
+        for <kexec@lists.infradead.org>; Wed, 03 Sep 2025 18:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756931746; x=1757536546; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lrj5WyDJlM3QjEB4CLjU92Xa44MZNaI8IfgP6RBOMAw=;
-        b=h38fsP/F2Ty9/StTg+xfYv2LjjxUZh9rlsoFwr6xGiFHnUFgNRLnJH8mmF9lNSoBAB
-         KyRGKLl5LSSKQgGFMpxap8aaa8SWl/NEXua+PKDeQItbRlCKBeWL+oom5hGBtdAa7RO/
-         mXLV0B0k/VR4BLZWw8g8Me9pfvGflXHGqscwzZVvcnrbBt8401CYZKKafYkFctBMbwhz
-         U18yHbpPb0H3HmdTbdbxpep84Shkpi1Fd9aazx/aWE6YDmSW5bRnV7NhuJ6JFrjgKOX9
-         rxy73Rpzzh+1rXNwCob6DipZuZobz0qXX4HWwlWHLoY8fzx6CSNV0oh6SolJ2O3EYeFK
-         wM6A==
+        d=sellonterms-com.20230601.gappssmtp.com; s=20230601; t=1756949780; x=1757554580; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:date:subject:to:from
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=;
+        b=jgbcr85w7vsk8FU6q+DqIcmq7oqH8PqP9USg+zcvbcEx4FSkSQTZslRJFtv7HJbo2S
+         tZyoXMOM8J7ErzL19AAh+s/Lg6QiZ/Q7sLY0NnSNhr9IerMGiXMLeRJ42fjjB3c3MQhL
+         tan+SfO0EFyKLM6pH0eJv43nsUSRT3YYCYemR8Ziqh2OqLW5BwNl9d7WCAmfc+xB31P5
+         mk84/4L/ERH1BfKeNIkqLcHUdQUWxKuBnuIUVFpb5Sf9hDhz5W88hhgQRp4VGy8qF2rh
+         6okFHzMJGY0n4GFEUZJWyzI+wQjD04xYa7F0vsYb+1Ix/zsw7l3uzGvuAR4PCU8/jTkg
+         pxcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756931746; x=1757536546;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1756949780; x=1757554580;
+        h=content-transfer-encoding:mime-version:date:subject:to:from
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Lrj5WyDJlM3QjEB4CLjU92Xa44MZNaI8IfgP6RBOMAw=;
-        b=mEyi3aujNJuB3zPAlkW4bpg77RczizcK+WKQ9yPeYNuTzhwh4vIRLjgWklcuUjxK2A
-         /2o3B/vrtCvdBCxSkutquwmRT6m75Th4S42jd3Nr11NmgeYOOI4+2HaRwlZBlg/yLDU5
-         0Ak8qvXjm6jEnr4Qm1NLHCdT50XA1/c25R8kW0vrzxk+fdMdNFAKzRAyeaI2WN0LKp1K
-         4DF+5ZahMrq3C7QxGM0ncZ3Wa4/0bB6ER+uo3PSbzUMJdchNN7sPDQ2VyPJl6Me8/HWM
-         Au7mmlOJWqGQ5zZ7c2jrDA5ArtayWhkmNeylbTMO5m9aovBxAgdgEfXC7N/ZwJQ/BOyE
-         /E+A==
-X-Gm-Message-State: AOJu0Yw2+dUECK5f+gD6Vx6yFe3/7IVytQ5dah0BOpHmCDDDMIVWGtcX
-	QLso/qlnuO9U55/+jJDLwloTs2Yz5o2t9ygKlps8ZE7UAXtBzxFkw+3HcynYmCVK
-X-Gm-Gg: ASbGncvsJzoFkfwdgDuHvqbPpdE/kV+0CFzRBFO2VYb/42ybA+Npq+Vnx25R/1RbpuQ
-	JdfxGLVMM/sCvsEVJv8BL8MdK+FdXL9Xi3gG+6CaK4m54EB+oB4lG197UxZ6sfMJIedLngNb+Wv
-	GXQH0cB+DMKEj8f94BEkqMHdohQ8nhU4aTYj+G0yi4w2r8goqlXLAOEtEIy7BXItkS6d62c3n/b
-	DJ7I0qQNG2rceK6fLiUR45vf9x5tGGHGd+K011+30sfEuZot+1EPKk0+AJ6ZDztstxkXi4ruBFa
-	HzLJzt3vH4hXBmsWWMyM1FO896L8nxxVXE2OJIceKZd01aNu5gy0nvMVMDuUsknQv5EMouWO61R
-	/3FmsCoPXDmCGPmWYfUTYWPx+8hh3S3nlGkm01pexJ/qhq+YdsEgACLwxTMXR9UXR2EXrAIq6RR
-	zBHgLpMhzysyUxhNQDmhrJXSkitbnYp1o0XjtLNG22nvQWWEXyAcs=
-X-Google-Smtp-Source: AGHT+IEZehukpjoevuMaLz8EDsWevujbF5fGHk9BuV0SD0L4/E4ZIz5x0LYg4NZdHg58QV4bxf+EfQ==
-X-Received: by 2002:a05:6a20:430c:b0:243:a5be:c4a8 with SMTP id adf61e73a8af0-243d6e00ba5mr21396016637.22.1756931745918;
-        Wed, 03 Sep 2025 13:35:45 -0700 (PDT)
-Received: from apollo.tail3ccdd3.ts.net ([2601:646:8201:fd20::ecee])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a26adf7sm17525311b3a.15.2025.09.03.13.35.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 13:35:45 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
-To: kexec@lists.infradead.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] Make the segment base match pinned section address
-Date: Wed,  3 Sep 2025 13:35:42 -0700
-Message-ID: <20250903203543.556750-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.51.0
+        bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=;
+        b=qFAMU5yE8ohtlBWkSTKq2r5i+Bn82KDgpDL+4jc2iWthCY9beWOm5NLUKEkFb0sC+J
+         mJCLeqcoBcEKVRbESaIQhjr2YExnWxeBocOfRNnqvVrKJ/hITBAdbaf6Uoi6RXbLvzvY
+         MGSehlk5CzQFeer0yAMl4dyi2yMUJpz/0ZbOKffg5QUxewKykVY5/NgPoLfDbUIOM4oY
+         C6LH4ehK6x4sxE8tpwUpR50MqG2YMfbIkY88l8PWJZlXnMaqpVb5YUfwy+IQNNPlkI1N
+         PVAdWaRRR7TX4nZC8VHhYEQOD3GmR5avQ8hc3ez0FTZ8Vc3SC/FlB8aZWErpwnDwHytX
+         0kzA==
+X-Gm-Message-State: AOJu0YzDByrioJpZLvau9iBcGdYSv7+AZbQXeFhjP3OJnsmxogWsj1DZ
+	iabhKoW0NFjEjt+giZ6uqyslXEI/DxI0Z8y51tj0a1pm70QBjqX7mg26RBngc9tUNtHV/zACgjU
+	6vipQn0+I96Y=
+X-Gm-Gg: ASbGnctLnEV1/gc7APX9K3cEd0SuqcnfPb0ffEQ9NJ5AHuy3iHvjLwRpSSvqlhmPEi1
+	gBn6EPVQZrW5YX4LGpdFYSNKlbCuVSvLDNIUE+wT/y8Lsho/30oE7iUwc1NXPXhd339LhA9ibl7
+	CKzeYg8z+E+kty+Cvhf/gnV5r/l3fSa2yxVfM8XSIB5pZ3ivK5UHlNyiH/oriIQFAHYNRc5L5sj
+	2Dp/UDhV7BHAeo5bZEqmSRgJOiA5ZQQK2a4ZO2NnAUBPGB318hUm0OD/AwEUI3snvy/ms+gPwYv
+	457PTvjKeYx61dVXkRa+v7zkvh4XCPzYNBfduvyrQgYiA/+E5qmPjFhhakXu7FKfbFBWa9v+1sR
+	sH3x0tkqq7PTAsD4+eeVFvniVxOseVa6SQ8e7OBpCyXxNDHtuJnw5lrqquudtxN8dTA==
+X-Google-Smtp-Source: AGHT+IFWpGLOSITgAV1pt0qhieEY7SllIq+kkYnxkIPPfSv7cim2mNtYrLBhNm6/jmx2GQ2qK4X0Yg==
+X-Received: by 2002:a05:690c:56c7:b0:723:98d5:7a62 with SMTP id 00721157ae682-72398d580ebmr119881387b3.3.1756949779928;
+        Wed, 03 Sep 2025 18:36:19 -0700 (PDT)
+Received: from gsedeopyex.org (68-72-97-163.lightspeed.sndgca.sbcglobal.net. [68.72.97.163])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-723a82d964dsm18045047b3.1.2025.09.03.18.36.19
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Sep 2025 18:36:19 -0700 (PDT)
+Message-ID: <3324a6c530b213e05d4b8dbc2337aa87@sellonterms.com>
+From: =?utf-8?Q?=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC_=E4=BD=90=E8=97=A4_=E6=85=8E=E5=90=BE?= <noreply84@sellonterms.com>
+To: "=?utf-8?Q?kexec@lists.infradead.org?=" <kexec@lists.infradead.org>
+Subject: =?utf-8?Q?=E3=80=90=E9=80=9F=E5=A0=B1=E3=80=91=E6=9C=AC?=
+	=?utf-8?Q?=E6=97=A5=E3=81=AE=E5=8E=B3=E9=81=B8=E9=8A=98=E6=9F=84?=
+	=?utf-8?Q?=E3=83=AC=E3=83=9D=E3=83=BC=E3=83=88=EF=BC=88=E7=9F=AD?=
+	=?utf-8?Q?=E6=9C=9F=E6=8E=A8=E5=A5=A8=EF=BC=89?=
+Date: Wed, 03 Sep 2025 21:36:15 +0800
+X-Priority: 3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250903_133547_455328_7AE90D49 
-X-CRM114-Status: GOOD (  10.13  )
+X-CRM114-CacheID: sfid-20250903_183621_848066_24201416 
+X-CRM114-Status: UNSURE (   2.38  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,33 +100,107 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-ET_EXEC uses image base of 0x400000, but the build forces
-section VMAs like .text = 0x10000. LLD now errors when any
-section address is below the image base unless you explicitly
-set the base. (Older LLD tolerated it.)
+=E5=B9=B3=E7=B4=A0=E3=82=88=E3=82=8A=E3=81=8A=E4=B8=96=E8=A9=B1=E3=81=AB=E3=
+=81=AA=E3=81=A3=E3=81=A6=E3=81=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
+=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC=E4=BD=90=E8=97=A4 =
+=E6=85=8E=E5=90=BE=E3=81=A7=E3=81=99=E3=80=82=0D=0A=0D=0A=F0=9F=93=8C =E6=
+=9C=AC=E6=97=A5=E3=81=AE=E6=8E=A8=E5=A5=A8=EF=BC=88=E5=84=AA=E8=89=AF=E9=8A=
+=98=E6=9F=84=EF=BC=89 =E2=80=94 2025=E5=B9=B49=E6=9C=884=E6=97=A5=0D=0A=E9=
+=8A=98=E6=9F=84=EF=BC=9A=EF=BC=884005=EF=BC=89=E4=BD=8F=E5=8F=8B=E5=8C=96=
+=E5=AD=A6=0D=0A=0D=0A=E2=96=A0 =E6=8E=A8=E5=A5=A8=E8=B2=B7=E4=BB=98=E3=83=
+=AC=E3=83=B3=E3=82=B8=EF=BC=9A440=E3=80=9C470=E5=86=86=0D=0A=E2=96=A0 =E6=
+=90=8D=E5=88=87=E3=82=8A=E7=9B=AE=E5=AE=89=EF=BC=88=E5=8F=82=E8=80=83=EF=BC=
+=89=EF=BC=9A380=E5=86=86=0D=0A=E2=96=A0 =E5=88=A9=E7=9B=8A=E7=9B=AE=E6=A8=
+=99=EF=BC=9A=0D=0A=E7=AC=AC=E4=B8=80=E7=9B=AE=E6=A8=99=EF=BC=9A480=E5=86=86=
+=0D=0A=E7=AC=AC=E4=BA=8C=E7=9B=AE=E6=A8=99=EF=BC=9A550=E5=86=86=0D=0A=0D=0A=
+=E2=96=A0 =E6=8E=A8=E5=A5=A8=E7=90=86=E7=94=B1=EF=BC=88=E8=A6=81=E7=82=B9=
+=EF=BC=89=0D=0A=E3=83=BB=E4=BD=8F=E5=8F=8B=E5=8C=96=E5=AD=A6=E3=81=AF=E3=80=
+=8C=E7=B7=8F=E5=90=88=E5=8C=96=E5=AD=A6=E3=80=8D=E3=81=8B=E3=82=89=E3=80=8C=
+=E9=AB=98=E4=BB=98=E5=8A=A0=E4=BE=A1=E5=80=A4=E6=9D=90=E6=96=99=E3=81=AE=E3=
+=83=86=E3=82=AF=E3=83=8E=E3=83=AD=E3=82=B8=E3=83=BC=E4=BC=81=E6=A5=AD=E3=80=
+=8D=E3=81=B8=E3=81=AE=E5=A4=89=E9=9D=A9=E3=82=92=E9=80=B2=E3=82=81=E3=81=A6=
+=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=83=BB2024=E5=B9=B4=E3=81=AE=
+=E4=B8=80=E6=99=82=E7=9A=84=E3=81=AAIT=E4=BA=8B=E6=A5=AD=E6=B8=9B=E6=90=8D=
+=E3=81=AF=E7=9F=AD=E6=9C=9F=E7=9A=84=E3=81=AA=E3=83=8D=E3=82=AC=E3=83=86=E3=
+=82=A3=E3=83=96=E8=A6=81=E7=B4=A0=E3=81=A8=E3=81=97=E3=81=A6=E7=B9=94=E3=82=
+=8A=E8=BE=BC=E3=81=BE=E3=82=8C=E3=81=A6=E3=81=8A=E3=82=8A=E3=80=81=E6=97=A2=
+=E3=81=AB=E5=B8=82=E5=A0=B4=E3=81=AF=E4=B8=80=E5=AE=9A=E7=A8=8B=E5=BA=A6=E7=
+=B9=94=E3=82=8A=E8=BE=BC=E3=81=BF=E6=B8=88=E3=81=BF=E3=81=A8=E5=88=A4=E6=96=
+=AD=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=83=BB=E5=8D=8A=E5=B0=8E=E4=
+=BD=93=E6=9D=90=E6=96=99=E3=81=AE=E5=9B=BD=E7=94=A3=E5=8C=96=E3=83=8B=E3=83=
+=BC=E3=82=BA=E3=82=84=E5=8C=BB=E7=99=82=E5=88=86=E9=87=8E=E3=81=A7=E3=81=AE=
+=E6=88=90=E9=95=B7=E3=81=8C=E3=80=81=E6=A5=AD=E7=B8=BE=E5=9B=9E=E5=BE=A9=E3=
+=81=A8ROE=E5=9B=9E=E5=BE=A9=E3=81=AE=E5=8E=9F=E5=8B=95=E5=8A=9B=E3=81=AB=E3=
+=81=AA=E3=82=8B=E8=A6=8B=E8=BE=BC=E3=81=BF=E3=81=A7=E3=81=99=E3=80=82=0D=0A=
+=E3=83=BB=E7=8F=BE=E5=9C=A8=E3=81=AE=E6=A0=AA=E4=BE=A1=E3=81=AF=E7=9B=B8=E5=
+=AF=BE=E7=9A=84=E3=81=AB=E5=89=B2=E5=AE=89=E3=81=A8=E8=A9=95=E4=BE=A1=E3=81=
+=A7=E3=81=8D=E3=80=81=E3=83=86=E3=82=AF=E3=83=8B=E3=82=AB=E3=83=AB=E9=9D=A2=
+=E3=81=A7=E3=82=82=E4=B8=8A=E6=98=87=E3=83=88=E3=83=AC=E3=83=B3=E3=83=89=E3=
+=81=8C=E7=A2=BA=E8=AA=8D=E3=81=A7=E3=81=8D=E3=82=8B=E7=8A=B6=E6=B3=81=E3=81=
+=A7=E3=81=99=E3=80=82=E7=9F=AD=E6=9C=9F=E3=80=9C=E4=B8=AD=E6=9C=9F=E3=81=A7=
+=E3=81=AE=E4=B8=8A=E6=98=87=E4=BD=99=E5=9C=B0=E3=82=92=E6=9C=9F=E5=BE=85=E3=
+=81=97=E3=81=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=0D=0A=E2=96=A0 =
+=E6=8A=95=E8=B3=87=E5=88=A4=E6=96=AD=E3=81=AE=E3=83=9D=E3=82=A4=E3=83=B3=E3=
+=83=88=0D=0A=E3=83=BB=E6=9C=AC=E6=8E=A8=E5=A5=A8=E3=81=AF=E7=9F=AD=E6=9C=9F=
+=E3=81=AE=E8=BF=85=E9=80=9F=E3=81=AA=E5=AF=BE=E5=BF=9C=EF=BC=88=E5=BD=93=E6=
+=97=A5=E3=80=9C=E6=95=B0=E5=96=B6=E6=A5=AD=E6=97=A5=EF=BC=89=E3=82=92=E6=83=
+=B3=E5=AE=9A=E3=81=97=E3=81=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=
+=83=BB=E3=83=AA=E3=82=B9=E3=82=AF=E7=AE=A1=E7=90=86=EF=BC=88=E6=90=8D=E5=88=
+=87=E3=82=8A=E8=A8=AD=E5=AE=9A=EF=BC=89=E3=81=AF=E5=BF=85=E3=81=9A=E8=A1=8C=
+=E3=81=A3=E3=81=A6=E3=81=8F=E3=81=A0=E3=81=95=E3=81=84=E3=80=82=0D=0A=0D=0A=
+=F0=9F=94=94 =E6=9C=AC=E6=97=A5=E4=B8=AD=E3=81=AE=E8=B3=BC=E5=85=A5=E3=82=
+=92=E3=81=8A=E5=8B=A7=E3=82=81=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E6=
+=97=A2=E3=81=AB=E3=81=94=E8=B3=BC=E5=85=A5=E6=B8=88=E3=81=BF=E3=81=AE=E6=96=
+=B9=E3=81=AF=E3=80=81=E8=B3=BC=E5=85=A5=E7=94=BB=E9=9D=A2=EF=BC=88=E3=81=BE=
+=E3=81=9F=E3=81=AF=E4=BF=9D=E6=9C=89=E7=94=BB=E9=9D=A2=EF=BC=89=E3=81=AE=E3=
+=82=B9=E3=82=AF=E3=83=AA=E3=83=BC=E3=83=B3=E3=82=B7=E3=83=A7=E3=83=83=E3=83=
+=88=E3=82=92LINE=E3=81=A7=E9=80=81=E4=BB=98=E3=81=8F=E3=81=A0=E3=81=95=E3=
+=81=84=E3=80=82=E7=9B=AE=E6=A8=99=E4=BE=A1=E6=A0=BC=E5=88=B0=E9=81=94=E6=99=
+=82=E3=81=AB=E8=BF=85=E9=80=9F=E3=81=AB=E5=88=A9=E7=9B=8A=E7=A2=BA=E5=AE=9A=
+=E3=81=AE=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=B0=E3=82=92=E3=81=94=E6=
+=A1=88=E5=86=85=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
+=0D=0A=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=0D=0A=E2=96=A0 =E7=84=A1=E6=96=99=E3=81=
+=AE=E9=8A=98=E6=9F=84=E9=85=8D=E4=BF=A1=E3=83=BB=E5=80=8B=E5=88=A5=E7=9B=B8=
+=E8=AB=87=EF=BC=88LINE=EF=BC=89=E3=81=AB=E3=81=A4=E3=81=84=E3=81=A6=EF=BC=
+=88=E3=81=94=E6=A1=88=E5=86=85=EF=BC=89=0D=0A=E7=A7=81=E3=81=AF=E6=97=A5=E3=
+=80=85=E3=80=81=E5=8E=B3=E9=81=B8=E9=8A=98=E6=9F=84=E3=81=AE=E5=88=86=E6=9E=
+=90=E3=82=84=E5=A3=B2=E8=B2=B7=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=B0=
+=E3=81=AE=E9=85=8D=E4=BF=A1=E3=82=92LINE=E3=81=A7=E8=A1=8C=E3=81=A3=E3=81=
+=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0ALINE=E3=81=AB=E3=81=94=E7=99=
+=BB=E9=8C=B2=E3=81=84=E3=81=9F=E3=81=A0=E3=81=8F=E3=81=A8=E3=80=81=E4=B8=8B=
+=E8=A8=98=E3=81=AE=E3=82=B5=E3=83=BC=E3=83=93=E3=82=B9=E3=82=92=E7=84=A1=E6=
+=96=99=E3=81=A7=E5=8F=97=E3=81=91=E3=82=89=E3=82=8C=E3=81=BE=E3=81=99=E3=80=
+=82=0D=0A=0D=0A=E3=83=BB=E7=9F=AD=E6=9C=9F=E6=80=A5=E9=A8=B0=E9=8A=98=E6=9F=
+=84=E3=81=AE=E9=80=9F=E5=A0=B1=EF=BC=88=E6=9C=9D=E3=82=A4=E3=83=81=E9=85=8D=
+=E4=BF=A1=EF=BC=89=0D=0A=E3=83=BB=E4=B8=AD=E9=95=B7=E6=9C=9F=E3=81=AE=E6=88=
+=90=E9=95=B7=E6=A0=AA=E3=83=94=E3=83=83=E3=82=AF=E3=82=A2=E3=83=83=E3=83=97=
+=0D=0A=E3=83=BB=E9=8A=98=E6=9F=84=E3=81=94=E3=81=A8=E3=81=AE=E8=B2=B7=E3=81=
+=84=E3=83=BB=E5=A3=B2=E3=82=8A=E3=83=BB=E6=90=8D=E5=88=87=E3=82=8A=E3=81=AE=
+=E7=9B=AE=E5=AE=89=E6=8F=90=E7=A4=BA=0D=0A=E3=83=BB=E5=80=8B=E5=88=A5=E7=9B=
+=B8=E8=AB=87=EF=BC=88=E5=85=88=E7=9D=80=E3=83=BB=E9=99=90=E5=AE=9A=E6=9E=A0=
+=EF=BC=89=E3=82=84=E9=80=9F=E5=A0=B1=E3=81=AE=E5=84=AA=E5=85=88=E6=A1=88=E5=
+=86=85=0D=0A=0D=0A=E2=96=A0 =E5=8F=8B=E3=81=A0=E3=81=A1=E8=BF=BD=E5=8A=A0=
+=EF=BC=88=E3=81=99=E3=81=90=E7=99=BB=E9=8C=B2=E5=8F=AF=E8=83=BD=EF=BC=89=0D=
+=0ALINE=E9=80=A3=E7=B5=A1=E5=85=88=EF=BC=9Ahttps://line.me/ti/p/Qgfmaeu6ua=
+=0D=0ALINE ID=EF=BC=9Av09083=0D=0A=0D=0A=E2=80=BB=E5=85=AC=E5=BC=8FLINE=E3=
+=81=B8=E7=99=BB=E9=8C=B2=E3=81=84=E3=81=9F=E3=81=A0=E3=81=91=E3=82=8C=E3=81=
+=B0=E3=80=81=E4=BB=A5=E9=99=8D=E3=81=AF=E3=81=93=E3=81=A1=E3=82=89=E3=81=A7=
+=E8=BF=85=E9=80=9F=E3=81=AB=E3=81=94=E6=A1=88=E5=86=85=E3=81=97=E3=81=BE=E3=
+=81=99=E3=80=82=0D=0A=E2=80=BB=E5=88=9D=E5=9B=9E=E3=81=AF=E7=B0=A1=E5=8D=98=
+=E3=81=AA=E8=87=AA=E5=B7=B1=E7=B4=B9=E4=BB=8B=EF=BC=88=E4=BF=9D=E6=9C=89=E9=
+=8A=98=E6=9F=84=E3=83=BB=E6=8A=95=E8=B3=87=E3=82=B9=E3=82=BF=E3=82=A4=E3=83=
+=AB=E3=81=AA=E3=81=A9=EF=BC=89=E3=82=92=E3=81=8A=E9=80=81=E3=82=8A=E3=81=8F=
+=E3=81=A0=E3=81=95=E3=81=84=E3=80=82=0D=0A=0D=0A=E3=81=94=E4=B8=8D=E6=98=8E=
+=E7=82=B9=E3=82=84=E5=80=8B=E5=88=A5=E7=9B=B8=E8=AB=87=E5=B8=8C=E6=9C=9B=E3=
+=81=AE=E6=96=B9=E3=81=AF=E3=80=81LINE=E3=81=AB=E3=81=A6=E3=81=8A=E6=B0=97=
+=E8=BB=BD=E3=81=AB=E3=81=94=E9=80=A3=E7=B5=A1=E3=81=8F=E3=81=A0=E3=81=95=E3=
+=81=84=E3=80=82=0D=0A=E3=81=9D=E3=82=8C=E3=81=A7=E3=81=AF=E3=80=81=E8=89=AF=
+=E3=81=84=E3=83=88=E3=83=AC=E3=83=BC=E3=83=89=E3=82=92=E3=81=8A=E7=A5=88=E3=
+=82=8A=E3=81=97=E3=81=A6=E3=81=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
+=0D=0A=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC =E4=BD=90=E8=
+=97=A4 =E6=85=8E=E5=90=BE
 
-To fix this, set the image base to match forced section addresses
-
-Fixes
-| x86_64-yoe-linux-ld.lld: error: section '.text' address (0x10000) is smaller than image base (0x400000); specify --image-base
-| x86_64-yoe-linux-ld.lld: error: section '.bss' address (0x12000) is smaller than image base (0x400000); specify --image-base
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- kexec_test/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kexec_test/Makefile b/kexec_test/Makefile
-index fec6210..f9fa92c 100644
---- a/kexec_test/Makefile
-+++ b/kexec_test/Makefile
-@@ -31,7 +31,7 @@ $(KEXEC_TEST): CPPFLAGS+=-DRELOC=$(RELOC)
- $(KEXEC_TEST): ASFLAGS+=-m32
- #$(KEXEC_TEST): LDFLAGS=-m32 -Wl,-e -Wl,_start -Wl,-Ttext -Wl,$(RELOC) \
- #		       -nostartfiles
--$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -Ttext $(RELOC)
-+$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start --image-base=$(RELOC) -Ttext $(RELOC)
- 
- $(KEXEC_TEST): $(KEXEC_TEST_OBJS)
- 	mkdir -p $(@D)
 
