@@ -4,68 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05EB4CA100B
-	for <kexec@archiver.kernel.org>; Wed,  3 Sep 2025 06:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 704A8CA1009
+	for <kexec@archiver.kernel.org>; Wed,  3 Sep 2025 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=L/NFMtx4Yhan7qfaUDRumI5vWdHH79NVYyphQT29qf0=; b=Za5qGP+vsHfnIVhI7gxt5ODISu
-	k58zy9bZo8Y6Qo8T+FGzfOx8LkTfZ7iqeBdQcZTBJlkDmLE9d+R8FSFtL9WIzdU9Q1KT1IlVSbiRu
-	kvpJQhreHvH5ObO85zh/V4b5liSwC3dSnb0+3O87iBa129Fg7WzeKlVfEMzZ4qnp2iWGBXULTP4Pe
-	NAdcix+/kxG4xmTRXbRQjtOwjOmHnQyIHLN8ftf4hwds9SqywCeAICqoP7JNGDIvCP+4HOxDJTE+m
-	dQEVNtRK32DbDwVGWDWGjmIE4xoTKuVMDtDxIfTp24XGpKeZ4UIHCMlVCoRwZ9+KJBAVvEAR2JgBZ
-	XujQrL7w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hR6IJbj1Vfo1F8yJ7ahz2cOIPT3YmpnAowzpDDMIGdQ=; b=K4g2b6/IMwely/sl8CsIW7EoCZ
+	De/B6ycz0R0T83cPKHcMVdjIMOmSPR0kopBtsrN5fcRcEPmSUysHjKUbYw0uU5v823unaWeEEA6cb
+	E2zmoWezGJG8R2pqdd6byFYvgEotYfkBUYeor+8V78tpW4iWJBiKqnC7gYKbuZzNti1Uvjp5QRxat
+	hEAPK5zJ1K1Ks5ecT91CiTjTq3u8RRig2P7jzupsjSyOgU5kq2Lg4qepYuIdChq4b7Kpxg8nOAj9C
+	YNxpffBkiZ5A6b/Uvsq+IxKy8J3NeVbWcTxhhvi2w3X1dyaikN7q/OnO4neCvhbD1no6vkT0BNKPX
+	UvRB26JA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uth6C-00000004h9n-38pA;
-	Wed, 03 Sep 2025 06:36:04 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1utpWK-00000006wAn-0Cu0;
+	Wed, 03 Sep 2025 15:35:36 +0000
+Received: from mail-mw2nam12on2060e.outbound.protection.outlook.com ([2a01:111:f403:200a::60e] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uth0r-00000004efa-1Umm
+	id 1utn2H-00000006U44-3sYE
 	for kexec@lists.infradead.org;
-	Wed, 03 Sep 2025 06:30:34 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 028AA44BE4;
-	Wed,  3 Sep 2025 06:30:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B792CC4CEF0;
-	Wed,  3 Sep 2025 06:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756881032;
-	bh=C3NlxNYz6bfCABhEIee3Vq9GbnEKAONZKNFONpPiN3c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aC+N1oXwxBgKXwGUcqK/EB5vl94l2OaSNEWh5MVcKe9/E3ZEaR3Il3xvniELhXC/u
-	 QEjwv5BvLPs/0LpPZgTeF9956fEiZqkVkJH1CteKyNspczWHXrTsgbwdSqpVSW7y3a
-	 bjV4uwAzs5j3qtLiKFRj36ghUYj4cbpmvKNvJwjfPg3Gc2t600hWq/Zw42Zd6u1Vow
-	 gPAObDgd8sIX6fQ95Fa2bXboBlxUlAUAR/q0sZ1FN088T0nnV3BFvMMv1XeM4kKNfR
-	 DkTEZ0nX/vogWZzUXpbt7gdX7X7Hlm9WfJSpdtksE5qf5hUiDk92XCB/enYUB7ESzO
-	 jtNDZKFvGUnIw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Graf <graf@amazon.com>,
-	Baoquan He <bhe@redhat.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Chris Li <chrisl@kernel.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
+	Wed, 03 Sep 2025 12:56:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iMYIjoreorXNUnQuL/iZ2u7zBsqlwMISU4b/iVYCQRnaeYdY27NaRMGTVWoSzPWoQE2bW+jIerv/QuB01M1R4LwrOglBKyvDtlCOvdfDhu//bSofoMmLZKlz7ZW3BV4i2UYndyEoeyPoKtMlisl7BoaNjH9DJnhLWB+Ut/AcnnfZi9soHlxpNBIQEplL5wSngJfg4XaKI9dTrMUetfqFxtw2zowvzJj5xeGXij3pcMPvXdbQntTEAakX48IPjdo/x4L9/hohxh+Jkim3GXKx6eQ9t4qggKoBPucGD/koWlHeaQ/hnequAyHS1MIwYVUkszRV/aSij0jkyCew45/fMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hR6IJbj1Vfo1F8yJ7ahz2cOIPT3YmpnAowzpDDMIGdQ=;
+ b=v6WgGoyS8ziXe5oPVQ1sk/G6Ypow80fyHA+Lja63XdLUtG5Rt46TcgruDL0xpKoKcnHN5y21LR6rONzwQ1jJzmMfbCTVoHwtGTNoCR9KCGjxPbz2BWOgfKTOeSh5V3m3kfaaM1KtcaenbrY7yJpqIhz2/SNhul+ByBnqA2dTJAQbP3DJgbK76nzZzu9Y49aI6F7J4t7tU6sgEEhcdS+UsNOwN8/dn8vrmbC3xsm8VP6lz47s/tn3kUzoRSnn/geETG7thPAUSPz2JiiyElOkBUSokTN9yZg5mC/NPuAiKOv/oqTyOJhPUP6BNuwzAEowptKbD5oeVVvKfGChYLN8dQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hR6IJbj1Vfo1F8yJ7ahz2cOIPT3YmpnAowzpDDMIGdQ=;
+ b=oJM72u7TKDfIoC3UQetVbsZkjaNRpp9S85fKb2O8EKNsIi3P9m2OnAMquK6r1JrScq1Wki/60/sdx+wXcZFaXLjnQoWc8yoydW/DM2+eFIpe7olVmbwGwEAFdPB6aB4JIZI5L4/+wtONOTNrpbw4FU+wwnajkEVAELaxtu79wjkZzlIbXZQaNGrFIIRUir6Y6rU2wyFFcraYrihnon5MPxEuu+JjYkxocSoKjIRdwZn5v3NcVvxAGsN8HfaG0ilLSNPt7GzeAM3V+BZUBhaSP8EcZ1M+DQe+ToeJYCqw7kWQnmMW5Od11vNhZgT0AwVVX/sDQczGCoulRNTXjbfbDg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by LV8PR12MB9264.namprd12.prod.outlook.com (2603:10b6:408:1e8::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Wed, 3 Sep
+ 2025 12:56:22 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9073.026; Wed, 3 Sep 2025
+ 12:56:21 +0000
+Date: Wed, 3 Sep 2025 09:56:20 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
+	Changyuan Lyu <changyuanl@google.com>, Chris Li <chrisl@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] lib/test_kho: use kho_preserve_vmalloc instead of storing addresses in fdt
-Date: Wed,  3 Sep 2025 09:30:18 +0300
-Message-ID: <20250903063018.3346652-3-rppt@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250903063018.3346652-1-rppt@kernel.org>
+	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kho: add support for preserving vmalloc allocations
+Message-ID: <20250903125620.GG470103@nvidia.com>
 References: <20250903063018.3346652-1-rppt@kernel.org>
+ <20250903063018.3346652-2-rppt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250903063018.3346652-2-rppt@kernel.org>
+X-ClientProxiedBy: YT4PR01CA0137.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d5::24) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|LV8PR12MB9264:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8626334-0c2b-49c5-b4f5-08ddeae94842
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?b8XdwMsnf1ADUDutP+3YyNer4xm/+XjOcQU+rWs5QoO0Bg3tfQgt5BXTtyrp?=
+ =?us-ascii?Q?+KOvUPCbt34vb4yj82hCbYTCXEk3EQFqFCpLVPOaqDdu85TrxCYeaN09Ny0+?=
+ =?us-ascii?Q?HFETlOCYEzBZIRPiNNkx9bDM4vcseSkBDv3dFzE7R2OwwqgLHbKyybYtIeEy?=
+ =?us-ascii?Q?9jBeqV58RelIuE/ryZ/RCNqwucRK14syzRoXqh2o1kEqH4NR68QB4JfhW3o+?=
+ =?us-ascii?Q?G5ZxZpy8obsg9POSVwa6bmQC2kUBukPxLJC7cGlVM3tPIK/7Jls2HobnsQMF?=
+ =?us-ascii?Q?P56aXBZXJglH+YqNV2FEFYJURjersFOlL8AEXl2fA0CjkXAIGAx9nKCgsNCt?=
+ =?us-ascii?Q?eJoWV5QVwRQuXFtigxzWb53IeQrNGN85s5dAXKmDMKpv91yV5I27K0oHqKki?=
+ =?us-ascii?Q?4UZi2nUXglaI77MGOmL4uE/soDEmjvpr2inrINdWTudy4imQw/QDJrnr3rDX?=
+ =?us-ascii?Q?NI6JFebu49ILJCQEFOsnKKEjr5I8NZhM/MwUC23QS7h0fWDfsWy/ACC+VdBb?=
+ =?us-ascii?Q?Nk6vB8Hn4u7Igtz/DpoMDVn6f5spCuFHZ4NyY+ZYLosxAJSi7scPEMTcRM53?=
+ =?us-ascii?Q?C8YNs5Xb22yyjTgme7nwn5bEYwWV/F6GubOSHAMO5gPw3x+PofB9sC+iow+n?=
+ =?us-ascii?Q?s0WJU6xuQEC43p0AX+bO3JYL/k4pu+vl9WYz5BQRFRW5ySWNwD9fCxScmowJ?=
+ =?us-ascii?Q?Za215oWjRSqwseIh5gUED8ukh21h0m1+ftebqdjNCPm76zyPO4834JGIozSq?=
+ =?us-ascii?Q?/tOjK8EzGNzvt61uckUcrn1r0oSXNYgJv1Ky4+X0nSqA1KNbltWKtKg1wYF+?=
+ =?us-ascii?Q?rL4qInrPpx2WWdsqyjibH9P6gjyps+UOu2tdgSxljlKqTiY0c553Ybu+dzmT?=
+ =?us-ascii?Q?DH9jaDygg6T8JKpc9Ka/HZ0Uwcpbc9F3lHzoW6Mi4CJT4UvXDSvNDkwEnBpr?=
+ =?us-ascii?Q?MefY+3IuNByDTs/sNrcLHjwAmVmqyBR2fbLPM+c/zAFOnP9dKqauOJ/2tq3u?=
+ =?us-ascii?Q?A6narhFAYmK6psr8X614qZ388DiRNgMBt4Lbj2OyvcJsfhFzJ2YxNuweJLx8?=
+ =?us-ascii?Q?E5icPYyY5tkQPaEAfP1IAYuBqels5ItqNkCqYhh45JxU4YW3d0UurUK+aYzU?=
+ =?us-ascii?Q?dGDNbM6YihN6rzhk3Dp2zkJSPUsXt6SSNqRjSdvnMJITX9lyOEAk2oCBfuiG?=
+ =?us-ascii?Q?WbPdWZ2qTUzBF1S0tHWwHMZ2wia11bDaDvBYF0MYAc3SMfrGtV4iIYi8EQlD?=
+ =?us-ascii?Q?rdizFhQGKeoX7kQwIJwB6lgVvYQUjzfWJX2b59jSM9at3qdObqiB1wNIRi9s?=
+ =?us-ascii?Q?tGntTKtDcFuJZtKtspnXxzGn/5fIOlNRclEyUI6OIXIn7BgF2LMWx1g/prS4?=
+ =?us-ascii?Q?vc6xiGpab7fWYpA9X3/W6sQS7XkplNuxXXIrkyE1zhRZ9557WtMfbyz9Eya6?=
+ =?us-ascii?Q?ZlPfuf/1ffc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FuBwuQpJJbJ3C4gECWgpctoGrAIHUAm8BMqE4/ebCzTa07wVrTrcBnnFIoGB?=
+ =?us-ascii?Q?4SP2LDUlxzGb/L00uNr0SzZ3s+94nwA+Cd1PwFC9OyJYqThPErWsiIXGarfZ?=
+ =?us-ascii?Q?wDFeC02s38U7gwXskqagdCpWtT3vGnSQus6snyUZxdkU7ks1KgQQO/0weSzs?=
+ =?us-ascii?Q?knm9LIsNAxlHdkBFxvD7LHE/1t94NYO0ujsuVdEqhUS7kcSwWNyULv+ead1w?=
+ =?us-ascii?Q?Grytk88uNy9TAu455kcVYDuLQjq3IDGkRHg37mXwPYZmv7SjevLMfC+XHE5Z?=
+ =?us-ascii?Q?Hz425tTk1sWieRbozdd3psPClLJsM+PbxFjyAaaJNi0p4R3p3MVffuo5DsuY?=
+ =?us-ascii?Q?nzL1Dvtqs72nbKy4RhM1WHFvn2SHMPWup4cURosIuhWMxndoJdouqimEqTO0?=
+ =?us-ascii?Q?D6fk/9F29CzTM95QNxX/pA2p6P4bWwtbD6qQL3buw5Ga7ya7coGCixqkpVHP?=
+ =?us-ascii?Q?8wp3+kBLl9+Q+E3CZFg4Ll8trt3NG77iOjsReFgtC8M4VY7RuEsazQjwgkri?=
+ =?us-ascii?Q?+HbdTZIgOFiYM0KNYUoEdLCdcZMb+fyd8SPl2eSgcA7kMuZizijIHYOFrTyt?=
+ =?us-ascii?Q?Y6UkbHclWhoAbRm2iMf63O03gaOq3OGF6sZl7mAZCLEX6xR9AW3OIN7/sGvG?=
+ =?us-ascii?Q?1B25HrWWx/N9OlzkFPa6Jcdw3SgPTb7c+bXNd8iyrccl0GGfPgxSA23PVAYl?=
+ =?us-ascii?Q?JWQLX9YZjembX46yweGlVKq4y+QriwrcZP6Vk8ljlwYcDGUAJfAcONWPv2HM?=
+ =?us-ascii?Q?Z/wtec1P8mBxXOQTrgDNE3SaFd0R7BIB423h2p4yfvUBVjm0jQ/nXnWDZbzw?=
+ =?us-ascii?Q?l12NLPJnnp3nXDwxNbwh/MXkcZcX0hdy+aw6fVDcgmGNIG2Ob/z2j/FiW65s?=
+ =?us-ascii?Q?5lNJEzQF+1roIAIrjuo0pe48CQu8O7G69GKPEBWRSm0A/Fwu/WJh+28VmZ0m?=
+ =?us-ascii?Q?Zf1blKvnAnLvdsi7SCmZskPfOV2lhf+qYlM3ZTfUB/Y+7B2btQLKEMeRYH/k?=
+ =?us-ascii?Q?V1e84TpLmwBo4ys7PO7hJwimgj+yh16dfDeema9hHOnQgYjshcTwi8NRVvoO?=
+ =?us-ascii?Q?colP75AMQdMhNvnojLv9WMHjsYbgNEwBPkyX8aqYUgoSkSQm16n90kJ/OHFH?=
+ =?us-ascii?Q?HFx80wvrvv1chai48OXcJsaKmyJToRHcYAchh7LVBwZ2VKvE2VLV89fnNhNB?=
+ =?us-ascii?Q?g7heh/uYOykTeISYN4y4wTk2wHknpmVBpwNxPXehUYb+Bzl9zqoxDNpwO2oZ?=
+ =?us-ascii?Q?x/nj3QOBT5jbGAhz55IOT8gH2KKAC2ZPKJoRJs/ZyvWlLuPfUsSs4GRSk2Oq?=
+ =?us-ascii?Q?AknMwhRRj0uKedv0h/4AjY8MP8dTSj9KRFsmP6AQtP2h85zZ+gBaykSZxoE+?=
+ =?us-ascii?Q?HBQ1n6RzATyLFZVz1c/zDnWHWZxd3HMPGDDygjGBTvZ+/g0dlKOu9zZpbdOA?=
+ =?us-ascii?Q?j6r7jvGCvNdEboClsJ3eqze6wI42iFrycq5w2Xr6MwxSKs7JB0O+smB+ceQ+?=
+ =?us-ascii?Q?essNz6SSpxxjoX8fWXhveUftAaZSg8vGvneUBVe+h5Ab8Y/Pk+HUprQ/5Wxj?=
+ =?us-ascii?Q?tzivcBMORiIY5oK5ihI=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8626334-0c2b-49c5-b4f5-08ddeae94842
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2025 12:56:21.8745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6PiYiKNWaUgv4BJdanJin8iIhpO1Bx7J/hvpO3EledOoLLGlMogw+iGxxm0sJiZ7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9264
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250902_233033_439112_7D6E8BD5 
-X-CRM114-Status: GOOD (  14.59  )
+X-CRM114-CacheID: sfid-20250903_055625_965398_13469138 
+X-CRM114-Status: GOOD (  12.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,113 +161,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Wed, Sep 03, 2025 at 09:30:17AM +0300, Mike Rapoport wrote:
+> +int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation)
+> +{
+> +	struct kho_vmalloc_chunk *chunk, *first_chunk;
+> +	struct vm_struct *vm = find_vm_area(ptr);
+> +	int err;
+> +
+> +	if (!vm)
+> +		return -EINVAL;
+> +
+> +	/* we don't support HUGE_VMAP yet */
+> +	if (get_vm_area_page_order(vm))
+> +		return -EOPNOTSUPP;
 
-KHO test stores physical addresses of the preserved folios directly in
-fdt.
-Use kho_preserve_vmalloc() instead of it and kho_restore_vmalloc() to
-retrieve the addresses after kexec.
+This is a compatability problem.. Should have some way to indicate
+that future kernels have an incompatible serialization so restore can
+fail..
 
-This makes the test more scalable from one side and adds tests coverage
-for kho_preserve_vmalloc() from the other.
+> +	chunk = new_vmalloc_chunk(NULL);
+> +	if (!chunk)
+> +		return -ENOMEM;
+> +	first_chunk = chunk;
+> +	first_chunk->hdr.total_pages = vm->nr_pages;
+> +
+> +	for (int i = 0; i < vm->nr_pages; i++) {
+> +		phys_addr_t phys = page_to_phys(vm->pages[i]);
+> +
+> +		err = kho_preserve_phys(phys, PAGE_SIZE);
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- lib/test_kho.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+Don't call kho_preserve_phy if you already have a page! We should be
+getting rid of kho_preserve_phys() :(
 
-diff --git a/lib/test_kho.c b/lib/test_kho.c
-index c2eb899c3b45..10045f5979a0 100644
---- a/lib/test_kho.c
-+++ b/lib/test_kho.c
-@@ -32,6 +32,7 @@ module_param(max_mem, long, 0644);
- struct kho_test_state {
- 	unsigned int nr_folios;
- 	struct folio **folios;
-+	phys_addr_t *folios_info;
- 	struct folio *fdt;
- 	__wsum csum;
- };
-@@ -68,13 +69,17 @@ static struct notifier_block kho_test_nb = {
- static int kho_test_save_data(struct kho_test_state *state, void *fdt)
- {
- 	phys_addr_t *folios_info __free(kvfree) = NULL;
-+	phys_addr_t folios_info_phys;
- 	int err = 0;
- 
--	folios_info = kvmalloc_array(state->nr_folios, sizeof(*folios_info),
--				     GFP_KERNEL);
-+	folios_info = vmalloc_array(state->nr_folios, sizeof(*folios_info));
- 	if (!folios_info)
- 		return -ENOMEM;
- 
-+	err = kho_preserve_vmalloc(folios_info, &folios_info_phys);
-+	if (err)
-+		return err;
-+
- 	for (int i = 0; i < state->nr_folios; i++) {
- 		struct folio *folio = state->folios[i];
- 		unsigned int order = folio_order(folio);
-@@ -89,11 +94,14 @@ static int kho_test_save_data(struct kho_test_state *state, void *fdt)
- 	err |= fdt_begin_node(fdt, "data");
- 	err |= fdt_property(fdt, "nr_folios", &state->nr_folios,
- 			    sizeof(state->nr_folios));
--	err |= fdt_property(fdt, "folios_info", folios_info,
--			    state->nr_folios * sizeof(*folios_info));
-+	err |= fdt_property(fdt, "folios_info", &folios_info_phys,
-+			    sizeof(folios_info_phys));
- 	err |= fdt_property(fdt, "csum", &state->csum, sizeof(state->csum));
- 	err |= fdt_end_node(fdt);
- 
-+	if (!err)
-+		state->folios_info = no_free_ptr(folios_info);
-+
- 	return err;
- }
- 
-@@ -197,7 +205,8 @@ static int kho_test_save(void)
- static int kho_test_restore_data(const void *fdt, int node)
- {
- 	const unsigned int *nr_folios;
--	const phys_addr_t *folios_info;
-+	const phys_addr_t *folios_info_phys;
-+	phys_addr_t *folios_info;
- 	const __wsum *old_csum;
- 	__wsum csum = 0;
- 	int len;
-@@ -212,8 +221,12 @@ static int kho_test_restore_data(const void *fdt, int node)
- 	if (!old_csum || len != sizeof(*old_csum))
- 		return -EINVAL;
- 
--	folios_info = fdt_getprop(fdt, node, "folios_info", &len);
--	if (!folios_info || len != sizeof(*folios_info) * *nr_folios)
-+	folios_info_phys = fdt_getprop(fdt, node, "folios_info", &len);
-+	if (!folios_info_phys || len != sizeof(*folios_info_phys))
-+		return -EINVAL;
-+
-+	folios_info = kho_restore_vmalloc(*folios_info_phys);
-+	if (!folios_info)
- 		return -EINVAL;
- 
- 	for (int i = 0; i < *nr_folios; i++) {
-@@ -233,6 +246,8 @@ static int kho_test_restore_data(const void *fdt, int node)
- 		folio_put(folio);
- 	}
- 
-+	vfree(folios_info);
-+
- 	if (csum != *old_csum)
- 		return -EINVAL;
- 
-@@ -291,6 +306,7 @@ static void kho_test_cleanup(void)
- 		folio_put(kho_test_state.folios[i]);
- 
- 	kvfree(kho_test_state.folios);
-+	vfree(kho_test_state.folios_info);
- }
- 
- static void __exit kho_test_exit(void)
--- 
-2.50.1
-
+Jason
 
