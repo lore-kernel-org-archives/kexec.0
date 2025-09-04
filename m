@@ -4,101 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C9B4CA1015
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 350D1CA1002
 	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 10:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=; b=eNrn6eJhEDP6ebED1gb9OuuZaq
-	dNInyof/tFxr7isemaGdSJ0yJOj101mqY2OVMCdgQBoxTNYHVowWpzmhxnQB2/MMMWddVf5lBcXuQ
-	rum56tHNKHde/TG+x1l+tdB5k412COk4dUupylSB5aE8xVShBUbKrahK8kYowX1Y69h53fSe49moq
-	vLPX9yluOnMxF0Rn/M7MePzr6GKHIpiNUT/gajoeJ7EQIbTegdlHhbhf3SIYo69ybQqw497PBxMxK
-	28VLqjobqKTBIbd4iSn58eoSYZtJUfKqLiYPUPVvDIP5cJWryAGWAh8V4k9Vb+ZFtqACz2+7Y6MP5
-	IiSTvxSQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=wjGzphpQSmdgD73ekPijlgtAxRIRaR7CsFHs0fRNlso=; b=XgnyFti3mo/NZu8s3dJRDJvbL9
+	tiem0xDCE9a/mAR3W0En91yAUdPZtkYZk+HMg20JZAJPKYLgxahBOQSROaYo3t6rqQ1YM3XoZ/2RH
+	Er3ywZBId97eYzh2xNfDfER2ZBsBnOLqG2NxUabZ8yaTtZxW6Y/qEQs5hXquEcaJPnOP7QyOVN+/y
+	Fm8NotuTX8kCedWihek4Hx6JAIVCGAgSfml6QDt5PO2MX2ZcO6uhRfqR+BoxiRtuV5vFbY6yo1/P1
+	yqsqfTcKORp9ejemYw/LuHF0HEdlMPumxjRkvXKm8sIddscTyycwwvo08NcQQxyb7IvaCI9El5fyt
+	3VQukCdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu7Vq-0000000B097-1J5L;
-	Thu, 04 Sep 2025 10:48:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uu7Vp-0000000B090-3tF8;
+	Thu, 04 Sep 2025 10:48:17 +0000
+Received: from pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.162.73.231])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu6Qr-0000000Ac26-0LDF
+	id 1uu6O7-0000000AbdC-0csO
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 09:39:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756978742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=;
-	b=aCQKWBlWt2n5ecwf6urSQEvAniBX+bZ/q8XxFneuZ3/6xriRp/s+kthnU3FjPMImxGfX4h
-	NJT3czIEu/YZr9D6HeHlVJFUDuVhEsDzh+vKMwe/bof4sK64G/iHE4yDXq7eXF+XDxV7dr
-	S6p2HaoRF579uNFKVCOZChaC+cu/gLQ=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-qN8ftY6cNKyQs8kvrJKRtA-1; Thu, 04 Sep 2025 05:39:01 -0400
-X-MC-Unique: qN8ftY6cNKyQs8kvrJKRtA-1
-X-Mimecast-MFC-AGG-ID: qN8ftY6cNKyQs8kvrJKRtA_1756978740
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3278bb34a68so732075a91.0
-        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 02:39:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756978740; x=1757583540;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=;
-        b=Ct0GUQAEHF9n+uj5SHK/kQd98ZjT485KhDjvAbuazcx+sS9nO7OSOmMyY3gIpXLd8Z
-         DsBOt5pK2MvfWo1RQswkgr+Z7IqKYGNbLcjRcuu8m6ThcgCoTyL3zUPjXipG80yauH1F
-         /30RQ+/5WEy7aiMWw79jjkS6vj32CyppIH2FeXUM9xAilSG9z3hsTosSOY2S/cBQwVlh
-         UiFVUE6t7bCo3SRT8Z+qvb3mR/L47BR4jt9LPSvD4YpNVwgFLeRWcXbejNR0cnGSeMht
-         Mo8N5bzS7+g8vB9PNtJZlpg7CFzXi+peEqDDM94XpEXBOw4orCSX0ANKsrZxo+NLMV11
-         6l9Q==
-X-Gm-Message-State: AOJu0Yw7L7gppPm/UFayFRiEbo8Y8Mo+TtnWTWK4ThEhfznYVgLFXVfG
-	0gaI4FscDRj4TEs4DLChlGN2JJEFTVZKpXfcEchLpBdEoEEuH2sk/q9LONkwk1OCUUbp9sqGWCy
-	ER/Y1GAF8UBPneCHtSgMAxe6s0l1+Td7iLKJcyK3JAw9V+oV19DG72frakPR0V16zIIkZrRHhqS
-	CCkNhRR9/4ZaPdCJE2J7+DOpC71oEH/L92/Tpr56QJGPuZ8g==
-X-Gm-Gg: ASbGncvC6+ziHV9x3t1qtFTvL+vsgaz4212FCXjbExH1TwBRJrx1eGLcc5LYwYg1qAo
-	fqmDHut3bD/HxR9SSXMYCQ6sUCP8BCpMe0EdYscGcC/WlOcgGhwP22bNEBmj5WMjUM5KTEmCE9w
-	DFz1alPQFcKeXF8SMEzI5ocFg8A30/GmCD0HW/WVvQlgNNLwcjXc3hZLDiCplp8iXfyl5qJp/iz
-	LKK0SMglsyzgFkThdESaR63ZCYZq145U3pENrm4uhHocnDbMB3rwR8lFgjmvVLHQhaoBWAp9mDi
-	ewNLtDZvnUSMvrBrynqAHwwDYFr+jtI=
-X-Received: by 2002:a17:90b:38c5:b0:327:c207:b3fb with SMTP id 98e67ed59e1d1-328156cc954mr21219724a91.25.1756978740226;
-        Thu, 04 Sep 2025 02:39:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEmAXPmAL5N6uswnGBHysh3EB25MAwxpg6uYHvn+wpMjFnTWn4DyTfl7/V8xNgx5Kkp7ntNlA==
-X-Received: by 2002:a17:90b:38c5:b0:327:c207:b3fb with SMTP id 98e67ed59e1d1-328156cc954mr21219683a91.25.1756978739508;
-        Thu, 04 Sep 2025 02:38:59 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-772396d2b97sm16676762b3a.67.2025.09.04.02.38.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 02:38:59 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: fuqiang wang <fuqiang.wang@easystack.cn>,
-	x86@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v6 1/2] x86/kexec: fix potential cmem->ranges out of memory
-Date: Thu,  4 Sep 2025 17:38:52 +0800
-Message-ID: <20250904093855.1180154-1-coxu@redhat.com>
-X-Mailer: git-send-email 2.51.0
+	Thu, 04 Sep 2025 09:36:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1756978575; x=1788514575;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wjGzphpQSmdgD73ekPijlgtAxRIRaR7CsFHs0fRNlso=;
+  b=BCxeXRFppPcwpx3FzP/qlctHt+m/LjAZflTn/tM6xusE7AiQw5QZIKVn
+   v5YO4OTTJ28xjL7lwcb2WcSyBJyhQeegTYezs5EvRR25Ym6maM85RzABR
+   I6ORHLLZSUnwrpOCiwQ5ni7Fw3uNi1oN4zJC8Pg/Jih2tl7o/mRo5WsSS
+   Zmq9L/NBPpS7n9DdlFpB//ot3ml+Yu1rRIGPGhcvhYxdyeh03Z3oKgjh/
+   ojNupkR7+JIozlJR/koaDeOxJOU8y8AC0jvYk9PJdXGnqBF3ceQOswgCF
+   eFZDZuLFW1tkfI8K4P9+f2KCnc/L/TjKUCMvJ2khETRpjm4xdXbKKQm10
+   g==;
+X-CSE-ConnectionGUID: bjc+8o0ZQjSAH2UyMvYysw==
+X-CSE-MsgGUID: 4EwNZJGCR2GA8AZ5/CtUCA==
+X-IronPort-AV: E=Sophos;i="6.18,238,1751241600"; 
+   d="scan'208";a="2272356"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 09:36:11 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:47410]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.63.19:2525] with esmtp (Farcaster)
+ id 67cfe508-291c-474a-991f-c5f04ba32975; Thu, 4 Sep 2025 09:36:10 +0000 (UTC)
+X-Farcaster-Flow-ID: 67cfe508-291c-474a-991f-c5f04ba32975
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Thu, 4 Sep 2025 09:36:10 +0000
+Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
+ (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Thu, 4 Sep 2025
+ 09:36:08 +0000
+From: Evangelos Petrongonas <epetron@amazon.de>
+To: <ardb@kernel.org>, Evangelos Petrongonas <epetron@amazon.de>, "Ilias
+ Apalodimas" <ilias.apalodimas@linaro.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: <bhe@redhat.com>, <changyuanl@google.com>, <graf@amazon.com>,
+	<kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<nh-open-source@amazon.com>, <rppt@kernel.org>
+Subject: Re: Re: [PATCH v3 2/2] efi: Support booting with kexec handover (KHO)
+Date: Thu, 4 Sep 2025 09:34:09 +0000
+Message-ID: <20250904093455.73184-1-epetron@amazon.de>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
+References: <cover.1755721529.git.epetron@amazon.de> <b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de> <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com> <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9PEoBtmhE9dcBErzYD62NRBooos-cKNQhaErX6q9ZyQ_1756978740
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-Originating-IP: [10.253.109.105]
+X-ClientProxiedBy: EX19D044UWA003.ant.amazon.com (10.13.139.43) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250904_023905_202149_60CAE683 
-X-CRM114-Status: GOOD (  17.45  )
+X-CRM114-CacheID: sfid-20250904_023615_248973_36E66238 
+X-CRM114-Status: GOOD (  22.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,89 +96,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: fuqiang wang <fuqiang.wang@easystack.cn>
-
-In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
-In the current x86 architecture code, the elfheader is always allocated
-at crashk_res.start. It seems that there won't be a new split range.
-But it depends on the allocation position of elfheader in crashk_res. To
-avoid potential out of memory in future, add a extra slot. Otherwise
-loading the kdump kernel will fail because crash_exclude_mem_range will
-return -ENOMEM. random kexec_buf for passing dm crypt keys may cause a
-range split too,
-add another extra slot here.
-
-The similar issue also exists in fill_up_crash_elf_data(). The range to
-be excluded is [0, 1M], start (0) is special and will not appear in the
-middle of existing cmem->ranges[]. But in cast the low 1M could be
-changed in the future, add a extra slot too.
-
-Previously discussed link:
-[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
-
-Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
-v5->v6:
-- rebase onto v6.17-rc4
-
-v4->v5 (Baoquan):
-- This is on top of Coiby's LUKS patchset in branch mm-nonmm-unstable of
-  akpm/mm.git. I did some adaption based on Coiby's patches.
-- [PATCH v9 0/8] Support kdump with LUKS encryption by reusing LUKS volume keys
-
- arch/x86/kernel/crash.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c6b12bed173d..5efdcd95a283 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	/*
- 	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
- 	 * may cause range splits. So add extra slots here.
-+	 *
-+	 * Exclusion of low 1M may not cause another range split, because the
-+	 * range of exclude is [0, 1M] and the condition for splitting a new
-+	 * region is that the start, end parameters are both in a certain
-+	 * existing region in cmem and cannot be equal to existing region's
-+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
-+	 * condition.
-+	 *
-+	 * But in order to lest the low 1M could be changed in the future,
-+	 * (e.g. [start, 1M]), add a extra slot.
- 	 */
--	nr_ranges += 2 + crashk_cma_cnt;
-+	nr_ranges += 3 + crashk_cma_cnt;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -323,10 +333,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	struct crash_mem *cmem;
- 
- 	/*
--	 * Using random kexec_buf for passing dm crypt keys may cause a range
--	 * split. So use two slots here.
-+	 * In the current x86 architecture code, the elfheader is always
-+	 * allocated at crashk_res.start. But it depends on the allocation
-+	 * position of elfheader in crashk_res. To avoid potential out of
-+	 * bounds in future, add an extra slot.
-+	 *
-+	 * And using random kexec_buf for passing dm crypt keys may cause a
-+	 * range split too, add another extra slot here.
- 	 */
--	nr_ranges = 2;
-+	nr_ranges = 3;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return -ENOMEM;
-
-base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
--- 
-2.51.0
+T24gVGh1LCA0IFNlcCAyMDI1IDA5OjE5OjIxICswMjAwLCBBcmQgQmllc2hldXZlbCA8YXJkYkBr
+ZXJuZWwub3JnPiB3cm90ZToKPiBPbiBTYXQsIDIzIEF1ZyAyMDI1IGF0IDIzOjQ3LCBBcmQgQmll
+c2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPiB3cm90ZToKPiA+Cj4gPiAoY2MgSWxpYXMpCj4gPgo+
+ID4gTm90ZSB0byBha3BtOiBwbGVhc2UgZHJvcCB0aGlzIHNlcmllcyBmb3Igbm93Lgo+ID4KPiA+
+IE9uIEZyaSwgMjIgQXVnIDIwMjUgYXQgMDQ6MDAsIEV2YW5nZWxvcyBQZXRyb25nb25hcyA8ZXBl
+dHJvbkBhbWF6b24uZGU+IHdyb3RlOgo+ID4gPgo+ID4gPiBXaGVuIEtITyAoS2V4ZWMgSGFuZE92
+ZXIpIGlzIGVuYWJsZWQsIGl0IHNldHMgdXAgc2NyYXRjaCBtZW1vcnkgcmVnaW9ucwo+ID4gPiBl
+YXJseSBkdXJpbmcgZGV2aWNlIHRyZWUgc2Nhbm5pbmcuIEFmdGVyIGtleGVjLCB0aGUgbmV3IGtl
+cm5lbAo+ID4gPiBleGNsdXNpdmVseSB1c2VzIHRoaXMgcmVnaW9uIGZvciBtZW1vcnkgYWxsb2Nh
+dGlvbnMgZHVyaW5nIGJvb3QgdXAgdG8KPiA+ID4gdGhlIGluaXRpYWxpemF0aW9uIG9mIHRoZSBw
+YWdlIGFsbG9jYXRvcgo+ID4gPgo+ID4gPiBIb3dldmVyLCB3aGVuIGJvb3Rpbmcgd2l0aCBFRkks
+IEVGSSdzIHJlc2VydmVfcmVnaW9ucygpIHVzZXMKPiA+ID4gbWVtYmxvY2tfcmVtb3ZlKDAsIFBI
+WVNfQUREUl9NQVgpIHRvIGNsZWFyIGFsbCBtZW1vcnkgcmVnaW9ucyBiZWZvcmUKPiA+ID4gcmVi
+dWlsZGluZyB0aGVtIGZyb20gRUZJIGRhdGEuIFRoaXMgZGVzdHJveXMgS0hPIHNjcmF0Y2ggcmVn
+aW9ucyBhbmQKPiA+ID4gdGhlaXIgZmxhZ3MsIHRodXMgY2F1c2luZyBhIGtlcm5lbCBwYW5pYywg
+YXMgdGhlcmUgYXJlIG5vIHNjcmF0Y2gKPiA+ID4gbWVtb3J5IHJlZ2lvbnMuCj4gPiA+Cj4gPiA+
+IEluc3RlYWQgb2Ygd2hvbGVzYWxlIHJlbW92YWwsIGl0ZXJhdGUgdGhyb3VnaCBtZW1vcnkgcmVn
+aW9ucyBhbmQgb25seQo+ID4gPiByZW1vdmUgbm9uLUtITyBvbmVzLiBUaGlzIHByZXNlcnZlcyBL
+SE8gc2NyYXRjaCByZWdpb25zLCB3aGljaCBhcmUKPiA+ID4gZ29vZCBrbm93biBtZW1vcnksIHdo
+aWxlIHN0aWxsIGFsbG93aW5nIEVGSSB0byByZWJ1aWxkIGl0cyBtZW1vcnkgbWFwLgo+ID4gPgo+
+ID4gPiBBY2tlZC1ieTogTWlrZSBSYXBvcG9ydCAoTWljcm9zb2Z0KSA8cnBwdEBrZXJuZWwub3Jn
+Pgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBFdmFuZ2Vsb3MgUGV0cm9uZ29uYXMgPGVwZXRyb25AYW1h
+em9uLmRlPgo+ID4gPiAtLS0KPiA+ID4gQ2hhbmdlcyBpbiB2MzoKPiA+ID4gICAgICAgICAtIElt
+cHJvdmUgdGhlIGNvZGUgY29tbWVudHMsIGJ5IHN0YXRpbmcgdGhhdCB0aGUgc2NyYXRjaCByZWdp
+b25zIGFyZQo+ID4gPiAgICAgICAgIGdvb2Qga25vd24gbWVtb3J5Cj4gPiA+Cj4gPiA+IENoYW5n
+ZXMgaW4gdjI6Cj4gPiA+ICAgICAgICAgLSBSZXBsYWNlIHRoZSBmb3IgbG9vcCB3aXRoIGZvcl9l
+YWNoX21lbV9yZWdpb24KPiA+ID4gICAgICAgICAtIEZpeCBjb21tZW50IGluZGVudGF0aW9uCj4g
+PiA+ICAgICAgICAgLSBBbWVuZCBjb21taXQgbWVzc2FnZSB0byBzcGVjaWZ5IHRoYXQgc2NyYXRj
+aCByZWdpb25zCj4gPiA+ICAgICAgICAgYXJlIGtub3duIGdvb2QgcmVnaW9ucwo+ID4gPgo+ID4g
+PiAgZHJpdmVycy9maXJtd2FyZS9lZmkvZWZpLWluaXQuYyB8IDI5ICsrKysrKysrKysrKysrKysr
+KysrKysrKystLS0tCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgNCBk
+ZWxldGlvbnMoLSkKPiA+ID4KPiA+Cj4gPiBJJ2QgcmF0aGVyIGRyb3AgdGhlIG1lbWJsb2NrX3Jl
+bW92ZSgpIGVudGlyZWx5IGlmIHBvc3NpYmxlLiBDb3VsZCB3ZQo+ID4gZ2V0IHNvbWUgaW5zaWdo
+dCBpbnRvIHdoZXRoZXIgbWVtYmxvY2tzIGFyZSBnZW5lcmFsbHkgYWxyZWFkeQo+ID4gcG9wdWxh
+dGVkIGF0IHRoaXMgcG9pbnQgZHVyaW5nIHRoZSBib290Pwo+ID4KPiA+Cj4gCj4gUGluZz8KCkhl
+eSBBcmQgSSB3YXMgQUZLIHRyYXZlbGxpbmcuIEkgYW0gYmFjayBub3cgYW5kIHdpbGwgZ2V0IHRv
+IGl0LgpQUzogS2VlbiB0byBtZWV0IHlvdSBsYXRlciB0b2RheSBpbiB0aGUgS1ZNIEZvcnVtLgoK
+S2luZCBSZWdhcmRzLApFdmFuZ2Vsb3MKCgoKCkFtYXpvbiBXZWIgU2VydmljZXMgRGV2ZWxvcG1l
+bnQgQ2VudGVyIEdlcm1hbnkgR21iSApUYW1hcmEtRGFuei1TdHIuIDEzCjEwMjQzIEJlcmxpbgpH
+ZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVp
+bmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAyNTc3NjQg
+QgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAzNjUgNTM4IDU5Nwo=
 
 
