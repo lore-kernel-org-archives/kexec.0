@@ -4,88 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21EBDCA1016
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 02:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BBCCCA1015
+	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 07:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Subject:To:From:Message-ID:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=; b=amUBHJm0NX6VJm+Zjea5x1o3OW
-	j9woU1aLlZ3K9SHKX0IxP5CA5IUoAGsjB5Agr89c2tMK/bU7Jr9B2+VoAEI4i3x0ypMSVWG6Zfwqt
-	Uems22R4EtWpIPBSamEg3cskyEzVbpxgRUEi0J4HeEzmPRYb8yhrgpEJM5eKlZ971MrLvMeD3JENk
-	hA0iaPuRV9/5m6Mzr6S0Af9aLUBNJQPX0e/ZBhr9cvgKdjvZ8n61r8UNO5Y2xmM0bLcG5kjYUmAbw
-	4Dx4kUu6f7mBjcc0OgLF7Q9CRXzU4smvhBv/LS74oODLP98/umR9FqWSUcV5fEOmzzoR7bSVmmLdv
-	abcgFmKA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tb40G1BP2UOmzBv4K9eP2Zzmqp+7E3i2B0tVuKcnrc0=; b=VSkdPLS/CDfxx1lKpFJMHDfqYZ
+	dnkdtiDDtcAmMeN8osG3mfHEABd9q3XWDc4opnGf26dS9h+hm6hScu8yVB8fFECNaMa38Riw///fv
+	ROESDjv+g+o4eFpbPUSmafJgWJZ/HjNavqFGohv3tF0g/NzwDk36/3BNrw808oT3ZWNqTliHPbmMg
+	jKIMh6bHafj0HGn/FVn2ZB1uvIu27AxUc+X9n+BRC/BJNSpT9e2MwwsfA1r7wbd/wTxo6JoVxpfdN
+	dp9rek5ozt0GpeX1ZF5jBod13kjf2sX5jaT81kdvXd0LIa3qv6assbXXTrxEfHEa4Tz9TahZQO5N7
+	Ac5mPAdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utzSY-00000008IOn-2Tmt;
-	Thu, 04 Sep 2025 02:12:22 +0000
-Received: from mail-yw1-x1143.google.com ([2607:f8b0:4864:20::1143])
+	id 1uu4PQ-00000009rtu-3bUl;
+	Thu, 04 Sep 2025 07:29:28 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utyth-00000008513-2QvA
+	id 1uu4Fs-00000009oRl-1Sl4
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 01:36:23 +0000
-Received: by mail-yw1-x1143.google.com with SMTP id 00721157ae682-71d5fb5e34cso5603847b3.0
-        for <kexec@lists.infradead.org>; Wed, 03 Sep 2025 18:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sellonterms-com.20230601.gappssmtp.com; s=20230601; t=1756949780; x=1757554580; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:date:subject:to:from
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=;
-        b=jgbcr85w7vsk8FU6q+DqIcmq7oqH8PqP9USg+zcvbcEx4FSkSQTZslRJFtv7HJbo2S
-         tZyoXMOM8J7ErzL19AAh+s/Lg6QiZ/Q7sLY0NnSNhr9IerMGiXMLeRJ42fjjB3c3MQhL
-         tan+SfO0EFyKLM6pH0eJv43nsUSRT3YYCYemR8Ziqh2OqLW5BwNl9d7WCAmfc+xB31P5
-         mk84/4L/ERH1BfKeNIkqLcHUdQUWxKuBnuIUVFpb5Sf9hDhz5W88hhgQRp4VGy8qF2rh
-         6okFHzMJGY0n4GFEUZJWyzI+wQjD04xYa7F0vsYb+1Ix/zsw7l3uzGvuAR4PCU8/jTkg
-         pxcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756949780; x=1757554580;
-        h=content-transfer-encoding:mime-version:date:subject:to:from
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OvzSAgyZO4rwBic03u2OGaUHWxMd4e8gjjmBFoEGAUs=;
-        b=qFAMU5yE8ohtlBWkSTKq2r5i+Bn82KDgpDL+4jc2iWthCY9beWOm5NLUKEkFb0sC+J
-         mJCLeqcoBcEKVRbESaIQhjr2YExnWxeBocOfRNnqvVrKJ/hITBAdbaf6Uoi6RXbLvzvY
-         MGSehlk5CzQFeer0yAMl4dyi2yMUJpz/0ZbOKffg5QUxewKykVY5/NgPoLfDbUIOM4oY
-         C6LH4ehK6x4sxE8tpwUpR50MqG2YMfbIkY88l8PWJZlXnMaqpVb5YUfwy+IQNNPlkI1N
-         PVAdWaRRR7TX4nZC8VHhYEQOD3GmR5avQ8hc3ez0FTZ8Vc3SC/FlB8aZWErpwnDwHytX
-         0kzA==
-X-Gm-Message-State: AOJu0YzDByrioJpZLvau9iBcGdYSv7+AZbQXeFhjP3OJnsmxogWsj1DZ
-	iabhKoW0NFjEjt+giZ6uqyslXEI/DxI0Z8y51tj0a1pm70QBjqX7mg26RBngc9tUNtHV/zACgjU
-	6vipQn0+I96Y=
-X-Gm-Gg: ASbGnctLnEV1/gc7APX9K3cEd0SuqcnfPb0ffEQ9NJ5AHuy3iHvjLwRpSSvqlhmPEi1
-	gBn6EPVQZrW5YX4LGpdFYSNKlbCuVSvLDNIUE+wT/y8Lsho/30oE7iUwc1NXPXhd339LhA9ibl7
-	CKzeYg8z+E+kty+Cvhf/gnV5r/l3fSa2yxVfM8XSIB5pZ3ivK5UHlNyiH/oriIQFAHYNRc5L5sj
-	2Dp/UDhV7BHAeo5bZEqmSRgJOiA5ZQQK2a4ZO2NnAUBPGB318hUm0OD/AwEUI3snvy/ms+gPwYv
-	457PTvjKeYx61dVXkRa+v7zkvh4XCPzYNBfduvyrQgYiA/+E5qmPjFhhakXu7FKfbFBWa9v+1sR
-	sH3x0tkqq7PTAsD4+eeVFvniVxOseVa6SQ8e7OBpCyXxNDHtuJnw5lrqquudtxN8dTA==
-X-Google-Smtp-Source: AGHT+IFWpGLOSITgAV1pt0qhieEY7SllIq+kkYnxkIPPfSv7cim2mNtYrLBhNm6/jmx2GQ2qK4X0Yg==
-X-Received: by 2002:a05:690c:56c7:b0:723:98d5:7a62 with SMTP id 00721157ae682-72398d580ebmr119881387b3.3.1756949779928;
-        Wed, 03 Sep 2025 18:36:19 -0700 (PDT)
-Received: from gsedeopyex.org (68-72-97-163.lightspeed.sndgca.sbcglobal.net. [68.72.97.163])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-723a82d964dsm18045047b3.1.2025.09.03.18.36.19
-        for <kexec@lists.infradead.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Sep 2025 18:36:19 -0700 (PDT)
-Message-ID: <3324a6c530b213e05d4b8dbc2337aa87@sellonterms.com>
-From: =?utf-8?Q?=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC_=E4=BD=90=E8=97=A4_=E6=85=8E=E5=90=BE?= <noreply84@sellonterms.com>
-To: "=?utf-8?Q?kexec@lists.infradead.org?=" <kexec@lists.infradead.org>
-Subject: =?utf-8?Q?=E3=80=90=E9=80=9F=E5=A0=B1=E3=80=91=E6=9C=AC?=
-	=?utf-8?Q?=E6=97=A5=E3=81=AE=E5=8E=B3=E9=81=B8=E9=8A=98=E6=9F=84?=
-	=?utf-8?Q?=E3=83=AC=E3=83=9D=E3=83=BC=E3=83=88=EF=BC=88=E7=9F=AD?=
-	=?utf-8?Q?=E6=9C=9F=E6=8E=A8=E5=A5=A8=EF=BC=89?=
-Date: Wed, 03 Sep 2025 21:36:15 +0800
-X-Priority: 3
+	Thu, 04 Sep 2025 07:19:36 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id ABC7B601A4
+	for <kexec@lists.infradead.org>; Thu,  4 Sep 2025 07:19:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BD7C4CEF4
+	for <kexec@lists.infradead.org>; Thu,  4 Sep 2025 07:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756970375;
+	bh=72oYlNKXXmAjA5Q5e13+DWrwi/CpM80zljJXvzw63aw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RkpRQhtW+a9Y5lrqRKRhT35FXEw1JPCeIWAQrYQnCH0PzIhHfBAOhG2Y5tMpknarz
+	 Pl6vzMh5wTJkjfijbtkfNLawzbNfsDaIq0XFhQ03u1qXSHpsWOyAsewXLQkmGGDpF4
+	 g5AZtKvc/NMoBuOSrEYboremIyftnqUZnccdN63+lyYaqC2zXAg1ev7wfVJH2lBPPs
+	 JVWLymM+QXBvbXwT51vLAHuB98LJ3hPXoXOI0XidDfDFuhAkXtfKW2uJbzeDUKLK45
+	 gu3YhlMYSQbv5cDMx39swAF/M58+EsE1FTxDMYZouqSbCtxD0PLFI34ZU+9r65T2RB
+	 b7Av9NcRTOQvQ==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f69cf4b77so787855e87.2
+        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 00:19:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXRu83sFHJk9kqqAGZIniEO3XN7+vsrmki9zic65cPn4thzSHRTYMxQrsPs7yTRSpZK5OonOw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwIlebOUppxxltOaY7F81kDzF8s5CGyGDLkzMFnIoVVNI5trfD2
+	4FF414hDCy1H4goXlVaM0didKDsysgJLZ5hD9ypUiXZPDodxuD3jPL/nnffcoCgceoFKI1zMtED
+	u19tO3aqoECvWe/GYtDfuMV9Gkt6VTC8=
+X-Google-Smtp-Source: AGHT+IEFvmAnCvfgO7PlnrG1BYUxZTjjsz6BPZ180OOcQw+OkZ+byNbMMbmHC7LJX6qhewccjpN/hH5j8/8g6mEFmZQ=
+X-Received: by 2002:a05:6512:239a:b0:560:8d97:8bb8 with SMTP id
+ 2adb3069b0e04-5608d978cd1mr1413481e87.32.1756970373660; Thu, 04 Sep 2025
+ 00:19:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250903_183621_848066_24201416 
-X-CRM114-Status: UNSURE (   2.38  )
-X-CRM114-Notice: Please train this message.
+References: <cover.1755721529.git.epetron@amazon.de> <b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de>
+ <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com>
+In-Reply-To: <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 4 Sep 2025 09:19:21 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
+X-Gm-Features: Ac12FXzg-Gwf5w9Dkz74akKGMbsagt1QMuLWSxeot3bSIi-D7R24FEVq60rM11k
+Message-ID: <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] efi: Support booting with kexec handover (KHO)
+To: Evangelos Petrongonas <epetron@amazon.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Changyuan Lyu <changyuanl@google.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nh-open-source@amazon.com
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,107 +83,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-=E5=B9=B3=E7=B4=A0=E3=82=88=E3=82=8A=E3=81=8A=E4=B8=96=E8=A9=B1=E3=81=AB=E3=
-=81=AA=E3=81=A3=E3=81=A6=E3=81=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
-=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC=E4=BD=90=E8=97=A4 =
-=E6=85=8E=E5=90=BE=E3=81=A7=E3=81=99=E3=80=82=0D=0A=0D=0A=F0=9F=93=8C =E6=
-=9C=AC=E6=97=A5=E3=81=AE=E6=8E=A8=E5=A5=A8=EF=BC=88=E5=84=AA=E8=89=AF=E9=8A=
-=98=E6=9F=84=EF=BC=89 =E2=80=94 2025=E5=B9=B49=E6=9C=884=E6=97=A5=0D=0A=E9=
-=8A=98=E6=9F=84=EF=BC=9A=EF=BC=884005=EF=BC=89=E4=BD=8F=E5=8F=8B=E5=8C=96=
-=E5=AD=A6=0D=0A=0D=0A=E2=96=A0 =E6=8E=A8=E5=A5=A8=E8=B2=B7=E4=BB=98=E3=83=
-=AC=E3=83=B3=E3=82=B8=EF=BC=9A440=E3=80=9C470=E5=86=86=0D=0A=E2=96=A0 =E6=
-=90=8D=E5=88=87=E3=82=8A=E7=9B=AE=E5=AE=89=EF=BC=88=E5=8F=82=E8=80=83=EF=BC=
-=89=EF=BC=9A380=E5=86=86=0D=0A=E2=96=A0 =E5=88=A9=E7=9B=8A=E7=9B=AE=E6=A8=
-=99=EF=BC=9A=0D=0A=E7=AC=AC=E4=B8=80=E7=9B=AE=E6=A8=99=EF=BC=9A480=E5=86=86=
-=0D=0A=E7=AC=AC=E4=BA=8C=E7=9B=AE=E6=A8=99=EF=BC=9A550=E5=86=86=0D=0A=0D=0A=
-=E2=96=A0 =E6=8E=A8=E5=A5=A8=E7=90=86=E7=94=B1=EF=BC=88=E8=A6=81=E7=82=B9=
-=EF=BC=89=0D=0A=E3=83=BB=E4=BD=8F=E5=8F=8B=E5=8C=96=E5=AD=A6=E3=81=AF=E3=80=
-=8C=E7=B7=8F=E5=90=88=E5=8C=96=E5=AD=A6=E3=80=8D=E3=81=8B=E3=82=89=E3=80=8C=
-=E9=AB=98=E4=BB=98=E5=8A=A0=E4=BE=A1=E5=80=A4=E6=9D=90=E6=96=99=E3=81=AE=E3=
-=83=86=E3=82=AF=E3=83=8E=E3=83=AD=E3=82=B8=E3=83=BC=E4=BC=81=E6=A5=AD=E3=80=
-=8D=E3=81=B8=E3=81=AE=E5=A4=89=E9=9D=A9=E3=82=92=E9=80=B2=E3=82=81=E3=81=A6=
-=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=83=BB2024=E5=B9=B4=E3=81=AE=
-=E4=B8=80=E6=99=82=E7=9A=84=E3=81=AAIT=E4=BA=8B=E6=A5=AD=E6=B8=9B=E6=90=8D=
-=E3=81=AF=E7=9F=AD=E6=9C=9F=E7=9A=84=E3=81=AA=E3=83=8D=E3=82=AC=E3=83=86=E3=
-=82=A3=E3=83=96=E8=A6=81=E7=B4=A0=E3=81=A8=E3=81=97=E3=81=A6=E7=B9=94=E3=82=
-=8A=E8=BE=BC=E3=81=BE=E3=82=8C=E3=81=A6=E3=81=8A=E3=82=8A=E3=80=81=E6=97=A2=
-=E3=81=AB=E5=B8=82=E5=A0=B4=E3=81=AF=E4=B8=80=E5=AE=9A=E7=A8=8B=E5=BA=A6=E7=
-=B9=94=E3=82=8A=E8=BE=BC=E3=81=BF=E6=B8=88=E3=81=BF=E3=81=A8=E5=88=A4=E6=96=
-=AD=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=83=BB=E5=8D=8A=E5=B0=8E=E4=
-=BD=93=E6=9D=90=E6=96=99=E3=81=AE=E5=9B=BD=E7=94=A3=E5=8C=96=E3=83=8B=E3=83=
-=BC=E3=82=BA=E3=82=84=E5=8C=BB=E7=99=82=E5=88=86=E9=87=8E=E3=81=A7=E3=81=AE=
-=E6=88=90=E9=95=B7=E3=81=8C=E3=80=81=E6=A5=AD=E7=B8=BE=E5=9B=9E=E5=BE=A9=E3=
-=81=A8ROE=E5=9B=9E=E5=BE=A9=E3=81=AE=E5=8E=9F=E5=8B=95=E5=8A=9B=E3=81=AB=E3=
-=81=AA=E3=82=8B=E8=A6=8B=E8=BE=BC=E3=81=BF=E3=81=A7=E3=81=99=E3=80=82=0D=0A=
-=E3=83=BB=E7=8F=BE=E5=9C=A8=E3=81=AE=E6=A0=AA=E4=BE=A1=E3=81=AF=E7=9B=B8=E5=
-=AF=BE=E7=9A=84=E3=81=AB=E5=89=B2=E5=AE=89=E3=81=A8=E8=A9=95=E4=BE=A1=E3=81=
-=A7=E3=81=8D=E3=80=81=E3=83=86=E3=82=AF=E3=83=8B=E3=82=AB=E3=83=AB=E9=9D=A2=
-=E3=81=A7=E3=82=82=E4=B8=8A=E6=98=87=E3=83=88=E3=83=AC=E3=83=B3=E3=83=89=E3=
-=81=8C=E7=A2=BA=E8=AA=8D=E3=81=A7=E3=81=8D=E3=82=8B=E7=8A=B6=E6=B3=81=E3=81=
-=A7=E3=81=99=E3=80=82=E7=9F=AD=E6=9C=9F=E3=80=9C=E4=B8=AD=E6=9C=9F=E3=81=A7=
-=E3=81=AE=E4=B8=8A=E6=98=87=E4=BD=99=E5=9C=B0=E3=82=92=E6=9C=9F=E5=BE=85=E3=
-=81=97=E3=81=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=0D=0A=E2=96=A0 =
-=E6=8A=95=E8=B3=87=E5=88=A4=E6=96=AD=E3=81=AE=E3=83=9D=E3=82=A4=E3=83=B3=E3=
-=83=88=0D=0A=E3=83=BB=E6=9C=AC=E6=8E=A8=E5=A5=A8=E3=81=AF=E7=9F=AD=E6=9C=9F=
-=E3=81=AE=E8=BF=85=E9=80=9F=E3=81=AA=E5=AF=BE=E5=BF=9C=EF=BC=88=E5=BD=93=E6=
-=97=A5=E3=80=9C=E6=95=B0=E5=96=B6=E6=A5=AD=E6=97=A5=EF=BC=89=E3=82=92=E6=83=
-=B3=E5=AE=9A=E3=81=97=E3=81=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E3=
-=83=BB=E3=83=AA=E3=82=B9=E3=82=AF=E7=AE=A1=E7=90=86=EF=BC=88=E6=90=8D=E5=88=
-=87=E3=82=8A=E8=A8=AD=E5=AE=9A=EF=BC=89=E3=81=AF=E5=BF=85=E3=81=9A=E8=A1=8C=
-=E3=81=A3=E3=81=A6=E3=81=8F=E3=81=A0=E3=81=95=E3=81=84=E3=80=82=0D=0A=0D=0A=
-=F0=9F=94=94 =E6=9C=AC=E6=97=A5=E4=B8=AD=E3=81=AE=E8=B3=BC=E5=85=A5=E3=82=
-=92=E3=81=8A=E5=8B=A7=E3=82=81=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=E6=
-=97=A2=E3=81=AB=E3=81=94=E8=B3=BC=E5=85=A5=E6=B8=88=E3=81=BF=E3=81=AE=E6=96=
-=B9=E3=81=AF=E3=80=81=E8=B3=BC=E5=85=A5=E7=94=BB=E9=9D=A2=EF=BC=88=E3=81=BE=
-=E3=81=9F=E3=81=AF=E4=BF=9D=E6=9C=89=E7=94=BB=E9=9D=A2=EF=BC=89=E3=81=AE=E3=
-=82=B9=E3=82=AF=E3=83=AA=E3=83=BC=E3=83=B3=E3=82=B7=E3=83=A7=E3=83=83=E3=83=
-=88=E3=82=92LINE=E3=81=A7=E9=80=81=E4=BB=98=E3=81=8F=E3=81=A0=E3=81=95=E3=
-=81=84=E3=80=82=E7=9B=AE=E6=A8=99=E4=BE=A1=E6=A0=BC=E5=88=B0=E9=81=94=E6=99=
-=82=E3=81=AB=E8=BF=85=E9=80=9F=E3=81=AB=E5=88=A9=E7=9B=8A=E7=A2=BA=E5=AE=9A=
-=E3=81=AE=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=B0=E3=82=92=E3=81=94=E6=
-=A1=88=E5=86=85=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
-=0D=0A=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
-=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
-=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
-=94=81=E2=94=81=E2=94=81=E2=94=81=0D=0A=E2=96=A0 =E7=84=A1=E6=96=99=E3=81=
-=AE=E9=8A=98=E6=9F=84=E9=85=8D=E4=BF=A1=E3=83=BB=E5=80=8B=E5=88=A5=E7=9B=B8=
-=E8=AB=87=EF=BC=88LINE=EF=BC=89=E3=81=AB=E3=81=A4=E3=81=84=E3=81=A6=EF=BC=
-=88=E3=81=94=E6=A1=88=E5=86=85=EF=BC=89=0D=0A=E7=A7=81=E3=81=AF=E6=97=A5=E3=
-=80=85=E3=80=81=E5=8E=B3=E9=81=B8=E9=8A=98=E6=9F=84=E3=81=AE=E5=88=86=E6=9E=
-=90=E3=82=84=E5=A3=B2=E8=B2=B7=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=B0=
-=E3=81=AE=E9=85=8D=E4=BF=A1=E3=82=92LINE=E3=81=A7=E8=A1=8C=E3=81=A3=E3=81=
-=A6=E3=81=84=E3=81=BE=E3=81=99=E3=80=82=0D=0ALINE=E3=81=AB=E3=81=94=E7=99=
-=BB=E9=8C=B2=E3=81=84=E3=81=9F=E3=81=A0=E3=81=8F=E3=81=A8=E3=80=81=E4=B8=8B=
-=E8=A8=98=E3=81=AE=E3=82=B5=E3=83=BC=E3=83=93=E3=82=B9=E3=82=92=E7=84=A1=E6=
-=96=99=E3=81=A7=E5=8F=97=E3=81=91=E3=82=89=E3=82=8C=E3=81=BE=E3=81=99=E3=80=
-=82=0D=0A=0D=0A=E3=83=BB=E7=9F=AD=E6=9C=9F=E6=80=A5=E9=A8=B0=E9=8A=98=E6=9F=
-=84=E3=81=AE=E9=80=9F=E5=A0=B1=EF=BC=88=E6=9C=9D=E3=82=A4=E3=83=81=E9=85=8D=
-=E4=BF=A1=EF=BC=89=0D=0A=E3=83=BB=E4=B8=AD=E9=95=B7=E6=9C=9F=E3=81=AE=E6=88=
-=90=E9=95=B7=E6=A0=AA=E3=83=94=E3=83=83=E3=82=AF=E3=82=A2=E3=83=83=E3=83=97=
-=0D=0A=E3=83=BB=E9=8A=98=E6=9F=84=E3=81=94=E3=81=A8=E3=81=AE=E8=B2=B7=E3=81=
-=84=E3=83=BB=E5=A3=B2=E3=82=8A=E3=83=BB=E6=90=8D=E5=88=87=E3=82=8A=E3=81=AE=
-=E7=9B=AE=E5=AE=89=E6=8F=90=E7=A4=BA=0D=0A=E3=83=BB=E5=80=8B=E5=88=A5=E7=9B=
-=B8=E8=AB=87=EF=BC=88=E5=85=88=E7=9D=80=E3=83=BB=E9=99=90=E5=AE=9A=E6=9E=A0=
-=EF=BC=89=E3=82=84=E9=80=9F=E5=A0=B1=E3=81=AE=E5=84=AA=E5=85=88=E6=A1=88=E5=
-=86=85=0D=0A=0D=0A=E2=96=A0 =E5=8F=8B=E3=81=A0=E3=81=A1=E8=BF=BD=E5=8A=A0=
-=EF=BC=88=E3=81=99=E3=81=90=E7=99=BB=E9=8C=B2=E5=8F=AF=E8=83=BD=EF=BC=89=0D=
-=0ALINE=E9=80=A3=E7=B5=A1=E5=85=88=EF=BC=9Ahttps://line.me/ti/p/Qgfmaeu6ua=
-=0D=0ALINE ID=EF=BC=9Av09083=0D=0A=0D=0A=E2=80=BB=E5=85=AC=E5=BC=8FLINE=E3=
-=81=B8=E7=99=BB=E9=8C=B2=E3=81=84=E3=81=9F=E3=81=A0=E3=81=91=E3=82=8C=E3=81=
-=B0=E3=80=81=E4=BB=A5=E9=99=8D=E3=81=AF=E3=81=93=E3=81=A1=E3=82=89=E3=81=A7=
-=E8=BF=85=E9=80=9F=E3=81=AB=E3=81=94=E6=A1=88=E5=86=85=E3=81=97=E3=81=BE=E3=
-=81=99=E3=80=82=0D=0A=E2=80=BB=E5=88=9D=E5=9B=9E=E3=81=AF=E7=B0=A1=E5=8D=98=
-=E3=81=AA=E8=87=AA=E5=B7=B1=E7=B4=B9=E4=BB=8B=EF=BC=88=E4=BF=9D=E6=9C=89=E9=
-=8A=98=E6=9F=84=E3=83=BB=E6=8A=95=E8=B3=87=E3=82=B9=E3=82=BF=E3=82=A4=E3=83=
-=AB=E3=81=AA=E3=81=A9=EF=BC=89=E3=82=92=E3=81=8A=E9=80=81=E3=82=8A=E3=81=8F=
-=E3=81=A0=E3=81=95=E3=81=84=E3=80=82=0D=0A=0D=0A=E3=81=94=E4=B8=8D=E6=98=8E=
-=E7=82=B9=E3=82=84=E5=80=8B=E5=88=A5=E7=9B=B8=E8=AB=87=E5=B8=8C=E6=9C=9B=E3=
-=81=AE=E6=96=B9=E3=81=AF=E3=80=81LINE=E3=81=AB=E3=81=A6=E3=81=8A=E6=B0=97=
-=E8=BB=BD=E3=81=AB=E3=81=94=E9=80=A3=E7=B5=A1=E3=81=8F=E3=81=A0=E3=81=95=E3=
-=81=84=E3=80=82=0D=0A=E3=81=9D=E3=82=8C=E3=81=A7=E3=81=AF=E3=80=81=E8=89=AF=
-=E3=81=84=E3=83=88=E3=83=AC=E3=83=BC=E3=83=89=E3=82=92=E3=81=8A=E7=A5=88=E3=
-=82=8A=E3=81=97=E3=81=A6=E3=81=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82=0D=0A=
-=0D=0A=E6=A0=AA=E5=BC=8F=E3=83=A1=E3=83=B3=E3=82=BF=E3=83=BC =E4=BD=90=E8=
-=97=A4 =E6=85=8E=E5=90=BE
+On Sat, 23 Aug 2025 at 23:47, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> (cc Ilias)
+>
+> Note to akpm: please drop this series for now.
+>
+> On Fri, 22 Aug 2025 at 04:00, Evangelos Petrongonas <epetron@amazon.de> wrote:
+> >
+> > When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
+> > early during device tree scanning. After kexec, the new kernel
+> > exclusively uses this region for memory allocations during boot up to
+> > the initialization of the page allocator
+> >
+> > However, when booting with EFI, EFI's reserve_regions() uses
+> > memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
+> > rebuilding them from EFI data. This destroys KHO scratch regions and
+> > their flags, thus causing a kernel panic, as there are no scratch
+> > memory regions.
+> >
+> > Instead of wholesale removal, iterate through memory regions and only
+> > remove non-KHO ones. This preserves KHO scratch regions, which are
+> > good known memory, while still allowing EFI to rebuild its memory map.
+> >
+> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
+> > ---
+> > Changes in v3:
+> >         - Improve the code comments, by stating that the scratch regions are
+> >         good known memory
+> >
+> > Changes in v2:
+> >         - Replace the for loop with for_each_mem_region
+> >         - Fix comment indentation
+> >         - Amend commit message to specify that scratch regions
+> >         are known good regions
+> >
+> >  drivers/firmware/efi/efi-init.c | 29 +++++++++++++++++++++++++----
+> >  1 file changed, 25 insertions(+), 4 deletions(-)
+> >
+>
+> I'd rather drop the memblock_remove() entirely if possible. Could we
+> get some insight into whether memblocks are generally already
+> populated at this point during the boot?
+>
+>
 
+Ping?
 
