@@ -4,101 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8ED5CA1012
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 10:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A7E9CA1002
+	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 16:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c0rvQKXzPsuqYoWHl9F18lxFz+XZ3OaNwusLzUP53R8=; b=ysMCMjTMbrZZfebCkf77BuMmjq
-	5VHIg8l/TZbJuKAw+hyNzvUkX9X3ggwwWDT4v8IfcjZzIZBqvDUdcXfnoK3AoTXxQSDqycJjVk08S
-	2taXaXlQHlqoLr5PZmgoezQaKjA0DrZxb9MWJ9QSy4DnD6ROIo0oSwzar2q1ceRSgYpnMA9qn6zDV
-	TKVBnhCSQk0Dt60pHSXxcWB6YyoUSy2MrzeQ3gcdzMSC47BavB4RBF3ofX785jsT5BaSyOt/X4CmO
-	4kQuIk5cy0Z0dnqzTrfnhJGPleezVipFxKCojbAdvnjhgwOcERDqrIkIvK+IHcWUJs3lhLmXTiAVw
-	8qtMAAXw==;
+	bh=F1iKONytI5VprWHix9kGVJSDeCfqd9fAtCYLYsbhXHE=; b=LK+Z67F8bsqR+5+DAc+OTM/f8z
+	p6ib81/+Dq6xY1pu98AwU2+CNJjCfFzSb8za/t2YCkFKMHz3v2aOzhvikv5GwCwW3+qn40ZF5NlSx
+	Kx12UVAUgA0SrGSaD9WBxC7urMgyOeZSzHYO5m9i5phZU47Iok7BCVKEpydFGon6z25zJUIVgMmJp
+	nkNoFK144/zXna9zkN2hDgzmjjfZe0ut/DSN7d3/wVgl0u0N1zfm631TAOwvfTxVVH5fNJ+99qDqg
+	UBtGJMOkCD9SVlyMCc77DvB+o/BjR+JBkAb20icQMl/I48Bbu3GOzmZF203c/ZvsbBVxNRZEXX9qq
+	00CwJ/PA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu7Vq-0000000B09N-2xxo;
-	Thu, 04 Sep 2025 10:48:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uuClS-0000000CqnQ-1LW6;
+	Thu, 04 Sep 2025 16:24:46 +0000
+Received: from mail-co1nam11on20616.outbound.protection.outlook.com ([2a01:111:f403:2416::616] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu6Qu-0000000Ac30-3uiV
+	id 1uu96v-0000000BZnT-0P5g
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 09:39:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756978747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c0rvQKXzPsuqYoWHl9F18lxFz+XZ3OaNwusLzUP53R8=;
-	b=VqQMIMuWbgF1jmsBB89pTYXBDUoqemg633vjIWj8Z0CFya48CQtQHzwk1gdsGiqBJ+Z+wb
-	Z3f6cqdwubmfdC7YtRNTrHB3/fR0YoJ5MX1LZfg+rId3+YcnsoLf+3qTb9e8zVwGksocWu
-	CbNg83394LSkIeBzMuqmrToiF6psFMs=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-_xyVvnCzPimSF6WdavIESg-1; Thu, 04 Sep 2025 05:39:06 -0400
-X-MC-Unique: _xyVvnCzPimSF6WdavIESg-1
-X-Mimecast-MFC-AGG-ID: _xyVvnCzPimSF6WdavIESg_1756978746
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-76e2eb787f2so947483b3a.3
-        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 02:39:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756978745; x=1757583545;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c0rvQKXzPsuqYoWHl9F18lxFz+XZ3OaNwusLzUP53R8=;
-        b=GmM0hTIUnQjr/Xv2sS6mwyWzom5m6P/c7WhbfKStnKlTLK+pFMpI8dZWVToXJqXC9P
-         PSp4eD0db4aDpN8cMSbxcrZsKe+neT18PuOIyP7qSeqo2ARAn1cQ7rRMWiq1vhZhNegF
-         PHpbk3PxI64jXjd1tZe2VT6115ytrbLuD0/Srqb/jVWNMhQ4mdHKZRAhU29Sn0BfFpiM
-         GGNXU/p99Ac0mb0O06wAoWeAIzuZdpTnvMydAlio4HIQwlJiwyWOsN/Ez6NHQFgXq6JH
-         jKphasOjl60t9CyvolCRgJeRcSYlKwvQPEn39lMRbCAvBJlvyspxmpTql8OUmIaI8Dr1
-         8LSw==
-X-Gm-Message-State: AOJu0YxLdx9Zj4JDx5lrGCdtp0r5L0uu+YScXJVW8cj38YqgGIGwqHu8
-	2kP405JXpKDgQRP6PbDSzCWk8AatkHaABTmZji9FFJ4W+Ta569y1lU1w1n9y5TC0H0ErPHelTar
-	wyE7w8naVkKJuovQZ8qSg4+fDrPaKc2DT1sezc0HTs2Edu2Cgc6BZUW2/TEdEm0oRGpLWuDw+7N
-	zYV1NM49+26tN4ayyeCUElCkbPvKsVl9VzHe4oB7FgBdcjzA==
-X-Gm-Gg: ASbGncsMYnJ3n3z5ql7KjdshxtFtOAf2rd1VBbLftKBFMGNf+LKyDoJc5J0jaxdi9Az
-	h+H8/Sz4n1ZWXaAn9mixmD/mcUFzpgvwSagdBkQOpPaTrvX9tXKJTSBL6otOlbCozM6y5QnM4/b
-	xT1qqs2ISKg5Wzw8pp8Jyt3baHxZ8oPabWBNFhNsvWPuKoZY/v+D3SD22/4iQHF8r289qsIVUf5
-	re95d9aGlbfED1OtHu2JSRcLzL8wW3xr1wYyncnfLa73RH+lp/2evuF5+1IrV3wBE37wfxYhveu
-	jaXEurEwUSIJb5lK8lVnHKrgm89bTiA=
-X-Received: by 2002:a05:6a20:6a09:b0:24b:bae4:9c7f with SMTP id adf61e73a8af0-24bbaf3e666mr2199362637.39.1756978745321;
-        Thu, 04 Sep 2025 02:39:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHKYbyG0cgqN5tuhgCwbhJAPJzkArpNfN7KHV1CCe7rYznCJ7EREuG5frfE+WvBeDVCfK1s1w==
-X-Received: by 2002:a05:6a20:6a09:b0:24b:bae4:9c7f with SMTP id adf61e73a8af0-24bbaf3e666mr2199323637.39.1756978744689;
-        Thu, 04 Sep 2025 02:39:04 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a26abdesm18571779b3a.1.2025.09.04.02.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 02:39:04 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: fuqiang wang <fuqiang.wang@easystack.cn>,
-	x86@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 2/2] crash: Add KUnit tests for crash_exclude_mem_range
-Date: Thu,  4 Sep 2025 17:38:53 +0800
-Message-ID: <20250904093855.1180154-2-coxu@redhat.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250904093855.1180154-1-coxu@redhat.com>
-References: <20250904093855.1180154-1-coxu@redhat.com>
+	Thu, 04 Sep 2025 12:30:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RGghbrEVzY+yIgC50/20SqIX0TU6NK7ynSfGxLMp/6PBPqsc2BFKFNdzmfXzr6moQFfxi2rUa+U7EpjwtxtplNBQndn7hYK9cYdThObDTWSimfP2xpwJlmMKNfYP8u6nb0ID1jxVksKVCPsfKCbp28QiCuQfgEoruSq7WNBuzUc+QXPpvK/n08Yixjov8k7HtlsV9+lLuY9kB/J90rBso/6ukYV74KZzxpI2QTOCux9oUlSIxaoJhJHPVQSxssMM6ZR3q0e/PTlS1M42WcnuMYri08PHN9k48xxYjnrfXSPsOhJCPCywsMptVvSDjfX7EL6NFKlcGZxvLcE2uL8Eqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F1iKONytI5VprWHix9kGVJSDeCfqd9fAtCYLYsbhXHE=;
+ b=oLtOhXJsBgeHvaoW0wzHKivubBqMNQn8FEsBb3UtV8d55+ZJ1wzqlYu4fma0gjD9lDtaXGRc4S8aiNJCVeStFamz7L+GEOCj7ChnHL7FXMtyGxZMZSHVNuuQMj9H5sXhhZXA2ZIwKKru8e8MW4F4uCg8nFp/ucHZ3iCDR53BKTJVHm9Shq2TzW4W5uuvkDeYdEqMTg9HGuQF+MrBKu5IRITvPt+BsGHt1g4MrBYewla/qa47iQMIcfHSRR9fFf6HSD1OJ31YK/qw/1D5JNUBPF68yFbJEozay8mnW5ryPRjk+toC6+iqaQIGgi/WZFfw2i+fK5utCXbsZtbT/1PtpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F1iKONytI5VprWHix9kGVJSDeCfqd9fAtCYLYsbhXHE=;
+ b=HJxtBmAquUbav++thaVI1VY199kiX4cTkKjbwHzzHeINYHf/heRhL1OnWglJ4zTs5vwXcGKObY1nvbLOuvfS/q1ZdnPuLquV3wDYJB5pqD871FYycFsZtZKMxoyFYza5Autq4CkBcnOd1o3dnwe80v9wJYpJsO/KO+1vOY3SIJi+rl6k9fj/MAj7rm9BJ/KRCElDpWXKFHB7FuDR1Wg+UivmbeIuqnn4yp2pabpqUJSdi9a80Td3b+cT1eGghtGIytOp3UTGiruyXyUao6FXfOhONV+JGruFoVHs+GAW1fhMPIq4Mvvb7aqhLJP+qeUsRS7FV7VFW274wdz2PmD/xQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by DS2PR12MB9615.namprd12.prod.outlook.com (2603:10b6:8:275::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.17; Thu, 4 Sep
+ 2025 12:30:34 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.017; Thu, 4 Sep 2025
+ 12:30:34 +0000
+Date: Thu, 4 Sep 2025 09:30:32 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
+	Changyuan Lyu <changyuanl@google.com>, Chris Li <chrisl@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kho: add support for preserving vmalloc allocations
+Message-ID: <20250904123032.GM470103@nvidia.com>
+References: <20250903063018.3346652-1-rppt@kernel.org>
+ <20250903063018.3346652-2-rppt@kernel.org>
+ <20250903125620.GG470103@nvidia.com>
+ <aLhg2Jli0KUe-CXC@kernel.org>
+ <20250903170631.GK470103@nvidia.com>
+ <aLiWDl3sq3RTkdfJ@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aLiWDl3sq3RTkdfJ@kernel.org>
+X-ClientProxiedBy: YT4PR01CA0383.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:fd::29) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 5wjgoc9ae4d19f2yVp3Xa7Qr4E17IJRSgpPgTBu8hxY_1756978746
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|DS2PR12MB9615:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2c4e4a2-066a-4e6e-26fa-08ddebaed848
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?DVrQn59uapZ8yqZGTn1kmGwxo7h9gE4qNnlwQWbWg2iRIBNGvkSEphbpv0+T?=
+ =?us-ascii?Q?WVxVdoxIlw4TfpTpJc3zNySc5D30KZWLXy3Sel/Y5/YLT8CPBgRc7Fww5LGg?=
+ =?us-ascii?Q?xKzq9wtiEQ0w/A8Z/65+j2a/+DQ8ZT8QVC7OBq4oMHuDX/ZTMSUZSuUdRXGu?=
+ =?us-ascii?Q?q4h7xnZozC6u0zOWTNYYrA0yU4FO8wFypETL4lmf0rsQofHaLoqtswzA9xHP?=
+ =?us-ascii?Q?iDU72360OC2AWYGB/zY6hk2L34wx0l9YKD16HMO6KhRNmRiUi4CR86S+oxSV?=
+ =?us-ascii?Q?FpGFjLs7RSEN6yklp2K305SVBb0RaxMYcQipzflIN/gn4XgraKzUYMoc133t?=
+ =?us-ascii?Q?DfBokQg6TNVK9EgW85K0zk6EaOaL5FWz/Usv77UgkUreLp9F6Y6WXaU7gY1A?=
+ =?us-ascii?Q?dP2HUUUPmQHehJabA6Wu4L79Nm8EOyHh5F8z21CcaTLT6DdunwGbNQVNCN6W?=
+ =?us-ascii?Q?ikQURD/22MbLEq7fISf9MaRlf8I80lw/chBg6pURN6XJZsPepVuWbR/5lZjZ?=
+ =?us-ascii?Q?4IGKvyyQGe881qQv22fueP88SkvIc/7AJjWMeFI67w2iTQzygsLt1NRVYGJt?=
+ =?us-ascii?Q?m5iY2eiwsXCHqvmgYBtU+sZ0aVsE7zgSZdkrHFViox+oyB0yCOT4elzDwRdf?=
+ =?us-ascii?Q?C1tDRQmL3IBlR206Zhpl9yObUDxerfIsX2ne/wOVzytYDtwlQ+SWPWs1YBXL?=
+ =?us-ascii?Q?MdmurIr+4hAQnfRmO7IBgtJP5OLxImkD3whjpKLteZMNIAGzUb/l+Tk1RRUU?=
+ =?us-ascii?Q?KmknoPCLocKTEwYUebpz7FHFTbSd54UVZc80s9wyASHUMrf9nZ5DTO45OVSd?=
+ =?us-ascii?Q?ITsHHJWELqqikLFcFSO3VZX7I+VUp/M4MboggCmfVY2LhKYxJ1lxI0cG51vL?=
+ =?us-ascii?Q?tcUoPdAxbBbGuTeUtaqE0NLeUbvpueOq9jPn0opr9lOFTYO8l6V+Hq2jal90?=
+ =?us-ascii?Q?8gCvdqp0fnRvoYQEY3gBUK00JSrU6jEq1+2T1fHKp1MBi7eDUnc9W9mO68X2?=
+ =?us-ascii?Q?jPoK8nluMWITFKwiDpfpGVMfbqP6x3IkhpD8d5lT5L/ubPIr4+oO7OJ23qkT?=
+ =?us-ascii?Q?N/yy/LG8SXZqoPPO45I/DSfNzdWuR51U9BOL/8/GXXKHiBsZSUPc86HliGRH?=
+ =?us-ascii?Q?1dXSSGfJ4Gne30u+Jw8Sg/jkCRW+Z+7IF20UMDsIL3nU9Q5G9Rff4Campt7B?=
+ =?us-ascii?Q?EZ3UIp1youZMqXJwL8S/PbBH07pWiKXHhc75H8n5hTtcTsmu+UFkjRNG8vYx?=
+ =?us-ascii?Q?xDUKYuyhWQBwJTSGNe8KalcP9ETjTIa8yWa3zZotBBGf+Hf/5R6dLuHu6jNJ?=
+ =?us-ascii?Q?L9obE21AY6RL+2eKAgUKuqEgiMqWsozXSfROPWgxJtJQpdDf7/vzwCDAr7/m?=
+ =?us-ascii?Q?Q9awKc2JiY6Wz3wg8L7oTUWqwHY7OGkCxExfEm17FbkJlAa5V1ULTQJG+nPE?=
+ =?us-ascii?Q?lNhFbpWU9g0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H1o9yxe6b8vtVcIKc1Fz/73GMYwvwRKi6sS5wijfAF51L6mY7JYsP0VII7C5?=
+ =?us-ascii?Q?Va6DvUSj/T4Ead9YGFgQjygKc4Yw405tacoId0Og9rtI9XmmtqQ8HjQ4lZux?=
+ =?us-ascii?Q?uqvQl02uKqIW+QOwmnbqgJSDut/DuAxV7OcH6mSLAmBuyoWCSJNNtsZ7afZf?=
+ =?us-ascii?Q?LtVKxRU0MvmQpc1urUQw6XkKTVWDeKJIl0D9rXKDcXiXYSnjdeYNnNwb8QDk?=
+ =?us-ascii?Q?OPCsqQfj9psYb5EMQEzrEmkVnbMS0ROKWyZQt67oZ07mxpwxSWnnmPGbtAWV?=
+ =?us-ascii?Q?DjwAFf6X2SGuE+LvoDD/owL3mmYjWKdjbW1+NfRI0YEO2fAHuhdpwZ16zEA2?=
+ =?us-ascii?Q?9i+mkWwPKdsz6Jls1oec5qsKFSz18A4YxJ3UWknw6rDpr8vZBNHiypM6NFTH?=
+ =?us-ascii?Q?Bjx1x3qTaJZFBrWq+Z0QRen54VY2bZM1gYBk/ODdpPO/3pqH8ReFTMGYXKuU?=
+ =?us-ascii?Q?H3Qs+SbgQgUbzDsccJxeby+6zzmw6cJ0uez9KrQ9XlrsO4TPlf1wGuexDnlB?=
+ =?us-ascii?Q?jxsR4zj+3Lvc/qgzVpDGvCcwuPpA0jHgyW0nW75kkvaWxr4/uKDxZWEkWWwl?=
+ =?us-ascii?Q?kdj/YcGuCCECnXlKk1t/HcuhwhBh565Ebn5dYeZ1gtBgGN9SrqoYyx1DjFqA?=
+ =?us-ascii?Q?IgWPNfw8CNVs95iyB+DWPPg8wER+S/wSJVZgZ3uj1MepQ5BM6rwYxS6sS8pb?=
+ =?us-ascii?Q?5ZhN774Q8MAzDZYax0chQGpDKBrQPBarNWiphn+0lbjL5rY1PSKDtR0ZhgVl?=
+ =?us-ascii?Q?62vMs2kcAdcq3If97rP4YgqF5sGOdmPkwUubQSfbJqaVg3kCVKVInooZUJ6K?=
+ =?us-ascii?Q?G42BtYMt7VvjkIabHApV5x12vc3IXsp34TNcxeMzXIDn20xN99PE1nvtWDO8?=
+ =?us-ascii?Q?sH/ZmIoud7yfOVszbgWVuigdS/D3iLoBL0RXRSIvrNTKWM/e4D6y/33PO/Gf?=
+ =?us-ascii?Q?GQ1AfTrJDjPMQRqqLHHnSKUboqtPAlp6Lplp286JJoYAU86+0u9qiL3dt45j?=
+ =?us-ascii?Q?k1zUdP23w2rxBDx/sQ3rtkHtxpAaYpgmrNdnnkUuNFIugzjf7BUjOiZ5I7ep?=
+ =?us-ascii?Q?Fr2YXQKWoH9WIMAszJ4TVn5Wt7KreTXHSPhrLWLrnM2voavUybu8Wuswzbtl?=
+ =?us-ascii?Q?BtXaHRaHShzZoL3BjD/BURxcrrDa9fses17K2bFtz1FVD/SytFuoJGxy1JAT?=
+ =?us-ascii?Q?hBTeKAzw7IBfP/A0dS4MtSURvzRJ3FBENsHcOH6evp/NNln3ZBl5Ed4s5nvD?=
+ =?us-ascii?Q?fMVn3OREwBaVS6hVZw5IJfW+uBDE5uwF/lnLzagVz2gjoPnqWGZ6lmzof7mD?=
+ =?us-ascii?Q?9QLuF6MCNR/w9gY92zWeWoqXGhpt9izY1aP5llpi7fBrIXSKpyQ4BtEbaFCY?=
+ =?us-ascii?Q?BCJ+WMyCrzpUQclZZJEdLRd0typl5J047AYC1IF6+BcsuUw4MXZvXyvHJOxs?=
+ =?us-ascii?Q?nZd663ITHMmVwdUqTkQvaoa6Pe5y0e4otn/lv6DmaDKZGWYK5pMSzgHRnD/1?=
+ =?us-ascii?Q?/1STUi5QakcIGVmo9FUJrv1lv9rh/eUE0Vo6xXCpauho9mIO8vvq7Ctr2E+u?=
+ =?us-ascii?Q?HcHGayrIjGIUg51PLjo=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2c4e4a2-066a-4e6e-26fa-08ddebaed848
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2025 12:30:34.3246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p430fchxrdDiDCPcM0EAQRSF8nHK0qfyTH8YXGX09BjYgMbuSzGm5dVC7cOHFoyy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9615
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250904_023909_120664_408B996E 
-X-CRM114-Status: GOOD (  31.22  )
+X-CRM114-CacheID: sfid-20250904_053041_138047_85C6D984 
+X-CRM114-Status: GOOD (  19.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,466 +165,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-crash_exclude_mem_range seems to be a simple function but there have been
-multiple attempts to fix it,
- - commit a2e9a95d2190 ("kexec: Improve & fix crash_exclude_mem_range()
-   to handle overlapping ranges")
- - commit 6dff31597264 ("crash_core: fix and simplify the logic of
-   crash_exclude_mem_range()")
+On Wed, Sep 03, 2025 at 10:25:02PM +0300, Mike Rapoport wrote:
 
-So add a set of unit tests to verify the correctness of current
-implementation. Shall we change the function in the future, the unit
-tests can also help prevent any regression. For example, we may make the
-function smarter by allocating extra crash_mem range on demand thus
-there is no need for the caller to foresee any memory range split or
-address -ENOMEM failure.
+> It seems that our major disagreement is about using 'folio' vs 'page' in
+> the naming.
 
-The testing strategy is to verify the correctness of base case. The
-base case is there is one to-be-excluded range A and one existing range
-B. Then we can exhaust all possibilities of the position of A regarding
-B. For example, here are two combinations,
-    Case: A is completely inside B (causes split)
-      Original:       [----B----]
-      Exclude:          {--A--}
-      Result:         [B1] .. [B2]
+It is a folio because folio is the name for something that is a high
+order page and it signals that the pointer is the head page. Which is
+excatly what KHO preservation works on.
 
-    Case: A overlaps B's left part
-      Original:       [----B----]
-      Exclude:  {---A---}
-      Result:           [..B..]
+I don't know what the next step is when folio is split - presumably we
+will get a new type to represent an abstract memdesc head of a high
+order allocation that the lowest KHO primitives will change over to.
 
-In theory we can prove the correctness by induction,
-   - Base case: crash_exclude_mem_range is correct in the case where n=1
-     (n is the number of existing ranges).
-   - Inductive step: If crash_exclude_mem_range is correct for n=k
-     existing ranges, then the it's also correct for n=k+1 ranges.
+> I'd rather stick to the good old 'page' and when the time comes we can
+> 's/page/memdesc/g' supposing Matthew actually plans for it.
 
-But for the sake of simplicity, simply use unit tests to cover the base
-case together with two regression tests.
-
-Note most of exclude_single_range_test code is generated by Google
-Gemini with some small tweaks. The function specification, function body
-and the exhausting test strategy are presented as prompts.
-
-Signed-off-by: Coiby Xu <coxu@redhat.com>
-Assisted-by: Google Gemini
----
- kernel/Kconfig.kexec     |  11 ++
- kernel/Makefile          |   1 +
- kernel/crash_core.c      |  14 ++
- kernel/crash_core_test.c | 343 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 369 insertions(+)
- create mode 100644 kernel/crash_core_test.c
-
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 1224dd937df0..422270d64820 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -148,6 +148,17 @@ config CRASH_DM_CRYPT_CONFIGS
- 	  CRASH_DM_CRYPT cannot directly select CONFIGFS_FS, because that
- 	  is required to be built-in.
+I think you should just convert from the vmap page to folio for now
+and most likely vmap will stop using page someday..
  
-+config CRASH_DUMP_KUNIT_TEST
-+	tristate "Unit Tests for kernel crash dumps" if !KUNIT_ALL_TESTS
-+	depends on CRASH_DUMP && KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This option builds KUnit unit tests for kernel crash dumps. The unit
-+	  tests will be used to verify the correctness of covered functions and
-+	  also prevent any regression.
-+
-+	  If unsure, say N.
-+
- config CRASH_HOTPLUG
- 	bool "Update the crash elfcorehdr on system configuration changes"
- 	default y
-diff --git a/kernel/Makefile b/kernel/Makefile
-index c60623448235..216a7dfc3a68 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_CRASH_RESERVE) += crash_reserve.o
- obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
- obj-$(CONFIG_CRASH_DUMP) += crash_core.o
- obj-$(CONFIG_CRASH_DM_CRYPT) += crash_dump_dm_crypt.o
-+obj-$(CONFIG_CRASH_DUMP_KUNIT_TEST) += crash_core_test.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
- obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index a4ef79591eb2..961a035aaea7 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -274,6 +274,20 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
- 	return 0;
- }
- 
-+/**
-+ * crash_exclude_mem_range - exclude a mem range for existing ranges
-+ * @mem: mem->range contains an array of ranges sorted in ascending order
-+ * @mstart: the start of to-be-excluded range
-+ * @mend: the start of to-be-excluded range
-+ *
-+ * If you are unsure if a range split will happen, to avoid function call
-+ * failure because of -ENOMEM, always make sure
-+ *    mem->max_nr_ranges == mem->nr_ranges + 1
-+ * before calling the function each time.
-+ *
-+ * returns 0 if a memory range is excluded successfully
-+ * return -ENOMEM if mem->ranges doesn't have space to hold split ranges
-+ */
- int crash_exclude_mem_range(struct crash_mem *mem,
- 			    unsigned long long mstart, unsigned long long mend)
- {
-diff --git a/kernel/crash_core_test.c b/kernel/crash_core_test.c
-new file mode 100644
-index 000000000000..8aadf6801530
---- /dev/null
-+++ b/kernel/crash_core_test.c
-@@ -0,0 +1,343 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/crash_core.h> // For struct crash_mem and struct range if defined there
-+
-+// Helper to create and initialize crash_mem
-+static struct crash_mem *create_crash_mem(struct kunit *test, unsigned int max_ranges,
-+					  unsigned int nr_initial_ranges,
-+					  const struct range *initial_ranges)
-+{
-+	struct crash_mem *mem;
-+	size_t alloc_size;
-+
-+	// Check if max_ranges can even hold initial_ranges
-+	if (max_ranges < nr_initial_ranges) {
-+		kunit_err(test, "max_ranges (%u) < nr_initial_ranges (%u)\n",
-+			  max_ranges, nr_initial_ranges);
-+		return NULL;
-+	}
-+
-+	alloc_size = sizeof(struct crash_mem) + (size_t)max_ranges * sizeof(struct range);
-+	mem = kunit_kzalloc(test, alloc_size, GFP_KERNEL);
-+	if (!mem) {
-+		kunit_err(test, "Failed to allocate crash_mem\n");
-+		return NULL;
-+	}
-+
-+	mem->max_nr_ranges = max_ranges;
-+	mem->nr_ranges = nr_initial_ranges;
-+	if (initial_ranges && nr_initial_ranges > 0) {
-+		memcpy(mem->ranges, initial_ranges,
-+		       nr_initial_ranges * sizeof(struct range));
-+	}
-+
-+	return mem;
-+}
-+
-+// Helper to compare ranges for assertions
-+static void assert_ranges_equal(struct kunit *test,
-+				const struct range *actual_ranges,
-+				unsigned int actual_nr_ranges,
-+				const struct range *expected_ranges,
-+				unsigned int expected_nr_ranges,
-+				const char *case_name)
-+{
-+	unsigned int i;
-+
-+	KUNIT_ASSERT_EQ_MSG(test, expected_nr_ranges, actual_nr_ranges,
-+			    "%s: Number of ranges mismatch.", case_name);
-+
-+	for (i = 0; i < expected_nr_ranges; i++) {
-+		KUNIT_ASSERT_EQ_MSG(test, expected_ranges[i].start, actual_ranges[i].start,
-+				    "%s: Range %u start mismatch.", case_name, i);
-+		KUNIT_ASSERT_EQ_MSG(test, expected_ranges[i].end, actual_ranges[i].end,
-+				    "%s: Range %u end mismatch.", case_name, i);
-+	}
-+}
-+
-+// Structure for test parameters
-+struct exclude_test_param {
-+	const char *description;
-+	unsigned long long exclude_start;
-+	unsigned long long exclude_end;
-+	unsigned int initial_max_ranges;
-+	const struct range *initial_ranges;
-+	unsigned int initial_nr_ranges;
-+	const struct range *expected_ranges;
-+	unsigned int expected_nr_ranges;
-+	int expected_ret;
-+};
-+
-+static void run_exclude_test_case(struct kunit *test, const struct exclude_test_param *params)
-+{
-+	struct crash_mem *mem;
-+	int ret;
-+
-+	kunit_info(test, "%s", params->description);
-+
-+	mem = create_crash_mem(test, params->initial_max_ranges,
-+			       params->initial_nr_ranges, params->initial_ranges);
-+	if (!mem)
-+		return; // Error already logged by create_crash_mem or kunit_kzalloc
-+
-+	ret = crash_exclude_mem_range(mem, params->exclude_start, params->exclude_end);
-+
-+	KUNIT_ASSERT_EQ_MSG(test, params->expected_ret, ret,
-+			    "%s: Return value mismatch.", params->description);
-+
-+	if (params->expected_ret == 0) {
-+		assert_ranges_equal(test, mem->ranges, mem->nr_ranges,
-+				    params->expected_ranges, params->expected_nr_ranges,
-+				    params->description);
-+	} else {
-+		// If an error is expected, nr_ranges might still be relevant to check
-+		// depending on the exact point of failure. For ENOMEM on split,
-+		// nr_ranges shouldn't have changed.
-+		KUNIT_ASSERT_EQ_MSG(test, params->initial_nr_ranges,
-+				    mem->nr_ranges,
-+				    "%s: Number of ranges mismatch on error.",
-+				    params->description);
-+	}
-+}
-+
-+/*
-+ * Test Strategy 1: One to-be-excluded range A and one existing range B.
-+ *
-+ * Exhaust all possibilities of the position of A regarding B.
-+ */
-+
-+static const struct range single_range_b = { .start = 100, .end = 199 };
-+
-+static const struct exclude_test_param exclude_single_range_test_data[] = {
-+	{
-+		.description = "1.1: A is left of B, no overlap",
-+		.exclude_start = 10, .exclude_end = 50,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.2: A's right boundary touches B's left boundary",
-+		.exclude_start = 10, .exclude_end = 99,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.3: A overlaps B's left part",
-+		.exclude_start = 50, .exclude_end = 149,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){{ .start = 150, .end = 199 }},
-+		.expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.4: A is completely inside B",
-+		.exclude_start = 120, .exclude_end = 179,
-+		.initial_max_ranges = 2, // Needs space for split
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){
-+			{ .start = 100, .end = 119 },
-+			{ .start = 180, .end = 199 }
-+		},
-+		.expected_nr_ranges = 2,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.5: A overlaps B's right part",
-+		.exclude_start = 150, .exclude_end = 249,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){{ .start = 100, .end = 149 }},
-+		.expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.6: A's left boundary touches B's right boundary",
-+		.exclude_start = 200, .exclude_end = 250,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.7: A is right of B, no overlap",
-+		.exclude_start = 250, .exclude_end = 300,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.8: A completely covers B and extends beyond",
-+		.exclude_start = 50, .exclude_end = 250,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = NULL, .expected_nr_ranges = 0,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.9: A covers B and extends to the left",
-+		.exclude_start = 50, .exclude_end = 199, // A ends exactly where B ends
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = NULL, .expected_nr_ranges = 0,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.10: A covers B and extends to the right",
-+		.exclude_start = 100, .exclude_end = 250, // A starts exactly where B starts
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = NULL, .expected_nr_ranges = 0,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.11: A is identical to B",
-+		.exclude_start = 100, .exclude_end = 199,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = NULL, .expected_nr_ranges = 0,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.12: A is a point, left of B, no overlap",
-+		.exclude_start = 10, .exclude_end = 10,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.13: A is a point, at start of B",
-+		.exclude_start = 100, .exclude_end = 100,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){{ .start = 101, .end = 199 }},
-+		.expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.14: A is a point, in middle of B (causes split)",
-+		.exclude_start = 150, .exclude_end = 150,
-+		.initial_max_ranges = 2, // Needs space for split
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){
-+			{ .start = 100, .end = 149 },
-+			{ .start = 151, .end = 199 }
-+		},
-+		.expected_nr_ranges = 2,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.15: A is a point, at end of B",
-+		.exclude_start = 199, .exclude_end = 199,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = (const struct range[]){{ .start = 100, .end = 198 }},
-+		.expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	{
-+		.description = "1.16: A is a point, right of B, no overlap",
-+		.exclude_start = 250, .exclude_end = 250,
-+		.initial_max_ranges = 1,
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = &single_range_b, .expected_nr_ranges = 1,
-+		.expected_ret = 0,
-+	},
-+	// ENOMEM case for single range split
-+	{
-+		.description = "1.17: A completely inside B (split), no space (ENOMEM)",
-+		.exclude_start = 120, .exclude_end = 179,
-+		.initial_max_ranges = 1, // Not enough for split
-+		.initial_ranges = &single_range_b, .initial_nr_ranges = 1,
-+		.expected_ranges = NULL, // Not checked on error by assert_ranges_equal for content
-+		.expected_nr_ranges = 1, // Should remain unchanged
-+		.expected_ret = -ENOMEM,
-+	},
-+};
-+
-+
-+static void exclude_single_range_test(struct kunit *test)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(exclude_single_range_test_data); i++) {
-+		kunit_log(KERN_INFO, test, "Running: %s", exclude_single_range_test_data[i].description);
-+		run_exclude_test_case(test, &exclude_single_range_test_data[i]);
-+		// KUnit will stop on first KUNIT_ASSERT failure within run_exclude_test_case
-+	}
-+}
-+
-+/*
-+ * Test Strategy 2: Regression test.
-+ */
-+
-+static const struct exclude_test_param exclude_range_regression_test_data[] = {
-+	// Test data from commit a2e9a95d2190
-+	{
-+		.description = "2.1: exclude low 1M",
-+		.exclude_start = 0, .exclude_end = (1 << 20) - 1,
-+		.initial_max_ranges = 3,
-+		.initial_ranges = (const struct range[]){
-+			{ .start = 0, .end = 0x3efff },
-+			{ .start = 0x3f000, .end = 0x3ffff },
-+			{ .start = 0x40000, .end = 0x9ffff }
-+		},
-+		.initial_nr_ranges = 3,
-+		.expected_nr_ranges = 0,
-+		.expected_ret = 0,
-+	},
-+	// Test data from https://lore.kernel.org/all/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/T/#u
-+	{
-+		.description = "2.2: when range out of bound",
-+		.exclude_start = 100, .exclude_end = 200,
-+		.initial_max_ranges = 3,
-+		.initial_ranges = (const struct range[]){
-+			{ .start = 1, .end = 299 },
-+			{ .start = 401, .end = 1000 },
-+			{ .start = 1001, .end = 2000 }
-+		},
-+		.initial_nr_ranges = 3,
-+		.expected_ranges = NULL, // Not checked on error by assert_ranges_equal for content
-+		.expected_nr_ranges = 3, // Should remain unchanged
-+		.expected_ret = -ENOMEM
-+	},
-+
-+};
-+
-+
-+static void exclude_range_regression_test(struct kunit *test)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(exclude_range_regression_test_data); i++) {
-+		kunit_log(KERN_INFO, test, "Running: %s", exclude_range_regression_test_data[i].description);
-+		run_exclude_test_case(test, &exclude_range_regression_test_data[i]);
-+		// KUnit will stop on first KUNIT_ASSERT failure within run_exclude_test_case
-+	}
-+}
-+
-+/*
-+ * KUnit Test Suite
-+ */
-+static struct kunit_case crash_exclude_mem_range_test_cases[] = {
-+	KUNIT_CASE(exclude_single_range_test),
-+	KUNIT_CASE(exclude_range_regression_test),
-+	{}
-+};
-+
-+static struct kunit_suite crash_exclude_mem_range_suite = {
-+	.name = "crash_exclude_mem_range_tests",
-+	.test_cases = crash_exclude_mem_range_test_cases,
-+	// .init and .exit can be NULL if not needed globally for the suite
-+};
-+
-+kunit_test_suite(crash_exclude_mem_range_suite);
-+
-+MODULE_DESCRIPTION("crash dump KUnit test suite");
-+MODULE_LICENSE("GPL");
--- 
-2.51.0
+> This way we won't need to handle the fallback from divorce of folio from
+> page. This indeed is less relevant to KHO, but there are a lot of
+> folio_alloc() in LUO and PCI patches that will have to be changed to a
+> different allocation apparently this year.
 
+I'm not sure what to do about this, really we should make slab work :\
+
+But yes whatever it gets changed into needs to have matching
+restoration. Most likely we will get some kind of API to allocate
+PAGE_SIZE units of frozen pages with a special memdesc, so that will
+need to be paired through the preserver/restore as well.
+
+> There is a struct page for everything that's memblock_alloc()ed. And we can
+> do page list, but for large  physically contiguous allocation it does not
+> make sense. 
+
+Arguably you could make them into high order pages and preserve those..
+ 
+> I'd rather replace kho_preserve_phys() with kho_preserve_memblock() and add
+> a restore counterpart to properly set the struct pages for it which we lack
+> now.
+
+Sure, but my point is if memblock physical memory has struct pages
+then you should be preserving the struct pages as struct pages not as
+phys. Upon restoring the 64 bytes of struct page memory should be
+restored back to whatever memblock expects, which will eventually
+include the proper memdesc value.
+
+Jason
 
