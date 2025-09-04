@@ -4,87 +4,208 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55A5BCA1012
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 19:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C47A3CA1017
+	for <kexec@archiver.kernel.org>; Fri,  5 Sep 2025 02:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jjoOxNGipBZMZSrHgnJO7zIqbW8l/mlQVhOAOi/XHNk=; b=YGS5JF+1pwAZAiRnLAqlCiqbmC
-	i09DcllsrMsSPLlSzabUNDVz18GvWMUU0Zq33zgJoq3n5+s4vEi6gVf0Oa4Yvo+aIlEqTX2uOWsyg
-	2FoRg9J1UJ/9l7KUBRSGH/nVrD8ZCy1yG5wnLx00YFGyLFkETASmlQykZ3d6dBEi6j3btxcAm8gG0
-	PzXJouBgkzSQeW568BWP5zsaPgKRjMxkPgovX7+PSNTS8KvlD7Ma7iaTFvgkszNAhSGxYqpERC5pq
-	qRZo/KUfF4zuDWeNIqz75yDlOX9bm44LQQUBPIjBNTnkciXp77gzcQAhah/Q4O9UOCKqUI7q+HoZ2
-	YaRjQbWg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=; b=BsVyr2WL4pPDJ6y/wWSzPH0Hzr
+	E3zumk1kWOkHfKWC4+pACJ6Ti9Slri1N06IjSbNjYBb68Hi0oDh3tQ13Jb0XeYqGOfhc6RxSn7ubv
+	1soN8Ydt5nd72KzWWLBkxyHWstdG1CHjIxwCp/dmDYh6KmAgW+1IqYGQ0NFQwzEUOxdfbi4O4Im3Z
+	FgqkZjp37goD9tb9DHwHIH/gKd/lQnYP2O1cZtMPJhcKFrzJsG21Q+gXIAdqgGP+cB/hVwKBj+zi2
+	/yo/lKikjMN/ayFdPOYQOH6OeCmKzr/gj/pFCidHN6Uhbr/NDgubGS7Oxt7ZWQxzIyBjZd8oq898x
+	TTpruvdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuG0s-0000000E3CA-0hgC;
-	Thu, 04 Sep 2025 19:52:54 +0000
-Received: from mail-wr1-x434.google.com ([2a00:1450:4864:20::434])
+	id 1uuM2b-0000000G0yB-36Aj;
+	Fri, 05 Sep 2025 02:19:05 +0000
+Received: from mx0a-00273201.pphosted.com ([208.84.65.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuBQJ-0000000CNtw-2QGU
+	id 1uuG6w-0000000E7I7-2aYR
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 14:58:52 +0000
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-3dce6eed889so841552f8f.0
-        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 07:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756997930; x=1757602730; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jjoOxNGipBZMZSrHgnJO7zIqbW8l/mlQVhOAOi/XHNk=;
-        b=dYiA93QTOZl9hNAmIRyoLfHLxQ80s+L6GmNmTr7LwzsDUo5r+TWzHGy3coa9Ni8Fte
-         1GEgLMt8OAdH2SwwiKo3ue+SyCo5iQerqfzX1CuUufcK6QHEKhqjhFi6Z27nwCnB874l
-         MZYMOsGaKD7rk5wtpykCwrRWB7vTeoQ5C1cauG0BwoxpYv0KxpucTW61VCic3x6Kw+Yv
-         vaWzwqca/DtdTjx+5OCBZl9zANWhIqN0nYWG1fujlZzN8r08qRGumIX4k7SGALhGNVQW
-         yVmcKxNGB+crqnZoRKS8v3BN91WMw4aRSPrLlIzAHGxL1zzFEEwVmndvqAwyM7Tt6iQq
-         Y/eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756997930; x=1757602730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jjoOxNGipBZMZSrHgnJO7zIqbW8l/mlQVhOAOi/XHNk=;
-        b=R7GR0fK6cpzoUuFh3ZB3+2UaoK4D27qnXU+kpUVjWjBJK+CE8uS/bWDs4zelJGoaMv
-         LOTXltr0LKYf0YC+ZzkFPHLJwVFGb0GS2Ol06/Qzq6ql/nx62PxXKwW4BqXIGpfxqAz5
-         zIS+39vgUkmS5oHYO18aYsXzi50qhgC0B1mKoZNaNFWG+8EyWX59peYQr0eejbkPNuEO
-         89tKqKizoBeGkfIAl55Nd+RK0Bu/64gZJ06NIhsB247cqXeoI2rEs1VqOdBtLVIiTHoV
-         /5MN2Km/X4etwC97liIGW5V0tPbgmOcf91ezS5/JVjJ6j9kcmd7PvAzPMJtZ4joSRlea
-         OQfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPUC5WPJZmTmI0FaX62C/5nMSI3mBAQVZboYdvwxm4Hu8Gojo/MBpmjcMYF9iRl/9zLOE4ZQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxdVDVAKRj8/BbAFZZRA7r4VWAg2rBc2dQ2yAr9ULhqtyOFF7Us
-	iFlTOaXImIVnw1/OKkvW3H8CEJjjpleIb52eQR+Cie/zm/wKoD/J6u5/8mMDNMo9fwigm3d66f9
-	P69FryfxWi6Ls/ifJ/G9HKWrEDDpIMDI=
-X-Gm-Gg: ASbGncv2DeApGlOABW5y/Z3ECgXFlmA4VTRSnn+R4V5jUjcdt3H32fKvnXAhPhBJDRX
-	xTl2mdeyAVZx8TFFOFI+2VF/QwFJPQeHywpbYVi9bSn2Djxm5tWSRUd2JCHInPYIOEVRMVL4rqa
-	AeVmx3NJis6O8prCh/BHSdxSPImyIQOZwJeoaiXZOZLsWLPJ/l6URRuRZpn93Ah9TYZAGzNfkXv
-	sZEFFQ=
-X-Google-Smtp-Source: AGHT+IEOLYmXnNodyTdeKUcsNwKRu/qrjmwe1/I99spM8q/MVj2nsHb/yfnDKG0O9PUqtUVGjpAX+llHDS6iNPSghBc=
-X-Received: by 2002:a05:6000:430c:b0:3e0:4d29:80be with SMTP id
- ffacd0b85a97d-3e04d29815cmr2637642f8f.49.1756997929274; Thu, 04 Sep 2025
- 07:58:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
- <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
-In-Reply-To: <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 4 Sep 2025 16:58:38 +0200
-X-Gm-Features: Ac12FXyGDcz59ifSydw05MuQg_P1V6YF0m9gsQ5VWAu0_B8ZIjHvT6en0L_OHZQ
-Message-ID: <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
-To: Baoquan He <bhe@redhat.com>, snovitoll@gmail.com
-Cc: glider@google.com, dvyukov@google.com, elver@google.com, 
-	linux-mm@kvack.org, ryabinin.a.a@gmail.com, vincenzo.frascino@arm.com, 
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, sj@kernel.org, 
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu
-Content-Type: text/plain; charset="UTF-8"
+	Thu, 04 Sep 2025 19:59:12 +0000
+Received: from pps.filterd (m0108159.ppops.net [127.0.0.1])
+	by mx0a-00273201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 584GYnY0002918;
+	Thu, 4 Sep 2025 12:58:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
+	cc:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS1017; bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=; b=qUWf
+	kb9osDPJImfSVieXhqhq0lAJjwVZp1rEllGbZ0kQvp7smBg8gd6HWsdw5auD0+RK
+	oNT4Aql55BrEg4uPwQhS3w1tMrndNpi9GdMiz2qPSTnAsUFsDBimT5VGKbS2HfW5
+	NoKqdhgs0zUC72/D6i83LHb7Q67Pa5XJTcB9fRxK7HRjH065saoYu2E3aY3sOqQs
+	X/z/AkTGGGi18xtD2atT/4YEq6wvltlKgn28sdTBYyR1SG3naP6jrxvPeDKYlu9p
+	/FbnAqejll7X1NjTn3jFE03lT/92kFZpZubhtjFlNHFMHUsA6TMAj0yI7XK2q3Kn
+	CzVeOw5iE9sEm5Wm2g==
+Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11020080.outbound.protection.outlook.com [52.101.46.80])
+	by mx0a-00273201.pphosted.com (PPS) with ESMTPS id 48xrytbcqa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Sep 2025 12:58:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ao+X9V5uKISb7b2BR8sgv4yKzDF/XHhgPCv7rjhZA+mbpFY8Lk6TbiMclH/tAW/kf9pVCBGzzTCqePZeQLKp/4/2jRHMfI1D3DJqimvEUrRmqp9xd5s8QbZHCbFq3LEMyB7lBn+W30gjLkzJ2Iaus5H2hbykBu53CjueFJSjI9pWS/T/9YrdDJo1kV2FA9ZGV9jKrrTh2CWK8+TVpiuD8R27OLHq3U0u59pdoNy8UXKmJ9WJo4D0GWIVb4AAhNH/oSAxXN0OKYlbUE8my7e3jjLvH2O5PDylZy2/s9EG95VTI9af6y1K5NDH+nxtMepHJFJyUwG+Ast59gefJTuJIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=;
+ b=Mf/3wmgAl1XH09IFXvsJX+f2lWuxBj+KxvObXO+2qP2hGJOQe1hrFQcSU0RsV92BtiKjESn/aL0UypRFIYI5aCuGwVYmA8wRN8Q+l7Quo86FZEKVF35c/A08Xxg3rGPKSdqajVtobLb4coetDC4VmPeV+nz6TeR/FYQmT4PZfmOpHDHDjYEbzR8XFLxPmKe8DP37faxxfCzGrLeLauPM6O6WTOnLmamFMsLY76BmXeXO7/xi3lgl2sfxqFvZST3pgUONkqusX7oabm7FZTu+wcbNi1OY2oEUd6so5GRB/Ys1Sm+86lPFlznVDrFGCZ/XM3364g4PeFSyQReknCRQvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=juniper.net; dmarc=pass action=none header.from=juniper.net;
+ dkim=pass header.d=juniper.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=;
+ b=bfc8w8mrFUDRNQtcXZw8vJLnyhc43OJR6A33pvjUesKspbSLmA9nHXrigmYs8Qoe4oG324gctfgV+waUjUohZot03NO7yobjq8TlE77PCTkyvvg17HcqeHtsDcRJWFMAmqwAtyH7dGSHAc2qreOjzW7p1lwB+VqoR6dtjfxVLfI=
+Received: from BLAPR05MB7284.namprd05.prod.outlook.com (2603:10b6:208:296::21)
+ by BY3PR05MB8370.namprd05.prod.outlook.com (2603:10b6:a03:3c1::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Thu, 4 Sep
+ 2025 19:58:26 +0000
+Received: from BLAPR05MB7284.namprd05.prod.outlook.com
+ ([fe80::3d79:19d4:e1cf:2224]) by BLAPR05MB7284.namprd05.prod.outlook.com
+ ([fe80::3d79:19d4:e1cf:2224%4]) with mapi id 15.20.9094.015; Thu, 4 Sep 2025
+ 19:58:26 +0000
+From: Brian Mak <makb@juniper.net>
+To: Baoquan He <bhe@redhat.com>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Graf
+	<graf@amazon.com>, Dave Young <dyoung@redhat.com>,
+        Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov
+	<bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin"
+	<hpa@zytor.com>, Rob Herring <robh@kernel.org>,
+        Saravana Kannan
+	<saravanak@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
+Thread-Topic: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
+Thread-Index: AQHcBk4oB5XugUC7+EiYsQsd7ryXGrRsoOkAgAA/AQCAADfZgIABBqSAgAW3BoCAD8p2gA==
+Date: Thu, 4 Sep 2025 19:58:26 +0000
+Message-ID: <1683D348-3A7C-484F-B21E-7828B96AA263@juniper.net>
+References: <20250805211527.122367-1-makb@juniper.net>
+ <20250805211527.122367-2-makb@juniper.net>
+ <20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
+ <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
+ <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
+ <aKflAV8XNjqeu1Dj@MiWiFi-R3L-srv>
+ <9F68DBD7-8A67-4FF4-AC99-5D485D9F9313@juniper.net>
+In-Reply-To: <9F68DBD7-8A67-4FF4-AC99-5D485D9F9313@juniper.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BLAPR05MB7284:EE_|BY3PR05MB8370:EE_
+x-ms-office365-filtering-correlation-id: f3c35982-666d-4ccd-46c6-08ddebed694b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?AAfN79iIlol/vE3PwQTX1xj8AE8qS8AA2554Lx01oNYdbG4aSdF58WcmqPhp?=
+ =?us-ascii?Q?EuW+I5QZnuuPFNn4phH6JGdaDkIYRYXAHmgD1ivAjMZX6rKmA7psKwSo3aHv?=
+ =?us-ascii?Q?Hp2ohrFPpvh3JRfzdff3jpYyObRIP+7hzWKGNP2e7FApQR5zFYPbwmnHis2j?=
+ =?us-ascii?Q?Hubw5L49zgjcYnRo+OMfZTTg+XjDGjZgkDG0yr3EQWZKAjtes+p1i8+CCnCx?=
+ =?us-ascii?Q?BA/NtetBTkGB15+qZDDZvaFYMQIClTKTbrf6a/XYFzqYibOKK0Mt/W+snn7d?=
+ =?us-ascii?Q?0WWis0lOCPEr2HZoJjp07aq5MU8dpYjygA0XFLSPYUtCbl/lna8Y8ogn2iGi?=
+ =?us-ascii?Q?FY+zGW+s09clp5WSbzAk6YCUlSZiIcpkmziNeSeSBkSecPdOYhPXfcv3RHcm?=
+ =?us-ascii?Q?+Anq6OvRHrKGZALL7Eq70530Ai1fiNK+ZfxCfGQ+79gCoaHi5M8gQ019w6Zj?=
+ =?us-ascii?Q?0DGBe4LpUMihaYg8iQch9yEOZ+AzDNbojj7sXLqwZCNIif2XSufQN4LflgLl?=
+ =?us-ascii?Q?3drJAjwX1I5yuVFuA0khrcQAD7xuPLt7lw54u38jN4sfUv2ouYxOwtz1pv0p?=
+ =?us-ascii?Q?tx7qwM5c7Xf6EyH4zKD1a8F36HAl/HFQLsZ7I9tJiBFla4sK/d3QZAQG4aCf?=
+ =?us-ascii?Q?6R7rZIjzEFsFvvUcaAgtfZNZh6iS7SYkAi7vcq4843SjBeTd5PLx3E19h8Ip?=
+ =?us-ascii?Q?2wkY3rRL2CjFJhk85LO7BRdwSw/PPmUEt2MmRtFWWhgnjSTgL5OvYKcLZNWh?=
+ =?us-ascii?Q?CNqOwiljty6aNTOQgSF/0gyaGZaOpleYcbwA3kJLd7+hQ2PZQRqouDKwSb2z?=
+ =?us-ascii?Q?UOdUd0mY8YzImmLuHM6cshMMAf/IQatfN1f90Zn13Gx4y+MojAPNqsNEqryu?=
+ =?us-ascii?Q?5/pISuzTGaEe9iFEBoJTdQlwQbE1McCI53GP7fUOETCKsZ+2w3Vau4RVFhcc?=
+ =?us-ascii?Q?+d2tO5ILYeYTPpsU9Ytsu9qyjw2ivI4OIWjStzkC7TgQBV0FU6G/ahcDKbiy?=
+ =?us-ascii?Q?hfEpMZTQpTnmoAzfWYhbKagAMjEQpLdyKpEHtc3njv316N7sjAjmLGWQ5ZQV?=
+ =?us-ascii?Q?tDpBTofzwn6rdfO0GEpx/yWZ6A+6nH6sGW8uuomS8hvA1MNm5G4rJVf6QblP?=
+ =?us-ascii?Q?SCkgGeBgVYHg76u7MfpeArB9MDZZXgmQVRJ8pX7zMJLzZl2DUAG5kzlolpDp?=
+ =?us-ascii?Q?2HQAa8kQlNTqn+btAIoarefcpGaBEBillSQj3SWvoD2p/OOfq/6UMDQYhW0W?=
+ =?us-ascii?Q?YlWw8oZcc7Z9d3eUkZYLO115aG4m4cQR1jIc4AUqgyQowkGU56g68EeJM4Hc?=
+ =?us-ascii?Q?Gq4+K6Z1RaD3y7GkW3xBqshTdmav0D1yg0dThAwrp2qZfPPuyIe5jJMsPcKX?=
+ =?us-ascii?Q?+cr15SPfqMkjbD0xd0R08FbdSNMl1llGj8cPYO0Hb2HWN+GcgqhNP+iEJ/3k?=
+ =?us-ascii?Q?Q8YAniUMCwQ=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR05MB7284.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UOtKGUKDOj7jjo6oJh0XeVwHzIrCVc99EVUf3y/jWT0W17x8WM4s2xe3tvoH?=
+ =?us-ascii?Q?y+9XWoW7rXJelYVceFsuTaworCYYIVw7BFFyiTNCSSnc8hCFoVLcx3hiTE/q?=
+ =?us-ascii?Q?mpHHvBPz/NUCw0mrjeT5l0wmojOg/0nmqWCkTTlJNSO0RwV+/SK8k8Hb6B+s?=
+ =?us-ascii?Q?xi18rhkHKhRtWkQ4r6ULVisMO1NVscxCYxoHnozwPr5X3S80lMxeY4r+cZVp?=
+ =?us-ascii?Q?BbXAxNwz6wPRqSqY3J/3Xa1HmyEgSZ5EfYAm9pXgSNo8B4svnrlMSoz7gcqm?=
+ =?us-ascii?Q?YkmandSzgqhE5hhAgeXE8odWazaDJjHiPigVG46dXySXYJvXd4dbUuUFQDQo?=
+ =?us-ascii?Q?ncNll+AOwRG7N53EJdyyWMPJ/eR1VYY9I1dRsWHYpCHc346n6P/HcxTfNSt2?=
+ =?us-ascii?Q?z9f/AKhCO7Vdg20uKY4tYq6dMPSwQjFCB+MjonZ0Lnut69VQD3OBee0tcJIm?=
+ =?us-ascii?Q?2Mo8bj1xTnCaBi9n3cWnI1+jjkB6ob2/8EL1Gbw73bhqm+b3eizjQq4uDpYl?=
+ =?us-ascii?Q?Ko0vWtzFCWs4FkHaoGz35+rp0DzFTZBIs4ic+jjPa4se4gdwT6AhHMZS32KZ?=
+ =?us-ascii?Q?WdbWGpopAoyLtYQhivXKragTbzp0VlFcIrRmr29EgsuGY9x+BKzyQT759cH/?=
+ =?us-ascii?Q?v7sJSrcH93ezo0eQ/8tBIfNpcWjAkE5SdPNTHtWCEUv9leGlPYgMoEKmtPp7?=
+ =?us-ascii?Q?Gh1b2KdZzR4JrtrKYLI2ybBiTKGmaCXSwlDOAbo28MfNKYraSFLQRTU0/BGV?=
+ =?us-ascii?Q?V2S7Y7uat0bMeavz92YzDV/qEjD7ZlIymxwbfjTQFl4/Pe0wuk0cdiaN7nLR?=
+ =?us-ascii?Q?BImdA9m4dX04FV1Icz7wDorHEL9LvzlACh431pnS6dyZhU9n/cFk2XaZxHhj?=
+ =?us-ascii?Q?Qi2D+0ISn/qHCCApClAUpsQY3xPz+KY/qiSCI0rRrMm2zBv97e+5nYhTiiQi?=
+ =?us-ascii?Q?cew7FNh4a1FKYhQfGA30ZkMO/vcBigbAZ4ogIPzorGK3hQNbUJi0sY5MpIN3?=
+ =?us-ascii?Q?T86Lwk8n11U3Npcn77rO63eiqW0gEsIrC4+dYHioxpfRp/jjtd1AfoYII7xT?=
+ =?us-ascii?Q?3pcN6LeoKrSw2K2svhQAJsQhcgunsqNT+tVazj0dcoXQHpjgBv2V49de8BOl?=
+ =?us-ascii?Q?vNedi3oeiY8ce1oWNKe3IOxKfchIR59a6NA6wgjTQpdYmXunTMRA9sqsfNoc?=
+ =?us-ascii?Q?394s5sMCL07WoPvtXFr463DibET43TbUC787m/ChC9E7K22bxF/pAoaMpmwp?=
+ =?us-ascii?Q?TRUBtxfhIBh0c4ErJ7ibaA+UajNch/OczktAJJKtwPDs1vFNynQyut59E+Rq?=
+ =?us-ascii?Q?+HZA2h5LbcpJkJIKwKTt++UkHdN3x/q0Ayr27SzYKx94RhRzlDAyw+iQc1n6?=
+ =?us-ascii?Q?TNHVIXryzF1o+gtFx/C/y/He7rk+Osm6A6NU9mCxvwhQ/8YsMQHsr6+Zepeh?=
+ =?us-ascii?Q?/0LrO1GzfPpR8PnmlxTSbrbgmXjoZkS8BIB+dVuX6nIagT6vM69iVsjrQ/jS?=
+ =?us-ascii?Q?Xfn1nAwG/t9qwkmEZdB9VX3XWcw1NPv9zEHDzrd4nwpjGhnX7VU0/VVWyRp4?=
+ =?us-ascii?Q?wlkvJwSYrjfbphjaVDVuCHjm/fKBYlZOsrCclbl+?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2E1D8F21CF408645B28729E1765E65A6@namprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: juniper.net
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR05MB7284.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3c35982-666d-4ccd-46c6-08ddebed694b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2025 19:58:26.2437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bea78b3c-4cdb-4130-854a-1d193232e5f4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OOtznzkueqVHLxL3pkgneH1Txds7hy0siIKEALRA7hR2X826zq93g+gsCIy2ZbWupcyiKqebSF+cZtrsyrlNGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR05MB8370
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTAzMDE2MyBTYWx0ZWRfX15JRWd+5fdaw
+ BW5lgOj4pI9E+oyx9yRu0KWLNuJ94SjcPGOc434djGtcHRfE3mHQ7v0Ij9S8mpZ5tjlGhyj9sky
+ 1KLC+mj7jIXRFlt+6RZpxX+r7+ptz+tb8kpO06Hbfqnf2fRnsQ1c6BajcYvg79L1zX8TMS0hjj6
+ XexTlFLkTuAfeZvFActfNCjF2j1WjjpfMEzIPmxFN077ggJQlMPBCWCOF+2YopWxm5IkE8MoHRU
+ br9HAxIXsj5yZJ129WAWYTu9v+K5enr9nN4C1IkhLuWUjGe0/a/FmAR/4989Wacs5o3byEOuIVM
+ E5bL/7zYymytHVJnjMxbZ/+mxsMlOkDtauPQ88rPq1IwtQ+x57+LsR7Bw0THSO5TbPUSk/5SCzE
+ Jswdyaws
+X-Authority-Analysis: v=2.4 cv=XM4wSRhE c=1 sm=1 tr=0 ts=68b9ef64 cx=c_pps
+ a=mPoTjFGc+mEQF3C7Fih31Q==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=rhJc5-LppCAA:10 a=VwQbUJbxAAAA:8 a=OUXY8nFuAAAA:8
+ a=20KFwNOVAAAA:8 a=vggBfdFIAAAA:8 a=oGMlB6cnAAAA:8 a=1XWaLZrsAAAA:8
+ a=Z4Rwk6OoAAAA:8 a=GwIJR99yofqPgWEKVJsA:9 a=CjuIK1q_8ugA:10
+ a=cAcMbU7R10T-QSRYIcO_:22 a=NdAtdrkLVvyUPsUoGJp4:22 a=HkZW87K1Qel5hWWM3VKY:22
+X-Proofpoint-ORIG-GUID: 7DVZ_qP71MU3Bmnj2G93bTlGHvHvJR-F
+X-Proofpoint-GUID: 7DVZ_qP71MU3Bmnj2G93bTlGHvHvJR-F
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-04_06,2025-09-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
+ score=0 phishscore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509030163
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250904_075851_615661_60BA8EA6 
-X-CRM114-Status: GOOD (  37.22  )
+X-CRM114-CacheID: sfid-20250904_125910_664615_8E7D4BB2 
+X-CRM114-Status: GOOD (  23.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,105 +220,210 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 4, 2025 at 10:11=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
->
-> > If so, would it help if we make the kasan.vmalloc command-line
-> > parameter work with the non-HW_TAGS modes (and make it do the same
-> > thing as disabling CONFIG_KASAN_VMALLOC)?
-> >
-> > What I don't like about introducing kasan=3Doff for non-HW_TAGS modes i=
-s
-> > that this parameter does not actually disable KASAN. It just
-> > suppresses KASAN code for mapping proper shadow memory. But the
-> > compiler-added instrumentation is still executing (and I suspect this
-> > might break the inline instrumentation mode).
->
-> I may not follow your saying it doesn't disable KASAN. In this patchset,
-> not only do I disable the code for mapping shadow memory, but also I
-> skip any KASAN checking. Please see change of check_region_inline() in
-> mm/kasan/generic.c and kasan_check_range() in mm/kasan/sw_tags.c. It
-> will skip any KASAN checking when accessing memory.
->
-> Yeah, the compiler added instrumentation will be called, but the if
-> (!kasan_enabled()) checking will decide if going further into KASAN code
-> or just return directly.
+On Aug 25, 2025, at 11:49 AM, Brian Mak <makb@juniper.net> wrote:
 
-This all is true for the outline instrumentation mode.
+> On Aug 21, 2025, at 8:33 PM, Baoquan He <bhe@redhat.com> wrote:
+>=20
+>> Yeah, this is a good catch and great fix. Without this fix,
+>> kexec_file_load syscall will failed and return '-EINVAL' when
+>> KEXEC_FILE_NO_CMA is specified just as below code shows. So, for this
+>> patch,
+>>=20
+>> Acked-by: Baoquan He <bhe@redhat.com>
+>=20
+> Hi Baoquan,
+>=20
+> Thanks for the ACK!
+>=20
+>> And, by the way, has the user space kexec-tools got the change merged
+>> to allow KEXEC_FILE_NO_CMA specified?
+>=20
+> I don't see any recent commits to kexec-tools to support
+> KEXEC_FILE_NO_CMA.
+>=20
+>>> From: Brian Mak <makb@juniper.net>
+>>> Subject: x86/kexec: carry forward the boot DTB on kexec
+>>> Date: Tue, 5 Aug 2025 14:15:27 -0700
+>>>=20
+>>> Currently, the kexec_file_load syscall on x86 does not support passing =
+a
+>>> device tree blob to the new kernel.  Some embedded x86 systems use devi=
+ce
+>>> trees.  On these systems, failing to pass a device tree to the new kern=
+el
+>>> causes a boot failure.
+>>>=20
+>>> To add support for this, we copy the behavior of ARM64 and PowerPC and
+>>> copy the current boot's device tree blob for use in the new kernel.  We=
+ do
+>>> this on x86 by passing the device tree blob as a setup_data entry in
+>>> accordance with the x86 boot protocol.
+>>>=20
+>>> This behavior is gated behind the KEXEC_FILE_FORCE_DTB flag.
+>>>=20
+>>> Link: https://urldefense.com/v3/__https://lkml.kernel.org/r/20250805211=
+527.122367-3-makb@juniper.net__;!!NEt6yMaO-gk!EbJyF8xO2E51MyYdN3_zqCBBMj0JK=
+oiKoPuG_8vEctQMk9uCyjX0LdSEH_FGkPDV8egxzc7w$
+>>> Signed-off-by: Brian Mak <makb@juniper.net>
+>>> Cc: Alexander Graf <graf@amazon.com>
+>>> Cc: Baoquan He <bhe@redhat.com>
+>>> Cc: Borislav Betkov <bp@alien8.de>
+>>> Cc: Dave Young <dyoung@redhat.com>
+>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: Saravana Kannan <saravanak@google.com>
+>>> Cc: Thomas Gleinxer <tglx@linutronix.de>
+>>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>>> ---
+>>>=20
+>>> arch/x86/kernel/kexec-bzimage64.c |   47 ++++++++++++++++++++++++++--
+>>> include/linux/kexec.h             |    5 ++
+>>> include/uapi/linux/kexec.h        |    4 ++
+>>> kernel/kexec_file.c               |    1
+>>> 4 files changed, 53 insertions(+), 4 deletions(-)
+>>>=20
+>>> --- a/arch/x86/kernel/kexec-bzimage64.c~x86-kexec-carry-forward-the-boo=
+t-dtb-on-kexec
+>>> +++ a/arch/x86/kernel/kexec-bzimage64.c
+>>> @@ -16,6 +16,8 @@
+>>> #include <linux/kexec.h>
+>>> #include <linux/kernel.h>
+>>> #include <linux/mm.h>
+>>> +#include <linux/libfdt.h>
+>>> +#include <linux/of_fdt.h>
+>>> #include <linux/efi.h>
+>>> #include <linux/random.h>
+>>>=20
+>>> @@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *para
+>>> }
+>>> #endif /* CONFIG_EFI */
+>>>=20
+>>> +#ifdef CONFIG_OF_FLATTREE
+>>> +static void setup_dtb(struct boot_params *params,
+>>> +                   unsigned long params_load_addr,
+>>> +                   unsigned int dtb_setup_data_offset)
+>>> +{
+>>> +     struct setup_data *sd =3D (void *)params + dtb_setup_data_offset;
+>>> +     unsigned long setup_data_phys, dtb_len;
+>>> +
+>>> +     dtb_len =3D fdt_totalsize(initial_boot_params);
+>>> +     sd->type =3D SETUP_DTB;
+>>> +     sd->len =3D dtb_len;
+>>> +
+>>> +     /* Carry over current boot DTB with setup_data */
+>>> +     memcpy(sd->data, initial_boot_params, dtb_len);
+>>> +
+>>> +     /* Add setup data */
+>>> +     setup_data_phys =3D params_load_addr + dtb_setup_data_offset;
+>>> +     sd->next =3D params->hdr.setup_data;
+>>> +     params->hdr.setup_data =3D setup_data_phys;
+>>> +}
+>>> +#endif /* CONFIG_OF_FLATTREE */
+>>> +
+>>> static void
+>>> setup_ima_state(const struct kimage *image, struct boot_params *params,
+>>>             unsigned long params_load_addr,
+>>> @@ -336,6 +360,17 @@ setup_boot_parameters(struct kimage *ima
+>>>                     sizeof(struct efi_setup_data);
+>>> #endif
+>>>=20
+>>> +#ifdef CONFIG_OF_FLATTREE
+>>> +     if (image->force_dtb && initial_boot_params) {
+>>> +             setup_dtb(params, params_load_addr, setup_data_offset);
+>>> +             setup_data_offset +=3D sizeof(struct setup_data) +
+>>> +                                  fdt_totalsize(initial_boot_params);
+>>> +     } else {
+>>> +             pr_debug("Not carrying over DTB, force_dtb =3D %d\n",
+>>> +                      image->force_dtb);
+>>> +     }
+>>> +#endif
+>>> +
+>>>     if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
+>>>             /* Setup IMA log buffer state */
+>>>             setup_ima_state(image, params, params_load_addr,
+>>> @@ -529,6 +564,12 @@ static void *bzImage64_load(struct kimag
+>>>                             sizeof(struct setup_data) +
+>>>                             RNG_SEED_LENGTH;
+>>>=20
+>>> +#ifdef CONFIG_OF_FLATTREE
+>>> +     if (image->force_dtb && initial_boot_params)
+>>> +             kbuf.bufsz +=3D sizeof(struct setup_data) +
+>>> +                           fdt_totalsize(initial_boot_params);
+>>> +#endif
+>>> +
+>>>     if (IS_ENABLED(CONFIG_IMA_KEXEC))
+>>>             kbuf.bufsz +=3D sizeof(struct setup_data) +
+>>>                           sizeof(struct ima_setup_data);
+>>> @@ -537,7 +578,7 @@ static void *bzImage64_load(struct kimag
+>>>             kbuf.bufsz +=3D sizeof(struct setup_data) +
+>>>                           sizeof(struct kho_data);
+>>>=20
+>>> -     params =3D kzalloc(kbuf.bufsz, GFP_KERNEL);
+>>> +     params =3D kvzalloc(kbuf.bufsz, GFP_KERNEL);
+>>=20
+>> Wondering how big the dtb blob is, can you explain a little bit about
+>> the kvzalloc usage here?
+>>=20
+>> Except of this, I have no other concern about this patch.
+>>=20
+>> And what's your plan about the user space kexec-tool change?
+>=20
+> When I tested this earlier on x86, the DTB was allowed to be up to just
+> under 64 pages large before the DTB failed to load. This is because it
+> has to fit into an early_memremap() mapping (relevant code snippet at
+> the bottom). Since the allocation can be many pages, I changed the
+> kzalloc to a kvzalloc.
+>=20
+> For the kexec-tools change, I have a draft change that I've already
+> shared on this thread for testing purposes. I believe you said you were
+> going to test it, but I haven't heard anything back from that yet. I'll
+> raise that change for review properly once this kernel commit is in
+> mainline.
+>=20
+> ---------
+>=20
+> void __init x86_flattree_get_config(void)
+> {
+> #ifdef CONFIG_OF_EARLY_FLATTREE
+> u32 size, map_len;
+> void *dt;
+>=20
+> if (initial_dtb) {
+> map_len =3D max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK), (u64)128);
+>=20
+> dt =3D early_memremap(initial_dtb, map_len);
+> size =3D fdt_totalsize(dt);
+> if (map_len < size) {
+> early_memunmap(dt, map_len);
+> dt =3D early_memremap(initial_dtb, size);
+> map_len =3D size;
+> }
+>=20
+> early_init_dt_verify(dt, __pa(dt));
+> }
+>=20
+> unflatten_and_copy_device_tree();
+>=20
+> if (initial_dtb)
+> early_memunmap(dt, map_len);
+> #endif
+> if (acpi_disabled && of_have_populated_dt())
+> x86_init.mpparse.parse_smp_cfg =3D x86_dtb_parse_smp_config;
+> }
+>=20
+> ---------
+>=20
+> Thanks,
+> Brian
 
-However, with the inline instrumentation, check_region_inline() is not
-called (in many cases, at least) and instead the compiler embeds the
-instructions to calculate the shadow memory address and check its
-value directly (this is why we have CONFIG_KASAN_SHADOW_OFFSET, whose
-value has to be known at compile time).
+Hi Baoquan,
 
-> I tried inline mode on x86_64 and arm64, it
-> works well when one reviewer said inline mode could cost much more
-> memory, I don't see any breakage w or w/o kasan=3Doff when this patchset
-> applied..
+Just wanted to check back on this. Did you have any further concerns? If
+not, would you be able to provide an ACK?
 
-This is interesting. I guess what happens is that we still have the
-early shadow memory mapped so the shadow memory accesses inserted by
-the inline instrumentation do not crash.
+Thanks,
+Brian
 
-But have you tried running kasan=3Doff + CONFIG_KASAN_STACK=3Dy +
-CONFIG_VMAP_STACK=3Dy (+ CONFIG_KASAN_VMALLOC=3Dy)? I would expect this
-should causes crashes, as the early shadow is mapped as read-only and
-the inline stack instrumentation will try writing into it (or do the
-writes into the early shadow somehow get ignored?..).
 
-> > Perhaps, we could instead add a new kasan.shadow=3Don/off parameter to
-> > make it more explicit that KASAN is not off, it's just that it stops
-> > mapping shadow memory.
->
-> Hmm, as I explained at above, kasan=3Doff will stop mapping shadow memory=
-,
-> and also stop executing KASAN code to poison/unpoison memory and check th=
-e
-> shadow. It may be inappropriate to say it only stops mapping shadow.
-
-That's true, but we can only achieve this for the outline instrumentation m=
-ode.
-
-With the inline instrumentation mode, the (early) shadow memory would
-still get accessed all the time even with kasan=3Doff. Which can be
-considered inappropriate, as you pointed out (though this is what
-happens for vmalloc allocations when CONFIG_KASAN_VMALLOC is disabled
-and it does seem to work; but the inline stack instrumentation might
-be a problem).
-
-We could limit kasan=3Doff to only the outline instrumentation mode, but
-I guess that defeats the purpose.
-
-I'm not completely opposed to making kasan=3Doff work with all KASAN
-modes (assuming it works with the inline instrumentation), but then we
-will need to thoroughly document the behavior it creates.
-
-And let's also wait for an opinion from the other KASAN maintainers on this=
-.
-
-> > Dmitry, Alexander, Marco, do you have any opinion on kasan=3Doff for
-> > non-HW_TAGS modes?
-> >
-> > On a side note, this series will need to be rebased onto Sabyrzhan's
-> > patches [1] - those are close to being ready. But perhaps let's wait
-> > for v7 first.
->
-> I replied to Sabyrzhan's patchset, on top of this patchset, it's much
-> easier and cleaner to remove kasan_arch_is_ready(). We don't need
-> introduce CONFIG_ARCH_DEFER_KASAN. Please see below patchset which is
-> based on this patchset introducing 'kasan=3Doff|on' to genric|sw_tags
-> mode.
-
-Based on a brief look, both patch series seem to be doing similar
-things (except yours also allows using kasan=3Doff for all modes).
-
-But I like the Sabyrzhan's approach of hiding the explicit
-static_branch_enable() calls under CONFIG_ARCH_DEFER_KASAN for the
-architectures where they are actually required.
-
-So I propose we moved forward with the Sabyrzhan's series and then
-apply additional patches for supporting kasan=3Doff on top (but again,
-assuming they work with the inline instrumentation).
-
-Thank you!
 
