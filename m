@@ -4,79 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E701CA1012
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 08:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C9B4CA1015
+	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 10:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Pr0Y4bkCbfd3itfrxpuVGdfdmmRa0XxzBqHDc5t+1Us=; b=WS42BimMrFPEorRjYO0BoUpNzK
-	2/TrATvHXssHRYUKWWzIfNT4rW+49SXzLy28gwgKpAwScLunuwWLhbdWyHIUeTX4IH+iLPOOOHG6+
-	ch5GeBAtzF7/FTxhSkINBCntwnm1WEANPLAdGm7ifqzsQy/JPn2Nn3uE6bb+5wcQ6dd/FUHPQaubv
-	sqJ/kfYIFKjAvWPlc4qYjp6UuaAYZsw6W3za/ZgNSfJOe3WCNIkrKqvDi8KVRyiMElRDV9dLpQta7
-	3aVSwqcdnYD756pV3VNaTCZrZmLWicDfbji8Z99DKwZOQ/c3gq+Ng44c3J++46WTjwLdw/XSWR2v0
-	TMAs/DJQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=; b=eNrn6eJhEDP6ebED1gb9OuuZaq
+	dNInyof/tFxr7isemaGdSJ0yJOj101mqY2OVMCdgQBoxTNYHVowWpzmhxnQB2/MMMWddVf5lBcXuQ
+	rum56tHNKHde/TG+x1l+tdB5k412COk4dUupylSB5aE8xVShBUbKrahK8kYowX1Y69h53fSe49moq
+	vLPX9yluOnMxF0Rn/M7MePzr6GKHIpiNUT/gajoeJ7EQIbTegdlHhbhf3SIYo69ybQqw497PBxMxK
+	28VLqjobqKTBIbd4iSn58eoSYZtJUfKqLiYPUPVvDIP5cJWryAGWAh8V4k9Vb+ZFtqACz2+7Y6MP5
+	IiSTvxSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu5lS-0000000ANr7-16RU;
-	Thu, 04 Sep 2025 08:56:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uu7Vq-0000000B097-1J5L;
+	Thu, 04 Sep 2025 10:48:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu54P-0000000A7Rp-1IAJ
+	id 1uu6Qr-0000000Ac26-0LDF
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 08:11:51 +0000
+	Thu, 04 Sep 2025 09:39:06 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756973507;
+	s=mimecast20190719; t=1756978742;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pr0Y4bkCbfd3itfrxpuVGdfdmmRa0XxzBqHDc5t+1Us=;
-	b=fK/Sxmk/WPaUxplly0EvNMA0fz/QViutvuiRuVIVfz4jYaLmo7/4XtijGRy1HLfNvVsyH3
-	FBAu3iyyH/bYVcbLkFS6OYCEpcItJM+HTC9ox3c+HRyuYTIyhaco5MPw/ootcq0ReCWZ67
-	LuhaotQ4/ZoVgxhzwTygJeIdhE9uM+I=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-44yZFtgQN2Gh_XbvPEWQXg-1; Thu,
- 04 Sep 2025 04:11:41 -0400
-X-MC-Unique: 44yZFtgQN2Gh_XbvPEWQXg-1
-X-Mimecast-MFC-AGG-ID: 44yZFtgQN2Gh_XbvPEWQXg_1756973499
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF26F180034D;
-	Thu,  4 Sep 2025 08:11:38 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.19])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5AD32180035E;
-	Thu,  4 Sep 2025 08:11:36 +0000 (UTC)
-Date: Thu, 4 Sep 2025 16:11:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: glider@google.com, dvyukov@google.com, elver@google.com,
-	linux-mm@kvack.org, ryabinin.a.a@gmail.com,
-	vincenzo.frascino@arm.com, akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, sj@kernel.org,
-	lorenzo.stoakes@oracle.com, snovitoll@gmail.com,
-	christophe.leroy@csgroup.eu
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three
- modes
-Message-ID: <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
-References: <20250820053459.164825-1-bhe@redhat.com>
- <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=;
+	b=aCQKWBlWt2n5ecwf6urSQEvAniBX+bZ/q8XxFneuZ3/6xriRp/s+kthnU3FjPMImxGfX4h
+	NJT3czIEu/YZr9D6HeHlVJFUDuVhEsDzh+vKMwe/bof4sK64G/iHE4yDXq7eXF+XDxV7dr
+	S6p2HaoRF579uNFKVCOZChaC+cu/gLQ=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-qN8ftY6cNKyQs8kvrJKRtA-1; Thu, 04 Sep 2025 05:39:01 -0400
+X-MC-Unique: qN8ftY6cNKyQs8kvrJKRtA-1
+X-Mimecast-MFC-AGG-ID: qN8ftY6cNKyQs8kvrJKRtA_1756978740
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3278bb34a68so732075a91.0
+        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 02:39:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756978740; x=1757583540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bBcU+drWJ3hvUYUB+y/OOMDGeoQSncTsSGslGzeSXlM=;
+        b=Ct0GUQAEHF9n+uj5SHK/kQd98ZjT485KhDjvAbuazcx+sS9nO7OSOmMyY3gIpXLd8Z
+         DsBOt5pK2MvfWo1RQswkgr+Z7IqKYGNbLcjRcuu8m6ThcgCoTyL3zUPjXipG80yauH1F
+         /30RQ+/5WEy7aiMWw79jjkS6vj32CyppIH2FeXUM9xAilSG9z3hsTosSOY2S/cBQwVlh
+         UiFVUE6t7bCo3SRT8Z+qvb3mR/L47BR4jt9LPSvD4YpNVwgFLeRWcXbejNR0cnGSeMht
+         Mo8N5bzS7+g8vB9PNtJZlpg7CFzXi+peEqDDM94XpEXBOw4orCSX0ANKsrZxo+NLMV11
+         6l9Q==
+X-Gm-Message-State: AOJu0Yw7L7gppPm/UFayFRiEbo8Y8Mo+TtnWTWK4ThEhfznYVgLFXVfG
+	0gaI4FscDRj4TEs4DLChlGN2JJEFTVZKpXfcEchLpBdEoEEuH2sk/q9LONkwk1OCUUbp9sqGWCy
+	ER/Y1GAF8UBPneCHtSgMAxe6s0l1+Td7iLKJcyK3JAw9V+oV19DG72frakPR0V16zIIkZrRHhqS
+	CCkNhRR9/4ZaPdCJE2J7+DOpC71oEH/L92/Tpr56QJGPuZ8g==
+X-Gm-Gg: ASbGncvC6+ziHV9x3t1qtFTvL+vsgaz4212FCXjbExH1TwBRJrx1eGLcc5LYwYg1qAo
+	fqmDHut3bD/HxR9SSXMYCQ6sUCP8BCpMe0EdYscGcC/WlOcgGhwP22bNEBmj5WMjUM5KTEmCE9w
+	DFz1alPQFcKeXF8SMEzI5ocFg8A30/GmCD0HW/WVvQlgNNLwcjXc3hZLDiCplp8iXfyl5qJp/iz
+	LKK0SMglsyzgFkThdESaR63ZCYZq145U3pENrm4uhHocnDbMB3rwR8lFgjmvVLHQhaoBWAp9mDi
+	ewNLtDZvnUSMvrBrynqAHwwDYFr+jtI=
+X-Received: by 2002:a17:90b:38c5:b0:327:c207:b3fb with SMTP id 98e67ed59e1d1-328156cc954mr21219724a91.25.1756978740226;
+        Thu, 04 Sep 2025 02:39:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmAXPmAL5N6uswnGBHysh3EB25MAwxpg6uYHvn+wpMjFnTWn4DyTfl7/V8xNgx5Kkp7ntNlA==
+X-Received: by 2002:a17:90b:38c5:b0:327:c207:b3fb with SMTP id 98e67ed59e1d1-328156cc954mr21219683a91.25.1756978739508;
+        Thu, 04 Sep 2025 02:38:59 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-772396d2b97sm16676762b3a.67.2025.09.04.02.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 02:38:59 -0700 (PDT)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: fuqiang wang <fuqiang.wang@easystack.cn>,
+	x86@kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH v6 1/2] x86/kexec: fix potential cmem->ranges out of memory
+Date: Thu,  4 Sep 2025 17:38:52 +0800
+Message-ID: <20250904093855.1180154-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 9PEoBtmhE9dcBErzYD62NRBooos-cKNQhaErX6q9ZyQ_1756978740
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250904_011149_701414_103140DA 
-X-CRM114-Status: GOOD (  34.39  )
+X-CRM114-CacheID: sfid-20250904_023905_202149_60CAE683 
+X-CRM114-Status: GOOD (  17.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,94 +113,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/03/25 at 03:22pm, Andrey Konovalov wrote:
-> On Wed, Aug 20, 2025 at 7:35 AM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > Currently only hw_tags mode of kasan can be enabled or disabled with
-> > kernel parameter kasan=on|off for built kernel. For kasan generic and
-> > sw_tags mode, there's no way to disable them once kernel is built.
-> > This is not convenient sometime, e.g in system kdump is configured.
-> > When the 1st kernel has KASAN enabled and crash triggered to switch to
-> > kdump kernel, the generic or sw_tags mode will cost much extra memory
-> > for kasan shadow while in fact it's meaningless to have kasan in kdump
-> > kernel.
-> >
-> > So this patchset moves the kasan=on|off out of hw_tags scope and into
-> > common code to make it visible in generic and sw_tags mode too. Then we
-> > can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
-> > kasan.
-> 
-> Continuing the discussion on the previous version: so the unwanted
-> extra memory usage is caused by the shadow memory for vmalloc
-> allocations (as they get freed lazily)? This needs to be explained in
-> the commit message.
+From: fuqiang wang <fuqiang.wang@easystack.cn>
 
-Hmm, up to now, there are two parts of big amount of memory requiring
-for kernel as I observed. One is the direct memory mapping shadow of
-kasan, which is 1/8 of system RAM in generic mode and 1/16 of system
-RAM in sw_tags mode; the other is the shadow meomry for vmalloc which
-causes meomry big meomry usage in kdump kernel because of lazy vmap
-freeing. By introducing "kasan=off|on", if we specify 'kasan=off', the
-former is avoided by skipping the kasan_init(), and the latter is avoided
-by not build the vmalloc shadow for vmalloc.
+In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
+In the current x86 architecture code, the elfheader is always allocated
+at crashk_res.start. It seems that there won't be a new split range.
+But it depends on the allocation position of elfheader in crashk_res. To
+avoid potential out of memory in future, add a extra slot. Otherwise
+loading the kdump kernel will fail because crash_exclude_mem_range will
+return -ENOMEM. random kexec_buf for passing dm crypt keys may cause a
+range split too,
+add another extra slot here.
 
-Yes, I totally agree with you, I should have put this in cover letter
-and the main patch log to explain it better.
+The similar issue also exists in fill_up_crash_elf_data(). The range to
+be excluded is [0, 1M], start (0) is special and will not appear in the
+middle of existing cmem->ranges[]. But in cast the low 1M could be
+changed in the future, add a extra slot too.
 
-> 
-> If so, would it help if we make the kasan.vmalloc command-line
-> parameter work with the non-HW_TAGS modes (and make it do the same
-> thing as disabling CONFIG_KASAN_VMALLOC)?
-> 
-> What I don't like about introducing kasan=off for non-HW_TAGS modes is
-> that this parameter does not actually disable KASAN. It just
-> suppresses KASAN code for mapping proper shadow memory. But the
-> compiler-added instrumentation is still executing (and I suspect this
-> might break the inline instrumentation mode).
+Previously discussed link:
+[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
+[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
+[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
 
-I may not follow your saying it doesn't disable KASAN. In this patchset,
-not only do I disable the code for mapping shadow memory, but also I
-skip any KASAN checking. Please see change of check_region_inline() in
-mm/kasan/generic.c and kasan_check_range() in mm/kasan/sw_tags.c. It
-will skip any KASAN checking when accessing memory.
+Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+v5->v6:
+- rebase onto v6.17-rc4
 
-Yeah, the compiler added instrumentation will be called, but the if
-(!kasan_enabled()) checking will decide if going further into KASAN code
-or just return directly. I tried inline mode on x86_64 and arm64, it
-works well when one reviewer said inline mode could cost much more
-memory, I don't see any breakage w or w/o kasan=off when this patchset
-applied..
+v4->v5 (Baoquan):
+- This is on top of Coiby's LUKS patchset in branch mm-nonmm-unstable of
+  akpm/mm.git. I did some adaption based on Coiby's patches.
+- [PATCH v9 0/8] Support kdump with LUKS encryption by reusing LUKS volume keys
 
-> 
-> Perhaps, we could instead add a new kasan.shadow=on/off parameter to
-> make it more explicit that KASAN is not off, it's just that it stops
-> mapping shadow memory.
+ arch/x86/kernel/crash.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Hmm, as I explained at above, kasan=off will stop mapping shadow memory,
-and also stop executing KASAN code to poison/unpoison memory and check the
-shadow. It may be inappropriate to say it only stops mapping shadow.
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index c6b12bed173d..5efdcd95a283 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	/*
+ 	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
+ 	 * may cause range splits. So add extra slots here.
++	 *
++	 * Exclusion of low 1M may not cause another range split, because the
++	 * range of exclude is [0, 1M] and the condition for splitting a new
++	 * region is that the start, end parameters are both in a certain
++	 * existing region in cmem and cannot be equal to existing region's
++	 * start or end. Obviously, the start of [0, 1M] cannot meet this
++	 * condition.
++	 *
++	 * But in order to lest the low 1M could be changed in the future,
++	 * (e.g. [start, 1M]), add a extra slot.
+ 	 */
+-	nr_ranges += 2 + crashk_cma_cnt;
++	nr_ranges += 3 + crashk_cma_cnt;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return NULL;
+@@ -323,10 +333,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	struct crash_mem *cmem;
+ 
+ 	/*
+-	 * Using random kexec_buf for passing dm crypt keys may cause a range
+-	 * split. So use two slots here.
++	 * In the current x86 architecture code, the elfheader is always
++	 * allocated at crashk_res.start. But it depends on the allocation
++	 * position of elfheader in crashk_res. To avoid potential out of
++	 * bounds in future, add an extra slot.
++	 *
++	 * And using random kexec_buf for passing dm crypt keys may cause a
++	 * range split too, add another extra slot here.
+ 	 */
+-	nr_ranges = 2;
++	nr_ranges = 3;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return -ENOMEM;
 
-> 
-> Dmitry, Alexander, Marco, do you have any opinion on kasan=off for
-> non-HW_TAGS modes?
-> 
-> On a side note, this series will need to be rebased onto Sabyrzhan's
-> patches [1] - those are close to being ready. But perhaps let's wait
-> for v7 first.
-
-I replied to Sabyrzhan's patchset, on top of this patchset, it's much
-easier and cleaner to remove kasan_arch_is_ready(). We don't need
-introduce CONFIG_ARCH_DEFER_KASAN. Please see below patchset which is
-based on this patchset introducing 'kasan=off|on' to genric|sw_tags
-mode.
-
-[PATCH 0/4] mm/kasan: remove kasan_arch_is_ready()
-https://lore.kernel.org/all/20250812130933.71593-1-bhe@redhat.com/T/#u
-
-> 
-> [1] https://lore.kernel.org/all/20250810125746.1105476-1-snovitoll@gmail.com/
-> 
-
-Thanks a lot for reviewing and feedback.
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+-- 
+2.51.0
 
 
