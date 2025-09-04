@@ -4,71 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BBCCCA1015
-	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 07:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E701CA1012
+	for <kexec@archiver.kernel.org>; Thu,  4 Sep 2025 08:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tb40G1BP2UOmzBv4K9eP2Zzmqp+7E3i2B0tVuKcnrc0=; b=VSkdPLS/CDfxx1lKpFJMHDfqYZ
-	dnkdtiDDtcAmMeN8osG3mfHEABd9q3XWDc4opnGf26dS9h+hm6hScu8yVB8fFECNaMa38Riw///fv
-	ROESDjv+g+o4eFpbPUSmafJgWJZ/HjNavqFGohv3tF0g/NzwDk36/3BNrw808oT3ZWNqTliHPbmMg
-	jKIMh6bHafj0HGn/FVn2ZB1uvIu27AxUc+X9n+BRC/BJNSpT9e2MwwsfA1r7wbd/wTxo6JoVxpfdN
-	dp9rek5ozt0GpeX1ZF5jBod13kjf2sX5jaT81kdvXd0LIa3qv6assbXXTrxEfHEa4Tz9TahZQO5N7
-	Ac5mPAdg==;
+	bh=Pr0Y4bkCbfd3itfrxpuVGdfdmmRa0XxzBqHDc5t+1Us=; b=WS42BimMrFPEorRjYO0BoUpNzK
+	2/TrATvHXssHRYUKWWzIfNT4rW+49SXzLy28gwgKpAwScLunuwWLhbdWyHIUeTX4IH+iLPOOOHG6+
+	ch5GeBAtzF7/FTxhSkINBCntwnm1WEANPLAdGm7ifqzsQy/JPn2Nn3uE6bb+5wcQ6dd/FUHPQaubv
+	sqJ/kfYIFKjAvWPlc4qYjp6UuaAYZsw6W3za/ZgNSfJOe3WCNIkrKqvDi8KVRyiMElRDV9dLpQta7
+	3aVSwqcdnYD756pV3VNaTCZrZmLWicDfbji8Z99DKwZOQ/c3gq+Ng44c3J++46WTjwLdw/XSWR2v0
+	TMAs/DJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu4PQ-00000009rtu-3bUl;
-	Thu, 04 Sep 2025 07:29:28 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1uu5lS-0000000ANr7-16RU;
+	Thu, 04 Sep 2025 08:56:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu4Fs-00000009oRl-1Sl4
+	id 1uu54P-0000000A7Rp-1IAJ
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 07:19:36 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id ABC7B601A4
-	for <kexec@lists.infradead.org>; Thu,  4 Sep 2025 07:19:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BD7C4CEF4
-	for <kexec@lists.infradead.org>; Thu,  4 Sep 2025 07:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756970375;
-	bh=72oYlNKXXmAjA5Q5e13+DWrwi/CpM80zljJXvzw63aw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RkpRQhtW+a9Y5lrqRKRhT35FXEw1JPCeIWAQrYQnCH0PzIhHfBAOhG2Y5tMpknarz
-	 Pl6vzMh5wTJkjfijbtkfNLawzbNfsDaIq0XFhQ03u1qXSHpsWOyAsewXLQkmGGDpF4
-	 g5AZtKvc/NMoBuOSrEYboremIyftnqUZnccdN63+lyYaqC2zXAg1ev7wfVJH2lBPPs
-	 JVWLymM+QXBvbXwT51vLAHuB98LJ3hPXoXOI0XidDfDFuhAkXtfKW2uJbzeDUKLK45
-	 gu3YhlMYSQbv5cDMx39swAF/M58+EsE1FTxDMYZouqSbCtxD0PLFI34ZU+9r65T2RB
-	 b7Av9NcRTOQvQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f69cf4b77so787855e87.2
-        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 00:19:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXRu83sFHJk9kqqAGZIniEO3XN7+vsrmki9zic65cPn4thzSHRTYMxQrsPs7yTRSpZK5OonOw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwIlebOUppxxltOaY7F81kDzF8s5CGyGDLkzMFnIoVVNI5trfD2
-	4FF414hDCy1H4goXlVaM0didKDsysgJLZ5hD9ypUiXZPDodxuD3jPL/nnffcoCgceoFKI1zMtED
-	u19tO3aqoECvWe/GYtDfuMV9Gkt6VTC8=
-X-Google-Smtp-Source: AGHT+IEFvmAnCvfgO7PlnrG1BYUxZTjjsz6BPZ180OOcQw+OkZ+byNbMMbmHC7LJX6qhewccjpN/hH5j8/8g6mEFmZQ=
-X-Received: by 2002:a05:6512:239a:b0:560:8d97:8bb8 with SMTP id
- 2adb3069b0e04-5608d978cd1mr1413481e87.32.1756970373660; Thu, 04 Sep 2025
- 00:19:33 -0700 (PDT)
+	Thu, 04 Sep 2025 08:11:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756973507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pr0Y4bkCbfd3itfrxpuVGdfdmmRa0XxzBqHDc5t+1Us=;
+	b=fK/Sxmk/WPaUxplly0EvNMA0fz/QViutvuiRuVIVfz4jYaLmo7/4XtijGRy1HLfNvVsyH3
+	FBAu3iyyH/bYVcbLkFS6OYCEpcItJM+HTC9ox3c+HRyuYTIyhaco5MPw/ootcq0ReCWZ67
+	LuhaotQ4/ZoVgxhzwTygJeIdhE9uM+I=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-44yZFtgQN2Gh_XbvPEWQXg-1; Thu,
+ 04 Sep 2025 04:11:41 -0400
+X-MC-Unique: 44yZFtgQN2Gh_XbvPEWQXg-1
+X-Mimecast-MFC-AGG-ID: 44yZFtgQN2Gh_XbvPEWQXg_1756973499
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF26F180034D;
+	Thu,  4 Sep 2025 08:11:38 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.19])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5AD32180035E;
+	Thu,  4 Sep 2025 08:11:36 +0000 (UTC)
+Date: Thu, 4 Sep 2025 16:11:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: glider@google.com, dvyukov@google.com, elver@google.com,
+	linux-mm@kvack.org, ryabinin.a.a@gmail.com,
+	vincenzo.frascino@arm.com, akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, sj@kernel.org,
+	lorenzo.stoakes@oracle.com, snovitoll@gmail.com,
+	christophe.leroy@csgroup.eu
+Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+Message-ID: <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
+References: <20250820053459.164825-1-bhe@redhat.com>
+ <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1755721529.git.epetron@amazon.de> <b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de>
- <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com>
-In-Reply-To: <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 4 Sep 2025 09:19:21 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
-X-Gm-Features: Ac12FXzg-Gwf5w9Dkz74akKGMbsagt1QMuLWSxeot3bSIi-D7R24FEVq60rM11k
-Message-ID: <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] efi: Support booting with kexec handover (KHO)
-To: Evangelos Petrongonas <epetron@amazon.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	Changyuan Lyu <changyuanl@google.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nh-open-source@amazon.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250904_011149_701414_103140DA 
+X-CRM114-Status: GOOD (  34.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,51 +91,94 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, 23 Aug 2025 at 23:47, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> (cc Ilias)
->
-> Note to akpm: please drop this series for now.
->
-> On Fri, 22 Aug 2025 at 04:00, Evangelos Petrongonas <epetron@amazon.de> wrote:
+On 09/03/25 at 03:22pm, Andrey Konovalov wrote:
+> On Wed, Aug 20, 2025 at 7:35 AM Baoquan He <bhe@redhat.com> wrote:
 > >
-> > When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
-> > early during device tree scanning. After kexec, the new kernel
-> > exclusively uses this region for memory allocations during boot up to
-> > the initialization of the page allocator
+> > Currently only hw_tags mode of kasan can be enabled or disabled with
+> > kernel parameter kasan=on|off for built kernel. For kasan generic and
+> > sw_tags mode, there's no way to disable them once kernel is built.
+> > This is not convenient sometime, e.g in system kdump is configured.
+> > When the 1st kernel has KASAN enabled and crash triggered to switch to
+> > kdump kernel, the generic or sw_tags mode will cost much extra memory
+> > for kasan shadow while in fact it's meaningless to have kasan in kdump
+> > kernel.
 > >
-> > However, when booting with EFI, EFI's reserve_regions() uses
-> > memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
-> > rebuilding them from EFI data. This destroys KHO scratch regions and
-> > their flags, thus causing a kernel panic, as there are no scratch
-> > memory regions.
-> >
-> > Instead of wholesale removal, iterate through memory regions and only
-> > remove non-KHO ones. This preserves KHO scratch regions, which are
-> > good known memory, while still allowing EFI to rebuild its memory map.
-> >
-> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> > ---
-> > Changes in v3:
-> >         - Improve the code comments, by stating that the scratch regions are
-> >         good known memory
-> >
-> > Changes in v2:
-> >         - Replace the for loop with for_each_mem_region
-> >         - Fix comment indentation
-> >         - Amend commit message to specify that scratch regions
-> >         are known good regions
-> >
-> >  drivers/firmware/efi/efi-init.c | 29 +++++++++++++++++++++++++----
-> >  1 file changed, 25 insertions(+), 4 deletions(-)
-> >
->
-> I'd rather drop the memblock_remove() entirely if possible. Could we
-> get some insight into whether memblocks are generally already
-> populated at this point during the boot?
->
->
+> > So this patchset moves the kasan=on|off out of hw_tags scope and into
+> > common code to make it visible in generic and sw_tags mode too. Then we
+> > can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
+> > kasan.
+> 
+> Continuing the discussion on the previous version: so the unwanted
+> extra memory usage is caused by the shadow memory for vmalloc
+> allocations (as they get freed lazily)? This needs to be explained in
+> the commit message.
 
-Ping?
+Hmm, up to now, there are two parts of big amount of memory requiring
+for kernel as I observed. One is the direct memory mapping shadow of
+kasan, which is 1/8 of system RAM in generic mode and 1/16 of system
+RAM in sw_tags mode; the other is the shadow meomry for vmalloc which
+causes meomry big meomry usage in kdump kernel because of lazy vmap
+freeing. By introducing "kasan=off|on", if we specify 'kasan=off', the
+former is avoided by skipping the kasan_init(), and the latter is avoided
+by not build the vmalloc shadow for vmalloc.
+
+Yes, I totally agree with you, I should have put this in cover letter
+and the main patch log to explain it better.
+
+> 
+> If so, would it help if we make the kasan.vmalloc command-line
+> parameter work with the non-HW_TAGS modes (and make it do the same
+> thing as disabling CONFIG_KASAN_VMALLOC)?
+> 
+> What I don't like about introducing kasan=off for non-HW_TAGS modes is
+> that this parameter does not actually disable KASAN. It just
+> suppresses KASAN code for mapping proper shadow memory. But the
+> compiler-added instrumentation is still executing (and I suspect this
+> might break the inline instrumentation mode).
+
+I may not follow your saying it doesn't disable KASAN. In this patchset,
+not only do I disable the code for mapping shadow memory, but also I
+skip any KASAN checking. Please see change of check_region_inline() in
+mm/kasan/generic.c and kasan_check_range() in mm/kasan/sw_tags.c. It
+will skip any KASAN checking when accessing memory.
+
+Yeah, the compiler added instrumentation will be called, but the if
+(!kasan_enabled()) checking will decide if going further into KASAN code
+or just return directly. I tried inline mode on x86_64 and arm64, it
+works well when one reviewer said inline mode could cost much more
+memory, I don't see any breakage w or w/o kasan=off when this patchset
+applied..
+
+> 
+> Perhaps, we could instead add a new kasan.shadow=on/off parameter to
+> make it more explicit that KASAN is not off, it's just that it stops
+> mapping shadow memory.
+
+Hmm, as I explained at above, kasan=off will stop mapping shadow memory,
+and also stop executing KASAN code to poison/unpoison memory and check the
+shadow. It may be inappropriate to say it only stops mapping shadow.
+
+> 
+> Dmitry, Alexander, Marco, do you have any opinion on kasan=off for
+> non-HW_TAGS modes?
+> 
+> On a side note, this series will need to be rebased onto Sabyrzhan's
+> patches [1] - those are close to being ready. But perhaps let's wait
+> for v7 first.
+
+I replied to Sabyrzhan's patchset, on top of this patchset, it's much
+easier and cleaner to remove kasan_arch_is_ready(). We don't need
+introduce CONFIG_ARCH_DEFER_KASAN. Please see below patchset which is
+based on this patchset introducing 'kasan=off|on' to genric|sw_tags
+mode.
+
+[PATCH 0/4] mm/kasan: remove kasan_arch_is_ready()
+https://lore.kernel.org/all/20250812130933.71593-1-bhe@redhat.com/T/#u
+
+> 
+> [1] https://lore.kernel.org/all/20250810125746.1105476-1-snovitoll@gmail.com/
+> 
+
+Thanks a lot for reviewing and feedback.
+
 
