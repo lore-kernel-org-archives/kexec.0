@@ -4,208 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C47A3CA1017
-	for <kexec@archiver.kernel.org>; Fri,  5 Sep 2025 02:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC487CA1015
+	for <kexec@archiver.kernel.org>; Fri,  5 Sep 2025 03:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=; b=BsVyr2WL4pPDJ6y/wWSzPH0Hzr
-	E3zumk1kWOkHfKWC4+pACJ6Ti9Slri1N06IjSbNjYBb68Hi0oDh3tQ13Jb0XeYqGOfhc6RxSn7ubv
-	1soN8Ydt5nd72KzWWLBkxyHWstdG1CHjIxwCp/dmDYh6KmAgW+1IqYGQ0NFQwzEUOxdfbi4O4Im3Z
-	FgqkZjp37goD9tb9DHwHIH/gKd/lQnYP2O1cZtMPJhcKFrzJsG21Q+gXIAdqgGP+cB/hVwKBj+zi2
-	/yo/lKikjMN/ayFdPOYQOH6OeCmKzr/gj/pFCidHN6Uhbr/NDgubGS7Oxt7ZWQxzIyBjZd8oq898x
-	TTpruvdg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=ePNqIAolRnndGShxxNxc52PWM1KkaM+ozhsJ1S/I3qQ=; b=qahWuwlCYnN+gkua6/gZFwmfow
+	xZIcCSw37wE1ViAD4Hw1SpzI+sg+vR6WKM/we58AhGqSYJoq7qzgK9XXRbm5aois+w14fI7KWDf2H
+	PFyw1H8s1qFPTiGSIjKeeqqVgJunzmfAg0FqDlApGB/mc830SGmKy6vL3l0iq44BpTFlF3SFxdEfa
+	1rUkbCJvMJr4OqJKPIrIt1lASp9xoYTJdu1ac5GcAjO15NiZW0+fC4j1uQGHmZdbgdaS2lOOrDm3Q
+	aSwdBEitcezovqbe49M0QhL51ZTts6WX1bE4m7HtZlPQa4zmQXMjJJD5mQ6UrAeA9s9cSdWunSn0p
+	CJPqxUEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuM2b-0000000G0yB-36Aj;
-	Fri, 05 Sep 2025 02:19:05 +0000
-Received: from mx0a-00273201.pphosted.com ([208.84.65.16])
+	id 1uuNbR-0000000GaPw-2ndj;
+	Fri, 05 Sep 2025 03:59:09 +0000
+Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuG6w-0000000E7I7-2aYR
+	id 1uuN2P-0000000GPs0-0TtX
 	for kexec@lists.infradead.org;
-	Thu, 04 Sep 2025 19:59:12 +0000
-Received: from pps.filterd (m0108159.ppops.net [127.0.0.1])
-	by mx0a-00273201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 584GYnY0002918;
-	Thu, 4 Sep 2025 12:58:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
-	cc:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS1017; bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=; b=qUWf
-	kb9osDPJImfSVieXhqhq0lAJjwVZp1rEllGbZ0kQvp7smBg8gd6HWsdw5auD0+RK
-	oNT4Aql55BrEg4uPwQhS3w1tMrndNpi9GdMiz2qPSTnAsUFsDBimT5VGKbS2HfW5
-	NoKqdhgs0zUC72/D6i83LHb7Q67Pa5XJTcB9fRxK7HRjH065saoYu2E3aY3sOqQs
-	X/z/AkTGGGi18xtD2atT/4YEq6wvltlKgn28sdTBYyR1SG3naP6jrxvPeDKYlu9p
-	/FbnAqejll7X1NjTn3jFE03lT/92kFZpZubhtjFlNHFMHUsA6TMAj0yI7XK2q3Kn
-	CzVeOw5iE9sEm5Wm2g==
-Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11020080.outbound.protection.outlook.com [52.101.46.80])
-	by mx0a-00273201.pphosted.com (PPS) with ESMTPS id 48xrytbcqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Sep 2025 12:58:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ao+X9V5uKISb7b2BR8sgv4yKzDF/XHhgPCv7rjhZA+mbpFY8Lk6TbiMclH/tAW/kf9pVCBGzzTCqePZeQLKp/4/2jRHMfI1D3DJqimvEUrRmqp9xd5s8QbZHCbFq3LEMyB7lBn+W30gjLkzJ2Iaus5H2hbykBu53CjueFJSjI9pWS/T/9YrdDJo1kV2FA9ZGV9jKrrTh2CWK8+TVpiuD8R27OLHq3U0u59pdoNy8UXKmJ9WJo4D0GWIVb4AAhNH/oSAxXN0OKYlbUE8my7e3jjLvH2O5PDylZy2/s9EG95VTI9af6y1K5NDH+nxtMepHJFJyUwG+Ast59gefJTuJIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=;
- b=Mf/3wmgAl1XH09IFXvsJX+f2lWuxBj+KxvObXO+2qP2hGJOQe1hrFQcSU0RsV92BtiKjESn/aL0UypRFIYI5aCuGwVYmA8wRN8Q+l7Quo86FZEKVF35c/A08Xxg3rGPKSdqajVtobLb4coetDC4VmPeV+nz6TeR/FYQmT4PZfmOpHDHDjYEbzR8XFLxPmKe8DP37faxxfCzGrLeLauPM6O6WTOnLmamFMsLY76BmXeXO7/xi3lgl2sfxqFvZST3pgUONkqusX7oabm7FZTu+wcbNi1OY2oEUd6so5GRB/Ys1Sm+86lPFlznVDrFGCZ/XM3364g4PeFSyQReknCRQvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=juniper.net; dmarc=pass action=none header.from=juniper.net;
- dkim=pass header.d=juniper.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pFA+dN8v6Wrhb3qQUpZ/arg2r3bzDZUs1Y7rOtgirsA=;
- b=bfc8w8mrFUDRNQtcXZw8vJLnyhc43OJR6A33pvjUesKspbSLmA9nHXrigmYs8Qoe4oG324gctfgV+waUjUohZot03NO7yobjq8TlE77PCTkyvvg17HcqeHtsDcRJWFMAmqwAtyH7dGSHAc2qreOjzW7p1lwB+VqoR6dtjfxVLfI=
-Received: from BLAPR05MB7284.namprd05.prod.outlook.com (2603:10b6:208:296::21)
- by BY3PR05MB8370.namprd05.prod.outlook.com (2603:10b6:a03:3c1::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Thu, 4 Sep
- 2025 19:58:26 +0000
-Received: from BLAPR05MB7284.namprd05.prod.outlook.com
- ([fe80::3d79:19d4:e1cf:2224]) by BLAPR05MB7284.namprd05.prod.outlook.com
- ([fe80::3d79:19d4:e1cf:2224%4]) with mapi id 15.20.9094.015; Thu, 4 Sep 2025
- 19:58:26 +0000
-From: Brian Mak <makb@juniper.net>
-To: Baoquan He <bhe@redhat.com>
-CC: Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Graf
-	<graf@amazon.com>, Dave Young <dyoung@redhat.com>,
-        Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
-	<bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin"
-	<hpa@zytor.com>, Rob Herring <robh@kernel.org>,
-        Saravana Kannan
-	<saravanak@google.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
-Thread-Topic: [PATCH v2 1/2] kexec: Add KEXEC_FILE_NO_CMA as a legal flag
-Thread-Index: AQHcBk4oB5XugUC7+EiYsQsd7ryXGrRsoOkAgAA/AQCAADfZgIABBqSAgAW3BoCAD8p2gA==
-Date: Thu, 4 Sep 2025 19:58:26 +0000
-Message-ID: <1683D348-3A7C-484F-B21E-7828B96AA263@juniper.net>
-References: <20250805211527.122367-1-makb@juniper.net>
- <20250805211527.122367-2-makb@juniper.net>
- <20250820214756.5c7b551e4723d9f0b5dd55e3@linux-foundation.org>
- <aKbZ1h5mjtfoFMh8@MiWiFi-R3L-srv>
- <20250821045319.72e81f40e021e54e2131ac44@linux-foundation.org>
- <aKflAV8XNjqeu1Dj@MiWiFi-R3L-srv>
- <9F68DBD7-8A67-4FF4-AC99-5D485D9F9313@juniper.net>
-In-Reply-To: <9F68DBD7-8A67-4FF4-AC99-5D485D9F9313@juniper.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BLAPR05MB7284:EE_|BY3PR05MB8370:EE_
-x-ms-office365-filtering-correlation-id: f3c35982-666d-4ccd-46c6-08ddebed694b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?AAfN79iIlol/vE3PwQTX1xj8AE8qS8AA2554Lx01oNYdbG4aSdF58WcmqPhp?=
- =?us-ascii?Q?EuW+I5QZnuuPFNn4phH6JGdaDkIYRYXAHmgD1ivAjMZX6rKmA7psKwSo3aHv?=
- =?us-ascii?Q?Hp2ohrFPpvh3JRfzdff3jpYyObRIP+7hzWKGNP2e7FApQR5zFYPbwmnHis2j?=
- =?us-ascii?Q?Hubw5L49zgjcYnRo+OMfZTTg+XjDGjZgkDG0yr3EQWZKAjtes+p1i8+CCnCx?=
- =?us-ascii?Q?BA/NtetBTkGB15+qZDDZvaFYMQIClTKTbrf6a/XYFzqYibOKK0Mt/W+snn7d?=
- =?us-ascii?Q?0WWis0lOCPEr2HZoJjp07aq5MU8dpYjygA0XFLSPYUtCbl/lna8Y8ogn2iGi?=
- =?us-ascii?Q?FY+zGW+s09clp5WSbzAk6YCUlSZiIcpkmziNeSeSBkSecPdOYhPXfcv3RHcm?=
- =?us-ascii?Q?+Anq6OvRHrKGZALL7Eq70530Ai1fiNK+ZfxCfGQ+79gCoaHi5M8gQ019w6Zj?=
- =?us-ascii?Q?0DGBe4LpUMihaYg8iQch9yEOZ+AzDNbojj7sXLqwZCNIif2XSufQN4LflgLl?=
- =?us-ascii?Q?3drJAjwX1I5yuVFuA0khrcQAD7xuPLt7lw54u38jN4sfUv2ouYxOwtz1pv0p?=
- =?us-ascii?Q?tx7qwM5c7Xf6EyH4zKD1a8F36HAl/HFQLsZ7I9tJiBFla4sK/d3QZAQG4aCf?=
- =?us-ascii?Q?6R7rZIjzEFsFvvUcaAgtfZNZh6iS7SYkAi7vcq4843SjBeTd5PLx3E19h8Ip?=
- =?us-ascii?Q?2wkY3rRL2CjFJhk85LO7BRdwSw/PPmUEt2MmRtFWWhgnjSTgL5OvYKcLZNWh?=
- =?us-ascii?Q?CNqOwiljty6aNTOQgSF/0gyaGZaOpleYcbwA3kJLd7+hQ2PZQRqouDKwSb2z?=
- =?us-ascii?Q?UOdUd0mY8YzImmLuHM6cshMMAf/IQatfN1f90Zn13Gx4y+MojAPNqsNEqryu?=
- =?us-ascii?Q?5/pISuzTGaEe9iFEBoJTdQlwQbE1McCI53GP7fUOETCKsZ+2w3Vau4RVFhcc?=
- =?us-ascii?Q?+d2tO5ILYeYTPpsU9Ytsu9qyjw2ivI4OIWjStzkC7TgQBV0FU6G/ahcDKbiy?=
- =?us-ascii?Q?hfEpMZTQpTnmoAzfWYhbKagAMjEQpLdyKpEHtc3njv316N7sjAjmLGWQ5ZQV?=
- =?us-ascii?Q?tDpBTofzwn6rdfO0GEpx/yWZ6A+6nH6sGW8uuomS8hvA1MNm5G4rJVf6QblP?=
- =?us-ascii?Q?SCkgGeBgVYHg76u7MfpeArB9MDZZXgmQVRJ8pX7zMJLzZl2DUAG5kzlolpDp?=
- =?us-ascii?Q?2HQAa8kQlNTqn+btAIoarefcpGaBEBillSQj3SWvoD2p/OOfq/6UMDQYhW0W?=
- =?us-ascii?Q?YlWw8oZcc7Z9d3eUkZYLO115aG4m4cQR1jIc4AUqgyQowkGU56g68EeJM4Hc?=
- =?us-ascii?Q?Gq4+K6Z1RaD3y7GkW3xBqshTdmav0D1yg0dThAwrp2qZfPPuyIe5jJMsPcKX?=
- =?us-ascii?Q?+cr15SPfqMkjbD0xd0R08FbdSNMl1llGj8cPYO0Hb2HWN+GcgqhNP+iEJ/3k?=
- =?us-ascii?Q?Q8YAniUMCwQ=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR05MB7284.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UOtKGUKDOj7jjo6oJh0XeVwHzIrCVc99EVUf3y/jWT0W17x8WM4s2xe3tvoH?=
- =?us-ascii?Q?y+9XWoW7rXJelYVceFsuTaworCYYIVw7BFFyiTNCSSnc8hCFoVLcx3hiTE/q?=
- =?us-ascii?Q?mpHHvBPz/NUCw0mrjeT5l0wmojOg/0nmqWCkTTlJNSO0RwV+/SK8k8Hb6B+s?=
- =?us-ascii?Q?xi18rhkHKhRtWkQ4r6ULVisMO1NVscxCYxoHnozwPr5X3S80lMxeY4r+cZVp?=
- =?us-ascii?Q?BbXAxNwz6wPRqSqY3J/3Xa1HmyEgSZ5EfYAm9pXgSNo8B4svnrlMSoz7gcqm?=
- =?us-ascii?Q?YkmandSzgqhE5hhAgeXE8odWazaDJjHiPigVG46dXySXYJvXd4dbUuUFQDQo?=
- =?us-ascii?Q?ncNll+AOwRG7N53EJdyyWMPJ/eR1VYY9I1dRsWHYpCHc346n6P/HcxTfNSt2?=
- =?us-ascii?Q?z9f/AKhCO7Vdg20uKY4tYq6dMPSwQjFCB+MjonZ0Lnut69VQD3OBee0tcJIm?=
- =?us-ascii?Q?2Mo8bj1xTnCaBi9n3cWnI1+jjkB6ob2/8EL1Gbw73bhqm+b3eizjQq4uDpYl?=
- =?us-ascii?Q?Ko0vWtzFCWs4FkHaoGz35+rp0DzFTZBIs4ic+jjPa4se4gdwT6AhHMZS32KZ?=
- =?us-ascii?Q?WdbWGpopAoyLtYQhivXKragTbzp0VlFcIrRmr29EgsuGY9x+BKzyQT759cH/?=
- =?us-ascii?Q?v7sJSrcH93ezo0eQ/8tBIfNpcWjAkE5SdPNTHtWCEUv9leGlPYgMoEKmtPp7?=
- =?us-ascii?Q?Gh1b2KdZzR4JrtrKYLI2ybBiTKGmaCXSwlDOAbo28MfNKYraSFLQRTU0/BGV?=
- =?us-ascii?Q?V2S7Y7uat0bMeavz92YzDV/qEjD7ZlIymxwbfjTQFl4/Pe0wuk0cdiaN7nLR?=
- =?us-ascii?Q?BImdA9m4dX04FV1Icz7wDorHEL9LvzlACh431pnS6dyZhU9n/cFk2XaZxHhj?=
- =?us-ascii?Q?Qi2D+0ISn/qHCCApClAUpsQY3xPz+KY/qiSCI0rRrMm2zBv97e+5nYhTiiQi?=
- =?us-ascii?Q?cew7FNh4a1FKYhQfGA30ZkMO/vcBigbAZ4ogIPzorGK3hQNbUJi0sY5MpIN3?=
- =?us-ascii?Q?T86Lwk8n11U3Npcn77rO63eiqW0gEsIrC4+dYHioxpfRp/jjtd1AfoYII7xT?=
- =?us-ascii?Q?3pcN6LeoKrSw2K2svhQAJsQhcgunsqNT+tVazj0dcoXQHpjgBv2V49de8BOl?=
- =?us-ascii?Q?vNedi3oeiY8ce1oWNKe3IOxKfchIR59a6NA6wgjTQpdYmXunTMRA9sqsfNoc?=
- =?us-ascii?Q?394s5sMCL07WoPvtXFr463DibET43TbUC787m/ChC9E7K22bxF/pAoaMpmwp?=
- =?us-ascii?Q?TRUBtxfhIBh0c4ErJ7ibaA+UajNch/OczktAJJKtwPDs1vFNynQyut59E+Rq?=
- =?us-ascii?Q?+HZA2h5LbcpJkJIKwKTt++UkHdN3x/q0Ayr27SzYKx94RhRzlDAyw+iQc1n6?=
- =?us-ascii?Q?TNHVIXryzF1o+gtFx/C/y/He7rk+Osm6A6NU9mCxvwhQ/8YsMQHsr6+Zepeh?=
- =?us-ascii?Q?/0LrO1GzfPpR8PnmlxTSbrbgmXjoZkS8BIB+dVuX6nIagT6vM69iVsjrQ/jS?=
- =?us-ascii?Q?Xfn1nAwG/t9qwkmEZdB9VX3XWcw1NPv9zEHDzrd4nwpjGhnX7VU0/VVWyRp4?=
- =?us-ascii?Q?wlkvJwSYrjfbphjaVDVuCHjm/fKBYlZOsrCclbl+?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2E1D8F21CF408645B28729E1765E65A6@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	Fri, 05 Sep 2025 03:22:58 +0000
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-244582738b5so14048725ad.3
+        for <kexec@lists.infradead.org>; Thu, 04 Sep 2025 20:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757042576; x=1757647376; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ePNqIAolRnndGShxxNxc52PWM1KkaM+ozhsJ1S/I3qQ=;
+        b=CWReZhf3OnVRjoNwN6t8iA6cDQD9pxmCf8cRUQLK4DqpWzhmqKuQD2KOMHXKuPENVN
+         8TtHlc5UVcplR3FP0ImPoDmwKRflt1gtHh+JMVTR/yeffSAftMdL9kXrl5els0c0V9ji
+         iBwVwJERS8T9DGz13MPmCaWVfc4hURGo5OLssUyJhjHKVVGalQW12v+zvibLunf8Ea4J
+         qFLZ289ZgDu4Y+B20W1AhBT/kKFA9tV0E+flB+xTyxWGYyhRAHS9AYH/KbP0QmK9yF12
+         xVEYqAkQxU4D5ZCM7YJGfu6a805gR9n1vBLWX8W4ISNOoYQ7cZrY5DHqRpXDO2lqwWbs
+         DaIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757042576; x=1757647376;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ePNqIAolRnndGShxxNxc52PWM1KkaM+ozhsJ1S/I3qQ=;
+        b=Oc6/FzLZcBmIhILVV6ZgTRTRjPqDVtwhY2GzqGf8rB3PbnYK5yg00yEKj/3O1lL0fT
+         dsAw0Quhpdjy4cvdFTud16Fbh+Yhv+YAV2pUYxIelGLzLW8+lunP6f67f+QzXoGxBAaa
+         GpzsyOzHxZVCjXIknfeT42aYIiNM+rQCu+5IZqxINDnL9tS8gTaMp2yxYpYauqKKCzb6
+         4KrdfWejm6nxXi1p24wyTFvglom4qdYhvDRLqZzliMQ7R7dV3lEHCA0Y+S2AejMGH/TI
+         IxdqxmRbVvcgAx62L/Bh81EKo+l/d2rJmgq6I3OgvRHekhmIw3MN1MOl4c0JqRKMUnq0
+         dZwQ==
+X-Gm-Message-State: AOJu0YyCFJIdcGztm7C0wCIBKPbflA/e8DZSjffUxHGlFH03zrvf+RDR
+	XYXDwWoXP1x2czWIfE5ofJwa810+6RwZuyl8T01cWQ+uPoEyijvqSA95fHi+GEON
+X-Gm-Gg: ASbGncu/VNUTQxYlMOtOVBZwD/1netd56JMfJptGpk0TwJ7WX2U2IDjlp523u2nxdr2
+	qXrFS6KiWIjjwwpNYqjJtNOBEUK9Nf7vQS6GOKJsUxPJgEi0aBgQKcVuiFsbiTvcz+qk75UINSL
+	Ik0ewVCssDDVi9CSidRB0U5ak/qGo7DTRAWSY5ZMwnefa2yyAYpmr/n31IJLidJEuPPr4jmnoy0
+	NVuQbyCGJlKnWT4un90Y+Dd/CC8CQMPvRQQw0gQPj1tSYdbtLPD3ErVYKrgepEDLCbBm1RIb9NI
+	rvlyUpCOeSWNdpEvTfe7rp10dPxHDATXMNQWIMvhGC9WATEnlwaFcFG8C8vjXkluQIPiz3gLyem
+	naUrMC+M0G0SnzQn9DPeoZdG6ChHTmh8Dgkj5cMwhdcAjwaF2LnUa+bPswJ5JO/jV2M1jQL8x0s
+	FU/HSUQ5gIEtQebexBFwYuDSnNadXtXvyPgPJosRq2
+X-Google-Smtp-Source: AGHT+IGUKS2lEeCQNEM1Vd49uYvD0dl1kE8T3g1H3CQRe/XLuPrkawbVtXVPKOjPfr10hgq4DEgpqw==
+X-Received: by 2002:a17:903:fa3:b0:24c:cca1:7cfc with SMTP id d9443c01a7336-24ccca1803amr59478255ad.59.1757042575778;
+        Thu, 04 Sep 2025 20:22:55 -0700 (PDT)
+Received: from apollo.tail3ccdd3.ts.net ([2601:646:8201:fd20::ecee])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-249037223d7sm196072465ad.32.2025.09.04.20.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 20:22:55 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
+To: kexec@lists.infradead.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH v2] Make the segment base match pinned section address
+Date: Thu,  4 Sep 2025 20:22:52 -0700
+Message-ID: <20250905032252.1216827-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-X-OriginatorOrg: juniper.net
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR05MB7284.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3c35982-666d-4ccd-46c6-08ddebed694b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2025 19:58:26.2437
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bea78b3c-4cdb-4130-854a-1d193232e5f4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OOtznzkueqVHLxL3pkgneH1Txds7hy0siIKEALRA7hR2X826zq93g+gsCIy2ZbWupcyiKqebSF+cZtrsyrlNGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR05MB8370
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTAzMDE2MyBTYWx0ZWRfX15JRWd+5fdaw
- BW5lgOj4pI9E+oyx9yRu0KWLNuJ94SjcPGOc434djGtcHRfE3mHQ7v0Ij9S8mpZ5tjlGhyj9sky
- 1KLC+mj7jIXRFlt+6RZpxX+r7+ptz+tb8kpO06Hbfqnf2fRnsQ1c6BajcYvg79L1zX8TMS0hjj6
- XexTlFLkTuAfeZvFActfNCjF2j1WjjpfMEzIPmxFN077ggJQlMPBCWCOF+2YopWxm5IkE8MoHRU
- br9HAxIXsj5yZJ129WAWYTu9v+K5enr9nN4C1IkhLuWUjGe0/a/FmAR/4989Wacs5o3byEOuIVM
- E5bL/7zYymytHVJnjMxbZ/+mxsMlOkDtauPQ88rPq1IwtQ+x57+LsR7Bw0THSO5TbPUSk/5SCzE
- Jswdyaws
-X-Authority-Analysis: v=2.4 cv=XM4wSRhE c=1 sm=1 tr=0 ts=68b9ef64 cx=c_pps
- a=mPoTjFGc+mEQF3C7Fih31Q==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=yJojWOMRYYMA:10 a=rhJc5-LppCAA:10 a=VwQbUJbxAAAA:8 a=OUXY8nFuAAAA:8
- a=20KFwNOVAAAA:8 a=vggBfdFIAAAA:8 a=oGMlB6cnAAAA:8 a=1XWaLZrsAAAA:8
- a=Z4Rwk6OoAAAA:8 a=GwIJR99yofqPgWEKVJsA:9 a=CjuIK1q_8ugA:10
- a=cAcMbU7R10T-QSRYIcO_:22 a=NdAtdrkLVvyUPsUoGJp4:22 a=HkZW87K1Qel5hWWM3VKY:22
-X-Proofpoint-ORIG-GUID: 7DVZ_qP71MU3Bmnj2G93bTlGHvHvJR-F
-X-Proofpoint-GUID: 7DVZ_qP71MU3Bmnj2G93bTlGHvHvJR-F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-04_06,2025-09-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
- score=0 phishscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509030163
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250904_125910_664615_8E7D4BB2 
-X-CRM114-Status: GOOD (  23.17  )
+X-CRM114-CacheID: sfid-20250904_202257_150222_1FB6C92E 
+X-CRM114-Status: GOOD (  14.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -220,210 +94,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Aug 25, 2025, at 11:49 AM, Brian Mak <makb@juniper.net> wrote:
+ET_EXEC uses image base of 0x400000, but the build forces
+section VMAs like .text = 0x10000. LLD now errors when any
+section address is below the image base unless you explicitly
+set the base. (Older LLD tolerated it.)
 
-> On Aug 21, 2025, at 8:33 PM, Baoquan He <bhe@redhat.com> wrote:
->=20
->> Yeah, this is a good catch and great fix. Without this fix,
->> kexec_file_load syscall will failed and return '-EINVAL' when
->> KEXEC_FILE_NO_CMA is specified just as below code shows. So, for this
->> patch,
->>=20
->> Acked-by: Baoquan He <bhe@redhat.com>
->=20
-> Hi Baoquan,
->=20
-> Thanks for the ACK!
->=20
->> And, by the way, has the user space kexec-tools got the change merged
->> to allow KEXEC_FILE_NO_CMA specified?
->=20
-> I don't see any recent commits to kexec-tools to support
-> KEXEC_FILE_NO_CMA.
->=20
->>> From: Brian Mak <makb@juniper.net>
->>> Subject: x86/kexec: carry forward the boot DTB on kexec
->>> Date: Tue, 5 Aug 2025 14:15:27 -0700
->>>=20
->>> Currently, the kexec_file_load syscall on x86 does not support passing =
-a
->>> device tree blob to the new kernel.  Some embedded x86 systems use devi=
-ce
->>> trees.  On these systems, failing to pass a device tree to the new kern=
-el
->>> causes a boot failure.
->>>=20
->>> To add support for this, we copy the behavior of ARM64 and PowerPC and
->>> copy the current boot's device tree blob for use in the new kernel.  We=
- do
->>> this on x86 by passing the device tree blob as a setup_data entry in
->>> accordance with the x86 boot protocol.
->>>=20
->>> This behavior is gated behind the KEXEC_FILE_FORCE_DTB flag.
->>>=20
->>> Link: https://urldefense.com/v3/__https://lkml.kernel.org/r/20250805211=
-527.122367-3-makb@juniper.net__;!!NEt6yMaO-gk!EbJyF8xO2E51MyYdN3_zqCBBMj0JK=
-oiKoPuG_8vEctQMk9uCyjX0LdSEH_FGkPDV8egxzc7w$
->>> Signed-off-by: Brian Mak <makb@juniper.net>
->>> Cc: Alexander Graf <graf@amazon.com>
->>> Cc: Baoquan He <bhe@redhat.com>
->>> Cc: Borislav Betkov <bp@alien8.de>
->>> Cc: Dave Young <dyoung@redhat.com>
->>> Cc: "H. Peter Anvin" <hpa@zytor.com>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: Rob Herring <robh@kernel.org>
->>> Cc: Saravana Kannan <saravanak@google.com>
->>> Cc: Thomas Gleinxer <tglx@linutronix.de>
->>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->>> ---
->>>=20
->>> arch/x86/kernel/kexec-bzimage64.c |   47 ++++++++++++++++++++++++++--
->>> include/linux/kexec.h             |    5 ++
->>> include/uapi/linux/kexec.h        |    4 ++
->>> kernel/kexec_file.c               |    1
->>> 4 files changed, 53 insertions(+), 4 deletions(-)
->>>=20
->>> --- a/arch/x86/kernel/kexec-bzimage64.c~x86-kexec-carry-forward-the-boo=
-t-dtb-on-kexec
->>> +++ a/arch/x86/kernel/kexec-bzimage64.c
->>> @@ -16,6 +16,8 @@
->>> #include <linux/kexec.h>
->>> #include <linux/kernel.h>
->>> #include <linux/mm.h>
->>> +#include <linux/libfdt.h>
->>> +#include <linux/of_fdt.h>
->>> #include <linux/efi.h>
->>> #include <linux/random.h>
->>>=20
->>> @@ -212,6 +214,28 @@ setup_efi_state(struct boot_params *para
->>> }
->>> #endif /* CONFIG_EFI */
->>>=20
->>> +#ifdef CONFIG_OF_FLATTREE
->>> +static void setup_dtb(struct boot_params *params,
->>> +                   unsigned long params_load_addr,
->>> +                   unsigned int dtb_setup_data_offset)
->>> +{
->>> +     struct setup_data *sd =3D (void *)params + dtb_setup_data_offset;
->>> +     unsigned long setup_data_phys, dtb_len;
->>> +
->>> +     dtb_len =3D fdt_totalsize(initial_boot_params);
->>> +     sd->type =3D SETUP_DTB;
->>> +     sd->len =3D dtb_len;
->>> +
->>> +     /* Carry over current boot DTB with setup_data */
->>> +     memcpy(sd->data, initial_boot_params, dtb_len);
->>> +
->>> +     /* Add setup data */
->>> +     setup_data_phys =3D params_load_addr + dtb_setup_data_offset;
->>> +     sd->next =3D params->hdr.setup_data;
->>> +     params->hdr.setup_data =3D setup_data_phys;
->>> +}
->>> +#endif /* CONFIG_OF_FLATTREE */
->>> +
->>> static void
->>> setup_ima_state(const struct kimage *image, struct boot_params *params,
->>>             unsigned long params_load_addr,
->>> @@ -336,6 +360,17 @@ setup_boot_parameters(struct kimage *ima
->>>                     sizeof(struct efi_setup_data);
->>> #endif
->>>=20
->>> +#ifdef CONFIG_OF_FLATTREE
->>> +     if (image->force_dtb && initial_boot_params) {
->>> +             setup_dtb(params, params_load_addr, setup_data_offset);
->>> +             setup_data_offset +=3D sizeof(struct setup_data) +
->>> +                                  fdt_totalsize(initial_boot_params);
->>> +     } else {
->>> +             pr_debug("Not carrying over DTB, force_dtb =3D %d\n",
->>> +                      image->force_dtb);
->>> +     }
->>> +#endif
->>> +
->>>     if (IS_ENABLED(CONFIG_IMA_KEXEC)) {
->>>             /* Setup IMA log buffer state */
->>>             setup_ima_state(image, params, params_load_addr,
->>> @@ -529,6 +564,12 @@ static void *bzImage64_load(struct kimag
->>>                             sizeof(struct setup_data) +
->>>                             RNG_SEED_LENGTH;
->>>=20
->>> +#ifdef CONFIG_OF_FLATTREE
->>> +     if (image->force_dtb && initial_boot_params)
->>> +             kbuf.bufsz +=3D sizeof(struct setup_data) +
->>> +                           fdt_totalsize(initial_boot_params);
->>> +#endif
->>> +
->>>     if (IS_ENABLED(CONFIG_IMA_KEXEC))
->>>             kbuf.bufsz +=3D sizeof(struct setup_data) +
->>>                           sizeof(struct ima_setup_data);
->>> @@ -537,7 +578,7 @@ static void *bzImage64_load(struct kimag
->>>             kbuf.bufsz +=3D sizeof(struct setup_data) +
->>>                           sizeof(struct kho_data);
->>>=20
->>> -     params =3D kzalloc(kbuf.bufsz, GFP_KERNEL);
->>> +     params =3D kvzalloc(kbuf.bufsz, GFP_KERNEL);
->>=20
->> Wondering how big the dtb blob is, can you explain a little bit about
->> the kvzalloc usage here?
->>=20
->> Except of this, I have no other concern about this patch.
->>=20
->> And what's your plan about the user space kexec-tool change?
->=20
-> When I tested this earlier on x86, the DTB was allowed to be up to just
-> under 64 pages large before the DTB failed to load. This is because it
-> has to fit into an early_memremap() mapping (relevant code snippet at
-> the bottom). Since the allocation can be many pages, I changed the
-> kzalloc to a kvzalloc.
->=20
-> For the kexec-tools change, I have a draft change that I've already
-> shared on this thread for testing purposes. I believe you said you were
-> going to test it, but I haven't heard anything back from that yet. I'll
-> raise that change for review properly once this kernel commit is in
-> mainline.
->=20
-> ---------
->=20
-> void __init x86_flattree_get_config(void)
-> {
-> #ifdef CONFIG_OF_EARLY_FLATTREE
-> u32 size, map_len;
-> void *dt;
->=20
-> if (initial_dtb) {
-> map_len =3D max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK), (u64)128);
->=20
-> dt =3D early_memremap(initial_dtb, map_len);
-> size =3D fdt_totalsize(dt);
-> if (map_len < size) {
-> early_memunmap(dt, map_len);
-> dt =3D early_memremap(initial_dtb, size);
-> map_len =3D size;
-> }
->=20
-> early_init_dt_verify(dt, __pa(dt));
-> }
->=20
-> unflatten_and_copy_device_tree();
->=20
-> if (initial_dtb)
-> early_memunmap(dt, map_len);
-> #endif
-> if (acpi_disabled && of_have_populated_dt())
-> x86_init.mpparse.parse_smp_cfg =3D x86_dtb_parse_smp_config;
-> }
->=20
-> ---------
->=20
-> Thanks,
-> Brian
+To fix this
 
-Hi Baoquan,
+use a tiny linker script to keep .text at 0x10000 and avoid .note overlap
 
-Just wanted to check back on this. Did you have any further concerns? If
-not, would you be able to provide an ACK?
+With hardcoded -Ttext,0x10000 and newer toolchains emitting
+.note.gnu.property before .text, the link can fail with an overlap.
+Provide a minimal linker script that:
+  - sets the image base to 0x10000,
+  - places .text first at exactly 0x10000,
+  - moves .note.gnu.property after .text,
+  - optionally fixes .bss at 0x12000.
 
-Thanks,
-Brian
+Works with both ld.bfd and LLD 21+.
 
+Fixes
+| x86_64-yoe-linux-ld.lld: error: section '.text' address (0x10000) is smaller than image base (0x400000); specify --image-base
+| x86_64-yoe-linux-ld.lld: error: section '.bss' address (0x12000) is smaller than image base (0x400000); specify --image-base
 
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+v2: Use a tiny linker script instead of trying to use linker options like -Ttext
+    to make it portable across BFD linker and LLD
+
+ kexec_test/Makefile      |  4 ++--
+ kexec_test/kexec_test.ld | 16 ++++++++++++++++
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+ create mode 100644 kexec_test/kexec_test.ld
+
+diff --git a/kexec_test/Makefile b/kexec_test/Makefile
+index fec6210..2ae66af 100644
+--- a/kexec_test/Makefile
++++ b/kexec_test/Makefile
+@@ -5,7 +5,7 @@ RELOC:=0x10000
+ KEXEC_TEST_SRCS:= kexec_test/kexec_test16.S kexec_test/kexec_test.S
+ 
+ dist += kexec_test/Makefile $(KEXEC_TEST_SRCS)				\
+-	kexec_test/x86-setup-legacy-pic.S
++	kexec_test/x86-setup-legacy-pic.S kexec_test/kexec_test.ld
+ 
+ BUILD_KEXEC_TEST = no
+ ifeq ($(ARCH),i386)
+@@ -31,7 +31,7 @@ $(KEXEC_TEST): CPPFLAGS+=-DRELOC=$(RELOC)
+ $(KEXEC_TEST): ASFLAGS+=-m32
+ #$(KEXEC_TEST): LDFLAGS=-m32 -Wl,-e -Wl,_start -Wl,-Ttext -Wl,$(RELOC) \
+ #		       -nostartfiles
+-$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -Ttext $(RELOC)
++$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -T $(srcdir)/kexec_test/kexec_test.ld
+ 
+ $(KEXEC_TEST): $(KEXEC_TEST_OBJS)
+ 	mkdir -p $(@D)
+diff --git a/kexec_test/kexec_test.ld b/kexec_test/kexec_test.ld
+new file mode 100644
+index 0000000..f68dcf8
+--- /dev/null
++++ b/kexec_test/kexec_test.ld
+@@ -0,0 +1,16 @@
++ENTRY(_start)
++SECTIONS
++{
++  . = 0x10000;
++  .text : { *(.text .text.*) }
++
++  /* Place the note after .text to avoid overlap */
++  . = ALIGN(16);
++  .note.gnu.property : { *(.note.gnu.property) }
++
++  .rodata : { *(.rodata .rodata.*) }
++
++  /* If you need bss fixed: */
++  . = 0x12000;
++  .bss : { *(.bss .bss.* COMMON) }
++}
 
