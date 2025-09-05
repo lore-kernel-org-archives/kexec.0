@@ -4,97 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CF4FCAC588
-	for <kexec@archiver.kernel.org>; Sat,  6 Sep 2025 00:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D997CA1013
+	for <kexec@archiver.kernel.org>; Sat,  6 Sep 2025 00:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YRexvvNjPPJfK1uT0OSGvRNA7ydx0We94Cj4HRzyUo8=; b=EXce+6AuR8Zl70GRbh2NFUeyAH
-	c30BZXy6uhB70XcGNXkTP8pnBxBuqM1SKtU8dCw349BNdLqr22sr+xVME9gN0z0SDVL+x1hddBcOW
-	0jsZ5OAwcn1DRNLB57/AQu83uwXLhWVxaKEzeIR9aHIZMsQ8OKw1ZTcA9TogtWkAMgKpXEvqSxsmT
-	fcrokWZ8IYHVg/n4VnHRHtg8v77qs7BQ2Nx6YpOeE4YIZkWiPvyy8P4mjDyhV8hXlXlU3pwIO3AfR
-	zI4FUNx9h2uePvr5bkLWqP8N3eLK4AQSfdVQNS/+IOswoXkxfYgqfV4XvEDOzfsEF2bUbfgjnJGs3
-	gtJ5Z7dQ==;
+	bh=iGdnI/KfWDDu00FpGfqLB2W/2CyE6C3w8An1H9pjQWM=; b=w75PG7XtLehQEH5wb9SC5ecDpD
+	if1z+RK0ClsEcqKSEc/FdK9VLHGkvdBuIWeAlHfOpu0IqHfOgS6ha5c2H+ah5QLk1rs0wBvC+jivZ
+	yEFB3zqPvg0zgD8jScuezevaESmGtYNetqd4I3km7kDhXp3JXLfRjvWGw7o8nkfO4M+mJZDWVa34u
+	5cXuCw3oxZ+cTNqgInYFmzVSPkh1PSwOj+GIyZiWfn4ZNDh7/qFB4e/zpb8zJ/HriJMPnNoaBJIIX
+	RshWbaLG6Gl7lGAI2z0T/eOIYz4/xp0h3op2AClh24Wtr0YDwmNQ2nE1+EO8x1Ucuh9iFwsNKrNN5
+	uHWUaf3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uugVY-00000005RRJ-1b0n;
-	Sat, 06 Sep 2025 00:10:20 +0000
-Received: from mail-wr1-x429.google.com ([2a00:1450:4864:20::429])
+	id 1uugWD-00000005T32-1GAC;
+	Sat, 06 Sep 2025 00:11:01 +0000
+Received: from mail-wr1-x42b.google.com ([2a00:1450:4864:20::42b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuZzB-00000003Nz3-0aK0
+	id 1uuarj-00000003grW-2Cai
 	for kexec@lists.infradead.org;
-	Fri, 05 Sep 2025 17:12:30 +0000
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-3d9e0a6aa4aso288463f8f.0
-        for <kexec@lists.infradead.org>; Fri, 05 Sep 2025 10:12:28 -0700 (PDT)
+	Fri, 05 Sep 2025 18:08:52 +0000
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-3dcce361897so1634584f8f.3
+        for <kexec@lists.infradead.org>; Fri, 05 Sep 2025 11:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757092347; x=1757697147; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YRexvvNjPPJfK1uT0OSGvRNA7ydx0We94Cj4HRzyUo8=;
-        b=BU4CGciFm+CXIfLSPp4ywsWTA37Qi7rw7SehV+k+H9GwB3Wvv36lXX5V0+BkheuyGr
-         nv7anu09WI1gQ5xBmREHzkUj/+pFtgf+PQ99La8l6I4kwlm0KL3Z2KiICuu98Dscu85Q
-         RiqwnN+OrAfcJdwLU6gHp33PFe24WQTlYS7CRoYBM+bW/BXAjE1EEYgNf/cS2dyLha3v
-         Iwvd/QzZJ/QnZuwqv/fn686bOZ491xRI3RbJwu3OduUgC6QxTIXupv85n3BGntxxyhJk
-         pRfEeNRh+Hkt0ztDWSFc70+tU2bQoYkuOmnCoM4mwlnBjLpYrjHoc8Xf9CZjSqQbUMU6
-         /6rg==
+        d=gmail.com; s=20230601; t=1757095729; x=1757700529; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iGdnI/KfWDDu00FpGfqLB2W/2CyE6C3w8An1H9pjQWM=;
+        b=l23E57jkUr+xS5rldPcmTq/m3L/vBHG02XPsH41sTaImYzc/73ZHupcSrLF2+N20D5
+         ghoQ2PxlogpfWRCI4SqPrtp2QjA+9Ty5K1PbHuxBtR+aEeOG1nkbMePIf4o4q6QMtzAs
+         zLhx6A+Enc99oRUKue843jZ/L4f2cQLgDe3G0jsf9L1ytbuO3CnW+EJ7inltXS72+hlX
+         s6RDNKhj92ZqnlO7sbdYGyASvaozELKU+jeUOig4QnkwAu05OyHeDM/hR3N3qo8rRmra
+         cq7kg94YWXVZrhKYg3Y2JbaSNqF4Plo5XNyFv5aToECMySSlJ3GyQHwlEI3AGidSNC2/
+         lClg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757092347; x=1757697147;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRexvvNjPPJfK1uT0OSGvRNA7ydx0We94Cj4HRzyUo8=;
-        b=J4ibI+xmcI11RDpcrcIxKKzZlXqB0tugGfRng/44hnGlUuKRUSoU0yqg3pXzuqR10k
-         mC+0VBxSo1+M+4G6xabFSqT+0hvUC58hwm92Zc2DaJ15/kuOluycLg7SSRrEaheHQP17
-         HqmFyjFqNhhUP3UMjDLm/961+pfTHEK/+zN7PuaB7mw4uzQPO5M+f/aIOU2yKLw8FVRD
-         3oTThNpQBU+KRnGgdk6s4O8vTPDYhnqGEJMqhemKsRkgMNejnOCDmbYt074Zdl8RaYeT
-         b+CCxovcuI40EQTscYLzQySozDANXP9X+OCBXiBZGFBmFYGwZD0m5xWybmItycRpCvd0
-         FpqA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8Qeo3eKulUIyKX7X32hAbM24fKw4nuauA6m/uaIM2tgDciEhT5HKwv1QqSsDkZwCNY+6gRw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxycr8Tcseqs6n12A8mZy5L3y7EYIqOwwOPrmbnp1+KluZuj9UJ
-	/5Oun4v5aqQLkXlbwKvPGhGA8B2f8JdGGsKlV8G8fMmrV9BsiakSs2bL
-X-Gm-Gg: ASbGncuC5J9/gfnsH569jJk6y7Tumwur+VF/TB9Fp2tZwj3GNO8rdol6bglfhV9xfUL
-	I7g2XkNOdFpeCMyjnuKfs+aK39nirQ9uKO8pVx/P2FUEbirgaNyOuoWhZtij9dzfHMxugeZZswW
-	htYBwQ4ri9T3Wf5zG5OMGPluw/LEKJrc+dK2EebID8Yqs1PVt6g7ntUXgmMeuD9JWFHwstnIG7Z
-	ZSQLQNquAFQtlOcgfjSI4BHpgK3ZkCwSAJx8XOExOcw+/uXcaO6t/wfZCavJSXgM9TwoRGKN3rh
-	RMR5RqokyxagSkJpqD0ZJeYFQiDVUyp6VQlTW/a31dpNM5d19vI/ZKymSnkf43TFBucoVLJcfiT
-	1PmC0q6P0FZoWyu8WuYw27CQ5i14VM7XOZ7qdDwnQyIb5oCt+8eCCIWOuR3SvyO2vT9YdaB8gUk
-	ia62K/Gu3H84c6RcA=
-X-Google-Smtp-Source: AGHT+IGlC1bZMx0rOOObifxr+isGVzwQ1CKTbVGeV1N0+/Jd+6iR4EncAxNpQwTB91Ey6108bNX3uA==
-X-Received: by 2002:a05:600c:8b10:b0:45d:d0a9:18b3 with SMTP id 5b1f17b1804b1-45dd0a91aecmr33464465e9.4.1757092346974;
-        Fri, 05 Sep 2025 10:12:26 -0700 (PDT)
-Received: from [10.213.233.28] (109-92-217-44.dynamic.isp.telekom.rs. [109.92.217.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e8ab14esm369577925e9.21.2025.09.05.10.12.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Sep 2025 10:12:26 -0700 (PDT)
-Message-ID: <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com>
-Date: Fri, 5 Sep 2025 19:12:01 +0200
+        d=1e100.net; s=20230601; t=1757095729; x=1757700529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iGdnI/KfWDDu00FpGfqLB2W/2CyE6C3w8An1H9pjQWM=;
+        b=Uv5q6TtBUZt8Wv4i1X5WaW+cLAtY+qm6ZuDoblRLcPbYOZqCHOI5V0eq3I5jzwbdi4
+         AShmqmaZWly2pYj3XXgPfoTY0GK5UGMKih70u7Q3pF79azUlnIx5LtyTesZ7T5kjfUfv
+         E+w5j7P6gLtRPB7my35I3cZGcb5I7SeE0Nh2gKxsVXpHgjPYgIs+TBYGEmMjuuA0Bgip
+         lRVF9kr4zpK92dPGDAAHEzvDSYeQUoJDKbkNJrEHut+bBrTZ3QejWaHXJ8RylOUPAWm5
+         Vqgmrx43hcMDVtXTszB22J4+gsQaOPW472GtLGB7V+YINc7XbG2nNz1GdB3Sz+S8KUKD
+         W0Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLSgb9OeSIGBFyyegYFuqsAgZgt44Oky5XXQ0Xhq4uyizAK/7LL8XBGujPq6u2W8OxJBp4zQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxmpEkWwJyLbctNBbLnBHSA8nZCdJ3oLqTjJDwQzQHcznsojz98
+	bFPstIV63M8w9+fGfKw3LGVFpUATE3T1+tvU5LbkHinrx0J90MXVoHkP7gY4YD3HVO0S5bPOyIm
+	Cr8xgPHiI7wsRvos2nWL2+B857K1iGcQ=
+X-Gm-Gg: ASbGncuCtlsrs3JmeIWXMyPcKvexjIypIR5cX6abenF7DPZG8Aw7ETw2uInGS9ruJja
+	vhP001zhKdkYLyrL0G7RHX2KaOs5Af+t5hUBqNQDFISyLEDmUa37vaDidopEt0BLrVA+u3Y2K6C
+	rX/AHGOfJaN9Tzys9X4JjS6G53wO9iN8CEqm1tewA8n5yIriHIIixOh/zoF5XmV2S84ZvCdSx3u
+	dqnfYTM0Xdj816bRQ==
+X-Google-Smtp-Source: AGHT+IFERVcRo3NEqVJraCj4UK8XqQK1l3sZQfzYHrDnZAXUKAj3OQJ2L1gNLfVRJ4WTCNxbt7GRroTNPcmh78bqpuE=
+X-Received: by 2002:a05:6000:18a8:b0:3d9:7021:fff0 with SMTP id
+ ffacd0b85a97d-3d970220156mr11837479f8f.37.1757095729307; Fri, 05 Sep 2025
+ 11:08:49 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three
- modes
-To: Andrey Konovalov <andreyknvl@gmail.com>, Baoquan He <bhe@redhat.com>,
- snovitoll@gmail.com
-Cc: glider@google.com, dvyukov@google.com, elver@google.com,
- linux-mm@kvack.org, vincenzo.frascino@arm.com, akpm@linux-foundation.org,
- kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com,
- christophe.leroy@csgroup.eu
-References: <20250820053459.164825-1-bhe@redhat.com>
- <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
- <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
- <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
-Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+ <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
+ <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com>
+In-Reply-To: <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Fri, 5 Sep 2025 20:08:36 +0200
+X-Gm-Features: Ac12FXwl8rdmcy6KM72QT5kbnXVskzKHCQ5SWTQj8L2OmEz2lTLzNNXRX0uI6YQ
+Message-ID: <CA+fCnZdWxWD99t9yhmB90VPefi3Gohn8Peo6=cxrvw8Zdz+3qQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>, snovitoll@gmail.com, glider@google.com, 
+	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
+	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250905_101229_210518_6278B690 
-X-CRM114-Status: GOOD (  23.97  )
+X-CRM114-CacheID: sfid-20250905_110851_569546_D3EAA19E 
+X-CRM114-Status: GOOD (  15.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,59 +101,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/4/25 4:58 PM, Andrey Konovalov wrote:
-> On Thu, Sep 4, 2025 at 10:11 AM Baoquan He <bhe@redhat.com> wrote:
->>
->>> If so, would it help if we make the kasan.vmalloc command-line
->>> parameter work with the non-HW_TAGS modes (and make it do the same
->>> thing as disabling CONFIG_KASAN_VMALLOC)?
->>>
->>> What I don't like about introducing kasan=off for non-HW_TAGS modes is
->>> that this parameter does not actually disable KASAN. It just
->>> suppresses KASAN code for mapping proper shadow memory. But the
->>> compiler-added instrumentation is still executing (and I suspect this
->>> might break the inline instrumentation mode).
->>
->> I may not follow your saying it doesn't disable KASAN. In this patchset,
->> not only do I disable the code for mapping shadow memory, but also I
->> skip any KASAN checking. Please see change of check_region_inline() in
->> mm/kasan/generic.c and kasan_check_range() in mm/kasan/sw_tags.c. It
->> will skip any KASAN checking when accessing memory.
->>
->> Yeah, the compiler added instrumentation will be called, but the if
->> (!kasan_enabled()) checking will decide if going further into KASAN code
->> or just return directly.
-> 
-> This all is true for the outline instrumentation mode.
-> 
-> However, with the inline instrumentation, check_region_inline() is not
-> called (in many cases, at least) and instead the compiler embeds the
-> instructions to calculate the shadow memory address and check its
-> value directly (this is why we have CONFIG_KASAN_SHADOW_OFFSET, whose
-> value has to be known at compile time).
-> 
->> I tried inline mode on x86_64 and arm64, it
->> works well when one reviewer said inline mode could cost much more
->> memory, I don't see any breakage w or w/o kasan=off when this patchset
->> applied..
-> 
-> This is interesting. I guess what happens is that we still have the
-> early shadow memory mapped so the shadow memory accesses inserted by
-> the inline instrumentation do not crash.
-> 
-> But have you tried running kasan=off + CONFIG_KASAN_STACK=y +
-> CONFIG_VMAP_STACK=y (+ CONFIG_KASAN_VMALLOC=y)? I would expect this
-> should causes crashes, as the early shadow is mapped as read-only and
-> the inline stack instrumentation will try writing into it (or do the
-> writes into the early shadow somehow get ignored?..).
-> 
+On Fri, Sep 5, 2025 at 7:12=E2=80=AFPM Andrey Ryabinin <ryabinin.a.a@gmail.=
+com> wrote:
+>
+> > But have you tried running kasan=3Doff + CONFIG_KASAN_STACK=3Dy +
+> > CONFIG_VMAP_STACK=3Dy (+ CONFIG_KASAN_VMALLOC=3Dy)? I would expect this
+> > should causes crashes, as the early shadow is mapped as read-only and
+> > the inline stack instrumentation will try writing into it (or do the
+> > writes into the early shadow somehow get ignored?..).
+> >
+>
+> It's not read-only, otherwise we would crash very early before full shado=
+w
+> setup and won't be able to boot at all. So writes still happen, and shado=
+w
+> checked, but reports are disabled.
 
-It's not read-only, otherwise we would crash very early before full shadow
-setup and won't be able to boot at all. So writes still happen, and shadow
-checked, but reports are disabled.
-
-So the patchset should work, but it's a little bit odd feature. With kasan=off we still
-pay x2-x3 performance penalty of compiler instrumentation and get nothing in return.
-So the usecase for this is if you don't want to compile and manage additional kernel binary
-(with CONFIG_KASAN=n) and don't care about performance at all.
+Hm, I thought it worked like that, but then what threw me off just now
+was seeing that zero_pte_populate()->pte_wrprotect() (on arm64) resets
+the PTE_WRITE bit and sets the PTE_RDONLY bit. So I thought the
+kasan_early_shadow_page is marked as read-only and then the
+instrumentation is disabled for all early code that might write into
+the page before the proper shadow is set up. Or am I reading this
+bit-setting code wrong?
 
