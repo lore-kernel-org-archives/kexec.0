@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 111F6CA1017
-	for <kexec@archiver.kernel.org>; Sun,  7 Sep 2025 06:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CB44CA1017
+	for <kexec@archiver.kernel.org>; Sun,  7 Sep 2025 07:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=aIyksWTmF+WPRQfDWNQ3wfYCg86aJi793lKO/e/geg0=; b=Z9hC2GONah8DzvrQCW5rEfAEX4
-	7r2y6Az02hYNVkGLdLRi/tFfTiF3AvRaF8ujE17SxpPinMi25fiaHnUbgFStQ7kHQcMQLuBHo9JZi
-	xF8gNYyqdYglmeNVYkcaHAzGRshZ4PVVV1A7c2xd9v/fWvjnZMYgRDwHCfSRLxSc7A4N1yu8FFXR2
-	NWvwXHwSZRp4eNeP65qaNGAja3s4o3p5ltZz9/5KocP/6Z/d6K9HIVUdUvSlQ4iny8d+bWFoF1NTw
-	6hha4SSEiA1pAd7gr9eCpwntRL/+A50ujzu1bNnX6NjLnpvgNBmc6ZUQhbcChIJBgWpAiIZ9dmNrG
-	bYqgFEmg==;
+	bh=FyIIqegIx0wfHeURsTvCMPzANphZ+sLHWvGCD0oe4C4=; b=oBjocGER1jpKn+jL9v5vXmVClF
+	PTy04dLsvzukGRFI7bhXIQ5jFZGlK+5Cb0LjjNk6f3mjuFJEUSxMbF6bSBotIlfna+2c3kDDnxuS2
+	e3tf4H0xypl5/UqBZL8asjgXCQ1rsHO+wzxnp/dtqXk3U93aHr8eQX4MA8+UHPLsH/oiZxDVq7AHs
+	GrRlQtjP5btVAzsMQi9f1Y7SHXIpToKTlrh/KYPjpeRGes8WAEDT6jE6/ONPvbk4g8puVWsyZAKo2
+	EVrOATEeCFQJvrtzHrTZmjTcgg03OvdhJ9+yFJXqyZoAwV0scI1XQCrqifVaT/A2Gj1pMzuZgB6Ng
+	NBiqwhwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uv8Vy-00000009hNe-2DzJ;
-	Sun, 07 Sep 2025 06:04:38 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1uv9O4-00000009tZo-24wb;
+	Sun, 07 Sep 2025 07:00:32 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uv8Vv-00000009hNC-36Wa
+	id 1uv9O2-00000009tYn-2ZXf
 	for kexec@lists.infradead.org;
-	Sun, 07 Sep 2025 06:04:37 +0000
+	Sun, 07 Sep 2025 07:00:31 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id BF97E43DA0;
-	Sun,  7 Sep 2025 06:04:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF20C4CEF0;
-	Sun,  7 Sep 2025 06:04:30 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 31499419A3;
+	Sun,  7 Sep 2025 07:00:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D33C4CEF0;
+	Sun,  7 Sep 2025 07:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757225073;
-	bh=Y+6NT7qGhfiYpIQPVV4I0mtOFqnghk5yu59oPQEuT2I=;
+	s=k20201202; t=1757228429;
+	bh=lAKGsfnUG4rgDzqjzr2gwTb62JFdmQhbLIaqo8Ydwj8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=haXlZ207G0qpRnmByYvNsmw0JNfqiAaOWam3kbsqOPErDLMXsEshkfvubab9jT1Iv
-	 1EsfHRPcCfBb/kX57nh1sb/nXMBWWizrNPR7BXJzeyM0I8e34ZFgkDk6enH9CUzUH/
-	 +8wV7owr1jTRIULdJU43VRMFrD41BIvVyBy6ERgjo+Kq4S1SFixIAFNd/1jIqhIzHX
-	 KbzPnzGz59GmbarsOi70dgjNMdY7iNUJFudyE/xeA+O3VzuUiys0LA7mLpL0fdPCsc
-	 zm3wlMU+hpMhSzkpHMt17fH0Jg2VoOQ/vbEkTjX/AdjbkATpaQ5QChPFzvFzvZG+qN
-	 RS7tHHD2QgbTg==
+	b=tPP7q2TCiDeELr22eaA6eXoox6CcsBeYkx8QFMoB8UJ4AuPgNYvFWeuwsX8wJICmg
+	 oWCGrjEjZjRjKZuK3FGmP/Jj1OrKgOtT3MJqJAlsKvBueRq4eJQ/rkaKQpy4kiE6Uw
+	 TigcrvW8Ug8aFmYqWqMByd+PgVWpaH7UrsycyExB08ZpgOR0JMbHTAk58cMLpUZ3mQ
+	 hdeMqT3veVF2EsYhb0sCcsBQXUrGD4NT1CqrqETcMtC3twDaXCL0lJWERop0i+3eLf
+	 yH8jqwy27Lgok9hho+nTIQjPMH8YaI+tfGEyEyVVj8vcosp2vopYSg0O2v7RZqpz5z
+	 YFi7pcicFIokg==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -55,15 +55,15 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] kho: add support for preserving vmalloc allocations
-Date: Sun,  7 Sep 2025 09:04:26 +0300
-Message-ID: <20250907060426.2177717-1-rppt@kernel.org>
+Subject: [PATCH v2 0/2] kho: add support for preserving vmalloc allocations
+Date: Sun,  7 Sep 2025 10:00:17 +0300
+Message-ID: <20250907070022.2177974-1-rppt@kernel.org>
 X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250906_230435_808310_DF9B3112 
-X-CRM114-Status: UNSURE (   8.14  )
+X-CRM114-CacheID: sfid-20250907_000030_667594_DFE8B624 
+X-CRM114-Status: UNSURE (   8.21  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -100,10 +100,7 @@ the fdt, memfd preservation can use vmalloc:
 
 [1] https://lore.kernel.org/all/20250807014442.3829950-30-pasha.tatashin@soleen.com
 
-v3 changes:
-* rebase on mm-unstable
-
-v2: https://lore.kernel.org/all/20250905131302.3595582-1-rppt@kernel.org
+v2 changes:
 * support preservation of vmalloc backed by large pages
 * add check for supported vmalloc flags and preserve the flags to be
   able to identify incompatible preservations
@@ -118,11 +115,11 @@ Mike Rapoport (Microsoft) (2):
 
  include/linux/kexec_handover.h |  12 ++
  kernel/kexec_handover.c        | 200 +++++++++++++++++++++++++++++++++
- lib/test_kho.c                 |  41 +++++--
- 3 files changed, 241 insertions(+), 12 deletions(-)
+ lib/test_kho.c                 |  30 +++--
+ 3 files changed, 235 insertions(+), 7 deletions(-)
 
 
-base-commit: b024763926d2726978dff6588b81877d000159c1
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
 -- 
 2.50.1
 
