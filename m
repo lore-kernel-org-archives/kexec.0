@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C628FCAC581
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2607CAC586
 	for <kexec@archiver.kernel.org>; Mon,  8 Sep 2025 12:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=aIyksWTmF+WPRQfDWNQ3wfYCg86aJi793lKO/e/geg0=; b=YW/q2I2SKwTwUB30lAzqzo4OZQ
-	NI1qjbkE0eg2AezKbpjdKhDiyB6snKXGEEHnomoYlkZY/wvQy+eLWJV0tHyPp9tOTnLGTH0EW9EVp
-	0NHvgJtNVj1UqwrFynCfFnqOV4lMm+MsZEzrCY3+FiiCDT1CXvunGkYjMBCCT3LxmMLJgSVCtqV0b
-	XPT830rk5NLdn9SYcCCgRYCXxLBnWH7fLVA56WUETKGP53+rRZMMBB5fL6YbhqD4zH9v8L42GyoOl
-	91OBbGJYGn+eayqB5jPGznh59YqHVTasc9uZWwetaWu3KT+ncXGguitOc163tL2bo/vvNqLocAvhh
-	8aeNoXAw==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OBihoWB2BZVYrmxK7QxgrmExXp049NTzu8jRGkA+Q/8=; b=XujnQHDzaRcGLLHjdUzvjXx62T
+	yQGbGarV7Vx0ufSectzIfXzCNcHDID0g1lb/IQJMmcT21L64immpiJ9RcTYcL8gJx3fZ2L+OK0yI5
+	vEkvBL8sRZ1cP4017YTpfmoEbgpG3xdU7oUmsktYbnv7DQOTmGJxw+sln+pauF+aQIdPDKVGXRF8A
+	SEVLogbg/tvkldFNZ5PFu8O4yZq7jm4PkAtBk7/TescTI5fJQKJJAu+NcDhGF2rP1pHCi23ndhA9G
+	7Zg70t6gNqlVNdvdIn4hy9iYcE7+c2gy4d5Q7W60PgF13rLm7CxsDa/FoiEMmyljV7hoOoFSz2G7P
+	TYXXHa/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvacR-0000000GrZ5-0CVd;
+	id 1uvacR-0000000GraJ-3U5m;
 	Mon, 08 Sep 2025 12:05:11 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvZDr-0000000GOli-2nBk
+	id 1uvZDv-0000000GOnh-0TNf
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 10:35:43 +0000
+	Mon, 08 Sep 2025 10:35:47 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 17826601BD;
+	by tor.source.kernel.org (Postfix) with ESMTP id 89804601EA;
+	Mon,  8 Sep 2025 10:35:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498B3C4CEF9;
 	Mon,  8 Sep 2025 10:35:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55DBC4CEF1;
-	Mon,  8 Sep 2025 10:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757327742;
-	bh=Y+6NT7qGhfiYpIQPVV4I0mtOFqnghk5yu59oPQEuT2I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p44JO1TSX342echla4JuExSua0T7EzB6vp6j6Kh5CjErmbLMjkm2x/e2lrPzDDv0S
-	 kdbLO12BAAf5rMEqTX6Ucz9KLEGP7l3xb9Jq172uruMlKx0uJuuGUGXO774e1GOeuy
-	 bPRaFS5AHdICB0FuSMuBBYbcWuxG8f1PCmraAAKhdNANdTZcTDAlIc/2olU2cpoD9d
-	 qGrZeggsIMXg6A220VwyyXRBJJFrN4/asEYEj1y3l7S9v6zjqxS8xF4BsL+9psPGP5
-	 wDUL7IVuAY2bNYB6tsFyLLKpQr/N63XArOFc8MpPDfHpUQ9tnkK0P9Mv3cxZmyBQah
-	 v5jQDBQvP1Amw==
+	s=k20201202; t=1757327746;
+	bh=luBH4/8PXqGM2HNziwU/5uMhkj6i/VmZqnkoGkwcoNw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OB3dtK57qcje3ZPhy1X7LKvnLf5X1PTehI0BCp986MeXT+5cpACLWCwP2ldbxbf2s
+	 xR3E2JfxXjb2Qyped613InX2OMANy0+re4H3Kc3nEZqoYMhfPYpx+ntXo/lbXycE3E
+	 pk+J5MlavNEHI19iquYcNoNknUBjaiJP4u8pZ/aHdJptzeGkQb1d6sW9PHMml9fJKp
+	 hg5/w/SJ0ryJrd9u4539wsNxPZzi/IQq/TARR16s3Y3BbGPKd2xomps2UfXFUD4gsa
+	 9ceWVydmmB9jPOsOxARlzn/SgnuPfmZyZXfMVLghlXP/6s6yZTmiMibrKIXkSJKzjz
+	 6JvFrO0XPFTtw==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -55,10 +55,12 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] kho: add support for preserving vmalloc allocations
-Date: Mon,  8 Sep 2025 13:35:26 +0300
-Message-ID: <20250908103528.2179934-1-rppt@kernel.org>
+Subject: [PATCH v3 1/2] kho: add support for preserving vmalloc allocations
+Date: Mon,  8 Sep 2025 13:35:27 +0300
+Message-ID: <20250908103528.2179934-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250908103528.2179934-1-rppt@kernel.org>
+References: <20250908103528.2179934-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
@@ -77,48 +79,276 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Hi,
+A vmalloc allocation is preserved using binary structure similar to
+global KHO memory tracker. It's a linked list of pages where each page
+is an array of physical address of pages in vmalloc area.
 
-Following the discussion about preservation of memfd with LUO [1] these
-patches add support for preserving vmalloc allocations.
+kho_preserve_vmalloc() hands out the physical address of the head page
+to the caller. This address is used as the argument to
+kho_vmalloc_restore() to restore the mapping in the vmalloc address
+space and populate it with the preserved pages.
 
-Any KHO uses case presumes that there's a data structure that lists
-physical addresses of preserved folios (and potentially some additional
-metadata). Allowing vmalloc preservations with KHO allows scalable
-preservation of such data structures.
-
-For instance, instead of allocating array describing preserved folios in
-the fdt, memfd preservation can use vmalloc:
-
-        preserved_folios = vmalloc_array(nr_folios, sizeof(*preserved_folios));
-        memfd_luo_preserve_folios(preserved_folios, folios, nr_folios);
-        kho_preserve_vmalloc(preserved_folios, &folios_info);
-
-[1] https://lore.kernel.org/all/20250807014442.3829950-30-pasha.tatashin@soleen.com
-
-v3 changes:
-* rebase on mm-unstable
-
-v2: https://lore.kernel.org/all/20250905131302.3595582-1-rppt@kernel.org
-* support preservation of vmalloc backed by large pages
-* add check for supported vmalloc flags and preserve the flags to be
-  able to identify incompatible preservations
-* don't use kho_preserve_phys()
-* add kernel-doc
-
-v1: https://lore.kernel.org/all/20250903063018.3346652-1-rppt@kernel.org
-
-Mike Rapoport (Microsoft) (2):
-  kho: add support for preserving vmalloc allocations
-  lib/test_kho: use kho_preserve_vmalloc instead of storing addresses in fdt
-
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
  include/linux/kexec_handover.h |  12 ++
  kernel/kexec_handover.c        | 200 +++++++++++++++++++++++++++++++++
- lib/test_kho.c                 |  41 +++++--
- 3 files changed, 241 insertions(+), 12 deletions(-)
+ 2 files changed, 212 insertions(+)
 
-
-base-commit: b024763926d2726978dff6588b81877d000159c1
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 348844cffb13..b7bf3bf11019 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -42,8 +42,10 @@ struct kho_serialization;
+ bool kho_is_enabled(void);
+ 
+ int kho_preserve_folio(struct folio *folio);
++int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation);
+ int kho_preserve_phys(phys_addr_t phys, size_t size);
+ struct folio *kho_restore_folio(phys_addr_t phys);
++void *kho_restore_vmalloc(phys_addr_t preservation);
+ int kho_add_subtree(struct kho_serialization *ser, const char *name, void *fdt);
+ int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
+ 
+@@ -70,11 +72,21 @@ static inline int kho_preserve_phys(phys_addr_t phys, size_t size)
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline struct folio *kho_restore_folio(phys_addr_t phys)
+ {
+ 	return NULL;
+ }
+ 
++static inline void *kho_restore_vmalloc(phys_addr_t preservation)
++{
++	return NULL;
++}
++
+ static inline int kho_add_subtree(struct kho_serialization *ser,
+ 				  const char *name, void *fdt)
+ {
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 8079fc4b9189..1177cc5ffa1a 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -18,6 +18,7 @@
+ #include <linux/memblock.h>
+ #include <linux/notifier.h>
+ #include <linux/page-isolation.h>
++#include <linux/vmalloc.h>
+ 
+ #include <asm/early_ioremap.h>
+ 
+@@ -742,6 +743,205 @@ int kho_preserve_phys(phys_addr_t phys, size_t size)
+ }
+ EXPORT_SYMBOL_GPL(kho_preserve_phys);
+ 
++struct kho_vmalloc_chunk;
++
++struct kho_vmalloc_hdr {
++	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
++	unsigned int total_pages;	/* only valid in the first chunk */
++	unsigned int flags;		/* only valid in the first chunk */
++	unsigned short order;		/* only valid in the first chunk */
++	unsigned short num_elms;
++};
++
++#define KHO_VMALLOC_SIZE				\
++	((PAGE_SIZE - sizeof(struct kho_vmalloc_hdr)) / \
++	 sizeof(phys_addr_t))
++
++struct kho_vmalloc_chunk {
++	struct kho_vmalloc_hdr hdr;
++	phys_addr_t phys[KHO_VMALLOC_SIZE];
++};
++
++static_assert(sizeof(struct kho_vmalloc_chunk) == PAGE_SIZE);
++
++#define KHO_VMALLOC_FLAGS_MASK	(VM_ALLOC | VM_ALLOW_HUGE_VMAP)
++
++static struct kho_vmalloc_chunk *new_vmalloc_chunk(struct kho_vmalloc_chunk *cur)
++{
++	struct kho_vmalloc_chunk *chunk;
++	int err;
++
++	chunk = kzalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!chunk)
++		return NULL;
++
++	err = kho_preserve_phys(virt_to_phys(chunk), PAGE_SIZE);
++	if (err)
++		goto err_free;
++	if (cur)
++		KHOSER_STORE_PTR(cur->hdr.next, chunk);
++	return chunk;
++
++err_free:
++	kfree(chunk);
++	return NULL;
++}
++
++static void kho_vmalloc_free_chunks(struct kho_vmalloc_chunk *first_chunk)
++{
++	struct kho_mem_track *track = &kho_out.ser.track;
++	struct kho_vmalloc_chunk *chunk = first_chunk;
++
++	while (chunk) {
++		unsigned long pfn = PHYS_PFN(virt_to_phys(chunk));
++		struct kho_vmalloc_chunk *tmp = chunk;
++
++		__kho_unpreserve(track, pfn, pfn + 1);
++
++		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
++		kfree(tmp);
++	}
++}
++
++/**
++ * kho_preserve_vmalloc - preserve memory allocated with vmalloc() across kexec
++ * @ptr: pointer to the area in vmalloc address space
++ * @preservation: returned physical address of preservation metadata
++ *
++ * Instructs KHO to preserve the area in vmalloc address space at @ptr. The
++ * physical pages mapped at @ptr will be preserved and on successful return
++ * @preservation will hold the physical address of a structure that describes
++ * the preservation.
++ *
++ * NOTE: The memory allocated with vmalloc_node() variants cannot be reliably
++ * restored on the same node
++ *
++ * Return: 0 on success, error code on failure
++ */
++int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation)
++{
++	struct kho_mem_track *track = &kho_out.ser.track;
++	struct kho_vmalloc_chunk *chunk, *first_chunk;
++	struct vm_struct *vm = find_vm_area(ptr);
++	unsigned int order, flags;
++	int err;
++
++	if (!vm)
++		return -EINVAL;
++
++	if (vm->flags & ~KHO_VMALLOC_FLAGS_MASK)
++		return -EOPNOTSUPP;
++
++	flags = vm->flags & KHO_VMALLOC_FLAGS_MASK;
++	order = get_vm_area_page_order(vm);
++
++	chunk = new_vmalloc_chunk(NULL);
++	if (!chunk)
++		return -ENOMEM;
++	first_chunk = chunk;
++	first_chunk->hdr.total_pages = vm->nr_pages;
++	first_chunk->hdr.flags = flags;
++	first_chunk->hdr.order = order;
++
++	for (int i = 0; i < vm->nr_pages; i += (1 << order)) {
++		phys_addr_t phys = page_to_phys(vm->pages[i]);
++
++		err = __kho_preserve_order(track, PHYS_PFN(phys), order);
++		if (err)
++			goto err_free;
++
++		chunk->phys[chunk->hdr.num_elms] = phys;
++		chunk->hdr.num_elms++;
++		if (chunk->hdr.num_elms == ARRAY_SIZE(chunk->phys)) {
++			chunk = new_vmalloc_chunk(chunk);
++			if (!chunk)
++				goto err_free;
++		}
++	}
++
++	*preservation = virt_to_phys(first_chunk);
++	return 0;
++
++err_free:
++	kho_vmalloc_free_chunks(first_chunk);
++	return err;
++}
++EXPORT_SYMBOL_GPL(kho_preserve_vmalloc);
++
++/**
++ * kho_restore_vmalloc - recreates and populates an area in vmalloc address
++ * space from the preserved memory.
++ * @preservation: physical address of the preservation metadata.
++ *
++ * Recreates an area in vmalloc address space and populates it with memory that
++ * was preserved using kho_preserve_vmalloc().
++ *
++ * Return: pointer to the area in the vmalloc address space, NULL on failure.
++ */
++void *kho_restore_vmalloc(phys_addr_t preservation)
++{
++	struct kho_vmalloc_chunk *chunk = phys_to_virt(preservation);
++	unsigned int align, order, shift, flags;
++	unsigned int idx = 0, nr;
++	unsigned long addr, size;
++	struct vm_struct *area;
++	struct page **pages;
++	int err;
++
++	flags = chunk->hdr.flags;
++	if (flags & ~KHO_VMALLOC_FLAGS_MASK)
++		return NULL;
++
++	nr = chunk->hdr.total_pages;
++	pages = kvmalloc_array(nr, sizeof(*pages), GFP_KERNEL);
++	if (!pages)
++		return NULL;
++	order = chunk->hdr.order;
++	shift = PAGE_SHIFT + order;
++	align = 1 << shift;
++
++	while (chunk) {
++		struct page *page;
++
++		for (int i = 0; i < chunk->hdr.num_elms; i++) {
++			phys_addr_t phys = chunk->phys[i];
++
++			for (int j = 0; j < (1 << order); j++) {
++				page = phys_to_page(phys);
++				kho_restore_page(page, 0);
++				pages[idx++] = page;
++				phys += PAGE_SIZE;
++			}
++		}
++
++		page = virt_to_page(chunk);
++		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
++		kho_restore_page(page, 0);
++		__free_page(page);
++	}
++
++	area = __get_vm_area_node(nr * PAGE_SIZE, align, shift, flags,
++				  VMALLOC_START, VMALLOC_END, NUMA_NO_NODE,
++				  GFP_KERNEL, __builtin_return_address(0));
++	if (!area)
++		goto err_free_pages_array;
++
++	addr = (unsigned long)area->addr;
++	size = get_vm_area_size(area);
++	err = vmap_pages_range(addr, addr + size, PAGE_KERNEL, pages, shift);
++	if (err)
++		goto err_free_vm_area;
++
++	return area->addr;
++
++err_free_vm_area:
++	free_vm_area(area);
++err_free_pages_array:
++	kvfree(pages);
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(kho_restore_vmalloc);
++
+ /* Handling for debug/kho/out */
+ 
+ static struct dentry *debugfs_root;
 -- 
 2.50.1
 
