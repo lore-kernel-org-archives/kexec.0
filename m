@@ -4,73 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13F60CA1013
-	for <kexec@archiver.kernel.org>; Mon,  8 Sep 2025 05:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C628FCAC581
+	for <kexec@archiver.kernel.org>; Mon,  8 Sep 2025 12:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1iWJ8X5B9+sCLtOTikQAELV3gEVXsp9NUo/jVMMCq+8=; b=1z6D7yuOLBWk7iz40YFnnYdpVW
-	hy3zvMfLfvb1wfEKia5JuIx1NdEh31OxdxNR8lAWYc+fQCQ7ffPP9ipCemQgwWwg8qp5Dug3mh5rV
-	LVz/dhL17OShL6/IaB4rcy2vN54UlQiURR78uofIwluo8N41Qb+dzz9BmDsGigUhsI4VLX+biDskp
-	hYpFKEDzLZB47Lezgm/udm9UWx2wT4wQeYEY/U78naVYAIo5rFIuofCV5QeGqqwgzSqWloa9xEMEs
-	GwwG7SiVmmTgZxWa+r+zogU1meoH/wXOvQpQPfYA0inAJxIahbk2DYuqGp/Wm2Ja7lSBhLtSO5EgS
-	+kNuGfvw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=aIyksWTmF+WPRQfDWNQ3wfYCg86aJi793lKO/e/geg0=; b=YW/q2I2SKwTwUB30lAzqzo4OZQ
+	NI1qjbkE0eg2AezKbpjdKhDiyB6snKXGEEHnomoYlkZY/wvQy+eLWJV0tHyPp9tOTnLGTH0EW9EVp
+	0NHvgJtNVj1UqwrFynCfFnqOV4lMm+MsZEzrCY3+FiiCDT1CXvunGkYjMBCCT3LxmMLJgSVCtqV0b
+	XPT830rk5NLdn9SYcCCgRYCXxLBnWH7fLVA56WUETKGP53+rRZMMBB5fL6YbhqD4zH9v8L42GyoOl
+	91OBbGJYGn+eayqB5jPGznh59YqHVTasc9uZWwetaWu3KT+ncXGguitOc163tL2bo/vvNqLocAvhh
+	8aeNoXAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvUoQ-0000000Ep5c-2UnD;
-	Mon, 08 Sep 2025 05:53:10 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uvacR-0000000GrZ5-0CVd;
+	Mon, 08 Sep 2025 12:05:11 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvUmE-0000000Eo5m-3zE8
+	id 1uvZDr-0000000GOli-2nBk
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 05:50:55 +0000
+	Mon, 08 Sep 2025 10:35:43 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 59FDB601BD
-	for <kexec@lists.infradead.org>; Mon,  8 Sep 2025 05:50:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D207C4CEF9
-	for <kexec@lists.infradead.org>; Mon,  8 Sep 2025 05:50:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 17826601BD;
+	Mon,  8 Sep 2025 10:35:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55DBC4CEF1;
+	Mon,  8 Sep 2025 10:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757310654;
-	bh=GINqdprG7It+egCrjMUFqxjobyN5ZaYR3gYB4TpViCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eqEyEaRuhNunHE3meUU+OuoeHwAkGzIcX9usvYpVewBuHj2C3F7wHa8HZU9upo1Uz
-	 s1VkxCRZF56OvA8sxNngOPt5NZ6pnkOCEulUlriyWxUo1E4eL43H7rH7690cbD5eqZ
-	 HJaJya4gAhtb768C9GG8JjPPhvxMGBoAsAPWThKZM9HnQO4NKTYBxCL2MUulH9YBUU
-	 DeQjZUYww54kwZqauuvIoQ/6Zc2xB4ygjAntlYYqg5OmvgKAH3n2EGAI4N7ku6FiU8
-	 OpNacVHWw9Y6OuUu7HhWlzydOCTx8iWQVPVvmY5YSEPiPVQcOgH9sjep/xGJVpejzx
-	 UG+3z+4InK5qw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55f7b6e4145so1352044e87.1
-        for <kexec@lists.infradead.org>; Sun, 07 Sep 2025 22:50:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV6pRpOrsRwLKTxjXRyGRtJI4RcBGB4/HaWFEWufila685yIBcwV7QAgR1TTxffmsf3KZE04A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyFMdQsv7myGGF8bjvo4rTmBwtMQd3LMoZLXKOPRxmeMynq44yW
-	P+JzKpV1T/mh13hs3wkLMw+/QgS4I3w1gRRMaeubMqYzuydnnXynP0RoIVCsPIEzxeKro7pJw5C
-	X1I2DlBnk7lgMTlc26lqrdbhtPQWV1Jk=
-X-Google-Smtp-Source: AGHT+IHj3nVEJWnBkVlJaXrN5K6OwmGDBEDQK/Rmk6FQrn4LOuQl1f6hmY4bY5Osqcf46rysjnySFniHWM+nuYqAYng=
-X-Received: by 2002:ac2:4e0e:0:b0:55b:9796:5d5a with SMTP id
- 2adb3069b0e04-562637cbf62mr1664560e87.26.1757310652405; Sun, 07 Sep 2025
- 22:50:52 -0700 (PDT)
+	s=k20201202; t=1757327742;
+	bh=Y+6NT7qGhfiYpIQPVV4I0mtOFqnghk5yu59oPQEuT2I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p44JO1TSX342echla4JuExSua0T7EzB6vp6j6Kh5CjErmbLMjkm2x/e2lrPzDDv0S
+	 kdbLO12BAAf5rMEqTX6Ucz9KLEGP7l3xb9Jq172uruMlKx0uJuuGUGXO774e1GOeuy
+	 bPRaFS5AHdICB0FuSMuBBYbcWuxG8f1PCmraAAKhdNANdTZcTDAlIc/2olU2cpoD9d
+	 qGrZeggsIMXg6A220VwyyXRBJJFrN4/asEYEj1y3l7S9v6zjqxS8xF4BsL+9psPGP5
+	 wDUL7IVuAY2bNYB6tsFyLLKpQr/N63XArOFc8MpPDfHpUQ9tnkK0P9Mv3cxZmyBQah
+	 v5jQDBQvP1Amw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Graf <graf@amazon.com>,
+	Baoquan He <bhe@redhat.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] kho: add support for preserving vmalloc allocations
+Date: Mon,  8 Sep 2025 13:35:26 +0300
+Message-ID: <20250908103528.2179934-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
-References: <cover.1755721529.git.epetron@amazon.de> <b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de>
- <CAMj1kXFQwOHyQg2LtabMA3qxiBn_AVV_JNfki2WPSg8u_XbBcg@mail.gmail.com>
- <CAMj1kXFzKzpoqczq7Rk-u+kKLFO057XEXMD+KM=iRMMsoUZbJA@mail.gmail.com>
- <20250904093455.73184-1-epetron@amazon.de> <CAMj1kXHTJxBMFX6J-QwcPRojLGMQsTNOH5Bz9kHk7CFdt1JApw@mail.gmail.com>
- <20250904125917.78112-1-epetron@amazon.de>
-In-Reply-To: <20250904125917.78112-1-epetron@amazon.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 8 Sep 2025 07:50:38 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGUOFN_W_8c3a6BnsXDy4xsF+9DUV3wcPr2s7-1K_xUUQ@mail.gmail.com>
-X-Gm-Features: Ac12FXy43MFxOfSIccwrzkLM_Cl2hPp8-URkzEi5uCzgUR5RgZV-_I5_vZSbyeQ
-Message-ID: <CAMj1kXGUOFN_W_8c3a6BnsXDy4xsF+9DUV3wcPr2s7-1K_xUUQ@mail.gmail.com>
-Subject: Re: Re: Re: [PATCH v3 2/2] efi: Support booting with kexec handover (KHO)
-To: Evangelos Petrongonas <epetron@amazon.de>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, changyuanl@google.com, 
-	graf@amazon.com, ilias.apalodimas@linaro.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	nh-open-source@amazon.com, rppt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,98 +75,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 4 Sept 2025 at 14:59, Evangelos Petrongonas <epetron@amazon.de> wrote:
->
-> On Thu, 4 Sep 2025 11:39:02 +0200, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > On Thu, 4 Sept 2025 at 11:36, Evangelos Petrongonas <epetron@amazon.de> wrote:
-> > >
-> > > On Thu, 4 Sep 2025 09:19:21 +0200, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > On Sat, 23 Aug 2025 at 23:47, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > (cc Ilias)
-> > > > >
-> > > > > Note to akpm: please drop this series for now.
-> > > > >
-> > > > > On Fri, 22 Aug 2025 at 04:00, Evangelos Petrongonas <epetron@amazon.de> wrote:
-> > > > > >
-> > > > > > When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
-> > > > > > early during device tree scanning. After kexec, the new kernel
-> > > > > > exclusively uses this region for memory allocations during boot up to
-> > > > > > the initialization of the page allocator
-> > > > > >
-> > > > > > However, when booting with EFI, EFI's reserve_regions() uses
-> > > > > > memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
-> > > > > > rebuilding them from EFI data. This destroys KHO scratch regions and
-> > > > > > their flags, thus causing a kernel panic, as there are no scratch
-> > > > > > memory regions.
-> > > > > >
-> > > > > > Instead of wholesale removal, iterate through memory regions and only
-> > > > > > remove non-KHO ones. This preserves KHO scratch regions, which are
-> > > > > > good known memory, while still allowing EFI to rebuild its memory map.
-> > > > > >
-> > > > > > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > > > > > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> > > > > > ---
-> > > > > > Changes in v3:
-> > > > > >         - Improve the code comments, by stating that the scratch regions are
-> > > > > >         good known memory
-> > > > > >
-> > > > > > Changes in v2:
-> > > > > >         - Replace the for loop with for_each_mem_region
-> > > > > >         - Fix comment indentation
-> > > > > >         - Amend commit message to specify that scratch regions
-> > > > > >         are known good regions
-> > > > > >
-> > > > > >  drivers/firmware/efi/efi-init.c | 29 +++++++++++++++++++++++++----
-> > > > > >  1 file changed, 25 insertions(+), 4 deletions(-)
-> > > > > >
-> > > > >
-> > > > > I'd rather drop the memblock_remove() entirely if possible. Could we
-> > > > > get some insight into whether memblocks are generally already
-> > > > > populated at this point during the boot?
-> > > > >
-> > > > >
-> > > >
-> > > > Ping?
-> > >
-> > > Hey Ard I was AFK travelling. I am back now and will get to it.
-> > > PS: Keen to meet you later today in the KVM Forum.
-> > >
-> >
-> > Yes, let's catch up!
-> >
-> >
->
-> I did some testing on qemu with memblock and EFI debug enabled
->
-> (`memblock=debug efi=debug`) and no KHO.
-> We see that `memblock_dump_all()` in `reserve_regions()` outputs:
-> ```
-> [    0.000000] MEMBLOCK configuration:
-> [    0.000000]  memory size = 0x0000000200000000 reserved size = 0x000000000db5383e
-> [    0.000000]  memory.cnt  = 0x7
-> [    0.000000]  memory[0x0]     [0x0000000040000000-0x000000023c76ffff], 0x00000001fc770000 bytes on node 0 flags: 0x0
-> ...
-> [    0.000000]  reserved.cnt  = 0xf
-> [    0.000000]  reserved[0x0]   [0x00000000fe000000-0x00000000ffffffff], 0x0000000002000000 bytes flags: 0x20
-> ```
->
-> Moreover checking the code, the boot flow  (at least on arm64)
-> populates memblocks from DT memory nodes via
-> `early_init_dt_add_memory_arch()` before `efi_init()` is called
->
-> `setup_arch()` -> `setup_machine_fdt()` -> `early_init_dt_scan()` ->
-> `early_init_dt_scan_memory()` -> `early_init_dt_add_memory_arch()` ->
-> `memblock_add()`
->
-> As a result, it seems that memblocks ARE populated when calling the
-> `reserve_regions()`. So looks like  we still need the
-> `memblock_remove()` (?)
->
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Indeed.
+Hi,
 
-For the series,
+Following the discussion about preservation of memfd with LUO [1] these
+patches add support for preserving vmalloc allocations.
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Any KHO uses case presumes that there's a data structure that lists
+physical addresses of preserved folios (and potentially some additional
+metadata). Allowing vmalloc preservations with KHO allows scalable
+preservation of such data structures.
+
+For instance, instead of allocating array describing preserved folios in
+the fdt, memfd preservation can use vmalloc:
+
+        preserved_folios = vmalloc_array(nr_folios, sizeof(*preserved_folios));
+        memfd_luo_preserve_folios(preserved_folios, folios, nr_folios);
+        kho_preserve_vmalloc(preserved_folios, &folios_info);
+
+[1] https://lore.kernel.org/all/20250807014442.3829950-30-pasha.tatashin@soleen.com
+
+v3 changes:
+* rebase on mm-unstable
+
+v2: https://lore.kernel.org/all/20250905131302.3595582-1-rppt@kernel.org
+* support preservation of vmalloc backed by large pages
+* add check for supported vmalloc flags and preserve the flags to be
+  able to identify incompatible preservations
+* don't use kho_preserve_phys()
+* add kernel-doc
+
+v1: https://lore.kernel.org/all/20250903063018.3346652-1-rppt@kernel.org
+
+Mike Rapoport (Microsoft) (2):
+  kho: add support for preserving vmalloc allocations
+  lib/test_kho: use kho_preserve_vmalloc instead of storing addresses in fdt
+
+ include/linux/kexec_handover.h |  12 ++
+ kernel/kexec_handover.c        | 200 +++++++++++++++++++++++++++++++++
+ lib/test_kho.c                 |  41 +++++--
+ 3 files changed, 241 insertions(+), 12 deletions(-)
+
+
+base-commit: b024763926d2726978dff6588b81877d000159c1
+-- 
+2.50.1
+
 
