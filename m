@@ -4,88 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 954C6CAC589
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC3E0CAC589
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OFR4fsYCPzy26gT9T9kYZtLy/SzbzsJmYYmla+zsN4U=; b=zhBmUJuSgKRg+ScZsjlmQfCLGq
-	Pwo8dUbLLNN0CYlxTZB24/CAG6MdPyNmSs9Z/7V0rLU5sWj0m0RcLxNEPih18aACX8+BviKV6Wvxl
-	PFt0gGBd6Xy883cij2TYZXnavMJ/FtPZd+HaeRk67End4Q1eYJO+Q8BidKnLp70BX9zCqBv7YUO3J
-	G8hj0R4vSnebaVTH2SzQiXuFO0T8btQJrEhN9sT6OtMRi4VgD0q20J2bA9Se38IKt0AqrW1uaK3OS
-	8AhtU09xhSrNZT2MXoHYF2GxfBNuaPlJLkkgFglsSQiwqpExtbHB/r4CKoMaVj5WfXxH9O1raVB3K
-	C1dhrqVw==;
+	bh=AcVb4aGGb/PCSNKySt679yYA4SUgcrQuR3+AtlRJhW8=; b=AuUeHRcd6pOpsPAUAjzFj19lz+
+	fc+ngktTQBGC7Krp4gWaaB7KCoIHxpRvoiGw2AqkVpsrs7sU5FqQQsWbEs2W42PPBUEw/t2/CfJmd
+	0C9ILexvf2FYrnmqqG3jRLpod3m2YmrExQgvKqxb8we5nOELxit23/ZLbPE9JbmklTyxSXjhRh6u2
+	gq62MqREv3GIGTJNilWqQpWdknMtBIFiKCtBCFXEihq4nMz1pmbbYZT+Fh5AYG9JZHPHyAIV21Z2t
+	+MlvUbcbq20UAJzYwerrPtWyxKQty7FWdWPsPZ7pCRBJBqw6NWzIkMkADVDYbaeOt8nWHu5K9T69r
+	xdVr+gNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvsxi-00000005GT0-3x0e;
-	Tue, 09 Sep 2025 07:40:22 +0000
+	id 1uvsxl-00000005GVI-3FlU;
+	Tue, 09 Sep 2025 07:40:25 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvdjL-00000000Ou6-1k8W
+	id 1uvdmW-00000000QNi-1dRi
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 15:24:32 +0000
+	Mon, 08 Sep 2025 15:27:50 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757345070;
+	s=mimecast20190719; t=1757345267;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OFR4fsYCPzy26gT9T9kYZtLy/SzbzsJmYYmla+zsN4U=;
-	b=htBqgRd/qyFNyyTi4BFWHd6hVcEbYVVz6ntBKZt3GbW6k1td4G6tjkcFR4qz6CzYujKRix
-	XoctZf6Yk4TZcG69SM9UE0Jow0nqjHNoEXj8RPfDS0ehPu3zf5vIzEQi1zeJBtduz9VrzP
-	VTxNheMK1F6TDnek563RUKtJpR+Arlk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AcVb4aGGb/PCSNKySt679yYA4SUgcrQuR3+AtlRJhW8=;
+	b=it7AVOP700YP7sQU0xZQIpZzKnuluUcodI4I9cfBufWtKxwh6fm+S01rjgVP5NVJfwFjjM
+	PuFPCGaDvL+d+2Jrpu/4UH4ZstoRS9X012V1oZEOoYKri45rH8wzjOI4VU8e+O4fWDVszi
+	MmsJ3AC9TEssyCVixogGc5WMS7zDS1M=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-l8cLucUlOKSY0e9JJ1QSng-1; Mon, 08 Sep 2025 11:24:29 -0400
-X-MC-Unique: l8cLucUlOKSY0e9JJ1QSng-1
-X-Mimecast-MFC-AGG-ID: l8cLucUlOKSY0e9JJ1QSng_1757345068
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3df19a545c2so3477290f8f.3
-        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:24:29 -0700 (PDT)
+ us-mta-663-ZbuGTxYwNv-h3XYZZ78Rig-1; Mon, 08 Sep 2025 11:27:43 -0400
+X-MC-Unique: ZbuGTxYwNv-h3XYZZ78Rig-1
+X-Mimecast-MFC-AGG-ID: ZbuGTxYwNv-h3XYZZ78Rig_1757345262
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45de5fdda1aso5326165e9.1
+        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:27:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757345068; x=1757949868;
+        d=1e100.net; s=20230601; t=1757345262; x=1757950062;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OFR4fsYCPzy26gT9T9kYZtLy/SzbzsJmYYmla+zsN4U=;
-        b=YdJqGavWzDse3+bH63OvBAWKwryMf5Pb+ovpGyxtz1GzwWUs4NO23dLLbBSahm7BEV
-         UNbonrj9zMj8Az9SMtBMlKoi+8TCrNHwpPtY5zCeMz4dhL3UqXcHPdnHjlgaWXBDJr88
-         dUTgTeE4DK3DaSS3ZIt9a7cY9trvxCusbpKYtJiPl55UgFwbMfTOFRYketXNnz2URT1G
-         CZ8fHRygb0n36X+cYHOM98V1jxSX1qirwnnyI8/NMp+c39vGEQubcEfsRWYkZqxCwgUy
-         tjO02MEWcrTldzv5i0lm2Ut2zmJkh7AU2TNKdHDbHy+XilTlanmUU9rUmSzN3Di9Eoqc
-         cizg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMrL0kPdNM2VurPD+Ir3HnqKf3FTtw549y23SbNHxAc/WLwf6xDpUoPuAKp4RoNbW090g7JQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz5it+CSuwXvMUdwCJLbIXsUpFE8qOcgHkzfzpNEDVH+iNQwAjx
-	YOVxKQcmNvIw03AT2Y0XOvfV7fdWznFmm0Nns3JGUCmutyfLUer8CdiEmMSp+Tv7zAmC46zze0i
-	wg2WGrOpN4VAW4nZK5KAjdZ7DGOeD9mLqcL2MuaClfm/z55MmBa72hlrTDLzK/Q==
-X-Gm-Gg: ASbGncuOCfJcpfSD9jTWUhtaBfaP6A59DvWdA29ytiusorpPJHDFWvgIhPixAlWCH/J
-	eKRSTuVDOwAkQOVaWZfPHtJVdqMzlBrGqdmR+h6gfIFI3bPMymL6uRthh1bb+kfaxXew+kAfAQS
-	6nQPUtmS6NSSm5HAhiAkkcW4sbvXk5CuwXGogA7f8Rz19vmMbB77ft5igdilN92ozKJdBmb40aJ
-	C+zJ4NmHsGwZYctZEZr/VHWx9fR2HgRxuCLZyepdaUD6sK5/mmt1R6p+xVBAFSTTARQPu65+Qbl
-	oL/wBebBeMrYUuuDtGcNmnlAUxBn9TZb3M52m4KJxiiGPLlalZqhDW0X3njWayJW/oJV4fPdQ4h
-	yJexKrXPAmO/J05N/4+nztZx76DzTdKURU64wvaFwogByb1820E9AVgY7u21Z4RSL
-X-Received: by 2002:a05:6000:2087:b0:3de:c5b3:dda3 with SMTP id ffacd0b85a97d-3e645c9d0fbmr7224235f8f.44.1757345067787;
-        Mon, 08 Sep 2025 08:24:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1+PXcaDlfYMG7l/tiEGAk9GKqnsTr1vgulen25L6LSRNlWKiBe/sZ6bAf6RuwddMzqclqxA==
-X-Received: by 2002:a05:6000:2087:b0:3de:c5b3:dda3 with SMTP id ffacd0b85a97d-3e645c9d0fbmr7224167f8f.44.1757345067184;
-        Mon, 08 Sep 2025 08:24:27 -0700 (PDT)
+        bh=AcVb4aGGb/PCSNKySt679yYA4SUgcrQuR3+AtlRJhW8=;
+        b=RN36K0MvrlHld1yfGmPNvdK+K8djganJX5cHDdwpaQ9hzXFUosDjpXOgs6TEipnf2e
+         QHWmXMHYSZtxp+0v9nXlBX6HCAj/I4Ct7x2vArj734NYlLr7/GPOaYrO6tnLWKxp5SVz
+         Vhb8Ukp34wne+i5F0fZ3vOJGlgLawyMGRTydHSPNq7kWk7K20p8EcUCuVmTCzl7Kcu/a
+         qY+xazsN1uMDOYepXW7Fa9lRlKeCZrctWI8fknc1kUO6A6SGdDVLlxTbmM+8RubwlY9t
+         9sigEuWMaTHLUVabpYlve/L1nArabjRNXlWTu2H4Rb31PSkXii+yvH5dsOAZifW13bsG
+         CWwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNI6oDFCyVoIOgYlLgeH0IJtyTAKDU03lSBYuQ0hJdEM1lVs5yLN6K8ia1eLPxv+k2I5Dt6g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz/Fr5pYPMUqRcobCRuaAHozZLadS1NgwGBiWpbvmEtB6sEfJbK
+	Vd5BLTadMqAVMuXHnEuGXVaDJTT0mD2/oMjRXooqx7Vip+InYSjI5xC1yZrAL2Pwzp0vfRYvfVR
+	1/XdlIJHzGqpR2f2CxjQJQrU0cwGA2Rs1cJK/EV1ArH5IXn2abv9tvjpGE6ZJ2A==
+X-Gm-Gg: ASbGnctR/h5GzmTmNOQTdTTfkBwUMK62hAyNrpxSHKCydHgS17ZgZBhl8U/beIC2Tdl
+	vTEvKjLnbrtXIEGIKWEtP1Z5hWP+vfgxmYSM7OVRCFo2OsO5zlhsSUJjUsv44ofHgNaHAbpM38b
+	g1hw9AGvjrPocyAtAWCvQLLkFBiH/3howlp1XNaoyTRU6sylobde27bbGGNqoLa7riA89/KbfkK
+	B6flS+EijAQ7KHNVcarICKjTjJwsYem1S3xW+uPKqz6DDTZofNirtNh0MQOUpklOds9DCJxaprm
+	bSx361ZGlAgYOdzSRYIwbILZL1hr2BjAuEubWQfAd+EXuPkiC/O+bawyXc0nHA6zAFUt8kd2Fg/
+	MuZKbyTmU2n+Jqo5rSWwzSYOpimjbb8UJEPjSZCnH3vTvj/4BUln+fUtqY9nkwc29
+X-Received: by 2002:a05:600c:1547:b0:459:dde3:1a56 with SMTP id 5b1f17b1804b1-45dddeda169mr71402145e9.28.1757345261632;
+        Mon, 08 Sep 2025 08:27:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFqHRAU8/Ayw6xHlY2Njo83Xv4mquQlEJe0L5F6BJtpt3Rw+E9lidjU1mHw6Po2oKE6ibJ0w==
+X-Received: by 2002:a05:600c:1547:b0:459:dde3:1a56 with SMTP id 5b1f17b1804b1-45dddeda169mr71401445e9.28.1757345261153;
+        Mon, 08 Sep 2025 08:27:41 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33add504sm41539994f8f.30.2025.09.08.08.24.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e8ab14esm485746255e9.21.2025.09.08.08.27.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 08:24:26 -0700 (PDT)
-Message-ID: <8edb13fc-e58d-4480-8c94-c321da0f4d8e@redhat.com>
-Date: Mon, 8 Sep 2025 17:24:23 +0200
+        Mon, 08 Sep 2025 08:27:40 -0700 (PDT)
+Message-ID: <ad69e837-b5c7-4e2d-a268-c63c9b4095cf@redhat.com>
+Date: Mon, 8 Sep 2025 17:27:37 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
-To: Jason Gunthorpe <jgg@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+Subject: Re: [PATCH 06/16] mm: introduce the f_op->mmap_complete, mmap_abort
+ hooks
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
  Guo Ren <guoren@kernel.org>, Thomas Bogendoerfer
  <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>,
  Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
@@ -117,16 +117,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
  sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
  linux-cxl@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
- kexec@lists.infradead.org, kasan-dev@googlegroups.com
+ kexec@lists.infradead.org, kasan-dev@googlegroups.com,
+ Jason Gunthorpe <jgg@nvidia.com>
 References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
- <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
- <20250908125101.GX616306@nvidia.com>
- <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
- <20250908133224.GE616306@nvidia.com>
- <090675bd-cb18-4148-967b-52cca452e07b@lucifer.local>
- <20250908142011.GK616306@nvidia.com>
- <764d413a-43a3-4be2-99c4-616cd8cd3998@lucifer.local>
- <20250908151637.GM616306@nvidia.com>
+ <ea1a5ab9fff7330b69f0b97c123ec95308818c98.1757329751.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -172,16 +166,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20250908151637.GM616306@nvidia.com>
+In-Reply-To: <ea1a5ab9fff7330b69f0b97c123ec95308818c98.1757329751.git.lorenzo.stoakes@oracle.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: KMRQGBdRzt4qU2glTbR9H9tEbM5B31pT1Q3nxlzcm7U_1757345068
+X-Mimecast-MFC-PROC-ID: yNisWCII5QmNhOC_-3DFdoslcxdYprO0CgtoxRwbnnc_1757345262
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250908_082431_524637_C50839CC 
-X-CRM114-Status: GOOD (  12.55  )
+X-CRM114-CacheID: sfid-20250908_082748_498901_C0EA6C64 
+X-CRM114-Status: GOOD (  34.69  )
 X-Mailman-Approved-At: Mon, 08 Sep 2025 23:53:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -197,21 +191,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 08.09.25 13:10, Lorenzo Stoakes wrote:
+> We have introduced the f_op->mmap_prepare hook to allow for setting up a
+> VMA far earlier in the process of mapping memory, reducing problematic
+> error handling paths, but this does not provide what all
+> drivers/filesystems need.
 > 
->> I think we need to be cautious of scope here :) I don't want to
->> accidentally break things this way.
+> In order to supply this, and to be able to move forward with removing
+> f_op->mmap altogether, introduce f_op->mmap_complete.
 > 
-> IMHO it is worth doing when you get into more driver places it is far
-> more obvious why the VM_SHARED is being checked.
+> This hook is called once the VMA is fully mapped and everything is done,
+> however with the mmap write lock and VMA write locks held.
 > 
->> OK I think a sensible way forward - How about I add desc_is_cowable() or
->> vma_desc_cowable() and only set this if I'm confident it's correct?
+> The hook is then provided with a fully initialised VMA which it can do what
+> it needs with, though the mmap and VMA write locks must remain held
+> throughout.
 > 
-> I'm thinking to call it vma_desc_never_cowable() as that is much much
-> clear what the purpose is.
+> It is not intended that the VMA be modified at this point, attempts to do
+> so will end in tears.
+> 
+> This allows for operations such as pre-population typically via a remap, or
+> really anything that requires access to the VMA once initialised.
+> 
+> In addition, a caller may need to take a lock in mmap_prepare, when it is
+> possible to modify the VMA, and release it on mmap_complete. In order to
+> handle errors which may arise between the two operations, f_op->mmap_abort
+> is provided.
+> 
+> This hook should be used to drop any lock and clean up anything before the
+> VMA mapping operation is aborted. After this point the VMA will not be
+> added to any mapping and will not exist.
+> 
+> We also add a new mmap_context field to the vm_area_desc type which can be
+> used to pass information pertinent to any locks which are held or any state
+> which is required for mmap_complete, abort to operate correctly.
+> 
+> We also update the compatibility layer for nested filesystems which
+> currently still only specify an f_op->mmap() handler so that it correctly
+> invokes f_op->mmap_complete as necessary (note that no error can occur
+> between mmap_prepare and mmap_complete so mmap_abort will never be called
+> in this case).
+> 
+> Also update the VMA tests to account for the changes.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>   include/linux/fs.h               |  4 ++
+>   include/linux/mm_types.h         |  5 ++
+>   mm/util.c                        | 18 +++++--
+>   mm/vma.c                         | 82 ++++++++++++++++++++++++++++++--
+>   tools/testing/vma/vma_internal.h | 31 ++++++++++--
+>   5 files changed, 129 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 594bd4d0521e..bb432924993a 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2195,6 +2195,10 @@ struct file_operations {
+>   	int (*uring_cmd_iopoll)(struct io_uring_cmd *, struct io_comp_batch *,
+>   				unsigned int poll_flags);
+>   	int (*mmap_prepare)(struct vm_area_desc *);
+> +	int (*mmap_complete)(struct file *, struct vm_area_struct *,
+> +			     const void *context);
+> +	void (*mmap_abort)(const struct file *, const void *vm_private_data,
+> +			   const void *context);
 
-Secretmem wants no private mappings. So we should check exactly that, 
-not whether we might have a cow mapping.
+Do we have a description somewhere what these things do, when they are 
+called, and what a driver may be allowed to do with a VMA?
+
+In particular, the mmap_complete() looks like another candidate for 
+letting a driver just go crazy on the vma? :)
 
 -- 
 Cheers
