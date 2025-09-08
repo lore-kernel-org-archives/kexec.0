@@ -4,111 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3B17CAC589
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66C5ECAC589
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RAwcm1nPLLX4X92euXLnYeRyvAbGSoqBmBe5SHTlwFM=; b=iMC9oq66/hwoo5AfzztJeu8XGj
-	qqMv3grdEeeGbCP+L3gnAd7NZOsbxP5sp68r4fY/QMgvXqYtaXDt8+7iqjUft5U3NhA6mHhAe/e+I
-	steX5/hGSURuF3xJIKhhI/hif7liznGoQcXOKGNiL+uW4qvpHEEVwP6zUhyjXvGbiXyM6siJ+j2S1
-	DjOaktn0bvZHKISRBhD7IjfpFhzqqDfhQQYU/xsnHzioTO8IUE6gcz3c52cFYcL6X8GYK3V9lk+rc
-	FZKhq1I3HOYDSUzIUMF7P/ry8ErckwEBlAAr3Zs8QNMKBpLX+Xpc1/SSdUQglsowN7qW+LmhtpkbE
-	gZusS8ag==;
+	bh=ddTrLlBONI++Tc0vmAVCsKGI5mMqVsSsSog7PjuxMWA=; b=QUECuuFZ2CP1XuNQB843wvBYm3
+	pPYGBF9LLMbAvHE/V5GNOgIHkjUUpaAYl+0jtoh5lT0DrFjqoqdh69FPCVsEIMba8109iq4ymtzKU
+	vjUX4Uw3JGz+xX+/YHMR85aIfvXedTuzwvRftVwAFfe2skV9TLWGPbincu+K7lJE/WJ5cXpOUaJtn
+	xSUF+qihPlvrszKlLgfzu8Z8NkzBn4AyeT3yWUvIskpEhSuqEx/WAm/LGnZiaSWQnUf7qS7sO1yG3
+	pcgUuDCYutB9kFVTIQlRwmc3+ro8fDCsLd6F2Ik0QR+HBYs7Fr6g13azrUg9pDk+IcPhaKe7vKzH0
+	2tXk22Bw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvsyR-00000005H6o-3LzN;
-	Tue, 09 Sep 2025 07:41:07 +0000
+	id 1uvsyU-00000005H9t-2C8D;
+	Tue, 09 Sep 2025 07:41:10 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvfhZ-00000001DFe-42i6
+	id 1uvfnl-00000001FMP-3FXI
 	for kexec@bombadil.infradead.org;
-	Mon, 08 Sep 2025 17:30:50 +0000
+	Mon, 08 Sep 2025 17:37:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
 	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
 	Sender:Reply-To:Content-ID:Content-Description;
-	bh=RAwcm1nPLLX4X92euXLnYeRyvAbGSoqBmBe5SHTlwFM=; b=QyNcxdIGihoI/QFCY1oAehtgvs
-	Z2HqhqFIBatxaTaUbOi9Iu/0O+Axe1YwbxchaeburGwTFMuohlAmfIycMNHsaqUBwEX8PqJFe+kdh
-	cUHxNxzpuii+er6g4zrazlRcOjB7cY1gDZBBv3zAwP6NYa/wyk8DvHxu4zVCFYQiJABiJw0LnxLkF
-	kQqMml27bupCJk9MbgQ2By+NVvR4u9ChDo0UKQLDhT5gkSR/ayFLhTjabIwvEEmXCek3MFTYml9LV
-	qwg7phACIF+SxA0jQy+8ynltvSD0UmC62wTNlhmP2mZa0JV8tddATBdybJJXhZtUz3YsMutz/EiQl
-	gmt3GJhg==;
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	bh=ddTrLlBONI++Tc0vmAVCsKGI5mMqVsSsSog7PjuxMWA=; b=GUdGCbStzmO/r+lsDWkFgE9M8S
+	7ZDY0Cm2FXInXN2dDOK20NFOLOsiKJb8Rz9lV4xlJglTGHFQeUB+S61NegEaiWufx12HstWAc1dDD
+	KNEu1SC9mAz53m1pRxiV6nzV1eZl253QddL4RhvXZJyxeTV2Qqt7ybwCJyZM6SkycpONoNa607qmr
+	yoTP6+LyQMtSRDRe4FWdVncZzmTL26C5qpjrVoIdKdOo1SPSu20sbL8czzwJsrvBjLgWaXJuy/NtV
+	E6LulzaP97FWbzkt8AL+BYUZ8bHZVTuqAp3yOmdGWE+ltpYlQYp5kliGn2wHfd+E+8ufpWW9e+DbS
+	J/4HwgqQ==;
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvfhW-000000056l4-2W8Y
+	id 1uvfni-000000056rw-2acW
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 17:30:48 +0000
+	Mon, 08 Sep 2025 17:37:12 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757352642;
+	s=mimecast20190719; t=1757353028;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RAwcm1nPLLX4X92euXLnYeRyvAbGSoqBmBe5SHTlwFM=;
-	b=QYWRPAmMwbZts0Ti25U4biMsPO0W0rW3vaFAt8iGyyL/bFPGhx6bTVRPjIXHPzjqdr8kxT
-	MAKI0LRi76XtwURBmzC1gLEqPP5vnPfZ53GkK6+HhHLelPMFKxXUugtnppeutSAtnBRAI3
-	N2zjPHRHpF7UkI94R/mmVzv+EfYgz1Q=
+	bh=ddTrLlBONI++Tc0vmAVCsKGI5mMqVsSsSog7PjuxMWA=;
+	b=MpD/HCrg0OigBnnyiR0PPkxjQBilIAH5lCRXO3DImrkMeJWlOmdZhAF7O0K6z6IL5vgOhP
+	zUFnU4PI+RWEk855ckxgzQO8fCWrwphIB6JATrMJeOcQXYAOmAV7+v8fOonsnhsJ0oNDtW
+	GU7oJJiMXFdFO43hqSRtMTJvGJ0KMgA=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757352642;
+	s=mimecast20190719; t=1757353028;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RAwcm1nPLLX4X92euXLnYeRyvAbGSoqBmBe5SHTlwFM=;
-	b=QYWRPAmMwbZts0Ti25U4biMsPO0W0rW3vaFAt8iGyyL/bFPGhx6bTVRPjIXHPzjqdr8kxT
-	MAKI0LRi76XtwURBmzC1gLEqPP5vnPfZ53GkK6+HhHLelPMFKxXUugtnppeutSAtnBRAI3
-	N2zjPHRHpF7UkI94R/mmVzv+EfYgz1Q=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ddTrLlBONI++Tc0vmAVCsKGI5mMqVsSsSog7PjuxMWA=;
+	b=MpD/HCrg0OigBnnyiR0PPkxjQBilIAH5lCRXO3DImrkMeJWlOmdZhAF7O0K6z6IL5vgOhP
+	zUFnU4PI+RWEk855ckxgzQO8fCWrwphIB6JATrMJeOcQXYAOmAV7+v8fOonsnhsJ0oNDtW
+	GU7oJJiMXFdFO43hqSRtMTJvGJ0KMgA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-480-mB6E4b4LOz2ABZDQ1Babvw-1; Mon, 08 Sep 2025 13:30:41 -0400
-X-MC-Unique: mB6E4b4LOz2ABZDQ1Babvw-1
-X-Mimecast-MFC-AGG-ID: mB6E4b4LOz2ABZDQ1Babvw_1757352639
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3dbf3054ac4so2739061f8f.3
-        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 10:30:40 -0700 (PDT)
+ us-mta-103-VRV6Oo78NKyoYMZEucqoNQ-1; Mon, 08 Sep 2025 13:37:06 -0400
+X-MC-Unique: VRV6Oo78NKyoYMZEucqoNQ-1
+X-Mimecast-MFC-AGG-ID: VRV6Oo78NKyoYMZEucqoNQ_1757353025
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45dd66e1971so31503325e9.2
+        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 10:37:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757352639; x=1757957439;
+        d=1e100.net; s=20230601; t=1757353025; x=1757957825;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RAwcm1nPLLX4X92euXLnYeRyvAbGSoqBmBe5SHTlwFM=;
-        b=PCjY2PWJmo8SmiwEHrVGnmlCqdvLArR7mdTbsEHeHJGsEYQ1bYfNK4KBTbzl2GFqZD
-         uk+EWq3H2LB11IzHy0rw2LW+7U/DeeX7alOm1KNAGmGCc/YP1wHKcBN0dAyhCPFqFAg7
-         M+dKGBwadwFF5AAY6zp1m5Jsju4UVoTRfKrooAL99GAYGteDQKbFBuMvuO0UppMtEYZN
-         t1rQtlqkszoQjTAuDr5LJujf1SG7UqUSda90+TsrR6Amwfs2k5rYdoeOBSRgHGRbewG6
-         E02mn64OAUHGLTMLf8B0Xf4W9Qf3OPF+/OenSj3/egpLY8qx5jmOBOwSGMrIa6pjmxhg
-         e+qA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGxkLT7NrIg8vTBOhayDupTFfPGWby7ijfM3W8qWr3fcGX3k8m818W6vBCjnjRLjaI+vhc+w==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw7tmX61Q7Rs8Yn/qWzUT7Kl+ZQMGViFpCmSQieaF5Bn7Ff4hK3
-	KhYn6b/8NRXeEkPSVlG/UskXEYAM7L93sQyzEjJjfj1PA+cQHS9cyz7gWxJJhRtpXdJL99wyEis
-	PCiVE2k2XCTuueRlhVx3Jml61tVvu9VrbcXvvuro4I7nF+BIsBX8laZPQR49tUQ==
-X-Gm-Gg: ASbGncvxlzC4A7dWAr6Uw75vW3KUvvAB0m1KjnhjNImhVhpiLkXZpPFUAaEu2NGljNL
-	nFNjhdo+bsqzMaR/oqVWB0jnpEwTvzBdrf6mpf5nsbEjlHawG6k7JUBXFInqVPmeMgJppXRSNfK
-	KcflhKmIrOBjS2aoMix3tWRov6yubeHNQbfoPKfgovUZU5lwuwf0Zgli0FQru7KgeDEovwBNNDY
-	TYx/qlSgV7lhgEGuv5xFzYetGOwzXqDOXze6oMJUA4WYLYZn6l1Uwy5yv6eMGcF+4cqE0/3TG3k
-	VJyNJw0rYcYy82BDUq+egEnK8Zs7+o76OLOmd7TSwrn2P2nN68uD6qqhAsvVXuu3KpS8T1TeDUM
-	7doW+XLLWvxPM7FttA1otYN9At8BDa75GtlBnZXcHQk6QGEXN+0GM9AlxmZylFR4u
-X-Received: by 2002:a5d:5d05:0:b0:3ce:f0a5:d581 with SMTP id ffacd0b85a97d-3e636d8ff6dmr7012151f8f.7.1757352639301;
-        Mon, 08 Sep 2025 10:30:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGj6Fx/oJ/i3mGb5tdhsyoUu3a7TRpHUY03SW3dQRjVAjsi0xq639ZH0YB5uZksW3RpOLFefg==
-X-Received: by 2002:a5d:5d05:0:b0:3ce:f0a5:d581 with SMTP id ffacd0b85a97d-3e636d8ff6dmr7012120f8f.7.1757352638837;
-        Mon, 08 Sep 2025 10:30:38 -0700 (PDT)
+        bh=ddTrLlBONI++Tc0vmAVCsKGI5mMqVsSsSog7PjuxMWA=;
+        b=RPiX1OJtoSN0O05P9M/+mAOtg4xfDKWBcHvDIv46y/4Ao7eso3YKcBpJkruoyJrAe/
+         iVeh2crpEqpwpcom99Xg6NGeArizvFETBGilOwQyDQ9uP9h7tdLywXgbUmFetn905dAU
+         puOmf9klC9yKvNM7bu+FAjtIUPyJA5b68Q66IhnkGWNDihFn2sfWkWm0BrEuW3p5o8sv
+         ORRb1a0CSTMCVUz1B7aeX4DfSydt6Rf2k1Fx9xkP3p3s1e99jreEi0poKo3p0VbhvD2F
+         YJW5gZlRfntJvDmIijDG9HJwvoCsWaNG5R7lPpMBoEVlLdwh1PYveiO2IBs3tu3bhlrB
+         sasw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlwjRBSofbxPlB/JY24NT+XO8ZiPXmBvbFfvUGnJGpz2aYeawkRNwCATXpEaonj70aX5WjEQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxz+wVeyYTU9KI17R/X85uu0MJBK2678WX4273s2ek7pDOwwjGy
+	cupJ5/DKAmASbPuAUN+ByOU2UJiDMX630GfwGNFG2/l0C9tx0uT0xwptjXpI3uBLoyuLyLtIWOC
+	fyAKwK1YT0haYfFqANOzcDswQWolepYTwzJhc0tWs+cT+lIqY7/6ei7Seqbgd8g==
+X-Gm-Gg: ASbGncsolMF2IjQ8McaMM1WwnCADlCMs+RlQB+waa3Cm93SrhwiIHhdrCW+snT9hWbm
+	vgwthyp07wfIGrClypjb811sA2BOEzgsAqZ6fiNWJQkq7x6k4gFPIDNt7fQxqkpO714RvfMJjl2
+	wae2RWzWG9sXXtS3jLKJwXK6CclGG0QF+XkglGwIkknUiha3/03hfzrcTSA6vspay1zH3NHOCTf
+	EC4hzBDV9JphDTf5TL2kcGSjI8mLZ4G7fJOf8I6lHXVvuALbHYH72cp97JRGPbCxzwbJkDpMvsH
+	YUqQyaDAL1Yq2DYcFlheMjOZy7Nj6UYAFMWTjqk0h9LNoDvKBnZiHkaeEtjCXEagKc5FxYebbAP
+	pkg+I8qM9z9s9v/0iAlwZmwfZLmSsWW4v9B7xGpIf9HoaD2DgOpSdz3iDuyRwzoq0
+X-Received: by 2002:a05:600c:4e93:b0:45d:e0d8:a0aa with SMTP id 5b1f17b1804b1-45de0d8a342mr90485085e9.17.1757353024948;
+        Mon, 08 Sep 2025 10:37:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbv9r9FbyFKOKYYRfwPOE7IG/CuXRebsq1QPIBNdBs4sMFncfDfGM1509u6wSlpw7tNCWppg==
+X-Received: by 2002:a05:600c:4e93:b0:45d:e0d8:a0aa with SMTP id 5b1f17b1804b1-45de0d8a342mr90484185e9.17.1757353024430;
+        Mon, 08 Sep 2025 10:37:04 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45dd296ed51sm197762845e9.3.2025.09.08.10.30.35
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45de16b8b58sm99810995e9.4.2025.09.08.10.37.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 10:30:38 -0700 (PDT)
-Message-ID: <92def589-a76f-4360-8861-6bc9f94c1987@redhat.com>
-Date: Mon, 8 Sep 2025 19:30:34 +0200
+        Mon, 08 Sep 2025 10:37:03 -0700 (PDT)
+Message-ID: <7b0f5b81-e18c-4629-a715-b5fee722b4aa@redhat.com>
+Date: Mon, 8 Sep 2025 19:36:59 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
  Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -143,16 +143,17 @@ Cc: Jason Gunthorpe <jgg@nvidia.com>,
  sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
  linux-cxl@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
  kexec@lists.infradead.org, kasan-dev@googlegroups.com
-References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
- <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
- <20250908125101.GX616306@nvidia.com>
- <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
+References: <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
  <20250908133224.GE616306@nvidia.com>
  <090675bd-cb18-4148-967b-52cca452e07b@lucifer.local>
  <20250908142011.GK616306@nvidia.com>
  <764d413a-43a3-4be2-99c4-616cd8cd3998@lucifer.local>
- <af3695c3-836a-4418-b18d-96d8ae122f25@redhat.com>
- <d47b68a2-9376-425c-86ce-0a3746819f38@lucifer.local>
+ <20250908151637.GM616306@nvidia.com>
+ <8edb13fc-e58d-4480-8c94-c321da0f4d8e@redhat.com>
+ <20250908153342.GA789684@nvidia.com>
+ <365c1ec2-cda6-4d94-895c-b2a795101857@redhat.com>
+ <3229ac90-943f-4574-a9b8-bd4f5fa6cf03@redhat.com>
+ <20250908155652.GE789684@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -198,16 +199,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <d47b68a2-9376-425c-86ce-0a3746819f38@lucifer.local>
+In-Reply-To: <20250908155652.GE789684@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: MLDexZdoM-uO9bDd-hyujAaEmipBioi6s4jEdSfXGOs_1757352639
+X-Mimecast-MFC-PROC-ID: V2L-cQ-jUjdvmUsaPNQC2Snllj5fkUm6Wrw7yuN0da4_1757353025
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250908_183046_933963_FBFAE2C7 
-X-CRM114-Status: GOOD (  18.75  )
+X-CRM114-CacheID: sfid-20250908_183710_912842_BE56FF18 
+X-CRM114-Status: GOOD (  20.80  )
 X-Mailman-Approved-At: Mon, 08 Sep 2025 23:53:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -223,60 +224,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08.09.25 17:35, Lorenzo Stoakes wrote:
-> On Mon, Sep 08, 2025 at 05:07:57PM +0200, David Hildenbrand wrote:
->> On 08.09.25 16:47, Lorenzo Stoakes wrote:
->>> On Mon, Sep 08, 2025 at 11:20:11AM -0300, Jason Gunthorpe wrote:
->>>> On Mon, Sep 08, 2025 at 03:09:43PM +0100, Lorenzo Stoakes wrote:
->>>>>> Perhaps
->>>>>>
->>>>>> !vma_desc_cowable()
->>>>>>
->>>>>> Is what many drivers are really trying to assert.
->>>>>
->>>>> Well no, because:
->>>>>
->>>>> static inline bool is_cow_mapping(vm_flags_t flags)
->>>>> {
->>>>> 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
->>>>> }
->>>>>
->>>>> Read-only means !CoW.
->>>>
->>>> What drivers want when they check SHARED is to prevent COW. It is COW
->>>> that causes problems for whatever the driver is doing, so calling the
->>>> helper cowable and making the test actually right for is a good thing.
->>>>
->>>> COW of this VMA, and no possibilty to remap/mprotect/fork/etc it into
->>>> something that is COW in future.
->>>
->>> But you can't do that if !VM_MAYWRITE.
->>>
->>> I mean probably the driver's just wrong and should use is_cow_mapping() tbh.
->>>
->>>>
->>>> Drivers have commonly various things with VM_SHARED to establish !COW,
->>>> but if that isn't actually right then lets fix it to be clear and
->>>> correct.
->>>
->>> I think we need to be cautious of scope here :) I don't want to accidentally
->>> break things this way.
->>>
->>> OK I think a sensible way forward - How about I add desc_is_cowable() or
->>> vma_desc_cowable() and only set this if I'm confident it's correct?
->>
->> I'll note that the naming is bad.
->>
->> Why?
->>
->> Because the vma_desc is not cowable. The underlying mapping maybe is.
+On 08.09.25 17:56, Jason Gunthorpe wrote:
+> On Mon, Sep 08, 2025 at 05:50:18PM +0200, David Hildenbrand wrote:
 > 
-> Right, but the vma_desc desribes a VMA being set up.
+>> So in practice there is indeed not a big difference between a private and
+>> cow mapping.
 > 
-> I mean is_cow_mapping(desc->vm_flags) isn't too egregious anyway, so maybe
-> just use that for that case?
+> Right and most drivers just check SHARED.
+> 
+> But if we are being documentative why they check shared is because the
+> driver cannot tolerate COW.
+> 
+> I think if someone is cargo culting a diver and sees
+> 'vma_never_cowable' they will have a better understanding of the
+> driver side issues.
+> 
+> Driver's don't actually care about private vs shared, except this
+> indirectly implies something about cow.
 
-Yes, I don't think we would need another wrapper.
+I recall some corner cases, but yes, most drivers don't clear MAP_MAYWRITE so
+is_cow_mapping() would just rule out what they wanted to rule out (no anon
+pages / cow semantics).
+
+FWIW, I recalled some VM_MAYWRITE magic in memfd, but it's really just for
+!cow mappings, so the following should likely work:
+
+diff --git a/mm/memfd.c b/mm/memfd.c
+index 1de610e9f2ea2..2a3aa26444bbb 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -346,14 +346,11 @@ static int check_write_seal(vm_flags_t *vm_flags_ptr)
+         vm_flags_t vm_flags = *vm_flags_ptr;
+         vm_flags_t mask = vm_flags & (VM_SHARED | VM_WRITE);
+  
+-       /* If a private mapping then writability is irrelevant. */
+-       if (!(mask & VM_SHARED))
++       /* If a CoW mapping then writability is irrelevant. */
++       if (is_cow_mapping(vm_flags))
+                 return 0;
+  
+-       /*
+-        * New PROT_WRITE and MAP_SHARED mmaps are not allowed when
+-        * write seals are active.
+-        */
++       /* New PROT_WRITE mappings are not allowed when write-sealed. */
+         if (mask & VM_WRITE)
+                 return -EPERM;
+  
+
 
 -- 
 Cheers
