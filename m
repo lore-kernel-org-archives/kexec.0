@@ -4,84 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD1F4CAC589
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 100EFCA0FED
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZriZC5ZCFi8VYhXaUXVlHuq1MXLstgNz6E2jeOUAEIM=; b=UdojytAiL6hAPtdq11VU8frRQ8
-	QdOWHJrqDm65IoT6joNie6qcWECe6SDUKqjCUEev4gzLNXM+JxRAokBQZu6ykGzFJLeZwqo8C6L/w
-	VJXa4MGJ8iCZfmgzl/ZKbSG7QPs88GFkxGOLb99fXt9AekcKLlQk05LPwOdvOfat4tDsRqbe4MyR+
-	TUr3MPElPwtrHL06xGO2qsPxbk0lCqKFzMZfGBZixrB+Bx01kYx+T5zJHA8Ejdh6T0jhJL4VjNB7u
-	6wAqW9KZXjhnrxDYgv5PgUqi7eCshMHPGxIMSpnQbXATBzTa1OlSwemCfrPl7gJSvTiRy1bfX5BZw
-	6vJbUVnA==;
+	bh=yRW3ZVdYmN/Kdh0wLmiEq7GLlrJxKlfpeCG0COnVkik=; b=NQDmaiFJ5ExwYmg9TZyOnkF/jN
+	PB8HTpaFUcbzxBtgtPcEmwVhR6imzzsbjCyElfBjRkDpx7JYQCF/tnvhpPmYJzhzTzpxlQLKvWRT+
+	RsmQL+oHpP9aiYtCTvOkAQGDVS0dkG+Wabdb6gwzgtaPIphCFdQ8S1tvh2HMoRM8T/U6GGNe2ozlK
+	YmR1uXtEmzglF532qHbz/NCXcCVD+oi1sUMhFk3i/b9EHGtvv66kq7PQUfDa9sy1mD1WFdDT6lGyo
+	OyYKCUYOeh0lDn9/FE5gMAPXpBWCAfdOQwZt3oPkxI+tXQpxL7Su/kVO8NanikEQY/lEKFZO9IUQE
+	tPCtsYiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvsyC-00000005Gtz-0XyG;
-	Tue, 09 Sep 2025 07:40:52 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1uvsyF-00000005Gx9-0Nzi;
+	Tue, 09 Sep 2025 07:40:55 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uve4G-00000000Wpj-3AEs
+	id 1uve8R-00000000Z7V-3ehd
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 15:46:11 +0000
+	Mon, 08 Sep 2025 15:50:28 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757346367;
+	s=mimecast20190719; t=1757346626;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZriZC5ZCFi8VYhXaUXVlHuq1MXLstgNz6E2jeOUAEIM=;
-	b=P196fo3ajbgLiR3YqS4tMxyIEp5ZP8wz1OpyNe66QHo5LkXJec4qKbWGiRiaLMxedrkDob
-	MaknStf/aQk4iETSxpKQ1i8UjGl2H2mB/aReBpyTTDnFD1uvDlc5xD50BhrCYejZb0+NYH
-	Vn04VMphmck2rtkBB6h0UzFo7swicKA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yRW3ZVdYmN/Kdh0wLmiEq7GLlrJxKlfpeCG0COnVkik=;
+	b=Vm9Jcf4FZF2l+nbwvsPJxOLQeMF1Wsp2K2dduv3eW5NMlM5iY1Wc81APHPUCfA9xpD3FDC
+	vdNLVFPZz385a5E/lsqEOAJr/DdmTksdbOpD2+FaVKis2e2LuHLC5N8uML+RimCxdOUrXT
+	YLpzmNDlg8Yrs4vhMymbrj8NmBtmqXg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-486-Vj6KKEtJM-awf-DOSA_PfA-1; Mon, 08 Sep 2025 11:46:05 -0400
-X-MC-Unique: Vj6KKEtJM-awf-DOSA_PfA-1
-X-Mimecast-MFC-AGG-ID: Vj6KKEtJM-awf-DOSA_PfA_1757346364
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3e40057d90aso1619783f8f.0
-        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:46:05 -0700 (PDT)
+ us-mta-655-qt8CknKLNNCGYaaHDMdkNQ-1; Mon, 08 Sep 2025 11:50:23 -0400
+X-MC-Unique: qt8CknKLNNCGYaaHDMdkNQ-1
+X-Mimecast-MFC-AGG-ID: qt8CknKLNNCGYaaHDMdkNQ_1757346622
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45b467f5173so32068435e9.3
+        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:50:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757346364; x=1757951164;
+        d=1e100.net; s=20230601; t=1757346622; x=1757951422;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
+         :references:cc:to:from:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZriZC5ZCFi8VYhXaUXVlHuq1MXLstgNz6E2jeOUAEIM=;
-        b=cJnm+3rQWXKOyEMTKeRvgtO3hEacc6uKR54dnkwEAZUvCUx7O1bCCo/O0r8cGFONBB
-         /J5JrFVeJjEm26DgGTPdgruLmGw17u9Zl3X3BSsadv4tYaXNSSo+j93j6oidkJzvvnKD
-         BmrzJlhFLCl5CpAC6E5u4tmpqktsPok3typ6WnqhJ2n9XHcdnmpFLAzhV3nTMb9hSB1j
-         PLBSOsz2nErJtG4lTAWGroXchPOqHrVNw9+96+AdFDpZyxBVKdZz2Mi4UGzb1pjNutW/
-         rzFTp5oGUk/PKR2NCPJup66ggLGB3Rvuyi3JYRhOWvTkQgEIasbk6ODCDJFu1xJ0nHfv
-         7IgA==
-X-Forwarded-Encrypted: i=1; AJvYcCV59xc81YPS91cYXyD8BDeC53Rzn2fwT7CmqgehwA7H968ax1pgFBbofRY/FWJOPmTVJl5zAw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yys5mT9Djs4uZ/oM7RCbi2Zp+9eAd6NtJndtXsAJUnTDWwC5PQF
-	nXNpepW4T4oPDdhaBc2rzAhIDJ83VjPw/t1Wqz4ir3v8c9LCQqMoSDiGmadOS6bzDcZJbHvc+iT
-	2NiBhw7EKe4SRL2OuzzYMlTP5oFXO95NM2Z/h2sDeH2zu+CNd6eL8S9566nneyw==
-X-Gm-Gg: ASbGncvZ2yA/HTIT7Gj5pSOPQ5pcY5yeYllryEBoOFIGxCJ3iqExUwnclh6wtOFq1KR
-	6hPbnkttRVpThCEDCQ3OibC7/s2wPVWN5TYUJeb1YnpMq4BpIdAzwI8vYU5LlkYkuGr68BQINFn
-	7IzxW/Z3Fgj9OrgYL2tLRDJhsC0Sgt0DPKfIXPOBI1SnRBN3NJe7/3h0/qTCJUypV3JFkFm1yTA
-	NOp75CAjWj0mcKivLWuTsEi9ipwIReanEfpexs0Uj2wV9y8OATNnyYsRr+aY1Cih2d8iodfpZUu
-	c/WuoFHuFL9pyNdu/hL43rxcm91ccgW6q8SsWU5rihq5KooLb6B1d1A0HWsx8UuWFi6xRUml6ko
-	+1on12mpFaGPgy8xT3EDqsbpjkKuLf/dIrMU/aiSvanvkMgv85pFZpk3zhE4w03IY
-X-Received: by 2002:a05:6000:2601:b0:3e4:64b0:a776 with SMTP id ffacd0b85a97d-3e64c4a5859mr6039878f8f.52.1757346363917;
-        Mon, 08 Sep 2025 08:46:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGH0L9/mCUrbfcy9B9f9kRjFruh5pYVslSI/dkJK5qtzud/rfRXHKTDbMjnJFVOPXLqfNNQtw==
-X-Received: by 2002:a05:6000:2601:b0:3e4:64b0:a776 with SMTP id ffacd0b85a97d-3e64c4a5859mr6039843f8f.52.1757346363314;
-        Mon, 08 Sep 2025 08:46:03 -0700 (PDT)
+        bh=yRW3ZVdYmN/Kdh0wLmiEq7GLlrJxKlfpeCG0COnVkik=;
+        b=cqB4edmL6fpFz7NVLGVxiq+LxK5lrjuQDWeGiNEi2nUMG+89nnr6rPPWH7DIOhB4A/
+         c3eub31Q+h8Y7b9cxXWWR39NBhGG9cgNYusw2fZvh3VvRSz15eZjqKg7g5jChBPMdyMa
+         sIaRpXr6FviXb1tSe5izO6AIB4yW0uuHMcbsBhfw1dPcPCh9SaSftQOmDMzne4MLkwRG
+         gWtLQUcQihu8P8I3d4FB27VW7PAKui6+VYJlTXBDLhNNeu6HP9yNUQLgNDseUTeI9/JS
+         nciDR9J1xnuSCW4Ps8jW4+6uMaDx+z1FmECfSIDtxNHmWo4OLLBqZGlZeZ9M3W+sT6Kd
+         Gn8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWdleOD2ia4loR9O7gMbdD6jGaUxBakhnJMowOUA5aU6El5F2sXG0lakZagi8wDTOfaA8mAhw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YygUGs4XlLa6W1eZmceSUCNY5ahNQwvYY1VNZvWRIbcZwzK1Q8h
+	2Q7EOmjpjZnwdCsdLMIztp0YW2AS2QSrp6rnewVqraJHuCBTxFoHE2674zJ587ecCzflCZ1OBCZ
+	NuLjwcm0592tJrOhh5Gc1awFRsddG4H9zrLlntyKxZGdJfYjIpOJZ4Oj1vjD3hg==
+X-Gm-Gg: ASbGncse+O6uCpUDEcjBOlGbypgtyGPg4Jb73nUKVTc5A3vNl+2scohXDfA2F3vBvTI
+	VvEnOBPdIX8S0KFD58uyhcKZxDJtXHnxFafdkrffuhDNIT7AH7RZn4mlF7lNrWbGZJZ9JtzvAqj
+	LownsPhhftKdxUWsrRTA5ztgyVsiRsh0O0QI+/A8AoIP73vHrcCJGGa9cQqvq156hjtrD/0dOQ1
+	xx2kKBUc0svaG3wHnhkQ4zgY8aqFd99nt72T6cXCL5M45Hi++ElXRN6Sv/BBdUev/0WmxdiQ3Qr
+	kDTjENId03jQbOi+BN8TouxgC3lZAxu+9/tEGge5jsSdPzDqsG+QLiGvt/pM2CYhPNwJjT1E3FM
+	lPWFzbTm1xqIHazz8ng1hfhUhS9jJ7np91AChacTq0xkNHCmgYF+zdivWtIvgyh7w
+X-Received: by 2002:a05:600c:4e14:b0:45b:86ee:415f with SMTP id 5b1f17b1804b1-45ddde8a741mr84356045e9.6.1757346622247;
+        Mon, 08 Sep 2025 08:50:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEIS2Yy99pUw9GXFN0rA/K14GohJu1BEy0lmIZFIqwZ3w6bOX7inAYbi8cC2UvYQeQPJx4Tjw==
+X-Received: by 2002:a05:600c:4e14:b0:45b:86ee:415f with SMTP id 5b1f17b1804b1-45ddde8a741mr84355495e9.6.1757346621708;
+        Mon, 08 Sep 2025 08:50:21 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e21e4c0e6fsm15532578f8f.17.2025.09.08.08.46.00
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45dd0595af9sm100737155e9.2.2025.09.08.08.50.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 08:46:02 -0700 (PDT)
-Message-ID: <365c1ec2-cda6-4d94-895c-b2a795101857@redhat.com>
-Date: Mon, 8 Sep 2025 17:46:00 +0200
+        Mon, 08 Sep 2025 08:50:20 -0700 (PDT)
+Message-ID: <3229ac90-943f-4574-a9b8-bd4f5fa6cf03@redhat.com>
+Date: Mon, 8 Sep 2025 17:50:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
+From: David Hildenbrand <david@redhat.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
@@ -129,7 +130,7 @@ References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
  <20250908151637.GM616306@nvidia.com>
  <8edb13fc-e58d-4480-8c94-c321da0f4d8e@redhat.com>
  <20250908153342.GA789684@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
+ <365c1ec2-cda6-4d94-895c-b2a795101857@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
  dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
@@ -174,16 +175,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20250908153342.GA789684@nvidia.com>
+In-Reply-To: <365c1ec2-cda6-4d94-895c-b2a795101857@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cnNBxwgGWk1j_vJgfwhmJImWz7dyxjwmUpX4cYSWclk_1757346364
+X-Mimecast-MFC-PROC-ID: LYW_zfgODwa1OTsHqWbD-b3OLExGgSXOZWgo3-2Me1w_1757346622
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250908_084608_858162_C267107D 
-X-CRM114-Status: GOOD (  12.48  )
+X-CRM114-CacheID: sfid-20250908_085027_976841_AD6F1EFE 
+X-CRM114-Status: GOOD (  14.38  )
 X-Mailman-Approved-At: Mon, 08 Sep 2025 23:53:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -199,32 +200,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08.09.25 17:33, Jason Gunthorpe wrote:
-> On Mon, Sep 08, 2025 at 05:24:23PM +0200, David Hildenbrand wrote:
+On 08.09.25 17:46, David Hildenbrand wrote:
+> On 08.09.25 17:33, Jason Gunthorpe wrote:
+>> On Mon, Sep 08, 2025 at 05:24:23PM +0200, David Hildenbrand wrote:
+>>>>
+>>>>> I think we need to be cautious of scope here :) I don't want to
+>>>>> accidentally break things this way.
+>>>>
+>>>> IMHO it is worth doing when you get into more driver places it is far
+>>>> more obvious why the VM_SHARED is being checked.
+>>>>
+>>>>> OK I think a sensible way forward - How about I add desc_is_cowable() or
+>>>>> vma_desc_cowable() and only set this if I'm confident it's correct?
+>>>>
+>>>> I'm thinking to call it vma_desc_never_cowable() as that is much much
+>>>> clear what the purpose is.
 >>>
->>>> I think we need to be cautious of scope here :) I don't want to
->>>> accidentally break things this way.
->>>
->>> IMHO it is worth doing when you get into more driver places it is far
->>> more obvious why the VM_SHARED is being checked.
->>>
->>>> OK I think a sensible way forward - How about I add desc_is_cowable() or
->>>> vma_desc_cowable() and only set this if I'm confident it's correct?
->>>
->>> I'm thinking to call it vma_desc_never_cowable() as that is much much
->>> clear what the purpose is.
+>>> Secretmem wants no private mappings. So we should check exactly that, not
+>>> whether we might have a cow mapping.
 >>
->> Secretmem wants no private mappings. So we should check exactly that, not
->> whether we might have a cow mapping.
+>> secretmem is checking shared for a different reason than many other places..
 > 
-> secretmem is checking shared for a different reason than many other places..
+> I think many cases just don't want any private mappings.
+> 
+> After all, you need a R/O file (VM_MAYWRITE cleared) mapped MAP_PRIVATE
+> to make is_cow_mapping() == false.
 
-I think many cases just don't want any private mappings.
+Sorry, was confused there. R/O file does not matter with MAP_PRIVATE. I 
+think we default to VM_MAYWRITE with MAP_PRIVATE unless someone 
+explicitly clears it.
 
-After all, you need a R/O file (VM_MAYWRITE cleared) mapped MAP_PRIVATE 
-to make is_cow_mapping() == false.
-
-And at that point, you just mostly have a R/O MAP_SHARED mapping IIRC.
+So in practice there is indeed not a big difference between a private 
+and cow mapping.
 
 -- 
 Cheers
