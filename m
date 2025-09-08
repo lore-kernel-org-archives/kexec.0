@@ -4,84 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A12CCAC589
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2BB7CAC589
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zj/W2A1w620z3uj4NM/KYzIZPfPCpjNHUO9sqnkbSZI=; b=Fli7kMzZhqWLeOT9VXBQ12lcOh
-	C7GRimDNseB1i9LAa3mZiRDsb3Re73Trgq5c8xAaGpt8S4OCB3YCvr/D9+QaQ8ppWx2Xif+gzTPsK
-	Jg5H3932mdTn4pKzD517tGxwFVO7Ohd3BhPuqpGtiYCrlZKx0bZC6lBSk8Hat6qpESbR8wGFH0yw8
-	k1O/Sq6YDyYmeO+AQNvNj/AfEtprS7e7NBjEdaY6m3OrZNgRSQF4z4YFTSvh098UZ33QSUhOFnCou
-	nTTZOSmBhpM3+pmNyOB6TToOiULt1yaoZJVdjNUYj5405k/HKy4Npt/ko/Rtxb0n2nvZCMimUzLd9
-	nuIuyY3Q==;
+	bh=QDJIN7zG3W3mljseXZ/jACk2q/AyQF9T/9Te0n2aogQ=; b=2S9V62JvBXar/TxdyiIevsSEEn
+	DOTQhvNbsn9XBl44FIUlcMCteCd+comCmJ8YefBfdPNR44LPU8N79Nz2myPxFzQuAOffE9dhgOqgB
+	h0us4z18iCf4KzC+5iODhpx3UUm8EW6HlkrA6lYOA27njwBAmne6inNBhxJmf64TnIyoJ0zjhCrtc
+	TJQVsPt4A93Ih1LvE3vYuhgpGL/aCpYNyybr0sKHOm5MsnLRVhv8kLnTEJvUDuNgC+DSkWExcP/aT
+	1UxCt+pIOGVkXY5gKmKrryFz7WONwOdTbM1YlMrU+pKq+oeyRU36vH0qBl7hQkw83vlGuHu4kco8K
+	ayjsAPDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvsxJ-00000005G6S-3PgN;
-	Tue, 09 Sep 2025 07:39:57 +0000
+	id 1uvsxM-00000005G8M-2Goq;
+	Tue, 09 Sep 2025 07:40:00 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvdLX-00000000Gy2-0cZX
+	id 1uvdPV-00000000IJ7-26We
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 14:59:57 +0000
+	Mon, 08 Sep 2025 15:04:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757343593;
+	s=mimecast20190719; t=1757343840;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zj/W2A1w620z3uj4NM/KYzIZPfPCpjNHUO9sqnkbSZI=;
-	b=JaelUdlbXjfTiQ4jma1WwFI5tI3x51GXeGbsbb+4IAqdB2ry32LxY2pe9PspfwB0mh75Cf
-	TlWYXQtIniyRVf1IuHM4vVvTwCBiJBX5CepBIzKx2dB8x/gssP9/gfHTz30FSbJzAn6Yqm
-	WJ2dOkRx7hoSvi6EHtXqBivWi3y7ZeE=
+	bh=QDJIN7zG3W3mljseXZ/jACk2q/AyQF9T/9Te0n2aogQ=;
+	b=TT9jDVnxByCPBYuSupFCNDXABmwC3BtGV5bK9hgS/UlZvcn/fdtN1tzQP8C1Xdscb8ZxKj
+	85tRqaUZPeEaepV00OIFVxwrzcv1VHkiAN0fan9KrnyMkGomG4h9IRAHTd6YW9qgzTSQ9P
+	/opOMDE5UyJTmmbUAh+kztf3g36Wg3k=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-gF5oRaAiPZOC114zDklSlA-1; Mon, 08 Sep 2025 10:59:51 -0400
-X-MC-Unique: gF5oRaAiPZOC114zDklSlA-1
-X-Mimecast-MFC-AGG-ID: gF5oRaAiPZOC114zDklSlA_1757343591
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45de5fdda1aso5112365e9.1
-        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 07:59:51 -0700 (PDT)
+ us-mta-641-8TKe6X4UPHaCswHzufYA0Q-1; Mon, 08 Sep 2025 11:03:59 -0400
+X-MC-Unique: 8TKe6X4UPHaCswHzufYA0Q-1
+X-Mimecast-MFC-AGG-ID: 8TKe6X4UPHaCswHzufYA0Q_1757343838
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45b96c2f4ccso27071805e9.0
+        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:03:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757343591; x=1757948391;
+        d=1e100.net; s=20230601; t=1757343838; x=1757948638;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zj/W2A1w620z3uj4NM/KYzIZPfPCpjNHUO9sqnkbSZI=;
-        b=B0DwbNBZmQXBjLCpJyvoTjnJaOYz2SPDPmJPN9gITVtyPEpIiflRIUnUr9krA3vRls
-         T8pdfWLrKbD2qe8wcAdhS0AJk1Tp4v+9SDkmDAi0/XNgkAPJjMYNiiNVZG6w7PpzG7Sw
-         Gt6H/Xv+iOPdA898Bu7spdEepYKTKabi/Im/VLIdFpanigztIKuGjEIrvXiwBve6U/FG
-         9zoV+OF2Ghzw1XzgRlJRJefvhLjUjAIMm73TCAh6ZXUZoCNgcuRtATk/wmSD5N+J1Y3N
-         yApD+xl+5UTut4cmvey6w7/rhrdQC8AynWx6LS4EX4av7Vqpop+sBi2QXvmi71U3UMSE
-         VuCA==
-X-Forwarded-Encrypted: i=1; AJvYcCW51f6in7NnB8aFFg/j5hewlNXq7ydNJ9KfOUl4M7cghYDTgKAbjuo71gLDp6FP6lSvvPVYOg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxAGNNB28pv5EyzjKWqcjbXpBwtxd0IzDyXy1mfntldOPugzmiG
-	RA4lDu25+T6IAII50R9rH2w1BSxQcLvof1l88gOVJGmvkYGNo4Q8Ndmn2c4Qa/YBQswt5fgtF8r
-	tUKIDylY5Q6088BZI9bvbowY0itXU5Mn2L6jiYkkqQ7da/0t4cM0Y3ifAb3YQow==
-X-Gm-Gg: ASbGnct9yj8p9N/ayDfu0Y12h9FMXl39u38KFhMXF3Pl67zapQGzEwBYLfFus185ygr
-	c50niEca+TFHFGw6lUrqStmboQTMUQujkswSciG4G9sO7Aice7sVzyyQjKZvW5xikVa2h47g44f
-	mqWgRn1GMRxzwAQK5AkZU8/kkr4KlkuryfqQxQiEjHjMFGm8wdugkURmnXyXuXdDlI37wjuAbeq
-	t3fgtOK14WvsGqEqoO6bJ5FvTEBmUfmp5otRg8923JLW785cZPIC9JY69tfD6BduYucPsXQ6roj
-	GcRKM3t8n5O3ZpY6pX4fAfCo4gq/HJmKs03zQ5SUL89GaFynepJoV3qMTEH2plVLBIKn9ka5ig2
-	ExHw4eb+zOuace82fqVXMjiL2NWz+7RNejDSday6cInoxm6nEVBI/GSBaD3Kfplms
-X-Received: by 2002:a05:6000:18a9:b0:3cb:5e64:ae8 with SMTP id ffacd0b85a97d-3e636d8fceamr8124658f8f.11.1757343590418;
-        Mon, 08 Sep 2025 07:59:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9Sl+7I843zNJKDyb1TeCWtEYDDRjw0tVeJKWAZDqQ44OZCVI4FghBC+qHaOA5/2UP0jatjQ==
-X-Received: by 2002:a05:6000:18a9:b0:3cb:5e64:ae8 with SMTP id ffacd0b85a97d-3e636d8fceamr8124577f8f.11.1757343589898;
-        Mon, 08 Sep 2025 07:59:49 -0700 (PDT)
+        bh=QDJIN7zG3W3mljseXZ/jACk2q/AyQF9T/9Te0n2aogQ=;
+        b=JH0CzQCOZuu9nM+8YQCBiXLvAbFu3opiZsDySuSUt0xwmLHI3xOFRm716UdIVuWm8t
+         +ZWqOxZLf3orVlymx3gJ946joPnAf0kXog4xD8srTCPknbqrnJajJaAw3DlaHOKKvI1j
+         MwRaLsgZrPElwrg7xmJZyP7DlqrqOvltyMj6ofR+yG68RldgRJZ0Su/CAfUlKQtFbaRG
+         41b9mcPiFnkEmdsOYEgZW0Nze2JgDny2Kkuj7oRyuBhTM+HhrOUt+qhMakyNc+pzoDbA
+         rroqGCn/lXNJX8USKY0GVzcvHmjtw0RQG7IOOC4PlZCYtL8XEN1rVfHcGcq5ZnEkoA3v
+         G6gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXX3EBq1f9uAFoxjRIL1J6Tcl0J1Yu1vNXVnzkvQqXayQ2BqrTH8SCUFdaAwNNtGCE5JQwcLA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwwkUtpaMcYYnyVcVI/51qaD/c+4F3ff89x4dDnIxCMHLfbxyrM
+	ZsSOzQi/IIYMw++/jVR+iVUN4WH51ra3PlEX9IM5lCZnx+rRb7fq/KpQbT+XlVC8I528o80YS+S
+	N+CBNg5Sx9cFPUqmbz12qoJauMm4fmNCJkkKjg8la2O875ZNqxJ8MONT+95w1mg==
+X-Gm-Gg: ASbGncsNqU2ds/g7t9snnlbsNrcJ+xxow2TAdUDHDohCw3Ru8WvRkiyCZ5iMoJ6+QqW
+	dMChoWjm8tUjudijlQObNwcaOevBJocSiJ13v926+Jbh9as5TbN1aiPvOmZxMP9B9PzBcVscRRQ
+	ZsQVbuLLlYoxoT9D5P+5a7/ZhFJ/Piwi/AiJJqoI4b05x9OBgTBYxn5ZNRe0gmRFIgOkfRboYtv
+	liSdYog9vacur5Bm0jOBM+p2TVYrnNL2U5UWArbv9So5so6BEJ9Mn4DrwCcluSu7pbixL3gYLNK
+	e9pR3iZspFkR7zb6Ea+AL6KTsF2AG5kebprpCmypU55gbQtcsTn6E/G5RcFBgt/68FRuJKIF2dH
+	rWBe/3curVruFvkKmP7SEEnIv0OZ0/uDs5dN5erbsXX2oTA4mDVh7d04uhL1enysP
+X-Received: by 2002:a05:600c:45ca:b0:456:29da:bb25 with SMTP id 5b1f17b1804b1-45dddee902cmr75155645e9.19.1757343837701;
+        Mon, 08 Sep 2025 08:03:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcYhKukj/qnNSUjtTjXPQvR6FO4J24oSYFDG6OuWaoCp94GzEZWcRix/Ms1WkzMyuueQOJNg==
+X-Received: by 2002:a05:600c:45ca:b0:456:29da:bb25 with SMTP id 5b1f17b1804b1-45dddee902cmr75154915e9.19.1757343837183;
+        Mon, 08 Sep 2025 08:03:57 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3da13041bcasm25975587f8f.35.2025.09.08.07.59.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e115c4f755sm17147156f8f.39.2025.09.08.08.03.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 07:59:49 -0700 (PDT)
-Message-ID: <cc59a58c-266c-4424-9df1-d1cec8d740c5@redhat.com>
-Date: Mon, 8 Sep 2025 16:59:46 +0200
+        Mon, 08 Sep 2025 08:03:56 -0700 (PDT)
+Message-ID: <e9f2a694-29b0-4761-ad7a-88c4b24b90b7@redhat.com>
+Date: Mon, 8 Sep 2025 17:03:54 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/16] mm/shmem: update shmem to use mmap_prepare
+Subject: Re: [PATCH 02/16] device/dax: update devdax to use mmap_prepare
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
@@ -119,7 +119,7 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
  kexec@lists.infradead.org, kasan-dev@googlegroups.com,
  Jason Gunthorpe <jgg@nvidia.com>
 References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
- <2f84230f9087db1c62860c1a03a90416b8d7742e.1757329751.git.lorenzo.stoakes@oracle.com>
+ <85681b9c085ee723f6ad228543c300b029d49cbc.1757329751.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -165,17 +165,16 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <2f84230f9087db1c62860c1a03a90416b8d7742e.1757329751.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <85681b9c085ee723f6ad228543c300b029d49cbc.1757329751.git.lorenzo.stoakes@oracle.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: GzN9z1HfjrwwFv5d-MwQobMZ0E-_DOrEp8PXrrkewm4_1757343591
+X-Mimecast-MFC-PROC-ID: XWAFm45xPv9lWLAw4gRlrj7yY4LSiIq8JaCqeW5jxms_1757343838
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250908_075955_261065_7582D57D 
-X-CRM114-Status: UNSURE (   8.17  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250908_080401_605531_127F8569 
+X-CRM114-Status: GOOD (  13.95  )
 X-Mailman-Approved-At: Mon, 08 Sep 2025 23:53:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -192,12 +191,39 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 08.09.25 13:10, Lorenzo Stoakes wrote:
-> This simply assigns the vm_ops so is easily updated - do so.
+> The devdax driver does nothing special in its f_op->mmap hook, so
+> straightforwardly update it to use the mmap_prepare hook instead.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
+>   drivers/dax/device.c | 32 +++++++++++++++++++++-----------
+>   1 file changed, 21 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 2bb40a6060af..c2181439f925 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -13,8 +13,9 @@
+>   #include "dax-private.h"
+>   #include "bus.h"
+>   
+> -static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+> -		const char *func)
+> +static int __check_vma(struct dev_dax *dev_dax, vm_flags_t vm_flags,
+> +		       unsigned long start, unsigned long end, struct file *file,
+> +		       const char *func)
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+In general
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+The only thing that bugs me is __check_vma() that does not check a vma.
+
+Maybe something along the lines of
+
+"check_vma_properties"
+
+Not sure.
 
 -- 
 Cheers
