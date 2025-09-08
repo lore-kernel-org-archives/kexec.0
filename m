@@ -4,61 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60551CAC587
-	for <kexec@archiver.kernel.org>; Mon,  8 Sep 2025 23:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F449CAC582
+	for <kexec@archiver.kernel.org>; Mon,  8 Sep 2025 23:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ITA0Tozb+y6hyap9tUeroMCT3ymYBs6N5od8BzuDufE=; b=EMZAcO27HdD6z0z+2Vbd06/BDH
-	FjBYDZU14+Yg+FDUvj5BEQYC6eu+AxFAoDu5Rl4ZDg5WlsxC5hiFOceKViAa+gCpy7SYxhYuVMhA8
-	7w46kXscE6HkWaoDfdw2c9A7X/ZMyDlud8iICSHKfLFG13fdjWSFLcORTD5JF7p/ShnXZ7sv4E3DY
-	lu3ZCBa8WXD05z/2APVJ7O3Tr+BmTu7nBLq4tt5eQxPuLI8s2N1nDlsuO/rv8oW5JuXvya/AhFQp3
-	yCJeGbbRX/eNyimKQc2HghuQLMmZ18G3ASM9AjN6bJWtCfHtQYWkLljyTzdF3QIlhYTVf69ed+1we
-	WW9EBNHA==;
+	bh=mTazilRRQUgzVgW6twbcGUfVNxS0a3YnsG2oe8K77sc=; b=ZthB055himi8vH/asoxzGM//IG
+	exZ42sHjTqw/fAw0MLRuAguMCJ76Gor8oWsrBTnIIXHPJIT4/TXj5kdf90E+bvNq7BA7wV2SLbrX1
+	8qr5pzhH+sFhJoAertBEKmVf+iSxBaI1tAAqocIWziLTLahFvMB/8jN3kbFtISfhEQgvY8hCcgaJi
+	6p18RsoG6VOJqd+sIsM1C7eYOiyPUKTIxfDTPswG5h0adSQ2WeHL5TH/AHm0YVeMB+C9qI+SLBYf4
+	NJM/TM19Aj9vLZtMg6k4/68rpGGRG3shPFFw6DPujhw1WEJZpl+oVvjx57wpnhE4aR61MxvwJwGEl
+	0+PEjGNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvlfT-000000034UF-3wME;
-	Mon, 08 Sep 2025 23:53:03 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1uvlfX-000000034cQ-2G23;
+	Mon, 08 Sep 2025 23:53:07 +0000
+Received: from mail-dm6nam04on20604.outbound.protection.outlook.com ([2a01:111:f403:2409::604] helo=NAM04-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvgMS-00000001Rzn-0sxZ
+	id 1uvgRg-00000001Toj-3jcI
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 18:13:04 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 48C6D601EA;
-	Mon,  8 Sep 2025 18:13:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2586CC4CEF1;
-	Mon,  8 Sep 2025 18:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757355183;
-	bh=Hy+hhrBDBPrCziBe+GY3JOr6m0xt0ZTDGce2ocsMKfw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sNEXm+fBi2+ESVu1qlLq6abGE5Ht9Wro8TnOUmP85VFgxg/rr7FEKbZzzhLtor88b
-	 NNBitv24/lCYUn/N04i5ep2sOClM7n4K5Sy/xffoeIwdhtjmTSWupQY7wfFFiUL3Ev
-	 UZPXqtGruBMTDfJTaYudxWnqfbOM3WGIL7JCw0H2mPUnNvEbkGmWqOwTwiJ7YlQR/o
-	 tcEwRZ9EDpMdq0MMp5k3gwT1oJwtOF6I902OvNxRRGNCqh/Oiaagf/sV1NSteIMT0v
-	 MjuNOEto/fQmeoKmDCuOS4lkXYaplZ3cFYSnezVx9OqpnetD55zlrLiK0268kZci03
-	 SnFSKPUiT8osw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
- <graf@amazon.com>,  Baoquan He <bhe@redhat.com>,  Changyuan Lyu
- <changyuanl@google.com>,  Chris Li <chrisl@kernel.org>,  Jason Gunthorpe
- <jgg@nvidia.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
- Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] kho: add support for preserving vmalloc allocations
-In-Reply-To: <20250908103528.2179934-2-rppt@kernel.org>
+	Mon, 08 Sep 2025 18:18:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qJWYD3hjZDW+nIO0hO0QzugoRV4eZlt6IzRuItEPScSmlFtiMW6pocxidF+yFm4DI8ZbGh9veQk01B1qUwQ+D0AM1o8537Mor/7Zu0uCP3dPmv9k6eKKLj2xRUZgaoiADjeCmp9OeuJwDmhO9OPy7bYU/0x7lguF1r/fhyZmScLR4TNqsfexCSrZ9Zx9SGXfzO6beHYNx4QRnLPquwGn8yv7Lbpo6X/6P/We3NIR+qJU6pLYuSo6Do638tbMOtxAuI1cnAMbKXoiTs4Tz7tyt9mxe9y59nU67zqU3K1LStfa97rusvbfRQL6y66p4UAa39UQsSPoE07hKYR6Lo2OCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mTazilRRQUgzVgW6twbcGUfVNxS0a3YnsG2oe8K77sc=;
+ b=MEkjWac0KUV2zWcuYt4/2ng2FIiSk1cVSPz51LLYEZ3qYWLFYEo61yhLMYQx5JHgPe7DLIPheIzHxbTqR7XQyV2YTdFPE0xTR/JEfpBDubxITP+6Unv1JB1gpgaF/DaXecc1W8bzXZsHhkKcD38QkosnuzB0KzKkw/8XAjD1yppwBQObwGVwBY350xWEYtMi4JA4NixgS4fpWcyleJEzGIf/VfeHcf+PB1ZTj28BMLCum+DqfjkgE7nkNKk8VxhRNQmwXJk2Ujz1bY4eboXebwa2lPEvcvFe3l/NAgTRo0icC+dcoWvcmzIdcwD/JUkV6n4RDsKLvrqydD5vYaIwvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mTazilRRQUgzVgW6twbcGUfVNxS0a3YnsG2oe8K77sc=;
+ b=acV0Sq8YdBQjyb8nHQiuPYuWav8jRbHuwHKgAdAhhr2KvFeCjAv8TP5pwswL/l9g3PsuUC/0PnftJQMknZWLFS+ckza/TP7FH7veWG/lPqf4L75N7Bcl3peceEtURgRj22HTtMhRDItYdLL6VPa8AP+WVcDdKEt8HqR3G8oyZR9iV83tVpC2Ma8jjpz1f4jfQCLk8d+H9cABUlZQZeBxDmmuwLmuRfFChjQ1nICcHD6BiRH8tdMBbmt8nE2bLyF6aERZkhCcQt+JcqXiwZMTDOWESAdOIG6ExtVHJL8KrAIInMvKJqwlEnjcwlI6OpA1NGnQKal0YbigHvc1D+K2nQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL1PR12MB5753.namprd12.prod.outlook.com (2603:10b6:208:390::15)
+ by SN7PR12MB7276.namprd12.prod.outlook.com (2603:10b6:806:2af::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Mon, 8 Sep
+ 2025 18:18:18 +0000
+Received: from BL1PR12MB5753.namprd12.prod.outlook.com
+ ([fe80::81e6:908a:a59b:87e2]) by BL1PR12MB5753.namprd12.prod.outlook.com
+ ([fe80::81e6:908a:a59b:87e2%6]) with mapi id 15.20.9094.018; Mon, 8 Sep 2025
+ 18:18:18 +0000
+Date: Mon, 8 Sep 2025 15:18:17 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
+	Changyuan Lyu <changyuanl@google.com>, Chris Li <chrisl@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] kho: add support for preserving vmalloc
+ allocations
+Message-ID: <20250908181817.GG789684@nvidia.com>
 References: <20250908103528.2179934-1-rppt@kernel.org>
-	<20250908103528.2179934-2-rppt@kernel.org>
-Date: Mon, 08 Sep 2025 20:12:59 +0200
-Message-ID: <mafs0ldmon784.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <20250908103528.2179934-2-rppt@kernel.org>
+ <mafs0ldmon784.fsf@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mafs0ldmon784.fsf@kernel.org>
+X-ClientProxiedBy: YT1PR01CA0156.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::35) To BL1PR12MB5753.namprd12.prod.outlook.com
+ (2603:10b6:208:390::15)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5753:EE_|SN7PR12MB7276:EE_
+X-MS-Office365-Filtering-Correlation-Id: c329a428-55df-406e-c63e-08ddef0415d5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?UtcEGsRI7GuAuR2NxPDzEu/lg+pSk5oHtRkV18CPIjlaSYef2fAsMomQlzYa?=
+ =?us-ascii?Q?ZYwo3PtHC8eg1WAqpMdb6b2TfdFoten8siZ+CxQ+/x7loEahmuepX9N5OZi3?=
+ =?us-ascii?Q?X9SxbbfxYNWymJejtL4gUUC08z9IrWFlU9s3oKsWTKyJ5E3mVq/HA9RQfDBU?=
+ =?us-ascii?Q?6F6HeM6OTOweJ+wdeZ++dWCOVrnGzgJb0jUJUy2lmogP4V3QvxtI9V7m4Hx3?=
+ =?us-ascii?Q?+0o4js0+jfMGYz9IH9MIZAntlN0NpmBexjkj2tDUGYkhVyQSwYVLmq8XCBF/?=
+ =?us-ascii?Q?xlW34JKLPWmihJQJcDKsyW2BtgtDMbyLFbYYLYUlKnFdbJCLz0APr5auGz5l?=
+ =?us-ascii?Q?gLASidoK4mgdYJa09d4qF2Xja3UJIzJpkSXRK86HI0gbSzLT3aWmM+ww/+vC?=
+ =?us-ascii?Q?CgfgpdIcplAok39RTFsufIktqHy1HFWUNED7xAx5/4uV6/R+hFf/+wd8/ezN?=
+ =?us-ascii?Q?vrf/Q1E0Ckry7VzUXzcfh/53I5+P4LDPqLAeb4JePLA/zW9j5TI4ttM2LuMO?=
+ =?us-ascii?Q?4ttdqghHHbWu8d2KfvdflUee1qSJNzlOoYI6NjFxcOi5SEmyGoN8P/xb/zb+?=
+ =?us-ascii?Q?iKW5Zx7aE68FenzNnAG50uddFIaSl42WmKpYK9b8zZEUNLWgKjACNsBET+9d?=
+ =?us-ascii?Q?6zoiGXp6m9lzSfdpEivJcYgUfzxcEla8wpBhEBjyvTGTdp0FSUvGEO6j4WgQ?=
+ =?us-ascii?Q?d5sKJPCGNQHDFkSVDIyDdXfCMxRPdZHn5sgF5ZRv3VIdkbcD9ggwrY69jyIH?=
+ =?us-ascii?Q?HJel1/3VCoVMAmHycA0P3aA0KZ1RoLX8LOPr3oTus4+MJ5QXkk9BwAx3A1Az?=
+ =?us-ascii?Q?KPGnFwCpnpoHJvvPWGTlHYnaHGvgn2+aK/WbXTkecPFU4ZVfO6aQkEGL+6+h?=
+ =?us-ascii?Q?iH7MLt1lkvGKN02jh5YapFi+kgMSzrVK2Cqa7XvyU+LTg1p6EwQR0Ss3QYZ+?=
+ =?us-ascii?Q?PzeCUEGQDpA6XPASpu/JN1VopN6iYl9P2tKrz6VkcEJBex8MNHlMbNm0vxKb?=
+ =?us-ascii?Q?+/rs3wWWrGNDwOJj6i4Yc/QRJOHkmFQYBy8wibTnlnlP0zLNgHRG2c+mhpIf?=
+ =?us-ascii?Q?O7LBdybWB6kbgQlZGxvXeTuxsM84SP83IkUoT7yIuPQSBY3zjlEHZ0ISnywD?=
+ =?us-ascii?Q?Ka/CVk5o/t0C4444QtEq92jDM6xpoQV8rtcczTtEWHQvj86y1CBje1hcsQ9Y?=
+ =?us-ascii?Q?FCJXuqowYuD5fxB8Xj/B9LnbbopB5AgGBV0GCJ1ydaqlDURgOO8ZeLd/Bbwn?=
+ =?us-ascii?Q?dRgtkZlg+4iwfDb+vcBR+My1Argnrz02qXQRAbPwW/Ti0LTiECw1BqwStVhr?=
+ =?us-ascii?Q?FjjYTCef3VYeuqXu/hdGP+rv6MsZgM+31Nmp+jHYu/LKDP0t0cDoz6yJ/0di?=
+ =?us-ascii?Q?IV/Rxvv0JSt3hgsYXf+2xmUcErHZmTxPlayt1XQTAP3P109WUoDp3ZV4E4B2?=
+ =?us-ascii?Q?ve5cgpUtBb4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5753.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?A2jLwsmkpKCa2vD7Tc3MicygEL4FIbDTA/H41ckRXagtav2Dk2Fmpr21Zs7M?=
+ =?us-ascii?Q?G1i8uuCKG6jygjoToufAmjXoTawdMCswa+tDLrKp7tS4UhbdmVdTUjbNxWcx?=
+ =?us-ascii?Q?E/cAypdiOMyZayrr9E8fDtD+mNsyOIoBkuJGHal8Emn/aywqFaLUClwpgk7H?=
+ =?us-ascii?Q?5GtErHiTnSFkBzS2gZ0BDOBc6wPBIiTgV7ccfiJZFMRV4R7ZDi6WsGEPLEYj?=
+ =?us-ascii?Q?DTOUqrab4RjDxVSp9mHvoXGbSTr55l3Cq6WAGJL58xfKbkmpsZ006IH77rqD?=
+ =?us-ascii?Q?1Abluz7u2DsU2Ggge7+RySxG0gJaYYOZ0yRKO3v67Rf2Q1B3bGP0FRf+dK/L?=
+ =?us-ascii?Q?YFwFsP7vjqgN6dbC0u0AXr6JlDpTtUK+fnyL07Lm1NWpGDArKJiuuXhK6/6c?=
+ =?us-ascii?Q?ObVLpWSEatKmDn/L2h9Fy8RCBy7JNhdrZwDs8NatD2lywM1J9cjd0euXkkEC?=
+ =?us-ascii?Q?3NNNNPzyFtBmW6bPNovBkfVdhOmxemm0rL62xCVIP+LL8aEe3GsutEf8AT2y?=
+ =?us-ascii?Q?zjmJuwy3souq9KD3VQzXfSGBuhwvbbyKDl2H0vo93yBhzLR6E81RLXoIK02e?=
+ =?us-ascii?Q?nvwOvjB3rgbJF793viGEYEVqPtWBzz9VlhJ3400yAmxBC4mVotq0cZA9KuNu?=
+ =?us-ascii?Q?ABo4Icf5XwNN75D9EwUEh5AMvaFyCObVoBHykZBkRPjvQZsDpTlVIrYiDBfI?=
+ =?us-ascii?Q?jktfXmcn2BCqzpNcbuEZVGiXjY213Iiisqf0izTCNhVWIbXAaNAA4LLnui3V?=
+ =?us-ascii?Q?sW8uoIrpqy3boh5Dqhoh1Ci39zwYZPgwLxv+YPg/JoXLXuvVRzROVMvhCQwY?=
+ =?us-ascii?Q?WbfcCbgJh+7Xu1AHJMG53HLfs2UmTCYGXfjNMsEpA+RowTmSSXSNV7YQsDt5?=
+ =?us-ascii?Q?2xaOSdGSenoLobp5RcUZnQDesN+QIJ5mBTqieE2BQH+r/+LTFzSmWwbCpbXT?=
+ =?us-ascii?Q?QNrDj+BsEaSyGm1jfCDDYpBHa4Zrx94MFYJldsR7XsNvGvCSYVwW5aJpxJzn?=
+ =?us-ascii?Q?kPmgrnXuvRcf+X/3b1WRT6w8Lf5dyVSrFRexXQw/htebagkSaxk6dMrzF1rQ?=
+ =?us-ascii?Q?Eos1ecD5koWgRco8K7OCn1vuKqR8UUMl5rV9F65utVYQ/TN44KI+l3gqAJWA?=
+ =?us-ascii?Q?BClw0rCFdWvzblXfeszIkMhmOBGXi2piXrZ5NRj7xa2ussnK2gH0FrdASylY?=
+ =?us-ascii?Q?W6WCW8OvAY+fwkk0POxDFMZISu9GBCvH25opzjA3+C1Jh0fbOE4xI5CsZF0s?=
+ =?us-ascii?Q?JfzUH3baUMpc/OG9T2Tp8KE7qgcPH0PvBjrTlp41UjzHxf1HD1R/6sGy3a0H?=
+ =?us-ascii?Q?LXV1pTgCZ2IAPEzFzeNKKM6RCkSWCjkF3OjBvI74NyWljWSgbTjJvLPd3BHX?=
+ =?us-ascii?Q?P42SAadQGaCMLnQSEMzlSTlPNgadbR5iwWjilY9i0o1OK+H7X7BSqftv/AUQ?=
+ =?us-ascii?Q?sg+ZPi+BZvfpCVjOyzYyAOIAXyWHanlizu5JWctiKzhO2FBBTn8zXA5zuaoM?=
+ =?us-ascii?Q?vPRXC2a+xL7PbmeP+VZtgmTIDjw5ityEEUCJDUR2c3ZjAzXWC2/l4qza0YbG?=
+ =?us-ascii?Q?RUqd9wZzLk3GVHSwMF4=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c329a428-55df-406e-c63e-08ddef0415d5
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5753.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 18:18:18.4511
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Paa+zedHWXNKEHazkhnF89E9VgThDU9TgZMt0NqQ70So5MOJot3oXQjCDG7lMbSI
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7276
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250908_111828_931359_C0BC69A3 
+X-CRM114-Status: UNSURE (   9.65  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,321 +165,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 08 2025, Mike Rapoport wrote:
+On Mon, Sep 08, 2025 at 08:12:59PM +0200, Pratyush Yadav wrote:
+> > +#define KHO_VMALLOC_FLAGS_MASK	(VM_ALLOC | VM_ALLOW_HUGE_VMAP)
+> 
+> I don't think it is a good idea to re-use VM flags. This can make adding
+> more flags later down the line ugly. I think it would be better to
+> define KHO_VMALLOC_FL* instead.
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> A vmalloc allocation is preserved using binary structure similar to
-> global KHO memory tracker. It's a linked list of pages where each page
-> is an array of physical address of pages in vmalloc area.
->
-> kho_preserve_vmalloc() hands out the physical address of the head page
-> to the caller. This address is used as the argument to
-> kho_vmalloc_restore() to restore the mapping in the vmalloc address
-> space and populate it with the preserved pages.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  include/linux/kexec_handover.h |  12 ++
->  kernel/kexec_handover.c        | 200 +++++++++++++++++++++++++++++++++
->  2 files changed, 212 insertions(+)
->
-> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-> index 348844cffb13..b7bf3bf11019 100644
-> --- a/include/linux/kexec_handover.h
-> +++ b/include/linux/kexec_handover.h
-> @@ -42,8 +42,10 @@ struct kho_serialization;
->  bool kho_is_enabled(void);
->  
->  int kho_preserve_folio(struct folio *folio);
-> +int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation);
->  int kho_preserve_phys(phys_addr_t phys, size_t size);
->  struct folio *kho_restore_folio(phys_addr_t phys);
-> +void *kho_restore_vmalloc(phys_addr_t preservation);
->  int kho_add_subtree(struct kho_serialization *ser, const char *name, void *fdt);
->  int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
->  
-> @@ -70,11 +72,21 @@ static inline int kho_preserve_phys(phys_addr_t phys, size_t size)
->  	return -EOPNOTSUPP;
->  }
->  
-> +static inline int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static inline struct folio *kho_restore_folio(phys_addr_t phys)
->  {
->  	return NULL;
->  }
->  
-> +static inline void *kho_restore_vmalloc(phys_addr_t preservation)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int kho_add_subtree(struct kho_serialization *ser,
->  				  const char *name, void *fdt)
->  {
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index 8079fc4b9189..1177cc5ffa1a 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -18,6 +18,7 @@
->  #include <linux/memblock.h>
->  #include <linux/notifier.h>
->  #include <linux/page-isolation.h>
-> +#include <linux/vmalloc.h>
->  
->  #include <asm/early_ioremap.h>
->  
-> @@ -742,6 +743,205 @@ int kho_preserve_phys(phys_addr_t phys, size_t size)
->  }
->  EXPORT_SYMBOL_GPL(kho_preserve_phys);
->  
-> +struct kho_vmalloc_chunk;
-> +
-> +struct kho_vmalloc_hdr {
-> +	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
-> +	unsigned int total_pages;	/* only valid in the first chunk */
-> +	unsigned int flags;		/* only valid in the first chunk */
-> +	unsigned short order;		/* only valid in the first chunk */
-> +	unsigned short num_elms;
++1
 
-I think it the serialization format would be cleaner if these were
-defined in a separate structure that holds the metadata instead of being
-defined in each page and then ignored in most of them.
+This kind of stuff should be avoided, it becomes a very sneaky ABI.
 
-If the caller can save 8 bytes (phys addr of first page), it might as
-well save 16 instead. Something like the below perhaps?
-
-struct kho_vmalloc {
-	DECLARE_KHOSER_PTR(first, struct kho_vmalloc_chunk *);
-	unsigned int total_pages;
-	unsigned short flags;
-	unsigned short order;
-};
-
-And then kho_vmalloc_hdr becomes simply:
-
-struct kho_vmalloc_hdr {
-	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
-};
-
-You don't even need num_elms since you have the list be zero-terminated.
-
-> +};
-> +
-> +#define KHO_VMALLOC_SIZE				\
-> +	((PAGE_SIZE - sizeof(struct kho_vmalloc_hdr)) / \
-> +	 sizeof(phys_addr_t))
-> +
-> +struct kho_vmalloc_chunk {
-> +	struct kho_vmalloc_hdr hdr;
-> +	phys_addr_t phys[KHO_VMALLOC_SIZE];
-> +};
-> +
-> +static_assert(sizeof(struct kho_vmalloc_chunk) == PAGE_SIZE);
-> +
-> +#define KHO_VMALLOC_FLAGS_MASK	(VM_ALLOC | VM_ALLOW_HUGE_VMAP)
-
-I don't think it is a good idea to re-use VM flags. This can make adding
-more flags later down the line ugly. I think it would be better to
-define KHO_VMALLOC_FL* instead.
-
-> +
-> +static struct kho_vmalloc_chunk *new_vmalloc_chunk(struct kho_vmalloc_chunk *cur)
-> +{
-> +	struct kho_vmalloc_chunk *chunk;
-> +	int err;
-> +
-> +	chunk = kzalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!chunk)
-> +		return NULL;
-> +
-> +	err = kho_preserve_phys(virt_to_phys(chunk), PAGE_SIZE);
-> +	if (err)
-> +		goto err_free;
-> +	if (cur)
-> +		KHOSER_STORE_PTR(cur->hdr.next, chunk);
-> +	return chunk;
-> +
-> +err_free:
-> +	kfree(chunk);
-> +	return NULL;
-> +}
-> +
-> +static void kho_vmalloc_free_chunks(struct kho_vmalloc_chunk *first_chunk)
-> +{
-> +	struct kho_mem_track *track = &kho_out.ser.track;
-> +	struct kho_vmalloc_chunk *chunk = first_chunk;
-> +
-> +	while (chunk) {
-> +		unsigned long pfn = PHYS_PFN(virt_to_phys(chunk));
-> +		struct kho_vmalloc_chunk *tmp = chunk;
-> +
-> +		__kho_unpreserve(track, pfn, pfn + 1);
-
-This doesn't unpreserve the pages contained in the chunk, which
-kho_preserve_vmalloc() preserved.
-
-> +
-> +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
-> +		kfree(tmp);
-> +	}
-> +}
-> +
-> +/**
-> + * kho_preserve_vmalloc - preserve memory allocated with vmalloc() across kexec
-> + * @ptr: pointer to the area in vmalloc address space
-> + * @preservation: returned physical address of preservation metadata
-> + *
-> + * Instructs KHO to preserve the area in vmalloc address space at @ptr. The
-> + * physical pages mapped at @ptr will be preserved and on successful return
-> + * @preservation will hold the physical address of a structure that describes
-> + * the preservation.
-> + *
-> + * NOTE: The memory allocated with vmalloc_node() variants cannot be reliably
-> + * restored on the same node
-> + *
-> + * Return: 0 on success, error code on failure
-> + */
-> +int kho_preserve_vmalloc(void *ptr, phys_addr_t *preservation)
-> +{
-> +	struct kho_mem_track *track = &kho_out.ser.track;
-> +	struct kho_vmalloc_chunk *chunk, *first_chunk;
-> +	struct vm_struct *vm = find_vm_area(ptr);
-> +	unsigned int order, flags;
-> +	int err;
-> +
-> +	if (!vm)
-> +		return -EINVAL;
-> +
-> +	if (vm->flags & ~KHO_VMALLOC_FLAGS_MASK)
-> +		return -EOPNOTSUPP;
-> +
-> +	flags = vm->flags & KHO_VMALLOC_FLAGS_MASK;
-> +	order = get_vm_area_page_order(vm);
-> +
-> +	chunk = new_vmalloc_chunk(NULL);
-> +	if (!chunk)
-> +		return -ENOMEM;
-> +	first_chunk = chunk;
-> +	first_chunk->hdr.total_pages = vm->nr_pages;
-> +	first_chunk->hdr.flags = flags;
-> +	first_chunk->hdr.order = order;
-> +
-> +	for (int i = 0; i < vm->nr_pages; i += (1 << order)) {
-> +		phys_addr_t phys = page_to_phys(vm->pages[i]);
-> +
-> +		err = __kho_preserve_order(track, PHYS_PFN(phys), order);
-> +		if (err)
-> +			goto err_free;
-> +
-> +		chunk->phys[chunk->hdr.num_elms] = phys;
-> +		chunk->hdr.num_elms++;
-> +		if (chunk->hdr.num_elms == ARRAY_SIZE(chunk->phys)) {
-> +			chunk = new_vmalloc_chunk(chunk);
-> +			if (!chunk)
-> +				goto err_free;
-> +		}
-> +	}
-> +
-> +	*preservation = virt_to_phys(first_chunk);
-> +	return 0;
-> +
-> +err_free:
-> +	kho_vmalloc_free_chunks(first_chunk);
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(kho_preserve_vmalloc);
-> +
-> +/**
-> + * kho_restore_vmalloc - recreates and populates an area in vmalloc address
-> + * space from the preserved memory.
-> + * @preservation: physical address of the preservation metadata.
-> + *
-> + * Recreates an area in vmalloc address space and populates it with memory that
-> + * was preserved using kho_preserve_vmalloc().
-> + *
-> + * Return: pointer to the area in the vmalloc address space, NULL on failure.
-> + */
-> +void *kho_restore_vmalloc(phys_addr_t preservation)
-> +{
-> +	struct kho_vmalloc_chunk *chunk = phys_to_virt(preservation);
-> +	unsigned int align, order, shift, flags;
-> +	unsigned int idx = 0, nr;
-> +	unsigned long addr, size;
-> +	struct vm_struct *area;
-> +	struct page **pages;
-> +	int err;
-> +
-> +	flags = chunk->hdr.flags;
-> +	if (flags & ~KHO_VMALLOC_FLAGS_MASK)
-> +		return NULL;
-> +
-> +	nr = chunk->hdr.total_pages;
-> +	pages = kvmalloc_array(nr, sizeof(*pages), GFP_KERNEL);
-> +	if (!pages)
-> +		return NULL;
-> +	order = chunk->hdr.order;
-> +	shift = PAGE_SHIFT + order;
-> +	align = 1 << shift;
-> +
-> +	while (chunk) {
-> +		struct page *page;
-> +
-> +		for (int i = 0; i < chunk->hdr.num_elms; i++) {
-> +			phys_addr_t phys = chunk->phys[i];
-> +
-> +			for (int j = 0; j < (1 << order); j++) {
-> +				page = phys_to_page(phys);
-> +				kho_restore_page(page, 0);
-> +				pages[idx++] = page;
-
-This can buffer-overflow if the previous kernel was buggy and added too
-many pages. Perhaps keep check for this?
-
-> +				phys += PAGE_SIZE;
-> +			}
-> +		}
-> +
-> +		page = virt_to_page(chunk);
-> +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
-> +		kho_restore_page(page, 0);
-> +		__free_page(page);
-> +	}
-> +
-> +	area = __get_vm_area_node(nr * PAGE_SIZE, align, shift, flags,
-> +				  VMALLOC_START, VMALLOC_END, NUMA_NO_NODE,
-> +				  GFP_KERNEL, __builtin_return_address(0));
-> +	if (!area)
-> +		goto err_free_pages_array;
-> +
-> +	addr = (unsigned long)area->addr;
-> +	size = get_vm_area_size(area);
-> +	err = vmap_pages_range(addr, addr + size, PAGE_KERNEL, pages, shift);
-> +	if (err)
-> +		goto err_free_vm_area;
-> +
-> +	return area->addr;
-
-You should free the pages array before returning here.
-
-> +
-> +err_free_vm_area:
-> +	free_vm_area(area);
-> +err_free_pages_array:
-> +	kvfree(pages);
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(kho_restore_vmalloc);
-> +
->  /* Handling for debug/kho/out */
->  
->  static struct dentry *debugfs_root;
-
--- 
-Regards,
-Pratyush Yadav
+Jason
 
