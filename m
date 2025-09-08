@@ -4,84 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7466FCAC589
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0FB5CA0FED
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 07:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MWs38ipt6qYVKPoOaNWVE9IjFwNAzWbj0IVoNQpA9LM=; b=429bP2q10AAtlZsk+huGH1DgoE
-	cECBAI97IQecn3Al75mfFPgrWSFV32VxMhnS5LXbuoirljpCkWvqS6Q/2NMxmlvsCze8cE4F8nEMr
-	YZq23P8zPvdco3mSkjo1Oy3OPMe0cv5gsbpsXJIkMiNBN8HMJ/DU6PI7k3QtdtV8moF9qLdeupa6c
-	JzoFSTxvEkbDpsOe1HxLzNR76mgnwo6mxl8fOIX5+k3/ubxIBc5tYdEPTT952YoQ5JfJtdGzN4Stg
-	wnAK8J+MbeqtaCaDYp9QbB9XzHelf+IS6qgoNAeJQWU0CMztLOftzTfFhF3wzYgm/NjlX4EqKoGQp
-	BT/t+Ziw==;
+	bh=x/hWHs+Oc+ZmanXHj1zb/uT9WG7h+yFz4TNF11CDu6c=; b=rF4l8aqq7LXyX9dAQBHsa05UlE
+	H2RRHOtBvZIxvSjodewGXUvsa5yl2ZvXlwx1QbnAz1nN7W3NjjfF8NvOIFKbYCTDgrIM1svbqcYZa
+	g8KAbB3kwr/zgyyVnVnTEV345jk5Y2Og96pfYAK019EPYNy0Xu9bArLfXxC4sSZVicsta60mI/D+J
+	E7JJFZ9vc0OLwRjoWjiVIQePymQuAXX1ORdTHtDAcabPw5JXAQgNZQwj7Ub2ON+d/eQISQON74EWg
+	KbR1L5WTVIXqpd2GsUbVShY095Wwn2SC/5pMcyfrHYI0XGKW+lZLcc+Q2R/fl02rqPX9WOgadpo4v
+	zAcCu19w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvsxU-00000005GGe-2dp5;
-	Tue, 09 Sep 2025 07:40:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uvsxX-00000005GI3-0mHg;
+	Tue, 09 Sep 2025 07:40:11 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvdVm-00000000KY5-2IEA
+	id 1uvdaS-00000000Lnh-2R1i
 	for kexec@lists.infradead.org;
-	Mon, 08 Sep 2025 15:10:31 +0000
+	Mon, 08 Sep 2025 15:15:22 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757344229;
+	s=mimecast20190719; t=1757344519;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MWs38ipt6qYVKPoOaNWVE9IjFwNAzWbj0IVoNQpA9LM=;
-	b=F7sMrVJWmQayueKBCeNKA+tKGYfzPSb8ZnpX+HvuEqvlT8yrsUgxQUVuZ4DyRJ3gdAY+jI
-	qtNYrBO/u+kJn4NyC6nttK7DNJ+obc7jbbzWQ0DIYqbZY8U4PHlD8t9qKVP7KfGbLQqRl+
-	j3NJqKchkGsU40qrHBp7vuTuOGwntiA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=x/hWHs+Oc+ZmanXHj1zb/uT9WG7h+yFz4TNF11CDu6c=;
+	b=CSJenM++ZFyz7qOEeQrvmyD/NQynPRh+fqGHDWadB/N9EBUkG+pK1iUzpZGobFP08OC1PU
+	4c8Dd0IBZpQEeASBR6yV1Gxx8dcWU1lNFg9qiCJpuZuV3hyfaQhoHaHI1A7lxRAEQIW9/4
+	MSNPo3F8my5p6t40hj/unuIf9xh3iK4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-lwftZXyoO_S8BKKD12uRBw-1; Mon, 08 Sep 2025 11:10:26 -0400
-X-MC-Unique: lwftZXyoO_S8BKKD12uRBw-1
-X-Mimecast-MFC-AGG-ID: lwftZXyoO_S8BKKD12uRBw_1757344225
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45b990eb77cso32840785e9.0
-        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:10:26 -0700 (PDT)
+ us-mta-454-Ru-O8r9wOCO1pFlP3dtn0g-1; Mon, 08 Sep 2025 11:15:18 -0400
+X-MC-Unique: Ru-O8r9wOCO1pFlP3dtn0g-1
+X-Mimecast-MFC-AGG-ID: Ru-O8r9wOCO1pFlP3dtn0g_1757344517
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45cb612d362so23609105e9.3
+        for <kexec@lists.infradead.org>; Mon, 08 Sep 2025 08:15:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757344225; x=1757949025;
+        d=1e100.net; s=20230601; t=1757344517; x=1757949317;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MWs38ipt6qYVKPoOaNWVE9IjFwNAzWbj0IVoNQpA9LM=;
-        b=EJtxjinlv+L41VRAMvRY65FMsCpZJxt2CoVpwgo6oavUGYVtR7E8tlDnaIDOm+FI7/
-         W5+JbEaoxgOVRgSeMQGUaUxEFyuMU4hIk2Y6lzfJXxomJsvhPH9Hkrrm87bvaX13rE+c
-         Hfjuq5+Jvx/iaJ7ARLgg3GE5sthwYY3q2U12IKOXQrQXqsb/Pgib4ga7QGTjdgBFQeNU
-         C46PSLbYf0Ltp33HF4Z5QjXESDXITj60hjE9iF49CBcKKHa4U2WKla49wflGDR8KoxL1
-         im9Ryx4PfgMEZaA09ZUGsoGkv2qrZVoAZwPcys3MbvG0aQH4gDJxrPyOhzDn/Zk5zBF/
-         WIWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSXD+gQbZA4tWlG0WMXFxsWp8UD8dQH8BXYeh6qgq0ATnwcfx3ZpD7ZufpLYSiMv6rtAwEVA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwbwNdNYisG/XvjD36qs5gKGZHAtvtoKLfF8QSs6UAAY6aM1LYz
-	P+kARFHlfCWwF05AC1STyK1nsrxwH3Cb5LyMux1rOHmGnb4KZPM6kEcbQ54qwwOXNnNYZKEzZGT
-	d6KtZxUNt1g0lSElEw8ql00yVMwTofROq/WXu2/7XjiyqsFlrWh/1AbUJtzcC2g==
-X-Gm-Gg: ASbGncuHJ1LutBqfRoVAXA3UQgSod3aR64mYrjZIW4hQXUl7C3ZJqwvgsgNuw6UgCwI
-	Jpotif1CrmiVZ9zMauUvXN/bfJ25ODwPEH3+XywjmhibOEuZxJj6nnAuBxJLkj0DBt/g8ffOf7M
-	EGhPk+/9HvQB+dJ64TeNPdtySB+aRUASKflRTKWSK9FFpxP3BiKryLTlfhlVLCjUWAVteo7WM11
-	pNttjaRvSE+R5AV+hA/P3wOYaUjDn5cDZ6GAVVo6w/YSOAezbn0VeSTsZ3buR2CcxI3Epy3og4Q
-	TmHY0E4whxJ92QCeFyfOEwrWsk9FMusa/oOgY2KrMAz42rCnUtwexQYl0quhKhgp2BqGTt7IK6E
-	GK8VuP80zwauEC8OLkCxa4gQ4PB8HzJFHy2Eb2t27ieqtQL8F2Nf7wwJV5dEw7xij
-X-Received: by 2002:a05:600d:f:b0:45d:e775:d8b8 with SMTP id 5b1f17b1804b1-45de775e1famr26225485e9.1.1757344224859;
-        Mon, 08 Sep 2025 08:10:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGe7ZTfhfsgtooC3/5pep0igJoOBuPGNNCiAINQdm3uwOco5gprVmhHIhPkct+pdrN1/wAPVA==
-X-Received: by 2002:a05:600d:f:b0:45d:e775:d8b8 with SMTP id 5b1f17b1804b1-45de775e1famr26224795e9.1.1757344224275;
-        Mon, 08 Sep 2025 08:10:24 -0700 (PDT)
+        bh=x/hWHs+Oc+ZmanXHj1zb/uT9WG7h+yFz4TNF11CDu6c=;
+        b=DOkxoLUIvUIm2Rqfx8awW+dG/yAIG19V6cBRw6PZkqV+BuAVQFFDY9gYu2QhrFtfdp
+         hhQtJMJ0hr9ecz8lTp5V22fPvR6L+kga70TDak/CC7OTPgQlZ0q0WPBLIqCl0GpQWqG6
+         A43y6Xza5LKwJB5zbnjacCr3Xmb7A+kna/7W4jnaosxUUCydBf5gjFTVHUhCxsSCnWqe
+         nOkza2HSpz67yKqZl/fZjCw0/gJr5qUBnoMgNaQ72xRXqD1wJDLCA6cpH04LCvKARhsY
+         8DOvxgZjk8QGmKMHsJ3wmNwnecXCKOyCUopR71onBaLPc1ylsw14R1Qo/TMeuSZJcKKb
+         V1Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtXhSQ3t4MqSrIeWbiWoXUc2rRxiVBTCqKkPi9r2CKXHYygoOMP/C69bZQterqRIOI0YrdZg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxWXvIVjmWRWrc07XwmXzPUkeayLjm7Ily8zNOCtTDdp5AgjZNz
+	M8ifBBSTpQjegyZvMrpOFKQjVY2AP8jWl1SDoubU9ire56hmybgQEfMGGX6Sk5QQ6XI6aEavqq2
+	X2mmzI1ESMD+6ci0aRoqmKFtD+fgcfyZT1bDfOmTTbqKy8oygRk+N48sqR/x31Q==
+X-Gm-Gg: ASbGnctXECgLb+zv2iTu8tuqUt8JlllYV0gc1sBOt2/z/k0DUB3VH2JH6q2RFqZjBv6
+	bwylnWKm5KEXngAvNbmo7ctUw1064rlI1R530QCZ14xFUZZCaare7rxnrR30rObNj9Kyen2y5AJ
+	Tw9TiUUs/ERUp9KZTzFdWXnv8JOJXselQNAICUczYvt6Ev8zUearNhluQg6VxEcZB0ukjIVoOol
+	b0bpXWPlmuqfMmxWAyOdwU5cIOR3/9bw1Mt6VoYKeBhnIo4s6HFryJUroPKBl14S87uYSxNMenY
+	2kpKBRNM+G0vPy+s4jrDkytDC9j8g7cPNrDLfe5vRlkq7fRzsHJNp9d+NNdsB/njg2HPd6Evoye
+	opI2j1pY2GMbqIuL8zukAlPbD+ylrXs6Jk6sRj4S9xlMMfleMvP4+rCN4IA/Cu2Iw
+X-Received: by 2002:a05:600c:4692:b0:459:db7b:988e with SMTP id 5b1f17b1804b1-45dddeb907dmr68698815e9.13.1757344516576;
+        Mon, 08 Sep 2025 08:15:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAYV3WnrUtHwlEp7ubFGe6B7naJwEV3uFeSC+r+JEU0bYm5LBcPezZQJbxkrEzDV02gdPnSQ==
+X-Received: by 2002:a05:600c:4692:b0:459:db7b:988e with SMTP id 5b1f17b1804b1-45dddeb907dmr68697815e9.13.1757344516004;
+        Mon, 08 Sep 2025 08:15:16 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45dddf8c51dsm109133275e9.20.2025.09.08.08.10.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e23d29bb9esm15808547f8f.4.2025.09.08.08.15.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 08:10:23 -0700 (PDT)
-Message-ID: <076658ac-78bc-4d4b-bf3b-d04cd3f0fa21@redhat.com>
-Date: Mon, 8 Sep 2025 17:10:20 +0200
+        Mon, 08 Sep 2025 08:15:15 -0700 (PDT)
+Message-ID: <e9b9b4f4-8ed1-40e8-8b49-22a0b10c72e6@redhat.com>
+Date: Mon, 8 Sep 2025 17:15:12 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
+Subject: Re: [PATCH 04/16] relay: update relay to use mmap_prepare
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
@@ -119,7 +119,7 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
  kexec@lists.infradead.org, kasan-dev@googlegroups.com,
  Jason Gunthorpe <jgg@nvidia.com>
 References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
- <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
+ <9cfe531c6d250665dfae940afdb54c9bd2e9ba37.1757329751.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -165,16 +165,17 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <9cfe531c6d250665dfae940afdb54c9bd2e9ba37.1757329751.git.lorenzo.stoakes@oracle.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: PSB-ovWZBhd8q8EVOmdtiHy8pJJEnnexpNlBllaCTNE_1757344225
+X-Mimecast-MFC-PROC-ID: VWj0NpfUUzX2Cmbiv0hrGfALfbTQcq5tgxu-KhGblpU_1757344517
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250908_081030_660204_30E6311D 
-X-CRM114-Status: GOOD (  23.17  )
+X-CRM114-CacheID: sfid-20250908_081520_866889_30B5E38C 
+X-CRM114-Status: UNSURE (   9.07  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Mon, 08 Sep 2025 23:53:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -191,77 +192,13 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 08.09.25 13:10, Lorenzo Stoakes wrote:
-> It's useful to be able to determine the size of a VMA descriptor range used
-> on f_op->mmap_prepare, expressed both in bytes and pages, so add helpers
-> for both and update code that could make use of it to do so.
+> It is relatively trivial to update this code to use the f_op->mmap_prepare
+> hook in favour of the deprecated f_op->mmap hook, so do so.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->   fs/ntfs3/file.c    |  2 +-
->   include/linux/mm.h | 10 ++++++++++
->   mm/secretmem.c     |  2 +-
->   3 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
-> index c1ece707b195..86eb88f62714 100644
-> --- a/fs/ntfs3/file.c
-> +++ b/fs/ntfs3/file.c
-> @@ -304,7 +304,7 @@ static int ntfs_file_mmap_prepare(struct vm_area_desc *desc)
->   
->   	if (rw) {
->   		u64 to = min_t(loff_t, i_size_read(inode),
-> -			       from + desc->end - desc->start);
-> +			       from + vma_desc_size(desc));
->   
->   		if (is_sparsed(ni)) {
->   			/* Allocate clusters for rw map. */
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index a6bfa46937a8..9d4508b20be3 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3560,6 +3560,16 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
->   	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
->   }
->   
-> +static inline unsigned long vma_desc_size(struct vm_area_desc *desc)
-> +{
-> +	return desc->end - desc->start;
-> +}
-> +
-> +static inline unsigned long vma_desc_pages(struct vm_area_desc *desc)
-> +{
-> +	return vma_desc_size(desc) >> PAGE_SHIFT;
-> +}
 
-"const struct vm_area_desc *" in both cases?
-
-> +
->   /* Look up the first VMA which exactly match the interval vm_start ... vm_end */
->   static inline struct vm_area_struct *find_exact_vma(struct mm_struct *mm,
->   				unsigned long vm_start, unsigned long vm_end)
-> diff --git a/mm/secretmem.c b/mm/secretmem.c
-> index 60137305bc20..62066ddb1e9c 100644
-> --- a/mm/secretmem.c
-> +++ b/mm/secretmem.c
-> @@ -120,7 +120,7 @@ static int secretmem_release(struct inode *inode, struct file *file)
->   
->   static int secretmem_mmap_prepare(struct vm_area_desc *desc)
->   {
-> -	const unsigned long len = desc->end - desc->start;
-> +	const unsigned long len = vma_desc_size(desc);
->   
->   	if ((desc->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
->   		return -EINVAL;
-
-We really want to forbid any private mappings here, independent of cow.
-
-Maybe a is_private_mapping() helper
-
-or a
-
-vma_desc_is_private_mapping()
-
-helper if we really need it
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers
