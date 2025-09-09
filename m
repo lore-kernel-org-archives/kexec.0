@@ -4,156 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C706CAC58C
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 17:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D8820CAC583
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 20:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oNpWfkwqjjtRlt61YpQWpZJLcy5IyvoDowLEv3mBNIQ=; b=vEpKIYatFnJHG0MIeTiha4J5o9
-	gB3JnYALMs1RMx/BLqHsLaRLE6RcNgeTd5ff2si1h/W/xyfPRKUn8XvEDS/GAR0QdMCigW/lCGWxy
-	aiUBSw7wzW+FvbW3TrXKmgbkyp7iwk8YAhJhYt8WKmM4JhGu3VH6MHAr9b/BtOlr+SBC5s1jSHAF5
-	1o9a2OYlVCdyEs/2ECeJ0KSxb5JTuZnLuL+SZI+QakeBom6OTDQ1rW8IetdqUobjlUfoksoH7o8kO
-	k1FDQIpMo+MkwkfK2ieNm6xlovl4w6FRIW3sUOsW+kwjSsC6hGzOHZQqaiorKCQJKGubEzaVovwxV
-	KWvT/NQA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=BrTg0k8lCV2HUq6REznRngkexlNL5x/b5e/pmlQ15ZI=; b=T6zP10MV6btl+y2mlT6PUdewch
+	6570zt/0yiZiARmnKu0djZGEkdWlgJv5WXkg4Oq1s9N5SPQ5c6+Gt06zKYaZ8fmC2cORlhuHM4dUf
+	Oe/75iYySA6a2QvNHbxpPAgcjm3KHtxki7TNbMA4HfKF5ozAxJyazL3MOz2KulwjDYE3H0LrpwJE4
+	alhwuVWg0kzTOk941OMifuus8DaoxxwW/sV2MaKSk4+k7vSRd/77PZT2r0XTI1ikvfKQetFv2wFxO
+	L2c92ZoDv1ItH4AnqxqYpVSCFJPCTcq4GngMEwQKo4v8xvmMM74GD1fmaE0VxLlni/Zc7q7HRdLJK
+	rRqo8sLg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uw26F-000000094KA-3JUH;
-	Tue, 09 Sep 2025 17:25:47 +0000
-Received: from mail-bn8nam12on20630.outbound.protection.outlook.com ([2a01:111:f403:2418::630] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
+	id 1uw4kd-00000009w38-1NlT;
+	Tue, 09 Sep 2025 20:15:39 +0000
+Received: from forwardcorp1a.mail.yandex.net ([2a02:6b8:c0e:500:1:45:d181:df01])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uw0cP-00000008K6j-0MZP
+	id 1uw4kY-00000009vyh-1lV8
 	for kexec@lists.infradead.org;
-	Tue, 09 Sep 2025 15:50:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gqm5QPrXsWpgNwrYH3skTOZtvQpwyg640dSoJHDLD4R18wluC1yaazK7fec06BI/0Lotbop6qP+3WzWhtvqIvPfdIxOzjs/eGa+lhGH9QaOw8DBqOKvcV066nfCaqAwGqoy6fvszFXeGWpXp9OJ/FBCZHgPZZ7eE5oj1ioIomvwIZCcpejpwBX6KS8I5PSJHaeZhpiubqgNv+0EUE3VuVhKFw/ZuVjiR/D2H/GB0tcjs8mPMaTNVmDzUkBkGQlSSax3WvDsuZ05D++ohu4Fa9UeVfSlyTdUOrYqqEO/e79h1hC1hFi15aPAx0+jD9hUZEx/1Awl6XLnuamGP3497wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oNpWfkwqjjtRlt61YpQWpZJLcy5IyvoDowLEv3mBNIQ=;
- b=LzcpON8eZyQdL97TqlBBpAYMKVF7anZFsP9KQqKI3lzfdx2R2/c1gDNLUTwAuv2GzM4yhENdlNGf4ftQrGd36mLTv+Wu9MXWiz3V/mX/l3t41MmsGXPJXPquauwyw1QAtTz8DcrWR1NFmRu/qz9OBHQG99EfsnrsTdUCA8SIbrzGz+MWVNZCQsI6yaI8xHtCJLoMuhhdIPdchMC5KHZv8t3cngTMcFMD6RQKOf1RU5oWfMXEiu3HxdZoL04jqeBkROPPRAkZaCg3UxZYJzbhQHeRw9N9+ffHC07AsDZPBn6f98g6/DXqY4UT2zUjRZ70Pv2HmbynEC9EV1GHGyZPuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oNpWfkwqjjtRlt61YpQWpZJLcy5IyvoDowLEv3mBNIQ=;
- b=C9nxcqyhZpD7XaHhdnXjWWjyhsPEPo584PNObF0IWgYw8ywHmaJgrj9JT18uR+Je1DGNdKAFxWvWLQnP74EykXpy7p+0EpvIsrhXX54BlD2A6P1ryyLCQgrOSakF3aWASNKLsywSmyJrqcTpF8sSh0P6zd2AUE6iIt1hegAJSa+wSrHYfsEvwQ8Ku2nz54Is6Da3dquBJ1SZxsTWoCpB09aSULsiRicYPGbz/oOPjWKrupQe4mJ7Z3RFSELxNKjVXQg+/jDDTkbGbdpBIat47R+DIeR9hHZsckkoG7tzu1H/ROVqi42EmVh+RAhaG7G3p4t7VQae/sC9/T57Bf/6Uw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by DM4PR12MB5746.namprd12.prod.outlook.com (2603:10b6:8:5d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
- 2025 15:50:46 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
- 15:50:46 +0000
-Date: Tue, 9 Sep 2025 12:50:44 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
+	Tue, 09 Sep 2025 20:15:37 +0000
+Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:3a87:0:640:845c:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 03AC6C0178;
+	Tue, 09 Sep 2025 23:15:29 +0300 (MSK)
+Received: from localhost.localdomain (172.31.115.73-vpn.dhcp.yndx.net [172.31.115.73])
+	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id IFQqlX5GteA0-l4Vy856v;
+	Tue, 09 Sep 2025 23:15:28 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
+	s=default; t=1757448928;
+	bh=BrTg0k8lCV2HUq6REznRngkexlNL5x/b5e/pmlQ15ZI=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=neGSZgoqXYXwpLcgher3hOxnbUXCh+LnfyKfxD6OWkli/tXddCyRc7h06ZF74m86Z
+	 KOW7OV80CpU3W0NMV/XxwboV0qA0Cd5wpuLTqhRluGsQJYAxSqi2Imnkg+R/1mMtyN
+	 lhAVl+kpBSt43LU/t9BrjK5i3nl0JtZpUGJwqX/w=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
+From: Andrey Ryabinin <arbn@yandex-team.com>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	James Gowans <jgowans@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Jason Gunthorpe <jgg@nvidia.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Chris Li <chrisl@kernel.org>, Jason Miu <jasonmiu@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Chris Li <chrisl@kernel.org>,
+	Ashish.Kalra@amd.com,
+	William Tu <witu@nvidia.com>,
 	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/4] kho: introduce the KHO array
-Message-ID: <20250909155044.GN789684@nvidia.com>
-References: <20250909144426.33274-1-pratyush@kernel.org>
- <20250909144426.33274-2-pratyush@kernel.org>
- <20250909152814.GL789684@nvidia.com>
- <mafs0ldmnk522.fsf@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mafs0ldmnk522.fsf@kernel.org>
-X-ClientProxiedBy: YT4PR01CA0451.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10d::17) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	Andrey Ryabinin <arbn@yandex-team.com>
+Subject: [PATCH v3 1/7] kho: move fdt setup in separate helper.
+Date: Tue,  9 Sep 2025 22:14:36 +0200
+Message-ID: <20250909201446.13138-2-arbn@yandex-team.com>
+X-Mailer: git-send-email 2.49.1
+In-Reply-To: <20250909201446.13138-1-arbn@yandex-team.com>
+References: <20250909201446.13138-1-arbn@yandex-team.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|DM4PR12MB5746:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba4e8c0d-3dce-46f9-a4db-08ddefb8a3d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?q1ChjAwzF2bMXsFpLjDzomA/dWTpvvi9lLliwvvghsfPPJxjaht/2aO3ZJUz?=
- =?us-ascii?Q?pnLvzuufG7+3td6f6hnDPw9zLz3bBYrn2GgIN+ek6clDDBKeElZL+rSqLqW/?=
- =?us-ascii?Q?Ep99mwYpMFt4cv4cNh8xuMQekVKj2gY8Oo2Sd8VNnU92YRmWBWgGS9wOSbbu?=
- =?us-ascii?Q?Opcn+gxPehW8G3S4i1Xw3Xle5SmeTsSzzlrxwvLo72NkvBVsSDlOy6qlB9l3?=
- =?us-ascii?Q?zWoE3ntuCzFCWEy7yXgWHP87GLAEAxu7cBi+xsLn38GguXdVmJ3VjQq8m5I6?=
- =?us-ascii?Q?nWcMcJyhd6Wf6dQSkrWebA0hVaLhSa8JHlHRL/7jqlRK4jsI/nA83gRd071Z?=
- =?us-ascii?Q?zS0nitMpGD0OLUE/Et5xsEhe6DKZjwEcCnZ3cNgMUfO9yjJ1JIJE8fomUX9v?=
- =?us-ascii?Q?iwT5v9/JmXToOeNlKo2z7OM83gWEJQw5FQ8ZFXs9JWvHCIc+DvlLgwDehxj5?=
- =?us-ascii?Q?R/jaHw6KMe3vSz/KNl+0qzhmjOc+BexBCq3rwq9Omz2KM9EZ8bKKPL01eseH?=
- =?us-ascii?Q?lvplPKOO5G4KuUzCI0xuJ9zGbK7BBPEik+2BgZt27t5FO6A9HR6VGg8fUs0X?=
- =?us-ascii?Q?sDCcAWN4en8rnqkahf7hWt4K2ZkM0ZV//y8yp/ae3z3V1JrypQzoob/Wfu6a?=
- =?us-ascii?Q?sdgT6aj53CMhNPv39XKw6LejQAsdnupqBP5ojSLVIphEexzPmH+9OcxJksfR?=
- =?us-ascii?Q?PMyidsLW7CI3AFnqp4nE9eZfkVO1dHf9EE9zVsTGQYpu7zcXqFDn8rPLaRui?=
- =?us-ascii?Q?Cm+ImgIBW0LUdPLMNnmnMGhEYpKx/1AHRkX0IiqNZyDkOcRZU4T08NT/vqvT?=
- =?us-ascii?Q?SPweT5Z22reVfoyXGLU2beowXvpuV+ubq67b3F195KYU6afTkGocZJbukOEn?=
- =?us-ascii?Q?hqi5AQdolHCsQ/IuCFfM/qfHpLHfbYTx5u657c66s7h30s5UpFX6TTNXZRS8?=
- =?us-ascii?Q?n51ac4Mc+3IjvoFq3IZi2PHd2TIICYjgL+U1VrgFzbGBTcxrtdp0Zy3W7mZW?=
- =?us-ascii?Q?wzl4K7+KtI0QSBeJODQHTlspSWcUgRQHAygWRD1EHx1cvnsaRxvfkAMP9UED?=
- =?us-ascii?Q?z5+XMoX8788x9Dn1+BdPzgt6NlWI73vgkxq7QKnhVoGtHBdjizS3ZTZdaz6O?=
- =?us-ascii?Q?LKeUR2f+k8MF6wYh+4YHYnxb9k1HDgBPiPKb2koX6sMCRkcHFfmlrr4daDbZ?=
- =?us-ascii?Q?dTMiMi1V+VKN5S2ew/CH2s2oZ5/Ka0ci5YOOkWt9j53LeJhOCY8AHwhRYee6?=
- =?us-ascii?Q?ZFeZVX4KKNl1oZxRUiZR230cIheOjmRGSaz7OjB8JB34hUFUaB/ShJHWt4xs?=
- =?us-ascii?Q?7BjIm4mA+sDE6yfByuHPkufcqhrLZrknCnu8MKjKjWpBWmhUENkbzzfhthfv?=
- =?us-ascii?Q?Bnhb2Yc/Tq8qBgsQSftSNI9lxEWMECP1b0r6JLtEgsQgVdjiB3a+RoZZgeg0?=
- =?us-ascii?Q?2mdqgYCK0Ak=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XBmxCuzQ/v0LB0pyJeaGVCLSGJgVGRe2pfvzNif9JBkow9LQIPbsaK07wGvZ?=
- =?us-ascii?Q?pHsFmDn1CjpgxjkHUxCrWLiDQ1YuUms0xqMKXrG4RP+w0M2CnL4aUiVeR5zI?=
- =?us-ascii?Q?5TWRKOj8wYj5FOoObSIvPSaTIUyuwqJ1HdR5a+gYNF4X4ImTg46ZiC1uAj26?=
- =?us-ascii?Q?UlCd4AtI+tcMQI3aaImZVDk1NRdQepcT/FRRwzpNMHIXfKdBkfu/p45c7EtI?=
- =?us-ascii?Q?6aKiwDfXKuj/1RUBLtdnBEAGFTgk6Ux8wjHQ4TaiPv+O4KdNUWX0U8rooLOy?=
- =?us-ascii?Q?oCYsI7d8bBvbVnRvJXM6iSZx+MogZTy0Mdo3szaX3ykSWCSDTl9PQ83IBCU/?=
- =?us-ascii?Q?datXGkFvWpn0oIRO2PNEONcM54u0kXJuo+lj28dkTjLN1WgHqOku8L0PZgSJ?=
- =?us-ascii?Q?SjI5kDF2QNsDaqkBbGckGBYhIUCEi3mDlReFBzi77DKv03SEDjj61RX3A1eS?=
- =?us-ascii?Q?45JPavfqZWoJTpmK2pbi5LduIbsXW5LZG1ajyaENdiXr1u+xRTwsYRncMAu7?=
- =?us-ascii?Q?yJeDs/WVwsQO2GY2cuvfn+84BrNW+6ukwQ7a5yNUnQ8rfgBpwMULYViqhRjS?=
- =?us-ascii?Q?SCwL37XIfpCgMHqE7qWX2BPFOkUN/SRmBVfJjY4psb0u0lJJQ0XRUUjgbkRJ?=
- =?us-ascii?Q?uT86RHwqNt34mHzh7N7DWGPf/0kMyk5BO6ALlB+MNkieuPPd02Cj3MNzzdLE?=
- =?us-ascii?Q?AAajval6HUOigysc8qM/CCyh/gpxUxCpSYCzwfWegn1kCeoWc6jMX0rLVMSO?=
- =?us-ascii?Q?7pZtzwCzwa1P2RUVdrJfCRwkcnI8nAu3QBRA775ILWb13MmzOYEPw8bEcnBb?=
- =?us-ascii?Q?gLbj0DFFeXN//FZOIyEOidfJgDELfO8zj62ciulfhbd70HIvxo0rxXRXuOGj?=
- =?us-ascii?Q?mjYhWCneCja/jtTczufCiPKbHQY+rhDVzA2KSW59QaqSwKPJaFcARZYmuJZ9?=
- =?us-ascii?Q?CaOU9d0qhziCg0i8n6xnwGhRN0B6McY074G4ISbcDp+hBn+yWU9ikmfk/10l?=
- =?us-ascii?Q?XE39dP2I5E3H2QSf2eS5EWnKdwFI7QExvwVPF2hHAoZ2ZhfY3BIJc8tIueVf?=
- =?us-ascii?Q?sHX2SJZ8Dz/uWhgbbOurH8948y532Fu2c1KzMi5bV9muFajhKxAlDF7WZ+Gs?=
- =?us-ascii?Q?qiA1+Lcvivso6xUgKl9LjTpuOAjMAFw2H4tI6o3DBvKBghvB2pMoyFuRmMtz?=
- =?us-ascii?Q?XBNXaagvifTqNCxI9hPvfLSWWJ3mChLZ1Y0Y4VIdOBQ0eod228Caog3gsmdP?=
- =?us-ascii?Q?KvrvnQCp77MJEHfxRHoaReMUK+IjXarsTPf94vhsRPhN7P6m4j5Z5ir0LEdd?=
- =?us-ascii?Q?TZ0Yk2XBnnMr2ut+1YijaaVWtT824a+0weYrj0QBe6mI83X4dngskhtv/mE1?=
- =?us-ascii?Q?UFwjputNqPXzyn/KRvSMQcU4r8W4YDRJv1auIdCqD9e7kNjgZYkRbBDAdxGp?=
- =?us-ascii?Q?YWrusdtZ5Vl4PEv/RlkxBxvIcpj44TQX6EHdovNcgNSQxEYZodq83JKuhHEQ?=
- =?us-ascii?Q?NuwIP/G2Hk0ZWy8C9t7d8voVGDkJj3HVOEpPWmysBZ22LD8W16lXEYxipQgo?=
- =?us-ascii?Q?evuKN15z5JhFNKaj2hE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba4e8c0d-3dce-46f9-a4db-08ddefb8a3d4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 15:50:45.9603
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AO5uDoByN1Dn2b4OrgtW27caXC9iZz/puSNtGTtVF3cAb9WaevnPHNdrkveYMU2/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5746
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250909_085054_300387_3F994205 
-X-CRM114-Status: UNSURE (   9.66  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250909_131534_634833_0F03C68B 
+X-CRM114-Status: GOOD (  14.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -168,17 +96,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 09, 2025 at 05:40:21PM +0200, Pratyush Yadav wrote:
-> PS: do you know if bitfield layout is reliable for serialization? Can
-> different compiler versions move them around? I always thought they can.
-> If not, I can also use them in memfd code since they make the code
-> neater.
+Move FDT initialization logic from kho_populate() into a new
+helper function kho_fdt_init(). The helper takes care of mapping,
+validating, and unmapping the FDT.
 
-It is specified by the SYSV ABI, compilers are not free to change it.
+This prepares for using KSTATE in KHO instead of FDT.
 
-https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/low-level-sys-info.tex?ref_type=heads#L337
+Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
+---
+ kernel/liveupdate/kexec_handover.c | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
-I didn't check ARM64 but would be shocked to find it is not specified.
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 364a69a2fa1b..e5a436893f5b 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1077,13 +1077,10 @@ void __init kho_memory_init(void)
+ 	}
+ }
+ 
+-void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+-			 phys_addr_t scratch_phys, u64 scratch_len)
++static int __init kho_fdt_init(phys_addr_t fdt_phys, u64 fdt_len)
+ {
+ 	void *fdt = NULL;
+-	struct kho_scratch *scratch = NULL;
+ 	int err = 0;
+-	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+ 
+ 	/* Validate the input FDT */
+ 	fdt = early_memremap(fdt_phys, fdt_len);
+@@ -1107,6 +1104,26 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		goto out;
+ 	}
+ 
++out:
++	if (fdt)
++		early_memunmap(fdt, fdt_len);
++
++	return err;
++}
++
++void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
++			 phys_addr_t scratch_phys, u64 scratch_len)
++{
++
++	struct kho_scratch *scratch = NULL;
++	int err = 0;
++	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
++
++
++	err = kho_fdt_init(fdt_phys, fdt_len);
++	if (err)
++		goto out;
++
+ 	scratch = early_memremap(scratch_phys, scratch_len);
+ 	if (!scratch) {
+ 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+@@ -1151,8 +1168,6 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	pr_info("found kexec handover data. Will skip init for some devices\n");
+ 
+ out:
+-	if (fdt)
+-		early_memunmap(fdt, fdt_len);
+ 	if (scratch)
+ 		early_memunmap(scratch, scratch_len);
+ 	if (err)
+-- 
+2.49.1
 
-Jason
 
