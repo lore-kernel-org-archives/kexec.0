@@ -4,79 +4,238 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58CD8CAC583
-	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 15:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1292CCAC591
+	for <kexec@archiver.kernel.org>; Tue,  9 Sep 2025 16:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UNqNdIyyKvlQsffc32Vo1vye5nnPAB3Xttji1HxWmGo=; b=1XnL4KzcVvjdgpWG8y6xwXi/tp
-	V56D9+KaXLGxsB4GML4hxjP7ILsewnDxeHH8DEOKmQlo1yhkiGhjgdEhT2hEOKNyS4huXWrkN1wqy
-	TYs9GCRN6CCffWqrljXuWLIhwUxCI6kYUK40A03KkSogDkMSVcniFKJJA0UuGP07tn+20MR57AHcN
-	pcT13wtgKR338pTe+njRDT8Vewh4PYQigE30D2YiLeYqv/LyyIPADqb6JhtXpt/qXotPuVJQAMMeo
-	5wF7HOK/zQ1V9uJ1g/BtIEKzXrFyYISr5Vh1Prb83f2G1KXqrnRE5k1MvW58yJRzZLSkJzZdsmDtf
-	jCtTQyaA==;
+	bh=31gLRNrjbFDKLczjXZyUbDsvkbA0iZ5t+mBrqJdTkio=; b=PlBsFpx/g3jC+kUebvSpYN/KnF
+	H/Bq9p/QzKIUf4OFS/Rub7Wn7BLB0EzM8/cPXs3DAYuEz+O8b7gEMvhcDXI7Q1wuZ9OcnPkm+fcVd
+	LlZ5pfHaBZXkG6QWhVDJ4wkZQyER0JJcptZozSvlLWW0YCS4dx7nnmYHyhfx/Dw6UlH/6SCN+n2n0
+	mL5mqXBUHPY07Vxp1NCSvVYcW7TDinHpayiA2gXi4501LpEn05kFz6FMif5N+q+j9QocAxMYZivkM
+	HkdxTkvB1iXfJDWS/sQsGLIxubxK6fIDMfnWq7q9w8mF6vqngzrQ1sOQba66qV0+835ckCaFB/aHG
+	PDmX6ciQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uw0cQ-00000008K7p-2dw3;
-	Tue, 09 Sep 2025 15:50:54 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1uw1Q4-00000008aa6-3Hg3;
+	Tue, 09 Sep 2025 16:42:12 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvxI9-00000007121-3C7O
-	for kexec@bombadil.infradead.org;
-	Tue, 09 Sep 2025 12:17:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UNqNdIyyKvlQsffc32Vo1vye5nnPAB3Xttji1HxWmGo=; b=oS3EpxdR3rNL7fQBiTJ9oP/kDm
-	8m5iLKQJwRwSc640/hrugw57lKj8wvjZ9ANxXxMCaXk/bMO8UxA9MwOYI8HJi6aFAYL0TP+8HOcMG
-	Vvcl+l1GIiuTjp62/CNT9eArTQXDRMxhBFqmHAnCydBoBKmH4Ux/YDps+qLO2Sds4vIwpvFOd+sQK
-	PiM5ns95awEETsBXMZruGQjHQYx5YnOwppNhhZLaovzpfAlKzqI8UNYffNYp2wte0HEVIZFdKLr5x
-	Zpi81O+ob5f/x1zqK/mSkh4LW/nr4aRsPYQXPk1WpHeOxIukTHFnZTfCndwH0PsTFZsKTglZIKoHN
-	sAuPjrLg==;
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uvxI6-00000005MJo-2kA7
+	id 1uvuY8-00000005vVN-26s7
 	for kexec@lists.infradead.org;
-	Tue, 09 Sep 2025 12:17:44 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8A41D4045D;
-	Tue,  9 Sep 2025 12:17:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F2BC4CEF4;
-	Tue,  9 Sep 2025 12:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757420258;
-	bh=CINqC1yuoC6EN3JTqav2e34BO45tJWHN4hfmBhvxPS0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=IFg7XF5CNMe84ZyievChiP1ILlqSCeMTZctwDIz45qv4ppTlVwgySeVsyMhey4TIZ
-	 HPJB087o01tclncA+qQFNTwJ+5slt7Neo2Ybi2YKxfpNMdUjskKBEt70norm4UjrH8
-	 6xmeU6/C2nzTUxrOhKxG3ByoMFqgvx952HpSIbGXXfTmFgJso6E0a1/lVzLCYMWtTI
-	 ME4x1Cd0o187Z3d/Zf38O/NHoGJcQdNd/hyaop6xvqBnIM9TF9AK/XGFJ4kMoWPo/h
-	 J2N8U1CU5gqWbDwUKKQ/p8B40uXxaPCKMaK1kHMk7QJ/CmfhaVq1oq2tTWLKRBm3hw
-	 9A3L+M93ZW1dA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Evangelos Petrongonas <epetron@amazon.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Alexander Graf <graf@amazon.com>,  Changyuan Lyu <changyuanl@google.com>,
-  Andrew Morton <akpm@linux-foundation.org>,  Baoquan He <bhe@redhat.com>,
-  <kexec@lists.infradead.org>,  <linux-mm@kvack.org>,
-  <linux-efi@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <nh-open-source@amazon.com>
-Subject: Re: [PATCH v3 2/2] efi: Support booting with kexec handover (KHO)
-In-Reply-To: <b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de>
-References: <cover.1755721529.git.epetron@amazon.de>
-	<b34da9fd50c89644cd4204136cfa6f5533445c56.1755721529.git.epetron@amazon.de>
-Date: Tue, 09 Sep 2025 14:17:35 +0200
-Message-ID: <mafs0segvlt0g.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Tue, 09 Sep 2025 09:22:05 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5897g23s009632;
+	Tue, 9 Sep 2025 09:21:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=31gLRNrjbFDKLczjXZ
+	yUbDsvkbA0iZ5t+mBrqJdTkio=; b=rJoxywO/v31aeo12kGrAOQ/wvPkFEA2Nd4
+	dJkYCNWBj5EbhBhlnrY+xRoNZU3C1lUr+8DM0elSk/aHe8WsfVyhClB9v/GnexcS
+	cEJr7s3cJnywpBftn9S58LRwfH2bTDuqj188UZRmECzffji2Qr5y3O1Nnoh+iZTe
+	DK5OBaDgNvIQVWKukhNco1MtXc3FBAINmCIL3hZkCfs+erbsq8vqy3opmztcHoFN
+	aGrdUdwMQOIB7dZ177pmZccAPduylnVJIarkwrWDnu2g7aCdOzL9ySUe1GDExg+K
+	x8p2cnK4O7V9iksr4p/uEYenJblwkq6ybTVNanm1tBuVPpifqgOg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4922jgsefe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 Sep 2025 09:21:34 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58981Qvs002897;
+	Tue, 9 Sep 2025 09:21:33 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 490bdfv3me-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 Sep 2025 09:21:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QlPjvtemWHvMAlGof0t/JlJtzFfZafUPNu4HappUBEkkkQh8/eviId9/OlTuGXdK3nv7fORENh3a1JfF0pMxpQHnRpbpTV2mXLyAlwizBFf+zS702QsYYuy/aPuw31Y8lLmZIe1/1QCZxphwm0GXubWsdE/YXkR2set7kgYM5BMDO2hrh7WwqSm6FBHLxgqy6x6B+ed4haD4UeOpnFjeKTlF7Zlb2qSCcDQ7kxHoX4m2syz+CQVUkTeaBSGpABdodJ14ozc/iIwmJIPVsKyeMeIV1I2qU0BaclaYSkJni1Pl5NXr43GDGpsC/M1h6duNbwMNS7CM1Wm1o2myBHlEUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=31gLRNrjbFDKLczjXZyUbDsvkbA0iZ5t+mBrqJdTkio=;
+ b=DtF5zI2LDrWBKCi9o5eExbmsLLxEkWNWNxqTPtVkG+ju+w/7Q2ncmOca8W9Qdm/TUALVZmoybBTNdbew8bW+F5PVUZttTHl8u0OoGRp6wCJ1Wy9A5EitLjeB52mjikvEFqKVFy5EAbCambTuBbpY0UyMX8BrJoJ/MzYkLshLd2r549QrsmO9VBYJ9MgoNawk5io/c5/RKXEKK++nw+HjykqaOiEG1pm3kTx/FhnZ6ggx3UkKs0AFeAiWYYxIo5gnogbYlYnTdkc2SKqumwMrbRgPVw2/k1hGLV+ZtYTfQcOTJSy4/t4MaJBKOuHhGoUbfpNQG7MuFy9GvWVhOizLpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=31gLRNrjbFDKLczjXZyUbDsvkbA0iZ5t+mBrqJdTkio=;
+ b=HIT3+zuItOSS3b9r57YGtByto5+D+f0XXSdKoVdtxV0/RfjE5n3seUElTVSACMlFq92n0OAc0m2fS1rQGKeOZQJuIxwbwbPtqXoP2/4EiX7GV2KGma+1VqTabRFVYNF7mw49PZ59UA1T1NDwGvGomqSyIyWt9Fgq5dTFKjbIj9w=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH0PR10MB4969.namprd10.prod.outlook.com (2603:10b6:610:c8::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
+ 2025 09:21:29 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
+ 09:21:29 +0000
+Date: Tue, 9 Sep 2025 10:21:25 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com
+Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
+Message-ID: <731db7f1-5a0a-45a3-8173-be1f19470bba@lucifer.local>
+References: <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
+ <20250908125101.GX616306@nvidia.com>
+ <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
+ <20250908133224.GE616306@nvidia.com>
+ <090675bd-cb18-4148-967b-52cca452e07b@lucifer.local>
+ <20250908142011.GK616306@nvidia.com>
+ <764d413a-43a3-4be2-99c4-616cd8cd3998@lucifer.local>
+ <af3695c3-836a-4418-b18d-96d8ae122f25@redhat.com>
+ <d47b68a2-9376-425c-86ce-0a3746819f38@lucifer.local>
+ <92def589-a76f-4360-8861-6bc9f94c1987@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92def589-a76f-4360-8861-6bc9f94c1987@redhat.com>
+X-ClientProxiedBy: AS4P190CA0038.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d1::17) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB4969:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89999ccc-2fc7-4e20-bec3-08ddef824249
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?RlSe/aN/nSDTW6gazHuL3KOb88hjJ7iO+2/GVOlUJs703rYKhNzOhwySIP8+?=
+ =?us-ascii?Q?31aXOYRUCYvikdAxt0Q/OKbGqjBIDTTYLvPPbEjpOhEhaFTZrMVjcjooK+1v?=
+ =?us-ascii?Q?1/yWwmPl2pZJFWP8aT3bUu7Me+B/O8uFuAXEs9WFHt0BuK804uqTc+PS3yAk?=
+ =?us-ascii?Q?SaW7PhGb2aISdA2J2g5LzW4XulK9Gs7GmGXoZwn5X1FEotfmfT36ZA6NndAP?=
+ =?us-ascii?Q?2A8KRQl+S63VMqREW9R7FdNqvbECiXpFadFcHQWzVzzq+hTpdo/g8KENJS4t?=
+ =?us-ascii?Q?m8BHEVDyNd06ugn/GCmwiiox8OxbtQ3kPM957wSTDNErS5yFtuFHOfyWbxfs?=
+ =?us-ascii?Q?SoaaBV2SpTwSgU9Ax3q5B8hGoVHkYyDX/tOffqY2WXcckjhYrXPdh+9J2SMC?=
+ =?us-ascii?Q?7MuO20frEInwSbwR0Tx2as9pFfLjmIqMAKfnO/qntM/WuGbKQNZuCuArS3iO?=
+ =?us-ascii?Q?nVRuGEonww0u6yxzRS2k7KbuLSa6d2WCbF4VTLPBIVKZpLgqCEY7JlovllQk?=
+ =?us-ascii?Q?6wr45BPKJoErhuSKLatV5NCNIyiTeLMmr1UizPSI3NUwJ6+zgX37yiEhAMRD?=
+ =?us-ascii?Q?VilcEcwkYNpTDVaUhQFYI+8B84y/a1AH4FTfyjOujalGb8qIy8ydH39AZ5Z1?=
+ =?us-ascii?Q?W14ZmTj7vFds1/BrMIafVL/m8PQGTMi1hcxMXK+zQFYQm5/K9ZgkTCjvHc9y?=
+ =?us-ascii?Q?8a0nGLyBxhOZIm0F95o7gcscrEVnVeHLMOID41xm9WczpWmBs3fXNR06rFKN?=
+ =?us-ascii?Q?7b1lsZfM/0ZcIHQ6W8X0VhVqS6ZNDgAlMmdpmsTPPDrwqmFBnVVjmqWrrT8K?=
+ =?us-ascii?Q?rq369XjGkJsbInWDLmIPW5xUrxZ4g2jOdCz36sgH4hWUosBNenppN049OrxY?=
+ =?us-ascii?Q?udfuKqrCagR5Vknzx+6djYcbbtUZ5TKWA8oEUBS3Sy8s8q8VjEBFruREQOjl?=
+ =?us-ascii?Q?WyYijjZGBpElyVeIC7HXQdampz1kBEzKMlOEn1qn0sRtQTfjUlbvCpdWwaGv?=
+ =?us-ascii?Q?RTwMF10z5U5Ew3t/JTJM2+EVcCiNvgBor0FfMvnfemlKVuGFcp3xTZazc8K2?=
+ =?us-ascii?Q?5wc05Vi7IcmY769qGYpTkA+14yGtdQTzkDZZQZagkBSsITcWZco18WZF3SQ8?=
+ =?us-ascii?Q?Dw3k3JvktAlfVfC6esT9fApSOPCJBzOYo52jXu3AsmOdFYaYYXemdwv0umhM?=
+ =?us-ascii?Q?4C4l0sXOFTM5MwXifpOd+RRMWw8D2mkBacAl3/+4QWrW/bmnWVw7GMwCVjb4?=
+ =?us-ascii?Q?uIxYioivXH2B/CReSDzgfdqZ0cHPs9qYZM15/djQH13wVFAthmLD12tRhE2f?=
+ =?us-ascii?Q?JUUNGTHVQDcDIH8KaHgNjL7LAya6gvnhKb+f8gjOe0482czlYrQdwF+k+3D3?=
+ =?us-ascii?Q?RYsJJUjU3A0tK2m6GH0k04JzJsvKHfyfkUAI+1D/UvYLzfNiD598/7yKQBLQ?=
+ =?us-ascii?Q?067Q5YUfqXs=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mL0fAdqDD8Lnk+vNHpR9BxwR2dv4py0mqp5p9+ak0lkk5ZHt5AqqTVgok1KN?=
+ =?us-ascii?Q?jQ7BfxSCyvEsthgra5z+1Fh0Ay2++saACBLLJgc0h3E1X5cCtbpqlE14vQGv?=
+ =?us-ascii?Q?VtXPFmlhVIsjKyQzbyb5WT5nzWbEu9BQJWslFqHbreY3anUafaLtQ62hOIpE?=
+ =?us-ascii?Q?CTSSq5tEK36W2R3zfxiioDgvGhOS4ORYRn8CJlQc+PDC3hoKwxYLmCPaAirV?=
+ =?us-ascii?Q?c8Ajg8/OZKZO/3HwA8vYGyGj+5023BTWZC6xsjszg/7ra3+LyB65LnComF3P?=
+ =?us-ascii?Q?SEd+4Eiraiww6zhJkw0wLS17H3YnnuzjMZciqLoEj7KJO1mAObw0dCAoxZlo?=
+ =?us-ascii?Q?H8lJwCbYeUMg3cQxxfr6il9IkgSpEoyhxPAcZ7+u/ZW66VoHspnqSYZOrZry?=
+ =?us-ascii?Q?rTjg4JHG+hE2yDxuzFtEQJiRBBx7HIi2Cyn9XOsg+iKoRSx/HfVbr+mQDQQW?=
+ =?us-ascii?Q?Fy8f3dRMYXuw22T0vo7wRKYGO6qbISWzTzIT/G9aSvypcFgKJLACxVVuHA6j?=
+ =?us-ascii?Q?Sb1O1MostqHovwNQBh7U8re3zDSrzA1hJ88c+n9ppYRceU7p3M9Dpj+FLKyj?=
+ =?us-ascii?Q?3XdiVOfSZTxBxldgnsTv712JpTrUhsAOj6QRQ9FHPE15PjbDRmysF31f5GA5?=
+ =?us-ascii?Q?fzaUcJQMjCj0QhJyPFDnBrIyUUb4Vm9HPUHP6e9ed1orGZKiuoFruWpk0hDw?=
+ =?us-ascii?Q?uKvXqlJSdiNvXFuY13YryTOttCWiFsia1bgRTFRbkRIfJa2Hb/Jzd5QvE5MZ?=
+ =?us-ascii?Q?pn+Qv3V5Spjf3snv5dRNUaD68ydJKElvyOH4T+ej+E5u4aGQ1gt1leBYJzw2?=
+ =?us-ascii?Q?DByTBhnB7ZGzTOfqkwyvM09p9LSUu1Tq/tJwCG+ZKkUSJ70weB4tjAUAfbPI?=
+ =?us-ascii?Q?T/cPxBgvmwZ1g3Z0H2QgIbzf0414WL6rvj1nJ1FmXll1iZ5aB4d/NdnipR/h?=
+ =?us-ascii?Q?m30W32MJYn8IjqB9DRPx1aA0xgqBWw8hzBhoMjhHtn4YGZMvFwWEtFQdpobW?=
+ =?us-ascii?Q?lo5CplNU5oPp3r/2fr0yTcgBqXGspFFsVautABxnJ0XTMCVziu1jpD+BK8LQ?=
+ =?us-ascii?Q?MLZBAiie4CsoiBmMYWfpww7puzIiKXfv1uETCou4tpv7LBw+yTDMCHG3rYBn?=
+ =?us-ascii?Q?PCJr8z5z9yrAwpWyDzw3pZLvj+BnxurcfPhNe/AmJvo/vXsDjsb96VaIdCWT?=
+ =?us-ascii?Q?rn1BQuxAwmq9K/l4FrgrsTI7zVWu9h7yPqTzS0SQXxwo51PS84FQlSoyM1jE?=
+ =?us-ascii?Q?cOGzJwXExdi6bDutH1KCjwjGPLnKuA29N8S6Am5UDExH2UP+lx1AhWEEq2C/?=
+ =?us-ascii?Q?f3J5ofs5nkssV4ndms+QOaVO99/Lg38FjOiTg3BLdsiOoIeWRgifhR6GiutJ?=
+ =?us-ascii?Q?c40EVNqmWoBs9jzfcYTwE6eMxnx2OnZ1JnnPdyzfIFNf70ksV7ZD4c3saoAQ?=
+ =?us-ascii?Q?9H39c/w1tV/QJgMJmdilB1nEOirGi+CIKZXfvrvZmzCjjWZPNTd6KjPk28ps?=
+ =?us-ascii?Q?qMDVrhWY5Q5jd2Dvry+2GKjkoATupxXbdCwcEqkmQZJaOkHvPVNRvdJkFmom?=
+ =?us-ascii?Q?U6p11sNNndncM10E7/WGAYP/Xb494miw1ZK/y22za2Nb0UeHRG26GjDN57c4?=
+ =?us-ascii?Q?8w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: UedZ9jt2h5O15BrCEIeud8484EJ+6MYaAk6kq/3+g3ntZNC0aGIHfrYEaBc7s4ermyl90nKhDYNIpO5XFIEJjYgKdBl2ig9ZjN0Mmjz+rWO1c/Ls9V8SilRgzHiPxfWebvNsNDrdAETZAV0/+BHYVRNb/ByqgdIW1AENwsC5NaJhHbiIn0NiP0wfveqmapmUlTTytmRbshxqWu1M0wk9t9+kPiJ2mihajBl5UsJWcGnmS/5A0GrDuUv1G+h4Z47u7Xo8T8rWiqVzalee/76FkrRm7VghkQEfxon7ciFuEJnX1Ieq4WQsuPDHI/HCq6tuwKpmYp4JYMlft7X9WB6S5GmhI/jKaYsmRDaqS3xpfCoVonFz3ldnHoecD1I+zm2PaYPapInNtwJq/e2toxg1PoiF5vh68+NRJWBF1e2QcqL0UQIs75GGeuMRHK8UDusSVQ+oIpIlLfCt8DitJLnivulv5RWJCrayaPO/kSDEcMwoXki1F5e0iG6MXwoByXjpYe8EmJ+1etthaaIvw8IP8Vs/fu0HUTDsTlOGkED3XnITwmgnYWniKLflmzTLz2yTylg24Ux9lzmtgdIqsG0zWAtSmYoEdzC8w4z6kZZJBWc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89999ccc-2fc7-4e20-bec3-08ddef824249
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 09:21:29.5200
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tAjFS+zCRBAHAvKgwyfUWRAqGhCVYr71cwgrE26+ThETfkZo50bYQQma1dSTqL2CG6DPEeCiZ5TLKXAeE7BgVyLKayF01YUkD18oyJ29tNI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4969
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-08_06,2025-09-08_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=935 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
+ definitions=main-2509090091
+X-Proofpoint-ORIG-GUID: NU8i7bTJylkUCmbS_rPXFxmKC4KDJL3e
+X-Authority-Analysis: v=2.4 cv=PLMP+eqC c=1 sm=1 tr=0 ts=68bff19e b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=GoEa3M9JfhUA:10 a=2_v4jMvWlZbjAAE9TA8A:9
+ a=CjuIK1q_8ugA:10 cc=ntf awl=host:12084
+X-Proofpoint-GUID: NU8i7bTJylkUCmbS_rPXFxmKC4KDJL3e
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE2MiBTYWx0ZWRfX73Yx0MJYl1Pc
+ u6WqSFsBTdiwykgNsuBhn7WDewRt2gofyCUfH8nZd9a6qVwZMsyyzDzKqS/oo1jbOm3rRf69avS
+ 2mjIdLjk4/RB+uHZqR1X/HFtkVeMaH3sQhow2oqXZUa5DA6b1ns9xW4iWP9NAtQNu5K4Hqc6ukj
+ KTFj7BuGI/8I7Srf9LaLS5Unb7Zy6vBhQ0yspig3tNURComClFjL+uSYaTPK5VwqYLRj0E1cjeb
+ qr26IZObGVdbX0l8shCDcTxZ7PHJz0k26We357vqc5LHqAii25QxxSkOqAOtGZ/oE6Ogtpz2EYm
+ BJbqqcDxRb3yjZk6gVn4kt1zzkRg/NmLsROqupSz6GXvD9FXsnT1NSBxCauLi5ccvsW84LWmyp0
+ JgVIRpH37psyIj5NTVQ18stYJmMQdA==
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250909_131743_049166_9B91E54F 
-X-CRM114-Status: GOOD (  26.89  )
+X-CRM114-CacheID: sfid-20250909_022204_660742_5AB6FB34 
+X-CRM114-Status: GOOD (  15.20  )
+X-Mailman-Approved-At: Tue, 09 Sep 2025 08:17:10 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,101 +250,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Aug 21 2025, Evangelos Petrongonas wrote:
-
-> When KHO (Kexec HandOver) is enabled, it sets up scratch memory regions
-> early during device tree scanning. After kexec, the new kernel
-> exclusively uses this region for memory allocations during boot up to
-> the initialization of the page allocator
+On Mon, Sep 08, 2025 at 07:30:34PM +0200, David Hildenbrand wrote:
+> On 08.09.25 17:35, Lorenzo Stoakes wrote:
+> > On Mon, Sep 08, 2025 at 05:07:57PM +0200, David Hildenbrand wrote:
+> > > On 08.09.25 16:47, Lorenzo Stoakes wrote:
+> > > > On Mon, Sep 08, 2025 at 11:20:11AM -0300, Jason Gunthorpe wrote:
+> > > > > On Mon, Sep 08, 2025 at 03:09:43PM +0100, Lorenzo Stoakes wrote:
+> > > > > > > Perhaps
+> > > > > > >
+> > > > > > > !vma_desc_cowable()
+> > > > > > >
+> > > > > > > Is what many drivers are really trying to assert.
+> > > > > >
+> > > > > > Well no, because:
+> > > > > >
+> > > > > > static inline bool is_cow_mapping(vm_flags_t flags)
+> > > > > > {
+> > > > > > 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+> > > > > > }
+> > > > > >
+> > > > > > Read-only means !CoW.
+> > > > >
+> > > > > What drivers want when they check SHARED is to prevent COW. It is COW
+> > > > > that causes problems for whatever the driver is doing, so calling the
+> > > > > helper cowable and making the test actually right for is a good thing.
+> > > > >
+> > > > > COW of this VMA, and no possibilty to remap/mprotect/fork/etc it into
+> > > > > something that is COW in future.
+> > > >
+> > > > But you can't do that if !VM_MAYWRITE.
+> > > >
+> > > > I mean probably the driver's just wrong and should use is_cow_mapping() tbh.
+> > > >
+> > > > >
+> > > > > Drivers have commonly various things with VM_SHARED to establish !COW,
+> > > > > but if that isn't actually right then lets fix it to be clear and
+> > > > > correct.
+> > > >
+> > > > I think we need to be cautious of scope here :) I don't want to accidentally
+> > > > break things this way.
+> > > >
+> > > > OK I think a sensible way forward - How about I add desc_is_cowable() or
+> > > > vma_desc_cowable() and only set this if I'm confident it's correct?
+> > >
+> > > I'll note that the naming is bad.
+> > >
+> > > Why?
+> > >
+> > > Because the vma_desc is not cowable. The underlying mapping maybe is.
+> >
+> > Right, but the vma_desc desribes a VMA being set up.
+> >
+> > I mean is_cow_mapping(desc->vm_flags) isn't too egregious anyway, so maybe
+> > just use that for that case?
 >
-> However, when booting with EFI, EFI's reserve_regions() uses
-> memblock_remove(0, PHYS_ADDR_MAX) to clear all memory regions before
-> rebuilding them from EFI data. This destroys KHO scratch regions and
-> their flags, thus causing a kernel panic, as there are no scratch
-> memory regions.
->
-> Instead of wholesale removal, iterate through memory regions and only
-> remove non-KHO ones. This preserves KHO scratch regions, which are
-> good known memory, while still allowing EFI to rebuild its memory map.
->
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> ---
-> Changes in v3:
-> 	- Improve the code comments, by stating that the scratch regions are
-> 	good known memory
->
-> Changes in v2:
-> 	- Replace the for loop with for_each_mem_region
-> 	- Fix comment indentation
-> 	- Amend commit message to specify that scratch regions
-> 	are known good regions
->
->  drivers/firmware/efi/efi-init.c | 29 +++++++++++++++++++++++++----
->  1 file changed, 25 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
-> index a00e07b853f2..a65c2d5b9e7b 100644
-> --- a/drivers/firmware/efi/efi-init.c
-> +++ b/drivers/firmware/efi/efi-init.c
-> @@ -12,6 +12,7 @@
->  #include <linux/efi.h>
->  #include <linux/fwnode.h>
->  #include <linux/init.h>
-> +#include <linux/kexec_handover.h>
->  #include <linux/memblock.h>
->  #include <linux/mm_types.h>
->  #include <linux/of.h>
-> @@ -164,12 +165,32 @@ static __init void reserve_regions(void)
->  		pr_info("Processing EFI memory map:\n");
->  
->  	/*
-> -	 * Discard memblocks discovered so far: if there are any at this
-> -	 * point, they originate from memory nodes in the DT, and UEFI
-> -	 * uses its own memory map instead.
-> +	 * Discard memblocks discovered so far except for KHO scratch
-> +	 * regions. Most memblocks at this point originate from memory nodes
-> +	 * in the DT and UEFI uses its own memory map instead. However, if
-> +	 * KHO is enabled, scratch regions, which are good known memory
-> +	 * must be preserved.
->  	 */
->  	memblock_dump_all();
-> -	memblock_remove(0, PHYS_ADDR_MAX);
-> +
-> +	if (is_kho_boot()) {
-> +		struct memblock_region *r;
-> +
-> +		/* Remove all non-KHO regions */
-> +		for_each_mem_region(r) {
-> +			if (!memblock_is_kho_scratch(r)) {
-> +				memblock_remove(r->base, r->size);
-> +				r--;
+> Yes, I don't think we would need another wrapper.
 
-Hmm, this caught me off-guard. I had to do a double take to realize that
-memblock_remove() would decrease memblock.memory.cnt and move the whole
-regions array back. A comment would have been nice here.
+Ack will use this in favour of a wrapper.
 
-But then, I wouldn't want you to do a full resend of the series for this
-minor nitpick. So perhaps whoever is taking this patch can add one when
-applying? Either way is fine though...
+>
+> --
+> Cheers
+>
+> David / dhildenb
+>
 
-Acked-by: Pratyush Yadav <pratyush@kernel.org>
-
-> +			}
-> +		}
-> +	} else {
-> +		/*
-> +		 * KHO is disabled. Discard memblocks discovered so far:
-> +		 * if there are any at this point, they originate from memory
-> +		 * nodes in the DT, and UEFI uses its own memory map instead.
-> +		 */
-> +		memblock_remove(0, PHYS_ADDR_MAX);
-> +	}
->  
->  	for_each_efi_memory_desc(md) {
->  		paddr = md->phys_addr;
-
--- 
-Regards,
-Pratyush Yadav
+Cheers, Lorenzo
 
