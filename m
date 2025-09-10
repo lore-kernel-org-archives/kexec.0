@@ -4,154 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 823DACAC58C
-	for <kexec@archiver.kernel.org>; Wed, 10 Sep 2025 15:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B650ECA101F
+	for <kexec@archiver.kernel.org>; Wed, 10 Sep 2025 16:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ecNQJ8L9OxyjeVCtUGHLNP/hxHpCw7UcmTPbPIc+ph0=; b=U5CPPyFqNBaLiTPf3Pmkc23X5+
-	xEFAzTOiZzqU/scGAao+TsWS0FuVaCh67XLJj8gbyVdx9Oy+UScpc71D6iLyz7f+CWeXMRjv/nE+e
-	ACTeT+thUumczqt0DW3TDoH/U1DaMzsCaaLkARbq4y34KFcjbb+fhFvm5zIj3uLos5Wtw6qxeC4rD
-	RIi5+B2vC5rswgtOa/llnlGPoPaFPTPFGh7NcWB56OvIfBLdB3CXvl3emdTdb6oihqjygd4bYOpge
-	XuHAJiDSm9mkMPETVAlusgxJs0laeZZp3vQu2Uf3/QBThJw8XaqVu1T5/nRtOEb+kp5Z9pKqW9OPO
-	lpL0muaQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=KrTGWU5jgNL2Yex8GuGQCQTTzsuf4kgKWTk1ruEDz8Q=; b=r/fUFbHklfw5ess3we7jp7jdnD
+	LtXj3+X4+T2O5HITXUWjDiMapJ58TJq0bY2faOdevL/BsBCvDP1+aHjDEgQuPVt4r2ky+KNHM/sFX
+	Z9MEiZMYTqbKhSiukkVEia2RaGQIQwRwVhTMNPopxA8aslkHBOHzO6xzQQeAA4mOxyUZtDGMCH+GH
+	1OKpSyS0WKOfip39gcuYbQCbPsi8cYFsLmiciMt2VhubsUnok3rwz4lkGyG3U3RFOWgExzJqD+sf7
+	Kz6nr7ogop1X+F8BTzK7TQVsilEgwM3YHX30+sS5uKcQQpt5CdaPmc0wadd+MPPFRt5eoTqX75AAd
+	jnJzYhVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwNAz-0000000FHmi-1MBG;
-	Wed, 10 Sep 2025 15:56:05 +0000
-Received: from mail-dm6nam11on20622.outbound.protection.outlook.com ([2a01:111:f403:2415::622] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
+	id 1uwNjG-0000000FVP9-0SJJ;
+	Wed, 10 Sep 2025 16:31:30 +0000
+Received: from pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.12.53.23])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwNAw-0000000FHky-2Y5k
+	id 1uwNjE-0000000FVNK-0EXM
 	for kexec@lists.infradead.org;
-	Wed, 10 Sep 2025 15:56:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E/aN/Ap3BHV6pJYwkwKXah7d5/hNMWYKSuLS+rhBZbyspHJk2vDbVi44QxsPJTsq2QO/9aF+dzs1sg8zAuaNFbdMwyq2HGet1JPA3zHMaNzaZxfNV1PyAkBcMAQyxsQbugtsrQIG5ENDdf1zVCLoUR++fM6RUCD2jYX25CZwwwzUs3YnM46yI1Gwpej1ApPcgpxp3N3WNXI+FtWPiYYvCRwlDlbtMuiCM9wIxyGN1IQlLnktW+hziXwsmP+6vs7JnvcVzwT6/50x/iLBPealQtdNq4asnB1zKFskEp5UFo5FgMLe5f0mSM8l2p36QFMK/ZIstZfpdIH5VBcyqpfmhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ecNQJ8L9OxyjeVCtUGHLNP/hxHpCw7UcmTPbPIc+ph0=;
- b=bdHEQMw3VBf7TN7duta9Z/NSavtwLJOEaQJvCNfFw4lXZnBI28h5Y9e6tpYpiPqVJJ7RYPxnKejCxqRXv3qoEmLn7Nz29LUKI9bHTwlkssX6xsP58HDIrmNzey0GJWbemy3WfaRe15dRF5LHS4uYurqU6mShQ94+WTYYDpY3u0WyA9Gz3ztyZ4oG3q+7mIoimqhhvCO2osUviTWfMgAwMYbDpZrhUh9KkMJJORnYHSdGPfmg7ka7UKFpI9Qi6LB196vNC9pCNXING3r0TWyBP7R1Pb6Z45d9JEaAlxZsDgKzGS9ziePmjZyH2Eow2Qu9FcBXkF24FbXoVZCgxhrEDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ecNQJ8L9OxyjeVCtUGHLNP/hxHpCw7UcmTPbPIc+ph0=;
- b=O75m8XPEjYwsRxkE4yHRG/dRu4DAvll5fI9FCbND64IXOZA91f3dbByjYind70N2JC5Fu9i8ZjxCbPFgxoTbU+JiL/8hbt2iEflOYInhrukcnE0bEb7hSNKxHSP0oRGSxIgeb/W92AwXezaOwvUY53maxnO2N8GNeoFCxM/G+w4UhxesUpacsgX6OqbW6ibDnvXE9emV5nQ/L+o3lIHJ5AGYaVydBMlqf07f1Puwnqqbzf+qccOqGKtgDO0UyPJlRoMJuzKkal/TNqAArRh8RXkA/nno5xzZ4ESCU+KztOd5GyZsuL51GBMHucLk1ayF96Oyzw8yLDKCrKb6sTKGpA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by SA1PR12MB9513.namprd12.prod.outlook.com (2603:10b6:806:45c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
- 2025 15:55:49 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 15:55:48 +0000
-Date: Wed, 10 Sep 2025 12:55:46 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Pratyush Yadav <me@yadavpratyush.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Chris Li <chrisl@kernel.org>, Jason Miu <jasonmiu@google.com>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] kho: make sure folio being restored is actually from KHO
-Message-ID: <20250910155546.GB922064@nvidia.com>
-References: <20250910153443.95049-1-pratyush@kernel.org>
- <aMGc-ExhkqwAyY_C@casper.infradead.org>
- <mafs08qimjoez.fsf@yadavpratyush.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mafs08qimjoez.fsf@yadavpratyush.com>
-X-ClientProxiedBy: YT1PR01CA0146.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::25) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	Wed, 10 Sep 2025 16:31:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1757521888; x=1789057888;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KrTGWU5jgNL2Yex8GuGQCQTTzsuf4kgKWTk1ruEDz8Q=;
+  b=VUh/jlCH8CWrKMPifSA6MQuh88EsQ+vshAaeuIQzfBboaQCQEkRLCyXE
+   X4eqFsz6WoQE+ximmxHPDuMaug5tgSReutYQcLJ4CJraCGgFvWXg7/3qZ
+   ivGL1XAvqcVePX1dyB3N8b2djtAT/V1iVK+15mbN/TmeybzH+2Q57lfYe
+   Ngacsra9ajLUapMMy0bVIeLKUOpe39zWF8GCYOlqHLsjgK8SeQ+rDkCf3
+   dnIT0aeX3RVuFYV23jlvhBhrZX9VIIfSVPET67g0ionR2KCdd+skhvXt3
+   MpntFtVywavDFZlbTMb6s358NXUZoALzm5oJhnURzA5n7Oys1Ldmv3l+h
+   Q==;
+X-CSE-ConnectionGUID: h9F3vohiSnSI31kY0ffszA==
+X-CSE-MsgGUID: BLs8tLXxSh+45GlVNn7aoA==
+X-IronPort-AV: E=Sophos;i="6.18,254,1751241600"; 
+   d="scan'208";a="2659304"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:31:24 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:32617]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.37.248:2525] with esmtp (Farcaster)
+ id 03010344-ed65-4286-b33c-177a1cba4abf; Wed, 10 Sep 2025 16:31:24 +0000 (UTC)
+X-Farcaster-Flow-ID: 03010344-ed65-4286-b33c-177a1cba4abf
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Wed, 10 Sep 2025 16:31:23 +0000
+Received: from 80a9970eed1e.amazon.com (10.106.101.45) by
+ EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Wed, 10 Sep 2025 16:31:23 +0000
+From: Justinien Bouron <jbouron@amazon.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Petr Mladek
+	<pmladek@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, "Marcos
+ Paulo de Souza" <mpdesouza@suse.com>, Alexander Graf <graf@amazon.com>,
+	Justinien Bouron <jbouron@amazon.com>, Steven Chen
+	<chenste@linux.microsoft.com>, Yan Zhao <yan.y.zhao@intel.com>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: Gunnar Kudrjavets <gunnarku@amazon.com>
+Subject: [PATCH] kexec_core: Remove superfluous page offset handling in segment loading
+Date: Wed, 10 Sep 2025 09:31:16 -0700
+Message-ID: <20250910163116.49148-1-jbouron@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|SA1PR12MB9513:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8507a99-ff1a-4c50-d87e-08ddf0828267
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?HHJxuWHqfmlvIp0e8jETj5LZWHi4K/ShZtdBGzjQLLd5HPLX3kGEBY5jfytR?=
- =?us-ascii?Q?2VKi3FRcevOiEZkX78nk5PsUFgp38iwrl8Jt/teKu4zM+ab2ghHXmdZCEEsc?=
- =?us-ascii?Q?AWC8/6R9By3p9if29zF8PY7hOCvZWG4GFaHi+rdvTyetRibA88RVUmCtr7Cj?=
- =?us-ascii?Q?fEhKQUJ71yPtxC7aPRIJHABLirz5VRTteRVK5kg02681F7alnd/P/ctAXYpk?=
- =?us-ascii?Q?nsWdr4pSvhMAwwD5ssWCac0F4WWZxlLX8lwRpkJWToSgdxBEFpY7HtzL8dji?=
- =?us-ascii?Q?2wAuKSB5qJyuVwHu31dZYiG+of/QD3K0bWnLVAzoUYIqDgdtVLv8I7CJvQw6?=
- =?us-ascii?Q?Igwhb8XzX9aRE3Xlm02etiB2Ie+A3lzWosn9Q5j3mBisPu1kIbF3xfwXcJ5l?=
- =?us-ascii?Q?zrUbzlw1tO7SnYwlk53gYJ4qzkp4xFAVKXOVCI+mN/tU6tBIOE046SaPS+go?=
- =?us-ascii?Q?H7r1wLRH8AWKcLXFVw1n3kuxWNnTvj/apsw80AyWkJYkPCfuUozx6iMnpVaE?=
- =?us-ascii?Q?/9fHHAt5mllxZtKqsdQpTX6e2icCGs7ckw9at3xc4++N16viCCfgOnwJ9eU8?=
- =?us-ascii?Q?+v6zyFRzaSH+hCLXRWCDTsWpuO450Jsy1RQGqHrmYXAxw+dDCZ4VkC7flws6?=
- =?us-ascii?Q?udwRA8+MiYQfjusn5GR/+feJ/Hs1tR8eHzsr+EuHPmjzLo1O3N2Wpt0eXLUi?=
- =?us-ascii?Q?mUkPehOsQXO92eiSa05eIn6la1RD0LQ9aDZoQmOgdEOgOEvXHHsDClt4XdN/?=
- =?us-ascii?Q?L+bXjjdOg5VYjaxFeEGA+3urALPybb/D9I8eUGCC3se6lQ6sMiB+PSdY77Fj?=
- =?us-ascii?Q?fj0nmxf7yRqapeZr0lGvmDw6wa0GuGLZmNCfxd6r8Ny8N7Sr+P71JXBhnB22?=
- =?us-ascii?Q?96fgF8kL1RMXGqY0mfa8lKznPpf3pleB1kDyiGD3RlaQUPr/bVic4kFwGGlB?=
- =?us-ascii?Q?9+FuA+rSGG4Xr41GRt2jyf2rOIrDihJfeKKVylBopx9jn9e5zb8er5iIKEg0?=
- =?us-ascii?Q?ObJDIRq4LZeUMRG1agcEIROHjvZQOUBNBWzQXWj9zj9nU3gU6+E+RZL/DKs8?=
- =?us-ascii?Q?ZBoOIpHdI02bXDDhwjaS+Ly9rXGoDPfJ1QGMCz6ja25a7uZU1AiQBpclPgYK?=
- =?us-ascii?Q?XlZ8TxR7DkyO2hqj4GB09cxZ4Z658yRm3Z0KzPTrvPAz1d+omdNKaqjLKoZE?=
- =?us-ascii?Q?YCiswhQuBTnTcs5vMOymoq6Q5bmIpuDS1LCJL0jW+Lf6Uqju8Z5syuilActb?=
- =?us-ascii?Q?7fEAf4l8ch3wjZ+8roU/GF4hia7B9XiuzttC+zvnPs8uIV0RSqYjkTNf5HYZ?=
- =?us-ascii?Q?YZPzglzqv4o8pS0Bg1zyS1+fchZf2Lw1l24xxHMaAI7Bj35er6HfmzoXaeTV?=
- =?us-ascii?Q?tCEJKmqZeoLLiuaXEdUY35PaXnWSUyNrYGZoBfgpUnvrxSa3PwzRdWnonxbF?=
- =?us-ascii?Q?l0L04OuVXRg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Oa9x2sqs2y8BofV9H7oBFyi+kFbvfBqpQk5RA1NxT3Z5jDGVI/Wa1TxelPrN?=
- =?us-ascii?Q?1GOo6MQCNCpEfl7kJFQ/9QNxsWce9mh7+2bstWxX7o15hwPL9BObGw7sjvDe?=
- =?us-ascii?Q?9SQlmHpUzTWpMm4/HRLGHwPeHRMcJif0NCL6Xpud+NVEHPlQSefzZ7ZqYMvh?=
- =?us-ascii?Q?u9TeKvfpISr6OU8HTqL/1ghsqTe4PW0l+VB/++KSrnGG93LERDZsywRvDeie?=
- =?us-ascii?Q?3WsR/LeqD1zGXfWDh2o03AFM0EfJJ5P+PosMZt72RpUM8l52VD7CHX3fI/qQ?=
- =?us-ascii?Q?wXUkHYaTX4F0Sv8guUClPHwwOx0/tRADCCEJcxOk0RMyYEZBIVLvmcKkugN5?=
- =?us-ascii?Q?WLA9A6Uioj2Ka9eb91eVw2Ryeg1RkOz3tJfH8h3uZ+TYDXztfcedzv15Jm7x?=
- =?us-ascii?Q?YF+cU/ch41659XPb8QzFSkVI4EzyNqLW9fSToAC93ivxncV4Kmj7sHDk9dpu?=
- =?us-ascii?Q?FKWOryYRVAOm8aosW1S0gD4f5l9OuL7V4gQhdC6hbddb17BFOiPDV57Skqho?=
- =?us-ascii?Q?Xq351xuh9At59krRwWWc9LApnZVMHwO3+b9MOUkSyUS7gd1Qr0eVQPn5WbIC?=
- =?us-ascii?Q?IH8J8QoMyLaqB4/IJ9zjl9SkfNF1uQ0GSB47pfOPL5cF/YA+XZO6fzfSOV5E?=
- =?us-ascii?Q?ltSEE8KI1AxUVJwp3rBAB32BHY0jsigFfx8h36f4F/+2ThPJfy8xR29deZGz?=
- =?us-ascii?Q?MKV90OHkfulPqMY4vYEC/Vus9obpnet/pAl8Gr+rQS91hsUAP/hrELeiYaY7?=
- =?us-ascii?Q?t45w5tnk7zJ9Mbwx2mZyO0OBFTvgxoNoXR6wma+vZP93a0CcS9zxikklgcOw?=
- =?us-ascii?Q?AkRJub4lTtiGUM2IjJR/MJHqIcM78SNMy9DYhQA8UVEkN1NOlEFklDrKC/jF?=
- =?us-ascii?Q?gKu5sJFcaFV6fiyDQkTjgYM32TcgMILZ2TtN4sBE44yqIs7tp8MN0EmnjzK4?=
- =?us-ascii?Q?IlFKSYhGbi2nst01OJJAuN5imcfysGFvmdM74vhUjUuAQYS9AcAhSGQX8X8t?=
- =?us-ascii?Q?qZsJZ3nWJ48mNOcLkW25piZtNC1ZYOolrZRLhfIxSc2344Leh9i/XipsWHHO?=
- =?us-ascii?Q?vjIpC3EmRyD3iQ6cYoj3AtNMyM4150JyvJQn/yjnQXkhqcRs0F2lSoxDIjEd?=
- =?us-ascii?Q?Xbr/6ir7tOPcW6AZOgkojZjcRAWu3LcaP7Kiym6tEsWZSQCF+o6LCEatgp7n?=
- =?us-ascii?Q?kn8/yMKZHrwFtXQWxy5O4Xl5P8HqWdCNo0L7eqW7PFHBZO4iMnjwpPX3iOlD?=
- =?us-ascii?Q?LRYR5plPN31a6cgPn/2XvSSQtvqAFEMuwybn7Y+D5beceuDhQUYMIaBtYkNz?=
- =?us-ascii?Q?8a+bfd5jRU05z30ICXT/ztN5Awb96pkiCi726iPh0sXFb4LtecCcqXjh77+s?=
- =?us-ascii?Q?5xce2d9ZCehTVoGswaeoyr/WmbdqsE52JlRjEH2275wcxyjsU78wc33q916G?=
- =?us-ascii?Q?QSnfFuR81ydY+mLMzNTuBevVL3P5cOP6QeF0ofjkhg2UXSeW9VnfWhqRMuhm?=
- =?us-ascii?Q?eVYP3V/+4Gwd5dq0vWUcz0ZDvqXVOzZNUVVtUPb12bSIDxDXgZZquFhdYWYv?=
- =?us-ascii?Q?TTG/1yYNOcczdMC32Dk=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8507a99-ff1a-4c50-d87e-08ddf0828267
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 15:55:48.2058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WkNeXBh2gzC1m+p3UUelpPsnRmb1I9ty0dWTY6xx4XvTkkvnWL7oyIjTb9RY2Imm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9513
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.106.101.45]
+X-ClientProxiedBy: EX19D031UWC001.ant.amazon.com (10.13.139.241) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250910_085602_748994_6BDFAC6C 
-X-CRM114-Status: GOOD (  25.06  )
+X-CRM114-CacheID: sfid-20250910_093128_156228_7143DF35 
+X-CRM114-Status: UNSURE (   9.89  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -166,66 +95,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 10, 2025 at 05:52:04PM +0200, Pratyush Yadav wrote:
-> On Wed, Sep 10 2025, Matthew Wilcox wrote:
-> 
-> > On Wed, Sep 10, 2025 at 05:34:40PM +0200, Pratyush Yadav wrote:
-> >> +#define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
-> >> +
-> >> +/*
-> >> + * KHO uses page->private, which is an unsigned long, to store page metadata.
-> >> + * Use it to store both the magic and the order.
-> >> + */
-> >> +union kho_page_info {
-> >> +	unsigned long page_private;
-> >> +	struct {
-> >> +		unsigned int order;
-> >> +		unsigned int magic;
-> >> +	};
-> >
-> > KHO is only supported on 64-bit?
-> 
-> Yes. Currently only x86_64 and ARM64. It is mainly for hypervisor live
-> update so there isn't much reason to support it on 32-bit platforms.
+Kexec does not accept segments for which the destination address is not
+page aligned. Therefore there is no need for page offset handling when
+loading segments.
 
-Presumably this will eventually change to use some special coding on the memdesc
-pointer?
+Signed-off-by: Justinien Bouron <jbouron@amazon.com>
+Reviewed-by: Gunnar Kudrjavets <gunnarku@amazon.com>
+---
+ kernel/kexec_core.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-> >> @@ -210,16 +226,16 @@ static void kho_restore_page(struct page *page, unsigned int order)
-> >>  struct folio *kho_restore_folio(phys_addr_t phys)
-> >>  {
-> >>  	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
-> >> -	unsigned long order;
-> >> +	union kho_page_info info;
-> >>  
-> >>  	if (!page)
-> >>  		return NULL;
-> >>  
-> >> -	order = page->private;
-> >> -	if (order > MAX_PAGE_ORDER)
-> >> +	info.page_private = page->private;
-> >> +	if (info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 31203f0bacaf..7d4c9eebea79 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -761,9 +761,7 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ 	while (mbytes) {
+ 		size_t uchunk, mchunk;
+ 
+-		ptr += maddr & ~PAGE_MASK;
+-		mchunk = min_t(size_t, mbytes,
+-				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
+ 		uchunk = min(ubytes, mchunk);
+ 
+ 		if (uchunk) {
+@@ -815,6 +813,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
+ 	mbytes = segment->memsz;
+ 	maddr = segment->mem;
+ 
++
+ 	if (image->segment_cma[idx])
+ 		return kimage_load_cma_segment(image, idx);
+ 
+@@ -840,9 +839,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
+ 		ptr = kmap_local_page(page);
+ 		/* Start with a clear page */
+ 		clear_page(ptr);
+-		ptr += maddr & ~PAGE_MASK;
+-		mchunk = min_t(size_t, mbytes,
+-				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
+ 		uchunk = min(ubytes, mchunk);
+ 
+ 		if (uchunk) {
+@@ -905,9 +902,7 @@ static int kimage_load_crash_segment(struct kimage *image, int idx)
+ 		}
+ 		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
+ 		ptr = kmap_local_page(page);
+-		ptr += maddr & ~PAGE_MASK;
+-		mchunk = min_t(size_t, mbytes,
+-				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
+ 		uchunk = min(ubytes, mchunk);
+ 		if (mchunk > uchunk) {
+ 			/* Zero the trailing part of the page */
+-- 
+2.43.0
 
-All the impossible checks shoudl be WARN_ON()
-
-> >>  		return NULL;
-> >>  
-> >> -	kho_restore_page(page, order);
-> >> +	kho_restore_page(page, info.order);
-> >>  	return page_folio(page);
-> >
-> > This all looks very confused.  Before your patch as well as after it.
-> > I don't see anything in the current KHO code that requires the
-> > phys_addr_t to be order-aligned.
-> 
-> Right, good point. I can send that as a follow up patch. But I think
-> this patch stands on its own without that fix too.
-
-Maybe it is worth adding some KHO_DEBUG kconfig to protect some of
-these extra checks?
-
-phys should be pfn_valid, phys should be aligned, the page should be
-in the right state, order should be valid, etc. All worth checking.
-
-Jason
 
