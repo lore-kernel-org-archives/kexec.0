@@ -4,83 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B650ECA101F
-	for <kexec@archiver.kernel.org>; Wed, 10 Sep 2025 16:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90531CA101F
+	for <kexec@archiver.kernel.org>; Wed, 10 Sep 2025 16:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=KrTGWU5jgNL2Yex8GuGQCQTTzsuf4kgKWTk1ruEDz8Q=; b=r/fUFbHklfw5ess3we7jp7jdnD
-	LtXj3+X4+T2O5HITXUWjDiMapJ58TJq0bY2faOdevL/BsBCvDP1+aHjDEgQuPVt4r2ky+KNHM/sFX
-	Z9MEiZMYTqbKhSiukkVEia2RaGQIQwRwVhTMNPopxA8aslkHBOHzO6xzQQeAA4mOxyUZtDGMCH+GH
-	1OKpSyS0WKOfip39gcuYbQCbPsi8cYFsLmiciMt2VhubsUnok3rwz4lkGyG3U3RFOWgExzJqD+sf7
-	Kz6nr7ogop1X+F8BTzK7TQVsilEgwM3YHX30+sS5uKcQQpt5CdaPmc0wadd+MPPFRt5eoTqX75AAd
-	jnJzYhVA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ssFMi1sJkq3DwLXtFEHozIINPdAKzWOlmS2TKLbZ6EU=; b=jVlfEBGE9bx0tCNy8ALg492Rol
+	Iam70kmDnloDsylcOsEGHqxtVdVWfve2lSDC1JaXp3iWCirpgug5UlmOPwamkSbOcUNX0vF904RP2
+	eJtPfcaMcdM3Kfo8u4XnwhYSMDpLYsq5fD4nlbMU7qsEKViAdGKTe4qQXLQy9uV/FLiJXDcgM9hhT
+	7/dp01yOyfDcAg1MrMMkAdaXXjUuklt8RoSk2dsPjUPr3aNRJNSimUskRwvNJLMur2gZUuWnO8NHC
+	2o0/bi7+gY+8HtuGfW157dd0FkpnjEEpNLlF4tCtkOYHrsyrA0cEBpTwGqEPh6YddWiKe22kRbT3E
+	9mEwAh3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwNjG-0000000FVP9-0SJJ;
-	Wed, 10 Sep 2025 16:31:30 +0000
-Received: from pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.12.53.23])
+	id 1uwO1O-0000000FcGp-1siY;
+	Wed, 10 Sep 2025 16:50:14 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwNjE-0000000FVNK-0EXM
+	id 1uwO1M-0000000FcGL-1L4C
 	for kexec@lists.infradead.org;
-	Wed, 10 Sep 2025 16:31:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1757521888; x=1789057888;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KrTGWU5jgNL2Yex8GuGQCQTTzsuf4kgKWTk1ruEDz8Q=;
-  b=VUh/jlCH8CWrKMPifSA6MQuh88EsQ+vshAaeuIQzfBboaQCQEkRLCyXE
-   X4eqFsz6WoQE+ximmxHPDuMaug5tgSReutYQcLJ4CJraCGgFvWXg7/3qZ
-   ivGL1XAvqcVePX1dyB3N8b2djtAT/V1iVK+15mbN/TmeybzH+2Q57lfYe
-   Ngacsra9ajLUapMMy0bVIeLKUOpe39zWF8GCYOlqHLsjgK8SeQ+rDkCf3
-   dnIT0aeX3RVuFYV23jlvhBhrZX9VIIfSVPET67g0ionR2KCdd+skhvXt3
-   MpntFtVywavDFZlbTMb6s358NXUZoALzm5oJhnURzA5n7Oys1Ldmv3l+h
-   Q==;
-X-CSE-ConnectionGUID: h9F3vohiSnSI31kY0ffszA==
-X-CSE-MsgGUID: BLs8tLXxSh+45GlVNn7aoA==
-X-IronPort-AV: E=Sophos;i="6.18,254,1751241600"; 
-   d="scan'208";a="2659304"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:31:24 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:32617]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.37.248:2525] with esmtp (Farcaster)
- id 03010344-ed65-4286-b33c-177a1cba4abf; Wed, 10 Sep 2025 16:31:24 +0000 (UTC)
-X-Farcaster-Flow-ID: 03010344-ed65-4286-b33c-177a1cba4abf
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Wed, 10 Sep 2025 16:31:23 +0000
-Received: from 80a9970eed1e.amazon.com (10.106.101.45) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Wed, 10 Sep 2025 16:31:23 +0000
-From: Justinien Bouron <jbouron@amazon.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Petr Mladek
-	<pmladek@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, "Marcos
- Paulo de Souza" <mpdesouza@suse.com>, Alexander Graf <graf@amazon.com>,
-	Justinien Bouron <jbouron@amazon.com>, Steven Chen
-	<chenste@linux.microsoft.com>, Yan Zhao <yan.y.zhao@intel.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: Gunnar Kudrjavets <gunnarku@amazon.com>
-Subject: [PATCH] kexec_core: Remove superfluous page offset handling in segment loading
-Date: Wed, 10 Sep 2025 09:31:16 -0700
-Message-ID: <20250910163116.49148-1-jbouron@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	Wed, 10 Sep 2025 16:50:13 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id D0C2843FCF;
+	Wed, 10 Sep 2025 16:50:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB16C4CEEB;
+	Wed, 10 Sep 2025 16:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757523011;
+	bh=ug5CvfYVPJihh5Zy5QREZIKCevb4x/BKaIGi7u0wAkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CPAOgAbmybkyYUUePXHpTFbjK4/sSheXD5Cb30bErD6cxup1wf9xVxlmDMRNMwIRT
+	 USv2axQrbQ9wY+QTzUewNNHgDwGIdgP0EjSPGNTVuC9d0QkPOrgMA92s+XiOFek6X1
+	 PGMz9vUOXTxn0jSQ3m8DaC5UtBYLbIJXCJZ0NwZftg6ovmRECwNzzyDuBU0ehgCApW
+	 EEOuiAPzHvdeIAFmWJxQp2PNt2U3wGDVHlH3skZ/ypc4gZkH9N44g0S0cm0zhGw28r
+	 TpE4NPHIm94DswLhRiL/EjL0BtfMRvLWNDtU8OlRbNqE+QNkJW4kvmOlj4D7+u+QnS
+	 LICDXPxSa2YPw==
+Date: Wed, 10 Sep 2025 11:50:10 -0500
+From: Rob Herring <robh@kernel.org>
+To: Andrey Ryabinin <arbn@yandex-team.com>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>, James Gowans <jgowans@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, Pratyush Yadav <ptyadav@amazon.de>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	David Rientjes <rientjes@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Chris Li <chrisl@kernel.org>, Ashish.Kalra@amd.com,
+	William Tu <witu@nvidia.com>, David Matlack <dmatlack@google.com>,
+	Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] kho: replace KHO FDT with kstate metadata
+Message-ID: <20250910165010.GA223810-robh@kernel.org>
+References: <20250909201446.13138-1-arbn@yandex-team.com>
+ <20250909201446.13138-5-arbn@yandex-team.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.106.101.45]
-X-ClientProxiedBy: EX19D031UWC001.ant.amazon.com (10.13.139.241) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909201446.13138-5-arbn@yandex-team.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250910_093128_156228_7143DF35 
-X-CRM114-Status: UNSURE (   9.89  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250910_095012_385061_974987D7 
+X-CRM114-Status: GOOD (  17.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,62 +88,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Kexec does not accept segments for which the destination address is not
-page aligned. Therefore there is no need for page offset handling when
-loading segments.
+On Tue, Sep 09, 2025 at 10:14:39PM +0200, Andrey Ryabinin wrote:
+> Store KSTATE physical address & size instead of FDT in kho_data.
+> and initialize KSTATE from kho_populate().
+> To be able to use FDT in parallel with KSTATE place FDT
+> address&size into 'struct kho_fdt' and save/restore it using KSTATE.
+> 
+> This finishes wiring KSTATE with KHO, making it fully functional.
+> 
+> Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
+> ---
+>  arch/x86/include/uapi/asm/setup_data.h |  4 +-
+>  arch/x86/kernel/kexec-bzimage64.c      |  6 +--
+>  arch/x86/kernel/setup.c                |  3 +-
+>  drivers/of/fdt.c                       |  6 +--
+>  include/linux/kexec.h                  |  2 +-
+>  include/linux/kstate.h                 |  1 +
+>  kernel/liveupdate/kexec_handover.c     | 60 +++++++++++++++++++++-----
+>  7 files changed, 61 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/x86/include/uapi/asm/setup_data.h b/arch/x86/include/uapi/asm/setup_data.h
+> index 2671c4e1b3a0..844f5b93473f 100644
+> --- a/arch/x86/include/uapi/asm/setup_data.h
+> +++ b/arch/x86/include/uapi/asm/setup_data.h
+> @@ -83,8 +83,8 @@ struct ima_setup_data {
+>   * Locations of kexec handover metadata
+>   */
+>  struct kho_data {
+> -	__u64 fdt_addr;
+> -	__u64 fdt_size;
+> +	__u64 kstate_addr;
+> +	__u64 kstate_size;
+>  	__u64 scratch_addr;
+>  	__u64 scratch_size;
+>  } __attribute__((packed));
 
-Signed-off-by: Justinien Bouron <jbouron@amazon.com>
-Reviewed-by: Gunnar Kudrjavets <gunnarku@amazon.com>
----
- kernel/kexec_core.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Isn't this part of the ABI which you can't just change.
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 31203f0bacaf..7d4c9eebea79 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -761,9 +761,7 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
- 	while (mbytes) {
- 		size_t uchunk, mchunk;
- 
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 
- 		if (uchunk) {
-@@ -815,6 +813,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
- 	mbytes = segment->memsz;
- 	maddr = segment->mem;
- 
-+
- 	if (image->segment_cma[idx])
- 		return kimage_load_cma_segment(image, idx);
- 
-@@ -840,9 +839,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
- 		ptr = kmap_local_page(page);
- 		/* Start with a clear page */
- 		clear_page(ptr);
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 
- 		if (uchunk) {
-@@ -905,9 +902,7 @@ static int kimage_load_crash_segment(struct kimage *image, int idx)
- 		}
- 		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
- 		ptr = kmap_local_page(page);
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 		if (mchunk > uchunk) {
- 			/* Zero the trailing part of the page */
--- 
-2.43.0
-
+Rob
 
