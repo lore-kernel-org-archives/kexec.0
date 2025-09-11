@@ -4,58 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66FA9CA1016
-	for <kexec@archiver.kernel.org>; Thu, 11 Sep 2025 09:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA62ECAC58E
+	for <kexec@archiver.kernel.org>; Thu, 11 Sep 2025 13:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ESVr/PCO5mj3Euf7na2oraMPrefSP5rEhizD9JtmFJg=; b=KybsqQ43p09LyT5a9PWIJBY1+s
-	qLJA1LCxlS6MyhuUNNjuUTrxGrGQXNnqI5XzR1argGyCX6JZQKdntBcORKgOZh6bdLfetL6+RVAzj
-	U0WTeVLZQUABj/U6JuyqhgYme1DRJ5U4TnT2EYwzWtBRCiVOblkFKDdqBt4a375LgqyLAETq58hoz
-	IxZjhQ094EeCjb82fGFhXyjZTWRWt/yJHRhllqqLjWfCHoEHVpj/ncYSu8D5oBeTvrjwrlPG2dMP0
-	cPdw3hH1mCNqRuQjkBg97AYKjO5FZwdx0RPfIWGalsyNvRkYoEArz5n+/DCK5rH8GvePiHGeLgHE6
-	am9shpJQ==;
+	bh=1bgzj1FibOhcu93jpOSuac8l4sB947S6RkPDa3rAbOQ=; b=MO7RfYHiigXQokQU6COZiYIyRw
+	f939ZgMTHNsIXNhX8h74I9Dq9ocyfkMc+QL8M5/Q9NmTPrrhsds83XH0uJSqvHiSFmL3EXzxhO60U
+	Dx2qzJx2CbcvKd1kTjSOZG88QrM2Wq7PGYD4jnbLDwTkXUHU3nsUJYCJd5RdzSlCgbPIk70TG0cNx
+	Cz1fmW2qNCMO7CW4RR9sh1pwZPvq9X1hpNmcxc4HprcEGuZwpsPV92fa98sxhbq9gybkq1xIuxvch
+	TpaXTB6ypJbSIRDKpU+EOkrtjZmpY9tHBG8ujomRE0vEq8JTja3o8SRwIzZDBFvV89Sjj5FtGV5g8
+	pqCz+ekA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwdoT-00000002BFD-29eu;
-	Thu, 11 Sep 2025 09:41:57 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1uwhIF-00000003Ddw-3RjP;
+	Thu, 11 Sep 2025 13:24:55 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwdoP-00000002BDO-0hlX
+	id 1uwhIC-00000003Dd2-3mLf
 	for kexec@lists.infradead.org;
-	Thu, 11 Sep 2025 09:41:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757583710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ESVr/PCO5mj3Euf7na2oraMPrefSP5rEhizD9JtmFJg=;
-	b=auR0wkXT/RpshyyfTBec36ht3is5LRaUFFI/391zaf4kWe/3OkJrUWc/ATu2Fsyp5Uplzf
-	hyfn1sN40oEP4OCnaxkvLHSqKiXFU1dJKrWkuSImEbuKKB0t5fa1+7exxD38jbAMapZhmw
-	c9cF6nT5trIzXAG/uf0jsDl339XMVS4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-573-Iz-BNOapM1ycJmmJ9f-N4g-1; Thu,
- 11 Sep 2025 05:41:46 -0400
-X-MC-Unique: Iz-BNOapM1ycJmmJ9f-N4g-1
-X-Mimecast-MFC-AGG-ID: Iz-BNOapM1ycJmmJ9f-N4g_1757583705
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC3AC1800378;
-	Thu, 11 Sep 2025 09:41:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.78])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 378AE19560BB;
-	Thu, 11 Sep 2025 09:41:42 +0000 (UTC)
-Date: Thu, 11 Sep 2025 17:41:37 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Justinien Bouron <jbouron@amazon.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thu, 11 Sep 2025 13:24:54 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757597093; x=1789133093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+AsJA3fwN7ebjrzACnOVJAO4yIltEC73u1ZO5SGyLdo=;
+  b=nglXQFAA8y1OWgfyUstOC5/7/xIry/AfWiGI3W6buLK2C/jM9q/n56Qw
+   2oNjrut3miHGMQUt3yJVcZZpQR5BMr+MBFYatoczVofXnbE3TzJHDcetR
+   52v0Zc3YYdqCmlqqPLefMPXU8wleX4U3iwDjrOVdGB/O85/4Tn+R6dOAo
+   9sU9GcHzusT+IS1N6pn7BKDTnae6g6eK2d20ex7UkPK0b3JNglG6QKw+D
+   2+rwDAqxg1befLN4O/rSgb/MWODiIVH7S/fYKQVztQijjy7zCQATfRFH9
+   neBwwm5MzE2IYxDmAMoIuN9wP1NC4F7l+qzA2kcSim+S9UP9JPBpC4Xun
+   Q==;
+X-CSE-ConnectionGUID: pVC/cXuyRxSof3VznUdwCA==
+X-CSE-MsgGUID: YZKTxH+1SEWT7fySRObMMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="63753558"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="63753558"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 06:24:51 -0700
+X-CSE-ConnectionGUID: MR/LBW95QSWzZ6cAFa+EDg==
+X-CSE-MsgGUID: qie/tJ+bRQy6g6/ytI3+2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,257,1751266800"; 
+   d="scan'208";a="173763974"
+Received: from lkp-server02.sh.intel.com (HELO eb5fdfb2a9b7) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 11 Sep 2025 06:24:47 -0700
+Received: from kbuild by eb5fdfb2a9b7 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uwhI3-0000Lu-13;
+	Thu, 11 Sep 2025 13:24:43 +0000
+Date: Thu, 11 Sep 2025 21:24:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Justinien Bouron <jbouron@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
 	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Petr Mladek <pmladek@suse.com>,
 	Mario Limonciello <mario.limonciello@amd.com>,
@@ -63,20 +70,21 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Alexander Graf <graf@amazon.com>,
 	Steven Chen <chenste@linux.microsoft.com>,
 	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
 	Gunnar Kudrjavets <gunnarku@amazon.com>
 Subject: Re: [PATCH] kexec_core: Remove superfluous page offset handling in
  segment loading
-Message-ID: <aMKZUY/zg31qN+68@MiWiFi-R3L-srv>
+Message-ID: <202509112118.1NElSKNk-lkp@intel.com>
 References: <20250910163116.49148-1-jbouron@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20250910163116.49148-1-jbouron@amazon.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250911_024153_277645_1FC757F4 
-X-CRM114-Status: GOOD (  18.49  )
+X-CRM114-CacheID: sfid-20250911_062452_980634_C8AB2333 
+X-CRM114-Status: GOOD (  12.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,84 +99,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/10/25 at 09:31am, Justinien Bouron wrote:
-> Kexec does not accept segments for which the destination address is not
-> page aligned. Therefore there is no need for page offset handling when
-> loading segments.
+Hi Justinien,
 
-Do you mean we will adjust the memsz and buf_align to PAGE_SIZE aligned
-in kexec_add_buffer()? That better be explained in log.
+kernel test robot noticed the following build warnings:
 
-int kexec_add_buffer(struct kexec_buf *kbuf)
-{
-	......
-	/* Ensure minimum alignment needed for segments. */
-        kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
-        kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
-        kbuf->cma = NULL;
-	......
-}
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on linus/master v6.17-rc5 next-20250911]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> Signed-off-by: Justinien Bouron <jbouron@amazon.com>
-> Reviewed-by: Gunnar Kudrjavets <gunnarku@amazon.com>
-> ---
->  kernel/kexec_core.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 31203f0bacaf..7d4c9eebea79 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -761,9 +761,7 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
->  	while (mbytes) {
->  		size_t uchunk, mchunk;
->  
-> -		ptr += maddr & ~PAGE_MASK;
-> -		mchunk = min_t(size_t, mbytes,
-> -				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
+url:    https://github.com/intel-lab-lkp/linux/commits/Justinien-Bouron/kexec_core-Remove-superfluous-page-offset-handling-in-segment-loading/20250911-003354
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250910163116.49148-1-jbouron%40amazon.com
+patch subject: [PATCH] kexec_core: Remove superfluous page offset handling in segment loading
+config: x86_64-buildonly-randconfig-004-20250911 (https://download.01.org/0day-ci/archive/20250911/202509112118.1NElSKNk-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250911/202509112118.1NElSKNk-lkp@intel.com/reproduce)
 
-I am not so eager to remove it as keeping it makes a little sense on
-defensive programming. Surely, I am not opposing it as it's truly not
-necessary for now.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509112118.1NElSKNk-lkp@intel.com/
 
->  		uchunk = min(ubytes, mchunk);
->  
->  		if (uchunk) {
-> @@ -815,6 +813,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
->  	mbytes = segment->memsz;
->  	maddr = segment->mem;
->  
-> +
->  	if (image->segment_cma[idx])
->  		return kimage_load_cma_segment(image, idx);
->  
-> @@ -840,9 +839,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
->  		ptr = kmap_local_page(page);
->  		/* Start with a clear page */
->  		clear_page(ptr);
-> -		ptr += maddr & ~PAGE_MASK;
-> -		mchunk = min_t(size_t, mbytes,
-> -				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
->  		uchunk = min(ubytes, mchunk);
->  
->  		if (uchunk) {
-> @@ -905,9 +902,7 @@ static int kimage_load_crash_segment(struct kimage *image, int idx)
->  		}
->  		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
->  		ptr = kmap_local_page(page);
-> -		ptr += maddr & ~PAGE_MASK;
-> -		mchunk = min_t(size_t, mbytes,
-> -				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
->  		uchunk = min(ubytes, mchunk);
->  		if (mchunk > uchunk) {
->  			/* Zero the trailing part of the page */
-> -- 
-> 2.43.0
-> 
-> 
+All warnings (new ones prefixed by >>):
 
+>> kernel/kexec_core.c:745:16: warning: variable 'maddr' set but not used [-Wunused-but-set-variable]
+     745 |         unsigned long maddr;
+         |                       ^
+   1 warning generated.
+
+
+vim +/maddr +745 kernel/kexec_core.c
+
+2965faa5e03d1e Dave Young       2015-09-09  739  
+07d24902977e47 Alexander Graf   2025-06-10  740  static int kimage_load_cma_segment(struct kimage *image, int idx)
+07d24902977e47 Alexander Graf   2025-06-10  741  {
+07d24902977e47 Alexander Graf   2025-06-10  742  	struct kexec_segment *segment = &image->segment[idx];
+07d24902977e47 Alexander Graf   2025-06-10  743  	struct page *cma = image->segment_cma[idx];
+07d24902977e47 Alexander Graf   2025-06-10  744  	char *ptr = page_address(cma);
+07d24902977e47 Alexander Graf   2025-06-10 @745  	unsigned long maddr;
+07d24902977e47 Alexander Graf   2025-06-10  746  	size_t ubytes, mbytes;
+07d24902977e47 Alexander Graf   2025-06-10  747  	int result = 0;
+07d24902977e47 Alexander Graf   2025-06-10  748  	unsigned char __user *buf = NULL;
+07d24902977e47 Alexander Graf   2025-06-10  749  	unsigned char *kbuf = NULL;
+07d24902977e47 Alexander Graf   2025-06-10  750  
+07d24902977e47 Alexander Graf   2025-06-10  751  	if (image->file_mode)
+07d24902977e47 Alexander Graf   2025-06-10  752  		kbuf = segment->kbuf;
+07d24902977e47 Alexander Graf   2025-06-10  753  	else
+07d24902977e47 Alexander Graf   2025-06-10  754  		buf = segment->buf;
+07d24902977e47 Alexander Graf   2025-06-10  755  	ubytes = segment->bufsz;
+07d24902977e47 Alexander Graf   2025-06-10  756  	mbytes = segment->memsz;
+07d24902977e47 Alexander Graf   2025-06-10  757  	maddr = segment->mem;
+07d24902977e47 Alexander Graf   2025-06-10  758  
+07d24902977e47 Alexander Graf   2025-06-10  759  	/* Then copy from source buffer to the CMA one */
+07d24902977e47 Alexander Graf   2025-06-10  760  	while (mbytes) {
+07d24902977e47 Alexander Graf   2025-06-10  761  		size_t uchunk, mchunk;
+07d24902977e47 Alexander Graf   2025-06-10  762  
+b4cdefb6ef1453 Justinien Bouron 2025-09-10  763  		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
+07d24902977e47 Alexander Graf   2025-06-10  764  		uchunk = min(ubytes, mchunk);
+07d24902977e47 Alexander Graf   2025-06-10  765  
+07d24902977e47 Alexander Graf   2025-06-10  766  		if (uchunk) {
+07d24902977e47 Alexander Graf   2025-06-10  767  			/* For file based kexec, source pages are in kernel memory */
+07d24902977e47 Alexander Graf   2025-06-10  768  			if (image->file_mode)
+07d24902977e47 Alexander Graf   2025-06-10  769  				memcpy(ptr, kbuf, uchunk);
+07d24902977e47 Alexander Graf   2025-06-10  770  			else
+07d24902977e47 Alexander Graf   2025-06-10  771  				result = copy_from_user(ptr, buf, uchunk);
+07d24902977e47 Alexander Graf   2025-06-10  772  			ubytes -= uchunk;
+07d24902977e47 Alexander Graf   2025-06-10  773  			if (image->file_mode)
+07d24902977e47 Alexander Graf   2025-06-10  774  				kbuf += uchunk;
+07d24902977e47 Alexander Graf   2025-06-10  775  			else
+07d24902977e47 Alexander Graf   2025-06-10  776  				buf += uchunk;
+07d24902977e47 Alexander Graf   2025-06-10  777  		}
+07d24902977e47 Alexander Graf   2025-06-10  778  
+07d24902977e47 Alexander Graf   2025-06-10  779  		if (result) {
+07d24902977e47 Alexander Graf   2025-06-10  780  			result = -EFAULT;
+07d24902977e47 Alexander Graf   2025-06-10  781  			goto out;
+07d24902977e47 Alexander Graf   2025-06-10  782  		}
+07d24902977e47 Alexander Graf   2025-06-10  783  
+07d24902977e47 Alexander Graf   2025-06-10  784  		ptr    += mchunk;
+07d24902977e47 Alexander Graf   2025-06-10  785  		maddr  += mchunk;
+07d24902977e47 Alexander Graf   2025-06-10  786  		mbytes -= mchunk;
+07d24902977e47 Alexander Graf   2025-06-10  787  
+07d24902977e47 Alexander Graf   2025-06-10  788  		cond_resched();
+07d24902977e47 Alexander Graf   2025-06-10  789  	}
+07d24902977e47 Alexander Graf   2025-06-10  790  
+07d24902977e47 Alexander Graf   2025-06-10  791  	/* Clear any remainder */
+07d24902977e47 Alexander Graf   2025-06-10  792  	memset(ptr, 0, mbytes);
+07d24902977e47 Alexander Graf   2025-06-10  793  
+07d24902977e47 Alexander Graf   2025-06-10  794  out:
+07d24902977e47 Alexander Graf   2025-06-10  795  	return result;
+07d24902977e47 Alexander Graf   2025-06-10  796  }
+07d24902977e47 Alexander Graf   2025-06-10  797  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
