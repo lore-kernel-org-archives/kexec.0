@@ -4,82 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23A1CCAC59D
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3AD3CAC59F
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pePLUMNa380skWZ7luqeNYuVXr6xGvhkxPkdStUqzL8=; b=Ro8Mt6jPGiPvTc3Sch4G81Fjfj
-	BuhMSbb/HIaTRk/FDFhIKnF/bLoGNY/gGMPn+qgHBHKTV2kIjV2It5mSPwotBQTcdbsR/byJpEgj7
-	sgn6Vi5TfcfioRr5u/OogLaXxj2ABmQvz3eh+cSFx7aZ9+4h1M5c98WgT/rI994Ng6RUopXsDqnTo
-	tkArEyPlHO2CHDs3stj0WUxKwrl3SIDzFRsH9ZLeGpGPmdXMM0DPeFhRV+5oeJ2uIM7i/tEsCtiqX
-	8GIa95zqyYbrbeqF3XM3yhqicIMgXXlzcsFp0eVJFDLONhAMYeiQo8xoIU1lA0zbLhOWkb+lsuM0g
-	050zwVTw==;
+	bh=C9OZHv6l97MqIsXfPxgJwmp3fJXxpsxaT+6E3H63F4A=; b=SMD1CIMQjzsDefJrzK+Kxhz0sL
+	MGyanNg/URCU546y0TC6jfumtJTdhdNeP7KGywxU9ZpfM1u8xRp8OfMIfaQmHIHTHxoFkB8ifn9BI
+	FR9jELoeNLQabqPJjFq2+wIIA6OxuNKcm8jFny2sx4Pa0MoLQOhVIN25Ln4YkpPbeDyJGFPMC23pj
+	nJk9doYDXw7CzqniFAD+28DEabRsn+A+Qk2W98C4P+1K15wrJMe8PzJULAbjuGpdM6GwTKirObrc+
+	rvf7i44kodmhc12sOfrRfbkEwXy2DZHl6uxG9SY/sf3p/qWspsah2fYvrGc3ElMzXr3KlgX0BR9yc
+	JSQzv3/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uybxe-00000008vbk-3S4j;
-	Tue, 16 Sep 2025 20:07:34 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1uybxj-00000008vhz-0UDm;
+	Tue, 16 Sep 2025 20:07:39 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwcjd-00000001pzr-33wq
+	id 1uwcpI-00000001sDD-3Rx6
 	for kexec@lists.infradead.org;
-	Thu, 11 Sep 2025 08:32:55 +0000
+	Thu, 11 Sep 2025 08:38:46 +0000
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E82216860D;
-	Thu, 11 Sep 2025 08:32:49 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9E8A93F958;
+	Thu, 11 Sep 2025 08:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757579570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1757579922; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pePLUMNa380skWZ7luqeNYuVXr6xGvhkxPkdStUqzL8=;
-	b=g69g7tVggGA4ICLcQNCp2a7FDFhEJgYZx+rlhxptW3OatO+qLAsjc1gwFiT3lagr6ckCae
-	W/ELmYo2UvyoKHg55pepNIQTqKprdkRGz8wGK2RCoVMTIvYZ7hOjyPCUfmPF892jrcts8m
-	6yQx2w5csZ75W+co3a197Outu6bRzj8=
+	bh=C9OZHv6l97MqIsXfPxgJwmp3fJXxpsxaT+6E3H63F4A=;
+	b=xB4gv7V39AjvzZqhbFvpMeDM5nwbiNwlcCmMOJwTz+PdsznaXJuTdLn3SoDQMoeUWdkeii
+	1r2pEaTWog+deAhwvgwTELQPnF8oZ0yYguW4upel7rfdVE+3wrH3qFra+HpwdHuYteaBSS
+	arDvuQko9RTMU9ux7Cb1QQtSWsvsur4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757579570;
+	s=susede2_ed25519; t=1757579922;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pePLUMNa380skWZ7luqeNYuVXr6xGvhkxPkdStUqzL8=;
-	b=0Kn9GhCxwfH7UtNWm0rPiTVf56F7jJTb27XMxMZrnkmLNlf+ZBZNmnvPfhGPo2lW5NDk33
-	Sh850po/Fb1oOjBA==
-Authentication-Results: smtp-out2.suse.de;
+	bh=C9OZHv6l97MqIsXfPxgJwmp3fJXxpsxaT+6E3H63F4A=;
+	b=PrOFG9bhllLqFULElo/ImR0TtrXr4AVrHSKP1NkH/s/biYgBBErxRpzuzCM3a8Sfmolf0X
+	olWF0zUGczMgn/Ag==
+Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757579569; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1757579922; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pePLUMNa380skWZ7luqeNYuVXr6xGvhkxPkdStUqzL8=;
-	b=Rlw8/zRpNMaso5w9hJU5rsFvLwdqP79gThQ0ptKrbOk16/q7H+vryA9mjmyFasd5sko7gs
-	kv2NB3QC3scH9aY6Yti/UmBGb0kXexhPBDR988HTBztTRbzI55KnYlKO3eIddsjqaZcBgT
-	EFQBO91Cut+OCVyQ+KCEaNZyRP2OCtk=
+	bh=C9OZHv6l97MqIsXfPxgJwmp3fJXxpsxaT+6E3H63F4A=;
+	b=xB4gv7V39AjvzZqhbFvpMeDM5nwbiNwlcCmMOJwTz+PdsznaXJuTdLn3SoDQMoeUWdkeii
+	1r2pEaTWog+deAhwvgwTELQPnF8oZ0yYguW4upel7rfdVE+3wrH3qFra+HpwdHuYteaBSS
+	arDvuQko9RTMU9ux7Cb1QQtSWsvsur4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757579569;
+	s=susede2_ed25519; t=1757579922;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pePLUMNa380skWZ7luqeNYuVXr6xGvhkxPkdStUqzL8=;
-	b=10BqmkcKUZL1Wc7BX4XLQc3Xzt89ZfORi8DPbmWNfCdmEsWQqWW8TCaGQojxjk/Owp6q9B
-	PFZSurPaXwnOuJBQ==
+	bh=C9OZHv6l97MqIsXfPxgJwmp3fJXxpsxaT+6E3H63F4A=;
+	b=PrOFG9bhllLqFULElo/ImR0TtrXr4AVrHSKP1NkH/s/biYgBBErxRpzuzCM3a8Sfmolf0X
+	olWF0zUGczMgn/Ag==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C178813974;
-	Thu, 11 Sep 2025 08:32:49 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8EE661372E;
+	Thu, 11 Sep 2025 08:38:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0sg1LzGJwmhDcQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 11 Sep 2025 08:32:49 +0000
+	id RzXXIpKKwmiAcwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 11 Sep 2025 08:38:42 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3E12AA0A2D; Thu, 11 Sep 2025 10:32:49 +0200 (CEST)
-Date: Thu, 11 Sep 2025 10:32:49 +0200
+	id 4D7CAA0A2D; Thu, 11 Sep 2025 10:38:42 +0200 (CEST)
+Date: Thu, 11 Sep 2025 10:38:42 +0200
 From: Jan Kara <jack@suse.cz>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -109,14 +109,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org, 
 	ntfs3@lists.linux.dev, kexec@lists.infradead.org, kasan-dev@googlegroups.com, 
 	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 01/16] mm/shmem: update shmem to use mmap_prepare
-Message-ID: <4lfedpbfjq6yexryq4jmdoycky762ewmw2thjm2h6wzgqda46a@p3wzpxlhe7ka>
+Subject: Re: [PATCH v2 04/16] relay: update relay to use mmap_prepare
+Message-ID: <q5kr5klayp7wcdv5535etvhfcmsftf2h5pi2nhxjpxsyu4h6qt@e6fidg7kolk2>
 References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
- <c328d14480808cb0e136db8090f2a203ade72233.1757534913.git.lorenzo.stoakes@oracle.com>
+ <3e34bb15a386d64e308c897ea1125e5e24fc6fa4.1757534913.git.lorenzo.stoakes@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c328d14480808cb0e136db8090f2a203ade72233.1757534913.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <3e34bb15a386d64e308c897ea1125e5e24fc6fa4.1757534913.git.lorenzo.stoakes@oracle.com>
 X-Spamd-Result: default: False [-2.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -140,10 +140,10 @@ X-Spamd-Result: default: False [-2.30 / 50.00];
 	RCVD_TLS_LAST(0.00)[];
 	TO_MATCH_ENVRCPT_SOME(0.00)[];
 	RCPT_COUNT_GT_50(0.00)[59];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,oracle.com:email,suse.com:email]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250911_013254_059036_B18870CC 
-X-CRM114-Status: GOOD (  22.16  )
+X-CRM114-CacheID: sfid-20250911_013845_157101_B1C9FC89 
+X-CRM114-Status: GOOD (  25.11  )
 X-Mailman-Approved-At: Tue, 16 Sep 2025 13:07:20 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -159,10 +159,10 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed 10-09-25 21:21:56, Lorenzo Stoakes wrote:
-> This simply assigns the vm_ops so is easily updated - do so.
+On Wed 10-09-25 21:21:59, Lorenzo Stoakes wrote:
+> It is relatively trivial to update this code to use the f_op->mmap_prepare
+> hook in favour of the deprecated f_op->mmap hook, so do so.
 > 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > Reviewed-by: David Hildenbrand <david@redhat.com>
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
@@ -173,43 +173,83 @@ Reviewed-by: Jan Kara <jack@suse.cz>
 								Honza
 
 > ---
->  mm/shmem.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  kernel/relay.c | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 45e7733d6612..990e33c6a776 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2938,16 +2938,17 @@ int shmem_lock(struct file *file, int lock, struct ucounts *ucounts)
->  	return retval;
+> diff --git a/kernel/relay.c b/kernel/relay.c
+> index 8d915fe98198..e36f6b926f7f 100644
+> --- a/kernel/relay.c
+> +++ b/kernel/relay.c
+> @@ -72,17 +72,18 @@ static void relay_free_page_array(struct page **array)
 >  }
 >  
-> -static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
-> +static int shmem_mmap_prepare(struct vm_area_desc *desc)
+>  /**
+> - *	relay_mmap_buf: - mmap channel buffer to process address space
+> - *	@buf: relay channel buffer
+> - *	@vma: vm_area_struct describing memory to be mapped
+> + *	relay_mmap_prepare_buf: - mmap channel buffer to process address space
+> + *	@buf: the relay channel buffer
+> + *	@desc: describing what to map
+>   *
+>   *	Returns 0 if ok, negative on error
+>   *
+>   *	Caller should already have grabbed mmap_lock.
+>   */
+> -static int relay_mmap_buf(struct rchan_buf *buf, struct vm_area_struct *vma)
+> +static int relay_mmap_prepare_buf(struct rchan_buf *buf,
+> +				  struct vm_area_desc *desc)
 >  {
-> +	struct file *file = desc->file;
->  	struct inode *inode = file_inode(file);
+> -	unsigned long length = vma->vm_end - vma->vm_start;
+> +	unsigned long length = vma_desc_size(desc);
 >  
->  	file_accessed(file);
->  	/* This is anonymous shared memory if it is unlinked at the time of mmap */
->  	if (inode->i_nlink)
-> -		vma->vm_ops = &shmem_vm_ops;
-> +		desc->vm_ops = &shmem_vm_ops;
->  	else
-> -		vma->vm_ops = &shmem_anon_vm_ops;
-> +		desc->vm_ops = &shmem_anon_vm_ops;
+>  	if (!buf)
+>  		return -EBADF;
+> @@ -90,9 +91,9 @@ static int relay_mmap_buf(struct rchan_buf *buf, struct vm_area_struct *vma)
+>  	if (length != (unsigned long)buf->chan->alloc_size)
+>  		return -EINVAL;
+>  
+> -	vma->vm_ops = &relay_file_mmap_ops;
+> -	vm_flags_set(vma, VM_DONTEXPAND);
+> -	vma->vm_private_data = buf;
+> +	desc->vm_ops = &relay_file_mmap_ops;
+> +	desc->vm_flags |= VM_DONTEXPAND;
+> +	desc->private_data = buf;
+>  
 >  	return 0;
 >  }
+> @@ -749,16 +750,16 @@ static int relay_file_open(struct inode *inode, struct file *filp)
+>  }
 >  
-> @@ -5217,7 +5218,7 @@ static const struct address_space_operations shmem_aops = {
+>  /**
+> - *	relay_file_mmap - mmap file op for relay files
+> - *	@filp: the file
+> - *	@vma: the vma describing what to map
+> + *	relay_file_mmap_prepare - mmap file op for relay files
+> + *	@desc: describing what to map
+>   *
+> - *	Calls upon relay_mmap_buf() to map the file into user space.
+> + *	Calls upon relay_mmap_prepare_buf() to map the file into user space.
+>   */
+> -static int relay_file_mmap(struct file *filp, struct vm_area_struct *vma)
+> +static int relay_file_mmap_prepare(struct vm_area_desc *desc)
+>  {
+> -	struct rchan_buf *buf = filp->private_data;
+> -	return relay_mmap_buf(buf, vma);
+> +	struct rchan_buf *buf = desc->file->private_data;
+> +
+> +	return relay_mmap_prepare_buf(buf, desc);
+>  }
+>  
+>  /**
+> @@ -1006,7 +1007,7 @@ static ssize_t relay_file_read(struct file *filp,
+>  const struct file_operations relay_file_operations = {
+>  	.open		= relay_file_open,
+>  	.poll		= relay_file_poll,
+> -	.mmap		= relay_file_mmap,
+> +	.mmap_prepare	= relay_file_mmap_prepare,
+>  	.read		= relay_file_read,
+>  	.release	= relay_file_release,
 >  };
->  
->  static const struct file_operations shmem_file_operations = {
-> -	.mmap		= shmem_mmap,
-> +	.mmap_prepare	= shmem_mmap_prepare,
->  	.open		= shmem_file_open,
->  	.get_unmapped_area = shmem_get_unmapped_area,
->  #ifdef CONFIG_TMPFS
 > -- 
 > 2.51.0
 > 
