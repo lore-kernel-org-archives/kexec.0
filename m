@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11CF4CAC597
-	for <kexec@archiver.kernel.org>; Mon, 15 Sep 2025 14:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90679CAC597
+	for <kexec@archiver.kernel.org>; Mon, 15 Sep 2025 14:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Pxnt3sHwAQpyUbxOwOsUzgo5O1xyk2XabDAUUNgLXds=; b=lCrSomske5i/10SyJXT6cw80P9
-	HsODGF2B1B9/6V6gdm12faszdI7CzUEITWq6VgfdSX1kSKvMOVDxosIyJkXXmVu12AHHbRJb5noAB
-	+NOFl3RRmcRAQbdiIVQZ+EPSOL1Yzil3UuGaqcsgWNZPnaNVZ6NIccxlxcAUHOc9iPSiskyKnfxA8
-	TuMD0aBus3tgWgFBdtHSoYcVQjkNH4af2Uqa4iIM+Rs99FiRNjQetbvv9xAa72UUXMdjFVEluCoac
-	7Rg4GGvI3jq8mGf1C1tSU/h98MAAtQRniVFvp+mKOJ0VZzowfVSZqGWdEd5LMeGv1zIEDr+o1xZYU
-	VyOvs6mQ==;
+	bh=Xy5GXthPruk62ZFe8cTV3mdpr8J0Bk8I8JUuAq9hXaQ=; b=BqzsVO4NVuWxt3BRYFgqxa+fbJ
+	Cj5gkwmX0xfVg/mQQqmVD91yCZ3Hbw0QGsIBdC5Joxk4v1/SwckKyHIo1eBy0scted51P/7fztBME
+	92onOpQU6NqxAcdzSYBqO9toDME8F/TR0GW1Iq3oVRtYZE0V68b9UYQ0bDtGk63HPuC9kSOUhj212
+	Fbm2bUNn4Sy3jmCrZfqNoGiSZxfg7e9Zz29wE+gKDT9Toz0omAAwAEvY1Fx8CtzkpsSOyw3zd08jP
+	s5VCJuIeB4lqItn3bT1ItvCUonxs0gerAgK58OgCK2vpgR4VYfJlzCjJR5MqysPK5Mqzi6BfMd9j8
+	Qe+Ey0zA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uy9sI-00000004b8a-46fZ;
-	Mon, 15 Sep 2025 14:08:10 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1uy9wc-00000004d5p-34Nl;
+	Mon, 15 Sep 2025 14:12:38 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uy9sH-00000004b7h-1kqb
+	id 1uy9wa-00000004d4n-0Lg3
 	for kexec@lists.infradead.org;
-	Mon, 15 Sep 2025 14:08:09 +0000
+	Mon, 15 Sep 2025 14:12:37 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id C12C46023F;
-	Mon, 15 Sep 2025 14:08:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93B3BC4CEF1;
-	Mon, 15 Sep 2025 14:08:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4FF3043EAA;
+	Mon, 15 Sep 2025 14:12:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C51C4CEF7;
+	Mon, 15 Sep 2025 14:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757945288;
-	bh=h50qQh38duU1m6UIFJf7kQKicDE1Q8M4KDLHwbgBOf8=;
+	s=k20201202; t=1757945555;
+	bh=7vkrO2WxsSWGdp6lM9Hcz4HCTPOoXFcwzPiEHHmzBQA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NPNNM2K5+B1b/SGk0biF3/sOCzrwdCGam8qGKQHN+sks0w9l8kVUKoPjqOjSLiFWS
-	 2Kr+U43tOamkUeEMzbHOtI4pmdBkDOAjZ1TIi0djoYjB3zPh6LyuRjqwO7ZwrBJFqA
-	 /Gj13YwN9YfxvmHRe412aU6eX2AsYpzT5f5WMy/7jNaL9tvMUllEfmqj3TY74AqKpz
-	 oi3AEtwgKPN1k2cUpXB+CCBwz9fNLonEJvXs3vZ50hYxlESkNOp9tbnNyUyZ4ksghJ
-	 Rchlx7gZR8ShmyvcSHwDa5Fw6FKvXyMxd1GTSQe+POyeTUnhCdELwE/nLGFz2pcduw
-	 M8mwbbGO9VV3A==
-Date: Mon, 15 Sep 2025 17:08:00 +0300
+	b=Xu/aNln+imqUsri9j70nV1KvIF4p98dag6M1lNrYGxFUCD6+B9Q9QdE+IbvcpraDj
+	 +tvp2RSzHST/mVvGyQn8g8yRaufswSezFjAc4r0HllLrMgfd/7TBLoajKncb+rOgnx
+	 yf07xYdO5umarJHmhwO/k1CpW/xc7Regd+H6FDUHfeGUpyQiv7VCYgn3gZfQSlySgg
+	 jo9tLBPVco4L9uJ32BP50/ILm8XYr79T7+QRJ+dL7fplFJsRWgRZAlnTz+9afjJrA5
+	 3xlojUa5SVh4qtR6CZGxV/bxvIjXFPfqfcTczB+NwgfPFp4F4u0eDokpq/HrcukpXn
+	 ggk/7yST2yjAQ==
+Date: Mon, 15 Sep 2025 17:12:27 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
+To: Pratyush Yadav <me@yadavpratyush.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
 	Changyuan Lyu <changyuanl@google.com>, Chris Li <chrisl@kernel.org>,
 	Jason Gunthorpe <jgg@nvidia.com>,
@@ -54,14 +55,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 1/2] kho: add support for preserving vmalloc
  allocations
-Message-ID: <aMgdwE83dKdT1K7L@kernel.org>
+Message-ID: <aMgey9qEC_XUejXm@kernel.org>
 References: <20250908103528.2179934-1-rppt@kernel.org>
  <20250908103528.2179934-2-rppt@kernel.org>
  <mafs0ldmon784.fsf@kernel.org>
+ <mafs0ldmnlmq0.fsf@yadavpratyush.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mafs0ldmon784.fsf@kernel.org>
+In-Reply-To: <mafs0ldmnlmq0.fsf@yadavpratyush.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250915_071236_140535_BCD094CA 
+X-CRM114-Status: GOOD (  22.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,130 +81,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 08, 2025 at 08:12:59PM +0200, Pratyush Yadav wrote:
-> On Mon, Sep 08 2025, Mike Rapoport wrote:
+On Tue, Sep 09, 2025 at 04:33:27PM +0200, Pratyush Yadav wrote:
+> Hi Mike,
 > 
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> Couple more thoughts.
+> 
+> On Mon, Sep 08 2025, Pratyush Yadav wrote:
+> > On Mon, Sep 08 2025, Mike Rapoport wrote:
+> >> +
+> >> +	while (chunk) {
+> >> +		struct page *page;
+> >> +
+> >> +		for (int i = 0; i < chunk->hdr.num_elms; i++) {
+> >> +			phys_addr_t phys = chunk->phys[i];
+> >> +
+> >> +			for (int j = 0; j < (1 << order); j++) {
+> >> +				page = phys_to_page(phys);
+> >> +				kho_restore_page(page, 0);
+> >> +				pages[idx++] = page;
 > >
-> > A vmalloc allocation is preserved using binary structure similar to
-> > global KHO memory tracker. It's a linked list of pages where each page
-> > is an array of physical address of pages in vmalloc area.
-> >
-> > kho_preserve_vmalloc() hands out the physical address of the head page
-> > to the caller. This address is used as the argument to
-> > kho_vmalloc_restore() to restore the mapping in the vmalloc address
-> > space and populate it with the preserved pages.
-> >
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > This can buffer-overflow if the previous kernel was buggy and added too
+> > many pages. Perhaps keep check for this?
+> 
+> Thinking about this a bit more, I think this should check that we found
+> _exactly_ chunk->hdr.total_pages pages, and should error out otherwise.
+> If too few are found, pages array will contain bogus data, if too many,
+> buffer overflow.
 
-...
-
-> > @@ -742,6 +743,205 @@ int kho_preserve_phys(phys_addr_t phys, size_t size)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kho_preserve_phys);
-> >  
-> > +struct kho_vmalloc_chunk;
-> > +
-> > +struct kho_vmalloc_hdr {
-> > +	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
-> > +	unsigned int total_pages;	/* only valid in the first chunk */
-> > +	unsigned int flags;		/* only valid in the first chunk */
-> > +	unsigned short order;		/* only valid in the first chunk */
-> > +	unsigned short num_elms;
-> 
-> I think it the serialization format would be cleaner if these were
-> defined in a separate structure that holds the metadata instead of being
-> defined in each page and then ignored in most of them.
-> 
-> If the caller can save 8 bytes (phys addr of first page), it might as
-> well save 16 instead. Something like the below perhaps?
-> 
-> struct kho_vmalloc {
-> 	DECLARE_KHOSER_PTR(first, struct kho_vmalloc_chunk *);
-> 	unsigned int total_pages;
-> 	unsigned short flags;
-> 	unsigned short order;
-> };
-> 
-> And then kho_vmalloc_hdr becomes simply:
-> 
-> struct kho_vmalloc_hdr {
-> 	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
-> };
-> 
-> You don't even need num_elms since you have the list be zero-terminated.
-
-Agree, thanks. 
-
-> > +#define KHO_VMALLOC_FLAGS_MASK	(VM_ALLOC | VM_ALLOW_HUGE_VMAP)
-> 
-> I don't think it is a good idea to re-use VM flags. This can make adding
-> more flags later down the line ugly. I think it would be better to
-> define KHO_VMALLOC_FL* instead.
-
-Ok.
+Sure, I can add the checks, but it feels superfluous to me.
  
-> > +static void kho_vmalloc_free_chunks(struct kho_vmalloc_chunk *first_chunk)
-> > +{
-> > +	struct kho_mem_track *track = &kho_out.ser.track;
-> > +	struct kho_vmalloc_chunk *chunk = first_chunk;
-> > +
-> > +	while (chunk) {
-> > +		unsigned long pfn = PHYS_PFN(virt_to_phys(chunk));
-> > +		struct kho_vmalloc_chunk *tmp = chunk;
-> > +
-> > +		__kho_unpreserve(track, pfn, pfn + 1);
+> Also, I am not a fan of using kho_restore_page() directly. I think the
+> vmalloc preservation is a layer above core KHO, and it should use the
+> public KHO APIs. It really doesn't need to poke into internal APIs. If
+> any of the public APIs are insufficient, we should add new ones.
 > 
-> This doesn't unpreserve the pages contained in the chunk, which
-> kho_preserve_vmalloc() preserved.
+> I don't suppose I'd insist on it, but something to consider since you
+> are likely going to do another revision anyway.
 
-Will fix. 
+I think vmalloc is as basic as folio. At some point we probably converge to 
+kho_preserve(void *) that will choose the right internal handler. like
+folio, vmalloc, kmalloc etc.
 
-> > +	while (chunk) {
-> > +		struct page *page;
-> > +
-> > +		for (int i = 0; i < chunk->hdr.num_elms; i++) {
-> > +			phys_addr_t phys = chunk->phys[i];
-> > +
-> > +			for (int j = 0; j < (1 << order); j++) {
-> > +				page = phys_to_page(phys);
-> > +				kho_restore_page(page, 0);
-> > +				pages[idx++] = page;
-> 
-> This can buffer-overflow if the previous kernel was buggy and added too
-> many pages. Perhaps keep check for this?
-
-You mean it added more than total_pages?
-But the preserve part adds exactly vm->nr_pages, so once we get it right
-what bugs do you expect here? 
- 
-> > +				phys += PAGE_SIZE;
-> > +			}
-> > +		}
-> > +
-> > +		page = virt_to_page(chunk);
-> > +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
-> > +		kho_restore_page(page, 0);
-> > +		__free_page(page);
-> > +	}
-> > +
-> > +	area = __get_vm_area_node(nr * PAGE_SIZE, align, shift, flags,
-> > +				  VMALLOC_START, VMALLOC_END, NUMA_NO_NODE,
-> > +				  GFP_KERNEL, __builtin_return_address(0));
-> > +	if (!area)
-> > +		goto err_free_pages_array;
-> > +
-> > +	addr = (unsigned long)area->addr;
-> > +	size = get_vm_area_size(area);
-> > +	err = vmap_pages_range(addr, addr + size, PAGE_KERNEL, pages, shift);
-> > +	if (err)
-> > +		goto err_free_vm_area;
-> > +
-> > +	return area->addr;
-> 
-> You should free the pages array before returning here.
-
-Why? They get into vm->pages.
+> -- 
+> Regards,
+> Pratyush Yadav
 
 -- 
 Sincerely yours,
