@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5D89CAC59B
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B0F6CAC59C
 	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 01:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=NX9CeCQ5BA7mSy9GMyixqOGIulSxpjlNCebCUvYZyvQ=; b=ZgK2yuT8Orf35+4dIp38XQWwbb
-	MlDrcGnLGLQgeCvemHr5ySX2oPZj8dMdY1bVQEy+6inRoeOd8Wb/mfgH2h77D2E6SloGr3i8/PMtI
-	o/yslHdlRCMGMC9C+wbMvyqoXBkjguOC61tMjM1+pTVNZXovCaPfdQ91g9t27AUzAE7x6QjGrLhCs
-	e5KBufXnEpdgSgbrzVmpe3bs+1clbXYaqC7kA2vVpLqng6k/EBlEort5BYTCxxZV/80s4Zu26sKGS
-	XhYODlkcGBBY40mNZSE9dqRgOVOiEBg2W2q67ZnbwAcrEjsK3vlxbYarkfMcbvvNczpNxEg/iafsM
-	e4Y3+DOw==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LcsDuUPDp7mHk0asfeabj5f7EbSnwPO1pJDI4q7ieoM=; b=LxBndsb7HoXrH99OVzl2Mvnwia
+	Ay0qG/EOiPeEjAaENvid1FIr8AD6GlIPfKKqrzp5ydkYsWm+DJ/2OL0OZ3PdZ932Uwq9DA+Oc7XNm
+	Yp9Scii9mzmmHsyK5Jgm6DmM8sW6DamGPyA9zR6TzoJmPVZmqH0f0VfTUhXlxh8u36GUX8P68aXWg
+	7ZOUrxgA7D4Kzw+kjoCIbLk/NY3SeAA688s1RcapzyUok3EOD4eGlD/SnEs8lra1ePwYu0MFmM39G
+	36ymctpFshHuaenotjCDWNDBEhiKoamU4u4poxfZJIDo/2sUojVvnVl9NBHvcpoqn2f5kBCGSOmGF
+	xMVzequQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKxe-00000006D1S-0sXu;
+	id 1uyKxe-00000006D1n-34dl;
 	Tue, 16 Sep 2025 01:58:26 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKxc-00000006D18-2TmU
+	id 1uyKxd-00000006D1J-1w7R
 	for kexec@bombadil.infradead.org;
-	Tue, 16 Sep 2025 01:58:24 +0000
+	Tue, 16 Sep 2025 01:58:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=NX9CeCQ5BA7mSy9GMyixqOGIulSxpjlNCebCUvYZyvQ=; b=KWer6Kib0yTq9kfiVINln0ct54
-	xwZiqvoe4vZJhBiNGU3IYr5+QagR5WuXEe2cr+1TBF9/3ChgBOvoREUD08fW3yKy6qRLbTk+a03nY
-	oiMaM+k2tFMIwgdCJEQHvohhBXycht8MQ/cnMwNfx/pBU7gXJywo3IPnrk9D4DWk2XS/R41P70pW4
-	ATvMlotz7662FbK32pPIOqMjcvkFaFmE77TreAqwKbDSzw0U67HN6TntwKulvgRjJ9zZUn9ZdJkrX
-	+gxzf0biOhTYhct82qOc0WgYQ+MAw3tUU158AD4D+ajBGxIUard1f/g/IHGdD3MROvNAtcyIAnVGt
-	+xAskyBw==;
-Received: from out-182.mta0.migadu.com ([2001:41d0:1004:224b::b6])
+	:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=LcsDuUPDp7mHk0asfeabj5f7EbSnwPO1pJDI4q7ieoM=; b=buapmTXqg5ecQ2IofNd/KQ0Y28
+	uYOfN+ye3x2m8S+1DPpzo5irJ9XdoHN4AjW3sAVBsLFuEzgf5Er4l8+FlCUCGwFwPIgV/seDob/yB
+	rc5sKJ6e7FrQWa/w3NrPcfk5QCmuaxRs/8OejaliwQExjshUAKS+rwzY1GloOpt6+ArwrJUUdF0bo
+	zQKpP75lblSZeiqXbpaekFbLcQiatuCl+FKMtjmc0Bsl/evjaVPja7VqmTUF9BAN00Or0vDz/agW3
+	P1qWR+AzxmTJcqXdfBTkXPlriNt4q6LHSNtsESx3Ng+/u53pIfUoYF9nzCMEOnR4bEEam/tRcRKZr
+	I4BX1Mgg==;
+Received: from out-173.mta0.migadu.com ([91.218.175.173])
 	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKxV-000000077yM-02jS
+	id 1uyKxW-000000077yO-1bI7
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 01:58:20 +0000
+	Tue, 16 Sep 2025 01:58:21 +0000
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1757987289;
+	t=1757987293;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NX9CeCQ5BA7mSy9GMyixqOGIulSxpjlNCebCUvYZyvQ=;
-	b=cG5LdOv5JtfJNJkSazHto4LIrafTAGUO0PCDJBY859w057hz8JHf0NRav3aEBoOuned/kd
-	NnDs2ORDUQ866VERYJFvHJAzI3KmTbiDi1o3bT/dJ8qQlHq8vmQdclVDkcR5d50tzdB76P
-	zs98/T5mfascWVOcp9RulgelCMMWqAE=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LcsDuUPDp7mHk0asfeabj5f7EbSnwPO1pJDI4q7ieoM=;
+	b=rhdidD4Qi3fj2U4lRSbVGHI1a7iVD/9OjWFT9XrJw9J3bROPicsMkFpkxqZLKmNg2pOxGA
+	7FrMngMNxXf3krcLHWJJ3iufMbhSXURM6SGjeTSdO30LN4cbP7WtgffFuW/Zf9PH6uaFOh
+	gO+kjzAy6EcznT8cBHBEo0vcrvDvGRs=
 From: Youling Tang <youling.tang@linux.dev>
 To: Simon Horman <horms@verge.net.au>
 Cc: Simon Horman <horms@kernel.org>,
@@ -59,15 +60,17 @@ Cc: Simon Horman <horms@kernel.org>,
 	kexec@lists.infradead.org,
 	youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v2 00/10] Fix and improve the LoongArch implementation
-Date: Tue, 16 Sep 2025 09:46:45 +0800
-Message-Id: <20250916014655.841632-1-youling.tang@linux.dev>
+Subject: [PATCH v2 02/10] LoongArch: Fix comments
+Date: Tue, 16 Sep 2025 09:46:47 +0800
+Message-Id: <20250916014655.841632-3-youling.tang@linux.dev>
+In-Reply-To: <20250916014655.841632-1-youling.tang@linux.dev>
+References: <20250916014655.841632-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_025818_173563_B438F60E 
-X-CRM114-Status: UNSURE (   6.42  )
+X-CRM114-CacheID: sfid-20250916_025819_684556_2F47852E 
+X-CRM114-Status: UNSURE (   8.28  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -85,43 +88,31 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-- Add kexec_file support for LoongArch.
-- Fix and improve the LoongArch implementation.
-- Fixed the handling of crashkernel parameters when using --reuse-cmdline.
+loongarch_load_other_segments() mainly loads initrd and cmdline. Fix this
+annotation.
 
-Kernel support for kexec_file was introduced by the patch detailed in Link [1].
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+---
+ kexec/arch/loongarch/kexec-pei-loongarch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Link[1]:
-https://lore.kernel.org/loongarch/20250903030100.196744-1-youling.tang@linux.dev/T/#t
-
-Changelog:
-v2:
- - Add kexec_file support for LoongArch.
- - Correct email address and Signed-off-by.
-
-Youling Tang (10):
-  kexec: Handle removal of multiple 'crashkernel' parameters
-  LoongArch: Fix comments
-  LoongArch: Terminate the cmdline string using '\0'
-  LoongArch: Enforce relocatable kernel check for crash dump
-  LoongArch: Change initrd allocation to top-down
-  LoongArch: Fix the use of loongarch_image_header in ELF format
-  LoongArch: Add pe_hdr->machine check for pei format images
-  LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
-  LoongArch: Add kexec_file_load syscall
-  LoongArch: Remove 'kexec_file' cmdline parameters when using
-    --reuse-cmdline option
-
- kexec/arch/loongarch/image-header.h        |  5 ++-
- kexec/arch/loongarch/kexec-elf-loongarch.c | 47 ++++++++++++++++++----
- kexec/arch/loongarch/kexec-loongarch.c     | 44 +++++++++++++++++++-
- kexec/arch/loongarch/kexec-loongarch.h     |  1 +
- kexec/arch/loongarch/kexec-pei-loongarch.c | 27 ++++++++++++-
- kexec/arch/loongarch/kexec-pez-loongarch.c | 14 ++++---
- kexec/kexec-syscall.h                      |  5 ++-
- kexec/kexec.c                              |  6 +++
- 8 files changed, 130 insertions(+), 19 deletions(-)
-
+diff --git a/kexec/arch/loongarch/kexec-pei-loongarch.c b/kexec/arch/loongarch/kexec-pei-loongarch.c
+index 1a11103..f0e0d09 100644
+--- a/kexec/arch/loongarch/kexec-pei-loongarch.c
++++ b/kexec/arch/loongarch/kexec-pei-loongarch.c
+@@ -102,10 +102,10 @@ int pei_loongarch_load(int argc, char **argv, const char *buf,
+ 	/* Load the kernel */
+ 	add_segment(info, buf, len, kernel_segment, loongarch_mem.image_size);
+ 
+-	/* Prepare and load dtb and initrd data */
++	/* Prepare and load initrd and cmdline data */
+ 	result = loongarch_load_other_segments(info, hole_min);
+ 	if (result) {
+-		fprintf(stderr, "kexec: Load dtb and initrd segments failed.\n");
++		fprintf(stderr, "kexec: Load initrd and cmdline segments failed.\n");
+ 		goto exit;
+ 	}
+ 
 -- 
 2.34.1
 
