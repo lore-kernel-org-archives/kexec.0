@@ -4,158 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3C29CAC59B
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 13:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EFA33CAC599
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 13:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZBlNXv9w2MFDe/4wwY3xOsTqkgSA5gMrcq9Y7mx7zFA=; b=QKRVl5PGDSeInnMnPw+5DQYJiE
-	r3M7/QoHBB1+/ePk8qc0VzPYnFnFfSMz548s35KiGZqu6YweCjulr1lIhh3a4TgLxHz2RFd7iqAXr
-	tNKaWdqrNczuX7M6jNrBlBqlb+m4XN+Z0UzaPJwQD7qBBfsnqvFPiZeOK760meh7wL7wIOCDR2nVN
-	ToVwcBNiu1wvlEffwAXh60xPKhwzPVABscXYW8o53mb09TpvvzKGl0QbjvNm7zWw4pqsfn4YOyypp
-	K8L0/+4tzZZP3ie1qAMnGl2wuXn36EpaBogNYqylMh92DeiIQtYiuOfKtSGBLToVztZ+9LCnjFeJw
-	5brDn3PA==;
+	bh=EM3YSkqrS+wD1DSZ8rxCwrnJyCPkgkPjNIyUR3FKILQ=; b=mmCELEnnD/umWUFRIvK+Iv6ULQ
+	RIzIYmx5H3ZHqyeRDOEoy9VajbiTlwHxk0Y50hLl9l/AqS2ipAWESjohSj7yNuWnrRshTjQqnowSx
+	hnj2+6ryKGyfxRl75GZXVBf6xsbfaeDYXdkbVInFTwKJZNfSD6YMnvqRUV0IZvceDeZkQnEAYgTtd
+	cSwVSGynEpFN22kWoubr3hZf1mYspXMmEOZQN3ZznzWmWIiBieTFJW/pajLmeUzPqYvRV7JbFP8+K
+	A0WtZuYDi2sW2fvljEydYir8iUbgneH1nBNx1hJjwkqIeJ5VkbM3cRHQ3sAEQqWwlbSlIUwXOWgnT
+	HJY7ub2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyVN7-00000007rym-2pnz;
-	Tue, 16 Sep 2025 13:05:25 +0000
-Received: from mail-westcentralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c112::5] helo=CY7PR03CU001.outbound.protection.outlook.com)
+	id 1uyVc9-00000007uiX-1oZl;
+	Tue, 16 Sep 2025 13:20:57 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyVN5-00000007ry5-40M6
+	id 1uyVc7-00000007uiM-2wQ1
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 13:05:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O8xUiIlnxKdiQrSqG2eFsqoNft5ZN9P/nRRmWjuwiQhNnolmsrLSx81QQDBGObCKlyhhHyPMXQbsbU14D0C1qIxlXDILOk/Qqn/kr9HDWwTHwrQYH+w/hmcb+qRqk7B3QP+NH2mo3L5XlGOnLRXoCc3aDk7HOnF53R7LFIPv+OXjgFtR12A52/IBtS8xnZ+Q2fipSrTf3kJregzXaHuQiJa0E96gqrm9eQVuckF4tMjUfXAL9oF8fN3nvpehOTbXBpM+E+QOr29MJcYShlPXi19V4dMAF/TUgH5ovVozkqy3Wcck4SvwtdL7WrlsnxDzNEZLkxq1YUuKnr1AuHacZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZBlNXv9w2MFDe/4wwY3xOsTqkgSA5gMrcq9Y7mx7zFA=;
- b=IlwYmbev/Lf1sKzZLu3ocpWfJvt1tNoSQAz72suallwdau8d3qAJzaOe8AoJpwCJiLbdxZz50/OgwxTTb9jL2Bin5FWlDJ6WHdtLqPpYC5493VxPl61y/zWuXwsyI4PmstoERjVIa4H4Mb1Tp1NvKXoLjhIXhhBRuB8zcx0px6aCOn2VqEo8OZ/IVhlYtck3OrexoKwSlsnc8UVEBZ55Lk9xE2dExFARnQSemWakuWoOhLava07W/HKjX9JQnyow19Nw0azpQqhe9WfgzxGCELAJuD91HHmDrVmx25PxkiYVhJHUZVsqdRdJJ0u4NLkygbxIoxf6AT81+detU6ixwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZBlNXv9w2MFDe/4wwY3xOsTqkgSA5gMrcq9Y7mx7zFA=;
- b=R6gJHoNtom6xnx3yPAVgbqKWGdpH1YPCDvfZruTO1avjJwflliBNcxJqDfifeTMfBvdLwdxZwS1s+8JbQqNOgWcrYXFoBJZt0QAvYb9vc9WrDyQqhse7dIamvT/DYR16yJ99miMvPz2TT8ErpIhqE3jwAYJJn2GUb1xpAH81C8B7psBdf3JyFaw2BoYpXd/IHXBtlrsqEC/oeoKczT0NX5TnYFzezFaFQXYujkoeki+c+16b6FgDVVBafKWQQaHOOZoYiprO/8NOUNGvT2IHXkw3NA3e0wEU6qGwJH7gqfsbX2uwoGMI0nlax5gITqj6zuPh/bpfECaDFkdeoCypvQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by IA0PR12MB7506.namprd12.prod.outlook.com (2603:10b6:208:442::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Tue, 16 Sep
- 2025 13:05:18 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9115.022; Tue, 16 Sep 2025
- 13:05:17 +0000
-Date: Tue, 16 Sep 2025 10:05:16 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <me@yadavpratyush.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
-	Changyuan Lyu <changyuanl@google.com>, Chris Li <chrisl@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] kho: add support for preserving vmalloc
- allocations
-Message-ID: <20250916130516.GB1086830@nvidia.com>
-References: <20250908103528.2179934-1-rppt@kernel.org>
- <20250908103528.2179934-2-rppt@kernel.org>
- <mafs0ldmon784.fsf@kernel.org>
- <mafs0ldmnlmq0.fsf@yadavpratyush.com>
- <aMgey9qEC_XUejXm@kernel.org>
- <20250915144335.GL1024672@nvidia.com>
- <aMhAiR6qnXMA-c8r@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aMhAiR6qnXMA-c8r@kernel.org>
-X-ClientProxiedBy: SA0PR11CA0154.namprd11.prod.outlook.com
- (2603:10b6:806:1bb::9) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	Tue, 16 Sep 2025 13:20:55 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 114E8601DF;
+	Tue, 16 Sep 2025 13:20:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E2EC4CEEB;
+	Tue, 16 Sep 2025 13:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758028854;
+	bh=NkEqYgbQHqBRppulOAwQLkXQ/kR/tGJDaQ28SAU/ZbE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=H7OhipGoDJaVVg75Xy37xy/Gb3iNzhFXsIZqgKxxxy99QyXG14oqvwpdXzjYB6oOB
+	 Pz0Ho367YOVHIksobf0Fxb4ZsK60vbtto3ZzcXGgUjpOegEmLGYTKfR6zvX5IjCkd9
+	 +tC4O4jsuvaMlEQFuqv+ByjyZyCQFXOWFNhqDza+bRlT125FRjJ7uKyQn5HSMP5DAo
+	 b/dhH2ac393YhcPbCsP+ya3oU1SARvXXSUcAJK7L8L68mer45+vP+YZbuNVoJ7X+TZ
+	 9f4CvU+15dVkWB1BOrKADvt9Hkr7LyZIVSmneOlNsis/TIKe3K10+EKR11q58Ud2ek
+	 e315dV4Chy44w==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <me@yadavpratyush.com>,  Matthew Wilcox
+ <willy@infradead.org>,  Pratyush Yadav <pratyush@kernel.org>,  Alexander
+ Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,  Changyuan Lyu
+ <changyuanl@google.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <bhe@redhat.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Chris Li <chrisl@kernel.org>,  Jason Miu <jasonmiu@google.com>,
+  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
+  linux-mm@kvack.org
+Subject: Re: [PATCH] kho: make sure folio being restored is actually from KHO
+In-Reply-To: <20250910155546.GB922064@nvidia.com>
+References: <20250910153443.95049-1-pratyush@kernel.org>
+	<aMGc-ExhkqwAyY_C@casper.infradead.org>
+	<mafs08qimjoez.fsf@yadavpratyush.com> <20250910155546.GB922064@nvidia.com>
+Date: Tue, 16 Sep 2025 15:20:51 +0200
+Message-ID: <mafs0zfauh6to.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|IA0PR12MB7506:EE_
-X-MS-Office365-Filtering-Correlation-Id: df4325b0-8815-40bf-f7d8-08ddf521af1f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?6QAXnYJ5VltH6dWrNn69GeogfJf83gAIhn4BntYnr25UojYMJSWq0xRnWs/6?=
- =?us-ascii?Q?vWBY2hqQ96jyMdnvvh/BnHP5JxPaBn820Yna5acsskKAZNSwEnY3p1yg2HCX?=
- =?us-ascii?Q?IdaUOzJmohND+8M+gbMZiVByyOD+jpjCDWAm7izI5tebKrZwGk2dL9tph0ue?=
- =?us-ascii?Q?+sYPLwxADlk8NoG4p2B99+D4tG0BQMPvAQPZFyPffDKnxDUNPp+dk36bHIwF?=
- =?us-ascii?Q?KO9d5kj9d7m8v/p7KCsKCL6+Goki1YRvyyq92K786qnqLpfvgJqJSSnAAgsW?=
- =?us-ascii?Q?SmczCStAaAHti/7uXqu0sKIXLtapToPqS3Smadg2WvIZ890sxbvJ4bauF7dY?=
- =?us-ascii?Q?W9WDok3hu7ELhTV2g0lRt86iBD0PxXD6YxH1Ce1tsAt01H6itNuWvYyLd+eZ?=
- =?us-ascii?Q?d8E34J0fZflUZmvcLesqzVb0F2uMco5qr448mc6r1onR+d0zH7KTpxMP5YHa?=
- =?us-ascii?Q?tIVcrWnPfGaZPZ9VWxufbvNXreZho/HKSto+kfME3sE2cK5duz072ifUwZWi?=
- =?us-ascii?Q?ihfD+zHkjAfA1jcqJQgawj3JoDeSn7I7PfcxljVLw7X0y4B3yuiFsOVVqvw2?=
- =?us-ascii?Q?gp6HAN5UtBpBldOCqA3faLztKBbEg86vUdqJjLsNSb/SmigaBB+rmysfHtCk?=
- =?us-ascii?Q?s+9jZut5iXUB++42Ox2cPmsO6e5Z1bu1/b+CXZNdBAJyUIwzIPnVODOlyRTC?=
- =?us-ascii?Q?SqnFaknl7fTgORSiqEyFb4NSYJNQF80Vm1i7H589yitIPSn+m2SbC4fxyx+R?=
- =?us-ascii?Q?UBDAniI1Y9YUKc/qB4/y/4RiEjnLWiL4uQzki02/92MPTJ23jJP9+Jg0DG5A?=
- =?us-ascii?Q?k1WiDez7g2zqhpcebD8OireEW8iUNIZnRMDZPYNwU1M3Fg/QiNfnwbLs1ayM?=
- =?us-ascii?Q?kW+/sHeytBv4zn7NkfVxz1DVGyCx5NAPHIU/i7Yhmt6QhpvLppVSZTHuv2Hp?=
- =?us-ascii?Q?DfA+JdObgzR8t0zySR6u6sr5GEuW9SoV4k3a/GGUsmNba6YfZZeJ7YQlJ1/f?=
- =?us-ascii?Q?+WskcDaYYJQSQC5hBnm9fTJEyQmJzFdHkilWjoMqNFYr+cLEs3oJWihh6WJx?=
- =?us-ascii?Q?5xpHgJ3LKo/L3Lxv8pI+iE0PZ9C2kaDW9pMPEffXh8NybK8mjnxdTI6fYMXq?=
- =?us-ascii?Q?xwaobwtf8FifJMyv6EV3p+F5Lsyb1Rrpp1cMgyoaor/IzIQmuwA0XYmm6J1P?=
- =?us-ascii?Q?wbzxNWF31yGRrJAgpbS+Ddu5YHQxw2UWcGk9KRjSDkWP1Gc+DK+MiKWmbnJ8?=
- =?us-ascii?Q?xE+1eWpuh27KoWYJRC/rBmzP3XDulvw0fHlFXGne4KYfo4W5s5mbCh5ZImcJ?=
- =?us-ascii?Q?rH2I0dDWi8pgw+oi989t1ijmUEPQSSw7/EP+q+NLzhPULRf2FqTPoBnWApWz?=
- =?us-ascii?Q?kTa0VVi5UYlq+RuB7xSsd/i3FaKzV0HVYIE66RxVbcJqcjDjP73dtFegGc5w?=
- =?us-ascii?Q?cdaI/jI3Bmw=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JBEdX8gV6cA8feLY4z1UN7G7rnl1lfIOCJscB/EGUQEIkCptCvuQm2eWWAhi?=
- =?us-ascii?Q?799yzXVgxsYR10+jZvdNr32J+OgpLZJl5Sd/8zsZVamShHeNcgfUxGxwPfkI?=
- =?us-ascii?Q?8TwueZgDZY+ZTY01zsXDtRwy3a5zmPaiEiSTvyPjDavRrA2LkyZK9eC4NKWO?=
- =?us-ascii?Q?QRoTGrn+lPQfSHg0Wj071E20JKJwuzEDQjsbCIGHK0aB5p0seA35kCl6Oow5?=
- =?us-ascii?Q?jUIoR/5iNrhLHIXx0x92S5N4jS11smxYMX0fh9hTrF84sS4ckYJeRevYoFOA?=
- =?us-ascii?Q?v4njsX/iFlK7/U5ny56OkZ+y6rnpvYPFp7flG3d27GoKE4wNIJpVH6HpG2/G?=
- =?us-ascii?Q?iuQDTQgy2SkATIJJxxhcbl02UDvrnayL8fXrnH+2vIxWjwZhRc6aalAjMShD?=
- =?us-ascii?Q?joYV0Dwk60sfiryY0kQkGoodO1Lf2NfGz6AjMrtnpHQdBtrpE06md2OJxcje?=
- =?us-ascii?Q?iqynkZDTgztksfXQHb3cv3f6MkmS2Om1fuZgbpTLWMz4wzHdgU17K+YjN7MB?=
- =?us-ascii?Q?dCRbafMY6YqZ8i7G4qm8JV3cDY6sU6VcUlPdSAqjt4CasoDcwiURlzuJULxh?=
- =?us-ascii?Q?s46Sh31nWCDdeOGnzzVEL70FRUgBP5sFy7XYA9ovXSRjxmoVyqaLlHXd0+Xw?=
- =?us-ascii?Q?sVPKirLGKO5irCNttCGfiK2w4ePypyHVd2O2awtUX3LT/albVgVltAmJkxtJ?=
- =?us-ascii?Q?kk+EnJfwm5Ao2kZYKveLsgqzXWnHYtGUfvLOWyrj9qL2PlmHrb5jqAo5ZsFR?=
- =?us-ascii?Q?TWsUuRDIh5hYJbXoUX0cvcIuyIcLlpPpPWD1jIL0GJ4/JiGjQNLP7eo8UtaT?=
- =?us-ascii?Q?5M43InBBu4UNK1GG9ckDPM72yNLjyeoFutedAchaKEwSyLvX7MiR0xcP4wKy?=
- =?us-ascii?Q?tI15APhwZkix/pRQf2tKNxaB/5OoBuXIZqyA/RHrD9v9qG4Q/Rean5q71dMl?=
- =?us-ascii?Q?vnU8mI/1lBYt3VM24N1f5Ni+s6VrAa4HZmxdM4qUQHaf31uTiAPkns7KNghT?=
- =?us-ascii?Q?eQQjNH0Rnf8m5mtPTCWoPO3P0g+mdfMOvuV8cqyzqI1fL0D6sZ3HqPAVTbaM?=
- =?us-ascii?Q?u8Um5kxpG4uAfmeadCBnH7c27Y/AzbOLvQeWCZF5p47mP4Bki51hFYnmiUnd?=
- =?us-ascii?Q?5soi57IBiiwq5aANojBjlkE7cCj00NgHjLHvawbW2pk7MLM/JBy1gNmZ+VYL?=
- =?us-ascii?Q?3czYSL82PdMypIzLbk4Rgca/L/F6fc9eU884bf7srkU+2cmGDDKU/xAU2TIC?=
- =?us-ascii?Q?zLjVikn5k4u+qoBAqOI4EXO0/hWanzdR5D/NRq+49EoeCpcTodVp5tUf2E8Z?=
- =?us-ascii?Q?XWJKjticiac6AMrTUt8Wv3w+8CGL9ZeeSjf3VW+ODkH8FWsoDfJCEY/VicvL?=
- =?us-ascii?Q?6DgN7/XLNWH/c4+2pVLb98irbmCZBF61nF7u3wJhVVx471v6dk/hHe2Pecz2?=
- =?us-ascii?Q?gRE9eYN5en0Wi3KdP6ERTCauATol9W5Zan34t6UEXIHmt1AfsNqEssSSwifz?=
- =?us-ascii?Q?c3mFe/LokwpHfV3BjdQBp4nUJKz+wj5oJu1G4ran606ppJFg5XQdPpeelm0p?=
- =?us-ascii?Q?noqeexUVihus5SpVn8OYxz8kXhWU5vXdoyPIrLuk?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df4325b0-8815-40bf-f7d8-08ddf521af1f
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 13:05:17.8897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZlkLrwnNc7fJ8DtZtyYWmb/jBzTJ/r6zkUv4dafOAIVTmYVfUrLhnbwe96de5no7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7506
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_060523_998170_C8417320 
-X-CRM114-Status: UNSURE (   9.68  )
-X-CRM114-Notice: Please train this message.
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -170,17 +76,95 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 15, 2025 at 07:36:25PM +0300, Mike Rapoport wrote:
-> > Under the covers it all uses the generic folio based code we already
-> > have, but we should have appropriate wrappers around that code that
-> > make clear these patterns.
-> 
-> Right, but that does not mean that vmalloc preserve/restore should use the
-> public KHO APIs and avoid using internal methods.
+On Wed, Sep 10 2025, Jason Gunthorpe wrote:
 
-I think it does, the same way vmalloc is layered on top of the buddy
-allocator. Why wouldn't you build things in clean understandable
-layers like this?
+> On Wed, Sep 10, 2025 at 05:52:04PM +0200, Pratyush Yadav wrote:
+>> On Wed, Sep 10 2025, Matthew Wilcox wrote:
+>> 
+>> > On Wed, Sep 10, 2025 at 05:34:40PM +0200, Pratyush Yadav wrote:
+>> >> +#define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
+>> >> +
+>> >> +/*
+>> >> + * KHO uses page->private, which is an unsigned long, to store page metadata.
+>> >> + * Use it to store both the magic and the order.
+>> >> + */
+>> >> +union kho_page_info {
+>> >> +	unsigned long page_private;
+>> >> +	struct {
+>> >> +		unsigned int order;
+>> >> +		unsigned int magic;
+>> >> +	};
+>> >
+>> > KHO is only supported on 64-bit?
+>> 
+>> Yes. Currently only x86_64 and ARM64. It is mainly for hypervisor live
+>> update so there isn't much reason to support it on 32-bit platforms.
+>
+> Presumably this will eventually change to use some special coding on the memdesc
+> pointer?
 
-Jason
+Maybe. I didn't think that through yet.
+
+>
+>> >> @@ -210,16 +226,16 @@ static void kho_restore_page(struct page *page, unsigned int order)
+>> >>  struct folio *kho_restore_folio(phys_addr_t phys)
+>> >>  {
+>> >>  	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
+>> >> -	unsigned long order;
+>> >> +	union kho_page_info info;
+>> >>  
+>> >>  	if (!page)
+>> >>  		return NULL;
+>> >>  
+>> >> -	order = page->private;
+>> >> -	if (order > MAX_PAGE_ORDER)
+>> >> +	info.page_private = page->private;
+>> >> +	if (info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER)
+>
+> All the impossible checks shoudl be WARN_ON()
+
+The mental model I have is that the place that introduced the
+"impossible" situation should get the WARN(). So for an incorrect phys
+address (leading to magic mismatch) or incorrect order (say preserved
+big range using kho_preserve_phys() and restoring it using
+kho_restore_folio()), the caller is responsible so it should do the
+WARN(). Does that make sense?
+
+>
+>> >>  		return NULL;
+>> >>  
+>> >> -	kho_restore_page(page, order);
+>> >> +	kho_restore_page(page, info.order);
+>> >>  	return page_folio(page);
+>> >
+>> > This all looks very confused.  Before your patch as well as after it.
+>> > I don't see anything in the current KHO code that requires the
+>> > phys_addr_t to be order-aligned.
+>> 
+>> Right, good point. I can send that as a follow up patch. But I think
+>> this patch stands on its own without that fix too.
+
+Actually, on another look, this patch implicitly makes sure that
+unaligned phys always fails. This is because deserialize_bitmap() only
+sets the magic on the head page which is always aligned by the order.
+For any unaligned phys, the magic will not match.
+
+Still, would be a good idea to do a KHO_DEBUG check for alignment if
+this implicit thing ever changes.
+
+>
+> Maybe it is worth adding some KHO_DEBUG kconfig to protect some of
+> these extra checks?
+>
+> phys should be pfn_valid, phys should be aligned, the page should be
+> in the right state, order should be valid, etc. All worth checking.
+
+Makes sense. Do you suggest the magic and order checks to also be under
+KHO_DEBUG, or should they always be done? I am of the opinion that it
+makes sense to do them always, but I can also understand the argument
+for disabling them in production for better performance.
+
+-- 
+Regards,
+Pratyush Yadav
 
