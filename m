@@ -4,84 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 240C1CAC5A1
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 737D1CAC592
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
 	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=; b=3bvHhicCCGe2acHxxQCRlJnlH/
-	QXO1Y8f46rZzH2qPdPC+lMTVblpe8ozGp+FNhY8yskZ+mEQrYZqB4VkeWVb4GFLsEww/nKMORLmn/
-	5roYH+MpyIsgH3zrPnooFY5aDNyPnNz/0gttA9afqLmN9+fSP1oYXs04LzSSCyHPAeBwhCDru8eTO
-	VRvWaTSjHf2XrMrnV67AT0kKkXjvcAyLMBPhisMyugqjF9LzaG0JCBVI48eR1JijobB38dk4J2nCv
-	JdmTMox3RHt/udY9DX7qlQn9Sis5NB60Th/2lPu5uUHvy8U6Xd1kpJMu2wFdp5SwQwXPklDfhluWl
-	OWmrUTKQ==;
+	bh=uea5mfPfz6gsP2PTuhVLwd3VedG7XAMEGNBdCWZOsHw=; b=0yAbVnVZDOn02q6CEn/L/nk5Z3
+	dCRhV+peF3jDCgfYuf4VdiPeDly0tD9xk6pQsFp/EaRp/lSfwzN+zDAmzi5TBr7N9Fjp2jKXuXUZW
+	tqEwBPXRro8w4/6bBC2GgTZdoFIdKMU1HcyCovshBWZwLyNw98nhRQjGT3P0kD0KTybRpGiwNHSMt
+	JN5VqfTcp3eLjPCIBQS/Ts0GvQlMS+Xdc70iNDsrf15TCq0zoEi63OA6qHcLzoAxDlCKUVDVJiIww
+	WCvN0CPsEWDfxhvYeDB9U9LH7jPSDEH3a2K3kqUUfPS93ooJwd1Cv7c/gWKmnlssz6+tPksLFla9p
+	ZgnDvfOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uybyh-00000008xcG-1SzM;
-	Tue, 16 Sep 2025 20:08:39 +0000
-Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
+	id 1uybyi-00000008xeh-313J;
+	Tue, 16 Sep 2025 20:08:40 +0000
+Received: from mail-ed1-x52b.google.com ([2a00:1450:4864:20::52b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyTjA-00000007eSe-3WOB
+	id 1uyTkc-00000007eh7-2GtM
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 11:20:06 +0000
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so802914766b.3
-        for <kexec@lists.infradead.org>; Tue, 16 Sep 2025 04:20:04 -0700 (PDT)
+	Tue, 16 Sep 2025 11:21:35 +0000
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-61feb87fe26so6301405a12.1
+        for <kexec@lists.infradead.org>; Tue, 16 Sep 2025 04:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1758021603; x=1758626403; darn=lists.infradead.org;
+        d=suse.com; s=google; t=1758021693; x=1758626493; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=;
-        b=f/o2kekNTIg6qBnG3uEDHAlU4K01k3QdEdtNyADnWPL46Or2sZS7j4wQmU85Zy0Swo
-         xam82LI0ti8LaSeuvCv/YwDAGgc6o8kAg7r90trnMfScFAMrYQ5p/fLZhDdUHQ7mPDq/
-         kwQv6a1WKkrcqbAsdbpAwWvYDfse/m6vPCza6ElW1cjt55E03gcmgP7Xdqbkkv9yjUvM
-         Wm153UjkrDkk+sI5meT0ZfBApgjR1xIgXZUpHfcTGoKW8CasbDkDPo70wnNL45XC7IZ6
-         Thi2a1rpU1+QJFUPXUK6dbdfWs/3ddKJKMjbBVIcJ2G8vcgt8KwyXvxkU2Bov73p2b0c
-         Is6Q==
+        bh=uea5mfPfz6gsP2PTuhVLwd3VedG7XAMEGNBdCWZOsHw=;
+        b=UA4nu9qOruySP7Me/jc/2uaOrZg/GdBPfGBZUwwsjnY1cdOlpMErAPhYUqLTZCF+I4
+         dEL3zvrTHIzPG9cUyupNymjerADZSgAgk0cx+lc+pN/hZwe6mNwOzBrO0tXvUN7Qjw8t
+         WtTxCrZ0YFZY39XOrPBWWXvXYqQsg8xUjxx3Dl1o9Ts6cN+8F9GwzoCvH7u1cxi1M2rJ
+         3Def04SdEgJ1Kjtx3Jiv/QudMwSI+UMK6HDqlUYoxEHbGUJ9m/0dbOop7Q5f3Oe8pb4G
+         QEkKPh09lAi9TkAUskYmyCksfs6jIg5LXJxbY6rNQotHk5ILcoqKrsnQdyyXDpUAIdYN
+         iDhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758021603; x=1758626403;
+        d=1e100.net; s=20230601; t=1758021693; x=1758626493;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=;
-        b=GbUIW7BSxdmG0aVpMrELXQnKpSvAOr0hJ0JGe21rXbAvXga16bujYQtRCXy1av0Mm8
-         ZOdYLj2m3KdGxcTiFhDGRnO8WR2IhPqzYfd0ok7j5QuBZk+iGfqhNFFtqmvyfI8LQ+/z
-         FlatwNEwvQCs47Q2bYS6Ni6pyLDouHiVPJgx9u1s1dmMcwSV7N9pT/kEuNiiqCOUt+nb
-         8MW1AK14xVxWC1ZVwhMafcHAt4fGptPIpz3bPKfZ/t5sa/oCaUssO8KVN1nIPmm6BVK4
-         +IcfVTSWDbhv6ALOvqZtfEh3iLROAW5OgoVtBHvHID72QnfLZmBT6rSbfSMGL3CBOvVF
-         Hf0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVYeYKHTWqQN7Azd9u69xcf4PeTPdvKSifU+c7Dl6zqhAsKg6eMTA2w8DTNNEINNo1RORv4kg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwrbUIK68erz4RNTj96/anzxkRClInUktY3X4vZzRk2jK91iYQo
-	i5aKcRDqE/YQB29ElzDeI3RMxOqzrHd1mpYCtJjCLRtWHvOEASKMVLPukxqg0d79l1g=
-X-Gm-Gg: ASbGncs32/a6qde5bfQtLCMSCCR6gUPzORzWfIfMdlkczsIYAfWINyt1yvGQs99e42T
-	vHtSNa2dY8JNIXq+JV0rfXoZw92xd/OrpRDtRnShCX3vv560ZzFpsHxbsbnbBPtFmb3mM0IQ1C2
-	lR4X+mx0JR7RF0OLru3f8y5a+4KLQTVGFA4AWnoHzsqfNZttdZUtnbU60FbbgCpba+giYdeaN0A
-	AvBSuk7JFMYWFmM7kb/3KGtxpFxPiPxkOPlDN+MJZ0XjVuR4Ozq2Ki5Y0ysjjFF53B08hgx5n3c
-	pX92xHNwISTJs82cBTaghIqEVrgHE7arigcyCFJe1f6QcM/ZlJ4qjoLROyhoHh32GcWoeH795wQ
-	9g/f4Pa8wV7Ng+em8bCmYBPOc2+76xjInKnww22zT
-X-Google-Smtp-Source: AGHT+IGYOku1dWOd7XgyZFqiTBP3WC2b/azuNq9E2ePki1CNpOxLiy1c6JRukGNdqA80ZoAb+KYahA==
-X-Received: by 2002:a17:906:c153:b0:b04:8c45:4bdb with SMTP id a640c23a62f3a-b07c37fb543mr1468835066b.34.1758021602813;
-        Tue, 16 Sep 2025 04:20:02 -0700 (PDT)
+        bh=uea5mfPfz6gsP2PTuhVLwd3VedG7XAMEGNBdCWZOsHw=;
+        b=b2Jm4i+fiV/RWXSHja6d6wXIPQ4hwfywM1j6CqZY/9GP5dHZ69MyqqR2AGp6JojguY
+         BOqNAq5cvguYNgVjO4MkwgVnPm86JkuiwtPp2eI4WlyRxMJETI6hoH+9KmBiM7rK2Mbp
+         nvPdjVGtxuOZKoSQzLhwgSXrHbCBCtLxhsdW+UnkWQPzfdDqQK84vn3pKvFnynsyoMy0
+         BPo1YBYabHmVqefvHipfvPFbDDDFqDrjEB0i0vQLCoBvYletP9gB3NU97su42uhsXzyo
+         a1EI/hg8frQSxwQ4hhlbQm6JXg5XwjjC/kXHKHuQflK2+0YT5wVJasApQO7bsVh73nNS
+         FU4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBGoP6RvpXnk4dvRAc391HbuenN800F9q5BZhGm+ODZ8cUhieC+MlIpE/0tEZREb/fWPqN0w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzO9Qii68OjhJW7/5W0ZSNvffMoa2qH+hdUib5s8iGmWwN5W2kw
+	Xiws7tDdFBBQubpGFycAq/9llKPAJGiBNeOptqhDEjJ/KAqpok4W2LQ0wFftCapr5uc=
+X-Gm-Gg: ASbGncs2TVLSvZoRiUgJ9cKd7/+L1JE0lNm2vubcanrVX2S5T/y4s3TZKyvY+0sz2MC
+	BQqBqNBVxWr4Esu1BIWRACOxiV07p8EbngUamh17g7nyl/PT+WlNO82PGJ3qYe+bgnqU/Kdm30X
+	1OFy6jb6VXJk0njKNG/dPlH6j8FFEjRY9tYuc5DV9yDs3s6+ecVZ6Fkt6w1xh8CkocGt/O0m67N
+	NJUmiIMLES7zIlf2H5qBLfazv3RCyLxndQnHnThfwqvHqDU8Y5115weBrljts3Rxa0JxUzwzkWk
+	i7joXkacIeNNzbDLi109yiXfdnhm7vH0jrUl22c3A8ik/tf8TQ5K9y5h1MGw0q8gjINY5afeTtM
+	MQPfXCu3raJddD2LbDWxgxvX/T15svv3ctevFEa7+
+X-Google-Smtp-Source: AGHT+IGdaApH84qgSh4FpIAmIv68lRlYszt1DGU1HPMtQq+Jg7ayFfDUxA0h2cZACJ5agdILmluAcw==
+X-Received: by 2002:a17:907:6d22:b0:b0c:5929:4cff with SMTP id a640c23a62f3a-b0c59295025mr1006070266b.26.1758021692577;
+        Tue, 16 Sep 2025 04:21:32 -0700 (PDT)
 Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-62f3919e168sm4212344a12.34.2025.09.16.04.20.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07b32f21a2sm1156991066b.83.2025.09.16.04.21.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 04:20:02 -0700 (PDT)
-Date: Tue, 16 Sep 2025 13:20:00 +0200
+        Tue, 16 Sep 2025 04:21:32 -0700 (PDT)
+Date: Tue, 16 Sep 2025 13:21:30 +0200
 From: Petr Mladek <pmladek@suse.com>
 To: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: Re: [PATCH v2 5/9] panic: use panic_try_start() in vpanic()
-Message-ID: <aMlH4CcK_n1I1gY2@pathway.suse.cz>
+Subject: Re: [PATCH v2 6/9] printk/nbcon: use panic_on_this_cpu() helper
+Message-ID: <aMlIOt52xnLIvOpK@pathway.suse.cz>
 References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
- <20250825022947.1596226-6-wangjinchao600@gmail.com>
+ <20250825022947.1596226-7-wangjinchao600@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250825022947.1596226-6-wangjinchao600@gmail.com>
+In-Reply-To: <20250825022947.1596226-7-wangjinchao600@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_042004_903126_1EC56ED8 
-X-CRM114-Status: GOOD (  17.41  )
+X-CRM114-CacheID: sfid-20250916_042134_593328_4F244B27 
+X-CRM114-Status: UNSURE (   9.93  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Tue, 16 Sep 2025 13:07:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,52 +99,19 @@ Cc: Sravan Kumar Gundu <sravankumarlpu@gmail.com>, linux-fbdev@vger.kernel.org, 
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon 2025-08-25 10:29:33, Jinchao Wang wrote:
-> vpanic() had open-coded logic to claim panic_cpu with atomic_try_cmpxchg.
-> This is already handled by panic_try_start().
+On Mon 2025-08-25 10:29:34, Jinchao Wang wrote:
+> nbcon_context_try_acquire() compared panic_cpu directly with
+> smp_processor_id().  This open-coded check is now provided by
+> panic_on_this_cpu().
 > 
-> Switch to panic_try_start() and use panic_on_other_cpu() for the fallback
-> path.
+> Switch to panic_on_this_cpu() to simplify the code and improve readability.
 > 
-> This removes duplicate code and makes panic handling consistent across
-> functions.
-> 
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -415,7 +415,6 @@ void vpanic(const char *fmt, va_list args)
->  	static char buf[1024];
->  	long i, i_next = 0, len;
->  	int state = 0;
-> -	int old_cpu, this_cpu;
->  	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
->  
->  	if (panic_on_warn) {
-> @@ -452,13 +451,10 @@ void vpanic(const char *fmt, va_list args)
->  	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
->  	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
->  	 */
 
-The above comment does not fit any longer. I think that it can
-be removed, maybe except for the 1st paragraph.
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 
-> -	old_cpu = PANIC_CPU_INVALID;
-> -	this_cpu = raw_smp_processor_id();
-> -
->  	/* atomic_try_cmpxchg updates old_cpu on failure */
+It looks good to me:
 
-Also this comment should be removed.
-
-> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
-> +	if (panic_try_start()) {
->  		/* go ahead */
-> -	} else if (old_cpu != this_cpu)
-> +	} else if (panic_on_other_cpu())
->  		panic_smp_self_stop();
->  
->  	console_verbose();
-
-Otherwise, it looks good. And the comments might be removed
-by a followup patch.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
 Best Regards,
 Petr
