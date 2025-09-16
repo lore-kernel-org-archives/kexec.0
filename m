@@ -4,85 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07E55CAC598
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 12:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5275DCAC598
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 12:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6tr2LlqeFB6hD9iMXwFSFB1+YLZ+2W4/0LTJuQB0NjE=; b=IgMocHH1XOHlPFDPfsz0ZcUEUO
-	JG2OctB4LDwdM3tB8VBmDcFRi/bbMe7RfAchMKBov3GmTCQFDJYewgQ+M3F6ewYunzxjlu/FrULcz
-	L9N9nARKFSX3zvVBYCK3s5LotPixdaDksjWUbjo7V+7Yqi7b2/1jCrPSvyKWI1TKHxUhznd5n3T6s
-	E/wZDGw6jBjV9RcB1SImtNKrJD9JL7ND8LGkHjA0ZMkWzWCOd9nTAyE8YcbKqVKNd0aUQSN1uivjE
-	72gGrG6sNNOHrlQl1xKkpdpEqMtAsuAm47IUim4laZrTJa1nixwaUk8wp4pA1eief4x+oWxMaqG2M
-	ExFfO1Bw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=hIAAMaDpQ4ucb+HGc+pD8RUm6Z1ve88qfRHrnH4BVGo=; b=kxm62Mb9zn0cpI3l46ExbU1g+U
+	v6lob5k1ADCQptCiM+OJ9YszG3DObCmQ7kABV+YXTQ+9bAGAq4kCf4xOKsMjZ45Z6iX948F9xt8m3
+	7hzyVlSuvvb0VFPh6/0dbhszmdQvotLfpYQ9McCOT635jhXBAamGnoZrFHxx8MnCk5PmGbjYN0Nhu
+	F6AhzuS4+HR/8mSoaCdERg8J8toE8msK/CVtPVHVwRCnBv2Jpo3DKXaw46mYQSFd8LOBC1ThDZGD2
+	ivI7LxrWx6zI0AGr+GXbHrzN8VX819xaJus1MdzDTR+Uj+Wz12zGT7Y82h6wHcQUvwE3ahEpo58TH
+	1Lc6DjCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyV94-00000007pY3-2pD9;
-	Tue, 16 Sep 2025 12:50:54 +0000
-Received: from mgamail.intel.com ([192.198.163.7])
+	id 1uyVA1-00000007pdw-01sn;
+	Tue, 16 Sep 2025 12:51:53 +0000
+Received: from mgamail.intel.com ([198.175.65.18])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyV92-00000007pXk-0olZ
+	id 1uyV9y-00000007pdQ-2tid
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 12:50:53 +0000
+	Tue, 16 Sep 2025 12:51:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758027052; x=1789563052;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VxM/cdUE+MegHutCDt81ETLB7ynUxqJX6Yz1kpPrbhQ=;
-  b=QKFi9y/IZCnZk8q0oWq+8NfeA0S4PyEAQ6M+q5OZNY9rZGWhhU4AeIEb
-   aQroAXyhAxl14agqolBioqoYwVOcOw4G3rhr6fQUKitULio9+JzvjNShF
-   WxnXFbMFeL9hMq9n5L6KlaF+kd4TsJJ2x86Ta24AqUoQl54VnooZjKOsa
-   sP4kJflZ8Qe72VQRRuSnBhp4Enr5mXj3RLKKMmVimMKH1M2W/QJ4t66rQ
-   /FJO+NqMrA63xLZkz+mudp0n5KtZbWYAtF+opBouYm+7oJunoUOJZZqBZ
-   9Ihx3qcfzM1ZYE5oW1x0U7s1j50kGbk4HvD24H6RW8y5L0axABO263U3O
-   A==;
-X-CSE-ConnectionGUID: SD9uejgDS0STcIWO1QNi4A==
-X-CSE-MsgGUID: ZKnFFBG4TJi9+4BIbqOenw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="85742568"
-X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
-   d="scan'208";a="85742568"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 05:50:52 -0700
-X-CSE-ConnectionGUID: Sfghzwj2RRG2AEz6CPxh+w==
-X-CSE-MsgGUID: dr1e4I5gRCGdNtLcOWHJew==
+  t=1758027110; x=1789563110;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=67qe2cHRWzRfMUP3ME91QmZPRdAfH2+ZYKLVwC5M8ik=;
+  b=G0s43wq2fx5vBJQPO/izvFo5LfT0tnPFlnYkPue58oQRDs2RKgBK4b4c
+   +4am4AokCeqADDBrG24x3vD/IYvC0pT2Y0SoIsmvUDdVN+BVArFsepGDj
+   89fQAn5RHMv1D1PHjP741V4dmp0QLFt0aLsXUCHX3TFEujeW1F6uEQkgn
+   VwCVPqmhGDDuP77yaQGc5w9Zh+Of5kL9w4iBjcufQVFJRSBW2i0E++NN4
+   erxTTcFBw0zcUjDrJinpLLvMGQp5uGL9gHH/3X1neYBuIaLAzDuuhFfw3
+   q2gbZcjlKZHErFkqQYTJIj63XaHT/0kxxKlE7PLyWqICaqKsE1QZ8cBZ4
+   Q==;
+X-CSE-ConnectionGUID: 8412e1yiRamB84HVo9MiwA==
+X-CSE-MsgGUID: crh+5p5ySUaS0ZlU/Mcj5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60364097"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="60364097"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 05:51:49 -0700
+X-CSE-ConnectionGUID: h8Lkt1NbTRqMIpPbxHGW6Q==
+X-CSE-MsgGUID: 7PQfZTs0R2W/sucx0zx+gw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
-   d="scan'208";a="174044636"
-Received: from smile.fi.intel.com ([10.237.72.51])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 05:50:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uyV8u-00000003WoJ-2sRO;
-	Tue, 16 Sep 2025 15:50:44 +0300
-Date: Tue, 16 Sep 2025 15:50:44 +0300
+   d="scan'208";a="174537453"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa007.fm.intel.com with ESMTP; 16 Sep 2025 05:51:46 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 83F2895; Tue, 16 Sep 2025 14:51:45 +0200 (CEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+To: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, grom@black.igk.intel.com,
-	07110bfd5785d3bff71cebd710db42d6f5c4a643@black.igk.intel.com,
-	Mon@black.igk.intel.com, Sep@black.igk.intel.com,
-	17@black.igk.intel.com, 2001@black.igk.intel.com
-Subject: Re: From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Message-ID: <aMldJJktQVvkcMub@smile.fi.intel.com>
-References: <20250916123048.3058824-1-andriy.shevchenko@linux.intel.com>
+	Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [resend, PATCH v2 1/1] kexec: Remove unused code in kimage_load_cma_segment()
+Date: Tue, 16 Sep 2025 14:51:09 +0200
+Message-ID: <20250916125124.3094021-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250916123048.3058824-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_055052_242419_6900A63E 
-X-CRM114-Status: UNSURE (   5.65  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250916_055150_787044_D40D042D 
+X-CRM114-Status: GOOD (  10.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,14 +90,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 16, 2025 at 02:29:49PM +0200, Andy Shevchenko wrote:
+clang is not happy about set but unused variable:
 
-My gosh, the Subject is mangled, sorry, I resend it ASAP after double checking
-it's fine looking.
+kernel/kexec_core.c:745:16: error: variable 'maddr' set but not used [-Werror,-Wunused-but-set-variable]
+  745 |         unsigned long maddr;
+      |                       ^
+1 error generated.
 
+Fix the compilation breakage (`make W=1` build) by removing unused variable.
+
+As Nathan noted, GCC 16 produces the similar warning;
+
+Fixes: f4fecb50d6e1 ("kexec_core: remove superfluous page offset handling in segment loading")
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+v2: fixed Fixes (Nathan), added a note about GCC (Nathan), added tag (Nathan)
+
+ kernel/kexec_core.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 5357ed39e9d1..32722926bc7e 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -742,7 +742,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ 	struct kexec_segment *segment = &image->segment[idx];
+ 	struct page *cma = image->segment_cma[idx];
+ 	char *ptr = page_address(cma);
+-	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result = 0;
+ 	unsigned char __user *buf = NULL;
+@@ -754,7 +753,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ 		buf = segment->buf;
+ 	ubytes = segment->bufsz;
+ 	mbytes = segment->memsz;
+-	maddr = segment->mem;
+ 
+ 	/* Then copy from source buffer to the CMA one */
+ 	while (mbytes) {
+@@ -782,7 +780,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+ 		}
+ 
+ 		ptr    += mchunk;
+-		maddr  += mchunk;
+ 		mbytes -= mchunk;
+ 
+ 		cond_resched();
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.50.1
 
 
