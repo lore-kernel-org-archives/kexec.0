@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EFA33CAC599
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 13:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB122CAC59B
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 13:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EM3YSkqrS+wD1DSZ8rxCwrnJyCPkgkPjNIyUR3FKILQ=; b=mmCELEnnD/umWUFRIvK+Iv6ULQ
-	RIzIYmx5H3ZHqyeRDOEoy9VajbiTlwHxk0Y50hLl9l/AqS2ipAWESjohSj7yNuWnrRshTjQqnowSx
-	hnj2+6ryKGyfxRl75GZXVBf6xsbfaeDYXdkbVInFTwKJZNfSD6YMnvqRUV0IZvceDeZkQnEAYgTtd
-	cSwVSGynEpFN22kWoubr3hZf1mYspXMmEOZQN3ZznzWmWIiBieTFJW/pajLmeUzPqYvRV7JbFP8+K
-	A0WtZuYDi2sW2fvljEydYir8iUbgneH1nBNx1hJjwkqIeJ5VkbM3cRHQ3sAEQqWwlbSlIUwXOWgnT
-	HJY7ub2A==;
+	bh=IDn0rh7zU8d+rzGbtxh1PQkeYWg/ygdRtn2ehDK3iw4=; b=NYHsoI1BpK8T87LlfIMsj0aYEb
+	zaV4g6RlCYNSBxxU3sULzTJDoG0QEFhveV6Bf9ZkMQqXt0HqYriXVtx/1uw6O4y4LXBwOgpyGx1th
+	V6qt5KPiT2HTplwm628lSA2jcz+8UWYImr/waP5Mpzy6E3cprFmTmvp1UA/Dufjq/WjlBQ7LdPD06
+	VRxN9WHB+dkTkjrxCaSUo+dCvCXEp06n+OSRAHTTALHAbDMBGH0ODgQzjmjqMki6UJKzT//pC4zkc
+	51lDjmJlnm93GxwHL4HNTS7kfVKS89P9Qt6xBQIlc1GGru/FOzgzDw1+dqilL7FrUNO48KtPjTGD3
+	SyYBrk9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyVc9-00000007uiX-1oZl;
-	Tue, 16 Sep 2025 13:20:57 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1uyVct-00000007urF-39jU;
+	Tue, 16 Sep 2025 13:21:43 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyVc7-00000007uiM-2wQ1
+	id 1uyVcs-00000007uqE-07i9
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 13:20:55 +0000
+	Tue, 16 Sep 2025 13:21:42 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 114E8601DF;
-	Tue, 16 Sep 2025 13:20:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E2EC4CEEB;
-	Tue, 16 Sep 2025 13:20:52 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6CE67601A3;
+	Tue, 16 Sep 2025 13:21:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1C8C4CEEB;
+	Tue, 16 Sep 2025 13:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758028854;
-	bh=NkEqYgbQHqBRppulOAwQLkXQ/kR/tGJDaQ28SAU/ZbE=;
+	s=k20201202; t=1758028901;
+	bh=rAvqEfhmGxEnvdZNyv3LFHPZmEftR6dOMSWOd/EB0bg=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=H7OhipGoDJaVVg75Xy37xy/Gb3iNzhFXsIZqgKxxxy99QyXG14oqvwpdXzjYB6oOB
-	 Pz0Ho367YOVHIksobf0Fxb4ZsK60vbtto3ZzcXGgUjpOegEmLGYTKfR6zvX5IjCkd9
-	 +tC4O4jsuvaMlEQFuqv+ByjyZyCQFXOWFNhqDza+bRlT125FRjJ7uKyQn5HSMP5DAo
-	 b/dhH2ac393YhcPbCsP+ya3oU1SARvXXSUcAJK7L8L68mer45+vP+YZbuNVoJ7X+TZ
-	 9f4CvU+15dVkWB1BOrKADvt9Hkr7LyZIVSmneOlNsis/TIKe3K10+EKR11q58Ud2ek
-	 e315dV4Chy44w==
+	b=Ot8VUQUm11Wn2fQsIQd89sBxvXfdHgw1OvkeKD97GN6OOkDmDuOVVGqb6eYdxZcsp
+	 XnstJ8uG7ADE2sOM49qgDDarHlUWPbC/wVZieuRlDc1Ob2fxjNmPAtRM41vz6lvuOa
+	 hG8a7QgYiScra6ptd4v+NK3BHnst6WXvIBMNNOwbwPWaj+9xFPFjRfPWLdNX/iHsjl
+	 seKtbnOBm5FiAXJBR1WBcDvVU7ipceTXOVzyNXnd3AQTNn26gJhMZZhj68mvre2oCY
+	 4844jDl91bxcTMG3pzI8j9cBomn3J7lvMB0nNfaN4MzOBf/uLmrdMnxe1IM/8up3Dc
+	 YUJGpNEM8vxWw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <me@yadavpratyush.com>,  Matthew Wilcox
- <willy@infradead.org>,  Pratyush Yadav <pratyush@kernel.org>,  Alexander
- Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,  Changyuan Lyu
- <changyuanl@google.com>,  Andrew Morton <akpm@linux-foundation.org>,
-  Baoquan He <bhe@redhat.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  Chris Li <chrisl@kernel.org>,  Jason Miu <jasonmiu@google.com>,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org
-Subject: Re: [PATCH] kho: make sure folio being restored is actually from KHO
-In-Reply-To: <20250910155546.GB922064@nvidia.com>
-References: <20250910153443.95049-1-pratyush@kernel.org>
-	<aMGc-ExhkqwAyY_C@casper.infradead.org>
-	<mafs08qimjoez.fsf@yadavpratyush.com> <20250910155546.GB922064@nvidia.com>
-Date: Tue, 16 Sep 2025 15:20:51 +0200
-Message-ID: <mafs0zfauh6to.fsf@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>,  Pratyush Yadav <me@yadavpratyush.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Alexander Graf <graf@amazon.com>,  Baoquan
+ He <bhe@redhat.com>,  Changyuan Lyu <changyuanl@google.com>,  Chris Li
+ <chrisl@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] kho: add support for preserving vmalloc allocations
+In-Reply-To: <20250916130516.GB1086830@nvidia.com>
+References: <20250908103528.2179934-1-rppt@kernel.org>
+	<20250908103528.2179934-2-rppt@kernel.org> <mafs0ldmon784.fsf@kernel.org>
+	<mafs0ldmnlmq0.fsf@yadavpratyush.com> <aMgey9qEC_XUejXm@kernel.org>
+	<20250915144335.GL1024672@nvidia.com> <aMhAiR6qnXMA-c8r@kernel.org>
+	<20250916130516.GB1086830@nvidia.com>
+Date: Tue, 16 Sep 2025 15:21:37 +0200
+Message-ID: <mafs0v7lih6se.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -76,93 +77,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 10 2025, Jason Gunthorpe wrote:
+On Tue, Sep 16 2025, Jason Gunthorpe wrote:
 
-> On Wed, Sep 10, 2025 at 05:52:04PM +0200, Pratyush Yadav wrote:
->> On Wed, Sep 10 2025, Matthew Wilcox wrote:
+> On Mon, Sep 15, 2025 at 07:36:25PM +0300, Mike Rapoport wrote:
+>> > Under the covers it all uses the generic folio based code we already
+>> > have, but we should have appropriate wrappers around that code that
+>> > make clear these patterns.
 >> 
->> > On Wed, Sep 10, 2025 at 05:34:40PM +0200, Pratyush Yadav wrote:
->> >> +#define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
->> >> +
->> >> +/*
->> >> + * KHO uses page->private, which is an unsigned long, to store page metadata.
->> >> + * Use it to store both the magic and the order.
->> >> + */
->> >> +union kho_page_info {
->> >> +	unsigned long page_private;
->> >> +	struct {
->> >> +		unsigned int order;
->> >> +		unsigned int magic;
->> >> +	};
->> >
->> > KHO is only supported on 64-bit?
->> 
->> Yes. Currently only x86_64 and ARM64. It is mainly for hypervisor live
->> update so there isn't much reason to support it on 32-bit platforms.
+>> Right, but that does not mean that vmalloc preserve/restore should use the
+>> public KHO APIs and avoid using internal methods.
 >
-> Presumably this will eventually change to use some special coding on the memdesc
-> pointer?
+> I think it does, the same way vmalloc is layered on top of the buddy
+> allocator. Why wouldn't you build things in clean understandable
+> layers like this?
 
-Maybe. I didn't think that through yet.
-
->
->> >> @@ -210,16 +226,16 @@ static void kho_restore_page(struct page *page, unsigned int order)
->> >>  struct folio *kho_restore_folio(phys_addr_t phys)
->> >>  {
->> >>  	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
->> >> -	unsigned long order;
->> >> +	union kho_page_info info;
->> >>  
->> >>  	if (!page)
->> >>  		return NULL;
->> >>  
->> >> -	order = page->private;
->> >> -	if (order > MAX_PAGE_ORDER)
->> >> +	info.page_private = page->private;
->> >> +	if (info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER)
->
-> All the impossible checks shoudl be WARN_ON()
-
-The mental model I have is that the place that introduced the
-"impossible" situation should get the WARN(). So for an incorrect phys
-address (leading to magic mismatch) or incorrect order (say preserved
-big range using kho_preserve_phys() and restoring it using
-kho_restore_folio()), the caller is responsible so it should do the
-WARN(). Does that make sense?
-
->
->> >>  		return NULL;
->> >>  
->> >> -	kho_restore_page(page, order);
->> >> +	kho_restore_page(page, info.order);
->> >>  	return page_folio(page);
->> >
->> > This all looks very confused.  Before your patch as well as after it.
->> > I don't see anything in the current KHO code that requires the
->> > phys_addr_t to be order-aligned.
->> 
->> Right, good point. I can send that as a follow up patch. But I think
->> this patch stands on its own without that fix too.
-
-Actually, on another look, this patch implicitly makes sure that
-unaligned phys always fails. This is because deserialize_bitmap() only
-sets the magic on the head page which is always aligned by the order.
-For any unaligned phys, the magic will not match.
-
-Still, would be a good idea to do a KHO_DEBUG check for alignment if
-this implicit thing ever changes.
-
->
-> Maybe it is worth adding some KHO_DEBUG kconfig to protect some of
-> these extra checks?
->
-> phys should be pfn_valid, phys should be aligned, the page should be
-> in the right state, order should be valid, etc. All worth checking.
-
-Makes sense. Do you suggest the magic and order checks to also be under
-KHO_DEBUG, or should they always be done? I am of the opinion that it
-makes sense to do them always, but I can also understand the argument
-for disabling them in production for better performance.
++1
 
 -- 
 Regards,
