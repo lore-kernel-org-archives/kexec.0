@@ -4,228 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7E40CAC59D
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72A5DCAC59F
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:CC:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
+	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7Yb5jZGdD0sSS+5D1aGT7DsEJz3AB9mw/RY9EV+oKqU=; b=IocXhg7wMB7bBin6eVQ5zVOgdH
-	oM0YZ7FHTglinBkxOYixQz55CBtt9bP34O/Qx5GFp8iMisQPLRLMCzPmpMpW0pXVTU6S37WoIOJL2
-	usMeKUs/H7UblFsikfbTNCLDFcKvglVhzZMDy3XnXqzwONrXb/7J4stLMWaq7qnZN/FJYzIF9BrIC
-	mUcPJJ21JnPerElOrcEXdZn5Q366Iud0GybVkdArys59l5a3OVH5RXIZvGogryp9cMOb9n6Kzevay
-	1Hi4DW0gnPYIBWvaTLXcvpGuC1ixsfhku9QAyrX6EpfOw/zzjUlgodWsLM7/wfuTddCfAD0tm905j
-	TOJETzXQ==;
+	bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=; b=G0ZMDbUVxzBlt89o3A7vFLDF+i
+	HRDbHZmWMtsXtVC3dgOw7xRjYMs/yNHnuVrom/ux9pdukEY8NwkSx3XJPcqkVUQefLNMCTFkuAxcT
+	CuEYSQAIu5hVUbYXhCANZb5j+Sk/qcSR3e44oJdLH2t96+nbuF7AonpAPDr06mlSstHKYG40C04wg
+	/zWNfPmr49Zn7SdF4hlo52MlRZiso9hK1mWPjkIUV6ikSwO8duph49srFqv6J4O2W9TGkIQtrI5FB
+	s2kp2U5YJNIuvifOl9zpBAykCl6eVBsYGUPcRBrqU/AtJ/wNHu/XXPBNjnQ6Gxg/DQNGKV8VWVImz
+	P9TwSVeg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uybye-00000008xY1-3lPY;
-	Tue, 16 Sep 2025 20:08:36 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1uybyf-00000008xZZ-44r5;
+	Tue, 16 Sep 2025 20:08:38 +0000
+Received: from mail-ej1-x632.google.com ([2a00:1450:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwpS1-00000005d7Z-2T5b
+	id 1uySR3-00000007Rjl-0eE6
 	for kexec@lists.infradead.org;
-	Thu, 11 Sep 2025 22:07:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757628454; x=1789164454;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=/0jbTR5no0OX5GVvppW5xzir+Y05qrAhgk/zorEwNO4=;
-  b=VJ8ixl+Gb97te+evVOXtnehFqnNxdiVuEFZmWUCPcSw2BGuuSxjKSBKi
-   MMNdulgneZjWIzIA1vSNcNg1RB6S6spMoT4DxokP80FsDQEH5ZdW40f4Z
-   uWezUcZg7oRI0+OmlkVO2wjRvtk0S/vNjborkWSCxKUEEXF7coAdE2sun
-   Vzs2Sy0WUDyVMGyfne2d4RajrCUD5UCAWjy+Ruhy2XBW0s0UKWfXmeXt0
-   UWidSGP3RSDO2asstnLJiGim0YfZQGwzGf/2hLUN+avsr8VRGJjevTvyV
-   9Weh336wmbGp4iOmHbIkzfGgBxKk+NK2B2TFub0GqIvzVmt9Fs4wldxnn
-   A==;
-X-CSE-ConnectionGUID: 4xFN95OuQVOuKS5iLWnq7A==
-X-CSE-MsgGUID: b9ABA1A8R624RfXXWreaRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11550"; a="71349769"
-X-IronPort-AV: E=Sophos;i="6.18,258,1751266800"; 
-   d="scan'208";a="71349769"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 15:07:33 -0700
-X-CSE-ConnectionGUID: fxqupNegR/CqAnoDOWiuoA==
-X-CSE-MsgGUID: 3hMBsVIaRWWKRDkUUGglng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,258,1751266800"; 
-   d="scan'208";a="173710304"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 15:07:30 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Thu, 11 Sep 2025 15:07:29 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Thu, 11 Sep 2025 15:07:29 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.64) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Thu, 11 Sep 2025 15:07:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rqDNgKe8mBHicsje7i1Z+3vUa+N0iv+fkR96LCZNnfuBoJLgZ5EEUwoM6UR2XY1LvxqloiceHAf4sAe/cSPMxlufqyWX3ovoGImcv/QrRPCIfOts3KBA9BSQZAQlPCfkpXfuWPbsFbZNkDqUR5e+/LEAksj8n9i8XUaE6YZsy8pndyZ1gW2zmJOcME40rHbwKLPQaBkmXI2nS6mgBm8iuXBYFIMDSNrjRI+3fWoo65iC0FNY/FKm5rC9qaM+uOBnCEDLK5MSX6OmZGpIzZwrAqnsSaZGCQcaBfWLO0bTWsz9anYTjAhH4sfN0OJB3SuYB7GC6V0fOTdP74UGMw26Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Yb5jZGdD0sSS+5D1aGT7DsEJz3AB9mw/RY9EV+oKqU=;
- b=jkSAEq98XNF45dpVyqG/x4x1EnOhZ/imo6pAR83pY2mMqGr73T9aGK/U5sakWd4k9pz9K5b/uU5pvNU5fB+G1AvR0blLoZBkR2PEFA9vav3OfnQ4RWgPFCK3yP0L3kjbluc9lDq+668sRrHSJAaPQVuoMFFTvaPQwITJCcN0cbHVQDhQz0MenniiWmhBZvHEypGvFZGgKv+Kv4Wg45xHxFpWRLG5QVagQJFxkfve/1VqLVQLom72b8iYn1OnMyvugbQLJIB2Riu8CtBZBLobZlwygnJZLmsyLYa647f9WIjvEb6IK/fX9RoWk4XkOndf1LWx3JNKpIrx/czPxejDMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SA2PR11MB5035.namprd11.prod.outlook.com (2603:10b6:806:116::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Thu, 11 Sep
- 2025 22:07:26 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.9094.021; Thu, 11 Sep 2025
- 22:07:26 +0000
-Message-ID: <dce30be7-90d3-4a6a-9b26-44d76c3190a0@intel.com>
-Date: Thu, 11 Sep 2025 15:07:21 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/16] mm: add ability to take further action in
- vm_area_desc
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
-	Guo Ren <guoren@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "David S .
- Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, "Arnd
- Bergmann" <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre
-	<nico@fluxnic.net>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
-	<osalvador@suse.de>, David Hildenbrand <david@redhat.com>, Konstantin Komarov
-	<almaz.alexandrovich@paragon-software.com>, Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Tony Luck
-	<tony.luck@intel.com>, Dave Martin <Dave.Martin@arm.com>, James Morse
-	<james.morse@arm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, "Christian
- Brauner" <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Liam R . Howlett"
-	<Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
-	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
-	<mhocko@suse.com>, Hugh Dickins <hughd@google.com>, Baolin Wang
-	<baolin.wang@linux.alibaba.com>, Uladzislau Rezki <urezki@gmail.com>, "Dmitry
- Vyukov" <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, "Jann
- Horn" <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-csky@vger.kernel.org>,
-	<linux-mips@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<sparclinux@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>, <ntfs3@lists.linux.dev>,
-	<kexec@lists.infradead.org>, <kasan-dev@googlegroups.com>, Jason Gunthorpe
-	<jgg@nvidia.com>
-References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
- <d85cc08dd7c5f0a4d5a3c5a5a1b75556461392a1.1757534913.git.lorenzo.stoakes@oracle.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <d85cc08dd7c5f0a4d5a3c5a5a1b75556461392a1.1757534913.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW3PR05CA0016.namprd05.prod.outlook.com
- (2603:10b6:303:2b::21) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	Tue, 16 Sep 2025 09:57:18 +0000
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-b07d4d24d09so271549166b.2
+        for <kexec@lists.infradead.org>; Tue, 16 Sep 2025 02:57:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1758016635; x=1758621435; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=;
+        b=XFttY3qfONc6twFzoKkXNnlvTgzQNuHo8XPeempqfiAyze55YG+MgpgwEGlZYBPFdF
+         gpnvPURT+y6bI3JXJDrNk2YbyG2DHRJoyUVV6GAzlYsnpzbVTK0mndhnfuJOlxS3LZIY
+         UhQY4X2Exo15xREI0Y5HTGWrHY+DDbd2oVRT3+94dFcIXPb8NUnQ8ue2jn+0Pp+UKMCi
+         dm+b0OOYCm1MamZ4c3P0YQS0etb0Av44R1VuvXXZkhyGp6cQLoa/xkfV4F8sLx5lkVYZ
+         /sdm42JvMqR3bBvWOAiKaPSFV0x/n5U+fQEtYIRQZJppdQRz9QtdZPCGqG7yHMuUzAR3
+         nesw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758016635; x=1758621435;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=;
+        b=i2sxK26hfCr9/yOeJAJ3C4iwlo9YLDMQYmeF8thRIc1z6yFPFmNn8OFU7xW+ZvKDAJ
+         ckeYXxyXGl0pZNg7bgOYBIcRYtX/ifXmixNrO4AUGUKEQlEEHLtXy1AQHOUKGmOEaS+x
+         8fm8RDQuLvfQSVA3OFIIztxXJinb8ykeGAiOOl05Ei1kxTz60E8RaFGGF4aCmDpjBXbh
+         8wZbWI7CrW9XST4ztG9urtjuTwZ6XErvirk84nuXX64vuy1WpzMcSGKLpOkUJltOM8dL
+         VkSFFxIw41rhH3FjIPC1RpicLRYempewzYbxvCaxaSlVVpK9fme65Pg8FikP0cUxfVqC
+         8uRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrXBwnN/2jmd0wuydBWKU+W5A2icroJ13WUTl5PJJvaqkH0AdO91Lw1TNtn8aDYMOepPXj6Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwmjDnxpRxcsXu42eMCL1eE96Efx6FLWhU6j/Mwjeau4J3WL2KW
+	wMR+0SzmIfVwmRfEirzrIrx2EyGUjgxIObCUAss5ijawdKvlo/Dxhs9veK29MuF5Zas=
+X-Gm-Gg: ASbGnctyCrvR+CZ8grXOItm0Dhueobl9EyU8E2PW7sQ8khSu1WLy+IH6tzq/acOF4hL
+	v7Ki36rUNEF80AQfspe5QFlVB6YKN5gS4Db/+/oA6j1Ng+2nR/1M/RlsMq+mUBXtOqHhdaFH+MI
+	g7JLWsueqQRwFIPPVXauqDc81CSSMuRcxWQ9fdHXhBVTBBViI2lwVhctyNHkqg40SrAPlS+Lg3p
+	V2Onz+Cl0Uc9Ot+Fl8mWBxUDdJOn0CTq2iTsthsizKEtjj6YPvuJQ7J4adFTclNHZ0/OxVLhNWj
+	Ko0xP1SOlK8ZMKU71uRl/TA4iDY4RpEmcYehyEVmRD+jMLYDa+zrCiYhbJfvmfOrWDoWAW+EAqX
+	hp4l2huHxtNn/vXAJLxya23xhYwkQuj/861/KveNP
+X-Google-Smtp-Source: AGHT+IHumhbFeoKijO1bIfbeRN7muXKT3iQrz7PNZcfL0Hw4Nuwk0HrRa1xVrQAwNjSiMUzT+ONYBQ==
+X-Received: by 2002:a17:907:3e9e:b0:b04:5cca:9988 with SMTP id a640c23a62f3a-b07c38699ffmr1699588866b.43.1758016634556;
+        Tue, 16 Sep 2025 02:57:14 -0700 (PDT)
+Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07b31291b0sm1128497566b.34.2025.09.16.02.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 02:57:14 -0700 (PDT)
+Date: Tue, 16 Sep 2025 11:57:11 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Subject: Re: [PATCH v2 1/9] panic: Introduce helper functions for panic state
+Message-ID: <aMk0d5JO_4YECYGY@pathway.suse.cz>
+References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+ <20250825022947.1596226-2-wangjinchao600@gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SA2PR11MB5035:EE_
-X-MS-Office365-Filtering-Correlation-Id: 104ed724-b80f-487b-4edc-08ddf17f97a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eDM4VnBna1g3SjJRb00wdjJNN3haRzlDaHhNc1VEMUhZNWZOb0IxRERDM09K?=
- =?utf-8?B?NVlVRnVlNXlzYTZsUnBoZzFkRUszSTdRRWNKaFQyK0h3QUdjblZNUlcvNEZl?=
- =?utf-8?B?UFZYZ3g1WTVIWkNuNjFiN05sWHVhUWNQNTI3UUxxbUViUWlXRUdTdHJRNlZh?=
- =?utf-8?B?aW9ybE1RYTlEZGVKa3dyQjJPUVJVajFUeGdzK202a2o3SWt5NFZaR3drS2x6?=
- =?utf-8?B?c0JsSTBTNzA1a21SZFdrYzNWdFk3NDFiUWovVVgxTjRHRkh5WU5ubkxKbXNv?=
- =?utf-8?B?aWIzTFg0bWVqRFVzSmRpQTNKdVI5UlJoTVBwcWxlQk10TVVHRUFNTituUzR4?=
- =?utf-8?B?N2dFZ1VQOVFVWVN6amdVYllnVHFFU1RFUS9lN0dyQmxOenR1UW02THhPNnV3?=
- =?utf-8?B?SmxBWjFDbHhtMmk5aG51SCtZYzFvOVhYd3JlUnJFQkk1LzRiSVJpZmtDeDJQ?=
- =?utf-8?B?NGlLSzdUbDMvYkxNR3RBbXE2ZmU2c1U2U0U4Tk4rWW1nSkk5RzZPWjBiUjlJ?=
- =?utf-8?B?UnBGYkRKWXdRbEErOUZ2QVE0U2sza1BZZzdScVpaV0NocUw1b3BzOUN5TEJa?=
- =?utf-8?B?K0cwWkFDZWRRRVVUdlVIb3VnY2Fzc0liWDVlck02dWJNWHdnamlRbnBySm5P?=
- =?utf-8?B?dE01YlloUXBOM2xYa20yVytxUUR6REhmY2ZkQkg3bXdIZFc4RTdDNE10UGZk?=
- =?utf-8?B?S0RabHI5L2djN3R2ZFB4RmF6VEVkMlBsa2gyK3F0czhUaGNiVDlpNnpKUW9n?=
- =?utf-8?B?Z0lYdUNsOHEzVTZMVGZ2U2NtUHdybWlZTzRDMEtSY1U3UUZnQW4vemhFVnJO?=
- =?utf-8?B?NzJOcGxOODVUc2dZTGxZdUhOOS8xaXRqK2pSMXFMOU9ZdlEyc3dkdVBwZjdO?=
- =?utf-8?B?VnZLK2h1WVBUZWlOYU5BMlgrVUQrYis0dXRNQmpzNE80czdVRUszLytOcDV3?=
- =?utf-8?B?UFdTQm9UL0JsbTZIay9vdEhvc3FTaXhSb1BINUpYQmxxL0dHLzl2eEU4WjNa?=
- =?utf-8?B?em05ZWJaL3A0T3NGNHhhZnNMZWhlTTZYbzVKRE4xSStvT3N0RTY0NU9HMFNE?=
- =?utf-8?B?NW1MUXM4MDVvM0FIMjd2YUt5ZWtVRFd4aVQ3bWJkTyswYXNjRk0zZHV3b1hB?=
- =?utf-8?B?UlF1YzZPbjFmZFo4N29kN2UzMDVCcGZoY0FUQ204WnBTNkg0RE1zR0libk0r?=
- =?utf-8?B?NXdyb3FkbkdUYk50aGYvU0ZJK3FpRkVsMlZETEhGUE5HUEw5K0JsS3dVSmpp?=
- =?utf-8?B?TnJ4cTdTbDZ3T01EQUI4cEpWeFVTYWtzOE1aUlFJMGpSOE9iV1pEdnZCSDl0?=
- =?utf-8?B?M1dtNXJWVUJwcU9CUUpabXNEK3VSbWJ3T3ZzbnIzQ3JIbDY0alR1S3lLeWsv?=
- =?utf-8?B?ZWhkdis1QUhMRTZPbi9KMWxkNXNmcFVXWUNEWFQxNzk2Y1ZZUXR4UExCbEls?=
- =?utf-8?B?WVQ2ZGJnRERDaVdtaG9LbGxJaXZjSkppQ3VlUnZzZnlickRVQVRyUEJyS01M?=
- =?utf-8?B?UVNVcnhKaUlNOTUyYllLZnFSNmRMOU5kMU1Iem5XVmNDakhPbm8rbDIxazJF?=
- =?utf-8?B?T0N6M3kzK2FFVzFxKyt5OGFOUjlKNUJXaFRJcXlGS0lGeGN1Slc2dHF2anJF?=
- =?utf-8?B?b0VwWEpZUnlUUDNXNjBUS094WTUzUE5aM3FmUUFtNllzZ1p6YjBXUHBBMkQv?=
- =?utf-8?B?RkhOSHlMSkdVMVQ0RzdmZzhJUFgxellQRGFSTll0NHRaTm1IS3pPYjROK1Rs?=
- =?utf-8?B?ZTRIRktwMDhDV1ROUlNlUDEyZzhObFEwak1XeFdGUDlNZVhJTUtEaDBUUGgw?=
- =?utf-8?B?QWI3S1FRbE5PQy9LNFVsOWpvU3pqMk9iRXd3aWxobS96VXViQjNhZkRzVHBF?=
- =?utf-8?B?UWE4SGJMcVBjbGtsTitRVTBmZTdJUmRLWEQxUHI1VWIxcEtHUzB4V1E3WHNz?=
- =?utf-8?Q?EKmVJ1TaePc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGVUZWYxa1pQYTZpeElDYmU5aVVFdC9uT3JwT3ZadnpIc0RZWm1hZUwxZ2I5?=
- =?utf-8?B?TndzaG1pQ2d0WTJCOTd5VlpzdEI1aXhJaU9yV3dPdUhwcDNIelRWd2ZqVmZt?=
- =?utf-8?B?bW9DRFNmL1drR2lBWms0c1BTdHlwYTdTdnBQVDZNbm82eUxuRjFyR2wxbWl4?=
- =?utf-8?B?ZitYTHhCOFFNWlVWMWFnUlpFZXJsSloyWnVvN3d5TXczY0hFZy9nL1hybEww?=
- =?utf-8?B?T09UcmwwTUM3bVE3MFZYZnRCNEx5dmgrbTVvMHZiTlhoK1BNb3llYVdnYS9B?=
- =?utf-8?B?Q0dydDN6QTRKelZwMDkvTEdJWW1YbnBpdGh2SUttNGZJeWdZbVRQcWI3Qm1h?=
- =?utf-8?B?bEJyWjFmNHh6VHU1R0l2QmNjMUJGQjg3S1R1aEV5MzNxd1IrS29Rd1JGMFhT?=
- =?utf-8?B?cmVlS0xqZndzbWxzSDBtSk1BanJBOUppY2oyWGpjR2F4SWNjZk5RZjBYaXBp?=
- =?utf-8?B?dXNzZGxFN3liamZSOEhzNkh2eElDOGJDRUJJYW1TV3V1TEVsWkgxSHRLWjdW?=
- =?utf-8?B?YjhhcGhReGZ4ZXlkMGwzZ0J5a1l5WDF6WmxHSzFCeWFqUUFQbU9RTzdHQXdV?=
- =?utf-8?B?cmJCSXVTUGlYZ29IQ21rTUJTbHFQREt1WGpHZUEvQzEwVHRtKzRHdkhVVG84?=
- =?utf-8?B?MjZZWTI1bmdCUFNpOWpZM1A5cHFTYktUcUNJa3J5Ni9BODh6bkliZDBodEsw?=
- =?utf-8?B?SnZPSGRRSVgvQVM0V0FaYzgrMWVtakJ2VFU2WFNkUExuRXRSQmFIdmc1VFdL?=
- =?utf-8?B?MENJdC8xQllRNFZkMHhiaXlEVTd1U3F3R2ZXeFFFbyt5OUIyUDBsekZObDdx?=
- =?utf-8?B?UWhYSUw0cGdmWGk3NTFJbnkrSXcrb0hsOG5VUmsxbFVGNTAxNnZnZEZIVWJk?=
- =?utf-8?B?TktFT2FUZnFKSC9OemhSV1cwQmlpeWJsb0dBbExnVy9OR3VGWktsbE5GWUM4?=
- =?utf-8?B?Q2M2dGtFWGZTLzIyZXduaHdsRGlKZGl2WGpTdEVuNDlGNk1RaGZCUFVPcDg0?=
- =?utf-8?B?YjJQbW9TWVFkVnVJdHFnNUNRL1pBWFoyWHJmOWZ0dXNsQm1nSnhFOGZIK2tz?=
- =?utf-8?B?TUlpdDQ3Qmc0M25IZXpxZ0toejh4MDMxSXE0bktBcEZ6bDBnUXFaMS9POEE3?=
- =?utf-8?B?bXgwTkZVYlJYUFI1Yzk4bHRjNktreGUzTHhWcllQQ1g4Q3hBVU53V05jRnE5?=
- =?utf-8?B?VFRXbVZPZTY2VlFsa1g3d3ZnYVpJQWE4SHhEY0ZxWTNzSmwvK3kvMndVVXJH?=
- =?utf-8?B?NEgyQ1dWYWlXU0gxOVQwYmhPNmRaWXdmQ3NWaUNlbEN2MnpsNTdQYStVckxX?=
- =?utf-8?B?bHdudU5lTlhyVDhsQm5VTkduNEE2VHVNUkp2SkpDQk9QZThiYzg5UHZNM2tk?=
- =?utf-8?B?RGpXMzdxT0doR2V6ZW05cHRNUVVrdzdwdDVjUWFWRytva2hyMjNxUlk2R3dh?=
- =?utf-8?B?ODlydXVLSmlVVmIxU01iSXZXaXcxK3MvZnJtb3ZaQWRHMWIrTnpJdys3UE5m?=
- =?utf-8?B?UGtIVmZqN0E3QVF4YlpZeFpKNzVWcFFWNDhuMlJ5UmFPR1ovbUxYNEpveUlR?=
- =?utf-8?B?eGphS1A0WGFVSUxoQVJCTEE0MEordENyM0oyUTBLK2hIMm55bEN4WTc3WW5G?=
- =?utf-8?B?VS94b3NoMWkzNlpNd2RNSzRkQWNDVVFVTnBHUHVjbDJlaFdITW1jeWJySVpo?=
- =?utf-8?B?TXcrbTFWa3Y3UVJTOW9XODBSTzExazFUOGZzaFBnQUtIVTcraFc1Sys3K3VH?=
- =?utf-8?B?cWc1WEVlcSs1eE55azdzTnBXYmJxZlRsZFZXaGU3aEY0aHg5aE5BUTZndnFB?=
- =?utf-8?B?VUpOeU1TMVBOTEVGcXJKNk5NRzMza1BpQWJmYnlXazVQNjBqOFdTWUJqTWl5?=
- =?utf-8?B?dHJmZ1YxMXc4d2I0WlphSWxzU0c1RVdnRDFkNzE2RSs5Y0VjTlV1ZFdMRmRU?=
- =?utf-8?B?QUR2SFZ1NkpLWlFzSVNhQThCL0Q1S1Nhdzd1REd6bUVHNHVId1FESWRUdk1F?=
- =?utf-8?B?VGQvYnR3SXdJRkRHWTR3VXpJYktFTkRHSUl0TE4wcm5qWTBET1owOEFLOXMz?=
- =?utf-8?B?MGxQaWkzd0lNOXI1WG9vNU91OFZLdHZ1V1RVR1dNUzUzWXVkV0xlSm5pQjVl?=
- =?utf-8?B?WXI4dHVOSXdRN25rNHBLZ3g3ayt6SXkxZytpOXRxdU5pNzJya0pTTmoxSC9T?=
- =?utf-8?B?VFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 104ed724-b80f-487b-4edc-08ddf17f97a2
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2025 22:07:26.5698
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MBxoLnLomYseB9mjG3m6U94rsNPsKwzmOs4mn79Mk++qLduFtEp+EQJ789YL7nPnhG10yna7KpqGmrq2df+lNJ2pl05FoIG9mVAKX7d+d28=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5035
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250825022947.1596226-2-wangjinchao600@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250911_150733_652711_FD466D47 
-X-CRM114-Status: GOOD (  17.52  )
+X-CRM114-CacheID: sfid-20250916_025717_236533_5C56278E 
+X-CRM114-Status: GOOD (  32.98  )
 X-Mailman-Approved-At: Tue, 16 Sep 2025 13:07:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -238,86 +94,153 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: Sravan Kumar Gundu <sravankumarlpu@gmail.com>, linux-fbdev@vger.kernel.org, Kees Cook <kees@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, Yicong Yang <yangyicong@hisilicon.com>, Zsolt Kajtar <soci@c64.rulez.org>, linux-hardening@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Simona Vetter <simona@ffwll.ch>, Max Kellermann <max.kellermann@ionos.com>, John Ogness <john.ogness@linutronix.de>, Baoquan He <bhe@redhat.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Helge Deller <deller@gmx.de>, Joel Granados <joel.granados@kernel.org>, Thorsten Blum <thorsten.blum@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Nam Cao <namcao@linutronix.de>, Qianqiang Liu <qianqiang.liu@163.com>, Yury Norov <yury.norov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, dri-devel@lists.freedesktop.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sohil Mehta <sohil.mehta@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Luo Gengkun <luogengkun@huaweicloud.com>, Feng Tang <feng.tang@linux.alibaba.com>, Shixiong Ou <oushixiong@kylinos.cn>, Anna Schumaker <anna.schumaker@oracle.com>, Tony Luck <tony.luck@intel.com>, Joel Fernandes <joelagnelf@nvidia.com>, kexec@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Li Huafei <lihuafei1@huawei.com>, linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Lorenzo,
-
-On 9/10/25 1:22 PM, Lorenzo Stoakes wrote:
-
-...
-
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 4a441f78340d..ae6c7a0a18a7 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -770,6 +770,64 @@ struct pfnmap_track_ctx {
->  };
->  #endif
+On Mon 2025-08-25 10:29:29, Jinchao Wang wrote:
+> This patch introduces four new helper functions to abstract the
+> management of the panic_cpu variable. These functions will be used in
+> subsequent patches to refactor existing code.
+> 
+> The direct use of panic_cpu can be error-prone and ambiguous, as it
+> requires manual checks to determine which CPU is handling the panic.
+> The new helpers clarify intent:
+> 
+> panic_try_start():
+> Atomically sets the current CPU as the panicking CPU.
+> 
+> panic_reset():
+> Reset panic_cpu to PANIC_CPU_INVALID.
+> 
+> panic_in_progress():
+> Checks if a panic has been triggered.
+> 
+> panic_on_this_cpu():
+> Returns true if the current CPU is the panic originator.
+> 
+> panic_on_other_cpu():
+> Returns true if a panic is on another CPU.
+> 
+> This change lays the groundwork for improved code readability
+> and robustness in the panic handling subsystem.
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  include/linux/panic.h  |  6 +++++
+>  kernel/panic.c         | 53 ++++++++++++++++++++++++++++++++++++++++++
+>  kernel/printk/printk.c |  5 ----
+>  3 files changed, 59 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index 7be742628c25..6f972a66c13e 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -43,6 +43,12 @@ void abort(void);
+>  extern atomic_t panic_cpu;
+>  #define PANIC_CPU_INVALID	-1
 >  
-> +/* What action should be taken after an .mmap_prepare call is complete? */
-> +enum mmap_action_type {
-> +	MMAP_NOTHING,		 /* Mapping is complete, no further action. */
-> +	MMAP_REMAP_PFN,		 /* Remap PFN range based on desc->remap. */
-> +	MMAP_INSERT_MIXED,	 /* Mixed map based on desc->mixedmap. */
-> +	MMAP_INSERT_MIXED_PAGES, /* Mixed map based on desc->mixedmap_pages. */
-> +	MMAP_CUSTOM_ACTION,	 /* User-provided hook. */
-> +};
+> +bool panic_try_start(void);
+> +void panic_reset(void);
+> +bool panic_in_progress(void);
+> +bool panic_on_this_cpu(void);
+> +bool panic_on_other_cpu(void);
 > +
-> +struct mmap_action {
-> +	union {
-> +		/* Remap range. */
-> +		struct {
-> +			unsigned long addr;
-> +			unsigned long pfn;
-> +			unsigned long size;
-> +			pgprot_t pgprot;
-> +		} remap;
-> +		/* Insert mixed map. */
-> +		struct {
-> +			unsigned long addr;
-> +			unsigned long pfn;
-> +			unsigned long num_pages;
-> +		} mixedmap;
-> +		/* Insert specific mixed map pages. */
-> +		struct {
-> +			unsigned long addr;
-> +			struct page **pages;
-> +			unsigned long num_pages;
-> +			/* kfree pages on completion? */
-> +			bool kfree_pages :1;
-> +		} mixedmap_pages;
-> +		struct {
-> +			int (*action_hook)(struct vm_area_struct *vma);
-> +		} custom;
-> +	};
-> +	enum mmap_action_type type;
+>  /*
+>   * Only to be used by arch init code. If the user over-wrote the default
+>   * CONFIG_PANIC_TIMEOUT, honor it.
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 72fcbb5a071b..eacb0c972110 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -294,6 +294,59 @@ void __weak crash_smp_send_stop(void)
+>  
+>  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+>  
+> +bool panic_try_start(void)
+> +{
+> +	int old_cpu, this_cpu;
 > +
 > +	/*
-> +	 * If specified, this hook is invoked after the selected action has been
-> +	 * successfully completed. Not that the VMA write lock still held.
-
-A typo that may trip tired eyes: Not -> Note ? (perhaps also "is still held"?)
-(also in the duplicate changes to tools/testing/vma/vma_internal.h)
-
-> +	 *
-> +	 * The absolute minimum ought to be done here.
-> +	 *
-> +	 * Returns 0 on success, or an error code.
+> +	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> +	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> +	 * may stop each other.  To exclude them, we use panic_cpu here too.
 > +	 */
-> +	int (*success_hook)(struct vm_area_struct *vma);
+> +	old_cpu = PANIC_CPU_INVALID;
+> +	this_cpu = raw_smp_processor_id();
 > +
+> +	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
+> +}
+> +EXPORT_SYMBOL(panic_try_start);
+> +
+> +void panic_reset(void)
+> +{
+> +	atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> +}
+> +EXPORT_SYMBOL(panic_reset);
+> +
+> +bool panic_in_progress(void)
+> +{
+> +	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
+> +}
+> +EXPORT_SYMBOL(panic_in_progress);
+> +
+> +/* Return true if a panic is in progress on the current CPU. */
+> +bool panic_on_this_cpu(void)
+> +{
 > +	/*
-> +	 * If specified, this hook is invoked when an error occurred when
-> +	 * attempting the selection action.
-> +	 *
-> +	 * The hook can return an error code in order to filter the error, but
-> +	 * it is not valid to clear the error here.
+> +	 * We can use raw_smp_processor_id() here because it is impossible for
+> +	 * the task to be migrated to the panic_cpu, or away from it. If
+> +	 * panic_cpu has already been set, and we're not currently executing on
+> +	 * that CPU, then we never will be.
 > +	 */
-> +	int (*error_hook)(int err);
-> +};
+> +	return unlikely(atomic_read(&panic_cpu) == raw_smp_processor_id());
+> +}
+> +EXPORT_SYMBOL(panic_on_this_cpu);
+> +
+> +/*
+> + * Return true if a panic is in progress on a remote CPU.
+> + *
+> + * On true, the local CPU should immediately release any printing resources
+> + * that may be needed by the panic CPU.
+> + */
+> +bool panic_on_other_cpu(void)
+> +{
+> +	return (panic_in_progress() && !this_cpu_in_panic());
+> +}
+> +EXPORT_SYMBOL(panic_on_other_cpu);
+> +
+>  /*
+>   * A variant of panic() called from NMI context. We return if we've already
+>   * panicked on this CPU. If another CPU already panicked, loop in
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 0efbcdda9aab..5fe35f377b79 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -345,11 +345,6 @@ static void __up_console_sem(unsigned long ip)
+>  }
+>  #define up_console_sem() __up_console_sem(_RET_IP_)
+>  
+> -static bool panic_in_progress(void)
+> -{
+> -	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
+> -}
+> -
+>  /* Return true if a panic is in progress on the current CPU. */
+>  bool this_cpu_in_panic(void)
+>  {
 
-Reinette
+All the functions are trivial. It would make sense to define
+them in linux/panic.h. Then the callers would benefit
+from the (unlikely) prediction macro...
 
+It can be done in a followup path.
 
+Otherwise, the patch looks good. I think that it is too late
+but feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
 
