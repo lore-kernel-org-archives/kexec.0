@@ -4,84 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72A5DCAC59F
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 240C1CAC5A1
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 20:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
 	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=; b=G0ZMDbUVxzBlt89o3A7vFLDF+i
-	HRDbHZmWMtsXtVC3dgOw7xRjYMs/yNHnuVrom/ux9pdukEY8NwkSx3XJPcqkVUQefLNMCTFkuAxcT
-	CuEYSQAIu5hVUbYXhCANZb5j+Sk/qcSR3e44oJdLH2t96+nbuF7AonpAPDr06mlSstHKYG40C04wg
-	/zWNfPmr49Zn7SdF4hlo52MlRZiso9hK1mWPjkIUV6ikSwO8duph49srFqv6J4O2W9TGkIQtrI5FB
-	s2kp2U5YJNIuvifOl9zpBAykCl6eVBsYGUPcRBrqU/AtJ/wNHu/XXPBNjnQ6Gxg/DQNGKV8VWVImz
-	P9TwSVeg==;
+	bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=; b=3bvHhicCCGe2acHxxQCRlJnlH/
+	QXO1Y8f46rZzH2qPdPC+lMTVblpe8ozGp+FNhY8yskZ+mEQrYZqB4VkeWVb4GFLsEww/nKMORLmn/
+	5roYH+MpyIsgH3zrPnooFY5aDNyPnNz/0gttA9afqLmN9+fSP1oYXs04LzSSCyHPAeBwhCDru8eTO
+	VRvWaTSjHf2XrMrnV67AT0kKkXjvcAyLMBPhisMyugqjF9LzaG0JCBVI48eR1JijobB38dk4J2nCv
+	JdmTMox3RHt/udY9DX7qlQn9Sis5NB60Th/2lPu5uUHvy8U6Xd1kpJMu2wFdp5SwQwXPklDfhluWl
+	OWmrUTKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uybyf-00000008xZZ-44r5;
-	Tue, 16 Sep 2025 20:08:38 +0000
-Received: from mail-ej1-x632.google.com ([2a00:1450:4864:20::632])
+	id 1uybyh-00000008xcG-1SzM;
+	Tue, 16 Sep 2025 20:08:39 +0000
+Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uySR3-00000007Rjl-0eE6
+	id 1uyTjA-00000007eSe-3WOB
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 09:57:18 +0000
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-b07d4d24d09so271549166b.2
-        for <kexec@lists.infradead.org>; Tue, 16 Sep 2025 02:57:15 -0700 (PDT)
+	Tue, 16 Sep 2025 11:20:06 +0000
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so802914766b.3
+        for <kexec@lists.infradead.org>; Tue, 16 Sep 2025 04:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1758016635; x=1758621435; darn=lists.infradead.org;
+        d=suse.com; s=google; t=1758021603; x=1758626403; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=;
-        b=XFttY3qfONc6twFzoKkXNnlvTgzQNuHo8XPeempqfiAyze55YG+MgpgwEGlZYBPFdF
-         gpnvPURT+y6bI3JXJDrNk2YbyG2DHRJoyUVV6GAzlYsnpzbVTK0mndhnfuJOlxS3LZIY
-         UhQY4X2Exo15xREI0Y5HTGWrHY+DDbd2oVRT3+94dFcIXPb8NUnQ8ue2jn+0Pp+UKMCi
-         dm+b0OOYCm1MamZ4c3P0YQS0etb0Av44R1VuvXXZkhyGp6cQLoa/xkfV4F8sLx5lkVYZ
-         /sdm42JvMqR3bBvWOAiKaPSFV0x/n5U+fQEtYIRQZJppdQRz9QtdZPCGqG7yHMuUzAR3
-         nesw==
+        bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=;
+        b=f/o2kekNTIg6qBnG3uEDHAlU4K01k3QdEdtNyADnWPL46Or2sZS7j4wQmU85Zy0Swo
+         xam82LI0ti8LaSeuvCv/YwDAGgc6o8kAg7r90trnMfScFAMrYQ5p/fLZhDdUHQ7mPDq/
+         kwQv6a1WKkrcqbAsdbpAwWvYDfse/m6vPCza6ElW1cjt55E03gcmgP7Xdqbkkv9yjUvM
+         Wm153UjkrDkk+sI5meT0ZfBApgjR1xIgXZUpHfcTGoKW8CasbDkDPo70wnNL45XC7IZ6
+         Thi2a1rpU1+QJFUPXUK6dbdfWs/3ddKJKMjbBVIcJ2G8vcgt8KwyXvxkU2Bov73p2b0c
+         Is6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758016635; x=1758621435;
+        d=1e100.net; s=20230601; t=1758021603; x=1758626403;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6HInf3vVICYvsjl1BbLw9IcLOL1iDFPRtoXvi2r6kSo=;
-        b=i2sxK26hfCr9/yOeJAJ3C4iwlo9YLDMQYmeF8thRIc1z6yFPFmNn8OFU7xW+ZvKDAJ
-         ckeYXxyXGl0pZNg7bgOYBIcRYtX/ifXmixNrO4AUGUKEQlEEHLtXy1AQHOUKGmOEaS+x
-         8fm8RDQuLvfQSVA3OFIIztxXJinb8ykeGAiOOl05Ei1kxTz60E8RaFGGF4aCmDpjBXbh
-         8wZbWI7CrW9XST4ztG9urtjuTwZ6XErvirk84nuXX64vuy1WpzMcSGKLpOkUJltOM8dL
-         VkSFFxIw41rhH3FjIPC1RpicLRYempewzYbxvCaxaSlVVpK9fme65Pg8FikP0cUxfVqC
-         8uRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrXBwnN/2jmd0wuydBWKU+W5A2icroJ13WUTl5PJJvaqkH0AdO91Lw1TNtn8aDYMOepPXj6Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwmjDnxpRxcsXu42eMCL1eE96Efx6FLWhU6j/Mwjeau4J3WL2KW
-	wMR+0SzmIfVwmRfEirzrIrx2EyGUjgxIObCUAss5ijawdKvlo/Dxhs9veK29MuF5Zas=
-X-Gm-Gg: ASbGnctyCrvR+CZ8grXOItm0Dhueobl9EyU8E2PW7sQ8khSu1WLy+IH6tzq/acOF4hL
-	v7Ki36rUNEF80AQfspe5QFlVB6YKN5gS4Db/+/oA6j1Ng+2nR/1M/RlsMq+mUBXtOqHhdaFH+MI
-	g7JLWsueqQRwFIPPVXauqDc81CSSMuRcxWQ9fdHXhBVTBBViI2lwVhctyNHkqg40SrAPlS+Lg3p
-	V2Onz+Cl0Uc9Ot+Fl8mWBxUDdJOn0CTq2iTsthsizKEtjj6YPvuJQ7J4adFTclNHZ0/OxVLhNWj
-	Ko0xP1SOlK8ZMKU71uRl/TA4iDY4RpEmcYehyEVmRD+jMLYDa+zrCiYhbJfvmfOrWDoWAW+EAqX
-	hp4l2huHxtNn/vXAJLxya23xhYwkQuj/861/KveNP
-X-Google-Smtp-Source: AGHT+IHumhbFeoKijO1bIfbeRN7muXKT3iQrz7PNZcfL0Hw4Nuwk0HrRa1xVrQAwNjSiMUzT+ONYBQ==
-X-Received: by 2002:a17:907:3e9e:b0:b04:5cca:9988 with SMTP id a640c23a62f3a-b07c38699ffmr1699588866b.43.1758016634556;
-        Tue, 16 Sep 2025 02:57:14 -0700 (PDT)
+        bh=MZkAhMwtG05Nwx51W4BF/MbpYhaSp+19IYTVLsAUUIs=;
+        b=GbUIW7BSxdmG0aVpMrELXQnKpSvAOr0hJ0JGe21rXbAvXga16bujYQtRCXy1av0Mm8
+         ZOdYLj2m3KdGxcTiFhDGRnO8WR2IhPqzYfd0ok7j5QuBZk+iGfqhNFFtqmvyfI8LQ+/z
+         FlatwNEwvQCs47Q2bYS6Ni6pyLDouHiVPJgx9u1s1dmMcwSV7N9pT/kEuNiiqCOUt+nb
+         8MW1AK14xVxWC1ZVwhMafcHAt4fGptPIpz3bPKfZ/t5sa/oCaUssO8KVN1nIPmm6BVK4
+         +IcfVTSWDbhv6ALOvqZtfEh3iLROAW5OgoVtBHvHID72QnfLZmBT6rSbfSMGL3CBOvVF
+         Hf0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVYeYKHTWqQN7Azd9u69xcf4PeTPdvKSifU+c7Dl6zqhAsKg6eMTA2w8DTNNEINNo1RORv4kg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwrbUIK68erz4RNTj96/anzxkRClInUktY3X4vZzRk2jK91iYQo
+	i5aKcRDqE/YQB29ElzDeI3RMxOqzrHd1mpYCtJjCLRtWHvOEASKMVLPukxqg0d79l1g=
+X-Gm-Gg: ASbGncs32/a6qde5bfQtLCMSCCR6gUPzORzWfIfMdlkczsIYAfWINyt1yvGQs99e42T
+	vHtSNa2dY8JNIXq+JV0rfXoZw92xd/OrpRDtRnShCX3vv560ZzFpsHxbsbnbBPtFmb3mM0IQ1C2
+	lR4X+mx0JR7RF0OLru3f8y5a+4KLQTVGFA4AWnoHzsqfNZttdZUtnbU60FbbgCpba+giYdeaN0A
+	AvBSuk7JFMYWFmM7kb/3KGtxpFxPiPxkOPlDN+MJZ0XjVuR4Ozq2Ki5Y0ysjjFF53B08hgx5n3c
+	pX92xHNwISTJs82cBTaghIqEVrgHE7arigcyCFJe1f6QcM/ZlJ4qjoLROyhoHh32GcWoeH795wQ
+	9g/f4Pa8wV7Ng+em8bCmYBPOc2+76xjInKnww22zT
+X-Google-Smtp-Source: AGHT+IGYOku1dWOd7XgyZFqiTBP3WC2b/azuNq9E2ePki1CNpOxLiy1c6JRukGNdqA80ZoAb+KYahA==
+X-Received: by 2002:a17:906:c153:b0:b04:8c45:4bdb with SMTP id a640c23a62f3a-b07c37fb543mr1468835066b.34.1758021602813;
+        Tue, 16 Sep 2025 04:20:02 -0700 (PDT)
 Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07b31291b0sm1128497566b.34.2025.09.16.02.57.13
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-62f3919e168sm4212344a12.34.2025.09.16.04.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 02:57:14 -0700 (PDT)
-Date: Tue, 16 Sep 2025 11:57:11 +0200
+        Tue, 16 Sep 2025 04:20:02 -0700 (PDT)
+Date: Tue, 16 Sep 2025 13:20:00 +0200
 From: Petr Mladek <pmladek@suse.com>
 To: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: Re: [PATCH v2 1/9] panic: Introduce helper functions for panic state
-Message-ID: <aMk0d5JO_4YECYGY@pathway.suse.cz>
+Subject: Re: [PATCH v2 5/9] panic: use panic_try_start() in vpanic()
+Message-ID: <aMlH4CcK_n1I1gY2@pathway.suse.cz>
 References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
- <20250825022947.1596226-2-wangjinchao600@gmail.com>
+ <20250825022947.1596226-6-wangjinchao600@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250825022947.1596226-2-wangjinchao600@gmail.com>
+In-Reply-To: <20250825022947.1596226-6-wangjinchao600@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_025717_236533_5C56278E 
-X-CRM114-Status: GOOD (  32.98  )
+X-CRM114-CacheID: sfid-20250916_042004_903126_1EC56ED8 
+X-CRM114-Status: GOOD (  17.41  )
 X-Mailman-Approved-At: Tue, 16 Sep 2025 13:07:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,148 +98,52 @@ Cc: Sravan Kumar Gundu <sravankumarlpu@gmail.com>, linux-fbdev@vger.kernel.org, 
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon 2025-08-25 10:29:29, Jinchao Wang wrote:
-> This patch introduces four new helper functions to abstract the
-> management of the panic_cpu variable. These functions will be used in
-> subsequent patches to refactor existing code.
+On Mon 2025-08-25 10:29:33, Jinchao Wang wrote:
+> vpanic() had open-coded logic to claim panic_cpu with atomic_try_cmpxchg.
+> This is already handled by panic_try_start().
 > 
-> The direct use of panic_cpu can be error-prone and ambiguous, as it
-> requires manual checks to determine which CPU is handling the panic.
-> The new helpers clarify intent:
+> Switch to panic_try_start() and use panic_on_other_cpu() for the fallback
+> path.
 > 
-> panic_try_start():
-> Atomically sets the current CPU as the panicking CPU.
+> This removes duplicate code and makes panic handling consistent across
+> functions.
 > 
-> panic_reset():
-> Reset panic_cpu to PANIC_CPU_INVALID.
-> 
-> panic_in_progress():
-> Checks if a panic has been triggered.
-> 
-> panic_on_this_cpu():
-> Returns true if the current CPU is the panic originator.
-> 
-> panic_on_other_cpu():
-> Returns true if a panic is on another CPU.
-> 
-> This change lays the groundwork for improved code readability
-> and robustness in the panic handling subsystem.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
->  include/linux/panic.h  |  6 +++++
->  kernel/panic.c         | 53 ++++++++++++++++++++++++++++++++++++++++++
->  kernel/printk/printk.c |  5 ----
->  3 files changed, 59 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/panic.h b/include/linux/panic.h
-> index 7be742628c25..6f972a66c13e 100644
-> --- a/include/linux/panic.h
-> +++ b/include/linux/panic.h
-> @@ -43,6 +43,12 @@ void abort(void);
->  extern atomic_t panic_cpu;
->  #define PANIC_CPU_INVALID	-1
->  
-> +bool panic_try_start(void);
-> +void panic_reset(void);
-> +bool panic_in_progress(void);
-> +bool panic_on_this_cpu(void);
-> +bool panic_on_other_cpu(void);
-> +
->  /*
->   * Only to be used by arch init code. If the user over-wrote the default
->   * CONFIG_PANIC_TIMEOUT, honor it.
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 72fcbb5a071b..eacb0c972110 100644
 > --- a/kernel/panic.c
 > +++ b/kernel/panic.c
-> @@ -294,6 +294,59 @@ void __weak crash_smp_send_stop(void)
+> @@ -415,7 +415,6 @@ void vpanic(const char *fmt, va_list args)
+>  	static char buf[1024];
+>  	long i, i_next = 0, len;
+>  	int state = 0;
+> -	int old_cpu, this_cpu;
+>  	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
 >  
->  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
->  
-> +bool panic_try_start(void)
-> +{
-> +	int old_cpu, this_cpu;
-> +
-> +	/*
-> +	 * Only one CPU is allowed to execute the crash_kexec() code as with
-> +	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
-> +	 * may stop each other.  To exclude them, we use panic_cpu here too.
-> +	 */
-> +	old_cpu = PANIC_CPU_INVALID;
-> +	this_cpu = raw_smp_processor_id();
-> +
-> +	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
-> +}
-> +EXPORT_SYMBOL(panic_try_start);
-> +
-> +void panic_reset(void)
-> +{
-> +	atomic_set(&panic_cpu, PANIC_CPU_INVALID);
-> +}
-> +EXPORT_SYMBOL(panic_reset);
-> +
-> +bool panic_in_progress(void)
-> +{
-> +	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-> +}
-> +EXPORT_SYMBOL(panic_in_progress);
-> +
-> +/* Return true if a panic is in progress on the current CPU. */
-> +bool panic_on_this_cpu(void)
-> +{
-> +	/*
-> +	 * We can use raw_smp_processor_id() here because it is impossible for
-> +	 * the task to be migrated to the panic_cpu, or away from it. If
-> +	 * panic_cpu has already been set, and we're not currently executing on
-> +	 * that CPU, then we never will be.
-> +	 */
-> +	return unlikely(atomic_read(&panic_cpu) == raw_smp_processor_id());
-> +}
-> +EXPORT_SYMBOL(panic_on_this_cpu);
-> +
-> +/*
-> + * Return true if a panic is in progress on a remote CPU.
-> + *
-> + * On true, the local CPU should immediately release any printing resources
-> + * that may be needed by the panic CPU.
-> + */
-> +bool panic_on_other_cpu(void)
-> +{
-> +	return (panic_in_progress() && !this_cpu_in_panic());
-> +}
-> +EXPORT_SYMBOL(panic_on_other_cpu);
-> +
->  /*
->   * A variant of panic() called from NMI context. We return if we've already
->   * panicked on this CPU. If another CPU already panicked, loop in
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 0efbcdda9aab..5fe35f377b79 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -345,11 +345,6 @@ static void __up_console_sem(unsigned long ip)
->  }
->  #define up_console_sem() __up_console_sem(_RET_IP_)
->  
-> -static bool panic_in_progress(void)
-> -{
-> -	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-> -}
+>  	if (panic_on_warn) {
+> @@ -452,13 +451,10 @@ void vpanic(const char *fmt, va_list args)
+>  	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
+>  	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
+>  	 */
+
+The above comment does not fit any longer. I think that it can
+be removed, maybe except for the 1st paragraph.
+
+> -	old_cpu = PANIC_CPU_INVALID;
+> -	this_cpu = raw_smp_processor_id();
 > -
->  /* Return true if a panic is in progress on the current CPU. */
->  bool this_cpu_in_panic(void)
->  {
+>  	/* atomic_try_cmpxchg updates old_cpu on failure */
 
-All the functions are trivial. It would make sense to define
-them in linux/panic.h. Then the callers would benefit
-from the (unlikely) prediction macro...
+Also this comment should be removed.
 
-It can be done in a followup path.
+> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+> +	if (panic_try_start()) {
+>  		/* go ahead */
+> -	} else if (old_cpu != this_cpu)
+> +	} else if (panic_on_other_cpu())
+>  		panic_smp_self_stop();
+>  
+>  	console_verbose();
 
-Otherwise, the patch looks good. I think that it is too late
-but feel free to use:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Otherwise, it looks good. And the comments might be removed
+by a followup patch.
 
 Best Regards,
 Petr
