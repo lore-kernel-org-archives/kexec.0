@@ -4,74 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C257BCAC599
-	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 01:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2D11CAC599
+	for <kexec@archiver.kernel.org>; Tue, 16 Sep 2025 01:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EYusAw+ydKRQCYLdtHQyUeEwT4JHuq76P/m5GhX8G8M=; b=RagGnfPTU3pxB9OzGGhU0XWXKB
-	jz3wkZax6IoY4+4q4bIFith6ZrFgfUbN9k3BAbrA36GqqPnL0nJuE9sCwZMhm9CwqlTTZN02nFBEB
-	2HkT0qLwV3BsRWa9pLOKCwd4OFW+EJotRDeGSl2NBhjtg5KQdrBNEIBKnfXw1JUrn4GmtG4rcTcOO
-	DSZluIK6AZ3EHad+q4SRU1cVr7UBYx3Hhnt9bj6CB4biBQPcHb5XIh5wi2ypD1Xw7lsP+HLxTXCxQ
-	alSvXYjQ17aLLuEvNfJctvJKUgo0CcUI7NW54y0TINZaXhdyfnQx+kFt6kw9VZgULGQw5LmPf6kPN
-	byxD/lOw==;
+	bh=6BrOBE+c1PVVlV09PEfbREdknOTw7yYX5nTsWQm067Y=; b=p1O+5vUSmfK3iPUILfirx/WZ2F
+	xjSFC+n/SjTUXE2xL6ylvVDG9Gv5KlhhS0wGYe2hc1vZU9ZeLl6irRiZaekQPlweaSEmbT1Ra10hV
+	dYbX6faWX9QNF0nHXLR7LZlzxWzq0aRo+HhW1aTNf7NuAyEnCMb8/ahC7ft2Yq7aOHnvC8jajBaUW
+	CAmsHgnSDvOgwxhtXhvT+HNt4v+WHUGf/3LE+FyezP//YUl0uHIHVvwLQGm9CQtcX/AQqq9LtmNku
+	ratkT753vdOjZ+PqN9iQKvYPmYppAwh+xvNLdslqbBAbFINJx/JpRNWLYE5V7X+NJY3963UYWZ3n9
+	m8R7fU+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKt2-00000006Cc8-2aLh;
-	Tue, 16 Sep 2025 01:53:40 +0000
+	id 1uyKxe-00000006D1Z-1xs2;
+	Tue, 16 Sep 2025 01:58:26 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKt1-00000006Cal-2V5N
+	id 1uyKxc-00000006D17-2TmJ
 	for kexec@bombadil.infradead.org;
-	Tue, 16 Sep 2025 01:53:39 +0000
+	Tue, 16 Sep 2025 01:58:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
 	:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-Type:Content-ID:Content-Description;
-	bh=EYusAw+ydKRQCYLdtHQyUeEwT4JHuq76P/m5GhX8G8M=; b=IG93i01nLibokwC2L+yId7fcTg
-	e/AKhEsQQj5oCChdidULm0lbfBosc5qTyfNgKcekDxe0ghm887uCYzOoxNRZYOAbg8lglmDo47FmD
-	+EMP1S9zGsyGWvODY7XHpaTbJBLhTADJUprAv0KNiGQ1oIFxv22ZD8rDYPZ1J65ll0W4QFAekTKBc
-	de46bHu1uC/RsSswzFeSDsBf3E3e/B97lLaD5P0GOYTWhxMi0SeIYXXjz5F5i2dObVcCulgdkZjdd
-	+D96ykf1PcMa0hptnGSjSMwGj4f3V6gRfq1+VObiHY1ceG/ShFuR7hRIS/3boBo1iSS0mZTNs/AB5
-	CGswer1g==;
-Received: from out-186.mta0.migadu.com ([2001:41d0:1004:224b::ba])
+	bh=6BrOBE+c1PVVlV09PEfbREdknOTw7yYX5nTsWQm067Y=; b=o/LRpOmoECIl+I4sKsFDS+CwQa
+	25woiUAJWChGzwFG01cv5xWkEMQPkGxcf4kVEWqxtzY22zE16+Su3r+Z1qPeULlg1fF3FjDDAx/qO
+	UvFx870v0hsAcLp6QEJc5xQtfOL9mAc9xTgDqf5Km8tfvxtmNFpIlQtIupH0+gEUZzgjrbfrX4zNt
+	nJw893mEbpTHdCHQVORLyqtHw4hxCGWzQjzfswfXmDYL2hs5GRrxbdetyyPQ4EzlNoETXo7jOu9k5
+	RlRPmhvC6uRdNoZCvCyQjOmPD5acsh8q0ZAFwP0FVC5T0AV4sL0Eq+bP4qRww4/O387gDROrXdasr
+	YOHOB8OQ==;
+Received: from out-173.mta0.migadu.com ([2001:41d0:1004:224b::ad])
 	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyKsx-000000077kC-3RkS
+	id 1uyKxV-000000077yN-02fB
 	for kexec@lists.infradead.org;
-	Tue, 16 Sep 2025 01:53:38 +0000
+	Tue, 16 Sep 2025 01:58:20 +0000
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1757987299;
+	t=1757987291;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EYusAw+ydKRQCYLdtHQyUeEwT4JHuq76P/m5GhX8G8M=;
-	b=ANvLWaAsZHJR8zXjDS/MG+b9yxyZZM1RSsT4zRXAJW7lg2ffv+K+FD7ZBS5GZkwGMslMpK
-	am5O9X9OWixQCyu3p3ZPtFN9OYlXRGY8YPCR7JvTNYixzev1cwJWYBCw4lJwjzNgoN3GDZ
-	AV3vqVVehHWsksTUL4lwXO+CLWOjDyc=
+	bh=6BrOBE+c1PVVlV09PEfbREdknOTw7yYX5nTsWQm067Y=;
+	b=rN8UU8Rw81SaMazAq8xaGr4nNfRyqJZ3aXWKwO4A61Fj/4bpZEdnyOwxmorfhUZlrKMFF6
+	FiEsvBFzDFEafkCK+D006WDoHjASX232DwA0Xt2+b0ry+9ei7FLjoZBCbnP6LQMffUmgSH
+	kMQCfuy430vFNKPEY95FjQtLmVhG+n8=
 From: Youling Tang <youling.tang@linux.dev>
 To: Simon Horman <horms@verge.net.au>
 Cc: Simon Horman <horms@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	kexec@lists.infradead.org,
 	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>,
-	Chenghao Duan <duanchenghao@kylinos.cn>
-Subject: [PATCH v2 05/10] LoongArch: Change initrd allocation to top-down
-Date: Tue, 16 Sep 2025 09:46:50 +0800
-Message-Id: <20250916014655.841632-6-youling.tang@linux.dev>
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH v2 01/10] kexec: Handle removal of multiple 'crashkernel' parameters
+Date: Tue, 16 Sep 2025 09:46:46 +0800
+Message-Id: <20250916014655.841632-2-youling.tang@linux.dev>
 In-Reply-To: <20250916014655.841632-1-youling.tang@linux.dev>
 References: <20250916014655.841632-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250916_025336_295820_2BEE94C1 
-X-CRM114-Status: UNSURE (   8.30  )
+X-CRM114-CacheID: sfid-20250916_025818_373928_8D9EC4D7 
+X-CRM114-Status: UNSURE (   9.27  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -89,34 +88,40 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-When loading a secondary kernel with KASLR enabled, the randomized relocation
-of the kernel image may overlap the initrd memory region, causing data corruption
-and boot failure. This occurs because KASLR dynamically shifts the kernel's load
-address, which could accidentally target the initrd's pre-allocated space.
+When the kernel command line contains multiple 'crashkernel' parameters
+(e.g., `crashkernel=1G,high crashkernel=256M,low`), the original
+`remove_parameter()` function only removed the first instance. This
+left residual parameters that caused conflicts during kexec operations.
 
-Modify the initrd allocation strategy from bottom-up to top-down within the
-reserved memory region. By placing the initrd at higher addresses first, we
-minimize the risk of the relocated kernel overwriting it.
-
-Reported-by: Chenghao Duan <duanchenghao@kylinos.cn>
 Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- kexec/arch/loongarch/kexec-loongarch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kexec/kexec.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-index c335e0b..32cd484 100644
---- a/kexec/arch/loongarch/kexec-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-loongarch.c
-@@ -317,7 +317,7 @@ int loongarch_load_other_segments(struct kexec_info *info, unsigned long hole_mi
- 		initrd_base = add_buffer(info, initrd_buf, initrd_size,
- 					initrd_size, sizeof(void *),
- 					_ALIGN_UP(initrd_min,
--						pagesize), hole_max, 1);
-+						pagesize), hole_max, -1);
- 		dbgprintf("initrd_base: %lx, initrd_size: %lx\n", initrd_base, initrd_size);
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 6bf12d7..c9e4bcb 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1153,6 +1153,7 @@ void remove_parameter(char *line, const char *param_name)
+ 	if (!start)
+ 		return;
  
- 		cmdline_add_initrd(cmdline, initrd_base, initrd_size);
++again:
+ 	/*
+ 	 * check if that's really the start of a parameter and not in
+ 	 * the middle of the word
+@@ -1167,6 +1168,11 @@ void remove_parameter(char *line, const char *param_name)
+ 		memmove(start, end+1, strlen(end));
+ 		*(end + strlen(end)) = 0;
+ 	}
++
++	/* There may be multiple 'crashkernel' parameters, such as low and high */
++	start = strstr(line, param_name);
++	if (start)
++		goto again;
+ }
+ 
+ static ssize_t _read(int fd, void *buf, size_t count)
 -- 
 2.34.1
 
