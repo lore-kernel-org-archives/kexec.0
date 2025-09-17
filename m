@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 462AACAC5A5
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B97AACAC59A
 	for <kexec@archiver.kernel.org>; Wed, 17 Sep 2025 12:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,72 +12,72 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1zHHraw2A4XXMh05M5xDQ/FIBzoxt7xagq0j6ASLE/8=; b=SYDL4OG4Cksk1PwT29Eh7JdC7K
-	Eekp8ZtcUWw/6pMdVo757RJ+9X7cwwYJuHu5o41DubeGExkYhwPEnHPZoBAl7OKB1wXFODcFTDAAh
-	4+86e6xMuljMq2fwjfeqdEDt83vhr3BUBWIfCEoF1ttQXLSeQ898PKIeCl3X6qab7Trl8FVQtMHjd
-	QPq+E8xtxmDCNZpV5ohIGhET1+Aw9z48VxlvYJXroF+kjnyOLd01Txs6cY2CsYGDYaTmHhPQWYBB3
-	ogNQuyBFuKAwP8l6tki0HqHGq0EJUyfc+ySTfSqa9+FyFrnQptre8EW9JyasCVFUNmqx/gwSlbQ1d
-	WJhQWjQw==;
+	bh=nZoP7xI9bh5cuZAC2MMMkkaHSM2qArN4UzTRm8GitpU=; b=WApgFbwnIBzOxqbTPYgrqynD4b
+	LCQdPMLjHwWoauhzu4r/Gqe/S9JyuUXLD9wD8KpURxyErE2iOm3gFvUK6o1yKXOr4xP09hanLrWAO
+	gKdYWQROOrvjCMpEeL8YwQEgagzQnuJPQysqmc3CsnXcUBA8SwVAaTSrtvScNcAq62aSX5FwzBjv/
+	AQNeCvFiqkVVYtG797fv1K5QtdfBjtBnEv1jy6oBCwSQsrldfgBKRZW1K7Z0gAuxlN7qx3+G4TkLK
+	wcPpKwLfxWr2gGTMPcJoGvqG2W97+L2odIzMvoRfckxoP5BYYoEVhm8z/tR2K/Qs5CNfgF/zIZis9
+	ai7ZjD+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyr6m-0000000BGzW-22qT;
+	id 1uyr6m-0000000BH04-3EiX;
 	Wed, 17 Sep 2025 12:18:00 +0000
 Received: from smtp-out2.suse.de ([195.135.223.131])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uypQz-0000000AzOq-3KWG
+	id 1uypXP-0000000B0VC-1NJF
 	for kexec@lists.infradead.org;
-	Wed, 17 Sep 2025 10:30:47 +0000
+	Wed, 17 Sep 2025 10:37:24 +0000
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 698CD1F7A4;
-	Wed, 17 Sep 2025 10:30:42 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5CAD71F7BC;
+	Wed, 17 Sep 2025 10:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758105042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758105441; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1zHHraw2A4XXMh05M5xDQ/FIBzoxt7xagq0j6ASLE/8=;
-	b=DqGz99zLZi7gBVK2fSpkmcFDQp+G3N1rsQtOWflY51o39LFUbbat4CrXeIS9F5/IJ0cXSf
-	o+geSvjpoF0ZXNGAs1g7+dAtLkl/Tv7OkTkU5kFSZlOAD62xQTFH7ZCebde3coO4ZyZKMQ
-	DDpAbzeqLk3TQWOx95Sxs7A/BO6tyzk=
+	bh=nZoP7xI9bh5cuZAC2MMMkkaHSM2qArN4UzTRm8GitpU=;
+	b=kNJ/uzXVRbTatfy05IVGNQLIzQ9yPArYK0Vuo18L+EvSl9LkJwvDxVTm6ipLRjopRYl37Q
+	lmkvpfx9V6hiDWJ3AUH0fo1eVRtgsuz3WXVd+0UCwW7ZT7gSDrbreDLFTElddZkurFO0tw
+	GBvYGseZhe+WcZcn66UCFBOvcVxQJvE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758105042;
+	s=susede2_ed25519; t=1758105441;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1zHHraw2A4XXMh05M5xDQ/FIBzoxt7xagq0j6ASLE/8=;
-	b=TvBdrFOGBW3c3Mtg0Mty8fKLlQApRtpmeFJ2kHvCrO4Oa93K6SSguxvDOL3Hma6jgZ7/bh
-	ZMvCmbgDAYSn9ECQ==
+	bh=nZoP7xI9bh5cuZAC2MMMkkaHSM2qArN4UzTRm8GitpU=;
+	b=lCKrd/3SMkAsu71vkV/44IEKXQSRO5fArYajtSwRNnnRLyN7UEpS4+bqwddhUAybMv2xHJ
+	mWtV6X5XQFK+a+CA==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758105042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758105441; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1zHHraw2A4XXMh05M5xDQ/FIBzoxt7xagq0j6ASLE/8=;
-	b=DqGz99zLZi7gBVK2fSpkmcFDQp+G3N1rsQtOWflY51o39LFUbbat4CrXeIS9F5/IJ0cXSf
-	o+geSvjpoF0ZXNGAs1g7+dAtLkl/Tv7OkTkU5kFSZlOAD62xQTFH7ZCebde3coO4ZyZKMQ
-	DDpAbzeqLk3TQWOx95Sxs7A/BO6tyzk=
+	bh=nZoP7xI9bh5cuZAC2MMMkkaHSM2qArN4UzTRm8GitpU=;
+	b=kNJ/uzXVRbTatfy05IVGNQLIzQ9yPArYK0Vuo18L+EvSl9LkJwvDxVTm6ipLRjopRYl37Q
+	lmkvpfx9V6hiDWJ3AUH0fo1eVRtgsuz3WXVd+0UCwW7ZT7gSDrbreDLFTElddZkurFO0tw
+	GBvYGseZhe+WcZcn66UCFBOvcVxQJvE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758105042;
+	s=susede2_ed25519; t=1758105441;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1zHHraw2A4XXMh05M5xDQ/FIBzoxt7xagq0j6ASLE/8=;
-	b=TvBdrFOGBW3c3Mtg0Mty8fKLlQApRtpmeFJ2kHvCrO4Oa93K6SSguxvDOL3Hma6jgZ7/bh
-	ZMvCmbgDAYSn9ECQ==
+	bh=nZoP7xI9bh5cuZAC2MMMkkaHSM2qArN4UzTRm8GitpU=;
+	b=lCKrd/3SMkAsu71vkV/44IEKXQSRO5fArYajtSwRNnnRLyN7UEpS4+bqwddhUAybMv2xHJ
+	mWtV6X5XQFK+a+CA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E6B6E1368D;
-	Wed, 17 Sep 2025 10:30:38 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BE4BD1368D;
+	Wed, 17 Sep 2025 10:37:17 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pYOYNM6NymjANgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 17 Sep 2025 10:30:38 +0000
-Date: Wed, 17 Sep 2025 11:30:37 +0100
+	id SZxDK12Pymj2OAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 17 Sep 2025 10:37:17 +0000
+Date: Wed, 17 Sep 2025 11:37:07 +0100
 From: Pedro Falcato <pfalcato@suse.de>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -108,14 +108,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>, 
 	iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Will Deacon <will@kernel.org>, 
 	Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 01/13] mm/shmem: update shmem to use mmap_prepare
-Message-ID: <ixvivcg7sr6twekgyfgas7yl23nv7zi5bmn6xyqjvsvuituc4d@usfryzkaf7dm>
+Subject: Re: [PATCH v3 02/13] device/dax: update devdax to use mmap_prepare
+Message-ID: <2jvm2x7krh7bkt43goiufksuxntncu2hxx67jos3i7zwj63jhh@rw47665pa25y>
 References: <cover.1758031792.git.lorenzo.stoakes@oracle.com>
- <cfefa4bad911f09d7accea74a605c49326be16d9.1758031792.git.lorenzo.stoakes@oracle.com>
+ <bfd55a49b89ebbdf2266d77c1f8df9339a99b97a.1758031792.git.lorenzo.stoakes@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cfefa4bad911f09d7accea74a605c49326be16d9.1758031792.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <bfd55a49b89ebbdf2266d77c1f8df9339a99b97a.1758031792.git.lorenzo.stoakes@oracle.com>
 X-Spamd-Result: default: False [-2.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -141,8 +141,8 @@ X-Spamd-Result: default: False [-2.30 / 50.00];
 	RCPT_COUNT_GT_50(0.00)[62];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250917_033045_977525_AE305B2E 
-X-CRM114-Status: GOOD (  10.15  )
+X-CRM114-CacheID: sfid-20250917_033723_513875_5FE22DF3 
+X-CRM114-Status: GOOD (  22.04  )
 X-Mailman-Approved-At: Wed, 17 Sep 2025 05:17:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -158,15 +158,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 16, 2025 at 03:11:47PM +0100, Lorenzo Stoakes wrote:
-> This simply assigns the vm_ops so is easily updated - do so.
+On Tue, Sep 16, 2025 at 03:11:48PM +0100, Lorenzo Stoakes wrote:
+> The devdax driver does nothing special in its f_op->mmap hook, so
+> straightforwardly update it to use the mmap_prepare hook instead.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 > Reviewed-by: Jan Kara <jack@suse.cz>
 
-Reviewed-by: Pedro Faclato <pfalcato@suse.de>
+Acked-by: Pedro Falcato <pfalcato@suse.de>
+
+> ---
+>  drivers/dax/device.c | 32 +++++++++++++++++++++-----------
+>  1 file changed, 21 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 2bb40a6060af..c2181439f925 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -13,8 +13,9 @@
+>  #include "dax-private.h"
+>  #include "bus.h"
+>  
+> -static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+> -		const char *func)
+> +static int __check_vma(struct dev_dax *dev_dax, vm_flags_t vm_flags,
+> +		       unsigned long start, unsigned long end, struct file *file,
+> +		       const char *func)
+>  {
+>  	struct device *dev = &dev_dax->dev;
+>  	unsigned long mask;
+> @@ -23,7 +24,7 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+>  		return -ENXIO;
+>  
+>  	/* prevent private mappings from being established */
+> -	if ((vma->vm_flags & VM_MAYSHARE) != VM_MAYSHARE) {
+> +	if ((vm_flags & VM_MAYSHARE) != VM_MAYSHARE) {
+>  		dev_info_ratelimited(dev,
+>  				"%s: %s: fail, attempted private mapping\n",
+>  				current->comm, func);
+> @@ -31,15 +32,15 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+>  	}
+>  
+>  	mask = dev_dax->align - 1;
+> -	if (vma->vm_start & mask || vma->vm_end & mask) {
+> +	if (start & mask || end & mask) {
+>  		dev_info_ratelimited(dev,
+>  				"%s: %s: fail, unaligned vma (%#lx - %#lx, %#lx)\n",
+> -				current->comm, func, vma->vm_start, vma->vm_end,
+> +				current->comm, func, start, end,
+>  				mask);
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (!vma_is_dax(vma)) {
+> +	if (!file_is_dax(file)) {
+>  		dev_info_ratelimited(dev,
+>  				"%s: %s: fail, vma is not DAX capable\n",
+>  				current->comm, func);
+> @@ -49,6 +50,13 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> +static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+> +		     const char *func)
+> +{
+> +	return __check_vma(dev_dax, vma->vm_flags, vma->vm_start, vma->vm_end,
+> +			   vma->vm_file, func);
+> +}
+> +
+
+Side comment: I'm no DAX expert at all, but this check_vma() thing looks... smelly?
+Besides the !dax_alive() check, I don't see the need to recheck vma limits at
+every ->huge_fault() call. Even taking mremap() into account,
+->get_unmapped_area() should Do The Right Thing, no?
 
 -- 
 Pedro
