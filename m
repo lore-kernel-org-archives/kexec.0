@@ -4,81 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 369B5CAC5A7
-	for <kexec@archiver.kernel.org>; Wed, 17 Sep 2025 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AFD7CAC5A9
+	for <kexec@archiver.kernel.org>; Wed, 17 Sep 2025 12:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ofj744S0hdgV+oqudN+JHGPXOpDjYVMC07hCO7WqjNw=; b=iYs7EAPDZ/OJZ/v7eMngwHIdXy
-	aqLOBOiull4NKOaidmon1AqQETQqFvVO8pW/fRwEvpwPrqekn7it3Ttq+haBoElum6YEYLCmZGUAo
-	3b3L4aRrP/4SaQdVvHZBzFi5EgwYsT57g0LR6hQeJMD7cRVJqTudMN9l6CHQscOTo2+WzPZ0dcGd0
-	nqHabBtG55U2yEzc88YDyXWrzShW6KB+KVKHnmCxMGdG1ddW4qlMdSIj3kHUXgG/9nGUo5TItJXkr
-	x6MPSkL+eigBQEVVWd2kQ67O7G7B6urwTnCnzgYwYPz1AGeBQlEyO4mQrle5oR1AoBP8406J7Q7tA
-	i/f2lK7w==;
+	bh=8/j+TghCbMxS6Hr+M6Px03nxBiobgKniH+u2vLxerW8=; b=0Q0yn6WR4qYkxY08X1c9os71NX
+	kLxqmpGHCFCUUaml6JtZLWBwurRObhNUhs9g8sVYHmYUoNqfB3H1evFlyuPCs+OtZshK0WflDDNsa
+	uts6G6/qyp7OwWj4K841uc1ud8XpxdAisdhMWg8unS646qpU7YvMcMpl6H43326KnrlefHdEkmY25
+	jt0O6gj82yIdAEQ2DDoNRAOq1MdkU4Ygi8GrbVi2xzOEFQm+frzfaw/r0G9zpQOZIGjxwAxGWMtI5
+	pVypykGOrrNLr5QFVX4WG+RTf6s5ecW04wyDCrsx0lL8j156GnCRBaeKIOpNLtqIIx4JqPHbOIJMU
+	RYSqwcgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyr6n-0000000BH14-1gSI;
-	Wed, 17 Sep 2025 12:18:01 +0000
+	id 1uyr6o-0000000BH2C-1ea2;
+	Wed, 17 Sep 2025 12:18:02 +0000
 Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uypbj-0000000B1NL-1QRF
+	id 1uyq16-0000000B4Wd-2GjN
 	for kexec@lists.infradead.org;
-	Wed, 17 Sep 2025 10:41:52 +0000
+	Wed, 17 Sep 2025 11:08:06 +0000
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ABBA222096;
-	Wed, 17 Sep 2025 10:41:49 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 709D02126A;
+	Wed, 17 Sep 2025 11:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758105709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758107282; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ofj744S0hdgV+oqudN+JHGPXOpDjYVMC07hCO7WqjNw=;
-	b=DukI9feJZ9PHgr6VTWS5HiVn6jlBgHPZpHg9NAZaFM1yw3drJVaDQdEhCoGEF+xCybfKQi
-	KigTRbEqW8N/WTK5cnGsrUK8yI1e3tSEiEHWYw63RkG5+wJoQRAlGRnyBLdbAweJqhkvFG
-	K+M9ZwPSAHpES21BjOxPwep1vHqojMs=
+	bh=8/j+TghCbMxS6Hr+M6Px03nxBiobgKniH+u2vLxerW8=;
+	b=ptkrptGseCISVsQSxi+p8tUW59Rrjz0N5sPnd1wzkFhKOxrWCHCwTIW4TWDHSpOespuFww
+	1e1PZQAzfRkjbo8bpdzp23GXJKOG2bLZpYH6zuvmfjqFO+esZfZXR+lBVUjtyUWkNHbwAY
+	0UVQEfLseGzXPrwa54eoqUh4Ta4r680=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758105709;
+	s=susede2_ed25519; t=1758107282;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ofj744S0hdgV+oqudN+JHGPXOpDjYVMC07hCO7WqjNw=;
-	b=cNqFvcTO/C5yxY1VCi5d3aNqbq/TGtGlWg7DF48yF4jgUx+6Nw9p12MfcKeo18wD1Fyfa/
-	aIyR+xrwgNcBRQCw==
+	bh=8/j+TghCbMxS6Hr+M6Px03nxBiobgKniH+u2vLxerW8=;
+	b=CuqXr5mf1f5gVEyVE/lNW/q6XMjuaOaU8Fo7jUe67po6sdGNuF62L3WB6GMPs7nmsIzR+e
+	XeKtsoSUgaSSfvAg==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=DukI9feJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cNqFvcTO
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ptkrptGs;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CuqXr5mf
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758105709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758107282; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ofj744S0hdgV+oqudN+JHGPXOpDjYVMC07hCO7WqjNw=;
-	b=DukI9feJZ9PHgr6VTWS5HiVn6jlBgHPZpHg9NAZaFM1yw3drJVaDQdEhCoGEF+xCybfKQi
-	KigTRbEqW8N/WTK5cnGsrUK8yI1e3tSEiEHWYw63RkG5+wJoQRAlGRnyBLdbAweJqhkvFG
-	K+M9ZwPSAHpES21BjOxPwep1vHqojMs=
+	bh=8/j+TghCbMxS6Hr+M6Px03nxBiobgKniH+u2vLxerW8=;
+	b=ptkrptGseCISVsQSxi+p8tUW59Rrjz0N5sPnd1wzkFhKOxrWCHCwTIW4TWDHSpOespuFww
+	1e1PZQAzfRkjbo8bpdzp23GXJKOG2bLZpYH6zuvmfjqFO+esZfZXR+lBVUjtyUWkNHbwAY
+	0UVQEfLseGzXPrwa54eoqUh4Ta4r680=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758105709;
+	s=susede2_ed25519; t=1758107282;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ofj744S0hdgV+oqudN+JHGPXOpDjYVMC07hCO7WqjNw=;
-	b=cNqFvcTO/C5yxY1VCi5d3aNqbq/TGtGlWg7DF48yF4jgUx+6Nw9p12MfcKeo18wD1Fyfa/
-	aIyR+xrwgNcBRQCw==
+	bh=8/j+TghCbMxS6Hr+M6Px03nxBiobgKniH+u2vLxerW8=;
+	b=CuqXr5mf1f5gVEyVE/lNW/q6XMjuaOaU8Fo7jUe67po6sdGNuF62L3WB6GMPs7nmsIzR+e
+	XeKtsoSUgaSSfvAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 33E9F1368D;
-	Wed, 17 Sep 2025 10:41:46 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D09581368D;
+	Wed, 17 Sep 2025 11:07:58 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gAoOCWqQymiEOgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 17 Sep 2025 10:41:46 +0000
-Date: Wed, 17 Sep 2025 11:41:44 +0100
+	id 1iOPL46WymikQwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 17 Sep 2025 11:07:58 +0000
+Date: Wed, 17 Sep 2025 12:07:52 +0100
 From: Pedro Falcato <pfalcato@suse.de>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -109,14 +109,15 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>, 
 	iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Will Deacon <will@kernel.org>, 
 	Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 04/13] relay: update relay to use mmap_prepare
-Message-ID: <jrxexcuzlxpnfs2jhm7ecdh4kak5i4a6e5od4cm72fn3twwzms@vptu5rfimbez>
+Subject: Re: [PATCH v3 06/13] mm: add remap_pfn_range_prepare(),
+ remap_pfn_range_complete()
+Message-ID: <fdkqhtegozzwx3p4fqzkar7dfbzffn7xiz7ht365c3pe4x6hk3@zbfwoktrhci3>
 References: <cover.1758031792.git.lorenzo.stoakes@oracle.com>
- <ae3769daca38035aaa71ab3468f654c2032b9ccb.1758031792.git.lorenzo.stoakes@oracle.com>
+ <7c050219963aade148332365f8d2223f267dd89a.1758031792.git.lorenzo.stoakes@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae3769daca38035aaa71ab3468f654c2032b9ccb.1758031792.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <7c050219963aade148332365f8d2223f267dd89a.1758031792.git.lorenzo.stoakes@oracle.com>
 X-Spamd-Result: default: False [-2.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -126,31 +127,33 @@ X-Spamd-Result: default: False [-2.51 / 50.00];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,infradead.org,kernel.org,alpha.franken.de,linux.ibm.com,davemloft.net,gaisler.com,arndb.de,linuxfoundation.org,intel.com,fluxnic.net,linux.dev,suse.de,redhat.com,paragon-software.com,arm.com,zeniv.linux.org.uk,suse.cz,oracle.com,google.com,suse.com,linux.alibaba.com,gmail.com,vger.kernel.org,lists.linux.dev,kvack.org,lists.infradead.org,googlegroups.com,nvidia.com];
-	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,infradead.org,kernel.org,alpha.franken.de,linux.ibm.com,davemloft.net,gaisler.com,arndb.de,linuxfoundation.org,intel.com,fluxnic.net,linux.dev,suse.de,redhat.com,paragon-software.com,arm.com,zeniv.linux.org.uk,suse.cz,oracle.com,google.com,suse.com,linux.alibaba.com,gmail.com,vger.kernel.org,lists.linux.dev,kvack.org,lists.infradead.org,googlegroups.com,nvidia.com];
 	RCVD_TLS_ALL(0.00)[];
 	DKIM_TRACE(0.00)[suse.de:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLzjiba8kn1xq17x95uu9jb85x)];
 	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	RCPT_COUNT_GT_50(0.00)[62];
-	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:email,suse.de:dkim]
-X-Rspamd-Queue-Id: ABBA222096
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	R_RATELIMIT(0.00)[to_ip_from(RLzjiba8kn1xq17x95uu9jb85x)];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Queue-Id: 709D02126A
 X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 X-Rspamd-Action: no action
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250917_034151_525366_3CEB8ACB 
-X-CRM114-Status: GOOD (  10.78  )
+X-CRM114-CacheID: sfid-20250917_040804_871600_FDCAC6D0 
+X-CRM114-Status: GOOD (  20.48  )
 X-Mailman-Approved-At: Wed, 17 Sep 2025 05:17:58 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -166,14 +169,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 16, 2025 at 03:11:50PM +0100, Lorenzo Stoakes wrote:
-> It is relatively trivial to update this code to use the f_op->mmap_prepare
-> hook in favour of the deprecated f_op->mmap hook, so do so.
+On Tue, Sep 16, 2025 at 03:11:52PM +0100, Lorenzo Stoakes wrote:
+> We need the ability to split PFN remap between updating the VMA and
+> performing the actual remap, in order to do away with the legacy
+> f_op->mmap hook.
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> To do so, update the PFN remap code to provide shared logic, and also make
+> remap_pfn_range_notrack() static, as its one user, io_mapping_map_user()
+> was removed in commit 9a4f90e24661 ("mm: remove mm/io-mapping.c").
+> 
+> Then, introduce remap_pfn_range_prepare(), which accepts VMA descriptor
+> and PFN parameters, and remap_pfn_range_complete() which accepts the same
+> parameters as remap_pfn_rangte().
+                remap_pfn_range
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> 
+> remap_pfn_range_prepare() will set the cow vma->vm_pgoff if necessary, so
+> it must be supplied with a correct PFN to do so.  If the caller must hold
+> locks to be able to do this, those locks should be held across the
+> operation, and mmap_abort() should be provided to revoke the lock should
+> an error arise.
+> 
+> While we're here, also clean up the duplicated #ifdef
+> __HAVE_PFNMAP_TRACKING check and put into a single #ifdef/#else block.
+> 
+> We would prefer to define these functions in mm/internal.h, however we
+> will do the same for io_remap*() and these have arch defines that require
+> access to the remap functions.
+>
+
+I'm confused. What's stopping us from declaring these new functions in
+internal.h? It's supposed to be used by core mm only anyway?
+
+
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+The changes themselves look OK to me, but I'm not super familiar with these
+bits anyway.
+
+Acked-by: Pedro Falcato <pfalcato@suse.de>
 
 -- 
 Pedro
