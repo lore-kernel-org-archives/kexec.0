@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 653DCCAC5AA
-	for <kexec@archiver.kernel.org>; Thu, 18 Sep 2025 22:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A2D7CA1013
+	for <kexec@archiver.kernel.org>; Thu, 18 Sep 2025 22:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oqZ7RnV7jRwLZA1ZXag8L1sahIyCZcbj4OJ09T3a3GA=; b=jGl01gjU3elML5Drf1jKi5nwGS
-	S77UmnjCBUZ3XjQ/Ep2i6Ks41FaDuJoZChOonrZdmtCTZpIiN7wT0/31dTzsKECnbfkjRf8oTo9/v
-	bm+8j+fm7N6K3Vo7UP7fO4u5s75sng7juC2Ag7bjCIM159EPQlRF2Mz/R5WbSBiuRHnT+K+A+P11t
-	Npp8T/YBJ+Q7JdXZ1xf6ifyrWgUiNAN3FLG+NljSrgxANuXW190zQG17p/bmzluEUwX3HrhOZynjr
-	7TIQwsmF4+22kFJzy4RtInxb9Ko6s33C4JNdFlyzN5/ttcdp36H/Emd/iUE4cQPCVVeoQdcwaIutL
-	tRIaoeww==;
+	bh=tzZPK+tD8ua9mkD8VwlX20r11BOjtw6Um42qZGE0OrE=; b=F2pKGnwXX7P327lAtXS0gQA39S
+	2U6Xw22MHWeqEvH6lNGrlvaQiLPBEy+lX3HAIRWJ7l7/NbYQzGBb6JzqEtqdl+f9anhnStdaZ6A1Q
+	V8rFuS+leNsMwNwk0RUa1xXgqHeIgXbGpcgasRwbCC0GEA/IO9o2stKAPAVOVfKlywuWxB0ea0tGN
+	DPWcVVXlsiD2uB7sznzmUlXGJR5oUWG1+EBnxA8FhcSAMxGSLVgfuQxfIiU5O0YjGPWwo69K0ozoL
+	Gdd+qq/L/v/XiI0GLAjX6yy/fFK4TyblJFO00+cEpk18ATaCQ4NJKTB5r+ONwqytzcs5jkbKE2Ku5
+	yPy5Gg5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzN59-00000001KI9-0Wc6;
-	Thu, 18 Sep 2025 22:26:27 +0000
-Received: from mail-pf1-x42e.google.com ([2607:f8b0:4864:20::42e])
+	id 1uzN5C-00000001KLz-44hk;
+	Thu, 18 Sep 2025 22:26:30 +0000
+Received: from mail-pf1-x429.google.com ([2607:f8b0:4864:20::429])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzN56-00000001KG4-2yoA
+	id 1uzN5A-00000001KJ9-17ZN
 	for kexec@lists.infradead.org;
-	Thu, 18 Sep 2025 22:26:25 +0000
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-7725de6b57dso2045064b3a.0
-        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 15:26:24 -0700 (PDT)
+	Thu, 18 Sep 2025 22:26:29 +0000
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-77d64726e47so1043748b3a.3
+        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 15:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758234384; x=1758839184; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1758234388; x=1758839188; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oqZ7RnV7jRwLZA1ZXag8L1sahIyCZcbj4OJ09T3a3GA=;
-        b=luFEUY8YPzZjtbqXB1c9ts3xP0b/idRP55kxEosPBRJTUzfeGf3WkOUVgj3EHI2cgD
-         mHkcwhvElewFlz/oz4jC6XT3Oj4XuQKdaCKsWBzgf9xY32NY8i8L8eNqBCf0IGRHpvXd
-         AffiXVtswgFmKUDaRGuTVlyVC7XNRUmQVBKaJfzAT0d72vdGmGAnfl0pBeBXr3a0bhcs
-         BV2AaMB07KIo3FQQlcHo9xVVMoRxMH4Q0dr8EU2oxDojvfs1+wjZETMRDSLOUcqPybMI
-         Cgqus/4AQMMLhrIxZeG4QKHkCCTkgqtTpvYgA+Sk1ve7N4sK6UUcIeA/ea/ELjqMdPas
-         hpMw==
+        bh=tzZPK+tD8ua9mkD8VwlX20r11BOjtw6Um42qZGE0OrE=;
+        b=aMPwbuyHtHP7dl79swyxGFlprjnDjO59xmHH+9UZbA3XDjgnrb85xk2cs4XVeRQA3a
+         yCM9GILdV4zUIDbEPbR+Y2Gm74Yam9NeE3AF77BAHfTTMunxPHcd8f9JMMas6+q9TjzR
+         Vlvi+4sOPnxvX40ytfYjdThAO3xnCDte4nyW093RCOU2OUw2/Nybe4QTC5Ks0bOoq72I
+         VOv+5k5Pvt/Nr4TdzahuJZ1b7uDN9dyCXF97zC93S9G3+Up5D1s1NAeTTfZB8ZKt/6mF
+         fhx0hW9avZAKPT0mz6zHtNs7xxa7RRMuA081wVG181+kgghmhdScJHd+RQ8flRapRF2X
+         YwRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758234384; x=1758839184;
+        d=1e100.net; s=20230601; t=1758234388; x=1758839188;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oqZ7RnV7jRwLZA1ZXag8L1sahIyCZcbj4OJ09T3a3GA=;
-        b=FilBASy8i98hT264pALDK87sNivMr8qIHvoRjEPFQ3x8criVGTXwIWjOGYXsObbyPO
-         nrFGDoWGrlAX+fwh8isyqe/yS8nbswrcKccSCK/WzZvX1iue16mSQfqlra4vhLaYUBaT
-         SZfoyOTShwXKLP5ETybnPTF1YBgJ5209AzP+nmM8wzSJfl+S4z+SaTIjOBF85s1n93SA
-         zE+qG3Mk0M0uiBpEO6Fheg3bdNXeBV1GYcUcbbO4tWls2h6T5fOyFqjr8/3EThKbBVRu
-         csu+xMSCv9EeqI9BE1wWIKyibvljvFWxSkBmuWLwOWSpLDyKWOUANaSEj+U/oEJpoosB
-         KsHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDQgispN9eWIrts5GrHSJJ5gI1ilymgNSsBL8FhStzA8RwMUbqgBNjBzevKraS8g0H+Q5l6g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyXGyELZdCifvx3rE/M8dcnBbSZZTqGNuhaCsZhCun4lCEOBwpM
-	rgvr6ADNtuXmgtwKFHRVR7JfsDhGaCZYMjFXOGicJYA7XfOXbNXqMNp6
-X-Gm-Gg: ASbGncsbfJasYB837nVF0zn4CCCbDkKcgGA/w4FU64007iopSkgNEbHsB3pnqMYJbev
-	bSHqH35vdc0C4yGXnV3rVJAVbTTi0E8wUrWXz8fpOyokZB46jmVmZ8minQsSSUjCwZykUkPWDng
-	99j6R9mjudHMMzkJxzHeQt4bcVd7UJg795B7Bsk6ogXWDxKhUm8EvZ1RBfWuaON/tFbvMV3wIQV
-	yZi1R3BR2wXkEEF2rtFSl5S9MXbkbyP62R6mhS4cv4I99Nn6wE5EaX1lnkBWb8WXDMUILDjosDe
-	t6DjMm2t8GxGcp8+dtv7BL8YCu7k8gSqs7tCjfThckkhX2FpGc2qAsqu3jFZY0XfVC9rBFE0v5W
-	oBOYBzknY+U4yDjUOeRgxrT4qn9C4QALUUuZN8r8I/CKWlh3IK27LXIzj0g==
-X-Google-Smtp-Source: AGHT+IELDxwl023oJLRmLHqDvYEHpxpw4zqR4LlWYFnOUceLV4c1nRGLvqIrVsP6oJRuokOT6UXRyQ==
-X-Received: by 2002:a05:6a00:14cf:b0:778:97e1:f499 with SMTP id d2e1a72fcca58-77e4e8bc469mr1385199b3a.21.1758234383776;
-        Thu, 18 Sep 2025 15:26:23 -0700 (PDT)
+        bh=tzZPK+tD8ua9mkD8VwlX20r11BOjtw6Um42qZGE0OrE=;
+        b=ErEhu1TO/Xovw2cegRUMmeVqGrXu4aIQDl5hWlNZHo5BLLvosC2oGyVaGJ0fTz7iZK
+         JxQvNHZ4TzOiOkiu7yvuxAOTEVKd0lptXImibuYhywMKwIaYMfwvA/8/cW6cJTONLf8g
+         vpfGIX36Ox4J6H6NYskel5TsZljF7OZwLrgRA1fqYwK8VWQdAtraHH9l1zAm2Uiyi2Lb
+         4SmvM9U2Tf/oBkVEyBdf2ohsAMm1jbiZjH2E6NOXQ1rYIp2A0ms7YpYFjCLJsMF+vaNU
+         otjrsby3UUOoMJUGnTVCtNSNs9fl5oORFtkSUi9RBWntcp9IdoN0MKlqvJcTKufgq316
+         jJfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhHUmA6FsLG272Ra9iIUjXZNra4Aus9duB0oh4vQ9DIG/Zz/+aNl4PZqOUUSG39uBs83f6bg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz3Z1L+3V6T3Yy2RDZzOF2/MOlFMo1aQ43aiYrCK5ofzwg6w5Vd
+	SbxO7WmJ91tAd3bjDSTzmu1zeP4Lrejv2kq7DkNF+znGy/OqMeYN1RO7
+X-Gm-Gg: ASbGncuKo3i3Ley5aYzqykrL1ksk9WIj3wP5pFB6aqlKvjYsq8DUnb5FLnc6BSfJAGf
+	lY4zZXxvBHhqTJpepgQygF+8m0xgKVMayzChcnas3Q/XTnqfexMGjICk4fcCa/mTnoV9YNVyEWg
+	6va4xHjgj0aI+SEPlwEMlwVDKOhP/qW+7e85XYOPzH4dBkVsqTXba21FMspu5I4D49NyzdfQsSc
+	WRDQkuujwoBK+pghNMBd9ZOfvYcG+74NI1sTl/mX+LZCLRjaWqk0BjTzO+3o8NSH046e9tDkfzb
+	0lRsXhZaQJUF+GtJMcc5A5jngLKW6AVrPruIwanKfv9M1JyxjncfWvAI2r0tEbsJWor0fewz7SP
+	U8ftZN8iZMqyqYPxkblCszFHeLIqn1WqJTnZoYeizXdDMMiE=
+X-Google-Smtp-Source: AGHT+IEcmBpKgxWK65kqL+t4N9tpvg/YpMV9lF9NLfIoi4A5w/Hpr9vbHnSl2Ql5oJ01WR0BGA3tRA==
+X-Received: by 2002:a05:6a00:cc7:b0:776:1804:6fe with SMTP id d2e1a72fcca58-77e4cc3c5e1mr1115624b3a.7.1758234387508;
+        Thu, 18 Sep 2025 15:26:27 -0700 (PDT)
 Received: from pop-os.. ([2601:647:6881:9060:c5c1:2e33:6cf2:beed])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77e5fe6de75sm407542b3a.19.2025.09.18.15.26.22
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77e5fe6de75sm407542b3a.19.2025.09.18.15.26.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Sep 2025 15:26:23 -0700 (PDT)
+        Thu, 18 Sep 2025 15:26:26 -0700 (PDT)
 From: Cong Wang <xiyou.wangcong@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: pasha.tatashin@soleen.com,
@@ -80,17 +80,17 @@ Cc: pasha.tatashin@soleen.com,
 	Changyuan Lyu <changyuanl@google.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [RFC Patch 2/7] x86: Introduce SMP INIT trampoline for multikernel CPU bootstrap
-Date: Thu, 18 Sep 2025 15:26:01 -0700
-Message-Id: <20250918222607.186488-3-xiyou.wangcong@gmail.com>
+Subject: [RFC Patch 4/7] kernel: Introduce generic multikernel IPI communication framework
+Date: Thu, 18 Sep 2025 15:26:03 -0700
+Message-Id: <20250918222607.186488-5-xiyou.wangcong@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
 References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250918_152624_784153_66942840 
-X-CRM114-Status: GOOD (  34.34  )
+X-CRM114-CacheID: sfid-20250918_152628_342710_EC7EF801 
+X-CRM114-Status: GOOD (  31.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,522 +107,499 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Cong Wang <cwang@multikernel.io>
 
-This patch introduces a dedicated trampoline mechanism for booting
-secondary CPUs with different kernel instances in multikernel mode.
-The implementation provides:
+This patch implements a comprehensive IPI-based communication system
+for multikernel environments, enabling data exchange between different
+kernel instances running on separate CPUs.
 
-- New trampoline_64_bsp.S assembly code for real-mode to long-mode
-  transition when launching kernels on secondary CPUs
-- Trampoline memory allocation and setup in low memory (<1MB) for
-  real-mode execution compatibility
-- Page table construction for identity mapping during CPU bootstrap
-- Integration with existing multikernel kexec infrastructure
+Key features include:
 
-The trampoline handles the complete CPU initialization sequence from
-16-bit real mode through 32-bit protected mode to 64-bit long mode,
-setting up appropriate GDT, page tables, and control registers before
-jumping to the target kernel entry point without resetting the whole
-system or the running kernel.
+- Generic IPI handler registration and callback mechanism allowing
+  modules to register for multikernel communication events
+- Shared memory infrastructure using either boot parameter-specified
+  or dynamically allocated physical memory regions
+- Per-CPU data buffers in shared memory for efficient IPI payload
+  transfer up to 256 bytes per message
+- IRQ work integration for safe callback execution in interrupt context
+- PFN-based flexible shared memory APIs for page-level data sharing
+- Resource tracking integration for /proc/iomem visibility
 
-Note: This implementation uses legacy assembly-based trampoline code
-and should be migrated to C-based x86 trampoline in future updates.
+The implementation provides multikernel_send_ipi_data() for sending
+typed data to target CPUs and multikernel_register_handler() for
+receiving notifications. Shared memory is established during early
+boot and mapped using memremap() for cache-coherent access.
+
+This infrastructure enables heterogeneous computing scenarios where
+multikernel instances can coordinate and share data while maintaining
+isolation on their respective CPU cores.
+
+Note, as a proof-of-concept, we have only implemented the x86 part.
 
 Signed-off-by: Cong Wang <cwang@multikernel.io>
 ---
- arch/x86/kernel/Makefile            |   1 +
- arch/x86/kernel/head64.c            |   5 +
- arch/x86/kernel/setup.c             |   3 +
- arch/x86/kernel/smpboot.c           |  87 +++++++--
- arch/x86/kernel/trampoline_64_bsp.S | 288 ++++++++++++++++++++++++++++
- arch/x86/kernel/vmlinux.lds.S       |   6 +
- 6 files changed, 375 insertions(+), 15 deletions(-)
- create mode 100644 arch/x86/kernel/trampoline_64_bsp.S
+ arch/x86/kernel/smp.c       |   5 +-
+ include/linux/multikernel.h |  81 ++++++++++
+ init/main.c                 |   2 +
+ kernel/Makefile             |   2 +-
+ kernel/multikernel.c        | 313 ++++++++++++++++++++++++++++++++++++
+ 5 files changed, 398 insertions(+), 5 deletions(-)
+ create mode 100644 include/linux/multikernel.h
+ create mode 100644 kernel/multikernel.c
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 0d2a6d953be9..ac89d82bf25b 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -50,6 +50,7 @@ CFLAGS_irq.o := -I $(src)/../include/asm/trace
- 
- obj-y			+= head_$(BITS).o
- obj-y			+= head$(BITS).o
-+obj-y			+= trampoline_64_bsp.o
- obj-y			+= ebda.o
- obj-y			+= platform-quirks.o
- obj-y			+= process_$(BITS).o signal.o signal_$(BITS).o
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 533fcf5636fc..4097101011d2 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -216,6 +216,9 @@ static void __init copy_bootdata(char *real_mode_data)
- 	sme_unmap_bootdata(real_mode_data);
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 028cc423a772..3ee515e32383 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -272,10 +272,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_call_function_single)
+ 	trace_call_function_single_exit(CALL_FUNCTION_SINGLE_VECTOR);
  }
  
-+unsigned long orig_boot_params;
-+EXPORT_SYMBOL(orig_boot_params);
-+
- asmlinkage __visible void __init __noreturn x86_64_start_kernel(char * real_mode_data)
+-static void generic_multikernel_interrupt(void)
+-{
+-	pr_info("Multikernel interrupt\n");
+-}
++void generic_multikernel_interrupt(void);
+ 
+ DEFINE_IDTENTRY_SYSVEC(sysvec_multikernel)
  {
- 	/*
-@@ -285,6 +288,8 @@ asmlinkage __visible void __init __noreturn x86_64_start_kernel(char * real_mode
- 	/* set init_top_pgt kernel high mapping*/
- 	init_top_pgt[511] = early_top_pgt[511];
- 
-+	orig_boot_params = (unsigned long) real_mode_data;
-+
- 	x86_64_start_reservations(real_mode_data);
- }
- 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 1b2edd07a3e1..8342c4e46bad 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -877,6 +877,8 @@ static void __init x86_report_nx(void)
-  * Note: On x86_64, fixmaps are ready for use even before this is called.
-  */
- 
-+extern void __init setup_trampolines_bsp(void);
-+
- void __init setup_arch(char **cmdline_p)
- {
- #ifdef CONFIG_X86_32
-@@ -1103,6 +1105,7 @@ void __init setup_arch(char **cmdline_p)
- 			(max_pfn_mapped<<PAGE_SHIFT) - 1);
- #endif
- 
-+	setup_trampolines_bsp();
- 	/*
- 	 * Find free memory for the real mode trampoline and place it there. If
- 	 * there is not enough free memory under 1M, on EFI-enabled systems
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index c2844a493ebf..df0b94612238 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -833,27 +833,48 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- 	return 0;
- }
- 
-+extern void __init setup_trampolines_bsp(void);
-+extern unsigned long orig_boot_params;
-+
-+unsigned char *x86_trampoline_bsp_base;
-+
-+extern const unsigned char trampoline_data_bsp[];
-+extern const unsigned char trampoline_status_bsp[];
-+extern const unsigned char x86_trampoline_bsp_start [];
-+extern const unsigned char x86_trampoline_bsp_end   [];
-+extern unsigned long kernel_phys_addr;
-+extern unsigned long boot_params_phys_addr;
-+
-+#define TRAMPOLINE_SYM_BSP(x)                                           \
-+        ((void *)(x86_trampoline_bsp_base +                                     \
-+                  ((const unsigned char *)(x) - trampoline_data_bsp)))
-+
-+/* Address of the SMP trampoline */
-+static inline unsigned long trampoline_bsp_address(void)
-+{
-+        return virt_to_phys(TRAMPOLINE_SYM_BSP(trampoline_data_bsp));
-+}
-+
- // must be locked by cpus_read_lock()
- static int do_multikernel_boot_cpu(u32 apicid, int cpu, unsigned long kernel_start_address)
- {
--	unsigned long start_ip = real_mode_header->trampoline_start;
-+	unsigned long start_ip;
- 	int ret;
- 
--	pr_info("do_multikernel_boot_cpu(apicid=%u, cpu=%u, kernel_start_address=%lx)\n", apicid, cpu, kernel_start_address);
--#ifdef CONFIG_X86_64
--	/* If 64-bit wakeup method exists, use the 64-bit mode trampoline IP */
--	if (apic->wakeup_secondary_cpu_64)
--		start_ip = real_mode_header->trampoline_start64;
--#endif
--	//initial_code = (unsigned long)start_secondary;
--	initial_code = (unsigned long)kernel_start_address;
-+	/* Multikernel -- set physical address where kernel has been copied.
-+           Note that this needs to be written to the location where the
-+           trampoline was copied, not to the location within the original
-+           kernel itself. */
-+        unsigned long *kernel_virt_addr = TRAMPOLINE_SYM_BSP(&kernel_phys_addr);
-+        unsigned long *boot_params_virt_addr = TRAMPOLINE_SYM_BSP(&boot_params_phys_addr);
- 
--	if (IS_ENABLED(CONFIG_X86_32)) {
--		early_gdt_descr.address = (unsigned long)get_cpu_gdt_rw(cpu);
--		//initial_stack  = idle->thread.sp;
--	} else if (!(smpboot_control & STARTUP_PARALLEL_MASK)) {
--		smpboot_control = cpu;
--	}
-+        *kernel_virt_addr = kernel_start_address;
-+        *boot_params_virt_addr = orig_boot_params;
-+
-+        /* start_ip had better be page-aligned! */
-+        start_ip = trampoline_bsp_address();
-+
-+	pr_info("do_multikernel_boot_cpu(apicid=%u, cpu=%u, kernel_start_address=%lx)\n", apicid, cpu, kernel_start_address);
- 
- 	/* Skip init_espfix_ap(cpu); */
- 
-@@ -897,6 +918,9 @@ static int do_multikernel_boot_cpu(u32 apicid, int cpu, unsigned long kernel_sta
- 	/* If the wakeup mechanism failed, cleanup the warm reset vector */
- 	if (ret)
- 		arch_cpuhp_cleanup_kick_cpu(cpu);
-+
-+        /* mark "stuck" area as not stuck */
-+        *(volatile u32 *)TRAMPOLINE_SYM_BSP(trampoline_status_bsp) = 0;
- 	return ret;
- }
- /*
-@@ -1008,6 +1032,39 @@ int multikernel_kick_ap(unsigned int cpu, unsigned long kernel_start_address)
- 	return err;
- }
- 
-+void __init setup_trampolines_bsp(void)
-+{
-+        phys_addr_t mem;
-+        size_t size = PAGE_ALIGN(x86_trampoline_bsp_end - x86_trampoline_bsp_start);
-+
-+        /* Has to be in very low memory so we can execute real-mode AP code. */
-+        mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, 1<<20);
-+        if (!mem)
-+                panic("Cannot allocate trampoline\n");
-+
-+        x86_trampoline_bsp_base = __va(mem);
-+        memblock_reserve(mem, mem + size);
-+
-+        printk(KERN_DEBUG "Base memory trampoline BSP at [%p] %llx size %zu\n",
-+               x86_trampoline_bsp_base, (unsigned long long)mem, size);
-+
-+        //if (!mklinux_boot) {
-+                memcpy(x86_trampoline_bsp_base, trampoline_data_bsp, size);
-+
-+        //} else {
-+        //        printk("Multikernel boot: BSP trampoline will NOT be copied\n");
-+        //}
-+}
-+
-+static int __init configure_trampolines_bsp(void)
-+{
-+        size_t size = PAGE_ALIGN(x86_trampoline_bsp_end - x86_trampoline_bsp_start);
-+
-+        set_memory_x((unsigned long)x86_trampoline_bsp_base, size >> PAGE_SHIFT);
-+        return 0;
-+}
-+
-+arch_initcall(configure_trampolines_bsp);
- 
- int native_kick_ap(unsigned int cpu, struct task_struct *tidle)
- {
-diff --git a/arch/x86/kernel/trampoline_64_bsp.S b/arch/x86/kernel/trampoline_64_bsp.S
+diff --git a/include/linux/multikernel.h b/include/linux/multikernel.h
 new file mode 100644
-index 000000000000..0bd2a971a973
+index 000000000000..12ed5e03f92e
 --- /dev/null
-+++ b/arch/x86/kernel/trampoline_64_bsp.S
-@@ -0,0 +1,288 @@
++++ b/include/linux/multikernel.h
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
++ * Copyright (C) 2025 Multikernel Technologies, Inc. All rights reserved
++ */
++#ifndef _LINUX_MULTIKERNEL_H
++#define _LINUX_MULTIKERNEL_H
++
++#include <linux/types.h>
++#include <linux/irq_work.h>
++
++/**
++ * Multikernel IPI interface
 + *
-+ *	Derived from Setup.S by Linus Torvalds, then derived from Popcorn Linux
-+ *
-+ *	4 Jan 1997 Michael Chastain: changed to gnu as.
-+ *	15 Sept 2005 Eric Biederman: 64bit PIC support
-+ *
-+ *	Entry: CS:IP point to the start of our code, we are 
-+ *	in real mode with no stack, but the rest of the 
-+ *	trampoline page to make our stack and everything else
-+ *	is a mystery.
-+ *
-+ *	On entry to trampoline_data, the processor is in real mode
-+ *	with 16-bit addressing and 16-bit data.  CS has some value
-+ *	and IP is zero.  Thus, data addresses need to be absolute
-+ *	(no relocation) and are taken with regard to r_base.
-+ *
-+ *	With the addition of trampoline_level4_pgt this code can
-+ *	now enter a 64bit kernel that lives at arbitrary 64bit
-+ *	physical addresses.
-+ *
-+ *	If you work on this file, check the object module with objdump
-+ *	--full-contents --reloc to make sure there are no relocation
-+ *	entries.
++ * This header provides declarations for the multikernel IPI interface,
++ * allowing modules to register callbacks for IPI events and pass data
++ * between CPUs.
 + */
 +
-+#include <linux/linkage.h>
++/* Maximum data size that can be transferred via IPI */
++#define MK_MAX_DATA_SIZE 256
++
++/* Data structure for passing parameters via IPI */
++struct mk_ipi_data {
++	int sender_cpu;          /* Which CPU sent this IPI */
++	unsigned int type;      /* User-defined type identifier */
++	size_t data_size;        /* Size of the data */
++	char buffer[MK_MAX_DATA_SIZE]; /* Actual data buffer */
++};
++
++/* Function pointer type for IPI callbacks */
++typedef void (*mk_ipi_callback_t)(struct mk_ipi_data *data, void *ctx);
++
++struct mk_ipi_handler {
++	mk_ipi_callback_t callback;
++	void *context;
++	struct mk_ipi_handler *next;
++	struct mk_ipi_data *saved_data;
++	struct irq_work work;
++};
++
++/**
++ * multikernel_register_handler - Register a callback for multikernel IPI
++ * @callback: Function to call when IPI is received
++ * @ctx: Context pointer passed to the callback
++ *
++ * Returns pointer to handler on success, NULL on failure
++ */
++struct mk_ipi_handler *multikernel_register_handler(mk_ipi_callback_t callback, void *ctx);
++
++/**
++ * multikernel_unregister_handler - Unregister a multikernel IPI callback
++ * @handler: Handler pointer returned from multikernel_register_handler
++ */
++void multikernel_unregister_handler(struct mk_ipi_handler *handler);
++
++/**
++ * multikernel_send_ipi_data - Send data to another CPU via IPI
++ * @cpu: Target CPU
++ * @data: Pointer to data to send
++ * @data_size: Size of data
++ * @type: User-defined type identifier
++ *
++ * This function copies the data to per-CPU storage and sends an IPI
++ * to the target CPU.
++ *
++ * Returns 0 on success, negative error code on failure
++ */
++int multikernel_send_ipi_data(int cpu, void *data, size_t data_size, unsigned long type);
++
++void generic_multikernel_interrupt(void);
++
++int __init multikernel_init(void);
++
++/* Flexible shared memory APIs (PFN-based) */
++int mk_send_pfn(int target_cpu, unsigned long pfn);
++int mk_receive_pfn(struct mk_ipi_data *data, unsigned long *out_pfn);
++void *mk_receive_map_page(struct mk_ipi_data *data);
++
++#define mk_receive_unmap_page(p) memunmap(p)
++
++#endif /* _LINUX_MULTIKERNEL_H */
+diff --git a/init/main.c b/init/main.c
+index 5753e9539ae6..46a199bcb389 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -103,6 +103,7 @@
+ #include <linux/randomize_kstack.h>
+ #include <linux/pidfs.h>
+ #include <linux/ptdump.h>
++#include <linux/multikernel.h>
+ #include <net/net_namespace.h>
+ 
+ #include <asm/io.h>
+@@ -955,6 +956,7 @@ void start_kernel(void)
+ 	vfs_caches_init_early();
+ 	sort_main_extable();
+ 	trap_init();
++	multikernel_init();
+ 	mm_core_init();
+ 	maple_tree_init();
+ 	poking_init();
+diff --git a/kernel/Makefile b/kernel/Makefile
+index c60623448235..e5216610a4e7 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -10,7 +10,7 @@ obj-y     = fork.o exec_domain.o panic.o \
+ 	    extable.o params.o \
+ 	    kthread.o sys_ni.o nsproxy.o \
+ 	    notifier.o ksysfs.o cred.o reboot.o \
+-	    async.o range.o smpboot.o ucount.o regset.o ksyms_common.o
++	    async.o range.o smpboot.o ucount.o regset.o ksyms_common.o multikernel.o
+ 
+ obj-$(CONFIG_MULTIUSER) += groups.o
+ obj-$(CONFIG_VHOST_TASK) += vhost_task.o
+diff --git a/kernel/multikernel.c b/kernel/multikernel.c
+new file mode 100644
+index 000000000000..74e2f84b7914
+--- /dev/null
++++ b/kernel/multikernel.c
+@@ -0,0 +1,313 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Multikernel Technologies, Inc. All rights reserved
++ */
++#include <linux/module.h>
++#include <linux/kernel.h>
 +#include <linux/init.h>
-+#include <asm/pgtable_types.h>
-+#include <asm/page_types.h>
-+#include <asm/msr.h>
-+#include <asm/segment.h>
-+#include <asm/processor-flags.h>
++#include <linux/smp.h>
++#include <linux/percpu.h>
++#include <linux/spinlock.h>
++#include <linux/multikernel.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <asm/apic.h>
++#include <linux/memblock.h>
 +
-+	.section ".x86_trampoline_bsp","a"
-+	.balign PAGE_SIZE
-+	.code16
++/* Memory parameters for shared region */
++#define MK_IPI_DATA_SIZE  (sizeof(struct mk_ipi_data) * NR_CPUS)
++#define MK_MEM_BASE_SIZE  (sizeof(struct mk_shared_data))
++#define MK_MEM_SIZE       (MK_MEM_BASE_SIZE + PAGE_SIZE)
 +
-+SYM_CODE_START(trampoline_data_bsp)
-+bsp_base = .
-+	cli			# We should be safe anyway
-+	wbinvd
-+	mov	%cs, %ax	# Code and data in the same place
-+	mov	%ax, %ds
-+	mov	%ax, %es
-+	mov	%ax, %ss
++/* Boot parameter for physical address */
++static unsigned long mk_phys_addr_param;
 +
++/* Parse multikernel physical address from kernel command line */
++static int __init multikernel_phys_addr_setup(char *str)
++{
++	return kstrtoul(str, 0, &mk_phys_addr_param);
++}
++early_param("mk_shared_memory", multikernel_phys_addr_setup);
 +
-+	movl	$0xA5A5A5A5, trampoline_status_bsp - bsp_base
-+				# write marker for master knows we're running
++/* Allocated/assigned physical address for shared memory */
++static phys_addr_t mk_phys_addr_base;
 +
-+					# Setup stack
-+	movw	$(trampoline_stack_bsp_end - bsp_base), %sp
++/* Resource structure for tracking the memory in /proc/iomem */
++static struct resource mk_mem_res __ro_after_init = {
++	.name = "Multikernel Shared Memory",
++	.flags = IORESOURCE_MEM | IORESOURCE_BUSY,
++};
 +
-+	# call	verify_cpu		# Verify the cpu supports long mode
-+	# testl   %eax, %eax		# Check for return code
-+	# jnz	no_longmode_bsp
++/* Shared memory structures */
++struct mk_shared_data {
++	struct mk_ipi_data cpu_data[NR_CPUS];  /* Data area for each CPU */
++};
 +
-+	mov	%cs, %ax
-+	movzx	%ax, %esi		# Find the 32bit trampoline location
-+	shll	$4, %esi
++/* Pointer to the shared memory area (remapped virtual address) */
++static struct mk_shared_data *mk_shared_mem;
 +
-+					# Fixup the absolute vectors
-+	leal	(startup_32_bsp - bsp_base)(%esi), %eax
-+	movl	%eax, startup_32_vector_bsp - bsp_base
-+	leal	(startup_64_bsp - bsp_base)(%esi), %eax
-+	movl	%eax, startup_64_vector_bsp - bsp_base
-+	leal	(tgdt_bsp - bsp_base)(%esi), %eax
-+	movl	%eax, (tgdt_bsp + 2 - bsp_base)
++/* Callback management */
++static struct mk_ipi_handler *mk_handlers;
++static raw_spinlock_t mk_handlers_lock = __RAW_SPIN_LOCK_UNLOCKED(mk_handlers_lock);
 +
-+	/*
-+	 * GDT tables in non default location kernel can be beyond 16MB and
-+	 * lgdt will not be able to load the address as in real mode default
-+	 * operand size is 16bit. Use lgdtl instead to force operand size
-+	 * to 32 bit.
-+	 */
++static void handler_work(struct irq_work *work)
++{
++    struct mk_ipi_handler *handler = container_of(work, struct mk_ipi_handler, work);
++    if (handler->callback)
++        handler->callback(handler->saved_data, handler->context);
++}
 +
-+	lidtl	tidt_bsp - bsp_base	# load idt with 0, 0
-+	lgdtl	tgdt_bsp - bsp_base	# load gdt with whatever is appropriate
-+
-+	mov	$X86_CR0_PE, %ax	# protected mode (PE) bit
-+	lmsw	%ax			# into protected mode
-+
-+	# flush prefetch and jump to startup_32
-+	ljmpl	*(startup_32_vector_bsp - bsp_base)
-+SYM_CODE_END(trampoline_data_bsp)
-+
-+	.code32
-+	.balign 4
-+startup_32_bsp:
-+
-+	cli
-+        movl    $(__KERNEL_DS), %eax
-+        movl    %eax, %ds
-+        movl    %eax, %es
-+        movl    %eax, %ss
-+
-+	/* Load new GDT with the 64bit segments using 32bit descriptor.
-+	 * The new GDT labels the entire address space as 64-bit, so we
-+	 * can switch into long mode later. */
-+        leal    (gdt_bsp_64 - bsp_base)(%esi), %eax
-+        movl    %eax, (gdt_bsp_64 - bsp_base + 2)(%esi)
-+        lgdt    (gdt_bsp_64 - bsp_base)(%esi)
-+
-+	/* Enable PAE mode.  Note that this does not actually take effect
-+	 * until paging is enabled */
-+	movl	%cr4, %eax
-+        orl     $(X86_CR4_PAE), %eax
-+        movl    %eax, %cr4
-+
-+        /* Initialize Page tables to 0 */
-+	leal    (pgtable_bsp - bsp_base)(%esi), %edi
-+	xorl    %eax, %eax
-+        movl    $((4096*6)/4), %ecx
-+        rep     stosl
-+
-+        /* Build Level 4 */
-+        leal    (pgtable_bsp - bsp_base)(%esi), %edi
-+        leal    0x1007 (%edi), %eax
-+        movl    %eax, 0(%edi)
-+
-+        /* Build Level 3 */
-+        leal    (pgtable_bsp - bsp_base + 0x1000)(%esi), %edi
-+        leal    0x1007(%edi), %eax
-+        movl    $4, %ecx
-+1:      movl    %eax, 0x00(%edi)
-+        addl    $0x00001000, %eax
-+        addl    $8, %edi
-+        decl    %ecx
-+        jnz     1b
-+
-+        /* Build Level 2 */
-+        leal    (pgtable_bsp - bsp_base + 0x2000)(%esi), %edi
-+        movl    $0x00000183, %eax
-+        movl    $2048, %ecx
-+1:      movl    %eax, 0(%edi)
-+        addl    $0x00200000, %eax
-+        addl    $8, %edi
-+        decl    %ecx
-+        jnz     1b
-+
-+        /* Enable the boot page tables */
-+        leal    (pgtable_bsp - bsp_base)(%esi), %eax
-+        movl    %eax, %cr3
-+
-+        /* Enable Long mode in EFER (Extended Feature Enable Register) */
-+        movl    $MSR_EFER, %ecx
-+        rdmsr
-+        btsl    $_EFER_LME, %eax
-+        wrmsr
-+
-+        /*
-+         * Setup for the jump to 64bit mode
-+         *
-+         * When the jump is performend we will be in long mode but
-+         * in 32bit compatibility mode with EFER.LME = 1, CS.L = 0, CS.D = 1
-+         * (and in turn EFER.LMA = 1).  To jump into 64bit mode we use
-+         * the new gdt/idt that has __KERNEL_CS with CS.L = 1.
-+         * We place all of the values on our mini stack so lret can
-+         * used to perform that far jump.
-+         */
-+        pushl   $__KERNEL_CS
-+        leal    (startup_64_bsp - bsp_base)(%esi), %eax
-+        pushl   %eax
-+
-+	/* Enter paged protected Mode, activating Long Mode */
-+        movl    $(X86_CR0_PG | X86_CR0_PE), %eax /* Enable Paging and Protected mode */
-+        movl    %eax, %cr0
-+
-+	/* Jump from 32bit compatibility mode into 64bit mode. */
-+        lret
-+
-+	.code64
-+	.balign 4
-+startup_64_bsp:
-+
-+	/* Get physical address of boot_params structure */
-+	movq    (boot_params_phys_addr - bsp_base)(%rsi), %r15
-+
-+	/* Load kernel address into register */
-+	movq    (kernel_phys_addr - bsp_base)(%rsi), %r14
-+
-+	/* Check whether the kernel is in the 4 GB we mapped already,
-+	 * and if not, add an additional mapping */
-+	movq	$0xffffffff00000000, %r8
-+	testq	%r8, %r14
-+	je	2f
-+
-+	/* If we got here, we need to identity-map an additional 1 GB */
-+	
-+	/* Mask off to figure out what our directory pointer should be */
-+	movq	%r14, %r13
-+	movq	$0xffffffffc0000000, %r12
-+	andq	%r12, %r13
-+
-+	/* Set our PDPTE */
-+	movq	%r13, %r11
-+	shrq	$(30-3), %r11
-+	leaq    (pgtable_bsp - bsp_base + 0x1000)(%rsi), %rdi
-+	addq	%r11, %rdi
-+	leaq	(pgtable_extra_bsp - bsp_base + 0x7)(%rsi), %rax
-+	movq	%rax, 0(%rdi)
-+
-+	/* Populate the page directory */
-+	leaq    (pgtable_extra_bsp - bsp_base)(%rsi), %rdi
-+	movq    $0x00000183, %rax
-+	addq	%r13, %rax
-+	movq    $512, %rcx
-+1:      movq    %rax, 0(%rdi)
-+	addq    $0x00200000, %rax
-+	addq    $8, %rdi
-+	decq    %rcx
-+	jnz     1b
-+
-+	/* Set esi to point to the boot_params structure */
-+2:	movq	%r15, %rsi
-+	jmp	*%r14
-+
-+	.align 8
-+SYM_DATA(boot_params_phys_addr, .quad  0)
-+
-+	.align 8
-+SYM_DATA(kernel_phys_addr, .quad  0)
-+
-+	.code16
-+	.balign 4
-+	# Careful these need to be in the same 64K segment as the above;
-+tidt_bsp:
-+	.word	0			# idt limit = 0
-+	.word	0, 0			# idt base = 0L
-+
-+	# Duplicate the global descriptor table
-+	# so the kernel can live anywhere
-+	.balign 4
-+tgdt_bsp:
-+	.short	tgdt_bsp_end - tgdt_bsp		# gdt limit
-+	.long	tgdt_bsp - bsp_base
-+	.short 0
-+	.quad	0x00cf9b000000ffff	# __KERNEL32_CS
-+	.quad	0x00af9b000000ffff	# __KERNEL_CS
-+	.quad	0x00cf93000000ffff	# __KERNEL_DS
-+tgdt_bsp_end:
-+
-+	.code64
-+	.balign 4
-+gdt_bsp_64:
-+        .word   gdt_bsp_64_end - gdt_bsp_64
-+        .long   gdt_bsp_64 - bsp_base
-+        .word   0
-+        .quad   0x0000000000000000      /* NULL descriptor */
-+        .quad   0x00af9a000000ffff      /* __KERNEL_CS */
-+        .quad   0x00cf92000000ffff      /* __KERNEL_DS */
-+        .quad   0x0080890000000000      /* TS descriptor */
-+        .quad   0x0000000000000000      /* TS continued */
-+gdt_bsp_64_end:
-+
-+	.code16
-+	.balign 4
-+startup_32_vector_bsp:
-+	.long	startup_32_bsp - bsp_base
-+	.word	__KERNEL32_CS, 0
-+
-+	.balign 4
-+startup_64_vector_bsp:
-+	.long	startup_64_bsp - bsp_base
-+	.word	__KERNEL_CS, 0
-+
-+	.balign 4
-+SYM_DATA(trampoline_status_bsp, .long	0)
-+
-+	.balign 4
-+SYM_DATA(trampoline_location, .quad   0)
-+
-+trampoline_stack_bsp:
-+	.fill 512,8,0
-+trampoline_stack_bsp_end:
-+
-+SYM_DATA(trampoline_bsp_end)
-+
-+/*
-+ * Space for page tables (not in .bss so not zeroed)
++/**
++ * multikernel_register_handler - Register a callback for multikernel IPI
++ * @callback: Function to call when IPI is received
++ * @ctx: Context pointer passed to the callback
++ *
++ * Returns pointer to handler on success, NULL on failure
 + */
-+        .balign 4096
-+pgtable_bsp:
-+        .fill 6*4096, 1, 0
-+pgtable_extra_bsp:
-+	.fill 1*4096, 1, 0
++struct mk_ipi_handler *multikernel_register_handler(mk_ipi_callback_t callback, void *ctx)
++{
++	struct mk_ipi_handler *handler;
++	unsigned long flags;
 +
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 4fa0be732af1..86f4fd37dc18 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -231,6 +231,12 @@ SECTIONS
- 
- 	INIT_DATA_SECTION(16)
- 
-+         .x86_trampoline_bsp : AT(ADDR(.x86_trampoline_bsp) - LOAD_OFFSET) {
-+                x86_trampoline_bsp_start = .;
-+                *(.x86_trampoline_bsp)
-+                x86_trampoline_bsp_end = .;
-+        }
++	if (!callback)
++		return NULL;
 +
- 	.x86_cpu_dev.init : AT(ADDR(.x86_cpu_dev.init) - LOAD_OFFSET) {
- 		__x86_cpu_dev_start = .;
- 		*(.x86_cpu_dev.init)
++	handler = kzalloc(sizeof(*handler), GFP_KERNEL);
++	if (!handler)
++		return NULL;
++
++	handler->callback = callback;
++	handler->context = ctx;
++
++	init_irq_work(&handler->work, handler_work);
++
++	raw_spin_lock_irqsave(&mk_handlers_lock, flags);
++	handler->next = mk_handlers;
++	mk_handlers = handler;
++	raw_spin_unlock_irqrestore(&mk_handlers_lock, flags);
++
++	return handler;
++}
++EXPORT_SYMBOL(multikernel_register_handler);
++
++/**
++ * multikernel_unregister_handler - Unregister a multikernel IPI callback
++ * @handler: Handler pointer returned from multikernel_register_handler
++ */
++void multikernel_unregister_handler(struct mk_ipi_handler *handler)
++{
++	struct mk_ipi_handler **pp, *p;
++	unsigned long flags;
++
++	if (!handler)
++		return;
++
++	raw_spin_lock_irqsave(&mk_handlers_lock, flags);
++	pp = &mk_handlers;
++	while ((p = *pp) != NULL) {
++		if (p == handler) {
++			*pp = p->next;
++			break;
++		}
++		pp = &p->next;
++	}
++	raw_spin_unlock_irqrestore(&mk_handlers_lock, flags);
++
++    /* Wait for pending work to complete */
++    irq_work_sync(&handler->work);
++    kfree(p);
++}
++EXPORT_SYMBOL(multikernel_unregister_handler);
++
++/**
++ * multikernel_send_ipi_data - Send data to another CPU via IPI
++ * @cpu: Target CPU
++ * @data: Pointer to data to send
++ * @data_size: Size of data
++ * @type: User-defined type identifier
++ *
++ * This function copies the data to per-CPU storage and sends an IPI
++ * to the target CPU.
++ *
++ * Returns 0 on success, negative error code on failure
++ */
++int multikernel_send_ipi_data(int cpu, void *data, size_t data_size, unsigned long type)
++{
++	struct mk_ipi_data *target;
++
++	if (cpu < 0 || cpu >= nr_cpu_ids)
++		return -EINVAL;
++
++	if (data_size > MK_MAX_DATA_SIZE)
++		return -EINVAL;  /* Data too large for buffer */
++
++	/* Ensure shared memory is initialized */
++	if (!mk_shared_mem)
++		return -ENOMEM;
++
++	/* Get target CPU's data area from shared memory */
++	target = &mk_shared_mem->cpu_data[cpu];
++
++	/* Set header information */
++	target->data_size = data_size;
++	target->sender_cpu = smp_processor_id();
++	target->type = type;
++
++	/* Copy the actual data into the buffer */
++	if (data && data_size > 0)
++		memcpy(target->buffer, data, data_size);
++
++	/* Send IPI to target CPU */
++	__apic_send_IPI(cpu, MULTIKERNEL_VECTOR);
++
++	return 0;
++}
++EXPORT_SYMBOL(multikernel_send_ipi_data);
++
++/**
++ * multikernel_interrupt_handler - Handle the multikernel IPI
++ *
++ * This function is called when a multikernel IPI is received.
++ * It invokes all registered callbacks with the per-CPU data.
++ */
++static void multikernel_interrupt_handler(void)
++{
++	struct mk_ipi_data *data;
++	struct mk_ipi_handler *handler;
++	int current_cpu = smp_processor_id();
++
++	/* Ensure shared memory is initialized */
++	if (!mk_shared_mem) {
++		pr_err("Multikernel IPI received but shared memory not initialized\n");
++		return;
++	}
++
++	/* Get this CPU's data area from shared memory */
++	data = &mk_shared_mem->cpu_data[current_cpu];
++
++	pr_debug("Multikernel IPI received on CPU %d from CPU %d, type=%u\n",
++		 current_cpu, data->sender_cpu, data->type);
++
++    raw_spin_lock(&mk_handlers_lock);
++    for (handler = mk_handlers; handler; handler = handler->next) {
++        handler->saved_data = data;
++        irq_work_queue(&handler->work);
++    }
++    raw_spin_unlock(&mk_handlers_lock);
++}
++
++/**
++ * Generic multikernel interrupt handler - called by the IPI vector
++ *
++ * This is the function that gets called by the IPI vector handler.
++ */
++void generic_multikernel_interrupt(void)
++{
++	multikernel_interrupt_handler();
++}
++
++/**
++ * setup_shared_memory - Initialize shared memory for inter-kernel communication
++ *
++ * Maps a fixed physical memory region for sharing IPI data between kernels
++ * Returns 0 on success, negative error code on failure
++ */
++static int __init setup_shared_memory(void)
++{
++	/* Check if a fixed physical address was provided via parameter */
++	if (mk_phys_addr_param) {
++		/* Use the provided physical address */
++		mk_phys_addr_base = (phys_addr_t)mk_phys_addr_param;
++		pr_info("Using specified physical address 0x%llx for multikernel shared memory\n",
++		       (unsigned long long)mk_phys_addr_base);
++	} else {
++		/* Dynamically allocate contiguous physical memory using memblock */
++		mk_phys_addr_base = memblock_phys_alloc(MK_MEM_SIZE, PAGE_SIZE);
++		if (!mk_phys_addr_base) {
++			pr_err("Failed to allocate physical memory for multikernel IPI data\n");
++			return -ENOMEM;
++		}
++	}
++
++	/* Map the physical memory region to virtual address space */
++	mk_shared_mem = memremap(mk_phys_addr_base, MK_MEM_SIZE, MEMREMAP_WB);
++	if (!mk_shared_mem) {
++		pr_err("Failed to map shared memory at 0x%llx for multikernel IPI data\n",
++		       (unsigned long long)mk_phys_addr_base);
++
++		/* Only free the memory if we allocated it dynamically */
++		if (!mk_phys_addr_param)
++			memblock_phys_free(mk_phys_addr_base, MK_MEM_SIZE);
++		return -ENOMEM;
++	}
++
++	/* Initialize the memory to zero */
++	memset(mk_shared_mem, 0, sizeof(struct mk_shared_data));
++
++	pr_info("Allocated and mapped multikernel shared memory: phys=0x%llx, virt=%px, size=%lu bytes\n",
++		(unsigned long long)mk_phys_addr_base, mk_shared_mem, MK_MEM_SIZE);
++
++	return 0;
++}
++
++int __init multikernel_init(void)
++{
++	int ret;
++
++	ret = setup_shared_memory();
++	if (ret < 0)
++		return ret;
++
++	pr_info("Multikernel IPI support initialized\n");
++	return 0;
++}
++
++static int __init init_shared_memory(void)
++{
++	/* Set up resource structure for /proc/iomem visibility */
++	mk_mem_res.start = mk_phys_addr_base;
++	mk_mem_res.end = mk_phys_addr_base + MK_MEM_SIZE - 1;
++
++	/* Register the resource in the global resource tree */
++	if (insert_resource(&iomem_resource, &mk_mem_res)) {
++		pr_warn("Could not register multikernel shared memory region in resource tracking\n");
++		/* Continue anyway as this is not fatal */
++		return -1;
++	}
++
++	pr_info("Registered multikernel shared memory in resource tree: 0x%llx-0x%llx\n",
++		(unsigned long long)mk_mem_res.start, (unsigned long long)mk_mem_res.end);
++	return 0;
++}
++core_initcall(init_shared_memory);
++
++/* ---- Flexible shared memory APIs (PFN-based) ---- */
++#define MK_PFN_IPI_TYPE 0x80000001U
++
++/* Send a PFN to another kernel via mk_ipi_data */
++int mk_send_pfn(int target_cpu, unsigned long pfn)
++{
++	return multikernel_send_ipi_data(target_cpu, &pfn, sizeof(pfn), MK_PFN_IPI_TYPE);
++}
++
++/* Receive a PFN from mk_ipi_data. Caller must check type. */
++int mk_receive_pfn(struct mk_ipi_data *data, unsigned long *out_pfn)
++{
++	if (!data || !out_pfn)
++		return -EINVAL;
++	if (data->type != MK_PFN_IPI_TYPE || data->data_size != sizeof(unsigned long))
++		return -EINVAL;
++	*out_pfn = *(unsigned long *)data->buffer;
++	return 0;
++}
++
++void *mk_receive_map_page(struct mk_ipi_data *data)
++{
++	unsigned long pfn;
++	int ret;
++
++	ret = mk_receive_pfn(data, &pfn);
++	if (ret < 0)
++		return NULL;
++	return memremap(pfn << PAGE_SHIFT, PAGE_SIZE, MEMREMAP_WB);
++}
 -- 
 2.34.1
 
