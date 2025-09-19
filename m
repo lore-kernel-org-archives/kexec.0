@@ -4,91 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C56A1CAC59A
-	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 06:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4618CAC59A
+	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 07:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=; b=bkW1nKe/nThlj673RX6jQ9xbon
-	Pprq1SvjTuw0Zd1AtlNlcrp63gnPNF/nC2iamzqUTWDqTd9cle9Ls+6A7AD8OwYrGwlU6MnQ9nXOu
-	hIrdLrM+DVGjcs0hmzdwXjqTUm0d+63XAXuel8IwaVDQ2P58NqlyA+d6F7iea/JKT57lD63YOxodq
-	lHCFzQ2Gdg2hl4HLdhygtCqzMS13w8kpu4kvf95SnnVxtna9DxVzFFkaAA7Tn5Y/zLJbL75+MMTM9
-	x3vYCu833088//vqxES+LKdMpWwuYbT0PV+DnYmzc51N+haMIRWf15hfXus4/oKbBsIx567n3JJT4
-	8Z5m82qw==;
+	MIME-Version:Message-Id:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=rs6R8mVEs35r5CKjZNhmHYeHlL7z4toPz5x2v4fqgSc=; b=Zwykt9YL97R9Rr/5UpoqpN3DAC
+	rAS8cQRiMWwcC2AbVDx/6oRSEV3ygTD4qgMEWsJS3G2I77Ikk0ChijME0LXIB7oxXXpEnh9/5b/2e
+	WjonKO1NmiHf9RzrVCxtG+KA5eYrJnXLgI/BF2EU7d0vV11KYVLTlqh7YpmY4uTVBipEAOlnOGzVn
+	zqxexCAsxNohkR3BnscifpTAWiCVMVd4iRbEbg8LS1U9k7yxFAaGWycE2Dt3Nd4QBZH3Hg1onlT/n
+	F4gepJUnFaunUyu74QH36LvG+tlhi9micmUOnzfsjBLq9zsVymsmLbTcSMVSxAbbY9OoJvjvDQa0e
+	Wx81RRMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzV5D-00000001zFD-0GRU;
-	Fri, 19 Sep 2025 06:59:03 +0000
-Received: from mail-vs1-xe34.google.com ([2607:f8b0:4864:20::e34])
+	id 1uzVeX-000000024mX-0E2v;
+	Fri, 19 Sep 2025 07:35:33 +0000
+Received: from mail-pg1-x544.google.com ([2607:f8b0:4864:20::544])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzV5A-00000001zEr-2iSO
+	id 1uzVeU-000000024lk-11oP
 	for kexec@lists.infradead.org;
-	Fri, 19 Sep 2025 06:59:01 +0000
-Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-52dd67b03c8so1221082137.2
-        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 23:59:00 -0700 (PDT)
+	Fri, 19 Sep 2025 07:35:31 +0000
+Received: by mail-pg1-x544.google.com with SMTP id 41be03b00d2f7-b5515eaefceso757718a12.2
+        for <kexec@lists.infradead.org>; Fri, 19 Sep 2025 00:35:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758265139; x=1758869939; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=;
-        b=HMq5l3EH/uTgSkU4Eu+MujLIJsTW9uheWABhVYrV9vV5Z1IxU92RWHMcxDWF0A5k2U
-         6CvyOYPcjYJ5Tx8Judn5Q1xk9vACKytMRqpKV6ekWnrEtsp+SrzzZe5UDPQJhvLu0586
-         Vg3i/NpNAybcyeQ2dRhAMux5+Lr3UlT4/b2KVTTJWDartWIPHw9vVX1H8TNfFIBzHY50
-         pJKeJmZFx7Whz2yocxWUGhea+N5k9WXbntEbIR4KPJCOizALERrCulTUqTyet97wqsJx
-         9HG9h5+YMtamwa2rUo24O5+s5XENcO8oKT8tvqX+BACIsvwdQB4CIub++C34d1VX7Uj6
-         974A==
+        d=gmail.com; s=20230601; t=1758267329; x=1758872129; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rs6R8mVEs35r5CKjZNhmHYeHlL7z4toPz5x2v4fqgSc=;
+        b=SLEGCTZg3HAPbjDqqHqERLhgZyx1HvC4oim5NV8rSFvOOfru8wjznNjg1iwzxHec5f
+         XDR3houuvy17MebyZyJ4QPU7T5xDuP5bFhmLkGsee6Jmko7UORsYqgjkhlUWEEzuXm5b
+         f4WZqe7jW6QGYWj75Rd21YS/PPkVngo7xt9CVyfSUiqt5MuPdjtkUDCcdDmVS9JbABD4
+         21O6pEmmqgszzdaI4FfXGyi97RbxdtmEXDAv+tjt3wgcfNOOc0S3206iBuZ04dk4L/8B
+         4rSMe+7cIt9zArEeANbF7Vq2SkOn8rxwgVNEJUDCiRgAL8nyIDw0Gg7wqpXXX3o+qyHb
+         DQRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758265139; x=1758869939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=;
-        b=NVB/YVqPN9SVOXKYO/6kt7+9tEEJA7qc40gSYEYDmWFYKkj6JQb5dyxOSGxlOoGnkN
-         Xto4HMG6ug9FXNT9HcyK1x6JMtU10BQHl8a/XB33l/unWb4DM3idHJJH/v0U5dh7tNYR
-         DxHL8hN5sYaS3nckrH3DH4BuqUB/o1nWXx2gOdQ74P7/g+nmeAD584Qx2EeSMQmXhJ7l
-         /pyFvsFVpOA3opF2lNxSXDwcjFZOQ48LRUxljlZn+dvphkyPXHWKsMv7XAteUe9YPjs3
-         OmA5w3X+OLc1uqE9me2fBAsFiXR+x8C5inYM0daUDS7A8eSc5epb0MBw1Y/hv2B2mMi+
-         izDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZaPtCSexRBoopFxxHf54pRUoIejR+wQETlCT1qWXqGOMeqtOaEkybou1Ohliu3zEW8h2IGg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx8ZEFGtgHELvtG7eYy1fw/ljBtZ7knKIkbGLMIzDZB1TKtMus3
-	A3kdgTyjb7mHqutl6mBd9dIZyc3UoBN7GMoasFp1422F4xmrgo8Mv/y1NAHZqExEPrOrz2pWK1d
-	22aHgltO3jSpn/goIyFAHQvTxtpq3sRm3g7oz36Im
-X-Gm-Gg: ASbGncsMOTtN816DnJHVEPp1cd61sHmVkHdLzKrutyUNXY8G9QXWTh71WydwSxVE2Ej
-	KU9tbg71KvcqS6ENLG0R4enSzkL5SBhTDc4LSynR+rcm1fjsig5jY3w7Pk5IPBuGWPAFp50ljYH
-	ZgY5VI+8o2ez+FveKIuByyddoSdEA7Dj1aFP/TTwpxBas99p+YvauMoTPpHu8F9Qs+YvLh6XC3i
-	BigFyicHVe4s5ro+i5r5laawX4MxrHr1NrKNw==
-X-Google-Smtp-Source: AGHT+IHk3HVC3jvHLLDRmh37Xu/EchCNrhbpXqT1eVIU2RepMDaci0Ybt3B7Crf5TYbbvxxQhcjhhhXUFlwv46zm7xc=
-X-Received: by 2002:a05:6102:3347:b0:529:4cf5:8aec with SMTP id
- ada2fe7eead31-588ec1dd609mr784951137.16.1758265139130; Thu, 18 Sep 2025
- 23:58:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758267329; x=1758872129;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rs6R8mVEs35r5CKjZNhmHYeHlL7z4toPz5x2v4fqgSc=;
+        b=AE1AwahJ5RZqXk9op8PZb8fyM38FLjtrlZsTR3wRWMVNtuap1aq70U8JNLlErF/NH9
+         3qDbQlEVOJt5g1nIdYqJ2SY8bXEg9AeE5U9dSlED9BaE1227Mjk3bLtf9lsMG/pszIYd
+         JsSVxWEIJQEIwPicrLnuqo3w2JNeCmRSJ6MqJYWhvsQ/uBuIvfb+zk+F8SjMV1WScnlw
+         yMTlpNESqjTPeEDZUGMXwr6/2IuLueqL58KiOEYHFQy9K6oFYrw3rb+dC5fMTYIi/mCo
+         Pv+pFBF+EX8PE5Y670+yBOfkqhVww75/4wjH8+HObZXBwNrgyfjqew4T7cpi+trukT1D
+         i84g==
+X-Forwarded-Encrypted: i=1; AJvYcCV/5nKlk4mXtXULUECJf0hoOg7TMf9PSGFVPjTwKDCZzaKUu75jS2EhyBnEW0tEnPIsbikdVg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzKCfobQsVqupTaCdQgULC0DUW/+yWtrHuSe2QJDwlgY+y8eBiO
+	r3rZQVgIx4nOnKHoLNDusWYx2WsieZLNvKCxxUZiSaHwqU0KC89F6/ZI
+X-Gm-Gg: ASbGnct8DZQlCdne4dTvrX/NlCm5pUZCNjKhAZHHQ9nQzcE6f/vlnhxxf22RaIk8r2Z
+	dCHnrjgtFMCJ/tCvvVjAjM7ixZPZaaXFZ2XEm50EQNXHwQVsFh5tVloCyyUE7r7VtFwUJNW02br
+	rR9DyAddIPGHGpvOmD/AbCAdNxDCeE2XKvSM8hMr3ys7ZNHW3HvFbGkWRtfB/aBrNrZgyGP7Ufo
+	fXdPc6R8nc2xoohD01GELo3kgq7B59nG68SYJLl4Aor2nNBDBwFNerxlNC3jtbBmB0A8/Kb/jef
+	L/AlhtLCWDYPfGGBnAJfImdh+iD8O5xH8qSwJR9UaY60J4brsv/14mNZAB4DrdXxKZc49LgoVga
+	3rLfRr1V/nhwEi7aE9BMtdJWXSNr6DXeowJEjeaBbAbGp
+X-Google-Smtp-Source: AGHT+IH/JbewrU8tMCRdVSKymQBC4NY9RBJRAxG3PQ4rO2Tkwc+lt+/BMdoxAoQ8MQgLVhADR4NFLw==
+X-Received: by 2002:a17:902:ec90:b0:269:b2ff:5c0e with SMTP id d9443c01a7336-269ba53c9d9mr31131235ad.46.1758267328839;
+        Fri, 19 Sep 2025 00:35:28 -0700 (PDT)
+Received: from PC-YLX4G5XJ.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33046a4d0basm6196155a91.27.2025.09.19.00.35.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Sep 2025 00:35:27 -0700 (PDT)
+From: Chen Wandun <chenwandun1@gmail.com>
+X-Google-Original-From: Chen Wandun <chenwandun@lixiang.com>
+To: piliu@redhat.com,
+	kexec@lists.infradead.org,
+	zhaomeijing@lixiang.com
+Subject: [PATCH] arm64/crashdump-arm64: Fix makedumpfile error caused by fail to get _text address
+Date: Fri, 19 Sep 2025 15:35:22 +0800
+Message-Id: <20250919073522.1840036-1-chenwandun@lixiang.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20250917025019.1585041-1-jasonmiu@google.com> <20250917025019.1585041-3-jasonmiu@google.com>
- <aMr1XAKmyfzM8RCc@kernel.org>
-In-Reply-To: <aMr1XAKmyfzM8RCc@kernel.org>
-From: Jason Miu <jasonmiu@google.com>
-Date: Thu, 18 Sep 2025 23:58:47 -0700
-X-Gm-Features: AS18NWA-W3pRg8J4Q0PVvMgsoADaqk7Awe1gJKAjZHyCKtolHE0_0MrSoYHTlwM
-Message-ID: <CAHN2nPL6SV_Y6Sxqy4o-mOPZoGYMoWow=KevUTX6=c8JkO_g8g@mail.gmail.com>
-Subject: Re: [RFC v1 2/4] kho: Adopt KHO page tables and remove serialization
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Petr Mladek <pmladek@suse.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Steven Chen <chenste@linux.microsoft.com>, 
-	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250918_235900_695214_D4A15BDA 
-X-CRM114-Status: GOOD (  20.71  )
+X-CRM114-CacheID: sfid-20250919_003530_284236_95E89B5D 
+X-CRM114-Status: GOOD (  12.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,56 +95,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike,
+I encountered the following error while makedumpfile without enableing
+kernel CONFIG_PROC_KCORE and CONFIG_KALLSYMS_ALL, this error only exists
+before commit 29fe506 (kexec: make -a the default), this commit change
+from kexec_load to kexec_file_load.
 
-Thank you very much for your comments!
+read_from_vmcore: Can't seek the dump memory(/proc/vmcore). (offset: ffff800084f4c000) Invalid argument
+readpage_elf: Can't read the dump memory(/proc/vmcore).
+readmem: type_addr: 1, addr:41f29800, size:8
+vaddr_to_paddr_arm64: Can't read pgd
+readmem: Can't convert a virtual address(ffff800082edf8a0) to physical address.
+readmem: type_addr: 0, addr:ffff800082edf8a0, size:390
+check_release: Can't get the address of system_utsname.
 
-On Wed, Sep 17, 2025 at 10:52=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
-> > -/*
-> > - * TODO: __maybe_unused is added to the functions:
-> > - * kho_preserve_page_table()
-> > - * kho_walk_tables()
-> > - * kho_memblock_reserve()
-> > - * since they are not actually being called in this change.
-> > - * __maybe_unused will be removed in the next patch.
-> > - */
-> > -static __maybe_unused int kho_preserve_page_table(unsigned long pfn, i=
-nt order)
-> > +static int kho_preserve_page_table(unsigned long pfn, int order)
->
-> Just merge this and the previous patch so that the patch will replace the
-> current preservation mechanism with a new one.
+Although several error messages appear when loading second kernel using kexec without
+kernel CONFIG_PROC_KCORE and CONFIG_KALLSYMS_ALL, but kexec return 0.
 
-Sure I can do this.
+Can't open (/proc/kcore).
+Can't get the symbol of _text to calculate page_offset.
+Can't get the symbol of _text to calculate page_offset.
 
-> > @@ -1023,12 +752,8 @@ int kho_preserve_folio(struct folio *folio)
-> >  {
-> >       const unsigned long pfn =3D folio_pfn(folio);
-> >       const unsigned int order =3D folio_order(folio);
-> > -     struct kho_mem_track *track =3D &kho_out.ser.track;
-> > -
-> > -     if (kho_out.finalized)
-> > -             return -EBUSY;
-> >
-> > -     return __kho_preserve_order(track, pfn, order);
-> > +     return kho_preserve_page_table(pfn, order);
->
-> I don't think we should "rename" __kho_preserve_order() to
-> kho_preserve_page_table(). __kho_preserve_order() could use the new data
-> structure, or call the new implementation, but I don't see a reason to
-> replace it.
->
+If kexec unable to get the _text address, it will result in elf_info.kern_paddr_start
+to be a large value, and also phdr->p_filesz/phdr->p_offset to be a large value, such as:
 
-Ok, I prefer calling the new implementation, so it will look like:
+readelf -l /proc/vmcore
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x0000000000001000 0x0000000000000000 0x0000000000000000
+                 0x0000000000001a44 0x0000000000001a44         0x4
+  LOAD           0x0000000000003000 0xffffffffffffffff 0x00007fffc0200000
+                 0xffff800083020000 0xffff800083020000  RWE    0x0
+  LOAD           0xffff800083023000 0x0000000000000000 0x0000000040000000
+                 0x00000001e6e00000 0x00000001e6e00000  RWE    0x0
+  LOAD           0xffff800269e23000 0x00000001f6e00000 0x0000000236e00000
+                 0x0000000009200000 0x0000000009200000  RWE    0x0
 
-kho_preserve_folio() -> __kho_preserve_order() -> __kho_preserve_page_table=
-()
+This patch avoiding makedumpfile failure by ending the kexec process and explicitly
+notifying error.
 
- __kho_preserve_page_table() is the internal implementation of
-kho_preserve_page_table() and we can remove the
-kho_preserve_page_table().
+Reported-by: Zhao Meijing <zhaomeijing@lixiang.com>
+Signed-off-by: Chen Wandun <chenwandun@lixiang.com>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---
-Jason Miu
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 73cb611..8629610 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -94,9 +94,11 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 		 * For compatibility, deduce by comparing the gap "__init_begin - _stext"
+ 		 * and the res size of "Kernel code" in /proc/iomem
+ 		 */
+-		if (kva_text_end - kva_stext == length)
++		if (kva_text_end - kva_stext == length) {
++			if (!kva_text)
++				die("Cannot get kernel _text symbol address\n");
+ 			elf_info.kern_paddr_start = base - (kva_stext - kva_text);
+-		else
++		} else
+ 			elf_info.kern_paddr_start = base;
+ 	}
+ 	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
+-- 
+2.25.1
+
 
