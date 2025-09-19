@@ -4,92 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBF16CAC59A
-	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 06:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C56A1CAC59A
+	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 06:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Z8ChdVFL3VbJv1RwXe37ElFR0o5xJ4LIb9+Ne1LI908=; b=ZaD17qDKZDziRxismFJRh7LoXC
-	f8uXW3kBDi36HJzpXNHXXqWB3y08YmT78X1m/0VxguU2ZrShMlSWFSOxZMfax5PznKtqBlQtD3z3W
-	NiYj5CjlGFOCIvIiQ76FxDIur0qpOs5pQMRb/UkNexUyntApriy/84FkFfojcmcz9uyVLCSLOstT+
-	z89z0oXfxuCHpmsnQL7MUZ7ZjnTy5WYWkCzCSj2/x60sgjUbN03YiWZaLS9hO2A86TgfVLv+hIrk4
-	tq6yGMdArhxWo6h1JY4Wju+2FXK4/AQqYbTHOYjASxLyGq0pLHeFkeONAaaImxSyLWw1k/Cq8dWjC
-	DYHB5wKw==;
+	bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=; b=bkW1nKe/nThlj673RX6jQ9xbon
+	Pprq1SvjTuw0Zd1AtlNlcrp63gnPNF/nC2iamzqUTWDqTd9cle9Ls+6A7AD8OwYrGwlU6MnQ9nXOu
+	hIrdLrM+DVGjcs0hmzdwXjqTUm0d+63XAXuel8IwaVDQ2P58NqlyA+d6F7iea/JKT57lD63YOxodq
+	lHCFzQ2Gdg2hl4HLdhygtCqzMS13w8kpu4kvf95SnnVxtna9DxVzFFkaAA7Tn5Y/zLJbL75+MMTM9
+	x3vYCu833088//vqxES+LKdMpWwuYbT0PV+DnYmzc51N+haMIRWf15hfXus4/oKbBsIx567n3JJT4
+	8Z5m82qw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzUvr-00000001y0W-1rsM;
-	Fri, 19 Sep 2025 06:49:23 +0000
-Received: from mail-vk1-xa35.google.com ([2607:f8b0:4864:20::a35])
+	id 1uzV5D-00000001zFD-0GRU;
+	Fri, 19 Sep 2025 06:59:03 +0000
+Received: from mail-vs1-xe34.google.com ([2607:f8b0:4864:20::e34])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzUvo-00000001xzO-3FsE
+	id 1uzV5A-00000001zEr-2iSO
 	for kexec@lists.infradead.org;
-	Fri, 19 Sep 2025 06:49:21 +0000
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-544ad727e87so1351500e0c.2
-        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 23:49:19 -0700 (PDT)
+	Fri, 19 Sep 2025 06:59:01 +0000
+Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-52dd67b03c8so1221082137.2
+        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 23:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758264559; x=1758869359; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1758265139; x=1758869939; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z8ChdVFL3VbJv1RwXe37ElFR0o5xJ4LIb9+Ne1LI908=;
-        b=Ovhn8TMYRenn8AsnrZJi8ilxuJ9ovnxg5hfpKzJiOvkjLZklS7TXJWwEiJDwUFSlQ8
-         l5wjDBQ57kSXzMoCNRWam9pbTVjgljHDXa/aGtk9o7lcnfOkmNhCowIzNxZXced0ssmD
-         /j29tcZkNlcWpLn/LGfmKDCcZMQ0KHlln5r0nSaEcDlDFvKMzRvUGMtHjfaxuIMoKnct
-         aqqymv5oKX1DGjgO9c2iC4S2Nqck8/JlsYI9lHLfngNHn39x7mUs8jO3o/aNExZ3uFds
-         CiObTwT4L4Zod5uH8H3El1Hva2KR98URMiqxex+WBVbLWHlCYjLs9a17SPPYsSZhV4/9
-         Ew9A==
+        bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=;
+        b=HMq5l3EH/uTgSkU4Eu+MujLIJsTW9uheWABhVYrV9vV5Z1IxU92RWHMcxDWF0A5k2U
+         6CvyOYPcjYJ5Tx8Judn5Q1xk9vACKytMRqpKV6ekWnrEtsp+SrzzZe5UDPQJhvLu0586
+         Vg3i/NpNAybcyeQ2dRhAMux5+Lr3UlT4/b2KVTTJWDartWIPHw9vVX1H8TNfFIBzHY50
+         pJKeJmZFx7Whz2yocxWUGhea+N5k9WXbntEbIR4KPJCOizALERrCulTUqTyet97wqsJx
+         9HG9h5+YMtamwa2rUo24O5+s5XENcO8oKT8tvqX+BACIsvwdQB4CIub++C34d1VX7Uj6
+         974A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758264559; x=1758869359;
+        d=1e100.net; s=20230601; t=1758265139; x=1758869939;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z8ChdVFL3VbJv1RwXe37ElFR0o5xJ4LIb9+Ne1LI908=;
-        b=MTSM6rD+61O4MVNz46eyFRS546akQ89jHZ7DiLvUrhr2encjm8KT5aLwErRhPIaAlb
-         0HSYo4QBUG2c1/iljcEIaHv0QZTAZrUK1wqeK5IXNnLOOTfYfmQQT4aTYWLt55OUJQE3
-         R0d+4QLeEQh8/ihbdZFtbtO7g03w5mZTw346s4HlwZEtYthaOfwGLLOFRrH/2OR4t1PA
-         b9KRZMygVqKsUjo4M5DszVK7nUH3js31I4WeSRJbeVOEGnNBLEmppXVnPwVxabeP705X
-         0QMDYP8i90SzeLwustEJ4upx1wAN8rQ4rY9x6TzAJihk1cDNsrV58AB8J+5HpV8BwCq4
-         ycQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWleyMwPJ0nC1pZ14/NMovptzZf2uRnAbMW4wPW8GuncGUTnfzfLAfUdpbrZvJeWT6jSkbIZw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz/x22/bCxjY/+lRQcFpmyz837/Xtf52NrtQ/4SsbpHfJ6RbsP4
-	G72OWULjH38iSWYFG/HYdN8Daz5BNLUY0hXMN1FrBt0toF3sO2LGRLbLtzEvKnaXHbxyc4xL2y6
-	Yoqd9dJ+3li7R84AueWpfRP6ZPPlN/uZonsej1iId
-X-Gm-Gg: ASbGncvxQtDRX76Vkgqpn9iwbXHuf4aO9Lvv/Nul0HEv/1eYg9qjJydF4VZElsou2Yd
-	HZiPSjh53JJmzppRI7F80upY9aNbdNsvAjJge0CY/muvwe3vYkK354hCIe4e5xadBvrNVsA0Hv1
-	GcbColmaqFpE69e+8KvjqtiXAd8QOHjqIDGO1U2+7jxs4lp1RpWPpidHkLaz0uyhW2QKbK8SOfH
-	dQweHnEQScLcqbIZhnqi7VlazEQyFtZ5EosU7iTuUzoMkGF
-X-Google-Smtp-Source: AGHT+IFVsk862c6jBLBQHlKlwevYkZVfUWmmFw+NQU42kXUhgZ2xtmh0tS9iCTXHJ7q0fDyvegsZslZdHcK2rLPpIvA=
-X-Received: by 2002:a05:6122:2a05:b0:530:5308:42ec with SMTP id
- 71dfb90a1353d-54a837e6887mr813853e0c.8.1758264558514; Thu, 18 Sep 2025
- 23:49:18 -0700 (PDT)
+        bh=xtcgVCi+G898H3JycH7loc6tUgEzYyu4N3/qLFW16pM=;
+        b=NVB/YVqPN9SVOXKYO/6kt7+9tEEJA7qc40gSYEYDmWFYKkj6JQb5dyxOSGxlOoGnkN
+         Xto4HMG6ug9FXNT9HcyK1x6JMtU10BQHl8a/XB33l/unWb4DM3idHJJH/v0U5dh7tNYR
+         DxHL8hN5sYaS3nckrH3DH4BuqUB/o1nWXx2gOdQ74P7/g+nmeAD584Qx2EeSMQmXhJ7l
+         /pyFvsFVpOA3opF2lNxSXDwcjFZOQ48LRUxljlZn+dvphkyPXHWKsMv7XAteUe9YPjs3
+         OmA5w3X+OLc1uqE9me2fBAsFiXR+x8C5inYM0daUDS7A8eSc5epb0MBw1Y/hv2B2mMi+
+         izDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZaPtCSexRBoopFxxHf54pRUoIejR+wQETlCT1qWXqGOMeqtOaEkybou1Ohliu3zEW8h2IGg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx8ZEFGtgHELvtG7eYy1fw/ljBtZ7knKIkbGLMIzDZB1TKtMus3
+	A3kdgTyjb7mHqutl6mBd9dIZyc3UoBN7GMoasFp1422F4xmrgo8Mv/y1NAHZqExEPrOrz2pWK1d
+	22aHgltO3jSpn/goIyFAHQvTxtpq3sRm3g7oz36Im
+X-Gm-Gg: ASbGncsMOTtN816DnJHVEPp1cd61sHmVkHdLzKrutyUNXY8G9QXWTh71WydwSxVE2Ej
+	KU9tbg71KvcqS6ENLG0R4enSzkL5SBhTDc4LSynR+rcm1fjsig5jY3w7Pk5IPBuGWPAFp50ljYH
+	ZgY5VI+8o2ez+FveKIuByyddoSdEA7Dj1aFP/TTwpxBas99p+YvauMoTPpHu8F9Qs+YvLh6XC3i
+	BigFyicHVe4s5ro+i5r5laawX4MxrHr1NrKNw==
+X-Google-Smtp-Source: AGHT+IHk3HVC3jvHLLDRmh37Xu/EchCNrhbpXqT1eVIU2RepMDaci0Ybt3B7Crf5TYbbvxxQhcjhhhXUFlwv46zm7xc=
+X-Received: by 2002:a05:6102:3347:b0:529:4cf5:8aec with SMTP id
+ ada2fe7eead31-588ec1dd609mr784951137.16.1758265139130; Thu, 18 Sep 2025
+ 23:58:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20250917025019.1585041-1-jasonmiu@google.com> <20250917025019.1585041-2-jasonmiu@google.com>
- <20250917122158.GC1086830@nvidia.com> <CA+CK2bBbSSyCDAAgThDSSwH0WdOeHz-eVgB-1bdiwsDtTSE5pg@mail.gmail.com>
- <20250917163200.GC1391379@nvidia.com>
-In-Reply-To: <20250917163200.GC1391379@nvidia.com>
+References: <20250917025019.1585041-1-jasonmiu@google.com> <20250917025019.1585041-3-jasonmiu@google.com>
+ <aMr1XAKmyfzM8RCc@kernel.org>
+In-Reply-To: <aMr1XAKmyfzM8RCc@kernel.org>
 From: Jason Miu <jasonmiu@google.com>
-Date: Thu, 18 Sep 2025 23:49:06 -0700
-X-Gm-Features: AS18NWCRC_XaURHfJJfME-M0Ey0ObAUOEvcdAIB2Bzvin5AUuRN7ltMM3UG48RQ
-Message-ID: <CAHN2nPK+Z5cvQ_waTWyPZiEoeSc9o7e3YnQLLjRzNzrb7VhAqQ@mail.gmail.com>
-Subject: Re: [RFC v1 1/4] kho: Introduce KHO page table data structures
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Changyuan Lyu <changyuanl@google.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, Joel Granados <joel.granados@kernel.org>, 
+Date: Thu, 18 Sep 2025 23:58:47 -0700
+X-Gm-Features: AS18NWA-W3pRg8J4Q0PVvMgsoADaqk7Awe1gJKAjZHyCKtolHE0_0MrSoYHTlwM
+Message-ID: <CAHN2nPL6SV_Y6Sxqy4o-mOPZoGYMoWow=KevUTX6=c8JkO_g8g@mail.gmail.com>
+Subject: Re: [RFC v1 2/4] kho: Adopt KHO page tables and remove serialization
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
 	Marcos Paulo de Souza <mpdesouza@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Mike Rapoport <rppt@kernel.org>, Petr Mladek <pmladek@suse.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Petr Mladek <pmladek@suse.com>, 
 	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Steven Chen <chenste@linux.microsoft.com>, 
 	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250918_234920_845138_8A9BE176 
-X-CRM114-Status: GOOD (  25.05  )
+X-CRM114-CacheID: sfid-20250918_235900_695214_D4A15BDA 
+X-CRM114-Status: GOOD (  20.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,73 +103,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jason,
+Hi Mike,
 
-On Wed, Sep 17, 2025 at 9:32=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
+Thank you very much for your comments!
+
+On Wed, Sep 17, 2025 at 10:52=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
 ote:
+> > -/*
+> > - * TODO: __maybe_unused is added to the functions:
+> > - * kho_preserve_page_table()
+> > - * kho_walk_tables()
+> > - * kho_memblock_reserve()
+> > - * since they are not actually being called in this change.
+> > - * __maybe_unused will be removed in the next patch.
+> > - */
+> > -static __maybe_unused int kho_preserve_page_table(unsigned long pfn, i=
+nt order)
+> > +static int kho_preserve_page_table(unsigned long pfn, int order)
 >
-> On Wed, Sep 17, 2025 at 12:18:39PM -0400, Pasha Tatashin wrote:
-> > On Wed, Sep 17, 2025 at 8:22=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com=
-> wrote:
-> > >
-> > > On Tue, Sep 16, 2025 at 07:50:16PM -0700, Jason Miu wrote:
-> > > > + * kho_order_table
-> > > > + * +-------------------------------+--------------------+
-> > > > + * | 0 order| 1 order| 2 order ... | HUGETLB_PAGE_ORDER |
-> > > > + * ++------------------------------+--------------------+
-> > > > + *  |
-> > > > + *  |
-> > > > + *  v
-> > > > + * ++------+
-> > > > + * |  Lv6  | kho_page_table
-> > > > + * ++------+
-> > >
-> > > I seem to remember suggesting this could be simplified without the
-> > > special case 7h level table table for order.
-> > >
-> > > Encode the phys address as:
-> > >
-> > > (order << 51) | (phys >> (PAGE_SHIFT + order))
+> Just merge this and the previous patch so that the patch will replace the
+> current preservation mechanism with a new one.
+
+Sure I can do this.
+
+> > @@ -1023,12 +752,8 @@ int kho_preserve_folio(struct folio *folio)
+> >  {
+> >       const unsigned long pfn =3D folio_pfn(folio);
+> >       const unsigned int order =3D folio_order(folio);
+> > -     struct kho_mem_track *track =3D &kho_out.ser.track;
+> > -
+> > -     if (kho_out.finalized)
+> > -             return -EBUSY;
 > >
-> > Why 51 and not 52, this limits to 63bit address space, is it not?
+> > -     return __kho_preserve_order(track, pfn, order);
+> > +     return kho_preserve_page_table(pfn, order);
 >
-> Yeah, might have got the math off
+> I don't think we should "rename" __kho_preserve_order() to
+> kho_preserve_page_table(). __kho_preserve_order() could use the new data
+> structure, or call the new implementation, but I don't see a reason to
+> replace it.
 >
-> > I like the idea, but I'm trying to find the benefits compared to the
-> > current per-order tree approach.
->
-> It is probably about half the code compared to what I see here because
-> everything is agressively simplified.
 
-Thank you very much for providing feedback to me, and I think this is
-a very smart idea.
+Ok, I prefer calling the new implementation, so it will look like:
 
-> > 3. It slightly complicates the logic in the new kernel. Instead of
-> > simply iterating a known tree for a specific order, the boot-time
-> > walker would need to reconstruct the per-order subtrees, and walk
-> > them.
->
-> The core walker just runs over a range, it is easy to compute the
-> range.
+kho_preserve_folio() -> __kho_preserve_order() -> __kho_preserve_page_table=
+()
 
-I believe the "range" here refers to the specific portion of the tree
-relevant to the `target_order` being restored, while the
-`target_order` is the variable from 0 to MAX_PAGE_ORDER to be used in
-the tree walk in the new kernel.
-
-My current understanding of the walker for a given `target_order`:
-
-  1. Find the `start_level` from the `target_order`. (for example,
-target_order =3D 10, start_level =3D 4)
-  2. The path from the root down to the level above `start_level` is
-fixed (index 0 at each of these levels).
-  3. At `start_level`, the index is also fixed, by (1 << (63 -
-PAGE_SHIFT - order)) in a 9 bit slice.
-  4. Then, for all levels *below* `order_level`, the walker iterates
-through all 512 table entries, until the bitmap level.
-
-so the "range" is the subtrees under the start_level, is my
-understanding correct?
+ __kho_preserve_page_table() is the internal implementation of
+kho_preserve_page_table() and we can remove the
+kho_preserve_page_table().
 
 --
 Jason Miu
