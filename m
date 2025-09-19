@@ -4,162 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46003CA1013
-	for <kexec@archiver.kernel.org>; Thu, 18 Sep 2025 23:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 542ABCAC597
+	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 01:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Fxpnlvy5mnwoWkxk1JDR86chtNcnnXQv+EF7nSmUv+E=; b=nflbpsy0Ht7RyUDQBFWdHww+FY
-	5EjQoGGgIAe+peyBLhM8xdaZwOxBO1HDpeimrRym01rmMkDn1hf3o4EDE1m5PyJL7L9A9JNBQXQWG
-	4bvwstYzAbYSgiwHeXeo0UHP+oz2F6NYB6qmidddtdwwhaBCmkT6+v9BafPJT45ExUOM2KZrse06Y
-	nAW5A5DkH7WvPfvGU1+7TfZelzAdNcso5uouYhU401+kn32F6CpWviOe39S9YVmpagfuEsnk0Zo1c
-	SOIJnJeFtnzqLUG8TCyM/s62cnZvTmcr/bvd7WYdNfzSHdBBfz3TQg+x4T08eHaojovQEIwR360qk
-	pKh0Ujuw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=jBqT4GDWcNMH7b8efKieP9YpFeoByi0GaQLbR+k6Z54=; b=PO1yHkXqbNRB2Mr8t37hDCwwyb
+	ji+Bz+d/Xih4XMePSmOr9uTKIvt3ehgyRO6q7h9wodYWJ0jULvbP6jklNR/dBLd776mtMCROEmBJz
+	98dePENh+t4abzKsYcq/s6SmNKmBrMnxSnHzXpVc4F98o2K4VIw3k5QmMANL0f5F69jGZWTWvwiDm
+	KuCKrygmFd9kptvC01d1WLOfk9uXTFzjuCsf9rpc4NKMVDDV27ZU2exfQ69Vr7+roCiciL/DNg5G5
+	jGGH16TrmwvJZaAI48Anhf0P5BucOc+GXPShikeC6YKb6ZR4MUoguX9qB/m92TvU9e3f3tWFru7kb
+	5XXoXBPA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzNpi-00000001P3y-381c;
-	Thu, 18 Sep 2025 23:14:34 +0000
-Received: from mail-westcentralusazlp170130007.outbound.protection.outlook.com ([2a01:111:f403:c112::7] helo=CY3PR05CU001.outbound.protection.outlook.com)
+	id 1uzPtR-00000001b4r-3qpk;
+	Fri, 19 Sep 2025 01:26:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzNpf-00000001P1f-3yUM
+	id 1uzPtP-00000001b4M-1S5Y
 	for kexec@lists.infradead.org;
-	Thu, 18 Sep 2025 23:14:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uYgu/koOq5bnVttslx6tMioWHwys38fCiYKNnJqdDh1jJzuiv2UA7cbk9RPSCQZZU/iDFyTVMma9ltMMTdg4licEfie9T1QUXjMnAE0ypkrc2AiddMLSdyjRdFNBdx5VNaNhvd8osyYqU4jzsgjw7oyytB7pKncorej1S9YcJBFrZ6ujmw2eih8JN1q+Tqi/uPDn0ngCa9fUoygsTBKDzQIbw0i650fmPSicx7/KJAe0ipIpwDU6avaQ68c7uxMUqEKqipifZG/UrG8OvCSqaBEsJzOcLE4eDzDlWX0azNwMiF0ff8IeiXBayQgwdfP3zBrlfBxRnXc8o0Go1gzrjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fxpnlvy5mnwoWkxk1JDR86chtNcnnXQv+EF7nSmUv+E=;
- b=F4weQz9VJWJ9sJn8XjGgcdX5kJ39gMgP8Xz5a0nJaxpedB0MTTVZKeBRkdaMXclcRXoHFsJZyaYZ67uTZKtTH7gbKig0m6Y3ZbWfLhDPAFFz3yncLIzc4WCx9ilMlNjZzDWaYdLNpSk7vn1+Sa866WZ+537G2aMF8F0Vjq+OVl9ZglvumP93eugTbMQ1aMi+xx+LPzJbey4d143ArKjaE93z1VW2jPnxi1Acie+WDIjILnrMikVCBY8pm1R17Dj/9jKKXjJVTFYm6iKh5S9s2JK9MD0TJ3yjtACeu5dFec+/BvizZwiaE1YowedWmcDVAa62KdrxTeLIbwhraR5cTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fxpnlvy5mnwoWkxk1JDR86chtNcnnXQv+EF7nSmUv+E=;
- b=RCuZ3aekRqwLuT/lRtz1H4dhZfW8oWDYzrt1izTZk/tMJT+1MT8CPupcl0SlwTQr7iq08kZPHh0YbI5IGfJplQ9+9iH1EwU87CsjvilutD+73BVnpZn0co4+3vxNBOR3KA+B1ecTXhqDfEs2wHH7XmKsCW4d9f9urSsAyfb4Hw9Fe6jKNIcfUWXYg7VCtwmp952gU9loUQM6y4wgUbtf8q7sd2AL68XvgYo0laObW8Qj51u52Idpsh1jgkcuU0PC4ul+pxUJxvKcyVcpucL8rdvu5zFXj4b2g9gqMngfGwJO0G08sQme/xWhORn/dlBxzAxaJvOpw4AAgBTxTJ9g9A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by PH7PR12MB5975.namprd12.prod.outlook.com (2603:10b6:510:1da::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Thu, 18 Sep
- 2025 23:14:20 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.012; Thu, 18 Sep 2025
- 23:14:20 +0000
-Date: Thu, 18 Sep 2025 20:14:19 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Andrey Ryabinin <arbn@yandex-team.com>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	James Gowans <jgowans@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, Pratyush Yadav <ptyadav@amazon.de>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	David Rientjes <rientjes@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	Chris Li <chrisl@kernel.org>, Ashish.Kalra@amd.com,
-	William Tu <witu@nvidia.com>, David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 6/7] mm/memblock: Use KSTATE instead of kho to
- preserve preserved_mem_table
-Message-ID: <20250918231419.GQ1391379@nvidia.com>
-References: <20250909201446.13138-1-arbn@yandex-team.com>
- <20250909201446.13138-7-arbn@yandex-team.com>
- <20250915114707.GB1024672@nvidia.com>
- <893401bc-4754-4c67-a82a-0c49c8e7f447@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <893401bc-4754-4c67-a82a-0c49c8e7f447@gmail.com>
-X-ClientProxiedBy: BLAPR03CA0083.namprd03.prod.outlook.com
- (2603:10b6:208:329::28) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	Fri, 19 Sep 2025 01:26:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758245188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jBqT4GDWcNMH7b8efKieP9YpFeoByi0GaQLbR+k6Z54=;
+	b=EcmgtS4YxSXpk9u83m2MDWBFlbfbJsVmQeeCykF2F3+F2/ahRGWOc0iwfyovl6hx2UQDff
+	Bo58NTqluR/iIzNwT0+EsXqPplNZbIuMtiBwmHj0HjhAY/muagDmdb4laG4u/mpUZKrYJn
+	vHOVQ+5tMpF+gJUAa9GAIdH4f8APZ1E=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-155-oJtrx9FdNs-sL4jOa_pStA-1; Thu, 18 Sep 2025 21:26:25 -0400
+X-MC-Unique: oJtrx9FdNs-sL4jOa_pStA-1
+X-Mimecast-MFC-AGG-ID: oJtrx9FdNs-sL4jOa_pStA_1758245185
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-24457f59889so18751495ad.0
+        for <kexec@lists.infradead.org>; Thu, 18 Sep 2025 18:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758245184; x=1758849984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jBqT4GDWcNMH7b8efKieP9YpFeoByi0GaQLbR+k6Z54=;
+        b=tf0JKzlLas0BrjYHvZcjKg+OPjiIYtzPddkm3leRXxSYdKzY8Dy9ITGwPVS/3V60eV
+         v85nZQLJaKmq8G8CmGyBdQDM5spEq9Q8LtOWrQ2aoEgdhzNimopswg0Rnc2nvEgrtnkO
+         ntQXL4yRGLhVgNNiRynkNe4O57PDI6MSrj8BU6jSCSk/5CjPIcuGL/DJLtqvAdgypI0H
+         N+EA0Cg2ME3Ic66TIZlkEQ8P8e4gKI6XMW2Qjaq7dkna/GBlGhOPHYlG91qYqf3kKej5
+         nm5z7+9iMTKHs9Bg8/V9AC9OzVc6FDld7obUJAt7RHwmSMJyDaxmqH6idR1n40ZlC7FQ
+         lpKQ==
+X-Gm-Message-State: AOJu0Yy7qplS6oB+N8PQfDigwc0wwordVvVmUsop2Nus9136ycr+U9MP
+	a9JgddTwfHj/eFWpRtTJwa2rlx5/pe/enDFVm6xjnIY6d0YhbnxIhxVUYl02v+OCQimli/5D4O2
+	MDqxERIlQP7+P1Rr4C7XQRWspsTIWHPgIwQSKUzw+Z4AcaB/OuRt0K/GWixRWSHOc+B0RxdlxfY
+	4y6F+p2RojqbdIOQIypXHFwlRiTfuHZTKNYQup
+X-Gm-Gg: ASbGncshaBGfwEPoUK9QS0gYYF5s4bn3Tv8wYW3hmy8/Ypi/lDzqjb9Z6ep82I5eehd
+	3n/DU76rLB9WSxZV7VX/626/g1LRPryDXjMPe2SP7Qze0p0dPPrwg9NxnTtwl4X+Jo20gPygBcj
+	ySg+SWoerpBbOYBRE5qQ5eoQ==
+X-Received: by 2002:a17:903:283:b0:24c:be1f:c1f9 with SMTP id d9443c01a7336-269ba401ffcmr18340795ad.8.1758245184599;
+        Thu, 18 Sep 2025 18:26:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGO2skCMLMEd8sMR6CZiuCIRgOkrs+OOLYvaa57nTFwaSIwdWHTuOC81sk4hi68CyPIOebLgrM0B/PMSkLqmrE=
+X-Received: by 2002:a17:903:283:b0:24c:be1f:c1f9 with SMTP id
+ d9443c01a7336-269ba401ffcmr18340485ad.8.1758245184190; Thu, 18 Sep 2025
+ 18:26:24 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|PH7PR12MB5975:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39175efd-73ad-42c6-ee58-08ddf709190e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?2sFaQ2uvlTIEM1Eje7tTCSNzb/+lGOOwqzm7eM4wMJ7MWSyqJ9XZlNeShHAu?=
- =?us-ascii?Q?8PF5/6Qb5SE8gG5q062aydlnMiCKGc72aGjgcxgbmhjbYVT4fTlqFurZM5Pk?=
- =?us-ascii?Q?APgqHO19cESaD6HuJ0rSxm69wVtKIFY0PP6PfwIK8Pjv/UZWqiWytbBGEJxz?=
- =?us-ascii?Q?PRfp60Obzw4w9t0yN2+EVld7kzm42Lcr0PIqnVhZ7KCtIKUnSLp6gIQhP8gn?=
- =?us-ascii?Q?vMbIfuynZcCbmbVor0EfggO3VSK9QlEezxDn620pFGjbjww8R7xsQYfJhswX?=
- =?us-ascii?Q?2YTj6bgsKx/L8QD3dLoshapcEjcXvLeyXoSg++MsqDSIfEhuCQ5psfSEpXjb?=
- =?us-ascii?Q?cOFXAndtj/fIEfes2+RwPJ1eRbSbon6xqHfMp/Yy8llzx63s7drSehImqaGN?=
- =?us-ascii?Q?IsxwI7vc925uf3ab+v+dIxKcZNm4xwcZwJeoAI4WPQpYLgpeAaeKBRAJWP4y?=
- =?us-ascii?Q?fh0+xzxZclHI/7Oc9G+gtRsuUk5x7zD1uV7E5iikyKRrMLH1i2m8sWWYO/Bo?=
- =?us-ascii?Q?YzROrPj0Bpkny/Z8ryZ0yYVWP0wT7aPSArtlUw5ykdZRFujgD0qT+g0BOg5j?=
- =?us-ascii?Q?wXOL9uJuQ41r/9j1awsTkIezPijRAzPEaI2r0fzIaTipKaO18CCOrHH9mAEy?=
- =?us-ascii?Q?/YSgQzHYOKFHJPLglpaYj8Z1S+ydW/8+mwljy8klkYp/ebqpHrXySXIZAii5?=
- =?us-ascii?Q?Ocoj2J8SFZnPc0hSaMquqFO9wt8ip2WyTBBJ97q1c6op4uL140Dfsc9q6ZG8?=
- =?us-ascii?Q?uX48P9AsCeM2XI5TcsvmuRkyj+6PJ+Y0UlbUjg1kusC6mhXSwpDxDIPWoQVg?=
- =?us-ascii?Q?4rABRWkVC8MmStNgAobL+SfXIDNTqmLnMEQK0s90eN8GTfAB4qmaM7yXuDQK?=
- =?us-ascii?Q?m93BAMySShqbuLcdX+94S7osKirOPHFUP6bCgs5RqOXaPkJlPcrnApOnZziC?=
- =?us-ascii?Q?04fJqvcP/n4LZ9yO6FFDIqHrKvvnwq9kea/u8kKygkcUZUGCMoiumwjTRjm0?=
- =?us-ascii?Q?amUoM1OkwXk00Qd0Npx7TuF9GhCd68wwyiTSGNYrpSp7+Axnee6oEhJNqAvP?=
- =?us-ascii?Q?rFqUdfvp3HxI/ViSjldLM5qV1+PrATTNAMuZc+le2prpBlANnY2aJFx+G6mK?=
- =?us-ascii?Q?Ob0ZIxWwpOrQQtGPAuBWqMc2nhUqg7o3xizywXqK1AIB+ZzInuJiMd9ZR9vk?=
- =?us-ascii?Q?goLHizW+WIr2w6iYFC7yEURPR6nsXPsycg/zlZItdu+jW5CEJ84zMKvS/++E?=
- =?us-ascii?Q?PJhZWlaEzZU2LLrZGAE0MMBm1UBxJESHsj6C3CB/dSFIzcUTLdLMN6zrmr29?=
- =?us-ascii?Q?C74NTSVim+EjBu9Mo+jvgbdiblKwRJpumbbI72uhG1LZ7QWWD+pyMzwixFjw?=
- =?us-ascii?Q?1H/eoc77gR0v+Lgu519XLN87jNX1S/mMrbfnlPItFiEaYAsE2BYgCCQpYDmV?=
- =?us-ascii?Q?TjIsxG9dCBU=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dzou9WuhTbWbJQCGuya75rjNET8SHZKTN0UD/YE7l1rLfo82HIp4OdDS8bZI?=
- =?us-ascii?Q?BOcgFGz5OFeQjWQjeC274re6U0zr+XxwD8bM0RHWrhwll27vdAiN3zhVO27F?=
- =?us-ascii?Q?OV8gukxEi3ltQffC0waN+Hh5NVaKUEsM5vOLKGGKXSDq0AH6whusIa/LE4YA?=
- =?us-ascii?Q?hRYsSIJdve+SyNCTBtJn7NHlDDL2adIrU80K9RF0bWGbMAgTuemCsQjRkwwf?=
- =?us-ascii?Q?Ksaaa9g482MPxwZBcseAN40T/h3ufYwS3B2/GJtPwukn2Aiz4ODZvpS0WCxb?=
- =?us-ascii?Q?NYzP/5zeXNpKIXCbjBltnSpkzHQjHfBi1+iZvfYrU+q8wYRe+Dj6l4MkU3hq?=
- =?us-ascii?Q?pyq+Ue/bfZXzP6gIuNzTLdvWpXkbtdlM4NHF2JQroxRHAszwxseu+xy+4h+f?=
- =?us-ascii?Q?PPD5sQRJM6ewc+8YuQ0dk8qxexnHxWIjMn4Xqctki8pCDUXYz+8cRu7rEl5l?=
- =?us-ascii?Q?9g4Ot2rCgg6MZGzW8hF5KQYnNlmdmtN79YOHJbzn8GRd4Xjm5R6MBMg6+EMq?=
- =?us-ascii?Q?brJX39oF+8bFNF1fHPtcsTb9wBjpsSqCmdKk45RABtlnKxwgl9Yjm9K60OAH?=
- =?us-ascii?Q?ySlBZZjWaj3S6V30yPfUOebv2hGFbLFQZOlG4mFfieYtB0SgZz8HSQcvGvS3?=
- =?us-ascii?Q?W0q7CL3tgYgMJzoy+GfmckUDIGBCcECS9vLyrYa2NzH9GXXzPYLpNlp0/syF?=
- =?us-ascii?Q?WDhvVNHCIMQdx74O8kXXz+/YEq2I/xbMzfiZC7himgPJlCz4oIjSTuKhc1uR?=
- =?us-ascii?Q?I/s5fS1/qCsBOM0v0GbJBnwdXIMY+uf6HhakWFRIcNx5DPAqXEv1QUmOqgI9?=
- =?us-ascii?Q?2JIth04vUu87VlCTRy1VjXWXWyMp5dVA3ERy9mVxHyzMfo+R9c0L+s9FMdN8?=
- =?us-ascii?Q?2xZv/ze3vfcGbPtRYzqfXiWJzgO1BxatK4wNCV8Teq1qEnBx3cltGuaLPk31?=
- =?us-ascii?Q?xDLiKclAH2lY1krfVTlFwGgI41W+F16ntGISbu8Oi+eZQWaUkyjBb3X/BWSN?=
- =?us-ascii?Q?70SuPweTsBIvsMrWFi/diqRXa523TJ73VyZYC02FQd/87pah/t0kVFB/hlms?=
- =?us-ascii?Q?zdelrjzBJlSUziRDO94ycRBIpwLyMuQbx9mYJqVrsH30yom6oU6x9gVQqINC?=
- =?us-ascii?Q?K5t9T1VCj0ikeinmlp8p81hHsP2CL6Q6uMGL7LyRI3DWLxe6nuqNLxSy1zWV?=
- =?us-ascii?Q?uKlJd+XdlU4iHb60dNA0YCEBxXRFu/e1NQ8oQm5lz+Ziq7JM+FljFCdxxNeh?=
- =?us-ascii?Q?nB5LC8xCyTGg9qs3IXeTw1DngPLymlJn+uYkXlhS2fSryVzKSQAP+Da5SdL7?=
- =?us-ascii?Q?jGeoda7bq4ybl9njvlGO96sMuWb6vD+pVzJs1ehTyFodDLh6t+s4GIqt+9BT?=
- =?us-ascii?Q?qffhLApEI+/zAqJW4VeDfX0pnDciKLchhYvpBoyXXMvC4nchfPyYHQAPsXKT?=
- =?us-ascii?Q?rRKtSKvwzACnvuPPclcA48lCWVzS8H2HdoB+3yvx5Y9GtuEsa9CMKrqnZV0Q?=
- =?us-ascii?Q?EKGxU0RaRUzpp9tfXHEtGZ3RVwvyxypoQOtcLe2dYpCUxG+IZijkfy4cmQwT?=
- =?us-ascii?Q?u60wKYiNf2HM03NTYtDIRT1z796KuEhnFQWZ4Vy6?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39175efd-73ad-42c6-ee58-08ddf709190e
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2025 23:14:20.5819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gJfg/8Wf2a5KpQ0/NleD3PUV0WffnnzFmfSzWSwHDccUbtWf/LLz1ZF6SWNnhtSf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5975
+References: <20250819012428.6217-1-piliu@redhat.com> <20250819012428.6217-7-piliu@redhat.com>
+ <20250901163042.721db92d@rotkaeppchen> <aMkJNuORiqSZfpok@fedora> <20250918154342.0589fd4b@rotkaeppchen>
+In-Reply-To: <20250918154342.0589fd4b@rotkaeppchen>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Fri, 19 Sep 2025 09:26:13 +0800
+X-Gm-Features: AS18NWDr6iUFJ3p1GM1beWie7SyVvsRSJs8JGgscj1z7Bvo9Oa_M3LitZF84RwI
+Message-ID: <CAF+s44Tz=yJVUeRz7Y5LZm7Rso7OLa6Y0cHGoPs4gPFa3PTeRw@mail.gmail.com>
+Subject: Re: [PATCHv5 06/12] kexec: Integrate with the introduced bpf kfuncs
+To: Philipp Rudo <prudo@redhat.com>
+Cc: kexec@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, bpf@vger.kernel.org, 
+	systemd-devel@lists.freedesktop.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Dak-57t2oD9EW1BOhRd3AtAMImA2nNTy8IA4J6OMzLI_1758245185
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250918_161431_991217_DE09644A 
-X-CRM114-Status: GOOD (  11.65  )
+X-CRM114-CacheID: sfid-20250918_182631_462247_FB1C572A 
+X-CRM114-Status: GOOD (  37.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,34 +113,181 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 18, 2025 at 09:00:31PM +0200, Andrey Ryabinin wrote:
+On Thu, Sep 18, 2025 at 9:43=E2=80=AFPM Philipp Rudo <prudo@redhat.com> wro=
+te:
+>
+> Hi Pingfan,
+>
+> On Tue, 16 Sep 2025 14:52:38 +0800
+> Pingfan Liu <piliu@redhat.com> wrote:
+>
+> > On Mon, Sep 01, 2025 at 04:30:42PM +0200, Philipp Rudo wrote:
+> > > Hi Pingfan,
+> > >
+> > >
+> > > On Tue, 19 Aug 2025 09:24:22 +0800
+> > > Pingfan Liu <piliu@redhat.com> wrote:
+> > >
+> > > > This patch does two things:
+> > > > First, register as a listener on bpf_copy_to_kernel()
+> > > > Second, in order that the hooked bpf-prog can call the sleepable kf=
+uncs,
+> > > > bpf_handle_pefile and bpf_post_handle_pefile are marked as
+> > > > KF_SLEEPABLE.
+> > > >
+> > > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > > > Cc: Alexei Starovoitov <ast@kernel.org>
+> > > > Cc: Philipp Rudo <prudo@redhat.com>
+> > > > Cc: Baoquan He <bhe@redhat.com>
+> > > > Cc: Dave Young <dyoung@redhat.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: bpf@vger.kernel.org
+> > > > To: kexec@lists.infradead.org
+> > > > ---
+> > > >  kernel/kexec_pe_image.c | 67 +++++++++++++++++++++++++++++++++++++=
+++++
+> > > >  1 file changed, 67 insertions(+)
+> > > >
+> > > > diff --git a/kernel/kexec_pe_image.c b/kernel/kexec_pe_image.c
+> > > > index b0cf9942e68d2..f8debcde6b516 100644
+> > > > --- a/kernel/kexec_pe_image.c
+> > > > +++ b/kernel/kexec_pe_image.c
+> > > > @@ -38,6 +38,51 @@ static struct kexec_res parsed_resource[3] =3D {
+> > > >   { KEXEC_RES_CMDLINE_NAME, },
+> > > >  };
+> > > >
+> > > > +/*
+> > > > + * @name should be one of : kernel, initrd, cmdline
+> > > > + */
+> > > > +static int bpf_kexec_carrier(const char *name, struct mem_range_re=
+sult *r)
+> > > > +{
+> > > > + struct kexec_res *res;
+> > > > + int i;
+> > > > +
+> > > > + if (!r || !name)
+> > > > +         return -EINVAL;
+> > > > +
+> > > > + for (i =3D 0; i < 3; i++) {
+> > > > +         if (!strcmp(parsed_resource[i].name, name))
+> > > > +                 break;
+> > > > + }
+> > > > + if (i >=3D 3)
+> > > > +         return -EINVAL;
+> > >
+> > > Can you please replace the magic '3' by ARRAY_SIZE, just like you did
+> > > below when (un-)registering the listener.
+> > >
+> >
+> > Yes, I will introduce a macro KEXEC_RES_ARRAY_SIZE to unify all of them=
+.
+>
+> Why do you want to introduce a new macro? Why not simply use
+> ARRAY_SIZE(parsed_resource)?
+>
 
-> By contrast, KSTATE centralizes this logic. It avoids duplicating code
-> and lets us express the preservation details declaratively instead
-> of re-implementing them per struct.
+The input parameters of kexec_file_load determine that the array size
+of parsed_resource[] itself should be three.
+And that should be the origin.
 
-I didn't really see it centralize much of anything, it is just a long
-way to spell "memcpy" the way it is being shown here.
+Thanks,
 
-I'm all for consolidating, but please do actually show some
-consolidation..
+Pingfan
 
-> On the versioning side:
-> With this approach, introducing a new ABI version (say, abi_map_v1)
-> would require us to maintain restore logic for each supported version,
-> and carefully handle upgrades between them.
+> Thanks
+> Philipp
+>
+> > Thanks,
+> >
+> > Pingfan
+> >
+> > > Thanks
+> > > Philipp
+> > >
+> > > > +
+> > > > + res =3D &parsed_resource[i];
+> > > > + /*
+> > > > +  * Replace the intermediate resource generated by the previous st=
+ep.
+> > > > +  */
+> > > > + if (!!res->r)
+> > > > +         mem_range_result_put(res->r);
+> > > > + mem_range_result_get(r);
+> > > > + res->r =3D r;
+> > > > + return 0;
+> > > > +}
+> > > > +
+> > > > +static struct carrier_listener kexec_res_listener[3] =3D {
+> > > > + { .name =3D KEXEC_RES_KERNEL_NAME,
+> > > > +   .alloc_type =3D 1,
+> > > > +   .handler =3D bpf_kexec_carrier,
+> > > > + },
+> > > > + { .name =3D KEXEC_RES_INITRD_NAME,
+> > > > +   .alloc_type =3D 1,
+> > > > +   .handler =3D bpf_kexec_carrier,
+> > > > + },
+> > > > + { .name =3D KEXEC_RES_CMDLINE_NAME,
+> > > > +   /* kmalloc-ed */
+> > > > +   .alloc_type =3D 0,
+> > > > +   .handler =3D bpf_kexec_carrier,
+> > > > + },
+> > > > +};
+> > > > +
+> > > >  static bool pe_has_bpf_section(const char *file_buf, unsigned long=
+ pe_sz);
+> > > >
+> > > >  static bool is_valid_pe(const char *kernel_buf, unsigned long kern=
+el_len)
+> > > > @@ -159,6 +204,22 @@ __attribute__((used, optimize("O0"))) void bpf=
+_post_handle_pefile(struct kexec_c
+> > > >   dummy +=3D 2;
+> > > >  }
+> > > >
+> > > > +BTF_KFUNCS_START(kexec_modify_return_ids)
+> > > > +BTF_ID_FLAGS(func, bpf_handle_pefile, KF_SLEEPABLE)
+> > > > +BTF_ID_FLAGS(func, bpf_post_handle_pefile, KF_SLEEPABLE)
+> > > > +BTF_KFUNCS_END(kexec_modify_return_ids)
+> > > > +
+> > > > +static const struct btf_kfunc_id_set kexec_modify_return_set =3D {
+> > > > + .owner =3D THIS_MODULE,
+> > > > + .set =3D &kexec_modify_return_ids,
+> > > > +};
+> > > > +
+> > > > +static int __init kexec_bpf_prog_run_init(void)
+> > > > +{
+> > > > + return register_btf_fmodret_id_set(&kexec_modify_return_set);
+> > > > +}
+> > > > +late_initcall(kexec_bpf_prog_run_init);
+> > > > +
+> > > >  /*
+> > > >   * PE file may be nested and should be unfold one by one.
+> > > >   * Query 'kernel', 'initrd', 'cmdline' in cur_phase, as they are i=
+nputs for the
+> > > > @@ -213,6 +274,9 @@ static void *pe_image_load(struct kimage *image=
+,
+> > > >   cmdline_start =3D cmdline;
+> > > >   cmdline_sz =3D cmdline_len;
+> > > >
+> > > > + for (int i =3D 0; i < ARRAY_SIZE(kexec_res_listener); i++)
+> > > > +         register_carrier_listener(&kexec_res_listener[i]);
+> > > > +
+> > > >   while (is_valid_format(linux_start, linux_sz) &&
+> > > >          pe_has_bpf_section(linux_start, linux_sz)) {
+> > > >           struct kexec_context context;
+> > > > @@ -250,6 +314,9 @@ static void *pe_image_load(struct kimage *image=
+,
+> > > >           disarm_bpf_prog();
+> > > >   }
+> > > >
+> > > > + for (int i =3D 0; i < ARRAY_SIZE(kexec_res_listener); i++)
+> > > > +         unregister_carrier_listener(kexec_res_listener[i].name);
+> > > > +
+> > > >   /*
+> > > >    * image's kernel_buf, initrd_buf, cmdline_buf are set. Now they =
+should
+> > > >    * be updated to the new content.
+> > >
+> >
+>
 
-Yes, you MUST do this. It cannot be magically avoided.
- 
-> With KSTATE, versioning is built in. For example, adding a new field can
-> simply be expressed as:
-
-No, it isn't. The code still has to process versions and still has to
-understand what to do when the unpacked struct didn't have its fields
-written.
-
-If anything it is making it more obfuscated and complicated to tell if
-the comparability is done correctly or not.
-
-Jason
 
