@@ -4,67 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CAD0CCAC59A
-	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 10:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D2F0CAC59A
+	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 12:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:In-Reply-To:Date:MIME-Version:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=S0iL4gam6jy/j+Q1w1Wozm+FmZ2/+1+dtAyUrkE2lBk=; b=TIeonBfSgYP8lA
-	FqxVwK0s5rjeTNDyhbknoVE4Mz4l8Pu2uMSFeEKmsjQ/IWEIad3+S6/G8goktKPQPWtyDNPdZ4QQW
-	+X9ZCmJT09OM5q+0b2bUIN1ruSE4mCSlzhrGdLs4jwBThtFrfVXYObosqioJYfw6zgUft8TybJaj0
-	bDpUnMMljSXv6dxaCJs0c6wByqaCJzL1yGSDqEssO9xMUbSy/HtiXGBtFI+Q6fnmyUpeqvGD8VEB0
-	dGzw+Uny9Qcgi5oyGImx8ue40CNX+pl38FRWv/7i6ebIzU7XfA4NHYCuvCdUIdCd4loZP1bmDB5Kt
-	jG67bz3ok+kCnppzEqrw==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4sXkyLG6zSpE8Zg8MgpvfJixz+QjhL4EEfTfyfr5+OM=; b=z+cJh3+dQwlROihabDUG8E1QWQ
+	fBkq/kv0nrQ8r81Gyl3Tzy328xbmnubgF89RqaUct0KbGQTyrpY4owBZDL6UnnhzayJmLIsvDI1pD
+	JwQyz3TKbxjiMtSCRK94vadAUw2co/M/9Yc2r7HLqCKoa6cfE1esP45XhGPg/QhY8np78V+5i1LxA
+	fL7s8dzOlKH0BW3v5zePoIrXzFJz03vujWD/bdPLoL83JCddedzsWrqORYaKYxMenxsi2bPQGTvL8
+	k/KDS/WA+e+YR4cL3lXG3r0cxyMViUqPPgTcytESQi6dzkOVCYSp7zu+qc3tDQ2ARPy+siaB7aG5Y
+	zfbB2WIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzY4u-00000002Vhe-1K5G;
-	Fri, 19 Sep 2025 10:10:56 +0000
-Received: from mail-il1-f198.google.com ([209.85.166.198])
+	id 1uzafm-00000002uos-3EMa;
+	Fri, 19 Sep 2025 12:57:10 +0000
+Received: from mail-northcentralusazlp170100001.outbound.protection.outlook.com ([2a01:111:f403:c105::1] helo=CH1PR05CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzY4r-00000002Vgf-3kNZ
+	id 1uzafk-00000002unl-1Iyp
 	for kexec@lists.infradead.org;
-	Fri, 19 Sep 2025 10:10:55 +0000
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-4240730201bso26652455ab.3
-        for <kexec@lists.infradead.org>; Fri, 19 Sep 2025 03:10:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758276652; x=1758881452;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0iL4gam6jy/j+Q1w1Wozm+FmZ2/+1+dtAyUrkE2lBk=;
-        b=Tl6AI2yLURiRi4EDvfsNS6KYHdxTcCmlbbI+lxi85h1Eid3HuTsD3z1Jj092MeGcL8
-         0eSaugE2T66LDHc90A0Nqy3k+etv01nd9z/QyAkpjSxWL4O9cjiEvA3bEwjwu+gYzSGz
-         b6J/TAGAA8MoKPbxjZoth1dD//sPZNyXnDSIGdUgCRc4LI3IPyBCOi8RAjgKpnG9apiF
-         53/HwJJ1PGYT3zb79YEz1ipzVE+t4nQtWuQTp0L28fOrekSYLvv9SbFSq/ai8tuApFDc
-         q7VbPp1y62mNhePRs2D3SFyQXk59aDavHP/yDrfYAF7aQcSKSTQrIPbq3cafQMYDKJmW
-         UWBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMKqnAu7v91V93Vbm1PMxn2HRJfdbyNNHS0uNq627LXBctM/fmOb7pIXAuiHF3KJdOt/Z2qw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwwTh9WSA8BSHX/2lg1Y6y9wS1hpfm2IqAqTnlRZPCJ1ay+39O8
-	q+vdTd8/TLL9pugMzjBmn2s5tjbEy067FOIgulEsO+1kJU8m7jdmu4dhmxk0beAytjdxWN5upHW
-	/BSvTva5c8+I7xlusdPXufKOZbwwERCtZHKopBsRha6KgCfpCZEErXiVpFMg=
-X-Google-Smtp-Source: AGHT+IEydYfL6yv9HwG5VYgb+FBhHRzUkvTIcN6Lm+clEXUkyuuYyrC7hJyHRrmbjZo4+BPh3aN4tJYkRMIBe6lzWBeRycfQT/uQ
+	Fri, 19 Sep 2025 12:57:10 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CXTenyWVrQQVc2A6aXV02weYMXRVAWjeb0eB2+jbGTzBc7ocFy5mLBUeHa/dXKxqaQsbgzgUJ7AaD+IW4Wp7kgPo+DKghvR+KrOTJuaF6aAGqShkyyDORD/BM457EQxoD4nMJuQSU18DefOvOC9vSQ5K3ABmon7FX4obTRjWcxf7mU00NpKiTwtAiGd+i/lUhcieeEjGJOE8atAh+y2Xhdieb4glB9SNuJkg7O0clQqFTfdlKco4IUATbPFZsSn6ARtYfFV/dXwDAt9s9xAbAwEjd3BWy8HNideB4F9sSqU+qA5LYP/N2VD5mBSa652hv5MbiFtjvVnKNyMzskW5Kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4sXkyLG6zSpE8Zg8MgpvfJixz+QjhL4EEfTfyfr5+OM=;
+ b=IcPc6oEJaZKIfSaYxwZUgjDGpU6ZRZMmGNoDIbzasdLo9RM0WGupIBB/tlBN38Fc4RZMMsah3IbcfUWN8DpatDLkscvomyLmF7ocwhTmS0xNs99id58q+R/E02s48DBcl6gkn60R45SrFeKCASDQ4FSdEapYcFFNVSzPTQeIAatnD7ijjYfVdk520APBS7VipUthSWFLhrlxILNHRNKZrhb08qthaFYwKTr2syOVtz2yniio5WA9/Ytw1uhyrq/Z6J8E28xgNBBfBgvp/5guSL0l2nl6rCt+Q5HiWCrXhICweuqAdLJ4Z7rEWKSUSWK4zgOuGZs7Q5HNV40MCDpKIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4sXkyLG6zSpE8Zg8MgpvfJixz+QjhL4EEfTfyfr5+OM=;
+ b=roNl18MRbeyyjjyXYAS+iN+qs6LgxsBLB3CYONnJJqYkzw06LynGhfsp+6vSw2PCE5/eqxPympNHJMdj7EPvGziyc9t8gUvPtVxXLOeZu9LhZ6/vvbcvidYO9iVz9+BetNM2m/kCG9qLZgpKrVDnSU2KlRef4muzVIDTSDcvEW6HHc6/oJyZcokUj22M3EhmXi2ahSXiPkRDZPKx5YhUu0hIYkaFayt/Pj05zx36DOknj85yZn47TnzumZdc0o/3EwjnA6N6+LsKpRA642bHPMDUe7Nny94b9XkE2q1k6SUaTFwCzxYLPnKdCYE5Mzfz+dIvctZpF6+m9oBZPQs+sQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by IA1PR12MB7662.namprd12.prod.outlook.com (2603:10b6:208:425::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Fri, 19 Sep
+ 2025 12:56:50 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.012; Fri, 19 Sep 2025
+ 12:56:50 +0000
+Date: Fri, 19 Sep 2025 09:56:48 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jason Miu <jasonmiu@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Mike Rapoport <rppt@kernel.org>, Petr Mladek <pmladek@suse.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Steven Chen <chenste@linux.microsoft.com>,
+	Yan Zhao <yan.y.zhao@intel.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC v1 1/4] kho: Introduce KHO page table data structures
+Message-ID: <20250919125648.GS1391379@nvidia.com>
+References: <20250917025019.1585041-1-jasonmiu@google.com>
+ <20250917025019.1585041-2-jasonmiu@google.com>
+ <20250917122158.GC1086830@nvidia.com>
+ <CA+CK2bBbSSyCDAAgThDSSwH0WdOeHz-eVgB-1bdiwsDtTSE5pg@mail.gmail.com>
+ <20250917163200.GC1391379@nvidia.com>
+ <CAHN2nPK+Z5cvQ_waTWyPZiEoeSc9o7e3YnQLLjRzNzrb7VhAqQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHN2nPK+Z5cvQ_waTWyPZiEoeSc9o7e3YnQLLjRzNzrb7VhAqQ@mail.gmail.com>
+X-ClientProxiedBy: BN0PR04CA0006.namprd04.prod.outlook.com
+ (2603:10b6:408:ee::11) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2509:b0:423:51e8:366c with SMTP id
- e9e14a558f8ab-4248192a6cemr41508645ab.9.1758276651826; Fri, 19 Sep 2025
- 03:10:51 -0700 (PDT)
-Date: Fri, 19 Sep 2025 03:10:51 -0700
-In-Reply-To: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68cd2c2b.a00a0220.37dadf.001a.GAE@google.com>
-Subject: [syzbot ci] Re: kernel: Introduce multikernel architecture support
-From: syzbot ci <syzbot+ci5a8560c05ff0980d@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, bhe@redhat.com, changyuanl@google.com, 
-	cwang@multikernel.io, graf@amazon.com, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, pasha.tatashin@soleen.com, 
-	rppt@kernel.org, xiyou.wangcong@gmail.com
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|IA1PR12MB7662:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a716519-2ae3-4775-68f1-08ddf77bffc0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?qaIJtcENLcfThMaMroqcCIaMUUV3D3bYhUK3k6DODtXRnQuqi575g/CpTnsl?=
+ =?us-ascii?Q?mHJUWXJKw8e/BStdFZiB8oIex9wpBN5j5lz6cQ6gnIY5WkBLRpR8Z4v1jZ9U?=
+ =?us-ascii?Q?bcpuQmg3kurrSy4wV2ArOL9RdPYvyOzs7lZe2OHBoVz1FjrjM6WA7zhDe3ty?=
+ =?us-ascii?Q?KeHGZbrT/4/rvafsq2i6DzzrIwEP2SiZubsIyiqXiFPbIQruF+ecak67NBGp?=
+ =?us-ascii?Q?Uki67JpDR42kv740IMTcFXjpq7KTXR219tGTj6F+oZlRR0CYIfdRzP7iTkXP?=
+ =?us-ascii?Q?Vlq+WnkAfwOlKSMrzyNFNpYcpfMTRqMJBZML9r9XMTJubPOm+2oQRGGf5nGS?=
+ =?us-ascii?Q?R8SVPAmN++XpuzPzOJ10EQAed+PT6wRSa9CJf8dxwUOxOyUzZV++bHJl5iFw?=
+ =?us-ascii?Q?kKbzIkuEF2SZCwn7gIaeoPq7Fd7Up8yCVZbagqhousCkJIXLo4iby2lBQZWE?=
+ =?us-ascii?Q?u28mum4DmyoWFO6OqthF7jbFo5IABmG38Us+ExBuh2dse/Suf2OncE36v/23?=
+ =?us-ascii?Q?9rSMrPFxwNeTUPrsAFUVZsyJiuCCH5Q+g7qMmHE8vRotFpbb7BKWHaGLDkiN?=
+ =?us-ascii?Q?0hJHxBFVcyQtr5aWLcQlMdvyaxI/+plLFShJsfXjKCc4hDVuuaUrk6YwhijU?=
+ =?us-ascii?Q?a3LnLaICsFrHq9tgmUcKBcnA8uDloUqnu2DNlyQxUBQWnOpl8Lchds401waL?=
+ =?us-ascii?Q?2fd77KVrKHR+6GM52L/G9VertQObHAgBybLv6d0ttSKNYS9e4aw5ikkS0PQq?=
+ =?us-ascii?Q?4yQ/dGyUiSAz9bDStEp9GU/Q8Eu5cpYSK9pp8qhMV8hb94O+JQMp4FHtF8s9?=
+ =?us-ascii?Q?hFsCQVayKgi01Gi2xGLApeaTlffD3tbKy8UMnlnQ1G01LH1uX8xfEMWfm+KB?=
+ =?us-ascii?Q?C79GkcEKbnN+n/RL6ah8QrEiFFOqsZd70wHVuzCfJIARHBfLVR3qYTkVmQ2s?=
+ =?us-ascii?Q?PARYsFXucjJp7Nyw1IJSxqaiUpvyTTXSskYXbRjdc+Pn54bLXnSJyxV3ykA9?=
+ =?us-ascii?Q?qqf0oNWtxfyBCGMCoGXOwke6JTS52hFMs+tyLa/g+AluRmk3OYYRFu0IJf5W?=
+ =?us-ascii?Q?/10YcuhTszgBkfCkZnyB5olaVjkP0VBYyf0aaUTpzHvWlKR4xZvvOE8u5svz?=
+ =?us-ascii?Q?T8wxEGknfO268050bL4MEeKI9Q46dnu6MzTDJuPGJFxFaOh+m+hIlo9Arcac?=
+ =?us-ascii?Q?qus3DyLeU+6qXL7X29kem/mHPssX3Fh4naSd7f7iOB0LKjTHgqhMZ1eIkNhj?=
+ =?us-ascii?Q?E2j22Ic7U/kyvs4gp5ovd9DNWf1HG9OnoaoS9ahfoLTbzPJ4FY1a01e/gnHV?=
+ =?us-ascii?Q?uGWrysLdqYVbUCBwRW9422pdqdL+CrxCvDfLvfanbX/Ux7LhH67u0TxwXEs7?=
+ =?us-ascii?Q?JRSlv54H/2QG9CAPJlkA8PT1RclAcxnvf8YUEwvQ12z4VMcHyzb6Wta1FjQF?=
+ =?us-ascii?Q?FqlHXt1HQe4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KoOwwgxlryghWI+9M+Ca3/wpHYiU4RaDBoAHJjmgnt0sbcWFaKQsu8VfVfQG?=
+ =?us-ascii?Q?ZgOpSpDa4XbXpWYQhbHv7b/7LVzqWnjllOtmkoREOsH7DPsFj6ZX2Ey5RlQr?=
+ =?us-ascii?Q?PkRqbQFQcEhHSawo5HkKF4w0qxAPI3DmT2Pbnh0Bh8fbipH5Dt8bLSu4RPMu?=
+ =?us-ascii?Q?/Tce3l2b1hBoAPl9Pw5TGOM7ZZNbFfPwZgvVuX1YXUU2rTKR888dxsNMeNZr?=
+ =?us-ascii?Q?0UFj+C/rord8yvga7Uu7jlhOxUgEjJ5GQuoe9AdRroKu0+gyPsmX+Fe+BhPO?=
+ =?us-ascii?Q?KtdMhTA9NQwkjOLjJb+d7dJtPzSfmfYjAS2aKFhdn3Kdx2W1rRFOKxe9150+?=
+ =?us-ascii?Q?YVl+NXN/eNEpA5TKFqLtoNGao1QqnYu41Fs1XScB6h8RjJu3jhXpktliloo2?=
+ =?us-ascii?Q?aNcAc2jTcISEtRMSeJqCyrb+4DnUCplW348jM/dEpO8/G2wSP3aAOrTU1S+I?=
+ =?us-ascii?Q?4RSg2fUtuV5PXw2SImMFQXTzLEgXgQxGYpGyDeNseIpZVG+b+k32ywutK8kP?=
+ =?us-ascii?Q?L3vmPauvQfUh63BG3f829EZROK4gnvFApD/DekXpt+HGS4KR8zeoCodsd9Zu?=
+ =?us-ascii?Q?3UxgsBUzsA1TWDH63vx1oql43xqoz/m09BSoZiAwuCm4e3YobtC7zWbDO0A4?=
+ =?us-ascii?Q?vNjX4AtjZgxNrrwiz3rk5JTTRRZY0c2Xn0X3a6xSmi1i24QLYGEtKgZGMLaf?=
+ =?us-ascii?Q?c8s0gMZ3OqmURfv8tJE+dnkS3eEtFg47XxycokKvpE4iCTyjtqIPs6PqMV/6?=
+ =?us-ascii?Q?dS+QfsIcCdiF8oMnRgipZCl/LB29BaQSuQOa0U8a8v8+3ZJObLGeaqZZ8pro?=
+ =?us-ascii?Q?xSwj7bVf3CUyw4z26+mpVoLvsotI9I636i6IDEjH/uSD8TzV/OITTEAj2IXI?=
+ =?us-ascii?Q?kO71gqzUnTtxfPxZ8QxaWMnfqUzdhKiCDCKxn3liBV3V7Pvkl/rjAzFdMClY?=
+ =?us-ascii?Q?kiGnsTosrhwF7ffGggoNZpqK6ccPAPF/LaR2WMnZBR2MJcO82WziX2NBKDUU?=
+ =?us-ascii?Q?sWveDDgUG3v3pEe5hOFoqFh4VAvATf1DNY7JA9bmt+dcIpiDuFKo4R1XrUIJ?=
+ =?us-ascii?Q?SiW2Vgd0gB26f4Gf62k/jEkQVYdpPmfKBpVoaZjzNO2U1BmtEbYhfC4VqFRz?=
+ =?us-ascii?Q?d4cH9C0VhAyw0z+bmzWsh9XV8Mkt2bHu0B8o/WrDpng0ROqLTYflEAqUBtt/?=
+ =?us-ascii?Q?FBLosGQe3iFtf0sRkGznafeIktmrOTAtuCCegjzdssVHjVdUQOD5s4twdzLd?=
+ =?us-ascii?Q?6VBorPJ7WZ2RWeRwP0kcXMs081QUjOflwuQm/lauzy0RP3tadB6Z8bxnY3U0?=
+ =?us-ascii?Q?P5nOWbGKzzmKInG0nytfhN5t+/oUjHDEJ1wLE9j3F38fC+BNs0TNXtNHweoA?=
+ =?us-ascii?Q?uEfVWw3gCXI6wFrGATjy3v/487GxUTscmeaUtcMB2TDZndTf/rsZl1e2CuY9?=
+ =?us-ascii?Q?Rzjv1gyNqQS8aMylP9JkOHodhmpER2irj3ezg9EqZAg7rTMgjkJVUPgpK6Yl?=
+ =?us-ascii?Q?Y3ng28kn1FtYoI7U5cxMW0gN24WPbo61/RcpLuHlwMwzLsY//ouJTemIW09e?=
+ =?us-ascii?Q?e45gTlXvtyx0WWq6nMYSCpzgZenr0b/SESkzVCNN?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a716519-2ae3-4775-68f1-08ddf77bffc0
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 12:56:50.2191
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q5FV3mbMYndknWHVLlL3yIXRhxk2bumqw4wrZuljx48M6JZ0iP8Mtd/qYtao5pwF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7662
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250919_031053_937573_7700470E 
-X-CRM114-Status: UNSURE (   8.75  )
+X-CRM114-CacheID: sfid-20250919_055708_354764_1B093223 
+X-CRM114-Status: UNSURE (   9.74  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -80,121 +174,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-syzbot ci has tested the following series
+>   1. Find the `start_level` from the `target_order`. (for example,
+> target_order = 10, start_level = 4)
+>   2. The path from the root down to the level above `start_level` is
+> fixed (index 0 at each of these levels).
+>   3. At `start_level`, the index is also fixed, by (1 << (63 -
+> PAGE_SHIFT - order)) in a 9 bit slice.
+>   4. Then, for all levels *below* `order_level`, the walker iterates
+> through all 512 table entries, until the bitmap level.
 
-[v1] kernel: Introduce multikernel architecture support
-https://lore.kernel.org/all/20250918222607.186488-1-xiyou.wangcong@gmail.com
-* [RFC Patch 1/7] kexec: Introduce multikernel support via kexec
-* [RFC Patch 2/7] x86: Introduce SMP INIT trampoline for multikernel CPU bootstrap
-* [RFC Patch 3/7] x86: Introduce MULTIKERNEL_VECTOR for inter-kernel communication
-* [RFC Patch 4/7] kernel: Introduce generic multikernel IPI communication framework
-* [RFC Patch 5/7] x86: Introduce arch_cpu_physical_id() to obtain physical CPU ID
-* [RFC Patch 6/7] kexec: Implement dynamic kimage tracking
-* [RFC Patch 7/7] kexec: Add /proc/multikernel interface for kimage tracking
+You don't need any special logic like that, that is my point, the
+whole thing is very simple:
 
-and found the following issue:
-WARNING in note_page
+static int get_index(unsigned int level, u64 pos)
+{
+	return (pos / (level * ITEMS_PER_TABLE * ITEMS_PER_BITMAP)) %
+	       ITEMS_PER_TABLE;
+}
 
-Full report is available here:
-https://ci.syzbot.org/series/9ca759c7-776a-4d45-a2f9-5e6ca245e989
+walk_table(u64 *table, unsigned int level, u64 start, u64 last)
+{
+	unsigned int index = get_index(level, start);
+	unsigned int last_index = get_index(level, last);
 
-***
+	do {
+		if (table[index]) {
+			u64 *next_table = phys_to_virt(table[index]);
 
-WARNING in note_page
+			if (level == 1)
+				walk_bitmap(next_table);
+			else
+				walk_table(next_table, level - 1, start, last);
+		}
+		index++;
+	} while (index <= last_index);
+}
 
-tree:      torvalds
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
-base:      f83ec76bf285bea5727f478a68b894f5543ca76e
-arch:      amd64
-compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-config:    https://ci.syzbot.org/builds/645f543b-aa06-4977-81f2-45a0b44a2133/config
+insert_table(u64 *table, unsigned int level, u64 pos)
+{
+	unsigned int index = get_index(level, start);
+	u64 *next_table;
 
-Key type fscrypt-provisioning registered
-kAFS: Red Hat AFS client v0.1 registering.
-Btrfs loaded, assert=on, ref-verify=on, zoned=yes, fsverity=yes
-Key type big_key registered
-Key type encrypted registered
-AppArmor: AppArmor sha256 policy hashing enabled
-ima: No TPM chip found, activating TPM-bypass!
-Loading compiled-in module X.509 certificates
-Loaded X.509 cert 'Build time autogenerated kernel key: 75e3f237904f24df4a2b6e4eae1a8f34effb6643'
-ima: Allocated hash algorithm: sha256
-ima: No architecture policies found
-evm: Initialising EVM extended attributes:
-evm: security.selinux (disabled)
-evm: security.SMACK64 (disabled)
-evm: security.SMACK64EXEC (disabled)
-evm: security.SMACK64TRANSMUTE (disabled)
-evm: security.SMACK64MMAP (disabled)
-evm: security.apparmor
-evm: security.ima
-evm: security.capability
-evm: HMAC attrs: 0x1
-PM:   Magic number: 9:738:504
-usb usb41-port1: hash matches
-usb usb40-port2: hash matches
-netconsole: network logging started
-gtp: GTP module loaded (pdp ctx size 128 bytes)
-rdma_rxe: loaded
-cfg80211: Loading compiled-in X.509 certificates for regulatory database
-Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
-clk: Disabling unused clocks
-ALSA device list:
-  #0: Dummy 1
-  #1: Loopback 1
-  #2: Virtual MIDI Card 1
-check access for rdinit=/init failed: -2, ignoring
-md: Waiting for all devices to be available before autodetect
-md: If you don't use raid, use raid=noautodetect
-md: Autodetecting RAID arrays.
-md: autorun ...
-md: ... autorun DONE.
-EXT4-fs (sda1): mounted filesystem b4773fba-1738-4da0-8a90-0fe043d0a496 ro with ordered data mode. Quota mode: none.
-VFS: Mounted root (ext4 filesystem) readonly on device 8:1.
-devtmpfs: mounted
-Freeing unused kernel image (initmem) memory: 26168K
-Write protecting the kernel read-only data: 210944k
-Freeing unused kernel image (text/rodata gap) memory: 104K
-Freeing unused kernel image (rodata/data gap) memory: 300K
-------------[ cut here ]------------
-x86/mm: Found insecure W+X mapping at address 0xffff888000096000
-WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:248 note_page+0x12a5/0x14a0
-Modules linked in:
-CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:note_page+0x12a5/0x14a0
-Code: d5 49 00 c6 05 bd 7d 17 0e 01 90 43 80 3c 2e 00 74 08 4c 89 ff e8 9b 47 ad 00 49 8b 37 48 c7 c7 40 98 88 8b e8 1c 53 0d 00 90 <0f> 0b 90 90 49 bd 00 00 00 00 00 fc ff df e9 5a f1 ff ff 44 89 f9
-RSP: 0000:ffffc90000047678 EFLAGS: 00010246
-RAX: 0829288c8ce4fa00 RBX: ffffc90000047cf0 RCX: ffff88801c2d0000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
-RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfa274 R12: ffffffffffffffff
-R13: dffffc0000000000 R14: 1ffff92000008fb2 R15: ffffc90000047d90
-FS:  0000000000000000(0000) GS:ffff8881a3c09000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000df36000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- ptdump_pte_entry+0xc6/0xe0
- walk_pte_range_inner+0x1ba/0x380
- walk_pgd_range+0x1467/0x1d40
- walk_page_range_debug+0x312/0x3d0
- ptdump_walk_pgd+0x126/0x320
- ptdump_walk_pgd_level_core+0x260/0x3e0
- kernel_init+0x53/0x1d0
- ret_from_fork+0x439/0x7d0
- ret_from_fork_asm+0x1a/0x30
- </TASK>
+	if (!table[index]) {
+		// allocate table[index]
+	}
+	else
+		next_table = phys_to_virt(table[index]);
+	if (level == 1)
+		insert_bitmap(next_table, pos);
+	else
+		insert_table(next_table, level - 1, pos);
+}
 
+That's it.. No special cases requried.
 
-***
+The above is very limited, it only works with certain formulations
+of start/last:
+   start has only one bit set
+   start & last == true,
+   last ^ start has bits 0 -> N set N > log2(ITEMS_PER_BITMAP)
 
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
+Which align to my suggestion for encoding.
 
----
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
+Jason
 
