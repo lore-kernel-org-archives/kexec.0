@@ -4,89 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF8E4CAC592
-	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 07:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94CF6CAC59A
+	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 09:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Xlobmp3U3nJ5hLlB38ePRBjirbU86UFdACM2UMQ2d8U=; b=oGlsg9LUkTCkol5X77TPwj15Ug
-	G+9ZdBbw5GEy+DcNQW6+gRaRkhNW335m/rTdrLb7XX7cj24s7NFTDoZhWPuPkAakRkzwzOFZSHaX2
-	wLISa1EJbqNHkiFLn5T+n3q/V+uuDz7ce1TwmxqRdCwifhf8ObhzZUjFyUrgR6QspAy9cLidRz4G6
-	qNQbPplCFNyP1nz16TjO7Esxc77HKqdCcFGaUiDunSA9RzrujT407mbEafqYkLkADmYtcX/38lW/F
-	ctlCUCEve/4NWeISkgV68XolIze1Dj6PuKjDEAaZxJlIpUdG9f7kpaaASrH1bqivFKteKLnyUbTXZ
-	6AuNJNSg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=utj8GPGe9xQrwlm+Dp8WOy90lEVmz2edyt0hCd7KAeg=; b=UTjXY/VwBZnVCLk6gYZfBrlKOZ
+	UghPa8HCB7SwvH0LkRcxKSLLfQaHCaj8/ETtGr6seYaYcaCF3T5fPdS+a2iYisHYYRoFGs6+0Kd7e
+	LwxWLJt58ULJaQ/h0BSuVrmg6KwRoGQnrfAJKmXBVIYM8Ccl2bQkxgb730ivhF4IaXTXWyRQAcENj
+	8pNqoedB9Q7/t6Lv8UxQB81oADvLAN2z4Pe5yJDwgBVUzT8l9USeMtLzU/ICZk069614lmf640y8w
+	Zf8XcBvK2Vdr5kfoNi5rhiiG1O7qHxwoXm4cTJzA3stPCRsXryqCtlnFiDAqodGXfV4fcfeTiehF1
+	elAKKhqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzVwz-00000002ARg-2Pnv;
-	Fri, 19 Sep 2025 07:54:37 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1uzXfw-00000002Qvf-3GRc;
+	Fri, 19 Sep 2025 09:45:08 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyyog-0000000EaxD-12Th
+	id 1uzXfv-00000002QvR-1l3O
+	for kexec@bombadil.infradead.org;
+	Fri, 19 Sep 2025 09:45:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=utj8GPGe9xQrwlm+Dp8WOy90lEVmz2edyt0hCd7KAeg=; b=Fbz+HrAE8cdlrrcgD7V4hV9TKh
+	hJJGOFnVM0RBjt5zj/4WjZqIpAObzFBnjPf3szszInkMG76i5JL0eh6wIRyGPf2x7LE5CHneK7TKJ
+	f6/I5inAZwdwJ+//+vKCp5bNXA9PUBGIPEJrQ0I4Vi8Lyuz35ouGTi0F7GHKfmxCvf69Sx51IIWE2
+	kvQ6L41MgkU4r7JFvj94tUSvMgsEl/VmInMu2Pa6/992vNtX9/I67TLqKpZUI3d4MmCpOzVsvAaui
+	ofb3VVj5h9277ulFPF6VLXhUJzLPdZQJB8hM9Yd/wltACpxZraX6VR0smWN0PqC7Zn1cnWFtF27pH
+	Siy0DmoQ==;
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uzXfs-00000007og5-0KMI
 	for kexec@lists.infradead.org;
-	Wed, 17 Sep 2025 20:31:52 +0000
+	Fri, 19 Sep 2025 09:45:06 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id A5D6444589;
-	Wed, 17 Sep 2025 20:31:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB4AC4CEF7;
-	Wed, 17 Sep 2025 20:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1758141109;
-	bh=BGbrjAutGhnIpTCiqQaOJoJH/14pGsxxKOLiT6MtmhQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IBy1LxKv3NeBlEokLMuWU+1Zds8hXmiAfgkBjVxPFJlsjL9B+7TUrQxsOOXLjfvfm
-	 O/Rh4dFO+uRRlozeCmDGpHx1cw3dNkwoT49KlLS15jCkgpI82HCQIrx/5ho1ICHP9i
-	 QTDJHo2Oz3iB24ucH6FBYqzVvvDIJbCIKF8BIiTI=
-Date: Wed, 17 Sep 2025 13:31:46 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
- Guo Ren <guoren@kernel.org>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, "David S . Miller" <davem@davemloft.net>, Andreas
- Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams
- <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
- Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>, Muchun Song
- <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, David
- Hildenbrand <david@redhat.com>, Konstantin Komarov
- <almaz.alexandrovich@paragon-software.com>, Baoquan He <bhe@redhat.com>,
- Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Dave
- Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Hugh
- Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Uladzislau Rezki <urezki@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
- ntfs3@lists.linux.dev, kexec@lists.infradead.org,
- kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
- iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Will Deacon
- <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 00/14] expand mmap_prepare functionality, port more
- users
-Message-Id: <20250917133146.cc7ea49dc2ec8093ab938a57@linux-foundation.org>
-In-Reply-To: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
-References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+	by sea.source.kernel.org (Postfix) with ESMTP id E7D1A442D8;
+	Fri, 19 Sep 2025 09:44:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADABC4CEF1;
+	Fri, 19 Sep 2025 09:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758275099;
+	bh=GevPAgZnxPiABiyE8TgVYJoyrxKHZP9YdLV2GloJTu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lhz40lt0SEu3HxgEYIqaeltRAt4aEBgazYuPF9b2ALx7MPrXRYZh7j4KBJAYjZ4Ab
+	 PhrajEYLtN+XhORv3jeUevqKHzRSuZHfsqfmH9EgBXtCpe2gtbQdOcrRd5UJsyc46b
+	 tFfY75K57McmOcZnLHImyV5Dv9LtW/GSpwXzxy2jZAovnc2lvPkPRezqGEDhD4l1sO
+	 Oh7o8eWuoZ5F6RLqO/4487IB1qBqFdXUKxmxATUT5sPDlCVokiHWmWYxV/1qF9/pD2
+	 ELNo7ibLVq3SzpiwEe2yb4CBGNo4N9NRP2IuIfBoXVJJE3/eIIGQXtNQv5jj26TxRe
+	 dkNeFxtNu9B6w==
+Date: Fri, 19 Sep 2025 12:44:52 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH] kho: only fill kimage if KHO is finalized
+Message-ID: <aM0mFDdoQ4r1f9Mo@kernel.org>
+References: <20250918170617.91413-1-pratyush@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918170617.91413-1-pratyush@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250917_133150_378262_90D243AE 
-X-CRM114-Status: GOOD (  29.82  )
-X-Mailman-Approved-At: Fri, 19 Sep 2025 00:54:34 -0700
+X-CRM114-CacheID: sfid-20250919_104504_430499_FF079953 
+X-CRM114-Status: GOOD (  27.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,879 +90,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 17 Sep 2025 20:11:02 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
-> callback"), The f_op->mmap hook has been deprecated in favour of
-> f_op->mmap_prepare.
+On Thu, Sep 18, 2025 at 07:06:15PM +0200, Pratyush Yadav wrote:
+> kho_fill_kimage() only checks for KHO being enabled before filling in
+> the FDT to the image. KHO being enabled does not mean that the kernel
+> has data to hand over. That happens when KHO is finalized.
 > 
-> This was introduced in order to make it possible for us to eventually
-> eliminate the f_op->mmap hook which is highly problematic as it allows
-> drivers and filesystems raw access to a VMA which is not yet correctly
-> initialised.
+> When a kexec is done with KHO enabled but not finalized, the FDT page is
+> allocated but not initialized. FDT initialization happens after
+> finalize. This means the KHO segment is filled in but the FDT contains
+> garbage data.
 > 
-> This hook also introduced complexity for the memory mapping operation, as
-> we must correctly unwind what we do should an error arises.
+> This leads to the below error messages in the next kernel:
 > 
-> Overall this interface being so open has caused significant problems for
-> us, including security issues, it is important for us to simply eliminate
-> this as a source of problems.
+>     [    0.000000] KHO: setup: handover FDT (0x10116b000) is invalid: -9
+>     [    0.000000] KHO: disabling KHO revival: -22
 > 
-> Therefore this series continues what was established by extending the
-> functionality further to permit more drivers and filesystems to use
-> mmap_prepare.
+> There is no problem in practice, and the next kernel boots and works
+> fine. But this still leads to misleading error messages and garbage
+> being handed over.
+> 
+> Only fill in KHO segment when KHO is finalized. When KHO is not enabled,
+> the debugfs interface is not created and there is no way to finalize it
+> anyway. So the check for kho_enable is not needed, and kho_out.finalize
+> alone is enough.
+> 
+> Fixes: 3bdecc3c93f9f ("kexec: add KHO support to kexec file loads")
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 
-Thanks, I updated mm.git's mm-new branch to this version.
+Nice catch!
 
-> v4:
-> * Dropped accidentally still-included reference to mmap_abort() in the
->   commit message for the patch in which remap_pfn_range_[prepare,
->   complete]() are introduced as per Jason.
-> * Avoided set_vma boolean parameter in remap_pfn_range_internal() as per
->   Jason.
-> * Further refactored remap_pfn_range() et al. as per Jason - couldn't make
->   IS_ENABLED() work nicely, as have to declare remap_pfn_range_track()
->   otherwise, so did least-nasty thing.
-> * Abstracted I/O remap on PFN calculation as suggested by Jason, however do
->   this more generally across io_remap_pfn_range() as a whole, before
->   introducing prepare/complete variants.
-> * Made [io_]remap_pfn_range_[prepare, complete]() internal-only as per
->   Pedro.
-> * Renamed [__]compat_vma_prepare to [__]compat_vma as per Jason.
-> * Dropped duplicated debug check in mmap_action_complete() as per Jason.
-> * Added MMAP_IO_REMAP_PFN action type as per Jason.
-> * Various small refactorings as suggested by Jason.
-> * Shared code between mmu and nommu mmap_action_complete() as per Jason.
-> * Add missing return in kdoc for shmem_zero_setup().
-> * Separate out introduction of shmem_zero_setup_desc() into another patch
->   as per Jason.
-> * Looked into Jason's request re: using shmem_zero_setup_desc() in vma.c -
->   It isn't really worthwhile for now as we'd have to set VMA fields from
->   the desc after the fields were already set from the map, though once we
->   convert all callers to mmap_prepare we can look at this again.
-> * Fixed bug with char mem driver not correctly setting MAP_PRIVATE
->   /dev/zero anonymous (with vma->vm_file still set), use success hook
->   instead.
-> * Renamed mmap_prepare_zero to mmap_zero_prepare to be consistent with
->   mmap_mem_prepare.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-For those following along at home, here's the overall v3->v4 diff. 
-It's quite substantial...
+> ---
+>  kernel/kexec_handover.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> index 8079fc4b9189..5ff959a90165 100644
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -1242,7 +1242,7 @@ int kho_fill_kimage(struct kimage *image)
+>  	int err = 0;
+>  	struct kexec_buf scratch;
+>  
+> -	if (!kho_enable)
+> +	if (!kho_out.finalized)
+>  		return 0;
+>  
+>  	image->kho.fdt = page_to_phys(kho_out.ser.fdt);
+> -- 
+> 2.47.3
+> 
 
-
---- a/arch/csky/include/asm/pgtable.h~b
-+++ a/arch/csky/include/asm/pgtable.h
-@@ -263,12 +263,6 @@ void update_mmu_cache_range(struct vm_fa
- #define update_mmu_cache(vma, addr, ptep) \
- 	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
--#define io_remap_pfn_range(vma, vaddr, pfn, size, prot) \
--	remap_pfn_range(vma, vaddr, pfn, size, prot)
--
--/* default io_remap_pfn_range_prepare can be used. */
--
--#define io_remap_pfn_range_complete(vma, addr, pfn, size, prot) \
--	remap_pfn_range_complete(vma, addr, pfn, size, prot)
-+#define io_remap_pfn_range_pfn(pfn, size) (pfn)
- 
- #endif /* __ASM_CSKY_PGTABLE_H */
---- a/arch/mips/alchemy/common/setup.c~b
-+++ a/arch/mips/alchemy/common/setup.c
-@@ -94,34 +94,13 @@ phys_addr_t fixup_bigphys_addr(phys_addr
- 	return phys_addr;
- }
- 
--static unsigned long calc_pfn(unsigned long pfn, unsigned long size)
-+static inline unsigned long io_remap_pfn_range_pfn(unsigned long pfn,
-+		unsigned long size)
- {
- 	phys_addr_t phys_addr = fixup_bigphys_addr(pfn << PAGE_SHIFT, size);
- 
- 	return phys_addr >> PAGE_SHIFT;
- }
--
--int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long vaddr,
--		unsigned long pfn, unsigned long size, pgprot_t prot)
--{
--	return remap_pfn_range(vma, vaddr, calc_pfn(pfn, size), size, prot);
--}
--EXPORT_SYMBOL(io_remap_pfn_range);
--
--void io_remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn,
--			       unsigned long size)
--{
--	remap_pfn_range_prepare(desc, calc_pfn(pfn, size));
--}
--EXPORT_SYMBOL(io_remap_pfn_range_prepare);
--
--int io_remap_pfn_range_complete(struct vm_area_struct *vma,
--		unsigned long addr, unsigned long pfn, unsigned long size,
--		pgprot_t prot)
--{
--	return remap_pfn_range_complete(vma, addr, calc_pfn(pfn, size),
--			size, prot);
--}
--EXPORT_SYMBOL(io_remap_pfn_range_complete);
-+EXPORT_SYMBOL(io_remap_pfn_range_pfn);
- 
- #endif /* CONFIG_MIPS_FIXUP_BIGPHYS_ADDR */
---- a/arch/mips/include/asm/pgtable.h~b
-+++ a/arch/mips/include/asm/pgtable.h
-@@ -604,19 +604,8 @@ static inline void update_mmu_cache_pmd(
-  */
- #ifdef CONFIG_MIPS_FIXUP_BIGPHYS_ADDR
- phys_addr_t fixup_bigphys_addr(phys_addr_t addr, phys_addr_t size);
--int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long vaddr,
--		unsigned long pfn, unsigned long size, pgprot_t prot);
--#define io_remap_pfn_range io_remap_pfn_range
--
--void io_remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn,
--		unsigned long size);
--#define io_remap_pfn_range_prepare io_remap_pfn_range_prepare
--
--int io_remap_pfn_range_complete(struct vm_area_struct *vma,
--		unsigned long addr, unsigned long pfn, unsigned long size,
--		pgprot_t prot);
--#define io_remap_pfn_range_complete io_remap_pfn_range_complete
--
-+unsigned long io_remap_pfn_range_pfn(unsigned long pfn, unsigned long size);
-+#define io_remap_pfn_range_pfn io_remap_pfn_range_pfn
- #else
- #define fixup_bigphys_addr(addr, size)	(addr)
- #endif /* CONFIG_MIPS_FIXUP_BIGPHYS_ADDR */
---- a/arch/sparc/include/asm/pgtable_32.h~b
-+++ a/arch/sparc/include/asm/pgtable_32.h
-@@ -395,13 +395,8 @@ __get_iospace (unsigned long addr)
- #define GET_IOSPACE(pfn)		(pfn >> (BITS_PER_LONG - 4))
- #define GET_PFN(pfn)			(pfn & 0x0fffffffUL)
- 
--int remap_pfn_range(struct vm_area_struct *, unsigned long, unsigned long,
--		    unsigned long, pgprot_t);
--void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn);
--int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t pgprot);
--
--static inline unsigned long calc_io_remap_pfn(unsigned long pfn)
-+static inline unsigned long io_remap_pfn_range_pfn(unsigned long pfn,
-+		unsigned long size)
- {
- 	unsigned long long offset, space, phys_base;
- 
-@@ -411,30 +406,7 @@ static inline unsigned long calc_io_rema
- 
- 	return phys_base >> PAGE_SHIFT;
- }
--
--static inline int io_remap_pfn_range(struct vm_area_struct *vma,
--				     unsigned long from, unsigned long pfn,
--				     unsigned long size, pgprot_t prot)
--{
--	return remap_pfn_range(vma, from, calc_io_remap_pfn(pfn), size, prot);
--}
--#define io_remap_pfn_range io_remap_pfn_range
--
--static inline void io_remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn,
--		unsigned long size)
--{
--	remap_pfn_range_prepare(desc, calc_io_remap_pfn(pfn));
--}
--#define io_remap_pfn_range_prepare io_remap_pfn_range_prepare
--
--static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
--		unsigned long addr, unsigned long pfn, unsigned long size,
--		pgprot_t prot)
--{
--	return remap_pfn_range_complete(vma, addr, calc_io_remap_pfn(pfn),
--			size, prot);
--}
--#define io_remap_pfn_range_complete io_remap_pfn_range_complete
-+#define io_remap_pfn_range_pfn io_remap_pfn_range_pfn
- 
- #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
- #define ptep_set_access_flags(__vma, __address, __ptep, __entry, __dirty) \
---- a/arch/sparc/include/asm/pgtable_64.h~b
-+++ a/arch/sparc/include/asm/pgtable_64.h
-@@ -1048,12 +1048,6 @@ int page_in_phys_avail(unsigned long pad
- #define GET_IOSPACE(pfn)		(pfn >> (BITS_PER_LONG - 4))
- #define GET_PFN(pfn)			(pfn & 0x0fffffffffffffffUL)
- 
--int remap_pfn_range(struct vm_area_struct *, unsigned long, unsigned long,
--		    unsigned long, pgprot_t);
--void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn);
--int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t pgprot);
--
- void adi_restore_tags(struct mm_struct *mm, struct vm_area_struct *vma,
- 		      unsigned long addr, pte_t pte);
- 
-@@ -1087,7 +1081,8 @@ static inline int arch_unmap_one(struct
- 	return 0;
- }
- 
--static inline unsigned long calc_io_remap_pfn(unsigned long pfn)
-+static inline unsigned long io_remap_pfn_range_pfn(unsigned long pfn,
-+		unsigned long size)
- {
- 	unsigned long offset = GET_PFN(pfn) << PAGE_SHIFT;
- 	int space = GET_IOSPACE(pfn);
-@@ -1097,30 +1092,7 @@ static inline unsigned long calc_io_rema
- 
- 	return phys_base >> PAGE_SHIFT;
- }
--
--static inline int io_remap_pfn_range(struct vm_area_struct *vma,
--				     unsigned long from, unsigned long pfn,
--				     unsigned long size, pgprot_t prot)
--{
--	return remap_pfn_range(vma, from, calc_io_remap_pfn(pfn), size, prot);
--}
--#define io_remap_pfn_range io_remap_pfn_range
--
--static inline void io_remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn,
--	unsigned long size)
--{
--	return remap_pfn_range_prepare(desc, calc_io_remap_pfn(pfn));
--}
--#define io_remap_pfn_range_prepare io_remap_pfn_range_prepare
--
--static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
--		unsigned long addr, unsigned long pfn, unsigned long size,
--		pgprot_t prot)
--{
--	return remap_pfn_range_complete(vma, addr, calc_io_remap_pfn(pfn),
--					size, prot);
--}
--#define io_remap_pfn_range_complete io_remap_pfn_range_complete
-+#define io_remap_pfn_range_pfn io_remap_pfn_range_pfn
- 
- static inline unsigned long __untagged_addr(unsigned long start)
- {
---- a/drivers/char/mem.c~b
-+++ a/drivers/char/mem.c
-@@ -504,18 +504,26 @@ static ssize_t read_zero(struct file *fi
- 	return cleared;
- }
- 
--static int mmap_prepare_zero(struct vm_area_desc *desc)
-+static int mmap_zero_private_success(const struct vm_area_struct *vma)
-+{
-+	/*
-+	 * This is a highly unique situation where we mark a MAP_PRIVATE mapping
-+	 * of /dev/zero anonymous, despite it not being.
-+	 */
-+	vma_set_anonymous((struct vm_area_struct *)vma);
-+
-+	return 0;
-+}
-+
-+static int mmap_zero_prepare(struct vm_area_desc *desc)
- {
- #ifndef CONFIG_MMU
- 	return -ENOSYS;
- #endif
- 	if (desc->vm_flags & VM_SHARED)
- 		return shmem_zero_setup_desc(desc);
--	/*
--	 * This is a highly unique situation where we mark a MAP_PRIVATE mapping
--	 * of /dev/zero anonymous, despite it not being.
--	 */
--	desc->vm_ops = NULL;
-+
-+	desc->action.success_hook = mmap_zero_private_success;
- 	return 0;
- }
- 
-@@ -533,7 +541,7 @@ static unsigned long get_unmapped_area_z
- {
- 	if (flags & MAP_SHARED) {
- 		/*
--		 * mmap_prepare_zero() will call shmem_zero_setup() to create a
-+		 * mmap_zero_prepare() will call shmem_zero_setup() to create a
- 		 * file, so use shmem's get_unmapped_area in case it can be
- 		 * huge; and pass NULL for file as in mmap.c's
- 		 * get_unmapped_area(), so as not to confuse shmem with our
-@@ -676,7 +684,7 @@ static const struct file_operations zero
- 	.write_iter	= write_iter_zero,
- 	.splice_read	= copy_splice_read,
- 	.splice_write	= splice_write_zero,
--	.mmap_prepare	= mmap_prepare_zero,
-+	.mmap_prepare	= mmap_zero_prepare,
- 	.get_unmapped_area = get_unmapped_area_zero,
- #ifndef CONFIG_MMU
- 	.mmap_capabilities = zero_mmap_capabilities,
---- a/include/linux/fs.h~b
-+++ a/include/linux/fs.h
-@@ -2279,14 +2279,14 @@ static inline bool can_mmap_file(struct
- 	return true;
- }
- 
--int __compat_vma_mmap_prepare(const struct file_operations *f_op,
-+int __compat_vma_mmap(const struct file_operations *f_op,
- 		struct file *file, struct vm_area_struct *vma);
--int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma);
-+int compat_vma_mmap(struct file *file, struct vm_area_struct *vma);
- 
- static inline int vfs_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	if (file->f_op->mmap_prepare)
--		return compat_vma_mmap_prepare(file, vma);
-+		return compat_vma_mmap(file, vma);
- 
- 	return file->f_op->mmap(file, vma);
- }
---- a/include/linux/mm.h~b
-+++ a/include/linux/mm.h
-@@ -3650,7 +3650,7 @@ static inline void mmap_action_ioremap(s
- 				       unsigned long size)
- {
- 	mmap_action_remap(desc, start, start_pfn, size);
--	desc->action.remap.is_io_remap = true;
-+	desc->action.type = MMAP_IO_REMAP_PFN;
- }
- 
- /**
-@@ -3713,9 +3713,6 @@ struct vm_area_struct *find_extend_vma_l
- 		unsigned long addr);
- int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
- 		    unsigned long pfn, unsigned long size, pgprot_t pgprot);
--void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn);
--int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t pgprot);
- 
- int vm_insert_page(struct vm_area_struct *, unsigned long addr, struct page *);
- int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
-@@ -3749,32 +3746,34 @@ static inline vm_fault_t vmf_insert_page
- 	return VM_FAULT_NOPAGE;
- }
- 
--#ifndef io_remap_pfn_range
--static inline int io_remap_pfn_range(struct vm_area_struct *vma,
--				     unsigned long addr, unsigned long pfn,
--				     unsigned long size, pgprot_t prot)
-+#ifdef io_remap_pfn_range_pfn
-+static inline unsigned long io_remap_pfn_range_prot(pgprot_t prot)
- {
--	return remap_pfn_range(vma, addr, pfn, size, pgprot_decrypted(prot));
-+	/* We do not decrypt if arch customises PFN. */
-+	return prot;
-+}
-+#else
-+static inline unsigned long io_remap_pfn_range_pfn(unsigned long pfn,
-+		unsigned long size)
-+{
-+	return pfn;
- }
--#endif
- 
--#ifndef io_remap_pfn_range_prepare
--static inline void io_remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn,
--	unsigned long size)
-+static inline pgprot_t io_remap_pfn_range_prot(pgprot_t prot)
- {
--	return remap_pfn_range_prepare(desc, pfn);
-+	return pgprot_decrypted(prot);
- }
- #endif
- 
--#ifndef io_remap_pfn_range_complete
--static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
--		unsigned long addr, unsigned long pfn, unsigned long size,
--		pgprot_t prot)
-+static inline int io_remap_pfn_range(struct vm_area_struct *vma,
-+				     unsigned long addr, unsigned long orig_pfn,
-+				     unsigned long size, pgprot_t orig_prot)
- {
--	return remap_pfn_range_complete(vma, addr, pfn, size,
--			pgprot_decrypted(prot));
-+	const unsigned long pfn = io_remap_pfn_range_pfn(orig_pfn, size);
-+	const pgprot_t prot = io_remap_pfn_range_prot(orig_prot);
-+
-+	return remap_pfn_range(vma, addr, pfn, size, prot);
- }
--#endif
- 
- static inline vm_fault_t vmf_error(int err)
- {
---- a/include/linux/mm_types.h~b
-+++ a/include/linux/mm_types.h
-@@ -777,6 +777,7 @@ struct pfnmap_track_ctx {
- enum mmap_action_type {
- 	MMAP_NOTHING,		/* Mapping is complete, no further action. */
- 	MMAP_REMAP_PFN,		/* Remap PFN range. */
-+	MMAP_IO_REMAP_PFN,	/* I/O remap PFN range. */
- };
- 
- /*
-@@ -791,7 +792,6 @@ struct mmap_action {
- 			unsigned long start_pfn;
- 			unsigned long size;
- 			pgprot_t pgprot;
--			bool is_io_remap;
- 		} remap;
- 	};
- 	enum mmap_action_type type;
---- a/mm/internal.h~b
-+++ a/mm/internal.h
-@@ -1653,4 +1653,26 @@ static inline bool reclaim_pt_is_enabled
- void dup_mm_exe_file(struct mm_struct *mm, struct mm_struct *oldmm);
- int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm);
- 
-+void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn);
-+int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
-+		unsigned long pfn, unsigned long size, pgprot_t pgprot);
-+
-+static inline void io_remap_pfn_range_prepare(struct vm_area_desc *desc,
-+		unsigned long orig_pfn, unsigned long size)
-+{
-+	const unsigned long pfn = io_remap_pfn_range_pfn(orig_pfn, size);
-+
-+	return remap_pfn_range_prepare(desc, pfn);
-+}
-+
-+static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
-+		unsigned long addr, unsigned long orig_pfn, unsigned long size,
-+		pgprot_t orig_prot)
-+{
-+	const unsigned long pfn = io_remap_pfn_range_pfn(orig_pfn, size);
-+	const pgprot_t prot = io_remap_pfn_range_prot(orig_prot);
-+
-+	return remap_pfn_range_complete(vma, addr, pfn, size, prot);
-+}
-+
- #endif	/* __MM_INTERNAL_H */
---- a/mm/memory.c~b
-+++ a/mm/memory.c
-@@ -2919,7 +2919,7 @@ static int get_remap_pgoff(vm_flags_t vm
- }
- 
- static int remap_pfn_range_internal(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t prot, bool set_vma)
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
- {
- 	pgd_t *pgd;
- 	unsigned long next;
-@@ -2930,16 +2930,7 @@ static int remap_pfn_range_internal(stru
- 	if (WARN_ON_ONCE(!PAGE_ALIGNED(addr)))
- 		return -EINVAL;
- 
--	if (set_vma) {
--		err = get_remap_pgoff(vma->vm_flags, addr, end,
--				      vma->vm_start, vma->vm_end,
--				      pfn, &vma->vm_pgoff);
--		if (err)
--			return err;
--		vm_flags_set(vma, VM_REMAP_FLAGS);
--	} else {
--		VM_WARN_ON_ONCE((vma->vm_flags & VM_REMAP_FLAGS) != VM_REMAP_FLAGS);
--	}
-+	VM_WARN_ON_ONCE((vma->vm_flags & VM_REMAP_FLAGS) != VM_REMAP_FLAGS);
- 
- 	BUG_ON(addr >= end);
- 	pfn -= addr >> PAGE_SHIFT;
-@@ -2961,9 +2952,9 @@ static int remap_pfn_range_internal(stru
-  * must have pre-validated the caching bits of the pgprot_t.
-  */
- static int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t prot, bool set_vma)
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
- {
--	int error = remap_pfn_range_internal(vma, addr, pfn, size, prot, set_vma);
-+	int error = remap_pfn_range_internal(vma, addr, pfn, size, prot);
- 	if (!error)
- 		return 0;
- 
-@@ -2976,18 +2967,6 @@ static int remap_pfn_range_notrack(struc
- 	return error;
- }
- 
--void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn)
--{
--	/*
--	 * We set addr=VMA start, end=VMA end here, so this won't fail, but we
--	 * check it again on complete and will fail there if specified addr is
--	 * invalid.
--	 */
--	get_remap_pgoff(desc->vm_flags, desc->start, desc->end,
--			desc->start, desc->end, pfn, &desc->pgoff);
--	desc->vm_flags |= VM_REMAP_FLAGS;
--}
--
- #ifdef __HAVE_PFNMAP_TRACKING
- static inline struct pfnmap_track_ctx *pfnmap_track_ctx_alloc(unsigned long pfn,
- 		unsigned long size, pgprot_t *prot)
-@@ -3018,7 +2997,7 @@ void pfnmap_track_ctx_release(struct kre
- }
- 
- static int remap_pfn_range_track(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t prot, bool set_vma)
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
- {
- 	struct pfnmap_track_ctx *ctx = NULL;
- 	int err;
-@@ -3044,7 +3023,7 @@ static int remap_pfn_range_track(struct
- 		return -EINVAL;
- 	}
- 
--	err = remap_pfn_range_notrack(vma, addr, pfn, size, prot, set_vma);
-+	err = remap_pfn_range_notrack(vma, addr, pfn, size, prot);
- 	if (ctx) {
- 		if (err)
- 			kref_put(&ctx->kref, pfnmap_track_ctx_release);
-@@ -3054,6 +3033,47 @@ static int remap_pfn_range_track(struct
- 	return err;
- }
- 
-+static int do_remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
-+{
-+	return remap_pfn_range_track(vma, addr, pfn, size, prot);
-+}
-+#else
-+static int do_remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
-+{
-+	return remap_pfn_range_notrack(vma, addr, pfn, size, prot);
-+}
-+#endif
-+
-+void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn)
-+{
-+	/*
-+	 * We set addr=VMA start, end=VMA end here, so this won't fail, but we
-+	 * check it again on complete and will fail there if specified addr is
-+	 * invalid.
-+	 */
-+	get_remap_pgoff(desc->vm_flags, desc->start, desc->end,
-+			desc->start, desc->end, pfn, &desc->pgoff);
-+	desc->vm_flags |= VM_REMAP_FLAGS;
-+}
-+
-+static int remap_pfn_range_prepare_vma(struct vm_area_struct *vma, unsigned long addr,
-+		unsigned long pfn, unsigned long size)
-+{
-+	unsigned long end = addr + PAGE_ALIGN(size);
-+	int err;
-+
-+	err = get_remap_pgoff(vma->vm_flags, addr, end,
-+			      vma->vm_start, vma->vm_end,
-+			      pfn, &vma->vm_pgoff);
-+	if (err)
-+		return err;
-+
-+	vm_flags_set(vma, VM_REMAP_FLAGS);
-+	return 0;
-+}
-+
- /**
-  * remap_pfn_range - remap kernel memory to userspace
-  * @vma: user vma to map to
-@@ -3069,32 +3089,21 @@ static int remap_pfn_range_track(struct
- int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
- 		    unsigned long pfn, unsigned long size, pgprot_t prot)
- {
--	return remap_pfn_range_track(vma, addr, pfn, size, prot,
--				     /* set_vma = */true);
--}
-+	int err;
- 
--int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
--		unsigned long pfn, unsigned long size, pgprot_t prot)
--{
--	/* With set_vma = false, the VMA will not be modified. */
--	return remap_pfn_range_track(vma, addr, pfn, size, prot,
--				     /* set_vma = */false);
--}
--#else
--int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
--		    unsigned long pfn, unsigned long size, pgprot_t prot)
--{
--	return remap_pfn_range_notrack(vma, addr, pfn, size, prot, /* set_vma = */true);
-+	err = remap_pfn_range_prepare_vma(vma, addr, pfn, size);
-+	if (err)
-+		return err;
-+
-+	return do_remap_pfn_range(vma, addr, pfn, size, prot);
- }
-+EXPORT_SYMBOL(remap_pfn_range);
- 
- int remap_pfn_range_complete(struct vm_area_struct *vma, unsigned long addr,
--			     unsigned long pfn, unsigned long size, pgprot_t prot)
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
- {
--	return remap_pfn_range_notrack(vma, addr, pfn, size, prot,
--				       /* set_vma = */false);
-+	return do_remap_pfn_range(vma, addr, pfn, size, prot);
- }
--#endif
--EXPORT_SYMBOL(remap_pfn_range);
- 
- /**
-  * vm_iomap_memory - remap memory to userspace
---- a/mm/shmem.c~b
-+++ a/mm/shmem.c
-@@ -5908,6 +5908,7 @@ static struct file *__shmem_zero_setup(u
- /**
-  * shmem_zero_setup - setup a shared anonymous mapping
-  * @vma: the vma to be mmapped is prepared by do_mmap
-+ * Returns: 0 on success, or error
-  */
- int shmem_zero_setup(struct vm_area_struct *vma)
- {
---- a/mm/util.c~b
-+++ a/mm/util.c
-@@ -1134,7 +1134,7 @@ EXPORT_SYMBOL(flush_dcache_folio);
- #endif
- 
- /**
-- * __compat_vma_mmap_prepare() - See description for compat_vma_mmap_prepare()
-+ * __compat_vma_mmap() - See description for compat_vma_mmap()
-  * for details. This is the same operation, only with a specific file operations
-  * struct which may or may not be the same as vma->vm_file->f_op.
-  * @f_op: The file operations whose .mmap_prepare() hook is specified.
-@@ -1142,7 +1142,7 @@ EXPORT_SYMBOL(flush_dcache_folio);
-  * @vma: The VMA to apply the .mmap_prepare() hook to.
-  * Returns: 0 on success or error.
-  */
--int __compat_vma_mmap_prepare(const struct file_operations *f_op,
-+int __compat_vma_mmap(const struct file_operations *f_op,
- 		struct file *file, struct vm_area_struct *vma)
- {
- 	struct vm_area_desc desc = {
-@@ -1168,11 +1168,11 @@ int __compat_vma_mmap_prepare(const stru
- 	set_vma_from_desc(vma, &desc);
- 	return mmap_action_complete(&desc.action, vma);
- }
--EXPORT_SYMBOL(__compat_vma_mmap_prepare);
-+EXPORT_SYMBOL(__compat_vma_mmap);
- 
- /**
-- * compat_vma_mmap_prepare() - Apply the file's .mmap_prepare() hook to an
-- * existing VMA.
-+ * compat_vma_mmap() - Apply the file's .mmap_prepare() hook to an
-+ * existing VMA and execute any requested actions.
-  * @file: The file which possesss an f_op->mmap_prepare() hook.
-  * @vma: The VMA to apply the .mmap_prepare() hook to.
-  *
-@@ -1187,7 +1187,7 @@ EXPORT_SYMBOL(__compat_vma_mmap_prepare)
-  * .mmap_prepare() hook, as we are in a different context when we invoke the
-  * .mmap() hook, already having a VMA to deal with.
-  *
-- * compat_vma_mmap_prepare() is a compatibility function that takes VMA state,
-+ * compat_vma_mmap() is a compatibility function that takes VMA state,
-  * establishes a struct vm_area_desc descriptor, passes to the underlying
-  * .mmap_prepare() hook and applies any changes performed by it.
-  *
-@@ -1196,11 +1196,11 @@ EXPORT_SYMBOL(__compat_vma_mmap_prepare)
-  *
-  * Returns: 0 on success or error.
-  */
--int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma)
-+int compat_vma_mmap(struct file *file, struct vm_area_struct *vma)
- {
--	return __compat_vma_mmap_prepare(file->f_op, file, vma);
-+	return __compat_vma_mmap(file->f_op, file, vma);
- }
--EXPORT_SYMBOL(compat_vma_mmap_prepare);
-+EXPORT_SYMBOL(compat_vma_mmap);
- 
- static void set_ps_flags(struct page_snapshot *ps, const struct folio *folio,
- 			 const struct page *page)
-@@ -1282,6 +1282,35 @@ again:
- 	}
- }
- 
-+static int mmap_action_finish(struct mmap_action *action,
-+		const struct vm_area_struct *vma, int err)
-+{
-+	/*
-+	 * If an error occurs, unmap the VMA altogether and return an error. We
-+	 * only clear the newly allocated VMA, since this function is only
-+	 * invoked if we do NOT merge, so we only clean up the VMA we created.
-+	 */
-+	if (err) {
-+		const size_t len = vma_pages(vma) << PAGE_SHIFT;
-+
-+		do_munmap(current->mm, vma->vm_start, len, NULL);
-+
-+		if (action->error_hook) {
-+			/* We may want to filter the error. */
-+			err = action->error_hook(err);
-+
-+			/* The caller should not clear the error. */
-+			VM_WARN_ON_ONCE(!err);
-+		}
-+		return err;
-+	}
-+
-+	if (action->success_hook)
-+		return action->success_hook(vma);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_MMU
- /**
-  * mmap_action_prepare - Perform preparatory setup for an VMA descriptor
-@@ -1296,11 +1325,11 @@ void mmap_action_prepare(struct mmap_act
- 	case MMAP_NOTHING:
- 		break;
- 	case MMAP_REMAP_PFN:
--		if (action->remap.is_io_remap)
--			io_remap_pfn_range_prepare(desc, action->remap.start_pfn,
--				action->remap.size);
--		else
--			remap_pfn_range_prepare(desc, action->remap.start_pfn);
-+		remap_pfn_range_prepare(desc, action->remap.start_pfn);
-+		break;
-+	case MMAP_IO_REMAP_PFN:
-+		io_remap_pfn_range_prepare(desc, action->remap.start_pfn,
-+					   action->remap.size);
- 		break;
- 	}
- }
-@@ -1324,44 +1353,18 @@ int mmap_action_complete(struct mmap_act
- 	case MMAP_NOTHING:
- 		break;
- 	case MMAP_REMAP_PFN:
--		VM_WARN_ON_ONCE((vma->vm_flags & VM_REMAP_FLAGS) !=
--				VM_REMAP_FLAGS);
--
--		if (action->remap.is_io_remap)
--			err = io_remap_pfn_range_complete(vma, action->remap.start,
-+		err = remap_pfn_range_complete(vma, action->remap.start,
- 				action->remap.start_pfn, action->remap.size,
- 				action->remap.pgprot);
--		else
--			err = remap_pfn_range_complete(vma, action->remap.start,
-+		break;
-+	case MMAP_IO_REMAP_PFN:
-+		err = io_remap_pfn_range_complete(vma, action->remap.start,
- 				action->remap.start_pfn, action->remap.size,
- 				action->remap.pgprot);
- 		break;
- 	}
- 
--	/*
--	 * If an error occurs, unmap the VMA altogether and return an error. We
--	 * only clear the newly allocated VMA, since this function is only
--	 * invoked if we do NOT merge, so we only clean up the VMA we created.
--	 */
--	if (err) {
--		const size_t len = vma_pages(vma) << PAGE_SHIFT;
--
--		do_munmap(current->mm, vma->vm_start, len, NULL);
--
--		if (action->error_hook) {
--			/* We may want to filter the error. */
--			err = action->error_hook(err);
--
--			/* The caller should not clear the error. */
--			VM_WARN_ON_ONCE(!err);
--		}
--		return err;
--	}
--
--	if (action->success_hook)
--		err = action->success_hook(vma);
--
--	return err;
-+	return mmap_action_finish(action, vma, err);
- }
- EXPORT_SYMBOL(mmap_action_complete);
- #else
-@@ -1372,6 +1375,7 @@ void mmap_action_prepare(struct mmap_act
- 	case MMAP_NOTHING:
- 		break;
- 	case MMAP_REMAP_PFN:
-+	case MMAP_IO_REMAP_PFN:
- 		WARN_ON_ONCE(1); /* nommu cannot handle these. */
- 		break;
- 	}
-@@ -1381,41 +1385,17 @@ EXPORT_SYMBOL(mmap_action_prepare);
- int mmap_action_complete(struct mmap_action *action,
- 			struct vm_area_struct *vma)
- {
--	int err = 0;
--
- 	switch (action->type) {
- 	case MMAP_NOTHING:
- 		break;
- 	case MMAP_REMAP_PFN:
-+	case MMAP_IO_REMAP_PFN:
- 		WARN_ON_ONCE(1); /* nommu cannot handle this. */
- 
- 		break;
- 	}
- 
--	/*
--	 * If an error occurs, unmap the VMA altogether and return an error. We
--	 * only clear the newly allocated VMA, since this function is only
--	 * invoked if we do NOT merge, so we only clean up the VMA we created.
--	 */
--	if (err) {
--		const size_t len = vma_pages(vma) << PAGE_SHIFT;
--
--		do_munmap(current->mm, vma->vm_start, len, NULL);
--
--		if (action->error_hook) {
--			/* We may want to filter the error. */
--			err = action->error_hook(err);
--
--			/* The caller should not clear the error. */
--			VM_WARN_ON_ONCE(!err);
--		}
--		return err;
--	}
--
--	if (action->success_hook)
--		err = action->success_hook(vma);
--
--	return 0;
-+	return mmap_action_finish(action, vma, /* err = */0);
- }
- EXPORT_SYMBOL(mmap_action_complete);
- #endif
---- a/tools/testing/vma/vma_internal.h~b
-+++ a/tools/testing/vma/vma_internal.h
-@@ -293,7 +293,6 @@ struct mmap_action {
- 			unsigned long start_pfn;
- 			unsigned long size;
- 			pgprot_t pgprot;
--			bool is_io_remap;
- 		} remap;
- 	};
- 	enum mmap_action_type type;
-@@ -1524,7 +1523,7 @@ static inline int mmap_action_complete(s
- 	return 0;
- }
- 
--static inline int __compat_vma_mmap_prepare(const struct file_operations *f_op,
-+static inline int __compat_vma_mmap(const struct file_operations *f_op,
- 		struct file *file, struct vm_area_struct *vma)
- {
- 	struct vm_area_desc desc = {
-@@ -1551,10 +1550,10 @@ static inline int __compat_vma_mmap_prep
- 	return mmap_action_complete(&desc.action, vma);
- }
- 
--static inline int compat_vma_mmap_prepare(struct file *file,
-+static inline int compat_vma_mmap(struct file *file,
- 		struct vm_area_struct *vma)
- {
--	return __compat_vma_mmap_prepare(file->f_op, file, vma);
-+	return __compat_vma_mmap(file->f_op, file, vma);
- }
- 
- /* Did the driver provide valid mmap hook configuration? */
-@@ -1575,7 +1574,7 @@ static inline bool can_mmap_file(struct
- static inline int vfs_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	if (file->f_op->mmap_prepare)
--		return compat_vma_mmap_prepare(file, vma);
-+		return compat_vma_mmap(file, vma);
- 
- 	return file->f_op->mmap(file, vma);
- }
-_
-
+-- 
+Sincerely yours,
+Mike.
 
