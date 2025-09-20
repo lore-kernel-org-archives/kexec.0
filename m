@@ -4,77 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8FEDECAC592
-	for <kexec@archiver.kernel.org>; Fri, 19 Sep 2025 21:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25FC2CAC5A7
+	for <kexec@archiver.kernel.org>; Sat, 20 Sep 2025 21:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/kUNBbkgUP7UkdLkjt7gNAUDoEAUE2pfBTAUAT+0Q90=; b=rLwwtGn5br20rvxtRKnf8QNQot
-	FqGi9OVuWKEyGA29BK/4gv5MLBbXWtpMbhTNvnUk4Um5Pks3PA4cS1hCV29Rl3h6UYdibNRLqMnMp
-	AYHZNcZzeWxgDy4BVhVpFMIhe95jxPu2kSAbaPUCk9+IWlr9l30/RsYXCoFRWa0gIigAUb5xGNiSi
-	OdXWERBke7Nzg6TafhhdVQfuITmtovIFBT+1J+z1F3EufVngonhFm6rocXhNANkIYii+uY978uRAr
-	WI2iWDOaTbLbzL73VhFf+nLjlaXiAaWMoii1pFUjIASr1TT+sW2n5mWcD3T1Ns5S7g/uy22/0LX4N
-	4DiMAp6w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4UIugca8SZaxMzP/24yjEddM7n8Al4cXmz5gSsZCJUE=; b=qPUzTqIZY4Lzag2FHCPkp9fU+9
+	C8PGv0nfUeiGgDL3qboOSIUatw54hBOECQZ5N+Po3kow3IvnfL+SS0KzRpfePgSd19TGqEWz0Xs9g
+	VONWNlKssjgyWgCj/ZZZpBcWaEPZyHMvYkyuu+WTxImefXTqeZNIJvN2NI2LqAYhwtTVeum2zEYW+
+	LiAByKdJDYQapxqcemOiAar2HERAC+ias1iqep6l4LcnzOnSjhirMwwxFq8NeIzmRG3Axw9rifIY8
+	3360GG8XjIgJz+rwgvVMtlXp1hwAHKGxaJdSGqAdUbPpqfT8Z+buzH65LhFM/j5yhCeRDIh9W0qI5
+	iie/RHFg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzieq-000000045UC-1Ogx;
-	Fri, 19 Sep 2025 21:28:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1v04uE-00000005xIT-1VRm;
+	Sat, 20 Sep 2025 21:14:06 +0000
+Received: from mail-ua1-x933.google.com ([2607:f8b0:4864:20::933])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uziem-000000045SZ-1PuJ
+	id 1v04u8-00000005xHy-1Rx0
 	for kexec@lists.infradead.org;
-	Fri, 19 Sep 2025 21:28:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758317318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/kUNBbkgUP7UkdLkjt7gNAUDoEAUE2pfBTAUAT+0Q90=;
-	b=GgDozlLh8IYaJzoX01fDgMttg1nRz2LtnlHl7UVoMHPnAE1iwlQvjas6JZIhWVaiKR9gT/
-	nMEuWK5nL3q2KO4NQNcsHMdbK+AA1pp170NaclJKjymekkLZU0OJE0Igk9Y2smpONf3hAY
-	ot+gDLgdV2IZaExdFgod+jNdjqQ8064=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-Z8c109b3MmeDkNukUh-YgA-1; Fri,
- 19 Sep 2025 17:26:55 -0400
-X-MC-Unique: Z8c109b3MmeDkNukUh-YgA-1
-X-Mimecast-MFC-AGG-ID: Z8c109b3MmeDkNukUh-YgA_1758317214
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7256919560B5;
-	Fri, 19 Sep 2025 21:26:53 +0000 (UTC)
-Received: from localhost (unknown [10.2.16.43])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB9B7180035E;
-	Fri, 19 Sep 2025 21:26:51 +0000 (UTC)
-Date: Fri, 19 Sep 2025 17:26:50 -0400
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com,
-	Cong Wang <cwang@multikernel.io>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture
- support
-Message-ID: <20250919212650.GA275426@fedora>
-References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
+	Sat, 20 Sep 2025 21:14:01 +0000
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-8e261568020so935373241.1
+        for <kexec@lists.infradead.org>; Sat, 20 Sep 2025 14:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758402839; x=1759007639; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4UIugca8SZaxMzP/24yjEddM7n8Al4cXmz5gSsZCJUE=;
+        b=dfXbJP+hLJr52RFMP6VXA/oFGw0nhlXUzcwJVKmgu5QNdEzi2/am2J2nZKiPlDhQRT
+         jukOQ1EVFfWPU4PRm3G8IEqfgua0Qz7LxZ9NqLYAdpsBgP51C9IzGGHey++mkQfzCVvL
+         IXgvcn0CNjS5cx3Mf6f/laRYQQR/nDEeFPf7H8N7y46DS9nQNK4moEdv9LjJMG5aPTh7
+         1pGb2G51Hcru40TaPQlIqSqVNlwLESFnrdkHH3QaAnxBcIWzCWE1vT31ndU4TUWRDGfM
+         cBtSW+lPanuOurJcPeyo9hRdqN4F3Vp2P8at/t4TJpaUdswTLB+C2ky7/dTGCaElRDcx
+         JVMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758402839; x=1759007639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4UIugca8SZaxMzP/24yjEddM7n8Al4cXmz5gSsZCJUE=;
+        b=T85qpJHSMZ4QKOgF0sDSE/AjEvxt8sh4XFMLYbbfAhKBeEyl7TFyfxhC0ZjKtyptti
+         6aoZub/l8v4Hug5aRImpUh9Cy7TyNgyxKjGp8spX3bvm+2C6a4WSg2/1nRbwgDLSuyR+
+         SJROeKUjBQFTCC3PJfWo5q5YYpSs2rUU2z2K9cFK4nHjgbIcBxCXobIlvZ5lueZvLjrR
+         Qf/3hez5aM3og4me9rLPHE+UPw/Z3HyMiBc1sHK2kpBtcEz8Qzet05LeeDYt98Fshigs
+         8w/L82dgfZxm5Qvzcyi4Fb42Uwn+xWkdFezxSyt/ZzDIYboXsOCxQTP0Y+ldDuZype60
+         1FQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVpBI50Q/5Totil/nLOh2OPRZs1nXS/IVVSPuK28DMKzFV5owPPOs78b8Z18VZANEBxadSvg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwvZC17zK21CNgswOv5HtSTYGINJXnC2oAfaw7DgIdeWeV1c7FL
+	1oUyb4G1YLlL9D2Je/HBTQ9DbLcbjft4kOPpqo7YzZXPJa0TRg1hFpzogFzKHnVg2ZrUEdDOh8X
+	5/KKX0wuhPqmA+ROqxruSp8BAGQdrBxGUkhbJ
+X-Gm-Gg: ASbGnctx0Q/qLykemluV7BsnEssx6nKs/wtxtmE/GC0hAMu4AD/gFD4pu0SUijf4BaH
+	EEeFoU7PdvPqDVWofYNCwQMCPX1DRR+J0XVQO29P4uKGkW3eLKKtbdw/EyVeJ+6v6UDRkzPsm0c
+	tGNPcW9qRzP0m6E54mqhJkLhM71B/6NzswMpom7cWc+lkZpPfhSRyi6tXx+0RBLE2lJ0W7gOrmY
+	XD800Q4/arPBY2+N3ReoYmeJRQL0nnWD/yPeJg=
+X-Google-Smtp-Source: AGHT+IFvnPA4h7T1ZUVtn4JDNMPpiPFDn9Yh1yg75Ylw2qMBHo9vNQ/p0Qj34UE2hbDoZxw+1L238MnfW2TU2rGaUKs=
+X-Received: by 2002:a05:6102:3e06:b0:55d:34c:f231 with SMTP id
+ ada2fe7eead31-588f9cfbf36mr2475265137.35.1758402838660; Sat, 20 Sep 2025
+ 14:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wJMNkTvE9gcHAHlx"
-Content-Disposition: inline
-In-Reply-To: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250918222607.186488-1-xiyou.wangcong@gmail.com> <CA+CK2bD3D_XFu1E60qBYwdDzK0c7_bN0BkGBE7h6h_sxmmfvAQ@mail.gmail.com>
+In-Reply-To: <CA+CK2bD3D_XFu1E60qBYwdDzK0c7_bN0BkGBE7h6h_sxmmfvAQ@mail.gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Date: Sat, 20 Sep 2025 14:13:46 -0700
+X-Gm-Features: AS18NWC0ac3RYhgSaViFSOyGBJe0fdwa4OEZ_zquyfPSWFlJlyPiOoaLI9mEwmY
+Message-ID: <CAM_iQpWmfkB9VPdV=sCcFzUm71my1bWFL7G+QLtYGHpe3oPHAg@mail.gmail.com>
+Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: linux-kernel@vger.kernel.org, Cong Wang <cwang@multikernel.io>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Changyuan Lyu <changyuanl@google.com>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250919_142840_493988_25812E4F 
-X-CRM114-Status: GOOD (  27.57  )
+X-CRM114-CacheID: sfid-20250920_141400_400078_B2959636 
+X-CRM114-Status: GOOD (  25.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,168 +97,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Fri, Sep 19, 2025 at 6:14=E2=80=AFAM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> On Thu, Sep 18, 2025 at 6:26=E2=80=AFPM Cong Wang <xiyou.wangcong@gmail.c=
+om> wrote:
+> >
+> > This patch series introduces multikernel architecture support, enabling
+> > multiple independent kernel instances to coexist and communicate on a
+> > single physical machine. Each kernel instance can run on dedicated CPU
+> > cores while sharing the underlying hardware resources.
+> >
+> > The multikernel architecture provides several key benefits:
+> > - Improved fault isolation between different workloads
+> > - Enhanced security through kernel-level separation
+> > - Better resource utilization than traditional VM (KVM, Xen etc.)
+> > - Potential zero-down kernel update with KHO (Kernel Hand Over)
+>
+> Hi Cong,
+>
+> Thank you for submitting this; it is an exciting series.
 
---wJMNkTvE9gcHAHlx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your feedback, Pasha.
 
-On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
-> This patch series introduces multikernel architecture support, enabling
-> multiple independent kernel instances to coexist and communicate on a
-> single physical machine. Each kernel instance can run on dedicated CPU
-> cores while sharing the underlying hardware resources.
->=20
-> The multikernel architecture provides several key benefits:
-> - Improved fault isolation between different workloads
-> - Enhanced security through kernel-level separation
+>
+> I experimented with this approach about five years ago for a Live
+> Update scenario. It required surprisingly little work to get two OSes
+> to boot simultaneously on the same x86 hardware. The procedure I
 
-What level of isolation does this patch series provide? What stops
-kernel A from accessing kernel B's memory pages, sending interrupts to
-its CPUs, etc?
+Yes, I totally agree.
 
-> - Better resource utilization than traditional VM (KVM, Xen etc.)
-> - Potential zero-down kernel update with KHO (Kernel Hand Over)
->=20
-> Architecture Overview:
-> The implementation leverages kexec infrastructure to load and manage
-> multiple kernel images, with each kernel instance assigned to specific
-> CPU cores. Inter-kernel communication is facilitated through a dedicated
-> IPI framework that allows kernels to coordinate and share information
-> when necessary.
->=20
-> Key Components:
-> 1. Enhanced kexec subsystem with dynamic kimage tracking
-> 2. Generic IPI communication framework for inter-kernel messaging
-> 3. Architecture-specific CPU bootstrap mechanisms (only x86 so far)
-> 4. Proc interface for monitoring loaded kernel instances
->=20
-> Patch Summary:
->=20
-> Patch 1/7: Introduces basic multikernel support via kexec, allowing
->            multiple kernel images to be loaded simultaneously.
->=20
-> Patch 2/7: Adds x86-specific SMP INIT trampoline for bootstrapping
->            CPUs with different kernel instances.
->=20
-> Patch 3/7: Introduces dedicated MULTIKERNEL_VECTOR for x86 inter-kernel
->            communication.
->=20
-> Patch 4/7: Implements generic multikernel IPI communication framework
->            for cross-kernel messaging and coordination.
->=20
-> Patch 5/7: Adds arch_cpu_physical_id() function to obtain physical CPU
->            identifiers for proper CPU management.
->=20
-> Patch 6/7: Replaces static kimage globals with dynamic linked list
->            infrastructure to support multiple kernel images.
->=20
-> Patch 7/7: Adds /proc/multikernel interface for monitoring and debugging
->            loaded kernel instances.
->=20
-> The implementation maintains full backward compatibility with existing
-> kexec functionality while adding the new multikernel capabilities.
->=20
-> IMPORTANT NOTES:
->=20
-> 1) This is a Request for Comments (RFC) submission. While the core
->    architecture is functional, there are numerous implementation details
->    that need improvement. The primary goal is to gather feedback on the
->    high-level design and overall approach rather than focus on specific
->    coding details at this stage.
->=20
-> 2) This patch series represents only the foundational framework for
->    multikernel support. It establishes the basic infrastructure and
->    communication mechanisms. We welcome the community to build upon
->    this foundation and develop their own solutions based on this
->    framework.
->=20
-> 3) Testing has been limited to the author's development machine using
->    hard-coded boot parameters and specific hardware configurations.
->    Community testing across different hardware platforms, configurations,
->    and use cases would be greatly appreciated to identify potential
->    issues and improve robustness. Obviously, don't use this code beyond
->    testing.
->=20
-> This work enables new use cases such as running real-time kernels
-> alongside general-purpose kernels, isolating security-critical
-> applications, and providing dedicated kernel instances for specific
-> workloads etc..
+> followed looked like this:
+>
+> 1. Create an immutable kernel image bundle: kernel + initramfs.
+> 2. The first kernel is booted with memmap parameters, setting aside
+> the first 1G for its own operation, the second 1G for the next kernel
+> (reserved), and the rest as PMEM for the VMs.
+> 3. In the first kernel, we offline one CPU and kexec the second kernel
+> with parameters that specify to use only the offlined CPU as the boot
+> CPU and to keep the other CPUs offline (i.e., smp_init does not start
+> other CPUs). The memmap specify the first 1G reserved, and the 2nd 1G
+> for its own operations, and the rest  is PMEM.
+> 4. Passing the VMs worked by suspending them in the old kernel.
+> 5. The other CPUs are onlined in the new kernel (thus killing the old ker=
+nel).
+> 6. The VMs are resumed in the new kernel.
 
-This reminds me of Jailhouse, a partitioning hypervisor for Linux.
-Jailhouse uses virtualization and other techniques to isolate CPUs,
-allowing real-time workloads to run alongside Linux:
-https://github.com/siemens/jailhouse
+Exactly.
 
-It would be interesting to hear your thoughts about where you want to go
-with this series and how it compares with a partitioning hypervisor like
-Jailhouse.
+>
+> While this approach was easy to get to the experimental PoC, it has
+> some fundamental problems that I am not sure can be solved in the long
+> run, such as handling global machine states like interrupts. I think
+> the Orphaned VM approach (i.e., keeping VCPUs running through the Live
+> Update procedure) is more reliable and likely to succeed for
+> zero-downtime kernel updates.
 
-Thanks,
-Stefan
+Indeed, migrating hardware resources gracefully is indeed challenging
+for both VM or multikernel, especially when not interrupting the applicatio=
+ns.
+I am imagining that KHO could establish a kind of protocol between two
+kernels to migrate resources. The device-tree-inspired abstraction looks
+neat to me, it is pretty much like protobuf but in kernel-space.
 
->=20
-> Signed-off-by: Cong Wang <cwang@multikernel.io>
->=20
-> ---
->=20
-> Cong Wang (7):
->   kexec: Introduce multikernel support via kexec
->   x86: Introduce SMP INIT trampoline for multikernel CPU bootstrap
->   x86: Introduce MULTIKERNEL_VECTOR for inter-kernel communication
->   kernel: Introduce generic multikernel IPI communication framework
->   x86: Introduce arch_cpu_physical_id() to obtain physical CPU ID
->   kexec: Implement dynamic kimage tracking
->   kexec: Add /proc/multikernel interface for kimage tracking
->=20
->  arch/powerpc/kexec/crash.c          |   8 +-
->  arch/x86/include/asm/idtentry.h     |   1 +
->  arch/x86/include/asm/irq_vectors.h  |   1 +
->  arch/x86/include/asm/smp.h          |   7 +
->  arch/x86/kernel/Makefile            |   1 +
->  arch/x86/kernel/crash.c             |   4 +-
->  arch/x86/kernel/head64.c            |   5 +
->  arch/x86/kernel/idt.c               |   1 +
->  arch/x86/kernel/setup.c             |   3 +
->  arch/x86/kernel/smp.c               |  15 ++
->  arch/x86/kernel/smpboot.c           | 161 +++++++++++++
->  arch/x86/kernel/trampoline_64_bsp.S | 288 ++++++++++++++++++++++
->  arch/x86/kernel/vmlinux.lds.S       |   6 +
->  include/linux/kexec.h               |  22 +-
->  include/linux/multikernel.h         |  81 +++++++
->  include/uapi/linux/kexec.h          |   1 +
->  include/uapi/linux/reboot.h         |   2 +-
->  init/main.c                         |   2 +
->  kernel/Makefile                     |   2 +-
->  kernel/kexec.c                      | 103 +++++++-
->  kernel/kexec_core.c                 | 359 ++++++++++++++++++++++++++++
->  kernel/kexec_file.c                 |  33 ++-
->  kernel/multikernel.c                | 314 ++++++++++++++++++++++++
->  kernel/reboot.c                     |  10 +
->  24 files changed, 1411 insertions(+), 19 deletions(-)
->  create mode 100644 arch/x86/kernel/trampoline_64_bsp.S
->  create mode 100644 include/linux/multikernel.h
->  create mode 100644 kernel/multikernel.c
->=20
-> --=20
-> 2.34.1
->=20
+Although I believe multikernel helps, there are still tons of details neede=
+d
+to consider. Therefore, I hope my proposal inspires people to think deeper
+and discuss together, and hopefully come up with better ideas.
 
---wJMNkTvE9gcHAHlx
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmjNypoACgkQnKSrs4Gr
-c8jDiAgAg+cJ1RtnT6VtPZ4iFMdU8taG28VItTHeoGu8v+SDyVctvyYYKUHpmW1x
-YZGWILjIz9LhjSqbVktIdavzMa/cGZBkWz6oWEdeEu0+uIUarlX3xQnSxSaHP9Js
-anZypzajok9Byzw7uQBHs2piynVAUEo34cMwq0jEGFXj817RLsx5mObptUJEFpgE
-mo3h4uzt6Pn8ASWpYve3zdr1TgpafXg1ljHoYpSR3CXjaUWfD1ycpFFag/k9l9Qv
-XPpGN8iviPGt5BwMvIvlMRKlc3vVg+l7wFwiunZpJ8ehsVh+Sj23ji0HKVNS94X5
-0kD3uiFZX97QuMHLzUX6QlNNzFyQNQ==
-=3ZjT
------END PGP SIGNATURE-----
-
---wJMNkTvE9gcHAHlx--
-
+Thanks for sharing your thoughts.
 
