@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BBD9CAC5A7
-	for <kexec@archiver.kernel.org>; Sun, 21 Sep 2025 05:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AAC8CAC5AD
+	for <kexec@archiver.kernel.org>; Sun, 21 Sep 2025 05:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=JNXQ7XIu0fz9LKitfDfRv/5GsRWOvEXSnCvtX8rTplA=; b=auAb+18ITGXB2Ziad6hQhB+Vo9
-	gGSzSM67stxcFV9E9Krha8hp16F9X6rHce1EgpXDqdGDKkja4cP3luxkgWvjDI8IJ+EyyEt/ZucV6
-	cSjPpQDJSWhMyGTJk0ED/moK/JgOMCwxlz45goAgUsaGWiW5twpr+lim/UokpNibKpjnam2y4nLBe
-	IHZ7OvkNWireDtZmfe27KyikbA0b6nPEWVZQLiNS02kg4eQ6JbpsxPxzKN7EIutZe+dqhlk6gZabh
-	GuQuTxB5KtElahmr5lntPqRy4AF+CfDQ8eN6TdnjKsE2/TQeOlmZXXB19O6WI8MijFF/r7dEwgABM
-	H4LhnBWg==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=b0UkgIRRiUCJy7C6Y062+omUJT2kSrmXXwq/Mgn5w2Q=; b=v43qJAXQy5wCShNWiCLucT/6kc
+	zwnBSM/6Mlk0iBF4DiYseFbRIOQ6wOl4132IOIEXF9VsogBCARzHSLvW/iNavFNdAbzrtUh89GB/I
+	YRVJ+rWi+HwjPUKhBiuW2ykp0JGXNnXunv2mY0pjvEPSXAspfHiQK30qU6HOlltDUDmzuZk+BRvdS
+	Z8WKXqc7nR5BZVquI35tjTCqniTNs86geAlGJJVkRzpLaXbSX0OzPrlBQjmNZYGqVP0qp78kFYE+b
+	l5rPRRTjGNZ5AHyqD8ZoAb/bgCg2JGEK3kB8wARBUrgVC7D4up+ENNM3GjQ4oTjBgT0iw02HG0uIg
+	bs4KgObQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0Csp-00000006h9g-2fO6;
-	Sun, 21 Sep 2025 05:45:11 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1v0Csr-00000006hAM-3pAD;
+	Sun, 21 Sep 2025 05:45:13 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0Csn-00000006h8x-18DT
+	id 1v0Cso-00000006h9N-3evx
 	for kexec@lists.infradead.org;
 	Sun, 21 Sep 2025 05:45:10 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 42D1442BAD;
+	by tor.source.kernel.org (Postfix) with ESMTP id F1ED460194;
+	Sun, 21 Sep 2025 05:45:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B61C4CEF7;
 	Sun, 21 Sep 2025 05:45:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA553C4CEE7;
-	Sun, 21 Sep 2025 05:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758433506;
-	bh=nwWluE/HYzt54TgZr7bT7uoFJDOTM+N37KaOXrsGYlQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cl8tO/bRb/V9ewUSs4La8qYHpF4Z3+KoUTgHWBULmErJDhTF7Ix/56fjyZ5NbYHey
-	 Yzzv4ucletwMmo+1u31sQpVt8TR4cPkcSaFdi6i3+UlzIFYCuNHoOkfYcZhA3YpH/5
-	 BbbChUN7TmVGwECjW8b1FtMXzpt2PEbWepqoBSqCLctJleGlZcu3U1krwxKmx32cFm
-	 E/A9FM2fVN+MK/GVLAlqOcSOSwPjMLVD4vTs9rJ1+vIh+oFqMrV0KvQprMriZcXnqS
-	 JE03KZoBV7XjhxPmqc2RJtDfVItMEFhdO0cl2LUIYyWRII2eFJ7gW6mPIahoOwP6rC
-	 I65J0fb9eQJRg==
+	s=k20201202; t=1758433509;
+	bh=qKv5CzwLLtDXYj45Vz9NYuIeSEVLwG4QLtqMDnI6e28=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=n+GIwKUZiWi4CgoEKu3KIu0wCOseJatAQSLSbZrUrAd9QoU8dee7yMHTGBzMSl3ED
+	 ghUNJKQmWMNsRQsovFspvdM74/loQb6s8wVAyzRVLnudXh9mi6Y9XAD4BTFIqTrpxV
+	 YpM1FDAM8o9cVrU53BDIL8rEfMKrl3lifCqVMPTyMJMNm6vheOM0whKLPYEpG5SKzJ
+	 9WwAHXW99DNpa7Mnab+L4PVv6op2Lmf1qcubLtxBjpv2xAQeajXVNojqll7cN0T3pX
+	 Dv7AmV7DMnJJuGJ0nmafCjjorQFg5WhjF1blob4QalpCms1ubzOs2Ozz77S1JYfXRf
+	 iGTaBzeol9Tbw==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -55,16 +55,14 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/4] kho: add support for preserving vmalloc allocations
-Date: Sun, 21 Sep 2025 08:44:54 +0300
-Message-ID: <20250921054458.4043761-1-rppt@kernel.org>
+Subject: [PATCH v5 1/4] kho: check if kho is finalized in __kho_preserve_order()
+Date: Sun, 21 Sep 2025 08:44:55 +0300
+Message-ID: <20250921054458.4043761-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250921054458.4043761-1-rppt@kernel.org>
+References: <20250921054458.4043761-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250920_224509_364865_A83C1204 
-X-CRM114-Status: UNSURE (   9.72  )
-X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,65 +79,109 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Hi,
+Instead of checking if kho is finalized in each caller of
+__kho_preserve_order(), do it in the core function itself.
 
-Following the discussion about preservation of memfd with LUO [1] these
-patches add support for preserving vmalloc allocations.
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+---
+ kernel/kexec_handover.c | 55 +++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 29 deletions(-)
 
-Any KHO uses case presumes that there's a data structure that lists
-physical addresses of preserved folios (and potentially some additional
-metadata). Allowing vmalloc preservations with KHO allows scalable
-preservation of such data structures.
-
-For instance, instead of allocating array describing preserved folios in
-the fdt, memfd preservation can use vmalloc:
-
-        preserved_folios = vmalloc_array(nr_folios, sizeof(*preserved_folios));
-        memfd_luo_preserve_folios(preserved_folios, folios, nr_folios);
-        kho_preserve_vmalloc(preserved_folios, &folios_info);
-
-[1] https://lore.kernel.org/all/20250807014442.3829950-30-pasha.tatashin@soleen.com
-
-v5 changes:
-* rebase on mm-new of September 17
-* use kho_restore_pages() in kho_restore_vmalloc(). Required to resolve
-  a conflict with "kho: make sure page being restored is actually from KHO"
-* use more descriptive local variable names in kho_restore_vmalloc()
-
-v4: https://lore.kernel.org/all/20250917174033.3810435-1-rppt@kernel.org 
-* rebase on mm-stable
-* use 'struct kho_vmalloc' as preservation metadata instead of storing it in the first chunk
-* separate KHO flags from VM_ flags
-* unreserve vmalloc pages on error
-* add checks for under- and overflow of preserved metadata
-
-v3: https://lore.kernel.org/all/20250908103528.2179934-1-rppt@kernel.org
-* rebase on mm-unstable
-
-v2: https://lore.kernel.org/all/20250905131302.3595582-1-rppt@kernel.org
-* support preservation of vmalloc backed by large pages
-* add check for supported vmalloc flags and preserve the flags to be
-  able to identify incompatible preservations
-* don't use kho_preserve_phys()
-* add kernel-doc
-
-v1: https://lore.kernel.org/all/20250903063018.3346652-1-rppt@kernel.org
-
-Mike Rapoport (Microsoft) (4):
-  kho: check if kho is finalized in __kho_preserve_order()
-  kho: replace kho_preserve_phys() with kho_preserve_pages()
-  kho: add support for preserving vmalloc allocations
-  lib/test_kho: use kho_preserve_vmalloc instead of storing addresses in
-    fdt
-
- include/linux/kexec_handover.h |  33 ++-
- kernel/kexec_handover.c        | 361 +++++++++++++++++++++++++++++----
- lib/test_kho.c                 |  41 ++--
- mm/memblock.c                  |   4 +-
- 4 files changed, 381 insertions(+), 58 deletions(-)
-
-
-base-commit: c565f9816932dc8d164bd8c69acf077840565ce7
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 555488eb1a18..85f1bf38b123 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -107,6 +107,29 @@ struct kho_serialization {
+ 	struct khoser_mem_chunk *preserved_mem_map;
+ };
+ 
++struct kho_out {
++	struct blocking_notifier_head chain_head;
++
++	struct dentry *dir;
++
++	struct mutex lock; /* protects KHO FDT finalization */
++
++	struct kho_serialization ser;
++	bool finalized;
++};
++
++static struct kho_out kho_out = {
++	.chain_head = BLOCKING_NOTIFIER_INIT(kho_out.chain_head),
++	.lock = __MUTEX_INITIALIZER(kho_out.lock),
++	.ser = {
++		.fdt_list = LIST_HEAD_INIT(kho_out.ser.fdt_list),
++		.track = {
++			.orders = XARRAY_INIT(kho_out.ser.track.orders, 0),
++		},
++	},
++	.finalized = false,
++};
++
+ static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, size_t sz)
+ {
+ 	void *elm, *res;
+@@ -165,6 +188,9 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+ 
+ 	might_sleep();
+ 
++	if (kho_out.finalized)
++		return -EBUSY;
++
+ 	physxa = xa_load(&track->orders, order);
+ 	if (!physxa) {
+ 		int err;
+@@ -667,29 +693,6 @@ int kho_add_subtree(struct kho_serialization *ser, const char *name, void *fdt)
+ }
+ EXPORT_SYMBOL_GPL(kho_add_subtree);
+ 
+-struct kho_out {
+-	struct blocking_notifier_head chain_head;
+-
+-	struct dentry *dir;
+-
+-	struct mutex lock; /* protects KHO FDT finalization */
+-
+-	struct kho_serialization ser;
+-	bool finalized;
+-};
+-
+-static struct kho_out kho_out = {
+-	.chain_head = BLOCKING_NOTIFIER_INIT(kho_out.chain_head),
+-	.lock = __MUTEX_INITIALIZER(kho_out.lock),
+-	.ser = {
+-		.fdt_list = LIST_HEAD_INIT(kho_out.ser.fdt_list),
+-		.track = {
+-			.orders = XARRAY_INIT(kho_out.ser.track.orders, 0),
+-		},
+-	},
+-	.finalized = false,
+-};
+-
+ int register_kho_notifier(struct notifier_block *nb)
+ {
+ 	return blocking_notifier_chain_register(&kho_out.chain_head, nb);
+@@ -717,9 +720,6 @@ int kho_preserve_folio(struct folio *folio)
+ 	const unsigned int order = folio_order(folio);
+ 	struct kho_mem_track *track = &kho_out.ser.track;
+ 
+-	if (kho_out.finalized)
+-		return -EBUSY;
+-
+ 	return __kho_preserve_order(track, pfn, order);
+ }
+ EXPORT_SYMBOL_GPL(kho_preserve_folio);
+@@ -743,9 +743,6 @@ int kho_preserve_phys(phys_addr_t phys, size_t size)
+ 	int err = 0;
+ 	struct kho_mem_track *track = &kho_out.ser.track;
+ 
+-	if (kho_out.finalized)
+-		return -EBUSY;
+-
+ 	if (!PAGE_ALIGNED(phys) || !PAGE_ALIGNED(size))
+ 		return -EINVAL;
+ 
 -- 
 2.50.1
 
