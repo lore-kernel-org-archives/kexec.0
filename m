@@ -4,64 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53366CAC5A5
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 05:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85FE3CAC5A7
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 13:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8Onfd9zYeL+OEf7fiK3TSj5PyIeGLL4m+H+3TpOEWGw=; b=EguJmyFV+wt1AO3UbVMnvxWUpy
-	Uz8k0xFp+rIyyIhOZTkqzOrvQE/gPdszDvFf9Fb1u46az245qb0HaVozhhINrB2ffoabdCYfyjD9B
-	SG5X1XlHQj+gjnaq4FwfPMv4uoKpqMcsjsDkKpTQM/w27gXyIlKICPioiZvRISVFa2jgZXPxhdGE1
-	OG+9iOKeIKmfT9qnLw9HHeWYucZxCRuk/F6EYja+ywf/kx6Ik5hrxpk1CBlb7PCw6+fWRU3r1xi2i
-	6RLSsCH2QtOh6/sz7tk82Ka4KsRCPVUUiioXH5jTkgkRbxpn9fIH9ZDGDTSiyNubPcpfook9QuDBN
-	bXaKv5WA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=CF1w1tB7AX8W93nv4m6JdkaoLtcqErW1ZVVfNtO6E+o=; b=pGnQDpQqHq6ofXgC9MEs1AL7fQ
+	LrYYdO+75CbScLskwspKx4YDAXSfZOzT/foA/cZg+PBUq5jTkhq9UMg7Fl6dQ0gkao0hrIEOJ46jU
+	a/ckNCzIDmFYI4W0VSIn92tbkfgWnoCqotA+YUW7Q/WbCv700woRCJhgJsMHdxggXX2U16mnrMOP7
+	8/4fNE3fceYI9iRyZnbwTf/EHFT1FjI9zoZdu8lzWB45ZcKSpd9pHl7J+/SthX9bpgSO1rug9Xlue
+	4zMH88LmVKJiJSfeo/m7N41h9pu/CncUO8KCQ5lEyqUellw16svkKnY3mPPEgxaqpmgUBuOJrSEAM
+	3f5D2teg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0vDJ-0000000CNMO-2Vg2;
-	Tue, 23 Sep 2025 05:05:17 +0000
-Received: from out-180.mta1.migadu.com ([95.215.58.180])
+	id 1v13Vd-0000000DcP1-42yZ;
+	Tue, 23 Sep 2025 13:56:45 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0vDG-0000000CNL7-2ISP
+	id 1v13Vc-0000000DcOQ-0IjJ
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 05:05:16 +0000
-Message-ID: <188710e0-6683-4bc3-af64-9ce1e8ae4b32@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758603911;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Onfd9zYeL+OEf7fiK3TSj5PyIeGLL4m+H+3TpOEWGw=;
-	b=wfMr0eHeLbrLQ3sqtgI2OVXU+fV60p1sUB/DRs87DoUK/bMRNC4UeVwc39oy5L5HYtrIPB
-	UuGFzBIT8H/WQDm1hHKQaQgxnfYPN588eHXLx3TqjzoVP1ycc6nan7+cJ3fYu108XfXhnz
-	576/7u+y7X6gLaAvm4NFwihKHjXOiNo=
-Date: Mon, 22 Sep 2025 22:04:52 -0700
+	Tue, 23 Sep 2025 13:56:44 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7FCE36024D;
+	Tue, 23 Sep 2025 13:56:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A6EC4CEF5;
+	Tue, 23 Sep 2025 13:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758635803;
+	bh=3zNG1VCnUeJ4Ybzc3kBTwVMsoJggsdS9/3RSWxB0cVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bv7HWdsFe/Qt/ot9I2lTupAKrmE/X+vlhq/lbKPebqEwPqlq1cx2bfcVOqUR989ZL
+	 vZf6CdweZlNI7AJOiCYYyaLi+5U/PToTo5u6MtuOY0kHQa3/j9nyqg9i1j8Qo1GPAR
+	 UNjOXmd2wuYLnfXmn2iKLdJXJVKf/9/9GeVlDerNfCV/LVPnaKR7Q5Te/PSHt6Ceg5
+	 FOqk3oVE8Y+vq88zGqVfboAx6ewXI10b8OSPleIteDTuxydfpLkDDaWsGTT0fLBOoP
+	 wnVMqxZYDg0/UbbvgBtkWZdnZtWyG6IRRcSwEhvBMtLd/c3/hkpLljD6EimLNlIZZP
+	 0oubweu+S3UUQ==
+Date: Tue, 23 Sep 2025 14:56:39 +0100
+From: Simon Horman <horms@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Askar Safin <safinaskar@zohomail.com>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	kexec <kexec@lists.infradead.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec
+ doesn't work on my laptop
+Message-ID: <20250923135639.GA1084957@horms.kernel.org>
+References: <20250819213014.908757-1-safinaskar@zohomail.com>
+ <19972b2566e.1115458b7339833.495097856732093802@zohomail.com>
+ <aNICt3e3Fg0iwxvv@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 3/4] kho: add support for preserving vmalloc
- allocations
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
- Chris Li <chrisl@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250921054458.4043761-1-rppt@kernel.org>
- <20250921054458.4043761-4-rppt@kernel.org>
- <8f893019-bd87-4f54-8238-acd8fdeed051@linux.dev>
- <20250922160836.8d0dc984ff0986b3809c9ab0@linux-foundation.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250922160836.8d0dc984ff0986b3809c9ab0@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250922_220515_265447_BFB3F792 
-X-CRM114-Status: GOOD (  12.69  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNICt3e3Fg0iwxvv@MiWiFi-R3L-srv>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,35 +73,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue, Sep 23, 2025 at 10:15:19AM +0800, Baoquan He wrote:
+> On 09/22/25 at 10:31pm, Askar Safin wrote:
+> > Simon Horman, so what? This patchset is still not merged.
+> 
+> Not sure if Simon minds the patch log, especially in patch 1. I saw the
+> 'TL;DR' first time in a patch log.
+> 
+> For a problem solving patch, we better provide information like
+> 
+> -what is the problem;
+> -why it's caused;
+> -how you fix it;
+> 
+> Don't tell too long story out of the space. Refering to other already
+> merged commit's log is also a good way to learn that.
+> 
+> The fix is absolutely a great one.
 
-在 2025/9/22 16:08, Andrew Morton 写道:
-> On Mon, 22 Sep 2025 15:31:42 -0700 "yanjun.zhu" <yanjun.zhu@linux.dev> wrote:
->
->>> +int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation)
->>> +{
->>> +	struct kho_vmalloc_chunk *chunk;
->>> +	struct vm_struct *vm = find_vm_area(ptr);
->>> +	unsigned int order, flags, nr_contig_pages;
->>> +	unsigned int idx = 0;
->>> +	int err;
->> This is a trivial issue. I’m not sure whether RCT (Reverse Christmas
->> Trees) is used in the Linux MM mailing list.
-> Not as far as I know.  Some like it.
->
-> If I was to have a preference I'd suggest that things be laid out in a
-> logical order rather than by column count.  Group like things together,
-> avoid use of unintialized storage in initializers(!).
-
-Thanks for your input. I consider this a trivial issue. RCT will help 
-make the local variables more organized. Since the Linux MM code does 
-not currently use RCT and prefers to group similar logical variables and 
-initialize these local variables, I am fine with the current approach.
-
-Yanjun.Zhu
-
->
--- 
-Best Regards,
-Yanjun.Zhu
-
+Sorry for the extended delay.
+I am looking over this now.
 
