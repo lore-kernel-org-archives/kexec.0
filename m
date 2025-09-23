@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E730CCAC5AC
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 16:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FDD7CAC5A7
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 16:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xMXDQwbG36YnXlKMwzk4DpC6B2Z988FbL2ZsCj2Yxtg=; b=M9MynIS22gXKfCOK05+DCHF+Uq
-	4oJ1zhejyI+Z9uTl8jnPy4VcpDCXcBfVCGIJIF9mjRnIwaCpXnVWI5jBPt30GAZG69+6wg+FpYw3d
-	btJq9A3ZfvqReofypd2QCsKLia0BtzJcU9yZQLtpAFJEPrV0ZR8KqVvDxRAFYGFWesJoXRMLugKL7
-	/bd12odV0d7OmX/2wbugJCDYsHZQNdFsRcCwYejltImzYSojerpFEuWMbXJOnbiQhaK3iLaLnkLMj
-	0hnztyS+1Xu6T+7Lxx9G5zQV4WgPtJ50qfXCIWXwRxmI1YHuc/vrvpMohLvTCcq6qYXlu2FoFBoOA
-	xPRJAS+g==;
+	bh=XafgPKTS6uVeZqg14MUmlXdf5k9uAExktP9DAQc6Wno=; b=BDmDw9SrPGseVfMaSx2Jgc1SmZ
+	yob9tb51yfamVq+7hqpqOzPpk2U6fI20d5Juw1A607WNBQFQXm7/J3IlTUeM4AKLWzaFgx1nBBpMA
+	moKvBuHgAXrImGfQyjO7oJ3xX+FSs+op8uN/h3pcNjerp1zHfKoalkHx4C6gg8zO9Al2NbexmNvSX
+	XJrpW+RYWS6Zb60J0/v5xy5imiqpsCL3XwMnUvzVqVqFd4azWIZND4MkfL2AI5YnYOixGBgbhKZr5
+	1tHQoJuvcsHzCbwMwGNf6Esgop9rUqacki0z7QCrt/beTcGPty7VbMixcxWSf+tw060O/kGY8JpLg
+	oaaTGb5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v16Df-0000000EJSa-2Uww;
-	Tue, 23 Sep 2025 16:50:23 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1v16F2-0000000EJbC-0xuI;
+	Tue, 23 Sep 2025 16:51:48 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v16De-0000000EJS3-3KaO
+	id 1v16Ez-0000000EJam-34iQ
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 16:50:22 +0000
+	Tue, 23 Sep 2025 16:51:46 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3F7466027B;
-	Tue, 23 Sep 2025 16:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A51C4CEF7;
-	Tue, 23 Sep 2025 16:50:21 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2CB6344715;
+	Tue, 23 Sep 2025 16:51:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A631C4CEF5;
+	Tue, 23 Sep 2025 16:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758646222;
-	bh=NwfV7isk/q+MFxGt7WrkLmnmPvO7ZZwL3/2S98/b8ao=;
+	s=k20201202; t=1758646305;
+	bh=mQG0BLn09doLZgKIxhmEOCbAqtuJYfg+WmTgeqeWubg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dDKcl1Q+X2ZHpDsl7juHxzvA4yKCeiq8+JvmgaZVt8f49q3jut2ga9Wyyd/Ecs/Xi
-	 kAkWFVc5gJNmeTkAsMva1hwokHfy/a4/pJDECTiDJisdp278qRlNZk+84dCKh9n+W3
-	 OYHVq5cQVWBi+j+Qafmdjx/txoQuZnoSgTkWTPEffXJKR2wtT/m4k/G6msQitSpZzo
-	 0VxdEwb/dxDK7rUp8yZU3+Thzk9o7RpjS7YHQ9daA1r9Vg6IJ9omiQnsAHXu2Wz+Ny
-	 A/yrzQy23Y7fM7tCus13186PX5ISwGBGxNhz2Ip7NZeYjTcH7HJPRWYbKqZFFHq5IQ
-	 /uO5PdyA9kJNQ==
-Date: Tue, 23 Sep 2025 17:50:19 +0100
+	b=dskjiY5Y4YAAaShlGNnMT7WdObnSm6ix3EjYQruxAM9BIN63Jt1g+eaGsapjWVMSt
+	 dsFnyg+/gkrxHdskBZ9XTiCn1DTw+SjLCfkW0zrM+/a1vPlQylp9r43S+ullTBw0dn
+	 kTNXIwMIIu1TZMZZTtbrBIOgGLjU6ncpdU7baYrel3FtrH1UmMBCl9YoqqqrHYBAlF
+	 ePV2nj9+2UtMByM6YO1FJNo5YqyzgbMRL3ZqFC4IYX3kQKiyrsy906VVu1y67EGnMF
+	 4EPG4F879c4DmGkoK/cT+Qcv7TFLzfnKJKgwjUYK/hP2CRInZAgRVn3KhrEd4dGn/Y
+	 wSCD97C3a7Zvg==
+Date: Tue, 23 Sep 2025 17:51:41 +0100
 From: Simon Horman <horms@kernel.org>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH v2] Make the segment base match pinned section address
-Message-ID: <20250923165019.GC1084957@horms.kernel.org>
-References: <20250905032252.1216827-1-raj.khem@gmail.com>
+To: Youling Tang <youling.tang@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>, kexec@lists.infradead.org,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH v2 00/10] Fix and improve the LoongArch implementation
+Message-ID: <20250923165141.GD1084957@horms.kernel.org>
+References: <20250916014655.841632-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250905032252.1216827-1-raj.khem@gmail.com>
+In-Reply-To: <20250916014655.841632-1-youling.tang@linux.dev>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250923_095145_815784_EC239FDE 
+X-CRM114-Status: GOOD (  12.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,37 +71,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 04, 2025 at 08:22:52PM -0700, Khem Raj wrote:
-> ET_EXEC uses image base of 0x400000, but the build forces
-> section VMAs like .text = 0x10000. LLD now errors when any
-> section address is below the image base unless you explicitly
-> set the base. (Older LLD tolerated it.)
+On Tue, Sep 16, 2025 at 09:46:45AM +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
 > 
-> To fix this
+> - Add kexec_file support for LoongArch.
+> - Fix and improve the LoongArch implementation.
+> - Fixed the handling of crashkernel parameters when using --reuse-cmdline.
 > 
-> use a tiny linker script to keep .text at 0x10000 and avoid .note overlap
+> Kernel support for kexec_file was introduced by the patch detailed in Link [1].
 > 
-> With hardcoded -Ttext,0x10000 and newer toolchains emitting
-> .note.gnu.property before .text, the link can fail with an overlap.
-> Provide a minimal linker script that:
->   - sets the image base to 0x10000,
->   - places .text first at exactly 0x10000,
->   - moves .note.gnu.property after .text,
->   - optionally fixes .bss at 0x12000.
+> Link[1]:
+> https://lore.kernel.org/loongarch/20250903030100.196744-1-youling.tang@linux.dev/T/#t
 > 
-> Works with both ld.bfd and LLD 21+.
+> Changelog:
+> v2:
+>  - Add kexec_file support for LoongArch.
+>  - Correct email address and Signed-off-by.
 > 
-> Fixes
-> | x86_64-yoe-linux-ld.lld: error: section '.text' address (0x10000) is smaller than image base (0x400000); specify --image-base
-> | x86_64-yoe-linux-ld.lld: error: section '.bss' address (0x12000) is smaller than image base (0x400000); specify --image-base
-> 
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ---
-> v2: Use a tiny linker script instead of trying to use linker options like -Ttext
->     to make it portable across BFD linker and LLD
+> Youling Tang (10):
+>   kexec: Handle removal of multiple 'crashkernel' parameters
+>   LoongArch: Fix comments
+>   LoongArch: Terminate the cmdline string using '\0'
+>   LoongArch: Enforce relocatable kernel check for crash dump
+>   LoongArch: Change initrd allocation to top-down
+>   LoongArch: Fix the use of loongarch_image_header in ELF format
+>   LoongArch: Add pe_hdr->machine check for pei format images
+>   LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
+>   LoongArch: Add kexec_file_load syscall
+>   LoongArch: Remove 'kexec_file' cmdline parameters when using
+>     --reuse-cmdline option
 
 Thanks, applied.
 
-- Make the segment base match pinned section address
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=efb97b509b1a
+- LoongArch: Remove 'kexec_file' cmdline parameters when using --reuse-cmdline option
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=19d1b275c649
+- LoongArch: Add kexec_file_load syscall
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=f1d66280a48b
+- LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=b7c35c42c3db
+- LoongArch: Add pe_hdr->machine check for pei format images
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=13e701e72ecf
+- LoongArch: Fix the use of loongarch_image_header in ELF format
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=919005b26c8f
+- LoongArch: Change initrd allocation to top-down
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=2d3f8185f5d7
+- LoongArch: Enforce relocatable kernel check for crash dump
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=024073e74dc7
+- LoongArch: Terminate the cmdline string using '\0'
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=d9c82c188646
+- LoongArch: Fix comments
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=e2bfd6df147c
+- kexec: Handle removal of multiple 'crashkernel' parameters
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=39ba2bd288af
 
