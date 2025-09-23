@@ -4,81 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8686CAC5A5
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 17:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CE8ECAC5A5
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 17:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Si+gRDqfMlxuN0KqN3KFYYBkczK7pbhlc1HLNzDjYGg=; b=j/GYkqi4uv5PBvheLO2oI1UP63
-	eLqzwUh060TfVo9ilKuM2ePAR4RISCUERfDQuEhTlO9KjrpXzltGAaNc6cfO2yJy3cF/J1D9bLhYq
-	dH+at90vu5NS0Mqok0ZB7xhlTSxDfKNQsvVdj7ubtnlvoFup9unbobi0v58StlLaz5a2XXDSSnQKJ
-	Y47e6kRCW+OPX3j8zlbADan/LKyJ0gr2RAN6TXRjfXIMd9bVwUhvYR8485tp5LhqTt4i2ePyZYbq8
-	Xls8q71k8jNf0D5rzTr/ZETaIkKMgE4QEkIaUEVe6O05oWuUnOKh/lHVLURaiDSPPThkVauz2NaLT
-	ZA7HFbqQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=; b=zzhTyuqUQStNWHWy6oZeIVk0Fj
+	dDmMLKYf/a9uD7GE9fP6+WhuhxAzKMI8UHNIF32xGJRplMj7//kYIzhcjRizjaF2F57dhHLgooZ18
+	XKRTRHXbzS4V3Th+wLcPdbE5VBNDeIClekdgq35LoFsi9w1l/wD+YH1bc4s0jiN/Q8KGYtg3ynjh7
+	lQKS08xIYsPrtNSP4GGUkCSUCHXo9KNkbbUCcpnDWdNFduqNmPwI+7l+FAT7WtKs376LPTm/dGHz5
+	/yOLtEtKfAemWgbmZYzJlR00hfXQmACEPECE9aMRzC4ZUfGpvyD2l22asAxAKw1xMen46pHdNRkX5
+	yTW6ZjiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v16Sn-0000000EL4j-0snP;
-	Tue, 23 Sep 2025 17:06:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1v179c-0000000ES9o-0cd7;
+	Tue, 23 Sep 2025 17:50:16 +0000
+Received: from mail-wr1-f47.google.com ([209.85.221.47])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v16Sj-0000000EL3A-0Mws
+	id 1v179G-0000000ERon-3azc
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 17:05:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758647155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Si+gRDqfMlxuN0KqN3KFYYBkczK7pbhlc1HLNzDjYGg=;
-	b=DnXjNFVwpzCm6XH0AOVNqDfBPmiyHV3ljem5nk9UqOse3WyhhQdhx9inDJ/NYrvDIfHlkr
-	iYTcVW5kuNVjJVSNfyCaenJfGqI3H0NZniIgMAjEEmfCgUm8JZOvD5woGdBK0Co2QGTzIf
-	A7qzrbcqXLh5Vil121x+PaEaP0xDFD8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-456-r0ZRWA2iMGiiOTICcbLMBg-1; Tue,
- 23 Sep 2025 13:05:50 -0400
-X-MC-Unique: r0ZRWA2iMGiiOTICcbLMBg-1
-X-Mimecast-MFC-AGG-ID: r0ZRWA2iMGiiOTICcbLMBg_1758647148
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7C0D1800372;
-	Tue, 23 Sep 2025 17:05:47 +0000 (UTC)
-Received: from localhost (unknown [10.2.17.69])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B878D19560B1;
-	Tue, 23 Sep 2025 17:05:46 +0000 (UTC)
-Date: Tue, 23 Sep 2025 13:05:45 -0400
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com,
-	Cong Wang <cwang@multikernel.io>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org, multikernel@lists.linux.dev
-Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture
- support
-Message-ID: <20250923170545.GA509965@fedora>
-References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
- <20250919212650.GA275426@fedora>
- <CAM_iQpXnHr7WC6VN3WB-+=CZGF5pyfo9y9D4MCc_Wwgp29hBrw@mail.gmail.com>
- <20250922142831.GA351870@fedora>
- <CAM_iQpWO71vSV_0qXiUYeKYZMYF0xWNz8MrUVRkqKwDEtQvKqA@mail.gmail.com>
+	Tue, 23 Sep 2025 17:49:56 +0000
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b9edf4cf6cso5238799f8f.3
+        for <kexec@lists.infradead.org>; Tue, 23 Sep 2025 10:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758649793; x=1759254593; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=;
+        b=CRfOw0z7VS7Tnm4kNPDe0+Y9oZuIVsZyr4tPaXgtXtSPHZIUZzpOIZ8Vvdbhfa7rt5
+         NTMn+08QLaEAmIPaLTZwkg3RtMuv71mze2Nc1OcQSxUnM8SD0CN6G6evxnUz51YdUK1M
+         TyN0LNKdWNpR/4nK9D9SEP/7JybxbyQekTbFWSvcXjlaMWPL9EOzCkPj3C+QVbXntATL
+         9Qes4D6zB6czt5/Leu/VsEyVAW+757a5AFaxNtyJ6iXSkBLPltyyI9OFe2FXU7uLGE20
+         P+PfyeumH6+o/l59BzRMEUd0PjEU7cyeSPb9iyIdc8kGI6IZmUwGZ0hGLA7ZpuBmF5+K
+         Zq4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758649793; x=1759254593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=;
+        b=M5KjDbGpK9m8zLclKzSUz8m4Wx/AKIw3ic+nb2ZZuJjzfzRLyR/jfK7k4XVcqfzprY
+         ePvK0Z1x5mtm5N+jDqqCYgGZ8LbwHIK3MI3Ac3/tfdTX+xcnGgm12VUjCJerwN9B9p6s
+         CwbenGjsFILfEImO3LUXTpNenNor4pchRvLGR5G7bpRxXXyq8hdpEg6l/g+gBr71sYQ6
+         UQBEFd1FyFAbh74nM7CcjPhd3C1b+F6AQcqmfzVHVDG6Dn1ebbSNhfl3pHLABWPrNIw6
+         kGp3MtYQ2T9O04IZdXxStRmUSxMNE9A8TDpix36Ocg8rp88F5lZy/UVvqjCdnTz9FSe8
+         fC1A==
+X-Forwarded-Encrypted: i=1; AJvYcCW2ztli+dHkJZYqQSSn58c1VjkvSvXbHZL8VMg4L2qcXccPhsanj//hwY+MFlWMULUDB+lWKA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzz7CRlfMva8c6ykCOd/1r89ZzaCYBgr9Sr3MqoeCzoICT6XTvJ
+	K1HBksuM4Eo+eNwCXGrNtBtfSHiLgWGCd/ebT5eJFG3T7p3YEb0VUel/V+QomFSxPJCO6Ga2TKN
+	bC4/By+kRmfh+HIyvbvaReHq7/oBoA7Q=
+X-Gm-Gg: ASbGnctCsbdGGGk2kXUlnKcJRmH0O0zQ8ieq9INeSmlnCyAbjNLbYYobkggVY3ICTdy
+	cFR7ZrEUYE6H6DUZJ9m74XOyDeIo+T9PRMxAAibl6tSu7DuF8V9DXfuRKUV6GLqBx0PdDjbvNqn
+	GWGtbCJHMKAM0q3ofiuXW86CeHCJKsIfvamWKQFCzH+je+1ly4TY80AYrgEMl+1XPDOJrlm1Q9y
+	Znl1PHO9g==
+X-Google-Smtp-Source: AGHT+IFDnIr9jURW/iDdf33QbVpq9yGIdz78c5cWwu6hkoK/t2n+HhwmdlTT8qcq2NE/YdgFwsyWNimpCK8U1Bj/+yE=
+X-Received: by 2002:a05:6000:200e:b0:3ec:7583:3b76 with SMTP id
+ ffacd0b85a97d-405c6847528mr2568370f8f.22.1758649792481; Tue, 23 Sep 2025
+ 10:49:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fOWoD/rtAfxeWV+w"
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpWO71vSV_0qXiUYeKYZMYF0xWNz8MrUVRkqKwDEtQvKqA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+ <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
+ <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com> <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
+ <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
+In-Reply-To: <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Tue, 23 Sep 2025 19:49:40 +0200
+X-Gm-Features: AS18NWAnwGHtT4NaZMiBj4LqaLnQFy6R4R90e3R6j2xRpw7zcnqFbVZB-WdaVnM
+Message-ID: <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, snovitoll@gmail.com, glider@google.com, 
+	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
+	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250923_100557_198476_1E4A6015 
-X-CRM114-Status: GOOD (  37.27  )
+X-CRM114-CacheID: sfid-20250923_104954_916431_599B2A84 
+X-CRM114-Status: GOOD (  23.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,130 +102,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Mon, Sep 15, 2025 at 11:05=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> > If you feel strongly that the ~1/8th RAM overhead (coming from the
+> > physmap shadow and the slab redzones) is still unacceptable for your
+> > use case (noting that the performance overhead (and the constant
+> > silent detection of false-positive bugs) would still be there), I
+> > think you can proceed with your series (unless someone else is
+> > against).
+>
+> Yeah, that would be great if we can also avoid any not needed memory
+> consumption for kdump.
 
---fOWoD/rtAfxeWV+w
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ack. Let's add support for kasan=3Doff then.
 
-On Mon, Sep 22, 2025 at 03:41:18PM -0700, Cong Wang wrote:
-> On Mon, Sep 22, 2025 at 7:28=E2=80=AFAM Stefan Hajnoczi <stefanha@redhat.=
-com> wrote:
-> >
-> > On Sat, Sep 20, 2025 at 02:40:18PM -0700, Cong Wang wrote:
-> > > On Fri, Sep 19, 2025 at 2:27=E2=80=AFPM Stefan Hajnoczi <stefanha@red=
-hat.com> wrote:
-> > > >
-> > > > On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
-> > > > > This patch series introduces multikernel architecture support, en=
-abling
-> > > > > multiple independent kernel instances to coexist and communicate =
-on a
-> > > > > single physical machine. Each kernel instance can run on dedicate=
-d CPU
-> > > > > cores while sharing the underlying hardware resources.
-> > > > >
-> > > > > The multikernel architecture provides several key benefits:
-> > > > > - Improved fault isolation between different workloads
-> > > > > - Enhanced security through kernel-level separation
-> > > >
-> > > > What level of isolation does this patch series provide? What stops
-> > > > kernel A from accessing kernel B's memory pages, sending interrupts=
- to
-> > > > its CPUs, etc?
-> > >
-> > > It is kernel-enforced isolation, therefore, the trust model here is s=
-till
-> > > based on kernel. Hence, a malicious kernel would be able to disrupt,
-> > > as you described. With memory encryption and IPI filtering, I think
-> > > that is solvable.
-> >
-> > I think solving this is key to the architecture, at least if fault
-> > isolation and security are goals. A cooperative architecture where
-> > nothing prevents kernels from interfering with each other simply doesn't
-> > offer fault isolation or security.
->=20
-> Kernel and kernel modules can be signed today, kexec also supports
-> kernel signing via kexec_file_load(). It migrates at least untrusted
-> kernels, although kernels can be still exploited via 0-day.
+But please describe it in detail in the KASAN documentation.
 
-Kernel signing also doesn't protect against bugs in one kernel
-interfering with another kernel.
+[...]
 
-> >
-> > On CPU architectures that offer additional privilege modes it may be
-> > possible to run a supervisor on every CPU to restrict access to
-> > resources in the spawned kernel. Kernels would need to be modified to
-> > call into the supervisor instead of accessing certain resources
-> > directly.
-> >
-> > IOMMU and interrupt remapping control would need to be performed by the
-> > supervisor to prevent spawned kernels from affecting each other.
->=20
-> That's right, security vs performance. A lot of times we have to balance
-> between these two. This is why Kata Container today runs a container
-> inside a VM.
->=20
-> This largely depends on what users could compromise, there is no single
-> right answer here.
->=20
-> For example, in a fully-controlled private cloud, security exploits are
-> probably not even a concern. Sacrificing performance for a non-concern
-> is not reasonable.
->=20
-> >
-> > This seems to be the price of fault isolation and security. It ends up
-> > looking similar to a hypervisor, but maybe it wouldn't need to use
-> > virtualization extensions, depending on the capabilities of the CPU
-> > architecture.
->=20
-> Two more points:
->=20
-> 1) Security lockdown. Security lockdown transforms multikernel from
-> "0-day means total compromise" to "0-day means single workload
-> compromise with rapid recovery." This is still a significant improvement
-> over containers where a single kernel 0-day compromises everything
-> simultaneously.
+> When I made patch and posted, I didn't see Sabyrzhan's patches because I
+> usually don't go through mm mailing list. If I saw his patch earlier, I
+> would have suggested him to solve this at the same time.
+>
+> About Sabyrzhan's patch sereis, I have picked up part of his patches and
+> credit the author to Sabyrzhan in below patchset.
+>
+> [PATCH 0/4] mm/kasan: remove kasan_arch_is_ready()
+> https://lore.kernel.org/all/20250812130933.71593-1-bhe@redhat.com/T/#u
+>
+> About reposting of this series, do you think which one is preferred:
+>
+> 1) Firstly merge Sabyrzhan's patch series, I reverted them and apply for
+>    my patchset.
+>
+> 2) Credit the author of patch 1,2,3 of this patch series to Sabyrzhan
+>    too as below, because Sabyrzhan do the unification of the static keys
+>    usage and the KASAN initialization calls earlier:
 
-I don't follow. My understanding is that multikernel currently does not
-prevent spawned kernels from affecting each other, so a kernel 0-day in
-multikernel still compromises everything?
+Since the Sabyrzhan's patches are already in mm-stable (and I assume
+will be merged during the next merge window), just rebase your changes
+on top.
 
->=20
-> 2) Rapid kernel updates: A more practical way to eliminate 0-day
-> exploits is to update kernel more frequently, today the major blocker
-> is the downtime required by kernel reboot, which is what multikernel
-> aims to resolve.
+But also note that Sabyrzhan is planning to move out the
+kasan_enabled() checks into include/linux/kasan.h (which is a clean-up
+I would have also asked you to do with the kasan=3Doff patches), so
+maybe you should sync up with him wrt these changes.
 
-If kernel upgrades are the main use case for multikernel, then I guess
-isolation is not necessary. Two kernels would only run side-by-side for
-a limited period of time and they would have access to the same
-workloads.
-
-Stefan
-
->=20
-> I hope this helps.
->=20
-> Regards,
-> Cong Wang
->=20
-
---fOWoD/rtAfxeWV+w
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmjS02kACgkQnKSrs4Gr
-c8gaLgf+LttcrIImZ/l3um6RUl/4dYace1hoDwxQJPCPksRImb0wzZW4C3r/6W8V
-dssJAEtVxaLcMnKlkA+usUipzCoHQqjOD6IVOe3gxnD28sSaIuE8v+RhftRbEMNI
-ytTI1l4AHyPwWr2nQG+FQZm2hf7LQUd2uItfnOjIS/sSelm7eOHr1m8zXvYDy1zT
-JXKNxZCk0PGTkYHCDZkmnZotwC/OEUD4htrk2s1V+xaGhXx8VS59XNacaileaplO
-rRPGU2lU6vXA/TRhs+FvZqPGFj0gffZrc+5H/pHCPVeod8Drolcf0YO+9WQ+b+n5
-SLcZ7lhWe6O/QynTmIpd89aXu+L0tA==
-=KKCS
------END PGP SIGNATURE-----
-
---fOWoD/rtAfxeWV+w--
-
+Thanks!
 
