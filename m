@@ -4,77 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CCA8CAC5AC
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 02:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54F24CAC5A7
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 03:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2avbd4LjS8nrMV3+bJmt9fqA5He5939YGUafn95iA/s=; b=WRAOxFzvO7FFpVCUGUPwWAN6K2
-	AQBU2UcKTUTwdC6eZykn4R3a6ChTHzZoMOOrd/xMcKhwG99YD1YllwhlZX392nmOJOQbjpY1RQ5NJ
-	XMy8LdLTyUarFZW9xsQACQ2SNXUDE5nojp5J8qiuLuM3f6Cq4FZkvjiFWB+0RaDAi55zloSdKYYAy
-	2qkiVDk4YKAyPgqnv7pgDtOjkhDIL8Da0kKVPZpD02D6G6P29yHkhKPpZ3ZqyW31MF9yHeY/R/8BA
-	yvFl7m2MtmsWp3dwkM42qy7hYlWLKE4BKX2Tsbcn0tfxo+H+dcyCWktL3fCMVPKuuTNJ2k7J2LCih
-	TZNn3axg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FeP6eYFLebBosoH7jIZ53wAm/VMjrkZC/giX2IIHiGQ=; b=EZ73a2/LnotDnGGi5HHE6XMsdu
+	IJ2ILpFA4eII/sihPt4Yal6YbybkjDFB1vLAgOn6XdFNnkvl9hRaLfFoTOuVzFISOyTVQlaSJZZzp
+	oa1+ju9gM7qSuMAZEGWjo3qn3ke5RNjX2dbsLnH4nNXUUBJzBJv0ZzlvYUezNErC6JOqsxuS/qIgT
+	UbXHEik+leh6UayR+m/8tWQ2h8FNP7r8cRTOtZ7BJnhCwOCJ5nh21gCR9RTtkokpRMFX79SDLfyvS
+	4qjBMIKqw880DeaBjjFrTQuiqzqPH3S8676SZvJUS6avOJlIgu2JOJE/94NCUQGudGcq1mLoMhrr5
+	tMj9rfWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0sZ7-0000000C7ij-3KKL;
-	Tue, 23 Sep 2025 02:15:37 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1v0tNR-0000000CBvn-29V7;
+	Tue, 23 Sep 2025 03:07:37 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0sZ4-0000000C7hf-3g8q
+	id 1v0tNQ-0000000CBvL-1Yzb
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 02:15:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758593732;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2avbd4LjS8nrMV3+bJmt9fqA5He5939YGUafn95iA/s=;
-	b=a1izDE43D1UnwoVodReJMizvKg4/b4zYdtzSNZF+9JbMinXiD99wbSLqlAb5aZmixisRJS
-	94WsRHf9PaZSeTh2p6/JhiEpPm/UoM4G2s+2erDwWrfBOpfXODN9oeViZKXFqFW3BA8pCS
-	3i//yey3vx+t5TsH8ngVkob1QtaMc2M=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-CbxdawZnMAa5DwVrSs_sfw-1; Mon,
- 22 Sep 2025 22:15:28 -0400
-X-MC-Unique: CbxdawZnMAa5DwVrSs_sfw-1
-X-Mimecast-MFC-AGG-ID: CbxdawZnMAa5DwVrSs_sfw_1758593726
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62A3319560B6;
-	Tue, 23 Sep 2025 02:15:26 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.183])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C35F18004D8;
-	Tue, 23 Sep 2025 02:15:22 +0000 (UTC)
-Date: Tue, 23 Sep 2025 10:15:19 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Askar Safin <safinaskar@zohomail.com>
-Cc: Simon Horman <horms@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
-	kexec <kexec@lists.infradead.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec
- doesn't work on my laptop
-Message-ID: <aNICt3e3Fg0iwxvv@MiWiFi-R3L-srv>
-References: <20250819213014.908757-1-safinaskar@zohomail.com>
- <19972b2566e.1115458b7339833.495097856732093802@zohomail.com>
-MIME-Version: 1.0
-In-Reply-To: <19972b2566e.1115458b7339833.495097856732093802@zohomail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zMDXWwn3QyzMbaw0N7kaiFh6ECUOJ7JvHHK4M9H7t74_1758593726
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250922_191534_985702_E207F841 
-X-CRM114-Status: UNSURE (   7.70  )
-X-CRM114-Notice: Please train this message.
+	Tue, 23 Sep 2025 03:07:36 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 3E7CD601E9;
+	Tue, 23 Sep 2025 03:07:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9E6C4CEF0;
+	Tue, 23 Sep 2025 03:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1758596852;
+	bh=86Xxar4vRcinCahBFuQlLC0lBKykHJS+rMOTXHO6mII=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FCLFePm9McSbrWerrTzJUCkPyWJ2VBkWUJWJn5AUvV0L7dPAgosiGJJ9HOUcqRNjV
+	 hSsx0IzVlc77xyTJjUFjjJv/LUVymKA2lgYBpn/U+521SM2afv4V3a9wrkFfrLU0vL
+	 2n3t9qAGri3DBNxsTEkbbNmzNZ/D8B89udzneY8o=
+Date: Mon, 22 Sep 2025 20:07:32 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: "Bouron, Justinien" <jbouron@amazon.com>, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, Petr Mladek <pmladek@suse.com>, Mario
+ Limonciello <mario.limonciello@amd.com>, Marcos Paulo de Souza
+ <mpdesouza@suse.com>, "Graf (AWS), Alexander" <graf@amazon.de>, Steven Chen
+ <chenste@linux.microsoft.com>, Yan Zhao <yan.y.zhao@intel.com>,
+ "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Kudrjavets, Gunnar" <gunnarku@amazon.com>
+Subject: Re: [PATCH] kexec_core: Remove superfluous page offset handling in
+ segment loading
+Message-Id: <20250922200732.f5c68c706e495635b1536ac2@linux-foundation.org>
+In-Reply-To: <aMO5eKSpvwYAtDtX@MiWiFi-R3L-srv>
+References: <20250910163116.49148-1-jbouron@amazon.com>
+	<aMKZUY/zg31qN+68@MiWiFi-R3L-srv>
+	<1659446A-F17C-4FF2-BE1B-3EC37520DDCB@amazon.com>
+	<aMO5eKSpvwYAtDtX@MiWiFi-R3L-srv>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,24 +76,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/22/25 at 10:31pm, Askar Safin wrote:
-> Simon Horman, so what? This patchset is still not merged.
+On Fri, 12 Sep 2025 14:11:04 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Not sure if Simon minds the patch log, especially in patch 1. I saw the
-'TL;DR' first time in a patch log.
+> > int sanity_check_segment_list(struct kimage *image)
+> > {
+> >     // ...
+> >     for (i = 0; i < nr_segments; i++) {
+> >         unsigned long mstart, mend;
+> > 
+> >         mstart = image->segment[i].mem;
+> >         mend   = mstart + image->segment[i].memsz;
+> >         if (mstart > mend)
+> >             return -EADDRNOTAVAIL;
+> >         if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+> >             return -EADDRNOTAVAIL;
+> >         if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
+> >             return -EADDRNOTAVAIL;
+> >     }
+> >     // ...
+> > }
+> > 
+> > > That better be explained in log.
+> > Does it warrant a second revision to change the log?
+> 
+> I would appreciate it if we can tell the reason a little bit in patch
+> log. Because we have codes as below where people assign a non PAGE_SIZE
+> to kbuf.buf_align. With a general conclusion, people need explore code
+> to find out. At least that's what I do when I check this patch.
+> 
+> arch/x86/kernel/kexec-bzimage64.c:
+> static void *bzImage64_load(struct kimage *image, char *kernel,
+>                             unsigned long kernel_len, char *initrd,
+>                             unsigned long initrd_len, char *cmdline,
+>                             unsigned long cmdline_len)
+> {
 
-For a problem solving patch, we better provide information like
-
--what is the problem;
--why it's caused;
--how you fix it;
-
-Don't tell too long story out of the space. Refering to other already
-merged commit's log is also a good way to learn that.
-
-The fix is absolutely a great one.
-
-Thanks
-Baoquan
+I'll drop this patch.  Justinien, please send along an updated version
+for the next -rc cycle, thanks.
 
 
