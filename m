@@ -4,90 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CE8ECAC5A5
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 17:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92F01CAC5AC
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 17:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=; b=zzhTyuqUQStNWHWy6oZeIVk0Fj
-	dDmMLKYf/a9uD7GE9fP6+WhuhxAzKMI8UHNIF32xGJRplMj7//kYIzhcjRizjaF2F57dhHLgooZ18
-	XKRTRHXbzS4V3Th+wLcPdbE5VBNDeIClekdgq35LoFsi9w1l/wD+YH1bc4s0jiN/Q8KGYtg3ynjh7
-	lQKS08xIYsPrtNSP4GGUkCSUCHXo9KNkbbUCcpnDWdNFduqNmPwI+7l+FAT7WtKs376LPTm/dGHz5
-	/yOLtEtKfAemWgbmZYzJlR00hfXQmACEPECE9aMRzC4ZUfGpvyD2l22asAxAKw1xMen46pHdNRkX5
-	yTW6ZjiQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=X3tx+fZ731hStR3QwB8Vwr+fatNxOU7DCvOysaUDqs0=; b=QwT4hdM/lIfMKa4INirDJFtfhM
+	Q0+HDgwFcamyMEFkw7dGdqaa+iCLGMlubRiOoYi5EPssmFdFgpcpI2bnsUGvhcFwiXKNHmm+ggDkj
+	4d+NVmtgeYwmp2traG0qqkIYywIwZMr/rGCvgkSbo1Gu4FwJCvohwFUBTf+y+G5JfuGwYIwoiHH7s
+	NFkMDolK0WtbHtGio5RX3t/i/uNQ8XXLwkhoiXQSKiEgdVwD8viDXjTfZUmvSlyc1qdycs1GuI+tq
+	TXu8wz9zHzpw7U4wo62enLLvNSrukmvTzYN2/Fr/zUfbyiKscjGd9BicyOFlInLPdqNr0FODCct7L
+	zwe6H+pw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v179c-0000000ES9o-0cd7;
-	Tue, 23 Sep 2025 17:50:16 +0000
-Received: from mail-wr1-f47.google.com ([209.85.221.47])
+	id 1v17AR-0000000ET2Q-171D;
+	Tue, 23 Sep 2025 17:51:07 +0000
+Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.155.198.111])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v179G-0000000ERon-3azc
+	id 1v17AL-0000000ESvj-2DbP
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 17:49:56 +0000
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b9edf4cf6cso5238799f8f.3
-        for <kexec@lists.infradead.org>; Tue, 23 Sep 2025 10:49:54 -0700 (PDT)
+	Tue, 23 Sep 2025 17:51:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758649793; x=1759254593; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=;
-        b=CRfOw0z7VS7Tnm4kNPDe0+Y9oZuIVsZyr4tPaXgtXtSPHZIUZzpOIZ8Vvdbhfa7rt5
-         NTMn+08QLaEAmIPaLTZwkg3RtMuv71mze2Nc1OcQSxUnM8SD0CN6G6evxnUz51YdUK1M
-         TyN0LNKdWNpR/4nK9D9SEP/7JybxbyQekTbFWSvcXjlaMWPL9EOzCkPj3C+QVbXntATL
-         9Qes4D6zB6czt5/Leu/VsEyVAW+757a5AFaxNtyJ6iXSkBLPltyyI9OFe2FXU7uLGE20
-         P+PfyeumH6+o/l59BzRMEUd0PjEU7cyeSPb9iyIdc8kGI6IZmUwGZ0hGLA7ZpuBmF5+K
-         Zq4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758649793; x=1759254593;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O0kx1rTugh76QptF0xZZo2hW1gYb0dlnX+yVu1KHk1w=;
-        b=M5KjDbGpK9m8zLclKzSUz8m4Wx/AKIw3ic+nb2ZZuJjzfzRLyR/jfK7k4XVcqfzprY
-         ePvK0Z1x5mtm5N+jDqqCYgGZ8LbwHIK3MI3Ac3/tfdTX+xcnGgm12VUjCJerwN9B9p6s
-         CwbenGjsFILfEImO3LUXTpNenNor4pchRvLGR5G7bpRxXXyq8hdpEg6l/g+gBr71sYQ6
-         UQBEFd1FyFAbh74nM7CcjPhd3C1b+F6AQcqmfzVHVDG6Dn1ebbSNhfl3pHLABWPrNIw6
-         kGp3MtYQ2T9O04IZdXxStRmUSxMNE9A8TDpix36Ocg8rp88F5lZy/UVvqjCdnTz9FSe8
-         fC1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW2ztli+dHkJZYqQSSn58c1VjkvSvXbHZL8VMg4L2qcXccPhsanj//hwY+MFlWMULUDB+lWKA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzz7CRlfMva8c6ykCOd/1r89ZzaCYBgr9Sr3MqoeCzoICT6XTvJ
-	K1HBksuM4Eo+eNwCXGrNtBtfSHiLgWGCd/ebT5eJFG3T7p3YEb0VUel/V+QomFSxPJCO6Ga2TKN
-	bC4/By+kRmfh+HIyvbvaReHq7/oBoA7Q=
-X-Gm-Gg: ASbGnctCsbdGGGk2kXUlnKcJRmH0O0zQ8ieq9INeSmlnCyAbjNLbYYobkggVY3ICTdy
-	cFR7ZrEUYE6H6DUZJ9m74XOyDeIo+T9PRMxAAibl6tSu7DuF8V9DXfuRKUV6GLqBx0PdDjbvNqn
-	GWGtbCJHMKAM0q3ofiuXW86CeHCJKsIfvamWKQFCzH+je+1ly4TY80AYrgEMl+1XPDOJrlm1Q9y
-	Znl1PHO9g==
-X-Google-Smtp-Source: AGHT+IFDnIr9jURW/iDdf33QbVpq9yGIdz78c5cWwu6hkoK/t2n+HhwmdlTT8qcq2NE/YdgFwsyWNimpCK8U1Bj/+yE=
-X-Received: by 2002:a05:6000:200e:b0:3ec:7583:3b76 with SMTP id
- ffacd0b85a97d-405c6847528mr2568370f8f.22.1758649792481; Tue, 23 Sep 2025
- 10:49:52 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1758649861; x=1790185861;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X3tx+fZ731hStR3QwB8Vwr+fatNxOU7DCvOysaUDqs0=;
+  b=ElkO3lfH+fs7+vze2TEL5m8RjCu3ymS6EAZkBuzWNAzEGmoQMuMSRKo6
+   N2uBXe++899BQdFJiYU+MzAReLP+mYdl5uxkysk2X9TXqwWrHBtomTX/4
+   XWwioPjoJZCZYVF+vj22PHqRyrbvtw52h936Q/rsWQaUDW4UfDcmfiI+O
+   c0vECNJWzBavRYXFYYzNtIvsUTeIg/F/Ncqfr58XNC7WWwVin3i/c682/
+   t9f9ufy7rSgFQ6ikh2+38QbuTk61ZjpaSWSRSYus4lDeSvG1vyuTIaSlQ
+   C+KNXWpqs1Nli966baMSQlZUiL3Esps7Puq81jy0213QFZRlnwVyjFDo0
+   w==;
+X-CSE-ConnectionGUID: lwCl1RWXT+aKK2oadLaBiA==
+X-CSE-MsgGUID: 475HWfd+TQehZxD0e1rLsQ==
+X-IronPort-AV: E=Sophos;i="6.18,288,1751241600"; 
+   d="scan'208";a="3480840"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 17:50:59 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:47695]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.38.121:2525] with esmtp (Farcaster)
+ id 3a68c820-3ea0-4f05-bb30-09be8ba4b876; Tue, 23 Sep 2025 17:50:58 +0000 (UTC)
+X-Farcaster-Flow-ID: 3a68c820-3ea0-4f05-bb30-09be8ba4b876
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Tue, 23 Sep 2025 17:50:58 +0000
+Received: from 80a9970eed1e (10.106.101.9) by EX19D001UWA001.ant.amazon.com
+ (10.13.138.214) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Tue, 23 Sep 2025
+ 17:50:57 +0000
+Date: Tue, 23 Sep 2025 10:50:55 -0700
+From: Justinien Bouron <jbouron@amazon.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Andrew Morton <akpm@linux-foundation.org>, Baoquan He
+	<bhe@redhat.com>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+	<nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, "Justin
+ Stitt" <justinstitt@google.com>, Justinien Bouron <jbouron@amazon.com>
+Subject: Re: [resend, PATCH v2 1/1] kexec: Remove unused code in
+ kimage_load_cma_segment()
+Message-ID: <aNLd_6CO6YMvm2MN@80a9970eed1e>
+References: <20250916125124.3094021-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
- <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
- <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com> <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
- <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
-In-Reply-To: <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Tue, 23 Sep 2025 19:49:40 +0200
-X-Gm-Features: AS18NWAnwGHtT4NaZMiBj4LqaLnQFy6R4R90e3R6j2xRpw7zcnqFbVZB-WdaVnM
-Message-ID: <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, snovitoll@gmail.com, glider@google.com, 
-	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
-	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250916125124.3094021-2-andriy.shevchenko@linux.intel.com>
+X-Editor: VIM - Vi IMproved 9.1
+X-Originating-IP: [10.106.101.9]
+X-ClientProxiedBy: EX19D045UWA004.ant.amazon.com (10.13.139.91) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250923_104954_916431_599B2A84 
-X-CRM114-Status: GOOD (  23.67  )
+X-CRM114-CacheID: sfid-20250923_105101_673556_C6078DD5 
+X-CRM114-Status: GOOD (  24.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,51 +95,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 15, 2025 at 11:05=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
->
-> > If you feel strongly that the ~1/8th RAM overhead (coming from the
-> > physmap shadow and the slab redzones) is still unacceptable for your
-> > use case (noting that the performance overhead (and the constant
-> > silent detection of false-positive bugs) would still be there), I
-> > think you can proceed with your series (unless someone else is
-> > against).
->
-> Yeah, that would be great if we can also avoid any not needed memory
-> consumption for kdump.
+On Tue, Sep 16, 2025 at 02:51:09PM +0200, Andy Shevchenko wrote:
+> clang is not happy about set but unused variable:
+> 
+> kernel/kexec_core.c:745:16: error: variable 'maddr' set but not used [-Werror,-Wunused-but-set-variable]
+>   745 |         unsigned long maddr;
+>       |                       ^
+> 1 error generated.
+> 
+> Fix the compilation breakage (`make W=1` build) by removing unused variable.
+> 
+> As Nathan noted, GCC 16 produces the similar warning;
+> 
+> Fixes: f4fecb50d6e1 ("kexec_core: remove superfluous page offset handling in segment loading")
+FYI the commit this patch is fixing (i.e. f4fecb50d6e1) is going to need a
+second revision as well (I haven't submitted it yet, still working on it), this
+means that your "Fixes:" tag will need to be changed again, requiring a 3rd
+revision.
 
-Ack. Let's add support for kasan=3Doff then.
+I am not sure what is the proper way forward here. Should I:
+    - Send my v2, without fixing the unused variable and then you send your v3
+      with the updated "Fixes:" tag pointing to my v2.
+    - OR fixing the unused variable in my v2 (i.e. "absorb" this patch in my
+      v2).
+In the latter case, I am not sure how I am supposed to credit the work in this
+case? Do I need to add another "Signed-off-by: Andy Shevchenko" besides mine?
 
-But please describe it in detail in the KASAN documentation.
+I'm still learning the ropes on how to contribute through the mailing list so I
+would be grateful if you could share your input on what's the proper way forward
+here.
 
-[...]
-
-> When I made patch and posted, I didn't see Sabyrzhan's patches because I
-> usually don't go through mm mailing list. If I saw his patch earlier, I
-> would have suggested him to solve this at the same time.
->
-> About Sabyrzhan's patch sereis, I have picked up part of his patches and
-> credit the author to Sabyrzhan in below patchset.
->
-> [PATCH 0/4] mm/kasan: remove kasan_arch_is_ready()
-> https://lore.kernel.org/all/20250812130933.71593-1-bhe@redhat.com/T/#u
->
-> About reposting of this series, do you think which one is preferred:
->
-> 1) Firstly merge Sabyrzhan's patch series, I reverted them and apply for
->    my patchset.
->
-> 2) Credit the author of patch 1,2,3 of this patch series to Sabyrzhan
->    too as below, because Sabyrzhan do the unification of the static keys
->    usage and the KASAN initialization calls earlier:
-
-Since the Sabyrzhan's patches are already in mm-stable (and I assume
-will be merged during the next merge window), just rebase your changes
-on top.
-
-But also note that Sabyrzhan is planning to move out the
-kasan_enabled() checks into include/linux/kasan.h (which is a clean-up
-I would have also asked you to do with the kasan=3Doff patches), so
-maybe you should sync up with him wrt these changes.
-
-Thanks!
+Best,
+Justinien
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> 
+> v2: fixed Fixes (Nathan), added a note about GCC (Nathan), added tag (Nathan)
+> 
+>  kernel/kexec_core.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5357ed39e9d1..32722926bc7e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -742,7 +742,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+>  	struct kexec_segment *segment = &image->segment[idx];
+>  	struct page *cma = image->segment_cma[idx];
+>  	char *ptr = page_address(cma);
+> -	unsigned long maddr;
+>  	size_t ubytes, mbytes;
+>  	int result = 0;
+>  	unsigned char __user *buf = NULL;
+> @@ -754,7 +753,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+>  		buf = segment->buf;
+>  	ubytes = segment->bufsz;
+>  	mbytes = segment->memsz;
+> -	maddr = segment->mem;
+>  
+>  	/* Then copy from source buffer to the CMA one */
+>  	while (mbytes) {
+> @@ -782,7 +780,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
+>  		}
+>  
+>  		ptr    += mchunk;
+> -		maddr  += mchunk;
+>  		mbytes -= mchunk;
+>  
+>  		cond_resched();
+> -- 
+> 2.50.1
+> 
 
