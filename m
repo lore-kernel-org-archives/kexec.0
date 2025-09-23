@@ -4,87 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76B8ECAC5A7
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 01:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CCA8CAC5AC
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 02:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5rlNsSgS15aFR1u3Y7StKp/YbzfTbHTA/Z7lHl49PV4=; b=1m7PEDc/6PhWMLJfv2Z5fD2VYp
-	QH9MRA88tz9jJpPQkloPSJndH99kE+NAqSmTGDP/IJ4KJECNHeDjRTT6bJb2JpOptYN1095xcqUnX
-	eCJ6hMc6T8R+XEHx1fMzCZf7rKMeoDDA42dULuF6vTEDDCL4pN90cxeXr/HcsZTYgzN5LsYHXdt0n
-	zINXvX/slCthZN0JCk6yflLZrl5W2c40WdhThYn6D93N/3gOr6ZWcXtGzYwKDX6MFkqScL6hEDdKy
-	wkbaHKYI6fwYyEkL0JMaabc1ZR2bR5aPoF//08j5VvgrrZAlQaYOpLJJ3GL0OD5mz84GDsPgFOnIp
-	s1CmoPXA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2avbd4LjS8nrMV3+bJmt9fqA5He5939YGUafn95iA/s=; b=WRAOxFzvO7FFpVCUGUPwWAN6K2
+	AQBU2UcKTUTwdC6eZykn4R3a6ChTHzZoMOOrd/xMcKhwG99YD1YllwhlZX392nmOJOQbjpY1RQ5NJ
+	XMy8LdLTyUarFZW9xsQACQ2SNXUDE5nojp5J8qiuLuM3f6Cq4FZkvjiFWB+0RaDAi55zloSdKYYAy
+	2qkiVDk4YKAyPgqnv7pgDtOjkhDIL8Da0kKVPZpD02D6G6P29yHkhKPpZ3ZqyW31MF9yHeY/R/8BA
+	yvFl7m2MtmsWp3dwkM42qy7hYlWLKE4BKX2Tsbcn0tfxo+H+dcyCWktL3fCMVPKuuTNJ2k7J2LCih
+	TZNn3axg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0rqf-0000000C13L-2r8H;
-	Tue, 23 Sep 2025 01:29:41 +0000
-Received: from mail-pj1-x1044.google.com ([2607:f8b0:4864:20::1044])
+	id 1v0sZ7-0000000C7ij-3KKL;
+	Tue, 23 Sep 2025 02:15:37 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v0rqd-0000000C12m-3XPh
+	id 1v0sZ4-0000000C7hf-3g8q
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 01:29:41 +0000
-Received: by mail-pj1-x1044.google.com with SMTP id 98e67ed59e1d1-330469eb750so5690590a91.2
-        for <kexec@lists.infradead.org>; Mon, 22 Sep 2025 18:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758590979; x=1759195779; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5rlNsSgS15aFR1u3Y7StKp/YbzfTbHTA/Z7lHl49PV4=;
-        b=l5xTgT9PVHk1qntRnpHnUJuz0YjnFjSlPqEvPNhepefgSsGN4rmDOiE9gonMGf4Olp
-         fxxrq+h5ZJOUUG5rzZpeAwYLyRhacN9Qk6zlkA2kd1pi4q2gsJvjxzr7bEVWGQlBtK7L
-         ah2tZazEKkb3/77Yi8COSgoY26P3CehNxnaQtQymOaQmumy1thraMPGyqEDTftJ1Rl0x
-         fN0X6DCMqKknqrFpKuaT/8cVWqhQH7VrW7Sw3hI013EfDn2PX74FXvXLUhL6yxz0XMj5
-         AUN6jTjnOw5u4NhbXzzv+A97PD8B3J75qe2sS3XNgNc6xsXA9RBtThsGdmIjyJmotWOS
-         Vp2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758590979; x=1759195779;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5rlNsSgS15aFR1u3Y7StKp/YbzfTbHTA/Z7lHl49PV4=;
-        b=tHg+ReICBH+UftOtDGlx3+8N73cuMtwQECds9WIyzG++Wshya8G5m0aNL6CzCoQTtw
-         tHP8p1klNtYk+nYq8DwSZrV8L6dqtzvagvKTyOEGZ8xxc2W2b4ctPpMSpl2wdQww0o0M
-         v23shl9yIVXzw7OAWpeobEtc7tZdC7o7mOWcR2UQuS6cFuVLSNkNpu8WssMtVez+NxXg
-         qJJ3a3ptv4yksUnTzW6jqZq9J75JhN+sH+c4LQANNXzOCuP2xUfWhU8wf5CWBeEsUFwU
-         +X2D1vgGQDCS+EYxWiet/ayLMAdv5oS62ZDnurNGRJksOcQ2FyiogBSBwdytS3iIOpbb
-         7iyg==
-X-Gm-Message-State: AOJu0YyZrC/eVpryZsTQLIQEhyPK/+Dzcovx3S7tOvjqpKq40rlb32WM
-	mzNAkflKWZJgi16cAXCUoOtemjfldrhwIr9+I2MV7L/p1cMzZPxD0xfSTFGGu1iMcPKEJQ==
-X-Gm-Gg: ASbGncswQ3wfNOHTdku2rnKw1ZwTJl0BLBolq8dLaO1DMOdtn7PcPQ0T6WzplXqsRy5
-	vRGKrJugTxV2e20WcsuQoA/djEx5kGIGhfALWxFFSaLhNYAnZEmFMyWk4zA8uOGFrUXb4nZ00Al
-	sYF0Ld/zwXFFtwtSf0JG69FM82eU+I3L7/wt+NDeLK3jlNQxkFAU5UvNk2sOCsLMJtFmSW/k39X
-	EfUVr7CtRiPd8Y40rz6VkbXjyTCNbbOlBg+2nrbEs7+2VQZUbQ0A/d1EHfqSRqZgsa31zCP1CDc
-	wSDE+bJAXKqEs5/DUAug7tWFXC4IveANUZ0sypOo24CYtPL5uHVS/XOkww3HQukfhWt1q8MNvuT
-	mYIG6AsJ77xQLVsd1JZ31vCaOF56IdJuUk8T5GCRH
-X-Google-Smtp-Source: AGHT+IGbkCM3o6k1u3FU0cszaH1li4+QeK05dVmg+eX6MDyu04GIRfZqe/0Jg8uMDo1lVgofdYPJnw==
-X-Received: by 2002:a17:90b:544e:b0:332:8133:b377 with SMTP id 98e67ed59e1d1-332a95376b9mr1251078a91.15.1758590978670;
-        Mon, 22 Sep 2025 18:29:38 -0700 (PDT)
-Received: from [10.125.192.50] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b5523f5ea3esm9599182a12.40.2025.09.22.18.29.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Sep 2025 18:29:38 -0700 (PDT)
-Message-ID: <17eadb48-0fbb-4aea-92d1-58e382359451@gmail.com>
-Date: Tue, 23 Sep 2025 09:29:33 +0800
+	Tue, 23 Sep 2025 02:15:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758593732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2avbd4LjS8nrMV3+bJmt9fqA5He5939YGUafn95iA/s=;
+	b=a1izDE43D1UnwoVodReJMizvKg4/b4zYdtzSNZF+9JbMinXiD99wbSLqlAb5aZmixisRJS
+	94WsRHf9PaZSeTh2p6/JhiEpPm/UoM4G2s+2erDwWrfBOpfXODN9oeViZKXFqFW3BA8pCS
+	3i//yey3vx+t5TsH8ngVkob1QtaMc2M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-CbxdawZnMAa5DwVrSs_sfw-1; Mon,
+ 22 Sep 2025 22:15:28 -0400
+X-MC-Unique: CbxdawZnMAa5DwVrSs_sfw-1
+X-Mimecast-MFC-AGG-ID: CbxdawZnMAa5DwVrSs_sfw_1758593726
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62A3319560B6;
+	Tue, 23 Sep 2025 02:15:26 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.183])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C35F18004D8;
+	Tue, 23 Sep 2025 02:15:22 +0000 (UTC)
+Date: Tue, 23 Sep 2025 10:15:19 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Askar Safin <safinaskar@zohomail.com>
+Cc: Simon Horman <horms@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+	kexec <kexec@lists.infradead.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec
+ doesn't work on my laptop
+Message-ID: <aNICt3e3Fg0iwxvv@MiWiFi-R3L-srv>
+References: <20250819213014.908757-1-safinaskar@zohomail.com>
+ <19972b2566e.1115458b7339833.495097856732093802@zohomail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/crashdump-arm64: Fix makedumpfile error caused by
- fail to get _text address
-To: Pingfan Liu <piliu@redhat.com>, horms@verge.net.au
-Cc: kexec@lists.infradead.org, zhaomeijing@lixiang.com
-References: <20250919073522.1840036-1-chenwandun@lixiang.com>
- <CAF+s44SDWTAkivXhh1=Nhw9wyp+mN8X+Z6OFUyy4mqayHcNukw@mail.gmail.com>
-From: Chen Wandun <chenwandun1@gmail.com>
-In-Reply-To: <CAF+s44SDWTAkivXhh1=Nhw9wyp+mN8X+Z6OFUyy4mqayHcNukw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <19972b2566e.1115458b7339833.495097856732093802@zohomail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: zMDXWwn3QyzMbaw0N7kaiFh6ECUOJ7JvHHK4M9H7t74_1758593726
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250922_182939_889897_44413E7B 
-X-CRM114-Status: GOOD (  21.91  )
+X-CRM114-CacheID: sfid-20250922_191534_985702_E207F841 
+X-CRM114-Status: UNSURE (   7.70  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,101 +89,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 09/22/25 at 10:31pm, Askar Safin wrote:
+> Simon Horman, so what? This patchset is still not merged.
 
+Not sure if Simon minds the patch log, especially in patch 1. I saw the
+'TL;DR' first time in a patch log.
 
-On 9/22/25 12:38 PM, Pingfan Liu wrote:
-> Hi Chen,
->
-> On Fri, Sep 19, 2025 at 3:35 PM Chen Wandun <chenwandun1@gmail.com> wrote:
->> I encountered the following error while makedumpfile without enableing
->> kernel CONFIG_PROC_KCORE and CONFIG_KALLSYMS_ALL, this error only exists
->> before commit 29fe506 (kexec: make -a the default), this commit change
->> from kexec_load to kexec_file_load.
->>
->> read_from_vmcore: Can't seek the dump memory(/proc/vmcore). (offset: ffff800084f4c000) Invalid argument
->> readpage_elf: Can't read the dump memory(/proc/vmcore).
->> readmem: type_addr: 1, addr:41f29800, size:8
->> vaddr_to_paddr_arm64: Can't read pgd
->> readmem: Can't convert a virtual address(ffff800082edf8a0) to physical address.
->> readmem: type_addr: 0, addr:ffff800082edf8a0, size:390
->> check_release: Can't get the address of system_utsname.
->>
->> Although several error messages appear when loading second kernel using kexec without
->> kernel CONFIG_PROC_KCORE and CONFIG_KALLSYMS_ALL, but kexec return 0.
->>
->> Can't open (/proc/kcore).
->> Can't get the symbol of _text to calculate page_offset.
->> Can't get the symbol of _text to calculate page_offset.
->>
->> If kexec unable to get the _text address, it will result in elf_info.kern_paddr_start
->> to be a large value, and also phdr->p_filesz/phdr->p_offset to be a large value, such as:
->>
->> readelf -l /proc/vmcore
->> Program Headers:
->>    Type           Offset             VirtAddr           PhysAddr
->>                   FileSiz            MemSiz              Flags  Align
->>    NOTE           0x0000000000001000 0x0000000000000000 0x0000000000000000
->>                   0x0000000000001a44 0x0000000000001a44         0x4
->>    LOAD           0x0000000000003000 0xffffffffffffffff 0x00007fffc0200000
->>                   0xffff800083020000 0xffff800083020000  RWE    0x0
->>    LOAD           0xffff800083023000 0x0000000000000000 0x0000000040000000
->>                   0x00000001e6e00000 0x00000001e6e00000  RWE    0x0
->>    LOAD           0xffff800269e23000 0x00000001f6e00000 0x0000000236e00000
->>                   0x0000000009200000 0x0000000009200000  RWE    0x0
->>
->> This patch avoiding makedumpfile failure by ending the kexec process and explicitly
->> notifying error.
->>
-> I'm afraid I cannot agree with your proposed fix. The makedumpfile
-> works on /proc/vmcore. In my opinion, if there isn't enough
-> information for makedumpfile to work properly, you should try to fix
-> and supplement it in the first kernel.
-Yes, you're right, and that's also how this patch is done;
+For a problem solving patch, we better provide information like
 
-Without this patch:
-If kexec can't get the address of _text, kexec will finish “normally” 
-with returning 0,
-but will fail when makedumpfile. This is not what we expected.
+-what is the problem;
+-why it's caused;
+-how you fix it;
 
-With this patch:
-kexec will abort if can't get the address ot _text and explicitly 
-notifying error, and
-first kernel should provide correct info based on error message.
+Don't tell too long story out of the space. Refering to other already
+merged commit's log is also a good way to learn that.
 
-Thanks,
-Wandun
+The fix is absolutely a great one.
 
->
-> Thanks,
->
-> Pingfan
->
->> Reported-by: Zhao Meijing <zhaomeijing@lixiang.com>
->> Signed-off-by: Chen Wandun <chenwandun@lixiang.com>
->> ---
->>   kexec/arch/arm64/crashdump-arm64.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
->> index 73cb611..8629610 100644
->> --- a/kexec/arch/arm64/crashdump-arm64.c
->> +++ b/kexec/arch/arm64/crashdump-arm64.c
->> @@ -94,9 +94,11 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
->>                   * For compatibility, deduce by comparing the gap "__init_begin - _stext"
->>                   * and the res size of "Kernel code" in /proc/iomem
->>                   */
->> -               if (kva_text_end - kva_stext == length)
->> +               if (kva_text_end - kva_stext == length) {
->> +                       if (!kva_text)
->> +                               die("Cannot get kernel _text symbol address\n");
->>                          elf_info.kern_paddr_start = base - (kva_stext - kva_text);
->> -               else
->> +               } else
->>                          elf_info.kern_paddr_start = base;
->>          }
->>          else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
->> --
->> 2.25.1
->>
+Thanks
+Baoquan
 
 
