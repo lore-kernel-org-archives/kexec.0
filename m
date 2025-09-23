@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05B3BCAC5AC
-	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 14:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5865CCAC5A7
+	for <kexec@archiver.kernel.org>; Tue, 23 Sep 2025 16:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EZcoNSnoVG+qrJMfOZX2XuUrCCP36J8i1i8eJwvKVKg=; b=d93zIUrjMZ7MPGESkDs9PAvBJu
-	84y0QjxP3zbET2RL8xxJD2dDe8Zal43x1sKKwNoTML2u+9z5Vi2dDezCM4zSEGQuXvP7iexnhAXAk
-	hOiJI9O2fjf1GxYnLgpR21LjGGCU034wrjbTh39VnhnTQBUMwnv0uncXjQH5WSHnXMdTwhln4x45c
-	S8zD3nvthNt2aQfLelaZpcjRB4O3MJYjaZ1qtqaFWnnKntk3o17RQnrghZCVgUj6dhsp8BK0c6aUR
-	CIzNH/sClylCr9cwAnr6BZFN8jDVyPi+GJouh5wuDFjIajesuFrFDhfOebrlCh7L6UM55CiifN/2f
-	Rubhz+Fw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=CdtlHdz8hccuQuHTmW/gkZb177dEvhf9nCDwgdsYksc=; b=wnk3GDYdn0DTpFBNf0QTE9ng3g
+	Fr+2bVt4pV6k+61HIn/LA6CZFWcG/D31WRhxPSz7Tz0Aobs5AzV5hqH6T5hhPTFdYS/JR3Rn1QqXk
+	ATHLBcwPJzixm0QrSj1eY8BJbIc64zRTr7ecUaBbHdJIc6C6rlFFo3QKwafMsZFUlmaWj5oQ5ACX6
+	NSjUVF9bzpbwBTzDBZ6DasRfvvMbTMhGsjr4Sa8tV9ehdylAgWaz2luT5xpZEi2SrjexutcS3pgyD
+	9RSXF5sJkfgCgeRohcMfFf2W6nHgSrUWI0SttBwoneVOuO+RljwHbeNTK3D7wGpXEJRhXqZbcbXKa
+	wLFjAeQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v13nN-0000000Dfv8-2PrT;
-	Tue, 23 Sep 2025 14:15:05 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1v166c-0000000EIq2-26C0;
+	Tue, 23 Sep 2025 16:43:06 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v13nM-0000000DfuN-12Ug
+	id 1v166a-0000000EIpo-2mUJ
 	for kexec@lists.infradead.org;
-	Tue, 23 Sep 2025 14:15:04 +0000
+	Tue, 23 Sep 2025 16:43:04 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id AA07760284;
-	Tue, 23 Sep 2025 14:15:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474CFC4CEF5;
-	Tue, 23 Sep 2025 14:15:02 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0751B60052
+	for <kexec@lists.infradead.org>; Tue, 23 Sep 2025 16:43:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62E5FC4CEF5
+	for <kexec@lists.infradead.org>; Tue, 23 Sep 2025 16:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758636903;
-	bh=hOgqFqGCOLHkWPioyYxLY87soOchuPqBxZaAvGiM3FU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QvRwaUvHyjz4luMpeZOS3By7g29PeRV5kPqTQmcrXNnOOymwCWvvxQbOzJOT7ID1b
-	 7JKV7WhGrm9Q62/io6FxpsZnwdePuGS0A95C/j7C3bjyijCi/oyMHY7CufaKbP4zrz
-	 eH+A5aWjRZvLANpke5ESNzZMohG30AshP48WD7oljhFt56x0nO8JaMDu8oyUP1EQoh
-	 cgO9FGNEVxl9YwoyRlG9SQ7VCtDgT2PCAxOWjx3Den6kYxr/34iDK7bnpNQj8RLmbr
-	 nx3M/HOsrqPrinHvk6pNf8S2Yb6sTdGU1hRsj7FgbmSIaW5hUjdCGzUAf7ddqafGIb
-	 z/yU2HgtgiEFg==
-Date: Tue, 23 Sep 2025 15:15:00 +0100
+	s=k20201202; t=1758645783;
+	bh=R68YJbq4BQXnzwo1q5OX+h3h/r5CPbOgf9YezQ72gOw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=GMp5rQ0k89P6kwe7vv9B9JCdpCcEBJ3B6WVfD1gHdA1S9WJSWGxSlk3xoLp1VZwH2
+	 4kyDjoCiJhMPtwUV2ZCR17xV1eznry9cIN4+PxCnpRne0DFoA4aYCf9RBzrMdVg3AB
+	 ZWt9p9qWNbXdo97AfskukBh6RtuWOWqWQu23VeNXg/bJzCS+VORgtWGJmrm3eQOU4G
+	 58cy43s+bgM/eIp5PLOk0uRiTQhyP5X54wG53VeAwgfSEPi/G4afwPoa4fRwFqTVog
+	 fGIAuuSZWPeAqoljRYH/Yx8YMmgM7ihgcTNwRM468L7/6+kh1C1hO6WFV5zJYiEHi6
+	 mbV1z1+3KbhGg==
 From: Simon Horman <horms@kernel.org>
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: kexec@lists.infradead.org, tangyouling@kylinos.cn,
-	chenhuacai@kernel.org
-Subject: Re: [PATCH] LoongArch: Change COMMAND_LINE_SIZE to 4096
-Message-ID: <20250923141500.GB1084957@horms.kernel.org>
-References: <20250922021057.206063-1-duanchenghao@kylinos.cn>
- <20250922025821.GA317763@chenghao-pc>
+Date: Tue, 23 Sep 2025 17:42:54 +0100
+Subject: [PATCH kexec-tools] workflow: Add loongarch64 build
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250922025821.GA317763@chenghao-pc>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250923-workflow-loongarch64-v1-1-047ebd559174@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAA3O0mgC/x3MQQ6CMBBG4auQWTtJLUrEqxgXtfzAhKZjpkZIC
+ He3cfkt3tupwASF7s1Ohq8U0VxxPjUU55AnsAzV5J2/ut63vKotY9KVk2qegsW5uzDg2nDr8XL
+ dQDV9G0bZ/tsHLdgQ+aOaCj2P4wdHhNDVcwAAAA==
+X-Change-ID: 20250923-workflow-loongarch64-ee03a89eb06d
+To: kexec@lists.infradead.org
+Cc: 
+X-Mailer: b4 0.14.2
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,40 +70,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 22, 2025 at 10:58:21AM +0800, Chenghao Duan wrote:
-> On Mon, Sep 22, 2025 at 10:10:57AM +0800, Chenghao Duan wrote:
-> > The default COMMAND_LINE_SIZE inherited from asm-generic is 512, which
-> > is too small for modern use cases. For example, when the parameter path
-> > in the cmdline of the kdump first kernel is too long, the limit is
-> > easily exceeded when loading the second kernel.
-> > 
-> > Increase the command line size to 4096 bytes, In LoongArch, this is
-> > consistent with the upstream configuration of the Linux kernel.
-> > linux kernel commit: f7794a4d92ade518c813de69a01b27ca6d8d86f3.
-> 
-> I'm very sorry, but the commit ID in the previous email was incorrect.
-> linux kernel commit: f7794a4d92ad(LoongArch: Increase COMMAND_LINE_SIZE up to 4096).
+Add loongarch64 to build matrix.
 
-Thanks, I have applied this patch.
+A gcc-14 package is installed as there is no generic gcc package
+for loongarch in Ubuntu 24.04. Hopefully this will be resolved in
+Ubuntu 26.04.
 
-- LoongArch: Change COMMAND_LINE_SIZE to 4096
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=b8f6c2a98d2c
+Signed-off-by: Simon Horman <horms@kernel.org>
+---
+ .github/workflows/build.yml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-And I updated the text when applying to read:
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+index d1b3e74391ffa3e20764cea69fd5d02e9e4fce6c..1dbb31bca111c0f2746567b0ce81f70e30043776 100644
+--- a/.github/workflows/build.yml
++++ b/.github/workflows/build.yml
+@@ -13,6 +13,7 @@ jobs:
+         - arm64
+         - hppa
+         - i686
++        - loongarch64
+         - m68k
+         - mips
+         - mipsel
+@@ -46,6 +47,8 @@ jobs:
+           x86_64)      ;;
+           x86_64-x32)  GNU_ARCH="x86_64-linux-gnux32"
+                        CROSS_COMPILER_PKG="gcc-x86-64-linux-gnux32" ;;
++          loongarch64) CROSS_COMPILER_PKG="gcc-14-loongarch64-linux-gnu"
++                       ;& # Fallthrough
+           *)           GNU_ARCH="$ARCH-linux-gnu" ;;
+         esac
+ 
+@@ -66,6 +69,11 @@ jobs:
+         sudo apt-get update
+         sudo apt-get -q=2 install ${{ env.EXTRA_PKGS }}
+ 
++    - name: Add GCC Link
++      if: matrix.arch == 'loongarch64'
++      run: |
++        ( cd /usr/bin && sudo ln -s loongarch64-linux-gnu-gcc-14 loongarch64-linux-gnu-gcc; )
++
+     - name: Build
+       run: |
+         ./bootstrap
 
-  Increase the command line size to 4096 bytes, In LoongArch, this is
-  consistent with the upstream configuration of the Linux kernel as of
-  commit f7794a4d92ad ("LoongArch: Increase COMMAND_LINE_SIZE up to 4096").
-
-> > This patch is necessary because the Linux kernel has been changed to
-> > 4096. When the kernel cmdline size exceeds 512, the --reuse-cmdline
-> > option of the kexec command will inevitably result in an error.
-> > 
-> > The COMMAND_LINE_SIZE in kexec/arch/loongarch/crashdump-loongarch.h
-> > is unused, so it is removed here.
-> > 
-> > Suggested-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-
-...
 
