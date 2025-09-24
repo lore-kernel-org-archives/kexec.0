@@ -4,89 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC708CAC5A5
-	for <kexec@archiver.kernel.org>; Wed, 24 Sep 2025 17:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB62FCAC5AE
+	for <kexec@archiver.kernel.org>; Wed, 24 Sep 2025 17:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=; b=BbQfs/5Lq4I4pBGSm/9kuJPEdU
-	dvkE+HhopuFCnIw11D0HVxQkD5vjrShdWinJ7sIi0apJnFAgMkNvtiHx7IzH3uSB64GPHPwh6ElUg
-	z1GFEe8fpWA/mCfeWacibAyITHFjUxnasubZ9SDxBevd0vQJ3WwbQs/IrD9sRxFR1ADqlJUkOQI7r
-	BNUt1ksWTMjdSEm7g7tp16nZDg4/N3pYilismMPJQ34Y/iAINVcT+sa7tutPgUMhU0GfhSxG7gPQE
-	MwXANxip7g0Ft0cnHDAVUb53GIkNE3HP1OSHq7aC76m90ijrnsxjfLqVn3CjTfJ6IkwxneyBFAENf
-	N/tEsvtQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1v/KwM/huxtHbwJvg0b1BdepVHxNprsmpQM5BGSeRcE=; b=poVaj7XomM3Bo9jB4Zo6iqmefD
+	UN/KoOL99qBoM0cy4LDSW7YhcEmB5Xdo2MVFPY9vKu63e8z66mWVUHKJnb5z4Med/Nebu+k/MAYbM
+	KPGYk4yDsZy7DUNLBpU3MEVzIOqB3D2gjVbvXPCnta3yAtmu7m8FpGwCuJ81rdzfF6k77zhVy0sWm
+	7W6W8bix7sawhcF+1u6jhMv7yPsMPDjXBOgiXfc2Y8XUBMX81+EPpQm2WgsNFxFfTF1BpjyjzkHWR
+	jUZ7Af0Ha0OKMNtAUHqIpHg6FhgiLaPz5Xyr3+j1uB2woWF5inlwcgDlTlIGmQTubUylYQRP64NtN
+	VCiW011Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1T8Z-000000024Zw-0ZEW;
-	Wed, 24 Sep 2025 17:18:39 +0000
-Received: from mail-vk1-xa2b.google.com ([2607:f8b0:4864:20::a2b])
+	id 1v1TeO-00000002IiY-0NlP;
+	Wed, 24 Sep 2025 17:51:32 +0000
+Received: from gentwo.org ([62.72.0.81])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1T8X-000000024WM-1TVw
+	id 1v1TeM-00000002Igg-09AY
 	for kexec@lists.infradead.org;
-	Wed, 24 Sep 2025 17:18:38 +0000
-Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-54bd3158f7bso102606e0c.0
-        for <kexec@lists.infradead.org>; Wed, 24 Sep 2025 10:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758734314; x=1759339114; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=;
-        b=JDmGs+c0ZvvVMsbzfNKs1JlEby4Z/nWzlPh/bq3obD3N14VUde1KDP4sBaPYpUXouz
-         TK9lSeNIIIe2NoB626JnVYDFF/wdhnXwQlOlP54G725r96yLNvUV48qBTw2K/8q1Pfi+
-         rzDV8UIdn+418u5tmAUliAnS9D0ykgVSttkLrwkVVF4s4FMDUehybHPCs7Mf0L9p/I4D
-         HwG1SPe0cdGzKvHLL72o1oSzjLaIKKx6rrtw/p6O3B9QjYJDNNbaDrVJgtUw215BIxwW
-         yARiGe9xNObzmI4xK7frH7LAxD22f/UPmTf42bMOt9QnlTN8gdBCyV7kEx5urYBe4Dad
-         cYjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758734314; x=1759339114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=;
-        b=wSSuB6mrl9KDiWUXLyakZZjCLyVoUGKOGX8/WUsyt/z2jQGMuqiK2vIRafDkPVMgrC
-         aEncHZcV3AEDjOM2ktvtcigg9werqTzcbEEEsKa64d6NhE/ANpBHfN+XkTwB2kAKZ2XG
-         vDx0pStC6c+lxWinZgi4zVnj+US0nbHNsJCmBkx1mu+Dxva+YOKWJbXCw03MWTNBG7u/
-         XWBVKPBKBD9hvfCMeuWo8g43hJ+BoIH0MxrEob4qVUvwDIyaudM6rnu5rYdZAe9VqOQ2
-         RfQqyD+J0rEk89Xdtdnc/yzt6Pq3fxN2dSBUJfcaELN46UyjWUHWgyD7F6haTku0x9Bk
-         f+ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWs3IsXoLY06avEEx8l36m5De+QBaxvnovsux/LBtYBLjwbVPYcKNRatRcLkgh52gizw1ccMA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzn6dwvuieXK+xZOTjNSKFHk8f7fctqWupEJGYI8Xd3RzsVCztB
-	K8E+uad1OI2eF9mdX1y1vwWnPzsTmOmPWXjWdUJKnhvqubfNwV/w8y9AgDrwJ801gncaHyprm2B
-	6wMicn3HTh3HyaL+9lNa6G43wUVYGTIs=
-X-Gm-Gg: ASbGncu73FGHHUidHNx3ufRpalOAB4XGt3hlBEHvI5e858IJgFsUc4s473b1afeZQuj
-	cqDL+KQh0L9/K2+8m9Slzveb3EEnZEQw8MEBjbT2RZRbG70BmrxxWiV8LINOz6JiGqSTC3j9Rqt
-	a5zm40vjlP087mqS6rNMOGTZ5qHWpg3+17SQRRw1IbAWAeZkmD7FkNAXRuiezZuVbvqRqZz94kd
-	TqZ8Fa6pJ7sWcNlwnQXxta5dHd57bzIjdKnwnA=
-X-Google-Smtp-Source: AGHT+IFNudWYdRYohdYWRakfqW3sTemN0SWD3jGIkvD9SRgmpWDEPo14DUBWOj+taHvy6lJzsWWaGnYJeYCvB7r8Igc=
-X-Received: by 2002:a05:6122:3c82:b0:54a:9fe8:171e with SMTP id
- 71dfb90a1353d-54bea23effamr355653e0c.7.1758734313522; Wed, 24 Sep 2025
- 10:18:33 -0700 (PDT)
-MIME-Version: 1.0
+	Wed, 24 Sep 2025 17:51:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1758736288;
+	bh=1v/KwM/huxtHbwJvg0b1BdepVHxNprsmpQM5BGSeRcE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=DqbVTkcaY2mxqjDwK32gR+OKB5UHJGJ6fYvY5/hFtLnO0BYvabDseryR6j9qIhGV/
+	 +1Epf9QOiWySiyNWVUOqqJRMqddF0uNRtewcmXp4wzVAZTbX3dAn7xFUai3uyXUXVl
+	 XszpToJbf2Y9Bl4p1xU8GtFtlG9b1+YsGNq5UgVU=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 8B0C540293; Wed, 24 Sep 2025 10:51:28 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 88C414028E;
+	Wed, 24 Sep 2025 10:51:28 -0700 (PDT)
+Date: Wed, 24 Sep 2025 10:51:28 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Cong Wang <xiyou.wangcong@gmail.com>
+cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, 
+    Cong Wang <cwang@multikernel.io>, 
+    Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+    Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+    Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, 
+    linux-mm@kvack.org
+Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture
+ support
+In-Reply-To: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
+Message-ID: <78127855-104f-46e2-e5d2-52c622243b08@gentwo.org>
 References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
- <20250919212650.GA275426@fedora> <CAM_iQpXnHr7WC6VN3WB-+=CZGF5pyfo9y9D4MCc_Wwgp29hBrw@mail.gmail.com>
- <20250922142831.GA351870@fedora> <CAM_iQpWO71vSV_0qXiUYeKYZMYF0xWNz8MrUVRkqKwDEtQvKqA@mail.gmail.com>
- <20250923170545.GA509965@fedora>
-In-Reply-To: <20250923170545.GA509965@fedora>
-From: Cong Wang <xiyou.wangcong@gmail.com>
-Date: Wed, 24 Sep 2025 10:18:22 -0700
-X-Gm-Features: AS18NWCWLBluj_2WnA7xQt94H_1gC4pE8CBvpOcHrfIASayaDPo8l1l16vPe2Bw
-Message-ID: <CAM_iQpWe50B4hfVTd-xTemByvoM_bg7eA9y8qwZjBsYcAbY9fA@mail.gmail.com>
-Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
-To: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, 
-	Cong Wang <cwang@multikernel.io>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	multikernel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250924_101837_427917_5A0AEA62 
-X-CRM114-Status: GOOD (  40.82  )
+X-CRM114-CacheID: sfid-20250924_105130_113895_889D39F9 
+X-CRM114-Status: GOOD (  11.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,137 +72,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 23, 2025 at 10:05=E2=80=AFAM Stefan Hajnoczi <stefanha@redhat.c=
-om> wrote:
->
-> On Mon, Sep 22, 2025 at 03:41:18PM -0700, Cong Wang wrote:
-> > On Mon, Sep 22, 2025 at 7:28=E2=80=AFAM Stefan Hajnoczi <stefanha@redha=
-t.com> wrote:
-> > >
-> > > On Sat, Sep 20, 2025 at 02:40:18PM -0700, Cong Wang wrote:
-> > > > On Fri, Sep 19, 2025 at 2:27=E2=80=AFPM Stefan Hajnoczi <stefanha@r=
-edhat.com> wrote:
-> > > > >
-> > > > > On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
-> > > > > > This patch series introduces multikernel architecture support, =
-enabling
-> > > > > > multiple independent kernel instances to coexist and communicat=
-e on a
-> > > > > > single physical machine. Each kernel instance can run on dedica=
-ted CPU
-> > > > > > cores while sharing the underlying hardware resources.
-> > > > > >
-> > > > > > The multikernel architecture provides several key benefits:
-> > > > > > - Improved fault isolation between different workloads
-> > > > > > - Enhanced security through kernel-level separation
-> > > > >
-> > > > > What level of isolation does this patch series provide? What stop=
-s
-> > > > > kernel A from accessing kernel B's memory pages, sending interrup=
-ts to
-> > > > > its CPUs, etc?
-> > > >
-> > > > It is kernel-enforced isolation, therefore, the trust model here is=
- still
-> > > > based on kernel. Hence, a malicious kernel would be able to disrupt=
-,
-> > > > as you described. With memory encryption and IPI filtering, I think
-> > > > that is solvable.
-> > >
-> > > I think solving this is key to the architecture, at least if fault
-> > > isolation and security are goals. A cooperative architecture where
-> > > nothing prevents kernels from interfering with each other simply does=
-n't
-> > > offer fault isolation or security.
-> >
-> > Kernel and kernel modules can be signed today, kexec also supports
-> > kernel signing via kexec_file_load(). It migrates at least untrusted
-> > kernels, although kernels can be still exploited via 0-day.
->
-> Kernel signing also doesn't protect against bugs in one kernel
-> interfering with another kernel.
+You dont really need any kernel support to run multiple kernels on an SMP
+system. Multiple kernels can operate without a hypervisor or anything
+complicated like that.
 
-This is also true, this is why memory encryption and authentication
-could help. Hardware vendors can catch up with software, which
-is how virtualization evolved (e.g. VPDA didn't exist when KVM was
-invented).
+The firmware can prep the kernel boot so that the kernels operate
+on distinct address spaces, processors and I/O resources. Whereupon you
+have the challenge to communicate betweeen the kernels which led to
+various forms of "ethernet" drives communicating via shard memory.
 
->
-> > >
-> > > On CPU architectures that offer additional privilege modes it may be
-> > > possible to run a supervisor on every CPU to restrict access to
-> > > resources in the spawned kernel. Kernels would need to be modified to
-> > > call into the supervisor instead of accessing certain resources
-> > > directly.
-> > >
-> > > IOMMU and interrupt remapping control would need to be performed by t=
-he
-> > > supervisor to prevent spawned kernels from affecting each other.
-> >
-> > That's right, security vs performance. A lot of times we have to balanc=
-e
-> > between these two. This is why Kata Container today runs a container
-> > inside a VM.
-> >
-> > This largely depends on what users could compromise, there is no single
-> > right answer here.
-> >
-> > For example, in a fully-controlled private cloud, security exploits are
-> > probably not even a concern. Sacrificing performance for a non-concern
-> > is not reasonable.
-> >
-> > >
-> > > This seems to be the price of fault isolation and security. It ends u=
-p
-> > > looking similar to a hypervisor, but maybe it wouldn't need to use
-> > > virtualization extensions, depending on the capabilities of the CPU
-> > > architecture.
-> >
-> > Two more points:
-> >
-> > 1) Security lockdown. Security lockdown transforms multikernel from
-> > "0-day means total compromise" to "0-day means single workload
-> > compromise with rapid recovery." This is still a significant improvemen=
-t
-> > over containers where a single kernel 0-day compromises everything
-> > simultaneously.
->
-> I don't follow. My understanding is that multikernel currently does not
-> prevent spawned kernels from affecting each other, so a kernel 0-day in
-> multikernel still compromises everything?
+This has been done for decades. I have stuff run stuff like this on
+SGI hardware and Sparc/Neon back in 2003. ARM should also do this without
+too much fuss.
 
-Linux kernel lockdown does reduce the blast radius of a 0-day exploit,
-but it doesn=E2=80=99t eliminate it. I hope this is clearer.
+There is even a device driver to share memory between those kernels called
+XPMEM (which was developed on SGI machines decades ago for exactly this
+purpose). Its ancient.
 
->
-> >
-> > 2) Rapid kernel updates: A more practical way to eliminate 0-day
-> > exploits is to update kernel more frequently, today the major blocker
-> > is the downtime required by kernel reboot, which is what multikernel
-> > aims to resolve.
->
-> If kernel upgrades are the main use case for multikernel, then I guess
-> isolation is not necessary. Two kernels would only run side-by-side for
-> a limited period of time and they would have access to the same
-> workloads.
+There is nothing new under the sun as already expressed over 2000 years
+ago in Ecclesiastes 1:9. ;-)
 
-Zero-downtime upgrade is probably the last we could achieve
-with multikernel, as a true zero-downtime requires significant effort
-on kernel-to-kernel coordination, so we would essentially need to
-establish a protocol (via KHO, I hope) here.
+The improvement here is that the burden of implementation away from
+firmware and we can then have a memory based "ethernet" shared memory
+implementation indepedent of the architecture.
 
-On the other hand, isolation is relatively easy and more useful.
-I understand you don't like kernel isolation, however, we need to
-recognize the success of containers today, regardless we like it or
-not.
+The reason this was done by SGI is to avoid scaling issues. Machines with
+high numbers of cores can slow down because of serialization overhead in
+the kernel.
 
-By the way, although just a theory, I hope multikernel does not
-prevent users using virtualization inside, as VM does not prevent
-running containers inside. The choice should always be on users'
-side, not ours.
+The segmentation of the cores into various kernel images reduces the
+scaling problem (but then lead to a communication bottleneck).
 
-I hope this helps.
 
-Regards,
-Cong Wang
+The rationale for Sparc/Neon were hardware limitations that resulted
+in broken cache coherency between cores from multiple sockets. A kernel
+expected coherent memory and thus one kernel for each coherency domain was
+a solution. ;-)
+
+AFAICT various contemporary Android deployments do the multiple kernel
+approach in one way or another already for security purposes and for
+specialized controllers. However, the multi kernel approaches are often
+depending on specialized and dedicated hardware. It may be difficult to
+support with a generic approach developed here.
 
