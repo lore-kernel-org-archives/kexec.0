@@ -4,64 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEE6BCAC5A5
-	for <kexec@archiver.kernel.org>; Wed, 24 Sep 2025 15:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC708CAC5A5
+	for <kexec@archiver.kernel.org>; Wed, 24 Sep 2025 17:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fO6Z//rPL79a8R8QZxUtb2XRgOYLfIxN6LnW/zgnSJE=; b=EJgN3zC00mP29OG5XVqGR6rNEm
-	QlYxouMV/TxhvwbDWsvSWBhd5YbrA8rrwkY4zxAS11sY/mVCAezpgBF95ZTYzFWahFUYSJqFMXC9K
-	huFCoPFORwq+PjSislOXJ0fTynEbegm1QFQEapjnu4Boj1fGztWEHr0J79hVrYPkzDxonbLzVXJ5X
-	9OVktLjM4CQkcgVd5vqJauOkQzHreVjORVy2YXxOMZE4PFEP4IY9nhe2Fi4l/n3ebAN1UMt+TFu3/
-	r7Ifam9uNM1LlVeqUFlCYrzN8p+rd8OY1dYbXHvOjJ1DyzdZQ6/FgeT+4aZOFatVqFTzuLy1S+NQD
-	/VR3l0CQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=; b=BbQfs/5Lq4I4pBGSm/9kuJPEdU
+	dvkE+HhopuFCnIw11D0HVxQkD5vjrShdWinJ7sIi0apJnFAgMkNvtiHx7IzH3uSB64GPHPwh6ElUg
+	z1GFEe8fpWA/mCfeWacibAyITHFjUxnasubZ9SDxBevd0vQJ3WwbQs/IrD9sRxFR1ADqlJUkOQI7r
+	BNUt1ksWTMjdSEm7g7tp16nZDg4/N3pYilismMPJQ34Y/iAINVcT+sa7tutPgUMhU0GfhSxG7gPQE
+	MwXANxip7g0Ft0cnHDAVUb53GIkNE3HP1OSHq7aC76m90ijrnsxjfLqVn3CjTfJ6IkwxneyBFAENf
+	N/tEsvtQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1RPg-00000001G8P-2zL6;
-	Wed, 24 Sep 2025 15:28:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1v1T8Z-000000024Zw-0ZEW;
+	Wed, 24 Sep 2025 17:18:39 +0000
+Received: from mail-vk1-xa2b.google.com ([2607:f8b0:4864:20::a2b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1RPf-00000001G65-2GHv
+	id 1v1T8X-000000024WM-1TVw
 	for kexec@lists.infradead.org;
-	Wed, 24 Sep 2025 15:28:11 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9EFFD601EB;
-	Wed, 24 Sep 2025 15:28:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F31FC4CEE7;
-	Wed, 24 Sep 2025 15:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758727690;
-	bh=O/bKTpvQARqt8FVg/y21EPm0JoWae7amDRNYbxV7ONc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=irQgTQzjfSAjWwFVUQYTRj/oZ1GIQOmw6hdssvbkPidionp5q5qRBCVgMhNc71jUA
-	 RpsG9bOvIDFcynHxs5toNX9PmUeYLEkApMwKR07l/VKoaqMkKEi4uDMFbIKmpvCMF4
-	 FdTi3dHPyvwoX3cnCcLsFQKRZXASwWuDUzS3vQoQFz2Vn2adC+XM1YHWXIcklNt1p/
-	 wYGFAX22klRZ7NuqxsHnDpJjIRZeFh9CCAqb0si0AEFWD9ZP5V67PvFMS8xdbyMuBT
-	 V+OlOwvaf35CchUJqb0cx5b/InhHOicYhWFNucyh5gLSkC2/UiOMh2riv7Cjk+T1j/
-	 j0+7OvHvZ2RUg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,  Mike Rapoport <rppt@kernel.org>,
-  Alexander Graf <graf@amazon.com>,  Baoquan He <bhe@redhat.com>,
-  Changyuan Lyu <changyuanl@google.com>,  Chris Li <chrisl@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] kho: add support for preserving vmalloc allocations
-In-Reply-To: <20250922143407.93e171f8b7c09eb21159a33e@linux-foundation.org>
-	(Andrew Morton's message of "Mon, 22 Sep 2025 14:34:07 -0700")
-References: <20250921054458.4043761-1-rppt@kernel.org>
-	<20250921054458.4043761-4-rppt@kernel.org>
-	<20250922131948.GX1391379@nvidia.com>
-	<20250922143407.93e171f8b7c09eb21159a33e@linux-foundation.org>
-Date: Wed, 24 Sep 2025 17:28:07 +0200
-Message-ID: <mafs0ikh7dg54.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 24 Sep 2025 17:18:38 +0000
+Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-54bd3158f7bso102606e0c.0
+        for <kexec@lists.infradead.org>; Wed, 24 Sep 2025 10:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758734314; x=1759339114; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=;
+        b=JDmGs+c0ZvvVMsbzfNKs1JlEby4Z/nWzlPh/bq3obD3N14VUde1KDP4sBaPYpUXouz
+         TK9lSeNIIIe2NoB626JnVYDFF/wdhnXwQlOlP54G725r96yLNvUV48qBTw2K/8q1Pfi+
+         rzDV8UIdn+418u5tmAUliAnS9D0ykgVSttkLrwkVVF4s4FMDUehybHPCs7Mf0L9p/I4D
+         HwG1SPe0cdGzKvHLL72o1oSzjLaIKKx6rrtw/p6O3B9QjYJDNNbaDrVJgtUw215BIxwW
+         yARiGe9xNObzmI4xK7frH7LAxD22f/UPmTf42bMOt9QnlTN8gdBCyV7kEx5urYBe4Dad
+         cYjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758734314; x=1759339114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hlK30MjUC9fiNGfLRxzMUUUgYUbF4BmxAwJAcTHgmLg=;
+        b=wSSuB6mrl9KDiWUXLyakZZjCLyVoUGKOGX8/WUsyt/z2jQGMuqiK2vIRafDkPVMgrC
+         aEncHZcV3AEDjOM2ktvtcigg9werqTzcbEEEsKa64d6NhE/ANpBHfN+XkTwB2kAKZ2XG
+         vDx0pStC6c+lxWinZgi4zVnj+US0nbHNsJCmBkx1mu+Dxva+YOKWJbXCw03MWTNBG7u/
+         XWBVKPBKBD9hvfCMeuWo8g43hJ+BoIH0MxrEob4qVUvwDIyaudM6rnu5rYdZAe9VqOQ2
+         RfQqyD+J0rEk89Xdtdnc/yzt6Pq3fxN2dSBUJfcaELN46UyjWUHWgyD7F6haTku0x9Bk
+         f+ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWs3IsXoLY06avEEx8l36m5De+QBaxvnovsux/LBtYBLjwbVPYcKNRatRcLkgh52gizw1ccMA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzn6dwvuieXK+xZOTjNSKFHk8f7fctqWupEJGYI8Xd3RzsVCztB
+	K8E+uad1OI2eF9mdX1y1vwWnPzsTmOmPWXjWdUJKnhvqubfNwV/w8y9AgDrwJ801gncaHyprm2B
+	6wMicn3HTh3HyaL+9lNa6G43wUVYGTIs=
+X-Gm-Gg: ASbGncu73FGHHUidHNx3ufRpalOAB4XGt3hlBEHvI5e858IJgFsUc4s473b1afeZQuj
+	cqDL+KQh0L9/K2+8m9Slzveb3EEnZEQw8MEBjbT2RZRbG70BmrxxWiV8LINOz6JiGqSTC3j9Rqt
+	a5zm40vjlP087mqS6rNMOGTZ5qHWpg3+17SQRRw1IbAWAeZkmD7FkNAXRuiezZuVbvqRqZz94kd
+	TqZ8Fa6pJ7sWcNlwnQXxta5dHd57bzIjdKnwnA=
+X-Google-Smtp-Source: AGHT+IFNudWYdRYohdYWRakfqW3sTemN0SWD3jGIkvD9SRgmpWDEPo14DUBWOj+taHvy6lJzsWWaGnYJeYCvB7r8Igc=
+X-Received: by 2002:a05:6122:3c82:b0:54a:9fe8:171e with SMTP id
+ 71dfb90a1353d-54bea23effamr355653e0c.7.1758734313522; Wed, 24 Sep 2025
+ 10:18:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
+ <20250919212650.GA275426@fedora> <CAM_iQpXnHr7WC6VN3WB-+=CZGF5pyfo9y9D4MCc_Wwgp29hBrw@mail.gmail.com>
+ <20250922142831.GA351870@fedora> <CAM_iQpWO71vSV_0qXiUYeKYZMYF0xWNz8MrUVRkqKwDEtQvKqA@mail.gmail.com>
+ <20250923170545.GA509965@fedora>
+In-Reply-To: <20250923170545.GA509965@fedora>
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Date: Wed, 24 Sep 2025 10:18:22 -0700
+X-Gm-Features: AS18NWCWLBluj_2WnA7xQt94H_1gC4pE8CBvpOcHrfIASayaDPo8l1l16vPe2Bw
+Message-ID: <CAM_iQpWe50B4hfVTd-xTemByvoM_bg7eA9y8qwZjBsYcAbY9fA@mail.gmail.com>
+Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
+To: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, 
+	Cong Wang <cwang@multikernel.io>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	multikernel@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250924_101837_427917_5A0AEA62 
+X-CRM114-Status: GOOD (  40.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,43 +101,137 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 22 2025, Andrew Morton wrote:
-
-> On Mon, 22 Sep 2025 10:19:48 -0300 Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Tue, Sep 23, 2025 at 10:05=E2=80=AFAM Stefan Hajnoczi <stefanha@redhat.c=
+om> wrote:
 >
->> > +static void kho_vmalloc_free_chunks(struct kho_vmalloc *kho_vmalloc)
->> > +{
->> > +	struct kho_vmalloc_chunk *chunk = KHOSER_LOAD_PTR(kho_vmalloc->first);
->> > +
->> > +	while (chunk) {
->> > +		struct kho_vmalloc_chunk *tmp = chunk;
->> > +
->> > +		kho_vmalloc_unpreserve_chunk(chunk);
->> > +
->> > +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
->> > +		kfree(tmp);
->> 
->> Shouldn't this be free_page()?
+> On Mon, Sep 22, 2025 at 03:41:18PM -0700, Cong Wang wrote:
+> > On Mon, Sep 22, 2025 at 7:28=E2=80=AFAM Stefan Hajnoczi <stefanha@redha=
+t.com> wrote:
+> > >
+> > > On Sat, Sep 20, 2025 at 02:40:18PM -0700, Cong Wang wrote:
+> > > > On Fri, Sep 19, 2025 at 2:27=E2=80=AFPM Stefan Hajnoczi <stefanha@r=
+edhat.com> wrote:
+> > > > >
+> > > > > On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
+> > > > > > This patch series introduces multikernel architecture support, =
+enabling
+> > > > > > multiple independent kernel instances to coexist and communicat=
+e on a
+> > > > > > single physical machine. Each kernel instance can run on dedica=
+ted CPU
+> > > > > > cores while sharing the underlying hardware resources.
+> > > > > >
+> > > > > > The multikernel architecture provides several key benefits:
+> > > > > > - Improved fault isolation between different workloads
+> > > > > > - Enhanced security through kernel-level separation
+> > > > >
+> > > > > What level of isolation does this patch series provide? What stop=
+s
+> > > > > kernel A from accessing kernel B's memory pages, sending interrup=
+ts to
+> > > > > its CPUs, etc?
+> > > >
+> > > > It is kernel-enforced isolation, therefore, the trust model here is=
+ still
+> > > > based on kernel. Hence, a malicious kernel would be able to disrupt=
+,
+> > > > as you described. With memory encryption and IPI filtering, I think
+> > > > that is solvable.
+> > >
+> > > I think solving this is key to the architecture, at least if fault
+> > > isolation and security are goals. A cooperative architecture where
+> > > nothing prevents kernels from interfering with each other simply does=
+n't
+> > > offer fault isolation or security.
+> >
+> > Kernel and kernel modules can be signed today, kexec also supports
+> > kernel signing via kexec_file_load(). It migrates at least untrusted
+> > kernels, although kernels can be still exploited via 0-day.
 >
-> Or vfree()?
+> Kernel signing also doesn't protect against bugs in one kernel
+> interfering with another kernel.
 
-It should be free_page(). The chunk isn't in the vmalloc-ed area, it is
-the metadata to track it. It gets allocated in new_vmalloc_chunk() using
-get_zeroed_page().
+This is also true, this is why memory encryption and authentication
+could help. Hardware vendors can catch up with software, which
+is how virtualization evolved (e.g. VPDA didn't exist when KVM was
+invented).
 
 >
-> Not sure why this code works - I'll suspend the series from linux-next
-> for now.
+> > >
+> > > On CPU architectures that offer additional privilege modes it may be
+> > > possible to run a supervisor on every CPU to restrict access to
+> > > resources in the spawned kernel. Kernels would need to be modified to
+> > > call into the supervisor instead of accessing certain resources
+> > > directly.
+> > >
+> > > IOMMU and interrupt remapping control would need to be performed by t=
+he
+> > > supervisor to prevent spawned kernels from affecting each other.
+> >
+> > That's right, security vs performance. A lot of times we have to balanc=
+e
+> > between these two. This is why Kata Container today runs a container
+> > inside a VM.
+> >
+> > This largely depends on what users could compromise, there is no single
+> > right answer here.
+> >
+> > For example, in a fully-controlled private cloud, security exploits are
+> > probably not even a concern. Sacrificing performance for a non-concern
+> > is not reasonable.
+> >
+> > >
+> > > This seems to be the price of fault isolation and security. It ends u=
+p
+> > > looking similar to a hypervisor, but maybe it wouldn't need to use
+> > > virtualization extensions, depending on the capabilities of the CPU
+> > > architecture.
+> >
+> > Two more points:
+> >
+> > 1) Security lockdown. Security lockdown transforms multikernel from
+> > "0-day means total compromise" to "0-day means single workload
+> > compromise with rapid recovery." This is still a significant improvemen=
+t
+> > over containers where a single kernel 0-day compromises everything
+> > simultaneously.
+>
+> I don't follow. My understanding is that multikernel currently does not
+> prevent spawned kernels from affecting each other, so a kernel 0-day in
+> multikernel still compromises everything?
 
-It only gets called in the error path and that didn't get hit during
-testing I suppose. Until v3 the chunk was being allocated using
-kzalloc() so I guess this got missed in the move to get_zeroed_page().
+Linux kernel lockdown does reduce the blast radius of a 0-day exploit,
+but it doesn=E2=80=99t eliminate it. I hope this is clearer.
 
-I think Mike is out of office this week. Do you think this series is
-stable enough to land in the upcoming merge window? If so, I can send a
-v6 with the fix today.
+>
+> >
+> > 2) Rapid kernel updates: A more practical way to eliminate 0-day
+> > exploits is to update kernel more frequently, today the major blocker
+> > is the downtime required by kernel reboot, which is what multikernel
+> > aims to resolve.
+>
+> If kernel upgrades are the main use case for multikernel, then I guess
+> isolation is not necessary. Two kernels would only run side-by-side for
+> a limited period of time and they would have access to the same
+> workloads.
 
--- 
+Zero-downtime upgrade is probably the last we could achieve
+with multikernel, as a true zero-downtime requires significant effort
+on kernel-to-kernel coordination, so we would essentially need to
+establish a protocol (via KHO, I hope) here.
+
+On the other hand, isolation is relatively easy and more useful.
+I understand you don't like kernel isolation, however, we need to
+recognize the success of containers today, regardless we like it or
+not.
+
+By the way, although just a theory, I hope multikernel does not
+prevent users using virtualization inside, as VM does not prevent
+running containers inside. The choice should always be on users'
+side, not ours.
+
+I hope this helps.
+
 Regards,
-Pratyush Yadav
+Cong Wang
 
