@@ -4,91 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8370CAC5AE
-	for <kexec@archiver.kernel.org>; Wed, 24 Sep 2025 21:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64042CAC5AA
+	for <kexec@archiver.kernel.org>; Thu, 25 Sep 2025 06:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gE7xr797IjE97kDTlx6kiGCJ5AYi5oF7DWAxEs64oWE=; b=CAGTAE7P1Z4lxqZlROa9UMfa6v
-	M8bCeOhV247qd2OOjv2L4HfpZSH93387HeEb+zAAATo63erKc4kK0atufhVDRhIE2m8ivnC9hjXn3
-	0wBUNtkUpmW07ajRQJoB6b9zmqzzs9UQaDN+cufAGLFVDzN39V/IW7V9D0ukd7uqmlSyFfSP8oTe6
-	8oSaY3eURJpjXRFLQOmLQfs/CUFaPKlunEk79cye/jMu1zOj8ab5tn9z2Da/LKpY0yxL8M6H/tB9y
-	UunrqWn3e8EFNgvEG1VI8S6Jnj6LcqPhmmTrwKsx1sJk7JbiLBkg5sJmvqLAFFmQK9v4WnP+AEVTr
-	geZVjgdA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MWVGs+PYKtMTbMr9CAqyDAMYWhTG9d/QRFnGi6Yteos=; b=Kxd6MLQEvWbQ1gKWzQc7EkkkeI
+	2pAXHAVRfl/C6jrN9bsQeppdXT+2LZmNWk3ckpr3zhjsW2ls9Kk2CAEEklSQ6IyxV7Fb+gB3GVMSu
+	hyPNLbKAKeOTyi0oiELEJk0fGnIt1n4tnHbGzehi3qnqxci3rfPJazOzrJtf2rfrXqmwSFkj1hSGW
+	ISMAqxwF3IsahYnwFO4x74azYHZ/DM6j7+CQ5pbwHsyQHVuxRimkRwPJDNhUndF2gxRrnoLQkdimj
+	9p6GMzHPCx5UjygKcr33nZjiEeaKJOisuIM4Br7XOZLucJPusHyNnPf/5t2v1/6l7mgpHFY8rh7ZZ
+	xTZ4W6AQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1WiI-00000003lX5-3SW2;
-	Wed, 24 Sep 2025 21:07:46 +0000
-Received: from mail-lj1-x229.google.com ([2a00:1450:4864:20::229])
+	id 1v1fLq-00000006ERK-3ptV;
+	Thu, 25 Sep 2025 06:21:10 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1WiG-00000003lW1-0xrk
+	id 1v1fLk-00000006EQF-2kgJ
 	for kexec@lists.infradead.org;
-	Wed, 24 Sep 2025 21:07:45 +0000
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-367874aeeacso2524261fa.1
-        for <kexec@lists.infradead.org>; Wed, 24 Sep 2025 14:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758748062; x=1759352862; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gE7xr797IjE97kDTlx6kiGCJ5AYi5oF7DWAxEs64oWE=;
-        b=HDSuHVUNF6cFLJZPzSrCM8ZmbidAAoihL8l2/80TBPcfuD8SDKUumAxCH+rVIo8NCb
-         fWaQutHmM5RrWIYIN0YS1exxnyu4GHugKCQAtXWkPk77B8+MTBOiw+LzDJZX/cLwXhSJ
-         UC8g+f5SmiFybR7PyTSfbtKJ0ku+fbjGHw8Eq+eDGpmMrADTMq/okiZJefm/dbLgbUIZ
-         N9qP2QPsrhKtW01ISz9aa3Fqfa6gbf8I0rm8vVtEDb4I4ZHOGN75vXbR3AeB+u3GSxfl
-         iUn50N16Sm2xowKnSyyKjgOQEab0XC5n0cpGOUj5F8+avBhs8SND1+4Sc3kkWTMgDy+N
-         ZYow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758748062; x=1759352862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gE7xr797IjE97kDTlx6kiGCJ5AYi5oF7DWAxEs64oWE=;
-        b=UCLk/25qIun4uY/jTc+wS7rvDeZrIOeSbMgjyi0edpCoSJxzYGhYSpdGE2b3LwnFD6
-         cR+qFcceAy3f3sbTy9F2V2by0xI8DHst98WDon+MHsIyuY/pjY28pwEwmPdT3qNwjBds
-         MD83ayQ67RkRojXcGxVNxidZnBBVk2tsQFxq8ntVNoDc2biIq1n23ik9W3otztjiM/p3
-         XglBFe/FbcHRreqlBWfY73xS0t+nsVqnEPx+fJh2vh8SLwfygkCXfWZ6WjOHt84MlWAl
-         j8e8vs/K03PsP2VyewCMBNA2zz20vlAIuD9Lt2WTV3qLOgdaqvapFSrufCOyi6t1T0R9
-         oTMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIwcLjvNfhPF9ck9QT1G1d2htoUkHVrCvNYWaDLYfG7JEHTsPBl1f7LerKfUcOLe/z1SFkcQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzLsLWNw0QUrlJQ/usqiFgnaQTfbM/avGbhnnj+aFrMzuTVCRVp
-	aQwebuzuPq9SgR3pHbWnz9MvqB9IVKoebFziWBt269q2tzp49gtS9V3hjwPya7HikWLL8I3PzWi
-	c2/D86AF8ztRvcmS+awxFZNy1suPFuL4=
-X-Gm-Gg: ASbGncsdvDyl7PfE/V2LTJKkUbdltmYrZPVlZHk+790fQMbejvCx21+hWgK7Xf4Cu8a
-	VIoLN937p2EhpkRZ12pzkUmWXgq1iq0gYnacswdstRKVmaXjlUbGViiu0Ml0Zg/QSK1Dd48v7DX
-	AgD7qYJ77/UxvBsZQvXMs2Y3qcbfvgJtdDwXs7ze3a/Jj7ZlJ2gXFEG9TuBRI8fWIKOOz8NlXo/
-	soXcwA=
-X-Google-Smtp-Source: AGHT+IFJPiaImNUPooT24I4Y2aFWPRjLkZZydE30bY2itAhlYNr+0vlA+AsyScyy1wD17a1jFkKVooka8O95a0ZzO/Q=
-X-Received: by 2002:a2e:9a12:0:b0:333:e590:1bc9 with SMTP id
- 38308e7fff4ca-36f7f2481d7mr2143301fa.24.1758748061412; Wed, 24 Sep 2025
- 14:07:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
- <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
- <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com> <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
- <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv> <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
+	Thu, 25 Sep 2025 06:21:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758781262;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MWVGs+PYKtMTbMr9CAqyDAMYWhTG9d/QRFnGi6Yteos=;
+	b=Ao3y4svZeOrpQYXP3YYH9BG+ihU92/AYUARP6cOalWWJ0xfFBn9JS7iExuO+wvDOlVHYMF
+	HoS2Cj62HuORplkkzRRSqN3+8hJ4NjF/tSRk1dST4V1wsJAtLzT9KA6A/lSCOn3R7hwdhD
+	eOkMpL0wbGKObxh/joGi03pZdHndXwU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-222-x8b2H0wSP5im0fP7tXEa7Q-1; Thu,
+ 25 Sep 2025 02:20:55 -0400
+X-MC-Unique: x8b2H0wSP5im0fP7tXEa7Q-1
+X-Mimecast-MFC-AGG-ID: x8b2H0wSP5im0fP7tXEa7Q_1758781253
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1E711955F45;
+	Thu, 25 Sep 2025 06:20:52 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.12])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E97CE19560B1;
+	Thu, 25 Sep 2025 06:20:50 +0000 (UTC)
+Date: Thu, 25 Sep 2025 14:20:46 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, glider@google.com,
+	dvyukov@google.com, elver@google.com, linux-mm@kvack.org,
+	vincenzo.frascino@arm.com, akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, sj@kernel.org,
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu
+Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+Message-ID: <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
+References: <20250820053459.164825-1-bhe@redhat.com>
+ <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+ <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
+ <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
+ <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com>
+ <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
+ <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
+ <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
  <aNNY1AzfGua3Kk3S@MiWiFi-R3L-srv>
-In-Reply-To: <aNNY1AzfGua3Kk3S@MiWiFi-R3L-srv>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Thu, 25 Sep 2025 00:07:24 +0300
-X-Gm-Features: AS18NWAbw-7uGsKJ0oGYd7zu1yq2_988Moths_iRDqX3j-B6KBGWgGPm02szRx4
-Message-ID: <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, glider@google.com, 
-	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
-	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250924_140744_275046_32C25332 
-X-CRM114-Status: GOOD (  16.80  )
+X-CRM114-CacheID: sfid-20250924_232104_764731_E3E073DB 
+X-CRM114-Status: GOOD (  21.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,35 +99,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Sep 24, 2025 at 5:35=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
->
-> On 09/23/25 at 07:49pm, Andrey Konovalov wrote:
-> > Since the Sabyrzhan's patches are already in mm-stable (and I assume
-> > will be merged during the next merge window), just rebase your changes
-> > on top.
->
-> That's fine, I will rebase.
->
+On 09/25/25 at 12:07am, Sabyrzhan Tasbolatov wrote:
+> On Wed, Sep 24, 2025 at 5:35 AM Baoquan He <bhe@redhat.com> wrote:
 > >
-> > But also note that Sabyrzhan is planning to move out the
-> > kasan_enabled() checks into include/linux/kasan.h (which is a clean-up
-> > I would have also asked you to do with the kasan=3Doff patches), so
-> > maybe you should sync up with him wrt these changes.
->
-> Hi Sabyrzhan,
->
-> What's your thought? You want to do the cleanup after my rebasing on
-> your merged patches or you prefer to do it ahead of time? Please let me
-> know so that I can adjust my posting accordingly. Thanks.
->
+> > On 09/23/25 at 07:49pm, Andrey Konovalov wrote:
+> > > Since the Sabyrzhan's patches are already in mm-stable (and I assume
+> > > will be merged during the next merge window), just rebase your changes
+> > > on top.
+> >
+> > That's fine, I will rebase.
+> >
+> > >
+> > > But also note that Sabyrzhan is planning to move out the
+> > > kasan_enabled() checks into include/linux/kasan.h (which is a clean-up
+> > > I would have also asked you to do with the kasan=off patches), so
+> > > maybe you should sync up with him wrt these changes.
+> >
+> > Hi Sabyrzhan,
+> >
+> > What's your thought? You want to do the cleanup after my rebasing on
+> > your merged patches or you prefer to do it ahead of time? Please let me
+> > know so that I can adjust my posting accordingly. Thanks.
+> >
+> 
+> Hello,
+> 
+> I can make all necessary changes only next week. Currently, traveling.
+> I will send the fix-up patch Andrey has described somewhere next week.
+> Please let me know if it's ok.
 
-Hello,
+Please take it easy, today is Thursday, I will wait for your clean up
+patch next week and post. I can do some preparation work for rebasing on
+your merged patches. Thanks.
 
-I can make all necessary changes only next week. Currently, traveling.
-I will send the fix-up patch Andrey has described somewhere next week.
-Please let me know if it's ok.
+> 
+> > Thanks
+> > Baoquan
+> >
+> 
 
-> Thanks
-> Baoquan
->
 
