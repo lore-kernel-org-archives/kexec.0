@@ -4,78 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43618CAC5B8
-	for <kexec@archiver.kernel.org>; Sat, 27 Sep 2025 20:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24B71CAC5B0
+	for <kexec@archiver.kernel.org>; Sat, 27 Sep 2025 20:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Nqm2a1slgwRpzw6giHb6m2YLEyBBuzMrjpXPrRVXwQ0=; b=M72W5Hcj9cJjmUOtpUmgJW/9vq
-	vnbM1lUa8ZubeXlZpY4E4OhtEgplKstPiIYcn68AC9fA58IfZkjsQr0l8SMFlyZdWCfIGzDpxtNBo
-	6XMNCIQqeq/S7TmqFZRWLiKN2cLSRV5anOFYdnTER84xzmEz2fKA9dKFIFidvFjylH7O9AbG0rT5Q
-	5HJGEGvNqzMIfOsh92FNVaJhoMnBgAgWjOMTA3r+/5yj95ViRRSEOzgTjd8+JA0xl7UWii1+hZ8IZ
-	zbrYTgvQbHZwD0X68KQGeyVUiCld8xH+YSNTprmxjGI7kr9IaDyc86fTq6NZj+75rItAUkHSlHXNE
-	qPJxJwyw==;
+	bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=; b=SjU286Go94BRcZgqMYPXxuZNeA
+	Gf/7utw9A4I/7dYlB1ArgX5QZM7SasPhTckHpY/VpMO3FWpbKeyt2IvTAIdniCSPQ+sqSDoO11FrG
+	7yfYsKJaTfGeboekBKXuqik4k0jXUPMOj+96oH6BuelM+R8Ep/4Rja3sWvOS1WgM5qs4a2QC2r5D3
+	cdx8TvE7bbv41oVz1YbAVH5P0WytSrGPEMLzy5bqmKsOH4epIWlaufLbQFoLoNJLY95MVmaAo0brJ
+	BlwtV2tH1wglcE8t0jlj37AHgnF8Yq8RpUkoLNQLx/iaDoP6NIY+2vSjee4Pp4V3baWBv7ZelR3S+
+	dHn74w2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v2bhn-0000000CPcF-3tts;
-	Sat, 27 Sep 2025 20:39:43 +0000
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+	id 1v2blb-0000000CQrO-3MCp;
+	Sat, 27 Sep 2025 20:43:39 +0000
+Received: from mail-vs1-xe2e.google.com ([2607:f8b0:4864:20::e2e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v2bhl-0000000CPbh-2Qcj
+	id 1v2blY-0000000CQpG-3r6p
 	for kexec@lists.infradead.org;
-	Sat, 27 Sep 2025 20:39:42 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4ddabf2ada5so25328031cf.1
-        for <kexec@lists.infradead.org>; Sat, 27 Sep 2025 13:39:40 -0700 (PDT)
+	Sat, 27 Sep 2025 20:43:38 +0000
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-55716f2d3b9so2704341137.1
+        for <kexec@lists.infradead.org>; Sat, 27 Sep 2025 13:43:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1759005580; x=1759610380; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1759005815; x=1759610615; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nqm2a1slgwRpzw6giHb6m2YLEyBBuzMrjpXPrRVXwQ0=;
-        b=FrbN1Q7i7dM7G821LrE/v88Ut0ska8yKE/oy+x627hk9j/7SnSqsuOwZqcx+uCu6NX
-         P14PyA0SdEj5Ub1KoMOLUtIlTFuKUf6dihFgTLpBWKUOM8G6i0OXOTsPdEg3puBMt9fd
-         1wOHvvY/MbRJqOYdTvwdzGydSjcI46iPZxIQ6z0fwsf/tXNJl2ADF0pX/c5HY/xprgrL
-         ipUcPZq8smponCNB6xzy4+y6LzAf5zqsSeW7w/OHXVUV0urq1J2mXarygVbqpMC5Io3p
-         LsJVE/WyLeg8u2z+nTnjfyN8e538Anp2h3Sf2RRfEEBb6wWdWdxG8z9QhogVU4rNel2m
-         7Ksg==
+        bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=;
+        b=F/dJK+l8x6D+Wg0JybmYzOE8p7G1BbhmDOwqTrj78QJuXoSVFj3WFOEpxGFELcmvLC
+         83i1POJZeHJKKi5B+R6sNIJWlos6gZHRTByYS3iEfzV2WxaU50iUM2N5F9JpnJGvzJpq
+         rgEMmT7eUJru0SiEDTuSiAewfjeqGY7fsEinFm89jJ4U9f2FghM/AuDQaAps0ESrBj0x
+         HrOT9CspjEbYaiFVBySqYedaEAzE/f12qnmbJT85UEO1ZkyAoY0V8E/Ns4lW3zt+c7Ii
+         RL1fthqnKwMWmit46MIS4RO6jqWPEsu2aGj1TxhbQj5vIdF0Icr/olicAa3vlCtTrSOe
+         A1WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759005580; x=1759610380;
+        d=1e100.net; s=20230601; t=1759005815; x=1759610615;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Nqm2a1slgwRpzw6giHb6m2YLEyBBuzMrjpXPrRVXwQ0=;
-        b=Md2iRK5RwHdOMWuKIWQ8Eq4Nv8uiVhDktAXt9f4RcsZbWpFi1+xbqealttq5en/eIB
-         g34Ucl3lyB5Q9MKle4UfSbC+KgHxmR4fFd2H5LsWYAmKCK/7rw82bDxlt+tZqtUvBbDi
-         2yiXkkSEHd/D7gBtA3LS2yymNIYMj9Qc2Cvv44y7jl45l0Aixw5xBFhWqd7GDy0Lty61
-         KssBxA5eIy+qSNliZvWDs71rn9aAuLkN/s9qbNuMH3K8G8lEMgUFbybTJINiaPihsOr/
-         VU01g3yYcZ2bANNBCq9Gq5RkNn2vLsaR27HFh1+O7fu4nzk7X1Jg1Vl/rhNJ/1b6ItDq
-         WzFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWgQZVpIQe/lwjkkhEAbWbpuZxTn9/HeNYV0piC3L9HdyMgcOC0sNQzKQG+HM3UlKP0t/STg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy4mXh4RYeLlzxdiFyNCYRgdJBdRwplLEzxYa9USLf4vrRLbGK3
-	Nv8h9ngTygWg31oAnoJERziwaR/kYkBTQMCCxkCiJO60kPJHjPI2llwC3v799/a3iDE3kGlH0RZ
-	XJ8775Df2D3Pu062UZa4Q9Qvlo3nM2kDTWMEBb8r9Ww==
-X-Gm-Gg: ASbGncuI0X8AKXWSmpZcjlkRmyXosvw3Is0ltsE4Cko8FnazBYijAPoENmTMQmLhWY6
-	P26RRhshAHVNP0QB4bdxXU0mqIEEty1o865RzCejcFIENJ/NXu936OyBZ8tRD/SNw/f7FTt7X/q
-	RV0tkE0dbPB8umGXBNH1oqJubDElgLSPiPPZPRLYJ9cIeS4OvndORyQY24Wht54F+1p7BVOV7zR
-	qF48JRzBDgplILbx3A3mFpYyA==
-X-Google-Smtp-Source: AGHT+IGBzy4xKVonjD75U3bFZeJHdh+aNj3HgTEf2iQJ6Ivdld2/QWu42FO96m5+KzxRvbcmbaVonTr0xtmksT79s30=
-X-Received: by 2002:a05:622a:4cc9:b0:4cb:102c:56b2 with SMTP id
- d75a77b69052e-4da41e113ecmr158400271cf.0.1759005579868; Sat, 27 Sep 2025
- 13:39:39 -0700 (PDT)
+        bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=;
+        b=LORQZOXVh3BVBsSbRTx1zx0TTs+lHaI5O9bwFOlMZKRgXOjaMJNhqScq0U7avrwo9l
+         Gf1WSYGt/3VqPOcCVkk6QHWZ5v4MMjP7GUnY8xyEkNaCfVmK4nwzBnUYxBu2wS9MaNj8
+         FVCYmfIlM6rW3vfibxbOzbPBbYjNaFmjCLqnkdqKS5iQb4epTyJWGrsoYXeYQQdvOvt3
+         s12Z0FZZMmpbaWiB1+oBzN+48khnnhlsa5M/9u/eCVMLBexoc8NZwCU501Om56KS8Rau
+         ZyeWnbsoI28gGXKmAQWsUnvRRIQrRNbSz/LbV0XrEOYkFRGZhsdeytz10zY6lnIVm0O9
+         iORA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeYmwqGSniCbKGpAM1cqIC59LDFjG1e0f5qgvU6o4edryGdTEyG0gYEZv84sRjEh9DAM/sKA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxpd4w94v3eZcxrRkAelhNg6kslQBSsMOHmevzP4mfQsJADCww2
+	69BOMmf0tl6K+7ifEoBkC43QYXomCe+cZFMfsuyjyykVjkAF9Uee5Bkz6BEj1fpfrRji+35F+El
+	6BVsMjaQtgeeFrydBWVepjrvdiGBOTMU=
+X-Gm-Gg: ASbGncsxrAkh9G4rJAh66p/ElYZUinQDl99K0kYSVXZEHPhHxzQPpGE1UIgzZeD7Wac
+	+TBdmXEsnFcMTkXsryXxihV8ud/DeFOZisdtwcloOVzYyUF/oF33PYaRgfWmTjAEJqdbQ3qPdbx
+	BmpG9WLsRyzf5OWkBcub7zjted6v2hPZDBlegQLqOQdkBVj719m4adGwosua/m1HvhCAqoeVY+D
+	fMHq/kD9/vxi0RSdUY+thawyKvq6168xkiOjUz+
+X-Google-Smtp-Source: AGHT+IGYQ8cZXq6p06Ik0TDBdufn7B3v54OBWxKvQ9AFYTgNeyye8BPJ3qw2CKkk7AUAcaDd0Kb3KEG7ImktB5zLhBw=
+X-Received: by 2002:a05:6102:2924:b0:52d:1b06:5e34 with SMTP id
+ ada2fe7eead31-5b2826795b7mr3196814137.10.1759005815440; Sat, 27 Sep 2025
+ 13:43:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
- <aNZWTB_AbK1qtacy@kernel.org> <CAM_iQpWBHWscTbuUm54G3tvqf-EQhSYaFJqEJD4M73doeH=TKQ@mail.gmail.com>
-In-Reply-To: <CAM_iQpWBHWscTbuUm54G3tvqf-EQhSYaFJqEJD4M73doeH=TKQ@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 27 Sep 2025 16:39:02 -0400
-X-Gm-Features: AS18NWAcl8Gu_k5gDYsA34u-oRSTQGnYnzR7vJJapQMSC9amp96YmIxuBqedkv8
-Message-ID: <CA+CK2bCFBOVQnwvRePHRkDqdh5rA+QYrkhqvf=ZiHu=yicShAw@mail.gmail.com>
+ <78127855-104f-46e2-e5d2-52c622243b08@gentwo.org> <CAM_iQpU2QucTR7+6TwE9yKb+QZg5u_=r9O_tMfsn7Ss7kJbd9A@mail.gmail.com>
+ <aNZh3uDdORZ5mfSD@kernel.org>
+In-Reply-To: <aNZh3uDdORZ5mfSD@kernel.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Date: Sat, 27 Sep 2025 13:43:23 -0700
+X-Gm-Features: AS18NWBZ4NYpS8oIgxtkL6K4jFZHcC-C1DNvJN4aikZTVbjqp7kQjMuXYe8nY8M
+Message-ID: <CAM_iQpWXFQwtayT7Zv7iJd7zQZ=rX_P1ZK2P11-6ohRhLpg7Xw@mail.gmail.com>
 Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org, 
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, 
 	Cong Wang <cwang@multikernel.io>, Andrew Morton <akpm@linux-foundation.org>, 
 	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
 	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
@@ -83,8 +84,8 @@ Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250927_133941_630054_919381DF 
-X-CRM114-Status: GOOD (  31.39  )
+X-CRM114-CacheID: sfid-20250927_134336_971138_344EE526 
+X-CRM114-Status: GOOD (  27.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,87 +100,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Sep 27, 2025 at 4:27=E2=80=AFPM Cong Wang <xiyou.wangcong@gmail.com=
-> wrote:
+On Fri, Sep 26, 2025 at 2:50=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
 >
-> On Fri, Sep 26, 2025 at 2:01=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.or=
-g> wrote:
+> On Wed, Sep 24, 2025 at 11:39:44AM -0700, Cong Wang wrote:
+> > On Wed, Sep 24, 2025 at 10:51=E2=80=AFAM Christoph Lameter (Ampere)
+> > <cl@gentwo.org> wrote:
+> > > AFAICT various contemporary Android deployments do the multiple kerne=
+l
+> > > approach in one way or another already for security purposes and for
+> > > specialized controllers. However, the multi kernel approaches are oft=
+en
+> > > depending on specialized and dedicated hardware. It may be difficult =
+to
+> > > support with a generic approach developed here.
 > >
-> > On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
-> > > This patch series introduces multikernel architecture support, enabli=
-ng
-> > > multiple independent kernel instances to coexist and communicate on a
-> > > single physical machine. Each kernel instance can run on dedicated CP=
-U
-> > > cores while sharing the underlying hardware resources.
-> > >
-> > > The multikernel architecture provides several key benefits:
-> > > - Improved fault isolation between different workloads
-> > > - Enhanced security through kernel-level separation
-> > > - Better resource utilization than traditional VM (KVM, Xen etc.)
-> > > - Potential zero-down kernel update with KHO (Kernel Hand Over)
-> >
-> > This list is like asking AI to list benefits, or like the whole cover
-> > letter has that type of feel.
+> > You are right, the multikernel concept is indeed pretty old, the Barrel=
+Fish
+> > OS was invented in around 2009. Jailhouse was released 12 years ago.
+> > There are tons of papers in this area too.
 >
-> Sorry for giving you that feeling. Please let me know how I can
-> improve it for you.
->
-> >
-> > I'd probably work on benchmarks and other types of tests that can
-> > deliver comparative figures, and show data that addresses workloads
-> > with KVM, namespaces/cgroups and this, reflecting these qualities.
->
-> Sure, I think performance comes after usability, not vice versa.
->
->
-> >
-> > E.g. consider "Enhanced security through kernel-level separation".
-> > It's a pre-existing feature probably since dawn of time. Any new layer
-> > makes obviously more complex version "kernel-level separation". You'd
-> > had to prove that this even more complex version is more secure than
-> > pre-existing science.
->
-> Apologize for this. Do you mind explaining why this is more complex
-> than the KVM/Qemu/vhost/virtio/VDPA stack?
->
-> >
-> > kexec and its various corner cases and how this patch set addresses
-> > them is the part where I'm most lost.
->
-> Sorry for that. I will post Youtube videos to explain kexec in detail,
-> please follow our Youtube channel if you are interested. (I don't
-> want to post a link here in case people think I am promoting my
-> own interest, please email me privately.)
->
-> >
-> > If I look at one of multikernel distros (I don't know any other
-> > tbh) that I know it's really VT-d and that type of hardware
-> > enforcement that make Qubes shine:
-> >
-> > https://www.qubes-os.org/
-> >
-> > That said, I did not look how/if this is using CPU virtualization
-> > features as part of the solution, so correct me if I'm wrong.
->
-> Qubes OS is based on Xen:
-> https://en.wikipedia.org/wiki/Qubes_OS
->
-> >
-> > I'm not entirely sure whether this is aimed to be alternative to
-> > namespaces/cgroups or vms but more in the direction of Solaris Zones
-> > would be imho better alternative at least for containers because
-> > it saves the overhead of an extra kernel. There's also a patch set
-> > for this:
-> >
-> > https://lwn.net/Articles/780364/?ref=3Dalian.info
->
-> Solaris Zones also share a single kernel. Or maybe I guess
-> you meant Kernel Zones? Isn't it a justification for our multikernel
-> approach for Linux? :-)
+> Jailhouse is quite nice actually. Perhaps you should pick that up
+> instead, and start refining and improving it? I'd be interested to test
+> refined jailhouse patches. It's also easy build test images having the
+> feature both with BuildRoot and Yocto.
 
-Solaris kernel zones use sun4v hypervisor to protect isolation. There
-is no such thing on x86 and arm.
+Static partitioning is not a bad choice, except it is less flexible. We can=
+'t
+get dynamic resource allocation with just static partitioning, but we can
+easily get static partitioning with dynamic allocation, in fact, it should =
+be
+the default case.
 
-Pasha
+In my own opinion, the reason why containers today are more popular
+than VM's is not just performance, it is elasticity too. Static partitionin=
+g
+is essentially against elasticity.
+
+More fundamentally, it is based on VMCS, which essentially requires
+a hypervisor:
+https://github.com/siemens/jailhouse/blob/master/hypervisor/control.c
+
+>
+> It would take me like half'ish day to create build target for it.
+>
+> > Dual-kernel systems, whether using virtualization or firmware, are inde=
+ed
+> > common at least for automotives today. This is a solid justification of=
+ its
+> > usefulness and real-world practice.
+>
+> OK so neither virtualization nor firmware are well defined here.
+> Firmware e.g. can mean anything fro pre-bootloader to full operating
+> system depending on context or who you ask.
+>
+> It's also pretty hard to project why VMs are bad for cars, and
+> despite lacking experience with building operating systems for
+> cars, I'd like to believe that the hardware enforcement that VT-x
+> and VT-d type of technologies bring is actually great for cars.
+>
+> It's like every other infosec con where someone is hacking a car,
+> and I seen even people who've participated to hackatons by car
+> manufacturers. That industry is improving gradually and the
+> challenge would be to create hard evidence that this brings
+> better isolation than VM based solutions..
+
+In case it is still not clear: No one wants to stop you from using a
+VM. In fact, at least in theory, you could use a VM inside a multikernel.
+Just like today we can still run a container in a VM (Kata Container).
+
+Your choice is always on the table.
+
+I hope this helps.
+
+Regards,
+Cong Wang
 
