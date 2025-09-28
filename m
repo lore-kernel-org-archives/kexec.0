@@ -4,88 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24B71CAC5B0
-	for <kexec@archiver.kernel.org>; Sat, 27 Sep 2025 20:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E25F5CAC5BB
+	for <kexec@archiver.kernel.org>; Sun, 28 Sep 2025 14:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=; b=SjU286Go94BRcZgqMYPXxuZNeA
-	Gf/7utw9A4I/7dYlB1ArgX5QZM7SasPhTckHpY/VpMO3FWpbKeyt2IvTAIdniCSPQ+sqSDoO11FrG
-	7yfYsKJaTfGeboekBKXuqik4k0jXUPMOj+96oH6BuelM+R8Ep/4Rja3sWvOS1WgM5qs4a2QC2r5D3
-	cdx8TvE7bbv41oVz1YbAVH5P0WytSrGPEMLzy5bqmKsOH4epIWlaufLbQFoLoNJLY95MVmaAo0brJ
-	BlwtV2tH1wglcE8t0jlj37AHgnF8Yq8RpUkoLNQLx/iaDoP6NIY+2vSjee4Pp4V3baWBv7ZelR3S+
-	dHn74w2w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=j+pnhhVPwQtp2ob0Ljz0ZqQa+RW/VO+kIfI/fInRQ3g=; b=0ldcWj92F4ZFzCGX4hLg3eFkfG
+	Ec36IHvgg8zWKaEZseRB35MrzoUZYUL0NuTI1xwSCK3SeHIaG4gpTsdhQbM7aSCj5+5SJuyLeRt1t
+	XRTtMpYYLmq5EEGkuoy654p0gYQxVjtdMgTjXKLi6zNF0kgRpdxYL9j1L6nTA908kUz0T6iA6xsqN
+	NncN7/DP4Lb6VPufuiwbtdaJKE5xU4jQnFBePRavh1S5ADT+7bjLK/99kO3d+eSQYCxB5YW/J6cNP
+	k0FYgAAzhnmf243KJDFNg9cStKfB9+V+aCT9jIHQdJZpeIZUuTARzw3sGD7ptJVHqKl7A/0RM9xUj
+	wwi35mEw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v2blb-0000000CQrO-3MCp;
-	Sat, 27 Sep 2025 20:43:39 +0000
-Received: from mail-vs1-xe2e.google.com ([2607:f8b0:4864:20::e2e])
+	id 1v2s5Q-0000000FvYq-1aS3;
+	Sun, 28 Sep 2025 14:09:12 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v2blY-0000000CQpG-3r6p
+	id 1v2s5N-0000000FvXD-0is9
 	for kexec@lists.infradead.org;
-	Sat, 27 Sep 2025 20:43:38 +0000
-Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-55716f2d3b9so2704341137.1
-        for <kexec@lists.infradead.org>; Sat, 27 Sep 2025 13:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759005815; x=1759610615; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=;
-        b=F/dJK+l8x6D+Wg0JybmYzOE8p7G1BbhmDOwqTrj78QJuXoSVFj3WFOEpxGFELcmvLC
-         83i1POJZeHJKKi5B+R6sNIJWlos6gZHRTByYS3iEfzV2WxaU50iUM2N5F9JpnJGvzJpq
-         rgEMmT7eUJru0SiEDTuSiAewfjeqGY7fsEinFm89jJ4U9f2FghM/AuDQaAps0ESrBj0x
-         HrOT9CspjEbYaiFVBySqYedaEAzE/f12qnmbJT85UEO1ZkyAoY0V8E/Ns4lW3zt+c7Ii
-         RL1fthqnKwMWmit46MIS4RO6jqWPEsu2aGj1TxhbQj5vIdF0Icr/olicAa3vlCtTrSOe
-         A1WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759005815; x=1759610615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UvNClLKNNn9rK6Vik019kICWDMo2uNNhdQgjV8A+LJY=;
-        b=LORQZOXVh3BVBsSbRTx1zx0TTs+lHaI5O9bwFOlMZKRgXOjaMJNhqScq0U7avrwo9l
-         Gf1WSYGt/3VqPOcCVkk6QHWZ5v4MMjP7GUnY8xyEkNaCfVmK4nwzBnUYxBu2wS9MaNj8
-         FVCYmfIlM6rW3vfibxbOzbPBbYjNaFmjCLqnkdqKS5iQb4epTyJWGrsoYXeYQQdvOvt3
-         s12Z0FZZMmpbaWiB1+oBzN+48khnnhlsa5M/9u/eCVMLBexoc8NZwCU501Om56KS8Rau
-         ZyeWnbsoI28gGXKmAQWsUnvRRIQrRNbSz/LbV0XrEOYkFRGZhsdeytz10zY6lnIVm0O9
-         iORA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeYmwqGSniCbKGpAM1cqIC59LDFjG1e0f5qgvU6o4edryGdTEyG0gYEZv84sRjEh9DAM/sKA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxpd4w94v3eZcxrRkAelhNg6kslQBSsMOHmevzP4mfQsJADCww2
-	69BOMmf0tl6K+7ifEoBkC43QYXomCe+cZFMfsuyjyykVjkAF9Uee5Bkz6BEj1fpfrRji+35F+El
-	6BVsMjaQtgeeFrydBWVepjrvdiGBOTMU=
-X-Gm-Gg: ASbGncsxrAkh9G4rJAh66p/ElYZUinQDl99K0kYSVXZEHPhHxzQPpGE1UIgzZeD7Wac
-	+TBdmXEsnFcMTkXsryXxihV8ud/DeFOZisdtwcloOVzYyUF/oF33PYaRgfWmTjAEJqdbQ3qPdbx
-	BmpG9WLsRyzf5OWkBcub7zjted6v2hPZDBlegQLqOQdkBVj719m4adGwosua/m1HvhCAqoeVY+D
-	fMHq/kD9/vxi0RSdUY+thawyKvq6168xkiOjUz+
-X-Google-Smtp-Source: AGHT+IGYQ8cZXq6p06Ik0TDBdufn7B3v54OBWxKvQ9AFYTgNeyye8BPJ3qw2CKkk7AUAcaDd0Kb3KEG7ImktB5zLhBw=
-X-Received: by 2002:a05:6102:2924:b0:52d:1b06:5e34 with SMTP id
- ada2fe7eead31-5b2826795b7mr3196814137.10.1759005815440; Sat, 27 Sep 2025
- 13:43:35 -0700 (PDT)
-MIME-Version: 1.0
+	Sun, 28 Sep 2025 14:09:10 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 814F141707;
+	Sun, 28 Sep 2025 14:09:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4016C4CEF0;
+	Sun, 28 Sep 2025 14:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759068542;
+	bh=oLopCkmGri793JE1kd5+sWMGisCseqI+NsmBu5y90K8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pWef6/N61eoFufqCle9xI0T0DU1bauI9krI9XxIo4sI9ZseI9gcbbjFFi85JiVBWr
+	 Q9j6FIA0BDuoMchOPOT45kc3k+akgS6Sg4iLtLIRzFv7D4eRCKzAmPobCJsOTPNn3m
+	 pTcS3BoqIJHTA8qrudy3uv1tjeVATtPSfcZ5htEpV+INz42ZaIhk0vULPa9+OJ69MZ
+	 D/bYvDjucs1IZi9Ff7HIRr5UoXOsM0UNBjQdfrFdHNIBnS4GXv+XYPkCJGWuh2xUZA
+	 f4lEbio8+Vt1GziYj++Ta3tzjnqYUtkCZ/F78PzZUzi7pOXAtgRcdWbIYrT0JlRFbP
+	 l1TlMqccYnL7g==
+Date: Sun, 28 Sep 2025 17:08:57 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com,
+	Cong Wang <cwang@multikernel.io>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, multikernel@lists.linux.dev
+Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture
+ support
+Message-ID: <aNlBeSpNCvqKXBWm@kernel.org>
 References: <20250918222607.186488-1-xiyou.wangcong@gmail.com>
- <78127855-104f-46e2-e5d2-52c622243b08@gentwo.org> <CAM_iQpU2QucTR7+6TwE9yKb+QZg5u_=r9O_tMfsn7Ss7kJbd9A@mail.gmail.com>
- <aNZh3uDdORZ5mfSD@kernel.org>
-In-Reply-To: <aNZh3uDdORZ5mfSD@kernel.org>
-From: Cong Wang <xiyou.wangcong@gmail.com>
-Date: Sat, 27 Sep 2025 13:43:23 -0700
-X-Gm-Features: AS18NWBZ4NYpS8oIgxtkL6K4jFZHcC-C1DNvJN4aikZTVbjqp7kQjMuXYe8nY8M
-Message-ID: <CAM_iQpWXFQwtayT7Zv7iJd7zQZ=rX_P1ZK2P11-6ohRhLpg7Xw@mail.gmail.com>
-Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, 
-	Cong Wang <cwang@multikernel.io>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Changyuan Lyu <changyuanl@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	multikernel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <aNZWTB_AbK1qtacy@kernel.org>
+ <CAM_iQpWBHWscTbuUm54G3tvqf-EQhSYaFJqEJD4M73doeH=TKQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM_iQpWBHWscTbuUm54G3tvqf-EQhSYaFJqEJD4M73doeH=TKQ@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250927_134336_971138_344EE526 
-X-CRM114-Status: GOOD (  27.18  )
+X-CRM114-CacheID: sfid-20250928_070909_253329_69E34BB8 
+X-CRM114-Status: GOOD (  40.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,79 +80,140 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 26, 2025 at 2:50=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.org>=
- wrote:
->
-> On Wed, Sep 24, 2025 at 11:39:44AM -0700, Cong Wang wrote:
-> > On Wed, Sep 24, 2025 at 10:51=E2=80=AFAM Christoph Lameter (Ampere)
-> > <cl@gentwo.org> wrote:
-> > > AFAICT various contemporary Android deployments do the multiple kerne=
-l
-> > > approach in one way or another already for security purposes and for
-> > > specialized controllers. However, the multi kernel approaches are oft=
-en
-> > > depending on specialized and dedicated hardware. It may be difficult =
-to
-> > > support with a generic approach developed here.
+On Sat, Sep 27, 2025 at 01:27:04PM -0700, Cong Wang wrote:
+> On Fri, Sep 26, 2025 at 2:01 AM Jarkko Sakkinen <jarkko@kernel.org> wrote:
 > >
-> > You are right, the multikernel concept is indeed pretty old, the Barrel=
-Fish
-> > OS was invented in around 2009. Jailhouse was released 12 years ago.
-> > There are tons of papers in this area too.
->
-> Jailhouse is quite nice actually. Perhaps you should pick that up
-> instead, and start refining and improving it? I'd be interested to test
-> refined jailhouse patches. It's also easy build test images having the
-> feature both with BuildRoot and Yocto.
+> > On Thu, Sep 18, 2025 at 03:25:59PM -0700, Cong Wang wrote:
+> > > This patch series introduces multikernel architecture support, enabling
+> > > multiple independent kernel instances to coexist and communicate on a
+> > > single physical machine. Each kernel instance can run on dedicated CPU
+> > > cores while sharing the underlying hardware resources.
+> > >
+> > > The multikernel architecture provides several key benefits:
+> > > - Improved fault isolation between different workloads
+> > > - Enhanced security through kernel-level separation
+> > > - Better resource utilization than traditional VM (KVM, Xen etc.)
+> > > - Potential zero-down kernel update with KHO (Kernel Hand Over)
+> >
+> > This list is like asking AI to list benefits, or like the whole cover
+> > letter has that type of feel.
+> 
+> Sorry for giving you that feeling. Please let me know how I can
+> improve it for you.
 
-Static partitioning is not a bad choice, except it is less flexible. We can=
-'t
-get dynamic resource allocation with just static partitioning, but we can
-easily get static partitioning with dynamic allocation, in fact, it should =
-be
-the default case.
+There is no evidence of any of these benefits. That's the central
+issue. You pretty much must give quantatitve proof of any of these
+claims or the benefit is imaginary.
 
-In my own opinion, the reason why containers today are more popular
-than VM's is not just performance, it is elasticity too. Static partitionin=
-g
-is essentially against elasticity.
+> 
+> >
+> > I'd probably work on benchmarks and other types of tests that can
+> > deliver comparative figures, and show data that addresses workloads
+> > with KVM, namespaces/cgroups and this, reflecting these qualities.
+> 
+> Sure, I think performance comes after usability, not vice versa.
+> 
+> 
+> >
+> > E.g. consider "Enhanced security through kernel-level separation".
+> > It's a pre-existing feature probably since dawn of time. Any new layer
+> > makes obviously more complex version "kernel-level separation". You'd
+> > had to prove that this even more complex version is more secure than
+> > pre-existing science.
+> 
+> Apologize for this. Do you mind explaining why this is more complex
+> than the KVM/Qemu/vhost/virtio/VDPA stack?
 
-More fundamentally, it is based on VMCS, which essentially requires
-a hypervisor:
-https://github.com/siemens/jailhouse/blob/master/hypervisor/control.c
+KVM does not complicate kernel level separation or access control per
+kernel instance at all. A guest in the end of the day is just a fancy
+executable.
 
->
-> It would take me like half'ish day to create build target for it.
->
-> > Dual-kernel systems, whether using virtualization or firmware, are inde=
-ed
-> > common at least for automotives today. This is a solid justification of=
- its
-> > usefulness and real-world practice.
->
-> OK so neither virtualization nor firmware are well defined here.
-> Firmware e.g. can mean anything fro pre-bootloader to full operating
-> system depending on context or who you ask.
->
-> It's also pretty hard to project why VMs are bad for cars, and
-> despite lacking experience with building operating systems for
-> cars, I'd like to believe that the hardware enforcement that VT-x
-> and VT-d type of technologies bring is actually great for cars.
->
-> It's like every other infosec con where someone is hacking a car,
-> and I seen even people who've participated to hackatons by car
-> manufacturers. That industry is improving gradually and the
-> challenge would be to create hard evidence that this brings
-> better isolation than VM based solutions..
+This feature on the other hand intervenes various easily breaking code
+paths.
 
-In case it is still not clear: No one wants to stop you from using a
-VM. In fact, at least in theory, you could use a VM inside a multikernel.
-Just like today we can still run a container in a VM (Kata Container).
+> 
+> >
+> > kexec and its various corner cases and how this patch set addresses
+> > them is the part where I'm most lost.
+> 
+> Sorry for that. I will post Youtube videos to explain kexec in detail,
+> please follow our Youtube channel if you are interested. (I don't
+> want to post a link here in case people think I am promoting my
+> own interest, please email me privately.)
 
-Your choice is always on the table.
+Here I have to say that posting a youtube link to LKML is of your
+own interest is not unacceptable as far as I'm concerned :-)
 
-I hope this helps.
+That said, I don't promise that I will watch any of the Youtube
+videos posted either here or privately. All the quantitative
+proof should be embedded to patches.
 
-Regards,
-Cong Wang
+> 
+> >
+> > If I look at one of multikernel distros (I don't know any other
+> > tbh) that I know it's really VT-d and that type of hardware
+> > enforcement that make Qubes shine:
+> >
+> > https://www.qubes-os.org/
+> >
+> > That said, I did not look how/if this is using CPU virtualization
+> > features as part of the solution, so correct me if I'm wrong.
+> 
+> Qubes OS is based on Xen:
+> https://en.wikipedia.org/wiki/Qubes_OS
+
+
+Yes, and it works great, and has much stronger security metrics than
+this could ever reach, and that is quantitative fact, thanks to great
+technologies such as VT-d :-)
+
+This is why I'm repeating the requirement for quantitative proof. We
+have already great solutions to most what this can do so building
+evidence of usefulness is the huge stretch this patch set should
+make it.
+
+Nothing personal, but with the current basically just claims, I don't
+believe in this. That said, by saying this I don't I'd pick my soccer
+no. If there is enough evidence, I'm always ready to turn my opinion
+180 degrees.
+
+> 
+> >
+> > I'm not entirely sure whether this is aimed to be alternative to
+> > namespaces/cgroups or vms but more in the direction of Solaris Zones
+> > would be imho better alternative at least for containers because
+> > it saves the overhead of an extra kernel. There's also a patch set
+> > for this:
+> >
+> > https://lwn.net/Articles/780364/?ref=alian.info
+> 
+> Solaris Zones also share a single kernel. Or maybe I guess
+> you meant Kernel Zones? Isn't it a justification for our multikernel
+> approach for Linux? :-)
+> 
+> BTW, it is less flexible since it completely isolates kernels
+> without inter-kernel communication. With our design, you can
+> still choose not to use inter-kernel IPI's, which turns dynamic
+> into static.
+> 
+> >
+> > VM barrier combined with IOMMU is pretty strong and hardware
+> > enforced, and with polished configuration it can be fairly
+> > performant (e.g. via page cache bypass and stuff like that)
+> > so really the overhead that this is fighting against is
+> > context switch overhead.
+> >
+> > In security I don't believe this has any realistic chances to
+> > win over VMs and IOMMU...
+> 
+> I appreciate you sharing your opinions. I hope my information
+> helps.
+
+I'd put strong focus on getting the figures aside with the claims :-)
+
+> 
+> Regards,
+> Cong Wang
+
+BR, Jarkko
 
