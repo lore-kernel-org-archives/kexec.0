@@ -4,59 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AF45CAC5B0
-	for <kexec@archiver.kernel.org>; Mon, 29 Sep 2025 09:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AADD1CAC5B0
+	for <kexec@archiver.kernel.org>; Mon, 29 Sep 2025 09:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3CD+eBafczqgm0Gtmyhxw8Dw+UwjHOZ8ZlVxf/MU5Q8=; b=KrUYTUDZLWx/2xJNdVLzCGW9E0
-	zNu03InMe34dAorytA5FR47ZtDmAlHL0WVf08VtfMtx8Dj7l6b/3tWukgdvL8SZmfE6EegGz3YMq9
-	3QquFg8baXGEFw+Vw/ySrYFukpPfz73pfkxHRbpeOgQoeDAsynRDg4OadNyCv+SRInG34fDYhTQ+o
-	30zguOK0V2MRb+y/r5TFwk995NeXfMVCzTHhX5otZiNnhJhDwD29QuvuGu38pkH7TFzKphTPonaSr
-	afx6EV4vLuWWefYFdnu3ZXLDaAjaUmgK5kPIih5jTfNDeSAFi1MvcvuUnre0C8PM1wP2yFyC7iyx9
-	NmEKqafg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=tKS30ulNmYtXnmwJk38VBTUSwHLV8oBqH30F7ZsYbuA=; b=FVDc6k+T6CnFGnzSoWfSTieib0
+	k6I6RUTUTlPQJ+ch9iyJaQdBg6zuSsds2F+wQmPbtE+I2chWhqfbUn3y/fE37Am8jlRnuCIscX1fk
+	6FD9sCIEP0wteW0T498pEaDaXjMpv+sYyFDsP20rC8M0UrcUmWPZfuxYtFAlugUXyk2trib2TovR7
+	iGzL4JFEFllvouatlUEMcK0ePHpIp4g8JpgZ10JGLQ6nnOwS6cSolM/lFrquVK9bvHiQjYNkCZxRl
+	tq0DzpfFwaXQL604vrE4d9T55YtzSeyryenaUt/qqD3mnZt5cKfgPA1VRt/lkLxCl3zkqaUFcTulh
+	m7BOvQAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3AXT-0000000233K-0B6f;
-	Mon, 29 Sep 2025 09:51:23 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1v3Aac-000000023R0-2fA5;
+	Mon, 29 Sep 2025 09:54:38 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3AWw-0000000231v-206E
+	id 1v3Aa3-000000023Pn-0QCK
 	for kexec@lists.infradead.org;
-	Mon, 29 Sep 2025 09:50:50 +0000
+	Mon, 29 Sep 2025 09:54:04 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id D4D3B6239B;
-	Mon, 29 Sep 2025 09:50:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90074C4CEF4;
-	Mon, 29 Sep 2025 09:50:48 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id C7AD74416E
+	for <kexec@lists.infradead.org>; Mon, 29 Sep 2025 09:54:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BFB5C4CEF4
+	for <kexec@lists.infradead.org>; Mon, 29 Sep 2025 09:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759139449;
-	bh=eyBG5MipCA+vWYuokK+3nM8AXjrHBF4dU5WWoKoSoRE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nGXyBxj1IXrklk73E9Zl9mZp6ibI2GHQoSe2v4oaEO/2ateb/JgHwLsof46wzu1lF
-	 2SdvSLQO2v7VOkI2aVkWANqQzV6A4fofk1aQDctmGm/3oALy04iCy1MLaNKHB9DBAs
-	 YQ5m8qnHpqw09C8mlmzBlPRF8Vj+LVhBqQjxXuXGcHzNCTW9MYwogFXKSzy04wPph2
-	 d8ed5MniEP43anoSRaqLj508mo87QLQFZ4bKZeOYW+vhLfTZu52IcHcmFPYeJwvbOF
-	 6WIIoOEAVaLDHtYSbwxTmymv578MuOwYz8HH3+48z8HNFQUnjR//2OueSlPMp5oR7m
-	 UbF9C8xi7XBRw==
-Date: Mon, 29 Sep 2025 10:50:46 +0100
+	s=k20201202; t=1759139642;
+	bh=tKS30ulNmYtXnmwJk38VBTUSwHLV8oBqH30F7ZsYbuA=;
+	h=Date:From:To:Subject:From;
+	b=awDOmtBf3/SLm8ggdHbRvGrRgCWEhJ2ZtuQMuhy1orQXdpDKml8uDnXKcI1PQAAms
+	 rbFHZ2sv3cckjSvSSGh2wB2dWcx0rZPxrzWsTxwvjRNq6cu0FzR+yDHtq35y+E/CvY
+	 zZisLoFjo188r+OHRZzBUwyoNtCQvXKUjxTOelBJv0K9krFR3dZJoTiavXmuL7gMzs
+	 4NLh4LHs3Wl+RjT50MHzXicS93LvX+0/LoDlqvWqEYqSOjGMrrCnrg3Ts4TIqkA4+R
+	 fsNRVjrhobnQDvD7TEIWG2Q7tFfPnWiA6wp5aWEaObmVpK7S4bM9Z2fOmTBk71gY3M
+	 qHTokBtOt7+Fw==
+Date: Mon, 29 Sep 2025 10:53:59 +0100
 From: Simon Horman <horms@kernel.org>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: Askar Safin <safinaskar@zohomail.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v4 0/6] Fix printf string specifiers, otherwise kexec
- doesn't work on my laptop
-Message-ID: <aNpWdp8jCMYaRYqh@horms.kernel.org>
-References: <20250819213014.908757-1-safinaskar@zohomail.com>
- <a28436ba-e040-42cf-82e5-52ff5cb144ce@arm.com>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools v2.0.32 preparation
+Message-ID: <aNpXN0ux-p8_qnR3@horms.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a28436ba-e040-42cf-82e5-52ff5cb144ce@arm.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20250929_025403_155459_8DD4961E 
+X-CRM114-Status: UNSURE (   8.90  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,37 +68,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 26, 2025 at 04:09:17PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> 
-> First, thanks for fixing this!
-> 
-> So, I've been trying to find a failure beyond the printouts being wrong for
-> the past couple days, and largely failed to duplicate a functional issue.
-> 
-> That said, this does fix a couple printouts I checked on 32-bit 686 debian
-> 12. Generally I think the code is ok as well and have reviewed it but i'm
-> going to withhold the review by tag because I still think the commit
-> messages could use some cleanup.
-> 
-> 
-> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+Hi all,
 
-Thanks, and sorry to everyone for the extended delay on this one.
+I am planning to release kexec-tools v2.0.32 in the next two weeks
+to roughly coincide with the release of the v6.17 kernel.
 
-I've applied these patches for inclusion in the next release.
+I would like to ask interested parties to send any patches they would like
+included in v2.0.32 within one week so they can be considered for inclusion
+in an rc release.
 
-- kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=2842172e1405
-- kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=c343815e7e0a
-- util_lib/elf_info.c: fix typo: prink -> printk
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=b7b2a13547a0
-- kexec/arch/i386/x86-linux-setup.c: replace %d with %u
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=9c12e71d712a
-- kexec/kexec-elf-exec.c: Replace %lux with %lx
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=c837f1971fab
-- Fix printf string specifiers, otherwise kexec doesn't work on my laptop
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=288e352ed7c8
+For reference the patches queued up since v2.0.31 are as follows.
+
+Thanks to everyone who has contributed to kexec-tools!
+
+2842172e1405 kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
+c343815e7e0a kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
+b7b2a13547a0 util_lib/elf_info.c: fix typo: prink -> printk
+9c12e71d712a kexec/arch/i386/x86-linux-setup.c: replace %d with %u
+c837f1971fab kexec/kexec-elf-exec.c: Replace %lux with %lx
+288e352ed7c8 Fix printf string specifiers, otherwise kexec doesn't work on my laptop
+0b5aecb85a21 workflow: Add loongarch64 build
+efb97b509b1a Make the segment base match pinned section address
+19d1b275c649 LoongArch: Remove 'kexec_file' cmdline parameters when using --reuse-cmdline option
+f1d66280a48b LoongArch: Add kexec_file_load syscall
+b7c35c42c3db LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
+13e701e72ecf LoongArch: Add pe_hdr->machine check for pei format images
+919005b26c8f LoongArch: Fix the use of loongarch_image_header in ELF format
+2d3f8185f5d7 LoongArch: Change initrd allocation to top-down
+024073e74dc7 LoongArch: Enforce relocatable kernel check for crash dump
+d9c82c188646 LoongArch: Terminate the cmdline string using '\0'
+e2bfd6df147c LoongArch: Fix comments
+39ba2bd288af kexec: Handle removal of multiple 'crashkernel' parameters
+b8f6c2a98d2c LoongArch: Change COMMAND_LINE_SIZE to 4096
+daa29443819d kexec/zstd: fix static zstd build
+8322826fa7b0 kexec/zboot: Add boundary check on PE header offset
+b257f311f5f0 RISC-V: Support loading Image binary file
+363087cd156f RISC-V: Separate elf_riscv_find_pbase out
+027e6e237427 RISC-V: Enable kexec_file_load syscall
+b3fd54b022fe RISC-V: Add support for riscv kexec/kdump on kexec-tools
+1bda78d60504 workflow: update to Ubuntu 24.04
+14f48ea80e51 x86_64: Use the x86-64 level for purgatory
+3baa1baebf91 kexec-tools 2.0.31.git
+
+
 
