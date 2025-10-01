@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DBDB8CCA470
-	for <kexec@archiver.kernel.org>; Wed,  1 Oct 2025 16:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC87ECCA471
+	for <kexec@archiver.kernel.org>; Wed,  1 Oct 2025 18:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8NO5Cox1O1/W54mk1qS/tzDDi0dYt0a/DUjYAb9Uhc8=; b=2CIrXnKKt2YqMMyplwoD41fqz8
-	oUqy2nz+HKd6n5/Tz8iipXDuu2V0alzdWnFtJ5omKr81Qy06IJ10oge0cbSt6+FxEOVuSgThXF/ou
-	41sYa+tHKPKdZBs15YruFDQEIQ/LGHxMXpRTqq8/od4gSh0KpNXexJQhNWzBb+kOJyGWnVs2VhXl8
-	Hxsp9I/KedVq0qbaU4CKQyMy00L8lsYNpq+/paabu1qNaR+BRPQhaOWaS2O3rsduNlC7Y3wnK4/IX
-	7rQNd3MkY9TJ6165aLd4OnpivdkHWQVzLiCIUrzLsfWCUTtUfeZV23FcrVi8grtzzP6XS5NTqCAwT
-	q4qWsr2A==;
+	bh=3Mdub60HiTWo+g+tF/XVv2omv5wDiDEFkmBEPHIx+T4=; b=EwWaWnIuOw4balyc2e+Qi4chZw
+	IQez7t0wqX4+sbj4y1iSB8s064VEU0aI/vqBXivMAG3aUDFY1okMkMK82mXbmtxfvQwRZoY2P/5yj
+	mdzUM5WQqZi5/aXzqWRcLpJ7Lc6sPxpxp/0gBPbjunCcw9iPy/0vkrgIPP0UGYUffz8EOKmgkhzf1
+	0EHsHAFfzSUHvtM8BelFnoEnhNN4S5ZirV9V4uDoieC6dpHEUhEdvLSbMMds6zVMlaaGX3JinS2KU
+	qpM0VsZky9kawA236cQAwo0oHgHw/1HnmlrbSQ7npJQBTSYZP3+7DqolwlHI9MSw5lvUy/FcGv8kq
+	dMRoEIpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3zoe-00000008XEZ-1ydm;
-	Wed, 01 Oct 2025 16:36:32 +0000
-Received: from mgamail.intel.com ([198.175.65.19])
+	id 1v41N2-00000008ivQ-3Uhh;
+	Wed, 01 Oct 2025 18:16:08 +0000
+Received: from mgamail.intel.com ([198.175.65.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3zob-00000008XDt-2zy1
+	id 1v41My-00000008iuZ-0BzY
 	for kexec@lists.infradead.org;
-	Wed, 01 Oct 2025 16:36:31 +0000
+	Wed, 01 Oct 2025 18:16:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759336590; x=1790872590;
+  t=1759342564; x=1790878564;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=HSLm25QXTpkKM7aT1hm4htROq4qR0UuimjxRvDGXd0s=;
-  b=bzHb3qjwOftKuh925q4rsEchRIjVKL8WLlarjujzCRDoNBJ0zPRzM3Qp
-   x8s+rIpqz7V2GBKmLSOOHcgtKZLIJZ1RhP1C7mZpzO+oWHx+09X4QIN10
-   MVW07MRmqTZqokyxcZeUd4YsNCDMb7OCxoGbXmQpBgAe5wRPI+o0cP84N
-   sASTpEf/83JvkP3UhneYO+A8c7KeYR6GNW0Mm/H3G4fI8Cihr3SJF2z79
-   FF8n1BV06UeWnxrRQk38R80y18iiraNI/Pv6UZQt01h9Rfe3HB+nocinT
-   D6/jVC8MzLh0GRp1YoLjRBGyfPOjo95vtL1NvhCyxU9DQHSdstSDzsUDu
-   w==;
-X-CSE-ConnectionGUID: lK4WHzr3R4eUU9J2Y49l2A==
-X-CSE-MsgGUID: sfXLJxGSSeeOeNoTYXJZkg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="61506584"
+  bh=qcrmoc3s3sksxYRsdt5U6g9JOBi2RNp8WJie6nSUIYk=;
+  b=RW5fzXJTu93OznJc9CK2ZOVr5OSsd23zSb+d7KzE5fI7GmseOe4ysNfm
+   rJV1mPTsmHTeT4AHmnHERqcrdGCbEu7YSaZlS+XoUYZS7sn/1uEDEnayw
+   jqwG5mDsAafuMDHvzGTn0lhPRceIQJbdowKDMulV70WKlS872LB72Nth9
+   e9cOgC/DnCB0wHkYEk+hhS1XsZw2Mv3D93a6+GoZYHDZQEHYadr7AFfv+
+   h0S7vFHkSfLgzO4/+1ZRpSIlKkWYRPlE3vdM6uFYLWijFJre8IIIciWYD
+   eFDbnZOhtAVmNU4zpmNegY/qXzl3tdSxE3Nmd6m+YyPHK8cElUgJ7WNft
+   g==;
+X-CSE-ConnectionGUID: tWrFEnakQ5G3LRUA2M0/sA==
+X-CSE-MsgGUID: l3u1I7HJTd2/vcAQ6U1z/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="61790920"
 X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
-   d="scan'208";a="61506584"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 09:36:26 -0700
-X-CSE-ConnectionGUID: TwRkw5L8S9qMFlhUI5AWtQ==
-X-CSE-MsgGUID: OPt0fZOnSpGgCizH7DihNw==
+   d="scan'208";a="61790920"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 11:08:35 -0700
+X-CSE-ConnectionGUID: WdspEPscT/meykkINjzoBA==
+X-CSE-MsgGUID: rPWEaq2eSuK3OcfRFceIAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
-   d="scan'208";a="183116776"
+   d="scan'208";a="179266909"
 Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 01 Oct 2025 09:36:22 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 01 Oct 2025 11:08:30 -0700
 Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1v3zoR-0003B5-26;
-	Wed, 01 Oct 2025 16:36:19 +0000
-Date: Thu, 2 Oct 2025 00:35:48 +0800
+	id 1v41Fc-0003Fb-0f;
+	Wed, 01 Oct 2025 18:08:28 +0000
+Date: Thu, 2 Oct 2025 02:07:46 +0800
 From: kernel test robot <lkp@intel.com>
 To: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -71,16 +71,16 @@ To: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
 	linux-kernel@vger.kernel.org
 Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH v1 2/3] memblock: Remove KHO notifier usage
-Message-ID: <202510020000.IIPFcxsW-lkp@intel.com>
-References: <20251001011941.1513050-3-jasonmiu@google.com>
+Subject: Re: [PATCH v1 3/3] kho: Remove notifier system infrastructure
+Message-ID: <202510020105.a05LM8TX-lkp@intel.com>
+References: <20251001011941.1513050-4-jasonmiu@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251001011941.1513050-3-jasonmiu@google.com>
+In-Reply-To: <20251001011941.1513050-4-jasonmiu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251001_093629_794124_48B5C850 
-X-CRM114-Status: GOOD (  12.90  )
+X-CRM114-CacheID: sfid-20251001_111604_187402_14B0937C 
+X-CRM114-Status: GOOD (  15.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,54 +108,207 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Miu/kho-Adopt-KHO-radix-tree-data-structures/20251001-092230
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git for-next
-patch link:    https://lore.kernel.org/r/20251001011941.1513050-3-jasonmiu%40google.com
-patch subject: [PATCH v1 2/3] memblock: Remove KHO notifier usage
-config: x86_64-randconfig-003-20251001 (https://download.01.org/0day-ci/archive/20251002/202510020000.IIPFcxsW-lkp@intel.com/config)
+patch link:    https://lore.kernel.org/r/20251001011941.1513050-4-jasonmiu%40google.com
+patch subject: [PATCH v1 3/3] kho: Remove notifier system infrastructure
+config: x86_64-randconfig-003-20251001 (https://download.01.org/0day-ci/archive/20251002/202510020105.a05LM8TX-lkp@intel.com/config)
 compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251002/202510020000.IIPFcxsW-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251002/202510020105.a05LM8TX-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510020000.IIPFcxsW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510020105.a05LM8TX-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> lib/test_kho.c:59:44: error: too many arguments to function call, expected 2, have 3
+>> lib/test_kho.c:49:7: error: use of undeclared identifier 'KEXEC_KHO_ABORT'
+      49 |         case KEXEC_KHO_ABORT:
+         |              ^
+>> lib/test_kho.c:51:7: error: use of undeclared identifier 'KEXEC_KHO_FINALIZE'
+      51 |         case KEXEC_KHO_FINALIZE:
+         |              ^
+   lib/test_kho.c:59:44: error: too many arguments to function call, expected 2, have 3
       59 |         err |= kho_add_subtree(ser, KHO_TEST_FDT, folio_address(state->fdt));
          |                ~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/kexec_handover.h:30:5: note: 'kho_add_subtree' declared here
-      30 | int kho_add_subtree(const char *name, void *fdt);
+   include/linux/kexec_handover.h:21:5: note: 'kho_add_subtree' declared here
+      21 | int kho_add_subtree(const char *name, void *fdt);
          |     ^               ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
+>> lib/test_kho.c:194:9: error: call to undeclared function 'register_kho_notifier'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     194 |         return register_kho_notifier(&kho_test_nb);
+         |                ^
+   lib/test_kho.c:194:9: note: did you mean 'register_module_notifier'?
+   include/linux/module.h:745:5: note: 'register_module_notifier' declared here
+     745 | int register_module_notifier(struct notifier_block *nb);
+         |     ^
+>> lib/test_kho.c:298:2: error: call to undeclared function 'unregister_kho_notifier'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     298 |         unregister_kho_notifier(&kho_test_nb);
+         |         ^
+   lib/test_kho.c:298:2: note: did you mean 'unregister_module_notifier'?
+   include/linux/module.h:746:5: note: 'unregister_module_notifier' declared here
+     746 | int unregister_module_notifier(struct notifier_block *nb);
+         |     ^
+   5 errors generated.
 
 
-vim +59 lib/test_kho.c
+vim +/KEXEC_KHO_ABORT +49 lib/test_kho.c
 
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  40) 
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  41) static int kho_test_notifier(struct notifier_block *self, unsigned long cmd,
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  42) 			     void *v)
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  43) {
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  44) 	struct kho_test_state *state = &kho_test_state;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  45) 	struct kho_serialization *ser = v;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  46) 	int err = 0;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  47) 
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  48) 	switch (cmd) {
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  49) 	case KEXEC_KHO_ABORT:
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  50) 		return NOTIFY_DONE;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  51) 	case KEXEC_KHO_FINALIZE:
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  52) 		/* Handled below */
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  53) 		break;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  54) 	default:
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  55) 		return NOTIFY_BAD;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  56) 	}
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  57) 
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  58) 	err |= kho_preserve_folio(state->fdt);
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27 @59) 	err |= kho_add_subtree(ser, KHO_TEST_FDT, folio_address(state->fdt));
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  60) 
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  61) 	return err ? NOTIFY_BAD : NOTIFY_DONE;
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  62) }
-b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  63) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   40) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   41) static int kho_test_notifier(struct notifier_block *self, unsigned long cmd,
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   42) 			     void *v)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   43) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   44) 	struct kho_test_state *state = &kho_test_state;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   45) 	struct kho_serialization *ser = v;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   46) 	int err = 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   47) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   48) 	switch (cmd) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  @49) 	case KEXEC_KHO_ABORT:
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   50) 		return NOTIFY_DONE;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  @51) 	case KEXEC_KHO_FINALIZE:
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   52) 		/* Handled below */
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   53) 		break;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   54) 	default:
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   55) 		return NOTIFY_BAD;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   56) 	}
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   57) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   58) 	err |= kho_preserve_folio(state->fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   59) 	err |= kho_add_subtree(ser, KHO_TEST_FDT, folio_address(state->fdt));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   60) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   61) 	return err ? NOTIFY_BAD : NOTIFY_DONE;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   62) }
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   63) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   64) static struct notifier_block kho_test_nb = {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   65) 	.notifier_call = kho_test_notifier,
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   66) };
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   67) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   68) static int kho_test_save_data(struct kho_test_state *state, void *fdt)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   69) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   70) 	phys_addr_t *folios_info __free(kvfree) = NULL;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   71) 	int err = 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   72) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   73) 	folios_info = kvmalloc_array(state->nr_folios, sizeof(*folios_info),
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   74) 				     GFP_KERNEL);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   75) 	if (!folios_info)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   76) 		return -ENOMEM;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   77) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   78) 	for (int i = 0; i < state->nr_folios; i++) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   79) 		struct folio *folio = state->folios[i];
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   80) 		unsigned int order = folio_order(folio);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   81) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   82) 		folios_info[i] = virt_to_phys(folio_address(folio)) | order;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   83) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   84) 		err = kho_preserve_folio(folio);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   85) 		if (err)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   86) 			return err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   87) 	}
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   88) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   89) 	err |= fdt_begin_node(fdt, "data");
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   90) 	err |= fdt_property(fdt, "nr_folios", &state->nr_folios,
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   91) 			    sizeof(state->nr_folios));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   92) 	err |= fdt_property(fdt, "folios_info", folios_info,
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   93) 			    state->nr_folios * sizeof(*folios_info));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   94) 	err |= fdt_property(fdt, "csum", &state->csum, sizeof(state->csum));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   95) 	err |= fdt_end_node(fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   96) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   97) 	return err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   98) }
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27   99) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  100) static int kho_test_prepare_fdt(struct kho_test_state *state)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  101) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  102) 	const char compatible[] = KHO_TEST_COMPAT;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  103) 	unsigned int magic = KHO_TEST_MAGIC;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  104) 	ssize_t fdt_size;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  105) 	int err = 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  106) 	void *fdt;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  107) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  108) 	fdt_size = state->nr_folios * sizeof(phys_addr_t) + PAGE_SIZE;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  109) 	state->fdt = folio_alloc(GFP_KERNEL, get_order(fdt_size));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  110) 	if (!state->fdt)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  111) 		return -ENOMEM;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  112) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  113) 	fdt = folio_address(state->fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  114) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  115) 	err |= fdt_create(fdt, fdt_size);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  116) 	err |= fdt_finish_reservemap(fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  117) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  118) 	err |= fdt_begin_node(fdt, "");
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  119) 	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  120) 	err |= fdt_property(fdt, "magic", &magic, sizeof(magic));
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  121) 	err |= kho_test_save_data(state, fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  122) 	err |= fdt_end_node(fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  123) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  124) 	err |= fdt_finish(fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  125) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  126) 	if (err)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  127) 		folio_put(state->fdt);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  128) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  129) 	return err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  130) }
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  131) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  132) static int kho_test_generate_data(struct kho_test_state *state)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  133) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  134) 	size_t alloc_size = 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  135) 	__wsum csum = 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  136) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  137) 	while (alloc_size < max_mem) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  138) 		int order = get_random_u32() % NR_PAGE_ORDERS;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  139) 		struct folio *folio;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  140) 		unsigned int size;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  141) 		void *addr;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  142) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  143) 		/* cap allocation so that we won't exceed max_mem */
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  144) 		if (alloc_size + (PAGE_SIZE << order) > max_mem) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  145) 			order = get_order(max_mem - alloc_size);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  146) 			if (order)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  147) 				order--;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  148) 		}
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  149) 		size = PAGE_SIZE << order;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  150) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  151) 		folio = folio_alloc(GFP_KERNEL | __GFP_NORETRY, order);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  152) 		if (!folio)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  153) 			goto err_free_folios;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  154) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  155) 		state->folios[state->nr_folios++] = folio;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  156) 		addr = folio_address(folio);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  157) 		get_random_bytes(addr, size);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  158) 		csum = csum_partial(addr, size, csum);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  159) 		alloc_size += size;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  160) 	}
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  161) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  162) 	state->csum = csum;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  163) 	return 0;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  164) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  165) err_free_folios:
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  166) 	for (int i = 0; i < state->nr_folios; i++)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  167) 		folio_put(state->folios[i]);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  168) 	return -ENOMEM;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  169) }
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  170) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  171) static int kho_test_save(void)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  172) {
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  173) 	struct kho_test_state *state = &kho_test_state;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  174) 	struct folio **folios __free(kvfree) = NULL;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  175) 	unsigned long max_nr;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  176) 	int err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  177) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  178) 	max_mem = PAGE_ALIGN(max_mem);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  179) 	max_nr = max_mem >> PAGE_SHIFT;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  180) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  181) 	folios = kvmalloc_array(max_nr, sizeof(*state->folios), GFP_KERNEL);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  182) 	if (!folios)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  183) 		return -ENOMEM;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  184) 	state->folios = folios;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  185) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  186) 	err = kho_test_generate_data(state);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  187) 	if (err)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  188) 		return err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  189) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  190) 	err = kho_test_prepare_fdt(state);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  191) 	if (err)
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  192) 		return err;
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  193) 
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27 @194) 	return register_kho_notifier(&kho_test_nb);
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  195) }
+b753522bed0b7e Mike Rapoport (Microsoft  2025-07-27  196) 
 
 -- 
 0-DAY CI Kernel Test Service
