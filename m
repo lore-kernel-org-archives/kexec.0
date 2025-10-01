@@ -4,59 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54620CAC5B9
-	for <kexec@archiver.kernel.org>; Tue, 30 Sep 2025 08:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 47C0DCCA471
+	for <kexec@archiver.kernel.org>; Wed,  1 Oct 2025 01:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
+	:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:Cc:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=75BCOOk4Otic7+i2rUytCMHq9hbBmmZg3qkoQqTuqQE=; b=PakqwbrfvOkbY6pWYXeUH/tHLN
-	bmk5vOmD1Qk4FZPBBlwcuTCk/M0rF1bhIYbIziOjPOV+SVzOBLHp+gOD6wG6xReLGi/o6GP+eNEbz
-	aKt1AsQ4fLkcRIUgS847oEVourozZGfC0NwVa4Q+KLrYvJCumt43q7weAbm8dWGxVug4JVLY0RfHJ
-	P+PbH/Yw6S2Ay1IicqnKyCouQ9fobWhKZ+1k0PBXthrskqmEs7EOSxbe2ioXRNwenHFjk55WOUwnT
-	l3cu8lVAiWM3Z1fWm5oR89Jv70AyjGTmz06IKWNMXjcoMYWgJiyv5ybOQsOysbEFUc/JZEMqNTWff
-	TIIg8GcA==;
+	bh=x4HnKiiE09rl43LC3UECv7NDLXowg9VsBNh2ns+1RXE=; b=oleEozY7uXzZvVbIgDdWWn8RZz
+	PcnPtc7GJ0BaCpBcAa2p9U0uVWNRBXN1Xe+L2xfO7vYx20/q+8A4IzhpOqVzDLS86z+jVlP77y+Y5
+	6xhEWqdl6FSFXkn99Zsux6/ohOa4laITtBgI/uORcyxOglJGYGxpdUAcitH4L3rctSrCODidFN86Q
+	fFyujdXC/nWVI0x+6U+2P8VozaJB988K5cQeH8vuHmUKXrHxhVi8Zq5LSzGZGunRF3RPjDmcmy7ky
+	4Zsr/TxPsZpgrsKz4Av+R2QcLanGb58B3V2pPeIbqJpFV2OFYVd9Kt7Bu6iX48QERR0GU5yr/Ln+3
+	cS7JQdIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3VoQ-00000004eil-3GTK;
-	Tue, 30 Sep 2025 08:34:18 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1v3lVa-00000006Ve8-3B56;
+	Wed, 01 Oct 2025 01:19:54 +0000
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3VoN-00000004eiK-37DH
+	id 1v3lVZ-00000006VcY-1X4u
 	for kexec@lists.infradead.org;
-	Tue, 30 Sep 2025 08:34:17 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 607CB43F12;
-	Tue, 30 Sep 2025 08:34:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFB4C4CEF0;
-	Tue, 30 Sep 2025 08:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759221255;
-	bh=DIqR8FNBtOIohy00IuAhyDtN2iR0A/0XJnGWD1Yd0cI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AGgZHaO+CBl5ueiM+1pATbV42yAK/8gtpiP7zF4LB9tzahWouOxq7FFcDY6ejWSed
-	 HsN4XE8zhwk3kXiEaEKHIFSbAde4M14h423t2uYLHjGzLIzY974Fz7TfY7Vd+/trz0
-	 0S/v0nmxWPBQHiK5V81FURT02DJLmHb4MAtHMqK3QLsaAkLN2tArJfKmyM7KmvCq+G
-	 pFDAxBkPcTAtWu85VyFi8rjw8TyR4K/LEA5+gYwhTKOXM9TRKQeN4BBgKD0HcfCKhE
-	 ztTBO89IaFaMAvnuCDt9RSAPGZ5eLGZJD/uSwK93XRAsFVlAdtzpmm2aXUIvgIqulj
-	 SRmmZVhU92eUA==
-Date: Tue, 30 Sep 2025 09:34:12 +0100
-From: Simon Horman <horms@kernel.org>
-To: Khalid Aziz <khalid@gonehiking.org>
-Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH kexec-tools] COPYING: Update with current text for GPL v2
-Message-ID: <aNuWBL9lMM7cNxpj@horms.kernel.org>
-References: <20250929191132.2511888-1-khalid@gonehiking.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250929191132.2511888-1-khalid@gonehiking.org>
+	Wed, 01 Oct 2025 01:19:54 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2681623f927so62402545ad.0
+        for <kexec@lists.infradead.org>; Tue, 30 Sep 2025 18:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759281592; x=1759886392; darn=lists.infradead.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x4HnKiiE09rl43LC3UECv7NDLXowg9VsBNh2ns+1RXE=;
+        b=tagdQ7/2S0+Tk3uqYoEUgREoTEiNu403SfdrM1Gh8FDK/lJiYhIJ1uw9OJ63tmdmAT
+         VbMx4N3YULHBdqxpUbClPn8CAsLaaCckykB2lgbX+TV0xzqbhP7LPMGMY1Ov+kkUkkH3
+         3pnMvdtr2X5uN3FwBIS63uxOBPt6K8u8LFQYS3V8eDyaYGQLHk6XJdcJ+QqLSBLnStrb
+         DdV9RJymdZvmPHgHC69O1Kx7AqsiSsxFuGpWG++iejKNm5hkpln7P0tsU2taWlSFbHso
+         coiPSvexJ271GEOAVkspOHhZoK1LwCZsWdvs3TGWRmyR7MgUE7EgW9P4UKXBshsjXlkj
+         8o/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759281592; x=1759886392;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x4HnKiiE09rl43LC3UECv7NDLXowg9VsBNh2ns+1RXE=;
+        b=e2oWxvq0chiZQtGcsioteO20BELT+eKNQkCJHiT65E7h9OmszcdO2l9XHrW/CL8zm+
+         lKHGL/pHpQMv2j0M0hDdRgPkr/qsIv18spHJZFIQ0WMU3mMb6ehwqXToTeFQoz5howNb
+         YYxULSg7JfnJgMGJd9GXsGLOeDLFXpUTHvN9rU1IEbcGDicBeOunwC3ZZ58PDzCqsMIa
+         yeU+DJGRQKiWazLditHu5ouNk8Y/r7gMpF+MtGNmdWHVjFa9FeOeLwB2jhEBoS73D57t
+         3suedBAb523KpnWzuHmALRltdJqAbBt5lw+HcJ0MNWZIsV3vPlTOrEnerh08nuRKvKb/
+         EAnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0CGnOLZchu94RUNBokhg2L/O9pYLTzfKjna7CBtwx2tNavFr7gMtGBRm3HOBybT7yDLOu4w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzC2kqUyCWHFC2Vr/Wd4hfEzC/jHiNbxqqgRjz975iEfYCokCEY
+	m43DkHwmpM1zHFuMidyHaFVaZQm6jxnRmW+OtjBL7Yf2WpKlsYxBR8XCDCVPJZ2uwVi+pz3cfK0
+	5d2TA9GyqzLl+ow==
+X-Google-Smtp-Source: AGHT+IEBtmTt/de8ZAH/Gty67fG7K6wz+DH/TLooGqCBdKidWKsNfouEipgjC7MTQ3Jd+/633JnpD2gkYNbqjw==
+X-Received: from plbml5.prod.google.com ([2002:a17:903:34c5:b0:24b:1657:c088])
+ (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f642:b0:266:ddd:772f with SMTP id d9443c01a7336-28e7f276df7mr19249665ad.9.1759281591707;
+ Tue, 30 Sep 2025 18:19:51 -0700 (PDT)
+Date: Tue, 30 Sep 2025 18:19:41 -0700
+In-Reply-To: <20251001011941.1513050-1-jasonmiu@google.com>
+Mime-Version: 1.0
+References: <20251001011941.1513050-1-jasonmiu@google.com>
+X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
+Message-ID: <20251001011941.1513050-4-jasonmiu@google.com>
+Subject: [PATCH v1 3/3] kho: Remove notifier system infrastructure
+From: Jason Miu <jasonmiu@google.com>
+To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Miu <jasonmiu@google.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20250930_013415_833691_30AD96EC 
-X-CRM114-Status: UNSURE (   7.85  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20250930_181953_408563_FA020AF6 
+X-CRM114-Status: GOOD (  11.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,18 +92,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 29, 2025 at 01:11:31PM -0600, Khalid Aziz wrote:
-> Text for GPL v2 has been updated to remove old mailing address. This
-> updates the license text in COPYING file with the current license text
-> from https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
-> 
-> Signed-off-by: Khalid Aziz <khalid@gonehiking.org>
+Eliminate the core KHO notifier API
+functions (`register_kho_notifier`, `unregister_kho_notifier`), the
+`kho_event` enum, and the notifier chain head from KHO internal
+structures.
 
-Thanks Khalid,
+This infrastructure was used to support the now-removed finalize and
+abort states and is no longer required. Client subsystems now interact
+with KHO through direct API calls.
 
-Applied.
+Signed-off-by: Jason Miu <jasonmiu@google.com>
+---
+ include/linux/kexec_handover.h | 22 ----------------------
+ kernel/kexec_handover.c        | 15 ---------------
+ 2 files changed, 37 deletions(-)
 
-- COPYING: Update with current text for GPL v2
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=591ebf60649d
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 9566c90a3501..09e8f0b0fcab 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -10,16 +10,7 @@ struct kho_scratch {
+ 	phys_addr_t size;
+ };
+ 
+-/* KHO Notifier index */
+-enum kho_event {
+-	KEXEC_KHO_FINALIZE = 0,
+-	KEXEC_KHO_ABORT = 1,
+-};
+-
+ struct folio;
+-struct notifier_block;
+-
+-struct kho_serialization;
+ 
+ #ifdef CONFIG_KEXEC_HANDOVER
+ bool kho_is_enabled(void);
+@@ -30,9 +21,6 @@ struct folio *kho_restore_folio(phys_addr_t phys);
+ int kho_add_subtree(const char *name, void *fdt);
+ int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
+ 
+-int register_kho_notifier(struct notifier_block *nb);
+-int unregister_kho_notifier(struct notifier_block *nb);
+-
+ void kho_memory_init(void);
+ 
+ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+@@ -68,16 +56,6 @@ static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline int register_kho_notifier(struct notifier_block *nb)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline int unregister_kho_notifier(struct notifier_block *nb)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+ static inline void kho_memory_init(void)
+ {
+ }
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index ee4f430dfae0..fc290226e58b 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -16,7 +16,6 @@
+ #include <linux/libfdt.h>
+ #include <linux/list.h>
+ #include <linux/memblock.h>
+-#include <linux/notifier.h>
+ #include <linux/page-isolation.h>
+ #include <linux/rwsem.h>
+ 
+@@ -641,13 +640,11 @@ static int kho_debugfs_fdt_add(struct list_head *list, struct dentry *dir,
+ }
+ 
+ struct kho_out {
+-	struct blocking_notifier_head chain_head;
+ 	struct dentry *dir;
+ 	struct kho_serialization ser;
+ };
+ 
+ static struct kho_out kho_out = {
+-	.chain_head = BLOCKING_NOTIFIER_INIT(kho_out.chain_head),
+ 	.ser = {
+ 		.fdt_list = LIST_HEAD_INIT(kho_out.ser.fdt_list),
+ 	},
+@@ -697,18 +694,6 @@ int kho_add_subtree(const char *name, void *fdt)
+ }
+ EXPORT_SYMBOL_GPL(kho_add_subtree);
+ 
+-int register_kho_notifier(struct notifier_block *nb)
+-{
+-	return blocking_notifier_chain_register(&kho_out.chain_head, nb);
+-}
+-EXPORT_SYMBOL_GPL(register_kho_notifier);
+-
+-int unregister_kho_notifier(struct notifier_block *nb)
+-{
+-	return blocking_notifier_chain_unregister(&kho_out.chain_head, nb);
+-}
+-EXPORT_SYMBOL_GPL(unregister_kho_notifier);
+-
+ /**
+  * kho_preserve_folio - preserve a folio across kexec.
+  * @folio: folio to preserve.
+-- 
+2.51.0.618.g983fd99d29-goog
 
 
