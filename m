@@ -4,92 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65705CAC5B8
-	for <kexec@archiver.kernel.org>; Thu,  2 Oct 2025 04:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EFAFDCAC5B0
+	for <kexec@archiver.kernel.org>; Thu,  2 Oct 2025 04:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ctQddUgZm+88vHmtPzUekOskf2BJsO+AnrtcChvOlmA=; b=hBvUOSbzBRBtmoOioibvhQbu77
-	/R4JcLYOdmfYCxetEYy4aqyq8goI014IWxCpWbCyRDhlfj97vbqEO6rff/ebxNEFlBq9kFaIeAFn0
-	Suxl/p3j2mrqpQer+jRJX7+rjSZiPhFuxcrsUQ7Cd/gom4aYzmXzbuxioi6p+WPY+OArIRsXZQyGD
-	JG2ghy2Ah3O66Zm/wUoHK1N/gSVH/686GnrDZ7RAATq5WFo0RPWyxqCm1+NNyOvglHrpZmh6eFtM6
-	9XmgjXhErfM9V8tcetSv8vBDQrZbwyF3fWy8Obt3au9ds7jYmFi0vtIYc8Q7wHlW4S651B+cWM4GA
-	7u05JlTg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=NHF6h4Ls4dHg3uTjT8RkkFkU4hLoyL8d6PtCtHg7MP4=; b=SZu931Z1yPBpMrBy7WkPJQX98W
+	ej5exRNr5iXD6So5FX6euug0541Jki6x4ypDhXpouEtq7AWtYDmNa3dypBpwYm8JhJKsgOQzUHUmW
+	WChLicIZfcbk0NXmsG9Jb+6hmq+G8ws8Mj5wANcgmJmqVBFdgaFn4zeoy+EUNWDeb9vc2N9jhilWT
+	Zs+LX8ssGqJ8C8sEKqtzw0QwvGiQuB2JEPjo7cKSvExxpV1tiP/X4t4+v7jonV4xDLhn+6diPohmi
+	PLsQywOorYFyasSiKgAfBEiU0xkhV5dtXlUYAqxSdp3mAy0xvxsavyAqbR10K1z0+EKyKar0PF4d3
+	dM1p59Dw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v4Akq-00000009aC5-29zo;
-	Thu, 02 Oct 2025 04:17:20 +0000
-Received: from mail-vs1-xe2b.google.com ([2607:f8b0:4864:20::e2b])
+	id 1v4Awc-00000009arQ-34nu;
+	Thu, 02 Oct 2025 04:29:30 +0000
+Received: from mgamail.intel.com ([192.198.163.10])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v4Akl-00000009aBX-3Xhb
+	id 1v4Awa-00000009aqp-0Ug7
 	for kexec@lists.infradead.org;
-	Thu, 02 Oct 2025 04:17:16 +0000
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-58de3ab1831so623644137.3
-        for <kexec@lists.infradead.org>; Wed, 01 Oct 2025 21:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759378634; x=1759983434; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ctQddUgZm+88vHmtPzUekOskf2BJsO+AnrtcChvOlmA=;
-        b=AByk9Rn4YHoJb6OZkT0i27KP90GAc7JZhi35VwjnRZFWGV66o5TiBZulR8NG/lbZI5
-         JgbIc0WyzPAfEMG9AJTDs07CwySJGva7dy92mPmI6XKx46e1hVPTBaMtXQ3WZPbQcjei
-         6P5844w6jCpzzy2zdz5CPqSIKbZvMEVUYxeQtfB3I53FDkCLoKscmzx7IS64MMZHOcdN
-         TYGCnsxkXCXo4pwLlrND6uHzcLesWii3B/dWNMmQBaRF5/Y/3e2kejZqJH2PZQqrA+9P
-         +A9QzXle7Bju3Omfb9UyiDsll9BiVAikh+B9DD65OqUNXvx/TLxxuEXcORz2PDO14ch7
-         d+pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759378634; x=1759983434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ctQddUgZm+88vHmtPzUekOskf2BJsO+AnrtcChvOlmA=;
-        b=tQnk0W3VNgOgGWyen6bkdGNqegrATe0xfvzNa03gHrEUSXkgy/noBReu2iJ9m0359W
-         /PSxy/DXu7fLM2b3mHvS8JpMdptEZmc6oi9fs0N7mLglaKo23WzC/dEyvTN7MrddqvcB
-         jvzto8LRbXIz1/Eysfbw+MpfiKfpQ9h9J8EnC6/rV4vKqWT26f7Os8DCVRfT+khrnFGr
-         E+N5FjgRMahSGcrgkYb9tEuMeNAcaWsLmy4TLVtsApvwDcdYhuuC1pNKij9tJHkVKhsa
-         SktymfOksJSVC9qi9umoFFmlS8YUR8CVfq44kfyR/cCPod2jZREpVyn+oyUU1fsYmXP6
-         Iryw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQvmQLSwWwfdeW6Xl+bHoC3Pt3a1D0qdRd+0Z16zcZTbuS0Zf2gBQG1B2fWahQS/UuzLvtGw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxWVr6n2/qksa5YtvCDuXrGgNfXxfE1/DUlQ9AdSU2X344WVDfu
-	EC9VdOXQ1is2UbUnE8MaTxmzhctUP6BG/9yQCrj0Sfw5wuUFP0Iju0PaRDNFjwtzLYAqFSHvxbg
-	JGuI6nGqBkkODT7MM1G6ven8hEhU/gus=
-X-Gm-Gg: ASbGncvWGc0T7dtUwy6WCup1mVe1/dG76i1HHEFqi1cwsxrJvtGUgWK2YUEOb+jFWXh
-	CZPA0VK7zWvM4TU7+mYDMwPu+x/ee0panmBbzLF+ZcnYr6ImqQRv3ymRA1ebJ53NyDrCXbmsdCq
-	GzSSbYAROkkGhG8L+Fy3wUAeCkvC8eYT7jH9xUyNT1BPmzTdVfol9N02GdJLGPC1QIIDK/N9Ubh
-	oz+w6JsnJq4giyQmm5yK3VjedExAd7nNnmIGqo2LLjwahiBaSWsUmhHXVKe4A0D2D0/SLk11WA=
-X-Google-Smtp-Source: AGHT+IHtvWQt8jonztmIlXZVLrosCzlBFZCwfKRU9/rXACxnEYGw3JcofNOIt435bpI1Zm7zqg5PCoJh2gMscknY7Rc=
-X-Received: by 2002:a05:6102:41a1:b0:59d:b0f7:664c with SMTP id
- ada2fe7eead31-5d3fe7043d6mr3036274137.35.1759378634290; Wed, 01 Oct 2025
- 21:17:14 -0700 (PDT)
+	Thu, 02 Oct 2025 04:29:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759379368; x=1790915368;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9f+HXNcD7IOFZER/ertfy9YqZjvmxhL5wyEiNgnR4kw=;
+  b=KakNZo8Nm5MBSPsRMzysa2vYGD2i3OvF8k6GGJMDAeViSKCabs7kPxiV
+   CrgICdi4ivOObCVlajUH9sUe2dSUIlEfSgt8DoB6cJRoZNCM9V7Cp66v6
+   nPFG4HXX+z/J0MENcT5FeShukkA4GiD61Gh+yDw9vmL8c9Xm82wzfIWcV
+   sPm8d/Qf4V4G2AqJJihALIWbWLF9qyhc5JKStRSaRvtAWiZIX8uYV0u/o
+   2omFc9CKbQXKsD0IfK8QA5wZiPKMcD0LK9BfXN9UchxhtcgilamyAhQEU
+   wskjedL7fwtLWMFUoSzju2RChS0g60j77m5UprYWmIdwlg/BQOJP+5rph
+   w==;
+X-CSE-ConnectionGUID: qqU76AtdTeG23VsHTRs0ZQ==
+X-CSE-MsgGUID: HEdQImhZTvidi85dAQ3gIg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="73016726"
+X-IronPort-AV: E=Sophos;i="6.18,308,1751266800"; 
+   d="scan'208";a="73016726"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 21:29:24 -0700
+X-CSE-ConnectionGUID: LZEq29e4Tqu8t5/Q3RYwFw==
+X-CSE-MsgGUID: wbDqmC1RT0KGjEqOh3Vncg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,308,1751266800"; 
+   d="scan'208";a="179734321"
+Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 01 Oct 2025 21:29:21 -0700
+Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v4AwR-0003Z5-0K;
+	Thu, 02 Oct 2025 04:29:19 +0000
+Date: Thu, 2 Oct 2025 12:29:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH v1 1/3] kho: Adopt KHO radix tree data structures
+Message-ID: <202510021229.mKL5i2Vt-lkp@intel.com>
+References: <20251001011941.1513050-2-jasonmiu@google.com>
 MIME-Version: 1.0
-References: <20250919212650.GA275426@fedora> <CAM_iQpXnHr7WC6VN3WB-+=CZGF5pyfo9y9D4MCc_Wwgp29hBrw@mail.gmail.com>
- <20250922142831.GA351870@fedora> <CAM_iQpWO71vSV_0qXiUYeKYZMYF0xWNz8MrUVRkqKwDEtQvKqA@mail.gmail.com>
- <20250923170545.GA509965@fedora> <3b1a1b17-9a93-47c6-99a1-43639cd05cbf@redhat.com>
- <20250924125101.GA562097@fedora> <CAM_iQpWRZ-vihMEa=k-j9EYN9itUeZLhZ14AoCvZ9mturFxAyw@mail.gmail.com>
- <20250924190316.GA8709@fedora> <CAM_iQpXnvyZWrv4W45SBTDV-tCXU4Fz1=S8z_0s5en+U29vSZQ@mail.gmail.com>
- <20250929151149.GB81824@fedora>
-In-Reply-To: <20250929151149.GB81824@fedora>
-From: Cong Wang <xiyou.wangcong@gmail.com>
-Date: Wed, 1 Oct 2025 21:17:02 -0700
-X-Gm-Features: AS18NWBSFERQychThKDKhC7xP4aDfnWKA8U5c5GLpDIk74WF-1WcxMsDvgDcjOU
-Message-ID: <CAM_iQpVRruWNnMtP2BKfQJrHnA_B+ea84GbO_C2rF6cuJcj5_Q@mail.gmail.com>
-Subject: Re: [RFC Patch 0/7] kernel: Introduce multikernel architecture support
-To: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, 
-	pasha.tatashin@soleen.com, Cong Wang <cwang@multikernel.io>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Changyuan Lyu <changyuanl@google.com>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, multikernel@lists.linux.dev, 
-	jasowang@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251001011941.1513050-2-jasonmiu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251001_211715_890183_95933116 
-X-CRM114-Status: GOOD (  32.86  )
+X-CRM114-CacheID: sfid-20251001_212928_198593_AA6B6BD3 
+X-CRM114-Status: GOOD (  11.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,79 +95,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Sep 29, 2025 at 8:12=E2=80=AFAM Stefan Hajnoczi <stefanha@redhat.co=
-m> wrote:
->
-> On Sat, Sep 27, 2025 at 12:42:23PM -0700, Cong Wang wrote:
-> > On Wed, Sep 24, 2025 at 12:03=E2=80=AFPM Stefan Hajnoczi <stefanha@redh=
-at.com> wrote:
-> > >
-> > > Thanks, that gives a nice overview!
-> > >
-> > > I/O Resource Allocation part will be interesting. Restructuring exist=
-ing
-> > > device drivers to allow spawned kernels to use specific hardware queu=
-es
-> > > could be a lot of work and very device-specific. I guess a small set =
-of
-> > > devices can be supported initially and then it can grow over time.
-> >
-> > My idea is to leverage existing technologies like XDP, which
-> > offers huge benefits here:
-> >
-> > 1) It is based on shared memory (although it is virtual)
-> >
-> > 2) Its API's are user-space API's, which is even stronger for
-> > kernel-to-kernel sharing, this possibly avoids re-inventing
-> > another protocol.
-> >
-> > 3) It provides eBPF.
-> >
-> > 4) The spawned kernel does not require any hardware knowledge,
-> > just pure XDP-ringbuffer-based software logic.
-> >
-> > But it also has limitations:
-> >
-> > 1) xdp_md is too specific for networking, extending it to storage
-> > could be very challenging. But we could introduce a SDP for
-> > storage to just mimic XDP.
-> >
-> > 2) Regardless, we need a doorbell anyway. IPI is handy, but
-> > I hope we could have an even lighter one. Or more ideally,
-> > redirecting the hardware queue IRQ into each target CPU.
->
-> I see. I was thinking that spawned kernels would talk directly to the
-> hardware. Your idea of using a software interface is less invasive but
-> has an overhead similar to paravirtualized devices.
+Hi Jason,
 
-When we have sufficient hardware resources or prefer to use
-SR IOV, the multikernel could indeed access hardware directly.
-Queues are an alternative choice for elasticity.
+kernel test robot noticed the following build warnings:
 
->
-> A software approach that supports a wider range of devices is
-> virtio_vdpa (drivers/vdpa/). The current virtio_vdpa implementation
-> assumes that the device is located in the same kernel. A
-> kernel-to-kernel bridge would be needed so that the spawned kernel
-> forwards the vDPA operations to the other kernel. The other kernel
-> provides the virtio-net, virtio-blk, etc device functionality by passing
-> requests to a netdev, blkdev, etc.
+[auto build test WARNING on rppt-memblock/for-next]
+[also build test WARNING on linus/master v6.17]
+[cannot apply to rppt-memblock/fixes akpm-mm/mm-everything next-20250929]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I think that is the major blocker. VDPA looks more complex than
-queue-based solutions (including Soft Functions provided by mlx),
-from my naive understanding, but I will take a deep look at VDPA.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Miu/kho-Adopt-KHO-radix-tree-data-structures/20251001-092230
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git for-next
+patch link:    https://lore.kernel.org/r/20251001011941.1513050-2-jasonmiu%40google.com
+patch subject: [PATCH v1 1/3] kho: Adopt KHO radix tree data structures
+config: x86_64-randconfig-005-20251001 (https://download.01.org/0day-ci/archive/20251002/202510021229.mKL5i2Vt-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251002/202510021229.mKL5i2Vt-lkp@intel.com/reproduce)
 
->
-> There are in-kernel simulator devices for virtio-net and virtio-blk in
-> drivers/vdpa/vdpa_sim/ which can be used as a starting point. These
-> devices are just for testing and would need to be fleshed out to become
-> useful for real workloads.
->
-> I have CCed Jason Wang, who maintains vDPA, in case you want to discuss
-> it more.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510021229.mKL5i2Vt-lkp@intel.com/
 
-Appreciate it.
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-Regards,
-Cong Wang
+>> WARNING: modpost: vmlinux: section mismatch in reference: kho_radix_walk_trees_callback+0x83 (section: .text) -> __memblock_reserve (section: .init.text)
+>> WARNING: modpost: vmlinux: section mismatch in reference: kho_radix_walk_trees_callback+0x91 (section: .text) -> memblock_reserved_mark_noinit (section: .init.text)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
