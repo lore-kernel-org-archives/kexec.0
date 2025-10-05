@@ -4,93 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D92C3CAC5BB
-	for <kexec@archiver.kernel.org>; Sun,  5 Oct 2025 04:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5FEEBCAC5BB
+	for <kexec@archiver.kernel.org>; Sun,  5 Oct 2025 23:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=YtRjel1HG5STXuZLFeW7ky9+MooC7qPIEizO0OKUdcE=; b=4C2DY9Ca4z4dqEwepNOHu2Myfh
-	UH/+T3X6rGHSJm8n+pj9Her6ropGvzEEM1RRJb2Wb/6+skavZt5Xv8U/yuQi+AKj5cJUpKWihnrKr
-	glT5+v2YbvAkesSoqMlxU3+0AJW5NvmuUpkEhNPWFoUoWeTDTWUnpHAa7oWTYXg5q8nVuxcf41/qd
-	IGEJztsYC+bZ3dboRNejpIjfaHNPu7fpzap0KkVGtULJStnMA2bvgvcab03iIB1LFmOZLjTcZjZwE
-	pGpI7IbOCHdSZBxKV9G4geCwyoB4sXtwnEzMpPrtZilFCWiI1xCzYRc1dljm5CFB4yUYAKL3qZscN
-	OoZOWWxQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1sWGDXdMbugCpVOcY97EEpJwL5EuPZmTaXRTy5Y/MZ0=; b=0f8LWxr6UF142pdy/g2t/Zu7Ji
+	QStMhsxxQ5Yewbd+VjPmcLaUNTq0hv9ZBGlM+BWf1C+wGNg7YU6EL3LAEqVjbucQ0/VV9oW94I/mK
+	8XCDUGHbNzMq+11u8dwdtC7sZP7NVOpHHywgPPK1VExf8+jP1oeRX3coShIk5Px4uI6ndRbsuOdwt
+	L9I9LD5fsSKcTT7EqavOXA1hrRLT+7GdoSXFuDVbVoiZUl4I3yTK6M6svyfWmYD81zLAZaYR/wd0V
+	iKpQCvrcrr66AJNLzUUmInBcrRiHZm5jPUNG8iKz6zsosgpwfvEAUouMz08fPjMgqPGQWpaXEU4Zs
+	kq/thgsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v5Ggo-0000000EEJb-1BtD;
-	Sun, 05 Oct 2025 04:49:42 +0000
-Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+	id 1v5Y7n-0000000GjEq-2Ksm;
+	Sun, 05 Oct 2025 23:26:43 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v5Ggj-0000000EEJE-1z6D
+	id 1v5Y7j-0000000GjEV-1RDw
 	for kexec@lists.infradead.org;
-	Sun, 05 Oct 2025 04:49:38 +0000
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-27d67abd215so224845ad.0
-        for <kexec@lists.infradead.org>; Sat, 04 Oct 2025 21:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759639776; x=1760244576; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YtRjel1HG5STXuZLFeW7ky9+MooC7qPIEizO0OKUdcE=;
-        b=HWKNyoL9hHHwIirl0xeOvUf5oW2nmGo+Zsgw+Y1iap+cE6AfiIZkYXg+6YzFBEmioV
-         Gi5q1O2BDWfDGtSRL5EhsLAH+iGrcHFZXkXvrwKT2wqBXIVg0CjATR+fiA+xCH2Z/+AP
-         0osSeHHrWh6SpmT4Qw321he9rfHTNy/V6SdtMFJzNfC716by9Iute2JhfK6fQe69WnRt
-         GyEvsD13YVZpBUJmVKPamSm+XWaKrRiOntVl0sViwg2i8ni/JaXnyzdgUtsQdDwkM+Nr
-         SmIzvMvR02tTAkIGvJdD2RAtol/GcbVWoHkLTTiYMjMzLYauUNf9a99cQNvLzGGjbVKz
-         DiJg==
+	Sun, 05 Oct 2025 23:26:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1759706796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sWGDXdMbugCpVOcY97EEpJwL5EuPZmTaXRTy5Y/MZ0=;
+	b=dHeCmhNWsx7OzoRFXEvE44Z0O0Fnzzl6lFGiP+sy8sYiYuEEZ9CLEAkG3QISSPcjX+fiVV
+	Es4WKsTQqV5rqRlyUxK/8M9ftHU/7keDXbxspdxJ7STu84BV4Jpd3M2hqMzk2grOrIjy2C
+	kZzpJDUKdaP07r7VxUeIWml4qM4yeio=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-376-ZkwnaSNPNrSihDNkoNxa8g-1; Sun, 05 Oct 2025 19:26:34 -0400
+X-MC-Unique: ZkwnaSNPNrSihDNkoNxa8g-1
+X-Mimecast-MFC-AGG-ID: ZkwnaSNPNrSihDNkoNxa8g_1759706794
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-84a3a7ac082so1007987785a.2
+        for <kexec@lists.infradead.org>; Sun, 05 Oct 2025 16:26:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759639776; x=1760244576;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YtRjel1HG5STXuZLFeW7ky9+MooC7qPIEizO0OKUdcE=;
-        b=YkX5PlforWcJXgm3DN257+2TG26IiW5Ftel/iUY8ShK79xXsE0Pgr5VpXJ3+npr7hl
-         TeIQdNDDZWSsBHpVduL8vM8u6iMtBzPynK7ZPUb46P+YE8pQywlZ2WoVO0ZZnwiYfyw0
-         6ECvYaUwd564uGeBe4TneMp7wcqFJKCJCPpbU3qv1OKHELHE6PSg7cNneHiEHxpmQv5Y
-         MNML0VZN7CE+VLksZwdpwBkY+A3aSrrWhBj8ZSs3/bAVeMh/W90GKkgSPB1JZj9UuAxw
-         QvXoJZl0yXwF8QmgiScpMTg5UMALXHYWoTTzNY+0A2App2mpfEIumPwi2gIwKP7MismF
-         95tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXg2luvgC1QvJTemlaJP93iX3oZhIqA5QSEcEO8GDfq8IDSuNfYeCzmYMZeZM+ojhKYLqiCWA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywx1FxW5HghUNYtgObdzw7nwcqY0WOzvyhbxBTgCoYVss/hxl7q
-	6FKnROFxLlhJUATpBU80gqfZNU1Y5WPCI4mwLaa7qyVF4JnUSXQWbIrCoalhzKgaXQ==
-X-Gm-Gg: ASbGncsUOxLjPc/JJSq/OW4cWBI2K9GUW6IpBa3pd4Znt3vHKy20pupxIpwkhr9NF48
-	G9Ady3EHTo1prlWSQLRcEbUF+nXBv+rYsbYJ02mpJ9yfLO1DiccqQh64JH6mwn/0Wb/QZT22P/n
-	zYXAB+FBKPJ5pDbqbcihvda4NHKGz1yFkgX8WKvV4CbVMeaVbeirI7C2hnjIeKIRzlH1yGpJ3XA
-	jzjN+WrD/efidNmFDLBLz8XOYNs9Mc0vey04jPuHmx4davcLM2yz08oPmCJxhAUzj2u1zseN/5L
-	UGA8Fl49qMRSUjCC2v1JN7zgmPsOReNpbaSTSb0YovSXkjcuRF2opA3NvwQv03eWY9cc7jr2vcJ
-	T0ZguRJZLH0nPF3kI9KS1JYpdGRjjgjHkp8Fhib1GjUawQlF1D6DXs2age+Dhs4FHg7llelElOU
-	/CaqAIXCRs6DoRzCM2Heffb2NZPoR/H0V/1K2221LbSIlzgZhZxjKNbzNmEvgMR13nE0x9sSpGI
-	c6b1j7sFCHypl3/nSlIeMOXSH80
-X-Google-Smtp-Source: AGHT+IGl2dZ4bBXbAE3dltXggDm/JaFJh+YfPTUIUtiSp316mGfJLHul8RCceskvrrqOdr7ugKUMyQ==
-X-Received: by 2002:a17:902:e550:b0:27e:e96a:4c6 with SMTP id d9443c01a7336-28ea7ec09dbmr3993895ad.2.1759639774950;
-        Sat, 04 Oct 2025 21:49:34 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:2b1a:83b3:ba8a:7851] ([2a00:79e0:2eb0:8:2b1a:83b3:ba8a:7851])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d11191bsm93535125ad.11.2025.10.04.21.49.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Oct 2025 21:49:34 -0700 (PDT)
-Date: Sat, 4 Oct 2025 21:49:33 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-    David Matlack <dmatlack@google.com>, 
-    Frank van der Linden <fvdl@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Junaid Shahid <junaids@google.com>, 
-    Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from September 22, 2025
-Message-ID: <365acb25-4b25-86a2-10b0-1df98703e287@google.com>
+        d=1e100.net; s=20230601; t=1759706794; x=1760311594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1sWGDXdMbugCpVOcY97EEpJwL5EuPZmTaXRTy5Y/MZ0=;
+        b=jfh8U62nARmFNC5H63pAFZqoBsrZE7wVyxhGQkriT8sotLChemlOc5XbgLymcZwkd4
+         lB3lg96+8OyUmI9ArY6b+jAPeOuuHJ0iU1Dks2tqSBGe3R1M/qQgla7N3dc6yqwa1xIq
+         ivO9uXlv93sj4wDSyP5UGeUy2VIJTTg5p7NeoFR4nSX4pyuB3z40r0plyUSsSssJn5+T
+         6CjL5cJG8ybFnCBkmhUy7+Rd1CU8NQZNMWc2/2MyM+9syOkxOe2w5T6cFrittuLVwIQ9
+         tsQureXlteE7zuJwA/3KlJaTscY1j7bH7tKpskbhjBdrMteJ7AEd1Wqyh/k7rxCC2KOb
+         MVpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkahA+RCJql0iovf9E7SbRHH0wOWmxr5g3rq1Qr93s6+8MFiUE3avEqV7ss8YLdC2EQ2W66Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxIJyjpgRwqxgHXmC13wpNuizWFjcDYoPxqe050uYwC3AleJr7T
+	WzFFj1S8mrip0B+PcZAXNLVe51e7+fED2A6DS3MjVgrh4rVQT9lv2Ys/N9mW1GAkNQM1la/B12o
+	yFbDAkQgGTl2qjJnVgKqHmZ4XzaJZp05yW+Ohf+6qXTSFEIL0WsFsiWOQj1E8r2bbGSSXn65Ydz
+	uC21JVFIUHC5gHTNcRfB0C6RKLPsnDLwWpLABW
+X-Gm-Gg: ASbGncvylh4b6oHBBPFdTYq6sVgUFs8gXNwtN3sJf97Rtan4I8gB14HQE4UwfzXf0Kn
+	H1fuHJKwvozDTKKH04eJgpXVNFqhkacScKVRFkmVgA6GazZBBkL9MGUAm0IKWconQ0mSGMmaZlC
+	8VU9SEASF3/tdYEVOgje0tzxWdBag=
+X-Received: by 2002:a05:620a:198d:b0:861:9992:26ab with SMTP id af79cd13be357-87a3b98592dmr1145904085a.82.1759706794017;
+        Sun, 05 Oct 2025 16:26:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEzM7F2ffMKEy1nf09oEF49LLLu0aXeC3HVzr0z+jPnGji3FVWmLMsnvUpOQfLZmCmI1aIsoIwvSjO7FKWtuQc=
+X-Received: by 2002:a05:620a:198d:b0:861:9992:26ab with SMTP id
+ af79cd13be357-87a3b98592dmr1145903285a.82.1759706793566; Sun, 05 Oct 2025
+ 16:26:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250610095743.18073-1-ltao@redhat.com> <20250610095743.18073-3-ltao@redhat.com>
+ <ec719745-caa8-4b97-945e-6409234a217d@nec.com>
+In-Reply-To: <ec719745-caa8-4b97-945e-6409234a217d@nec.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Mon, 6 Oct 2025 12:25:57 +1300
+X-Gm-Features: AS18NWABX8zEdHKVODkH0h2qO6ij-g6Qb7Afd1JnKjzr70PMH7IIJPn7tp2a4EY
+Message-ID: <CAO7dBbXvWxJrhSG+cKxroLub3saP=yqfp=FQnVOO_C8bKsO04A@mail.gmail.com>
+Subject: Re: [PATCH RFC][makedumpfile 02/10] dwarf_info: Fix a infinite
+ recursion bug for search_domain
+To: =?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>
+Cc: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, 
+	"aravinda@linux.vnet.ibm.com" <aravinda@linux.vnet.ibm.com>, 
+	"devel@lists.crash-utility.osci.io" <devel@lists.crash-utility.osci.io>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Ku6PGuAl1FuN6OUFhOualDtXEQmW4FCLHXIMBi4u2zs_1759706794
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251004_214937_537955_7CFB73DA 
-X-CRM114-Status: GOOD (  24.10  )
+X-CRM114-CacheID: sfid-20251005_162639_797769_73770FB2 
+X-CRM114-Status: GOOD (  25.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,122 +108,139 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+Hi YAMAZAKI,
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, September 22.  Thanks to everybody who was involved!
+On Fri, Oct 3, 2025 at 8:23=E2=80=AFPM YAMAZAKI MASAMITSU(=E5=B1=B1=E5=B4=
+=8E=E3=80=80=E7=9C=9F=E5=85=89)
+<yamazaki-msmt@nec.com> wrote:
+>
+> On 2025/06/10 18:57, Tao Liu wrote:
+> > There is an infinite recursion bug noticed in rust symbols. The root ca=
+use is
+> > unclear to me. This patch will avoid the bug by skip the recursion of r=
+ust
+> > symbols, since currently we don't need to deal with those.
+> >
+> > Signed-off-by: Tao Liu <ltao@redhat.com>
+> > ---
+> >   dwarf_info.c | 15 ++++++++-------
+> >   1 file changed, 8 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/dwarf_info.c b/dwarf_info.c
+> > index a3a2fd6..73842ab 100644
+> > --- a/dwarf_info.c
+> > +++ b/dwarf_info.c
+> > @@ -837,7 +837,7 @@ search_symbol(Dwarf_Die *die, int *found)
+> >   }
+> >
+> >   static void
+> > -search_domain(Dwarf_Die *die, int *found)
+> > +search_domain(Dwarf_Die *die, int *found, int lang)
+> >   {
+> >       int tag;
+> >       const char *name;
+> > @@ -859,10 +859,11 @@ search_domain(Dwarf_Die *die, int *found)
+> >                       if (is_container(&die_type)) {
+> >                               Dwarf_Die child;
+> >
+> > -                             if (dwarf_child(&die_type, &child) !=3D 0=
+)
+> > +                             if (dwarf_child(&die_type, &child) !=3D 0=
+ ||
+> > +                                 lang =3D=3D DW_LANG_Rust)
+> >                                       continue;
+> >
+> > -                             search_domain(&child, found);
+> > +                             search_domain(&child, found, lang);
+> >
+> >                               if (*found)
+> >                                       return;
+> > @@ -924,7 +925,7 @@ search_die(Dwarf_Die *die, int *found)
+> >   }
+> >
+> >   static void
+> > -search_die_tree(Dwarf_Die *die, int *found)
+> > +search_die_tree(Dwarf_Die *die, int *found, int lang)
+> >   {
+> >       Dwarf_Die child;
+> >
+> > @@ -932,7 +933,7 @@ search_die_tree(Dwarf_Die *die, int *found)
+> >        * start by looking at the children
+> >        */
+> >       if (dwarf_child(die, &child) =3D=3D 0)
+> > -             search_die_tree(&child, found);
+> > +             search_die_tree(&child, found, lang);
+> >
+> >       if (*found)
+> >               return;
+> > @@ -950,7 +951,7 @@ search_die_tree(Dwarf_Die *die, int *found)
+> >               search_typedef(die, found);
+> >
+> >       else if (is_search_domain(dwarf_info.cmd))
+> > -             search_domain(die, found);
+> > +             search_domain(die, found, lang);
+> >
+> >       else if (is_search_die(dwarf_info.cmd))
+> >               search_die(die, found);
+> > @@ -1007,7 +1008,7 @@ get_debug_info(void)
+> >                       ERRMSG("Can't get CU die.\n");
+> >                       goto out;
+> >               }
+> > -             search_die_tree(&cu_die, &found);
+> > +             search_die_tree(&cu_die, &found, dwarf_srclang(&cu_die));
+> >               if (found)
+> >                       break;
+> >               off =3D next_off;
+>
+> Hi Liu
+>
+> This problem need to be solve. But I don't know how to reproduce.
+> If Your server is running rust program. Or Or is it running as a
+> module by rust? Please tell me how to reproduce it.
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+Sure
+E.g. using the following eppic program: /tmp/test.c:
+string test_opt(){return "";}
+string test_usage(){return "";}
+static void test_showusage(){printf("");}
+string test_help(){return "";}
 
------>o-----
-Pasha updated LUO v4 by syncing with linux-next and was going over all 
-feedback.  The session support had been added and he planned on sending 
-the next series over the next couple days.  No major changes other than 
-the session support.  There was a lot of discussion about versioning but 
-that will not be included in the next series.
+int test()
+{
+struct task_struct *p;
+unsigned long offset;
 
-There were no major updates on luod, the design doc continued to be 
-receiving feedback.  We planned on sending this to the googleprodkernel 
-GitHub when ready[1].
+p =3D (struct task_struct *)&init_task;
+offset =3D (unsigned long)&(p->tasks) - (unsigned long)p;
 
------>o-----
-We discussed memfd preservation and the 1GB limitation.  Pratyush noted 
-that he had worked through all feedback based on v5.  The next version 
-will still have the 1GB limitation and we're waiting for Mike's series 
-before addressing that.  Once we have the vmalloc support, this will be 
-more straightforward.
+do {
+printf("%d\n", (int)(p->pid));
+p =3D (struct task_struct *)((unsigned long)(p->tasks.next) - (unsigned lon=
+g)p);
+} while (p !=3D &init_task);
+return 1;
+}
 
-Pratyush noted that the next steps for memfd preservation would be sparse 
-memfds and hugepages.  He suggested that guest_memfd may be simpler as an 
-extension.  Pasha noted that HugeTLB support would actually be harder.
+$ ./makedumpfile --dry-run -d 31 -l
+/var/crash/127.0.0.1-2025-06-10-18\:03\:12/vmcore /tmp/out -x
+/lib/debug/lib/modules/6.11.8-300.fc41.x86_64/vmlinux --eppic
+/tmp/test.c
+Segmentation fault (core dumped)
 
-Vmalloc support should make it into the next merge window and then memfd 
-support can avoid the 1GB limitation, so it may be possible for the next 
-merge window to lift the 1GB limitation and include sparse memfd support.
+With the patch, no segfault.
 
------>o-----
-Chris discussed preservation of memory with split folios and the error 
-path.  If a folio is preserved and then it is split, the preservation 
-needs to be undone before preserving it again.  Pasha said that this 
-simply could not happen because KHO memory is not migratable.  Jason noted 
-that memfd would have to prevent any split, including in cases of page 
-fault with pinning.
+The vmcore/vmlinux should contain rust symbols: CONFIG_RUST=3Dy, you can
+use the following vmcore https://people.redhat.com/~ltao/core/vmcore +
+https://kojipkgs.fedoraproject.org//packages/kernel/6.11.8/300.fc41/x86_64/=
+kernel-debuginfo-6.11.8-300.fc41.x86_64.rpm
+for vmlinux and vmcore to test.
 
-Pratyush noted that we may want to add some debugging assertions to ensure 
-all KHO memory is pinned, cannot be migrated, and the folio cannot be 
-split.
+Thanks,
+Tao Liu
 
-Vishal noted for Confidential Computing that folios are sometimes split to 
-handle the sharing of pages, the conversion of shared <-> private guest 
-memory.  Since the guest can ask for this conversion during brown out, 
-we'll need to ensure that this can't happen.
+>
+> Thanks,
+> Masa
+>
 
------>o-----
-Chris updated the status of PCI preservation and sending out v2 of those 
-patches.  The current patch series only preserves the bus master bit.  He 
-asked for any feedback to be provided on the list as he was planning on 
-pushing for this to be merged after LUO v4 is landed.
-
-We discussed where to merge the changes when they are ready, the consensus 
-was that this would go through the PCI maintainer tree but after the LUO 
-APIs are already merged upstream.
-
------>o-----
-Andrey provided an update on KSTATE, he said he will would be willing to 
-go over the current status and plans through the end of the year in the 
-next sync so we planned on carving out some time in the next instance.
-
------>o-----
-Vipin went over VFIO device preservation at Google as a follow-up to the 
-KVM forum[2].
-
-Vipin noted the internal approach will be different from what is sent 
-upstream.  Vipin discussed passing VFIO device file descriptor to the LUO 
-ioctl for preservation similar to what is being done for memfd.  There was 
-an open question on whether VFIO cdev should be shown in /dev/vfio/devices 
-until the VMM has reclaimed the device from LUO.  Jason suggested that it 
-should either error out or cancel the live update (resets the device and 
-operates normally).  Pasha suggested that if the fd had not been reclaimed 
-after kexec then it should reset the device.
-
-Vipin discussed interrupt preservation and the internal approach for doing 
-this.  There's an alternative of disabling interrupts on the device before 
-kexec and then after kexec, set up new interrupts and blindly inject all 
-configured interrupts.  At KVM Forum there was feedback provided about 
-side effects of this for Windows guests.  Jason suggested sending patches 
-for this alternative as a starting point.
-
------>o-----
-Next meeting will be on Monday, October 6 at 8am PDT (UTC-7), everybody is
-welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - update on latest status of LUO and next steps for merge into akpm's
-   tree
- - update on the status of versioning support and anticipated timelines
-   for inclusion
- - update on the status of stateless KHO RFC patches that should simplify
-   LUO support
- - update on memfd preservation, vmalloc support, and 1GB limitation
- - discuss guest_memfd preservation use cases for Confidential Computing
-   and any current work happening on it, including overlap with memfd
-   preservation being worked on by Pratyush
-   + discuss any use cases for Confidential Computing where folios may
-     need to be split after being marked as preserved during brown out
- - [20 min] Andrey will discuss the current status of KSTATE and plans for
-   it through the end of this year
- - [25 min] Samiullah will discuss IOMMU preservation plans to get early
-   alignment with stakeholders
- - later: testing methodology to allow downstream consumers to qualify
-   that live update works from one version to another
- - later: reducing blackout window during live update
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://github.com/googleprodkernel/linux-liveupdate
-[2]
-https://gitlab.com/qemu-project/kvm-forum/-/raw/main/_attachments/2025/VFIO_device_DiiwG94.pdf 
 
