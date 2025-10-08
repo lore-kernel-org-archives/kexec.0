@@ -4,112 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 536C9CCA476
-	for <kexec@archiver.kernel.org>; Tue,  7 Oct 2025 09:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F4A3CAC5BB
+	for <kexec@archiver.kernel.org>; Wed,  8 Oct 2025 07:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yLP+glegqIJBcIb7jt0bclmibbjRxFmE8iklM/lj5FI=; b=l/bjLy9NMfrRgPBbD0NMBzkO5C
-	M+ybDUwckR2Khd3rFeqkG5paGpoF9oD7B51OoJT/++xDofry8NHKPhIh4eSjHzrv3nxaUGP/fssSe
-	dHANx2PaVXUwkJtuxeDGSm4azuwNp1rxNeJdheKBuOAPL2SdDLEwqShRShPbdY7v5Fi1UIwuBozeV
-	14QEKl9WLnbUNWYEKzyulzNchR1w6oFJaYeRoCGlj3ZLzzeDBzLUmjJBAPn4JFtkhhuMl3a9QlCP7
-	Q3QNuWvl5N1KxDx0woF55dyHsJhXeR/anZsgc23g2meHCWaMhsbk1AnZsKdn6QcdIopDDENPI37pI
-	II7crGCA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:To:From:Date:Message-ID:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=jxb0oDMobd7GaIcoqojTSF8ZoNcoVg4kM8ohJkoHKb8=; b=JjlileEac+/5TTM9NkqvtAMqV1
+	yEZCM+XDH29hYXSrfTs9L8eAuwPuF0jzUDxj9BqFyYbCsf/fp34r/hR+X85BbrWX5gDbfumuvAjG1
+	m4nL0sOX+LmqFnykJHAKEXm4AH2HCqHRTAzRoIRS+rDoQAma2XGjw0USOEbrRTrgs4nWMZg3RqmuP
+	WwG8QXGSID9I6/hh0VMbR3jiEfx8uFAq51Bna16eCfkj99A2gt2EZjEqNBUl9l6v+ILdvB9AP82e1
+	RfmfJveIH4mqD9m+Pg583IZ7zz/0Yl5BuD4Y95w9y4bXGGnL6gKosQUezIFDTW53CaJBT5IVG78ey
+	V8yOZKDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v63jb-00000001gPc-0imr;
-	Tue, 07 Oct 2025 09:11:51 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1v6Of1-00000003MLy-2grU;
+	Wed, 08 Oct 2025 07:32:31 +0000
+Received: from mail.proventix.pl ([51.195.118.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v63jX-00000001gOU-0ZGI
+	id 1v6Oey-00000003MLE-45dw
 	for kexec@lists.infradead.org;
-	Tue, 07 Oct 2025 09:11:48 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id E2F5B336F3;
-	Tue,  7 Oct 2025 09:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1759828303; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLP+glegqIJBcIb7jt0bclmibbjRxFmE8iklM/lj5FI=;
-	b=ljO1R0bBwHZiKasEy6MhvQCSGMlm4+xEKkcMA41IC56HN4tKhzzPOFm+eTkjrQzqilrVK3
-	UC/yHR6APtQGnjhomDeck1bgfmzaVQmrry8QRd0kPAGBVcwOP8DGrFPGvbqISCnAjhGulb
-	rNU4Uie76wFo5+5DZz5J1iEYpTP2aB4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1759828303;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLP+glegqIJBcIb7jt0bclmibbjRxFmE8iklM/lj5FI=;
-	b=BxvMRXFMc97Quk4/ZugYs8ialO0F/RJfEsI5Q5x9B6YX01gaJ6jzvuX/oaR8uw2O4xZmKE
-	tgpgxhSKqSLMDnBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1759828302; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLP+glegqIJBcIb7jt0bclmibbjRxFmE8iklM/lj5FI=;
-	b=axDO3gJNswuZeSVfGNwO0ejXnMY06seTp6gjJMbJxdhX3zGYuYB+jGZzlZM9q38syn3Fsu
-	PTTnLxfztDzoPNnl44gYiGimfP+ZKAa3Xa3bFoFZkLbFgvafB+E9gjyLbj6iSWDxovtWEu
-	5ZB1LFMsTFU1K4kTHxrCz0+chEO9V9A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1759828302;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLP+glegqIJBcIb7jt0bclmibbjRxFmE8iklM/lj5FI=;
-	b=PFqMaes1rrVopcuRe9tYuxzoLI7wyEtAd2Tb16TNVlhte9BwGzUA/0Q8CyM/FJdYAMDYMS
-	W9iYjQfFKU399tBA==
-Date: Tue, 7 Oct 2025 11:11:42 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>
-Cc: David Hildenbrand <dhildenb@redhat.com>,
-	Breno Leitao <leitao@debian.org>, kas@kernel.org, riel@surriel.com,
-	vbabka@suse.cz, nphamcs@gmail.com, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aOTZTji039KEJ1T0@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
- <vojlxf5pelxlr6omsfsccd4e4cdzn5qyxpgiqajorkgmgd7ruh@e5wwhkmvntpb>
- <26ae6b04-3beb-47e9-9639-b081003dc9bb@redhat.com>
- <f7x2flir2c5zpkusgiyk7qnrdqo4dek3iksyldw6w22r55s4vy@4b47lrcv3fag>
- <2e35b6dd-56dd-47e6-8dac-54f446f763f0@redhat.com>
- <aOSO/e68pZ7FGKm1@MiWiFi-R3L-srv>
+	Wed, 08 Oct 2025 07:32:30 +0000
+Received: by mail.proventix.pl (Postfix, from userid 1002)
+	id B3C30A3A2B; Wed,  8 Oct 2025 09:31:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=proventix.pl; s=mail;
+	t=1759908745; bh=jxb0oDMobd7GaIcoqojTSF8ZoNcoVg4kM8ohJkoHKb8=;
+	h=Date:From:To:Subject:From;
+	b=Bh8A5KCNeXH8bRhM9rPoRU/CDjeeQDia3ayyjxbcLrh+GqeUOd8QDIqvBtef/CktR
+	 H+G9/np6cGC5XoRw4/MIbWRznqB8V1WWf6d8fpFiBmkKHypTKdgciy1X3ctxMvz6zZ
+	 8xf4j9u52QqwD/UNVLM/4H5zxwxpkh/7gQuzO4Yh9hwEYzqRXDMLYtgiBhoYL46e8w
+	 vSYCRJZB55Fh1D6Q7iOZAUPjLBUugaXloXsASMr6VflNtAxTzUZmFwgjZoBeEhwiqE
+	 iwPbEdr4mvpRClsgnMbhq2zqgIEScyj3kw+mTzXuUByDaM+Rwlbf7uErR8IcFpWCI8
+	 oZCwsFNMijIUQ==
+Received: by mail.proventix.pl for <kexec@lists.infradead.org>; Wed,  8 Oct 2025 07:30:37 GMT
+Message-ID: <20251008084500-0.1.od.3eaxv.0.gdd5bqadyv@proventix.pl>
+Date: Wed,  8 Oct 2025 07:30:37 GMT
+From: "Adrian Liszka" <adrian.liszka@proventix.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.proventix.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aOSO/e68pZ7FGKm1@MiWiFi-R3L-srv>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_CC(0.00)[redhat.com,debian.org,kernel.org,surriel.com,suse.cz,gmail.com,lists.infradead.org,linux-foundation.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251007_021147_321251_18717808 
-X-CRM114-Status: UNSURE (   5.17  )
+X-CRM114-CacheID: sfid-20251008_003229_310895_86F45EEC 
+X-CRM114-Status: UNSURE (   0.41  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -125,17 +66,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Oct 07, 2025 at 11:55:36AM +0800, Baoquan He wrote:
-> And I saw Jiri has excluded the crashk_cma_ranges[] from the dumped
-> content via elf_header_exclude_ranges(). 
+Dzie=C5=84 dobry,
 
-Exactly, thanks for pointing this out, while I was away from my e-mail.
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
 
-The crashkernel CMA reservation ranges will not be seen at all by
-makedumpfile.
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
 
+Zapraszam do kontaktu.
+
+
+Z pozdrowieniami
+Adrian Liszka
 
