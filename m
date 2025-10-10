@@ -4,154 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF681CCD183
-	for <kexec@archiver.kernel.org>; Thu,  9 Oct 2025 17:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2739FCCA476
+	for <kexec@archiver.kernel.org>; Fri, 10 Oct 2025 09:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xKezOozn2ni66j80d21CIq7j4HubCbIJLKPI+10N5aw=; b=JxT+euThHc+X0bggWsVTEF+pd+
-	e9ToFao9XBoA3W0SkQjRKvgMxq6Fx6UqMm1+CXSLsUCEUoIHca3rjV9af8FACGF4wlYGmkzsiDu0h
-	hCJvKiignuSJTP8GN7Toxw1fVyXcvmFtp9g2JiQRo4pjPOfPjR52KSljjrcLopSWGo8hTUq/Zc0u1
-	BdGCri2EcBJyGYM0lLdpSN/Mh4CwYls7bg1m2MksPOR2GjyT2YwjEr/61yO1i6Pw7B4zv89IG3ee2
-	AAiGzuahcDI12sqkEGVX9Nx9UuNqUNcNmwIVrGRTUlxiMK43NeIprxsptaZmnz0g2GUaHx2f+ooRZ
-	1az5PJ9g==;
+	bh=cv4nEj7UBTV72f1gU8wuBa1ut3a9qHUaWAVjisQOCJo=; b=y5e1l+fbrGYu1gbloBXHqDnvOY
+	JBqr5Kt4MwWC6Hu5ljNgt+UeZBzL4Lx1i57gz8K9J8OAxSfpnivPHGAfcy+jB3z3GF8mNKRFvvbqY
+	VYC6wwLhWQMjx1UE15lQxQefEv+GUzdrL3ZD50rPl4upWRYmdjvrQwMYUIjIB05+W6xOYxpIxenm0
+	TPrtKWlLhtRua0FGhwRuTZT7IerSDU37/MpZzqWwiCYz5gU+iCeMGkSXEEhgsUdxp4H9SrWgdFhSh
+	8e/JyQWneld5kYJEU5aE/NN7Ttbf1SDRoxtMCHid5CxA84kt2CO3+IuevbZ9fQgIeXWG3Vz4fVR5c
+	4SyFZ+Og==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v6uoU-00000006qqv-2YAR;
-	Thu, 09 Oct 2025 17:52:26 +0000
-Received: from mail-westus2azlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c005::5] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1v79Vo-00000008AcM-0Y0e;
+	Fri, 10 Oct 2025 09:34:08 +0000
+Received: from mail-ed1-f53.google.com ([209.85.208.53])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v6uoP-00000006qq7-2vCp
+	id 1v79Vl-00000008Ab2-3nxk
 	for kexec@lists.infradead.org;
-	Thu, 09 Oct 2025 17:52:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RA1q8gh+gLee7SU1yErhxdmbRjKmPCcalpBNI1Muce6yqW+SLymGcbCxQtk2mK/Smy6LI8IFmgy9fCtBNjbzSF3JRtLpkpeTkl9P0wW/eu5ugCM79cd9ULXDH3OP4q77PgI5to63PxrIsiaVy2CdbKcXHzM8tg2EEZ+vBs954vnG1g8l2TEOHn5wUArSPHg/89SQHL5LWhQ68ASw2JZ2u3ylJ5dJYJ09BG5Z6udcaEGVAIoGl28BM7CQqmZxcDUDkKM2zhypcldTosWAgrsAbMGcPzDN9m/kdl3faUSSD4JF20ISUbhD5GzymFimzWvJ04ETQYj7FULI3x/qxCJAIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xKezOozn2ni66j80d21CIq7j4HubCbIJLKPI+10N5aw=;
- b=UQGHa5H5b2/N/tFCzBYW3a7hn+5EKQAo63faBKyZSOSVIR4GQkNA1SoKiF+Koqa54JS4+Kmsa4B8g90DEtFF14vxI6rxTSAOOmnjWs6nHdpzKaDaC8/0DZrKPiZg0rQiou/UOCGVwhvyVpzMiTgfMfwrDhHixUNsUWHeb16zTLAlS9UX/vQopyy/TyKXJ7MexJ5sHNPfPIwni1252XWdjFwRGTWhKjAbzAuvMJ9QJGTa7kTlRQNcI8GfrM3XEGh9+W2uY3qi5x5KblR4X199i48u3qffb1U6jRIK8Hlyql+BRfL/o8NhYqiUzbK1yhixmCgLVWmbEciODewYJNRbLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKezOozn2ni66j80d21CIq7j4HubCbIJLKPI+10N5aw=;
- b=XTj5nu6YgI3zF11VwatAv02IK0vKm/VQJdTbeIQO2r+pQeueUNBLPjh5ZBRrRPmtE6704fzPuTBPIxUsclLFmsYxA+LFfuON5wFZrZRtCC1/k6HTImsXmzxNmEFmqTWTG2mXEVzcA9qv32tQ8ZxufGEIjleSUxye76BssO2LME/pCRRjDyrcc0YUKfLCk3lz5xRlhwn+80eRb/RvQclA/hphXejL2woQchW7A26ZPCIn9eZdVFXEsILCfxJcXFTOMk+RASqdHmj8MyqJadaWps8liQZK3ZxzeIVnB+Hq7qKY1dL0ZeH9YtG9L7gkm1f4lCsq/vkw49wMyZHui4lUeA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
- by MW4PR12MB7013.namprd12.prod.outlook.com (2603:10b6:303:218::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.10; Thu, 9 Oct
- 2025 17:52:13 +0000
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9203.009; Thu, 9 Oct 2025
- 17:52:06 +0000
-Date: Thu, 9 Oct 2025 14:52:05 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jason Miu <jasonmiu@google.com>
-Cc: Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 1/3] kho: Adopt KHO radix tree data structures
-Message-ID: <20251009175205.GB3899236@nvidia.com>
-References: <20251001011941.1513050-1-jasonmiu@google.com>
- <20251001011941.1513050-2-jasonmiu@google.com>
- <20251006141444.GN3360665@nvidia.com>
- <CAHN2nPKjg6=0QTcSoptxvQW9MpP0YwGUTx_gQDBxgCtSzxY5Pg@mail.gmail.com>
+	Fri, 10 Oct 2025 09:34:07 +0000
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6349e3578adso3477704a12.1
+        for <kexec@lists.infradead.org>; Fri, 10 Oct 2025 02:34:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760088843; x=1760693643;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cv4nEj7UBTV72f1gU8wuBa1ut3a9qHUaWAVjisQOCJo=;
+        b=aRGoMt+uzjDHcGVTzBxdpPkpn7vbzABlYfj9s+QAlciLgXN7BIYCS+DA6jwiRev3hH
+         sNKuV6y0ibTgEXyQrV9FJUWlL2d5Tq3zrOqw+rrTmSplZ/b+BS7KQyvJJIPc3YbCU4+i
+         wVdANMW1YtsRRhLhtSidGtb2O7XfC5dBlH+fAqwq5r7J9BfAuIyiUAUjZosz0SNN4S0I
+         lw5zPgUWaHtccGjKIjUt348jnwIGBvGOo8Ys062ztKs0ASDtcAnSvdmHXpWb3ZjY5mEn
+         drTz45aVs3iLRdJMa3RzZPK5vcowZxmjwzJPYJ6eBeKIIoYmL7kXLkEgBDqnRSIZAHxG
+         f5mA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOHHcBvVjTqU5CG1FW8xOOnDWm2fpm6prEdrpVW8X33+fOftlT190x2fTA7BFJa+cwrSSVCA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxA1GWv4ion9zCvhCZHoD+nH/mbXRoFc3PkLrbmoodMOjStzUrU
+	Fu/HdUsMJAoxY+4REZ0ehyiM/ipYdyYQfE/cNHrNEaxHa4tCg+loI4Gf
+X-Gm-Gg: ASbGnctXt0LND0wXjzmp5nsEkEFFU5r/t2q8vA1npwgrbzf+dkTUeD3CZ/2ZUV8NqPC
+	eTKVdiInJ/hSsemRZ4lf18W9hCVy5HFmOcdFKPprY1UHvux5rr/HwYzA+J9z8aGAFXlp+GgNIAz
+	Pnppga+QQI0fIE0V+MwhKEX6WiwFZt9wfq+CQ9KyVUzuebAzB1VPpuQE4BJqMBTtFLYXJVUeBZp
+	LeMhLXmelPbIr+MCOri34CFIiOTIdfCc9E4YBkRdlqfET4/4S5iftwagZ1WpqwD1jQUb8LaN2+C
+	HyPV7CqmUS+oJfgBavPLV0zQOEOMVB/oMLGhn7LZQOoiHpip5siBQLAgxtdD2JKT13NVnHk+Fol
+	S+4+HiE/irlAXzrK2hme8ihR5gEk2ck/m90ty
+X-Google-Smtp-Source: AGHT+IHJJZYzLmff6dVgniqDgTA9wuOtJBZMe0+HaoaCcR6f3ALYVARpNqjkBuP0lUSeRtOHCgzETA==
+X-Received: by 2002:a17:906:6b9a:b0:b45:1063:fb65 with SMTP id a640c23a62f3a-b50abaafd40mr960927966b.39.1760088843318;
+        Fri, 10 Oct 2025 02:34:03 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d9a3fc41sm190057566b.87.2025.10.10.02.34.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Oct 2025 02:34:02 -0700 (PDT)
+Date: Fri, 10 Oct 2025 02:33:59 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Changyuan Lyu <changyuanl@google.com>, rppt@kernel.org
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, benh@kernel.crashing.org, 
+	bp@alien8.de, catalin.marinas@arm.com, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, devicetree@vger.kernel.org, dwmw2@infradead.org, 
+	ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, 
+	kexec@lists.infradead.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, 
+	mingo@redhat.com, pasha.tatashin@soleen.com, pbonzini@redhat.com, 
+	peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, 
+	rppt@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v8 01/17] memblock: add MEMBLOCK_RSRV_KERN flag
+Message-ID: <ef6wfr72set5wa5el3wbbu4yd5tnc4p2rhtjpb5kpmncv3xs5d@i3c5v3ciioi3>
+References: <20250509074635.3187114-1-changyuanl@google.com>
+ <20250509074635.3187114-2-changyuanl@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHN2nPKjg6=0QTcSoptxvQW9MpP0YwGUTx_gQDBxgCtSzxY5Pg@mail.gmail.com>
-X-ClientProxiedBy: DM5PR07CA0085.namprd07.prod.outlook.com
- (2603:10b6:4:ae::14) To MN2PR12MB3613.namprd12.prod.outlook.com
- (2603:10b6:208:c1::17)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|MW4PR12MB7013:EE_
-X-MS-Office365-Filtering-Correlation-Id: b15fd660-584d-413e-36a2-08de075c8fec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?OOsjLgoavB7E9Bo4Z6hlT4ooxy90x8cT3YJtM4Op6eih2r7ACKR/zmGFnO2D?=
- =?us-ascii?Q?xedb9GoML1LNGzbwbPewhmJGOPNAEr2xbW3nnPtjcfIHtJYkuaymmGEm1ZXh?=
- =?us-ascii?Q?mVhBFSfegi8weDvaurQi+0C+8B60s0C92dw+gb7e4bP2vIZPMUGtFtMf312C?=
- =?us-ascii?Q?girl7uVqExVxXerYltjKk7VTKaVBIkUaILj1ddu9FhOtHRpP3UkQ6MKXvadz?=
- =?us-ascii?Q?5H2IFLM1wxt1EWIKYgC1Ho69VN/cuFFld7L23lMw9c8f91hm1Hl9N+BZXkiv?=
- =?us-ascii?Q?mnaOkA3mlDg50CIXX+XCQGltNYlOeoV+2ErPKnLGzkiRG3PnhqWT2Bvg98Dw?=
- =?us-ascii?Q?zib2zeeRrxSzsEDQ/2Y8vNlJwEi4qDcboRLw6neJHhtltPcu4q2EoYFVMsC1?=
- =?us-ascii?Q?A4xc48lIgYy9VOLmxOlhMLgtkl1Jr/sQmUo64wDqRKn16PxKuF+L7cdPxX9B?=
- =?us-ascii?Q?IMF6ING+MovXirh2ZtqXVWOQG06jw/PNfbkBKrj+eilM8oJzX/JMGUaVS7QF?=
- =?us-ascii?Q?jqEq5G/eLnnR37ygNtE4yN3CmAeZt7i2UqDHrt1oaj7AAA8iwtSf4Y7VSJK/?=
- =?us-ascii?Q?GOirXc8n3jiymVXSkCH5LRji9VZzhzROEB3E8gOWfaG/p2EL0XjqHS9XCnC2?=
- =?us-ascii?Q?kj4r3w3/+4zV2oVgRcyADJQymv+o/Ni14nbZXzPN1J0iDCbxbk4mFoT9/PYm?=
- =?us-ascii?Q?qiZCHZX7XOrn/1Qt8qLanYY2ZFIq2+aAd2GrXMB/zs88g/7shrJgGGXkLEX+?=
- =?us-ascii?Q?W/Zr749cpJpBBHYjK06s7JgGU/zULvbFp+UiXAA02sNdtIuS90UBa+vlWkjL?=
- =?us-ascii?Q?Z2ymA59OPdoKiYfPrDrN6Dww9iPh/g6sW/1YPCW1MIeSdEXwl+3mdo3wdlv0?=
- =?us-ascii?Q?GXbQ73f3fj8l2K2H1bxEAUSkqJC/7MBm+O9o4YXaUJGIeikyvfofujMPgCQj?=
- =?us-ascii?Q?a2biF0Bxqp9sO4q6f3Y5AkROxJjYJmKdkT1N3A0p8407/7GpxQKGo/vdgEUe?=
- =?us-ascii?Q?57omQyfOtlMJDfJ8eE0JnzV+N9zz2uLgcbT2k/eTWVovnBekN/Fa8y7yM+81?=
- =?us-ascii?Q?REufzccnJhFBT4Yui/XM+bUJ5MDHGBDkvFoyvFJsvDfgRyQifkFi/XE409B4?=
- =?us-ascii?Q?2kZ5ctusGQj/d+nuEenlZ2i+OjKUfzaQVZWl8nassATD0gsmqzOVxtZ5k9bj?=
- =?us-ascii?Q?tzda2bENzeJzbGQdpT4K4Zl26b00L2teFhhzy1O44NkzXRCvNoA6F518XK7b?=
- =?us-ascii?Q?btnLYD2WpbLxIc0WRFyIHCXRvdRd98GGBWJQ87AEBm537ikljtqmrSJ7sCLP?=
- =?us-ascii?Q?rJHM9Fh+/5bP32PHK52wO2ZOB2kDbb0ooiW8N1xZtWFrhDGNlVlF1GY61v9z?=
- =?us-ascii?Q?CVBQdbA1Mxgd+xKN0a+gotKvvjuGcE+BMwuzkwhCboPo2UFXkoMc/aLx0RAy?=
- =?us-ascii?Q?wFlCMhjIXeAiIlpvfS6wh4L6ssuXuITq?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rm7Q1RSxw8nlg7eJ2XqyRE+OLzZdZlW7npzMReOeeLjUollK1WwGYuz142Yc?=
- =?us-ascii?Q?23S0ljjAavQWfmpvEnLXogazALeHFhnSeQ2V9piqsgPa3Gl3ZptY51lCL1FX?=
- =?us-ascii?Q?sv3mhGr3xEBRuMpBwxk+F//17FpXTq/yE4M3S4XX4lY2Z3ttgFW7lHdKpE2g?=
- =?us-ascii?Q?HXQ99IAH4iTxvonchMncYWh+GDcH2smKRaxBFjUaSquUMBpGb8lCjB+MC/8P?=
- =?us-ascii?Q?2pb52kdsLvRKRWMA6jx79iK85ujXgeXrPdHAfFRRvuPQziIymrYkLT9gxQJs?=
- =?us-ascii?Q?BN5NISFQz9fco3VMxukw55jyoIRYIuq9J0l1+UdOurqb+G4MM6+qrj8a8hMO?=
- =?us-ascii?Q?AdKRnOIkymM3kBtDNyrhLeYIqSgWF49E4wEv05ILGewmVaOMIKPDww81ZF1X?=
- =?us-ascii?Q?BAl6vr+E9emiHfJQ89YCWyACRZBvdvYSBQ4j8XeMrUq0gosTlywM82GR2LXp?=
- =?us-ascii?Q?KkBx4dTGKA/pfzWseIPSsornhCeWXvCVZ8mHu7d+Ez05SPXfOMuIitZkzCi9?=
- =?us-ascii?Q?DEhn8sg8NP2FgLQwwc8yOhetcxtUKQEcVqI3pKyP5Mp/YUjPoeSkut6gVVIn?=
- =?us-ascii?Q?STOwapRTyq84kFQamh5cjKl9+9trFdIysHV4kYx/52I1n3kIu5g74NNAaW9q?=
- =?us-ascii?Q?4nccjy+k8neoZM3Z+RoZmQw7RfN2X2eTy4Egfvjg4zSdRjJTGVXz4s3JJpc/?=
- =?us-ascii?Q?jSTXaKsP9ST/+BaEddjqWTLLsn8Amzwv7VTVlvwWlkFuNSDhaNXgP2QXaMJn?=
- =?us-ascii?Q?drzDkthJoXtW8oL7VCqbQ+bhRELOAnmkG/m6+NpfLVMiHJTLvk1JGuzbNlzS?=
- =?us-ascii?Q?naJ/VWiundYaOwzgnYeapdQFQfUqjwX9JuSjz4rvxwyAMGTo0zw2ePM5aOM4?=
- =?us-ascii?Q?z+s1CLDXX7EuLvZdWUvDpGh6zFcotv8XVc4cHYVlV64rJFrS88VUJRFkdBLx?=
- =?us-ascii?Q?4tI8fNWMwA8FRk4QSP1j0J74Ep4B8rNR/uxPVitKeeQCNJeaxKLD8hfzE5hF?=
- =?us-ascii?Q?x+m3r7qXU5EuUUZn8+2ohrjQxaQYGMoU7Xj8ILtFSFFH5SVan9688v/CxobE?=
- =?us-ascii?Q?LpD+2B4RT7/zkOH86PG33+771F81QKp/aW3C9J3Wk1aq1cnn36APjfzZJJv+?=
- =?us-ascii?Q?IlXef7i2vizswUn/zgbOVLqcDyFCZu6afVgIDa7ck/xSs0xKvG6OEDgt1yNP?=
- =?us-ascii?Q?3gukIu3psalJ7BcXH/xFOil+Q12Gqzu84OuQlcNplzzPjssZY37v4Q9PLHSP?=
- =?us-ascii?Q?f8cXI8bym1/p4Wh2ETU1DR+XhhjfSUiUEC8ns9EhyxncmqXIZ6h81mKwKSr9?=
- =?us-ascii?Q?ALhz1+0ZL/H/x+co463eoshMdn7XiP59L+rYT2rcSuK2hiLyn0XORD2YsQEu?=
- =?us-ascii?Q?GL8K6NyawDNYheEFE06DdCruk8pGaA6QjF39YmjiYLxYjyHVgibS952DuFVc?=
- =?us-ascii?Q?+NEFTP0fTIj6z2+GesBdnzOeBQTZIaDixArSoNo+075bbHq5f5qhzOqd8qou?=
- =?us-ascii?Q?h090/cvVJroS9A2/bAcQk2UJFRk8uia/QNZlvsB+5qh2lAJebbNGC+xSMFLE?=
- =?us-ascii?Q?GecpE5ONrPLqqMroRhpY+pIi5I09aE6Rfu0rwdyz?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b15fd660-584d-413e-36a2-08de075c8fec
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2025 17:52:06.8622
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tu0OUcypGmT1yT20eNJibcBArwIspJHQC8Q5r/rJ1hGIsk9TUOTAZHNLtC08m2Fd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7013
+In-Reply-To: <20250509074635.3187114-2-changyuanl@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251009_105221_763579_8CD43B9B 
-X-CRM114-Status: GOOD (  37.42  )
+X-CRM114-CacheID: sfid-20251010_023405_970022_F2160E75 
+X-CRM114-Status: GOOD (  13.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -166,141 +96,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> > > -#define PROP_PRESERVED_MEMORY_MAP "preserved-memory-map"
-> > > +#define PROP_PRESERVED_PAGE_RADIX_TREE "preserved-page-radix-tree"
-> > >  #define PROP_SUB_FDT "fdt"
-> >
-> > I'de really like to see all of these sorts of definitions in some
-> > structured ABI header not open coded all over the place..
-> 
-> Do you think `include/linux/kexec_handover.h` is the appropriate
-> place, or would you prefer a new, dedicated ABI header (e.g., in
-> `include/uapi/linux/`) for all KHO-related FDT constants?
+Hello Chanyuan, Mike,
 
-I would avoid uapi, but maybe Pasha has some
-idea.
+On Fri, May 09, 2025 at 12:46:19AM -0700, Changyuan Lyu wrote:
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -492,7 +492,7 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
+>  	 * needn't do it
+>  	 */
+>  	if (!use_slab)
+> -		BUG_ON(memblock_reserve(addr, new_alloc_size));
+> +		BUG_ON(memblock_reserve_kern(addr, new_alloc_size));
+>  
+>  	/* Update slab flag */
+>  	*in_slab = use_slab;
+> @@ -642,7 +642,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+>  #ifdef CONFIG_NUMA
+>  			WARN_ON(nid != memblock_get_region_node(rgn));
+>  #endif
+> -			WARN_ON(flags != rgn->flags);
+> +			WARN_ON(flags != MEMBLOCK_NONE && flags != rgn->flags);
 
- include/linux/live_update/abi/ ?
+I am hitting some sporadic warnings at early boot on a production kernel
+(6.16). Unfortunately this issue is not easily reproduce for me to test on
+upstream.
 
-> Agreed. Will change `u64` according to Pasha's comment. And we use
-> explicit casts like `(u64)virt_to_phys(new_tree)` and `(struct
-> kho_radix_tree *)phys_to_virt(table_entry)` in the current series. I
-> believe this, along with the `u64` type, makes it clear that the table
-> stores physical addresses.
+	09:14:44  BIOS-provided physical RAM map:
+	09:14:44  BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+	09:14:44  BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000000100000-0x0000000064cb7fff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000064cb8000-0x0000000064dc3fff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000064dc4000-0x0000000065b13fff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000065b14000-0x0000000065b61fff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000065b62000-0x0000000065ed0fff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000065ed1000-0x0000000065f2bfff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000065f2c000-0x0000000066621fff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000066622000-0x0000000066630fff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000066631000-0x0000000068107fff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000068108000-0x000000006819dfff] ACPI data
+	09:14:44  BIOS-e820: [mem 0x000000006819e000-0x000000006a48cfff] usable
+	09:14:44  BIOS-e820: [mem 0x000000006a48d000-0x000000006c58cfff] reserved
+	09:14:44  BIOS-e820: [mem 0x000000006c58d000-0x000000006c5dcfff] ACPI data
+	09:14:44  BIOS-e820: [mem 0x000000006c5dd000-0x000000006cfdcfff] ACPI NVS
+	09:14:44  BIOS-e820: [mem 0x000000006cfdd000-0x000000006e9fcfff] reserved
+	09:14:44  BIOS-e820: [mem 0x000000006e9fd000-0x000000006fffffff] usable
+	09:14:44  BIOS-e820: [mem 0x0000000070000000-0x000000008fffffff] reserved
+	09:14:44  BIOS-e820: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
+	09:14:44  BIOS-e820: [mem 0x00000000fed20000-0x00000000fed44fff] reserved
+	09:14:44  BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+	09:14:44  BIOS-e820: [mem 0x0000000100000000-0x000000107fff655f] usable
+	09:14:44  BIOS-e820: [mem 0x000000107fff6560-0x000000107fff656f] type 128
+	09:14:44  BIOS-e820: [mem 0x000000107fff6570-0x000000107fffffff] usable
+	09:14:44  random: crng init done
+	09:14:44  ------------[ cut here ]------------
+	09:14:44 WARNING: CPU: 0 PID: 0 at mm/memblock.c:668 memblock_add_range (mm/memblock.c:668)
+	09:14:44  Modules linked in:
+	09:14:44  Tainted: [S]=CPU_OUT_OF_SPEC
+	09:14:44 RIP: 0010:memblock_add_range (mm/memblock.c:668)
+	09:14:44 Code: 28 80 3c 01 00 0f 84 04 fd ff ff 4c 89 ef e8 6c 77 09 00 e9 f7 fc ff ff 0f 0b 83 7c 24 1c 00 0f 85 9c fd ff ff e9 c5 fd ff ff <0f> 0b e9 be fd ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 6b fd
+	All code
+	========
+	0:    28 80 3c 01 00 0f        sub    %al,0xf00013c(%rax)
+	6:    84 04 fd ff ff 4c 89     test   %al,-0x76b30001(,%rdi,8)
+	d:    ef                       out    %eax,(%dx)
+	e:    e8 6c 77 09 00           call   0x9777f
+	13:    e9 f7 fc ff ff           jmp    0xfffffffffffffd0f
+	18:    0f 0b                    ud2
+	1a:    83 7c 24 1c 00           cmpl   $0x0,0x1c(%rsp)
+	1f:    0f 85 9c fd ff ff        jne    0xfffffffffffffdc1
+	25:    e9 c5 fd ff ff           jmp    0xfffffffffffffdef
+	2a:*    0f 0b                    ud2            <-- trapping instruction
+	2c:    e9 be fd ff ff           jmp    0xfffffffffffffdef
+	31:    44 89 f1                 mov    %r14d,%ecx
+	34:    80 e1 07                 and    $0x7,%cl
+	37:    80 c1 03                 add    $0x3,%cl
+	3a:    38 c1                    cmp    %al,%cl
+	3c:    0f                       .byte 0xf
+	3d:    8c 6b fd                 mov    %gs,-0x3(%rbx)
 
-Well, the macros were intended to automate this and avoid mistakes
-from opencoding.. Just keep using them?
+	Code starting with the faulting instruction
+	===========================================
+	0:    0f 0b                    ud2
+	2:    e9 be fd ff ff           jmp    0xfffffffffffffdc5
+	7:    44 89 f1                 mov    %r14d,%ecx
+	a:    80 e1 07                 and    $0x7,%cl
+	d:    80 c1 03                 add    $0x3,%cl
+	10:    38 c1                    cmp    %al,%cl
+	12:    0f                       .byte 0xf
+	13:    8c 6b fd                 mov    %gs,-0x3(%rbx)
+	09:14:44  RSP: 0000:ffffffff85e07d48 EFLAGS: 00010083 ORIG_RAX: 0000000000000000
+	09:14:44  RAX: 0000000000000020 RBX: 0000000000001c00 RCX: dffffc0000000000
+	09:14:44  RDX: 000000000009f000 RSI: 000000000009d000 RDI: ffffffff8685ebf8
+	09:14:44  RBP: 0000000000000002 R08: 0000000000000020 R09: 0000000000000000
+	09:14:44  R10: ffffffffff200570 R11: fffffbffffe400b2 R12: 000000000009d000
+	09:14:44  R13: 0000000000100000 R14: ffffffff8edf5ce4 R15: ffffffff8edf5ce0
+	09:14:44  FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+	09:14:44  CR2: ffff888059e2dff8 CR3: 000000005bc1d000 CR4: 00000000000000b0
+	09:14:44  Call Trace:
+	09:14:44   <TASK>
+	09:14:44 ? __memblock_reserve (mm/memblock.c:936)
+	09:14:44 ? add_early_ima_buffer (arch/x86/kernel/setup.c:413)
+	09:14:44 ? parse_setup_data (arch/x86/kernel/setup.c:500)
+	09:14:44 ? setup_arch (arch/x86/kernel/setup.c:245 arch/x86/kernel/setup.c:958)
+	09:14:44 ? start_kernel (init/main.c:922)
+	09:14:44 ? x86_64_start_reservations (arch/x86/kernel/ebda.c:57)
+	09:14:44 ? x86_64_start_kernel (arch/x86/kernel/head64.c:231)
+	09:14:44 ? common_startup_64 (arch/x86/kernel/head_64.S:419)
+	09:14:44   </TASK>
+	....
+	Memory: 49640988K/66772816K available (54946K kernel code, 19058K rwdata, 22636K rodata, 2940K init, 120968K bss, 10650188K reserved, 6291456K cma-reserved)
 
-> > > + */
-> > > +static unsigned long kho_radix_encode(unsigned long pa, unsigned int order)
-> >
-> > pa is phys_addr_t in the kernel, never unsigned long.
-> >
-> > If you want to make it all dynamic then this should be phys_addr_t
-> 
-> Should this also be `u64`, or we stay with `phys_addr_t` for all page
-> addresses?
+So, there is a memory override, and I am curious about it. Do you think it
+would be useful to expand this warning to dump more information about the
+issue? (only compiled tested)
 
-you should use phys_addr_t for everything that originates from a
-phys_addr_t, and u64 for all the ABI
+	if (flags != MEMBLOCK_NONE && flags != rgn->flags) {
+		pr_warn("memblock: Flag mismatch at region [%pa-%pa]\n",
+			&rgn->base, &rend);
+		pr_warn("  Existing region flags: %#x\n", rgn->flags);
+		pr_warn("  New range flags: %#x\n", flags);
+		pr_warn("  New range: [%pa-%pa]\n", &base, &end);
+		WARN_ON_ONCE(1);
+	}
 
-> > > +{
-> > > +     unsigned long h = 1UL << (BITS_PER_LONG - PAGE_SHIFT - order);
-> >
-> > And this BITS_PER_LONG is confused, it is BITS_PER_PHYS_ADDR_T which
-> > may not exist.
-> >
-> > Use an enum ORDER_0_LG2 maybe
-> 
-> I prefer `KHO_RADIX_ORDER_0_BIT_POS` (defined as `BITS_PER_LONG -
-> PAGE_SHIFT`) over `ORDER_0_LG2`, as I think the latter is a bit hard
-> to understand, what do you think? This constant, along with others,
-> will be placed in the enum.
-
-Sure, though I prefer LG2 to BIT_POS
-
-BIT_POS to me implies it is being used as  bit wise operation, while
-log2 is a mathematical concept
-
-  X_lg2 = ilog2(X)  &&  X == 1 << X_lg2
-
-> > > +                             kho_radix_tree_walk_callback_t cb)
-> > > +{
-> > > +     int level_shift = ilog2(PAGE_SIZE / sizeof(unsigned long));
-> > > +     struct kho_radix_tree *next_tree;
-> > > +     unsigned long encoded, i;
-> > > +     int err = 0;
-> > >
-> > > +     if (level == 1) {
-> > > +             encoded = offset;
-> > > +             return kho_radix_walk_bitmaps((struct kho_bitmap_table *)root,
-> > > +                                           encoded, cb);
-> >
-> > Better to do this in the caller  a few lines below
-> 
-> But the caller is in a different tree level? Should we only walk the
-> bitmaps at the lowest level?
-
-I mean just have the caller do
-
-if (level-1 ==0)
-   kho_radix_walk_bitmaps()
-else
-   ..
-
-Avoids a function call
-
-> > > +     for (i = 0; i < PAGE_SIZE / sizeof(unsigned long); i++) {
-> > > +             if (root->table[i]) {
-> > > +                     encoded = offset << level_shift | i;
-> >
-> > This doesn't seem right..
-> >
-> > The argument to the walker should be the starting encoded of the table
-> > it is about to walk.
-> >
-> > Since everything always starts at 0 it should always be
-> >   start | (i << level_shift)
-> >
-> > ?
-> 
-> You're right that this line might not be immediately intuitive. The
-> var `level_shift` (which is constant value 9 here) is applied to the
-> *accumulated* `offset` from the parent level. Let's consider an
-> example of a preserved page at physical address `0x1000`, which
-> encodes to `0x10000000000001` (bit 52 is set for order 0, bit 0 is set
-> for page 1).
-
-Oh, weird, too weird maybe. I'd just keep all the values as fully
-shifted, level_shift should be adjusted to have the full shift for
-this level. Easier to understand.
-
-Also, I think the order bits might have become a bit confused, I think
-I explained it wrong.
-
-My idea was to try to share the radix levels to save space eg if we
-have like this patch does:
-
-  Order phys
-  00001 abcd
-  00010 0bcd
-  00100 00cd
-  01000 000d
-
-Then we don't get too much page level sharing, the middle ends up with
-0 indexes in tables that cannot be shared.
-
-What I was going for was to push all the shared pages to the left
-
-  00001 abcd
-  00000 1bcd
-  00000 01cd
-  00000 001d
-
-Here the first radix level has index 0 or 1 and is fully shared. So eg
-Order 4 and 5 will have all the same 0 index table levels. This also
-reduces the max height of the tree because only +1 bit is needed to
-store order.
-
-Jason
+Thanks
+--breno
 
