@@ -4,92 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA7D2CCD187
-	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 05:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C35E0CCD187
+	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 07:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=; b=RsljjIzNYosRNolv0qICNo7gSt
-	nuTK3FZfdgHBmlj7LFsnOew8vgdAYdWM6WPUeUbev2myvebTbRSmQyl3jSNpgavBIyXPLADQWLB3R
-	ktX+X99y3QtDd2NOCis5xEDCa42wKWD+y7f7sAxP4oEVMeqgn4+WnA7KvstVGK8CpU1YdHjoc64+E
-	j/9RbSNkDrS259rgWQ4phYQ9wB6VfyMGqzjyGVX1Kv7JACQpy73+My3ZAJPvkovBlcweNulcpYp+n
-	CpQSVkAFgYOnv+s67hzr3oD35r68OowFulfJUx1FSjN26RtjhkPxyn2AnoG6Hyeo7wU4/vXsf9Tvs
-	w94nDEzg==;
+	bh=N6sm8UVcZLRMA4oI+f1r4FSpf8cY6fiaDo/3CXat7ck=; b=xyNxnO1qElBZYTl8SWHcT913uS
+	06DqdKapfEtOtehFWPUu9kszGGLgwsWzim650hD52IhNgUTyBCY1pFknzt+I+sDm9RLD1RQky2R1y
+	7SyPecir6iXeXQ1za7c43McwjjDxs3qJa+OBEpjcO2TTVPAkVBOn6Fs1I44Ek+WuJ5yMalBJG1Tzt
+	vJNF9LQLozp8N7ktjVkUbs9jw2I+gOsDW2MUPavW1/959ujk0QiaZ+9fvGBn2n9cQe/pvGvLxPjTf
+	TBimLUVirmgP+VlHke/Xgvyd4TdiN9NlI6q7f5g7HjYwOYAR5GnEo/0aUhdCudcO5RBA3P5qnFcYP
+	5EsDQ/Nw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8XaB-0000000FD5k-3f6S;
-	Tue, 14 Oct 2025 05:28:23 +0000
-Received: from mail-lj1-x22e.google.com ([2a00:1450:4864:20::22e])
+	id 1v8ZbG-0000000FTkp-0p0n;
+	Tue, 14 Oct 2025 07:37:38 +0000
+Received: from mail-lf1-x134.google.com ([2a00:1450:4864:20::134])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8Xa7-0000000FD4S-24SD
+	id 1v8ZbD-0000000FTjW-2Jm9
 	for kexec@lists.infradead.org;
-	Tue, 14 Oct 2025 05:28:20 +0000
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-36a6a39752bso46670481fa.0
-        for <kexec@lists.infradead.org>; Mon, 13 Oct 2025 22:28:18 -0700 (PDT)
+	Tue, 14 Oct 2025 07:37:37 +0000
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-579363a4602so5926066e87.0
+        for <kexec@lists.infradead.org>; Tue, 14 Oct 2025 00:37:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760419697; x=1761024497; darn=lists.infradead.org;
+        d=bytedance.com; s=google; t=1760427450; x=1761032250; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=;
-        b=jlUiLvTVtnFW1J8PM+WyWrXlKUKxft8kJ2ZuTetm8M4PXaHSL5nwGO66wbGX2OOmVv
-         wWWsBySy2ePn+9cw40zKRd8Igfa1jpzaX9bwrhx5tWJiL8sB6Yw5AzMrd1m9TTmmVGRB
-         2B6AEXbBEACuEP2gM4FQ89GMvfTByWdr2Yac9Aw5GtQjDzC5mGzkPOyVBZUCvRYWj2hI
-         Mpr2XxNlHiop6bYhv8P+TrE3/iO7HaFtHd227+L/YPe2PsypIa/UM4sE83I1TixrAOpg
-         b88c7lctTvT1N4yPnxpJd9fbYI+4yheq+GzwCKb+3ASVhR4+A3KMpsh1pKfAKTcLkxnC
-         k4ng==
+        bh=N6sm8UVcZLRMA4oI+f1r4FSpf8cY6fiaDo/3CXat7ck=;
+        b=HeTRZCRQcdfGEwblNs6Zox1OhMw32wYbqd9TZ6ahU2empwWNhpxtkyaEJyWx+mZ8/W
+         5p0phflMKTGAZp22mYba0d15uWwjFc4QYYr/y/G/M0D1yQuKcbfTX7F3gw20X3CGTWRF
+         qHbdaK9uVCYDM/9B3+Yli0g6S3lWkHc6npEA0oGpl+E/PL8Zs0dd69n32RETYdAcMgs7
+         Zo+bz63oleTm/P6vdjgDleFuj+Dd22OUVEAgWz4JLwu1adksCZXrU9FGTJJZ1JeseWwf
+         0MRsAsQAfDxUYsbwd6okpsDzGDF8ADvFJUp3zLE6xCNG0Y2As+ItsrHXocVJi6nx1sUw
+         Hs6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760419697; x=1761024497;
+        d=1e100.net; s=20230601; t=1760427450; x=1761032250;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=;
-        b=pEqtsYm+A/FaI0v4G31IdV9NDpDloKJm2BMfMmwatl8+2f3QfPW5OADXzhFk/skWo+
-         tzIlfNPpiw4ce2uLtsq1pWyp3DHkMY/Vd7uszngolNSfktDsC4NPMSMBsWJ4qgvQkrZw
-         /pm7+meDB6eXGkow0V4gW1z2TZX62GqbXEoEA4etc1lZF9PViQb3ZqSfB+K8wpdfR255
-         A9l9XJA0SIoQBd+Fbb+y5l6Ydb0D7By2IYmYuwy6rxM5N9tO8vxuNiqHAWXy1RJ4LIAt
-         wdZMo9PXz7bl2eK/cNbYlL3sw2HQXfIhka5uY1VP836vCtnYFjqHkgYsR0diu+0jD8NH
-         MAFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGSJRoN82B73aXLyT5bfy7nDPDmHvSwiXqDiC4fPWWmgMyRUPZW4iL56EGQA9WvXUOhjgukw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz4Nx9Xz/vF3pWtqG+XzNRhw4gyg7PcUJiHhvsONt1RHrhhCmGP
-	u0udUzhk3rNx/X5klCu611uORT0wdK2148m+0g8GMXY1+RDSP8FCi0N8ngStgdTuX16PFZYhTfL
-	ipVmSYDsKlkJvjRVlbYyoEyKLmFSleow=
-X-Gm-Gg: ASbGncvITyA93lQeoOOuerD2uSURF5cn5OKEmIxFf/bV3oICmtKpgkfsoK6CBRSTYiV
-	PZYt+KfoEzgqOP5uMygW6HJ0qyUvfbiXb9OMB3yg6WirEHeC2lt13iYxWk3gpMuMfCUwZzB+/is
-	sz12ki6EARVptiHS8M962Y8rhLPaK19TsT2Xu/Ze/w9aqDICJN4VmlvXRZSRGIhDrZ5hoW0fAuk
-	HzGhngW/M0hHnfHn13CDGhO/A==
-X-Google-Smtp-Source: AGHT+IGdjfNUCN4gunItNKInWlyxyXS9VWDbMBSmmBL39oiGRrNBNxoCrVW6HmO4TTj1J7zFqIEW6QQm2vhVXKpWfzQ=
-X-Received: by 2002:a2e:bcc7:0:b0:372:950f:2aff with SMTP id
- 38308e7fff4ca-37609e0ed4emr64933311fa.27.1760419696692; Mon, 13 Oct 2025
- 22:28:16 -0700 (PDT)
+        bh=N6sm8UVcZLRMA4oI+f1r4FSpf8cY6fiaDo/3CXat7ck=;
+        b=WZAWuPERmKTPB2U+9FP6Zrp+haLSMfudUg6H6Xl1yU/KEgLZi/i2P1ldxovG6VVmLz
+         6Ogc7iSeKBQ8MKDbuo2+ZY8qUcLwqkGBGqh/R6e2Go9RGwvdCViRaGJHdaZv36wnzYp8
+         8T0kqRhGUrCABsMWcaM/7RwdEF6CPjt6KiflSv9VR8to8wxBVuRjKnfFKMNYZ26uoCBy
+         gvWFW4xoWinQk/XVcVwFG0vM1WUBYT7oVlG5Lz/sC8DQGp50cH3EQHn/BWFGec4KgUhd
+         ng10amW4WjljcGf6NOKNBl9Q88KMcthYbOM6qxon3bLEhGbq9ENhWzhnabA6a4R1bv++
+         P7FA==
+X-Forwarded-Encrypted: i=1; AJvYcCUo1GANGT7NN5UcQvhRZX9TCiKcegvhTv4l6hoQFcX6QeAaGhqHLhoUifHPUFO5OPEIxj6JDw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzvMS+NmAfFDY87CjDmJPuD/NloqG9dLRq6qxsaxdvv88T5som/
+	12yaY+qHEslQXGJOmXlA5QMMEadjR4aRUl7leImv9Qxpm01iBz2kIvymJo4MQAbuS1X5ldK4n3W
+	KlY+lfSNjCSea1CuyHbu3z8sN6tXyqBBL7nuDI5xQhA==
+X-Gm-Gg: ASbGncte5hwnwvama55wHwy6jbntvsxKM79KxdYudHx6mk2WJAKQ3SpL3xuJvg6RqIY
+	hW/vvlAKOhVZU2c/sCTtr5sN7rF6Av4R2Yh7xYfG+WiFmUARUEqiOm5MUh4Q/CK/YWrpQHuz+yu
+	IEWqVCE49fsz/O7Hmq6wKbxyOKF4WGxwqYc9Zxiq2m1fBMdH8PNSCeK8QmW/Zs8AhFlInYuhk8E
+	A89CnrjwU0eLurOZ5aavdB5v10QjULP3sCJGVOzfQKb7A==
+X-Google-Smtp-Source: AGHT+IHq34YNSItovnVows3bsMiARXLvNd6BOzu5f7l3lU09pBJe/LSEkG0WHJOjzrh9jsv+lnLXQC4kAkrLgb7asKo=
+X-Received: by 2002:ac2:4e15:0:b0:591:c379:69d0 with SMTP id
+ 2adb3069b0e04-591c3796b4fmr196177e87.5.1760427450348; Tue, 14 Oct 2025
+ 00:37:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
- <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
- <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com> <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
- <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv> <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
- <aNNY1AzfGua3Kk3S@MiWiFi-R3L-srv> <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
- <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
-In-Reply-To: <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Tue, 14 Oct 2025 10:27:59 +0500
-X-Gm-Features: AS18NWDpoAnK8X4S74wzUC_xmUwiiptVaXx4Fi_Po4Ht89THf-aVMKFaVW0-Q-g
-Message-ID: <CACzwLxiJ0pGur42Vigq=JnYecyZn-Z5BC3VcqxSUttT54kEusA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, glider@google.com, 
-	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
-	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu
+References: <aEqnxxfLZMllMC8I@dwarf.suse.cz> <vojlxf5pelxlr6omsfsccd4e4cdzn5qyxpgiqajorkgmgd7ruh@e5wwhkmvntpb>
+ <26ae6b04-3beb-47e9-9639-b081003dc9bb@redhat.com> <f7x2flir2c5zpkusgiyk7qnrdqo4dek3iksyldw6w22r55s4vy@4b47lrcv3fag>
+ <2e35b6dd-56dd-47e6-8dac-54f446f763f0@redhat.com> <aOSO/e68pZ7FGKm1@MiWiFi-R3L-srv>
+ <ctrpw2ppozwtsj7544jx45kpexmaackpzzyeyhkqsjrf7cz2tc@7fmuzvy7uwec>
+ <CACSyD1N0fb1H3_ssEyaAMh=2shQy-64gG_t3MqkedwfOLEExEA@mail.gmail.com> <e28a62ae-5482-4bda-bb00-fd8a5083fb31@redhat.com>
+In-Reply-To: <e28a62ae-5482-4bda-bb00-fd8a5083fb31@redhat.com>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Tue, 14 Oct 2025 15:36:54 +0800
+X-Gm-Features: AS18NWBwgtHhcLP0kbUd5HKwhmUQyrzTwXsVnpcaLzBMmrL5fLJbX1wcOLzAGBE
+Message-ID: <CACSyD1M1AEbww_07KPd_AAv9RV--XsUOChGE5O+HM5CV+J5=WQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
+To: David Hildenbrand <david@redhat.com>
+Cc: jbohac@suse.cz, Baoquan He <bhe@redhat.com>, kas@kernel.org, riel@surriel.com, 
+	vbabka@suse.cz, nphamcs@gmail.com, Vivek Goyal <vgoyal@redhat.com>, 
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, akpm@linux-foundation.org, 
+	Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>, 
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org, 
+	Michal Hocko <mhocko@suse.cz>, Muchun Song <muchun.song@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251013_222819_547092_2CDB7E80 
-X-CRM114-Status: GOOD (  21.77  )
+X-CRM114-CacheID: sfid-20251014_003735_617971_102D4813 
+X-CRM114-Status: GOOD (  29.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,52 +103,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 25, 2025 at 11:21=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+On Mon, Oct 13, 2025 at 4:01=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
 >
-> On 09/25/25 at 12:07am, Sabyrzhan Tasbolatov wrote:
-> > On Wed, Sep 24, 2025 at 5:35=E2=80=AFAM Baoquan He <bhe@redhat.com> wro=
-te:
-> > >
-> > > On 09/23/25 at 07:49pm, Andrey Konovalov wrote:
-> > > > Since the Sabyrzhan's patches are already in mm-stable (and I assum=
-e
-> > > > will be merged during the next merge window), just rebase your chan=
-ges
-> > > > on top.
-> > >
-> > > That's fine, I will rebase.
-> > >
-> > > >
-> > > > But also note that Sabyrzhan is planning to move out the
-> > > > kasan_enabled() checks into include/linux/kasan.h (which is a clean=
--up
-> > > > I would have also asked you to do with the kasan=3Doff patches), so
-> > > > maybe you should sync up with him wrt these changes.
-> > >
-> > > Hi Sabyrzhan,
-> > >
-> > > What's your thought? You want to do the cleanup after my rebasing on
-> > > your merged patches or you prefer to do it ahead of time? Please let =
-me
-> > > know so that I can adjust my posting accordingly. Thanks.
-> > >
+> On 13.10.25 06:03, Zhongkun He wrote:
+> > Hi folks,
 > >
-> > Hello,
+> > We=E2=80=99re encountering the same issue that this patch series aims t=
+o address,
+> > and we also planned to leverage CMA to solve it. However, some implemen=
+tation
+> > details on our side may differ, so we=E2=80=99d like to discuss our pro=
+posed approach we
+> > have tried in this thread.
 > >
-> > I can make all necessary changes only next week. Currently, traveling.
-> > I will send the fix-up patch Andrey has described somewhere next week.
-> > Please let me know if it's ok.
+> > 1. Register a dedicated CMA area for kexec kernel use
+> > Introduce a dedicated CMA region (e.g., kexec_cma) and allocate the con=
+trol
+> > code page and crash segments from this area via cma_alloc. Pages for a
+> > normal kexec kernel can also be allocated from this region [1].
+> >
+> > 2. Keep crashkernel=3Dxx unchanged (register CMA)
+> > We introduced a flag in the kexec syscall to dynamically enable
+> > or disable memory reuse without system reboot. For example, with
+> > crashkernel=3D500M (a 500M cma region), cma_alloc may use 100M for the
+> > kernel,initrd and others data. This region could then be reused for the=
+ current
+> > kernel if the reuse flag is set in the syscall, or left unused for dump=
+ing user
+> > pages in case of a crash.
+> >
+> > 3. Keep this CMA region inactive by default
+> > The CMA region should remain inactive until kexec is enabled with the r=
+euse flag
+> > (or fully reused when the kdump service is not enabled). It can then
+> > be activated for
+> > use by the current kernel.
+> >
+> > 4. Introduce a new migratetype KEXEC_CMA
+> > Similar to the existing CMA type, this would be used to:
+> > 1)Prevent page allocation from this zone for get_user_pages (GUP).
+> > 2)Handle page migration correctly when pages are pinned after allocatio=
+n.
 >
-> Please take it easy, today is Thursday, I will wait for your clean up
-> patch next week and post. I can do some preparation work for rebasing on
-> your merged patches. Thanks.
 
-Hello,
+Hi David,
 
-Just heads up that I've already sent cleanup patches [1] and
-Andrew has merged them into mm-new tree.
-Hopefully, one week's delay wasn't a problem.
+> It will be hard to get something like that in for the purpose of kdump.
+> Further, I'm afraid it might open up a can of worms of "migration
+> temporarily failed" -> GUP failed issues for some workloads.
+>
+> So I assume this might currently not be the best way to move forward.
 
-[1] https://lore.kernel.org/all/20251009155403.1379150-1-snovitoll@gmail.co=
-m/
+Got it, thanks.
+
+>
+> One alternative would be using GCMA [1] in the current design. The CMA
+> memory would not be exposed to the buddy, but can still be used as a
+> cache for clean file pages. Pinning etc. is not a problem in that context=
+.
+>
+> Of course, the more we limit the usage of that region, the less
+> versatile it is.
+
+Yes, I agree.  I=E2=80=99ve already noticed GCMA, and I hope it can be merg=
+ed upstream
+in a more lightweight manner.
+
+>
+> [1] https://lkml.kernel.org/r/20251010011951.2136980-1-surenb@google.com
+>
+> --
+> Cheers
+>
+> David / dhildenb
+>
 
