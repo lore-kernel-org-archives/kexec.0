@@ -4,87 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDA95CCD18E
-	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 09:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6514BCCD184
+	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 13:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=84qLuulQEWfDvvAd6y1sTa13pyZb7pX9XGxQ88tYQoo=; b=x+eC9Fzs0FJfa9+sarENSGtyZr
-	T63jUq8h6botTStG6zCARiSeHzm2CP3C3pklLyMR5v50srO4qJpKAjO9LxyQmHpv8DpjJBdOjVeGY
-	VzB+uejd/we7Hd+vIZ0yOhjfsLt3FaFsw7BHPI7d78YDxWn7ENx/sTU96jOsS/C8NDvuCBD2mjMV0
-	YsS6YG3LMBJ9Ez8o83ca89RSv0+45IizbWVyvfd9Meq7gCmDvVneXYgK4b0zemzsiX+6I0IWoAxi4
-	AR2D+80HvV8YtT7471P8bxgiMPfTB9sRHpbAq9ATaeZ7PA/B2uowpv5PnfiVg06odbNyRGpYfM7fJ
-	notBWzRw==;
+	bh=nsF6PObp6qoqkkCKTQsSNmyL4hK2S7wY4EQepojwbJw=; b=CiBlIMVHruyfMwbGoFlc87/LbU
+	5NMZUHrHpwWagx9fSnBZjyzQYO/O4AgKD3fxWqhIVl5IfRO9IXZaSm9V6Dv1MkqQtIKOWuv/2P9XG
+	oUECl+Y4JZ+uQil5gH5qTiYHfCyDwhBTFcsQr1KS+c0VbWsoKuAizznAhMpqSQWZq+w6gyZZn6vtN
+	0L/KRtn638C2JeH9m/Pps5frFZEqvplzFGSeSzNGn7bOzzdTHZSsIARk4x9N9luKfjnC1+GdM42cD
+	BSGKN5K8ylGWl05IWONdleWCJDYis4n5DFd3cYxoYB3XZ0maoMj7eK9ksiKp9mQabuciZcY0pG7sT
+	mb6McNtA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8b7g-0000000FitO-08MH;
-	Tue, 14 Oct 2025 09:15:12 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1v8ene-0000000GPjm-0cY3;
+	Tue, 14 Oct 2025 13:10:46 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8b7d-0000000Fiqi-1n7c
-	for kexec@lists.infradead.org;
-	Tue, 14 Oct 2025 09:15:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760433307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=84qLuulQEWfDvvAd6y1sTa13pyZb7pX9XGxQ88tYQoo=;
-	b=TZ79chb+YDm/geyWTHcokvn14TSlXvvKvXBKw3Ps/nppqUjblomhhZkGyIAPfOGMUH31AW
-	dIpnpXSAg8WIAQALilFJajiZwE8eDMvWVz08oBYZUL3IsqCTQ5KfLwTUwhScRc6k9kIPkg
-	tLpP3jnrJhG1VpevPba48ysW1dnQUms=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-215-habP5WxuNy6IzIfoPvjpwQ-1; Tue,
- 14 Oct 2025 05:15:03 -0400
-X-MC-Unique: habP5WxuNy6IzIfoPvjpwQ-1
-X-Mimecast-MFC-AGG-ID: habP5WxuNy6IzIfoPvjpwQ_1760433299
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 08D5B18002CD;
-	Tue, 14 Oct 2025 09:14:59 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DCFA1800283;
-	Tue, 14 Oct 2025 09:14:57 +0000 (UTC)
-Date: Tue, 14 Oct 2025 17:14:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, glider@google.com,
-	dvyukov@google.com, elver@google.com, linux-mm@kvack.org,
-	vincenzo.frascino@arm.com, akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, sj@kernel.org,
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu
-Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three
- modes
-Message-ID: <aO4UjVmGkYg5Nyf6@MiWiFi-R3L-srv>
-References: <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv>
- <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
- <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com>
- <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
- <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv>
- <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
- <aNNY1AzfGua3Kk3S@MiWiFi-R3L-srv>
- <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
- <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
- <CACzwLxiJ0pGur42Vigq=JnYecyZn-Z5BC3VcqxSUttT54kEusA@mail.gmail.com>
+	id 1v8enc-0000000GPiS-2vuB;
+	Tue, 14 Oct 2025 13:10:44 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 0EF9C622CF;
+	Tue, 14 Oct 2025 13:10:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8533FC4CEE7;
+	Tue, 14 Oct 2025 13:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760447443;
+	bh=1z29qiTz6h5jyAO8g68bo34GcYPLqTUSe9I3ydJUTw8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=g9+NifUwXszKwI+i9b+BADg9CHX9pjgCw2mu/yxA+73glB/SfRpvhpeMLwX+7zeg9
+	 cpZyrZdbl6zsMX+Wo90KkdV6hDFv+HpHH+GKnixUqPtsiiuipRTYlBSA+RFLrU6AdF
+	 z8MA7ZC0dDyvXrecjZhU8nlLLfZCLEsyyqROyne29Obt+UqzwZBF2jT+f8QUD3imN0
+	 gQ5aZfRz1OgEk0IJVCMTbI4VrsIEPNPKNZutUFVMj6TdGeXxePJsX5/R68ibLC+6iv
+	 jZYvfqrXGK5MchNQMt25O838FaWOmrFURP+ZyNfLcRWE1zF4CmsEn6AFbRAtwXlHBn
+	 SOQ76mXQJoW1Q==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Changyuan Lyu
+ <changyuanl@google.com>,  rppt@kernel.org,  akpm@linux-foundation.org,
+  linux-kernel@vger.kernel.org,  anthony.yznaga@oracle.com,  arnd@arndb.de,
+  ashish.kalra@amd.com,  benh@kernel.crashing.org,  bp@alien8.de,
+  catalin.marinas@arm.com,  corbet@lwn.net,  dave.hansen@linux.intel.com,
+  devicetree@vger.kernel.org,  dwmw2@infradead.org,  ebiederm@xmission.com,
+  graf@amazon.com,  hpa@zytor.com,  jgowans@amazon.com,
+  kexec@lists.infradead.org,  krzk@kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  luto@kernel.org,  mark.rutland@arm.com,
+  mingo@redhat.com,  pasha.tatashin@soleen.com,  pbonzini@redhat.com,
+  peterz@infradead.org,  robh@kernel.org,  rostedt@goodmis.org,
+  saravanak@google.com,  skinsburskii@linux.microsoft.com,
+  tglx@linutronix.de,  thomas.lendacky@amd.com,  will@kernel.org,
+  x86@kernel.org
+Subject: Re: [PATCH v8 01/17] memblock: add MEMBLOCK_RSRV_KERN flag
+In-Reply-To: <2ege2jfbevtunhxsnutbzde7cqwgu5qbj4bbuw2umw7ke7ogcn@5wtskk4exzsi>
+	(Breno Leitao's message of "Tue, 14 Oct 2025 01:34:07 -0700")
+References: <20250509074635.3187114-1-changyuanl@google.com>
+	<20250509074635.3187114-2-changyuanl@google.com>
+	<ef6wfr72set5wa5el3wbbu4yd5tnc4p2rhtjpb5kpmncv3xs5d@i3c5v3ciioi3>
+	<mafs0wm4yluej.fsf@kernel.org> <mafs0h5w2lpqu.fsf@kernel.org>
+	<2ege2jfbevtunhxsnutbzde7cqwgu5qbj4bbuw2umw7ke7ogcn@5wtskk4exzsi>
+Date: Tue, 14 Oct 2025 15:10:37 +0200
+Message-ID: <mafs0cy6pljci.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACzwLxiJ0pGur42Vigq=JnYecyZn-Z5BC3VcqxSUttT54kEusA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251014_021509_536830_2A385F0A 
-X-CRM114-Status: GOOD (  25.37  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,53 +85,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/14/25 at 10:27am, Sabyrzhan Tasbolatov wrote:
-> On Thu, Sep 25, 2025 at 11:21 AM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 09/25/25 at 12:07am, Sabyrzhan Tasbolatov wrote:
-> > > On Wed, Sep 24, 2025 at 5:35 AM Baoquan He <bhe@redhat.com> wrote:
-> > > >
-> > > > On 09/23/25 at 07:49pm, Andrey Konovalov wrote:
-> > > > > Since the Sabyrzhan's patches are already in mm-stable (and I assume
-> > > > > will be merged during the next merge window), just rebase your changes
-> > > > > on top.
-> > > >
-> > > > That's fine, I will rebase.
-> > > >
-> > > > >
-> > > > > But also note that Sabyrzhan is planning to move out the
-> > > > > kasan_enabled() checks into include/linux/kasan.h (which is a clean-up
-> > > > > I would have also asked you to do with the kasan=off patches), so
-> > > > > maybe you should sync up with him wrt these changes.
-> > > >
-> > > > Hi Sabyrzhan,
-> > > >
-> > > > What's your thought? You want to do the cleanup after my rebasing on
-> > > > your merged patches or you prefer to do it ahead of time? Please let me
-> > > > know so that I can adjust my posting accordingly. Thanks.
-> > > >
-> > >
-> > > Hello,
-> > >
-> > > I can make all necessary changes only next week. Currently, traveling.
-> > > I will send the fix-up patch Andrey has described somewhere next week.
-> > > Please let me know if it's ok.
-> >
-> > Please take it easy, today is Thursday, I will wait for your clean up
-> > patch next week and post. I can do some preparation work for rebasing on
-> > your merged patches. Thanks.
-> 
-> Hello,
-> 
-> Just heads up that I've already sent cleanup patches [1] and
-> Andrew has merged them into mm-new tree.
-> Hopefully, one week's delay wasn't a problem.
+On Tue, Oct 14 2025, Breno Leitao wrote:
 
-Thanks for telling. I planned to rebase on top of that and repost in
-one week or two weeks. I am doing some patch back porting for RHEL.
+> Hello Pratyush,
+>
+> On Mon, Oct 13, 2025 at 06:40:09PM +0200, Pratyush Yadav wrote:
+>> On Mon, Oct 13 2025, Pratyush Yadav wrote:
+>> >
+>> > I suppose this would be useful. I think enabling memblock debug prints
+>> > would also be helpful (using the "memblock=debug" commandline parameter)
+>> > if it doesn't impact your production environment too much.
+>> 
+>> Actually, I think "memblock=debug" is going to be the more useful thing
+>> since it would also show what function allocated the overlapping range
+>> and the flags it was allocated with.
+>> 
+>> On my qemu VM with KVM, this results in around 70 prints from memblock.
+>> So it adds a bit of extra prints but nothing that should be too
+>> disrupting I think. Plus, only at boot so the worst thing you get is
+>> slightly slower boot times.
+>
+> Unfortunately this issue is happening on production systems, and I don't
+> have an easy way to reproduce it _yet_.
+>
+> At the same time, "memblock=debug" has two problems:
+>
+>  1) It slows the boot time as you suggested. Boot time at large
+>     environments is SUPER critical and time sensitive. It is a bit
+>     weird, but it is common for machines in production to kexec
+>     _thousands_ of times, and kexecing is considered downtime.
 
-> 
-> [1] https://lore.kernel.org/all/20251009155403.1379150-1-snovitoll@gmail.com/
-> 
+I don't know if it would make a real enough difference on boot times,
+only that it should theoretically affect it, mainly if you are using
+serial for dmesg logs. Anyway, that's your production environment so you
+know best.
 
+>
+>     This would be useful if I find some hosts getting this issue, and
+>     then I can easily enable the extra information to collect what
+>     I need, but, this didn't pan out because the hosts I got
+>     `memblock=debug` didn't collaborate.
+>
+>  2) "memblock=debug" is verbose for all cases, which also not necessary
+>     the desired behaviour. I am more interested in only being verbose
+>     when there is a known problem.
+>
+> That said, my suggestion is to only dump extra information when something goes
+> wrong, not affecting the boot time neither boot verbosity.
+>
+
+With your proposed change, we only know what the overlapping area is,
+but not who allocated it. I don't see how that can be done when the
+error is detected. memblock debug lets us know that, which is why I
+suggested it.
+
+-- 
+Regards,
+Pratyush Yadav
 
