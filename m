@@ -4,75 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DA78CCD18D
-	for <kexec@archiver.kernel.org>; Mon, 13 Oct 2025 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA7D2CCD187
+	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 05:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dtgke5IIG+N7o7YGoqhF+zbTkrpkk29pKkR8cJvrfW4=; b=MeBdYVnyGDDVwG7LrGk4FPa5Cf
-	tb6G2HWo9YzxUNOLhTPONSDJTO6qPOuQvk7NdT2CZ9HB3oUYtPhS0jgGLEVe7j51S2bUJw2m+7J/F
-	Llex1nuKkOCXvoToN4P6JR/MvTXSgLp9vOsPSroOgImbsk5siom87Cf64PJfRmqEiiuNCedDHGnaG
-	zcZ7VilzrNb7r4aiGG7Y5Rc/XRLYZtIP1Vd7o1w22KBqVwvV4vlczEbPACnBOA9M1KBhxP1efGdDt
-	S7osgaeOIsv/6xpAfRLIMY4FQ0lEJ80yk+Cyy/PTDxxOdJiT/myRtFAl8/G4ZJbnxG/Im54hA6SsM
-	j7kU7FRA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=; b=RsljjIzNYosRNolv0qICNo7gSt
+	nuTK3FZfdgHBmlj7LFsnOew8vgdAYdWM6WPUeUbev2myvebTbRSmQyl3jSNpgavBIyXPLADQWLB3R
+	ktX+X99y3QtDd2NOCis5xEDCa42wKWD+y7f7sAxP4oEVMeqgn4+WnA7KvstVGK8CpU1YdHjoc64+E
+	j/9RbSNkDrS259rgWQ4phYQ9wB6VfyMGqzjyGVX1Kv7JACQpy73+My3ZAJPvkovBlcweNulcpYp+n
+	CpQSVkAFgYOnv+s67hzr3oD35r68OowFulfJUx1FSjN26RtjhkPxyn2AnoG6Hyeo7wU4/vXsf9Tvs
+	w94nDEzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8Lav-0000000Du0V-33fG;
-	Mon, 13 Oct 2025 16:40:21 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1v8XaB-0000000FD5k-3f6S;
+	Tue, 14 Oct 2025 05:28:23 +0000
+Received: from mail-lj1-x22e.google.com ([2a00:1450:4864:20::22e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8Las-0000000Dtyu-1hnR;
-	Mon, 13 Oct 2025 16:40:20 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 35CBF43A06;
-	Mon, 13 Oct 2025 16:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D77C4CEE7;
-	Mon, 13 Oct 2025 16:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760373616;
-	bh=hs5Dm6BPAEGHFTEY/NVYLFoUg8OkvqoPEabZITp2GSE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XZSQu07P4SgkBBZjCn0RGnl0R5rV5/5dNJSGZOUAAsLQYCfUrfnNS+2HXe4K3m8l/
-	 KspWTGFqpB6+C8D6h76oWfo9JXkqDf2a34ASBb98qAVwnmZ9Btt2ElduQT2WpPTwww
-	 kmiBHNzSKdUzad5WTPGTAhE4J8bGtJo1Iu5u+uJCq98zd4m34G+qLiBvGhsU7F+Csv
-	 HWvSoO80bQv/kATFT6eHFXH67KQXHE+9CuWPspkyUx+j4KM1t6j5TFunRpv9sPvTbQ
-	 9iKwbP2ZPelsuuF5j7/TZi2mOfSFBbkWV2a2oDkxTMJMYb1C8FClYtFZyuYVCnuH7T
-	 j0FoiJN2A1P0A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>,  Changyuan Lyu
- <changyuanl@google.com>,  rppt@kernel.org,  akpm@linux-foundation.org,
-  linux-kernel@vger.kernel.org,  anthony.yznaga@oracle.com,  arnd@arndb.de,
-  ashish.kalra@amd.com,  benh@kernel.crashing.org,  bp@alien8.de,
-  catalin.marinas@arm.com,  corbet@lwn.net,  dave.hansen@linux.intel.com,
-  devicetree@vger.kernel.org,  dwmw2@infradead.org,  ebiederm@xmission.com,
-  graf@amazon.com,  hpa@zytor.com,  jgowans@amazon.com,
-  kexec@lists.infradead.org,  krzk@kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  luto@kernel.org,  mark.rutland@arm.com,
-  mingo@redhat.com,  pasha.tatashin@soleen.com,  pbonzini@redhat.com,
-  peterz@infradead.org,  robh@kernel.org,  rostedt@goodmis.org,
-  saravanak@google.com,  skinsburskii@linux.microsoft.com,
-  tglx@linutronix.de,  thomas.lendacky@amd.com,  will@kernel.org,
-  x86@kernel.org
-Subject: Re: [PATCH v8 01/17] memblock: add MEMBLOCK_RSRV_KERN flag
-In-Reply-To: <mafs0wm4yluej.fsf@kernel.org> (Pratyush Yadav's message of "Mon,
-	13 Oct 2025 16:59:32 +0200")
-References: <20250509074635.3187114-1-changyuanl@google.com>
-	<20250509074635.3187114-2-changyuanl@google.com>
-	<ef6wfr72set5wa5el3wbbu4yd5tnc4p2rhtjpb5kpmncv3xs5d@i3c5v3ciioi3>
-	<mafs0wm4yluej.fsf@kernel.org>
-Date: Mon, 13 Oct 2025 18:40:09 +0200
-Message-ID: <mafs0h5w2lpqu.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1v8Xa7-0000000FD4S-24SD
+	for kexec@lists.infradead.org;
+	Tue, 14 Oct 2025 05:28:20 +0000
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-36a6a39752bso46670481fa.0
+        for <kexec@lists.infradead.org>; Mon, 13 Oct 2025 22:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760419697; x=1761024497; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=;
+        b=jlUiLvTVtnFW1J8PM+WyWrXlKUKxft8kJ2ZuTetm8M4PXaHSL5nwGO66wbGX2OOmVv
+         wWWsBySy2ePn+9cw40zKRd8Igfa1jpzaX9bwrhx5tWJiL8sB6Yw5AzMrd1m9TTmmVGRB
+         2B6AEXbBEACuEP2gM4FQ89GMvfTByWdr2Yac9Aw5GtQjDzC5mGzkPOyVBZUCvRYWj2hI
+         Mpr2XxNlHiop6bYhv8P+TrE3/iO7HaFtHd227+L/YPe2PsypIa/UM4sE83I1TixrAOpg
+         b88c7lctTvT1N4yPnxpJd9fbYI+4yheq+GzwCKb+3ASVhR4+A3KMpsh1pKfAKTcLkxnC
+         k4ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760419697; x=1761024497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ptPHbzU60TAIm8mnnxk2ahAv+Cxa99UUvkWsQlBP2xU=;
+        b=pEqtsYm+A/FaI0v4G31IdV9NDpDloKJm2BMfMmwatl8+2f3QfPW5OADXzhFk/skWo+
+         tzIlfNPpiw4ce2uLtsq1pWyp3DHkMY/Vd7uszngolNSfktDsC4NPMSMBsWJ4qgvQkrZw
+         /pm7+meDB6eXGkow0V4gW1z2TZX62GqbXEoEA4etc1lZF9PViQb3ZqSfB+K8wpdfR255
+         A9l9XJA0SIoQBd+Fbb+y5l6Ydb0D7By2IYmYuwy6rxM5N9tO8vxuNiqHAWXy1RJ4LIAt
+         wdZMo9PXz7bl2eK/cNbYlL3sw2HQXfIhka5uY1VP836vCtnYFjqHkgYsR0diu+0jD8NH
+         MAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGSJRoN82B73aXLyT5bfy7nDPDmHvSwiXqDiC4fPWWmgMyRUPZW4iL56EGQA9WvXUOhjgukw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz4Nx9Xz/vF3pWtqG+XzNRhw4gyg7PcUJiHhvsONt1RHrhhCmGP
+	u0udUzhk3rNx/X5klCu611uORT0wdK2148m+0g8GMXY1+RDSP8FCi0N8ngStgdTuX16PFZYhTfL
+	ipVmSYDsKlkJvjRVlbYyoEyKLmFSleow=
+X-Gm-Gg: ASbGncvITyA93lQeoOOuerD2uSURF5cn5OKEmIxFf/bV3oICmtKpgkfsoK6CBRSTYiV
+	PZYt+KfoEzgqOP5uMygW6HJ0qyUvfbiXb9OMB3yg6WirEHeC2lt13iYxWk3gpMuMfCUwZzB+/is
+	sz12ki6EARVptiHS8M962Y8rhLPaK19TsT2Xu/Ze/w9aqDICJN4VmlvXRZSRGIhDrZ5hoW0fAuk
+	HzGhngW/M0hHnfHn13CDGhO/A==
+X-Google-Smtp-Source: AGHT+IGdjfNUCN4gunItNKInWlyxyXS9VWDbMBSmmBL39oiGRrNBNxoCrVW6HmO4TTj1J7zFqIEW6QQm2vhVXKpWfzQ=
+X-Received: by 2002:a2e:bcc7:0:b0:372:950f:2aff with SMTP id
+ 38308e7fff4ca-37609e0ed4emr64933311fa.27.1760419696692; Mon, 13 Oct 2025
+ 22:28:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250820053459.164825-1-bhe@redhat.com> <CA+fCnZdfv+D7sfRtWgbbFAmWExggzC2by8sDaK7hXfTS7viY8w@mail.gmail.com>
+ <aLlJtTeNMdtZAA9B@MiWiFi-R3L-srv> <CA+fCnZf2fGTQ6PpoKxDqkOtwcdwyPYx2cFwQw+3xAjOVxjoh6w@mail.gmail.com>
+ <75a2eb31-3636-44d4-b2c9-3a24646499a4@gmail.com> <CA+fCnZf7jYPUyqHqonWhDKVi9eeN6aaaByMTBYCQrv2-8+hngQ@mail.gmail.com>
+ <aMfWz4gwFNMx7x82@MiWiFi-R3L-srv> <CA+fCnZcWEuBerMeS4RCXQtged06MJhY=55KsYeJEOJn3K0psXQ@mail.gmail.com>
+ <aNNY1AzfGua3Kk3S@MiWiFi-R3L-srv> <CACzwLxh10=H5LE0p86xKqfvObqq+6ZN5Cs0hJ9i1MKJHWnNx2w@mail.gmail.com>
+ <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
+In-Reply-To: <aNTfPjS2buXMI46D@MiWiFi-R3L-srv>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Tue, 14 Oct 2025 10:27:59 +0500
+X-Gm-Features: AS18NWDpoAnK8X4S74wzUC_xmUwiiptVaXx4Fi_Po4Ht89THf-aVMKFaVW0-Q-g
+Message-ID: <CACzwLxiJ0pGur42Vigq=JnYecyZn-Z5BC3VcqxSUttT54kEusA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, glider@google.com, 
+	dvyukov@google.com, elver@google.com, linux-mm@kvack.org, 
+	vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, sj@kernel.org, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251013_094018_484261_AA0715F4 
-X-CRM114-Status: GOOD (  20.12  )
+X-CRM114-CacheID: sfid-20251013_222819_547092_2CDB7E80 
+X-CRM114-Status: GOOD (  21.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,151 +104,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 13 2025, Pratyush Yadav wrote:
-
-> On Fri, Oct 10 2025, Breno Leitao wrote:
+On Thu, Sep 25, 2025 at 11:21=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
 >
->> Hello Chanyuan, Mike,
->>
->> On Fri, May 09, 2025 at 12:46:19AM -0700, Changyuan Lyu wrote:
->>> --- a/mm/memblock.c
->>> +++ b/mm/memblock.c
->>> @@ -492,7 +492,7 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
->>>  	 * needn't do it
->>>  	 */
->>>  	if (!use_slab)
->>> -		BUG_ON(memblock_reserve(addr, new_alloc_size));
->>> +		BUG_ON(memblock_reserve_kern(addr, new_alloc_size));
->>>  
->>>  	/* Update slab flag */
->>>  	*in_slab = use_slab;
->>> @@ -642,7 +642,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->>>  #ifdef CONFIG_NUMA
->>>  			WARN_ON(nid != memblock_get_region_node(rgn));
->>>  #endif
->>> -			WARN_ON(flags != rgn->flags);
->>> +			WARN_ON(flags != MEMBLOCK_NONE && flags != rgn->flags);
->>
->> I am hitting some sporadic warnings at early boot on a production kernel
->> (6.16). Unfortunately this issue is not easily reproduce for me to test on
->> upstream.
->>
->> 	09:14:44  BIOS-provided physical RAM map:
->> 	09:14:44  BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
->> 	09:14:44  BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000000100000-0x0000000064cb7fff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000064cb8000-0x0000000064dc3fff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000064dc4000-0x0000000065b13fff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000065b14000-0x0000000065b61fff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000065b62000-0x0000000065ed0fff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000065ed1000-0x0000000065f2bfff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000065f2c000-0x0000000066621fff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000066622000-0x0000000066630fff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000066631000-0x0000000068107fff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000068108000-0x000000006819dfff] ACPI data
->> 	09:14:44  BIOS-e820: [mem 0x000000006819e000-0x000000006a48cfff] usable
->> 	09:14:44  BIOS-e820: [mem 0x000000006a48d000-0x000000006c58cfff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x000000006c58d000-0x000000006c5dcfff] ACPI data
->> 	09:14:44  BIOS-e820: [mem 0x000000006c5dd000-0x000000006cfdcfff] ACPI NVS
->> 	09:14:44  BIOS-e820: [mem 0x000000006cfdd000-0x000000006e9fcfff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x000000006e9fd000-0x000000006fffffff] usable
->> 	09:14:44  BIOS-e820: [mem 0x0000000070000000-0x000000008fffffff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x00000000fed20000-0x00000000fed44fff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
->> 	09:14:44  BIOS-e820: [mem 0x0000000100000000-0x000000107fff655f] usable
->> 	09:14:44  BIOS-e820: [mem 0x000000107fff6560-0x000000107fff656f] type 128
->> 	09:14:44  BIOS-e820: [mem 0x000000107fff6570-0x000000107fffffff] usable
->> 	09:14:44  random: crng init done
->> 	09:14:44  ------------[ cut here ]------------
->> 	09:14:44 WARNING: CPU: 0 PID: 0 at mm/memblock.c:668 memblock_add_range (mm/memblock.c:668)
->> 	09:14:44  Modules linked in:
->> 	09:14:44  Tainted: [S]=CPU_OUT_OF_SPEC
->> 	09:14:44 RIP: 0010:memblock_add_range (mm/memblock.c:668)
->> 	09:14:44 Code: 28 80 3c 01 00 0f 84 04 fd ff ff 4c 89 ef e8 6c 77 09 00 e9 f7 fc ff ff 0f 0b 83 7c 24 1c 00 0f 85 9c fd ff ff e9 c5 fd ff ff <0f> 0b e9 be fd ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 6b fd
->> 	All code
->> 	========
->> 	0:    28 80 3c 01 00 0f        sub    %al,0xf00013c(%rax)
->> 	6:    84 04 fd ff ff 4c 89     test   %al,-0x76b30001(,%rdi,8)
->> 	d:    ef                       out    %eax,(%dx)
->> 	e:    e8 6c 77 09 00           call   0x9777f
->> 	13:    e9 f7 fc ff ff           jmp    0xfffffffffffffd0f
->> 	18:    0f 0b                    ud2
->> 	1a:    83 7c 24 1c 00           cmpl   $0x0,0x1c(%rsp)
->> 	1f:    0f 85 9c fd ff ff        jne    0xfffffffffffffdc1
->> 	25:    e9 c5 fd ff ff           jmp    0xfffffffffffffdef
->> 	2a:*    0f 0b                    ud2            <-- trapping instruction
->> 	2c:    e9 be fd ff ff           jmp    0xfffffffffffffdef
->> 	31:    44 89 f1                 mov    %r14d,%ecx
->> 	34:    80 e1 07                 and    $0x7,%cl
->> 	37:    80 c1 03                 add    $0x3,%cl
->> 	3a:    38 c1                    cmp    %al,%cl
->> 	3c:    0f                       .byte 0xf
->> 	3d:    8c 6b fd                 mov    %gs,-0x3(%rbx)
->>
->> 	Code starting with the faulting instruction
->> 	===========================================
->> 	0:    0f 0b                    ud2
->> 	2:    e9 be fd ff ff           jmp    0xfffffffffffffdc5
->> 	7:    44 89 f1                 mov    %r14d,%ecx
->> 	a:    80 e1 07                 and    $0x7,%cl
->> 	d:    80 c1 03                 add    $0x3,%cl
->> 	10:    38 c1                    cmp    %al,%cl
->> 	12:    0f                       .byte 0xf
->> 	13:    8c 6b fd                 mov    %gs,-0x3(%rbx)
->> 	09:14:44  RSP: 0000:ffffffff85e07d48 EFLAGS: 00010083 ORIG_RAX: 0000000000000000
->> 	09:14:44  RAX: 0000000000000020 RBX: 0000000000001c00 RCX: dffffc0000000000
->> 	09:14:44  RDX: 000000000009f000 RSI: 000000000009d000 RDI: ffffffff8685ebf8
->> 	09:14:44  RBP: 0000000000000002 R08: 0000000000000020 R09: 0000000000000000
->> 	09:14:44  R10: ffffffffff200570 R11: fffffbffffe400b2 R12: 000000000009d000
->> 	09:14:44  R13: 0000000000100000 R14: ffffffff8edf5ce4 R15: ffffffff8edf5ce0
->> 	09:14:44  FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
->> 	09:14:44  CR2: ffff888059e2dff8 CR3: 000000005bc1d000 CR4: 00000000000000b0
->> 	09:14:44  Call Trace:
->> 	09:14:44   <TASK>
->> 	09:14:44 ? __memblock_reserve (mm/memblock.c:936)
->> 	09:14:44 ? add_early_ima_buffer (arch/x86/kernel/setup.c:413)
->> 	09:14:44 ? parse_setup_data (arch/x86/kernel/setup.c:500)
->> 	09:14:44 ? setup_arch (arch/x86/kernel/setup.c:245 arch/x86/kernel/setup.c:958)
->> 	09:14:44 ? start_kernel (init/main.c:922)
->> 	09:14:44 ? x86_64_start_reservations (arch/x86/kernel/ebda.c:57)
->> 	09:14:44 ? x86_64_start_kernel (arch/x86/kernel/head64.c:231)
->> 	09:14:44 ? common_startup_64 (arch/x86/kernel/head_64.S:419)
->> 	09:14:44   </TASK>
->> 	....
->> 	Memory: 49640988K/66772816K available (54946K kernel code, 19058K rwdata, 22636K rodata, 2940K init, 120968K bss, 10650188K reserved, 6291456K cma-reserved)
->>
->> So, there is a memory override, and I am curious about it. Do you think it
+> On 09/25/25 at 12:07am, Sabyrzhan Tasbolatov wrote:
+> > On Wed, Sep 24, 2025 at 5:35=E2=80=AFAM Baoquan He <bhe@redhat.com> wro=
+te:
+> > >
+> > > On 09/23/25 at 07:49pm, Andrey Konovalov wrote:
+> > > > Since the Sabyrzhan's patches are already in mm-stable (and I assum=
+e
+> > > > will be merged during the next merge window), just rebase your chan=
+ges
+> > > > on top.
+> > >
+> > > That's fine, I will rebase.
+> > >
+> > > >
+> > > > But also note that Sabyrzhan is planning to move out the
+> > > > kasan_enabled() checks into include/linux/kasan.h (which is a clean=
+-up
+> > > > I would have also asked you to do with the kasan=3Doff patches), so
+> > > > maybe you should sync up with him wrt these changes.
+> > >
+> > > Hi Sabyrzhan,
+> > >
+> > > What's your thought? You want to do the cleanup after my rebasing on
+> > > your merged patches or you prefer to do it ahead of time? Please let =
+me
+> > > know so that I can adjust my posting accordingly. Thanks.
+> > >
+> >
+> > Hello,
+> >
+> > I can make all necessary changes only next week. Currently, traveling.
+> > I will send the fix-up patch Andrey has described somewhere next week.
+> > Please let me know if it's ok.
 >
-> Yeah, it seems IMA is reserving a region that overlaps a region reserved
-> by something else that doesn't use memblock_reserve_kern().
->
->> would be useful to expand this warning to dump more information about the
->> issue? (only compiled tested)
->>
->> 	if (flags != MEMBLOCK_NONE && flags != rgn->flags) {
->> 		pr_warn("memblock: Flag mismatch at region [%pa-%pa]\n",
->> 			&rgn->base, &rend);
->> 		pr_warn("  Existing region flags: %#x\n", rgn->flags);
->> 		pr_warn("  New range flags: %#x\n", flags);
->> 		pr_warn("  New range: [%pa-%pa]\n", &base, &end);
->> 		WARN_ON_ONCE(1);
->> 	}
->
-> I suppose this would be useful. I think enabling memblock debug prints
-> would also be helpful (using the "memblock=debug" commandline parameter)
-> if it doesn't impact your production environment too much.
+> Please take it easy, today is Thursday, I will wait for your clean up
+> patch next week and post. I can do some preparation work for rebasing on
+> your merged patches. Thanks.
 
-Actually, I think "memblock=debug" is going to be the more useful thing
-since it would also show what function allocated the overlapping range
-and the flags it was allocated with.
+Hello,
 
-On my qemu VM with KVM, this results in around 70 prints from memblock.
-So it adds a bit of extra prints but nothing that should be too
-disrupting I think. Plus, only at boot so the worst thing you get is
-slightly slower boot times.
+Just heads up that I've already sent cleanup patches [1] and
+Andrew has merged them into mm-new tree.
+Hopefully, one week's delay wasn't a problem.
 
--- 
-Regards,
-Pratyush Yadav
+[1] https://lore.kernel.org/all/20251009155403.1379150-1-snovitoll@gmail.co=
+m/
 
