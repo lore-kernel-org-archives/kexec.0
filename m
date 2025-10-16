@@ -4,73 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6514BCCD184
-	for <kexec@archiver.kernel.org>; Tue, 14 Oct 2025 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00380CCD183
+	for <kexec@archiver.kernel.org>; Thu, 16 Oct 2025 08:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nsF6PObp6qoqkkCKTQsSNmyL4hK2S7wY4EQepojwbJw=; b=CiBlIMVHruyfMwbGoFlc87/LbU
-	5NMZUHrHpwWagx9fSnBZjyzQYO/O4AgKD3fxWqhIVl5IfRO9IXZaSm9V6Dv1MkqQtIKOWuv/2P9XG
-	oUECl+Y4JZ+uQil5gH5qTiYHfCyDwhBTFcsQr1KS+c0VbWsoKuAizznAhMpqSQWZq+w6gyZZn6vtN
-	0L/KRtn638C2JeH9m/Pps5frFZEqvplzFGSeSzNGn7bOzzdTHZSsIARk4x9N9luKfjnC1+GdM42cD
-	BSGKN5K8ylGWl05IWONdleWCJDYis4n5DFd3cYxoYB3XZ0maoMj7eK9ksiKp9mQabuciZcY0pG7sT
-	mb6McNtA==;
+	Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=C1Duh4QCFHeZIPUyGEpMdJwJnINrIQD13crg/F5L+io=; b=eoE2/FHx8Z8FXdDNdy/wgVopTk
+	co11u9bWQ88lsrW2dxbAOdnt5KWdfaPj4cOec2qaoJTLre6M/SSqG/N6oFE9ug8+HcSvwHhktRloO
+	GfKbLARF1wMCLum8jSxT9v+liFN7hpXdbENnSIfI68eXFSjZQVrhilaTBP8Ku/ysNvp6Nq39oJ5PB
+	c3HhGWCXRdXXAnzyx5GTDt1KK/Da84AZorGv7HpL4Fn9oyYWGX/ZHQN7NaUCjeiptGvlbotMotOu9
+	uypJInmdbR3GObXGyfMfBaRuF+AN7z0XXntf+qH46rAtTwbLbZXWMEu0HK6pPTSDrDHvsnCNq4JaY
+	4qAbpMpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8ene-0000000GPjm-0cY3;
-	Tue, 14 Oct 2025 13:10:46 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1v9JKE-00000003vn7-1p59;
+	Thu, 16 Oct 2025 08:27:06 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8enc-0000000GPiS-2vuB;
-	Tue, 14 Oct 2025 13:10:44 +0000
+	id 1v9JK8-00000003vm3-0plA
+	for kexec@lists.infradead.org;
+	Thu, 16 Oct 2025 08:27:01 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0EF9C622CF;
-	Tue, 14 Oct 2025 13:10:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8533FC4CEE7;
-	Tue, 14 Oct 2025 13:10:38 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 9A2A442B87
+	for <kexec@lists.infradead.org>; Thu, 16 Oct 2025 08:26:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A606C4CEF1
+	for <kexec@lists.infradead.org>; Thu, 16 Oct 2025 08:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760447443;
-	bh=1z29qiTz6h5jyAO8g68bo34GcYPLqTUSe9I3ydJUTw8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=g9+NifUwXszKwI+i9b+BADg9CHX9pjgCw2mu/yxA+73glB/SfRpvhpeMLwX+7zeg9
-	 cpZyrZdbl6zsMX+Wo90KkdV6hDFv+HpHH+GKnixUqPtsiiuipRTYlBSA+RFLrU6AdF
-	 z8MA7ZC0dDyvXrecjZhU8nlLLfZCLEsyyqROyne29Obt+UqzwZBF2jT+f8QUD3imN0
-	 gQ5aZfRz1OgEk0IJVCMTbI4VrsIEPNPKNZutUFVMj6TdGeXxePJsX5/R68ibLC+6iv
-	 jZYvfqrXGK5MchNQMt25O838FaWOmrFURP+ZyNfLcRWE1zF4CmsEn6AFbRAtwXlHBn
-	 SOQ76mXQJoW1Q==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Changyuan Lyu
- <changyuanl@google.com>,  rppt@kernel.org,  akpm@linux-foundation.org,
-  linux-kernel@vger.kernel.org,  anthony.yznaga@oracle.com,  arnd@arndb.de,
-  ashish.kalra@amd.com,  benh@kernel.crashing.org,  bp@alien8.de,
-  catalin.marinas@arm.com,  corbet@lwn.net,  dave.hansen@linux.intel.com,
-  devicetree@vger.kernel.org,  dwmw2@infradead.org,  ebiederm@xmission.com,
-  graf@amazon.com,  hpa@zytor.com,  jgowans@amazon.com,
-  kexec@lists.infradead.org,  krzk@kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  luto@kernel.org,  mark.rutland@arm.com,
-  mingo@redhat.com,  pasha.tatashin@soleen.com,  pbonzini@redhat.com,
-  peterz@infradead.org,  robh@kernel.org,  rostedt@goodmis.org,
-  saravanak@google.com,  skinsburskii@linux.microsoft.com,
-  tglx@linutronix.de,  thomas.lendacky@amd.com,  will@kernel.org,
-  x86@kernel.org
-Subject: Re: [PATCH v8 01/17] memblock: add MEMBLOCK_RSRV_KERN flag
-In-Reply-To: <2ege2jfbevtunhxsnutbzde7cqwgu5qbj4bbuw2umw7ke7ogcn@5wtskk4exzsi>
-	(Breno Leitao's message of "Tue, 14 Oct 2025 01:34:07 -0700")
-References: <20250509074635.3187114-1-changyuanl@google.com>
-	<20250509074635.3187114-2-changyuanl@google.com>
-	<ef6wfr72set5wa5el3wbbu4yd5tnc4p2rhtjpb5kpmncv3xs5d@i3c5v3ciioi3>
-	<mafs0wm4yluej.fsf@kernel.org> <mafs0h5w2lpqu.fsf@kernel.org>
-	<2ege2jfbevtunhxsnutbzde7cqwgu5qbj4bbuw2umw7ke7ogcn@5wtskk4exzsi>
-Date: Tue, 14 Oct 2025 15:10:37 +0200
-Message-ID: <mafs0cy6pljci.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20201202; t=1760603219;
+	bh=eBl64WLERobdXDyDS0UJb0KWsbN36B8vu7EM33AcIeM=;
+	h=Date:From:To:Subject:From;
+	b=UxIw2A9bSIXYO3oiUF0hMyn4rDRJN1T7K2D0Bzq318VmhKWbouhqhYhCaRBAv6635
+	 NnEyBHcoWkxO80r+jMaby07ZzigYmjV6Tk5zZ3KHYCwzT450gs5Ws7JsurzVAI2Otp
+	 IFmGQjlxqVmddp/ueUIHyacvzkrN9JNIU5p6+vy8hyTUW3cwsfG57tt//VzxzqOHIs
+	 MG/9Y/iuUNlpPZmUrG3tqlaumG5G5JUZ643jupIazDT02XrAhZDR4EGdoFiQ14C6gu
+	 OZhAxv3rd4/uaNEv98g/M791IkdKPt2XgtMTO6SrLMSdFn74BKTXKjCwWKB1MkWM1o
+	 xwogUjrCHlh4g==
+Date: Thu, 16 Oct 2025 09:26:57 +0100
+From: Simon Horman <horms@kernel.org>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools 2.0.32
+Message-ID: <aPCsUWfUnwjV3vaQ@horms.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251016_012700_258326_51262EAF 
+X-CRM114-Status: UNSURE (   7.96  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,61 +68,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Oct 14 2025, Breno Leitao wrote:
+Hi all,
 
-> Hello Pratyush,
->
-> On Mon, Oct 13, 2025 at 06:40:09PM +0200, Pratyush Yadav wrote:
->> On Mon, Oct 13 2025, Pratyush Yadav wrote:
->> >
->> > I suppose this would be useful. I think enabling memblock debug prints
->> > would also be helpful (using the "memblock=debug" commandline parameter)
->> > if it doesn't impact your production environment too much.
->> 
->> Actually, I think "memblock=debug" is going to be the more useful thing
->> since it would also show what function allocated the overlapping range
->> and the flags it was allocated with.
->> 
->> On my qemu VM with KVM, this results in around 70 prints from memblock.
->> So it adds a bit of extra prints but nothing that should be too
->> disrupting I think. Plus, only at boot so the worst thing you get is
->> slightly slower boot times.
->
-> Unfortunately this issue is happening on production systems, and I don't
-> have an easy way to reproduce it _yet_.
->
-> At the same time, "memblock=debug" has two problems:
->
->  1) It slows the boot time as you suggested. Boot time at large
->     environments is SUPER critical and time sensitive. It is a bit
->     weird, but it is common for machines in production to kexec
->     _thousands_ of times, and kexecing is considered downtime.
+I am happy to announce the release of kexec-tools 2.0.32.
 
-I don't know if it would make a real enough difference on boot times,
-only that it should theoretically affect it, mainly if you are using
-serial for dmesg logs. Anyway, that's your production environment so you
-know best.
+This release can be downloaded from kernel.org:
 
->
->     This would be useful if I find some hosts getting this issue, and
->     then I can easily enable the extra information to collect what
->     I need, but, this didn't pan out because the hosts I got
->     `memblock=debug` didn't collaborate.
->
->  2) "memblock=debug" is verbose for all cases, which also not necessary
->     the desired behaviour. I am more interested in only being verbose
->     when there is a known problem.
->
-> That said, my suggestion is to only dump extra information when something goes
-> wrong, not affecting the boot time neither boot verbosity.
->
+	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.32.tar.xz
+	http://kernel.org/pub/linux/utils/kernel/kexec/
 
-With your proposed change, we only know what the overlapping area is,
-but not who allocated it. I don't see how that can be done when the
-error is detected. memblock debug lets us know that, which is why I
-suggested it.
+It is also tagged it in git:
 
--- 
-Regards,
-Pratyush Yadav
+	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec!
+
+Commits since v2.0.31:
+
+15d78e5799ee kexec-tools 2.0.32
+63a6986d7aae kexec-tools 2.0.32-rc1
+591ebf60649d COPYING: Update with current text for GPL v2
+2842172e1405 kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
+c343815e7e0a kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
+b7b2a13547a0 util_lib/elf_info.c: fix typo: prink -> printk
+9c12e71d712a kexec/arch/i386/x86-linux-setup.c: replace %d with %u
+c837f1971fab kexec/kexec-elf-exec.c: Replace %lux with %lx
+288e352ed7c8 Fix printf string specifiers, otherwise kexec doesn't work on my laptop
+0b5aecb85a21 workflow: Add loongarch64 build
+efb97b509b1a Make the segment base match pinned section address
+19d1b275c649 LoongArch: Remove 'kexec_file' cmdline parameters when using --reuse-cmdline option
+f1d66280a48b LoongArch: Add kexec_file_load syscall
+b7c35c42c3db LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
+13e701e72ecf LoongArch: Add pe_hdr->machine check for pei format images
+919005b26c8f LoongArch: Fix the use of loongarch_image_header in ELF format
+2d3f8185f5d7 LoongArch: Change initrd allocation to top-down
+024073e74dc7 LoongArch: Enforce relocatable kernel check for crash dump
+d9c82c188646 LoongArch: Terminate the cmdline string using '\0'
+e2bfd6df147c LoongArch: Fix comments
+39ba2bd288af kexec: Handle removal of multiple 'crashkernel' parameters
+b8f6c2a98d2c LoongArch: Change COMMAND_LINE_SIZE to 4096
+daa29443819d kexec/zstd: fix static zstd build
+8322826fa7b0 kexec/zboot: Add boundary check on PE header offset
+b257f311f5f0 RISC-V: Support loading Image binary file
+363087cd156f RISC-V: Separate elf_riscv_find_pbase out
+027e6e237427 RISC-V: Enable kexec_file_load syscall
+b3fd54b022fe RISC-V: Add support for riscv kexec/kdump on kexec-tools
+1bda78d60504 workflow: update to Ubuntu 24.04
+14f48ea80e51 x86_64: Use the x86-64 level for purgatory
+3baa1baebf91 kexec-tools 2.0.31.git
 
