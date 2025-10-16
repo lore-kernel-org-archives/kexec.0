@@ -4,56 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00380CCD183
-	for <kexec@archiver.kernel.org>; Thu, 16 Oct 2025 08:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AABCCCD195
+	for <kexec@archiver.kernel.org>; Thu, 16 Oct 2025 14:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=C1Duh4QCFHeZIPUyGEpMdJwJnINrIQD13crg/F5L+io=; b=eoE2/FHx8Z8FXdDNdy/wgVopTk
-	co11u9bWQ88lsrW2dxbAOdnt5KWdfaPj4cOec2qaoJTLre6M/SSqG/N6oFE9ug8+HcSvwHhktRloO
-	GfKbLARF1wMCLum8jSxT9v+liFN7hpXdbENnSIfI68eXFSjZQVrhilaTBP8Ku/ysNvp6Nq39oJ5PB
-	c3HhGWCXRdXXAnzyx5GTDt1KK/Da84AZorGv7HpL4Fn9oyYWGX/ZHQN7NaUCjeiptGvlbotMotOu9
-	uypJInmdbR3GObXGyfMfBaRuF+AN7z0XXntf+qH46rAtTwbLbZXWMEu0HK6pPTSDrDHvsnCNq4JaY
-	4qAbpMpw==;
+	bh=N6TCUvBIFH9Km535j+F8XX51XzSvyn3JmZRkey0E9jU=; b=s9DO6fUkYZW8aua/onoVSff464
+	IeJJ7Ej2mNPVmgrnE0wpkhQD11gVwM9dEl4d+KadNALdrwGGc7j7sgjlFn6eZll1N5HtXOyLYrF6+
+	QSqIUOqVVOsIVRzTXjYCm0WboCuKR5cbA5Vb3M3ztjtmRH8U1m9BvrkyYQ1id7Fh5XKm1AHnhkVuP
+	t7jjZrN4aYXftY5RMv5rG1jBHWJdth6WxcVifXAIEBB33Z1TmHNrOMRAjRDg+ZfkeT/ckfaNXzebt
+	ztL+Qw2/37qW/vaug2o5DEFkg8KsmKQLKHpH8iWvrAW5KliiFh5NCP5wd055X3fnCzjLrIsoAZp9A
+	/P09FOpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v9JKE-00000003vn7-1p59;
-	Thu, 16 Oct 2025 08:27:06 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1v9OyL-0000000505U-2xt9;
+	Thu, 16 Oct 2025 14:28:53 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v9JK8-00000003vm3-0plA
+	id 1v9OyI-0000000504b-0tpS
 	for kexec@lists.infradead.org;
-	Thu, 16 Oct 2025 08:27:01 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9A2A442B87
-	for <kexec@lists.infradead.org>; Thu, 16 Oct 2025 08:26:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A606C4CEF1
-	for <kexec@lists.infradead.org>; Thu, 16 Oct 2025 08:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760603219;
-	bh=eBl64WLERobdXDyDS0UJb0KWsbN36B8vu7EM33AcIeM=;
-	h=Date:From:To:Subject:From;
-	b=UxIw2A9bSIXYO3oiUF0hMyn4rDRJN1T7K2D0Bzq318VmhKWbouhqhYhCaRBAv6635
-	 NnEyBHcoWkxO80r+jMaby07ZzigYmjV6Tk5zZ3KHYCwzT450gs5Ws7JsurzVAI2Otp
-	 IFmGQjlxqVmddp/ueUIHyacvzkrN9JNIU5p6+vy8hyTUW3cwsfG57tt//VzxzqOHIs
-	 MG/9Y/iuUNlpPZmUrG3tqlaumG5G5JUZ643jupIazDT02XrAhZDR4EGdoFiQ14C6gu
-	 OZhAxv3rd4/uaNEv98g/M791IkdKPt2XgtMTO6SrLMSdFn74BKTXKjCwWKB1MkWM1o
-	 xwogUjrCHlh4g==
-Date: Thu, 16 Oct 2025 09:26:57 +0100
-From: Simon Horman <horms@kernel.org>
-To: kexec@lists.infradead.org
-Subject: [ANNOUNCE] kexec-tools 2.0.32
-Message-ID: <aPCsUWfUnwjV3vaQ@horms.kernel.org>
+	Thu, 16 Oct 2025 14:28:52 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59GAm8WP001407;
+	Thu, 16 Oct 2025 14:28:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=N6TCUvBIFH9Km535j+F8XX51XzSvyn3JmZRkey0E9
+	jU=; b=Xs+GY7nqdj0+1k5lWjeQLPxkL7kHSCW4+/iwN94o1X5kd78iMEM911WNA
+	tBtCIAD5k1/NtGNyG1tJ9HKqhlvd9FZNJ8FxFjQDWTtoOxJuEl1fSESSDQQMxpuH
+	tnmZoyMYssqGvjrqli5GCnNSHHkiBebib9RldkEHp3x6IRwPbdg0SQSnAyERsoTu
+	mgEuaIoEgfG4B9X4pX5icPKJNWAM6YfnocS5RsLqZPh+AiZ0cPuE9bPV42vUr6MU
+	qVtMFtuNX6ryDjh/Bbrm3MrIK5yyBJQ2jVtDYWycnUvwJtRgyZ+Srs+FBR591iPJ
+	3+MowHnSr0TpfgAsutfiMqW/63Z6A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp865s0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Oct 2025 14:28:41 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59GEP5GX013814;
+	Thu, 16 Oct 2025 14:28:41 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp865rv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Oct 2025 14:28:41 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59GBJkmm015028;
+	Thu, 16 Oct 2025 14:28:40 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49r3sjnyb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Oct 2025 14:28:40 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59GESaXZ51380616
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 16 Oct 2025 14:28:36 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7265D20148;
+	Thu, 16 Oct 2025 14:28:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1AC5B20150;
+	Thu, 16 Oct 2025 14:28:34 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 16 Oct 2025 14:28:33 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: [PATCH] crash: let architecture decide crash memory export to iomem_resource
+Date: Thu, 16 Oct 2025 19:58:31 +0530
+Message-ID: <20251016142831.144515-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VN6n-4cdB3fGC8v1n0JAnjD6jY94qsWV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDEyMDA4NCBTYWx0ZWRfXxtWerBGArH7U
+ zHMHpqxZ8tU+A95PdpfIz5fqKAQb1LJSXtLXXz1l4BCk7Ky36lbRJwR5KYQw0/58iyjjSAa/fde
+ VgaMQCHlAyEVI7x1xtqjJICz1pNKiiiPyGL41zy9LPLnOyKdO9Vn5qyi5VuGjxdqnLHJLJMjMIH
+ ENTwvTYtE6hBAY5aBBtoNdKP1dxHsh8Mm11LFfdRnaXMFj3RYpSIGYn6TJs+izvK0XzDf4TgpVk
+ tuHOZQuayRozT8Br4DyWCvxYxN31MiV/UmK9t0UsJ+j5RDm5ua0gt2HKkqGuUVhSdPvBSNK143W
+ iVnnFA8oTlBTZMhgZWinb0JZpsElZuFcKFYE0f/G7qaT0TxiPWqnP+CtFJ/qEGDf8GIvS9jfN7n
+ /6Y4YfVFKST8cPaeO5CV8JB/KacK4w==
+X-Proofpoint-GUID: oR4BFbbA78zC_rTnWXR5gpyNLlsY0sK-
+X-Authority-Analysis: v=2.4 cv=af5sXBot c=1 sm=1 tr=0 ts=68f10119 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=JfrnYn6hAAAA:8
+ a=oNOrHKTX8ZNhZH91a0IA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=1CNFftbPRP8L7MoqJWF3:22
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-16_02,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510120084
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251016_012700_258326_51262EAF 
-X-CRM114-Status: UNSURE (   7.96  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251016_072850_258418_46A9F5AB 
+X-CRM114-Status: GOOD (  16.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,52 +128,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+With the generic crashkernel reservation, the kernel emits the following
+warning on powerpc:
 
-I am happy to announce the release of kexec-tools 2.0.32.
+WARNING: CPU: 0 PID: 1 at arch/powerpc/mm/mem.c:341 add_system_ram_resources+0xfc/0x180
+Modules linked in:
+CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-auto-12607-g5472d60c129f #1 VOLUNTARY
+Hardware name: IBM,9080-HEX Power11 (architected) 0x820200 0xf000007 of:IBM,FW1110.01 (NH1110_069) hv:phyp pSeries
+NIP:  c00000000201de3c LR: c00000000201de34 CTR: 0000000000000000
+REGS: c000000127cef8a0 TRAP: 0700   Not tainted (6.17.0-auto-12607-g5472d60c129f)
+MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 84000840  XER: 20040010
+CFAR: c00000000017eed0 IRQMASK: 0
+GPR00: c00000000201de34 c000000127cefb40 c0000000016a8100 0000000000000001
+GPR04: c00000012005aa00 0000000020000000 c000000002b705c8 0000000000000000
+GPR08: 000000007fffffff fffffffffffffff0 c000000002db8100 000000011fffffff
+GPR12: c00000000201dd40 c000000002ff0000 c0000000000112bc 0000000000000000
+GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR20: 0000000000000000 0000000000000000 0000000000000000 c0000000015a3808
+GPR24: c00000000200468c c000000001699888 0000000000000106 c0000000020d1950
+GPR28: c0000000014683f8 0000000081000200 c0000000015c1868 c000000002b9f710
+NIP [c00000000201de3c] add_system_ram_resources+0xfc/0x180
+LR [c00000000201de34] add_system_ram_resources+0xf4/0x180
+Call Trace:
+add_system_ram_resources+0xf4/0x180 (unreliable)
+do_one_initcall+0x60/0x36c
+do_initcalls+0x120/0x220
+kernel_init_freeable+0x23c/0x390
+kernel_init+0x34/0x26c
+ret_from_kernel_user_thread+0x14/0x1c
 
-This release can be downloaded from kernel.org:
+This warning occurs due to a conflict between crashkernel and System RAM
+iomem resources.
 
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.32.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
+The generic crashkernel reservation adds the crashkernel memory range to
+/proc/iomem during early initialization. Later, all memblock ranges are
+added to /proc/iomem as System RAM. If the crashkernel region overlaps
+with any memblock range, it causes a conflict while adding those memblock
+regions as iomem resources, triggering the above warning. The conflicting
+memblock regions are then omitted from /proc/iomem.
 
-It is also tagged it in git:
+For example, if the following crashkernel region is added to /proc/iomem:
+20000000-11fffffff : Crash kernel
 
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+then the following memblock regions System RAM regions fail to be inserted:
+00000000-7fffffff : System RAM
+80000000-257fffffff : System RAM
 
-Thanks to everyone who has contributed to kexec!
+Fix this by not adding the crashkernel memory to /proc/iomem on powerpc.
+Introduce an architecture hook to let each architecture decide whether to
+export the crashkernel region to /proc/iomem.
 
-Commits since v2.0.31:
+For more info checkout commit c40dd2f766440 ("powerpc: Add System RAM
+to /proc/iomem") and commit bce074bdbc36 ("powerpc: insert System RAM
+resource to prevent crashkernel conflict")
 
-15d78e5799ee kexec-tools 2.0.32
-63a6986d7aae kexec-tools 2.0.32-rc1
-591ebf60649d COPYING: Update with current text for GPL v2
-2842172e1405 kexec/arch/arm64/crashdump-arm64.c: remove extra whitespace
-c343815e7e0a kexec/arch/i386/kexec-x86-common.c: remove duplicate <stdio.h>
-b7b2a13547a0 util_lib/elf_info.c: fix typo: prink -> printk
-9c12e71d712a kexec/arch/i386/x86-linux-setup.c: replace %d with %u
-c837f1971fab kexec/kexec-elf-exec.c: Replace %lux with %lx
-288e352ed7c8 Fix printf string specifiers, otherwise kexec doesn't work on my laptop
-0b5aecb85a21 workflow: Add loongarch64 build
-efb97b509b1a Make the segment base match pinned section address
-19d1b275c649 LoongArch: Remove 'kexec_file' cmdline parameters when using --reuse-cmdline option
-f1d66280a48b LoongArch: Add kexec_file_load syscall
-b7c35c42c3db LoongArch/pez: Fix kernel_fd handling when kexec_file is supported
-13e701e72ecf LoongArch: Add pe_hdr->machine check for pei format images
-919005b26c8f LoongArch: Fix the use of loongarch_image_header in ELF format
-2d3f8185f5d7 LoongArch: Change initrd allocation to top-down
-024073e74dc7 LoongArch: Enforce relocatable kernel check for crash dump
-d9c82c188646 LoongArch: Terminate the cmdline string using '\0'
-e2bfd6df147c LoongArch: Fix comments
-39ba2bd288af kexec: Handle removal of multiple 'crashkernel' parameters
-b8f6c2a98d2c LoongArch: Change COMMAND_LINE_SIZE to 4096
-daa29443819d kexec/zstd: fix static zstd build
-8322826fa7b0 kexec/zboot: Add boundary check on PE header offset
-b257f311f5f0 RISC-V: Support loading Image binary file
-363087cd156f RISC-V: Separate elf_riscv_find_pbase out
-027e6e237427 RISC-V: Enable kexec_file_load syscall
-b3fd54b022fe RISC-V: Add support for riscv kexec/kdump on kexec-tools
-1bda78d60504 workflow: update to Ubuntu 24.04
-14f48ea80e51 x86_64: Use the x86-64 level for purgatory
-3baa1baebf91 kexec-tools 2.0.31.git
+Note: Before switching to the generic crashkernel reservation, powerpc
+never exported the crashkernel region to /proc/iomem.
+
+Fixes: e3185ee438c2 ("powerpc/crash: use generic crashkernel reservation").
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/all/90937fe0-2e76-4c82-b27e-7b8a7fe3ac69@linux.ibm.com/
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/include/asm/crash_reserve.h | 8 ++++++++
+ include/linux/crash_reserve.h            | 6 ++++++
+ kernel/crash_reserve.c                   | 3 +++
+ 3 files changed, 17 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/crash_reserve.h b/arch/powerpc/include/asm/crash_reserve.h
+index 6467ce29b1fa..d1b570ddbf98 100644
+--- a/arch/powerpc/include/asm/crash_reserve.h
++++ b/arch/powerpc/include/asm/crash_reserve.h
+@@ -5,4 +5,12 @@
+ /* crash kernel regions are Page size agliged */
+ #define CRASH_ALIGN             PAGE_SIZE
+ 
++#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
++static inline bool arch_add_crash_res_to_iomem(void)
++{
++	return false;
++}
++#define arch_add_crash_res_to_iomem arch_add_crash_res_to_iomem
++#endif
++
+ #endif /* _ASM_POWERPC_CRASH_RESERVE_H */
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index 7b44b41d0a20..f0dc03d94ca2 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -32,6 +32,12 @@ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ void __init reserve_crashkernel_cma(unsigned long long cma_size);
+ 
+ #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
++#ifndef arch_add_crash_res_to_iomem
++static inline bool arch_add_crash_res_to_iomem(void)
++{
++	return true;
++}
++#endif
+ #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
+ #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+ #endif
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 87bf4d41eabb..62e60e0223cf 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -524,6 +524,9 @@ void __init reserve_crashkernel_cma(unsigned long long cma_size)
+ #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
+ static __init int insert_crashkernel_resources(void)
+ {
++	if (!arch_add_crash_res_to_iomem())
++		return 0;
++
+ 	if (crashk_res.start < crashk_res.end)
+ 		insert_resource(&iomem_resource, &crashk_res);
+ 
+-- 
+2.51.0
+
 
