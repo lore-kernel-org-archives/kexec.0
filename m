@@ -4,116 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AABCCCD195
-	for <kexec@archiver.kernel.org>; Thu, 16 Oct 2025 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 406CFCCD183
+	for <kexec@archiver.kernel.org>; Thu, 16 Oct 2025 20:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=N6TCUvBIFH9Km535j+F8XX51XzSvyn3JmZRkey0E9jU=; b=s9DO6fUkYZW8aua/onoVSff464
-	IeJJ7Ej2mNPVmgrnE0wpkhQD11gVwM9dEl4d+KadNALdrwGGc7j7sgjlFn6eZll1N5HtXOyLYrF6+
-	QSqIUOqVVOsIVRzTXjYCm0WboCuKR5cbA5Vb3M3ztjtmRH8U1m9BvrkyYQ1id7Fh5XKm1AHnhkVuP
-	t7jjZrN4aYXftY5RMv5rG1jBHWJdth6WxcVifXAIEBB33Z1TmHNrOMRAjRDg+ZfkeT/ckfaNXzebt
-	ztL+Qw2/37qW/vaug2o5DEFkg8KsmKQLKHpH8iWvrAW5KliiFh5NCP5wd055X3fnCzjLrIsoAZp9A
-	/P09FOpw==;
+	bh=hZ7ypki6CuYeCryqFiqKvWXs+ZzivlIk6Wotvz3thCw=; b=YFaTCDgsCjJaRVyGEhyYaa+JZF
+	zDyxfizN06pozLncCQLnLDB3jNnFg88f9HAXNAa0GIW4jQzl91bcFL68WhP5MNwCw0E9ZzcKy3e3X
+	JqzaOJu/LkkidnzUNgb15DwKm1dV6enJb3PdCOW1IqkD3XMTQG0ctItcqa3mpIITNOID45FN23S5H
+	lX1e7rxvUIuOheqwmIXn473LemjWMN3hChQJFZCDXgVqAUVXcTAqXEPzoI3Kv7IX5U3Ep0290mEu3
+	1eEe21+hOW1SbgKotd65Rtz7guA6ySXorg00Q+dQ4r4LrcGUx+lCufBYztvyAyH81qxaXAK6k1s54
+	69kRzArw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v9OyL-0000000505U-2xt9;
-	Thu, 16 Oct 2025 14:28:53 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1v9UEN-00000005qxH-1yiJ;
+	Thu, 16 Oct 2025 20:05:47 +0000
+Received: from out-170.mta0.migadu.com ([91.218.175.170])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v9OyI-0000000504b-0tpS
+	id 1v9UEL-00000005qe5-0scp
 	for kexec@lists.infradead.org;
-	Thu, 16 Oct 2025 14:28:52 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59GAm8WP001407;
-	Thu, 16 Oct 2025 14:28:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=N6TCUvBIFH9Km535j+F8XX51XzSvyn3JmZRkey0E9
-	jU=; b=Xs+GY7nqdj0+1k5lWjeQLPxkL7kHSCW4+/iwN94o1X5kd78iMEM911WNA
-	tBtCIAD5k1/NtGNyG1tJ9HKqhlvd9FZNJ8FxFjQDWTtoOxJuEl1fSESSDQQMxpuH
-	tnmZoyMYssqGvjrqli5GCnNSHHkiBebib9RldkEHp3x6IRwPbdg0SQSnAyERsoTu
-	mgEuaIoEgfG4B9X4pX5icPKJNWAM6YfnocS5RsLqZPh+AiZ0cPuE9bPV42vUr6MU
-	qVtMFtuNX6ryDjh/Bbrm3MrIK5yyBJQ2jVtDYWycnUvwJtRgyZ+Srs+FBR591iPJ
-	3+MowHnSr0TpfgAsutfiMqW/63Z6A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp865s0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Oct 2025 14:28:41 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59GEP5GX013814;
-	Thu, 16 Oct 2025 14:28:41 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp865rv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Oct 2025 14:28:41 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59GBJkmm015028;
-	Thu, 16 Oct 2025 14:28:40 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49r3sjnyb5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Oct 2025 14:28:40 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59GESaXZ51380616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Oct 2025 14:28:36 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7265D20148;
-	Thu, 16 Oct 2025 14:28:36 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1AC5B20150;
-	Thu, 16 Oct 2025 14:28:34 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 16 Oct 2025 14:28:33 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [PATCH] crash: let architecture decide crash memory export to iomem_resource
-Date: Thu, 16 Oct 2025 19:58:31 +0530
-Message-ID: <20251016142831.144515-1-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	Thu, 16 Oct 2025 20:05:46 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760645015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hZ7ypki6CuYeCryqFiqKvWXs+ZzivlIk6Wotvz3thCw=;
+	b=flz0HAWN9ApGK0shi3gJ6lDvw6V/IDIeGbU0w236HwES7BzMdLM7w32ZObrecuORBGSmgQ
+	FQQjch2XhrH5Qanf4V5CmEt38sbrZshz/ra8CGvuFgJxDEBHQ94ruiCClH7DkegUxbv5QO
+	jlNAQ6l5GuPhcb/HZmLzIvK7x4NPHbA=
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+To: kexec@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Zhu Yanjun <yanjun.zhu@linux.dev>,
+	graf@amazon.com,
+	rppt@kernel.org,
+	changyuanl@google.com,
+	akpm@linux-foundation.org,
+	bhe@redhat.com
+Subject: [PATCH 1/1] kexec: Use %pe format specifier for error pointer printing
+Date: Thu, 16 Oct 2025 20:03:20 +0000
+Message-ID: <20251016200320.4179702-1-yanjun.zhu@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: VN6n-4cdB3fGC8v1n0JAnjD6jY94qsWV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDEyMDA4NCBTYWx0ZWRfXxtWerBGArH7U
- zHMHpqxZ8tU+A95PdpfIz5fqKAQb1LJSXtLXXz1l4BCk7Ky36lbRJwR5KYQw0/58iyjjSAa/fde
- VgaMQCHlAyEVI7x1xtqjJICz1pNKiiiPyGL41zy9LPLnOyKdO9Vn5qyi5VuGjxdqnLHJLJMjMIH
- ENTwvTYtE6hBAY5aBBtoNdKP1dxHsh8Mm11LFfdRnaXMFj3RYpSIGYn6TJs+izvK0XzDf4TgpVk
- tuHOZQuayRozT8Br4DyWCvxYxN31MiV/UmK9t0UsJ+j5RDm5ua0gt2HKkqGuUVhSdPvBSNK143W
- iVnnFA8oTlBTZMhgZWinb0JZpsElZuFcKFYE0f/G7qaT0TxiPWqnP+CtFJ/qEGDf8GIvS9jfN7n
- /6Y4YfVFKST8cPaeO5CV8JB/KacK4w==
-X-Proofpoint-GUID: oR4BFbbA78zC_rTnWXR5gpyNLlsY0sK-
-X-Authority-Analysis: v=2.4 cv=af5sXBot c=1 sm=1 tr=0 ts=68f10119 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=JfrnYn6hAAAA:8
- a=oNOrHKTX8ZNhZH91a0IA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=1CNFftbPRP8L7MoqJWF3:22
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-16_02,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 suspectscore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510120084
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251016_072850_258418_46A9F5AB 
-X-CRM114-Status: GOOD (  16.45  )
+X-CRM114-CacheID: sfid-20251016_130545_412734_031F0620 
+X-CRM114-Status: UNSURE (   9.37  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,130 +70,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With the generic crashkernel reservation, the kernel emits the following
-warning on powerpc:
+Make pr_xxx() call to use the %pe format specifier instead of %d.
+The %pe specifier prints a symbolic error string (e.g., -ENOMEM,
+-EINVAL) when given an error pointer created with ERR_PTR(err).
 
-WARNING: CPU: 0 PID: 1 at arch/powerpc/mm/mem.c:341 add_system_ram_resources+0xfc/0x180
-Modules linked in:
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-auto-12607-g5472d60c129f #1 VOLUNTARY
-Hardware name: IBM,9080-HEX Power11 (architected) 0x820200 0xf000007 of:IBM,FW1110.01 (NH1110_069) hv:phyp pSeries
-NIP:  c00000000201de3c LR: c00000000201de34 CTR: 0000000000000000
-REGS: c000000127cef8a0 TRAP: 0700   Not tainted (6.17.0-auto-12607-g5472d60c129f)
-MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 84000840  XER: 20040010
-CFAR: c00000000017eed0 IRQMASK: 0
-GPR00: c00000000201de34 c000000127cefb40 c0000000016a8100 0000000000000001
-GPR04: c00000012005aa00 0000000020000000 c000000002b705c8 0000000000000000
-GPR08: 000000007fffffff fffffffffffffff0 c000000002db8100 000000011fffffff
-GPR12: c00000000201dd40 c000000002ff0000 c0000000000112bc 0000000000000000
-GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-GPR20: 0000000000000000 0000000000000000 0000000000000000 c0000000015a3808
-GPR24: c00000000200468c c000000001699888 0000000000000106 c0000000020d1950
-GPR28: c0000000014683f8 0000000081000200 c0000000015c1868 c000000002b9f710
-NIP [c00000000201de3c] add_system_ram_resources+0xfc/0x180
-LR [c00000000201de34] add_system_ram_resources+0xf4/0x180
-Call Trace:
-add_system_ram_resources+0xf4/0x180 (unreliable)
-do_one_initcall+0x60/0x36c
-do_initcalls+0x120/0x220
-kernel_init_freeable+0x23c/0x390
-kernel_init+0x34/0x26c
-ret_from_kernel_user_thread+0x14/0x1c
+This change enhances the clarity and diagnostic value of the error
+message by showing a descriptive error name rather than a numeric
+error code.
 
-This warning occurs due to a conflict between crashkernel and System RAM
-iomem resources.
+Signed-off-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+CC: graf@amazon.com
+CC: rppt@kernel.org
+CC: changyuanl@google.com
+CC: akpm@linux-foundation.org
+CC: bhe@redhat.com
 
-The generic crashkernel reservation adds the crashkernel memory range to
-/proc/iomem during early initialization. Later, all memblock ranges are
-added to /proc/iomem as System RAM. If the crashkernel region overlaps
-with any memblock range, it causes a conflict while adding those memblock
-regions as iomem resources, triggering the above warning. The conflicting
-memblock regions are then omitted from /proc/iomem.
-
-For example, if the following crashkernel region is added to /proc/iomem:
-20000000-11fffffff : Crash kernel
-
-then the following memblock regions System RAM regions fail to be inserted:
-00000000-7fffffff : System RAM
-80000000-257fffffff : System RAM
-
-Fix this by not adding the crashkernel memory to /proc/iomem on powerpc.
-Introduce an architecture hook to let each architecture decide whether to
-export the crashkernel region to /proc/iomem.
-
-For more info checkout commit c40dd2f766440 ("powerpc: Add System RAM
-to /proc/iomem") and commit bce074bdbc36 ("powerpc: insert System RAM
-resource to prevent crashkernel conflict")
-
-Note: Before switching to the generic crashkernel reservation, powerpc
-never exported the crashkernel region to /proc/iomem.
-
-Fixes: e3185ee438c2 ("powerpc/crash: use generic crashkernel reservation").
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Closes: https://lore.kernel.org/all/90937fe0-2e76-4c82-b27e-7b8a7fe3ac69@linux.ibm.com/
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- arch/powerpc/include/asm/crash_reserve.h | 8 ++++++++
- include/linux/crash_reserve.h            | 6 ++++++
- kernel/crash_reserve.c                   | 3 +++
- 3 files changed, 17 insertions(+)
+ kernel/kexec_handover.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/crash_reserve.h b/arch/powerpc/include/asm/crash_reserve.h
-index 6467ce29b1fa..d1b570ddbf98 100644
---- a/arch/powerpc/include/asm/crash_reserve.h
-+++ b/arch/powerpc/include/asm/crash_reserve.h
-@@ -5,4 +5,12 @@
- /* crash kernel regions are Page size agliged */
- #define CRASH_ALIGN             PAGE_SIZE
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 76f0940fb485..77af377022b0 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -1095,7 +1095,7 @@ static int kho_abort(void)
+ 	err = notifier_to_errno(err);
  
-+#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+static inline bool arch_add_crash_res_to_iomem(void)
-+{
-+	return false;
-+}
-+#define arch_add_crash_res_to_iomem arch_add_crash_res_to_iomem
-+#endif
-+
- #endif /* _ASM_POWERPC_CRASH_RESERVE_H */
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index 7b44b41d0a20..f0dc03d94ca2 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -32,6 +32,12 @@ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- void __init reserve_crashkernel_cma(unsigned long long cma_size);
+ 	if (err)
+-		pr_err("Failed to abort KHO finalization: %d\n", err);
++		pr_err("Failed to abort KHO finalization: %pe\n", ERR_PTR(err));
  
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+#ifndef arch_add_crash_res_to_iomem
-+static inline bool arch_add_crash_res_to_iomem(void)
-+{
-+	return true;
-+}
-+#endif
- #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
- #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
- #endif
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index 87bf4d41eabb..62e60e0223cf 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -524,6 +524,9 @@ void __init reserve_crashkernel_cma(unsigned long long cma_size)
- #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
- static __init int insert_crashkernel_resources(void)
- {
-+	if (!arch_add_crash_res_to_iomem())
-+		return 0;
-+
- 	if (crashk_res.start < crashk_res.end)
- 		insert_resource(&iomem_resource, &crashk_res);
+ 	return err;
+ }
+@@ -1142,7 +1142,7 @@ static int kho_finalize(void)
  
+ abort:
+ 	if (err) {
+-		pr_err("Failed to convert KHO state tree: %d\n", err);
++		pr_err("Failed to convert KHO state tree: %pe\n", ERR_PTR(err));
+ 		kho_abort();
+ 	}
+ 
+@@ -1355,8 +1355,8 @@ static __init int kho_in_debugfs_init(const void *fdt)
+ 		err = kho_debugfs_fdt_add(&kho_in.fdt_list, sub_fdt_dir, name,
+ 					  phys_to_virt(*fdt_phys));
+ 		if (err) {
+-			pr_warn("failed to add fdt `%s` to debugfs: %d\n", name,
+-				err);
++			pr_warn("failed to add fdt `%s` to debugfs: %pe\n", name,
++				ERR_PTR(err));
+ 			continue;
+ 		}
+ 	}
+@@ -1400,8 +1400,8 @@ static __init int kho_init(void)
+ 		 * kexec.
+ 		 */
+ 		if (err)
+-			pr_err("failed exposing handover FDT in debugfs: %d\n",
+-			       err);
++			pr_err("failed exposing handover FDT in debugfs: %pe\n",
++			       ERR_PTR(err));
+ 
+ 		return 0;
+ 	}
+@@ -1524,8 +1524,8 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		memblock_add(area->addr, size);
+ 		err = memblock_mark_kho_scratch(area->addr, size);
+ 		if (WARN_ON(err)) {
+-			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %d",
+-				&area->addr, &size, err);
++			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
++				&area->addr, &size, ERR_PTR(err));
+ 			goto out;
+ 		}
+ 		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
+@@ -1553,7 +1553,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	if (scratch)
+ 		early_memunmap(scratch, scratch_len);
+ 	if (err)
+-		pr_warn("disabling KHO revival: %d\n", err);
++		pr_warn("disabling KHO revival: %pe\n", ERR_PTR(err));
+ }
+ 
+ /* Helper functions for kexec_file_load */
 -- 
 2.51.0
 
