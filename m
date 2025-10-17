@@ -4,90 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B977EFD5310
-	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E3D1FD530C
+	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RZTcbKUpf2wubcUUQwFd4TLSwyssXimapX4rFbyIz5A=; b=jF5xwj4E64R8mL0fA+s0QrrSOS
-	Vv1AGZMHXmBA4Kd+qHfaDVjkY68aJqyie/eZ/xL4kY21g68TNvpFJdPMMHMIL6KuNxdAYVtL+Z1DB
-	YCszJEF7o4iDIh8Y8YGtC8k9Oft32Y0cc/yb0Ma2XcbXRuk5fyJ8y9+KWCaZ9NVDuMSz2RnvXk0NS
-	/GFXWTO1A2m8OdmIPw4z3hpLJYwSUUQQFqq9AHhH/4dgpFzY/5U9mqrAXfC5ANhqmRPXueX1JIVZW
-	8CF4EK+LHFSHuo/bOsss6wR6Dx83mzMtf+ygcBCdOE47jinGk7+AGH0lo9xkh2JAzru4J7X0ViBXm
-	UMtpzvig==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zcD/4uYFsGN+ddlc5XN7jrlEbZPy90Q3VYii2jxgM9Y=; b=WulZbdAtgFMA83NKRz8HOhGl1X
+	84sbSNpqlKY2XJrktFOMDILVh2VxlXgcKg+RXabOYfSYIWNB/8vI6pK+ywmCrmBVuKs7K7akCa1Fy
+	pkFujAUdsiggBHkZG9sn8yYfZwNYdovqEfsXDDmxJSdTNtRtF/zCaHae057rm7qBA0Gywh0VdYvr4
+	PNo7N1gxomjNFzARjbBBMoUSUgCGaC9EUWO2FXpBaJnf/tsKNW7VgVcx9eF5MmEYZD2lz+Hqy936c
+	HkeQ1K7EN84o56Cgm2NhPon/1GGvZLC/hRPbfj32///oIrznI272NVsnTYjmnVqPeNhPcvZw82nTC
+	R+8ed+5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvtN1-000000080CP-0nA5;
-	Fri, 27 Feb 2026 08:38:47 +0000
-Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
+	id 1vvtN5-000000080I2-2vwS;
+	Fri, 27 Feb 2026 08:38:51 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqNNx-00000001bYX-0fKw;
-	Thu, 12 Feb 2026 03:29:02 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=RZTcbKUpf2wubcUUQwFd4TLSwyssXimapX4rFbyIz5A=;
-	b=cXMfoad+w/Ix+LI9YndMWoNmF4Iu3IJhXflwlT1MxUXYGZVZzdihNCJKOT0lufO87rj8TPJxq
-	3rCoLyHgE6YQfJO7OcmMQHWBZTvKnoxt4QdFUAjcXo3Ou/NK7Ychs3Q1erI52ZOjhspHUesfzbk
-	tjGTeV7nVTLFy9vfIpqFDy4=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fBLHs1gjWzRhRT;
-	Thu, 12 Feb 2026 11:24:09 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7371340567;
-	Thu, 12 Feb 2026 11:28:47 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 12 Feb 2026 11:28:43 +0800
-Message-ID: <31c2ae53-cbb7-bfad-9b8f-f9e1a254491e@huawei.com>
-Date: Thu, 12 Feb 2026 11:28:42 +0800
+	id 1v9jZE-00000007o0A-47r7
+	for kexec@lists.infradead.org;
+	Fri, 17 Oct 2025 12:28:22 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59HAarsL010294;
+	Fri, 17 Oct 2025 12:28:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=zcD/4uYFsGN+ddlc5XN7jrlEbZPy90
+	Q3VYii2jxgM9Y=; b=eE5W0N9ngKQsBCaEoKP5X7uMprOx6srXl/Y5VSnftyarLC
+	FSGEDSCmpjEvwqDQFh7AEijQZhgnsC4DjNtYcVSD2tWylUvlrd4mw2tUZr96iquP
+	/Z+lp47gr9mIxlR3dOKgFjPzYEUIvnSowb+LGqWv/mwux3Hir+753eGvRXblGAVl
+	S/1vztL894fE4p+ROE4dyTuhsSxnbHKOHNZ8TZpwoVVIQRwGqR1AFUMHqQ1rhx5Y
+	oJV9EhNt4y4mTiiWLDsGZ5H7lIV3YJc8+elXhzspQaeNoIjaX6oeGSgjxMHKd8Bi
+	2/n7WNnKjsQMvJom9/+Vry4AmFzLW57ZDlOaJsVg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49qewujm35-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Oct 2025 12:28:03 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59HCS2e4011949;
+	Fri, 17 Oct 2025 12:28:02 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49qewujm2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Oct 2025 12:28:02 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59H9Ms3A015041;
+	Fri, 17 Oct 2025 12:28:01 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49r3sjvxxw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Oct 2025 12:28:01 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59HCRviL24904158
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 Oct 2025 12:27:57 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 80522200F0;
+	Fri, 17 Oct 2025 12:27:57 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DE081200ED;
+	Fri, 17 Oct 2025 12:27:54 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.111.68.179])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 17 Oct 2025 12:27:54 +0000 (GMT)
+Date: Fri, 17 Oct 2025 14:27:53 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
+        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
+ mmap_prepare
+Message-ID: <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
+ <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
+ <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v4 1/3] crash: Exclude crash kernel memory in crash core
-Content-Language: en-US
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, <corbet@lwn.net>,
-	<catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
-	<rdunlap@infradead.org>, <pmladek@suse.com>, <feng.tang@linux.alibaba.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<arnd@arndb.de>, <lirongqing@baidu.com>, <fvdl@google.com>,
-	<leitao@debian.org>, <rppt@kernel.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<osandov@fb.com>, <ryan.roberts@arm.com>, <cfsworks@gmail.com>,
-	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <thuth@redhat.com>,
-	<hbathini@linux.ibm.com>, <eajames@linux.ibm.com>, <bjorn@rivosinc.com>,
-	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <dwmw@amazon.co.uk>, <pbonzini@redhat.com>,
-	<thomas.lendacky@amd.com>, <kai.huang@intel.com>, <ubizjak@gmail.com>,
-	<coxu@redhat.com>, <liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
-	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-References: <20260209095931.2813152-1-ruanjinjie@huawei.com>
- <20260209095931.2813152-2-ruanjinjie@huawei.com>
- <50693f0c-c610-4347-86aa-40d50dc681fc@linux.ibm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <50693f0c-c610-4347-86aa-40d50dc681fc@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oq4BBwfqQ48M4fFrJYto5eFg6cOrIUo4
+X-Authority-Analysis: v=2.4 cv=Kr1AGGWN c=1 sm=1 tr=0 ts=68f23653 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=kj9zAlcOel0A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=Q64uQKxdJJvBSAPQG9IA:9 a=CjuIK1q_8ugA:10
+ a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
+X-Proofpoint-ORIG-GUID: 6VusDNc5IkEdh68Kaj2ZTeyqGB4LSNCy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxNCBTYWx0ZWRfXxloq0CHfoAPH
+ XWVL1aBHdkm9/xfBCuiQ3NRDkHBHHJBzuRDZONYMy2fb9zEbQIvnfmYJ/id2eywCKro3ajwNeBN
+ 4kh50+Ptwe9WC/jgv6TvlSU3BjTjj8J4e8Q28WaUW15+fWE4+obYIhdatSNa8pR7s7K3qc9B/vz
+ /NrDUP9sclcVLmwCaUq8/8kitasnnMGBQ+06iNPPJ2JLfYTXft3CE9tZA6j7MvZnByxSm0WG2L9
+ 6HJF8v/KHOyke08jKmTMex92BViTc6nNAZ8Mf08l0p8tEVPKsDoeg+/woBR1eJnDItXypZ8WKoi
+ 4hmgIRXSm+rnxVDlrmJgusCv4UyparD/Ec+dlPRV+dFyojmExkE6m1pDYvzlIJcGkJRfebaDxiR
+ gMuyJhCR/K7vXVkZsF8tcUl7kIfexg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-17_04,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
+ phishscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110014
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260211_192900_340404_2E701B26 
-X-CRM114-Status: GOOD (  32.01  )
-X-Mailman-Approved-At: Fri, 27 Feb 2026 00:38:19 -0800
+X-CRM114-CacheID: sfid-20251017_052821_025241_358037F2 
+X-CRM114-Status: GOOD (  22.31  )
+X-Mailman-Approved-At: Fri, 27 Feb 2026 00:38:39 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,249 +166,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 2026/2/10 20:30, Sourabh Jain wrote:
-> Hello Jinjie,
+On Tue, Sep 23, 2025 at 02:17:04PM -0700, Andrew Morton wrote:
+> On Tue, 23 Sep 2025 13:52:09 +0200 Sumanth Korikkar <sumanthk@linux.ibm.com> wrote:
 > 
-> On 09/02/26 15:29, Jinjie Ruan wrote:
->> The exclude of crashk_res, crashk_low_res and crashk_cma memory
->> are almost identical across different architectures, handling them
->> in the crash core would eliminate a lot of duplication, so do
->> them in the common code.
->>
->> And move the size calculation (and the realloc if needed) into the
->> generic crash core so that:
->>
->> - New CMA regions or future crash-memory types can automatically
->>    accounted for in crash core;
->>
->> - Each architecture no longer has to play whack-a-mole with
->>    its private array size.
->>
->> To achieve the above goal, 4 architecture-specific functions are
->> introduced:
->>
->> - arch_get_system_nr_ranges() and arch_prepare_elf64_ram_headers().
->>    The 1st function pre-counts the number of memory ranges, and
->>    the 2st function fill the memory ranges into the cmem->ranges[] array,
->>    and count the actual number of ranges filled. The default
->> implementation
->>    is consistent with arm64 and loongson.
->>
->> - arch_crash_exclude_mem_range(). Realloc for powerpc. The default
->>    implementation is crash_exclude_mem_range(), and use
->>    crash_exclude_mem_range_guarded() to implement the arch version
->>    for powerpc.
->>
->> - arch_get_crash_memory_ranges(). Get crash memory ranges for arch and
->>    the default implementation is generic across x86, arm64, riscv, and
->>    loongson by using the first two arch functions above. powerpc has its
->>    own implementation by calling get_crash_memory_ranges().
->>
->> Tested on x86, arm64 and riscv with QEMU.
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>   arch/arm64/kernel/machine_kexec_file.c     |  47 +--------
->>   arch/loongarch/kernel/machine_kexec_file.c |  45 +-------
->>   arch/powerpc/include/asm/kexec.h           |  13 +++
->>   arch/powerpc/kexec/crash.c                 |  52 ++++++----
->>   arch/powerpc/kexec/file_load_64.c          |  17 ++-
->>   arch/powerpc/kexec/ranges.c                |  18 +---
->>   arch/riscv/include/asm/kexec.h             |  10 ++
->>   arch/riscv/kernel/machine_kexec_file.c     |  37 ++-----
->>   arch/x86/include/asm/kexec.h               |  10 ++
->>   arch/x86/kernel/crash.c                    | 104 ++-----------------
->>   include/linux/crash_core.h                 | 114 +++++++++++++++++++--
->>   kernel/crash_core.c                        |  71 +++++++++++--
->>   12 files changed, 269 insertions(+), 269 deletions(-)
->>
-
-[...]
-
->>   extern void crash_ipi_callback(struct pt_regs *regs);
->> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
->> index a325c1c02f96..5ade9a853fb0 100644
->> --- a/arch/powerpc/kexec/crash.c
->> +++ b/arch/powerpc/kexec/crash.c
->> @@ -419,30 +419,21 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->>       return sizeof(struct elfhdr) + (phdr_cnt * sizeof(Elf64_Phdr));
->>   }
->>   -/**
->> - * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it
->> with old
->> - *                   elfcorehdr in the kexec segment array.
->> - * @image: the active struct kimage
->> - * @mn: struct memory_notify data handler
->> - */
->> -static void update_crash_elfcorehdr(struct kimage *image, struct
->> memory_notify *mn)
->> +int arch_get_crash_memory_ranges(struct crash_mem **cmem, unsigned
->> long *nr_mem_ranges,
->> +                 struct kimage *image, struct memory_notify *mn)
->>   {
->> +    unsigned long base_addr, size;
->>       int ret;
->> -    struct crash_mem *cmem = NULL;
->> -    struct kexec_segment *ksegment;
->> -    void *ptr, *mem, *elfbuf = NULL;
->> -    unsigned long elfsz, memsz, base_addr, size;
->>   -    ksegment = &image->segment[image->elfcorehdr_index];
->> -    mem = (void *) ksegment->mem;
->> -    memsz = ksegment->memsz;
->> -
->> -    ret = get_crash_memory_ranges(&cmem);
->> +    ret = get_crash_memory_ranges(cmem);
->>       if (ret) {
->>           pr_err("Failed to get crash mem range\n");
->> -        return;
->> +        return ret;
->>       }
->>   +    if (!image || !mn)
->> +        return 0;
->> +
->>       /*
->>        * The hot unplugged memory is part of crash memory ranges,
->>        * remove it here.
->> @@ -450,14 +441,34 @@ static void update_crash_elfcorehdr(struct
->> kimage *image, struct memory_notify *
->>       if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
->>           base_addr = PFN_PHYS(mn->start_pfn);
->>           size = mn->nr_pages * PAGE_SIZE;
->> -        ret = remove_mem_range(&cmem, base_addr, size);
->> +        ret = remove_mem_range(cmem, base_addr, size);
+> > > --- a/fs/hugetlbfs/inode.c
+> > > +++ b/fs/hugetlbfs/inode.c
+> > > @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
+> > >  #define PGOFF_LOFFT_MAX \
+> > >  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
+> > >  
+> > > -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> > > +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
+> > >  {
+> > > +	/* Unfortunate we have to reassign vma->vm_private_data. */
+> > > +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
+> > > +}
+> > 
+> > Hi Lorenzo,
+> > 
+> > The following tests causes the kernel to enter a blocked state,
+> > suggesting an issue related to locking order. I was able to reproduce
+> > this behavior in certain test runs.
 > 
-> I like the overall design for handling crashkernel memory exclusion
-> in this patch series, especially the way you managed to free the
-> crash_mem object (mem) in the generic code (crash_prepare_elf64_headers()).
+> Thanks.  I pulled this series out of mm.git's mm-stable branch, put it
+> back into mm-unstable.
 
-Thanks for the review.
+Hi all,
 
-> 
-> However, the way crash memory is prepared after a memory hotplug
-> event on powerpc by calling remove_mem_range(), can leave the crash
-> memory ranges unsorted. This can cause issues in the generic code
-> when excluding crashkernel memory, because crash_exclude_mem_range()
-> expects crash_mem to be sorted.
+The issue is reproducible again in linux-next with the following commit:
+5fdb155933fa ("mm/hugetlbfs: update hugetlbfs to use mmap_prepare")
 
-You are absolutely correct.
-
-> 
-> So I wrote a simple patch to cover this scenario. Including the
-> patch below as the first patch in this series would be helpful.
-> https://lore.kernel.org/all/20260210120803.433978-1-sourabhjain@linux.ibm.com/
-
-Thanks for the additional patch. I'll add it as the first patch in the
-next revision to ensure crash_mem remains sorted after memory hotplug
-events on powerpc.
-
-Best regards,
-Jinjie
-
-> 
-> Jinjie, will it be possible for you to include the above patch in this
-> patch series?
-
-My pleasure.
-
->>           if (ret) {
->>               pr_err("Failed to remove hot-unplugged memory from crash
->> memory ranges\n");
->> -            goto out;
->> +            return ret;
->>           }
->>       }
->>   -    ret = crash_prepare_elf64_headers(cmem, false, &elfbuf, &elfsz);
->> +    return 0;
->> +}
->> +
->> +/**
->> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it
->> with old
->> + *                   elfcorehdr in the kexec segment array.
->> + * @image: the active struct kimage
->> + * @mn: struct memory_notify data handler
->> + */
->> +static void update_crash_elfcorehdr(struct kimage *image, struct
->> memory_notify *mn)
->> +{
->> +    void *ptr, *mem, *elfbuf = NULL;
->> +    struct kexec_segment *ksegment;
->> +    unsigned long elfsz, memsz;
->> +    int ret;
->> +
->> +    ksegment = &image->segment[image->elfcorehdr_index];
->> +    mem = (void *) ksegment->mem;
->> +    memsz = ksegment->memsz;
->> +
->> +    ret = crash_prepare_elf64_headers(false, &elfbuf, &elfsz, NULL,
->> image, mn);
->>       if (ret) {
->>           pr_err("Failed to prepare elf header\n");
->>           goto out;
->> @@ -486,7 +497,6 @@ static void update_crash_elfcorehdr(struct kimage
->> *image, struct memory_notify *
->>           xchg(&kexec_crash_image, image);
->>       }
->>   out:
->> -    kvfree(cmem);
->>       kvfree(elfbuf);
->>   }
-
-[...]
-
->> +int crash_prepare_elf64_headers(int need_kernel_map, void **addr,
->> +                unsigned long *sz, unsigned long *nr_mem_ranges,
->> +                struct kimage *image, struct memory_notify *mn)
->>   {
->> -    Elf64_Ehdr *ehdr;
->> -    Elf64_Phdr *phdr;
->>       unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
->> -    unsigned char *buf;
->> -    unsigned int cpu, i;
->>       unsigned long long notes_addr;
->> +    struct crash_mem *mem = NULL;
->>       unsigned long mstart, mend;
->> +    unsigned int cpu, i;
->> +    unsigned char *buf;
->> +    Elf64_Ehdr *ehdr;
->> +    Elf64_Phdr *phdr;
->> +    int ret = 0;
->> +
->> +    ret = arch_get_crash_memory_ranges(&mem, nr_mem_ranges, image, mn);
->> +    if (ret)
->> +        return ret;
->> +
->> +    if (mem) {
->> +        ret = crash_exclude_mem_ranges(mem, nr_mem_ranges);
->> +        if (ret)
->> +            goto out;
->> +    }
->>         /* extra phdr for vmcoreinfo ELF note */
->>       nr_phdr = nr_cpus + 1;
->> @@ -192,8 +240,10 @@ int crash_prepare_elf64_headers(struct crash_mem
->> *mem, int need_kernel_map,
->>       elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
->>         buf = vzalloc(elf_sz);
->> -    if (!buf)
->> -        return -ENOMEM;
->> +    if (!buf) {
->> +        ret = -ENOMEM;
->> +        goto out;
->> +    }
->>         ehdr = (Elf64_Ehdr *)buf;
->>       phdr = (Elf64_Phdr *)(ehdr + 1);
->> @@ -262,7 +312,10 @@ int crash_prepare_elf64_headers(struct crash_mem
->> *mem, int need_kernel_map,
->>         *addr = buf;
->>       *sz = elf_sz;
->> -    return 0;
->> +
->> +out:
->> +    kvfree(mem);
->> +    return ret;
->>   }
->>     /**
-> 
+Thanks,
+Sumanth
 
