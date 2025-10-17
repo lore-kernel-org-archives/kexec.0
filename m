@@ -4,81 +4,236 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14376FD5310
-	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9CB4FD530C
+	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
-	:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:Cc:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AWLyCZ/AfdZpAgAsiHnyUKG0P8QmXPBkf7+qJJ/50+E=; b=T/lgQN08uoFv6N6R+PMtqTXlxL
-	CWefU0L4odRoYptpsOZRGsJKVfulrCIXWVbKvPuqlXbrYUmDt3iYmlMzeuRh5W7yuwPQecem5kgyu
-	/uHXE4hXUINqZN3zWfa/MHQLlX5fU+3iOkpLTHemO1U4pTtTQXUK8l4/9enc35uDIae2UrwrK9aN0
-	FHDEfWYLpRhbZyJ4hyIgdCeCpwOUkS+hctoN+WO/2u2LSxLpkqU9B1/F+TRGdL1ElbCsUZ8sU6xw9
-	vgGJym4Erg98iAXu+x5xbunsjLP267ROBY3O7NK0KTiLLbwa0tp3V4kwi9EDrq7bLkyqg3fK6+YPm
-	ti3c6oiA==;
+	bh=oI061dAy8vsrxlC0Z0wPC3REZJnjXCHWEy6h0Lna4zs=; b=RVkWmgkCkpS2oGbOSBy9yGE2gV
+	pRHj9geeB5HPVIkamRrbHC7JqCOXOQkgN/60iYJlMIEc8c/ewwY7mXLOyJTGBLbjPadz5jrRwP9mU
+	UxPsj/DAmmY/b3US5yIBCYjb1kCU7lEXi8pXXQt/+qiwBZ8dcqLmT5Or9UDhZRB2oa9JQkuetHmr3
+	pLIJOyxHO/xGJuLqbTe7WEg+99Y5kk4mfWmq8TazvUT52yd7lV8iCfp/rLZ8uWa5lzAsoSKcBBh+r
+	YPMbpRn/BiBSvQhFzHWq6FJbgqLNmOAlfWKUbXJOLKCRMAWluCI7k+Ijp4QSQIjZM7SvG/od2PNY1
+	WbRa61wA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvtL5-00000007zVG-0Wqo;
-	Fri, 27 Feb 2026 08:36:47 +0000
-Received: from mail-dl1-x1249.google.com ([2607:f8b0:4864:20::1249])
+	id 1vvtMb-00000007zg1-2j52;
+	Fri, 27 Feb 2026 08:38:21 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ve06J-000000011QS-46x6
+	id 1v9jrH-00000007pkb-0Xkv
 	for kexec@lists.infradead.org;
-	Fri, 09 Jan 2026 00:11:38 +0000
-Received: by mail-dl1-x1249.google.com with SMTP id a92af1059eb24-11b7dbce216so4793528c88.1
-        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 16:11:34 -0800 (PST)
+	Fri, 17 Oct 2025 12:47:00 +0000
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59HCdZYZ019395;
+	Fri, 17 Oct 2025 12:46:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=oI061dAy8vsrxlC0Z0
+	wPC3REZJnjXCHWEy6h0Lna4zs=; b=qw9hJogiVM1OosFztlA3vcIeDwG6RnStxB
+	aljILJD609euUKdCS5YwmXPe8tGrGeCcmJ3FM2Y2Q7Q/h2FIAtNj+Wc/UIQQe0xM
+	reR0+3yTic9rmGb4RzGptXD+9cpyH2imJa9RxrRSmsXHxwSVclg8mWUdNx7IDSjc
+	W89hQRUPzJOxcxz5RsrF/nfqskCFH0fQVPtVBfZUG9m7Iq2/XT2habbPOaqjkRRI
+	uRy+VwJPy3aMub9uqI28QnkSCjn7yWwMj7qnOeHIk1BCq3IbpwmYve4Hn4koge1L
+	GkE3y8FEyPlKo/7TPr3SkHrYFAbtzhn4e7cuhuU9dwspwvxuEwuQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49qe59jwaa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 Oct 2025 12:46:27 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59HCag8r000649;
+	Fri, 17 Oct 2025 12:46:27 GMT
+Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11010047.outbound.protection.outlook.com [52.101.46.47])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49qdpd1ftt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 Oct 2025 12:46:26 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o6yHbbY6DLxJVTAmOaPL0lSsud6KNTmo/dqjmGuKwwVHDkFpmzhyCcn5qdbcvY/5mB8SLePCCt3OmGq7bO7z0UsfevnBG17ikhZfZub2wJuV/vivDWzkqEo5af5r4ZRiFNuMoKwv3B6jgxqS+ipZeBHgq5qw7xp2bLAzRMX9MeIcGRlO+1D70mIV+BY0wp/GA9ch0LqAV1let/jhUGXYymWCAqwKge62PUXEtLsODIuCUKMuqfxZNS/4HL41NBZF83rod3GFPgJWFm1N5wTAU4h9edD+5YGhuY/diJGKkfgvnDYBzrH0BJnO3lanVklgF/UeAXtlpwMmfmiS94Fgrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oI061dAy8vsrxlC0Z0wPC3REZJnjXCHWEy6h0Lna4zs=;
+ b=NVnzlgvhrfGnEXlKYsNtLUQE/+YhIUtjEjilzFTH1lW7RWtzIeADq69PzCIqfRVZt8Qlc31DvPe/pEkzLranU9K3kuPuMqzYD4W6KVHZr4KyTJG4HrWJtr4YgCRmQTHWflh5O0pJJCqxLAMci5iMWgnvYjOLqs3TRV94eP8e08GL/0ow14Aqp6JfvwU/GJhc0idE6TrsiA/CQDSnNYUkE2aLQ7sx7n3ReDRdewe2wYVMKH6eVTq/DD2PZ19VfGxDhRInGrm0JNrHEtd9R59WfRcigiLYooQBnznWs4gLYdnCNQE0aW/pshrfzhqEM8ISidjB9LLhfLAioSGS/igorA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767917493; x=1768522293; darn=lists.infradead.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AWLyCZ/AfdZpAgAsiHnyUKG0P8QmXPBkf7+qJJ/50+E=;
-        b=wui4AgGGwcNGE7gk0n676S8yhzTHvkVLjCW7qf1ecfHY/aRozT3BbgzVwrgNlrQgk3
-         kDn1ZJrE5HcV46OtdPie7BfmlA2sORJdyJ83kXsVbjIue1fX+GeTP1pK4tHv1kdW7q38
-         VAGZkwk2RM4EA9/owQ2VQOqm5g2xJxufcBkElD3/a256L5hOiNZfZ9zpTjl7Fl7W4tQy
-         6P5JSKiV9p2RcY8s/aTIwo+oxWFC+E0vjUiTDQPefp//nV6snz5BU71PVTSrda41cDv4
-         suYkhSpuh/YYsioRUULKxpd27//x5IAUsj3iB/UWjnHNBdYrlNwa9RodLPW5DUDVhhYG
-         GDEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767917493; x=1768522293;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWLyCZ/AfdZpAgAsiHnyUKG0P8QmXPBkf7+qJJ/50+E=;
-        b=aHGKZUQe1GnA4OyeuDCDNBEEmGoqCSZkQPcQolmSQ3Y1rqm0PP//zB63SlkuQa0QQu
-         FT0puQXfWmtIUjagFUdVlV1cPPi9GCMzgEQSG8M8efbxgoo9jodUuysUlud7jc12A76c
-         /jj07ZfCydnJx988jp1tvzNpReK8hLH1O5c26ynCaqp8fp93qzi9cn+Q7CjjQJ5qySxh
-         kIELufExOsmuGH1ioWWXdBZ5qytMopbC8LgHgYL5KkW3szoLaJuwor/u21RZBMr5hTGW
-         76YLtr+sMqpGe8q3Ak4fptAjQ6tslfpbRGM6uW/9OUd8Ec8z+Sv7qM4FfGP5F2n3jas4
-         a7VA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo5OftRJB20p/WgmxJm3J9jTb1ap2hy274Mm1GtxGJYTElVreVpjIIgbzMXgyUdlvI0Qc0cw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YySgGEc+erQbhcm5Cnu14gSHD7dKXRQhX2JETDz3SCWyZXCECNr
-	Q+H06y3L13FeZmWXCDcmNVSfz3nVlc9HZzFNbTEaUF7ifbRN+f0bZBAV8k6vas2R/jiBcxX+9VZ
-	4eDznfkUSY6/gCg==
-X-Google-Smtp-Source: AGHT+IFA7Yv4goEDmpR+z1yXPW3hKABa9rYuxzfsiraoD1u+yOiW/5xG4UE2dBbIVr3LcwJ0oAUlK+FXxTwpMQ==
-X-Received: from dlbrf6.prod.google.com ([2002:a05:7022:f206:b0:11d:ccc4:4c98])
- (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7022:6993:b0:11b:9b9f:4283 with SMTP id a92af1059eb24-121f8b46117mr6883880c88.24.1767917493315;
- Thu, 08 Jan 2026 16:11:33 -0800 (PST)
-Date: Thu,  8 Jan 2026 16:11:26 -0800
-In-Reply-To: <20260109001127.2596222-1-jasonmiu@google.com>
-Mime-Version: 1.0
-References: <20260109001127.2596222-1-jasonmiu@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260109001127.2596222-2-jasonmiu@google.com>
-Subject: [PATCH v4 1/2] kho: Adopt radix tree for preserved memory tracking
-From: Jason Miu <jasonmiu@google.com>
-To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Miu <jasonmiu@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oI061dAy8vsrxlC0Z0wPC3REZJnjXCHWEy6h0Lna4zs=;
+ b=xqpcYlCDf5uv4AYt1N2vs6fqyBjljB1J+oO+B3TuxJGy12oHkCV/GvsSeQDM0AdEZDH3DdFtFDTGsOU8/v2Vf2f5y9GiMhfUTVJeDRD7Tu8qCdnp4FH3J6NLmx66Mr3+f2McyjYqeTsIPyb/BUmO7krCbylzkbGhZetll1jkygc=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CYYPR10MB7627.namprd10.prod.outlook.com (2603:10b6:930:be::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Fri, 17 Oct
+ 2025 12:46:23 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%2]) with mapi id 15.20.9228.011; Fri, 17 Oct 2025
+ 12:46:23 +0000
+Date: Fri, 17 Oct 2025 13:46:20 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
+        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
+ mmap_prepare
+Message-ID: <c64e017a-5219-4382-bba9-d24310ad2c21@lucifer.local>
+References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
+ <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
+ <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
+ <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+X-ClientProxiedBy: LO2P265CA0149.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9::17) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CYYPR10MB7627:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e644385-67e4-40c3-db52-08de0d7b2dab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?QPLeEIcJ/w59HVFnCTEmNLMUIwdU5nhIfjMZH7IyCC464BQ2EmzZ8h6HCZwx?=
+ =?us-ascii?Q?ZQcPhNWDSvIWr0uuVwnO6YN3XGzmYuAbtSyakg0SfsyMM8erwgTYCqCHUu2g?=
+ =?us-ascii?Q?E0wwjZXVRU6KhguU/Bm2hEvYDx7OsLqfOhqeq3igTcG1oLBOVBQY2Shq/1XA?=
+ =?us-ascii?Q?6OcZKPWI17ch7uTlRjull11omF/iw3L/dit8gduJY/+fPDIrHWBKhaWJMQSP?=
+ =?us-ascii?Q?fS8lUAbf1pM5VtQQf58gZW9DV5YReEGrpy/aH60WlLeTggBCzILJrWeA/k4Y?=
+ =?us-ascii?Q?vRh+O7rxb7YMvKa3LfhjdyLFNNfWHHuqXexjDS4lZvRPsPzAiIOebGa5utVz?=
+ =?us-ascii?Q?nssfIcpZUbday1FH2MPn22zJk5xDkx7C254i58QP1tzNsAU+c1DNckIiDHBR?=
+ =?us-ascii?Q?Mt3oQl6pT1JpSQBZWhcAn1gj4tcFBG7b1ZtFgICII0HMyjDHMUB40YTgI+9Y?=
+ =?us-ascii?Q?wczQusQwwUNGg8UdgLy1qAqCCgQVlBQlKmAi/V2VATGgzFSPfeKB5SDg66J7?=
+ =?us-ascii?Q?tm/6Yx6MgcMWwqT0gT2Irip05m5rkLX9mkyflGuR7kaT0gbR4rb9lxquGToX?=
+ =?us-ascii?Q?GSddsciv2cCf0i9iLfwP2/2wuSwDIV7uXA8+ivK2DLmMIexIkeKh/BiI3bZl?=
+ =?us-ascii?Q?UWTvO1GBg8zXR3mUL9OW9/MOIiFX11I72eKqr2Xtk8np8Cl4mGeqV8x/0wpb?=
+ =?us-ascii?Q?2UC3+8gvTuXjt1G1Jx6nCptXV4d1BnsWZzEGaYQETRJqfwxJYSy1Ky0M5dbA?=
+ =?us-ascii?Q?rExdemD5X39GaNyEoPsga+q8UIZHmDCA+tGdMJEijg/EXQLnLbxjSTHzT4ZJ?=
+ =?us-ascii?Q?+svYIh3HJ35mgpTB1yJVI23qEMDy3GxXnuKEWnQuYMofnB9c+q3N9eQFnr/6?=
+ =?us-ascii?Q?3le56jFz9vHACRMyOMfRUE7sSt3ede0JxaGDYSqYGCA3YxdouTbYmybVzSGQ?=
+ =?us-ascii?Q?aOHaN/LsyJx5BzXu8LVhWxPJMxWEiOP4c8zsvUbCMX0L76neXyy0VWDDWEYN?=
+ =?us-ascii?Q?S0IaTZwvREmzfLP1YOMDCvgGlAIV50fM+csbz7uTmpwGGprb8X//2DwQU5Yf?=
+ =?us-ascii?Q?kha6rxm6wtjfQpYQhccjT4RDMQhrlyzeGk3M1DoiUe5/DKMLn83Rv+PY2j65?=
+ =?us-ascii?Q?2z0Ek62D1/RqOISu+jsofJfzXbnZr01fOhDbjjS6Fp1c27WTTZh9sBhFibf7?=
+ =?us-ascii?Q?Sx13g62oEbaa+Xzb2SGxN82SAYhZiJlN26BQa2dpcHxpeIK/dqTSPDDNsYSj?=
+ =?us-ascii?Q?1jCWeb91N9N+8d6JD3MB5gaIuNq4LCYw6/XXXpLg0nASqow+unX4hwoZGrn+?=
+ =?us-ascii?Q?E7TtSfNJj/hiGpxJlxKEs74MR5slhPy5+UWc2OEuWEBPQ7FTs8GsXGyOgpWd?=
+ =?us-ascii?Q?aiGOcdtcbM6bUSFhpS9HPdE7uk6KkPLcFDhUUcRmZObUR7BOiAUzL6WPm9G9?=
+ =?us-ascii?Q?YIyWlog8HPnpjn3ZFFp0qKAKzzmTK0VQ?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H/w3MGCmG8RFh9h2aXw4RCdESHRsDE8VGfOXPQjXlTC12qyM1V/hxm19kzNJ?=
+ =?us-ascii?Q?GxMTBeYtKgYLWntC2C217SIhs4gZYXRbyyU3uDt8FxMbXT+vTalloCnEdY3B?=
+ =?us-ascii?Q?nQ+sENoUSn/FCHRQWszFO9m8NwUjxiVC+lKo5+Rftw6i1FqMBjsrcAx3eoKe?=
+ =?us-ascii?Q?+qJCZISuVbKMsBahtAM+zbPwZOonGAiLgwgDNMiZgHi47FjNm0dC0+MSumEY?=
+ =?us-ascii?Q?uPBLyv1tSqEjkpyOVxGhPUVRSsxGLirpOg2bUA9ooGmGyiC8p1D1q0TDadAi?=
+ =?us-ascii?Q?fvfBS3yjjVxU2NAV78eye4cMtp/LlLnVnL4x5LzqTytBMwPVLRQuThb5La8S?=
+ =?us-ascii?Q?BZzpyL5nCPElpa4FQ0GPblMcFT4zcmeTV1wB/Chxe5T680xbPo2O3cp4GZ6n?=
+ =?us-ascii?Q?Mvq3F1yjNNAuz3GuxeYFQPURbEfKCGw6JaCv1H2wRlmSHREPKgtcFQ0apx16?=
+ =?us-ascii?Q?5LwVIhcWr8IfPut0ozAQ+VqLVPuCp1ZmvAMTbU4R+kccBuE4wuBqEEDIpAP8?=
+ =?us-ascii?Q?U4ADcRbYoDZdWDywSKZ+S6OcfRLPQK4H0OrvrxpfWQXWh0DDb3kIUs05RtgI?=
+ =?us-ascii?Q?H+3IIIPqcRnIt2EGNqF0TIlWsfxf0EygecyZuYr8DVZn01b3g28p4Y0K3LAl?=
+ =?us-ascii?Q?BROYvFsh4/phke9jv0b5tuwpZFMEFAlGDwD2W5kGGZ8XIQri9s2BG5ysOBO4?=
+ =?us-ascii?Q?8TuX/wnonYcBF5cHnuwDJszMF7U00VMjGF9SWL04hWyBTOxNA22PhdqAvTGO?=
+ =?us-ascii?Q?bkMlp9s+Hgugs5xYuEHx3gR83K62Y1hPC8g4spGWFSzmNwd2EYQMkcEz8J3e?=
+ =?us-ascii?Q?mBs4Z5oIiXJr3jbHCBBPSwpDvta4WGQuS0rn3PVfdQiGePse2pGvdr1jQMoV?=
+ =?us-ascii?Q?LPjMe5LmECVJ8YnSiljzVhX4Hk0QaYbznI7iSD7lkT+FpEjM6MJa11MbNBuR?=
+ =?us-ascii?Q?VJSYfqT5M3hEae8K8X1loQREmOWrksd9WYdbW1HzMpVGF5leUsKnd0CuS7EM?=
+ =?us-ascii?Q?JSwz/PPDGLGxhSjJBexCOsYPx+vF1Z+kGgJ/MowCdPf3ppFPS8PFpvmZjETv?=
+ =?us-ascii?Q?4aUqyV+JcMFZn3+zPpnsS1DUriDvazcLPgJBoDEzLYil/hfCdHUbZDP5GCZ7?=
+ =?us-ascii?Q?vJHstp8h7iyoE34S5eVJ7hbNM9yXozVM37Gs4Fu8wl5O2X/PpPX6wKfQvIPs?=
+ =?us-ascii?Q?IWlOHiLh+V4JRc3SGG+ZZ+EA/61TDIvKi79I3lWGJLJjq8OkEgZeJXqVLD/i?=
+ =?us-ascii?Q?K0NA+l7Y8qDNIMFaC6SUy4Bo1kQ3r52fTJ07YjCk6OIjCErBbG7FJWxvcVU/?=
+ =?us-ascii?Q?TdCWP5sHm4B5Pm2XALHSB3Yj6nlI3ChiMsgPZn+4lgB+x6G6p7ox7/mwEU2g?=
+ =?us-ascii?Q?LsCqpSkS6HR5C0NFxDbiZuLbgTFz8+bOgD8jqUFr6V1c7/OtWm7X7LOLvbZG?=
+ =?us-ascii?Q?xeyZ6y7j76d11fuGOnP23pmGKtURg4PmLzGWDiYILZkpLiRhlguq8XbZu5BK?=
+ =?us-ascii?Q?Eq6XgSULp5CZd3R6yGG+/Fq5xJtva6VeLI2DawW8KTQWr+dQpn7gI7hqblb+?=
+ =?us-ascii?Q?WAXOgRUzRIxyAxycHXX66KNdu3GBZ6zR1JoYGRzJmj0J8zXqRWCnFtQOfJ5r?=
+ =?us-ascii?Q?eQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: NCUDsCptfdl6NVzE+XRmAcfVB0TCO0kpXJIYms8adXUf22J0h7WZM4IIQd7nCVa1F70dSW1XQFFS4AAYF54RDH2F3aMWjcjcbahwaWKuOFaVO8N7AOo1W42VJaLM2K91sbRYV3Fl2Dke+PSfHAprFZF6wV98Mzuzz4mfzWBzFEPf5q1elBX9i4rYazjn1LsdPZYYPIdtpaA8/CxEK4qd9tgoNwxROINZji6a6T1obs7ArnN3seeZFVn65KgjLsWr/UGmKhr3M+R0smOhWExz+U24dH+tTsyew5TQ1vV50pCgs6MozIUgk+BcbH2jEACMHOX9ndzsi6ss27MIP44Mgw5LuIAtO1o0WlOo6f515vUCKwai+nz6QDrQT8RsiVmy5ZM1ebqHY3hYrXuTmOKIdP8124X0FpBYoXA8ASV/uoEuLithP7pJw5x8aujv2gOcrRUs7zETEwsOdhqBNvHJmiHUSHjJBwQPjxfYxpp3Gk+MczXRLdHqBCcrnUA/YjIBEr2DYazVyWKousL4/raMwtgmxhibM3sZoZwoprBgx2j/7ZjdfqhYUOktLnSqjqgWkt523qYg5SMtL8feCFCd+qG+y5F4cOZmlJNfc3SPG9M=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e644385-67e4-40c3-db52-08de0d7b2dab
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 12:46:23.2333
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lyLZpbdgkkaBS3MV9WFDbMuMpa0JedZDiK/jFohQfYTWt+VxXKJUsZBh2gIbhpo1iV3p4pNO+fQcbUE206exI9rSpTuPe9vvF3+pqNs1fXo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7627
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-17_04,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
+ definitions=main-2510170094
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxMCBTYWx0ZWRfX3CdVs5SExetr
+ yYo6EN3KDVrGoeTEdYk5fuIcEIIn0CT6zD1IeIJhsnYZGyqOnxxbkOqcpu40PCqlO2a1oYhrpmp
+ x+n53pSct9KOct8ZXC2VMx4n4NZUKpkQdrZSBAcTkXPN7nH9H4lXTt15raRoMUF1eNpCY692sr4
+ JMMc34YULLv0Zh1J+HBTbZfh8qB1EbDkN7JtDOObIHRFaS3DuQZKtjRZ/ff0bgaRN4ZbtkzNdfM
+ ZTnY3s4sxeeL8UsBO04vvO0aTNFT7qT/51swibZ//2a2O1pAtLzIPeoDWPvoHnKZ5NNav+Sem7s
+ YEyc2mfgbHWRTULBj4vAvk21A0iVSAymDW8TQfyFIrKrBZ0fRc940Gw5b1MbCXb3YurPx4vsK13
+ 9GzrxUE6CRJORmob6d8Kijfw9C+W3A==
+X-Authority-Analysis: v=2.4 cv=V7JwEOni c=1 sm=1 tr=0 ts=68f23aa3 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=eWYn1dIeHkTF74O058IA:9 a=CjuIK1q_8ugA:10
+ a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
+X-Proofpoint-ORIG-GUID: 0ATmMJrwdHoEuzfB9kMIKut0xlYxjzQs
+X-Proofpoint-GUID: 0ATmMJrwdHoEuzfB9kMIKut0xlYxjzQs
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260108_161136_086966_D0C55813 
-X-CRM114-Status: GOOD (  36.95  )
-X-Mailman-Approved-At: Fri, 27 Feb 2026 00:36:44 -0800
+X-CRM114-CacheID: sfid-20251017_054659_179766_953228AC 
+X-CRM114-Status: GOOD (  15.65  )
+X-Mailman-Approved-At: Fri, 27 Feb 2026 00:38:19 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,1341 +248,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Introduce a radix tree implementation for tracking preserved memory
-pages and switch the KHO memory tracking mechanism to use it. This
-lays the groundwork for a stateless KHO implementation that eliminates
-the need for serialization and the associated "finalize" state.
+On Fri, Oct 17, 2025 at 02:27:53PM +0200, Sumanth Korikkar wrote:
+> On Tue, Sep 23, 2025 at 02:17:04PM -0700, Andrew Morton wrote:
+> > On Tue, 23 Sep 2025 13:52:09 +0200 Sumanth Korikkar <sumanthk@linux.ibm.com> wrote:
+> >
+> > > > --- a/fs/hugetlbfs/inode.c
+> > > > +++ b/fs/hugetlbfs/inode.c
+> > > > @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
+> > > >  #define PGOFF_LOFFT_MAX \
+> > > >  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
+> > > >
+> > > > -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> > > > +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
+> > > >  {
+> > > > +	/* Unfortunate we have to reassign vma->vm_private_data. */
+> > > > +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
+> > > > +}
+> > >
+> > > Hi Lorenzo,
+> > >
+> > > The following tests causes the kernel to enter a blocked state,
+> > > suggesting an issue related to locking order. I was able to reproduce
+> > > this behavior in certain test runs.
+> >
+> > Thanks.  I pulled this series out of mm.git's mm-stable branch, put it
+> > back into mm-unstable.
+>
+> Hi all,
+>
+> The issue is reproducible again in linux-next with the following commit:
+> 5fdb155933fa ("mm/hugetlbfs: update hugetlbfs to use mmap_prepare")
 
-This patch introduces the core radix tree data structures and
-constants to the KHO ABI. It adds the radix tree node and leaf
-structures, along with documentation for the radix tree key encoding
-scheme that combines a page's physical address and order.
+Andrew - I see this series in mm-unstable, not sure what it's doing there
+as I need to rework this (when I get a chance, back from a 2 week vacation
+and this week has been - difficult :)
 
-To support broader use by other kernel subsystems, such as hugetlb
-preservation, the core radix tree manipulation functions are exported
-as a public API.
+Can we please drop this until I have a chance to respin?
 
-The xarray-based memory tracking is replaced with this new radix tree
-implementation. The core KHO preservation and unpreservation functions
-are wired up to use the radix tree helpers. On boot, the second kernel
-restores the preserved memory map by walking the radix tree whose root
-physical address is passed via the FDT.
-
-The ABI `compatible` version is bumped to "kho-v2" to reflect the
-structural changes in the preserved memory map and sub-FDT property
-names. This includes renaming "fdt" to "preserved-data" to better
-reflect that preserved state may use formats other than FDT.
-
-Signed-off-by: Jason Miu <jasonmiu@google.com>
----
- Documentation/core-api/kho/abi.rst     |   6 +
- Documentation/core-api/kho/index.rst   |  16 +
- include/linux/kho/abi/kexec_handover.h | 141 ++++-
- include/linux/kho_radix_tree.h         |  72 +++
- kernel/liveupdate/kexec_handover.c     | 722 +++++++++++++------------
- 5 files changed, 583 insertions(+), 374 deletions(-)
- create mode 100644 include/linux/kho_radix_tree.h
-
-diff --git a/Documentation/core-api/kho/abi.rst b/Documentation/core-api/kho/abi.rst
-index 2e63be3486cf..799d743105a6 100644
---- a/Documentation/core-api/kho/abi.rst
-+++ b/Documentation/core-api/kho/abi.rst
-@@ -22,6 +22,12 @@ memblock preservation ABI
- .. kernel-doc:: include/linux/kho/abi/memblock.h
-    :doc: memblock kexec handover ABI
- 
-+KHO persistent memory tracker ABI
-+=================================
-+
-+.. kernel-doc:: include/linux/kho/abi/kexec_handover.h
-+  :doc: KHO persistent memory tracker
-+
- See Also
- ========
- 
-diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
-index f56579b5c351..7ddc4d3ecac5 100644
---- a/Documentation/core-api/kho/index.rst
-+++ b/Documentation/core-api/kho/index.rst
-@@ -4,6 +4,8 @@
- Kexec Handover Subsystem
- ========================
- 
-+.. _kho-concepts:
-+
- Overview
- ========
- 
-@@ -72,6 +74,8 @@ the next KHO, because kexec can overwrite even the original kernel.
- KHO finalization phase
- ======================
- 
-+.. _kho-finalization-phase:
-+
- To enable user space based kexec file loader, the kernel needs to be able to
- provide the FDT that describes the current kernel's state before
- performing the actual kexec. The process of generating that FDT is
-@@ -79,6 +83,18 @@ called serialization. When the FDT is generated, some properties
- of the system may become immutable because they are already written down
- in the FDT. That state is called the KHO finalization phase.
- 
-+Kexec Handover Radix Tree
-+=========================
-+
-+.. kernel-doc:: include/linux/kho_radix_tree.h
-+  :doc: Kexec Handover Radix Tree
-+
-+Public API
-+==========
-+
-+.. kernel-doc:: kernel/liveupdate/kexec_handover.c
-+  :export:
-+
- See Also
- ========
- 
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
-index 285eda8a36e4..06836edb14f0 100644
---- a/include/linux/kho/abi/kexec_handover.h
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -10,6 +10,8 @@
- #ifndef _LINUX_KHO_ABI_KEXEC_HANDOVER_H
- #define _LINUX_KHO_ABI_KEXEC_HANDOVER_H
- 
-+#include <linux/bits.h>
-+#include <linux/log2.h>
- #include <linux/types.h>
- 
- /**
-@@ -29,32 +31,32 @@
-  * compatibility is only guaranteed for kernels supporting the same ABI version.
-  *
-  * FDT Structure Overview:
-- *   The FDT serves as a central registry for physical
-- *   addresses of preserved data structures and sub-FDTs. The first kernel
-- *   populates this FDT with references to memory regions and other FDTs that
-- *   need to persist across the kexec transition. The subsequent kernel then
-- *   parses this FDT to locate and restore the preserved data.::
-+ *   The FDT serves as a central registry for physical addresses of preserved
-+ *   data structures. The first kernel populates this FDT with references to
-+ *   memory regions and other metadata that need to persist across the kexec
-+ *   transition. The subsequent kernel then parses this FDT to locate and
-+ *   restore the preserved data.::
-  *
-  *     / {
-- *         compatible = "kho-v1";
-+ *         compatible = "kho-v2";
-  *
-  *         preserved-memory-map = <0x...>;
-  *
-  *         <subnode-name-1> {
-- *             fdt = <0x...>;
-+ *             preserved-data = <0x...>;
-  *         };
-  *
-  *         <subnode-name-2> {
-- *             fdt = <0x...>;
-+ *             preserved-data = <0x...>;
-  *         };
-  *               ... ...
-  *         <subnode-name-N> {
-- *             fdt = <0x...>;
-+ *             preserved-data = <0x...>;
-  *         };
-  *     };
-  *
-  *   Root KHO Node (/):
-- *     - compatible: "kho-v1"
-+ *     - compatible: "kho-v2"
-  *
-  *       Indentifies the overall KHO ABI version.
-  *
-@@ -69,20 +71,20 @@
-  *     is provided by the subsystem that uses KHO for preserving its
-  *     data.
-  *
-- *     - fdt: u64
-+ *     - preserved-data: u64
-  *
-- *       Physical address pointing to a subnode FDT blob that is also
-+ *       Physical address pointing to a subnode data blob that is also
-  *       being preserved.
-  */
- 
- /* The compatible string for the KHO FDT root node. */
--#define KHO_FDT_COMPATIBLE "kho-v1"
-+#define KHO_FDT_COMPATIBLE "kho-v2"
- 
- /* The FDT property for the preserved memory map. */
- #define KHO_FDT_MEMORY_MAP_PROP_NAME "preserved-memory-map"
- 
--/* The FDT property for sub-FDTs. */
--#define KHO_FDT_SUB_TREE_PROP_NAME "fdt"
-+/* The FDT property for preserved data blobs. */
-+#define KHO_FDT_SUB_TREE_PROP_NAME "preserved-data"
- 
- /**
-  * DOC: Kexec Handover ABI for vmalloc Preservation
-@@ -160,4 +162,113 @@ struct kho_vmalloc {
- 	unsigned short order;
- };
- 
-+/**
-+ * DOC: KHO persistent memory tracker
-+ *
-+ * KHO tracks preserved memory using a radix tree data structure. Each node of
-+ * the tree is exactly a single page. The leaf nodes are bitmaps where each set
-+ * bit is a preserved page of any order. The intermediate nodes are tables of
-+ * physical addresses that point to a lower level node.
-+ *
-+ * The tree hierarchy is shown below::
-+ *
-+ *   root
-+ *   +-------------------+
-+ *   |     Level 5       | (struct kho_radix_node)
-+ *   +-------------------+
-+ *     |
-+ *     v
-+ *   +-------------------+
-+ *   |     Level 4       | (struct kho_radix_node)
-+ *   +-------------------+
-+ *     |
-+ *     | ... (intermediate levels)
-+ *     |
-+ *     v
-+ *   +-------------------+
-+ *   |      Level 0      | (struct kho_radix_leaf)
-+ *   +-------------------+
-+ *
-+ * The tree is traversed using a key that encodes the page's physical address
-+ * (pa) and its order into a single unsigned long value. The encoded key value
-+ * is composed of two parts: the 'order bit' in the upper part and the 'page
-+ * offset' in the lower part.::
-+ *
-+ *   +------------+-----------------------------+--------------------------+
-+ *   | Page Order | Order Bit                   | Page Offset              |
-+ *   +------------+-----------------------------+--------------------------+
-+ *   | 0          | ...000100 ... (at bit 52)   | pa >> (PAGE_SHIFT + 0)   |
-+ *   | 1          | ...000010 ... (at bit 51)   | pa >> (PAGE_SHIFT + 1)   |
-+ *   | 2          | ...000001 ... (at bit 50)   | pa >> (PAGE_SHIFT + 2)   |
-+ *   | ...        | ...                         | ...                      |
-+ *   +------------+-----------------------------+--------------------------+
-+ *
-+ * Page Offset:
-+ * The 'page offset' is the physical address normalized for its order. It
-+ * effectively represents the page offset for the given order.
-+ *
-+ * Order Bit:
-+ * The 'order bit' encodes the page order by setting a single bit at a
-+ * specific position. The position of this bit itself represents the order.
-+ *
-+ * For instance, on a 64-bit system with 4KB pages (PAGE_SHIFT = 12), the
-+ * maximum range for a page offset (for order 0) is 52 bits (64 - 12). This
-+ * offset occupies bits [0-51]. For order 0, the order bit is set at
-+ * position 52.
-+ *
-+ * The following diagram illustrates how the encoded key value is split into
-+ * indices for the tree levels, with PAGE_SIZE of 4KB::
-+ *
-+ *        63:60   59:51    50:42    41:33    32:24    23:15         14:0
-+ *   +---------+--------+--------+--------+--------+--------+-----------------+
-+ *   |    0    |  Lv 5  |  Lv 4  |  Lv 3  |  Lv 2  |  Lv 1  |  Lv 0 (bitmap)  |
-+ *   +---------+--------+--------+--------+--------+--------+-----------------+
-+ *
-+ * The radix tree stores pages of all sizes (orders) in a single 6-level
-+ * hierarchy. It efficiently shares lower table levels, especially due to
-+ * common zero top address bits, allowing a single, efficient algorithm to
-+ * manage all pages. This bitmap approach also offers memory efficiency; for
-+ * example, a 512KB bitmap can cover a 16GB memory range for 0-order pages with
-+ * PAGE_SIZE = 4KB.
-+ *
-+ * The data structures defined here are part of the KHO ABI. Any modification
-+ * to these structures that breaks backward compatibility must be accompanied by
-+ * an update to the "compatible" string. This ensures that a newer kernel can
-+ * correctly interpret the data passed by an older kernel.
-+ */
-+
-+/*
-+ * Defines constants for the KHO radix tree structure, used to track preserved
-+ * memory. These constants govern the indexing, sizing, and depth of the tree.
-+ */
-+enum kho_radix_consts {
-+	/*
-+	 * The bit position of the order bit (and also the length of the
-+	 * page offset) for an order-0 page.
-+	 */
-+	KHO_ORDER_0_LOG2 = 64 - PAGE_SHIFT,
-+
-+	/* Size of the table in kho_radix_node, in log2 */
-+	KHO_TABLE_SIZE_LOG2 = const_ilog2(PAGE_SIZE / sizeof(phys_addr_t)),
-+
-+	/* Number of bits in the kho_radix_leaf bitmap, in log2 */
-+	KHO_BITMAP_SIZE_LOG2 = PAGE_SHIFT + const_ilog2(BITS_PER_BYTE),
-+
-+	/*
-+	 * The total tree depth is the number of intermediate levels
-+	 * and 1 bitmap level.
-+	 */
-+	KHO_TREE_MAX_DEPTH =
-+	DIV_ROUND_UP(KHO_ORDER_0_LOG2 - KHO_BITMAP_SIZE_LOG2,
-+		     KHO_TABLE_SIZE_LOG2) + 1,
-+};
-+
-+struct kho_radix_node {
-+	u64 table[1 << KHO_TABLE_SIZE_LOG2];
-+};
-+
-+struct kho_radix_leaf {
-+	DECLARE_BITMAP(bitmap, 1 << KHO_BITMAP_SIZE_LOG2);
-+};
-+
- #endif	/* _LINUX_KHO_ABI_KEXEC_HANDOVER_H */
-diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-new file mode 100644
-index 000000000000..8f03dd226dd9
---- /dev/null
-+++ b/include/linux/kho_radix_tree.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_KHO_ABI_RADIX_TREE_H
-+#define _LINUX_KHO_ABI_RADIX_TREE_H
-+
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/mutex_types.h>
-+#include <linux/types.h>
-+
-+/**
-+ * DOC: Kexec Handover Radix Tree
-+ *
-+ * This is a radix tree implementation for tracking physical memory pages
-+ * across kexec transitions. It was developed for the KHO mechanism but is
-+ * designed for broader use by any subsystem that needs to preserve pages.
-+ *
-+ * The radix tree is a multi-level tree where leaf nodes are bitmaps
-+ * representing individual pages. To allow pages of different sizes (orders)
-+ * to be stored efficiently in a single tree, it uses a unique key encoding
-+ * scheme. Each key is an unsigned long that combines a page's physical
-+ * address and its order.
-+ *
-+ * Client code is responsible for allocating the root node of the tree,
-+ * initializing the mutex lock, and managing its lifecycle. It must use the
-+ * tree data structures defined in the KHO ABI,
-+ * `include/linux/kho/abi/kexec_handover.h`.
-+ */
-+
-+struct kho_radix_node;
-+
-+struct kho_radix_tree {
-+	struct kho_radix_node *root;
-+	struct mutex lock; /* protects the tree's structure and root pointer */
-+};
-+
-+typedef int (*kho_radix_tree_walk_callback_t)(phys_addr_t phys,
-+					      unsigned int order);
-+
-+#ifdef CONFIG_KEXEC_HANDOVER
-+
-+int kho_radix_add_page(struct kho_radix_tree *tree, unsigned long pfn,
-+		       unsigned int order);
-+
-+void kho_radix_del_page(struct kho_radix_tree *tree, unsigned long pfn,
-+			unsigned int order);
-+
-+int kho_radix_walk_tree(struct kho_radix_tree *tree, unsigned int level,
-+			unsigned long start, kho_radix_tree_walk_callback_t cb);
-+
-+#else  /* #ifdef CONFIG_KEXEC_HANDOVER */
-+
-+static inline int kho_radix_add_page(struct kho_radix_tree *tree, long pfn,
-+				     unsigned int order)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline void kho_radix_del_page(struct kho_radix_tree *tree,
-+				      unsigned long pfn, unsigned int order) { }
-+
-+static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
-+				      unsigned int level,
-+				      unsigned long start,
-+				      kho_radix_tree_walk_callback_t cb)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+#endif /* #ifdef CONFIG_KEXEC_HANDOVER */
-+
-+#endif	/* _LINUX_KHO_ABI_RADIX_TREE_H */
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 271d90198a08..440f6de65eb2 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2025 Microsoft Corporation, Mike Rapoport <rppt@kernel.org>
-  * Copyright (C) 2025 Google LLC, Changyuan Lyu <changyuanl@google.com>
-  * Copyright (C) 2025 Pasha Tatashin <pasha.tatashin@soleen.com>
-+ * Copyright (C) 2025 Google LLC, Jason Miu <jasonmiu@google.com>
-  */
- 
- #define pr_fmt(fmt) "KHO: " fmt
-@@ -15,6 +16,7 @@
- #include <linux/count_zeros.h>
- #include <linux/kexec.h>
- #include <linux/kexec_handover.h>
-+#include <linux/kho_radix_tree.h>
- #include <linux/kho/abi/kexec_handover.h>
- #include <linux/libfdt.h>
- #include <linux/list.h>
-@@ -65,194 +67,320 @@ static int __init kho_parse_enable(char *p)
- }
- early_param("kho", kho_parse_enable);
- 
--/*
-- * Keep track of memory that is to be preserved across KHO.
-- *
-- * The serializing side uses two levels of xarrays to manage chunks of per-order
-- * PAGE_SIZE byte bitmaps. For instance if PAGE_SIZE = 4096, the entire 1G order
-- * of a 8TB system would fit inside a single 4096 byte bitmap. For order 0
-- * allocations each bitmap will cover 128M of address space. Thus, for 16G of
-- * memory at most 512K of bitmap memory will be needed for order 0.
-- *
-- * This approach is fully incremental, as the serialization progresses folios
-- * can continue be aggregated to the tracker. The final step, immediately prior
-- * to kexec would serialize the xarray information into a linked list for the
-- * successor kernel to parse.
-- */
--
--#define PRESERVE_BITS (PAGE_SIZE * 8)
--
--struct kho_mem_phys_bits {
--	DECLARE_BITMAP(preserve, PRESERVE_BITS);
--};
--
--static_assert(sizeof(struct kho_mem_phys_bits) == PAGE_SIZE);
--
--struct kho_mem_phys {
--	/*
--	 * Points to kho_mem_phys_bits, a sparse bitmap array. Each bit is sized
--	 * to order.
--	 */
--	struct xarray phys_bits;
--};
--
--struct kho_mem_track {
--	/* Points to kho_mem_phys, each order gets its own bitmap tree */
--	struct xarray orders;
--};
--
--struct khoser_mem_chunk;
--
- struct kho_out {
- 	void *fdt;
- 	bool finalized;
- 	struct mutex lock; /* protects KHO FDT finalization */
- 
--	struct kho_mem_track track;
-+	struct kho_radix_tree radix_tree;
- 	struct kho_debugfs dbg;
- };
- 
- static struct kho_out kho_out = {
- 	.lock = __MUTEX_INITIALIZER(kho_out.lock),
--	.track = {
--		.orders = XARRAY_INIT(kho_out.track.orders, 0),
-+	.radix_tree = {
-+		.lock = __MUTEX_INITIALIZER(kho_out.radix_tree.lock),
- 	},
- 	.finalized = false,
- };
- 
--static void *xa_load_or_alloc(struct xarray *xa, unsigned long index)
-+/**
-+ * kho_radix_encode_key - Encodes a physical address and order into a radix key.
-+ * @phys: The physical address of the page.
-+ * @order: The order of the page.
-+ *
-+ * This function combines a page's physical address and its order into a
-+ * single unsigned long, which is used as a key for all radix tree
-+ * operations.
-+ *
-+ * Return: The encoded unsigned long radix key.
-+ */
-+static unsigned long kho_radix_encode_key(phys_addr_t phys, unsigned int order)
- {
--	void *res = xa_load(xa, index);
-+	/* Order bits part */
-+	unsigned long h = 1UL << (KHO_ORDER_0_LOG2 - order);
-+	/* Page offset part */
-+	unsigned long l = phys >> (PAGE_SHIFT + order);
- 
--	if (res)
--		return res;
--
--	void *elm __free(free_page) = (void *)get_zeroed_page(GFP_KERNEL);
--
--	if (!elm)
--		return ERR_PTR(-ENOMEM);
--
--	if (WARN_ON(kho_scratch_overlap(virt_to_phys(elm), PAGE_SIZE)))
--		return ERR_PTR(-EINVAL);
--
--	res = xa_cmpxchg(xa, index, NULL, elm, GFP_KERNEL);
--	if (xa_is_err(res))
--		return ERR_PTR(xa_err(res));
--	else if (res)
--		return res;
--
--	return no_free_ptr(elm);
-+	return h | l;
- }
- 
--static void __kho_unpreserve_order(struct kho_mem_track *track, unsigned long pfn,
--				   unsigned int order)
-+/**
-+ * kho_radix_decode_key - Decodes a radix key back into a physical address and order.
-+ * @key: The unsigned long key to decode.
-+ * @order: An output parameter, a pointer to an unsigned int where the decoded
-+ *         page order will be stored.
-+ *
-+ * This function reverses the encoding performed by kho_radix_encode_key(),
-+ * extracting the original physical address and page order from a given key.
-+ *
-+ * Return: The decoded physical address.
-+ */
-+static phys_addr_t kho_radix_decode_key(unsigned long key,
-+					unsigned int *order)
- {
--	struct kho_mem_phys_bits *bits;
--	struct kho_mem_phys *physxa;
--	const unsigned long pfn_high = pfn >> order;
-+	unsigned int order_bit = fls64(key);
-+	phys_addr_t phys;
- 
--	physxa = xa_load(&track->orders, order);
--	if (WARN_ON_ONCE(!physxa))
--		return;
-+	/* order_bit is numbered starting at 1 from fls64 */
-+	*order = KHO_ORDER_0_LOG2 - order_bit + 1;
-+	/* The order is discarded by the shift */
-+	phys = key << (PAGE_SHIFT + *order);
- 
--	bits = xa_load(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
--	if (WARN_ON_ONCE(!bits))
--		return;
--
--	clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
-+	return phys;
- }
- 
--static void __kho_unpreserve(struct kho_mem_track *track, unsigned long pfn,
--			     unsigned long end_pfn)
-+static unsigned long kho_radix_get_bitmap_index(unsigned long key)
-+{
-+	return key % (1 << KHO_BITMAP_SIZE_LOG2);
-+}
-+
-+static unsigned long kho_radix_get_index(unsigned long key,
-+					 unsigned int level)
-+{
-+	int s;
-+
-+	if (level == 0)
-+		return kho_radix_get_bitmap_index(key);
-+
-+	s = ((level - 1) * KHO_TABLE_SIZE_LOG2) + KHO_BITMAP_SIZE_LOG2;
-+	return (key >> s) % (1 << KHO_TABLE_SIZE_LOG2);
-+}
-+
-+/**
-+ * kho_radix_add_page - Marks a page as preserved in the radix tree.
-+ * @tree: The KHO radix tree.
-+ * @pfn: The page frame number of the page to preserve.
-+ * @order: The order of the page.
-+ *
-+ * This function traverses the radix tree based on the key derived from @pfn
-+ * and @order. It sets the corresponding bit in the leaf bitmap to mark the
-+ * page for preservation. If intermediate nodes do not exist along the path,
-+ * they are allocated and added to the tree.
-+ *
-+ * Return: 0 on success, or a negative error code on failure.
-+ */
-+int kho_radix_add_page(struct kho_radix_tree *tree,
-+		       unsigned long pfn, unsigned int order)
-+{
-+	/* Newly allocated nodes for error cleanup */
-+	struct kho_radix_node *intermediate_nodes[KHO_TREE_MAX_DEPTH] = { 0 };
-+	unsigned long key = kho_radix_encode_key(PFN_PHYS(pfn), order);
-+	struct kho_radix_node *node = tree->root;
-+	struct kho_radix_node *new_node;
-+	struct kho_radix_leaf *leaf;
-+	unsigned int i, idx;
-+	int err = 0;
-+
-+	if (WARN_ON_ONCE(!tree->root))
-+		return -EINVAL;
-+
-+	might_sleep();
-+
-+	guard(mutex)(&tree->lock);
-+
-+	/* Go from high levels to low levels */
-+	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
-+		idx = kho_radix_get_index(key, i);
-+
-+		if (node->table[idx]) {
-+			node = phys_to_virt(node->table[idx]);
-+			continue;
-+		}
-+
-+		/* Next node is empty, create a new node for it */
-+		new_node = (struct kho_radix_node *)get_zeroed_page(GFP_KERNEL);
-+		if (!new_node) {
-+			err = -ENOMEM;
-+			goto err_free_nodes;
-+		}
-+
-+		node->table[idx] = virt_to_phys(new_node);
-+		node = new_node;
-+
-+		intermediate_nodes[i] = new_node;
-+	}
-+
-+	/* Handle the leaf level bitmap (level 0) */
-+	idx = kho_radix_get_index(key, 0);
-+	leaf = (struct kho_radix_leaf *)node;
-+	__set_bit(idx, leaf->bitmap);
-+
-+	return 0;
-+
-+err_free_nodes:
-+	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
-+		if (intermediate_nodes[i])
-+			free_page((unsigned long)intermediate_nodes[i]);
-+	}
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(kho_radix_add_page);
-+
-+/**
-+ * kho_radix_del_page - Removes a page's preservation status from the radix tree.
-+ * @tree: The KHO radix tree.
-+ * @pfn: The page frame number of the page to unpreserve.
-+ * @order: The order of the page.
-+ *
-+ * This function traverses the radix tree and clears the bit corresponding to
-+ * the page, effectively removing its "preserved" status. It does not free
-+ * the tree's intermediate nodes, even if they become empty.
-+ */
-+void kho_radix_del_page(struct kho_radix_tree *tree, unsigned long pfn,
-+			unsigned int order)
-+{
-+	unsigned long key = kho_radix_encode_key(PFN_PHYS(pfn), order);
-+	struct kho_radix_node *node = tree->root;
-+	struct kho_radix_leaf *leaf;
-+	unsigned int i, idx;
-+
-+	if (WARN_ON_ONCE(!tree->root))
-+		return;
-+
-+	might_sleep();
-+
-+	guard(mutex)(&tree->lock);
-+
-+	/* Go from high levels to low levels */
-+	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
-+		idx = kho_radix_get_index(key, i);
-+
-+		/*
-+		 * Attempting to delete a page that has not been preserved,
-+		 * return with a warning.
-+		 */
-+		if (WARN_ON(!node->table[idx]))
-+			return;
-+
-+		if (node->table[idx])
-+			node = phys_to_virt((phys_addr_t)node->table[idx]);
-+	}
-+
-+	/* Handle the leaf level bitmap (level 0) */
-+	leaf = (struct kho_radix_leaf *)node;
-+	idx = kho_radix_get_index(key, 0);
-+	__clear_bit(idx, leaf->bitmap);
-+}
-+EXPORT_SYMBOL_GPL(kho_radix_del_page);
-+
-+static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf,
-+			       unsigned long key,
-+			       kho_radix_tree_walk_callback_t cb)
-+{
-+	unsigned long *bitmap = (unsigned long *)leaf;
-+	unsigned int order;
-+	phys_addr_t phys;
-+	unsigned int i;
-+	int err;
-+
-+	for_each_set_bit(i, bitmap, PAGE_SIZE * BITS_PER_BYTE) {
-+		phys = kho_radix_decode_key(key | i, &order);
-+		err = cb(phys, order);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __kho_radix_walk_tree(struct kho_radix_node *root,
-+				 unsigned int level, unsigned long start,
-+				 kho_radix_tree_walk_callback_t cb)
-+{
-+	struct kho_radix_node *node;
-+	struct kho_radix_leaf *leaf;
-+	unsigned long key, i;
-+	unsigned int shift;
-+	int err;
-+
-+	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
-+		if (!root->table[i])
-+			continue;
-+
-+		shift = ((level - 1) * KHO_TABLE_SIZE_LOG2) +
-+			KHO_BITMAP_SIZE_LOG2;
-+		key = start | (i << shift);
-+
-+		node = phys_to_virt((phys_addr_t)root->table[i]);
-+
-+		if (level == 1) {
-+			/*
-+			 * we are at level 1,
-+			 * node is pointing to the level 0 bitmap.
-+			 */
-+			leaf = (struct kho_radix_leaf *)node;
-+			return kho_radix_walk_leaf(leaf, key, cb);
-+		}
-+
-+		err  = __kho_radix_walk_tree(node, level - 1,
-+					     key, cb);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * kho_radix_walk_tree - Traverses the radix tree and calls a callback for each preserved page.
-+ * @tree: A pointer to the KHO radix tree to walk.
-+ * @level: The starting level for the walk (typically KHO_TREE_MAX_DEPTH - 1).
-+ * @start: The initial key prefix for the walk (typically 0).
-+ * @cb: A callback function of type kho_radix_tree_walk_callback_t that will be
-+ *      invoked for each preserved page found in the tree. The callback receives
-+ *      the physical address and order of the preserved page.
-+ *
-+ * This function walks the radix tree, searching from the specified top level
-+ * (@level) down to the lowest level (level 0). For each preserved page found,
-+ * it invokes the provided callback, passing the page's physical address and
-+ * order.
-+ *
-+ * Return: 0 if the walk completed the specified tree, or the non-zero return
-+ *         value from the callback that stopped the walk.
-+ */
-+int kho_radix_walk_tree(struct kho_radix_tree *tree, unsigned int level,
-+			unsigned long start, kho_radix_tree_walk_callback_t cb)
-+{
-+	if (WARN_ON_ONCE(!tree->root))
-+		return -EINVAL;
-+
-+	guard(mutex)(&tree->lock);
-+
-+	return __kho_radix_walk_tree(tree->root, level, start, cb);
-+}
-+EXPORT_SYMBOL_GPL(kho_radix_walk_tree);
-+
-+static void __kho_unpreserve(struct kho_radix_tree *tree,
-+			     unsigned long pfn, unsigned long end_pfn)
- {
- 	unsigned int order;
- 
- 	while (pfn < end_pfn) {
- 		order = min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
- 
--		__kho_unpreserve_order(track, pfn, order);
-+		kho_radix_del_page(tree, pfn, order);
- 
- 		pfn += 1 << order;
- 	}
- }
- 
--static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
--				unsigned int order)
--{
--	struct kho_mem_phys_bits *bits;
--	struct kho_mem_phys *physxa, *new_physxa;
--	const unsigned long pfn_high = pfn >> order;
--
--	might_sleep();
--	physxa = xa_load(&track->orders, order);
--	if (!physxa) {
--		int err;
--
--		new_physxa = kzalloc(sizeof(*physxa), GFP_KERNEL);
--		if (!new_physxa)
--			return -ENOMEM;
--
--		xa_init(&new_physxa->phys_bits);
--		physxa = xa_cmpxchg(&track->orders, order, NULL, new_physxa,
--				    GFP_KERNEL);
--
--		err = xa_err(physxa);
--		if (err || physxa) {
--			xa_destroy(&new_physxa->phys_bits);
--			kfree(new_physxa);
--
--			if (err)
--				return err;
--		} else {
--			physxa = new_physxa;
--		}
--	}
--
--	bits = xa_load_or_alloc(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
--	if (IS_ERR(bits))
--		return PTR_ERR(bits);
--
--	set_bit(pfn_high % PRESERVE_BITS, bits->preserve);
--
--	return 0;
--}
--
--/* For physically contiguous 0-order pages. */
--static void kho_init_pages(struct page *page, unsigned int nr_pages)
--{
--	for (unsigned int i = 0; i < nr_pages; i++)
--		set_page_count(page + i, 1);
--}
--
--static void kho_init_folio(struct page *page, unsigned int order)
--{
--	unsigned int nr_pages = (1 << order);
--
--	/* Head page gets refcount of 1. */
--	set_page_count(page, 1);
--
--	/* For higher order folios, tail pages get a page count of zero. */
--	for (unsigned int i = 1; i < nr_pages; i++)
--		set_page_count(page + i, 0);
--
--	if (order > 0)
--		prep_compound_page(page, order);
--}
--
- static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- {
- 	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
-+	unsigned int nr_pages, ref_cnt;
- 	union kho_page_info info;
--	unsigned int nr_pages;
- 
- 	if (!page)
- 		return NULL;
- 
- 	info.page_private = page->private;
- 	/*
--	 * deserialize_bitmap() only sets the magic on the head page. This magic
--	 * check also implicitly makes sure phys is order-aligned since for
--	 * non-order-aligned phys addresses, magic will never be set.
-+	 * kho_radix_memblock_reserve() only sets the magic on the
-+	 * head page. This magic check also implicitly makes sure phys is
-+	 * order-aligned since for non-order-aligned phys addresses, magic will
-+	 * never be set.
- 	 */
- 	if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER))
- 		return NULL;
-@@ -260,11 +388,20 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- 
- 	/* Clear private to make sure later restores on this page error out. */
- 	page->private = 0;
-+	/* Head page gets refcount of 1. */
-+	set_page_count(page, 1);
- 
--	if (is_folio)
--		kho_init_folio(page, info.order);
--	else
--		kho_init_pages(page, nr_pages);
-+	/*
-+	 * For higher order folios, tail pages get a page count of zero.
-+	 * For physically contiguous order-0 pages every pages gets a page
-+	 * count of 1
-+	 */
-+	ref_cnt = is_folio ? 0 : 1;
-+	for (unsigned int i = 1; i < nr_pages; i++)
-+		set_page_count(page + i, ref_cnt);
-+
-+	if (is_folio && info.order)
-+		prep_compound_page(page, info.order);
- 
- 	adjust_managed_page_count(page, nr_pages);
- 	return page;
-@@ -314,188 +451,24 @@ struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages)
- }
- EXPORT_SYMBOL_GPL(kho_restore_pages);
- 
--/* Serialize and deserialize struct kho_mem_phys across kexec
-- *
-- * Record all the bitmaps in a linked list of pages for the next kernel to
-- * process. Each chunk holds bitmaps of the same order and each block of bitmaps
-- * starts at a given physical address. This allows the bitmaps to be sparse. The
-- * xarray is used to store them in a tree while building up the data structure,
-- * but the KHO successor kernel only needs to process them once in order.
-- *
-- * All of this memory is normal kmalloc() memory and is not marked for
-- * preservation. The successor kernel will remain isolated to the scratch space
-- * until it completes processing this list. Once processed all the memory
-- * storing these ranges will be marked as free.
-- */
--
--struct khoser_mem_bitmap_ptr {
--	phys_addr_t phys_start;
--	DECLARE_KHOSER_PTR(bitmap, struct kho_mem_phys_bits *);
--};
--
--struct khoser_mem_chunk_hdr {
--	DECLARE_KHOSER_PTR(next, struct khoser_mem_chunk *);
--	unsigned int order;
--	unsigned int num_elms;
--};
--
--#define KHOSER_BITMAP_SIZE                                   \
--	((PAGE_SIZE - sizeof(struct khoser_mem_chunk_hdr)) / \
--	 sizeof(struct khoser_mem_bitmap_ptr))
--
--struct khoser_mem_chunk {
--	struct khoser_mem_chunk_hdr hdr;
--	struct khoser_mem_bitmap_ptr bitmaps[KHOSER_BITMAP_SIZE];
--};
--
--static_assert(sizeof(struct khoser_mem_chunk) == PAGE_SIZE);
--
--static struct khoser_mem_chunk *new_chunk(struct khoser_mem_chunk *cur_chunk,
--					  unsigned long order)
-+static int __init kho_radix_memblock_reserve(phys_addr_t phys,
-+					     unsigned int order)
- {
--	struct khoser_mem_chunk *chunk __free(free_page) = NULL;
-+	union kho_page_info info;
-+	struct page *page;
-+	int sz;
- 
--	chunk = (void *)get_zeroed_page(GFP_KERNEL);
--	if (!chunk)
--		return ERR_PTR(-ENOMEM);
-+	sz = 1 << (order + PAGE_SHIFT);
-+	page = phys_to_page(phys);
- 
--	if (WARN_ON(kho_scratch_overlap(virt_to_phys(chunk), PAGE_SIZE)))
--		return ERR_PTR(-EINVAL);
--
--	chunk->hdr.order = order;
--	if (cur_chunk)
--		KHOSER_STORE_PTR(cur_chunk->hdr.next, chunk);
--	return no_free_ptr(chunk);
--}
--
--static void kho_mem_ser_free(struct khoser_mem_chunk *first_chunk)
--{
--	struct khoser_mem_chunk *chunk = first_chunk;
--
--	while (chunk) {
--		struct khoser_mem_chunk *tmp = chunk;
--
--		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
--		free_page((unsigned long)tmp);
--	}
--}
--
--/*
-- *  Update memory map property, if old one is found discard it via
-- *  kho_mem_ser_free().
-- */
--static void kho_update_memory_map(struct khoser_mem_chunk *first_chunk)
--{
--	void *ptr;
--	u64 phys;
--
--	ptr = fdt_getprop_w(kho_out.fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, NULL);
--
--	/* Check and discard previous memory map */
--	phys = get_unaligned((u64 *)ptr);
--	if (phys)
--		kho_mem_ser_free((struct khoser_mem_chunk *)phys_to_virt(phys));
--
--	/* Update with the new value */
--	phys = first_chunk ? (u64)virt_to_phys(first_chunk) : 0;
--	put_unaligned(phys, (u64 *)ptr);
--}
--
--static int kho_mem_serialize(struct kho_out *kho_out)
--{
--	struct khoser_mem_chunk *first_chunk = NULL;
--	struct khoser_mem_chunk *chunk = NULL;
--	struct kho_mem_phys *physxa;
--	unsigned long order;
--	int err = -ENOMEM;
--
--	xa_for_each(&kho_out->track.orders, order, physxa) {
--		struct kho_mem_phys_bits *bits;
--		unsigned long phys;
--
--		chunk = new_chunk(chunk, order);
--		if (IS_ERR(chunk)) {
--			err = PTR_ERR(chunk);
--			goto err_free;
--		}
--
--		if (!first_chunk)
--			first_chunk = chunk;
--
--		xa_for_each(&physxa->phys_bits, phys, bits) {
--			struct khoser_mem_bitmap_ptr *elm;
--
--			if (chunk->hdr.num_elms == ARRAY_SIZE(chunk->bitmaps)) {
--				chunk = new_chunk(chunk, order);
--				if (IS_ERR(chunk)) {
--					err = PTR_ERR(chunk);
--					goto err_free;
--				}
--			}
--
--			elm = &chunk->bitmaps[chunk->hdr.num_elms];
--			chunk->hdr.num_elms++;
--			elm->phys_start = (phys * PRESERVE_BITS)
--					  << (order + PAGE_SHIFT);
--			KHOSER_STORE_PTR(elm->bitmap, bits);
--		}
--	}
--
--	kho_update_memory_map(first_chunk);
-+	/* Reserve the memory preserved in KHO radix tree in memblock */
-+	memblock_reserve(phys, sz);
-+	memblock_reserved_mark_noinit(phys, sz);
-+	info.magic = KHO_PAGE_MAGIC;
-+	info.order = order;
-+	page->private = info.page_private;
- 
- 	return 0;
--
--err_free:
--	kho_mem_ser_free(first_chunk);
--	return err;
--}
--
--static void __init deserialize_bitmap(unsigned int order,
--				      struct khoser_mem_bitmap_ptr *elm)
--{
--	struct kho_mem_phys_bits *bitmap = KHOSER_LOAD_PTR(elm->bitmap);
--	unsigned long bit;
--
--	for_each_set_bit(bit, bitmap->preserve, PRESERVE_BITS) {
--		int sz = 1 << (order + PAGE_SHIFT);
--		phys_addr_t phys =
--			elm->phys_start + (bit << (order + PAGE_SHIFT));
--		struct page *page = phys_to_page(phys);
--		union kho_page_info info;
--
--		memblock_reserve(phys, sz);
--		memblock_reserved_mark_noinit(phys, sz);
--		info.magic = KHO_PAGE_MAGIC;
--		info.order = order;
--		page->private = info.page_private;
--	}
--}
--
--/* Returns physical address of the preserved memory map from FDT */
--static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
--{
--	const void *mem_ptr;
--	int len;
--
--	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
--	if (!mem_ptr || len != sizeof(u64)) {
--		pr_err("failed to get preserved memory bitmaps\n");
--		return 0;
--	}
--
--	return get_unaligned((const u64 *)mem_ptr);
--}
--
--static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
--{
--	while (chunk) {
--		unsigned int i;
--
--		for (i = 0; i != chunk->hdr.num_elms; i++)
--			deserialize_bitmap(chunk->hdr.order,
--					   &chunk->bitmaps[i]);
--		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
--	}
- }
- 
- /*
-@@ -796,14 +769,14 @@ EXPORT_SYMBOL_GPL(kho_remove_subtree);
-  */
- int kho_preserve_folio(struct folio *folio)
- {
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	const unsigned long pfn = folio_pfn(folio);
- 	const unsigned int order = folio_order(folio);
--	struct kho_mem_track *track = &kho_out.track;
- 
- 	if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
- 		return -EINVAL;
- 
--	return __kho_preserve_order(track, pfn, order);
-+	return kho_radix_add_page(tree, pfn, order);
- }
- EXPORT_SYMBOL_GPL(kho_preserve_folio);
- 
-@@ -817,11 +790,11 @@ EXPORT_SYMBOL_GPL(kho_preserve_folio);
-  */
- void kho_unpreserve_folio(struct folio *folio)
- {
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	const unsigned long pfn = folio_pfn(folio);
- 	const unsigned int order = folio_order(folio);
--	struct kho_mem_track *track = &kho_out.track;
- 
--	__kho_unpreserve_order(track, pfn, order);
-+	kho_radix_del_page(tree, pfn, order);
- }
- EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
- 
-@@ -837,7 +810,7 @@ EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
-  */
- int kho_preserve_pages(struct page *page, unsigned int nr_pages)
- {
--	struct kho_mem_track *track = &kho_out.track;
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	const unsigned long start_pfn = page_to_pfn(page);
- 	const unsigned long end_pfn = start_pfn + nr_pages;
- 	unsigned long pfn = start_pfn;
-@@ -853,7 +826,7 @@ int kho_preserve_pages(struct page *page, unsigned int nr_pages)
- 		const unsigned int order =
- 			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
- 
--		err = __kho_preserve_order(track, pfn, order);
-+		err = kho_radix_add_page(tree, pfn, order);
- 		if (err) {
- 			failed_pfn = pfn;
- 			break;
-@@ -863,7 +836,7 @@ int kho_preserve_pages(struct page *page, unsigned int nr_pages)
- 	}
- 
- 	if (err)
--		__kho_unpreserve(track, start_pfn, failed_pfn);
-+		__kho_unpreserve(tree, start_pfn, failed_pfn);
- 
- 	return err;
- }
-@@ -881,11 +854,11 @@ EXPORT_SYMBOL_GPL(kho_preserve_pages);
-  */
- void kho_unpreserve_pages(struct page *page, unsigned int nr_pages)
- {
--	struct kho_mem_track *track = &kho_out.track;
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	const unsigned long start_pfn = page_to_pfn(page);
- 	const unsigned long end_pfn = start_pfn + nr_pages;
- 
--	__kho_unpreserve(track, start_pfn, end_pfn);
-+	__kho_unpreserve(tree, start_pfn, end_pfn);
- }
- EXPORT_SYMBOL_GPL(kho_unpreserve_pages);
- 
-@@ -944,14 +917,14 @@ static struct kho_vmalloc_chunk *new_vmalloc_chunk(struct kho_vmalloc_chunk *cur
- static void kho_vmalloc_unpreserve_chunk(struct kho_vmalloc_chunk *chunk,
- 					 unsigned short order)
- {
--	struct kho_mem_track *track = &kho_out.track;
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	unsigned long pfn = PHYS_PFN(virt_to_phys(chunk));
- 
--	__kho_unpreserve(track, pfn, pfn + 1);
-+	__kho_unpreserve(tree, pfn, pfn + 1);
- 
- 	for (int i = 0; i < ARRAY_SIZE(chunk->phys) && chunk->phys[i]; i++) {
- 		pfn = PHYS_PFN(chunk->phys[i]);
--		__kho_unpreserve(track, pfn, pfn + (1 << order));
-+		__kho_unpreserve(tree, pfn, pfn + (1 << order));
- 	}
- }
- 
-@@ -1220,16 +1193,10 @@ EXPORT_SYMBOL_GPL(kho_restore_free);
- 
- int kho_finalize(void)
- {
--	int ret;
--
- 	if (!kho_enable)
- 		return -EOPNOTSUPP;
- 
- 	guard(mutex)(&kho_out.lock);
--	ret = kho_mem_serialize(&kho_out);
--	if (ret)
--		return ret;
--
- 	kho_out.finalized = true;
- 
- 	return 0;
-@@ -1244,7 +1211,6 @@ bool kho_finalized(void)
- struct kho_in {
- 	phys_addr_t fdt_phys;
- 	phys_addr_t scratch_phys;
--	phys_addr_t mem_map_phys;
- 	struct kho_debugfs dbg;
- };
- 
-@@ -1312,18 +1278,49 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
- }
- EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
- 
-+static int __init kho_mem_retrieve(const void *fdt)
-+{
-+	struct kho_radix_tree tree;
-+	const phys_addr_t *mem;
-+	int len;
-+
-+	/* Retrieve the KHO radix tree from passed-in FDT. */
-+	mem = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
-+
-+	if (!mem || len != sizeof(*mem)) {
-+		pr_err("failed to get preserved KHO memory tree\n");
-+		return -ENOENT;
-+	}
-+
-+	if (!*mem)
-+		return -EINVAL;
-+
-+	tree.root = phys_to_virt(*mem);
-+	mutex_init(&tree.lock);
-+	return kho_radix_walk_tree(&tree, KHO_TREE_MAX_DEPTH - 1,
-+				   0, kho_radix_memblock_reserve);
-+}
-+
- static __init int kho_out_fdt_setup(void)
- {
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	void *root = kho_out.fdt;
--	u64 empty_mem_map = 0;
-+	u64 preserved_mem_tree_pa;
- 	int err;
- 
- 	err = fdt_create(root, PAGE_SIZE);
- 	err |= fdt_finish_reservemap(root);
- 	err |= fdt_begin_node(root, "");
- 	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
--	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME, &empty_mem_map,
--			    sizeof(empty_mem_map));
-+
-+	scoped_guard(mutex, &tree->lock) {
-+		preserved_mem_tree_pa = (u64)virt_to_phys(tree->root);
-+	}
-+
-+	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME,
-+			    &preserved_mem_tree_pa,
-+			    sizeof(preserved_mem_tree_pa));
-+
- 	err |= fdt_end_node(root);
- 	err |= fdt_finish(root);
- 
-@@ -1332,16 +1329,26 @@ static __init int kho_out_fdt_setup(void)
- 
- static __init int kho_init(void)
- {
-+	struct kho_radix_tree *tree = &kho_out.radix_tree;
- 	const void *fdt = kho_get_fdt();
- 	int err = 0;
- 
- 	if (!kho_enable)
- 		return 0;
- 
-+	scoped_guard(mutex, &tree->lock) {
-+		tree->root = (struct kho_radix_node *)
-+			kzalloc(PAGE_SIZE, GFP_KERNEL);
-+		if (!tree->root) {
-+			err = -ENOMEM;
-+			goto err_free_scratch;
-+		}
-+	}
-+
- 	kho_out.fdt = kho_alloc_preserve(PAGE_SIZE);
- 	if (IS_ERR(kho_out.fdt)) {
- 		err = PTR_ERR(kho_out.fdt);
--		goto err_free_scratch;
-+		goto err_free_kho_radix_tree_root;
- 	}
- 
- 	err = kho_debugfs_init();
-@@ -1387,6 +1394,9 @@ static __init int kho_init(void)
- 
- err_free_fdt:
- 	kho_unpreserve_free(kho_out.fdt);
-+err_free_kho_radix_tree_root:
-+	kfree(tree->root);
-+	tree->root = NULL;
- err_free_scratch:
- 	kho_out.fdt = NULL;
- 	for (int i = 0; i < kho_scratch_cnt; i++) {
-@@ -1426,10 +1436,12 @@ static void __init kho_release_scratch(void)
- 
- void __init kho_memory_init(void)
- {
--	if (kho_in.mem_map_phys) {
-+	if (kho_in.scratch_phys) {
- 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
- 		kho_release_scratch();
--		kho_mem_deserialize(phys_to_virt(kho_in.mem_map_phys));
-+
-+		if (kho_mem_retrieve(kho_get_fdt()))
-+			kho_in.fdt_phys = 0;
- 	} else {
- 		kho_reserve_scratch();
- 	}
-@@ -1438,11 +1450,10 @@ void __init kho_memory_init(void)
- void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 			 phys_addr_t scratch_phys, u64 scratch_len)
- {
-+	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
- 	struct kho_scratch *scratch = NULL;
--	phys_addr_t mem_map_phys;
- 	void *fdt = NULL;
- 	int err = 0;
--	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
- 
- 	/* Validate the input FDT */
- 	fdt = early_memremap(fdt_phys, fdt_len);
-@@ -1466,12 +1477,6 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		goto out;
- 	}
- 
--	mem_map_phys = kho_get_mem_map_phys(fdt);
--	if (!mem_map_phys) {
--		err = -ENOENT;
--		goto out;
--	}
--
- 	scratch = early_memremap(scratch_phys, scratch_len);
- 	if (!scratch) {
- 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
-@@ -1512,7 +1517,6 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 
- 	kho_in.fdt_phys = fdt_phys;
- 	kho_in.scratch_phys = scratch_phys;
--	kho_in.mem_map_phys = mem_map_phys;
- 	kho_scratch_cnt = scratch_cnt;
- 	pr_info("found kexec handover data.\n");
- 
--- 
-2.52.0.457.g6b5491de43-goog
-
+Thanks, Lorenzo
 
