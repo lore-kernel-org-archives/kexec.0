@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30E58CCD1AF
-	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5972CCD1B0
+	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dIeDgxZ048HUq/QptiVsvTSq/SH6NNfnJz16wRbfAOg=; b=2tfGFUDomqVaOtlS3I+/3TCOp8
-	zVfdJVLKaSiBDYsWtbcu8xZ22uA+95BOZ3BO/JslVfNoBww3l0RLj36pwRfxaXdWpEA2D6oDnKWmH
-	1SrVgV1fcmOjCE3gVybstfoAHmsWcehK5s/xmfs2aO9jCEncU45fAdiVl/zse+iRvrQunwKEY8/zV
-	xPg1M/JxamGd2Ey1O9I82YIU0pCsJyTl0I3awWkM4tqmeiriRCT2x5h0yfKeZ3Xproh93TPm6pAUN
-	pf9e+QvpkQIVj32JuaF4BhRBpr5DFeG6QxYti4Sk2mft+oSm6qkvPBAUvQ0GGPgYuLyhB1jdrEaZR
-	ipbWwTBg==;
+	bh=zvmrmv3hPe2oQTJQT8OKmJhhNCe47YQRwxqYt3ifUEE=; b=usiLtzr3lcusybASsm9ACQmUiW
+	tbCeH3ECPT/4IpL1h3gKhHYOAnoRSV3XKMLzhsCddqTk2VMvXmW15ZZgIJo/tgASdoZbFP92c4ki1
+	ffVIBp4KEH7iPSWJ8s+zyfXPJN72cw3FjldMQztsOgi6KmfG1iJ4MPw5rAaVQ2eBxCN9CSmzu6b8+
+	kkn12x9ZItO3H3tJF7m5Dhaz4MRI+Ex858YOCDnDR17Mm7ZWj9J9V5sz+75D7y8EPG7i2/B9OWhv3
+	n9vzs0NNYXxZRExMh2GA/xC1EUzf949aDPi30kxxI3bMz/LY760Z7xNNKwvK7HtWIPkv/lXsFj8Y3
+	V+qA6ZmA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMiw-0000000Aj1T-1nBe;
-	Sun, 19 Oct 2025 06:16:58 +0000
-Received: from mail-pf1-x42b.google.com ([2607:f8b0:4864:20::42b])
+	id 1vAMj0-0000000Aj4C-0vjy;
+	Sun, 19 Oct 2025 06:17:02 +0000
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMit-0000000Aizo-1xHH
+	id 1vAMix-0000000Aj2I-3PX1
 	for kexec@lists.infradead.org;
-	Sun, 19 Oct 2025 06:16:56 +0000
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-7a226a0798cso1548891b3a.2
-        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:16:55 -0700 (PDT)
+	Sun, 19 Oct 2025 06:17:00 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-290c2b6a6c2so27665325ad.1
+        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760854615; x=1761459415; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1760854619; x=1761459419; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dIeDgxZ048HUq/QptiVsvTSq/SH6NNfnJz16wRbfAOg=;
-        b=JhbPxQePOkiukaZHlL6PXI8/4fJ2gm3lRms7FWZ5htLm2HQuDlM6KXPKzSBpNcJPQi
-         bCqaW4j7bWgSwiAq0XvsE7duQxrC0dRgAD5PiaXTBI6DpLE2TZO0tzobxTEWIPsguvvb
-         v9gVx/LqZdrU8M9nnsxuJaeH3ISBMWSmDojaVyiIttSIHWw7uK/Av9lS6ss0MAVkO2z1
-         T097hThUz2lZiB9RyyttLIzEKyAVWOeHamNCPtPYVsuCDplzQXsba6yvTHqH8kQdDwzJ
-         phVex5QqclydO71N6qRqLYrItNLlDae7RCmFDPR87IC0t5aY2rz3QY8vIKnxMZfanwmx
-         5GNw==
+        bh=zvmrmv3hPe2oQTJQT8OKmJhhNCe47YQRwxqYt3ifUEE=;
+        b=eKJX3gzW0dPYNmfdvDC16LlDmaV4QOokUxzZXe/I2HDyFMobVHpBCLaM2hegoY3Ors
+         hbVEZ1kxxxX+Ez5wsnSDHc+4MCsbKQdJiyivpFPf9rYDV9h4tPXchktsPiU5urnu1EjM
+         JmTiG9iz2ZdIAGDS5TI1NHAMefbr5Yn9uZlKq/WYI615/iOg884aFjQxhCY/K88NNhvU
+         MvMB0oqT/bMEJCurzUDUadJBm/boti+jp/LpSZ1KMvutwVel4rj3pCtXtfLrxyie9Anj
+         CV0JiTHnNhLv7bOdsP2l/tTsGNufB/9+7z2zjmGBoXBQ+of/+4kJECey6XOUah/7dbam
+         u8ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760854615; x=1761459415;
+        d=1e100.net; s=20230601; t=1760854619; x=1761459419;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dIeDgxZ048HUq/QptiVsvTSq/SH6NNfnJz16wRbfAOg=;
-        b=QV4EB21qQ3ya0NqLBtES4OWUa0fiGL79hktHgMQLLmOefehWVNiCqYeW7GKn9fb2AC
-         KV7QMoFDqxQn7jbjpMmtpFAYVqy0XtFIinlUU+MmVcqkC8euqTZwPeS72hwNxOUj0abO
-         9RwTbt60zVGbjSanV5E8g5jfdTDOGgRFXKQclJVER9fJMkIW/ycvyvx3kjtLYjga/52q
-         pernR+nXoVdDSCJ4QcaroV9dUTrfuuu5+UJe8A4R5F4FIaLUxIUBD6lSkPlLlF5KnUF1
-         LacWJib6FwT2hCXCY5+5Nmmxrwn4z/ZZoRvN9lx+fXPvOoZ4KPg5+2EnW02CVcXMToF3
-         ul/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUVxsbugwUaO5oW8lHMGEq3QT1eh60DOTrYz+8YneNVrZShqGkbRJ8NVYXqqO3rcDXMkE4C2A==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx1O8s9O7UoiZe0n7LZZ+yKQT81Qba5jgVXpmPx+eR0Q/UzqYrk
-	U5x50ijmPAFqglPnUGlTo8gUroxVECmp3aaWi1xe0txvYB0lXdhxz/HX
-X-Gm-Gg: ASbGncs2a/X+xDLVKfaEQjfxULXyzyL4d2Bl5yTfwOtP24idDllm2AJKt9Gz9Ot/WM9
-	0jJpONic48HuL1iDPViT3yV6mRVdZIEgvq55bjwhG+a2sb8OhJH5l7rQ+xMGsNjS5m2qAfR3oMH
-	h4cojdQS+O/RrG1mdNBnGYvH5C7Jkifq2Qfq5RMoI/q02LeIGg2gTH2up1yd2t62OpgAorbDdK1
-	eYHQ8YeAjykLLlKuexFKYmJmrpg/rZ2nESEJUKNvU3qZS9gZaX4ApBXcOoY0+CIYdQ1DX6AECIs
-	Myc42gpxWkw2fKyFQGkzNiLUArfYz1qDmx7xmN0UwFlj7sa/V+a8WwFcZdquoPettSLEaVwB/wC
-	9ou7yK863xAfF7C6wNlXB+pTc359MoRrW//iTz3/333/x2HCTQyd8enoYdftxI5WJOQ3Y6KWdqI
-	98cqUEK0ZqCczDSE8=
-X-Google-Smtp-Source: AGHT+IG0OBW7fmiA2YniV8ymtG2+sPiHKCxBMdY5eWEb2qkoBgohPShQvQn2sQ3XNKwAIyFsb9Df0A==
-X-Received: by 2002:a05:6300:4cc:20b0:334:b4ad:154b with SMTP id adf61e73a8af0-334b4ad168fmr5911026637.27.1760854614800;
-        Sat, 18 Oct 2025 23:16:54 -0700 (PDT)
+        bh=zvmrmv3hPe2oQTJQT8OKmJhhNCe47YQRwxqYt3ifUEE=;
+        b=cp/hZ5rPFvR4Qpn0KwUgGfhWPxhPsUMHDvqa6W0HjpjZmpbe66RXsmpCYTdDBCDk+w
+         g7GwTZJumfMByq8BTnjLf7IUZCYLA0NfsGuVp1SAi7G24rH4Ti3Kj7YKGDcgzgwaFNQH
+         sKfz/Kq6IENMABWNDNTjeAhDyZBt+KR71LSAbJNBA97Vr819Lb1De5kYHu9XYKFgnCsu
+         c5Bt/3p+L9PAjdpBUs5WK2SOjuncHB3EA9n6gu8Z1qyeUaYeRbd7hDYA31MOuGGugQxn
+         NXJ94gW0jEQqbL0f785jTzjHjnm2AnlFpD8Vc28/DxCi5FVAnDFmYvOlGhMMB0MPfuMU
+         /orw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6z7+ij9Ja0BiR7bUbpMeWtjOaKR4Dl8zXLUP21CBnFeDl+kG47UlNfgzOcIIIqsR6PjNZ7w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwZyL9uN9fcnqMTEjTpaLolIvoZ9CIxk3sNrGEkvMNM+vm/8k6Q
+	LaK+vxD6kGVfRsmAwZ57LdpvuU8YySRBN/d2Khmr+3pAMJLPHRFC4MCg
+X-Gm-Gg: ASbGncu7Wbn942tnN6ZathDTkIZDaSWYUN4f6tvANTsZa9trrs+j0874sFjBOaMGo12
+	PuFTgi8STClDsNpwI7SI44Jn32viMdrYa8zjaNBwVMdZPKqK7gbcrSHiC0xODVqecLWxH5zDwXh
+	8CqZs6KEw5OiNCoDTAek6g4lie95iLJ9y9RWBrthYw0hPcgB5afcS1M6gNywKl4Os6bw4ezqnoO
+	lchdIWQbu3sExAeFNdqn/6x14kkEpMwaLE41KqKxWeDylEnVmMHJ7X8Dg5Wlxp8kZ6MC/jJVFpt
+	mVn9SGuKtYLj9nlXA5KJmkyUuJ3LhlTjFF1lI/DxsQpFcK1FaevqBLJKhUEKwhl//EXct7dQNza
+	TNvztUMPkNTAlqaozdEaeIljMpEvKfrN2bS3BJ7De137ItwyhhWvVw3oMTvi0K9lKwmRAANFknt
+	WjJyMvJnMAl9bniVI=
+X-Google-Smtp-Source: AGHT+IGr/O8zk+3lAXEyhTOS21GeRIQ7WsMW/dXKVowLJ0bFIrZpOFcNFSeyeDuMLrkyPKnaIvg3BA==
+X-Received: by 2002:a17:903:298c:b0:27e:eabd:4b41 with SMTP id d9443c01a7336-290c9c89eabmr108602405ad.7.1760854618954;
+        Sat, 18 Oct 2025 23:16:58 -0700 (PDT)
 Received: from pop-os.. ([2601:647:6881:9060:bc87:d8fe:3e55:7ffb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.16.53
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.16.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 23:16:54 -0700 (PDT)
+        Sat, 18 Oct 2025 23:16:58 -0700 (PDT)
 From: Cong Wang <xiyou.wangcong@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: jiri@resnulli.us,
@@ -84,17 +84,17 @@ Cc: jiri@resnulli.us,
 	Changyuan Lyu <changyuanl@google.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [RFC Patch v2 03/16] multikernel: Introduce basic multikernel subsystem infrastructure
-Date: Sat, 18 Oct 2025 23:16:17 -0700
-Message-Id: <20251019061631.2235405-4-xiyou.wangcong@gmail.com>
+Subject: [RFC Patch v2 05/16] x86: Introduce arch_cpu_physical_id() to obtain physical CPU ID
+Date: Sat, 18 Oct 2025 23:16:19 -0700
+Message-Id: <20251019061631.2235405-6-xiyou.wangcong@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 References: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251018_231655_519570_2A805CAF 
-X-CRM114-Status: GOOD (  16.24  )
+X-CRM114-CacheID: sfid-20251018_231659_861136_58A715B4 
+X-CRM114-Status: GOOD (  12.51  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,116 +111,69 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Cong Wang <cwang@multikernel.io>
 
-This commit introduces:
+The tranditional smp_processor_id() is a software-defined CPU ID which
+is only unique within the same kernel. With Multikernel architecture, we
+run multiple Linux kernels on different CPU's, hence the host kernel
+needs a globally unique CPU ID to manage the CPU's. The physical CPU ID
+is perfect for this case.
 
-* Configuration infrastructure (kernel/multikernel/Kconfig) that adds
-  CONFIG_MULTIKERNEL option depending on KEXEC_CORE, it will provide kernfs
-  interface for multikernel instance management, device tree based
-  resource management, physical memory pool allocation, and kexec integration.
-
-* Core initialization module (kernel/multikernel/core.c) that provides
-  basic subsystem initialization using subsys_initcall() to ensure
-  multikernel support is initialized after core kernel subsystems.
-
-This foundational commit establishes the basic framework that subsequent
-patches will build upon to implement the full multikernel functionality.
+This API will be used to globally distinguish CPU's among different
+multikernels.
 
 Signed-off-by: Cong Wang <cwang@multikernel.io>
 ---
- kernel/Kconfig.kexec        |  2 ++
- kernel/Makefile             |  1 +
- kernel/multikernel/Kconfig  | 20 ++++++++++++++++++++
- kernel/multikernel/Makefile |  6 ++++++
- kernel/multikernel/core.c   | 17 +++++++++++++++++
- 5 files changed, 46 insertions(+)
- create mode 100644 kernel/multikernel/Kconfig
- create mode 100644 kernel/multikernel/Makefile
- create mode 100644 kernel/multikernel/core.c
+ arch/x86/include/asm/smp.h | 6 ++++++
+ arch/x86/kernel/smp.c      | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 422270d64820..e0fbd7e9af43 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -194,4 +194,6 @@ config CRASH_MAX_MEMORY_RANGES
- 	  the computation behind the value provided through the
- 	  /sys/kernel/crash_elfcorehdr_size attribute.
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index 1a59fd0de759..378be65ceafa 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -40,6 +40,7 @@ struct smp_ops {
  
-+source "kernel/multikernel/Kconfig"
-+
- endmenu
-diff --git a/kernel/Makefile b/kernel/Makefile
-index df3dd8291bb6..017ed567f86a 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -56,6 +56,7 @@ obj-y += dma/
- obj-y += entry/
- obj-y += unwind/
- obj-$(CONFIG_MODULES) += module/
-+obj-$(CONFIG_MULTIKERNEL) += multikernel/
+ 	void (*send_call_func_ipi)(const struct cpumask *mask);
+ 	void (*send_call_func_single_ipi)(int cpu);
++	int (*cpu_physical_id)(int cpu);
+ };
  
- obj-$(CONFIG_KCMP) += kcmp.o
- obj-$(CONFIG_FREEZER) += freezer.o
-diff --git a/kernel/multikernel/Kconfig b/kernel/multikernel/Kconfig
-new file mode 100644
-index 000000000000..0e61fd2e505a
---- /dev/null
-+++ b/kernel/multikernel/Kconfig
-@@ -0,0 +1,20 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Multikernel configuration
-+#
-+
-+config MULTIKERNEL
-+	bool "Multikernel support"
-+	depends on KEXEC_CORE
-+	help
-+	  Enable multikernel support, which allows running multiple kernel
-+	  instances simultaneously with resource isolation and inter-kernel
-+	  communication capabilities.
-+
-+	  This feature provides:
-+	  - Sysfs interface for multikernel instance management
-+	  - Device tree based resource specification
-+	  - Memory pool management for kernel instances
-+	  - Integration with kexec for kernel loading
-+
-+	  If unsure, say N.
-diff --git a/kernel/multikernel/Makefile b/kernel/multikernel/Makefile
-new file mode 100644
-index 000000000000..950bace927a0
---- /dev/null
-+++ b/kernel/multikernel/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Makefile for multikernel support
-+#
-+
-+obj-y += core.o
-diff --git a/kernel/multikernel/core.c b/kernel/multikernel/core.c
-new file mode 100644
-index 000000000000..218424d59cc3
---- /dev/null
-+++ b/kernel/multikernel/core.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 Multikernel Technologies, Inc. All rights reserved
-+ */
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/multikernel.h>
-+
-+static int __init multikernel_init(void)
+ /* Globals due to paravirt */
+@@ -100,6 +101,11 @@ static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask)
+ 	smp_ops.send_call_func_ipi(mask);
+ }
+ 
++static inline int arch_cpu_physical_id(int cpu)
 +{
-+	pr_info("Multikernel support initialized\n");
-+	return 0;
++	return smp_ops.cpu_physical_id(cpu);
 +}
 +
-+/* Initialize multikernel after core kernel subsystems are ready */
-+subsys_initcall(multikernel_init);
+ void cpu_disable_common(void);
+ void native_smp_prepare_boot_cpu(void);
+ void smp_prepare_cpus_common(void);
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 59658fcd9037..e2eba09da7fc 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -288,6 +288,11 @@ static int __init nonmi_ipi_setup(char *str)
+ 
+ __setup("nonmi_ipi", nonmi_ipi_setup);
+ 
++static int native_cpu_physical_id(int cpu)
++{
++	return cpu_physical_id(cpu);
++}
++
+ struct smp_ops smp_ops = {
+ 	.smp_prepare_boot_cpu	= native_smp_prepare_boot_cpu,
+ 	.smp_prepare_cpus	= native_smp_prepare_cpus,
+@@ -305,6 +310,7 @@ struct smp_ops smp_ops = {
+ 
+ 	.send_call_func_ipi	= native_send_call_func_ipi,
+ 	.send_call_func_single_ipi = native_send_call_func_single_ipi,
++	.cpu_physical_id	= native_cpu_physical_id,
+ };
+ EXPORT_SYMBOL_GPL(smp_ops);
+ 
 -- 
 2.34.1
 
