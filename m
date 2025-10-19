@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76D97CCD1A5
-	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00130CCD184
+	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dLqqJGV/L+ji7bkggNzrd9CKo82o255TTwQERVGyCig=; b=kIMSsdBsdBVbEfQgZocZB0er8U
-	mFtbML2LgQlBtkJBRMGdCR/JWOZnv+Rg5sFnilmoxDdtwlS7Ank0LgXOIFAxZNRD2V6WwXAczkGpq
-	itFMmPRoTL79vm0cI202+eudoY87l6wlX9ZcDLO+miQmmT+rET3eQtWxT+j6S8uyn0DQlLTL8ngl8
-	QiNFWOuu3PJbmACknudrxwGLOqcjYmIQ4qufEh5QdB9LvTyjsKzLHhgjKs2yB1Kv5wYuBVyiBQ8XG
-	AofNKnIBOwFn4iffaz4DavT3I28luIzlsW+oSK9wsNQBGqvb0F+yYMaFJHxPvruL1WQuHnEoX0pNu
-	2CU6U6jQ==;
+	bh=J0wsGtkMDP+lGhx28p+RHXRkJ0fALFx2Ca8PburHIFc=; b=oFZ0tV+LxqgP+436JPLkp40Q5i
+	5dU/skZ5LAqHbirrMx/tmX24wEpAnmv2zM5Di1kD2lgohNVZbSSzWp2w/CjkjI8hbHrF6gd8bEyz7
+	y/rVWc2ZE+PsAGrcG5QT/fIqRtpZsoIxC5vsUBanD5cGVGbxUSny/uNXk6Dmhy1elzCxarjITYDNz
+	QDTvEUDHEvd7UnI70Wers5UYQjV6Kvt9jUtuqfA+P3mdw+ZeVUlcAHkZWzahNq1IP9kcGXCZ37m4o
+	kh+BMhrnXnfmLN2cS3U0h8Rv8Diq2OBWAVN1v+VEjq6p8xCpmhBv2Kc69s/hqEvS44lK/n/5rLB/D
+	39XoU1jg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMj6-0000000Aj8u-0KLT;
-	Sun, 19 Oct 2025 06:17:08 +0000
-Received: from mail-pf1-x436.google.com ([2607:f8b0:4864:20::436])
+	id 1vAMj9-0000000AjBD-1kTt;
+	Sun, 19 Oct 2025 06:17:11 +0000
+Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMj2-0000000Aj5S-2P1F
+	id 1vAMj7-0000000Aj9X-0hdR
 	for kexec@lists.infradead.org;
-	Sun, 19 Oct 2025 06:17:06 +0000
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-781206cce18so3353032b3a.0
-        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:04 -0700 (PDT)
+	Sun, 19 Oct 2025 06:17:10 +0000
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-290cd62acc3so27174895ad.2
+        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760854624; x=1761459424; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1760854628; x=1761459428; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dLqqJGV/L+ji7bkggNzrd9CKo82o255TTwQERVGyCig=;
-        b=EbsYR3hAXVlbjt/2B4/z0uXz8jIArpOUuf+68nqfxWAk859qaz5NMYu9OJk+O9G2J/
-         zZH5P02LWBTb+ZJmr0xo+36jhVvDeUk94jQCfcsEKfhKXWBfhR1ftbFFl76+ZI2ihY37
-         K07Ax+Om2GlK90+SmOkJJWxy7+9Gw6FvAnyhkKcCZwaG+wRzhwVmXnEnm+gvV4XKZNoT
-         UqEJWVhMU0hkIahyadTGCegrOhfIrAJB9yIsgIj0zb8Rqo12DHYYo0niATz3anmi8oUn
-         YUe01oP0uQEClV8GGmAkVkEWF6OIO1buiiyEQaylNEHCTiajO9ydoFe3ChHt2qESO877
-         DLSw==
+        bh=J0wsGtkMDP+lGhx28p+RHXRkJ0fALFx2Ca8PburHIFc=;
+        b=S+GP7AO88POh3sdLcF6e7asDYNnUhDrakM4K27Uvqz8DdwOYTSfKaLwOr8oNVKYFy0
+         HoLzBAuRLoAM53rPEZySqcoU2rBFZyd9lBobHuLah87+LbvTgRMAS2A5q+ZUa3GNdW7t
+         v61rhxAqDIU4MsfkI7jvuGmDXr+L6a/BDCwdCsp9fYKn0WcT0Uf3tBRp53emeMLB86A0
+         il48TrPNN05q7YdQwvZ1cgLpL7mnMLcmn9aiO83MoNdAxQYhIjHEjD2x9YihN30VbVUi
+         HAPIv+AdJaFT1WptSIkkYhJvLQcG/1wRWJhb85CKSANAZfWvDZS5QKs1RvtfFvfM5RnZ
+         3p3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760854624; x=1761459424;
+        d=1e100.net; s=20230601; t=1760854628; x=1761459428;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dLqqJGV/L+ji7bkggNzrd9CKo82o255TTwQERVGyCig=;
-        b=YcKEKSOdifr6msiAw2ENi1+LNRZmsBmfGeD7HZriKZ9VlsLWQpaIh+VGMcxH0YN+Ol
-         b7071UVQJ7EMEwVJCDbXpiwLZbvnBa1y7Sik1GuRjzbrJc5Satm0vDRUIuJ4ab5TQtSu
-         38Ls/TlKSwtDohipWpGQS5Sap6ksTfayGy0e9MUtuz6XiMbyZ53Lij7sZ+TVPgLrx6JX
-         G567Vc+JDmfF2XexMJnSvxy9gcPnLp+rt8oILYAF9KSboj+AtNi8n3b20goFIGJMom81
-         GoRh9COM4N5vcT8Rt5bgyrs6jCm330MYqS2fv5hk1h3QFKDGEb5tTrFgv0bFavHOijF5
-         thkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBUEJBLWK9+kdcBPIM8kQ/1JQrZGVXX/Shkkl/p08C8V7LQLnmHdy/Hfrv9+8BWlruGcV63g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxaZ8t6ncQAm3Yj3qddnvrBrx0O/6nuWocYe4HrDLi6JzwT+3YU
-	uyb64PlWIdWRDrqzOR/O5ttpONA61empNYmlBF/dlarxh+9y5OsV7uUc
-X-Gm-Gg: ASbGncst248C+INoN8Y71GYvTGggnU1Igtsj5nDeoCE1fvaQUKOVOdtiYD8a+kD8ZxM
-	Vr8UoBvCBgKGbq3izqYS+2DszgO2+BDqsV1nPxof1q9SyKNYmrOVo9TdIvZaEu8bWjz2TeuNP9h
-	CAiKhT3pvKgLeKbzYYzO40WbwFo5GszJieH5x5ptFWfQ1hds80lqBIUPlgzrraHeWjkauthF93I
-	kSa2+FQ+XSA4OmqSNT7JZsuuPKmWeVea8beI6C6GKJddgTjH/qO3YbW81DtKjxV74f/t0CXkjjh
-	7Skv2jfdHSPs/CjpvA+wo3tJCQMfAV+M/H8eUMermzaQf4dorFYBNu1kHSpvWc1GcO0Lza89Fp2
-	QR+75m+/M9bWKlaTlOLWT4UCT9sLnLRwWXMXJ9vpJQMCO0Rid/piehkwp4F/jKkI8W6PmCW0Rap
-	wTyVdISiSbq7/+reU=
-X-Google-Smtp-Source: AGHT+IHnfm9cDhxkKo6634pD1Qrn3qveTjwFz5affIoqxA2b6S+MUJtfZj8poS0j4agHQFerUWJNwQ==
-X-Received: by 2002:a05:6a20:3d84:b0:278:bc13:d83e with SMTP id adf61e73a8af0-334a787d9c2mr12210119637.11.1760854623674;
-        Sat, 18 Oct 2025 23:17:03 -0700 (PDT)
+        bh=J0wsGtkMDP+lGhx28p+RHXRkJ0fALFx2Ca8PburHIFc=;
+        b=WHTOQRxUIOMTK7OWD+dmber6mMhRWAFxf5P6EK8VEFtvbK0CoqCPz5/G3ZVq/sSDnW
+         QeIAcJxJHd9VWoe9Fl9l2XG5cbTURydkYvIZ4KRuS5qsx6o/vb39C5jjFCNFmeP/eyPA
+         icM1zmAJZuP23Z1kZKrt7cAOFBcHwUzJ0fityu+H+gcBHx2xx54s0HQyFpSgL45EydpL
+         SgY1TyM4LFFacdBFREW3ycOor2AFOqE1DWFmcOTIDCuNVDfx2zV2xqzmFzQvG4F6OAzG
+         yx5RjVk3FwbQfr4U24Aq15SSDk/AnvxlyRbWmlJX2O8MK0/nLhTUsQk73kDO9CPVElPr
+         7Uyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBKo/slIB8CJABzsCHOvezMo9ClI4gtE11EfGMN/v0xfqajxaCQp1UAvPtC8g0j20iWtnWGw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw8BP8DSSOxT0xFtUCP8v0nV/Gr0NspPYepYfkVDlNYgNldfnUn
+	M3O7veez7zAU05iUbJYxamrqfl+8yiyz/yHEmqHLV7L/g2zK6x/loAn9
+X-Gm-Gg: ASbGncv9ksXBM/UXYfTvBx+YzAKWrFHKcuCx2eXI8rzgymH6ZTLCDKF71hD7nMMyw56
+	kUbb+ywwRjitJXKoL9/zaGJ4sG/Sy8sDx3RVBN//EfvL96uVvyfY5OzGwg2WeAmvuTnF/8LSvei
+	w0Gmp2cgB2hKYsfSuMtQucDpVoHR/nVPhSb4fv/m3N6jucFhu9+xnY+59+Lf3sAO2U3X3INcdH7
+	Sh8Dkw4ButPEmqDHvRWgWzsXPDr9NsjHjh2XEsX/zzkYayjKwQdiAUsPRTdKIghoaDG0fKInJws
+	a/Seaj555HjE5rbyGLHON2YTG526cjEwymXF0+YEHQpmpOdCapxiXK6RO1mjqpFAmP9wCjkG7x6
+	Ck+u3kROn+tlJxZK7eQMtwj/VniupOwIJC61M7LYCQiLor5oF37APaN4QYyhxKdz08FeF7N/LkS
+	lT1xzQ
+X-Google-Smtp-Source: AGHT+IGu67uE2s3blbKf/o2fKnuxlQtS3znzk8IIHkaEnUlKNNl2NW2CaX6Hyb7Xbj4GWxwVqCqcDg==
+X-Received: by 2002:a17:903:230a:b0:290:c3a6:822c with SMTP id d9443c01a7336-290c9d1b50dmr103427605ad.15.1760854628322;
+        Sat, 18 Oct 2025 23:17:08 -0700 (PDT)
 Received: from pop-os.. ([2601:647:6881:9060:bc87:d8fe:3e55:7ffb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.02
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 23:17:03 -0700 (PDT)
+        Sat, 18 Oct 2025 23:17:07 -0700 (PDT)
 From: Cong Wang <xiyou.wangcong@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: jiri@resnulli.us,
@@ -84,17 +84,17 @@ Cc: jiri@resnulli.us,
 	Changyuan Lyu <changyuanl@google.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [RFC Patch v2 07/16] kexec: Implement dynamic kimage tracking
-Date: Sat, 18 Oct 2025 23:16:21 -0700
-Message-Id: <20251019061631.2235405-8-xiyou.wangcong@gmail.com>
+Subject: [RFC Patch v2 09/16] kexec: Integrate multikernel instance management with kexec subsystem
+Date: Sat, 18 Oct 2025 23:16:23 -0700
+Message-Id: <20251019061631.2235405-10-xiyou.wangcong@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 References: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251018_231704_638748_998FBCE9 
-X-CRM114-Status: GOOD (  31.16  )
+X-CRM114-CacheID: sfid-20251018_231709_224312_1DC002EA 
+X-CRM114-Status: GOOD (  24.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,372 +111,255 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Cong Wang <cwang@multikernel.io>
 
-Replace static kexec_image and kexec_crash_image globals with a dynamic
-linked list infrastructure to support multiple kernel images. This change
-enables multikernel functionality while maintaining backward compatibility.
+Establish bidirectional integration between the kexec subsystem and
+multikernel instance management, enabling proper lifecycle tracking
+and resource coordination for multikernel operations.
 
-Key changes:
-- Add list_head member to kimage structure for chaining
-- Implement thread-safe linked list management with global mutex
-- Update kexec load/unload logic to use list-based APIs for multikernel
-- Add helper functions for finding and managing multiple kimages
-- Preserve existing kexec_image/kexec_crash_image pointers for compatibility
-- Update architecture-specific crash handling to use new APIs
+This commit introduces:
 
-The multikernel case now properly uses list-based management instead of
-overwriting compatibility pointers, allowing multiple multikernel images
-to coexist in the system.
+* Enhanced kimage structure with multikernel-specific fields including
+  mk_id for unique multikernel identification and mk_instance pointer
+  for cross-referencing with the multikernel instance management
+  system, enabling proper state synchronization.
+
+* UAPI extensions in include/uapi/linux/kexec.h that define multikernel
+  ID encoding within kexec flags using KEXEC_MK_ID_MASK and
+  KEXEC_MK_ID_SHIFT, providing up to 2047 unique multikernel instances
+  with proper bit field management macros.
+
+* Multikernel image lookup infrastructure through kimage_find_by_id()
+  that leverages the mk_instance system for efficient image retrieval
+  by multikernel ID, replacing CPU-based lookup with proper instance
+  management.
+
+* Refactored multikernel_kexec() interface from CPU-based to ID-based
+  operation (multikernel_kexec_by_id()) that uses instance CPU
+  assignments from device tree configuration rather than manual CPU
+  specification, improving safety and consistency.
+
+* Proper resource lifecycle management in kimage_free() that clears
+  cross-references, updates instance states, and handles reference
+  counting when multikernel images are freed, preventing resource
+  leaks and dangling pointers.
+
+* Updated reboot syscall interface that accepts multikernel instance
+  IDs instead of CPU numbers in LINUX_REBOOT_CMD_MULTIKERNEL,
+  providing a more intuitive and safer user interface.
 
 Signed-off-by: Cong Wang <cwang@multikernel.io>
 ---
- arch/powerpc/kexec/crash.c |  8 ++--
- arch/x86/kernel/crash.c    |  4 +-
- include/linux/kexec.h      | 13 ++++++
- kernel/kexec.c             | 60 ++++++++++++++++++++++++++--
- kernel/kexec_core.c        | 81 ++++++++++++++++++++++++++++++++++++++
- kernel/kexec_file.c        | 33 ++++++++++++++--
- 6 files changed, 187 insertions(+), 12 deletions(-)
+ include/linux/kexec.h       | 10 ++++-
+ include/linux/multikernel.h |  3 ++
+ include/uapi/linux/kexec.h  |  4 ++
+ kernel/kexec_core.c         | 75 +++++++++++++++++++++++++++++++++----
+ kernel/reboot.c             |  4 +-
+ 5 files changed, 85 insertions(+), 11 deletions(-)
 
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index a325c1c02f96..af190fad4f22 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -477,13 +477,13 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	ptr = __va(mem);
- 	if (ptr) {
- 		/* Temporarily invalidate the crash image while it is replaced */
--		xchg(&kexec_crash_image, NULL);
-+		kimage_update_compat_pointers(NULL, KEXEC_TYPE_CRASH);
- 
- 		/* Replace the old elfcorehdr with newly prepared elfcorehdr */
- 		memcpy((void *)ptr, elfbuf, elfsz);
- 
- 		/* The crash image is now valid once again */
--		xchg(&kexec_crash_image, image);
-+		kimage_update_compat_pointers(image, KEXEC_TYPE_CRASH);
- 	}
- out:
- 	kvfree(cmem);
-@@ -537,14 +537,14 @@ static void update_crash_fdt(struct kimage *image)
- 	fdt = __va((void *)image->segment[fdt_index].mem);
- 
- 	/* Temporarily invalidate the crash image while it is replaced */
--	xchg(&kexec_crash_image, NULL);
-+	kimage_update_compat_pointers(NULL, KEXEC_TYPE_CRASH);
- 
- 	/* update FDT to reflect changes in CPU resources */
- 	if (update_cpus_node(fdt))
- 		pr_err("Failed to update crash FDT");
- 
- 	/* The crash image is now valid once again */
--	xchg(&kexec_crash_image, image);
-+	kimage_update_compat_pointers(image, KEXEC_TYPE_CRASH);
- }
- 
- int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 335fd2ee9766..a81f91d4352d 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -559,9 +559,9 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- 	 * Temporarily invalidate the crash image while the
- 	 * elfcorehdr is updated.
- 	 */
--	xchg(&kexec_crash_image, NULL);
-+	kimage_update_compat_pointers(NULL, KEXEC_TYPE_CRASH);
- 	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
--	xchg(&kexec_crash_image, image);
-+	kimage_update_compat_pointers(image, KEXEC_TYPE_CRASH);
- 	kunmap_local(old_elfcorehdr);
- 	pr_debug("updated elfcorehdr\n");
- 
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index edf64bc98ed5..69877db5360b 100644
+index 69877db5360b..5e9e9ad1dfeb 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -431,6 +431,9 @@ struct kimage {
- 	/* dm crypt keys buffer */
- 	unsigned long dm_crypt_keys_addr;
- 	unsigned long dm_crypt_keys_sz;
+@@ -132,6 +132,7 @@ struct purgatory_info {
+ };
+ 
+ struct kimage;
++struct mk_instance;
+ 
+ typedef int (kexec_probe_t)(const char *kernel_buf, unsigned long kernel_size);
+ typedef void *(kexec_load_t)(struct kimage *image, char *kernel_buf,
+@@ -434,6 +435,12 @@ struct kimage {
+ 
+ 	/* For multikernel support: linked list node */
+ 	struct list_head list;
 +
-+	/* For multikernel support: linked list node */
-+	struct list_head list;
++	/* Multikernel unique ID (0 = current kernel, >0 = multikernel images) */
++	int mk_id;
++
++	/* Multikernel instance cross-reference */
++	struct mk_instance *mk_instance;
  };
  
  /* kexec interface functions */
-@@ -534,6 +537,16 @@ extern bool kexec_file_dbg_print;
+@@ -441,7 +448,8 @@ extern void machine_kexec(struct kimage *image);
+ extern int machine_kexec_prepare(struct kimage *image);
+ extern void machine_kexec_cleanup(struct kimage *image);
+ extern int kernel_kexec(void);
+-extern int multikernel_kexec(int cpu);
++extern int multikernel_kexec_by_id(int mk_id);
++extern struct kimage *kimage_find_by_id(int mk_id);
+ extern struct page *kimage_alloc_control_pages(struct kimage *image,
+ 						unsigned int order);
  
- extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
- extern void kimage_unmap_segment(void *buffer);
+diff --git a/include/linux/multikernel.h b/include/linux/multikernel.h
+index 75cbb316d565..c65d39a66b84 100644
+--- a/include/linux/multikernel.h
++++ b/include/linux/multikernel.h
+@@ -102,6 +102,9 @@ struct mk_instance {
+ 	void *dtb_data;                 /* Device tree blob data */
+ 	size_t dtb_size;                /* Size of DTB */
+ 
++	/* Kexec integration */
++	struct kimage *kimage;          /* Associated kimage object */
 +
-+/* Multikernel support functions */
-+extern struct kimage *kimage_find_by_type(int type);
-+extern void kimage_add_to_list(struct kimage *image);
-+extern void kimage_remove_from_list(struct kimage *image);
-+extern void kimage_update_compat_pointers(struct kimage *new_image, int type);
-+extern int kimage_get_all_by_type(int type, struct kimage **images, int max_count);
-+extern void kimage_list_lock(void);
-+extern void kimage_list_unlock(void);
-+extern void kimage_list_multikernel_images(void);
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 28008e3d462e..74b8df4670e0 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -114,7 +114,31 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 	/* Sysfs representation */
+ 	struct kernfs_node *kn;            /* Kernfs node for this instance */
  
- 	if (nr_segments == 0) {
- 		/* Uninstall image */
--		kimage_free(xchg(dest_image, NULL));
-+		if (flags & KEXEC_ON_CRASH) {
-+			struct kimage *old_image = xchg(&kexec_crash_image, NULL);
-+			if (old_image) {
-+				kimage_remove_from_list(old_image);
-+				kimage_free(old_image);
-+			}
-+		} else if (flags & KEXEC_MULTIKERNEL) {
-+			/* For multikernel unload, we need to specify which image to remove */
-+			/* For now, remove all multikernel images - this could be enhanced */
-+			struct kimage *images[10];
-+			int count, i;
-+
-+			count = kimage_get_all_by_type(KEXEC_TYPE_MULTIKERNEL, images, 10);
-+			for (i = 0; i < count; i++) {
-+				kimage_remove_from_list(images[i]);
-+				kimage_free(images[i]);
-+			}
-+			pr_info("Unloaded %d multikernel images\n", count);
-+		} else {
-+			struct kimage *old_image = xchg(&kexec_image, NULL);
-+			if (old_image) {
-+				kimage_remove_from_list(old_image);
-+				kimage_free(old_image);
-+			}
-+		}
- 		ret = 0;
- 		goto out_unlock;
- 	}
-@@ -124,7 +148,11 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 		 * crashes.  Free any current crash dump kernel before
- 		 * we corrupt it.
- 		 */
--		kimage_free(xchg(&kexec_crash_image, NULL));
-+		struct kimage *old_crash_image = xchg(&kexec_crash_image, NULL);
-+		if (old_crash_image) {
-+			kimage_remove_from_list(old_crash_image);
-+			kimage_free(old_crash_image);
-+		}
- 	}
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 346e0ff4e663..82a562ae6ac1 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -15,6 +15,10 @@
+ #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
+ #define KEXEC_CRASH_HOTPLUG_SUPPORT 0x00000008
+ #define KEXEC_MULTIKERNEL	0x00000010
++#define KEXEC_MK_ID_MASK	0x0000ffe0
++#define KEXEC_MK_ID_SHIFT	5
++#define KEXEC_MK_ID(id)		(((id) << KEXEC_MK_ID_SHIFT) & KEXEC_MK_ID_MASK)
++#define KEXEC_GET_MK_ID(flags)	(((flags) & KEXEC_MK_ID_MASK) >> KEXEC_MK_ID_SHIFT)
+ #define KEXEC_ARCH_MASK		0xffff0000
  
- 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
-@@ -164,7 +192,33 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 		goto out;
- 
- 	/* Install the new kernel and uninstall the old */
--	image = xchg(dest_image, image);
-+	if (flags & KEXEC_ON_CRASH) {
-+		struct kimage *old_image = xchg(&kexec_crash_image, image);
-+		if (old_image) {
-+			kimage_remove_from_list(old_image);
-+			kimage_free(old_image);
-+		}
-+		if (image) {
-+			kimage_add_to_list(image);
-+			kimage_update_compat_pointers(image, KEXEC_TYPE_CRASH);
-+		}
-+		image = NULL; /* Don't free the new image */
-+	} else if (flags & KEXEC_MULTIKERNEL) {
-+		if (image)
-+			kimage_add_to_list(image);
-+		image = NULL; /* Don't free the new image */
-+	} else {
-+		struct kimage *old_image = xchg(&kexec_image, image);
-+		if (old_image) {
-+			kimage_remove_from_list(old_image);
-+			kimage_free(old_image);
-+		}
-+		if (image) {
-+			kimage_add_to_list(image);
-+			kimage_update_compat_pointers(image, KEXEC_TYPE_DEFAULT);
-+		}
-+		image = NULL; /* Don't free the new image */
-+	}
- 
- out:
- #ifdef CONFIG_CRASH_DUMP
+ /*
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 7d89d00e2cde..449096060fe8 100644
+index 449096060fe8..ed5c97b4531e 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -56,6 +56,10 @@ bool kexec_in_progress = false;
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/multikernel.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/memblock.h>
  
- bool kexec_file_dbg_print;
+@@ -255,6 +256,12 @@ struct kimage *do_kimage_alloc_init(void)
+ 	/* Initialize the list node for multikernel support */
+ 	INIT_LIST_HEAD(&image->list);
  
-+/* Linked list of dynamically allocated kimages */
-+static LIST_HEAD(kexec_image_list);
-+static DEFINE_MUTEX(kexec_image_mutex);
++	/* Initialize multikernel ID (0 = current kernel, will be assigned later for multikernel) */
++	image->mk_id = 0;
 +
- /*
-  * When kexec transitions to the new kernel there is a one-to-one
-  * mapping between physical and virtual addresses.  On processors
-@@ -248,6 +252,9 @@ struct kimage *do_kimage_alloc_init(void)
- 	/* Initialize the list of unusable pages */
- 	INIT_LIST_HEAD(&image->unusable_pages);
- 
-+	/* Initialize the list node for multikernel support */
-+	INIT_LIST_HEAD(&image->list);
++	/* Initialize multikernel instance cross-reference */
++	image->mk_instance = NULL;
 +
  #ifdef CONFIG_CRASH_HOTPLUG
  	image->hp_action = KEXEC_CRASH_HP_NONE;
  	image->elfcorehdr_index = -1;
-@@ -580,6 +587,13 @@ void kimage_free(struct kimage *image)
- 	if (!image)
- 		return;
+@@ -594,6 +601,16 @@ void kimage_free(struct kimage *image)
+ 	else if (image == kexec_crash_image)
+ 		kimage_update_compat_pointers(NULL, KEXEC_TYPE_CRASH);
  
-+	/* Remove from linked list and update compatibility pointers */
-+	kimage_remove_from_list(image);
-+	if (image == kexec_image)
-+		kimage_update_compat_pointers(NULL, KEXEC_TYPE_DEFAULT);
-+	else if (image == kexec_crash_image)
-+		kimage_update_compat_pointers(NULL, KEXEC_TYPE_CRASH);
++	/* Remove from IDR if it's a multikernel image */
++	if (image->type == KEXEC_TYPE_MULTIKERNEL && image->mk_instance) {
++		/* Clear cross-reference and update state */
++		image->mk_instance->kimage = NULL;
++		mk_instance_set_state(image->mk_instance, MK_STATE_READY);
++		mk_instance_put(image->mk_instance);
++		image->mk_instance = NULL;
++		pr_info("Freed multikernel ID %d\n", image->mk_id);
++	}
 +
  #ifdef CONFIG_CRASH_DUMP
  	if (image->vmcoreinfo_data_copy) {
  		crash_update_vmcoreinfo_safecopy(NULL);
-@@ -1096,6 +1110,72 @@ void kimage_unmap_segment(void *segment_buffer)
- 	vunmap(segment_buffer);
+@@ -1393,26 +1410,68 @@ int kernel_kexec(void)
+ 	return error;
  }
  
-+void kimage_add_to_list(struct kimage *image)
-+{
-+	mutex_lock(&kexec_image_mutex);
-+	list_add_tail(&image->list, &kexec_image_list);
-+	mutex_unlock(&kexec_image_mutex);
+-int multikernel_kexec(int cpu)
++/*
++ * Find a multikernel image by ID using mk_instance lookup
++ */
++struct kimage *kimage_find_by_id(int mk_id)
+ {
+-	int rc;
++	struct mk_instance *instance;
++	struct kimage *image = NULL;
+ 
+-	pr_info("multikernel kexec: cpu %d\n", cpu);
++	if (mk_id <= 0)
++		return NULL;
+ 
+-	if (cpu_online(cpu)) {
+-		pr_err("The CPU is currently running with this kernel instance.");
+-		return -EBUSY;
++	/* Use mk_instance system to find the associated kimage */
++	instance = mk_instance_find(mk_id);
++	if (instance) {
++		image = instance->kimage;
++		mk_instance_put(instance); /* Release reference from find */
+ 	}
+ 
++	return image;
 +}
 +
-+void kimage_remove_from_list(struct kimage *image)
++int multikernel_kexec_by_id(int mk_id)
 +{
-+	mutex_lock(&kexec_image_mutex);
-+	if (!list_empty(&image->list))
-+		list_del_init(&image->list);
-+	mutex_unlock(&kexec_image_mutex);
-+}
++	struct kimage *mk_image;
++	struct mk_instance *instance;
++	int cpu = -1;
++	int rc;
 +
-+struct kimage *kimage_find_by_type(int type)
-+{
-+	struct kimage *image;
+ 	if (!kexec_trylock())
+ 		return -EBUSY;
+-	if (!kexec_image) {
 +
-+	mutex_lock(&kexec_image_mutex);
-+	list_for_each_entry(image, &kexec_image_list, list) {
-+		if (image->type == type) {
-+			mutex_unlock(&kexec_image_mutex);
-+			return image;
-+		}
++	mk_image = kimage_find_by_id(mk_id);
++	if (!mk_image) {
++		pr_err("No multikernel image found with ID %d\n", mk_id);
+ 		rc = -EINVAL;
+ 		goto unlock;
+ 	}
+ 
++	instance = mk_image->mk_instance;
++	if (instance->cpus_valid && !cpumask_empty(instance->cpus)) {
++		cpu = cpumask_first(instance->cpus);
++		pr_info("multikernel kexec: using assigned CPU %d from instance cpumask %*pbl\n",
++			cpu, cpumask_pr_args(instance->cpus));
++	} else {
++		pr_err("No CPU assignment found for multikernel instance %d - CPU assignment is required\n",
++		       mk_id);
++		rc = -EINVAL;
++		goto unlock;
 +	}
-+	mutex_unlock(&kexec_image_mutex);
-+	return NULL;
-+}
 +
-+void kimage_update_compat_pointers(struct kimage *new_image, int type)
-+{
-+	mutex_lock(&kexec_image_mutex);
-+	if (type == KEXEC_TYPE_CRASH) {
-+		kexec_crash_image = new_image;
-+	} else if (type == KEXEC_TYPE_DEFAULT) {
-+		kexec_image = new_image;
++	if (cpu_online(cpu)) {
++		pr_err("CPU %d is currently online and cannot be used for multikernel instance %d\n",
++		       cpu, mk_id);
++		rc = -EBUSY;
++		goto unlock;
 +	}
-+	mutex_unlock(&kexec_image_mutex);
-+}
 +
-+int kimage_get_all_by_type(int type, struct kimage **images, int max_count)
-+{
-+	struct kimage *image;
-+	int count = 0;
++	pr_info("Using multikernel image with ID %d (entry point: 0x%lx) on CPU %d\n",
++		mk_image->mk_id, mk_image->start, cpu);
 +
-+	mutex_lock(&kexec_image_mutex);
-+	list_for_each_entry(image, &kexec_image_list, list) {
-+		if (image->type == type && count < max_count) {
-+			images[count++] = image;
-+		}
-+	}
-+	mutex_unlock(&kexec_image_mutex);
-+	return count;
-+}
-+
-+void kimage_list_lock(void)
-+{
-+	mutex_lock(&kexec_image_mutex);
-+}
-+
-+void kimage_list_unlock(void)
-+{
-+	mutex_unlock(&kexec_image_mutex);
-+}
-+
- struct kexec_load_limit {
- 	/* Mutex protects the limit count. */
- 	struct mutex mutex;
-@@ -1112,6 +1192,7 @@ static struct kexec_load_limit load_limit_panic = {
- 	.limit = -1,
+ 	cpus_read_lock();
+-	rc = multikernel_kick_ap(cpu, kexec_image->start);
++	rc = multikernel_kick_ap(cpu, mk_image->start);
+ 	cpus_read_unlock();
+ 
+ unlock:
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index f3ac703c4695..bff6d3603a17 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -718,7 +718,7 @@ EXPORT_SYMBOL_GPL(kernel_power_off);
+ DEFINE_MUTEX(system_transition_mutex);
+ 
+ struct multikernel_boot_args {
+-	int cpu;
++	int mk_id;
  };
  
-+/* Compatibility: maintain pointers to current default and crash images */
- struct kimage *kexec_image;
- struct kimage *kexec_crash_image;
- static int kexec_load_disabled;
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index eb62a9794242..2d9d5626c8da 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -400,8 +400,13 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	 * same memory where old crash kernel might be loaded. Free any
- 	 * current crash dump kernel before we corrupt it.
- 	 */
--	if (flags & KEXEC_FILE_ON_CRASH)
--		kimage_free(xchg(&kexec_crash_image, NULL));
-+	if (flags & KEXEC_FILE_ON_CRASH) {
-+		struct kimage *old_crash_image = xchg(&kexec_crash_image, NULL);
-+		if (old_crash_image) {
-+			kimage_remove_from_list(old_crash_image);
-+			kimage_free(old_crash_image);
-+		}
-+	}
+ /*
+@@ -807,7 +807,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
+ 	case LINUX_REBOOT_CMD_MULTIKERNEL:
+ 		if (copy_from_user(&boot_args, arg, sizeof(boot_args)))
+ 			return -EFAULT;
+-		ret = multikernel_kexec(boot_args.cpu);
++		ret = multikernel_kexec_by_id(boot_args.mk_id);
+ 		break;
+ #endif
  
- 	ret = kimage_file_alloc_init(&image, kernel_fd, initrd_fd, cmdline_ptr,
- 				     cmdline_len, flags);
-@@ -457,7 +462,29 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	 */
- 	kimage_file_post_load_cleanup(image);
- exchange:
--	image = xchg(dest_image, image);
-+	if (image_type == KEXEC_TYPE_CRASH) {
-+		struct kimage *old_image = xchg(&kexec_crash_image, image);
-+		if (old_image) {
-+			kimage_remove_from_list(old_image);
-+			kimage_free(old_image);
-+		}
-+		if (image) {
-+			kimage_add_to_list(image);
-+			kimage_update_compat_pointers(image, KEXEC_TYPE_CRASH);
-+		}
-+		image = NULL; /* Don't free the new image */
-+	} else {
-+		struct kimage *old_image = xchg(&kexec_image, image);
-+		if (old_image) {
-+			kimage_remove_from_list(old_image);
-+			kimage_free(old_image);
-+		}
-+		if (image) {
-+			kimage_add_to_list(image);
-+			kimage_update_compat_pointers(image, KEXEC_TYPE_DEFAULT);
-+		}
-+		image = NULL; /* Don't free the new image */
-+	}
- out:
- #ifdef CONFIG_CRASH_DUMP
- 	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
 -- 
 2.34.1
 
