@@ -4,79 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78A2FCCD184
-	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1009CCD1AF
+	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=SIzBYAq5cauMEng/8nrVC1spI8sxNqVcm1FTDbL64Gs=; b=W48oVeVXzXNIkJmcats80zOmfd
-	NX2v3BzNEPPIjyQicB4p4nsSs455mhyE1OP12jo6fMYJrhuMwnA6/1i4OcuhzHbkXFMtBhjnYXFsI
-	qGDhlueRjv+XD6UZUap/dSwAk8IA9+ESW+SgoWVzDjdqk1rr85ph+Ru+wt7G9iwWIRJ366NAWdWBo
-	hMF3LBNmjLd2PDr0FfFFqsKQwnbhO5cESHlLY6IwGkSaOuPtY9mKbmD6xSOEHllJdz4vYLAQvCMEv
-	rTUrw9J881XqIP6Sz0Z8LSMrllzvCiNTDN4NCNFmazVrELQ7/3oWId57ZcYkKFRLxFF0mcMP4hj5F
-	wg2gHAaA==;
+	bh=+dhzEiy+8NWdg0h4CeSLeODHjNB3Z/i+xinCfvk2bH8=; b=Vujm5pjqDHKnHoOL1TlygR+0yB
+	UHrpOIJJ8c9nQP/mxZj6AIAjMn/lafUFPlOSCrD14gMdoTpGekHGrncGanVquUzXJxhAzkWOUwtN7
+	BURn39gaf0a8vT7cotP+77J/0eEJuihn2gmULlKOxs1SIMz5eRid27+OSXdrjonTsIshTLLF7k33B
+	AnCTHwhk8ajnchMmCmyCOok24VqX+Ew7lKSZeNQgFiAsW6wTYaCB7GuH9ql1km6yJIkBlxraISOUk
+	1CwnabH1sjT7AtCbU2UU5wcGjYBqV5ICqeF/rC/OKXxkBsSgIOT4ESJKkDnljCCggDrR/48c8d6K8
+	fjq5VupA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMjG-0000000AjGn-1vYV;
-	Sun, 19 Oct 2025 06:17:18 +0000
-Received: from mail-pf1-x431.google.com ([2607:f8b0:4864:20::431])
+	id 1vAMjB-0000000AjDN-3Pmu;
+	Sun, 19 Oct 2025 06:17:13 +0000
+Received: from mail-pj1-x102e.google.com ([2607:f8b0:4864:20::102e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMjE-0000000AjEo-0Gqh
+	id 1vAMj9-0000000AjAs-12iT
 	for kexec@lists.infradead.org;
-	Sun, 19 Oct 2025 06:17:17 +0000
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-7835321bc98so2925146b3a.2
-        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:15 -0700 (PDT)
+	Sun, 19 Oct 2025 06:17:12 +0000
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-33bafd5d2adso2814644a91.3
+        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760854635; x=1761459435; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1760854630; x=1761459430; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SIzBYAq5cauMEng/8nrVC1spI8sxNqVcm1FTDbL64Gs=;
-        b=bIAzzjnaSCKa9EQF3IgYo+bVi9+4x4xGWspx4E4jTt5KqLLkhCUna1Q+aOEogFHaD7
-         aK7yNsr0p2ybPU4b/+jglIr0/IfMBUH0y23VtsCr5CGTrFSk4+7CRJVTuPhHSzdeSD1C
-         OK4iMm7lnlSSkU82WSWWlCQV65CuUY8gMqdx1+EUWIULqVXWsRQPepaMxIVZg5W3Gd3Q
-         33d/63mNHNFPU8sapmIZsVlF52cvDcw/KcbxxbaDITDqNlPz7Iit/mRU56jthwjgHwc+
-         gvBg4RM2W/9KIPjNbWpdcHtmUI34hLRIZ02wyt6wUDcJ7dZV/d4eYSoJUXHaUvAAzMiu
-         TcqQ==
+        bh=+dhzEiy+8NWdg0h4CeSLeODHjNB3Z/i+xinCfvk2bH8=;
+        b=mXDzOw+BX7kpN+PtOHQ7LV1vOTt4AXGRMoRa5iKYO7Q5wBmDYGkqtQRynJSRIMR0Sd
+         l/KypVCYWjs5i8JqX4lUwuN4C8mV3bK1D78OJmnH29x+Ks+I+ctAgHLopkSlRh78oOAB
+         m3VKIgRyKm5tqIwVrF9TRzTzfu5bUK8cIwUEm3uWDB5wnQXQUuHLvkDm7mHsQEC4s3cC
+         1KApppMXHHt2kyPfjhO/vBuSSKltgbVl64okNVCBhTkTRYa/fFUTZk5w6cfMi69KmWXy
+         hFzXaoA6zfFjJIyauWOK/WIlUwSE+sKfeGn0XznNdIFMUR+DKdrPv4BAz4INRQz9XwEb
+         LDdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760854635; x=1761459435;
+        d=1e100.net; s=20230601; t=1760854630; x=1761459430;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SIzBYAq5cauMEng/8nrVC1spI8sxNqVcm1FTDbL64Gs=;
-        b=lMBSyDEM3j3nVk3Njxhgu3UK4IByYEN8Db/iXNRrpOqfViRDdfeo049WVjqouVS1b0
-         0+3D0XYraeWq3z59KfxHkswVFSvx0zdDE5U3brp9KTL8rl0XxKjTahyoSHXdZfSVWYF+
-         ZPie6pHUFawAtP3fdMf+65gegUa6XJZA8+qJDCFuSmFwdDOroK0LhfIe5NZFhTlSpNIu
-         U5AgzsHCFnz9qjJcrBbKTRj+fLpFXckhB9+rbN04SxXdDPwMtV88cdjGeTdGq5JUCcvD
-         COTGuCD6Sfbmb8ThZ7Q/fTyxagB5P8WWtqs2cpB/7MmfCVqHnbrymNR0Lmj+hs+yjBI6
-         cyLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV12oICTHMeiJOQctNvMe2scI7646X8gpmIhbW4cDuX8126IbAI3fqkXWWnBRBOLZLTPsvNbQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwlDn60y3k0CpzBqDWwTKKFumvG9avN+fO0CJ8KQtVjpZ2h0taH
-	hYdlacZCSHgAjUgGmyB5rvB+h4KiQt+LlSMKVyT1n49XINroE9ixKS8H
-X-Gm-Gg: ASbGncvt08J5xNeJLD+YdpnRTfBhMJs+TEwAIFkHWKnEp4sX0cr6tee8xZrWVymsCGE
-	Ujpj8WVzN+K5vlnxIWYwtB4ldnvx48yloUL+++PJAaE8e3b0UPnHV68jKBnoTH30ZI8M8uHes4V
-	Ska8fe11bbmTMfGsBzzs79hM5MKWbVu4oy6kZasd7e2MkFTmp5xhs3/XDQ0JHtLI+Vto/fPRJbL
-	oJ3o2mbqwUF9oV//o1rJDmtHgwOB6xDxLTBkYCK8nxKI2dDdhd/51O2InJ2RNiLSNP6Ryi04VyU
-	uXzGITAreKl3lPQd1UtY0rFPOid5VNAo//pJ1vHo2OjR7ee40SxG87MBDYUN9q9LAuSTxfk5DsY
-	kVwGYzB3CoPLza2RL7KroXTNRAlRlMiR8o28HGPL4XUL6WZB613YK9mG1m+k/a6oxDPASA+PxPh
-	hahgzh
-X-Google-Smtp-Source: AGHT+IHfF4hU8/QtsMDLLQvEjqsCa8w0BBb+2CNnqIZAGSLrLtnMeBv6KtywAED8Fp+17ZtBPczCAA==
-X-Received: by 2002:a05:6a20:7355:b0:32d:b925:4a8 with SMTP id adf61e73a8af0-334a851519cmr11699864637.3.1760854635123;
-        Sat, 18 Oct 2025 23:17:15 -0700 (PDT)
+        bh=+dhzEiy+8NWdg0h4CeSLeODHjNB3Z/i+xinCfvk2bH8=;
+        b=u0AKTz51FRZgeub2Eexjd0hQmri9LKQP618ob8djAsqoTcRnL3el+eCVCdXVDVsPC9
+         5f0mjcp5IJGCN6J8ef3ry5mc8MO0vNxQDUg3F86t3qPum+AxsxXDexXm1qhyFqeyUd7k
+         q3QRDzv5TzUbvkDuInaihn7GZC0D6CpvvvNroKa49Br+5/YoCKF4DakshYdKr96m7WOY
+         29JaL1j0wuF71CuKWIcVDmyB3vevIL+I/LxJwwtkvTbAt5EMl2gcnGC3d2A0/u9VtvIS
+         LaGFzeAww8CwKevdQcZ7WgLznbNsNDCtwwCUeEXVUbRLgvGIoZrkA4q4MrKS6YzkKfbQ
+         Jd3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Ec63yqdei0cnoAGu98JSoTspO/5zo2DKBGT663Uu8TUa/GCXtTELfZdnxQcFG6wQ9j478g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyzC30iiCfJd16lmhh2WoAuHj8o83TxVNPXZMmyBIQmMOXqgjwP
+	QOlOI7xdPpNEphAC9yHLMe4VAHjTtWdNVnEG2rt/E/eW/9b7+a1sT8yu
+X-Gm-Gg: ASbGncvZ0ECqVttk9cYzDo8GgDYejWCULHhYU4LnLzp6L5iAKLfqDy+03vLpJc7F6jj
+	+mKwa7B6wiCX8dRAev6YxoLAda/7jKAfw1+3FO0raRGXkbAtWz/zhkqYgKgMggP0cMrGKVZMYwh
+	Zjo2ltzjNpArF3AKGm030OclQBWZ3EDBK5t1C5yzm0gdC29vGNPIwvJix61NLW1SSvTkKfvkBoK
+	i0txymuMub5SUeXgDQzAYCE1/Bm/O70+v/1MouTDpOIDJMb9tZgIonFbcbe40kLFICXdw19NR6E
+	74HejfkukHnazOIzJAuVO1qljYadftHrB3n34x0gTQlPaJy1t3Gtf3ffjA+j7cn0Js0pc5sjz+2
+	azBxKLq90Dp6gk1JqwGJWg0yuHG2JvcTorDv18K0qzcarXaCSL8Mch48lTvO7s6yo+sA+tL61Jx
+	WbomRdls4H9sIpTY0=
+X-Google-Smtp-Source: AGHT+IHsfMse1ea3nbYNy4BvjdFagVFMuvl17zEl9LnMyhbIq3nsVQdQyV1KljR01j/1hJqe5RDh3A==
+X-Received: by 2002:a17:90b:1e07:b0:32e:7340:a7f7 with SMTP id 98e67ed59e1d1-33bcf85abb4mr10954646a91.2.1760854630353;
+        Sat, 18 Oct 2025 23:17:10 -0700 (PDT)
 Received: from pop-os.. ([2601:647:6881:9060:bc87:d8fe:3e55:7ffb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.13
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 23:17:14 -0700 (PDT)
+        Sat, 18 Oct 2025 23:17:09 -0700 (PDT)
 From: Cong Wang <xiyou.wangcong@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: jiri@resnulli.us,
 	stefanha@redhat.com,
 	multikernel@lists.linux.dev,
 	pasha.tatashin@soleen.com,
-	Cong Wang <cwang@multikernel.io>,
+	Cong Wang <cwang@multiernel.io>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>,
 	Alexander Graf <graf@amazon.com>,
@@ -84,17 +84,18 @@ Cc: jiri@resnulli.us,
 	Changyuan Lyu <changyuanl@google.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [RFC Patch v2 12/16] multikernel: Introduce per-instance memory allocation interface
-Date: Sat, 18 Oct 2025 23:16:26 -0700
-Message-Id: <20251019061631.2235405-13-xiyou.wangcong@gmail.com>
+Subject: [RFC Patch v2 10/16] Documentation: Add multikernel usage
+Date: Sat, 18 Oct 2025 23:16:24 -0700
+Message-Id: <20251019061631.2235405-11-xiyou.wangcong@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 References: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251018_231716_120999_6EE42B04 
-X-CRM114-Status: GOOD (  15.12  )
+X-CRM114-CacheID: sfid-20251018_231711_312772_4812881E 
+X-CRM114-Status: GOOD (  18.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,181 +110,235 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Cong Wang <cwang@multikernel.io>
+From: Cong Wang <cwang@multiernel.io>
 
-Add virtual memory allocation interface for multikernel instances,
-providing convenient high-level functions for memory management within
-instance-specific memory pools with automatic virtual address mapping.
-
-This commit introduces:
-
-* Instance-based memory allocation functions (mk_instance_alloc() and
-  mk_instance_free()) that provide virtual memory allocation from
-  instance-specific memory pools with configurable alignment support
-  and automatic physical-to-virtual address mapping using memremap().
-
-* Kimage-based memory allocation wrappers (mk_kimage_alloc() and
-  mk_kimage_free()) that provide convenient access to instance memory
-  pools through kimage structures, commonly used in kexec code paths
-  for multikernel operations.
-
-* Automatic memory mapping infrastructure that uses memremap() with
-  MEMREMAP_WB caching policy to provide write-back cached virtual
-  addresses for allocated physical memory from instance pools.
-
-* Proper error handling and cleanup with automatic rollback of
-  physical allocations when virtual mapping fails, preventing memory
-  leaks in error conditions.
-
-The allocation functions complement the existing physical memory pool
-management by providing a higher-level interface suitable for kernel
-code that requires virtual addresses, such as buffer management, data
-structure allocation, and inter-kernel communication buffers.
-
-This interface enables multikernel subsystems to allocate kernel images,
-initramfs etc., maintaining proper resource isolation between multikernel
-instances.
-
-Signed-off-by: Cong Wang <cwang@multikernel.io>
+Signed-off-by: Cong Wang <cwang@multiernel.io>
 ---
- include/linux/multikernel.h |  6 +++
- kernel/multikernel/core.c   | 98 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
+ Documentation/multikernel/usage.rst | 215 ++++++++++++++++++++++++++++
+ 1 file changed, 215 insertions(+)
+ create mode 100644 Documentation/multikernel/usage.rst
 
-diff --git a/include/linux/multikernel.h b/include/linux/multikernel.h
-index c65d39a66b84..79611923649e 100644
---- a/include/linux/multikernel.h
-+++ b/include/linux/multikernel.h
-@@ -280,6 +280,12 @@ int mk_instance_reserve_resources(struct mk_instance *instance,
-  */
- void mk_instance_free_memory(struct mk_instance *instance);
- 
-+void *mk_instance_alloc(struct mk_instance *instance, size_t size, size_t align);
-+void mk_instance_free(struct mk_instance *instance, void *virt_addr, size_t size);
+diff --git a/Documentation/multikernel/usage.rst b/Documentation/multikernel/usage.rst
+new file mode 100644
+index 000000000000..a2ec8d56ca1d
+--- /dev/null
++++ b/Documentation/multikernel/usage.rst
+@@ -0,0 +1,215 @@
++===================================
++Multikernel Kernfs Interface Usage
++===================================
 +
-+void *mk_kimage_alloc(struct kimage *image, size_t size, size_t align);
-+void mk_kimage_free(struct kimage *image, void *virt_addr, size_t size);
++Overview
++========
 +
- /**
-  * String conversion helpers
-  */
-diff --git a/kernel/multikernel/core.c b/kernel/multikernel/core.c
-index 52bf8e38206a..ee7a21327ea5 100644
---- a/kernel/multikernel/core.c
-+++ b/kernel/multikernel/core.c
-@@ -7,7 +7,10 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/cpu.h>
-+#include <linux/io.h>
-+#include <linux/kexec.h>
- #include <linux/multikernel.h>
-+#include <asm/page.h>
- #include "internal.h"
- 
- /**
-@@ -403,6 +406,101 @@ int mk_instance_reserve_resources(struct mk_instance *instance,
- 	return 0;
- }
- 
-+/**
-+ * Per-instance memory pool management
-+ */
++The multikernel kernfs interface provides a clean, user-friendly way to manage multikernel instances through the filesystem. The interface is located at ``/sys/fs/multikernel/`` and supports automatic instance creation from multikernel device trees.
 +
-+/**
-+ * mk_instance_alloc() - Allocate memory from instance pool
-+ * @instance: Instance to allocate from
-+ * @size: Size to allocate
-+ * @align: Alignment requirement (must be power of 2)
-+ *
-+ * Returns virtual address of allocated memory, or NULL on failure.
-+ */
-+void *mk_instance_alloc(struct mk_instance *instance, size_t size, size_t align)
-+{
-+	phys_addr_t phys_addr;
-+	void *virt_addr;
++Architecture
++============
 +
-+	if (!instance || !instance->instance_pool) {
-+		pr_debug("mk_instance_alloc: instance %p has no pool\n", instance);
-+		return NULL;
-+	}
++::
 +
-+	/* Allocate from instance pool with alignment */
-+	phys_addr = multikernel_instance_alloc(instance->instance_pool, size, align);
-+	if (!phys_addr) {
-+		pr_debug("Failed to allocate %zu bytes from instance pool (align=0x%zx)\n", size, align);
-+		return NULL;
-+	}
++    /sys/fs/multikernel/
++    ├── device_tree         # Root-level DTB upload (write-only)
++    └── instances/          # Instance directory
++        ├── web-server/     # Instance created from DTB
++        │   ├── id          # Instance ID (read-only)
++        │   ├── status      # Instance status (read-only)
++        │   └── device_tree_source  # Instance DTB in DTS format (read-only)
++        ├── database/       # Another instance
++        │   ├── id
++        │   ├── status
++        │   └── device_tree_source
++        └── ...
 +
-+	/* Map to virtual address space */
-+	virt_addr = memremap(phys_addr, size, MEMREMAP_WB);
-+	if (!virt_addr) {
-+		pr_err("Failed to map instance memory at 0x%llx\n", (unsigned long long)phys_addr);
-+		multikernel_instance_free(instance->instance_pool, phys_addr, size);
-+		return NULL;
-+	}
++Workflow
++========
 +
-+	return virt_addr;
-+}
++Phase 1: Instance Creation (Automatic from DTB)
++------------------------------------------------
 +
-+/**
-+ * mk_instance_free() - Free memory back to instance pool
-+ * @instance: Instance to free to
-+ * @virt_addr: Virtual address to free
-+ * @size: Size to free
-+ */
-+void mk_instance_free(struct mk_instance *instance, void *virt_addr, size_t size)
-+{
-+	phys_addr_t phys_addr;
++1. **Create Multikernel Device Tree**
 +
-+	if (!instance || !instance->instance_pool || !virt_addr)
-+		return;
++   Create a device tree with multiple instances:
 +
-+	phys_addr = virt_to_phys(virt_addr);
-+	memunmap(virt_addr);
-+	multikernel_instance_free(instance->instance_pool, phys_addr, size);
-+}
++   .. code-block:: dts
 +
-+/**
-+ * Kimage-based memory pool access functions
-+ *
-+ * These provide convenient wrappers for accessing instance memory pools
-+ * through the kimage structure, commonly used in kexec code paths.
-+ */
++      /dts-v1/;
++      / {
++          compatible = "multikernel-v1";
 +
-+/**
-+ * mk_kimage_alloc() - Allocate memory from kimage's instance pool
-+ * @image: kimage with associated mk_instance
-+ * @size: Size to allocate
-+ * @align: Alignment requirement (must be power of 2)
-+ *
-+ * Returns virtual address of allocated memory, or NULL on failure.
-+ */
-+void *mk_kimage_alloc(struct kimage *image, size_t size, size_t align)
-+{
-+	if (!image || !image->mk_instance)
-+		return NULL;
++          instances {
++              web-server {
++                  id = <1>;
++                  resources {
++                      cpus = <1>;
++                      memory-bytes = <0x20000000>;   // 512MB
++                  };
++              };
 +
-+	return mk_instance_alloc(image->mk_instance, size, align);
-+}
++              database {
++                  id = <2>;
++                  resources {
++                      cpus = <2 3>;
++                      memory-bytes = <0x40000000>;   // 1GB
++                  };
++              };
++          };
++      };
 +
-+/**
-+ * mk_kimage_free() - Free memory back to kimage's instance pool
-+ * @image: kimage with associated mk_instance
-+ * @virt_addr: Virtual address to free
-+ * @size: Size to free
-+ */
-+void mk_kimage_free(struct kimage *image, void *virt_addr, size_t size)
-+{
-+	if (!image || !image->mk_instance)
-+		return;
++2. **Upload Multikernel DTB**
 +
-+	mk_instance_free(image->mk_instance, virt_addr, size);
-+}
++   .. code-block:: bash
 +
- static int __init multikernel_init(void)
- {
- 	int ret;
++      # Compile device tree to binary format
++      dtc -O dtb -o multikernel.dtb multikernel.dts
++
++      # Upload DTB to create instances automatically
++      cat multikernel.dtb > /sys/fs/multikernel/device_tree
++
++   This automatically:
++
++   - Validates DTB format and multikernel-v1 compatibility
++   - Parses each instance in the ``/instances`` node
++   - Creates instance directories under ``instances/``
++   - Reserves memory and CPU resources for each instance
++   - Updates each instance status to "ready"
++
++3. **Check Created Instances**
++
++   .. code-block:: bash
++
++      # List created instances
++      ls /sys/fs/multikernel/instances/
++      # Output: database  web-server
++
++      # Check instance details
++      cat /sys/fs/multikernel/instances/web-server/id
++      # Output: 1
++
++      cat /sys/fs/multikernel/instances/web-server/status
++      # Output: ready
++
++      # View instance device tree
++      cat /sys/fs/multikernel/instances/web-server/device_tree_source
++      # Output: DTS format showing the instance configuration
++
++Phase 2: Kernel Loading (Kexec Integration)
++--------------------------------------------
++
++1. **Load Kernel Image**
++
++   .. code-block:: bash
++
++      # Load kernel for instance ID 1 (web-server)
++      kexec_file_load(..., KEXEC_MULTIKERNEL | KEXEC_MK_ID(1))
++
++   This:
++
++   - Finds pre-reserved resources for instance ID 1
++   - Creates kimage using pre-allocated memory and CPU resources
++   - Updates status to "loading" → "active"
++   - Preserves instance DTB for KHO (Kexec HandOver) restoration
++
++2. **Instance DTB Preservation**
++
++   The multikernel system automatically preserves each instance's device tree during kexec for restoration in the spawn kernel. The spawn kernel will:
++
++   - Detect multikernel KHO data during early boot
++   - Restore the instance's DTB and recreate the instance structure
++   - Re-reserve the same memory and CPU resources
++
++Device Tree Format
++==================
++
++Multikernel DTB Structure
++--------------------------
++
++The multikernel device tree uses the ``/instances`` structure with ``multikernel-v1`` compatibility:
++
++.. code-block:: dts
++
++    /dts-v1/;
++    / {
++        compatible = "multikernel-v1";
++
++        instances {
++            web-server {
++                id = <1>;
++                resources {
++                    cpus = <1>;                      // CPU ID 1
++                    memory-bytes = <0x20000000>;     // 512MB
++                };
++            };
++
++            database {
++                id = <2>;
++                resources {
++                    cpus = <2 3>;                    // CPU IDs 2 and 3
++                    memory-bytes = <0x40000000>;     // 1GB
++                };
++            };
++
++            load-balancer {
++                id = <3>;
++                resources {
++                    cpus = <0>;                      // CPU ID 0
++                    memory-bytes = <0x10000000>;     // 256MB
++                };
++            };
++        };
++    };
++
++Per-Instance DTB Format
++-----------------------
++
++When viewing an instance's ``device_tree_source``, it appears in per-instance format:
++
++.. code-block:: dts
++
++    /dts-v1/;
++
++    /web-server {
++        compatible = "multikernel-v1";
++        id = <1>;
++        resources {
++            cpus = <1>;
++            memory-bytes = <0x20000000>; // 512 MB
++        };
++    };
++
++Resource Properties
++-------------------
++
++- **cpus**: Array of CPU IDs to assign to this instance
++- **memory-bytes**: Memory size in bytes (must be page-aligned)
++- **id**: Unique instance identifier used for kexec operations
++
++The system validates that:
++
++- CPU IDs are valid and available
++- Memory requests don't exceed available multikernel pool
++- Instance IDs are unique
++- All values are properly aligned
++
++Instance States
++===============
++
++- **empty**: Instance created but no resources allocated yet
++- **ready**: DTB processed, resources reserved, ready for kexec
++- **loading**: Kernel being loaded via kexec
++- **active**: Kernel running in this instance
++- **failed**: Error occurred during any phase
++
++Interface Restrictions
++======================
++
++The new kernfs interface has the following restrictions:
++
++- **No manual instance creation**: Use ``mkdir`` under ``instances/`` is disabled
++- **No direct DTB upload to instances**: Instances don't have writable ``device_tree`` files
++- **Centralized DTB management**: All instances must be created via the root ``device_tree`` file
++- **Read-only instance files**: All instance attributes are read-only for consistency
 -- 
 2.34.1
 
