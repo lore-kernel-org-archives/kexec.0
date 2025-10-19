@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F3EFCCD184
-	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66E72CCD1AA
+	for <kexec@archiver.kernel.org>; Sun, 19 Oct 2025 06:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CGfWBR5gpu5BpcnPXBhslXXLKaWQISUn3yoh9fDkD14=; b=49xBm3ATwWxWtAn0HNiesKmTrv
-	j3ZLpr6TgNw6t1/8zq7j++79yyMzFSUZeNjh9ea8rbhnD3qAh/VKZAR7yzUmU699gOa13OmfXW57Q
-	Ii2WAtBraWYUCrlpI+ArZ6o8ZPbr6UMxMxkLPaey05uDBykaJKPIHxE+h/+MMLUacvAvCbedSjXEl
-	ir//z7MrhL/aUmOalH/xRou6sC93lhJgmODHeF7HqRBQAMePt89Uq8uVStY8rt+MrXIUp59mttGPi
-	UJn1/wdJjOe+ursjP6+/d0d9czbdvdSmiHbg+y2QKQ3Fbs0wFZ4FTBbUn5I3Iv6ylcLkPGVbWmyz8
-	o3L9x0zw==;
+	bh=iW8m1Nosqs5OYRPteC6KkkFaB5XtsL1cC7HU92fjoGM=; b=WX316o01bjcJoGhbYyWgqZmCQi
+	DlK0VcvrfOtCn128XIfsa0LaDv/zPHewReCJqVL9mg3JFB3BAmrpZbh5av3i5zslhFDv60lLNWwEW
+	ymPl6FAalD0zF4QQ+/tZiSYL7iGe4FtokZUzEbHkhX3iWKy/XgfRT71uvYL9ALPMfNLpMss2DNa8G
+	yW7kms0hzOUTsSDMTa5S3t/r+N44xTtgPUpmKQiluDCAfTWtBdzgbSNl27M6ZUgyLmWOL2t5K5Sra
+	yYGUpAL6TAHFSSjZBKAIo+Pb8+gj5+aLADZK+nXIMLXCFIisTAa+QUPzisQpn5A0qXzin5eNAC7+t
+	WmFZiWGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMjL-0000000AjLC-1AVk;
-	Sun, 19 Oct 2025 06:17:23 +0000
-Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
+	id 1vAMjQ-0000000AjPO-0S6z;
+	Sun, 19 Oct 2025 06:17:28 +0000
+Received: from mail-pf1-x430.google.com ([2607:f8b0:4864:20::430])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAMjJ-0000000AjIY-0XoJ
+	id 1vAMjN-0000000AjN3-1fYm
 	for kexec@lists.infradead.org;
-	Sun, 19 Oct 2025 06:17:22 +0000
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-33b5a3e8ae2so3574340a91.1
-        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:20 -0700 (PDT)
+	Sun, 19 Oct 2025 06:17:27 +0000
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-796f9a8a088so3124196b3a.1
+        for <kexec@lists.infradead.org>; Sat, 18 Oct 2025 23:17:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760854640; x=1761459440; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1760854645; x=1761459445; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CGfWBR5gpu5BpcnPXBhslXXLKaWQISUn3yoh9fDkD14=;
-        b=Rx/Ubk0gvDCFeOHLBfiBPJeM2p0WDlX9PaFfaAfbF2sSh2Eram8ihPHj+misJwM8fA
-         jsnWVw7AD5jMnMawgANO3RVkPDyDklSEY5BYEeGHpCkE2maDTJwKuyoqXfpk2eGc+ADt
-         BQJ9U6jD6oM45orl/YOEhg4o5cf7gtgOa9qN3jMhTLUeANM4tyOszg26Bn1sfHaNx6mT
-         NtJ+ykZjoJxuHmCgefp7hnzDvxCO0F7bPC38kb1rghiWed5kHxZRRpcl6iH+0FlmwFX+
-         1qm6Vx+RA1Opqs/T6Cv31jzdygg+FPmsTDg/CUq6KATZ7RXM/pAwatAPRpjMu32fIlN8
-         kANw==
+        bh=iW8m1Nosqs5OYRPteC6KkkFaB5XtsL1cC7HU92fjoGM=;
+        b=Wa2asDwajdD3SgSRMFlhf6D9WUu39X/SNVZ+Cd4lnsZy0bKlT3GzW4daX5RNHMr21/
+         YhWrilLvVJYghqqh8tnDAHD9PUmzJr7oD97BGB8Ix+sTKWk1LYeSzBCD4YQ5VQ/iiD33
+         IBzTftAk77b49t5T3BZ6/kM3grrSsCTMijRWtTeOIGEGTQS7nVQ8dxLesDS+foW3IoHR
+         /3YksAPX94sfieGe5gHwabqY4RDXqt1kOm51JjQH1sHaNQGGIzgPTABkKKR4PKqV1pww
+         Pkv3mjkapUHBkLQQTg+R51hb78QY1dLFwQDzM52WzpoSqYpDF2G4QiuKcjuZgBSvx/0q
+         EZVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760854640; x=1761459440;
+        d=1e100.net; s=20230601; t=1760854645; x=1761459445;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CGfWBR5gpu5BpcnPXBhslXXLKaWQISUn3yoh9fDkD14=;
-        b=oagpxX/akE0JSQw99+ZUxDIH6XN4Io/4HVNTW7o1J+qe7WRUHqaGO4PoLBIoQQSeSG
-         8DJc1kOK998q/bi3Yh0VP1r4EHItLtw1sr9IDxMBS0lYAXODrrOb+8iv1tw1C/JxLYlX
-         ZgkbGbWUbJ++YyjnB4AqanPYuH7Ujj4nsnxwTLIqQFRwdSXDGdeC1LkTXZUpHIBynkJL
-         XNkGoZ4yxQkaVSeN3klyHlmFS2cwRttvDlukVyMkzB3j9XXdeSOl46+Yn7hlsRYom+S3
-         WQNVz1IzhHbH2zVEz8m9E/Sw7eAmGmvDxVQwRlGpg4EzKvhuhmFgqSvCkmHJcQKdBnar
-         YGMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkEUfySfoEXy1A9o7bk/XJnlwzbVzjGn+bxTZe2GeoMJ+c/U7ZPfvfT6uTKSJG2zmyDh9EHw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxkkD5MFGsuD49tO44osE0+md6zR8goXZUwHwAz10K5U3pIclCC
-	n3An76akqeIyv2fGkumkc8oyK0RZcHdsmZ9G/bCKBvbsG47BGjcFtQaQPOox+Q==
-X-Gm-Gg: ASbGncuubZ3vDaJydfmwfrNEMqZslIULpmmWk/XOSy2p+W0EE6KJhd8iR+W2TNSpYrh
-	d8xdvVDd2v1hHOTES0i1st/LMTYr/OuKuDGctSJt9Elxc5WsPbRdFhDHI8rtIYhasW/MAE9XyJL
-	U5tYPTiizGWfilzwMmIc8Y2SrtplKgO0fgmJ0ASDlILifFZZ+7S3QQi5IDzRfbBR5Tbq3Lme6Uw
-	sCAnuxfEGJzUlEW1NZsZsVpL5Gifd9oiJ6GutWbOJirzVFp9aU8xzGTwfXSAStI418KlcReA2PP
-	av+/qAI8XKUlfbvd0oRuqX9Jp1NzjTzOThbfdC3NCUY/be0BFCOpqUl3lQYP+Xk3ATwbVuRGJSp
-	QZzX4AmorXZ5KsN1YSoQqCxp0h7pc0vITI5J2F/hqQ3L050jaXjv5oXZFa+tEcz1/hrDtSOEf/E
-	b0Di2S
-X-Google-Smtp-Source: AGHT+IFB/9N4hWxuPbcz7xQxYSDMcrE9Ap+mI0ELEadewX8FBE7rytwKC4P01IfgOC+LAL66fL2HMg==
-X-Received: by 2002:a17:90b:3512:b0:32e:7ff6:6dbd with SMTP id 98e67ed59e1d1-33bc9aa6e69mr13206379a91.0.1760854640156;
-        Sat, 18 Oct 2025 23:17:20 -0700 (PDT)
+        bh=iW8m1Nosqs5OYRPteC6KkkFaB5XtsL1cC7HU92fjoGM=;
+        b=JhR9c7vcBgJ9nnDqKPqkgYrAYOgpNXfCTgLpORSiEwAYIg3w/MmDsfHHaB2kGIadJw
+         5IhNErDti/l6P2wUM8XqmHnSkDhDP5ENgSaKhKpMI5jZP+6f7mh9lNL5rAOBjQVyOPZe
+         6f2+OWGt62qY4jyUTDeA99lMdgycNQiDyan9VtVaLSubxK5h67CtHeB62eSLQGVX1NLJ
+         84wcIi8zFHuWxHko1tL/lWayI9gytlxdZRPp7zaWKE1sXO/d1vTtEkufHm8pegDZ4bWH
+         0yrv0pAFSv85Wpi4LO+AW+DBUscRl2C++FSfIxRH5roGBNOPc7MSJ35Ku6/KQVXM2XAn
+         dDAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZmgaSymRVthRBHwM792RD32aIA5LW/hDq1zCH32htWNS/BQfRDaM44ECOMx40Ugjj8FrRYQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxpK0AJ50bCvXgnmKZTJFnzMVpu5PAFSHVeFdzmNLaqhKF2vk8f
+	QtshLBIIu/lQYqoiOTgQL4uHqCFWw7CsKYD/AUn51+BiH3bx8iGM7nIg
+X-Gm-Gg: ASbGncty2da+Gf0W53OLtLzgWLbR4gMcrngTfzdvlUfYZASYDqodCDUPwDpHy39O6Tq
+	YUuIspm6ba7nPoUuOz1EPxO9u4bxAX4by0FtMIoxTGxIJz80+tPhs8jlULJMlRY382UVFS6k2Y4
+	J2UY3knkCaq8YtfDSL7sjRp+iKnDJIZJdb3eJOz5fNkNUQZ7sEMJ+KDgcwRGeCZOMyO8Z8QVjM3
+	Yzhd3PDulUOO1/gaMUFm0M93H40zgZDVB9lTPx4m8fdBNs0pWOZ6rOnz45PxmuiY7oz/1YIu0bl
+	aakKhj1Mrap+TGwMslYq/HkeIlMWcZv3U/Pav7+d26gFHXiuHrIb43C4dR22I4iA4XolPmhb0tL
+	viQuTisxo++9rswcjlu3FIGsniVdVIBGwQVV+jl6jr1S3qv0ADV5FYtJLgMietjtNiZU1GGXUR0
+	Ln3hFvk1lhQH+PpQQ=
+X-Google-Smtp-Source: AGHT+IFbKeFyxkkhx6UyR26SVo2nzPpKOqrfEUyuRiwI43B7E0dceQ2zTo4yosdetNp12c9xTjB04A==
+X-Received: by 2002:a05:6a20:7286:b0:334:9b5d:388e with SMTP id adf61e73a8af0-334a858b223mr13102693637.26.1760854644467;
+        Sat, 18 Oct 2025 23:17:24 -0700 (PDT)
 Received: from pop-os.. ([2601:647:6881:9060:bc87:d8fe:3e55:7ffb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.18
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f302sm4332032a12.38.2025.10.18.23.17.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 23:17:19 -0700 (PDT)
+        Sat, 18 Oct 2025 23:17:23 -0700 (PDT)
 From: Cong Wang <xiyou.wangcong@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: jiri@resnulli.us,
@@ -84,17 +84,17 @@ Cc: jiri@resnulli.us,
 	Changyuan Lyu <changyuanl@google.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [RFC Patch v2 14/16] multikernel: Add messaging layer for inter-kernel communication
-Date: Sat, 18 Oct 2025 23:16:28 -0700
-Message-Id: <20251019061631.2235405-15-xiyou.wangcong@gmail.com>
+Subject: [RFC Patch v2 16/16] multikernel: Integrate Kexec HandOver framework for DTB preservation
+Date: Sat, 18 Oct 2025 23:16:30 -0700
+Message-Id: <20251019061631.2235405-17-xiyou.wangcong@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 References: <20251019061631.2235405-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251018_231721_219460_2A09D4C8 
-X-CRM114-Status: GOOD (  25.82  )
+X-CRM114-CacheID: sfid-20251018_231725_508815_6AF27A2D 
+X-CRM114-Status: GOOD (  28.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,572 +111,996 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Cong Wang <cwang@multikernel.io>
 
-Introduce a structured messaging system built on top of the existing
-multikernel IPI infrastructure to enable reliable communication between
-kernel instances running on different CPUs.
+This commit introduces:
 
-The messaging layer provides:
+* Multikernel-specific KHO handling in arch/x86 that differentiates
+  between regular KHO operations (requiring both FDT and scratch areas)
+  and multikernel operations (requiring only FDT) with conditional
+  setup data generation and proper boot parameter configuration.
 
-* Simple message format with type/subtype hierarchy for extensibility
-* Support for I/O interrupt forwarding between kernel instances
-* Resource management messages for CPU and memory hotplug operations
-* Type-safe payload structures with validation
-* Handler registration system for message processing
-* Convenient inline functions for common operations
+* Enhanced KHO framework with multikernel-aware notifier chain
+  (mk_kexec_register_notifier/mk_kexec_unregister_notifier) that
+  provides dedicated callbacks for multikernel DTB preservation
+  without the overhead of full KHO serialization infrastructure.
 
-Message types include:
-- MK_MSG_IO: I/O interrupt forwarding and load balancing
-- MK_MSG_RESOURCE: CPU/memory add/remove operations
-- MK_MSG_SYSTEM: System-level coordination messages
-- MK_MSG_USER: User-defined message types
+* Multikernel KHO finalization through mk_kexec_finalize() that creates
+  minimal FDT structures with multikernel-v1 compatibility and calls
+  specialized notifiers to preserve target instance DTBs in shared
+  memory for seamless handover to spawned kernels.
 
-The implementation leverages the reliable nature of intra-machine IPIs,
-maintaining simplicity and performance. Messages are limited to the
-existing 256-byte IPI buffer size, with larger data transfers handled
-via the existing PFN-based shared memory mechanism.
+* DTB restoration infrastructure (mk_kho_restore_dtbs()) that enables
+  spawned kernels to automatically recover their device tree
+  configurations from KHO shared memory during early boot, recreating
+  instance structures with proper resource allocation.
 
-This messaging foundation enables sophisticated multikernel coordination
-scenarios including dynamic resource allocation, interrupt load
-balancing, and system-wide state management.
+* Integration with existing kexec_file_load workflow through automatic
+  FDT page allocation for multikernel images and proper cleanup
+  handling when images are freed, ensuring resource lifecycle
+  management across kexec boundaries.
+
+The KHO integration maintains full compatibility with existing KHO
+code path while extending it for the multikernel use case. Regular kexec
+operations continue to use standard KHO scratch area and serialization,
+while multikernel case uses the streamlined DTB-only protocol.
+
+This enables seamless multikernel instance migration across kernel
+boundaries, allowing spawned kernels to automatically inherit their
+device tree configurations and resource allocations without manual
+intervention or complex boot parameter manipulation.
 
 Signed-off-by: Cong Wang <cwang@multikernel.io>
 ---
- include/linux/multikernel.h    | 200 ++++++++++++++++++++++++
- kernel/multikernel/Makefile    |   2 +-
- kernel/multikernel/core.c      |   7 +
- kernel/multikernel/messaging.c | 278 +++++++++++++++++++++++++++++++++
- 4 files changed, 486 insertions(+), 1 deletion(-)
- create mode 100644 kernel/multikernel/messaging.c
+ arch/x86/kernel/kexec-bzimage64.c |  16 +-
+ arch/x86/kernel/setup.c           |   8 +-
+ drivers/of/kexec.c                |  20 +-
+ include/linux/kexec_handover.h    |  40 ++++
+ include/linux/multikernel.h       |  34 +++
+ kernel/kexec_core.c               |  11 +
+ kernel/kexec_file.c               |   9 +
+ kernel/kexec_handover.c           | 197 ++++++++++++++++-
+ kernel/multikernel/Kconfig        |   5 +
+ kernel/multikernel/Makefile       |   2 +-
+ kernel/multikernel/core.c         |   6 +
+ kernel/multikernel/kho.c          | 356 ++++++++++++++++++++++++++++++
+ 12 files changed, 691 insertions(+), 13 deletions(-)
+ create mode 100644 kernel/multikernel/kho.c
 
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index c3244ac680d1..8ed2b49bf086 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -276,15 +276,23 @@ static void setup_kho(const struct kimage *image, struct boot_params *params,
+ 	sd->type = SETUP_KEXEC_KHO;
+ 	sd->len = sizeof(struct kho_data);
+ 
+-	/* Only add if we have all KHO images in place */
+-	if (!image->kho.fdt || !image->kho.scratch)
++	if (image->type == KEXEC_TYPE_MULTIKERNEL) {
++		if (!image->kho.fdt)
++			return;
++	} else if (!image->kho.fdt || !image->kho.scratch)
+ 		return;
+ 
+ 	/* Add setup data */
+ 	kho->fdt_addr = image->kho.fdt;
+ 	kho->fdt_size = PAGE_SIZE;
+-	kho->scratch_addr = image->kho.scratch->mem;
+-	kho->scratch_size = image->kho.scratch->bufsz;
++	if (image->type == KEXEC_TYPE_MULTIKERNEL) {
++		kho->scratch_addr = 0;
++		kho->scratch_size = 0;
++	} else {
++		kho->scratch_addr = image->kho.scratch->mem;
++		kho->scratch_size = image->kho.scratch->bufsz;
++	}
++
+ 	sd->next = params->hdr.setup_data;
+ 	params->hdr.setup_data = params_load_addr + setup_data_offset;
+ }
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 8342c4e46bad..40e3cb19e06b 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -467,7 +467,13 @@ static void __init add_kho(u64 phys_addr, u32 data_len)
+ 		return;
+ 	}
+ 
+-	kho_populate(kho->fdt_addr, kho->fdt_size, kho->scratch_addr, kho->scratch_size);
++	if (kho->scratch_addr == 0 && kho->scratch_size == 0) {
++		pr_info("setup: detected multikernel KHO data\n");
++		mk_kho_populate(kho->fdt_addr, kho->fdt_size);
++	} else {
++		pr_info("setup: detected regular KHO data\n");
++		kho_populate(kho->fdt_addr, kho->fdt_size, kho->scratch_addr, kho->scratch_size);
++	}
+ 
+ 	early_memunmap(kho, size);
+ }
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 1ee2d31816ae..a27971be555c 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -280,13 +280,21 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
+ 	if (ret && ret != -FDT_ERR_NOTFOUND)
+ 		return ret;
+ 
+-	if (!image->kho.fdt || !image->kho.scratch)
++	if (image->type == KEXEC_TYPE_MULTIKERNEL) {
++		if (!image->kho.fdt)
++			return 0;
++	} else if (!image->kho.fdt || !image->kho.scratch)
+ 		return 0;
+ 
+ 	fdt_mem = image->kho.fdt;
+ 	fdt_len = PAGE_SIZE;
+-	scratch_mem = image->kho.scratch->mem;
+-	scratch_len = image->kho.scratch->bufsz;
++	if (image->type == KEXEC_TYPE_MULTIKERNEL) {
++		scratch_mem = 0;
++		scratch_len = 0;
++	} else {
++		scratch_mem = image->kho.scratch->mem;
++		scratch_len = image->kho.scratch->bufsz;
++	}
+ 
+ 	pr_debug("Adding kho metadata to DT");
+ 
+@@ -294,8 +302,10 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
+ 				       fdt_mem, fdt_len);
+ 	if (ret)
+ 		return ret;
+-	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
+-				       scratch_mem, scratch_len);
++
++	if (scratch_mem && scratch_len)
++		ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
++					       scratch_mem, scratch_len);
+ 
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ 	return ret;
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 25042c1d8d54..480c4510a9ed 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -64,9 +64,20 @@ int register_kho_notifier(struct notifier_block *nb);
+ int unregister_kho_notifier(struct notifier_block *nb);
+ 
+ void kho_memory_init(void);
++int kho_get_target_mk_id(struct kho_serialization *ser);
++struct kimage;
+ 
+ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+ 		  u64 scratch_len);
++void mk_kho_populate(phys_addr_t fdt_phys, u64 fdt_len);
++
++/* Multikernel kexec notifier functions */
++int mk_kexec_register_notifier(struct notifier_block *nb);
++int mk_kexec_unregister_notifier(struct notifier_block *nb);
++int mk_kexec_finalize(struct kimage *target_image);
++
++/* KHO FDT access */
++phys_addr_t kho_get_fdt_phys(void);
+ #else
+ static inline bool kho_is_enabled(void)
+ {
+@@ -121,6 +132,11 @@ static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int kho_get_target_mk_id(struct kho_serialization *ser)
++{
++	return 0;
++}
++
+ static inline int register_kho_notifier(struct notifier_block *nb)
+ {
+ 	return -EOPNOTSUPP;
+@@ -139,6 +155,30 @@ static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 				phys_addr_t scratch_phys, u64 scratch_len)
+ {
+ }
++
++static inline void mk_kho_populate(phys_addr_t fdt_phys, u64 fdt_len)
++{
++}
++
++static inline int mk_kexec_register_notifier(struct notifier_block *nb)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline int mk_kexec_unregister_notifier(struct notifier_block *nb)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline int mk_kexec_finalize(struct kimage *target_image)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline phys_addr_t kho_get_fdt_phys(void)
++{
++	return 0;
++}
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ 
+ #endif /* LINUX_KEXEC_HANDOVER_H */
 diff --git a/include/linux/multikernel.h b/include/linux/multikernel.h
-index ee96bd2332b6..3bc07361145b 100644
+index 3bc07361145b..c463940eb27c 100644
 --- a/include/linux/multikernel.h
 +++ b/include/linux/multikernel.h
-@@ -80,6 +80,206 @@ void *mk_receive_map_page(struct mk_ipi_data *data);
+@@ -622,4 +622,38 @@ static inline bool mk_is_resource_property(const char *prop_name)
+ 	return false;
+ }
  
- #define mk_receive_unmap_page(p) memunmap(p)
++/**
++ * KHO (Kexec HandOver) Integration Functions
++ *
++ * These functions provide KHO support for preserving and restoring
++ * multikernel instance device trees across kexec boundaries.
++ */
++
++/**
++ * mk_kho_restore_dtbs() - Restore DTBs from KHO shared memory
++ *
++ * Called during multikernel initialization to restore DTBs that were
++ * preserved by the previous kernel via KHO.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int __init mk_kho_restore_dtbs(void);
++
++/**
++ * mk_kho_init() - Initialize KHO support for multikernel
++ *
++ * Registers the KHO notifier and attempts to restore DTBs from
++ * a previous KHO boot.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int __init mk_kho_init(void);
++
++/**
++ * mk_kho_cleanup() - Cleanup KHO support for multikernel
++ *
++ * Unregisters the KHO notifier.
++ */
++void mk_kho_cleanup(void);
++
+ #endif /* _LINUX_MULTIKERNEL_H */
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 61ad01acd034..c5ed3fd90ede 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -43,6 +43,7 @@
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
+ #include <linux/multikernel.h>
++#include <linux/kexec_handover.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/memblock.h>
  
-+/*
-+ * Multikernel Messaging System
-+ */
-+
-+/**
-+ * Message type definitions - organized by category
-+ */
-+
-+/* Top-level message categories */
-+#define MK_MSG_IO           0x1000
-+#define MK_MSG_RESOURCE     0x2000
-+#define MK_MSG_SYSTEM       0x3000
-+#define MK_MSG_USER         0x4000
-+
-+/* I/O interrupt forwarding subtypes */
-+#define MK_IO_IRQ_FORWARD   (MK_MSG_IO + 1)
-+#define MK_IO_IRQ_BALANCE   (MK_MSG_IO + 2)
-+#define MK_IO_IRQ_MASK      (MK_MSG_IO + 3)
-+#define MK_IO_IRQ_UNMASK    (MK_MSG_IO + 4)
-+
-+/* Resource management subtypes */
-+#define MK_RES_CPU_ADD      (MK_MSG_RESOURCE + 1)
-+#define MK_RES_CPU_REMOVE   (MK_MSG_RESOURCE + 2)
-+#define MK_RES_MEM_ADD      (MK_MSG_RESOURCE + 3)
-+#define MK_RES_MEM_REMOVE   (MK_MSG_RESOURCE + 4)
-+#define MK_RES_QUERY        (MK_MSG_RESOURCE + 5)
-+
-+/* System management subtypes */
-+#define MK_SYS_HEARTBEAT    (MK_MSG_SYSTEM + 1)
-+#define MK_SYS_SHUTDOWN     (MK_MSG_SYSTEM + 2)
-+
-+/**
-+ * Core message structure
-+ */
-+struct mk_message {
-+	u32 msg_type;           /* Message type identifier */
-+	u32 msg_subtype;        /* Subtype for specific operations */
-+	u64 msg_id;             /* Optional message ID for correlation */
-+	u32 payload_len;        /* Length of payload data */
-+	u8 payload[];           /* Variable payload (up to remaining IPI buffer) */
-+};
-+
-+/**
-+ * Payload structures for specific message types
-+ */
-+
-+/* I/O interrupt forwarding */
-+struct mk_io_irq_payload {
-+	u32 irq_number;         /* Hardware IRQ number */
-+	u32 vector;             /* Interrupt vector */
-+	u32 device_id;          /* Device identifier (optional) */
-+	u32 flags;              /* Control flags (priority, etc.) */
-+};
-+
-+/* IRQ control flags */
-+#define MK_IRQ_HIGH_PRIORITY    0x01
-+#define MK_IRQ_LOW_LATENCY      0x02
-+#define MK_IRQ_EDGE_TRIGGERED   0x04
-+#define MK_IRQ_LEVEL_TRIGGERED  0x08
-+
-+/* CPU resource operations */
-+struct mk_cpu_resource_payload {
-+	u32 cpu_id;             /* Physical CPU ID */
-+	u32 numa_node;          /* NUMA node (optional) */
-+	u32 flags;              /* CPU capabilities/attributes */
-+};
-+
-+/* CPU capability flags */
-+#define MK_CPU_HAS_AVX512       0x01
-+#define MK_CPU_HAS_TSX          0x02
-+#define MK_CPU_HYPERTHREAD      0x04
-+
-+/* Memory resource operations */
-+struct mk_mem_resource_payload {
-+	u64 start_pfn;          /* Starting page frame number */
-+	u64 nr_pages;           /* Number of pages */
-+	u32 numa_node;          /* NUMA node */
-+	u32 mem_type;           /* Memory type (normal/DMA/etc.) */
-+};
-+
-+/* Memory types */
-+#define MK_MEM_NORMAL           0x01
-+#define MK_MEM_DMA              0x02
-+#define MK_MEM_DMA32            0x04
-+#define MK_MEM_HIGHMEM          0x08
-+
-+/**
-+ * Message handler callback type
-+ */
-+typedef void (*mk_msg_handler_t)(u32 msg_type, u32 subtype,
-+				 void *payload, u32 payload_len, void *ctx);
-+
-+/**
-+ * Message API functions
-+ */
-+
-+/**
-+ * mk_send_message - Send a message to another CPU
-+ * @instance_id: Target multikernel instance ID
-+ * @msg_type: Message type identifier
-+ * @subtype: Message subtype
-+ * @payload: Pointer to payload data (can be NULL)
-+ * @payload_len: Length of payload data
-+ *
-+ * Returns 0 on success, negative error code on failure
-+ */
-+int mk_send_message(int instance_id, u32 msg_type, u32 subtype,
-+		    void *payload, u32 payload_len);
-+
-+/**
-+ * mk_register_msg_handler - Register handler for specific message type
-+ * @msg_type: Message type to handle
-+ * @handler: Handler function
-+ * @ctx: Context pointer passed to handler
-+ *
-+ * Returns 0 on success, negative error code on failure
-+ */
-+int mk_register_msg_handler(u32 msg_type, mk_msg_handler_t handler, void *ctx);
-+
-+/**
-+ * mk_unregister_msg_handler - Unregister message handler
-+ * @msg_type: Message type to unregister
-+ * @handler: Handler function to remove
-+ *
-+ * Returns 0 on success, negative error code on failure
-+ */
-+int mk_unregister_msg_handler(u32 msg_type, mk_msg_handler_t handler);
-+
-+/**
-+ * Convenience functions for common message types
-+ */
-+
-+/* I/O interrupt forwarding */
-+static inline int mk_send_irq_forward(int instance_id, u32 irq_number,
-+				      u32 vector, u32 device_id, u32 flags)
-+{
-+	struct mk_io_irq_payload payload = {
-+		.irq_number = irq_number,
-+		.vector = vector,
-+		.device_id = device_id,
-+		.flags = flags
-+	};
-+	return mk_send_message(instance_id, MK_MSG_IO, MK_IO_IRQ_FORWARD,
-+			       &payload, sizeof(payload));
-+}
-+
-+/* CPU resource management */
-+static inline int mk_send_cpu_add(int instance_id, u32 cpu_id,
-+				  u32 numa_node, u32 flags)
-+{
-+	struct mk_cpu_resource_payload payload = {
-+		.cpu_id = cpu_id,
-+		.numa_node = numa_node,
-+		.flags = flags
-+	};
-+	return mk_send_message(instance_id, MK_MSG_RESOURCE, MK_RES_CPU_ADD,
-+			       &payload, sizeof(payload));
-+}
-+
-+static inline int mk_send_cpu_remove(int instance_id, u32 cpu_id)
-+{
-+	struct mk_cpu_resource_payload payload = {
-+		.cpu_id = cpu_id,
-+		.numa_node = 0,
-+		.flags = 0
-+	};
-+	return mk_send_message(instance_id, MK_MSG_RESOURCE, MK_RES_CPU_REMOVE,
-+			       &payload, sizeof(payload));
-+}
-+
-+/* Memory resource management */
-+static inline int mk_send_mem_add(int instance_id, u64 start_pfn, u64 nr_pages,
-+				  u32 numa_node, u32 mem_type)
-+{
-+	struct mk_mem_resource_payload payload = {
-+		.start_pfn = start_pfn,
-+		.nr_pages = nr_pages,
-+		.numa_node = numa_node,
-+		.mem_type = mem_type
-+	};
-+	return mk_send_message(instance_id, MK_MSG_RESOURCE, MK_RES_MEM_ADD,
-+			       &payload, sizeof(payload));
-+}
-+
-+static inline int mk_send_mem_remove(int instance_id, u64 start_pfn, u64 nr_pages)
-+{
-+	struct mk_mem_resource_payload payload = {
-+		.start_pfn = start_pfn,
-+		.nr_pages = nr_pages,
-+		.numa_node = 0,
-+		.mem_type = 0
-+	};
-+	return mk_send_message(instance_id, MK_MSG_RESOURCE, MK_RES_MEM_REMOVE,
-+			       &payload, sizeof(payload));
-+}
-+
-+/* Messaging system functions */
-+int __init mk_messaging_init(void);
-+void mk_messaging_cleanup(void);
-+
- struct resource;
+@@ -673,6 +674,10 @@ void kimage_free(struct kimage *image)
+ 		image->mk_instance = NULL;
+ 		pr_info("Freed multikernel ID %d\n", image->mk_id);
+ 	}
++	if (image->kho.fdt && image->type == KEXEC_TYPE_MULTIKERNEL) {
++		put_page(phys_to_page(image->kho.fdt));
++		image->kho.fdt = 0;
++	}
  
- extern phys_addr_t multikernel_alloc(size_t size);
+ #ifdef CONFIG_CRASH_DUMP
+ 	if (image->vmcoreinfo_data_copy) {
+@@ -1591,6 +1596,12 @@ int multikernel_kexec_by_id(int mk_id)
+ 		goto unlock;
+ 	}
+ 
++	rc = mk_kexec_finalize(mk_image);
++	if (rc)
++		pr_warn("KHO finalization failed: %d\n", rc);
++	else
++		pr_info("KHO finalized for multikernel instance\n");
++
+ 	pr_info("Using multikernel image with ID %d (entry point: 0x%lx) on CPU %d\n",
+ 		mk_image->mk_id, mk_image->start, cpu);
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f9979c1d9f9e..44b42ae34ef2 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -329,6 +329,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 	if (multikernel_load) {
+ 		struct mk_instance *instance;
+ 		int mk_id = KEXEC_GET_MK_ID(flags);
++		struct page *fdt_page;
+ 
+ 		/* Set multikernel image type for proper memory allocation */
+ 		image->type = KEXEC_TYPE_MULTIKERNEL;
+@@ -367,6 +368,14 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 		mk_instance_set_state(instance, MK_STATE_LOADING);
+ 
+ 		pr_info("Associated kimage with multikernel instance %d\n", mk_id);
++
++		fdt_page = alloc_page(GFP_KERNEL);
++		if (!fdt_page) {
++			pr_err("Failed to allocate FDT page for multikernel kimage\n");
++			ret = -ENOMEM;
++			goto out_free_image;
++		}
++		image->kho.fdt = page_to_phys(fdt_page);
+ 	}
+ 
+ 	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 76f0940fb485..70bfd4b27220 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -19,6 +19,7 @@
+ #include <linux/notifier.h>
+ #include <linux/page-isolation.h>
+ #include <linux/vmalloc.h>
++#include <linux/multikernel.h>
+ 
+ #include <asm/early_ioremap.h>
+ 
+@@ -106,6 +107,8 @@ struct kho_serialization {
+ 	struct kho_mem_track track;
+ 	/* First chunk of serialized preserved memory map */
+ 	struct khoser_mem_chunk *preserved_mem_map;
++	/* Target multikernel instance ID for selective preservation */
++	int target_mk_id;
+ };
+ 
+ struct kho_out {
+@@ -1100,12 +1103,20 @@ static int kho_abort(void)
+ 	return err;
+ }
+ 
+-static int kho_finalize(void)
++static int kho_finalize(struct kimage *target_image)
+ {
+ 	int err = 0;
+ 	u64 *preserved_mem_map;
+ 	void *fdt = page_to_virt(kho_out.ser.fdt);
+ 
++	if (target_image && target_image->mk_id > 0) {
++		kho_out.ser.target_mk_id = target_image->mk_id;
++		pr_info("KHO finalize: targeting multikernel instance %d\n", target_image->mk_id);
++	} else {
++		kho_out.ser.target_mk_id = 0;
++		pr_info("KHO finalize: no specific target (preserving all instances)\n");
++	}
++
+ 	err |= fdt_create(fdt, PAGE_SIZE);
+ 	err |= fdt_finish_reservemap(fdt);
+ 	err |= fdt_begin_node(fdt, "");
+@@ -1149,6 +1160,134 @@ static int kho_finalize(void)
+ 	return err;
+ }
+ 
++static BLOCKING_NOTIFIER_HEAD(mk_kexec_notifier_chain);
++
++/**
++ * mk_kexec_call_notifiers - Call multikernel-specific notifiers
++ * @target_image: The multikernel kimage being executed
++ * @fdt: The FDT to populate with multikernel data
++ *
++ * This calls a dedicated notifier chain for multikernel that bypasses
++ * the complex KHO serialization system.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++static int mk_kexec_call_notifiers(struct kimage *target_image, void *fdt)
++{
++	struct mk_kexec_data {
++		struct kimage *image;
++		void *fdt;
++		int mk_id;
++	} data = {
++		.image = target_image,
++		.fdt = fdt,
++		.mk_id = target_image->mk_id
++	};
++
++	int ret = blocking_notifier_call_chain(&mk_kexec_notifier_chain,
++					       0, &data);
++	return notifier_to_errno(ret);
++}
++
++/**
++ * mk_kexec_register_notifier - Register a multikernel kexec notifier
++ * @nb: The notifier block to register
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int mk_kexec_register_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&mk_kexec_notifier_chain, nb);
++}
++EXPORT_SYMBOL_GPL(mk_kexec_register_notifier);
++
++/**
++ * mk_kexec_unregister_notifier - Unregister a multikernel kexec notifier
++ * @nb: The notifier block to unregister
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int mk_kexec_unregister_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&mk_kexec_notifier_chain, nb);
++}
++EXPORT_SYMBOL_GPL(mk_kexec_unregister_notifier);
++
++/**
++ * mk_kexec_finalize - Finalize multikernel DTB for kexec
++ * @target_image: The multikernel kimage being executed
++ *
++ * This function creates a minimal FDT for multikernel and calls the
++ * multikernel notifier to preserve the target instance's DTB.
++ * It reuses the existing device tree infrastructure but avoids the
++ * complex KHO serialization system.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int mk_kexec_finalize(struct kimage *target_image)
++{
++	void *fdt;
++	int ret;
++
++	if (target_image->mk_id <= 0) {
++		pr_warn("mk_kexec_finalize called without valid multikernel target\n");
++		return -EINVAL;
++	}
++
++	if (!target_image->kho.fdt) {
++		pr_err("No FDT page allocated for multikernel kimage\n");
++		return -EINVAL;
++	}
++
++	/* Use the pre-allocated FDT page from multikernel memory pool */
++	fdt = phys_to_virt(target_image->kho.fdt);
++
++	ret = fdt_create(fdt, PAGE_SIZE);
++	ret |= fdt_finish_reservemap(fdt);
++	ret |= fdt_begin_node(fdt, "");
++	ret |= fdt_property_string(fdt, "compatible", MK_FDT_COMPATIBLE);
++	if (ret) {
++		pr_err("Failed to create FDT structure: %d\n", ret);
++		return ret;
++	}
++
++	ret = mk_kexec_call_notifiers(target_image, fdt);
++	if (ret) {
++		pr_err("Multikernel notifier failed: %d\n", ret);
++		fdt_end_node(fdt);
++		fdt_finish(fdt);
++		return ret;
++	}
++
++	ret = fdt_end_node(fdt);
++	ret |= fdt_finish(fdt);
++	if (ret) {
++		pr_err("Failed to finalize FDT: %d\n", ret);
++		return ret;
++	}
++
++	if (fdt_totalsize(fdt) > PAGE_SIZE) {
++		pr_err("FDT size (%d bytes) exceeds allocated page size (%lu bytes)\n",
++		       fdt_totalsize(fdt), PAGE_SIZE);
++		return -ENOSPC;
++	}
++
++	pr_info("Finalized multikernel FDT for instance %d (size: %d bytes)\n",
++		target_image->mk_id, fdt_totalsize(fdt));
++	return 0;
++}
++
++/**
++ * kho_get_target_mk_id - Get target multikernel ID from KHO serialization
++ * @ser: KHO serialization structure
++ *
++ * Returns the target multikernel instance ID, or 0 if not set.
++ */
++int kho_get_target_mk_id(struct kho_serialization *ser)
++{
++	return ser ? ser->target_mk_id : 0;
++}
++
+ static int kho_out_finalize_get(void *data, u64 *val)
+ {
+ 	mutex_lock(&kho_out.lock);
+@@ -1174,7 +1313,7 @@ static int kho_out_finalize_set(void *data, u64 _val)
+ 	}
+ 
+ 	if (val)
+-		ret = kho_finalize();
++		ret = kho_finalize(NULL);
+ 	else
+ 		ret = kho_abort();
+ 
+@@ -1262,6 +1401,11 @@ static const void *kho_get_fdt(void)
+ 	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
+ }
+ 
++phys_addr_t kho_get_fdt_phys(void)
++{
++	return kho_in.fdt_phys;
++}
++
+ /**
+  * is_kho_boot - check if current kernel was booted via KHO-enabled
+  * kexec
+@@ -1474,6 +1618,55 @@ void __init kho_memory_init(void)
+ 	}
+ }
+ 
++/**
++ * mk_kho_populate() - Populate multikernel KHO data during early boot
++ * @fdt_phys: Physical address of the multikernel FDT
++ * @fdt_len: Length of the FDT
++ *
++ * This function handles multikernel FDT revival during early boot. Unlike
++ * regular KHO, multikernel doesn't use scratch areas and has a different
++ * FDT format with 'multikernel-v1' compatibility.
++ */
++void __init mk_kho_populate(phys_addr_t fdt_phys, u64 fdt_len)
++{
++	void *fdt = NULL;
++	int err = 0;
++
++	pr_info("Multikernel KHO: processing FDT at 0x%llx (size: %llu)\n", fdt_phys, fdt_len);
++
++	/* Validate the input FDT */
++	fdt = early_memremap(fdt_phys, fdt_len);
++	if (!fdt) {
++		pr_warn("Multikernel KHO: failed to memremap FDT (0x%llx)\n", fdt_phys);
++		goto out;
++	}
++
++	err = fdt_check_header(fdt);
++	if (err) {
++		pr_warn("Multikernel KHO: handover FDT (0x%llx) is invalid: %d\n",
++			fdt_phys, err);
++		goto out;
++	}
++
++	err = fdt_node_check_compatible(fdt, 0, MK_FDT_COMPATIBLE);
++	if (err) {
++		pr_warn("Multikernel KHO: handover FDT (0x%llx) is incompatible with 'multikernel-v1': %d\n",
++			fdt_phys, err);
++		goto out;
++	}
++
++	kho_in.fdt_phys = fdt_phys;
++	kho_in.scratch_phys = 0;
++
++	pr_info("Multikernel KHO: successfully populated FDT data\n");
++
++out:
++	if (fdt)
++		early_memunmap(fdt, fdt_len);
++	if (err)
++		pr_warn("Multikernel KHO: disabling multikernel revival\n");
++}
++
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
+diff --git a/kernel/multikernel/Kconfig b/kernel/multikernel/Kconfig
+index a9582a4d0c54..1b0191beffa7 100644
+--- a/kernel/multikernel/Kconfig
++++ b/kernel/multikernel/Kconfig
+@@ -6,6 +6,7 @@
+ config MULTIKERNEL
+ 	bool "Multikernel support"
+ 	depends on KEXEC_CORE
++	depends on KEXEC_HANDOVER
+ 	select LIBFDT
+ 	help
+ 	  Enable multikernel support, which allows running multiple kernel
+@@ -17,5 +18,9 @@ config MULTIKERNEL
+ 	  - Device tree based resource specification
+ 	  - Memory pool management for kernel instances
+ 	  - Integration with kexec for kernel loading
++	  - KHO (Kexec HandOver) support for seamless DTB transfer
++
++	  Requires KEXEC_HANDOVER for preserving device trees and instance
++	  state across kernel boundaries.
+ 
+ 	  If unsure, say N.
 diff --git a/kernel/multikernel/Makefile b/kernel/multikernel/Makefile
-index b539acc656c6..f133e1eaf534 100644
+index f133e1eaf534..3d81a3233bba 100644
 --- a/kernel/multikernel/Makefile
 +++ b/kernel/multikernel/Makefile
 @@ -3,7 +3,7 @@
  # Makefile for multikernel support
  #
  
--obj-y += core.o mem.o kernfs.o dts.o ipi.o
-+obj-y += core.o mem.o kernfs.o dts.o ipi.o messaging.o
+-obj-y += core.o mem.o kernfs.o dts.o ipi.o messaging.o
++obj-y += core.o mem.o kernfs.o dts.o ipi.o messaging.o kho.o
  
  # Add libfdt include path for device tree parsing
  CFLAGS_dts.o = -I $(srctree)/scripts/dtc/libfdt
 diff --git a/kernel/multikernel/core.c b/kernel/multikernel/core.c
-index ee7a21327ea5..37dbf0cf4be6 100644
+index 37dbf0cf4be6..95d27b3b15cc 100644
 --- a/kernel/multikernel/core.c
 +++ b/kernel/multikernel/core.c
-@@ -505,9 +505,16 @@ static int __init multikernel_init(void)
- {
- 	int ret;
- 
-+	ret = mk_messaging_init();
-+	if (ret < 0) {
-+		pr_err("Failed to initialize multikernel messaging: %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = mk_kernfs_init();
- 	if (ret < 0) {
- 		pr_err("Failed to initialize multikernel sysfs interface: %d\n", ret);
-+		mk_messaging_cleanup();
+@@ -518,6 +518,12 @@ static int __init multikernel_init(void)
  		return ret;
  	}
  
-diff --git a/kernel/multikernel/messaging.c b/kernel/multikernel/messaging.c
++	ret = mk_kho_init();
++	if (ret < 0) {
++		pr_warn("Failed to initialize KHO support: %d\n", ret);
++		/* Continue without KHO support - this is not fatal */
++	}
++
+ 	pr_info("Multikernel support initialized\n");
+ 	return 0;
+ }
+diff --git a/kernel/multikernel/kho.c b/kernel/multikernel/kho.c
 new file mode 100644
-index 000000000000..be1fba8778ec
+index 000000000000..8f25b4d73fa1
 --- /dev/null
-+++ b/kernel/multikernel/messaging.c
-@@ -0,0 +1,278 @@
++++ b/kernel/multikernel/kho.c
+@@ -0,0 +1,356 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Multikernel Messaging System
 + * Copyright (C) 2025 Multikernel Technologies, Inc. All rights reserved
 + *
-+ * Simple messaging layer on top of multikernel IPI infrastructure
++ * Multikernel KHO (Kexec HandOver)
++ *
++ * Provides KHO support for preserving and restoring multikernel instance
++ * device trees across kexec boundaries using shared memory.
 + */
 +
 +#include <linux/kernel.h>
 +#include <linux/slab.h>
-+#include <linux/spinlock.h>
++#include <linux/mutex.h>
++#include <linux/list.h>
 +#include <linux/multikernel.h>
++#include <linux/io.h>
++#ifdef CONFIG_KEXEC_HANDOVER
++#include <linux/kexec_handover.h>
++#include <linux/libfdt.h>
++#include <linux/sizes.h>
++#include "internal.h"
 +
-+/* Per-type message handler registry */
-+struct mk_msg_type_handler {
-+	u32 msg_type;
-+	struct mk_ipi_handler *ipi_handler;
-+	mk_msg_handler_t msg_handler;
-+	void *context;
-+	struct mk_msg_type_handler *next;
++#define PROP_SUB_FDT "fdt"
++#endif
++
++#ifdef CONFIG_KEXEC_HANDOVER
++
++/**
++ * mk_kexec_notifier() - Multikernel kexec notifier callback for DTB preservation
++ * @nb: Notifier block
++ * @action: Notifier action (unused)
++ * @data: Multikernel kexec data
++ *
++ * Called by multikernel kexec subsystem during kexec to preserve multikernel DTBs
++ * in shared memory for the target kernel. This uses a simplified interface
++ * compared to the full KHO system.
++ */
++static int mk_kexec_notifier(struct notifier_block *nb, unsigned long action, void *data)
++{
++	struct mk_kexec_data {
++		struct kimage *image;
++		void *fdt;
++		int mk_id;
++	} *mk_data = data;
++
++	struct mk_instance *instance;
++	int ret = 0;
++
++	pr_info("Preserving multikernel DTB for instance %d\n", mk_data->mk_id);
++
++	/* Find the target multikernel instance */
++	instance = mk_instance_find(mk_data->mk_id);
++	if (!instance) {
++		pr_err("Target multikernel instance %d not found\n", mk_data->mk_id);
++		return NOTIFY_STOP;
++	}
++
++	if (!instance->dtb_data || instance->dtb_size == 0) {
++		pr_err("Target multikernel instance %d has no DTB data - did you write to device_tree file?\n", mk_data->mk_id);
++		mk_instance_put(instance);
++		return NOTIFY_STOP;
++	}
++
++	ret |= fdt_begin_node(mk_data->fdt, "multikernel");
++	ret |= fdt_property(mk_data->fdt, "dtb-data", instance->dtb_data, instance->dtb_size);
++	ret |= fdt_end_node(mk_data->fdt);
++
++	if (ret) {
++		pr_err("Failed to add DTB for instance %d to FDT: %d\n", mk_data->mk_id, ret);
++		mk_instance_put(instance);
++		return notifier_from_errno(ret);
++	}
++
++	pr_info("Preserved DTB for instance %d (%zu bytes)\n", mk_data->mk_id, instance->dtb_size);
++	mk_instance_put(instance);
++	return NOTIFY_OK;
++}
++
++/* Multikernel kexec notifier block */
++static struct notifier_block mk_kexec_nb = {
++	.notifier_call = mk_kexec_notifier,
 +};
 +
-+static struct mk_msg_type_handler *mk_msg_type_handlers;
-+static raw_spinlock_t mk_msg_type_handlers_lock = __RAW_SPIN_LOCK_UNLOCKED(mk_msg_type_handlers_lock);
-+
 +/**
-+ * mk_message_type_ipi_callback - IPI callback to handle incoming messages for a specific type
-+ * @data: IPI data containing the message
-+ * @ctx: Context containing the message handler info
++ * mk_dt_extract_instance_info() - Extract instance ID and name from DTB
++ * @dtb_data: Device tree blob data
++ * @dtb_size: Size of DTB data
++ * @instance_id: Output parameter for instance ID
++ * @instance_name: Output parameter for instance name (caller must free)
++ *
++ * Parses the DTB to find the first instance in the instances node and
++ * extracts its ID and name.
++ *
++ * Returns: 0 on success, negative error code on failure
 + */
-+static void mk_message_type_ipi_callback(struct mk_ipi_data *data, void *ctx)
++static int mk_dt_extract_instance_info(const void *dtb_data, size_t dtb_size,
++				       int *instance_id, const char **instance_name)
 +{
-+	struct mk_msg_type_handler *type_handler = (struct mk_msg_type_handler *)ctx;
-+	struct mk_message *msg;
-+	u32 msg_type, msg_subtype;
-+	void *payload;
-+	u32 payload_len;
++	const void *fdt = dtb_data;
++	int instances_node, instance_node;
++	const fdt32_t *id_prop;
++	const char *name;
 +
-+	if (!type_handler || !type_handler->msg_handler) {
-+		pr_warn("Multikernel message received but no handler registered\n");
-+		return;
++	if (!dtb_data || !instance_id || !instance_name) {
++		return -EINVAL;
 +	}
 +
-+	/* Verify this matches our expected message type */
-+	if (data->type != type_handler->msg_type) {
-+		pr_warn("Multikernel message type mismatch: expected 0x%x, got 0x%x\n",
-+			type_handler->msg_type, data->type);
-+		return;
++	/* Find /instances node */
++	instances_node = fdt_path_offset(fdt, "/instances");
++	if (instances_node < 0) {
++		pr_err("No /instances node found in device tree\n");
++		return -ENOENT;
 +	}
 +
-+	/* Ensure we have at least a message header */
-+	if (data->data_size < sizeof(struct mk_message)) {
-+		pr_warn("Multikernel message too small: %zu bytes\n", data->data_size);
-+		return;
++	/* Find the first instance child node */
++	instance_node = fdt_first_subnode(fdt, instances_node);
++	if (instance_node < 0) {
++		pr_err("No instance found in /instances node\n");
++		return -ENOENT;
 +	}
 +
-+	msg = (struct mk_message *)data->buffer;
-+
-+	/* Validate message structure */
-+	if (msg->payload_len > (data->data_size - sizeof(struct mk_message))) {
-+		pr_warn("Multikernel message payload length invalid: %u > %zu\n",
-+			msg->payload_len, data->data_size - sizeof(struct mk_message));
-+		return;
++	/* Get the instance name (node name) */
++	name = fdt_get_name(fdt, instance_node, NULL);
++	if (!name) {
++		pr_err("Failed to get instance name\n");
++		return -EINVAL;
 +	}
 +
-+	msg_type = msg->msg_type;
-+	msg_subtype = msg->msg_subtype;
-+	payload = msg->payload_len > 0 ? msg->payload : NULL;
-+	payload_len = msg->payload_len;
++	/* Get the instance ID property */
++	id_prop = fdt_getprop(fdt, instance_node, "id", NULL);
++	if (!id_prop) {
++		pr_err("No 'id' property found in instance '%s'\n", name);
++		return -ENOENT;
++	}
 +
-+	pr_debug("Multikernel message received: type=0x%x, subtype=0x%x, len=%u from CPU %d\n",
-+		 msg_type, msg_subtype, payload_len, data->sender_cpu);
++	*instance_id = fdt32_to_cpu(*id_prop);
++	*instance_name = name;
 +
-+	/* Call the registered handler for this message type */
-+	type_handler->msg_handler(msg_type, msg_subtype, payload, payload_len, type_handler->context);
++	return 0;
 +}
 +
 +/**
-+ * mk_send_message - Send a message to another CPU
-+ * @instance_id: Target multikernel instance ID
-+ * @msg_type: Message type identifier
-+ * @subtype: Message subtype
-+ * @payload: Pointer to payload data (can be NULL)
-+ * @payload_len: Length of payload data
++ * mk_kho_restore_dtbs() - Restore DTB from KHO shared memory
 + *
-+ * Returns 0 on success, negative error code on failure
++ * Called during multikernel initialization in the spawned kernel to restore
++ * the single DTB that was preserved by the host kernel via KHO. The spawned
++ * kernel receives exactly one DTB and parses the instance ID from it.
++ *
++ * Returns: 0 on success, negative error code on failure
 + */
-+int mk_send_message(int instance_id, u32 msg_type, u32 subtype,
-+		    void *payload, u32 payload_len)
++int __init mk_kho_restore_dtbs(void)
 +{
-+	struct mk_message *msg;
-+	size_t total_size;
++	void *dtb_virt;
++	int dtb_len;
 +	int ret;
++	struct mk_instance *instance;
++	struct mk_dt_config config;
++	int instance_id;
++	const char *instance_name;
++	const void *kho_fdt = NULL;
++	phys_addr_t fdt_phys;
 +
-+	/* Calculate total message size */
-+	total_size = sizeof(struct mk_message) + payload_len;
-+
-+	/* Check if message fits in IPI buffer */
-+	if (total_size > MK_MAX_DATA_SIZE) {
-+		pr_err("Multikernel message too large: %zu > %d bytes\n",
-+		       total_size, MK_MAX_DATA_SIZE);
-+		return -EMSGSIZE;
-+	}
-+
-+	/* Allocate temporary buffer for message */
-+	msg = kzalloc(total_size, GFP_ATOMIC);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	/* Fill in message header */
-+	msg->msg_type = msg_type;
-+	msg->msg_subtype = subtype;
-+	msg->msg_id = 0; /* Could be enhanced with unique IDs later */
-+	msg->payload_len = payload_len;
-+
-+	/* Copy payload if provided */
-+	if (payload && payload_len > 0)
-+		memcpy(msg->payload, payload, payload_len);
-+
-+	/* Send via IPI using the message type as IPI type */
-+	ret = multikernel_send_ipi_data(instance_id, msg, total_size, msg_type);
-+
-+	/* Clean up temporary buffer */
-+	kfree(msg);
-+
-+	if (ret < 0) {
-+		pr_err("Failed to send multikernel message: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pr_debug("Multikernel message sent: type=0x%x, subtype=0x%x, len=%u to instance %d\n",
-+		 msg_type, subtype, payload_len, instance_id);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(mk_send_message);
-+
-+/**
-+ * mk_register_msg_handler - Register handler for specific message type
-+ * @msg_type: Message type to handle
-+ * @handler: Handler function
-+ * @ctx: Context pointer passed to handler
-+ *
-+ * Returns 0 on success, negative error code on failure
-+ */
-+int mk_register_msg_handler(u32 msg_type, mk_msg_handler_t handler, void *ctx)
-+{
-+	struct mk_msg_type_handler *type_handler;
-+	unsigned long flags;
-+
-+	if (!handler)
-+		return -EINVAL;
-+
-+	/* Check if handler for this type already exists */
-+	raw_spin_lock_irqsave(&mk_msg_type_handlers_lock, flags);
-+	for (type_handler = mk_msg_type_handlers; type_handler; type_handler = type_handler->next) {
-+		if (type_handler->msg_type == msg_type) {
-+			raw_spin_unlock_irqrestore(&mk_msg_type_handlers_lock, flags);
-+			pr_warn("Handler for message type 0x%x already registered\n", msg_type);
-+			return -EEXIST;
-+		}
-+	}
-+	raw_spin_unlock_irqrestore(&mk_msg_type_handlers_lock, flags);
-+
-+	/* Allocate new type handler entry */
-+	type_handler = kzalloc(sizeof(*type_handler), GFP_KERNEL);
-+	if (!type_handler)
-+		return -ENOMEM;
-+
-+	type_handler->msg_type = msg_type;
-+	type_handler->msg_handler = handler;
-+	type_handler->context = ctx;
-+
-+	/* Register IPI handler for this message type */
-+	type_handler->ipi_handler = multikernel_register_handler(mk_message_type_ipi_callback,
-+									 type_handler, msg_type);
-+	if (!type_handler->ipi_handler) {
-+		pr_err("Failed to register IPI handler for message type 0x%x\n", msg_type);
-+		kfree(type_handler);
-+		return -ENOMEM;
-+	}
-+
-+	/* Add to type handler list */
-+	raw_spin_lock_irqsave(&mk_msg_type_handlers_lock, flags);
-+	type_handler->next = mk_msg_type_handlers;
-+	mk_msg_type_handlers = type_handler;
-+	raw_spin_unlock_irqrestore(&mk_msg_type_handlers_lock, flags);
-+
-+	pr_debug("Registered multikernel message handler for type 0x%x\n", msg_type);
-+	return 0;
-+}
-+EXPORT_SYMBOL(mk_register_msg_handler);
-+
-+/**
-+ * mk_unregister_msg_handler - Unregister message handler
-+ * @msg_type: Message type to unregister
-+ * @handler: Handler function to remove
-+ *
-+ * Returns 0 on success, negative error code on failure
-+ */
-+int mk_unregister_msg_handler(u32 msg_type, mk_msg_handler_t handler)
-+{
-+	struct mk_msg_type_handler **pp, *type_handler;
-+	unsigned long flags;
-+	int found = 0;
-+
-+	if (!handler)
-+		return -EINVAL;
-+
-+	raw_spin_lock_irqsave(&mk_msg_type_handlers_lock, flags);
-+	pp = &mk_msg_type_handlers;
-+	while ((type_handler = *pp) != NULL) {
-+		if (type_handler->msg_type == msg_type && type_handler->msg_handler == handler) {
-+			*pp = type_handler->next;
-+			found = 1;
-+			break;
-+		}
-+		pp = &type_handler->next;
-+	}
-+	raw_spin_unlock_irqrestore(&mk_msg_type_handlers_lock, flags);
-+
-+	if (found) {
-+		/* Unregister the IPI handler */
-+		if (type_handler->ipi_handler) {
-+			multikernel_unregister_handler(type_handler->ipi_handler);
-+		}
-+		kfree(type_handler);
-+		pr_debug("Unregistered multikernel message handler for type 0x%x\n", msg_type);
++	fdt_phys = kho_get_fdt_phys();
++	if (!fdt_phys) {
++		pr_info("No KHO FDT available for multikernel DTB restoration\n");
 +		return 0;
 +	}
 +
-+	return -ENOENT;
++	pr_info("Restoring multikernel DTB from KHO (phys: 0x%llx)\n", fdt_phys);
++
++	/* Map the FDT for early boot access */
++	kho_fdt = early_memremap(fdt_phys, PAGE_SIZE);
++	if (!kho_fdt) {
++		pr_err("Failed to map KHO FDT at 0x%llx\n", fdt_phys);
++		return -EFAULT;
++	}
++
++	int mk_node = fdt_subnode_offset(kho_fdt, 0, "multikernel");
++	if (mk_node < 0) {
++		pr_info("No multikernel node found in KHO FDT\n");
++		ret = 0;
++		goto cleanup_fdt;
++	}
++
++	const void *dtb_data = fdt_getprop(kho_fdt, mk_node, "dtb-data", &dtb_len);
++	if (!dtb_data || dtb_len <= 0) {
++		pr_info("No dtb-data property found in multikernel node\n");
++		ret = 0;
++		goto cleanup_fdt;
++	}
++
++	pr_info("Found preserved multikernel DTB (%d bytes)\n", dtb_len);
++
++	/* Validate DTB header */
++	ret = fdt_check_header(dtb_data);
++	if (ret) {
++		pr_err("Invalid DTB header from KHO: %d\n", ret);
++		ret = -EINVAL;
++		goto cleanup_fdt;
++	}
++
++	if (dtb_len > SZ_1M) {
++		pr_err("DTB size too large: %d bytes\n", dtb_len);
++		ret = -EINVAL;
++		goto cleanup_fdt;
++	}
++
++	dtb_virt = kmalloc(dtb_len, GFP_KERNEL);
++	if (!dtb_virt) {
++		pr_err("Failed to allocate memory for DTB (%d bytes)\n", dtb_len);
++		ret = -ENOMEM;
++		goto cleanup_fdt;
++	}
++	memcpy(dtb_virt, dtb_data, dtb_len);
++
++	/* Parse DTB to get the actual instance ID and name */
++	ret = mk_dt_extract_instance_info(dtb_virt, dtb_len, &instance_id, &instance_name);
++	if (ret) {
++		pr_err("Failed to extract instance info from DTB: %d\n", ret);
++		goto cleanup_dtb;
++	}
++
++	pr_info("DTB contains instance ID %d, name '%s'\n", instance_id, instance_name);
++
++	/* Parse DTB configuration */
++	mk_dt_config_init(&config);
++	ret = mk_dt_parse(dtb_virt, dtb_len, &config);
++	if (ret) {
++		pr_err("Failed to parse DTB from KHO: %d\n", ret);
++		goto config_free;
++	}
++
++	/* Create a new instance for this DTB */
++	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
++	if (!instance) {
++		pr_err("Failed to allocate memory for multikernel instance\n");
++		ret = -ENOMEM;
++		goto config_free;
++	}
++
++	/* Initialize instance with parsed data */
++	instance->id = instance_id;
++	instance->name = kstrdup(instance_name, GFP_KERNEL);
++	if (!instance->name) {
++		ret = -ENOMEM;
++		goto cleanup_instance;
++	}
++
++	instance->dtb_data = kmalloc(dtb_len, GFP_KERNEL);
++	if (!instance->dtb_data) {
++		pr_err("Failed to allocate memory for DTB restoration\n");
++		ret = -ENOMEM;
++		goto cleanup_instance_name;
++	}
++
++	memcpy(instance->dtb_data, dtb_virt, dtb_len);
++	instance->dtb_size = dtb_len;
++
++	INIT_LIST_HEAD(&instance->memory_regions);
++	INIT_LIST_HEAD(&instance->list);
++	kref_init(&instance->refcount);
++
++	ret = mk_instance_reserve_resources(instance, &config);
++	if (ret == 0) {
++		mk_instance_set_state(instance, MK_STATE_READY);
++
++		mutex_lock(&mk_instance_mutex);
++		list_add_tail(&instance->list, &mk_instance_list);
++		mutex_unlock(&mk_instance_mutex);
++
++		pr_info("Successfully restored multikernel instance %d ('%s') from KHO (%d bytes)\n",
++			instance_id, instance_name, dtb_len);
++		mk_dt_config_free(&config);
++		kfree(dtb_virt);
++		early_memunmap((void *)kho_fdt, PAGE_SIZE);
++		return 0;
++	} else {
++		pr_err("Failed to reserve memory for restored instance: %d\n", ret);
++		mk_instance_set_state(instance, MK_STATE_FAILED);
++		/* Fall through to cleanup */
++	}
++
++cleanup_instance_name:
++	kfree(instance->name);
++cleanup_instance:
++	kfree(instance->dtb_data);
++	kfree(instance);
++config_free:
++	mk_dt_config_free(&config);
++cleanup_dtb:
++	kfree(dtb_virt);
++cleanup_fdt:
++	early_memunmap((void *)kho_fdt, PAGE_SIZE);
++	return ret;
 +}
-+EXPORT_SYMBOL(mk_unregister_msg_handler);
 +
 +/**
-+ * mk_messaging_init - Initialize the messaging system
++ * mk_kho_init() - Initialize KHO support for multikernel
 + *
-+ * Called during multikernel initialization to set up message handling
-+ * Returns 0 on success, negative error code on failure
++ * Registers the KHO notifier and attempts to restore DTBs from
++ * a previous KHO boot.
++ *
++ * Returns: 0 on success, negative error code on failure
 + */
-+int __init mk_messaging_init(void)
++int __init mk_kho_init(void)
 +{
-+	/* No global IPI handler needed anymore - handlers are registered per message type */
-+	pr_info("Multikernel messaging system initialized\n");
++	int ret;
++
++	/* Register multikernel kexec notifier for DTB preservation */
++	ret = mk_kexec_register_notifier(&mk_kexec_nb);
++	if (ret) {
++		pr_warn("Failed to register multikernel kexec notifier: %d\n", ret);
++		return ret;
++	}
++
++	pr_info("Registered multikernel kexec notifier for DTB preservation\n");
++
++	/* Restore DTBs from previous kernel if KHO boot */
++	ret = mk_kho_restore_dtbs();
++	if (ret) {
++		pr_warn("Failed to restore DTBs from KHO: %d\n", ret);
++		/* Continue - this is not fatal */
++	}
++
 +	return 0;
 +}
 +
 +/**
-+ * mk_messaging_cleanup - Cleanup the messaging system
++ * mk_kho_cleanup() - Cleanup multikernel kexec support
 + *
-+ * Called during multikernel cleanup
++ * Unregisters the multikernel kexec notifier.
 + */
-+void mk_messaging_cleanup(void)
++void mk_kho_cleanup(void)
 +{
-+	struct mk_msg_type_handler *type_handler, *next;
-+	unsigned long flags;
-+
-+	/* Clean up all registered message type handlers */
-+	raw_spin_lock_irqsave(&mk_msg_type_handlers_lock, flags);
-+	type_handler = mk_msg_type_handlers;
-+	mk_msg_type_handlers = NULL;
-+	raw_spin_unlock_irqrestore(&mk_msg_type_handlers_lock, flags);
-+
-+	while (type_handler) {
-+		next = type_handler->next;
-+
-+		/* Unregister IPI handler */
-+		if (type_handler->ipi_handler) {
-+			multikernel_unregister_handler(type_handler->ipi_handler);
-+		}
-+
-+		kfree(type_handler);
-+		type_handler = next;
-+	}
-+
-+	pr_info("Multikernel messaging system cleaned up\n");
++	mk_kexec_unregister_notifier(&mk_kexec_nb);
++	pr_debug("Unregistered multikernel kexec notifier\n");
 +}
++
++#else /* !CONFIG_KEXEC_HANDOVER */
++
++/* Stub functions when KHO is not enabled */
++int __init mk_kho_restore_dtbs(void)
++{
++	return 0;
++}
++
++int __init mk_kho_init(void)
++{
++	return 0;
++}
++
++void mk_kho_cleanup(void)
++{
++}
++
++#endif /* CONFIG_KEXEC_HANDOVER */
 -- 
 2.34.1
 
