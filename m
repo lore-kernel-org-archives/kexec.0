@@ -4,99 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98AA8CCD1A2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA9C1CCD1A5
 	for <kexec@archiver.kernel.org>; Mon, 20 Oct 2025 22:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rt4aMimZMzfPvCgAGyWcWfzzFK4ASU33RpzUho4to+o=; b=MY7SbJzoHgJqEGFvQg4x3hnOzp
-	Y3X42FmyHzkre794jAs9T/Tnzrx7c9rNIkhhqL4qeJmVL49CtLUXtssJIN+waATgz0/xfePRnFKv1
-	CguTbiqCwv4mKgaYvZ/3efXqupciKP5FP4G7kAzNL4rj284psWTXgq+VrvwjqdWlhAfvxagavkz68
-	c9Q29Tjm2xhVA6LCBT6JlSUomQ/MJjUkbsMt2S+05H6YAYI1nt2L1a42cRFp/F0DG1eXzSYX3qTqw
-	ZD7v0zujZhEV026eA+J2F1/fv2ERANDoyNt619WzyhhRzmBIrtXGILplzXjdFHd81xVmUu9SzG/e0
-	sCfMAELA==;
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=/mTrPVMTg8B4wtz9vwTttnRjqdusRlxVLTGuDdFn9H8=; b=IXtsCnthN6/6myrImxtPZ8kgOb
+	X6xmnyYLsAV1jh7MOdm9NHs23AYN0mXjV737WcRxjIfJcGyoqk1pWLTV2W4gYHP477Qqtnq6XZ6ds
+	RZvqaaarhugmGdRWwRduH74H0USVZHqBiM/Ay2xKbkay3OEirtDwLw8iotftrokrZYY4I8DDfytIa
+	eBfV+4bQLTADmzPNaPN4+knhXJQYD5qTw0XhrECxeogxNXjWpdiquT7b5VeDqnEdUngnwa8i+fjv8
+	PS2tmT5oWmw5ofyC3oB+o8hwoOsEoOvAu5PeRAH7tX3SROe6exsX64NscrBbbimElObdbIHIYrsjX
+	4z84c6Sg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAyIm-0000000FAqb-3hWx;
-	Mon, 20 Oct 2025 22:24:28 +0000
+	id 1vAyIl-0000000FAqO-2Xbi;
+	Mon, 20 Oct 2025 22:24:27 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAyIk-0000000FApz-3CEm
+	id 1vAyIi-0000000FApR-2GJs
 	for kexec@lists.infradead.org;
-	Mon, 20 Oct 2025 22:24:27 +0000
+	Mon, 20 Oct 2025 22:24:26 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760999065;
+	s=mimecast20190719; t=1760999062;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rt4aMimZMzfPvCgAGyWcWfzzFK4ASU33RpzUho4to+o=;
-	b=IB0gN+YRio5Om/Rqo1w9tDRF9KFRb8hPx1+2KcphUsKSItlDyfDi4jP26p3H0F2jktRN4t
-	eaq0dA9Kho4w2GdSgU7G/f8ikIesom5qcnLW3Vqnqx+hvSpnkr92//AGrNr0cKZZ76QLxF
-	U1Kjqo7JxPCr1PKic7ybyBWGnMSazVM=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/mTrPVMTg8B4wtz9vwTttnRjqdusRlxVLTGuDdFn9H8=;
+	b=AbHsA8UyGTdymRT4oEVYigitowuIsmkgmGeScxtBONrDrleMfrg8UTm+CVFQlim+koa9TZ
+	X6qF4LluVqbURcPiZik6bT8muhlxNg69Vjr//FFahvMudWbdFpPP7TS9oM5ljhZM/L2PUQ
+	dwU3tUvx1SSrvZ5V2j8VoUzLTmQMbgg=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-ivTV4cTIPjKxPjE0rKIPmQ-1; Mon, 20 Oct 2025 18:24:24 -0400
-X-MC-Unique: ivTV4cTIPjKxPjE0rKIPmQ-1
-X-Mimecast-MFC-AGG-ID: ivTV4cTIPjKxPjE0rKIPmQ_1760999063
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-76e2e60221fso8572652b3a.0
-        for <kexec@lists.infradead.org>; Mon, 20 Oct 2025 15:24:24 -0700 (PDT)
+ us-mta-265-PrI44kkaO4GjFOZFe-oFng-1; Mon, 20 Oct 2025 18:24:20 -0400
+X-MC-Unique: PrI44kkaO4GjFOZFe-oFng-1
+X-Mimecast-MFC-AGG-ID: PrI44kkaO4GjFOZFe-oFng_1760999060
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-781269a9049so8399016b3a.2
+        for <kexec@lists.infradead.org>; Mon, 20 Oct 2025 15:24:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760999063; x=1761603863;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rt4aMimZMzfPvCgAGyWcWfzzFK4ASU33RpzUho4to+o=;
-        b=qu9OkWcu9dIEvUnU52OD35XBAveYERf3lcnBsIN7N21H2SAscB5IsjRAUi/CWhjMae
-         2TFmf+HeZ60xO8I7UKGQb4V+DCet6G/L9FCx5HQvriGku3A1ut3yoCXaEWE/vrVfzs0I
-         b2ZrkgS2kGkSLUZnEzV4YSNqBrLBhC1kk9ga8169Sa+Su4I32686AjYh64dV52kUK7H/
-         YEyihOimd/IjiGRW0UbRu9OTuST2Ym927lHZqJ2HemiSxWSK/bDd7I1EJq2/Vz4QEZNo
-         JfgMaYnnKskEhF0V7mo5w2KCihgdmvUR6XjnIRQxkEetJMvcltElZdU/rKQ8NbXJiGf3
-         WmqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrufYr9zdMcMECjVyzp0y1iDJj3un3CPZ0IhWOEvUc/qzBVAynvRMcnTi5JWrUOB8go1bzRA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzknwk0ffs1JfW+sqfmFtZ+pr9FIqJ1ywzja5gOjVftr4xLitA1
-	HfyzdNyqEVbGNOO3QbuPgy74x6AM/Mskk2Ai99TiNeE1UTCwcrx+wum1j4RR3WQux07UOvffFja
-	JtOf+fBekTUZ+F+PFOrGPaZLoReAbfBLUesVi3D5z3n1V/ayMxYa4+yN/ag4cVndRjuhBdA==
-X-Gm-Gg: ASbGncuealR4TQCwdEfs/s7zjHDykbta1Dv2G4Hoti0ekoPEoaXUGUb0pySlRngvP7f
-	/O6eVoTf5+EAtzGRZd/EjbJtotfkQMuWQIryGWa+ovKewhCnsQwHY62bHJjVf7vKn1c8d+2boOT
-	ueFJBFprTb55EvEcvIKdLgksKDn1lBusUUetP/+T2nS6W7m7Z4Qh5XQBQh2mx1OIx5d1sK5sdT8
-	RyOJJ2Y4p6Gm7f8UD2S7pRc1lZiHl+rc4fne4vTVuth7AzSbIq5ybFjNhBmw+vhqp1ZhKNFCg+w
-	/SQsM6lPA7duDnJe26/Ak5hXxTbV90FlKfUxY7oFqWj9U2ePsZuXp24EIMGKQNzke5VCl2+9rnc
-	wXCqNQ7Y0Ay+wye35D++3qpwAmCbNjK8OT2/2miJqwq4=
-X-Received: by 2002:a05:6a00:acc:b0:781:1b4c:75fb with SMTP id d2e1a72fcca58-7a220b0719cmr20351102b3a.18.1760999063028;
-        Mon, 20 Oct 2025 15:24:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHTpRjDVz9jfZvAFkbgresngQrsaEKD/tN8fy7c0ZcKNMwG5mWEh6T7sTe6nADO/+DrPdI3xA==
-X-Received: by 2002:a05:6a00:acc:b0:781:1b4c:75fb with SMTP id d2e1a72fcca58-7a220b0719cmr20351074b3a.18.1760999062516;
-        Mon, 20 Oct 2025 15:24:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760999059; x=1761603859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/mTrPVMTg8B4wtz9vwTttnRjqdusRlxVLTGuDdFn9H8=;
+        b=vC7yqyt2UEVbXWxqXQveQhGYpuQfvVOhTzFgrBH0D0t9+gjfSUu0vz3nw0QDKwLpfX
+         UXAerxpXdYc8Wo6SzqoxSPjQdZz9vVxEJW45aZTohIig/9LZgWgttGADMMZ2pb0j6cYv
+         zMxa4ijoRmoZc+EYrTIJMXWZe1+h9XfJyulrbOwMpPMNlEg1yJlzEWsZxKYjQ0CGIN6z
+         O4EfVBJC1S2djni76syBFvkn/YP5SZhyKPpsRFBsaCQXYNB7AyknUoGpecwWPD4opsjH
+         AYuv1tMZqWOt6ABLlsIYXGuexJnGzNzDesTdM16IUpTve2a9q/5JLxnYITZeZT692oQn
+         inXg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6dpgPlBXojxszlSuhukY+b/vZuIQ6m7gnRxrxDHYTEJ5YHARbJDE8Fflcc6G5oYoUM/I6mg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyLzO/5fJ1dJ3BcAZtWNycKPOFLe4tFl/IxekMBcUlDN+ICu3K4
+	cTetqyoJED+Cnc4DMqHcR5xCpvsGiqpvHCqACwOsxxEoWx6oHkMnCbb8qTcuESPm3P2AkEFIFrA
+	CeWonsaKWb9uh9iz8e7H0UPE3P0PUfMltaOcDP4Vq4GZMGjiyZx0SnMwE60rItA==
+X-Gm-Gg: ASbGnctXclY6XM8wYT9vN+ZBgzmiaYNSP/nXELrtqTUIpTNP0F5J5zgtsJ08audBszD
+	3Dz6LkGOI/7U/nMP0D9wf1Tj01TiFjCbkTl/34jUaQYJxPrNZB+Ow7hP/M2cOqubiXXbwD6dusp
+	HhBBJD98KXbrm3jiwHRuNi0sDC+rWg2WXIgKos1rMOtlEwfySFBbe/3eB+j+n/xTJ5Bf0zvNwEm
+	uF6PZPnhzlIkhL3QncGYjIHuY+ZmEkHGTqCb0KuF3grT5utQrJq2zPA+60ELRwH9KhOv5cKMoRd
+	wt9FhChGsf5SHiTyBkmDyzIngCk9jkkbTwIGfwQROaWMUEd+4l9N7Ehtuqdi6mBMharLng110uF
+	xqFKEBYicmk82guLceP3G4Il6L/F+c3/IFQPh6B2SdZs=
+X-Received: by 2002:a05:6a00:94c2:b0:79a:f5eb:3dce with SMTP id d2e1a72fcca58-7a220d5792amr17121683b3a.31.1760999059443;
+        Mon, 20 Oct 2025 15:24:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHp6x1GB2tRznJ1+F3JZ7ygqypGd88EdxpoEyPU7g1AaZmKMeGmVT28l/Cbs7FqZ3uiqb6tEg==
+X-Received: by 2002:a05:6a00:94c2:b0:79a:f5eb:3dce with SMTP id d2e1a72fcca58-7a220d5792amr17121660b3a.31.1760999058980;
+        Mon, 20 Oct 2025 15:24:18 -0700 (PDT)
 Received: from localhost.localdomain (115-189-93-209.mobile.spark.co.nz. [115.189.93.209])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a23010e265sm9229263b3a.52.2025.10.20.15.24.19
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a23010e265sm9229263b3a.52.2025.10.20.15.24.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 15:24:22 -0700 (PDT)
+        Mon, 20 Oct 2025 15:24:18 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
 To: yamazaki-msmt@nec.com,
 	k-hagio-ab@nec.com,
 	kexec@lists.infradead.org
 Cc: aravinda@linux.vnet.ibm.com,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCH v2][makedumpfile 01/14] Add page filtering function
-Date: Tue, 21 Oct 2025 11:23:57 +1300
-Message-ID: <20251020222410.8235-2-ltao@redhat.com>
+Subject: [PATCH v2][makedumpfile 00/14] btf/kallsyms based eppic extension for mm page filtering
+Date: Tue, 21 Oct 2025 11:23:56 +1300
+Message-ID: <20251020222410.8235-1-ltao@redhat.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20251020222410.8235-1-ltao@redhat.com>
-References: <20251020222410.8235-1-ltao@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gX_tDNGnuHUUAaxanzv3HKfY547yVEMnCfBdVBRuES4_1760999063
+X-Mimecast-MFC-PROC-ID: JwKyt8PT-Q9G6kWuA8whd-qsTSo-8wr0NzWthEmCCuI_1760999060
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251020_152426_877681_9DA243F8 
-X-CRM114-Status: GOOD (  22.18  )
+X-CRM114-CacheID: sfid-20251020_152424_656400_1494F88A 
+X-CRM114-Status: GOOD (  23.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,197 +108,198 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-pfn and num is the data which eppic scritps give to makedumpfile for mm page
-filtering, so any page within (pfn ~ pfn + num) can be filtered. Since
-makedumpfile will iterate the pfn in an ascending order in
-__exclude_unnecessary_pages(), the linked lists formed by ft_page_info will
-also be organized in an ascending order by pfn, so if one pfn
-is hit by one list, the following pfn is most likely to be hit either by
-this list again, or the one follows, so a cur variable is used for saving
-the current list position to speedup the pfn checking process.
+A) This patchset will introduce the following features to makedumpfile:
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
- erase_info.c   | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++
- erase_info.h   |  8 ++++++
- makedumpfile.c | 18 ++++++++++---
- 3 files changed, 91 insertions(+), 4 deletions(-)
+  1) Enable eppic script for memory pages filtering.
+  2) Enable btf and kallsyms for symbol type and address resolving.
 
-diff --git a/erase_info.c b/erase_info.c
-index af6bfae..fd316c1 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -2466,3 +2466,72 @@ get_size_eraseinfo(void)
- 	return size_eraseinfo;
- }
- 
-+static struct ft_page_info *ft_head = NULL;
-+
-+/*
-+ * Insert the ft_page_info blocks into ft_head by ascending pfn.
-+ */
-+int
-+update_filter_pages_info(unsigned long pfn, unsigned long num)
-+{
-+	struct ft_page_info *p;
-+	struct ft_page_info *new_p = malloc(sizeof(struct ft_page_info));
-+
-+	if (!new_p) {
-+		ERRMSG("Can't allocate memory for ft_page_info at %lx\n", pfn);
-+		return 1;
-+	}
-+	new_p->pfn = pfn;
-+	new_p->num = num;
-+	new_p->next = NULL;
-+
-+	if (!ft_head || ft_head->pfn > new_p->pfn) {
-+		new_p->next = ft_head;
-+		ft_head = new_p;
-+		return 0;
-+	}
-+
-+	p = ft_head;
-+	while (p->next != NULL && p->next->pfn < new_p->pfn) {
-+		p = p->next;
-+	}
-+
-+	new_p->next = p->next;
-+	p->next = new_p;
-+	return 0;
-+}
-+
-+/*
-+ * Check if the pfn page should be filtered.
-+ *
-+ * pfn and ft_head are in ascending order, so save the current ft_page_info
-+ * block into **p because it is likely to hit again next time.
-+ */
-+int
-+filter_page(unsigned long pfn, struct ft_page_info **p)
-+{
-+	if (ft_head == NULL)
-+		return 0;
-+
-+	if (*p == NULL)
-+		*p = ft_head;
-+
-+	/* Handle the 1st gap */
-+	if (pfn >= 0 && pfn < ft_head->pfn)
-+		return 0;
-+
-+	/* Handle ft_page_info blocks and following gaps */
-+	while ((*p)->next) {
-+		if (pfn >= (*p)->pfn && pfn < (*p)->pfn + (*p)->num)
-+			return 1; // filter this page
-+		if (pfn >= (*p)->pfn + (*p)->num && pfn < (*p)->next->pfn)
-+			return 0; // save this page
-+		*p = (*p)->next;
-+	}
-+
-+	/* Handle the last gap */
-+	if (pfn >= (*p)->pfn + (*p)->num)
-+		return 0;
-+	else
-+		return 1;
-+}
-\ No newline at end of file
-diff --git a/erase_info.h b/erase_info.h
-index b363a40..4552dfc 100644
---- a/erase_info.h
-+++ b/erase_info.h
-@@ -64,6 +64,14 @@ void filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
- 					size_t size, pthread_mutex_t *mutex);
- unsigned long get_size_eraseinfo(void);
- int update_filter_info_raw(unsigned long long, int, int);
-+int update_filter_pages_info(unsigned long, unsigned long);
-+
-+struct ft_page_info {
-+	unsigned long pfn;
-+	unsigned long num;
-+	struct ft_page_info *next;
-+};
-+int filter_page(unsigned long, struct ft_page_info **p);
- 
- #endif /* _ERASE_INFO_H */
- 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 2d3b08b..33fad32 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -100,6 +100,7 @@ mdf_pfn_t pfn_user;
- mdf_pfn_t pfn_free;
- mdf_pfn_t pfn_hwpoison;
- mdf_pfn_t pfn_offline;
-+mdf_pfn_t pfn_eppic;
- mdf_pfn_t pfn_elf_excluded;
- 
- mdf_pfn_t num_dumped;
-@@ -6453,6 +6454,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 	unsigned int order_offset, dtor_offset;
- 	unsigned long flags, mapping, private = 0;
- 	unsigned long compound_dtor, compound_head = 0;
-+	struct ft_page_info *cur = NULL;
- 
- 	/*
- 	 * If a multi-page exclusion is pending, do it first
-@@ -6670,6 +6672,13 @@ check_order:
- 		else if (isOffline(flags, _mapcount)) {
- 			pfn_counter = &pfn_offline;
- 		}
-+		/*
-+		 * Exclude pages that specified by eppic script
-+		 */
-+		else if (filter_page(pfn, &cur)) {
-+			nr_pages = 1;
-+			pfn_counter = &pfn_eppic;
-+		}
- 		/*
- 		 * Unexcludable page
- 		 */
-@@ -8217,7 +8226,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	 */
- 	if (info->flag_cyclic) {
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = pfn_eppic = 0;
- 		pfn_memhole = info->max_mapnr;
- 	}
- 
-@@ -9555,7 +9564,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		 * Reset counter for debug message.
- 		 */
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = pfn_eppic = 0;
- 		pfn_memhole = info->max_mapnr;
- 
- 		/*
-@@ -10504,7 +10513,7 @@ print_report(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline + pfn_eppic;
- 
- 	REPORT_MSG("\n");
- 	REPORT_MSG("Original pages  : 0x%016llx\n", pfn_original);
-@@ -10520,6 +10529,7 @@ print_report(void)
- 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
- 	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
- 	REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_offline);
-+	REPORT_MSG("    Eppic filtered pages    : 0x%016llx\n", pfn_eppic);
- 	REPORT_MSG("  Remaining pages  : 0x%016llx\n",
- 	    pfn_original - pfn_excluded);
- 
-@@ -10560,7 +10570,7 @@ print_mem_usage(void)
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
- 	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
--	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-+	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline + pfn_eppic;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
- 	total_size = info->page_size * pfn_original;
+B) The purpose of the features are:
+
+  1) Currently makedumpfile filters mm pages based on page flags, because flags
+     can help to determine one page's usage. But this page-flag-checking method
+     lacks of flexibility in certain cases, e.g. if we want to filter those mm
+     pages occupied by GPU during vmcore dumping due to:
+
+     a) GPU may be taking a large memory and contains sensitive data;
+     b) GPU mm pages have no relations to kernel crash and useless for vmcore
+        analysis.
+
+     But there is no GPU mm page specific flags, and apparently we don't need
+     to create one just for kdump use. A programmable filtering tool is more
+     suitable for such cases. In addition, different GPU vendors may use
+     different ways for mm pages allocating, programmable filtering is better
+     than hard coding these GPU specific logics into makedumpfile in this case.
+
+  2) Currently makedumpfile already contains a programmable filtering tool, aka
+     eppic script, which allows user to write customized code for data erasing.
+     However it has the following drawbacks:
+
+     a) cannot do mm page filtering.
+     b) need to access to debuginfo of both kernel and modules, which is not
+        applicable in the 2nd kernel.
+     c) Poor performance, making vmcore dumping time unacceptable (See
+        the following performance testing).
+
+     makedumpfile need to resolve the dwarf data from debuginfo, to get symbols
+     types and addresses. In recent kernel there are dwarf alternatives such
+     as btf/kallsyms which can be used for this purpose. And btf/kallsyms info
+     are already packed within vmcore, so we can use it directly.
+
+  With these, this patchset introduces an upgraded eppic, which is based on
+  btf/kallsyms symbol resolving, and is programmable for mm page filtering.
+  The following info shows its usage and performance, please note the tests
+  are performed in 1st kernel:
+
+  $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:03\:12/vmcore
+    /tmp/dwarf.out -x /lib/debug/lib/modules/6.11.8-300.fc41.x86_64/vmlinux
+    --eppic eppic_scripts/filter_amdgpu_mm_pages.c
+        real    14m6.894s
+        user    4m16.900s
+        sys     9m44.695s
+
+  $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:03\:12/vmcore
+    /tmp/btf.out --eppic eppic_scripts/filter_amdgpu_mm_pages.c
+        real    0m10.672s
+        user    0m9.270s
+        sys     0m1.130s
+
+  -rw------- 1 root root 367475074 Jun 10 18:06 btf.out
+  -rw------- 1 root root 367475074 Jun 10 21:05 dwarf.out
+  -rw-rw-rw- 1 root root 387181418 Jun 10 18:03 /var/crash/127.0.0.1-2025-06-10-18:03:12/vmcore
+
+C) Discussion:
+
+  1) GPU types: Currently only tested with amdgpu's mm page filtering, others
+     are not tested.
+  2) OS: The code can work on rhel-10+/rhel9.5+ on x86_64/arm64/s390/ppc64.
+     Others are not tested.
+
+D) Testing:
+
+  1) If you don't want to create your vmcore, you can find a vmcore which I
+     created with amdgpu mm pages unfiltered [1], the amdgpu mm pages are
+     allocated by program [2]. You can use the vmcore in 1st kernel to filter
+     the amdgpu mm pages by the previous performance testing cmdline. To
+     verify the pages are filtered in crash:
+
+     Unfiltered:
+     crash> search -c "!QAZXSW@#EDC"
+     ffff96b7fa800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+     ffff96b87c800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+     crash> rd ffff96b7fa800000
+     ffff96b7fa800000:  405753585a415121                    !QAZXSW@
+     crash> rd ffff96b87c800000
+     ffff96b87c800000:  405753585a415121                    !QAZXSW@
+
+     Filtered:
+     crash> search -c "!QAZXSW@#EDC"
+     crash> rd ffff96b7fa800000
+     rd: page excluded: kernel virtual address: ffff96b7fa800000  type: "64-bit KVADDR"
+     crash> rd ffff96b87c800000
+     rd: page excluded: kernel virtual address: ffff96b87c800000  type: "64-bit KVADDR"
+
+  2) You can use eppic_scripts/print_all_vma.c against an ordinary vmcore to
+     test only btf/kallsyms functions by output all VMAs if no amdgpu
+     vmcores/machine avaliable.
+
+[1]: https://people.redhat.com/~ltao/core/
+[2]: https://gist.github.com/liutgnu/a8cbce1c666452f1530e1410d1f352df
+
+v2 -> v1:
+
+1) Moved maple tree related code(for VMA iteration) into eppic script, so we
+   don't need to port maple tree code to makedumpfile.
+
+2) Reorganized the patchset as follows:
+
+    --- <common modification> ---
+    1.Add page filtering function                                                    
+    2.Supporting main() as the entry of eppic script                                 
+
+    --- <dwarf related modification> ---
+    3.dwarf_info: Support kernel address randomization                               
+    4.dwarf_info: Fix a infinite recursion bug for rust                              
+    5.eppic dwarf: support anonymous structs member resolving                        
+    6.Enable page filtering for dwarf eppic                                          
+
+    --- <btf & kallsyms related modification> ---
+    7.Implement kernel kallsyms resolving                                            
+    8.Implement kernel btf resolving                                                 
+    9.Implement kernel module's kallsyms resolving                                   
+    10.Implement kernel module's btf resolving                                        
+    11.Export necessary btf/kallsyms functions to eppic extension                     
+    12.Enable page filtering for btf/kallsyms eppic                                   
+    13.Docs: Update eppic related entries                                             
+
+    --- <only for test purpose, don't merge> ---
+    14.Introducing 2 eppic scripts to test the dwarf/btf eppic extension     
+
+   The modification on dwarf is primary for comparision purpose, that
+   for the same eppic program, mm page filtering should get exact same
+   outputs for dwarf & kallsyms/btf based approaches. If outputs unmatch,
+   this indicates bugs. In fact, we will never take dwarf mm pages filtering
+   in real use, due to its poor performance as well as inaccessibility
+   of debuginfo during kdump in 2nd kernel. So patch 3/4/5 won't affect
+   the function of btf/kallsyms eppic mm page filtering, but there are
+   functions shared in patch 6, so it is a must-have one. Patch 14 is
+   only for test purpose, to demonstrate how to write eppic script for
+   mm page filtering, so it isn't a must-have patch.
+
+   Please note, in patch 14, I have deliberately converted all array
+   operation into pointer operation, e.g. modified "node->slot[i]" into
+   "*((unsigned long *)&(node->slot) + i)". This is because there are
+   bugs for array operation support in extension_eppic.c. I didn't have
+   effort to test and fix them all because as I mentioned previously,
+   mm page filtering in dwarf side is only for comparision and will
+   never be used in real use. There is no such issue for kallsyms/btf
+   eppic side.
+
+3) Since we ported maple tree code to eppic script, several bugs found
+   both for eppic library & eppic btf support. Please use master branch
+   of eppic library to co-compile with this patchset.
+
+Tao Liu (14):
+  Add page filtering function
+  Supporting main() as the entry of eppic script
+  dwarf_info: Support kernel address randomization
+  dwarf_info: Fix a infinite recursion bug for rust
+  eppic dwarf: support anonymous structs member resolving
+  Enable page filtering for dwarf eppic
+  Implement kernel kallsyms resolving
+  Implement kernel btf resolving
+  Implement kernel module's kallsyms resolving
+  Implement kernel module's btf resolving
+  Export necessary btf/kallsyms functions to eppic extension
+  Enable page filtering for btf/kallsyms eppic
+  Docs: Update eppic related entries
+  Introducing 2 eppic scripts to test the dwarf/btf eppic extension
+
+ Makefile                               |   6 +-
+ btf.c                                  | 919 +++++++++++++++++++++++++
+ btf.h                                  | 177 +++++
+ dwarf_info.c                           |   7 +
+ eppic_scripts/filter_amdgpu_mm_pages.c | 255 +++++++
+ eppic_scripts/print_all_vma.c          | 239 +++++++
+ erase_info.c                           | 120 +++-
+ erase_info.h                           |  19 +
+ extension_btf.c                        | 258 +++++++
+ extension_eppic.c                      | 106 ++-
+ extension_eppic.h                      |   6 +-
+ kallsyms.c                             | 392 +++++++++++
+ kallsyms.h                             |  41 ++
+ makedumpfile.8.in                      |  24 +-
+ makedumpfile.c                         |  21 +-
+ makedumpfile.h                         |  11 +
+ print_info.c                           |  11 +-
+ 17 files changed, 2550 insertions(+), 62 deletions(-)
+ create mode 100644 btf.c
+ create mode 100644 btf.h
+ create mode 100644 eppic_scripts/filter_amdgpu_mm_pages.c
+ create mode 100644 eppic_scripts/print_all_vma.c
+ create mode 100644 extension_btf.c
+ create mode 100644 kallsyms.c
+ create mode 100644 kallsyms.h
+
 -- 
 2.47.0
 
