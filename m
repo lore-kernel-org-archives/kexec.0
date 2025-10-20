@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E3D1FD530C
-	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C093EFD530C
+	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 08:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zcD/4uYFsGN+ddlc5XN7jrlEbZPy90Q3VYii2jxgM9Y=; b=WulZbdAtgFMA83NKRz8HOhGl1X
-	84sbSNpqlKY2XJrktFOMDILVh2VxlXgcKg+RXabOYfSYIWNB/8vI6pK+ywmCrmBVuKs7K7akCa1Fy
-	pkFujAUdsiggBHkZG9sn8yYfZwNYdovqEfsXDDmxJSdTNtRtF/zCaHae057rm7qBA0Gywh0VdYvr4
-	PNo7N1gxomjNFzARjbBBMoUSUgCGaC9EUWO2FXpBaJnf/tsKNW7VgVcx9eF5MmEYZD2lz+Hqy936c
-	HkeQ1K7EN84o56Cgm2NhPon/1GGvZLC/hRPbfj32///oIrznI272NVsnTYjmnVqPeNhPcvZw82nTC
-	R+8ed+5Q==;
+	bh=ViQ89gOu19UDAiRynbx1fqy0JdIKiOkaAlpGFEg0jmo=; b=U+9Vy67CWBd3T5Alm7KbB44t4P
+	BQCLf8xI129Pv3p4k7OYH4z/jXvPyZLE8DE+RRtq6omAvhwdNM/hj/DfWjZB2H9/pvmpAQ/e5Og9M
+	y9WQ3P1OizLL+buQAD3rJVDRK3l2sI0vIq61VOUGquEBrIrwF9bc40xzWAAwTnUT5WC2cD5NPFsBe
+	s1aFiIdOvX/aQFcPZFzk6M76vWUQ/O/y+UddWzdN3FEggY/MHFRvdnYdX0NPgRaMCUHtDI7Yj/DyZ
+	HLTSpP714GcG6Z/QjtjkVOf08RgugSvU0cwFevUT7Mu/rmW8CDJxsg2ZYTfRdDDwie8H5GZb3m16B
+	/+53afXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvtN5-000000080I2-2vwS;
-	Fri, 27 Feb 2026 08:38:51 +0000
+	id 1vvtN8-000000080L3-3Czw;
+	Fri, 27 Feb 2026 08:38:54 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v9jZE-00000007o0A-47r7
+	id 1vAq6q-0000000Dozs-1nA6
 	for kexec@lists.infradead.org;
-	Fri, 17 Oct 2025 12:28:22 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59HAarsL010294;
-	Fri, 17 Oct 2025 12:28:03 GMT
+	Mon, 20 Oct 2025 13:39:37 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59KCRbo4023459;
+	Mon, 20 Oct 2025 13:39:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=zcD/4uYFsGN+ddlc5XN7jrlEbZPy90
-	Q3VYii2jxgM9Y=; b=eE5W0N9ngKQsBCaEoKP5X7uMprOx6srXl/Y5VSnftyarLC
-	FSGEDSCmpjEvwqDQFh7AEijQZhgnsC4DjNtYcVSD2tWylUvlrd4mw2tUZr96iquP
-	/Z+lp47gr9mIxlR3dOKgFjPzYEUIvnSowb+LGqWv/mwux3Hir+753eGvRXblGAVl
-	S/1vztL894fE4p+ROE4dyTuhsSxnbHKOHNZ8TZpwoVVIQRwGqR1AFUMHqQ1rhx5Y
-	oJV9EhNt4y4mTiiWLDsGZ5H7lIV3YJc8+elXhzspQaeNoIjaX6oeGSgjxMHKd8Bi
-	2/n7WNnKjsQMvJom9/+Vry4AmFzLW57ZDlOaJsVg==
+	:references:subject:to; s=pp1; bh=ViQ89gOu19UDAiRynbx1fqy0JdIKiO
+	kaAlpGFEg0jmo=; b=Ptjzv4kBROTmkVPoTlFfTfmB/4UXjPZvHkVkOlxHn6JGaF
+	n942llznxWdYPp3MjsYwnIwwcmkfvftLcKeiYvIOAGDY9eX/lZk7P1NAyXX3k+p2
+	vQXts7umot2B8zY367jh/chah1eUCv7e6VHYajk8l2skYinBvfuOiESk/S8QyEd7
+	9HI5stj26Psb5zmVPKAJr/zM5BMClWM9lRnxbtQVQVxRAQKv0qec4Ap64fk56vCU
+	JBrAPOCWLf+9fhpyiyr79baK5Sfts8ijh4b/sAJDz9XwDScfwVr2zFu2Gd1Ci8PO
+	8dpWqQUM2ldPeQw/7da2l3r7Wkl829htX/Zf7J5w==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49qewujm35-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31rsqg6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 12:28:03 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59HCS2e4011949;
-	Fri, 17 Oct 2025 12:28:02 GMT
+	Mon, 20 Oct 2025 13:39:15 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59KDSrHp023351;
+	Mon, 20 Oct 2025 13:39:14 GMT
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49qewujm2x-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31rsqg3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 12:28:02 +0000 (GMT)
+	Mon, 20 Oct 2025 13:39:14 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59H9Ms3A015041;
-	Fri, 17 Oct 2025 12:28:01 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49r3sjvxxw-1
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59KC35wv002281;
+	Mon, 20 Oct 2025 13:39:13 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49vqej5p7v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 12:28:01 +0000
+	Mon, 20 Oct 2025 13:39:12 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59HCRviL24904158
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59KDd98t29557158
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Oct 2025 12:27:57 GMT
+	Mon, 20 Oct 2025 13:39:09 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 80522200F0;
-	Fri, 17 Oct 2025 12:27:57 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1465F20040;
+	Mon, 20 Oct 2025 13:39:09 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE081200ED;
-	Fri, 17 Oct 2025 12:27:54 +0000 (GMT)
-Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.111.68.179])
+	by IMSVA (Postfix) with ESMTP id 0AE432004B;
+	Mon, 20 Oct 2025 13:39:07 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.111.85.12])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 17 Oct 2025 12:27:54 +0000 (GMT)
-Date: Fri, 17 Oct 2025 14:27:53 +0200
+	Mon, 20 Oct 2025 13:39:06 +0000 (GMT)
+Date: Mon, 20 Oct 2025 15:39:05 +0200
 From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
         Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
         Guo Ren <guoren@kernel.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -114,43 +114,42 @@ Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
         kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
         iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
         Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
+Subject: Re: [PATCH v5 12/15] mm/hugetlbfs: update hugetlbfs to use
  mmap_prepare
-Message-ID: <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
- <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
- <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
+Message-ID: <aPY7eQec0bB9847x@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <cover.1760959441.git.lorenzo.stoakes@oracle.com>
+ <b1afa16d3cfa585a03df9ae215ae9f905b3f0ed7.1760959442.git.lorenzo.stoakes@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
+In-Reply-To: <b1afa16d3cfa585a03df9ae215ae9f905b3f0ed7.1760959442.git.lorenzo.stoakes@oracle.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oq4BBwfqQ48M4fFrJYto5eFg6cOrIUo4
-X-Authority-Analysis: v=2.4 cv=Kr1AGGWN c=1 sm=1 tr=0 ts=68f23653 cx=c_pps
+X-Proofpoint-ORIG-GUID: ZSoy0DnAVX45duhi1_mDLkuJQ3da5vFy
+X-Proofpoint-GUID: 2FFr9MxsKTbmfu7DnP8tGWY4DhBVRDkg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfXy3CVS9OyeYuF
+ 3+tWa5wjvP+gkbv9wIuR2qBo2tCYgmgyTdm2zAqfL8UFStMulHvbtnTG5sqtSbNbGC7YvcprEqv
+ 0d6/694Ay5/WaywfyIa71bzqVpJ+YelsfaR6Fgo2F6IMpwfoqzJiZIDNnA7xw0K40cEjnFnUiYM
+ oDKF5qlhz607Hjx7bxgydKT4VgnEhOta0jia3+WHEGk61414+0Z9tjdEL7VpIj44M5+o7Y1fW82
+ OVInIKfzXUDHTrkjx3GSeH/Sqxwna+Wi9hKxe9JcxyPadb1pe+SyjdPgcUFpynbyWFiFEpi45GP
+ 4FvlBMRbqmC01KgzuyyJ/fw2hjq8Pgqs/7uGjoyGcoquemDY7UnpDzBM6gZj/b+AHFmqBo6ZfMD
+ TihvVeJSVrOZw0tNC7yiCSCnr0sABw==
+X-Authority-Analysis: v=2.4 cv=IJYPywvG c=1 sm=1 tr=0 ts=68f63b83 cx=c_pps
  a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=kj9zAlcOel0A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=Q64uQKxdJJvBSAPQG9IA:9 a=CjuIK1q_8ugA:10
- a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
-X-Proofpoint-ORIG-GUID: 6VusDNc5IkEdh68Kaj2ZTeyqGB4LSNCy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxNCBTYWx0ZWRfXxloq0CHfoAPH
- XWVL1aBHdkm9/xfBCuiQ3NRDkHBHHJBzuRDZONYMy2fb9zEbQIvnfmYJ/id2eywCKro3ajwNeBN
- 4kh50+Ptwe9WC/jgv6TvlSU3BjTjj8J4e8Q28WaUW15+fWE4+obYIhdatSNa8pR7s7K3qc9B/vz
- /NrDUP9sclcVLmwCaUq8/8kitasnnMGBQ+06iNPPJ2JLfYTXft3CE9tZA6j7MvZnByxSm0WG2L9
- 6HJF8v/KHOyke08jKmTMex92BViTc6nNAZ8Mf08l0p8tEVPKsDoeg+/woBR1eJnDItXypZ8WKoi
- 4hmgIRXSm+rnxVDlrmJgusCv4UyparD/Ec+dlPRV+dFyojmExkE6m1pDYvzlIJcGkJRfebaDxiR
- gMuyJhCR/K7vXVkZsF8tcUl7kIfexg==
+ a=yPCof4ZbAAAA:8 a=Ikd4Dj_1AAAA:8 a=VnNF1IyMAAAA:8 a=7mAFR29It3qcuHcA-EIA:9
+ a=CjuIK1q_8ugA:10 a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22
+ a=QOGEsqRv6VhmHaoFNykA:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-17_04,2025-10-13_01,2025-03-28_01
+ definitions=2025-10-20_04,2025-10-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
- phishscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ phishscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110014
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251017_052821_025241_358037F2 
-X-CRM114-Status: GOOD (  22.31  )
+X-CRM114-CacheID: sfid-20251020_063936_490534_A8455E94 
+X-CRM114-Status: GOOD (  15.29  )
 X-Mailman-Approved-At: Fri, 27 Feb 2026 00:38:39 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -166,36 +165,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Sep 23, 2025 at 02:17:04PM -0700, Andrew Morton wrote:
-> On Tue, 23 Sep 2025 13:52:09 +0200 Sumanth Korikkar <sumanthk@linux.ibm.com> wrote:
+On Mon, Oct 20, 2025 at 01:11:29PM +0100, Lorenzo Stoakes wrote:
+> Since we can now perform actions after the VMA is established via
+> mmap_prepare, use desc->action_success_hook to set up the hugetlb lock
+> once the VMA is setup.
 > 
-> > > --- a/fs/hugetlbfs/inode.c
-> > > +++ b/fs/hugetlbfs/inode.c
-> > > @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
-> > >  #define PGOFF_LOFFT_MAX \
-> > >  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
-> > >  
-> > > -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > > +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
-> > >  {
-> > > +	/* Unfortunate we have to reassign vma->vm_private_data. */
-> > > +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
-> > > +}
-> > 
-> > Hi Lorenzo,
-> > 
-> > The following tests causes the kernel to enter a blocked state,
-> > suggesting an issue related to locking order. I was able to reproduce
-> > this behavior in certain test runs.
+> We also make changes throughout hugetlbfs to make this possible.
 > 
-> Thanks.  I pulled this series out of mm.git's mm-stable branch, put it
-> back into mm-unstable.
+> Note that we must hide newly established hugetlb VMAs from the rmap until
+> the operation is entirely complete as we establish a hugetlb lock during
+> VMA setup that can be raced by rmap users.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Hi all,
+Hi Lorenzo,
 
-The issue is reproducible again in linux-next with the following commit:
-5fdb155933fa ("mm/hugetlbfs: update hugetlbfs to use mmap_prepare")
+Tested this patch with libhugetlbfs tests. No locking issues anymore.
 
-Thanks,
-Sumanth
+Tested-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+
+Thank you
 
