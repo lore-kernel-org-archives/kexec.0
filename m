@@ -4,72 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D77A1CCD1AB
-	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56FB3CCD1BB
+	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 15:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=a/cxvjDIyLxcpAHODcE1I1yUn0aCZhf3T+hIgt770q8=; b=HWnYRBhbfsqkSg7gEJZ+YMvdP+
-	3kk6prkYuwpsjRRxWNAFH+nHvNGiv+ZVsAkB4dlLG540dzFuleLuWXYnNADglROOvQiwb4ZMu3KND
-	N0fafAnVlIqyhPrjS7Se3RxWAW1EyQD6GT74Ao0/2z74PUr9ZmXd4Ss+mTabFReV1zHYTlCrB5vqD
-	RhCcrm1ypWaavSZOqDhytqknSfXEXRbJwA0MY1n52IS0BRaFTRNNzTehmsZHh9mxu/0GAMx9jwRoN
-	PVgiCUduc0uRSSHgdtvI9iYDNfadPXfv677Ygbq3QSKMx9ONfOfvVQscOnWA1Rc0kyU0DqTyEppno
-	da2jdd8g==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=aaDlp+RI/87Oq/P/iLc6Ydi0LWEpE3MZQqoOk2S4jJw=; b=tO59CHvHLVRPRu
+	gzTMVqmEy+qay6YBj5bYBJ7hlNwsSEeoZZ821mh8DWneYa79Es4rRZ6UMq01ALoQajjZ9KilgLvdN
+	BsJh86xFSp+JYNAEQDRqUKKNPqzkBGfqUXt0Z3iUYUsPdFitX7YIeVDciJR3F+e4qZTVZaeEqeCGe
+	rRe3dkLwPUYB5lzv35B7b5+pql4WGpFUdZh/9FtT5fHyRzcT0+kCqIoPg/85UmWFcQY5J9XWsn5l1
+	s2UqM1VHLry5fHZwPJEhCUKucnb8UcuCTpXk7DZB2j08E8COAB3GeybxYYg0rmZZ4xzOUlPVjHV1Y
+	0QB5KRg4a6HFTVaH7Psg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBadk-00000003Myy-3nSg;
-	Wed, 22 Oct 2025 15:20:40 +0000
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66])
+	id 1vBapC-00000003Pi5-3pms;
+	Wed, 22 Oct 2025 15:32:30 +0000
+Received: from mailout.easymail.ca ([64.68.200.34])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBadh-00000003MxL-45hj
+	id 1vBap8-00000003Pfv-3N2a
 	for kexec@lists.infradead.org;
-	Wed, 22 Oct 2025 15:20:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
-	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=a/cxvjDIyLxcpAHODcE1I1yUn0aCZhf3T+hIgt770q8=; t=1761146438;
-	x=1761751238; b=YivkZ2pSJZZSAbuhvQQmIG/rBI1ituYLsiye1aRgIwa24brzEIxU/IRU20f7U
-	OeMwcnQ/TNKd/l/szpXsN45MNr/uFWF4T7ON1Prrqss/zfnxR1NyU+a2L+qt+Tvm9GODWyDL40Fuf
-	arjVjYLebHLM3MVAKOg3CiHEvY2yCzuubnK9moqj7r7vzXnB+WYTz4AJ7NBsi4pmbHCn5RVqbO8PT
-	f4FR2xmekZ6RqS+HcO1Jkf0soBNbV99TFQv43JP/JvK73Qwu2i7rmK/UL82vx9c6BltCgPcsPKqeK
-	GUNqABhOLnZm2PHNl7WxtYZmaxBWZsgoMNrSO2UANr239Lsl+g==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1vBadf-00000000sYE-2xrR; Wed, 22 Oct 2025 17:20:35 +0200
-Received: from p5b13aa34.dip0.t-ipconnect.de ([91.19.170.52] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1vBadf-00000000MEa-2F6p; Wed, 22 Oct 2025 17:20:35 +0200
-Message-ID: <145b0eb54dd6548e19e22f230ebfca8cedee7e17.camel@physik.fu-berlin.de>
+	Wed, 22 Oct 2025 15:32:29 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by mailout.easymail.ca (Postfix) with ESMTP id 99FAE63A41;
+	Wed, 22 Oct 2025 15:32:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo07-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+	by localhost (emo07-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id RCmx42ZlcONu; Wed, 22 Oct 2025 15:32:24 +0000 (UTC)
+Received: from mail.gonehiking.org (unknown [38.175.187.108])
+	by mailout.easymail.ca (Postfix) with ESMTPA id F386363740;
+	Wed, 22 Oct 2025 15:32:23 +0000 (UTC)
+Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
+	by mail.gonehiking.org (Postfix) with ESMTP id A3C7A7EB48;
+	Wed, 22 Oct 2025 09:32:23 -0600 (MDT)
+Message-ID: <f2235ac2-41fa-4cad-bf1d-24692397af86@gonehiking.org>
+Date: Wed, 22 Oct 2025 09:32:23 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [Spam] [PATCH 1/2] kexec-tools: powerpc: Fix function signature
  of comparefunc()
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: khalid@gonehiking.org
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Cc: kexec@lists.infradead.org
-Date: Wed, 22 Oct 2025 17:20:35 +0200
-In-Reply-To: <14f8d5e9-716b-413f-a6a9-da6b4f024a09@gonehiking.org>
 References: <20251022114413.4440-1-glaubitz@physik.fu-berlin.de>
-	 <14f8d5e9-716b-413f-a6a9-da6b4f024a09@gonehiking.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.0 
-MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 91.19.170.52
-X-ZEDAT-Hint: PO
+ <14f8d5e9-716b-413f-a6a9-da6b4f024a09@gonehiking.org>
+ <145b0eb54dd6548e19e22f230ebfca8cedee7e17.camel@physik.fu-berlin.de>
+From: Khalid Aziz <khalid@gonehiking.org>
+Content-Language: en-US
+Autocrypt: addr=khalid@gonehiking.org; keydata=
+ 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
+In-Reply-To: <145b0eb54dd6548e19e22f230ebfca8cedee7e17.camel@physik.fu-berlin.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251022_082038_387504_7C925FDC 
-X-CRM114-Status: GOOD (  19.01  )
+X-CRM114-CacheID: sfid-20251022_083227_189656_7DE36DE0 
+X-CRM114-Status: GOOD (  21.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,77 +112,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: khalid@gonehiking.org
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Khalid,
+On 10/22/25 9:20 AM, John Paul Adrian Glaubitz wrote:
+> Hi Khalid,
+> 
+> On Wed, 2025-10-22 at 09:15 -0600, Khalid Aziz wrote:
+>> On 10/22/25 5:44 AM, John Paul Adrian Glaubitz wrote:
+>>> Fixes the following build error on 32-bit PowerPC:
+>>>
+>>> kexec/arch/ppc/fs2dt.c: In function 'putnode':
+>>> kexec/arch/ppc/fs2dt.c:338:51: error: passing argument 4 of 'scandir' from incompatible pointer type [-Wincompatible-pointer-types]
+>>>     338 |         numlist = scandir(pathname, &namelist, 0, comparefunc);
+>>>         |                                                   ^~~~~~~~~~~
+>>>         |                                                   |
+>>>         |                                                   int (*)(const void *, const void *)
+>>>
+>>> Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+>>
+>> I sent out a suggested patch yesterday making these same changes. They make sense to me.
+> 
+> Yes, I actually saw your patch after submitting my patches. ;-)
+> 
+>>> ---
+>>>    kexec/arch/ppc/fs2dt.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+>>> index fed499b..d03b995 100644
+>>> --- a/kexec/arch/ppc/fs2dt.c
+>>> +++ b/kexec/arch/ppc/fs2dt.c
+>>> @@ -292,7 +292,8 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+>>>     * Compare function used to sort the device-tree directories
+>>>     * This function will be passed to scandir.
+>>>     */
+>>> -static int comparefunc(const void *dentry1, const void *dentry2)
+>>> +static int comparefunc(const struct dirent **dentry1,
+>>> +		       const struct dirent **dentry2)
+>>>    {
+>>>    	char *str1 = (*(struct dirent **)dentry1)->d_name;
+>>>    	char *str2 = (*(struct dirent **)dentry2)->d_name;
+>>
+>> You can drop typecasting in above two lines as well:
+>>
+>> -    char *str1 = (*(struct dirent **)dentry1)->d_name;
+>> -    char *str2 = (*(struct dirent **)dentry2)->d_name;
+>> +    char *str1 = (*dentry1)->d_name;
+>> +    char *str2 = (*dentry2)->d_name;
+> 
+> That's right. However, that should be done in a separate patch which would
+> also do the same for comparefunc() in kexec/fs2dt.c so that changes that
+> logically belong together are submitted as one patch.
 
-On Wed, 2025-10-22 at 09:15 -0600, Khalid Aziz wrote:
-> On 10/22/25 5:44 AM, John Paul Adrian Glaubitz wrote:
-> > Fixes the following build error on 32-bit PowerPC:
-> >=20
-> > kexec/arch/ppc/fs2dt.c: In function 'putnode':
-> > kexec/arch/ppc/fs2dt.c:338:51: error: passing argument 4 of 'scandir' f=
-rom incompatible pointer type [-Wincompatible-pointer-types]
-> >    338 |         numlist =3D scandir(pathname, &namelist, 0, comparefun=
-c);
-> >        |                                                   ^~~~~~~~~~~
-> >        |                                                   |
-> >        |                                                   int (*)(cons=
-t void *, const void *)
-> >=20
-> > Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
->=20
-> I sent out a suggested patch yesterday making these same changes. They ma=
-ke sense to me.
+Okay, I can see that. It also makes sense to drop typecast in kexec/arch/ppc/kexec-ppc.c
+in the same patch that changes comparefunc declaration. I don't feel strongly about
+either approach and can go either way. You can add my reviewed by tag:
 
-Yes, I actually saw your patch after submitting my patches. ;-)
+Reviewed-by: Khalid Aziz <khalid@gonehiking.org>
 
-> > ---
-> >   kexec/arch/ppc/fs2dt.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
-> > index fed499b..d03b995 100644
-> > --- a/kexec/arch/ppc/fs2dt.c
-> > +++ b/kexec/arch/ppc/fs2dt.c
-> > @@ -292,7 +292,8 @@ static void putprops(char *fn, struct dirent **nlis=
-t, int numlist)
-> >    * Compare function used to sort the device-tree directories
-> >    * This function will be passed to scandir.
-> >    */
-> > -static int comparefunc(const void *dentry1, const void *dentry2)
-> > +static int comparefunc(const struct dirent **dentry1,
-> > +		       const struct dirent **dentry2)
-> >   {
-> >   	char *str1 =3D (*(struct dirent **)dentry1)->d_name;
-> >   	char *str2 =3D (*(struct dirent **)dentry2)->d_name;
->=20
-> You can drop typecasting in above two lines as well:
->=20
-> -    char *str1 =3D (*(struct dirent **)dentry1)->d_name;
-> -    char *str2 =3D (*(struct dirent **)dentry2)->d_name;
-> +    char *str1 =3D (*dentry1)->d_name;
-> +    char *str2 =3D (*dentry2)->d_name;
+> 
+> My changes above are the minimal changes required to fix the build on 32-bit
+> PowerPC which I tested on the Debian powerpc/ppc64 porterbox.
+> 
+> Once the two patches are merged, I'm happy to submit one to drop the two
+> type-casting changes in both instances of comparefunc().
+> 
+> There are also some warnings that I will look into and address them.
 
-That's right. However, that should be done in a separate patch which would
-also do the same for comparefunc() in kexec/fs2dt.c so that changes that
-logically belong together are submitted as one patch.
+Yes, there are lots of build warnings :) I chose to ignore those for now and get
+this building first. I am glad you are looking at those.
 
-My changes above are the minimal changes required to fix the build on 32-bi=
-t
-PowerPC which I tested on the Debian powerpc/ppc64 porterbox.
-
-Once the two patches are merged, I'm happy to submit one to drop the two
-type-casting changes in both instances of comparefunc().
-
-There are also some warnings that I will look into and address them.
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> 
+> Adrian
+> 
+--Khalid
 
