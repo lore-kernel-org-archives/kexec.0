@@ -4,74 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3849BCCD1AB
-	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 11:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC7DDCCD1BB
+	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 12:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xN1mV5QoBCeblnnwnP2HPoikUahvxsaFYWrSPo98hy0=; b=ROiILPJ//W9ShKicgpYbRx//7J
-	I9nImvMefArf+3Mih2RUeOA3XWUFybuMbJVOJqUNQAo44XoFEsqoe4QzslCb0v32NgJ3Ux6Zw62Jk
-	UhHHsf/Zyo+K6paPjejaKHInQrjkR0DswQNaSPpHrX7HkJREMUyR2d5Bk/h8X2cLpycJCP5imcwJQ
-	NhSeCupEm5Dj8te4CSV4TVaTqLEjcsqDyaasnCfACJbnY/ZGJMGp3yEKq9VF/UVbIWEl41NOY0Zso
-	xo+EaXOdWlNClQIJMGnHHqzwZX4HUuQAMeVykgYeXYbk1WprjDd2KnnvuThrpJr5d8zAAHvXLXN0p
-	hZmbvV0w==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=zvReUmFuOQX/SJC9oEYeW8Gu66yrEnKENSYxIaDF4ho=; b=RP87BA0ebslf3pwgpeUJClNyR+
+	QK69AMNXi5gHzXR7TYXMBWbzyd6B50KCEwulrsNG6vBziMgUrF68UR05WFoK1iJlQ2qWQ7klowtdY
+	y6Gvfaom8zu/nBFPSFFD19UReCQwYBa3OnnB/Gadt2xHEc+vlHHN8ny3yqsiYHIRcpcehlhER1NGf
+	sh0EtdW7jRqkI2zKItFbMPfvkXRNf0Vev1WsUqBoTdyQQ2is7oJwL8j3aHelQGctK2f8YIVBmWGav
+	u1E9c89i0o7R+6LbP+pHVUih9zJ/yf+GOWU+6ri3HnTIY7BU5N12+oIvgx5+XAVL8Y4KHyNtGQImt
+	Z3IE/Ugg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBXGY-00000002heX-0hZB;
-	Wed, 22 Oct 2025 11:44:30 +0000
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66])
+	id 1vBXjR-00000002lYB-1ML2;
+	Wed, 22 Oct 2025 12:14:21 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBXGR-00000002hbb-3vpf
+	id 1vBXjO-00000002lWR-0cdt
 	for kexec@lists.infradead.org;
-	Wed, 22 Oct 2025 11:44:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=xN1mV5QoBCeblnnwnP2HPoikUahvxsaFYWrSPo98hy0=; t=1761133464; x=1761738264; 
-	b=YfZUW0kADb4j+vB+HDL865uMlYnQBJI0gaGsct0WT3gT6Y9BU7DCYCvldrmJzXrYEzzXmpE0PCK
-	oozCN2DzrpRleNxnT7A+KlSa2WYNULex+zf1K8bjCIW9p/QB2iG4jYK+EB21It6qAC3TJr5Q4qRYb
-	hJHgKpkkxUfpytmBUuyqeKv4j+a82gVy4AdngcvojcUk6+eXy9wX0UmhmASgxyrxFaSsDMZwhqe1q
-	VZ+pmKXNURAYVlmSD3TY+P3eI+gtHjpP3vcuuptjD8fU3ftB90AE08oY6ni8FS9LYTT5oJ3Ft/H/N
-	fDefGv8ybaewNVmImR/T2Dpdduk7oO++pVSw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1vBXGN-00000003EiR-02O4; Wed, 22 Oct 2025 13:44:19 +0200
-Received: from p5b13aa34.dip0.t-ipconnect.de ([91.19.170.52] helo=z6.fritz.box)
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1vBXGM-00000002rQm-3NHn; Wed, 22 Oct 2025 13:44:18 +0200
-Received: from glaubitz by z6.fritz.box with local (Exim 4.98.2)
-	(envelope-from <glaubitz@physik.fu-berlin.de>)
-	id 1vBXGM-0000000019t-2490;
-	Wed, 22 Oct 2025 13:44:18 +0200
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: kexec@lists.infradead.org
-Cc: Khalid Aziz <khalid@gonehiking.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: [PATCH 2/2] kexec-tools: powerpc: Fix pointer declarations in read_memory_region_limits()
-Date: Wed, 22 Oct 2025 13:44:13 +0200
-Message-ID: <20251022114413.4440-2-glaubitz@physik.fu-berlin.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251022114413.4440-1-glaubitz@physik.fu-berlin.de>
-References: <20251022114413.4440-1-glaubitz@physik.fu-berlin.de>
+	Wed, 22 Oct 2025 12:14:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761135255;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zvReUmFuOQX/SJC9oEYeW8Gu66yrEnKENSYxIaDF4ho=;
+	b=i10mBIiGXcWlWI55vWbM+7AvLAzHzXweP2ecmrmzPsFcLcVl7hdMhrlHYw8k+wZonNwwSw
+	YX6hpxwY2z+IWXmjSoSV7kW+LjiHCtw+jzUBS61XMPu9XJPJxu7G7KoAc00zqemlR3YFDp
+	fQvN5JjCwD5oVpDcoG7ie9CIMgBSeic=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-662-2ZqrSGLPNYaIcltsT0sPlA-1; Wed,
+ 22 Oct 2025 08:14:12 -0400
+X-MC-Unique: 2ZqrSGLPNYaIcltsT0sPlA-1
+X-Mimecast-MFC-AGG-ID: 2ZqrSGLPNYaIcltsT0sPlA_1761135250
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E79F11800345;
+	Wed, 22 Oct 2025 12:14:08 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.98])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DD324180057E;
+	Wed, 22 Oct 2025 12:13:59 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Pierre Gondois <pierre.gondois@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Joel Granados <joel.granados@kernel.org>
+Subject: [RFC 0/3] kexec: Force kexec to proceed under heavy deadline load
+Date: Wed, 22 Oct 2025 20:13:42 +0800
+Message-ID: <20251022121345.23496-1-piliu@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 91.19.170.52
-X-ZEDAT-Hint: PO
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251022_044425_289341_136E2F95 
-X-CRM114-Status: GOOD (  10.13  )
+X-CRM114-CacheID: sfid-20251022_051418_252520_1BAEFF82 
+X-CRM114-Status: UNSURE (   7.84  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,46 +93,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Fixes the following two build errors on 32-bit PowerPC:
+During discussion of the scheduler deadline bug [1], Pierre Gondois
+pointed out a potential issue during kexec: as CPUs are unplugged, the
+available DL bandwidth of the root domain gradually decreases. At some
+point, insufficient bandwidth triggers an overflow detection, causing
+CPU hot-removal to fail and kexec to hang.[2]
+    
+I reproduced it on a system with 160 cpus with the following command
+  seq 10 | xargs -I{} -P10 sh -c 'chrt -d -T 1000000 -P 1000000 0 yes > /dev/null &'
+  kexec -e
 
-kexec/arch/ppc/kexec-ppc.c: In function 'read_memory_region_limits':
-kexec/arch/ppc/kexec-ppc.c:106:11: error: assignment to 'long long unsigned int *' from incompatible pointer type 'long unsigned int *' [-Wincompatible-pointer-types]
-  106 |         p = (unsigned long*)buf;
-      |           ^
-
-kexec/arch/ppc/kexec-ppc.c: In function 'read_memory_region_limits':
-kexec/arch/ppc/kexec-ppc.c:112:19: error: assignment to 'long unsigned int *' from incompatible pointer type 'long long unsigned int *' [-Wincompatible-pointer-types]
-  112 |                 p = (unsigned long long *)p + 1;
-      |                   ^
-
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
----
- kexec/arch/ppc/kexec-ppc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index d3dad0f..e173433 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -91,7 +91,7 @@ int read_memory_region_limits(int fd, unsigned long long *start,
- 				unsigned long long *end)
- {
- 	char buf[MAXBYTES];
--	unsigned long *p;
-+	unsigned long long *p;
- 	unsigned long nbytes = dt_address_cells + dt_size_cells;
+The system hang during the kexec process.
  
- 	if (lseek(fd, 0, SEEK_SET) == -1) {
-@@ -103,7 +103,7 @@ int read_memory_region_limits(int fd, unsigned long long *start,
- 		return -1;
- 	}
- 
--	p = (unsigned long*)buf;
-+	p = (unsigned long long*)buf;
- 	if (dt_address_cells == sizeof(unsigned long)) {
- 		*start = p[0];
- 		p++;
+This series skips the DL bandwidth check, migrates the task from dying
+CPU directly to the kexec CPU, and promotes the kexec to DL task. By
+this way, the heavy deadline load will not starve the CPU hot-removal
+kthread so that kexec task can move on.
+
+In contrast to this series, an alternative aggressive approach is to
+send SIGKILL to all DL tasks at the beginning of the kexec process.
+Let us discuss how to resolve this issue.
+
+
+[1]: https://lore.kernel.org/all/20250929133602.32462-1-piliu@redhat.com/
+[2]: https://lore.kernel.org/all/3408aca5-e6c9-434a-9950-82e9147fcbba@arm.com/
+
+Pingfan Liu (3):
+  sched/deadline: Skip the deadline bandwidth check if kexec_in_progress
+  kernel/cpu: Mark nonboot cpus as inactive when shutting down nonboot
+    cpus
+  kexec_core: Promote the kexec to DL task
+
+ kernel/cpu.c            | 10 ++++++++++
+ kernel/kexec_core.c     | 28 ++++++++++++++++++++++++++++
+ kernel/sched/deadline.c |  7 +++++++
+ 3 files changed, 45 insertions(+)
+
 -- 
-2.47.3
+2.49.0
 
 
