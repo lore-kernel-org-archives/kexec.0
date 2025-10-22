@@ -4,117 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05026CCD1BE
-	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 13:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1166CCCD1AB
+	for <kexec@archiver.kernel.org>; Wed, 22 Oct 2025 15:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qq8wDPR1G1OlOoofqcbloHRaiLMsECfV0yl+0cBcSBo=; b=Ah3LEdDOvNcSQRk1g6fypEJXX3
-	ZnHkp/AK7SNAetu2PpYASQMqGN1+VIminY5YzIp/oe2QL/Gp9oJFff2v0rnnFzZSUlZ8gSCuOmltH
-	So4GZAGiyy2pBqfnv3j/zFrSpa6BNdbbHmq3CYxYm1nDeistcLHzueZM+QWGF0MUd+4bAcQVVtM9K
-	SS8HMnYAfmX+RYPW2JPrJeRO6i1aPTIGahZXsf5CykvZI6HQBDnJvSdjvxOrfb0tcerMolIjyF0WO
-	aDvSfolaYnOAyHwXmRGOYG2z3dLbYxsbXLOKwYsYIkETJApzjgttngd6yubPbolX5iH1K7VW5yOoF
-	TiBBYMGw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Reply-To:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject
+	:MIME-Version:Date:Message-ID:Cc:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=QJcxL4R+m0nKqBxTjpS3AuFRfmKLldbRVy/U8bVW4d0=; b=YQ4/z6y+V579dIu0bjy57NVO5N
+	3ZphSqFh092dhnskD5eKGhDnjVTNzNLX10GWYIPw3JriSUm7nH7SAVtgI06KCkXPiobfwkNxsQWDS
+	fZt32G9E52aEJ07zCkNy06lyNhXP2WEU47RSFhvH+/018UYwgMMvA5vr8JSFMuCqs+l377GN/rJYw
+	53fLXJhJoAEuy1I3agNhPVrGmPV49vTYaM/fJzq5dEpXFfB72kbaGxBL2UPuDv0RT533YIqCyV4dC
+	qgn0hjAlU8NTXEhQeUPQRCwdDj0+D1feAKhPYvvEnrQxhzFbec7YZusd3jFf3zoguZflX+hLYuFTz
+	UYeDHQlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBZAw-000000034ku-0QlI;
-	Wed, 22 Oct 2025 13:46:50 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1vBaYV-00000003Lv8-1M5J;
+	Wed, 22 Oct 2025 15:15:15 +0000
+Received: from mailout.easymail.ca ([64.68.200.34])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBZAs-000000034jr-203n
-	for kexec@bombadil.infradead.org;
-	Wed, 22 Oct 2025 13:46:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=qq8wDPR1G1OlOoofqcbloHRaiLMsECfV0yl+0cBcSBo=; b=F1FzqkvzBFEU5coZfv9KB2MjvQ
-	u1UjsGMOBYSqVwvr79Klwh/dkOb9BUHovGOQmd0gEGrdS9rwEwK5MUv69IMFwqtHrQtjYiLwOERAn
-	syMXciIKWn2u2CUFZtALiCgcMdAKLG3Gd6aN8en/+xILjmJ+Zc6N8TumAwIqHnvM7usvrcDL5xbxI
-	T+0J18NzGv92LlTd/5VQDKh6hWOLLEF8EyLBZv8DQG+1zOSIskJSR38bKoz20TezvvAvStswpGJOR
-	oLSp04SVbDZnGozmyVI83FefUvyBpt7o7OSXrxhVPUUqUHGOBFl0Ex34QwJu5MNVgaQqnqKL8TEEw
-	kY7+jYVg==;
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBYJ4-00000000bDo-3T8d
+	id 1vBaYR-00000003LuT-3cN0
 	for kexec@lists.infradead.org;
-	Wed, 22 Oct 2025 12:51:13 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59MBlVsC030017;
-	Wed, 22 Oct 2025 13:46:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=qq8wDPR1G1OlOoofq
-	cbloHRaiLMsECfV0yl+0cBcSBo=; b=ROpDFpZHdQd0xoWxgC/OdSMGX4vZSFHok
-	vw+s64JZV7SwY9DkORKCHQQxSBp8SXlvGZ+QjOksKuIjDM9TDTMGSYkn8pUYHSpf
-	gtZHfz2T74hcyPEPe4HT9bRE9/U0qrwnclkzo6/5AN6XZBhdHeQ+z1+RVxSTPTAw
-	2tRr8Yr7K4U2lW1g8Q3QLOxtSVtcY3UMAWT6O0pTkwtJJ5YpQfISiY9yLWkJEq+N
-	H4feqGwIR9KM0vvSFhse9V7w5lGfgQVhltOPFXgEDoRwf1OhzskVc+oaXSHrwkpp
-	qg518K6SGW58GprkkSfhwrQR0BtkA/zQ3TUNvZgQv2GSzyPbK3Dmg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31s513a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 13:46:35 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59MDj7DR017066;
-	Wed, 22 Oct 2025 13:46:34 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vnky0qj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 13:46:34 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59MDkUST34472270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Oct 2025 13:46:30 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 980F020043;
-	Wed, 22 Oct 2025 13:46:30 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 835F32004D;
-	Wed, 22 Oct 2025 13:46:28 +0000 (GMT)
-Received: from shivang.com (unknown [9.124.221.84])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Oct 2025 13:46:28 +0000 (GMT)
-From: Shivang Upadhyay <shivangu@linux.ibm.com>
-To: horms@kernel.org
-Cc: shivangu@linux.ibm.com, sourabhjain@linux.ibm.com,
-        kexec@lists.infradead.org
-Subject: [PATCH kexec-tools 4/4] ppc64: life the dtb and initrd restriction
-Date: Wed, 22 Oct 2025 19:16:09 +0530
-Message-ID: <20251022134611.8921-5-shivangu@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251022134611.8921-1-shivangu@linux.ibm.com>
-References: <20251022134611.8921-1-shivangu@linux.ibm.com>
+	Wed, 22 Oct 2025 15:15:13 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by mailout.easymail.ca (Postfix) with ESMTP id 499E663A7D;
+	Wed, 22 Oct 2025 15:15:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo09-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+	by localhost (emo09-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UdYp0PEAnt4x; Wed, 22 Oct 2025 15:15:07 +0000 (UTC)
+Received: from mail.gonehiking.org (unknown [38.175.187.108])
+	by mailout.easymail.ca (Postfix) with ESMTPA id C7715638A1;
+	Wed, 22 Oct 2025 15:15:07 +0000 (UTC)
+Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
+	by mail.gonehiking.org (Postfix) with ESMTP id 5FB6C7EB48;
+	Wed, 22 Oct 2025 09:15:07 -0600 (MDT)
+Message-ID: <14f8d5e9-716b-413f-a6a9-da6b4f024a09@gonehiking.org>
+Date: Wed, 22 Oct 2025 09:15:07 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3Mn1BMSXiXlrXRRELdPYDacpObycZbnT
-X-Proofpoint-GUID: 3Mn1BMSXiXlrXRRELdPYDacpObycZbnT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX9JDQRu0u5SHz
- l59VIgWhk3IeXjrk1RaIfOv/9oXYH+k7dS1IfPTa0cDgZo3lrBzcFc9xGSzkWu3/enJkJ0If1bi
- Vfrle4wD2sCIYKPG4cCqLRvBzDviYplGC0REZ7SbAWyHCQBCd3wRyQ+zLqvDYCLIxPFGXI3UaSK
- P1xGwjSVZW8kO8UjsVtEgWLLYdxhjJ19WMISAGi3GM56V+QLX0gOV3lZl7j9qyglLe4l1gBaRcX
- YgfNjBsVB7OXVMeq/rwgKUDkqF/YPmwtWbMDj1ZLs4V0vWXv22T4EqLuIX69ct7MlyatN5u9nK2
- RlCYTflUbXnY09N0f0SbWs+oShUp/kMBhO3FCZna2jZ2YxizqL2KS2Dhg+JGp0wOwC9Z16OEmbb
- c7ff/xXI96/Zj6h8fD7qnzZF7Io/bA==
-X-Authority-Analysis: v=2.4 cv=IJYPywvG c=1 sm=1 tr=0 ts=68f8e03b cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=DegWWgokSwm6QpFQitMA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-22_05,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0
- bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Spam] [PATCH 1/2] kexec-tools: powerpc: Fix function signature
+ of comparefunc()
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ kexec@lists.infradead.org
+References: <20251022114413.4440-1-glaubitz@physik.fu-berlin.de>
+From: Khalid Aziz <khalid@gonehiking.org>
+Content-Language: en-US
+Autocrypt: addr=khalid@gonehiking.org; keydata=
+ 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
+In-Reply-To: <20251022114413.4440-1-glaubitz@physik.fu-berlin.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251022_135111_279781_018B4761 
-X-CRM114-Status: GOOD (  13.47  )
+X-CRM114-CacheID: sfid-20251022_081512_040924_C95D9FF2 
+X-CRM114-Status: GOOD (  14.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,44 +110,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: khalid@gonehiking.org
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The dtb and initrd restriction is now applied only when performing a
-kdump.
+On 10/22/25 5:44 AM, John Paul Adrian Glaubitz wrote:
+> Fixes the following build error on 32-bit PowerPC:
+> 
+> kexec/arch/ppc/fs2dt.c: In function 'putnode':
+> kexec/arch/ppc/fs2dt.c:338:51: error: passing argument 4 of 'scandir' from incompatible pointer type [-Wincompatible-pointer-types]
+>    338 |         numlist = scandir(pathname, &namelist, 0, comparefunc);
+>        |                                                   ^~~~~~~~~~~
+>        |                                                   |
+>        |                                                   int (*)(const void *, const void *)
+> 
+> Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-Signed-off-by: Shivang Upadhyay <shivangu@linux.ibm.com>
----
- kexec/arch/ppc64/kexec-elf-ppc64.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+I sent out a suggested patch yesterday making these same changes. They make sense to me.
 
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 2084356..288ca41 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -566,15 +566,16 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	elf_rel_build_load(info, &info->rhdr, purgatory,
- 				purgatory_size, 0, max_addr, 1, 0);
- 
-+	if (ramdisk && devicetreeblob && (info->kexec_flags & KEXEC_ON_CRASH)) {
-+		fprintf(stderr,
-+		"Can't use ramdisk with device tree blob input in kdump\n");
-+		return -1;
-+	}
-+
- 	/* Add a ram-disk to the current image
- 	 * Note: Add the ramdisk after elf_rel_build_load
- 	 */
- 	if (ramdisk) {
--		if (devicetreeblob) {
--			fprintf(stderr,
--			"Can't use ramdisk with device tree blob input\n");
--			return -1;
--		}
- 		seg_buf = slurp_file(ramdisk, &seg_size);
- 		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
- 			0, 0, max_addr, 1);
--- 
-2.51.0
+> ---
+>   kexec/arch/ppc/fs2dt.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+> index fed499b..d03b995 100644
+> --- a/kexec/arch/ppc/fs2dt.c
+> +++ b/kexec/arch/ppc/fs2dt.c
+> @@ -292,7 +292,8 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+>    * Compare function used to sort the device-tree directories
+>    * This function will be passed to scandir.
+>    */
+> -static int comparefunc(const void *dentry1, const void *dentry2)
+> +static int comparefunc(const struct dirent **dentry1,
+> +		       const struct dirent **dentry2)
+>   {
+>   	char *str1 = (*(struct dirent **)dentry1)->d_name;
+>   	char *str2 = (*(struct dirent **)dentry2)->d_name;
+
+You can drop typecasting in above two lines as well:
+
+-    char *str1 = (*(struct dirent **)dentry1)->d_name;
+-    char *str2 = (*(struct dirent **)dentry2)->d_name;
++    char *str1 = (*dentry1)->d_name;
++    char *str2 = (*dentry2)->d_name;
+
+--
+Khalid
+
 
 
