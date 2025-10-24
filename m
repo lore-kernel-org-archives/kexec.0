@@ -4,89 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20B0DCCD1BF
-	for <kexec@archiver.kernel.org>; Fri, 24 Oct 2025 01:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C422CCD1AB
+	for <kexec@archiver.kernel.org>; Fri, 24 Oct 2025 06:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=W+Ewuo9a/2we8RgcxmU8qjQ8t+tF8hL7x4+dIkq7Jb0=; b=YdL+ddqF+ylWKIjZscgI9NkWCl
-	EZ8neZApjCrpn8UPyDMXS2D106C1pA4i85nMdWV/gq3c6kMbymTh4ddn1R/q0gVptuC1QNNdmk1x+
-	DOISNYzjGZKKLPG9xGEmtzgNGAyeag4nULY1wubrCMNcqJ/fKL0q3fAa9/MaIufgTi1i1Dvd+Z9i8
-	y/zU/2K7bGLNVE8Q8/EuEomPjFsI+jH0G9U27RM07VsHfNDEbEo0HYTFkO/rm46KWcD3MNt1lWIlt
-	3xJFddbV80l0/QvZYYPQyCrdJS6ELz+Lh8/hcC0biraqF2AuLwuBY4NTyq2saqW7zhYp4R73wFW5B
-	6OVR3QLw==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=1TvIv7PbWa1SLONpFsnfOqn8JEAeX8zPwAC2ZKpuoN0=; b=nr7JTgq+nvq/V/2ekHcCJ9KzIo
+	YttdsvoAxYU9t/XAYjrcPOxa4A4SLw8fDtR9ZILYGbOC4w0AkO82uRTokZDLfBmnTunfw2WK0hWpf
+	tdoeg2355jf0T3SacQF+gzvjzOqmWqdColbYBfaskIYA77Rq3tZsiM370niOyYQyG2G4dxTs0P+M1
+	BEBZx5aH4nz7kYwX1dhwIk3YkoNxYrIjF+Gryy6D2vwbAR8REkj/bjQ+Ifo/BjX+nv+zqFdF2ONC0
+	+2l1prEEqL638cmy7HoG305nRM7Mb+XWBL2gNWc88ltubh786gDdQxXbpuu4HD3cl8HhMG0wJ9gru
+	UA72F5Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vC6XL-00000007xfW-3dNh;
-	Fri, 24 Oct 2025 01:24:11 +0000
-Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
+	id 1vCBR5-00000008MqW-2TLP;
+	Fri, 24 Oct 2025 06:38:03 +0000
+Received: from out-170.mta0.migadu.com ([91.218.175.170])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vC6XJ-00000007xfB-37mq
+	id 1vCBR2-00000008MpN-1Cww
 	for kexec@lists.infradead.org;
-	Fri, 24 Oct 2025 01:24:11 +0000
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-b626a4cd9d6so308587266b.3
-        for <kexec@lists.infradead.org>; Thu, 23 Oct 2025 18:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1761269047; x=1761873847; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W+Ewuo9a/2we8RgcxmU8qjQ8t+tF8hL7x4+dIkq7Jb0=;
-        b=HF+ayE/50VipX4ILTgpASkb1DgnLk4svoMevV7Bnd6AnFXinSVLaGQPpenVA+vIMgU
-         nndgDjat0a13UMRrvl0WUXMOA3wnbcUgi3KS2cJlynX19QbH9TVWNNMS2zbo+mAPkObM
-         51ZMnMpryKLRcvAW2Yg4b1rSsywxpGRNOy2Lx2jj6mY3nznKkyqjzcpG03QBFfoVlKBT
-         td0O0TNnV+++uDq0/ZZTMm/j3Mbt7HDiIo0TfMWBEOO2cCxfzHTO9DY6emED+/yQxJ4/
-         ILsbk5ydM8+CyuPVTJwkQrmGt+hFS9usUpnMVL5ZEL9gNFnmAseOcVZ3BElBkdYf4tqK
-         QyOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761269047; x=1761873847;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W+Ewuo9a/2we8RgcxmU8qjQ8t+tF8hL7x4+dIkq7Jb0=;
-        b=XfkcRF+TlVCiK+ib4hV4ippy/oXQg7nkF+RoKXhmEUntyHhINN2DZO7fPV7HpY+Ha/
-         0VEZXyNCF5BfInJ4PVo7ZNbf8t1ScQ5Fe4sPs2n681pHmNQfUlCyTfANLcVDMYB9EyHE
-         wuWS6k6wEPmvKl+8YkV1CHqoOjKDUxiDzbUrT6bCeujekZSHTRPnw4HJ4lEEftTL4MOJ
-         VHHxG8BBBG5q6Fiz7Qbt+bs9uLV1jqjBqMjOzsqD/UQlWygDhzzeUwtuwZGvyCzfVSvJ
-         dV1TYvJxqzoxfgvNA6WLuogyHIs9z71M6kIQGELxKnCfDGoNpeW8wxrGEim/aj1VaH5F
-         H7xA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBcOYfYir8iJGkULzj2KB2K8mtKhsM5xugIzyoILbnB+cy0+9FHIAREoY5dqJsIc0ZwtnPoQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxmdacQtePilU/4sGI2IG+Ndqw1upqVzNyjFoneJ9XLo7dTSGhP
-	94JZ3p/F2CF9tX5zD9WcvMau2I4FE7AmBqqNKcKYZ4KRIN1sL6XiTHq4XOZkoDNGfdhj8mlFFcx
-	m0Q/7vrDhJnxh0BUYEIjep/Lml8XGtqXXkTgmJsHTBQ==
-X-Gm-Gg: ASbGncvpBkYaL4f1QFHi/m0Wra/DJnTq/ANFdwgSpkKwd0f9RHYmlR/MD3/qPSw15Ak
-	2uIxsQG5Jy5QZOcjGx2R5Bi1h7dZHocHfYgiPXf4QKlKFz7Ae9/FlBIYUWTT3CoHr3qvUkkbrXb
-	1lWwI97aQXyjL+2Z2On9LE466sWy2LPn4aydLVLeIxg+oKkDhOpc3B8HX6a1KhquSD5zUCfkO6E
-	S5BUSSo3pYkYHQvf6RyCS9pZwiT6Ccch7UR1HBKbdQUQYKJfchGglXmYiZff6z7zMMbkMdEdqQE
-	b/w=
-X-Google-Smtp-Source: AGHT+IGPGFOQwXjv/FxDxf/tnyuTjxtvPtbnk93Nmt5FLlBDIFGiWQ5Zxzwcgqg1tu3cm4Iarmy9Tfwt6vB7TvUL9y4=
-X-Received: by 2002:a17:907:d649:b0:b3c:200b:4364 with SMTP id
- a640c23a62f3a-b6d6fe0424amr55993066b.27.1761269046741; Thu, 23 Oct 2025
- 18:24:06 -0700 (PDT)
+	Fri, 24 Oct 2025 06:38:02 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761287874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1TvIv7PbWa1SLONpFsnfOqn8JEAeX8zPwAC2ZKpuoN0=;
+	b=sa2g5KHVenCJDAf1OLVJ92/DH+zBJx78fnD8L9BsuGfkO92hEpBZfuykMLNXoGrVrrk5tD
+	h+7Xl5x9lrWX7Ge9hQEMNGeJ9sHDdRp0uV4ZUZhNtPKBUnZv6M68/TrYgOrmEp8qLigvtt
+	0h45dVgw0QcSXrrbovDunM8NYK83nH0=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kexec@lists.infradead.org,
+	Breno Leitao <leitao@debian.org>,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH] LoongArch: kexec: Initialize kexec_buf struct
+Date: Fri, 24 Oct 2025 14:36:53 +0800
+Message-ID: <20251024063653.35492-1-youling.tang@linux.dev>
 MIME-Version: 1.0
-References: <20251020100306.2709352-1-jasonmiu@google.com> <20251020100306.2709352-2-jasonmiu@google.com>
- <20251023234532.GA846943@nvidia.com>
-In-Reply-To: <20251023234532.GA846943@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 23 Oct 2025 21:23:30 -0400
-X-Gm-Features: AWmQ_bmMOAwY_P1hjpj1ykwuacULXmguJ7YYyQlMD3h9K2SSIMuIchdHSzMvpu8
-Message-ID: <CA+CK2bCR0r61cnVxff6XSPoVN+ZxxS8rLHy0Mp6922xypCP8jA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kho: Adopt KHO radix tree data structures
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Changyuan Lyu <changyuanl@google.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251023_182409_816757_DE13EED3 
-X-CRM114-Status: GOOD (  11.17  )
+X-CRM114-CacheID: sfid-20251023_233800_678696_F2A9B59F 
+X-CRM114-Status: GOOD (  10.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,27 +66,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Oct 23, 2025 at 7:45=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Mon, Oct 20, 2025 at 03:03:04AM -0700, Jason Miu wrote:
->
-> > +static struct kho_radix_tree *kho_alloc_radix_tree(void)
-> >  {
-> > +     return (struct kho_radix_tree *)get_zeroed_page(GFP_KERNEL);
-> > +}
->
-> I was reading the thread over here:
->
-> https://lore.kernel.org/all/20151222210435.GB20997@ZenIV.linux.org.uk/
->
-> And I guess this stuff should just use
->   kzalloc(sizeof(struct kho_radix_tree), GFP_KERNEL);
+From: Youling Tang <tangyouling@kylinos.cn>
 
-kzalloc() uses slab, which in turn may use kfence objects, and kfence
-can allocate memory from KHO scratch area, leading to memory
-corruptions. Let's not use slab allocator for KHO preserved and
-metadata memory, it is not a good choice.
+The kexec_buf structure was previously declared without initialization.
+commit bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
+added a field that is always read but not consistently populated by all
+architectures. This un-initialized field will contain garbage.
 
-Pasha
+This is also triggering a UBSAN warning when the uninitialized data was
+accessed:
+
+        ------------[ cut here ]------------
+        UBSAN: invalid-load in ./include/linux/kexec.h:210:10
+        load of value 252 is not a valid value for type '_Bool'
+
+Zero-initializing kexec_buf at declaration ensures all fields are
+cleanly set, preventing future instances of uninitialized memory being
+used.
+
+Fixes: bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
+Link: https://lore.kernel.org/r/20250827-kbuf_all-v1-2-1df9882bb01a@debian.org
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+---
+ arch/loongarch/kernel/kexec_efi.c          | 2 +-
+ arch/loongarch/kernel/kexec_elf.c          | 2 +-
+ arch/loongarch/kernel/machine_kexec_file.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+index 45121b914f8f..5ee78ebb1546 100644
+--- a/arch/loongarch/kernel/kexec_efi.c
++++ b/arch/loongarch/kernel/kexec_efi.c
+@@ -42,7 +42,7 @@ static void *efi_kexec_load(struct kimage *image,
+ {
+ 	int ret;
+ 	unsigned long text_offset, kernel_segment_number;
+-	struct kexec_buf kbuf;
++	struct kexec_buf kbuf = {};
+ 	struct kexec_segment *kernel_segment;
+ 	struct loongarch_image_header *h;
+ 
+diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
+index 97b2f049801a..1b6b64744c7f 100644
+--- a/arch/loongarch/kernel/kexec_elf.c
++++ b/arch/loongarch/kernel/kexec_elf.c
+@@ -59,7 +59,7 @@ static void *elf_kexec_load(struct kimage *image,
+ 	int ret;
+ 	unsigned long text_offset, kernel_segment_number;
+ 	struct elfhdr ehdr;
+-	struct kexec_buf kbuf;
++	struct kexec_buf kbuf = {};
+ 	struct kexec_elf_info elf_info;
+ 	struct kexec_segment *kernel_segment;
+ 
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index dda236b51a88..fb57026f5f25 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -143,7 +143,7 @@ int load_other_segments(struct kimage *image,
+ 	unsigned long initrd_load_addr = 0;
+ 	unsigned long orig_segments = image->nr_segments;
+ 	char *modified_cmdline = NULL;
+-	struct kexec_buf kbuf;
++	struct kexec_buf kbuf = {};
+ 
+ 	kbuf.image = image;
+ 	/* Don't allocate anything below the kernel */
+-- 
+2.43.0
+
 
