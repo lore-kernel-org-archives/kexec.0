@@ -4,82 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66E7BCCD1BF
-	for <kexec@archiver.kernel.org>; Fri, 24 Oct 2025 15:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73B4CCCF9E3
+	for <kexec@archiver.kernel.org>; Fri, 24 Oct 2025 15:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=puiOctPkkRjOuoUxgwNEPA+P78IsHjj9a2gG6mw0pTw=; b=FMAp3yYbTaY2QHkKbEMHXlzvWP
-	Rnkl0UjSJraYyB/gSY8lBg2Fw8qceO7pkGxT/ZQOqzs8dlbdKIn8mnebj7LCLPy2lTheCr3r2xnco
-	VQjoARc0zgo/MX1FI3fuh+aj8PQlsPU3/twnQfzdghFd8W2peLIWhKWqxQRvLpPTVI1SQbQF8HxbP
-	RiD8ZcYD5ykq37zUKIKXajzTB93AO3L/JFGD13xXbb2wphBisnZxaArjRAQ2TvBSznJzqcm/xihAG
-	4Yw5VqQufNuZGmwGOwKYypjXJEwLaggL2lGWVIZgj+42cftAIxQgKKzMGI9RZ8I9mWL+Rx7wm0mfm
-	YPyWs4lQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ZZLvMMGLPrwC4lG+ycq2alCZKKK/dEl3bx8H9eEFcpQ=; b=eH2YfcQN3PSExfmQRBL6/M/RBk
+	yu/wyTI8Thyhb20LU+EJWfiKPcsbkIX+B4h28mzdihaH6793v131nAG1huQmqhF92LaOh15WLDbtp
+	a7knhH+jkoyA60Eve55C9Oz37GTVo2HcpHu0yYXSEgWIphlkNfpMcB1/MxVoz9LhnKhS2hOIA93aM
+	B5z6kh8Xbv7skP28sXwxXAUrlwSuocjr0Mz2HzT2oyPT8g7YR+SnLWUm7I+wdst550L6H2jYRXUbk
+	pHYGufJEPUOia2T0zqX++1ZygitF4prpvoxHAqIGYQ6rDw7HUuT/4uKLTZIyLZAMd60hgho3axgYZ
+	a7czPQ1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCK3X-00000009rEA-39nq;
-	Fri, 24 Oct 2025 15:50:19 +0000
-Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.155.198.111])
+	id 1vCK5e-00000009rj2-1PsL;
+	Fri, 24 Oct 2025 15:52:30 +0000
+Received: from pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.162.73.231])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCK3U-00000009rDU-3Zxp
+	id 1vCK5Y-00000009rh2-36w6
 	for kexec@lists.infradead.org;
-	Fri, 24 Oct 2025 15:50:18 +0000
+	Fri, 24 Oct 2025 15:52:28 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1761321016; x=1792857016;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=puiOctPkkRjOuoUxgwNEPA+P78IsHjj9a2gG6mw0pTw=;
-  b=EXT432oHhcHv9i4XoEERBQREQ5qm48AXoMmyhq07mAYTsYwbRWHxxAE+
-   +feOdxr1NIULeSZlXzSuZbKceAp/vJV8tw0llGd8yfjJCs025gGAxlV/A
-   Ab8fnUyvq2XIjFrOnzQv0d90mS/6BwYACNzHorr+5xAnxcxqPSNlxeLS2
-   y6WX9aU9LHu2tL9+sYA4pynjj5IvYAq5zzhBfRYVX8OjGMXP/uan8IXC6
-   4WnAUe+fYMvIlSMx7fXDykSAFGvXzFNd0ACXzDbXcTZGHnRH0yeLR69q0
-   fgo+vwD9ChKt07jGCHR5erEgklUtdyhztCffHDTDOardEGQHEzYZ0acYk
-   A==;
-X-CSE-ConnectionGUID: 1J5QlMDQQ0mjlHn4AQ0yqA==
-X-CSE-MsgGUID: nug+SKKfRI+1BzB8GQ/a9g==
+  t=1761321144; x=1792857144;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZZLvMMGLPrwC4lG+ycq2alCZKKK/dEl3bx8H9eEFcpQ=;
+  b=bX0xYGFPzWFNCzc8jKs9VocTqpbErsVr34acta22q39MsJEWQVRnpUT7
+   Rvt0BzIgiicA+1uIDAUopmYD5kfSW9QBhc+IZTiKwDWYwB04yWHBRKGDB
+   aYzuzFJltoL3q7tIvs4wMBRAhNk3mOaPgCOxHZswBTpgMm2WSgsxw1ZwS
+   NNhC/xwHv3p+L/FHLON+Yixsxk8k1E7krW9STO5xHm/TBR96vOX2LEnwI
+   TrBvdV3yYf475J22lAk8p17BpZZEulseE9FUfikKRL47shMaDSzC8mn5W
+   l3Uglf+069NGgyRijRqoJmPWwDFb+2Bs5k/b+AnK02dwS/+eXJA/HUgO2
+   Q==;
+X-CSE-ConnectionGUID: qBwoSCLaRMeOl+2TB46dNQ==
+X-CSE-MsgGUID: 4n+btcNcT8uXKFNToDW02Q==
 X-IronPort-AV: E=Sophos;i="6.19,252,1754956800"; 
-   d="scan'208";a="5538943"
-Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
-  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 15:50:16 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.105:30918]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.58.51:2525] with esmtp (Farcaster)
- id 630c549a-7215-466d-a400-77b1726e03d1; Fri, 24 Oct 2025 15:50:16 +0000 (UTC)
-X-Farcaster-Flow-ID: 630c549a-7215-466d-a400-77b1726e03d1
+   d="scan'208";a="5464797"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 15:52:20 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.234:15943]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.17.61:2525] with esmtp (Farcaster)
+ id ccefef81-52eb-42be-b5ad-d91f33391713; Fri, 24 Oct 2025 15:52:20 +0000 (UTC)
+X-Farcaster-Flow-ID: ccefef81-52eb-42be-b5ad-d91f33391713
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 24 Oct 2025 15:50:15 +0000
-Received: from 80a9970eed1e.amazon.com (10.106.100.47) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 24 Oct 2025 15:50:15 +0000
+ Fri, 24 Oct 2025 15:52:20 +0000
+Received: from 80a9970eed1e (10.106.100.47) by EX19D001UWA001.ant.amazon.com
+ (10.13.138.214) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 24 Oct 2025
+ 15:52:19 +0000
+Date: Fri, 24 Oct 2025 08:52:17 -0700
 From: Justinien Bouron <jbouron@amazon.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Petr Mladek
-	<pmladek@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, "Marcos
- Paulo de Souza" <mpdesouza@suse.com>, Steven Chen
-	<chenste@linux.microsoft.com>, Yan Zhao <yan.y.zhao@intel.com>, "Alexander
- Graf" <graf@amazon.com>, Justinien Bouron <jbouron@amazon.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: Gunnar Kudrjavets <gunnarku@amazon.com>
-Subject: [PATCH v3] kexec_core: Remove superfluous page offset handling in segment loading
-Date: Fri, 24 Oct 2025 08:50:09 -0700
-Message-ID: <20251024155009.39502-1-jbouron@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Andrew Morton <akpm@linux-foundation.org>, Baoquan He
+	<bhe@redhat.com>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+	<nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, "Justin
+ Stitt" <justinstitt@google.com>
+Subject: Re: [resend, PATCH v2 1/1] kexec: Remove unused code in
+ kimage_load_cma_segment()
+Message-ID: <aPugsWImYm0Vj7Dk@80a9970eed1e>
+References: <20250916125124.3094021-2-andriy.shevchenko@linux.intel.com>
+ <aNLd_6CO6YMvm2MN@80a9970eed1e>
+ <aO1lmNyLCVUhL_kO@smile.fi.intel.com>
+ <aPt5CYz5Cc-7St6L@black.igk.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aPt5CYz5Cc-7St6L@black.igk.intel.com>
+X-Editor: VIM - Vi IMproved 9.1
 X-Originating-IP: [10.106.100.47]
-X-ClientProxiedBy: EX19D032UWA001.ant.amazon.com (10.13.139.62) To
+X-ClientProxiedBy: EX19D033UWA004.ant.amazon.com (10.13.139.85) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251024_085016_940413_EEA4C66B 
-X-CRM114-Status: GOOD (  15.58  )
+X-CRM114-CacheID: sfid-20251024_085225_011634_6BEC981E 
+X-CRM114-Status: GOOD (  29.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,136 +98,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-During kexec_segment loading, when copying the content of the segment
-(i.e. kexec_segment::kbuf or kexec_segment::buf) to its associated
-pages, kimage_load_{cma,normal,crash}_segment handle the case where the
-physical address of the segment is not page aligned, e.g. in
-kimage_load_normal_segment:
-```
-	page = kimage_alloc_page(image, GFP_HIGHUSER, maddr);
-	// ...
-	ptr = kmap_local_page(page);
-	// ...
-	ptr += maddr & ~PAGE_MASK;
-	mchunk = min_t(size_t, mbytes,
-		PAGE_SIZE - (maddr & ~PAGE_MASK));
-	// ^^^^ Non page-aligned segments handled here ^^^
-	// ...
-	if (image->file_mode)
-		memcpy(ptr, kbuf, uchunk);
-	else
-		result = copy_from_user(ptr, buf, uchunk);
-```
-(similar logic is present in kimage_load_{cma,crash}_segment).
+On Fri, Oct 24, 2025 at 03:03:05PM +0200, Andy Shevchenko wrote:
+> On Mon, Oct 13, 2025 at 11:48:24PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 23, 2025 at 10:50:55AM -0700, Justinien Bouron wrote:
+> > > On Tue, Sep 16, 2025 at 02:51:09PM +0200, Andy Shevchenko wrote:
+> > > > clang is not happy about set but unused variable:
+> > > > 
+> > > > kernel/kexec_core.c:745:16: error: variable 'maddr' set but not used [-Werror,-Wunused-but-set-variable]
+> > > >   745 |         unsigned long maddr;
+> > > >       |                       ^
+> > > > 1 error generated.
+> > > > 
+> > > > Fix the compilation breakage (`make W=1` build) by removing unused variable.
+> > > > 
+> > > > As Nathan noted, GCC 16 produces the similar warning;
+> > > > 
+> > > > Fixes: f4fecb50d6e1 ("kexec_core: remove superfluous page offset handling in segment loading")
+> > > FYI the commit this patch is fixing (i.e. f4fecb50d6e1) is going to need a
+> > > second revision as well (I haven't submitted it yet, still working on it), this
+> > > means that your "Fixes:" tag will need to be changed again, requiring a 3rd
+> > > revision.
+> > > 
+> > > I am not sure what is the proper way forward here. Should I:
+> > >     - Send my v2, without fixing the unused variable and then you send your v3
+> > >       with the updated "Fixes:" tag pointing to my v2.
+> > >     - OR fixing the unused variable in my v2 (i.e. "absorb" this patch in my
+> > >       v2).
+> > 
+> > Second is the best (integrate this fix into yours v2).
+> > 
+> > > In the latter case, I am not sure how I am supposed to credit the work in this
+> > > case? Do I need to add another "Signed-off-by: Andy Shevchenko" besides mine?
+> > 
+> > Just in the comment block (after the cutter '---' line and before the diff) in
+> > a free words. No need for any special tags for this in such a case.
+> > 
+> > > I'm still learning the ropes on how to contribute through the mailing list so I
+> > > would be grateful if you could share your input on what's the proper way forward
+> > > here.
+> 
+> Any news, folks, please? The bug is still in Linux Next and prevents me from
+> building my stuff cleanly.
+V3 is up: https://lore.kernel.org/lkml/20251024155009.39502-1-jbouron@amazon.com/
 
-This is actually not needed because, prior to their loading, all
-kexec_segments first go through a vetting step in
-`sanity_check_segment_list`, which rejects any segment that is not
-page-aligned:
-```
-	for (i = 0; i < nr_segments; i++) {
-		unsigned long mstart, mend;
-		mstart = image->segment[i].mem;
-		mend   = mstart + image->segment[i].memsz;
-		// ...
-		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
-			return -EADDRNOTAVAIL;
-		// ...
-	}
-```
-In case `sanity_check_segment_list` finds a non-page aligned the whole
-kexec load is aborted and no segment is loaded.
-
-This means that `kimage_load_{cma,normal,crash}_segment` never actually
-have to handle non page-aligned segments and `(maddr & ~PAGE_MASK) == 0`
-is always true no matter if the segment is coming from a file (i.e.
-`kexec_file_load` syscall), from a user-space buffer (i.e. `kexec_load`
-syscall) or created by the kernel through `kexec_add_buffer`. In the
-latter case, `kexec_add_buffer` actually enforces the page alignment:
-```
-	/* Ensure minimum alignment needed for segments. */
-	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
-	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
-```
-
-Signed-off-by: Justinien Bouron <jbouron@amazon.com>
-Reviewed-by: Gunnar Kudrjavets <gunnarku@amazon.com>
----
-Changes since v1:
-	- Reworked commit message as requested by Baoquan He
-	  <bhe@redhat.com>
-	- Removed accidental whitespace change
-	- v1 Link: https://lore.kernel.org/lkml/20250910163116.49148-1-jbouron@amazon.com/
-
-Changes since v2:
-	- Removed unused variable in kimage_load_cma_segment() which was
-	  causing a warning and failing build with `make W=1`. Thanks
-	  Andy Shevchenko for finding this issue
-	- v2 Link: https://lore.kernel.org/lkml/20250929160220.47616-1-jbouron@amazon.com/
----
- kernel/kexec_core.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index fa00b239c5d9..5ed7a2383d5d 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -742,7 +742,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
- 	struct kexec_segment *segment = &image->segment[idx];
- 	struct page *cma = image->segment_cma[idx];
- 	char *ptr = page_address(cma);
--	unsigned long maddr;
- 	size_t ubytes, mbytes;
- 	int result = 0;
- 	unsigned char __user *buf = NULL;
-@@ -754,15 +753,12 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
- 		buf = segment->buf;
- 	ubytes = segment->bufsz;
- 	mbytes = segment->memsz;
--	maddr = segment->mem;
- 
- 	/* Then copy from source buffer to the CMA one */
- 	while (mbytes) {
- 		size_t uchunk, mchunk;
- 
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 
- 		if (uchunk) {
-@@ -784,7 +780,6 @@ static int kimage_load_cma_segment(struct kimage *image, int idx)
- 		}
- 
- 		ptr    += mchunk;
--		maddr  += mchunk;
- 		mbytes -= mchunk;
- 
- 		cond_resched();
-@@ -839,9 +834,7 @@ static int kimage_load_normal_segment(struct kimage *image, int idx)
- 		ptr = kmap_local_page(page);
- 		/* Start with a clear page */
- 		clear_page(ptr);
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 
- 		if (uchunk) {
-@@ -904,9 +897,7 @@ static int kimage_load_crash_segment(struct kimage *image, int idx)
- 		}
- 		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
- 		ptr = kmap_local_page(page);
--		ptr += maddr & ~PAGE_MASK;
--		mchunk = min_t(size_t, mbytes,
--				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		mchunk = min_t(size_t, mbytes, PAGE_SIZE);
- 		uchunk = min(ubytes, mchunk);
- 		if (mchunk > uchunk) {
- 			/* Zero the trailing part of the page */
--- 
-2.43.0
-
+Best,
+Justinien Bouron
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
