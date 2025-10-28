@@ -4,84 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24B3DCCF9E0
-	for <kexec@archiver.kernel.org>; Tue, 28 Oct 2025 03:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93A49CCD1BF
+	for <kexec@archiver.kernel.org>; Tue, 28 Oct 2025 06:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=I8WR19ZGz2+uRagsLyH/16PxuPlbDWfbpOkIs9ZyrcI=; b=3GbWs4TGVf1CAGF0XAmxaJkMNy
-	CkyDR+c0WpKCecfyy87LN/HfpYzW5XBczVEiZE/U+w93GddBQ7LmAwrVfv77jtZk1/M3qamfQ4gn1
-	BHMdt1/t8Z5abnoRRDkwclrjbHuFqepZd00/jrqyZ9XLAz+X/X92hBblU6vznwuuigLLBpRFmfHzA
-	FhRU+hJWyNPsalx2QPolA8HBJMYZHyTkOM0zypu+DBSyyKMSFytUCTK+FOFCwTim8iy/S7w8xuoAi
-	Tiz+ACZ9PkqJek3NYT2AnnaSs46pmtscMIMW+3s1d+XyDWbSPZNweGNuwyoNPL18Q2fWG2SpqnIVM
-	iysL7/Wg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zuGj1hW8mWz3shIq2GZWCMOifU7nzT6tSAo/1NZESWI=; b=OTjTMKj19l2LXo+C54nwvhM8jK
+	Cny8gIb6EA6SM3XNh/fCFtez6oE/8k+R86wSfSTIeBMM1q0LtsezZZsAaBfCkfbXo1hX/++ojMhbu
+	P/h0Z93yfEM1Ip79y2fRhbsQApt0Ty7RtD78VTMpAQdhgofMBQEQPDroD96eqvdO2JQsf7YBwj291
+	G4z2SVLIzmEy8MB7vRxLTaUnLpqjGmGW/K+MqH5Ma+ISCp2oySu0jfChWENlv51o6hr+1gJuRzpdB
+	s9d2E+6AepeIA5qiRztsTozk8iG15+3yQ1lZf8DDihwWik+EBGv0CGZddigrKfbyIxzoz1/M1FXXt
+	iCYqQACA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vDa6A-0000000F9KB-0Zp4;
-	Tue, 28 Oct 2025 03:10:14 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vDd7t-0000000FKU7-19oI;
+	Tue, 28 Oct 2025 06:24:13 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vDa67-0000000F9JV-0TMm
+	id 1vDd7q-0000000FKTH-0Yeu
 	for kexec@lists.infradead.org;
-	Tue, 28 Oct 2025 03:10:12 +0000
+	Tue, 28 Oct 2025 06:24:12 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761621010;
+	s=mimecast20190719; t=1761632647;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I8WR19ZGz2+uRagsLyH/16PxuPlbDWfbpOkIs9ZyrcI=;
-	b=O3yabnsa7dhYWG7IDjpi9+c4nIt+Y96xMZT2sTd77RASvvybYJRqaXQEZRRP1kfTwi1Bxs
-	rQCu1EZfU3e03LPlNzXaBSEMW+gQ4KwVbztyL5AEKwlDuf95u5qFTfzPfXjdKpvjyGx4Z6
-	iK1/p+9bxUJqNtuPiN1fzWlXrstSCBg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=zuGj1hW8mWz3shIq2GZWCMOifU7nzT6tSAo/1NZESWI=;
+	b=OEkby+cC18FNzCPYjanW751CFC2bNEujudiWZRHA0pKGQP43LiEUXsRoSEzjy36u0l/pSw
+	YbQNVKj2mR70SKtbUKeYDPlJ7CRtsJudKPsD/BQXZHylViRDu+P0V7Y2a8ca6D3SB+b83o
+	hXoVXb7B1VVPKToyzK0OWnnNqnZEF+8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-300-8ksgbZnRO-WlzUfowka3Ww-1; Mon,
- 27 Oct 2025 23:10:07 -0400
-X-MC-Unique: 8ksgbZnRO-WlzUfowka3Ww-1
-X-Mimecast-MFC-AGG-ID: 8ksgbZnRO-WlzUfowka3Ww_1761621000
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-92njuEYVOgKUgJEjxNPoCA-1; Tue,
+ 28 Oct 2025 02:24:03 -0400
+X-MC-Unique: 92njuEYVOgKUgJEjxNPoCA-1
+X-Mimecast-MFC-AGG-ID: 92njuEYVOgKUgJEjxNPoCA_1761632641
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E267919539BC;
-	Tue, 28 Oct 2025 03:09:59 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.112.84])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC6F618002AD;
-	Tue, 28 Oct 2025 03:09:47 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Pierre Gondois <pierre.gondois@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCHv2 2/2] kernel/kexec: Stop all userspace deadline tasks
-Date: Tue, 28 Oct 2025 11:09:14 +0800
-Message-ID: <20251028030914.9520-3-piliu@redhat.com>
-In-Reply-To: <20251028030914.9520-1-piliu@redhat.com>
-References: <20251028030914.9520-1-piliu@redhat.com>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9EEE81956080;
+	Tue, 28 Oct 2025 06:24:00 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.212])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6C6FA1800353;
+	Tue, 28 Oct 2025 06:23:58 +0000 (UTC)
+Date: Tue, 28 Oct 2025 14:23:53 +0800
+From: Baoquan he <bhe@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shivang Upadhyay <shivangu@linux.ibm.com>
+Subject: Re: [PATCH 0/4] powerpc/kdump: Support high crashkernel reservation
+Message-ID: <aQBheTeMycPuDHJ+@MiWiFi-R3L-srv>
+References: <20251027151338.819957-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20251027151338.819957-1-sourabhjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tVIDdPR_BpRQ4zPZuo_dBJjRS7TSB0ryXFIUEWZskrI_1761632641
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251027_201011_221059_77E6159F 
-X-CRM114-Status: GOOD (  12.11  )
+X-CRM114-CacheID: sfid-20251027_232410_253589_B24FFF0B 
+X-CRM114-Status: GOOD (  17.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,55 +89,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Now that the deadline bandwidth check has been skipped, there is nothing
-to prevent CPUs from being unplugged. But as deadline tasks are crowded
-onto the remaining CPUs, they may starve normal tasks, especially the
-hotplug kthreads. As a result, the kexec process will hang indefinitely.
+Cc kexec mailing list.
 
-Send SIGSTOP to all userspace deadline tasks at the beginning of kexec
-to allow other tasks to run as CPUs are unplugged.
-
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
----
- kernel/kexec_core.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 265de9d1ff5f5..090bb58797d12 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1132,6 +1132,18 @@ bool kexec_load_permitted(int kexec_image_type)
- 	return true;
- }
- 
-+static void stop_user_deadline_tasks(void)
-+{
-+	struct task_struct *task;
-+
-+	rcu_read_lock();
-+	for_each_process(task) {
-+		if (task->policy == SCHED_DEADLINE && task->mm)
-+			send_sig(SIGSTOP, task, 1);
-+	}
-+	rcu_read_unlock();
-+}
-+
- /*
-  * Move into place and start executing a preloaded standalone
-  * executable.  If nothing was preloaded return an error.
-@@ -1190,6 +1202,11 @@ int kernel_kexec(void)
- 		cpu_hotplug_disable();
- 		kexec_in_progress = true;
- 		cpu_hotplug_enable();
-+		/*
-+		 * As CPU hot-removal, the crowed deadline task may starve other
-+		 * tasks. So stop them.
-+		 */
-+		stop_user_deadline_tasks();
- 		kernel_restart_prepare("kexec reboot");
- 		migrate_to_reboot_cpu();
- 		syscore_shutdown();
--- 
-2.49.0
+On 10/27/25 at 08:43pm, Sourabh Jain wrote:
+> Add support for reserving crashkernel memory in higher address ranges
+> using the crashkernel=xxM,high command-line option.
+> 
+> With this feature, most of the crashkernel memory for kdump will be
+> reserved in high memory regions, while only a small portion (64 MB) will
+> be reserved in low memory for the kdump kernel. This helps free up low
+> memory for other components that require allocations in that region.
+> 
+> For example, if crashkernel=2G,high is specified, the kernel will reserve
+> 2 GB of crashkernel memory near the end of system RAM and an additional
+> 64 MB of low memory (below 1 GB) for RTAS to function properly.
+> 
+> Currently, this feature is supported only on PPC64 systems with 64-bit
+> RTAS instantiation and Radix MMU enabled.
+> 
+> Two critical changes were made to support this feature:
+> 
+>  - CPU feature discovery is now performed before crashkernel
+>    reservation. This ensures the MMU type is determined before reserving
+>    crashkernel memory. (Patch 01/04)
+> 
+>  - RTAS instantiation has been moved to 64-bit mode. (Patch 02/04)
+> 
+> Apply the following patch first, and then apply this patch series:
+> https://lore.kernel.org/all/20251024170118.297472-1-sourabhjain@linux.ibm.com/
+> 
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+> 
+> Sourabh Jain (4):
+>   powerpc/mmu: do MMU type discovery before crashkernel reservation
+>   powerpc: move to 64-bit RTAS
+>   powerpc/kdump: consider high crashkernel memory if enabled
+>   powerpc/kdump: add support for high crashkernel reservation
+> 
+>  arch/powerpc/include/asm/book3s/64/mmu.h |  1 +
+>  arch/powerpc/include/asm/crash_reserve.h |  8 +++++
+>  arch/powerpc/include/asm/kexec.h         |  1 +
+>  arch/powerpc/include/asm/mmu.h           |  1 +
+>  arch/powerpc/include/asm/rtas.h          | 11 ++++++
+>  arch/powerpc/kernel/prom.c               | 28 ++++++++-------
+>  arch/powerpc/kernel/prom_init.c          | 26 +++++++++++---
+>  arch/powerpc/kernel/rtas.c               |  5 +++
+>  arch/powerpc/kernel/rtas_entry.S         | 17 ++++++++-
+>  arch/powerpc/kexec/core.c                | 45 +++++++++++++++++-------
+>  arch/powerpc/kexec/elf_64.c              | 10 ++++--
+>  arch/powerpc/kexec/file_load_64.c        |  5 +--
+>  arch/powerpc/kexec/ranges.c              | 24 +++++++++++--
+>  arch/powerpc/mm/init_64.c                | 27 ++++++++------
+>  14 files changed, 161 insertions(+), 48 deletions(-)
+> 
+> -- 
+> 2.51.0
+> 
 
 
