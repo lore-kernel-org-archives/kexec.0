@@ -4,89 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B701CCD1BF
-	for <kexec@archiver.kernel.org>; Wed, 29 Oct 2025 02:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D101FCCF9E9
+	for <kexec@archiver.kernel.org>; Wed, 29 Oct 2025 11:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ViE2IJMZsT38eN1nZhUPu2n0lIp+ocL0/8G3rWAGTZ4=; b=WoTb5sKwFbzWjc49iMrjifaq9d
-	KymOiBgGOjlG8v7dOxEa1LS2YZNrgtzGMRN6jkzcnw2oSUS666lViURq7JUYykNbTtlei8WN5gUIm
-	zZb34T0MbTxyykdxMHyxWsT8Gd2GMkUhhYb5WLASniqs94lXJaL9OKqKNMD6ztfZ0noZUI4vy22N/
-	L5k/1yQMcXTH9G9sgdSgM0pGGRYgZnQL5PCHNMQffbvcemBB8UVpy5OE8jkhukdZzCQ4iHBTDIxQV
-	EHgtt/ePr6RNtN0KrxXsv4jF0jwYSBzWQeScaOOyzWb27Bzj/s4aQBH4o7WZf9IazD/RAe1WiHMQc
-	GgdDvP3A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=JewGrExeY4YUsH2Q4/QPO/3tV8s8JWgMbXOK4V6Kv3s=; b=ShMAX1rk4VWOQBT6CQyqBzHrHX
+	KXXEc/d+IHQ3LYu4alKvKuZWwFrDxHcLJUPAiyINTtz87rRSbmAnq0mpgKdZk3MbME2QV50nJO6er
+	TLQ+snIS9hnXsE2oJUmFB3cenRb+NOK3OeAO3ik+z6lBQN/OZZfkjn/rnSyrqXhoAVbWYA711mRzD
+	SmgvNDDW5mQuvZiVYxQN0lZiid19/dfuRP3XaUwRZ+hY6/h3Zgr2RZvJHH6WTiMyC1wL+28M8y+As
+	XFsyGdnfupYQ5qVch/WmOTT2v9HHmYQN0bCk64Xk5LJyAfWIqYWzpzHg7lQlXFyNirUibRqpJqycs
+	STEy5d9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vDvcC-0000000Gy1e-00a9;
-	Wed, 29 Oct 2025 02:08:44 +0000
-Received: from mail-wm1-x32d.google.com ([2a00:1450:4864:20::32d])
+	id 1vE4Tq-0000000113U-2tj6;
+	Wed, 29 Oct 2025 11:36:42 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vDvc9-0000000Gy13-2cWf
+	id 1vE4Tl-0000000112r-18zd
 	for kexec@lists.infradead.org;
-	Wed, 29 Oct 2025 02:08:43 +0000
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-4711810948aso49625275e9.2
-        for <kexec@lists.infradead.org>; Tue, 28 Oct 2025 19:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761703720; x=1762308520; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ViE2IJMZsT38eN1nZhUPu2n0lIp+ocL0/8G3rWAGTZ4=;
-        b=pbzrTn7CU5uRzomnqHheqQ8M6GzvuVhtLuFUg51Ik3ybZJbDu70VvJN5BaltU4wzxY
-         t1sY4B2wIVnS28mWcDThAj4b2noCOIEnysgY9U2x0evDZknv2VtSIuo2JrpBe1ow0x18
-         PW1cfWvDrYBkpL0RSBWihX6hN239U0ImCxnx5IzNvwRMTjeTwfASzconxOUN+BmbVyBS
-         wf76CRwoUOMyRdv0f7aPgJk6xGWlV+RwC3bYCGLTUegF4osIqwQHHRy52nOHXx/+b/iV
-         t5dde/0MWDh/Y26AH0wZ7XOvLtd30GFZhwqQOIuADO4ycXTtCbdNkV02VrMbxg67BC8U
-         eFaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761703720; x=1762308520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ViE2IJMZsT38eN1nZhUPu2n0lIp+ocL0/8G3rWAGTZ4=;
-        b=QK2jVoNpLu05Dkb2Fz85CnOSCEUjo70OXaIAMgqJSGAuExEKqmdkPCrIUGw+RMmTXz
-         f2R2R/vWa9N5+6fD5ZJcF38nPhhgKSX+Aup72BRRdxKB6v0a0oVXvU3nEBK930sKFMFs
-         0abzxU3fj/WWbSPeRAb63RrA00nXYKqa3Z72f38omSnYCkFK/iykiIdCZi3jreJMZh5x
-         vJ9ZQzxUvy0dbyLS4IiL14zZcD4hvndj3rykx2bIKWnBn/rJ3b14OSE+26myaNS/DqKZ
-         6uyXJeLv2Emrmt3ms5v7MC0m7xOoU91u2IgndpCUf2MyZuM9c1DzvJ69K/h9gE3kZBNW
-         gK6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXgaogX4yeP8FFzq9BoorHdKSlMLY0jnxL5S5s9UZha4g+v5aFnlAgrCseQzhLA6tRaZaV/oA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxPEFW40sliVRexye7pBPEXTlJGc8uHn7d3xDICpNjN0qKhhKGR
-	4yUwmoXVWUugK/YlRypJTArCQmSAaJ6xjJ+HLfKqTO1z19mAt13bWMahoxYd3AVHO6WhKAI3sJC
-	aq9asU+NZBlIDTTgq/TNK2I4dp/7fIjUOcvStfiVy
-X-Gm-Gg: ASbGncvoG2e3brqYoR8AIw4Z3eUX9EjA+4pMVUPXvhUoGxy6/sewHXCxJdUOpkyWoSc
-	43ZSliSyB/KiZ17LU7ISaSYJnq0qjSH1iaztMZnqdyJFBAcv1rias4Nw0d5Gzkn3JxdnRojd+m7
-	4GL0AVIZoSxPuAUCNUfyFfEDtp11iXH3lXKe9MhZBAKOB0HzC+byoPISgCDfjE6r7dD1XDddFzU
-	GbGiKniuALHIOEbspYqUy3Zyynq8zEnL0iv4J/bJnAZgu7Bi0dHj1N2FsqJqgObCgTvc/+8QtjX
-	jcx5EtOOClwxUNU=
-X-Google-Smtp-Source: AGHT+IFZSk1aVcDaiZG1WuRbrPfpYeQn9yjnQ/yehfVemqM2wa4pmyOLOTvDDNrzAwfyZ4ClnhC6dYEQulkvBDKpLAA=
-X-Received: by 2002:a05:6000:2508:b0:3fb:aca3:d5d9 with SMTP id
- ffacd0b85a97d-429aef76469mr656025f8f.1.1761703719439; Tue, 28 Oct 2025
- 19:08:39 -0700 (PDT)
+	Wed, 29 Oct 2025 11:36:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761737794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JewGrExeY4YUsH2Q4/QPO/3tV8s8JWgMbXOK4V6Kv3s=;
+	b=SFkRDNgzLsdotOoOf2BK3saCnMdbNtwxVy7OPAUKCn/0QZG5UK/lsxwZinN35m96BIAcC8
+	sUD8KCaz4xP4vCLuMVHf0IGkMsSVxgSg1IJphnDn6bntdKvUmmOmPPrrqu1Qwefp3Xai2y
+	BLeFt1d+U0/70H+MypHdcyMJukUHKvI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-210-YWvrsIZNM_63qENBF2bUfQ-1; Wed,
+ 29 Oct 2025 07:36:29 -0400
+X-MC-Unique: YWvrsIZNM_63qENBF2bUfQ-1
+X-Mimecast-MFC-AGG-ID: YWvrsIZNM_63qENBF2bUfQ_1761737786
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF401180899A;
+	Wed, 29 Oct 2025 11:36:24 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.80])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 015433000223;
+	Wed, 29 Oct 2025 11:36:20 +0000 (UTC)
+Date: Wed, 29 Oct 2025 19:36:08 +0800
+From: Pingfan Liu <piliu@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Pierre Gondois <pierre.gondois@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Joel Granados <joel.granados@kernel.org>
+Subject: Re: [RFC 2/3] kernel/cpu: Mark nonboot cpus as inactive when
+ shutting down nonboot cpus
+Message-ID: <aQH8KJ8RsnzbLfN2@fedora>
+References: <20251022121345.23496-1-piliu@redhat.com>
+ <20251022121345.23496-3-piliu@redhat.com>
+ <877bwgw9yf.ffs@tglx>
+ <aQAvnjVvJOUx78Nk@fedora>
+ <87qzunuqqo.ffs@tglx>
 MIME-Version: 1.0
-References: <20251020100306.2709352-1-jasonmiu@google.com> <20251020100306.2709352-2-jasonmiu@google.com>
- <aP9dTNhZ4LduuXb3@kernel.org>
-In-Reply-To: <aP9dTNhZ4LduuXb3@kernel.org>
-From: Jason Miu <jasonmiu@google.com>
-Date: Tue, 28 Oct 2025 19:08:27 -0700
-X-Gm-Features: AWmQ_bnowmRLlgmKDoJlRCBEY1XavrLAyi7DtGAa01tD5hlwi4aNGIgYxzT4Uf0
-Message-ID: <CAHN2nPL2+qs9MZnOYq-Oh_D1ehOSfSLsViLa8pZ7bt4AE4zZXg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kho: Adopt KHO radix tree data structures
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87qzunuqqo.ffs@tglx>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251028_190841_888113_CD224E00 
-X-CRM114-Status: GOOD (  62.73  )
+X-CRM114-CacheID: sfid-20251029_043637_381330_220CD627 
+X-CRM114-Status: GOOD (  20.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,784 +98,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike,
-
-Thank you very much for providing your comments.
-
-On Mon, Oct 27, 2025 at 4:53=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Mon, Oct 20, 2025 at 03:03:04AM -0700, Jason Miu wrote:
-> > Introduce a radix tree data structure for tracking preserved
-> > memory pages in KHO, which will replace the current xarray-based
-> > implementation.
+On Tue, Oct 28, 2025 at 01:59:11PM +0100, Thomas Gleixner wrote:
+> On Tue, Oct 28 2025 at 10:51, Pingfan Liu wrote:
+> > On Mon, Oct 27, 2025 at 06:06:32PM +0100, Thomas Gleixner wrote:
+> >> When kexec() is in progress, then running user space tasks at all is a
+> >> completely pointless exercise.
+> >> 
+> >> So the obvious solution to the problem is to freeze all user space tasks
 > >
-> > The primary motivation for this change is to eliminate the need for
-> > serialization. By marking preserved pages directly in the new KHO
-> > radix tree and passing them to the next kernel, the entire
-> > serialization process can be removed. This ultimately allows for the
-> > removal of the KHO finalize and abort states, simplifying the overall
-> > design.
-> >
-> > The preserved page physical address and its order are encoded in to a
-> > value. The KHO radix tree has multiple level of nodes where each node
-> > is a table contining a descriptor to the next level of nodes. The
-> > encoded value get split and stored its parts along the tree
-> > traversal. The tree traversal ends with the `kho_bitmap_table`, where
-> > each bit represents a single preserved page.
-> >
-> > Instead of serializing the memory map, the first kernel store the KHO
-> > radix tree root in the FDT. This KHO radix tree root is passed to the
-> > second kernel after kexec, hence elimitated the KHO finalize and abort
-> > states.
-> >
-> > The second kernel walks the passed-in KHO radix tree from its root. It
-> > restores the memory pages and their orders by decoding the value
-> > stored in the KHO radix tree.
-> >
-> > This architectural shift to using a shared radix tree structure
-> > simplifies the KHO design and eliminates the overhead of serializing
-> > and deserializing the preserved memory map.
-> >
-> > Signed-off-by: Jason Miu <jasonmiu@google.com>
-> > ---
-> >  MAINTAINERS                                   |   2 +
-> >  include/linux/kexec_handover.h                |  23 +-
-> >  .../linux/live_update/abi/kexec_handover.h    |  10 +
-> >  kernel/kexec_handover.c                       | 861 +++++++++---------
-> >  4 files changed, 458 insertions(+), 438 deletions(-)
-> >  create mode 100644 include/linux/live_update/abi/kexec_handover.h
-> >
-> > diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_hando=
-ver.h
-> > index 348844cffb13..bc2f9e060a79 100644
-> > --- a/include/linux/kexec_handover.h
-> > +++ b/include/linux/kexec_handover.h
-> > @@ -45,6 +28,7 @@ int kho_preserve_folio(struct folio *folio);
-> >  int kho_preserve_phys(phys_addr_t phys, size_t size);
-> >  struct folio *kho_restore_folio(phys_addr_t phys);
-> >  int kho_add_subtree(struct kho_serialization *ser, const char *name, v=
-oid *fdt);
-> > +int kho_remove_subtree(const char *name);
->
-> This change seems unrelated.
+> > I agree, but what about a less intrusive approach? Simply stopping the 
+> > DL tasks should suffice, as everything works correctly without them.
+> 
+> What's intrusive about that? Task freezing exists already.
+> 
 
-I want to add the "kho_remove_subtree()" as a counterpart of the
-"kho_add_subtree()". You are right that "kho_remove_subtree()" is not
-very related to this radix tree data struct change. Do you prefer I
-split this kho_remove_subtree() change as another patch in this
-series, or do you prefer another independent patch series? (I like the
-latter option more personally)
+Thanks for your guidance. That's a good point -- system suspending is a
+good analogy. I will check how PM handles it.
 
->
-> >  int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
+> > I have a draft patch ready. Let's discuss it and go from there.
 > >
-> >  int register_kho_notifier(struct notifier_block *nb);
-> > @@ -86,6 +70,11 @@ static inline int kho_retrieve_subtree(const char *n=
-ame, phys_addr_t *phys)
-> >       return -EOPNOTSUPP;
-> >  }
+> >> when kexec() is invoked. No horrible hacks in the deadline scheduler and
+> >> elsewhere required to make that work. No?
 > >
-> > +static inline int kho_remove_subtree(const char *name)
-> > +{
-> > +     return -EOPNOTSUPP;
-> > +}
-> > +
->
-> Ditto.
->
-> >  static inline int register_kho_notifier(struct notifier_block *nb)
-> >  {
-> >       return -EOPNOTSUPP;
-> > diff --git a/include/linux/live_update/abi/kexec_handover.h b/include/l=
-inux/live_update/abi/kexec_handover.h
-> > new file mode 100644
-> > index 000000000000..3154e5c33851
-> > --- /dev/null
-> > +++ b/include/linux/live_update/abi/kexec_handover.h
-> > @@ -0,0 +1,10 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _ABI__KEXEC_HANDOVER_H
-> > +#define _ABI__KEXEC_HANDOVER_H
-> > +
-> > +#define KHO_FDT_COMPATIBLE "kho-v2"
-> > +#define PROP_PRESERVED_PAGE_RADIX_TREE "preserved-page-radix-tree"
->
-> The property describes the preserved memory, it's not important if it's a
-> radix tree, a linked list or whatever else, so I don't think
-> page-radix-tree is a good name.
->
-> IMHO we can keep the preserved-memory-map name because version bump ensur=
-es
-> we won't attempt to parse v1 data structure.
->
+> > To clarify, skipping the dl_bw_deactivate() validation is necessary 
+> > because it prevents CPU hot-removal.
+> 
+> If you freeze stuff there is nothing to do. Hibernation works exactly
+> that way without any magic hacks in a particular scheduling class, no?
+> 
 
-Sure, I can just keep the preserved-memory-map name.
+There is a nuance: DL bandwidth represents a commitment, not necessarily
+the actual payload. Even a blocked DL task still occupies DL bandwidth.
+The system's DL bandwidth remains unchanged as long as the CPUs stay
+online, which is the case in hibernation.
 
-> > +#define PROP_SUB_FDT "fdt"
-> > +
-> > +#endif
-> > diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> > index ecd1ac210dbd..2fc5975690a7 100644
-> > --- a/kernel/kexec_handover.c
-> > +++ b/kernel/kexec_handover.c
-> > @@ -46,143 +45,305 @@ static int __init kho_parse_enable(char *p)
-> >  }
-> >  early_param("kho", kho_parse_enable);
-> >
-> > +typedef int (*kho_radix_tree_walk_callback_t)(unsigned long encoded);
-> > +
-> >  /*
-> > - * Keep track of memory that is to be preserved across KHO.
->
-> Please leave this sentence.
->
-> > + * The KHO radix tree tracks preserved memory pages. It is a hierarchi=
-cal
-> > + * structure that starts with a single root `kho_radix_tree`. This sin=
-gle
-> > + * tree stores pages of all orders.
->
-> I'd combine this comment and the comment above declaration of enum
-> kho_radix_consts into something like this:
->
 
-Yes, I will move the kho_radix_consts up so its comment will be
-combined and stay close to the comment of kho_radix_tree.
+Best Regards,
 
-> /*
->  * KHO tracks preserved memory using a radix tree data structure. Each no=
-de of
->  * the tree is PAGE_SIZE and it is PAGE_SIZE aligned.
->  *
->  * The leaf nodes of the tree are bitmaps where each set bit represents a
->  * single preserved page. The intermediate and root nodes of the tree are
->  * tables of physical addresses that point to a lower level node:
->  *
->  * kho_radix_tree_root
->  * +-------------------+
->  * |     Level 5       | (struct kho_radix_tree)
->  * +-------------------+
->  *   |
->  *   v
->  * +-------------------+
->  * |     Level 4       | (struct kho_radix_tree)
->  * +-------------------+
->  *   |
->  *   | ... (intermediate levels)
->  *   |
->  *   v
->  * +-------------------+
->  * |      Level 0      | (struct kho_bitmap_table)
->  * +-------------------+
->  *
->  * The physical address of the preserved page and its order are encoded i=
-nto a
->  * single unsigned long value where higher bits represent the order and t=
-he
->  * lower bits represent the page offset:
->  *
->  *   <-- Higher Bits ------------------------------------ Lower Bits -->
->  *  +--------------------------+-----------------------------------------=
-+
->  *  |        Order Bits        |               Page Offset               =
-|
->  *  +--------------------------+-----------------------------------------=
-+
->  *  |0| ... 0 0 0 1            | pa >> (PAGE_SHIFT + 0)                  =
-|
->  *  |1| ... 0 0 0 0 1            | pa >> (PAGE_SHIFT + 1)                =
-|
->  *  |2| ... 0 0 0 0 0 1            | pa >> (PAGE_SHIFT + 2)              =
-|
->  *  +------------------------------+-------------------------------------=
-+
->  *                  ^
->  *                  |
->  *  This single '1' bit's position uniquely identifies the 'order'.
->  *
->  * Page Offset:
->  * The 'page offset' is the physical address normalized for its order. It
->  * effectively represents the page offset for the given order.
->  *
->  * Order Bits:
->  * The 'order bits' encode the page order by setting a single bit at a
->  * specific position. The position of this bit itself represents the orde=
-r.
->  *
->  * For instance, on a 64-bit system with 4KB pages (PAGE_SHIFT =3D 12), t=
-he
->  * maximum range for a page offset (for order 0) is 52 bits (64 - 12). Th=
-is
->  * offset occupies bits [0-51]. For order 0, the order bit is set at
->  * position 52.
->  *
->  * As the order increases, the number of bits required for the 'page offs=
-et'
->  * decreases. For example, order 1 requires one less bit for its page
->  * offset. This allows its order bit to be set at position 51,
->  * i.e. shifting right, without conflicting with the page offset bits.
->  *
->  * Bitfields in this encoded value are used as indices into the tables fo=
-r
->  * upper levels and as bitmap index for the lowest level.
->  *
->  * The following diagram illustrates how the encoded value is split into
->  * indices for the tree levels, with PAGE_SIZE of 4KB:
->  *
->  *      63:60   59:51    50:42    41:33    32:24    23:15         14:0
->  * +---------+--------+--------+--------+--------+--------+--------------=
----+
->  * |    0    |  Lv 5  |  Lv 4  |  Lv 3  |  Lv 2  |  Lv 1  |  Lv 0 (bitmap=
-)  |
->  * +---------+--------+--------+--------+--------+--------+--------------=
----+
->  *
->  * This design stores pages of all sizes (orders) in a single 6-level tab=
-le.
->  * It efficiently shares lower table levels, especially due to common zer=
-o top
->  * address bits, allowing a single, efficient algorithm to manage all pag=
-es.
->  *
->  * < a paragraph about memory consumption >
->  */
->
-> > + *
-> > + * This is achieved by encoding the page's physical address and its or=
-der into
-> > + * a single `unsigned long` value. This encoded value is then used to =
-traverse
-> > + * the tree.
->
-> ...
->
-> > + * Each `kho_radix_tree` (Levels 1-5) and `kho_bitmap_table` (Level 0)=
- is
-> > + * PAGE_SIZE. Each entry in a `kho_radix_tree` is a descriptor (a phys=
-ical
-> > + * address) pointing to the next level node. For Level 1 `kho_radix_tr=
-ee`
-> > + * nodes, these descriptors point to a `kho_bitmap_table`. The final
-> > + * `kho_bitmap_table` is a bitmap where each set bit represents a sing=
-le
-> > + * preserved page.
-> >   */
->
-> Please add an empty line between description and the declaration.
->
-> > +struct kho_radix_tree {
->
-> I think the name should reflect that this data structure is for tracking
-> memory in KHO. Otherwise it reads like a generic data structure that can =
-be
-> used with KHO, like kho_array Pratyush proposed a while ago.
->
-> Maybe struct kho_mem_radix_tree? Or even drop the 'radix', I don't think
-> it's really important here.
->
+Pingfan
 
-I use the 'radix' here as we need a step to convert the page address
-to a radix tree key. I agree that `kho_mem_radix_tree` sounds better.
-
-> > +     phys_addr_t table[PAGE_SIZE / sizeof(phys_addr_t)];
-> > +};
-> >
-> > -#define PRESERVE_BITS (512 * 8)
-> > -
-> > -struct kho_mem_phys_bits {
-> > -     DECLARE_BITMAP(preserve, PRESERVE_BITS);
-> > +struct kho_bitmap_table {
-> > +     unsigned long bitmaps[PAGE_SIZE / sizeof(unsigned long)];
->
-> What's wrong with kho_mem_phys_bits and DECLARE_BITMAP?
-> Simply adjust PRESERVE_BITS to match PAGE_SIZE.
->
-
-I used `kho_bitmap_table` as I wanted to highlight it as a patch of
-bitmap that has to be in the size of PAGE_SIZE. I found the original
-`kho_mem_phys_bits` harder to understand as a bit in this bitmap is
-referring to one memory page. I can update it as
-
-#define PRESERVE_PAGE_BITS (PAGE_SIZE * 8)
-struct kho_bitmap {
-    DECLARE_BITMAP(preserve_page, PRESERVE_PAGE_BITS);
-};
-
-what do you think?
-
-> >  };
-> >
-> > -struct kho_mem_phys {
-> > +/*
-> > + * The KHO radix tree tracks preserved pages by encoding a page's phys=
-ical
->
-> ...
->
-> > + * address bits, allowing a single, efficient algorithm to manage all =
-pages.
-> > + */
-> > +enum kho_radix_consts {
->
-> I think this should be declared before the structs, so that there will be
-> one long description before the enum, structs and code.
->
-
-yes, will move this enum up.
-
-> > +     /* The bit position of a 0-order page, only supports 64bits syste=
-m */
-> > +     ORDER_0_LG2 =3D 64 - PAGE_SHIFT,
-> > +     /* Bit number used for each level of tables */
-> > +     TABLE_SIZE_LG2 =3D const_ilog2(PAGE_SIZE / sizeof(phys_addr_t)),
-> > +     /* Bit number used for lowest level of bitmaps */
-> > +     BITMAP_SIZE_LG2 =3D PAGE_SHIFT + const_ilog2(BITS_PER_BYTE),
-> >       /*
-> > -      * Points to kho_mem_phys_bits, a sparse bitmap array. Each bit i=
-s sized
-> > -      * to order.
-> > +      * The total tree depth is the number of intermediate levels
-> > +      * and 1 bitmap level.
-> >        */
-> > -     struct xarray phys_bits;
-> > +     TREE_MAX_DEPTH =3D DIV_ROUND_UP(ORDER_0_LG2 - BITMAP_SIZE_LG2,
-> > +                                   TABLE_SIZE_LG2) + 1,
-> >  };
-> >
-> > -struct kho_mem_track {
-> > -     /* Points to kho_mem_phys, each order gets its own bitmap tree */
-> > -     struct xarray orders;
-> > -};
-> > +/*
-> > + * `kho_radix_tree_root` points to a page thats serves as the root of =
-the
-> > + * KHO radix tree. This page is allocated during KHO module initializa=
-tion.
-> > + * Its physical address is written to the FDT and passed to the next k=
-ernel
-> > + * during kexec.
-> > + */
-> > +static struct kho_radix_tree *kho_radix_tree_root;
-> > +static DECLARE_RWSEM(kho_radix_tree_root_sem);
->
-> I believe it's clearer to have struct kho_mem_track containing the pointe=
-r
-> to root and the semaphore, e.g.
->
-> struct kho_mem_track {
->         struct kho_mem_tree *root;
->         struct rw_semaphore sem;
-> };
->
-
-Sure.
-
-> > -struct khoser_mem_chunk;
-> > +static inline phys_addr_t kho_radix_tree_desc(struct kho_radix_tree *v=
-a)
->
-> I think kho_mem_tree is a better prefix than kho_radix.
-
-As above, I tend to use `kho_mem_radix_tree`.
-
->
-> > +{
-> > +     return (phys_addr_t)virt_to_phys(va);
-> > +}
-> >
-> > -struct kho_serialization {
-> > -     struct page *fdt;
-> > -     struct list_head fdt_list;
-> > -     struct dentry *sub_fdt_dir;
-> > -     struct kho_mem_track track;
-> > -     /* First chunk of serialized preserved memory map */
-> > -     struct khoser_mem_chunk *preserved_mem_map;
-> > -};
-> > +static inline struct kho_radix_tree *kho_radix_tree(phys_addr_t desc)
->
-> This is not really a 'desc', this is a plain physical address, i.e. 'pa'.
-> It's probably will be clearer to just use phys_to_virt() and virt_to_phys=
-()
-> directly rather than introduce these wrappers.
-
-We had some previous discussions that using helper functions for
-converting between the va and pa. But I agree with what you said that
-"this is not ready a desc". How about "kho_radix_tree(phys_addr_t
-node_pa)", to align with the variable name of the tree iterator below?
-
->
-> > +{
-> > +     return (struct kho_radix_tree *)(phys_to_virt(desc));
-> > +}
-> >
-> > -static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, =
-size_t sz)
-> > +static struct kho_radix_tree *kho_alloc_radix_tree(void)
-> >  {
-> > -     void *elm, *res;
-> > +     return (struct kho_radix_tree *)get_zeroed_page(GFP_KERNEL);
-> > +}
-> >
-> > -     elm =3D xa_load(xa, index);
-> > -     if (elm)
-> > -             return elm;
-> > +static unsigned long kho_radix_encode(phys_addr_t pa, unsigned int ord=
-er)
->
-> This name is really cryptic. Encode to what? Can't say I have great ideas=
-,
-> but this name should reflect that physical address and order are encoded
-> into combined index into the tree.
->
-> Maybe _encode_indices()?
-
-As the "indices" can also refer to an entry of the table in a KHO mem
-radix tree node. We are actually encoding a radix tree key, so may be
-kho_radix_encode_key() ?
-
->
-> > +{
-> > +     /* Order bits part */
-> > +     unsigned long h =3D 1UL << (ORDER_0_LG2 - order);
-> > +     /* Page offset part */
-> > +     unsigned long l =3D pa >> (PAGE_SHIFT + order);
-> >
-> > -     elm =3D kzalloc(sz, GFP_KERNEL);
-> > -     if (!elm)
-> > -             return ERR_PTR(-ENOMEM);
-> > +     return h | l;
-> > +}
-> >
-> > -     res =3D xa_cmpxchg(xa, index, NULL, elm, GFP_KERNEL);
-> > -     if (xa_is_err(res))
-> > -             res =3D ERR_PTR(xa_err(res));
-> > +static phys_addr_t kho_radix_decode(unsigned long encoded, unsigned in=
-t *order)
->
-> The same here. Maybe
->
->         _decode_indices(unsigned long indices, unsigned int *order)
->
-> > +{
-> > +     unsigned int order_bit =3D fls64(encoded);
-> > +     phys_addr_t pa;
-> >
-> > -     if (res) {
-> > -             kfree(elm);
-> > -             return res;
-> > -     }
-> > +     /* order_bit is numbered starting at 1 from fls64 */
-> > +     *order =3D ORDER_0_LG2 - order_bit + 1;
-> > +     /* The order is discarded by the shift */
-> > +     pa =3D encoded << (PAGE_SHIFT + *order);
-> >
-> > -     return elm;
-> > +     return pa;
-> >  }
-> >
-> > -static void __kho_unpreserve(struct kho_mem_track *track, unsigned lon=
-g pfn,
-> > -                          unsigned long end_pfn)
-> > +static unsigned long kho_radix_get_index(unsigned long encoded,
->
-> I don't like 'encoded' here and below as well.
->
-
-If we agree with the name above, I think we can use
-"kho_radix_get_index(unsigned long radix_key" here.
-
-> > +                                      unsigned int level)
-> >  {
-> > -     struct kho_mem_phys_bits *bits;
-> > -     struct kho_mem_phys *physxa;
-> > -
-> > -     while (pfn < end_pfn) {
-> > -             const unsigned int order =3D
-> > -                     min(count_trailing_zeros(pfn), ilog2(end_pfn - pf=
-n));
-> > -             const unsigned long pfn_high =3D pfn >> order;
-> > +     int s;
-> >
-> > -             physxa =3D xa_load(&track->orders, order);
-> > -             if (!physxa)
-> > -                     continue;
-> > +     if (level =3D=3D 0)
-> > +             return encoded % (1 << BITMAP_SIZE_LG2);
-> >
-> > -             bits =3D xa_load(&physxa->phys_bits, pfn_high / PRESERVE_=
-BITS);
-> > -             if (!bits)
-> > -                     continue;
-> > +     s =3D ((level - 1) * TABLE_SIZE_LG2) + BITMAP_SIZE_LG2;
-> > +     return (encoded >> s) % (1 << TABLE_SIZE_LG2);
-> > +}
-> >
-> > -             clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
-> > +static int kho_radix_set_bitmap(struct kho_bitmap_table *bit_tlb,
->
->                                                            ^ bitmap
-
-Yes, let's just call it `struct kho_bitmap`.
-
->
-> > +                             unsigned long offset)
-> > +{
-> > +     if (!bit_tlb ||
-> > +         offset >=3D PAGE_SIZE * BITS_PER_BYTE)
->
-> No need for two lines here
->
-> > +             return -EINVAL;
-> >
-> > -             pfn +=3D 1 << order;
-> > -     }
-> > +     __set_bit(offset, bit_tlb->bitmaps);
-> > +     return 0;
-> >  }
-> >
-> > -static int __kho_preserve_order(struct kho_mem_track *track, unsigned =
-long pfn,
-> > -                             unsigned int order)
-> > +static int kho_radix_preserve_page(phys_addr_t pa, unsigned int order)
-> >  {
-> > -     struct kho_mem_phys_bits *bits;
-> > -     struct kho_mem_phys *physxa, *new_physxa;
-> > -     const unsigned long pfn_high =3D pfn >> order;
-> > +     unsigned long encoded =3D kho_radix_encode(pa, order);
-> > +     struct kho_radix_tree *current_tree, *new_tree;
->
-> current_ is excessive IMHO and 'node' seems to be a better name for a tre=
-e
-> iterator:
->
->         struct kho_radix_tree *node;
->
-> is fine, the new_tree can be declared in the scope that uses it.
->
-> > +     struct kho_bitmap_table *bitmap_table;
->
-> _table is excessive on both the type name and variable name
->
-> > +     unsigned int tree_level =3D TREE_MAX_DEPTH - 1;
->
-> Just 'level' is enough.
->
-> > +     unsigned int err =3D 0;
->
-> err is signed.
->
-> > +     unsigned int i, idx;
-> >
-> > -     might_sleep();
-> > +     down_write(&kho_radix_tree_root_sem);
-> >
-> > -     physxa =3D xa_load(&track->orders, order);
-> > -     if (!physxa) {
-> > -             int err;
-> > +     if (!kho_radix_tree_root) {
->
-> Isn't this an assert?
-> Also I don't see concurrency for accessing the root, the assertion can be
-> outside the lock.
->
-
-Yes, I will add a WARN_ON here.
-
-> > +             err =3D -EINVAL;
-> > +             goto out;
-> > +     }
-> >
-> > -             new_physxa =3D kzalloc(sizeof(*physxa), GFP_KERNEL);
-> > -             if (!new_physxa)
-> > -                     return -ENOMEM;
-> > +     current_tree =3D kho_radix_tree_root;
-> >
-> > -             xa_init(&new_physxa->phys_bits);
-> > -             physxa =3D xa_cmpxchg(&track->orders, order, NULL, new_ph=
-ysxa,
-> > -                                 GFP_KERNEL);
-> > +     /* Go from high levels to low levels */
-> > +     for (i =3D tree_level; i >=3D 0; i--) {
-> > +             idx =3D kho_radix_get_index(encoded, i);
-> >
-> > -             err =3D xa_err(physxa);
-> > -             if (err || physxa) {
-> > -                     xa_destroy(&new_physxa->phys_bits);
-> > -                     kfree(new_physxa);
-> > +             if (i =3D=3D 0) {
-> > +                     bitmap_table =3D (struct kho_bitmap_table *)curre=
-nt_tree;
-> > +                     err =3D kho_radix_set_bitmap(bitmap_table, idx);
->
-> I'd consider making the loop until 'i > 0' and putting this outside the
-> loop.
->
-> > +                     goto out;
-> > +             }
-> > +
->
->                 if (node->table[idx]) {
->                         node =3D kho_radix_tree(node->table[idx]);
->                         continue;
->                 }
->
-> and reduce the indentation for allocating a new table.
->
-> > +             if (!current_tree->table[idx]) {
-> > +                     new_tree =3D kho_alloc_radix_tree();
-> > +                     if (!new_tree) {
-> > +                             err =3D -ENOMEM;
-> > +                             goto out;
-> > +                     }
-> >
-> > -                     if (err)
-> > -                             return err;
-> > +                     current_tree->table[idx] =3D
-> > +                             kho_radix_tree_desc(new_tree);
-> > +                     current_tree =3D new_tree;
-> >               } else {
-> > -                     physxa =3D new_physxa;
-> > +                     current_tree =3D kho_radix_tree(current_tree->tab=
-le[idx]);
-> >               }
-> >       }
-> >
-> > -     bits =3D xa_load_or_alloc(&physxa->phys_bits, pfn_high / PRESERVE=
-_BITS,
-> > -                             sizeof(*bits));
-> > -     if (IS_ERR(bits))
-> > -             return PTR_ERR(bits);
-> > +out:
-> > +     up_write(&kho_radix_tree_root_sem);
-> > +     return err;
-> > +}
-> > +
-> > +static int kho_radix_walk_bitmaps(struct kho_bitmap_table *bit_tlb,
-> > +                               unsigned long encoded,
-> > +                               kho_radix_tree_walk_callback_t cb)
-> > +{
-> > +     unsigned long *bitmap =3D (unsigned long *)bit_tlb;
-> > +     unsigned int i;
-> > +     int err =3D 0;
-> > +
-> > +     for_each_set_bit(i, bitmap, PAGE_SIZE * BITS_PER_BYTE) {
-> > +             err =3D cb(encoded | i);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> >
-> > -     set_bit(pfn_high % PRESERVE_BITS, bits->preserve);
-> > +     return 0;
-> > +}
-> > +
-> > +static int kho_radix_walk_trees(struct kho_radix_tree *root, unsigned =
-int level,
->
-> static int kho_radix_walk_tree(struct kho_radix_tree *parent, ...
->
-> > +                             unsigned long start,
-> > +                             kho_radix_tree_walk_callback_t cb)
-> > +{
-> > +     struct kho_radix_tree *next_tree;
->
->         struct kho_radix_tree *node;
->
-> > +     struct kho_bitmap_table *bitmap_table;
->
->                                 ^ bitmap;
->
-> > +     unsigned long encoded, i;
-> > +     unsigned int level_shift;
->
-> This can move to the scope where it's used and 'shift' would be enough.
->
-> > +     int err =3D 0;
->
-> ...
->
-> > +static int __kho_preserve_order(unsigned long pfn, unsigned int order)
-> > +{
-> > +     unsigned long pa =3D PFN_PHYS(pfn);
-> > +
-> > +     might_sleep();
-> > +
-> > +     return kho_radix_preserve_page(pa, order);
->
-> I don't think that __kho_preserve_order() wrapper is useful, just rename
-> kho_radix_preserve_page to __kho_preserve_order()
-
-Will merge both.
-
->
-> > +}
-> > +
-> >  /* almost as free_reserved_page(), just don't free the page */
-> >  static void kho_restore_page(struct page *page, unsigned int order)
-> >  {
-> > @@ -224,152 +385,49 @@ struct folio *kho_restore_folio(phys_addr_t phys=
-)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kho_restore_folio);
->
-> ...
->
-> > -static int kho_mem_serialize(struct kho_serialization *ser)
-> > +static int __init kho_radix_walk_trees_memblock_callback(unsigned long=
- encoded)
->
-> I wonder if we expect other callbacks for tree traversal?
-> For now there's only one case when we traverse the tree, so it seems
-> simpler to just merge the code here into kho_radix_walk_bitmaps() and
-> rename kho_radix_walk_trees() and kho_radix_walk_bitmaps() to reflect tha=
-t
-> they are reserving the preserved memory.
->
-
-Currently only `kho_radix_walk_trees_memblock_callback()` is used in
-tree walking, but having a callback in the tree walking helps for
-debugging the KHO mem tree. I can imagine that we can have different
-build options for different callbacks. If there is no big objection, I
-tend to keep the callback.
-
-> >  {
-> > +     unsigned int order;
-> > +     unsigned long pa;
-> > +     struct page *page;
-> > +     int sz;
-> >
-> > +     pa =3D kho_radix_decode(encoded, &order);
-> > +     sz =3D 1 << (order + PAGE_SHIFT);
-> > +     page =3D phys_to_page(pa);
-> >
-> > +     /* Reserve the memory preserved in KHO radix tree in memblock */
-> > +     memblock_reserve(pa, sz);
-> > +     memblock_reserved_mark_noinit(pa, sz);
-> > +     page->private =3D order;
-> >  }
-> >
-> >  static void __init kho_mem_deserialize(const void *fdt)
->
-> Well, it's not deserialize anymore.
-
-Yeah, I did think about this name too... How about  kho_mem_retrieve() ?
-
->
-> >  {
-> > @@ -599,6 +657,35 @@ static int kho_debugfs_fdt_add(struct list_head *l=
-ist, struct dentry *dir,
-> >       return 0;
-> >  }
->
-> It seems that a lot of the changes below are not related to changing the
-> mechanism for tracking the preserved memory.
->
-> I'm stopping here.
->
-> --
-> Sincerely yours,
-> Mike.
-
-Thanks again, Mike.
 
