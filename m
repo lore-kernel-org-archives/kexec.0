@@ -4,70 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0532CCFA00
-	for <kexec@archiver.kernel.org>; Mon,  3 Nov 2025 02:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96D00CCF9F8
+	for <kexec@archiver.kernel.org>; Mon,  3 Nov 2025 03:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=X2q0M43HiImC77msPAox01Eekne3kZwBQne5m3Gl0v0=; b=uw+0sGkTWV8OxBdnn8eMncfi8g
-	Mg7dPYn0UW1cV65BLoe1GlpDoSXRS19lzXuhTVY0vMDf98tLvoP489va04PlHdHParcZRxLt14/n4
-	7L4jWavj+kr2DCLOoh7m8h54Uxa51rMFbGMycSDv11S4F0ss8nnDYGmjRWiMYAWGXkk8RJAVavlGB
-	1+1kiBVrnTbU8UxEY6sEwhYINh8/qvO0YNhnNI8STcApqyUR8DDEaOFcB8hFTsrDUP3ATjvtM017R
-	hPAXrDa9NfCYBXtZUXnyO6pWk9Li+5bHTBps4u0Vy4v3SQ2JKCSRQwSnEW6qM0gunxKhRC9HKGGcB
-	CMIIeM0w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=jG0Iw6QpT58oATgb/oO5UhFDe0HY8lXWzUzsrRiKGis=; b=TJwSGe0P9JrYF+2b/s5hG/1rlZ
+	YneQxr19huF7gBhv0MMlHS7twiKSt52sdh/3r45gL0bgk5vIsWG2rWbZpLm5W10Sdy+jwHMqrd5u0
+	jPitN8UqnCsCLsqKIgPUgk8CubJZoxs3xdCfnxNoH7KWpwys/A4vwqlI+R/1TE56V/BGutvEnCNhR
+	fblIJMzwMdqgQs8/gpV0LjYfoNjZF3FWm24bjsj5w5Fkpf8AA0xF4NV9jrmJzyrcBDz+sjhdEBqdg
+	r7w7svL7ixfxVSFZqoemiIPUTH69gCfovxd8GOV2vBVrPSJly4ScB9Ga+HHkCWLT37fAc9TsrP955
+	9mS9ovZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFkiu-000000095cm-1A7V;
-	Mon, 03 Nov 2025 02:55:12 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vFlit-000000099wj-27N0;
+	Mon, 03 Nov 2025 03:59:15 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFkio-000000095cI-1HbW
+	id 1vFlir-000000099wF-02g6
 	for kexec@lists.infradead.org;
-	Mon, 03 Nov 2025 02:55:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762138504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X2q0M43HiImC77msPAox01Eekne3kZwBQne5m3Gl0v0=;
-	b=HiVpjgHPwmZO0Qr8g0guWKUCP+wNpBeGIEMNCZWBM9fHdH2zJjajatkmcn/5bCYQK1MR4v
-	9ReNMd95MNthLvmxlRI6Ml07bWbb88C4HMWhF09POkRdO2Of9Si3c4h55Lf0ct7zgBSOOP
-	58t2YcThmhQeNrox3CtyXX+5VuTk7mA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-98-ESv9nNmDPxqM20Jo0oTHrQ-1; Sun,
- 02 Nov 2025 21:54:59 -0500
-X-MC-Unique: ESv9nNmDPxqM20Jo0oTHrQ-1
-X-Mimecast-MFC-AGG-ID: ESv9nNmDPxqM20Jo0oTHrQ_1762138498
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E962195606C;
-	Mon,  3 Nov 2025 02:54:56 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.98])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E8DDC30001A1;
-	Mon,  3 Nov 2025 02:54:54 +0000 (UTC)
-Date: Mon, 3 Nov 2025 10:54:50 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Zhen Lei <thunder.leizhen@huawei.com>, kexec@lists.infradead.org
-Subject: Re: [PATCH] crash: fix crashkernel resource shrink
-Message-ID: <aQgZekkvdC6Ekq8V@MiWiFi-R3L-srv>
-References: <20251101193741.289252-1-sourabhjain@linux.ibm.com>
+	Mon, 03 Nov 2025 03:59:14 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A2MhkbD023007;
+	Mon, 3 Nov 2025 03:59:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=jG0Iw6QpT58oATgb/oO5UhFDe0HY8lXWzUzsrRiKG
+	is=; b=aax2FDu9n376TJwfD54rCLYC7q2UGmPSnL5riagy+GhZ1wmBmyZwjILbM
+	k5Ew1FdBsL5loAsTBRiz40qgohur53TuvwkK1uNgvV1SF/LLmczM52Tc8NxeTcb0
+	/VFAkMdEWcrxVtjRXpVuvBzYT0WzWc4J0zbqU7uK6gABxfP/bXDwjsVxNezazt7r
+	61myYdl4zWy2glsley5Ly57JeDbq02S/lqq1vm1I95IanE5uZ1UIXS8xKkzTSa81
+	CYtlB36eZIq9ixjnH5JErT5HEa+WdgdxHIeslBZZiXUiPDXAEIJkMcBworB36yWy
+	Xakz4R/Hh4wZgRLuDznMH6nYr7lfQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59xbmtp8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 03:59:10 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A31pgbc025605;
+	Mon, 3 Nov 2025 03:59:10 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5vhsbvad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 03:59:09 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A33x6qK53019130
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Nov 2025 03:59:06 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 20C522004E;
+	Mon,  3 Nov 2025 03:59:06 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 147182004B;
+	Mon,  3 Nov 2025 03:59:04 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Nov 2025 03:59:03 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Jiri Bohac <jbohac@suse.cz>, Shivang Upadhyay <shivangu@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+Subject: [PATCH 0/2] Export kdump crashkernel CMA ranges
+Date: Mon,  3 Nov 2025 09:28:57 +0530
+Message-ID: <20251103035859.1267318-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251101193741.289252-1-sourabhjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfX9Jv2DGNs4KoA
+ P41p2b9x0mrajMEf6XE3CfSv0pzvi0v3t8xhfN5hPSoW+IQoyYid9FhDoHw+Tb1mueDJhNatOZ0
+ H1BpTzgLqxhc1Xf84mSWeCRBF8Nw5aoIdwoxxHO3USYmut0EurYjf63Eokv30r9PC0qBri5Uq39
+ faQt8hcTxElT3soEAhMmEsuusQ94pBqjDE8aiJ1NNz2E4rF6kkIOv+hZflqRatd0KXVmg/9Agmi
+ jUfzalRPUMuBiDYE1oD+Z/DRFw2d4pVuktCU59Mz4ye+eF5cmpAx6R8G2H8dzvFkdC0B3q0oHC1
+ 3bgoCkNuS5sET0LcmINSXKOKZ20Yq0fwR7YK87aCKjw9MOPL3am44VUc7vPkn7M5uS9orz2EkWz
+ H7R+ZCdRJMYYb6EXj1iUAaijsqoNwA==
+X-Proofpoint-GUID: IoHpLgL9Ckx4FvbHmod1NksDnf2MPXun
+X-Authority-Analysis: v=2.4 cv=OdCVzxTY c=1 sm=1 tr=0 ts=6908288f cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8
+ a=VnNF1IyMAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8 a=bBV_4OgQmAgx81cr9awA:9
+ a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22 a=1CNFftbPRP8L7MoqJWF3:22
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: IoHpLgL9Ckx4FvbHmod1NksDnf2MPXun
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-02_02,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010021
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251102_185506_443691_71B055A0 
-X-CRM114-Status: GOOD (  22.63  )
+X-CRM114-CacheID: sfid-20251102_195913_417543_C37D8DDD 
+X-CRM114-Status: GOOD (  15.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,82 +116,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/02/25 at 01:07am, Sourabh Jain wrote:
-> When crashkernel is configured with a high reservation, shrinking its
-> value below the low crashkernel reservation causes two issues:
-> 
-> 1. Invalid crashkernel resource objects
-> 2. Kernel crash if crashkernel shrinking is done twice
-> 
-> For example, with crashkernel=200M,high, the kernel reserves 200MB of
-> high memory and some default low memory (say 256MB). The reservation
-> appears as:
-> 
-> cat /proc/iomem | grep -i crash
-> af000000-beffffff : Crash kernel
-> 433000000-43f7fffff : Crash kernel
-> 
-> If crashkernel is then shrunk to 50MB (echo 52428800 >
-> /sys/kernel/kexec_crash_size), /proc/iomem still shows 256MB reserved:
-> af000000-beffffff : Crash kernel
-> 
-> Instead, it should show 50MB:
-> af000000-b21fffff : Crash kernel
-> 
-> Further shrinking crashkernel to 40MB causes a kernel crash with the
-> following trace (x86):
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000038
-> PGD 0 P4D 0
-> Oops: 0000 [#1] PREEMPT SMP NOPTI
-> <snip...>
-> Call Trace: <TASK>
-> ? __die_body.cold+0x19/0x27
-> ? page_fault_oops+0x15a/0x2f0
-> ? search_module_extables+0x19/0x60
-> ? search_bpf_extables+0x5f/0x80
-> ? exc_page_fault+0x7e/0x180
-> ? asm_exc_page_fault+0x26/0x30
-> ? __release_resource+0xd/0xb0
-> release_resource+0x26/0x40
-> __crash_shrink_memory+0xe5/0x110
-> crash_shrink_memory+0x12a/0x190
-> kexec_crash_size_store+0x41/0x80
-> kernfs_fop_write_iter+0x141/0x1f0
-> vfs_write+0x294/0x460
-> ksys_write+0x6d/0xf0
-> <snip...>
-> 
-> This happens because __crash_shrink_memory()/kernel/crash_core.c
-> incorrectly updates the crashk_res resource object even when
-> crashk_low_res should be updated.
-> 
-> Fix this by ensuring the correct crashkernel resource object is updated
-> when shrinking crashkernel memory.
-> 
-> Fixes: 16c6006af4d4 ("kexec: enable kexec_crash_size to support two crash kernel regions")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Zhen Lei <thunder.leizhen@huawei.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  kernel/crash_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 3b1c43382eec..99dac1aa972a 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -373,7 +373,7 @@ static int __crash_shrink_memory(struct resource *old_res,
->  		old_res->start = 0;
->  		old_res->end   = 0;
->  	} else {
-> -		crashk_res.end = ram_res->start - 1;
-> +		old_res->end = ram_res->start - 1;
+/sys/kernel/kexec_crash_cma_ranges to export all CMA regions reserved
+for the crashkernel to user-space. This enables user-space tools
+configuring kdump to determine the amount of memory reserved for the
+crashkernel. When CMA is used for crashkernel allocation, tools can use
+this information to warn users that attempting to capture user pages
+while CMA reservation is active may lead to unreliable or incomplete
+dump capture.
 
-It's a code bug, nice catch, thanks.
+While adding documentation for the new sysfs interface, I realized that
+there was no ABI document for the existing kexec and kdump sysfs
+interfaces, so I added one.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+The first patch adds the ABI documentation for the existing kexec and
+kdump sysfs interfaces, and the second patch adds the
+/sys/kernel/kexec_crash_cma_ranges sysfs interface along with its
+corresponding ABI documentation.
+
+*Seeking opinions*
+There are already four kexec/kdump sysfs entries under /sys/kernel/,
+and this patch series adds one more. Should we consider moving them to
+a separate directory, such as /sys/kernel/kexec, to avoid polluting
+/sys/kernel/? For backward compatibility, we can create symlinks at
+the old locations for sometime and remove them in the future.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Jiri Bohac <jbohac@suse.cz>
+Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kexec@lists.infradead.org
+
+Sourabh Jain (2):
+  Documentation/ABI: add kexec and kdump sysfs interface
+  crash: export crashkernel CMA reservation to userspace
+
+ .../ABI/testing/sysfs-kernel-kexec-kdump      | 53 +++++++++++++++++++
+ kernel/ksysfs.c                               | 17 ++++++
+ 2 files changed, 70 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+
+-- 
+2.51.0
 
 
