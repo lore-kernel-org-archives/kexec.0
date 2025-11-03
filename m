@@ -4,59 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FCE3CCF9F8
-	for <kexec@archiver.kernel.org>; Mon,  3 Nov 2025 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9AD25CCF9F8
+	for <kexec@archiver.kernel.org>; Mon,  3 Nov 2025 18:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OKtfTX6p+YHeic6n4Wv3jNDv9OpjNDhge2Ceh/S4hIY=; b=cPbBeRGN6EC8SRl661JT8KMWE9
-	V6r1LebCiWiCnfO8jZEZovK89KBQNieHVZVNNm6Ko3ZwxJtDAa8mMoXzSo+RjrptbA4rPgL6kYN3o
-	WcY+klDhZRVTB+8GBWs9tedG8V+ZitpdrdOf7hCASPITqYVA/16rQLPQrBKz1yWUSTo3B2BcIUaT8
-	XZV26KhVbzSvt5sL6uaOejx0MhtTJ8bFRcOPp8aeFKsJc8z2/HdCd3BNe6cWKDNqRk0uE/MAJqdfJ
-	AMijoHPCbJrp3ctoGkWydvw5L/3JdQlolCCj03CVTOIS5CstZduLkdGST3xMrqG5S9ZUq5QgluQ08
-	e9dEsceQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Pei6vbmGLhErGC3eN8KTGQTS7SSeKvTLHuMiLPn2HO0=; b=KRF/F2yDcGROyhm4d5feeDWiGp
+	fQwbiMVmMRypW3URQcW3R5WJr8uojXI5QRcO7CJrbmhjep9IAeVK7PwwtQ5emXJlW9YyMvEJin1Px
+	ZFpK52jL1VUX+z1wEKoXWZWlbRh9ivh3Y78jYSM2YFEI/FkZPtrXIxl5Z5pRyAn/J2vSuuNWwmN/W
+	3wb0q87MQPSNQOGvLB7JMx53spuDYfR4mgd08RWkPr4c8Rgt3oNuy4sywKT5CZh92PRtfodGPN0yj
+	lhE01TcT0n0MFbu8ymAgf6CAGJRbmmhtkjQ9yAuVXNO5fx3nq1pa6WKTPTqWAt3HKLupaIejvFXko
+	bP13lMKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFxs5-0000000AMo8-1WXE;
-	Mon, 03 Nov 2025 16:57:33 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vFytB-0000000AS0I-0ern;
+	Mon, 03 Nov 2025 18:02:45 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFxs4-0000000AMnc-0WkA
+	id 1vFyt8-0000000ARzi-29h8
 	for kexec@lists.infradead.org;
-	Mon, 03 Nov 2025 16:57:32 +0000
+	Mon, 03 Nov 2025 18:02:43 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 86A4460139;
-	Mon,  3 Nov 2025 16:57:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564D7C4CEE7;
-	Mon,  3 Nov 2025 16:57:28 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D433B41E48;
+	Mon,  3 Nov 2025 18:02:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DE5C4CEE7;
+	Mon,  3 Nov 2025 18:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762189051;
-	bh=UXbyL0c4gAKXyaDUG6J01Z7qz3xy2A7gPJAePIXHk4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b5oNCpeXpk2uZyGZqBHEsvT/hu0avc8wvFDKDf/GNIctuNY4LZzu7oKF3BcrtP152
-	 krdL00sj+nAvuQJ7luVVgQZBHtZLG+ESOvSYRXYtd9okIy9M1kuE4DJ8+BtrrOcay0
-	 hxJtbn+ZQSFnv5Dk4evrInz5BKWwCvw9qLMCNPM5TgR9adqRa0ua75zNlC15uhXUyq
-	 arfewDLc70AnhMi5JT+O/G3ShaUUNkej4oHy9sxxYAunMtwrAlnlKxfiC9kME8LDXe
-	 wpfQqZFeNAEnF+mJNTKDYKMtOdbaWXl14nGiYny7DOAMOLe9+1892E8GGaFEn7AtvV
-	 C8V3fDWrEBf9g==
-Date: Mon, 3 Nov 2025 18:57:24 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+	s=k20201202; t=1762192961;
+	bh=eG5n+gndF8e0beK2oqNvA+G9a2E4qmKoofNCVIki7n4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cJ/rnIsGFyt798HOUhwVpAhp5rwBCX7jIcMn8RxznG/cDU4jT+533agy4CoUEXWMC
+	 qP8kyYGV4derqCSEXkw56mboX+61rvDl58m3aUTlbh6uu2rctWhg80uaIndVzvS7VL
+	 jMRXtocc8Zn3SKwXsXOP2JWtD20jLWMCQyITPrqWpE9DsgEXVou0q20yjllsvZ56iX
+	 VKe8wRq6PWssnv+WWmI9ZE5iVyx9KD8rbOUUCqalmWI7BzYqK8uO6EpcnpSkt6GyLx
+	 sun/Jx3GFdow/+wsHZ/QQ6nYRsyE0Y6IM6srZ8nD+Vk2XLpjhc73omoji3gg7yn+z8
+	 qP1hoheL45Zuw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
 	Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: kexec@lists.infradead.org,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kho: fix out-of-bounds access of vmalloc chunk
-Message-ID: <aQje9CFnTymbkUlM@kernel.org>
-References: <20251103110159.8399-1-pratyush@kernel.org>
+Subject: [PATCH 0/2] kho: misc fixes
+Date: Mon,  3 Nov 2025 19:02:30 +0100
+Message-ID: <20251103180235.71409-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.51.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103110159.8399-1-pratyush@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251103_100242_568605_F1DF8DA2 
+X-CRM114-Status: UNSURE (   7.94  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,63 +76,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Nov 03, 2025 at 12:01:57PM +0100, Pratyush Yadav wrote:
-> The list of pages in a vmalloc chunk is NULL-terminated. So when looping
-> through the pages in a vmalloc chunk, both kho_restore_vmalloc() and
-> kho_vmalloc_unpreserve_chunk() rightly make sure to stop when
-> encountering a NULL page. But when the chunk is full, the loops do not
-> stop and go past the bounds of chunk->phys, resulting in out-of-bounds
-> memory access, and possibly the restoration or unpreservation of an
-> invalid page.
-> 
-> Fix this by making sure the processing of chunk stops at the end of the
-> array.
-> 
-> Fixes: a667300bd53f2 ("kho: add support for preserving vmalloc allocations")
-> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+This series has a couple of misc fixes for KHO I discovered during code
+review and testing.
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The series is based on top of [0] which has another fix for the function
+touched by patch 1. I spotted these two after sending the patch. If that
+one needs a reroll, I can combine the three into a series.
 
-> ---
-> 
-> Notes:
->     Commit 89a3ecca49ee8 ("kho: make sure page being restored is actually
->     from KHO") was quite helpful in catching this since kho_restore_page()
->     errored out due to missing magic number, instead of "restoring" a random
->     page and causing errors at other random places.
-> 
->  kernel/kexec_handover.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index 76f0940fb4856..cc5aaa738bc50 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -869,7 +869,7 @@ static void kho_vmalloc_unpreserve_chunk(struct kho_vmalloc_chunk *chunk)
->  
->  	__kho_unpreserve(track, pfn, pfn + 1);
->  
-> -	for (int i = 0; chunk->phys[i]; i++) {
-> +	for (int i = 0; i < ARRAY_SIZE(chunk->phys) && chunk->phys[i]; i++) {
->  		pfn = PHYS_PFN(chunk->phys[i]);
->  		__kho_unpreserve(track, pfn, pfn + 1);
->  	}
-> @@ -992,7 +992,7 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
->  	while (chunk) {
->  		struct page *page;
->  
-> -		for (int i = 0; chunk->phys[i]; i++) {
-> +		for (int i = 0; i < ARRAY_SIZE(chunk->phys) && chunk->phys[i]; i++) {
->  			phys_addr_t phys = chunk->phys[i];
->  
->  			if (idx + contig_pages > total_pages)
-> 
-> base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
-> -- 
-> 2.47.3
-> 
+[0] https://lore.kernel.org/linux-mm/20251103110159.8399-1-pratyush@kernel.org/
 
+Pratyush Yadav (2):
+  kho: fix unpreservation of higher-order vmalloc preservations
+  kho: warn and exit when unpreserved page wasn't preserved
+
+ kernel/kexec_handover.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+prerequisite-patch-id: fce7dcea45c85bac06a559d06f038e9c0cb38b17
 -- 
-Sincerely yours,
-Mike.
+2.47.3
+
 
