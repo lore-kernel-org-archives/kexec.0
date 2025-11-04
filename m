@@ -4,122 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C02F0CCF9E3
-	for <kexec@archiver.kernel.org>; Tue,  4 Nov 2025 09:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4CB38CCFA00
+	for <kexec@archiver.kernel.org>; Tue,  4 Nov 2025 10:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cm8ohofdl8x8t8svbS9cTI+oNVT/LIoR61TMRnkuXOs=; b=t6vPPtrtynk7MJJfy/Shey6ZBP
-	ev5NRYZnn3YUjKvZfqK3TPLjzXl4zA7fSt/IT2LwsSKbTooBDWVIqoR+B89SbjeDD3JIHBeF7eiIw
-	C6XdHuh5v39zLzcAxXxeCOiuCbJm3bTve+2jXfLIwbbnMWOtHqeiz8yM+7h3xw3uURIlxIwBwExN8
-	aOCokkR5JhciMQiXkRMORvILOXncov2P2HxKJ9JxttM0jsMvBDTXgTd4u67lRMNPgN0RirKKPM6qf
-	sNZyRVKygsQc/U8mv+M2kCha1TECTGZFnLaB1WC5OJ98rDwhClpJVKGxs8oy4xjpPYZ+twJ0+YsOV
-	iB4XMuZQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:References:Message-ID:Date:
+	In-Reply-To:Subject:Cc:To:From:Reply-To:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=owDawV/cnKyMwzi7YiANe4vB27Qq/ThAIZ5MpALecMg=; b=U5uW0beCavaS1ZCX8u5uHOiaF4
+	slhyxLu8nzF2nJCrh6mjZJOUzuT+4dfz3QaNAZnbE0fhZWhws/on5ns81mEIsqrJLtcga/QfJruzM
+	gvlxJUx4yn2/rDy2GHunxp783NdfvWaj5wwILgwxaDabGhV5BtpoqOHdDx0YA19euxNz3LH9fT+5j
+	31PL0/rJwdE8UT1oQt1fJDZW0FSDxUe4yvl7srxuMmb+AvbDg67oMyMHdAdYmZMeUSwqZUbxhVUY2
+	AH7Fq0x0cIT4VsJgErfnH9ZPpLYriXCpXxheubpxtjtVZ4h5EPhr9dGq0ogUnInoTHtreu4/QyFOK
+	Gh6ISoHQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGDRK-0000000BXfM-2yuM;
-	Tue, 04 Nov 2025 09:34:58 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vGEDT-0000000BbiF-23Xa;
+	Tue, 04 Nov 2025 10:24:43 +0000
+Received: from mail-pl1-x62c.google.com ([2607:f8b0:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGDRG-0000000BXeU-37wz
+	id 1vGEDQ-0000000BbhA-3QLf
 	for kexec@lists.infradead.org;
-	Tue, 04 Nov 2025 09:34:56 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A43A6d6012681;
-	Tue, 4 Nov 2025 09:34:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=cm8oho
-	fdl8x8t8svbS9cTI+oNVT/LIoR61TMRnkuXOs=; b=JJlEH/4/gLX+8aC2XD6AC8
-	nImaFYBkS4gHnZ6R41m7zZt7mBmatGt4cMMruCPxRZ0dOM7oixoLYCp3iML//exm
-	hPK7Zn90CXK6llHt0AAPqCZ6+Ma8ZMozFfOVN9YeE2SqY4L9G6d47PN/YjEbVZJW
-	qrle9uNSZM1lxnyG6WaDRCJLbcB4zsk3ROwD4dTbnao+YvPtCvfptH3ICqv9ngPk
-	wxlCqTNV5W+WWogMb/zaYhSV1RJ/PCW0EscAb3XeYxM9XY8m9rCeiONXYNNtwUE3
-	kaaT452dS5GMJlvr6vmZWc3Y7rDAyM326NTFjj4AFJ10DJeE7hdC46JUpDncntCA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59v1u0pg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Nov 2025 09:34:46 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A49Yjpa002806;
-	Tue, 4 Nov 2025 09:34:46 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59v1u0pe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Nov 2025 09:34:45 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A46e6E0009877;
-	Tue, 4 Nov 2025 09:34:45 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5x1kaa22-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Nov 2025 09:34:45 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A49YfN757606498
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Nov 2025 09:34:41 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D7B82004B;
-	Tue,  4 Nov 2025 09:34:41 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B16AA20040;
-	Tue,  4 Nov 2025 09:34:38 +0000 (GMT)
-Received: from [9.109.204.116] (unknown [9.109.204.116])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Nov 2025 09:34:38 +0000 (GMT)
-Message-ID: <ea44849c-9d0f-43cc-9476-42bc619728f6@linux.ibm.com>
-Date: Tue, 4 Nov 2025 15:04:37 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] powerpc/kdump: Add support for crashkernel CMA
- reservation
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc: Baoquan he <bhe@redhat.com>, Jiri Bohac <jbohac@suse.cz>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>, kexec@lists.infradead.org
-References: <20251103043747.1298065-1-sourabhjain@linux.ibm.com>
- <87y0on4ebh.ritesh.list@gmail.com>
- <7957bd55-5bda-406f-aab3-64e0620bd452@linux.ibm.com>
-Content-Language: en-US
+	Tue, 04 Nov 2025 10:24:41 +0000
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-294fb21b160so37853185ad.1
+        for <kexec@lists.infradead.org>; Tue, 04 Nov 2025 02:24:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762251879; x=1762856679; darn=lists.infradead.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=owDawV/cnKyMwzi7YiANe4vB27Qq/ThAIZ5MpALecMg=;
+        b=hD2V5QxtHE6NbVRoZBTn+et7ueixjr2YwxVcuPA4BoCK1gXgYP1PAqjyiP5dEmejaM
+         xkrmtvRc7SL6+zgEK6mFbIwLhAeEJhafQDOwRfY0jJf0L+dR+Txd0nk6ks3zPH96ie07
+         /VSG8V+PxTCdpjaOzN7fpcJEP235KnRrHc2yH4y1DPxLBDS63o4H8jSElEsQ5loU2i5J
+         i1AMMXPvhyx5h6M3Y0S3P6bJngKoMtIt5n2cMvSq4j1kEJfldB+yN0A5ko6Rj96Qrled
+         30xSLht5IShz1GImRDlKK2Rt94BAWGcgVbxOQdsdfoP/HMewW95f7YwOJamHFD8puG0c
+         6VHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762251879; x=1762856679;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=owDawV/cnKyMwzi7YiANe4vB27Qq/ThAIZ5MpALecMg=;
+        b=HlpeaggUbdt2tXKuD7fPBPXHTPF2ESzt9CZHJkF/R4J7fxX7OdCTehCLhEcwgydFMx
+         Mc8rJCZjpKypekRw5+UOYkA3feZcG1GuKGZFH8bElE725tGuQ59zuIW5uR5QWt9M5V0g
+         7lI1H9aWsrt50iCf4BEPvuGhZHr9PTmuaHkLJcUOXBBsWwHLrgT8FKjJH2Gf9psLN89m
+         RFHfWfSUUD/1x6Fztg0J719oMzVZsaFQla4fYzB/MP+XvE43o7j0qZ301xO4V6ECjFPJ
+         vYdY2t5SeKUzhl5cqgqTur8ZEKVjFj5v5cFcNh0BKNH9vEKA88sd0hTCJFznALSbNIl9
+         qq8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVv0d4ewdPi11A74LrA/a+BBJkJPHtSQqfLbU4qUg6SJ2hLTlCMuih17XThueXbxcZ8t+/mGA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyNXUBGIxSu1/KY2mgSMVz58Wj5EAXNMSea92j51S3dpvQ1n4GN
+	j+yIL5yb/adRB1NqDIBOo1X+T/KGZlDfD6e9mPBYjsrWUpCYO6K7N3xkc0rU4KU/
+X-Gm-Gg: ASbGncvSTdWSSVi4+1Yyo7By6c+aam+PGzWKOEHREPe0yy7xjJfAJFpX6w/v6IinsCw
+	8wSpDzAJbZs1AjScp6kfzLADrsP9w3NaAw/e8s8kOOGwnHyWSWjR2Qc90ENp46Y4PpZb1t6Amf3
+	WafboaF5a29j7NjthDHDppOzm2UEmF+be/aDjrIgmm/+kWjax6zebui94fx/ollVqYs9XgZ0HH1
+	HTiOKEBl9tBpqnAz3R72N38ay6kEED6ysAnnVk4zx/F6U5hizjJLf4+ecOeGJST2L5wTNfS5boe
+	8PJCV1npkvwgwlXkJTyGlEfKW0+1zpkFyFzmXW2XhLufdkLnNytg3IdHCNTExIQ/1WtufNFZTn2
+	kQMurc82DoR6J5pvJSOtCrZhQZptlsGssO36K2t5wEiNELcuyoyoE1evFoy2D4Jk0mvloBA==
+X-Google-Smtp-Source: AGHT+IEu4ISs/3Zx+zO0qMNXn+InIequcG2BrEwlpQjYK4nng9gbF8T2Q1dyWzpa23EPsiCBGAeVBw==
+X-Received: by 2002:a17:903:41cc:b0:295:7b85:2f5f with SMTP id d9443c01a7336-2957b8530eemr103346575ad.31.1762251879495;
+        Tue, 04 Nov 2025 02:24:39 -0800 (PST)
+Received: from dw-tp ([171.76.85.117])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2960199832asm21393245ad.26.2025.11.04.02.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Nov 2025 02:24:38 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Baoquan he <bhe@redhat.com>, Jiri Bohac <jbohac@suse.cz>, Hari Bathini <hbathini@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Mahesh Salgaonkar <mahesh@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Shivang Upadhyay <shivangu@linux.ibm.com>, kexec@lists.infradead.org
+Subject: Re: [PATCH v5] powerpc/kdump: Add support for crashkernel CMA reservation
 In-Reply-To: <7957bd55-5bda-406f-aab3-64e0620bd452@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: znfR5Pxw2vfiWQeSSFjfjk4DyFZh13ST
-X-Proofpoint-ORIG-GUID: ZAldhUSWiLiHIC2XZw6kiAV0OnldeOJr
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfX1tTxv6CRqIVZ
- t1nf4gzlw3xmB3Qu9nbGP9yY/O4zB4ZRhxpGBeRAM+WO8DHf2mtCfstgoaxXBouCw9KrbE3AggA
- 2BxwnWgZfY3VElKrdBBlH1eNE7BPf+QfxqWgzW/JQz6NZADZ91YunuxyJYgLRM97wB9S563LZBI
- 4ZigFP6CWhuhsoBjChUZpIOUD/g8M7kyUHKWG7NGB0zfV8kiEswi7oN5Ey07RMyrTDUM1iuGgkl
- +hYO3GakcwhAyYjIgFdMr+guD8oCFj2GcUtGnO6oAcmfKqCRzcDTTUCqiwtiaKQ9q2hxYr6JUeh
- F1XlkKpp0mh5JwzrNXol/ZSRnL/poAdYW8kWF3BPyc3bd4LHNKMLDNv5tSWyV8TE0dFY69uZY8i
- MRGRGkeeqq0LQK4ofES1ubFqlSg3pg==
-X-Authority-Analysis: v=2.4 cv=H8HWAuYi c=1 sm=1 tr=0 ts=6909c8b6 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=JfrnYn6hAAAA:8
- a=jZA0fL0DCMBm6u-czYMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-03_06,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010021
+Date: Tue, 04 Nov 2025 15:48:48 +0530
+Message-ID: <87wm463xtj.ritesh.list@gmail.com>
+References: <20251103043747.1298065-1-sourabhjain@linux.ibm.com> <87y0on4ebh.ritesh.list@gmail.com> <7957bd55-5bda-406f-aab3-64e0620bd452@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251104_013455_081362_969C1F92 
-X-CRM114-Status: GOOD (  43.27  )
+X-CRM114-CacheID: sfid-20251104_022440_860208_4DEF2598 
+X-CRM114-Status: GOOD (  10.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -134,340 +92,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Sourabh Jain <sourabhjain@linux.ibm.com> writes:
 
 
-On 04/11/25 10:48, Sourabh Jain wrote:
->
->
-> On 03/11/25 15:40, Ritesh Harjani (IBM) wrote:
->> Sourabh Jain <sourabhjain@linux.ibm.com> writes:
->>
->>> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
->>> crashkernel= command line option") and commit ab475510e042 ("kdump:
->>> implement reserve_crashkernel_cma") added CMA support for kdump
->>> crashkernel reservation.
->>>
->>> Extend crashkernel CMA reservation support to powerpc.
->>>
->>> The following changes are made to enable CMA reservation on powerpc:
->>>
->>> - Parse and obtain the CMA reservation size along with other 
->>> crashkernel
->>>    parameters
->>> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump
->>> - Include the CMA-reserved ranges in the usable memory ranges for the
->>>    kdump kernel to use.
->>> - Exclude the CMA-reserved ranges from the crash kernel memory to
->>>    prevent them from being exported through /proc/vmcore.
->>>
->>> With the introduction of the CMA crashkernel regions,
->>> crash_exclude_mem_range() needs to be called multiple times to exclude
->>> both crashk_res and crashk_cma_ranges from the crash memory ranges. To
->>> avoid repetitive logic for validating mem_ranges size and handling
->>> reallocation when required, this functionality is moved to a new 
->>> wrapper
->>> function crash_exclude_mem_range_guarded().
->>>
->>> To ensure proper CMA reservation, reserve_crashkernel_cma() is called
->>> after pageblock_order is initialized.
->>>
->>> Update kernel-parameters.txt to document CMA support for crashkernel on
->>> powerpc architecture.
->>>
->>> Cc: Baoquan he <bhe@redhat.com>
->>> Cc: Jiri Bohac <jbohac@suse.cz>
->>> Cc: Hari Bathini <hbathini@linux.ibm.com>
->>> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
->>> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
->>> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
->>> Cc: kexec@lists.infradead.org
->>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>> ---
->>> Changlog:
->>>
->>> v3 -> v4
->>>   - Removed repeated initialization to tmem in
->>>     crash_exclude_mem_range_guarded()
->>>   - Call crash_exclude_mem_range() with right crashk ranges
->>>
->>> v4 -> v5:
->>>   - Document CMA-based crashkernel support for ppc64 in 
->>> kernel-parameters.txt
->>> ---
->>>   .../admin-guide/kernel-parameters.txt         |  2 +-
->>>   arch/powerpc/include/asm/kexec.h              |  2 +
->>>   arch/powerpc/kernel/setup-common.c            |  4 +-
->>>   arch/powerpc/kexec/core.c                     | 10 ++++-
->>>   arch/powerpc/kexec/ranges.c                   | 43 
->>> ++++++++++++++-----
->>>   5 files changed, 47 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/Documentation/admin-guide/kernel-parameters.txt 
->>> b/Documentation/admin-guide/kernel-parameters.txt
->>> index 6c42061ca20e..0f386b546cec 100644
->>> --- a/Documentation/admin-guide/kernel-parameters.txt
->>> +++ b/Documentation/admin-guide/kernel-parameters.txt
->>> @@ -1013,7 +1013,7 @@
->>>               It will be ignored when crashkernel=X,high is not used
->>>               or memory reserved is below 4G.
->>>       crashkernel=size[KMG],cma
->>> -            [KNL, X86] Reserve additional crash kernel memory from
->>> +            [KNL, X86, ppc64] Reserve additional crash kernel 
->>> memory from
->> Shouldn't this be PPC and not ppc64?
->>
->> If I see the crash_dump support...
->>
->> config ARCH_SUPPORTS_CRASH_DUMP
->>     def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
->>
->> The changes below aren't specific to ppc64 correct?
->
-> The thing is this feature is only supported with KEXEC_FILE and which 
-> only supported on PPC64:
->
-> config ARCH_SUPPORTS_KEXEC_FILE
->     def_bool PPC64
->
-> Hence I kept it as ppc64.
->
-> I think I should update that in the commit message.
->
-> Also do you think is it good to restrict this feature to KEXEC_FILE?
-
-Putting this under KEXEC_FILE may not help much because KEXEC_FILE is 
-enabled
-by default in most configurations. Once it is enabled, the CMA 
-reservation will
-happen regardless of which system call is used to load the kdump kernel
-(kexec_load or kexec_file_load).
-
-However, not restricting this feature to KEXEC_FILE will allow the kexec 
-tool to
-independently add support for this feature in the future for the kexec_load
-system call.
-
-With that logic, I think if we do not restrict this feature to 
-KEXEC_FILE, the support
-will be available for ppc and not limited to ppc64.
-
-
-
->
->>
->>>               CMA. This reservation is usable by the first system's
->>>               userspace memory and kernel movable allocations (memory
->>>               balloon, zswap). Pages allocated from this memory range
->>> diff --git a/arch/powerpc/include/asm/kexec.h 
->>> b/arch/powerpc/include/asm/kexec.h
->>> index 4bbf9f699aaa..bd4a6c42a5f3 100644
->>> --- a/arch/powerpc/include/asm/kexec.h
->>> +++ b/arch/powerpc/include/asm/kexec.h
->>> @@ -115,9 +115,11 @@ int setup_new_fdt_ppc64(const struct kimage 
->>> *image, void *fdt, struct crash_mem
->>>   #ifdef CONFIG_CRASH_RESERVE
->>>   int __init overlaps_crashkernel(unsigned long start, unsigned long 
->>> size);
->>>   extern void arch_reserve_crashkernel(void);
->>> +extern void kdump_cma_reserve(void);
->>>   #else
->>>   static inline void arch_reserve_crashkernel(void) {}
->>>   static inline int overlaps_crashkernel(unsigned long start, 
->>> unsigned long size) { return 0; }
->>> +static inline void kdump_cma_reserve(void) { }
->>>   #endif
->>>     #if defined(CONFIG_CRASH_DUMP)
->>> diff --git a/arch/powerpc/kernel/setup-common.c 
->>> b/arch/powerpc/kernel/setup-common.c
->>> index 68d47c53876c..c8c42b419742 100644
->>> --- a/arch/powerpc/kernel/setup-common.c
->>> +++ b/arch/powerpc/kernel/setup-common.c
->>> @@ -35,6 +35,7 @@
->>>   #include <linux/of_irq.h>
->>>   #include <linux/hugetlb.h>
->>>   #include <linux/pgtable.h>
->>> +#include <asm/kexec.h>
->>>   #include <asm/io.h>
->>>   #include <asm/paca.h>
->>>   #include <asm/processor.h>
->>> @@ -995,11 +996,12 @@ void __init setup_arch(char **cmdline_p)
->>>       initmem_init();
->>>         /*
->>> -     * Reserve large chunks of memory for use by CMA for fadump, 
->>> KVM and
->>> +     * Reserve large chunks of memory for use by CMA for kdump, 
->>> fadump, KVM and
->>>        * hugetlb. These must be called after initmem_init(), so that
->>>        * pageblock_order is initialised.
->>>        */
->>>       fadump_cma_init();
->>> +    kdump_cma_reserve();
->>>       kvm_cma_reserve();
->>>       gigantic_hugetlb_cma_reserve();
->>>   diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
->>> index d1a2d755381c..25744737eff5 100644
->>> --- a/arch/powerpc/kexec/core.c
->>> +++ b/arch/powerpc/kexec/core.c
->>> @@ -33,6 +33,8 @@ void machine_kexec_cleanup(struct kimage *image)
->>>   {
->>>   }
->>>   +unsigned long long cma_size;
->>> +
->> nit:
->> Since this is a gloabal powerpc variable you are defining, then can we
->> keep it's name to crashk_cma_size?
->
-> Yeah make sense. I will update the variable name.
->
->
->>
->>>   /*
->>>    * Do not allocate memory (or fail in any way) in machine_kexec().
->>>    * We are past the point of no return, committed to rebooting now.
->>> @@ -110,7 +112,7 @@ void __init arch_reserve_crashkernel(void)
->>>         /* use common parsing */
->>>       ret = parse_crashkernel(boot_command_line, total_mem_sz, 
->>> &crash_size,
->>> -                &crash_base, NULL, NULL, NULL);
->>> +                &crash_base, NULL, &cma_size, NULL);
->>>         if (ret)
->>>           return;
->>> @@ -130,6 +132,12 @@ void __init arch_reserve_crashkernel(void)
->>>       reserve_crashkernel_generic(crash_size, crash_base, 0, false);
->>>   }
->>>   +void __init kdump_cma_reserve(void)
->>> +{
->>> +    if (cma_size)
->>> +        reserve_crashkernel_cma(cma_size);
->>> +}
->>> +
->> nit:
->> cma_size is already checked for null within reserve_crashkernel_cma(),
->> so we don't really need kdump_cma_reserve() function call as such.
->>
->> Also kdump_cma_reserve() only make sense with #ifdef CRASHKERNEL_CMA..
->> so instead do you think we can directly call 
->> reserve_crashkernel_cma(cma_size)?
->
-> I think the above kdump_cma_reserve() definition should come under 
-> CONFIG_CRASH_RESERVE
-> because the way it is declared in arch/powerpc/include/asm/kexec.h.
->
 > I would like to keep kdump_cma_reserve() as is it because of two reasons:
 >
 > - It keeps setup_arch() free from kdump #ifdefs
-> - In case if we want to add some condition on this reservation it 
-> would straight forward.
+
+Not really.
+
+Instead of kdump_cma_reserve(crashk_cma_size), one could call
+
+reserve_crashkernel_cma(crashk_cma_size) directly in setup_arch().
+
+> - In case if we want to add some condition on this reservation it would 
+> straight forward.
 >
-> So lets keep kdump_cma_reserve as is, unless you have strong opinion 
-> on not to.
+
+Make sense.
+
+> So lets keep kdump_cma_reserve as is, unless you have strong opinion on 
+> not to.
 >
->>>   int __init overlaps_crashkernel(unsigned long start, unsigned long 
->>> size)
->>>   {
->>>       return (start + size) > crashk_res.start && start <= 
->>> crashk_res.end;
->>> diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
->>> index 3702b0bdab14..3bd27c38726b 100644
->>> --- a/arch/powerpc/kexec/ranges.c
->>> +++ b/arch/powerpc/kexec/ranges.c
->>> @@ -515,7 +515,7 @@ int get_exclude_memory_ranges(struct crash_mem 
->>> **mem_ranges)
->>>    */
->>>   int get_usable_memory_ranges(struct crash_mem **mem_ranges)
->>>   {
->>> -    int ret;
->>> +    int ret, i;
->>>         /*
->>>        * Early boot failure observed on guests when low memory 
->>> (first memory
->>> @@ -528,6 +528,13 @@ int get_usable_memory_ranges(struct crash_mem 
->>> **mem_ranges)
->>>       if (ret)
->>>           goto out;
->>>   +    for (i = 0; i < crashk_cma_cnt; i++) {
->>> +        ret = add_mem_range(mem_ranges, crashk_cma_ranges[i].start,
->>> +                    crashk_cma_ranges[i].end - 
->>> crashk_cma_ranges[i].start + 1);
->>> +        if (ret)
->>> +            goto out;
->>> +    }
->>> +
->>>       ret = add_rtas_mem_range(mem_ranges);
->>>       if (ret)
->>>           goto out;
->>> @@ -546,6 +553,22 @@ int get_usable_memory_ranges(struct crash_mem 
->>> **mem_ranges)
->>>   #endif /* CONFIG_KEXEC_FILE */
->>>     #ifdef CONFIG_CRASH_DUMP
->>> +static int crash_exclude_mem_range_guarded(struct crash_mem 
->>> **mem_ranges,
->>> +                       unsigned long long mstart,
->>> +                       unsigned long long mend)
->>> +{
->>> +    struct crash_mem *tmem = *mem_ranges;
->>> +
->>> +    /* Reallocate memory ranges if there is no space to split 
->>> ranges */
->>> +    if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
->>> +        tmem = realloc_mem_ranges(mem_ranges);
->>> +        if (!tmem)
->>> +            return -ENOMEM;
->>> +    }
->>> +
->>> +    return crash_exclude_mem_range(tmem, mstart, mend);
->>> +}
->>> +
->>>   /**
->>>    * get_crash_memory_ranges - Get crash memory ranges. This list 
->>> includes
->>>    *                           first/crashing kernel's memory 
->>> regions that
->>> @@ -557,7 +580,6 @@ int get_usable_memory_ranges(struct crash_mem 
->>> **mem_ranges)
->>>   int get_crash_memory_ranges(struct crash_mem **mem_ranges)
->>>   {
->>>       phys_addr_t base, end;
->>> -    struct crash_mem *tmem;
->>>       u64 i;
->>>       int ret;
->>>   @@ -582,19 +604,18 @@ int get_crash_memory_ranges(struct crash_mem 
->>> **mem_ranges)
->>>               sort_memory_ranges(*mem_ranges, true);
->>>       }
->>>   -    /* Reallocate memory ranges if there is no space to split 
->>> ranges */
->>> -    tmem = *mem_ranges;
->>> -    if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
->>> -        tmem = realloc_mem_ranges(mem_ranges);
->>> -        if (!tmem)
->>> -            goto out;
->>> -    }
->>> -
->>>       /* Exclude crashkernel region */
->>> -    ret = crash_exclude_mem_range(tmem, crashk_res.start, 
->>> crashk_res.end);
->>> +    ret = crash_exclude_mem_range_guarded(mem_ranges, 
->>> crashk_res.start, crashk_res.end);
->>>       if (ret)
->>>           goto out;
->>>   +    for (i = 0; i < crashk_cma_cnt; ++i) {
->>> +        ret = crash_exclude_mem_range_guarded(mem_ranges, 
->>> crashk_cma_ranges[i].start,
->>> +                          crashk_cma_ranges[i].end);
->>> +        if (ret)
->>> +            goto out;
->>> +    }
->>> +
->>>       /*
->>>        * FIXME: For now, stay in parity with kexec-tools but if 
->>> RTAS/OPAL
->>>        *        regions are exported to save their context at the 
->>> time of
->>> -- 
->>> 2.51.0
->
+
+No strong opinion, as I said it was a minor nit. Feel free to keep the
+function kdump_cma_reserve() as is then.
+
+-ritesh
 
 
