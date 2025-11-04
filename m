@@ -4,65 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52748CCFA08
-	for <kexec@archiver.kernel.org>; Mon,  3 Nov 2025 18:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A64CCCF9F8
+	for <kexec@archiver.kernel.org>; Tue,  4 Nov 2025 00:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ErWge/UzD1LqvuHl7Z8/FN67Gq0geRz5k29l1oyq1Is=; b=Cuw7xKGbt2rneamoiezUOmS+v7
-	G8LuImhbG6MqkCEpl3oFDQ5l44L6Z5iG69r3YAZqqJVkljYSv+fJnx+WYnFSJzBPyQDn59WLZpdnF
-	wTdge/3J7e1pa/g5Z51QEXtZvDZYrG3Beqsy+OL1Jdwc4md7LYz1WbUL4lX+ThPo8SeROK/5Ktba2
-	sd3S/rl46oXxo64IB09886TaqfDKEOK0V/i/+upndm0fu2tBqSjtk0FoiTo1ytARESX3Xset6CetU
-	PygsS8HMFLtVydnczlOgwFA5YhIjYfJY6Vi+AnVKnySKXJ2CKwublGvMxDF68IfHRg5WutK0z/VRv
-	jixC66vg==;
+	bh=kg4LF7rkE/bXl9iieD20/QFbOQMW7syaEp2SBV98U9g=; b=yzmCsf9RUuQN5PlO5CovQ6HoqR
+	RKtk9jBCWpCpyR0H8bY9qj6YCulCDqo60imCSuAURWyvbXSyDLS7hkeqWiuzsDEg6saSQ82AjiqZW
+	gZq1thzJpgJJw0umtfFHrLSGc/nMTIYdKbTfykm8Ba3fAoMwO/n0Is2yw/XERgQL5LJSUxFyMyfbj
+	dX7d+V4/O6lE04a7nNP9Y8eo1Ud6N7RvVdt4br/9sBtqWVf2Xj1jqtROBbeiovEYHxEKYKEGCm4Mx
+	pDvfWfQg/8tKPBaumnVr/C5MR7jUSUzGQJTXdpFP5XmYPyryNfbS2ePy4xdzmXJ8Eht6+GYK2y1Pb
+	BX06aGVw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFytD-0000000AS1y-3zt2;
-	Mon, 03 Nov 2025 18:02:47 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vG4mi-0000000Aq1o-1Zeh;
+	Tue, 04 Nov 2025 00:20:28 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFytB-0000000AS0J-1EqI
+	id 1vG4md-0000000Aq1O-1Mhg
 	for kexec@lists.infradead.org;
-	Mon, 03 Nov 2025 18:02:46 +0000
+	Tue, 04 Nov 2025 00:20:25 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 068FF41E48;
-	Mon,  3 Nov 2025 18:02:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD2DC4AF09;
-	Mon,  3 Nov 2025 18:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762192964;
-	bh=XAwF/h8XdutL+ENyQyWob7z7axCXjW7g+SCPNNUBiyQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IogQUODJjyTWMTWVWaSKOwkSJBVW67K2O34Yde/KtslQOOC/Iz4sy8KaX6kqBr7H5
-	 GFb0Mcw/CkdVwmgfsioszFx5cEWJnFMulKlO4IIWvyPCxOY1jfelhxhEZQ5AP4Ct20
-	 0Vgjho6r1cDd6BAXDhjF53c2kxEy94T2XEauW2MpEwvaH7ybnXWy2ukCRmB/8Xzbk8
-	 Q8XlwO1XtdHF4UuXTBo9/62vnf1B1SOwpRq/JctgNqhxnH4iX4n2dIk3KVMpmHVZDY
-	 fl6Itix1asg+IRwQ/C5Alq02OX92QqFS6qSZ4BEdLJGRyEcSa9MguO0nJ5vMyR8QXe
-	 Rxj/Q36Ehv0Gg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kho: warn and exit when unpreserved page wasn't preserved
-Date: Mon,  3 Nov 2025 19:02:32 +0100
-Message-ID: <20251103180235.71409-3-pratyush@kernel.org>
-X-Mailer: git-send-email 2.51.2
+	by sea.source.kernel.org (Postfix) with ESMTP id D435F44455;
+	Tue,  4 Nov 2025 00:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE24C19425;
+	Tue,  4 Nov 2025 00:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1762215621;
+	bh=ARYJ94hkfr+wqtaTaCXJsG3Gdo7c5EgIBjp/zMCYw74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kxfHdtZnLR8DJe75xj8jde8hiIdLJsDODUzrkcsU3oth4EmoafaP9q1vIet2FrDF7
+	 Vif5lE2/OP4CwnUL/MCo+HJX3LicBWecGw1rfvdMKv85ziXudJQm5eF/OZ1UJX5vzy
+	 P0Le76leURiT1Nbr40lIbqF1bECoQ5dIJm3nBBJ0=
+Date: Mon, 3 Nov 2025 16:20:20 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>, Mike
+ Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] kho: misc fixes
+Message-Id: <20251103162020.ac696dbc695f9341e7a267f7@linux-foundation.org>
 In-Reply-To: <20251103180235.71409-1-pratyush@kernel.org>
 References: <20251103180235.71409-1-pratyush@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251103_100245_356434_0E031F69 
-X-CRM114-Status: GOOD (  10.78  )
+X-CRM114-CacheID: sfid-20251103_162023_443723_512393AF 
+X-CRM114-Status: GOOD (  13.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,42 +70,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Calling __kho_unpreserve() on a pair of (pfn, end_pfn) that wasn't
-preserved is a bug. Currently, if that is done, the physxa or bits can
-be NULL. This results in a soft lockup since a NULL physxa or bits
-results in redoing the loop without ever making any progress.
+On Mon,  3 Nov 2025 19:02:30 +0100 Pratyush Yadav <pratyush@kernel.org> wrote:
 
-Return when physxa or bits are not found, but WARN first to loudly
-indicate invalid behaviour.
+> This series has a couple of misc fixes for KHO I discovered during code
+> review and testing.
+> 
+> The series is based on top of [0] which has another fix for the function
+> touched by patch 1. I spotted these two after sending the patch. If that
+> one needs a reroll, I can combine the three into a series.
+>
 
-Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
-Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
----
- kernel/kexec_handover.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Things appear to be misordered here.
 
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index c2bcbb10918ce..e5fd833726226 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -167,12 +167,12 @@ static void __kho_unpreserve(struct kho_mem_track *track, unsigned long pfn,
- 		const unsigned long pfn_high = pfn >> order;
- 
- 		physxa = xa_load(&track->orders, order);
--		if (!physxa)
--			continue;
-+		if (WARN_ON_ONCE(!physxa))
-+			return;
- 
- 		bits = xa_load(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
--		if (!bits)
--			continue;
-+		if (WARN_ON_ONCE(!bits))
-+			return;
- 
- 		clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
- 
--- 
-2.47.3
+[1/2] "kho: fix unpreservation of higher-order vmalloc preservations"
+	fixes a667300bd53f2, so it's wanted in 6.18-rcX
 
+[2/2] "kho: warn and exit when unpreserved page wasn't preserved"
+	fixes fc33e4b44b271, so it's wanted in 6.16+
+
+So can we please have [2/2] as a standalone fix against latest -linus,
+with a cc:stable?
+
+And then [1/2] as a standalone fix against latest -linus without a
+cc:stable.
+
+
+Once I have those merged up we can then take a look at what to do about
+the 6.19 material which is presently queued in mm-unstable.
+
+Thanks.
 
