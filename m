@@ -4,80 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0962CCFA0D
-	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 13:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 587B0CCF9F8
+	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 13:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mXIwHhdPf2vZL070s3tpHwbG9LrUwjSbIBxTv4Nl50c=; b=E3v3VkwmrPklTQ/EU+OXyHf1cn
-	RtfnrjpB/CLovFW+0Xxpm7y1ZQ8QLB9VGKO40DjM28dgx0vGaA1kkivUqwzsFox/y065bsEoL9tMP
-	8XvPRqx7vLXD2oCJMGPGJsllAxEMu19Nm20cD0sEmhbzGGgK3zKBaGYrKRfl8IBhW39c+lDGrRySO
-	PX7DeWNOG0m7+4d0ia4fdD3/GqEmocwidoKNmbLWGTLlTPOlYbQUyntBbw/dZLzrFSwmALG+kWTjg
-	OCzbjxnDPnTOugSlwEpVC1x72g927hhhnME1K4Ue91iF4SAOb89idP0kaUjjGa6C8o8X9NMwl4WpX
-	6sTbkZ/g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=gqcLVCa1jkv4pbaYsW9IMWFqqRXLm42SJbgQb+hrNIY=; b=bMK2TNd7Ord9r/HRlIHPtuVihe
+	gLgOoBnHEdDUEPkCHNkKPxQxiIm9dS3BO0gRACiUOROID4LnhfIgF4qnPRrMrZ+2nYpVZG7ccERsV
+	+rgD0Ky4+AvqrmXENCAIRJ/4MFs5ivqwNS3HLcWED4gg54Jyxw3zbRE8a7P9yKHxEfRmW8Rw6quH7
+	B+R7BkMntkaXchclM4h1LI4P8tNXzNdApfrHCuO8hQkKsaJxmtguWwLCVh3GuejYSCokUApRz//4V
+	9gk7KB4oMzt1I1yS5eHvD41J8lyBMz2XOdREhXWgEOghMewCP+m8pcE5cy8z7BvbF8p1B0gNKGQK9
+	dKFlpuVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGd8m-0000000Dj4g-06VJ;
-	Wed, 05 Nov 2025 13:01:32 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vGdGn-0000000DjjT-1Lix;
+	Wed, 05 Nov 2025 13:09:49 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGd8h-0000000Dj4A-3KTL
+	id 1vGdGk-0000000DjiH-2Y66
 	for kexec@lists.infradead.org;
-	Wed, 05 Nov 2025 13:01:30 +0000
+	Wed, 05 Nov 2025 13:09:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762347686;
+	s=mimecast20190719; t=1762348184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXIwHhdPf2vZL070s3tpHwbG9LrUwjSbIBxTv4Nl50c=;
-	b=UZSivVHWHeKi9zwUNoZt7J7TQQemUMRJKe4UJZBiqxvuSsHA7YA3ey/K+nqIHN3g32s8DT
-	gzhOA54xkx/0L7PMbqPGBepu3kZnsgbI4BFCli9eZe5bBVcZykbsjnaEMZY8ocUEFIVC92
-	Ib1rYaPg6fX53thtkKTLffdrZVVNQWc=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gqcLVCa1jkv4pbaYsW9IMWFqqRXLm42SJbgQb+hrNIY=;
+	b=bAUFlelK8nIhBxS8rK0BSoFrZ1YKeWNPCuiHGJ088CdVOjlTly6U4DAVJvPWDxKnkSep+4
+	NZbD6/ClJfOM6lnHKWZqOwqIl7njKo9bm1A+hLI9wb5id/smIERkry3TiLAZ644hRSX8v5
+	uG3Q4bYRrVBI29ydOlK4GKhMWaJLnAg=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-676-Akg3YLegNSCoPQQgB6Exrg-1; Wed,
- 05 Nov 2025 08:01:22 -0500
-X-MC-Unique: Akg3YLegNSCoPQQgB6Exrg-1
-X-Mimecast-MFC-AGG-ID: Akg3YLegNSCoPQQgB6Exrg_1762347681
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-519-sGgpAQAiPZekw02ybDPSTg-1; Wed,
+ 05 Nov 2025 08:09:42 -0500
+X-MC-Unique: sGgpAQAiPZekw02ybDPSTg-1
+X-Mimecast-MFC-AGG-ID: sGgpAQAiPZekw02ybDPSTg_1762348181
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1670E195607F;
-	Wed,  5 Nov 2025 13:01:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.190])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 936AD19560A2;
-	Wed,  5 Nov 2025 13:01:16 +0000 (UTC)
-Date: Wed, 5 Nov 2025 21:01:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Qiang Ma <maqianga@uniontech.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 3/4] kexec: print out debugging message if required
- for kexec_load
-Message-ID: <aQtKmP1W+k2+Gjdq@MiWiFi-R3L-srv>
-References: <20251103063440.1681657-1-maqianga@uniontech.com>
- <20251103063440.1681657-4-maqianga@uniontech.com>
- <aQq97iGeYvZdr3SX@MiWiFi-R3L-srv>
- <5FC4A8D79744B238+97288be4-6c1a-4c0d-ae7d-be2029ec87f3@uniontech.com>
- <aQsCaeTx0WduSjSz@MiWiFi-R3L-srv>
- <2331A9F3E09581FC+4ab7e9ba-8776-47d2-868f-cb01ca9cd909@uniontech.com>
- <aQsRADZ+pPho9pYa@MiWiFi-R3L-srv>
- <44308A6B6D8BEB61+c143d52e-03dd-48bf-aadd-8a0d9196b280@uniontech.com>
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1F8FB195609F;
+	Wed,  5 Nov 2025 13:09:40 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.93])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ABE7B300018D;
+	Wed,  5 Nov 2025 13:09:33 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org,
+	linux-integrity@vger.kernel.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Alexander Graf <graf@amazon.com>,
+	Steven Chen <chenste@linux.microsoft.com>
+Subject: [PATCH 1/2] kernel/kexec: Change the prototype of kimage_map_segment()
+Date: Wed,  5 Nov 2025 21:09:21 +0800
+Message-ID: <20251105130922.13321-1-piliu@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <44308A6B6D8BEB61+c143d52e-03dd-48bf-aadd-8a0d9196b280@uniontech.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251105_050128_314919_14D946B3 
-X-CRM114-Status: GOOD (  40.50  )
+X-CRM114-CacheID: sfid-20251105_050946_725671_79512173 
+X-CRM114-Status: GOOD (  14.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,102 +85,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/05/25 at 07:28pm, Qiang Ma wrote:
-> 
-> 在 2025/11/5 16:55, Baoquan He 写道:
-> > On 11/05/25 at 04:35pm, Qiang Ma wrote:
-> > > 在 2025/11/5 15:53, Baoquan He 写道:
-> > > > On 11/05/25 at 11:41am, Qiang Ma wrote:
-> > > > > 在 2025/11/5 11:01, Baoquan He 写道:
-> > > > > > On 11/03/25 at 02:34pm, Qiang Ma wrote:
-> > > > > > > The commit a85ee18c7900 ("kexec_file: print out debugging message
-> > > > > > > if required") has added general code printing in kexec_file_load(),
-> > > > > > > but not in kexec_load().
-> > > > > > > 
-> > > > > > > Especially in the RISC-V architecture, kexec_image_info() has been
-> > > > > > > removed(commit eb7622d908a0 ("kexec_file, riscv: print out debugging
-> > > > > > > message if required")). As a result, when using '-d' for the kexec_load
-> > > > > > > interface, print nothing in the kernel space. This might be helpful for
-> > > > > > > verifying the accuracy of the data passed to the kernel. Therefore,
-> > > > > > > refer to this commit a85ee18c7900 ("kexec_file: print out debugging
-> > > > > > > message if required"), debug print information has been added.
-> > > > > > > 
-> > > > > > > Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> > > > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > > > > Closes: https://lore.kernel.org/oe-kbuild-all/202510310332.6XrLe70K-lkp@intel.com/
-> > > > > > > ---
-> > > > > > >     kernel/kexec.c | 11 +++++++++++
-> > > > > > >     1 file changed, 11 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > > > > > > index c7a869d32f87..9b433b972cc1 100644
-> > > > > > > --- a/kernel/kexec.c
-> > > > > > > +++ b/kernel/kexec.c
-> > > > > > > @@ -154,7 +154,15 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-> > > > > > >     	if (ret)
-> > > > > > >     		goto out;
-> > > > > > > +	kexec_dprintk("nr_segments = %lu\n", nr_segments);
-> > > > > > >     	for (i = 0; i < nr_segments; i++) {
-> > > > > > > +		struct kexec_segment *ksegment;
-> > > > > > > +
-> > > > > > > +		ksegment = &image->segment[i];
-> > > > > > > +		kexec_dprintk("segment[%lu]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
-> > > > > > > +			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
-> > > > > > > +			      ksegment->memsz);
-> > > > > > There has already been a print_segments() in kexec-tools/kexec/kexec.c,
-> > > > > > you will get duplicated printing. That sounds not good. Have you tested
-> > > > > > this?
-> > > > > I have tested it, kexec-tools is the debug message printed
-> > > > > in user space, while kexec_dprintk is printed
-> > > > > in kernel space.
-> > > > > 
-> > > > > This might be helpful for verifying the accuracy of
-> > > > > the data passed to the kernel.
-> > > > Hmm, that's not necessary with a debug printing to verify value passed
-> > > > in kernel. We should only add debug pringing when we need but lack it.
-> > > > I didn't check it carefully, if you add the debug printing only for
-> > > > verifying accuracy, that doesn't justify the code change.
-> > > It's not entirely because of it.
-> > > 
-> > > Another reason is that for RISC-V, for kexec_file_load interface,
-> > > kexec_image_info() was deleted at that time because the content
-> > > has been printed out in generic code.
-> > > 
-> > > However, these contents were not printed in kexec_load because
-> > > kexec_image_info was deleted. So now it has been added.
-> > print_segments() in kexec-tools/kexec/kexec.c is a generic function,
-> > shouldn't you make it called in kexec-tools for risc-v? I am confused by
-> > the purpose of this patchset.
-> There is a problem with what I expressed.
-> I don't want to add print_segments to riscv.
-> I want to add some debugging message(ksegment,kimage,flag) for kexec_load.
-> 
-> Although ksegment debugging message has been printed in kexec-tools,
-> it is still helpful for debugging the kernel space function.
+The kexec segment index will be required to extract the corresponding
+information for that segment in kimage_map_segment(). Additionally,
+kexec_segment already holds the kexec relocation destination address and
+size. Therefore, the prototype of kimage_map_segment() can be changed.
 
-Sorry, I can't support that. We all prepare the loading segments for the
-future jumping in kexec_tools if it's kexec_load interface. And calling
-print_segments() to print those loading information is natural. Why do we
-need print them two times for verifying if the printing is accuracy?
-Could you explain why risc-v is special?
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Roberto Sassu <roberto.sassu@huawei.com>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Steven Chen <chenste@linux.microsoft.com>
+To: kexec@lists.infradead.org
+To: linux-integrity@vger.kernel.org
+---
+ include/linux/kexec.h              | 4 ++--
+ kernel/kexec_core.c                | 9 ++++++---
+ security/integrity/ima/ima_kexec.c | 4 +---
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-> > 
-> > > > > > > +
-> > > > > > >     		ret = kimage_load_segment(image, i);
-> > > > > > >     		if (ret)
-> > > > > > >     			goto out;
-> > > > > > > @@ -166,6 +174,9 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-> > > > > > >     	if (ret)
-> > > > > > >     		goto out;
-> > > > > > > +	kexec_dprintk("kexec_load: type:%u, start:0x%lx head:0x%lx flags:0x%lx\n",
-> > > > > > > +		      image->type, image->start, image->head, flags);
-> > > > > > > +
-> > > > > > >     	/* Install the new kernel and uninstall the old */
-> > > > > > >     	image = xchg(dest_image, image);
-> > > > > > > -- 
-> > > > > > > 2.20.1
-> > > > > > > 
-> > 
-> 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ff7e231b0485..8a22bc9b8c6c 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -530,7 +530,7 @@ extern bool kexec_file_dbg_print;
+ #define kexec_dprintk(fmt, arg...) \
+         do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+ 
+-extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
++extern void *kimage_map_segment(struct kimage *image, int idx);
+ extern void kimage_unmap_segment(void *buffer);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+@@ -540,7 +540,7 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
+-static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
++static inline void *kimage_map_segment(struct kimage *image, int idx)
+ { return NULL; }
+ static inline void kimage_unmap_segment(void *buffer) { }
+ #define kexec_in_progress false
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index fa00b239c5d9..9a1966207041 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -960,17 +960,20 @@ int kimage_load_segment(struct kimage *image, int idx)
+ 	return result;
+ }
+ 
+-void *kimage_map_segment(struct kimage *image,
+-			 unsigned long addr, unsigned long size)
++void *kimage_map_segment(struct kimage *image, int idx)
+ {
++	unsigned long addr, size, eaddr;
+ 	unsigned long src_page_addr, dest_page_addr = 0;
+-	unsigned long eaddr = addr + size;
+ 	kimage_entry_t *ptr, entry;
+ 	struct page **src_pages;
+ 	unsigned int npages;
+ 	void *vaddr = NULL;
+ 	int i;
+ 
++	addr = image->segment[idx].mem;
++	size = image->segment[idx].memsz;
++	eaddr = addr + size;
++
+ 	/*
+ 	 * Collect the source pages and map them in a contiguous VA range.
+ 	 */
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 7362f68f2d8b..5beb69edd12f 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -250,9 +250,7 @@ void ima_kexec_post_load(struct kimage *image)
+ 	if (!image->ima_buffer_addr)
+ 		return;
+ 
+-	ima_kexec_buffer = kimage_map_segment(image,
+-					      image->ima_buffer_addr,
+-					      image->ima_buffer_size);
++	ima_kexec_buffer = kimage_map_segment(image, image->ima_segment_index);
+ 	if (!ima_kexec_buffer) {
+ 		pr_err("Could not map measurements buffer.\n");
+ 		return;
+-- 
+2.49.0
 
 
