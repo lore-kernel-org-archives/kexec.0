@@ -4,86 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B658CCFA04
-	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 04:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6FA54CCF9F8
+	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 04:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mJ58wxkUp3QPDHQZyMF0q4nEx7f3gcDEWgs42azNwv4=; b=hPghGFUzdFzmOUFQNCIuRf8liC
-	PVyO7v/TaBmx+ztxi+iNyrdYM5ne2LsurtZz/henuxJ3Ms/ljoy3S+P4mvJWukhaglAPebdPUL/y/
-	P11++DkaHj2IfNsHh4/YwvAQQW03E3ePG1Ijp3F69xy4WcGhQ15tuKpHbUvn4VIioo9vNhFeiQV6u
-	N84VMbh3jgIfnenvUZqct1PvPs0R+gr9IoB1X6+6QkN6JJ0der+LcZ4deJe2g/jXXhtC44U0qNMJK
-	6O6e4HIMc5TrbZvEzdg8sQIG/zsq+8Oa/NPf/wM3NaFmgjcJT6jme2XoFwQihxDIyXoh9YgT30BNy
-	j9Anjcgw==;
+	bh=IzRkElXePV0e5YJI1LL9d23HgU39352OJQ6VVeYJKEg=; b=ICVf7XXuVHvntLC6GdsqmXZGC+
+	IQoyR8nB+/YDpWATs6M5NUQig3vu043AjReYXU/ou8Ty5vmIfnR7c/xNvGaczRhQBuZrHea7h1Ged
+	xMsY0cHgPYu/Wvei1uhi3yXtcdcjlb+qsgIbXYfMjWAidPSD/qHkgDN1ZLrbH/oX6KtaVzh3GWG0c
+	ZdkMNRIVi0YS8xMYt9OiBByziJSm6TqK2S3Ej0sTWYOQUHnTZrYkwyUCh4trVScAfSW4HCwrMjYkV
+	8uDsquGAp+cfs11k2T5VhDTg9tLiEOZ/Qn5jU6/frX0yEF9FTq+tvt7Y5b9IF8wpbPhK5hr5pSFzW
+	8MYP9njA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGVBO-0000000D0AF-0obc;
-	Wed, 05 Nov 2025 04:31:42 +0000
-Received: from smtpbg151.qq.com ([18.169.211.239])
+	id 1vGVDC-0000000D0FO-3ZUn;
+	Wed, 05 Nov 2025 04:33:34 +0000
+Received: from smtpbgeu1.qq.com ([52.59.177.22])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGVBK-0000000D09d-17wT
+	id 1vGVD6-0000000D0Eo-2hrx
 	for kexec@lists.infradead.org;
-	Wed, 05 Nov 2025 04:31:40 +0000
+	Wed, 05 Nov 2025 04:33:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1762317064;
-	bh=mJ58wxkUp3QPDHQZyMF0q4nEx7f3gcDEWgs42azNwv4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=onTdruhMlw5iPpYED7i0Drw+s5KfcnflcCoLRzr2nbijNY7Gke+rBa4ywdov/GFrz
-	 A0C7aXoCN7nJhktapBuApjA4krZX956YYiOVjv/XUEts3d864G40gEj1Ty+QadeZnf
-	 d2/9g6E2IZcR6nusIHUlmMt6oZnye4XMMvvM5cPY=
-X-QQ-mid: zesmtpgz3t1762317061tf373d11d
-X-QQ-Originating-IP: LqdixfTpbZBUVo+Ea7w7yN8rPbRjEJ7emqHxABhoIn8=
+	s=onoh2408; t=1762317166;
+	bh=IzRkElXePV0e5YJI1LL9d23HgU39352OJQ6VVeYJKEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Mu6k5nbZZxZE9H8O4BVi2LQU7nXCv59m91kkg5hDyjcnRJpr0dkKdO/c2otPPklIo
+	 KFZlI8WNzsetfoNHYizIk0izCmas1TIJ01si5swn+ov1Bizc+g80Vrf1eWmwEpeu0t
+	 orUgqi3+83P7fmijvdv9hi/8e6wxfkI/jgdzOWeM=
+X-QQ-mid: zesmtpgz7t1762317163t58b5e436
+X-QQ-Originating-IP: IVuLNbt0LM4XVn04dFFo5bmVH3eL0NEBQpBWLy9Dm8g=
 Received: from [10.10.74.117] ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 05 Nov 2025 12:31:00 +0800 (CST)
+	id ; Wed, 05 Nov 2025 12:32:42 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8064024665032217773
-Message-ID: <C1D5AF8ADDDB53F3+623309e9-4fc9-4186-8f07-04cd6f5d5612@uniontech.com>
-Date: Wed, 5 Nov 2025 12:31:00 +0800
+X-BIZMAIL-ID: 5240506837288176278
+Message-ID: <CCA9495F3D18EFF3+40304116-c894-4b4b-9f9f-e0398bc4deac@uniontech.com>
+Date: Wed, 5 Nov 2025 12:32:42 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] kexec_file: Fix the issue of mismatch between loop
- variable types
-From: Qiang Ma <maqianga@uniontech.com>
+Subject: Re: [PATCH v2 2/4] kexec: add kexec_core flag to control debug
+ printing
 To: Baoquan He <bhe@redhat.com>
 Cc: akpm@linux-foundation.org, kexec@lists.infradead.org,
  linux-kernel@vger.kernel.org
 References: <20251103063440.1681657-1-maqianga@uniontech.com>
- <20251103063440.1681657-5-maqianga@uniontech.com>
- <aQq/CHi10ihT8/sn@MiWiFi-R3L-srv>
- <c669d240-1ee8-4897-a30d-3efefe161085@uniontech.com>
+ <20251103063440.1681657-3-maqianga@uniontech.com>
+ <aQq/2WN8Sqz6m6xc@MiWiFi-R3L-srv>
 Content-Language: en-US
-In-Reply-To: <c669d240-1ee8-4897-a30d-3efefe161085@uniontech.com>
+From: Qiang Ma <maqianga@uniontech.com>
+In-Reply-To: <aQq/2WN8Sqz6m6xc@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
-X-QQ-XMAILINFO: M58CI+QHpTsklVtnHl0PfrWs7Jlc4iKmKu+ho6D9VUo+fgA8IjGwtizG
-	weDUFU9SAJK37CUi9V8c+9mAfaCK6elmyArCc5r2rbzy3jMoItKKHswShO+/G6cFH+65pfp
-	TydH6F4x7JKZHamoWJKyZOPpSUvf/b5XLmpII5Jm8ZiZGQxG4U0zRxUrL/TNmxnmdyZT6eJ
-	HgjhBQf+287mGERgv8JPPa+3RrMfM3g8bsQLkMw3rXYLxsUIsjIOm8/MVK94zrsR4WQQC95
-	MIBZk4dOfZCvSFTXutNJrxdTywJSIAvR+yFdHHkMKtj6CJMCx2f48mqojSrae30TSdCxiQU
-	dtcMopqjj+VESf0X5nd+8G3Hg90USBF8Ee+JEgIzFCnuoXAoygjh9AxBey57UtNJezIuybn
-	IH/M1z5hlKjn+Ihol/VTXYe+6DerWsrfPIlfkf28Wbdph9y6ZcKsws298R+UyhpNj6wfr3O
-	xyr78MdlP6Bvn4uVmVNuZ+XO/k3bsT4DPjKF+qMgGvWwXDYBXOJc9wxIcW71DiR4RCZ7F2M
-	qUYfaxxK10+VXozLdQhMjvXDp+Qu/6hnuDvAw5dHwMeh8in+jMTObKpVe65aX9O63p/yOS1
-	D4uZ1fDUOW1dkoiCz+wchU8LrvwB4+ZwQjy6m4MtVSY426y1aLEz03Lmgu8dLrv8gzy0+bd
-	aqnyf+MXkJ8i+XKyKyBsNxx32ieDTlG0bAd9KgXMxzILuRhC7sIAWTqwx5GrOcpmrrridY8
-	gfpkpjB9hvp0bqS67aXfbKcoAhRgrsvRkFxqvsXVOIg8gtBIieHNulnkm78Cic2dKYxgjOG
-	u6kEV0GeGhZbSoYzUgQ10yqwml6sidVMHLMU/5eKPp1LSj9KA1XLn3631oXdBDKgfUs4sxu
-	0jONnuy2A/g8AsZMkpTntObWVeK6XO0a1xbcicEueaz7WaBNMvWkjRh96VQan5TJbyDB86u
-	IdpC5kLFmsvXpOrOviU7yQPgcNSFaqe0CAxZpRk8EZj+JYi08v4OGOnorSkxGHVC2VqgQU7
-	Om/hMXO7w76s0aRe0hwDpmXQDyrN7X9Jz/5ZzSCY9R2tVWGRoZDZp+jooAE3o=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-XMAILINFO: MkB8ALqi1u9wA9WpJpvI3pzCPR7FOINZ512Mm3x6iHJCTKcTr/9iwLs8
+	gmE57fi2nUw4btu5CCxYBCLQDc+lRkK589ZbN2Dz6pStnlgIjwer2G7mTw3lFslAVdRWBm5
+	6Zof93o2edMvfQo2i3AeCNl5T9pxAnB2fbeq7JMP1jpy7eUiqXWq6GOr4hiSl1uaHhDQ/m1
+	mlLUfd167vREg2lkDDZOEwTAoVNuJAfwaSAJEvaLMsQeFT3/z3dDfluIitsjSMbn0dBIbJA
+	fOEE/ZJSleNQJn0sAjnNmLvlBZZeKlEq1uS4XlsfVKM24VxxQRp83ZbYXIvhGQjkbqz9wii
+	QfsLZ4Skz97mXCDTc/SdCsxDJTCUIFhgnSX8ED5YXCAVx98i6dc1KH0xm7vYNTA9NGVtNQh
+	8mOm2jEAVmB5oppvitrCpfSZo31kBOHA65O1RiNa3q/CP0CnQ1w2XHxzb7w9Yo5Y8GPweEO
+	B4VSU4fffO8iW/ccONcSmwoUn8AS72kcU76HzugTZEVkJLH1Hh73pCuAx65LJruBVQUwE/T
+	lq5U9SFHQZP+n8m5vB8ZlIFcop4birFVA3M5++UKfVsJTQWH2pwwU8wkqazOeXYapr5TaHn
+	KCTlB7VjcqdLlGAzLA1wWr+ewlbN8bLydyq9DaqAOF1oannCfjs/Sr8HHDXTQGuw9fWRZsN
+	NAtG5Wr5yBbVNXFtAcNVhe/ovKVA4BDuJ/ikqYni7ypmMD2/NW+ndpDXRHuPZTvCpOX7qJP
+	0oP+TK/SodxuiyjiUm9gIFx2nwxb6g03vNcE6Akd9JBQWV+ltvxA7aM9iR+7k7LQrVdTfkN
+	8cctXOWlazdDTCkhqqAmlbGezP2xW7V+QlskD5643t9+TuwtqlJ07394ZEvzTVbhpMUzvA0
+	6i84R861xkofoytGOjQkuB+wF5FrqhT5JqKjyaDhd+h3eHSVk87ev84FoRZey6gjLXbr0iR
+	j8vVvmR8V0SdKkUOjL38JpMRgaRVf1fFHS9+YAMhZ50zWXibNlM50ltY0fl9waPIAC2nXew
+	ApBYlYMC0wIQ+xCUl3
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
 X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251104_203139_095513_47BA6083 
-X-CRM114-Status: UNSURE (   9.63  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251104_203329_235657_244018A8 
+X-CRM114-Status: GOOD (  20.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,51 +97,142 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-在 2025/11/5 11:47, Qiang Ma 写道:
->
-> 在 2025/11/5 11:05, Baoquan He 写道:
->> On 11/03/25 at 02:34pm, Qiang Ma wrote:
->>> The type of the struct kimage member variable nr_segments is 
->>> unsigned long.
->>> Correct the loop variable i and the print format specifier type.
->> I can't see what's meaningful with this change. nr_segments is unsigned
->> long, but it's the range 'i' will loop. If so, we need change all for
->> loop of the int iterator.
-> If image->nr_segments is large enough, 'i' overflow causes an infinite 
-> loop.
-Meanwhile, the do_kexec_load() was checked and also defined as 'unsigned 
-long i'.
->>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
->>> ---
->>>   kernel/kexec_file.c | 5 +++--
->>>   1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->>> index 4a24aadbad02..7afdaa0efc50 100644
->>> --- a/kernel/kexec_file.c
->>> +++ b/kernel/kexec_file.c
->>> @@ -366,7 +366,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, 
->>> int, initrd_fd,
->>>       int image_type = (flags & KEXEC_FILE_ON_CRASH) ?
->>>                KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
->>>       struct kimage **dest_image, *image;
->>> -    int ret = 0, i;
->>> +    int ret = 0;
->>> +    unsigned long i;
->>>         /* We only trust the superuser with rebooting the system. */
->>>       if (!kexec_load_permitted(image_type))
->>> @@ -432,7 +433,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, 
->>> int, initrd_fd,
->>>           struct kexec_segment *ksegment;
->>>             ksegment = &image->segment[i];
->>> -        kexec_dprintk("segment[%d]: buf=0x%p bufsz=0x%zx mem=0x%lx 
->>> memsz=0x%zx\n",
->>> +        kexec_dprintk("segment[%lu]: buf=0x%p bufsz=0x%zx mem=0x%lx 
->>> memsz=0x%zx\n",
->>>                     i, ksegment->buf, ksegment->bufsz, ksegment->mem,
->>>                     ksegment->memsz);
->>>   --
->>> 2.20.1
->>>
+在 2025/11/5 11:09, Baoquan He 写道:
+> On 11/03/25 at 02:34pm, Qiang Ma wrote:
+>> The commit a85ee18c7900 ("kexec_file: print out debugging message
+>> if required") has added general code printing in kexec_file_load(),
+>> but not in kexec_load().
 >>
+>> Since kexec_load and kexec_file_load are not triggered
+>> simultaneously, we can unify the debug flag of kexec and kexec_file
+>> as kexec_core_dbg_print.
+> After reconsidering this, I regret calling it kexec_core_dbg_print.
+> That sounds a printing only happening in kexec_core. Maybe
+> kexec_dbg_print is better. Because here kexec refers to a generic
+> concept, but not limited to kexec_load interface only. Just my personal
+> thinking.
+This sounds reasonable. The next version will be renamed kexec_dbg_print.
+>
+> Other than the naming, the whole patch looks good to me. Thanks.
+>
+>> Next, we need to do four things:
+>>
+>> 1. rename kexec_file_dbg_print to kexec_core_dbg_print
+>> 2. Add KEXEC_DEBUG
+>> 3. Initialize kexec_core_dbg_print for kexec
+>> 4. Set the reset of kexec_file_dbg_print to kimage_free
+>>
+>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+>> ---
+>>   include/linux/kexec.h      | 9 +++++----
+>>   include/uapi/linux/kexec.h | 1 +
+>>   kernel/kexec.c             | 1 +
+>>   kernel/kexec_core.c        | 4 +++-
+>>   kernel/kexec_file.c        | 4 +---
+>>   5 files changed, 11 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index ff7e231b0485..cad8b5c362af 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -455,10 +455,11 @@ bool kexec_load_permitted(int kexec_image_type);
+>>   
+>>   /* List of defined/legal kexec flags */
+>>   #ifndef CONFIG_KEXEC_JUMP
+>> -#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_CRASH_HOTPLUG_SUPPORT)
+>> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_CRASH_HOTPLUG_SUPPORT | \
+>> +			KEXEC_DEBUG)
+>>   #else
+>>   #define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR | \
+>> -			KEXEC_CRASH_HOTPLUG_SUPPORT)
+>> +			KEXEC_CRASH_HOTPLUG_SUPPORT | KEXEC_DEBUG)
+>>   #endif
+>>   
+>>   /* List of defined/legal kexec file flags */
+>> @@ -525,10 +526,10 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
+>>   static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
+>>   #endif
+>>   
+>> -extern bool kexec_file_dbg_print;
+>> +extern bool kexec_core_dbg_print;
+>>   
+>>   #define kexec_dprintk(fmt, arg...) \
+>> -        do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+>> +	do { if (kexec_core_dbg_print) pr_info(fmt, ##arg); } while (0)
+>>   
+>>   extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+>>   extern void kimage_unmap_segment(void *buffer);
+>> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+>> index 55749cb0b81d..819c600af125 100644
+>> --- a/include/uapi/linux/kexec.h
+>> +++ b/include/uapi/linux/kexec.h
+>> @@ -14,6 +14,7 @@
+>>   #define KEXEC_PRESERVE_CONTEXT	0x00000002
+>>   #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
+>>   #define KEXEC_CRASH_HOTPLUG_SUPPORT 0x00000008
+>> +#define KEXEC_DEBUG		0x00000010
+>>   #define KEXEC_ARCH_MASK		0xffff0000
+>>   
+>>   /*
+>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>> index 9bb1f2b6b268..c7a869d32f87 100644
+>> --- a/kernel/kexec.c
+>> +++ b/kernel/kexec.c
+>> @@ -42,6 +42,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+>>   	if (!image)
+>>   		return -ENOMEM;
+>>   
+>> +	kexec_core_dbg_print = !!(flags & KEXEC_DEBUG);
+>>   	image->start = entry;
+>>   	image->nr_segments = nr_segments;
+>>   	memcpy(image->segment, segments, nr_segments * sizeof(*segments));
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index fa00b239c5d9..865f2b14f23b 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -53,7 +53,7 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
+>>   /* Flag to indicate we are going to kexec a new kernel */
+>>   bool kexec_in_progress = false;
+>>   
+>> -bool kexec_file_dbg_print;
+>> +bool kexec_core_dbg_print;
+>>   
+>>   /*
+>>    * When kexec transitions to the new kernel there is a one-to-one
+>> @@ -576,6 +576,8 @@ void kimage_free(struct kimage *image)
+>>   	kimage_entry_t *ptr, entry;
+>>   	kimage_entry_t ind = 0;
+>>   
+>> +	kexec_core_dbg_print = false;
+>> +
+>>   	if (!image)
+>>   		return;
+>>   
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index eb62a9794242..4a24aadbad02 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -138,8 +138,6 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>>   	 */
+>>   	kfree(image->image_loader_data);
+>>   	image->image_loader_data = NULL;
+>> -
+>> -	kexec_file_dbg_print = false;
+>>   }
+>>   
+>>   #ifdef CONFIG_KEXEC_SIG
+>> @@ -314,7 +312,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+>>   	if (!image)
+>>   		return -ENOMEM;
+>>   
+>> -	kexec_file_dbg_print = !!(flags & KEXEC_FILE_DEBUG);
+>> +	kexec_core_dbg_print = !!(flags & KEXEC_FILE_DEBUG);
+>>   	image->file_mode = 1;
+>>   
+>>   #ifdef CONFIG_CRASH_DUMP
+>> -- 
+>> 2.20.1
+>>
+>
+
 
