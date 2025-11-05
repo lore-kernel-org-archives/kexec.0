@@ -4,92 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48134CCF9F8
-	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 15:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C6A2CCFA0D
+	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 17:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=A+ChnVt+FBJp4iytGmAJheIuFypppdt2s3zywMDMXYM=; b=YF3vsBaJNerb1QZzC2fPPWDNWi
-	WyQd4uxrmOfiJ/1u9deWAsuzfs3zmqplA3gJd1B+lJeum+xOpjnPVMHkciZ5hyk0GQ+18+JR0P4Hc
-	Sbk+JXpp6tf6AYhjqLDdzqtIVVSZdeUfPVSc0h4dUbOwIy/72ki3c79AGVkMCx6l3ThKp7jmMWy/n
-	Wdgwnho1iNuYffwsZxAF9d6bCa7DmF13kYe+txqW33q5AU2f+8rMOpatxR3fNkWYInP2NgS0jKHNx
-	B7uBLgpaPr1Lf/7olXHUir5Pei1pism88mOhjZL0PsDJl1BWilvIpUjYEdpbUUOC71ECTX1NhSLeB
-	N2JbqTzw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4oRX6H93K+8sdo8cLCGPw0zH57ZwvITwM9e6I+WIaDs=; b=eSa7qSOR92SZLKwN+AGVeAP0Jj
+	QkunzooCjDyy7FCdMybQIlP4W4HkA957uT/3Y8V7z4P79njVtNILlls4hjfruyKTh1NtsXDUXx87k
+	7izl2UcjNF4Z+dEXBmh6/R7iJBzZAm4YArz20SbAwtmbtFgDMOq93CUkc+Y3/dYXAI/ycdpaR5BHr
+	Qb50XcR2TVh5YgUAnxkJh5T3/f0KrHVa7xvYiei0DF+0C7mJxiJ+O09Yo9ny2w9aIEt+5vw2tTq2C
+	sI1lz/OIlHyY7Sl3kIop0SZfXgihZAeZTbMRgGTJtTYcK6w1dfg33DRrnLGsuOzj3KWMJy00ovGFy
+	Rxi3a6CQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGf59-0000000DtFW-31tI;
-	Wed, 05 Nov 2025 15:05:55 +0000
-Received: from smtpbgbr2.qq.com ([54.207.22.56])
+	id 1vGhRk-0000000EBqf-0JX0;
+	Wed, 05 Nov 2025 17:37:24 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGf55-0000000DtDq-27RL
+	id 1vGhRh-0000000EBqD-3dfv
 	for kexec@lists.infradead.org;
-	Wed, 05 Nov 2025 15:05:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1762355112;
-	bh=A+ChnVt+FBJp4iytGmAJheIuFypppdt2s3zywMDMXYM=;
-	h=Subject:To:From:Message-ID:Date:MIME-Version;
-	b=JkLSaKfcXWtK5dH3yYQawOU1nQ/xOjkaWF2U8LGacFK0LzFFT3HY6xEWER/dXjbGx
-	 tVael6dFVyTV+aBDPoDQkaaAIOqdTlNUQllgXfMCXlbrfGdrOdBkXArsOdCjDwH9ZK
-	 6RL8LQTshJDmjf3oW9dGJgNwlY0gwCCLXmGsra0Y=
-X-QQ-mid: zesmtpip2t1762355105t1dc560dc
-X-QQ-Originating-IP: uLk8JsAEsmzInxV4x73oTWX7tUmvk6eBLTptYDLaM5w=
-Received: from [IPv6:2409:8900:8683:1129:8a90: ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 05 Nov 2025 23:05:04 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4721291873598464723
-Subject: Re: [PATCH v2 3/4] kexec: print out debugging message if required for
- kexec_load
-To: Baoquan He <bhe@redhat.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20251103063440.1681657-1-maqianga@uniontech.com>
- <20251103063440.1681657-4-maqianga@uniontech.com>
- <aQq97iGeYvZdr3SX@MiWiFi-R3L-srv>
- <5FC4A8D79744B238+97288be4-6c1a-4c0d-ae7d-be2029ec87f3@uniontech.com>
- <aQsCaeTx0WduSjSz@MiWiFi-R3L-srv>
- <2331A9F3E09581FC+4ab7e9ba-8776-47d2-868f-cb01ca9cd909@uniontech.com>
- <aQsRADZ+pPho9pYa@MiWiFi-R3L-srv>
- <44308A6B6D8BEB61+c143d52e-03dd-48bf-aadd-8a0d9196b280@uniontech.com>
- <aQtKmP1W+k2+Gjdq@MiWiFi-R3L-srv>
-From: Qiang Ma <maqianga@uniontech.com>
-Message-ID: <1E51DC0D8C72320F+8ad85e3e-1f03-4ca9-ba29-f2ff8a4cb831@uniontech.com>
-Date: Wed, 5 Nov 2025 23:05:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	Wed, 05 Nov 2025 17:37:22 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 0542440C4A;
+	Wed,  5 Nov 2025 17:37:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C02C4CEF5;
+	Wed,  5 Nov 2025 17:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762364238;
+	bh=oikeBsTkXESg/zQM0VeX21fpP5BX4NjeQ4ImkTAOD5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FwssDAbz9953tgEm10JYoi4KJCfP6SA6HAnQavrw7zTCAAxZbffzhzNi1qIUHFtYB
+	 wktfURi/o17LfLNLdryKQcTkeufo9Aa+Yt+Z1np3CrMVo321ZTgvxxCWVfmLki1ioB
+	 ChNFrzDkmWVMpPJbteshSWo352Oe8lIzVbH+Q0ePF02kVWIzYfzquMgYJYdu88LS4k
+	 +CXAY85sr37wiOCTIs8Uugg5lhkgSTPGGGIzyqgOSWZoqE1sbFC7xnD6zrTXKn6zxg
+	 IHoTiDci/Ni/aU+QDZVvHJ71CB3OFl9+zb8hevZBjPFcpWNvWPXC4agZJQDi2Q9t2P
+	 XLtb2qGWIgoQQ==
+Date: Wed, 5 Nov 2025 19:37:12 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: add myself as a reviewer for KHO
+Message-ID: <aQuLSAAy-hfxLVsJ@kernel.org>
+References: <20251105102022.18798-1-pratyush@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aQtKmP1W+k2+Gjdq@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: M0mNcQTrro1WmpLn6mrucPL6KieEWv0cnLvbUp67Up68cap7GnOhRUQ/
-	Tb1a29tZOwyCbMmMGiA+KmGR/Slx7LYfF8a1701na6gIvghr3MBgZVptSXCHlkjL3jWfRa2
-	AprMBd5bxK2oST+32Wq9qfIOwP//oIWozp/CB+5tbR351ydv0Cv22gjmdq5hEAd9tOw/d6e
-	oM7+mYbSu3Dy4cz/Z3wIz7Hscbbkr+tzQd4AL9Y/Xp8n4qSYuCiBttCLNsDHxSpIAMGp1G1
-	7kJ0hK2m2XE7RV1up5PKbkqI0d+PnBJbXSInCzi5ssJvzKk5fe2wkRSkn0+PLbJpEDM1/FM
-	GX3XFJdIKbrLO0uegP/V+6rwmlswv7lyquDhpJGOUPXLQKhB7in0DBq68vQnKiTsasx0Gx6
-	JhpDENMYPB0RrQRoQV4zlpyIIa/QqADKhN2gigGiPybu3vAbnF8BEBNbxX+BXjrzfpocR/e
-	QgPW363MUWikdUzip9Blqjicxq899UM3WRv1/XVntiorTf8lCODly+C61GjHuAXwo0UIdmI
-	l8rdoIRtMbrBUXwdCSJZUUUVv/pjLj/5muDhZBWuXmdBoVJiw65Cai84y7kkf5oGIwCAiSv
-	D65OvflhB/aCWdTiapWUJLO2aq5TazYlBHNTN4PLyWEwaygTfnmfkT7kWTwq84Ps4boLBEp
-	6g3DLuEaqDq6+fAGa8su9c4vQ1geadfhlu19bqy4jGUlv6I5A969ou9o0cUWIsOWnX2ZLTF
-	FcVPCsKKten3kfC6VfZO4U/fTsrqNs8JzU6l+TuJvf88qtdEcv0fU6Xsu08YnlHifitByEr
-	Z44nRYbUzWlL419SubyL3P7Yg5D0R0OSmdLCDkj2jn95v2dcHtV7pNpRM73XpcLlyGY3yLu
-	cGiybkL6e9Tj4M+E2WsrUBw8WXyCBEqPE3Q63sv+RgD2zhaP4+FMV99FWL+YrOwcd3s3lwL
-	D8PDADqJqXuEcyccBEhAZzVrmhmbYXI+y68avl81LXE2DkFk6xFwl2m7LQ0ORoO00bDbPn2
-	sGeQcbFinjUNj5JAhTAXC78NFWYa1tuluIS9l4a1Kgv6ODKRMBRPDVXa5BdSxjGeoFHXU1h
-	t19EwSyJBs6kVBOxk0CCx80GvzoXQ7dAMvkClmqQ7vz
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251105102022.18798-1-pratyush@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251105_070552_830147_68BD582B 
-X-CRM114-Status: GOOD (  26.77  )
+X-CRM114-CacheID: sfid-20251105_093721_948991_8FE9B373 
+X-CRM114-Status: GOOD (  15.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,115 +74,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Wed, Nov 05, 2025 at 11:20:19AM +0100, Pratyush Yadav wrote:
+> I have been reviewing most patches for KHO already, and it is easier to
+> spot them if I am directly in Cc.
+> 
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 
-On 2025/11/5 下午9:01, Baoquan He wrote:
-> On 11/05/25 at 07:28pm, Qiang Ma wrote:
->> 在 2025/11/5 16:55, Baoquan He 写道:
->>> On 11/05/25 at 04:35pm, Qiang Ma wrote:
->>>> 在 2025/11/5 15:53, Baoquan He 写道:
->>>>> On 11/05/25 at 11:41am, Qiang Ma wrote:
->>>>>> 在 2025/11/5 11:01, Baoquan He 写道:
->>>>>>> On 11/03/25 at 02:34pm, Qiang Ma wrote:
->>>>>>>> The commit a85ee18c7900 ("kexec_file: print out debugging message
->>>>>>>> if required") has added general code printing in kexec_file_load(),
->>>>>>>> but not in kexec_load().
->>>>>>>>
->>>>>>>> Especially in the RISC-V architecture, kexec_image_info() has been
->>>>>>>> removed(commit eb7622d908a0 ("kexec_file, riscv: print out debugging
->>>>>>>> message if required")). As a result, when using '-d' for the kexec_load
->>>>>>>> interface, print nothing in the kernel space. This might be helpful for
->>>>>>>> verifying the accuracy of the data passed to the kernel. Therefore,
->>>>>>>> refer to this commit a85ee18c7900 ("kexec_file: print out debugging
->>>>>>>> message if required"), debug print information has been added.
->>>>>>>>
->>>>>>>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
->>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202510310332.6XrLe70K-lkp@intel.com/
->>>>>>>> ---
->>>>>>>>      kernel/kexec.c | 11 +++++++++++
->>>>>>>>      1 file changed, 11 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/kernel/kexec.c b/kernel/kexec.c
->>>>>>>> index c7a869d32f87..9b433b972cc1 100644
->>>>>>>> --- a/kernel/kexec.c
->>>>>>>> +++ b/kernel/kexec.c
->>>>>>>> @@ -154,7 +154,15 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->>>>>>>>      	if (ret)
->>>>>>>>      		goto out;
->>>>>>>> +	kexec_dprintk("nr_segments = %lu\n", nr_segments);
->>>>>>>>      	for (i = 0; i < nr_segments; i++) {
->>>>>>>> +		struct kexec_segment *ksegment;
->>>>>>>> +
->>>>>>>> +		ksegment = &image->segment[i];
->>>>>>>> +		kexec_dprintk("segment[%lu]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
->>>>>>>> +			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
->>>>>>>> +			      ksegment->memsz);
->>>>>>> There has already been a print_segments() in kexec-tools/kexec/kexec.c,
->>>>>>> you will get duplicated printing. That sounds not good. Have you tested
->>>>>>> this?
->>>>>> I have tested it, kexec-tools is the debug message printed
->>>>>> in user space, while kexec_dprintk is printed
->>>>>> in kernel space.
->>>>>>
->>>>>> This might be helpful for verifying the accuracy of
->>>>>> the data passed to the kernel.
->>>>> Hmm, that's not necessary with a debug printing to verify value passed
->>>>> in kernel. We should only add debug pringing when we need but lack it.
->>>>> I didn't check it carefully, if you add the debug printing only for
->>>>> verifying accuracy, that doesn't justify the code change.
->>>> It's not entirely because of it.
->>>>
->>>> Another reason is that for RISC-V, for kexec_file_load interface,
->>>> kexec_image_info() was deleted at that time because the content
->>>> has been printed out in generic code.
->>>>
->>>> However, these contents were not printed in kexec_load because
->>>> kexec_image_info was deleted. So now it has been added.
->>> print_segments() in kexec-tools/kexec/kexec.c is a generic function,
->>> shouldn't you make it called in kexec-tools for risc-v? I am confused by
->>> the purpose of this patchset.
->> There is a problem with what I expressed.
->> I don't want to add print_segments to riscv.
->> I want to add some debugging message(ksegment,kimage,flag) for kexec_load.
->>
->> Although ksegment debugging message has been printed in kexec-tools,
->> it is still helpful for debugging the kernel space function.
-> Sorry, I can't support that. We all prepare the loading segments for the
-> future jumping in kexec_tools if it's kexec_load interface. And calling
-> print_segments() to print those loading information is natural. Why do we
-> need print them two times for verifying if the printing is accuracy?
-Is it necessary to verify the user-space data after it is passed to the 
-kernel space?
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-> Could you explain why risc-v is special?
-At first, when I saw that in the RISC-V architecture,
-after kexec_image_info was removed from this commit eb7622d908a0
-("kexec_file, riscv: print out debugging message if required"),
-I thought only kexec_file_load was taken into consideration.
-However, without considering that kexec_load would call
-kexec_image_info to print segment and other debugging message,
-I think that since it has been deleted.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8ee7cb5fe838f..3c85bb0e381fc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13789,6 +13789,7 @@ KEXEC HANDOVER (KHO)
+>  M:	Alexander Graf <graf@amazon.com>
+>  M:	Mike Rapoport <rppt@kernel.org>
+>  M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+> +R:	Pratyush Yadav <pratyush@kernel.org>
+>  L:	kexec@lists.infradead.org
+>  L:	linux-mm@kvack.org
+>  S:	Maintained
+> 
+> base-commit: d25eefc46daf21bd1ebbc699f0ffd7fe11d92296
+> -- 
+> 2.47.3
+> 
 
-Then, I referred to kexec_file_load and added these debugging message
-to the general code of kexec_load. In this way, all architectures can
-print these general debugging message.
-
-Then I can add these debugging message to the general code,
-so that all architectures can print these general debugging message.
->>>>>>>> +
->>>>>>>>      		ret = kimage_load_segment(image, i);
->>>>>>>>      		if (ret)
->>>>>>>>      			goto out;
->>>>>>>> @@ -166,6 +174,9 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->>>>>>>>      	if (ret)
->>>>>>>>      		goto out;
->>>>>>>> +	kexec_dprintk("kexec_load: type:%u, start:0x%lx head:0x%lx flags:0x%lx\n",
->>>>>>>> +		      image->type, image->start, image->head, flags);
->>>>>>>> +
->>>>>>>>      	/* Install the new kernel and uninstall the old */
->>>>>>>>      	image = xchg(dest_image, image);
->>>>>>>> -- 
->>>>>>>> 2.20.1
->>>>>>>>
->
+-- 
+Sincerely yours,
+Mike.
 
