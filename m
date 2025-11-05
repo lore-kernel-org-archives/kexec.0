@@ -4,62 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C6A2CCFA0D
-	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 17:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A694FCCF9F8
+	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 17:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4oRX6H93K+8sdo8cLCGPw0zH57ZwvITwM9e6I+WIaDs=; b=eSa7qSOR92SZLKwN+AGVeAP0Jj
-	QkunzooCjDyy7FCdMybQIlP4W4HkA957uT/3Y8V7z4P79njVtNILlls4hjfruyKTh1NtsXDUXx87k
-	7izl2UcjNF4Z+dEXBmh6/R7iJBzZAm4YArz20SbAwtmbtFgDMOq93CUkc+Y3/dYXAI/ycdpaR5BHr
-	Qb50XcR2TVh5YgUAnxkJh5T3/f0KrHVa7xvYiei0DF+0C7mJxiJ+O09Yo9ny2w9aIEt+5vw2tTq2C
-	sI1lz/OIlHyY7Sl3kIop0SZfXgihZAeZTbMRgGTJtTYcK6w1dfg33DRrnLGsuOzj3KWMJy00ovGFy
-	Rxi3a6CQ==;
+	bh=8bZBUPtzzzev37+uLhtrdVviulgMuIjvC1GY3crWBFA=; b=y7I6o+5ZuhAXj7EzmcmawMvWcT
+	uMVxr6R7umQs/pjS7zog+Y6pdVgovHHkTZo+wqkWHbvssEbiVK166fC3mOWLG9pPbPYeqMzwx25tM
+	lihYjBqrHvqZRBkBMNi27FNESTXkgbimYq0CC+RvNtaVzQQtN1kDs7wzNxysaWLwI4YNVgDnoSz8b
+	49+5bQIgTaJDhh3Hfjyg/gS5jcafgUpERMUhc2r7e6w+4edDLO4vuorHmHi5ehVraM5KKz+0jbMYt
+	K77kDQe99R9g4HLgFWq700p2ufZ79gPpjkfyTxIok+TBd52cjt0GTNH7Z+vncLYuRcozTSHn4Lrsd
+	YQbBpdfg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGhRk-0000000EBqf-0JX0;
-	Wed, 05 Nov 2025 17:37:24 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vGhTb-0000000EC28-1yG9;
+	Wed, 05 Nov 2025 17:39:19 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGhRh-0000000EBqD-3dfv
+	id 1vGhTa-0000000EC1z-0xM2
 	for kexec@lists.infradead.org;
-	Wed, 05 Nov 2025 17:37:22 +0000
+	Wed, 05 Nov 2025 17:39:18 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0542440C4A;
-	Wed,  5 Nov 2025 17:37:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C02C4CEF5;
-	Wed,  5 Nov 2025 17:37:15 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 4AE2F60215;
+	Wed,  5 Nov 2025 17:39:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1058C4CEF5;
+	Wed,  5 Nov 2025 17:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762364238;
-	bh=oikeBsTkXESg/zQM0VeX21fpP5BX4NjeQ4ImkTAOD5Y=;
+	s=k20201202; t=1762364357;
+	bh=bnh3/CAPolVJG3UKOT5bLfJBBm8bDPtW71CYPwpR/mo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FwssDAbz9953tgEm10JYoi4KJCfP6SA6HAnQavrw7zTCAAxZbffzhzNi1qIUHFtYB
-	 wktfURi/o17LfLNLdryKQcTkeufo9Aa+Yt+Z1np3CrMVo321ZTgvxxCWVfmLki1ioB
-	 ChNFrzDkmWVMpPJbteshSWo352Oe8lIzVbH+Q0ePF02kVWIzYfzquMgYJYdu88LS4k
-	 +CXAY85sr37wiOCTIs8Uugg5lhkgSTPGGGIzyqgOSWZoqE1sbFC7xnD6zrTXKn6zxg
-	 IHoTiDci/Ni/aU+QDZVvHJ71CB3OFl9+zb8hevZBjPFcpWNvWPXC4agZJQDi2Q9t2P
-	 XLtb2qGWIgoQQ==
-Date: Wed, 5 Nov 2025 19:37:12 +0200
+	b=KqsEtYSWwRoLiOeSsx3jWqVxakKTAiqjHt3pYO+HqWKIOgMb8Yv//+Q4+L72UVBBh
+	 3y5NxBtKZHptCNufrfu4o+4y0RITkyywqH4qoGrzfzjTs58y2KKkTJcQKKU5RGWe0e
+	 teyXwwpyWA7Vp3b3rCKTXj+TLa6cPruHE69TBxiMprtcD2sV2VuhNzG685aYPXuj8n
+	 qOBGvBKiDh1AKxQ3F7/O4eUnz2HDhRzxyKnl3EzGswJndnPzAImRIu8a1Su0tLd2Or
+	 rmpOjTcW7kuYuRDkgB+kGV1av2uWHZ+9vPbiHvs75FsEuC/i0MN8b6hImRNqw+2m97
+	 gtxMrrog8iW6g==
+Date: Wed, 5 Nov 2025 19:39:09 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add myself as a reviewer for KHO
-Message-ID: <aQuLSAAy-hfxLVsJ@kernel.org>
-References: <20251105102022.18798-1-pratyush@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: extend file entry in KHO to include
+ subdirectories
+Message-ID: <aQuLvVjH12g7L-fY@kernel.org>
+References: <20251104143238.119803-1-lukas.bulwahn@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251105102022.18798-1-pratyush@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251105_093721_948991_8FE9B373 
-X-CRM114-Status: GOOD (  15.23  )
+In-Reply-To: <20251104143238.119803-1-lukas.bulwahn@redhat.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,34 +72,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Nov 05, 2025 at 11:20:19AM +0100, Pratyush Yadav wrote:
-> I have been reviewing most patches for KHO already, and it is easier to
-> spot them if I am directly in Cc.
+On Tue, Nov 04, 2025 at 03:32:38PM +0100, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 > 
-> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+> Commit 3498209ff64e ("Documentation: add documentation for KHO") adds the
+> file entry for 'Documentation/core-api/kho/*'. The asterisk in the end
+> means that all files in kho are included, but not files in its
+> subdirectories below.
+> Hence, the files under Documentation/core-api/kho/bindings/ are not
+> considered part of KHO, and get_maintainers.pl does not necessarily add the
+> KHO maintainers to the recipients of patches to those files. Probably, this
+> is not intended, though, and it was simply an oversight of the detailed
+> semantics of such file entries.
+> 
+> Make the file entry to include the subdirectories of
+> Documentation/core-api/kho/.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8ee7cb5fe838f..3c85bb0e381fc 100644
+> index 06ff926c5331..499b52d7793f 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -13789,6 +13789,7 @@ KEXEC HANDOVER (KHO)
->  M:	Alexander Graf <graf@amazon.com>
->  M:	Mike Rapoport <rppt@kernel.org>
->  M:	Pasha Tatashin <pasha.tatashin@soleen.com>
-> +R:	Pratyush Yadav <pratyush@kernel.org>
->  L:	kexec@lists.infradead.org
+> @@ -13836,7 +13836,7 @@ L:	kexec@lists.infradead.org
 >  L:	linux-mm@kvack.org
 >  S:	Maintained
-> 
-> base-commit: d25eefc46daf21bd1ebbc699f0ffd7fe11d92296
+>  F:	Documentation/admin-guide/mm/kho.rst
+> -F:	Documentation/core-api/kho/*
+> +F:	Documentation/core-api/kho/
+>  F:	include/linux/kexec_handover.h
+>  F:	kernel/kexec_handover.c
+>  F:	tools/testing/selftests/kho/
 > -- 
-> 2.47.3
+> 2.51.1
 > 
 
 -- 
