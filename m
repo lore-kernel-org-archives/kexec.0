@@ -4,108 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F957CCFA04
-	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 03:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD7A5CCF9F8
+	for <kexec@archiver.kernel.org>; Wed,  5 Nov 2025 03:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mqwLGxE4Y564ZewohM8e+2lOgfE4v+q7gK0OGvckDt4=; b=aq3so1JKR7pw9wZdibfjYK1CRe
-	QYnZW4a/VatTORJL/0jhvQ/Vwvy1BJNO6n8or+NgyGcPPATrkt0r7bYGEQQWfcX5Hj6Kc0aXkw0rT
-	ykchqJu4kQhOCfNsIJFnC19EwCvZfP+FPEDj0Nx+mblaf8XkT6kQEenOwVTpikl2mYjuLcVubTUGr
-	YSKwaPzJhBwQMK0loVU3JhwIhp5ICiv63Pl0FkUYAe9VAd0RPJSrj+Tt36pYH6Jg6Ni3nbrwN0wb2
-	vJmcJmTUaGSwx5mKSiE7Hqp56Sb8PODgFmYiI9IIaRJlCKQBOD31kTtoQwkB8U1s7BQi3PgXwQ817
-	iCZt7C/w==;
+	bh=Fz1i1LUkKPABBVeGFuF+90i9fD0TWAWKRpPjxlVqDQ8=; b=hzi1ZSQhn1BRyUSnME9LwHhXuv
+	5XjNWWicAEoo+4CaTCc//k2uA4Gs4EYR505grwUC20Wx0B55oulKpjjVh+Q5M4vfu297hBMZkKBpx
+	W85eU0Sa7YgNsB0qqpUjDzcO/apqA1N62vemKYjZFS7aKHMgWOUEd+Aejb9a10IaGXzIZgHbWXv8R
+	g21rN70Tlw/YNwh96wqKlChNRuFwejSPrikhkxJWg/54PirhnF2Fz34QoM90ey3yTKjeC+ApUXAJd
+	7KDXWx6PlMn7Fm1eBdo2SDUKl2dm0JG4X5lofkzouZcDFxWemHIIXs51XmdiboMNeKsJ7JNiPa6QL
+	SKDG7+xA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGUHy-0000000CxA5-2QVN;
-	Wed, 05 Nov 2025 03:34:26 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1vGUPJ-0000000Cy6G-42hI;
+	Wed, 05 Nov 2025 03:42:01 +0000
+Received: from smtpbgsg1.qq.com ([54.254.200.92])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGUHv-0000000Cx9F-0DcG
+	id 1vGUPG-0000000Cy4D-3ej6
 	for kexec@lists.infradead.org;
-	Wed, 05 Nov 2025 03:34:25 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A4EgECR024476;
-	Wed, 5 Nov 2025 03:34:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mqwLGx
-	E4Y564ZewohM8e+2lOgfE4v+q7gK0OGvckDt4=; b=Fsh1zd9XmM+0Qw5AshzRsz
-	Gm3WrqmmPdjasc5DhPIlxPkc0zyRd28dbqtSNgmszN6AG18OZx++I7ERTsxWUD9G
-	pnxa0RnFKqJMCieG5Iet3ObncZlkpfZSrICpywsY49OOBHlh/oz2lJM0AoWJv5wa
-	ObDVX+z398WMx4K0rY4HatkaGdj5t097nbzN9xQeIShY0KjDIf416745mmG2vUk2
-	F2ukfci6aU5Ym3gvAtsj3dOM8UZDv2o2IoejlXCj3HjhfIg5SvAP2bHnNffIgCeZ
-	x1rTNVQYTHIfXxKLqdXZEWg4ATd0LlcTzA/CznUXsOXeE4JbeXswRAQfTxDv8KyQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59vuf6qe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Nov 2025 03:34:20 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A530ZDI009855;
-	Wed, 5 Nov 2025 03:34:19 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5x1ke6ew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Nov 2025 03:34:19 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A53YH7B59769142
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Nov 2025 03:34:17 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 57CD420043;
-	Wed,  5 Nov 2025 03:34:17 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C732F20040;
-	Wed,  5 Nov 2025 03:34:15 +0000 (GMT)
-Received: from [9.109.204.116] (unknown [9.109.204.116])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Nov 2025 03:34:15 +0000 (GMT)
-Message-ID: <a81bf9c0-f8c8-49f9-965d-26f704a73517@linux.ibm.com>
-Date: Wed, 5 Nov 2025 09:03:43 +0530
+	Wed, 05 Nov 2025 03:42:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1762314078;
+	bh=Fz1i1LUkKPABBVeGFuF+90i9fD0TWAWKRpPjxlVqDQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=p4Qfm/O8eUwmCkXyYb9QYb2gd6ZrMx9VQKIs9JVXvUr1DyYmU3EGHZarSoSBu3hy4
+	 8vtQ7eU0+8XnSLN8/9qSHcsCNjerhX7tkfBjIwfy2Z3nSPnqG0VeyKnXIT42KxkvZu
+	 y8OmLnt/xipiXrKigicZSrhoLlqMW1hm/HkE/AcQ=
+X-QQ-mid: esmtpsz17t1762314071t04862f69
+X-QQ-Originating-IP: VZ8hyRnddlbw0XyeY8Fe92+B5KFDCJfwg0xaIeEEtQg=
+Received: from [10.10.74.117] ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 05 Nov 2025 11:41:09 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4576968291990005006
+Message-ID: <5FC4A8D79744B238+97288be4-6c1a-4c0d-ae7d-be2029ec87f3@uniontech.com>
+Date: Wed, 5 Nov 2025 11:41:09 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Export kdump crashkernel CMA ranges
-To: Baoquan he <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Bohac <jbohac@suse.cz>, Shivang Upadhyay <shivangu@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
-References: <20251103035859.1267318-1-sourabhjain@linux.ibm.com>
- <aQrBbYVEQleExjpk@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v2 3/4] kexec: print out debugging message if required for
+ kexec_load
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20251103063440.1681657-1-maqianga@uniontech.com>
+ <20251103063440.1681657-4-maqianga@uniontech.com>
+ <aQq97iGeYvZdr3SX@MiWiFi-R3L-srv>
 Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <aQrBbYVEQleExjpk@MiWiFi-R3L-srv>
+From: Qiang Ma <maqianga@uniontech.com>
+In-Reply-To: <aQq97iGeYvZdr3SX@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HXZlabnTa8h_DEIcxvl6Sm-kK7acfCMs
-X-Proofpoint-GUID: HXZlabnTa8h_DEIcxvl6Sm-kK7acfCMs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfX/2AOhhSIVWQ3
- CEMlQwF3PoJSFF8N6w/iSrlQZ7dH9aqMHwpp6EAayXxRCihpo2E+PpouVBw/L4wmuBokZSRU3Y9
- VWx6Z5TFWqNJwggDUgDUMkW2t9bloYQpA5VoIshtPdqjOWfxlQJHXzsZVYX0ofHtT9d/qNA9G4g
- bN4sjRu2oChRnZmA+3iW5eDQNoF9gazfJY2UlR7dtYKL5YZQcCTk85zg7AJ/dSkdCEutsyTHJnM
- LsFv+idoiWRcjDSW9wRj3802H6uRnqKxa7YO2cnyi5cNbLOKGXLiB1te07/cptx25ISLlO/dCiF
- ykzxtk4L24YlaTHi3y73Vwx9EMsHqHCvaZ2xaf/2Bq8phBDw9+RddWG1PN321EhNFpPDCcYnAHp
- 8GvFpss+rLobSzBRzYDKw+EwC6OnVA==
-X-Authority-Analysis: v=2.4 cv=U6qfzOru c=1 sm=1 tr=0 ts=690ac5bc cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=XWi_oYZyp0CedhVi0gkA:9 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-05_02,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 impostorscore=0 spamscore=0 phishscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511010021
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
+X-QQ-XMAILINFO: MAN6sKHDZ5xSrxCnFlhyBCwy/ehiSqR3NikowjD2bOoDld6ue6Uy8Xaf
+	6rHdi0fmC/XUMGCb5sXYb5ugGOHCvVZ3AfojMH/LRyQ2IfcyVKN5LAfBl+MT3FNJPxavsVk
+	U+wHM8A0pHk/zxojtc/m6LcPshKO0jV1zexHfq9ijIS0LLyek2n/d8B2yiE+++PDevh7+0e
+	5noqa7UWvrRirb7B7hiqGB4vPephCZq+ZNbvZUFtfuBRklOZp3csPBGNpdU+sOSCXrlmhoL
+	YrKjZd6LF8uBUxTwNLA+1CQHokTi2v5lfHOrrkjJ8HaZQNZtH5U1E2wweEi+sqA85vwC0OT
+	UPbvNoG9PjTTwbKJ5itcokxlq05+U0fcahtSG0xPSm+mXnPmj7nGAhJYVv4O6chDvNMcQLU
+	WPlUfrLRE3xRLMH5fx5Az3yPmSURCVTk8+jVhhNT8UzuC57lLfNzqlqi1gdDEfADLGBq3wq
+	8DNStGIQdTJ8Lb5kiEKxKdmGHHjxvQoyZzvuaIOCi9H2mp07bvCd1aTikz0j0LuRgKc6ELr
+	4H+b1KB+6E5p8t9LQq+DKdZSbDkE8w3xza8bLIEkZ1p+ltCanJoIVcufNLOTmaoBa9o98r6
+	QHjZmjs812MaB4tppTnykahEo8mKj3e+2nbZ0daKR/c7PxocYv5QYHrxMmm7szOw5KDRrr7
+	LP7pB9xjdpxcUSyGC2/CZiLKmb6lAACZOVJZpO9vRiB2DxV+T/QZdW564C/M0j3Ef6XEDvr
+	hvLsH8nNrxFs93r2R7R8wRCHYd3eDImLbUSa/98NPs4cbfK3baaZy7spnTmnELClAEEuDuN
+	/G/IlxWTQuq41fJgddNcfboBoDkQwvshM/GjMtHEe1Z1CasVyD9qU6qC+PlQ+7ZcCHJL/L0
+	4S2p13z/oN5HKRRi9gsaV8F4MDdQyCZryYDnmz4XrrU7tX94+fx99y//VbH48nr9S/vmK6Q
+	ut7bmaXpU+Ue1qCAY+otiD/MYoeaZBC86cquopZdlNNHmu5CuD2mUoLm8Fn4wocuhrCCBWC
+	dwbmI9rR5QDxOwNa7kP5onO2C02GuyQzGexLzVKg==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251104_193423_446148_977D9242 
-X-CRM114-Status: GOOD (  15.51  )
+X-CRM114-CacheID: sfid-20251104_194159_287372_6753FFD5 
+X-CRM114-Status: GOOD (  16.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,38 +97,69 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-
-On 05/11/25 08:45, Baoquan he wrote:
-> On 11/03/25 at 09:28am, Sourabh Jain wrote:
->> /sys/kernel/kexec_crash_cma_ranges to export all CMA regions reserved
->> for the crashkernel to user-space. This enables user-space tools
->> configuring kdump to determine the amount of memory reserved for the
->> crashkernel. When CMA is used for crashkernel allocation, tools can use
->> this information to warn users that attempting to capture user pages
->> while CMA reservation is active may lead to unreliable or incomplete
->> dump capture.
+在 2025/11/5 11:01, Baoquan He 写道:
+> On 11/03/25 at 02:34pm, Qiang Ma wrote:
+>> The commit a85ee18c7900 ("kexec_file: print out debugging message
+>> if required") has added general code printing in kexec_file_load(),
+>> but not in kexec_load().
 >>
->> While adding documentation for the new sysfs interface, I realized that
->> there was no ABI document for the existing kexec and kdump sysfs
->> interfaces, so I added one.
+>> Especially in the RISC-V architecture, kexec_image_info() has been
+>> removed(commit eb7622d908a0 ("kexec_file, riscv: print out debugging
+>> message if required")). As a result, when using '-d' for the kexec_load
+>> interface, print nothing in the kernel space. This might be helpful for
+>> verifying the accuracy of the data passed to the kernel. Therefore,
+>> refer to this commit a85ee18c7900 ("kexec_file: print out debugging
+>> message if required"), debug print information has been added.
 >>
->> The first patch adds the ABI documentation for the existing kexec and
->> kdump sysfs interfaces, and the second patch adds the
->> /sys/kernel/kexec_crash_cma_ranges sysfs interface along with its
->> corresponding ABI documentation.
+>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202510310332.6XrLe70K-lkp@intel.com/
+>> ---
+>>   kernel/kexec.c | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
 >>
->> *Seeking opinions*
->> There are already four kexec/kdump sysfs entries under /sys/kernel/,
->> and this patch series adds one more. Should we consider moving them to
->> a separate directory, such as /sys/kernel/kexec, to avoid polluting
->> /sys/kernel/? For backward compatibility, we can create symlinks at
->> the old locations for sometime and remove them in the future.
-> That sounds a good idea, will you do it in v2? Because otherwise the
-> kexec_crash_cma_ranges need be moved too.
+>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>> index c7a869d32f87..9b433b972cc1 100644
+>> --- a/kernel/kexec.c
+>> +++ b/kernel/kexec.c
+>> @@ -154,7 +154,15 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+>>   	if (ret)
+>>   		goto out;
+>>   
+>> +	kexec_dprintk("nr_segments = %lu\n", nr_segments);
+>>   	for (i = 0; i < nr_segments; i++) {
+>> +		struct kexec_segment *ksegment;
+>> +
+>> +		ksegment = &image->segment[i];
+>> +		kexec_dprintk("segment[%lu]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
+>> +			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+>> +			      ksegment->memsz);
+> There has already been a print_segments() in kexec-tools/kexec/kexec.c,
+> you will get duplicated printing. That sounds not good. Have you tested
+> this?
+I have tested it, kexec-tools is the debug message printed
+in user space, while kexec_dprintk is printed
+in kernel space.
 
-Yes I will include it in v2.
-
-Thanks,
-Sourabh Jain
+This might be helpful for verifying the accuracy of
+the data passed to the kernel.
+>> +
+>>   		ret = kimage_load_segment(image, i);
+>>   		if (ret)
+>>   			goto out;
+>> @@ -166,6 +174,9 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+>>   	if (ret)
+>>   		goto out;
+>>   
+>> +	kexec_dprintk("kexec_load: type:%u, start:0x%lx head:0x%lx flags:0x%lx\n",
+>> +		      image->type, image->start, image->head, flags);
+>> +
+>>   	/* Install the new kernel and uninstall the old */
+>>   	image = xchg(dest_image, image);
+>>   
+>> -- 
+>> 2.20.1
+>>
+>
 
 
