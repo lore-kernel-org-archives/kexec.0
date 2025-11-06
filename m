@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BAC48CCFA13
-	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 04:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F0A8CCFA03
+	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 04:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=T98toL3WRCrRsv5kuQ1L3LAsNFaeNulv4FwQH6BM8eA=; b=MWT/dhVSa22FI13jShQlWgM7vl
-	i/UAaUixD8OPnkOU2ak0pPFAZ1dgX9UWLu4jmrdM9v4LXH59kAZ9K14jHccHFGUomY278Y6CWQkVB
-	wkteJwqeJ5yJPBOUa1v7iUYaImuYxsSg7Xn3aC4N4kH5DYUlUd7RCLxfowTavqVi9XO5dkW5qMdGO
-	wkyRl61+BKuPNXA1uMVkDECV3zj/Is2I9qMv/clTuFzBrS3kvH84n8YGUAEyRFfvs02Ei7/43lgev
-	WQb7wb40R6pBfgFoWLuSuowEYevUgsH2Kj112tbdoBU/Dv4M60p18hru6QCnrga3w4QHwnUizmRtp
-	OEuECnZQ==;
+	bh=BqbBVE44ajeexSzF0N19NMVE1A4eRgniI5vkn68ApmA=; b=Gp3p9DnPPUOD5/DeuwVhXWfsIQ
+	+eCITQ1geAWvKAYacUFbPup8JVQVFFP+KBwGB/mkfGyDUyxZg3NFEz/9Ogf6o0mLjAZsvR89p7mUU
+	0JDN5ecDC6LEZ2kUCdcuCBibuYmjLUqU2YMyIvjXK5ttlYx/L1XUvTpSGeWsQk9+JTxlUFZBGEx6N
+	Kyj120yMqR26vyyGYmPmDKP+SPj0lg7GhKLRTrNJFSFdCAgeM4nvP5OgmMmCAFnxNGXGbh25EExYB
+	WeaFLyK2gj6WRNdAcQ/IQRKiFW/C44DkAfRgH3kx25Eb3/wTgKV3O3DREQWq6INQgSliBV6S6urqJ
+	3st2ZI3w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGryB-0000000ErpL-0Cyh;
-	Thu, 06 Nov 2025 04:51:35 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vGryG-0000000Err5-1MQE;
+	Thu, 06 Nov 2025 04:51:40 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGry9-0000000Erof-2Ekb
+	id 1vGryD-0000000ErqF-3t42
 	for kexec@lists.infradead.org;
-	Thu, 06 Nov 2025 04:51:34 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A5HQvtf012367;
-	Thu, 6 Nov 2025 04:51:32 GMT
+	Thu, 06 Nov 2025 04:51:39 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A5GeDhJ028252;
+	Thu, 6 Nov 2025 04:51:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=T98toL3WRCrRsv5ku
-	Q1L3LAsNFaeNulv4FwQH6BM8eA=; b=KMVFPKSBKG1yEDEkpcQFX075Hh4xjGbZm
-	T7TzVT58fOplUzk+H1uTOka5sJNZ06U1a3wSxzgdnwmHKzusGAwZfh1zE3rfGP1f
-	UxGzcOKg9Bl7bBgAPmT/ceveRk4O0mEktfIHn/w+Q2f1Bp7XN/fLiyx2fHY/tCBp
-	Nsymbuvx3dfkNau4W5fOoZ/R6RQUGjxvwzWZKAF8m+GXtwiF2L/agDeijXGoc3tn
-	3p5sdSLXErY+eVpGTOZvBgerd7+PQel8IWBws7891cE9gXoedQskEtTK8GMo5VOD
-	HL2X5l9tRSQQv/0vWGLaM74+S8An8dh9jjgOpfvCWcLpXQ8TMjqcA==
+	:mime-version:references:subject:to; s=pp1; bh=BqbBVE44ajeexSzF0
+	N19NMVE1A4eRgniI5vkn68ApmA=; b=DQhnx8SgMz1L0OVQIe+J9kSrGgVOjfPxz
+	YOcNrHVF+F34zHlT7wLqueF2QhUU+rMoibNdKCr9G0y/gFygfj7uLXeWTW/gFqgw
+	RsYAyhDp/zBuX7eTET6hp88Y/k9yvs5c78GRriothfbP1oKD3z0Y4u9E12n/hRAX
+	ncE5mFfXijuC/B+iSkPYlaIa7IgH6XnJkY0X9m2cRbCyiYxCD771MHuUmq5vecsp
+	Nj+C/9rYXcMHRwJA5sxh++HjF6Aobfz6F1s1G5/3GHLMMQPzZGXIEN/oYhmzcbr8
+	N+dN+YjhjyKr3SbrwLRj19Tdw5+1mwO4SayFKZ63ssqTr5sI50wXQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a58mm4h54-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q955n7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:32 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A64pVgq013096;
-	Thu, 6 Nov 2025 04:51:31 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a58mm4h53-1
+	Thu, 06 Nov 2025 04:51:36 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A64pav6020381;
+	Thu, 6 Nov 2025 04:51:36 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q955n5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:31 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A63tr5t009874;
-	Thu, 6 Nov 2025 04:51:31 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5x1kknda-1
+	Thu, 06 Nov 2025 04:51:36 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A62XRNP025557;
+	Thu, 6 Nov 2025 04:51:35 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5vhsuwb9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:30 +0000
+	Thu, 06 Nov 2025 04:51:35 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A64pRa946399962
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A64pVvY35783096
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Nov 2025 04:51:27 GMT
+	Thu, 6 Nov 2025 04:51:31 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0D05720049;
-	Thu,  6 Nov 2025 04:51:27 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id BAA1F2004B;
+	Thu,  6 Nov 2025 04:51:31 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E0A820040;
-	Thu,  6 Nov 2025 04:51:23 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 2078420049;
+	Thu,  6 Nov 2025 04:51:28 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Nov 2025 04:51:23 +0000 (GMT)
+	Thu,  6 Nov 2025 04:51:27 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linux-kernel@vger.kernel.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
@@ -83,41 +83,41 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
         Shivang Upadhyay <shivangu@linux.ibm.com>,
         Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
         kexec@lists.infradead.org
-Subject: [PATCH v2 2/5] kexec: move sysfs entries to /sys/kernel/kexec
-Date: Thu,  6 Nov 2025 10:21:04 +0530
-Message-ID: <20251106045107.17813-3-sourabhjain@linux.ibm.com>
+Subject: [PATCH v2 3/5] Documentation/ABI: mark old kexec sysfs deprecated
+Date: Thu,  6 Nov 2025 10:21:05 +0530
+Message-ID: <20251106045107.17813-4-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251106045107.17813-1-sourabhjain@linux.ibm.com>
 References: <20251106045107.17813-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: z-2NTfWLO7M7G9Qz_UUPo3CHwaBFYT3C
-X-Proofpoint-GUID: rAObDXFRdIlBfSWLkaB1y5Py-4Ps04Ot
-X-Authority-Analysis: v=2.4 cv=SqidKfO0 c=1 sm=1 tr=0 ts=690c2954 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Authority-Analysis: v=2.4 cv=StmdKfO0 c=1 sm=1 tr=0 ts=690c2958 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
  a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8
- a=_1xw4giDfGel_dwv_FAA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
+ a=LRU2jnFezOS3J6eLL00A:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
  a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAwOSBTYWx0ZWRfX0SCvhaPcOs9h
- MCC5giHrpLRCI069eBBBuYys44xNKRT5k+RiTXy5T6B4JYFG1f4dcytICQu84Q67367pskYcekl
- EMdYDAO+SmOYBMdRy7DRSqj0LU5O2OLQUBySOpHfMpvhdlo0lx9NPGcgp6fBmEBELvr39SLhH7r
- kY2dkegEocwtJx1rrGTnYD3LQSCDIhirD5XazV2yKVcNaw39FG5g5fSkkWaR16I+BQVwNakO4YU
- jRO9oKI0BxP1N+Xj6KPT0+g2FkM6i2qGYHGXbsIsuOUbPYZAnb6wzLRluA9HK88Q0+1AbW80uIo
- diMtVLEzfmBiYBWkf3b+YNz78TGTr3NUZoAJu4cBVEJtfJNmMCYtap5ipwz5yVVR5Eif2gAQj0T
- kENHEFfP76l96R+2QgozoOSILzdhTw==
+X-Proofpoint-ORIG-GUID: vNLE-dy86bDOAcNAjQBwrBWwCA7-xOhg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAxOCBTYWx0ZWRfXypYRgNz1MH7Z
+ yvlBJAFZ0PMhrMc+pVVDSAYgkOrgByjt+r6p8Iq9xjbISey17j/UsMjgtWx5NXe48mKpvU8Qhs1
+ //MvkKMlu4MysADaIf65KfaSdaNoiC2W5+F9oKA1Fa2yjhCe0bIiPMEOlhZMlqs0hjqQX/SggsH
+ EqGTLBzfOKSia3NSHHwfmO69HOEQXGv0ZA0EYoImfX77DK6Dz1UhBtVtATsBZWJlNxZpYkV/Uu/
+ SBQdAgsWSvJLsbLd3CWHGlgKwl9trGSyrRv/KyY+bL4q4rkR9FVyr4p+btGpUYoCpgYbg6NTu6R
+ r7bNbTq/ib8oj26ZfUsp7ll+bC+omajcds2ek4G0HaAHSikPX90LRqhgcg93DMWvnrlUVGyiSqH
+ MOwPT1GzJvuFBWKhp2Xx5cQa6Vq5Hw==
+X-Proofpoint-GUID: wftntqg2j8hSyYxVSEkyTeMhtjun1Gq9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-05_09,2025-11-03_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ spamscore=0 suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 adultscore=0 bulkscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010009
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010018
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251105_205133_695609_5BFCA64B 
-X-CRM114-Status: GOOD (  24.47  )
+X-CRM114-CacheID: sfid-20251105_205137_970214_EA02D3F1 
+X-CRM114-Status: GOOD (  14.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,25 +132,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Several kexec and kdump sysfs entries are currently placed directly
-under /sys/kernel/, which clutters the directory and makes it harder to
-identify unrelated entries. To improve organization and readability,
-these entries are now moved under a dedicated directory,
-/sys/kernel/kexec.
+The previous commit ("kexec: move sysfs entries to /sys/kernel/kexec")
+moved all existing kexec sysfs entries to a new location. The ABI
+document is updated to include a note about the deprecation of the old
+kexec sysfs entries.
 
-For backward compatibility, symlinks are created at the old locations
-so that existing tools and scripts continue to work. These symlinks can
-be removed in the future once users have switched to the new path.
-
-While creating symlinks, entries are added in /sys/kernel/ that point
-to their new locations under /sys/kernel/kexec/. If an error occurs
-while adding a symlink, it is logged but does not stop initialization
-of the remaining kexec sysfs symlinks.
-
-The /sys/kernel/<crash_elfcorehdr_size | kexec/crash_elfcorehdr_size>
-entry is now controlled by CONFIG_CRASH_DUMP instead of
-CONFIG_VMCORE_INFO, as CONFIG_CRASH_DUMP also enables
-CONFIG_VMCORE_INFO.
+The following kexec sysfs entries are deprecated:
+- /sys/kernel/kexec_loaded
+- /sys/kernel/kexec_crash_loaded
+- /sys/kernel/kexec_crash_size
+- /sys/kernel/crash_elfcorehdr_size
 
 Cc: Aditya Gupta <adityag@linux.ibm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -168,245 +159,37 @@ Cc: linuxppc-dev@lists.ozlabs.org
 Cc: kexec@lists.infradead.org
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- kernel/kexec_core.c | 118 ++++++++++++++++++++++++++++++++++++++++++++
- kernel/ksysfs.c     |  68 +------------------------
- 2 files changed, 119 insertions(+), 67 deletions(-)
+ .../sysfs-kernel-kexec-kdump                     | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-kexec-kdump (61%)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index fa00b239c5d9..2e12a164e870 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -41,6 +41,7 @@
- #include <linux/objtool.h>
- #include <linux/kmsg_dump.h>
- #include <linux/dma-map-ops.h>
-+#include <linux/sysfs.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -1229,3 +1230,120 @@ int kernel_kexec(void)
- 	kexec_unlock();
- 	return error;
- }
+diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
+similarity index 61%
+rename from Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+rename to Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
+index 96b24565b68e..96b4d41721cc 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
++++ b/Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
+@@ -1,3 +1,19 @@
++NOTE: all the ABIs listed in this file are deprecated and will be removed after 2028.
 +
-+static ssize_t loaded_show(struct kobject *kobj,
-+				 struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", !!kexec_image);
-+}
-+static struct kobj_attribute loaded_attr = __ATTR_RO(loaded);
++Here are the alternative ABIs:
+++------------------------------------+-----------------------------------------+
++| Deprecated                         | Alternative                             |
+++------------------------------------+-----------------------------------------+
++| /sys/kernel/kexec_loaded           | /sys/kernel/kexec/loaded                |
+++------------------------------------+-----------------------------------------+
++| /sys/kernel/kexec_crash_loaded     | /sys/kernel/kexec/crash_loaded          |
+++------------------------------------+-----------------------------------------+
++| /sys/kernel/kexec_crash_size       | /sys/kernel/kexec/crash_size            |
+++------------------------------------+-----------------------------------------+
++| /sys/kernel/crash_elfcorehdr_size  | /sys/kernel/kexec/crash_elfcorehdr_size |
+++------------------------------------+-----------------------------------------+
 +
-+#ifdef CONFIG_CRASH_DUMP
-+static ssize_t crash_loaded_show(struct kobject *kobj,
-+				       struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", kexec_crash_loaded());
-+}
-+static struct kobj_attribute crash_loaded_attr = __ATTR_RO(crash_loaded);
 +
-+static ssize_t crash_size_show(struct kobject *kobj,
-+				       struct kobj_attribute *attr, char *buf)
-+{
-+	ssize_t size = crash_get_memory_size();
-+
-+	if (size < 0)
-+		return size;
-+
-+	return sysfs_emit(buf, "%zd\n", size);
-+}
-+static ssize_t crash_size_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	unsigned long cnt;
-+	int ret;
-+
-+	if (kstrtoul(buf, 0, &cnt))
-+		return -EINVAL;
-+
-+	ret = crash_shrink_memory(cnt);
-+	return ret < 0 ? ret : count;
-+}
-+static struct kobj_attribute crash_size_attr = __ATTR_RW(crash_size);
-+
-+#ifdef CONFIG_CRASH_HOTPLUG
-+static ssize_t crash_elfcorehdr_size_show(struct kobject *kobj,
-+			       struct kobj_attribute *attr, char *buf)
-+{
-+	unsigned int sz = crash_get_elfcorehdr_size();
-+
-+	return sysfs_emit(buf, "%u\n", sz);
-+}
-+static struct kobj_attribute crash_elfcorehdr_size_attr = __ATTR_RO(crash_elfcorehdr_size);
-+
-+#endif /* CONFIG_CRASH_HOTPLUG */
-+#endif /* CONFIG_CRASH_DUMP */
-+
-+static struct attribute *kexec_attrs[] = {
-+	&loaded_attr.attr,
-+#ifdef CONFIG_CRASH_DUMP
-+	&crash_loaded_attr.attr,
-+	&crash_size_attr.attr,
-+#ifdef CONFIG_CRASH_HOTPLUG
-+	&crash_elfcorehdr_size_attr.attr,
-+#endif
-+#endif
-+	NULL
-+};
-+
-+struct kexec_link_entry {
-+	const char *target;
-+	const char *name;
-+};
-+
-+static struct kexec_link_entry kexec_links[] = {
-+	{ "loaded", "kexec_loaded" },
-+#ifdef CONFIG_CRASH_DUMP
-+	{ "crash_loaded", "kexec_crash_loaded" },
-+	{ "crash_size", "kexec_crash_size" },
-+#ifdef CONFIG_CRASH_HOTPLUG
-+	{ "crash_elfcorehdr_size", "crash_elfcorehdr_size" },
-+#endif
-+#endif
-+
-+};
-+
-+struct kobject *kexec_kobj;
-+ATTRIBUTE_GROUPS(kexec);
-+
-+static int __init init_kexec_sysctl(void)
-+{
-+	int error;
-+	int i;
-+
-+	kexec_kobj = kobject_create_and_add("kexec", kernel_kobj);
-+	if (!kexec_kobj) {
-+		pr_err("failed to create kexec kobject\n");
-+		return -ENOMEM;
-+	}
-+
-+	error = sysfs_create_groups(kexec_kobj, kexec_groups);
-+	if (error)
-+		goto kset_exit;
-+
-+	for (i = 0; i < ARRAY_SIZE(kexec_links); i++) {
-+		error = compat_only_sysfs_link_entry_to_kobj(kernel_kobj, kexec_kobj,
-+							     kexec_links[i].target,
-+							     kexec_links[i].name);
-+		if (error)
-+			pr_err("Unable to create %s symlink (%d)", kexec_links[i].name, error);
-+	}
-+
-+	return 0;
-+
-+kset_exit:
-+	kobject_put(kexec_kobj);
-+	return error;
-+}
-+
-+subsys_initcall(init_kexec_sysctl);
-diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-index eefb67d9883c..a9e6354d9e25 100644
---- a/kernel/ksysfs.c
-+++ b/kernel/ksysfs.c
-@@ -12,7 +12,7 @@
- #include <linux/sysfs.h>
- #include <linux/export.h>
- #include <linux/init.h>
--#include <linux/kexec.h>
-+#include <linux/vmcore_info.h>
- #include <linux/profile.h>
- #include <linux/stat.h>
- #include <linux/sched.h>
-@@ -119,50 +119,6 @@ static ssize_t profiling_store(struct kobject *kobj,
- KERNEL_ATTR_RW(profiling);
- #endif
- 
--#ifdef CONFIG_KEXEC_CORE
--static ssize_t kexec_loaded_show(struct kobject *kobj,
--				 struct kobj_attribute *attr, char *buf)
--{
--	return sysfs_emit(buf, "%d\n", !!kexec_image);
--}
--KERNEL_ATTR_RO(kexec_loaded);
--
--#ifdef CONFIG_CRASH_DUMP
--static ssize_t kexec_crash_loaded_show(struct kobject *kobj,
--				       struct kobj_attribute *attr, char *buf)
--{
--	return sysfs_emit(buf, "%d\n", kexec_crash_loaded());
--}
--KERNEL_ATTR_RO(kexec_crash_loaded);
--
--static ssize_t kexec_crash_size_show(struct kobject *kobj,
--				       struct kobj_attribute *attr, char *buf)
--{
--	ssize_t size = crash_get_memory_size();
--
--	if (size < 0)
--		return size;
--
--	return sysfs_emit(buf, "%zd\n", size);
--}
--static ssize_t kexec_crash_size_store(struct kobject *kobj,
--				   struct kobj_attribute *attr,
--				   const char *buf, size_t count)
--{
--	unsigned long cnt;
--	int ret;
--
--	if (kstrtoul(buf, 0, &cnt))
--		return -EINVAL;
--
--	ret = crash_shrink_memory(cnt);
--	return ret < 0 ? ret : count;
--}
--KERNEL_ATTR_RW(kexec_crash_size);
--
--#endif /* CONFIG_CRASH_DUMP*/
--#endif /* CONFIG_KEXEC_CORE */
--
- #ifdef CONFIG_VMCORE_INFO
- 
- static ssize_t vmcoreinfo_show(struct kobject *kobj,
-@@ -174,18 +130,6 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
- }
- KERNEL_ATTR_RO(vmcoreinfo);
- 
--#ifdef CONFIG_CRASH_HOTPLUG
--static ssize_t crash_elfcorehdr_size_show(struct kobject *kobj,
--			       struct kobj_attribute *attr, char *buf)
--{
--	unsigned int sz = crash_get_elfcorehdr_size();
--
--	return sysfs_emit(buf, "%u\n", sz);
--}
--KERNEL_ATTR_RO(crash_elfcorehdr_size);
--
--#endif
--
- #endif /* CONFIG_VMCORE_INFO */
- 
- /* whether file capabilities are enabled */
-@@ -255,18 +199,8 @@ static struct attribute * kernel_attrs[] = {
- #ifdef CONFIG_PROFILING
- 	&profiling_attr.attr,
- #endif
--#ifdef CONFIG_KEXEC_CORE
--	&kexec_loaded_attr.attr,
--#ifdef CONFIG_CRASH_DUMP
--	&kexec_crash_loaded_attr.attr,
--	&kexec_crash_size_attr.attr,
--#endif
--#endif
- #ifdef CONFIG_VMCORE_INFO
- 	&vmcoreinfo_attr.attr,
--#ifdef CONFIG_CRASH_HOTPLUG
--	&crash_elfcorehdr_size_attr.attr,
--#endif
- #endif
- #ifndef CONFIG_TINY_RCU
- 	&rcu_expedited_attr.attr,
+ What:		/sys/kernel/kexec_loaded
+ Date:		Jun 2006
+ Contact:	kexec@lists.infradead.org
 -- 
 2.51.0
 
