@@ -4,66 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02D19CCFA03
-	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 12:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79796CCFA05
+	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 14:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=LbyAEgDnJGsPB9foIQ8o4d15eE5i+swWjLhqn7YTe70=; b=WvFYBt0SOaF4LFyjqW5+h7s+Y2
-	Gm/lKkECjUpTBskhGX38MXo26d1evWn4pT4iNx7c1qHm13Nn9txVJN8Dynku7gEc3FConwMYZXkJH
-	uBr9V6pwZ1GPFQOUJ4GTxbPuvP9BVOyY/xlOBevxl3Njeeq/OVjj/bn/O7YqxhnXiAjyC+lX9WjHH
-	eDf9JWQrtAORoEuZzBiE+1JzjYTQR4qDsZWiTJ4nbBm8QOdArQYc22lB3yjpizfY3ZBl9zO1PmoMn
-	1g/hU3G8JnXW/ijZRcKQaEAZXY3+OWC9FTOwpFoDu7Dvv8iRh/Mm/WOVUXhsevF8IVyOaI1MhINYT
-	Z4y8f10Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=jh3BnHvW8PIXMHNCqBwP8m/N0iJoZMQt+GVZ+IQ2MbI=; b=L84b9c3taRk7SIS8DFTiShQFPj
+	icIIGmHfEQO4GR5eWxp+CChpGY6RxgVz0OeVWhHrQfyfmpD9Md1uIEqgNGu3Pg/Ctk/EpNwGIyDcH
+	B0zoo7z9sjREi2JE0N/EDKti/hHaLGD7KsbOpw4rBbI7MXm2gBc0Voibv/5XSgE70R8HocwXlsQBf
+	83jMstg2mCZx/amTMoF2+T0HsVf4NN/zUxNkdixof1YLffLqbl8xmxTfWMTTouMY6LzoWwaOJEzWn
+	pPTNw5d7lp3bngPgXz25y6GDWfddBbxcHUg3ZM2eiThPqN3VHxPmu2LJGa3RC5DFjreCGrzZtZpOC
+	76zLJUug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGyim-0000000FPz1-01OT;
-	Thu, 06 Nov 2025 12:04:08 +0000
-Received: from esa4.hc555-34.eu.iphmx.com ([207.54.77.171])
+	id 1vH18B-0000000Fi3N-3A7I;
+	Thu, 06 Nov 2025 14:38:31 +0000
+Received: from mgamail.intel.com ([198.175.65.20])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGyih-0000000FPxj-0Ab0
+	id 1vH188-0000000Fi2q-2JR2
 	for kexec@lists.infradead.org;
-	Thu, 06 Nov 2025 12:04:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1762430642; x=1793966642;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cNfxgOQuWs1JF6rvNLqtJujdXitEZmAXi/TntVweYso=;
-  b=R4jN8pCZUQSXgH1cgNNmc3sAiuFVZCoLQIAcrJIJEhUdANozoAt+Temz
-   VKMdu3twflEgI7DLjmuovwbfhFjXNmwdTXjL3GT4SmWYP/4/GWX3SRezt
-   QW+BeOB4NTkpbIJF2gtkA1DV//idlzBFj+PW5bnuct9APT2PDXeFi35sE
-   1UvxowqmKZ9oDKsgLJu34uuMrN5DXxMQlFSnb2oNbmsI4T5sRFcUexsOy
-   kbhDYerY5L8csyAkkaXJfVSr3oVwlB0I/PnLNtREQgcxizIeSgLqWVah/
-   2Lec0QbAbC0JtCnJv2DymdUIiSc6NYuNw+hZeU+JSISsuHE+qgiwaIqe2
-   w==;
-X-CSE-ConnectionGUID: jFIsLvRtQL+3dYn4G2CaQA==
-X-CSE-MsgGUID: IW+3toKsRICwMrhwXJyF5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 14:03:57 +0200
-X-CSE-ConnectionGUID: y/zLHxB6TuWlcqGezwVLVA==
-X-CSE-MsgGUID: 33g8M7SESS2KuHxclaBMMg==
-Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 06 Nov 2025 14:04:16 +0200
-Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Thu, 06 Nov 2025 14:03:56 +0200
-From: Pnina Feder <pnina.feder@mobileye.com>
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org,
-	Pnina Feder <pnina.feder@mobileye.com>
-Subject: [PATCH] util_lib: Add direct map fallback in vaddr_to_offset()
-Date: Thu,  6 Nov 2025 14:03:44 +0200
-Message-ID: <20251106120344.2382695-1-pnina.feder@mobileye.com>
+	Thu, 06 Nov 2025 14:38:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762439909; x=1793975909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+75GKPCI5jNkPc6bb4WB2j4Mz3JYShSPvH/44slbqt4=;
+  b=JzVjJi+LHixsvto3sZ6RlM6/x6uxfIYnEODuMwx3/U9FvppKFfG79c9Q
+   aVai1t16Df+blgJtdQatgOQ0bf207u+Mszd4NvdZ3ggRLmd+btUdyViZJ
+   PtM0uaCa5K/4UvdFdWz8/cZd3sYZdp7fga4Et/UXitktkBpuou6bMKMvm
+   7NxeIpepCpfYrk5R4EemStXfOlohU1YC9eEddfGfNc3j1oxQJivm+usLb
+   OGYfGApt2J/M7JTIx0COdkirweY0CTiAlzgu8T5SiOxebZij9QmKTamid
+   sONPWe1+1Aaelfc9UwNbCTdS6KVFhz8SfMRVH7lhiyO4KRoxxABjkF8f6
+   A==;
+X-CSE-ConnectionGUID: hccVG//zRt2yMhzcFnV6Cg==
+X-CSE-MsgGUID: CiRZMCS1QdyPvdsIkflvHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64274317"
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="64274317"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 06:38:28 -0800
+X-CSE-ConnectionGUID: mtLqvztIR2+6pQQoTPF7Mg==
+X-CSE-MsgGUID: ezPYJZsdQpq225RUv4XYxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="187487529"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 06 Nov 2025 06:38:24 -0800
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vH182-000U1K-1F;
+	Thu, 06 Nov 2025 14:38:22 +0000
+Date: Thu, 6 Nov 2025 22:38:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: oe-kbuild-all@lists.linux.dev, Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Baoquan he <bhe@redhat.com>, Jiri Bohac <jbohac@suse.cz>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shivang Upadhyay <shivangu@linux.ibm.com>,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v6] powerpc/kdump: Add support for crashkernel CMA
+ reservation
+Message-ID: <202511062213.dHidoorr-lkp@intel.com>
+References: <20251104132818.1724562-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251104132818.1724562-1-sourabhjain@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251106_040403_543662_23768680 
-X-CRM114-Status: GOOD (  18.92  )
+X-CRM114-CacheID: sfid-20251106_063828_635786_55546928 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,125 +95,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The vmcore-dmesg tool could fail with the message:
-"No program header covering vaddr 0x%llx found kexec bug?"
+Hi Sourabh,
 
-This occurred when a virtual address belonged to the kernel’s direct
-mapping region, which may not be covered by any PT_LOAD segment in
-the vmcore ELF headers.
+kernel test robot noticed the following build warnings:
 
-Add a direct-map fallback in vaddr_to_offset() that converts such
-virtual addresses using the known page and physical offsets. This
-allows resolving these addresses correctly.
+[auto build test WARNING on powerpc/next]
+[also build test WARNING on powerpc/fixes linus/master v6.18-rc4 next-20251106]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Tested on Linux 6.16 (RISC-V)
+url:    https://github.com/intel-lab-lkp/linux/commits/Sourabh-Jain/powerpc-kdump-Add-support-for-crashkernel-CMA-reservation/20251104-213036
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/20251104132818.1724562-1-sourabhjain%40linux.ibm.com
+patch subject: [PATCH v6] powerpc/kdump: Add support for crashkernel CMA reservation
+config: powerpc64-randconfig-r113-20251106 (https://download.01.org/0day-ci/archive/20251106/202511062213.dHidoorr-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251106/202511062213.dHidoorr-lkp@intel.com/reproduce)
 
-Signed-off-by: Pnina Feder <pnina.feder@mobileye.com>
----
- util_lib/elf_info.c | 58 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 10 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511062213.dHidoorr-lkp@intel.com/
 
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index b005245..589bc1a 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -72,6 +72,7 @@ static uint16_t log_offset_len = UINT16_MAX;
- static uint16_t log_offset_text_len = UINT16_MAX;
- 
- static uint64_t phys_offset = UINT64_MAX;
-+static uint64_t page_offset = UINT64_MAX;
- 
- #if __BYTE_ORDER == __LITTLE_ENDIAN
- #define ELFDATANATIVE ELFDATA2LSB
-@@ -115,7 +116,26 @@ static uint64_t vaddr_to_offset(uint64_t vaddr)
- 			continue;
- 		return (vaddr - phdr[i].p_vaddr) + phdr[i].p_offset;
- 	}
--	fprintf(stderr, "No program header covering vaddr 0x%llxfound kexec bug?\n",
-+
-+	/* Direct map fallback */
-+	if (page_offset != UINT64_MAX &&
-+		phys_offset != UINT64_MAX &&
-+		vaddr >= page_offset) {
-+
-+		uint64_t paddr = 0;
-+
-+		paddr = vaddr - (page_offset - phys_offset);
-+
-+		for (i = 0; i < ehdr.e_phnum; i++) {
-+			if (phdr[i].p_paddr > paddr)
-+				continue;
-+			if ((phdr[i].p_paddr + phdr[i].p_memsz) <= paddr)
-+				continue;
-+			return phdr[i].p_offset + (paddr - phdr[i].p_paddr);
-+		}
-+	}
-+
-+	fprintf(stderr, "No program header covering vaddr 0x%llx found kexec bug?\n",
- 		(unsigned long long)vaddr);
- 	exit(30);
- }
-@@ -309,6 +329,20 @@ int get_pt_load(int idx,
- 	return 1;
- }
- 
-+static inline int parse_phys_offset(const char *str, char *pos)
-+{
-+	char *endp;
-+
-+	phys_offset = strtoul(pos + strlen(str), &endp, 10);
-+	if (strlen(endp) != 0)
-+		phys_offset = strtoul(pos + strlen(str), &endp, 16);
-+	if ((phys_offset == LONG_MAX) || strlen(endp) != 0) {
-+		fprintf(stderr, "Invalid data %s\n", pos);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- #define NOT_FOUND_LONG_VALUE		(-1)
- 
- void (*arch_scan_vmcoreinfo)(char *pos);
-@@ -319,7 +353,7 @@ void scan_vmcoreinfo(char *start, size_t size)
- 	char *pos, *eol;
- 	char temp_buf[1024];
- 	bool last_line = false;
--	char *str, *endp;
-+	char *str;
- 
- #define SYMBOL(sym) {					\
- 	.str = "SYMBOL(" #sym  ")=",			\
-@@ -543,17 +577,21 @@ void scan_vmcoreinfo(char *start, size_t size)
- 		/* Check for PHYS_OFFSET number */
- 		str = "NUMBER(PHYS_OFFSET)=";
- 		if (memcmp(str, pos, strlen(str)) == 0) {
--			phys_offset = strtoul(pos + strlen(str), &endp,
--							10);
--			if (strlen(endp) != 0)
--				phys_offset = strtoul(pos + strlen(str), &endp, 16);
--			if ((phys_offset == LONG_MAX) || strlen(endp) != 0) {
--				fprintf(stderr, "Invalid data %s\n",
--					pos);
-+			if (parse_phys_offset(str, pos) != 0)
- 				break;
--			}
- 		}
- 
-+		/* Check for PHYS_OFFSET number on some arch it called phys_ram_base*/
-+		str = "NUMBER(phys_ram_base)=";
-+		if (memcmp(str, pos, strlen(str)) == 0) {
-+			if (parse_phys_offset(str, pos) != 0)
-+				break;
-+		}
-+
-+		str = "NUMBER(PAGE_OFFSET)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			page_offset = strtoull(pos + strlen(str), NULL, 16);
-+
- 		if (arch_scan_vmcoreinfo != NULL)
- 			(*arch_scan_vmcoreinfo)(pos);
- 
+sparse warnings: (new ones prefixed by >>)
+>> arch/powerpc/kexec/core.c:62:20: sparse: sparse: symbol 'crashk_cma_size' was not declared. Should it be static?
+   arch/powerpc/kexec/core.c:188:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_base @@     got restricted __be64 [usertype] @@
+   arch/powerpc/kexec/core.c:188:29: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_base
+   arch/powerpc/kexec/core.c:188:29: sparse:     got restricted __be64 [usertype]
+   arch/powerpc/kexec/core.c:190:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_size @@     got restricted __be64 [usertype] @@
+   arch/powerpc/kexec/core.c:190:29: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_size
+   arch/powerpc/kexec/core.c:190:29: sparse:     got restricted __be64 [usertype]
+   arch/powerpc/kexec/core.c:198:19: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] mem_limit @@     got restricted __be64 [usertype] @@
+   arch/powerpc/kexec/core.c:198:19: sparse:     expected unsigned long long static [addressable] [toplevel] mem_limit
+   arch/powerpc/kexec/core.c:198:19: sparse:     got restricted __be64 [usertype]
+   arch/powerpc/kexec/core.c:214:20: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] kernel_end @@     got restricted __be64 [usertype] @@
+   arch/powerpc/kexec/core.c:214:20: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] kernel_end
+   arch/powerpc/kexec/core.c:214:20: sparse:     got restricted __be64 [usertype]
+
+vim +/crashk_cma_size +62 arch/powerpc/kexec/core.c
+
+    61	
+  > 62	unsigned long long crashk_cma_size;
+    63	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
