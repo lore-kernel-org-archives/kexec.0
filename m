@@ -4,120 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEF7FCCFA03
-	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 04:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17B6BCCF9F8
+	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 06:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Mq3+E8iM504RqipsdFipuUGK8oqmp5DYndX4lT9YQMM=; b=1Ld4OYLIlvJDoTqSLiLaa1TsOQ
-	6Cdjth+cw96lzBocH2ItyqHyWRiVTd/oeeIQkqgoO1Bx0Xbn9GQqCDwFDikp4xaOx/7asVhFvmRv4
-	FJL4/KXnp6qEPeAXV6pSTKJOhOk2l9pIjfgbN8XTRZ3j2zSHqzdtdeN0OITHzD6jqv8MxQ1kk4Beu
-	BT1U3dFzhyQ6X9PgkAXmwBH1/b83nEj9/+qeJ1+QJsI6um9rf5EzldotCsMTXU/92keMyFDDEU03Q
-	+Yfs0SG3EuZhrN9qyoAfgR9pLsdjzRHzET5jEjApHLZXIzhMkeAtQE08avwnGsYBfplHNwmiD+4Z3
-	MzFsVk2A==;
+	bh=5om+jgkF7lMNLCSif3n8iVPJleVZd8uHxQY35uUaYt4=; b=ogIK7tX0TEP26XUtNdilVd7ZV4
+	v2vHkFzYBN64XEekp0ZDGDr+5K8rEn9LxQWDqkCTpwtQ1tr4OFcf3s39XcFS0d0Oi1KnheYJ8QrO9
+	K211dmBy9A2nxSQN89sI9nnmQhMG9RhS4n08p6t0egei5KpxNPrxhADLM20/OYHvEp1K//LnYzV/C
+	QdYlDL9InJEUky5KW9ttnzckOCA6F+tS7jjAh2q73CmQjblKzV1QP14KsCTUCaqOzMq0O9taggjP4
+	7bNlIP26rB9J2pG6mJy9LMoyrOOWeRbAy8Day4LQTUL/1BIzRmi09n+Rel1YUlumRnisyc9PtOAFM
+	PaulH1Yg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGryQ-0000000ErvZ-0VNf;
-	Thu, 06 Nov 2025 04:51:50 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vGtvM-0000000EyGo-3qqE;
+	Thu, 06 Nov 2025 06:56:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGryN-0000000EruG-39jc
+	id 1vGtvJ-0000000EyGO-07I7
 	for kexec@lists.infradead.org;
-	Thu, 06 Nov 2025 04:51:48 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A5GgNHX031438;
-	Thu, 6 Nov 2025 04:51:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Mq3+E8iM504Rqipsd
-	FipuUGK8oqmp5DYndX4lT9YQMM=; b=UnPNMFQypMNL6XMoEp9Nz16giKpRH7DxF
-	3BrtuGK1pz6NG/DNYnA2tf5ocZUC5AKp+npZPL55zEgXuOQ2Sa5Zbrt9WBqZUqj7
-	tGJgSVG30Dc0VdRZBBsLvWHc9P/osVql3zeWCC7koL/M7VeA8c/AGGExQwHcFzOW
-	wis+A5Y0pIcUSD/JZ9veZKVlFEa4HlDLu4/ZNYTH43hhJsNwqE/kL7Uar3NGJWZU
-	nk7sc9/ucHWNb5lIOVXbV3ZnqJOmV8KA0nUjIGnVt4XACNJCjIY7uSGbK90xGwPp
-	arfBpikjHieucjqwtd8PsvMOPCYrJPcz/dtv91ZnvlpzvV3kCYwGg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a58mm4h5r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:46 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A64pjwR013410;
-	Thu, 6 Nov 2025 04:51:45 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a58mm4h5p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:45 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A64ZMUS021515;
-	Thu, 6 Nov 2025 04:51:45 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5xrjuhc1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Nov 2025 04:51:44 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A64pfSr31523252
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Nov 2025 04:51:41 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 783892004B;
-	Thu,  6 Nov 2025 04:51:41 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAE3A20049;
-	Thu,  6 Nov 2025 04:51:37 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Nov 2025 04:51:37 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Aditya Gupta <adityag@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
-        Jiri Bohac <jbohac@suse.cz>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        kexec@lists.infradead.org
-Subject: [PATCH v2 5/5] crash: export crashkernel CMA reservation to userspace
-Date: Thu,  6 Nov 2025 10:21:07 +0530
-Message-ID: <20251106045107.17813-6-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251106045107.17813-1-sourabhjain@linux.ibm.com>
-References: <20251106045107.17813-1-sourabhjain@linux.ibm.com>
+	Thu, 06 Nov 2025 06:56:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762412203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5om+jgkF7lMNLCSif3n8iVPJleVZd8uHxQY35uUaYt4=;
+	b=NVebCcOV29Sjctore4xUNWag82Pj2en5eDSRZC3eYFPaJjq1cLILMgXFY+rM+VuedQYArq
+	3H4tSTKVSDIaIKlL0xjq18gz5g/u3QRN/iiA+SF+HaKDSZWOBhzXYceLYtLUJJaWEf3H/n
+	PXBdHrwt1fkHRilboH4ip8B5KyOQ5uo=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-ih9JhdVKN7ikOJV_T1vRiQ-1; Thu, 06 Nov 2025 01:56:39 -0500
+X-MC-Unique: ih9JhdVKN7ikOJV_T1vRiQ-1
+X-Mimecast-MFC-AGG-ID: ih9JhdVKN7ikOJV_T1vRiQ_1762412199
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-782063922ceso198005b3a.0
+        for <kexec@lists.infradead.org>; Wed, 05 Nov 2025 22:56:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762412199; x=1763016999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5om+jgkF7lMNLCSif3n8iVPJleVZd8uHxQY35uUaYt4=;
+        b=QQzRLmJuNbBQeOShCbOyFYPUqCnEJTtHD7fWgnLrzLMTVnRAAmEsTkkFlqhG1xLgSu
+         yXKA2XJy1ujRclvmGgqixeFL5lBxvCTELv4D9+Rle7TdE5mHGiLzRzNz3/FlymeFk17h
+         dNV6roxxjDVmm39P5iRXWQE7K5xBoCydUk1vYFkrwmxTNSYSHmhbxkT2SVgWtIjw1xTy
+         TSiCbml48ArF2nxFPqqMvz4hw8lu+U8KCLCRFC+eU2j8YJ9Q8wurWCaGMF13vn9bSPYx
+         U9lF0VMvkzbJF+I4/rTBHFd/GkIwX0inptHWTrbybNCp7yKXYUqZqFPzyCcVY6Rn+Ao5
+         FZRw==
+X-Gm-Message-State: AOJu0YxM6JfmbgbFaAMdBhDcvV8EAU+2hIwrMOI5/iiBYmHH/VsbzViJ
+	q2qzq7J1t86ESZiqAgLFVHWl8tTOgdHFlVLCMwpn9e89O8B/4WvPp5RGVfyLLtBLO/uZ3jIInbb
+	BHcNxev/GFtAxU+W9YhBCeu676eKexdG/Ups95JsSbZl1aqgv9gdgS5mQVjICU34CdXP6cipckj
+	UZqNqza4uA0i+iQMwWDFGL0Smmw9Eq3Trgv1ep
+X-Gm-Gg: ASbGncvKFjjklGDd8dYfiGJf/RBTRkodGf7215tjCI50U4mfb6qDWDpFCv0KyjPgLUW
+	4S6uIgjM5IeLsjcSnJ8fXvsTH0Cssc47ZmUOpZ2xvdCB/QEGoPp+OAuadYXkVD9CPLTo5DCqJcJ
+	H43VAFbyHGyI48mD0uOpR2eNhXcU2OndAXnTQTLjExeNeP02mkRzs25DtD
+X-Received: by 2002:a05:6a20:9186:b0:34e:e0ba:7c1 with SMTP id adf61e73a8af0-34f839e0371mr7539087637.6.1762412198858;
+        Wed, 05 Nov 2025 22:56:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEwXf06EEtGqGt59eNE630eIQryoAHY3nsXO3Hk+QYKm+lQdENUtVhqE0eUA9haxSSEpTHDrv5myNmqIZbmVw4=
+X-Received: by 2002:a05:6a20:9186:b0:34e:e0ba:7c1 with SMTP id
+ adf61e73a8af0-34f839e0371mr7539064637.6.1762412198513; Wed, 05 Nov 2025
+ 22:56:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: oy27WJyoVf45d-2LYhmnWv46AmUci0rC
-X-Proofpoint-GUID: bhah8pCo5NneVwQiOxlrQKOSrzEtVPK-
-X-Authority-Analysis: v=2.4 cv=SqidKfO0 c=1 sm=1 tr=0 ts=690c2962 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
- a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8
- a=JDx1kcstoNt1si94OFQA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAwOSBTYWx0ZWRfXwCcKGiv9l+zk
- G3FMJjzZrOWIYCtDyBfdjH+GpMX8ULeqFjgenl1Y1AvC5LwLZK/aKjSjjeMzftRTBQd8OIvI5Ur
- sjfggqm2SqG0rmD6t5g37WLrtZoaWyLTaWDbCxo+J2uQi5S6Yp3JV9rnmEvO6yjXWIZ50NQ1xGa
- MJ1cV2BhVnXcNPIN/zBO1N1/bFejR2kezioimG7Bt0BKDTRpDfpqRq3SH9XVaOSaMLF8Aqou1c5
- 7n4osxcATVfghVZVmPSNrZMBoOSzu+eDrGYLFsHEZIAF1b304eCn997xRixGk3YaJ9u6AhbxDgL
- WJDgbIm9qPkRoStDXaQ18k5LNOdO23+HnWmZXnv3RCjmWk2/i0GETP+Nw0K5Tvi6FMMuQN4GbtI
- lJI/k8CcXLAvJ3QI447Wzs8YTO7zGw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-05_09,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010009
+References: <20251105130922.13321-1-piliu@redhat.com> <20251105130922.13321-2-piliu@redhat.com>
+ <aQwCDMhidg+a2Jzt@MiWiFi-R3L-srv> <CAF+s44StrV1USH4ZLQ6DRobXA=hXOs6EVkmeeeTsK-koWsV_KQ@mail.gmail.com>
+ <aQwUUh3noWGXaite@MiWiFi-R3L-srv>
+In-Reply-To: <aQwUUh3noWGXaite@MiWiFi-R3L-srv>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Thu, 6 Nov 2025 14:56:27 +0800
+X-Gm-Features: AWmQ_bmDJKbpbWUjPVU7pY3OEsXiayXePeKuaPXhcc9NBNJcotJApHoGGTl8gVw
+Message-ID: <CAF+s44QzxjPpWkBLrO1WpORy+QTj2=mFRJFeuPsGvp9K=hfKJQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kernel/kexec: Fix IMA when allocation happens in CMA area
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, linux-integrity@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Alexander Graf <graf@amazon.com>, 
+	Steven Chen <chenste@linux.microsoft.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 7C93_aqF6Rv4hfp0dK9EEO4uSBW4KLsHvhUkSTyVKr8_1762412199
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251105_205147_911905_FD1FFB8F 
-X-CRM114-Status: GOOD (  14.57  )
+X-CRM114-CacheID: sfid-20251105_225645_144543_42BC74F8 
+X-CRM114-Status: GOOD (  27.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,56 +107,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a sysfs entry /sys/kernel/kexec/crash_cma_ranges to expose all
-CMA crashkernel ranges.
+On Thu, Nov 6, 2025 at 11:22=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 11/06/25 at 10:33am, Pingfan Liu wrote:
+> > Hi Baoquan,
+> >
+> > Thanks for your review. Please see the comment below.
+> >
+> > On Thu, Nov 6, 2025 at 10:04=E2=80=AFAM Baoquan He <bhe@redhat.com> wro=
+te:
+> > >
+> > > Hi Pingfan,
+> > >
+> > > On 11/05/25 at 09:09pm, Pingfan Liu wrote:
+> > > > When I tested kexec with the latest kernel, I ran into the followin=
+g warning:
+> > > >
+> > > > [   40.712410] ------------[ cut here ]------------
+> > > > [   40.712576] WARNING: CPU: 2 PID: 1562 at kernel/kexec_core.c:100=
+1 kimage_map_segment+0x144/0x198
+> > > > [...]
+> > > > [   40.816047] Call trace:
+> > > > [   40.818498]  kimage_map_segment+0x144/0x198 (P)
+> > > > [   40.823221]  ima_kexec_post_load+0x58/0xc0
+> > > > [   40.827246]  __do_sys_kexec_file_load+0x29c/0x368
+> > > > [...]
+> > > > [   40.855423] ---[ end trace 0000000000000000 ]---
+> > > >
+> > > > This is caused by the fact that kexec allocates the destination dir=
+ectly
+> > > > in the CMA area. In that case, the CMA kernel address should be exp=
+orted
+> > > > directly to the IMA component, instead of using the vmalloc'd addre=
+ss.
+> > > >
+> > > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: Baoquan He <bhe@redhat.com>
+> > > > Cc: Alexander Graf <graf@amazon.com>
+> > > > Cc: Steven Chen <chenste@linux.microsoft.com>
+> > > > Cc: linux-integrity@vger.kernel.org
+> > > > To: kexec@lists.infradead.org
+> > > > ---
+> > > >  kernel/kexec_core.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > > > index 9a1966207041..abe40286a02c 100644
+> > > > --- a/kernel/kexec_core.c
+> > > > +++ b/kernel/kexec_core.c
+> > > > @@ -967,6 +967,7 @@ void *kimage_map_segment(struct kimage *image, =
+int idx)
+> > > >       kimage_entry_t *ptr, entry;
+> > > >       struct page **src_pages;
+> > > >       unsigned int npages;
+> > > > +     struct page *cma;
+> > > >       void *vaddr =3D NULL;
+> > > >       int i;
+> > > >
+> > > > @@ -974,6 +975,9 @@ void *kimage_map_segment(struct kimage *image, =
+int idx)
+> > > >       size =3D image->segment[idx].memsz;
+> > > >       eaddr =3D addr + size;
+> > > >
+> > > > +     cma =3D image->segment_cma[idx];
+> > >
+> > > Thanks for your fix. But I totally can't get what you are doing. The =
+idx
+> > > passed into kimage_map_segment() could index image->segment[], and ca=
+n
+> > > index image->segment_cma[], could you reconsider and make the code mo=
+re
+> > > reasonable?
+> > >
+> >
+> > Since idx can index both image->segment[] and segment_cma[], the
+> > behavior differs based on whether segment_cma[idx] is NULL:
+> >
+> > - If segment_cma[idx] is not NULL, it points directly to the final
+> > target location, eliminating the need for data copying that
+> > traditional kexec relocation requires.
+> > - If segment_cma[idx] is NULL, the segment relies on the traditional
+> > kexec relocation code to copy its data.
+>
+> I see, thanks. While image->segment_cma[idx] records the struct page of
+> the relevant cma area, but not virtual address. Is it OK for IMA later
 
-This allows userspace tools configuring kdump to determine how much
-memory is reserved for crashkernel. If CMA is used, tools can warn
-users when attempting to capture user pages with CMA reservation.
+Oops. It requires page_address(page) to convert the address. I will
+send out V2 to fix it.
 
-The new sysfs hold the CMA ranges in below format:
+Thanks,
 
-cat /sys/kernel/kexec/crash_cma_ranges
-100000000-10c7fffff
-
-Cc: Aditya Gupta <adityag@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Jiri Bohac <jbohac@suse.cz>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- Documentation/ABI/testing/sysfs-kernel-kexec-kdump | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-index 00c00f380fea..f59051b5d96d 100644
---- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-+++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-@@ -49,3 +49,13 @@ Description:	read only
- 		is used by the user space utility kexec to support updating the
- 		in-kernel kdump image during hotplug operations.
- User:		Kexec tools
-+
-+What:		/sys/kernel/kexec/crash_cma_ranges
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Provides information about the memory ranges reserved from
-+		the Contiguous Memory Allocator (CMA) area that are allocated
-+		to the crash (kdump) kernel. It lists the start and end physical
-+		addresses of CMA regions assigned for crashkernel use.
-+User:		kdump service
--- 
-2.51.0
+Pingfan
 
 
