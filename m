@@ -4,75 +4,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C1D5CCFA19
-	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 08:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40EEECCFA19
+	for <kexec@archiver.kernel.org>; Thu,  6 Nov 2025 08:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:Message-ID:Subject:CC:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8FnkNdHhMVBUSWhSH665J4Pt2qzWSihqM7/C3ojK3sM=; b=Yyk9cZeZROCzPTLUBxc5fRj4Hi
-	CuI+/kRqFRCwjtUsOGuH1vHgOjPl5SJpGU1iJgwGyvct2qW/D3GgLgqq1B+sVk8GEtOhzxvvimGvj
-	pqHoW2GBsgzIKI1qeXwD4KDsZCaGyOocOBrMv5iT91z+yHd1VMzKC+YMBMgihhjO8fO9eo6KwfnQ0
-	fWJ8eQDp7YrlcKH0inEJLxZ1axFEcuYtWKrdTHyNv4dSp3zulX02nXURaNbEkMAFY6pd/Tmy3JLjh
-	Pa6YV19niqK/mSxTiMXy3NK+eWM6tGw6x9QO2MGPFBP8eYuqzo4KSs3X6QcMAIPtliR5Z5vFaVQei
-	jYECefCA==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=MODUgEIL9QYHu1jFzfFf4ip2M6yT0CwEJ5/P/CnJLrM=; b=szu7TjLPczdNCB
+	exFDy92KvPmBWLSqkj2sf0uq4MnZHWXrhyJGPcCfpYCVJghQhxBoDwFmUi/SJGB2AMnWibLAch6Ym
+	vu7pX8WrrlDb7ugitBxsvyIMI35a4tTwx6tl9iYLzIhmW3ZYwQAmFlpJHxCtirml7tIcRBOW0pKfb
+	r4rz237XT4RYDjqf4qYonH6tGSIacEXtUlozBhRTriTJ31QKNmrljvX3sPw9KGk1kAVd0oKuIv82K
+	VKTqC0NKlSExKlPuNrMbNr4QChihZVF9lR0cXyWumknVYMEci0/Hsl0rIR6MBP74k3Rq6lZ6ClT88
+	qmDpr7mqjUTbKmVBIgWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGvIR-0000000F3il-1Iye;
-	Thu, 06 Nov 2025 08:24:43 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vGvYq-0000000F4vB-2LRW;
+	Thu, 06 Nov 2025 08:41:40 +0000
+Received: from mgamail.intel.com ([198.175.65.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGvIQ-0000000F3ic-1JMW;
-	Thu, 06 Nov 2025 08:24:42 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id A105F6022B;
-	Thu,  6 Nov 2025 08:24:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3145C4CEFB;
-	Thu,  6 Nov 2025 08:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762417480;
-	bh=tnT+oLc/kBo4dvSKn58H5wJqyeTpfH6PqdkJR5lwiCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MQfFohEUn+hXz5i9qgPu11Y8k2A6IGar+vdTxNhbAo5kq96oZC66SvEwCEwZLngMa
-	 nZqgVO6+lGr5SbnAscnFEGlOYth+V4uFEvuRy8xVQMnvVEiHxMmse/uc5VnagiJNt8
-	 7+LUyj+hqpudRx/65qxTU8MdcRF9WWbQQgyoIMJ5FYNqvVvXm0EJe3tzNLVe4x9hWN
-	 OwMtBjGFSqk12yNZ+IiQNnuFCH6ChjQrOxCXNG3qNwMylFktFN1x1Sr2exkVzhcv2W
-	 GcbUH/H4EasrjeEnAZuC2B/VAI67qBmhIzlMObyBFLthPShiCWyultl0kZZGY0ZbBJ
-	 1YtPynLoEba2g==
-Date: Thu, 6 Nov 2025 10:24:24 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, anthony.yznaga@oracle.com,
-	arnd@arndb.de, ashish.kalra@amd.com, benh@kernel.crashing.org,
-	bp@alien8.de, catalin.marinas@arm.com, corbet@lwn.net,
-	dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
-	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
-	hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com,
-	pbonzini@redhat.com, peterz@infradead.org, robh@kernel.org,
-	rostedt@goodmis.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v8 01/17] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <aQxbOG65t-Vu6TVe@kernel.org>
-References: <20250509074635.3187114-1-changyuanl@google.com>
- <20250509074635.3187114-2-changyuanl@google.com>
- <ef6wfr72set5wa5el3wbbu4yd5tnc4p2rhtjpb5kpmncv3xs5d@i3c5v3ciioi3>
- <mafs0wm4yluej.fsf@kernel.org>
- <mafs0h5w2lpqu.fsf@kernel.org>
- <2ege2jfbevtunhxsnutbzde7cqwgu5qbj4bbuw2umw7ke7ogcn@5wtskk4exzsi>
- <mafs0cy6pljci.fsf@kernel.org>
- <c2nrxby4atq75o5yhwdpoikyso42tzimwn2bnl7fk54wuwdqax@i6kdssez3kfj>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+	id 1vGvYm-0000000F4uo-1TJE
+	for kexec@lists.infradead.org;
+	Thu, 06 Nov 2025 08:41:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762418497; x=1793954497;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=CsHq55rHISM1nc/ZP/PUQYMp+qwZvcgZbgUXqDUDhU4=;
+  b=kD8C36Dwvk7Xu3WDoecbra5j7e/VfT40XXhuY65xuOhVK0VoiAPWynCY
+   jQganci9CgT+RABZ9NEkx7bcojvSHYLLaiT002aKftm6LQdJ32ZqdH4B5
+   rcn0wB9Cd6/HT7N3xm+hCqrUhpmH9CaPkEqVqcHpTM8sBeX5B7Ct0Foqb
+   wLxQuRUGPWtpJec4gnnrZ/bVSpEao6qcPSlXd4rV8lkklcO1UHGGyDKep
+   aQQ0TIEkKzZymsLhlCSHD0OIOlSXkO26Fzglsh3ewZJK395WZdAGGDPXA
+   P7H8VrMOAO1GEcWnGIbfVX4w29taUrI7pzOFYPjB0zPfb3TVZBHMDW55q
+   w==;
+X-CSE-ConnectionGUID: dsfSUIYlTfi0llk+UjNBtQ==
+X-CSE-MsgGUID: zChYqvMkT32hfU51RKh1Kg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64700025"
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="64700025"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 00:41:35 -0800
+X-CSE-ConnectionGUID: SGU6gwX9Rw25VkhEVmyqNA==
+X-CSE-MsgGUID: 7xqvqqXaQZOuGXcEQqE/eA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="187545020"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 00:41:35 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 6 Nov 2025 00:41:34 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Thu, 6 Nov 2025 00:41:34 -0800
+Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.42) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 6 Nov 2025 00:41:34 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cGKc1T9TFU2KIP1JiRj8GKDzmHAmRFcZJ6fiRMDhurT1CSyh1Axmop8QKDueJAcZto+h15Ahbl9MouwQ559k24sj0SP2IW6rZR2CpR/h/i9dPc+KQn1j5qS1LfVz/Nh0r0d770PuxWIZkztv3SYg0CitaBazppR//v86DfwdkLL9Cl5FhNuTfusePXaBDCSR50CneQCmL/OoFJHKrRzt63/Ws3rrsDAkwevkQ2ASqRDOP7olUFUzW8DXI5BSzwKPwmfcobyOAFYY0dU0a5EGr4l6VGqHR31kVkQaIHBM+TZomSWjPgyf2WwB7cHnvz2o1WqwrfmdM6n00Ph5iL5qOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MODUgEIL9QYHu1jFzfFf4ip2M6yT0CwEJ5/P/CnJLrM=;
+ b=S2s9HEJk0JamlSziWc57a+l8ZEjLmSxy3q42BF+9MF5y7zSp53cK//bEXgIXy2atkt2mp5R2XqEbpp23fj1A57k3rKd+EwXQ9G6NdE75hE5eAq6PSUmX0piLUTfzXMlDcSU44D0VSsWohp1StpQdzIJLOiPeVNcqRxB1SxbA7zLpoLV+2fdjYr07oCSDhByUsnPsdr2db3O/JqagvF2o1+gG76nRmCLgy+2hdCBr+r3GLTyNl+RXjXSuvNhdRpOq4oHicA5iMHY7F1wv9hxgrwy0tyfSF+ZFV7I6oS+eP4biTJG+4MvTodPb3NYoCSJ9oP3IgGU6Ejm5Xjov1Eriyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CH0PR11MB8168.namprd11.prod.outlook.com (2603:10b6:610:186::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.12; Thu, 6 Nov
+ 2025 08:41:31 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9298.010; Thu, 6 Nov 2025
+ 08:41:31 +0000
+Date: Thu, 6 Nov 2025 16:41:16 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, <kexec@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <brauner@kernel.org>, <corbet@lwn.net>,
+	<graf@amazon.com>, <jgg@ziepe.ca>, <linux-kselftest@vger.kernel.org>,
+	<masahiroy@kernel.org>, <ojeda@kernel.org>, <pratyush@kernel.org>,
+	<rdunlap@infradead.org>, <rppt@kernel.org>, <tj@kernel.org>,
+	<yanjun.zhu@linux.dev>, <oliver.sang@intel.com>
+Subject: Re: [PATCH v9 2/9] kho: drop notifiers
+Message-ID: <202511061629.e242724-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <c2nrxby4atq75o5yhwdpoikyso42tzimwn2bnl7fk54wuwdqax@i6kdssez3kfj>
+In-Reply-To: <20251101142325.1326536-3-pasha.tatashin@soleen.com>
+X-ClientProxiedBy: MA5PR01CA0110.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:1d1::9) To SJ2PR11MB8587.namprd11.prod.outlook.com
+ (2603:10b6:a03:568::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH0PR11MB8168:EE_
+X-MS-Office365-Filtering-Correlation-Id: 436bd3f5-2845-4b50-9eb9-08de1d104855
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?u5QPAVKODwtKttwqmxKheiXWi38jUl/k3L35H4pX1FnUSPcqzNj0wWtndhG5?=
+ =?us-ascii?Q?GETVj3BK3Bc6MmezyY4L5HhN9JVnGkwNjrhtaAHpv5NNPA49kDViImqiM73H?=
+ =?us-ascii?Q?iL2GqkolulssVDsoNl83cV+8vlxzvN9xvNGMVCTkpAaGdJkvmlzgj73Si/fa?=
+ =?us-ascii?Q?1dpHNQ9jfiAxWFJtIAzxFJPJO9uWIf6JGqCvyDVz0P7Ht1ZmKos9vye8ujQJ?=
+ =?us-ascii?Q?/hzLs3wXHwN21u1FRenXej5CawUvEEW6hsiSyrAy8Ey3JT61gx7D8b7Qndyz?=
+ =?us-ascii?Q?tK2c8p7WkxKy3cYbK4ofBetpZsqZs0epdtnQ/RUZo8cKJWkhcEHmfqto6umr?=
+ =?us-ascii?Q?MGwSyPDdV6ILkWbnv6hEMZMAmJyi2BbzIu/P9a0q5z6KaVpl2dpjWT8g8sPY?=
+ =?us-ascii?Q?33vxnKphFkh8ghLCsGbboiThPWLWey6sYEIvuWXbPOfSqhzKUpp8WfCBTzWd?=
+ =?us-ascii?Q?Rw89LYtaqIQzdF1NAfQ+UfZt39fJ1fG2SdmT7SJXFOqtBMo+lT7PM4hIicOq?=
+ =?us-ascii?Q?maumo/5tGuC2em+4L5JYKVtq9HY3la0S1h1pBEurT/yOE5vjPx2wxCHL97Bb?=
+ =?us-ascii?Q?2Z4IZJANbczIX5CwORERJN+6V88AQtguCNqQBpiIhOud92bADYTRuLOAPhj/?=
+ =?us-ascii?Q?MwAI+Fz3ALsgedgFFoY/8UsMx6aUGcqq2zV1SPOSz3R5botiUdtR9l9Zh7CK?=
+ =?us-ascii?Q?7W5THAh9ru38V6f5YccFz9oi2qvKEhXoglLUHDdgZFV1RcNef/N5zoQB+CUd?=
+ =?us-ascii?Q?kHWz8T9KZXcfyUoE+fKhbgkQ0Y/i7pDIAOf9HzkTbyR1jxFx//BNT+sadkUe?=
+ =?us-ascii?Q?Zg2GEfNwhdz+tReD6aHMkjBYhh4VxJpKc1jSo+gRY3k+wSHUYo6mj+wuEQzP?=
+ =?us-ascii?Q?pasqhBUZ9kYcoiXMa7alvKdWVVToZGtZmLwyNpX2+UZcQcdru5z320mYhkoH?=
+ =?us-ascii?Q?rN6GAmQQeooXUFQ/GG1FHTAyFnNjjQXemS9OuE06bA+Iort5jgskSYShkyPa?=
+ =?us-ascii?Q?QfWGzWNm669hOZ0hjMdAOqvMCgy7JauzC9wsE731hYph0GjJcHQNo8u0wmsc?=
+ =?us-ascii?Q?WRpVjQgZQndlUTXDx8cpa9nviMTyBYTHSnypj3h7B7L3NM9fQ0BSCxdUnzQv?=
+ =?us-ascii?Q?5rUnwV618u18I1+/pL3ICLDy2NiPBE7crWsk6gNhR7oi4rdsIyRpiqJb26KY?=
+ =?us-ascii?Q?NNPY+YeZJGmKdcbSR9SMKuOmePZDgtnH/ZYMRQZhOeD9utcyphWjkQt9e+oF?=
+ =?us-ascii?Q?Ou47CmQH9CZHfpesFdvj8+9oKMWcykYkxsySVePUrIsRCdiSn58dlh8t++6g?=
+ =?us-ascii?Q?2Y4aQMLWH7vj3Myi2/EA8b+yZaCmslsOG7Oy9QKgXrBkn9zkztNQMJmclRwG?=
+ =?us-ascii?Q?xk01x1flJPTpyzHuiVl0VUy8pkdgiSiaDBPaH0r9GZ0HslOUa44ZiYN4ABJu?=
+ =?us-ascii?Q?xjEzalGtTDw/IMLnitdOd7m07WH/xDAfc5H9hsYP3JpIevFMlFbiSA=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dfZvPqCt7rFLJKTd/Q87O/e52GActGi3yjvnGCLuVXsg9Kgt74JObegmizS8?=
+ =?us-ascii?Q?Z4VTR+HHvKgZ/tLXcjnFv4cvNxQtbzgdZ+7ZJWpuuOTR2DOpYZ8NcYcFzyjq?=
+ =?us-ascii?Q?ojqcFyxNi4+wowCq9p3Hle4b8qWcgSzYI7SuMFiT90hDW4lzN/aHN75/d78+?=
+ =?us-ascii?Q?c/vAvLHwUZOsalvX8yv84xLrBQUNviK29b8i3F1I9vKK1WRbwdzR0Q1iUYZc?=
+ =?us-ascii?Q?4D4A+8Vx2WRUCf1ScC9r+a8pYeTj/yg3buVIt+M/rIEFGbzKwiStJvCW5ryH?=
+ =?us-ascii?Q?VuD0Nac9vOa9PwYYEOcew0EWdtGWhUZlZ6cG/9OLe1z9GTavhjKNi5Vo9Zj/?=
+ =?us-ascii?Q?1sUpD0mUH69FMjPhhsbGtTh34oWfhZiCXzuDbDtdSWEAmpNP0M2aJAcXs5w/?=
+ =?us-ascii?Q?Xw73mmOnR5W3O2abk9/YJdcBRUKWtOjDL/kSGBCrllJy7U++MjJWlcgDmpl/?=
+ =?us-ascii?Q?6Alg/DuyzHr2QwdX9r3eLPhwQo45AynCNgW4QlLE/KFWZKY//q4fZKXtZue+?=
+ =?us-ascii?Q?u2alvYOAjMMSz8eGNZnjjnVJmCVlSQVgShnW5x2QBC3swY3KEdEO8sBzXggb?=
+ =?us-ascii?Q?o1/n2s8kkWHBO3xv1+7buKDB1jb5iHhOtQty8qAf2B4lzb1OFUQyB1WSSFi2?=
+ =?us-ascii?Q?SuUY34ASUkuOdKiJSG4LhAJxe7DJ62SZgi18jk6c9pk/sQeu1Nz/ti3AONJm?=
+ =?us-ascii?Q?0UqavWj1lkJ4XYVU8WQ5ReES2rO4e37eBx+CX7AjoRPhuaPuh1jcrRl1fupe?=
+ =?us-ascii?Q?ECT1bVnc+Nst0U3G20isaHin1t6djA2UYtKcdlRL0rkEXgZNkeMlqc1jx6IF?=
+ =?us-ascii?Q?h/Dw14ZVXghY5M43Y94bRNyfRpJeQHX9LsKAKa8dc5BohqIbFdulUuj91+qZ?=
+ =?us-ascii?Q?Y8zany0YM8nttvI9z2kaHQC3dAf3n/CRRLCN33fjGQ87Cairh0mZrVpnftiC?=
+ =?us-ascii?Q?LqaFI1uTD2G+RuIksQ6R9WzaV+LjmRt5F2aO4y1sx4I9DcE5aZxd1HHdV+pd?=
+ =?us-ascii?Q?9FIPyMlLkIaj4zAVyDMp/sepGX7C/lJvf1Fvpswwm1B4fiZiDJHUGi3zOJdM?=
+ =?us-ascii?Q?bjPcvEyH9kslBQbkLwbRWhqADqtGZVtdVmUiSCg5DdzPt4XbvUmEA1aWNGXC?=
+ =?us-ascii?Q?EhrdpG1oJn4w0pkxYJ4RPHqU0B9Jwi8YlutaFBQF2MJWIlwWkSi25iV7U0wH?=
+ =?us-ascii?Q?JUJia+IQyKSvxW6fSazh3R/dtmfPzEMkJOgF5ixoHXrI0Q7GyCvMnT0GC2MU?=
+ =?us-ascii?Q?JvnIq8vb2DSqdLiEuDUzdArdWn6xw6qqIu6CnQ69oaACuyJGJcmC5APfSui2?=
+ =?us-ascii?Q?TF566KGxlsatxbDOdGQ4uzt9/8jXor5Zi8hXsdEzCyWDRifsHrEL7w+o2DqD?=
+ =?us-ascii?Q?04VM4vJsh89bIyGWNld85qnIGgxE07kWSOpAPo6RaKJUsQi+Td08qcNMC1kL?=
+ =?us-ascii?Q?/tbAzvhQyVwS0AmhLG/H0UdW9CCZD6PsRbsowWyE9fTLWctRNXvOsuWgBzbF?=
+ =?us-ascii?Q?Rj0ARfQsrak6U9QTPiEkRNfiI+8hi73H5qcXnP8BEWETMW/EAnoyYrAFSYIk?=
+ =?us-ascii?Q?tLwnDcOSfZpgXCfrZXKu1fT9KUq1xtQDK2E1iyxCPBGHP7MB29CRHW7C8DR/?=
+ =?us-ascii?Q?vQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 436bd3f5-2845-4b50-9eb9-08de1d104855
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 08:41:31.8228
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eyp2A8fJ1RAvYxwwBNpuJKMFGoI1GIu1L1aojJ7IckrGL5ptICTf1THv2tlRVwsNOwaozbQybuyYTf0GM1F7jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8168
+X-OriginatorOrg: intel.com
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251106_004136_512125_86F19A43 
+X-CRM114-Status: UNSURE (   9.05  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,108 +198,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Breno,
 
-On Wed, Nov 05, 2025 at 02:18:11AM -0800, Breno Leitao wrote:
-> Hello Pratyush,
-> 
-> On Tue, Oct 14, 2025 at 03:10:37PM +0200, Pratyush Yadav wrote:
-> > On Tue, Oct 14 2025, Breno Leitao wrote:
-> > > On Mon, Oct 13, 2025 at 06:40:09PM +0200, Pratyush Yadav wrote:
-> > >> On Mon, Oct 13 2025, Pratyush Yadav wrote:
-> > >> >
-> > >> > I suppose this would be useful. I think enabling memblock debug prints
-> > >> > would also be helpful (using the "memblock=debug" commandline parameter)
-> > >> > if it doesn't impact your production environment too much.
-> > >> 
-> > >> Actually, I think "memblock=debug" is going to be the more useful thing
-> > >> since it would also show what function allocated the overlapping range
-> > >> and the flags it was allocated with.
-> > >> 
-> > >> On my qemu VM with KVM, this results in around 70 prints from memblock.
-> > >> So it adds a bit of extra prints but nothing that should be too
-> > >> disrupting I think. Plus, only at boot so the worst thing you get is
-> > >> slightly slower boot times.
-> > >
-> > > Unfortunately this issue is happening on production systems, and I don't
-> > > have an easy way to reproduce it _yet_.
-> > >
-> > > At the same time, "memblock=debug" has two problems:
-> > >
-> > >  1) It slows the boot time as you suggested. Boot time at large
-> > >     environments is SUPER critical and time sensitive. It is a bit
-> > >     weird, but it is common for machines in production to kexec
-> > >     _thousands_ of times, and kexecing is considered downtime.
-> > 
-> > I don't know if it would make a real enough difference on boot times,
-> > only that it should theoretically affect it, mainly if you are using
-> > serial for dmesg logs. Anyway, that's your production environment so you
-> > know best.
-> > 
-> > >
-> > >     This would be useful if I find some hosts getting this issue, and
-> > >     then I can easily enable the extra information to collect what
-> > >     I need, but, this didn't pan out because the hosts I got
-> > >     `memblock=debug` didn't collaborate.
-> > >
-> > >  2) "memblock=debug" is verbose for all cases, which also not necessary
-> > >     the desired behaviour. I am more interested in only being verbose
-> > >     when there is a known problem.
-> 
-> I am still interested in this problem, and I finally found a host that
-> constantly reproduce the issue and I was able to get `memblock=debug`
-> cmdline. I am running 6.18-rc4 with some debug options enabled.
-> 
-> 	DMA-API: exceeded 7 overlapping mappings of cacheline 0x0000000006d6e400
-> 	WARNING: CPU: 58 PID: 828 at kernel/dma/debug.c:463 add_dma_entry+0x2e4/0x330
-> 	pc : add_dma_entry+0x2e4/0x330
-> 	lr : add_dma_entry+0x2e4/0x330
-> 	sp : ffff8000b036f7f0
-> 	x29: ffff8000b036f800 x28: 0000000000000001 x27: 0000000000000008
-> 	x26: ffff8000835f7fb8 x25: ffff8000835f7000 x24: ffff8000835f7ee0
-> 	x23: 0000000000000000 x22: 0000000006d6e400 x21: 0000000000000000
-> 	x20: 0000000006d6e400 x19: ffff0003f70c1100 x18: 00000000ffffffff
-> 	x17: ffff80008019a2d8 x16: ffff80008019a08c x15: 0000000000000000
-> 	x14: 0000000000000000 x13: 0000000000000820 x12: ffff00011faeaf00
-> 	x11: 0000000000000000 x10: ffff8000834633d8 x9 : ffff8000801979d4
-> 	x8 : 00000000fffeffff x7 : ffff8000834633d8 x6 : 0000000000000000
-> 	x5 : 00000000000bfff4 x4 : 0000000000000000 x3 : ffff0001075eb7c0
-> 	x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0001075eb7c0
-> 	Call trace:
-> 	add_dma_entry+0x2e4/0x330 (P)
-> 	debug_dma_map_phys+0xc4/0xf0
-> 	dma_map_phys (/home/leit/Devel/upstream/./include/linux/dma-direct.h:138 /home/leit/Devel/upstream/kernel/dma/direct.h:102 /home/leit/Devel/upstream/kernel/dma/mapping.c:169)
-> 	dma_map_page_attrs (/home/leit/Devel/upstream/kernel/dma/mapping.c:387)
-> 	blk_dma_map_direct.isra.0 (/home/leit/Devel/upstream/block/blk-mq-dma.c:102)
-> 	blk_dma_map_iter_start (/home/leit/Devel/upstream/block/blk-mq-dma.c:123 /home/leit/Devel/upstream/block/blk-mq-dma.c:196)
-> 	blk_rq_dma_map_iter_start (/home/leit/Devel/upstream/block/blk-mq-dma.c:228)
-> 	nvme_prep_rq+0xb8/0x9b8
-> 	nvme_queue_rq+0x44/0x1b0
-> 	blk_mq_dispatch_rq_list (/home/leit/Devel/upstream/block/blk-mq.c:2129)
-> 	__blk_mq_sched_dispatch_requests (/home/leit/Devel/upstream/block/blk-mq-sched.c:314)
-> 	blk_mq_sched_dispatch_requests (/home/leit/Devel/upstream/block/blk-mq-sched.c:329)
-> 	blk_mq_run_work_fn (/home/leit/Devel/upstream/block/blk-mq.c:219 /home/leit/Devel/upstream/block/blk-mq.c:231)
-> 	process_one_work (/home/leit/Devel/upstream/kernel/workqueue.c:991 /home/leit/Devel/upstream/kernel/workqueue.c:3213)
-> 	worker_thread (/home/leit/Devel/upstream/./include/linux/list.h:163 /home/leit/Devel/upstream/./include/linux/list.h:191 /home/leit/Devel/upstream/./include/linux/list.h:319 /home/leit/Devel/upstream/kernel/workqueue.c:1153 /home/leit/Devel/upstream/kernel/workqueue.c:1205 /home/leit/Devel/upstream/kernel/workqueue.c:3426)
-> 	kthread (/home/leit/Devel/upstream/kernel/kthread.c:386 /home/leit/Devel/upstream/kernel/kthread.c:457)
-> 	ret_from_fork (/home/leit/Devel/upstream/entry.S:861)
-> 
-> 
-> Looking at memblock debug logs, I haven't seen anything related to
-> 0x0000000006d6e400.
 
-It looks like the crash happens way after memblock passed all the memory to
-buddy. Why do you think this is related to memblock?
- 
-> I got the output of `dmesg | grep memblock` in, in case you are curious:
-> 
-> 	https://github.com/leitao/debug/blob/main/pastebin/memblock/dmesg_grep_memblock.txt
-> 
-> Thanks
-> --breno
-> 
+Hello,
+
+kernel test robot noticed "WARNING:at_kernel/kexec_handover.c:#kho_add_subtree" on:
+
+commit: e44a700c561d1e892a8d0829d557e221604a7b93 ("[PATCH v9 2/9] kho: drop notifiers")
+url: https://github.com/intel-lab-lkp/linux/commits/Pasha-Tatashin/kho-make-debugfs-interface-optional/20251101-222610
+patch link: https://lore.kernel.org/all/20251101142325.1326536-3-pasha.tatashin@soleen.com/
+patch subject: [PATCH v9 2/9] kho: drop notifiers
+
+in testcase: boot
+
+config: x86_64-randconfig-001-20251015
+compiler: gcc-14
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
++--------------------------------------------------------+------------+------------+
+|                                                        | 93e4b3b2e9 | e44a700c56 |
++--------------------------------------------------------+------------+------------+
+| WARNING:at_kernel/kexec_handover.c:#kho_add_subtree    | 0          | 8          |
+| RIP:kho_add_subtree                                    | 0          | 8          |
++--------------------------------------------------------+------------+------------+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202511061629.e242724-lkp@intel.com
+
+
+[   13.620111][    T1] ------------[ cut here ]------------
+[   13.620739][    T1] WARNING: CPU: 1 PID: 1 at kernel/kexec_handover.c:704 kho_add_subtree (kernel/kexec_handover.c:704)
+[   13.621665][    T1] Modules linked in:
+[   13.622090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.18.0-rc3-00211-ge44a700c561d #1 VOLUNTARY
+[   13.623073][    T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   13.624054][    T1] RIP: 0010:kho_add_subtree (kernel/kexec_handover.c:704)
+[   13.624596][    T1] Code: c7 38 b4 ac 85 31 ed e8 01 1c 00 00 48 c7 c7 70 5a ca 86 85 c0 89 c3 40 0f 95 c5 31 c9 31 d2 89 ee e8 37 b5 0a 00 85 db 74 02 <0f> 0b b9 01 00 00 00 31 d2 89 ee 48 c7 c7 40 5a ca 86 e8 1c b5 0a
+All code
+========
+   0:	c7 38 b4 ac 85       	xbegin 0xffffffff85acb43d,(bad)
+   5:	31 ed                	xor    %ebp,%ebp
+   7:	e8 01 1c 00 00       	call   0x1c0d
+   c:	48 c7 c7 70 5a ca 86 	mov    $0xffffffff86ca5a70,%rdi
+  13:	85 c0                	test   %eax,%eax
+  15:	89 c3                	mov    %eax,%ebx
+  17:	40 0f 95 c5          	setne  %bpl
+  1b:	31 c9                	xor    %ecx,%ecx
+  1d:	31 d2                	xor    %edx,%edx
+  1f:	89 ee                	mov    %ebp,%esi
+  21:	e8 37 b5 0a 00       	call   0xab55d
+  26:	85 db                	test   %ebx,%ebx
+  28:	74 02                	je     0x2c
+  2a:*	0f 0b                	ud2		<-- trapping instruction
+  2c:	b9 01 00 00 00       	mov    $0x1,%ecx
+  31:	31 d2                	xor    %edx,%edx
+  33:	89 ee                	mov    %ebp,%esi
+  35:	48 c7 c7 40 5a ca 86 	mov    $0xffffffff86ca5a40,%rdi
+  3c:	e8                   	.byte 0xe8
+  3d:	1c b5                	sbb    $0xb5,%al
+  3f:	0a                   	.byte 0xa
+
+Code starting with the faulting instruction
+===========================================
+   0:	0f 0b                	ud2
+   2:	b9 01 00 00 00       	mov    $0x1,%ecx
+   7:	31 d2                	xor    %edx,%edx
+   9:	89 ee                	mov    %ebp,%esi
+   b:	48 c7 c7 40 5a ca 86 	mov    $0xffffffff86ca5a40,%rdi
+  12:	e8                   	.byte 0xe8
+  13:	1c b5                	sbb    $0xb5,%al
+  15:	0a                   	.byte 0xa
+[   13.626370][    T1] RSP: 0018:ffffc9000001fca0 EFLAGS: 00010286
+[   13.626951][    T1] RAX: dffffc0000000000 RBX: 00000000ffffffff RCX: 0000000000000000
+[   13.627737][    T1] RDX: 1ffffffff0d94b52 RSI: 0000000000000001 RDI: ffffffff86ca5a90
+[   13.628523][    T1] RBP: 0000000000000001 R08: 0000000000000008 R09: fffffbfff0dfac4c
+[   13.629330][    T1] R10: 0000000000000000 R11: ffffffff86fd6267 R12: ffff888133ee2000
+[   13.630101][    T1] R13: ffffffff85acb340 R14: ffff888117a5f988 R15: dffffc0000000000
+[   13.630869][    T1] FS:  0000000000000000(0000) GS:ffff888426ea0000(0000) knlGS:0000000000000000
+[   13.631727][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   13.632370][    T1] CR2: 00007f586df260ac CR3: 00000000054ea000 CR4: 00000000000406f0
+[   13.633154][    T1] Call Trace:
+[   13.633506][    T1]  <TASK>
+[   13.633833][    T1]  kho_test_prepare_fdt+0x145/0x180
+[   13.634446][    T1]  ? kho_test_save_data+0x210/0x210
+[   13.635097][    T1]  ? csum_partial (lib/checksum.c:123)
+[   13.635546][    T1]  kho_test_init (lib/test_kho.c:177 lib/test_kho.c:284)
+[   13.636018][    T1]  ? vmalloc_test_init (lib/test_kho.c:271)
+[   13.636508][    T1]  ? add_device_randomness (drivers/char/random.c:944)
+[   13.637485][    T1]  ? mix_pool_bytes (drivers/char/random.c:944)
+[   13.637955][    T1]  ? trace_initcall_start (include/trace/events/initcall.h:27 (discriminator 3))
+[   13.638498][    T1]  ? vmalloc_test_init (lib/test_kho.c:271)
+[   13.638989][    T1]  do_one_initcall (init/main.c:1284)
+[   13.639477][    T1]  ? trace_initcall_start (init/main.c:1274)
+[   13.639998][    T1]  ? parse_one (kernel/params.c:143)
+[   13.640455][    T1]  ? kasan_save_track (mm/kasan/common.c:69 (discriminator 1) mm/kasan/common.c:78 (discriminator 1))
+[   13.640948][    T1]  ? __kmalloc_noprof (mm/slub.c:5659)
+[   13.641465][    T1]  do_initcalls (init/main.c:1344 (discriminator 3) init/main.c:1361 (discriminator 3))
+[   13.641924][    T1]  kernel_init_freeable (init/main.c:1595)
+[   13.642441][    T1]  ? rest_init (init/main.c:1475)
+[   13.642891][    T1]  kernel_init (init/main.c:1485)
+[   13.643345][    T1]  ? rest_init (init/main.c:1475)
+[   13.643788][    T1]  ret_from_fork (arch/x86/kernel/process.c:164)
+[   13.644256][    T1]  ? rest_init (init/main.c:1475)
+[   13.644703][    T1]  ret_from_fork_asm (arch/x86/entry/entry_64.S:255)
+[   13.645213][    T1]  </TASK>
+[   13.645540][    T1] irq event stamp: 132025
+[   13.645971][    T1] hardirqs last  enabled at (132035): __up_console_sem (arch/x86/include/asm/irqflags.h:26 arch/x86/include/asm/irqflags.h:109 arch/x86/include/asm/irqflags.h:151 kernel/printk/printk.c:345)
+[   13.646887][    T1] hardirqs last disabled at (132046): __up_console_sem (kernel/printk/printk.c:343 (discriminator 3))
+[   13.648253][    T1] softirqs last  enabled at (131286): handle_softirqs (kernel/softirq.c:469 (discriminator 1) kernel/softirq.c:650 (discriminator 1))
+[   13.649690][    T1] softirqs last disabled at (131281): __irq_exit_rcu (kernel/softirq.c:496 kernel/softirq.c:723)
+[   13.651128][    T1] ---[ end trace 0000000000000000 ]---
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20251106/202511061629.e242724-lkp@intel.com
+
+
 
 -- 
-Sincerely yours,
-Mike.
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 
