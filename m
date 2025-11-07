@@ -4,125 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 298FECCFA19
-	for <kexec@archiver.kernel.org>; Fri,  7 Nov 2025 07:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DCF8CCF9F8
+	for <kexec@archiver.kernel.org>; Fri,  7 Nov 2025 08:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=X3HaBkZ0Y16/ZOvlCHIH11hsAoruhXZ8XfKm+QVi5aM=; b=yxopJE2jZEtaj5npP3HSfFUsYz
-	jqjoXRsDMx2myT36kISO/MNHD+rpBno5mqDZkZP1C9ohFItugCfjyIbmwSNbmjSuQAJgoPFrrLKXF
-	pq+lZKfVD9HQNKLY3Bq1sKTmnkI1E7Z6Q8yjKgEKUWMY5BF7ThIh86uOgc7xy5ICAgbdfxg6HP2Cc
-	dPPo6myxbaqLTi6lcRJgi6mVMkqFmvGCi7BP+dn3kIZknTKyzG0DJK0aKYarOIyJCLSTbokt89Ts5
-	gblymvjIofXtKAOh3ZLKk1iOB1TT4+6CWb8NGYLdXwqaMiVg+NP9KkQI0fQGMM6CnesqETenKOp8t
-	KNWwcWew==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=r0WIycQGoDb293KrA8TcGBXpp6L8iM0FDINhPucJVkc=; b=Le+Q6AWCmEYtswYW6nk53bM5a7
+	occt2BZOf0MLexIUdy2pBheSbMi4r/bdk2XasKQssySdgVEQ6Dy+BYGlYmFFczop/5F/I5bO6Hcfy
+	1bECCavO7p4VtF8fOyu//9+aHn6aob6Zg0pGRYEhrdQP9qn7mOJYohTasqyCKGqHECCQOr60AkZ3e
+	QHoh+kAjwW84wITRLf8UYdog7j8kTrmcXZA4njEYb+5N36sxJTl2SmiQaeps0ZLCA8TCxwRe/Cfw7
+	iC3UuweJyj2kKYNFjMwmLHLzp5V/+F5g3GUJEo36bwvPwnRuqE01MqsnL7XtVoXEiSKvrj50Ao9mF
+	OPzB1tkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vHGhr-0000000Gm3d-1bl2;
-	Fri, 07 Nov 2025 07:16:23 +0000
+	id 1vHHRz-0000000Gq5I-3kUp;
+	Fri, 07 Nov 2025 08:04:03 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vHGho-0000000Gm3F-1pkt
+	id 1vHHRx-0000000Gq4v-2lkl
 	for kexec@lists.infradead.org;
-	Fri, 07 Nov 2025 07:16:21 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A72iEV9006421;
-	Fri, 7 Nov 2025 07:16:11 GMT
+	Fri, 07 Nov 2025 08:04:03 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A74SYuG005487;
+	Fri, 7 Nov 2025 08:03:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=X3HaBk
-	Z0Y16/ZOvlCHIH11hsAoruhXZ8XfKm+QVi5aM=; b=g1uXRAZvhO00wkg9gfZaLB
-	s2x+5PQOb2Uysd5rt5bAr46EJn6qtjf2cKf7hn7zWXyZa1V2QBYoiZJsxKFamLsv
-	z0g2oLbKk/IG0xAAVH0V1vaLDKuBCfoJlv68VaxPRWWgaprKp9Y1nr3oMUTMELDP
-	ZCtQuGKK7Z8HQtVDoyo5/7mCfpYkEVdJF6LXaXEEQ37YsT1ujEYpV5Fmj5iHVTCk
-	Tu5ocYQt4O+K91q6sM4aCs1SLtdVrnAVl29ksm3Dqstspqnt8CAv+e8zPpLVv/4V
-	W56iwJbD1RriLgo650k/xeJm2RqObnGwFVPal4mj2PuoB1CQdvg9PacHc5uidjiw
-	==
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=r0WIycQGoDb293KrA8TcGBXpp6L8iM0FDINhPucJV
+	kc=; b=OLdxbpPtRlfedISYJtkV47VQXGKvrmnWwtT/z0GRXWqJ16Uct/ndwbrJ1
+	3xdL/rx9wsTWIyrneqkuyIS2DEUUeg1ZBrMJvyKJewZVniXaUx/Jk4FU+D5y2oCg
+	rgZo/AkpUOrJUm+PglqOODmtgKfmvdi3EzRnDZg1tQ7Ibm92QPz5HQqATiLkfFbx
+	TUvd2Ynn7nYKNaNc2z2CqZ6vrCZhE41BAqBJTE6cu6e/BsF5stZon/L2zMNCqsJ6
+	YZTIJwNHva4wS03g8cw2TwCPXxf38MuyLHooWvQ3yUlTeuxo2negfZHhEz7bYUNz
+	sH/pyqoLpJzxHYlTWgP9Aa+/0po4w==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59xcbb9b-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59vuuk6j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Nov 2025 07:16:10 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A77GA2s032292;
-	Fri, 7 Nov 2025 07:16:10 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59xcbb9a-1
+	Fri, 07 Nov 2025 08:03:54 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A783s6r012554;
+	Fri, 7 Nov 2025 08:03:54 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59vuuk6g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Nov 2025 07:16:10 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A7476K8021483;
-	Fri, 7 Nov 2025 07:16:09 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5xrk1b2u-1
+	Fri, 07 Nov 2025 08:03:54 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A73ShhD009863;
+	Fri, 7 Nov 2025 08:03:53 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5x1kskpj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Nov 2025 07:16:09 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A77G5pw52953528
+	Fri, 07 Nov 2025 08:03:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A783m5O53608754
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Nov 2025 07:16:05 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F3E6A20040;
-	Fri,  7 Nov 2025 07:16:04 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CCD6E2004F;
-	Fri,  7 Nov 2025 07:15:56 +0000 (GMT)
-Received: from [9.124.216.224] (unknown [9.124.216.224])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Nov 2025 07:15:56 +0000 (GMT)
-Message-ID: <f2c83fff-a5cd-4894-8014-f6b289e89019@linux.ibm.com>
-Date: Fri, 7 Nov 2025 12:45:55 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] crash: export crashkernel CMA reservation to
- userspace
-To: linux-kernel@vger.kernel.org
-Cc: Aditya Gupta <adityag@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
-        Jiri Bohac <jbohac@suse.cz>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        kexec@lists.infradead.org
-References: <20251106045107.17813-1-sourabhjain@linux.ibm.com>
- <20251106045107.17813-6-sourabhjain@linux.ibm.com>
-Content-Language: en-US
+	Fri, 7 Nov 2025 08:03:48 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB0E52004D;
+	Fri,  7 Nov 2025 08:03:48 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 90D5820043;
+	Fri,  7 Nov 2025 08:03:45 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.124.216.224])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Nov 2025 08:03:45 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20251106045107.17813-6-sourabhjain@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Baoquan he <bhe@redhat.com>,
+        Jiri Bohac <jbohac@suse.cz>, Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>, kexec@lists.infradead.org
+Subject: [PATCH v7] powerpc/kdump: Add support for crashkernel CMA reservation
+Date: Fri,  7 Nov 2025 13:33:34 +0530
+Message-ID: <20251107080334.708028-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.51.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfX3oDTbhKli8Pr
- 8f3nXufGk75pmFiqgvo+8HUCiOmHeuWSqOrKGikPbqeDyF1e9JbxyevdXxdCoy8VLF5g9dR3TgN
- VvAQR4x02lVDcl8Xwl54XUzu50sjEXV/TioDeRfocmo6XSRSWKQlz7U2Tjp6H+XCa7VJPZ4pQ1V
- f1tO7U5RRJF0pxWDQZVjX10KmQhgg93oSdnhW1zkwt+l/edylINS6gFLcHSULR5hOHIaZ1bND0H
- pzF1p57c968iSrEHS8hReLTAZh8rh6JVu24boNv7Tg85l1AMEW7oi/N8UhhypFBbA6wqusptBUQ
- tdfU2j7iJdMUSESAMCalttCmPdVcyuqe4alTlpHMl4oGZVAhBKxUeEJS6kMkGue1sBW1ULcZepk
- P9VU5kpN6DSKusZlFrzsZD2fCZaOZA==
-X-Proofpoint-GUID: 14-cE65UTlpF7D9vFBtjFK4_BH7bS4Ih
-X-Authority-Analysis: v=2.4 cv=OdCVzxTY c=1 sm=1 tr=0 ts=690d9cbb cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8
- a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8 a=kZwJjtJCwpCGEqBlNKsA:9 a=QEXdDO2ut3YA:10
- a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22 a=1CNFftbPRP8L7MoqJWF3:22
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: beCPzcuNJC0uG_6u3WqdW1RYVTuinS_S
+X-Proofpoint-ORIG-GUID: ok-v2_INB8CXqRzvkuZIlxuRjmwV7NCB
+X-Proofpoint-GUID: pMsfbICs8kSd9IhiyLUvd7fVEZhE_Ipd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfX6wHxH0Carqaw
+ 3uhmEQaqZjX2F7UEgngy4/c/cdrNLJ/D7TDbTLpgjCeKD233BKKU69L7RhGfgHh1PJlEq1ep3EL
+ qOCBSiCgihZYUMNARnB79fIzC0K4K7tRejoayLjnmQcLbyFqRd3Lljb3e1RspxC7LF8l/b5/FKU
+ RudwlJcdrYHHBrycZtvr6wab18JIjkHipVuB1OxwzsyPkRC6UsPlv+LK7qd6chtleaONOStDWRw
+ QooZwuzOtKx/AlOgJmBekEj438v3AHHi+AXS5CZrWU5Y4L9jSio4ofAX9BqFWY0ugEJ227KLkoD
+ dciwWHon3Ln9DjwRaAwp8xheengn+8w/g49iUaUn7c7p+fO8iC19CMMWQp29CUwoif0wZsJdDwx
+ a0Zdk8goR2WfAtK3DA+P/Mi34+b1ZQ==
+X-Authority-Analysis: v=2.4 cv=U6qfzOru c=1 sm=1 tr=0 ts=690da7ea cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=JfrnYn6hAAAA:8 a=cx1aSUdoMbGpntF6QmcA:9
+ a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-07_01,2025-11-06_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010021
+ bulkscore=0 adultscore=0 impostorscore=0 spamscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511010021
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251106_231620_491068_8B9F0AB1 
-X-CRM114-Status: GOOD (  19.90  )
+X-CRM114-CacheID: sfid-20251107_000401_730708_60325833 
+X-CRM114-Status: GOOD (  27.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -137,62 +126,238 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+crashkernel= command line option") and commit ab475510e042 ("kdump:
+implement reserve_crashkernel_cma") added CMA support for kdump
+crashkernel reservation.
 
+Extend crashkernel CMA reservation support to powerpc.
 
-On 06/11/25 10:21, Sourabh Jain wrote:
-> Add a sysfs entry /sys/kernel/kexec/crash_cma_ranges to expose all
-> CMA crashkernel ranges.
->
-> This allows userspace tools configuring kdump to determine how much
-> memory is reserved for crashkernel. If CMA is used, tools can warn
-> users when attempting to capture user pages with CMA reservation.
->
-> The new sysfs hold the CMA ranges in below format:
->
-> cat /sys/kernel/kexec/crash_cma_ranges
-> 100000000-10c7fffff
->
-> Cc: Aditya Gupta <adityag@linux.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Baoquan he <bhe@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Jiri Bohac <jbohac@suse.cz>
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Pingfan Liu <piliu@redhat.com>
-> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->   Documentation/ABI/testing/sysfs-kernel-kexec-kdump | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-> index 00c00f380fea..f59051b5d96d 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-> +++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-> @@ -49,3 +49,13 @@ Description:	read only
->   		is used by the user space utility kexec to support updating the
->   		in-kernel kdump image during hotplug operations.
->   User:		Kexec tools
-> +
-> +What:		/sys/kernel/kexec/crash_cma_ranges
-> +Date:		Nov 2025
-> +Contact:	kexec@lists.infradead.org
-> +Description:	read only
-> +		Provides information about the memory ranges reserved from
-> +		the Contiguous Memory Allocator (CMA) area that are allocated
-> +		to the crash (kdump) kernel. It lists the start and end physical
-> +		addresses of CMA regions assigned for crashkernel use.
-> +User:		kdump service
-While rebasing the v1 patches, the hunk that adds the show function 
-didn't get picked up.
-I will send v3 with a show function to export the crashkernel CMA 
-reservation.
+The following changes are made to enable CMA reservation on powerpc:
 
-- Sourabh Jain
+- Parse and obtain the CMA reservation size along with other crashkernel
+  parameters
+- Call reserve_crashkernel_cma() to allocate the CMA region for kdump
+- Include the CMA-reserved ranges in the usable memory ranges for the
+  kdump kernel to use.
+- Exclude the CMA-reserved ranges from the crash kernel memory to
+  prevent them from being exported through /proc/vmcore.
+
+With the introduction of the CMA crashkernel regions,
+crash_exclude_mem_range() needs to be called multiple times to exclude
+both crashk_res and crashk_cma_ranges from the crash memory ranges. To
+avoid repetitive logic for validating mem_ranges size and handling
+reallocation when required, this functionality is moved to a new wrapper
+function crash_exclude_mem_range_guarded().
+
+To ensure proper CMA reservation, reserve_crashkernel_cma() is called
+after pageblock_order is initialized.
+
+Update kernel-parameters.txt to document CMA support for crashkernel on
+powerpc architecture.
+
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Jiri Bohac <jbohac@suse.cz>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+Cc: kexec@lists.infradead.org
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+Changelog:
+
+v6 -> v7
+https://lore.kernel.org/all/20251104132818.1724562-1-sourabhjain@linux.ibm.com/
+ - declare crashk_cma_size static
+
+---
+ .../admin-guide/kernel-parameters.txt         |  2 +-
+ arch/powerpc/include/asm/kexec.h              |  2 +
+ arch/powerpc/kernel/setup-common.c            |  4 +-
+ arch/powerpc/kexec/core.c                     | 10 ++++-
+ arch/powerpc/kexec/ranges.c                   | 43 ++++++++++++++-----
+ 5 files changed, 47 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 6c42061ca20e..1c10190d583d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1013,7 +1013,7 @@
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+ 	crashkernel=size[KMG],cma
+-			[KNL, X86] Reserve additional crash kernel memory from
++			[KNL, X86, ppc] Reserve additional crash kernel memory from
+ 			CMA. This reservation is usable by the first system's
+ 			userspace memory and kernel movable allocations (memory
+ 			balloon, zswap). Pages allocated from this memory range
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 4bbf9f699aaa..bd4a6c42a5f3 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -115,9 +115,11 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt, struct crash_mem
+ #ifdef CONFIG_CRASH_RESERVE
+ int __init overlaps_crashkernel(unsigned long start, unsigned long size);
+ extern void arch_reserve_crashkernel(void);
++extern void kdump_cma_reserve(void);
+ #else
+ static inline void arch_reserve_crashkernel(void) {}
+ static inline int overlaps_crashkernel(unsigned long start, unsigned long size) { return 0; }
++static inline void kdump_cma_reserve(void) { }
+ #endif
+ 
+ #if defined(CONFIG_CRASH_DUMP)
+diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+index 68d47c53876c..c8c42b419742 100644
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -35,6 +35,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/hugetlb.h>
+ #include <linux/pgtable.h>
++#include <asm/kexec.h>
+ #include <asm/io.h>
+ #include <asm/paca.h>
+ #include <asm/processor.h>
+@@ -995,11 +996,12 @@ void __init setup_arch(char **cmdline_p)
+ 	initmem_init();
+ 
+ 	/*
+-	 * Reserve large chunks of memory for use by CMA for fadump, KVM and
++	 * Reserve large chunks of memory for use by CMA for kdump, fadump, KVM and
+ 	 * hugetlb. These must be called after initmem_init(), so that
+ 	 * pageblock_order is initialised.
+ 	 */
+ 	fadump_cma_init();
++	kdump_cma_reserve();
+ 	kvm_cma_reserve();
+ 	gigantic_hugetlb_cma_reserve();
+ 
+diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
+index d1a2d755381c..e59bdfcc6463 100644
+--- a/arch/powerpc/kexec/core.c
++++ b/arch/powerpc/kexec/core.c
+@@ -59,6 +59,8 @@ void machine_kexec(struct kimage *image)
+ 
+ #ifdef CONFIG_CRASH_RESERVE
+ 
++static unsigned long long crashk_cma_size;
++
+ static unsigned long long __init get_crash_base(unsigned long long crash_base)
+ {
+ 
+@@ -110,7 +112,7 @@ void __init arch_reserve_crashkernel(void)
+ 
+ 	/* use common parsing */
+ 	ret = parse_crashkernel(boot_command_line, total_mem_sz, &crash_size,
+-				&crash_base, NULL, NULL, NULL);
++				&crash_base, NULL, &crashk_cma_size, NULL);
+ 
+ 	if (ret)
+ 		return;
+@@ -130,6 +132,12 @@ void __init arch_reserve_crashkernel(void)
+ 	reserve_crashkernel_generic(crash_size, crash_base, 0, false);
+ }
+ 
++void __init kdump_cma_reserve(void)
++{
++	if (crashk_cma_size)
++		reserve_crashkernel_cma(crashk_cma_size);
++}
++
+ int __init overlaps_crashkernel(unsigned long start, unsigned long size)
+ {
+ 	return (start + size) > crashk_res.start && start <= crashk_res.end;
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 3702b0bdab14..3bd27c38726b 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -515,7 +515,7 @@ int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+  */
+ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+ {
+-	int ret;
++	int ret, i;
+ 
+ 	/*
+ 	 * Early boot failure observed on guests when low memory (first memory
+@@ -528,6 +528,13 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+ 	if (ret)
+ 		goto out;
+ 
++	for (i = 0; i < crashk_cma_cnt; i++) {
++		ret = add_mem_range(mem_ranges, crashk_cma_ranges[i].start,
++				    crashk_cma_ranges[i].end - crashk_cma_ranges[i].start + 1);
++		if (ret)
++			goto out;
++	}
++
+ 	ret = add_rtas_mem_range(mem_ranges);
+ 	if (ret)
+ 		goto out;
+@@ -546,6 +553,22 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ #ifdef CONFIG_CRASH_DUMP
++static int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
++					   unsigned long long mstart,
++					   unsigned long long mend)
++{
++	struct crash_mem *tmem = *mem_ranges;
++
++	/* Reallocate memory ranges if there is no space to split ranges */
++	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
++		tmem = realloc_mem_ranges(mem_ranges);
++		if (!tmem)
++			return -ENOMEM;
++	}
++
++	return crash_exclude_mem_range(tmem, mstart, mend);
++}
++
+ /**
+  * get_crash_memory_ranges - Get crash memory ranges. This list includes
+  *                           first/crashing kernel's memory regions that
+@@ -557,7 +580,6 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+ {
+ 	phys_addr_t base, end;
+-	struct crash_mem *tmem;
+ 	u64 i;
+ 	int ret;
+ 
+@@ -582,19 +604,18 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+ 			sort_memory_ranges(*mem_ranges, true);
+ 	}
+ 
+-	/* Reallocate memory ranges if there is no space to split ranges */
+-	tmem = *mem_ranges;
+-	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+-		tmem = realloc_mem_ranges(mem_ranges);
+-		if (!tmem)
+-			goto out;
+-	}
+-
+ 	/* Exclude crashkernel region */
+-	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
++	ret = crash_exclude_mem_range_guarded(mem_ranges, crashk_res.start, crashk_res.end);
+ 	if (ret)
+ 		goto out;
+ 
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ret = crash_exclude_mem_range_guarded(mem_ranges, crashk_cma_ranges[i].start,
++					      crashk_cma_ranges[i].end);
++		if (ret)
++			goto out;
++	}
++
+ 	/*
+ 	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+ 	 *        regions are exported to save their context at the time of
+-- 
+2.51.1
+
 
