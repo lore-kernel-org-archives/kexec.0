@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 09F03CCFA05
-	for <kexec@archiver.kernel.org>; Fri,  7 Nov 2025 09:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1FCFCCF9F8
+	for <kexec@archiver.kernel.org>; Fri,  7 Nov 2025 09:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qRBkHJa4BRGFROBjttcbTKceSh4EPFClBc48CB54JR8=; b=5B3iFsGMPU666lY/NElj1wYFHV
-	O/GRYwJHV3Zqyaj4UifSy+pHIJZtHcmln15iLv9CCJzSxMpZRaRFkNvnP/KwXMQ/gBv8JiN3GgkzO
-	xPOVDVP9Sn/ccOFnZQBrtGFnOb1XWxbvB/IqgdD9NFO9pDCESy0k6+TnjsSA8f5t4tlzXunxgwPAb
-	tlZMQhzfTg5Vv2gBFoMb85ybduHD4+rWmL2U8vBR+9uzxhLXcIJEhbc9XyPoD+KhAyObUSseyvf2O
-	Ad+cLxf2OF+CKJHq/kNy+zEjITlcv/4C3xdlCTGNfs/SoR6KlmCCK9tGYvDeiki+v6am5ccv3FxDw
-	38scblSA==;
+	bh=ZOsWva3fGpX5t38JbJQnotyoTQSLPIQg5IlEqD9ldoU=; b=CKqqJVRrP3ZbwQoKDXxua8ndHx
+	0L0KZKIjAnaz8xmBEwJr7pqma/LsKJmNw+Z3vAK6dP4+a+ICftAZbdFEg+HIZg0F1OVg4H7VN0kGK
+	5QM84NInZ2GuPQ9JaJL1qbuGRdGtQ0VDZiiVpi3SU/h+88JlQEtYuUfVLrbhDkihfx33nb4MFzRl0
+	JsMxOs9rHwtOtc1bTUV/DcabtMyk6F50010QIs5H+RNFHhkeJSG7ekLfbZsi5mNlQqalR8HKUa6Xo
+	8DtU3k2ntEq45FukjFRFmthwZlbRGHVWgDrOiv/23WqaaSybyTzh6Cu15ekKwW5gz8zYiT489FQsd
+	O+1KM4Lg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vHIot-0000000Gxi0-2uYq;
-	Fri, 07 Nov 2025 09:31:47 +0000
+	id 1vHIrV-0000000GxuI-2Ueq;
+	Fri, 07 Nov 2025 09:34:29 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vHIor-0000000GxhT-1sdS
+	id 1vHIrT-0000000GxtS-30f7
 	for kexec@lists.infradead.org;
-	Fri, 07 Nov 2025 09:31:46 +0000
+	Fri, 07 Nov 2025 09:34:28 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762507904;
+	s=mimecast20190719; t=1762508066;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qRBkHJa4BRGFROBjttcbTKceSh4EPFClBc48CB54JR8=;
-	b=E1V/eJDx39d8W4nikfEMSpa1R5VSgeGViAjdfNu2zvNW15l3NMt3MNZStvmKwJONkUEjND
-	veiYjTPulDi7bpNcat+uviUVcx15Q8rFdffrKKsjnT3pmgq1PGUgT9IYGf83vrBiN/UjRV
-	RyURo4MEH6u50R/4k5uWn/2zKT9QYG4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=ZOsWva3fGpX5t38JbJQnotyoTQSLPIQg5IlEqD9ldoU=;
+	b=MamJMQe/ujDbdL+A7ITS0otgJTmTVZyUPCVvfxSqajKpXgpnVZflhhsNjL1x87iE1IbeCj
+	bMXh/uaPVByhc8mIbBYLZ/Ta0f1/wCig0Z9rC7T2GcRGpq4bszM+Jirw/zcDY0z04TiotB
+	YuhxhverK76DKY0pi+ka+7R9DaPsJrw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-571-kc5534LfMnGD2FHOmi4G9A-1; Fri,
- 07 Nov 2025 04:31:42 -0500
-X-MC-Unique: kc5534LfMnGD2FHOmi4G9A-1
-X-Mimecast-MFC-AGG-ID: kc5534LfMnGD2FHOmi4G9A_1762507901
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-QQajzvzhO2Kq7C04dCd4KA-1; Fri,
+ 07 Nov 2025 04:34:23 -0500
+X-MC-Unique: QQajzvzhO2Kq7C04dCd4KA-1
+X-Mimecast-MFC-AGG-ID: QQajzvzhO2Kq7C04dCd4KA_1762508062
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 717D619560B5;
-	Fri,  7 Nov 2025 09:31:39 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E343180035F;
+	Fri,  7 Nov 2025 09:34:21 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.190])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE3161800346;
-	Fri,  7 Nov 2025 09:31:37 +0000 (UTC)
-Date: Fri, 7 Nov 2025 17:31:32 +0800
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2A1D19560A7;
+	Fri,  7 Nov 2025 09:34:19 +0000 (UTC)
+Date: Fri, 7 Nov 2025 17:34:15 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Pingfan Liu <piliu@redhat.com>
 Cc: kexec@lists.infradead.org, linux-integrity@vger.kernel.org,
@@ -64,24 +63,17 @@ Cc: kexec@lists.infradead.org, linux-integrity@vger.kernel.org,
 	Steven Chen <chenste@linux.microsoft.com>, stable@vger.kernel.org
 Subject: Re: [PATCHv2 2/2] kernel/kexec: Fix IMA when allocation happens in
  CMA area
-Message-ID: <aQ28dGVP4UqsoIzI@MiWiFi-R3L-srv>
+Message-ID: <aQ29F90I5FIgxmyr@MiWiFi-R3L-srv>
 References: <20251106065904.10772-1-piliu@redhat.com>
  <20251106065904.10772-2-piliu@redhat.com>
- <aQxV2ULFzG/xrl7/@MiWiFi-R3L-srv>
- <CAF+s44TyM7sBVmGn7kn5Cw+Ygm02F93hchiSBN0Q_qR=oA+DLg@mail.gmail.com>
- <aQ1QiLGXWRsZbiYo@MiWiFi-R3L-srv>
- <CAF+s44TOt+EwGi9VDES9PC+VaGZoDCw6rbyRv_mnb0xbaLScbg@mail.gmail.com>
- <aQ2C1UyJoyyuC/ZK@MiWiFi-R3L-srv>
- <aQ21GVR1pEjzWvw1@fedora>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aQ21GVR1pEjzWvw1@fedora>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20251106065904.10772-2-piliu@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251107_013145_565697_95793051 
-X-CRM114-Status: GOOD (  34.75  )
+X-CRM114-CacheID: sfid-20251107_013427_836834_A464DB77 
+X-CRM114-Status: GOOD (  22.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,115 +88,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/07/25 at 05:00pm, Pingfan Liu wrote:
-> On Fri, Nov 07, 2025 at 01:25:41PM +0800, Baoquan He wrote:
-> > On 11/07/25 at 01:13pm, Pingfan Liu wrote:
-> > > On Fri, Nov 7, 2025 at 9:51 AM Baoquan He <bhe@redhat.com> wrote:
-> > > >
-> > > > On 11/06/25 at 06:01pm, Pingfan Liu wrote:
-> > > > > On Thu, Nov 6, 2025 at 4:01 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > > >
-> > > > > > On 11/06/25 at 02:59pm, Pingfan Liu wrote:
-> > > > > > > When I tested kexec with the latest kernel, I ran into the following warning:
-> > > > > > >
-> > > > > > > [   40.712410] ------------[ cut here ]------------
-> > > > > > > [   40.712576] WARNING: CPU: 2 PID: 1562 at kernel/kexec_core.c:1001 kimage_map_segment+0x144/0x198
-> > > > > > > [...]
-> > > > > > > [   40.816047] Call trace:
-> > > > > > > [   40.818498]  kimage_map_segment+0x144/0x198 (P)
-> > > > > > > [   40.823221]  ima_kexec_post_load+0x58/0xc0
-> > > > > > > [   40.827246]  __do_sys_kexec_file_load+0x29c/0x368
-> > > > > > > [...]
-> > > > > > > [   40.855423] ---[ end trace 0000000000000000 ]---
-> > > > > > >
-> > > > > > > This is caused by the fact that kexec allocates the destination directly
-> > > > > > > in the CMA area. In that case, the CMA kernel address should be exported
-> > > > > > > directly to the IMA component, instead of using the vmalloc'd address.
-> > > > > >
-> > > > > > Well, you didn't update the log accordingly.
-> > > > > >
-> > > > >
-> > > > > I am not sure what you mean. Do you mean the earlier content which I
-> > > > > replied to you?
-> > > >
-> > > > No. In v1, you return cma directly. But in v2, you return its direct
-> > > > mapping address, isnt' it?
-> > > >
-> > > 
-> > > Yes. But I think it is a fault in the code, which does not convey the
-> > > expression in the commit log. Do you think I should rephrase the words
-> > > "the CMA kernel address" as "the CMA kernel direct mapping address"?
-> > 
-> > That's fine to me.
-> > 
-> > > 
-> > > > >
-> > > > > > Do you know why cma area can't be mapped into vmalloc?
-> > > > > >
-> > > > > Should not the kernel direct mapping be used?
-> > > >
-> > > > When image->segment_cma[i] has value, image->ima_buffer_addr also
-> > > > contains the physical address of the cma area, why cma physical address
-> > > > can't be mapped into vmalloc and cause the failure and call trace?
-> > > >
-> > > 
-> > > It could be done using the vmalloc approach, but it's unnecessary.
-> > > IIUC, kimage_map_segment() was introduced to provide a contiguous
-> > > virtual address for IMA access, since the IND_SRC pages are scattered
-> > > throughout the kernel. However, in the CMA case, there is already a
-> > > contiguous virtual address in the kernel direct mapping range.
-> > > Normally, when we have a physical address, we simply use
-> > > phys_to_virt() to get its corresponding kernel virtual address.
-> > 
-> > OK, I understand cma area is contiguous, and no need to map into
-> > vmalloc. I am wondering why in the old code mapping cma addrss into 
-> > vmalloc cause the warning which you said is a IMA problem. 
-> > 
+On 11/06/25 at 02:59pm, Pingfan Liu wrote:
+> When I tested kexec with the latest kernel, I ran into the following warning:
 > 
-> It doesn't go that far. The old code doesn't map CMA into vmalloc'd
-> area.
+> [   40.712410] ------------[ cut here ]------------
+> [   40.712576] WARNING: CPU: 2 PID: 1562 at kernel/kexec_core.c:1001 kimage_map_segment+0x144/0x198
+> [...]
+> [   40.816047] Call trace:
+> [   40.818498]  kimage_map_segment+0x144/0x198 (P)
+> [   40.823221]  ima_kexec_post_load+0x58/0xc0
+> [   40.827246]  __do_sys_kexec_file_load+0x29c/0x368
+> [...]
+> [   40.855423] ---[ end trace 0000000000000000 ]---
 > 
-> void *kimage_map_segment(struct kimage *image, int idx)
-> {
-> 	...
->         for_each_kimage_entry(image, ptr, entry) {
->                 if (entry & IND_DESTINATION) {
->                         dest_page_addr = entry & PAGE_MASK;
->                 } else if (entry & IND_SOURCE) {
->                         if (dest_page_addr >= addr && dest_page_addr < eaddr) {
->                                 src_page_addr = entry & PAGE_MASK;
->                                 src_pages[i++] =
->                                         virt_to_page(__va(src_page_addr));
->                                 if (i == npages)
->                                         break;
->                                 dest_page_addr += PAGE_SIZE;
->                         }
->                 }
->         }
+> This is caused by the fact that kexec allocates the destination directly
+> in the CMA area. In that case, the CMA kernel address should be exported
+> directly to the IMA component, instead of using the vmalloc'd address.
 > 
->         /* Sanity check. */
->         WARN_ON(i < npages);     //--> This is the warning thrown by kernel
+> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Alexander Graf <graf@amazon.com>
+> Cc: Steven Chen <chenste@linux.microsoft.com>
+> Cc: linux-integrity@vger.kernel.org
+> Cc: <stable@vger.kernel.org>
+> To: kexec@lists.infradead.org
+> ---
+> v1 -> v2:
+> return page_address(page) instead of *page
 > 
->         vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
->         kfree(src_pages);
+>  kernel/kexec_core.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
->         if (!vaddr)
->                 pr_err("Could not map ima buffer.\n");
-> 
->         return vaddr;
-> }
-> 
-> When CMA is used, there is no IND_SOURCE, so we have i=0 < npages.
-> Now, I see how my words ("In that case, the CMA kernel address should be
-> exported directly to the IMA component, instead of using the vmalloc'd
-> address.") confused you. As for "instead of using the vmalloc'd
-> address", I meant to mention "vmap()" approach.
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 9a1966207041..332204204e53 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -967,6 +967,7 @@ void *kimage_map_segment(struct kimage *image, int idx)
+>  	kimage_entry_t *ptr, entry;
+>  	struct page **src_pages;
+>  	unsigned int npages;
+> +	struct page *cma;
+>  	void *vaddr = NULL;
+>  	int i;
+>  
+> @@ -974,6 +975,9 @@ void *kimage_map_segment(struct kimage *image, int idx)
+>  	size = image->segment[idx].memsz;
+>  	eaddr = addr + size;
+>  
+> +	cma = image->segment_cma[idx];
+> +	if (cma)
+> +		return page_address(cma);
 
-Ok, I got it. It's truly a bug because if image->segment_cma[idx] is
-valid, the current kimage_map_segment() can't collect the source pages
-at all since they are not marked with IND_DESTINATION|IND_SOURCE as
-normal segment does. In that situation, we can take the direct mapping
-address of image->segment_cma[idx] which is more efficient, instead of
-collecting source pages and vmap().
+This judgement can be put above the addr/size/eaddr assignment lines?
+
+If you agree, maybe you can update the patch log by adding more details
+to explain the root cause so that people can understand it easier.
+
+>  	/*
+>  	 * Collect the source pages and map them in a contiguous VA range.
+>  	 */
+> @@ -1014,7 +1018,8 @@ void *kimage_map_segment(struct kimage *image, int idx)
+>  
+>  void kimage_unmap_segment(void *segment_buffer)
+>  {
+> -	vunmap(segment_buffer);
+> +	if (is_vmalloc_addr(segment_buffer))
+> +		vunmap(segment_buffer);
+>  }
+>  
+>  struct kexec_load_limit {
+> -- 
+> 2.49.0
+> 
 
 
