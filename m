@@ -4,120 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3A64CD13CF
-	for <kexec@archiver.kernel.org>; Mon, 10 Nov 2025 04:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3E5C2CCF9E3
+	for <kexec@archiver.kernel.org>; Mon, 10 Nov 2025 07:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Y843UHAo4TTYfhg3gY3eOgCT9p62bFpqECVsQxpKWAQ=; b=X13qXtMrcDhFHj/mP4o0chgv+n
-	iXZT4F7oJ7Ph7uVAI/mv6nUir0x7ogv/LV3xDsLifgE0BHa3oYTuYdBEBUXtr+C6fg0mdstGbxPOr
-	CeKVEm9xP9K+1DIlszlXQoCtsbzgSk/cPCAZm1UmQyWWZfRWt6Qo5ykLD2UWQtzgI5C1jBQFtGyQt
-	7BNPCdahj9WKjN7LTy5nr1BJp4zRBAF5iLLgsvqsJv4PMAet/eWpqY1RvONiXBVEadZRgjSj48gPM
-	NHWoPwXixiAgcS6SkzIT4GvAVsCfr+9s3MRleSH4cIMAdgddAfqr6bJgamRzoXhtA/sNNeWdFOYz/
-	9E7Dk92w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FQeFfemk8R9pFVPJVE7vGo0yI2GmBM6W7T4hZkmc8fU=; b=cWcZVet1oZP+FaNVe2u8Scd2x5
+	mOj/wsUKZnmqI4xH3FRzY7D0baXORJBqNAYSWLLgwHoCp5tF8vu7MqCPs5glYyndDNbyJGp2aao5/
+	5V5NOa9uAKRdHG1GyhQsgYMEbQ02hwxSa7tvq/5MPLq3HoVil3rsSuYu3JZe6XuEXICR7/OAcix0F
+	VI3pADuvrCQrBe+YJzrcdYWUUISOEOvst8aD24V4sZ9B+rIIFh6X9jKCKjTEkafHzpC5Im8p3pQ7N
+	kIfgvNjdwguEuEM2Bl9/Xn1wJ2yYPdsMlZNYucvVi97NNoZ5gNxKgdzyb8ysrN2wbiXNb9UHmcGj/
+	ZqjTpV9Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIJa2-00000004ip1-3XZS;
-	Mon, 10 Nov 2025 04:32:38 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1vIM1P-00000004sX6-1ddT;
+	Mon, 10 Nov 2025 07:09:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIJZl-00000004ik4-3CTX
+	id 1vIM1L-00000004sVp-0T1l
 	for kexec@lists.infradead.org;
-	Mon, 10 Nov 2025 04:32:37 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A9NMBbL030964;
-	Mon, 10 Nov 2025 04:32:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Y843UHAo4TTYfhg3g
-	Y3eOgCT9p62bFpqECVsQxpKWAQ=; b=ll1yWM1SY774DrdGf5bitP3pDP9w186+y
-	HDJLiJhbuf7O0jdSyi/i2p7t2bOpNO7KHeCIvWdC/ALpuZKnTE7g4LcZQXkdxrYj
-	sI0W4Rv2LTu4nrespmHEl3DdTR0fl55ryR5To/k4tUFg1Wn998XwXTJan+fPIaVx
-	lZ9gWo3PPc1TUyx3MOTDHuATSp8RsbG2mFR307bBibKYji8yjGl0tLl61yKZTfJW
-	aR3ugIc4Jr9OgsoAIMrO5XWtpxmgpxw1Eadul/H/NKljCK5NThCiffso4FLwO3qH
-	ZGHlnE7kT8Z12orfb3fuu0bVIW7F/GqX2+JXAnp6VVvEP9fyehQ3w==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5chw70p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 04:32:20 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AA4U43a026875;
-	Mon, 10 Nov 2025 04:32:20 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5chw70j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 04:32:20 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A9NJMCl014841;
-	Mon, 10 Nov 2025 04:32:19 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpjut9x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 04:32:18 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AA4WF4j61342196
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Nov 2025 04:32:15 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1ABBD20049;
-	Mon, 10 Nov 2025 04:32:15 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4602020040;
-	Mon, 10 Nov 2025 04:32:11 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Nov 2025 04:32:11 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Aditya Gupta <adityag@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
-        Jiri Bohac <jbohac@suse.cz>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        kexec@lists.infradead.org
-Subject: [PATCH v3 5/5] crash: export crashkernel CMA reservation to userspace
-Date: Mon, 10 Nov 2025 10:01:43 +0530
-Message-ID: <20251110043143.484408-6-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251110043143.484408-1-sourabhjain@linux.ibm.com>
+	Mon, 10 Nov 2025 07:09:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762758536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FQeFfemk8R9pFVPJVE7vGo0yI2GmBM6W7T4hZkmc8fU=;
+	b=f/rZ/COQx53+jEPS0DMLIJs01tNJZU+sHaEu1MUyj3DEFLSqcPR5VP4qI4HIOsem5Bk4tR
+	fdor4GUMCE8jdBNqbjvyljLgMrXnwK1H0NBLRCjpuwnZkI2pZrUxAsH6RbXNPnoFloeRNC
+	TJXAqxJBX5E/VXOcxSdto4VeJnljO5o=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-eeRdVSlDPZqYg8Icnng9Iw-1; Mon,
+ 10 Nov 2025 02:08:53 -0500
+X-MC-Unique: eeRdVSlDPZqYg8Icnng9Iw-1
+X-Mimecast-MFC-AGG-ID: eeRdVSlDPZqYg8Icnng9Iw_1762758531
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65A95195608F;
+	Mon, 10 Nov 2025 07:08:50 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.59])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B262E19560A7;
+	Mon, 10 Nov 2025 07:08:47 +0000 (UTC)
+Date: Mon, 10 Nov 2025 15:08:41 +0800
+From: Baoquan he <bhe@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, Aditya Gupta <adityag@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Young <dyoung@redhat.com>,
+	Hari Bathini <hbathini@linux.ibm.com>, Jiri Bohac <jbohac@suse.cz>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Pingfan Liu <piliu@redhat.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shivang Upadhyay <shivangu@linux.ibm.com>,
+	Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v3 5/5] crash: export crashkernel CMA reservation to
+ userspace
+Message-ID: <aRGPee9izxWPRHj5@MiWiFi-R3L-srv>
 References: <20251110043143.484408-1-sourabhjain@linux.ibm.com>
+ <20251110043143.484408-6-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=69116ad4 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
- a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8
- a=xHySkhmCpRGYbmLIrh4A:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfXxviF4FCwEarM
- yc1LY5Tu8GcyGsCVpQaqoUaZAVbe4a3a0MfS/jZRPM0K4YerWDDjCrxZ4u0MEKp6nA6nkAO5A4J
- 0J4ekljfk6jQ+VrV2IzSp05iLz3TeDqgE1uf3pkuQ3RnxOOPUbizgkJUo60HIy9FqO4pgCXNSRw
- tIJluGlaYzKM/qSOzRobVB8RJr/wPyA/ujXuR2vAJJCZ/f2I9ZV1VXv/dk7raSfM7tMHiY3Jbd4
- TqGPQHr1oSH0uWp25QV5Gi9XFyJghieKKyMQbLXLn3a5iA79D0sNPj9Ut+ywciTf+5l6Sm7ynwe
- fdbBX86+jBjWirf8NHYvHO8QLk6dtl9VQGVbu82ztCSBJ/4jXc/xoHrIAZzrovnfTkj1UfK2bZ5
- BPbpCkDTHwpaZ1SHaWNhIbT+X5yJFw==
-X-Proofpoint-GUID: auHh23VC4ON0syCQXH9zdfVE6uPG1e4W
-X-Proofpoint-ORIG-GUID: YOWHrtq7ZAwkVSY61seUoCGRKrnTKQYS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-10_01,2025-11-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251110043143.484408-6-sourabhjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251109_203234_236568_028A676B 
-X-CRM114-Status: GOOD (  18.44  )
+X-CRM114-CacheID: sfid-20251109_230859_221170_8F0D39F6 
+X-CRM114-Status: GOOD (  25.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,96 +93,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a sysfs entry /sys/kernel/kexec/crash_cma_ranges to expose all
-CMA crashkernel ranges.
+On 11/10/25 at 10:01am, Sourabh Jain wrote:
+> Add a sysfs entry /sys/kernel/kexec/crash_cma_ranges to expose all
+> CMA crashkernel ranges.
 
-This allows userspace tools configuring kdump to determine how much
-memory is reserved for crashkernel. If CMA is used, tools can warn
-users when attempting to capture user pages with CMA reservation.
+I am not against this way. While wondering if it's more appropriate to
+export them into iomem_resource just like crashk_res and crashk_low_res
+doing.
 
-The new sysfs hold the CMA ranges in below format:
-
-cat /sys/kernel/kexec/crash_cma_ranges
-100000000-10c7fffff
-
-Cc: Aditya Gupta <adityag@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Jiri Bohac <jbohac@suse.cz>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
-Changelog:
- - Add the missing hunk to export crash_cma_ranges sysfs
-
----
- .../ABI/testing/sysfs-kernel-kexec-kdump        | 10 ++++++++++
- kernel/kexec_core.c                             | 17 +++++++++++++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-index 00c00f380fea..f59051b5d96d 100644
---- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-+++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-@@ -49,3 +49,13 @@ Description:	read only
- 		is used by the user space utility kexec to support updating the
- 		in-kernel kdump image during hotplug operations.
- User:		Kexec tools
-+
-+What:		/sys/kernel/kexec/crash_cma_ranges
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Provides information about the memory ranges reserved from
-+		the Contiguous Memory Allocator (CMA) area that are allocated
-+		to the crash (kdump) kernel. It lists the start and end physical
-+		addresses of CMA regions assigned for crashkernel use.
-+User:		kdump service
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 7476a46de5d6..da6ff72b4669 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1271,6 +1271,22 @@ static ssize_t crash_size_store(struct kobject *kobj,
- }
- static struct kobj_attribute crash_size_attr = __ATTR_RW(crash_size);
- 
-+static ssize_t crash_cma_ranges_show(struct kobject *kobj,
-+				     struct kobj_attribute *attr, char *buf)
-+{
-+
-+	ssize_t len = 0;
-+	int i;
-+
-+	for (i = 0; i < crashk_cma_cnt; ++i) {
-+		len += sysfs_emit_at(buf, len, "%08llx-%08llx\n",
-+				     crashk_cma_ranges[i].start,
-+				     crashk_cma_ranges[i].end);
-+	}
-+	return len;
-+}
-+static struct kobj_attribute crash_cma_ranges_attr = __ATTR_RO(crash_cma_ranges);
-+
- #ifdef CONFIG_CRASH_HOTPLUG
- static ssize_t crash_elfcorehdr_size_show(struct kobject *kobj,
- 			       struct kobj_attribute *attr, char *buf)
-@@ -1289,6 +1305,7 @@ static struct attribute *kexec_attrs[] = {
- #ifdef CONFIG_CRASH_DUMP
- 	&crash_loaded_attr.attr,
- 	&crash_size_attr.attr,
-+	&crash_cma_ranges_attr.attr,
- #ifdef CONFIG_CRASH_HOTPLUG
- 	&crash_elfcorehdr_size_attr.attr,
- #endif
--- 
-2.51.1
+> 
+> This allows userspace tools configuring kdump to determine how much
+> memory is reserved for crashkernel. If CMA is used, tools can warn
+> users when attempting to capture user pages with CMA reservation.
+> 
+> The new sysfs hold the CMA ranges in below format:
+> 
+> cat /sys/kernel/kexec/crash_cma_ranges
+> 100000000-10c7fffff
+> 
+> Cc: Aditya Gupta <adityag@linux.ibm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Jiri Bohac <jbohac@suse.cz>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Pingfan Liu <piliu@redhat.com>
+> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+> Changelog:
+>  - Add the missing hunk to export crash_cma_ranges sysfs
+> 
+> ---
+>  .../ABI/testing/sysfs-kernel-kexec-kdump        | 10 ++++++++++
+>  kernel/kexec_core.c                             | 17 +++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+> index 00c00f380fea..f59051b5d96d 100644
+> --- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+> +++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+> @@ -49,3 +49,13 @@ Description:	read only
+>  		is used by the user space utility kexec to support updating the
+>  		in-kernel kdump image during hotplug operations.
+>  User:		Kexec tools
+> +
+> +What:		/sys/kernel/kexec/crash_cma_ranges
+> +Date:		Nov 2025
+> +Contact:	kexec@lists.infradead.org
+> +Description:	read only
+> +		Provides information about the memory ranges reserved from
+> +		the Contiguous Memory Allocator (CMA) area that are allocated
+> +		to the crash (kdump) kernel. It lists the start and end physical
+> +		addresses of CMA regions assigned for crashkernel use.
+> +User:		kdump service
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 7476a46de5d6..da6ff72b4669 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1271,6 +1271,22 @@ static ssize_t crash_size_store(struct kobject *kobj,
+>  }
+>  static struct kobj_attribute crash_size_attr = __ATTR_RW(crash_size);
+>  
+> +static ssize_t crash_cma_ranges_show(struct kobject *kobj,
+> +				     struct kobj_attribute *attr, char *buf)
+> +{
+> +
+> +	ssize_t len = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < crashk_cma_cnt; ++i) {
+> +		len += sysfs_emit_at(buf, len, "%08llx-%08llx\n",
+> +				     crashk_cma_ranges[i].start,
+> +				     crashk_cma_ranges[i].end);
+> +	}
+> +	return len;
+> +}
+> +static struct kobj_attribute crash_cma_ranges_attr = __ATTR_RO(crash_cma_ranges);
+> +
+>  #ifdef CONFIG_CRASH_HOTPLUG
+>  static ssize_t crash_elfcorehdr_size_show(struct kobject *kobj,
+>  			       struct kobj_attribute *attr, char *buf)
+> @@ -1289,6 +1305,7 @@ static struct attribute *kexec_attrs[] = {
+>  #ifdef CONFIG_CRASH_DUMP
+>  	&crash_loaded_attr.attr,
+>  	&crash_size_attr.attr,
+> +	&crash_cma_ranges_attr.attr,
+>  #ifdef CONFIG_CRASH_HOTPLUG
+>  	&crash_elfcorehdr_size_attr.attr,
+>  #endif
+> -- 
+> 2.51.1
+> 
 
 
