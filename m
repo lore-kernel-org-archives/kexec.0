@@ -4,70 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6440CCFA13
-	for <kexec@archiver.kernel.org>; Mon, 10 Nov 2025 09:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 138BBCCFA13
+	for <kexec@archiver.kernel.org>; Mon, 10 Nov 2025 18:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+am4pjzzW6xR5ogqMFubRXmmdAyB4wsYUFRJOyh7Xts=; b=Oi7AJ/q8u879UVMS3xfxIaMnvb
-	z8T922jFRwipQnlZjzZ1GraUbHo8pMTdKR+mT2IWunO9OXOSnKvv+P3elbNAjErJ6t72gK8CRM96N
-	arZsqBQIGSAfsEfagf07rEJFWEgtRMDJGBqa3tN+/ldDWXNrjC9Pv3FVoJmFdpfPYELUmSeuBSvoA
-	wBpqDdOp3Twq+RTeXnXelf7q6H7PyNrB7Z4jXjRR2uiMeejz3mmb1HJstxw4u2d4ndFHRe3zHPX58
-	zi/8R9k92XCrq4NAlyy8pUd2W5EvEBGyFZ2reLkMyr3M0Vs6WCvycPGgeOOH+zcCf8KZmC5ynwOiZ
-	dLXtgHEw==;
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=qL9D4+vuZNdcA1n/TETU1FBv3lcXALq5Yj616FCh89Y=; b=S9xr+7dBdxxhl5l1nDXRGlBPCl
+	ETPxrnp5o34P948k0lp4QsGeI8uSA673GJMU0usZ3hqiAkSZKCWI5lNZg0GkhhRKoFNN+erddii7r
+	B92ryadXYZnUGjc0mgR+WLBw2+QbcYE2Z1pjea7BcPSLZKZ0hsumj4apcDiNA5WW9kjMbjTbSnZPg
+	1HhOSTgIlWP7Ylok9PKHv1piaO9sQn/X15uLC/7/mJWaP1i8FbaubzaKoUctxCpvJvZomvoogpnRL
+	qiAN7rZ4UEvM8AbKtQjB0T9H/97gcBeTYt81TeqdDwisbmDB+kKwC8u7PhRdMohLFTg6Eq7Ma7LjI
+	iTmfrb6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIO8D-000000055RO-2W71;
-	Mon, 10 Nov 2025 09:24:13 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vIWIX-00000005xDd-2LsI;
+	Mon, 10 Nov 2025 18:07:25 +0000
+Received: from mail-yx1-xb135.google.com ([2607:f8b0:4864:20::b135])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIO8A-000000055Pn-0dJv
+	id 1vIWIV-00000005xCV-23eS
 	for kexec@lists.infradead.org;
-	Mon, 10 Nov 2025 09:24:12 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id A27C543B0B
-	for <kexec@lists.infradead.org>; Mon, 10 Nov 2025 09:24:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E601C4AF0C
-	for <kexec@lists.infradead.org>; Mon, 10 Nov 2025 09:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762766647;
-	bh=KPLJ0BDFg+H/l04UHzoeAt3yMyHAuNG095TqJJtvvWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qGLo6+aDkkea2sc1+PLVJH4zVX7+Qt4cWOxCQihj7rgpJ71ydrvxQ66rWl6M+E495
-	 IupFlb2waoUzR5cOMF/dt1KfisBkfr5a40rXWVr9i365QKAEbr8M+FN0gTbud3ugrX
-	 eU/ye0WmY5ezdNYTcUQrt9aAnVizmV4tHuuT2RTtIxsvLsN3ls9dKmQMHk64oXwjTg
-	 FMxtnjCRvY8nyAnfVLT02GrEpYQKnlFm0bR80XgEqaOu/XwJQV84P/da5i2RUZFOa0
-	 oSziD8bosDUmBNHgE/Y75BNAnzDQYVZtMgpWpq9kWPDZsirMS2VGdUBAcxU53iDybj
-	 92i0/TbG1z/0Q==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b71397df721so310803366b.1
-        for <kexec@lists.infradead.org>; Mon, 10 Nov 2025 01:24:07 -0800 (PST)
-X-Gm-Message-State: AOJu0YzcdEDm12P+RxP9On2prGlRbU0mhWkuUtc8PgF4HUllx2uMhdX/
-	549MR/5NHAVKKwW5hmVqgw/rgEMvrZ2lymtNheHrc37qW8G/SJc0HiMAdcuHs23AGawdWha9eZR
-	qB+DThONzaSZ8n6JCKOfCs99KCZoP0Gw=
-X-Google-Smtp-Source: AGHT+IECk/4a6nuss3sq4iYLcoOTG4x5u8UvQs/gVeLBKJJK9PsE0m+om6lErffOtsHGdZFaa7nKYC+Lh8LbT9AtDgM=
-X-Received: by 2002:a17:907:96a6:b0:b72:6de0:44a1 with SMTP id
- a640c23a62f3a-b72e001a617mr645254166b.0.1762766646091; Mon, 10 Nov 2025
- 01:24:06 -0800 (PST)
+	Mon, 10 Nov 2025 18:07:24 +0000
+Received: by mail-yx1-xb135.google.com with SMTP id 956f58d0204a3-63f9beb27b9so2930769d50.1
+        for <kexec@lists.infradead.org>; Mon, 10 Nov 2025 10:07:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1762798041; x=1763402841; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qL9D4+vuZNdcA1n/TETU1FBv3lcXALq5Yj616FCh89Y=;
+        b=GVZpnWUqDqWZkGpBf2i+ILgDx/oI1az6ELd19QvrAAR2n5bIQYEskid7McvwiBjRUT
+         gradvSJo1gpPDRL/Qgb34vmt9BngB1xywvzdwVo1NE7mIKmQgRCQ/sKaPJBGKxCRAehJ
+         PEprD1sXwZiHv8o4UfRkiEgihb1FAfGrdqvKzF1oJRckKldhLZb7JvoMQr2LLSYwVCMo
+         Rl/Ft1itanukYCBVfZeyhb0+9SI0h2C4S9M6D+Ry+Ud9fZg3cB/xbG799ayum7hix2AR
+         bbA1JAoXnGnZvqAMEW48uiojEWeoulh46eRcm7g75qcEAVc/5ZRvcV27d7e337mDkhkZ
+         1K2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762798041; x=1763402841;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qL9D4+vuZNdcA1n/TETU1FBv3lcXALq5Yj616FCh89Y=;
+        b=djznYGx4orJZGj87584LANvJlwJ+QwEQ9uxepw6pLGmu3lfUHq8ASDs5BGhMI9YLqi
+         JS9CW8Wmi/s9mn8hlyaYBeNFyjDlx04pI7f881m3tvbS5t9aR4U0ciiOmu6xOTyuO9q0
+         RRUA8THC6i5AoTilUffPTl/d54aYaJ1Zownfo3CGoQmDydEuxxD6qnKm8WmseMyx8VkZ
+         7/x1xusIBV/g4b1uxeW5ovRqKDPJbWyNRjXvRlU6vbOtmpM74LbXul7YPBNChrj8tx6q
+         mnSV0qi4rW0xgX31rq8UhqFkTnZnbfaWbBuzPrZQFXpR0c20kkYxOH5vXoP6AOJSN5pL
+         UXHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxSvIQdIOzXYzP2LIYYBt20gzeulT7J46GvSG9CWQQWYjl9aGJwn0hmVEDnlqmqTEoX2IPeg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxEi0LWbzLRmjZD8dRue8QB8fgfyhjsHa4DrXKGxTJY4tBqzmDw
+	n5QkxS91f6iHPX83wLVOXwEWtZvCJyfPQyJeCWU2d9rWzIgYhvD5OSZDT5SQTnJl5dM=
+X-Gm-Gg: ASbGncujFXMVnKh41CWPF/l7AA/mFat+cRt/fZHt9c3GBDyl/1mdoi+0PsGRnimqIl3
+	mIgFRFe7UHP51ttkVRA0cJt7RPpXpzZ2RF+yI1uxyehWKL9LfV88uydT+fwIYHEUePAcX0YDF0z
+	8//MnjMPCLp/78Clonri6C1L/ad6BQEmfwO8JiRqmRdeTbhVHfPlNdQhoCgBr6OASUZK/3Apov2
+	0jbLW1A5R5z5Y0/alXy+kVmfKU5u0tA6pX505X2GDC5CywwC1iUtF5a2jcIBOlI5Vl/Kpc2BTIm
+	Ke29Q4yJFUUPqsyLlDhMp5Ev5UlQSqKrLs7Y99PKPJPA8es07nvrqjvs8LQl9JB5oN6LJMmFzAq
+	ik4ebMlkWIh1S+QHRwuhTJ5213RaSvF/iRq5SGIdpESKpJ82AetquOpfSyu53cZQGBgNhtRmxkx
+	VmHkCkdniNBQtK2sHeuh9G/7gVs7n5pM31giW5L/G/A2311sQvfFeVZrKDors/NrP2YuCinyXa4
+	HlsumM=
+X-Google-Smtp-Source: AGHT+IFI8k9m6fstEvlSakNx4eRqRGXfQ5gFh54/EdAevddbPRJpRnpFRHjsRRXHMaEqb+vKcs/2pw==
+X-Received: by 2002:a05:690c:3505:b0:787:cad1:bdac with SMTP id 00721157ae682-787d5473912mr97384637b3.65.1762798041432;
+        Mon, 10 Nov 2025 10:07:21 -0800 (PST)
+Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-787d6a3f334sm25489757b3.60.2025.11.10.10.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Nov 2025 10:07:20 -0800 (PST)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	graf@amazon.com,
+	pratyush@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org
+Subject: [PATCH] liveupdate: kho: Enable KHO by default
+Date: Mon, 10 Nov 2025 13:07:15 -0500
+Message-ID: <20251110180715.602807-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
 MIME-Version: 1.0
-References: <20251024063653.35492-1-youling.tang@linux.dev>
-In-Reply-To: <20251024063653.35492-1-youling.tang@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Nov 2025 17:24:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6G0TRkXzg_6DZk3MLRni+w8M5tkm7MonckoQpvAtBzQQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bnTXBzaL5_4R0BXD7sOHR-d5DocgfNKWbMfqTGXAOcgExSIa2bJBQuGIGY
-Message-ID: <CAAhV-H6G0TRkXzg_6DZk3MLRni+w8M5tkm7MonckoQpvAtBzQQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: kexec: Initialize kexec_buf struct
-To: Youling Tang <youling.tang@linux.dev>
-Cc: kexec@lists.infradead.org, Breno Leitao <leitao@debian.org>, 
-	Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251110_012411_299977_61EC5FE5 
-X-CRM114-Status: GOOD (  19.11  )
+X-CRM114-CacheID: sfid-20251110_100723_530693_34CEF39E 
+X-CRM114-Status: UNSURE (   8.37  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,84 +103,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Applied, thanks.
+Upcoming LUO requires KHO for its operations, the requirement to place
+both KHO=on and liveupdate=on becomes redundant. Set KHO to be enabled
+by default.
 
-Huacai
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/liveupdate/kexec_handover.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Oct 24, 2025 at 2:38=E2=80=AFPM Youling Tang <youling.tang@linux.de=
-v> wrote:
->
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> The kexec_buf structure was previously declared without initialization.
-> commit bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
-> added a field that is always read but not consistently populated by all
-> architectures. This un-initialized field will contain garbage.
->
-> This is also triggering a UBSAN warning when the uninitialized data was
-> accessed:
->
->         ------------[ cut here ]------------
->         UBSAN: invalid-load in ./include/linux/kexec.h:210:10
->         load of value 252 is not a valid value for type '_Bool'
->
-> Zero-initializing kexec_buf at declaration ensures all fields are
-> cleanly set, preventing future instances of uninitialized memory being
-> used.
->
-> Fixes: bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
-> Link: https://lore.kernel.org/r/20250827-kbuf_all-v1-2-1df9882bb01a@debia=
-n.org
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->  arch/loongarch/kernel/kexec_efi.c          | 2 +-
->  arch/loongarch/kernel/kexec_elf.c          | 2 +-
->  arch/loongarch/kernel/machine_kexec_file.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/ke=
-xec_efi.c
-> index 45121b914f8f..5ee78ebb1546 100644
-> --- a/arch/loongarch/kernel/kexec_efi.c
-> +++ b/arch/loongarch/kernel/kexec_efi.c
-> @@ -42,7 +42,7 @@ static void *efi_kexec_load(struct kimage *image,
->  {
->         int ret;
->         unsigned long text_offset, kernel_segment_number;
-> -       struct kexec_buf kbuf;
-> +       struct kexec_buf kbuf =3D {};
->         struct kexec_segment *kernel_segment;
->         struct loongarch_image_header *h;
->
-> diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/ke=
-xec_elf.c
-> index 97b2f049801a..1b6b64744c7f 100644
-> --- a/arch/loongarch/kernel/kexec_elf.c
-> +++ b/arch/loongarch/kernel/kexec_elf.c
-> @@ -59,7 +59,7 @@ static void *elf_kexec_load(struct kimage *image,
->         int ret;
->         unsigned long text_offset, kernel_segment_number;
->         struct elfhdr ehdr;
-> -       struct kexec_buf kbuf;
-> +       struct kexec_buf kbuf =3D {};
->         struct kexec_elf_info elf_info;
->         struct kexec_segment *kernel_segment;
->
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/=
-kernel/machine_kexec_file.c
-> index dda236b51a88..fb57026f5f25 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -143,7 +143,7 @@ int load_other_segments(struct kimage *image,
->         unsigned long initrd_load_addr =3D 0;
->         unsigned long orig_segments =3D image->nr_segments;
->         char *modified_cmdline =3D NULL;
-> -       struct kexec_buf kbuf;
-> +       struct kexec_buf kbuf =3D {};
->
->         kbuf.image =3D image;
->         /* Don't allocate anything below the kernel */
-> --
-> 2.43.0
->
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index b54ca665e005..568cd9fe9aca 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -51,7 +51,7 @@ union kho_page_info {
+ 
+ static_assert(sizeof(union kho_page_info) == sizeof(((struct page *)0)->private));
+ 
+-static bool kho_enable __ro_after_init;
++static bool kho_enable __ro_after_init = true;
+ 
+ bool kho_is_enabled(void)
+ {
+
+base-commit: ab40c92c74c6b0c611c89516794502b3a3173966
+-- 
+2.51.2.1041.gc1ab5b90ca-goog
+
 
