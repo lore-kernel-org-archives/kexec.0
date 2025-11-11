@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35F6CCCFA1A
-	for <kexec@archiver.kernel.org>; Tue, 11 Nov 2025 13:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E3B6CCFA18
+	for <kexec@archiver.kernel.org>; Tue, 11 Nov 2025 13:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=o7iVquRCsSK8fTZI//abqOQQYNcId3LHlW2ScL9MriU=; b=nPBpgLHA15+pA3u8TfI1KtQBV6
-	n2NgPjB/jLjuHKE0HB2ROYU8+gnhzMKjzLfN1zJ4F7KC2ClJpKCsVkUn/jA7ktcxClT1XeKSd23pL
-	rk6fgvKjygrHIoXkYOUacrblu8SZqXyUAWUq2vAHb8LJvi+vXt+tu1zEyOjyIYsl9yO8LoCNlE9b8
-	GlvND+l31kYXH04T4s+ErJ0lPaFEJHjrMTBemmkW0JIRL+cDUp++4s6Kj9TfQzeiKylX/UnhOMHaR
-	XUeutx3d1yaZbcfLlvW9oyWo5mXxs4v1vQ2gxGkd8xAbfJv3SpQ5MCbGjr6r/kEvrCEej9vZZwe+S
-	RqNFXsfQ==;
+	bh=WqjC0KPSA/kJx0Q/UZ/gAekn4c4P6V9dOQ2k1QcmT70=; b=VHXNun11v9pWBY0IsqeDpo5LH8
+	JEhllaxkq/sSO2lc4RdktOnZtoVXLrok79f7ZYG869vmRoa/8FSyyPEa7aEDZPuXkwgFogtA2YtXX
+	bBAIu8SX+lnEj8fEyHoLSrZws2IAQoMlq9X6J4XSXOo1meCpGkjYsIMkpNX0vRsFQOviRquEP4eQQ
+	d+DA0q5W+20udK34kA8XUp+KgX5jXNRmlzat22sO49g/Kqa3vA5k33aREhhCluVznXvxfYi0y5ZBi
+	mCaDWlINmEQJ4I8GPhvpqVEp4s7GzqHepuDPiOZf+zY75bgXtXhc51ddKZognO5cV/8KI/tdkIk6e
+	4zzvzIuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIokn-00000007GK6-3MnR;
-	Tue, 11 Nov 2025 13:49:49 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vIonw-00000007GXp-3uMr;
+	Tue, 11 Nov 2025 13:53:04 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIokl-00000007GJZ-2cTY
+	id 1vIonu-00000007GXA-1rLv
 	for kexec@lists.infradead.org;
-	Tue, 11 Nov 2025 13:49:47 +0000
+	Tue, 11 Nov 2025 13:53:03 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B537A60214;
-	Tue, 11 Nov 2025 13:49:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927D1C113D0;
-	Tue, 11 Nov 2025 13:49:45 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id CCCAF429FB;
+	Tue, 11 Nov 2025 13:53:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA90C4CEFB;
+	Tue, 11 Nov 2025 13:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762868986;
-	bh=8MOgDcP+hzOoEsUBJ/yFGynorLiidim4fQ8MMVrhaXk=;
+	s=k20201202; t=1762869181;
+	bh=iqEYhUWSjHlr/b5/W4ozAZn+rYEu4lKJIK+ekzjR42Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d5JbjAzbTiHxY4LVSBrpdYCVd4n9NVQagFVEOCITXh+8szyZPDPj2lKy6CkESm10e
-	 yFiOswGDrE32yXBlwH72V07BSGTjROM9kOxlUAW9JXkWF9w8xjS5WQzfmEB7W4gmfF
-	 uJsj563ercwG9bnlyj+UtUn33kIBoCaMmUmB2svsZ9wfF6QAj696qvqetz8bv269oA
-	 avwF102KbPd9B3gwVROJwNUvFHUv51+awCfVlD6t0fbDDZcbR1RGvTlcBLKeqe5WJP
-	 qUGOvuzxqBPvGhRxqa38tOOWthCvcy4wtrABO43jhwxYHkb2YTbDkGbIHa97oUIKK2
-	 Ln9idSYzTBSTg==
-Date: Tue, 11 Nov 2025 13:49:43 +0000
+	b=WwVLupmRy6c0UrYHcD4WSohk5CpV3P0HuODbkwNH6O8YSIWf7OeZQJzfPTWOacTKk
+	 hbcWME4TqOf5YIZ6i8BtOSJgB7AIgqoUvWzCT3EJ1/mlBqLv5aKJkRhmFzLTKEYi1U
+	 84cNq+wX8gGRfGuWgephvy4cGD/4BBy5vogJISXRKhRyVJPv7FA6xNHiC8/TmP36Bb
+	 PQ6XfNrvilOciOfkrays21Jh1KpKYgL+xjPDDOEDuCPzSFGPKGMG0Ur2rSExJXYotr
+	 cQh/51u8jjnYa6N5V/3GGZW94jAQhw3bZqyP45Nqp6Y72O8IfpIHhoTvICGBaH6C7B
+	 vaFRSbZPHscEA==
+Date: Tue, 11 Nov 2025 13:52:58 +0000
 From: Simon Horman <horms@kernel.org>
-To: Qiang Ma <maqianga@uniontech.com>
-Cc: kexec@lists.infradead.org, bhe@redhat.com
-Subject: Re: [PATCH] kexec: add kexec flag to support debug printing
-Message-ID: <aRM-9xt_obIL1XpX@horms.kernel.org>
-References: <20251104025959.1948450-1-maqianga@uniontech.com>
+To: Pnina Feder <pnina.feder@mobileye.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
+Subject: Re: [PATCH] util_lib: Add direct map fallback in vaddr_to_offset()
+Message-ID: <aRM_uuDPsZD4f1ei@horms.kernel.org>
+References: <20251106120344.2382695-1-pnina.feder@mobileye.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251104025959.1948450-1-maqianga@uniontech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251106120344.2382695-1-pnina.feder@mobileye.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251111_055302_505516_B46B5B2F 
+X-CRM114-Status: GOOD (  10.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,20 +71,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 04, 2025 at 10:59:59AM +0800, Qiang Ma wrote:
-> This add KEXEC_DEBUG to kexec_flags so that it can be passed
-> to kernel when '-d' is added with kexec_load interface. With that
-> flag enabled, kernel can enable the debugging message printing.
+On Thu, Nov 06, 2025 at 02:03:44PM +0200, Pnina Feder wrote:
+> The vmcore-dmesg tool could fail with the message:
+> "No program header covering vaddr 0x%llx found kexec bug?"
 > 
-> This patch requires support from the kexec_load debugging message
-> of the Linux kernel[1].
+> This occurred when a virtual address belonged to the kernel’s direct
+> mapping region, which may not be covered by any PT_LOAD segment in
+> the vmcore ELF headers.
 > 
-> [1]: https://lore.kernel.org/kexec/20251103063440.1681657-1-maqianga@uniontech.com/
+> Add a direct-map fallback in vaddr_to_offset() that converts such
+> virtual addresses using the known page and physical offsets. This
+> allows resolving these addresses correctly.
 > 
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> Tested on Linux 6.16 (RISC-V)
+> 
+> Signed-off-by: Pnina Feder <pnina.feder@mobileye.com>
 
 Thanks, applied.
 
-- kexec: add kexec flag to support debug printing
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=71d6fd99af7e
+- util_lib: Add direct map fallback in vaddr_to_offset()
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=393c449aec3d
 
