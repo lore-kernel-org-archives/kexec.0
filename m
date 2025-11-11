@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCA59CCFA18
-	for <kexec@archiver.kernel.org>; Tue, 11 Nov 2025 13:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4F33CCFA1A
+	for <kexec@archiver.kernel.org>; Tue, 11 Nov 2025 13:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0dpb4tvrW3qTRQlqryb0Y1hbD51O72N8+Mufx2g4gtQ=; b=0O22X6/ew2svyrwxYnZbpWJakc
-	uCvOCxZvRqseokvtl6ZC/4UdUdYOJGAppqVlKJENU9UsRpJJMzZ4g0Mb37Oz4kmD2qTftAf+YLIBZ
-	LtRwhybd6CyG0kbeHQIBI5rylyG7nqH69pb396gbWwFCzjIQaIwEivM0k6PSz052UKu972l8vX3Rq
-	z/GrEcd6bz0q70Rvf3YUusqFcuU2B6kzBxE2lSs3IZD6S1RABj7YsajILEXCogVuRI7iv4pTBoiE4
-	SFwer0orlkxaeBU5KBTrYAGLGC2mlQRZJtjFChPRVTybnKUh5XrNzY8QedmCJRCHPZvxJcWdGmxH/
-	b0OGppLQ==;
+	bh=YbfoW4FusG0fMg0vzSwpYZqdO9J6D1921sMzomHWarI=; b=Cawbmo8eclvwFomm2H/H61e3fV
+	yCgvPcrAr6d04abk/Wx0sbjeQhbFjIGaKjG55P4X6OYeZcJxq7KUru1VWQxbl06lwqGYuej9mpRyU
+	GajLlt3a6jQiAaehN1tc26RVZYg1adKbh8j6RE9UIHZY/nvHJiA+3oyIZYJtCa+OshEaK2kV1uIt+
+	nSw48bQamIgNa0sPItezmV+I4uCGBZoeDNJsLTsMjtnijRbsFyWHr3CUB9sPgsK/c9hfB9df6pw5V
+	nbG3cHpnDrurPJ+BDC2xeSiDPmtq3W+qQbGvR5DPxp4LaqrSa9vFnD9cFZHI/gchL9wLmwh+Y0XIz
+	3QuD5cDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIoZy-00000007Fha-42wN;
-	Tue, 11 Nov 2025 13:38:38 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vIoaT-00000007FkY-14uh;
+	Tue, 11 Nov 2025 13:39:09 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIoZx-00000007FhU-2eZi
+	id 1vIoaR-00000007Fk5-2yD6
 	for kexec@lists.infradead.org;
-	Tue, 11 Nov 2025 13:38:37 +0000
+	Tue, 11 Nov 2025 13:39:08 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id BA18460216;
-	Tue, 11 Nov 2025 13:38:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1B88C113D0;
-	Tue, 11 Nov 2025 13:38:35 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id C3C1E4198A;
+	Tue, 11 Nov 2025 13:39:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7EBC16AAE;
+	Tue, 11 Nov 2025 13:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762868316;
-	bh=lQP+bOmGeGCCWBjET4LAtV+4tKuHgbehZHXLyEbfMl8=;
+	s=k20201202; t=1762868346;
+	bh=wejCjjZmabYzoXepvMTC7JiV8b2MvZtIZQZww7RPGpk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u6H1eGrJGH9GYpcxKUxAF7HQOjcJ6VrLx087P6GCxWw0G5Djup26D28NxFCGFA/ec
-	 EY6gjU38ZWzRwGinhSBm5gtLNEWlPAN8VsoUIlDiFeGvkknLN12v4H2t9jHIqhfCUu
-	 2Ewkqb2NJvwi1TWXVJ2PfeGeR2KSw4+f6q+0VWZOH6SWwFescC929bLzrlIaKnlGKt
-	 kpInwm3kQdg0MTS3Q9xxBUbR0k0T2+8TXJaCH3tMAO72Fw+sTKcvmTy/VeKh5woXnb
-	 MRwSsS2Er3Wj8eFwEO58hDMBypAgHK3+mW6rLDGNFMBV9K6671r91CIGVTFOq1iC7R
-	 UWZJKdeUdszFg==
-Date: Tue, 11 Nov 2025 13:38:33 +0000
+	b=uu99aoJg4UPNnbkWf0GpfQZ9XcyB3nP/cYeyAJHpl2ehlbbRuiEmkx8WuK4FLIzWI
+	 h/49rfhFPDXFZCrmb84iNSgYcAsYsZCukBavHIh7V0/cR3UZ7REoP83x5NgLDVMxf4
+	 dRddq2jvvsmFiFqwOGrl2NbvmsCH70LhSl0BCkeezt/8rU96ndR0JtPgpWtks4h3m8
+	 9T/TLN2TyEg+AMozXi/r/4DjKl6AijhwcOhogey83HDQ2VSB87xnoMPGw0BVWRI+xO
+	 LKQ7VhNM6ZNZDNM/ITPdudiHKlrM5lPgzV05O3E0ExoYHWhlPfCsoecAiVqVGdLoE4
+	 NdkJUZVrOGsdA==
+Date: Tue, 11 Nov 2025 13:39:03 +0000
 From: Simon Horman <horms@kernel.org>
 To: Mason Rocha <mrocha@turretllc.us>
 Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH kexec-tools 0/2] kexec/ifdown.c: minimise errors printed
-Message-ID: <aRM8WbG6l625aYXp@horms.kernel.org>
+Subject: Re: [PATCH kexec-tools 2/2] kexec/ifdown.c: Hide error if sockets
+ are disabled
+Message-ID: <aRM8dwyYJSYdsqri@horms.kernel.org>
 References: <20251022020703.14200-2-mrocha@turretllc.us>
+ <20251022020703.14200-4-mrocha@turretllc.us>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251022020703.14200-2-mrocha@turretllc.us>
+In-Reply-To: <20251022020703.14200-4-mrocha@turretllc.us>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251111_053907_784299_671917B2 
+X-CRM114-Status: GOOD (  17.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,17 +72,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Oct 21, 2025 at 09:07:02PM -0500, Mason Rocha wrote:
-> On some embedded configurations, kexec generates messages when rebooting
-> to the new kernel.  This patch line helps eliminate these messages in
-> the event certain kernel options are set.  I'm not too worried about the
-> second patch, but it is along the same line as the first patch and I
-> thought that it should included.  Thanks!
+On Tue, Oct 21, 2025 at 09:07:04PM -0500, Mason Rocha wrote:
+> Prevents the message "Function not implemented" from being logged when
+> a system with networking support disabled, as there couldn't possibly be
+> any interfaces to bring down to the point where we need to make sure the
+> user knows that the interfaces were not brought down.
+> 
+> Signed-off-by: Mason Rocha <mrocha@turretllc.us>
+> ---
+>  kexec/ifdown.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kexec/ifdown.c b/kexec/ifdown.c
+> index 6a60bcb..e6ea0ae 100644
+> --- a/kexec/ifdown.c
+> +++ b/kexec/ifdown.c
+> @@ -32,8 +32,10 @@ int ifdown(void)
+>  	int fd, shaper;
+>  
+>  	if ((fd = socket(AF_NETLINK, SOCK_DGRAM, 0)) < 0) {
+> -		fprintf(stderr, "ifdown: ");
+> -		perror("socket");
+> +		if(errno != ENOSYS) {
 
-Thanks, applied.
+nit: I'd prefer a space between 'if' and '('
 
-- kexec/ifdown.c: Hide error if sockets are disabled
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=86c3d1f7b646
-- kexec/ifdown.c: Use AF_NETLINK instead of AF_INET
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=eb8609a29363
+     I added one when applying this series.
+
+> +			fprintf(stderr, "ifdown: ");
+> +			perror("socket");
+> +		}
+>  		goto error;
+>  	}
+>  
+> -- 
+> 2.51.0
+> 
 
