@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C76A0CE8D4C
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEF97CE8D4A
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=GfZyo9u25oM70F0ygQaaTqn4+hpd1ir7NjzpQRKKylc=; b=onKCVUZE9loncZw3Mw5GaKN3Jc
-	rXfZBOiB9h9A/oxD369HbpOpG06CERDAKhz+04kZrAVGIPFZYImSMAyEM8kqKQAqim0TnNX8mENMk
-	zV4LTdOMuIANpZ8j4KJOqmosmxChx/gmXXXwa9RH6kbvbBzaOiPYRSeZrpjcCeP4NGlx5NFYRPNia
-	Jh1baqgZ8gB1IvlukLO1CiLGjLqEnszC7lxLshAJZKB9/5uS+qa57xdzy2jxPFU+wuv8ZPmHRaVME
-	jd/mCfLBEGhmJ3IXfUMSRGDtMgZudkWY0UdiuyDLFRYiebiX9HQrBV+m/LQzCdXJ1GeLtq9yjeTjw
-	tP3ATyYQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
+	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Fcc2P38UXx+hVgmb+4SxxQNGh2d5KmsLcTOMGNeKk/s=; b=3cVQravz78hC0kc8mgoL4YkEJp
+	Y4Qp9Zgjyhzg0C5NXKmVjBvqzWa+9SJzc721cESic3cVYCsI5A6FyfC7eJ3XoQRAzctCRY3MGgHBe
+	3tSLQkxbl90Z3TSC1qhF0Tio392atSN+880s18rx3RzqunlwYlviUhWZOG0yTZE07yedFmr54O6fo
+	5x9vHIaHJ05Tk4LfJXgLEQJjafDbpyJOM2JYWVbKYG+mg41VNFwO0PCZcOrPvVXGS+8oZUFukVi87
+	oatX+tp+j2Hpd5uX+yRxgAOu6geALosumyUAEf4f5CyyM4nRJduO5ZEqZ78lIr50/rCcXE4ACvqCK
+	WOZniB1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7j-0000000Cchp-0eYw;
-	Fri, 14 Nov 2025 15:54:07 +0000
-Received: from mail-yw1-x112f.google.com ([2607:f8b0:4864:20::112f])
+	id 1vJw7k-0000000Ccih-3vPr;
+	Fri, 14 Nov 2025 15:54:08 +0000
+Received: from mail-yx1-f48.google.com ([74.125.224.48])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7g-0000000Ccgr-11EU
+	id 1vJw7i-0000000CchU-1hkP
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 15:54:05 +0000
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-786d1658793so20868057b3.1
-        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 07:54:03 -0800 (PST)
+	Fri, 14 Nov 2025 15:54:07 +0000
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-63fbbad0ac3so1992013d50.1
+        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 07:54:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763135643; x=1763740443; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GfZyo9u25oM70F0ygQaaTqn4+hpd1ir7NjzpQRKKylc=;
-        b=YOCgLp/acg6ULuxThuPHbER+0kYmfMV6qoOgTUbxW5SjOkqJ1wxmjyYlfkAlUpzQOm
-         n0OJrtgOfeCx2zzpsRyGShRg39xdUetbQ93B3Jq+D3yZle9ztrKKtlNxWlyx0x0l+CTy
-         YUI3JM7PXbGe1chTijPP/NmhqPBF8H5ew3SX5WH24+9iUXqjDPcjUCcdMIrG2WzXW6V+
-         PnyF6Lja1/u4Ia8xhNXmCMbKpziCmqshJjmtx+VHJTYVyjP35ah1VkR7SaSxyCMN/177
-         J/ZREwekzM7WfL77GZmPSz5jD2wsVwXUsvYmODQYs3ANzR6DymnN4Srt1PG3PESKbu1A
-         xe3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763135643; x=1763740443;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=soleen.com; s=google; t=1763135645; x=1763740445; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GfZyo9u25oM70F0ygQaaTqn4+hpd1ir7NjzpQRKKylc=;
-        b=B+69RWJfRTLBlxxG3Z7KPRh7LKZvvN+TZTop/JhpXkWo3tJR7V/7H3mCWrTQ3qSePf
-         hjhy+FnWQCbw+I5QpKtaPEgO/3niWZuCF6JmzbLGJZUsTcTSMUXdia1CasPubgvewj0B
-         Y4bscy2ShFQh/nRntuzYamx0WSs8iq/uiVAIptkr1Ko5jfavoR43/Hec8vkrnh6GPebB
-         YsHZsn51867YBrxXhs23wsv+1w/cFelmJdoeXxnQcZqal60J4d0qhy2RpDHPmqkl4J/h
-         zUprob18Am9R9rj8Bl81qDV7MiLzznRHRYw31MHAFB60otsXKCnJRC6j3BX2+bI26oac
-         hKBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyA/bfA0PXzNA8sldz1JkP/0xTboheMQDScaLgpC48JsXOUjr7Ux7fvnvUjC/0nlyU2L83zg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwentFAC2T+FJyWomSwmjW+yUnnsmBqhG6J2Mcts1DYuLwmFbWA
-	pMOLSJpfoHvVmnhG3hperObfJh5GCWDuUxIg3ZrmFfkFTcz5FFcD7CkqeKdErBlnQW7CU9lfDKN
-	Iuwjl
-X-Gm-Gg: ASbGncsYKPZu1YkHYBj3AcuZdpFNa11xFZGjYqbGHxwtTk2m8gqDtZzgP+ZIXppr9SC
-	PrX04PsynKCPHxuyA4ozpvXQcfsEyZOZRGHr48Jm//uYwcMMhFfaJw/XujwKE8J3U17EWh3Tdb9
-	cia4o/1jJWlRDf1qtNMXL6ss48NWxZ69AlFbJQ2VO5DMHRkD9DZXYm6y76Bwr1P9yy1vN9vF5C5
-	/zuPuYxCKAsJuiZnCcfAgSguydLsfScxWq+KGzsVHhAyQj+7fcv5jFfNrP+sawM3IUrQDr7Wsat
-	ON3o9b0TtqfpSlhU/JxsKS7m4BmgbO67CmZTptv6h+xXddO+yVGsIXNMsQuD8Qtlfdy2iWb5QtR
-	E97lrrE+U0yU55skSIBRshc8mCy+NL0TzukKwa4/qsRXFaDlMXcB32Xd99x7+paCWvp+/J7I4TK
-	Iy3hGZmbRQvk6GCZRaWT4E3tl3V8D9Rl/ggb72X1jVMnDhi05N4nlPHx4sPrDferOOYjN4beszH
-	ve9eik=
-X-Google-Smtp-Source: AGHT+IEkRZsenlzrshhmVUXkMssN1FuHmBAG4UEJw+j/0VvWJXbh4MXHIwmGsrrNxwXibEcnyWDXfw==
-X-Received: by 2002:a05:690c:9684:b0:787:cddb:ec2d with SMTP id 00721157ae682-78929e2b535mr63260347b3.19.1763135642698;
-        Fri, 14 Nov 2025 07:54:02 -0800 (PST)
+        bh=Fcc2P38UXx+hVgmb+4SxxQNGh2d5KmsLcTOMGNeKk/s=;
+        b=e+lRP89t0omPO/fVxBpwTajZ39MtgJ+bmeSYLm5cVsZJ8/0ezrQtdLV6BKW9vzGakA
+         Sa6+3GZpy9CaCAU6j2rzd6pvctafzRQNjS7tiV2lRbDh9SVfyJjqlINpKtj8fTubTe3j
+         EOYHj9KRgW+FrTUFTwJGkZ+XIKfyJugqLzuZ4G13oBtqEJHNm1J2AeGBaDQ3oH7Y+XlZ
+         fW2JjAYRgL/tqL8eGCw/0lFuxj149pLGBJOgL1zBOS76XSqFP5YiZ+ISYPLfjJ1NIT1N
+         SysQviVZrbSlNmX0Yr9LIFRsyDRsi7awP0FNDRPZxdXCX7d1mwSNEDJqu8378vXdOYBO
+         xMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763135645; x=1763740445;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Fcc2P38UXx+hVgmb+4SxxQNGh2d5KmsLcTOMGNeKk/s=;
+        b=iyfiAfavK6CjOIayJxycHamZCAoFk8qgg6IShFtxZD0Mb8n1GHiTXDJvJ1jm0DTLLL
+         p2QyDO9VsHlDarDZXsvXienh/GN6gswi3d+D2YTtP04rfnpRgF0RvDO7csucTzYKG3NZ
+         QXv/IagxtIL6CgDc8nV/EmaDwyMprDHwlZHwFHU9g/fOpVqgZbvbbLML0rkRFBnZ8WcU
+         3iTU+SgNZFeY+iMySvLVC2PjGa1Ithqg7057gTRIahBqN714nYXM3uGKzNvZ2fGbZo6t
+         B0dE0HuHDFMu/Lr8Pd4q1lxVaoB5J1c0IzwZJXDbtJ5pzuZl/AS0UJNNmJGKsKkSkHAi
+         udUg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3R6T+zkn3g2lqISNRBSpFeiza7RmTgEzQUyoCSDPdLoWOa8fQOO+SkGzSmL5DCSfhWHV0Zg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwZpllPrANPKjXMT4uWisWMQ67JUDsRiGzE0Jg3+DEO9Bg7amfv
+	bwTmowvVecXwJwE6VXippB8zIFh/qmI/zn8u/1qGFEY9YsEGGoYoqMxT26qbrkJwZms=
+X-Gm-Gg: ASbGncuKuIuPpe5IWXNj0PV+CXtQzb6+I+08iZRBMYAVInv8Qvq2jviXjbv3MZ99g1D
+	BcqVkK3Nd4wVLGcgMA4jTZzf4lX1FqJWsjf6LD/sLzHYvwm3sqroJ7bjElGmko1H2LJZc/8ZiyN
+	OU39D1AXWfbJoR1rfcSvkHICN9ooIWpUrVY/35YxVdHvz30IDvJdca80OSOlcX5CqXFcPX9zEsv
+	x3CttxF6x7/wuiPZrquY/BR0F0L3HY7yaouqn8akH9218GtaBadsKhGx4ao9LAW1DTYP/WJoBVL
+	9VgdRcVlyqGYkRBmQwk9/R9McLinlz+weFuuR2Ny7xH9iw4n4UuaGPRTYFi2C+ii05/kjB7CK0Y
+	JB2Fl2+9lU07RIoa0njgjUcwv3IT1e1TszWq0hhfhkyyoR61Fb8UleSVKP7nyeiD+zMryTfncId
+	M9pFqX1a5LSjFx1BLMkvtbKK+AvWlaC9dLoWU1Fcf5QnRbDf4bx1403AoBaevE4EFQSHMEgSn+0
+	zh6Ibcn+TdVmFoPpA==
+X-Google-Smtp-Source: AGHT+IEryNh271MCJ4rrcCUSvX2q1hEPoAUfB2GLhMC00ZkHNbgwj+jY1D/l0YSpdPxZL/e++/fAwQ==
+X-Received: by 2002:a05:690e:2516:b0:640:dda6:e957 with SMTP id 956f58d0204a3-641e7605cd0mr2400614d50.36.1763135645015;
+        Fri, 14 Nov 2025 07:54:05 -0800 (PST)
 Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.01
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 07:54:02 -0800 (PST)
+        Fri, 14 Nov 2025 07:54:04 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
@@ -86,15 +86,18 @@ To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [PATCH v1 00/13] kho: simplify state machine and enable dynamic updates
-Date: Fri, 14 Nov 2025 10:53:45 -0500
-Message-ID: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v1 02/13] kho: Convert __kho_abort() to return void
+Date: Fri, 14 Nov 2025 10:53:47 -0500
+Message-ID: <20251114155358.2884014-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
+In-Reply-To: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_075404_319249_E9216E8F 
-X-CRM114-Status: GOOD (  12.72  )
+X-CRM114-CacheID: sfid-20251114_075406_446372_0562F163 
+X-CRM114-Status: UNSURE (   9.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,92 +112,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Andrew: This series applies against mm-nonmm-unstable, but should
-go right before LUOv5, i.e. on top of:
-"liveupdate: kho: use %pe format specifier for error pointer printing"
+The internal helper __kho_abort() always returns 0 and has no failure
+paths. Its return value is ignored by __kho_finalize and checked
+needlessly by kho_abort.
 
-It also replaces the following patches, that once applied should be
-dropped from mm-nonmm-unstable:
-"liveupdate: kho: when live update add KHO image during kexec load"
-"liveupdate: Kconfig: make debugfs optional"
-"kho: enable KHO by default"
+Change the return type to void to reflect that this function cannot
+fail, and simplify kho_abort by removing dead error handling code.
 
-This patch series refactors the Kexec Handover subsystem to transition
-from a rigid, state-locked model to a dynamic, re-entrant architecture.
-It also introduces usability improvements.
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/liveupdate/kexec_handover.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Motivation
-Currently, KHO relies on a strict state machine where memory
-preservation is locked upon finalization. If a change is required, the
-user must explicitly "abort" to reset the state. Additionally, the kexec
-image cannot be loaded until KHO is finalized, and the FDT is rebuilt
-from scratch on every finalization.
-
-This series simplifies this workflow to support "load early, finalize
-late" scenarios.
-
-Key Changes
-
-State Machine Simplification:
-- Removed kho_abort(). kho_finalize() is now re-entrant; calling it a
-  second time automatically flushes the previous serialized state and
-  generates a fresh one.
-
-- Removed kho_out.finalized checks from preservation APIs, allowing
-  drivers to add/remove pages even after an initial finalization.
-
-- Decoupled kexec_file_load from KHO finalization. The KHO FDT physical
-  address is now stable from boot, allowing the kexec image to be loaded
-  before the handover metadata is finalized.
-
-FDT Management:
-- The FDT is now updated in-place dynamically when subtrees are added or
-  removed, removing the need for complex reconstruction logic.
-
-- The output FDT is always exposed in debugfs (initialized and zeroed at
-  boot), improving visibility and debugging capabilities throughout the
-  system lifecycle.
-
-- Removed the redundant global preserved_mem_map pointer, establishing
-  the FDT property as the single source of truth.
-
-New Features & API Enhancements:
-- High-Level Allocators: Introduced kho_alloc_preserve() and friends to
-  reduce boilerplate for drivers that need to allocate, preserve, and
-  eventually restore simple memory buffers.
-
-- Configuration: Added CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT to allow KHO
-  to be active by default without requiring the kho=on command line
-  parameter.
-
-Fixes:
-- Fixed potential alignment faults when accessing 64-bit FDT properties.
-
-- Fixed the lifecycle of the FDT folio preservation (now preserved once
-  at init).
-
-Pasha Tatashin (13):
-  kho: Fix misleading log message in kho_populate()
-  kho: Convert __kho_abort() to return void
-  kho: Preserve FDT folio only once during initialization
-  kho: Verify deserialization status and fix FDT alignment access
-  kho: Always expose output FDT in debugfs
-  kho: Simplify serialization and remove __kho_abort
-  kho: Remove global preserved_mem_map and store state in FDT
-  kho: Remove abort functionality and support state refresh
-  kho: Update FDT dynamically for subtree addition/removal
-  kho: Allow kexec load before KHO finalization
-  kho: Allow memory preservation state updates after finalization
-  kho: Add Kconfig option to enable KHO by default
-  kho: Introduce high-level memory allocation API
-
- include/linux/kexec_handover.h              |  22 +-
- kernel/liveupdate/Kconfig                   |  14 +
- kernel/liveupdate/kexec_handover.c          | 338 ++++++++++++--------
- kernel/liveupdate/kexec_handover_debugfs.c  |   2 +-
- kernel/liveupdate/kexec_handover_internal.h |   1 -
- 5 files changed, 232 insertions(+), 145 deletions(-)
-
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 6ad45e12f53b..bc7f046a1313 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1117,20 +1117,16 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_vmalloc);
+ 
+-static int __kho_abort(void)
++static void __kho_abort(void)
+ {
+ 	if (kho_out.preserved_mem_map) {
+ 		kho_mem_ser_free(kho_out.preserved_mem_map);
+ 		kho_out.preserved_mem_map = NULL;
+ 	}
+-
+-	return 0;
+ }
+ 
+ int kho_abort(void)
+ {
+-	int ret = 0;
+-
+ 	if (!kho_enable)
+ 		return -EOPNOTSUPP;
+ 
+@@ -1138,10 +1134,7 @@ int kho_abort(void)
+ 	if (!kho_out.finalized)
+ 		return -ENOENT;
+ 
+-	ret = __kho_abort();
+-	if (ret)
+-		return ret;
+-
++	__kho_abort();
+ 	kho_out.finalized = false;
+ 
+ 	kho_debugfs_fdt_remove(&kho_out.dbg, kho_out.fdt);
 -- 
 2.52.0.rc1.455.g30608eb744-goog
 
