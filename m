@@ -4,85 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60F95CE8D52
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DBCF2CE8D57
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 16:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yDQtpO0LuGRtA7x4zSaAXPnOMeh5Kiwvod9aseLK5Gg=; b=Tb/k4vGGymQ6RFDNoZ45vfV13G
-	qQnkWnCnSv/Q1uvoyYisB+CtQyousAQXE7//31Q0GXNQgbfTkxrd/wdIH6g5jEhRLK/yN4HLgxoEo
-	WfHOQb+gNEMUSjOaBJ5ltRT2/VPP6S/xCi8EwJraFzFjV5RYYbTiqj2rQcwRW5j2jqV/DYoZbmeur
-	MCPww8GhFOfvTs4TlZonmquVZVjoH2aKhyU7LXo5G9Towm9Hgri+Db96mHNAeIyqUCGWNlod+8TkC
-	KdbZIhN2jxN6dCv4orR5hF88v7pElwZi9xJVDW35EY475EnICtBKvVMpkLe36s8k8fPSKRqY6bdSv
-	OptAkkbQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MarKiFtWWXiCJfop2Mp04w6dux4RRrqD8MZucum8wGM=; b=kEFPeVLTNEUSCdb3MPl/fw/rEV
+	5xpud62tqABxhDL+zXhrXMWFxAdmOBt1kfvjwpvdd+rjM8Vc4qE/yFIDrsUSDaZ54P1ivCWqgfVGm
+	SWY/7Ou1xhneHgRDjomSaZYSdj3xSYHhoiC1KOVGLeLFmYfjMyyfsOiXu32HFAv0BrYnrVhGm6uRp
+	Jhhuv288N6y37+S4lE/Uq8zdyJp2pwReX+VbGXxvkHfL3JWicFtjDXElN/Hd2x8ipk2f6tI72dllv
+	Fuf10C/oH4NgbuQ3lxaSNEam8iAh3vhDnFNWwOQCBC5h9zhkkIbnizRMuiXtDGQ+HDDqW/gYkCOBP
+	ppCbdl5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJwwo-0000000ClJO-1HtN;
-	Fri, 14 Nov 2025 16:46:54 +0000
-Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
+	id 1vJx2R-0000000Cljc-2mE3;
+	Fri, 14 Nov 2025 16:52:43 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJwwl-0000000ClIi-3Ysk
+	id 1vJx2P-0000000CljJ-3VpA
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 16:46:53 +0000
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-64088c6b309so3874170a12.0
-        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 08:46:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763138810; x=1763743610; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yDQtpO0LuGRtA7x4zSaAXPnOMeh5Kiwvod9aseLK5Gg=;
-        b=LZWSZsefvNsD0hErKRyuRxVjU9BAbO0VeWqarSreE6Hu+7+C19GhdnIqv7P89wPUC5
-         m0ugjrfHyFLt9Vc7rCYvnKSU3cBpZfhARjOjvy8KVNyUMaYXJVKaP/5AYLCvfs95uCpv
-         ijbSwsufucfup9WhhDvmaHPo0qM+b/zokaKhkV6GeFxTzeHBe78WIXsXedYMzazb5vAE
-         jXld5mCEPBl3m/9O0eo+JlfurnBNwVjCLTHqpxtd+QX9boPf3u1JBMpJ50bJv6U0FSTu
-         B8FeprYRvSP5EopIMptFUUDKLw53oepE/J/uMr7o41uZdXwvYGuyA+VH/uHiwlqq2NCg
-         2Qcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763138810; x=1763743610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yDQtpO0LuGRtA7x4zSaAXPnOMeh5Kiwvod9aseLK5Gg=;
-        b=wXDZ4vGLjOec024fzzjJikIqa7FOykGciVVG6gp6MLeWAYX4efh6/dDWh7VsUPT/rF
-         atA8jR7Xhnts6RPp6ItqmwcfEfnQ17mPbmX010CS2ENiTt6scBK/s3jS8ZSOM8tXtKlj
-         h5HVUNdtWUAJkgo5HvdwkrN7fTQag7nY1TK3zAFGnKsZowj4BRV7fhQ7hl1bgXHYQNkL
-         5agbpTQ4fiJ7ePVaRJj0fcdG5fbANv1qkRr02c7GY1AKkJRp4j5r7gN8jVg0qGRjsAUQ
-         hu4j2uIjVTj01lZ3d3q0ETw+YP5M/eyC1waqPZBDwTNJsT59aar1yQPhf7mKMpUw4zp/
-         rD2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUu37mwilI6h0tgWw7YHqoZto/UEF/qLR4rNoNx37hXgWXzxKqABIM3zOeYvbOS+8dmUJQ+VA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzjopCQazVGrmUpcIJ/p7ahu6iya8V8yHNAwQYYoplSGT60sgm9
-	ILtkMK/tBadxFVXCBSOxNqEteAfbsCCXVYlKDBpAOa+Vdg3ggnrUzcBOyfmkJGIZ0GllrfDELJY
-	UXNCgYKh1OW2WKntnPo3UnXYUJvAqF7j2qz9K3Fi63w==
-X-Gm-Gg: ASbGncsGddlzAnEZVFgA+aS7XhQPsAJcKJx2cHldCp6tXNpWYEJ1MpAvWx47S4TnntB
-	IkRoroJcGNjXEU6JhycAFH9ABYRu5eHouJbUrvz6HOt8UvP4DyF74ycRvCWnibARGBThMyNQ/MG
-	T6nhqLI0FYqxoOhPj/def9Pk6yGieipn3g9zk42vNinThzXZlLLtjVYEoyQ0kciluf1Rz2sLHIU
-	d1IeVdIBHjsJSJaPjwlhJxPM1URCtd8gEbKQgLH9bMXwqBy3wDdbwcgAw==
-X-Google-Smtp-Source: AGHT+IFbJ/KZEyWmM8d4Tn7qAbyKy89sED/8mpiPp9IrefIs6/m2O49OIJhrycbebbsgWFvmsokzshBL66RF2COnksA=
-X-Received: by 2002:a05:6402:34d5:b0:643:18db:1d82 with SMTP id
- 4fb4d7f45d1cf-64350e2159emr3167393a12.11.1763138809509; Fri, 14 Nov 2025
- 08:46:49 -0800 (PST)
+	Fri, 14 Nov 2025 16:52:41 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id D5A1360198;
+	Fri, 14 Nov 2025 16:52:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32DBC116B1;
+	Fri, 14 Nov 2025 16:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763139160;
+	bh=ukDtEMQ3h+HhdTJApwHm9gtvXizGx7c4PKt+RTNGPfM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=dYUKLJgJtebr3v2RLEJLGjWo41D48EJ74YaRNQVVcm9EIEADqqQMMJSdMPnkQyRAY
+	 XkyMOmFO3ICqJO7e5Nva3u3qleGxnEKKidN2/N8S3rc1/Nh30kccNHXjEAVPZsadOg
+	 dOiaDloor0qs0YW7KtSIGIMWfqCor3kC3qbk4otQ0YiPgFGwSZCynzXIoJUG4QHN/E
+	 IH4UrA/zU3x42MbWyJqcj2PmtkLUek9tZM/TDt1nf1GFO6ZuOKoUV7X2U3r7+ihKBA
+	 rPf51GRurGrGeTA6XskxG28Z/YZzJAQOnxxY5Dqu65vEFiDcfcKcHdWBmZsUeVhRK3
+	 GxVPiDNBhTPRg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org,  bhe@redhat.com,  rppt@kernel.org,
+  jasonmiu@google.com,  arnd@arndb.de,  coxu@redhat.com,
+  dave@vasilevsky.ca,  ebiggers@google.com,  graf@amazon.com,
+  kees@kernel.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v1 04/13] kho: Verify deserialization status and fix FDT
+ alignment access
+In-Reply-To: <20251114155358.2884014-5-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Fri, 14 Nov 2025 10:53:49 -0500")
+References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+	<20251114155358.2884014-5-pasha.tatashin@soleen.com>
+Date: Fri, 14 Nov 2025 17:52:37 +0100
+Message-ID: <mafs0tsyw7e0a.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-References: <20251114155358.2884014-1-pasha.tatashin@soleen.com> <aRdWF8ck4iq1hc0B@kernel.org>
-In-Reply-To: <aRdWF8ck4iq1hc0B@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 14 Nov 2025 11:46:12 -0500
-X-Gm-Features: AWmQ_bnccF6a3b19rd__cNBKQXa9KGCdbhYFEGJJeXr8Oiyaq_gWPptNojqbe4c
-Message-ID: <CA+CK2bCgdz3Hv90axzuSThRtEF17oSj-RKHgVwu5rQ7TXcoKcQ@mail.gmail.com>
-Subject: Re: [PATCH v1 00/13] kho: simplify state machine and enable dynamic updates
-To: Mike Rapoport <rppt@kernel.org>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, jasonmiu@google.com, 
-	arnd@arndb.de, coxu@redhat.com, dave@vasilevsky.ca, ebiggers@google.com, 
-	graf@amazon.com, kees@kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_084651_905615_A346FE10 
-X-CRM114-Status: GOOD (  15.21  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,54 +74,110 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 11:17=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> On Fri, Nov 14, 2025 at 10:53:45AM -0500, Pasha Tatashin wrote:
-> >
-> > This patch series refactors the Kexec Handover subsystem to transition
-> > from a rigid, state-locked model to a dynamic, re-entrant architecture.
-> > It also introduces usability improvements.
-> >
-> > Pasha Tatashin (13):
-> >   kho: Fix misleading log message in kho_populate()
-> >   kho: Convert __kho_abort() to return void
-> >   kho: Preserve FDT folio only once during initialization
-> >   kho: Verify deserialization status and fix FDT alignment access
-> >   kho: Always expose output FDT in debugfs
-> >   kho: Simplify serialization and remove __kho_abort
-> >   kho: Remove global preserved_mem_map and store state in FDT
-> >   kho: Remove abort functionality and support state refresh
-> >   kho: Update FDT dynamically for subtree addition/removal
-> >   kho: Allow kexec load before KHO finalization
-> >   kho: Allow memory preservation state updates after finalization
-> >   kho: Add Kconfig option to enable KHO by default
-> >   kho: Introduce high-level memory allocation API
->
-> For the series:
->
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->
-> with small nits in patches 9 and 13 in replies to them.
+On Fri, Nov 14 2025, Pasha Tatashin wrote:
 
-Thank you Mike! I will update the series, and post v2 shortly.
-
-Pasha
-
+> During boot, kho_restore_folio() relies on the memory map having been
+> successfully deserialized. If deserialization fails or no map is present,
+> attempting to restore the FDT folio is unsafe.
 >
-> >
-> >  include/linux/kexec_handover.h              |  22 +-
-> >  kernel/liveupdate/Kconfig                   |  14 +
-> >  kernel/liveupdate/kexec_handover.c          | 338 ++++++++++++--------
-> >  kernel/liveupdate/kexec_handover_debugfs.c  |   2 +-
-> >  kernel/liveupdate/kexec_handover_internal.h |   1 -
-> >  5 files changed, 232 insertions(+), 145 deletions(-)
-> >
-> > --
-> > 2.52.0.rc1.455.g30608eb744-goog
-> >
+> Update kho_mem_deserialize() to return a boolean indicating success. Use
+> this return value in kho_memory_init() to disable KHO if deserialization
+> fails. Also, the incoming FDT folio is never used, there is no reason to
+> restore it.
 >
-> --
-> Sincerely yours,
-> Mike.
+> Additionally, use memcpy() to retrieve the memory map pointer from the FDT.
+> FDT properties are not guaranteed to be naturally aligned, and accessing
+> a 64-bit value via a pointer that is only 32-bit aligned can cause faults.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  kernel/liveupdate/kexec_handover.c | 32 ++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
+>
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index a4b33ca79246..83aca3b4af15 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -450,20 +450,28 @@ static void __init deserialize_bitmap(unsigned int order,
+>  	}
+>  }
+>  
+> -static void __init kho_mem_deserialize(const void *fdt)
+> +/* Return true if memory was deserizlied */
+> +static bool __init kho_mem_deserialize(const void *fdt)
+>  {
+>  	struct khoser_mem_chunk *chunk;
+> -	const phys_addr_t *mem;
+> +	const void *mem_ptr;
+> +	u64 mem;
+>  	int len;
+>  
+> -	mem = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+> -
+> -	if (!mem || len != sizeof(*mem)) {
+> +	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+> +	if (!mem_ptr || len != sizeof(u64)) {
+>  		pr_err("failed to get preserved memory bitmaps\n");
+> -		return;
+> +		return false;
+>  	}
+> +	/* FDT guarantees 32-bit alignment, have to use memcpy */
+> +	memcpy(&mem, mem_ptr, len);
+
+Perhaps get_unaligned(mem) would have been simpler?
+
+> +
+> +	chunk = mem ? phys_to_virt(mem) : NULL;
+> +
+> +	/* No preserved physical pages were passed, no deserialization */
+> +	if (!chunk)
+> +		return false;
+
+Should we disallow all kho_restore_{folio,pages}() calls too if this
+fails? Ideally those should never happen since kho_retrieve_subtree()
+will fail, so maybe as a debug aid?
+
+>  
+> -	chunk = *mem ? phys_to_virt(*mem) : NULL;
+>  	while (chunk) {
+>  		unsigned int i;
+>  
+> @@ -472,6 +480,8 @@ static void __init kho_mem_deserialize(const void *fdt)
+>  					   &chunk->bitmaps[i]);
+>  		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+>  	}
+> +
+> +	return true;
+>  }
+>  
+>  /*
+> @@ -1377,16 +1387,12 @@ static void __init kho_release_scratch(void)
+>  
+>  void __init kho_memory_init(void)
+>  {
+> -	struct folio *folio;
+> -
+>  	if (kho_in.scratch_phys) {
+>  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+>  		kho_release_scratch();
+>  
+> -		kho_mem_deserialize(kho_get_fdt());
+> -		folio = kho_restore_folio(kho_in.fdt_phys);
+> -		if (!folio)
+> -			pr_warn("failed to restore folio for KHO fdt\n");
+> +		if (!kho_mem_deserialize(kho_get_fdt()))
+> +			kho_in.fdt_phys = 0;
+
+The folio restore does serve a purpose: it accounts for that folio in
+the system's total memory. See the call to adjust_managed_page_count()
+in kho_restore_page(). In practice, I don't think it makes much of a
+difference, but I don't see why not.
+
+>  	} else {
+>  		kho_reserve_scratch();
+>  	}
+
+-- 
+Regards,
+Pratyush Yadav
 
