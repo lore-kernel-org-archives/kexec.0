@@ -4,87 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B19BECE8D64
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5B6ECE8D5F
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 17:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jr99N8EvfE7VSxMEgoXnQ9FQqP6csNpcKoPAkZthtV0=; b=pmv84Y6VT6UcHi+QZIbGUJMspr
-	eU8yCPTjttjJxsGqOqb/1T/t++tdkw68bT7LiI4NOecVobtvZ15F7uLISncaJGWwz5Cj1u0EYldCb
-	K65pVmrkY4+TCtDRf0XIjy7OaGZGfHTy7I6h+aqkBiDJ3pFSS3KChi5SKnuwc548O91ywkz+sYVcE
-	Qalyd6QuU/y4DEqB6AIgJmvLhVUHEK7Ny7rRB08KyNB27uK4JsQmB/ere458TscrNYfbov8mOEWzp
-	kB8dKUxhcyglma1lylCOJm1eJ9LKorPd95Rfi88j05Uk3d2OKmP+eIWCWQ3Iz6zizynt2vCRLXber
-	1kY+du8A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=jI5hPOPLIoKkXUKVIROmgZN8YwXJuNfqNLlBqLlPxr8=; b=exZlP437bZDecVxX3OLlrwX9z4
+	jqGn4HBU1VCLCSD+BOkLA5Ih9u8Jkh6wwxkvGhfmu8hXOKB4aMSii3AUBMeF/DS9YmHwYf5zCnfst
+	dvnpTlaFxhtC+v27wgOGOC/lW9Zc3DQUABcO/ve04Pj4SlzqCVc1gvJ1QBNSW1n/Yi3xvTmO544lQ
+	Id28H1GTn1/rWLFBH0UtDIGbCmk7zxf62M6tbLjCZrHv/dge6w8+lpZnK1cdy9NcicNTQzn2+JJc4
+	3cQyLd6mrHxqVJLjQFNB0YRdS2EIhZrFaZ5568s5v7dVFdFcWNdRQsfIN62HjUGAP2FsP1ooROO54
+	dr7W6w3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJxXH-0000000Cpp9-2NHE;
-	Fri, 14 Nov 2025 17:24:35 +0000
-Received: from mail-ed1-x529.google.com ([2a00:1450:4864:20::529])
+	id 1vJxac-0000000CqVc-1sX4;
+	Fri, 14 Nov 2025 17:28:02 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJxXD-0000000Cpoa-3uzX
+	id 1vJxab-0000000CqVH-3P7j
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 17:24:33 +0000
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-64149f78c0dso3574261a12.3
-        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 09:24:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763141070; x=1763745870; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jr99N8EvfE7VSxMEgoXnQ9FQqP6csNpcKoPAkZthtV0=;
-        b=Swa8BUNDtK2UcbK2+3FAB/oFNGc0+1KRqI+zz2TMVd8F67yeQCrcrs318+B7qpKmH8
-         hW485yEOdmKJYFmCA7DYwd0UJFlswl9Xd7Z2C1uYat9vMup9ddAOnyy1AIA3zWjDaaE9
-         wpfJKvZBqSFN/ergXftmbxRt67j5jFRb3TvCqTg+9SJW475S+l/GdXEpWlUPu8mdHBZm
-         8bNj5gl1XrlYdb5+bxUxThWWh/4LTHIXqY0h/luPiP5CHACi3lqyhSzRJfMqysvuM+lz
-         UtAvDUz0OuD5URQt9py/1TWHi9H9+kuC+6YibLdW47eHXa0Okcx7DxfCPggh6C5g7HQk
-         gNFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763141070; x=1763745870;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jr99N8EvfE7VSxMEgoXnQ9FQqP6csNpcKoPAkZthtV0=;
-        b=pNZKNU3Jkf86snSBNeZbRnqsdI1+9EngyADI/RXpz/aNHP7HdTD14ZOymDrAsKafAM
-         PrepWLjWSQ/ne4n19bMYCEYWOsNYXc+oiPZqICQnPJgf0aPmFSAg8B517XNNFKylVqrz
-         Sr0futrRow66LxZX2NzIwdHVi5OcZKlvSiIJhiBcmFjLk/O0fH+7cRU5bIeWX0Tu3rEA
-         KnHcdvDMwn4GXFZFl/YUOHac7HFgGODtTCFQku4w+IqxigdES4cBU02sjaVijRqxhyuM
-         s8HVyp4qjoIL7hwUfBh3hMRcqe6R8GRgdeqWfGCf/NFhvP+K3xzgNDOJG7XLHNoFK0i5
-         AR6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUv/wqs+XOltkZ8eYvUNil/pfAjwixNb8483U1v9x93BY9ofiMS7DBc5yOppUbyDHIB0RFSXg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzta8AFQQv1QgpWUwwRmem4EvkzFg9IeAJP6JYC/kQHnz0z4XE3
-	r1ZLfziTl+i4jLCgfpmeZn1zSMaUweQX/8w4WaRsKlRIuOwSlPUxfDDN11mh349C5+pfkNaa+C6
-	oeB+4njiTEvcMejn2XEHVsX1RqxjShzWJ4WBdDBuNjQ==
-X-Gm-Gg: ASbGnctYwog9K4deY/halNdsZpe8I1loWXssWIZaSrcYOlm7E6wLrQQKrOY5JrLPKCx
-	XwgmRqWCUFQDwysK+WOjqIFjxGher1N/tzEhDlOwBQ9TQRN2Euavh9TcpeU+5yO9AoLHMesQhvf
-	73PZwRRkxng7I3D4abnjeU1geCufamWVd2ZhbfzMpZJT5OAu3ZNtyg4hO4YIO3/J5NfRWScmLRo
-	LrLaRrHF4eY40je3d83+nO16bbFyIVwjZgvptHf1MHSP7h/tMHHr0s06Q==
-X-Google-Smtp-Source: AGHT+IHaD0ZR24K10v+0sxxsxBE7BTJ1DM+XaPqvd21jueM2H9NAEGZUn/yDXQLn/HV5bmLvw3r9Ugvsl3a5yg3XZCk=
-X-Received: by 2002:a05:6402:3547:b0:640:b06f:87c5 with SMTP id
- 4fb4d7f45d1cf-64350e10fdbmr3182814a12.1.1763141069892; Fri, 14 Nov 2025
- 09:24:29 -0800 (PST)
-MIME-Version: 1.0
+	Fri, 14 Nov 2025 17:28:01 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id C367B601E4;
+	Fri, 14 Nov 2025 17:28:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87609C4CEF1;
+	Fri, 14 Nov 2025 17:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763141280;
+	bh=ulTWAOAR8z9do9SIRmHIYkiPa4c1m881M13St87xoQA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=dn0ywYFX7u1pMRmBB6mt3qOI+RoqX+gUyW3hryzuEn23rmHGfuVLx34qn3gdb7I7H
+	 sN+fIgiXgJzEL+gSz1mj0HFq7lITtHxpI+gru7gqIffawp8FYnhfrNEFVhx0Lin4wB
+	 eSbKoeJGcCs3KiiT0WR18L/2xpurvlBBH4UL6IYLGIpdUXqSFN+zw75W6qftHLAM58
+	 O7XfUeBAQ5Twwq1DGqjDqssc8MacW9QvEKVbhiEvGXv2Mg8tAAG8XFsl0RJzOuDNMm
+	 sNEbe+OBiF4o72N5YbKBfYVEXjLYJK+UCR3yqYg4wmcVJCChemVNnocLYFm0BKFqha
+	 GbFfyXYii0QeA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org,  bhe@redhat.com,  rppt@kernel.org,
+  jasonmiu@google.com,  arnd@arndb.de,  coxu@redhat.com,
+  dave@vasilevsky.ca,  ebiggers@google.com,  graf@amazon.com,
+  kees@kernel.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v1 09/13] kho: Update FDT dynamically for subtree
+ addition/removal
+In-Reply-To: <20251114155358.2884014-10-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Fri, 14 Nov 2025 10:53:54 -0500")
 References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
- <20251114155358.2884014-9-pasha.tatashin@soleen.com> <mafs0cy5k7ct3.fsf@kernel.org>
-In-Reply-To: <mafs0cy5k7ct3.fsf@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 14 Nov 2025 12:23:54 -0500
-X-Gm-Features: AWmQ_bneFQNsBKrT8Cx_1rm5coKnpl4em1PjNxUmKMGB5lxAwOhN1QTQg0XRok0
-Message-ID: <CA+CK2bCS52_vU-Z5ZRPrceiVCnJim=8VoYRMmBkx5iEd8-B8tw@mail.gmail.com>
-Subject: Re: [PATCH v1 08/13] kho: Remove abort functionality and support
- state refresh
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org, 
-	jasonmiu@google.com, arnd@arndb.de, coxu@redhat.com, dave@vasilevsky.ca, 
-	ebiggers@google.com, graf@amazon.com, kees@kernel.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_092431_979248_665EDDB5 
-X-CRM114-Status: GOOD (  16.55  )
+	<20251114155358.2884014-10-pasha.tatashin@soleen.com>
+Date: Fri, 14 Nov 2025 18:27:57 +0100
+Message-ID: <mafs08qg87cde.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,46 +74,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 12:18=E2=80=AFPM Pratyush Yadav <pratyush@kernel.or=
-g> wrote:
->
-> On Fri, Nov 14 2025, Pasha Tatashin wrote:
->
-> > Previously, KHO required a dedicated kho_abort() function to clean up
-> > state before kho_finalize() could be called again. This was necessary
-> > to handle complex unwind paths when using notifiers.
-> >
-> > With the shift to direct memory preservation, the explicit abort step
-> > is no longer strictly necessary.
-> >
-> > Remove kho_abort() and refactor kho_finalize() to handle re-entry.
-> > If kho_finalize() is called while KHO is already finalized, it will
-> > now automatically clean up the previous memory map and state before
-> > generating a new one. This allows the KHO state to be updated/refreshed
-> > simply by triggering finalize again.
-> >
-> > Update debugfs to return -EINVAL if userspace attempts to write 0 to
-> > the finalize attribute, as explicit abort is no longer supported.
->
-> Documentation/core-api/kho/concepts.rst touches on the concept of
-> finalization. I suppose that should be updated as well.
+On Fri, Nov 14 2025, Pasha Tatashin wrote:
 
-I looked at it, and it is vague, we are soon to remove finalize with
-stateless kho from Jason Miu, so in that series that section can be
-removed or replaced.
+> Currently, sub-FDTs were tracked in a list (kho_out.sub_fdts) and the
+> final FDT is constructed entirely from scratch during kho_finalize().
+>
+> We can maintain the FDT dynamically:
+> 1. Initialize a valid, empty FDT in kho_init().
+> 2. Use fdt_add_subnode and fdt_setprop in kho_add_subtree to
+>    update the FDT immediately when a subsystem registers.
+> 3. Use fdt_del_node in kho_remove_subtree to remove entries.
+>
+> This removes the need for the intermediate sub_fdts list and the
+> reconstruction logic in kho_finalize(). kho_finalize() now
+> only needs to trigger memory map serialization.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
->
-> Other than this,
->
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-Thank you,
-Pasha
+[...]
 
->
-> [...]
->
-> --
-> Regards,
-> Pratyush Yadav
+-- 
+Regards,
+Pratyush Yadav
 
