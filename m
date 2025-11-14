@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15DBBCE8D76
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 19:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60286CE8D76
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 19:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Cr/M35xOZt69Rz+1fp2O+fG2oD8FG7boktVqzDGyi4M=; b=W7ZdgIbIhx5xHwegveFVx9cGun
-	Nj66JMPrv2xiN70IhkyfYQ7x3JGWeesd1GsEkZAVya4oAE07nJj293mrtgJjZ3vRGJBw54jJCEJj3
-	Vp9hUGuoOXsw5qyLVB4RfoayBWT9syr8/xKy0V5fzO5hQCazBM1B2avT21vHhPd8FAfEleA5x/8Rf
-	n/FltSep0Ua/TSDokYz2e1TMq0Ihi768kmXQmrR+JIAC1KD4qVzMQZ4lsLmCOiRbYTkuw/h8AegRz
-	21gxouuhjMOV/Z8rCCWA6Bc56FgLxYUtjk1Y72FaD+fvNf+P0+1FslpL5L1Jw43j04J8tdPFpJqzl
-	PylqciDg==;
+	bh=IVOsGGNev+kFc4fmmK/Sez25eFhPMXojX9JX+N57FXU=; b=GjxcAZR0DjVbxVUH1s+3nIPEwC
+	nW81lAS3I5LIOihxnepovnqijEqNA4tMM2+VZGXbFyt8J1kX0sfT46XJ3uZSGDU0mIEq11mGKDYg6
+	fmV7PyC8TpiSvGqZzUnsJG8rOaCLgpYexmt4GolTJsFAwkBV7pl4XGr+JIRJYBzfS77srJc/OzfnI
+	12IRNTA9VxMKIxVeG7uCmiCOxUmvdHi2//ty1tZWjmH0bfKRY/KWtySaTGamZLIieAn/oKe6JpNwT
+	PDcG6UoWKfX+5gbrtAlDzinlofpv5kTWcpENFUzKj7K7QV/HIou+AVCpH5IS0wF/3lWXnHQNMrQAI
+	24lF6EAw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJzYW-0000000D1ST-2PfZ;
-	Fri, 14 Nov 2025 19:34:00 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vJza2-0000000D1Wc-3vRE;
+	Fri, 14 Nov 2025 19:35:34 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJzYU-0000000D1S6-1Ecp
+	id 1vJza1-0000000D1WU-119q
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 19:33:59 +0000
+	Fri, 14 Nov 2025 19:35:33 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9391A42E49;
-	Fri, 14 Nov 2025 19:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897F6C113D0;
-	Fri, 14 Nov 2025 19:33:55 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 4077260188;
+	Fri, 14 Nov 2025 19:35:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8BFC4CEF5;
+	Fri, 14 Nov 2025 19:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763148837;
-	bh=FZlWl6qWs90L/x6LrsaPXbIv40QuDF4Bq+k9+9iwvHM=;
+	s=k20201202; t=1763148932;
+	bh=Zc97r0exmktwpRs9kQQA4bpGO3Sc8oaRn9s7KddLdwQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=H/FCBFq3BK4sRDRlJS4qxqxbkJ04z3EUmWnL6nfcRTAYLPQs5LsCcx0P0FWqIeXBf
-	 EY4XCIsjOOtT/LhGn/3+JTNCV2epPhgMYFzcg/B7EJmKYtDDzrxeYBgNF8+EcMvmUu
-	 p4kdbKdYGEPxNOhITYECmyOfJXmBaBqcCx/tDY/UOy66N/SiDku0pMAT9lM72+Wdgt
-	 pnwpKrcyu0OrIYe74l6RQoS896GojkRIgnZtH7zJ1duMnhTVAKcHb5HwvRcgBNzeXc
-	 SzfLqHK/QJEkleADVWXk/ByhAxt7eS4kOINLelj8lcf82ZQmCThm5QSwxz2/DNffuf
-	 b/rZhOGN5SPqQ==
+	b=kz1ExJB9ShhwyZCJrTmzMuqpRjtWv4hW2F7jZNB3rfQUowOAAacUIA9PnkDXUXXGy
+	 xLhcc2rw7hSxiEIqfhbBUcVT9CvKryIbYxKgx8gSDhH6DPxm8qm1u6p2h4NU4y+eCh
+	 jElngR6kvZ1B+ABXKxNxhL3hIGll1aJDF2ueT+YF5Q4Bkr8Q9r9knlbR1fBdFyTVCq
+	 R2ND68jqTTUj1ZeLbaAN4/1I/L/AHp8N6psr/aDGPJdB4iWsFfp4u6FjJE+EFxuFiy
+	 r945l83UMnqUx71Xg0fjH+ULU/gdV0SC6l9m//rhtkFv5zEouCT8tb8KzHp71NJNGW
+	 JstnL8QGZWi/g==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: akpm@linux-foundation.org,  bhe@redhat.com,  rppt@kernel.org,
@@ -49,21 +49,17 @@ Cc: akpm@linux-foundation.org,  bhe@redhat.com,  rppt@kernel.org,
   dave@vasilevsky.ca,  ebiggers@google.com,  graf@amazon.com,
   kees@kernel.org,  linux-kernel@vger.kernel.org,
   kexec@lists.infradead.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v2 05/13] kho: Verify deserialization status and fix FDT
- alignment access
-In-Reply-To: <20251114190002.3311679-6-pasha.tatashin@soleen.com> (Pasha
-	Tatashin's message of "Fri, 14 Nov 2025 13:59:54 -0500")
+Subject: Re: [PATCH v2 12/13] kho: Allow memory preservation state updates
+ after finalization
+In-Reply-To: <20251114190002.3311679-13-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Fri, 14 Nov 2025 14:00:01 -0500")
 References: <20251114190002.3311679-1-pasha.tatashin@soleen.com>
-	<20251114190002.3311679-6-pasha.tatashin@soleen.com>
-Date: Fri, 14 Nov 2025 20:33:54 +0100
-Message-ID: <mafs0ecq05rz1.fsf@kernel.org>
+	<20251114190002.3311679-13-pasha.tatashin@soleen.com>
+Date: Fri, 14 Nov 2025 20:35:28 +0100
+Message-ID: <mafs0a50o5rwf.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_113358_354741_71AB6989 
-X-CRM114-Status: UNSURE (   9.87  )
-X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,19 +76,23 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Fri, Nov 14 2025, Pasha Tatashin wrote:
 
-> During boot, kho_restore_folio() relies on the memory map having been
-> successfully deserialized. If deserialization fails or no map is
-> present, attempting to restore the FDT folio is unsafe.
+> Currently, kho_preserve_* and kho_unpreserve_* return -EBUSY if
+> KHO is finalized. This enforces a rigid "freeze" on the KHO memory
+> state.
 >
-> Update kho_mem_deserialize() to return a boolean indicating success. Use
-> this return value in kho_memory_init() to disable KHO if deserialization
-> fails. Also, the incoming FDT folio is never used, there is no reason to
-> restore it.
+> With the introduction of re-entrant finalization, this restriction is
+> no longer necessary. Users should be allowed to modify the preservation
+> set (e.g., adding new pages or freeing old ones) even after an initial
+> finalization.
 >
-> Additionally, use get_unaligned() to retrieve the memory map pointer
-> from the FDT. FDT properties are not guaranteed to be naturally aligned,
-> and accessing a 64-bit value via a pointer that is only 32-bit aligned
-> can cause faults.
+> The intended workflow for updates is now:
+> 1. Modify state (preserve/unpreserve).
+> 2. Call kho_finalize() again to refresh the serialized metadata.
+>
+> Remove the kho_out.finalized checks to enable this dynamic behavior.
+>
+> This also allows to convert kho_unpreserve_* functions to void, as they
+> do not return any error anymore.
 >
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
