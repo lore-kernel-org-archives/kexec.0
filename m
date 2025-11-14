@@ -4,60 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75127CE8D51
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 16:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B47F1CE8D4F
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 16:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LzmaurRwXd/FUfjWlIvyc9JKRHbFyjNcTaJdND6zQwk=; b=yxpa1BIqlEfCCNlLqYDp/0ZCse
-	Xz/3nF++8ubp762PQlX4NxGEqjicYar/afylrnLJbrDfvLLfWowcYlABGgI/l8S68GhTmNc3kTVhX
-	bOuoS5yb6zksPZ5W2Lif2QU5wu6s/RAgjouq35X90oukBPcEvzBHOIAgkq54bXpDH0Bcv+RG6vfUU
-	j5+A81baA3Aj+03oThKUBj7vsk+SMcA4ASi4Kkm5T0U6ZGQRZvD12GDiGzRCmLRga2xY+s/6Cy/nT
-	gI4cOLEYwkU4sPRTAWB4CwAMrckNdMZ8xJjkSZi12sCR/GBuW83SwJADIg/qTpu+VcBJFWPFSMmni
-	43MEL0wA==;
+	bh=041pjVoVlObxguqJXnDZhxQ3I0o1sLrkCwAqRkPqSsM=; b=SsW8nycyTz20/lwkLNDjkf5B/h
+	gmO7bcphgDQk1munHhWmxRW/xTBPkw6fHUQQAV0/67UkRqbmmRjIm3j9mERLtPrJEAYPS6NCpK23c
+	BJsXuhxyrA0pZuoV6/0v8hVA0WsKwI4pxj/F3Y2cj68ZdTHmCW7WviWsd47yq5zkxhyEpG/Nams0r
+	GDVB8HLjRiK0yNuxqmLWvNnNWbCVqYjjyizLrvkxZNZlKSzDW3Y1nzDNJ7RCi1cOy1n0LLqY61iiT
+	dO2mWZjpAM0ipv+1UKL59NaM8q1aP3RvjTIEyY3DpWn4aDl9giqsxLdf1bsTfXLzrP1EqqZsJcKBe
+	rNL145yQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJwUT-0000000Ciu1-48Xo;
-	Fri, 14 Nov 2025 16:17:37 +0000
+	id 1vJwiV-0000000CkFc-3t7z;
+	Fri, 14 Nov 2025 16:32:07 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJwUS-0000000Citc-1E7X
+	id 1vJwiT-0000000CkFT-3wP1
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 16:17:36 +0000
+	Fri, 14 Nov 2025 16:32:05 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id AFFA960150;
-	Fri, 14 Nov 2025 16:17:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FFD7C4CEF5;
-	Fri, 14 Nov 2025 16:17:30 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0AFEA60150;
+	Fri, 14 Nov 2025 16:32:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B467C4CEF8;
+	Fri, 14 Nov 2025 16:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763137055;
-	bh=1TP2PBihBm/xACDWaGTPWhNWAdDdBhE5Owp0RpW0KBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bwrPhz/H4pWI6GRx+uoYSdBmXA78z+aVv88xUzOIT17tPfm2Ur79PxBbmFmETirvN
-	 6/z2xXhyZKz1WEYyTa9ySylU39jBcxrcd/LaesSsiSgm4WZeP5HMBWX76VJ2mMVnlV
-	 3HVMlBc9re1Z4MtzUQv3z5aLXfQ6beeJ7DdK6fPjtwRoTDJaSFg4Tv1P0K365g6Xnz
-	 lL5wkoVXSMH235A+WDbEaMuUz7+vSIAbl8IqCGrTyxL+ATr3C2IxBwOLW2pnNP+C31
-	 TyvqXGWFVQiKzXHNB8RLx5qPpjPiSbEfZvQ7k5koLM845Ed7SdKJFdjXQ9df1LX8I1
-	 j0YEIpr35ql2w==
-Date: Fri, 14 Nov 2025 18:17:27 +0200
-From: Mike Rapoport <rppt@kernel.org>
+	s=k20201202; t=1763137924;
+	bh=tvaWCesSZPV5aZlyiiBehWbeYK80FC2R6bxRgb0JBv8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qCIGg/d2HL42aDcB/Jy4naeEgwsC7p8QScxs+SzfBo8xshO5b0sREvxff35GjiixX
+	 G4OEItKvJLztO3DAFZBDxm6nSenW1ZsDeVLHeDmKkeY++3qj4Lr6UsH7jrFdyYqoua
+	 u91wQUy8WeigCtehOpi8RkYv20uysrmjxDNlBQ8eB2OYJqw1WSCNYIdHV4ZhINprVD
+	 kuwwxUsyP3u9Sp3Et/cKunlR1A4e/3rWao+LqVNt4FkFKmJX7Eh850SY9Ys+18ndCq
+	 uGVoMv2oJTSEiT1EpT30n9fXoF0iDd2SwTLhHlPOTBp5Kd11lJ4vQpVBv8Hk4ytYii
+	 v36JV88qUa68w==
+From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, jasonmiu@google.com,
-	arnd@arndb.de, coxu@redhat.com, dave@vasilevsky.ca,
-	ebiggers@google.com, graf@amazon.com, kees@kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v1 00/13] kho: simplify state machine and enable dynamic
- updates
-Message-ID: <aRdWF8ck4iq1hc0B@kernel.org>
+Cc: akpm@linux-foundation.org,  bhe@redhat.com,  rppt@kernel.org,
+  jasonmiu@google.com,  arnd@arndb.de,  coxu@redhat.com,
+  dave@vasilevsky.ca,  ebiggers@google.com,  graf@amazon.com,
+  kees@kernel.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v1 01/13] kho: Fix misleading log message in kho_populate()
+In-Reply-To: <20251114155358.2884014-2-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Fri, 14 Nov 2025 10:53:46 -0500")
 References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+	<20251114155358.2884014-2-pasha.tatashin@soleen.com>
+Date: Fri, 14 Nov 2025 17:32:01 +0100
+Message-ID: <mafs0a50o8tj2.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,46 +73,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 10:53:45AM -0500, Pasha Tatashin wrote:
-> 
-> This patch series refactors the Kexec Handover subsystem to transition
-> from a rigid, state-locked model to a dynamic, re-entrant architecture.
-> It also introduces usability improvements.
-> 
-> Pasha Tatashin (13):
->   kho: Fix misleading log message in kho_populate()
->   kho: Convert __kho_abort() to return void
->   kho: Preserve FDT folio only once during initialization
->   kho: Verify deserialization status and fix FDT alignment access
->   kho: Always expose output FDT in debugfs
->   kho: Simplify serialization and remove __kho_abort
->   kho: Remove global preserved_mem_map and store state in FDT
->   kho: Remove abort functionality and support state refresh
->   kho: Update FDT dynamically for subtree addition/removal
->   kho: Allow kexec load before KHO finalization
->   kho: Allow memory preservation state updates after finalization
->   kho: Add Kconfig option to enable KHO by default
->   kho: Introduce high-level memory allocation API
+On Fri, Nov 14 2025, Pasha Tatashin wrote:
 
-For the series:
+> The log message in kho_populate() currently states "Will skip init for
+> some devices". This implies that Kexec Handover always involves
+> skipping device initialization.
+>
+> However, KHO is a generic mechanism used to preserve kernel memory across
+> reboot for various purposes, such as memfd, telemetry, or reserve_mem.
+> Skipping device initialization is a specific property of live update
+> drivers using KHO, not a property of the mechanism itself.
+>
+> Remove the misleading suffix to accurately reflect the generic nature of
+> KHO discovery.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-with small nits in patches 9 and 13 in replies to them.
-
-> 
->  include/linux/kexec_handover.h              |  22 +-
->  kernel/liveupdate/Kconfig                   |  14 +
->  kernel/liveupdate/kexec_handover.c          | 338 ++++++++++++--------
->  kernel/liveupdate/kexec_handover_debugfs.c  |   2 +-
->  kernel/liveupdate/kexec_handover_internal.h |   1 -
->  5 files changed, 232 insertions(+), 145 deletions(-)
-> 
-> -- 
-> 2.52.0.rc1.455.g30608eb744-goog
-> 
+[...]
 
 -- 
-Sincerely yours,
-Mike.
+Regards,
+Pratyush Yadav
 
