@@ -4,88 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21C5DCE8D4F
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3708BCE8D4E
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oAQesQhs6e+PTptufLvrkGE1DQZP/NgJYpEOzUVqdGc=; b=Cg+BxPY1lED2335ov4Xzu36WPU
-	B0WZUxohMcV7B5bU9U27Q2hxzMV8Rhwtpmql+x2a+QVfGZzCeRFXFXtax41HFP661vM/026i6MWMz
-	gQ5290BoZRErbN0+MhqdrSLvspuqElI5lgOv08VpWJzfADYwzhpjXhWMedow1XA36Nw+bhfr23Fm0
-	M9YCCzuCQjm5R4x7K8Fy7fsbBQYqpwHw0UFIKzHPNSJfGAhdYXsxvEN3XTLHgQWjVuhmw4AjdAhEM
-	TVOpfiEGQyu/yERyOt5M9C8EFtaO9iNDE82EUKTFAS5Ooo6WvPgt/2Ns8SsQd+k3oSSNTw85MGygn
-	YNN6j3wg==;
+	bh=kKhHd1KgPWmocj3LIkR2PSOdJapJ90TJO0FtGZ1fNlc=; b=E5kgfE8/o90iz5WEj1VtXUfxwM
+	x2HZLsIXqKjLN8ZXJ8rRIpfn2OmaJZNlX05KmfFbqK9n6FsYDnqcXLl5qlRei32HTpfIlxdcClg1b
+	fQHeqKBpESyaZSJFiuZ+QanHlkRKOfVfk08sOcLZEZDoAIoaU2m4gw/RpnKbmGNm052WvONoqe50e
+	RJKrOlP8xWopQIcZnZyS2jh02E5MQzMncvwJ0xc1yw6GPgBQ49XRKjZolMs6RK0WaPEKczHCT2KnT
+	bqcuBzGRiXWa6yw8SE/Fo9GDP4ueF33bS6Q/MhHQnJCo9BQL0Vg8cRjSgYg0kdez9/x6PmcWfQ+0Q
+	AVTelUZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7v-0000000Ccu1-3Zm4;
-	Fri, 14 Nov 2025 15:54:19 +0000
+	id 1vJw7x-0000000Ccvg-1tZ7;
+	Fri, 14 Nov 2025 15:54:21 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7s-0000000CcqF-1xcp
+	id 1vJw7u-0000000CcrC-3BLt
 	for kexec@bombadil.infradead.org;
-	Fri, 14 Nov 2025 15:54:16 +0000
+	Fri, 14 Nov 2025 15:54:19 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
 	:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
 	Content-Type:Content-ID:Content-Description;
-	bh=oAQesQhs6e+PTptufLvrkGE1DQZP/NgJYpEOzUVqdGc=; b=F28APjQVcfrwq1It7k85UjxTOM
-	pxaYLyRS+rmj4tSVrqyWTe5h3skmJXckofRbKlS24IbQJ09uMCt5GFfZ/dZ3Da25sqzwyN60z6gLS
-	9zAtWfyRvgHM8Yv5q5g/M2Hc7pZTyRIHn5WrhTfX7jQ+/cnYC2kJVVgGYEZfyipnLWd4WKffVrFkn
-	0mGPw2UuRX47T0yEDBJWzzjy1AL7qjRzVZIsm8wQC330M28ScCIgM2USpdDa9PXixzoW0MAUHmx4A
-	vIbSygV/Js11qWW3QUU57wcqFDi2OKHqv6YNuLSU67BYrSuX32uiUkkTwz+M48zRQwVUjHmPgM9d9
-	/v8Grrnw==;
-Received: from mail-yx1-xb12d.google.com ([2607:f8b0:4864:20::b12d])
+	bh=kKhHd1KgPWmocj3LIkR2PSOdJapJ90TJO0FtGZ1fNlc=; b=eHGAMJNF+Gq/GS1Fild2CQaj1M
+	xbHo9pyDDVRdPLpW2sWQEFCbl5bdIiGZAnxQNFi9sHij5AIHKqoEWeiMFEhfF1lXMuVHor93eTuc6
+	uWjJgH9YdYkgjOl7qyJ/HByg9uuzTIdBlZs+a6EXIUJu/VysisGWnBT6T2cQlU06KcNIq4PnfWtRS
+	GVpH0G1yTliIjBEjudOth2UUuHJqfNOyd4ULfxSFVFJ60Th+aWTdADVICIfWMGOk+cG9UdrxydQRc
+	Lt/yR6BnWVSJM/0/pe85sReINN+Sn2fHoJLKXShbL6sAJzUnVCeAhPPPgghDuOAy1hDtSwiwIlgnu
+	artg2/uQ==;
+Received: from mail-yx1-xb134.google.com ([2607:f8b0:4864:20::b134])
 	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJvGA-00000002tBe-0DjL
+	id 1vJvGD-00000002tDX-0mLg
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 14:58:48 +0000
-Received: by mail-yx1-xb12d.google.com with SMTP id 956f58d0204a3-63fc6115d65so2074819d50.0
-        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 07:54:12 -0800 (PST)
+	Fri, 14 Nov 2025 14:58:51 +0000
+Received: by mail-yx1-xb134.google.com with SMTP id 956f58d0204a3-63fca769163so2009574d50.2
+        for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 07:54:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763135651; x=1763740451; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1763135654; x=1763740454; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oAQesQhs6e+PTptufLvrkGE1DQZP/NgJYpEOzUVqdGc=;
-        b=THsCCtZiX3+FDEH4XQzvciJAvuUzxE32i8KSV99QgThe8qSoWDCc+eWsjtvcLhBk4G
-         WaqNNOgO1s6X1YcAnG6+O+TvAkMqdepgl5S6xMTYSSpoxPhkdbznS9NNFi/vbXrBa49w
-         atjAEEdimtsnXfYGoNgmtbpqbIMXggrwnvtnA3RaHzfRIut4rsxWC0SZTwCQOIQesAJD
-         Qr4mzUkMiEZeWLSHlmCK4y9aOmyU36m4kxSFeNtiw4f7b7T0L5w4Cv4KmhY4fBN6zUyX
-         2s14afqfh5PEnxvkkVujXahrkcU/BH7bzhYWViuJLmuQBHX89g9m37Sq3NQw31cK7Wo4
-         YfTw==
+        bh=kKhHd1KgPWmocj3LIkR2PSOdJapJ90TJO0FtGZ1fNlc=;
+        b=ND6k+zgWUh7Cziv64CD2aCICJs03jhMg5BXTBvLB/g5NJrU9MlauEg4ppAvMaej0d3
+         if48qDXUorcxgfF+vHVPZKmWgzfvEpUB9E4Ahwfv/XSjqLPwvejs+yTPKxBaBMEDcu08
+         kDBkodzuABjii88oo6zqJfYbtxufs3ja45ZyeAYDr455SdMtVdcQg1R5QcKGUPcNhQZY
+         jw/Gem/4PO7ENCTXXWSMaVpmV9M9BuwfvLfcIzgfB33cnPdkoxrTSx47YhlvpZC7vCkM
+         g8xDs9wK2E+SbJdAgCqjogdlqciEd+KhqjqQHDZ6QMTOTeySIPercsij7bxOpLlRMgKT
+         UV3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763135651; x=1763740451;
+        d=1e100.net; s=20230601; t=1763135654; x=1763740454;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=oAQesQhs6e+PTptufLvrkGE1DQZP/NgJYpEOzUVqdGc=;
-        b=r3j2bjAVqgAyrR6A+/NZ1cZkRBUjFTeU9rw5LwaKS17Mw9Ou8UdQU9/miNgshntRuE
-         wLOty8XoH+WhwNEg6uWjta5Gou1rUtYEjGyIdkGzh1si6souj5qSsHo64JDO7fBzVYqm
-         j6Ey3MHuFw8wiTzFDGP1Ku2Oxpa5TnKrbgQZws3tco0ojapJf0/FURzXsoscxaZ0LEVB
-         LsP/D4TcPlfmmOUiy3O/g2p2rGbUJEirEphxtKgXmPrUzvx4GpGwuVbEN+nf4iGrId/E
-         /h+YC1v3JVVpwrF3JSvgvv4YzbqTbOknmux2XDCVP5opuqNFWXlw82LddHzwGR4QhAhy
-         ksuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmM8/wX9ibELHgzrTBP5Wo7auxjKEmFxIJX6XrAFAJFMiE9xR9lL9UgOVnevIoOoRhiYqP5A==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw7vK1JcvZhJXQ9P7C86wTeiXp28A6wZAdoqTPZBnZJxcU0i4KN
-	7plojDHYccdFusmgQRl7bu1D/yd8Ouv4zdHjaFBttsIoBiQNNa7ixNkDZAXzJCbHBIo=
-X-Gm-Gg: ASbGncuKGJ1LeKaagAXDFb/cwKX7mX20a1CCeZrqk7KSIoMeXnqYH1eE6Rh5xbaxPvW
-	RZLs4LcplvhFsLv9igs1ETeuaG2sRZREb6yZjtyzjrbakxWjoU7Q+miU9POun8V3LxG548/pOeu
-	DxBKd+IXdb+ANprF6xsMSA9ZNWSVf3KXFW6GHKrXxbUcuK27xiUNO5J356zf0xFXfBLjEHPPHtU
-	CIW8fPpZY2CJD+LBZDd0p6cMX47J2TX3+gByTLz+uzHXahZUMw+v3o4BmkSWWj1mP7Dic8cv2wx
-	gRy39AHKNKXRPNBif6hiSu1k9bBekam0RhLjb+L0Exk0Uml48utbN6GuggF9Jr3zhh1Gq5/A/Od
-	UrxgysOg9HI5rLoBQgoswAC3obO1uqOY1Cjc7ZSfaHI9wYN3xCzUPyRV4qHW1ziCkcz5ukRpWV0
-	ogWGOcq9C5PuZzpdKKWpTJw+TA+GLW4c6/s8jjcvz+Phn35LkahsE5gnKZ/XQy1xL9giFHDFCRS
-	a3nLt4=
-X-Google-Smtp-Source: AGHT+IGlvukkElqwWxXv7Gpk1y3f7JDTm4WbhlGwLIf1Tn2iiPc/ZeTFQ6+QGmg6hTPSZZWz9TZhAg==
-X-Received: by 2002:a53:d013:0:b0:63f:b952:dfef with SMTP id 956f58d0204a3-641e7280bb1mr3380829d50.0.1763135650981;
-        Fri, 14 Nov 2025 07:54:10 -0800 (PST)
+        bh=kKhHd1KgPWmocj3LIkR2PSOdJapJ90TJO0FtGZ1fNlc=;
+        b=DmNfBFFhz/dz6Z0fIofOTYZLzP5yiJ3dCCT5XzisonYsuPBRXd/srC85+Ypk6v8cYU
+         KDsa5IFOCIRcD42AJL+RC/jBoqWx8a4iMVybdR/d3N4c25MI/OE17xJceq7fGlbtLicK
+         2O806Hp5f7bib8mc+qRPTuzFdkqLj2j4MerPF44yoDTbP/Y5+Ax51Y6RGGUEK1Wz9oTl
+         HXIUdrQTXB7a5AwKaSpgcvsd5uGk81JvBAXeS0OKMOI/c05MYtBmwwpVhztUGnwFb2PJ
+         zfTgcY0bDvlzxLctT5nKb0ftg+qUKQf8JmH5ELuYqKVjblL0QuIaujefd9Ut9rJLwADH
+         vsOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwX+BYjBqlhKHg5pCoVlf1xiEWclcU+Fu9oZIUP6zj0tOTIogLdnIjXuIDFE16Tz80knBEkg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxsbzdtn/GXHbVnGGITssvxeo573q15mtQvGM2H3B5AAuKxqD7D
+	uSRK9yHKhC48hMC7FWgTxknqLrvnxt/l3LRE43N0L1u/LjCM1klJL4dqD90vTC8DhTA=
+X-Gm-Gg: ASbGncskZ7HPDS6tVt/rF5IlpyPPdF1DdNXcA+OzBWIyxYKp+uHxdJx3Bhlrt0hTKuv
+	oeIXeuLI9rPGKQbq0Lzeh+O96S36NO6xATPe+yC16XiK5X81ZNyY282vPcOvSaU6qQ/ycKJ4EwX
+	+5SrD5ag/YZC532JSloNayRkLJrRn/QJTfxgQGqPmOzNShdh17uPTUyZBHFDPQCkiznAcS9TuM6
+	VkyuY4cQyM1PgbDjb4p0DgP/zJAykqVR9nb7gw75n/6111sscKxcIquLqezV57SlQU9q0hMCL39
+	6/Cq9k6gyKBvqcr9CMyWoy+zPcaD6LTiiTMe6F/o2rbmNxn4MAnDwcU3zcfeZBJiL5jugvyIj/u
+	U9QAdIounGhHM7nPX16F119Q8V321miblOKL77xhQrFOm4b5XzbOXy2SVSCLVcZDXJfY1jqROsO
+	ghY66xI7ZrKbadZhdDp3R2srzn1xgIcHylEjaOO6MYCUR8VKkGdxQDQTrhtdbz2IKTg75g
+X-Google-Smtp-Source: AGHT+IGiDMpoF1/OziCNFf3dCo0jW3YOO3Yc+5BO/O7YGqjVq/L6uWOIGV+2HHGmACM7asKY55998g==
+X-Received: by 2002:a05:690e:1508:b0:636:d4ab:a507 with SMTP id 956f58d0204a3-641e74d6eaemr2931309d50.16.1763135654039;
+        Fri, 14 Nov 2025 07:54:14 -0800 (PST)
 Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.10
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 07:54:10 -0800 (PST)
+        Fri, 14 Nov 2025 07:54:13 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
@@ -101,17 +100,18 @@ To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [PATCH v1 08/13] kho: Remove abort functionality and support state refresh
-Date: Fri, 14 Nov 2025 10:53:53 -0500
-Message-ID: <20251114155358.2884014-9-pasha.tatashin@soleen.com>
+Subject: [PATCH v1 11/13] kho: Allow memory preservation state updates after finalization
+Date: Fri, 14 Nov 2025 10:53:56 -0500
+Message-ID: <20251114155358.2884014-12-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
 In-Reply-To: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
 References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_145846_152223_A66338D9 
-X-CRM114-Status: GOOD (  14.54  )
+X-CRM114-CacheID: sfid-20251114_145849_530667_3AB74B24 
+X-CRM114-Status: UNSURE (   9.84  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,94 +126,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Previously, KHO required a dedicated kho_abort() function to clean up
-state before kho_finalize() could be called again. This was necessary
-to handle complex unwind paths when using notifiers.
+Currently, kho_preserve_* and kho_unpreserve_* return -EBUSY if
+KHO is finalized. This enforces a rigid "freeze" on the KHO memory
+state.
 
-With the shift to direct memory preservation, the explicit abort step
-is no longer strictly necessary.
+With the introduction of re-entrant finalization, this restriction is
+no longer necessary. Users should be allowed to modify the preservation
+set (e.g., adding new pages or freeing old ones) even after an initial
+finalization.
 
-Remove kho_abort() and refactor kho_finalize() to handle re-entry.
-If kho_finalize() is called while KHO is already finalized, it will
-now automatically clean up the previous memory map and state before
-generating a new one. This allows the KHO state to be updated/refreshed
-simply by triggering finalize again.
+The intended workflow for updates is now:
+1. Modify state (preserve/unpreserve).
+2. Call kho_finalize() again to refresh the serialized metadata.
 
-Update debugfs to return -EINVAL if userspace attempts to write 0 to
-the finalize attribute, as explicit abort is no longer supported.
+Remove the kho_out.finalized checks to enable this dynamic behavior.
 
-Suggested-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/kexec_handover.c          | 21 ++++-----------------
- kernel/liveupdate/kexec_handover_debugfs.c  |  2 +-
- kernel/liveupdate/kexec_handover_internal.h |  1 -
- 3 files changed, 5 insertions(+), 19 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index f1c3dd1ef680..8ab77cb85ca9 100644
+index 27ef20565a5f..87e9b488237d 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -1145,21 +1145,6 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
- }
- EXPORT_SYMBOL_GPL(kho_restore_vmalloc);
+@@ -183,10 +183,6 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+ 	const unsigned long pfn_high = pfn >> order;
  
--int kho_abort(void)
--{
--	if (!kho_enable)
--		return -EOPNOTSUPP;
+ 	might_sleep();
 -
--	guard(mutex)(&kho_out.lock);
--	if (!kho_out.finalized)
--		return -ENOENT;
--
--	kho_update_memory_map(NULL);
--	kho_out.finalized = false;
--
--	return 0;
--}
--
- static int __kho_finalize(void)
- {
- 	void *root = kho_out.fdt;
-@@ -1210,8 +1195,10 @@ int kho_finalize(void)
- 		return -EOPNOTSUPP;
- 
- 	guard(mutex)(&kho_out.lock);
 -	if (kho_out.finalized)
--		return -EEXIST;
-+	if (kho_out.finalized) {
-+		kho_update_memory_map(NULL);
-+		kho_out.finalized = false;
-+	}
+-		return -EBUSY;
+-
+ 	physxa = xa_load(&track->orders, order);
+ 	if (!physxa) {
+ 		int err;
+@@ -815,9 +811,6 @@ int kho_unpreserve_folio(struct folio *folio)
+ 	const unsigned int order = folio_order(folio);
+ 	struct kho_mem_track *track = &kho_out.track;
  
- 	ret = __kho_finalize();
- 	if (ret)
-diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
-index ac739d25094d..2abbf62ba942 100644
---- a/kernel/liveupdate/kexec_handover_debugfs.c
-+++ b/kernel/liveupdate/kexec_handover_debugfs.c
-@@ -87,7 +87,7 @@ static int kho_out_finalize_set(void *data, u64 val)
- 	if (val)
- 		return kho_finalize();
- 	else
--		return kho_abort();
-+		return -EINVAL;
+-	if (kho_out.finalized)
+-		return -EBUSY;
+-
+ 	__kho_unpreserve_order(track, pfn, order);
+ 	return 0;
  }
+@@ -885,9 +878,6 @@ int kho_unpreserve_pages(struct page *page, unsigned int nr_pages)
+ 	const unsigned long start_pfn = page_to_pfn(page);
+ 	const unsigned long end_pfn = start_pfn + nr_pages;
  
- DEFINE_DEBUGFS_ATTRIBUTE(kho_out_finalize_fops, kho_out_finalize_get,
-diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
-index 52ed73659fe6..0202c85ad14f 100644
---- a/kernel/liveupdate/kexec_handover_internal.h
-+++ b/kernel/liveupdate/kexec_handover_internal.h
-@@ -24,7 +24,6 @@ extern unsigned int kho_scratch_cnt;
+-	if (kho_out.finalized)
+-		return -EBUSY;
+-
+ 	__kho_unpreserve(track, start_pfn, end_pfn);
  
- bool kho_finalized(void);
- int kho_finalize(void);
--int kho_abort(void);
+ 	return 0;
+@@ -1066,9 +1056,6 @@ EXPORT_SYMBOL_GPL(kho_preserve_vmalloc);
+  */
+ int kho_unpreserve_vmalloc(struct kho_vmalloc *preservation)
+ {
+-	if (kho_out.finalized)
+-		return -EBUSY;
+-
+ 	kho_vmalloc_free_chunks(preservation);
  
- #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
- int kho_debugfs_init(void);
+ 	return 0;
 -- 
 2.52.0.rc1.455.g30608eb744-goog
 
