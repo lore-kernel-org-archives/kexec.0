@@ -4,72 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 728DECE8D4E
-	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D376CE8D4A
+	for <kexec@archiver.kernel.org>; Fri, 14 Nov 2025 15:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nCJEgobzRYn/tItBVhI3XMcNL4Ytkb3Xbpl8L0K4v8I=; b=TpTgMxZUYY8TEw8w9hNDb0KYnf
-	kZK9bpClWycVx+1l/qOckz2ZVQaHUKinCnsaAttVWUuqLHZ06QjIUhuuMJSDUvqtimFlXLGUKqLt3
-	6BvbL1d6c9sxdPcNvS+lMWfJF4lJty96K6qUjoGw447/Za/k94BTAWNxEksSyqFR3z/NG7vCsKWcK
-	vIeQ/VkXm7F5edGRy5BSiT/IJV6EmZbbgCO7fPWNc3GLCNhVGAgqS8zZgkuyOWiI2LHvoSQGILs8R
-	6GABt23T5xTMwItybBVN6AzjqmArenK5dETgKdKqg66KJU3TJDpiIymzt76jCma6vy5O3sVcU3sij
-	Du0jTMyg==;
+	bh=mhKTIQNEYkcaFtj/KVfNXsYw1sfQy1wKIwy75vaOKnA=; b=oi78Ali/4S5cun1Y1yej4KOtKy
+	BmuokPUsyW3IiJEq7QWveGkDdyRvUPgoiUs4Dd8k/exSr/TDaFMrQJijvK915RRI30zL7Tv0ph6Im
+	CJhDcnB50JcAvWt3ObcGzuGXnw6hnJ6LMF6OgycK4/fc8kx/eFbNrc1aJu0LL3fZBiBUB5joEexH/
+	vhMO0hu+Eiuo+fDn062veHWZSPtkQB5CpU2OCEGGlwwu57t/oIscFXhjsKqJ3vgxrgYi1Opf9TfnB
+	zAwaTTPKft76v7KvaA2nx//qrcpyEJFKPVvvoCzARXCmHebnFQjJ8VpQW4RTgsxsIteHXSUW7HTNJ
+	4UfBGIHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7o-0000000Ccmf-3QDH;
-	Fri, 14 Nov 2025 15:54:12 +0000
-Received: from mail-yx1-xb12d.google.com ([2607:f8b0:4864:20::b12d])
+	id 1vJw7r-0000000CcpV-1gk9;
+	Fri, 14 Nov 2025 15:54:15 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJw7l-0000000Ccib-09ZN
+	id 1vJw7o-0000000CclH-1Rik
+	for kexec@bombadil.infradead.org;
+	Fri, 14 Nov 2025 15:54:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
+	Content-Type:Content-ID:Content-Description;
+	bh=mhKTIQNEYkcaFtj/KVfNXsYw1sfQy1wKIwy75vaOKnA=; b=lyYsEaeTaFNth0G07szyPW0WjR
+	6A2ugO/cZrEFMKnGDss/3Q7PaOStx+zQLpHG2bZggxGDPgAdrKtYev7eggdgMbwqpA/tu0YOA4ejv
+	lDuSy7gimXcvrwQKSKEoIDd0kZk5HHQACYHRPw5+cCBKZD1eIZf4uiaP3AhNRToTAf5IF02whpIk1
+	dcNjyGHDkBCWJsvIwsm9C1Li++azr5nlGjMkyVTWWkUoQWMZG6PW8XSz99mawQHqoSZ1jkwQljII/
+	ySSUQhNrwRACedGtDX11ue8Tu/rxBnAkfIjxCcXCxsZ0THbkiTztbNUOxm1IS9nU9fSU/Q2T81Fmn
+	25jvVOPw==;
+Received: from mail-yx1-xb12a.google.com ([2607:f8b0:4864:20::b12a])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vJvG6-00000002tAQ-18fs
 	for kexec@lists.infradead.org;
-	Fri, 14 Nov 2025 15:54:11 +0000
-Received: by mail-yx1-xb12d.google.com with SMTP id 956f58d0204a3-640d0895d7cso2705417d50.1
+	Fri, 14 Nov 2025 14:58:44 +0000
+Received: by mail-yx1-xb12a.google.com with SMTP id 956f58d0204a3-63e393c49f1so1782861d50.0
         for <kexec@lists.infradead.org>; Fri, 14 Nov 2025 07:54:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763135648; x=1763740448; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1763135647; x=1763740447; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nCJEgobzRYn/tItBVhI3XMcNL4Ytkb3Xbpl8L0K4v8I=;
-        b=WeJFkOEloPeRHCi7I6R/QHK7X5q4ByG/XbgTt08f159ng8506/XrlGmCIA/HOj3Hha
-         kyTpxT30x2NDJ7dpmF3j5xxx0Fpl6T4C2phjJEsNCs+8F2VsIJ3SGGQj3r5ClIa8xyIL
-         kwSK2iSoFT2QHhUWDkn48ItMIiEiCmKeH1mrz9JLPpB8C+qGU3XEYSo64LwRNwzfgSJA
-         EIzrFJECihabH/p8unB99X8jK7pF740hLXEpzVASkKKnja2kwdtx2EM10GHH9sr3i0mu
-         OjPaEOdm/e9h47YYRfx3/bg7/st0SkhpyWyfVkCTIsTqPK2iCPPw3D8S2PlMGJB7GvBL
-         QeSw==
+        bh=mhKTIQNEYkcaFtj/KVfNXsYw1sfQy1wKIwy75vaOKnA=;
+        b=Y3ft1gHbS7LAz33OjrxY8sQSDKNDNcv2CYHXDtk8zinzRPhN5FQIYY0XMF6s+5YekY
+         nfQ3Ehaob3iLC5Twik9PSwAdVK0lMupY0BukMoLiMqv5m4H7CKavKS7m82YnGoPvgq7Z
+         FdpEkB7EmcvWoNkTCCNXFNuL0nRvA52ZDzsfTOg31I4YjOL3CozVRUqQg1XGWYnwJwLo
+         ItRTojYvdWHXxcQfbXvORa3FTZYvVi9JJqBE139lF2IMKdL8NMYxUhuTcpjwCmDnQNZh
+         aUCc3dqrWGQ2IEWtM3ASbh2m2Ia4iC3EMKlVD5E5WqrbipBaXH2anLcip3c7Z/wO3Feb
+         cJyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763135648; x=1763740448;
+        d=1e100.net; s=20230601; t=1763135647; x=1763740447;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=nCJEgobzRYn/tItBVhI3XMcNL4Ytkb3Xbpl8L0K4v8I=;
-        b=VaJ+7OfuuCbJmXf+Gp88l6OndKqIL1k0gvnoGJsXNuGLH+2GZi9i5/X4QKT2AO/cmI
-         8KuhgPFQoWmmUZqe0AQGPXiVilXpn2eiec+KvRL2DvStikHtbSynurx3nqbES0fxvHaK
-         LTBiPepW4jKVFa7jT93BvLRZxA7U9T8tXfNx2UYqUw+OAIvPVt9zIEVSZM0QuNkYjZtN
-         ovZPt0DnVfJTbITPf7KSi52RAn+IDuyhCRXdlOoHVc9J/EgM4OZOdQwYDyOh4CIm146z
-         qtaMZVSBcUjZHnbElj5DAd5umJZIGkXeYv0/c78cJVRh85oMWt01V6W+U5GnjrK2CFxT
-         fClg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwTwAA4P81M4nRp/uZxErSxP+UonE0eKkhM7fg4Yw7mldzbReE9ozsQ1EeK6Sn0/FKD+i/Ow==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzBjrf9e/dAgh2+ZG1nlxa4QQOnBP8BRGo7ga5wk5joqNECzMLt
-	MTTDXuCUItslJr+l9iQjhDrNK9aLhbL/LphAGJlcxJvePhamgXGgCuKtS49Qz1G5pEc=
-X-Gm-Gg: ASbGncvDaYg5REaRRt0+XmSZV6x740AfDML+VKUWwB43DR1f0lWa2I07jbNvJwo8Fyx
-	1iu8Yc6GsScKyGqmC3TNEAQaqxBb+L47cxoIh9EmridGeh6jE+4OGsc3XOYt80Tpd1gsewEnXT8
-	nBE5ozy1aFFWFg1UAg+bYfa7aE6/X32UPWJ2D3JkofzGVzSTb7yAaQZTP/SbTfuuqs+Iz9f3+X6
-	yeOiK95isa7qWzkdeqv8R+k8e/5OSIvqr8pLZK/C5vvDg1grd1zTi3PqFQM7bdgqzGkU2Cp7nJ5
-	ZfyKrAmzEDA7Kf+xPwzI6IPwvoHGwlVi79W63OeCOn4ZknqLZLK3na7xCNwMs0zL06AGYF1F8kq
-	jJ73s8Yzyl9pqafdgLvgtd0eFOE9+fEsYo+qr3Q00RcJlSuBZPEnN7vfePweKV9AxqSEpUGy8FK
-	9QSV4W9Bwi19Gvl6+a4ts/xRIGC03SDUbD3WBnSm6jgDszmea16V6ownKEMOMpov8lSP9E
-X-Google-Smtp-Source: AGHT+IGqvP0vwg6guTwhcdsa6bT4+I6iFV9vusGDhb+GF/sTNONxEyRk8zCeLELCWn/eYnZOTmVaMg==
-X-Received: by 2002:a05:690e:1544:20b0:63e:3546:6fc5 with SMTP id 956f58d0204a3-6410d194f9fmr5217183d50.32.1763135647923;
-        Fri, 14 Nov 2025 07:54:07 -0800 (PST)
+        bh=mhKTIQNEYkcaFtj/KVfNXsYw1sfQy1wKIwy75vaOKnA=;
+        b=cuGqKDXFIn9AQaUZDOCSdvRYJ0I0cLTehj37M9GkQ+SW/8W4QE8hreHYBIAX6xt4S4
+         Bm3s9w+cZWA/GuDgaJF4oSBk03fociUKO2U6aEU3B00iteC4J3ka2GcrDH1RWTKFrCsz
+         w/MVzsOTSUWYTyoiWCfw3hROGmfd21+3YP7uSu3DwGhbedZZMToZO6rHhIGZJAxOygqB
+         MFrDsTDg707MxrQCfLQuUBNsKEgJS5xwyu/fLcbW1kx9vJl9Bh9t0m95/dykrf6IjZMO
+         dktiFqSS5WvCkjaWNx+r5tT5U/lTcCytHOdRQetLBLeTXpHQpI4smwF4G2dYQunXJJc+
+         MgvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvOZUo/Q+gM7sl3LCD/yL60na3TkLjiD572iQGSPtFn33KCVFMgzoWXoJIaXTK7NIQSjgpGw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxOtIEZ7vsS/gmLf4nd3Yi3KNE1TLNECRulvtPGFsU912Mdv+xq
+	xxaLk9CXjT/YVIvQuHAE5O2WAKJD8np6rTuUEQEknS+ESe3gTbYUdPuvCu2psN/kq9o=
+X-Gm-Gg: ASbGncuWORJRmlCNpxqqoYbVoguHlNoSIFg6o5C07WVarNetILxExFuCNWezCl6xuEH
+	S+1/lhDAzkISAYbBUzoyAiF4V4y0fRZWakShrXv1/p8pC7tVBCntGAH41j8ZabJmf0Tw66iO+FA
+	j/r5Gh0zO6nSAdb9vPKtBp91gGR/QvwMEFFxAISbZC7DqWIyrsxjuYiqb3D5bSaGcunwF6SIX9Q
+	saFsYf7Zi77n19ON4H1KfdKPfwwpTLp6rWrz5C63oZHlonTlgxtrfWJFQs9SITmQwaIg8NvKRbI
+	YLOTwMXR/euO+nqM3QvEBOBrv5Os5pvK6G2vyWWuC5HUC+BOsQBcMyoOaZvVxHqVNrgA7ltsRG8
+	zDYjkCoDbmuqs0IBHwqeyXDN4BOE3e0NDY1JHUbWnYFFNkyGgxS8mO5C5O1L01D4tq797Kz2beJ
+	IFM1qbZVWrOqQfctrhDoEutWRsB1yN4nVEhrf/wmxGgWM4HCH5PDmX4XHRkCgK63ERV2221AxX2
+	86YyZU=
+X-Google-Smtp-Source: AGHT+IEJQtu/Dz82I0FeERgoL2lysnBiw3v4C+//1rJhBKK/+KWOlrhz3FcpRzXmN9PhDx5QWGdAiA==
+X-Received: by 2002:a05:690e:259a:b0:63f:aa5b:bce1 with SMTP id 956f58d0204a3-641e760a530mr2430273d50.39.1763135646933;
+        Fri, 14 Nov 2025 07:54:06 -0800 (PST)
 Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.07
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822125317sm16468577b3.37.2025.11.14.07.54.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 07:54:07 -0800 (PST)
+        Fri, 14 Nov 2025 07:54:06 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
@@ -85,17 +101,17 @@ To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: [PATCH v1 05/13] kho: Always expose output FDT in debugfs
-Date: Fri, 14 Nov 2025 10:53:50 -0500
-Message-ID: <20251114155358.2884014-6-pasha.tatashin@soleen.com>
+Subject: [PATCH v1 04/13] kho: Verify deserialization status and fix FDT alignment access
+Date: Fri, 14 Nov 2025 10:53:49 -0500
+Message-ID: <20251114155358.2884014-5-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
 In-Reply-To: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
 References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251114_075409_078846_66F8B5C0 
-X-CRM114-Status: GOOD (  11.58  )
+X-CRM114-CacheID: sfid-20251114_145842_505995_7B4D3B2B 
+X-CRM114-Status: GOOD (  13.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,64 +126,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently, the output FDT is added to debugfs only when KHO is
-finalized and removed when aborted.
+During boot, kho_restore_folio() relies on the memory map having been
+successfully deserialized. If deserialization fails or no map is present,
+attempting to restore the FDT folio is unsafe.
 
-There is no need to hide the FDT based on the state. Always expose it
-starting from initialization. This aids the transition toward removing
-the explicit abort functionality and converting KHO to be fully
-stateless.
+Update kho_mem_deserialize() to return a boolean indicating success. Use
+this return value in kho_memory_init() to disable KHO if deserialization
+fails. Also, the incoming FDT folio is never used, there is no reason to
+restore it.
 
-Also, pre-zero the FDT tree so we do not expose random bits to the
-user and to the next kernel.
+Additionally, use memcpy() to retrieve the memory map pointer from the FDT.
+FDT properties are not guaranteed to be naturally aligned, and accessing
+a 64-bit value via a pointer that is only 32-bit aligned can cause faults.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/kexec_handover.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 32 ++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 83aca3b4af15..cd8641725343 100644
+index a4b33ca79246..83aca3b4af15 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -1147,8 +1147,6 @@ int kho_abort(void)
- 	__kho_abort();
- 	kho_out.finalized = false;
- 
--	kho_debugfs_fdt_remove(&kho_out.dbg, kho_out.fdt);
--
- 	return 0;
- }
- 
-@@ -1219,9 +1217,6 @@ int kho_finalize(void)
- 
- 	kho_out.finalized = true;
- 
--	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, "fdt",
--					 kho_out.fdt, true));
--
- 	return 0;
- }
- 
-@@ -1310,7 +1305,7 @@ static __init int kho_init(void)
- 	if (!kho_enable)
- 		return 0;
- 
--	fdt_page = alloc_page(GFP_KERNEL);
-+	fdt_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
- 	if (!fdt_page) {
- 		err = -ENOMEM;
- 		goto err_free_scratch;
-@@ -1344,6 +1339,9 @@ static __init int kho_init(void)
- 			init_cma_reserved_pageblock(pfn_to_page(pfn));
+@@ -450,20 +450,28 @@ static void __init deserialize_bitmap(unsigned int order,
  	}
+ }
  
-+	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, "fdt",
-+					 kho_out.fdt, true));
+-static void __init kho_mem_deserialize(const void *fdt)
++/* Return true if memory was deserizlied */
++static bool __init kho_mem_deserialize(const void *fdt)
+ {
+ 	struct khoser_mem_chunk *chunk;
+-	const phys_addr_t *mem;
++	const void *mem_ptr;
++	u64 mem;
+ 	int len;
+ 
+-	mem = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+-
+-	if (!mem || len != sizeof(*mem)) {
++	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
++	if (!mem_ptr || len != sizeof(u64)) {
+ 		pr_err("failed to get preserved memory bitmaps\n");
+-		return;
++		return false;
+ 	}
++	/* FDT guarantees 32-bit alignment, have to use memcpy */
++	memcpy(&mem, mem_ptr, len);
 +
- 	return 0;
++	chunk = mem ? phys_to_virt(mem) : NULL;
++
++	/* No preserved physical pages were passed, no deserialization */
++	if (!chunk)
++		return false;
  
- err_free_fdt:
+-	chunk = *mem ? phys_to_virt(*mem) : NULL;
+ 	while (chunk) {
+ 		unsigned int i;
+ 
+@@ -472,6 +480,8 @@ static void __init kho_mem_deserialize(const void *fdt)
+ 					   &chunk->bitmaps[i]);
+ 		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+ 	}
++
++	return true;
+ }
+ 
+ /*
+@@ -1377,16 +1387,12 @@ static void __init kho_release_scratch(void)
+ 
+ void __init kho_memory_init(void)
+ {
+-	struct folio *folio;
+-
+ 	if (kho_in.scratch_phys) {
+ 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+ 		kho_release_scratch();
+ 
+-		kho_mem_deserialize(kho_get_fdt());
+-		folio = kho_restore_folio(kho_in.fdt_phys);
+-		if (!folio)
+-			pr_warn("failed to restore folio for KHO fdt\n");
++		if (!kho_mem_deserialize(kho_get_fdt()))
++			kho_in.fdt_phys = 0;
+ 	} else {
+ 		kho_reserve_scratch();
+ 	}
 -- 
 2.52.0.rc1.455.g30608eb744-goog
 
