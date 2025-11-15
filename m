@@ -4,61 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2E64CEB2CA
-	for <kexec@archiver.kernel.org>; Sat, 15 Nov 2025 09:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BBF03CEB2C7
+	for <kexec@archiver.kernel.org>; Sat, 15 Nov 2025 09:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xHB08IvKUjp6VSgzon31v8zdn+VKIBB5Ms0B5usaIp0=; b=F5ROagOl/Rl/gx8Jt2whS5gGY7
-	EIShTdl0imHEdrGep5/JKaMyUQ6zVGoFgBMVyupP8rRH7nElQpwXgJBC8jGxq5F//ShdtcL+bp8no
-	lbWKvVcqFpPnRBnBtzFrHIWjaGnLhy38aOF9IO0/Z+7BwK0Ns1nhbzGBC+u+bsM69dkLbX89lVKIt
-	VNuwi/5VpuuUC6kvPqh+vwV3BFuxmpgN0/MAxvlg2WIH1BFABQrtGFZBOrfoXpqNt8DZ9N/uhecWD
-	uqzhW2SWxzITLOn7G58RgYKCYWADBv26m80QxxxJzTUw8F7gVh7LgyrmXKtWKvlTgD62qlxrLwhfI
-	0wxm01Uw==;
+	bh=hI9GPURT1FrsbraIOg+c5sfJwIq07JD/MQ/pZOvc0Io=; b=FBYt7YhlBFy5qIU8DxPb2VhniS
+	B63iwb6CNDw+7OBBuV3po4hMmoC+SJJsVVB7fMSAOefEZa3pkMbTwFRNwDcjXkKWixov4P3yfyfmH
+	nVETXUuyFgPo8n4ojfd3m5nuMlT6B5R4jOuUn3v67oNjoAwwUdoi7SVyhZJvoNa2bEhoTG406GPWe
+	gVjxZ1mLuIPPhRYwq/wtjpQhAd6SqfDOxndrA69B+P3IFPAk2OWAnSq18k9F+ykpNNMT/oAKnX2Re
+	gW1UiPByOxDA24kq/lfio/Vq+GQAG6y412kV2G476+u6hOqetJRfIrKqZ09FJwkI6jjYLcCsOpAri
+	RpMVnEkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKClX-0000000DesL-1Ng2;
-	Sat, 15 Nov 2025 09:40:19 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vKCnL-0000000DexT-3Kxr;
+	Sat, 15 Nov 2025 09:42:11 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKClW-0000000DesF-2UaX
+	id 1vKCnJ-0000000Dex3-2GC7
 	for kexec@lists.infradead.org;
-	Sat, 15 Nov 2025 09:40:18 +0000
+	Sat, 15 Nov 2025 09:42:10 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0605B60052;
-	Sat, 15 Nov 2025 09:40:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59544C19423;
-	Sat, 15 Nov 2025 09:40:13 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0724D43880;
+	Sat, 15 Nov 2025 09:42:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D638C113D0;
+	Sat, 15 Nov 2025 09:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763199617;
-	bh=Ftwq9aXcMX9LHqwm1OwdhNRh26BPiUZtjHSBKYdzc7A=;
+	s=k20201202; t=1763199727;
+	bh=5TLcwJDDFiBtj7lJVJ9lPhvDhUna9We8VbF9X0zLOfI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jnACPYRGa0Ckp5lRrrDfhH+1W1avXDf7QG3tmJb6TLgF0IHMUoQub3f+z+duHfIlw
-	 b3gL1NefLvwN1CxaW6GeiptTvPo9pITddyzIcyre1y2CFr4GcAJmOefxYcb/zUT3tg
-	 kVQGBlQPZveH0FwA0jWK4VvlubuTgK2pR247Qzd8X8RW0TQLJwWsqFY0G09jrAjqCA
-	 xxhfGO91qX5kNCEkcPzb/pZiqnWDaZmCBSktt7qH7Uv67WM4xSL0FUal1b5JBMO98w
-	 7S3RIA2pWrvzpC5HIR57S71tJf5pGjYLJ5MbgFnNzdru+jx7kYJxJu+mt8a7TlLnr+
-	 3W6qQcwJ5i53w==
-Date: Sat, 15 Nov 2025 11:40:09 +0200
+	b=JVE7FFfcnStH8/zqhoWCvqwopCxelotqfG4sYk/BiaxyZy1UEJbCr94sYXbNJHav4
+	 Y3x4oN5eUZmh/GhUDL2b28zkgS2SIu05fnQ6STStSprGS+E1o2ohQ4DaRgT9bZ1eg2
+	 oV2Fh+N/VH2TdbPJcobloEaC3F6G4cMn1Feev7xyebN+UmwsMLWWj/Up8lenQsdTFn
+	 twFkMiK5B9gfWBoXnKKn8hQcW0k4WwcoqJZV14JAxtpvPKCQKm9iMdmwObnqo5HSV0
+	 991oTRVul8vfpew05xw2F3A5UQbwRWcUrl4F4alp0931iG8fkbF5OnAuro2wJNSzIB
+	 Q9J0OECjcwi+g==
+Date: Sat, 15 Nov 2025 11:42:01 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, jasonmiu@google.com,
-	arnd@arndb.de, coxu@redhat.com, dave@vasilevsky.ca,
-	ebiggers@google.com, graf@amazon.com, kees@kernel.org,
+Cc: akpm@linux-foundation.org, graf@amazon.com, pratyush@kernel.org,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
 	linux-mm@kvack.org
-Subject: Re: [PATCH v2 10/13] kho: Update FDT dynamically for subtree
- addition/removal
-Message-ID: <aRhKeXM5iAswD7oe@kernel.org>
-References: <20251114190002.3311679-1-pasha.tatashin@soleen.com>
- <20251114190002.3311679-11-pasha.tatashin@soleen.com>
+Subject: Re: [PATCH] liveupdate: kho: Enable KHO by default
+Message-ID: <aRhK6dBs6ZwEz9Md@kernel.org>
+References: <20251110180715.602807-1-pasha.tatashin@soleen.com>
+ <aRbag7qR9OVNAQXN@kernel.org>
+ <CA+CK2bD+ZseJ_6GUMV7d=8xpUcWW6jzJBdJRy7kQmez_2sMYUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251114190002.3311679-11-pasha.tatashin@soleen.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bD+ZseJ_6GUMV7d=8xpUcWW6jzJBdJRy7kQmez_2sMYUQ@mail.gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251115_014209_598103_B4C42EF1 
+X-CRM114-Status: GOOD (  12.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,37 +75,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 01:59:59PM -0500, Pasha Tatashin wrote:
-> -	struct kho_sub_fdt *sub_fdt;
-> +	phys_addr_t phys = virt_to_phys(fdt);
-> +	void *root_fdt = kho_out.fdt;
-> +	int err = -ENOMEM;
-> +	int off, fdt_err;
->  
-> -	sub_fdt = kmalloc(sizeof(*sub_fdt), GFP_KERNEL);
-> -	if (!sub_fdt)
-> -		return -ENOMEM;
-> +	guard(mutex)(&kho_out.lock);
-> +
-> +	fdt_err = fdt_open_into(root_fdt, root_fdt, PAGE_SIZE);
-> +	if (fdt_err < 0)
-> +		return err;
->  
-> -	INIT_LIST_HEAD(&sub_fdt->l);
-> -	sub_fdt->name = name;
-> -	sub_fdt->fdt = fdt;
-> +	off = fdt_add_subnode(root_fdt, 0, name);
+On Fri, Nov 14, 2025 at 09:13:01AM -0500, Pasha Tatashin wrote:
+> On Fri, Nov 14, 2025 at 2:30 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Mon, Nov 10, 2025 at 01:07:15PM -0500, Pasha Tatashin wrote:
+> > > Upcoming LUO requires KHO for its operations, the requirement to place
+> > > both KHO=on and liveupdate=on becomes redundant. Set KHO to be enabled
+> > > by default.
+> >
+> > I though more about this and it seems too much of a change. kho=1 enables
+> > scratch areas and that significantly changes how free pages are distributed
+> > in the free lists.
+> >
+> > Let's go with a Kconfig option we discussed of-list:
+> > (this is on top of the current mmotm/mm-nonmm-unstable)
+> 
+> I will include this into the KHO simplification series
 
-Why not
-	fdt_err = fdt_add_subnode()
-
-as I asked in v1 review?
-
-> +	if (off < 0) {
-> +		if (off == -FDT_ERR_EXISTS)
-> +			err = -EEXIST;
-> +		goto out_pack;
-> +	}
+Please add Alex's Reviewed-by as well.
 
 -- 
 Sincerely yours,
