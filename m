@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79CA3CEB2C7
-	for <kexec@archiver.kernel.org>; Sat, 15 Nov 2025 09:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2E64CEB2CA
+	for <kexec@archiver.kernel.org>; Sat, 15 Nov 2025 09:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DKoisX4HLU9dgcXGPM7N3K58Netj8d9bvL1jAWnG9Ew=; b=S18ZYUpV+jXL3zlSa3+2xUbTKC
-	JW63VYZpg9yl8HCLKWdh67mS/j28qtdbCHNGUjvY8HevzprwF4X1UZcDHTegmYp9YTq7ZQ9GB2ZM8
-	UxleHHt6b69JwiRDMLwS3qOaJlx3rzKGLqbsaraP4xuCSvlVOOUfbWTV+S60B+XqaWVmWWjHa6KQE
-	Eqd3HqUjIlPLGpPYq0ZS5moMQYjbuyuNUbzVNLHNHQksdeW7B1QYwQ92+hWbK+JUJghHttT8xpdP1
-	oCOY2bl/UgmVbbPHMbhmZeJM3S4g5iMwGD0EXpOBFfhDID/UfCg05ZxbhvaULnLfKjSRqmXMfQOyu
-	N2GsyMaA==;
+	bh=xHB08IvKUjp6VSgzon31v8zdn+VKIBB5Ms0B5usaIp0=; b=F5ROagOl/Rl/gx8Jt2whS5gGY7
+	EIShTdl0imHEdrGep5/JKaMyUQ6zVGoFgBMVyupP8rRH7nElQpwXgJBC8jGxq5F//ShdtcL+bp8no
+	lbWKvVcqFpPnRBnBtzFrHIWjaGnLhy38aOF9IO0/Z+7BwK0Ns1nhbzGBC+u+bsM69dkLbX89lVKIt
+	VNuwi/5VpuuUC6kvPqh+vwV3BFuxmpgN0/MAxvlg2WIH1BFABQrtGFZBOrfoXpqNt8DZ9N/uhecWD
+	uqzhW2SWxzITLOn7G58RgYKCYWADBv26m80QxxxJzTUw8F7gVh7LgyrmXKtWKvlTgD62qlxrLwhfI
+	0wxm01Uw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKCht-0000000Ded0-3Nif;
-	Sat, 15 Nov 2025 09:36:33 +0000
+	id 1vKClX-0000000DesL-1Ng2;
+	Sat, 15 Nov 2025 09:40:19 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKChp-0000000DecF-0nPV
+	id 1vKClW-0000000DesF-2UaX
 	for kexec@lists.infradead.org;
-	Sat, 15 Nov 2025 09:36:29 +0000
+	Sat, 15 Nov 2025 09:40:18 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3D0FB6014C;
-	Sat, 15 Nov 2025 09:36:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 483C6C113D0;
-	Sat, 15 Nov 2025 09:36:23 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0605B60052;
+	Sat, 15 Nov 2025 09:40:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59544C19423;
+	Sat, 15 Nov 2025 09:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763199387;
-	bh=UQVFeJZr0401KX1N/k/ogaXP4dW5OIP3VmbTx9eJ0p4=;
+	s=k20201202; t=1763199617;
+	bh=Ftwq9aXcMX9LHqwm1OwdhNRh26BPiUZtjHSBKYdzc7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dGxzfoXlLnRHLFr5Iy+HgSyVz8Mf24TyR4OMdm2IHhWYyyw5lvhnGu1juDXcxNUkp
-	 QGhzi4JzLJsO3a+Z5xAT7xWd+MWzPyyx6vz4jvLNbTuQ1z76N3iBJpinvuFeHy843t
-	 oTWlLJWPDqqzXfL8c1qC8ZIeGVbv7lhEq4qH4op6A+dTztPFhuvt2s7/V6kahITEd2
-	 3GaNsGO0s/w16mxXH8zmm4SBsTxJDfykXeINuvSgDFhuZM7l2O1Y/qg5XIz4OhiHHE
-	 9G0bjLz0Z9QZFPaZt+OqQXbfhF9gn/h1IHT3Fuz1Jdv5I0MrIxaoqfRmHqymK78Xs+
-	 X5RVw3cugcXIA==
-Date: Sat, 15 Nov 2025 11:36:19 +0200
+	b=jnACPYRGa0Ckp5lRrrDfhH+1W1avXDf7QG3tmJb6TLgF0IHMUoQub3f+z+duHfIlw
+	 b3gL1NefLvwN1CxaW6GeiptTvPo9pITddyzIcyre1y2CFr4GcAJmOefxYcb/zUT3tg
+	 kVQGBlQPZveH0FwA0jWK4VvlubuTgK2pR247Qzd8X8RW0TQLJwWsqFY0G09jrAjqCA
+	 xxhfGO91qX5kNCEkcPzb/pZiqnWDaZmCBSktt7qH7Uv67WM4xSL0FUal1b5JBMO98w
+	 7S3RIA2pWrvzpC5HIR57S71tJf5pGjYLJ5MbgFnNzdru+jx7kYJxJu+mt8a7TlLnr+
+	 3W6qQcwJ5i53w==
+Date: Sat, 15 Nov 2025 11:40:09 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org,
-	bhe@redhat.com, jasonmiu@google.com, arnd@arndb.de, coxu@redhat.com,
-	dave@vasilevsky.ca, ebiggers@google.com, graf@amazon.com,
-	kees@kernel.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 04/13] kho: Verify deserialization status and fix FDT
- alignment access
-Message-ID: <aRhJk_Glv2pX2dRo@kernel.org>
-References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
- <20251114155358.2884014-5-pasha.tatashin@soleen.com>
- <mafs0tsyw7e0a.fsf@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, jasonmiu@google.com,
+	arnd@arndb.de, coxu@redhat.com, dave@vasilevsky.ca,
+	ebiggers@google.com, graf@amazon.com, kees@kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 10/13] kho: Update FDT dynamically for subtree
+ addition/removal
+Message-ID: <aRhKeXM5iAswD7oe@kernel.org>
+References: <20251114190002.3311679-1-pasha.tatashin@soleen.com>
+ <20251114190002.3311679-11-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mafs0tsyw7e0a.fsf@kernel.org>
+In-Reply-To: <20251114190002.3311679-11-pasha.tatashin@soleen.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,41 +73,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 05:52:37PM +0100, Pratyush Yadav wrote:
-> On Fri, Nov 14 2025, Pasha Tatashin wrote:
-> 
-> > @@ -1377,16 +1387,12 @@ static void __init kho_release_scratch(void)
-> >  
-> >  void __init kho_memory_init(void)
-> >  {
-> > -	struct folio *folio;
-> > -
-> >  	if (kho_in.scratch_phys) {
-> >  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
-> >  		kho_release_scratch();
-> >  
-> > -		kho_mem_deserialize(kho_get_fdt());
-> > -		folio = kho_restore_folio(kho_in.fdt_phys);
-> > -		if (!folio)
-> > -			pr_warn("failed to restore folio for KHO fdt\n");
-> > +		if (!kho_mem_deserialize(kho_get_fdt()))
-> > +			kho_in.fdt_phys = 0;
-> 
-> The folio restore does serve a purpose: it accounts for that folio in
-> the system's total memory. See the call to adjust_managed_page_count()
-> in kho_restore_page(). In practice, I don't think it makes much of a
-> difference, but I don't see why not.
+On Fri, Nov 14, 2025 at 01:59:59PM -0500, Pasha Tatashin wrote:
+> -	struct kho_sub_fdt *sub_fdt;
+> +	phys_addr_t phys = virt_to_phys(fdt);
+> +	void *root_fdt = kho_out.fdt;
+> +	int err = -ENOMEM;
+> +	int off, fdt_err;
+>  
+> -	sub_fdt = kmalloc(sizeof(*sub_fdt), GFP_KERNEL);
+> -	if (!sub_fdt)
+> -		return -ENOMEM;
+> +	guard(mutex)(&kho_out.lock);
+> +
+> +	fdt_err = fdt_open_into(root_fdt, root_fdt, PAGE_SIZE);
+> +	if (fdt_err < 0)
+> +		return err;
+>  
+> -	INIT_LIST_HEAD(&sub_fdt->l);
+> -	sub_fdt->name = name;
+> -	sub_fdt->fdt = fdt;
+> +	off = fdt_add_subnode(root_fdt, 0, name);
 
-This page is never freed, so adding it to zone managed pages or keeping it
-reserved does not change anything.
- 
-> >  	} else {
-> >  		kho_reserve_scratch();
-> >  	}
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+Why not
+	fdt_err = fdt_add_subnode()
+
+as I asked in v1 review?
+
+> +	if (off < 0) {
+> +		if (off == -FDT_ERR_EXISTS)
+> +			err = -EEXIST;
+> +		goto out_pack;
+> +	}
 
 -- 
 Sincerely yours,
