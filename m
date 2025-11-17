@@ -4,86 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6062CD4F3E
-	for <kexec@archiver.kernel.org>; Sun, 16 Nov 2025 14:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 089D8CEACEF
+	for <kexec@archiver.kernel.org>; Mon, 17 Nov 2025 03:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=E/Y2Up6627+KSz5a+6vTFY7dxyvWIBUQP6LhDWx3ZbY=; b=UR7qxtIcXHPcCKHQXRL257T5eC
-	xfbs+dsab8R3QjGjVzkpn9Uro5uMNk7kNUkZHnr5YaZpcAViiYEdMNmkXKxxxQXrVQqt9c85Jco7k
-	+L2o+g6C7xUtsiWYQ31AomHJ2tuZerS6hNjrpd5jT8JjjVppCV5jGWEoPWxmmkkwfSKD9uddILbTx
-	Vunc/toOgI/V4GhSv+2+tmqtCUvM3pfA6PrnW+Hta2DrlmAtsqh3EnnQeyfTywQ1mMTBtLTfu6SZa
-	rLFIVsskCUtpnT0vHySAogUjCII0l/fiFV29Xbs9lr8EMFT9R+eRI8ErloEgG6+yLkkWROGNMfm2N
-	nkD9NpBA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=TTIkmuHYIMKfZaYrHE3ln/Ch7TvaOt4dh1CyfzrBu+g=; b=xkRxZIq4E5WqOP4avFlZkxf+FW
+	/3r8elAP7o0Ws+kzogBXjOngmGm3GpFtQPoUrtovcA+fsWTF6+JsrzUVQx0myHBgOdt/I+CqjQURY
+	VNfQXivdn62MEAVgymruiOHaxQVnWsTbbXa1FeRUP3vZwsAelE/cYZC5Ttd0u5MSEpJn56kbzssv4
+	UXp+y4olPJaIFMff/uFVKn9EzqsP3At6aRnMVS286YvjF74JKHG6I3glf1lzECzxC6FEVZJYLMaVB
+	4MNMKA3IdsTrtLPvR0n5gTaSREotlg/B0DQGt0EfnEcfY8ICzDIsd7Py7Ct1hTtGCwK7p8YclmGzP
+	IcTshTww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKeCM-0000000El9h-2xHU;
-	Sun, 16 Nov 2025 14:57:50 +0000
-Received: from mail-ed1-x532.google.com ([2a00:1450:4864:20::532])
+	id 1vKqHm-0000000FOVk-3GIs;
+	Mon, 17 Nov 2025 03:52:14 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vKeCH-0000000El9K-0XI7
+	id 1vKqHj-0000000FOVE-0t6u
 	for kexec@lists.infradead.org;
-	Sun, 16 Nov 2025 14:57:46 +0000
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-63c489f1e6cso1377621a12.1
-        for <kexec@lists.infradead.org>; Sun, 16 Nov 2025 06:57:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1763305063; x=1763909863; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/Y2Up6627+KSz5a+6vTFY7dxyvWIBUQP6LhDWx3ZbY=;
-        b=daHP/XuqAmxWEo+4u8K+ywelifQo1EXFKARF/k8kx8GVJ/c029+xRV5G/PzTE71Qv1
-         d6l7XPtQRMGb3pLax7QbWA3jOQ5In72VHFxbz876fzfQAxnf381lC5Oq1TpemLPS19TB
-         PskZglc+m6kfqBZkfLehLbZzMJEP51iRCNSGggMeF5+enrnDtvQeIuEGKMsujDU4FW+P
-         T2P7uAet+Va3y57Tv5ceXSnelQ4vZTPIBe9FxM+ZeGcXe7zewr8VqvpPVOSKVhA/DM9A
-         VDrjwDt+9XJ5EY3WczzkXHGhwom3m8AfML4c08rM1YaJj1Yy7KcQ7ONuRa9QbFVwiqZE
-         cEAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763305063; x=1763909863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=E/Y2Up6627+KSz5a+6vTFY7dxyvWIBUQP6LhDWx3ZbY=;
-        b=k6JfXE9id0Bd2zgG1+7sUNsMHxLTHyR7Ym3qS3CNyVKzR6NFTBOrlq0EfuqyfRcMjt
-         bjS9uwc1RRddmBRjjJbhw3Bd9YU9yAC34O3Z6gJYQLyLlFD/fhVI6bqMSG9Tin03a2nl
-         dgBQCMxKZzqh7ikTWSJ51JPofjz86hzcmg4dHkPdx2GlFerlMLm8utFC1K0ZqwYEgJCR
-         8veKoN47dJQERr3ZU2irOJDfbQDBF3k5+m4d8DGCy1YldfND63YTJPTqaTs9ixh06zMK
-         ntKHX4ku5Pn45DW/GSK7lQDhCI22Al11TJqXOsLdkTV+4TU/ilyy8tEjaEeZP34DmWtx
-         hJaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwoJbf0fN1396m2L37SF1mYsNGxyz2C8wRFt7XC95w6nRcCnhsVMBPshCRCsowCbMQp2cHkw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzihC0KX2CUV8taxE4+zWZdGmsqw3DxZo25CIBx6xRuL1Gp1OK2
-	6hz67Wx1p1Uz1kqLx2LfcCMh7RKYoJQGnC6Ot+suIDqgFWlC0otgnknYNXMeiA0wHdht3P1yM55
-	1irr6+P5C6AoDmkN+m5Tqaaqki0Nqcdzc4oH6h0k0Cw==
-X-Gm-Gg: ASbGncugH2vxgQJPvOVzM+UGrf7J9IoKeGjsoivlftEDArMUCFYBbXezIUmxUeI6oBU
-	asOz5ficKLd50Xewfsn3TdouCs/zcKqP2tEYUmJAJXSRe0HFcYTlQulFM1smo58A3AHxvB6PyPh
-	IKN/xVg8jIoGPu7rPMAXmNsq5K+2G94UxGe5yu9WnTNwdRVFAOvVEJ7uCxP7W+wyYbkOm2MZmfx
-	C1a82s6pNHZ3mdr7Zf6cu1fOjvDVZK4meJ8N7jEEPs2OXrg4lg50rQKRtAR+7zptxZcpe+F4QHI
-	8zu62ENkJpM6xeIPOmmGh1gOHQs/
-X-Google-Smtp-Source: AGHT+IFzCTKe+4oomiSL3/XUvnLJJ+h9FkIHFHoxYiYbAnr5wXaa8WsvkSSDNZQRrZhaV59Tuhi0aL3GyuwkRYUtKTg=
-X-Received: by 2002:a05:6402:1656:b0:641:1cbe:a5bf with SMTP id
- 4fb4d7f45d1cf-64334cf0fd6mr8966314a12.9.1763305062361; Sun, 16 Nov 2025
- 06:57:42 -0800 (PST)
+	Mon, 17 Nov 2025 03:52:13 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AGKF41k004244;
+	Mon, 17 Nov 2025 03:52:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=TTIkmuHYIMKfZaYrHE3ln/Ch7TvaOt4dh1CyfzrBu
+	+g=; b=FetZSFBTwMkweKOm1Ww/1jr3lRa7/ffSJ4mDmTsfc9/RV/ojmkBgJm5lK
+	/85fXZPxKrDUFBxHl+fSsZ6avhV7OoSDMcVtdE1Unmvt3CF6n045r3s1k/um5kw0
+	zwGcEbVYUk1I4Q0PJSLNoHKR7QIM6WTxUBq/JaT44IJm7WwtBbWKWgCa3SWIKN1q
+	gpqKlWxplPdZs8uPSh6j4Mlze9tLPV3lQEFN5u2mtFJbXscKHsqdJOiqefj5rUM4
+	faquO6UORLPyN5JLa7Bm/vqwVSgkBUhFc7+TGipkPp3HWwu2941WDIFyr7Wr5Smp
+	NiR22sYzGzjcCC4KlMQ9SfYDwBMug==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwm7fc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Nov 2025 03:52:07 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AH3mLBB011571;
+	Mon, 17 Nov 2025 03:52:06 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwm7fb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Nov 2025 03:52:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AGMiBjk017319;
+	Mon, 17 Nov 2025 03:52:06 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j1bhy1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Nov 2025 03:52:06 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AH3q2d141615782
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Nov 2025 03:52:02 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29EE620043;
+	Mon, 17 Nov 2025 03:52:02 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2B2120040;
+	Mon, 17 Nov 2025 03:51:58 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.in.ibm.com (unknown [9.109.204.116])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Nov 2025 03:51:58 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Aditya Gupta <adityag@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
+        Jiri Bohac <jbohac@suse.cz>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Pingfan Liu <piliu@redhat.com>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
+        kexec@lists.infradead.org
+Subject: [PATCH v5] Documentation/ABI: add kexec and kdump sysfs interface
+Date: Mon, 17 Nov 2025 09:21:53 +0530
+Message-ID: <20251117035153.1199665-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.51.1
 MIME-Version: 1.0
-References: <20251114190002.3311679-4-pasha.tatashin@soleen.com> <20251116064918.35549-1-ioworker0@gmail.com>
-In-Reply-To: <20251116064918.35549-1-ioworker0@gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 16 Nov 2025 09:57:05 -0500
-X-Gm-Features: AWmQ_bknMK8U4gd8bjwM0cRGJKpRjLCOKKOLfwahMDCMf_AdWWN6xXq3RI7dyNo
-Message-ID: <CA+CK2bAK6V3iaUr_vRmXiU=7c2HFdBc7Cybj_H7ZDQez-WSSsw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/13] kho: Introduce high-level memory allocation API
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, bhe@redhat.com, coxu@redhat.com, 
-	dave@vasilevsky.ca, ebiggers@google.com, graf@amazon.com, jasonmiu@google.com, 
-	kees@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rppt@kernel.org, Lance Yang <lance.yang@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: h9tTWo7n7MYJUtvpOtn6WE5fDQF-PNVP
+X-Authority-Analysis: v=2.4 cv=YqwChoYX c=1 sm=1 tr=0 ts=691a9be7 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=Z4Rwk6OoAAAA:8
+ a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8
+ a=JfrnYn6hAAAA:8 a=2fxpJEG2JIKmu2fkhY0A:9 a=HkZW87K1Qel5hWWM3VKY:22
+ a=IC2XNlieTeVoXbcui8wp:22 a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: s6hoV0Mte31BCg7ouFL7T051-h-uWZIO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX5c4H7IgA+vnF
+ taw18GKGtsjtlyBVQrrajbuYGrEgMv9U4kd7vKpfKjzhZjhNlT2fj1OcygI6tId8RCl0No84MTR
+ k8jpj/g6Y8tdRxz7JTw0QGCxxMkK8KXR4tuae7IVLF5ViIrMs8WHT4lDdEkrDre68OmU+aErkWy
+ e2xtmR5S3dJkAVOSJGplL9AQerSEcDY3zkt1rlLvx+MzYsEvVhm6rLrMav3UOCuyvufoQ15yn9V
+ dkDXjJtijhP8MOaQNtXXLO86KEL1GO1Jkkg4DLtR4C9OkBR1eihMdvLcrB1K0Ki7tBZlUYBs9ly
+ DIguDMeM1j+0O1gkG66OAe67DqU13VeqoXKMmE9pFWdU0ujnzUH+gTqzS4DbAibPljRyc4WPXMb
+ 2MB870vAHIUTzFmixOKBaH4kSPhTcg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-17_02,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511150032
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251116_065745_220066_6B554803 
-X-CRM114-Status: GOOD (  22.80  )
+X-CRM114-CacheID: sfid-20251116_195211_375520_0AB57B24 
+X-CRM114-Status: GOOD (  21.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,197 +131,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Nov 16, 2025 at 1:49=E2=80=AFAM Lance Yang <ioworker0@gmail.com> wr=
-ote:
->
-> From: Lance Yang <lance.yang@linux.dev>
->
->
-> On Fri, 14 Nov 2025 13:59:52 -0500, Pasha Tatashin wrote:
-> > Currently, clients of KHO must manually allocate memory (e.g., via
-> > alloc_pages), calculate the page order, and explicitly call
-> > kho_preserve_folio(). Similarly, cleanup requires separate calls to
-> > unpreserve and free the memory.
-> >
-> > Introduce a high-level API to streamline this common pattern:
-> >
-> > - kho_alloc_preserve(size): Allocates physically contiguous, zeroed
-> >   memory and immediately marks it for preservation.
-> > - kho_unpreserve_free(ptr): Unpreserves and frees the memory
-> >   in the current kernel.
-> > - kho_restore_free(ptr): Restores the struct page state of
-> >   preserved memory in the new kernel and immediately frees it to the
-> >   page allocator.
-> >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  include/linux/kexec_handover.h     | 22 +++++---
-> >  kernel/liveupdate/kexec_handover.c | 87 ++++++++++++++++++++++++++++++
-> >  2 files changed, 102 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_hando=
-ver.h
-> > index 80ece4232617..38a9487a1a00 100644
-> > --- a/include/linux/kexec_handover.h
-> > +++ b/include/linux/kexec_handover.h
-> > @@ -2,8 +2,9 @@
-> >  #ifndef LINUX_KEXEC_HANDOVER_H
-> >  #define LINUX_KEXEC_HANDOVER_H
-> >
-> > -#include <linux/types.h>
-> > +#include <linux/err.h>
-> >  #include <linux/errno.h>
-> > +#include <linux/types.h>
-> >
-> >  struct kho_scratch {
-> >       phys_addr_t addr;
-> > @@ -48,6 +49,9 @@ int kho_preserve_pages(struct page *page, unsigned in=
-t nr_pages);
-> >  int kho_unpreserve_pages(struct page *page, unsigned int nr_pages);
-> >  int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation);
-> >  int kho_unpreserve_vmalloc(struct kho_vmalloc *preservation);
-> > +void *kho_alloc_preserve(size_t size);
-> > +void kho_unpreserve_free(void *mem);
-> > +void kho_restore_free(void *mem);
-> >  struct folio *kho_restore_folio(phys_addr_t phys);
-> >  struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages=
-);
-> >  void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
-> > @@ -101,6 +105,14 @@ static inline int kho_unpreserve_vmalloc(struct kh=
-o_vmalloc *preservation)
-> >       return -EOPNOTSUPP;
-> >  }
-> >
-> > +void *kho_alloc_preserve(size_t size)
-> > +{
-> > +     return ERR_PTR(-EOPNOTSUPP);
-> > +}
-> > +
-> > +void kho_unpreserve_free(void *mem) { }
-> > +void kho_restore_free(void *mem) { }
->
-> The compile is unhapply here when CONFIG_KEXEC_HANDOVER is not set ...
+Add an ABI document for following kexec and kdump sysfs interface:
+- /sys/kernel/kexec_loaded
+- /sys/kernel/kexec_crash_loaded
+- /sys/kernel/kexec_crash_size
+- /sys/kernel/crash_elfcorehdr_size
 
-Thank you, Andrew already applied a fix:
-https://lore.kernel.org/all/CA+CK2bBgXDhrHwTVgxrw7YTQ-0=3DLgW0t66CwPCgG=3DC=
-85ftz4zw@mail.gmail.com/T/#u
+Cc: Aditya Gupta <adityag@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Jiri Bohac <jbohac@suse.cz>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Cc: Pingfan Liu <piliu@redhat.com>
+Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kexec@lists.infradead.org
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
 
->
-> ```
-> ld: arch/x86/realmode/rm/video-mode.o: in function `kho_alloc_preserve':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:102: multiple definition of `kho_alloc_preserve'; arch/x86/real=
-mode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./in=
-clude/linux/kexec_handover.h:102: first defined here
-> ld: arch/x86/realmode/rm/video-mode.o: in function `kho_unpreserve_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:104: multiple definition of `kho_unpreserve_free'; arch/x86/rea=
-lmode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./i=
-nclude/linux/kexec_handover.h:104: first defined here
-> ld: arch/x86/realmode/rm/video-mode.o: in function `kho_restore_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:105: multiple definition of `kho_restore_free'; arch/x86/realmo=
-de/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./incl=
-ude/linux/kexec_handover.h:105: first defined here
-> ld: arch/x86/realmode/rm/regs.o: in function `kho_alloc_preserve':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/arch/x86/realmode/rm/=
-regs.c:102: multiple definition of `kho_alloc_preserve'; arch/x86/realmode/=
-rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./include=
-/linux/kexec_handover.h:102: first defined here
-> ld: arch/x86/realmode/rm/regs.o: in function `kho_unpreserve_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/arch/x86/realmode/rm/=
-regs.c:104: multiple definition of `kho_unpreserve_free'; arch/x86/realmode=
-/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./includ=
-e/linux/kexec_handover.h:104: first defined here
-> ld: arch/x86/realmode/rm/regs.o: in function `kho_restore_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/arch/x86/realmode/rm/=
-regs.c:105: multiple definition of `kho_restore_free'; arch/x86/realmode/rm=
-/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./include/l=
-inux/kexec_handover.h:105: first defined here
-> ld: arch/x86/realmode/rm/video-vga.o: in function `kho_alloc_preserve':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:102: multiple definition of `kho_alloc_preserve'; arch/x86/real=
-mode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./in=
-clude/linux/kexec_handover.h:102: first defined here
-> ld: arch/x86/realmode/rm/video-vga.o: in function `kho_unpreserve_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:104: multiple definition of `kho_unpreserve_free'; arch/x86/rea=
-lmode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./i=
-nclude/linux/kexec_handover.h:104: first defined here
-> ld: arch/x86/realmode/rm/video-vga.o: in function `kho_restore_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:105: multiple definition of `kho_restore_free'; arch/x86/realmo=
-de/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./incl=
-ude/linux/kexec_handover.h:105: first defined here
-> ld: arch/x86/realmode/rm/video-vesa.o: in function `kho_alloc_preserve':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:102: multiple definition of `kho_alloc_preserve'; arch/x86/real=
-mode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./in=
-clude/linux/kexec_handover.h:102: first defined here
-> ld: arch/x86/realmode/rm/video-vesa.o: in function `kho_unpreserve_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:104: multiple definition of `kho_unpreserve_free'; arch/x86/rea=
-lmode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./i=
-nclude/linux/kexec_handover.h:104: first defined here
-> ld: arch/x86/realmode/rm/video-vesa.o: in function `kho_restore_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:105: multiple definition of `kho_restore_free'; arch/x86/realmo=
-de/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./incl=
-ude/linux/kexec_handover.h:105: first defined here
-> ld: arch/x86/realmode/rm/video-bios.o: in function `kho_alloc_preserve':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:102: multiple definition of `kho_alloc_preserve'; arch/x86/real=
-mode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./in=
-clude/linux/kexec_handover.h:102: first defined here
-> ld: arch/x86/realmode/rm/video-bios.o: in function `kho_unpreserve_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:104: multiple definition of `kho_unpreserve_free'; arch/x86/rea=
-lmode/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./i=
-nclude/linux/kexec_handover.h:104: first defined here
-> ld: arch/x86/realmode/rm/video-bios.o: in function `kho_restore_free':
-> /home/runner/work/mm-test-robot/mm-test-robot/linux/./include/linux/kexec=
-_handover.h:105: multiple definition of `kho_restore_free'; arch/x86/realmo=
-de/rm/wakemain.o:/home/runner/work/mm-test-robot/mm-test-robot/linux/./incl=
-ude/linux/kexec_handover.h:105: first defined here
-> make[5]: *** [arch/x86/realmode/rm/Makefile:49: arch/x86/realmode/rm/real=
-mode.elf] Error 1
-> make[4]: *** [arch/x86/realmode/Makefile:22: arch/x86/realmode/rm/realmod=
-e.bin] Error 2
-> make[3]: *** [scripts/Makefile.build:556: arch/x86/realmode] Error 2
-> ```
->
-> Perhaps these stubs should be declared as static inline? That should make
-> the compiler happy and resolve the linking errors :)
->
-> ----8<----
-> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handove=
-r.h
-> index 6dd0dcdf0ec1..5f7b9de97e8d 100644
-> --- a/include/linux/kexec_handover.h
-> +++ b/include/linux/kexec_handover.h
-> @@ -96,13 +96,13 @@ static inline int kho_preserve_vmalloc(void *ptr,
->
->  static inline void kho_unpreserve_vmalloc(struct kho_vmalloc *preservati=
-on) { }
->
-> -void *kho_alloc_preserve(size_t size)
-> +static inline void *kho_alloc_preserve(size_t size)
->  {
->         return ERR_PTR(-EOPNOTSUPP);
->  }
->
-> -void kho_unpreserve_free(void *mem) { }
-> -void kho_restore_free(void *mem) { }
-> +static inline void kho_unpreserve_free(void *mem) { }
-> +static inline void kho_restore_free(void *mem) { }
->
->  static inline struct folio *kho_restore_folio(phys_addr_t phys)
->  {
-> ---
->
-> [...]
->
-> Cheers,
-> Lance
+Changelog:
+
+v4 -> v5:
+ https://lore.kernel.org/all/20251114152550.ac2dd5e23542f09c62defec7@linux-foundation.org/
+ - Splitted patch from above patch series.
+
+---
+ .../ABI/testing/sysfs-kernel-kexec-kdump      | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+
+diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+new file mode 100644
+index 000000000000..96b24565b68e
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+@@ -0,0 +1,43 @@
++What:		/sys/kernel/kexec_loaded
++Date:		Jun 2006
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates whether a new kernel image has been loaded
++		into memory using the kexec system call. It shows 1 if
++		a kexec image is present and ready to boot, or 0 if none
++		is loaded.
++User:		kexec tools, kdump service
++
++What:		/sys/kernel/kexec_crash_loaded
++Date:		Jun 2006
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates whether a crash (kdump) kernel is currently
++		loaded into memory. It shows 1 if a crash kernel has been
++		successfully loaded for panic handling, or 0 if no crash
++		kernel is present.
++User:		Kexec tools, Kdump service
++
++What:		/sys/kernel/kexec_crash_size
++Date:		Dec 2009
++Contact:	kexec@lists.infradead.org
++Description:	read/write
++		Shows the amount of memory reserved for loading the crash
++		(kdump) kernel. It reports the size, in bytes, of the
++		crash kernel area defined by the crashkernel= parameter.
++		This interface also allows reducing the crashkernel
++		reservation by writing a smaller value, and the reclaimed
++		space is added back to the system RAM.
++User:		Kdump service
++
++What:		/sys/kernel/crash_elfcorehdr_size
++Date:		Aug 2023
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates the preferred size of the memory buffer for the
++		ELF core header used by the crash (kdump) kernel. It defines
++		how much space is needed to hold metadata about the crashed
++		system, including CPU and memory information. This information
++		is used by the user space utility kexec to support updating the
++		in-kernel kdump image during hotplug operations.
++User:		Kexec tools
+-- 
+2.51.1
+
 
