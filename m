@@ -4,60 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E231CEE343
-	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 18:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1E87CEE343
+	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 18:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=KzLyoYUtaV7JmG91OXsljbaoJdcsWdUcTqfEyos/6Ws=; b=YjEx1umciHRxNso9DXv6mbp8H7
-	JBDrYdoSTAgXEVbuJxU2srIQM3mqLtSSOl07KIEYBfq4izI+ZdPwvSsevVWzS1KErckMl+BwiLueb
-	5volybzLyfkndDHTAueXs8GQGBJYjPs2sUjmTat23A/ZNhAEOjzOW80+VevaLg5Hlp1VUd9k+zpMT
-	CFvqLPfL56oa8mYnQ+7OX3juL5SzGNXxTKR4rDDGHCy+qP6/MT0NySWSZbdSRwu5N9UJdECepmHQr
-	h7HDD3Gck04rR6MdU8h9QABGEEKFVmctOSwFus6ODpQ8fvEw2qeqIofpvECN2jA1fSvicesgrGx9S
-	+8TEW6lg==;
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RyRTgkSKs87SB8s3jqLkcqh8DAVS3ymL4PEzUKP4wbY=; b=XCoILZanvGRlFY4/zsf+JKUFKG
+	OiXYz+OmlxkFq7BtagL9/igHhws53txJScI0fw90V8wBjdyaFYyMYo+cqXY6AL1gvDFvGutNv8vdl
+	y/WFWRvZ0iDRGZJjWDDPyVzinYO/O9lKqG6qukqq+Kq7wmA3nSq1jCs1CfvLC+y/X91ZnAMk24WEz
+	yL4fV7xKplV1+7kkj5ICZm3CZznDW7ULSa4n8oN9V9oYR1tZeDw8dL32rjcuwCYomJ+kDy+7aWlNf
+	drYIjRK3S8xS/BCMPZJEje/2EU7RDFGm//sRsW15hJEK45sLEPwZr1sHIh1LLytGvz+Tyy3DC04z4
+	kL6zJfnw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLQNN-00000000veG-26Js;
-	Tue, 18 Nov 2025 18:24:25 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vLQYg-00000000x8f-0E64;
+	Tue, 18 Nov 2025 18:36:06 +0000
+Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLQNM-00000000ve0-1IxF
+	id 1vLQYT-00000000x5x-3RNR
 	for kexec@lists.infradead.org;
-	Tue, 18 Nov 2025 18:24:24 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6A4A260129;
-	Tue, 18 Nov 2025 18:24:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01115C4CEF1;
-	Tue, 18 Nov 2025 18:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763490263;
-	bh=fyLPAFBoJghiBCAB3NIk/qOCqx6vFu5htUaGPEmW1JU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ud8H5qWjDYrgvHTvxseFOcZjgnjvjPGE1Fykjj2L3tZ23bYArNT/loOO2SCHFtK5P
-	 w8elLHh/xQkRtb7pm9R/ENzwvEJ/Q4jdibfgTTbSUuxcoYp5161ptrIgl9lVTpfiKe
-	 XAcBZjmcqoVSU4XlyyFhMLA5EQV3TzQRwtGMQFIa4w/oxdiBpJj3Ua7Tv8kx13dmTj
-	 RKJ7Cd1LN20q19SqqR44PqI7P7ME7BLMvghYPQQxjJDdeLA8Q2Fl72kd7/E6EbBChw
-	 B1pX3lxVWLtHFLwTLvQonK4zdPySJTLBVj4hTzXoKXOo4Lmb7uCB8hEvX5Xwq9VNKG
-	 4wnNBXcBob2fw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add test_kho to KHO's entry
-Date: Tue, 18 Nov 2025 19:24:15 +0100
-Message-ID: <20251118182416.70660-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.51.2
+	Tue, 18 Nov 2025 18:36:04 +0000
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-64320b9bb4bso233562a12.0
+        for <kexec@lists.infradead.org>; Tue, 18 Nov 2025 10:35:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1763490952; x=1764095752; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RyRTgkSKs87SB8s3jqLkcqh8DAVS3ymL4PEzUKP4wbY=;
+        b=IOKEpFaaadTdccnEeXtS4fYQoCh6PaNs64LYEoCuoV7TUNVbH4wQQPn73hM2D6jX3f
+         MExD31USjvYPdJkhGZggL7Nq+B23lUbImwi5aNd/OmlOfMDgXCHVlYo8GuAxRaRc0uM3
+         Ow+Drj7dBpxQ+EFdBhcP8wviL/XO7HELKyoXkz8Utijbi7GpxsJ1krmSwu+ifL4hoedU
+         eyorMk80LLVLJiCBepRuK+6T5QeHixCkn1KMfXFr09U+Otdf8yK2LO38rVvXV2lY78XJ
+         NiBddpJ+xcFUx0YN1v3m/BjdCQb6uwqOtUvethgY6RHE7Trq5mi+wFyOfQarCanZmFGw
+         Almw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763490952; x=1764095752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RyRTgkSKs87SB8s3jqLkcqh8DAVS3ymL4PEzUKP4wbY=;
+        b=IcDHOGLD8tYGc52Q9Supw1WSQx92y+Cgt2N37WLV4AfEX6tKLZjgwOM5rl5WOAE9cd
+         osOvA5aQZ6HTZoTg3Pj3ikiH5OLIJEAWdmtQGcXBI+KfYfLIZ5e1XlKy9VqcpVo0gaZw
+         1Zt87ZqS5z+ZtF+bH5JcFf8g7NIRE4s2a2Pc5Fag3VTeqyktYn1hBaBPuBrUkijqaiJv
+         AsM9uxasgRj17SvYbe+V3wDouoSoFP3Rf8uPJmcQjOwLTOWIKxCFubTKEODWYdeg1PGC
+         SZSq0tYLJ7V3XxYsBX73eSQ+De7mBD51kiOLTXJAzqIbhdWZ05xzMSQTn4nkPc8TtpD5
+         Jd3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWw1FAEL8jsikJITScUhbCKZjzF0BQUfgcWYKIq2Zus5lDGv4cOy1ChFMVIvjdHrRQ+pTCvdw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzCQUs2s9h0gmnHBZTABL1+vbG1en6d0yYCCWbi7UcFTLmlyjlK
+	vj1sYKsJ5dmcs9x0lEV6ewU0UHKyOmsV8mLisFgh2IrdpdlXP+cZ3NjO3dfG1W1Oc8pxDwQm5tY
+	LBHA/xgb66Sgi+GetRxmoqF6hVOxQLOm8TNErkeAtaQ==
+X-Gm-Gg: ASbGnct7wKzdZr430p4loIJi2MsTMiUduOuEtFqH481GzBfyY49dHmiAKynobntz0yx
+	LjIR6sNMImyRhjycx2gDflOgASjeKV+r7hwJ53F7940ZqjEGIRWs4kSKtEeiWq3pbr24KNAVGRh
+	aJZ39ZzlEgrl3c0ZrfSLFf7XIP+ugwhjEp8Ix3fcKdX06+yDTV754gBjS7VkscBGO7fSSLhS9vq
+	rjj6uQ/SOTmWS5UHiKwdXw7CLHvnvxruwTOvSip/jrtj8Nx0B3HJ72kFZbdbS0IMWv+
+X-Google-Smtp-Source: AGHT+IGY1b8vCf1fid4hLfUOxiAz8fmDTgBhQ1eRdZ4VYO7oROGSK3fr2sUwAVyfU+H5ZlCd9QfKeCG+BFuDsmYifK0=
+X-Received: by 2002:aa7:cc92:0:b0:643:eae:b1b6 with SMTP id
+ 4fb4d7f45d1cf-6451a78c2a8mr289851a12.12.1763490951883; Tue, 18 Nov 2025
+ 10:35:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251118182416.70660-1-pratyush@kernel.org>
+In-Reply-To: <20251118182416.70660-1-pratyush@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 18 Nov 2025 13:35:15 -0500
+X-Gm-Features: AWmQ_bn-9Az87x1D-uqAKwYqa32LAYYFMR57J5R9sIXwHik0qL2mN1dUbKo6LOY
+Message-ID: <CA+CK2bCFxMvSsafk1VVQe=uUfFQMeDNtBSkTUexbfvpCeWocAQ@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: add test_kho to KHO's entry
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, 
+	Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251118_103554_319763_53B41B58 
+X-CRM114-Status: UNSURE (   8.51  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,30 +97,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit b753522bed0b7 ("kho: add test for kexec handover") introduced the
-KHO test but missed adding it to KHO's MAINTAINERS entry. Add it so the
-KHO maintainers can get patches for its test.
+On Tue, Nov 18, 2025 at 1:24=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> Commit b753522bed0b7 ("kho: add test for kexec handover") introduced the
+> KHO test but missed adding it to KHO's MAINTAINERS entry. Add it so the
+> KHO maintainers can get patches for its test.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: b753522bed0b7 ("kho: add test for kexec handover")
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 
-Cc: stable@vger.kernel.org
-Fixes: b753522bed0b7 ("kho: add test for kexec handover")
-Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 05e336174ede5..b0873f8ebcda6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13799,6 +13799,7 @@ F:	Documentation/admin-guide/mm/kho.rst
- F:	Documentation/core-api/kho/*
- F:	include/linux/kexec_handover.h
- F:	kernel/liveupdate/kexec_handover*
-+F:	lib/test_kho.c
- F:	tools/testing/selftests/kho/
- 
- KEYS-ENCRYPTED
--- 
-2.47.3
-
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
