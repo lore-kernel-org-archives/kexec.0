@@ -4,121 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80AF0CED606
-	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 11:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B27D8CED63B
+	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 13:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=e0hLQINTaCmaRyN1vU9vMbUl969S3sc/832AKPQWkZg=; b=Rhf40XU/RWJ9AMFRjypKgZ9Ac/
-	Q5rdU/gcY87x37Ls1WSK9v6AlZ5s2HWrd/AfAJygjAaG7jmf/8Prc6ZVfSLSN0+GL5YP+IUIvtOxZ
-	R1aLJFCe3YVZfKyeKxFi05+vXJiyvSb7ZTFUlLHXgNVEb2AtgdADiPgvKCQBBB8pG5k6+11asjdM4
-	k1mg9OByiFq6FcUq4lh4vSgB+o9DvFK7FZggrdwXo2XiPxY2hrroQpYvCsgdreuN6kduCluXLRgJO
-	gd5jtqL1zL3VNWnlHVbc75t0nj47qz/lUoawXqEE6JebX9CNdtLUZlA2dZbCykVTaoHt3i3dabCk9
-	zOOT0XwQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=TprChO0f6bKa/OkInckoXb38IeGLCxVtCRhDnKcSsvg=; b=ZzvIYYXaAr+M0NycR4AbdUh3pr
+	JkXGPNzPeRlMDiOg9M9VVLcvP3H2F6a1nj7vVuaziJ9PBfv5t3kIxBBIkJs/tg4y9orkKY9PkC0TO
+	whZfz26OTqTxftONZK7eiWItsTYvY3AUtvyeEidlfrNFpQDLBEEb4E3QjUgUmKtJDdiAZZaz//Bxc
+	4MK9/EhCP/KokP29YttGNXJ+jusKM1pJoVq9TNeTpSisoo+U2XFSblfP7TQTI8KhjfmNn8DGkhTzf
+	OzqbNCm2lPNd1Lnd/iIilvi9tLXzKAMsfxQhLrW40oFkSBiXRvlgY0flfAbwDBBzkHwquUcX7upfn
+	9umgd9tw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLK9e-00000000LzM-3peN;
-	Tue, 18 Nov 2025 11:45:50 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vLLck-00000000Sp8-0NsV;
+	Tue, 18 Nov 2025 13:19:58 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLK9U-00000000Lwk-2bBc
+	id 1vLLci-00000000Soy-45dq
 	for kexec@lists.infradead.org;
-	Tue, 18 Nov 2025 11:45:41 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AI5Tvm5024576;
-	Tue, 18 Nov 2025 11:45:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=e0hLQINTaCmaRyN1v
-	U9vMbUl969S3sc/832AKPQWkZg=; b=cWFcLTq4OIECRrIBm1PjVJqX2XotdIpXz
-	09Dap/gxV5Z9IyjN5xpOkPFaWQo8EurR7Z1Q41prH9qwCa+0DlQxUDnjlgJX0HwS
-	eh4hLcyTz0XYUie+EzXfrgTJkUdUwPGoBylmOGuiowoKQ2JRcwbE6MXfTE2Z6RY8
-	aFFQGSzElDPrpu4Hzdyk0FvTsvqAdXC6d1p9VJzAYM5vbSCBAA0VKsIznkP98EpT
-	B6hX6HhYmrY2L1JLI4xrpOXzNxbEQncdvlvVvrmKc5AtnEnicVq10xQXJIv5gafN
-	Z8sXe/XoZnNQqWcvknpBEM2wvcSroa87e0MlJLPVP1SiQZK0zFL6w==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwt8dv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:38 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AIBhM4b021473;
-	Tue, 18 Nov 2025 11:45:38 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwt8du-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:38 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AIB2suf030795;
-	Tue, 18 Nov 2025 11:45:37 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af47xtyv3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:37 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AIBjXTY56033576
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Nov 2025 11:45:33 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B7D4420043;
-	Tue, 18 Nov 2025 11:45:33 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A62E20040;
-	Tue, 18 Nov 2025 11:45:29 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.39.25.190])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Nov 2025 11:45:29 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Aditya Gupta <adityag@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan he <bhe@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>,
-        Jiri Bohac <jbohac@suse.cz>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        kexec@lists.infradead.org
-Subject: [PATCH v6 3/3] Documentation/ABI: new kexec and kdump sysfs interface
-Date: Tue, 18 Nov 2025 17:15:07 +0530
-Message-ID: <20251118114507.1769455-4-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251118114507.1769455-1-sourabhjain@linux.ibm.com>
-References: <20251118114507.1769455-1-sourabhjain@linux.ibm.com>
+	Tue, 18 Nov 2025 13:19:57 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 115D260194;
+	Tue, 18 Nov 2025 13:19:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61BCC116B1;
+	Tue, 18 Nov 2025 13:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763471995;
+	bh=xEfBSU/j2FGHLktRs1aJpVOnTyEUSa7gj3GAPsupGvQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=hV0NNWczFRQTiTZisfgnxT6TTqxqtFrXjsbKyb/0jDkDe2CrpBvZ/G2YqiqGlBI73
+	 R4nzPN9VYeC/GXv7mcuEy/aD8p3BqFLyJP0Wp38xjy/VF2tuBQ196NHv3yELc6DNAA
+	 wxBNAGkleKSIxy4uCkWPWnfh63pe4dskhjxYuQQrRxt6dzcA/yAO6cAYO6bcae5Sx1
+	 4x3W6yvi8ew5rSru0nUcozzx1O6R5QI68W9WqQlPMyktTnruNnWGFFM/3afmir6ohQ
+	 tTvgMSpyOzhGJfSD452gMmMLUV94nA1bhEUDFYTdB8eSuCpk/d2tM7D2RyFxb4dtG1
+	 cz6tdOvb1RJQA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  akpm@linux-foundation.org,  bhe@redhat.com,
+  jasonmiu@google.com,  arnd@arndb.de,  coxu@redhat.com,
+  dave@vasilevsky.ca,  ebiggers@google.com,  graf@amazon.com,
+  kees@kernel.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v1 04/13] kho: Verify deserialization status and fix FDT
+ alignment access
+In-Reply-To: <aRhJk_Glv2pX2dRo@kernel.org> (Mike Rapoport's message of "Sat,
+	15 Nov 2025 11:36:19 +0200")
+References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
+	<20251114155358.2884014-5-pasha.tatashin@soleen.com>
+	<mafs0tsyw7e0a.fsf@kernel.org> <aRhJk_Glv2pX2dRo@kernel.org>
+Date: Tue, 18 Nov 2025 14:19:50 +0100
+Message-ID: <mafs0qztv4gw9.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lv60pG7ahr_au-Ez_XUU298QwUCq5vtj
-X-Authority-Analysis: v=2.4 cv=YqwChoYX c=1 sm=1 tr=0 ts=691c5c63 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
- a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8
- a=C7Xb30-FUlXqnvbFlGcA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: R8HbI9uE-bqJJcgPa4NIBDMjH6ONUAd8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX9nGszFNYV7pf
- xPrmGqFB6nwyf2Uz6d7WGjFbW6VwF3Svc+AesZwvMv43Rt/Ch6Zk5aUAzOzl/joDaz5SAhzqCUG
- oECxmyw+rB0Vk/IcxLvfmwvZkSzDnMLC54MS8dTvuhSS7knOKCqGgZPtyLuHo/ynu/AbD2s4Muq
- M7UKYss2GJTT0jh5pfPyHoD5TIxGsNbSZ7TGOlpem50d2N0wIIS9qwBZU7Bl3VeZH8IZGV5AYPx
- eyOeBfLPRNpM0OqesBm7htxMWOkLfFdoWAwGviJmrFN/UPzAfQqr1NxeV7PnR1en+Dp3akFdAHH
- 81ifUy+cdNsTaZJuvs2l6Au9D/0TfeaI/vi1pntX/IxR95RmvP3g/7aQRGwueWuX2xgGZahvbCJ
- CEgmLx5mgDjrRcNibn/2xFHpZeZV2w==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-17_04,2025-11-13_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511150032
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251118_034540_780455_B924F87D 
-X-CRM114-Status: GOOD (  22.44  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,102 +76,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add an ABI document for following kexec and kdump sysfs interface:
+On Sat, Nov 15 2025, Mike Rapoport wrote:
 
-- /sys/kernel/kexec/loaded
-- /sys/kernel/kexec/crash_loaded
-- /sys/kernel/kexec/crash_size
-- /sys/kernel/kexec/crash_elfcorehdr_size
-- /sys/kernel/kexec/crash_cma_ranges
+> On Fri, Nov 14, 2025 at 05:52:37PM +0100, Pratyush Yadav wrote:
+>> On Fri, Nov 14 2025, Pasha Tatashin wrote:
+>> 
+>> > @@ -1377,16 +1387,12 @@ static void __init kho_release_scratch(void)
+>> >  
+>> >  void __init kho_memory_init(void)
+>> >  {
+>> > -	struct folio *folio;
+>> > -
+>> >  	if (kho_in.scratch_phys) {
+>> >  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+>> >  		kho_release_scratch();
+>> >  
+>> > -		kho_mem_deserialize(kho_get_fdt());
+>> > -		folio = kho_restore_folio(kho_in.fdt_phys);
+>> > -		if (!folio)
+>> > -			pr_warn("failed to restore folio for KHO fdt\n");
+>> > +		if (!kho_mem_deserialize(kho_get_fdt()))
+>> > +			kho_in.fdt_phys = 0;
+>> 
+>> The folio restore does serve a purpose: it accounts for that folio in
+>> the system's total memory. See the call to adjust_managed_page_count()
+>> in kho_restore_page(). In practice, I don't think it makes much of a
+>> difference, but I don't see why not.
+>
+> This page is never freed, so adding it to zone managed pages or keeping it
+> reserved does not change anything.
 
-Cc: Aditya Gupta <adityag@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Jiri Bohac <jbohac@suse.cz>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- .../ABI/testing/sysfs-kernel-kexec-kdump      | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+In practice, sure. I still don't see a good reason to _not_ initialize
+the page properly. It's not like it costs us much in terms of
+performance or code complexity.
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-new file mode 100644
-index 000000000000..f59051b5d96d
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-@@ -0,0 +1,61 @@
-+What:		/sys/kernel/kexec/*
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:
-+		The /sys/kernel/kexec/* directory contains sysfs files
-+		that provide information about the configuration status
-+		of kexec and kdump.
-+
-+What:		/sys/kernel/kexec/loaded
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Indicates whether a new kernel image has been loaded
-+		into memory using the kexec system call. It shows 1 if
-+		a kexec image is present and ready to boot, or 0 if none
-+		is loaded.
-+User:		kexec tools, kdump service
-+
-+What:		/sys/kernel/kexec/crash_loaded
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Indicates whether a crash (kdump) kernel is currently
-+		loaded into memory. It shows 1 if a crash kernel has been
-+		successfully loaded for panic handling, or 0 if no crash
-+		kernel is present.
-+User:		Kexec tools, Kdump service
-+
-+What:		/sys/kernel/kexec/crash_size
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read/write
-+		Shows the amount of memory reserved for loading the crash
-+		(kdump) kernel. It reports the size, in bytes, of the
-+		crash kernel area defined by the crashkernel= parameter.
-+		This interface also allows reducing the crashkernel
-+		reservation by writing a smaller value, and the reclaimed
-+		space is added back to the system RAM.
-+User:		Kdump service
-+
-+What:		/sys/kernel/kexec/crash_elfcorehdr_size
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Indicates the preferred size of the memory buffer for the
-+		ELF core header used by the crash (kdump) kernel. It defines
-+		how much space is needed to hold metadata about the crashed
-+		system, including CPU and memory information. This information
-+		is used by the user space utility kexec to support updating the
-+		in-kernel kdump image during hotplug operations.
-+User:		Kexec tools
-+
-+What:		/sys/kernel/kexec/crash_cma_ranges
-+Date:		Nov 2025
-+Contact:	kexec@lists.infradead.org
-+Description:	read only
-+		Provides information about the memory ranges reserved from
-+		the Contiguous Memory Allocator (CMA) area that are allocated
-+		to the crash (kdump) kernel. It lists the start and end physical
-+		addresses of CMA regions assigned for crashkernel use.
-+User:		kdump service
+Since kho_restore_folio() makes sure the folio was _actually_ preserved
+from KHO, you have a safety check against previous kernel having a bug
+and not preserving the FDT properly. And I get that the FDT has already
+been used by this point, but at least you would have some known point to
+catch this.
+
+[...]
+
 -- 
-2.51.1
-
+Regards,
+Pratyush Yadav
 
