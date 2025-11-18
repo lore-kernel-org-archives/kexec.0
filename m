@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99656CED626
-	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 11:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80AF0CED606
+	for <kexec@archiver.kernel.org>; Tue, 18 Nov 2025 11:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/EdJcAjn0UUofVbNdZzgAJd5H9zW7YfwU3rw04h2rVc=; b=tVLfVNB+m1J7GeU84UC2WoxKi8
-	9koTiWxmFOp29j58FK3xniAuBzUillsGE7zmQBgvfLvnUn7oSQD96XwKCpTcnWeXKW+dZ8Xh5Jaw8
-	3gmqrdSfWwDfkA0VRpybUwEw/8/DgsXTf6PP2iNdTEiVyCT9dV1UL/1ZZZxEq03VEa1XMmJokEC3O
-	WihYsORouVQGR9Wrw+7bwqk6ClbpQ02zeknaPDpB3kCr4IOgafFHMpRNejv9qabDWjJBNYFk5xQBI
-	RuqEYrEZvD3OmUjWkjUGnEAeWgP93F85W+xMyN6CVl4zgORnpTmd4+Vim5g+cGu1dLJDk8MPnPhP3
-	qkJBw3eQ==;
+	bh=e0hLQINTaCmaRyN1vU9vMbUl969S3sc/832AKPQWkZg=; b=Rhf40XU/RWJ9AMFRjypKgZ9Ac/
+	Q5rdU/gcY87x37Ls1WSK9v6AlZ5s2HWrd/AfAJygjAaG7jmf/8Prc6ZVfSLSN0+GL5YP+IUIvtOxZ
+	R1aLJFCe3YVZfKyeKxFi05+vXJiyvSb7ZTFUlLHXgNVEb2AtgdADiPgvKCQBBB8pG5k6+11asjdM4
+	k1mg9OByiFq6FcUq4lh4vSgB+o9DvFK7FZggrdwXo2XiPxY2hrroQpYvCsgdreuN6kduCluXLRgJO
+	gd5jtqL1zL3VNWnlHVbc75t0nj47qz/lUoawXqEE6JebX9CNdtLUZlA2dZbCykVTaoHt3i3dabCk9
+	zOOT0XwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLK9S-00000000Lvm-3sfm;
-	Tue, 18 Nov 2025 11:45:38 +0000
+	id 1vLK9e-00000000LzM-3peN;
+	Tue, 18 Nov 2025 11:45:50 +0000
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLK9Q-00000000LuN-0PKb
+	id 1vLK9U-00000000Lwk-2bBc
 	for kexec@lists.infradead.org;
-	Tue, 18 Nov 2025 11:45:37 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AI1VFMe017282;
-	Tue, 18 Nov 2025 11:45:34 GMT
+	Tue, 18 Nov 2025 11:45:41 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AI5Tvm5024576;
+	Tue, 18 Nov 2025 11:45:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=/EdJcAjn0UUofVbNd
-	ZzgAJd5H9zW7YfwU3rw04h2rVc=; b=a50muEGpbDwjPqpkLDQfyK3As74KD5Rfi
-	F6dpDSr98F8MdSpJi8RDvDPA4fXvoqgRS+RdojIn9PlM3xXc/TU6io0yMs9UsdaP
-	pkbB8F/CjOUpr0rBsfPzrl35p4se2PHsdO8XWbd0VW+qBoYTLHdPcoVkZoq0S8Ns
-	ny//JJBhlRYowCOWUwhAREjCikHOh0ALepg5jt6YtX+vw6FEBxtOW4K57hUBkHmB
-	946uf6EP3ZrIuOJ85kZevYkBgCCmf9AfjuGM4HnocVBcb7W6EKKIFX3fDUcRve6a
-	1s5SLDofP8YLTb3ZnlI8LRDIwqKtH+ehq/Z7himRpehGq+nUPXzjA==
+	:mime-version:references:subject:to; s=pp1; bh=e0hLQINTaCmaRyN1v
+	U9vMbUl969S3sc/832AKPQWkZg=; b=cWFcLTq4OIECRrIBm1PjVJqX2XotdIpXz
+	09Dap/gxV5Z9IyjN5xpOkPFaWQo8EurR7Z1Q41prH9qwCa+0DlQxUDnjlgJX0HwS
+	eh4hLcyTz0XYUie+EzXfrgTJkUdUwPGoBylmOGuiowoKQ2JRcwbE6MXfTE2Z6RY8
+	aFFQGSzElDPrpu4Hzdyk0FvTsvqAdXC6d1p9VJzAYM5vbSCBAA0VKsIznkP98EpT
+	B6hX6HhYmrY2L1JLI4xrpOXzNxbEQncdvlvVvrmKc5AtnEnicVq10xQXJIv5gafN
+	Z8sXe/XoZnNQqWcvknpBEM2wvcSroa87e0MlJLPVP1SiQZK0zFL6w==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejjtt8rm-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwt8dv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:34 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AIBjXHY030696;
-	Tue, 18 Nov 2025 11:45:33 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejjtt8rj-1
+	Tue, 18 Nov 2025 11:45:38 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AIBhM4b021473;
+	Tue, 18 Nov 2025 11:45:38 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejgwt8du-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AI7anHH005122;
-	Tue, 18 Nov 2025 11:45:32 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af5bk2u8w-1
+	Tue, 18 Nov 2025 11:45:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AIB2suf030795;
+	Tue, 18 Nov 2025 11:45:37 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af47xtyv3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 11:45:32 +0000
+	Tue, 18 Nov 2025 11:45:37 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AIBjSQk43516254
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AIBjXTY56033576
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Nov 2025 11:45:28 GMT
+	Tue, 18 Nov 2025 11:45:33 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE46C20040;
-	Tue, 18 Nov 2025 11:45:28 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B7D4420043;
+	Tue, 18 Nov 2025 11:45:33 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E0A7020043;
-	Tue, 18 Nov 2025 11:45:24 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9A62E20040;
+	Tue, 18 Nov 2025 11:45:29 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.39.25.190])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Nov 2025 11:45:24 +0000 (GMT)
+	Tue, 18 Nov 2025 11:45:29 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linux-kernel@vger.kernel.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
@@ -83,42 +83,42 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
         Shivang Upadhyay <shivangu@linux.ibm.com>,
         Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org,
         kexec@lists.infradead.org
-Subject: [PATCH v6 2/3] Documentation/ABI: mark old kexec sysfs deprecated
-Date: Tue, 18 Nov 2025 17:15:06 +0530
-Message-ID: <20251118114507.1769455-3-sourabhjain@linux.ibm.com>
+Subject: [PATCH v6 3/3] Documentation/ABI: new kexec and kdump sysfs interface
+Date: Tue, 18 Nov 2025 17:15:07 +0530
+Message-ID: <20251118114507.1769455-4-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251118114507.1769455-1-sourabhjain@linux.ibm.com>
 References: <20251118114507.1769455-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: AInG0RbrMUiTmtSvvRUBunMN2aIslJ5y
-X-Proofpoint-ORIG-GUID: a3diN4XZq9a5Z-Y5xPFpJZUlJf7dQxl6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfXzIH2yYtAofx5
- LREEd5BQFFBgq6RQV0Vqd2oLY0bBFqwXSWoqouKSvyFw8PH5Wd4LAE9XWIg9KkPYm6/ZUDG1HyV
- 60c9EBePd2/OV/Y9OZ9ilbItIxxz2AcTH7ezp+wzM1BmCdz+d5dRo5kgO+rc4emK7W3xka/UKWB
- 9faE5pmlPWmj4np5LrwQxG+LjYch+IVce2XAj5hy3huFtQpUzMHdrTmcnFv+pzG4TWNCHr1tPNC
- /Q9MbkxW2ICnpAA+HrwB84p+Icv0xhdpnPnJEIN2xbfrxPI0TCgJmndonRYnPQiKHJ7ebrEAXo7
- 9Wv2apMNvg3xd6rqaPijjOi+NbwsvFuKe2gVZ6AP0gVZFSd93PVincApItvVfcF+0YKue0Tddv3
- aHl+16o3kJQFA1hOwltkzBRmLT6s3g==
-X-Authority-Analysis: v=2.4 cv=SvOdKfO0 c=1 sm=1 tr=0 ts=691c5c5e cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-GUID: lv60pG7ahr_au-Ez_XUU298QwUCq5vtj
+X-Authority-Analysis: v=2.4 cv=YqwChoYX c=1 sm=1 tr=0 ts=691c5c63 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8
  a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=voM4FWlXAAAA:8 a=JfrnYn6hAAAA:8
- a=LRU2jnFezOS3J6eLL00A:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
+ a=C7Xb30-FUlXqnvbFlGcA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=IC2XNlieTeVoXbcui8wp:22
  a=1CNFftbPRP8L7MoqJWF3:22 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: R8HbI9uE-bqJJcgPa4NIBDMjH6ONUAd8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX9nGszFNYV7pf
+ xPrmGqFB6nwyf2Uz6d7WGjFbW6VwF3Svc+AesZwvMv43Rt/Ch6Zk5aUAzOzl/joDaz5SAhzqCUG
+ oECxmyw+rB0Vk/IcxLvfmwvZkSzDnMLC54MS8dTvuhSS7knOKCqGgZPtyLuHo/ynu/AbD2s4Muq
+ M7UKYss2GJTT0jh5pfPyHoD5TIxGsNbSZ7TGOlpem50d2N0wIIS9qwBZU7Bl3VeZH8IZGV5AYPx
+ eyOeBfLPRNpM0OqesBm7htxMWOkLfFdoWAwGviJmrFN/UPzAfQqr1NxeV7PnR1en+Dp3akFdAHH
+ 81ifUy+cdNsTaZJuvs2l6Au9D/0TfeaI/vi1pntX/IxR95RmvP3g/7aQRGwueWuX2xgGZahvbCJ
+ CEgmLx5mgDjrRcNibn/2xFHpZeZV2w==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-17_04,2025-11-13_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
- suspectscore=0 phishscore=0 adultscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
  definitions=main-2511150032
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251118_034536_258758_353E2B80 
-X-CRM114-Status: GOOD (  13.85  )
+X-CRM114-CacheID: sfid-20251118_034540_780455_B924F87D 
+X-CRM114-Status: GOOD (  22.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,17 +133,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The previous commit ("kexec: move sysfs entries to /sys/kernel/kexec")
-moved all existing kexec sysfs entries to a new location. The ABI
-document is updated to include a note about the deprecation of the old
-kexec sysfs entries.
+Add an ABI document for following kexec and kdump sysfs interface:
 
-The following kexec sysfs entries are deprecated:
-- /sys/kernel/kexec_loaded
-- /sys/kernel/kexec_crash_loaded
-- /sys/kernel/kexec_crash_size
-- /sys/kernel/crash_elfcorehdr_size
-- /sys/kernel/kexec_crash_cma_ranges
+- /sys/kernel/kexec/loaded
+- /sys/kernel/kexec/crash_loaded
+- /sys/kernel/kexec/crash_size
+- /sys/kernel/kexec/crash_elfcorehdr_size
+- /sys/kernel/kexec/crash_cma_ranges
 
 Cc: Aditya Gupta <adityag@linux.ibm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -161,39 +157,77 @@ Cc: linuxppc-dev@lists.ozlabs.org
 Cc: kexec@lists.infradead.org
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- .../sysfs-kernel-kexec-kdump                   | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-kexec-kdump (63%)
+ .../ABI/testing/sysfs-kernel-kexec-kdump      | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-kexec-kdump
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
-similarity index 63%
-rename from Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-rename to Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
-index f6089e38de5f..ba26a6a1d2be 100644
---- a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
-+++ b/Documentation/ABI/obsolete/sysfs-kernel-kexec-kdump
-@@ -1,3 +1,21 @@
-+NOTE: all the ABIs listed in this file are deprecated and will be removed after 2028.
+diff --git a/Documentation/ABI/testing/sysfs-kernel-kexec-kdump b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+new file mode 100644
+index 000000000000..f59051b5d96d
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-kexec-kdump
+@@ -0,0 +1,61 @@
++What:		/sys/kernel/kexec/*
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:
++		The /sys/kernel/kexec/* directory contains sysfs files
++		that provide information about the configuration status
++		of kexec and kdump.
 +
-+Here are the alternative ABIs:
-++------------------------------------+-----------------------------------------+
-+| Deprecated                         | Alternative                             |
-++------------------------------------+-----------------------------------------+
-+| /sys/kernel/kexec_loaded           | /sys/kernel/kexec/loaded                |
-++------------------------------------+-----------------------------------------+
-+| /sys/kernel/kexec_crash_loaded     | /sys/kernel/kexec/crash_loaded          |
-++------------------------------------+-----------------------------------------+
-+| /sys/kernel/kexec_crash_size       | /sys/kernel/kexec/crash_size            |
-++------------------------------------+-----------------------------------------+
-+| /sys/kernel/crash_elfcorehdr_size  | /sys/kernel/kexec/crash_elfcorehdr_size |
-++------------------------------------+-----------------------------------------+
-+| /sys/kernel/kexec_crash_cma_ranges | /sys/kernel/kexec/crash_cma_ranges      |
-++------------------------------------+-----------------------------------------+
++What:		/sys/kernel/kexec/loaded
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates whether a new kernel image has been loaded
++		into memory using the kexec system call. It shows 1 if
++		a kexec image is present and ready to boot, or 0 if none
++		is loaded.
++User:		kexec tools, kdump service
 +
++What:		/sys/kernel/kexec/crash_loaded
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates whether a crash (kdump) kernel is currently
++		loaded into memory. It shows 1 if a crash kernel has been
++		successfully loaded for panic handling, or 0 if no crash
++		kernel is present.
++User:		Kexec tools, Kdump service
 +
- What:		/sys/kernel/kexec_loaded
- Date:		Jun 2006
- Contact:	kexec@lists.infradead.org
++What:		/sys/kernel/kexec/crash_size
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:	read/write
++		Shows the amount of memory reserved for loading the crash
++		(kdump) kernel. It reports the size, in bytes, of the
++		crash kernel area defined by the crashkernel= parameter.
++		This interface also allows reducing the crashkernel
++		reservation by writing a smaller value, and the reclaimed
++		space is added back to the system RAM.
++User:		Kdump service
++
++What:		/sys/kernel/kexec/crash_elfcorehdr_size
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Indicates the preferred size of the memory buffer for the
++		ELF core header used by the crash (kdump) kernel. It defines
++		how much space is needed to hold metadata about the crashed
++		system, including CPU and memory information. This information
++		is used by the user space utility kexec to support updating the
++		in-kernel kdump image during hotplug operations.
++User:		Kexec tools
++
++What:		/sys/kernel/kexec/crash_cma_ranges
++Date:		Nov 2025
++Contact:	kexec@lists.infradead.org
++Description:	read only
++		Provides information about the memory ranges reserved from
++		the Contiguous Memory Allocator (CMA) area that are allocated
++		to the crash (kdump) kernel. It lists the start and end physical
++		addresses of CMA regions assigned for crashkernel use.
++User:		kdump service
 -- 
 2.51.1
 
