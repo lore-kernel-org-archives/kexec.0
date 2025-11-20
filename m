@@ -4,69 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 488B8CF8861
-	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 14:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62697CF8875
+	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 16:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=C21VWiTFnCtjKUC3lRTNib5t5KU/n8R+0YWZGg6WN4c=; b=W6JV+BVKanvAmPgG97kr2wJc/r
-	XzzIvBL2ZAnxCE6NkJjj2ZLNL0HbZQaPgWOqnjim8HUyzVtk5e4NII29dxV+opjSXwCSPtap3PEXP
-	AOz6LT+RCbfjE8G+gbBi/705vc0L/ov7voBaVfJmteyV1ZbrZGNGpYJqXcU1ohUd8vXRNbuw0Qzd5
-	eADhXX71vV8sdeV7zcZx8E5e2n6tYoeub8WaaPACs3wCHTUG68ETLZUdUFHCpRtrbLnSvBkrWmaBZ
-	tbAwvvishQpywM/rIGiW9pZsadub+akk2mEVGwi0PEjKa7MP+AsEQY6mzH3H3gq2PG3K/o1c3YT/p
-	oRfmCtmg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5sjrMVguqYtKBqGhH4ECYdIUD8k3FOXNKADzIAX6Ncg=; b=RTr4sC7fgBwkvnFwoXCYbyXTA0
+	t/sWHPsq+y9eS2iOMZuJGEWAWeHSLYzsN6eDFN7E+Wgr2e2XOyxclRn4ZMX7JuxLqlVz+rTVHxm9n
+	YBt2wAlOyC+kKNqW4ZXkYJqXfOAgJqbIfdqyg1WQNDHvkadjdqMfnpCeySkibhlOsmt2J9wDl5m4i
+	kTrmPK6AV3vIp8Zxwv8c62Q4ppWKjbsxZiuZFba51AiuOdjhaTnNwFB6sei8pZn4zyXTiQghHzIez
+	2Pkl1EfEyEGLdD9dmRT8XMmxg3YTdcOqqNYW622noDsh6bzCn2qhSpNOFybf3mMnUp8RExjSP3N34
+	s2pLLgGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM5sE-00000006rf8-2nXN;
-	Thu, 20 Nov 2025 14:43:02 +0000
-Received: from m16.mail.163.com ([220.197.31.4])
+	id 1vM7Lj-00000006zRh-0BYK;
+	Thu, 20 Nov 2025 16:17:35 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM5s9-00000006rc0-3O8B
+	id 1vM7Lh-00000006zRV-2hHc
 	for kexec@lists.infradead.org;
-	Thu, 20 Nov 2025 14:43:01 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=C2
-	1VWiTFnCtjKUC3lRTNib5t5KU/n8R+0YWZGg6WN4c=; b=YFhlBDO+wGNN1bMmpY
-	2qb/OX6/Mho6hh50nJn0j4E+Yf5o2M/RCV8iDnbqUEQ4ys/Lc1AuUDKfwYQN792v
-	zBkZRsZD938tJhpCzPqFBrylDLRy1XFGCUfoAqHFb1ywCa93l1kzzgzonMTKKQfO
-	y/yg9YsUNLwblZTUiUr/Q2TUo=
-Received: from ubuntu24-z.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wA3yJmuKB9pTEQrBQ--.727S3;
-	Thu, 20 Nov 2025 22:41:53 +0800 (CST)
-From: ranxiaokai627@163.com
-To: catalin.marinas@arm.com,
-	akpm@linux-foundation.org,
-	graf@amazon.com,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	changyuanl@google.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kexec@lists.infradead.org,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com
-Subject: [PATCH 1/2] mm: kmemleak: introduce kmemleak_no_scan_phys() helper
-Date: Thu, 20 Nov 2025 14:41:46 +0000
-Message-ID: <20251120144147.90508-2-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251120144147.90508-1-ranxiaokai627@163.com>
+	Thu, 20 Nov 2025 16:17:33 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id E6A8B60146;
+	Thu, 20 Nov 2025 16:17:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED8D9C116D0;
+	Thu, 20 Nov 2025 16:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763655451;
+	bh=NxStlN0sykH1gh6u/oPgxyBdh3fqUB6K49dDrBU3dDY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aeotwaVP/quTK59YtQvEIkiP8/BGxEN9pfdawUrjnS7OkA05j2AJyR4Ra/g5VQSv5
+	 UehQfPQbBNvFe4Nk6zt/Ny7nUGJFLrYk4ZX6FD1zR6Zxhu19BmdG1h5WDGqRP/I7E/
+	 Kghk8ZEdsMQTqZUDbFhym+ftH4FtEVQvoikKhr5Or2WcufcL4kauCfQlf6O6onaBy5
+	 gYpZP/5gEiXN/o59nqfT22nZgjQpRiIWLiNnmmcj4ufXfZdlv7nQ/FeTSTj8eV26Sb
+	 a32axiyrfZPbjLgueRCrAjQWV+iKHqBW0YXxyqvt/8f684TLg3o9rWW7gbQKL9PgZ+
+	 To+wTcRhvXj5g==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: ranxiaokai627@163.com
+Cc: catalin.marinas@arm.com,  akpm@linux-foundation.org,  graf@amazon.com,
+  rppt@kernel.org,  pasha.tatashin@soleen.com,  pratyush@kernel.org,
+  changyuanl@google.com,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  kexec@lists.infradead.org,  ran.xiaokai@zte.com.cn
+Subject: Re: [PATCH 2/2] liveupdate: Fix boot failure due to kmemleak access
+ to unmapped pages
+In-Reply-To: <20251120144147.90508-3-ranxiaokai627@163.com> (ranxiaokai's
+	message of "Thu, 20 Nov 2025 14:41:47 +0000")
 References: <20251120144147.90508-1-ranxiaokai627@163.com>
+	<20251120144147.90508-3-ranxiaokai627@163.com>
+Date: Thu, 20 Nov 2025 17:17:28 +0100
+Message-ID: <mafs05xb43ch3.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wA3yJmuKB9pTEQrBQ--.727S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZry8XF4rKrW5Wry7tF43Wrg_yoW5Zr47pF
-	Z7Cry7GFW7Xa4Uua9Fva48Zw4DJws7GF1aya42kwnxZF90vFn7Aw4fCrZFyFy5Jr97Gr4Y
-	vrWxtFZ0kr48J3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piXyCPUUUUU=
-X-Originating-IP: [117.176.242.6]
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbBEAcMTGkfJUZRigAAsZ
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251120_064258_232580_40902D82 
-X-CRM114-Status: GOOD (  10.90  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,88 +73,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Thu, Nov 20 2025, ranxiaokai627@163.com wrote:
 
-Introduce kmemleak_no_scan_phys(phys_addr_t), a physical-address
-variant to kmemleak_no_scan(). This helper marks memory regions
-as non-scanable using physical addresses directly.
+> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>
+> When booting with debug_pagealloc=on while having:
+> CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y
+> CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=n
+> the system fails to boot due to page faults during kmemleak scanning.
+>
+> This occurs because:
+> With debug_pagealloc enabled, __free_pages() invokes
+> debug_pagealloc_unmap_pages(), clearing the _PAGE_PRESENT bit for
+> freed pages in the direct mapping.
+> Commit 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> releases the KHO scratch region via init_cma_reserved_pageblock(),
+> unmapping its physical pages. Subsequent kmemleak scanning accesses
+> these unmapped pages, triggering fatal page faults.
 
-It is specifically designed to prevent kmemleak from accessing pages
-that have been unmapped by debug_pagealloc after being freed to
-the buddy allocator. The kexec handover (KHO) subsystem will call
-this helper to exclude the kho_scratch reservation region from scanning,
-thereby avoiding fatal page faults during boot when debug_pagealloc=on.
+I don't know how kmemleak works. Why does kmemleak access the unmapped
+pages? If pages are not mapped, it should learn to not access them,
+right?
 
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- include/linux/kmemleak.h |  4 ++++
- mm/kmemleak.c            | 15 ++++++++++++---
- 2 files changed, 16 insertions(+), 3 deletions(-)
+>
+> Call kmemleak_no_scan_phys() from kho_reserve_scratch() to
+> exclude the reserved region from scanning before
+> it is released to the buddy allocator.
 
-diff --git a/include/linux/kmemleak.h b/include/linux/kmemleak.h
-index fbd424b2abb1..e955ad441b8a 100644
---- a/include/linux/kmemleak.h
-+++ b/include/linux/kmemleak.h
-@@ -31,6 +31,7 @@ extern void kmemleak_ignore(const void *ptr) __ref;
- extern void kmemleak_ignore_percpu(const void __percpu *ptr) __ref;
- extern void kmemleak_scan_area(const void *ptr, size_t size, gfp_t gfp) __ref;
- extern void kmemleak_no_scan(const void *ptr) __ref;
-+extern void kmemleak_no_scan_phys(phys_addr_t phys) __ref;
- extern void kmemleak_alloc_phys(phys_addr_t phys, size_t size,
- 				gfp_t gfp) __ref;
- extern void kmemleak_free_part_phys(phys_addr_t phys, size_t size) __ref;
-@@ -113,6 +114,9 @@ static inline void kmemleak_erase(void **ptr)
- static inline void kmemleak_no_scan(const void *ptr)
- {
- }
-+static inline void kmemleak_no_scan_phys(phys_addr_t phys)
-+{
-+}
- static inline void kmemleak_alloc_phys(phys_addr_t phys, size_t size,
- 				       gfp_t gfp)
- {
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 1ac56ceb29b6..b2b8374e19c3 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1058,12 +1058,12 @@ static void object_set_excess_ref(unsigned long ptr, unsigned long excess_ref)
-  * pointer. Such object will not be scanned by kmemleak but references to it
-  * are searched.
-  */
--static void object_no_scan(unsigned long ptr)
-+static void object_no_scan_flags(unsigned long ptr, unsigned long objflags)
- {
- 	unsigned long flags;
- 	struct kmemleak_object *object;
- 
--	object = find_and_get_object(ptr, 0);
-+	object = __find_and_get_object(ptr, 0, objflags);
- 	if (!object) {
- 		kmemleak_warn("Not scanning unknown object at 0x%08lx\n", ptr);
- 		return;
-@@ -1328,10 +1328,19 @@ void __ref kmemleak_no_scan(const void *ptr)
- 	pr_debug("%s(0x%px)\n", __func__, ptr);
- 
- 	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
--		object_no_scan((unsigned long)ptr);
-+		object_no_scan_flags((unsigned long)ptr, 0);
- }
- EXPORT_SYMBOL(kmemleak_no_scan);
- 
-+void __ref kmemleak_no_scan_phys(phys_addr_t phys)
-+{
-+	pr_debug("%s(%pap)\n", __func__, &phys);
-+
-+	if (kmemleak_enabled)
-+		object_no_scan_flags((unsigned long)phys, OBJECT_PHYS);
-+}
-+EXPORT_SYMBOL(kmemleak_no_scan_phys);
-+
- /**
-  * kmemleak_alloc_phys - similar to kmemleak_alloc but taking a physical
-  *			 address argument
+kho_reserve_scratch() is called on the first boot. It allocates the
+scratch areas for subsequent boots. On every KHO boot after this,
+kho_reserve_scratch() is not called and kho_release_scratch() is called
+instead since the scratch areas already exist from previous boot.
+
+Eventually both paths converge to kho_init() and call
+init_cma_reserved_pageblock().
+
+So shouldn't you call kmemleak_no_scan_phys() from kho_init() instead?
+This would reduce code duplication and cover both paths.
+
+>
+> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> ---
+>  kernel/liveupdate/kexec_handover.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 224bdf5becb6..dd4942d1d76c 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -11,6 +11,7 @@
+>  
+>  #include <linux/cleanup.h>
+>  #include <linux/cma.h>
+> +#include <linux/kmemleak.h>
+>  #include <linux/count_zeros.h>
+>  #include <linux/kexec.h>
+>  #include <linux/kexec_handover.h>
+> @@ -654,6 +655,7 @@ static void __init kho_reserve_scratch(void)
+>  	if (!addr)
+>  		goto err_free_scratch_desc;
+>  
+> +	kmemleak_no_scan_phys(addr);
+>  	kho_scratch[i].addr = addr;
+>  	kho_scratch[i].size = size;
+>  	i++;
+> @@ -664,6 +666,7 @@ static void __init kho_reserve_scratch(void)
+>  	if (!addr)
+>  		goto err_free_scratch_areas;
+>  
+> +	kmemleak_no_scan_phys(addr);
+>  	kho_scratch[i].addr = addr;
+>  	kho_scratch[i].size = size;
+>  	i++;
+> @@ -676,6 +679,7 @@ static void __init kho_reserve_scratch(void)
+>  		if (!addr)
+>  			goto err_free_scratch_areas;
+>  
+> +		kmemleak_no_scan_phys(addr);
+>  		kho_scratch[i].addr = addr;
+>  		kho_scratch[i].size = size;
+>  		i++;
+
 -- 
-2.25.1
-
-
+Regards,
+Pratyush Yadav
 
