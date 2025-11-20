@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D58A1CF8840
-	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 10:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB422CF8861
+	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 14:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t1L78JWdnbTPwOev7eMJ4Yi1EfrBBlfXmTcOPyqNKVg=; b=u4hl7IOhDUf8Z0FK2QjJONv2mT
-	So26DSz9DPtuJ0spCbdj08aWUcn0xkeIuE6Kax5quMiGFoq71+9j+8THQrg6L788/EYPjwNKZIDPe
-	xmUHK7hW+ovUfka6nqIQO7S3qli7emTtkHsIF8OZJhBXLkztH7HjITB5z0DgFmK4Sk+D2Gsi8kAK2
-	P7WykpFJxKZ4qnkuOFNVT4UaYS0SXpcHDEw0ZYOPWKSj+tE5gVcoEogfezd1oWNBULPr6AGAUHQBH
-	upsbUqOXE5rEgM4OFm1DXtWNWbfe69J7gJ7j0vM8s52G98vHRaaFoe1BZwlR6r8RzzFU0jOdmaqTu
-	dtUB9BOA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=VqtJVjFf2VTiEsbahcHSK1+SUTx0HAzBAG6cy3z+p1Y=; b=d/+znSZS4bvXINIxtmpxOuNKzG
+	h/VdkcJANcTlg0UYQ08uNwBfsme2REb77gD9wgAyMAi8uCVueBDD5DSdyHdbldoD+U7PE5dyjl7Ba
+	wpsClEhUwIOEOlKNa6bqF1NLRobHb33sGAY1eAhMCjOZiRyrFuVDIA65PwYL8IwbiAaa6LE7B44v8
+	QnU8mVRM/P8smlwb4X0b06P8IhCAxB5z8wRZncHEvgDl3iUz7IlPg5XIk2mIRzbt7jmyswOQ9AvOd
+	5bGk0q12EkRCT2DYVy3G53+5nm35v4HbC1dYd1qa6/BZNhIJ760wNEVEfdcfTaWzqq4QLlLnA5Kiw
+	6wupOHMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM24a-00000006WPc-2xf0;
-	Thu, 20 Nov 2025 10:39:32 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vM5rr-00000006rXb-2K85;
+	Thu, 20 Nov 2025 14:42:39 +0000
+Received: from m16.mail.163.com ([117.135.210.2])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM24Y-00000006WPF-28I2
+	id 1vM5ro-00000006rW7-2fhL
 	for kexec@lists.infradead.org;
-	Thu, 20 Nov 2025 10:39:31 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6754844303;
-	Thu, 20 Nov 2025 10:39:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52C5C4CEF1;
-	Thu, 20 Nov 2025 10:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763635169;
-	bh=znEBJZ6KVjGxzXOPPFRsG2pfUqSyfqKNp3vpnt4GJOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+NMVcBnQBzC7bjU9SGmlKCg9QD1FjOqHhljO7/dgmuvdk6VrTEKwWCW4phwfHHd8
-	 PB3TCRF0Zex+ImdB5soewloNhAA6U9XfQmF+FVBbt0wyqpGM3lMM6z48PXFeXL5gDu
-	 oJHDekD5xXDH236W2gsv2C379JPZuS3UyL9zMlS2KjQF5bPKguchJ3gVDC43qr1cLM
-	 zIoixbl2+j+a3DuJYs9R6KwP9+Vu2T/aHyyqC7tnGm+Bo/2VnFXgvtKzcowKux1Urs
-	 B9lLldl/SE9NXZ6sEEqCAuT+5Cm6KFGrg8iX0WFXCJV3QfpwtPoD0hHRKo0f7BTyO3
-	 A5dE/feCtJxBQ==
-Date: Thu, 20 Nov 2025 12:39:21 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org,
-	bhe@redhat.com, jasonmiu@google.com, arnd@arndb.de, coxu@redhat.com,
-	dave@vasilevsky.ca, ebiggers@google.com, graf@amazon.com,
-	kees@kernel.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 04/13] kho: Verify deserialization status and fix FDT
- alignment access
-Message-ID: <aR7v2VyYfs2HAUbW@kernel.org>
-References: <20251114155358.2884014-1-pasha.tatashin@soleen.com>
- <20251114155358.2884014-5-pasha.tatashin@soleen.com>
- <mafs0tsyw7e0a.fsf@kernel.org>
- <aRhJk_Glv2pX2dRo@kernel.org>
- <mafs0qztv4gw9.fsf@kernel.org>
- <CA+CK2bDfrx21=Aw3pwPn4=AKGVeh0O+sB5gp8rvh0fk8C_nsdw@mail.gmail.com>
- <mafs0a50j466b.fsf@kernel.org>
+	Thu, 20 Nov 2025 14:42:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Vq
+	tJVjFf2VTiEsbahcHSK1+SUTx0HAzBAG6cy3z+p1Y=; b=T6DiTPF0QphyeJ6ynn
+	rpY6XD2TiGV6q27qAf8VLfdX98bhKJJh+KtuE1Hrjnxm4LekyutigidujNaJZWUG
+	r84wyEXl/6O4Z5VDNM9CPz8nx5HVZn7NGs0xkQwThGDFvJjgCC4iACP8KbFJO8vA
+	U8CfGhL9bNzEy5/5EKKrUSi7E=
+Received: from ubuntu24-z.. (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wA3yJmuKB9pTEQrBQ--.727S4;
+	Thu, 20 Nov 2025 22:41:55 +0800 (CST)
+From: ranxiaokai627@163.com
+To: catalin.marinas@arm.com,
+	akpm@linux-foundation.org,
+	graf@amazon.com,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	changyuanl@google.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kexec@lists.infradead.org,
+	ran.xiaokai@zte.com.cn,
+	ranxiaokai627@163.com
+Subject: [PATCH 2/2] liveupdate: Fix boot failure due to kmemleak access to unmapped pages
+Date: Thu, 20 Nov 2025 14:41:47 +0000
+Message-ID: <20251120144147.90508-3-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251120144147.90508-1-ranxiaokai627@163.com>
+References: <20251120144147.90508-1-ranxiaokai627@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mafs0a50j466b.fsf@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wA3yJmuKB9pTEQrBQ--.727S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr48CF43Jw4DKryfuFWktFb_yoW8tr4xpF
+	yvkF1DCw4jy34jqFWxZa4v934Fga90kw17AFyj934avr9Fv3s3tws5ZryUtryUXrZ3KF4j
+	vFWDK3yruw4UZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEs2-UUUUUU=
+X-Originating-IP: [117.176.242.6]
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbBEBwMTGkfJUZRjQABsE
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251120_023930_568769_56EDB928 
-X-CRM114-Status: GOOD (  27.32  )
+X-CRM114-CacheID: sfid-20251120_064237_017663_52012767 
+X-CRM114-Status: UNSURE (   8.55  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,47 +82,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 18, 2025 at 06:11:24PM +0100, Pratyush Yadav wrote:
-> On Tue, Nov 18 2025, Pasha Tatashin wrote:
-> 
-> >> > This page is never freed, so adding it to zone managed pages or keeping it
-> >> > reserved does not change anything.
-> >>
-> >> In practice, sure. I still don't see a good reason to _not_ initialize
-> >> the page properly. It's not like it costs us much in terms of
-> >> performance or code complexity.
-> >>
-> >> Since kho_restore_folio() makes sure the folio was _actually_ preserved
-> >> from KHO, you have a safety check against previous kernel having a bug
-> >> and not preserving the FDT properly. And I get that the FDT has already
-> >> been used by this point, but at least you would have some known point to
-> >> catch this.
-> >
-> > The kho_alloc_preserve() API is different from kho_preserve_folio().
-> > With kho_preserve_folio(), memory is allocated and some time later is
-> > preserved, so there is a possibility for that memory to exist and be
-> > used where it is not preserved, therefore it is a crucial step for
-> > such memory to also do kho_restore_folio() before used. With
-> > kho_alloc_preserve(), when the memory exists it is always preserved;
-> > it is gurantee of this API. There is no reason to do
-> > kho_restore_folio() on such memory at all. It can be released back to
-> > the system via kho_free_restore()/kho_free_unpreserve().
-> 
-> Even for those I think there should be a kho_restore_mem() or something
-> similar (naming things is hard :/), so they go through the restore,
-> their struct page is properly initialized and accounted for, and
-> make sure the pages were actually preserved.
-> 
-> Using the memory without restoring it first should be the exception IMO.
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+
+When booting with debug_pagealloc=on while having:
+CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y
+CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=n
+the system fails to boot due to page faults during kmemleak scanning.
+
+This occurs because:
+With debug_pagealloc enabled, __free_pages() invokes
+debug_pagealloc_unmap_pages(), clearing the _PAGE_PRESENT bit for
+freed pages in the direct mapping.
+Commit 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+releases the KHO scratch region via init_cma_reserved_pageblock(),
+unmapping its physical pages. Subsequent kmemleak scanning accesses
+these unmapped pages, triggering fatal page faults.
+
+Call kmemleak_no_scan_phys() from kho_reserve_scratch() to
+exclude the reserved region from scanning before
+it is released to the buddy allocator.
+
+Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+---
+ kernel/liveupdate/kexec_handover.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 224bdf5becb6..dd4942d1d76c 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -11,6 +11,7 @@
  
-Base KHO and LUO FTDs are such exceptions for sure :)
-We have to use them way before we can even think about restoring.
-
-> -- 
-> Regards,
-> Pratyush Yadav
-
+ #include <linux/cleanup.h>
+ #include <linux/cma.h>
++#include <linux/kmemleak.h>
+ #include <linux/count_zeros.h>
+ #include <linux/kexec.h>
+ #include <linux/kexec_handover.h>
+@@ -654,6 +655,7 @@ static void __init kho_reserve_scratch(void)
+ 	if (!addr)
+ 		goto err_free_scratch_desc;
+ 
++	kmemleak_no_scan_phys(addr);
+ 	kho_scratch[i].addr = addr;
+ 	kho_scratch[i].size = size;
+ 	i++;
+@@ -664,6 +666,7 @@ static void __init kho_reserve_scratch(void)
+ 	if (!addr)
+ 		goto err_free_scratch_areas;
+ 
++	kmemleak_no_scan_phys(addr);
+ 	kho_scratch[i].addr = addr;
+ 	kho_scratch[i].size = size;
+ 	i++;
+@@ -676,6 +679,7 @@ static void __init kho_reserve_scratch(void)
+ 		if (!addr)
+ 			goto err_free_scratch_areas;
+ 
++		kmemleak_no_scan_phys(addr);
+ 		kho_scratch[i].addr = addr;
+ 		kho_scratch[i].size = size;
+ 		i++;
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
+
 
