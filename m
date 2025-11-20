@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84557CF8577
-	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 09:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2144ACF8575
+	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 09:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3p8qOthpWydgOBX1TRi7q4Y/4ZncxHSSHMGH189+eH8=; b=nC7HGOzT2uSR57oFbpcVILgs4L
-	mnBn94qR7fp8UC8VgRyJmxyLfMXp1jEc0GPhlRuTWl5W+6JqjiJvjaWWPXuJZFmNFROVOK+PwPcKB
-	6Xxi+ZcpUVH7I/VTs9D8sSg2Fd30x6QLaFgnDY0r87EfWS7/ta1jSe+NbBzKOA+aXl74BszVvC7un
-	Pi4nFMEyKMUoCSts2z34PgjUR+iJLjC9UBJLT4Atla9LIjjcpVCYvPzTOsKL5CaG4jP1nzV1U3Dbw
-	hgN+ZoRW+wHgvSIUMBkifOdbT8IlY4ozmHyvKMps5kx7UnvSrReu9t9Ihw0UPO5fXPGb0tUYDxp0m
-	Qot9yRIg==;
+	bh=LTfZeiaXGWQ6vbYaGKegjGaFNQc9BuDEVM1zPEh/xbo=; b=3vvLZ47zB/nGddKX6wnfkaLXmI
+	oKdOqYTTetXC3KtZgCG82OXdSqk5UmOm/wCqQKWGo+RudozWVMRcuwwQe4E8gIcCfJpxcqSE0aWYQ
+	c4ETJU2B1HOlRPjE7jtMvvtOfC52/2IcBe9f/2wYn9xjAlrYGYjaYqjHLXFofpp4sitUONugEtehI
+	Mw02fv0bu5lWpcDNztAYArRPIYeGA9tB9IpV1ACP7OxtXho5+Br9iSgQrdCkBEBEdzLZpWhWFfiRB
+	aPU27DbYrwxAfHk58h+LkhgzIvouSXROVotvL4pskTP0ugbGJc9LezY0xmRJwyzc/puRpkPaF4UEJ
+	GnTX8lYw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM0v9-00000006Pwt-1kMJ;
-	Thu, 20 Nov 2025 09:25:43 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vM0vy-00000006Q2D-35GI;
+	Thu, 20 Nov 2025 09:26:34 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM0v4-00000006PwN-3JFf
+	id 1vM0vv-00000006Q1o-2zcS
 	for kexec@lists.infradead.org;
-	Thu, 20 Nov 2025 09:25:42 +0000
+	Thu, 20 Nov 2025 09:26:32 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 319CF60149;
-	Thu, 20 Nov 2025 09:25:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 109C2C4CEF1;
-	Thu, 20 Nov 2025 09:25:35 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2539E43E19;
+	Thu, 20 Nov 2025 09:26:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F8EC19422;
+	Thu, 20 Nov 2025 09:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763630737;
-	bh=evjGnIEpXhARTPmoO/cs1I6ssBqa6z251Ea4MgH+LQ8=;
+	s=k20201202; t=1763630791;
+	bh=O8ppzezBVngh9p2neSkJwi7IKljaPCF/ARYNeHVOvFg=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FNK9vddXtCXrTVzMyiR2HxiHbuMADQ+WlZBq9mC2fCoJRg4vxHKB00hiwoIdlap7D
-	 ncqc3fjzIGcBOTVaFUQrnXwJG24cD9mYLD/RvqVcnaucDRl0dDIPHmv1Rs9C0IwqVw
-	 s7+c3N4FOk1KTTX99A9jjZwC3qHcvY5iLBrgEQPOsGxXrk1mtM0jfm/6JDLI5Qi6+z
-	 /TZt7Ev5zh9kGnqUhkWRjoBdf1vgO6jiUHQe+HwET90FCgxYwHcvztM1shPH/HhBc+
-	 V/XfajD1W9gE/o5+4CzWKlvEzdm98ZirchTgFzeZIbuFPJ86z0jfXVil2Tzx9gkcLq
-	 bzCkwzRc9QBYQ==
+	b=nyE0zf7+Zm3qEjzxMy+D6jswoaBimOO39W356YHTZBNMo8zH0aeaxEbym99oYc6gy
+	 wLqFIQc4dMFf7rbeeKyEhc5kdWQw6tC/hLcd70clP1tOj3ei8D7BJXc45z1RbBOV7s
+	 BgCYKBFbX4iMq8jb/TvSO6gJbQc+Gg36FiHawDAe9k3i26hPvZb3W+gEHATFDqjSNL
+	 LVgCVSqbUBOCrmwJdsk4jNUtHGgnlJZwZD0IyIm444iBFesnMNFlH6yCvSWC2f69jg
+	 jLoMOC2QlXaBHleNVdIQyjCt+4aWkfdZr+aT4MGJrDmD+3IYR2LJIjQj7JZ0xWybEt
+	 R7hLK7DWFIE/w==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
  <akpm@linux-foundation.org>,  Alexander Graf <graf@amazon.com>,  Mike
- Rapoport <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  stable@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add test_kho to KHO's entry
-In-Reply-To: <2025111944-bullpen-slinging-dcdc@gregkh> (Greg KH's message of
-	"Wed, 19 Nov 2025 17:02:49 +0100")
-References: <20251118182416.70660-1-pratyush@kernel.org>
-	<2025111944-tracing-unwieldy-1769@gregkh> <mafs0wm3m2f1h.fsf@kernel.org>
-	<2025111944-bullpen-slinging-dcdc@gregkh>
-Date: Thu, 20 Nov 2025 10:25:34 +0100
-Message-ID: <mafs0ms4h2gz5.fsf@kernel.org>
+ Rapoport <rppt@kernel.org>,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kho: free already restored pages when
+ kho_restore_vmalloc() fails
+In-Reply-To: <CA+CK2bAumctR3WyDW0b+NeeX22+OuCMkQ2VsGvnE1NxJwOVPEQ@mail.gmail.com>
+	(Pasha Tatashin's message of "Tue, 18 Nov 2025 13:43:32 -0500")
+References: <20251118181811.47336-1-pratyush@kernel.org>
+	<CA+CK2bAumctR3WyDW0b+NeeX22+OuCMkQ2VsGvnE1NxJwOVPEQ@mail.gmail.com>
+Date: Thu, 20 Nov 2025 10:26:28 +0100
+Message-ID: <mafs0ikf52gxn.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251120_012631_790306_933F14BD 
+X-CRM114-Status: GOOD (  12.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,36 +76,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Nov 19 2025, Greg KH wrote:
+On Tue, Nov 18 2025, Pasha Tatashin wrote:
 
-> On Wed, Nov 19, 2025 at 04:55:06PM +0100, Pratyush Yadav wrote:
->> On Wed, Nov 19 2025, Greg KH wrote:
->> 
->> > On Tue, Nov 18, 2025 at 07:24:15PM +0100, Pratyush Yadav wrote:
->> >> Commit b753522bed0b7 ("kho: add test for kexec handover") introduced the
->> >> KHO test but missed adding it to KHO's MAINTAINERS entry. Add it so the
->> >> KHO maintainers can get patches for its test.
->> >> 
->> >> Cc: stable@vger.kernel.org
->> >
->> > Why is this a patch for stable trees?
->> 
->> If someone finds a problem with this test in a stable kernel, they will
->> know who to contact.
+>> When kho_restore_vmalloc() fails, it frees up the pages array, but not
+>> the pages it contains. These are the pages that were successfully
+>> restored using kho_restore_pages(). If the failure happens when
+>> restoring the pages, the ones successfully restored are leaked. If the
+>> failure happens when allocating the vm_area or when mapping the pages,
+>> all the pages of the preserved vmalloc buffer are leaked.
 >
-> Contacting developers/maintainers should always be done on the latest
-> kernel release, not on older stable kernels as fixes need to ALWAYS be
-> done on Linus's tree first.
->
-> Please don't force us to attempt to keep MAINTAINERS changes in sync in
-> stable kernel trees, that way lies madness and even more patches that
-> you would be forcing me to handle :)
+> Hm, I am not sure if KHO should be responsible for freeing the
+> restored pages. We don't know the content of those pages, and what
+> they are used for. They could be used by a hypervisor or a device.
+> Therefore, it may be better to keep them leaked, and let the caller
+> decide what to do next: i.e., boot into a maintenance mode, crash the
+> kernel, or allow the leak until the next reboot.
 
-Okay, my bad. Feel free to ignore this patch then. And I will keep that
-in mind the next time around.
-
-Andrew, can you please drop the "Cc: stable@vger.kernel.org" when you
-apply?
+Hmm, fair point. This patch can be ignored then.
 
 -- 
 Regards,
