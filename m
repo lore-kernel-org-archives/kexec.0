@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FF25CF8575
-	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 09:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84557CF8577
+	for <kexec@archiver.kernel.org>; Thu, 20 Nov 2025 09:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qExihDuno7MaUro6s8FSJYa8KtjgfePenn0sjuTqV9s=; b=Vw3rZnQnzcoJogbLAAIEFCCCHq
-	pWyq2oXGhC0uXstMLhlX/FPcBhXhHoLkc/ZfmPpaofrj+tEey+OsDq8GcB0GcSne1rzBBqDi9Nbjj
-	ixM9075DG9H4UL2m+ZSo57BqJG0MpL9Po2m9s9owSDHNk1YSDrfkxOuDh2vk5rYULnxfdiKWAmR68
-	/ww9RA7q+didBkn3XyOlQxLrCZ1JQ/IRBygqgSJ0+QUvcLC8B3cwMocfTIFi2DpZ+G531RkskEgeY
-	7VXCVS8B1udN87ceo/SlOw8ETrBCwaeGX0tPWicZj+vzn+Hw4iTEADc+hSRt5lYKvEfRJWNn7uXLD
-	odipGqig==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3p8qOthpWydgOBX1TRi7q4Y/4ZncxHSSHMGH189+eH8=; b=nC7HGOzT2uSR57oFbpcVILgs4L
+	mnBn94qR7fp8UC8VgRyJmxyLfMXp1jEc0GPhlRuTWl5W+6JqjiJvjaWWPXuJZFmNFROVOK+PwPcKB
+	6Xxi+ZcpUVH7I/VTs9D8sSg2Fd30x6QLaFgnDY0r87EfWS7/ta1jSe+NbBzKOA+aXl74BszVvC7un
+	Pi4nFMEyKMUoCSts2z34PgjUR+iJLjC9UBJLT4Atla9LIjjcpVCYvPzTOsKL5CaG4jP1nzV1U3Dbw
+	hgN+ZoRW+wHgvSIUMBkifOdbT8IlY4ozmHyvKMps5kx7UnvSrReu9t9Ihw0UPO5fXPGb0tUYDxp0m
+	Qot9yRIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM0r8-00000006Pd0-4BCj;
-	Thu, 20 Nov 2025 09:21:34 +0000
+	id 1vM0v9-00000006Pwt-1kMJ;
+	Thu, 20 Nov 2025 09:25:43 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vM0r7-00000006Pco-46Cf
+	id 1vM0v4-00000006PwN-3JFf
 	for kexec@lists.infradead.org;
-	Thu, 20 Nov 2025 09:21:34 +0000
+	Thu, 20 Nov 2025 09:25:42 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 263446011E;
-	Thu, 20 Nov 2025 09:21:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69759C116B1;
-	Thu, 20 Nov 2025 09:21:31 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 319CF60149;
+	Thu, 20 Nov 2025 09:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 109C2C4CEF1;
+	Thu, 20 Nov 2025 09:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763630492;
-	bh=qExihDuno7MaUro6s8FSJYa8KtjgfePenn0sjuTqV9s=;
+	s=k20201202; t=1763630737;
+	bh=evjGnIEpXhARTPmoO/cs1I6ssBqa6z251Ea4MgH+LQ8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=eu0rkwm4OBhsJQEJ00dt0+Lu8W7F8Xg4qqtuoQiXLuc7+DVYohnk+hBynpVP84HCo
-	 6va4jxO0d2DFSzImL/zm7JxlR0CKNPehqnSq/KA27pgEZqlBnEgVkmRUzhkO6vKWsA
-	 4zGwzDAiMNtewJneTXI2NcaND2UFiWBZCWdiO793ZNhKru4FzNo30AEq45vj78cSCI
-	 U8Z/iDCQidE84ggxTX1yRdVvyUmgHxYRiPuWVeB6peTPUAfzzI1bTgxDkqXRV04Bj9
-	 O0FibFGbf2QjoPt4zKGcP4tl8MKahPARfvWzscDk+GGESNDrjDIhszZIjM+rhvh6Fm
-	 OO/SQekExeOAw==
+	b=FNK9vddXtCXrTVzMyiR2HxiHbuMADQ+WlZBq9mC2fCoJRg4vxHKB00hiwoIdlap7D
+	 ncqc3fjzIGcBOTVaFUQrnXwJG24cD9mYLD/RvqVcnaucDRl0dDIPHmv1Rs9C0IwqVw
+	 s7+c3N4FOk1KTTX99A9jjZwC3qHcvY5iLBrgEQPOsGxXrk1mtM0jfm/6JDLI5Qi6+z
+	 /TZt7Ev5zh9kGnqUhkWRjoBdf1vgO6jiUHQe+HwET90FCgxYwHcvztM1shPH/HhBc+
+	 V/XfajD1W9gE/o5+4CzWKlvEzdm98ZirchTgFzeZIbuFPJ86z0jfXVil2Tzx9gkcLq
+	 bzCkwzRc9QBYQ==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  Alexander Graf <graf@amazon.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  David Matlack <dmatlack@google.com>,  Mike
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Alexander Graf <graf@amazon.com>,  Mike
  Rapoport <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kho: free chunks using free_page() instead of kfree()
-In-Reply-To: <d41ce2d1-e353-4e5b-a17f-52d888a560b4@web.de> (Markus Elfring's
-	message of "Wed, 19 Nov 2025 21:06:49 +0100")
-References: <20251118182218.63044-1-pratyush@kernel.org>
-	<d41ce2d1-e353-4e5b-a17f-52d888a560b4@web.de>
-Date: Thu, 20 Nov 2025 10:21:30 +0100
-Message-ID: <mafs0qztt2h5x.fsf@kernel.org>
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  stable@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: add test_kho to KHO's entry
+In-Reply-To: <2025111944-bullpen-slinging-dcdc@gregkh> (Greg KH's message of
+	"Wed, 19 Nov 2025 17:02:49 +0100")
+References: <20251118182416.70660-1-pratyush@kernel.org>
+	<2025111944-tracing-unwieldy-1769@gregkh> <mafs0wm3m2f1h.fsf@kernel.org>
+	<2025111944-bullpen-slinging-dcdc@gregkh>
+Date: Thu, 20 Nov 2025 10:25:34 +0100
+Message-ID: <mafs0ms4h2gz5.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,30 +74,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Nov 19 2025, Markus Elfring wrote:
+On Wed, Nov 19 2025, Greg KH wrote:
 
-> =E2=80=A6
->> When the commit switched to using the buddy allocator directly, it
->> missed updating kho_mem_ser_free() to use free_page() instead of
->> kfree().
+> On Wed, Nov 19, 2025 at 04:55:06PM +0100, Pratyush Yadav wrote:
+>> On Wed, Nov 19 2025, Greg KH wrote:
+>> 
+>> > On Tue, Nov 18, 2025 at 07:24:15PM +0100, Pratyush Yadav wrote:
+>> >> Commit b753522bed0b7 ("kho: add test for kexec handover") introduced the
+>> >> KHO test but missed adding it to KHO's MAINTAINERS entry. Add it so the
+>> >> KHO maintainers can get patches for its test.
+>> >> 
+>> >> Cc: stable@vger.kernel.org
+>> >
+>> > Why is this a patch for stable trees?
+>> 
+>> If someone finds a problem with this test in a stable kernel, they will
+>> know who to contact.
 >
-> Would another imperative wording become helpful for an improved change de=
-scription?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?h=3Dv6.18-rc6#n94
+> Contacting developers/maintainers should always be done on the latest
+> kernel release, not on older stable kernels as fixes need to ALWAYS be
+> done on Linus's tree first.
+>
+> Please don't force us to attempt to keep MAINTAINERS changes in sync in
+> stable kernel trees, that way lies madness and even more patches that
+> you would be forcing me to handle :)
 
-"the commit" here refers to the commit fa759cd75bce5 ("kho: allocate
-metadata directly from the buddy allocator"), not "this commit"/"this
-patch". I figured that can be understood from the context and I won't
-need to spell the whole thing out again.
+Okay, my bad. Feel free to ignore this patch then. And I will keep that
+in mind the next time around.
 
-I don't understand the technicalities of the English grammar so well,
-but IIUC imperative mood is used in sentences that give a command. This
-paragraph talks about a past event.
+Andrew, can you please drop the "Cc: stable@vger.kernel.org" when you
+apply?
 
-Anyway, if you have something better, happy to take suggestions.
-
---=20
+-- 
 Regards,
 Pratyush Yadav
 
