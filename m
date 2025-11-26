@@ -4,110 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56680D10386
-	for <kexec@archiver.kernel.org>; Wed, 26 Nov 2025 07:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91C35D1038C
+	for <kexec@archiver.kernel.org>; Wed, 26 Nov 2025 08:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Iv7ZH0U5VwCrSx4pIQP2NujklUNE6c7fxiogNvnqOWg=; b=u8PUyYHUObdnQWWCaXpzu+yM3/
-	EvYxvj6bKFgYZeZyKck6PHxqEWSRjC+fD5b2QDQCuMpYNE3/JBfea6PKYL3Ws5/l2a1dZJ+j6Ez5K
-	Qn+PO+g5BHTDduS9MpMxgeKb/qn16r6NWDjMyuPNnzdckFOf11S8reswEXt3yfeu5Ek+MZBsc5lIR
-	Cd7JE5zP+jj8LP5Ww7g0C/xZEIUedfqgzrnm0tzOEXa++YTQInT6CcwDbdOc7cneqPpvNBBotjkHI
-	z35nOoTSbrkMWQI42kFdK45SsJ+zc8x/5xqGfMnI0pDL2fuITzXllrmYOll/8gTGodPO+7VpmjuS/
-	kNSUX74Q==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=7b1v+VfWdS9vnI3hgHts2MCpC3pXD6k/AqQcBNZpi3w=; b=YWQynB02O4dweu8WH3QSHVxQl6
+	e4ZxvntseTIM2bLETWtcXC8Ze5pmkklc5zzgUODfIFZc7LuTqI2AQe1A81U1YTeCAKTSo7mIHFvnr
+	gC/eFloBzU2jlw68jAmQosqm16XLkyRITg+4zCdzj3euBmP5iArYtkYRTjJJp7KOJSwoRB1wV7i4J
+	QW9LUp6urdfxA23UVBnmfmzb1SV/ytR1KjTBnV9WuX6vh3dtxKD/k+GmRViBm50A2EPc3JK/1+JC9
+	5Gw6vrsb1aPrb1BN8jGWHilXdfCH0GwfTdusQ8P9bHYxz1cUU3tNvj7fc3BGWKoC3qeHEWGiT7xa8
+	VamCcRCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vO9uY-0000000EVw7-3rAl;
-	Wed, 26 Nov 2025 07:25:58 +0000
-Received: from mail-ed1-x535.google.com ([2a00:1450:4864:20::535])
+	id 1vOB9h-0000000Edkh-2EpU;
+	Wed, 26 Nov 2025 08:45:41 +0000
+Received: from smtpbguseast1.qq.com ([54.204.34.129])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vO9uV-0000000EVuc-2lzx
+	id 1vOB9c-0000000Edbr-1ZzF
 	for kexec@lists.infradead.org;
-	Wed, 26 Nov 2025 07:25:57 +0000
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-640a3317b89so9323071a12.0
-        for <kexec@lists.infradead.org>; Tue, 25 Nov 2025 23:25:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764141953; x=1764746753; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iv7ZH0U5VwCrSx4pIQP2NujklUNE6c7fxiogNvnqOWg=;
-        b=PNvx8NqLCVbc2KAVNccNrjfDRZ7Is1qGganYgxIBxK7tPjCoft26K9sL+b9aCFGRuv
-         C82TiVeqdhXU7ZrvjJvsJhuEIk5xLKhGq/Lq8pNDAWLj3dXCRudAXPTdNZ3JrQNBYnff
-         Q1UjDgerYf4jAj1Xq2Uyy47hAq5vB7BjEAVsX2zdpNjBG/fCPdqdoWfMUYpvIPJyOhEh
-         xKwcyEJaXLEnIUiLrYAmRlQYEOcM3EVuBbmuUjMfo+ReUWbs348/BiHR0x+eN7wokzyB
-         fkVwhI0Ql3p8WMny4wC97KhxXjN+S6sIH0xvhUHDotJqKA/AtjluH7mqbBFtc1tBfj8G
-         1qsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764141953; x=1764746753;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Iv7ZH0U5VwCrSx4pIQP2NujklUNE6c7fxiogNvnqOWg=;
-        b=tnFH1bIslnyjE/zOm6FGo78vKy+zgr5Z/7v+Yh/VNoMIc0QZqO/2ejXJLcF05Ka7vp
-         PRqPF3P0ikUTPnsWAXyyJlLUNk6X7vJuxybrbu+eoiUmouHpO+vdWakFleZMMaYWguzG
-         LA40xDQc9x/yVyWzhpUZqKv6sxQpk7aR///GGIHCUMCe27JPBNLtfh1SR7Tlhq7IGr5c
-         oBkXQUD+fEer/e00ANbNxBJSMOPDj8zPufBLVq5zzBJuz7+MAjeg+yRO2oCe7wEb8D0J
-         5NQcCzCcvqoLFgbp6ZFmWD1dz2OcQbonn+k0zdOO6xfzAahY7XPZhd169qsb1E+LTQH8
-         5j8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Fzl8dy1TQeQl/XPPK3xS2L1FRe1pdlZ6kIYvIHF4j9owb4H6aBQXmHlSmgKrppnLZU1wSg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxUrbgNSbLuFTKoI1ho6byyOG26SIsm4wfjbbWDHlrwW8vVcs0N
-	z8QFyvXFM17QbkI/UekYLkAKkWkrFnckzyW95G/GnoQJRh52yq3GLfze
-X-Gm-Gg: ASbGnctlXLeanVs6has35qg9dPa+RAv73Z9UU4nFCiybaZ0JKZ2SQ6yH62/YvfgtHu1
-	tdqAudwrtun2SQskbstdHxy6UmNuZ1PqcsUBwTNEOV+qRXMaTcpzrpe8hNolxQ89WyPDCxwNSjC
-	Y2PCp+voqx/lPpUpcWEtZz780EUkWZ3OXNCdcjvKXyYwR14KWS6Hrm8GW+z1pGx95tHkLHz2MIa
-	qlDUUYrDO0CybNYNF23aK7/ZfLkUTbkkJ+z9wqXCT46YRLvysqrDlunnxHkSyEO9nPNtwy2J0L9
-	yWc1H3sSbsSW90Nb/3lyrYGUx58FKF0FM/P4qlSaGE0hcpbiSQmS7RyQ79dkp3eG5U4O1l8EHzX
-	dockpwlzGhQhVDNic1eYcZC20H+5V8/kPnOaopUBce1KTDdiGGsCSH1e/XCag5FsijBO/VWtZQb
-	5ukdCfww8jZ7qkVyGZ6ZsJjz5zUuhMbXgOiNyzeS6PHHJVYEk4/TFRE4xF5AxXtgQ2N1upNSEUP
-	G++CEgw8T4Q
-X-Google-Smtp-Source: AGHT+IHX0rqNNyRTR0dneFys5BvltD8NgTOoyYKLcnywZAT/mxA+kXa1PwfcBV0janZViN7HMFRH3g==
-X-Received: by 2002:a17:907:7fa2:b0:b70:7cd8:9098 with SMTP id a640c23a62f3a-b76c5592b7amr549919866b.61.1764141952922;
-        Tue, 25 Nov 2025 23:25:52 -0800 (PST)
-Received: from ?IPV6:2a02:6b6f:e750:1800:450:cba3:aec3:a1fd? ([2a02:6b6f:e750:1800:450:cba3:aec3:a1fd])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7654d55d7fsm1796765066b.21.2025.11.25.23.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Nov 2025 23:25:51 -0800 (PST)
-Message-ID: <d38aeb5d-5a46-4e8d-b3c1-f2b4cdb15b04@gmail.com>
-Date: Wed, 26 Nov 2025 07:25:48 +0000
+	Wed, 26 Nov 2025 08:45:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1764146709;
+	bh=7b1v+VfWdS9vnI3hgHts2MCpC3pXD6k/AqQcBNZpi3w=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=R8uzIO7fNJMx+rQyxcix3eaALrK3QmnP/uBzIAIEVjX80H79g1EMNuLAEQBPw00un
+	 r8zGdvZZJzVCOQI9SzRwruvQNHmNszomQnbanHFT8U9zpYJpNI5IUzbengaec60MfP
+	 jB2yhJk5oAJ9ozTuXU+74ks0mFjYiJ/8nuUM4xXU=
+X-QQ-mid: zesmtpgz7t1764146705t92bcfc87
+X-QQ-Originating-IP: LjE2iX/jIr2kW4U183fcosGl+esKkN4mwkn8InklZ9k=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 26 Nov 2025 16:45:03 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14949448011716842836
+EX-QQ-RecipientCnt: 5
+From: Qiang Ma <maqianga@uniontech.com>
+To: akpm@linux-foundation.org,
+	bhe@redhat.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Qiang Ma <maqianga@uniontech.com>
+Subject: [PATCH v3 0/3] kexec: print out debugging message if required for kexec_load
+Date: Wed, 26 Nov 2025 16:44:24 +0800
+Message-Id: <20251126084427.3222212-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 12/17] x86/e820: temporarily enable KHO scratch for
- memory below 1M
-Content-Language: en-GB
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,
- Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, anthony.yznaga@oracle.com, arnd@arndb.de,
- ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
- catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
- devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com,
- graf@amazon.com, hpa@zytor.com, jgowans@amazon.com,
- kexec@lists.infradead.org, krzk@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
- pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org,
- robh@kernel.org, rostedt@goodmis.org, saravanak@google.com,
- skinsburskii@linux.microsoft.com, tglx@linutronix.de,
- thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org,
- Breno Leitao <leitao@debian.org>, thevlad@meta.com
-References: <20250509074635.3187114-1-changyuanl@google.com>
- <20250509074635.3187114-13-changyuanl@google.com>
- <a0f875f1-45ad-4dfc-b5c8-ecb51b242523@gmail.com>
- <mafs01plmxngp.fsf@kernel.org> <aSW0MF9BXjLnY2Fr@kernel.org>
- <ba690e06-c2a1-4d2e-9428-9ca2ea9f2b86@gmail.com>
- <aSaazgjKX8PfFDXf@kernel.org>
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <aSaazgjKX8PfFDXf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: MOSHzC1SiP/mFgoaNtdf5wbgdDIutKBV8hKBXDqn1dkLC1ozIeoQrVw3
+	7SwHJ2EPnEzNWuQRMLUmoneUM/3SCxxP4vPFivGocy5ewU38iasFXkWAzOlc+o9UR0b/K6i
+	VqEIrRoJbMeMDVTDF2QOl0MwDz4cq80+LcN7HkW64Gcu/fFw04mgwFp8wr9ioE4qIwzhI3M
+	FcIChIKYrHnNtRp9eMkr0/tqZlZEBvB6f8MOETd+e2q2oquAGl9u2L3c8BCEzGBZhbP+K7/
+	Bu8LLN5h765eIYaSbQ3t85/ZXjAkAUr899b/XNEYp6P3D+ufHFGIVgbq2rx5Qg2U3/gW9PV
+	oGGv0dHO0+idxArxgRa6Pka5l9RykihqKyvtTqHt8ieyUmZH3bCTcg6xEJ4MD+elG+HDb83
+	rnQIWr/aZZ2KnoErm9tAhfNsUamrW3rAIQCAl4N9wLXFhEJCxLJ2pjG1ryrlYyq/DQaytPv
+	cb02ok8XKcQdYrxy/ge3xhD8gRfkCCWE9Bb3vfb5EV5+LvZ8O4SNLmwTWPD2CvhFu+fyMjD
+	JooXZPDmdVwlWKMLbEGA3Ij6ebcIQjN8uM8bMI37sBdYQP5v6Yhww2xkaViuiJ6JUp3Lup9
+	KrlC8BVkCQ8B7G2Rhn0P7RQW8wd4UDktXdYLw37ywUpzRlakWi0p9CwYDcKtxNhUznbNRNG
+	Xs1+Rv9JBft5xnnuxojizQDeE/I2DG7jhcEeAQZb0uYCoHiGS08KcOSbRW+dgh2vesFY3Tt
+	7XFTyRscVEZjMa5gYZBvKihse/v8kKqzc4IXJEiRj4M6B7BKIQcuH+7TQmO1BX6NExHHTWd
+	tkanz+yrPe82F626s1Ekhe2KmbdyoTiWbHArnm/Kn42/OO0i3tAHmmZnggSoUGjxBUFpnza
+	kCStqXXevY3VtszfiIxq13ievHiqgixWBkAx0Ki2uxagOOsieaW8e4kA/YzbhoXOWBbmERb
+	ZGuQzWbVGXk3IJ8TQj/r5UYmxU6qCaJUAu07gURmnhabEIt6zMr7+Cjq0skEgH/01TVZqwh
+	8lwAK4wVN7v3B3aHsyn+rdJsDvAnNC2AwSOnKKy+EHtxNv4gHdi/8KIBcHYoFRN6rg02ej9
+	w==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251125_232555_802474_02C46ACF 
-X-CRM114-Status: GOOD (  43.21  )
+X-CRM114-CacheID: sfid-20251126_004537_076851_BAF23CD7 
+X-CRM114-Status: UNSURE (   9.82  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,230 +94,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Overview:
+=========
+The commit a85ee18c7900 ("kexec_file: print out debugging message
+if required") has added general code printing in kexec_file_load(),
+but not in kexec_load().
+    
+Since kexec_load and kexec_file_load are not triggered simultaneously,
+we can unify the debug flag of kexec and kexec_file as kexec_dbg_print.
+    
+Next, we need to do some things in this patchset:
+    
+1. rename kexec_file_dbg_print to kexec_dbg_print
+2. Add KEXEC_DEBUG
+3. Initialize kexec_dbg_print for kexec
+4. Fix uninitialized struct kimage *image pointer 
+5. Set the reset of kexec_dbg_print to kimage_free
 
+Testing:
+=========
+I did testing on x86_64, arm64 and loongarch. On x86_64, the printed messages
+look like below:
 
-On 26/11/2025 06:14, Mike Rapoport wrote:
-> On Tue, Nov 25, 2025 at 06:47:15PM +0000, Usama Arif wrote:
->>
->>
->> On 25/11/2025 13:50, Mike Rapoport wrote:
->>> Hi,
->>>
->>> On Tue, Nov 25, 2025 at 02:15:34PM +0100, Pratyush Yadav wrote:
->>>> On Mon, Nov 24 2025, Usama Arif wrote:
->>>
->>>>>> --- a/arch/x86/realmode/init.c
->>>>>> +++ b/arch/x86/realmode/init.c
->>>>>> @@ -65,6 +65,8 @@ void __init reserve_real_mode(void)
->>>>>>  	 * setup_arch().
->>>>>>  	 */
->>>>>>  	memblock_reserve(0, SZ_1M);
->>>>>> +
->>>>>> +	memblock_clear_kho_scratch(0, SZ_1M);
->>>>>>  }
->>>>>>  
->>>>>>  static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
->>>>>
->>>>> Hello!
->>>>>
->>>>> I am working with Breno who reported that we are seeing the below warning at boot
->>>>> when rolling out 6.16 in Meta fleet. It is difficult to reproduce on a single host
->>>>> manually but we are seeing this several times a day inside the fleet.
->>>>>
->>>>>  20:16:33  ------------[ cut here ]------------
->>>>>  20:16:33  WARNING: CPU: 0 PID: 0 at mm/memblock.c:668 memblock_add_range+0x316/0x330
->>>>>  20:16:33  Modules linked in:
->>>>>  20:16:33  CPU: 0 UID: 0 PID: 0 Comm: swapper Tainted: G S                  6.16.1-0_fbk0_0_gc0739ee5037a #1 NONE 
->>>>>  20:16:33  Tainted: [S]=CPU_OUT_OF_SPEC
->>>>>  20:16:33  RIP: 0010:memblock_add_range+0x316/0x330
->>>>>  20:16:33  Code: ff ff ff 89 5c 24 08 41 ff c5 44 89 6c 24 10 48 63 74 24 08 48 63 54 24 10 e8 26 0c 00 00 e9 41 ff ff ff 0f 0b e9 af fd ff ff <0f> 0b e9 b7 fd ff ff 0f 0b 0f 0b cc cc cc cc cc cc cc cc cc cc cc
->>>>>  20:16:33  RSP: 0000:ffffffff83403dd8 EFLAGS: 00010083 ORIG_RAX: 0000000000000000
->>>>>  20:16:33  RAX: ffffffff8476ff90 RBX: 0000000000001c00 RCX: 0000000000000002
->>>>>  20:16:33  RDX: 00000000ffffffff RSI: 0000000000000000 RDI: ffffffff83bad4d8
->>>>>  20:16:33  RBP: 000000000009f000 R08: 0000000000000020 R09: 8000000000097101
->>>>>  20:16:33  R10: ffffffffff2004b0 R11: 203a6d6f646e6172 R12: 000000000009ec00
->>>>>  20:16:33  R13: 0000000000000002 R14: 0000000000100000 R15: 000000000009d000
->>>>>  20:16:33  FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
->>>>>  20:16:33  CR2: ffff888065413ff8 CR3: 00000000663b7000 CR4: 00000000000000b0
->>>>>  20:16:33  Call Trace:
->>>>>  20:16:33   <TASK>
->>>>>  20:16:33   ? __memblock_reserve+0x75/0x80
->>>
->>> Do you have faddr2line for this?
->>>>>>  20:16:33   ? setup_arch+0x30f/0xb10
->>>
->>> And this?
->>>
->>
->>
->> Thanks for this! I think it helped narrow down the problem.
->>
->> The stack is:
->>
->> 20:16:33 ? __memblock_reserve (mm/memblock.c:936) 
->> 20:16:33 ? setup_arch (arch/x86/kernel/setup.c:413 arch/x86/kernel/setup.c:499 arch/x86/kernel/setup.c:956) 
->> 20:16:33 ? start_kernel (init/main.c:922) 
->> 20:16:33 ? x86_64_start_reservations (arch/x86/kernel/ebda.c:57) 
->> 20:16:33 ? x86_64_start_kernel (arch/x86/kernel/head64.c:231) 
->> 20:16:33 ? common_startup_64 (arch/x86/kernel/head_64.S:419) 
->>
->> This is 6.16 kernel.
->>
->> 20:16:33 ? __memblock_reserve (mm/memblock.c:936) 
->> Thats memblock_add_range call in memblock_reserve
->>
->> 20:16:33 ? setup_arch (arch/x86/kernel/setup.c:413 arch/x86/kernel/setup.c:499 arch/x86/kernel/setup.c:956) 
->> That is parse_setup_data -> add_early_ima_buffer -> add_early_ima_buffer -> memblock_reserve_kern
->>
->>
->> I put a simple print like below:
->>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 680d1b6dfea41..cc97ffc0083c7 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -409,6 +409,7 @@ static void __init add_early_ima_buffer(u64 phys_addr)
->>         }
->>  
->>         if (data->size) {
->> +               pr_err("PPP %s %s %d data->addr %llx, data->size %llx \n", __FILE__, __func__, __LINE__, data->addr, data->size);
->>                 memblock_reserve_kern(data->addr, data->size);
->>                 ima_kexec_buffer_phys = data->addr;
->>                 ima_kexec_buffer_size = data->size;
->>
->>
->> and I see (without replicating the warning):
->>
->> [    0.000000] PPP arch/x86/kernel/setup.c add_early_ima_buffer 412 data->addr 9e000, data->size 1000                                                                                          
->> ....
-> 
-> So it looks like in cases when the warning reproduces there's something
-> that reserves memory overlapping with IMA buffer before
-> add_early_ima_buffer().
-> 
->>
->> [    0.000348] MEMBLOCK configuration:
->> [    0.000348]  memory size = 0x0000003fea329ff0 reserved size = 0x00000000050c969b
->> [    0.000350]  memory.cnt  = 0x5
->> [    0.000351]  memory[0x0]     [0x0000000000001000-0x000000000009ffff], 0x000000000009f000 bytes flags: 0x40
->> [    0.000353]  memory[0x1]     [0x0000000000100000-0x0000000067c65fff], 0x0000000067b66000 bytes flags: 0x0
->> [    0.000355]  memory[0x2]     [0x000000006d8db000-0x000000006fffffff], 0x0000000002725000 bytes flags: 0x0
->> [    0.000356]  memory[0x3]     [0x0000000100000000-0x000000407fff8fff], 0x0000003f7fff9000 bytes flags: 0x0
->> [    0.000358]  memory[0x4]     [0x000000407fffa000-0x000000407fffffff], 0x0000000000006000 bytes flags: 0x0
->> [    0.000359]  reserved.cnt  = 0x7
->>
->>
->> So MEMBLOCK_RSRV_KERN and MEMBLOCK_KHO_SCRATCH seem to overlap..
-> 
-> It does not matter, they are set on different arrays. RSRV_KERN is set on
-> regions in memblock.reserved and KHO_SCRATCH is set on regions in
-> memblock.memory.
-> 
-> So dumping memblock.memory is completely irrelevant, you need to check
-> memblock.reserved for potential conflicts.
->  
->>>>>  20:16:33   ? start_kernel+0x58/0x960
->>>>>  20:16:33   ? x86_64_start_reservations+0x20/0x20
->>>>>  20:16:33   ? x86_64_start_kernel+0x13d/0x140
->>>>>  20:16:33   ? common_startup_64+0x13e/0x140
->>>>>  20:16:33   </TASK>
->>>>>  20:16:33  ---[ end trace 0000000000000000 ]--- 
->>>>>
->>>>>
->>>>> Rolling out with memblock=debug is not really an option in a large scale fleet due to the
->>>>> time added to boot. But I did try on one of the hosts (without reproducing the issue) and I see:
->>>
->>> Is it a problem to roll out a kernel that has additional debug printouts as
->>> Breno suggested earlier? I.e.
->>>
->>> 	if (flags != MEMBLOCK_NONE && flags != rgn->flags) {
->>> 		pr_warn("memblock: Flag mismatch at region [%pa-%pa]\n",
->>> 			&rgn->base, &rend);
->>> 		pr_warn("  Existing region flags: %#x\n", rgn->flags);
->>> 		pr_warn("  New range flags: %#x\n", flags);
->>> 		pr_warn("  New range: [%pa-%pa]\n", &base, &end);
->>> 		WARN_ON_ONCE(1);
->>> 	}
->>>
->>
->> I can add this, but the only thing is that it might be several weeks between me putting this in the
->> kernel and that kernel being deployed to enough machines that it starts to show up. I think the IMA coinciding
->> with memblock_mark_kho_scratch in e820__memblock_setup could be the reason for the warning. It might be better to
->> fix that case and deploy it to see if the warnings still show up?
->> I can add these prints as well incase it doesnt fix the problem.
->  
-> I really don't think that effectively disabling memblock_mark_kho_scratch()
-> when KHO is disabled will solve the problem because as I said the flags it
-> sets are on different structure than the flags set by
-> memblock_reserve_kern().
-> 
->>> If you have the logs from failing boots up to the point where SLUB reports
->>> about it's initialization, e.g. 
->>>
->>> [    0.134377] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
->>>
->>> something there may hint about what's the issue. 
->>
->> So the boot doesnt fail, its just giving warnings in the fleet.
->> I have added the dmesg to the end of the mail.
->  
-> Thanks, unfortunately nothing jumped at me there.
-> 
->> Does something like this look good? I can try deploying this (although it will take sometime to find out).
->> We can get it upstream as well as that makes backports easier.
->>
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 154f1d73b61f2..257c6f0eee03d 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -1119,8 +1119,13 @@ int __init_memblock memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t
->>   */
->>  __init int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size)
->>  {
->> -       return memblock_setclr_flag(&memblock.memory, base, size, 1,
->> -                                   MEMBLOCK_KHO_SCRATCH);
->> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> +       if (is_kho_boot())
-> 
-> Please use 
-> 
-> 	if (IS_ENABLED(CONFIG_MEMBLOCK_KHO_SCRATCH)
-> 
-> instead of indef.
-> 
-> If you send a formal patch with it, I'll take it.
-> I'd suggest still deploying additional debug printouts internally.
+unset CONFIG_KEXEC_FILE:
+[   81.502374] kexec: kexec_load: type:0, start:0x23fff7700 head:0x10a4b9002 flags:0x3e0010
 
+set CONFIG_KEXEC_FILE
+[   36.774228] kexec_file: kernel: 0000000066c386c8 kernel_size: 0xd78400
+[   36.821814] kexec-bzImage64: Loaded purgatory at 0x23fffb000
+[   36.821826] kexec-bzImage64: Loaded boot_param, command line and misc at 0x23fff9000 bufsz=0x12d0 memsz=0x2000
+[   36.821829] kexec-bzImage64: Loaded 64bit kernel at 0x23d400000 bufsz=0xd73400 memsz=0x2ab7000
+[   36.821918] kexec-bzImage64: Loaded initrd at 0x23bd0b000 bufsz=0x16f40a8 memsz=0x16f40a8
+[   36.821920] kexec-bzImage64: Final command line is: root=/dev/mapper/test-root crashkernel=auto rd.lvm.lv=test/root
+[   36.821925] kexec-bzImage64: E820 memmap:
+[   36.821926] kexec-bzImage64: 0000000000000000-000000000009ffff (1)
+[   36.821928] kexec-bzImage64: 0000000000100000-0000000000811fff (1)
+[   36.821930] kexec-bzImage64: 0000000000812000-0000000000812fff (2)
+[   36.821931] kexec-bzImage64: 0000000000813000-00000000bee38fff (1)
+[   36.821933] kexec-bzImage64: 00000000bee39000-00000000beec2fff (2)
+[   36.821934] kexec-bzImage64: 00000000beec3000-00000000bf8ecfff (1)
+[   36.821935] kexec-bzImage64: 00000000bf8ed000-00000000bfb6cfff (2)
+[   36.821936] kexec-bzImage64: 00000000bfb6d000-00000000bfb7efff (3)
+[   36.821937] kexec-bzImage64: 00000000bfb7f000-00000000bfbfefff (4)
+[   36.821938] kexec-bzImage64: 00000000bfbff000-00000000bff7bfff (1)
+[   36.821939] kexec-bzImage64: 00000000bff7c000-00000000bfffffff (2)
+[   36.821940] kexec-bzImage64: 00000000feffc000-00000000feffffff (2)
+[   36.821941] kexec-bzImage64: 00000000ffc00000-00000000ffffffff (2)
+[   36.821942] kexec-bzImage64: 0000000100000000-000000023fffffff (1)
+[   36.872348] kexec_file: nr_segments = 4
+[   36.872356] kexec_file: segment[0]: buf=0x000000005314ece7 bufsz=0x4000 mem=0x23fffb000 memsz=0x5000
+[   36.872370] kexec_file: segment[1]: buf=0x000000006e59b143 bufsz=0x12d0 mem=0x23fff9000 memsz=0x2000
+[   36.872374] kexec_file: segment[2]: buf=0x00000000eb7b1fc3 bufsz=0xd73400 mem=0x23d400000 memsz=0x2ab7000
+[   36.882172] kexec_file: segment[3]: buf=0x000000006af76441 bufsz=0x16f40a8 mem=0x23bd0b000 memsz=0x16f5000
+[   36.889113] kexec_file: kexec_file_load: type:0, start:0x23fffb150 head:0x101a2e002 flags:0x8
 
-Thanks! I will add the additional debug prints and [1] in the next release.
-It will be sometime before it makes it into production, so I will try to debug
-this more using the information you provided above.
+Changes in v3:
+==========
+- Rename kexec_core_dbg_print to kexec_dbg_print
+- Remove unnecessary segments prints
+- Remove patch "kexec_file: Fix the issue of mismatch between loop variable types"
 
-[1] https://lore.kernel.org/all/20251126072051.546700-1-usamaarif642@gmail.com/
+Qiang Ma (3):
+  kexec: Fix uninitialized struct kimage *image pointer
+  kexec: add kexec flag to control debug printing
+  kexec: print out debugging message if required for kexec_load
 
-> 
->> +               return memblock_setclr_flag(&memblock.memory, base, size, 1,
->> +                                           MEMBLOCK_KHO_SCRATCH);
->> +#else
->> +       return 0;
->> +#endif
->>  }
->>  
->>  /**
->> @@ -1133,8 +1138,13 @@ __init int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size)
->>   */
->>  __init int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size)
->>  {
->> -       return memblock_setclr_flag(&memblock.memory, base, size, 0,
->> -                                   MEMBLOCK_KHO_SCRATCH);
->> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> +       if (is_kho_boot())
->> +               return memblock_setclr_flag(&memblock.memory, base, size, 0,
->> +                                           MEMBLOCK_KHO_SCRATCH);
->> +#else
-> 
-> If nothing sets the flag _clear is anyway nop, but let's update it as well
-> for symmetry.
-> 
+ include/linux/kexec.h      | 9 +++++----
+ include/uapi/linux/kexec.h | 1 +
+ kernel/kexec.c             | 8 +++++++-
+ kernel/kexec_core.c        | 4 +++-
+ kernel/kexec_file.c        | 4 +---
+ 5 files changed, 17 insertions(+), 9 deletions(-)
+
+-- 
+2.20.1
 
 
