@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91C35D1038C
-	for <kexec@archiver.kernel.org>; Wed, 26 Nov 2025 08:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0385D10395
+	for <kexec@archiver.kernel.org>; Wed, 26 Nov 2025 08:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=7b1v+VfWdS9vnI3hgHts2MCpC3pXD6k/AqQcBNZpi3w=; b=YWQynB02O4dweu8WH3QSHVxQl6
-	e4ZxvntseTIM2bLETWtcXC8Ze5pmkklc5zzgUODfIFZc7LuTqI2AQe1A81U1YTeCAKTSo7mIHFvnr
-	gC/eFloBzU2jlw68jAmQosqm16XLkyRITg+4zCdzj3euBmP5iArYtkYRTjJJp7KOJSwoRB1wV7i4J
-	QW9LUp6urdfxA23UVBnmfmzb1SV/ytR1KjTBnV9WuX6vh3dtxKD/k+GmRViBm50A2EPc3JK/1+JC9
-	5Gw6vrsb1aPrb1BN8jGWHilXdfCH0GwfTdusQ8P9bHYxz1cUU3tNvj7fc3BGWKoC3qeHEWGiT7xa8
-	VamCcRCQ==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WufCdDOpzfL/WfQ3htR6pHmHReVaZ+8ySuuRY7Lmf9g=; b=wVn4GOltDfh/qv0fCw/Rze9008
+	pge5wVgFf3QtZ8fZWDvB0w4OmEdXqHFbSzzMaFqYwjJu06aIcROSYkMpy3wFJESbyy22cfjpC08/7
+	zfwXbIownpgStH2kBUUB6r0EMbzvIH+gMIm6vHWrliQlY7ZeQdJIlMYkDyD4Hx+PoVdbKLiRwEcHD
+	L+42tO8jHXOVUgay4DR7JqOXfaL+2fhpZKnM0vlHsxluz7DtPolnvkQRJoClIUWOaZgTxmYoQR7cT
+	NykavI0bw6kPXICnZFRePSbTqw/nzhVxDfjQrPA5XnMk+tAAmuAwUqDHEkxw5QzkQYl7s/CPWoVzo
+	GAAkdReg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOB9h-0000000Edkh-2EpU;
-	Wed, 26 Nov 2025 08:45:41 +0000
-Received: from smtpbguseast1.qq.com ([54.204.34.129])
+	id 1vOBA4-0000000EdqM-3ryq;
+	Wed, 26 Nov 2025 08:46:04 +0000
+Received: from smtpbgau1.qq.com ([54.206.16.166])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOB9c-0000000Edbr-1ZzF
+	id 1vOBA2-0000000EdkZ-3FHx
 	for kexec@lists.infradead.org;
-	Wed, 26 Nov 2025 08:45:39 +0000
+	Wed, 26 Nov 2025 08:46:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1764146709;
-	bh=7b1v+VfWdS9vnI3hgHts2MCpC3pXD6k/AqQcBNZpi3w=;
+	s=onoh2408; t=1764146736;
+	bh=WufCdDOpzfL/WfQ3htR6pHmHReVaZ+8ySuuRY7Lmf9g=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=R8uzIO7fNJMx+rQyxcix3eaALrK3QmnP/uBzIAIEVjX80H79g1EMNuLAEQBPw00un
-	 r8zGdvZZJzVCOQI9SzRwruvQNHmNszomQnbanHFT8U9zpYJpNI5IUzbengaec60MfP
-	 jB2yhJk5oAJ9ozTuXU+74ks0mFjYiJ/8nuUM4xXU=
-X-QQ-mid: zesmtpgz7t1764146705t92bcfc87
-X-QQ-Originating-IP: LjE2iX/jIr2kW4U183fcosGl+esKkN4mwkn8InklZ9k=
+	b=lhUUGRDauK/AI2nblJZp5Xq0G6QtNYjkYdU21rs/5R0XxQXcIsAnwxU3lFpyCl80E
+	 S4QEdAWWM4RHnFdKcKMi6qORy2FrsWZcvEnnGjI0QBkRpbctDg2DRUaG34c++HK21J
+	 neO5vZUgBPtE/dxpLNbqH93NuqWxhZMEP/abP2AQ=
+X-QQ-mid: zesmtpgz7t1764146731t05aa1bad
+X-QQ-Originating-IP: rjDpBB+HlmgtOOJx3N41NKQSqniequPMppjqpg9r/ME=
 Received: from localhost.localdomain ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 26 Nov 2025 16:45:03 +0800 (CST)
+	id ; Wed, 26 Nov 2025 16:45:07 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14949448011716842836
+X-BIZMAIL-ID: 4168768459753501341
 EX-QQ-RecipientCnt: 5
 From: Qiang Ma <maqianga@uniontech.com>
 To: akpm@linux-foundation.org,
@@ -49,37 +49,37 @@ To: akpm@linux-foundation.org,
 Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH v3 0/3] kexec: print out debugging message if required for kexec_load
-Date: Wed, 26 Nov 2025 16:44:24 +0800
-Message-Id: <20251126084427.3222212-1-maqianga@uniontech.com>
+Subject: [PATCH v3 1/3] kexec: Fix uninitialized struct kimage *image pointer
+Date: Wed, 26 Nov 2025 16:44:25 +0800
+Message-Id: <20251126084427.3222212-2-maqianga@uniontech.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20251126084427.3222212-1-maqianga@uniontech.com>
+References: <20251126084427.3222212-1-maqianga@uniontech.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: MOSHzC1SiP/mFgoaNtdf5wbgdDIutKBV8hKBXDqn1dkLC1ozIeoQrVw3
-	7SwHJ2EPnEzNWuQRMLUmoneUM/3SCxxP4vPFivGocy5ewU38iasFXkWAzOlc+o9UR0b/K6i
-	VqEIrRoJbMeMDVTDF2QOl0MwDz4cq80+LcN7HkW64Gcu/fFw04mgwFp8wr9ioE4qIwzhI3M
-	FcIChIKYrHnNtRp9eMkr0/tqZlZEBvB6f8MOETd+e2q2oquAGl9u2L3c8BCEzGBZhbP+K7/
-	Bu8LLN5h765eIYaSbQ3t85/ZXjAkAUr899b/XNEYp6P3D+ufHFGIVgbq2rx5Qg2U3/gW9PV
-	oGGv0dHO0+idxArxgRa6Pka5l9RykihqKyvtTqHt8ieyUmZH3bCTcg6xEJ4MD+elG+HDb83
-	rnQIWr/aZZ2KnoErm9tAhfNsUamrW3rAIQCAl4N9wLXFhEJCxLJ2pjG1ryrlYyq/DQaytPv
-	cb02ok8XKcQdYrxy/ge3xhD8gRfkCCWE9Bb3vfb5EV5+LvZ8O4SNLmwTWPD2CvhFu+fyMjD
-	JooXZPDmdVwlWKMLbEGA3Ij6ebcIQjN8uM8bMI37sBdYQP5v6Yhww2xkaViuiJ6JUp3Lup9
-	KrlC8BVkCQ8B7G2Rhn0P7RQW8wd4UDktXdYLw37ywUpzRlakWi0p9CwYDcKtxNhUznbNRNG
-	Xs1+Rv9JBft5xnnuxojizQDeE/I2DG7jhcEeAQZb0uYCoHiGS08KcOSbRW+dgh2vesFY3Tt
-	7XFTyRscVEZjMa5gYZBvKihse/v8kKqzc4IXJEiRj4M6B7BKIQcuH+7TQmO1BX6NExHHTWd
-	tkanz+yrPe82F626s1Ekhe2KmbdyoTiWbHArnm/Kn42/OO0i3tAHmmZnggSoUGjxBUFpnza
-	kCStqXXevY3VtszfiIxq13ievHiqgixWBkAx0Ki2uxagOOsieaW8e4kA/YzbhoXOWBbmERb
-	ZGuQzWbVGXk3IJ8TQj/r5UYmxU6qCaJUAu07gURmnhabEIt6zMr7+Cjq0skEgH/01TVZqwh
-	8lwAK4wVN7v3B3aHsyn+rdJsDvAnNC2AwSOnKKy+EHtxNv4gHdi/8KIBcHYoFRN6rg02ej9
-	w==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-XMAILINFO: OQhZ3T0tjf0aipUoODJiBJfVzWfh7sTjffBRh/jiLQkPX80f/edV/qCi
+	NnfWqpapYAKQQO+SwqXukYaDt0D6FXp+SOlPoN4/LMCOl232VzTfmc+v15hHwV1pAAP1PlX
+	WHHOLmURdgtvfV2lBMJsINTU/0yQWf0icIr5jKRHjcWth2G63fBiPkH0zEA4A6Sd99wEDsM
+	rl/VXijWIeHbEd8cpKEjTs5uHb62+cWOBQ3zwLLyxsZeRvj9oBlJn2Dm9NEKlQAzyKy2++Q
+	HfndFdxvnNZ6wjrfuxAvshGyM8KTRfLSYt+wppoAcizynju16Lz955gFbrSK4l3S3XDkAx8
+	ypePyrrdmZvk8U/tDOrJu/YNvaPju0FsbssrW/0QQdSaw2vBhudlL6gjSWt7MX8UjIMf1Ju
+	Mkxc9TB9Mt92i9y9Q2JMh+19+euxBBaQv4jec2cdyhowOMs6O3z+YZTO3VDm7sd7K8M4Rje
+	EeOVuPPObcol7TJOJKV3VFTE0Bnh2VmVI/JS+zlcI08jz+JApEIcmvMisW4TV9eGhLMfXc5
+	Gw+HSKgMbhPoj2WHz9iN/4B3+h+6Pn6zLzpE8+rFb2bqHXrAeUXUMQRXF81U6M1E3OXV3lV
+	Q277rnxY4honUzbpcJ+RhUHmWxW8P8+AGK/zeKfgn3WVKuyzWt7Dr+FtW2acyURDuyahycB
+	0kbVcS+9t0LSlD3sjYAb10rHA+/ylMwMEda2da6x+DeZ9Ne2ssoyhwe+14TKRM4FOE4jIJ7
+	k3SfNM7MbypzetylHvdwtnT64mY/O33TVjaJBkYiIUUHeED6u0/OiN7I8ZjaJ8ydRVlaLWl
+	NxNNajDxtri6v9wvkqZ+5URVvlWNey/irNndzaqVMLQ//xY23MVoA6l9mibvxBEY59W3sHL
+	DwVfpF2IYYLFJCz9VerR46Ho+HnLdeilxjQzllP6DuBIgeBxd6BcGJLZLXtTuwlATOs+Cql
+	IhUJJQlgZzvs+OtY9Gsf6zznZk025SWOo2nXCVmAjdGoYxAtGLZvbRL+/W1En90RZ4q0Msk
+	paFhllOaKwQAc0hEzkauzAfHNJCDKFgIz53UC4gA==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251126_004537_076851_BAF23CD7 
-X-CRM114-Status: UNSURE (   9.82  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251126_004603_345565_CC31269C 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,78 +94,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Overview:
-=========
-The commit a85ee18c7900 ("kexec_file: print out debugging message
-if required") has added general code printing in kexec_file_load(),
-but not in kexec_load().
-    
-Since kexec_load and kexec_file_load are not triggered simultaneously,
-we can unify the debug flag of kexec and kexec_file as kexec_dbg_print.
-    
-Next, we need to do some things in this patchset:
-    
-1. rename kexec_file_dbg_print to kexec_dbg_print
-2. Add KEXEC_DEBUG
-3. Initialize kexec_dbg_print for kexec
-4. Fix uninitialized struct kimage *image pointer 
-5. Set the reset of kexec_dbg_print to kimage_free
+The image is initialized to NULL. Then, after calling kimage_alloc_init,
+we can directly goto 'out' because at this time, the kimage_free will
+determine whether image is a NULL pointer.
 
-Testing:
-=========
-I did testing on x86_64, arm64 and loongarch. On x86_64, the printed messages
-look like below:
+This can also prepare for the subsequent patch's kexec_core_dbg_print
+to be reset to zero in kimage_free.
 
-unset CONFIG_KEXEC_FILE:
-[   81.502374] kexec: kexec_load: type:0, start:0x23fff7700 head:0x10a4b9002 flags:0x3e0010
+Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+---
+ kernel/kexec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-set CONFIG_KEXEC_FILE
-[   36.774228] kexec_file: kernel: 0000000066c386c8 kernel_size: 0xd78400
-[   36.821814] kexec-bzImage64: Loaded purgatory at 0x23fffb000
-[   36.821826] kexec-bzImage64: Loaded boot_param, command line and misc at 0x23fff9000 bufsz=0x12d0 memsz=0x2000
-[   36.821829] kexec-bzImage64: Loaded 64bit kernel at 0x23d400000 bufsz=0xd73400 memsz=0x2ab7000
-[   36.821918] kexec-bzImage64: Loaded initrd at 0x23bd0b000 bufsz=0x16f40a8 memsz=0x16f40a8
-[   36.821920] kexec-bzImage64: Final command line is: root=/dev/mapper/test-root crashkernel=auto rd.lvm.lv=test/root
-[   36.821925] kexec-bzImage64: E820 memmap:
-[   36.821926] kexec-bzImage64: 0000000000000000-000000000009ffff (1)
-[   36.821928] kexec-bzImage64: 0000000000100000-0000000000811fff (1)
-[   36.821930] kexec-bzImage64: 0000000000812000-0000000000812fff (2)
-[   36.821931] kexec-bzImage64: 0000000000813000-00000000bee38fff (1)
-[   36.821933] kexec-bzImage64: 00000000bee39000-00000000beec2fff (2)
-[   36.821934] kexec-bzImage64: 00000000beec3000-00000000bf8ecfff (1)
-[   36.821935] kexec-bzImage64: 00000000bf8ed000-00000000bfb6cfff (2)
-[   36.821936] kexec-bzImage64: 00000000bfb6d000-00000000bfb7efff (3)
-[   36.821937] kexec-bzImage64: 00000000bfb7f000-00000000bfbfefff (4)
-[   36.821938] kexec-bzImage64: 00000000bfbff000-00000000bff7bfff (1)
-[   36.821939] kexec-bzImage64: 00000000bff7c000-00000000bfffffff (2)
-[   36.821940] kexec-bzImage64: 00000000feffc000-00000000feffffff (2)
-[   36.821941] kexec-bzImage64: 00000000ffc00000-00000000ffffffff (2)
-[   36.821942] kexec-bzImage64: 0000000100000000-000000023fffffff (1)
-[   36.872348] kexec_file: nr_segments = 4
-[   36.872356] kexec_file: segment[0]: buf=0x000000005314ece7 bufsz=0x4000 mem=0x23fffb000 memsz=0x5000
-[   36.872370] kexec_file: segment[1]: buf=0x000000006e59b143 bufsz=0x12d0 mem=0x23fff9000 memsz=0x2000
-[   36.872374] kexec_file: segment[2]: buf=0x00000000eb7b1fc3 bufsz=0xd73400 mem=0x23d400000 memsz=0x2ab7000
-[   36.882172] kexec_file: segment[3]: buf=0x000000006af76441 bufsz=0x16f40a8 mem=0x23bd0b000 memsz=0x16f5000
-[   36.889113] kexec_file: kexec_file_load: type:0, start:0x23fffb150 head:0x101a2e002 flags:0x8
-
-Changes in v3:
-==========
-- Rename kexec_core_dbg_print to kexec_dbg_print
-- Remove unnecessary segments prints
-- Remove patch "kexec_file: Fix the issue of mismatch between loop variable types"
-
-Qiang Ma (3):
-  kexec: Fix uninitialized struct kimage *image pointer
-  kexec: add kexec flag to control debug printing
-  kexec: print out debugging message if required for kexec_load
-
- include/linux/kexec.h      | 9 +++++----
- include/uapi/linux/kexec.h | 1 +
- kernel/kexec.c             | 8 +++++++-
- kernel/kexec_core.c        | 4 +++-
- kernel/kexec_file.c        | 4 +---
- 5 files changed, 17 insertions(+), 9 deletions(-)
-
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 28008e3d462e..9bb1f2b6b268 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -95,6 +95,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 	unsigned long i;
+ 	int ret;
+ 
++	image = NULL;
++
+ 	/*
+ 	 * Because we write directly to the reserved memory region when loading
+ 	 * crash kernels we need a serialization here to prevent multiple crash
+@@ -129,7 +131,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 
+ 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
+ 	if (ret)
+-		goto out_unlock;
++		goto out;
+ 
+ 	if (flags & KEXEC_PRESERVE_CONTEXT)
+ 		image->preserve_context = 1;
 -- 
 2.20.1
 
