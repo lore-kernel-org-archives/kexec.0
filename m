@@ -4,73 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AE97CFD2F6
-	for <kexec@archiver.kernel.org>; Thu, 27 Nov 2025 15:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05B06D111A8
+	for <kexec@archiver.kernel.org>; Thu, 27 Nov 2025 16:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iUYE5Nv9stWS9k53Pjb2GiHfm7cAAwaViRSFXAZ3/B0=; b=g5WzKM3+eBMY3zqcBpcVSZGuNV
-	jmVdmk1SKlZiZ/ipQV0lPTxDacidiJ5F+SiLLf9ggnkW+CsZtPf8lLyKozOucy0t9ZlkZtcGE1crY
-	QnFKKvJ5jkke6Oj1gai1dcW64Mtf0aFg+wLolN8C1rLjTzEyeCioOKoK8FpipOLQlvi7FtcOibJ8y
-	4hewNNMD+62k+8numyIDFx6MFI8bd7qVPcwlpnid77FpKYvuEHnA2Nr8yvyq6CNzK2vBYXJMxPol4
-	h4WPyMcylezpnI458qSW5bg0+0ME3LZtfW4w1+oX0kOKU27NwpYKlIvKT/kFdqd/QSbHsT9NtuFdZ
-	3T4j1jUw==;
+	bh=yb5O61brOXNx5cnFLPLNFtBKkHZFWE66/2wPBrCgz5c=; b=CgntqPbvaJ0EEFoawIBGZkFzcB
+	0720Md2o1/wFMo/FW9c9gXSfMk6hyRungj1lIR6kdZNmZSb9OifIH+MtbqXC22uk4f+WnRo63T6lm
+	For/u0IXZbaP+qMuytWiFzg8W6Id2cMLh59M4RGMXqNb9vyR2+1YOsev27tQaQyuIB69Qs6EgTtR1
+	H894KO/goW83GuG7GJDyIF9BYc58386SS+F/tWEcsn9UzazznxImLOAEWxyGHGl2tosxSYoMJparL
+	dx9YO2VJNqG+ycDK6dXfTllCFCijaRQW7DIOtPO8/dFqCVosMEvTjHF0lhHnOTt4rJocJTIDC/z5p
+	6Y/fKjOA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOdxS-0000000GqYb-07Hx;
-	Thu, 27 Nov 2025 15:30:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vOejD-0000000Gv4B-3dFr;
+	Thu, 27 Nov 2025 16:20:19 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOdxN-0000000GqXX-2Xpq
+	id 1vOejD-0000000Gv45-0G9v
 	for kexec@lists.infradead.org;
-	Thu, 27 Nov 2025 15:30:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764257452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iUYE5Nv9stWS9k53Pjb2GiHfm7cAAwaViRSFXAZ3/B0=;
-	b=Jj3TRQ+Bbk68NkXRdh6DZSPTUW7/F6jcncdOMuNlMr5Fas5tapLFFLH1Vm9EaJbP7iaSc7
-	gIukqn4+1houGSPQ7Vz4DaMrcvJyOPHj8WsKghQovDhE04Bi7Pjp+szWfysVLauKToteoF
-	Vc4B+K/5WJO8gkOu8Yey3AAeNBmdRRM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-578-pxvj3IHcPoSYz_Fi9Nw39g-1; Thu,
- 27 Nov 2025 10:30:45 -0500
-X-MC-Unique: pxvj3IHcPoSYz_Fi9Nw39g-1
-X-Mimecast-MFC-AGG-ID: pxvj3IHcPoSYz_Fi9Nw39g_1764257444
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA918195606F;
-	Thu, 27 Nov 2025 15:30:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.7])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E965230001A4;
-	Thu, 27 Nov 2025 15:30:40 +0000 (UTC)
-Date: Thu, 27 Nov 2025 23:30:36 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, akpm@linux-foundation.org
-Cc: Qiang Ma <maqianga@uniontech.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shivang upadhyay <shivangu@linux.ibm.com>
-Subject: Re: [PATCH v3 0/3] kexec: print out debugging message if required
- for kexec_load
-Message-ID: <aShunGBgVbEZmCxO@MiWiFi-R3L-srv>
-References: <20251126084427.3222212-1-maqianga@uniontech.com>
- <7aadda55-d2a4-40f9-95ef-d284ec358646@linux.ibm.com>
+	Thu, 27 Nov 2025 16:20:19 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 23A3960153;
+	Thu, 27 Nov 2025 16:20:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240AFC4CEF8;
+	Thu, 27 Nov 2025 16:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764260417;
+	bh=avZf9Vu6ylIFB1LxLASnCOKBE9sB2MGp7u47/NpKjkk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=enT7i+QGeF5nMmfGvskWHyOmourYf9rryiYO17BNruJNNuOE3iYx0zIYavhZ3/6o8
+	 0LeogTw+IqzuEAPVdEnA0B0qsUL6U3wSLD6fXyZCATBp73Z8UbUquCNIHwtlu0S8i1
+	 ovyrsz2rMipXJIp3sP1/Ezn9ku7QE6ujpTyCbf5/o1yk/FkgNgEGa2NabB7ypXIMro
+	 /5+hOa5C2wFoefcDYmrW1oFyAPJ2HSCWxMyDLVKhy3S4x5G6I9wHGUcOt4y0KlDs5N
+	 uN3JYWaveYxh0o+R0dceTbU3iVHXvXP6oMVbvOyn4hVqnB37G8EzogSO5I8YFXZhPH
+	 6KsRQiXRcv52g==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: ranxiaokai627@163.com
+Cc: rppt@kernel.org,  akpm@linux-foundation.org,  catalin.marinas@arm.com,
+  changyuanl@google.com,  graf@amazon.com,  pasha.tatashin@soleen.com,
+  pratyush@kernel.org,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  ran.xiaokai@zte.com.cn
+Subject: Re: [PATCH v4] KHO: Fix boot failure due to kmemleak access to
+ non-PRESENT pages
+In-Reply-To: <20251127122700.103927-1-ranxiaokai627@163.com> (ranxiaokai's
+	message of "Thu, 27 Nov 2025 12:27:00 +0000")
+References: <20251127122700.103927-1-ranxiaokai627@163.com>
+Date: Thu, 27 Nov 2025 17:20:14 +0100
+Message-ID: <mafs07bvbwipt.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7aadda55-d2a4-40f9-95ef-d284ec358646@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251127_073053_713748_3981560E 
-X-CRM114-Status: GOOD (  10.60  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,23 +73,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/27/25 at 05:31pm, Sourabh Jain wrote:
-> Hello All,
-> 
-> Do we have plan to support KEXEC_DEBUG flag?
-> 
-> Because upstream kexec-tools already added support for KEXEC_DEBUG flag
-> and that breaks the kexec_load with -d option.
-> 
-> - kexec: add kexec flag to support debug printing
->   https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=71d6fd99af7e
+On Thu, Nov 27 2025, ranxiaokai627@163.com wrote:
 
-I think we should revert that kexec-tools commit. This whole patchset is
-non-sense. Because of my carelessness, that userspace patch was merged.
+> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>
+> When booting with debug_pagealloc=on while having:
+> CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y
+> CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=n
+> the system fails to boot due to page faults during kmemleak scanning.
+>
+> This occurs because:
+> With debug_pagealloc is enabled, __free_pages() invokes
+> debug_pagealloc_unmap_pages(), clearing the _PAGE_PRESENT bit for
+> freed pages in the kernel page table.
+> KHO scratch areas are allocated from memblock and noted by kmemleak. But
+> these areas don't remain reserved but released later to the page allocator
+> using init_cma_reserved_pageblock(). This causes subsequent kmemleak scans
+> access non-PRESENT pages, leading to fatal page faults.
+>
+> Mark scratch areas with kmemleak_ignore_phys() after they are allocated
+> from memblock to exclude them from kmemleak scanning before they are
+> released to buddy allocator to fix this.
+>
+> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Hi Sourabh,
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-Could you go through this patchset and help check if they are really
-needed? I can't find anything to convince myself. Thanks.
+Thanks!
 
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
 
